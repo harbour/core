@@ -251,7 +251,7 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    SWITCH Lower( hb_FNameExt( cBody ) )
    CASE ".htm"
    CASE ".html"
-      IF hb_FileExists( cBody )
+      IF hb_vfExists( cBody )
          cBody := MemoRead( cBody )
          lBodyHTML := .T.
          EXIT

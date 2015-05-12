@@ -193,12 +193,12 @@ METHOD ExcelWriterXML:writeData( target )
       RETURN .T.
    ENDIF
 
-   IF hb_FileExists( target ) .AND. ! ::overwriteFile
+   IF hb_vfExists( target ) .AND. ! ::overwriteFile
       ::cError := target + " exists and overwriteFile is set to false"
       ::errors := .T.
       RETURN .F.
    ENDIF
-   IF ( handle := hb_FCreate( target,, FO_EXCLUSIVE ) ) == F_ERROR
+   IF ( handle := hb_vfOpen( target, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) == NIL
       ::cError := "Not able to open " + target + " for writing"
       ::errors := .T.
       RETURN .F.
@@ -234,7 +234,7 @@ METHOD ExcelWriterXML:writeData( target )
       '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel" />' + hb_eol() + ;
       "<Styles>" + hb_eol()
 
-   FWrite( handle, xml )
+   hb_vfWrite( handle, xml )
    xml := ""
 
    FOR EACH style IN ::styles
@@ -242,14 +242,14 @@ METHOD ExcelWriterXML:writeData( target )
    NEXT
    xml += "</Styles>" + hb_eol()
 
-   FWrite( handle, xml )
+   hb_vfWrite( handle, xml )
    xml := ""
 
    IF Len( ::sheets ) == 0
       ::addSheet()
    ENDIF
    FOR EACH sheet IN ::sheets
-      xml += sheet:getSheetXML( handle )
+      xml += sheet:getSheetXML()
       IF Len( sheet:getErrors() ) > 0
          ::errors := .T.
       ENDIF
@@ -258,8 +258,8 @@ METHOD ExcelWriterXML:writeData( target )
       ::errors := .T.
    ENDIF
 
-   FWrite( handle, xml + "</Workbook>" )
-   FClose( handle )
+   hb_vfWrite( handle, xml + "</Workbook>" )
+   hb_vfClose( handle )
 
    RETURN .T.
 

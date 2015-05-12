@@ -221,7 +221,7 @@ METHOD toString() CLASS THtmlDocument
 // reads HTML file and parses it into tree of objects
 METHOD readFile( cFileName ) CLASS THtmlDocument
 
-   IF hb_FileExists( cFileName )
+   IF hb_vfExists( cFileName )
       ::changed := .T.
       ::new( MemoRead( cFileName ) )
 

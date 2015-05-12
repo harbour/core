@@ -47,7 +47,6 @@
 #include "dbinfo.ch"
 #include "dbstruct.ch"
 #include "error.ch"
-#include "fileio.ch"
 
 #ifndef EG_RENAME
 #define EG_RENAME       26
@@ -106,12 +105,12 @@ FUNCTION dbModifyStructure( cFile )
 
       // Rename original as backup, and new file as the new original.
       IF lRet
-         IF FRename( cFile, cBakFile ) == F_ERROR
+         IF ! hb_dbRename( cFile, cBakFile )
             BREAK
          ENDIF
-         IF FRename( cNewFile, cFile ) == F_ERROR
+         IF ! hb_dbRename( cNewFile, cFile )
             // If we can't then try to restore backup as original
-            IF FRename( cBakFile, cFile ) == F_ERROR
+            IF ! hb_dbRename( cBakFile, cFile )
                // Oops - must advise the user!
                oErr := ErrorNew()
                oErr:severity     := ES_ERROR
@@ -143,13 +142,13 @@ FUNCTION dbModifyStructure( cFile )
    END SEQUENCE
 
    IF cBakFile != NIL
-      FErase( cBakFile )
+      hb_dbDrop( cBakFile )
    ENDIF
    IF cStructureFile != NIL
-      FErase( cStructureFile )
+      hb_dbDrop( cStructureFile )
    ENDIF
    IF cNewFile != NIL
-      FErase( cNewFile )
+      hb_dbDrop( cNewFile )
    ENDIF
 
    dbSelectArea( nPresetArea )

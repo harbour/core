@@ -551,13 +551,13 @@ METHOD Open( cProgName ) CLASS HB_LogDbf
       RETURN .F.
    ENDIF
 
-   IF ! hb_FileExists( ::cDBFName )
+   IF ! hb_dbExists( ::cDBFName )
       dbCreate( ::cDBFName, ::aStruct )
       dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
       INDEX ON DToS( FIELD->date ) + FIELD->time + Str( FIELD->priority, 2 ) + FIELD->MESSAGE TAG "datetime" TO ( ::cIndexName )
       INDEX ON Str( FIELD->priority, 2 ) + DToS( FIELD->date ) + FIELD->time + FIELD->MESSAGE TAG "priority" TO ( ::cIndexName )
       LogDbf->( dbCloseArea() )
-   ELSEIF ! hb_FileExists( ::cIndexName )
+   ELSEIF ! hb_dbExists( ::cIndexName )
       dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
       INDEX ON DToS( FIELD->date ) + FIELD->time + Str( FIELD->priority, 2 ) + FIELD->MESSAGE TAG "datetime" TO ( ::cIndexName )
       INDEX ON Str( FIELD->priority, 2 ) + DToS( FIELD->date ) + FIELD->time + FIELD->MESSAGE TAG "priority" TO ( ::cIndexName )

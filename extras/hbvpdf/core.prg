@@ -1,5 +1,5 @@
 /* Optimized for Harbour, Unicode support, portability, cleanups
-   by Viktor Szakats */
+   and other Harbour tailoring by Viktor Szakats */
 
 #include "hbvpdf.ch"
 
@@ -441,7 +441,7 @@ PROCEDURE pdfClose()
       "endobj" + CRLF
 
    t_aReport[ DOCLEN ] += Len( cTemp )
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    // info
    ++t_aReport[ REPORTOBJ ]
@@ -459,7 +459,7 @@ PROCEDURE pdfClose()
       ">>" + CRLF + ;
       "endobj" + CRLF
    t_aReport[ DOCLEN ] += Len( cTemp )
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    // root
    ++t_aReport[ REPORTOBJ ]
@@ -468,7 +468,7 @@ PROCEDURE pdfClose()
       hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
       "<< /Type /Catalog /Pages 1 0 R /Outlines " + hb_ntos( t_aReport[ REPORTOBJ ] + 1 ) + " 0 R" + iif( ( nBookLen := Len( t_aReport[ BOOKMARK ] ) ) > 0, " /PageMode /UseOutlines", "" ) + " >>" + CRLF + "endobj" + CRLF
    t_aReport[ DOCLEN ] += Len( cTemp )
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    ++t_aReport[ REPORTOBJ ]
    nObj1 := t_aReport[ REPORTOBJ ]
@@ -499,7 +499,7 @@ PROCEDURE pdfClose()
       cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + "<< /Type /Outlines /Count " + hb_ntos( nCount ) + " /First " + hb_ntos( nFirst ) + " 0 R /Last " + hb_ntos( nLast ) + " 0 R >>" + CRLF + "endobj" // + CRLF
       AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
       t_aReport[ DOCLEN ] += Len( cTemp )
-      FWrite( t_aReport[ HANDLE ], cTemp )
+      hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
       ++t_aReport[ REPORTOBJ ]
       nRecno := 1
@@ -518,7 +518,7 @@ PROCEDURE pdfClose()
 
          AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] + 2 )
          t_aReport[ DOCLEN ] += Len( cTemp )
-         FWrite( t_aReport[ HANDLE ], cTemp )
+         hb_vfWrite( t_aReport[ HANDLE ], cTemp )
          ++nRecno
       NEXT
       pdfBookClose()
@@ -528,7 +528,7 @@ PROCEDURE pdfClose()
       cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + "<< /Type /Outlines /Count 0 >>" + CRLF + "endobj" + CRLF
       AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
       t_aReport[ DOCLEN ] += Len( cTemp )
-      FWrite( t_aReport[ HANDLE ], cTemp )
+      hb_vfWrite( t_aReport[ HANDLE ], cTemp )
    ENDIF
 
    cTemp := CRLF
@@ -550,13 +550,13 @@ PROCEDURE pdfClose()
       "startxref" + CRLF + ;
       hb_ntos( t_aReport[ DOCLEN ] ) + CRLF + ;
       "%%EOF" + CRLF
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 #if 0
    IF t_aReport[ OPTIMIZE ]
       pdfOptimize( ) coming !
    ENDIF
 #endif
-   FClose( t_aReport[ HANDLE ] )
+   hb_vfClose( t_aReport[ HANDLE ] )
 
    t_aReport := NIL
 
@@ -583,7 +583,7 @@ STATIC PROCEDURE pdfClosePage()
       "endobj" + CRLF
 
    t_aReport[ DOCLEN ] += Len( cTemp )
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
    cTemp := ;
@@ -620,7 +620,7 @@ STATIC PROCEDURE pdfClosePage()
    cTemp += CRLF + ">>" + CRLF + "endobj" + CRLF
 
    t_aReport[ DOCLEN ] += Len( cTemp )
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
    cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj << /Length " + ;
@@ -628,7 +628,7 @@ STATIC PROCEDURE pdfClosePage()
       "stream"
 
    t_aReport[ DOCLEN ] += Len( cTemp )
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    IF Len( t_aReport[ PAGEIMAGES ] ) > 0
       cTemp := ""
@@ -654,7 +654,7 @@ STATIC PROCEDURE pdfClosePage()
       "endobj" + CRLF
 
    t_aReport[ DOCLEN ] += Len( cTemp )
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
 
@@ -664,7 +664,7 @@ STATIC PROCEDURE pdfClosePage()
       "endobj" + CRLF
 
    t_aReport[ DOCLEN ] += Len( cTemp )
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    FOR EACH nI IN t_aReport[ FONTS ]
       IF nI[ 2 ] > t_aReport[ REPORTOBJ ]
@@ -683,8 +683,7 @@ STATIC PROCEDURE pdfClosePage()
             "endobj" + CRLF
 
          t_aReport[ DOCLEN ] += Len( cTemp )
-         FWrite( t_aReport[ HANDLE ], cTemp )
-
+         hb_vfWrite( t_aReport[ HANDLE ], cTemp )
       ENDIF
    NEXT
 
@@ -710,10 +709,10 @@ STATIC PROCEDURE pdfClosePage()
             "stream" + CRLF
 
          t_aReport[ DOCLEN ] += Len( cTemp )
-         FWrite( t_aReport[ HANDLE ], cTemp )
+         hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
-         nImageHandle := FOpen( nI[ 1 ] )
-         FSeek( nImageHandle, nI[ 3 ][ IMAGE_FROM ] )
+         nImageHandle := hb_vfOpen( nI[ 1 ] )
+         hb_vfSeek( nImageHandle, nI[ 3 ][ IMAGE_FROM ] )
 
          nBuffer := 8192
          cBuffer := Space( nBuffer )
@@ -724,20 +723,20 @@ STATIC PROCEDURE pdfClosePage()
             ELSE
                nRead := nI[ 3 ][ IMAGE_LENGTH ] - k
             ENDIF
-            FRead( nImageHandle, @cBuffer, nRead )
+            hb_vfRead( nImageHandle, @cBuffer, nRead )
 
             t_aReport[ DOCLEN ] += nRead
-            FWrite( t_aReport[ HANDLE ], cBuffer, nRead )
+            hb_vfWrite( t_aReport[ HANDLE ], cBuffer, nRead )
             k += nRead
          ENDDO
 
-         FClose( nImageHandle )
+         hb_vfClose( nImageHandle )
 
          cTemp := CRLF + "endstream" + CRLF + ;
             "endobj" + CRLF
 
          t_aReport[ DOCLEN ] += Len( cTemp )
-         FWrite( t_aReport[ HANDLE ], cTemp )
+         hb_vfWrite( t_aReport[ HANDLE ], cTemp )
       ENDIF
    NEXT
 
@@ -959,7 +958,7 @@ PROCEDURE pdfOpen( cFile, nLen, lOptimize )
    t_aReport[ PDFTOP       ] := 1  // top
    t_aReport[ PDFLEFT      ] := 10  // left and right
    t_aReport[ PDFBOTTOM    ] := t_aReport[ PAGEY ] / 72 * t_aReport[ LPI ] - 1  // bottom, default "LETTER", "P", 6
-   t_aReport[ HANDLE       ] := FCreate( cFile )
+   t_aReport[ HANDLE       ] := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE )
    t_aReport[ PAGES        ] := {}
    t_aReport[ REFS         ] := { 0, 0 }
    t_aReport[ BOOKMARK     ] := {}
@@ -987,7 +986,7 @@ PROCEDURE pdfOpen( cFile, nLen, lOptimize )
    t_aReport[ DOCLEN ] := 0
    cTemp := "%PDF-1.3" + CRLF
    t_aReport[ DOCLEN ] += Len( cTemp )
-   FWrite( t_aReport[ HANDLE ], cTemp )
+   hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    RETURN
 
@@ -1446,7 +1445,7 @@ PROCEDURE pdfDisableHeader( cId )
 PROCEDURE pdfSaveHeader( cFile )
 
    Array2File( "temp.tmp", t_aReport[ HEADER ] )
-   hb_FCopy( "temp.tmp", cFile )
+   hb_vfCopyFile( "temp.tmp", cFile )
 
    RETURN
 
@@ -1860,13 +1859,13 @@ FUNCTION pdfTIFFInfo( cFile )
 
    LOCAL nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0, yRes := 0
 
-   LOCAL nHandle := FOpen( cFile )
+   LOCAL nHandle := hb_vfOpen( cFile )
 
    c2 := Space( 2 )
-   FRead( nHandle, @c2, 2 )
-   FRead( nHandle, @c2, 2 )
+   hb_vfRead( nHandle, @c2, 2 )
+   hb_vfRead( nHandle, @c2, 2 )
    cIFDNext := Space( 4 )
-   FRead( nHandle, @cIFDNext, 4 )
+   hb_vfRead( nHandle, @cIFDNext, 4 )
 
    cTemp := Space( 12 )
    // nPages := 0
@@ -1875,14 +1874,14 @@ FUNCTION pdfTIFFInfo( cFile )
 
       nIFD := Bin2L( cIFDNext )
 
-      FSeek( nHandle, nIFD )
+      hb_vfSeek( nHandle, nIFD )
       // ? "*** IFD", hb_ntos( ++nPages )
 
-      FRead( nHandle, @c2, 2 )
+      hb_vfRead( nHandle, @c2, 2 )
       nFields := Bin2I( c2 )
 
       FOR nn := 1 TO nFields
-         FRead( nHandle, @cTemp, 12 )
+         hb_vfRead( nHandle, @cTemp, 12 )
 
          nTag := Bin2W( hb_BSubStr( cTemp, 1, 2 ) )
          nFieldType := Bin2W( hb_BSubStr( cTemp, 3, 2 ) )
@@ -1911,12 +1910,12 @@ FUNCTION pdfTIFFInfo( cFile )
          nOffset := Bin2L( hb_BSubStr( cTemp, 9, 4 ) )
 
          IF nCount > 1 .OR. nFieldType == RATIONAL .OR. nFieldType == SRATIONAL
-            nPos := filepos( nHandle )
-            FSeek( nHandle, nOffset )
+            nPos := FilePos( nHandle )
+            hb_vfSeek( nHandle, nOffset )
 
             cValues := Space( nCount * aCount[ nFieldType ] )
-            FRead( nHandle, @cValues, hb_BLen( cValues ) )
-            FSeek( nHandle, nPos )
+            hb_vfRead( nHandle, @cValues, hb_BLen( cValues ) )
+            hb_vfSeek( nHandle, nPos )
          ELSE
             cValues := hb_BSubStr( cTemp, 9, 4 )
          ENDIF
@@ -2426,10 +2425,10 @@ FUNCTION pdfTIFFInfo( cFile )
          ?? " >"
 #endif
       NEXT
-      FRead( nHandle, @cIFDNext, 4 )
+      hb_vfRead( nHandle, @cIFDNext, 4 )
    ENDDO
 
-   FClose( nHandle )
+   hb_vfClose( nHandle )
 
    RETURN { ;
       nWidth, ;
@@ -2447,10 +2446,10 @@ FUNCTION pdfJPEGInfo( cFile )
    LOCAL nWidth, nHeight, nBits := 8, nFrom := 0, nLength, xRes, yRes
    LOCAL nSpace  // := 3 // 3 - RGB, 1 - GREY, 4 - CMYK
 
-   LOCAL nHandle := FOpen( cFile )
+   LOCAL nHandle := hb_vfOpen( cFile )
 
    c255 := Space( 20000 )
-   FRead( nHandle, @c255, hb_BLen( c255 ) )
+   hb_vfRead( nHandle, @c255, hb_BLen( c255 ) )
 
    xRes := hb_BCode( hb_BSubStr( c255, 15, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 16, 1 ) )
    yRes := hb_BCode( hb_BSubStr( c255, 17, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 18, 1 ) )
@@ -2466,7 +2465,7 @@ FUNCTION pdfJPEGInfo( cFile )
 
    nLength := FileSize( nHandle )
 
-   FClose( nHandle )
+   hb_vfClose( nHandle )
 
    RETURN { ;
       nWidth, ;
@@ -2479,7 +2478,7 @@ FUNCTION pdfJPEGInfo( cFile )
       nSpace }
 
 STATIC FUNCTION FilePos( nHandle )
-   RETURN FSeek( nHandle, 0, FS_RELATIVE )
+   RETURN hb_vfSeek( nHandle, 0, FS_RELATIVE )
 
 STATIC FUNCTION Chr_RGB( cChar )
    RETURN Str( hb_BCode( cChar ) / 255, 4, 2 )
@@ -2546,10 +2545,10 @@ STATIC FUNCTION NumAt( cSearch, cString )
 STATIC FUNCTION FileSize( nHandle )
 
    LOCAL nCurrent := FilePos( nHandle )  // Get file position
-   LOCAL nLength := FSeek( nHandle, 0, FS_END )  // Get file length
+   LOCAL nLength := hb_vfSeek( nHandle, 0, FS_END )  // Get file length
 
    // Reset file position
-   FSeek( nHandle, nCurrent )
+   hb_vfSeek( nHandle, nCurrent )
 
    RETURN nLength
 
@@ -2560,8 +2559,8 @@ STATIC FUNCTION Array2File( cFile, aRay, nDepth, hFile )  /* TODO: replace with 
    LOCAL nBytes := 0
    LOCAL i
 
-   IF hFile == NIL
-      IF ( hFile := FCreate( cFile ) ) == F_ERROR
+   IF PCount() < 4
+      IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE ) ) == NIL
          RETURN nBytes
       ENDIF
    ENDIF
@@ -2576,7 +2575,7 @@ STATIC FUNCTION Array2File( cFile, aRay, nDepth, hFile )  /* TODO: replace with 
    ENDIF
    nDepth--
    IF nDepth == 0
-      FClose( hFile )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN nBytes
@@ -2595,7 +2594,7 @@ STATIC FUNCTION WriteData( hFile, xData )
    OTHERWISE ; cData += I2Bin( 0 )  // NIL
    ENDSWITCH
 
-   RETURN FWrite( hFile, cData )
+   RETURN hb_vfWrite( hFile, cData )
 
 // written by Peter Kulek
 STATIC FUNCTION File2Array( cFile, nLen, hFile )  /* TODO: replace with hb_Deserialize() */
@@ -2604,12 +2603,12 @@ STATIC FUNCTION File2Array( cFile, nLen, hFile )  /* TODO: replace with hb_Deser
    LOCAL nDepth := 0
    LOCAL aRay   := {}
 
-   IF hFile == NIL
-      IF ( hFile := FOpen( cFile ) ) == F_ERROR
+   IF PCount() < 3
+      IF ( hFile := hb_vfOpen( cFile ) ) == NIL
          RETURN aRay
       ENDIF
       cData := Space( 3 )
-      FRead( hFile, @cData, 3 )
+      hb_vfRead( hFile, @cData, 3 )
       IF ! hb_LeftEq( cData, "A" )
          RETURN aRay
       ENDIF
@@ -2617,7 +2616,7 @@ STATIC FUNCTION File2Array( cFile, nLen, hFile )  /* TODO: replace with hb_Deser
    ENDIF
    DO WHILE nDepth < nLen
       cData  := Space( 3 )
-      nBytes := FRead( hFile, @cData, 3 )
+      nBytes := hb_vfRead( hFile, @cData, 3 )
       IF nBytes < 3
          EXIT
       ENDIF
@@ -2625,7 +2624,7 @@ STATIC FUNCTION File2Array( cFile, nLen, hFile )  /* TODO: replace with hb_Deser
       nDataLen := Bin2I( hb_BRight( cData, 2 ) )
       IF !( cType == "A" )
          cData := Space( nDataLen )
-         nBytes := FRead( hFile, @cData, nDataLen )
+         nBytes := hb_vfRead( hFile, @cData, nDataLen )
          IF nBytes < nDataLen
             EXIT
          ENDIF
@@ -2641,7 +2640,7 @@ STATIC FUNCTION File2Array( cFile, nLen, hFile )  /* TODO: replace with hb_Deser
       ENDSWITCH
    ENDDO
    IF cFile != NIL
-      FClose( hFile )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN aRay

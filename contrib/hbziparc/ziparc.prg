@@ -272,7 +272,7 @@ FUNCTION hb_ZipFile( ;
    ENDIF
 
    IF lOverwrite .AND. hb_vfExists( cFileName )
-      FErase( cFileName )
+      hb_vfErase( cFileName )
    ENDIF
 
    IF ! Empty( hZip := hb_zipOpen( cFileName, iif( ! lOverwrite .AND. hb_vfExists( cFileName ), HB_ZIP_OPEN_ADDINZIP, NIL ) ) )

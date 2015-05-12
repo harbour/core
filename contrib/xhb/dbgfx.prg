@@ -99,7 +99,7 @@ PROCEDURE hb_ToLogFile( cLogFile, ... )
       IF ! s_lEmptyLogFile .AND. hb_vfExists( cLogFile )
          nHandle := hb_vfOpen( cLogFile, FO_WRITE + FO_SHARED )
       ELSE
-         nHandle := hb_vfOpen( cLogFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_SHARED )
+         nHandle := hb_vfOpen( cLogFile, FO_WRITE + FO_SHARED + FO_CREAT + FO_TRUNC )
          s_lEmptyLogFile := .F.
       ENDIF
 

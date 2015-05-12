@@ -80,7 +80,7 @@ FUNCTION xhb_SetTraceFile( xFile, lAppend )
    IF HB_ISSTRING( xFile )
       s_cSET_TRACEFILE := xFile
       IF ! hb_defaultValue( lAppend, .F. )
-         FClose( FCreate( s_cSET_TRACEFILE ) )
+         hb_vfClose( hb_vfOpen( s_cSET_TRACEFILE, FO_CREAT + FO_TRUNC ) )
       ENDIF
    ENDIF
 
@@ -116,45 +116,35 @@ FUNCTION xhb_SetTraceStack( xLevel )
 FUNCTION TraceLog( ... )
 
    // Using PRIVATE instead of LOCALs so TraceLog() is DIVERT friendly.
-   LOCAL cFile, FileHandle, nLevel, ProcName, xParam
+   LOCAL FileHandle, nLevel, ProcName, xParam
 
-   IF s_lSET_TRACE
+   IF s_lSET_TRACE .AND. ;
+      ( FileHandle := hb_vfOpen( s_cSET_TRACEFILE, FO_WRITE + FO_CREAT ) ) != NIL
 
-      /* hb_FileExists() and FOpen()/FCreate() make different assumptions regarding path,
-         so we have to make sure cFile contains path to avoid ambiguity */
-      cFile := cWithPath( s_cSET_TRACEFILE )
+      hb_vfSeek( FileHandle, 0, FS_END )
 
-      IF ( FileHandle := hb_vfOpen( cFile, FO_WRITE + FO_CREAT ) ) != NIL
+      nLevel := s_nSET_TRACESTACK
 
-         hb_vfSeek( FileHandle, 0, FS_END )
-
-         nLevel := s_nSET_TRACESTACK
-
-         IF nLevel > 0
-            hb_vfWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
-         ENDIF
-
-         IF nLevel > 1 .AND. !( ProcName( 2 ) == "" )
-            hb_vfWrite( FileHandle, " Called from:" + hb_eol() )
-            nLevel := 1
-            DO WHILE !( ( ProcName := ProcName( ++nLevel ) ) == "" )
-               hb_vfWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
-            ENDDO
-         ELSE
-            hb_vfWrite( FileHandle, hb_eol() )
-         ENDIF
-
-         FOR EACH xParam IN hb_AParams()
-            hb_vfWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
-         NEXT
-
-         hb_vfWrite( FileHandle, hb_eol() )
-         hb_vfClose( FileHandle )
+      IF nLevel > 0
+         hb_vfWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
       ENDIF
+
+      IF nLevel > 1 .AND. !( ProcName( 2 ) == "" )
+         hb_vfWrite( FileHandle, " Called from:" + hb_eol() )
+         nLevel := 1
+         DO WHILE !( ( ProcName := ProcName( ++nLevel ) ) == "" )
+            hb_vfWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
+         ENDDO
+      ELSE
+         hb_vfWrite( FileHandle, hb_eol() )
+      ENDIF
+
+      FOR EACH xParam IN hb_AParams()
+         hb_vfWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
+      NEXT
+
+      hb_vfWrite( FileHandle, hb_eol() )
+      hb_vfClose( FileHandle )
    ENDIF
 
    RETURN .T.
-
-/* Ensure cFilename contains path. If it doesn't, add current directory to the front of it */
-STATIC FUNCTION cWithPath( cFilename )
-   RETURN iif( Empty( hb_FNameDir( cFilename ) ), "." + hb_ps(), "" ) + cFilename

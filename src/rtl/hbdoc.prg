@@ -89,7 +89,7 @@ FUNCTION __hbdoc_DirLastModified( cDir )
                cDocDir := cDir + _HBDOC_SRC_SUBDIR + hb_ps() + aFile[ F_NAME ]
 
                FOR EACH aDocFile IN hb_vfDirectory( cDocDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
-                  IF hb_FGetDateTime( cDocDir + hb_ps() + aDocFile[ F_NAME ], @tDoc ) .AND. ;
+                  IF hb_vfTimeGet( cDocDir + hb_ps() + aDocFile[ F_NAME ], @tDoc ) .AND. ;
                      tLast < tDoc
                      tLast := tDoc
                   ENDIF

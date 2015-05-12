@@ -141,7 +141,7 @@ FUNCTION tip_MailAssemble( ;
          CASE HB_ISSTRING( aThisFile )
             cFile := aThisFile
             cData := hb_MemoRead( cFile )
-            hb_FGetAttr( cFile, @nAttr )
+            hb_vfAttrGet( cFile, @nAttr )
          CASE HB_ISARRAY( aThisFile ) .AND. Len( aThisFile ) >= 2
             cFile := aThisFile[ 1 ]
             IF HB_ISSTRING( aThisFile[ 2 ] )
@@ -149,7 +149,7 @@ FUNCTION tip_MailAssemble( ;
                hb_default( @cFile, "unnamed" )
             ELSEIF HB_ISSTRING( cFile )
                cData := hb_MemoRead( cFile )
-               hb_FGetAttr( cFile, @nAttr )
+               hb_vfAttrGet( cFile, @nAttr )
             ELSE
                LOOP  /* No filename and no content. */
             ENDIF

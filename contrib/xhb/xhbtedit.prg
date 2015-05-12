@@ -2677,7 +2677,7 @@ METHOD LoadFile( cFileName ) CLASS XHBEditor
 
    LOCAL cString
 
-   IF hb_FileExists( cFileName )
+   IF hb_vfExists( cFileName )
       ::cFile := cFileName
       cString := MemoRead( cFileName )
    ELSE

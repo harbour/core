@@ -834,7 +834,7 @@ METHOD ReadIni( cIniName ) CLASS HBFormatCode
 
    LOCAL i, nLen, aIni, c
 
-   IF hb_FileExists( cIniName )
+   IF hb_vfExists( cIniName )
       aIni := hb_ATokens( MemoRead( cIniName ), .T. )
       nLen := Len( aIni )
       FOR i := 1 TO nLen
@@ -883,7 +883,7 @@ METHOD Array2Source( aSource ) CLASS HBFormatCode
 
 METHOD File2Array( cFileName ) CLASS HBFormatCode
 
-   IF hb_FileExists( cFileName )
+   IF hb_vfExists( cFileName )
       RETURN ::Source2Array( MemoRead( cFileName ) )
    ENDIF
 

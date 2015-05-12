@@ -77,7 +77,6 @@
 
 #include "dbinfo.ch"
 #include "dbstruct.ch"
-#include "fileio.ch"
 #include "ord.ch"
 #include "hbsxdef.ch"
 
@@ -350,7 +349,7 @@ FUNCTION sx_KillTag( xTag, xIndex )
          ENDCASE
          IF ! Empty( cIndex )
             IF ordBagClear( cIndex )
-               lRet := FErase( cIndex ) != F_ERROR
+               lRet := hb_dbDrop( cIndex )
             ENDIF
          ENDIF
       ENDIF

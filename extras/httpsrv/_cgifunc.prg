@@ -475,19 +475,19 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 #endif
    hb_default( @cLog, hb_ps() + "tmp" + hb_ps() + "logfile.log" )
 
-   IF ! hb_defaultValue( lCreate, .F. ) .AND. hb_FileExists( cLog )
-      nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED )
+   IF ! hb_defaultValue( lCreate, .F. ) .AND. hb_vfExists( cLog )
+      nHandle := hb_vfOpen( cLog, FO_WRITE + FO_SHARED )
    ELSE
-      nHandle := hb_FCreate( cLog,, FO_READWRITE + FO_SHARED )
+      nHandle := hb_vfOpen( cLog, FO_WRITE + FO_SHARED + FO_CREAT + FO_TRUNC )
       // __OutDebug( "Create ", nHandle )
    ENDIF
 
    // cString := "PROCEDURE: " + ProcName( -2 ) + " " + cString
 
-   IF nHandle != F_ERROR
-      FSeek( nHandle, 0, FS_END )
-      FWrite( nHandle, cString + CRLF )
-      FClose( nHandle )
+   IF nHandle != NIL
+      hb_vfSeek( nHandle, 0, FS_END )
+      hb_vfWrite( nHandle, cString + CRLF )
+      hb_vfClose( nHandle )
    ENDIF
 
    RETURN

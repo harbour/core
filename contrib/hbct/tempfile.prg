@@ -44,8 +44,6 @@
  *
  */
 
-#include "fileio.ch"
-
 FUNCTION TempFile( cDir, cExt, nAttr )
 
    LOCAL cName
@@ -59,10 +57,10 @@ FUNCTION TempFile( cDir, cExt, nAttr )
       cExt := "." + cExt
    ENDIF
 
-   IF ( fhnd := hb_FTempCreateEx( @cName, cDir,, cExt, ;
-      hb_defaultValue( nAttr, SetFCreate() ) ) ) != F_ERROR
+   IF ( fhnd := hb_vfTempFile( @cName, cDir,, cExt, ;
+      hb_defaultValue( nAttr, SetFCreate() ) ) ) != NIL
 
-      FClose( fhnd )
+      hb_vfClose( fhnd )
       RETURN cName
    ENDIF
 
