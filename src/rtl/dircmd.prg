@@ -47,7 +47,6 @@
 #pragma -gc0
 
 #include "directry.ch"
-#include "fileio.ch"
 
 #define _DIR_HEADER  1
 
@@ -70,7 +69,7 @@ PROCEDURE __Dir( cFileMask )
       QOut( __natMsg( _DIR_HEADER ) )
 #endif
 
-      AEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ), ;
+      AEval( hb_vfDirectory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ), ;
              {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
       hb_FNameSplit( iif( Set( _SET_TRIMFILENAME ), AllTrim( cFileMask ), cFileMask ), ;
@@ -79,7 +78,7 @@ PROCEDURE __Dir( cFileMask )
          cPath := Set( _SET_DEFAULT )
       ENDIF
 
-      AEval( Directory( hb_FNameMerge( cPath, cName, cExt ) ), ;
+      AEval( hb_vfDirectory( hb_FNameMerge( cPath, cName, cExt ) ), ;
              {| aDirEntry | PutNormal( aDirEntry ) } )
    ENDIF
 
@@ -100,9 +99,9 @@ STATIC PROCEDURE PutDBF( aDirEntry )
    LOCAL nRecCount := 0
    LOCAL dLastUpdate := hb_SToD()
 
-   IF ( fhnd := FOpen( aDirEntry[ F_NAME ] ) ) != F_ERROR
+   IF ( fhnd := hb_vfOpen( aDirEntry[ F_NAME ] ) ) != NIL
 
-      buffer := hb_FReadLen( fhnd, 8 )
+      buffer := hb_vfReadLen( fhnd, 8 )
 
       IF hb_BLen( buffer ) == 8 .AND. hb_BAt( hb_BLeft( buffer, 1 ), _DBF_HEAD_MARK ) > 0
          nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
@@ -111,7 +110,7 @@ STATIC PROCEDURE PutDBF( aDirEntry )
                                  hb_BPeek( buffer, 4 ) )
       ENDIF
 
-      FClose( fhnd )
+      hb_vfClose( fhnd )
    ENDIF
 
    QOut( ;

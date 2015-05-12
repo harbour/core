@@ -533,8 +533,8 @@ ENDCLASS
 
 METHOD writeLines( aLines ) CLASS HBProfileReportToFile
 
-   IF ::hFile != F_ERROR
-      AEval( aLines, {| c | FWrite( ::hFile, c + hb_eol() ) } )
+   IF ::hFile != NIL
+      AEval( aLines, {| c | hb_vfWrite( ::hFile, c + hb_eol() ) } )
    ENDIF
 
    RETURN Self
@@ -543,9 +543,9 @@ METHOD generate( bFilter, cFile ) CLASS HBProfileReportToFile
 
    LOCAL lProfile := __SetProfiler( .F. )
 
-   IF ( ::hFile := FCreate( hb_defaultValue( cFile, "hbprof.txt" ) ) ) != F_ERROR
+   IF ( ::hFile := hb_vfOpen( hb_defaultValue( cFile, "hbprof.txt" ), FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != NIL
       ::super:generate( bFilter )
-      FClose( ::hFile )
+      hb_vfClose( ::hFile )
    ELSE
       // TODO: Throw an error
    ENDIF

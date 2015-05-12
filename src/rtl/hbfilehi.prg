@@ -44,7 +44,7 @@
  *
  */
 
-#define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
+#define _ISDRIVESPEC( cDir )  ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
 
 /* NOTE: Can hurt if there are symlinks on the way. */
 FUNCTION hb_PathNormalize( cPath )
@@ -176,7 +176,7 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
 
    /* Force to return relative paths even when base is different. */
    IF hb_defaultValue( lForceRelative, .T. ) .AND. ;
-      hb_DirExists( cPathBase + ( cTestTarget := s_FN_FromArray( aPathTarget, tmp, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) ) ) )
+      hb_vfDirExists( cPathBase + ( cTestTarget := s_FN_FromArray( aPathTarget, tmp, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) ) ) )
       RETURN cTestTarget
    ENDIF
 
@@ -276,7 +276,7 @@ FUNCTION hb_DirBuild( cDir )
 
    cDir := hb_PathNormalize( cDir )
 
-   IF ! hb_DirExists( cDir )
+   IF ! hb_vfDirExists( cDir )
 
       cDir := hb_DirSepAdd( cDir )
 
@@ -297,10 +297,10 @@ FUNCTION hb_DirBuild( cDir )
          ENDIF
          IF ! Empty( cDirItem )  /* Skip root path, if any */
             cDirTemp += cDirItem
-            IF hb_FileExists( cDirTemp )
+            IF hb_vfExists( cDirTemp )
                RETURN .F.
-            ELSEIF ! hb_DirExists( cDirTemp )
-               IF hb_DirCreate( cDirTemp ) != 0
+            ELSEIF ! hb_vfDirExists( cDirTemp )
+               IF hb_vfDirMake( cDirTemp ) != 0
                   RETURN .F.
                ENDIF
             ENDIF
@@ -319,14 +319,14 @@ FUNCTION hb_DirUnbuild( cDir )
       RETURN .F.
    ENDIF
 
-   IF hb_DirExists( cDir )
+   IF hb_vfDirExists( cDir )
 
       cDir := hb_DirSepDel( cDir )
 
       cDirTemp := cDir
       DO WHILE ! Empty( cDirTemp )
-         IF hb_DirExists( cDirTemp )
-            IF hb_DirDelete( cDirTemp ) != 0
+         IF hb_vfDirExists( cDirTemp )
+            IF hb_vfDirRemove( cDirTemp ) != 0
                RETURN .F.
             ENDIF
          ENDIF

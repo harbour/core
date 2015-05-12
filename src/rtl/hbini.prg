@@ -129,25 +129,25 @@ STATIC FUNCTION hb_iniFileLow( cFileSpec )
       aFiles := { cFileSpec }
    ENDIF
 
-   hFile := F_ERROR
+   hFile := NIL
    FOR EACH cFile IN aFiles
-      IF ! Empty( cFile ) .AND. hb_FileExists( cFile )
-         IF ( hFile := FOpen( cFile ) ) != F_ERROR
+      IF ! Empty( cFile ) .AND. hb_vfExists( cFile )
+         IF ( hFile := hb_vfOpen( cFile ) ) != NIL
             EXIT
          ENDIF
       ENDIF
    NEXT
 
-   IF hFile == F_ERROR
+   IF hFile == NIL
       RETURN ""
    ENDIF
 
    /* we'll read the whole file, then we'll break it in lines. */
-   cData := Space( FSeek( hFile, 0, FS_END ) )
-   FSeek( hFile, 0, FS_SET )
-   nLen := FRead( hFile, @cData, hb_BLen( cData ) )
+   cData := Space( hb_vfSeek( hFile, 0, FS_END ) )
+   hb_vfSeek( hFile, 0, FS_SET )
+   nLen := hb_vfRead( hFile, @cData, hb_BLen( cData ) )
    cData := hb_BLeft( cData, nLen )
-   FClose( hFile )
+   hb_vfClose( hFile )
 
    RETURN cData
 
@@ -237,29 +237,28 @@ FUNCTION hb_iniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
       RETURN .F.
    ENDIF
 
-   IF HB_ISSTRING( xFileName )
-      hFile := FCreate( xFileName )
+   DO CASE
+   CASE HB_ISSTRING( xFileName )
+      IF ( hFile := hb_vfOpen( xFileName, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != NIL
+         RETURN .F.
+      ENDIF
       lClose := .T.
-   ELSEIF HB_ISNUMERIC( xFileName )
+   CASE HB_ISPOINTER( xFileName )
       hFile := xFileName
       lClose := .F.
-   ELSE
+   OTHERWISE
       RETURN .F.
-   ENDIF
+   ENDCASE
 
-   IF hFile == F_ERROR
-      RETURN .F.
-   ENDIF
-
-   IF FWrite( hFile, cBuffer ) != hb_BLen( cBuffer )
+   IF hb_vfWrite( hFile, cBuffer ) != hb_BLen( cBuffer )
       IF lClose
-         FClose( hFile )
+         hb_vfClose( hFile )
       ENDIF
       RETURN .F.
    ENDIF
 
    IF lClose
-      FClose( hFile )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN .T.

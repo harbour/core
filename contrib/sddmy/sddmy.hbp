@@ -9,11 +9,11 @@ rddsql.hbc
 
 -depurlbase=mysql:https://downloads.mariadb.org/mariadb/
 -depurlbase=mysql:https://dev.mysql.com/downloads/
--deppkgname=mysql:libmariadbd-devel{rpm}
+-deppkgname=mysql:libmariadb-devel{rpm}
 -deppkgname=mysql:libmysqlclient-devel{rpm}
 -deppkgname=mysql:mysql-devel{rpm}
 -deppkgname=mysql:MySQL-devel{rpm}
--deppkgname=mysql:libmariadbd-dev{deb}
+-deppkgname=mysql:libmariadb-client-lgpl-dev{deb}
 -deppkgname=mysql:libmysqlclient15-dev{deb}
 -deppkgname=mysql:mariadb{homebrew}
 -deppkgname=mysql:mysql{homebrew}

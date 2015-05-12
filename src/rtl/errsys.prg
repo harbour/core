@@ -92,7 +92,11 @@ STATIC FUNCTION DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
+#ifdef HB_CLP_STRICT
       cOSError := hb_StrFormat( "(DOS Error %1$d)", oError:osCode )
+#else
+      cOSError := hb_StrFormat( "(OS Error %1$d)", oError:osCode )
+#endif
    ENDIF
 
    // Build buttons

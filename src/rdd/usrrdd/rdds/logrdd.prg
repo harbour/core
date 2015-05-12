@@ -93,7 +93,7 @@ STATIC FUNCTION LOGRDD_EXIT( nRDD )
    /* Closing log file */
 
    IF aRDDData[ ARRAY_FHANDLE ] != NIL
-      FClose( aRDDData[ ARRAY_FHANDLE ] )
+      hb_vfClose( aRDDData[ ARRAY_FHANDLE ] )
       aRDDData[ ARRAY_FHANDLE ] := NIL
    ENDIF
 
@@ -361,16 +361,9 @@ STATIC PROCEDURE OpenLogFile( nWA )
    IF lActive .AND. nHandle == NIL
 
       /* Open Access Log File */
-      IF hb_FileExists( cFileName )
-         nHandle := FOpen( cFileName, FO_READWRITE + FO_SHARED )
-      ELSE
-         nHandle := hb_FCreate( cFileName,, FO_READWRITE + FO_SHARED )
-      ENDIF
-      IF nHandle != F_ERROR
+      IF ( nHandle := hb_vfOpen( cFileName, FO_READWRITE + FO_SHARED + iif( hb_vfExists( cFileName ), 0, FO_CREAT + FO_TRUNC ) ) ) != NIL
          /* Move to end of file */
-         FSeek( nHandle, 0, FS_END )
-      ELSE
-         nHandle := NIL
+         hb_vfSeek( nHandle, 0, FS_END )
       ENDIF
 
       aRDDData[ ARRAY_FHANDLE  ] := nHandle
@@ -450,7 +443,7 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
             ENDIF
             // Log to file only if cLog is a valid string
             IF HB_ISSTRING( cLog )
-               FWrite( nHandle, cLog + hb_eol() )
+               hb_vfWrite( nHandle, cLog + hb_eol() )
             ENDIF
          ENDIF
       ELSE

@@ -91,7 +91,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       ENDDO
 
       FOR EACH cPath IN hb_ATokens( cTmp, ";" )
-         IF hb_FileExists( cTmp := hb_FNameMerge( cPath, cName, cExt ) )
+         IF hb_vfExists( cTmp := hb_FNameMerge( cPath, cName, cExt ) )
             cFile := cTmp
             EXIT
          ENDIF
@@ -99,7 +99,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
    ENDIF
 
    nRetries := 0
-   DO WHILE ( nHandle := FOpen( cFile, FO_READWRITE ) ) == F_ERROR
+   DO WHILE ( nHandle := hb_vfOpen( cFile, FO_READWRITE ) ) == NIL
       oErr := ErrorNew()
       oErr:severity    := ES_ERROR
       oErr:genCode     := EG_OPEN
@@ -123,10 +123,10 @@ PROCEDURE __TypeFile( cFile, lPrint )
       aSaveSet[ 2 ] := Set( _SET_PRINTER, .T. )
    ENDIF
 
-   nSize   := FSeek( nHandle, 0, FS_END )
+   nSize   := hb_vfSeek( nHandle, 0, FS_END )
    nBuffer := Min( nSize, BUFFER_LENGTH )
 
-   FSeek( nHandle, 0 )  /* go top */
+   hb_vfSeek( nHandle, 0 )  /* go top */
 
    /* Here we try to read a line at a time but I think we could just
       display the whole buffer since it said:
@@ -135,14 +135,14 @@ PROCEDURE __TypeFile( cFile, lPrint )
    nHasRead := 0
    cBuffer := Space( nBuffer )
    QOut()  /* starting a new line */
-   DO WHILE ( nRead := FRead( nHandle, @cBuffer, nBuffer ) ) > 0
+   DO WHILE ( nRead := hb_vfRead( nHandle, @cBuffer, nBuffer ) ) > 0
       nHasRead += nRead
       QQOut( cBuffer )
       nBuffer := Min( nSize - nHasRead, nBuffer )
       cBuffer := Space( nBuffer )
    ENDDO
 
-   FClose( nHandle )
+   hb_vfClose( nHandle )
 
    IF lPrint
       Set( _SET_DEVICE,  aSaveSet[ 1 ] )

@@ -194,7 +194,7 @@ STATIC FUNCTION xhb_DefError( oError )
          "(" + hb_ntos( ProcLine( n ) ) + ") in module:", ProcFile( n )
    ENDDO
 
-   /* For some strange reason, the DOS prompt gets written on the first line
+   /* For some strange reason, the OS prompt gets written on the first line
       *of* the message instead of on the first line *after* the message after
       the program quits, unless the screen has scrolled. [dgh] */
    LogError( oError )

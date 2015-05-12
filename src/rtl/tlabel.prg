@@ -52,7 +52,6 @@
 #include "hbclass.ch"
 
 #include "error.ch"
-#include "fileio.ch"
 #include "inkey.ch"
 
 #define _LF_SAMPLES     2       // "Do you want more samples?"
@@ -345,19 +344,19 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    aLabel[ LBL_FIELDS ]  := {}             // Array of label fields
 
    // Open the label file
-   IF ( nHandle := FOpen( cLblFile ) ) == F_ERROR .AND. ;
+   IF ( nHandle := hb_vfOpen( cLblFile ) ) == NIL .AND. ;
       Empty( hb_FNameDir( cLblFile ) )
 
       // Search through default path; attempt to open label file
       FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
-         IF ( nHandle := FOpen( hb_DirSepAdd( cPath ) + cLblFile ) ) != F_ERROR
+         IF ( nHandle := hb_vfOpen( hb_DirSepAdd( cPath ) + cLblFile ) ) != NIL
             EXIT
          ENDIF
       NEXT
    ENDIF
 
    // File error
-   IF nHandle == F_ERROR
+   IF nHandle == NIL
       err := ErrorNew()
       err:severity := ES_ERROR
       err:genCode := EG_OPEN
@@ -366,7 +365,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
       err:filename := cLblFile
       Eval( ErrorBlock(), err )
    ELSE
-      IF FRead( nHandle, @cBuff, BUFFSIZE ) > 0 .AND. FError() == 0
+      IF hb_vfRead( nHandle, @cBuff, BUFFSIZE ) > 0 .AND. FError() == 0
          // Load label dimension into aLabel
          aLabel[ LBL_REMARK  ] := hb_BSubStr( cBuff, REMARKOFFSET, REMARKSIZE )
          aLabel[ LBL_HEIGHT  ] := Bin2W( hb_BSubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
@@ -393,7 +392,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
          NEXT
       ENDIF
 
-      FClose( nHandle )  // Close file
+      hb_vfClose( nHandle )  // Close file
    ENDIF
 
    RETURN aLabel

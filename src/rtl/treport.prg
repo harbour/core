@@ -49,7 +49,6 @@
 #include "hbclass.ch"
 
 #include "error.ch"
-#include "fileio.ch"
 #include "inkey.ch"
 
 #define F_OK            0       // No error
@@ -869,19 +868,19 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    aReport[ RPT_HEADING ]   := ""
 
    // Open the report file
-   IF ( nFrmHandle := FOpen( cFrmFile ) ) == F_ERROR .AND. ;
+   IF ( nFrmHandle := hb_vfOpen( cFrmFile ) ) == NIL .AND. ;
       Empty( hb_FNameDir( cFrmFile ) )
 
       // Search through default path; attempt to open report file
       FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
-         IF ( nFrmHandle := FOpen( hb_DirSepAdd( cPath ) + cFrmFile ) ) != F_ERROR
+         IF ( nFrmHandle := hb_vfOpen( hb_DirSepAdd( cPath ) + cFrmFile ) ) != NIL
             EXIT
          ENDIF
       NEXT
    ENDIF
 
    // File error
-   IF nFrmHandle == F_ERROR
+   IF nFrmHandle == NIL
       err := ErrorNew()
       err:severity := ES_ERROR
       err:genCode := EG_OPEN
@@ -890,7 +889,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       err:filename := cFrmFile
       Eval( ErrorBlock(), err )
    ELSE
-      IF FRead( nFrmHandle, @cFileBuff, SIZE_FILE_BUFF ) > 0 .AND. FError() == 0
+      IF hb_vfRead( nFrmHandle, @cFileBuff, SIZE_FILE_BUFF ) > 0 .AND. FError() == 0
          // Is this a .frm type file (2 at start and end of file)
          IF Bin2W( hb_BSubStr( cFileBuff, 1, 2 ) ) == 2 .AND. ;
             Bin2W( hb_BSubStr( cFileBuff, SIZE_FILE_BUFF - 1, 2 ) ) == 2
@@ -1013,7 +1012,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
             NEXT
          ENDIF
       ENDIF
-      FClose( nFrmHandle )
+      hb_vfClose( nFrmHandle )
    ENDIF
 
    RETURN aReport

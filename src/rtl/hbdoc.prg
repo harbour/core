@@ -79,16 +79,16 @@ FUNCTION __hbdoc_DirLastModified( cDir )
 
       cDir := hb_DirSepAdd( cDir )
 
-      IF hb_DirExists( cDir + _HBDOC_SRC_SUBDIR )
+      IF hb_vfDirExists( cDir + _HBDOC_SRC_SUBDIR )
 
-         FOR EACH aFile IN Directory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
+         FOR EACH aFile IN hb_vfDirectory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ aFile[ F_ATTR ] .AND. ;
                !( aFile[ F_NAME ] == "." ) .AND. ;
                !( aFile[ F_NAME ] == ".." )
 
                cDocDir := cDir + _HBDOC_SRC_SUBDIR + hb_ps() + aFile[ F_NAME ]
 
-               FOR EACH aDocFile IN Directory( cDocDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
+               FOR EACH aDocFile IN hb_vfDirectory( cDocDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
                   IF hb_FGetDateTime( cDocDir + hb_ps() + aDocFile[ F_NAME ], @tDoc ) .AND. ;
                      tLast < tDoc
                      tLast := tDoc
@@ -112,7 +112,7 @@ FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
 
       cDir := hb_DirSepAdd( cDir )
 
-      IF hb_DirExists( cDir + _HBDOC_SRC_SUBDIR )
+      IF hb_vfDirExists( cDir + _HBDOC_SRC_SUBDIR )
 
          aEntry := {}
          hMeta := { => }
@@ -122,7 +122,7 @@ FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
          ENDIF
 
          nCount := 0
-         FOR EACH aFile IN Directory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
+         FOR EACH aFile IN hb_vfDirectory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ aFile[ F_ATTR ] .AND. ;
                !( aFile[ F_NAME ] == "." ) .AND. ;
                !( aFile[ F_NAME ] == ".." )
@@ -146,7 +146,7 @@ STATIC PROCEDURE __hbdoc__read_langdir( aEntry, cDir, hMeta, aErrMsg )
    LOCAL nCount
 
    nCount := 0
-   FOR EACH aFile IN Directory( cDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
+   FOR EACH aFile IN hb_vfDirectory( cDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
       hMeta[ "_LANG" ] := aFile[ F_NAME ]
       __hbdoc__read_file( aEntry, cDir + hb_ps() + aFile[ F_NAME ], hMeta, aErrMsg )
       ++nCount
@@ -359,10 +359,10 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      IF ( fhnd := hb_FCreate( cFileName,, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != F_ERROR
-         FWrite( fhnd, _HBDOC_SIGNATURE )
-         FWrite( fhnd, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
-         FClose( fhnd )
+      IF ( fhnd := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != NIL
+         hb_vfWrite( fhnd, _HBDOC_SIGNATURE )
+         hb_vfWrite( fhnd, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
+         hb_vfClose( fhnd )
          RETURN .T.
       ENDIF
    ENDIF
@@ -382,14 +382,14 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      IF ( fhnd := FOpen( cFileName ) ) != F_ERROR
+      IF ( fhnd := hb_vfOpen( cFileName ) ) != NIL
 
-         IF hb_FReadLen( fhnd, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
+         IF hb_vfReadLen( fhnd, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
 
-            cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBDOC_SIG_LEN )
-            FSeek( fhnd, _HBDOC_SIG_LEN, FS_SET )
-            FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
-            FClose( fhnd )
+            cBuffer := Space( hb_vfSeek( fhnd, 0, FS_END ) - _HBDOC_SIG_LEN )
+            hb_vfSeek( fhnd, _HBDOC_SIG_LEN, FS_SET )
+            hb_vfRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
+            hb_vfClose( fhnd )
 
             aEntry := hb_Deserialize( cBuffer )
             cBuffer := NIL
@@ -398,7 +398,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
                aEntry := NIL
             ENDIF
          ELSE
-            FClose( fhnd )
+            hb_vfClose( fhnd )
          ENDIF
       ENDIF
    ENDIF
