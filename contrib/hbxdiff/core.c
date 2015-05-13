@@ -475,7 +475,7 @@ HB_FUNC( XDL_PATCH )
    if( phb_mmf1 && phb_mmf1->mmf && phb_mmf2 && phb_mmf2->mmf )
    {
       if( ( HB_ISNUM( 4 ) || hb_fileParamGet( 4 ) ) &&
-          ( HB_ISNUM( 5 ) || hb_fileParamGet( 5 ) )
+          ( HB_ISNUM( 5 ) || hb_fileParamGet( 5 ) ) )
       {
          int        mode = hb_parnidef( 3, XDL_PATCH_NORMAL );
          xdemitcb_t ecb;
