@@ -806,7 +806,7 @@ static HB_BOOL s_fileExists( PHB_FILE_FUNCS pFuncs, const char * pszFileName, ch
    {
       /* Warning: return buffer could be the same memory place as filename parameter! */
       if( pRetPath && pRetPath != pszFileName )
-         hb_strncpy( pRetPath, pszFileName, HB_PATH_MAX );
+         hb_strncpy( pRetPath, pszFileName, HB_PATH_MAX - 1 );
       return HB_TRUE;
    }
    return HB_FALSE;
@@ -950,7 +950,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
                             const char * pPaths, PHB_ITEM pError )
 {
    HB_FHANDLE hFile;
-   char       szNameNew[ HB_PATH_MAX + 1 ];
+   char       szNameNew[ HB_PATH_MAX ];
    HB_USHORT  uiFlags;
    HB_SIZE    nLen;
 
@@ -958,7 +958,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
    HB_SYMBOL_UNUSED( pPaths );
    HB_SYMBOL_UNUSED( pError );
 
-   hb_strncpy( szNameNew, szName + FILE_PREFIX_LEN, HB_PATH_MAX );
+   hb_strncpy( szNameNew, szName + FILE_PREFIX_LEN, HB_PATH_MAX - 1 );
 
    if( szDefExt )
    {
@@ -967,7 +967,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
       {
          if( nLen == 0 || strchr( HB_OS_PATH_DELIM_CHR_LIST, szNameNew[ nLen - 1 ] ) )
          {
-            hb_strncat( szNameNew, szDefExt, HB_PATH_MAX );
+            hb_strncat( szNameNew, szDefExt, HB_PATH_MAX - 1 );
             break;
          }
       }
