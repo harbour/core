@@ -52,14 +52,14 @@
 
 #define READING_BLOCK  4096
 
-static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const char ** pTerm, HB_ISIZ * pnTermSizes, HB_ISIZ nTerms, HB_BOOL * pbFound, HB_BOOL * pbEOF )
+static char * s_ReadLine( PHB_FILE hFileHandle, HB_ISIZ * plBuffLen, const char ** pTerm, HB_ISIZ * pnTermSizes, HB_ISIZ nTerms, HB_BOOL * pbFound, HB_BOOL * pbEOF )
 {
    HB_ISIZ nPosTerm = 0, nPos, nPosition;
    int     nTries;
    HB_ISIZ nRead = 0, nOffset, nSize;
    char *  pBuff;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsReadLine(%p, %" HB_PFS "d, %p, %p, %" HB_PFS "d, %p, %p)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, pTerm, pnTermSizes, nTerms, pbFound, pbEOF ) );
+   HB_TRACE( HB_TR_DEBUG, ( "s_ReadLine(%p, %" HB_PFS "d, %p, %p, %" HB_PFS "d, %p, %p)", hFileHandle, *plBuffLen, pTerm, pnTermSizes, nTerms, pbFound, pbEOF ) );
 
    *pbFound = HB_FALSE;
    *pbEOF   = HB_FALSE;
@@ -83,7 +83,7 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
       }
 
       /* read from file */
-      nRead = hb_fsReadLarge( hFileHandle, pBuff + nOffset, nSize - nOffset );
+      nRead = hb_fileRead( hFileHandle, pBuff + nOffset, nSize - nOffset, -1 );
 
       /* scan the read buffer */
 
@@ -123,7 +123,7 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
             pBuff[ *plBuffLen ] = '\0';
 
             /* Set handle pointer in the end of the line */
-            hb_fsSeekLarge( hFileHandle, ( ( nRead - nPos ) * -1 ) + 1, FS_RELATIVE );
+            hb_fileSeek( hFileHandle, ( ( nRead - nPos ) * -1 ) + 1, FS_RELATIVE );
 
             return pBuff;
          }
@@ -154,77 +154,85 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
    return pBuff;
 }
 
-/* PRG level fReadLine( <Handle>, <@buffer>, [<aTerminators | cTerminator>], [<nReadingBlock>] ) */
+/* PRG level hb_FReadLine( <Handle>, <@buffer>, [<aTerminators | cTerminator>], [<nReadingBlock>] ) */
 
 HB_FUNC( HB_FREADLINE )
 {
-   HB_FHANDLE    hFileHandle = hb_numToHandle( hb_parnint( 1 ) );
-   const char ** Term;
-   char *        pBuffer;
-   HB_ISIZ *     pnTermSizes;
-   HB_ISIZ       nSize = hb_parns( 4 );
-   HB_ISIZ       nTerms;
-   HB_BOOL       bFound, bEOF;
+   PHB_FILE hFileHandle;
 
-   if( ! HB_ISBYREF( 2 ) || ! HB_ISNUM( 1 ) )
+   if( HB_ISNUM( 1 ) )
+      hFileHandle = hb_fileFromHandle( hb_numToHandle( hb_parnint( 1 ) ) );
+   else
+      hFileHandle = hb_fileParamGet( 1 );
+
+   if( hFileHandle )
    {
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-      return;
-   }
+      const char ** Term;
+      char *        pBuffer;
+      HB_ISIZ *     pnTermSizes;
+      HB_ISIZ       nSize = hb_parns( 4 );
+      HB_ISIZ       nTerms;
+      HB_BOOL       bFound, bEOF;
 
-   if( HB_ISARRAY( 3 ) || HB_ISCHAR( 3 ) )
-   {
-      PHB_ITEM pTerm1;
-
-      if( HB_ISARRAY( 3 ) )
+      if( HB_ISARRAY( 3 ) || HB_ISCHAR( 3 ) )
       {
-         HB_ISIZ i;
+         PHB_ITEM pTerm1;
 
-         pTerm1 = hb_param( 3, HB_IT_ARRAY );
-         nTerms = hb_arrayLen( pTerm1 );
-
-         if( nTerms <= 0 )
+         if( HB_ISARRAY( 3 ) )
          {
-            hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-            return;
+            HB_ISIZ i;
+
+            pTerm1 = hb_param( 3, HB_IT_ARRAY );
+            nTerms = hb_arrayLen( pTerm1 );
+
+            if( nTerms <= 0 )
+            {
+               hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+               return;
+            }
+
+            Term        = ( const char ** ) hb_xgrab( sizeof( char * ) * nTerms );
+            pnTermSizes = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) * nTerms );
+
+            for( i = 0; i < nTerms; i++ )
+            {
+               Term[ i ]        = hb_arrayGetCPtr( pTerm1, i + 1 );
+               pnTermSizes[ i ] = hb_arrayGetCLen( pTerm1, i + 1 );
+            }
          }
-
-         Term        = ( const char ** ) hb_xgrab( sizeof( char * ) * nTerms );
-         pnTermSizes = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) * nTerms );
-
-         for( i = 0; i < nTerms; i++ )
+         else
          {
-            Term[ i ]        = hb_arrayGetCPtr( pTerm1, i + 1 );
-            pnTermSizes[ i ] = hb_arrayGetCLen( pTerm1, i + 1 );
+            pTerm1           = hb_param( 3, HB_IT_STRING );
+            Term             = ( const char ** ) hb_xgrab( sizeof( char * ) );
+            pnTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
+            Term[ 0 ]        = hb_itemGetCPtr( pTerm1 );
+            pnTermSizes[ 0 ] = hb_itemGetCLen( pTerm1 );
+            nTerms           = 1;
          }
       }
       else
       {
-         pTerm1           = hb_param( 3, HB_IT_STRING );
          Term             = ( const char ** ) hb_xgrab( sizeof( char * ) );
          pnTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
-         Term[ 0 ]        = hb_itemGetCPtr( pTerm1 );
-         pnTermSizes[ 0 ] = hb_itemGetCLen( pTerm1 );
+         Term[ 0 ]        = "\r\n";    /* Should be preplaced with the default EOL sequence */
          nTerms           = 1;
+         pnTermSizes[ 0 ] = 2;
       }
+
+      if( nSize == 0 )
+         nSize = READING_BLOCK;
+
+      pBuffer = s_ReadLine( hFileHandle, &nSize, Term, pnTermSizes, nTerms, &bFound, &bEOF );
+
+      if( ! hb_storclen_buffer( pBuffer, nSize, 2 ) )
+         hb_xfree( pBuffer );
+      hb_retns( bEOF ? -1 : 0 );
+      hb_xfree( ( void * ) Term );
+      hb_xfree( pnTermSizes );
+
+      if( HB_ISNUM( 1 ) )
+         hb_fileDetach( hFileHandle );
    }
    else
-   {
-      Term             = ( const char ** ) hb_xgrab( sizeof( char * ) );
-      pnTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
-      Term[ 0 ]        = "\r\n";    /* Should be preplaced with the default EOL sequence */
-      nTerms           = 1;
-      pnTermSizes[ 0 ] = 2;
-   }
-
-   if( nSize == 0 )
-      nSize = READING_BLOCK;
-
-   pBuffer = hb_fsReadLine( hFileHandle, &nSize, Term, pnTermSizes, nTerms, &bFound, &bEOF );
-
-   if( ! hb_storclen_buffer( pBuffer, nSize, 2 ) )
-      hb_xfree( pBuffer );
-   hb_retns( bEOF ? -1 : 0 );
-   hb_xfree( ( void * ) Term );
-   hb_xfree( pnTermSizes );
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
