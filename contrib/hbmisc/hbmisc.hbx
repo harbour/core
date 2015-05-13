@@ -100,13 +100,6 @@ DYNAMIC ed_WinCol
 DYNAMIC ed_WinRow
 DYNAMIC FCOMMA
 DYNAMIC FCOMMA_GETFUNCTABLE
-DYNAMIC FileFindAttr
-DYNAMIC FileFindDate
-DYNAMIC FileFindFirst
-DYNAMIC FileFindName
-DYNAMIC FileFindNext
-DYNAMIC FileFindSize
-DYNAMIC FileFindTime
 DYNAMIC hbmisc_DaysInMonth
 DYNAMIC hb_DynaCall1
 DYNAMIC hb_ntp_GetTimeUTC

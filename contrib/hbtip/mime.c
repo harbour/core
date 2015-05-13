@@ -675,26 +675,7 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
    return NULL;
 }
 
-static const char * s_findFileMimeTypeFS( HB_FHANDLE fileIn )
-{
-   char       buf[ 512 ];
-   int        iLen;
-   HB_FOFFSET nPos;
-
-   nPos = hb_fsSeekLarge( fileIn, 0, FS_RELATIVE );
-   hb_fsSeek( fileIn, 0, FS_SET );
-   iLen = hb_fsRead( fileIn, buf, sizeof( buf ) );
-
-   if( iLen > 0 )
-   {
-      hb_fsSeekLarge( fileIn, nPos, FS_SET );
-      return s_findStringMimeType( buf, iLen );
-   }
-
-   return NULL;
-}
-
-static const char * s_findFileMimeTypeFile( PHB_FILE fileIn )
+static const char * s_findFileMimeType( PHB_FILE fileIn )
 {
    char buf[ 512 ];
 
@@ -774,14 +755,18 @@ HB_FUNC( TIP_FILEMIMETYPE )
                                         FXO_SHARELOCK | FXO_NOSEEKPOS,
                                         NULL, NULL ) ) != NULL )
          {
-            magic_type = s_findFileMimeTypeFile( fileIn );
+            magic_type = s_findFileMimeType( fileIn );
             hb_fileClose( fileIn );
          }
       }
       else if( hb_fileItemGet( pFile ) )
-         magic_type = s_findFileMimeTypeFile( hb_fileItemGet( pFile ) );
+         magic_type = s_findFileMimeType( hb_fileItemGet( pFile ) );
       else
-         magic_type = s_findFileMimeTypeFS( hb_numToHandle( hb_itemGetNInt( pFile ) ) );
+      {
+         PHB_FILE fileIn = hb_fileFromHandle( hb_numToHandle( hb_itemGetNInt( pFile ) ) );
+         magic_type = s_findFileMimeType( fileIn );
+         hb_fileDetach( fileIn );
+      }
 
       if( magic_type )
          hb_retc_const( magic_type );

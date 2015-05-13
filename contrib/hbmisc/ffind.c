@@ -46,6 +46,8 @@
 
 #include "hbapifs.h"
 
+#ifdef HB_LEGACY_LEVEL5
+
 static HB_GARBAGE_FUNC( PHB_FFIND_release )
 {
    void ** ph = ( void ** ) Cargo;
@@ -135,3 +137,5 @@ HB_FUNC( FILEFINDTIME )
 
    hb_retc( ffind ? ffind->szTime : NULL );
 }
+
+#endif

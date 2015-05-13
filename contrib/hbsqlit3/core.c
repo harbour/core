@@ -1817,19 +1817,18 @@ HB_FUNC( SQLITE3_TRACE )
 
 HB_FUNC( SQLITE3_FILE_TO_BUFF )
 {
-   HB_FHANDLE handle = hb_fsOpen( hb_parcx( 1 ), FO_READ );
+   PHB_FILE handle = hb_fileOpen( hb_parcx( 1 ), FO_READ );
 
-   if( handle != FS_ERROR )
+   if( handle )
    {
       char *  buffer;
       HB_SIZE nSize;
 
-      nSize = hb_fsSeek( handle, 0, FS_END );
-      hb_fsSeek( handle, 0, FS_SET );
+      nSize = hb_fileSize( handle );
       buffer = ( char * ) hb_xgrab( nSize + 1 );
-      nSize  = hb_fsReadLarge( handle, buffer, nSize );
+      nSize  = hb_fileReadAt( handle, buffer, nSize, 0 );
       buffer[ nSize ] = '\0';
-      hb_fsClose( handle );
+      hb_fileClose( handle );
 
       hb_retclen_buffer( buffer, nSize );
    }
@@ -1839,16 +1838,20 @@ HB_FUNC( SQLITE3_FILE_TO_BUFF )
 
 HB_FUNC( SQLITE3_BUFF_TO_FILE )
 {
-   HB_FHANDLE handle = hb_fsCreate( hb_parcx( 1 ), FC_NORMAL );
-   HB_SIZE    nSize  = hb_parcsiz( 2 ) - 1;
-
-   if( handle != FS_ERROR && nSize > 0 )
+   if( HB_ISCHAR( 1 ) )
    {
-      hb_retni( hb_fsWriteLarge( handle, hb_parcx( 2 ), nSize ) == nSize ? 0 : -1 );
-      hb_fsClose( handle );
+      PHB_FILE handle = hb_fileOpen( hb_parcx( 1 ), FO_CREAT + FO_TRUNC + FO_WRITE );
+
+      if( handle )
+      {
+         HB_SIZE nSize = hb_parclen( 2 );
+         hb_retni( hb_fileWrite( handle, hb_parcx( 2 ), nSize, -1 ) == nSize ? 0 : -1 );
+         hb_fileClose( handle );
+         return;
+      }
    }
-   else
-      hb_retni( 1 );
+
+   hb_retni( 1 );
 }
 
 /**

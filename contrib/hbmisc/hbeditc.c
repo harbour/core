@@ -814,22 +814,12 @@ HB_FUNC( ED_READTEXT )
 
       if( HB_ISNUM( 2 ) )
       {
-         HB_FHANDLE nFile = hb_numToHandle( hb_parnint( 2 ) );
-         HB_FOFFSET nRead = hb_fsSeekLarge( nFile, nSeek, FS_SET );
+         PHB_FILE file = hb_fileFromHandle( hb_numToHandle( hb_parnint( 2 ) ) );
 
-         if( nRead == nSeek )
-         {
-            nSize = hb_fsReadLarge( nFile, pEd->begin, nSize );
-            lSuccess = HB_TRUE;
+         nSize = hb_fileReadAt( file, pEd->begin, nSize, nSeek );
+         lSuccess = HB_TRUE;
 
-            pEd->begin[ nSize ] = '\0';
-
-            pEd->text_length = nSize;
-
-            NewText( pEd );
-
-            pEd->fStable = HB_FALSE;
-         }
+         hb_fileDetach( file );
       }
       else if( hb_fileParamGet( 2 ) )
       {

@@ -362,22 +362,7 @@ HB_FUNC( XDL_MMFILE_COMPACT )
 
 /* callbacks */
 
-#define hb_ptrToHandle( p )   ( ( HB_FHANDLE ) ( HB_PTRDIFF ) ( p ) )
-#define hb_parHandlePtr( n )  ( ( void * ) ( HB_PTRDIFF ) hb_numToHandle( hb_parnint( n ) ) )
-
-static int xdlt_outfs( void * priv, mmbuffer_t * mb, int nbuf )
-{
-   int i;
-
-   for( i = 0; i < nbuf; i++ )
-   {
-      hb_fsWriteLarge( hb_ptrToHandle( priv ), mb[ i ].ptr, ( HB_SIZE ) mb[ i ].size );
-
-      if( hb_fsError() != 0 )
-         return -1;
-   }
-   return 0;
-}
+#define hb_parHandlePtr( n )  hb_fileFromHandle( hb_numToHandle( hb_parnint( n ) ) )
 
 static int xdlt_outfile( void * priv, mmbuffer_t * mb, int nbuf )
 {
@@ -438,9 +423,11 @@ HB_FUNC( XDL_DIFF )
       if( HB_ISNUM( 5 ) )
       {
          ecb.priv = hb_parHandlePtr( 5 );
-         ecb.outf = xdlt_outfs;
+         ecb.outf = xdlt_outfile;
 
          hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
+
+         hb_fileDetach( ecb.priv );
       }
       else if( hb_fileParamGet( 5 ) )
       {
@@ -477,33 +464,39 @@ HB_FUNC( XDL_PATCH )
       if( ( HB_ISNUM( 4 ) || hb_fileParamGet( 4 ) ) &&
           ( HB_ISNUM( 5 ) || hb_fileParamGet( 5 ) ) )
       {
-         int        mode = hb_parnidef( 3, XDL_PATCH_NORMAL );
+         int mode = hb_parnidef( 3, XDL_PATCH_NORMAL );
+
          xdemitcb_t ecb;
          xdemitcb_t rjecb;
+
+         HB_BOOL lDetach_ecb = HB_FALSE;
+         HB_BOOL lDetach_rjecb = HB_FALSE;
+
+         ecb.outf = xdlt_outfile;
+         rjecb.outf = xdlt_outfile;
 
          if( HB_ISNUM( 4 ) )
          {
             ecb.priv = hb_parHandlePtr( 4 );
-            ecb.outf = xdlt_outfs;
+            lDetach_ecb = HB_TRUE;
          }
          else
-         {
             ecb.priv = hb_fileParamGet( 4 );
-            ecb.outf = xdlt_outfile;
-         }
 
          if( HB_ISNUM( 5 ) )
          {
             rjecb.priv = hb_parHandlePtr( 5 );
-            rjecb.outf = xdlt_outfs;
+            lDetach_rjecb = HB_TRUE;
          }
          else
-         {
             rjecb.priv = hb_fileParamGet( 5 );
-            rjecb.outf = xdlt_outfile;
-         }
 
          hb_retni( xdl_patch( phb_mmf1->mmf, phb_mmf2->mmf, mode, &ecb, &rjecb ) );
+
+         if( lDetach_ecb )
+            hb_fileDetach( ecb.priv );
+         if( lDetach_rjecb )
+            hb_fileDetach( rjecb.priv );
       }
       else
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -534,9 +527,11 @@ HB_FUNC( XDL_BDIFF )
       if( HB_ISNUM( 4 ) )
       {
          ecb.priv = hb_parHandlePtr( 4 );
-         ecb.outf = xdlt_outfs;
+         ecb.outf = xdlt_outfile;
 
          hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
+
+         hb_fileDetach( ecb.priv );
       }
       else if( hb_fileParamGet( 4 ) )
       {
@@ -579,9 +574,11 @@ HB_FUNC( XDL_RABDIFF )
       if( HB_ISNUM( 3 ) )
       {
          ecb.priv = hb_parHandlePtr( 3 );
-         ecb.outf = xdlt_outfs;
+         ecb.outf = xdlt_outfile;
 
          hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
+
+         hb_fileDetach( ecb.priv );
       }
       else if( hb_fileParam( 3 ) )
       {
@@ -620,9 +617,11 @@ HB_FUNC( XDL_BPATCH )
       if( HB_ISNUM( 3 ) )
       {
          ecb.priv = hb_parHandlePtr( 3 );
-         ecb.outf = xdlt_outfs;
+         ecb.outf = xdlt_outfile;
 
          hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
+
+         hb_fileDetach( ecb.priv );
       }
       else if( hb_fileParam( 3 ) )
       {

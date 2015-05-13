@@ -211,15 +211,6 @@ static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 }
 #endif
 
-static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
-{
-   void * iptr = hb_xgrab( sz );
-
-   hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) sz );
-
-   return iptr;
-}
-
 static void * LoadImageFromFileObject( PHB_FILE fhandle, int sz )
 {
    void * iptr = hb_xgrab( sz );
@@ -241,13 +232,11 @@ static void * LoadImageFromFile( const char * szFile, int * sz )
    if( fhandle )
    {
       /* get length */
-      *sz = ( int ) hb_fileSeek( fhandle, 0, FS_END );
-      /* rewind */
-      hb_fileSeek( fhandle, 0, FS_SET );
+      *sz = ( int ) hb_fileSize( fhandle );
 
       /* Read file */
       iptr = hb_xgrab( *sz );
-      hb_fileRead( fhandle, iptr, ( HB_SIZE ) *sz, -1 );
+      hb_fileReadAt( fhandle, iptr, ( HB_SIZE ) *sz, 0 );
 
       hb_fileClose( fhandle );
    }
@@ -261,14 +250,18 @@ static void * LoadImageFromFile( const char * szFile, int * sz )
    return iptr;
 }
 
-static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
-{
-   hb_fsWriteLarge( fhandle, iptr, ( HB_SIZE ) sz );
-}
-
 static void SaveImageToFileObject( PHB_FILE fhandle, const void * iptr, int sz )
 {
    hb_fileWrite( fhandle, iptr, ( HB_SIZE ) sz, -1 );
+}
+
+static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
+{
+   PHB_FILE file = hb_fileFromHandle( fhandle );
+
+   SaveImageToFileObject( file, iptr, sz );
+
+   hb_fileDetach( file );
 }
 
 static void SaveImageToFile( const char * szFile, const void * iptr, int sz )
@@ -309,17 +302,21 @@ static void GDImageCreateFrom( int nType )
       /* Retrieve image size */
       sz = hb_parni( 2 );
 
-      /* retrieve image from handle */
+      /* Retrieve image */
       iptr = LoadImageFromFileObject( hb_fileParamGet( 1 ), sz );
    }
    else if( HB_ISNUM( 1 ) &&
             HB_ISNUM( 2 ) )
    {
+      PHB_FILE file = hb_fileFromHandle( hb_numToHandle( hb_parnintdef( 1, HB_STDIN_HANDLE ) ) );
+
       /* Retrieve image size */
       sz = hb_parni( 2 );
 
-      /* retrieve image from handle */
-      iptr = LoadImageFromHandle( hb_numToHandle( hb_parnintdef( 1, HB_STDIN_HANDLE ) ), sz );
+      /* Retrieve image */
+      iptr = LoadImageFromFileObject( file, sz );
+
+      hb_fileDetach( file );
    }
    else
    {

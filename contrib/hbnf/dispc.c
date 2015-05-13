@@ -520,7 +520,7 @@ HB_FUNC( _FT_DFINIT )
          dispc->winbot     = 0;                /* init window bottom pointer */
 
          /* get file size */
-         dispc->fsize = hb_fileSeek( dispc->infile, 0, FS_END ) - 1;
+         dispc->fsize = hb_fileSize( dispc->infile ) - 1;
 
          /* get the first block */
          hb_fileSeek( dispc->infile, 0, FS_SET );

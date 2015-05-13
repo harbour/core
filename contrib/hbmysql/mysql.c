@@ -594,7 +594,7 @@ static char * filetoBuff( const char * fname, unsigned long * size )
                                   FXO_SHARELOCK | FXO_NOSEEKPOS,
                                   NULL, NULL ) ) != NULL )
    {
-      *size = hb_fileSeek( handle, 0, FS_END );
+      *size = hb_fileSize( handle );
       buffer = ( char * ) hb_xgrab( *size + 1 );
       *size  = ( unsigned long ) hb_fileReadAt( handle, buffer, *size, 0 );
       buffer[ *size ] = '\0';

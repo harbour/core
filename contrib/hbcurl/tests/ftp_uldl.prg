@@ -144,7 +144,7 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
       ? curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
 
-      ? "DOWNLOAD FILE (FN):", curl_easy_perform( curl )
+      ? "DOWNLOAD FILE (FILENAME):", curl_easy_perform( curl )
 
       curl_easy_reset( curl )
 
@@ -154,13 +154,13 @@ PROCEDURE Main( cDL, cUL )
 
       ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
-      ? curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, tmp1 := hb_vfOpen( "test_dl_vf.bin", FO_CREAT + FO_TRUNC + FO_WRITE ) )
+      ? curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, tmp1 := hb_vfOpen( "test_dlh.bin", FO_CREAT + FO_TRUNC + FO_WRITE ) )
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
       ? curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
 
-      ? "DOWNLOAD FILE (VF):", curl_easy_perform( curl )
+      ? "DOWNLOAD FILE (FILE HANDLE):", curl_easy_perform( curl )
 
       curl_easy_reset( curl )
 
@@ -172,13 +172,13 @@ PROCEDURE Main( cDL, cUL )
 
       ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
-      ? curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, tmp1 := FCreate( "test_dl_fs.bin" ) )
+      ? curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, tmp1 := FCreate( "test_dlo.bin" ) )
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
       ? curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
 
-      ? "DOWNLOAD FILE (FS):", curl_easy_perform( curl )
+      ? "DOWNLOAD FILE (FS HANDLE):", curl_easy_perform( curl )
 
       curl_easy_reset( curl )
 
@@ -230,7 +230,6 @@ PROCEDURE Main( cDL, cUL )
       /* Cleanup session */
 
       curl_easy_cleanup( curl )
-
    ENDIF
 
    curl_global_cleanup()

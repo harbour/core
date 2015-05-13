@@ -348,13 +348,10 @@ HB_FUNC( WVW_OPENIMAGE )
                                       NULL, NULL );
       if( fhnd )
       {
-         SIZE_T nFileSize = ( SIZE_T ) hb_fileSeek( fhnd, 0, FS_END );
+         SIZE_T nFileSize = ( SIZE_T ) hb_fileSize( fhnd );
          hG = GlobalAlloc( GPTR, nFileSize );
          if( hG )
-         {
-            hb_fileSeek( fhnd, 0, FS_SET );
-            hb_fileRead( fhnd, hG, nFileSize, -1 );
-         }
+            hb_fileReadAt( fhnd, hG, nFileSize, 0 );
          hb_fileClose( fhnd );
       }
    }
@@ -392,18 +389,21 @@ HB_FUNC( WVW_OPENIMAGE )
 
 HB_FUNC( WVW_OPENBITMAP )
 {
-   HB_FHANDLE fhnd = hb_fsOpen( hb_parcx( 1 ), FO_READ | FO_SHARED );
+   PHB_FILE fhnd = hb_fileExtOpen( hb_parcx( 1 ), NULL,
+                                   FO_READ | FO_SHARED | FO_PRIVATE |
+                                   FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                   NULL, NULL );
 
    HBITMAP hbm = NULL;
 
-   if( fhnd != FS_ERROR )
+   if( fhnd )
    {
       BITMAPFILEHEADER bmfh;
       BITMAPINFOHEADER bmih;
       HGLOBAL          hmem1;
 
-      hb_fsReadLarge( fhnd, &bmfh, sizeof( bmfh ) );  /* Retrieve the BITMAPFILEHEADER structure. */
-      hb_fsReadLarge( fhnd, &bmih, sizeof( bmih ) );  /* Retrieve the BITMAPFILEHEADER structure. */
+      hb_fileRead( fhnd, &bmfh, sizeof( bmfh ), -1 );  /* Retrieve the BITMAPFILEHEADER structure. */
+      hb_fileRead( fhnd, &bmih, sizeof( bmih ), -1 );  /* Retrieve the BITMAPFILEHEADER structure. */
 
       /* Allocate memory for the BITMAPINFO structure. */
       hmem1 = GlobalAlloc( GHND, sizeof( BITMAPINFOHEADER ) +
@@ -435,13 +435,13 @@ HB_FUNC( WVW_OPENBITMAP )
             case 1:
             case 4:
             case 8:
-               hb_fsReadLarge( fhnd, lpbmi->bmiColors, ( ( SIZE_T ) 1 << bmih.biBitCount ) * sizeof( RGBQUAD ) );
+               hb_fileRead( fhnd, lpbmi->bmiColors, ( ( SIZE_T ) 1 << bmih.biBitCount ) * sizeof( RGBQUAD ), -1 );
                break;
 
             case 16:
             case 32:
                if( bmih.biCompression == BI_BITFIELDS )
-                  hb_fsReadLarge( fhnd, lpbmi->bmiColors, 3 * sizeof( RGBQUAD ) );
+                  hb_fileRead( fhnd, lpbmi->bmiColors, 3 * sizeof( RGBQUAD ), -1 );
                break;
 
             case 24:
@@ -457,7 +457,7 @@ HB_FUNC( WVW_OPENBITMAP )
             LPVOID lpvBits = GlobalLock( hmem2 );
 
             /* Retrieve the bitmap data. */
-            hb_fsReadLarge( fhnd, lpvBits, bmfh.bfSize - bmfh.bfOffBits );
+            hb_fileRead( fhnd, lpvBits, bmfh.bfSize - bmfh.bfOffBits, -1 );
 
             if( ! hDC )
                hDC = GetDC( 0 );
@@ -476,7 +476,7 @@ HB_FUNC( WVW_OPENBITMAP )
          GlobalFree( hmem1 );
       }
 
-      hb_fsClose( fhnd );
+      hb_fileClose( fhnd );
    }
 
    hbwapi_ret_raw_HANDLE( hbm );
