@@ -1,7 +1,7 @@
 /* This is an original work by Mike Taylor and is placed in the public domain.
 
       Rev 1.10  22 Apr 2004 15:32:00   David G. Holm <dholm@jsd-llc.com>
-   Corrected all hb_fsSeek calls to use FS_ defines instead of using
+   Corrected all hb_fsSeek() calls to use FS_ defines instead of using
    redefined SEEK_ ones that conflict with the C-level SEEK_ defines.
       Rev 1.9   ? ?
    An unknown number of changes were made between Rev 1.8 and Rev 1.10.

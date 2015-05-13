@@ -105,7 +105,7 @@ FUNCTION Sp_Add( cWord )
       // If the auxiliary dictionary does not exist,
       // we will create it for the user
 
-      IF ( nAuxHandle := hb_vfOpen( T_AUXILIARY_DICTIONARY, FO_CREAT + FO_READWRITE + FO_DENYWRITE ) ) != NIL
+      IF ( nAuxHandle := hb_vfOpen( T_AUXILIARY_DICTIONARY, FO_CREAT + FO_WRITE + FO_DENYWRITE ) ) != NIL
 
          hb_vfSeek( nAuxHandle, 0, FS_END )                      // Bottom of the file
          nWritten := hb_vfWrite( nAuxHandle, cWord + hb_eol() )  // Write word into file

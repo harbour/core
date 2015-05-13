@@ -8,6 +8,8 @@
 #define REMOTE_URL_DEL      "ftp://username:password@localhost/" + RENAME_FILE_TO
 #define REMOTE_URL_MEM      "ftp://username:password@localhost/from_mem.txt"
 
+#define _CA_FN_  "cacert.pem"
+
 PROCEDURE Main( cDL, cUL )
 
    LOCAL curl
@@ -116,6 +118,18 @@ PROCEDURE Main( cDL, cUL )
 
       WAIT
 
+      #if ! defined( __PLATFORM__UNIX )
+         IF ! hb_FileExists( _CA_FN_ )
+            ? "Downloading", _CA_FN_
+            curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
+            curl_easy_setopt( curl, HB_CURLOPT_URL, "http://curl.haxx.se/ca/cacert.pem" )
+            curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, _CA_FN_ )
+            curl_easy_perform( curl )
+            curl_easy_reset( curl )
+         ENDIF
+         curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
+      #endif
+
       hb_default( @cDL, "https://www.mozilla.org/README" )
 
       /* Now let's download to a file */
@@ -126,6 +140,7 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
+      ? curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
 
       ? "DOWNLOAD FILE:", curl_easy_perform( curl )
 
@@ -141,6 +156,7 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
+      ? curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
 
       ? "DOWNLOAD FILE TO MEM:", curl_easy_perform( curl )
 
