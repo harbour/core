@@ -415,10 +415,13 @@ static void hb_curl_slist_free( struct curl_slist ** ptr )
 
 static void hb_curl_file_ul_free( PHB_CURL hb_curl )
 {
-   if( hb_curl && hb_curl->ul_name )
+   if( hb_curl )
    {
-      hb_xfree( hb_curl->ul_name );
-      hb_curl->ul_name = NULL;
+      if( hb_curl->ul_name )
+      {
+         hb_xfree( hb_curl->ul_name );
+         hb_curl->ul_name = NULL;
+      }
 
       if( hb_curl->ul_file != NULL )
       {
@@ -433,16 +436,19 @@ static void hb_curl_file_ul_free( PHB_CURL hb_curl )
 
 static void hb_curl_fhandle_ul_free( PHB_CURL hb_curl )
 {
-   if( hb_curl && hb_curl->ul_name )
+   if( hb_curl )
       hb_curl->ul_handle = FS_ERROR;
 }
 
 static void hb_curl_file_dl_free( PHB_CURL hb_curl )
 {
-   if( hb_curl && hb_curl->dl_name )
+   if( hb_curl )
    {
-      hb_xfree( hb_curl->dl_name );
-      hb_curl->dl_name = NULL;
+      if( hb_curl->dl_name != NULL )
+      {
+         hb_xfree( hb_curl->dl_name );
+         hb_curl->dl_name = NULL;
+      }
 
       if( hb_curl->dl_file != NULL )
       {
@@ -457,7 +463,7 @@ static void hb_curl_file_dl_free( PHB_CURL hb_curl )
 
 static void hb_curl_fhandle_dl_free( PHB_CURL hb_curl )
 {
-   if( hb_curl && hb_curl->dl_name )
+   if( hb_curl )
       hb_curl->dl_handle = FS_ERROR;
 }
 
@@ -1774,6 +1780,8 @@ HB_FUNC( CURL_EASY_SETOPT )
 
             case HB_CURLOPT_UL_FILE_SETUP:
                hb_curl_file_ul_free( hb_curl );
+               hb_curl_fhandle_ul_free( hb_curl );
+               hb_curl_buff_ul_free( hb_curl );
 
                if( HB_ISCHAR( 3 ) )
                {
@@ -1784,12 +1792,16 @@ HB_FUNC( CURL_EASY_SETOPT )
                   curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_file_callback );
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, hb_curl );
                }
-               break;
+               else if( hb_fileParamGet( 3 ) )
+               {
+                  hb_curl->ul_name  = NULL;
+                  hb_curl->ul_file  = hb_fileParamGet( 3 );
+                  hb_curl->ul_close = HB_FALSE;
 
-            case HB_CURLOPT_UL_FHANDLE_SETUP:
-               hb_curl_fhandle_ul_free( hb_curl );
-
-               if( HB_ISNUM( 3 ) )
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_READFUNCTION, hb_curl_read_file_callback );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_READDATA, hb_curl );
+               }
+               else if( HB_ISNUM( 3 ) )
                {
                   hb_curl->ul_name   = NULL;
                   hb_curl->ul_handle = hb_numToHandle( hb_parnint( 3 ) );
@@ -1806,6 +1818,8 @@ HB_FUNC( CURL_EASY_SETOPT )
 
             case HB_CURLOPT_DL_FILE_SETUP:
                hb_curl_file_dl_free( hb_curl );
+               hb_curl_fhandle_dl_free( hb_curl );
+               hb_curl_buff_dl_free( hb_curl );
 
                if( HB_ISCHAR( 3 ) )
                {
@@ -1816,12 +1830,16 @@ HB_FUNC( CURL_EASY_SETOPT )
                   curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_file_callback );
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, hb_curl );
                }
-               break;
+               else if( hb_fileParamGet( 3 ) )
+               {
+                  hb_curl->dl_name  = NULL;
+                  hb_curl->dl_file  = hb_fileParamGet( 3 );
+                  hb_curl->dl_close = HB_FALSE;
 
-            case HB_CURLOPT_DL_FHANDLE_SETUP:
-               hb_curl_fhandle_dl_free( hb_curl );
-
-               if( HB_ISNUM( 3 ) )
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEFUNCTION, hb_curl_write_file_callback );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_WRITEDATA, hb_curl );
+               }
+               else if( HB_ISNUM( 3 ) )
                {
                   hb_curl->dl_name   = NULL;
                   hb_curl->dl_handle = hb_numToHandle( hb_parnint( 3 ) );
@@ -1837,6 +1855,8 @@ HB_FUNC( CURL_EASY_SETOPT )
                break;
 
             case HB_CURLOPT_UL_BUFF_SETUP:
+               hb_curl_file_ul_free( hb_curl );
+               hb_curl_fhandle_ul_free( hb_curl );
                hb_curl_buff_ul_free( hb_curl );
 
                if( HB_ISCHAR( 3 ) )
@@ -1853,6 +1873,8 @@ HB_FUNC( CURL_EASY_SETOPT )
                break;
 
             case HB_CURLOPT_DL_BUFF_SETUP:
+               hb_curl_file_dl_free( hb_curl );
+               hb_curl_fhandle_dl_free( hb_curl );
                hb_curl_buff_dl_free( hb_curl );
 
                hb_curl->dl_pos = 0;

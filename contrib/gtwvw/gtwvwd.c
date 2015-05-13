@@ -5579,13 +5579,16 @@ static BITMAPINFO * PackedDibLoad( const char * szFileName )
 {
    BITMAPINFO * pbmi = NULL;
 
-   HB_FHANDLE fhnd = hb_fsOpen( szFileName, FO_READ | FO_SHARED );
+   PHB_FILE fhnd = hb_fileExtOpen( szFileName, NULL,
+                                   FO_READ | FO_SHARED | FO_PRIVATE |
+                                   FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                   NULL, NULL );
 
-   if( fhnd != FS_ERROR )
+   if( fhnd )
    {
       BITMAPFILEHEADER bmfh;
 
-      if( ( size_t ) hb_fsReadLarge( fhnd, &bmfh, sizeof( bmfh ) ) == sizeof( bmfh ) &&
+      if( ( size_t ) hb_fileRead( fhnd, &bmfh, sizeof( bmfh ), -1 ) == sizeof( bmfh ) &&
           bmfh.bfType == 0x4d42 /* "BM" */ &&
           bmfh.bfSize > sizeof( bmfh ) &&
           bmfh.bfSize <= ( 32 * 1024 * 1024 ) /* an arbitrary size limit */ )
@@ -5594,14 +5597,14 @@ static BITMAPINFO * PackedDibLoad( const char * szFileName )
 
          pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
 
-         if( ( DWORD ) hb_fsReadLarge( fhnd, pbmi, dwPackedDibSize ) != dwPackedDibSize )
+         if( ( DWORD ) hb_fileRead( fhnd, pbmi, dwPackedDibSize, -1 ) != dwPackedDibSize )
          {
             hb_xfree( pbmi );
             pbmi = NULL;
          }
       }
 
-      hb_fsClose( fhnd );
+      hb_fileClose( fhnd );
    }
 
    return pbmi;

@@ -12,6 +12,7 @@
 // parts of this program are copyrights of their respective owners
 
 #require "gtwvw"
+#require "hbtest"
 
 #include "dbstruct.ch"
 #include "inkey.ch"
@@ -191,7 +192,7 @@ PROCEDURE Main()
    oMouse:lTight := .T.
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-   // 20070525 the real pushbutton, easier and better looking. Nothing to do with wvwmouse.prg.
+   // 2007-05-25 the real pushbutton, easier and better looking. Nothing to do with wvwmouse.prg.
    wvw_pbCreate( nCurWindow, MaxRow() - 4, 67 - 11 - 11 - 11 - 11 - 11, MaxRow() - 4, 67 + 9 - 11 - 11 - 11 - 11 - 11, "native", , {|| lboxmessage( "native pushbutton" ) } )
 
    SetColor( "N/W,N/GR*,,,N/W*" )

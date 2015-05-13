@@ -1,7 +1,7 @@
 /* This is an original work by Mike Taylor and is placed in the public domain.
 
       Rev 1.10  22 Apr 2004 15:32:00   David G. Holm <dholm@jsd-llc.com>
-   Corrected all hb_fsSeek() calls to use FS_ defines instead of using
+   Corrected all hb_fileSeek() calls to use FS_ defines instead of using
    redefined SEEK_ ones that conflict with the C-level SEEK_ defines.
       Rev 1.9   ? ?
    An unknown number of changes were made between Rev 1.8 and Rev 1.10.
@@ -66,7 +66,7 @@ typedef struct
    int        sline, eline;      /* start and end line of window */
    int        scol, ecol;        /* start and end col of window */
    int        height, width;     /* height and width of window */
-   HB_FHANDLE infile;            /* input file handle */
+   PHB_FILE   infile;            /* input file handle */
    int        maxlin;            /* line size */
    HB_ISIZ    buffsize;          /* buffer size */
    int        hlight;            /* highlight attribute */
@@ -116,25 +116,25 @@ static HB_FOFFSET getblock( PFT_DISPC dispc, HB_FOFFSET offset )
       then check to see if a positive offset was requested, if so then
       set the pointer to the offset from the end of the file, otherwise
       set it from the beginning of the file. */
-   hb_fsSeekLarge( dispc->infile, offset, FS_SET );
+   hb_fileSeek( dispc->infile, offset, FS_SET );
 
    /* read in the file and set the buffer bottom variable equal
       to the number of bytes actually read in. */
-   dispc->buffbot = hb_fsReadLarge( dispc->infile, dispc->buffer, dispc->buffsize );
+   dispc->buffbot = hb_fileRead( dispc->infile, dispc->buffer, dispc->buffsize, -1 );
 
    /* if a full buffer's worth was not read in, make it full. */
    if( dispc->buffbot != dispc->buffsize && dispc->fsize > dispc->buffsize )
    {
       if( offset > 0 )
-         hb_fsSeekLarge( dispc->infile, -dispc->buffsize, FS_END );
+         hb_fileSeek( dispc->infile, -dispc->buffsize, FS_END );
       else
-         hb_fsSeekLarge( dispc->infile, dispc->buffsize, FS_SET );
+         hb_fileSeek( dispc->infile, dispc->buffsize, FS_SET );
 
-      dispc->buffbot = hb_fsReadLarge( dispc->infile, dispc->buffer, dispc->buffsize );
+      dispc->buffbot = hb_fileRead( dispc->infile, dispc->buffer, dispc->buffsize, -1 );
    }
 
    /* return the actual file position */
-   return hb_fsSeekLarge( dispc->infile, 0, FS_RELATIVE ) - dispc->buffbot;
+   return hb_fileSeek( dispc->infile, 0, FS_RELATIVE ) - dispc->buffbot;
 }
 
 /* buff_align() makes sure the buffer top and bottom variables point
@@ -483,7 +483,7 @@ HB_FUNC( _FT_DFINIT )
       {
          HB_ISIZ i, j = hb_parni( 6 );                       /* starting line value */
 
-         dispc->infile = hb_numToHandle( hb_parnint( 1 ) );  /* file handle */
+         dispc->infile = hb_fileParam( 1 );                  /* file handle */
          dispc->norm   = hb_parni( 7 );                      /* normal color attribute */
          dispc->hlight = hb_parni( 8 );                      /* highlight color attribute */
 
@@ -520,10 +520,10 @@ HB_FUNC( _FT_DFINIT )
          dispc->winbot     = 0;                /* init window bottom pointer */
 
          /* get file size */
-         dispc->fsize = hb_fsSeek( dispc->infile, 0, FS_END ) - 1;
+         dispc->fsize = hb_fileSeek( dispc->infile, 0, FS_END ) - 1;
 
          /* get the first block */
-         hb_fsSeek( dispc->infile, 0, FS_SET );
+         hb_fileSeek( dispc->infile, 0, FS_SET );
 
          /* if block less than buffsize */
          if( dispc->fsize < dispc->buffbot )
@@ -580,7 +580,7 @@ HB_FUNC( FT_DISPFILE )
    int ch;
 
    /* make sure buffers were allocated and file was opened */
-   if( dispc->bIsAllocated && dispc->infile > 0 )
+   if( dispc->bIsAllocated && dispc->infile )
    {
       HB_BOOL bDone = HB_FALSE;
       int     i;

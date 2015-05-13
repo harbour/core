@@ -235,26 +235,29 @@ HB_FUNC( FILESCREEN )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      HB_FHANDLE hFile = hb_fsOpen( hb_parc( 1 ), FO_READ );
+      PHB_FILE hFile;
 
-      if( hFile != FS_ERROR )
+      if( ( hFile = hb_fileExtOpen( hb_parc( 1 ), NULL,
+                                    FO_READ | FO_SHARED | FO_PRIVATE |
+                                    FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                    NULL, NULL ) ) != NULL )
       {
          char * pBuffer;
          HB_SIZE nSize;
          HB_SIZE nLength;
 
          if( HB_ISNUM( 2 ) )
-            hb_fsSeekLarge( hFile, ( HB_FOFFSET ) hb_parnint( 2 ), FS_SET );
+            hb_fileSeek( hFile, ( HB_FOFFSET ) hb_parnint( 2 ), FS_SET );
 
          hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &nSize );
          pBuffer = ( char * ) hb_xgrab( nSize );
 
-         nLength = hb_fsReadLarge( hFile, pBuffer, nSize );
+         nLength = hb_fileRead( hFile, pBuffer, nSize );
          hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
          hb_xfree( pBuffer );
 
-         hb_fsClose( hFile );
+         hb_fileClose( hFile );
          hb_retns( nLength );
       }
       else

@@ -220,23 +220,36 @@ static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
    return iptr;
 }
 
+static void * LoadImageFromFileObject( PHB_FILE fhandle, int sz )
+{
+   void * iptr = hb_xgrab( sz );
+
+   hb_fileRead( fhandle, iptr, ( HB_SIZE ) sz, -1 );
+
+   return iptr;
+}
+
 static void * LoadImageFromFile( const char * szFile, int * sz )
 {
-   void *     iptr;
-   HB_FHANDLE fhandle;
+   void * iptr;
 
-   if( ( fhandle = hb_fsOpen( szFile, FO_READ ) ) != FS_ERROR )
+   PHB_FILE fhandle = hb_fileExtOpen( szFile, NULL,
+                                      FO_READ | FO_SHARED | FO_PRIVATE |
+                                      FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                      NULL, NULL );
+
+   if( fhandle )
    {
       /* get length */
-      *sz = ( int ) hb_fsSeek( fhandle, 0, FS_END );
+      *sz = ( int ) hb_fileSeek( fhandle, 0, FS_END );
       /* rewind */
-      hb_fsSeek( fhandle, 0, FS_SET );
+      hb_fileSeek( fhandle, 0, FS_SET );
 
       /* Read file */
       iptr = hb_xgrab( *sz );
-      hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) *sz );
+      hb_fileRead( fhandle, iptr, ( HB_SIZE ) *sz, -1 );
 
-      hb_fsClose( fhandle );
+      hb_fileClose( fhandle );
    }
    else
    {
@@ -253,16 +266,22 @@ static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
    hb_fsWriteLarge( fhandle, iptr, ( HB_SIZE ) sz );
 }
 
+static void SaveImageToFileObject( PHB_FILE fhandle, const void * iptr, int sz )
+{
+   hb_fileWrite( fhandle, iptr, ( HB_SIZE ) sz, -1 );
+}
+
 static void SaveImageToFile( const char * szFile, const void * iptr, int sz )
 {
-   HB_FHANDLE fhandle;
+   PHB_FILE fhandle = hb_fileExtOpen( szFile, NULL,
+                                      FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                      FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                      NULL, NULL );
 
-   if( ( fhandle = hb_fsCreate( szFile, FC_NORMAL ) ) != FS_ERROR )
+   if( fhandle )
    {
-      /* Write Image */
-      SaveImageToHandle( fhandle, iptr, sz );
-
-      hb_fsClose( fhandle );
+      hb_fileWrite( fhandle, iptr, ( HB_SIZE ) sz, -1 );
+      hb_fileClose( fhandle );
    }
 }
 
@@ -283,6 +302,15 @@ static void GDImageCreateFrom( int nType )
 
       /* Retrieve image pointer + size */
       iptr = hb_parGdImage( 1 );
+   }
+   else if( hb_fileParamGet( 1 ) &&
+            HB_ISNUM( 2 ) )
+   {
+      /* Retrieve image size */
+      sz = hb_parni( 2 );
+
+      /* retrieve image from handle */
+      iptr = LoadImageFromFileObject( hb_fileParamGet( 1 ), sz );
    }
    else if( HB_ISNUM( 1 ) &&
             HB_ISNUM( 2 ) )
@@ -426,6 +454,8 @@ static void GDImageSaveTo( int nType )
          SaveImageToFile( hb_parc( 2 ), iptr, sz );
 
       /* Write to file handle */
+      else if( hb_fileParamGet( 2 ) )
+         SaveImageToFileObject( hb_fileParamGet( 2 ), iptr, sz );
       else if( HB_ISNUM( 2 ) )
       {
          /* Write to std output or to a passed file */
@@ -2092,17 +2122,16 @@ HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlac
 
 static void AddImageToFile( const char * szFile, const void * iptr, int sz )
 {
-   HB_FHANDLE fhandle;
+   PHB_FILE fhandle = hb_fileExtOpen( szFile, NULL,
+                                      FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                      FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                      NULL, NULL );
 
-   if( ( fhandle = hb_fsOpen( szFile, FO_READWRITE ) ) != FS_ERROR )
+   if( fhandle )
    {
-      /* move to end of file */
-      hb_fsSeek( fhandle, 0, FS_END );
-
-      /* Write Image */
-      SaveImageToHandle( fhandle, iptr, sz );
-
-      hb_fsClose( fhandle );
+      hb_fileSeek( fhandle, 0, FS_END );
+      hb_fileWrite( fhandle, iptr, ( HB_SIZE ) sz, -1 );
+      hb_fileClose( fhandle );
    }
 }
 
@@ -2129,6 +2158,8 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
       /* Check if parameter is a file name or a handle */
       if( HB_ISCHAR( 2 ) )
          SaveImageToFile( hb_parc( 2 ), iptr, size );
+      else if( hb_fileParamGet( 2 ) )
+         SaveImageToFileObject( hb_fileParamGet( 2 ), iptr, size );
       else
          SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, HB_STDOUT_HANDLE ) ), iptr, size );
    }
@@ -2166,6 +2197,8 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       /* Check if parameter is a file name or a handle */
       if( HB_ISCHAR( 2 ) )
          AddImageToFile( hb_parc( 2 ), iptr, size );
+      else if( hb_fileParamGet( 2 ) )
+         SaveImageToFileObject( hb_fileParamGet( 2 ), iptr, size );
       else
          SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, HB_STDOUT_HANDLE ) ), iptr, size );
    }
@@ -2187,6 +2220,8 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       /* Check if 1st parameter is a file name or a handle */
       if( HB_ISCHAR( 1 ) )
          AddImageToFile( hb_parc( 1 ), iptr, size );
+      else if( hb_fileParamGet( 2 ) )
+         SaveImageToFileObject( hb_fileParamGet( 2 ), iptr, size );
       else
          SaveImageToHandle( hb_numToHandle( hb_parnintdef( 1, HB_STDOUT_HANDLE ) ), iptr, size );
    }

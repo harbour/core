@@ -801,32 +801,49 @@ HB_FUNC( ED_READTEXT )
    if( pEd )
    {
       HB_BOOL    lSuccess = HB_FALSE;
-      HB_FHANDLE nFile;
-      HB_ISIZ    nSize;
-      HB_FOFFSET nRead;
-      HB_FOFFSET nSeek;
+      HB_FOFFSET nSeek = hb_parnint( 3 );
+      HB_ISIZ    nSize = hb_parns( 4 );
 
       KillText( pEd );
       New( pEd, pEd->tab_size, pEd->line_length, pEd->buffer_size );
 
-      nFile = hb_numToHandle( hb_parnint( 2 ) );
-      nSeek = hb_parnint( 3 );
-      nSize = hb_parns( 4 );
+      if( nSize < 0 )
+         nSize = 0;
+      else if( nSize > ( pEd->buffer_size - 10 ) )
+         nSize = pEd->buffer_size - 10;
 
-      nRead = hb_fsSeekLarge( nFile, nSeek, FS_SET );
-      if( nRead == nSeek )
+      if( HB_ISNUM( 2 ) )
       {
-         if( nSize > ( pEd->buffer_size - 10 ) )
-            nSize = pEd->buffer_size - 10;
+         HB_FHANDLE nFile = hb_numToHandle( hb_parnint( 2 ) );
+         HB_FOFFSET nRead = hb_fsSeekLarge( nFile, nSeek, FS_SET );
 
-         nSize = hb_fsReadLarge( nFile, pEd->begin, nSize );
+         if( nRead == nSeek )
+         {
+            nSize = hb_fsReadLarge( nFile, pEd->begin, nSize );
+            lSuccess = HB_TRUE;
+
+            pEd->begin[ nSize ] = '\0';
+
+            pEd->text_length = nSize;
+
+            NewText( pEd );
+
+            pEd->fStable = HB_FALSE;
+         }
+      }
+      else if( hb_fileParamGet( 2 ) )
+      {
+         nSize = hb_fileReadAt( hb_fileParamGet( 2 ), pEd->begin, nSize, nSeek );
+         lSuccess  = HB_TRUE;
+      }
+
+      if( lSuccess )
+      {
          pEd->begin[ nSize ] = '\0';
-
          pEd->text_length = nSize;
 
          NewText( pEd );
 
-         lSuccess     = HB_TRUE;
          pEd->fStable = HB_FALSE;
       }
 

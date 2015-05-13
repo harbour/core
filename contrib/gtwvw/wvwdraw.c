@@ -545,11 +545,14 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
 {
    IPicture * pPicture = NULL;
 
-   HB_FHANDLE fhnd = hb_fsOpen( filename, FO_READ | FO_SHARED );
+   PHB_FILE fhnd = hb_fileExtOpen( filename, NULL,
+                                   FO_READ | FO_SHARED | FO_PRIVATE |
+                                   FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                   NULL, NULL );
 
-   if( fhnd != FS_ERROR )
+   if( fhnd )
    {
-      DWORD   nFileSize = ( DWORD ) hb_fsSeek( fhnd, 0, FS_END );
+      DWORD   nFileSize = ( DWORD ) hb_fileSeek( fhnd, 0, FS_END );
       HGLOBAL hGlobal   = GlobalAlloc( GMEM_MOVEABLE, nFileSize + 4096 );
 
       if( hGlobal )
@@ -562,8 +565,8 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
 
             memset( pGlobal, 0, nFileSize );
 
-            hb_fsSeek( fhnd, 0, FS_SET );
-            hb_fsReadLarge( fhnd, pGlobal, nFileSize );
+            hb_fileSeek( fhnd, 0, FS_SET );
+            hb_fileRead( fhnd, pGlobal, nFileSize, -1 );
 
             if( CreateStreamOnHGlobal( hGlobal, FALSE, &pStream ) == S_OK && pStream )
                OleLoadPicture( pStream, nFileSize, TRUE, HB_ID_REF( IID_IPicture ), ( LPVOID * ) &pPicture );
@@ -590,7 +593,7 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
                HB_VTBL( pStream )->Release( HB_THIS( pStream ) );
          }
 
-         hb_fsClose( fhnd );
+         hb_fileClose( fhnd );
 
          GlobalFree( hGlobal );
       }

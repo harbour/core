@@ -183,7 +183,7 @@ HB_FUNC( SETFATTR )
 {
    int iResult;
 
-   if( hb_fsSetAttr( hb_parcx( 1 ), hb_parnldef( 2, HB_FA_ARCHIVE ) ) )
+   if( hb_fileAttrSet( hb_parcx( 1 ), hb_parnldef( 2, HB_FA_ARCHIVE ) ) )
       iResult = 0;
    else
       iResult = -1;
@@ -227,7 +227,7 @@ HB_FUNC( SETFDATI )
          else
             lMillisec = -1;
       }
-      fResult = hb_fsSetFileTime( szFile, lJulian, lMillisec );
+      fResult = hb_fileTimeSet( szFile, lJulian, lMillisec );
    }
 
    hb_retl( fResult );
@@ -272,15 +272,15 @@ HB_FUNC( FILEDELETE )
 
 HB_FUNC( FILEMOVE )
 {
-   hb_retnint( hb_fsRename( hb_parcx( 1 ),
-                            hb_parcx( 2 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
+   hb_retnint( hb_fileRename( hb_parcx( 1 ),
+                              hb_parcx( 2 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
 }
 
 HB_FUNC_TRANSLATE( RENAMEFILE, FILEMOVE )
 
 HB_FUNC( DELETEFILE )
 {
-   hb_retnint( hb_fsDelete( hb_parcx( 1 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
+   hb_retnint( hb_fileDelete( hb_parcx( 1 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
 }
 
 HB_FUNC( FILESMAX )

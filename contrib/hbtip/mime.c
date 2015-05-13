@@ -675,7 +675,7 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
    return NULL;
 }
 
-static const char * s_findFileMimeType( HB_FHANDLE fileIn )
+static const char * s_findFileMimeTypeFS( HB_FHANDLE fileIn )
 {
    char       buf[ 512 ];
    int        iLen;
@@ -688,6 +688,22 @@ static const char * s_findFileMimeType( HB_FHANDLE fileIn )
    if( iLen > 0 )
    {
       hb_fsSeekLarge( fileIn, nPos, FS_SET );
+      return s_findStringMimeType( buf, iLen );
+   }
+
+   return NULL;
+}
+
+static const char * s_findFileMimeTypeFile( PHB_FILE fileIn )
+{
+   char buf[ 512 ];
+
+   HB_FOFFSET nPos = hb_fileSeek( fileIn, 0, FS_RELATIVE );
+   int        iLen = hb_fileReadAt( fileIn, buf, sizeof( buf ), 0 );
+
+   if( iLen > 0 )
+   {
+      hb_fileSeek( fileIn, nPos, FS_SET );
       return s_findStringMimeType( buf, iLen );
    }
 
@@ -736,11 +752,10 @@ HB_FUNC( TIP_FILENAMEMIMETYPE )
 
 HB_FUNC( TIP_FILEMIMETYPE )
 {
-   PHB_ITEM pFile = hb_param( 1, HB_IT_STRING | HB_IT_NUMERIC );
+   PHB_ITEM pFile = hb_param( 1, HB_IT_STRING | HB_IT_POINTER | HB_IT_NUMERIC );
 
    if( pFile )
    {
-      HB_FHANDLE   fileIn;
       const char * ext_type   = NULL;
       const char * magic_type = NULL;
 
@@ -749,21 +764,24 @@ HB_FUNC( TIP_FILEMIMETYPE )
          const char * fname = hb_itemGetCPtr( pFile );
 
          PHB_FNAME pFileName = hb_fsFNameSplit( fname );
+         PHB_FILE fileIn;
 
          ext_type = pFileName->szExtension ? s_findExtMimeType( pFileName->szExtension ) : NULL;
          hb_xfree( pFileName );
 
-         if( ( fileIn = hb_fsOpen( fname, FO_READ ) ) != FS_ERROR )
+         if( ( fileIn = hb_fileExtOpen( fname, NULL,
+                                        FO_READ | FO_SHARED | FO_PRIVATE |
+                                        FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                        NULL, NULL ) ) != NULL )
          {
-            magic_type = s_findFileMimeType( fileIn );
-            hb_fsClose( fileIn );
+            magic_type = s_findFileMimeTypeFile( fileIn );
+            hb_fileClose( fileIn );
          }
       }
+      else if( hb_fileItemGet( pFile ) )
+         magic_type = s_findFileMimeTypeFile( hb_fileItemGet( pFile ) );
       else
-      {
-         fileIn     = hb_numToHandle( hb_itemGetNInt( pFile ) );
-         magic_type = s_findFileMimeType( fileIn );
-      }
+         magic_type = s_findFileMimeTypeFS( hb_numToHandle( hb_itemGetNInt( pFile ) ) );
 
       if( magic_type )
          hb_retc_const( magic_type );

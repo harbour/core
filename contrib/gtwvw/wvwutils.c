@@ -342,17 +342,20 @@ HB_FUNC( WVW_OPENIMAGE )
    }
    else
    {
-      HB_FHANDLE fhnd = hb_fsOpen( hb_parcx( 1 ), FO_READ | FO_SHARED );
-      if( fhnd != FS_ERROR )
+      PHB_FILE fhnd = hb_fileExtOpen( hb_parcx( 1 ), NULL,
+                                      FO_READ | FO_SHARED | FO_PRIVATE |
+                                      FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                      NULL, NULL );
+      if( fhnd )
       {
-         SIZE_T nFileSize = ( SIZE_T ) hb_fsSeek( fhnd, 0, FS_END );
+         SIZE_T nFileSize = ( SIZE_T ) hb_fileSeek( fhnd, 0, FS_END );
          hG = GlobalAlloc( GPTR, nFileSize );
          if( hG )
          {
-            hb_fsSeek( fhnd, 0, FS_SET );
-            hb_fsReadLarge( fhnd, hG, nFileSize );
+            hb_fileSeek( fhnd, 0, FS_SET );
+            hb_fileRead( fhnd, hG, nFileSize, -1 );
          }
-         hb_fsClose( fhnd );
+         hb_fileClose( fhnd );
       }
    }
 

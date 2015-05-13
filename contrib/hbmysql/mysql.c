@@ -586,17 +586,19 @@ HB_FUNC( MYSQL_ESCAPE_STRING )
 
 static char * filetoBuff( const char * fname, unsigned long * size )
 {
-   char *     buffer = NULL;
-   HB_FHANDLE handle = hb_fsOpen( fname, FO_READWRITE );
+   char *   buffer = NULL;
+   PHB_FILE handle;
 
-   if( handle != FS_ERROR )
+   if( ( handle = hb_fileExtOpen( fname, NULL,
+                                  FO_READ | FO_SHARED | FO_PRIVATE |
+                                  FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                  NULL, NULL ) ) != NULL )
    {
-      *size = hb_fsSeek( handle, 0, FS_END );
-      hb_fsSeek( handle, 0, FS_SET );
+      *size = hb_fileSeek( handle, 0, FS_END );
       buffer = ( char * ) hb_xgrab( *size + 1 );
-      *size  = ( unsigned long ) hb_fsReadLarge( handle, buffer, *size );
+      *size  = ( unsigned long ) hb_fileReadAt( handle, buffer, *size, 0 );
       buffer[ *size ] = '\0';
-      hb_fsClose( handle );
+      hb_fileClose( handle );
    }
    else
       *size = 0;

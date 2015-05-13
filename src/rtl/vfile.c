@@ -80,6 +80,13 @@ PHB_FILE hb_fileParam( int iParam )
    return NULL;
 }
 
+PHB_FILE hb_fileParamGet( int iParam )
+{
+   PHB_FILE * fileHolder = ( PHB_FILE * ) hb_parptrGC( &s_gcFileFuncs, iParam );
+
+   return fileHolder ? *fileHolder : NULL;
+}
+
 PHB_FILE hb_fileItemGet( PHB_ITEM pItem )
 {
    PHB_FILE * fileHolder = ( PHB_FILE * ) hb_itemGetPtrGC( pItem, &s_gcFileFuncs );

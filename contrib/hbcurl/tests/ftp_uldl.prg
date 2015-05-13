@@ -10,6 +10,8 @@
 
 #define _CA_FN_  "cacert.pem"
 
+#include "fileio.ch"
+
 PROCEDURE Main( cDL, cUL )
 
    LOCAL curl
@@ -142,9 +144,45 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
       ? curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
 
-      ? "DOWNLOAD FILE:", curl_easy_perform( curl )
+      ? "DOWNLOAD FILE (FN):", curl_easy_perform( curl )
 
       curl_easy_reset( curl )
+
+      WAIT
+
+      /* Now let's download to a file handle */
+
+      ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
+      ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
+      ? curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, tmp1 := hb_vfOpen( "test_dl_vf.bin", FO_CREAT + FO_TRUNC + FO_WRITE ) )
+      ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
+      ? curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
+
+      ? "DOWNLOAD FILE (VF):", curl_easy_perform( curl )
+
+      curl_easy_reset( curl )
+
+      ? hb_vfClose( tmp1 )
+
+      WAIT
+
+      /* Now let's download to a file OS handle */
+
+      ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
+      ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
+      ? curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, tmp1 := FCreate( "test_dl_fs.bin" ) )
+      ? curl_easy_setopt( curl, HB_CURLOPT_XFERINFOBLOCK, {| nPos, nLen | hb_DispOutAt( 11, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ) } )
+      ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, 0 )
+      ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
+      ? curl_easy_setopt( curl, HB_CURLOPT_CAINFO, _CA_FN_ )
+
+      ? "DOWNLOAD FILE (FS):", curl_easy_perform( curl )
+
+      curl_easy_reset( curl )
+
+      ? FClose( tmp1 )
 
       WAIT
 
@@ -181,9 +219,13 @@ PROCEDURE Main( cDL, cUL )
 
       ? "DOWNLOAD DIRLIST TO STRING:", curl_easy_perform( curl )
 
-      ? "RESULT 1:", curl_easy_dl_buff_get( curl )
+      ? "RESULT 1:"
+      ? curl_easy_dl_buff_get( curl )
+
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_GET, @tmp )
-      ? "RESULT 2:", tmp
+
+      ? "RESULT 2:"
+      ? tmp
 
       /* Cleanup session */
 

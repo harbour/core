@@ -191,30 +191,33 @@ FUNCTION EditorNextLine( oEdit )
 //
 FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
 
-   LOCAL nHandle, nLen, oEdit, lSaved, lClose := .F.
-   LOCAL nSize
+   LOCAL xHandle, oEdit, lSaved, lClose := .F.
+   LOCAL nLen := t_nESize
+   LOCAL lHandleOk := .F.
 
    IF HB_ISSTRING( xInput )
-      nHandle := FOpen( xInput )
+      xHandle := hb_vfOpen( xInput )
       lClose := .T.
    ELSE
-      nHandle := xInput
+      xHandle := xInput
    ENDIF
 
-   IF nHandle != F_ERROR
-      nLen := Max( FileLength( nHandle ), t_nESize )
-   ELSE
-      nLen := t_nESize
-   ENDIF
+   DO CASE
+   CASE HB_ISNUMERIC( xHandle ) .AND. xHandle != F_ERROR
+      nLen := Max( FileLength( xHandle ), nLen )
+      lHandleOk := .T.
+   CASE HB_ISPOINTER( xHandle ) .AND. xHandle != NIL
+      nLen := Max( hb_vfSize( xHandle ), nLen )
+      lHandleOk := .T.
+   ENDCASE
 
-   nSize := iif( nLen < 8192, nLen * 2, Int( nLen * 1.5 ) )
    oEdit := EditorNew( 1, 0, 23, 79, nLineLen, "---      ", cOutput, , ;
-      nSize, nEscape )
+      iif( nLen < 8192, nLen * 2, Int( nLen * 1.5 ) ), nEscape )
 
-   IF nHandle != F_ERROR
-      ed_ReadText( oEdit[ E_EDIT ], nHandle, 0, nLen, hb_defaultValue( lConv, .F. ) )
+   IF lHandleOk
+      ed_ReadText( oEdit[ E_EDIT ], xHandle, 0, nLen, hb_defaultValue( lConv, .F. ) )
       IF lClose
-         FClose( nHandle )
+         hb_vfClose( xHandle )
       ENDIF
    ELSE
       EditorSetText( oEdit, " " )
@@ -227,17 +230,26 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
 
    RETURN lSaved
 
+STATIC FUNCTION FileLength( nH )
+
+   LOCAL nPos := FSeek( nH, 0, FS_RELATIVE )
+   LOCAL nLen := FSeek( nH, 0, FS_END )
+
+   FSeek( nH, nPos, FS_SET )
+
+   RETURN nLen
+
 // Reads a text from a file into the editor
 //
 // oEditor  - existing editor
-// nHandle -  handle to an open file to read from
+// xHandle -  handle to an open file to read from
 // nOffset - the starting offset
 // nLen - the number of characters to read
 // lConv - specifies if some unprintable characters should be converted
 //    (NOTE: it was used to allow display charcters with ASCII code 27 and 26)
 //
-FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
-   RETURN ed_ReadText( oEditor[ E_EDIT ], nHandle, nOffset, nLen, ;
+FUNCTION EditorRead( oEditor, xHandle, nOffset, nLen, lConv )
+   RETURN ed_ReadText( oEditor[ E_EDIT ], xHandle, nOffset, nLen, ;
       hb_defaultValue( lConv, .T. ) )
 
 // Start the editor
@@ -428,12 +440,12 @@ STATIC FUNCTION EditorSave( oEdit )
       RETURN .F.
    ENDIF
 
-   IF ( nHandle := FCreate( cFile ) ) != F_ERROR
-      FWrite( nHandle, EditorGetText( oEdit ) )
-      FClose( nHandle )
+   IF ( nHandle := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+      hb_vfWrite( nHandle, EditorGetText( oEdit ) )
+      hb_vfClose( nHandle )
    ENDIF
 
-   RETURN nHandle != F_ERROR
+   RETURN nHandle != NIL
 
 FUNCTION SaveBox( top, left, bott, right, color, patt )
 
@@ -455,12 +467,3 @@ PROCEDURE RestBox( oBox )
    SetColor( oBox[ 6 ] )
 
    RETURN
-
-STATIC FUNCTION FileLength( nH )
-
-   LOCAL nPos := FSeek( nH, 0, FS_RELATIVE )
-   LOCAL nLen := FSeek( nH, 0, FS_END )
-
-   FSeek( nH, nPos, FS_SET )
-
-   RETURN nLen

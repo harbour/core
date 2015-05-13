@@ -13,9 +13,7 @@
    Nanforum Toolkit
  */
 
-#include "fileio.ch"
-
-THREAD STATIC t_nHandle := F_ERROR
+THREAD STATIC t_nHandle
 
 FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
       nStart, nCNormal, nCHighlight, cExitKeys, ;
@@ -23,7 +21,7 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
 
    LOCAL rval
 
-   IF hb_FileExists( cInFile )
+   IF hb_vfExists( cInFile )
 
       DO CASE
       CASE HB_ISARRAY( cExitKeys )  // HB_EXTENSION - Harbour extension
@@ -36,7 +34,7 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
          cExitKeys := {}
       ENDCASE
 
-      t_nHandle := FOpen( cInFile )
+      t_nHandle := hb_vfOpen( cInFile )
 
       IF ( rval := FError() ) == 0
          rval := _ft_DFInit( t_nHandle, ;
@@ -61,12 +59,12 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
 
 PROCEDURE ft_DFClose()
 
-   IF t_nHandle != F_ERROR
+   IF t_nHandle != NIL
       _ft_DFClos()
 
-      FClose( t_nHandle )
+      hb_vfClose( t_nHandle )
 
-      t_nHandle := F_ERROR
+      t_nHandle := NIL
    ENDIF
 
    RETURN
