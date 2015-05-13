@@ -191,8 +191,7 @@ FUNCTION EditorNextLine( oEdit )
 //
 FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
 
-   LOCAL xHandle, oEdit, lSaved, lClose := .F.
-   LOCAL nLen := t_nESize
+   LOCAL xHandle, nLen, oEdit, lSaved, lClose := .F.
    LOCAL lHandleOk := .F.
 
    IF HB_ISSTRING( xInput )
@@ -204,12 +203,14 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
 
    DO CASE
    CASE HB_ISNUMERIC( xHandle ) .AND. xHandle != F_ERROR
-      nLen := Max( FileLength( xHandle ), nLen )
+      nLen := FileLength( xHandle )
       lHandleOk := .T.
    CASE HB_ISPOINTER( xHandle ) .AND. xHandle != NIL
-      nLen := Max( hb_vfSize( xHandle ), nLen )
+      nLen := hb_vfSize( xHandle )
       lHandleOk := .T.
    ENDCASE
+
+   nLen := Max( nLen, t_nESize )
 
    oEdit := EditorNew( 1, 0, 23, 79, nLineLen, "---      ", cOutput, , ;
       iif( nLen < 8192, nLen * 2, Int( nLen * 1.5 ) ), nEscape )

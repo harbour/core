@@ -834,7 +834,7 @@ HB_FUNC( ED_READTEXT )
       else if( hb_fileParamGet( 2 ) )
       {
          nSize = hb_fileReadAt( hb_fileParamGet( 2 ), pEd->begin, nSize, nSeek );
-         lSuccess  = HB_TRUE;
+         lSuccess = HB_TRUE;
       }
 
       if( lSuccess )
