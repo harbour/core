@@ -144,11 +144,14 @@ HB_FUNC( PRINTSEND )
 
    if( nLen )
    {
-      HB_FHANDLE hFile = hb_fsOpen( szPort, FO_WRITE );
-      if( hFile != FS_ERROR )
+      PHB_FILE hFile = hb_fileExtOpen( szPort, NULL,
+                                       FO_WRITE | FO_SHARED | FO_PRIVATE |
+                                       FXO_APPEND | FXO_NOSEEKPOS,
+                                       NULL, NULL );
+      if( hFile )
       {
-         nRet = hb_fsWriteLarge( hFile, szStr, nLen );
-         hb_fsClose( hFile );
+         nRet = hb_fileWrite( hFile, szStr, nLen, -1 );
+         hb_fileClose( hFile );
       }
    }
    hb_retns( nRet );
