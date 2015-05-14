@@ -214,7 +214,7 @@ HB_FUNC( HB_FREADLINE )
       {
          Term             = ( const char ** ) hb_xgrab( sizeof( char * ) );
          pnTermSizes      = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) );
-         Term[ 0 ]        = "\r\n";    /* Should be preplaced with the default EOL sequence */
+         Term[ 0 ]        = "\r\n";    /* Should be replaced with the default EOL sequence */
          nTerms           = 1;
          pnTermSizes[ 0 ] = 2;
       }

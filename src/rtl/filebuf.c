@@ -1343,8 +1343,10 @@ HB_FHANDLE hb_fileHandle( PHB_FILE pFile )
 
 /* internal FILE structures only */
 
-PHB_FILE hb_fileCreateTemp( const char * pszDir, const char * pszPrefix,
-                            HB_FATTR ulAttr, char * pszName )
+PHB_FILE hb_fileCreateTemp( const char * pszDir,
+                            const char * pszPrefix,
+                            HB_FATTR ulAttr,
+                            char * pszName )
 {
    PHB_FILE pFile = NULL;
    HB_FHANDLE hFile;

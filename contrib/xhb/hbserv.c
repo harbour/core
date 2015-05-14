@@ -76,13 +76,6 @@
 #include <signal.h>
 #endif
 
-/* TODO:
-   we'll use hb_fsPopen for popening once we put it multiplatform. For now: */
-#ifdef HB_OS_WIN
-   #define popen                       _popen
-   #define pclose                      _pclose
-#endif
-
 #ifdef __LCC__
 #define EXCEPTION_ILLEGAL_INSTRUCTION  STATUS_ILLEGAL_INSTRUCTION
 #endif
