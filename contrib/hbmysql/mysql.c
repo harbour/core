@@ -591,7 +591,7 @@ static char * filetoBuff( const char * fname, unsigned long * size )
 
    if( ( handle = hb_fileExtOpen( fname, NULL,
                                   FO_READ | FO_SHARED | FO_PRIVATE |
-                                  FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                  FXO_SHARELOCK,
                                   NULL, NULL ) ) != NULL )
    {
       *size = hb_fileSize( handle );

@@ -226,7 +226,7 @@ static void * LoadImageFromFile( const char * szFile, int * sz )
 
    PHB_FILE fhandle = hb_fileExtOpen( szFile, NULL,
                                       FO_READ | FO_SHARED | FO_PRIVATE |
-                                      FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                      FXO_SHARELOCK,
                                       NULL, NULL );
 
    if( fhandle )
@@ -2121,7 +2121,7 @@ static void AddImageToFile( const char * szFile, const void * iptr, int sz )
 {
    PHB_FILE fhandle = hb_fileExtOpen( szFile, NULL,
                                       FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
-                                      FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                      FXO_APPEND | FXO_SHARELOCK,
                                       NULL, NULL );
 
    if( fhandle )

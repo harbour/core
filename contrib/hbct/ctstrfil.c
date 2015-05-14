@@ -132,7 +132,7 @@ static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE n
    {
       hFile = hb_fileExtOpen( pFileName, NULL,
                               FO_WRITE | FO_PRIVATE |
-                              FXO_SHARELOCK | FXO_NOSEEKPOS,
+                              FXO_SHARELOCK,
                               NULL, NULL );
       bOpen = HB_TRUE;
    }
@@ -140,7 +140,7 @@ static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE n
    {
       hFile = hb_fileExtOpen( pFileName, NULL,
                               FO_WRITE | FO_PRIVATE |
-                              FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS,
+                              FXO_TRUNCATE | FXO_SHARELOCK,
                               NULL, NULL );
       if( ! bFile )
          hb_fileAttrSet( pFileName, HB_FA_NORMAL );

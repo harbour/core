@@ -7,7 +7,7 @@
 
 hbct.hbc
 
--depurlbase=gd:http://libgd.org/
+-depurlbase=gd:https://libgd.github.io
 -deppkgname=gd:gd-devel{rpm}
 -deppkgname=gd:libgd2-xpm-dev{deb}
 -deppkgname=gd:libgd-xpm-dev{deb}

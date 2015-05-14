@@ -547,7 +547,7 @@ static IPicture * hb_gt_wvw_rr_LoadPicture( const char * filename, int * piWidth
 
    PHB_FILE fhnd = hb_fileExtOpen( filename, NULL,
                                    FO_READ | FO_SHARED | FO_PRIVATE |
-                                   FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                   FXO_SHARELOCK,
                                    NULL, NULL );
 
    if( fhnd )

@@ -91,7 +91,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
    char * pBuffer = NULL;
    PHB_FILE pFile = hb_fileExtOpen( hb_parcx( 1 ), NULL,
                                     FO_READ | FO_SHARED | FO_PRIVATE |
-                                    FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                    FXO_SHARELOCK,
                                     NULL, NULL );
    if( pFile != NULL )
    {
