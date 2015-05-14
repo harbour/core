@@ -143,7 +143,7 @@ static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE n
                               FXO_TRUNCATE | FXO_SHARELOCK,
                               NULL, NULL );
       if( ! bFile )
-         hb_fileAttrSet( pFileName, HB_FA_NORMAL );
+         hb_fileAttrSet( pFileName, ct_getfcreate() );
       bOpen = HB_FALSE;
    }
    else
