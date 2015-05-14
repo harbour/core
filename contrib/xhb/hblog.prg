@@ -462,10 +462,11 @@ METHOD close( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "end --", hb_eol() ) )
-
-   hb_vfClose( ::nFileHandle )
-   ::nFileHandle := NIL
+   IF ::nFileHandle != NIL
+      hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "end --", hb_eol() ) )
+      hb_vfClose( ::nFileHandle )
+      ::nFileHandle := NIL
+   ENDIF
 
    ::lOpened := .F.
 
@@ -475,33 +476,37 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 
    LOCAL nCount
 
-   hb_vfWrite( ::nFileHandle, ::Format( nStyle, cMessage, cProgName, nPriority ) + hb_eol() )
-   hb_vfCommit( ::nFileHandle )
+   IF ::nFileHandle != NIL
+      hb_vfWrite( ::nFileHandle, ::Format( nStyle, cMessage, cProgName, nPriority ) + hb_eol() )
+      hb_vfCommit( ::nFileHandle )
 
-   // see file limit and eventually swap file.
-   IF ::nFileLimit > 0
-      IF hb_vfSeek( ::nFileHandle, 0, FS_RELATIVE ) > ::nFileLimit * 1024
-         hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", hb_eol() ) )
-         hb_vfClose( ::nFileHandle )
+      // see file limit and eventually swap file.
+      IF ::nFileLimit > 0
+         IF hb_vfSeek( ::nFileHandle, 0, FS_RELATIVE ) > ::nFileLimit * 1024
+            hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", hb_eol() ) )
+            hb_vfClose( ::nFileHandle )
 
-         IF ::nBackup > 1
-            IF hb_vfExists( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
-               hb_vfErase( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
+            IF ::nBackup > 1
+               IF hb_vfExists( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
+                  hb_vfErase( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
+               ENDIF
+               FOR nCount := ::nBackup - 1 TO 1 STEP -1
+                  hb_vfRename( ::cFileName + "." + StrZero( nCount - 1, 3 ), ::cFileName + "." + StrZero( nCount, 3 ) )
+               NEXT
             ENDIF
-            FOR nCount := ::nBackup - 1 TO 1 STEP -1
-               hb_vfRename( ::cFileName + "." + StrZero( nCount - 1, 3 ), ::cFileName + "." + StrZero( nCount, 3 ) )
-            NEXT
-         ENDIF
 
-         IF hb_vfRename( ::cFileName, ::cFileName + ".000" ) != F_ERROR
-            ::nFileHandle := hb_vfOpen( ::cFileName, FO_CREAT + FO_TRUNC + FO_WRITE )
-            hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
+            IF hb_vfRename( ::cFileName, ::cFileName + ".000" ) != F_ERROR
+               IF ( ::nFileHandle := hb_vfOpen( ::cFileName, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+                  hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
+               ENDIF
+            ENDIF
          ENDIF
       ENDIF
+
+      RETURN FError() == 0
    ENDIF
 
-   RETURN FError() == 0
-
+   RETURN .F.
 
 /* Console channel - to dbf */
 

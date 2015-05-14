@@ -28,8 +28,7 @@ FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode, lDropCompatibility /
 
    LOCAL nHandle, lRet
 
-   nHandle := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE )
-   IF ( nErrorCode := FError() ) == 0
+   IF ( nHandle := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
       lRet := _ftsavesub( aArray, nHandle, @nErrorCode, hb_defaultValue( lDropCompatibility, .F. ) )
       hb_vfClose( nHandle )
       IF lRet .AND. FError() != 0
@@ -37,6 +36,7 @@ FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode, lDropCompatibility /
          lRet := .F.
       ENDIF
    ELSE
+      nErrorCode := FError()
       lRet := .F.
    ENDIF
 
@@ -75,12 +75,13 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
 FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
 
    LOCAL aArray
-   LOCAL nHandle := hb_vfOpen( cFileName )
+   LOCAL nHandle
 
-   IF ( nErrorCode := FError() ) == 0
+   IF ( nHandle := hb_vfOpen( cFileName ) ) != NIL
       aArray := _ftrestsub( nHandle, @nErrorCode )
       hb_vfClose( nHandle )
    ELSE
+      nErrorCode := FError()
       aArray := {}
    ENDIF
 

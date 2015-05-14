@@ -6,7 +6,7 @@
       Rev 1.6   03 Oct 1991 18:36:28   GLENN
    Tim Wong from Nantucket pointed out that this DOS function actually
    leaves a file handle in AX.  In order to preserve the functionality,
-   I now FClose() that handle if the call is succsessful.
+   I now close that handle if the call is succsessful.
 
       Rev 1.5   15 Aug 1991 23:05:04   GLENN
    Forest Belt proofread/edited/cleaned up doc

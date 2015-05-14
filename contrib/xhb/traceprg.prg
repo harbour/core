@@ -76,11 +76,13 @@ FUNCTION xhb_SetTrace( xTrace )
 FUNCTION xhb_SetTraceFile( xFile, lAppend )
 
    LOCAL cTraceFile := s_cSET_TRACEFILE
+   LOCAL file
 
    IF HB_ISSTRING( xFile )
       s_cSET_TRACEFILE := xFile
-      IF ! hb_defaultValue( lAppend, .F. )
-         hb_vfClose( hb_vfOpen( s_cSET_TRACEFILE, FO_CREAT + FO_TRUNC ) )
+      IF ! hb_defaultValue( lAppend, .F. ) .AND. ;
+         ( file := hb_vfOpen( s_cSET_TRACEFILE, FO_CREAT + FO_TRUNC ) ) != NIL
+         hb_vfClose( file )
       ENDIF
    ENDIF
 
