@@ -293,8 +293,8 @@ If you want to build only a specific part of Harbour, like
 one core library or all core libraries, or all contrib packages,
 you have to do everything the same way as for a full build, the
 only difference is that you first have to go into the specific
-source directory you want to build. When starting GNU Make,
-all components under that dir will be built:
+source directory you'd like to build. When starting GNU Make,
+all components under that directory will be built:
 
     cd src/rtl
     <make> [clean]

@@ -1,6 +1,6 @@
 /*
- * SetFCreate(), CSetSafety(), StrFile(), FileStr(), ScreenFile()
- * ScreenFile(), FileScreen()
+ * StrFile(), FileStr(), ScreenFile(), FileScreen()
+ * SetFCreate(), CSetSafety()
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  *
@@ -123,33 +123,44 @@ HB_FUNC( CSETSAFETY )
 static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE nLen,
                            HB_BOOL bOverwrite, HB_FOFFSET nOffset, HB_BOOL bTrunc )
 {
-   HB_FHANDLE hFile;
-   HB_BOOL bOpen = HB_FALSE;
-   HB_BOOL bFile = hb_fsFile( pFileName );
+   PHB_FILE hFile;
+   HB_BOOL bOpen;
+   HB_BOOL bFile = hb_fileExists( pFileName, NULL );
    HB_SIZE nWrite = 0;
 
    if( bFile && bOverwrite )
    {
-      hFile = hb_fsOpen( pFileName, FO_READWRITE );
+      hFile = hb_fileExtOpen( pFileName, NULL,
+                              FO_WRITE | FO_PRIVATE |
+                              FXO_SHARELOCK | FXO_NOSEEKPOS,
+                              NULL, NULL );
       bOpen = HB_TRUE;
    }
    else if( ! bFile || ! ct_getsafety() )
-      hFile = hb_fsCreate( pFileName, ct_getfcreate() );
+   {
+      hFile = hb_fileExtOpen( pFileName, NULL,
+                              FO_WRITE | FO_PRIVATE |
+                              FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS,
+                              NULL, NULL );
+      if( ! bFile )
+         hb_fileAttrSet( pFileName, HB_FA_NORMAL );
+      bOpen = HB_FALSE;
+   }
    else
-      hFile = FS_ERROR;
+      hFile = NULL;
 
-   if( hFile != FS_ERROR )
+   if( hFile )
    {
       if( nOffset )
-         hb_fsSeekLarge( hFile, nOffset, FS_SET );
+         hb_fileSeek( hFile, nOffset, FS_SET );
       else if( bOpen )
-         hb_fsSeek( hFile, 0, FS_END );
+         hb_fileSeek( hFile, 0, FS_END );
 
-      nWrite = hb_fsWriteLarge( hFile, pcStr, nLen );
-      if( ( nWrite == nLen ) && bOpen && bTrunc )
-         hb_fsWrite( hFile, NULL, 0 );
+      nWrite = hb_fileWrite( hFile, pcStr, nLen, -1 );
+      if( nWrite == nLen && bOpen && bTrunc )
+         hb_fileWrite( hFile, NULL, 0, -1 );
 
-      hb_fsClose( hFile );
+      hb_fileClose( hFile );
    }
    return nWrite;
 }
