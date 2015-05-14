@@ -9,7 +9,7 @@ PROCEDURE Main()
    ? "TEST TO DEMONSTRATE EXAMPLES OF ft_AMedian()"
    ?
 
-   AEval( Directory(), {| x | AAdd( myarray1, x[ F_SIZE ] ) } )
+   AEval( hb_Directory(), {| x | AAdd( myarray1, x[ F_SIZE ] ) } )
 
    ? PadR( "ft_AMedian( myarray1 ) ->", 35 ), ft_AMedian( myarray1 )
    ? PadR( "ft_AMedian( myarray1, 2 ) ->", 35 ), ft_AMedian( myarray1, 2 )

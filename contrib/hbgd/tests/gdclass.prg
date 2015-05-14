@@ -19,10 +19,7 @@ PROCEDURE Main()
 
    hb_cdpSelect( "UTF8EX" )
 
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
+   hb_DirCreate( IMAGES_OUT )
 
    /* Create an image in memory */
    oI := GDImage():Create( 200, 200 )

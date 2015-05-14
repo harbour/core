@@ -11,10 +11,7 @@ PROCEDURE Main()
 
    LOCAL oI := GDImage():Create( 600, 300 )
 
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
+   hb_DirCreate( IMAGES_OUT )
 
    oI:Rectangle( 0, 0, 600, 300, .T., oI:SetColor( 255, 255, 255 ) )
 

@@ -12,10 +12,7 @@ PROCEDURE Main()
    LOCAL im
    LOCAL blue
 
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
+   hb_DirCreate( IMAGES_OUT )
 
    /* This sample shows differences on use of antiliased command between a
       palette based image and a true color image.

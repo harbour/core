@@ -30,14 +30,11 @@ PROCEDURE Main()
    Inkey( 0 )
 #endif
    AltD()
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      hb_DirCreate( IMAGES_OUT )
-   ENDIF
+
+   hb_DirCreate( IMAGES_OUT )
 
    ? "Initialise"
    fi_Initialise()
-
 
    ? "Version          :", fi_GetVersion()
    ? "Copyright        :", fi_GetCopyrightMessage()

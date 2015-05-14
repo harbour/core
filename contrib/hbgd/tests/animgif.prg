@@ -16,10 +16,7 @@ PROCEDURE Main()
    LOCAL hFile
    LOCAL cFile := IMAGES_OUT + "anim2.gif"
 
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
+   hb_DirCreate( IMAGES_OUT )
 
    hFile := FCreate( IMAGES_OUT + "anim1.gif" )           /* Open output file in binary mode */
 

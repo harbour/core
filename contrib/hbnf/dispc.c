@@ -417,15 +417,17 @@ HB_FUNC( _FT_DFINIT )
 
    int sline = hb_parni( 2 );
    int scol  = hb_parni( 3 );
-   int eline = hb_parni( 4 );
-   int ecol  = hb_parni( 5 );
+   int eline = hb_parnidef( 4, hb_gtMaxRow() );
+   int ecol  = hb_parnidef( 5, hb_gtMaxCol() );
 
-   int     maxlin   = hb_parni( 12 );
-   HB_ISIZ buffsize = hb_parns( 13 );
+   int     maxlin   = hb_parnidef( 12, 255 );
+   HB_ISIZ buffsize = hb_parnsdef( 13, 4096 );
+
+   PHB_FILE infile = hb_fileParam( 1 );
 
    hb_gtRectSize( sline, scol, eline, ecol, &nSize );
 
-   if( nSize > 0 && maxlin >= 0 && buffsize > 0 )
+   if( infile && nSize > 0 && maxlin >= 0 && buffsize > 0 )
    {
       rval = 0;
 
@@ -481,11 +483,11 @@ HB_FUNC( _FT_DFINIT )
       }
       else                                                   /* get parameters */
       {
-         HB_ISIZ i, j = hb_parni( 6 );                       /* starting line value */
+         HB_ISIZ i, j = hb_parnidef( 6, 1 );                 /* starting line value */
 
-         dispc->infile = hb_fileParam( 1 );                  /* file handle */
-         dispc->norm   = hb_parni( 7 );                      /* normal color attribute */
-         dispc->hlight = hb_parni( 8 );                      /* highlight color attribute */
+         dispc->infile = infile;                             /* file handle */
+         dispc->norm   = hb_parnidef( 7, 0x07 );             /* normal color attribute */
+         dispc->hlight = hb_parnidef( 8, 0x0F );             /* highlight color attribute */
 
          if( HB_ISARRAY( 9 ) )
          {
@@ -509,7 +511,7 @@ HB_FUNC( _FT_DFINIT )
 
          dispc->bBrowse = hb_parl( 10 );       /* get browse flag */
 
-         dispc->colinc = hb_parni( 11 );       /* column skip value */
+         dispc->colinc = hb_parnidef( 11, 1 ); /* column skip value */
 
          dispc->bufftop    = 0;                /* init buffer top pointer */
          dispc->buffbot    = dispc->buffsize;  /* init buffer bottom pointer */

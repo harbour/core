@@ -12,7 +12,7 @@ PROCEDURE Main( cURL, cMask )
    LOCAL oFTP, oURL
 
    /* fetch files to transfer */
-   IF ! Empty( aFiles := Directory( hb_defaultValue( cMask, hb_osFileMask() ) ) )
+   IF ! Empty( aFiles := hb_Directory( hb_defaultValue( cMask, hb_osFileMask() ) ) )
 
       hb_default( @cURL, "ftp://user:pass@ftp.example.com" )
 

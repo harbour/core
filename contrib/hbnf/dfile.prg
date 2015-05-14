@@ -37,19 +37,9 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
       t_nHandle := hb_vfOpen( cInFile )
 
       IF ( rval := FError() ) == 0
-         rval := _ft_DFInit( t_nHandle, ;
-            hb_defaultValue( nTop        , 0 ), ;
-            hb_defaultValue( nLeft       , 0 ), ;
-            hb_defaultValue( nBottom     , MaxRow() ), ;
-            hb_defaultValue( nRight      , MaxCol() ), ;
-            hb_defaultValue( nStart      , 1 ), ;
-            hb_defaultValue( nCNormal    , 7 ), ;
-            hb_defaultValue( nCHighlight , 15 ), ;
-            cExitKeys, ;
-            hb_defaultValue( lBrowse     , .F. ), ;
-            hb_defaultValue( nColSkip    , 1 ), ;
-            hb_defaultValue( nRMargin    , 255 ), ;
-            hb_defaultValue( nBuffSize   , 4096 ) )
+         rval := _ft_DFInit( t_nHandle, nTop, nLeft, nBottom, nRight, ;
+            nStart, nCNormal, nCHighlight, cExitKeys, ;
+            lBrowse, nColSkip, nRMargin, nBuffSize )
       ENDIF
    ELSE
       rval := 2  // simulate a file-not-found MS-DOS file error

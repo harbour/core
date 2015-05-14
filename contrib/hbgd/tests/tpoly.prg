@@ -12,10 +12,7 @@ STATIC s_nAngle, s_nCoordX, s_nCoordY
 
 PROCEDURE Main()
 
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
+   hb_DirCreate( IMAGES_OUT )
 
    DrawFlake( .T. )
    DrawFlake( .F. )

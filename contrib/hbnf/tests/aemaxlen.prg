@@ -4,11 +4,11 @@
 
 PROCEDURE Main()
 
-   LOCAL myarray1 := Directory()
+   LOCAL myarray1 := hb_Directory()
 
    ? "TEST TO DEMONSTRATE EXAMPLES OF ft_AEMaxLen()"
    ?
-   ? "myarray1 := Directory()"
+   ? "myarray1 := hb_Directory()"
    ?
    ? PadR( "ft_AEMaxLen( myarray1 ) ->", 35 ), ft_AEMaxLen( myarray1 )
    ? PadR( "ft_AEMaxLen( myarray1, F_SIZE ) ->", 35 ), ft_AEMaxLen( myarray1, F_SIZE )

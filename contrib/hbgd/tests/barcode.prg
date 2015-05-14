@@ -26,10 +26,7 @@ PROCEDURE Main()
 #endif
    LOCAL ccode128   := "Code 128"
 
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
+   hb_DirCreate( IMAGES_OUT )
 
    /* here is the list of arguments
    1- Barcode Type 13,8  and 128

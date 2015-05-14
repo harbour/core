@@ -45,10 +45,7 @@ PROCEDURE Main( cValue, cBaseImage )
 
    ? "Value =", cValue
 
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
+   hb_DirCreate( IMAGES_OUT )
 
    /* Load a digits image in memory from file */
    oIDigits := GDImage():LoadFromGif( cBaseImage )

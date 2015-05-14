@@ -11,10 +11,7 @@ PROCEDURE Main()
 
    LOCAL oI
 
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
+   hb_DirCreate( IMAGES_OUT )
 
    /* Load an image from file */
    oI := GDImage():LoadFromFile( IMAGES_IN + "conv_tst.jpg" )
