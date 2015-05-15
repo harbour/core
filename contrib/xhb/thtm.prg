@@ -1734,4 +1734,4 @@ FUNCTION HtmlAny2Str( xVal )
    CASE "U" ; RETURN "NIL"
    ENDSWITCH
 
-   RETURN "<Unknown Value>"
+   RETURN "<Unrecognized Value>"

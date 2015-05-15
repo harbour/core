@@ -165,13 +165,13 @@ STATIC FUNCTION PrepareDB( cFile )
       }, enum
 
    IF Empty( pDb := sqlite3_open( cFile, .T. ) )
-      ? "Can't open/create database:", cFile
+      ? "Could not open/create database:", cFile
       RETURN NIL
    ENDIF
 
    cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER, pasw TEXT(32) )"
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
-      ? "Can't create table:", "person"
+      ? "Could not create table:", "person"
       pDb := NIL  // close database
       RETURN NIL
    ENDIF
@@ -179,7 +179,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cSQLTEXT := "INSERT INTO person( name, age, pasw ) VALUES( :name, :age, :pasw )"
 
    IF Empty( pStmt := sqlite3_prepare( pDb, cSQLTEXT ) )
-      ? "Can't prepare statement:", cSQLTEXT
+      ? "Could not prepare statement:", cSQLTEXT
       pDb := NIL
       RETURN NIL
    ENDIF

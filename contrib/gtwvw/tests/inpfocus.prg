@@ -100,7 +100,7 @@ STATIC PROCEDURE MenuAction( nWinNum, nCommand )
    CASE nCommand == IDM_ARRANGEWIN
       wvw_XReposWindow()
    OTHERWISE
-      wvw_MessageBox( nWinNum, "Unknown menu command", "Internal Error", WIN_MB_OK + WIN_MB_ICONEXCLAMATION )
+      wvw_MessageBox( nWinNum, "Unrecognized menu command", "Internal Error", WIN_MB_OK + WIN_MB_ICONEXCLAMATION )
    ENDCASE
 
    RETURN
@@ -241,7 +241,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )  /* must be a 
    ENDCASE
 
 #if 0
-   wvw_MessageBox( 0, "Sorry we can't handle this event:" + hb_eol() + ;
+   wvw_MessageBox( 0, "Sorry, we cannot handle this event:" + hb_eol() + ;
       "nWinNum == " + hb_ntos( nWinNum ) + hb_eol() + ;
       "message == " + hb_ntos( message ) + hb_eol() + ;
       "wParam == " + hb_ntos( wParam ) + hb_eol() + ;

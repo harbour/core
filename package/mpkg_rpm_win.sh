@@ -45,7 +45,7 @@ done
 
 if [ -z "${TARGET}" ]
 then
-   echo "Can't determine the location for the MinGW32 cross-compiler."
+   echo "Could not determine the location for the MinGW32 cross-compiler."
    echo "Please install it or add valid path to the $0 script."
    exit 1
 fi

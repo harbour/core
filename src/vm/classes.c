@@ -420,7 +420,7 @@ static HB_BOOL hb_clsDictRealloc( PCLASS pClass )
    {
       nNewHashKey <<= 1;
       if( nNewHashKey > HASH_KEYMAX )
-         hb_errInternal( 6002, "Unable to realloc class message in __clsDictRealloc()", NULL, NULL );
+         hb_errInternal( 6002, "Could not realloc class message in __clsDictRealloc()", NULL, NULL );
 
 #ifdef HB_MSG_POOL
       puiMsgIdx = ( HB_USHORT * ) hb_xgrabz( ( nNewHashKey << BUCKETBITS ) * sizeof( HB_USHORT ) );
@@ -611,7 +611,7 @@ static PMETHOD hb_clsAllocMsg( PCLASS pClass, PHB_DYNS pMsg )
    }
    while( hb_clsDictRealloc( pClass ) );
 
-   hb_errInternal( 6001, "Unable to allocate new message", NULL, NULL );
+   hb_errInternal( 6001, "Could not allocate new message", NULL, NULL );
 
    return NULL;
 }

@@ -121,7 +121,7 @@ PROCEDURE Main( cURL, cFile )
             IF ! Empty( cData )
                ? "First 80 characters:", RTrim( Left( cData, 80 ) )
             ELSE
-               ? "Error: file can't be retrieved", oClient:lastErrorMessage()
+               ? "Error: file could not be retrieved", oClient:lastErrorMessage()
             ENDIF
          ELSE
             IF oClient:ReadToFile( cFile )
@@ -136,7 +136,7 @@ PROCEDURE Main( cURL, cFile )
       oClient:Close()
       ? "Done:", iif( Empty( oClient:cReply ), "(no goodbye message)", oClient:cReply )
    ELSE
-      ? "Can't open URI", cURL
+      ? "Could not open URI", cURL
       IF ! Empty( oClient:cReply )
          ? oClient:cReply
       ENDIF

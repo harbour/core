@@ -2277,7 +2277,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       l_aLIBSYSCORE := { "coredll", "ws2", "iphlpapi" }
       l_aLIBSYSMISC := { "ceshell", "uuid", "ole32", "oleaut32", "wininet", "commdlg", "commctrl" }
    OTHERWISE
-      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Platform value unknown: %1$s" ), hbmk[ _HBMK_cPLAT ] ) )
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Platform value unrecognized: %1$s" ), hbmk[ _HBMK_cPLAT ] ) )
       RETURN _EXIT_UNKNPLAT
    ENDCASE
 
@@ -2509,7 +2509,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
       ELSE
          IF hb_AScan( aCOMPSUP, hbmk[ _HBMK_cCOMP ],,, .T. ) == 0
-            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Compiler value unknown: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
+            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Compiler value unrecognized: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
             RETURN _EXIT_UNKNCOMP
          ENDIF
 #ifdef HARBOUR_SUPPORT
@@ -9983,7 +9983,7 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
 
                cVersion := hb_StrReplace( cVersion, Chr( 13 ) + Chr( 10 ) )
                IF Empty( cVersion )
-                  cVersion := "unknown version"
+                  cVersion := "unrecognized version"
                ENDIF
 
                cStdOut := StrTran( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ), " " )
@@ -14395,7 +14395,7 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
       ENDIF
 
       IF ! Empty( aFunction )
-         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Error: Referenced, missing, but unknown Harbour function(s): %1$s" ), ;
+         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Error: Referenced, missing, but unrecognized Harbour function(s): %1$s" ), ;
             ArrayToList( aFunction, ", ",,,, "()" ) ) )
       ENDIF
    ENDIF
@@ -17348,8 +17348,8 @@ STATIC FUNCTION ExitCodeStr( nResult )
 
    SWITCH nResult
    CASE _EXIT_OK              ; RETURN I_( "no error" )
-   CASE _EXIT_UNKNPLAT        ; RETURN I_( "unknown platform" )
-   CASE _EXIT_UNKNCOMP        ; RETURN I_( "unknown compiler" )
+   CASE _EXIT_UNKNPLAT        ; RETURN I_( "unrecognized platform" )
+   CASE _EXIT_UNKNCOMP        ; RETURN I_( "unrecognized compiler" )
    CASE _EXIT_FAILHBDETECT    ; RETURN H_( "failed Harbour detection" )
    CASE _EXIT_STUBCREATE      ; RETURN I_( "failed stub creation" )
    CASE _EXIT_PHASE_COMP      ; RETURN I_( "failed in compilation phase" )
@@ -17363,7 +17363,7 @@ STATIC FUNCTION ExitCodeStr( nResult )
    CASE _EXIT_STOP            ; RETURN I_( "stop requested" )
    ENDSWITCH
 
-   RETURN hb_StrFormat( I_( "unknown: %1$d" ), nResult )
+   RETURN hb_StrFormat( I_( "unrecognized: %1$d" ), nResult )
 
 STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
@@ -17941,7 +17941,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_APIPlugin := { ;
       , ;
-      { "hbmk_Register_Input_File_Extension( hbmk, <cExt> ) -> NIL"                   , I_( "Register input file extension to be passed to plugin (by default all unknown file extensions are passed to Harbour compiler)." ) }, ;
+      { "hbmk_Register_Input_File_Extension( hbmk, <cExt> ) -> NIL"                   , I_( "Register input file extension to be passed to plugin (by default all unrecognized file extensions are passed to Harbour compiler)." ) }, ;
       { "hbmk_AddInput_PRG( hbmk, <cFileName> ) -> NIL"                               , I_( "Add a Harbour input file to the project." ) }, ;
       { "hbmk_AddInput_C( hbmk, <cFileName> ) -> NIL"                                 , I_( "Add a C input file to the project." ) }, ;
       { "hbmk_AddInput_CPP( hbmk, <cFileName> ) -> NIL"                               , I_( "Add a C++ input file to the project." ) }, ;

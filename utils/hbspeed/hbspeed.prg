@@ -207,7 +207,7 @@ procedure main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
          lSyntax := .t.
       endif
       if lSyntax
-         ? "Unknown option:", cParam
+         ? "Unrecognized option:", cParam
          ? "syntax: hbspeed [--thread[=<num>]] [--only=<test(s)>] [--exclude=<test(s)>]"
          ?
          return

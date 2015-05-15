@@ -20,7 +20,7 @@ PROCEDURE Main()
    rddSetDefault( "SQLMIX" )
    nConnection := rddInfo( RDDI_CONNECT, { "ODBC", "Server=localhost;Driver={MySQL ODBC 5.1 Driver};dsn=;User=test;database=test;" } )
    IF nConnection == 0
-      ? "Unable connect to server", rddInfo( RDDI_ERRORNO ), rddInfo( RDDI_ERROR )
+      ? "Could not connect to server", rddInfo( RDDI_ERRORNO ), rddInfo( RDDI_ERROR )
       RETURN
    ENDIF
    ? nConnection

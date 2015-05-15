@@ -442,7 +442,7 @@ PROCEDURE Main_STR()
    /* TODO: StrTran() */
 
 /* NOTE: It seems like CA-Cl*pper 5.x is not aware of the BREAK return value of
-         the error handler, so the error is thrown, but we can't catch it.
+         the error handler, so the error is thrown, but we cannot catch it.
          This bug is fixed in CA-Cl*pper 5.3 [vszakats] */
 #ifndef __CLIPPER__
 #ifndef __XPP__

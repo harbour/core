@@ -3,7 +3,7 @@ README 2003-12-23 - Harbour Low Level API for Firebird and Interbase RDBMS
 This work is not finished yet. It's planned to be similar to Harbour TMysql routines.
 
 The Class implementation has no all implementation like TMysql has, because Firebird it's diferent.
-For example, you can't navigate in records like Mysql do, ex: Getrow( number of row ), in firebird you can
+For example, you cannot navigate in records like Mysql do, ex: Getrow( number of row ), in firebird you can
 just go forward.
 
 TODO:

@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(e36b743\) \(2014\-10\-12 00:14\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(e114a31\) \(2015\-05\-08 19:20\)  
 Copyright &copy; 1999\-2015, Viktor Szakáts  
 <https://github\.com/vszakats/harbour\-core/>  
 Traducción \(es\_419\): Guillermo Varona Silupú &lt;gvaronas@gmail\.com&gt;  
@@ -64,6 +64,7 @@ Opciones:
  - **\-run\[\-\]** ejecutar/no ejecutar aplicativo generado\.
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
  - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ and \_HBMK\_BUILD\_ID\_NUM\_ with sequence number \(incremented on each build\) and \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
+ - **\-haltrev\[\-\]** do not increase revision numbers in \-bldhead= \(\_HBMK\_BUILD\_ID\_\) and \-vcshead= \(\_HBMK\_VCS\_ID\_\) options \(default: do increase\)
  - **\-icon=&lt;file&gt;** establece &lt;file&gt; como ícono de la aplicación\. &lt;file&gt; debe ser un formato soportado en la plataforma destino \(puede no ser soportado por algunas plataformas/compiladores\)\. En Windows, es implementado generando y enlazando un archivo de recursos\.
  - **\-manifest=&lt;file&gt;** incrustar manifiesto &lt;file&gt; en ejecutable/lib dinámica \(sólo Windows\)
  - **\-sign=&lt;key&gt;** firma el ejecutable con &lt;key&gt; \(solo Windows y Darwin\)\. En Windows, se utiliza sigtntool\.exe \(incluido en el SDK de MS Windows\) o posign\.exe \(parte de Pelees C 7\), en ese orden, ambos auto\-detectados\.
@@ -174,10 +175,10 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
 
  - **\-find &lt;text&gt;** list all known Harbour functions that contain &lt;text&gt; in their name, along with their package \(case insensitive, accepts multiple values, can contain wildcard characters\)
- - **\-doc &lt;text&gt;** show documentation for function\[s\]/command\[s\] in &lt;text&gt; \[EXPERIMENTAL\]
- - **\-docjson &lt;text&gt;** output documentation in JSON format for function\[s\]/command\[s\] in &lt;text&gt; \[EXPERIMENTAL\]
- - **\-fixcase &lt;file\[s\]&gt;** fix casing of Harbour function names to their 'official' format\. Core functions and functions belonging to all active contribs/addons with an \.hbx file will be processed\. \[EXPERIMENTAL\]
- - **\-sanitize &lt;file\[s\]&gt;** convert filenames to lowercase, EOLs to platform native and remove EOF character, if present\. \[EXPERIMENTAL\]
+ - **\-doc &lt;text&gt;** show documentation for function\[s\]/command\[s\] in &lt;text&gt;
+ - **\-docjson &lt;text&gt;** output documentation in JSON format for function\[s\]/command\[s\] in &lt;text&gt;
+ - **\-fixcase &lt;file\[s\]&gt;** fix casing of Harbour function names to their 'official' format\. Core functions and functions belonging to all active contribs/addons with an \.hbx file will be processed\.
+ - **\-sanitize &lt;file\[s\]&gt;** convert filenames to lowercase, EOLs to platform native and remove EOF character, if present\.
 
 
  - **\-hbmake=&lt;file&gt;** convierte proyecto hbmake en un archivo \.hbp
@@ -473,7 +474,7 @@ API de plugin:
 
 
  - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
-Registra extensión de archivo de entrada para enviar al plugin \(por defecto todas las extensiones de archivo desconocidas son pasadas al compilador Harbour\)\.
+Register input file extension to be passed to plugin \(by default all unrecognized file extensions are passed to Harbour compiler\)\.
  - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Agregar un archivo Harbour al proyecto\.
  - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
@@ -636,8 +637,8 @@ Códigos de salida \("errorlevels"\):
 
 
  - **0** sin error
- - **1** plataforma desconocida
- - **2** compilador desconocido
+ - **1** unrecognized platform
+ - **2** unrecognized compiler
  - **3** detección de Harbour fallida
  - **5** no se pudo crear fragmento de código
  - **6** failed in compilation phase

@@ -109,7 +109,7 @@ FUNCTION dbModifyStructure( cFile )
             BREAK
          ENDIF
          IF ! hb_dbRename( cNewFile, cFile )
-            // If we can't then try to restore backup as original
+            // If we cannot then try to restore backup as original
             IF ! hb_dbRename( cBakFile, cFile )
                // Oops - must advise the user!
                oErr := ErrorNew()

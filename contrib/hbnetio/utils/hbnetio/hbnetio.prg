@@ -201,7 +201,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
          HB_Usage()
          RETURN
       OTHERWISE
-         netiosrv_LogEvent( hb_StrFormat( "Warning: Unknown command line parameter ignored: %1$s", cParam ) )
+         netiosrv_LogEvent( hb_StrFormat( "Warning: Unrecognized command line parameter ignored: %1$s", cParam ) )
       ENDCASE
    NEXT
 

@@ -46,7 +46,7 @@ PROCEDURE Main( cURL )
 
       oHTTP:Close()
    ELSE
-      ? "Can't connect with", oURL:cServer
+      ? "Could not connect with", oURL:cServer
       IF oHTTP:SocketCon == NIL
          ? "Connection not initiated"
       ELSEIF hb_inetErrorCode( oHTTP:SocketCon ) == 0

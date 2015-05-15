@@ -24,7 +24,7 @@ PROCEDURE Main()
 
    node := mxmlFindElement( tree, tree, "hash", , , MXML_DESCEND )
    IF Empty( node )
-      ? "Unable to find <hash> element in XML tree!"
+      ? "Cannot find <hash> element in XML tree!"
       mxmlDelete( tree )
 
       ErrorLevel( -1 )

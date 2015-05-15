@@ -56,7 +56,7 @@
        Current Window
     ENDIF
 
-  Since GTWVT application can't be in MainCoordMode,
+  Since GTWVT application cannot be in MainCoordMode,
   the following approach makes these functions work on current window.
 
   You may want to replace NIL with your own function/variable by which you can decide

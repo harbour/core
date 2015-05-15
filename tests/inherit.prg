@@ -107,7 +107,7 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
       ::hFile := FCreate( cFileName )
       EXIT
    OTHERWISE
-      ? "File Init: Unknown file mode:", ::cMode
+      ? "File Init: Unrecognized file mode:", ::cMode
    ENDSWITCH
 
    IF ::hFile == F_ERROR

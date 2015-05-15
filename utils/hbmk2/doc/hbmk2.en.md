@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(e36b743\) \(2014\-10\-12 00:14\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(e114a31\) \(2015\-05\-08 19:20\)  
 Copyright &copy; 1999\-2015, Viktor Szakáts  
 <https://github\.com/vszakats/harbour\-core/>  
 
@@ -63,6 +63,7 @@ Options:
  - **\-run\[\-\]** run/do not run output executable
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
  - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ and \_HBMK\_BUILD\_ID\_NUM\_ with sequence number \(incremented on each build\) and \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
+ - **\-haltrev\[\-\]** do not increase revision numbers in \-bldhead= \(\_HBMK\_BUILD\_ID\_\) and \-vcshead= \(\_HBMK\_VCS\_ID\_\) options \(default: do increase\)
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** embed manifest &lt;file&gt; in executable/dynamic lib \(Windows only\)
  - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
@@ -173,10 +174,10 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
 
  - **\-find &lt;text&gt;** list all known Harbour functions that contain &lt;text&gt; in their name, along with their package \(case insensitive, accepts multiple values, can contain wildcard characters\)
- - **\-doc &lt;text&gt;** show documentation for function\[s\]/command\[s\] in &lt;text&gt; \[EXPERIMENTAL\]
- - **\-docjson &lt;text&gt;** output documentation in JSON format for function\[s\]/command\[s\] in &lt;text&gt; \[EXPERIMENTAL\]
- - **\-fixcase &lt;file\[s\]&gt;** fix casing of Harbour function names to their 'official' format\. Core functions and functions belonging to all active contribs/addons with an \.hbx file will be processed\. \[EXPERIMENTAL\]
- - **\-sanitize &lt;file\[s\]&gt;** convert filenames to lowercase, EOLs to platform native and remove EOF character, if present\. \[EXPERIMENTAL\]
+ - **\-doc &lt;text&gt;** show documentation for function\[s\]/command\[s\] in &lt;text&gt;
+ - **\-docjson &lt;text&gt;** output documentation in JSON format for function\[s\]/command\[s\] in &lt;text&gt;
+ - **\-fixcase &lt;file\[s\]&gt;** fix casing of Harbour function names to their 'official' format\. Core functions and functions belonging to all active contribs/addons with an \.hbx file will be processed\.
+ - **\-sanitize &lt;file\[s\]&gt;** convert filenames to lowercase, EOLs to platform native and remove EOF character, if present\.
 
 
  - **\-hbmake=&lt;file&gt;** convert hbmake project &lt;file&gt; to \.hbp file
@@ -472,7 +473,7 @@ Plugin API:
 
 
  - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
-Register input file extension to be passed to plugin \(by default all unknown file extensions are passed to Harbour compiler\)\.
+Register input file extension to be passed to plugin \(by default all unrecognized file extensions are passed to Harbour compiler\)\.
  - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Add a Harbour input file to the project\.
  - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
@@ -635,8 +636,8 @@ Exit codes \("errorlevels"\):
 
 
  - **0** no error
- - **1** unknown platform
- - **2** unknown compiler
+ - **1** unrecognized platform
+ - **2** unrecognized compiler
  - **3** failed Harbour detection
  - **5** failed stub creation
  - **6** failed in compilation phase

@@ -76,7 +76,7 @@ PROCEDURE Main()
    ENDIF
 
    IF Empty( pDbDest := sqlite3_open_v2( cFileDest, SQLITE_OPEN_CREATE + SQLITE_OPEN_READWRITE + SQLITE_OPEN_EXCLUSIVE ) )
-      ? "Can't open database:", cFileDest
+      ? "Could not open database:", cFileDest
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -84,7 +84,7 @@ PROCEDURE Main()
    sqlite3_trace( pDbDest, .T., "backup.log" )
 
    IF Empty( pBackup := sqlite3_backup_init( pDbDest, "main", pDbSource, "main" ) )
-      ? "Can't initialize backup"
+      ? "Could not initialize backup"
       ErrorLevel( 1 )
       RETURN
    ELSE
@@ -140,7 +140,7 @@ STATIC FUNCTION PrepareDB( cFile )
       }, enum
 
    IF Empty( pDb := sqlite3_open( cFile, .T. ) )
-      ? "Can't open/create database:", cFile
+      ? "Could not open/create database:", cFile
       RETURN NIL
    ENDIF
 
@@ -148,14 +148,14 @@ STATIC FUNCTION PrepareDB( cFile )
 
    cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )"
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
-      ? "Can't create table:", "person"
+      ? "Could not create table:", "person"
       pDb := NIL  // close database
       RETURN NIL
    ENDIF
 
    cSQLTEXT := "INSERT INTO person( name, age ) VALUES( :name, :age )"
    IF Empty( pStmt := sqlite3_prepare( pDb, cSQLTEXT ) )
-      ? "Can't prepare statement:", cSQLTEXT
+      ? "Could not prepare statement:", cSQLTEXT
       pDb := NIL
       RETURN NIL
    ENDIF

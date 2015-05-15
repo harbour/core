@@ -1108,7 +1108,7 @@ STATIC FUNCTION ADO_SETREL( nWA, aRelInfo )
       aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys:Append( cKeyName, adKeyForeign, ;
          aRelInfo[ UR_RI_CEXPR ], cChild, aRelInfo[ UR_RI_CEXPR ] )
    RECOVER
-      /* raise error for can't create relation */
+      /* raise error for cannot create relation */
    END SEQUENCE
 
    RETURN HB_SUCCESS

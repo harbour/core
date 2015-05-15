@@ -51,7 +51,7 @@ PROCEDURE Main( cName )
    IF hb_iniWrite( "parseini_out.ini", hIni, "#Generated file; don't touch", "#End of file" )
       ? "File written"
    ELSE
-      ? "Can't write file"
+      ? "Could not write file"
    ENDIF
    ?
    WAIT
@@ -101,7 +101,7 @@ PROCEDURE Main( cName )
                    .F. )
       ? "File written"
    ELSE
-      ? "Can't write file"
+      ? "Could not write file"
    ENDIF
    ?
    WAIT

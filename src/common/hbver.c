@@ -144,7 +144,7 @@ const char * hb_verCPU( void )
 #elif defined( HB_CPU_SYS390 )
    return "System/390";
 #else
-   return "(unknown)";
+   return "(unrecognized)";
 #endif
 }
 
@@ -557,7 +557,7 @@ char * hb_verPlatform( void )
 #else
 
    {
-      hb_strncpy( pszPlatform, "(unknown)", PLATFORM_BUF_SIZE );
+      hb_strncpy( pszPlatform, "(unrecognized)", PLATFORM_BUF_SIZE );
    }
 
 #endif
@@ -1187,7 +1187,7 @@ char * hb_verCompiler( void )
          hb_snprintf( pszCompiler, COMPILER_BUF_SIZE, "%s%s", pszName, szSub );
    }
    else
-      hb_strncpy( pszCompiler, "(unknown)", COMPILER_BUF_SIZE - 1 );
+      hb_strncpy( pszCompiler, "(unrecognized)", COMPILER_BUF_SIZE - 1 );
 
 #if defined( __clang_version__ )
    if( strstr( __clang_version__, "(" ) )

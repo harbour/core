@@ -113,7 +113,7 @@
 #define MYSQL_FS_DECIMALS       8     /* Number of decimals in field */
 
 /* MySQL field flags */
-#define NOT_NULL_FLAG           hb_bitShift( 1, 0 )   /* Field can't be NULL */
+#define NOT_NULL_FLAG           hb_bitShift( 1, 0 )   /* Field cannot be NULL */
 #define PRI_KEY_FLAG            hb_bitShift( 1, 1 )   /* Field is part of a primary key */
 #define UNIQUE_KEY_FLAG         hb_bitShift( 1, 2 )   /* Field is part of a unique key */
 #define MULTIPLE_KEY_FLAG       hb_bitShift( 1, 3 )   /* Field is part of a key */

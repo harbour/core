@@ -148,7 +148,7 @@ ifeq ($(HB_INIT_DONE),)
       export HB_REBUILD_PARSER := no
    endif
 
-   # Can't build shared tools if we don't create dlls
+   # Cannot build shared tools if we don't create dlls
    ifeq ($(HB_BUILD_DYN),no)
       export HB_BUILD_SHARED := no
    endif

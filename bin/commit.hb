@@ -736,7 +736,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
             AAdd( aErr, "filename: missing extension" )
          ENDIF
       ELSEIF ! Empty( hAllowedExt ) .AND. ! hb_FNameExt( cName ) $ hAllowedExt
-         AAdd( aErr, "filename: unknown extension. Either change it or update .gitattributes." )
+         AAdd( aErr, "filename: unrecognized extension. Either change it or update .gitattributes." )
       ENDIF
 
       IF "casematters" $ hFLags .AND. !( cName == Lower( cName ) ) .AND. ! FNameExc( cName, aCanBeUpper )

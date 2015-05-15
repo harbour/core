@@ -146,7 +146,7 @@ METHOD Edit() CLASS HBMemoEditor
          ENDIF
       ENDDO
    ELSE
-      // If I can't edit text buffer or there is not a user function enter standard HBEditor
+      // If I cannot edit text buffer or there is not a user function enter standard HBEditor
       // ::Edit() method which is able to handle everything
       ::super:Edit()
    ENDIF

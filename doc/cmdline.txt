@@ -53,7 +53,7 @@ whitespace. (or just walk through all argv[])
   allowing the usage of quote characters. This is mostly
   a problem on systems which use "/" as path separator.
 
-  The "-" sign has no special meaning here, it can't be
+  The "-" sign has no special meaning here, it cannot be
   used to disable a switch.
 
   Switch               Resulting options

@@ -207,7 +207,7 @@
  *
  * It seems that the Unix versions of GNU patch can not handle diff files with
  * DOS-style path separators, whereas the Windows (MinGW/Cygwin) versions have no
- * problem working with Unix-style path separators. They however can't be coerced
+ * problem working with Unix-style path separators. They however cannot be coerced
  * into generating diffs with Unix-style path separators, which results in diffs
  * generated on Windows hosts can not be applied on non-Windows hosts.
  *
@@ -444,7 +444,7 @@ PROCEDURE Main( ... )
 
    s_cSourceRoot := WalkAndFind( CombinePath( s_cTempDir, "root" ), cTopIndicator )
    IF s_cSourceRoot == NIL
-      OutStd( "E: Unable to find the new tree's root" + hb_eol() )
+      OutStd( "E: Could not find the new tree's root" + hb_eol() )
       OutStd( hb_StrFormat( "   Inspect `%1$s'", s_cTempDir ) + hb_eol() )
       ErrorLevel( 2 )
       RETURN

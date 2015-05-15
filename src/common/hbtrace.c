@@ -386,7 +386,7 @@ void hb_tr_trace( const char * fmt, ... )
       pTrace->level = -1;
       /* NOTE: resetting file name/line number will cause that we will unable
        * to report the location of code that allocated unreleased memory blocks
-       * See hb_xalloc/hb_xgrab in src/vm/fm.c
+       * See hb_xalloc()/hb_xgrab() in src/vm/fm.c
        */
       if( hb_tr_level() < HB_TR_DEBUG )
       {

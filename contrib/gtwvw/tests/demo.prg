@@ -1022,7 +1022,7 @@ STATIC FUNCTION nMenuChecker( nMenuEvent )
       xDebugInfo()
       EXIT
    OTHERWISE
-      lboxmessage( "Sorry, unknown menu option: " + hb_ntos( nMenuEvent ) )
+      lboxmessage( "Sorry, unrecognized menu option: " + hb_ntos( nMenuEvent ) )
    ENDSWITCH
 
    // xEnableToolbar( 0 )

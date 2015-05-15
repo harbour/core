@@ -457,7 +457,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
 
             OTHERWISE
 #if 0
-               ? "Unknown type from SQL Server Field: " + hb_ntos( fld:__enumIndex() ) + " is type " + hb_ntos( fld[ MYSQL_FS_TYPE ] )
+               ? "Unrecognized type from SQL Server Field: " + hb_ntos( fld:__enumIndex() ) + " is type " + hb_ntos( fld[ MYSQL_FS_TYPE ] )
 #endif
             ENDSWITCH
 

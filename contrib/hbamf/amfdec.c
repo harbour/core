@@ -421,7 +421,7 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
 
    array_len = ( int ) ( header >> 1 );
    /* Original python comment was:
-      Can't use array_len to create a list of known
+      Cannot use array_len to create a list of known
       length, see ticket #46
       I think that this is not a problem for Harbour */
 

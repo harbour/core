@@ -92,7 +92,7 @@ THREAD STATIC t_cHtmlAnsiChars
 THREAD STATIC t_lInit := .F.       // initilization flag for HTML data
 
 #ifdef _DEBUG_
-#xtranslate HIDDEN: => EXPORTED:   // debugger can't see HIDDEN iVars
+#xtranslate HIDDEN: => EXPORTED:   // debugger cannot see HIDDEN iVars
 #endif
 
 /* Class for handling an entire HTML document */

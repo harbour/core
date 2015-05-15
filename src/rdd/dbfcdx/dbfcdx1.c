@@ -9131,7 +9131,7 @@ static void hb_cdxSortWritePage( LPCDXSORTINFO pSort )
       char szName[ HB_PATH_MAX ];
       pSort->pTempFile = hb_fileCreateTemp( NULL, NULL, FC_NORMAL, szName );
       if( pSort->pTempFile == NULL )
-         hb_errInternal( 9301, "hb_cdxSortWritePage: Can't create temporary file.", NULL, NULL );
+         hb_errInternal( 9301, "hb_cdxSortWritePage: Could not create temporary file.", NULL, NULL );
       pSort->szTempFileName = hb_strdup( szName );
    }
    pSort->pSwapPage[ pSort->ulCurPage ].ulKeys = pSort->ulKeys;

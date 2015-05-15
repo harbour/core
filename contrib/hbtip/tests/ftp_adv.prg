@@ -50,7 +50,7 @@ PROCEDURE Main( cURL )
 
       oFTP:Close()
    ELSE
-      ? "Can't connect with", oURL:cServer
+      ? "Could not connect with", oURL:cServer
       IF oFTP:SocketCon == NIL
          ? "Connection not initiated"
       ELSEIF hb_inetErrorCode( oFTP:SocketCon ) == 0

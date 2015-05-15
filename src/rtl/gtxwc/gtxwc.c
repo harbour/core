@@ -3583,7 +3583,7 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor * pColor )
           * Look for the color that best approximates the desired one
           * and has not been checked so far and try to allocate it.
           * If allocation fails, it must mean that the color was read-write
-          * (so we can't use it, since its owner might change it) or else
+          * (so we cannot use it, since its owner might change it) or else
           * it was already freed. Repeat until something succeeds or
           * we test all colors in given maximum of approximation.
           *
@@ -4586,10 +4586,10 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
       {
          /* TODO: a standard Harbour error should be generated here when
                   it can run without console!
-         hb_errRT_TERM( EG_CREATE, 10001, NULL, "Can't connect to X server", 0, 0 );
+         hb_errRT_TERM( EG_CREATE, 10001, NULL, "Could not connect to X server", 0, 0 );
          */
          s_fNoXServer = HB_TRUE;
-         hb_errInternal( 10001, "Can't connect to X server.", NULL, NULL );
+         hb_errInternal( 10001, "Could not connect to X server.", NULL, NULL );
       }
       return HB_FALSE;
    }
@@ -4760,11 +4760,11 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 
             /* TODO: a standard Harbour error should be generated here when
                      it can run without console!
-            hb_errRT_TERM( EG_CREATE, 10001, NULL, "Can't load 'fixed' font", 0, 0 );
+            hb_errRT_TERM( EG_CREATE, 10001, NULL, "Cannot load 'fixed' font", 0, 0 );
             return;
             */
             s_fNoXServer = HB_TRUE;
-            hb_errInternal( 10001, "Can't load 'fixed' font", NULL, NULL );
+            hb_errInternal( 10001, "Cannot load 'fixed' font", NULL, NULL );
          }
       }
    }

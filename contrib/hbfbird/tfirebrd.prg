@@ -418,7 +418,7 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
    LOCAL aTables := oRow:GetTables()
 
    IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
-      // Can't insert joined tables
+      // Cannot insert joined tables
 
       IF ! HB_ISSTRING( cWhere )
          aKeys := oRow:GetKeyField()

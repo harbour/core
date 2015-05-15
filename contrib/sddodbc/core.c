@@ -202,7 +202,7 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
       hb_itemRelease( pRet );
    }
    else
-      szRet = hb_strdup( "HY000 Unable to get error message" );
+      szRet = hb_strdup( "HY000 Could not get the error message" );
 
    if( pErrCode )
       *pErrCode = ( HB_ERRCODE ) iNativeErr;

@@ -18,12 +18,12 @@ PROCEDURE Main( cParam )
    ENDIF
 
    IF ! hb_comOpen( nPort )
-      ? "Unable to open port. Error:", hb_ntos( hb_comGetError( nPort ) ), " OS error:", hb_ntos( hb_comGetOSError( nPort ) )
+      ? "Could not open port. Error:", hb_ntos( hb_comGetError( nPort ) ), " OS error:", hb_ntos( hb_comGetOSError( nPort ) )
       RETURN
    ENDIF
 
    IF ! hb_comInit( nPort, 1200, "N", 8, 1 )
-      ? "Unable to initialize port. Error:", hb_ntos( hb_comGetError( nPort ) ), " OS error:", hb_ntos( hb_comGetOSError( nPort ) )
+      ? "Could not initialize port. Error:", hb_ntos( hb_comGetError( nPort ) ), " OS error:", hb_ntos( hb_comGetOSError( nPort ) )
       hb_comClose( nPort )
       RETURN
    ENDIF

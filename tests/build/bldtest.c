@@ -49,7 +49,7 @@ int main( void )
    printf( "\nn=0x%x -> \"%s\" (%s endian) %s\n", n, buf,
            i == 1234 ? "big" :
            i == 2143 ? "pdp" :
-           i == 4321 ? "little" : "unknown",
+           i == 4321 ? "little" : "unrecognized",
            i == l ? "OK" : "BAD" );
    if( i != l )
       iRet = 1;

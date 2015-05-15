@@ -13,7 +13,7 @@ PROCEDURE Main( cFileName )
 
    IF HB_ISSTRING( cFileName )
       IF Empty( cData := MemoRead( cFileName ) )
-         ? "Can't open", cFileName
+         ? "Cannot open", cFileName
          RETURN
       ENDIF
    ENDIF

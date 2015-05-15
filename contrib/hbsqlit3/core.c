@@ -679,11 +679,11 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
                bResult = HB_TRUE;
             else
                HB_TRACE( HB_TR_DEBUG,
-                         ( "sqlite_temp_directory(): Can't create directory %s", pszDirName ) );
+                         ( "sqlite_temp_directory(): Could not create directory %s", pszDirName ) );
          }
          else
             HB_TRACE( HB_TR_DEBUG,
-                      ( "sqlite_temp_directory(): Directory doesn't exist %s", pszDirName ) );
+                      ( "sqlite_temp_directory(): Directory does not exist %s", pszDirName ) );
       }
 
       if( bResult )
@@ -729,7 +729,7 @@ HB_FUNC( SQLITE3_OPEN )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "sqlite3_open(): Database doesn't exist %s", pszdbName ) );
+      HB_TRACE( HB_TR_DEBUG, ( "sqlite3_open(): Database does not exist %s", pszdbName ) );
 
       hb_retptr( NULL );
    }

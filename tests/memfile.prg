@@ -42,7 +42,7 @@ PROCEDURE Main()
    RESTORE FROM memfile ADDITIVE
 
    ? m_xStayHer
-   ? m_cLongerN /* Can't restore the part of the name beyond the tenth char */
+   ? m_cLongerN /* Cannot restore the part of the name beyond the tenth char */
    ? m_cString
    ? m_nDouble
    ? m_nDoubleH
@@ -55,7 +55,7 @@ PROCEDURE Main()
    RESTORE FROM memfile
 
 // ? m_xStayHer
-   ? m_cLongerN /* Can't restore the part of the name beyond the tenth char */
+   ? m_cLongerN /* Cannot restore the part of the name beyond the tenth char */
    ? m_cString
    ? m_nDouble
    ? m_nDoubleH

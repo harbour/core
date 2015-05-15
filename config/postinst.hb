@@ -290,7 +290,7 @@ PROCEDURE Main( ... )
 
                   OutStd( hb_StrFormat( "! Making Harbour tar installer release package: '%1$s'", tmp ) + hb_eol() )
 
-                  /* In the generated script always use tar because we can't be sure
+                  /* In the generated script always use tar because we cannot be sure
                      if cBin_Tar exists in the installation environment */
                   hb_MemoWrit( tmp, ;
                      hb_StrFormat( sfx_tgz_sh(), ;

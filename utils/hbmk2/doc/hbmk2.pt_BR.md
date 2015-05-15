@@ -1,4 +1,4 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(e36b743\) \(2014\-10\-12 00:14\)  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(e114a31\) \(2015\-05\-08 19:20\)  
 Copyright &copy; 1999\-2015, Viktor Szakáts  
 <https://github\.com/vszakats/harbour\-core/>  
 Tradução \(pt\_BR\): Sami Laham &lt;sami@laham\.com\.br&gt; / Vailton Renato &lt;vailtom@gmail\.com&gt;  
@@ -63,6 +63,7 @@ Opções:
  - **\-run\[\-\]** executar/não executar o aplicativo gerado\.
  - **\-vcshead=&lt;file&gt;** gerar arquivo de cabeçalho \.ch com informações do repositório local\. Git, SVN, Mercurial, Bazaar, Fossil, CVS e Monotone são suportados atualmente\. O cabeçalho gerado irá definir constantes pré\-processador \_HBMK\_VCS\_TYPE\_ com o nome de VCS detectado \_HBMK\_VCS\_ID\_ como o unico ID do repositorio local\. Informações específicas de VCS são adicionado como constante \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_, onde são suportadas\. Se nenhum sistema de VCS for detectado, um número seqüencial será lançado automaticamente em cada construção\.
  - **\-bldhead=&lt;file&gt;** gerar arquivo de cabeçalho \.ch com informações de compilação, como número de seqüência e com a data e hora\.Cabeçalho gerado irá definir constantes pré\-processador \_HBMK\_BUILD\_ID\_ e \_HBMK\_BUILD\_ID\_NUM\_ com número de seqüência \(incrementado em cada compilação\) e \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ com a data / hora da compiliação\.
+ - **\-haltrev\[\-\]** do not increase revision numbers in \-bldhead= \(\_HBMK\_BUILD\_ID\_\) and \-vcshead= \(\_HBMK\_VCS\_ID\_\) options \(default: do increase\)
  - **\-icon=&lt;file&gt;** colocar o arquivo &lt;file&gt; como ícone de aplicação\. O arquivo &lt;file&gt; deve estar em um formato suportado na plataforma alvo \(não suportado por algumas plataformas/compiladores\)\. No Windows, isso é implementado gerando e linkando um arquivo de recursos\.
  - **\-manifest=&lt;file&gt;** incorporar arquivo manifest &lt;file&gt; no executável / lib dinâmica \(somente para Windows\)
  - **\-sign=&lt;key&gt;** assinar executável com &lt;key&gt; \(somente Windows e Darwin\)\. No Windows é usado signtool\.exe \(parte do MS Windows SDK\) ou posign\.exe \(part do Pelles C 7\), nesta ordem, ambos auto\-detectados\.
@@ -175,10 +176,10 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
 
  - **\-find &lt;text&gt;** listar todas as funções conhecidas do Harbour que contenham &lt;text&gt; em seu nome, juntamente com o seu pacote \(tanto faz maiúsculas ou minúsculas, aceita vários valores, pode conter caracteres curinga\)
- - **\-doc &lt;text&gt;** exibe a documentação para funçõe\[s\]/comando\[s\] indicada no &lt;text&gt; \[EXPERIMENTAL\]
- - **\-docjson &lt;text&gt;** documentação de saída no formato JSON para funçõe\[s\]/comando\[s\] indicada no &lt;text&gt; \[EXPERIMENTAL\]
- - **\-fixcase &lt;file\[s\]&gt;** corrige os nomes das funções de acordo com formato do Harbour'oficial'\. Funções essenciais e todas  funções ativas  pertencentes contribs/addons serão processados com os arquivos \.hbx \.\[EXPERIMENTAL\]
- - **\-sanitize &lt;file\[s\]&gt;** converte nomes de arquivo para minuscúlo, EOLs para plataforma nativa e remove caracteres EOF, se presentes\.\[EXPERIMENTAL\]
+ - **\-doc &lt;text&gt;** show documentation for function\[s\]/command\[s\] in &lt;text&gt;
+ - **\-docjson &lt;text&gt;** output documentation in JSON format for function\[s\]/command\[s\] in &lt;text&gt;
+ - **\-fixcase &lt;file\[s\]&gt;** fix casing of Harbour function names to their 'official' format\. Core functions and functions belonging to all active contribs/addons with an \.hbx file will be processed\.
+ - **\-sanitize &lt;file\[s\]&gt;** convert filenames to lowercase, EOLs to platform native and remove EOF character, if present\.
 
 
  - **\-hbmake=&lt;file&gt;** converte um projeto do hbmake para um arquivo \.hbp
@@ -475,7 +476,7 @@ Plugin API:
 
 
  - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
-Registre extensão de arquivo de entrada a ser passado para plugin \(por padrão todas as extensões desconhecidas são passadas para o compilador Harbour\)\.
+Register input file extension to be passed to plugin \(by default all unrecognized file extensions are passed to Harbour compiler\)\.
  - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Adicionar um arquivo de entrada Harbour ao projeto\.
  - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
@@ -638,8 +639,8 @@ Códigos de saída \("errorlevels"\):
 
 
  - **0** sem erros
- - **1** plataforma desconhecida
- - **2** compilador desconhecido
+ - **1** unrecognized platform
+ - **2** unrecognized compiler
  - **3** falha Harbour não detectado
  - **5** criação stub falhou
  - **6** falha em fase de compilação

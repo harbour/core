@@ -1328,15 +1328,15 @@
 #define RBS_DBLCLKTOGGLE                          32768
 
 #define RBBS_BREAK                                1  // break to new line
-#define RBBS_FIXEDSIZE                            2  // band can't be sized
+#define RBBS_FIXEDSIZE                            2  // band cannot be sized
 #define RBBS_CHILDEDGE                            4  // edge around top & bottom of child window
-#define RBBS_HIDDEN                               8  // don't show
-#define RBBS_NOVERT                               16  // don't show when vertical
-#define RBBS_FIXEDBMP                             32  // bitmap doesn't move during band resize
+#define RBBS_HIDDEN                               8  // do not show
+#define RBBS_NOVERT                               16  // do not show when vertical
+#define RBBS_FIXEDBMP                             32  // bitmap does not move during band resize
 #define RBBS_VARIABLEHEIGHT                       64  // allow autosizing of this child vertically
 #define RBBS_GRIPPERALWAYS                        128  // always show the gripper
 #define RBBS_NOGRIPPER                            256  // never show the gripper
-#define RBBS_USECHEVRON                           512  // display drop-down button for this band if it's sized smaller than ideal width
+#define RBBS_USECHEVRON                           512  // display drop-down button for this band if it is sized smaller than ideal width
 #define RBBS_HIDETITLE                            1024  // keep band title hidden
 
 #define RBBIM_STYLE                               1

@@ -247,7 +247,7 @@ PROCEDURE Main( cFileArg )
 
    hNode := mxmlFindPath( hTree, "*/two" )
    IF Empty( hNode )
-      ? "ERROR: Unable to find value for '*/two'."
+      ? "ERROR: Cannot find value for '*/two'."
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -262,7 +262,7 @@ PROCEDURE Main( cFileArg )
 
    hNode := mxmlFindPath( hTree, "foo/*/two" )
    IF Empty( hNode )
-      ? "ERROR: Unable to find value for 'foo/*/two'."
+      ? "ERROR: Cannot find value for 'foo/*/two'."
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -277,7 +277,7 @@ PROCEDURE Main( cFileArg )
 
    hNode := mxmlFindPath( hTree, "foo/bar/one/two" )
    IF Empty( hNode )
-      ? "ERROR: Unable to find value for 'foo/bar/one/two'."
+      ? "ERROR: Cannot find value for 'foo/bar/one/two'."
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -294,7 +294,7 @@ PROCEDURE Main( cFileArg )
 
    hInd := mxmlIndexNew( hTree )
    IF Empty( hInd )
-      ? "ERROR: Unable to create index of all nodes!"
+      ? "ERROR: Could not create index of all nodes!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -324,7 +324,7 @@ PROCEDURE Main( cFileArg )
 
    hInd := mxmlIndexNew( hTree, "group" )
    IF Empty( hInd )
-      ? "ERROR: Unable to create index of groups!"
+      ? "ERROR: Could not create index of groups!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -354,7 +354,7 @@ PROCEDURE Main( cFileArg )
 
    hInd := mxmlIndexNew( hTree,, "type" )
    IF Empty( hInd )
-      ? "ERROR: Unable to create index of type attributes!"
+      ? "ERROR: Coult not create index of type attributes!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -384,7 +384,7 @@ PROCEDURE Main( cFileArg )
 
    hInd := mxmlIndexNew( hTree, "group", "type" )
    IF Empty( hInd )
-      ? "ERROR: Unable to create index of elements and attributes!"
+      ? "ERROR: Could not create index of elements and attributes!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
@@ -450,7 +450,7 @@ PROCEDURE Main( cFileArg )
    ENDIF
 
    IF Empty( hTree )
-      ? "Unable to read XML file!"
+      ? "Could not read XML file!"
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -461,7 +461,7 @@ PROCEDURE Main( cFileArg )
          properly  XXX: this doesn't test for the mxmlWalkNext() _binding_ */
 
       IF Empty( hNode := mxmlFindElement( hTree, hTree, "choice",,, MXML_DESCEND ) )
-         ? "Unable to find first <choice> element in XML tree!"
+         ? "Cannot find first <choice> element in XML tree!"
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
@@ -469,7 +469,7 @@ PROCEDURE Main( cFileArg )
       ENDIF
 
       IF Empty( mxmlFindElement( hNode, hTree, "choice",,, MXML_NO_DESCEND ) )
-         ? "Unable to find second <choice> element in XML tree!"
+         ? "Cannot find second <choice> element in XML tree!"
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )

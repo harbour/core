@@ -24,7 +24,7 @@ PROCEDURE Main()
    ? "RDDs:"; AEval( rddList(), {| x | QQOut( "", x ) } )
 
    IF rddInfo( RDDI_CONNECT, { "MYSQL", "localhost", "test", , "test" } ) == 0
-      ? "Unable connect to the server"
+      ? "Could not connect to the server"
       RETURN
    ENDIF
 

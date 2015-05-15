@@ -26,7 +26,7 @@ PROCEDURE Main()
    ? "RDDs:"; AEval( rddList(), {| x | QQOut( "", x ) } )
 
    IF rddInfo( RDDI_CONNECT, { "POSTGRESQL", "postgresql://localhost/postgres" } ) == 0
-      ? "Unable connect to the server"
+      ? "Could not connect to the server"
       RETURN
    ENDIF
 

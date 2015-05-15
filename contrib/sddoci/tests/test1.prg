@@ -19,9 +19,9 @@ PROCEDURE Main()
    hb_SDDOCI_Register()
 #endif
 
-   ? hb_HGetDef( { 1 => "OCI_CHAR_ANSI", 2 => "OCI_CHAR_WIDE" }, OCI_GetCharsetMetaData(), "OCI_CHAR_unknown" )
-   ? hb_HGetDef( { 1 => "OCI_CHAR_ANSI", 2 => "OCI_CHAR_WIDE" }, OCI_GetCharsetUserData(), "OCI_CHAR_unknown" )
-   ? hb_HGetDef( { 1 => "OCI_IMPORT_MODE_LINKAGE", 2 => "OCI_IMPORT_MODE_RUNTIME" }, OCI_GetImportMode(), "OCI_IMPORT_MODE_unknown" )
+   ? hb_HGetDef( { 1 => "OCI_CHAR_ANSI", 2 => "OCI_CHAR_WIDE" }, OCI_GetCharsetMetaData(), "OCI_CHAR_unrecognized" )
+   ? hb_HGetDef( { 1 => "OCI_CHAR_ANSI", 2 => "OCI_CHAR_WIDE" }, OCI_GetCharsetUserData(), "OCI_CHAR_unrecognized" )
+   ? hb_HGetDef( { 1 => "OCI_IMPORT_MODE_LINKAGE", 2 => "OCI_IMPORT_MODE_RUNTIME" }, OCI_GetImportMode(), "OCI_IMPORT_MODE_unrecognized" )
 
    rddSetDefault( "SQLMIX" )
 
@@ -35,7 +35,7 @@ PROCEDURE Main()
       ENDIF
    NEXT
    IF tmp == 0
-      ? "Unable connect to the server"
+      ? "Could not connect to the server"
       RETURN
    ENDIF
 

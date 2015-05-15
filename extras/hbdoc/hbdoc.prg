@@ -171,7 +171,7 @@ PROCEDURE Main( ... )
          CASE cArgName == "-source" ; s_hSwitches[ "basedir" ] := hb_DirSepAdd( arg )
          CASE cArgName == "-format"
             IF arg == "" .OR. hb_AScan( s_hSwitches[ "format-list" ], arg, , , .T. ) == 0
-               ShowHelp( "Unknown format option '" + arg + "'" )
+               ShowHelp( "Unrecognized format option '" + arg + "'" )
                RETURN
             ELSEIF arg == "all"
                s_hSwitches[ "format" ] := s_hSwitches[ "format-list" ]
@@ -191,7 +191,7 @@ PROCEDURE Main( ... )
                   AAdd( s_hSwitches[ "format" ], SubStr( cArgName, 2 ) )
                ENDIF
             ELSE
-               ShowHelp( "Unknown option:" + cArgName + iif( Len( arg ) > 0, "=" + arg, "" ) )
+               ShowHelp( "Unrecognized option:" + cArgName + iif( Len( arg ) > 0, "=" + arg, "" ) )
                RETURN
             ENDIF
          ENDCASE
@@ -459,7 +459,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
          IF o:IsTemplate( cSection )
             o:SetTemplate( cSection )
          ELSE
-            AddErrorCondition( cFile, "Unknown TEMPLATE '" + cSection + "'" ) // + "' (line " + hb_ntos( aHandle[ 2 ] ) + ")" // exclude link number, it reports tonnes of entries
+            AddErrorCondition( cFile, "Unrecognized TEMPLATE '" + cSection + "'" ) // + "' (line " + hb_ntos( aHandle[ 2 ] ) + ")" // exclude link number, it reports tonnes of entries
             lAccepted := .F.
             EXIT
          ENDIF
@@ -487,7 +487,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
          CASE cSectionName == "CATEGORY"
 
             IF ( idxCategory := AScan( sc_hConstraint[ "categories" ], {| c | ! Empty( c ) .AND. iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) } ) ) == 0
-               AddErrorCondition( cFile, "Unknown CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
+               AddErrorCondition( cFile, "Unrecognized CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
 #if 0
                lAccepted := .F.
 #endif
@@ -504,7 +504,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
             ELSEIF ( idxSubCategory := AScan( sc_hConstraint[ "categories" ][ idxCategory ][ 2 ], {| c | c != NIL .AND. iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) } ) ) == 0
 
-               AddErrorCondition( cFile, "Unknown SUBCATEGORY '" + sc_hConstraint[ "categories" ][ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
+               AddErrorCondition( cFile, "Unrecognized SUBCATEGORY '" + sc_hConstraint[ "categories" ][ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
 #if 0
                lAccepted := .F.
 #endif
@@ -777,7 +777,7 @@ STATIC FUNCTION Decode( cType, hsBlock, cKey )
       ELSEIF Len( cCode ) > 1
          RETURN cCode
       ELSEIF Len( cCode ) > 0
-         RETURN "Unknown 'STATUS' code: '" + cCode + "'"
+         RETURN "Unrecognized 'STATUS' code: '" + cCode + "'"
       ELSE
          RETURN ATail( sc_hConstraint[ "status" ] )[ 2 ]
       ENDIF
@@ -850,7 +850,7 @@ STATIC FUNCTION Decode( cType, hsBlock, cKey )
          CASE ! Empty( hsBlock[ "NAME" ] )
             RETURN "Function " + hsBlock[ "NAME" ]
          OTHERWISE
-            RETURN "Unknown 'CATEGORY': " + hsBlock[ "CATEGORY" ]
+            RETURN "Unrecognized 'CATEGORY': " + hsBlock[ "CATEGORY" ]
          ENDCASE
       ENDIF
 
@@ -954,7 +954,7 @@ STATIC PROCEDURE ShowHelp( cExtraMessage, aArgs )
 
    OTHERWISE
 
-      ShowHelp( "Unknown help option" )
+      ShowHelp( "Unrecognized help option" )
       RETURN
 
    ENDCASE
@@ -1237,7 +1237,7 @@ STATIC PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
       IF o:IsTemplate( cTemplate )
          nFrom := nTo := AScan( o:Templates, {| a | Upper( a[ 1 ] ) == Upper( cTemplate ) } )
       ELSE
-         ShowHelp( "Unknown template '" + cTemplate + "'" )
+         ShowHelp( "Unrecognized template '" + cTemplate + "'" )
          RETURN
       ENDIF
    ENDIF

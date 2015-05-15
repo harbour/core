@@ -51,7 +51,7 @@ PROCEDURE Main( ... )
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
             cData := MemoRead( cData )
             IF Empty( cData )
-               ? "Fatal: Can't read", hb_PValue( i )
+               ? "Fatal: Could not read", hb_PValue( i )
                RETURN
             ENDIF
             oMail:SetBody( cData + e"\r\n" )
@@ -60,7 +60,7 @@ PROCEDURE Main( ... )
       OTHERWISE  // it is an attachment file
          cData := hb_MemoRead( cData )
          IF Empty( cData )
-            ? "Fatal: Can't read attachment", hb_PValue( i )
+            ? "Fatal: Could not read attachment or attachment empty", hb_PValue( i )
             RETURN
          ENDIF
 

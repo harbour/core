@@ -154,7 +154,7 @@ STATIC FUNCTION WMI_Bios_BiosCharacteristics( nValue )
    CASE 39 ; RETURN "Smart Battery is supported"
    ENDSWITCH
 
-   RETURN "(unknown)"
+   RETURN "(unrecognized)"
 
 STATIC FUNCTION WMI_Bios_SoftwareElementState( nValue )
 
@@ -165,7 +165,7 @@ STATIC FUNCTION WMI_Bios_SoftwareElementState( nValue )
    CASE 3 ; RETURN "Running"
    ENDSWITCH
 
-   RETURN "(unknown)"
+   RETURN "(unrecognized)"
 
 STATIC FUNCTION WMI_Bios_TargetOperatingSystem( nValue )
 
@@ -234,4 +234,4 @@ STATIC FUNCTION WMI_Bios_TargetOperatingSystem( nValue )
    CASE 61 ; RETURN "TPF"
    ENDSWITCH
 
-   RETURN "(unknown)"
+   RETURN "(unrecognized)"

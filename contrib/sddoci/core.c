@@ -192,7 +192,7 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    }
    else
    {
-      szRet      = hb_strdup( "Unable to get error message" );
+      szRet      = hb_strdup( "Could not get the error message" );
       iNativeErr = 9999;
    }
 

@@ -871,7 +871,7 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL * ref, PHB_ITEM pNode, PHB_IT
          case 0:
             if( HB_ISALPHA( chr ) )
             {
-               /* can't cause reallocations */
+               /* cannot cause reallocations */
                buf[ iPos++ ] = ( char ) chr;
                iStatus       = 1;
             }
@@ -886,7 +886,7 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL * ref, PHB_ITEM pNode, PHB_IT
          case 1:
             if( HB_ISALNUM( chr ) || chr == '_' || chr == '-' || chr == ':' )
             {
-               /* can't cause reallocations */
+               /* cannot cause reallocations */
                buf[ iPos++ ] = ( char ) chr;
             }
             else if( chr == '>' || chr == ' ' || chr == '/' || chr == '\r' ||
@@ -1521,7 +1521,7 @@ static MXML_STATUS mxml_node_read( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM do
          }
          else
          {
-            /* Error is already set in ref->status; it can't be an hard error, we catch it before.*/
+            /* Error is already set in ref->status; it cannot be an hard error, we catch it before.*/
             hb_itemRelease( node );
             /* node will be destroyed by GC when needed */
             return ref->status;
@@ -1530,7 +1530,7 @@ static MXML_STATUS mxml_node_read( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM do
 
    }
 
-   /* We can't have errors here; we would have been already returned */
+   /* We cannot have errors here; we would have been already returned */
 
    if( iStatus == -1 )  /* ARE WE DONE ? */
    {

@@ -32,7 +32,7 @@
 #       - _DET_RES_TEXT with human readable detection result.
 #       - variable name specified in _DET_VAR_HAS_ (typically "HB_HAS_*") will
 #         have any these values:
-#          (empty)        - we can't use this component
+#          (empty)        - we cannot use this component
 #          <dirlist>      - component headers were found at these locations (typically one)
 #       - variable name specified in _DET_VAR_HAS_ + "_LOCAL" (typically "HB_HAS_*_LOCAL") will
 #         be non-empty if we're using the locally hosted version of the package.

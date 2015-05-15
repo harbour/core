@@ -230,7 +230,7 @@ STATIC FUNCTION IsVersionOK( cBIN, /* @ */ cVer )
          RETURN .T.
       ENDCASE
    ELSE
-      cVer := "unknown version"
+      cVer := "unrecognized version"
    ENDIF
 
    RETURN .F.

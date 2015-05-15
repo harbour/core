@@ -579,7 +579,7 @@ void hb_vmSetExceptionHandler( void )
       s_regRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
       rc = DosSetExceptionHandler( &s_regRec );
       if( rc != NO_ERROR )
-         hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
+         hb_errInternal( HB_EI_ERRUNRECOV, "Could not setup exception handler (DosSetExceptionHandler())", NULL, NULL );
    }
 #elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
    {

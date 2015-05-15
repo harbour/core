@@ -487,7 +487,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    IF ( s_hfileLogAccess := FOpen( cLogAccess, FO_CREAT + FO_WRITE ) ) == F_ERROR
-      ? "Can't open access log file"
+      ? "Could not open access log file"
       WAIT
       ErrorLevel( 1 )
       RETURN
@@ -499,7 +499,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    IF ( s_hfileLogError := FOpen( cLogError, FO_CREAT + FO_WRITE ) ) == F_ERROR
-      ? "Can't open error log file"
+      ? "Could not open error log file"
       WAIT
       ErrorLevel( 1 )
       RETURN

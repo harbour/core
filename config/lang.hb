@@ -54,7 +54,7 @@ PROCEDURE Main( cCommand, cMain, ... )
          iif( Empty( hb_FNameName( cMain := hb_DirSepToOS( cMain ) ) ), cMain + hb_FNameName( hb_DirSepDel( cMain ) ) + ".prg", cMain ), ;
          ... )
    ELSE
-      ? "unknown command or missing target"
+      ? "unrecognized command or missing target"
    ENDIF
 
    RETURN

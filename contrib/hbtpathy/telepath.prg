@@ -580,7 +580,7 @@ FUNCTION tp_flush( nPort, nTimeout )
 FUNCTION tp_ctrldsr( nPort )
    RETURN tp_isdsr( nPort )
 
-// / you can't do these things.  try rc.serial
+// / you cannot do these things.  try rc.serial
 FUNCTION tp_shared()
    RETURN 0
 

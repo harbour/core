@@ -1350,7 +1350,7 @@ HB_FUNC( WAPI_GETICONINFO )  /* TODO: added support to return hash instead of ar
 
    memset( &ii, 0, sizeof( ii ) );
 
-/* MSDN doc says it's in icon.lib, but I can't find such lib in wce msvcarm/mingwarm. */
+/* MSDN doc says it's in icon.lib, but I could not find such lib in wce msvcarm/mingwarm. */
 #if defined( HB_OS_WIN_CE )
    bResult = FALSE;
    hbwapi_SetLastError( ERROR_INVALID_FUNCTION );

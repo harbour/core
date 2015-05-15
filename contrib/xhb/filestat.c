@@ -137,10 +137,10 @@ HB_FUNC( FILESTATS )
          }
 
          /* Standard characters */
-         if( ( usAttr & 4 ) == 0 ) /* Hidden (can't read) */
+         if( ( usAttr & 4 ) == 0 ) /* Hidden (cannot read) */
             ushbAttr |= HB_FA_HIDDEN;
 
-         if( ( usAttr & 2 ) == 0 ) /* read only (can't write) */
+         if( ( usAttr & 2 ) == 0 ) /* read only (cannot write) */
             ushbAttr |= HB_FA_READONLY;
 
          if( ( usAttr & 1 ) == 1 ) /* executable? (xbit) */

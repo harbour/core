@@ -1139,7 +1139,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
 
    /* BH:
       If a filter is set that is not valid for ADS, we need to skip
-      off of any invalid records (IOW, filter at the Harbour level if ADS can't
+      off of any invalid records (IOW, filter at the Harbour level if ADS cannot
       because the filter has UDFs or PUBLICVAR references).
       To make sure the skipped-to record still matches the seeked key, we need to
       be able to construct a comparable key for the subsequent record.
@@ -4057,7 +4057,7 @@ static HB_ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
    {
       if( HB_IS_STRING( pOrderInfo->itmOrder ) )
       {
-         /* ADS can't handle a space-padded string--we have to trim it */
+         /* ADS cannot handle a space-padded string--we have to trim it */
          hb_strncpyUpperTrim( ( char * ) pucTagName,
                               hb_itemGetCPtr( pOrderInfo->itmOrder ),
                               sizeof( pucTagName ) - 1 );

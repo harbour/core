@@ -976,7 +976,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       }
 #endif
       if( s_HInput == INVALID_HANDLE_VALUE )
-         hb_errInternal( 10001, "Can't allocate console", NULL, NULL );
+         hb_errInternal( 10001, "Could not allocate console", NULL, NULL );
    }
 
    /* Add Ctrl+Break handler [vszakats] */
@@ -992,7 +992,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                      0, 0 );
 
    if( s_HOutput == INVALID_HANDLE_VALUE )
-      hb_errInternal( 10001, "Can't allocate console (output)", NULL, NULL );
+      hb_errInternal( 10001, "Could not allocate console (output)", NULL, NULL );
 
    s_HInput = CreateFile( TEXT( "CONIN$" ),                 /* filename    */
                      GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
@@ -1002,7 +1002,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                      0, 0 );
 
    if( s_HInput == INVALID_HANDLE_VALUE )
-      hb_errInternal( 10001, "Can't allocate console (input)", NULL, NULL );
+      hb_errInternal( 10001, "Could not allocate console (input)", NULL, NULL );
 
    GetConsoleScreenBufferInfo( s_HOutput, &s_csbi );
 
