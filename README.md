@@ -365,7 +365,7 @@ See: [How to Build](#how-to-build)
 # How to Enable Optional Components
 
 Certain Harbour parts &ndash; typically contrib packages &ndash; depend
-on 3rd party components. To make these Harbour parts built,you need
+on 3rd party components. To make these Harbour parts built, you need
 to tell Harbour where to find the headers for these 3rd party
 components.
 
