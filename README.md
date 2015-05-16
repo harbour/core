@@ -714,7 +714,7 @@ for your host platform can be found:
 If you leave this value empty, the make system will try to auto-detect it,
 so in practice all you have to do is to create a native build first (no
 `install` required), then create the cross-build. If you set this value
-manually, it may be useful to know that harbour, hbpp and hbmk2
+manually, it may be useful to know that `harbour`, `hbpp` and `hbmk2`
 executables are required for a cross-build process to succeed.
 
 
@@ -726,8 +726,8 @@ executables are required for a cross-build process to succeed.
 >
 > - All code below should be copied to batch files or typed at command
 >   line.
-> - Naturally, you will need to adapt dirs to valid ones on your system.
->   Don't use spaces in dirs.
+> - Naturally, you will need to adapt pathnames to valid ones on your system.
+>   Don't use spaces in pathnames.
 > - You can use additional `clean`, `install` or `clean install`
 >   make parameters depending on what you want to do.
 > - To redirect all output to a log file, append this after the make
@@ -1187,10 +1187,10 @@ For all platforms you will need two things:
     which will automatically be used, so you don't have to
     make any extra steps here.
 
-Use hbmk2 to build your app from source. It's recommended to put
+Use `hbmk2` to build your app from source. It's recommended to put
 it in the `PATH` (f.e. by using `set PATH=C:\hb\bin;%PATH%` on Windows).
 
-See hbmk2 [documentation, with examples](utils/hbmk2/doc/hbmk2.en.md).
+See `hbmk2` [documentation, with examples](utils/hbmk2/doc/hbmk2.en.md).
 
 
 # Debugging Options
@@ -1575,7 +1575,7 @@ Supported shells per host platforms:
         * <https://readthedocs.org/>
      * ReadMe.io [online documentation creator, web service, free plan]
         * <https://readme.io/>
-     * GNU Bison (grammer paser generator) [multi-platform, free, open-source]
+     * GNU Bison (grammer parser generator) [multi-platform, free, open-source]
         * Windows binary:
            * <http://gnuwin32.sourceforge.net/packages/bison.htm>
                (not verified with current Harbour version)
@@ -1652,7 +1652,7 @@ Supported shells per host platforms:
        * <http://docs.transifex.com/developer/formats/gettext>
        * <http://heiner-eichmann.de/autotools/using_gettext.html>
      * [GitHub Guides](https://guides.github.com)
-     * [GitHub flavoured Markdown](https://help.github.com/articles/github-flavored-markdown)
+     * [GitHub flavored Markdown](https://help.github.com/articles/github-flavored-markdown)
      * [A practical git introduction](http://mrchlblng.me/2014/09/practical-git-introduction/)
 
 * Community forums:
