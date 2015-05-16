@@ -124,11 +124,11 @@
    - Consider renaming the tool to simply 'hb'.
    - Turn off lib grouping by default
    - Avoid adding certain options and input files twice
-   - Clean up compiler autodetection and add those few feature only
-     found in GNU Make / global.mk, like *nix native autodetection,
-     autodetection of watcom cross-build setups, poccarm/pocc64 setups,
+   - Clean up compiler auto-detection and add those few feature only
+     found in GNU Make / global.mk, like *nix native auto-detection,
+     auto-detection of watcom cross-build setups, poccarm/pocc64 setups,
      clang, etc.
-   - Next gen compiler autodetection:
+   - Next gen compiler auto-detection:
      1. Gather supported compilers by Harbour installation
         (look for lib/<plat>/*[/<name>] subdirs)
         Show error if nothing is found
@@ -1257,7 +1257,7 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
    LOCAL lDOSWinTokens
 
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_BIN ] )
-      /* Autodetect multi-compiler/platform bin structure (also .dlls are in bin dir on non-*nix platforms) */
+      /* Auto-detect multi-compiler/platform bin structure (also .dlls are in bin dir on non-*nix platforms) */
       IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "bin" + ;
                                                 hb_ps() + hbmk[ _HBMK_cPLAT ] + ;
                                                 hb_ps() + hbmk[ _HBMK_cCOMP ] + ;
@@ -1268,7 +1268,7 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
       ENDIF
    ENDIF
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_LIB ] )
-      /* Autodetect multi-compiler/platform lib structure */
+      /* Auto-detect multi-compiler/platform lib structure */
       IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" + ;
                                                 hb_ps() + hbmk[ _HBMK_cPLAT ] + ;
                                                 hb_ps() + hbmk[ _HBMK_cCOMP ] + ;
@@ -2057,7 +2057,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    ENDIF
 #endif
 
-   /* Autodetect platform */
+   /* Auto-detect platform */
 
    IF Empty( hbmk[ _HBMK_cPLAT ] )
 
@@ -2090,7 +2090,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDSWITCH
       IF ! Empty( hbmk[ _HBMK_cPLAT ] )
          IF hbmk[ _HBMK_lInfo ]
-            _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected platform: %1$s" ), hbmk[ _HBMK_cPLAT ] ) )
+            _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Auto-detected platform: %1$s" ), hbmk[ _HBMK_cPLAT ] ) )
          ENDIF
       ENDIF
    ENDIF
@@ -2230,7 +2230,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          { {|| iif( FindInPath( "wcc386"   ) == NIL, ;
                     FindInPath( "cl.exe"   ), ;
                     NIL )                      }, "msvc"    }, ;
-         { {|| _BCC_BIN_DETECT()        }, "bcc"    }, ; /* TODO: Add bcc64 autodetection */
+         { {|| _BCC_BIN_DETECT()        }, "bcc"    }, ; /* TODO: Add bcc64 auto-detection */
          { {|| iif( FindInPath( "dbgeng.lib", GetEnv( "LIB" ) ) != NIL .AND. ( tmp1 := FindInPath( "pocc.exe" ) ) != NIL, tmp1, NIL ) }, "pocc64"  }, ;
          { {|| FindInPath( "pocc.exe" ) }, "pocc"   }, ;
          { {|| iif( ( tmp1 := FindInPath( "icl.exe" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" }, ;
@@ -2289,13 +2289,13 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    SetupForGT( hbmk[ _HBMK_cGTDEFAULT ],, @hbmk[ _HBMK_lGUI ] )
 #endif
 
-   /* Autodetect Harbour environment */
+   /* Auto-detect Harbour environment */
 
 #ifdef HARBOUR_SUPPORT
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
       IF ! hbmk_harbour_dirlayout_detect( hbmk, .F. )
-         hbmk_OutErr( hbmk, hb_StrFormat( I_( e"Error: %1$s not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory." ), _HBMK_ENV_INSTALL_PFX ) )
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( e"Error: %1$s not set, failed to auto-detect.\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory." ), _HBMK_ENV_INSTALL_PFX ) )
          RETURN _EXIT_FAILHBDETECT
       ENDIF
    ELSE
@@ -2392,7 +2392,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    ENDIF
 #endif
 
-   /* Autodetect compiler */
+   /* Auto-detect compiler */
 
    cPath_CompC := NIL
 
@@ -2431,7 +2431,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      IF Len( tmp ) >= _COMPDET_cPLAT .AND. tmp[ _COMPDET_cPLAT ] != NIL
                         hbmk[ _HBMK_cPLAT ] := tmp[ _COMPDET_cPLAT ]
                      ENDIF
-                     /* Hack autodetect watcom platform by looking at the header path config. TODO: Do it properly */
+                     /* Hack auto-detect watcom platform by looking at the header path config. TODO: Do it properly */
                      IF hbmk[ _HBMK_cCOMP ] == "watcom"
                         DO CASE
                         CASE FindInPath( "os2.h", GetEnv( "INCLUDE" ) ) != NIL
@@ -2458,12 +2458,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                            hbmk[ _HBMK_cCCSUFFIX ] := tmp[ _COMPDET_cCCSUFFIX ]
                         ENDIF
                         IF !( hbmk[ _HBMK_cPLAT ] == tmp1 ) .AND. hbmk[ _HBMK_lInfo ]
-                           _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected platform: %1$s (adjusted)" ), hbmk[ _HBMK_cPLAT ] ) )
+                           _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Auto-detected platform: %1$s (adjusted)" ), hbmk[ _HBMK_cPLAT ] ) )
                         ENDIF
                         EXIT
 #ifdef HARBOUR_SUPPORT
                      ELSE
-                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected C compiler '%1$s' skipped because required Harbour core libraries are not found." ), tmp[ _COMPDET_cCOMP ] ) )
+                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Auto-detected C compiler '%1$s' skipped because required Harbour core libraries are not found." ), tmp[ _COMPDET_cCOMP ] ) )
                      ENDIF
 #endif
                   ENDIF
@@ -2472,7 +2472,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          IF Empty( hbmk[ _HBMK_cCOMP ] )
 #ifdef HARBOUR_SUPPORT
-            /* Autodetect embedded installations */
+            /* Auto-detect embedded installations */
             FOR EACH tmp IN aCOMPDET_EMBED
                IF hbmk[ _HBMK_cPLAT ] == tmp[ _COMPDETE_cPLAT ] .AND. ;
                   ! Empty( cPath_CompC := Eval( tmp[ _COMPDETE_bBlock ], tmp[ _COMPDETE_cCCPREFIX ], tmp[ _COMPDETE_cCCPATH ] ) )
@@ -2497,7 +2497,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          IF ! Empty( hbmk[ _HBMK_cCOMP ] )
             IF hbmk[ _HBMK_lInfo ]
-               _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Autodetected C compiler: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
+               _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Auto-detected C compiler: %1$s" ), hbmk[ _HBMK_cCOMP ] ) )
             ENDIF
          ELSE
             IF Empty( aCOMPDET )
@@ -9399,7 +9399,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                                          .T. /* lOnlyMatch */ )
                /* NOTE: It will accept files with unclosed string separators
                         (the compiler doesn't).
-                        It won't consider closing command separator (';') nor
+                        It will not recognize closing command separator (';') nor
                         inline comments.
                         Other minor differences might be also possible. */
                cHeader := tmp[ 2 ]
@@ -13873,7 +13873,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
       cCommand := "svnversion " + iif( Empty( cDir ), ".", cDir )
       EXIT
    CASE _VCS_GIT_SUB
-      /* --git-dir= won't handle submodules. So instead we CD into
+      /* --git-dir= will not handle submodules. So instead we CD into
          the submodule dir and call git with default/current dir. */
       cOldDir := hb_cwd( cDir )
       /* fall through */
@@ -17468,7 +17468,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-haltrev[-]"        , I_( "do not increase revision numbers in -bldhead= (_HBMK_BUILD_ID_) and -vcshead= (_HBMK_VCS_ID_) options (default: do increase)" ) }, ;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform (not supported by some platforms/compilers). On Windows, it is implemented by generating and linking a resource file." ) }, ;
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) }, ;
-      { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only). On Windows signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles C 7), in that order, both autodetected." ) }, ;
+      { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only). On Windows signtool.exe is used (part of MS Windows SDK) or posign.exe (part of Pelles C 7), in that order, both auto-detected." ) }, ;
       { "-signpw=<pw>"       , I_( "use <pw> as password when signing executable (Windows and Darwin only)" ) }, ;
       { "-signts=<[std:]url>", hb_StrFormat( I_( "use <url> as trusted timestamp server. Optional <std> might specify the standard as 'rfc3161' or 'authenticode' (without quotes). The default is 'rfc3161'. Empty value resets it to the default: %1$s" ), _HBMK_SIGN_TIMEURL_DEF ) }, ;
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you do not specify <file>, the list of files in that group will be emptied." ) }, ;
@@ -17582,7 +17582,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       , ;
       { "-plat=<platform>"   , I_( "override default target platform (default: automatic)" ) }, ;
       { "-cpu=<cpu>"         , I_( "override default target CPU (default: automatic) (EXPERIMENTAL)" ) }, ;
-      { "-comp=<compiler>"   , I_( e"override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)" ) }, ;
+      { "-comp=<compiler>"   , I_( e"override C compiler auto-detection\nSpecial value:\n - bld: use original build settings (default on *nix)" ) }, ;
       { "-build=<name>"      , I_( "specify a build name" ) }, ;
       { "-lang=<lang>"       , I_( "override default language. <lang> is an ISO language code." ) }, ;
       { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) }, ;
@@ -17685,7 +17685,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "HB_USER_LDFLAGS"    , I_( "options to be passed to linker (executable) (before command-line options)" ) }, ;
       { "HB_USER_DFLAGS"     , I_( "options to be passed to linker (dynamic library) (before command-line options)" ) }, ;
       { "HB_USER_AFLAGS"     , I_( "options to be passed to linker (static library) (before command-line options)" ) }, ;
-      { "HB_COMPILER_VER"    , I_( "override C compiler version autodetection (gcc and msvc compiler families only). Format: <15><00> = <major><minor>" ) }, ;
+      { "HB_COMPILER_VER"    , I_( "override C compiler version auto-detection (gcc and msvc compiler families only). Format: <15><00> = <major><minor>" ) }, ;
       { "HB_CCPATH"          , I_( "override C compiler executable directory (gcc compiler families only)" ) }, ;
       { "HB_CCPREFIX"        , I_( "override C compiler executable prefix (gcc compiler families only)" ) }, ;
       { "HB_CCSUFFIX"        , I_( "override C compiler executable suffix (gcc compiler families only)" ) }, ;
@@ -18057,7 +18057,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          "directory and in PATH. If not extension is given, .hb and .hrb extensions are " + ;
          "searched, in that order. .dbf file will be opened automatically in shared mode and " + ;
          "interactive Harbour shell launched. " + ;
-         "Non-standard extensions will be autodetected for source and precompiled script types. " + ;
+         "Non-standard extensions will be auto-detected for source and precompiled script types. " + ;
          "Note, for Harbour scripts, the codepage is set to UTF-8 by default. The default " + ;
          "core header 'hb.ch' is automatically #included at the interactive shell prompt. " + ;
          "The default date format is the ISO standard: yyyy-mm-dd. " + ;
@@ -18088,7 +18088,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       e"platforms and across all supported C compilers. It also aims to cover " + ;
       e"the majority of build tasks via short and simple project files (options). " + ;
       e"%1$s supports pure -non-Harbour- C/C++/Objective-C projects as well. " + ;
-      e"In order to achieve above goals, %1$s will autodetect Harbour, C compiler " + ;
+      e"In order to achieve above goals, %1$s will auto-detect Harbour, C compiler " + ;
       e"and other required tools, then configure and call them appropriately. " + ;
       e"%1$s allows to extend the types of supported source files via plugins.\n" + ;
       e"Besides building executables, %1$s is able to run Harbour scripts (both " + ;

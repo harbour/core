@@ -173,7 +173,7 @@ STATIC FUNCTION tool_detect( hbmk, cName )
          ! hb_FileExists( cBIN := hb_DirSepAdd( GetEnv( "HB_BISONPATH" ) ) + cName )
 
          IF Empty( cBIN := hbmk_FindInPath( cName, GetEnv( "PATH" ) ) )
-            hbmk_OutErr( hbmk, hb_StrFormat( "%1$s not set, could not autodetect '%2$s' executable", hbmk_ArrayToList( aEnvList, ", " ), cName ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( "%1$s not set, could not auto-detect '%2$s' executable", hbmk_ArrayToList( aEnvList, ", " ), cName ) )
             RETURN NIL
          ENDIF
       ENDIF

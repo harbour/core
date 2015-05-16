@@ -388,7 +388,7 @@ static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, H
       /* Try a windowed mode first */
       if( iRet != 0 )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "trying autodetect windowed mode" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "trying to auto-detect windowed mode" ) );
          iRet = al_set_gfx_mode( AL_GFX_AUTODETECT_WINDOWED, iWidth, iHeight, 0, 0 );
       }
 #ifdef ALLEGRO_WINDOWS
@@ -406,7 +406,7 @@ static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, H
 #endif
       if( iRet != 0 )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "trying autodetect console mode" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "trying to auto-detect console mode" ) );
          iRet = al_set_gfx_mode( AL_GFX_AUTODETECT, iWidth, iHeight, 0, 0 );
       }
       if( iRet != 0 )

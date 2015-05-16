@@ -65,7 +65,7 @@
 
 #include "ace.h"
 
-/* Autodetect ACE version. */
+/* Auto-detect ACE version. */
 #if   defined( ADS_ROOT_DD_ALIAS )
    #define _ADS_LIB_VERSION  1110 /* or upper */
 #elif defined( ADS_GET_FORMAT_WEB )

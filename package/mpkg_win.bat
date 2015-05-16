@@ -30,7 +30,7 @@ if "%HB_RT%" == "" set HB_RT=%HB_RT_DEF%
 set HB_DR=hb%HB_VS%\
 set HB_ABSROOT=%HB_RT%%HB_DR%
 
-:: Autodetect the base bitness, by default it will be 32-bit,
+:: Auto-detect the base bitness, by default it will be 32-bit,
 :: and 64-bit if it's the only one available.
 
 if exist "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (

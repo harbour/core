@@ -261,7 +261,7 @@ Core
 - Added Windows 7 and Server 2008 R2 version detection.
 - Replaced old hbmk.bat, hbmk bash script and Harbour Make tool with
   portable make tool written in Harbour: hbmk. This tool can create
-  a Harbour executable on any platforms using minimal effort. It autodetects
+  a Harbour executable on any platforms using minimal effort. It auto-detects
   OS and compiler environment. Support script and parameter files,
   can act as a linker, C compiler, Harbour compiler, static and dynamic
   library creator, resource compiler (on Windows). Core features are
@@ -349,7 +349,7 @@ Contrib
 - hbtip FTP handling fixed some accidental typos.
 - hbtip new MIME types.
 - hbtip fixes and optimization to HB_BASE64().
-- rddads now autodetects version 9.10.
+- rddads now auto-detects version 9.10.
 - hbct XToC(), FToC() and CToF() fixed to be properly multiplatform.
 - hbct unbuffered drawing speed improvement in windowing code.
 - hbct DirName() fixed.
@@ -512,7 +512,7 @@ General
   renamed, please update your system if you're using them:
   exit_err.bat -> hbmkpost.bat
 - Added experimental MSVC WinCE GNU-make file.
-- Added Darwin autodetection to non-GNU .sh make files.
+- Added Darwin auto-detection to non-GNU .sh make files.
 - Changed GNU-make name of MinGW WinCE compiler (HB_COMPILER)
   from 'cemgw' to 'mingwce'. Please update your system, if
   you've been using this directly (and not via make_*ce.sh scripts).

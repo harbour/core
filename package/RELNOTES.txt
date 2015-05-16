@@ -122,7 +122,7 @@ Changes since previous (2.0.0beta2 2009-06-24) release
 - Fixed remaining Clipper compatibility issues (@.clp, SET PROC TO, DO WITH, etc)
 - Added replaceable core file I/O layer.
 - Reworked build system with integrated dynlib creation, cross-platform
-  support, compiler and external component autodetection and much more.
+  support, compiler and external component auto-detection and much more.
 - MinGW updated to 4.4.1
 - MinGW x64 updated to 4.5.0 (2009-09-05)
 - Finalizing ActiveX/OLE2 support.

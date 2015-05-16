@@ -337,7 +337,7 @@ STATIC PROCEDURE GNUMake( aParams, hProjectList )
    hb_SetEnv( "_HB_INSTALL_ETC", GetEnv( "HB_INSTALL_ETC" ) )
    hb_SetEnv( "_HB_INSTALL_CONTRIB", GetEnv( "HB_INSTALL_CONTRIB" ) )
 
-   /* Override hbmk2 autodetection. WARNING: Must be in sync with global.mk logic */
+   /* Override hbmk2 auto-detection. WARNING: Must be in sync with global.mk logic */
    hb_SetEnv( "HB_INSTALL_PREFIX", s_cRoot )
    hb_SetEnv( "HB_INSTALL_BIN", s_cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
    hb_SetEnv( "HB_INSTALL_LIB", s_cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )

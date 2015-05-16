@@ -9,7 +9,7 @@ clone_folder: C:\hb\
 environment:
   HB_VF: daily
   matrix:
-# Do not set HB_COMPILER here, it will prevent compiler version autodetection.
+# Do not set HB_COMPILER here, it will prevent compiler version auto-detection.
 # - TARGET: msvc64
 # - TARGET: msvc
 # - TARGET: mingw64

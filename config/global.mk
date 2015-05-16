@@ -315,7 +315,7 @@ else
 endif
 
 # NOTE: This can be need if we want to run some internal command which are
-#       missing from GNU Make's internal autodetection list. Like 'move' on
+#       missing from GNU Make's internal auto-detection list. Like 'move' on
 #       non-*nix shells. [vszakats]
 CMDPREF :=
 ifneq ($(HB_SHELL),sh)
@@ -506,13 +506,13 @@ ifeq ($(HB_PLATFORM),)
       endif
    endif
    ifneq ($(HB_PLATFORM),)
-      HB_PLAT_AUTO := (autodetected)
+      HB_PLAT_AUTO := (auto-detected)
    endif
 endif
 
 HB_COMPILER_ORI := $(HB_COMPILER)
 
-# enable CC autodetection in *nix cross builds
+# enable CC auto-detection in *nix cross builds
 HB_CC_DET :=
 ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
    ifeq ($(filter $(HB_HOST_PLAT),win dos os2),)
@@ -854,7 +854,7 @@ ifeq ($(HB_COMPILER),)
                                                          endif
                                                          endif
                                                       else
-                                                         # TODO: Add bcc64 autodetection
+                                                         # TODO: Add bcc64 auto-detection
                                                          HB_COMP_PATH := $(call find_in_path_raw,bcc32.exe)
                                                          ifneq ($(HB_COMP_PATH),)
                                                             HB_COMPILER := bcc
@@ -1085,7 +1085,7 @@ ifeq ($(HB_COMPILER),)
    endif
    endif
 
-   # autodetect watcom platform by looking at the header path config
+   # auto-detect watcom platform by looking at the header path config
    ifeq ($(HB_COMPILER),watcom)
       ifneq ($(call find_in_path_prw,os2.h,$(INCLUDE)),)
          HB_PLATFORM := os2
@@ -1101,7 +1101,7 @@ ifeq ($(HB_COMPILER),)
    endif
 endif
 
-# autodetect CC values for given platform/compiler
+# auto-detect CC values for given platform/compiler
 ifneq ($(HB_CC_DET),)
    ifeq ($(HB_PLATFORM)-$(HB_COMPILER),win-mingw)
 
@@ -1367,7 +1367,7 @@ endif
 ifeq ($(HB_COMPILER_ORI),)
    ifneq ($(HB_COMPILER),)
       HB_COMP_PATH := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
-      HB_COMP_AUTO := (autodetected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),)$(if $(HB_CCPREFIX), [$(HB_CCPREFIX)*],)$(if $(HB_CCSUFFIX), [*$(HB_CCSUFFIX)],))
+      HB_COMP_AUTO := (auto-detected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),)$(if $(HB_CCPREFIX), [$(HB_CCPREFIX)*],)$(if $(HB_CCSUFFIX), [*$(HB_CCSUFFIX)],))
    endif
 endif
 HB_COMP_VERD := $(if $(HB_COMPILER_VER), (v$(HB_COMPILER_VER)),)
@@ -1377,10 +1377,10 @@ export HB_CCPREFIX
 export HB_CCSUFFIX
 
 ifeq ($(HB_PLATFORM),)
-   $(error ! HB_PLATFORM not set, could not autodetect)
+   $(error ! HB_PLATFORM not set, could not auto-detect)
 endif
 ifeq ($(HB_COMPILER),)
-   $(error ! HB_COMPILER not set, could not autodetect)
+   $(error ! HB_COMPILER not set, could not auto-detect)
 endif
 
 export HB_PLATFORM
@@ -1392,7 +1392,7 @@ ifneq ($(HB_COMP_PATH),)
    export HB_COMP_PATH_PUB := $(HB_COMP_PATH)
 endif
 
-# Always autodetect bcc location (hack)
+# Always auto-detect bcc location (hack)
 ifeq ($(HB_COMP_PATH_PUB),)
    ifeq ($(HB_PLATFORM)-$(HB_COMPILER),win-bcc)
       HB_COMP_PATH := $(call find_in_path_raw,bcc32.exe)

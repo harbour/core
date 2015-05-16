@@ -62,7 +62,7 @@ of Harbour in the [README](https://github.com/harbour/core/blob/master/README.md
 
 ### Harbour live source repository
 
-You'll need Git version control software installed on your system
+You will need Git version control software installed on your system
 and to issue this command:
 
     git clone https://github.com/vszakats/harbour-core.git harbour-core
@@ -97,7 +97,7 @@ Download source archive from any of these URLs and unpack:
 
 # How to Build
 
-For all platforms you'll need:
+For all platforms you will need:
 
 * Supported ANSI C compiler
 * GNU Make (3.81 recommended, minimum 3.79 required, see also platform details)
@@ -227,8 +227,8 @@ You should see `Hello, world!` on screen.
 
 Platform specific prerequisites:
 
-1. You'll need to have the developer tools installed.
-2. Then you'll need to install gmake and optionally bison.
+1. You will need to have the developer tools installed.
+2. Then you will need to install gmake and optionally bison.
    If you installed the ports collection, then all you need
    to do to install bison and gmake is to run the following
    commands, which may require that you run su root first to
@@ -377,7 +377,7 @@ You only need to use manual setup if the dependency isn't available
 on your platform on a system location, or you wish to use
 a non-standard location. Typically you need to do this on non-*nix
 (Windows, MS-DOS, OS/2) systems for all packages and for a few packages
-on *nix which aren't available through official package managers
+on *nix which are not available through official package managers
 (f.e. ADS Client).
 
 Note that Harbour is tuned to use 3rd party binary packages in their
@@ -390,7 +390,7 @@ generation) might not work as expected.
 You can set these environment variables before starting
 the build. Make sure to adjust them to your own directories:
 
-    HB_WITH_CURSES= (on *nix systems and DJGPP, autodetected on both)
+    HB_WITH_CURSES= (on *nix systems and DJGPP, auto-detected on both)
     HB_WITH_GPM= (on Linux only)
     HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
     HB_WITH_PCRE2=C:\pcre2
@@ -403,7 +403,7 @@ the build. Make sure to adjust them to your own directories:
     HB_WITH_ZLIB=C:\zlib (defaults to locally hosted version if not found)
 
 To explicitly disable any given components, use the value `no`.
-This may be useful to avoid autodetection of installed packages
+This may be useful to avoid auto-detection of installed packages
 on *nix systems. You may also use the value `local` to force using the
 locally hosted copy (inside Harbour source repository) of these packages,
 where applicable. `nolocal` will explicitly disable using locally hosted
@@ -416,7 +416,7 @@ See contrib-specific dependencies and build notes in the projects'
 > NOTES:
 >
 >    * you need to use native path format to your shell/OS
->    * spaces in directory names aren't supported
+>    * spaces in directory names are not supported
 >      (you *can* use 8.3 name alias on Windows platform, though)
 >    * don't put directory names inside double quotes
 >    * use absolute paths
@@ -435,11 +435,11 @@ See contrib-specific dependencies and build notes in the projects'
 
 ## Linux (.deb based distros: Debian, Ubuntu)
 
-You'll need these base packages to build/package/test/use Harbour:
+You will need these base packages to build/package/test/use Harbour:
 
       bash git gcc binutils fakeroot debhelper valgrind upx uncrustify p7zip-full
 
-You'll need these packages to compile optional core Harbour features:
+You will need these packages to compile optional core Harbour features:
 
       for gtcrs terminal lib:    libncurses-dev
       for gtsln terminal lib:    libslang2-dev OR libslang1-dev
@@ -453,11 +453,11 @@ Optional, to override locally hosted sources:
 
 ## Linux (.rpm based distros: openSUSE, Fedora, CentOS, Mandriva)
 
-You'll need these base packages to build/package/test/use Harbour:
+You will need these base packages to build/package/test/use Harbour:
 
       bash git gcc make glibc-devel rpm valgrind upx uncrustify p7zip
 
-You'll need these packages to compile optional core Harbour features:
+You will need these packages to compile optional core Harbour features:
 
       for gtcrs terminal lib:    ncurses-devel ncurses
       for gtsln terminal lib:    slang-devel slang
@@ -522,10 +522,10 @@ sensitive.
    - `HB_USER_AFLAGS`          User linker options for libraries
    - `HB_USER_DFLAGS`          User linker options for dynamic libraries
 
-   Set these only if autodetection doesn't suit your purpose:
+   Set these only if auto-detection doesn't suit your purpose:
 
-   - `HB_PLATFORM`             Override platform autodetection
-   - `HB_COMPILER`             Override C compiler autodetection
+   - `HB_PLATFORM`             Override platform auto-detection
+   - `HB_COMPILER`             Override C compiler auto-detection
 
      See this for possible values:
      [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers)
@@ -592,13 +592,13 @@ sensitive.
 
    - `HB_BUILD_3RDEXT=no`
 
-     Enable autodetection of 3rd party components
+     Enable auto-detection of 3rd party components
      on default system locations. Default: `yes`
 
    - `HB_BUILD_CONTRIBS=no [<l>]`
 
-     Don't build any, or space separated `<l>` list of,
-     contrib packages. Please note it won't prevent
+     Do not build any, or space separated `<l>` list of,
+     contrib packages. Please note it will not prevent
      building packages which are dependencies of
      other &ndash; enabled &ndash; packages.
 
@@ -622,7 +622,7 @@ sensitive.
 
          F.e. mingw: 0501 for 5.1.x, msvc: 1900 for 19.00.x
 
-     Default: filled by compiler autodetection or empty
+     Default: filled by compiler auto-detection or empty
 
    - `HB_USER_LIBS=[<list>]`
 
@@ -711,7 +711,7 @@ for your host platform can be found:
 
       HB_HOST_BIN=<harbour_native_build_dir>\bin
 
-If you leave this value empty, the make system will try to autodetect it,
+If you leave this value empty, the make system will try to auto-detect it,
 so in practice all you have to do is to create a native build first (no
 `install` required), then create the cross-build. If you set this value
 manually, it may be useful to know that harbour, hbpp and hbmk2
@@ -726,7 +726,7 @@ executables are required for a cross-build process to succeed.
 >
 > - All code below should be copied to batch files or typed at command
 >   line.
-> - Naturally, you'll need to adapt dirs to valid ones on your system.
+> - Naturally, you will need to adapt dirs to valid ones on your system.
 >   Don't use spaces in dirs.
 > - You can use additional `clean`, `install` or `clean install`
 >   make parameters depending on what you want to do.
@@ -996,7 +996,7 @@ sh -c make
 
 ## on Windows x86-64 (64-bit) hosts
 
-Same as 32-bit Windows, with the difference that you'll have to change
+Same as 32-bit Windows, with the difference that you will have to change
 `%ProgramFiles%` to `%ProgramFiles(x86)%` for 32-bit and mixed tools,
 that you can build for both x86 and x86-64 without building a native
 target first, and potential differences with some compilers in using
@@ -1170,7 +1170,7 @@ make HB_PLATFORM=wce
 
 # Build Your Own Harbour App
 
-For all platforms you'll need two things:
+For all platforms you will need two things:
 
 * Harbour binaries
 
@@ -1252,7 +1252,7 @@ Press `<Alt+D>` in the app.
 
 # Supported Platforms and C Compilers
 
-## You can override target platform autodetection with these `HB_PLATFORM` values:
+## You can override target platform auto-detection with these `HB_PLATFORM` values:
 
 * linux    - Linux
 * darwin   - OS X
@@ -1264,7 +1264,7 @@ Press `<Alt+D>` in the app.
 * android  - Android
 * vxworks  - VxWorks
 * symbian  - Symbian OS (experimental)
-* minix    - Minix 3 (tested on 3.2.1; earlier releases won't work)
+* minix    - Minix 3 (tested on 3.2.1; earlier releases will not work)
 * aix      - IBM AIX
 * win      - MS Windows (all flavors)
              (see [External Links](#external-links) for Win9x requirements)
@@ -1273,7 +1273,7 @@ Press `<Alt+D>` in the app.
              (MS-DOS compatible systems also work, like dosemu)
 * os2      - OS/2 Warp 4 / eComStation
 
-## You can override C compiler autodetection with these `HB_COMPILER` values:
+## You can override C compiler auto-detection with these `HB_COMPILER` values:
 
 ### linux
 * gcc      - GNU C
@@ -1493,7 +1493,7 @@ Supported shells per host platforms:
             * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/seh/>
      * MinGW CEGCC [win, *nix, free, open-source]
         * <https://sourceforge.net/projects/cegcc/files/cegcc/>
-          * To use this package, you'll also need Cygwin package
+          * To use this package, you will also need Cygwin package
             (from <https://cygwin.com>) installed and be in `PATH`
             for the Cygwin runtime (`cygwin1.dll`).
           * Unpack using these commands:

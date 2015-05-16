@@ -1,5 +1,5 @@
 ifeq ($(HB_COMPILER_VER),)
-   $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let autodetection detect it, or set HB_COMPILER_VER manually according to your C compiler version (f.e. 0304 for 3.4.x).)
+   $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let auto-detection detect it, or set HB_COMPILER_VER manually according to your C compiler version (f.e. 0304 for 3.4.x).)
 endif
 
 ifeq ($(HB_BUILD_MODE),cpp)
