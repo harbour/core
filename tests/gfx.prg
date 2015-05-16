@@ -29,14 +29,14 @@ PROCEDURE Main()
    nFontHeight := hb_gtInfo( HB_GTI_FONTSIZE )
    nFontWidth := hb_gtInfo( HB_GTI_FONTWIDTH )
 
-   cWelcome := "Welcome to the World of Harbour multiplatform Graphics!" + " (GT" + hb_gtVersion() + ")"
+   cWelcome := "Welcome to the World of Harbour multi-platform Graphics!" + " (GT" + hb_gtVersion() + ")"
 
    SetColor( "n/w" )
    @ 0, 0 SAY Space( MaxCol() + 1 )
    @ 1, 0 SAY PadC( cWelcome, MaxCol() + 1 )
    @ 2, 0 SAY Space( MaxCol() + 1 )
 
-   hb_gtInfo( HB_GTI_WINTITLE, "Cross-GT, multiplatform graphics demo" )
+   hb_gtInfo( HB_GTI_WINTITLE, "Cross-GT, multi-platform graphics demo" )
 
    PutFrame( ;
       nFontHeight / 2, ;

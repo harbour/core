@@ -410,7 +410,7 @@ where applicable. `nolocal` will explicitly disable using locally hosted
 copy.
 
 See contrib-specific dependencies and build notes in the projects'
-.hbp file and find occasional link notes inside their .hbc files.
+`.hbp` file and find occasional link notes inside their `.hbc` files.
 
 
 > NOTES:
@@ -609,7 +609,7 @@ sensitive.
 
    - `HB_BUILD_ADDONS=<l>`
 
-     Build space separated <l> list of additional .hbp
+     Build space separated <l> list of additional `.hbp`
      projects.
 
    - `HB_COMPILER_VER=[<ver>]`
@@ -1502,7 +1502,7 @@ Supported shells per host platforms:
             `tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h`
 
           * Compiler will be inside the `opt\mingw32ce` subdirectory.
-     * Clang [multiplatform, free, open-source]
+     * Clang [multi-platform, free, open-source]
         * <http://llvm.org/builds/> (Windows snapshots)
      * Cygwin [win, free, open-source]
         * <https://cygwin.com/>
@@ -1533,17 +1533,17 @@ Supported shells per host platforms:
 
 * Libraries:
 
-     * HB_WITH_JPEG - jpeglib [multiplatform, free, open-source]
+     * HB_WITH_JPEG - jpeglib [multi-platform, free, open-source]
         * <http://ijg.org/>
-     * HB_WITH_PCRE2, HB_WITH_PCRE - Perl Compatible Regular Expressions [multiplatform, free, open-source]
+     * HB_WITH_PCRE2, HB_WITH_PCRE - Perl Compatible Regular Expressions [multi-platform, free, open-source]
         * <http://pcre.org/>
-     * HB_WITH_PNG - libpng [multiplatform, free, open-source]
+     * HB_WITH_PNG - libpng [multi-platform, free, open-source]
         * <http://libpng.org/pub/png/libpng.html>
-     * HB_WITH_TIFF - libtiff [multiplatform, free, open-source]
+     * HB_WITH_TIFF - libtiff [multi-platform, free, open-source]
         * <http://remotesensing.org/libtiff/>
      * HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
         * <http://home.broadpark.no/~gvanem/>
-     * HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
+     * HB_WITH_ZLIB - zlib [multi-platform, free, open-source]
         * <http://zlib.net/>
 
      * Windows 95 Winsock2 [win, free, closed-source]
@@ -1559,12 +1559,12 @@ Supported shells per host platforms:
 
 * Tools:
 
-     * Git (1.7 or upper) [multiplatform, free, open-source]
+     * Git (1.7 or upper) [multi-platform, free, open-source]
         * <http://git-scm.com/>
         * Windows binaries:
            * <https://msysgit.github.io>
            * <https://github.com/msysgit/msysgit/releases>
-     * GitHub Client [multiplatform, free]
+     * GitHub Client [multi-platform, free]
         * <https://windows.github.com/>
         * <https://mac.github.com/>
      * Travis CI [continuous integration, web service, free plan]
@@ -1575,28 +1575,28 @@ Supported shells per host platforms:
         * <https://readthedocs.org/>
      * ReadMe.io [online documentation creator, web service, free plan]
         * <https://readme.io/>
-     * GNU Bison (grammer paser generator) [multiplatform, free, open-source]
+     * GNU Bison (grammer paser generator) [multi-platform, free, open-source]
         * Windows binary:
            * <http://gnuwin32.sourceforge.net/packages/bison.htm>
                (not verified with current Harbour version)
-     * Cppcheck (static analysis) [multiplatform, free, open-source]
+     * Cppcheck (static analysis) [multi-platform, free, open-source]
         * <http://cppcheck.sourceforge.net/>
      * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
         * <http://valgrind.org/>
-     * ack (programmer grep) [multiplatform, free, open-source]
+     * ack (programmer grep) [multi-platform, free, open-source]
         * <http://beyondgrep.com/>
-     * Uncrustify (source formatter) [multiplatform, free, open-source]
+     * Uncrustify (source formatter) [multi-platform, free, open-source]
         * <http://uncrustify.sourceforge.net/>
      * UPX (executable compressor) [win, dos, *nix, free, open-source]
         * <http://upx.sourceforge.net/>
-     * 7-Zip [multiplatform, free, open-source]
+     * 7-Zip [multi-platform, free, open-source]
         * <http://7-zip.org/>
      * 7-Zip SFX modules [win, free, open-source]
         * <http://7zsfx.info/en/>
-     * bzip2 [multiplatform, free, open-source]
+     * bzip2 [multi-platform, free, open-source]
         * Windows binary:
            * <http://bzip.org/downloads.html>
-     * Win-builds [multiplatform, free, open-source]
+     * Win-builds [multi-platform, free, open-source]
         * <http://win-builds.org/>
      * Chocolatey (Windows package manager) [free, open-source]
         * <https://chocolatey.org/>

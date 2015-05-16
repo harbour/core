@@ -22,7 +22,7 @@
  *         hb_gtInfo() And GTO_* implementation.
  *
  * Copyright 2004 Mauricio Abre <maurifull@datafull.com>
- *         Cross-GT, multiplatform Graphics API
+ *         Cross-GT, multi-platform Graphics API
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

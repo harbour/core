@@ -350,7 +350,7 @@ Contrib
 - hbtip new MIME types.
 - hbtip fixes and optimization to HB_BASE64().
 - rddads now auto-detects version 9.10.
-- hbct XToC(), FToC() and CToF() fixed to be properly multiplatform.
+- hbct XToC(), FToC() and CToF() fixed to be properly multi-platform.
 - hbct unbuffered drawing speed improvement in windowing code.
 - hbct DirName() fixed.
 - hbct other fixes.
@@ -1830,7 +1830,7 @@ Version 0.38 Alpha Build 38 (2001-12-15) tag: build38
 - ::Super(::oneVar) is now correctly interpreted
 - Freezed Scooping because it was not anymore working after the
   previous fix. Waiting after Alpha build 38 to fix and re-enable it
-- HGF (Harbour GUI multiplatform Framework) started
+- HGF (Harbour GUI multi-platform Framework) started
 - Class HBPersistent added to RTL to provide Harbour objects persistence
 - New PROPERTY | PERSISTENT clause added as a DATA feature
 - New function __clsGetProperties() added. Syntax:
@@ -1935,7 +1935,7 @@ Version 0.34 Alpha Build 34 (2000-06-02)
 - Linux/Unix ncurses screen output and xterm mouse input support
 - MEMOEDIT support started
 - CONTRIBs better separated from core Harbour (TOOLS moved there)
-- Simplified and enhanced base for multiplatform coding
+- Simplified and enhanced base for multi-platform coding
 - Language API (link/compile time language module selection)
 - Several small optimizations, enhancements and fixes (compiler, macro, GT,
   inkey, make and build systems, more strict compiler warnings)
@@ -1995,7 +1995,7 @@ Version 0.33 Alpha Build 33 (2000-04-07)
 - Make and build files further cleaned up, enhanced, optimized, synchronized
   etc...
 - Compiler and platform detection enhanced, some hacks removed,
-  multiplatform cleanups and fixes.
+  multi-platform cleanups and fixes.
 - Warning levels upped, warnings fixed, code quality raised
 - Version numbering standardized
 - Multiple source file support in Harbour command line

@@ -26,7 +26,7 @@
  *         hb_gtInfo() And GTO_* implementation.
  *
  * (C) 2004 Mauricio Abre <maurifull@datafull.com>
- *         Cross-GT, multiplatform Graphics API
+ *         Cross-GT, multi-platform Graphics API
  *
  * (C) 2009 Cristiam Azambuja <cristiam@datacempro.com.br>
  *          Marson de Paula <marson@datacempro.com.br>

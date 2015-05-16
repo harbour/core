@@ -328,7 +328,7 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
    ELSE
       lMoved := .T.
 
-      cEOL := Chr( 13 ) + Chr( 10 )  /* TOFIX: EOL detection to be multiplatform */
+      cEOL := Chr( 13 ) + Chr( 10 )  /* TOFIX: EOL detection to be multi-platform */
 
       // Check preceeding chars for EOL
       FSeek( fHandle, -hb_BLen( cEOL ), FS_RELATIVE )

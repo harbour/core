@@ -2506,7 +2506,7 @@ to original ZLIB one.
 
 ###    SERIAL PORT SUPPORT    ###
 =================================
-Harbour gives common multiplatform PRG and C level API for serial port
+Harbour gives common multi-platform PRG and C level API for serial port
 communication by hb_com*() functions in core libraries. It also implements
 few other known in Clipper serial port interfaces in contrib libraries
 like CT3 COM_*() functions in hbct library or basic support for Telepathy

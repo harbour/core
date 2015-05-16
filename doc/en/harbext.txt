@@ -57,7 +57,7 @@
 
       * The Harbour debugger provides new interesting classes:
 
-        - Class TDbWindow could be the foundation for a generic multiplatform
+        - Class TDbWindow could be the foundation for a generic multi-platform
 
         - Class TForm
 

@@ -128,7 +128,7 @@ void hb_conInit( void )
 
       if( iStderr == 0 || iStderr == 1 )  /* //STDERR with no parameter or 0 */
          s_hFilenoStderr = s_hFilenoStdout;
-      /* disabled in default builds. It's not multiplatform and very
+      /* disabled in default builds. It's not multi-platform and very
        * dangerous because it can redirect error messages to data files
        * [druzus]
        */

@@ -11401,7 +11401,7 @@ STATIC FUNCTION AutoConfPathList( hbmk, lCWD, lForDocOutput )
 
    IF ! Empty( GetEnv( _OSCONFDIR_ENV_ ) )
       IF lForDocOutput
-         /* QUESTION: How to document home directory in a multiplatform fashion? */
+         /* QUESTION: How to document home directory in a multi-platform fashion? */
          AAdd( aPath, hb_DirSepAdd( EnvNotation( _OSCONFDIR_ENV_ ) ) + _CONFDIR_BASE_ )
       ELSE
          AAdd( aPath, hb_DirSepAdd( GetEnv( _OSCONFDIR_ENV_ ) ) + _CONFDIR_BASE_ )
@@ -15336,7 +15336,7 @@ STATIC FUNCTION __hbshell_ConfigDir( lForDocOutput )
       ENDIF
    ELSE
       IF lForDocOutput
-         /* QUESTION: How to document home directory in a multiplatform fashion? */
+         /* QUESTION: How to document home directory in a multi-platform fashion? */
          cDir := hb_DirSepAdd( EnvNotation( _OSCONFDIR_ENV_ ) ) + _CONFDIR_BASE_
       ELSE
          cDir := hb_DirSepAdd( GetEnv( _OSCONFDIR_ENV_ ) ) + _CONFDIR_BASE_

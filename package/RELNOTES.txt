@@ -57,7 +57,7 @@ Changes since previous (2.0.0beta3 2009-09-05) release
 - Documentation enhancements: README.md and doc/xhb-diff.txt.
 - hbmk2 got support to convert xMate, hbmake and xbuild make files to .hbp
   format.
-- Added hbsms contrib library (to send SMS text messages in multiplatform way).
+- Added hbsms contrib library (to send SMS text messages in multi-platform way).
 - gtwvg now builds in 64-bit mode.
 - Rudimentary port of GTWVW (find it in examples)
 - New hbcairo wrapper for cairo lib.
