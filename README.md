@@ -503,7 +503,7 @@ sensitive.
    - `HB_INSTALL_PREFIX`
 
      Target root directory to install Harbour files.
-     On *nix systems the default is set to `/usr/local/`
+     On \*nix systems the default is set to `/usr/local/`
      or `$(PREFIX)` if specified, and
      `/usr/local/harbour-<arch>-<comp>` for cross-builds.
      It's always set to `./pkg/<arch>/<comp>` when
