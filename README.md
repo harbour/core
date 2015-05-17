@@ -1575,7 +1575,7 @@ Supported shells per host platforms:
         * <https://readthedocs.org/>
      * ReadMe.io [online documentation creator, web service, free plan]
         * <https://readme.io/>
-     * GNU Bison (grammer parser generator) [multi-platform, free, open-source]
+     * GNU Bison (grammar parser generator) [multi-platform, free, open-source]
         * Windows binary:
            * <http://gnuwin32.sourceforge.net/packages/bison.htm>
                (not verified with current Harbour version)
