@@ -17,7 +17,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && ! defined( HB_OS_IOS )
    #include <unistd.h>
    #if defined( HB_OS_DARWIN )
       #include <crt_externs.h>
@@ -26,8 +26,16 @@
       extern char ** environ;
    #endif
 #elif defined( HB_OS_DOS )
-   #define environ     _environ
-   extern char ** _environ;
+   #if defined( __DJGPP__ )
+      extern char ** environ;
+   #elif ! defined( __WATCOMC__ )
+      #define environ _environ
+      extern char ** _environ;
+   #endif
+#elif defined( HB_OS_OS2 )
+   #if ! defined( __WATCOMC__ )
+      extern char ** environ;
+   #endif
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    #include "hbwinuni.h"
    #include <windows.h>
@@ -40,7 +48,8 @@
 
 HB_FUNC( FT_GETE )
 {
-#if defined( HB_OS_DOS ) || defined( HB_OS_UNIX )
+#if ( defined( HB_OS_UNIX ) && ! defined( HB_OS_IOS ) ) || \
+    defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
    {
       char * buffer = NULL;
       int    x;
