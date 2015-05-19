@@ -78,10 +78,10 @@ FUNCTION tip_MailAssemble( ;
    LOCAL tmp
 
    IF Empty( cFrom ) .OR. ! HB_ISSTRING( cFrom )
-      RETURN .F.
+      RETURN ""
    ENDIF
    IF Empty( xTo ) .OR. ( ! HB_ISSTRING( xTo ) .AND. ! HB_ISARRAY( xTo ) )
-      RETURN .F.
+      RETURN ""
    ENDIF
 
    hb_default( @cBody, "" )
