@@ -166,7 +166,7 @@
 #     define _x_long_dbl      long double
 #     if defined( HB_NO_MODFL ) || \
          defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( HB_OS_CYGWIN ) || \
-         defined( HB_OS_BEOS ) || defined( HB_OS_IPHONE ) || defined( HB_OS_SYMBIAN ) || \
+         defined( HB_OS_BEOS ) || defined( HB_OS_SYMBIAN ) || \
          defined( __OpenBSD__ ) || defined( __NetBSD__ ) || defined( __DragonFly__ ) || \
          defined( __TINYC__ ) || \
          ( defined( __FreeBSD_version ) && __FreeBSD_version < 603000 ) || \

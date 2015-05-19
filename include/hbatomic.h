@@ -89,7 +89,11 @@ HB_EXTERN_BEGIN
 
 #  if defined( HB_USE_GCCATOMIC_OFF )
 #     undef HB_USE_GCCATOMIC
-#  elif ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1) ) && \
+#  elif defined( HB_OS_OS2 ) && \
+        ( __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ <= 5 ) )
+      /* allow users to enable it manually by HB_USE_GCCATOMIC macro */
+      /* #undef HB_USE_GCCATOMIC */
+#  elif ( __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1 ) ) && \
         ! defined( __MINGW32CE__ ) && ! defined( HB_USE_GCCATOMIC )
 #     define HB_USE_GCCATOMIC
 #  elif defined( HB_OS_WIN ) && defined( __clang__ )
