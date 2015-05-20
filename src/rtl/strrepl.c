@@ -101,7 +101,7 @@ HB_FUNC( HB_STRREPLACE )
                      ptr = hb_arrayGetCPtr( pSrc, nAt );
                   }
                   if( nSkip > 0 && nSkip <= nText - nPos &&
-                      memcmp( pszText + nPos, ptr , nSkip ) == 0 )
+                      memcmp( pszText + nPos, ptr, nSkip ) == 0 )
                      break;
                }
                if( nAt > nSrc )
