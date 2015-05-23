@@ -124,7 +124,7 @@ static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE n
                            HB_BOOL bOverwrite, HB_FOFFSET nOffset, HB_BOOL bTrunc )
 {
    PHB_FILE hFile;
-   HB_BOOL bOpen;
+   HB_BOOL bOpen = HB_FALSE;
    HB_BOOL bFile = hb_fileExists( pFileName, NULL );
    HB_SIZE nWrite = 0;
 
@@ -144,7 +144,6 @@ static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE n
                               NULL, NULL );
       if( ! bFile )
          hb_fileAttrSet( pFileName, ct_getfcreate() );
-      bOpen = HB_FALSE;
    }
    else
       hFile = NULL;
