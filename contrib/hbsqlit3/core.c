@@ -1817,7 +1817,7 @@ HB_FUNC( SQLITE3_TRACE )
 
 HB_FUNC( SQLITE3_FILE_TO_BUFF )
 {
-   PHB_FILE handle = hb_fileOpen( hb_parcx( 1 ), FO_READ );
+   PHB_FILE handle = hb_fileExtOpen(  hb_parcx( 1 ), NULL, FO_READ | FO_SHARED | FO_PRIVATE | FXO_SHARELOCK, NULL, NULL );
 
    if( handle )
    {
@@ -1840,7 +1840,7 @@ HB_FUNC( SQLITE3_BUFF_TO_FILE )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      PHB_FILE handle = hb_fileOpen( hb_parcx( 1 ), FO_CREAT + FO_TRUNC + FO_WRITE );
+      PHB_FILE handle = hb_fileExtOpen( hb_parcx( 1 ), NULL, FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE | FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS, NULL, NULL );
 
       if( handle )
       {
