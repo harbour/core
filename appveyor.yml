@@ -68,7 +68,7 @@ build_script:
 - set HB_BUILD_STRIP=bin
 - set HB_BUILD_DYN=no
 - set HB_BUILD_CONTRIB_DYN=yes
-- set HB_BUILD_CONTRIBS=hbrun hbnetio/utils/hbnetio hbformat/utils hbtest hbct hbhpdf hbmzip hbwin hbtip hbexpat hbnetio hbmemio rddsql hbtpathy hbzebra hbodbc hbhttpd hbmisc hbmxml hbxpp hbscrypt hbtcpio hbcomio sddodbc hbcurl
+- set HB_BUILD_CONTRIBS=hbrun hbnetio/utils/hbnetio hbformat/utils hbtest hbct hbhpdf hbmzip hbwin hbtip hbexpat hbnetio hbmemio rddsql hbtpathy hbzebra hbodbc hbhttpd hbmisc hbmxml hbxpp hbscrypt hbtcpio hbcomio sddodbc hbcurl hbsqlit3 sddsqlt3
 - set HB_BUILD_OPTIM=yes
 - set HB_BUILD_PKG=yes
 - set HB_BUILD_POSTRUN=hbtest
