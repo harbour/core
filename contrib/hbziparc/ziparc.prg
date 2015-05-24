@@ -338,7 +338,8 @@ FUNCTION hb_ZipFile( ;
             ENDIF
 
             nRead := 0
-            nSize := hb_vfSize( cFileToZip )
+            nSize := hb_vfSize( hHandle )
+            hb_vfSeek( hHandle, 0, FS_SET )
 
             hb_vfTimeGet( cFileToZip, @tTime )
 
