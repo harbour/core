@@ -1,8 +1,8 @@
 #require "hbnf"
 
-/* Pass "mono" or "MONO" as a command line parameter to force mono mode.
-   Pass "nosnow" or "NOSNOW" as a command line parameter on a CGA.
-   Pass "vga" or "VGA" as a command line parameter for 50-line mode.
+/* Pass "mono" or "MONO" as a command-line parameter to force mono mode.
+   Pass "nosnow" or "NOSNOW" as a command-line parameter on a CGA.
+   Pass "vga" or "VGA" as a command-line parameter for 50-line mode.
  */
 
 #include "box.ch"

@@ -1,4 +1,4 @@
-/**
+/*
  * Test for Ini file reading/writing
  *
  * Giancarlo Niccolai
@@ -14,7 +14,7 @@ PROCEDURE Main( cName )
    SetColor( "W+/B" )
    CLS
    @ nRow++, 20 SAY "Harbour - .ini file parser test"
-   @ nRow++, 5 SAY "Call from command line using a .ini filename as the only parameter"
+   @ nRow++, 5 SAY "Call from command-line using a .ini filename as the only parameter"
    nRow++
 
    IF Empty( cName )

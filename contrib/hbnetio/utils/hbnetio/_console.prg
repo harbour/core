@@ -167,7 +167,7 @@ STATIC PROCEDURE ManageCursor( cCommand )
 
    RETURN
 
-/* Complete the command line, based on the first characters that the user typed. [vailtom] */
+/* Complete the command-line, based on the first characters that the user typed. [vailtom] */
 STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
 
    LOCAL s := Lower( AllTrim( cCommand ) )

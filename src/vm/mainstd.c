@@ -63,7 +63,7 @@ int _crt0_startup_flags = _CRT0_FLAG_USE_DOS_SLASHES;
 
 char ** __crt0_glob_function( char * _arg )
 {
-   /* This function disables command line wildcard expansion. */
+   /* This function disables command-line wildcard expansion. */
    HB_SYMBOL_UNUSED( _arg );
 
    return 0;

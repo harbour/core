@@ -73,12 +73,12 @@ build_script:
 - set HB_BUILD_POSTRUN=hbtest
 - rem "hbspeed --stdout"
 - set _HB_BUILD_PKG_ARCHIVE=no
-- set _HB_PKG_WINUNI_BUNDLE_C=no
+- set _HB_PKG_BUNDLE_C=no
 #- set _HB_PKG_DEBUG=yes
 - win-make.exe clean install HB_VERSION=%HB_VF%
 - call package\mpkg_win.bat
 artifacts:
 - path: harbour-daily-win.7z.exe
-  name: win-uni
+  name: win
 after_deploy:
 - curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -L --proto-redir =http -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe

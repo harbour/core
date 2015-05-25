@@ -2,7 +2,7 @@
  *
  * Creating a mail message.
  * This will create a valid mail message, using
- * the set of files given in the command line.
+ * the set of files given in the command-line.
  */
 
 #require "hbtip"

@@ -1,5 +1,5 @@
 /*
- * Command line and environment argument management
+ * Command-line and environment argument management
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
@@ -63,7 +63,7 @@
    #include <os2.h>
 #endif
 
-/* Command line argument management */
+/* Command-line argument management */
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
@@ -464,7 +464,7 @@ HB_BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, piLen ) );
 
    /* NOTE: Not checking for '--' here, as it would filter out
-            valid command line options used by applications. [vszakats] */
+            valid command-line options used by applications. [vszakats] */
 
    if( hb_strnicmp( szArg, "--hb:", 5 ) == 0 ||
        hb_strnicmp( szArg, "//hb:", 5 ) == 0 )
@@ -496,7 +496,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargGet(%s, %d)", pszName, ( int ) bRetValue ) );
 
-   /* Check the command line first */
+   /* Check the command-line first */
 
    for( i = 1; i < s_argc; i++ )
    {
@@ -689,7 +689,7 @@ HB_FUNC( HB_ARGSTRING )
    hb_retc_null();
 }
 
-/* Returns the number of command line arguments passed to the application, this
+/* Returns the number of command-line arguments passed to the application, this
    also includes the internal arguments. */
 
 HB_FUNC( HB_ARGC )
@@ -697,9 +697,9 @@ HB_FUNC( HB_ARGC )
    hb_retni( s_argc - 1 );
 }
 
-/* Returns a command line argument passed to the application. Calling it with
+/* Returns a command-line argument passed to the application. Calling it with
    the parameter zero or no parameter, it will return the name of the executable,
-   as written in the command line. */
+   as written in the command-line. */
 
 HB_FUNC( HB_ARGV )
 {
@@ -821,7 +821,7 @@ HB_FUNC( HB_CMDLINE )
       hb_retc_null();
 }
 
-/* Check for command line internal arguments */
+/* Check for command-line internal arguments */
 void hb_cmdargProcess( void )
 {
    int iHandles;

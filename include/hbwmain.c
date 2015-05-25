@@ -54,7 +54,7 @@
 
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HINSTANCE hPrevInstance,  /* handle to previous instance */
-                    HB_LPSTR  lpCmdLine,      /* pointer to command line */
+                    HB_LPSTR  lpCmdLine,      /* pointer to command-line */
                     int iCmdShow )            /* show state of window */
 {
    int iErrorCode;

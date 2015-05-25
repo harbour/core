@@ -75,7 +75,7 @@ General
   (old ones still work for compatibility, but please
   switch your code to use the new ones)
 - Fixed dynamic library creation on Solaris OSes.
-- hbrun will now open .dbf files when passed on the command line.
+- hbrun will now open .dbf files when passed on the command-line.
 - Added web-server written in Harbour: uHTTPD
 - POCC WinCE builds are now supported.
 - Open Watcom 1.8 (RC3) compiler is now supported.
@@ -292,7 +292,7 @@ Core
 - Fixed __M[V]CLEAR()/ __M[V]RESTORE() to be exactly Clipper compatible
   and do not release PUBLIC GetList value.
 - bcc compiler in GNU Make now supports older Windows NT with limited
-  command line length.
+  command-line length.
 - Removed support for following compilers:
   dos/bcc16, dos/rsx32, win/dmc, win/rsxnt, os2/icc, win/icc (IBM).
 - Fixed static variables indexes in the generated PCODE when static
@@ -1258,7 +1258,7 @@ syntax:
   (FLEX version only).
 - Added new compiler switch -gc3 to generate real C code output
   (instead of PCODE array called by a C wrapper).
-- Added new command line switch -r=<max_recursive_preprocessor_passes>
+- Added new command-line switch -r=<max_recursive_preprocessor_passes>
 - Added -undef: compiler switch (borrowed from xHarbour).
 - Added support for @filelst[.clp] - partially borrowed from xHarbour.
   It's not exactly the same as in Clipper because Clipper creates one
@@ -1686,7 +1686,7 @@ The runtime modules
 - Added possibility to load a character mapping using HB_GT_CHARMAP()
   (ncurses GT only)
 - Improved recognition of xterm compatible terminals (ncurses GT only)
-- New internal command line arguments were added to control
+- New internal command-line arguments were added to control
   application at runtime:
         //FLAGS:switches
             this flag controls compatibility issues of the virtual
@@ -1924,7 +1924,7 @@ Version 0.35 Alpha Build 35 (2000-08-15)
 - MySQL database access contribution started
 - ADS RDD encryption/decryption functions added
 - New GTCGI driver
-- Improved command line parsing
+- Improved command-line parsing
 - Alternate Lexer (SimpLex), utilizes less memory, smaller Harbour.exe
   as well as smaller compiled applications (due to smaller macro compiler)
 
@@ -1998,7 +1998,7 @@ Version 0.33 Alpha Build 33 (2000-04-07)
   multi-platform cleanups and fixes.
 - Warning levels upped, warnings fixed, code quality raised
 - Version numbering standardized
-- Multiple source file support in Harbour command line
+- Multiple source file support in Harbour command-line
 - HBCLIP and RUNJAVA contribution dirs added
 - HBDOC Enhacements: New subtags for better output: <par>,</par> for paragraph
   <b></b> for bold, <i></i> for italic, <em></em> for bold italic font
@@ -2039,7 +2039,7 @@ Version 0.31 Alpha Build 31 (2000-01-27) tag: build31
 - Many changes, fixes, and enhancements to the GT API system
 - Improved SetCursor() and Set( _SET_CURSOR )
 - Added FieldBlock() and FieldWBlock()
-- The Harbour '-w' command line option can set the maximal level of reported
+- The Harbour '-w' command-line option can set the maximal level of reported
   warnings. The following levels are supported currently:
    '-w0'         - no warnings
    '-w' or '-w1' - Clipper compatible warnings
@@ -2097,7 +2097,7 @@ Version 0.31 Alpha Build 31 (2000-01-27) tag: build31
 - Added HARBOURCMD/CLIPPERCMD environment variables
 - Added support for #pragma directives
 - Enhanced GetEnv() function
-- Added //BUILD app command line option
+- Added //BUILD app command-line option
 
 ----------------------------------------------------------------------
 Version 0.30 Alpha Build 30 (1999-09-30)
@@ -2112,7 +2112,7 @@ Version 0.30 Alpha Build 30 (1999-09-30)
 - Support for FIELD variables
 - Support for canceling the application by pressing Alt-C
 - Enhanced ITEM API
-- Support for internal command line options '//'
+- Support for internal command-line options '//'
 - Severe speed improvement
 - Better Directory() compatibility
 - Redirected output works now
@@ -2125,7 +2125,7 @@ Version 0.30 Alpha Build 30 (1999-09-30)
 - Array handling fixed and made Clipper compatible
 - Ragged array declaration and initialization support added
 - FileSys API extensions, more C5.3 compatible functions added
-- Compiler command line compatibility enhanced
+- Compiler command-line compatibility enhanced
 - Internal errors made uniform
 - Source code cleanup and formatting
 - Many new functions, samples and bug fixes
@@ -2279,7 +2279,7 @@ Version 0.17 Alpha Build 17 (1999-04-20)
 Version 0.16 Alpha Build 16 (1999-04-17)
 
 - New project directories structure
-- Added support for command line parameters
+- Added support for command-line parameters
 - Compiler /o options changed to /g
 - /gc added (default option)
 - Changes on types.h

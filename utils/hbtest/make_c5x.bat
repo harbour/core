@@ -2,7 +2,7 @@
 
 :: ---------------------------------------------------------------
 :: NOTE: To compile for CA-Cl*pper 5.3,
-::       run with command line parameter "53" (without quotes).
+::       run with command-line parameter "53" (without quotes).
 :: ---------------------------------------------------------------
 
 :: ---------------------------------------------------------------

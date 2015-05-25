@@ -239,7 +239,7 @@
       TAB key. To select an option the user can press ENTER, SPACE or the
       first letter of the option.
 
-      If the program is executed with the //NOALERT command line switch,
+      If the program is executed with the //NOALERT command-line switch,
       nothing is displayed and it simply returns NIL. This switch could
       be overridden with __NoNoAlert().
 
@@ -290,7 +290,7 @@
       src/rtl/alert.prg the Left-Mouse button could be used to select
       an option.
 
-      The interpretation of the //NOALERT command line switch is done only
+      The interpretation of the //NOALERT command-line switch is done only
       if HB_CLP_UNDOC was define during compilation of src/rtl/alert.prg
 
       <cColorNorm> is a Harbour extension, or at least un-documented
@@ -314,13 +314,13 @@
    $SUBCATEGORY$
       User interface
    $ONELINER$
-      Override //NOALERT command line switch
+      Override //NOALERT command-line switch
    $SYNTAX$
       __NoNoAlert()
    $ARGUMENTS$
       This function takes no arguments.
    $DESCRIPTION$
-      The //NOALERT command line switch cause Clipper to ignore calls to
+      The //NOALERT command-line switch cause Clipper to ignore calls to
       the Alert() function, this function override this behavior
       and always display Alert() dialog box.
    $EXAMPLES$
@@ -668,7 +668,7 @@
       take varying length when converted into string depending on its
       source (see Str() for detail).
 
-      There is an undocumented CA-Cl*pper command line switch //STDERR
+      There is an undocumented CA-Cl*pper command-line switch //STDERR
       which can set the file handle to write output from OutErr(). If not
       specified the default STDERR is used, //STDERR or //STDERR:0 set
       OutErr() to output to the same file handle as OutStd(), //STDERR:n

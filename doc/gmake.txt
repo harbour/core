@@ -126,7 +126,7 @@ your platform and compiler.
 For gcc on Windows with the Cygwin library:
   Notes: The CYGWIN environment variable must include "noglob" in order
          to avoid having Harbour or programs created with Harbour expand
-         wildcard command line arguments (this is checked at run-time!)
+         wildcard command-line arguments (this is checked at run-time!)
   HB_PLATFORM       win
   HB_COMPILER       gcc
   CYGWIN            noglob
@@ -201,4 +201,4 @@ and hbrun. For example, 'hbmk2 scroll.prg -run' will build the scroll.prg
 program and then run it. 'hbrun scroll.prg' will run the program as
 a script. You can also pass parameters to the program. For example,
 'hbrun readfile.prg harbour.ini' will rebuild the readfile.prg program
-and run it with 'harbour.ini' as a command line parameter.
+and run it with 'harbour.ini' as a command-line parameter.

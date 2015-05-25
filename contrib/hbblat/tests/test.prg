@@ -94,7 +94,7 @@ PROCEDURE Main()
    oBlat:Check()
 #endif
 
-   ? "Command .........:", oBlat:GetCommand()  // Not necessary - this show complete command line sent to blat
+   ? "Command .........:", oBlat:GetCommand()  // Not necessary - this show complete command-line sent to blat
    ?
    ? "Sending mail..."
    ?

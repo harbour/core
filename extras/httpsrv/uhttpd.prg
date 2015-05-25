@@ -343,7 +343,7 @@ PROCEDURE Main( ... )
    hb_ToOutDebug( "s_hAliases: %s\n\r", hb_ValToExp( s_hAliases ) )
 #endif
 
-   // Parameters forced from command line
+   // Parameters forced from command-line
 
    IF HB_ISSTRING( cCmdPort )
       nPort := Val( cCmdPort )

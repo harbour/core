@@ -4,7 +4,7 @@ Harbour switch handling spec
 This spec goes for CLIPPERCMD, HARBOURCMD, Harbour
 compiler and #pragma directives in the source code.
 
-The command line always overrides the envvar.
+The command-line always overrides the envvar.
 
 Note that some switches are not accepted in envvar,
 some others in #pragmas.
@@ -69,17 +69,17 @@ whitespace. (or just walk through all argv[])
 
 The Harbour switches are always case insensitive.
 
-In the Harbour commandline the two style can be used together:
+In the Harbour command-line the two style can be used together:
 harbour -wnes2 /gc0/q0 -iC:\hb\include
 
 Exceptions:
 
 - Handling of the /CREDIT undocumented switch
-  on Harbour command line is unusual, check the current code
+  on Harbour command-line is unusual, check the current code
   for this.
 
 - CLIPPER, HARBOUR envvars and Harbour application
-  command line parsing is a different beast,
+  command-line parsing is a different beast,
   see cmdarg.c for a NOTE.
 
   Just some examples for the various accepted forms:
@@ -88,7 +88,7 @@ Exceptions:
   F0NOIDLEX10
   SQUAWKNOIDLE
 
-  "//" should always be used on the command line.
+  "//" should always be used on the command-line.
 
 
 [ Copyright (c) 1999-2009 Viktor Szakats (vszakats.net/harbour)

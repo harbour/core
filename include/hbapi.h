@@ -1050,11 +1050,11 @@ extern           HB_LONG   hb_dynsymCount( void ); /* number of dynamic symbols 
 /* Symbol management */
 extern HB_EXPORT PHB_SYMB  hb_symbolNew( const char * szName ); /* create a new symbol */
 
-/* Command line and environment argument management */
-extern HB_EXPORT void          hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
-extern HB_EXPORT int           hb_cmdargARGC( void ); /* retrieve command line argument count */
-extern HB_EXPORT char **       hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
-extern HB_EXPORT const char *  hb_cmdargARGVN( int argc ); /* retrieve given command line argument */
+/* Command-line and environment argument management */
+extern HB_EXPORT void          hb_cmdargInit( int argc, char * argv[] ); /* initialize command-line argument API's */
+extern HB_EXPORT int           hb_cmdargARGC( void ); /* retrieve command-line argument count */
+extern HB_EXPORT char **       hb_cmdargARGV( void ); /* retrieve command-line argument buffer pointer */
+extern HB_EXPORT const char *  hb_cmdargARGVN( int argc ); /* retrieve given command-line argument */
 extern HB_EXPORT HB_BOOL       hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
 extern HB_EXPORT char *        hb_cmdargProgName( void ); /* return application name with path or NULL if not set, caller must free returned value with hb_xfree() if not NULL */
 extern HB_EXPORT char *        hb_cmdargBaseProgName( void ); /* return application name without path or NULL if not set, caller must free returned value with hb_xfree() if not NULL */
@@ -1063,7 +1063,7 @@ extern           void          hb_cmdargUpdate( void ); /* update arguments afte
 extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //GT:cgi) */
 extern           int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
-extern           void          hb_cmdargProcess( void ); /* Check for command line internal arguments */
+extern           void          hb_cmdargProcess( void ); /* Check for command-line internal arguments */
 #if defined( HB_OS_WIN )
 extern HB_EXPORT void          hb_winmainArgInit( void * hInstance, void * hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
 extern HB_EXPORT HB_BOOL       hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */

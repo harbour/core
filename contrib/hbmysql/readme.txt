@@ -5,7 +5,7 @@
 This is work in progress, so it has to be fully tested and needs a few more methods to cover MySQL possibilities.
 
 
-Add hbmysql.hbc to your hbmk2 command line (you can also try to
+Add hbmysql.hbc to your hbmk2 command-line (you can also try to
 recompile programs in utils and tests subdirs just to test everything)
 and be sure to have MySQL dynamic libraries configured.
 

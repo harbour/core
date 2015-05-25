@@ -71,7 +71,7 @@ int hb_compMainExt( int argc, const char * const argv[],
    /* First check the environment variables */
    hb_compChkEnvironment( HB_COMP_PARAM );
 
-   /* Then check command line arguments
+   /* Then check command-line arguments
       This will override duplicated environment settings */
    hb_compChkCommandLine( HB_COMP_PARAM, argc, argv );
 
@@ -121,7 +121,7 @@ int hb_compMainExt( int argc, const char * const argv[],
    else
    {
       int i;
-      /* Process all files passed via the command line. */
+      /* Process all files passed via the command-line. */
       for( i = 1; i < argc && ! HB_COMP_PARAM->fExit; i++ )
       {
          HB_TRACE( HB_TR_DEBUG, ( "main LOOP(%i,%s)", i, argv[ i ] ) );

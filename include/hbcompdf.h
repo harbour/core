@@ -532,7 +532,7 @@ typedef struct _HB_HFUNC
    HB_USHORT         wWithObjectCnt;
 } HB_HFUNC, * PHB_HFUNC;
 
-/* structure to hold PP #define variables passed as command line parameters */
+/* structure to hold PP #define variables passed as command-line parameters */
 typedef struct _HB_PPDEFINE
 {
    char * szName;                         /* name of PP #define variable */

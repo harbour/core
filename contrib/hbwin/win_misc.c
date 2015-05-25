@@ -71,7 +71,7 @@ HB_FUNC( WIN_RUNDETACHED )
 
    if( CreateProcess(
           HB_PARSTR( 1, &hCommandName, NULL ),                  /* Command name */
-          HB_STRUNSHARE( &hCommandLine, lpCommandRO, nLen ),    /* Command line (Unicode version needs an non-const buffer) */
+          HB_STRUNSHARE( &hCommandLine, lpCommandRO, nLen ),    /* Command-line (Unicode version needs an non-const buffer) */
           NULL,                                                 /* Process handle not inheritable */
           NULL,                                                 /* Thread handle not inheritable */
           FALSE,                                                /* Set handle inheritance to FALSE */

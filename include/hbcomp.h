@@ -348,18 +348,18 @@ extern const HB_BYTE hb_comp_pcode_len[];
 #define HB_IDENT_FREE         1
 #define HB_IDENT_COPY         2
 
-/* /GC command line setting types */
+/* /GC command-line setting types */
 #define HB_COMPGENC_COMPACT     0
 #define HB_COMPGENC_NORMAL      1
 #define HB_COMPGENC_VERBOSE     2
 #define HB_COMPGENC_REALCODE    3
 
-/* /ES command line setting types */
+/* /ES command-line setting types */
 #define HB_EXITLEVEL_DEFAULT    0
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
 
-/* /kx command line setting types - compatibility modes
+/* /kx command-line setting types - compatibility modes
  * (turn on a bit in HB_ULONG word)
 */
 #define HB_COMPFLAG_HARBOUR      HB_SM_HARBOUR     /* 1 -kh */

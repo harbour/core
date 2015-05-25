@@ -109,7 +109,7 @@
  *   forward slash (`/'). DOS-style backslash separators are not recognized and
  *   will produce undefined results.
  *
- *   The `-validate' command line argument causes 3rdpatch to validate the
+ *   The `-validate' command-line argument causes 3rdpatch to validate the
  *   metadata without executing any actions that might otherwise be necessary.
  *   It is recommended to use this after a component's metadata changes.
  *
@@ -123,7 +123,7 @@
  * tree, for example), 3rdpatch's utility will decrease steeply. In such cases
  * considering the full manual update of the component is advised.
  *
- * If 3rdpatch is called with the `-rediff' command line argument, it switches
+ * If 3rdpatch is called with the `-rediff' command-line argument, it switches
  * to a `local diff refresh' mode. This mode is used to refresh the local diff
  * after Harbour-specific modifications have been made to the component's
  * source. In order to help with the initial diff creation, 3rdpatch will proceed

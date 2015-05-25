@@ -87,7 +87,7 @@
       PARAMETERS, MEMVAR, STATIC and FIELD, may precede the LOCAL command.
 
       LOCAL array reference may not be initialized (i.e., assigned values)
-      on the same command line as the LOCAL command statement. This can be
+      on the same command-line as the LOCAL command statement. This can be
       done later in the program.
 
       LOCAL variables and arrays are not affected by the RELEASE command.
