@@ -1,4 +1,5 @@
 class Harbour < Formula
+  desc "xBase compatible compiler"
   homepage "https://github.com/vszakats/harbour-core/"
 
   stable do
