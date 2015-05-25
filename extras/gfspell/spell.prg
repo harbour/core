@@ -1134,7 +1134,8 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
       hb_DispOutAt( 10, 31, "Complete:        ", "W/R" )
       hb_DispOutAt( 11, 31, "  Record:        ", "W/R" )
 
-      nSize := hb_vfSize( cDictionary )
+      nSize := hb_vfSize( t_nHandle )
+      hb_vfSeek( t_nHandle, 0, FS_SET )
    ENDIF
 
    j := 2

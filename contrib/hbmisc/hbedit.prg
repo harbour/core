@@ -203,7 +203,7 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
 
    DO CASE
    CASE HB_ISNUMERIC( xHandle ) .AND. xHandle != F_ERROR
-      nLen := FileLength( xHandle )
+      nLen := FSeek( xHandle, 0, FS_END )
       lHandleOk := .T.
    CASE HB_ISPOINTER( xHandle ) .AND. xHandle != NIL
       nLen := hb_vfSize( xHandle )
@@ -230,15 +230,6 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
    EditorKill( oEdit )
 
    RETURN lSaved
-
-STATIC FUNCTION FileLength( nH )
-
-   LOCAL nPos := FSeek( nH, 0, FS_RELATIVE )
-   LOCAL nLen := FSeek( nH, 0, FS_END )
-
-   FSeek( nH, nPos, FS_SET )
-
-   RETURN nLen
 
 // Reads a text from a file into the editor
 //
