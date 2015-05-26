@@ -47,6 +47,7 @@ REQUEST __HBEXTERN__HBSSL__
 #endif
 
 #include "hbclass.ch"
+#include "inkey.ch"
 #include "tip.ch"
 
 PROCEDURE Main( cURL, cFile )
@@ -149,4 +150,4 @@ STATIC FUNCTION ShowGauge( nSent, nSize )
    SetPos( Row(), 0 )
    ?? "Sending:", nSent, "/", nSize
 
-   RETURN .T.
+   RETURN Inkey() != K_ESC
