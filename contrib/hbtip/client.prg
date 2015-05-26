@@ -466,6 +466,9 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
       IF HB_ISEVALITEM( ::exGauge ) .AND. ;
          ! hb_defaultValue( Eval( ::exGauge, nSent, nSize, Self ), .T. )
+         IF nFOut != NIL
+            hb_vfClose( nFOut )
+         ENDIF
          RETURN .F.
       ENDIF
    ENDDO
@@ -503,6 +506,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
    IF HB_ISEVALITEM( ::exGauge ) .AND. ;
       ! hb_defaultValue( Eval( ::exGauge, nSent, nSize, Self ), .T. )
+      hb_vfClose( nFIn )
       RETURN .F.
    ENDIF
 
@@ -516,6 +520,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
       nSent += nLen
       IF HB_ISEVALITEM( ::exGauge ) .AND. ;
          ! hb_defaultValue( Eval( ::exGauge, nSent, nSize, Self ), .T. )
+         hb_vfClose( nFIn )
          RETURN .F.
       ENDIF
    ENDDO
