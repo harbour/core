@@ -23,6 +23,8 @@
 
 DYNAMIC hb_u_getVersion
 DYNAMIC u_errorName
+DYNAMIC U_FAILURE
+DYNAMIC U_SUCCESS
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBICU__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

@@ -144,9 +144,9 @@ PROCEDURE Main( cURL, cFile )
 
    RETURN
 
-STATIC PROCEDURE ShowGauge( nSent, nSize )
+STATIC FUNCTION ShowGauge( nSent, nSize )
 
    SetPos( Row(), 0 )
    ?? "Sending:", nSent, "/", nSize
 
-   RETURN
+   RETURN .T.

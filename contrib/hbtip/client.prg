@@ -433,8 +433,9 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
       cFile := ""
    ENDIF
 
-   IF HB_ISEVALITEM( ::exGauge )
-      Eval( ::exGauge, nSent, nSize, Self )
+   IF HB_ISEVALITEM( ::exGauge ) .AND. ;
+      ! hb_defaultValue( Eval( ::exGauge, nSent, nSize, Self ), .T. )
+      RETURN .F.
    ENDIF
 
    ::nRead   := 0
@@ -463,8 +464,9 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
       nSent += hb_BLen( cData )
 
-      IF HB_ISEVALITEM( ::exGauge )
-         Eval( ::exGauge, nSent, nSize, Self )
+      IF HB_ISEVALITEM( ::exGauge ) .AND. ;
+         ! hb_defaultValue( Eval( ::exGauge, nSent, nSize, Self ), .T. )
+         RETURN .F.
       ENDIF
    ENDDO
 
@@ -499,8 +501,9 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
    // allow initialization of the gauge
    nSent := 0
 
-   IF HB_ISEVALITEM( ::exGauge )
-      Eval( ::exGauge, nSent, nSize, Self )
+   IF HB_ISEVALITEM( ::exGauge ) .AND. ;
+      ! hb_defaultValue( Eval( ::exGauge, nSent, nSize, Self ), .T. )
+      RETURN .F.
    ENDIF
 
    ::nStatus := 1
@@ -511,8 +514,9 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
          RETURN .F.
       ENDIF
       nSent += nLen
-      IF HB_ISEVALITEM( ::exGauge )
-         Eval( ::exGauge, nSent, nSize, Self )
+      IF HB_ISEVALITEM( ::exGauge ) .AND. ;
+         ! hb_defaultValue( Eval( ::exGauge, nSent, nSize, Self ), .T. )
+         RETURN .F.
       ENDIF
    ENDDO
 

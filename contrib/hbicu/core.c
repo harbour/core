@@ -54,6 +54,16 @@ HB_FUNC( U_ERRORNAME )
    hb_retc( u_errorName( ( UErrorCode ) hb_parnint( 1 ) ) );
 }
 
+HB_FUNC( U_SUCCESS )
+{
+   hb_retl( U_SUCCESS( ( UErrorCode ) hb_parnint( 1 ) ) );
+}
+
+HB_FUNC( U_FAILURE )
+{
+   hb_retl( U_FAILURE( ( UErrorCode ) hb_parnint( 1 ) ) );
+}
+
 HB_FUNC( HB_U_GETVERSION )
 {
    UVersionInfo versionArray;
