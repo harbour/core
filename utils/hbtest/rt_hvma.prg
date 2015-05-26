@@ -365,8 +365,13 @@ PROCEDURE Main_HVMA()
    HBTEST saArray[ 0 ]                    IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 "
    HBTEST saArray[ 0 ] := 1               IS "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 "
 #endif
+#ifdef HB_CLP_STRICT
    HBTEST saArray[ 1000 ]                 IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 "
    HBTEST saArray[ 1000 ] := 1            IS "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 "
+#else
+   HBTEST saArray[ 1000 ]                 IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 A:2:A:{.[1].};N:1000 "
+   HBTEST saArray[ 1000 ] := 1            IS "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 A:1:N:1000 "
+#endif
 #ifndef __HARBOUR__
    // this error is reported at compile time
    HBTEST saArray[ -1 ]                   IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 "

@@ -155,9 +155,15 @@ PROCEDURE Main_ARRAY()
 #ifndef __XPP__
 #ifdef HB_COMPAT_C53
    HBTEST ASize()                         IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+#ifdef HB_CLP_STRICT
    HBTEST ASize( NIL )                    IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
    HBTEST ASize( {} )                     IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
    HBTEST ASize( ErrorNew() )             IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+#else
+   HBTEST ASize( NIL )                    IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:1:U:NIL "
+   HBTEST ASize( {} )                     IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:1:A:{.[0].} "
+   HBTEST ASize( ErrorNew() )             IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:1:O:ERROR Object "
+#endif
 #else
    HBTEST ASize()                         IS NIL
    HBTEST ASize( NIL )                    IS NIL
@@ -166,9 +172,15 @@ PROCEDURE Main_ARRAY()
 #endif
 #endif
 #ifdef HB_COMPAT_C53
+#ifdef HB_CLP_STRICT
    HBTEST ASize( NIL, 0 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
    HBTEST ASize( NIL, 1 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
    HBTEST ASize( NIL, -1 )                IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+#else
+   HBTEST ASize( NIL, 0 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:2:U:NIL;N:0 "
+   HBTEST ASize( NIL, 1 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:2:U:NIL;N:1 "
+   HBTEST ASize( NIL, -1 )                IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:2:U:NIL;N:-1 "
+#endif
 #else
    HBTEST ASize( NIL, 0 )                 IS NIL
    HBTEST ASize( NIL, 1 )                 IS NIL
@@ -210,7 +222,11 @@ PROCEDURE Main_ARRAY()
    /* disable Harbour extended optimizations to test correct RTE message */
    #pragma -ko-
 #endif
+#ifdef HB_CLP_STRICT
    HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
+#else
+   HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 A:3:N:1;N:0;N:-10 "
+#endif
    HBTEST Array( 1, 0, "A" )              IS NIL
 #ifdef __HARBOUR__
    #pragma -ko+
