@@ -143,6 +143,7 @@ C_SOURCES := \
    natmsg.c \
    natmsgu.c \
    net.c \
+   netusr.c \
    oemansi.c \
    oldbox.c \
    oldclear.c \
