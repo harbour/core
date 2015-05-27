@@ -1,7 +1,7 @@
 /*
  * High-level portable file functions.
  *
- * Copyright 2009-2011 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -342,3 +342,8 @@ FUNCTION hb_DirUnbuild( cDir )
    ENDIF
 
    RETURN .T.
+
+FUNCTION hb_FNameExists( cName )
+   RETURN ;
+      hb_vfExists( cName ) .OR. ;
+      hb_vfDirExists( cName )
