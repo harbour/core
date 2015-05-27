@@ -2575,7 +2575,7 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parent ) : QWidget( parent 
     */
    /* setAttribute( Qt::WA_InputMethodEnabled ); */
 
-#if defined( HB_OS_ANDROID ) || defined( HB_OS_WIN_CE )
+#if defined( HB_OS_ANDROID ) || defined( HB_OS_IOS ) || defined( HB_OS_WIN_CE )
    setInputMethodHints( Qt::ImhNoPredictiveText );
 #endif
 
@@ -3003,7 +3003,7 @@ void QTConsole::focusInEvent( QFocusEvent * event )
 {
    hb_gt_qtc_addKeyToInputQueue( pQTC, HB_K_GOTFOCUS );
    QWidget::focusInEvent( event );
-#if defined( HB_OS_ANDROID ) || defined( HB_OS_WIN_CE )
+#if defined( HB_OS_ANDROID ) || defined( HB_OS_IOS ) || defined( HB_OS_WIN_CE )
    QEvent reqSIPevent( QEvent::RequestSoftwareInputPanel );
    QApplication::sendEvent( pQTC->qWnd, &reqSIPevent );
 #endif
@@ -3070,7 +3070,7 @@ void QTConsole::mouseDoubleClickEvent( QMouseEvent * event )
    switch( event->button() )
    {
       case Qt::LeftButton:
-#if defined( HB_OS_ANDROID ) || defined( HB_OS_WIN_CE )
+#if defined( HB_OS_ANDROID ) || defined( HB_OS_IOS ) || defined( HB_OS_WIN_CE )
          {
             QEvent reqSIPevent( QEvent::RequestSoftwareInputPanel );
             QApplication::sendEvent( pQTC->qWnd, &reqSIPevent );

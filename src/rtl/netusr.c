@@ -1,8 +1,7 @@
 /*
- * NetName() function
+ * hb_UserName() function
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net> (Support for DJGPP/GCC/OS2 for NetName())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,13 +54,6 @@
       #include "hbwince.h"
    #endif
 
-#elif defined( HB_OS_DOS )
-
-   #include "hb_io.h"
-   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
-      #include <sys/param.h>
-   #endif
-
 #elif defined( HB_OS_OS2 ) && defined( __GNUC__ )
 
    #include "hb_io.h"
@@ -69,88 +61,52 @@
    /* 2004-03-25 - <maurilio.longo@libero.it>
       not needed anymore as of GCC 3.2.2 */
 
+   #include <pwd.h>
+   #include <sys/types.h>
+
    #if defined( __EMX__ ) && __GNUC__ * 1000 + __GNUC_MINOR__ < 3002
       #include <emx/syscalls.h>
-      #define gethostname __gethostname
    #endif
 
-#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
+#elif defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( __WATCOMC__ )
 
-   #if defined( HB_OS_VXWORKS )
-      #include <hostLib.h>
-   #endif
+   #include <pwd.h>
+   #include <sys/types.h>
    #include <unistd.h>
 
 #endif
 
-#if ! defined( MAXGETHOSTNAME ) && ( defined( HB_OS_UNIX ) || \
-      ( ( defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) ) && \
-        defined( __GNUC__ ) ) )
-   #define MAXGETHOSTNAME 256      /* should be enough for a host name */
-#endif
-
-/* NOTE: Clipper will only return a maximum of 15 bytes from this function.
-         And it will be padded with spaces. Harbour does the same on the
-         MS-DOS platform.
-         [vszakats] */
-
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
-char * hb_netname( void )
+char * hb_username( void )
 {
 #if defined( HB_OS_WIN )
 
-   DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
-   TCHAR lpValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
+   DWORD ulLen = 256;
+   TCHAR lpValue[ 256 ];
 
    lpValue[ 0 ] = TEXT( '\0' );
-   GetComputerName( lpValue, &ulLen );
-   lpValue[ MAX_COMPUTERNAME_LENGTH ] = TEXT( '\0' );
+   GetUserName( lpValue, &ulLen );
+   lpValue[ 255 ] = TEXT( '\0' );
 
    if( lpValue[ 0 ] )
       return HB_OSSTRDUP( lpValue );
 
-#elif defined( HB_OS_DOS )
+#elif ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) ) || \
+      ( defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( __WATCOMC__ ) )
 
-   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
-      char szValue[ MAXGETHOSTNAME + 1 ];
-      szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
-      gethostname( szValue, MAXGETHOSTNAME );
-      if( szValue[ 0 ] )
-         return hb_osStrDecode( szValue );
-   #else
-      union REGS regs;
-      struct SREGS sregs;
-      char szValue[ 16 ];
-      szValue[ 0 ] = szValue[ 15 ] = '\0';
-
-      regs.HB_XREGS.ax = 0x5E00;
-      regs.HB_XREGS.dx = FP_OFF( pszValue );
-      sregs.ds = FP_SEG( pszValue );
-
-      HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
-
-      if( regs.h.ch != 0 && szValue[ 0 ] )
-         return hb_osStrDecode( szValue );
-   #endif
-
-#elif ( defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) ) || \
-      ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
-
-   char szValue[ MAXGETHOSTNAME + 1 ];
-   szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
-   gethostname( szValue, MAXGETHOSTNAME );
-   if( szValue[ 0 ] )
-      return hb_osStrDecode( szValue );
+   struct passwd * pwd = getpwuid( getuid() );
+   if( pwd && pwd->pw_name )
+      return hb_osStrDecode( pwd->pw_name );
 
 #endif
 
-   return hb_getenv( "HOSTNAME" );
+   return hb_getenv( "USER" );
 }
 
-HB_FUNC( NETNAME )
+HB_FUNC( HB_USERNAME )
 {
-   char * buffer = hb_netname();
+   char * buffer = hb_username();
 
    if( buffer )
       hb_retc_buffer( buffer );
