@@ -544,7 +544,8 @@ PROCEDURE Main_HVMA()
    HBTEST RTSTR( 500000000000000 )                IS " 16  500000000000000"
    HBTEST RTSTR( 00000000000005 )                 IS " 10          5"
 #ifdef __HARBOUR__
-   /* QUESTION: Is this a Harbour bug? */
+   /* INCOMPATIBILITY:
+      https://github.com/harbour/core/issues/98#issuecomment-105807651 */
    HBTEST RTSTR( 00000500000000000000 )           IS " 16  500000000000000"
    HBTEST RTSTR( 0000500000000000000 )            IS " 16  500000000000000"
    HBTEST RTSTR( 000500000000000000 )             IS " 16  500000000000000"
