@@ -1538,7 +1538,7 @@ Supported shells per host platforms:
      * HB_WITH_PCRE2, HB_WITH_PCRE - Perl Compatible Regular Expressions [multi-platform, free, open-source]
         * <http://pcre.org/>
      * HB_WITH_PNG - libpng [multi-platform, free, open-source]
-        * <http://libpng.org/pub/png/libpng.html>
+        * <https://github.com/glennrp/libpng>
      * HB_WITH_TIFF - libtiff [multi-platform, free, open-source]
         * <http://remotesensing.org/libtiff/>
      * HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
@@ -1560,7 +1560,7 @@ Supported shells per host platforms:
 * Tools:
 
      * Git (1.7 or upper) [multi-platform, free, open-source]
-        * <http://git-scm.com/>
+        * <https://git-scm.com/>
         * Windows binaries:
            * <https://msysgit.github.io>
            * <https://github.com/msysgit/msysgit/releases>
@@ -1645,7 +1645,7 @@ Supported shells per host platforms:
 
      * [Netiquette Guidelines](https://tools.ietf.org/html/rfc1855)
      * [Setting up Git](https://help.github.com/articles/set-up-git)
-     * [Git book](http://git-scm.com/book) [free]
+     * [Git book](https://git-scm.com/book) [free]
      * [Git Reference](http://gitref.org)
      * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
      * Using gettext (.po files)
