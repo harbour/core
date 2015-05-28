@@ -1586,7 +1586,7 @@ Supported shells per host platforms:
      * ack (programmer grep) [multi-platform, free, open-source]
         * <http://beyondgrep.com/>
      * Uncrustify (source formatter) [multi-platform, free, open-source]
-        * <http://uncrustify.sourceforge.net/>
+        * <https://github.com/bengardner/uncrustify>
      * UPX (executable compressor) [win, dos, *nix, free, open-source]
         * <http://upx.sourceforge.net/>
      * 7-Zip [multi-platform, free, open-source]
