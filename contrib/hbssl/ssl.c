@@ -629,9 +629,15 @@ HB_FUNC( SSL_GET_SSL_METHOD )
          else if( p == TLSv1_method()         ) n = HB_SSL_CTX_NEW_METHOD_TLSV1;
          else if( p == TLSv1_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER;
          else if( p == TLSv1_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT;
-         else if( p == SSLv23_method()        ) n = HB_SSL_CTX_NEW_METHOD_SSLV23;
-         else if( p == SSLv23_server_method() ) n = HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER;
-         else if( p == SSLv23_client_method() ) n = HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT;
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+         else if( p == TLS_method()           ) n = HB_SSL_CTX_NEW_METHOD_TLS;
+         else if( p == TLS_server_method()    ) n = HB_SSL_CTX_NEW_METHOD_TLS_SERVER;
+         else if( p == TLS_client_method()    ) n = HB_SSL_CTX_NEW_METHOD_TLS_CLIENT;
+#else
+         else if( p == SSLv23_method()        ) n = HB_SSL_CTX_NEW_METHOD_TLS;
+         else if( p == SSLv23_server_method() ) n = HB_SSL_CTX_NEW_METHOD_TLS_SERVER;
+         else if( p == SSLv23_client_method() ) n = HB_SSL_CTX_NEW_METHOD_TLS_CLIENT;
+#endif
          else                                   n = HB_SSL_CTX_NEW_METHOD_UNKNOWN;
 
          hb_retni( n );

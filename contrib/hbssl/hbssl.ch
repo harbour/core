@@ -60,9 +60,12 @@
 #define HB_SSL_CTX_NEW_METHOD_TLSV1                         6
 #define HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER                  7
 #define HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT                  8
-#define HB_SSL_CTX_NEW_METHOD_SSLV23                        9
-#define HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER                 10
-#define HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT                 11
+#define HB_SSL_CTX_NEW_METHOD_TLS                           9
+#define HB_SSL_CTX_NEW_METHOD_TLS_SERVER                    10
+#define HB_SSL_CTX_NEW_METHOD_TLS_CLIENT                    11
+#define HB_SSL_CTX_NEW_METHOD_SSLV23                        HB_SSL_CTX_NEW_METHOD_TLS
+#define HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER                 HB_SSL_CTX_NEW_METHOD_TLS_SERVER
+#define HB_SSL_CTX_NEW_METHOD_SSLV23_CLIENT                 HB_SSL_CTX_NEW_METHOD_TLS_CLIENT
 
 #define HB_SSLEAY_VERSION                                   0
 #define HB_SSLEAY_CFLAGS                                    1
