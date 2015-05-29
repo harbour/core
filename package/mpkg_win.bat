@@ -110,7 +110,7 @@ xcopy /y /s /q /i "%~dp0..\src\3rd\*.h" "%HB_ABSROOT%src\3rd\"
 :: TODO: This whole section should only be relevant
 ::       if the distro is mingw based. Much of it is
 ::       useful only if mingw _is_ actually bundled
-::       with the package, which probably something
+::       with the package, which is probably something
 ::       that should be avoided in the future.
 
 set MINGW_HOST=32
