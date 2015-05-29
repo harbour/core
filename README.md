@@ -1581,7 +1581,7 @@ Supported shells per host platforms:
            * <https://github.com/msysgit/msysgit/releases>
                (not verified with current Harbour version)
      * Cppcheck (static analysis) [multi-platform, free, open-source]
-        * <http://cppcheck.sourceforge.net/>
+        * <https://github.com/danmar/cppcheck>
      * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
         * <http://valgrind.org/>
      * ack (programmer grep) [multi-platform, free, open-source]
