@@ -1,5 +1,4 @@
 # Welcome to Harbour
-[![Issues](https://img.shields.io/github/issues/vszakats/harbour-core.svg)](https://github.com/vszakats/harbour-core/issues)
 [![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core) [![Build status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master) [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208) [![Download](https://api.bintray.com/packages/vszakats/generic/harbour/images/download.svg)](https://bintray.com/vszakats/generic/harbour/_latestVersion)
 
 Harbour is the free software implementation of a multi-platform,
@@ -1495,8 +1494,7 @@ Supported shells per host platforms:
      * MinGW CEGCC [win, *nix, free, open-source]
         * <https://web.archive.org/https://sourceforge.net/projects/cegcc/files/cegcc/>
           * To use this package, you will also need Cygwin package
-            (from <https://cygwin.com>) installed and be in `PATH`
-            for the Cygwin runtime (`cygwin1.dll`).
+            installed and be in `PATH` for the Cygwin runtime (`cygwin1.dll`).
           * Unpack using these commands:
 
             `bzip2 -d cegcc_mingw32ce_cygwin1.7_r1399.tar.bz2`<br />
@@ -1508,11 +1506,11 @@ Supported shells per host platforms:
      * Cygwin [win, free, open-source]
         * <https://cygwin.com/>
      * OS/2 GCC [os2, free, open-source]
-        * <http://os2ports.smedley.info/index.php?page=gcc-v4-4-x>
+        * <http://os2ports.smedley.id.au/index.php?page=tools-utilities>
      * DJGPP [dos, *nix, free, open-source]
         * <http://www.delorie.com/djgpp/>
      * Open Watcom [win, dos, os2, linux, free, open-source]
-        * <https://github.com/open-watcom>, <http://openwatcom.org/>
+        * <https://github.com/open-watcom>, <https://open-watcom.github.io/open-watcom/>
      * Xcode / Command Line Tools for Xcode [darwin, free, hybrid-source]
         * <https://itunes.apple.com/us/app/xcode/id497799835>
         * <https://developer.apple.com/downloads/>
@@ -1579,7 +1577,6 @@ Supported shells per host platforms:
      * GNU Bison (grammar parser generator) [multi-platform, free, open-source]
         * Windows binary:
            * <https://github.com/msysgit/msysgit/releases>
-               (not verified with current Harbour version)
      * Cppcheck (static analysis) [multi-platform, free, open-source]
         * <https://github.com/danmar/cppcheck>
      * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
@@ -1612,8 +1609,8 @@ Supported shells per host platforms:
 
         MS-DOS binary + source:
 
-         * <http://www.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip>
-         * <http://www.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip>
+         * <https://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip>
+         * <https://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip>
           <br />(included in Harbour as [dos-make.exe](dos-make.exe))
 
         OS/2 binary + source (3.81r3 or upper):
@@ -1625,18 +1622,17 @@ Supported shells per host platforms:
 
         MS-DOS binary + source:
 
-         * <http://www.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip>
-         * <http://www.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip>
-         * <http://www.delorie.com/pub/djgpp/current/v2gnu/shl2011b.zip>
-         * <http://www.delorie.com/pub/djgpp/current/v2gnu/shtl208s.zip>
-         * <http://www.delorie.com/pub/djgpp/current/v2/djdev203.zip>
-         * <http://www.delorie.com/pub/djgpp/current/v2/djlsr203.zip>
+         * <https://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip>
+         * <https://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip>
+         * <https://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/shl2011b.zip>
+         * <https://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2gnu/shtl208s.zip>
+         * <https://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2/djdev203.zip>
+         * <https://www.mirrorservice.org/sites/ftp.delorie.com/pub/djgpp/current/v2/djlsr203.zip>
           <br />(included in Harbour as [dosmkdir.exe](config/dosmkdir.exe), [dosrm.exe](config/dosrm.exe), [doscp.exe](config/doscp.exe), [dosecho.exe](config/dosecho.exe))
 
         OS/2 binary:
 
-         * <http://os2ports.smedley.info/index.php?page=tools-utilities>
-         * <http://download.smedley.info/buildenv_20071022.zip>
+         * <http://os2ports.smedley.id.au/index.php?page=gnu-coreutils>
           <br />(included in Harbour as [os2mkdir.exe](config/os2mkdir.exe), [os2rm.exe](config/os2rm.exe), [os2cp.exe](config/os2cp.exe))
 
 * Documentation:
@@ -1644,8 +1640,7 @@ Supported shells per host platforms:
      * [Netiquette Guidelines](https://tools.ietf.org/html/rfc1855)
      * [Setting up Git](https://help.github.com/articles/set-up-git)
      * [Git book](https://git-scm.com/book) [free]
-     * [Git Reference](http://gitref.org)
-     * [Git crash course for Subversion users](http://git.or.cz/course/svn.html)
+     * [Git Training Kit & Multi-language Cheat Sheet](https://training.github.com/kit/)
      * Using gettext (.po files)
        * <http://docs.transifex.com/formats/gettext>
        * <http://heiner-eichmann.de/autotools/using_gettext.html>
