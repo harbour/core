@@ -31,6 +31,7 @@ before_install:
       sudo apt-get install -qq -m unixodbc-dev
     fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
+      brew update
       brew install allegro5
       brew install cairo
       brew install curl
