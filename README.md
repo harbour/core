@@ -1486,12 +1486,12 @@ Supported shells per host platforms:
      * MinGW/MinGW-64 [win, *nix, free, open-source]
         * <http://mingw-w64.yaxm.org/>, <https://sourceforge.net/projects/mingw-w64/> (recommended, look for niXman builds)
           * Dual-target for x86-64 and x86 hosts (select non-native target with `HB_CPU=x86` or `HB_CPU=x86_64`):
-            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/>
-            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-win32/sjlj/>
+            * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/4.9.2/threads-win32/sjlj/>
+            * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/4.9.2/threads-win32/sjlj/>
           * x86:
-            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/4.9.2/threads-win32/dwarf/>
+            * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/4.9.2/threads-win32/dwarf/>
           * x86-64:
-            * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/seh/>
+            * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/4.9.2/threads-win32/seh/>
      * MinGW CEGCC [win, *nix, free, open-source]
         * <https://web.archive.org/https://sourceforge.net/projects/cegcc/files/cegcc/>
           * To use this package, you will also need Cygwin package
@@ -1605,7 +1605,6 @@ Supported shells per host platforms:
 
         Windows binary + source:
 
-         * <https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/>
          * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma>
          * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma>
          * `git clone ssh://git.sv.gnu.org/srv/git/make.git`
@@ -1613,7 +1612,6 @@ Supported shells per host platforms:
 
         MS-DOS binary + source:
 
-         * <http://www.delorie.com/pub/djgpp/beta/v2gnu/>
          * <http://www.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip>
          * <http://www.delorie.com/pub/djgpp/beta/v2gnu/mak381s.zip>
           <br />(included in Harbour as [dos-make.exe](dos-make.exe))
@@ -1627,7 +1625,6 @@ Supported shells per host platforms:
 
         MS-DOS binary + source:
 
-         * <http://www.delorie.com/pub/djgpp/current/v2gnu/>
          * <http://www.delorie.com/pub/djgpp/current/v2gnu/fil41b.zip>
          * <http://www.delorie.com/pub/djgpp/current/v2gnu/fil41s.zip>
          * <http://www.delorie.com/pub/djgpp/current/v2gnu/shl2011b.zip>
