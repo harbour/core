@@ -1,7 +1,7 @@
 /*
  * Hash table type and functions
  *
- * Copyright 2009 April White <april@users.sourceforge.net>
+ * Copyright 2009 April White <april users.sf.net>
  * Based on the content of hashfunc.c and hashes.c
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

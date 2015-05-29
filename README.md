@@ -120,7 +120,7 @@ Platform specific prerequisites:
 3. GNU Make 3.81 or upper is required. A copy of this tool
    is included in the source package, so you don't have to do
    anything.
-   If you want to get it separately, you can find it [here](https://sourceforge.net/projects/mingw/files/MinGW/Extension/make/).
+   If you want to get it separately, you can find it [here](#external-links).
    Unpack it to your `PATH` or Harbour source root directory,
    and run it as `mingw32-make`.
 
@@ -1493,7 +1493,7 @@ Supported shells per host platforms:
           * x86-64:
             * <https://sourceforge.net/projects/mingw-w64/files/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/4.9.2/threads-win32/seh/>
      * MinGW CEGCC [win, *nix, free, open-source]
-        * <https://sourceforge.net/projects/cegcc/files/cegcc/>
+        * <https://web.archive.org/https://sourceforge.net/projects/cegcc/files/cegcc/>
           * To use this package, you will also need Cygwin package
             (from <https://cygwin.com>) installed and be in `PATH`
             for the Cygwin runtime (`cygwin1.dll`).
@@ -1555,7 +1555,7 @@ Supported shells per host platforms:
         * <https://www.microsoft.com/en-us/download/details.aspx?id=4237>
             (required for Win9x/ME support to run applications built with Harbour in UNICODE mode)
      * Windows UNICOWS runtime/import library [win, free, open-source]
-        * <http://libunicows.sourceforge.net/>
+        * <https://web.archive.org/http://libunicows.sourceforge.net/>
             (required for Win9x/ME support at application built-time)
 
 * Tools:
@@ -1578,7 +1578,7 @@ Supported shells per host platforms:
         * <https://readme.io/>
      * GNU Bison (grammar parser generator) [multi-platform, free, open-source]
         * Windows binary:
-           * <http://gnuwin32.sourceforge.net/packages/bison.htm>
+           * <https://github.com/msysgit/msysgit/releases>
                (not verified with current Harbour version)
      * Cppcheck (static analysis) [multi-platform, free, open-source]
         * <http://cppcheck.sourceforge.net/>

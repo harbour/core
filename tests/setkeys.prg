@@ -2,7 +2,7 @@
  * This file contains the Harbour function(s) that maintain the list
  * of set-keys (hot-keys).
  *
- * Copyright 1999 April White <april@users.sourceforge.net>
+ * Copyright 1999 April White <april users.sf.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ PROCEDURE Main()
 
    LOCAL GetList := {}
    LOCAL alpha, bravo, charlie, k
-   LOCAL F8Active := .T.
+   LOCAL lF8Active := .T.
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
@@ -69,12 +69,12 @@ PROCEDURE Main()
    @ 11, 10 GET bravo
    @ 12, 10 GET charlie
 
-   SetKey( K_F10, {|| Alert( Transform( GetActive():varGet(), NIL ) ) }, ;
+   hb_SetKey( K_F10, {|| Alert( Transform( GetActive():varGet(), NIL ) ) }, ;
       {|| ! Empty( GetActive():varGet() ) } )
    SetKey( K_F9, {|| k := hb_SetKeySave( NIL ), ;
       SetKey( K_F9, {|| hb_SetKeySave( k ) } ) } )
-   SetKey( K_F8, {|| SubMain() }, {|| F8Active } )
-   SetKey( K_F7, {|| F8Active := ! F8Active } )
+   hb_SetKey( K_F8, {|| SubMain() }, {|| lF8Active } )
+   SetKey( K_F7, {|| lF8Active := ! lF8Active } )
 
    READ
    ? alpha, bravo, charlie
@@ -83,11 +83,12 @@ PROCEDURE Main()
 
 STATIC PROCEDURE SubMain()
 
-   LOCAL n
-   LOCAL bF8Action, bF8Active
    LOCAL aKeyArray := { hb_keyCode( "1" ), hb_keyCode( "2" ), hb_keyCode( "4" ), hb_keyCode( "5" ) }
+   LOCAL n
 
-   bF8Action := hb_SetKeyGet( K_F8, @bF8Active )
+   LOCAL bF8Active
+   LOCAL bF8Action := hb_SetKeyGet( K_F8, @bF8Active )
+
    SetKey( K_F8, NIL )
 
    hb_SetKeyArray( aKeyArray, {| x | QOut( hb_keyChar( x ) ) } )
@@ -101,6 +102,6 @@ STATIC PROCEDURE SubMain()
    ENDDO
 
    hb_SetKeyArray( aKeyArray, NIL )
-   SetKey( K_F8, bF8Action, bF8Active )
+   hb_SetKey( K_F8, bF8Action, bF8Active )
 
    RETURN
