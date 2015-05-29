@@ -76,7 +76,7 @@ endif
 # URL    https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre2-10.10.tar.bz2
 # DIFF   pcre2.dif
 #
-# MAP    LICENCE
+# MAP    LICENCE                               LICENSE.txt
 # MAP    src/config.h.generic                  config.h
 # MAP    src/pcre2.h.generic                   pcre2.h
 # MAP    src/pcre2_internal.h                  pcre2ina.h

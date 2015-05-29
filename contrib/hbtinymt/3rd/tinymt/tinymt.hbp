@@ -14,8 +14,8 @@ tinymt64.c
 # URL    http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/TinyMT-src-1.0.3.zip
 # DIFF   tinymt.dif
 #
-# MAP    LICENSE.txt          LICENSE.txt
-# MAP    tinymt/tinymt32.c    tinymt32.c
-# MAP    tinymt/tinymt64.c    tinymt64.c
-# MAP    tinymt/tinymt32.h    tinymt32.h
-# MAP    tinymt/tinymt64.h    tinymt64.h
+# MAP    LICENSE.txt       LICENSE.txt
+# MAP    tinymt/tinymt32.c tinymt32.c
+# MAP    tinymt/tinymt64.c tinymt64.c
+# MAP    tinymt/tinymt32.h tinymt32.h
+# MAP    tinymt/tinymt64.h tinymt64.h

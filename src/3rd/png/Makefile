@@ -68,10 +68,10 @@ endif
 # URL    https://github.com/glennrp/libpng/archive/v1.6.17.tar.gz
 # DIFF   png.dif
 #
-# MAP    LICENSE
+# MAP    LICENSE                        LICENSE.txt
 # MAP    png.c
 # MAP    pngconf.h
-# MAP    scripts/pnglibconf.h.prebuilt           pnglconf.h
+# MAP    scripts/pnglibconf.h.prebuilt  pnglconf.h
 # MAP    pngerror.c
 # MAP    pngget.c
 # MAP    png.h
@@ -89,5 +89,5 @@ endif
 # MAP    pngwtran.c
 # MAP    pngwutil.c
 # MAP    pnginfo.h
-# MAP    pngstruct.h                             pngstru.h
+# MAP    pngstruct.h                    pngstru.h
 # MAP    pngdebug.h

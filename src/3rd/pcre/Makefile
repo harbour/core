@@ -73,7 +73,7 @@ endif
 # URL    https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.37.tar.bz2
 # DIFF   pcre.dif
 #
-# MAP    LICENCE
+# MAP    LICENCE                           LICENSE.txt
 # MAP    config.h.generic                  config.h
 # MAP    pcre.h.generic                    pcre.h
 # MAP    pcre_internal.h                   pcreinal.h

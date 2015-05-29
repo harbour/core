@@ -104,7 +104,7 @@ endif
 # URL    http://infai.org/jpeg/files?get=jpegsrc.v9a.tar.gz
 # DIFF   jpeg.dif
 #
-# MAP    README
+# MAP    README     README.txt
 # MAP    cderror.h
 # MAP    cdjpeg.h
 # MAP    jaricom.c

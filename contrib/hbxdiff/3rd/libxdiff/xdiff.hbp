@@ -30,7 +30,7 @@ xversion.c
 # URL    http://xmailserver.org/libxdiff-0.23.tar.gz
 # DIFF   libxdiff.dif
 #
-# MAP    COPYING
+# MAP    COPYING             LICENSE.txt
 # MAP    winconfig.h         winconf.h
 # MAP    xdiff/xadler32.c    xadler32.c
 # MAP    xdiff/xadler32.h    xadler32.h

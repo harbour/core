@@ -96,7 +96,7 @@ endif
 # URL    http://download.osgeo.org/libtiff/tiff-4.0.3.zip
 # DIFF   tiff.dif
 #
-# MAP    COPYRIGHT                LICENSE
+# MAP    COPYRIGHT                LICENSE.txt
 # MAP    libtiff/tif_aux.c        auxtif.c
 # MAP    libtiff/tif_close.c      close.c
 # MAP    libtiff/tif_codec.c      codec.c

@@ -30,7 +30,7 @@ mxml_str.c
 # URL    https://www.msweet.org/files/project3/mxml-2.9.tar.gz
 # DIFF   minixml.dif
 #
-# MAP    COPYING
+# MAP    COPYING         LICENSE.txt
 # MAP    config.h.in     config.h
 # MAP    mxml-attr.c     mxml_att.c
 # MAP    mxml-entity.c   mxml_ent.c

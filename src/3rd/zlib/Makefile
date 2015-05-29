@@ -65,7 +65,7 @@ endif
 # URL    https://github.com/madler/zlib/archive/v1.2.8.zip
 # DIFF   zlib.dif
 #
-# MAP    README
+# MAP    README     README.txt
 # MAP    adler32.c
 # MAP    compress.c
 # MAP    crc32.c
