@@ -1535,7 +1535,7 @@ Supported shells per host platforms:
 * Libraries:
 
      * HB_WITH_JPEG - jpeglib [multi-platform, free, open-source]
-        * <http://ijg.org/>
+        * <http://infai.org/jpeg/>
      * HB_WITH_PCRE2, HB_WITH_PCRE - Perl Compatible Regular Expressions [multi-platform, free, open-source]
         * <http://pcre.org/>
      * HB_WITH_PNG - libpng [multi-platform, free, open-source]

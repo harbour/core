@@ -101,7 +101,7 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# URL    http://ijg.org/files/jpegsrc.v9a.tar.gz
+# URL    http://infai.org/jpeg/files?get=jpegsrc.v9a.tar.gz
 # DIFF   jpeg.dif
 #
 # MAP    README
