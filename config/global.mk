@@ -12,7 +12,7 @@
 # Portable shell programming:
 #    https://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
 #    https://www.gnu.org/software/bash/manual/bashref.html
-#    http://pubs.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
+#    https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
 # GNU coding standards:
 #    https://www.gnu.org/prep/standards/standards.html
 # GNU Make NEWS:

@@ -492,7 +492,7 @@ static void arc4_stir( void )
     * Discard early keystream, as per recommendations in
     * "Weaknesses in the Key Scheduling Algorithm of RC4" by
     * Scott Fluhrer, Itsik Mantin, and Adi Shamir.
-    * http://www.wisdom.weizmann.ac.il/~itsik/RC4/Papers/Rc4_ksa.ps
+    * https://web.archive.org/http://www.wisdom.weizmann.ac.il/~itsik/RC4/Papers/Rc4_ksa.ps
     *
     * Ilya Mironov's "(Not So) Random Shuffles of RC4" suggests that
     * we drop at least 2*256 bytes, with 12*256 as a conservative
