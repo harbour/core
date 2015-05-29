@@ -1543,7 +1543,7 @@ Supported shells per host platforms:
      * HB_WITH_TIFF - libtiff [multi-platform, free, open-source]
         * <http://remotesensing.org/libtiff/>
      * HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
-        * <http://home.broadpark.no/~gvanem/>
+        * <http://www.watt-32.net/>
      * HB_WITH_ZLIB - zlib [multi-platform, free, open-source]
         * <http://zlib.net/>
 
