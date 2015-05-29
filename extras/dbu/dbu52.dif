@@ -1,6 +1,6 @@
 diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
 --- dbu52ori/dbu.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbu.prg	2014-12-10 17:20:46.000000000 +0100
++++ dbu52pat/dbu.prg	2015-05-29 02:18:20.000000000 +0200
 @@ -9,6 +9,10 @@
  *
  */
@@ -59,11 +59,11 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
     *  Arrays declared in main module are considered public and
     *  may be accessed or altered by any module in the system. The
 -   *  matrix defines 6 work areas with 7 indexes and 64 fields
-+   *  matrix defines 6 work areas with 7 indexes and 128 fields
++   *  matrix defines 6 work areas with 7 indexes and 256 fields
     *  for each. 15 relations are also provided. All elements are
     *  initialized to avoid a type mismatch.
     **
-@@ -157,12 +174,12 @@
+@@ -157,15 +174,15 @@
     DECLARE t_relate[15]                          && target of relation
     
     * individual field names for active list
@@ -73,15 +73,20 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
 -   DECLARE field_n4[64]
 -   DECLARE field_n5[64]
 -   DECLARE field_n6[64]
-+   DECLARE field_n1[128]
-+   DECLARE field_n2[128]
-+   DECLARE field_n3[128]
-+   DECLARE field_n4[128]
-+   DECLARE field_n5[128]
-+   DECLARE field_n6[128]
++   DECLARE field_n1[256]
++   DECLARE field_n2[256]
++   DECLARE field_n3[256]
++   DECLARE field_n4[256]
++   DECLARE field_n5[256]
++   DECLARE field_n6[256]
     
-    * master field list..128 fields overall max
-    DECLARE field_list[128]
+-   * master field list..128 fields overall max
+-   DECLARE field_list[128]
++   * master field list..256 fields overall max
++   DECLARE field_list[256]
+    
+    * first and last row of each screen section
+    DECLARE row_a[3]                              && first row of each screen section
 @@ -250,7 +267,7 @@
     @ 0,0 SAY " F1        F2        F3        F4        F5        F6        " +;
     "F7        F8       "
