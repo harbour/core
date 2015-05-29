@@ -58,6 +58,7 @@ xhbkey.c
 xhbmsgs.c
 xhbmtc.c
 xhbmvinf.c
+xhbnetn.c
 xhbolec.c
 xhbprn.c
 xhbproc.c
