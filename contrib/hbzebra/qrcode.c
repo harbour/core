@@ -48,7 +48,7 @@
      QR Code is ISO/IEC18004
 
      JIS-X-0510  QR Code standard in Japaneese language :)
-       https://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
+       https://osdn.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
 
    https://en.wikipedia.org/wiki/QR_Code
    http://www.qrcode.com/en/
@@ -56,9 +56,9 @@
    http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
    http://www.swetake.com/qr/index-e.html
    https://www.codeproject.com/Articles/20574/Open-Source-QRCode-Library
-   https://sourceforge.jp/projects/reedsolomon
+   https://osdn.jp/projects/reedsolomon/
    http://twit88.com/home/
-   http://qrcode.sourceforge.jp/
+   http://qrcode.osdn.jp
    http://zxing.org/w/decode.jspx                          Online decoder
    http://blog.qr4.nl/Online-QR-Code_Decoder.aspx          Online decoder (not all codes are decoded)
    http://www.thonky.com/qr-code-tutorial/                 Tutorial
