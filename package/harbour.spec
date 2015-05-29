@@ -3,7 +3,7 @@
 # Dave Pearson <davep@davep.org>
 # Harbour RPM spec file
 #
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------

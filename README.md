@@ -1697,7 +1697,7 @@ Supported shells per host platforms:
    hope they will be useful, but WITHOUT GUARANTEE that they are complete,
    accurate, non-infringing or usable for any purpose whatsoever.
    Contributors are NOT LIABLE for any damages that result from using
-   Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
+   Harbour in any ways. For more legal details, see [LICENSE](LICENSE.txt).
 
    If you feel you can make Harbour better: contribute.
    [See how](CONTRIBUTING.md).

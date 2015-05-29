@@ -2,7 +2,7 @@
 
 :: ---------------------------------------------------------------
 :: Copyright 2009-2015 Viktor Szakats (vszakats.net/harbour)
-:: See COPYING.txt for licensing terms.
+:: See LICENSE.txt for licensing terms.
 :: ---------------------------------------------------------------
 
 :: - Adjust target dir, mingw dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,

@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (vszakats.net/harbour)
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 # GNU make docs:
@@ -2040,7 +2040,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
 else
    # Require HB_INSTALL_PREFIX on non-*nix when install is used,
-   # so that obligatory supplement files (like COPYING.txt) are always
+   # so that obligatory supplement files (like LICENSE.txt) are always
    # copied to install destination.
    ifneq ($(filter install,$(HB_MAKECMDGOALS)),)
       ifeq ($(HB_PLATFORM_UNIX),)

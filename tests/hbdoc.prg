@@ -28,7 +28,7 @@ PROCEDURE Main( cRoot )
       cRoot := "." + hb_ps()
       DO WHILE hb_DirExists( cRoot + ".." )
          IF hb_FileExists( cRoot + "README.md" ) .AND. ;
-            hb_FileExists( cRoot + "COPYING.txt" ) .AND. ;
+            hb_FileExists( cRoot + "LICENSE.txt" ) .AND. ;
             hb_DirExists( cRoot + "config" )
             EXIT
          ENDIF

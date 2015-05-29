@@ -4,7 +4,7 @@
 # Copyright 2003 Przemyslaw Czerpak <druzus@priv.onet.pl>
 # small set of functions used by Harbour scripts
 #
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 get_hbver()

@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (vszakats.net/harbour)
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 # This makefile will detect optional 3rd party components

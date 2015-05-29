@@ -85,7 +85,7 @@ PROCEDURE Main( ... )
                   mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES.txt", "" ), .T. )
                NEXT
 
-               mk_hb_FCopy( "COPYING.txt", tmp + hb_ps(), .T. )
+               mk_hb_FCopy( "LICENSE.txt", tmp + hb_ps(), .T. )
                mk_hb_FCopy( "CONTRIBUTING.md", tmp + hb_ps(), .T. )
                mk_hb_FCopy( "README.md", tmp + hb_ps(), .T. )
             ELSE
