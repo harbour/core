@@ -1663,10 +1663,12 @@ Supported shells per host platforms:
      * [FiveWin](http://forums.fivetechsupport.com/viewforum.php?f=3)
      * [xHarbour](https://groups.google.com/forum/#!forum/comp.lang.xharbour)
 
+  * Translators:
 
-  [Google Translate](https://translate.google.com)
+     * [Bing Translator](https://www.bing.com/translator/)
+     * [Google Translate](https://translate.google.com)
 
-  
+
 # Harbour Links
 
   * [Homepage](https://vszakats.github.io/harbour-core/)

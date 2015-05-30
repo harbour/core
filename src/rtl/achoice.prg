@@ -17,7 +17,7 @@
 
 /* NOTE: Extension: Harbour supports codeblocks and function pointers
          as the xSelect parameter (both when supplied as is, or as an
-         array of codeblocks). [vszakats] */
+         array of values). [vszakats] */
 
 FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPos, nHiLiteRow )
 
