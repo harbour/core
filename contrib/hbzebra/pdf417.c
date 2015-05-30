@@ -537,7 +537,7 @@ static int _pdf417_ec_size( int iLevel )
 
 static int _pdf417_default_ec_level( int iDataSize )
 {
-   /* http://www.idautomation.com/pdf417faq.html */
+   /* https://www.idautomation.com/barcode-faq/2d/pdf417/ */
    if( iDataSize <= 40 )
       return 2;
    if( iDataSize <= 160 )

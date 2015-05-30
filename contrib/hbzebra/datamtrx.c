@@ -51,8 +51,8 @@
      http://www.gs1.org/docs/barcodes/GS1_DataMatrix_Introduction_and_technical_overview.pdf
      http://www.aipsys.com/dmintro.htm
 
-   Open source projects, that implements DataMatrix:
-     http://www.datenfreihafen.org/projects/iec16022.html
+   Open source projects, that implement DataMatrix:
+     https://www.datenfreihafen.org/projects/iec16022.html
      http://www.libdmtx.org/
      https://www.codeproject.com/Articles/66495/DataMatrixNet-ported-to-Compact-Framework.aspx
 
