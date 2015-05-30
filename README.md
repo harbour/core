@@ -1664,9 +1664,9 @@ Supported shells per host platforms:
      * [xHarbour](https://groups.google.com/forum/#!forum/comp.lang.xharbour)
 
 
-  [Google translate](https://translate.google.com)
+  [Google Translate](https://translate.google.com)
 
-
+  
 # Harbour Links
 
   * [Homepage](https://vszakats.github.io/harbour-core/)
