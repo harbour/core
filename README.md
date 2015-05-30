@@ -1638,15 +1638,15 @@ Supported shells per host platforms:
 * Documentation:
 
      * [Netiquette Guidelines](https://tools.ietf.org/html/rfc1855)
-     * [Setting up Git](https://help.github.com/articles/set-up-git)
-     * [Git book](https://git-scm.com/book) [free]
-     * [Git Training Kit & Multi-language Cheat Sheet](https://training.github.com/kit/)
+     * [Setting Up Git](https://help.github.com/articles/set-up-git)
+     * [Git Book](https://git-scm.com/book) [free]
+     * [GitHub Training Kit & Multi-language Cheat Sheet](https://training.github.com/kit/)
      * Using gettext (.po files)
        * <http://docs.transifex.com/formats/gettext>
        * <http://heiner-eichmann.de/autotools/using_gettext.html>
      * [GitHub Guides](https://guides.github.com)
-     * [GitHub flavored Markdown](https://help.github.com/articles/github-flavored-markdown)
-     * [A practical git introduction](http://mrchlblng.me/2014/09/practical-git-introduction/)
+     * [GitHub Flavored Markdown](https://help.github.com/articles/github-flavored-markdown)
+     * [A Practical Git Introduction](http://mrchlblng.me/2014/09/practical-git-introduction/)
 
 * Community forums:
 
@@ -1678,7 +1678,7 @@ Supported shells per host platforms:
      * [hbmk2 documentation](utils/hbmk2/doc/hbmk2.en.md)
      * [hbrun documentation](contrib/hbrun/doc/hbrun.en.md)
      * [ChangeLog](ChangeLog.txt?raw=true)
-     * Comparing [Harbour to xHarbour](doc/xhb-diff.txt?raw=true)
+     * Comparing [Harbour with xHarbour](doc/xhb-diff.txt?raw=true)
      * CA-Cl*pper 5.3 [online documentation](http://x-hacker.org/ng/53guide/)
      * Harbour [online documentation](https://vszakats.github.io/harbour-core/harbour.html)
      * Harbour [internal documents](doc/)
