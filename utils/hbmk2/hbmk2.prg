@@ -8214,6 +8214,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                 */
                DO CASE
                CASE ( cBin_Sign := FindInPath( "signtool.exe" ) ) != NIL /* in MS Windows SDK */
+                  /* -fd sha256 -td sha256 */
                   IF signts_split_arg( hbmk[ _HBMK_cSignTime ] ) == "rfc3161"
                      cOpt_Sign := "sign {FS} -f {ID} -p {PW} -tr {UT} {OB}"
                   ELSE
@@ -8222,10 +8223,21 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF AScan( hbmk[ _HBMK_aOPTS ], {| tmp | HBMK_IS_IN( Lower( tmp ), "-v|/v" ) } ) == 0
                      AAdd( hbmk[ _HBMK_aOPTS ], "-q" )
                   ENDIF
+               #if defined( __PLATFORM__UNIX )
+               CASE ( cBin_Sign := FindInPath( "osslsigncode" ) ) != NIL
+               #else
+               CASE ( cBin_Sign := FindInPath( "osslsigncode.exe" ) ) != NIL
+               #endif
+                  /* https://sourceforge.net/projects/osslsigncode/ */
+                  /* -h sha256 */
+                  IF signts_split_arg( hbmk[ _HBMK_cSignTime ] ) == "rfc3161"
+                     cOpt_Sign := "sign {FS} -pkcs12 {ID} -pass {PW} -ts {UT} -in {OB} -out {TB}"
+                  ELSE
+                     cOpt_Sign := "sign {FS} -pkcs12 {ID} -pass {PW} -t {UT} -in {OB} -out {TB}"
+                  ENDIF
                CASE ( cBin_Sign := FindInPath( "posign.exe" ) ) != NIL /* in Pelles C 7.00.0 or newer */
                   IF signts_split_arg( hbmk[ _HBMK_cSignTime ] ) == "authenticode" .OR. ;
                      hbmk[ _HBMK_cSignTime ] == _HBMK_SIGN_TIMEURL_DEF  /* [BOOKMARK:1] */
-                     cBin_Sign := "posign.exe"
                      cOpt_Sign := "{FS} -pfx:{ID} -pwd:{PW} -timeurl:{UT} {OB}"
                   ELSE
                      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Code signing skipped, because the signing tool found (%1$s) does not support the timestamping standard (%2$s)." ), cBin_Sign, signts_split_arg( hbmk[ _HBMK_cSignTime ] ) ) )
@@ -8243,6 +8255,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
             IF ! Empty( cBin_Sign )
 
+               IF ( fhnd := hb_FTempCreateEx( @tmp2, hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) ) ) != F_ERROR
+                  FClose( fhnd )
+               ENDIF
+
                /* Code signing */
 
                hReplace := { ;
@@ -8250,6 +8266,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   "{UT}" => signts_split_arg( hbmk[ _HBMK_cSignTime ], .T. ), ;
                   "{ID}" => cOpt_SignID, ;
                   "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ), ;
+                  "{TB}" => FNameEscape( tmp2, nOpt_Esc, nOpt_FNF ), ;
                   "{PW}" => cOpt_SignPass }
 
                cCommand := cBin_Sign + " " + AllTrim( hb_StrReplace( cOpt_Sign, hReplace ) )
@@ -8267,6 +8284,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running code sign command. %1$d:" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutStd( tmp1 + _OUT_EOL )
+                  ENDIF
+               ENDIF
+
+               IF hb_FileExists( tmp2 )
+                  IF "{TB}" $ cOpt_Sign .AND. hb_FSize( tmp2 ) != 0
+                     FErase( hbmk[ _HBMK_cPROGNAME ] )
+                     FRename( tmp2, hbmk[ _HBMK_cPROGNAME ] )
+                  ELSE
+                     FErase( tmp2 )
                   ENDIF
                ENDIF
             ENDIF
