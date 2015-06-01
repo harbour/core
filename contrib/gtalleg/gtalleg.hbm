@@ -8,7 +8,7 @@
 
 -stop{pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm|(win&clang)}
 
--depurlbase=allegro:http://alleg.sourceforge.net/
+-depurlbase=allegro:http://liballeg.org/
 -deppkgname=allegro:allegro-devel{rpm}
 -deppkgname=allegro:liballegro4.2-dev{deb}
 -deppkgname=allegro:allegro4{homebrew}

@@ -8288,7 +8288,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ENDIF
 
                IF hb_FileExists( tmp2 )
-                  IF "{TB}" $ cOpt_Sign .AND. hb_FSize( tmp2 ) != 0
+                  IF "{TB}" $ cOpt_Sign .AND. hb_FSize( tmp2 ) > 0
                      FErase( hbmk[ _HBMK_cPROGNAME ] )
                      FRename( tmp2, hbmk[ _HBMK_cPROGNAME ] )
                   ELSE
