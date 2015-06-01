@@ -35,7 +35,7 @@ before_install:
     fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
       brew update;
-      brew install allegro5;
+      brew install allegro;
       brew install cairo;
       brew install curl;
       brew install freeimage;
