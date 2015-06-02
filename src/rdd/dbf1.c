@@ -2126,14 +2126,12 @@ static HB_ERRCODE hb_dbfGetRec( DBFAREAP pArea, HB_BYTE ** pBuffer )
 static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    LPFIELD pField;
-   PHB_ITEM pError;
    HB_BOOL fError;
    char * pszVal;
    HB_SIZE nLen;
    HB_MAXINT lVal;
    double dVal;
    HB_BOOL fDbl;
-   int iLen;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_dbfGetValue(%p, %hu, %p)", pArea, uiIndex, pItem ) );
 
@@ -2241,6 +2239,8 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
       case HB_FT_ROWVER:
          if( pField->uiDec )
          {
+            int iLen;
+
             switch( pField->uiLen )
             {
                case 1:
@@ -2375,7 +2375,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    /* Any error? */
    if( fError )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutOperation( pError, hb_dynsymName( ( PHB_DYNS ) pField->sym ) );

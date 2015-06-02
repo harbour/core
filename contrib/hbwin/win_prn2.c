@@ -127,12 +127,11 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
    if( hb_iswin2k() )  /* Windows 2000 or later */
    {
       typedef BOOL( WINAPI * DEFPRINTER ) ( LPTSTR, LPDWORD );
-      DEFPRINTER fnGetDefaultPrinter;
       HMODULE hWinSpool = hbwapi_LoadLibrarySystem( TEXT( "winspool.drv" ) );
 
       if( hWinSpool )
       {
-         fnGetDefaultPrinter = ( DEFPRINTER ) HB_WINAPI_GETPROCADDRESST( hWinSpool,
+         DEFPRINTER fnGetDefaultPrinter = ( DEFPRINTER ) HB_WINAPI_GETPROCADDRESST( hWinSpool,
             "GetDefaultPrinter" );
 
          if( fnGetDefaultPrinter )
@@ -300,7 +299,7 @@ HB_FUNC( WIN_PRINTERSTATUS )
             }
          }
 
-         CloseHandle( hPrinter );
+         ClosePrinter( hPrinter );
       }
 
       hb_strfree( hPrinterName );
@@ -606,8 +605,8 @@ HB_FUNC( WIN_PRINTERLIST )
 
                         hb_arrayAddForward( pPrinterArray, pTempItem );
                      }
+                     ClosePrinter( hPrinter );
                   }
-                  CloseHandle( hPrinter );
                }
             }
          }
