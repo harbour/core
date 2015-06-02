@@ -603,8 +603,9 @@ HB_FUNC( WIN_PRINTERLIST )
 
                         hb_arrayAddForward( pPrinterArray, pTempItem );
                      }
+
+                     ClosePrinter( hPrinter );
                   }
-                  CloseHandle( hPrinter );
                }
             }
          }
