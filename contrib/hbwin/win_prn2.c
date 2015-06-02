@@ -296,7 +296,7 @@ HB_FUNC( WIN_PRINTERSTATUS )
             }
          }
 
-         CloseHandle( hPrinter );
+         ClosePrinter( hPrinter );
       }
 
       hb_strfree( hPrinterName );
