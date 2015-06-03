@@ -64,7 +64,7 @@ build_script:
 #- set HB_WITH_MYSQL=C:\mariadb\include\mysql
 #- set HB_WITH_OCILIB=C:\ocilib\include
 #- set HB_WITH_PGSQL=C:\pgsql\include
-- set HB_USER_CFLAGS=-Wc90-c99-compat -Wc99-c11-compat -Wswitch-bool -Wlogical-not-parentheses -Wsizeof-array-argument -Wbool-compare
+- set HB_USER_CFLAGS=-Wc99-c11-compat -Wswitch-bool -Wlogical-not-parentheses -Wsizeof-array-argument -Wbool-compare
 - set HB_INSTALL_3RDDYN=yes
 - set HB_BUILD_STRIP=bin
 - set HB_BUILD_DYN=no
