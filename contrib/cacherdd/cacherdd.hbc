@@ -1,0 +1,25 @@
+description=CacheRDD (An RDD for Intersystem's Cache Database)
+
+
+
+skip={!allwin}
+
+
+
+incpaths=.
+
+
+
+headers=cacherdd.ch
+
+
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
+libs=hbwin.hbc
+
+libs=xhb.hbc
+
+
+
+mt=yes

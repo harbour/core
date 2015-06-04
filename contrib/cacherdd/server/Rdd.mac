@@ -1,0 +1,605 @@
+ ;
+ ;                              (x)Harbour Language Extensions
+ ;
+ ;                           Pritpal Bedi <bedipritpal@hotmail.com>
+ ;                                    with courtesy from
+ ;                             CURACAO <http://www.icuracao.com>
+ ;
+ ;                                   All Rights Reserved
+ ;
+ ;                                       12 Nov 2006
+ ;                                 Last Updated 04Nov2014
+ ;
+EOM( h, f=0 ) PUBLIC
+{
+    s:f h=$zdateh( h,f )
+    set d=$zdate( h,8 ), y=$extract( d,1,4 ), m=$extract( d,5,6 )
+    quit $zdateh( y_m_$select( m-2:m\8+m#2+30, 1:y#4=0-(y#100=0)+(y#400=0)+28), 8 )
+}
+BOM( h, f=0 ) PUBLIC
+{
+    s:f h=$zdateh( h,f )
+    set d=$zdate( h,8 ), y=$extract( d,1,4 ), m=$extract( d,5,6 )
+    quit $zdateh( y_m_"01", 8 )
+}
+EOY( h, f=0 ) PUBLIC
+{
+    s:f h=$zdateh( h,f )
+    set d=$zdate( h,8 )
+    set y=$extract( d,1,4 )
+    quit $zdateh( y_"1231", 8 )
+}
+SUBSTR( cStr, nFrom, nCount ) PUBLIC
+{
+   if $get( nCount ) = ""
+   {
+     set nCount = $length( cStr )
+   }
+   set cStr = $extract( cStr, nFrom, ( nCount+nFrom-1 ) )
+   set nLength = $length( cStr )
+   set nDif = ( nCount - nLength )
+   quit cStr_$select( nDif <= 0:"",1:$justify( " ",nDif ) )
+}
+LEFT( cStr, nLen )  PUBLIC
+{
+   set cStr    = $extract( cStr,1,nLen )
+   Set nLength = $length( cStr )
+   Set nDif    = ( nLen-nLength )
+   quit cStr_$select( nDif <= 0:"",1:$justify( " ",nDif ) )
+}
+UPPER( cStr, nLen ) PUBLIC
+{
+   set cStr    = $zconvert( cStr, "U" )
+   set cStr    = $extract( cStr,1,nLen )
+   Set nLength = $length( cStr )
+   Set nDif    = ( nLen-nLength )
+   quit cStr_$select( nDif <= 0:"",1:$justify( " ",nDif ) )
+}
+LOWER( cStr, nLen ) PUBLIC
+{
+   set cStr    = $zconvert( cStr, "L" )
+   set cStr    = $extract( cStr,1,nLen )
+   Set nLength = $length( cStr )
+   Set nDif    = ( nLen-nLength )
+   quit cStr_$select( nDif <= 0:"",1:$justify( " ",nDif ) )
+}
+REVERSE( cStr, nLen ) PUBLIC
+{
+   set nLength = $length( cStr )
+   if $get( nLen ) = ""
+   {
+      set nLen = nLength
+   }
+   set nDif = nLen - nLength
+   quit $reverse( cStr_$select( nDif <= 0:"",1:$justify( " ",nDif ) ) )
+}
+PAD( cStr, nLen ) PUBLIC
+{
+   set cStr    = $extract( cStr,1,nLen )
+   Set nLength = $length( cStr )
+   Set nDif    = ( nLen-nLength )
+   quit cStr_$select( nDif <= 0:"",1:$justify( " ",nDif ) )
+}
+STR( nNumber, nLen, nDecimals ) PUBLIC
+{
+   if $get( nLen ) = ""
+   {
+      set nLen = 15
+   }
+   if $get( nDecimals ) = ""
+   {
+      set nDecimals = 0
+   }
+   quit $justify( nNumber, nLen, nDecimals )
+}
+DATE() PUBLIC
+{
+   quit +$HOROLOG
+}
+TIME() PUBLIC
+{
+   quit $PIECE($HOROLOG,",",2)
+}
+DTOS( nDate ) PUBLIC
+{
+   if ( nDate = "" )
+   {
+      quit "        "
+   }
+   quit $zdate( nDate,8 )
+}
+STOD( sDate ) PUBLIC
+{
+   quit $zdateh( sDate,8 )
+}
+IF( bValue, valIfTrue, valIfFalse ) PUBLIC
+{
+   quit $select( bValue:valIfTrue,1:valIfFalse )
+}
+IIF( bValue, valIfTrue, valIfFalse ) PUBLIC
+{
+   quit $select( bValue:valIfTrue,1:valIfFalse )
+}
+EMPTY( xValue ) PUBLIC
+{
+   quit $length( xValue ) = 0
+}
+CTOD( cDate ) PUBLIC
+{
+   quit $zdateh( $piece( cDate,"/",3 )_$piece( cDate,"/",1 )_$piece( cDate,"/",2 ),8 )
+}
+SECONDS() PUBLIC
+{
+   quit +$PIECE($HOROLOG,",",2)
+}
+STRZERO( nNumber, nZeros ) PUBLIC
+{
+   if $get( nNumber ) = ""
+   {
+      set nNumber = 0
+   }
+   if $get( nZeros ) = ""
+   {
+      set nZeros = 0
+   }
+   set nLen = $length( nNumber )
+   set nOff = nZeros - nLen
+   if ( nOff > 0 )
+   {
+      quit $translate( $justify( " ", nOff ), " ", "0" )_nNumber
+   }
+   else
+   {
+      quit ""
+   }
+}
+UpdateKPI( cPackage, KPICode, KPIFreq, oldDate, newDate, oldValue, newValue, bDelete = 0 ) PUBLIC
+{
+   if ( KPIFreq = "M" )
+   {
+      set dRefDateO = $$EOM( oldDate )
+      set dRefDateN = $$EOM( newDate )
+   }
+   elseif ( KPIFreq = "Y" )
+   {
+      set dRefDateO = $$EOY( oldDate )
+      set dRefDateN = $$EOY( newDate )
+   }
+   else
+   {
+      set dRefDateO = oldDate
+      set dRefDateN = newDate
+   }
+   set cOldDate = $zdate( dRefDateO,8 )
+   set cNewDate = $zdate( dRefDateN,8 )
+
+   set KPIClassName = cPackage_".KPI"
+   set exists = ##class(%Dictionary.ClassDefinition).%ExistsId(KPIClassName)
+   if '(exists)
+   {
+      quit 1
+   }
+
+   set indexLoc  = "^"_KPIClassName_"I"
+   set indexName = "KPIKEY"
+
+   if ( oldDate '= "" )
+   {
+      // Check Old Date
+      set bInserted = 0
+      set indexKey  = " "_$$PAD( KPICode, 30 )_cOldDate
+      set queryStr  = $query( @indexLoc@(indexName,indexKey) )
+      if ( ( queryStr = "" ) || ( indexName '= $QSubScript(queryStr,1) ) || ( indexKey '= $QSubScript(queryStr,2) ) )
+      {
+           set class      = $zobjclassmethod( KPIClassName, "%New" )
+         set sc         = $zobjmethod( class,"%Save" )
+         set recPointer = $zobjmethod( class,"%Id"   )
+         set bInserted  = 1
+      }
+      else
+      {
+         set recPointer = $QSubScript(queryStr,3)
+      }
+      set class  = $zobjclassmethod( KPIClassName, "%OpenId", recPointer )
+      if bInserted = 1
+      {
+         set $zobjproperty( class,"KPICODE"   ) = KPICode
+         set $zobjproperty( class,"FREQUENCY" ) = KPIFreq
+         set $zobjproperty( class,"REFDATE"   ) = dRefDateO
+      }
+      set value = $zobjproperty( class,"VALUE" )
+      if value = ""
+      {
+         set value = 0
+      }
+      set $zobjproperty( class,"VALUE" ) = ( value - oldValue )
+      set sc = $zobjmethod( class,"%Save" )
+   }
+
+
+   if ( newDate '= "" )
+   {
+      // Check New Date
+      set indexKey  = " "_$$PAD( KPICode, 30 )_cNewDate
+      set queryStr  = $query( @indexLoc@(indexName,indexKey) )
+      set bInserted = 0
+      if ( ( queryStr = "" ) || ( indexName '= $QSubScript(queryStr,1) ) || ( indexKey '= $QSubScript(queryStr,2) ) )
+      {
+           set class      = $zobjclassmethod( KPIClassName, "%New" )
+         set sc         = $zobjmethod( class,"%Save" )
+         set recPointer = $zobjmethod( class,"%Id"   )
+         set bInserted  = 1
+      }
+      else
+      {
+         set recPointer = $QSubScript(queryStr,3)
+      }
+      set class  = $zobjclassmethod( KPIClassName, "%OpenId", recPointer )
+      if bInserted = 1
+      {
+         set $zobjproperty( class,"KPICODE"   ) = KPICode
+         set $zobjproperty( class,"FREQUENCY" ) = KPIFreq
+         set $zobjproperty( class,"REFDATE"   ) = dRefDateN
+      }
+      set value = $zobjproperty( class,"VALUE" )
+      if ( value = "" )
+      {
+         set value = 0
+      }
+      set $zobjproperty( class,"VALUE" ) = ( value + newValue )
+      set sc = $zobjmethod( class,"%Save" )
+   }
+
+   quit 1
+}
+
+ /*
+UpdatePerformanceIndicator( cPackage, cClass, cKeyWord, nOldVal, nNewVal ) PUBLIC
+{
+ClassMethod %OnDelete(oid As %ObjectIdentity) As %Status [ Private ]
+{
+   set x = $$RecordCopy^Rdd( ..%PackageName(), ..%ClassName(), $list( oid,1 ) )
+
+   set obj = $zobjclassmethod( "SQLUSER.SERVICE", "%OpenId", $list( oid,1 ) )
+   set x = $$UpdateKPI^Rdd( ..%PackageName(), "SERVICE.TOTCHARGS.M", "M", $zobjproperty( obj,"DATEIN" ), "", $zobjproperty( obj,"TOTCHARGS" ), 0, 1 )
+
+   quit $$$OK
+}
+
+Trigger RecCopyOnDelete [ Event = DELETE ]
+{
+   set x = $$RecordCopy^Rdd( ..%PackageName(), ..%ClassName(), %ROWID )
+}
+
+/// Triggers for KPI
+///
+Property OldInstance As SQLUSER.MYTABLE [ Transient ];
+
+Method %OnBeforeSave(insert As %Boolean) As %Status [ Private ]
+{
+   if '( insert )
+   {
+      if ..%Id() '= ""
+      {
+         set ..OldInstance = ..%New()
+           do ..OldInstance.%LoadData(..%Id())
+      }
+   }
+   quit $$$OK
+}
+
+Method %OnAfterSave(insert As %Boolean) As %Status [ Private ]
+{
+   if '( insert )
+   {
+      set oldValue = ..OldInstance.TOTCHARGS
+      set newValue = ..TOTCHARGS
+      if ( oldValue '= 0 ) || ( newValue '= 0 )
+      {
+         set oldDate  = ..OldInstance.DATEIN
+         set newDate  = ..DATEIN
+         if ( oldDate '= "" ) || ( newDate '= "" )
+         {
+            if ( oldValue '= newValue ) || ( oldDate '= newDate )
+            {
+               set KPICode  = "SERVICE.TOTCHARGS.M"
+               set KPIFreq  = "M"
+               set x = $$UpdateKPI^Rdd( ..%PackageName(), KPICode, KPIFreq, oldDate, newDate, oldValue, newValue, 0 )
+            }
+         }
+      }
+   }
+   quit $$$OK
+}
+}
+ */
+
+ClassCopy( FromPackage,FromClass ) PUBLIC
+{
+   set FromClassName = FromPackage_"."_FromClass
+   // New class name
+   set ToPackage   = FromPackage_"DEL"
+   set ToClassName = ToPackage_"."_FromClass
+   set exists = ##class(%Dictionary.ClassDefinition).%ExistsId(ToClassName)
+   if (exists)
+   {
+      quit 1
+   }
+   // Now open up the class
+   set FromClassObj = ##class(%Dictionary.ClassDefinition).%OpenId(FromClassName)
+   // Now construct a clone
+   set ToClassObj = FromClassObj.%ConstructClone(1)
+   set ToClassObj.Name = ToClassName
+   set old = FromPackage_"."
+   set new = ToPackage_"."
+   set len = $length(old)
+   // Super classes
+   do ListToArray(.list,ToClassObj.Super)
+   for key=1:1 {
+      if '$data(list(key)) quit
+      if $extract(list(key),1,len)=old set list(key)=new_$extract(list(key),len+1,$length(list(key)))
+   }
+   set ToClassObj.Super = $$ArrayToList(.list)
+   /*
+   // Compile after
+   do ListToArray(.list,ToClassObj.CompileAfter)
+   for key=1:1 {
+      if '$data(list(key)) quit
+      if $extract(list(key),1,len)=old set list(key)=new_$extract(list(key),len+1,$length(list(key)))
+   }
+   set ToClassObj.CompileAfter = $$ArrayToList(.list)
+   set ^RDDDeleted( FromClassName,32 ) = ToClassObj.CompileAfter
+   // Constraint class
+   do ListToArray(.list,ToClassObj.ConstraintClass)
+   for key=1:1 {
+      if '$data(list(key)) quit
+      if $extract(list(key),1,len)=old set list(key)=new_$extract(list(key),len+1,$length(list(key)))
+   }
+   set ToClassObj.ConstraintClass = $$ArrayToList(.list)
+   set ^RDDDeleted( FromClassName,33 ) = ToClassObj.ConstraintClass
+   // Depends on
+   do ListToArray(.list,ToClassObj.DependsOn)
+   for key=1:1 {
+      if '$data(list(key)) quit
+      if $extract(list(key),1,len)=old set list(key)=new_$extract(list(key),len+1,$length(list(key)))
+   }
+   set ToClassObj.DependsOn = $$ArrayToList(.list)
+   set ^RDDDeleted( FromClassName,34 ) = ToClassObj.DependsOn
+   // Import
+   do ListToArray(.list,ToClassObj.Import)
+   for key=1:1 {
+      if '$data(list(key)) quit
+      if $extract(list(key),1,len)=old set list(key)=new_$extract(list(key),len+1,$length(list(key)))
+   }
+   set ToClassObj.Import = $$ArrayToList(.list)
+   set ^RDDDeleted( FromClassName,35 ) = ToClassObj.Import
+   // Projection class
+   do ListToArray(.list,ToClassObj.ProjectionClass)
+   for key=1:1 {
+      if '$data(list(key)) quit
+      if $extract(list(key),1,len)=old set list(key)=new_$extract(list(key),len+1,$length(list(key)))
+   }
+   set ToClassObj.ProjectionClass = $$ArrayToList(.list)
+   set ^RDDDeleted( FromClassName,36 ) = ToClassObj.ProjectionClass
+   */
+   set ToClassObj.SqlRoutinePrefix = ""
+   set ToClassObj.SqlTableName = ""
+   // Get the storage strategy in use
+   set storID = 0 // Indicates whether we found a default storage type
+   set storStrategy = ToClassObj.StorageStrategy
+   set storCount = ToClassObj.Storages.Count()
+   // Work down all the storages and find out which strategy is being used
+   for storage=1:1:storCount {
+      set storName = ToClassObj.Storages.GetAt(storage).Name
+      // Get the strategy that matches the name
+      if (storStrategy="")||(storStrategy=storName) {
+         // Only do this for default storages. Anything else would be a little complicated
+         set storID=storage
+         if ToClassObj.Storages.GetAt(storage).Type = "%Library.CacheStorage" {
+            set storDataOld = ToClassObj.Storages.GetAt(storage).DataLocation
+            set storIndexOld = ToClassObj.Storages.GetAt(storage).IndexLocation
+            set storIdOld = ToClassObj.Storages.GetAt(storage).IdLocation
+            set storStreamOld = ToClassObj.Storages.GetAt(storage).StreamLocation
+         }
+      }
+   }
+   // Change the global names if we found a default storage
+   if storID {
+      for type=storDataOld,storIndexOld,storIdOld,storStreamOld {
+         set storRoot = $$GetStoreRootName(type,old,new)
+         if storRoot'="" quit
+      }
+      set storDataNew = storDataOld if storDataOld["." set len = $length(storDataOld,"."),storDataNew = storRoot_"."_$piece(storDataOld,".",len)
+      set storIndexNew = storIndexOld if storIndexOld["." set len = $length(storIndexOld,"."),storIndexNew = storRoot_"."_$piece(storIndexOld,".",len)
+      set storIdNew = storIdOld if storIdOld["." set len = $length(storIdOld,"."),storIdNew = storRoot_"."_$piece(storIdOld,".",len)
+      set storStreamNew = storStreamOld if storStreamOld["." set len = $length(storStreamOld,"."),storStreamNew = storRoot_"."_$piece(storStreamOld,".",len)
+      set ToClassObj.Storages.GetAt(storID).DataLocation = storDataNew
+      set ToClassObj.Storages.GetAt(storID).IndexLocation = storIndexNew
+      set ToClassObj.Storages.GetAt(storID).IdLocation = storIdNew
+      set ToClassObj.Storages.GetAt(storID).StreamLocation = storStreamNew
+      set storData(ToClassName) = $lb(storDataOld,storIndexOld,storIdOld,storStreamOld,storDataNew,storIndexNew,storIdNew,storStreamNew)
+   }
+   set len = $length(old)
+   // Foreign keys
+   set fkCount = ToClassObj.ForeignKeys.Count()
+   for fk=1:1:fkCount {
+      set fkObj = ToClassObj.ForeignKeys.GetAt(fk)
+      // Foreign key referenced class
+      do ListToArray(.list,fkObj.ReferencedClass)
+      for key=1:1 {
+         if '$data(list(key)) quit
+         if $extract(list(key),1,len)=old set list(key)=new_$extract(list(key),len+1,$length(list(key)))
+      }
+      set fkObj.ReferencedClass = $$ArrayToList(.list)
+   }
+   // Methods
+   kill ^RDDClass( "Class" )
+   for {
+      set methodCount = ToClassObj.Methods.Count()
+      quit:((methodCount = 0 )||(methodCount = "" ))
+      set propObj = ToClassObj.Methods.GetAt( 1 )
+      set ^RDDClass( "Class","MethodName",propObj.Name ) = propObj.Name
+      //do propObj.%Delete()
+      //do ToClassObj.Methods.%DeleteExtent()
+      quit
+   }
+   // Properties
+   set propCount = ToClassObj.Properties.Count()
+   for prop=1:1:propCount {
+      set propObj = ToClassObj.Properties.GetAt(prop)
+      // Property type
+      do ListToArray(.list,propObj.Type)
+      for key=1:1 {
+         if '$data(list(key)) quit
+         if $extract(list(key),1,len)=old set list(key)=new_$extract(list(key),len+1,$length(list(key)))
+      }
+      set propObj.Type = $$ArrayToList(.list)
+   }
+   // Save the new class
+   set status = ToClassObj.%Save()
+   if status {
+      set status = $system.OBJ.CompilePackage(ToPackage,"-d",.error)
+      if status {
+         quit 1
+      }
+   }
+   quit 0
+}
+ListToArray( list, string ) PUBLIC
+{
+   kill list
+   set len = $length(string,",")
+   for i=1:1:len set list(i)=$piece(string,",",i)
+}
+ArrayToList( list ) PUBLIC
+{
+   set string=$get(list(1))
+   if string'="" for i=2:1 quit:'$data(list(i))  set string=string_","_list(i)
+   quit string
+}
+GetStoreRootName(storOld, old, new) PUBLIC
+{
+   set storRoot=""
+   if storOld["." {
+      set lenOld = $length(old)
+      set randomPart = $char(65+$random(26))_$random(10)_$random(10)_$random(10)
+      // Calculate new name "root"
+      if $extract(storOld,2,lenOld+1)=old {
+         set storNew = "^"_new_$extract(storOld,lenOld+2,$length(storOld))
+      }
+      else {
+         set len=$length(storOld,".")
+         set storNew="^"_new_$piece(storOld,".",len)
+      }
+      // Replace a complicated one if the new name is greater than 31 characters
+      if $length(storNew)>31 {
+         set len = $length(storNew,".")
+         set last = "."_$piece(storNew,".",len)
+         set max = 31-$length(last)-4
+         set storNew = $extract(storNew,1,max)_randomPart_last
+      }
+      set len = $length(storNew,".")
+      set storRoot = $piece(storNew,".",1,len-1)
+   }
+   quit storRoot
+}
+RecordCopy( FromPackage,FromClass,rec ) PUBLIC
+{
+   set FromClassName = FromPackage_"."_FromClass
+   set ToPackage     = FromPackage_"DEL"
+   set ToClassName   = ToPackage_"."_FromClass
+   set g = "^"_FromClassName_"D("_rec_")"
+   set v = @g
+
+   set r   = rec
+   set g   = "^"_ToClassName_"D("_r_")"
+
+   set @g  = v
+
+    set job = ##class(%SYS.ProcessQuery).%OpenId( $JOB )
+     if ( job '= "" )
+     {
+        set lb = $lb( "",
+                      job.UserName,
+                      job.ClientIPAddressGet(),
+                      job.ClientNodeNameGet(),
+                      job.OSUserName,
+                      +$PIECE( $HOROLOG,",",1 ),
+                      +r,
+                      job.ClientExecutableNameGet(),
+                      +rec,
+                      $ZTime( $PIECE( $HOROLOG,",",2 ) ),
+                     job.UserInfo
+                    )
+   }
+   set g = "^"_ToClassName_"INF"_"D("_r_")"
+   set @g = lb
+
+   quit 1
+}
+RemoveIndex( className, tagName ) PUBLIC
+{
+   set cdef = ""
+   set bRet = 1
+
+   if ##class(%Dictionary.ClassDefinition).%ExistsId(className)
+   {
+      Set cdef = ##class(%Dictionary.ClassDefinition).%OpenId(className)
+   }
+   if cdef = ""
+   {
+      quit 0
+   }
+
+   set done = $zobjclassmethod( className, "%PurgeIndices", $ListBuild( tagName ) )
+   if $extract(done,1,1) = 0
+   {
+      do $System.Status.DecomposeStatus( done,.err )
+      set ^Errors("Index",className,tagName,"%PurgeIndices Failed" ) = $get( err( 1 ) )
+      w className, !, $get( err( 1 ) )
+   }
+
+   set count = cdef.Indices.Count()
+   for i=1:1:count
+   {
+      set idef = cdef.Indices.GetAt( i )
+      if ( idef.Name = tagName )
+      {
+         set propName = idef.Properties
+         if ( propName [ "Idx" )
+         {
+            set pcount = cdef.Properties.Count()
+            for j = 1:1:pcount
+            {
+               set pdef = cdef.Properties.GetAt( j )
+               if ( pdef.Name = propName )
+               {
+                  do cdef.Properties.RemoveAt( j )
+               }
+            }
+         }
+         do cdef.Indices.RemoveAt( i )
+
+         Set done = cdef.%Save()
+         if $extract(done,1,1) = 0
+         {
+              do $System.Status.DecomposeStatus( done,.err )
+              set ^Errors("Index",className,tagName,"For Remove Not Saved" ) = $get( err( 1 ) )
+              set bRet = 0
+              quit
+          }
+
+         set done = $system.OBJ.Compile( className )
+         if $extract(done,1,1) = 0
+         {
+              do $System.Status.DecomposeStatus( done,.err )
+              set ^Errors("Index",className, tagName,"After Remove Not Compiled" ) = $get( err( 1 ) )
+              set bRet = 0
+              quit
+         }
+
+         quit
+      }
+   }
+   quit bRet
+}
