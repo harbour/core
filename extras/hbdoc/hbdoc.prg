@@ -60,22 +60,6 @@
 
    TODO: - look for embedded 'fixed'
 
-   these files have <tables>
-
-   *../../doc/en/cmdline.txt
-    ../../doc/en/dbstrux.txt
-   *../../doc/en/file.txt
-    ../../doc/en/input.txt
-    ../../doc/en/lang.txt
-    ../../doc/en/menu.txt
-    ../../doc/en/objfunc.txt
-    ../../doc/en/rdddb.txt
-    ../../doc/en/sayget.txt
-    ../../doc/en/set.txt
-    ../../doc/en/setmode.txt
-    ../../doc/en/string.txt
-    ../../doc/en/var.txt
-
    done - recognize and accept </par>; see macro.txt output esp. hb_setmacro
    done - list 'compliance' and 'platforms' within help
    done - list 'category' and 'subcategory' types on help screen
