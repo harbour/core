@@ -83,7 +83,7 @@
       https://www.gnu.org/software/groff/manual/html_node/index.html
       https://www.gnu.org/software/groff/manual/groff.pdf
    Troff manual:
-      http://cm.bell-labs.com/sys/doc/troff.pdf
+      http://plan9.bell-labs.com/sys/doc/troff.pdf
  */
 
 #ifndef HBMK_GENERIC
