@@ -61,11 +61,11 @@
       http://nethack4.org/blog/building-c.html
 
    Program Library HOWTO:
-      http://www.linux.org/docs/ldp/howto/Program-Library-HOWTO/index.html
+      http://www.dwheeler.com/program-library/Program-Library-HOWTO.pdf
 
    Markdown syntax:
       https://daringfireball.net/projects/markdown/syntax
-      https://jgm.github.io/stmd/spec.html (CommonMark)
+      http://spec.commonmark.org/ (CommonMark)
       http://johnmacfarlane.net/babelmark2/
 
    Markdown to man page converter:
@@ -76,14 +76,6 @@
       md2man man.md > man.1
       (man.md should come out from this executable as output, so
       the manual does not have to be updated in two disctinct places)
-
-   Man page HOWTO:
-      http://www.schweikhardt.net/man_page_howto.html
-   Groff manual:
-      https://www.gnu.org/software/groff/manual/html_node/index.html
-      https://www.gnu.org/software/groff/manual/groff.pdf
-   Troff manual:
-      http://plan9.bell-labs.com/sys/doc/troff.pdf
  */
 
 #ifndef HBMK_GENERIC
@@ -14435,35 +14427,35 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
 
 STATIC PROCEDURE Levenshtein_Tests()
 
-   ? Levenshtein( "kitten", "sitting" )               == 3
-   ? Levenshtein( "stop", "tops" )                    == 2
-   ? Levenshtein( "rosettacode", "raisethysword" )    == 8
-   ? Levenshtein( ""   , ""    )                      == 0
-   ? Levenshtein( "a"  , ""    )                      == 1
-   ? Levenshtein( ""   , "a"   )                      == 1
-   ? Levenshtein( "abc",  ""   )                      == 3
-   ? Levenshtein( ""   , "abc" )                      == 3
-   ? Levenshtein( "a"  , "a"   )                      == 0
-   ? Levenshtein( "abc", "abc" )                      == 0
-   ? Levenshtein( ""   , "a"   )                      == 1
-   ? Levenshtein( "a"  , "ab"  )                      == 1
-   ? Levenshtein( "b"  , "ab"  )                      == 1
-   ? Levenshtein( "ac" , "abc" )                      == 1
-   ? Levenshtein( "abcdefg", "xabxcdxxefxgx" )        == 6
-   ? Levenshtein( "ab" , "a"   )                      == 1
-   ? Levenshtein( "ab" , "b"   )                      == 1
-   ? Levenshtein( "abc", "ac"  )                      == 1
-   ? Levenshtein( "xabxcdxxefxgx", "abcdefg" )        == 6
-   ? Levenshtein( "a"  , "b"   )                      == 1
-   ? Levenshtein( "ab" , "ac"  )                      == 1
-   ? Levenshtein( "ac" , "bc"  )                      == 1
-   ? Levenshtein( "abc", "axc" )                      == 1
-   ? Levenshtein( "xabxcdxxefxgx", "1ab2cd34ef5g6" )  == 6
-   ? Levenshtein( "example", "samples" )              == 3
-   ? Levenshtein( "sturgeon", "urgently" )            == 6
-   ? Levenshtein( "levenshtein", "frankenstein" )     == 6
-   ? Levenshtein( "distance", "difference" )          == 5
-   ? Levenshtein( "java was neat", "scala is great" ) == 7
+   ? 3 == Levenshtein( "kitten", "sitting" )
+   ? 2 == Levenshtein( "stop", "tops" )
+   ? 8 == Levenshtein( "rosettacode", "raisethysword" )
+   ? 0 == Levenshtein( ""   , ""    )
+   ? 1 == Levenshtein( "a"  , ""    )
+   ? 1 == Levenshtein( ""   , "a"   )
+   ? 3 == Levenshtein( "abc",  ""   )
+   ? 3 == Levenshtein( ""   , "abc" )
+   ? 0 == Levenshtein( "a"  , "a"   )
+   ? 0 == Levenshtein( "abc", "abc" )
+   ? 1 == Levenshtein( ""   , "a"   )
+   ? 1 == Levenshtein( "a"  , "ab"  )
+   ? 1 == Levenshtein( "b"  , "ab"  )
+   ? 1 == Levenshtein( "ac" , "abc" )
+   ? 6 == Levenshtein( "abcdefg", "xabxcdxxefxgx" )
+   ? 1 == Levenshtein( "ab" , "a"   )
+   ? 1 == Levenshtein( "ab" , "b"   )
+   ? 1 == Levenshtein( "abc", "ac"  )
+   ? 6 == Levenshtein( "xabxcdxxefxgx", "abcdefg" )
+   ? 1 == Levenshtein( "a"  , "b"   )
+   ? 1 == Levenshtein( "ab" , "ac"  )
+   ? 1 == Levenshtein( "ac" , "bc"  )
+   ? 1 == Levenshtein( "abc", "axc" )
+   ? 6 == Levenshtein( "xabxcdxxefxgx", "1ab2cd34ef5g6" )
+   ? 3 == Levenshtein( "example", "samples" )
+   ? 6 == Levenshtein( "sturgeon", "urgently" )
+   ? 6 == Levenshtein( "levenshtein", "frankenstein" )
+   ? 5 == Levenshtein( "distance", "difference" )
+   ? 7 == Levenshtein( "java was neat", "scala is great" )
 
    RETURN
 #endif
