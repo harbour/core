@@ -16,6 +16,7 @@ before_install:
       if [ "$CC" = "gcc" ]; then
          sudo apt-get install -qq -m gcc-5 g++-5;
          export HB_CCSUFFIX=-5;
+         ls -lA /usr/bin/gcc*;
       fi;
       sudo apt-get install -qq -m firebird2.1-dev;
       sudo apt-get install -qq -m liballegro4.2-dev;
