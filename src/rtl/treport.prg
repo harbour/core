@@ -872,7 +872,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       Empty( hb_FNameDir( cFrmFile ) )
 
       // Search through default path; attempt to open report file
-      FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
+      FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH ), ",", ";" ), ";" )
          IF ( nFrmHandle := hb_vfOpen( hb_DirSepAdd( cPath ) + cFrmFile ) ) != NIL
             EXIT
          ENDIF

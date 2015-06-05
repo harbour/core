@@ -62,19 +62,19 @@
 
    these files have <tables>
 
-   *..\..\doc\en\cmdline.txt    txt\lineutility.txt
-    ..\..\doc\en\dbstrux.txt    txt\dbstrux.txt
-   *..\..\doc\en\file.txt       txt\file.txt
-    ..\..\doc\en\input.txt      txt\input.txt
-    ..\..\doc\en\lang.txt       txt\lang.txt
-    ..\..\doc\en\menu.txt       txt\menu.txt
-    ..\..\doc\en\objfunc.txt    txt\objfunc.txt
-    ..\..\doc\en\rdddb.txt      txt\rdddb.txt
-    ..\..\doc\en\sayget.txt     txt\sayget.txt
-    ..\..\doc\en\set.txt        txt\set.txt
-    ..\..\doc\en\setmode.txt    txt\setmode.txt
-    ..\..\doc\en\string.txt     txt\string.txt
-    ..\..\doc\en\var.txt        txt\var.txt
+   *../../doc/en/cmdline.txt
+    ../../doc/en/dbstrux.txt
+   *../../doc/en/file.txt
+    ../../doc/en/input.txt
+    ../../doc/en/lang.txt
+    ../../doc/en/menu.txt
+    ../../doc/en/objfunc.txt
+    ../../doc/en/rdddb.txt
+    ../../doc/en/sayget.txt
+    ../../doc/en/set.txt
+    ../../doc/en/setmode.txt
+    ../../doc/en/string.txt
+    ../../doc/en/var.txt
 
    done - recognize and accept </par>; see macro.txt output esp. hb_setmacro
    done - list 'compliance' and 'platforms' within help
