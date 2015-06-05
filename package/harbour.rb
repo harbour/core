@@ -19,8 +19,25 @@ class Harbour < Formula
 
   head "https://github.com/vszakats/harbour-core/core.git"
 
+  # This one is "vendored", but is used if found on the system
   depends_on "pcre"
+
   depends_on :x11 => :optional
+
+  depends_on "allegro" => :optional
+  depends_on "cairo" => :optional
+  depends_on "curl" => :optional
+  depends_on "freeimage" => :optional
+  depends_on "gd" => :optional
+  depends_on "ghostscript" => :optional
+  depends_on "libmagic" => :optional
+  depends_on "mariadb" => :optional
+  depends_on "mysql" => :optional
+  depends_on "ncurses" => :optional
+  depends_on "postgresql" => :optional
+  depends_on "qt5" => :optional
+  depends_on "slang" => :optional
+  depends_on "unixodbc" => :optional
 
   def install
     ENV["HB_INSTALL_PREFIX"] = prefix
