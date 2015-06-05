@@ -26,7 +26,7 @@ class Harbour < Formula
 
   depends_on "allegro" => :optional
   depends_on "cairo" => :optional
-  depends_on "curl" => :optional
+  depends_on "curl" => :recommended
   depends_on "freeimage" => :optional
   depends_on "gd" => :optional
   depends_on "ghostscript" => :optional
