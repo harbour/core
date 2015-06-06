@@ -80,4 +80,4 @@ build_script:
 #- set _HB_PKG_DEBUG=yes
 - win-make.exe clean install HB_VERSION=%HB_VF%
 - call package\mpkg_win.bat
-- curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -L --proto-redir =http -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
+- curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -L --proto-redir =https -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
