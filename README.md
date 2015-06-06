@@ -1656,6 +1656,10 @@ Supported shells per host platforms:
      * [Portuguese](http://pctoledo.com.br/forum/viewforum.php?f=4)
      * [Russian](http://clipper.borda.ru/?0-4)
 
+  * Social media:
+     * [Facebook](https://www.facebook.com/groups/harbour.project/)
+     * [Twitter](https://twitter.com/harbourproject)
+
   * Product-specific:
      * [Harbour mainline development](https://groups.google.com/forum/#!forum/harbour-devel)
      * [HMG](http://hmgforum.com/viewforum.php?f=7)
