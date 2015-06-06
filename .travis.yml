@@ -46,7 +46,6 @@ before_install:
       brew install mariadb;
       brew install ncurses;
       brew install postgresql;
-      brew install slang;
       brew install unixodbc;
     fi
 notifications:
