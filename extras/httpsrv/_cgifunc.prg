@@ -466,7 +466,7 @@ PROCEDURE uhttpd_Die( cError )
 FUNCTION uhttpd_HTMLSpace( n )
    RETURN Replicate( "&nbsp;", n )  // "&#32;"
 
-PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
+PROCEDURE uhttpd_WriteToLogFile( cString, cLog )
 
    LOCAL nHandle
 
@@ -475,12 +475,7 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 #endif
    hb_default( @cLog, hb_ps() + "tmp" + hb_ps() + "logfile.log" )
 
-   IF ! hb_defaultValue( lCreate, .F. ) .AND. hb_vfExists( cLog )
-      nHandle := hb_vfOpen( cLog, FO_WRITE + FO_SHARED )
-   ELSE
-      nHandle := hb_vfOpen( cLog, FO_WRITE + FO_SHARED + FO_CREAT + FO_TRUNC )
-      // __OutDebug( "Create ", nHandle )
-   ENDIF
+   nHandle := hb_vfOpen( cLog, FO_CREAT + FO_WRITE + FO_SHARED )
 
    // cString := "PROCEDURE: " + ProcName( -2 ) + " " + cString
 

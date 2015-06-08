@@ -410,10 +410,10 @@ STATIC PROCEDURE LogError( oerr )
    AddLine( @cReport, "" )
    AddLine( @cReport, "" )
 
-   IF ( nHandle := hb_vfOpen( cLogFile, FO_CREAT + FO_WRITE + iif( lAppendLog, 0, FO_TRUNC ) ) ) == NIL .AND. ;
+   IF ( nHandle := hb_vfOpen( cLogFile, FO_CREAT + iif( lAppendLog, 0, FO_TRUNC ) + FO_WRITE ) ) == NIL .AND. ;
       ! hb_FileMatch( cLogFile, "error.log" )
       // Force creating error.log in case supplied log file cannot be created for any reason
-      nHandle := hb_vfOpen( "error.log", FO_CREAT + FO_WRITE + FO_TRUNC )
+      nHandle := hb_vfOpen( "error.log", FO_CREAT + FO_TRUNC + FO_WRITE )
    ENDIF
 
    IF nHandle != NIL

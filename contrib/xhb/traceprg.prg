@@ -81,7 +81,7 @@ FUNCTION xhb_SetTraceFile( xFile, lAppend )
    IF HB_ISSTRING( xFile )
       s_cSET_TRACEFILE := xFile
       IF ! hb_defaultValue( lAppend, .F. ) .AND. ;
-         ( file := hb_vfOpen( s_cSET_TRACEFILE, FO_CREAT + FO_TRUNC ) ) != NIL
+         ( file := hb_vfOpen( s_cSET_TRACEFILE, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
          hb_vfClose( file )
       ENDIF
    ENDIF
@@ -121,7 +121,7 @@ FUNCTION TraceLog( ... )
    LOCAL FileHandle, nLevel, ProcName, xParam
 
    IF s_lSET_TRACE .AND. ;
-      ( FileHandle := hb_vfOpen( s_cSET_TRACEFILE, FO_WRITE + FO_CREAT ) ) != NIL
+      ( FileHandle := hb_vfOpen( s_cSET_TRACEFILE, FO_CREAT + FO_WRITE ) ) != NIL
 
       hb_vfSeek( FileHandle, 0, FS_END )
 

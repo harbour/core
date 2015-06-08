@@ -52,6 +52,7 @@
 #include "hbclass.ch"
 
 #include "error.ch"
+#include "fileio.ch"
 #include "inkey.ch"
 
 #define _LF_SAMPLES     2       // "Do you want more samples?"
@@ -329,7 +330,9 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    LOCAL cFieldText                       // Text expression container
    LOCAL err                              // error object
 
+#ifdef HB_CLP_STRICT
    LOCAL cPath             // iteration variable
+#endif
 
    // Create and initialize default label array
    LOCAL aLabel[ LBL_COUNT ]
@@ -344,27 +347,27 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    aLabel[ LBL_FIELDS ]  := {}             // Array of label fields
 
    // Open the label file
+#ifdef HB_CLP_STRICT
    IF ( nHandle := hb_vfOpen( cLblFile ) ) == NIL .AND. ;
       Empty( hb_FNameDir( cLblFile ) )
 
       // Search through default path; attempt to open label file
-#ifdef HB_CLP_STRICT
       FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
-#else
-      /* The Cl*pper 5.x documentation says that _SET_PATH is also
-         searched here - just like it is for .frm files -, but the
-         implementation is missing this logic. It is safe to assume
-         that the documented behavior is the intended one to maintain
-         dBase compatibility. This is fixed in Harbour, unless strict
-         compatibility is selected.
-         [vszakats] */
-      FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH ), ",", ";" ), ";" )
-#endif
          IF ( nHandle := hb_vfOpen( hb_DirSepAdd( cPath ) + cLblFile ) ) != NIL
             EXIT
          ENDIF
       NEXT
    ENDIF
+#else
+   /* The Cl*pper 5.x documentation says that _SET_PATH is also
+      searched here - just like it is for .frm files -, but the
+      implementation is missing this logic. It is safe to assume
+      that the documented behavior is the intended one to maintain
+      dBase compatibility. This is fixed in Harbour, unless strict
+      compatibility is selected.
+      [vszakats] */
+   nHandle := hb_vfOpen( cLblFile, HB_FO_DEFAULTS )
+#endif
 
    // File error
    IF nHandle == NIL

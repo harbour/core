@@ -49,6 +49,7 @@
 #include "hbclass.ch"
 
 #include "error.ch"
+#include "fileio.ch"
 #include "inkey.ch"
 
 #define F_OK            0       // No error
@@ -841,8 +842,6 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    LOCAL aReport[ RPT_COUNT ]       // Create report array
    LOCAL err                        // error object
 
-   LOCAL cPath                      // iteration variable
-
    LOCAL aHeader                    // temporary storage for report form headings
    LOCAL nHeaderIndex               // index into temporary header array
 
@@ -868,19 +867,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    aReport[ RPT_HEADING ]   := ""
 
    // Open the report file
-   IF ( nFrmHandle := hb_vfOpen( cFrmFile ) ) == NIL .AND. ;
-      Empty( hb_FNameDir( cFrmFile ) )
-
-      // Search through default path; attempt to open report file
-      FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH ), ",", ";" ), ";" )
-         IF ( nFrmHandle := hb_vfOpen( hb_DirSepAdd( cPath ) + cFrmFile ) ) != NIL
-            EXIT
-         ENDIF
-      NEXT
-   ENDIF
-
-   // File error
-   IF nFrmHandle == NIL
+   IF ( nFrmHandle := hb_vfOpen( cFrmFile, HB_FO_DEFAULTS ) ) == NIL
       err := ErrorNew()
       err:severity := ES_ERROR
       err:genCode := EG_OPEN

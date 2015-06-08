@@ -427,7 +427,7 @@ HB_FUNC( HB_VFOPEN )
       int iMode;
 
       iMode = hb_parnidef( 2, FO_READWRITE | FO_DENYNONE | FO_PRIVATE ) &
-              ( 0xFF | FO_CREAT | FO_TRUNC | FO_EXCL );
+              ( 0xFF | FO_CREAT | FO_TRUNC | FO_EXCL | HB_FO_DEFAULTS );
 
       if( iMode & FO_CREAT )
       {
@@ -438,6 +438,9 @@ HB_FUNC( HB_VFOPEN )
          if( iMode & FO_EXCL )
             uiModeAttr |= FXO_UNIQUE;
       }
+      else if( iMode & HB_FO_DEFAULTS )
+         uiModeAttr |= FXO_DEFAULTS;
+
       if( iMode & ( FO_EXCLUSIVE | FO_DENYWRITE | FO_DENYREAD | FO_DENYNONE ) )
          uiModeAttr |= FXO_SHARELOCK;
 

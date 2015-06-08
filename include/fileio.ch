@@ -101,6 +101,7 @@
 #define HB_FO_CREAT        0x0100      /* create and open file */
 #define HB_FO_TRUNC        0x0200      /* open with truncation */
 #define HB_FO_EXCL         0x0400      /* create and open only if file doesn't exist */
+#define HB_FO_DEFAULTS     0x1000      /* Use SET command defaults */
 
 /* Constants breaking Cl*pper namespace.
    Leaving it here for compatibility */

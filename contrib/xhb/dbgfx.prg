@@ -94,14 +94,9 @@ PROCEDURE hb_ToLogFile( cLogFile, ... )
 
    IF s_lToLogFile
 
-      hb_default( @cLogFile, "logfile.log" )
+      nHandle := hb_vfOpen( hb_defaultValue( cLogFile, "logfile.log" ), FO_CREAT + iif( s_lEmptyLogFile, FO_TRUNC, 0 ) + FO_WRITE + FO_SHARED )
 
-      IF ! s_lEmptyLogFile .AND. hb_vfExists( cLogFile )
-         nHandle := hb_vfOpen( cLogFile, FO_WRITE + FO_SHARED )
-      ELSE
-         nHandle := hb_vfOpen( cLogFile, FO_WRITE + FO_SHARED + FO_CREAT + FO_TRUNC )
-         s_lEmptyLogFile := .F.
-      ENDIF
+      s_lEmptyLogFile := .F.
 
       // Writing
       IF nHandle != NIL
