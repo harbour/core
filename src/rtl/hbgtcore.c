@@ -1984,6 +1984,26 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, HB_GTI_RESIZEMODE_FONT );
          break;
 
+      case HB_GTI_RESIZABLE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_FALSE );
+         break;
+
+      case HB_GTI_CLOSABLE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
+         break;
+
+      case HB_GTI_FONTNAME:
+         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+         break;
+
+      case HB_GTI_FONTSIZE:
+      case HB_GTI_FONTWIDTH:
+      case HB_GTI_FONTWEIGHT:
+      case HB_GTI_FONTQUALITY:
+      case HB_GTI_FONTATTRIBUTE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, 0 );
+         break;
+
       case HB_GTI_FONTSEL:
          pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
          break;

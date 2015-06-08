@@ -3775,9 +3775,6 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
-      default:
-         return HB_GTSUPER_INFO( pGT, iType, pInfo );
-
       case HB_GTI_RESIZABLE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
@@ -3786,17 +3783,8 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 
-      case HB_GTI_FONTNAME:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-         break;
-
-      case HB_GTI_FONTSIZE:
-      case HB_GTI_FONTWIDTH:
-      case HB_GTI_FONTWEIGHT:
-      case HB_GTI_FONTQUALITY:
-      case HB_GTI_FONTATTRIBUTE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, 0 );
-         break;
+      default:
+         return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
 
    return HB_TRUE;

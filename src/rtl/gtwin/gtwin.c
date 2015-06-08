@@ -1972,22 +1972,6 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, ! hb_iswinvista() );
          break;
 
-      case HB_GTI_FONTNAME:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-         break;
-
-      case HB_GTI_FONTSIZE:
-      case HB_GTI_FONTWIDTH:
-      case HB_GTI_FONTWEIGHT:
-      case HB_GTI_FONTQUALITY:
-      case HB_GTI_FONTATTRIBUTE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, 0 );
-         break;
-
-      case HB_GTI_FONTSEL:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-         break;
-
       case HB_GTI_PALETTE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
