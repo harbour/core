@@ -98,9 +98,15 @@
 #define FO_READWRITE       2           /* File is opened for reading and writing */
 
 /* File open flags */
-#define FO_CREAT           0x0100      /* create and open file */
-#define FO_TRUNC           0x0200      /* open with truncation */
-#define FO_EXCL            0x0400      /* create and open only if file doesn't exist */
+#define HB_FO_CREAT        0x0100      /* create and open file */
+#define HB_FO_TRUNC        0x0200      /* open with truncation */
+#define HB_FO_EXCL         0x0400      /* create and open only if file doesn't exist */
+
+/* Constants breaking Cl*pper namespace.
+   Leaving it here for compatibility */
+#define FO_CREAT           HB_FO_CREAT /* Harbour extension */
+#define FO_TRUNC           HB_FO_TRUNC /* Harbour extension */
+#define FO_EXCL            HB_FO_EXCL  /* Harbour extension */
 
 /* File sharing flags */
 #define FO_COMPAT          0           /* No sharing specified */
