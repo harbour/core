@@ -22,8 +22,6 @@ class Harbour < Formula
   # This one is "vendored", but is used if found on the system
   depends_on "pcre"
 
-  depends_on :x11 => :optional
-
   depends_on "allegro" => :optional
   depends_on "cairo" => :optional
   depends_on "freeimage" => :optional
@@ -36,6 +34,7 @@ class Harbour < Formula
   depends_on :postgresql => :optional
   depends_on "qt5" => :optional
   depends_on "unixodbc" => :optional
+  depends_on :x11 => :optional
 
   def install
     ENV["HB_INSTALL_PREFIX"] = prefix
