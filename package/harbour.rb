@@ -1,5 +1,5 @@
 class Harbour < Formula
-  desc "xBase compatible compiler"
+  desc "Portable, xBase-compatible programming language and environment"
   homepage "https://github.com/vszakats/harbour-core/"
 
   stable do
