@@ -16,6 +16,16 @@ STATIC s_nColorIndex := 1
 
 //
 
+STATIC s_nFont := 1
+STATIC sc_aFont := { ;
+      "Lucida Console", ;
+      "Consolas", ;
+      "Courier New", ;
+      "Terminal", ;
+      "DejaVu Sans Mono", ;
+      "Monaco" }
+//
+
 PROCEDURE Main()
 
    LOCAL nKey, lMark, lResize, lClose, aKeys[ 50 ], nI
@@ -38,7 +48,7 @@ PROCEDURE Main()
 
    Set( _SET_SCOREBOARD, .F. )
 
-   hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
+   hb_gtInfo( HB_GTI_FONTNAME , sc_aFont[ s_nFont ] )
    hb_gtInfo( HB_GTI_FONTWIDTH, nWidth  )
    hb_gtInfo( HB_GTI_FONTSIZE , nHeight )
    hb_gtInfo( HB_GTI_WINTITLE , "GT-Test (Resizable by FONT)" )
@@ -236,12 +246,11 @@ PROCEDURE Main()
          DispScreen()
 
       CASE nKey == K_F12
-         SWITCH hb_gtInfo( HB_GTI_FONTNAME )
-         CASE "Lucida Console" ; hb_gtInfo( HB_GTI_FONTNAME, "Courier New" ) ; EXIT
-         CASE "Courier New"    ; hb_gtInfo( HB_GTI_FONTNAME, "Terminal" ) ; EXIT
-         CASE "Terminal"       ; hb_gtInfo( HB_GTI_FONTNAME, "DejaVu Sans Mono" ) ; EXIT
-         OTHERWISE             ; hb_gtInfo( HB_GTI_FONTNAME, "Lucida Console" ) ; EXIT
-         ENDSWITCH
+         IF ++s_nFont > Len( sc_aFont )
+            s_nFont := 1
+         ENDIF
+         hb_gtInfo( HB_GTI_FONTNAME, sc_aFont[ s_nFont ] )
+
          IF hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS
             hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
             SetMode( MaxRow(), MaxCol() )
@@ -395,7 +404,7 @@ STATIC PROCEDURE thFunc()
    IF s_nBrowser % 2 != 0
       hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    ENDIF
-   hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
+   hb_gtInfo( HB_GTI_FONTNAME , sc_aFont[ 1 ] )
    hb_gtInfo( HB_GTI_WINTITLE, "test.dbf    [" + iif( s_nBrowser % 2 != 0, "RESIZABLE_BY_ROWS", "RESIZABLE_BY_FONT" ) + "]" )
    hb_gtInfo( HB_GTI_ALTENTER, .T. )  // allow alt-enter for full screen
 
