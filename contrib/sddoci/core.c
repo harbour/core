@@ -55,7 +55,7 @@
 
 #include "hbrddsql.h"
 
-#include <ocilib.h>
+#include "ocilib.h"
 
 #define HB_OCILIB_VERS( ma, mi, mu )  ( OCILIB_MAJOR_VERSION > ma || ( OCILIB_MAJOR_VERSION == ma && ( OCILIB_MINOR_VERSION > mi || ( OCILIB_MINOR_VERSION == mi && OCILIB_REVISION_VERSION >= mu ) ) ) )
 

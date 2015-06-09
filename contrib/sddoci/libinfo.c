@@ -46,7 +46,7 @@
 
 #include "hbapi.h"
 
-#include <ocilib.h>
+#include "ocilib.h"
 
 HB_FUNC( OCI_GETIMPORTMODE )
 {
