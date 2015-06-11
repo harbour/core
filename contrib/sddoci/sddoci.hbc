@@ -3,8 +3,7 @@ description=RDDSQL OCILib (Oracle SQL) backend
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 {!allwin}libs=ocilib
-{allwin&HB_WITH_OCILIB_ANSI}libs=ociliba
-{allwin&HB_WITH_OCILIB_MIXED}libs=ocilibm
-{allwin&!HB_WITH_OCILIB_ANSI&!HB_WITH_OCILIB_MIXED}libs=ocilibw
+{allwin& HB_WITH_OCILIB_ANSI}libs=ociliba
+{allwin&!HB_WITH_OCILIB_ANSI}libs=ocilibw
 
 libs=rddsql.hbc

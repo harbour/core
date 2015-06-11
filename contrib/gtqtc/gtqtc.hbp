@@ -29,6 +29,7 @@
 
 {!HBMK_HAS_QT5}-depurlbase=qt:https://www.qt.io/developers/
 {!HBMK_HAS_QT5}-depurlbase=qt:https://download.qt.io/official_releases/qt/
+{!HBMK_HAS_QT5&darwin}-deppkgname=qt:qt4
 {!HBMK_HAS_QT5&!darwin&!android}-deppkgname=qt:QtCore
 {!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h
 {!HBMK_HAS_QT5}-depcontrol=qt:${HB_WITH_QT}

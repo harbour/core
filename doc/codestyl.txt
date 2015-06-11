@@ -192,8 +192,8 @@ Documentation
 
 [6] If you are the developer of the function, and you are using system's
     functions or vars undocumented, please explain it as much as possible.
-    If you use a obscure or strange algorithm (i.e md5 ) please explain what
-    it does and how it works.
+    If you use a obscure or strange algorithm please explain what it does
+    and how it works.
 
 [7] Notes, remarks and explainings enclose always between the /* */ pair,
     please don't use the double bar // because it difficults portability.

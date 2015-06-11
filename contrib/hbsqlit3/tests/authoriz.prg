@@ -169,7 +169,7 @@ STATIC FUNCTION PrepareDB( cFile )
       RETURN NIL
    ENDIF
 
-   cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER, pasw TEXT(32) )"
+   cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER, pasw TEXT(64) )"
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
       ? "Could not create table:", "person"
       pDb := NIL  // close database
@@ -188,7 +188,7 @@ STATIC FUNCTION PrepareDB( cFile )
       sqlite3_reset( pStmt )
       sqlite3_bind_text( pStmt, 1, enum:__enumKey() )
       sqlite3_bind_int( pStmt, 2, enum:__enumValue() )
-      sqlite3_bind_text( pStmt, 3, hb_MD5( enum:__enumKey() ) )
+      sqlite3_bind_text( pStmt, 3, hb_SHA256( enum:__enumKey() ) )  /* not secure, just an example */
       sqlite3_step( pStmt )
    NEXT
 

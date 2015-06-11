@@ -635,10 +635,8 @@ EXTERNAL __hbdoc_LoadDir
 EXTERNAL __hbdoc_ToSource
 EXTERNAL __hbdoc_SaveHBD
 EXTERNAL hb_regex
-EXTERNAL hb_SHA1
 EXTERNAL hb_SHA256
 EXTERNAL hb_SHA512
-EXTERNAL hb_MD5
 EXTERNAL hb_CRC32
 EXTERNAL hb_blowfishKey
 EXTERNAL hb_blowfishEncrypt

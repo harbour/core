@@ -31,7 +31,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   IF !( hb_MD5( _ENCODE( node ) ) == mxmlElementGetAttr( node, "checksum" ) )
+   IF !( HB_SHA256( _ENCODE( node ) ) == mxmlElementGetAttr( node, "checksum" ) )
       ? "Custom data of element <hash> is corrupted!"
       mxmlDelete( tree )
 
@@ -65,7 +65,7 @@ STATIC PROCEDURE create_cust( cFileName )
    node    := mxmlNewCustom( element, hData )
 
    mxmlElementSetAttr( element, "type", "custom" )
-   mxmlElementSetAttr( element, "checksum", hb_MD5( _ENCODE( node ) ) )
+   mxmlElementSetAttr( element, "checksum", hb_SHA256( _ENCODE( node ) ) )
 
    mxmlSaveFile( tree, cFileName, @whitespace_cb() )
 

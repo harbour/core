@@ -1179,11 +1179,11 @@ PROCEDURE UWrite( cString )
 
 STATIC PROCEDURE USessionCreateInternal()
 
-   LOCAL cSID := hb_MD5( hb_TToS( hb_DateTime() ) + hb_randStr( 32 ) )
+   LOCAL cSID := hb_SHA256( hb_TToS( hb_DateTime() ) + hb_randStr( 32 ) )
    LOCAL hMtx := hb_mutexCreate()
 
    hb_mutexLock( hMtx )
-   t_aSessionData := httpd:hSession[ cSID ] := { hMtx, { "_unique" => hb_MD5( hb_randStr( 15 ) ) }, hb_MilliSeconds() + SESSION_TIMEOUT * 1000, cSID }
+   t_aSessionData := httpd:hSession[ cSID ] := { hMtx, { "_unique" => hb_SHA256( hb_randStr( 15 ) ) }, hb_MilliSeconds() + SESSION_TIMEOUT * 1000, cSID }
    session := t_aSessionData[ 2 ]
    UAddHeader( "Set-Cookie", "SESSID=" + cSID + "; path=/" )
 
@@ -1330,7 +1330,7 @@ FUNCTION ULink( cText, cUrl )
    RETURN '<a href="' + cUrl + '">' + UHtmlEncode( cText ) + '</a>'
 
 FUNCTION UUrlChecksum( cUrl )
-   RETURN cUrl + iif( "?" $ cUrl, "&", "?" ) + "_ucs=" + hb_MD5( session[ "_unique" ] + cUrl + session[ "_unique" ] )
+   RETURN cUrl + iif( "?" $ cUrl, "&", "?" ) + "_ucs=" + hb_SHA256( session[ "_unique" ] + cUrl + session[ "_unique" ] )
 
 FUNCTION UUrlValidate( cUrl )
 
@@ -1342,7 +1342,7 @@ FUNCTION UUrlValidate( cUrl )
       nI := At( "&_ucs=", cUrl )
    ENDIF
 
-   RETURN hb_MD5( session[ "_unique" ] + Left( cUrl, nI - 1 ) + session[ "_unique" ] ) == SubStr( cUrl, nI + 6 )
+   RETURN hb_SHA256( session[ "_unique" ] + Left( cUrl, nI - 1 ) + session[ "_unique" ] ) == SubStr( cUrl, nI + 6 )
 
 PROCEDURE UProcFiles( cFileName, lIndex )
 
