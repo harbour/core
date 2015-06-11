@@ -1,7 +1,7 @@
 /*
  * Document generator, templates
  *
- * Copyright 2009 April White <april users.sf.net>
+ * Copyright 2009 April White
  * Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br> (Portions of this project are based on hbdoc)
  *
  * This program is free software; you can redistribute it and/or modify

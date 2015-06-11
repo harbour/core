@@ -2,7 +2,7 @@
  * This file contains the Harbour function(s) that maintain the list
  * of set-keys (hot-keys).
  *
- * Copyright 1999 April White <april users.sf.net>
+ * Copyright 1999 April White
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

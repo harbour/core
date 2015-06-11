@@ -1483,7 +1483,7 @@ Supported shells per host platforms:
 * C/C++ Compilers/Shells:
 
      * MinGW/MinGW-64 [win, *nix, free, open-source]
-        * <http://mingw-w64.yaxm.org/>, <https://sourceforge.net/projects/mingw-w64/> (recommended, look for niXman builds)
+        * <http://mingw-w64.org/>, <https://duckduckgo.com/?q=mingw-w64> (recommended, look for niXman builds)
           * Dual-target for x86-64 and x86 hosts (select non-native target with `HB_CPU=x86` or `HB_CPU=x86_64`):
             * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.1.0/threads-win32/sjlj/>
             * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.1.0/threads-win32/sjlj/>
@@ -1586,7 +1586,7 @@ Supported shells per host platforms:
      * Uncrustify (source formatter) [multi-platform, free, open-source]
         * <https://github.com/bengardner/uncrustify>
      * UPX (executable compressor) [win, dos, *nix, free, open-source]
-        * <http://upx.sourceforge.net/>
+        * <https://duckduckgo.com/?q=upx>
      * 7-Zip [multi-platform, free, open-source]
         * <http://7-zip.org/>
      * 7-Zip SFX modules [win, free, open-source]

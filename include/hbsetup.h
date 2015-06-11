@@ -130,7 +130,7 @@
  */
 
 /* Partially based on:
-      https://sourceforge.net/p/predef/wiki/Home/
+      https://duckduckgo.com/?q=pre-defined+compiler+macros
       http://poshlib.hookatooka.com/poshlib/trac.cgi/browser/posh.h
       [vszakats]
  */

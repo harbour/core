@@ -8218,7 +8218,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                #else
                CASE ( cBin_Sign := FindInPath( "osslsigncode.exe" ) ) != NIL
                #endif
-                  /* https://sourceforge.net/projects/osslsigncode/ */
+                  /* https://duckduckgo.com/?q=osslsigncode */
                   /* -h sha256 */
                   IF signts_split_arg( hbmk[ _HBMK_cSignTime ] ) == "rfc3161"
                      cOpt_Sign := "sign {FS} -pkcs12 {ID} -pass {PW} -ts {UT} -in {OB} -out {TB}"
