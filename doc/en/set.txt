@@ -2,7 +2,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    Documentation for: Set(), __SetCentury()
  *
- * Copyright 1999 April White
+ * Copyright 1999 April White <bright.tigra gmail.com>
  *    Documentation for: SetKey(), hb_SetKeyGet(), hb_SetKeySave(),
  *                       hb_SetKeyCheck(), SET KEY
  *

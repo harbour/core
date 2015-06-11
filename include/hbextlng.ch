@@ -1,7 +1,7 @@
 /*
  * All HB_LANG_* externals. (Compatibility header)
  *
- * Copyright 2009 April White
+ * Copyright 2009 April White <bright.tigra gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
