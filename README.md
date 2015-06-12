@@ -44,8 +44,12 @@ and interfaces to popular APIs.
 
 ### Harbour stable binary download
 
-You can find URLs for the latest stable release (3.0.0)
-of Harbour in the [README](https://github.com/harbour/core/blob/master/README.md#stable-versions) of the mainline source.
+<https://github.com/vszakats/harbour-core/releases/tag/v3.0.0>
+
+> NOTE: It is identical to the mainline stable release, and
+> not supported or recommended by this fork. It is hosted
+> here because the old service started [bundling](https://helb.github.io/goodbye-sourceforge/)
+> [malware](https://www.howtogeek.com/218764/) for some projects.
 
 ### Harbour stable source download
 
