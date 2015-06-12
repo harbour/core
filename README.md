@@ -1490,9 +1490,9 @@ Supported shells per host platforms:
         * <http://mingw-w64.org/>, <https://duckduckgo.com/?q=mingw-w64> (recommended, look for niXman builds)
           * Dual-target for x86-64 and x86 hosts (select non-native target with `HB_CPU=x86` or `HB_CPU=x86_64`):
             * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.1.0/threads-win32/sjlj/>
-            * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.1.0/threads-win32/sjlj/>
+            * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.1.0/threads-posix/sjlj/>
           * x86:
-            * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.1.0/threads-win32/dwarf/>
+            * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.1.0/threads-posix/dwarf/>
           * x86-64:
             * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.1.0/threads-win32/seh/>
      * MinGW CEGCC [win, *nix, free, open-source]

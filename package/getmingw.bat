@@ -4,7 +4,7 @@ setlocal
 
 cd /d "%~dp0"
 
-set "_MINGW_32=https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/5.1.0/threads-win32/sjlj/i686-5.1.0-release-win32-sjlj-rt_v4-rev0.7z"
+set "_MINGW_32=https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/5.1.0/threads-posix/sjlj/i686-5.1.0-release-posix-sjlj-rt_v4-rev0.7z"
 set "_MINGW_64=https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.1.0/threads-win32/sjlj/x86_64-5.1.0-release-win32-sjlj-rt_v4-rev0.7z"
 
 set _URL_CLIENT=%_MINGW_32%
