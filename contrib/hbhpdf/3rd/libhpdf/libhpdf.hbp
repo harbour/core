@@ -96,7 +96,7 @@ hpdfxref.c
 # URL    https://github.com/libharu/libharu/archive/RELEASE_2_3_0RC3.zip
 # DIFF   libhpdf.dif
 #
-# MAP    README
+# MAP    README                         README.txt
 # MAP    src/hpdf_3dmeasure.c           hpdf3dme.c
 # MAP    src/hpdf_annotation.c          hpdfanno.c
 # MAP    src/hpdf_array.c               hpdfarra.c

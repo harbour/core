@@ -29,7 +29,7 @@ unzip.c
 # URL    https://github.com/madler/zlib/archive/v1.2.8.zip
 # DIFF   minizip.dif
 #
-# MAP    README
+# MAP    README                  README.txt
 # MAP    contrib/minizip/crypt.h crypt.h
 # MAP    contrib/minizip/ioapi.c ioapi.c
 # MAP    contrib/minizip/ioapi.h ioapi.h
