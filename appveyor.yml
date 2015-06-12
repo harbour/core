@@ -22,7 +22,7 @@ environment:
       secure: +CyA1IIhoPpI7EY54BsRADDxb1V62HDWLSekCX4mTxk=
 install:
 - set VER_CURL=7.42.1
-- set VER_OPENSSL=1.0.2b
+- set VER_OPENSSL=1.0.2c
 - curl -fsS -L http://www.7-zip.org/a/7za920.zip -o 7z.7z
 - 7z x -y -oC:\7z 7z.7z > nul
 - curl -fsS http://7zsfx.info/files/7zsd_150_2712.7z -o 7zsfx.7z

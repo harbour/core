@@ -49,7 +49,7 @@ and interfaces to popular APIs.
 > NOTE: It is identical to the mainline stable release, and
 > not supported or recommended by this fork. It is hosted
 > here because the old service started [bundling](https://helb.github.io/goodbye-sourceforge/)
-> [malware](https://www.howtogeek.com/218764/) for some projects.
+> [malware](https://www.howtogeek.com/218764/) into some projects.
 
 ### Harbour stable source download
 
