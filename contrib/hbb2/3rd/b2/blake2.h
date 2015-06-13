@@ -1,5 +1,5 @@
 /*
-   BLAKE2 reference source code package - optimized C implementations
+   BLAKE2 reference source code package - reference C implementations
 
    Written in 2012 by Samuel Neves <sneves@dei.uc.pt>
 
@@ -16,28 +16,6 @@
 
 #include <stddef.h>
 #include <stdint.h>
-
-#if defined(_MSC_VER)
-  #define ALIGN(x) __declspec(align(x))
-  #if defined(DYNAMIC_LIB)
-    #if defined(DYNAMIC_LIB_EXPORT)
-      #define EXPORT_DLL __declspec(dllexport)
-    #else
-      #define EXPORT_DLL __declspec(dllimport)
-    #endif
-  #else
-    #define EXPORT_DLL
-  #endif
-#else
-  #define EXPORT_DLL
-   /* clang seems to crash in certain conditions
-      due to alignment hints */
-  #if defined(__clang__)
-    #define ALIGN(x)
-  #else
-    #define ALIGN(x) __attribute__ ((__aligned__(x)))
-  #endif
-#endif
 
 #if defined(__cplusplus)
 extern "C" {
@@ -77,14 +55,13 @@ extern "C" {
     uint8_t  personal[BLAKE2S_PERSONALBYTES];  // 32
   } blake2s_param;
 
-  ALIGN( 64 ) typedef struct __blake2s_state
+  typedef struct __blake2s_state
   {
     uint32_t h[8];
     uint32_t t[2];
     uint32_t f[2];
     uint8_t  buf[2 * BLAKE2S_BLOCKBYTES];
-    uint32_t buflen;
-    uint8_t  outlen;
+    size_t   buflen;
     uint8_t  last_node;
   } blake2s_state;
 
@@ -103,67 +80,64 @@ extern "C" {
     uint8_t  personal[BLAKE2B_PERSONALBYTES];  // 64
   } blake2b_param;
 
-  ALIGN( 64 ) typedef struct __blake2b_state
+  typedef struct __blake2b_state
   {
     uint64_t h[8];
     uint64_t t[2];
     uint64_t f[2];
     uint8_t  buf[2 * BLAKE2B_BLOCKBYTES];
-    uint32_t buflen;
-    uint8_t  outlen;
+    size_t   buflen;
     uint8_t  last_node;
   } blake2b_state;
 
-  ALIGN( 64 ) typedef struct __blake2sp_state
+  typedef struct __blake2sp_state
   {
     blake2s_state S[8][1];
     blake2s_state R[1];
-    uint8_t  buf[8 * BLAKE2S_BLOCKBYTES];
-    uint32_t buflen;
-    uint8_t  outlen;
+    uint8_t buf[8 * BLAKE2S_BLOCKBYTES];
+    size_t  buflen;
   } blake2sp_state;
 
-  ALIGN( 64 ) typedef struct __blake2bp_state
+  typedef struct __blake2bp_state
   {
     blake2b_state S[4][1];
     blake2b_state R[1];
-    uint8_t  buf[4 * BLAKE2B_BLOCKBYTES];
-    uint32_t buflen;
-    uint8_t  outlen;
+    uint8_t buf[4 * BLAKE2B_BLOCKBYTES];
+    size_t  buflen;
   } blake2bp_state;
 #pragma pack(pop)
 
   // Streaming API
-  EXPORT_DLL int blake2s_init( blake2s_state *S, size_t outlen );
-  EXPORT_DLL int blake2s_init_key( blake2s_state *S, size_t outlen, const void *key, size_t keylen );
-  EXPORT_DLL int blake2s_init_param( blake2s_state *S, const blake2s_param *P );
-  EXPORT_DLL int blake2s_update( blake2s_state *S, const uint8_t *in, size_t inlen );
-  EXPORT_DLL int blake2s_final( blake2s_state *S, uint8_t *out, size_t outlen );
+  int blake2s_init( blake2s_state *S, const uint8_t outlen );
+  int blake2s_init_key( blake2s_state *S, const uint8_t outlen, const void *key, const uint8_t keylen );
+  int blake2s_init_param( blake2s_state *S, const blake2s_param *P );
+  int blake2s_update( blake2s_state *S, const uint8_t *in, uint64_t inlen );
+  int blake2s_final( blake2s_state *S, uint8_t *out, uint8_t outlen );
 
-  EXPORT_DLL int blake2b_init( blake2b_state *S, size_t outlen );
-  EXPORT_DLL int blake2b_init_key( blake2b_state *S, size_t outlen, const void *key, size_t keylen );
-  EXPORT_DLL int blake2b_init_param( blake2b_state *S, const blake2b_param *P );
-  EXPORT_DLL int blake2b_update( blake2b_state *S, const uint8_t *in, size_t inlen );
-  EXPORT_DLL int blake2b_final( blake2b_state *S, uint8_t *out, size_t outlen );
+  int blake2b_init( blake2b_state *S, const uint8_t outlen );
+  int blake2b_init_key( blake2b_state *S, const uint8_t outlen, const void *key, const uint8_t keylen );
+  int blake2b_init_param( blake2b_state *S, const blake2b_param *P );
+  int blake2b_update( blake2b_state *S, const uint8_t *in, uint64_t inlen );
+  int blake2b_final( blake2b_state *S, uint8_t *out, uint8_t outlen );
 
-  EXPORT_DLL int blake2sp_init( blake2sp_state *S, size_t outlen );
-  EXPORT_DLL int blake2sp_init_key( blake2sp_state *S, size_t outlen, const void *key, size_t keylen );
-  EXPORT_DLL int blake2sp_update( blake2sp_state *S, const uint8_t *in, size_t inlen );
-  EXPORT_DLL int blake2sp_final( blake2sp_state *S, uint8_t *out, size_t outlen );
+  int blake2sp_init( blake2sp_state *S, const uint8_t outlen );
+  int blake2sp_init_key( blake2sp_state *S, const uint8_t outlen, const void *key, const uint8_t keylen );
+  int blake2sp_update( blake2sp_state *S, const uint8_t *in, uint64_t inlen );
+  int blake2sp_final( blake2sp_state *S, uint8_t *out, uint8_t outlen );
 
-  EXPORT_DLL int blake2bp_init( blake2bp_state *S, size_t outlen );
-  EXPORT_DLL int blake2bp_init_key( blake2bp_state *S, size_t outlen, const void *key, size_t keylen );
-  EXPORT_DLL int blake2bp_update( blake2bp_state *S, const uint8_t *in, size_t inlen );
-  EXPORT_DLL int blake2bp_final( blake2bp_state *S, uint8_t *out, size_t outlen );
+  int blake2bp_init( blake2bp_state *S, const uint8_t outlen );
+  int blake2bp_init_key( blake2bp_state *S, const uint8_t outlen, const void *key, const uint8_t keylen );
+  int blake2bp_update( blake2bp_state *S, const uint8_t *in, uint64_t inlen );
+  int blake2bp_final( blake2bp_state *S, uint8_t *out, uint8_t outlen );
 
   // Simple API
-  EXPORT_DLL int blake2s( uint8_t *out, const void *in, const void *key, size_t outlen, size_t inlen, size_t keylen );
-  EXPORT_DLL int blake2b( uint8_t *out, const void *in, const void *key, size_t outlen, size_t inlen, size_t keylen );
+  int blake2s( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen );
+  int blake2b( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen );
 
-  EXPORT_DLL int blake2sp( uint8_t *out, const void *in, const void *key, size_t outlen, size_t inlen, size_t keylen );
-  EXPORT_DLL int blake2bp( uint8_t *out, const void *in, const void *key, size_t outlen, size_t inlen, size_t keylen );
+  int blake2sp( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen );
+  int blake2bp( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen );
 
-  static inline int blake2( uint8_t *out, const void *in, const void *key, size_t outlen, size_t inlen, size_t keylen )
+  static inline int blake2( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen )
   {
     return blake2b( out, in, key, outlen, inlen, keylen );
   }

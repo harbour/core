@@ -18,6 +18,5 @@ blake2s.c
 # MAP    COPYING            LICENSE.txt
 # MAP    src/blake2b-ref.c  blake2b.c
 # MAP    src/blake2s-ref.c  blake2s.c
-# MAP    src/config.h.in    config.h
 # MAP    src/blake2.h       blake2.h
 # MAP    src/blake2-impl.h  blake2-i.h

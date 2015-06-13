@@ -45,13 +45,13 @@ static const uint8_t blake2b_sigma[12][16] =
 
 static inline int blake2b_set_lastnode( blake2b_state *S )
 {
-  S->f[1] = ~0ULL;
+  S->f[1] = -1;
   return 0;
 }
 
 static inline int blake2b_clear_lastnode( blake2b_state *S )
 {
-  S->f[1] = 0ULL;
+  S->f[1] = 0;
   return 0;
 }
 
@@ -60,7 +60,7 @@ static inline int blake2b_set_lastblock( blake2b_state *S )
 {
   if( S->last_node ) blake2b_set_lastnode( S );
 
-  S->f[0] = ~0ULL;
+  S->f[0] = -1;
   return 0;
 }
 
@@ -68,7 +68,7 @@ static inline int blake2b_clear_lastblock( blake2b_state *S )
 {
   if( S->last_node ) blake2b_clear_lastnode( S );
 
-  S->f[0] = 0ULL;
+  S->f[0] = 0;
   return 0;
 }
 
@@ -145,43 +145,22 @@ static inline int blake2b_init0( blake2b_state *S )
   return 0;
 }
 
-#define blake2b_init BLAKE2_IMPL_NAME(blake2b_init)
-#define blake2b_init_param BLAKE2_IMPL_NAME(blake2b_init_param)
-#define blake2b_init_key BLAKE2_IMPL_NAME(blake2b_init_key)
-#define blake2b_update BLAKE2_IMPL_NAME(blake2b_update)
-#define blake2b_final BLAKE2_IMPL_NAME(blake2b_final)
-#define blake2b BLAKE2_IMPL_NAME(blake2b)
-
-#if defined(__cplusplus)
-extern "C" {
-#endif
-  int blake2b_init( blake2b_state *S, size_t outlen );
-  int blake2b_init_param( blake2b_state *S, const blake2b_param *P );
-  int blake2b_init_key( blake2b_state *S, size_t outlen, const void *key, size_t keylen );
-  int blake2b_update( blake2b_state *S, const uint8_t *in, size_t inlen );
-  int blake2b_final( blake2b_state *S, uint8_t *out, size_t outlen );
-  int blake2b( uint8_t *out, const void *in, const void *key, size_t outlen, size_t inlen, size_t keylen );
-#if defined(__cplusplus)
-}
-#endif
-
 /* init xors IV with input parameter block */
 int blake2b_init_param( blake2b_state *S, const blake2b_param *P )
 {
   blake2b_init0( S );
-  uint8_t *p = ( uint8_t * )( P );
+  const uint8_t *p = ( const uint8_t * )( P );
 
   /* IV XOR ParamBlock */
   for( size_t i = 0; i < 8; ++i )
     S->h[i] ^= load64( p + sizeof( S->h[i] ) * i );
 
-  S->outlen = P->digest_length;
   return 0;
 }
 
 
 
-int blake2b_init( blake2b_state *S, size_t outlen )
+int blake2b_init( blake2b_state *S, const uint8_t outlen )
 {
   blake2b_param P[1];
 
@@ -202,7 +181,7 @@ int blake2b_init( blake2b_state *S, size_t outlen )
 }
 
 
-int blake2b_init_key( blake2b_state *S, size_t outlen, const void *key, size_t keylen )
+int blake2b_init_key( blake2b_state *S, const uint8_t outlen, const void *key, const uint8_t keylen )
 {
   blake2b_param P[1];
 
@@ -297,8 +276,8 @@ static int blake2b_compress( blake2b_state *S, const uint8_t block[BLAKE2B_BLOCK
   return 0;
 }
 
-
-int blake2b_update( blake2b_state *S, const uint8_t *in, size_t inlen )
+/* inlen now in bytes */
+int blake2b_update( blake2b_state *S, const uint8_t *in, uint64_t inlen )
 {
   while( inlen > 0 )
   {
@@ -328,11 +307,13 @@ int blake2b_update( blake2b_state *S, const uint8_t *in, size_t inlen )
   return 0;
 }
 
-int blake2b_final( blake2b_state *S, uint8_t *out, size_t outlen )
+/* Is this correct? */
+int blake2b_final( blake2b_state *S, uint8_t *out, uint8_t outlen )
 {
-  uint8_t buffer[BLAKE2B_OUTBYTES];
+  uint8_t buffer[BLAKE2B_OUTBYTES] = {0};
 
-  if(S->outlen != outlen) return -1;
+  if( outlen > BLAKE2B_OUTBYTES )
+    return -1;
 
   if( S->buflen > BLAKE2B_BLOCKBYTES )
   {
@@ -354,7 +335,8 @@ int blake2b_final( blake2b_state *S, uint8_t *out, size_t outlen )
   return 0;
 }
 
-int blake2b( uint8_t *out, const void *in, const void *key, size_t outlen, size_t inlen, size_t keylen )
+/* inlen, at least, should be uint64_t. Others can be size_t. */
+int blake2b( uint8_t *out, const void *in, const void *key, const uint8_t outlen, const uint64_t inlen, uint8_t keylen )
 {
   blake2b_state S[1];
 
@@ -363,7 +345,7 @@ int blake2b( uint8_t *out, const void *in, const void *key, size_t outlen, size_
 
   if ( NULL == out ) return -1;
 
-  if( NULL == key && keylen > 0 ) return -1;
+  if( NULL == key ) keylen = 0;
 
   if( keylen > 0 )
   {
@@ -374,8 +356,38 @@ int blake2b( uint8_t *out, const void *in, const void *key, size_t outlen, size_
     if( blake2b_init( S, outlen ) < 0 ) return -1;
   }
 
-  if( blake2b_update( S, ( uint8_t * )in, inlen ) < 0 ) return -1;
-  return blake2b_final( S, out, outlen );
+  blake2b_update( S, ( const uint8_t * )in, inlen );
+  blake2b_final( S, out, outlen );
+  return 0;
 }
 
+#if defined(BLAKE2B_SELFTEST)
+#include <string.h>
+#include "blake2-kat.h"
+int main( int argc, char **argv )
+{
+  uint8_t key[BLAKE2B_KEYBYTES];
+  uint8_t buf[KAT_LENGTH];
 
+  for( size_t i = 0; i < BLAKE2B_KEYBYTES; ++i )
+    key[i] = ( uint8_t )i;
+
+  for( size_t i = 0; i < KAT_LENGTH; ++i )
+    buf[i] = ( uint8_t )i;
+
+  for( size_t i = 0; i < KAT_LENGTH; ++i )
+  {
+    uint8_t hash[BLAKE2B_OUTBYTES];
+    blake2b( hash, buf, key, BLAKE2B_OUTBYTES, i, BLAKE2B_KEYBYTES );
+
+    if( 0 != memcmp( hash, blake2b_keyed_kat[i], BLAKE2B_OUTBYTES ) )
+    {
+      puts( "error" );
+      return -1;
+    }
+  }
+
+  puts( "ok" );
+  return 0;
+}
+#endif
