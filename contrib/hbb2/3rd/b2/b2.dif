@@ -1,6 +1,18 @@
+diff -urN b2.orig/blake2b.c b2/blake2b.c
+--- b2.orig/blake2b.c	2015-06-13 13:20:32.677014100 +0200
++++ b2/blake2b.c	2015-06-13 13:20:32.677014100 +0200
+@@ -363,7 +363,7 @@
+ 
+   if ( NULL == out ) return -1;
+ 
+-  if( NULL == key && key > 0 ) return -1;
++  if( NULL == key && keylen > 0 ) return -1;
+ 
+   if( keylen > 0 )
+   {
 diff -urN b2.orig/config.h b2/config.h
---- b2.orig/config.h	2015-06-13 02:54:49.596094800 +0200
-+++ b2/config.h	2015-06-13 02:54:49.611694200 +0200
+--- b2.orig/config.h	2015-06-13 13:20:32.692613200 +0200
++++ b2/config.h	2015-06-13 13:20:32.692613200 +0200
 @@ -1,5 +1,7 @@
  /* src/config.h.in.  Generated from configure.ac by autoheader.  */
  

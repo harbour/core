@@ -5,8 +5,6 @@
 
 -w3 -es2
 
--stop{wce}
-
 -depurlbase=blake2:https://blake2.net/
 -deppkgname=blake2:libb2-dev{deb}
 -deppkgname=blake2:libb2-devel{rpm}

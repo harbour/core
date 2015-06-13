@@ -1,21 +1,16 @@
 -stop{hbdyn}
 
--stop{wce|pocc64}
-
 -hblib
 -inc
 
 -o${hb_targetname}
 
--warn=low
--cpp=no
 -pic
 
 blake2b.c
 blake2s.c
 
 -cflag=-DSUFFIX=
-{bcc}-aflag=/C
 
 # URL    https://blake2.net/libb2-0.96.tar.gz
 # DIFF   b2.dif
@@ -26,4 +21,3 @@ blake2s.c
 # MAP    src/config.h.in    config.h
 # MAP    src/blake2.h       blake2.h
 # MAP    src/blake2-impl.h  blake2-i.h
-# MAP    src/blake2-kat.h   blake2-k.h
