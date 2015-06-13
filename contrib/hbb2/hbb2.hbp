@@ -19,6 +19,7 @@
 
 -hbx=${hb_name}
 
-core.c
+blake2b.c
+blake2s.c
 
 3rd/b2/b2.hbc{HBMK_HAS_BLAKE2_LOCAL}
