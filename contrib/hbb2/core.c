@@ -59,7 +59,9 @@ HB_FUNC( HB_BLAKE2S )
       int iHashLen = hb_parnidef( 3, BLAKE2S_OUTBYTES );
       uint8_t out[ BLAKE2S_OUTBYTES ];
 
-      if( iHashLen > BLAKE2S_OUTBYTES )
+      if( iHashLen < 1 )
+         iHashLen = 1;
+      else if( iHashLen > BLAKE2S_OUTBYTES )
          iHashLen = BLAKE2S_OUTBYTES;
 
       blake2s( out, pszStr, hb_parc( 2 ), iHashLen, nLen, hb_parclen( 2 ) );
@@ -88,7 +90,9 @@ HB_FUNC( HB_BLAKE2B )
       int iHashLen = hb_parnidef( 3, BLAKE2B_OUTBYTES );
       uint8_t out[ BLAKE2B_OUTBYTES ];
 
-      if( iHashLen > BLAKE2B_OUTBYTES )
+      if( iHashLen < 1 )
+         iHashLen = 1;
+      else if( iHashLen > BLAKE2B_OUTBYTES )
          iHashLen = BLAKE2B_OUTBYTES;
 
       blake2b( out, pszStr, hb_parc( 2 ), iHashLen, nLen, hb_parclen( 2 ) );
