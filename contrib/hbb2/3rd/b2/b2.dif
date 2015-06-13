@@ -1,0 +1,21 @@
+diff -urN b2.orig/config.h b2/config.h
+--- b2.orig/config.h	2015-06-13 02:54:49.596094800 +0200
++++ b2/config.h	2015-06-13 02:54:49.611694200 +0200
+@@ -1,5 +1,7 @@
+ /* src/config.h.in.  Generated from configure.ac by autoheader.  */
+ 
++#include "hbdefs.h"
++
+ /* Define if pointers to integers require aligned access */
+ #undef HAVE_ALIGNED_ACCESS_REQUIRED
+ 
+@@ -72,6 +74,9 @@
+ 
+ /* machine is little-endian */
+ #undef NATIVE_LITTLE_ENDIAN
++#if defined( HB_LITTLE_ENDIAN )
++   #define NATIVE_LITTLE_ENDIAN
++#endif
+ 
+ /* Name of package */
+ #undef PACKAGE

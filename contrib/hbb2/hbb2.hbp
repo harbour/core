@@ -1,0 +1,25 @@
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-stop{wce}
+
+-depurlbase=blake2:https://blake2.net/
+-deppkgname=blake2:libb2-dev{deb}
+-deppkgname=blake2:libb2{homebrew}
+-depkeyhead=blake2:blake2.h
+-depcontrol=blake2:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=blake2:${HB_WITH_blake2}
+-depincpath=blake2:/usr/local/include
+-depincpath=blake2:/usr/include
+-depincpathlocal=blake2:3rd/b2
+-depfinish=blake2
+
+-hbx=${hb_name}
+
+core.c
+
+3rd/b2/b2.hbc{HBMK_HAS_BLAKE2_LOCAL}
