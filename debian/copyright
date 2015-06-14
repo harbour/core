@@ -24,7 +24,7 @@ THE HARBOUR PROJECT LIBRARY LICENSE
 ===================================
 
 Note: This license applies to most of the files in the include directory,
-      source/contrib/extras directories, and their subdirectories.
+      /src, /contrib, /extras directories, and their subdirectories.
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
