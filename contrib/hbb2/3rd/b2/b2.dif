@@ -1,6 +1,6 @@
 diff -urN b2.orig/blake2-i.h b2/blake2-i.h
---- b2.orig/blake2-i.h	2015-06-13 13:43:34.757413700 +0200
-+++ b2/blake2-i.h	2015-06-13 13:43:34.757413700 +0200
+--- b2.orig/blake2-i.h	2015-06-15 02:41:05.714736300 +0200
++++ b2/blake2-i.h	2015-06-15 02:41:05.714736300 +0200
 @@ -1,5 +1,5 @@
  /*
 -   BLAKE2 reference source code package - optimized C implementations
@@ -89,8 +89,8 @@ diff -urN b2.orig/blake2-i.h b2/blake2-i.h
  #endif
 -
 diff -urN b2.orig/blake2.h b2/blake2.h
---- b2.orig/blake2.h	2015-06-13 13:43:34.757413700 +0200
-+++ b2/blake2.h	2015-06-13 13:43:34.757413700 +0200
+--- b2.orig/blake2.h	2015-06-15 02:41:05.714736300 +0200
++++ b2/blake2.h	2015-06-15 02:41:05.714736300 +0200
 @@ -1,5 +1,5 @@
  /*
 -   BLAKE2 reference source code package - optimized C implementations
@@ -98,12 +98,11 @@ diff -urN b2.orig/blake2.h b2/blake2.h
  
     Written in 2012 by Samuel Neves <sneves@dei.uc.pt>
  
-@@ -17,28 +17,6 @@
+@@ -17,20 +17,6 @@
  #include <stddef.h>
  #include <stdint.h>
  
 -#if defined(_MSC_VER)
--  #define ALIGN(x) __declspec(align(x))
 -  #if defined(DYNAMIC_LIB)
 -    #if defined(DYNAMIC_LIB_EXPORT)
 -      #define EXPORT_DLL __declspec(dllexport)
@@ -115,26 +114,12 @@ diff -urN b2.orig/blake2.h b2/blake2.h
 -  #endif
 -#else
 -  #define EXPORT_DLL
--   /* clang seems to crash in certain conditions
--      due to alignment hints */
--  #if defined(__clang__)
--    #define ALIGN(x)
--  #else
--    #define ALIGN(x) __attribute__ ((__aligned__(x)))
--  #endif
 -#endif
 -
  #if defined(__cplusplus)
  extern "C" {
  #endif
-@@ -77,14 +55,13 @@
-     uint8_t  personal[BLAKE2S_PERSONALBYTES];  // 32
-   } blake2s_param;
- 
--  ALIGN( 64 ) typedef struct __blake2s_state
-+  typedef struct __blake2s_state
-   {
-     uint32_t h[8];
+@@ -75,8 +61,7 @@
      uint32_t t[2];
      uint32_t f[2];
      uint8_t  buf[2 * BLAKE2S_BLOCKBYTES];
@@ -144,14 +129,7 @@ diff -urN b2.orig/blake2.h b2/blake2.h
      uint8_t  last_node;
    } blake2s_state;
  
-@@ -103,67 +80,64 @@
-     uint8_t  personal[BLAKE2B_PERSONALBYTES];  // 64
-   } blake2b_param;
- 
--  ALIGN( 64 ) typedef struct __blake2b_state
-+  typedef struct __blake2b_state
-   {
-     uint64_t h[8];
+@@ -101,8 +86,7 @@
      uint64_t t[2];
      uint64_t f[2];
      uint8_t  buf[2 * BLAKE2B_BLOCKBYTES];
@@ -161,8 +139,7 @@ diff -urN b2.orig/blake2.h b2/blake2.h
      uint8_t  last_node;
    } blake2b_state;
  
--  ALIGN( 64 ) typedef struct __blake2sp_state
-+  typedef struct __blake2sp_state
+@@ -110,52 +94,50 @@
    {
      blake2s_state S[8][1];
      blake2s_state R[1];
@@ -173,8 +150,7 @@ diff -urN b2.orig/blake2.h b2/blake2.h
 +    size_t  buflen;
    } blake2sp_state;
  
--  ALIGN( 64 ) typedef struct __blake2bp_state
-+  typedef struct __blake2bp_state
+   typedef struct __blake2bp_state
    {
      blake2b_state S[4][1];
      blake2b_state R[1];
@@ -247,8 +223,8 @@ diff -urN b2.orig/blake2.h b2/blake2.h
      return blake2b( out, in, key, outlen, inlen, keylen );
    }
 diff -urN b2.orig/blake2b.c b2/blake2b.c
---- b2.orig/blake2b.c	2015-06-13 13:43:34.757413700 +0200
-+++ b2/blake2b.c	2015-06-13 13:43:34.757413700 +0200
+--- b2.orig/blake2b.c	2015-06-15 02:41:05.699137900 +0200
++++ b2/blake2b.c	2015-06-15 02:41:05.714736300 +0200
 @@ -45,13 +45,13 @@
  
  static inline int blake2b_set_lastnode( blake2b_state *S )
@@ -380,7 +356,7 @@ diff -urN b2.orig/blake2b.c b2/blake2b.c
  
    if ( NULL == out ) return -1;
  
--  if( NULL == key && key > 0 ) return -1;
+-  if( NULL == key && keylen > 0 ) return -1;
 +  if( NULL == key ) keylen = 0;
  
    if( keylen > 0 )
@@ -427,8 +403,8 @@ diff -urN b2.orig/blake2b.c b2/blake2b.c
 +}
 +#endif
 diff -urN b2.orig/blake2s.c b2/blake2s.c
---- b2.orig/blake2s.c	2015-06-13 13:43:34.757413700 +0200
-+++ b2/blake2s.c	2015-06-13 13:43:34.757413700 +0200
+--- b2.orig/blake2s.c	2015-06-15 02:41:05.714736300 +0200
++++ b2/blake2s.c	2015-06-15 02:41:05.714736300 +0200
 @@ -40,13 +40,13 @@
  
  static inline int blake2s_set_lastnode( blake2s_state *S )

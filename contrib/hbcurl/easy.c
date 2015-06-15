@@ -1025,8 +1025,8 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, hb_curl->pHTTPPOST_First );
                }
+               break;
             }
-            break;
             case HB_CURLOPT_HTTPPOST_CONTENT:
             {
                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
@@ -1051,8 +1051,8 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, hb_curl->pHTTPPOST_First );
                }
+               break;
             }
-            break;
             case HB_CURLOPT_REFERER:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_REFERER, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
                break;
@@ -1188,8 +1188,8 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAIL_RCPT, hb_curl->pMAIL_RCPT );
                }
+               break;
             }
-            break;
 #endif
 #if LIBCURL_VERSION_NUM >= 0x071900
             case HB_CURLOPT_MAIL_AUTH:

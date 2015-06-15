@@ -10,9 +10,10 @@
 blake2b.c
 blake2s.c
 
+# only required for the unpatched libb2 code
 -cflag=-DSUFFIX=
 
-# URL    https://blake2.net/libb2-0.96.tar.gz
+# URL    https://blake2.net/libb2-0.97.tar.gz
 # DIFF   b2.dif
 #
 # MAP    COPYING            LICENSE.txt
