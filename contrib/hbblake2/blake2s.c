@@ -250,18 +250,20 @@ HB_FUNC( HB_BLAKE2S )
       else if( iHashLen > BLAKE2S_OUTBYTES )
          iHashLen = BLAKE2S_OUTBYTES;
 
-      if( blake2s( out, iHashLen, hb_parc( 2 ), hb_parclen( 2 ), pszStr, nLen ) != 0 )
-         memset( out, '\0', sizeof( out ) );
-
-      if( ! hb_parl( 4 ) )
+      if( blake2s( out, iHashLen, hb_parc( 2 ), hb_parclen( 2 ), pszStr, nLen ) == 0 )
       {
-         char digest[ ( sizeof( out ) * 2 ) + 1 ];
-         hb_strtohex( ( char * ) out, iHashLen, digest );
-         hb_retclen( digest, iHashLen * 2 );
+         if( ! hb_parl( 4 ) )
+         {
+            char digest[ ( sizeof( out ) * 2 ) + 1 ];
+            hb_strtohex( ( char * ) out, iHashLen, digest );
+            hb_retclen( digest, iHashLen * 2 );
+         }
+         else
+            hb_retclen( ( char * ) out, HB_SIZEOFARRAY( out ) );
+
+         return;
       }
-      else
-         hb_retclen( ( char * ) out, HB_SIZEOFARRAY( out ) );
    }
-   else
-      hb_retc_null();
+
+   hb_retc_null();
 }
