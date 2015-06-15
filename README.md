@@ -1,5 +1,4 @@
-# Welcome to Harbour<br />[![License](https://img.shields.io/badge/license-GPLv2%20%2B%20Library%20Exception-blue.svg)](LICENSE.txt)
-[![Download](https://api.bintray.com/packages/vszakats/generic/harbour/images/download.svg)](https://bintray.com/vszakats/generic/harbour/_latestVersion)
+# Welcome to Harbour<br />[![License](https://img.shields.io/badge/license-GPLv2%20%2B%20Library%20Exception-blue.svg)](LICENSE.txt) [![Download](https://api.bintray.com/packages/vszakats/generic/harbour/images/download.svg)](https://bintray.com/vszakats/generic/harbour/_latestVersion)
 [![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core) [![Build status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master) [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208)
 
 Harbour is the free software implementation of a multi-platform,
