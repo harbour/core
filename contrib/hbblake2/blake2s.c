@@ -62,29 +62,25 @@ typedef struct
    HB_U8  b[ 64 ];                      /* input buffer */
    HB_U32 h[ 8 ];                       /* chained state */
    HB_U32 t[ 2 ];                       /* total number of bytes */
-   size_t c;                            /* pointer for b[] */
-   size_t outlen;                       /* digest size */
+   HB_SIZE c;                           /* pointer for b[] */
+   HB_SIZE outlen;                      /* digest size */
 } blake2s_ctx;
 
 /* cyclic right rotation */
-
-#ifndef ROTR32
-#define ROTR32( x, y )  ( ( ( x ) >> ( y ) ) ^ ( ( x ) << ( 32 - ( y ) ) ) )
-#endif
+#define _HB_ROTR32( x, y )  ( ( ( x ) >> ( y ) ) ^ ( ( x ) << ( 32 - ( y ) ) ) )
 
 /* G Mixing function */
-#define B2S_G( a, b, c, d, x, y )  {       \
-   v[ a ] = v[ a ] + v[ b ] + x;           \
-   v[ d ] = ROTR32( v[ d ] ^ v[ a ], 16 ); \
-   v[ c ] = v[ c ] + v[ d ];               \
-   v[ b ] = ROTR32( v[ b ] ^ v[ c ], 12 ); \
-   v[ a ] = v[ a ] + v[ b ] + y;           \
-   v[ d ] = ROTR32( v[ d ] ^ v[ a ], 8 );  \
-   v[ c ] = v[ c ] + v[ d ];               \
-   v[ b ] = ROTR32( v[ b ] ^ v[ c ], 7 ); }
+#define B2S_G( a, b, c, d, x, y )  {           \
+   v[ a ] = v[ a ] + v[ b ] + x;               \
+   v[ d ] = _HB_ROTR32( v[ d ] ^ v[ a ], 16 ); \
+   v[ c ] = v[ c ] + v[ d ];                   \
+   v[ b ] = _HB_ROTR32( v[ b ] ^ v[ c ], 12 ); \
+   v[ a ] = v[ a ] + v[ b ] + y;               \
+   v[ d ] = _HB_ROTR32( v[ d ] ^ v[ a ], 8 );  \
+   v[ c ] = v[ c ] + v[ d ];                   \
+   v[ b ] = _HB_ROTR32( v[ b ] ^ v[ c ], 7 ); }
 
 /* Initialization Vector */
-
 static const HB_U32 blake2s_iv[ 8 ] =
 {
    0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
@@ -92,10 +88,9 @@ static const HB_U32 blake2s_iv[ 8 ] =
 };
 
 /* Compression function. "last" flag indicates last block. */
-
 static void blake2s_compress( blake2s_ctx * ctx, int last )
 {
-   const HB_U8 sigma[ 10 ][ 16 ] = {
+   static const HB_U8 sigma[ 10 ][ 16 ] = {
       { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15 },
       { 14, 10, 4,  8,  9,  15, 13, 6,  1,  12, 0,  2,  11, 7,  5,  3  },
       { 11, 8,  12, 0,  5,  2,  15, 13, 10, 14, 3,  6,  7,  1,  9,  4  },
@@ -142,11 +137,10 @@ static void blake2s_compress( blake2s_ctx * ctx, int last )
 }
 
 /* update with new data */
-
 static void blake2s_update( blake2s_ctx * ctx,
-                            const void * in, size_t inlen ) /* data bytes */
+                            const void * in, HB_SIZE inlen ) /* data bytes */
 {
-   size_t i;
+   HB_SIZE i;
 
    for( i = 0; i < inlen; i++ )
    {
@@ -163,11 +157,10 @@ static void blake2s_update( blake2s_ctx * ctx,
 }
 
 /* Initialize the state. key is optional */
-
-static int blake2s_init( blake2s_ctx * ctx, size_t outlen,
-                         const void * key, size_t keylen ) /* (keylen=0: no key) */
+static int blake2s_init( blake2s_ctx * ctx, HB_SIZE outlen,
+                         const void * key, HB_SIZE keylen ) /* (keylen=0: no key) */
 {
-   size_t i;
+   HB_SIZE i;
 
    if( outlen == 0 || outlen > 32 || keylen > 32 )
       return -1;                        /* illegal parameters */
@@ -193,10 +186,9 @@ static int blake2s_init( blake2s_ctx * ctx, size_t outlen,
 }
 
 /* finalize */
-
 static void blake2s_final( blake2s_ctx * ctx, void * out )
 {
-   size_t i;
+   HB_SIZE i;
 
    ctx->t[ 0 ] += ctx->c;               /* mark last block offset */
    if( ctx->t[ 0 ] < ctx->c )           /* carry overflow */
@@ -215,10 +207,9 @@ static void blake2s_final( blake2s_ctx * ctx, void * out )
 }
 
 /* convenience function for all-in-one computation */
-
-static int blake2s( void * out, size_t outlen,
-                    const void * key, size_t keylen,
-                    const void * in, size_t inlen )
+static int blake2s( void * out, HB_SIZE outlen,
+                    const void * key, HB_SIZE keylen,
+                    const void * in, HB_SIZE inlen )
 {
    blake2s_ctx ctx;
 

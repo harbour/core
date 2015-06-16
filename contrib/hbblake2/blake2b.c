@@ -62,29 +62,25 @@ typedef struct
    HB_U8  b[ 128 ];                     /* input buffer */
    HB_U64 h[ 8 ];                       /* chained state */
    HB_U64 t[ 2 ];                       /* total number of bytes */
-   size_t c;                            /* pointer for b[] */
-   size_t outlen;                       /* digest size */
+   HB_SIZE c;                           /* pointer for b[] */
+   HB_SIZE outlen;                      /* digest size */
 } blake2b_ctx;
 
 /* cyclic right rotation */
-
-#ifndef ROTR64
-#define ROTR64( x, y )  ( ( ( x ) >> ( y ) ) ^ ( ( x ) << ( 64 - ( y ) ) ) )
-#endif
+#define _HB_ROTR64( x, y )  ( ( ( x ) >> ( y ) ) ^ ( ( x ) << ( 64 - ( y ) ) ) )
 
 /* G Mixing function */
-#define B2B_G( a, b, c, d, x, y )  {       \
-   v[ a ] = v[ a ] + v[ b ] + x;           \
-   v[ d ] = ROTR64( v[ d ] ^ v[ a ], 32 ); \
-   v[ c ] = v[ c ] + v[ d ];               \
-   v[ b ] = ROTR64( v[ b ] ^ v[ c ], 24 ); \
-   v[ a ] = v[ a ] + v[ b ] + y;           \
-   v[ d ] = ROTR64( v[ d ] ^ v[ a ], 16 ); \
-   v[ c ] = v[ c ] + v[ d ];               \
-   v[ b ] = ROTR64( v[ b ] ^ v[ c ], 63 ); }
+#define B2B_G( a, b, c, d, x, y )  {           \
+   v[ a ] = v[ a ] + v[ b ] + x;               \
+   v[ d ] = _HB_ROTR64( v[ d ] ^ v[ a ], 32 ); \
+   v[ c ] = v[ c ] + v[ d ];                   \
+   v[ b ] = _HB_ROTR64( v[ b ] ^ v[ c ], 24 ); \
+   v[ a ] = v[ a ] + v[ b ] + y;               \
+   v[ d ] = _HB_ROTR64( v[ d ] ^ v[ a ], 16 ); \
+   v[ c ] = v[ c ] + v[ d ];                   \
+   v[ b ] = _HB_ROTR64( v[ b ] ^ v[ c ], 63 ); }
 
 /* Initialization Vector */
-
 static const HB_U64 blake2b_iv[ 8 ] =
 {
    0x6A09E667F3BCC908, 0xBB67AE8584CAA73B,
@@ -94,10 +90,9 @@ static const HB_U64 blake2b_iv[ 8 ] =
 };
 
 /* Compression function. "last" flag indicates last block. */
-
 static void blake2b_compress( blake2b_ctx * ctx, int last )
 {
-   const HB_U8 sigma[ 12 ][ 16 ] = {
+   static const HB_U8 sigma[ 12 ][ 16 ] = {
       { 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15 },
       { 14, 10, 4,  8,  9,  15, 13, 6,  1,  12, 0,  2,  11, 7,  5,  3  },
       { 11, 8,  12, 0,  5,  2,  15, 13, 10, 14, 3,  6,  7,  1,  9,  4  },
@@ -146,11 +141,10 @@ static void blake2b_compress( blake2b_ctx * ctx, int last )
 }
 
 /* update with new data */
-
 static void blake2b_update( blake2b_ctx * ctx,
-                            const void * in, size_t inlen ) /* data bytes */
+                            const void * in, HB_SIZE inlen ) /* data bytes */
 {
-   size_t i;
+   HB_SIZE i;
 
    for( i = 0; i < inlen; i++ )
    {
@@ -167,11 +161,10 @@ static void blake2b_update( blake2b_ctx * ctx,
 }
 
 /* Initialize the state. key is optional */
-
-static int blake2b_init( blake2b_ctx * ctx, size_t outlen,
-                         const void * key, size_t keylen ) /* (keylen=0: no key) */
+static int blake2b_init( blake2b_ctx * ctx, HB_SIZE outlen,
+                         const void * key, HB_SIZE keylen ) /* (keylen=0: no key) */
 {
-   size_t i;
+   HB_SIZE i;
 
    if( outlen == 0 || outlen > 64 || keylen > 64 )
       return -1;                        /* illegal parameters */
@@ -197,10 +190,9 @@ static int blake2b_init( blake2b_ctx * ctx, size_t outlen,
 }
 
 /* finalize */
-
 static void blake2b_final( blake2b_ctx * ctx, void * out )
 {
-   size_t i;
+   HB_SIZE i;
 
    ctx->t[ 0 ] += ctx->c;               /* mark last block offset */
    if( ctx->t[ 0 ] < ctx->c )           /* carry overflow */
@@ -219,10 +211,9 @@ static void blake2b_final( blake2b_ctx * ctx, void * out )
 }
 
 /* convenience function for all-in-one computation */
-
-static int blake2b( void * out, size_t outlen,
-                    const void * key, size_t keylen,
-                    const void * in, size_t inlen )
+static int blake2b( void * out, HB_SIZE outlen,
+                    const void * key, HB_SIZE keylen,
+                    const void * in, HB_SIZE inlen )
 {
    blake2b_ctx ctx;
 
