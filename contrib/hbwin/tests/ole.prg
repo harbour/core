@@ -445,7 +445,7 @@ STATIC PROCEDURE Exm_SOAP()
 
    IF ( oSoapClient := win_oleCreateObject( "MSSOAP.SoapClient30" ) ) != NIL
 
-      oSoapClient:msSoapInit( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL" )
+      oSoapClient:msSoapInit( "https://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL" )
 
       ? oSoapClient:InvertStringCase( "lower UPPER" )
    ELSE
@@ -464,7 +464,7 @@ STATIC PROCEDURE Exm_PocketSOAP()
       oEnvelope:EncodingStyle := ""
       oEnvelope:SetMethod( "InvertStringCase", "http://www.dataaccess.com/webservicesserver/" )
       oEnvelope:Parameters:Create( "sAString", "lower UPPER" )
-      oHttp:Send( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL", oEnvelope:Serialize() )
+      oHttp:Send( "https://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL", oEnvelope:Serialize() )
       oEnvelope:Parse( oHttp )
 
       ? oEnvelope:Parameters:Item( 0 ):Value
