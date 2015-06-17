@@ -27,9 +27,9 @@ PROCEDURE Main( cFrom, cPassword, cTo, cHost )
    cHost := Lower( cHost )
 
    /* SMTPS works with SSL/TLS on port 465 and with STARTTLS
-      on port 587. STARTTLS mode is fully automatic and require
-      that SSL/TLS be disabled at first (it will be activated
-      on request after STARTTLS command) */
+      on port 587. STARTTLS mode is fully automatic and requires
+      SSL/TLS be disabled at first (it will be activated on
+      request after STARTTLS command) */
 
    DO CASE
    CASE cHost == "apple" .OR. "@icloud.com" $ cFrom .OR. "@mac.com" $ cFrom .OR. "@me.com" $ cFrom
