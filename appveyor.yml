@@ -21,7 +21,7 @@ environment:
     BINTRAY_PATH:
       secure: +CyA1IIhoPpI7EY54BsRADDxb1V62HDWLSekCX4mTxk=
 install:
-- set VER_CURL=7.42.1
+- set VER_CURL=7.43.0
 - set VER_OPENSSL=1.0.2c
 - curl -fsS -L http://www.7-zip.org/a/7za920.zip -o 7z.7z
 - 7z x -y -oC:\7z 7z.7z > nul
