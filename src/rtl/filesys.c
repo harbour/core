@@ -3842,10 +3842,12 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
       uiFlags |= FO_CREAT;
       if( uiExFlags & FXO_UNIQUE )
          uiFlags |= FO_EXCL;
-#if ! defined( HB_USE_SHARELOCKS )
+#if defined( HB_USE_SHARELOCKS )
+      else if( ( uiExFlags & ( FXO_TRUNCATE | FXO_SHARELOCK ) ) == FXO_TRUNCATE )
+#else
       else if( uiExFlags & FXO_TRUNCATE )
-         uiFlags |= FO_TRUNC;
 #endif
+         uiFlags |= FO_TRUNC;
    }
 
    hFile = hb_fsOpen( szPath, uiFlags );

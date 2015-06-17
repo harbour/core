@@ -734,11 +734,10 @@ void hb_taskSuspend( void )
 /* TODO: do not start task immediately */
 void hb_taskResume( void * pTaskPtr )
 {
-   PHB_TASKINFO pTask = ( PHB_TASKINFO ) pTaskPtr, pCurrTask;
+   PHB_TASKINFO pTask = ( PHB_TASKINFO ) pTaskPtr;
 
    if( s_currTask != pTask )
    {
-      pCurrTask = s_currTask;
       switch( pTask->state )
       {
 #if ! defined( HB_HAS_UCONTEXT )
@@ -763,9 +762,12 @@ void hb_taskResume( void * pTaskPtr )
             /* no break */
          case TASK_RUNNING:
 #if defined( HB_HAS_UCONTEXT )
-            s_currTask = pTask;
-            /* save current execution context and switch to the new one */
-            swapcontext( &pCurrTask->context, &pTask->context );
+            {
+               PHB_TASKINFO pCurrTask = s_currTask;
+               s_currTask = pTask;
+               /* save current execution context and switch to the new one */
+               swapcontext( &pCurrTask->context, &pTask->context );
+            }
 #else
             /* save current execution context */
             if( setjmp( s_currTask->context ) == 0 )
