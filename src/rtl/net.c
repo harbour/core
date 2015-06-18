@@ -125,8 +125,8 @@ char * hb_netname( void )
       szValue[ 0 ] = szValue[ 15 ] = '\0';
 
       regs.HB_XREGS.ax = 0x5E00;
-      regs.HB_XREGS.dx = FP_OFF( pszValue );
-      sregs.ds = FP_SEG( pszValue );
+      regs.HB_XREGS.dx = FP_OFF( szValue );
+      sregs.ds = FP_SEG( szValue );
 
       HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
 
