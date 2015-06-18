@@ -14,7 +14,7 @@
 #define HB_CDP_LOWER    0x04
 #define HB_CDP_UPPER    0x08
 
-procedure main()
+procedure main( cUnicodeData )
 
    local cLine, aLine
    local cGenCat
@@ -38,7 +38,7 @@ procedure main()
    nMinCh := nMinUp := nMinLo := 0xFFFF
    nUppers := nLowers := 0
 
-   for each cLine in hb_ATokens( hb_MemoRead( "UnicodeData.txt" ), .T. )
+   for each cLine in hb_ATokens( hb_MemoRead( hb_defaultValue( cUnicodeData, "UnicodeData.txt" ) ), .T. )
       if ! Empty( cLine )
          aLine := hb_ATokens( cLine, ";" )
          if Len( aLine ) == 15
