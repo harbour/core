@@ -1,5 +1,5 @@
 1.) Download PageScript32 package and unzip it:
-    http://www.abeelabs.com/downloads/PS32.zip
+    https://web.archive.org/web/20150201213531/http://abeelabs.com/downloads/PS32.zip
 
 2.) Copy these files from PageScript32 installation
     to this folder:
