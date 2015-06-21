@@ -1,7 +1,7 @@
-1.) Download original sources of SuperLib 3.5 from this page:
-       http://www.the-oasis.net/ftpmaster.php3?content=ftplib.htm
-    Direct link:
+1.) Download original sources of SuperLib 3.5:
        http://www.the-oasis.net/files/library/supfree.zip
+    or
+       https://web.archive.org/web/20071108113537/http://www.the-oasis.net/files/library/supfree.zip
 
 2.) Unpack it:
     unzip supfree.zip
