@@ -10,6 +10,7 @@
 
 -instfile=misc:*.hb
 -instfile=misc:*.hbc
+-instfile=misc:*.md
 -instfile=misc:*.txt
 -instfile=inc:*.ch
 -instfile=inc_sub:include/*.ch

@@ -73,6 +73,7 @@
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.hbc
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.hbx
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.ch
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}*.md
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.txt
 -instfile=contrib_tests:${_HB_CONTRIB_SUBDIR}tests/*.*
 
