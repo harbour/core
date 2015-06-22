@@ -473,7 +473,7 @@ You will need these packages to compile optional core Harbour features:
 >   * See [this](http://distrowatch.com/dwres.php?resource=package-management) on
 >       package management in various distros.
 >   * On openSUSE, if you want to build 32-bit Harbour on a 64-bit host, install
->       above packages with `-32bit` appended to their names, f.e. `slang-devel-32bit`
+>       above packages with `-32bit` suffix, f.e. `slang-devel-32bit`
 
 ## OpenSolaris
 
