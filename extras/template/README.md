@@ -1,11 +1,11 @@
 Harbour Library Project Template
 ================================
 
-* Build static lib:
+* Build static library:
 
    `hbmk2 hbtpl.hbp`
 
-* Build dynamic lib:
+* Build dynamic library:
 
    `hbmk2 -hbdyn hbtpl.hbp`
 
@@ -27,7 +27,7 @@ Harbour Library Project Template
    hbrun test.prg
    ```
 
-* Use lib from command prompt ("dot prompt"):
+* Use library from Harbour command prompt ("dot prompt"):
 
    ```
    cd tests
