@@ -9,17 +9,17 @@ Harbour Library Project Template
 
    `hbmk2 -hbdyn hbtpl.hbp`
 
-* Build and run sample and test code using:
+* Build and run sample and test code:
 
    ```
    cd tests
    hbmk2 sample
-   sample
+   ./sample
    hbmk2 test hbtest.hbc
-   test
+   ./test
    ```
 
-* Run sample and test code using:
+* Run sample and test code:
 
    ```
    hbrun tests/sample.prg
