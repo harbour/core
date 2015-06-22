@@ -35,7 +35,7 @@ and interfaces to popular APIs.
   * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
 
 
-  Thanks to those who did!
+  Thanks to all who did!
 
 
 # How to Get
