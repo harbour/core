@@ -36,7 +36,7 @@ PROCEDURE Main()
    ? hb_DynCall( { "SystemParametersInfo", "user32.dll", HB_DYN_CALLCONV_STDCALL }, SPI_SETDRAGFULLWINDOWS, 1, 0, 0 )
    Inkey( 0 )
 
-   /* Get some standard Windows folders */
+   /* Get some standard Windows directories */
 
    #define CSIDL_APPDATA               0x001a /* <username>\Application Data */
    #define CSIDL_ADMINTOOLS            0x0030 /* <username>\Start Menu\Programs\Administrative Tools */

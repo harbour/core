@@ -1164,9 +1164,9 @@
 #define HB_WIN_DE_PATHTOODEEP              0x79      /* The source or destination path exceeded or would exceed MAX_PATH. */
 #define HB_WIN_DE_MANYDEST                 0x7A      /* The operation involved multiple destination paths, which can fail in the case of a move operation. */
 #define HB_WIN_DE_INVALIDFILES             0x7C      /* The path in the source or destination or both was invalid. */
-#define HB_WIN_DE_DESTSAMETREE             0x7D      /* The source and destination have the same parent folder. */
+#define HB_WIN_DE_DESTSAMETREE             0x7D      /* The source and destination have the same parent directory. */
 #define HB_WIN_DE_FLDDESTISFILE            0x7E      /* The destination path is an existing file. */
-#define HB_WIN_DE_FILEDESTISFLD            0x80      /* The destination path is an existing folder. */
+#define HB_WIN_DE_FILEDESTISFLD            0x80      /* The destination path is an existing directory. */
 #define HB_WIN_DE_FILENAMETOOLONG          0x81      /* The name of the file exceeds MAX_PATH. */
 #define HB_WIN_DE_DEST_IS_CDROM            0x82      /* The destination is a read-only CD-ROM, possibly unformatted. */
 #define HB_WIN_DE_DEST_IS_DVD              0x83      /* The destination is a read-only DVD, possibly unformatted. */

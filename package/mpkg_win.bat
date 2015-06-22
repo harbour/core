@@ -138,7 +138,7 @@ if exist "%_MINGW_DLL_DIR%\mingwm*.dll"    xcopy /y "%HB_DIR_MINGW%\bin\mingwm*.
 :: for posix cc1.exe to run without putting mingw\bin into PATH
 rem if exist "%_MINGW_DLL_DIR%\libwinpthread-*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libwinpthread-*.dll" "%HB_ABSROOT%bin\"
 
-:: Delete stuff from C compiler folder we don't need:
+:: Delete stuff from C compiler directory we don't need:
 :: - secondary target from multi-target mingws
 :: - non-C/C++ language support
 :: - gdb (along with Python)

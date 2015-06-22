@@ -1495,7 +1495,7 @@ STATIC FUNCTION CGIExec( cProc, /* @ */ cOutPut )
 
       hProc := hb_processOpen( cProc, @hIn, @hOut, @hOut, .T. ) // .T.: Detached Process (Hide Window)
 
-      // return to original folder
+      // return to original directory
       hb_cwd( cCurPath )
 
       // hb_ToOutDebug( "New 2 Path: %s\n\r", hb_cwd() )
@@ -1885,7 +1885,7 @@ STATIC FUNCTION uproc_default()
             // is it a directory ?
          ELSEIF hb_DirExists( uhttpd_OSFileName( cFileName ) )
 
-            // if it exists as folder and it is missing trailing slash I add it and redirect to it
+            // if it exists as directory and it is missing trailing slash I add it and redirect to it
             IF !( Right( cFileName, 1 ) == "/" )
                uhttpd_SetHeader( "Location", "http://" + _SERVER[ "HTTP_HOST" ] + _SERVER[ "SCRIPT_NAME" ] + "/" )
                RETURN MakeResponse()
@@ -2035,7 +2035,7 @@ STATIC PROCEDURE ShowServerStatus()
    RETURN
 #endif
 
-STATIC PROCEDURE ShowFolder( cDir )
+STATIC PROCEDURE ShowDirectory( cDir )
 
    LOCAL aDir, aF
    LOCAL cParentDir
@@ -2525,10 +2525,10 @@ STATIC FUNCTION Handler_Default( cFileName )
       // Directory content request
    CASE hb_DirExists( uhttpd_OSFileName( cFileName ) )
 
-      // If I'm here it's means that I have no page, so, if it is defined, I will display content folder
+      // If I'm here it's means that I have no page, so, if it is defined, I will display content directory
       IF s_lIndexes
-         // display folder content
-         ShowFolder( cFileName )
+         // display directory content
+         ShowDirectory( cFileName )
       ELSE
          uhttpd_SetStatusCode( 403 )
          t_cErrorMsg := "Display file list not allowed"
@@ -2622,7 +2622,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
                   cFileName, cCurPath, s_cDocumentRoot, pHRB, xResult )
 #endif
 
-               // return to original folder
+               // return to original directory
                hb_cwd( cCurPath )
 
                hb_hrbUnload( pHRB )

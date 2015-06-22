@@ -52,8 +52,8 @@
 
 CREATE CLASS TPLGenerate
 
-   METHOD NewIndex( cFolder, cFilename, cTitle, cExtension )
-   METHOD NewDocument( cFolder, cFilename, cTitle, cExtension )
+   METHOD NewIndex( cDir, cFilename, cTitle, cExtension )
+   METHOD NewDocument( cDir, cFilename, cTitle, cExtension )
    METHOD AddEntry( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
    METHOD AddReference( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
    METHOD BeginSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth++
@@ -63,44 +63,44 @@ CREATE CLASS TPLGenerate
 
    PROTECTED:
 
-   METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
+   METHOD New( cDir, cFilename, cTitle, cExtension, nType ) HIDDEN
 
    VAR nType AS INTEGER
    VAR Depth AS INTEGER INIT 0
 
    VAR nHandle AS NUMERIC
-   VAR cFolder AS STRING
+   VAR cDir AS STRING
    VAR cFilename AS STRING
    VAR cTitle AS STRING
    VAR cExtension AS STRING
 
 ENDCLASS
 
-METHOD NewIndex( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
+METHOD NewIndex( cDir, cFilename, cTitle, cExtension ) CLASS TPLGenerate
 
-   ::New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
-
-   RETURN self
-
-METHOD NewDocument( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
-
-   ::New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
+   ::New( cDir, cFilename, cTitle, cExtension, INDEX_ )
 
    RETURN self
 
-METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
+METHOD NewDocument( cDir, cFilename, cTitle, cExtension ) CLASS TPLGenerate
 
-   ::cFolder := cFolder
+   ::New( cDir, cFilename, cTitle, cExtension, DOCUMENT_ )
+
+   RETURN self
+
+METHOD New( cDir, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
+
+   ::cDir := cDir
    ::cFilename := cFilename
    ::cTitle := cTitle
    ::cExtension := cExtension
    ::nType := nType
 
-   IF ! hb_DirExists( ::cFolder )
-      OutStd( hb_eol() + "Creating folder", "'" + ::cFolder + "'" )
-      hb_DirCreate( ::cFolder )
+   IF ! hb_DirExists( ::cDir )
+      OutStd( hb_eol() + "Creating directory", "'" + ::cDir + "'" )
+      hb_DirCreate( ::cDir )
    ENDIF
 
-   ::nHandle := FCreate( ::cFolder + hb_ps() + ::cFilename + ::cExtension )
+   ::nHandle := FCreate( ::cDir + hb_ps() + ::cFilename + ::cExtension )
 
    RETURN self

@@ -51,22 +51,22 @@
 
 CREATE CLASS GenerateAscii FROM GenerateText
 
-   METHOD NewIndex( cFolder, cFilename, cTitle, cDescription )
-   METHOD NewDocument( cFolder, cFilename, cTitle, cDescription )
+   METHOD NewIndex( cDir, cFilename, cTitle, cDescription )
+   METHOD NewDocument( cDir, cFilename, cTitle, cDescription )
 
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
+METHOD NewDocument( cDir, cFilename, cTitle, cDescription ) CLASS GenerateAscii
 
    ::lContinuous := .T.
-   ::super:NewDocument( cFolder, cFilename, cTitle, cDescription )
+   ::super:NewDocument( cDir, cFilename, cTitle, cDescription )
 
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
+METHOD NewIndex( cDir, cFilename, cTitle, cDescription ) CLASS GenerateAscii
 
    ::lContinuous := .T.
-   ::super:NewIndex( cFolder, cFilename, cTitle, cDescription )
+   ::super:NewIndex( cDir, cFilename, cTitle, cDescription )
 
    RETURN self
 
@@ -78,8 +78,8 @@ CREATE CLASS GenerateText FROM TPLGenerate
    VAR lContinuous AS LOGICAL INIT .F.
 
    EXPORTED:
-   METHOD NewIndex( cFolder, cFilename, cTitle )
-   METHOD NewDocument( cFolder, cFilename, cTitle )
+   METHOD NewIndex( cDir, cFilename, cTitle )
+   METHOD NewDocument( cDir, cFilename, cTitle )
    METHOD AddEntry( oEntry )
    METHOD AddIndex( oEntry ) HIDDEN
    METHOD BeginSection( cSection, cFilename )
@@ -92,16 +92,16 @@ CREATE CLASS GenerateText FROM TPLGenerate
 
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateText
+METHOD NewDocument( cDir, cFilename, cTitle ) CLASS GenerateText
 
-   ::super:NewDocument( cFolder, cFilename, cTitle, ".txt" )
+   ::super:NewDocument( cDir, cFilename, cTitle, ".txt" )
    ::WriteEntry( "", cTitle + hb_eol(), .F. )
 
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
+METHOD NewIndex( cDir, cFilename, cTitle ) CLASS GenerateText
 
-   ::super:NewIndex( cFolder, cFilename, cTitle, ".txt" )
+   ::super:NewIndex( cDir, cFilename, cTitle, ".txt" )
    ::WriteEntry( "", cTitle + hb_eol(), .F. )
 
    RETURN self

@@ -30,7 +30,7 @@ PROCEDURE Main()
    @  4, 28 SAY "            Directory            " COLOR "W+/B"
    @  5, 28, 15, 60 BOX B_THIN + " " COLOR "W/W*"
 
-   // get the current folder files to display on the aChoice menu
+   /* get files of the current directory to display them on the AChoice() menu */
    tmpFileList := Directory()
 
    FOR i := 1 TO Len( tmpFileList )
@@ -54,11 +54,11 @@ PROCEDURE Main()
 
    RETURN
 
-// function used to update scrollbar
+/* function used to update scrollbar */
 
 STATIC FUNCTION updateFilesScroll( nMode, aFileList, filesScroll )
 
-   LOCAL newPos, valRet := AC_CONT   // Default to continue
+   LOCAL newPos, valRet := AC_CONT   /* Default to continue */
    LOCAL nLastKey := LastKey()
 
    newPos := filesScroll:current
@@ -91,11 +91,12 @@ STATIC FUNCTION updateFilesScroll( nMode, aFileList, filesScroll )
       ENDCASE
    ENDCASE
 
-   IF newPos < 1
+   DO CASE
+   CASE newPos < 1
       newPos := 1
-   ELSEIF newPos >= filesScroll:total
+   CASE newPos >= filesScroll:total
       newPos := filesScroll:total
-   ENDIF
+   ENDCASE
 
    filesScroll:current := newPos
    filesScroll:update()

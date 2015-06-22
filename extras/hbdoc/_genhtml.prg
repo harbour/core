@@ -59,20 +59,20 @@
 
 CREATE CLASS GenerateHTML2 FROM GenerateHTML
 
-   METHOD NewIndex( cFolder, cFilename, cTitle )
-   METHOD NewDocument( cFolder, cFilename, cTitle )
+   METHOD NewIndex( cDir, cFilename, cTitle )
+   METHOD NewDocument( cDir, cFilename, cTitle )
 
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateHTML2
+METHOD NewDocument( cDir, cFilename, cTitle ) CLASS GenerateHTML2
 
-   ::super:NewDocument( cFolder, cFilename, cTitle, EXTENSION )
+   ::super:NewDocument( cDir, cFilename, cTitle, EXTENSION )
 
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML2
+METHOD NewIndex( cDir, cFilename, cTitle ) CLASS GenerateHTML2
 
-   ::super:NewIndex( cFolder, cFilename, cTitle, EXTENSION )
+   ::super:NewIndex( cDir, cFilename, cTitle, EXTENSION )
 
    RETURN self
 
@@ -91,8 +91,8 @@ CREATE CLASS GenerateHTML FROM TPLGenerate
 
    EXPORTED:
    METHOD NewFile() HIDDEN
-   METHOD NewIndex( cFolder, cFilename, cTitle )
-   METHOD NewDocument( cFolder, cFilename, cTitle )
+   METHOD NewIndex( cDir, cFilename, cTitle )
+   METHOD NewDocument( cDir, cFilename, cTitle )
    METHOD AddEntry( oEntry )
    METHOD AddReference( oEntry, cReference, cSubReference )
    METHOD BeginSection( cSection, cFilename )
@@ -130,16 +130,16 @@ METHOD NewFile() CLASS GenerateHTML
 
    RETURN self
 
-METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateHTML
+METHOD NewDocument( cDir, cFilename, cTitle ) CLASS GenerateHTML
 
-   ::super:NewDocument( cFolder, cFilename, cTitle, EXTENSION )
+   ::super:NewDocument( cDir, cFilename, cTitle, EXTENSION )
    ::NewFile()
 
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML
+METHOD NewIndex( cDir, cFilename, cTitle ) CLASS GenerateHTML
 
-   ::super:NewIndex( cFolder, cFilename, cTitle, EXTENSION )
+   ::super:NewIndex( cDir, cFilename, cTitle, EXTENSION )
    ::NewFile()
 
    RETURN self
@@ -325,7 +325,7 @@ METHOD RecreateStyleDocument( cStyleFile ) CLASS GenerateHTML
 
    #pragma __streaminclude "hbdoc.css" | cString := %s
 
-   IF ! hb_MemoWrit( ::cFolder + hb_ps() + cStyleFile, cString )
+   IF ! hb_MemoWrit( ::cDir + hb_ps() + cStyleFile, cString )
       /* TODO: raise an error, could not create style file */
    ENDIF
 

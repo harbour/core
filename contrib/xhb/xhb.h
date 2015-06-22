@@ -1,5 +1,5 @@
 /*
- * Header file for C functions in xhb contrib folder
+ * Header file for C functions in xhb contrib directory
  *
  * Copyright 2008 {list of individual authors and e-mail addresses}
  *

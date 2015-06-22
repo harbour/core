@@ -305,6 +305,6 @@ PROCEDURE Main()
    // Class does it auto
 
    ?
-   ? "Look at", IMAGES_OUT, "folder for output images"
+   ? "Look at", IMAGES_OUT, "directory for output images"
 
    RETURN

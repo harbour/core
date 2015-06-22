@@ -655,7 +655,7 @@ HB_FUNC( SQLITE3_LAST_INSERT_ROWID )
 }
 
 /**
-   Name Of The Folder Holding Temporary Files
+   Name Of The Directory Holding Temporary Files
 
    sqlite3_temp_directory( cDirName ) -> lResult
  */

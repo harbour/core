@@ -50,6 +50,6 @@ PROCEDURE Main()
    gdImageLine( im, 0, 40, 99, 80, gdAntiAliased )         /* and re-draw the line in antialiased mode */
    gdImageJpeg( im, IMAGES_OUT + "antialiasedtrue.jpg" )   /* saving the image */
 
-   ? "Look at", IMAGES_OUT, "folder for output images"
+   ? "Look at", IMAGES_OUT, "directory for output images"
 
    RETURN

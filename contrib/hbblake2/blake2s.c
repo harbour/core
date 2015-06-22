@@ -1,5 +1,5 @@
 /*
- * BLAKE2 functions wrappers
+ * BLAKE2s function wrapper
  *
  * Copyright 2015 Viktor Szakats (vszakats.net/harbour)
  * (Harbour wrapper and low-level code adaptation)

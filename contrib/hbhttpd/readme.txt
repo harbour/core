@@ -152,15 +152,15 @@ Usage of '/files*' is invalid and do not match '/files1', '/filesa'
 or '/files/x'. The requested URL path is checked by deleting last
 slashed part until URL is found in mounting table. If no URL found
 in mounting table, 404 Not Found error is returned.
-Example 1. If '/files/folder/aaa' is requested, '/files/folder/aaa',
-'/files/folder/*', '/files/*', and '/*' will be checked before 404
+Example 1. If '/files/dir/aaa' is requested, '/files/dir/aaa',
+'/files/dir/*', '/files/*', and '/*' will be checked before 404
 error is returned.
-Example 2. If '/files/folder/' is requested, '/files/folder/',
-'/files/folder/*', '/files/*', and '/*' will be checked before 404
+Example 2. If '/files/dir/' is requested, '/files/dir/',
+'/files/dir/*', '/files/*', and '/*' will be checked before 404
 error is returned.
 
 NOTE 2: if you want to use a slash-less URL address as a synonym for
-the folder you may need an extra redirection rule. Ex.,
+the directory you may need an extra redirection rule. Ex.,
      "/files"   => { {|| URedirect( "/files/" ) }, .F. }
      "/files/*" => { {| x | UProcFiles( DocumentRoot + x ) }, .F. }
 

@@ -452,7 +452,7 @@ read the source code :-).
   - General Windows API functions
 - Brief descriptions of some GTWVW functions imported from GTWVT
 
-See function skeletons inside the source code and in doc folder.
+See function skeletons inside the source code and in doc directory.
 
 
 # GTWVW and GTWVT

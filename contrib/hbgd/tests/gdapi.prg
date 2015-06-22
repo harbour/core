@@ -88,6 +88,6 @@ PROCEDURE Main()
    gdImageJpeg( im2, IMAGES_OUT + "conv_tst.jpg" )
 
    ?
-   ? "Look at", IMAGES_OUT, "folder for output images"
+   ? "Look at", IMAGES_OUT, "directory for output images"
 
    RETURN

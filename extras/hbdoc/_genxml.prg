@@ -56,8 +56,8 @@ CREATE CLASS GenerateXML FROM TPLGenerate
    PROTECTED:
 
    EXPORTED:
-   METHOD NewIndex( cFolder, cFilename, cTitle )
-   METHOD NewDocument( cFolder, cFilename, cTitle )
+   METHOD NewIndex( cDir, cFilename, cTitle )
+   METHOD NewDocument( cDir, cFilename, cTitle )
    METHOD AddEntry( oEntry )
    METHOD AddIndex( oEntry ) HIDDEN
    METHOD BeginSection( cSection, cFilename )
@@ -68,17 +68,17 @@ CREATE CLASS GenerateXML FROM TPLGenerate
 
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateXML
+METHOD NewDocument( cDir, cFilename, cTitle ) CLASS GenerateXML
 
-   ::super:NewDocument( cFolder, cFilename, cTitle, ".xml" )
+   ::super:NewDocument( cDir, cFilename, cTitle, ".xml" )
    FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
    FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
 
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateXML
+METHOD NewIndex( cDir, cFilename, cTitle ) CLASS GenerateXML
 
-   ::super:NewIndex( cFolder, cFilename, cTitle, ".xml" )
+   ::super:NewIndex( cDir, cFilename, cTitle, ".xml" )
    FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
    FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
 

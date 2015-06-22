@@ -196,7 +196,7 @@ PROCEDURE Main( ... )
          iif( s_hSwitches[ "source" ], s_hSwitches[ "basedir" ] + "src", NIL ), ;
          iif( s_hSwitches[ "contribs" ], s_hSwitches[ "basedir" ] + "contrib", NIL ), ;
       }, ;
-      {| c | iif( Empty( c ),, ProcessFolder( c, @aContent ) ) } )
+      {| c | iif( Empty( c ),, ProcessDir( c, @aContent ) ) } )
 
    OutStd( hb_ntos( Len( aContent ) ), "items found" + hb_eol() )
    OutStd( hb_eol() )
@@ -358,29 +358,29 @@ PROCEDURE Main( ... )
 
    RETURN
 
-STATIC PROCEDURE ProcessFolder( cFolder, aContent )  /* this is a recursive procedure */
+STATIC PROCEDURE ProcessDir( cDir, aContent )  /* this is a recursive procedure */
 
    LOCAL file
 
 #if 0
-   OutStd( ">>> " + cFolder + hb_eol() )
+   OutStd( ">>> " + cDir + hb_eol() )
 #endif
 
-   cFolder += hb_ps()
+   cDir += hb_ps()
 
-   FOR EACH file IN Directory( cFolder + hb_osFileMask(), "D" )
+   FOR EACH file IN Directory( cDir + hb_osFileMask(), "D" )
       IF file[ F_ATTR ] == "D"
          IF !( file[ F_NAME ] == "." ) .AND. ;
             !( file[ F_NAME ] == ".." )
 
             IF s_hSwitches[ "source" ] .OR. s_hSwitches[ "contribs" ]
                /* .AND. hb_AScanI( s_aSkipDirs, file[ F_NAME ],,, .T. ) == 0 */
-               ProcessFolder( cFolder + file[ F_NAME ], @aContent )
+               ProcessDir( cDir + file[ F_NAME ], @aContent )
             ENDIF
          ENDIF
       ELSEIF hb_AScanI( sc_aExclusions, file[ F_NAME ],,, .T. ) == 0
          IF Lower( hb_FNameExt( file[ F_NAME ] ) ) == ".txt" .AND. ;
-            ! ProcessFile( cFolder + file[ F_NAME ], @aContent )
+            ! ProcessFile( cDir + file[ F_NAME ], @aContent )
             EXIT
          ENDIF
       ENDIF
@@ -908,7 +908,7 @@ STATIC PROCEDURE ShowHelp( cExtraMessage, aArgs )
             "-output-single                  output is one file" + IsDefault( s_hSwitches[ "output" ] == "single" ), ;
             "-output-category                output is one file per category" + IsDefault( s_hSwitches[ "output" ] == "category" ), ;
             "-output-entry                   output is one file per entry (function, command, etc)" + IsDefault( s_hSwitches[ "output" ] == "entry" ), ;
-            "-source=<folder>                source folder, default is .." + hb_ps() + "..", ;
+            "-source=<directory>             source directory, default is .." + hb_ps() + "..", ;
             "-include-doc-source             output is to indicate the document source file name", ;
             "-include-doc-version            output is to indicate the document source file version" ;
          } }

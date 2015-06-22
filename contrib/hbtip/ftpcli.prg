@@ -341,14 +341,14 @@ METHOD Rename( cFrom, cTo ) CLASS TIPClientFTP
 
    RETURN .F.
 
-// Create a new folder
+// Create a new directory
 METHOD MKD( cPath ) CLASS TIPClientFTP
 
    ::inetSendAll( ::SocketCon, "MKD " + cPath + ::cCRLF )
 
    RETURN ::GetReply()
 
-// Delete an existing folder
+// Delete an existing directory
 METHOD RMD( cPath ) CLASS TIPClientFTP
 
    ::inetSendAll( ::SocketCon, "RMD " + cPath + ::cCRLF )

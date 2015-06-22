@@ -1739,7 +1739,7 @@ RDD
 ---
 - Latest RDD changes synced with xHarbour.
 - Fixed dbCreate() bug that closed an open dbf with same name as newly
-  created dbf in a different folder.
+  created dbf in a different directory.
 - FieldPut() Fixed to accept and ignore field NIL values
   without runtime error. C52 compatible.
 - Added scopped relations. Now ordSetRelation() works with DBFCDX like

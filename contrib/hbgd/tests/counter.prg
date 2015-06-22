@@ -112,6 +112,6 @@ PROCEDURE Main( cValue, cBaseImage )
    oI:SaveGif( IMAGES_OUT + "counter.gif" )
 
    ?
-   ? "Look at", IMAGES_OUT, "folder for output images"
+   ? "Look at", IMAGES_OUT, "directory for output images"
 
    RETURN

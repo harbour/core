@@ -46,11 +46,11 @@
 
 #if defined( HBMK_HAS_HBGD )
 
-MEMVAR _SERVER  // defined in uHTTPD
-MEMVAR _REQUEST // defined in uHTTPD
+MEMVAR _SERVER   // defined in uHTTPD
+MEMVAR _REQUEST  // defined in uHTTPD
 
-#define IMAGES_IN  hb_DirSepToOS( "../../../contrib/hbgd/tests/digits/" )
-#define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + hb_ps() + "counter" + hb_ps() )
+#define IMAGES_IN   hb_DirSepToOS( "../../../contrib/hbgd/tests/digits/" )
+#define IMAGES_OUT  ( _SERVER[ "DOCUMENT_ROOT" ] + hb_ps() + "counter" + hb_ps() )
 
 #define DISPLAY_NUM  10
 
@@ -103,15 +103,6 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    ENDIF
 
    cValue := StrZero( nValue, DISPLAY_NUM )
-
-#if 0
-   ? "Value =", cValue
-
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
-#endif
 
    /* Load a digits image in memory from file */
    oIDigits := GDImage():LoadFromGif( cBaseImage )
@@ -183,7 +174,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    oI:SaveGif( IMAGES_OUT + "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif" )
 
    ?
-   ? "Look at", IMAGES_OUT, "folder for output images"
+   ? "Look at", IMAGES_OUT, "directory for output images"
    ?
 #endif
 

@@ -180,7 +180,7 @@ PROCEDURE Main()
    fi_DeInitialise()
 
    ?
-   ? "Look at", IMAGES_OUT, "folder for output images"
+   ? "Look at", IMAGES_OUT, "directory for output images"
 
    RETURN
 
