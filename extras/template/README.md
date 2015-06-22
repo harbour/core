@@ -19,11 +19,12 @@ Harbour Library Project Template
    ./test
    ```
 
-* Run sample and test code:
+* Run sample and test code as scripts:
 
    ```
-   hbrun tests/sample.prg
-   hbrun tests/test.prg
+   cd tests
+   hbrun sample.prg
+   hbrun test.prg
    ```
 
 * Use lib from command prompt ("dot prompt"):
