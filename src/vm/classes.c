@@ -5169,7 +5169,7 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
    pClass = s_pClasses[ uiClass ];
    nLen = nCount = hb_arrayLen( pObject );
    nSize = 0;
-   pIndex = ( PHB_IVARINFO ) hb_xgrabz( nLen * sizeof( HB_IVARINFO ) );
+   pIndex = nLen ? ( PHB_IVARINFO ) hb_xgrabz( nLen * sizeof( HB_IVARINFO ) ) : NULL;
 
    if( fChanged && pClass->uiInitDatas )
    {
@@ -5280,7 +5280,8 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
       }
    }
 
-   hb_xfree( pIndex );
+   if( pIndex )
+      hb_xfree( pIndex );
 
    return pReturn;
 }
