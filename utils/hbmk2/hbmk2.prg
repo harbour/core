@@ -10144,7 +10144,7 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSkipDep
          ENDIF
       ELSE
          /* Check in parent dir */
-         IF hb_FileExists( tmp := hb_DirSepAdd( hb_DirSepToOS( cParentDir ) ) + hb_DirSepToOS( cFileName ) )
+         IF hb_FileExists( tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cParentDir ) ), hb_DirSepToOS( cFileName ) ) )
             RETURN tmp
          ENDIF
       ENDIF
@@ -10154,14 +10154,14 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSkipDep
    IF lSkipDept
       FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
          IF !( cDir $ hbmk[ _HBMK_hDEPTSDIR ] )
-            IF hb_FileExists( tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName ) )
+            IF hb_FileExists( tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cDir ) ), hb_DirSepToOS( cFileName ) ) )
                RETURN tmp
             ENDIF
          ENDIF
       NEXT
    ELSE
       FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
-         IF hb_FileExists( tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName ) )
+         IF hb_FileExists( tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cDir ) ), hb_DirSepToOS( cFileName ) ) )
             RETURN tmp
          ENDIF
       NEXT
@@ -10176,12 +10176,12 @@ STATIC FUNCTION HeaderExists( cDir, cFileName )
    LOCAL nPos
 
    IF ( nPos := At( "/", cFileName ) ) > 0
-      IF hb_FileExists( tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + Left( cFileName, nPos - 1 ) + ".framework" + hb_ps() + "Headers" + hb_ps() + SubStr( cFileName, nPos + 1 ) )
+      IF hb_FileExists( tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cDir ) ), Left( cFileName, nPos - 1 ) + ".framework" + hb_ps() + "Headers" + hb_ps() + SubStr( cFileName, nPos + 1 ) ) )
          RETURN tmp
       ENDIF
    ENDIF
 #endif
-   tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName )
+   tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cDir ) ), hb_DirSepToOS( cFileName ) )
 
    RETURN iif( hb_FileExists( tmp ), tmp, NIL )
 

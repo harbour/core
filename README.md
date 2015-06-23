@@ -712,7 +712,7 @@ build on x86 hosts, or Linux MIPS build on x86 host, etc.
 Point this envvar to the directory where native Harbour executables
 for your host platform can be found:
 
-      HB_HOST_BIN=<harbour_native_build_dir>\bin
+      HB_HOST_BIN=<path-to-harbour-native-build>\bin
 
 If you leave this value empty, the make system will try to auto-detect it,
 so in practice all you have to do is to create a native build first (no
