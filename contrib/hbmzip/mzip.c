@@ -1389,6 +1389,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
       st.tm_mday = ufi.tmu_date.tm_mday;
       st.tm_mon  = ufi.tmu_date.tm_mon;
       st.tm_year = ufi.tmu_date.tm_year - 1900;
+      st.tm_isdst = -1;
 
       utim.actime = utim.modtime = mktime( &st );
       ( void ) utime( szNameOS, &utim );
