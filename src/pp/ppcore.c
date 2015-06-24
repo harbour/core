@@ -1959,7 +1959,11 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
          pFileName->szExtension = NULL;
          if( ! fSysFile )
          {
-            if( ! pFileName->szPath || ! pFileName->szPath[ 0 ] )
+            file_in = hb_fopen( szFileName, fBinary ? "rb" : "r" );
+            if( ! file_in &&
+                ( ! pFileName->szPath || ! pFileName->szPath[ 0 ] ||
+                  ( ! pFileName->szDrive &&
+                    ! strchr( HB_OS_PATH_DELIM_CHR_LIST, ( HB_UCHAR ) pFileName->szPath[ 0 ] ) ) ) )
             {
                char * szFirstFName = NULL;
                pFile = pState->pFile;
@@ -1972,14 +1976,16 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
                if( szFirstFName )
                {
                   PHB_FNAME pFirstFName = hb_fsFNameSplit( szFirstFName );
-                  pFileName->szPath = pFirstFName->szPath;
-                  hb_fsFNameMerge( szFileNameBuf, pFileName );
-                  szFileName = szFileNameBuf;
+                  if( pFirstFName->szPath && pFirstFName->szPath[ 0 ] )
+                  {
+                     pFileName->szPath = pFirstFName->szPath;
+                     hb_fsFNameMerge( szFileNameBuf, pFileName );
+                     szFileName = szFileNameBuf;
+                     file_in = hb_fopen( szFileName, fBinary ? "rb" : "r" );
+                  }
                   hb_xfree( pFirstFName );
                }
             }
-
-            file_in = hb_fopen( szFileName, fBinary ? "rb" : "r" );
             if( file_in )
                iAction = HB_PP_OPEN_OK;
             else
