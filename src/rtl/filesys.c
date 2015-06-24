@@ -1670,7 +1670,7 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
             new_value.tm_min = iMinute;
             new_value.tm_sec = iSecond;
          }
-         new_value.tm_isdst = 0;
+         new_value.tm_isdst = -1;
 
 #  if defined( HB_OS_LINUX ) && ! defined( __WATCOMC__ )
          {
