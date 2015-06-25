@@ -215,9 +215,7 @@ unix2dos "%HB_ABSROOT%addons\*.txt"
 
 pushd "%HB_RT%"
 
-echo.> _hbfiles
-
-echo "*.md"         >> _hbfiles
+echo "*.md"         > _hbfiles
 echo "*.txt"        >> _hbfiles
 echo "bin\*.bat"    >> _hbfiles
 echo "bin\*.dll"    >> _hbfiles
@@ -241,7 +239,6 @@ popd
 
 if exist "%HB_SFX_7Z%" (
 
-   echo.> _7zconf
    echo ;!@Install@!UTF-8!> _7zconf
    echo Title=^"Harbour %HB_VF%^">> _7zconf
    echo BeginPrompt=^"Do you want to install Harbour %HB_VF%?^">> _7zconf
