@@ -1975,10 +1975,11 @@ static PHB_PP_FILE hb_pp_FileNew( PHB_PP_STATE pState, const char * szFileName,
                   PHB_FNAME pFirstFName = hb_fsFNameSplit( szFirstFName );
                   pFileName->szPath = pFirstFName->szPath;
                   hb_fsFNameMerge( szFileNameBuf, pFileName );
-                  szFileName = szFileNameBuf;
-                  file_in = hb_fopen( szFileName, fBinary ? "rb" : "r" );
                   hb_xfree( pFirstFName );
+                  szFileName = szFileNameBuf;
                }
+               if( ! pFileName->szPath || szFirstFName )
+                  file_in = hb_fopen( szFileName, fBinary ? "rb" : "r" );
             }
             if( file_in )
                iAction = HB_PP_OPEN_OK;
