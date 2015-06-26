@@ -339,6 +339,7 @@ DYNAMIC hb_CDay
 DYNAMIC hb_cdpCharMax
 DYNAMIC hb_cdpExists
 DYNAMIC hb_cdpInfo
+DYNAMIC hb_cdpIsCharIdx
 DYNAMIC hb_cdpIsUTF8
 DYNAMIC hb_cdpList
 DYNAMIC hb_cdpOS
