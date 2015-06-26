@@ -85,7 +85,8 @@ Download source archive from any of these URLs and unpack:
 
 #### Windows (mingw, 32-bit, 7-zip archive and installer combined)
 
-* <https://dl.bintray.com/vszakats/generic/harbour-daily-win.7z.exe>
+* <https://dl.bintray.com/vszakats/generic/harbour-daily-win.7z.exe><br />
+  [![Get automatic notifications about new versions](https://www.bintray.com/docs/images/bintray_badge_color.png)](https://bintray.com/vszakats/generic/harbour/view?source=watch)
 
 #### OS X (using Homebrew)
 
