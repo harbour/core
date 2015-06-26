@@ -86,17 +86,21 @@ Download source archive from any of these URLs and unpack:
 #### Windows (mingw, 32-bit, 7-zip archive and installer combined)
 
 * <https://dl.bintray.com/vszakats/generic/harbour-daily-win.7z.exe><br />
-  [![Get automatic notifications about new versions](https://www.bintray.com/docs/images/bintray_badge_color.png)](https://bintray.com/vszakats/generic/harbour/view?source=watch)
+  [![Get automatic notifications about new versions](https://www.bintray.com/docs/images/bintray_badge_bw.png)](https://bintray.com/vszakats/generic/harbour/view?source=watch)
 
 #### OS X (using Homebrew)
 
     brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb --HEAD
 
-### Follow commits using any of these facilities
+### Follow commits using:
 
-* [Web](https://github.com/vszakats/harbour-core/commits/master)
-* [RSS](https://github.com/vszakats/harbour-core/commits/master.atom)
-* [Mac app](https://itunes.apple.com/us/app/committed/id560767719)
+* [Web browser](https://github.com/vszakats/harbour-core/commits/master)
+* [RSS feed](https://github.com/vszakats/harbour-core/commits/master.atom)
+* Apps
+  * [iOctocat for iOS](https://ioctocat.com/)
+  * [CodeHub for iOS](https://itunes.apple.com/us/app/codehub-github-for-ios/id707173885)
+  * [OctoDroid for Android](https://play.google.com/store/apps/details?id=com.gh4a)
+  * [Committed for Mac](https://itunes.apple.com/us/app/committed-source-control-notifications/id881634293)
 
 
 # How to Build
