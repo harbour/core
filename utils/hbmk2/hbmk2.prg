@@ -8503,6 +8503,11 @@ STATIC FUNCTION CheckParamLib( hbmk, cLibName, lHBC, aParam )
    LOCAL cSuggestion := ""
    LOCAL cOpt
 
+   IF Lower( hb_FNameExt( cLibName ) ) == ".hbc"
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring .hbc file specified via -l option %2$s. Specify it as '%1$s' instead." ), cLibName, ParamToString( aParam ) ) )
+      RETURN .F.
+   ENDIF
+
    /* detect path in libname (non-portable) */
    IF ! Empty( hb_FNameDir( cLibName ) )
       cOpt := hb_DirSepDel( hb_FNameDir( cLibName ) )
