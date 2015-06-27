@@ -1,34 +1,35 @@
-Harbour _HB_VERSION_ (_VCS_ID_) source archives and Windows binary
-release is available for download on this URL:
+## Harbour _HB_VERSION_ (_VCS_ID_)
 
-   https://github.com/vszakats/harbour-core/releases
+Source archives and Windows binaries
+are available for download:
 
-Make sure to check README.md "Build Your Own Harbour App" section.
+  <https://github.com/vszakats/harbour-core/releases>
 
-Release Notes
-=============
+## Release Notes
 
-Windows release for x86 and x64 platforms.
+Package content:
 
-Default components: x86 tools, x86 static/shared libs, examples.
-Options: MinGW compiler, x64 libs and tools.
+* x86 tools, x86/x64 static/shared libraries, sample sources
+* Dual-target MinGW C compiler (downloadable)
 
 Usage:
-1. install/unpack to any directory
-2. click "Harbour Shell" on your Desktop
-3. install MinGW compiler by typing: `getmingw.bat`
-4. for x86 executable, type: `hbmk2 ../tests/hello.prg`
-5. for x64 executable, type: `hbmk2 ../tests/hello.prg -cpu=x64`
 
-Tool/library Dependencies
-=========================
+1. Install/unpack to any directory.
+2. Launch a Command Prompt.
+3. Add Harbour to `PATH`: `set PATH=<path-to-harbour>\bin;%PATH%`
+4. Download MinGW C compiler by typing: `getmingw.bat`
+5. Build test x86 executable: `hbmk2 <path-to-harbour>/tests/hello.prg`
+6. Build test x64 executable: `hbmk2 <path-to-harbour>/tests/hello.prg -cpu=x64`
+7. Further hints in section **Build Your Own Harbour App**
+   of `README.md`.
 
-  See BUILD.txt
+## Tool/library Dependencies
 
-Changes since previous (3.0.0) release
-======================================
+See `BUILD.txt`
 
-  [TODO]
+## Changes since previous (3.0.0) release
 
---
+[TODO]
+
+---
 Viktor Szakats
