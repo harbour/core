@@ -94,35 +94,39 @@ METHOD WvgPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
+   LOCAL lIsDefaultStyle := ( ::Style == WIN_WS_CHILD + BS_PUSHBUTTON + BS_NOTIFY /* + BS_PUSHLIKE */ )
+
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   DO CASE
-   CASE HB_ISNUMERIC( ::caption )
-      ::style += BS_BITMAP
-   CASE HB_ISSTRING( ::caption )
-      SWITCH Lower( hb_FNameExt( ::caption ) )
-      CASE ".ico"
-         ::style += BS_ICON
-         EXIT
-      CASE ".bmp"
+   IF lIsDefaultStyle
+      DO CASE
+      CASE HB_ISNUMERIC( ::caption )
          ::style += BS_BITMAP
-         EXIT
-      ENDSWITCH
-   CASE HB_ISARRAY( ::caption )
-      ASize( ::caption, 3 )
-      IF HB_ISNUMERIC( ::caption[ 2 ] )
-         SWITCH ::caption[ 2 ]
-         CASE WVG_IMAGE_ICONFILE
-         CASE WVG_IMAGE_ICONRESOURCE
+      CASE HB_ISSTRING( ::caption )
+         SWITCH Lower( hb_FNameExt( ::caption ) )
+         CASE ".ico"
             ::style += BS_ICON
             EXIT
-         CASE WVG_IMAGE_BITMAPFILE
-         CASE WVG_IMAGE_BITMAPRESOURCE
+         CASE ".bmp"
             ::style += BS_BITMAP
             EXIT
          ENDSWITCH
-      ENDIF
-   ENDCASE
+      CASE HB_ISARRAY( ::caption )
+         ASize( ::caption, 3 )
+         IF HB_ISNUMERIC( ::caption[ 2 ] )
+            SWITCH ::caption[ 2 ]
+            CASE WVG_IMAGE_ICONFILE
+            CASE WVG_IMAGE_ICONRESOURCE
+               ::style += BS_ICON
+               EXIT
+            CASE WVG_IMAGE_BITMAPFILE
+            CASE WVG_IMAGE_BITMAPRESOURCE
+               ::style += BS_BITMAP
+               EXIT
+            ENDSWITCH
+         ENDIF
+      ENDCASE
+   ENDIF
 
    IF ! ::border
       ::style += BS_FLAT
@@ -140,7 +144,9 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ENDIF
    ::setPosAndSize()
 
-   ::setCaption( ::caption )
+   IF lIsDefaultStyle
+      ::setCaption( ::caption )
+   ENDIF
 
    RETURN Self
 

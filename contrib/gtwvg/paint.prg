@@ -55,7 +55,7 @@ THREAD STATIC t_paint_ := { { "", {} } }
 
 PROCEDURE wvt_Paint()
 
-   WvtPaintObjects()  /* Call this function from this funtion */
+   WvtPaintObjects()  /* Call this function from this function */
 
    RETURN
 
