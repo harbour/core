@@ -60,11 +60,11 @@ build_script:
 - if "%TARGET:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=no
 - if "%TARGET%" == "mingw" set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win32-mingw\include
 - if "%TARGET%" == "mingw" set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win32-mingw\include
-#- if "%TARGET%" == "mingw" set HB_WITH_QT=C:\hb3rd\Qt\5.4\mingw491_32\include
+#- if "%TARGET%" == "mingw" set HB_WITH_QT=C:\w\Qt\5.4\mingw491_32\include
 - if "%TARGET%" == "mingw64" set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win64-mingw\include
 - if "%TARGET%" == "mingw64" set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
-#- if "%TARGET%" == "msvc" set HB_WITH_QT=C:\hb3rd\Qt\5.4\msvc2013_64_opengl\include
-#- if "%TARGET%" == "msvc64" set HB_WITH_QT=C:\hb3rd\Qt\5.4\msvc2013_64_opengl\include
+#- if "%TARGET%" == "msvc" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
+#- if "%TARGET%" == "msvc64" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
 #- set HB_WITH_ADS=C:\w\ads\acesdk
 #- set HB_WITH_CAIRO=C:\w\cairo\include\cairo
 #- set HB_WITH_FIREBIRD=C:\w\firebird\include
