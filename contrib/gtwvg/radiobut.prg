@@ -118,14 +118,14 @@ METHOD WvgRadioButton:handleEvent( nMessage, aNM )
 
          IF HB_ISEVALITEM( ::sl_lbClick )
             Eval( ::sl_lbClick, ::editBuffer, , self )
-            RETURN 0
+            RETURN EVENT_HANDLED
          ENDIF
       ENDIF
       EXIT
 
    ENDSWITCH
 
-   RETURN 1
+   RETURN EVENT_UNHANDLED
 
 METHOD PROCEDURE WvgRadioButton:destroy()
 

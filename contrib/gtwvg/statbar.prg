@@ -114,19 +114,19 @@ METHOD WvgStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
-   LOCAL nHandled := 1
+   LOCAL nHandled := EVENT_UNHANDLED
    LOCAL nObj, aNMH
 
    DO CASE
 
    CASE nMessage == HB_GTE_RESIZED
       ::sendMessage( WIN_WM_SIZE, 0, 0 )
-      RETURN 0
+      RETURN EVENT_HANDLED
 
    CASE nMessage == HB_GTE_COMMAND
       IF HB_ISEVALITEM( ::sl_lbClick )
          Eval( ::sl_lbClick, , , self )
-         RETURN 0
+         RETURN EVENT_HANDLED
       ENDIF
 
    CASE nMessage == HB_GTE_NOTIFY
@@ -142,7 +142,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
                Eval( ::sl_lbClick, ::aItems[ nObj ], , Self )
             ENDIF
 
-            nHandled := 0
+            nHandled := EVENT_HANDLED
          ENDIF
 
       ENDCASE

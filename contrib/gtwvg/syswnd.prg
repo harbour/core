@@ -326,7 +326,7 @@ METHOD WvgFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
          wapi_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ], .F. )
       ENDIF
 
-      RETURN 1
+      RETURN EVENT_UNHANDLED
 
    CASE nMessage == WIN_WM_COMMAND
       nL := wapi_LOWORD( nwParam )
@@ -358,7 +358,7 @@ METHOD WvgFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
 
    ENDCASE
 
-   RETURN 0
+   RETURN EVENT_HANDLED
 
 METHOD WvgFontDialog:display( nMode )
 

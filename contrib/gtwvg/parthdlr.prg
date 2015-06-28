@@ -465,12 +465,12 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
                ENDIF
             ENDIF
          ENDIF
-         RETURN 0
+         RETURN EVENT_HANDLED
       ELSE
          IF ( nObj := AScan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
             nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
             IF HB_ISNUMERIC( nReturn ) .AND. nReturn == 0
-               RETURN 0
+               RETURN EVENT_HANDLED
             ENDIF
          ENDIF
       ENDIF
@@ -480,7 +480,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       IF ( nObj := AScan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
          nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, wvg_n2p( nlParam ) } )
          IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_HANDLED
-            RETURN 0
+            RETURN EVENT_HANDLED
          ELSEIF HB_ISLOGICAL( nReturn )
             RETURN nReturn
          ENDIF
@@ -507,11 +507,11 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    CASE WIN_WM_HSCROLL
       ::handleEvent( HB_GTE_HSCROLL, { wapi_LOWORD( nwParam ), wapi_HIWORD( nwParam ), wvg_n2p( nlParam ) } )
-      RETURN 0
+      RETURN EVENT_HANDLED
 
    CASE WIN_WM_VSCROLL
       IF ::handleEvent( HB_GTE_VSCROLL, { wapi_LOWORD( nwParam ), wapi_HIWORD( nwParam ), wvg_n2p( nlParam ) } ) == EVENT_HANDLED
-         RETURN 0
+         RETURN EVENT_HANDLED
       ENDIF
       EXIT
 
@@ -531,7 +531,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
          IF ::oParent:objType == objTypeCrt
             wapi_SetFocus( ::oParent:pWnd )
          ENDIF
-         RETURN 0
+         RETURN EVENT_HANDLED
       ENDIF
       EXIT
 
@@ -552,7 +552,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    OTHERWISE
       IF ::handleEvent( HB_GTE_ANY, { nMessage, nwParam, wvg_n2p( nlParam ) } ) == EVENT_HANDLED
-         RETURN 0
+         RETURN EVENT_HANDLED
       ENDIF
       EXIT
 

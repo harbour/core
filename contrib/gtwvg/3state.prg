@@ -130,7 +130,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
 
          IF HB_ISEVALITEM( ::sl_lbClick )
             Eval( ::sl_lbClick, ::editBuffer, , self )
-            RETURN 0
+            RETURN EVENT_HANDLED
          ENDIF
       ENDIF
 
@@ -147,7 +147,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
 
    ENDCASE
 
-   RETURN 1
+   RETURN EVENT_UNHANDLED
 
 METHOD PROCEDURE Wvg3State:destroy()
 

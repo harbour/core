@@ -168,11 +168,11 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       CASE wapi_GetDlgItem( hDlg, ID_MLE ) == wvg_n2p( lParam )
          wapi_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 0, 0, 255 ) )
          wapi_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 200 ) )
-         RETURN 1
+         RETURN EVENT_UNHANDLED
       CASE wapi_GetDlgItem( hDlg, ID_EDT_TEXT ) == wvg_n2p( lParam )
          wapi_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 255 ) )
          wapi_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 10, 200, 45 ) )
-         RETURN 1
+         RETURN EVENT_UNHANDLED
       ENDCASE
       EXIT
 
@@ -181,7 +181,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       IF wapi_GetDlgItem( hDlg, ID_STA_TEXT ) == wvg_n2p( lParam )
          wapi_SetTextColor( wvg_n2p( wParam ), WIN_RGB( 255, 255, 255 ) )
          wapi_SetBkColor( wvg_n2p( wParam ), WIN_RGB( 0, 0, 0 ) )
-         RETURN 1
+         RETURN EVENT_UNHANDLED
       ENDIF
 #endif
       EXIT
@@ -248,7 +248,7 @@ STATIC FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       EXIT
    ENDSWITCH
 
-   RETURN 0
+   RETURN EVENT_HANDLED
 
 STATIC FUNCTION GetEditText()
    RETURN ;
@@ -318,7 +318,7 @@ STATIC FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
       EXIT
    ENDSWITCH
 
-   RETURN 0
+   RETURN EVENT_HANDLED
 
 STATIC PROCEDURE DrawSlide( hDlg, nSlide )
 
