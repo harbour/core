@@ -30,7 +30,7 @@ PROCEDURE Main()
 
    RETURN
 
-CREATE CLASS Test FROM HBPersistent
+CREATE CLASS Test INHERIT HBPersistent
 
    VAR    One        PROPERTY
    VAR    Two        PROPERTY
@@ -44,7 +44,7 @@ CREATE CLASS Test FROM HBPersistent
 
 ENDCLASS
 
-CREATE CLASS Test2 FROM HBPersistent
+CREATE CLASS Test2 INHERIT HBPersistent
 
    VAR Five  PROPERTY
 

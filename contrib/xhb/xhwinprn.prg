@@ -60,7 +60,7 @@ FUNCTION Win32Bmp()
 #include "hbclass.ch"
 #include "hbwin.ch"
 
-CREATE CLASS Win32Prn FROM win_Prn
+CREATE CLASS Win32Prn INHERIT win_Prn
 
    METHOD New( cPrinter )
    METHOD Create()
@@ -133,7 +133,7 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
       lUpdatePosX, nColor, ;
       hb_bitOr( nAlignHori, nAlignVert ) )
 
-CREATE CLASS Win32Bmp FROM win_BMP
+CREATE CLASS Win32Bmp INHERIT win_BMP
 ENDCLASS
 
 #endif /* __PLATFORM__WINDOWS */

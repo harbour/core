@@ -48,7 +48,7 @@
 
 #include "hbclass.ch"
 
-CREATE CLASS TIPEncoderQP FROM TIPEncoder
+CREATE CLASS TIPEncoderQP INHERIT TIPEncoder
 
    METHOD New() CONSTRUCTOR
    METHOD Encode( cData )

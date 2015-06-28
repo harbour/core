@@ -421,7 +421,7 @@ METHOD MatchCriteria() CLASS THtmlIterator
 
 /* Iterator scan class */
 
-CLASS THtmlIteratorScan FROM THtmlIterator MODULE FRIENDLY
+CREATE CLASS THtmlIteratorScan INHERIT THtmlIterator MODULE FRIENDLY
 
    METHOD New( oNodeTop ) CONSTRUCTOR
 
@@ -468,7 +468,7 @@ METHOD MatchCriteria( oFound ) CLASS THtmlIteratorScan
 
 /* Iterator regex class */
 
-CLASS THtmlIteratorRegex FROM THtmlIterator MODULE FRIENDLY
+CREATE CLASS THtmlIteratorRegex INHERIT THtmlIterator MODULE FRIENDLY
 
    METHOD New( oNodeTop ) CONSTRUCTOR
    HIDDEN:

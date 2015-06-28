@@ -67,7 +67,7 @@
    ASSIGN Block( x ) INLINE ::MyVal := x
  */
 
-CREATE CLASS TBColumnSQL FROM TBColumn
+CREATE CLASS TBColumnSQL INHERIT TBColumn
 
    VAR oBrw                 // pointer to Browser containing this column, needed to be able to
                             // retreive field values from Browse instance variable oCurRow
@@ -129,7 +129,7 @@ METHOD Block() CLASS TBColumnSQL
 
 /* This class is more or less like a TBrowseDB() object in that it receives an oQuery/oTable
    object and gives back a browseable view of it */
-CREATE CLASS TBrowseSQL FROM TBrowse
+CREATE CLASS TBrowseSQL INHERIT TBrowse
 
    VAR oCurRow                       // Active row inside table / sql query
    VAR oQuery                        // Query / table object which we are browsing

@@ -770,7 +770,7 @@
          METHOD New() INLINE Self
       ENDCLASS
 
-      CREATE CLASS THappy FROM TMood
+      CREATE CLASS THappy INHERIT TMood
          METHOD Smile() INLINE QOut( "*smile*" )
       ENDCLASS
 

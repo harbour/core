@@ -48,7 +48,7 @@
 
 #include "fileio.ch"
 
-CREATE CLASS TIPClientHTTP FROM TIPClient
+CREATE CLASS TIPClientHTTP INHERIT TIPClient
 
    VAR cMethod
    VAR nReplyCode

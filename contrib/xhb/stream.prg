@@ -110,7 +110,7 @@ METHOD PROCEDURE CopyTo( oTargetStream ) CLASS TStream
 
    RETURN
 
-CREATE CLASS TStreamFileReader FROM TStream
+CREATE CLASS TStreamFileReader INHERIT TStream
 
    VAR cFile
    VAR Handle INIT F_ERROR
@@ -169,7 +169,7 @@ METHOD ReadByte() CLASS TStreamFileReader
 
    RETURN ""
 
-CREATE CLASS TStreamFileWriter FROM TStream
+CREATE CLASS TStreamFileWriter INHERIT TStream
 
    VAR cFile
    VAR Handle INIT F_ERROR

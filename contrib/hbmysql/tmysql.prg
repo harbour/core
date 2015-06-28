@@ -559,7 +559,7 @@ METHOD FieldType( nNum ) CLASS TMySQLQuery
 // A Table is a query without joins; this way I can Insert() e Delete() rows.
 // NOTE: it's always a SELECT result, so it will contain a full table only if
 //       SELECT * FROM ... was issued
-CREATE CLASS TMySQLTable FROM TMySQLQuery
+CREATE CLASS TMySQLTable INHERIT TMySQLQuery
 
    VAR cTable                                       // name of table
    VAR aOldValue                                    //  keeps a copy of old value

@@ -56,7 +56,7 @@
 #define THICKNESS_I250   0
 #define THICKNESS_I251   0
 
-CREATE CLASS GDBar FROM GDImage
+CREATE CLASS GDBar INHERIT GDImage
 
    // Class attributes
    VAR positionX      AS NUMERIC INIT 4

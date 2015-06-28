@@ -61,7 +61,7 @@
 STATIC s_nPort := _PORT_MIN
 STATIC s_mutexPort := hb_mutexCreate()
 
-CREATE CLASS TIPClientFTP FROM TIPClient
+CREATE CLASS TIPClientFTP INHERIT TIPClient
 
    VAR nDataPort
    VAR cDataServer

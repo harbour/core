@@ -49,7 +49,7 @@
 
 #include "fileio.ch"
 
-CREATE CLASS GenerateAscii FROM GenerateText
+CREATE CLASS GenerateAscii INHERIT GenerateText
 
    METHOD NewIndex( cDir, cFilename, cTitle, cDescription )
    METHOD NewDocument( cDir, cFilename, cTitle, cDescription )
@@ -70,7 +70,7 @@ METHOD NewIndex( cDir, cFilename, cTitle, cDescription ) CLASS GenerateAscii
 
    RETURN self
 
-CREATE CLASS GenerateText FROM TPLGenerate
+CREATE CLASS GenerateText INHERIT TPLGenerate
 
    HIDDEN:
 

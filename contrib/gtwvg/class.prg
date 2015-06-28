@@ -921,7 +921,7 @@ METHOD WvtObject:ShowPopup()
    RETURN lRet
 
 /* Class WvtBrowse */
-CREATE CLASS WvtBrowse FROM WvtObject
+CREATE CLASS WvtBrowse INHERIT WvtObject
 
    VAR    cAlias
    VAR    oBrw
@@ -1183,7 +1183,7 @@ METHOD WvtBrowse:PaintBlock( nPaintObj )
    RETURN Self
 
 /* WvtStatusBar */
-CREATE CLASS WvtStatusBar FROM WvtObject
+CREATE CLASS WvtStatusBar INHERIT WvtObject
 
    VAR    aPanels
    VAR    cColor
@@ -1312,7 +1312,7 @@ METHOD WvtStatusBar:Refresh()
    RETURN NIL
 
 /* Class WvtPanel */
-CREATE CLASS WvtPanel FROM WvtObject
+CREATE CLASS WvtPanel INHERIT WvtObject
 
    VAR    cColor
    VAR    cTxt
@@ -1341,7 +1341,7 @@ METHOD WvtPanel:Refresh()
    RETURN Self
 
 /* Class WvtLabel */
-CREATE CLASS WvtLabel FROM WvtObject
+CREATE CLASS WvtLabel INHERIT WvtObject
 
    ACCESS TEXT                                    INLINE iif( ::cText == NIL, "", ::cText )
    ASSIGN TEXT( cTxt )                            INLINE ::cText := iif( cTxt == NIL, "", cTxt )
@@ -1477,7 +1477,7 @@ METHOD WvtLabel:HoverOff()
    RETURN Self
 
 /* Class WvtToolBar */
-CREATE CLASS WvtToolBar FROM WvtObject
+CREATE CLASS WvtToolBar INHERIT WvtObject
 
    VAR    nPaintID
    VAR    aObjects                                INIT {}
@@ -1617,7 +1617,7 @@ METHOD WvtToolBar:HoverOff()
    RETURN Self
 
 /* Class WvtToolButton */
-CREATE CLASS WvtToolButton FROM WvtObject
+CREATE CLASS WvtToolButton INHERIT WvtObject
 
    VAR    cFileImage
    VAR    nCurState             INIT 0
@@ -1713,7 +1713,7 @@ METHOD WvtToolButton:HoverOff()
    RETURN Self
 
 /* Class WvtImage */
-CREATE CLASS WvtImage FROM WvtObject
+CREATE CLASS WvtImage INHERIT WvtObject
 
    VAR    cImageFile
 
@@ -1754,7 +1754,7 @@ METHOD WvtImage:SetImage( cImage )
    RETURN Self
 
 /* Class WvtStatic */
-CREATE CLASS WvtStatic FROM WvtObject
+CREATE CLASS WvtStatic INHERIT WvtObject
 
    VAR    nStatic
    VAR    nOrient
@@ -1881,7 +1881,7 @@ METHOD WvtStatic:Refresh()
    RETURN Self
 
 /* Class WvtPushButton */
-CREATE CLASS WvtPushButton FROM WvtObject
+CREATE CLASS WvtPushButton INHERIT WvtObject
 
    VAR    cCaption
    VAR    cFileImage
@@ -1939,7 +1939,7 @@ METHOD WvtPushButton:LeftUp()
    RETURN .T.
 
 /* Class WvtGets */
-CREATE CLASS WvtGets FROM WvtObject
+CREATE CLASS WvtGets INHERIT WvtObject
 
    VAR    aGetList                                INIT {}
    VAR    nLastGet                                INIT 1
@@ -2055,7 +2055,7 @@ METHOD WvtGets:DeHilite()
    RETURN Self
 
 /* Class WvtScrollBar */
-CREATE CLASS WvtScrollBar FROM WvtObject
+CREATE CLASS WvtScrollBar INHERIT WvtObject
 
    VAR    nBarType                                INIT WVT_SCROLLBAR_VERT
 
@@ -2573,7 +2573,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
    RETURN lHit
 
 /* CLASS WvtBanner */
-CREATE CLASS WvtBanner FROM WvtObject
+CREATE CLASS WvtBanner INHERIT WvtObject
 
    VAR    nTimeDelay                              INIT 0.5    /* One-half Second */
    VAR    nDirection                              INIT 0      /* LEFT 1-RIGHT */
@@ -2717,7 +2717,7 @@ METHOD WvtBanner:HoverOff()
    RETURN Self
 
 /* Class WvtTextBox */
-CREATE CLASS WvtTextBox FROM WvtObject
+CREATE CLASS WvtTextBox INHERIT WvtObject
 
    VAR    cText                                   INIT ""
 
@@ -2794,7 +2794,7 @@ METHOD WvtTextBox:HoverOff( /* cText */ )
    RETURN Self
 
 /* Class WvtProgressBar */
-CREATE CLASS WvtProgressBar FROM WvtObject
+CREATE CLASS WvtProgressBar INHERIT WvtObject
 
    VAR    cImage
    VAR    nDirection                              INIT 0      /* 0-Left-Right,Top-Bottom  1-Right-Left,Bottom-Top */
@@ -3050,7 +3050,7 @@ METHOD PROCEDURE wvtMenu:DrawMenuBar()
    RETURN
 
 /* Class WvtConsole */
-CREATE CLASS WvtConsole FROM WvtObject
+CREATE CLASS WvtConsole INHERIT WvtObject
 
    METHOD New( oParent )
    METHOD Say( nRow, nCol, xExp, cColor )
@@ -3111,7 +3111,7 @@ METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 #define _TBCI_LASTSPACE       14  /* space after last visible column        */
 #define _TBCI_SIZE            14  /* size of array with TBrowse column data */
 
-CREATE CLASS TBrowseWvg FROM TBrowse
+CREATE CLASS TBrowseWvg INHERIT TBrowse
 
    VAR    aColumnsSep                             INIT {}
 

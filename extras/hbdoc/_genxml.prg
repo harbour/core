@@ -49,7 +49,7 @@
 
 #include "fileio.ch"
 
-CREATE CLASS GenerateXML FROM TPLGenerate
+CREATE CLASS GenerateXML INHERIT TPLGenerate
 
    HIDDEN:
 

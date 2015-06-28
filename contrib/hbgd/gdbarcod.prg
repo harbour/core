@@ -54,7 +54,7 @@
 #define STARTB      105
 #define STARTC      106
 
-CREATE CLASS GDBarCode FROM GDBar
+CREATE CLASS GDBarCode INHERIT GDBar
 
    VAR nType
 

@@ -21,7 +21,7 @@ METHOD New() CLASS TClassBase
 
    RETURN Self
 
-CREATE CLASS TAnyClass FROM TClassBase
+CREATE CLASS TAnyClass INHERIT TClassBase
 
    METHOD New()
 

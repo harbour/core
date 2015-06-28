@@ -61,7 +61,7 @@
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-CREATE CLASS WvgActiveXControl FROM WvgWindow
+CREATE CLASS WvgActiveXControl INHERIT WvgWindow
 
    VAR    oOLE
    VAR    CLSID                              INIT ""

@@ -129,7 +129,7 @@ STATIC FUNCTION s_oleError( nGenCode, cDescript )
    RETURN oErr
 
 
-CREATE CLASS TOleAuto FROM win_oleAuto
+CREATE CLASS TOleAuto INHERIT win_oleAuto
 
    VAR cClassName
 

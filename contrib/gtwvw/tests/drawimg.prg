@@ -170,7 +170,7 @@ ENDCLASS
 
 /* --- */
 
-CREATE CLASS wPaintObj FROM wGUIObj STATIC
+CREATE CLASS wPaintObj INHERIT wGUIObj STATIC
 
    // image like wvtimage
    VAR cImage

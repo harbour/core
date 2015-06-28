@@ -1373,7 +1373,7 @@ and:
 It's also possible to give unprotected access to all other functions
 declared in the same .prg module just like in xHarbour by using
 'MODULE FRIENDLY' clause in class declaration, i.e.:
-      CLASS myCls FROM parent MODULE FRIENDLY
+      CREATE CLASS myCls INHERIT parent MODULE FRIENDLY
          [...]
       ENDCLASS
 So in Harbour all scopes aspects are explicitly controlled by programmer
@@ -1418,7 +1418,7 @@ explicit casting is used. This code illustrate the problem:
          ? o:var, o:cls1:var, o:cls2:var, o:cls3:var
       return
 
-      CREATE CLASS MYCLS FROM CLS1, CLS2, CLS3
+      CREATE CLASS MYCLS INHERIT CLS1, CLS2, CLS3
       EXPORTED:
          VAR      VAR
       ENDCLASS
@@ -1490,7 +1490,7 @@ automatically by HVM:
          WAIT
       RETURN
 
-      CREATE CLASS MYCLS FROM CLS1, CLS2
+      CREATE CLASS MYCLS INHERIT CLS1, CLS2
       EXPORTED:
          METHOD   ACTION
       ENDCLASS

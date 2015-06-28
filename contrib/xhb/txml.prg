@@ -244,7 +244,7 @@ METHOD MatchCriteria( oNode ) CLASS TXmlIterator
 
 /* Iterator scan class */
 
-CREATE CLASS TXmlIteratorScan FROM TXmlIterator
+CREATE CLASS TXmlIteratorScan INHERIT TXmlIterator
 
    METHOD New( oNodeTop ) CONSTRUCTOR
    PROTECTED:
@@ -281,7 +281,7 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
 
 /* Iterator regex class */
 
-CREATE CLASS TXmlIteratorRegex FROM TXmlIterator
+CREATE CLASS TXmlIteratorRegex INHERIT TXmlIterator
 
    METHOD New( oNodeTop ) CONSTRUCTOR
    PROTECTED:

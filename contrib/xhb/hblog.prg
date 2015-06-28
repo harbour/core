@@ -336,7 +336,7 @@ METHOD Format( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
 /* Console channel */
 
-CREATE CLASS HB_LogConsole FROM HB_LogChannel
+CREATE CLASS HB_LogConsole INHERIT HB_LogChannel
 
    METHOD New( nLevel )
    METHOD Open( cName )
@@ -406,7 +406,7 @@ METHOD PROCEDURE Out( ... ) CLASS HB_LogConsole
 
 /* Console channel - to file */
 
-CREATE CLASS HB_LogFile FROM HB_LogChannel
+CREATE CLASS HB_LogFile INHERIT HB_LogChannel
 
    VAR cFileName
    VAR nFileHandle
@@ -510,7 +510,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 
 /* Console channel - to dbf */
 
-CREATE CLASS HB_LogDbf FROM HB_LogChannel
+CREATE CLASS HB_LogDbf INHERIT HB_LogChannel
 
    VAR cDBFName    INIT "messages.dbf"
    VAR cIndexName  INIT "messages.cdx"
@@ -620,7 +620,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogDbf
 /* Syslog channel - a wrapper for the low level
    C interface to syslog/ event log system */
 
-CREATE CLASS HB_LogSysLog FROM HB_LogChannel
+CREATE CLASS HB_LogSysLog INHERIT HB_LogChannel
 
    VAR nId
 
@@ -667,7 +667,7 @@ METHOD Send( nType, cMessage, cName, nPriority ) CLASS HB_LogSysLog
 
 /* Debug channel */
 
-CREATE CLASS HB_LogDebug FROM HB_LogChannel
+CREATE CLASS HB_LogDebug INHERIT HB_LogChannel
 
    VAR nMaxLevel
 

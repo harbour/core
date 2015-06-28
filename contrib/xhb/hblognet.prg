@@ -47,7 +47,7 @@
 
 #define CRLF  Chr( 13 ) + Chr( 10 )
 
-CREATE CLASS HB_LogEmail FROM HB_LogChannel
+CREATE CLASS HB_LogEmail INHERIT HB_LogChannel
 
    VAR cServer
    VAR cAddress        INIT "log@example.org"
@@ -184,7 +184,7 @@ METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
    RETURN cPre
 
 /* Channel for monitors listening on a port */
-CREATE CLASS HB_LogInetPort FROM HB_LogChannel
+CREATE CLASS HB_LogInetPort INHERIT HB_LogChannel
 
    VAR nPort           INIT 7761
    VAR aListeners      INIT {}

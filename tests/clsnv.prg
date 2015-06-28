@@ -171,7 +171,7 @@ METHOD z()
 
    RETURN self
 
-CREATE CLASS myclass3 FROM myclass1, myclass2
+CREATE CLASS myclass3 INHERIT myclass1, myclass2
 
    HIDDEN:
    VAR a INIT "(a3)"

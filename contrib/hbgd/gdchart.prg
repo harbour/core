@@ -47,7 +47,7 @@
 #include "hbclass.ch"
 #include "gd.ch"
 
-CREATE CLASS GDChart FROM GDImage
+CREATE CLASS GDChart INHERIT GDImage
 
    VAR cTitle
    VAR cAxisX

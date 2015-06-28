@@ -49,7 +49,7 @@
 
 /* Inet service manager: pop3 */
 
-CREATE CLASS TIPClientPOP FROM TIPClient
+CREATE CLASS TIPClientPOP INHERIT TIPClient
 
    METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl )

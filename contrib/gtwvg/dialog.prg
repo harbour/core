@@ -56,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgDialog FROM WvgWindow
+CREATE CLASS WvgDialog INHERIT WvgWindow
 
    VAR    oMenu
    VAR    aRect

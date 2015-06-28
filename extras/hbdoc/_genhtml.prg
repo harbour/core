@@ -57,7 +57,7 @@
 
 #define STYLEFILE "hbdoc.css"
 
-CREATE CLASS GenerateHTML2 FROM GenerateHTML
+CREATE CLASS GenerateHTML2 INHERIT GenerateHTML
 
    METHOD NewIndex( cDir, cFilename, cTitle )
    METHOD NewDocument( cDir, cFilename, cTitle )
@@ -76,7 +76,7 @@ METHOD NewIndex( cDir, cFilename, cTitle ) CLASS GenerateHTML2
 
    RETURN self
 
-CREATE CLASS GenerateHTML FROM TPLGenerate
+CREATE CLASS GenerateHTML INHERIT TPLGenerate
 
    HIDDEN:
    METHOD RecreateStyleDocument( cStyleFile )

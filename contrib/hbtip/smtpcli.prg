@@ -51,7 +51,7 @@
 
 #include "tip.ch"
 
-CREATE CLASS TIPClientSMTP FROM TIPClient
+CREATE CLASS TIPClientSMTP INHERIT TIPClient
 
    VAR lAuthLOGIN INIT .F.
    VAR lAuthPLAIN INIT .F.
