@@ -1,6 +1,6 @@
 description=ICU wrapper/puller
 
-depurlbase=icu:https:/ssl.icu-project.org
+depurlbase=icu:https:/ssl.icu-project.org/
 deppkgname=icu:libicu-dev{deb}
 deppkgname=icu:libicu-devel{rpm}
 deppkgname=icu:icu4c{homebrew}
