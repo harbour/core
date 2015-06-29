@@ -13542,8 +13542,9 @@ STATIC FUNCTION win_implib_coff( hbmk, cSourceDLL, cTargetLib )
       IF ! hbmk[ _HBMK_lQuiet ]
          _hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
-      RETURN iif( hb_FileMatch( cSourceLib, cTargetLib ) .OR. ;
-                  hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+      RETURN iif( ;
+         hb_FileMatch( cSourceLib, cTargetLib ) .OR. ;
+         hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
@@ -13559,8 +13560,9 @@ STATIC FUNCTION win_implib_omf( hbmk, cSourceDLL, cTargetLib )
       IF ! hbmk[ _HBMK_lQuiet ]
          _hbmk_OutStd( hbmk, I_( "Found OMF .lib with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
-      RETURN iif( hb_FileMatch( cSourceLib, cTargetLib ) .OR. ;
-                  hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+      RETURN iif( ;
+         hb_FileMatch( cSourceLib, cTargetLib ) .OR. ;
+         hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
@@ -13585,8 +13587,9 @@ STATIC FUNCTION win_implib_copy( hbmk, cSourceDLL, cTargetLib )
 
    IF hb_FileExists( cSourceDLL )
       /* Use .dll directly if all other attempts failed */
-      RETURN iif( hb_FileMatch( cSourceDLL, cTargetLib ) .OR. ;
-                  hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+      RETURN iif( ;
+         hb_FileMatch( cSourceDLL, cTargetLib ) .OR. ;
+         hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND

@@ -1347,7 +1347,7 @@ Press `<Alt+D>` in the app.
 ### win (partial support, some features may be missing)
 * clang    - Clang
 * watcom   - Open Watcom C/C++
-* bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
+* bcc      - Borland/CodeGear/Embarcadero C++ 5.5 and above
 * bcc64    - Embarcadero C++ 6.5 and above
 * icc      - Intel(R) C/C++
 * iccia64  - Intel(R) C/C++ IA-64 (Itanium)

@@ -513,8 +513,7 @@ HB_EXTERN_BEGIN
 #        define HB_SPINLOCK_REPEAT     63
 #     endif
 
-/* workaround for borland C/C++ compiler limitation */
-#if defined( __BORLANDC__ )
+#if defined( __BORLANDC__ )  /* workaround for compiler limitation */
 #     define hb_spinlock_acquire_r( sl ) \
       do { \
          HB_SPINLOCK_T * l = &(sl)->lock; \
