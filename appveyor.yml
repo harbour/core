@@ -25,31 +25,31 @@ install:
 - set VER_OPENSSL=1.0.2c
 - mkdir C:\w\
 - curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/s/se/sevenzip/7-Zip/9.20/7za920.zip -o 7z.7z
-- openssl dgst -sha256 7z.7z | findstr /i /C:"2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac"
+- openssl dgst -sha256 7z.7z | findstr /i /c:"2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac"
 - 7z x -y -oC:\w\7z 7z.7z > nul
 - curl -fsS http://7zsfx.info/files/7zsd_150_2712.7z -o 7zsfx.7z
-- openssl dgst -sha256 7zsfx.7z | findstr /i /C:"e5a2a05997553cde6318149951da1e449b0fd277a6e671ac06bfde8572754739"
+- openssl dgst -sha256 7zsfx.7z | findstr /i /c:"e5a2a05997553cde6318149951da1e449b0fd277a6e671ac06bfde8572754739"
 - 7z x -y -oC:\w\7zsfx 7zsfx.7z > nul
 - curl -fsS -L --proto-redir =https https://fossies.org/windows/misc/upx391w.zip -o upx.zip
-- openssl dgst -sha256 upx.zip | findstr /i /C:"d7d4817f46d2616c209c46fb8bce44e4bec93ab5adef5e4dfc93ee879527be1b"
+- openssl dgst -sha256 upx.zip | findstr /i /c:"d7d4817f46d2616c209c46fb8bce44e4bec93ab5adef5e4dfc93ee879527be1b"
 - 7z e -y -oC:\w\upx upx.zip > nul
 # Long URL: "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.1.0/threads-win32/sjlj/x86_64-5.1.0-release-win32-sjlj-rt_v4-rev0.7z" https://goo.gl/HF6raX
 # Long URL: "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.1.0/threads-posix/sjlj/x86_64-5.1.0-release-posix-sjlj-rt_v4-rev0.7z"
 - curl -fsS -L --proto-redir =https https://goo.gl/kS5jx4 -o mingw.7z
-- openssl dgst -sha256 mingw.7z | findstr /i /C:"65b30e0469f03d0e219a1ebe022f135692ed6ecdaf4f9a86923ece7689157244"
+- openssl dgst -sha256 mingw.7z | findstr /i /c:"65b30e0469f03d0e219a1ebe022f135692ed6ecdaf4f9a86923ece7689157244"
 # Will unpack into C:\mingw64\
 - 7z x -y -oC:\w\ mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win32-mingw.zip -o curl-win-mingw.zip
-- openssl dgst -sha256 curl-win-mingw.zip | findstr /i /C:"df3cf9807b1fb45242df498879a6349e9ee8a510d4f5451b302b2ab6872a2372"
+- openssl dgst -sha256 curl-win-mingw.zip | findstr /i /c:"df3cf9807b1fb45242df498879a6349e9ee8a510d4f5451b302b2ab6872a2372"
 - 7z x -y -oC:\w\ curl-win-mingw.zip > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win32-mingw.zip -o openssl-win-mingw.zip
-- openssl dgst -sha256 openssl-win-mingw.zip | findstr /i /C:"8b0ec646161d7cd7c3aa044bb3dee639304ed79676e9eee66c113539311629e9"
+- openssl dgst -sha256 openssl-win-mingw.zip | findstr /i /c:"8b0ec646161d7cd7c3aa044bb3dee639304ed79676e9eee66c113539311629e9"
 - 7z x -y -oC:\w\ openssl-win-mingw.zip > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win64-mingw.zip -o curl-win-mingw64.zip
-- openssl dgst -sha256 curl-win-mingw64.zip | findstr /i /C:"1f5564f6baa1a124ca3f1e54293072dff9f09ef97009c51102459f8d5a1fec59"
+- openssl dgst -sha256 curl-win-mingw64.zip | findstr /i /c:"1f5564f6baa1a124ca3f1e54293072dff9f09ef97009c51102459f8d5a1fec59"
 - 7z x -y -oC:\w\ curl-win-mingw64.zip > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.zip -o openssl-win-mingw64.zip
-- openssl dgst -sha256 openssl-win-mingw64.zip | findstr /i /C:"e31fc2c3a3576e9b2bf81bbacc43ee15d961c81dae8f7ce98a68e8fd8972159e"
+- openssl dgst -sha256 openssl-win-mingw64.zip | findstr /i /c:"e31fc2c3a3576e9b2bf81bbacc43ee15d961c81dae8f7ce98a68e8fd8972159e"
 - 7z x -y -oC:\w\ openssl-win-mingw64.zip > nul
 build_script:
 - set HB_SFX_7Z=C:\w\7zsfx\7zsd.sfx
