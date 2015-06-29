@@ -2697,7 +2697,7 @@ protection it generates exception and application crash. To make the
 above code safe programmer should change it to:
       HB_FUNC( NOT )
       {
-         int iValue = ISNUM( 1 ) ? _parni( 1 ) : 0;
+         int iValue = HB_ISNUM( 1 ) ? _parni( 1 ) : 0;
          hb_retni( ~iValue );
       }
 or:

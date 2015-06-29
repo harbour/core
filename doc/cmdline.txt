@@ -13,8 +13,8 @@ First the parser should start to step through
 all the tokens in the string separated by
 whitespace. (or just walk through all argv[])
 
-1.) If the token begins with "-", it
-    should be treated as a new style switch.
+1. If the token begins with "-", it
+   should be treated as a new style switch.
 
   One or more switch characters can follow
   this. The "-" sign inside the token
@@ -42,8 +42,8 @@ whitespace. (or just walk through all argv[])
 
   -w- -w -w-            ( finally: !W )
 
-2.) If the token begins with "/", it
-    should be treated as a compatibility style switch.
+2. If the token begins with "/", it
+   should be treated as a compatibility style switch.
 
   The parser scans the token for the next "/" sign or EOS
   and treats the resulting string as one switch.
@@ -64,8 +64,8 @@ whitespace. (or just walk through all argv[])
   /i"hello/world/"/w   ( I=hello/world/ W )
   /ihello\world\       ( I=hello\world\ )
 
-3.) If the token begins with anything else it should
-    be skipped.
+3. If the token begins with anything else it should
+   be skipped.
 
 The Harbour switches are always case insensitive.
 

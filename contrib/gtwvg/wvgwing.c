@@ -80,7 +80,7 @@
 
 #include "gtwvg.h"
 
-#if defined( __BORLANDC__ ) && ( __BORLANDC__ >= 1552 )
+#if defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0610
    #undef NONAMELESSUNION
 #endif
 

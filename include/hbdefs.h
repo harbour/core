@@ -59,7 +59,7 @@
 #if defined( __XCC__ ) || defined( __POCC__ ) || defined( __LCC__ ) || \
     defined( __MINGW32__ ) || defined( __DMC__ ) || defined( __TINYC__ ) || \
     ( defined( _MSC_VER ) && _MSC_VER >= 1600 ) || \
-    ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 ) || \
+    ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ >= 1270 ) || \
     ( ( defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
       ( defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || \
@@ -79,7 +79,7 @@
 #     define _INTPTR_T
 #  endif
    /* workaround for BCC 5.8 bug */
-   #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 )
+   #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 )
       #undef INT32_MIN
       #define INT32_MIN ((int32_t) (-INT32_MAX-1))
       #undef INT64_MIN
@@ -479,13 +479,8 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
  * without it they cut the number to HB_LONG
  */
 #if defined( __BORLANDC__ )
-#  if __BORLANDC__ >= 1328
-#     define HB_LL( num )           num##i64
-#     define HB_ULL( num )          num##ui64
-#  else
-#     define HB_LL( num )           num
-#     define HB_ULL( num )          num
-#  endif
+#  define HB_LL( num )           num##i64
+#  define HB_ULL( num )          num##ui64
 #elif defined( _MSC_VER )
 #  define HB_LL( num )           num
 #  define HB_ULL( num )          num

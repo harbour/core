@@ -157,8 +157,8 @@ arguments are well known and can be calculated at compile time:
      i.e.:
             iif( dData == NIL, dDate, aVal[ 1 ] ) := date()
             iif( empty( x ), aVal[ 2 ], nTmp ) += 10
-            ? iif( f1(), nVal1, nVal2 ) ++
-            ? -- iif( f2(), aVal[ 1 ], hVal[ "abc" ] )
+            ? iif( f1(), nVal1, nVal2 )++
+            ? --iif( f2(), aVal[ 1 ], hVal[ "abc" ] )
 
    - Harbour extensions which may disable RT errors in wrong expressions
      or can change used operators using basic math rules. Enabled by -ko

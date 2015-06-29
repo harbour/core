@@ -54,13 +54,13 @@ HB_EXTERN_BEGIN
 
 #if defined( __WATCOMC__ )
    #define HB_MATH_HANDLER
-   #if ( __WATCOMC__ > 1000 ) /* && defined( __cplusplus ) */
+   #if __WATCOMC__ > 1000  /* && defined( __cplusplus ) */
       #define exception _exception
    #endif
 #elif defined( __BORLANDC__ )
    #define HB_MATH_HANDLER
    #define matherr _matherr
-   #if ( __BORLANDC__ >= 1360 ) /* && defined( __cplusplus ) */
+   #if __BORLANDC__ >= 0x0550  /* && defined( __cplusplus ) */
       #define exception _exception
    #endif
 #elif defined( __MINGW32CE__ )
