@@ -89,7 +89,7 @@ Download source archive from any of these URLs and unpack:
 * <https://dl.bintray.com/vszakats/generic/harbour-daily-win.7z.exe><br />
   [![Get automatic notifications about new versions](https://www.bintray.com/docs/images/bintray_badge_bw.png)](https://bintray.com/vszakats/generic/harbour/view?source=watch)
 
-#### OS X (using Homebrew)
+#### OS X (using Homebrew :beer:)
 
     brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb --HEAD
 
@@ -432,7 +432,7 @@ See contrib-specific dependencies and build notes in the projects'
 
 ## Darwin (OS X)
 
-1. Install [Homebrew](http://brew.sh/)
+1. Install [Homebrew :beer:](http://brew.sh/)
 2. Install packages:
 
         $ brew install brew-cask pcre pcre2 upx uncrustify ack optipng jpegoptim
