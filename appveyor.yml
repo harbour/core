@@ -27,6 +27,7 @@ install:
 - curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/s/se/sevenzip/7-Zip/9.20/7za920.zip -o 7z.7z
 - 7z x -y -oC:\w\7z 7z.7z > nul
 - curl -fsS http://7zsfx.info/files/7zsd_150_2712.7z -o 7zsfx.7z
+- for /f "tokens=2 delims= " %%I in ('openssl dgst -sha256 "7zsfx.7z" 2^> nul') do echo "%%I" | findstr "e5a2a05997553cde6318149951da1e449b0fd277a6e671ac06bfde8572754739"
 - 7z x -y -oC:\w\7zsfx 7zsfx.7z > nul
 - curl -fsS -L --proto-redir =https https://fossies.org/windows/misc/upx391w.zip -o upx.zip
 - 7z e -y -oC:\w\upx upx.zip > nul
