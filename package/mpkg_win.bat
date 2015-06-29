@@ -12,6 +12,7 @@
 :: - Requires GNU sed and unix2dos tools in PATH
 :: - Optional HB_SFX_7Z envvar pointed to 7z SFX module
 ::   found in: http://7zsfx.info/files/7zsd_150_2712.7z
+:: - Requires OpenSSL in PATH
 
 echo ! Self: %0
 
@@ -266,6 +267,8 @@ if exist "%HB_SFX_7Z%" (
 
    del "harbour-%HB_VF%-win.7z"
    del _7zconf
+
+   openssl dgst -sha256 "harbour-%HB_VF%-win.7z.exe"
 )
 
 del _hbfiles
