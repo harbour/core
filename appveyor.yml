@@ -42,9 +42,6 @@ install:
 - 7z x -y -oC:\w\ curl-win-mingw64.zip > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.zip -o openssl-win-mingw64.zip
 - 7z x -y -oC:\w\ openssl-win-mingw64.zip > nul
-cache:
-- C:\hb
-- C:\w
 build_script:
 - set HB_SFX_7Z=C:\w\7zsfx\7zsd.sfx
 - set HB_DIR_7Z=C:\w\7z\
