@@ -43,10 +43,10 @@ install:
 - for /f "tokens=2 delims= " %%I in ('openssl dgst -sha256 curl-win-mingw.zip') do echo "%%I" | findstr "df3cf9807b1fb45242df498879a6349e9ee8a510d4f5451b302b2ab6872a2372"
 - 7z x -y -oC:\w\ curl-win-mingw.zip > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win32-mingw.zip -o openssl-win-mingw.zip
-- for /f "tokens=2 delims= " %%I in ('openssl dgst -sha256 openssl-win-mingw.zip') do echo "%%I" | findstr "1f5564f6baa1a124ca3f1e54293072dff9f09ef97009c51102459f8d5a1fec59"
+- for /f "tokens=2 delims= " %%I in ('openssl dgst -sha256 openssl-win-mingw.zip') do echo "%%I" | findstr "8b0ec646161d7cd7c3aa044bb3dee639304ed79676e9eee66c113539311629e9"
 - 7z x -y -oC:\w\ openssl-win-mingw.zip > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win64-mingw.zip -o curl-win-mingw64.zip
-- for /f "tokens=2 delims= " %%I in ('openssl dgst -sha256 curl-win-mingw64.zip') do echo "%%I" | findstr "8b0ec646161d7cd7c3aa044bb3dee639304ed79676e9eee66c113539311629e9"
+- for /f "tokens=2 delims= " %%I in ('openssl dgst -sha256 curl-win-mingw64.zip') do echo "%%I" | findstr "1f5564f6baa1a124ca3f1e54293072dff9f09ef97009c51102459f8d5a1fec59"
 - 7z x -y -oC:\w\ curl-win-mingw64.zip > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.zip -o openssl-win-mingw64.zip
 - for /f "tokens=2 delims= " %%I in ('openssl dgst -sha256 openssl-win-mingw64.zip') do echo "%%I" | findstr "e31fc2c3a3576e9b2bf81bbacc43ee15d961c81dae8f7ce98a68e8fd8972159e"
