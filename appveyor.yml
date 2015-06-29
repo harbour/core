@@ -24,7 +24,7 @@ install:
 - set VER_CURL=7.43.0
 - set VER_OPENSSL=1.0.2c
 - mkdir C:\w\
-- curl -fsS -L http://www.7-zip.org/a/7za920.zip -o 7z.7z
+- curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/s/se/sevenzip/7-Zip/9.20/7za920.zip -o 7z.7z
 - 7z x -y -oC:\w\7z 7z.7z > nul
 - curl -fsS http://7zsfx.info/files/7zsd_150_2712.7z -o 7zsfx.7z
 - 7z x -y -oC:\w\7zsfx 7zsfx.7z > nul
