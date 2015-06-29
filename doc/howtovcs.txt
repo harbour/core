@@ -14,34 +14,34 @@ Content
 =========================================================
 by Viktor Szakats
 
- 1) Read CONTRIBUTING.md, monitor the development mailing list,
+ 1. Read CONTRIBUTING.md, monitor the development mailing list,
     consult with the developers, make contributions. This way your chances
     are high to get a R/W access to the repository.
- 2) Before uploading anything you'll need push permission for the
+ 2. Before uploading anything you'll need push permission for the
     Harbour Git server. To get this please make a request on the development
     list. Note that getting Developer status is not an automatic process.
- 3) You'll need an Git client for your platform.
- 4) Do a 'git clone' to get your own local development Git repository.
+ 3. You'll need an Git client for your platform.
+ 4. Do a 'git clone' to get your own local development Git repository.
 
 1.2 Here's how to upload your changes to the Git server
 =======================================================
 by Viktor Szakats
 
- 1) Make the changes in the source
- 2) Do a 'git pull'
- 3) Resolve any conflicts
- 4) Run 'hbrun bin/commit' to check any commit pre-checks
+ 1. Make the changes in the source
+ 2. Do a 'git pull'
+ 3. Resolve any conflicts
+ 4. Run 'hbrun bin/commit' to check any commit pre-checks
     and to create new ChangeLog.txt entry template
- 5) Edit ChangeLog.txt with a text editor (do not use notepad.exe)
- 6) Copy the last ChangeLog.txt entry to the clipboard
+ 5. Edit ChangeLog.txt with a text editor (do not use notepad.exe)
+ 6. Copy the last ChangeLog.txt entry to the clipboard
     If it's a single atomic change, it's better to copy only
     the description itself without the entry header and list
     of files.
- 7) Do a 'git commit [-a]'
- 8) Paste clipboard content to the text editor that popped up
- 9) Save and exit in editor
-10) Git is now committing
-11) Do a 'git push' to publish your changes online to the
+ 7. Do a 'git commit [-a]'
+ 8. Paste clipboard content to the text editor that popped up
+ 9. Save and exit in editor
+10. Git is now committing
+11. Do a 'git push' to publish your changes online to the
     master repository
 
 NOTE:
@@ -91,7 +91,7 @@ by Viktor Szakats
 =====================================================
 by David G. Holm
 
-1) Always do your Harbour development using your local source tree. Do not
+1. Always do your Harbour development using your local source tree. Do not
    do your development outside your local source tree and then copy your
    changes into your local source tree to commit them, because that leads
    easily to accidentally overwriting changes made by others, because
@@ -100,7 +100,7 @@ by David G. Holm
    your local source tree, changes made by others will be merged with your
    changes and you only need to recompile and retest before committing.
 
-2) Always run 'git pull' from the 'harbour' directory before you run
+2. Always run 'git pull' from the 'harbour' directory before you run
    'git commit'. Run 'hbmk2 bin/commit' before committing, which will
    create a new entry at the top of ChangeLog.txt, which you can then
    edit with the description of changes.
@@ -119,4 +119,4 @@ by David G. Holm
 [ Copyright (c) 1999-2014 Viktor Szakats (vszakats.net/harbour)
   Licensed under Creative Commons Attribution-ShareAlike 4.0:
   https://creativecommons.org/licenses/by-sa/4.0/
-  See COPYING.txt. ]
+  See LICENSE.txt. ]

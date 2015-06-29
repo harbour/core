@@ -642,8 +642,8 @@ DYNAMIC hb_libFree
 DYNAMIC hb_libGetFunSym
 DYNAMIC hb_libLoad
 DYNAMIC hb_libName
-DYNAMIC hb_libPostfix
 DYNAMIC hb_libPrefix
+DYNAMIC hb_libSuffix
 DYNAMIC hb_lppCreate
 DYNAMIC hb_lppDestroy
 DYNAMIC hb_lppError

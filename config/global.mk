@@ -1937,36 +1937,36 @@ ifneq ($(HB_INSTALL_PREFIX),)
       endif
    endif
 
-   LIBPOSTFIX :=
-   INCPOSTFIX :=
+   LIBSUFFIX :=
+   INCSUFFIX :=
    ifeq ($(HB_PLATFORM),beos)
       ifeq ($(HB_SYSLOC),yes)
-         LIBPOSTFIX := $(DIRSEP)harbour
-         INCPOSTFIX := $(DIRSEP)harbour
+         LIBSUFFIX := $(DIRSEP)harbour
+         INCSUFFIX := $(DIRSEP)harbour
       endif
    else
    ifeq ($(HB_PLATFORM_UNIX),)
-      LIBPOSTFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
+      LIBSUFFIX := $(DIRSEP)$(subst /,$(DIRSEP),$(PLAT_COMP))
    else
-      LIBPOSTFIX :=
+      LIBSUFFIX :=
       # Use 'lib64' instead of 'lib' for 64-bit targets where lib64 dir exists
       ifneq ($(wildcard $(HB_INSTALL_PREFIX)$(DIRSEP)lib64),)
          ifneq ($(filter $(HB_CPU),x86_64),)
-            LIBPOSTFIX := 64
+            LIBSUFFIX := 64
          endif
       endif
       # Not perfect, please enhance it.
       ifneq ($(findstring |/usr,|$(HB_INSTALL_PREFIX)),)
          ifeq ($(findstring |/usr/home,|$(HB_INSTALL_PREFIX)),)
-            LIBPOSTFIX := $(LIBPOSTFIX)$(DIRSEP)harbour
-            INCPOSTFIX := $(DIRSEP)harbour
+            LIBSUFFIX := $(LIBSUFFIX)$(DIRSEP)harbour
+            INCSUFFIX := $(DIRSEP)harbour
          endif
       else
          ifneq ($(findstring |/opt,|$(HB_INSTALL_PREFIX)),)
-            LIBPOSTFIX := $(LIBPOSTFIX)$(DIRSEP)harbour
-            INCPOSTFIX := $(DIRSEP)harbour
+            LIBSUFFIX := $(LIBSUFFIX)$(DIRSEP)harbour
+            INCSUFFIX := $(DIRSEP)harbour
          else
-            LIBPOSTFIX :=
+            LIBSUFFIX :=
          endif
       endif
    endif
@@ -1978,7 +1978,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
    # Standard name: LIBDIR
    ifeq ($(HB_INSTALL_LIB),)
-      export HB_INSTALL_LIB := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBPOSTFIX)
+      export HB_INSTALL_LIB := $(HB_INSTALL_PREFIX)$(DIRSEP)lib$(LIBSUFFIX)
    endif
    ifeq ($(HB_INSTALL_DYN),)
       ifeq ($(HB_PLATFORM_UNIX),)
@@ -1993,7 +1993,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
    # Standard name: INCLUDEDIR
    ifeq ($(HB_INSTALL_INC),)
-      export HB_INSTALL_INC := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCPOSTFIX)
+      export HB_INSTALL_INC := $(HB_INSTALL_PREFIX)$(DIRSEP)include$(INCSUFFIX)
    endif
    # Standard name: DOCDIR
    ifeq ($(HB_INSTALL_DOC),)

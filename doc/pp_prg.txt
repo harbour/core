@@ -56,14 +56,17 @@ it's lines by macro compiler:
    ? "pow =", pow
    ? "value * pow =", VALUE * pow
    WAIT
-   ? VALUE2 // generate RTE
+   ? VALUE2  // generate RTE
 
 
    /*** testpp.prg ***/
    REQUEST __pp_StdRules
    REQUEST __Wait
+
    PROCEDURE Main()
+
       LOCAL cLine, pPP, oErr
+
       pPP := __pp_Init()
       BEGIN SEQUENCE WITH __BreakBlock()
          FOR EACH cLine IN hb_ATokens( __pp_Process( pPP, ;
@@ -83,6 +86,7 @@ it's lines by macro compiler:
          ? ErrMsg( oErr )
       END SEQUENCE
       ?
+
       RETURN
 
    STATIC FUNCTION ErrMsg( oErr )

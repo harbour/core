@@ -16,7 +16,7 @@ PROCEDURE Main()
    LOCAL hConnection1
 
 #if defined( __HBDYNLOAD__RDDADS__ )
-   LOCAL l := hb_libLoad( hb_libName( "rddads" + hb_libPostfix() ) )
+   LOCAL l := hb_libLoad( hb_libName( "rddads" + hb_libSuffix() ) )
 
    hb_rddADSRegister()
 

@@ -308,8 +308,8 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_PLUGIN            "__HBSCRIPT__HBMK_PLUGIN"
 #define _HBMK_SHELL             "__HBSCRIPT__HBSHELL"
 
-#define _HBMK_IMPLIB_EXE_POST   "_exe"
-#define _HBMK_IMPLIB_DLL_POST   "_dll"
+#define _HBMK_IMPLIB_EXE_SUFF   "_exe"
+#define _HBMK_IMPLIB_DLL_SUFF   "_dll"
 
 #define _HBMK_TARGENAME_ADHOC   ".adhoc."
 
@@ -6239,7 +6239,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cBinExt )
          ENDIF
          IF l_cIMPLIBNAME == NIL
-            l_cIMPLIBNAME := cName + _HBMK_IMPLIB_EXE_POST
+            l_cIMPLIBNAME := cName + _HBMK_IMPLIB_EXE_SUFF
          ENDIF
          l_cIMPLIBNAME := hb_FNameMerge( l_cIMPLIBDIR, cLibLibPrefix + l_cIMPLIBNAME, cImpLibExt )
       CASE lStopAfterCComp .AND. hbmk[ _HBMK_lCreateDyn ]
@@ -6252,9 +6252,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          hbmk[ _HBMK_cPROGNAME ] := hb_FNameMerge( cDir, cName, cExt )
          IF l_cIMPLIBNAME == NIL
-            /* By default add default postfix to avoid collision with static lib
+            /* By default add default suffix to avoid collision with static lib
                with the same name. */
-            l_cIMPLIBNAME := cName + _HBMK_IMPLIB_DLL_POST
+            l_cIMPLIBNAME := cName + _HBMK_IMPLIB_DLL_SUFF
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ] .AND. HBMK_ISPLAT( "win|os2|dos" )
             l_cLIBSELF := l_cIMPLIBNAME
@@ -11033,7 +11033,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
             ENDIF
             IF cExtNew != NIL
                hb_FNameSplit( cLibNameCooked,, @cName, @cExt )
-               /* Do not strip version number postfixes */
+               /* Do not strip version number suffixes */
                IF hb_asciiIsDigit( SubStr( cExt, 2, 1 ) )
                   cLibNameCooked += cExtNew
                ELSE
@@ -13542,7 +13542,8 @@ STATIC FUNCTION win_implib_coff( hbmk, cSourceDLL, cTargetLib )
       IF ! hbmk[ _HBMK_lQuiet ]
          _hbmk_OutStd( hbmk, I_( "Found COFF .lib with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
-      RETURN iif( hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+      RETURN iif( hb_FileMatch( cSourceLib, cTargetLib ) .OR. ;
+                  hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
@@ -13558,7 +13559,8 @@ STATIC FUNCTION win_implib_omf( hbmk, cSourceDLL, cTargetLib )
       IF ! hbmk[ _HBMK_lQuiet ]
          _hbmk_OutStd( hbmk, I_( "Found OMF .lib with the same name, falling back to using it instead of the .dll." ) )
       ENDIF
-      RETURN iif( hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+      RETURN iif( hb_FileMatch( cSourceLib, cTargetLib ) .OR. ;
+                  hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
@@ -13583,7 +13585,8 @@ STATIC FUNCTION win_implib_copy( hbmk, cSourceDLL, cTargetLib )
 
    IF hb_FileExists( cSourceDLL )
       /* Use .dll directly if all other attempts failed */
-      RETURN iif( hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+      RETURN iif( hb_FileMatch( cSourceDLL, cTargetLib ) .OR. ;
+                  hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
@@ -15487,7 +15490,7 @@ FUNCTION hbshell_ext_load( cName )
                         to load, and we should load those, if any. */
                IF ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSER ] ) .OR. ;
                   ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSERGT ] )
-                  cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ), ;
+                  cFileName := FindInPath( tmp := hb_libName( cName + hb_libSuffix() ), ;
                                            iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
                   IF Empty( cFileName )
                      _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "'%1$s' (%2$s) not found." ), cName, tmp ) )
@@ -17464,7 +17467,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 /*    { "-c=<value>"         , I_( "select C standard. Allowed values are: iso90, iso99, iso11, gnu90, gnu99, gnu11" ) }, */;
 /*    { "-cpp=<value>"       , I_( "select C++ mode or standard. Allowed values are: def, yes, no, iso98, iso11, iso14, gnu98, gnu11, gnu14" ) }, */;
       { "-map[-]"            , I_( "create (or not) a map file" ) }, ;
-      { "-implib[-]"         , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added." ) }, ;
+      { "-implib[-]"         , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a suffix added." ) }, ;
       { "-implib=<output>"   , I_( "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)" ) }, ;
       { "-ln=<link>"         , I_( "create symbolic link pointing to <output> (<link> is considered relative to <output>)" ) }, ;
       { "-strip[-]"          , I_( "strip (no strip) binaries" ) }, ;
