@@ -203,7 +203,7 @@ void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount
          const char * szText = hb_compIdentifierNew( HB_COMP_PARAM, szTexts[ ul ], HB_IDENT_COPY );
          HB_UINT uiPlural;
 
-         for( uiPlural = 0; uiPlural < pString->uiPlurals; ++uiPlural )
+         for( uiPlural = 0; uiPlural < HB_MIN( pString->uiPlurals, HB_I18N_PLURAL_MAX ); ++uiPlural )
          {
             if( pString->szPlurals[ uiPlural ] == szText )
             {
