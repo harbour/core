@@ -75,11 +75,11 @@ características especiais da GTWVW:
   disso, a GTWVW "acha" a janela mais atual e utiliza-a. Mesmo
   assim, temos que considerar o número da janela para a ordem
   correta dos parâmetros. Por exemplo, a funçăo para excluir um
-  combobox é definida da seguinte forma wvw_cbDestroy( nWinNum,
-  nCBId ) onde nWinNum é o número da janela e nCBId o identificador
+  combobox é definida da seguinte forma `wvw_cbDestroy( nWinNum,
+  nCBId )` onde nWinNum é o número da janela e nCBId o identificador
   do combobox. Para a GTWVW o parâmetro nWinNum é ignorado, entăo
-  tanto faz chamarmos a funçăo assim wvw_cbDestroy( nWinNum, nCBId )
-  ou assim wvw_cbDestroy( , nCBId )
+  tanto faz chamarmos a funçăo assim `wvw_cbDestroy( nWinNum, nCBId )`
+  ou assim `wvw_cbDestroy( , nCBId )`
 
 ## COORDENADAS
 
@@ -114,7 +114,7 @@ janelas săo minimizadas ou sobrepostas por outros elementos. Nossa
 aplicaçăo deve "lembrar" quais săo os elementos que devem ser
 redesenhados e a GTWVW nos ajuda com isso.
 
-Existe uma funçăo, WVW_PAINT(), definida pela nossa aplicaçăo, que
+Existe uma funçăo, `WVW_PAINT()`, definida pela nossa aplicaçăo, que
 é chamada pela GTWVW, para que possamos redesenhar os nossos elementos
 gráficos ou qualquer outra coisa que quisermos.
 
@@ -169,7 +169,7 @@ O espaçamento default é de zero.
 Nas diversas funções da GTWVW sobre as fontes, existem diversos
 parâmetros para controlar o tipo, largura, altura e outros fatores da
 fonte. Vamos ver aqui os detalhes de cada parâmetro da funções sobre
-fontes. Por exemplo, na funçăo wvw_CreateFont(), tem a seguinte lista
+fontes. Por exemplo, na funçăo `wvw_CreateFont()`, tem a seguinte lista
 de parâmetros:
    cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout,
    nCharset, nQuality, nEscapement e o significado para cada um é:

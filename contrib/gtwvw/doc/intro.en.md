@@ -96,7 +96,7 @@ gtwvt of:
   uses it. Besides that, of course, we need to consider the first parameter
   in a function call. For example, the function to delete a combobox is
   defined like:
-     wvw_cbDestroy( nWinNum, nCBId )
+     `wvw_cbDestroy( nWinNum, nCBId )`
   Where nWinNum is the window id and nCBId is the id of combobox. To GTWVW
   the first parameter is ignored, so we can call this function like
      `wvw_cbDestroy( nWinNum, nCBId )`
@@ -108,7 +108,7 @@ gtwvt of:
 - Mouse and keyboard input accepted only when topmost window is on focus.
   (That is, currently GTWVW windows are modals.)
 - Inputs are therefore stored in topmost window's buffer.
-- Inputs on non topmost window can now be handled via WVW_INPUTFOCUS function
+- Inputs on non topmost window can now be handled via `WVW_INPUTFOCUS()` function
   (menu, toolbar, scrollbar, pushbutton, and other keyboard/mouse events).
 
 ## COORDINATES
@@ -250,7 +250,7 @@ The default interval value is set to 100.
 There are two styles of caret: horizontal (classic, console style) and
 vertical (commonly used in GUI applications).
 
-Programmer can select which style to choose, using wvw_SetVertCaret()
+Programmer can select which style to choose, using `wvw_SetVertCaret()`
 function. Currently the chosen style will be applied to all windows
 (in current implementation of GTWVW caret can only be displayed on
 topmost window, the only one allowed to accept input).
@@ -266,7 +266,7 @@ the line below the GUI objects. Each window may have its own line spacing,
 settable via `wvw_SetLineSpacing()` function.
 
 Next open window will use default line spacing of nDefLineSpacing settable
-via wvw_SetDefLineSpacing() function.
+via `wvw_SetDefLineSpacing()` function.
 
 nDefLineSpacing is initially 0.
 
@@ -275,7 +275,7 @@ nDefLineSpacing is initially 0.
 
 In many GTWVW font functions, there are a lot of parameters to control
 type, height, width and others styles like underline, bold, etc. For
-example, the wvw_CreateFont() function has the following list of parameters:
+example, the `wvw_CreateFont()` function has the following list of parameters:
   cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout,
   nCharset, nQuality, nEscapement and the meaning is:
 
@@ -525,7 +525,7 @@ However, IMHO this kind of decision requires serious, careful collective thought
 involving cross-platform gurus of Harbour, not by bursting ideas like I did in
 above paragraph :-).
 
-Additionally, some aspects of current GTWVW may not be accepted as a 'good practice'
+Additionally, some aspects of current GTWVW may not be accepted as a *good practice*
 by other developers. For example, I am using Windows native controls (toolbar,
 statusbar, scrollbar) which are intentionally avoided by GTWVT. At best, it is
 because I can't give a convincing arguments. At worst, it is really a bad design
@@ -555,7 +555,7 @@ In my personal web site () you can download an example of application,
 screen shots of converted applications and some sample of code, exploring
 a lot of interesting features. And of course, you can download this little
 documentation.
-Enjoy it !
+Enjoy it!
 
 
 # EPILOGUE
