@@ -434,17 +434,10 @@ TIFFReadRawStrip(TIFF* tif, uint32 strip, void* buf, tmsize_t size)
 	}
 	bytecount = td->td_stripbytecount[strip];
 	if ((int64)bytecount <= 0) {
-#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
 		TIFFErrorExt(tif->tif_clientdata, module,
-			     "%I64u: Invalid strip byte count, strip %lu",
-			     (unsigned __int64) bytecount,
+			     TIFF_UINT64_FORMAT ": Invalid strip byte count, strip %lu",
+			     (TIFF_UINT64_T) bytecount,
 			     (unsigned long) strip);
-#else
-		TIFFErrorExt(tif->tif_clientdata, module,
-			     "%llu: Invalid strip byte count, strip %lu",
-			     (unsigned long long) bytecount,
-			     (unsigned long) strip);
-#endif
 		return ((tmsize_t)(-1));
 	}
 	bytecountm = (tmsize_t)bytecount;
@@ -474,17 +467,10 @@ TIFFFillStrip(TIFF* tif, uint32 strip)
 	{
 		uint64 bytecount = td->td_stripbytecount[strip];
 		if ((int64)bytecount <= 0) {
-#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
 			TIFFErrorExt(tif->tif_clientdata, module,
-				"Invalid strip byte count %I64u, strip %lu",
-				     (unsigned __int64) bytecount,
+				"Invalid strip byte count " TIFF_UINT64_FORMAT ", strip %lu",
+				     (TIFF_UINT64_T) bytecount,
 				     (unsigned long) strip);
-#else
-			TIFFErrorExt(tif->tif_clientdata, module,
-				"Invalid strip byte count %llu, strip %lu",
-				     (unsigned long long) bytecount,
-				     (unsigned long) strip);
-#endif
 			return (0);
 		}
 		if (isMapped(tif) &&
@@ -748,17 +734,10 @@ TIFFFillTile(TIFF* tif, uint32 tile)
 	{
 		uint64 bytecount = td->td_stripbytecount[tile];
 		if ((int64)bytecount <= 0) {
-#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
 			TIFFErrorExt(tif->tif_clientdata, module,
-				"%I64u: Invalid tile byte count, tile %lu",
-				     (unsigned __int64) bytecount,
+				TIFF_UINT64_FORMAT ": Invalid tile byte count, tile %lu",
+				     (TIFF_UINT64_T) bytecount,
 				     (unsigned long) tile);
-#else
-			TIFFErrorExt(tif->tif_clientdata, module,
-				"%llu: Invalid tile byte count, tile %lu",
-				     (unsigned long long) bytecount,
-				     (unsigned long) tile);
-#endif
 			return (0);
 		}
 		if (isMapped(tif) &&
