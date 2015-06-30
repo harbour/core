@@ -10,8 +10,10 @@
 
 minilzo.c
 
+# WARNING: self-signed certificate
+
 # ORIGIN https://www.oberhumer.com/opensource/lzo/
-# URL    https://www.oberhumer.com/opensource/lzo/download/minilzo-2.08.tar.gz
+# URL    https://www.oberhumer.com/opensource/lzo/download/minilzo-2.09.tar.gz
 # DIFF
 #
 # MAP    COPYING    LICENSE.txt
