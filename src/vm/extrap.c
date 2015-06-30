@@ -70,9 +70,8 @@
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
    #endif
-   /* BCC and MinGW doesn't seem to #define this */
    #ifndef TH32CS_SNAPMODULE32
-   #define TH32CS_SNAPMODULE32  0
+   #define TH32CS_SNAPMODULE32  0x00000010
    #endif
 #elif defined( HB_OS_OS2 )
    #define INCL_DOSEXCEPTIONS

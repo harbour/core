@@ -8,7 +8,7 @@ e seus "ancestrais". Marcos Antonio Gambeta Ele escreveu um guia de
 programaçăo para a GTWVT e disponibilizou como freeware. A leitura
 desse manual me ajudou a resolver diversas dúvidas quanto aos
 parâmetros das funções, retorno de valores, etc. Forum de notícias
-Harbour Leitura obrigatória. Forum Cl*pper on line Muita gente boa
+Harbour Leitura obrigatória. Forum Cl\*pper on line Muita gente boa
 disposta a dividir seus conhecimentos. MS SDK HELP FILES Leitura
 indispensável para entender realmente como e porquę de alguns
 parâmetros e características da GTWVW. Julio C. Cantillo Molina Seu
@@ -91,20 +91,20 @@ selecionar/mudar a qualquer momento:
 - A janela atual é sempre setada, no início do programa ou em cada
   operaçăo de abertura e fechamento de janela.
 - Todas as saídas/entradas da tela săo orientadas para a janela
-  principal. Dessa forma as funções MaxRow() e MaxCol() retornarăo
+  principal. Dessa forma as funções `MaxRow()` e `MaxCol()` retornarăo
   os limites da janela atual.
 
 ### Maincoord Mode
 - Nesse modo as coordenadas săo relativas a janela principal (como
-  no Cl*pper). - Todas as saídas/entradas trabalham baseadas na
+  no Cl\*pper). - Todas as saídas/entradas trabalham baseadas na
   janela atual. Internamente, existe um processo que verifica em
   qual janela deve ser feita a operaçăo de saída/entrada, dependendo
   da linha/coluna. Após cada operaçăo, a janela atual é sempre
-  resetada para a janela principal. Dessa forma MaxRow() e MaxCol()
+  resetada para a janela principal. Dessa forma `MaxRow()` e `MaxCol()`
   sempre retornarăo as coordenadas máximas da janela principal, năo
   importando o número de janelas abertas.
 - Esse modo foi projetado para ser a forma mais rápida e eficiente
-  para portar aplicativos do Cl*pper para Harbour.
+  para portar aplicativos do Cl\*pper para Harbour.
 
 
 # SOBRE MINIMIZAR, MAXIMIZAR E REDESENHAR TELAS
@@ -119,21 +119,23 @@ Existe uma funçăo, WVW_PAINT(), definida pela nossa aplicaçăo, que
 gráficos ou qualquer outra coisa que quisermos.
 
 Algumas das funções da GTWVW que precisam do suporte para redesenho săo:
+```
    wvw_DrawBoxGet()
    wvw_DrawBoxRaised()
    wvw_DrawBoxRecessed()
    wvw_DrawBoxGroup()
    wvw_DrawImage()
    wvw_DrawLabel()
+```
 
 Observe que o redesenho năo é feito de forma imediata pela GTWVW.
 O intervalo para redesenho pode ser definido pela nossa aplicaçăo
-através da funçăo wvw_SetPaintRefresh(). Se setarmos o intervalo para
-redesenho para zero, a GTWVW chamará a funçăo WVW_PAINT() cada vez que
+através da funçăo `wvw_SetPaintRefresh()`. Se setarmos o intervalo para
+redesenho para zero, a GTWVW chamará a funçăo `WVW_PAINT()` cada vez que
 foi requisitado o redesenho, pelo windows (exceto se uma chamada prévia
 ainda năo foi retornada). Se o intervalo para redesenho for setado para
 maior que zero (valores válidos maiores que 50), entăo a funçăo
-WVW_PAINT() será chamada após esse intervalo, em milisegundos, apenas
+`WVW_PAINT()` será chamada após esse intervalo, em milisegundos, apenas
 se ainda persistir uma açăo de redesenho pendente. O intervalo default
 para o redesenho é de 100.
 
@@ -142,7 +144,7 @@ para o redesenho é de 100.
 
 Existem dois estilos para o cursor: Horizontal (como em aplicações
 MS-DOS) Vertical (mais comum em aplicações Windows) O programador
-pode wvw_SetVertCaret(). selecionar qual o estilo que deseja, através
+pode `wvw_SetVertCaret()`. selecionar qual o estilo que deseja, através
 da funçăo
 
 O novo estilo do cursor será aplicado para todas as janelas (atualmente
@@ -157,7 +159,7 @@ desejável, entre outras razões, porque os elementos GUI podem
 sobrescrever a linha acima ou abaixo.
 
 Cada janela pode ter seu próprio espaçamento, que pode ser configurado
-através da funçăo wvw_SetDefLineSpacing().
+através da funçăo `wvw_SetDefLineSpacing()`.
 
 O espaçamento default é de zero.
 
@@ -179,19 +181,19 @@ de parâmetros:
 - `nWeight` Especifica o "peso" da fonte, variando de 0 até 1000. Por
   exemplo, um "peso" de 400 geralmente determina uma fonte normal,
   já 700, negrito. Existem 15 (quinze) modelos de "peso" de fonte,
-  que podem ser encontradas no arquivo `wingdi.ch` (FW_DONTCARE, FW_THIN,
+  que podem ser encontradas no arquivo `wingdi.ch` (`FW_DONTCARE`, `FW_THIN`,
   etc.).
 - `lItalic` Identifica se a fonte será itálica ou năo.
 - `lUnderline` Identifica uma fonte sublinhada ou năo.
 - `lStrikeOut` Identifica uma fonte strikeout (fonte com linha traçada
   no meio das letras).
 - `nCharSet` Especifica o cojnunto de caracteres a ser usado. Por exemplo,
-  ANSI_CHARSET, DEFAULT_CHARSET, OEM_CHARSET, etc. (os modelo estăo no
+  `ANSI_CHARSET`, `DEFAULT_CHARSET`, `OEM_CHARSET`, etc. (os modelo estăo no
   arquivo `wingdi.ch`).
 - `nQuality` Identifica a qualidade de saída da fonte. Essa característica
   define como a GDI deve interpretar a forma lógica da fonte, com a sua
   forma de apresentaçăo física. Existem tręs valores possíveis para
-  a qualidade da fonte: DEFAULT_QUALITY DRAFT_QUALITY PROOF_QUALITY
+  a qualidade da fonte: `DEFAULT_QUALITY` `DRAFT_QUALITY` `PROOF_QUALITY`
 - `nEscapement` Especifica o ângulo, em décimos de graus, entre o vetor
   de fuga e o eixo-x do dispositivo. O vetor de fuga é paralelo com a
   linha base do texto. O default é 0. A aparęncia da fonte năo importa.
@@ -205,23 +207,23 @@ Existem algumas funções que devem ser definidas na nossa aplicaçăo, que
 săo na verdade, chamadas diretamente pela GTWVW. Algumas das principais
 funções săo:
 
-- WVW_PAINT( nWinNum )
+- `WVW_PAINT( nWinNum )`
 
   Essa funçăo é chamada sempre que o Windows recebe uma mensagem
-  WM_PAINT (para redesenho da tela). Na verdade o intervalo para
-  chamada de WVW_PAINT() pode ser configurado, através da funçăo
-  wvw_SetPaintRefresh().
+  `WM_PAINT` (para redesenho da tela). Na verdade o intervalo para
+  chamada de `WVW_PAINT()` pode ser configurado, através da funçăo
+  `wvw_SetPaintRefresh()`.
 
-- WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )
+- `WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )`
 
   Essa funçăo é chamada a cada intervalo de tempo, que pode ser definido
-  através da funçăo wvw_SetTimer().
+  através da funçăo `wvw_SetTimer()`.
 
-- WVW_SIZE( nWindow, hWnd, message, wParam, lParam ) Chamada sempre que
+- `WVW_SIZE( nWindow, hWnd, message, wParam, lParam )`
 
-  a janela é minimizada, maximizada ou restaurada. Em conjunto com essa
-  funçăo, deve ser definida a funçăo wvw_Size_Ready(), que indica se o
-  processamento de WVW_Size() deve ser realizado ou năo.
+  Chamada sempre que a janela é minimizada, maximizada ou restaurada.
+  Em conjunto com essa funçăo, deve ser definida a funçăo `wvw_Size_Ready()`,
+  que indica se o processamento de `WVW_SIZE()` deve ser realizado ou năo.
 
 
 # EXEMPLOS

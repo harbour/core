@@ -44,10 +44,9 @@
  *
  */
 
-/* NOTE: Ugly hack to avoid this error when compiler with BCC 5.8.2 and above:
-         Error E2238 <...>\Firebird-2.1.1\include\ibase.h 82: Multiple declaration for 'intptr_t' */
 #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 )
-/* Prevent inclusion of <stdint.h> from hbdefs.h */
+   /* Ugly hack to prevent inclusion of <stdint.h> from hbdefs.h to avoid
+      Error E2238 <...>\Firebird-2.1.1\include\ibase.h 82: Multiple declaration for 'intptr_t' */
    #define __STDINT_H
 #endif
 

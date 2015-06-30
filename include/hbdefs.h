@@ -78,8 +78,7 @@
 #  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && ! defined( _INTPTR_T )
 #     define _INTPTR_T
 #  endif
-   /* workaround for BCC 5.8 bug */
-   #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 )
+   #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 )  /* workaround for compiler bug */
       #undef INT32_MIN
       #define INT32_MIN ((int32_t) (-INT32_MAX-1))
       #undef INT64_MIN

@@ -69,7 +69,7 @@
          Application must call SSL_init(), so that this module gets linked.
          [vszakats] */
 #if defined( HB_OS_WIN ) && ! defined( HB_OPENSSL_STATIC ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
-   /* NOTE: It doesn't build in bcc55:
+   /* NOTE: It doesn't build in BCC 5.5:
             Warning W8065 openssl/applink.c 40: Call to function '_setmode' with no prototype in function app_fsetmod
             Error E2451 openssl/applink.c 82: Undefined symbol '_lseek' in function OPENSSL_Applink
     */
