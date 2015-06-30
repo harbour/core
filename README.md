@@ -35,9 +35,14 @@ and interfaces to popular APIs.
 
   * [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG)
 
-
   Thanks to all who did!
 
+# Maintainer contacts
+
+  * [Twitter](https://twitter.com/vszakats)
+  * [GitHub](https://github.com/vszakats)
+  * [PGP](https://keybase.io/vszakats) [key](https://keybase.io/vszakats/key.asc)
+  * [Homepage](http://vszakats.net/)
 
 # How to Get
 
