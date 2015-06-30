@@ -1,7 +1,7 @@
 diff -urN tiff.orig/dirread.c tiff/dirread.c
---- tiff.orig/dirread.c	2014-06-28 13:19:31.134108300 +0200
-+++ tiff/dirread.c	2014-06-28 13:19:32.101277300 +0200
-@@ -2216,7 +2216,7 @@
+--- tiff.orig/dirread.c	2015-06-30 11:23:52.936154000 +0200
++++ tiff/dirread.c	2015-06-30 11:23:53.482122500 +0200
+@@ -2211,7 +2211,7 @@
  		case TIFF_FLOAT:
  			if (tif->tif_flags&TIFF_SWAB)
  				TIFFSwabArrayOfLong((uint32*)origdata,count);  
@@ -10,7 +10,7 @@ diff -urN tiff.orig/dirread.c tiff/dirread.c
  			*value=(float*)origdata;
  			return(TIFFReadDirEntryErrOk);
  	}
-@@ -3194,11 +3194,7 @@
+@@ -3174,11 +3174,7 @@
  /*
   * Largest 32-bit unsigned integer value.
   */
@@ -23,7 +23,7 @@ diff -urN tiff.orig/dirread.c tiff/dirread.c
  
  static enum TIFFReadDirEntryErr
  TIFFReadDirEntryCheckRangeLongLong8(uint64 value)
-@@ -3286,11 +3282,7 @@
+@@ -3266,11 +3262,7 @@
  /*
   * Largest 64-bit signed integer value.
   */
@@ -37,8 +37,8 @@ diff -urN tiff.orig/dirread.c tiff/dirread.c
  static enum TIFFReadDirEntryErr
  TIFFReadDirEntryCheckRangeSlong8Long8(uint64 value)
 diff -urN tiff.orig/dirwrite.c tiff/dirwrite.c
---- tiff.orig/dirwrite.c	2014-06-28 13:19:31.149707800 +0200
-+++ tiff/dirwrite.c	2014-06-28 13:19:32.116876800 +0200
+--- tiff.orig/dirwrite.c	2015-06-30 11:23:52.951753100 +0200
++++ tiff/dirwrite.c	2015-06-30 11:23:53.482122500 +0200
 @@ -2238,7 +2238,7 @@
  {
  	assert(count<0x40000000);
@@ -58,8 +58,8 @@ diff -urN tiff.orig/dirwrite.c tiff/dirwrite.c
  		TIFFSwabArrayOfDouble(value,count);
  	return(TIFFWriteDirectoryTagData(tif,ndir,dir,tag,TIFF_DOUBLE,count,count*8,value));
 diff -urN tiff.orig/dumpmode.c tiff/dumpmode.c
---- tiff.orig/dumpmode.c	2014-06-28 13:19:31.149707800 +0200
-+++ tiff/dumpmode.c	2014-06-28 13:19:32.116876800 +0200
+--- tiff.orig/dumpmode.c	2015-06-30 11:23:52.951753100 +0200
++++ tiff/dumpmode.c	2015-06-30 11:23:53.482122500 +0200
 @@ -80,19 +80,11 @@
  	static const char module[] = "DumpModeDecode";
  	(void) s;
@@ -84,8 +84,8 @@ diff -urN tiff.orig/dumpmode.c tiff/dumpmode.c
  	}
  	/*
 diff -urN tiff.orig/luv.c tiff/luv.c
---- tiff.orig/luv.c	2014-06-28 13:19:31.243304800 +0200
-+++ tiff/luv.c	2014-06-28 13:19:32.116876800 +0200
+--- tiff.orig/luv.c	2015-06-30 11:23:53.045347700 +0200
++++ tiff/luv.c	2015-06-30 11:23:53.482122500 +0200
 @@ -224,17 +224,10 @@
  					tp[i++] |= (int16)*bp++ << shft;
  			}
@@ -147,9 +147,9 @@ diff -urN tiff.orig/luv.c tiff/luv.c
  			tif->tif_rawcc = cc;
  			return (0);
 diff -urN tiff.orig/lzw.c tiff/lzw.c
---- tiff.orig/lzw.c	2014-06-28 13:19:31.258904300 +0200
-+++ tiff/lzw.c	2014-06-28 13:19:32.116876800 +0200
-@@ -549,15 +549,9 @@
+--- tiff.orig/lzw.c	2015-06-30 11:23:53.060946800 +0200
++++ tiff/lzw.c	2015-06-30 11:23:53.497721600 +0200
+@@ -553,15 +553,9 @@
  	sp->dec_maxcodep = maxcodep;
  
  	if (occ > 0) {
@@ -167,7 +167,7 @@ diff -urN tiff.orig/lzw.c tiff/lzw.c
  		return (0);
  	}
  	return (1);
-@@ -753,15 +747,9 @@
+@@ -759,15 +753,9 @@
  	sp->dec_maxcodep = maxcodep;
  
  	if (occ > 0) {
@@ -186,8 +186,8 @@ diff -urN tiff.orig/lzw.c tiff/lzw.c
  	}
  	return (1);
 diff -urN tiff.orig/print.c tiff/print.c
---- tiff.orig/print.c	2014-06-28 13:19:31.368100800 +0200
-+++ tiff/print.c	2014-06-28 13:19:32.116876800 +0200
+--- tiff.orig/print.c	2015-06-30 11:23:53.107744100 +0200
++++ tiff/print.c	2015-06-30 11:23:53.497721600 +0200
 @@ -98,27 +98,13 @@
  			|| fip->field_type == TIFF_FLOAT)
  			fprintf(fd, "%f", ((float *) raw_data)[j]);
@@ -278,8 +278,8 @@ diff -urN tiff.orig/print.c tiff/print.c
  }
  
 diff -urN tiff.orig/read.c tiff/read.c
---- tiff.orig/read.c	2014-06-28 13:19:31.383700300 +0200
-+++ tiff/read.c	2014-06-28 13:19:32.116876800 +0200
+--- tiff.orig/read.c	2015-06-30 11:23:53.107744100 +0200
++++ tiff/read.c	2015-06-30 11:23:53.497721600 +0200
 @@ -125,19 +125,11 @@
          cc = TIFFReadFile(tif, tif->tif_rawdata + unused_data, to_read);
  
@@ -308,16 +308,16 @@ diff -urN tiff.orig/read.c tiff/read.c
  		cc = TIFFReadFile(tif, buf, size);
  		if (cc != size) {
 -#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
+-			TIFFErrorExt(tif->tif_clientdata, module,
 -		"Read error at scanline %lu; got %I64u bytes, expected %I64u",
-+		"Read error at scanline %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
- 				     (unsigned long) tif->tif_row,
+-				     (unsigned long) tif->tif_row,
 -				     (unsigned __int64) cc,
 -				     (unsigned __int64) size);
 -#else
--			TIFFErrorExt(tif->tif_clientdata, module,
+ 			TIFFErrorExt(tif->tif_clientdata, module,
 -		"Read error at scanline %lu; got %llu bytes, expected %llu",
--				     (unsigned long) tif->tif_row,
++		"Read error at scanline %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
+ 				     (unsigned long) tif->tif_row,
 -				     (unsigned long long) cc,
 -				     (unsigned long long) size);
 -#endif
@@ -351,65 +351,25 @@ diff -urN tiff.orig/read.c tiff/read.c
  			return ((tmsize_t)(-1));
  		}
  		_TIFFmemcpy(buf, tif->tif_base + ma,
-@@ -459,17 +434,10 @@
- 	}
- 	bytecount = td->td_stripbytecount[strip];
- 	if (bytecount <= 0) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
--		TIFFErrorExt(tif->tif_clientdata, module,
--			     "%I64u: Invalid strip byte count, strip %lu",
--			     (unsigned __int64) bytecount,
--			     (unsigned long) strip);
--#else
- 		TIFFErrorExt(tif->tif_clientdata, module,
--			     "%llu: Invalid strip byte count, strip %lu",
--			     (unsigned long long) bytecount,
-+			     TIFF_UINT64_FORMAT ": Invalid strip byte count, strip %lu",
-+			     (TIFF_UINT64_T) bytecount,
- 			     (unsigned long) strip);
--#endif
- 		return ((tmsize_t)(-1));
- 	}
- 	bytecountm = (tmsize_t)bytecount;
-@@ -499,17 +467,10 @@
- 	{
- 		uint64 bytecount = td->td_stripbytecount[strip];
- 		if (bytecount <= 0) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
--				"Invalid strip byte count %I64u, strip %lu",
--				     (unsigned __int64) bytecount,
-+				"Invalid strip byte count " TIFF_UINT64_FORMAT ", strip %lu",
-+				     (TIFF_UINT64_T) bytecount,
- 				     (unsigned long) strip);
--#else
--			TIFFErrorExt(tif->tif_clientdata, module,
--				"Invalid strip byte count %llu, strip %lu",
--				     (unsigned long long) bytecount,
--				     (unsigned long) strip);
--#endif
- 			return (0);
- 		}
- 		if (isMapped(tif) &&
-@@ -548,23 +509,13 @@
+@@ -548,23 +523,13 @@
  				 * it's what would happen if a read were done
  				 * instead.
  				 */
 -#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 				TIFFErrorExt(tif->tif_clientdata, module,
- 
- 					"Read error on strip %lu; "
--					"got %I64u bytes, expected %I64u",
-+					"got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
- 					(unsigned long) strip,
--					(unsigned __int64) tif->tif_size - td->td_stripoffset[strip],
--					(unsigned __int64) bytecount);
--#else
 -				TIFFErrorExt(tif->tif_clientdata, module,
 -
 -					"Read error on strip %lu; "
--					"got %llu bytes, expected %llu",
+-					"got %I64u bytes, expected %I64u",
 -					(unsigned long) strip,
+-					(unsigned __int64) tif->tif_size - td->td_stripoffset[strip],
+-					(unsigned __int64) bytecount);
+-#else
+ 				TIFFErrorExt(tif->tif_clientdata, module,
+ 
+ 					"Read error on strip %lu; "
+-					"got %llu bytes, expected %llu",
++					"got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
+ 					(unsigned long) strip,
 -					(unsigned long long) tif->tif_size - td->td_stripoffset[strip],
 -					(unsigned long long) bytecount);
 -#endif
@@ -418,23 +378,23 @@ diff -urN tiff.orig/read.c tiff/read.c
  				tif->tif_curstrip = NOSTRIP;
  				return (0);
  			}
-@@ -695,21 +646,12 @@
+@@ -695,21 +660,12 @@
  		}
  		cc = TIFFReadFile(tif, buf, size);
  		if (cc != size) {
 -#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
+-			TIFFErrorExt(tif->tif_clientdata, module,
 -	"Read error at row %lu, col %lu; got %I64u bytes, expected %I64u",
-+	"Read error at row %lu, col %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
- 				     (unsigned long) tif->tif_row,
- 				     (unsigned long) tif->tif_col,
+-				     (unsigned long) tif->tif_row,
+-				     (unsigned long) tif->tif_col,
 -				     (unsigned __int64) cc,
 -				     (unsigned __int64) size);
 -#else
--			TIFFErrorExt(tif->tif_clientdata, module,
+ 			TIFFErrorExt(tif->tif_clientdata, module,
 -	"Read error at row %lu, col %lu; got %llu bytes, expected %llu",
--				     (unsigned long) tif->tif_row,
--				     (unsigned long) tif->tif_col,
++	"Read error at row %lu, col %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
+ 				     (unsigned long) tif->tif_row,
+ 				     (unsigned long) tif->tif_col,
 -				     (unsigned long long) cc,
 -				     (unsigned long long) size);
 -#endif
@@ -443,7 +403,7 @@ diff -urN tiff.orig/read.c tiff/read.c
  			return ((tmsize_t)(-1));
  		}
  	} else {
-@@ -724,23 +666,13 @@
+@@ -724,23 +680,13 @@
  		else
  			n=size;
  		if (n!=size) {
@@ -470,29 +430,9 @@ diff -urN tiff.orig/read.c tiff/read.c
  			return ((tmsize_t)(-1));
  		}
  		_TIFFmemcpy(buf, tif->tif_base + ma, size);
-@@ -802,17 +734,10 @@
- 	{
- 		uint64 bytecount = td->td_stripbytecount[tile];
- 		if (bytecount <= 0) {
--#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
- 			TIFFErrorExt(tif->tif_clientdata, module,
--				"%I64u: Invalid tile byte count, tile %lu",
--				     (unsigned __int64) bytecount,
-+				TIFF_UINT64_FORMAT ": Invalid tile byte count, tile %lu",
-+				     (TIFF_UINT64_T) bytecount,
- 				     (unsigned long) tile);
--#else
--			TIFFErrorExt(tif->tif_clientdata, module,
--				"%llu: Invalid tile byte count, tile %lu",
--				     (unsigned long long) bytecount,
--				     (unsigned long) tile);
--#endif
- 			return (0);
- 		}
- 		if (isMapped(tif) &&
 diff -urN tiff.orig/strip.c tiff/strip.c
---- tiff.orig/strip.c	2014-06-28 13:19:31.383700300 +0200
-+++ tiff/strip.c	2014-06-28 13:19:32.132476300 +0200
+--- tiff.orig/strip.c	2015-06-30 11:23:53.123343200 +0200
++++ tiff/strip.c	2015-06-30 11:23:53.497721600 +0200
 @@ -154,17 +154,10 @@
  
  	if (bytecount == 0)
@@ -514,8 +454,8 @@ diff -urN tiff.orig/strip.c tiff/strip.c
  	}
  
 diff -urN tiff.orig/thunder.c tiff/thunder.c
---- tiff.orig/thunder.c	2014-06-28 13:19:31.399299800 +0200
-+++ tiff/thunder.c	2014-06-28 13:19:32.132476300 +0200
+--- tiff.orig/thunder.c	2015-06-30 11:23:53.123343200 +0200
++++ tiff/thunder.c	2015-06-30 11:23:53.497721600 +0200
 @@ -143,21 +143,12 @@
  	tif->tif_rawcp = (uint8*) bp;
  	tif->tif_rawcc = cc;
@@ -542,8 +482,8 @@ diff -urN tiff.orig/thunder.c tiff/thunder.c
  	}
  
 diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
---- tiff.orig/tiffconf.h	2014-06-28 13:19:31.633292300 +0200
-+++ tiff/tiffconf.h	2014-06-28 13:19:32.132476300 +0200
+--- tiff.orig/tiffconf.h	2015-06-30 11:23:53.201338700 +0200
++++ tiff/tiffconf.h	2015-06-30 11:23:53.497721600 +0200
 @@ -7,44 +7,65 @@
  #ifndef _TIFFCONF_
  #define _TIFFCONF_
@@ -706,8 +646,8 @@ diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
 +
  #endif /* _TIFFCONF_ */
 diff -urN tiff.orig/tiffio.h tiff/tiffio.h
---- tiff.orig/tiffio.h	2014-06-28 13:19:31.602093300 +0200
-+++ tiff/tiffio.h	2014-06-28 13:19:32.132476300 +0200
+--- tiff.orig/tiffio.h	2015-06-30 11:23:53.170140500 +0200
++++ tiff/tiffio.h	2015-06-30 11:23:53.497721600 +0200
 @@ -102,6 +102,8 @@
  # else
  typedef HFILE thandle_t;       /* client data handle */
@@ -718,8 +658,8 @@ diff -urN tiff.orig/tiffio.h tiff/tiffio.h
  typedef void* thandle_t;       /* client data handle */
  #endif /* USE_WIN32_FILEIO */
 diff -urN tiff.orig/tiffiop.h tiff/tiffiop.h
---- tiff.orig/tiffiop.h	2014-06-28 13:19:31.602093300 +0200
-+++ tiff/tiffiop.h	2014-06-28 13:19:32.132476300 +0200
+--- tiff.orig/tiffiop.h	2015-06-30 11:23:53.185739600 +0200
++++ tiff/tiffiop.h	2015-06-30 11:23:53.497721600 +0200
 @@ -30,7 +30,7 @@
   * ``Library-private'' definitions.
   */
@@ -730,8 +670,8 @@ diff -urN tiff.orig/tiffiop.h tiff/tiffiop.h
  #ifdef HAVE_FCNTL_H
  # include <fcntl.h>
 diff -urN tiff.orig/unix.c tiff/unix.c
---- tiff.orig/unix.c	2014-06-28 13:19:31.399299800 +0200
-+++ tiff/unix.c	2014-06-28 13:19:32.132476300 +0200
+--- tiff.orig/unix.c	2015-06-30 11:23:53.138942300 +0200
++++ tiff/unix.c	2015-06-30 11:23:53.513320700 +0200
 @@ -29,7 +29,7 @@
   * Windows Common RunTime Library.
   */
