@@ -15,7 +15,7 @@ if "%_URL_CLIENT%" == "%_MINGW_64%" echo Downloading 64-bit hosted dual mingw...
 
 set _DL_URL=%_URL_CLIENT%
 set _DL_DST=%TEMP%\mingw.7z
-set _TMP=%TEMP%\_webdl.js
+set _TMP=%TEMP%\_webdl.tmp
 echo var http = new ActiveXObject(^"WinHttp.WinHttpRequest.5.1^");> "%_TMP%"
 echo http.Open(^"GET^", ^"%_DL_URL%^", false);>> "%_TMP%"
 echo http.Send();>> "%_TMP%"
@@ -24,7 +24,7 @@ echo    var f = new ActiveXObject(^"ADODB.Stream^");>> "%_TMP%"
 echo    f.type = 1; f.open(); f.write(http.responseBody);>> "%_TMP%"
 echo    f.savetofile(^"%_DL_DST:\=\\%^", 2);>> "%_TMP%"
 echo }>> "%_TMP%"
-cscript "%_TMP%" //Nologo
+cscript //nologo /e:jscript "%_TMP%"
 del "%_TMP%"
 
 pushd ..

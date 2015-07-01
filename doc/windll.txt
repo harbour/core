@@ -30,7 +30,7 @@ Harbour supports Windows DLLs in 3 ways.
      Harbour.dll.
      If you want dynamic linking, then use this to execute a Harbour
      dynamically loaded pcode DLL function or procedure:
-        hb_LibDo( <cFuncName> [,<params...>] ) --> [<uResult>]
+        hb_LibDo( <cFuncName>[, <params...>] ) --> [<uResult>]
 
      This lets you have all your common code in a DLL, and have lots
      of small EXEs that use it.  Realize however that, even though this
