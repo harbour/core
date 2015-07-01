@@ -55,11 +55,11 @@
   with care - most existing sources are well-formatted, so make
   sure to only apply it to newly added or modified code sections)
 
-        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <source(.c|.h)>
-        $ <harbour_dir>/bin/hbformat <source(.prg|.hb|.ch)>
+        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <source{.c|.h}>
+        $ <harbour_dir>/bin/hbformat <source{.prg|.hb|.ch}>
 
 - Text editor setting for Harbour files
-  - Encoding is either 7-bit ASCII or UTF-8 (without [BOM](https://en.wikipedia.org/wiki/Byte_order_mark))
+  - Encoding is either 7-bit ASCII or UTF-8, without [BOM](https://en.wikipedia.org/wiki/Byte_order_mark)
   - Use spaces, never tabs
   - Remove trailing spaces from lines
   - Keep one (not zero or multiple) newline at the end of file
