@@ -145,7 +145,6 @@ PROCEDURE Main()
    ? bmpinfoheader:SayMembers( " ", .T., .T. )
 
    bmpinfo:Pointer( fi_GetInfo( im ) )
-   bmpinfo := NIL // To fix warning
    ? "Info             :", hb_ValToExp( bmpinfo )
    ? bmpinfo:SayMembers( " ", .T., .T. )
    ? Replicate( "-", 60 )
@@ -162,9 +161,6 @@ PROCEDURE Main()
    ? iccprofile:SayMembers( " ", .T., .T. )
 
    bmpinfoheader:Reset()
-   appo := NIL
-   bmpinfoheader := NIL
-   hb_gcAll( .T. )
 #endif
 
    IF ! Empty( cStr := hb_MemoRead( IMAGES_IN + "sample1.jpg" ) )

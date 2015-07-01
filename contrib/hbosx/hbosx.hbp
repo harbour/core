@@ -7,7 +7,7 @@
 
 -stop{!darwin}
 
--c=gnu99
+#-c=gnu99
 
 -hbx=${hb_name}
 

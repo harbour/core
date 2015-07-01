@@ -40,7 +40,7 @@
 -cflag={allgcc&darwin}-Wno-deprecated
 
 # For _fileno() in openssl/applink.c
--c=gnu90
+#-c=gnu90
 
 ssl_hb.c
 ssl_inet.c

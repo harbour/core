@@ -12,7 +12,7 @@
 {wce}-cflag=-DNO_MSCVER_FILE64_FUNC
 
 # for f*64() functions
--c=gnu90
+#-c=gnu90
 
 ioapi.c
 zip.c

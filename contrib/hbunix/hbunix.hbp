@@ -7,7 +7,7 @@
 
 -stop{!unix}
 
--c=gnu90
+#-c=gnu90
 
 -hbx=${hb_name}
 

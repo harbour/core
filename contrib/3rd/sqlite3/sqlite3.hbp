@@ -38,7 +38,7 @@
 -cflag=-DSQLITE_OMIT_WAL=1{minix}
 
 # mingw 4.5.0/4.5.1 revisions fail compiling in iso90 mode. It's fixed in 4.5.2.
--c=gnu90{allgcc&HB_COMP_VER='45'}
+#-c=gnu90{allgcc&HB_COMP_VER='45'}
 
 hbicu.hbc
 

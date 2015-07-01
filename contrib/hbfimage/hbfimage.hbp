@@ -22,7 +22,7 @@ hbwin.hbc{allwin}
 -depimplibs=freeimage:FreeImage.dll
 
 # For FreeImage headers
--c=gnu90
+#-c=gnu90
 
 -hbx=${hb_name}
 

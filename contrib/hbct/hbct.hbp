@@ -6,7 +6,7 @@
 -w3 -es2
 
 # For stime()
--c=gnu90{linux}
+#-c=gnu90{linux}
 
 -instfile=contrib:ct.h
 -instfile=contrib:ctmath.h

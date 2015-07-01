@@ -3146,9 +3146,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          OTHERWISE                                ; InvalidOptionValue( hbmk, aParam )
          ENDCASE
 
-         /* dangerous? disable it */
-         hbmk[ _HBMK_cCPP ] := ""
-
       CASE hb_LeftEq( cParamL, "-c=" )
 
          DO CASE
@@ -3161,9 +3158,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          CASE SubStr( cParamL, 3 + 1 ) == ""      ; hbmk[ _HBMK_cC ] := ""
          OTHERWISE                                ; InvalidOptionValue( hbmk, aParam )
          ENDCASE
-
-         /* dangerous? disable it */
-         hbmk[ _HBMK_cC ] := ""
 
       CASE cParamL == "-cpp"             ; hbmk[ _HBMK_lCPP ]       := .T. /* synonym to -cpp=yes */
       CASE cParamL == "-cpp-"            ; hbmk[ _HBMK_lCPP ]       := .F. /* synonym to -cpp=no */

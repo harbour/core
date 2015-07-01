@@ -10,7 +10,7 @@
 -pic
 
 # __inline__ keyword
-{sunos}-c=gnu90
+#{sunos}-c=gnu90
 
 {win}-cflag=-DWIN32 -DWIN
 {win|dos|os2}-cflag=-D_EOL_CRLF

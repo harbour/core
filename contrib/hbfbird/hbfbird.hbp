@@ -21,7 +21,7 @@
 -depimplibd=firebird:fbclient
 
 # For Firebird headers
--c=gnu90
+#-c=gnu90
 
 -hbx=${hb_name}
 

@@ -12,7 +12,7 @@
 -instfile=contrib:xhb.h
 
 # For hbserv.c, maybe more
--c=gnu90
+#-c=gnu90
 
 hbct.hbc
 hbtip.hbc

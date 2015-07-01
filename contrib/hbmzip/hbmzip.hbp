@@ -6,7 +6,7 @@
 -w3 -es2
 
 # localtime_r, gmtime_r
--c=gnu90
+#-c=gnu90
 
 -depurlbase=minizip:http://zlib.net/
 -depurlbase=minizip:http://winimage.com/zLibDll/minizip.html
