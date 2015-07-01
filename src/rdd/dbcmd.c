@@ -1004,6 +1004,26 @@ HB_FUNC( FIELDPUT )
    }
 }
 
+HB_FUNC( HB_FIELDPUT )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+   {
+      HB_USHORT uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
+
+      if( uiIndex > 0 )
+      {
+         PHB_ITEM pItem = hb_param( 2, HB_IT_ANY );
+         if( pItem )
+         {
+            if( SELF_PUTVALUE( pArea, uiIndex, pItem ) == HB_SUCCESS )
+               hb_itemReturn( pItem );
+         }
+      }
+   }
+}
+
 HB_FUNC( FLOCK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
