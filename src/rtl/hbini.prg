@@ -239,7 +239,7 @@ FUNCTION hb_iniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
    DO CASE
    CASE HB_ISSTRING( xFileName )
-      IF ( hFile := hb_vfOpen( xFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
+      IF ( hFile := hb_vfOpen( xFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) == NIL
          RETURN .F.
       ENDIF
       lClose := .T.
