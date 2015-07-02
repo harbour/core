@@ -10374,6 +10374,11 @@ FUNCTION hbmk_FNameDirExtSet( ... )   ; RETURN FNameDirExtSet( ... )
 FUNCTION hbmk_FuncNameEncode( ... )   ; RETURN FuncNameEncode( ... )
 FUNCTION hbmk_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
 
+#ifndef HB_LEGACY_LEVEL4
+FUNCTION hb_regexMatch( ... ) /* For a plugin that prefers to rely on buggy/deprecated API. See commit: 2009-03-10 17:25 UTC+0100 */
+   RETURN hb_regexHas( ... )
+#endif
+
 FUNCTION hbmk_ArrayToList( array, cSeparator )
 
    LOCAL cString := ""
