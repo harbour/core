@@ -33,9 +33,9 @@
 
 HB_FUNC( FT_SETDATE )
 {
-   HB_BOOL    fResult;
-   int        iYear, iMonth, iDay;
-   long       lDate;
+   HB_BOOL fResult;
+   int     iYear, iMonth, iDay;
+   long    lDate;
 
    if( HB_ISDATE( 1 ) )
       hb_dateDecode( lDate = hb_pardl( 1 ), &iYear, &iMonth, &iDay );

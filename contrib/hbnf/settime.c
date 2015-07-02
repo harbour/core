@@ -34,7 +34,7 @@
 HB_FUNC( FT_SETTIME )
 {
    HB_BOOL fResult;
-   int iHour = 0, iMinute = 0, iSeconds = 0, iMillisec = 0;
+   int     iHour = 0, iMinute = 0, iSeconds = 0, iMillisec = 0;
 
    if( HB_ISCHAR( 1 ) )
    {
