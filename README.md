@@ -15,7 +15,7 @@ and interfaces to popular APIs.
 2. [How to Get](#how-to-get)
 3. [How to Build](#how-to-build)
 4. [How to Do a Partial Build](#how-to-do-a-partial-build)
-5. [How to Create Distributable Packages](#how-to-create-distributable-packages)
+5. [How to Create Packages for Distribution](#how-to-create-packages-for-distribution)
 6. [How to Enable Optional Components](#how-to-enable-optional-components)
 7. [Build Options](#build-options)
 8. [Build Examples](#build-examples)
@@ -319,7 +319,7 @@ If you want to rebuild one specific contrib package, use this:
     hbmk2 make.hb <name> [clean] [custom hbmk2 options]
 
 
-# How to Create Distributable Packages
+# How to Create Packages for Distribution
 
 ## Source .tgz on *nix
 
