@@ -5,6 +5,9 @@
 
 -w3 -es2
 
+# For stime()
+#-c=gnu90{linux}
+
 -hbx=${hb_name}
 
 alt.c

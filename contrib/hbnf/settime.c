@@ -16,18 +16,25 @@
    Nanforum Toolkit
  */
 
+/* stime() exists only in SVr4, SVID, X/OPEN and Linux */
+#ifndef _SVID_SOURCE
+#define _SVID_SOURCE
+#endif
+
 #include "hbapi.h"
 #include "hbdate.h"
 
-#if defined( HB_OS_DOS )
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#elif defined( HB_OS_DOS )
    #include <dos.h>
 #endif
+#include <time.h>
 
 HB_FUNC( FT_SETTIME )
 {
-#if defined( HB_OS_DOS )
-   int        iHour = 0, iMinute = 0, iSeconds = 0;
-   union REGS regs;
+   HB_BOOL fResult;
+   int iHour = 0, iMinute = 0, iSeconds = 0, iMillisec = 0;
 
    if( HB_ISCHAR( 1 ) )
    {
@@ -43,19 +50,45 @@ HB_FUNC( FT_SETTIME )
    }
    else
    {
-      int iYear, iMonth, iDay, iMillisec;
+      int iYear, iMonth, iDay;
       hb_timeStampGetLocal( &iYear, &iMonth, &iDay,
                             &iHour, &iMinute, &iSeconds, &iMillisec );
    }
 
-   regs.h.ah = 45;
-   regs.h.ch = iHour;
-   regs.h.cl = iMinute;
-   regs.h.dh = iSeconds;
-   HB_DOS_INT86( 0x21, &regs, &regs );
+#if defined( HB_OS_WIN )
+   {
+      SYSTEMTIME st;
+      GetLocalTime( &st );
+      st.wHour         = ( WORD ) iHour;
+      st.wMinute       = ( WORD ) iMinute;
+      st.wSecond       = ( WORD ) iSeconds;
+      st.wMilliseconds = ( WORD ) iMillisec * 10;
+      fResult = SetLocalTime( &st );
+   }
+#elif defined( HB_OS_LINUX ) && ! defined( HB_OS_ANDROID ) && ! defined( __WATCOMC__ )
+   {
+      /* stime() exists only in SVr4, SVID, X/OPEN and Linux */
+      HB_ULONG lNewTime;
+      time_t   tm;
 
-   hb_retl( HB_TRUE );
+      lNewTime = iHour * 3600 + iMinute * 60 + iSeconds;
+      tm       = time( NULL );
+      tm      += lNewTime - ( tm % 86400 );
+      fResult  = stime( &tm ) == 0;
+   }
+#elif defined( HB_OS_DOS )
+   {
+      union REGS regs;
+      regs.h.ah = 45;
+      regs.h.ch = iHour;
+      regs.h.cl = iMinute;
+      regs.h.dh = iSeconds;
+      HB_DOS_INT86( 0x21, &regs, &regs );
+      fResult = regs.h.al == 0;
+   }
 #else
-   hb_retl( HB_FALSE );
+   fResult = HB_FALSE;
 #endif
+
+   hb_retl( fResult );
 }

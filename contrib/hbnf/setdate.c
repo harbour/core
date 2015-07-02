@@ -16,32 +16,69 @@
    Nanforum Toolkit
  */
 
+/* stime() exists only in SVr4, SVID, X/OPEN and Linux */
+#ifndef _SVID_SOURCE
+#define _SVID_SOURCE
+#endif
+
 #include "hbapi.h"
 #include "hbdate.h"
 
-#if defined( HB_OS_DOS )
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#elif defined( HB_OS_DOS )
    #include <dos.h>
 #endif
+#include <time.h>
 
 HB_FUNC( FT_SETDATE )
 {
-#if defined( HB_OS_DOS )
+   HB_BOOL    fResult;
    int        iYear, iMonth, iDay;
-   union REGS regs;
+   long       lDate;
 
    if( HB_ISDATE( 1 ) )
-      hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
+      hb_dateDecode( lDate = hb_pardl( 1 ), &iYear, &iMonth, &iDay );
    else
+   {
       hb_dateToday( &iYear, &iMonth, &iDay );
+      lDate = hb_dateEncode( iYear, iMonth, iDay );
+   }
 
-   regs.h.ah        = 43;
-   regs.HB_XREGS.cx = iYear;
-   regs.h.dh        = iMonth;
-   regs.h.dl        = iDay;
-   HB_DOS_INT86( 0x21, &regs, &regs );
+#if defined( HB_OS_WIN )
+   {
+      SYSTEMTIME st;
+      GetLocalTime( &st );
+      st.wYear      = ( WORD ) iYear;
+      st.wMonth     = ( WORD ) iMonth;
+      st.wDay       = ( WORD ) iDay;
+      st.wDayOfWeek = ( WORD ) hb_dateJulianDOW( lDate );
+      fResult       = SetLocalTime( &st );
+   }
+#elif defined( HB_OS_LINUX ) && ! defined( HB_OS_ANDROID ) && ! defined( __WATCOMC__ )
+   {
+      /* stime() exists only in SVr4, SVID, X/OPEN and Linux */
+      long   lNewDate;
+      time_t tm;
 
-   hb_retl( HB_TRUE );
+      lNewDate = lDate - hb_dateEncode( 1970, 1, 1 );
+      tm       = time( NULL );
+      tm       = lNewDate * 86400 + ( tm % 86400 );
+      fResult  = stime( &tm ) == 0;
+   }
+#elif defined( HB_OS_DOS )
+   {
+      union REGS regs;
+      regs.h.ah        = 43;
+      regs.HB_XREGS.cx = iYear;
+      regs.h.dh        = iMonth;
+      regs.h.dl        = iDay;
+      HB_DOS_INT86( 0x21, &regs, &regs );
+      fResult = regs.h.al == 0;
+   }
 #else
-   hb_retl( HB_FALSE );
+   fResult = HB_FALSE;
 #endif
+
+   hb_retl( fResult );
 }
