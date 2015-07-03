@@ -1272,14 +1272,9 @@ char * hb_verPCode( void )
    return pszPCode;
 }
 
+#if defined( HB_LEGACY_LEVEL4 )
 char * hb_verBuildDate( void )
 {
-   char * pszDate;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_verBuildDate()" ) );
-
-   pszDate = ( char * ) hb_xgrab( 64 );
-   hb_snprintf( pszDate, 64, "%s %s", __DATE__, __TIME__ );
-
-   return pszDate;
+   return ( char * ) hb_xgrabz( 1 );
 }
+#endif

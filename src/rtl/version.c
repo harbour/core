@@ -86,31 +86,23 @@ HB_FUNC( HB_VERSION )
       case HB_VERSION_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
       case HB_VERSION_BUILD_PLAT:     hb_retc_const( hb_verHB_PLAT() ); break;
       case HB_VERSION_BUILD_COMP:     hb_retc_const( hb_verHB_COMP() ); break;
-      case HB_VERSION_BUILD_DATE_STR: hb_retc_buffer( hb_verBuildDate() ); break;
+      case HB_VERSION_BUILD_DATE_STR: hb_retc_buffer( hb_verCommitInfo() ); break;
       case HB_VERSION_BUILD_DATE:
       {
-         char * pszBuildDate = hb_verBuildDate();
+         const char * pszBuildDate = hb_verCommitInfo();
 
-         if( strlen( pszBuildDate ) >= 11 )
+         if( strlen( pszBuildDate ) >= 10 )
          {
-            static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
             char szDate[ 9 ];
-            int  iMonth;
 
-            szDate[ 4 ] = szDate[ 5 ] = '0';
-
-            for( iMonth = 11; iMonth >= 0; iMonth-- )
-            {
-               if( memcmp( pszBuildDate, s_months[ iMonth ], 3 ) == 0 )
-               {
-                  hb_snprintf( szDate + 4, 3, "%02d", iMonth + 1 );
-                  break;
-               }
-            }
-
-            memcpy( szDate, pszBuildDate + 7, 4 );
-            szDate[ 6 ] = pszBuildDate[ 4 ] == ' ' ? '0' : pszBuildDate[ 4 ];
-            szDate[ 7 ] = pszBuildDate[ 5 ];
+            szDate[ 0 ] = pszBuildDate[ 0 ];
+            szDate[ 1 ] = pszBuildDate[ 1 ];
+            szDate[ 2 ] = pszBuildDate[ 2 ];
+            szDate[ 3 ] = pszBuildDate[ 3 ];
+            szDate[ 4 ] = pszBuildDate[ 5 ];
+            szDate[ 5 ] = pszBuildDate[ 6 ];
+            szDate[ 6 ] = pszBuildDate[ 8 ];
+            szDate[ 7 ] = pszBuildDate[ 9 ];
             szDate[ 8 ] = '\0';
 
             hb_retds( szDate );
@@ -118,14 +110,15 @@ HB_FUNC( HB_VERSION )
          else
             hb_retds( NULL );
 
-         hb_xfree( pszBuildDate );
          break;
       }
       case HB_VERSION_BUILD_TIME:
       {
-         char * pszBuildDate = hb_verBuildDate();
-         hb_retc( strlen( pszBuildDate ) >= 20 ? pszBuildDate + 12 : NULL );
-         hb_xfree( pszBuildDate );
+         const char * pszBuildDate = hb_verCommitInfo();
+         if( strlen( pszBuildDate ) >= 19 )
+            hb_retclen( pszBuildDate + 11, 8 );
+         else
+            hb_retc_null();
          break;
       }
       case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;
@@ -267,7 +260,7 @@ HB_FUNC( HB_PCODEVER )
 
 HB_FUNC( HB_BUILDDATE )
 {
-   hb_retc_buffer( hb_verBuildDate() );
+   hb_retc_const( hb_verCommitInfo() );
 }
 
 #endif

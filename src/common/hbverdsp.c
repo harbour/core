@@ -94,14 +94,6 @@ void hb_verBuildInfo( void )
    hb_conOutErr( hb_conNewLine(), 0 );
 
    {
-      char * pszBuildDate = hb_verBuildDate();
-      hb_conOutErr( "Built on: ", 0 );
-      hb_conOutErr( pszBuildDate, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-      hb_xfree( pszBuildDate );
-   }
-
-   {
       const char * pszFlags = hb_verFlagsPRG();
       if( pszFlags && *pszFlags )
       {
