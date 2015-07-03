@@ -1,7 +1,7 @@
 diff -urN pcre2.orig/p2jicomp.c pcre2/p2jicomp.c
---- pcre2.orig/p2jicomp.c	2015-01-25 16:17:45.464245700 +0100
-+++ pcre2/p2jicomp.c	2015-01-25 16:17:46.244195700 +0100
-@@ -71,7 +71,7 @@
+--- pcre2.orig/p2jicomp.c	2015-07-03 22:00:50.473403900 +0200
++++ pcre2/p2jicomp.c	2015-07-03 22:00:51.190985500 +0200
+@@ -76,7 +76,7 @@
  allocator->free(ptr, allocator->memory_data);
  }
  
@@ -11,9 +11,9 @@ diff -urN pcre2.orig/p2jicomp.c pcre2/p2jicomp.c
  #if defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED
  #error Unsupported architecture
 diff -urN pcre2.orig/sjconfi.h pcre2/sjconfi.h
---- pcre2.orig/sjconfi.h	2015-01-25 16:17:45.635834700 +0100
-+++ pcre2/sjconfi.h	2015-01-25 16:17:46.244195700 +0100
-@@ -472,8 +472,12 @@
+--- pcre2.orig/sjconfi.h	2015-07-03 22:00:50.644999500 +0200
++++ pcre2/sjconfi.h	2015-07-03 22:00:51.190985500 +0200
+@@ -477,8 +477,12 @@
  
  #if defined(__GNUC__) && !defined(__APPLE__)
  
