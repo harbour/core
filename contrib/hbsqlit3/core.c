@@ -1824,9 +1824,9 @@ HB_FUNC( SQLITE3_FILE_TO_BUFF )
       char *  buffer;
       HB_SIZE nSize;
 
-      nSize = hb_fileSize( handle );
+      nSize  = ( HB_SIZE ) hb_fileSize( handle );
       buffer = ( char * ) hb_xgrab( nSize + 1 );
-      nSize  = hb_fileReadAt( handle, buffer, nSize, 0 );
+      nSize  = ( HB_SIZE ) hb_fileReadAt( handle, buffer, nSize, 0 );
       buffer[ nSize ] = '\0';
       hb_fileClose( handle );
 

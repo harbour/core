@@ -40,7 +40,7 @@ endif
 # enable this only for users of MSVS 2013 and upper
 ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500 1600 1700),)
    ifneq ($(HB_COMPILER),clang)
-      ifneq ($(_HB_MSVC_ANALYZE),no)
+      ifeq ($(_HB_MSVC_ANALYZE),yes)
          CFLAGS += -analyze
       endif
    endif
