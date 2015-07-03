@@ -86,7 +86,7 @@ HB_FUNC( HB_VERSION )
       case HB_VERSION_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
       case HB_VERSION_BUILD_PLAT:     hb_retc_const( hb_verHB_PLAT() ); break;
       case HB_VERSION_BUILD_COMP:     hb_retc_const( hb_verHB_COMP() ); break;
-      case HB_VERSION_BUILD_DATE_STR: hb_retc_buffer( hb_verCommitInfo() ); break;
+      case HB_VERSION_BUILD_DATE_STR: hb_retc_const( hb_verCommitInfo() ); break;
       case HB_VERSION_BUILD_DATE:
       {
          const char * pszBuildDate = hb_verCommitInfo();
