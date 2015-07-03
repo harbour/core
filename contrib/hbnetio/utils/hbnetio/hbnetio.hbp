@@ -13,8 +13,8 @@ _winsvc.prg{win}
 -main=WinMain{win}
 hbwin.hbc{win}
 
-_daemon.prg{unix}
--main=DaemonMain{unix}
+_daemon.prg{linux}
+-main=DaemonMain{linux}
 hbunix.hbc{linux}
 
 # uncomment to build a slim hbnetio executable
