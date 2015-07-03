@@ -6613,9 +6613,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
                   IF Len( aTO_DO:__enumBase() ) > 1
-                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Harbour compiler command (embedded) job #%1$d:" ), aTO_DO:__enumIndex() ) )
+                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Harbour compiler command (built-in) job #%1$d:" ), aTO_DO:__enumIndex() ) )
                   ELSE
-                     _hbmk_OutStd( hbmk, I_( "Harbour compiler command (embedded):" ) )
+                     _hbmk_OutStd( hbmk, I_( "Harbour compiler command (built-in):" ) )
                   ENDIF
                ENDIF
                OutStd( ;
@@ -6628,7 +6628,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( aThreads, { hb_threadStart( @hbmk_hb_compile(), hbmk, "harbour", aCommand ), aCommand } )
                ELSE
                   IF ( tmp := hbmk_hb_compile( hbmk, "harbour", aCommand ) ) != 0
-                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler (embedded). %1$d" ), tmp ) )
+                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running Harbour compiler (built-in). %1$d" ), tmp ) )
                      IF ! hbmk[ _HBMK_lQuiet ]
                         OutErr( ;
                            "(" + FNameEscape( hb_DirSepAdd( hb_DirBase() ) + cBin_CompPRG + cBinExt, hbmk[ _HBMK_nCmd_Esc ] ) + ")" + ;
@@ -14958,8 +14958,8 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 
    THREAD STATIC t_hHeaders
 
-#if defined( HBMK_WITH_EMBEDDED_HEADERS ) .OR. ;
-    defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
+#if defined( HBMK_WITH_BUILTIN_HEADERS_TOP ) .OR. ;
+    defined( HBMK_WITH_BUILTIN_HEADERS_ALL )
 
    IF t_hHeaders == NIL
       t_hHeaders := { => }
@@ -14968,7 +14968,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
       #xcommand ADD HEADER TO <hash> FILE <(cFile)> => ;
                 #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
 
-#if defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
+#if defined( HBMK_WITH_BUILTIN_HEADERS_ALL )
       ADD HEADER TO t_hHeaders FILE "achoice.ch"
       ADD HEADER TO t_hHeaders FILE "assert.ch"
       ADD HEADER TO t_hHeaders FILE "blob.ch"
@@ -17740,8 +17740,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "*.ch"               , H_( "if passed directly as a source file, it will be used as additional standard header" ) }, ;
       { _HBMK_AUTOHBC_NAME   , hb_StrFormat( I_( "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence) [*]: %1$s" ), ArrayToList( AutoConfPathList( hbmk, .F., hbmk[ _HBMK_lMarkdown ] ), ", " ) ) }, ;
       { _HBMK_AUTOHBM_NAME   , I_( "optional .hbm file residing in current working directory, which gets automatically processed before other options" ) }, ;
-      { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" , hb_StrFormat( H_( "special .hbm file embedded inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)." ), _SELF_NAME_ ) }, ;
-      { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_install.hbm", hb_StrFormat( H_( "special .hbm file embedded inside %1$s. It manages the details of installing build targets and related package files to standard locations (in the style of Harbour contribs)." ), _SELF_NAME_ ) } }
+      { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" , hb_StrFormat( H_( "special .hbm file built-in inside %1$s. It manages the details of creating a dynamic library (in the style of Harbour contribs)." ), _SELF_NAME_ ) }, ;
+      { _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_install.hbm", hb_StrFormat( H_( "special .hbm file built-in inside %1$s. It manages the details of installing build targets and related package files to standard locations (in the style of Harbour contribs)." ), _SELF_NAME_ ) } }
 
    LOCAL aLst_File_Shell := { ;
       , ;
@@ -18217,10 +18217,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 #endif
 
 #ifdef HARBOUR_SUPPORT
-#if defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
-   AAdd( aLst_Config, I_( "Embed all core Harbour headers." ) )
-#elif defined( HBMK_WITH_EMBEDDED_HEADERS )
-   AAdd( aLst_Config, I_( "Embed frequently used core Harbour headers." ) )
+#if defined( HBMK_WITH_BUILTIN_HEADERS_ALL )
+   AAdd( aLst_Config, I_( "Provide built-in core Harbour headers: all" ) )
+#elif defined( HBMK_WITH_BUILTIN_HEADERS_TOP )
+   AAdd( aLst_Config, I_( "Provide built-in core Harbour headers: frequently used ones" ) )
 #endif
 #ifndef _HBMK_EMBEDDED_
    #if defined( HBMK_WITH_EXTS )
