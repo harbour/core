@@ -13,6 +13,10 @@ _winsvc.prg{win}
 -main=WinMain{win}
 hbwin.hbc{win}
 
+_daemon.prg{unix}
+-main=DaemonMain{unix}
+hbunix.hbc{linux}
+
 # uncomment to build a slim hbnetio executable
 # without RPC support for all Harbour core functions
 #-prgflag=-DHB_NO_EXTERN

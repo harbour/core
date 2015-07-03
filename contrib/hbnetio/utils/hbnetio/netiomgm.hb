@@ -324,13 +324,13 @@ STATIC FUNCTION XToStrX( xValue )
 
 STATIC PROCEDURE cmdAbout( netiocli )
 
-   hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + HBRawVersion() )
+   hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + HBRawVersionMgmnt() )
    hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2015, Viktor Szakats" )
    hbnetiocon_dispevent( netiocli, hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN
 
-STATIC FUNCTION HBRawVersion()
+STATIC FUNCTION HBRawVersionMgmnt()
    RETURN hb_StrFormat( "%d.%d.%d%s (%s) (%s)", ;
       hb_Version( HB_VERSION_MAJOR ), ;
       hb_Version( HB_VERSION_MINOR ), ;

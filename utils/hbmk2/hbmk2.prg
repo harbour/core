@@ -10375,8 +10375,8 @@ FUNCTION hbmk_FuncNameEncode( ... )   ; RETURN FuncNameEncode( ... )
 FUNCTION hbmk_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
 
 #ifndef HB_LEGACY_LEVEL4
-FUNCTION hb_regexMatch( ... ) /* For a plugin that prefers to rely on buggy/deprecated API. See commit: 2009-03-10 17:25 UTC+0100 */
-   RETURN hb_regexHas( ... )
+FUNCTION hb_regexMatch( ... )  /* For a plugin that prefers to rely on buggy/deprecated API. See commit: 2009-03-10 17:25 UTC+0100 */
+   RETURN iif( hb_defaultValue( hb_PValue( 5 ), .F. ), hb_regexLike( ... ), hb_regexHas( ... ) )
 #endif
 
 FUNCTION hbmk_ArrayToList( array, cSeparator )
