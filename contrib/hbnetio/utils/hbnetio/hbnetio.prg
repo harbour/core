@@ -879,6 +879,8 @@ STATIC PROCEDURE HB_Usage()
    OutStd(                                                                                                               hb_eol() )
    #elif defined( __PLATFORM__LINUX )
    OutStd(               "  -d                    run as a daemon"                                                     , hb_eol() )
+   OutStd(               "  -[e]{u|g}id:<val>     set gid/uid/egid/euid to <val> when run as daemon"                   , hb_eol() )
+   OutStd(               "                        where <val> can be a number or a name"                               , hb_eol() )
    #endif
    #endif
    OutStd(               "  --version             display version header only"                                         , hb_eol() )
