@@ -11360,21 +11360,12 @@ STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile )
 
 STATIC FUNCTION HBC_FindAndProcess( hbmk, cFile, nNesting )
 
-   LOCAL lFound
+   IF hb_FileExists( cFile ) .OR. ;
+      HBC_FindStd( hbmk, @cFile )
 
-   hb_default( @nNesting, 1 )
+      AAddNew( hbmk[ _HBMK_aHBCCON ], hb_FNameName( hb_PathNormalize( cFile ) ) )
 
-   IF hb_FileExists( cFile )
-      lFound := .T.
-   ELSE
-      lFound := HBC_FindStd( hbmk, @cFile )
-      IF lFound
-         AAddNew( hbmk[ _HBMK_aHBCCON ], hb_FNameName( hb_PathNormalize( cFile ) ) )
-      ENDIF
-   ENDIF
-
-   IF lFound
-      RETURN HBC_ProcessOne( hbmk, hb_PathNormalize( cFile ), nNesting )
+      RETURN HBC_ProcessOne( hbmk, hb_PathNormalize( cFile ), hb_defaultValue( nNesting, 1 ) )
    ENDIF
 
    RETURN ""
