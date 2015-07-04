@@ -4834,6 +4834,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      ENDIF
                   ENDIF
                ENDIF
+               IF hbmk[ _HBMK_nCOMPVer ] > 0409  /* binutils 2.24 */
+                  AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-insert-timestamp" )
+                  /* This has potential risks for .dlls:
+                        https://sourceware.org/bugzilla/show_bug.cgi?id=16887 */
+                  AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-insert-timestamp" )
+               ENDIF
             ENDIF
          ENDIF
          cOpt_CompC += " {FC}"

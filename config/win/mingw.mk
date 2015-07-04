@@ -59,6 +59,12 @@ ifneq ($(HB_COMPILER_VER),)
             DFLAGS += -Wl,--high-entropy-va
          endif
       endif
+      ifeq ($(filter $(HB_COMPILER_VER),0405 0406 0407 0408),)
+         LDFLAGS += -Wl,--no-insert-timestamp
+         # This has potential risks for .dlls:
+         #    https://sourceware.org/bugzilla/show_bug.cgi?id=16887
+         DFLAGS += -Wl,--no-insert-timestamp
+      endif
    endif
 endif
 
