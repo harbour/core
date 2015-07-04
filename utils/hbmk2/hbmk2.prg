@@ -4829,16 +4829,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--dynamicbase" )
                   IF hbmk[ _HBMK_cCOMP ] == "mingw64"
                      IF hbmk[ _HBMK_nCOMPVer ] >= 0500  /* binutils 2.25 */
+                        AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--high-entropy-va" )
                         AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--high-entropy-va" )
-                        AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--high-entropy-va" )
+                        AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-insert-timestamp" )
+                        /* This has potential risks for .dlls:
+                              https://sourceware.org/bugzilla/show_bug.cgi?id=16887 */
+                        AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-insert-timestamp" )
                      ENDIF
                   ENDIF
-               ENDIF
-               IF hbmk[ _HBMK_nCOMPVer ] > 0409  /* binutils 2.24 */
-                  AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-insert-timestamp" )
-                  /* This has potential risks for .dlls:
-                        https://sourceware.org/bugzilla/show_bug.cgi?id=16887 */
-                  AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-insert-timestamp" )
                ENDIF
                IF hbmk[ _HBMK_nCOMPVer ] > 0405  /* binutils 2.20 */
                   AAdd( hbmk[ _HBMK_aOPTA ], "-D" )
@@ -5914,7 +5912,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( hbmk[ _HBMK_aOPTL ], "-fixed:no" ) /* is this useful? */
                   AAdd( hbmk[ _HBMK_aOPTD ], "-dynamicbase" )
                   IF hbmk[ _HBMK_cCOMP ] == "pocc64"
-                     AAdd( hbmk[ _HBMK_aOPTD ], "-highentropyva" )
+                     AAdd( hbmk[ _HBMK_aOPTL ], "-highentropyva" )
                      AAdd( hbmk[ _HBMK_aOPTD ], "-highentropyva" )
                   ENDIF
                ENDIF

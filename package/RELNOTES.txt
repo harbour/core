@@ -25,7 +25,7 @@ Usage:
 7. Further hints in section **Build Your Own Harbour App**
    of `README.md`.
 
-## Tool/library Dependencies
+## Tool/Library Dependencies
 
 See `BUILD.txt`
 

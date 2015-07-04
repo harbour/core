@@ -53,13 +53,11 @@ ifneq ($(HB_COMPILER_VER),)
    ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404),)
       LDFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
       DFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
-      ifeq ($(HB_COMPILER),mingw64)
-         ifeq ($(filter $(HB_COMPILER_VER),0405 0406 0407 0408 0409),)
+      ifeq ($(filter $(HB_COMPILER_VER),0405 0406 0407 0408 0409),)
+         ifeq ($(HB_COMPILER),mingw64)
             LDFLAGS += -Wl,--high-entropy-va
             DFLAGS += -Wl,--high-entropy-va
          endif
-      endif
-      ifeq ($(filter $(HB_COMPILER_VER),0405 0406 0407 0408),)
          LDFLAGS += -Wl,--no-insert-timestamp
          # This has potential risks for .dlls:
          #    https://sourceware.org/bugzilla/show_bug.cgi?id=16887
