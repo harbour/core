@@ -4394,9 +4394,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar"
             ENDCASE
             IF HBMK_ISPLAT( "hpux|sunos" )
-               cOpt_Lib := "{FA} rc {OL} {LO}"
+               cOpt_Lib := "rc {FA} {OL} {LO}"
             ELSE
-               cOpt_Lib := "{FA} rcs {OL} {LO}"
+               cOpt_Lib := "rcs {FA} {OL} {LO}"
             ENDIF
          ENDIF
          DO CASE
@@ -4840,6 +4840,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         https://sourceware.org/bugzilla/show_bug.cgi?id=16887 */
                   AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-insert-timestamp" )
                ENDIF
+               IF hbmk[ _HBMK_nCOMPVer ] > 0405  /* binutils 2.20 */
+                  AAdd( hbmk[ _HBMK_aOPTA ], "-D" )
+               ENDIF
             ENDIF
          ENDIF
          cOpt_CompC += " {FC}"
@@ -4877,7 +4880,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #if defined( __PLATFORM__WINDOWS )
          hbmk[ _HBMK_nCmd_Esc ] := _ESC_DBLQUOTE
 #endif
-         cOpt_Lib := "{FA} rcs {OL} {LO}"
+         cOpt_Lib := "rcs {FA} {OL} {LO}"
          cLibObjPrefix := NIL
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
             cBin_Lib     := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Lib, hbmk[ _HBMK_nCmd_Esc ] )
@@ -5048,7 +5051,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cImpLibExt := cLibLibExt
             cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
          ENDIF
-         cOpt_Lib := "{FA} rcs {OL} {LO}"
+         cOpt_Lib := "rcs {FA} {OL} {LO}"
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-Map,{OM}" )
@@ -5157,7 +5160,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cLibPathSep := " "
          cLibLibExt := ".a"
          cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "ar" + hbmk[ _HBMK_cCCEXT ]
-         cOpt_Lib := "{FA} rcs {OL} {LO}{SCRIPT}"
+         cOpt_Lib := "rcs {FA} {OL} {LO}{SCRIPT}"
          cBin_LibHBX := hbmk[ _HBMK_cCCPREFIX ] + "nm" + hbmk[ _HBMK_cCCEXT ]
          cOpt_LibHBX := "-g --defined-only -C {LI}"
          IF l_lLIBGROUPING
@@ -5931,9 +5934,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cObjExt := ".o"
          cBin_Lib := "ar"
          IF hbmk[ _HBMK_cPLAT ] == "linux"
-            cOpt_Lib := "{FA} rcs {OL} {LO}"
+            cOpt_Lib := "rcs {FA} {OL} {LO}"
          ELSE
-            cOpt_Lib := "{FA} rc {OL} {LO}"
+            cOpt_Lib := "rc {FA} {OL} {LO}"
          ENDIF
          cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "sunCC" + hbmk[ _HBMK_cCCSUFFIX ]
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "suncc" + hbmk[ _HBMK_cCCSUFFIX ] )
@@ -6074,7 +6077,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cLibExt := ""
          cObjExt := ".o"
          cBin_Lib := hbmk[ _HBMK_cCCPREFIX ] + "dar"
-         cOpt_Lib := "{FA} rcs {OL} {LO}"
+         cOpt_Lib := "rcs {FA} {OL} {LO}"
          cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "dplus"
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "dcc" )
          cOpt_CompC := "-c"

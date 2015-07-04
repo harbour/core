@@ -59,7 +59,7 @@ endif
 LDFLAGS += $(LDLIBPATHS)
 
 AR := $(HB_CCPREFIX)ar$(HB_CCSUFFIX)
-AR_RULE = ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
+AR_RULE = ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
 
 DY := $(CC)
 DFLAGS += -shared $(DLIBPATHS)

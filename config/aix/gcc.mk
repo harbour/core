@@ -69,7 +69,7 @@ LD_RULE = $(aix_ld)
 # end of workaround block
 
 AR := $(HB_CCPREFIX)ar
-AR_RULE = ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rc $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
+AR_RULE = ( $(AR) rc $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
 
 DY := $(CC)
 DFLAGS += -shared -Wl,-G $(LIBPATHS)
