@@ -4839,7 +4839,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cOpt_CompC += " {FC}"
          cOptIncMask := "-I{DI}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            IF .T. /* EXPERIMENTAL */
+            IF .T.  /* Proven to be working. Enabled permanently. */
                lCHD_Comp := .T.
                cOpt_CompC += " {LC}"
             ELSE
@@ -13611,6 +13611,7 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
    LOCAL cDef
    LOCAL cSourceDef
    LOCAL fhnd
+   LOCAL tmp
 
    LOCAL lDefSource
    LOCAL lNoDefSource := .F.
@@ -13653,6 +13654,8 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
             RETURN nResult
          ENDIF
       ENDIF
+   ELSEIF hb_FileExists( tmp := FN_CookLib( cSourceDLL, "lib", ".dll.a" ) )  /* use "lib<dllname>.dll.a" implibs, if there are any */
+      cSourceDLL := tmp
    ENDIF
 
    RETURN win_implib_copy( hbmk, cSourceDLL, cTargetLib )

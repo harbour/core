@@ -71,6 +71,7 @@ build_script:
 - if "%TARGET%" == "mingw64" set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
 #- if "%TARGET%" == "msvc" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
 #- if "%TARGET%" == "msvc64" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
+- if "%TARGET:~0,5%-%HB_BUILD_MODE%" == "mingw-cpp" set HB_USER_LDFLAGS=-static-libgcc -static-libstdc++
 #- set HB_WITH_ADS=C:\w\ads\acesdk
 #- set HB_WITH_CAIRO=C:\w\cairo\include\cairo
 #- set HB_WITH_FIREBIRD=C:\w\firebird\include

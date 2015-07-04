@@ -25,7 +25,7 @@ depfinish=qt5
 {HBMK_HAS_QT5&darwin}dflags=-F${HBMK_DIR_QT5}/../lib
 {darwin}frameworks=QtCore QtGui
 {darwin&HBMK_HAS_QT5}frameworks=QtWidgets
-{(bsd|darwin)}libs=stdc++
+{bsd|darwin}libs=stdc++
 
 cpp=yes
 gui=yes

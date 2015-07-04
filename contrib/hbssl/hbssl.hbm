@@ -39,6 +39,9 @@
 # the complete OpenSSL API, starting with OS X Lion 10.7
 -cflag={allgcc&darwin}-Wno-deprecated
 
+# for openssl/applink.c
+-cflag={lngcpp&allgcc}-fpermissive
+
 # For _fileno() in openssl/applink.c
 #-c=gnu90
 
