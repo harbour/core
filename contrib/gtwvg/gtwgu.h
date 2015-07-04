@@ -154,8 +154,13 @@ typedef struct
    int       width;
    int       height;
 
-} HB_GTWVT, * PHB_GTWVT;
+} HB_GTWGU, * PHB_GTWGU;
 
+/* Trick to avoid warning about structures with the same
+   name having multiple definitions in the same module.
+   Without diverging from mainline codebase too much. */
+#define HB_GTWVT   HB_GTWGU
+#define PHB_GTWVT  PHB_GTWGU
 
 HB_EXTERN_END
 

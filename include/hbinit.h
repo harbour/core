@@ -59,7 +59,13 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
 #if defined( __cplusplus ) && ! defined( HB_STATIC_STARTUP ) && \
     ! defined( HB_PRAGMA_STARTUP ) && ! defined( HB_GNUC_STARTUP ) && \
     ! defined( HB_INITSEG_STARTUP ) && ! defined( HB_DATASEG_STARTUP )
-   #define HB_STATIC_STARTUP
+
+   /* GCC 5.x will show 'defined but not used [Wunused-variable]' warning
+      for the static variable initialized with the init function, so we're
+      using the native GCC method instead. */
+   #if !( defined( __GNUC__ ) && ( __GNUC__ - 0 >= 5 ) )
+      #define HB_STATIC_STARTUP
+   #endif
 #endif
 
 #define HB_INIT_SYMBOLS_COUNT ( sizeof( symbols_table ) / sizeof( HB_SYMB ) )

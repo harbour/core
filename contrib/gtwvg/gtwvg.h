@@ -299,7 +299,13 @@ typedef struct
 
    HB_THREAD_NO threadNO;                   /* Will hold the current THREAD No */
 
-} HB_GTWVT, * PHB_GTWVT;
+} HB_GTWVG, * PHB_GTWVG;
+
+/* Trick to avoid warning about structures with the same
+   name having multiple definitions in the same module.
+   Without diverging from mainline codebase too much. */
+#define HB_GTWVT   HB_GTWVG
+#define PHB_GTWVT  PHB_GTWVG
 
 extern HB_EXPORT POINT         hb_wvt_gtGetXYFromColRow( int col, int row );
 #if ! defined( HB_OS_WIN_CE )
