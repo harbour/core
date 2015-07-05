@@ -272,6 +272,8 @@ if exist "%HB_SFX_7Z%" (
       "harbour-%HB_VF%-win.7z" ^
       "harbour-%HB_VF%-win.7z.exe"
 
+   touch -t %_TS% "harbour-%HB_VF%-win.7z.exe"
+
    del "harbour-%HB_VF%-win.7z"
    del _7zconf
 

@@ -241,6 +241,8 @@ PROCEDURE Main( ... )
                " " + FNameEscape( tmp ) + ;
                " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" )
 
+            mk_hb_FSetDateTime( tmp )
+
             OutStd( hb_StrFormat( "! Created Harbour release package: '%1$s' (%2$d bytes)", tmp, hb_FSize( tmp ) ) + hb_eol() )
          ELSE
             cBin_Tar := "tar"
@@ -281,6 +283,8 @@ PROCEDURE Main( ... )
                   " " + FNameEscape( cTar_Path ) + ;
                   iif( lGNU_Tar, " --owner=" + cOwner + " --group=" + cGroup, "" ) + ;
                   " ." )
+
+               mk_hb_FSetDateTime( cTar_Path )
 
                hb_cwd( cOldDir )
 
@@ -363,12 +367,18 @@ PROCEDURE Main( ... )
 
    RETURN
 
+STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
+
+   LOCAL tVCS := vcs_timestamp()
+
+   RETURN Empty( tVCS ) .OR. hb_FSetDateTime( cFileName, tVCS )
+
 STATIC FUNCTION mk_hb_MemoWrit( cFileName, cContent )
 
    LOCAL lSuccess := hb_MemoWrit( cFileName, cContent )
 
-   IF GetEnvC( "HB_BUILD_PKG" ) == "yes"
-      hb_FSetDateTime( cFileName, vcs_timestamp() )
+   IF lSuccess .AND. GetEnvC( "HB_BUILD_PKG" ) == "yes"
+      mk_hb_FSetDateTime( cFileName )
    ENDIF
 
    RETURN lSuccess
@@ -389,6 +399,9 @@ STATIC FUNCTION vcs_timestamp()
          SubStr( cStdOut, 12, 2 ) + ;
          SubStr( cStdOut, 15, 2 ) + ;
          SubStr( cStdOut, 18, 2 ) )
+
+      OutStd( hb_StrFormat( "! Repository timestamp: %1$s" + ;
+         iif( Empty( s_tVCS ), "(not available)", hb_TToC( s_tVCS, "yyyy-mm-dd", "HH:MM" ) ) ) + hb_eol() )
    ENDIF
 
    RETURN s_tVCS
