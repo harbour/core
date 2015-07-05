@@ -459,6 +459,8 @@ static int hb_pp_TimeStampToNum( PHB_PP_STATE pState, char * pszLog )
                   ( int ) ( pszLog[ 22 ] - '0' ) ) * 60 +
                   ( int ) ( pszLog[ 23 ] - '0' ) * 10 +
                   ( int ) ( pszLog[ 24 ] - '0' );
+         if( pszLog[ 20 ] == '-' )
+            iUTC *= -1;
       }
       pszLog[ 16 ] = '\0';
       if( iUTC != 0 && hb_timeStampStrGetDT( pszLog, &lJulian, &lMilliSec ) )
