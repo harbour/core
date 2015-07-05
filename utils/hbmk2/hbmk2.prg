@@ -6294,6 +6294,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
       IF ! Empty( l_cVCSHEAD ) .OR. lVCSTSLoad .OR. hbmk[ _HBMK_lVCSTS ]
          tmp1 := VCSID( hbmk, l_cVCSDIR, l_cVCSHEAD, @tmp2, @tmp3 )
+         IF hbmk[ _HBMK_lInfo ] .AND. ( lVCSTSLoad .OR. hbmk[ _HBMK_lVCSTS ] )
+            _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Repository timestamp (local): %1$s" ), hb_TToC( hbmk[ _HBMK_tVCSTS ], "yyyy-mm-dd", "HH:MM:SS" ) ) )
+         ENDIF
          IF ! Empty( l_cVCSHEAD )
             /* Use the same EOL for all platforms to avoid unnecessary rebuilds. */
             tmp := ;
@@ -13982,7 +13985,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
       /* fall through */
    CASE _VCS_GIT
       cType := "git"
-      cCommand := "git" + iif( nType == _VCS_GIT_SUB .OR. Empty( cDir ), "", " --git-dir=" + cDir + ".git" ) + " log -n 1 --format=format:%h%n%H%n%ai%n%an%n%ae --encoding=utf8"
+      cCommand := "git" + iif( nType == _VCS_GIT_SUB .OR. Empty( cDir ), "", " --git-dir=" + cDir + ".git" ) + " log -n 1 --format=format:%h%n%H%n%ci%n%cn%n%ce%n%ai%n%an%n%ae --encoding=utf8"
       EXIT
    CASE _VCS_MERCURIAL
       cType := "mercurial"
@@ -14031,31 +14034,49 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
          /* 5f561a7
             5f561a78ebf2ad1aa6866f469c82231fc8104925
             2013-04-26 02:12:08 +0200
-            Foo Bar
-            foobar@foobaz */
-         IF Len( aResult := hb_ATokens( cStdOut, .T. ) ) >= 5
+            Foo Bar Commit
+            foobar.commit@foobaz
+            2013-04-26 02:12:08 +0200
+            Foo Bar Author
+            foobar.author@foobaz */
+         IF Len( aResult := hb_ATokens( cStdOut, .T. ) ) >= 8
+
+            cResult := aResult[ 1 ]
+            hCustom[ "COMMIT_HASH" ] := aResult[ 2 ]
 
             nOffset := iif( SubStr( aResult[ 3 ], 21, 1 ) == "-", -1, 1 ) * 60 * ;
                        ( Val( SubStr( aResult[ 3 ], 22, 2 ) ) * 60 + ;
                          Val( SubStr( aResult[ 3 ], 24, 2 ) ) )
 
-            cResult := aResult[ 1 ]
-            hCustom[ "COMMIT_HASH" ] := aResult[ 2 ]
-            hCustom[ "AUTHOR_DATE_ISO" ] := aResult[ 3 ]
-            hCustom[ "AUTHOR_DATE" ] := ;
+            hCustom[ "COMMIT_DATE_ISO" ] := aResult[ 3 ]
+            hCustom[ "COMMIT_DATE" ] := ;
                SubStr( aResult[ 3 ], 1, 4 ) + ;
                SubStr( aResult[ 3 ], 6, 2 ) + ;
                SubStr( aResult[ 3 ], 9, 2 )
-            hCustom[ "AUTHOR_TIME" ] := ;
+            hCustom[ "COMMIT_TIME" ] := ;
                SubStr( aResult[ 3 ], 12, 2 ) + ;
                SubStr( aResult[ 3 ], 15, 2 ) + ;
                SubStr( aResult[ 3 ], 18, 2 )
+            hCustom[ "COMMIT_TIMESTAMP" ] := hCustom[ "COMMIT_DATE" ] + hCustom[ "COMMIT_TIME" ]
+            hCustom[ "COMMIT_TIMESTAMP_UTC" ] := Left( hb_TToS( hb_SToT( hCustom[ "COMMIT_TIMESTAMP" ] ) - ( nOffset / 86400 ) ), 14 )
+            hCustom[ "COMMIT_NAME" ] := aResult[ 4 ] /* UTF-8 */
+            hCustom[ "COMMIT_MAIL" ] := aResult[ 5 ] /* UTF-8 */
+
+            hbmk[ _HBMK_tVCSTS ] := hb_SToT( hCustom[ "COMMIT_TIMESTAMP" ] ) + ( hb_UTCOffset() / 86400 )
+
+            hCustom[ "AUTHOR_DATE_ISO" ] := aResult[ 6 ]
+            hCustom[ "AUTHOR_DATE" ] := ;
+               SubStr( aResult[ 6 ], 1, 4 ) + ;
+               SubStr( aResult[ 6 ], 6, 2 ) + ;
+               SubStr( aResult[ 6 ], 9, 2 )
+            hCustom[ "AUTHOR_TIME" ] := ;
+               SubStr( aResult[ 6 ], 12, 2 ) + ;
+               SubStr( aResult[ 6 ], 15, 2 ) + ;
+               SubStr( aResult[ 6 ], 18, 2 )
             hCustom[ "AUTHOR_TIMESTAMP" ] := hCustom[ "AUTHOR_DATE" ] + hCustom[ "AUTHOR_TIME" ]
             hCustom[ "AUTHOR_TIMESTAMP_UTC" ] := Left( hb_TToS( hb_SToT( hCustom[ "AUTHOR_TIMESTAMP" ] ) - ( nOffset / 86400 ) ), 14 )
-            hCustom[ "AUTHOR_NAME" ] := aResult[ 4 ] /* UTF-8 */
-            hCustom[ "AUTHOR_MAIL" ] := aResult[ 5 ] /* UTF-8 */
-
-            hbmk[ _HBMK_tVCSTS ] := hb_SToT( hCustom[ "AUTHOR_TIMESTAMP" ] )
+            hCustom[ "AUTHOR_NAME" ] := aResult[ 7 ] /* UTF-8 */
+            hCustom[ "AUTHOR_MAIL" ] := aResult[ 8 ] /* UTF-8 */
 
             hb_processRun( "git rev-parse --abbrev-ref HEAD",, @tmp )
             hb_processRun( hb_StrFormat( "git rev-list %1$s --count", hb_StrReplace( tmp, Chr( 13 ) + Chr( 10 ) ) ),, @cStdOut )

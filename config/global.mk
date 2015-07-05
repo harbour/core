@@ -1899,7 +1899,7 @@ ifeq ($(HB_INIT_DONE),)
    endif
    ifneq ($(wildcard $(TOP)$(ROOT).git),)
       ifneq ($(call find_in_path,git),)
-         _cmd := git show --summary --format="%h%n%ai%n%an%n%ae" HEAD
+         _cmd := git show --summary --format="%h%n%ci%n%an%n%ae" HEAD
          ifneq ($(HB_SHELL),sh)
             _cmd := $(subst %,%%,$(_cmd))
          endif
