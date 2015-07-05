@@ -569,8 +569,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_cPKGM             163
 #define _HBMK_aHBCCON           164
 #define _HBMK_lHaltRevCounters  165
+#define _HBMK_lVCSTS            166
 
-#define _HBMK_MAX_              165
+#define _HBMK_MAX_              166
 
 #define _HBMK_DEP_CTRL_MARKER   ".control."  /* must be an invalid path */
 
@@ -1116,6 +1117,7 @@ STATIC FUNCTION hbmk_new( lShellMode )
    hbmk[ _HBMK_bOut ] := @OutStd()
 
    hbmk[ _HBMK_lHaltRevCounters ] := .F.
+   hbmk[ _HBMK_lVCSTS ] := .F.
 
    hbmk[ _HBMK_nArgTarget ] := 0
 
@@ -3083,6 +3085,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       CASE cParamL == "-harden"             ; hbmk[ _HBMK_lHARDEN ] := .T.
       CASE cParamL == "-harden-"            ; hbmk[ _HBMK_lHARDEN ] := .F.
+      CASE cParamL == "-vcsts"              ; hbmk[ _HBMK_lVCSTS ] := .T.
+      CASE cParamL == "-vcsts-"             ; hbmk[ _HBMK_lVCSTS ] := .F.
 #ifdef HB_LEGACY_LEVEL5
       CASE cParamL == "-safe"               ; hbmk[ _HBMK_lHARDEN ] := .T. ; LegacyWarning( hbmk, aParam, "-harden" )
       CASE cParamL == "-safe-"              ; hbmk[ _HBMK_lHARDEN ] := .F. ; LegacyWarning( hbmk, aParam, "-harden-" )
@@ -6286,7 +6290,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    /* Generate header with repository ID information */
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
-      IF ! Empty( l_cVCSHEAD ) .OR. lVCSDateLoad
+      IF ! Empty( l_cVCSHEAD ) .OR. lVCSDateLoad .OR. hbmk[ _HBMK_lVCSTS ]
          tmp1 := VCSID( hbmk, l_cVCSDIR, l_cVCSHEAD, @tmp2, @tmp3, @tVCSDate )
          IF ! Empty( l_cVCSHEAD )
             /* Use the same EOL for all platforms to avoid unnecessary rebuilds. */
@@ -7782,6 +7786,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF ! hbmk[ _HBMK_lQuiet ]
                      HintHBC( hbmk )
                   ENDIF
+
+                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
+                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
+                     IF hbmk[ _HBMK_lIMPLIB ]
+                        hb_FSetDateTime( l_cIMPLIBNAME, tVCSDate )
+                     ENDIF
+                     IF hb_FileExists( tmp := hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
+                        hb_FSetDateTime( tmp, tVCSDate )
+                     ENDIF
+                  ENDIF
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -7906,6 +7920,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF ! hbmk[ _HBMK_lQuiet ]
                      HintHBC( hbmk )
                   ENDIF
+
+                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
+                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
+                     IF hbmk[ _HBMK_lIMPLIB ]
+                        hb_FSetDateTime( l_cIMPLIBNAME, tVCSDate )
+                     ENDIF
+                     IF hb_FileExists( tmp := hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
+                        hb_FSetDateTime( tmp, tVCSDate )
+                     ENDIF
+                  ENDIF
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -7970,6 +7994,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ENDIF
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
                      hbmk[ _HBMK_nExitCode ] := _EXIT_RUNLIB
+                  ENDIF
+
+                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
+                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
                   ENDIF
                ENDIF
 
@@ -8125,11 +8153,20 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   OutErr( cCommand + _OUT_EOL )
                ENDIF
             ENDIF
+
+            IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
+               hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
+               IF l_cIMPLIBNAME != NIL .AND. hbmk[ _HBMK_lIMPLIB ]
+                  hb_FSetDateTime( l_cIMPLIBNAME, tVCSDate )
+               ENDIF
+            ENDIF
          ENDIF
 
          IF hbmk[ _HBMK_nCOMPR ] != _COMPR_OFF .AND. ! hbmk[ _HBMK_lCreateLib ]
 
             /* Setup compressor for host platform */
+
+            /* NOTE: upx preserves timestamp of the executable */
 
             #if defined( __PLATFORM__WINDOWS ) .OR. ;
                 defined( __PLATFORM__DOS )
@@ -8289,6 +8326,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Running code sign command. %1$d:" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutStd( tmp1 + _OUT_EOL )
+                  ENDIF
+
+                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
+                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
                   ENDIF
                ENDIF
 
@@ -13994,7 +14035,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom, /* 
             hCustom[ "AUTHOR_NAME" ] := aResult[ 4 ] /* UTF-8 */
             hCustom[ "AUTHOR_MAIL" ] := aResult[ 5 ] /* UTF-8 */
 
-            tVCSDate := hb_SToT( hCustom[ "AUTHOR_TIMESTAMP_UTC" ] )
+            tVCSDate := hb_SToT( hCustom[ "AUTHOR_TIMESTAMP" ] )
 
             hb_processRun( "git rev-parse --abbrev-ref HEAD",, @tmp )
             hb_processRun( hb_StrFormat( "git rev-list %1$s --count", hb_StrReplace( tmp, Chr( 13 ) + Chr( 10 ) ) ),, @cStdOut )
@@ -17510,6 +17551,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-traceonly"         , I_( "show commands to be executed, but do not execute them" ) }, ;
       { "-warn=<level>"      , I_( e"set C compiler warning level\n<level> can be: max, yes, low, no, def (default: yes)" ) }, ;
       { "-harden[-]"         , I_( "enable hardening options in C compiler/linker (default: enabled on Windows, disabled on other systems)" ) }, ;
+      { "-vcsts[-]"          , I_( "set timestamp of output file(s) to the last repository commit (Supported with: Git)" ) }, ;
       { "-compr=<level>"     , I_( e"compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, high, max" ) }, ;
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
       { "-vcshead=<file>"    , H_( "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. VCS specific information is added as _HBMK_VCS_<TYPE>_*_ constants, where supported. If no VCS system is detected, a sequential number will be rolled automatically on each build." ) }, ;

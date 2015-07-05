@@ -12,6 +12,7 @@
 #-prgflag=-u+hbstrict.ch
 
 -harden
+{HB_BUILD_PKG='yes'}-vcsts
 
 # disable .hbx updates unless requested
 {!(HB_REBUILD_EXTERN='yes')}-hbx-

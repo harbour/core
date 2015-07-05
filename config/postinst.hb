@@ -128,7 +128,7 @@ PROCEDURE Main( ... )
                IF hb_LeftEq( tmp1, GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
                   tmp1 := SubStr( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
                ENDIF
-               hb_MemoWrit( hb_DirSepToOS( tmp + "/harbour.conf" ), tmp1 + hb_eol() )
+               mk_hb_MemoWrit( hb_DirSepToOS( tmp + "/harbour.conf" ), tmp1 + hb_eol() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
@@ -292,7 +292,7 @@ PROCEDURE Main( ... )
 
                   /* In the generated script always use tar because we cannot be sure
                      if cBin_Tar exists in the installation environment */
-                  hb_MemoWrit( tmp, ;
+                  mk_hb_MemoWrit( tmp, ;
                      hb_StrFormat( sfx_tgz_sh(), ;
                         hb_FSize( cTar_Path ), ;
                         cTar_NameExt, ;
@@ -363,6 +363,36 @@ PROCEDURE Main( ... )
 
    RETURN
 
+STATIC FUNCTION mk_hb_MemoWrit( cFileName, cContent )
+
+   LOCAL lSuccess := hb_MemoWrit( cFileName, cContent )
+
+   IF GetEnvC( "HB_BUILD_PKG" ) == "yes"
+      hb_FSetDateTime( cFileName, vcs_timestamp() )
+   ENDIF
+
+   RETURN lSuccess
+
+STATIC FUNCTION vcs_timestamp()
+
+   STATIC s_tVCS
+
+   LOCAL cStdOut
+
+   IF s_tVCS == NIL
+      cStdOut := ""
+      hb_processRun( "git log -n 1 --format=format:%ai",, @cStdOut )
+      s_tVCS := hb_SToT( ;
+         SubStr( cStdOut, 1, 4 ) + ;
+         SubStr( cStdOut, 6, 2 ) + ;
+         SubStr( cStdOut, 9, 2 ) + ;
+         SubStr( cStdOut, 12, 2 ) + ;
+         SubStr( cStdOut, 15, 2 ) + ;
+         SubStr( cStdOut, 18, 2 ) )
+   ENDIF
+
+   RETURN s_tVCS
+
 STATIC FUNCTION sfx_tgz_sh()
 #pragma __cstream | RETURN %s
 #!/bin/sh
@@ -395,7 +425,7 @@ STATIC FUNCTION mk_hbl( cIn, cOut )
    ENDIF
 
    IF ( aTrans := __i18n_potArrayLoad( cIn, @cErrorMsg ) ) != NIL
-      IF hb_MemoWrit( cOut, hb_i18n_SaveTable( __i18n_hashTable( __i18n_potArrayToHash( aTrans, .F. ) ) ) )
+      IF mk_hb_MemoWrit( cOut, hb_i18n_SaveTable( __i18n_hashTable( __i18n_potArrayToHash( aTrans, .F. ) ) ) )
          OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cOut, cIn ) + hb_eol() )
          RETURN .T.
       ELSE
@@ -454,6 +484,7 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, lEOL, l644 )
 
    LOCAL cDir, cName, cExt
    LOCAL cFile
+   LOCAL tDate
 
    cSrc := hb_DirSepToOS( cSrc )
    cDst := hb_DirSepToOS( cDst )
@@ -466,6 +497,9 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, lEOL, l644 )
 
    IF ! Empty( cFile := hb_MemoRead( cSrc ) ) .AND. ;
       hb_MemoWrit( cDst, iif( hb_defaultValue( lEOL, .F. ), EOLConv( cFile ), cFile ) )
+
+      hb_FGetDateTime( cSrc, @tDate )
+      hb_FSetDateTime( cDst, tDate )
 #if 0
       OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
 #endif
@@ -587,7 +621,7 @@ STATIC FUNCTION GetEnvC( cEnvVar )
 
    RETURN s_hEnvCache[ cEnvVar ] := GetEnv( cEnvVar )
 
-PROCEDURE mk_hbr( cDestDir )
+STATIC PROCEDURE mk_hbr( cDestDir )
 
    LOCAL hAll := { => }
 
@@ -604,7 +638,7 @@ PROCEDURE mk_hbr( cDestDir )
       ENDIF
    NEXT
 
-   hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_Serialize( hAll, HB_SERIALIZE_COMPRESS ) )
+   mk_hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_Serialize( hAll, HB_SERIALIZE_COMPRESS ) )
 
    RETURN
 
