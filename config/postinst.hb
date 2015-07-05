@@ -193,7 +193,7 @@ PROCEDURE Main( ... )
       IF ! Empty( GetEnvC( "HB_INSTALL_DOC" ) ) .AND. ;
          ! GetEnvC( "HB_BUILD_PARTS" ) == "lib"
 
-         OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
+         OutStd( "! Creating core translation (.hbl) files..." + hb_eol() )
 
          FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
@@ -265,7 +265,7 @@ PROCEDURE Main( ... )
                cTar_NameExt := cTar_Name + iif( GetEnvC( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
                cTar_Path := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_NameExt
 
-               OutStd( hb_StrFormat( "! Making Harbour tar release package: '%1$s'", cTar_Path ) + hb_eol() )
+               OutStd( hb_StrFormat( "! Creating Harbour tar release package: '%1$s'", cTar_Path ) + hb_eol() )
 
                FErase( cTar_Path )
 
@@ -292,7 +292,7 @@ PROCEDURE Main( ... )
 
                   tmp := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
 
-                  OutStd( hb_StrFormat( "! Making Harbour tar installer release package: '%1$s'", tmp ) + hb_eol() )
+                  OutStd( hb_StrFormat( "! Creating Harbour tar installer release package: '%1$s'", tmp ) + hb_eol() )
 
                   /* In the generated script always use tar because we cannot be sure
                      if cBin_Tar exists in the installation environment */
@@ -369,22 +369,6 @@ PROCEDURE Main( ... )
 
 STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
 
-   LOCAL tVCS := vcs_timestamp()
-
-   RETURN Empty( tVCS ) .OR. hb_FSetDateTime( cFileName, tVCS )
-
-STATIC FUNCTION mk_hb_MemoWrit( cFileName, cContent )
-
-   LOCAL lSuccess := hb_MemoWrit( cFileName, cContent )
-
-   IF lSuccess .AND. GetEnvC( "HB_BUILD_PKG" ) == "yes"
-      mk_hb_FSetDateTime( cFileName )
-   ENDIF
-
-   RETURN lSuccess
-
-STATIC FUNCTION vcs_timestamp()
-
    STATIC s_tVCS
 
    LOCAL cStdOut
@@ -400,11 +384,22 @@ STATIC FUNCTION vcs_timestamp()
          SubStr( cStdOut, 15, 2 ) + ;
          SubStr( cStdOut, 18, 2 ) )
 
+      OutStd( hb_StrFormat( "! DEBUG: Machine UTF offset: %1$d", hb_UTCOffset() ) + hb_eol() )
       OutStd( hb_StrFormat( "! Repository timestamp: %1$s" + ;
          iif( Empty( s_tVCS ), "(not available)", hb_TToC( s_tVCS, "yyyy-mm-dd", "HH:MM" ) ) ) + hb_eol() )
    ENDIF
 
-   RETURN s_tVCS
+   RETURN Empty( s_tVCS ) .OR. hb_FSetDateTime( cFileName, s_tVCS )
+
+STATIC FUNCTION mk_hb_MemoWrit( cFileName, cContent )
+
+   LOCAL lSuccess := hb_MemoWrit( cFileName, cContent )
+
+   IF lSuccess .AND. GetEnvC( "HB_BUILD_PKG" ) == "yes"
+      mk_hb_FSetDateTime( cFileName )
+   ENDIF
+
+   RETURN lSuccess
 
 STATIC FUNCTION sfx_tgz_sh()
 #pragma __cstream | RETURN %s
@@ -465,6 +460,7 @@ STATIC FUNCTION mk_hbd_core( cDirSource, cDirDest )
    IF ! Empty( aEntry )
       cName := hb_DirSepAdd( hb_DirSepToOS( cDirDest ) ) + cName + ".hbd"
       IF __hbdoc_SaveHBD( cName, aEntry )
+         mk_hb_FSetDateTime( cName )
          OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cName, cDirSource ) + hb_eol() )
          RETURN .T.
       ELSE

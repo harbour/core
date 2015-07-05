@@ -1,7 +1,8 @@
 /*
  * Version related functions
  *
- * Copyright 1999-2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (timestamp conversion)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +47,7 @@
 
 #include "hbapi.h"
 #include "hbvm.h"
+#include "hbdate.h"
 
 #include "hbver.ch"
 
@@ -119,6 +121,42 @@ HB_FUNC( HB_VERSION )
             hb_retclen( pszBuildDate + 11, 8 );
          else
             hb_retc_null();
+         break;
+      }
+      case HB_VERSION_BUILD_TIMESTAMP_UTC:
+      {
+         char * pszBuildDate = hb_strdup( hb_verCommitInfo() );
+
+         if( strlen( pszBuildDate ) >= 19 )
+         {
+            long lJulian = 0, lMilliSec = 0;
+            int iUTC = 0;
+
+            if( strlen( pszBuildDate ) >= 25 &&
+                ( pszBuildDate[ 20 ] == '+' || pszBuildDate[ 20 ] == '-' ) &&
+                HB_ISDIGIT( pszBuildDate[ 21 ] ) && HB_ISDIGIT( pszBuildDate[ 22 ] ) &&
+                HB_ISDIGIT( pszBuildDate[ 23 ] ) && HB_ISDIGIT( pszBuildDate[ 24 ] ) )
+            {
+               iUTC = ( ( int ) ( pszBuildDate[ 21 ] - '0' ) * 10 +
+                        ( int ) ( pszBuildDate[ 22 ] - '0' ) ) * 60 +
+                        ( int ) ( pszBuildDate[ 23 ] - '0' ) * 10 +
+                        ( int ) ( pszBuildDate[ 24 ] - '0' );
+               if( pszBuildDate[ 20 ] == '-' )
+                  iUTC *= -1;
+            }
+            pszBuildDate[ 19 ] = '\0';
+            hb_timeStampStrGetDT( pszBuildDate, &lJulian, &lMilliSec );
+            if( iUTC != 0 )
+               hb_timeStampUnpackDT( hb_timeStampPackDT( lJulian, lMilliSec ) -
+                                     ( double ) iUTC / ( 24 * 60 ),
+                                     &lJulian, &lMilliSec );
+            hb_rettdt( lJulian, lMilliSec );
+         }
+         else
+            hb_rettdt( 0, 0 );
+
+         hb_xfree( pszBuildDate );
+
          break;
       }
       case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;

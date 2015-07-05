@@ -570,8 +570,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_aHBCCON           164
 #define _HBMK_lHaltRevCounters  165
 #define _HBMK_lVCSTS            166
+#define _HBMK_tVCSTS            167
 
-#define _HBMK_MAX_              166
+#define _HBMK_MAX_              167
 
 #define _HBMK_DEP_CTRL_MARKER   ".control."  /* must be an invalid path */
 
@@ -1118,6 +1119,7 @@ STATIC FUNCTION hbmk_new( lShellMode )
 
    hbmk[ _HBMK_lHaltRevCounters ] := .F.
    hbmk[ _HBMK_lVCSTS ] := .F.
+   hbmk[ _HBMK_tVCSTS ] := hb_SToT()
 
    hbmk[ _HBMK_nArgTarget ] := 0
 
@@ -1664,7 +1666,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL cStdOutErr
    LOCAL aParamINC
 
-   LOCAL tVCSDate := hb_SToT(), lVCSDateLoad := .F.
+   LOCAL lVCSTSLoad := .F.
 
    hb_default( @aArgs, {} )
    hb_default( @nArgTarget, 0 )
@@ -4848,7 +4850,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      /* Workaround usable with ld builds with this patch applied:
                            https://sourceware.org/ml/binutils/2015-06/msg00099.html */
                      AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--insert-timestamp={TU}" )
-                     lVCSDateLoad := .T.
+                     lVCSTSLoad := .T.
 #endif
                   ENDIF
                ENDIF
@@ -6290,8 +6292,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    /* Generate header with repository ID information */
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
-      IF ! Empty( l_cVCSHEAD ) .OR. lVCSDateLoad .OR. hbmk[ _HBMK_lVCSTS ]
-         tmp1 := VCSID( hbmk, l_cVCSDIR, l_cVCSHEAD, @tmp2, @tmp3, @tVCSDate )
+      IF ! Empty( l_cVCSHEAD ) .OR. lVCSTSLoad .OR. hbmk[ _HBMK_lVCSTS ]
+         tmp1 := VCSID( hbmk, l_cVCSDIR, l_cVCSHEAD, @tmp2, @tmp3 )
          IF ! Empty( l_cVCSHEAD )
             /* Use the same EOL for all platforms to avoid unnecessary rebuilds. */
             tmp := ;
@@ -7728,7 +7730,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   iif( Empty( hbmk[ _HBMK_aOPTL ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) ) )
 
                cOpt_Link := AllTrim( hb_StrReplace( cOpt_Link, { ;
-                  "{TU}" => hb_ntos( Int( ( Max( tVCSDate, hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 ) ), ;
+                  "{TU}" => hb_ntos( Int( ( Max( hbmk[ _HBMK_tVCSTS ], hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 ) ), ;
                   "{LO}" => ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cObjPrefix ), ;
                   "{LS}" => ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ), ;
                   "{LA}" => ArrayToList( l_aOBJA,, nOpt_Esc, nOpt_FNF ), ;
@@ -7786,14 +7788,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF ! hbmk[ _HBMK_lQuiet ]
                      HintHBC( hbmk )
                   ENDIF
-
-                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
-                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
+               ELSE
+                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( hbmk[ _HBMK_tVCSTS ] )
+                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
                      IF hbmk[ _HBMK_lIMPLIB ]
-                        hb_FSetDateTime( l_cIMPLIBNAME, tVCSDate )
+                        hb_FSetDateTime( l_cIMPLIBNAME, hbmk[ _HBMK_tVCSTS ] )
                      ENDIF
                      IF hb_FileExists( tmp := hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
-                        hb_FSetDateTime( tmp, tVCSDate )
+                        hb_FSetDateTime( tmp, hbmk[ _HBMK_tVCSTS ] )
                      ENDIF
                   ENDIF
                ENDIF
@@ -7864,7 +7866,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
 
                cOpt_Dyn := AllTrim( hb_StrReplace( cOpt_Dyn, { ;
-                  "{TU}" => hb_ntos( Int( ( Max( tVCSDate, hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 ) ), ;
+                  "{TU}" => hb_ntos( Int( ( Max( hbmk[ _HBMK_tVCSTS ], hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 ) ), ;
                   "{LO}" => tmp, ;
                   "{LS}" => ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ), ;
                   "{LL}" => ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ), ;
@@ -7920,14 +7922,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF ! hbmk[ _HBMK_lQuiet ]
                      HintHBC( hbmk )
                   ENDIF
-
-                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
-                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
+               ELSE
+                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( hbmk[ _HBMK_tVCSTS ] )
+                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
                      IF hbmk[ _HBMK_lIMPLIB ]
-                        hb_FSetDateTime( l_cIMPLIBNAME, tVCSDate )
+                        hb_FSetDateTime( l_cIMPLIBNAME, hbmk[ _HBMK_tVCSTS ] )
                      ENDIF
                      IF hb_FileExists( tmp := hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
-                        hb_FSetDateTime( tmp, tVCSDate )
+                        hb_FSetDateTime( tmp, hbmk[ _HBMK_tVCSTS ] )
                      ENDIF
                   ENDIF
                ENDIF
@@ -7995,9 +7997,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
                      hbmk[ _HBMK_nExitCode ] := _EXIT_RUNLIB
                   ENDIF
-
-                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
-                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
+               ELSE
+                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( hbmk[ _HBMK_tVCSTS ] )
+                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
                   ENDIF
                ENDIF
 
@@ -8152,12 +8154,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                IF ! hbmk[ _HBMK_lQuiet ]
                   OutErr( cCommand + _OUT_EOL )
                ENDIF
-            ENDIF
-
-            IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
-               hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
-               IF l_cIMPLIBNAME != NIL .AND. hbmk[ _HBMK_lIMPLIB ]
-                  hb_FSetDateTime( l_cIMPLIBNAME, tVCSDate )
+            ELSE
+               IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( hbmk[ _HBMK_tVCSTS ] )
+                  hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
+                  IF l_cIMPLIBNAME != NIL .AND. hbmk[ _HBMK_lIMPLIB ]
+                     hb_FSetDateTime( l_cIMPLIBNAME, hbmk[ _HBMK_tVCSTS ] )
+                  ENDIF
                ENDIF
             ENDIF
          ENDIF
@@ -8327,9 +8329,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutStd( tmp1 + _OUT_EOL )
                   ENDIF
-
-                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( tVCSDate )
-                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], tVCSDate )
+               ELSE
+                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( hbmk[ _HBMK_tVCSTS ] )
+                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
                   ENDIF
                ENDIF
 
@@ -13376,6 +13378,7 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
    LOCAL tLNG
    LOCAL aPO_TO_DO
    LOCAL lUpdateNeeded
+   LOCAL tmp
 
    LOCAL aNew := {}
 
@@ -13405,8 +13408,12 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
             IF hbmk[ _HBMK_lDEBUGI18N ]
                _hbmk_OutStd( hbmk, hb_StrFormat( "po: %1$s -> %2$s", ArrayToList( aPO_TO_DO ), StrTran( cHBL, _LNG_MARKER, cLNG ) ) )
             ENDIF
-            GenHBL( hbmk, aPO_TO_DO, StrTran( cHBL, _LNG_MARKER, cLNG ) )
-            AAdd( aNew, cLNG )
+            IF GenHBL( hbmk, aPO_TO_DO, tmp := StrTran( cHBL, _LNG_MARKER, cLNG ) )
+               IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( hbmk[ _HBMK_tVCSTS ] )
+                  hb_FSetDateTime( tmp, hbmk[ _HBMK_tVCSTS ] )
+               ENDIF
+               AAdd( aNew, cLNG )
+            ENDIF
          ENDIF
       NEXT
    ENDIF
@@ -13950,7 +13957,7 @@ STATIC FUNCTION SeqID( hbmk, cHEAD, cIDName )
 
    RETURN cResult
 
-STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom, /* @ */ tVCSDate )
+STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
 
    LOCAL cStdOut
    LOCAL nType := VCSDetect( cDir )
@@ -14048,7 +14055,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom, /* 
             hCustom[ "AUTHOR_NAME" ] := aResult[ 4 ] /* UTF-8 */
             hCustom[ "AUTHOR_MAIL" ] := aResult[ 5 ] /* UTF-8 */
 
-            tVCSDate := hb_SToT( hCustom[ "AUTHOR_TIMESTAMP" ] )
+            hbmk[ _HBMK_tVCSTS ] := hb_SToT( hCustom[ "AUTHOR_TIMESTAMP" ] )
 
             hb_processRun( "git rev-parse --abbrev-ref HEAD",, @tmp )
             hb_processRun( hb_StrFormat( "git rev-list %1$s --count", hb_StrReplace( tmp, Chr( 13 ) + Chr( 10 ) ) ),, @cStdOut )

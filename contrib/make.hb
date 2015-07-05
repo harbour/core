@@ -609,6 +609,7 @@ STATIC FUNCTION mk_hbd( cDir )
       IF ! Empty( aEntry )
          cName := hb_DirSepToOS( cDocDir ) + hb_ps() + cName + ".hbd"
          IF __hbdoc_SaveHBD( cName, aEntry )
+            mk_hb_FSetDateTime( cName )
             OutStd( hb_StrFormat( "! Compiled documentation: %1$s <= %2$s", cName, cDir ) + hb_eol() )
             RETURN .T.
          ELSE
@@ -783,3 +784,23 @@ STATIC PROCEDURE LoadProjectListFromString( hProjectList, cString )
    NEXT
 
    RETURN
+
+STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
+
+   STATIC s_tVCS
+
+   LOCAL cStdOut
+
+   IF s_tVCS == NIL
+      cStdOut := ""
+      hb_processRun( "git log -n 1 --format=format:%ai",, @cStdOut )
+      s_tVCS := hb_SToT( ;
+         SubStr( cStdOut, 1, 4 ) + ;
+         SubStr( cStdOut, 6, 2 ) + ;
+         SubStr( cStdOut, 9, 2 ) + ;
+         SubStr( cStdOut, 12, 2 ) + ;
+         SubStr( cStdOut, 15, 2 ) + ;
+         SubStr( cStdOut, 18, 2 ) )
+   ENDIF
+
+   RETURN Empty( s_tVCS ) .OR. hb_FSetDateTime( cFileName, s_tVCS )
