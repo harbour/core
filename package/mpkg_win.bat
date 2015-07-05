@@ -35,6 +35,8 @@ set HB_ABSROOT=%HB_RT%%HB_DR%
 for /f "tokens=*" %%I in ('git log -n 1 --format^=format:%%ci') do set _TS=%%I
 set _TS=%_TS:~0,4%%_TS:~5,2%%_TS:~8,2%%_TS:~11,2%%_TS:~14,2%.%_TS:~17,2%
 
+echo ! Repository timestamp (raw): %_TS%
+
 :: Auto-detect the base bitness, by default it will be 32-bit,
 :: and 64-bit if it's the only one available.
 

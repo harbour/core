@@ -801,10 +801,9 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
          SubStr( cStdOut, 12, 2 ) + ;
          SubStr( cStdOut, 15, 2 ) + ;
          SubStr( cStdOut, 18, 2 ) ) - ;
-         Round( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
-                  ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
-                    Val( SubStr( cStdOut, 24, 2 ) ) ) ) + 0 /* hb_UTCOffset() */ ) / 86400, 0 )
-         hb_UTCOffset()
+         ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
+             ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
+               Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
    ENDIF
 
    RETURN Empty( s_tVCS ) .OR. hb_FSetDateTime( cFileName, s_tVCS )
