@@ -14062,7 +14062,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
             hCustom[ "COMMIT_NAME" ] := aResult[ 4 ] /* UTF-8 */
             hCustom[ "COMMIT_MAIL" ] := aResult[ 5 ] /* UTF-8 */
 
-            hbmk[ _HBMK_tVCSTS ] := hb_SToT( hCustom[ "COMMIT_TIMESTAMP" ] ) + ( hb_UTCOffset() / 86400 )
+            hbmk[ _HBMK_tVCSTS ] := hb_SToT( hCustom[ "COMMIT_TIMESTAMP" ] ) + ( 0 /* hb_UTCOffset() */ / 86400 )
 
             hCustom[ "AUTHOR_DATE_ISO" ] := aResult[ 6 ]
             hCustom[ "AUTHOR_DATE" ] := ;

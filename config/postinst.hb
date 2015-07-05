@@ -385,7 +385,7 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
          SubStr( cStdOut, 18, 2 ) ) - ;
          Round( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
                   ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
-                    Val( SubStr( cStdOut, 24, 2 ) ) ) ) + hb_UTCOffset() ) / 86400, 0 )
+                    Val( SubStr( cStdOut, 24, 2 ) ) ) ) + 0 /* hb_UTCOffset() */ ) / 86400, 0 )
 
       OutStd( hb_StrFormat( "! Repository timestamp (local): %1$s" + ;
          iif( Empty( s_tVCS ), "(not available)", hb_TToC( s_tVCS, "yyyy-mm-dd", "HH:MM:SS" ) ) ) + hb_eol() )

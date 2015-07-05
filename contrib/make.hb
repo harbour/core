@@ -803,7 +803,7 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
          SubStr( cStdOut, 18, 2 ) ) - ;
          Round( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
                   ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
-                    Val( SubStr( cStdOut, 24, 2 ) ) ) ) + hb_UTCOffset() ) / 86400, 0 )
+                    Val( SubStr( cStdOut, 24, 2 ) ) ) ) + 0 /* hb_UTCOffset() */ ) / 86400, 0 )
          hb_UTCOffset()
    ENDIF
 
