@@ -135,6 +135,23 @@ set _MINGW_DLL_DIR=%HB_DIR_MINGW%\bin
 if "%LIB_TARGET%" == "32" if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32" set _MINGW_DLL_DIR=%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32
 if "%LIB_TARGET%" == "64" if exist "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"   set _MINGW_DLL_DIR=%HB_DIR_MINGW%\i686-w64-mingw32\lib64
 
+:: Workaround for ld --no-insert-timestamp bug that exist as of
+:: binutils 2.25, when the PE build timestamp field is often
+:: filled with random bytes instead of zeroes. -s option is not
+:: fixing this, though a separate 'strip' call does, so we're
+:: doing that. Do this while only Harbour built binaries are
+:: copied into the bin directory to not break 3rd party binaries.
+strip "%HB_ABSROOT%bin\*.exe" "%HB_ABSROOT%bin\*.dll"
+
+:: Workaround for ld --no-insert-timestamp issue in that it
+:: won't remove internal timestamps from generated implibs.
+:: Slow. Requires binutils 2.23.
+:: Short synonym '-D' is not recognized as of binutils 2.25.
+strip --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw\*-*.*"
+strip --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw64\*-*.*"
+strip --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw\*_dll*.*"
+strip --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw64\*_dll*.*"
+
 if exist "%_MINGW_DLL_DIR%\libgcc_s_*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_*.dll" "%HB_ABSROOT%bin\"
 if exist "%_MINGW_DLL_DIR%\mingwm*.dll"    xcopy /y "%HB_DIR_MINGW%\bin\mingwm*.dll"    "%HB_ABSROOT%bin\"
 :: for posix cc1.exe to run without putting mingw\bin into PATH
