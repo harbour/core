@@ -9241,7 +9241,6 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
          _hbmk_OutStd( hbmk, hb_StrFormat( "debuginc: Calling C/C++ compiler to detect dependencies of %1$s", cFileName ) )
       ENDIF
 
-      tmp := ""
       hb_processRun( ;
          cBin_CompC + " -MM" + ;
          " " + iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) + ;
@@ -10037,8 +10036,6 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
          IF ! dep[ _HBMKDEP_lFound ]
             cName := AllTrim( cName )
 
-            cStdOut := ""
-            cVersion := ""
             hb_processRun( "pkg-config --libs --cflags " + cName,, @cStdOut, @cStdErr )
             hb_processRun( "pkg-config --modversion " + cName,, @cVersion, @cStdErr )
             IF Empty( cStdOut )
@@ -12833,7 +12830,6 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
              Lower( cExt ) == ".cx"
          /* do nothing */
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
-         cFuncList := ""
          hb_processRun( cExecNM + " " + FNameEscape( cFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) + ;
             " -g -n" + iif( hbmk[ _HBMK_cCOMP ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) > 0
@@ -13847,7 +13843,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
 
 STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
 
-   LOCAL cStdOutErr := ""
+   LOCAL cStdOutErr
    LOCAL tmp, tmp1
 
    DO CASE
@@ -13872,7 +13868,7 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
 
 STATIC FUNCTION msvc_rc_nologo_support( hbmk, cPath )
 
-   LOCAL cStdOutErr := ""
+   LOCAL cStdOutErr
 
    IF HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
       hb_processRun( cPath + " -?",, @cStdOutErr, @cStdOutErr )
@@ -13985,7 +13981,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
       /* fall through */
    CASE _VCS_GIT
       cType := "git"
-      cCommand := "git" + iif( nType == _VCS_GIT_SUB .OR. Empty( cDir ), "", " --git-dir=" + cDir + ".git" ) + " log -n 1 --format=format:%h%n%H%n%ci%n%cn%n%ce%n%ai%n%an%n%ae --encoding=utf8"
+      cCommand := "git" + iif( nType == _VCS_GIT_SUB .OR. Empty( cDir ), "", " --git-dir=" + cDir + ".git" ) + " log -1 --format=format:%h%n%H%n%ci%n%cn%n%ce%n%ai%n%an%n%ae --encoding=utf8"
       EXIT
    CASE _VCS_MERCURIAL
       cType := "mercurial"
@@ -14402,11 +14398,7 @@ STATIC FUNCTION hbmk_hb_processRunFile( cCommand, cTempFile )
 
 STATIC FUNCTION hbmk_hb_processRunCatch( cCommand, /* @ */ cStdOutErr )
 
-   LOCAL nExitCode
-
-   cStdOutErr := ""
-
-   nExitCode := hb_processRun( cCommand,, @cStdOutErr, @cStdOutErr )
+   LOCAL nExitCode := hb_processRun( cCommand,, @cStdOutErr, @cStdOutErr )
 
    IF nExitCode != 0
       OutErr( cStdOutErr )

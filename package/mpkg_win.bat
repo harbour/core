@@ -48,12 +48,13 @@ if exist "%HB_ABSROOT%" rd /s /q "%HB_ABSROOT%"
 xcopy /y /s /q "%~dp0..\extras\*.*"                                               "%HB_ABSROOT%extras\"
 xcopy /y /s /q "%~dp0..\tests\*.*"                                                "%HB_ABSROOT%tests\"
 
+if "%LIB_TARGET%" == "32" xcopy /y /s /q "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
+if "%LIB_TARGET%" == "64" xcopy /y /s /q "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
+
 :: Using xcopy to create the destination subdir in the same step
 xcopy /y /q    "%~dp0ADDONS.txt"                                                  "%HB_ABSROOT%addons\"
 mv "%HB_ABSROOT%addons\ADDONS.txt" "%HB_ABSROOT%addons\README.txt"
-
-if "%LIB_TARGET%" == "32" xcopy /y /s /q "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
-if "%LIB_TARGET%" == "64" xcopy /y /s /q "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
+touch "%HB_ABSROOT%addons\README.txt" -r "%HB_ABSROOT%README.md"
 
 xcopy /y /s    "%~dp0..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"        "%HB_ABSROOT%lib\linux\watcom\" 2> nul
 xcopy /y /s    "%~dp0..\pkg\dos\watcom\hb%HB_VL%wa\lib"                           "%HB_ABSROOT%lib\" 2> nul
@@ -235,8 +236,12 @@ echo "extras\*"     >> _hbfiles
 echo "tests\*"      >> _hbfiles
 echo "addons\*.txt" >> _hbfiles
 
+set _SCRIPT=%~dp0mpkg_ts.hb
+set _ROOT=%~dp0..
+
 if exist "harbour-%HB_VF%-win.7z" del "harbour-%HB_VF%-win.7z"
 pushd "%HB_DR%"
+"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" "%_ROOT%"
 "%HB_DIR_7Z%7za" a -r -mx "..\harbour-%HB_VF%-win.7z" @..\_hbfiles > nul
 popd
 
