@@ -56,7 +56,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    Set( _SET_SCOREBOARD, .F. )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   Set( _SET_TIMEFORMAT, "HH:MM:SS" )
+   Set( _SET_TIMEFORMAT, "hh:mm:ss" )
 
    SetCancel( .F. )
 

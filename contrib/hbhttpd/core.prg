@@ -925,7 +925,7 @@ STATIC FUNCTION HttpDateFormat( tDate )
       StrZero( Day( tDate ), 2 ) + " " + ;
       { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + " " + ;
       StrZero( Year( tDate ), 4 ) + " " + ;
-      hb_TToC( tDate, "", "HH:MM:SS" ) + " " + ;
+      hb_TToC( tDate, "", "hh:mm:ss" ) + " " + ;
       hb_StrFormat( "UTC%1$s%2$02d%3$02d", ;
          iif( nOffset < 0, "-", "+" ), ;
          Int( Abs( nOffset ) / 3600 ), ;

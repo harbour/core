@@ -317,7 +317,7 @@ METHOD Date() CLASS TimeStamp
    RETURN hb_TToC( Self,, "" )
 
 METHOD Time() CLASS TimeStamp
-   RETURN hb_TToC( Self, "", "HH:MM:SS" )
+   RETURN hb_TToC( Self, "", "hh:mm:ss" )
 
 METHOD Year() CLASS TimeStamp
    RETURN Year( Self )

@@ -393,13 +393,7 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
    IF s_tVCS == NIL
       hb_processRun( "git log -1 --format=format:%ci",, @cStdOut )
 
-      s_tVCS := hb_SToT( ;
-         SubStr( cStdOut, 1, 4 ) + ;
-         SubStr( cStdOut, 6, 2 ) + ;
-         SubStr( cStdOut, 9, 2 ) + ;
-         SubStr( cStdOut, 12, 2 ) + ;
-         SubStr( cStdOut, 15, 2 ) + ;
-         SubStr( cStdOut, 18, 2 ) )
+      s_tVCS := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
 
       IF ! Empty( s_tVCS )
          s_tVCS -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
@@ -408,7 +402,7 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
       ENDIF
 
       OutStd( hb_StrFormat( "! Repository timestamp (local): %1$s" + ;
-         iif( Empty( s_tVCS ), "(not available)", hb_TToC( s_tVCS, "yyyy-mm-dd", "HH:MM:SS" ) ) ) + hb_eol() )
+         iif( Empty( s_tVCS ), "(not available)", hb_TToC( s_tVCS, "yyyy-mm-dd", "hh:mm:ss" ) ) ) + hb_eol() )
    ENDIF
 
    RETURN ;

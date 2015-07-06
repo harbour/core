@@ -102,7 +102,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
    ENDIF
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   Set( _SET_TIMEFORMAT, "HH:MM:SS.FFF" )
+   Set( _SET_TIMEFORMAT, "hh:mm:ss.fff" )
 
    HB_Logo()
 

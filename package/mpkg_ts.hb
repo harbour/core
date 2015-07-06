@@ -41,13 +41,7 @@ PROCEDURE Main( cGitRoot )
 
       hb_processRun( "git log -1 --format=format:%ci",, @cStdOut )
 
-      tDateHEAD := hb_SToT( ;
-         SubStr( cStdOut, 1, 4 ) + ;
-         SubStr( cStdOut, 6, 2 ) + ;
-         SubStr( cStdOut, 9, 2 ) + ;
-         SubStr( cStdOut, 12, 2 ) + ;
-         SubStr( cStdOut, 15, 2 ) + ;
-         SubStr( cStdOut, 18, 2 ) )
+      tDateHEAD := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
 
       IF ! Empty( tDateHEAD )
          tDateHEAD -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
@@ -59,7 +53,10 @@ PROCEDURE Main( cGitRoot )
 
       IF ! Empty( tDateHEAD ) .OR. ! lShallow
 
-         _DEBUG( "mpkg_ts: files" + hb_eol() )
+         OutStd( "! mpkg_ts: Timestamping repository files..." + hb_eol() )
+         IF lShallow
+            OutStd( "! mpkg_ts: Warning: Shallow repository, resorting to last commit timestamp." + hb_eol() )
+         ENDIF
 
          FOR EACH tmp IN { ;
             "bin/*.bat", ;
@@ -84,13 +81,7 @@ PROCEDURE Main( cGitRoot )
                      " log -1 --format=format:%ci" + ;
                      " " + FNameEscape( file ),, @cStdOut )
 
-                  tDate := hb_SToT( ;
-                     SubStr( cStdOut, 1, 4 ) + ;
-                     SubStr( cStdOut, 6, 2 ) + ;
-                     SubStr( cStdOut, 9, 2 ) + ;
-                     SubStr( cStdOut, 12, 2 ) + ;
-                     SubStr( cStdOut, 15, 2 ) + ;
-                     SubStr( cStdOut, 18, 2 ) )
+                  tDate := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
 
                   IF ! Empty( tDate )
                      tDate -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
@@ -105,7 +96,7 @@ PROCEDURE Main( cGitRoot )
 
       /* Reset directory timestamps to last commit */
       IF ! Empty( tDateHEAD )
-         _DEBUG( "mpkg_ts: directories" + hb_eol() )
+         OutStd( "! mpkg_ts: Timestamping directories..." + hb_eol() )
          FOR EACH file IN hb_DirScan( "." + hb_ps(),, "D" ) DESCEND
             IF "D" $ file[ F_ATTR ] .AND. ;
                !( hb_FNameNameExt( file[ F_NAME ] ) == "." .OR. ;
