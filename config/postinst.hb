@@ -77,7 +77,7 @@ PROCEDURE Main( ... )
 
          OutStd( "! Timestamping generated binaries..." + hb_eol() )
 
-         FOR EACH tmp IN {
+         FOR EACH tmp IN { ;
             GetEnvC( "HB_INSTALL_BIN" ), ;
             GetEnvC( "HB_INSTALL_DYN" ), ;
             GetEnvC( "HB_INSTALL_LIB" ) }
