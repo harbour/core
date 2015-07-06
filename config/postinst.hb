@@ -70,6 +70,23 @@ PROCEDURE Main( ... )
 
    IF hb_AScanI( hb_AParams(), "install",,, .T. ) > 0
 
+      IF GetEnvC( "HB_BUILD_PKG" ) == "yes"
+
+         /* Display repository timestamp */
+         mk_hb_FSetDateTime()
+
+         OutStd( "! Timestamping generated binaries..." + hb_eol() )
+
+         FOR EACH tmp IN {
+            GetEnvC( "HB_INSTALL_BIN" ), ;
+            GetEnvC( "HB_INSTALL_DYN" ), ;
+            GetEnvC( "HB_INSTALL_LIB" ) }
+            FOR EACH tmp1 IN Directory( tmp + hb_ps() + hb_osFileMask() )
+               mk_hb_FSetDateTime( tmp + hb_ps() + tmp1[ F_NAME ] )
+            NEXT
+         NEXT
+      ENDIF
+
       /* Installing some misc files */
       tmp := GetEnvC( "HB_INSTALL_DOC" )
       IF !( tmp == "no" )
@@ -82,12 +99,12 @@ PROCEDURE Main( ... )
 
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
                FOR EACH aFile IN Directory( "Change*" )
-                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES.txt", "" ), .T. )
+                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES.txt", "" ), .T.,, .T. )
                NEXT
 
-               mk_hb_FCopy( "LICENSE.txt", tmp + hb_ps(), .T. )
-               mk_hb_FCopy( "CONTRIBUTING.md", tmp + hb_ps(), .T. )
-               mk_hb_FCopy( "README.md", tmp + hb_ps(), .T. )
+               mk_hb_FCopy( "LICENSE.txt", tmp + hb_ps(), .T.,, .T. )
+               mk_hb_FCopy( "CONTRIBUTING.md", tmp + hb_ps(), .T.,, .T. )
+               mk_hb_FCopy( "README.md", tmp + hb_ps(), .T.,, .T. )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
@@ -103,7 +120,7 @@ PROCEDURE Main( ... )
          FOR EACH tmp IN { ;
             "bin/3rdpatch.hb", ;
             "bin/commit.hb" }
-            mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps() )
+            mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps(),,, .T. )
          NEXT
       ENDIF
 
@@ -391,17 +408,20 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
          iif( Empty( s_tVCS ), "(not available)", hb_TToC( s_tVCS, "yyyy-mm-dd", "HH:MM:SS" ) ) ) + hb_eol() )
    ENDIF
 
-   RETURN Empty( s_tVCS ) .OR. hb_FSetDateTime( cFileName, s_tVCS )
+   RETURN ;
+      Empty( cFileName ) .OR. ;
+      !( GetEnvC( "HB_BUILD_PKG" ) == "yes" ) .OR. ;
+      Empty( s_tVCS ) .OR. ;
+      hb_FSetDateTime( cFileName, s_tVCS )
 
 STATIC FUNCTION mk_hb_MemoWrit( cFileName, cContent )
 
-   LOCAL lSuccess := hb_MemoWrit( cFileName, cContent )
-
-   IF lSuccess .AND. GetEnvC( "HB_BUILD_PKG" ) == "yes"
+   IF hb_MemoWrit( cFileName, cContent )
       mk_hb_FSetDateTime( cFileName )
+      RETURN .T.
    ENDIF
 
-   RETURN lSuccess
+   RETURN .F.
 
 STATIC FUNCTION sfx_tgz_sh()
 #pragma __cstream | RETURN %s
@@ -491,7 +511,7 @@ STATIC FUNCTION EOLConv( cFile )
 
 /* Like hb_FCopy(), but accepts dir as target, can set attributes
    and translates EOL to target platform */
-STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, lEOL, l644 )
+STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, lEOL, l644, lTS )
 
    LOCAL cDir, cName, cExt
    LOCAL cFile
@@ -509,15 +529,17 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, lEOL, l644 )
    IF ! Empty( cFile := hb_MemoRead( cSrc ) ) .AND. ;
       hb_MemoWrit( cDst, iif( hb_defaultValue( lEOL, .F. ), EOLConv( cFile ), cFile ) )
 
-      hb_FGetDateTime( cSrc, @tDate )
-      hb_FSetDateTime( cDst, tDate )
-#if 0
-      OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
-#endif
+      IF hb_defaultValue( lTS, .F. )
+         mk_hb_FSetDateTime( cDst )
+      ELSE
+         hb_FGetDateTime( cSrc, @tDate )
+         hb_FSetDateTime( cDst, tDate )
+      ENDIF
       IF hb_defaultValue( l644, .F. )
          hb_FSetAttr( cDst, hb_bitOr( HB_FA_RUSR, HB_FA_WUSR, HB_FA_RGRP, HB_FA_ROTH ) )
       ENDIF
 #if 0
+      OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
    ELSE
       OutStd( hb_StrFormat( "! Error: Copying %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
 #endif
