@@ -401,7 +401,7 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
          SubStr( cStdOut, 15, 2 ) + ;
          SubStr( cStdOut, 18, 2 ) )
 
-      IF Empty( s_tVCS )
+      IF ! Empty( s_tVCS )
          s_tVCS -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
                        ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
                          Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
