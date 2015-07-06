@@ -25,27 +25,28 @@ PROCEDURE DaemonMain( ... )
    LOCAL nID, tmp
 
    IF Lower( hb_defaultValue( hb_PValue( 1 ), "" ) ) == "-d"
+
+      IF ! Empty( tmp := CmdLineSuffix( "-gid:" ) ) .AND. ;
+         ( ( nID := Val( tmp ) ) != 0 .OR. ( nID := posix_getgrnam( tmp ) ) != 0 )
+         posix_setgid( nID )
+      ENDIF
+      IF ! Empty( tmp := CmdLineSuffix( "-uid:" ) ) .AND. ;
+         ( ( nID := Val( tmp ) ) != 0 .OR. ( nID := posix_getpwnam( tmp ) ) != 0 )
+         posix_setuid( nID )
+      ENDIF
+      IF ! Empty( tmp := CmdLineSuffix( "-egid:" ) ) .AND. ;
+         ( ( nID := Val( tmp ) ) != 0 .OR. ( nID := posix_getgrnam( tmp ) ) != 0 )
+         posix_setegid( nID )
+      ENDIF
+      IF ! Empty( tmp := CmdLineSuffix( "-euid:" ) ) .AND. ;
+         ( ( nID := Val( tmp ) ) != 0 .OR. ( nID := posix_getpwnam( tmp ) ) != 0 )
+         posix_seteuid( nID )
+      ENDIF
+
       IF unix_daemon( 0, 0 ) == -1
          OutStd( hb_StrFormat( "Daemon failed to launch with errno=%1$d", posix_errno() ) + hb_eol() )
          ErrorLevel( 1 )
       ELSE
-         IF ! Empty( tmp := CmdLineSuffix( "-gid:" ) ) .AND. ;
-            ( ( nID := Val( tmp ) ) != 0 .OR. ( nID := posix_getgrnam( tmp ) ) != 0 )
-            posix_setgid( nID )
-         ENDIF
-         IF ! Empty( tmp := CmdLineSuffix( "-uid:" ) ) .AND. ;
-            ( ( nID := Val( tmp ) ) != 0 .OR. ( nID := posix_getpwnam( tmp ) ) != 0 )
-            posix_setuid( nID )
-         ENDIF
-         IF ! Empty( tmp := CmdLineSuffix( "-egid:" ) ) .AND. ;
-            ( ( nID := Val( tmp ) ) != 0 .OR. ( nID := posix_getgrnam( tmp ) ) != 0 )
-            posix_setegid( nID )
-         ENDIF
-         IF ! Empty( tmp := CmdLineSuffix( "-euid:" ) ) .AND. ;
-            ( ( nID := Val( tmp ) ) != 0 .OR. ( nID := posix_getpwnam( tmp ) ) != 0 )
-            posix_seteuid( nID )
-         ENDIF
-
          netiosrv_Main( .F., ... )  /* Non-interactive */
       ENDIF
    ELSE

@@ -81,7 +81,7 @@ if exist "%HB_ABSROOT%lib\win\bcc" (
       echo s/LIBRARY     %%~na.DLL/LIBRARY     "%%~na.dll"/Ig> _hbtemp.sed
       sed -f _hbtemp.sed < "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw" > "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
       "%HB_DIR_BCC_IMPLIB%implib.exe" -c -a "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib" "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
-      touch "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib" -r "%~dp0..\README.md"
+      touch "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.lib" -r "%HB_ABSROOT%README.md"
       del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.defraw"
       del "%HB_ABSROOT%lib\win\bcc\%%~na-bcc.def"
    )
@@ -198,7 +198,7 @@ if not "%HB_VF%" == "%HB_VF_DEF%" set _HB_VER=%HB_VF_DEF% %_HB_VER%
 for /f %%I in ('git rev-parse --short HEAD') do set VCS_ID=%%I
 sed -e "s/_VCS_ID_/%VCS_ID%/g"^
     -e "s/_HB_VERSION_/%_HB_VER%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
-touch "%HB_ABSROOT%RELNOTES.txt" -r "%~dp0..\README.md"
+touch "%HB_ABSROOT%RELNOTES.txt" -r "%HB_ABSROOT%README.md"
 
 :: Register build information
 
@@ -206,7 +206,7 @@ touch "%HB_ABSROOT%RELNOTES.txt" -r "%~dp0..\README.md"
 set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_PLATFORM|HB_COMPILER|HB_CPU|HB_WITH_|HB_DIR_|HB_STATIC_)/p" >> "%HB_ABSROOT%BUILD.txt"
 echo --------------------------->> "%HB_ABSROOT%BUILD.txt"
 dir /s /b /ad "%HB_ABSROOT%lib\" | sed -e "s|%HB_ABSROOT:\=.%lib.||g" >> "%HB_ABSROOT%BUILD.txt"
-touch "%HB_ABSROOT%BUILD.txt" -r "%~dp0..\README.md"
+touch "%HB_ABSROOT%BUILD.txt" -r "%HB_ABSROOT%README.md"
 
 :: Convert EOLs
 
@@ -267,7 +267,7 @@ if exist "%HB_SFX_7Z%" (
       "harbour-%HB_VF%-win.7z" ^
       "harbour-%HB_VF%-win.7z.exe"
 
-   touch "harbour-%HB_VF%-win.7z.exe" -r "%~dp0..\README.md"
+   touch "harbour-%HB_VF%-win.7z.exe" -r "%HB_ABSROOT%README.md"
 
    del "harbour-%HB_VF%-win.7z"
    del _7zconf
