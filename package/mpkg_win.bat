@@ -30,6 +30,9 @@ if "%HB_RT%" == "" set HB_RT=%HB_RT_DEF%
 set HB_DR=hb%HB_VS%\
 set HB_ABSROOT=%HB_RT%%HB_DR%
 
+set _SCRIPT=%~dp0mpkg_ts.hb
+set _ROOT=%~dp0..
+
 :: Auto-detect the base bitness, by default it will be 32-bit,
 :: and 64-bit if it's the only one available.
 
@@ -45,16 +48,12 @@ if exist "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
 
 if exist "%HB_ABSROOT%" rd /s /q "%HB_ABSROOT%"
 
+xcopy /y /s /q "%~dp0..\addons\*.txt"                                             "%HB_ABSROOT%addons\"
 xcopy /y /s /q "%~dp0..\extras\*.*"                                               "%HB_ABSROOT%extras\"
 xcopy /y /s /q "%~dp0..\tests\*.*"                                                "%HB_ABSROOT%tests\"
 
 if "%LIB_TARGET%" == "32" xcopy /y /s /q "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
 if "%LIB_TARGET%" == "64" xcopy /y /s /q "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
-
-:: Using xcopy to create the destination subdir in the same step
-xcopy /y /q    "%~dp0ADDONS.txt"                                                  "%HB_ABSROOT%addons\"
-mv "%HB_ABSROOT%addons\ADDONS.txt" "%HB_ABSROOT%addons\README.txt"
-touch "%HB_ABSROOT%addons\README.txt" -r "%HB_ABSROOT%README.md"
 
 xcopy /y /s    "%~dp0..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"        "%HB_ABSROOT%lib\linux\watcom\" 2> nul
 xcopy /y /s    "%~dp0..\pkg\dos\watcom\hb%HB_VL%wa\lib"                           "%HB_ABSROOT%lib\" 2> nul
@@ -92,10 +91,13 @@ if exist "%HB_ABSROOT%lib\win\bcc" (
 :: Workaround for ld --no-insert-timestamp bug that exist as of
 :: binutils 2.25, when the PE build timestamp field is often
 :: filled with random bytes instead of zeroes. -s option is not
-:: fixing this, though a separate 'strip' call does, so we're
-:: doing that. Do this while only Harbour built binaries are
-:: copied into the bin directory to not break 3rd party binaries.
-strip -p "%HB_ABSROOT%bin\*.exe" "%HB_ABSROOT%bin\*.dll"
+:: fixing this, 'strip' randomly fails either, so we're
+:: patching manually. Do this while only Harbour built binaries are
+:: copied into the bin directory to not modify 3rd party binaries.
+copy /y "%HB_ABSROOT%bin\hbmk2.exe" "%HB_ABSROOT%bin\hbmk2-temp.exe"
+"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" eh "%_ROOT%" "%HB_ABSROOT%bin\*.exe"
+"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" eh "%_ROOT%" "%HB_ABSROOT%bin\*.dll"
+del /f "%HB_ABSROOT%bin\hbmk2-temp.exe"
 
 :: Workaround for ld --no-insert-timestamp issue in that it
 :: won't remove internal timestamps from generated implibs.
@@ -253,12 +255,9 @@ echo "extras\*"     >> _hbfiles
 echo "tests\*"      >> _hbfiles
 echo "addons\*.txt" >> _hbfiles
 
-set _SCRIPT=%~dp0mpkg_ts.hb
-set _ROOT=%~dp0..
-
 if exist "harbour-%HB_VF%-win.7z" del "harbour-%HB_VF%-win.7z"
 pushd "%HB_DR%"
-"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" "%_ROOT%"
+"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" ts "%_ROOT%"
 "%HB_DIR_7Z%7za" a -r -mx "..\harbour-%HB_VF%-win.7z" @..\_hbfiles > nul
 popd
 

@@ -4840,6 +4840,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--high-entropy-va" )
                         AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--high-entropy-va" )
                      ENDIF
+#if 0
+                     /* '--no-insert-timestamp' has a bug failing to properly
+                        reset timestamp in many (apparently random) cases as
+                        of binutils 2.25, so disable for now. */
 #if 1
                      AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-insert-timestamp" )
                      /* This has potential risks for .dlls:
@@ -4851,6 +4855,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                            https://sourceware.org/ml/binutils/2015-06/msg00099.html */
                      AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--insert-timestamp={TU}" )
                      lVCSTSLoad := .T.
+#endif
 #endif
                   ENDIF
                ENDIF

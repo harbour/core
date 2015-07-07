@@ -1535,9 +1535,19 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
 
 #if defined( HB_OS_WIN )
    {
-      HB_FHANDLE hFile = hb_fsOpen( pszFileName, FO_READWRITE | FO_SHARED );
+      LPCTSTR lpFileName;
+      LPTSTR lpFree;
+      HANDLE hFile;
 
-      fResult = hFile != FS_ERROR;
+      lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
+
+      hb_vmUnlock();
+      hFile = CreateFile( lpFileName, GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ,
+                          NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL );
+      fResult = hFile != ( HANDLE ) INVALID_HANDLE_VALUE;
+      hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
+
       if( fResult )
       {
          FILETIME local_ft;
@@ -1566,14 +1576,17 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
          {
             FILETIME ft;
             LocalFileTimeToFileTime( &local_ft, &ft );
-            fResult = SetFileTime( DosToWinHandle( hFile ), NULL, &ft, &ft ) != 0;
+            fResult = SetFileTime( hFile, NULL, &ft, &ft ) != 0;
          }
          else
             fResult = HB_FALSE;
 
          hb_fsSetIOError( fResult, 0 );
-         hb_fsClose( hFile );
+         CloseHandle( hFile );
       }
+
+      if( lpFree )
+         hb_xfree( lpFree );
    }
 #elif defined( HB_OS_OS2 )
    {

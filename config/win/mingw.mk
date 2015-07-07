@@ -58,10 +58,13 @@ ifneq ($(HB_COMPILER_VER),)
             LDFLAGS += -Wl,--high-entropy-va
             DFLAGS += -Wl,--high-entropy-va
          endif
-         LDFLAGS += -Wl,--no-insert-timestamp
+         # '--no-insert-timestamp' has a bug failing to properly
+         # reset timestamp in many (apparently random) cases as
+         # of binutils 2.25, so disable for now.
+         #LDFLAGS += -Wl,--no-insert-timestamp
          # This has potential risks for .dlls:
          #    https://sourceware.org/bugzilla/show_bug.cgi?id=16887
-         DFLAGS += -Wl,--no-insert-timestamp
+         #DFLAGS += -Wl,--no-insert-timestamp
       endif
       ARFLAGS += -D
    endif
