@@ -43,7 +43,9 @@ PROCEDURE Main( cMode, cGitRoot, cBinMask )
 
       tDateHEAD := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
 
-      IF ! Empty( tDateHEAD )
+      IF Empty( tDateHEAD )
+         OutStd( "! mpkg_ts: Error: Failed to obtain last commit timestamp." + hb_eol() )
+      ELSE
          tDateHEAD -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
                           ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
                             Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
@@ -52,7 +54,7 @@ PROCEDURE Main( cMode, cGitRoot, cBinMask )
       _DEBUG( "mpkg_ts: date HEAD:", tDateHEAD, hb_eol() )
 
       SWITCH Lower( cMode := hb_defaultValue( cMode, "" ) )
-      CASE "eh"
+      CASE "pe"
 
          tmp := hb_DirSepToOS( hb_defaultValue( cBinMask, "" ) )
 
@@ -68,10 +70,11 @@ PROCEDURE Main( cMode, cGitRoot, cBinMask )
 
          IF ! Empty( tDateHEAD ) .OR. ! lShallow
 
-            OutStd( "! mpkg_ts: Timestamping repository files..." + hb_eol() )
             IF lShallow
                OutStd( "! mpkg_ts: Warning: Shallow repository, resorting to last commit timestamp." + hb_eol() )
             ENDIF
+
+            OutStd( "! mpkg_ts: Timestamping repository files..." + hb_eol() )
 
             FOR EACH tmp IN { ;
                "bin/*.bat", ;
@@ -170,17 +173,16 @@ STATIC FUNCTION win_ExeSetTimestamp( cFileName, tDateHdr )
 
          IF FSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008
 
-            cDWORD := hb_BChar( nDWORD % 256 ) + ;
-                      hb_BChar( nDWORD / 256 )
+            cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
+                      hb_BChar( nDWORD / 0x100 )
             nDWORD /= 0x10000
-            cDWORD += hb_BChar( nDWORD % 256 ) + ;
-                      hb_BChar( nDWORD / 256 )
+            cDWORD += hb_BChar( nDWORD % 0x100 ) + ;
+                      hb_BChar( nDWORD / 0x100 )
 
-            IF ( Bin2W( hb_FReadLen( fhnd, 2 ) ) + Bin2W( hb_FReadLen( fhnd, 2 ) ) * 0x10000 ) != nDWORD
-               IF FSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008 .AND. ;
-                  FWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
-                  lModified := .T.
-               ENDIF
+            IF !( hb_FReadLen( fhnd, 4 ) == cDWORD ) .AND. ;
+               FSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008 .AND. ;
+               FWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+               lModified := .T.
             ENDIF
 
             IF FSeek( fhnd, nPEPos + 0x0014, FS_SET ) == nPEPos + 0x0014
@@ -210,7 +212,9 @@ STATIC FUNCTION win_ExeSetTimestamp( cFileName, tDateHdr )
                      NEXT
                      IF nPEPos != NIL .AND. ;
                         FSeek( fhnd, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004
-                        IF FWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+                        IF !( hb_FReadLen( fhnd, 4 ) == cDWORD ) .AND. ;
+                           FSeek( fhnd, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004 .AND. ;
+                           FWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
                            lModified := .T.
                         ENDIF
                      ENDIF
@@ -223,11 +227,11 @@ STATIC FUNCTION win_ExeSetTimestamp( cFileName, tDateHdr )
                   FSeek( fhnd, FS_SET, 0 )
                   nDWORD := win_ExeChecksumCalc( hb_FReadLen( fhnd, tmp ), nPECheckSumPos )
                   IF FSeek( fhnd, nPEChecksumPos ) == nPEChecksumPos
-                     cDWORD := hb_BChar( nDWORD % 256 ) + ;
-                               hb_BChar( nDWORD / 256 )
+                     cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
+                               hb_BChar( nDWORD / 0x100 )
                      nDWORD /= 0x10000
-                     cDWORD += hb_BChar( nDWORD % 256 ) + ;
-                               hb_BChar( nDWORD / 256 )
+                     cDWORD += hb_BChar( nDWORD % 0x100 ) + ;
+                               hb_BChar( nDWORD / 0x100 )
                      FWrite( fhnd, cDWORD )
                   ENDIF
                ENDIF
