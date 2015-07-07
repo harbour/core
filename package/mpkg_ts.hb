@@ -56,10 +56,10 @@ PROCEDURE Main( cMode, cGitRoot, cBinMask )
 
          tmp := hb_DirSepToOS( hb_defaultValue( cBinMask, "" ) )
 
-         OutStd( "! mpkg_ts: Resetting build times in executable headers in", tmp + hb_eol() )
+         OutStd( "! mpkg_ts: Setting build times in executable headers of", tmp + hb_eol() )
 
          FOR EACH file IN Directory( tmp )
-            win_ExeResetTimestamp( hb_FNameDir( tmp ) + file[ F_NAME ], tDateHEAD )
+            win_ExeSetTimestamp( hb_FNameDir( tmp ) + file[ F_NAME ], tDateHEAD )
          NEXT
 
          EXIT
@@ -138,11 +138,13 @@ PROCEDURE Main( cMode, cGitRoot, cBinMask )
 STATIC FUNCTION FNameEscape( cFileName )
    RETURN '"' + cFileName + '"'
 
-STATIC FUNCTION win_ExeResetTimestamp( cFileName, tDateHdr )
+STATIC FUNCTION win_ExeSetTimestamp( cFileName, tDateHdr )
 
-   LOCAL lSuccess := .F.
+   LOCAL lModified := .F.
 
-   LOCAL fhnd, nPEPos, cSignature, tDate, nDateHdr, cDateHdr
+   LOCAL fhnd, nPEPos, cSignature, tDate, nSections
+   LOCAL nPEChecksumPos, nDWORD, cDWORD
+   LOCAL tmp, tmp1
 
    hb_FGetDateTime( cFileName, @tDate )
 
@@ -152,38 +154,114 @@ STATIC FUNCTION win_ExeResetTimestamp( cFileName, tDateHdr )
          nPEPos := Bin2W( hb_FReadLen( fhnd, 2 ) ) + ;
                    Bin2W( hb_FReadLen( fhnd, 2 ) ) * 0x10000
          FSeek( fhnd, nPEPos, FS_SET )
-         IF !( hb_FReadLen( fhnd, 2 ) == "PE" )
+         IF !( hb_FReadLen( fhnd, 4 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 ) )
             nPEPos := NIL
          ENDIF
-      ELSEIF cSignature == "PE"
+      ELSEIF cSignature == "PE" .AND. hb_FReadLen( fhnd, 2 ) == hb_BChar( 0 ) + hb_BChar( 0 )
          nPEPos := 0
       ENDIF
       IF nPEPos != NIL
 
-         nDateHdr := Int( ( Max( hb_defaultValue( tDateHdr, hb_SToT() ), hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 )
+         FSeek( fhnd, 0x0002, FS_RELATIVE )
 
-         FSeek( fhnd, nPEPos + 0x0008, FS_SET )
-         IF ( Bin2W( hb_FReadLen( fhnd, 2 ) ) + Bin2W( hb_FReadLen( fhnd, 2 ) ) * 0x10000 ) != nDateHdr
+         nSections := Bin2W( hb_FReadLen( fhnd, 2 ) )
 
-            cDateHdr := hb_BChar( nDateHdr % 256 ) + ;
-                        hb_BChar( nDateHdr / 256 )
-            nDateHdr /= 0x10000
-            cDateHdr += hb_BChar( nDateHdr % 256 ) + ;
-                        hb_BChar( nDateHdr / 256 )
+         nDWORD := Int( ( Max( hb_defaultValue( tDateHdr, hb_SToT() ), hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 )
 
-            IF FSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008 .AND. ;
-               FWrite( fhnd, cDateHdr ) == hb_BLen( cDateHdr )
-               lSuccess := .T.
+         IF FSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008
+
+            cDWORD := hb_BChar( nDWORD % 256 ) + ;
+                      hb_BChar( nDWORD / 256 )
+            nDWORD /= 0x10000
+            cDWORD += hb_BChar( nDWORD % 256 ) + ;
+                      hb_BChar( nDWORD / 256 )
+
+            IF ( Bin2W( hb_FReadLen( fhnd, 2 ) ) + Bin2W( hb_FReadLen( fhnd, 2 ) ) * 0x10000 ) != nDWORD
+               IF FSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008 .AND. ;
+                  FWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+                  lModified := .T.
+               ENDIF
             ENDIF
-         ELSE
-            lSuccess := .T.
+
+            IF FSeek( fhnd, nPEPos + 0x0014, FS_SET ) == nPEPos + 0x0014
+
+               nPEPos += 0x0018
+               nPEChecksumPos := nPEPos + 0x0040
+
+               IF Bin2W( hb_FReadLen( fhnd, 2 ) ) > 0x0058 .AND. ;
+                  FSeek( fhnd, nPEPos + 0x005C, FS_SET ) == nPEPos + 0x005C
+
+                  nPEPos += 0x005C + ;
+                            ( ( Bin2W( hb_FReadLen( fhnd, 2 ) ) + ;
+                                Bin2W( hb_FReadLen( fhnd, 2 ) ) * 0x10000 ) * 8 ) + 4
+                  IF FSeek( fhnd, nPEPos, FS_SET ) == nPEPos
+                     tmp1 := nPEPos
+                     nPEPos := NIL
+                     /* IMAGE_SECTION_HEADERs */
+                     FOR tmp := 1 TO nSections
+                        FSeek( fhnd, tmp1 + ( tmp - 1 ) * 0x28, FS_SET )
+                        /* IMAGE_EXPORT_DIRECTORY */
+                        IF hb_FReadLen( fhnd, 8 ) == ".edata" + hb_BChar( 0 ) + hb_BChar( 0 )
+                           FSeek( fhnd, 0x000C, FS_RELATIVE )
+                           nPEPos := Bin2W( hb_FReadLen( fhnd, 2 ) ) + ;
+                                     Bin2W( hb_FReadLen( fhnd, 2 ) ) * 0x10000
+                           EXIT
+                        ENDIF
+                     NEXT
+                     IF nPEPos != NIL .AND. ;
+                        FSeek( fhnd, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004
+                        IF FWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+                           lModified := .T.
+                        ENDIF
+                     ENDIF
+                  ENDIF
+               ENDIF
+
+               /* Recalculate PE checksum */
+               IF lModified
+                  tmp := FSeek( fhnd, FS_END, 0 )
+                  FSeek( fhnd, FS_SET, 0 )
+                  nDWORD := win_ExeChecksumCalc( hb_FReadLen( fhnd, tmp ), nPECheckSumPos )
+                  IF FSeek( fhnd, nPEChecksumPos ) == nPEChecksumPos
+                     cDWORD := hb_BChar( nDWORD % 256 ) + ;
+                               hb_BChar( nDWORD / 256 )
+                     nDWORD /= 0x10000
+                     cDWORD += hb_BChar( nDWORD % 256 ) + ;
+                               hb_BChar( nDWORD / 256 )
+                     FWrite( fhnd, cDWORD )
+                  ENDIF
+               ENDIF
+            ENDIF
          ENDIF
       ENDIF
       FClose( fhnd )
    ENDIF
 
-   IF lSuccess
+   IF lModified
       hb_FSetDateTime( cFileName, tDate )
    ENDIF
 
-   RETURN lSuccess
+   RETURN lModified
+
+/* Based on:
+      https://stackoverflow.com/questions/6429779/can-anyone-define-the-windows-pe-checksum-algorithm */
+STATIC FUNCTION win_ExeChecksumCalc( cData, nPECheckSumPos )
+
+   LOCAL nChecksum := 0, nPos
+
+   FOR nPos := 1 TO hb_BLen( cData ) STEP 4
+      IF nPos != nPECheckSumPos + 1
+         nChecksum := hb_bitAnd( nChecksum, 0xFFFFFFFF ) + ;
+            ( Bin2W( hb_BSubStr( cData, nPos + 0, 2 ) ) + ;
+                     Bin2W( hb_BSubStr( cData, nPos + 2, 2 ) ) * 0x10000 ) + ;
+            hb_bitShift( nChecksum, -32 )
+         IF nChecksum > 0x100000000
+            nChecksum := hb_bitAnd( nChecksum, 0xFFFFFFFF ) + hb_bitShift( nChecksum, -32 )
+         ENDIF
+      ENDIF
+   NEXT
+
+   nChecksum := hb_bitAnd( nChecksum, 0xFFFF ) + hb_bitShift( nChecksum, -16 )
+   nChecksum := hb_bitAnd( nChecksum + hb_bitShift( nChecksum, -16 ), 0xFFFF )
+
+   RETURN nChecksum + hb_BLen( cData )

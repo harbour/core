@@ -75,6 +75,9 @@ PROCEDURE Main( ... )
          /* Display repository timestamp */
          mk_hb_FSetDateTime()
 
+         /* Binaries built using the GNU Make system are not
+            timestamped after build, so we do it here. This
+            also works for all C compilers, not just recent gcc */
          OutStd( "! Timestamping generated binaries..." + hb_eol() )
 
          FOR EACH tmp IN { ;
