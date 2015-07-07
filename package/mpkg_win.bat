@@ -95,8 +95,8 @@ if exist "%HB_ABSROOT%lib\win\bcc" (
 :: patching manually. Do this while only Harbour built binaries are
 :: copied into the bin directory to not modify 3rd party binaries.
 copy /y "%HB_ABSROOT%bin\hbmk2.exe" "%HB_ABSROOT%bin\hbmk2-temp.exe"
-"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" eh "%_ROOT%" "%HB_ABSROOT%bin\*.exe"
-"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" eh "%_ROOT%" "%HB_ABSROOT%bin\*.dll"
+"%HB_ABSROOT%bin\hbmk2-temp.exe" "%_SCRIPT%" eh "%_ROOT%" "%HB_ABSROOT%bin\*.exe"
+"%HB_ABSROOT%bin\hbmk2-temp.exe" "%_SCRIPT%" eh "%_ROOT%" "%HB_ABSROOT%bin\*.dll"
 del /f "%HB_ABSROOT%bin\hbmk2-temp.exe"
 
 :: Workaround for ld --no-insert-timestamp issue in that it
