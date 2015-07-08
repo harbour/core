@@ -11876,7 +11876,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF hb_LeftEq( cItem, "/" )
-               LegacyWarningNP( hbmk, ParamToString( _PAR_NEW_HBC() ), LegacyOptionConv( cItem ) )
+               LegacyWarningNP( hbmk, _PAR_NEW_HBC(), LegacyOptionConv( cItem ) )
             ENDIF
             AAddNewNotEmpty( hbmk[ _HBMK_aOPTPRG ], cItem )
          NEXT
