@@ -3580,6 +3580,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-prgflag=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF Left( cParam, 1 ) $ cOptPrefix
+            IF hb_LeftEq( cParam, "/" )
+               LegacyWarningNP( hbmk, aParam, LegacyOptionConv( cParam, "-prgflag=" ) )
+            ENDIF
             IF SubStr( cParamL, 2 ) == "gh"
                hbmk[ _HBMK_lStopAfterHarbour ] := .T.
                hbmk[ _HBMK_lCreateHRB ] := .T.
@@ -3849,7 +3852,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
          ENDIF
 
-      CASE Left( cParam, 1 ) $ cOptPrefix
+      CASE Left( cParam, 1 ) $ cOptPrefix .AND. ;
+         !( hb_LeftEq( cParam, "/" ) .AND. hb_FileExists( hb_DirSepToOS( cParam ) ) )
+
+         IF hb_LeftEq( cParam, "/" )
+            LegacyWarningNP( hbmk, aParam, LegacyOptionConv( cParam ) )
+         ENDIF
 
          DO CASE
          CASE lAcceptLDFlag
@@ -7797,13 +7805,18 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      HintHBC( hbmk )
                   ENDIF
                ELSE
-                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( hbmk[ _HBMK_tVCSTS ] )
-                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
-                     IF hbmk[ _HBMK_lIMPLIB ]
-                        hb_FSetDateTime( l_cIMPLIBNAME, hbmk[ _HBMK_tVCSTS ] )
+                  IF hbmk[ _HBMK_lVCSTS ]
+                     IF hbmk[ _HBMK_cPLAT ] == "win"
+                        win_PESetTimestamp( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
                      ENDIF
-                     IF hb_FileExists( tmp := hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
-                        hb_FSetDateTime( tmp, hbmk[ _HBMK_tVCSTS ] )
+                     IF ! Empty( hbmk[ _HBMK_tVCSTS ] )
+                        hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
+                        IF hbmk[ _HBMK_lIMPLIB ]
+                           hb_FSetDateTime( l_cIMPLIBNAME, hbmk[ _HBMK_tVCSTS ] )
+                        ENDIF
+                        IF hb_FileExists( tmp := hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
+                           hb_FSetDateTime( tmp, hbmk[ _HBMK_tVCSTS ] )
+                        ENDIF
                      ENDIF
                   ENDIF
                ENDIF
@@ -7931,13 +7944,18 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      HintHBC( hbmk )
                   ENDIF
                ELSE
-                  IF hbmk[ _HBMK_lVCSTS ] .AND. ! Empty( hbmk[ _HBMK_tVCSTS ] )
-                     hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
-                     IF hbmk[ _HBMK_lIMPLIB ]
-                        hb_FSetDateTime( l_cIMPLIBNAME, hbmk[ _HBMK_tVCSTS ] )
+                  IF hbmk[ _HBMK_lVCSTS ]
+                     IF hbmk[ _HBMK_cPLAT ] == "win"
+                        win_PESetTimestamp( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
                      ENDIF
-                     IF hb_FileExists( tmp := hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
-                        hb_FSetDateTime( tmp, hbmk[ _HBMK_tVCSTS ] )
+                     IF ! Empty( hbmk[ _HBMK_tVCSTS ] )
+                        hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
+                        IF hbmk[ _HBMK_lIMPLIB ]
+                           hb_FSetDateTime( l_cIMPLIBNAME, hbmk[ _HBMK_tVCSTS ] )
+                        ENDIF
+                        IF hb_FileExists( tmp := hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ) )
+                           hb_FSetDateTime( tmp, hbmk[ _HBMK_tVCSTS ] )
+                        ENDIF
                      ENDIF
                   ENDIF
                ENDIF
@@ -8486,6 +8504,19 @@ STATIC FUNCTION InvalidOptionValue( hbmk, aParam )
 STATIC FUNCTION LegacyWarning( hbmk, aParam, cSuggestion )
    RETURN _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Deprecated compatibility option: %1$s. Use '%2$s' instead." ), ParamToString( aParam ), cSuggestion ) )
 #endif
+
+STATIC FUNCTION LegacyWarningNP( hbmk, aParam, cSuggestion )
+   RETURN _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Deprecated, non-portable option: %1$s. Use '%2$s' instead." ), ParamToString( aParam ), cSuggestion ) )
+
+STATIC FUNCTION LegacyOptionConv( cOption, cPrefix )
+
+   hb_default( @cPrefix, "" )
+
+   IF "/" $ SubStr( cOption, 2 )
+      RETURN cPrefix + "-" + StrTran( SubStr( cOption, 2 ), "/", " " + cPrefix + "-" )
+   ENDIF
+
+   RETURN cPrefix + "-" + SubStr( cOption, 2 )
 
 STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
 
@@ -11843,7 +11874,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 #ifdef HARBOUR_SUPPORT
       CASE hb_LeftEq( cLineL, "prgflags="     ) ; cLine := SubStr( cLine, Len( "prgflags="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            AAddNewNotEmpty( hbmk[ _HBMK_aOPTPRG ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) )
+            cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
+            IF hb_LeftEq( cItem, "/" )
+               LegacyWarningNP( hbmk, ParamToString( _PAR_NEW_HBC() ), LegacyOptionConv( cItem ) )
+            ENDIF
+            AAddNewNotEmpty( hbmk[ _HBMK_aOPTPRG ], cItem )
          NEXT
 #endif
 
@@ -13524,6 +13559,135 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
    ENDIF
 
    RETURN lRetVal
+
+STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
+
+   LOCAL lModified := .F.
+
+   LOCAL fhnd, nPEPos, cSignature, tDate, nSections
+   LOCAL nPEChecksumPos, nDWORD, cDWORD
+   LOCAL tmp, tmp1
+
+   hb_FGetDateTime( cFileName, @tDate )
+
+   IF ( fhnd := FOpen( cFileName, FO_READWRITE + FO_EXCLUSIVE ) ) != F_ERROR
+      IF ( cSignature := hb_FReadLen( fhnd, 2 ) ) == "MZ"
+         FSeek( fhnd, 0x003C, FS_SET )
+         nPEPos := Bin2W( hb_FReadLen( fhnd, 2 ) ) + ;
+                   Bin2W( hb_FReadLen( fhnd, 2 ) ) * 0x10000
+         FSeek( fhnd, nPEPos, FS_SET )
+         IF !( hb_FReadLen( fhnd, 4 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 ) )
+            nPEPos := NIL
+         ENDIF
+      ELSEIF cSignature + hb_FReadLen( fhnd, 2 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 )
+         nPEPos := 0
+      ENDIF
+      IF nPEPos != NIL
+
+         FSeek( fhnd, 0x0002, FS_RELATIVE )
+
+         nSections := Bin2W( hb_FReadLen( fhnd, 2 ) )
+
+         nDWORD := Int( ( Max( hb_defaultValue( tDateHdr, hb_SToT() ), hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 )
+
+         IF FSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008
+
+            cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
+                      hb_BChar( nDWORD / 0x100 )
+            nDWORD /= 0x10000
+            cDWORD += hb_BChar( nDWORD % 0x100 ) + ;
+                      hb_BChar( nDWORD / 0x100 )
+
+            IF !( hb_FReadLen( fhnd, 4 ) == cDWORD ) .AND. ;
+               FSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008 .AND. ;
+               FWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+               lModified := .T.
+            ENDIF
+
+            IF FSeek( fhnd, nPEPos + 0x0014, FS_SET ) == nPEPos + 0x0014
+
+               nPEPos += 0x0018
+               nPEChecksumPos := nPEPos + 0x0040
+
+               IF Bin2W( hb_FReadLen( fhnd, 2 ) ) > 0x0058 .AND. ;
+                  FSeek( fhnd, nPEPos + 0x005C, FS_SET ) == nPEPos + 0x005C
+
+                  nPEPos += 0x005C + ;
+                            ( ( Bin2W( hb_FReadLen( fhnd, 2 ) ) + ;
+                                Bin2W( hb_FReadLen( fhnd, 2 ) ) * 0x10000 ) * 8 ) + 4
+                  IF FSeek( fhnd, nPEPos, FS_SET ) == nPEPos
+                     tmp1 := nPEPos
+                     nPEPos := NIL
+                     /* IMAGE_SECTION_HEADERs */
+                     FOR tmp := 1 TO nSections
+                        FSeek( fhnd, tmp1 + ( tmp - 1 ) * 0x28, FS_SET )
+                        /* IMAGE_EXPORT_DIRECTORY */
+                        IF hb_FReadLen( fhnd, 8 ) == ".edata" + hb_BChar( 0 ) + hb_BChar( 0 )
+                           FSeek( fhnd, 0x000C, FS_RELATIVE )
+                           nPEPos := Bin2W( hb_FReadLen( fhnd, 2 ) ) + ;
+                                     Bin2W( hb_FReadLen( fhnd, 2 ) ) * 0x10000
+                           EXIT
+                        ENDIF
+                     NEXT
+                     IF nPEPos != NIL .AND. ;
+                        FSeek( fhnd, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004
+                        IF !( hb_FReadLen( fhnd, 4 ) == cDWORD ) .AND. ;
+                           FSeek( fhnd, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004 .AND. ;
+                           FWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+                           lModified := .T.
+                        ENDIF
+                     ENDIF
+                  ENDIF
+               ENDIF
+
+               /* Recalculate PE checksum */
+               IF lModified
+                  tmp := FSeek( fhnd, FS_END, 0 )
+                  FSeek( fhnd, FS_SET, 0 )
+                  nDWORD := win_PEChecksumCalc( hb_FReadLen( fhnd, tmp ), nPECheckSumPos )
+                  IF FSeek( fhnd, nPEChecksumPos ) == nPEChecksumPos
+                     cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
+                               hb_BChar( nDWORD / 0x100 )
+                     nDWORD /= 0x10000
+                     cDWORD += hb_BChar( nDWORD % 0x100 ) + ;
+                               hb_BChar( nDWORD / 0x100 )
+                     FWrite( fhnd, cDWORD )
+                  ENDIF
+               ENDIF
+            ENDIF
+         ENDIF
+      ENDIF
+      FClose( fhnd )
+   ENDIF
+
+   IF lModified
+      hb_FSetDateTime( cFileName, tDate )
+   ENDIF
+
+   RETURN lModified
+
+/* Based on:
+      https://stackoverflow.com/questions/6429779/can-anyone-define-the-windows-pe-checksum-algorithm */
+STATIC FUNCTION win_PEChecksumCalc( cData, nPECheckSumPos )
+
+   LOCAL nChecksum := 0, nPos
+
+   FOR nPos := 1 TO hb_BLen( cData ) STEP 4
+      IF nPos != nPECheckSumPos + 1
+         nChecksum := hb_bitAnd( nChecksum, 0xFFFFFFFF ) + ;
+            ( Bin2W( hb_BSubStr( cData, nPos + 0, 2 ) ) + ;
+                     Bin2W( hb_BSubStr( cData, nPos + 2, 2 ) ) * 0x10000 ) + ;
+            hb_bitShift( nChecksum, -32 )
+         IF nChecksum > 0x100000000
+            nChecksum := hb_bitAnd( nChecksum, 0xFFFFFFFF ) + hb_bitShift( nChecksum, -32 )
+         ENDIF
+      ENDIF
+   NEXT
+
+   nChecksum := hb_bitAnd( nChecksum, 0xFFFF ) + hb_bitShift( nChecksum, -16 )
+   nChecksum := hb_bitAnd( nChecksum + hb_bitShift( nChecksum, -16 ), 0xFFFF )
+
+   RETURN nChecksum + hb_BLen( cData )
 
 STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags )
 
