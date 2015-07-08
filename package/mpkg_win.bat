@@ -101,7 +101,7 @@ del /f "%HB_ABSROOT%bin\hbmk2-temp.exe"
 
 :: Workaround for ld --no-insert-timestamp issue in that it
 :: won't remove internal timestamps from generated implibs.
-:: Slow. Requires binutils 2.23.
+:: Slow. Requires binutils 2.23 (maybe 2.24/2.25).
 :: Short synonym '-D' is not recognized as of binutils 2.25.
 strip -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw\*-*.*"
 strip -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw64\*-*.*"

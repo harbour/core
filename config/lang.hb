@@ -136,7 +136,7 @@ STATIC PROCEDURE src_push( cMain )
       #endif
    ELSE
       cContent := hb_StrFormat( ;
-         '#, c-format' + hb_eol() + ;
+         "#, c-format" + hb_eol() + ;
          'msgid ""' + hb_eol() + ;
          'msgstr ""' + hb_eol() + ;
          '"Project-Id-Version: %1$s\n"' + hb_eol() + ;
@@ -156,10 +156,10 @@ STATIC PROCEDURE src_push( cMain )
       "content" => StrTran( cContent, hb_eol(), e"\n" ), ;
       "mimetype" => "text/x-po" } ) )
 
-   lang_hb_run( hb_StrFormat( 'curl -s -L --proto-redir =https --user %1$s -X ' + ;
+   lang_hb_run( hb_StrFormat( "curl -s -L --proto-redir =https --user %1$s -X " + ;
       'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
-      'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/' + ;
-      ' -o %5$s', ;
+      "https://www.transifex.com/api/2/project/%3$s/resource/%4$s/content/" + ;
+      " -o %5$s", ;
       ParEscape( hPar[ "login" ] ), cTempContent, ;
       TransifexSlugMap( hPar[ "project" ] ), ;
       TransifexSlugMap( hb_FNameName( hPar[ "entry" ] ) ), cTempResult ) )
@@ -207,7 +207,7 @@ STATIC PROCEDURE trs_pull( cMain )
 
       ?? "", cLang
 
-      lang_hb_run( hb_StrFormat( 'curl -s -L --proto-redir =https --user %1$s -X ' + ;
+      lang_hb_run( hb_StrFormat( "curl -s -L --proto-redir =https --user %1$s -X " + ;
          "GET https://www.transifex.com/api/2/project/%2$s/resource/%3$s/translation/%4$s/" + ;
          " -o %5$s", ;
          ParEscape( hPar[ "login" ] ), ;
@@ -273,7 +273,9 @@ STATIC FUNCTION DoctorTranslation( cString, cOri )
    ENDIF
 
    /* For Transifex: RETURN SYMBOL to real new line */
-   cString := StrTran( cString, hb_UChar( 0x23CE ), e"\n" )
+   cString := hb_StrReplace( cString, { ;
+      hb_UChar( 0x23CE ) => e"\n", ;
+      "http://www.transifex.com/" => "https://www.transifex.com/" } )
 
    IF lRightToLeft
       /* Common typos: extra space or punctuation */
@@ -408,10 +410,10 @@ STATIC PROCEDURE trs_push( cMain )
 
       hb_MemoWrit( cTempContent, hb_jsonEncode( { "content" => StrTran( cContent, hb_eol(), e"\n" ) } ) )
 
-      lang_hb_run( hb_StrFormat( 'curl -s -L --proto-redir =https --user %1$s -X ' + ;
+      lang_hb_run( hb_StrFormat( "curl -s -L --proto-redir =https --user %1$s -X " + ;
          'PUT -d @%2$s -H "Content-Type: application/json" ' + ;
-         'https://www.transifex.com/api/2/project/%3$s/resource/%4$s/translation/%5$s/' + ;
-         ' -o %6$s', ;
+         "https://www.transifex.com/api/2/project/%3$s/resource/%4$s/translation/%5$s/" + ;
+         " -o %6$s", ;
          ParEscape( hPar[ "login" ] ), cTempContent, ;
          TransifexSlugMap( hPar[ "project" ] ), ;
          TransifexSlugMap( hb_FNameName( hPar[ "entry" ] ) ), cLang, cTempResult ) )
