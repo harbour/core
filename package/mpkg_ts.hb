@@ -61,7 +61,8 @@ PROCEDURE Main( cMode, cGitRoot, cBinMask )
          OutStd( "! mpkg_ts: Setting build times in executable headers of", tmp + hb_eol() )
 
          FOR EACH file IN Directory( tmp )
-            win_ExeSetTimestamp( hb_FNameDir( tmp ) + file[ F_NAME ], tDateHEAD )
+            /* Use a fixed date to change binaries only if their ingredients have changed */
+            win_PESetTimestamp( hb_FNameDir( tmp ) + file[ F_NAME ] )
          NEXT
 
          EXIT
@@ -141,13 +142,17 @@ PROCEDURE Main( cMode, cGitRoot, cBinMask )
 STATIC FUNCTION FNameEscape( cFileName )
    RETURN '"' + cFileName + '"'
 
-STATIC FUNCTION win_ExeSetTimestamp( cFileName, tDateHdr )
+STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
    LOCAL lModified := .F.
 
    LOCAL fhnd, nPEPos, cSignature, tDate, nSections
    LOCAL nPEChecksumPos, nDWORD, cDWORD
    LOCAL tmp, tmp1
+
+   IF Empty( tDateHdr )
+      tDateHdr := hb_SToT( "20150101000000" )
+   ENDIF
 
    hb_FGetDateTime( cFileName, @tDate )
 
@@ -225,7 +230,7 @@ STATIC FUNCTION win_ExeSetTimestamp( cFileName, tDateHdr )
                IF lModified
                   tmp := FSeek( fhnd, FS_END, 0 )
                   FSeek( fhnd, FS_SET, 0 )
-                  nDWORD := win_ExeChecksumCalc( hb_FReadLen( fhnd, tmp ), nPECheckSumPos )
+                  nDWORD := win_PEChecksumCalc( hb_FReadLen( fhnd, tmp ), nPECheckSumPos )
                   IF FSeek( fhnd, nPEChecksumPos ) == nPEChecksumPos
                      cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
                                hb_BChar( nDWORD / 0x100 )
@@ -249,7 +254,7 @@ STATIC FUNCTION win_ExeSetTimestamp( cFileName, tDateHdr )
 
 /* Based on:
       https://stackoverflow.com/questions/6429779/can-anyone-define-the-windows-pe-checksum-algorithm */
-STATIC FUNCTION win_ExeChecksumCalc( cData, nPECheckSumPos )
+STATIC FUNCTION win_PEChecksumCalc( cData, nPECheckSumPos )
 
    LOCAL nChecksum := 0, nPos
 

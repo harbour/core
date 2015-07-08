@@ -7807,7 +7807,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ELSE
                   IF hbmk[ _HBMK_lVCSTS ]
                      IF hbmk[ _HBMK_cPLAT ] == "win"
-                        win_PESetTimestamp( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
+                        win_PESetTimestamp( hbmk[ _HBMK_cPROGNAME ] )
                      ENDIF
                      IF ! Empty( hbmk[ _HBMK_tVCSTS ] )
                         hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
@@ -7946,7 +7946,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ELSE
                   IF hbmk[ _HBMK_lVCSTS ]
                      IF hbmk[ _HBMK_cPLAT ] == "win"
-                        win_PESetTimestamp( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
+                        win_PESetTimestamp( hbmk[ _HBMK_cPROGNAME ] )
                      ENDIF
                      IF ! Empty( hbmk[ _HBMK_tVCSTS ] )
                         hb_FSetDateTime( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_tVCSTS ] )
@@ -13567,6 +13567,10 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
    LOCAL fhnd, nPEPos, cSignature, tDate, nSections
    LOCAL nPEChecksumPos, nDWORD, cDWORD
    LOCAL tmp, tmp1
+
+   IF Empty( tDateHdr )
+      tDateHdr := hb_SToT( "20150101000000" )
+   ENDIF
 
    hb_FGetDateTime( cFileName, @tDate )
 
