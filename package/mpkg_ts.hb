@@ -258,8 +258,10 @@ STATIC FUNCTION win_PEChecksumCalc( cData, nPECheckSumPos )
 
    LOCAL nChecksum := 0, nPos
 
+   ++nPECheckSumPos
+
    FOR nPos := 1 TO hb_BLen( cData ) STEP 4
-      IF nPos != nPECheckSumPos + 1
+      IF nPos != nPECheckSumPos
          nChecksum := hb_bitAnd( nChecksum, 0xFFFFFFFF ) + ;
             ( Bin2W( hb_BSubStr( cData, nPos + 0, 2 ) ) + ;
                      Bin2W( hb_BSubStr( cData, nPos + 2, 2 ) ) * 0x10000 ) + ;
