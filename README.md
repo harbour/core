@@ -276,7 +276,7 @@ Install GNU make from the Minix pkgsrc repository; for details see [here](http:/
 Optionally, GCC may also be installed if you wish to use that instead
 of Clang, the Minix system compiler.
 
-## on other *nix hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
+## on other \*nix hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
 To build:
 
@@ -321,11 +321,11 @@ If you want to rebuild one specific contrib package, use this:
 
 # How to Create Packages for Distribution
 
-## Source .tgz on *nix
+## Source .tgz on \*nix
 
     $ package/mpkg_src.sh
 
-## Binary .tgz on *nix
+## Binary .tgz on \*nix
 
     $ export HB_BUILD_PKG=yes
     $ make clean install
@@ -383,15 +383,15 @@ on 3rd party components. To make these Harbour parts built, you need
 to tell Harbour where to find the headers for these 3rd party
 components.
 
-On *nix systems most of these 3rd party components will
+On \*nix systems most of these 3rd party components will
 automatically be used if installed on well-known standard
 system locations.
 
 You only need to use manual setup if the dependency isn't available
 on your platform on a system location, or you wish to use
-a non-standard location. Typically you need to do this on non-*nix
+a non-standard location. Typically you need to do this on non-\*nix
 (Windows, MS-DOS, OS/2) systems for all packages and for a few packages
-on *nix which are not available through official package managers
+on \*nix which are not available through official package managers
 (f.e. ADS Client).
 
 Note that Harbour is tuned to use 3rd party binary packages in their
@@ -404,21 +404,21 @@ generation) might not work as expected.
 You can set these environment variables before starting
 the build. Make sure to adjust them to your own directories:
 
-    HB_WITH_CURSES= (on *nix systems and DJGPP, auto-detected on both)
+    HB_WITH_CURSES= (on \*nix systems and DJGPP, auto-detected on both)
     HB_WITH_GPM= (on Linux only)
     HB_WITH_JPEG=C:\jpeglib (defaults to locally hosted version if not found)
     HB_WITH_PCRE2=C:\pcre2
     HB_WITH_PCRE=C:\pcre (defaults to locally hosted version if not found)
     HB_WITH_PNG=C:\libpng (defaults to locally hosted version if not found)
-    HB_WITH_SLANG= (on *nix systems)
+    HB_WITH_SLANG= (on \*nix systems)
     HB_WITH_TIFF=C:\libtiff (defaults to locally hosted version if not found)
     HB_WITH_WATT= (on MS-DOS systems)
-    HB_WITH_X11= (on *nix systems)
+    HB_WITH_X11= (on \*nix systems)
     HB_WITH_ZLIB=C:\zlib (defaults to locally hosted version if not found)
 
 To explicitly disable any given components, use the value `no`.
 This may be useful to avoid auto-detection of installed packages
-on *nix systems. You may also use the value `local` to force using the
+on \*nix systems. You may also use the value `local` to force using the
 locally hosted copy (inside Harbour source repository) of these packages,
 where applicable. `nolocal` will explicitly disable using locally hosted
 copy.
@@ -521,7 +521,7 @@ sensitive.
      or `$(PREFIX)` if specified, and
      `/usr/local/harbour-<arch>-<comp>` for cross-builds.
      It's always set to `./pkg/<arch>/<comp>` when
-     `HB_BUILD_PKG` is set to `yes`. On non-*nix systems,
+     `HB_BUILD_PKG` is set to `yes`. On non-\*nix systems,
      you must set it to a valid directory when using
      `install`. Use absolute paths only. For a peace of
      mind, avoid using spaces and quotes in the name.
@@ -574,7 +574,7 @@ sensitive.
 
      Create Harbour executables in shared mode.
      Default: `yes` when `HB_INSTALL_PREFIX` points
-     to a *nix system location, otherwise `no`.
+     to a \*nix system location, otherwise `no`.
 
    - `HB_BUILD_DEBUG=yes`
 
@@ -688,9 +688,9 @@ sensitive.
 
    - `HB_CCPATH=[<dir>/]`
 
-     Used with non-*nix gcc family compilers (and
+     Used with non-\*nix gcc family compilers (and
      sunpro) to specify path to compiler/linker/archive
-     tool to help them run from *nix hosts as cross-build
+     tool to help them run from \*nix hosts as cross-build
      tools. Ending slash must be added.
 
    - `HB_CCPREFIX=[<prefix>]`
@@ -714,7 +714,7 @@ sensitive.
 ## Cross-builds
 
 You can build Harbour for target platforms different than host
-platform. F.e. you can create Windows build on *nix systems, Linux
+platform. F.e. you can create Windows build on \*nix systems, Linux
 builds on Windows systems, etc. It's also possible to build targets
 for different than host CPU architectures. F.e. you can create
 Windows 64-bit build on 32-bit Windows platform, or Linux x86-64
@@ -1165,7 +1165,7 @@ export HB_COMPILER=gcc
 make
 ```
 
-## on *nix hosts in general
+## on \*nix hosts in general
 
 ```bash
 make
@@ -1221,7 +1221,7 @@ Run app with:
     # to override default stderr output:
     HB_TR_OUTPUT=<filename>
     # to enable additional system specific logging output,
-    # OutputDebugString() on Windows, syslog() on *nix systems:
+    # OutputDebugString() on Windows, syslog() on \*nix systems:
     HB_TR_SYSOUT=yes
 
 ## Memory statistics/tracking
@@ -1489,14 +1489,14 @@ Supported shells per host platforms:
 * dos  / POSIX shell (bash.exe)
 * os/2 / OS/2 shell (cmd.exe)
 * os/2 / POSIX shell (bash.exe)
-* *nix / POSIX shell
+* \*nix / POSIX shell
 
 
 # External Links
 
 * C/C++ Compilers/Shells:
 
-     * MinGW/MinGW-64 [win, *nix, free, open-source]
+     * MinGW/MinGW-64 [win, \*nix, free, open-source]
         * <http://mingw-w64.org/>, <https://duckduckgo.com/?q=mingw-w64> (recommended, look for niXman builds)
           * Dual-target for x86-64 and x86 hosts (select non-native target with `HB_CPU=x86` or `HB_CPU=x86_64`):
             * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.1.0/threads-posix/sjlj/>
@@ -1505,7 +1505,7 @@ Supported shells per host platforms:
             * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.1.0/threads-posix/dwarf/>
           * x86-64:
             * <https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.1.0/threads-posix/seh/>
-     * MinGW CEGCC [win, *nix, free, open-source]
+     * MinGW CEGCC [win, \*nix, free, open-source]
         * <https://web.archive.org/https://sourceforge.net/projects/cegcc/files/cegcc/>
           * To use this package, you will also need Cygwin package
             installed and be in `PATH` for the Cygwin runtime (`cygwin1.dll`).
@@ -1521,7 +1521,7 @@ Supported shells per host platforms:
         * <https://cygwin.com/>
      * OS/2 GCC [os2, free, open-source]
         * <http://os2ports.smedley.id.au/index.php?page=tools-utilities>
-     * DJGPP [dos, *nix, free, open-source]
+     * DJGPP [dos, \*nix, free, open-source]
         * <http://www.delorie.com/djgpp/>
      * Open Watcom [win, dos, os2, linux, free, open-source]
         * <https://github.com/open-watcom>, <https://open-watcom.github.io/open-watcom/>
@@ -1599,7 +1599,7 @@ Supported shells per host platforms:
         * <http://beyondgrep.com/>
      * Uncrustify (source formatter) [multi-platform, free, open-source]
         * <https://github.com/bengardner/uncrustify>
-     * UPX (executable compressor) [win, dos, *nix, free, open-source]
+     * UPX (executable compressor) [win, dos, \*nix, free, open-source]
         * <https://duckduckgo.com/?q=upx>
      * 7-Zip [multi-platform, free, open-source]
         * <http://7-zip.org/>

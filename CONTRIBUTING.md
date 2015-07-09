@@ -90,7 +90,7 @@ Evaluate these points before reporting an issue:
     source tree in a new local directory and start over. See
     [How to Get](README.md#how-to-get) for instructions to get the source.
     In case you installed Harbour into system locations (this used to be
-    the case with some *nix users, albeit mostly completely unnecessarily
+    the case with some \*nix users, albeit mostly completely unnecessarily
     or wrongly - f.e. for unstable versions), you will need to remember
     cleaning off Harbour from all of these locations, too.
     Hint: Never install unstable Harbour versions to system locations.
