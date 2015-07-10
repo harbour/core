@@ -119,8 +119,6 @@ typedef struct _HB_CURL
    PHB_ITEM pProgressCallback;
 
    PHB_HASH_TABLE pHash;
-   
-   FILE * pErr;
 
 } HB_CURL, * PHB_CURL;
 
@@ -546,10 +544,6 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
    else
       curl_easy_reset( hb_curl->curl );
 #endif
-
-  if( hb_curl->pErr )
-      fclose( hb_curl->pErr );
-
 }
 
 /* NOTE: Will create a new one. If 'from' is specified, the new one
@@ -822,18 +816,7 @@ HB_FUNC( CURL_EASY_SETOPT )
             /* Error */
 
             /* HB_CURLOPT_ERRORBUFFER */
-             case HB_CURLOPT_STDERR:
- 
-                if( hb_curl->pErr )
-                   fclose( hb_curl->pErr );
- 
-                if( HB_ISCHAR( 3 ) )
-                {
-                   hb_curl->pErr = fopen( hb_parc( 3 ), "a"  );
-                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_STDERR, hb_curl->pErr );
-                }
- 
-                break;
+            /* HB_CURLOPT_STDERR */
 
             case HB_CURLOPT_FAILONERROR:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_FAILONERROR, HB_CURL_OPT_BOOL( 3 ) );
@@ -1051,32 +1034,6 @@ HB_FUNC( CURL_EASY_SETOPT )
                }
             }
             break;
-            case HB_CURLOPT_HTTPPOST_VALUE:
-             {
-                PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
- 
-                if( pArray )
-                {
-                   HB_SIZE ulPos;
-                   HB_SIZE ulArrayLen = hb_arrayLen( pArray );
- 
-                   for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
-                   {
-                      PHB_ITEM pSubArray = hb_arrayGetItemPtr( pArray, ulPos + 1 );
- 
-                      curl_formadd( &hb_curl->pHTTPPOST_First,
-                                    &hb_curl->pHTTPPOST_Last,
-                                    CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 1 ),
-                                    CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 1 ),
-                                    CURLFORM_COPYCONTENTS, hb_arrayGetCPtr( pSubArray, 2 ),
-                                    CURLFORM_CONTENTSLENGTH, hb_arrayGetCLen( pSubArray, 2 ),
-                                    CURLFORM_END );
-                   }
- 
-                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, hb_curl->pHTTPPOST_First );
-                }
-             }
-             break;
             case HB_CURLOPT_REFERER:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_REFERER, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
                break;
