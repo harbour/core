@@ -18,12 +18,13 @@ STATIC s_nColorIndex := 1
 
 STATIC s_nFont := 1
 STATIC sc_aFont := { ;
-      "Lucida Console", ;
-      "Consolas", ;
-      "Courier New", ;
-      "Terminal", ;
-      "DejaVu Sans Mono", ;
-      "Monaco" }
+   "Lucida Console", ;
+   "Consolas", ;
+   "Courier New", ;
+   "Terminal", ;
+   "DejaVu Sans Mono", ;
+   "Monaco" }
+
 //
 
 PROCEDURE Main()

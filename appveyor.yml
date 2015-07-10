@@ -22,7 +22,7 @@ environment:
       secure: +CyA1IIhoPpI7EY54BsRADDxb1V62HDWLSekCX4mTxk=
 install:
 - set VER_CURL=7.43.0
-- set VER_OPENSSL=1.0.2c
+- set VER_OPENSSL=1.0.2d
 - mkdir C:\w\
 - curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/s/se/sevenzip/7-Zip/9.20/7za920.zip -o 7z.7z
 - openssl dgst -sha256 7z.7z | findstr /i /c:"2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac"
