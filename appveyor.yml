@@ -40,16 +40,16 @@ install:
 # Will unpack into C:\mingw64\
 - 7z x -y -oC:\w\ mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win32-mingw.zip -o curl-win-mingw.zip
-- openssl dgst -sha256 curl-win-mingw.zip | findstr /i /c:"df3cf9807b1fb45242df498879a6349e9ee8a510d4f5451b302b2ab6872a2372"
+- openssl dgst -sha256 curl-win-mingw.zip | findstr /i /c:"6a631f893fcf8d6b0f0494579b15cfc443c8c16be184ffdbbdff02c77ab24101"
 - 7z x -y -oC:\w\ curl-win-mingw.zip > nul
-- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win32-mingw.zip -o openssl-win-mingw.zip
-- openssl dgst -sha256 openssl-win-mingw.zip | findstr /i /c:"8b0ec646161d7cd7c3aa044bb3dee639304ed79676e9eee66c113539311629e9"
-- 7z x -y -oC:\w\ openssl-win-mingw.zip > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win64-mingw.zip -o curl-win-mingw64.zip
-- openssl dgst -sha256 curl-win-mingw64.zip | findstr /i /c:"1f5564f6baa1a124ca3f1e54293072dff9f09ef97009c51102459f8d5a1fec59"
+- openssl dgst -sha256 curl-win-mingw64.zip | findstr /i /c:"b8b4a2eff402bf2d79878baf628ee6e7d53c78c254dd95a52c8469a08fce528e"
 - 7z x -y -oC:\w\ curl-win-mingw64.zip > nul
+- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win32-mingw.zip -o openssl-win-mingw.zip
+- openssl dgst -sha256 openssl-win-mingw.zip | findstr /i /c:"d6be98b4e6f3c83a1a57fb89936ac41d89b8244e416c7dc672e79fec03c9ff03"
+- 7z x -y -oC:\w\ openssl-win-mingw.zip > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.zip -o openssl-win-mingw64.zip
-- openssl dgst -sha256 openssl-win-mingw64.zip | findstr /i /c:"e31fc2c3a3576e9b2bf81bbacc43ee15d961c81dae8f7ce98a68e8fd8972159e"
+- openssl dgst -sha256 openssl-win-mingw64.zip | findstr /i /c:"13dcc5c8675ffa2aabf7f73b7e200684e9e7246b294207c84b1e7e9683d1a7d2"
 - 7z x -y -oC:\w\ openssl-win-mingw64.zip > nul
 build_script:
 - set HB_SFX_7Z=C:\w\7zsfx\7zsd.sfx
