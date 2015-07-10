@@ -356,7 +356,7 @@ static HB_BOOL hb_regex( int iRequest )
                       ( HB_SIZE ) HB_REGMATCH_EO( aMatches, 0 ) == nLen;
             break;
 
-         case 2: /* MATCH ( HAS ) */
+         case 2: /* HAS */
             fResult = HB_TRUE;
             break;
 
