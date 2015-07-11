@@ -391,10 +391,13 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
 
    STATIC s_tVCS
 
-   LOCAL cStdOut
+   LOCAL cStdOut, cStdErr
 
    IF s_tVCS == NIL
-      hb_processRun( "git log -1 --format=format:%ci",, @cStdOut )
+      IF hb_processRun( "git log -1 --format=format:%ci",, @cStdOut, @cStdErr ) != 0
+         cStdOut := hb_ATokens( hb_MemoRead( "include" + hb_ps() + "_repover.txt" ), .T. )
+         cStdOut := iif( Len( cStdOut ) >= 2, cStdOut[ 2 ], "" )
+      ENDIF
 
       s_tVCS := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
 
