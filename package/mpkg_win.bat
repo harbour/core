@@ -222,10 +222,10 @@ touch "%HB_ABSROOT%RELNOTES.txt" -r "%HB_ABSROOT%README.md"
 
 :: Register build information
 
-"%HB_ABSROOT%bin\harbour" -build 2>&1 > nul | sed -nr "/^(Version:|Platform:|Extra )/!p" > "%HB_ABSROOT%BUILD.txt"
+"%HB_ABSROOT%bin\harbour" -build 2>&1 | sed -nr "/^(Version:|Platform:|Extra )/!p" > "%HB_ABSROOT%BUILD.txt"
 set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_PLATFORM|HB_COMPILER|HB_CPU|HB_WITH_|HB_STATIC_)/p" >> "%HB_ABSROOT%BUILD.txt"
 echo --------------------------->> "%HB_ABSROOT%BUILD.txt"
-dir /s /b /ad "%HB_ABSROOT%lib\" | sed -e "s|%HB_ABSROOT:\=.%lib.||g" >> "%HB_ABSROOT%BUILD.txt"
+dir /s /b /ad "%HB_ABSROOT%lib\" | sed -e "s|%HB_ABSROOT:\=.%lib.||g" | sed -nr "/[^a-z0-9]/p" >> "%HB_ABSROOT%BUILD.txt"
 touch "%HB_ABSROOT%BUILD.txt" -r "%HB_ABSROOT%README.md"
 
 :: Convert EOLs
