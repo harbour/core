@@ -5,7 +5,7 @@
 :: See LICENSE.txt for licensing terms.
 :: ---------------------------------------------------------------
 
-:: - Adjust target dir, mingw dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
+:: - Adjust target dir, MinGW dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
 ::   create required packages beforehand.
 :: - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
 :: - Run this from vanilla official source tree only.
@@ -37,10 +37,10 @@ set _ROOT=%~dp0..
 :: and 64-bit if it's the only one available.
 
 if exist "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" (
-   :: mingw 32-bit base system
+   :: MinGW 32-bit base system
    set LIB_TARGET=32
 ) else if exist "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" (
-   :: mingw 64-bit base system
+   :: MinGW 64-bit base system
    set LIB_TARGET=64
 )
 
@@ -129,8 +129,8 @@ xcopy /y /s /q /i "%~dp0..\src\3rd\*.h" "%HB_ABSROOT%src\3rd\"
 :: Copy C compiler
 
 :: TODO: This whole section should only be relevant
-::       if the distro is mingw based. Much of it is
-::       useful only if mingw _is_ actually bundled
+::       if the distro is MinGW based. Much of it is
+::       useful only if MinGW _is_ actually bundled
 ::       with the package, which is probably something
 ::       that should be avoided in the future.
 
@@ -146,9 +146,9 @@ if "%_HB_PKG_BUNDLE_C%" == "yes" (
    xcopy /y /q "%~dp0getmingw.bat" "%HB_ABSROOT%bin\"
 )
 
-:: Copy mingw runtime .dlls
+:: Copy MinGW runtime .dlls
 
-:: Pick the ones from a multi-target mingw distro
+:: Pick the ones from a multi-target MinGW distro
 :: that match the bitness of our base target.
 set _MINGW_DLL_DIR=%HB_DIR_MINGW%\bin
 if "%LIB_TARGET%" == "32" if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32" set _MINGW_DLL_DIR=%HB_DIR_MINGW%\x86_64-w64-mingw32\lib32
@@ -156,11 +156,11 @@ if "%LIB_TARGET%" == "64" if exist "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"   set
 
 if exist "%_MINGW_DLL_DIR%\libgcc_s_*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_*.dll" "%HB_ABSROOT%bin\"
 if exist "%_MINGW_DLL_DIR%\mingwm*.dll"    xcopy /y "%HB_DIR_MINGW%\bin\mingwm*.dll"    "%HB_ABSROOT%bin\"
-:: for posix cc1.exe to run without putting mingw\bin into PATH
+:: for posix cc1.exe to run without putting MinGW bin directory into PATH
 rem if exist "%_MINGW_DLL_DIR%\libwinpthread-*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libwinpthread-*.dll" "%HB_ABSROOT%bin\"
 
 :: Delete stuff from C compiler directory we don't need:
-:: - secondary target from multi-target mingws
+:: - secondary target from multi-target MinGWs
 :: - non-C/C++ language support
 :: - gdb (along with Python)
 :: - 3rd party libraries
@@ -208,7 +208,7 @@ if "%MINGW_HOST%" == "32" (
    del /f /q "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%MINGW_VER%\gnat1.exe" 2> nul
 )
 
-echo ! mingw version: %MINGW_VER% %MINGW_HOST%-bit hosted
+echo ! MinGW version: %MINGW_VER% (%MINGW_HOST%-bit hosted)
 
 :: Burn build information into RELNOTES.txt
 
