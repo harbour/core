@@ -9,7 +9,7 @@
 ::   create required packages beforehand.
 :: - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (for implib).
 :: - Run this from vanilla official source tree only.
-:: - Requires GNU sed, unix2dos, touch and OpenSSL tools in PATH
+:: - Requires GNU sed, touch and OpenSSL tools in PATH
 :: - Optional HB_SFX_7Z envvar pointed to 7z SFX module
 ::   found in: http://7zsfx.info/files/7zsd_150_2712.7z
 
@@ -30,7 +30,7 @@ if "%HB_RT%" == "" set HB_RT=%HB_RT_DEF%
 set HB_DR=hb%HB_VS%\
 set HB_ABSROOT=%HB_RT%%HB_DR%
 
-set _SCRIPT=%~dp0mpkg_ts.hb
+set _SCRIPT=%~dp0mpkg.hb
 set _ROOT=%~dp0..
 
 :: Auto-detect the base bitness, by default it will be 32-bit,
@@ -222,17 +222,17 @@ touch "%HB_ABSROOT%RELNOTES.txt" -r "%HB_ABSROOT%README.md"
 
 :: Register build information
 
-"%HB_ABSROOT%bin\harbour" -build > "%HB_ABSROOT%BUILD.txt" 2>&1
-set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_PLATFORM|HB_COMPILER|HB_CPU|HB_WITH_|HB_DIR_|HB_STATIC_)/p" >> "%HB_ABSROOT%BUILD.txt"
+"%HB_ABSROOT%bin\harbour" -build 2>&1 > nul | sed -nr "/^(Version:|Platform:|Extra )/!p" > "%HB_ABSROOT%BUILD.txt"
+set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_PLATFORM|HB_COMPILER|HB_CPU|HB_WITH_|HB_STATIC_)/p" >> "%HB_ABSROOT%BUILD.txt"
 echo --------------------------->> "%HB_ABSROOT%BUILD.txt"
 dir /s /b /ad "%HB_ABSROOT%lib\" | sed -e "s|%HB_ABSROOT:\=.%lib.||g" >> "%HB_ABSROOT%BUILD.txt"
 touch "%HB_ABSROOT%BUILD.txt" -r "%HB_ABSROOT%README.md"
 
 :: Convert EOLs
 
-unix2dos -k "%HB_ABSROOT%*.md"
-unix2dos -k "%HB_ABSROOT%*.txt"
-unix2dos -k "%HB_ABSROOT%addons\*.txt"
+"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" nl "%HB_ABSROOT%*.md"
+"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" nl "%HB_ABSROOT%*.txt"
+"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" nl "%HB_ABSROOT%addons\*.txt"
 
 :: Create installer/archive
 

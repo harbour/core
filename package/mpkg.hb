@@ -15,67 +15,79 @@
    #translate _DEBUG( [<x,...>] ) =>
 #endif
 
-PROCEDURE Main( cMode, cGitRoot, cBinMask )
+PROCEDURE Main( cMode )
 
    LOCAL tmp, aFiles, file, cStdOut, tDate, tDateHEAD
-   LOCAL lShallow
+   LOCAL cGitRoot, lShallow, cBinMask
 
-   _DEBUG( "mpkg_ts: BEGIN" + hb_eol() )
+   _DEBUG( __FILE__ + ": BEGIN" + hb_eol() )
 
-   cGitRoot := hb_DirSepAdd( hb_defaultValue( cGitRoot, "." ) ) + ".git"
-   IF hb_DirExists( cGitRoot )
+   SWITCH Lower( cMode := hb_defaultValue( cMode, "" ) )
+   CASE "nl"
 
-      _DEBUG( "mpkg_ts: cwd:", hb_cwd() + hb_eol() )
-      _DEBUG( "mpkg_ts: git:", cGitRoot + hb_eol() )
+      tmp := hb_DirSepToOS( hb_defaultValue( hb_PValue( 2 ), "" ) )
 
-      hb_processRun( "git" + ;
-         " " + FNameEscape( "--git-dir=" + cGitRoot ) + ;
-         " rev-parse --abbrev-ref HEAD",, @cStdOut )
+      OutStd( "! mpkg.hb: Converting newlines in", tmp + hb_eol() )
 
-      hb_processRun( "git" + ;
-         " " + FNameEscape( "--git-dir=" + cGitRoot ) + ;
-         " rev-list " + hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) + ;
-         " --count",, @cStdOut )
+      FOR EACH file IN Directory( tmp )
+         FileConvEOL( hb_FNameDir( tmp ) + file[ F_NAME ] )
+      NEXT
 
-      lShallow := Val( hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) ) < 2000
+      EXIT
 
-      hb_processRun( "git log -1 --format=format:%ci",, @cStdOut )
+   CASE "pe"
 
-      tDateHEAD := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
+      tmp := hb_DirSepToOS( hb_defaultValue( hb_PValue( 3 ), "" ) )
 
-      IF Empty( tDateHEAD )
-         OutStd( "! mpkg_ts: Error: Failed to obtain last commit timestamp." + hb_eol() )
-      ELSE
-         tDateHEAD -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
-                          ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
-                            Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
-      ENDIF
+      OutStd( "! mpkg.hb: Setting build times in executable headers of", tmp + hb_eol() )
 
-      _DEBUG( "mpkg_ts: date HEAD:", tDateHEAD, hb_eol() )
+      FOR EACH file IN Directory( tmp )
+         /* Use a fixed date to change binaries only if their ingredients have changed */
+         win_PESetTimestamp( hb_FNameDir( tmp ) + file[ F_NAME ] )
+      NEXT
 
-      SWITCH Lower( cMode := hb_defaultValue( cMode, "" ) )
-      CASE "pe"
+      EXIT
 
-         tmp := hb_DirSepToOS( hb_defaultValue( cBinMask, "" ) )
+   CASE "ts"
 
-         OutStd( "! mpkg_ts: Setting build times in executable headers of", tmp + hb_eol() )
+      cGitRoot := hb_DirSepAdd( hb_DirSepToOS( hb_defaultValue( hb_PValue( 2 ), "." ) ) ) + ".git"
+      IF hb_DirExists( cGitRoot )
 
-         FOR EACH file IN Directory( tmp )
-            /* Use a fixed date to change binaries only if their ingredients have changed */
-            win_PESetTimestamp( hb_FNameDir( tmp ) + file[ F_NAME ] )
-         NEXT
+         _DEBUG( __FILE__ + ": cwd:", hb_cwd() + hb_eol() )
+         _DEBUG( __FILE__ + ": git:", cGitRoot + hb_eol() )
 
-         EXIT
+         hb_processRun( "git" + ;
+            " " + FNameEscape( "--git-dir=" + cGitRoot ) + ;
+            " rev-parse --abbrev-ref HEAD",, @cStdOut )
 
-      CASE "ts"
+         hb_processRun( "git" + ;
+            " " + FNameEscape( "--git-dir=" + cGitRoot ) + ;
+            " rev-list " + hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) + ;
+            " --count",, @cStdOut )
+
+         lShallow := Val( hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) ) < 2000
+
+         hb_processRun( "git log -1 --format=format:%ci",, @cStdOut )
+
+         tDateHEAD := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
+
+         IF Empty( tDateHEAD )
+            OutStd( "! mpkg.hb: Error: Failed to obtain last commit timestamp." + hb_eol() )
+         ELSE
+            tDateHEAD -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
+                             ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
+                               Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
+         ENDIF
+
+         _DEBUG( __FILE__ + ": date HEAD:", tDateHEAD, hb_eol() )
 
          IF ! Empty( tDateHEAD ) .OR. ! lShallow
 
             IF lShallow
-               OutStd( "! mpkg_ts: Warning: Shallow repository, resorting to last commit timestamp." + hb_eol() )
+               OutStd( "! mpkg.hb: Warning: Shallow repository, resorting to last commit timestamp." + hb_eol() )
             ENDIF
 
-            OutStd( "! mpkg_ts: Timestamping repository files..." + hb_eol() )
+            OutStd( "! mpkg.hb: Timestamping repository files..." + hb_eol() )
 
             FOR EACH tmp IN { ;
                "bin/*.bat", ;
@@ -116,7 +128,7 @@ PROCEDURE Main( cMode, cGitRoot, cBinMask )
 
          /* Reset directory timestamps to last commit */
          IF ! Empty( tDateHEAD )
-            OutStd( "! mpkg_ts: Timestamping directories..." + hb_eol() )
+            OutStd( "! mpkg.hb: Timestamping directories..." + hb_eol() )
             FOR EACH file IN hb_DirScan( "." + hb_ps(),, "D" ) DESCEND
                IF "D" $ file[ F_ATTR ] .AND. ;
                   !( hb_FNameNameExt( file[ F_NAME ] ) == "." .OR. ;
@@ -125,17 +137,29 @@ PROCEDURE Main( cMode, cGitRoot, cBinMask )
                ENDIF
             NEXT
          ENDIF
+      ELSE
+         OutStd( __FILE__ + ": Error: Repository not found:", cGitRoot + hb_eol() )
+      ENDIF
 
-         EXIT
+      EXIT
 
-      OTHERWISE
-         OutStd( "mpkg_ts: Error: Wrong mode:", "'" + cMode + "'" + hb_eol() )
-      ENDSWITCH
-   ELSE
-      OutStd( "mpkg_ts: Error: Repository not found:", cGitRoot + hb_eol() )
-   ENDIF
+   CASE "ch"
 
-   _DEBUG( "mpkg_ts: FINISH" + hb_eol() )
+      tmp := hb_DirSepToOS( hb_defaultValue( hb_PValue( 2 ), "" ) )
+
+      OutStd( "! mpkg.hb: Calculating SHA-256 hash for", tmp + hb_eol() )
+
+      FOR EACH file IN Directory( tmp )
+         OutStd( hb_SHA256( hb_MemoRead( hb_FNameDir( tmp ) + file[ F_NAME ] ) ), hb_FNameDir( tmp ) + file[ F_NAME ] + hb_eol() )
+      NEXT
+
+      EXIT
+
+   OTHERWISE
+      OutStd( __FILE__ + ": Error: Wrong mode:", "'" + cMode + "'" + hb_eol() )
+   ENDSWITCH
+
+   _DEBUG( __FILE__ + ": FINISH" + hb_eol() )
 
    RETURN
 
@@ -276,3 +300,21 @@ STATIC FUNCTION win_PEChecksumCalc( cData, nPECheckSumPos )
    nChecksum := hb_bitAnd( nChecksum + hb_bitShift( nChecksum, -16 ), 0xFFFF )
 
    RETURN nChecksum + hb_BLen( cData )
+
+STATIC FUNCTION StringEOLConv( cFile )
+
+   cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+
+   RETURN iif( hb_eol() == Chr( 10 ), cFile, ;
+      StrTran( cFile, Chr( 10 ), Chr( 13 ) + Chr( 10 ) ) )
+
+STATIC FUNCTION FileConvEOL( cFileName )
+
+   LOCAL cFile, tDate
+
+   hb_FGetDateTime( cFileName, @tDate )
+
+   RETURN ;
+      ! Empty( cFile := hb_MemoRead( cFileName ) ) .AND. ;
+      hb_MemoWrit( cFileName, StringEOLConv( cFile ) ) .AND. ;
+      hb_FSetDateTime( cFileName, tDate )

@@ -186,10 +186,10 @@ PROCEDURE Main( ... )
          mk_hb_FLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
 
          DO CASE
-         CASE EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
-              EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib64/harbour" ) .OR. ;
-              EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
-              EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
+         CASE hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
+              hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib64/harbour" ) .OR. ;
+              hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
+              hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
 
             mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionless )
             mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionComp )
@@ -572,7 +572,7 @@ STATIC PROCEDURE mk_hb_FLinkSym( cDst, cSrc )
 
    RETURN
 
-STATIC FUNCTION EndsWith( cString, cEnd )
+STATIC FUNCTION hb_RightEq( cString, cEnd )
    RETURN Right( cString, Len( cEnd ) ) == cEnd
 
 STATIC FUNCTION query_stdout( cName )
