@@ -396,7 +396,7 @@ on \*nix which are not available through official package managers
 
 Note that Harbour is tuned to use 3rd party binary packages in their
 default, unmodified &ndash; "vanilla" &ndash; install layout created by their
-official/mainstream install kits. If you manually move, rename,
+official/mainstream binary install kits. If you manually move, rename,
 delete or add files under the 3rd party packages' root directory,
 the default Harbour build process (especially Windows implib
 generation) might not work as expected.
