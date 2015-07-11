@@ -394,12 +394,12 @@ a non-standard location. Typically you need to do this on non-\*nix
 on \*nix which are not available through official package managers
 (f.e. ADS Client).
 
-Note that Harbour is tuned to use 3rd party binary packages in their
+Note that Harbour is tuned to use 3rd party _binary_ packages in their
 default, unmodified &ndash; "vanilla" &ndash; install layout created by their
-official/mainstream binary install kits. If you manually move, rename,
-delete or add files under the 3rd party packages' root directory,
-the default Harbour build process (especially Windows implib
-generation) might not work as expected.
+official/mainstream install kits. If you manually move, rename,
+delete, add files under the 3rd party packages' root directory, or 
+use a source package, the default Harbour build process (especially 
+Windows implib generation) might not work as expected.
 
 You can set these environment variables before starting
 the build. Make sure to adjust them to your own directories:
