@@ -14151,7 +14151,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
       EXIT
    CASE _VCS_GIT_SUB
       /* --git-dir= will not handle submodules. So instead we CD into
-         the submodule dir and call git with default/current dir. */
+         the submodule dir and call Git with default/current dir. */
       cOldDir := hb_cwd( cDir )
       /* fall through */
    CASE _VCS_GIT

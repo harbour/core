@@ -13,6 +13,7 @@
 -depcontrol=blat:${HB_WITH_BLAT}
 -depimplibs=blat:../blat.dll
 
+{!HBMK_HAS_BLAT}-depurlbase=blat:http://www.blat.net/
 {!HBMK_HAS_BLAT}-depoptional=blatold:yes{!hbdyn}
 {!HBMK_HAS_BLAT}-depkeyhead=blatold:blat.h
 {!HBMK_HAS_BLAT}-depcontrol=blatold:${HB_WITH_BLAT}

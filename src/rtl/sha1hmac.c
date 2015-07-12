@@ -169,7 +169,7 @@ void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, unsigned i
 
 void hb_HMAC_SHA1_EndMessage(unsigned char *out, HMAC_SHA1_CTX *ctx) {
     unsigned char   buf[HMAC_SHA1_DIGEST_LENGTH];
-    SHA_CTX     *c = &ctx->shactx;
+    HB_SHA_CTX   *c = &ctx->shactx;
 
     hb_SHA1_Final(&(buf[0]), c);
     hb_SHA1_Init(c);

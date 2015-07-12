@@ -51,7 +51,7 @@
 HB_FUNC( HB_SHA1 )
 {
    sha1_byte digest[ SHA1_DIGEST_LENGTH ];
-   SHA_CTX ctx;
+   HB_SHA_CTX ctx;
 
    hb_SHA1_Init( &ctx );
 

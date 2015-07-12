@@ -61,7 +61,7 @@ extern "C" {
 typedef struct _HMAC_SHA1_CTX {
     unsigned char   ipad[HMAC_SHA1_BLOCK_LENGTH];
     unsigned char   opad[HMAC_SHA1_BLOCK_LENGTH];
-    SHA_CTX         shactx;
+    HB_SHA_CTX      shactx;
     unsigned char   key[HMAC_SHA1_BLOCK_LENGTH];
     unsigned int    keylen;
     unsigned int    hashkey;

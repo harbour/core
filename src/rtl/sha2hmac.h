@@ -41,48 +41,48 @@ extern "C" {
 #endif
 
 typedef struct {
-    sha224_ctx ctx_inside;
-    sha224_ctx ctx_outside;
+    hb_sha224_ctx ctx_inside;
+    hb_sha224_ctx ctx_outside;
 
     /* for hmac_reinit */
-    sha224_ctx ctx_inside_reinit;
-    sha224_ctx ctx_outside_reinit;
+    hb_sha224_ctx ctx_inside_reinit;
+    hb_sha224_ctx ctx_outside_reinit;
 
     unsigned char block_ipad[SHA224_BLOCK_SIZE];
     unsigned char block_opad[SHA224_BLOCK_SIZE];
 } hmac_sha224_ctx;
 
 typedef struct {
-    sha256_ctx ctx_inside;
-    sha256_ctx ctx_outside;
+    hb_sha256_ctx ctx_inside;
+    hb_sha256_ctx ctx_outside;
 
     /* for hmac_reinit */
-    sha256_ctx ctx_inside_reinit;
-    sha256_ctx ctx_outside_reinit;
+    hb_sha256_ctx ctx_inside_reinit;
+    hb_sha256_ctx ctx_outside_reinit;
 
     unsigned char block_ipad[SHA256_BLOCK_SIZE];
     unsigned char block_opad[SHA256_BLOCK_SIZE];
 } hmac_sha256_ctx;
 
 typedef struct {
-    sha384_ctx ctx_inside;
-    sha384_ctx ctx_outside;
+    hb_sha384_ctx ctx_inside;
+    hb_sha384_ctx ctx_outside;
 
     /* for hmac_reinit */
-    sha384_ctx ctx_inside_reinit;
-    sha384_ctx ctx_outside_reinit;
+    hb_sha384_ctx ctx_inside_reinit;
+    hb_sha384_ctx ctx_outside_reinit;
 
     unsigned char block_ipad[SHA384_BLOCK_SIZE];
     unsigned char block_opad[SHA384_BLOCK_SIZE];
 } hmac_sha384_ctx;
 
 typedef struct {
-    sha512_ctx ctx_inside;
-    sha512_ctx ctx_outside;
+    hb_sha512_ctx ctx_inside;
+    hb_sha512_ctx ctx_outside;
 
     /* for hmac_reinit */
-    sha512_ctx ctx_inside_reinit;
-    sha512_ctx ctx_outside_reinit;
+    hb_sha512_ctx ctx_inside_reinit;
+    hb_sha512_ctx ctx_outside_reinit;
 
     unsigned char block_ipad[SHA512_BLOCK_SIZE];
     unsigned char block_opad[SHA512_BLOCK_SIZE];

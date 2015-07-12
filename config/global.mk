@@ -1893,7 +1893,7 @@ ifeq ($(HB_INIT_DONE),)
             ifneq ($(shell git diff --name-only --quiet),)
                $(info ! === WARNING: Locally modified source code ===)
             endif
-            $(info ! GIT_REVISION: $(shell git rev-parse --short HEAD))
+            $(info ! Git revision: $(shell git rev-parse --short HEAD))
          endif
       endif
    endif
@@ -1906,7 +1906,7 @@ ifeq ($(HB_INIT_DONE),)
          $(shell $(_cmd) > $(TOP)$(ROOT)include$(DIRSEP)_repover.txt)
          $(shell git rev-list $(shell git rev-parse --abbrev-ref HEAD) --count >> $(TOP)$(ROOT)include$(DIRSEP)_repover.txt)
       else
-         $(info ! WARNING: git not found in PATH. Version information might not be accurate.)
+         $(info ! WARNING: Git not found in PATH. Version information might not be accurate.)
       endif
    endif
 endif

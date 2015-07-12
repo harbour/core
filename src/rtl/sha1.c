@@ -107,7 +107,7 @@ static void SHA1_Transform(sha1_quadbyte state[5], sha1_byte buffer[64]) {
 
 
 /* SHA1_Init - Initialize new context */
-void hb_SHA1_Init(SHA_CTX* context) {
+void hb_SHA1_Init(HB_SHA_CTX* context) {
     /* SHA1 initialization constants */
     context->state[0] = 0x67452301;
     context->state[1] = 0xEFCDAB89;
@@ -118,7 +118,7 @@ void hb_SHA1_Init(SHA_CTX* context) {
 }
 
 /* Run your data through this. */
-void hb_SHA1_Update(SHA_CTX *context, const void *datav, unsigned int len) {
+void hb_SHA1_Update(HB_SHA_CTX *context, const void *datav, unsigned int len) {
     const sha1_byte * data = ( const sha1_byte * ) datav;
     unsigned int    i, j;
 
@@ -141,7 +141,7 @@ void hb_SHA1_Update(SHA_CTX *context, const void *datav, unsigned int len) {
 
 
 /* Add padding and return the message digest. */
-void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX *context) {
+void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], HB_SHA_CTX *context) {
     sha1_quadbyte   i;
     sha1_byte   finalcount[8];
 

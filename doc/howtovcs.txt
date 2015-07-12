@@ -14,14 +14,12 @@ Content
 =========================================================
 by Viktor Szakats
 
- 1. Read CONTRIBUTING.md, monitor the development mailing list,
-    consult with the developers, make contributions. This way your chances
-    are high to get a R/W access to the repository.
- 2. Before uploading anything you'll need push permission for the
-    Harbour Git server. To get this please make a request on the development
-    list. Note that getting Developer status is not an automatic process.
- 3. You'll need an Git client for your platform.
- 4. Do a 'git clone' to get your own local development Git repository.
+ 1. Read CONTRIBUTING.md, monitor the development forums,
+    consult with the developers, make contributions. This
+    way your chances are high to get your Pull Requests
+    accepted and eventually join the team of committers.
+ 2. You'll need an Git client for your platform.
+ 3. Do a 'git clone' to get your own local development Git repository.
 
 1.2 Here's how to upload your changes to the Git server
 =======================================================

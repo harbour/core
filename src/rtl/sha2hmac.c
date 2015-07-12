@@ -80,17 +80,17 @@ void hb_hmac_sha224_init(hmac_sha224_ctx *ctx, const void *keyv,
 
     /* for hmac_reinit */
     memcpy(&ctx->ctx_inside_reinit, &ctx->ctx_inside,
-           sizeof(sha224_ctx));
+           sizeof(hb_sha224_ctx));
     memcpy(&ctx->ctx_outside_reinit, &ctx->ctx_outside,
-           sizeof(sha224_ctx));
+           sizeof(hb_sha224_ctx));
 }
 
 void hb_hmac_sha224_reinit(hmac_sha224_ctx *ctx)
 {
     memcpy(&ctx->ctx_inside, &ctx->ctx_inside_reinit,
-           sizeof(sha224_ctx));
+           sizeof(hb_sha224_ctx));
     memcpy(&ctx->ctx_outside, &ctx->ctx_outside_reinit,
-           sizeof(sha224_ctx));
+           sizeof(hb_sha224_ctx));
 }
 
 void hb_hmac_sha224_update(hmac_sha224_ctx *ctx, const void *message,
@@ -167,17 +167,17 @@ void hb_hmac_sha256_init(hmac_sha256_ctx *ctx, const void *keyv,
 
     /* for hmac_reinit */
     memcpy(&ctx->ctx_inside_reinit, &ctx->ctx_inside,
-           sizeof(sha256_ctx));
+           sizeof(hb_sha256_ctx));
     memcpy(&ctx->ctx_outside_reinit, &ctx->ctx_outside,
-           sizeof(sha256_ctx));
+           sizeof(hb_sha256_ctx));
 }
 
 void hb_hmac_sha256_reinit(hmac_sha256_ctx *ctx)
 {
     memcpy(&ctx->ctx_inside, &ctx->ctx_inside_reinit,
-           sizeof(sha256_ctx));
+           sizeof(hb_sha256_ctx));
     memcpy(&ctx->ctx_outside, &ctx->ctx_outside_reinit,
-           sizeof(sha256_ctx));
+           sizeof(hb_sha256_ctx));
 }
 
 void hb_hmac_sha256_update(hmac_sha256_ctx *ctx, const void *message,
@@ -254,17 +254,17 @@ void hb_hmac_sha384_init(hmac_sha384_ctx *ctx, const void *keyv,
 
     /* for hmac_reinit */
     memcpy(&ctx->ctx_inside_reinit, &ctx->ctx_inside,
-           sizeof(sha384_ctx));
+           sizeof(hb_sha384_ctx));
     memcpy(&ctx->ctx_outside_reinit, &ctx->ctx_outside,
-           sizeof(sha384_ctx));
+           sizeof(hb_sha384_ctx));
 }
 
 void hb_hmac_sha384_reinit(hmac_sha384_ctx *ctx)
 {
     memcpy(&ctx->ctx_inside, &ctx->ctx_inside_reinit,
-           sizeof(sha384_ctx));
+           sizeof(hb_sha384_ctx));
     memcpy(&ctx->ctx_outside, &ctx->ctx_outside_reinit,
-           sizeof(sha384_ctx));
+           sizeof(hb_sha384_ctx));
 }
 
 void hb_hmac_sha384_update(hmac_sha384_ctx *ctx, const void *message,
@@ -341,17 +341,17 @@ void hb_hmac_sha512_init(hmac_sha512_ctx *ctx, const void *keyv,
 
     /* for hmac_reinit */
     memcpy(&ctx->ctx_inside_reinit, &ctx->ctx_inside,
-           sizeof(sha512_ctx));
+           sizeof(hb_sha512_ctx));
     memcpy(&ctx->ctx_outside_reinit, &ctx->ctx_outside,
-           sizeof(sha512_ctx));
+           sizeof(hb_sha512_ctx));
 }
 
 void hb_hmac_sha512_reinit(hmac_sha512_ctx *ctx)
 {
     memcpy(&ctx->ctx_inside, &ctx->ctx_inside_reinit,
-           sizeof(sha512_ctx));
+           sizeof(hb_sha512_ctx));
     memcpy(&ctx->ctx_outside, &ctx->ctx_outside_reinit,
-           sizeof(sha512_ctx));
+           sizeof(hb_sha512_ctx));
 }
 
 void hb_hmac_sha512_update(hmac_sha512_ctx *ctx, const void *message,

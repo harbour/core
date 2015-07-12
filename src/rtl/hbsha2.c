@@ -51,7 +51,7 @@
 HB_FUNC( HB_SHA224 )
 {
    unsigned char digest[ SHA224_DIGEST_SIZE ];
-   sha224_ctx ctx;
+   hb_sha224_ctx ctx;
 
    hb_sha224_init( &ctx );
    #if HB_SIZE_MAX > UINT_MAX
@@ -98,7 +98,7 @@ HB_FUNC( HB_SHA224 )
 HB_FUNC( HB_SHA256 )
 {
    unsigned char digest[ SHA256_DIGEST_SIZE ];
-   sha256_ctx ctx;
+   hb_sha256_ctx ctx;
 
    hb_sha256_init( &ctx );
    #if HB_SIZE_MAX > UINT_MAX
@@ -145,7 +145,7 @@ HB_FUNC( HB_SHA256 )
 HB_FUNC( HB_SHA384 )
 {
    unsigned char digest[ SHA384_DIGEST_SIZE ];
-   sha384_ctx ctx;
+   hb_sha384_ctx ctx;
 
    hb_sha384_init( &ctx );
    #if HB_SIZE_MAX > UINT_MAX
@@ -192,7 +192,7 @@ HB_FUNC( HB_SHA384 )
 HB_FUNC( HB_SHA512 )
 {
    unsigned char digest[ SHA512_DIGEST_SIZE ];
-   sha512_ctx ctx;
+   hb_sha512_ctx ctx;
 
    hb_sha512_init( &ctx );
    #if HB_SIZE_MAX > UINT_MAX
