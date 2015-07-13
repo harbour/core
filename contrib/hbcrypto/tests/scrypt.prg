@@ -1,6 +1,6 @@
 /* Copyright 2013 Viktor Szakats (vszakats.net/harbour) */
 
-#require "hbscrypt"
+#require "hbcrypto"
 #require "hbtest"
 
 PROCEDURE Main()
