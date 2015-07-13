@@ -29,20 +29,9 @@
 #ifndef _SHA256_H_
 #define _SHA256_H_
 
-#include <sys/types.h>
-
 #include <stdint.h>
 
-typedef struct SHA256Context {
-	uint32_t state[8];
-	uint32_t count[2];
-	unsigned char buf[64];
-} SHA256_CTX;
-
-typedef struct HMAC_SHA256Context {
-	SHA256_CTX ictx;
-	SHA256_CTX octx;
-} HMAC_SHA256_CTX;
+#include "hbcrypto.h"
 
 /**
  * PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c, buf, dkLen):
