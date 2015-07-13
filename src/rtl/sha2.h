@@ -1,7 +1,7 @@
 /*
  * FIPS 180-2 SHA-224/256/384/512 implementation
- * Last update: 02/02/2007
- * Issue date:  04/30/2005
+ * Last update: 2007-02-02
+ * Issue date:  2005-04-30
  *
  * Copyright (C) 2005, 2007 Olivier Gay <olivier.gay@a3.epfl.ch>
  * All rights reserved.
@@ -31,81 +31,80 @@
  * SUCH DAMAGE.
  */
 
-#ifndef SHA2_H
-#define SHA2_H
+#ifndef HB_SHA2_H
+#define HB_SHA2_H
 
-#define SHA224_DIGEST_SIZE ( 224 / 8)
-#define SHA256_DIGEST_SIZE ( 256 / 8)
-#define SHA384_DIGEST_SIZE ( 384 / 8)
-#define SHA512_DIGEST_SIZE ( 512 / 8)
+#include "hbapi.h"
 
-#define SHA256_BLOCK_SIZE  ( 512 / 8)
-#define SHA512_BLOCK_SIZE  (1024 / 8)
-#define SHA384_BLOCK_SIZE  SHA512_BLOCK_SIZE
-#define SHA224_BLOCK_SIZE  SHA256_BLOCK_SIZE
+#define HB_SHA224_DIGEST_SIZE  (  224 / 8 )
+#define HB_SHA256_DIGEST_SIZE  (  256 / 8 )
+#define HB_SHA384_DIGEST_SIZE  (  384 / 8 )
+#define HB_SHA512_DIGEST_SIZE  (  512 / 8 )
 
-#ifndef SHA2_TYPES
-#define SHA2_TYPES
-typedef unsigned char uint8;
-typedef unsigned int  uint32;
-#if defined( __BORLANDC__ ) || defined( _MSC_VER )
-typedef unsigned __int64 uint64;
-#else
-typedef unsigned long long uint64;
-#endif
-#endif
+#define HB_SHA256_BLOCK_SIZE   (  512 / 8 )
+#define HB_SHA512_BLOCK_SIZE   ( 1024 / 8 )
+#define HB_SHA384_BLOCK_SIZE   HB_SHA512_BLOCK_SIZE
+#define HB_SHA224_BLOCK_SIZE   HB_SHA256_BLOCK_SIZE
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 typedef struct {
-    unsigned int tot_len;
-    unsigned int len;
-    unsigned char block[2 * SHA256_BLOCK_SIZE];
-    uint32 h[8];
+   unsigned int tot_len;
+   unsigned int len;
+   unsigned char block[ 2 * HB_SHA256_BLOCK_SIZE ];
+   HB_U32 h[ 8 ];
 } hb_sha256_ctx;
 
 typedef struct {
-    unsigned int tot_len;
-    unsigned int len;
-    unsigned char block[2 * SHA512_BLOCK_SIZE];
-    uint64 h[8];
+   unsigned int tot_len;
+   unsigned int len;
+   unsigned char block[ 2 * HB_SHA512_BLOCK_SIZE ];
+   HB_U64 h[ 8 ];
 } hb_sha512_ctx;
 
 typedef hb_sha512_ctx hb_sha384_ctx;
 typedef hb_sha256_ctx hb_sha224_ctx;
 
-void hb_sha224_init(hb_sha224_ctx *ctx);
-void hb_sha224_update(hb_sha224_ctx *ctx, const void *message,
-                      unsigned int len);
-void hb_sha224_final(hb_sha224_ctx *ctx, unsigned char *digest);
-void hb_sha224(const void *message, unsigned int len,
-               unsigned char *digest);
+extern HB_EXPORT void hb_sha224_init( hb_sha224_ctx * ctx );
+extern HB_EXPORT void hb_sha224_update( hb_sha224_ctx * ctx,
+                                        const void * message,
+                                        unsigned int len );
+extern HB_EXPORT void hb_sha224_final( hb_sha224_ctx * ctx,
+                                       unsigned char * digest );
+extern HB_EXPORT void hb_sha224( const void * message,
+                                 unsigned int len,
+                                 unsigned char * digest );
 
-void hb_sha256_init(hb_sha256_ctx * ctx);
-void hb_sha256_update(hb_sha256_ctx *ctx, const void *message,
-                      unsigned int len);
-void hb_sha256_final(hb_sha256_ctx *ctx, unsigned char *digest);
-void hb_sha256(const void *message, unsigned int len,
-               unsigned char *digest);
+extern HB_EXPORT void hb_sha256_init( hb_sha256_ctx * ctx );
+extern HB_EXPORT void hb_sha256_update( hb_sha256_ctx * ctx,
+                                       const void *message,
+                                       unsigned int len );
+extern HB_EXPORT void hb_sha256_final( hb_sha256_ctx * ctx,
+                                       unsigned char * digest );
+extern HB_EXPORT void hb_sha256( const void * message,
+                                 unsigned int len,
+                                 unsigned char * digest );
 
-void hb_sha384_init(hb_sha384_ctx *ctx);
-void hb_sha384_update(hb_sha384_ctx *ctx, const void *message,
-                      unsigned int len);
-void hb_sha384_final(hb_sha384_ctx *ctx, unsigned char *digest);
-void hb_sha384(const void *message, unsigned int len,
-               unsigned char *digest);
+extern HB_EXPORT void hb_sha384_init( hb_sha384_ctx * ctx );
+extern HB_EXPORT void hb_sha384_update( hb_sha384_ctx * ctx,
+                                        const void *message,
+                                        unsigned int len );
+extern HB_EXPORT void hb_sha384_final( hb_sha384_ctx * ctx,
+                                       unsigned char * digest );
+extern HB_EXPORT void hb_sha384( const void * message,
+                                 unsigned int len,
+                                 unsigned char * digest );
 
-void hb_sha512_init(hb_sha512_ctx *ctx);
-void hb_sha512_update(hb_sha512_ctx *ctx, const void *message,
-                      unsigned int len);
-void hb_sha512_final(hb_sha512_ctx *ctx, unsigned char *digest);
-void hb_sha512(const void *message, unsigned int len,
-               unsigned char *digest);
+extern HB_EXPORT void hb_sha512_init( hb_sha512_ctx * ctx );
+extern HB_EXPORT void hb_sha512_update( hb_sha512_ctx * ctx,
+                                        const void *message,
+                                        unsigned int len );
+extern HB_EXPORT void hb_sha512_final( hb_sha512_ctx * ctx,
+                                       unsigned char * digest );
+extern HB_EXPORT void hb_sha512( const void * message,
+                                 unsigned int len,
+                                 unsigned char * digest );
 
-#ifdef __cplusplus
-}
-#endif
+HB_EXTERN_END
 
-#endif /* !SHA2_H */
+#endif /* HB_SHA2_H */

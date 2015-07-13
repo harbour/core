@@ -77,7 +77,7 @@ STATIC PROCEDURE hbtest_Banner()
       "    Version:", Version() + hb_eol() + ;
       "   Compiler:", hb_Compiler() + hb_eol() + ;
       "         OS:", OS() + hb_eol() + ;
-      " Date, Time:", hb_TToC( hb_DateTime() ) + hb_eol() + ;
+      " Date, Time:", hb_TToC( hb_DateTime(), "yyyy-mm-dd", "hh:mm:ss" ) + hb_eol() + ;
       Replicate( "=", 75 ) + hb_eol() + ;
       Space( TEST_RESULT_COL1_WIDTH ), ;
       PadR( "Location", TEST_RESULT_COL2_WIDTH ), ;

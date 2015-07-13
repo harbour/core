@@ -50,7 +50,7 @@
 
 HB_FUNC( HB_SHA224 )
 {
-   unsigned char digest[ SHA224_DIGEST_SIZE ];
+   unsigned char digest[ HB_SHA224_DIGEST_SIZE ];
    hb_sha224_ctx ctx;
 
    hb_sha224_init( &ctx );
@@ -97,7 +97,7 @@ HB_FUNC( HB_SHA224 )
 
 HB_FUNC( HB_SHA256 )
 {
-   unsigned char digest[ SHA256_DIGEST_SIZE ];
+   unsigned char digest[ HB_SHA256_DIGEST_SIZE ];
    hb_sha256_ctx ctx;
 
    hb_sha256_init( &ctx );
@@ -144,7 +144,7 @@ HB_FUNC( HB_SHA256 )
 
 HB_FUNC( HB_SHA384 )
 {
-   unsigned char digest[ SHA384_DIGEST_SIZE ];
+   unsigned char digest[ HB_SHA384_DIGEST_SIZE ];
    hb_sha384_ctx ctx;
 
    hb_sha384_init( &ctx );
@@ -191,7 +191,7 @@ HB_FUNC( HB_SHA384 )
 
 HB_FUNC( HB_SHA512 )
 {
-   unsigned char digest[ SHA512_DIGEST_SIZE ];
+   unsigned char digest[ HB_SHA512_DIGEST_SIZE ];
    hb_sha512_ctx ctx;
 
    hb_sha512_init( &ctx );

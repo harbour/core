@@ -1,7 +1,7 @@
 /*-
  * HMAC-SHA-224/256/384/512 implementation
- * Last update: 06/15/2005
- * Issue date:  06/15/2005
+ * Last update: 2005-06-15
+ * Issue date:  2005-06-15
  *
  * Copyright (C) 2005 Olivier Gay <olivier.gay@a3.epfl.ch>
  * All rights reserved.
@@ -31,109 +31,129 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _HMAC_SHA2_H
-#define _HMAC_SHA2_H
+#ifndef _HB_HMAC_SHA2_H
+#define _HB_HMAC_SHA2_H
 
 #include "sha2.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+HB_EXTERN_BEGIN
 
 typedef struct {
-    hb_sha224_ctx ctx_inside;
-    hb_sha224_ctx ctx_outside;
+   hb_sha224_ctx ctx_inside;
+   hb_sha224_ctx ctx_outside;
 
-    /* for hmac_reinit */
-    hb_sha224_ctx ctx_inside_reinit;
-    hb_sha224_ctx ctx_outside_reinit;
+   /* for hmac_reinit */
+   hb_sha224_ctx ctx_inside_reinit;
+   hb_sha224_ctx ctx_outside_reinit;
 
-    unsigned char block_ipad[SHA224_BLOCK_SIZE];
-    unsigned char block_opad[SHA224_BLOCK_SIZE];
-} hmac_sha224_ctx;
-
-typedef struct {
-    hb_sha256_ctx ctx_inside;
-    hb_sha256_ctx ctx_outside;
-
-    /* for hmac_reinit */
-    hb_sha256_ctx ctx_inside_reinit;
-    hb_sha256_ctx ctx_outside_reinit;
-
-    unsigned char block_ipad[SHA256_BLOCK_SIZE];
-    unsigned char block_opad[SHA256_BLOCK_SIZE];
-} hmac_sha256_ctx;
+   unsigned char block_ipad[ HB_SHA224_BLOCK_SIZE ];
+   unsigned char block_opad[ HB_SHA224_BLOCK_SIZE ];
+} hb_hmac_sha224_ctx;
 
 typedef struct {
-    hb_sha384_ctx ctx_inside;
-    hb_sha384_ctx ctx_outside;
+   hb_sha256_ctx ctx_inside;
+   hb_sha256_ctx ctx_outside;
 
-    /* for hmac_reinit */
-    hb_sha384_ctx ctx_inside_reinit;
-    hb_sha384_ctx ctx_outside_reinit;
+   /* for hmac_reinit */
+   hb_sha256_ctx ctx_inside_reinit;
+   hb_sha256_ctx ctx_outside_reinit;
 
-    unsigned char block_ipad[SHA384_BLOCK_SIZE];
-    unsigned char block_opad[SHA384_BLOCK_SIZE];
-} hmac_sha384_ctx;
+   unsigned char block_ipad[ HB_SHA256_BLOCK_SIZE ];
+   unsigned char block_opad[ HB_SHA256_BLOCK_SIZE ];
+} hb_hmac_sha256_ctx;
 
 typedef struct {
-    hb_sha512_ctx ctx_inside;
-    hb_sha512_ctx ctx_outside;
+   hb_sha384_ctx ctx_inside;
+   hb_sha384_ctx ctx_outside;
 
-    /* for hmac_reinit */
-    hb_sha512_ctx ctx_inside_reinit;
-    hb_sha512_ctx ctx_outside_reinit;
+   /* for hmac_reinit */
+   hb_sha384_ctx ctx_inside_reinit;
+   hb_sha384_ctx ctx_outside_reinit;
 
-    unsigned char block_ipad[SHA512_BLOCK_SIZE];
-    unsigned char block_opad[SHA512_BLOCK_SIZE];
-} hmac_sha512_ctx;
+   unsigned char block_ipad[ HB_SHA384_BLOCK_SIZE ];
+   unsigned char block_opad[ HB_SHA384_BLOCK_SIZE ];
+} hb_hmac_sha384_ctx;
 
-void hb_hmac_sha224_init(hmac_sha224_ctx *ctx, const void *key,
-                         unsigned int key_size);
-void hb_hmac_sha224_reinit(hmac_sha224_ctx *ctx);
-void hb_hmac_sha224_update(hmac_sha224_ctx *ctx, const void *message,
-                           unsigned int message_len);
-void hb_hmac_sha224_final(hmac_sha224_ctx *ctx, unsigned char *mac,
-                          unsigned int mac_size);
-void hb_hmac_sha224(const void *key, unsigned int key_size,
-                    const void *message, unsigned int message_len,
-                    unsigned char *mac, unsigned mac_size);
+typedef struct {
+   hb_sha512_ctx ctx_inside;
+   hb_sha512_ctx ctx_outside;
 
-void hb_hmac_sha256_init(hmac_sha256_ctx *ctx, const void *key,
-                         unsigned int key_size);
-void hb_hmac_sha256_reinit(hmac_sha256_ctx *ctx);
-void hb_hmac_sha256_update(hmac_sha256_ctx *ctx, const void *message,
-                           unsigned int message_len);
-void hb_hmac_sha256_final(hmac_sha256_ctx *ctx, unsigned char *mac,
-                          unsigned int mac_size);
-void hb_hmac_sha256(const void *key, unsigned int key_size,
-                    const void *message, unsigned int message_len,
-                    unsigned char *mac, unsigned mac_size);
+   /* for hmac_reinit */
+   hb_sha512_ctx ctx_inside_reinit;
+   hb_sha512_ctx ctx_outside_reinit;
 
-void hb_hmac_sha384_init(hmac_sha384_ctx *ctx, const void *key,
-                         unsigned int key_size);
-void hb_hmac_sha384_reinit(hmac_sha384_ctx *ctx);
-void hb_hmac_sha384_update(hmac_sha384_ctx *ctx, const void *message,
-                           unsigned int message_len);
-void hb_hmac_sha384_final(hmac_sha384_ctx *ctx, unsigned char *mac,
-                          unsigned int mac_size);
-void hb_hmac_sha384(const void *key, unsigned int key_size,
-                    const void *message, unsigned int message_len,
-                    unsigned char *mac, unsigned mac_size);
+   unsigned char block_ipad[ HB_SHA512_BLOCK_SIZE ];
+   unsigned char block_opad[ HB_SHA512_BLOCK_SIZE ];
+} hb_hmac_sha512_ctx;
 
-void hb_hmac_sha512_init(hmac_sha512_ctx *ctx, const void *key,
-                         unsigned int key_size);
-void hb_hmac_sha512_reinit(hmac_sha512_ctx *ctx);
-void hb_hmac_sha512_update(hmac_sha512_ctx *ctx, const void *message,
-                           unsigned int message_len);
-void hb_hmac_sha512_final(hmac_sha512_ctx *ctx, unsigned char *mac,
-                          unsigned int mac_size);
-void hb_hmac_sha512(const void *key, unsigned int key_size,
-                    const void *message, unsigned int message_len,
-                    unsigned char *mac, unsigned mac_size);
+extern HB_EXPORT void hb_hmac_sha224_init( hb_hmac_sha224_ctx * ctx,
+                                           const void * key,
+                                           unsigned int key_size );
+extern HB_EXPORT void hb_hmac_sha224_reinit( hb_hmac_sha224_ctx * ctx );
+extern HB_EXPORT void hb_hmac_sha224_update( hb_hmac_sha224_ctx * ctx,
+                                             const void * message,
+                                             unsigned int message_len );
+extern HB_EXPORT void hb_hmac_sha224_final( hb_hmac_sha224_ctx * ctx,
+                                            unsigned char * mac,
+                                            unsigned int mac_size );
+extern HB_EXPORT void hb_hmac_sha224( const void * key,
+                                      unsigned int key_size,
+                                      const void * message,
+                                      unsigned int message_len,
+                                      unsigned char * mac,
+                                      unsigned mac_size );
 
-#ifdef __cplusplus
-}
-#endif
+extern HB_EXPORT void hb_hmac_sha256_init( hb_hmac_sha256_ctx * ctx,
+                                           const void * key,
+                                           unsigned int key_size );
+extern HB_EXPORT void hb_hmac_sha256_reinit( hb_hmac_sha256_ctx * ctx );
+extern HB_EXPORT void hb_hmac_sha256_update( hb_hmac_sha256_ctx * ctx,
+                                             const void * message,
+                                             unsigned int message_len );
+extern HB_EXPORT void hb_hmac_sha256_final( hb_hmac_sha256_ctx * ctx,
+                                            unsigned char * mac,
+                                            unsigned int mac_size );
+extern HB_EXPORT void hb_hmac_sha256( const void * key,
+                                      unsigned int key_size,
+                                      const void * message,
+                                      unsigned int message_len,
+                                      unsigned char * mac,
+                                      unsigned mac_size );
 
-#endif /* ! _HMAC_SHA2_H */
+extern HB_EXPORT void hb_hmac_sha384_init( hb_hmac_sha384_ctx * ctx,
+                                           const void * key,
+                                           unsigned int key_size );
+extern HB_EXPORT void hb_hmac_sha384_reinit( hb_hmac_sha384_ctx * ctx );
+extern HB_EXPORT void hb_hmac_sha384_update( hb_hmac_sha384_ctx * ctx,
+                                             const void * message,
+                                             unsigned int message_len );
+extern HB_EXPORT void hb_hmac_sha384_final( hb_hmac_sha384_ctx * ctx,
+                                            unsigned char * mac,
+                                            unsigned int mac_size );
+extern HB_EXPORT void hb_hmac_sha384( const void * key,
+                                      unsigned int key_size,
+                                      const void * message,
+                                      unsigned int message_len,
+                                      unsigned char * mac,
+                                      unsigned mac_size );
+
+extern HB_EXPORT void hb_hmac_sha512_init( hb_hmac_sha512_ctx * ctx,
+                                           const void * key,
+                                           unsigned int key_size );
+extern HB_EXPORT void hb_hmac_sha512_reinit( hb_hmac_sha512_ctx * ctx );
+extern HB_EXPORT void hb_hmac_sha512_update( hb_hmac_sha512_ctx * ctx,
+                                             const void * message,
+                                             unsigned int message_len );
+extern HB_EXPORT void hb_hmac_sha512_final( hb_hmac_sha512_ctx * ctx,
+                                            unsigned char * mac,
+                                            unsigned int mac_size );
+extern HB_EXPORT void hb_hmac_sha512( const void * key,
+                                      unsigned int key_size,
+                                      const void * message,
+                                      unsigned int message_len,
+                                      unsigned char * mac,
+                                      unsigned mac_size );
+
+HB_EXTERN_END
+
+#endif /* _HB_HMAC_SHA2_H */
