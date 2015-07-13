@@ -29,6 +29,8 @@
 blake2b.c
 blake2s.c
 
+ed25519.c
+
 pbkdf2.c
 scrypt.c
 strcmpc.c

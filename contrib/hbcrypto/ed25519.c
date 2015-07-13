@@ -52,7 +52,7 @@
 #include "ed25519.h"
 
 /* ed25519_create_keypair( @<public_key>, @<private_key> ) -> NIL */
-HB_FUNC( ED25519_CREATE_KEYPAIR )
+HB_FUNC( HB_ED25519_CREATE_KEYPAIR )
 {
    unsigned char seed[ 32 ], public_key[ 32 ], private_key[ 64 ];
 
@@ -67,7 +67,7 @@ HB_FUNC( ED25519_CREATE_KEYPAIR )
 }
 
 /* ed25519_sign( @<signature>, <message>, <public_key>, <private_key> ) -> NIL */
-HB_FUNC( ED25519_SIGN )
+HB_FUNC( HB_ED25519_SIGN )
 {
    if( HB_ISCHAR( 2 ) &&
        hb_parclen( 3 ) == 32 &&
@@ -89,7 +89,7 @@ HB_FUNC( ED25519_SIGN )
 }
 
 /* ed25519_verify( <signature>, <message>, <public_key> ) -> <lOK> */
-HB_FUNC( ED25519_VERIFY )
+HB_FUNC( HB_ED25519_VERIFY )
 {
    if( hb_parclen( 1 ) == 64 &&
        HB_ISCHAR( 2 ) &&
@@ -104,7 +104,7 @@ HB_FUNC( ED25519_VERIFY )
 #if 0
 
 /* ed25519_key_exchange( <shared_secret>, <public_key>, <private_key> ) -> NIL */
-HB_FUNC( ED25519_KEY_EXCHANGE )
+HB_FUNC( HB_ED25519_KEY_EXCHANGE )
 {
    if( hb_parclen( 2 ) == 32 &&
        hb_parclen( 3 ) == 64 )
