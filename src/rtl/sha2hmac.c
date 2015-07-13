@@ -31,9 +31,7 @@
  * SUCH DAMAGE.
  */
 
-#include <string.h>
-
-#include "sha2hmac.h"
+#include "hbcrypto.h"
 
 /* HMAC-SHA-224 functions */
 

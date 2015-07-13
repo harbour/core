@@ -1,9 +1,12 @@
-/*-
+/*
+ * FIPS 180-2 SHA-224/256/384/512 implementation
+ * Last update: 2007-02-02
+ * Issue date:  2005-04-30
  * HMAC-SHA-224/256/384/512 implementation
  * Last update: 2005-06-15
  * Issue date:  2005-06-15
  *
- * Copyright (C) 2005 Olivier Gay <olivier.gay@a3.epfl.ch>
+ * Copyright (C) 2005, 2007 Olivier Gay <olivier.gay@a3.epfl.ch>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -31,12 +34,79 @@
  * SUCH DAMAGE.
  */
 
-#ifndef _HB_HMAC_SHA2_H
-#define _HB_HMAC_SHA2_H
+#ifndef HB_CRYPTO_H_
+#define HB_CRYPTO_H_
 
-#include "sha2.h"
+#include "hbapi.h"
+
+#define HB_SHA224_DIGEST_SIZE  (  224 / 8 )
+#define HB_SHA256_DIGEST_SIZE  (  256 / 8 )
+#define HB_SHA384_DIGEST_SIZE  (  384 / 8 )
+#define HB_SHA512_DIGEST_SIZE  (  512 / 8 )
+
+#define HB_SHA256_BLOCK_SIZE   (  512 / 8 )
+#define HB_SHA512_BLOCK_SIZE   ( 1024 / 8 )
+#define HB_SHA384_BLOCK_SIZE   HB_SHA512_BLOCK_SIZE
+#define HB_SHA224_BLOCK_SIZE   HB_SHA256_BLOCK_SIZE
 
 HB_EXTERN_BEGIN
+
+typedef struct {
+   unsigned int tot_len;
+   unsigned int len;
+   unsigned char block[ 2 * HB_SHA256_BLOCK_SIZE ];
+   HB_U32 h[ 8 ];
+} hb_sha256_ctx;
+
+typedef struct {
+   unsigned int tot_len;
+   unsigned int len;
+   unsigned char block[ 2 * HB_SHA512_BLOCK_SIZE ];
+   HB_U64 h[ 8 ];
+} hb_sha512_ctx;
+
+typedef hb_sha512_ctx hb_sha384_ctx;
+typedef hb_sha256_ctx hb_sha224_ctx;
+
+extern HB_EXPORT void hb_sha224_init( hb_sha224_ctx * ctx );
+extern HB_EXPORT void hb_sha224_update( hb_sha224_ctx * ctx,
+                                        const void * message,
+                                        unsigned int len );
+extern HB_EXPORT void hb_sha224_final( hb_sha224_ctx * ctx,
+                                       unsigned char * digest );
+extern HB_EXPORT void hb_sha224( const void * message,
+                                 unsigned int len,
+                                 unsigned char * digest );
+
+extern HB_EXPORT void hb_sha256_init( hb_sha256_ctx * ctx );
+extern HB_EXPORT void hb_sha256_update( hb_sha256_ctx * ctx,
+                                       const void *message,
+                                       unsigned int len );
+extern HB_EXPORT void hb_sha256_final( hb_sha256_ctx * ctx,
+                                       unsigned char * digest );
+extern HB_EXPORT void hb_sha256( const void * message,
+                                 unsigned int len,
+                                 unsigned char * digest );
+
+extern HB_EXPORT void hb_sha384_init( hb_sha384_ctx * ctx );
+extern HB_EXPORT void hb_sha384_update( hb_sha384_ctx * ctx,
+                                        const void *message,
+                                        unsigned int len );
+extern HB_EXPORT void hb_sha384_final( hb_sha384_ctx * ctx,
+                                       unsigned char * digest );
+extern HB_EXPORT void hb_sha384( const void * message,
+                                 unsigned int len,
+                                 unsigned char * digest );
+
+extern HB_EXPORT void hb_sha512_init( hb_sha512_ctx * ctx );
+extern HB_EXPORT void hb_sha512_update( hb_sha512_ctx * ctx,
+                                        const void *message,
+                                        unsigned int len );
+extern HB_EXPORT void hb_sha512_final( hb_sha512_ctx * ctx,
+                                       unsigned char * digest );
+extern HB_EXPORT void hb_sha512( const void * message,
+                                 unsigned int len,
+                                 unsigned char * digest );
 
 typedef struct {
    hb_sha224_ctx ctx_inside;
@@ -156,4 +226,4 @@ extern HB_EXPORT void hb_hmac_sha512( const void * key,
 
 HB_EXTERN_END
 
-#endif /* _HB_HMAC_SHA2_H */
+#endif /* HB_CRYPTO_H_ */
