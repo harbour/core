@@ -9,6 +9,12 @@
 
 -cflag=-DHAVE_CONFIG_H
 
+-depurlbase=ed25519:https://github.com/orlp/ed25519
+-depkeyhead=ed25519:ed25519.h
+-depcontrol=ed25519:${HB_WITH_ED25519}
+-depincpathlocal=ed25519:3rd/ed25519
+-depfinish=ed25519
+
 -depurlbase=scrypt:https://www.tarsnap.com/scrypt/
 # Harbour specific short filename
 -depkeyhead=scrypt:scrypt_p.h
@@ -20,8 +26,12 @@
 
 -hbx=${hb_name}
 
+blake2b.c
+blake2s.c
+
 pbkdf2.c
 scrypt.c
 strcmpc.c
 
+3rd/ed25519/ed25519.hbc{HBMK_HAS_ED25519_LOCAL}
 3rd/scrypt/scrypt.hbc{HBMK_HAS_SCRYPT_LOCAL}
