@@ -2109,9 +2109,11 @@ void hb_gt_wvw_ResetWindowSize( PWVW_WIN wvw_win, HWND hWnd )
    /* we will need to use the font size to handle the transformations from
       row column space in the future, so we keep it around in a static! */
 
-   wvw_win->PTEXTSIZE.x = wvw_win->fontWidth < 0 ? -wvw_win->fontWidth : tm.tmAveCharWidth;     /* For fixed FONT should == tm.tmMaxCharWidth */
-   wvw_win->PTEXTSIZE.y = tm.tmHeight;                                                          /*     but seems to be a problem on Win9X so */
-   /*     assume proportional fonts always for Win9X */
+   /* For fixed FONT should == tm.tmMaxCharWidth
+      but seems to be a problem on Win9x so
+      assume proportional fonts always for Win9x. */
+   wvw_win->PTEXTSIZE.x = wvw_win->fontWidth < 0 ? -wvw_win->fontWidth : tm.tmAveCharWidth;
+   wvw_win->PTEXTSIZE.y = tm.tmHeight;
 
    if( wvw_win->fontWidth < 0 || s_wvw->a.Win9X || ( tm.tmPitchAndFamily & TMPF_FIXED_PITCH ) || wvw_win->PTEXTSIZE.x != tm.tmMaxCharWidth )
       wvw_win->FixedFont = HB_FALSE;

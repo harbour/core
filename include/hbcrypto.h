@@ -52,15 +52,15 @@
 HB_EXTERN_BEGIN
 
 typedef struct {
-   unsigned int tot_len;
-   unsigned int len;
+   HB_SIZE tot_len;
+   HB_SIZE len;
    unsigned char block[ 2 * HB_SHA256_BLOCK_SIZE ];
    HB_U32 h[ 8 ];
 } hb_sha256_ctx;
 
 typedef struct {
-   unsigned int tot_len;
-   unsigned int len;
+   HB_SIZE tot_len;
+   HB_SIZE len;
    unsigned char block[ 2 * HB_SHA512_BLOCK_SIZE ];
    HB_U64 h[ 8 ];
 } hb_sha512_ctx;
@@ -71,41 +71,41 @@ typedef hb_sha256_ctx hb_sha224_ctx;
 extern HB_EXPORT void hb_sha224_init( hb_sha224_ctx * ctx );
 extern HB_EXPORT void hb_sha224_update( hb_sha224_ctx * ctx,
                                         const void * message,
-                                        unsigned int len );
+                                        HB_SIZE len );
 extern HB_EXPORT void hb_sha224_final( hb_sha224_ctx * ctx,
                                        unsigned char * digest );
 extern HB_EXPORT void hb_sha224( const void * message,
-                                 unsigned int len,
+                                 HB_SIZE len,
                                  unsigned char * digest );
 
 extern HB_EXPORT void hb_sha256_init( hb_sha256_ctx * ctx );
 extern HB_EXPORT void hb_sha256_update( hb_sha256_ctx * ctx,
                                        const void *message,
-                                       unsigned int len );
+                                       HB_SIZE len );
 extern HB_EXPORT void hb_sha256_final( hb_sha256_ctx * ctx,
                                        unsigned char * digest );
 extern HB_EXPORT void hb_sha256( const void * message,
-                                 unsigned int len,
+                                 HB_SIZE len,
                                  unsigned char * digest );
 
 extern HB_EXPORT void hb_sha384_init( hb_sha384_ctx * ctx );
 extern HB_EXPORT void hb_sha384_update( hb_sha384_ctx * ctx,
                                         const void *message,
-                                        unsigned int len );
+                                        HB_SIZE len );
 extern HB_EXPORT void hb_sha384_final( hb_sha384_ctx * ctx,
                                        unsigned char * digest );
 extern HB_EXPORT void hb_sha384( const void * message,
-                                 unsigned int len,
+                                 HB_SIZE len,
                                  unsigned char * digest );
 
 extern HB_EXPORT void hb_sha512_init( hb_sha512_ctx * ctx );
 extern HB_EXPORT void hb_sha512_update( hb_sha512_ctx * ctx,
                                         const void *message,
-                                        unsigned int len );
+                                        HB_SIZE len );
 extern HB_EXPORT void hb_sha512_final( hb_sha512_ctx * ctx,
                                        unsigned char * digest );
 extern HB_EXPORT void hb_sha512( const void * message,
-                                 unsigned int len,
+                                 HB_SIZE len,
                                  unsigned char * digest );
 
 typedef struct {
@@ -158,71 +158,71 @@ typedef struct {
 
 extern HB_EXPORT void hb_hmac_sha224_init( hb_hmac_sha224_ctx * ctx,
                                            const void * key,
-                                           unsigned int key_size );
+                                           HB_SIZE key_size );
 extern HB_EXPORT void hb_hmac_sha224_reinit( hb_hmac_sha224_ctx * ctx );
 extern HB_EXPORT void hb_hmac_sha224_update( hb_hmac_sha224_ctx * ctx,
                                              const void * message,
-                                             unsigned int message_len );
+                                             HB_SIZE message_len );
 extern HB_EXPORT void hb_hmac_sha224_final( hb_hmac_sha224_ctx * ctx,
                                             unsigned char * mac,
-                                            unsigned int mac_size );
+                                            HB_SIZE mac_size );
 extern HB_EXPORT void hb_hmac_sha224( const void * key,
-                                      unsigned int key_size,
+                                      HB_SIZE key_size,
                                       const void * message,
-                                      unsigned int message_len,
+                                      HB_SIZE message_len,
                                       unsigned char * mac,
-                                      unsigned mac_size );
+                                      HB_SIZE mac_size );
 
 extern HB_EXPORT void hb_hmac_sha256_init( hb_hmac_sha256_ctx * ctx,
                                            const void * key,
-                                           unsigned int key_size );
+                                           HB_SIZE key_size );
 extern HB_EXPORT void hb_hmac_sha256_reinit( hb_hmac_sha256_ctx * ctx );
 extern HB_EXPORT void hb_hmac_sha256_update( hb_hmac_sha256_ctx * ctx,
                                              const void * message,
-                                             unsigned int message_len );
+                                             HB_SIZE message_len );
 extern HB_EXPORT void hb_hmac_sha256_final( hb_hmac_sha256_ctx * ctx,
                                             unsigned char * mac,
-                                            unsigned int mac_size );
+                                            HB_SIZE mac_size );
 extern HB_EXPORT void hb_hmac_sha256( const void * key,
-                                      unsigned int key_size,
+                                      HB_SIZE key_size,
                                       const void * message,
-                                      unsigned int message_len,
+                                      HB_SIZE message_len,
                                       unsigned char * mac,
-                                      unsigned mac_size );
+                                      HB_SIZE mac_size );
 
 extern HB_EXPORT void hb_hmac_sha384_init( hb_hmac_sha384_ctx * ctx,
                                            const void * key,
-                                           unsigned int key_size );
+                                           HB_SIZE key_size );
 extern HB_EXPORT void hb_hmac_sha384_reinit( hb_hmac_sha384_ctx * ctx );
 extern HB_EXPORT void hb_hmac_sha384_update( hb_hmac_sha384_ctx * ctx,
                                              const void * message,
-                                             unsigned int message_len );
+                                             HB_SIZE message_len );
 extern HB_EXPORT void hb_hmac_sha384_final( hb_hmac_sha384_ctx * ctx,
                                             unsigned char * mac,
-                                            unsigned int mac_size );
+                                            HB_SIZE mac_size );
 extern HB_EXPORT void hb_hmac_sha384( const void * key,
-                                      unsigned int key_size,
+                                      HB_SIZE key_size,
                                       const void * message,
-                                      unsigned int message_len,
+                                      HB_SIZE message_len,
                                       unsigned char * mac,
-                                      unsigned mac_size );
+                                      HB_SIZE mac_size );
 
 extern HB_EXPORT void hb_hmac_sha512_init( hb_hmac_sha512_ctx * ctx,
                                            const void * key,
-                                           unsigned int key_size );
+                                           HB_SIZE key_size );
 extern HB_EXPORT void hb_hmac_sha512_reinit( hb_hmac_sha512_ctx * ctx );
 extern HB_EXPORT void hb_hmac_sha512_update( hb_hmac_sha512_ctx * ctx,
                                              const void * message,
-                                             unsigned int message_len );
+                                             HB_SIZE message_len );
 extern HB_EXPORT void hb_hmac_sha512_final( hb_hmac_sha512_ctx * ctx,
                                             unsigned char * mac,
-                                            unsigned int mac_size );
+                                            HB_SIZE mac_size );
 extern HB_EXPORT void hb_hmac_sha512( const void * key,
-                                      unsigned int key_size,
+                                      HB_SIZE key_size,
                                       const void * message,
-                                      unsigned int message_len,
+                                      HB_SIZE message_len,
                                       unsigned char * mac,
-                                      unsigned mac_size );
+                                      HB_SIZE mac_size );
 
 HB_EXTERN_END
 

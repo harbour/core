@@ -63,7 +63,7 @@ typedef struct {
 
 #ifndef NOPROTO
 void hb_SHA1_Init(HB_SHA_CTX *context);
-void hb_SHA1_Update(HB_SHA_CTX *context, const void *data, unsigned int len);
+void hb_SHA1_Update(HB_SHA_CTX *context, const void *data, HB_SIZE len);
 void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], HB_SHA_CTX* context);
 #else
 void hb_SHA1_Init();

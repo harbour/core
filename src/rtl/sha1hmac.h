@@ -63,16 +63,16 @@ typedef struct _HMAC_SHA1_CTX {
     unsigned char   opad[HMAC_SHA1_BLOCK_LENGTH];
     HB_SHA_CTX      shactx;
     unsigned char   key[HMAC_SHA1_BLOCK_LENGTH];
-    unsigned int    keylen;
-    unsigned int    hashkey;
+    HB_SIZE         keylen;
+    HB_SIZE         hashkey;
 } HMAC_SHA1_CTX;
 
 #ifndef NOPROTO
 void hb_HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx);
-void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keylen);
+void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, HB_SIZE keylen);
 void hb_HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx);
 void hb_HMAC_SHA1_StartMessage(HMAC_SHA1_CTX *ctx);
-void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, unsigned int datalen);
+void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, HB_SIZE datalen);
 void hb_HMAC_SHA1_EndMessage(unsigned char *out, HMAC_SHA1_CTX *ctx);
 void hb_HMAC_SHA1_Done(HMAC_SHA1_CTX *ctx);
 #else

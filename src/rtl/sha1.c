@@ -118,9 +118,9 @@ void hb_SHA1_Init(HB_SHA_CTX* context) {
 }
 
 /* Run your data through this. */
-void hb_SHA1_Update(HB_SHA_CTX *context, const void *datav, unsigned int len) {
+void hb_SHA1_Update(HB_SHA_CTX *context, const void *datav, HB_SIZE len) {
     const sha1_byte * data = ( const sha1_byte * ) datav;
-    unsigned int    i, j;
+    HB_SIZE    i, j;
 
     j = (context->count[0] >> 3) & 63;
     if ((context->count[0] += len << 3) < (len << 3)) context->count[1]++;

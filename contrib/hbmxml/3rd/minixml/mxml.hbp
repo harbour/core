@@ -12,7 +12,7 @@
 # __inline__ keyword
 #{sunos}-c=gnu90
 
-{win}-cflag=-DWIN32 -DWIN
+{win}-cflag=-DWIN32
 {win|dos|os2}-cflag=-D_EOL_CRLF
 
 mxml_att.c

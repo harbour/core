@@ -208,19 +208,19 @@ static const HB_U64 sha512_k[80] =
 /* SHA-256 functions */
 
 static void sha256_transf(hb_sha256_ctx *ctx, const unsigned char *message,
-                          unsigned int block_nb)
+                          HB_SIZE block_nb)
 {
     HB_U32 w[64];
     HB_U32 wv[8];
     HB_U32 t1, t2;
     const unsigned char *sub_block;
-    int i;
+    HB_ISIZ i;
 
+    for (i = 0; i < ( HB_ISIZ ) block_nb; i++) {
 #ifndef UNROLL_LOOPS
-    int j;
+       int j;
 #endif
 
-    for (i = 0; i < (int) block_nb; i++) {
         sub_block = message + (i << 6);
 
 #ifndef UNROLL_LOOPS
@@ -322,7 +322,7 @@ static void sha256_transf(hb_sha256_ctx *ctx, const unsigned char *message,
     }
 }
 
-void hb_sha256(const void *message, unsigned int len, unsigned char *digest)
+void hb_sha256(const void *message, HB_SIZE len, unsigned char *digest)
 {
     hb_sha256_ctx ctx;
 
@@ -350,11 +350,11 @@ void hb_sha256_init(hb_sha256_ctx *ctx)
 }
 
 void hb_sha256_update(hb_sha256_ctx *ctx, const void *messagev,
-                   unsigned int len)
+                      HB_SIZE len)
 {
     const unsigned char * message = ( const unsigned char * ) messagev;
-    unsigned int block_nb;
-    unsigned int new_len, rem_len, tmp_len;
+    HB_SIZE block_nb;
+    HB_SIZE new_len, rem_len, tmp_len;
     const unsigned char *shifted_message;
 
     tmp_len = HB_SHA256_BLOCK_SIZE - ctx->len;
@@ -386,9 +386,9 @@ void hb_sha256_update(hb_sha256_ctx *ctx, const void *messagev,
 
 void hb_sha256_final(hb_sha256_ctx *ctx, unsigned char *digest)
 {
-    unsigned int block_nb;
-    unsigned int pm_len;
-    unsigned int len_b;
+    HB_SIZE block_nb;
+    HB_SIZE pm_len;
+    HB_SIZE len_b;
 
 #ifndef UNROLL_LOOPS
     int i;
@@ -425,15 +425,19 @@ void hb_sha256_final(hb_sha256_ctx *ctx, unsigned char *digest)
 /* SHA-512 functions */
 
 static void sha512_transf(hb_sha512_ctx *ctx, const unsigned char *message,
-                          unsigned int block_nb)
+                          HB_SIZE block_nb)
 {
     HB_U64 w[80];
     HB_U64 wv[8];
     HB_U64 t1, t2;
     const unsigned char *sub_block;
-    int i, j;
+    HB_ISIZ i;
 
-    for (i = 0; i < (int) block_nb; i++) {
+    for (i = 0; i < ( HB_ISIZ ) block_nb; i++) {
+#ifndef UNROLL_LOOPS
+       int j;
+#endif
+
         sub_block = message + (i << 7);
 
 #ifndef UNROLL_LOOPS
@@ -519,7 +523,7 @@ static void sha512_transf(hb_sha512_ctx *ctx, const unsigned char *message,
     }
 }
 
-void hb_sha512(const void *message, unsigned int len,
+void hb_sha512(const void *message, HB_SIZE len,
             unsigned char *digest)
 {
     hb_sha512_ctx ctx;
@@ -548,11 +552,11 @@ void hb_sha512_init(hb_sha512_ctx *ctx)
 }
 
 void hb_sha512_update(hb_sha512_ctx *ctx, const void *messagev,
-                   unsigned int len)
+                   HB_SIZE len)
 {
     const unsigned char * message = ( const unsigned char * ) messagev;
-    unsigned int block_nb;
-    unsigned int new_len, rem_len, tmp_len;
+    HB_SIZE block_nb;
+    HB_SIZE new_len, rem_len, tmp_len;
     const unsigned char *shifted_message;
 
     tmp_len = HB_SHA512_BLOCK_SIZE - ctx->len;
@@ -584,9 +588,9 @@ void hb_sha512_update(hb_sha512_ctx *ctx, const void *messagev,
 
 void hb_sha512_final(hb_sha512_ctx *ctx, unsigned char *digest)
 {
-    unsigned int block_nb;
-    unsigned int pm_len;
-    unsigned int len_b;
+    HB_SIZE block_nb;
+    HB_SIZE pm_len;
+    HB_SIZE len_b;
 
 #ifndef UNROLL_LOOPS
     int i;
@@ -622,7 +626,7 @@ void hb_sha512_final(hb_sha512_ctx *ctx, unsigned char *digest)
 
 /* SHA-384 functions */
 
-void hb_sha384(const void *message, unsigned int len,
+void hb_sha384(const void *message, HB_SIZE len,
             unsigned char *digest)
 {
     hb_sha384_ctx ctx;
@@ -651,11 +655,11 @@ void hb_sha384_init(hb_sha384_ctx *ctx)
 }
 
 void hb_sha384_update(hb_sha384_ctx *ctx, const void *messagev,
-                   unsigned int len)
+                      HB_SIZE len)
 {
     const unsigned char * message = ( const unsigned char * ) messagev;
-    unsigned int block_nb;
-    unsigned int new_len, rem_len, tmp_len;
+    HB_SIZE block_nb;
+    HB_SIZE new_len, rem_len, tmp_len;
     const unsigned char *shifted_message;
 
     tmp_len = HB_SHA384_BLOCK_SIZE - ctx->len;
@@ -687,9 +691,9 @@ void hb_sha384_update(hb_sha384_ctx *ctx, const void *messagev,
 
 void hb_sha384_final(hb_sha384_ctx *ctx, unsigned char *digest)
 {
-    unsigned int block_nb;
-    unsigned int pm_len;
-    unsigned int len_b;
+    HB_SIZE block_nb;
+    HB_SIZE pm_len;
+    HB_SIZE len_b;
 
 #ifndef UNROLL_LOOPS
     int i;
@@ -723,7 +727,7 @@ void hb_sha384_final(hb_sha384_ctx *ctx, unsigned char *digest)
 
 /* SHA-224 functions */
 
-void hb_sha224(const void *message, unsigned int len,
+void hb_sha224(const void *message, HB_SIZE len,
                unsigned char *digest)
 {
     hb_sha224_ctx ctx;
@@ -752,11 +756,11 @@ void hb_sha224_init(hb_sha224_ctx *ctx)
 }
 
 void hb_sha224_update(hb_sha224_ctx *ctx, const void *messagev,
-                   unsigned int len)
+                      HB_SIZE len)
 {
     const unsigned char * message = ( const unsigned char * ) messagev;
-    unsigned int block_nb;
-    unsigned int new_len, rem_len, tmp_len;
+    HB_SIZE block_nb;
+    HB_SIZE new_len, rem_len, tmp_len;
     const unsigned char *shifted_message;
 
     tmp_len = HB_SHA224_BLOCK_SIZE - ctx->len;
@@ -788,9 +792,9 @@ void hb_sha224_update(hb_sha224_ctx *ctx, const void *messagev,
 
 void hb_sha224_final(hb_sha224_ctx *ctx, unsigned char *digest)
 {
-    unsigned int block_nb;
-    unsigned int pm_len;
-    unsigned int len_b;
+    HB_SIZE block_nb;
+    HB_SIZE pm_len;
+    HB_SIZE len_b;
 
 #ifndef UNROLL_LOOPS
     int i;

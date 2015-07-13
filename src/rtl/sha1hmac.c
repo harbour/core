@@ -76,7 +76,7 @@ void hb_HMAC_SHA1_Init(HMAC_SHA1_CTX *ctx) {
     ctx->hashkey = 0;
 }
 
-void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int keylen) {
+void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, HB_SIZE keylen) {
 
     /* Do we have anything to work with?  If not, return right away. */
     if (keylen < 1)
@@ -132,7 +132,7 @@ void hb_HMAC_SHA1_UpdateKey(HMAC_SHA1_CTX *ctx, const void *key, unsigned int ke
 
 void hb_HMAC_SHA1_EndKey(HMAC_SHA1_CTX *ctx) {
     unsigned char   *ipad, *opad, *key;
-    unsigned int     i;
+    HB_SIZE         i;
 
     /* Did we end up hashing the key? */
     if (ctx->hashkey) {
@@ -163,7 +163,7 @@ void hb_HMAC_SHA1_StartMessage(HMAC_SHA1_CTX *ctx) {
     hb_SHA1_Update(&ctx->shactx, &(ctx->ipad[0]), HMAC_SHA1_BLOCK_LENGTH);
 }
 
-void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, unsigned int datalen) {
+void hb_HMAC_SHA1_UpdateMessage(HMAC_SHA1_CTX *ctx, const void *data, HB_SIZE datalen) {
     hb_SHA1_Update(&ctx->shactx, data, datalen);
 }
 

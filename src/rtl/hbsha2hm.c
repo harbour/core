@@ -46,44 +46,13 @@
 
 #include "hbapi.h"
 
-#include "sha2hmac.h"
+#include "hbcrypto.h"
 
 HB_FUNC( HB_HMAC_SHA224 )
 {
    unsigned char mac[ HB_SHA224_DIGEST_SIZE ];
-   hmac_sha224_ctx ctx;
 
-   hb_hmac_sha224_init( &ctx, hb_parcx( 2 ), ( unsigned int ) hb_parclen( 2 ) );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_hmac_sha224_update( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_hmac_sha224_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
-   hb_hmac_sha224_final( &ctx, mac, HB_SIZEOFARRAY( mac ) );
+   hb_hmac_sha224( hb_parcx( 2 ), hb_parclen( 2 ), hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
    if( ! hb_parl( 3 ) )
    {
@@ -98,39 +67,8 @@ HB_FUNC( HB_HMAC_SHA224 )
 HB_FUNC( HB_HMAC_SHA256 )
 {
    unsigned char mac[ HB_SHA256_DIGEST_SIZE ];
-   hmac_sha256_ctx ctx;
 
-   hb_hmac_sha256_init( &ctx, hb_parcx( 2 ), ( unsigned int ) hb_parclen( 2 ) );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_hmac_sha256_update( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_hmac_sha256_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
-   hb_hmac_sha256_final( &ctx, mac, HB_SIZEOFARRAY( mac ) );
+   hb_hmac_sha256( hb_parcx( 2 ), hb_parclen( 2 ), hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
    if( ! hb_parl( 3 ) )
    {
@@ -145,39 +83,8 @@ HB_FUNC( HB_HMAC_SHA256 )
 HB_FUNC( HB_HMAC_SHA384 )
 {
    unsigned char mac[ HB_SHA384_DIGEST_SIZE ];
-   hmac_sha384_ctx ctx;
 
-   hb_hmac_sha384_init( &ctx, hb_parcx( 2 ), ( unsigned int ) hb_parclen( 2 ) );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_hmac_sha384_update( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_hmac_sha384_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
-   hb_hmac_sha384_final( &ctx, mac, HB_SIZEOFARRAY( mac ) );
+   hb_hmac_sha384( hb_parcx( 2 ), hb_parclen( 2 ), hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
    if( ! hb_parl( 3 ) )
    {
@@ -192,39 +99,8 @@ HB_FUNC( HB_HMAC_SHA384 )
 HB_FUNC( HB_HMAC_SHA512 )
 {
    unsigned char mac[ HB_SHA512_DIGEST_SIZE ];
-   hmac_sha512_ctx ctx;
 
-   hb_hmac_sha512_init( &ctx, hb_parcx( 2 ), ( unsigned int ) hb_parclen( 2 ) );
-   #if HB_SIZE_MAX > UINT_MAX
-   {
-      const char * buffer = hb_parcx( 1 );
-      HB_SIZE nCount = hb_parclen( 1 );
-      HB_SIZE nDone = 0;
-
-      while( nCount )
-      {
-         unsigned int uiChunk;
-
-         if( nCount > ( HB_SIZE ) UINT_MAX )
-         {
-            uiChunk = UINT_MAX;
-            nCount -= ( HB_SIZE ) uiChunk;
-         }
-         else
-         {
-            uiChunk = ( unsigned int ) nCount;
-            nCount = 0;
-         }
-
-         hb_hmac_sha512_update( &ctx, buffer + nDone, uiChunk );
-
-         nDone += ( HB_SIZE ) uiChunk;
-      }
-   }
-   #else
-      hb_hmac_sha512_update( &ctx, hb_parcx( 1 ), hb_parclen( 1 ) );
-   #endif
-   hb_hmac_sha512_final( &ctx, mac, HB_SIZEOFARRAY( mac ) );
+   hb_hmac_sha512( hb_parcx( 2 ), hb_parclen( 2 ), hb_parcx( 1 ), hb_parclen( 1 ), mac, HB_SIZEOFARRAY( mac ) );
 
    if( ! hb_parl( 3 ) )
    {
