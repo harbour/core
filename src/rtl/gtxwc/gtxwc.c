@@ -4983,12 +4983,18 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
       else
       {
          HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 1000;
+         HB_BOOL fResizable = wnd->fResizable;
 
 #ifdef XWC_DEBUG
          printf( "SetMode(%d,%d) begin\n", iRow, iCol ); fflush( stdout );
 #endif
 
          HB_XWC_XLIB_LOCK();
+         if( ! fResizable )
+         {
+            wnd->fResizable = HB_TRUE;
+            hb_gt_xwc_SetResizing( wnd );
+         }
          hb_gt_xwc_ResizeRequest( wnd, iCol, iRow );
          HB_XWC_XLIB_UNLOCK();
 
@@ -5003,6 +5009,14 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
                hb_releaseCPU();
          }
          while( !fResult );
+
+         if( ! fResizable )
+         {
+            wnd->fResizable = HB_FALSE;
+            HB_XWC_XLIB_LOCK();
+            hb_gt_xwc_SetResizing( wnd );
+            HB_XWC_XLIB_UNLOCK();
+         }
 
 #ifdef XWC_DEBUG
          printf( "SetMode(%d,%d) => %d\n", iRow, iCol, fResult ); fflush( stdout );
