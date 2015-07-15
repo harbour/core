@@ -54,7 +54,7 @@
  * Inline function support...
  */
 
-#define inline _HB_INLINE_
+/* #define inline */
 
 
 /*
