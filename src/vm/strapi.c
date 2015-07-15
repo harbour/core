@@ -203,13 +203,13 @@ HB_WCHAR * hb_wstrunshare( void ** phStr, const HB_WCHAR * pStr, HB_SIZE nLen )
       return NULL;
 
    if( nLen > 0 &&
-       ( *phStr == ( void * ) s_szConstStr || hb_xRefCount( *phStr ) > 1 ) )
+       ( *phStr == ( const void * ) s_szConstStr || hb_xRefCount( *phStr ) > 1 ) )
    {
       HB_WCHAR * pszDest = ( HB_WCHAR * ) hb_xgrab( ( nLen + 1 ) *
                                                     sizeof( HB_WCHAR ) );
       memcpy( pszDest, pStr, nLen * sizeof( HB_WCHAR ) );
       pszDest[ nLen ] = 0;
-      if( *phStr != ( void * ) s_szConstStr )
+      if( *phStr != ( const void * ) s_szConstStr )
          hb_xRefDec( *phStr );
       *phStr = ( void * ) pszDest;
 
@@ -227,12 +227,12 @@ char * hb_strunshare( void ** phStr, const char * pStr, HB_SIZE nLen )
       return NULL;
 
    if( nLen > 0 &&
-       ( *phStr == ( void * ) s_szConstStr || hb_xRefCount( *phStr ) > 1 ) )
+       ( *phStr == ( const void * ) s_szConstStr || hb_xRefCount( *phStr ) > 1 ) )
    {
       char * pszDest = ( char * ) hb_xgrab( ( nLen + 1 ) * sizeof( char ) );
       memcpy( pszDest, pStr, nLen * sizeof( char ) );
       pszDest[ nLen ] = 0;
-      if( *phStr != ( void * ) s_szConstStr )
+      if( *phStr != ( const void * ) s_szConstStr )
          hb_xRefDec( *phStr );
       *phStr = ( void * ) pszDest;
 
@@ -260,7 +260,7 @@ void hb_strfree( void * hString )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_strfree(%p)", hString ) );
 
-   if( hString && hString != ( void * ) s_szConstStr )
+   if( hString && hString != ( const void * ) s_szConstStr )
       hb_xRefFree( hString );
 }
 
