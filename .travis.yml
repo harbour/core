@@ -37,7 +37,7 @@ before_install:
          export HB_CCSUFFIX=-5;
          ls -lA /usr/bin/gcc*;
       else
-         export HB_CCSUFFIX=-3.7;
+         export HB_CCSUFFIX=-3.6;
          ls -lA /usr/bin/clang*;
       fi;
     fi
