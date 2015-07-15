@@ -1795,7 +1795,7 @@ HB_FUNC( SQLITE3_PROFILE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
       sqlite3_profile( pHbSqlite3->db, hb_parl( 2 ) ? SQL3ProfileLog : NULL,
-                       ( void * ) ( HB_ISCHAR( 3 ) ? hb_parcx( 3 ) : NULL ) );
+                       ( void * ) ( HB_ISCHAR( 3 ) ? hb_parc( 3 ) : NULL ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -1806,7 +1806,7 @@ HB_FUNC( SQLITE3_TRACE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
       sqlite3_trace( pHbSqlite3->db, hb_parl( 2 ) ? SQL3TraceLog : NULL,
-                     ( void * ) ( HB_ISCHAR( 3 ) ? hb_parcx( 3 ) : NULL ) );
+                     ( void * ) ( HB_ISCHAR( 3 ) ? hb_parc( 3 ) : NULL ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -1840,18 +1840,18 @@ HB_FUNC( SQLITE3_BUFF_TO_FILE )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      PHB_FILE handle = hb_fileExtOpen( hb_parcx( 1 ), NULL, FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE | FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS, NULL, NULL );
+      PHB_FILE handle = hb_fileExtOpen( hb_parc( 1 ), NULL, FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE | FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS, NULL, NULL );
 
       if( handle )
       {
          HB_SIZE nSize = hb_parclen( 2 );
-         hb_retni( hb_fileWrite( handle, hb_parcx( 2 ), nSize, -1 ) == nSize ? 0 : -1 );
+         hb_retns( hb_fileWrite( handle, hb_parcx( 2 ), nSize, -1 ) == nSize ? 0 : -1 );
          hb_fileClose( handle );
          return;
       }
    }
 
-   hb_retni( 1 );
+   hb_retns( -1 );
 }
 
 /**
@@ -2044,7 +2044,7 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
        HB_ISCHAR( 2 ) && HB_ISCHAR( 4 ) )
    {
       sqlite3_backup * pBackup = sqlite3_backup_init( pHbSqlite3Dest->db,
-         hb_parcx( 2 ), pHbSqlite3Source->db, hb_parcx( 4 ) );
+         hb_parc( 2 ), pHbSqlite3Source->db, hb_parc( 4 ) );
 
       if( pBackup )
          hb_retptr( pBackup );  /* TOFIX: Create GC collected pointer */
