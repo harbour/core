@@ -27,6 +27,7 @@ class Harbour < Formula
   depends_on "freeimage" => :optional
   depends_on "gd" => :optional
   depends_on "ghostscript" => :optional
+  depends_on "icu4c" => :optional
   depends_on "libmagic" => :optional
   depends_on "mariadb" => :optional
   depends_on :mysql => :optional

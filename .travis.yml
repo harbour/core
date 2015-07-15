@@ -11,7 +11,9 @@ compiler:
 sudo: false
 addons:
   apt:
-    packages:
+  sources:
+    - ubuntu-toolchain-r-test
+  packages:
     - gcc-5
     - g++-5
     - firebird2.5-dev
@@ -20,6 +22,7 @@ addons:
     - libfreeimage-dev
     - libgd2-xpm-dev
     - libgpm-dev
+    - libicu-dev
     - libmagic-dev
     - libmysqlclient-dev
     - libncurses5-dev
