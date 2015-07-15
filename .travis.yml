@@ -11,29 +11,34 @@ compiler:
 sudo: false
 addons:
   apt:
-  sources:
-    - ubuntu-toolchain-r-test
-  packages:
-    - gcc-5
-    - g++-5
-    - firebird2.5-dev
-    - libcairo2-dev
-    - libcurl4-openssl-dev
-    - libfreeimage-dev
-    - libgd2-xpm-dev
-    - libgpm-dev
-    - libicu-dev
-    - libmagic-dev
-    - libmysqlclient-dev
-    - libncurses5-dev
-    - libpq-dev
-    - unixodbc-dev
+    sources:
+      - llvm-toolchain-precise-3.6
+      - ubuntu-toolchain-r-test
+    packages:
+      - clang-3.6
+      - gcc-5
+      - g++-5
+      - firebird2.5-dev
+      - libcairo2-dev
+      - libcurl4-openssl-dev
+      - libfreeimage-dev
+      - libgd2-xpm-dev
+      - libgpm-dev
+      - libicu-dev
+      - libmagic-dev
+      - libmysqlclient-dev
+      - libncurses5-dev
+      - libpq-dev
+      - unixodbc-dev
 script: export HB_COMPILER=$CC && make
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
       if [ "$CC" = "gcc" ]; then
          export HB_CCSUFFIX=-5;
          ls -lA /usr/bin/gcc*;
+      else
+         export HB_CCSUFFIX=-3.7;
+         ls -lA /usr/bin/clang*;
       fi;
     fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
