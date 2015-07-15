@@ -14157,6 +14157,8 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
    CASE _VCS_GIT
       cType := "git"
       cCommand := "git" + iif( nType == _VCS_GIT_SUB .OR. Empty( cDir ), "", " --git-dir=" + cDir + ".git" ) + " log -1 --format=format:%h%n%H%n%ci%n%cn%n%ce%n%ai%n%an%n%ae --encoding=utf8"
+      /* see: https://github.com/golang/go/issues/9341 */
+      hb_SetEnv( "GIT_TERMINAL_PROMPT", "0" )
       EXIT
    CASE _VCS_MERCURIAL
       cType := "mercurial"

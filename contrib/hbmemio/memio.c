@@ -252,7 +252,9 @@ static PHB_MEMFS_FILE memfsHandleToFile( HB_FHANDLE hFile )
 {
    if( hFile == FS_ERROR || ( HB_ULONG ) hFile == 0 || ( HB_ULONG ) hFile > s_fs.ulFileAlloc || s_fs.pFiles[ ( HB_ULONG ) hFile - 1 ] == NULL )
    {
-      /* hb_errInternal( 9999, "memfsHandleToFile: Invalid file handle", NULL, NULL ); */
+#if 0
+      hb_errInternal( 9999, "memfsHandleToFile: Invalid file handle", NULL, NULL );
+#endif
       return NULL;
    }
    else

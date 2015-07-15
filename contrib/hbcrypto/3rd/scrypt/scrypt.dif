@@ -1,19 +1,167 @@
+diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
+--- scrypt.orig/c_scrypt.c	2015-07-14 02:04:52.306544000 +0200
++++ scrypt/c_scrypt.c	2015-07-14 02:04:52.306544000 +0200
+@@ -26,15 +26,12 @@
+  * This file was originally written by Colin Percival as part of the Tarsnap
+  * online backup system.
+  */
+-#include "scrypt_platform.h"
+-
+ #include <errno.h>
+ #include <stdint.h>
+ #include <stdlib.h>
+ #include <string.h>
+ 
+ #include "sha256.h"
+-#include "sysendian.h"
+ 
+ #include "c_scrypt.h"
+ 
+@@ -76,7 +73,7 @@
+ 
+ 	/* Convert little-endian values in. */
+ 	for (i = 0; i < 16; i++)
+-		B32[i] = le32dec(&B[i * 4]);
++		B32[i] = HB_GET_LE_UINT32(&B[i * 4]);
+ 
+ 	/* Compute x = doubleround^4(B32). */
+ 	for (i = 0; i < 16; i++)
+@@ -117,7 +114,7 @@
+ 
+ 	/* Convert little-endian values out. */
+ 	for (i = 0; i < 16; i++)
+-		le32enc(&B[4 * i], B32[i]);
++		HB_PUT_LE_UINT32(&B[4 * i], B32[i]);
+ }
+ 
+ /**
+@@ -160,7 +157,7 @@
+ {
+ 	uint8_t * X = &B[(2 * r - 1) * 64];
+ 
+-	return (le64dec(X));
++	return (HB_GET_LE_UINT64(X));
+ }
+ 
+ /**
 diff -urN scrypt.orig/config.h scrypt/config.h
---- scrypt.orig/config.h	2015-07-14 00:23:09.705065600 +0200
-+++ scrypt/config.h	2015-07-14 00:23:09.705065600 +0200
-@@ -1,5 +1,7 @@
- /* config.h.in.  Generated from configure.ac by autoheader.  */
- 
-+#include "hbsetup.h"
-+
- /* Define to 1 if you have the `clock_gettime' function. */
- #undef HAVE_CLOCK_GETTIME
- 
+--- scrypt.orig/config.h	2015-07-14 02:04:52.306544000 +0200
++++ scrypt/config.h	1970-01-01 01:00:00.000000000 +0100
+@@ -1,98 +0,0 @@
+-/* config.h.in.  Generated from configure.ac by autoheader.  */
+-
+-/* Define to 1 if you have the `clock_gettime' function. */
+-#undef HAVE_CLOCK_GETTIME
+-
+-/* Define to 1 if you have the declaration of `be64enc', and to 0 if you
+-   don't. */
+-#undef HAVE_DECL_BE64ENC
+-
+-/* Define to 1 if you have the <err.h> header file. */
+-#undef HAVE_ERR_H
+-
+-/* Define to 1 if you have the <inttypes.h> header file. */
+-#undef HAVE_INTTYPES_H
+-
+-/* Define to 1 if you have the `rt' library (-lrt). */
+-#undef HAVE_LIBRT
+-
+-/* Define to 1 if you have the <memory.h> header file. */
+-#undef HAVE_MEMORY_H
+-
+-/* Define to 1 if you have the `posix_memalign' function. */
+-#undef HAVE_POSIX_MEMALIGN
+-
+-/* Define to 1 if you have the <stdint.h> header file. */
+-#undef HAVE_STDINT_H
+-
+-/* Define to 1 if you have the <stdlib.h> header file. */
+-#undef HAVE_STDLIB_H
+-
+-/* Define to 1 if you have the <strings.h> header file. */
+-#undef HAVE_STRINGS_H
+-
+-/* Define to 1 if you have the <string.h> header file. */
+-#undef HAVE_STRING_H
+-
+-/* Define to 1 if the system has the type `struct sysinfo'. */
+-#undef HAVE_STRUCT_SYSINFO
+-
+-/* Define to 1 if `mem_unit' is member of `struct sysinfo'. */
+-#undef HAVE_STRUCT_SYSINFO_MEM_UNIT
+-
+-/* Define to 1 if `totalram' is member of `struct sysinfo'. */
+-#undef HAVE_STRUCT_SYSINFO_TOTALRAM
+-
+-/* Define to 1 if the OS has a hw.usermem sysctl */
+-#undef HAVE_SYSCTL_HW_USERMEM
+-
+-/* Define to 1 if you have the `sysinfo' function. */
+-#undef HAVE_SYSINFO
+-
+-/* Define to 1 if you have the <sys/endian.h> header file. */
+-#undef HAVE_SYS_ENDIAN_H
+-
+-/* Define to 1 if you have the <sys/param.h> header file. */
+-#undef HAVE_SYS_PARAM_H
+-
+-/* Define to 1 if you have the <sys/stat.h> header file. */
+-#undef HAVE_SYS_STAT_H
+-
+-/* Define to 1 if you have the <sys/sysinfo.h> header file. */
+-#undef HAVE_SYS_SYSINFO_H
+-
+-/* Define to 1 if you have the <sys/types.h> header file. */
+-#undef HAVE_SYS_TYPES_H
+-
+-/* Define to 1 if you have the <unistd.h> header file. */
+-#undef HAVE_UNISTD_H
+-
+-/* Name of package */
+-#undef PACKAGE
+-
+-/* Define to the address where bug reports for this package should be sent. */
+-#undef PACKAGE_BUGREPORT
+-
+-/* Define to the full name of this package. */
+-#undef PACKAGE_NAME
+-
+-/* Define to the full name and version of this package. */
+-#undef PACKAGE_STRING
+-
+-/* Define to the one symbol short name of this package. */
+-#undef PACKAGE_TARNAME
+-
+-/* Define to the version of this package. */
+-#undef PACKAGE_VERSION
+-
+-/* Define to 1 if you have the ANSI C header files. */
+-#undef STDC_HEADERS
+-
+-/* Version number of package */
+-#undef VERSION
+-
+-/* Number of bits in a file offset, on hosts where this is settable. */
+-#undef _FILE_OFFSET_BITS
+-
+-/* Define for large files, on AIX-style hosts. */
+-#undef _LARGE_FILES
 diff -urN scrypt.orig/sha256.c scrypt/sha256.c
---- scrypt.orig/sha256.c	2015-07-14 00:23:09.720664500 +0200
-+++ scrypt/sha256.c	2015-07-14 00:23:09.720664500 +0200
-@@ -34,326 +34,6 @@
+--- scrypt.orig/sha256.c	2015-07-14 02:04:52.306544000 +0200
++++ scrypt/sha256.c	2015-07-14 02:04:52.306544000 +0200
+@@ -23,337 +23,13 @@
+  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+  * SUCH DAMAGE.
+  */
+-#include "scrypt_platform.h"
+-
+ #include <sys/types.h>
  
+ #include <stdint.h>
+ #include <string.h>
+ 
+-#include "sysendian.h"
+-
  #include "sha256.h"
  
 -/*
@@ -339,7 +487,7 @@ diff -urN scrypt.orig/sha256.c scrypt/sha256.c
  /**
   * PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c, buf, dkLen):
   * Compute PBKDF2(passwd, salt, c, dkLen) using HMAC-SHA256 as the PRF, and
-@@ -363,7 +43,7 @@
+@@ -363,7 +39,7 @@
  PBKDF2_SHA256(const uint8_t * passwd, size_t passwdlen, const uint8_t * salt,
      size_t saltlen, uint64_t c, uint8_t * buf, size_t dkLen)
  {
@@ -348,7 +496,7 @@ diff -urN scrypt.orig/sha256.c scrypt/sha256.c
  	size_t i;
  	uint8_t ivec[4];
  	uint8_t U[32];
-@@ -373,8 +53,8 @@
+@@ -373,27 +49,27 @@
  	size_t clen;
  
  	/* Compute HMAC state after processing P and S. */
@@ -359,8 +507,9 @@ diff -urN scrypt.orig/sha256.c scrypt/sha256.c
  
  	/* Iterate through the blocks. */
  	for (i = 0; i * 32 < dkLen; i++) {
-@@ -382,18 +62,18 @@
- 		be32enc(ivec, (uint32_t)(i + 1));
+ 		/* Generate INT(i + 1). */
+-		be32enc(ivec, (uint32_t)(i + 1));
++		HB_PUT_BE_UINT32(ivec, (uint32_t)(i + 1));
  
  		/* Compute U_1 = PRF(P, S || INT(i)). */
 -		memcpy(&hctx, &PShctx, sizeof(HMAC_SHA256_CTX));
@@ -384,7 +533,7 @@ diff -urN scrypt.orig/sha256.c scrypt/sha256.c
  
  			/* ... xor U_j ... */
  			for (k = 0; k < 32; k++)
-@@ -408,5 +88,5 @@
+@@ -408,5 +84,5 @@
  	}
  
  	/* Clean PShctx, since we never called _Final on it. */
@@ -392,8 +541,8 @@ diff -urN scrypt.orig/sha256.c scrypt/sha256.c
 +	memset(&PShctx, 0, sizeof(PShctx));
  }
 diff -urN scrypt.orig/sha256.h scrypt/sha256.h
---- scrypt.orig/sha256.h	2015-07-14 00:23:09.720664500 +0200
-+++ scrypt/sha256.h	2015-07-14 00:23:09.720664500 +0200
+--- scrypt.orig/sha256.h	2015-07-14 02:04:52.306544000 +0200
++++ scrypt/sha256.h	2015-07-14 02:04:52.306544000 +0200
 @@ -29,27 +29,9 @@
  #ifndef _SHA256_H_
  #define _SHA256_H_
@@ -423,78 +572,3 @@ diff -urN scrypt.orig/sha256.h scrypt/sha256.h
  
  /**
   * PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c, buf, dkLen):
-diff -urN scrypt.orig/u_sysend.h scrypt/u_sysend.h
---- scrypt.orig/u_sysend.h	2015-07-14 00:23:09.720664500 +0200
-+++ scrypt/u_sysend.h	2015-07-14 00:23:09.720664500 +0200
-@@ -44,7 +44,7 @@
- 
- #include <stdint.h>
- 
--static inline uint32_t
-+static HB_FORCEINLINE uint32_t
- be32dec(const void *pp)
- {
- 	const uint8_t *p = (uint8_t const *)pp;
-@@ -53,7 +53,7 @@
- 	    ((uint32_t)(p[1]) << 16) + ((uint32_t)(p[0]) << 24));
- }
- 
--static inline void
-+static HB_FORCEINLINE void
- be32enc(void *pp, uint32_t x)
- {
- 	uint8_t * p = (uint8_t *)pp;
-@@ -64,7 +64,7 @@
- 	p[0] = (x >> 24) & 0xff;
- }
- 
--static inline uint64_t
-+static HB_FORCEINLINE uint64_t
- be64dec(const void *pp)
- {
- 	const uint8_t *p = (uint8_t const *)pp;
-@@ -75,7 +75,7 @@
- 	    ((uint64_t)(p[1]) << 48) + ((uint64_t)(p[0]) << 56));
- }
- 
--static inline void
-+static HB_FORCEINLINE void
- be64enc(void *pp, uint64_t x)
- {
- 	uint8_t * p = (uint8_t *)pp;
-@@ -90,7 +90,7 @@
- 	p[0] = (x >> 56) & 0xff;
- }
- 
--static inline uint32_t
-+static HB_FORCEINLINE uint32_t
- le32dec(const void *pp)
- {
- 	const uint8_t *p = (uint8_t const *)pp;
-@@ -99,7 +99,7 @@
- 	    ((uint32_t)(p[2]) << 16) + ((uint32_t)(p[3]) << 24));
- }
- 
--static inline void
-+static HB_FORCEINLINE void
- le32enc(void *pp, uint32_t x)
- {
- 	uint8_t * p = (uint8_t *)pp;
-@@ -110,7 +110,7 @@
- 	p[3] = (x >> 24) & 0xff;
- }
- 
--static inline uint64_t
-+static HB_FORCEINLINE uint64_t
- le64dec(const void *pp)
- {
- 	const uint8_t *p = (uint8_t const *)pp;
-@@ -121,7 +121,7 @@
- 	    ((uint64_t)(p[6]) << 48) + ((uint64_t)(p[7]) << 56));
- }
- 
--static inline void
-+static HB_FORCEINLINE void
- le64enc(void *pp, uint64_t x)
- {
- 	uint8_t * p = (uint8_t *)pp;

@@ -17,7 +17,7 @@
 
 -depurlbase=scrypt:https://www.tarsnap.com/scrypt/
 # Harbour specific short filename
--depkeyhead=scrypt:scrypt_p.h
+-depkeyhead=scrypt:c_scrypt.h
 -depcontrol=scrypt:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=scrypt:${HB_WITH_SCRYPT}
 -depincpath=scrypt:/usr/include

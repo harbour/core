@@ -65,8 +65,8 @@ HB_FUNC( HB_PBKDF2_SHA256 )
       buf[ 0 ] = '\0';
 
       PBKDF2_SHA256(
-         ( uint8_t * ) hb_parc( 1 ), ( size_t ) hb_parclen( 1 ),
-         ( uint8_t * ) hb_parc( 2 ), ( size_t ) hb_parclen( 2 ),
+         ( const uint8_t * ) hb_parc( 1 ), ( size_t ) hb_parclen( 1 ),
+         ( const uint8_t * ) hb_parc( 2 ), ( size_t ) hb_parclen( 2 ),
          nC,
          buf, keylen );
 

@@ -108,4 +108,4 @@ METHOD Close() CLASS TIPLog
    RETURN .F.
 
 METHOD Clear() CLASS TIPLog
-   RETURN ::Close() .AND. hb_vfErase( ::cFileName ) != NIL
+   RETURN ::Close() .AND. hb_vfErase( ::cFileName ) != F_ERROR

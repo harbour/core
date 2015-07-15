@@ -23,14 +23,10 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include "scrypt_p.h"
-
 #include <sys/types.h>
 
 #include <stdint.h>
 #include <string.h>
-
-#include "u_sysend.h"
 
 #include "sha256.h"
 
@@ -59,7 +55,7 @@ PBKDF2_SHA256(const uint8_t * passwd, size_t passwdlen, const uint8_t * salt,
 	/* Iterate through the blocks. */
 	for (i = 0; i * 32 < dkLen; i++) {
 		/* Generate INT(i + 1). */
-		be32enc(ivec, (uint32_t)(i + 1));
+		HB_PUT_BE_UINT32(ivec, (uint32_t)(i + 1));
 
 		/* Compute U_1 = PRF(P, S || INT(i)). */
 		memcpy(&hctx, &PShctx, sizeof(hb_hmac_sha256_ctx));

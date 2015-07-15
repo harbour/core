@@ -117,12 +117,12 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
    }
    else
    {
-      HB_FHANDLE hFileHandle = hb_fsOpen( pszFileName, FO_READ | FO_COMPAT );
+      PHB_FILE hFileHandle;
 
-      if( hFileHandle != FS_ERROR )
+      if( ( hFileHandle = hb_fileExtOpen( pszFileName, NULL, FO_READ | FO_COMPAT | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
       {
-         HB_FOFFSET nPos = hb_fsSeekLarge( hFileHandle, 0, FS_END );
-         hb_fsClose( hFileHandle );
+         HB_FOFFSET nPos = hb_fileSeek( hFileHandle, 0, FS_END );
+         hb_fileClose( hFileHandle );
          return nPos;
       }
    }
