@@ -230,9 +230,8 @@ HB_FUNC( HB_BLAKE2S )
 
    if( pszStr )
    {
-      HB_SIZE nLen     = hb_parclen( 1 );
-      int     iHashLen = hb_parnidef( 3, BLAKE2S_OUTBYTES );
-      HB_U8   out[ BLAKE2S_OUTBYTES ];
+      int   iHashLen = hb_parnidef( 3, BLAKE2S_OUTBYTES );
+      HB_U8 out[ BLAKE2S_OUTBYTES ];
 
       memset( out, '\0', sizeof( out ) );
 
@@ -241,7 +240,7 @@ HB_FUNC( HB_BLAKE2S )
       else if( iHashLen > BLAKE2S_OUTBYTES )
          iHashLen = BLAKE2S_OUTBYTES;
 
-      if( blake2s( out, iHashLen, hb_parc( 2 ), hb_parclen( 2 ), pszStr, nLen ) == 0 )
+      if( blake2s( out, iHashLen, hb_parc( 2 ), hb_parclen( 2 ), pszStr, hb_parclen( 1 ) ) == 0 )
       {
          if( ! hb_parl( 4 ) )
          {

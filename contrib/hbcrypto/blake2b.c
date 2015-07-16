@@ -234,16 +234,15 @@ HB_FUNC( HB_BLAKE2B )
 
    if( pszStr )
    {
-      HB_SIZE nLen     = hb_parclen( 1 );
-      int     iHashLen = hb_parnidef( 3, BLAKE2B_OUTBYTES );
-      HB_U8   out[ BLAKE2B_OUTBYTES ];
+      int   iHashLen = hb_parnidef( 3, BLAKE2B_OUTBYTES );
+      HB_U8 out[ BLAKE2B_OUTBYTES ];
 
       if( iHashLen < 1 )
          iHashLen = 1;
       else if( iHashLen > BLAKE2B_OUTBYTES )
          iHashLen = BLAKE2B_OUTBYTES;
 
-      if( blake2b( out, iHashLen, hb_parc( 2 ), hb_parclen( 2 ), pszStr, nLen ) == 0 )
+      if( blake2b( out, iHashLen, hb_parc( 2 ), hb_parclen( 2 ), pszStr, hb_parclen( 1 ) ) == 0 )
       {
          if( ! hb_parl( 4 ) )
          {
