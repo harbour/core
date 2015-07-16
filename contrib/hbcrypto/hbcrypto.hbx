@@ -21,6 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC hb_bcrypt
 DYNAMIC hb_blake2b
 DYNAMIC hb_blake2s
 DYNAMIC hb_ed25519_create_keypair

@@ -57,7 +57,7 @@
 HB_FUNC( HB_SCRYPT )
 {
    HB_ISIZ keylen = hb_parns( 6 );
-   HB_U64 nC = hb_parnintdef( 3, 16384 );  /* CPU difficulty. must be a power of 2, > 1 */
+   HB_U64 nC = hb_parnintdef( 3, 0x4000 );  /* CPU difficulty. must be a power of 2, > 1 */
 
    if( HB_ISCHAR( 1 ) &&
        HB_ISCHAR( 2 ) &&
