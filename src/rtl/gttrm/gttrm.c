@@ -129,6 +129,11 @@ static HB_GT_FUNCS SuperTable;
 #define TERM_PUTTY          4
 #define TERM_CONS           8
 
+#define HB_GTTRM_CLRSTD     0
+#define HB_GTTRM_CLRX16     1
+#define HB_GTTRM_CLR256     2
+#define HB_GTTRM_CLRRGB     3
+
 #define NO_STDKEYS          96
 #define NO_EXTDKEYS         30
 
@@ -310,7 +315,7 @@ typedef struct _HB_GTTRM
    int        iHeight;
    HB_SIZE    nLineBufSize;
    char *     pLineBuf;
-   int        iCurrentSGR, iFgColor, iBgColor, iBold, iBlink, iACSC, iAM;
+   int        iCurrentSGR, iFgColor, iBgColor, iBold, iBlink, iACSC, iExtColor, iAM;
    int        iAttrMask;
    int        iCursorStyle;
    HB_BOOL    fAM;
@@ -412,7 +417,7 @@ static const char * s_szMouseOff = "\033[?1002l\033[?1001r";
 static const char s_szBell[] = { HB_CHAR_BEL, 0 };
 
 /* conversion table for ANSI color indexes */
-static const int  s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
+static const int  s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7, 8, 12, 10, 14, 9, 13, 11, 15 };
 
 static int getClipKey( int nKey )
 {
@@ -1528,7 +1533,7 @@ static void hb_gt_trm_LinuxSetPalette( PHB_GTTRM pTerm, int iIndexFrom, int iInd
       do
       {
          char szColor[ 11 ];
-         int iAnsiIndex = s_AnsiColors[ iIndexFrom & 0x07 ] | ( iIndexFrom & 0x08 );
+         int iAnsiIndex = s_AnsiColors[ iIndexFrom & 0x0F ];
 
          hb_snprintf( szColor, sizeof( szColor ), "\033]P%X%02X%02X%02X",
                       iAnsiIndex,
@@ -1592,18 +1597,27 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
 
    if( pTerm->iCurrentSGR != iAttr )
    {
-      int i, acsc, bg, fg, bold, blink;
-      char buff[ 32 ];
+      int i, acsc, bg, fg, bold, blink, rgb;
+      char buff[ 64 ];
 
       i = 2;
       buff[ 0 ] = 0x1b;
       buff[ 1 ] = '[';
 
       acsc  = ( iAttr & HB_GTTRM_ATTR_ACSC ) && ! pTerm->fUTF8 ? 1 : 0;
-      bg    = s_AnsiColors[ ( iAttr >> 4 ) & 0x07 ];
-      fg    = s_AnsiColors[ iAttr & 0x07 ];
-      bold  = iAttr & 0x08 ? 1 : 0;
-      blink = iAttr & 0x80 ? 1 : 0;
+      if( pTerm->iExtColor == HB_GTTRM_CLRSTD )
+      {
+         bg    = s_AnsiColors[ ( iAttr >> 4 ) & 0x07 ];
+         fg    = s_AnsiColors[ iAttr & 0x07 ];
+         bold  = iAttr & 0x08 ? 1 : 0;
+         blink = iAttr & 0x80 ? 1 : 0;
+      }
+      else
+      {
+         bg = s_AnsiColors[ ( iAttr >> 4 ) & 0x0F ];
+         fg = s_AnsiColors[ iAttr & 0x0F ];
+         bold = blink = 0;
+      }
 
       if( pTerm->iCurrentSGR == -1 )
       {
@@ -1615,21 +1629,72 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
          buff[ i++ ] = 0x1b;
          buff[ i++ ] = '[';
 
-         if( bold )
+         if( pTerm->iExtColor == HB_GTTRM_CLRSTD )
          {
-            buff[ i++ ] = '1';
+            if( bold )
+            {
+               buff[ i++ ] = '1';
+               buff[ i++ ] = ';';
+            }
+            if( blink )
+            {
+               buff[ i++ ] = '5';
+               buff[ i++ ] = ';';
+            }
+            buff[ i++ ] = '3';
+            buff[ i++ ] = '0' + fg;
             buff[ i++ ] = ';';
+            buff[ i++ ] = '4';
+            buff[ i++ ] = '0' + bg;
          }
-         if( blink )
+         else if( pTerm->iExtColor == HB_GTTRM_CLRX16 )
          {
+            // ESC [ 38 ; 5 ; <fg> m
+            buff[ i++ ] = '3';
+            buff[ i++ ] = '8';
+            buff[ i++ ] = ';';
             buff[ i++ ] = '5';
             buff[ i++ ] = ';';
+            if( fg >= 10 )
+               buff[ i++ ] = '1';
+            buff[ i++ ] = '0' + fg % 10;
+            buff[ i++ ] = ';';
+            // ESC [ 48 ; 5 ; <bg> m
+            buff[ i++ ] = '4';
+            buff[ i++ ] = '8';
+            buff[ i++ ] = ';';
+            buff[ i++ ] = '5';
+            buff[ i++ ] = ';';
+            if( bg >= 10 )
+               buff[ i++ ] = '1';
+            buff[ i++ ] = '0' + bg % 10;
          }
-         buff[ i++ ] = '3';
-         buff[ i++ ] = '0' + fg;
-         buff[ i++ ] = ';';
-         buff[ i++ ] = '4';
-         buff[ i++ ] = '0' + bg;
+         else if( pTerm->iExtColor == HB_GTTRM_CLR256 )
+         {
+            // ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m   // 0 <= r,g,b <= 5
+            rgb = pTerm->colors[ iAttr & 0x0F ];
+            rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
+                        6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
+                            ( ( ( rgb >> 16 ) & 0xFF ) / 43 );
+            i += hb_snprintf( buff + i, sizeof( buff ) - i, "38;5;%d", rgb );
+            // ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m   // 0 <= r,g,b <= 5
+            rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
+            rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
+                        6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
+                            ( ( ( rgb >> 16 ) & 0xFF ) / 43 );
+            i += hb_snprintf( buff + i, sizeof( buff ) - i, ";48;5;%d", rgb );
+         }
+         else if( pTerm->iExtColor == HB_GTTRM_CLRRGB )
+         {
+            // ESC [ 38 ; 2 ; <r> ; <g> ; <b> m
+            rgb = pTerm->colors[ iAttr & 0x0F ];
+            i += hb_snprintf( buff + i, sizeof( buff ) - i, "38;2;%d;%d;%d",
+                              rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
+            // ESC [ 48 ; 2 ; <r> ; <g> ; <b> m
+            rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
+            i += hb_snprintf( buff + i, sizeof( buff ) - i, ";48;2;%d;%d;%d",
+                              rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
+         }
          buff[ i++ ] = 'm';
          pTerm->iACSC    = acsc;
          pTerm->iBold    = bold;
@@ -1661,15 +1726,77 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
          }
          if( pTerm->iFgColor != fg )
          {
-            buff[ i++ ] = '3';
-            buff[ i++ ] = '0' + fg;
+            if( pTerm->iExtColor == HB_GTTRM_CLRSTD )
+            {
+               buff[ i++ ] = '3';
+               buff[ i++ ] = '0' + fg;
+            }
+            else if( pTerm->iExtColor == HB_GTTRM_CLRX16 )
+            {
+               // ESC [ 38 ; 5 ; <fg> m
+               buff[ i++ ] = '3';
+               buff[ i++ ] = '8';
+               buff[ i++ ] = ';';
+               buff[ i++ ] = '5';
+               buff[ i++ ] = ';';
+               if( fg >= 10 )
+                  buff[ i++ ] = '1';
+               buff[ i++ ] = '0' + fg % 10;
+            }
+            else if( pTerm->iExtColor == HB_GTTRM_CLR256 )
+            {
+               // ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m   // 0 <= r,g,b <= 5
+               rgb = pTerm->colors[ iAttr & 0x0F ];
+               rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
+                           6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
+                               ( ( ( rgb >> 16 ) & 0xFF ) / 43 );
+               i += hb_snprintf( buff + i, sizeof( buff ) - i, "38;5;%d", rgb );
+            }
+            else if( pTerm->iExtColor == HB_GTTRM_CLRRGB )
+            {
+               // ESC [ 38 ; 2 ; <r> ; <g> ; <b> m
+               rgb = pTerm->colors[ iAttr & 0x0F ];
+               i += hb_snprintf( buff + i, sizeof( buff ) - i, "38;2;%d;%d;%d",
+                                 rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
+            }
             buff[ i++ ] = ';';
             pTerm->iFgColor = fg;
          }
          if( pTerm->iBgColor != bg )
          {
-            buff[ i++ ] = '4';
-            buff[ i++ ] = '0' + bg;
+            if( pTerm->iExtColor == HB_GTTRM_CLRSTD )
+            {
+               buff[ i++ ] = '4';
+               buff[ i++ ] = '0' + bg;
+            }
+            else if( pTerm->iExtColor == HB_GTTRM_CLRX16 )
+            {
+               // ESC [ 48 ; 5 ; <fg> m
+               buff[ i++ ] = '4';
+               buff[ i++ ] = '8';
+               buff[ i++ ] = ';';
+               buff[ i++ ] = '5';
+               buff[ i++ ] = ';';
+               if( bg >= 10 )
+                  buff[ i++ ] = '1';
+               buff[ i++ ] = '0' + bg % 10;
+            }
+            else if( pTerm->iExtColor == HB_GTTRM_CLR256 )
+            {
+               // ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m   // 0 <= r,g,b <= 5
+               rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
+               rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
+                           6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
+                               ( ( ( rgb >> 16 ) & 0xFF ) / 43 );
+               i += hb_snprintf( buff + i, sizeof( buff ) - i, "48;5;%d", rgb );
+            }
+            else if( pTerm->iExtColor == HB_GTTRM_CLRRGB )
+            {
+               // ESC [ 48 ; 2 ; <r> ; <g> ; <b> m
+               rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
+               i += hb_snprintf( buff + i, sizeof( buff ) - i, "48;2;%d;%d;%d",
+                                 rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
+            }
             buff[ i++ ] = ';';
             pTerm->iBgColor = bg;
          }
@@ -2136,14 +2263,28 @@ static void hb_gt_trm_AnsiExit( PHB_GTTRM pTerm )
 /*
  * common functions
  */
-static HB_BOOL hb_trm_Param( const char * pszParam )
+static HB_BOOL hb_trm_Param( const char * pszParam, int * piValue )
 {
    HB_BOOL fResult = HB_FALSE;
    char * pszGtTrmParams = hb_cmdargString( "GTTRM" );
 
    if( pszGtTrmParams )
    {
-      fResult = strstr( hb_strupr( pszGtTrmParams ), pszParam ) != NULL;
+      const char * pszAt = strstr( hb_strupr( pszGtTrmParams ), pszParam );
+
+      if( pszAt != NULL )
+      {
+         fResult = HB_TRUE;
+         if( piValue )
+         {
+            int iOverflow;
+
+            pszAt += strlen( pszParam );
+            if( *pszAt == '=' || *pszAt == ':' )
+               ++pszAt;
+            * piValue = HB_ISDIGIT( *pszAt ) ? hb_strValInt( pszAt, &iOverflow ) : 1;
+         }
+      }
       hb_xfree( pszGtTrmParams );
    }
 
@@ -2165,9 +2306,9 @@ static HB_BOOL hb_trm_isUTF8( PHB_GTTRM pTerm )
       }
    }
 
-   if( hb_trm_Param( "UTF8" ) || hb_trm_Param( "UTF-8" ) )
+   if( hb_trm_Param( "UTF8", NULL ) || hb_trm_Param( "UTF-8", NULL ) )
       return HB_TRUE;
-   else if( hb_trm_Param( "ISO" ) )
+   else if( hb_trm_Param( "ISO", NULL ) )
       return HB_FALSE;
    else if( pTerm->fPosAnswer )
       return fUTF8;
@@ -2947,6 +3088,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    static const char * szAcsc = "``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~";
    static const char * szExtAcsc = "+\020,\021-\030.\0310\333`\004a\261f\370g\361h\260i\316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376";
    const char * szTerm;
+   int iValue;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetTerm(%p)", pTerm ) );
 
@@ -2959,26 +3101,67 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    pTerm->mouse_type    = MOUSE_NONE;
    pTerm->esc_delay     = ESC_DELAY;
    pTerm->iAttrMask     = ~HB_GTTRM_ATTR_BOX;
+   pTerm->iExtColor     = HB_GTTRM_CLRSTD;
    pTerm->terminal_ext  = 0;
    pTerm->fAM           = HB_FALSE;
-   if( hb_trm_Param( "PUTTY" ) )
-      pTerm->terminal_ext |= TERM_PUTTY;
 
-   szTerm = getenv( "HB_TERM" );
-   if( szTerm == NULL || *szTerm == '\0' )
+   /* standard VGA colors */
+   pTerm->colors[ 0x00 ] = 0x000000;
+   pTerm->colors[ 0x01 ] = 0xAA0000;
+   pTerm->colors[ 0x02 ] = 0x00AA00;
+   pTerm->colors[ 0x03 ] = 0xAAAA00;
+   pTerm->colors[ 0x04 ] = 0x0000AA;
+   pTerm->colors[ 0x05 ] = 0xAA00AA;
+   pTerm->colors[ 0x06 ] = 0x0055AA;
+   pTerm->colors[ 0x07 ] = 0xAAAAAA;
+   pTerm->colors[ 0x08 ] = 0x555555;
+   pTerm->colors[ 0x09 ] = 0xFF5555;
+   pTerm->colors[ 0x0A ] = 0x55FF55;
+   pTerm->colors[ 0x0B ] = 0xFFFF55;
+   pTerm->colors[ 0x0C ] = 0x5555FF;
+   pTerm->colors[ 0x0D ] = 0xFF55FF;
+   pTerm->colors[ 0x0E ] = 0x55FFFF;
+   pTerm->colors[ 0x0F ] = 0xFFFFFF;
+
+   if( hb_trm_Param( "PUTTY", NULL ) )
+      pTerm->terminal_ext |= TERM_PUTTY;
+   if( hb_trm_Param( "EXCLR", &iValue ) )
    {
-      szTerm = getenv( "TERM" );
-      if( szTerm == NULL || *szTerm == '\0' )
-         szTerm = "ansi";
+      switch( iValue )
+      {
+         case HB_GTTRM_CLRSTD:
+         case HB_GTTRM_CLRX16:
+         case HB_GTTRM_CLR256:
+         case HB_GTTRM_CLRRGB:
+            pTerm->iExtColor = iValue;
+            break;
+      }
    }
 
+   if( hb_trm_Param( "XTERM", NULL ) )
+      szTerm = "xterm";
+   else if( hb_trm_Param( "LINUX", NULL ) )
+      szTerm = "linux";
+   else if( hb_trm_Param( "CONS", NULL ) )
+      szTerm = "cons";
+   else if( hb_trm_Param( "ANSI", NULL ) )
+      szTerm = "ansi";
+   else
+   {
+      szTerm = getenv( "HB_TERM" );
+      if( szTerm == NULL || *szTerm == '\0' )
+      {
+         szTerm = getenv( "TERM" );
+         if( szTerm == NULL || *szTerm == '\0' )
+            szTerm = "ansi";
+      }
+   }
 
    if( ( pTerm->terminal_ext & TERM_PUTTY ) ||
        strstr( szTerm, "xterm" ) != NULL ||
        strncmp( szTerm, "rxvt", 4 ) == 0 ||
        strcmp( szTerm, "putty" ) == 0 ||
-       strncmp( szTerm, "screen", 6 ) == 0 ||
-       hb_trm_Param( "XTERM" ) )
+       strncmp( szTerm, "screen", 6 ) == 0 )
    {
       pTerm->Init           = hb_gt_trm_AnsiInit;
       pTerm->Exit           = hb_gt_trm_AnsiExit;
@@ -2996,8 +3179,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    }
    else if( strncmp( szTerm, "linux", 5 ) == 0 ||
             strcmp( szTerm, "tterm" ) == 0 ||
-            strcmp( szTerm, "teraterm" ) == 0 ||
-            hb_trm_Param( "LINUX" ) )
+            strcmp( szTerm, "teraterm" ) == 0 )
    {
       pTerm->Init           = hb_gt_trm_AnsiInit;
       pTerm->Exit           = hb_gt_trm_AnsiExit;
@@ -3013,8 +3195,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->szAcsc         = szExtAcsc;
       pTerm->terminal_type  = TERM_LINUX;
    }
-   else if( strncmp( szTerm, "cons", 4 ) == 0 ||
-            hb_trm_Param( "CONS" ) )
+   else if( strncmp( szTerm, "cons", 4 ) == 0 )
    {
       pTerm->Init           = hb_gt_trm_AnsiInit;
       pTerm->Exit           = hb_gt_trm_AnsiExit;
@@ -3058,7 +3239,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->hFileno     = pTerm->hFilenoStdin;
       pTerm->fOutTTY     = HB_TRUE;
    }
-   pTerm->fPosAnswer     = pTerm->fOutTTY && ! hb_trm_Param( "NOPOS" );
+   pTerm->fPosAnswer     = pTerm->fOutTTY && ! hb_trm_Param( "NOPOS", NULL );
    pTerm->fUTF8          = HB_FALSE;
 
    hb_fsSetDevMode( pTerm->hFileno, FD_BINARY );
