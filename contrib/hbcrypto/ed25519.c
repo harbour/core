@@ -66,23 +66,36 @@ HB_FUNC( HB_ED25519_CREATE_KEYPAIR )
    hb_ret();
 }
 
-/* ed25519_sign( @<signature>, <message>, <public_key>, <private_key> ) -> NIL */
+/* ed25519_get_pubkey( <private_key> ) -> <public_key> */
+HB_FUNC( HB_ED25519_GET_PUBKEY )
+{
+   if( hb_parclen( 1 ) == 64 )
+   {
+      unsigned char private_key[ 32 ];
+
+      ed25519_get_pubkey( private_key, ( const unsigned char * ) hb_parc( 1 ) );
+
+      hb_retclen( ( char * ) private_key, sizeof( private_key ) );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3013, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* ed25519_sign( <message>, <public_key>, <private_key> ) -> <signature> */
 HB_FUNC( HB_ED25519_SIGN )
 {
-   if( HB_ISCHAR( 2 ) &&
-       hb_parclen( 3 ) == 32 &&
-       hb_parclen( 4 ) == 64 )
+   if( HB_ISCHAR( 1 ) &&
+       hb_parclen( 2 ) == 32 &&
+       hb_parclen( 3 ) == 64 )
    {
       unsigned char signature[ 64 ];
 
       ed25519_sign( signature,
-                    ( const unsigned char * ) hb_parc( 2 ), ( size_t ) hb_parclen( 2 ),
-                    ( const unsigned char * ) hb_parc( 3 ),
-                    ( const unsigned char * ) hb_parc( 4 ) );
+                    ( const unsigned char * ) hb_parc( 1 ), ( size_t ) hb_parclen( 1 ),
+                    ( const unsigned char * ) hb_parc( 2 ),
+                    ( const unsigned char * ) hb_parc( 3 ) );
 
-      hb_storclen( ( char * ) signature, sizeof( signature ), 1 );
-
-      hb_ret();
+      hb_retclen( ( char * ) signature, sizeof( signature ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3013, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -103,21 +116,19 @@ HB_FUNC( HB_ED25519_VERIFY )
 
 #if 0
 
-/* ed25519_key_exchange( <shared_secret>, <public_key>, <private_key> ) -> NIL */
+/* ed25519_key_exchange( <public_key>, <private_key> ) -> <shared_secret> */
 HB_FUNC( HB_ED25519_KEY_EXCHANGE )
 {
-   if( hb_parclen( 2 ) == 32 &&
-       hb_parclen( 3 ) == 64 )
+   if( hb_parclen( 1 ) == 32 &&
+       hb_parclen( 2 ) == 64 )
    {
       unsigned char shared_secret[ 32 ];
 
       ed25519_key_exchange( shared_secret,
-                            ( const unsigned char * ) hb_parc( 2 ),
-                            ( const unsigned char * ) hb_parc( 3 ) );
+                            ( const unsigned char * ) hb_parc( 1 ),
+                            ( const unsigned char * ) hb_parc( 2 ) );
 
-      hb_storclen( ( char * ) shared_secret, sizeof( shared_secret ), 1 );
-
-      hb_ret();
+      hb_retclen( ( char * ) shared_secret, sizeof( shared_secret ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3013, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

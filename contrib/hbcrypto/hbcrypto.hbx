@@ -25,6 +25,7 @@ DYNAMIC hb_bcrypt
 DYNAMIC hb_blake2b
 DYNAMIC hb_blake2s
 DYNAMIC hb_ed25519_create_keypair
+DYNAMIC hb_ed25519_get_pubkey
 DYNAMIC hb_ed25519_sign
 DYNAMIC hb_ed25519_verify
 DYNAMIC hb_pbkdf2_sha256

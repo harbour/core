@@ -487,7 +487,7 @@ static HB_U32 hb_Blowfish_stream2word( const HB_U8 * data, HB_U16 databytes,
    temp = 0x00000000;
    j    = *current;
 
-   for( i = 0; i < 4; i++, j++ )
+   for( i = 0; i < 4; ++i, ++j )
    {
       if( j >= databytes )
          j = 0;
@@ -509,7 +509,7 @@ static void hb_Blowfish_expand0state( hb_blf_ctx * c,
    HB_U32 datar;
 
    j = 0;
-   for( i = 0; i < BLF_N + 2; i++ )
+   for( i = 0; i < BLF_N + 2; ++i )
    {
       /* Extract 4 int8 to 1 int32 from keystream */
       temp      = hb_Blowfish_stream2word( key, keybytes, &j );
@@ -527,7 +527,7 @@ static void hb_Blowfish_expand0state( hb_blf_ctx * c,
       c->P[ i + 1 ] = datar;
    }
 
-   for( i = 0; i < 4; i++ )
+   for( i = 0; i < 4; ++i )
    {
       HB_U16 k;
       for( k = 0; k < 256; k += 2 )
@@ -553,7 +553,7 @@ static void hb_Blowfish_expandstate( hb_blf_ctx * c,
    HB_U32 datar;
 
    j = 0;
-   for( i = 0; i < BLF_N + 2; i++ )
+   for( i = 0; i < BLF_N + 2; ++i )
    {
       /* Extract 4 int8 to 1 int32 from keystream */
       temp      = hb_Blowfish_stream2word( key, keybytes, &j );
@@ -573,7 +573,7 @@ static void hb_Blowfish_expandstate( hb_blf_ctx * c,
       c->P[ i + 1 ] = datar;
    }
 
-   for( i = 0; i < 4; i++ )
+   for( i = 0; i < 4; ++i )
    {
       HB_U16 k;
       for( k = 0; k < 256; k += 2 )
@@ -594,7 +594,7 @@ static void hb_blf_enc( hb_blf_ctx * c, HB_U32 * data, HB_U16 blocks )
    HB_U32 * d = data;
    HB_U16   i;
 
-   for( i = 0; i < blocks; i++ )
+   for( i = 0; i < blocks; ++i )
    {
       hb_Blowfish_encipher( c, d, d + 1 );
       d += 2;
@@ -634,7 +634,7 @@ static void bcrypt_hash( HB_U8 * sha2pass, HB_U8 * sha2salt, HB_U8 * out )
    /* key expansion */
    hb_Blowfish_initstate( &state );
    hb_Blowfish_expandstate( &state, sha2salt, shalen, sha2pass, shalen );
-   for( i = 0; i < 64; i++ )
+   for( i = 0; i < 64; ++i )
    {
       hb_Blowfish_expand0state( &state, sha2salt, shalen );
       hb_Blowfish_expand0state( &state, sha2pass, shalen );
@@ -642,14 +642,14 @@ static void bcrypt_hash( HB_U8 * sha2pass, HB_U8 * sha2salt, HB_U8 * out )
 
    /* encryption */
    j = 0;
-   for( i = 0; i < BCRYPT_BLOCKS; i++ )
+   for( i = 0; i < BCRYPT_BLOCKS; ++i )
       cdata[ i ] = hb_Blowfish_stream2word( ciphertext, sizeof( ciphertext ),
                                             &j );
-   for( i = 0; i < 64; i++ )
+   for( i = 0; i < 64; ++i )
       hb_blf_enc( &state, cdata, sizeof( cdata ) / sizeof( HB_U64 ) );
 
    /* copy out */
-   for( i = 0; i < BCRYPT_BLOCKS; i++ )
+   for( i = 0; i < BCRYPT_BLOCKS; ++i )
    {
       out[ 4 * i + 3 ] = ( cdata[ i ] >> 24 ) & 0xff;
       out[ 4 * i + 2 ] = ( cdata[ i ] >> 16 ) & 0xff;
@@ -708,14 +708,14 @@ static int bcrypt_pbkdf( const HB_U8 * pass, size_t passlen,
       bcrypt_hash( sha2pass, sha2salt, tmpout );
       memcpy( out, tmpout, sizeof( out ) );
 
-      for( i = 1; i < rounds; i++ )
+      for( i = 1; i < rounds; ++i )
       {
          /* subsequent rounds, salt is previous output */
          hb_sha512_init( &ctx );
          hb_sha512_update( &ctx, tmpout, sizeof( tmpout ) );
          hb_sha512_final( &ctx, sha2salt );
          bcrypt_hash( sha2pass, sha2salt, tmpout );
-         for( j = 0; j < sizeof( out ); j++ )
+         for( j = 0; j < sizeof( out ); ++j )
             out[ j ] ^= tmpout[ j ];
       }
 
@@ -724,7 +724,7 @@ static int bcrypt_pbkdf( const HB_U8 * pass, size_t passlen,
        */
       if( keylen < amt )
          amt = keylen;
-      for( i = 0; i < amt; i++ )
+      for( i = 0; i < amt; ++i )
          key[ i * stride + ( count - 1 ) ] = out[ i ];
       keylen -= amt;
    }
