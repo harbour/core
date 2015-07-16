@@ -252,7 +252,7 @@ HB_FUNC( HB_BLAKE2B )
             hb_retclen( digest, iHashLen * 2 );
          }
          else
-            hb_retclen( ( char * ) out, HB_SIZEOFARRAY( out ) );
+            hb_retclen( ( char * ) out, iHashLen );
 
          return;
       }
