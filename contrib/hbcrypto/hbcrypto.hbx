@@ -30,6 +30,7 @@ DYNAMIC hb_ed25519_sign
 DYNAMIC hb_ed25519_verify
 DYNAMIC hb_pbkdf2_sha256
 DYNAMIC hb_scrypt
+DYNAMIC hb_scrypt_setup
 DYNAMIC hb_strcmpc
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCRYPTO__REQUEST )
