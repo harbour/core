@@ -303,6 +303,7 @@
 
 /* HB_CURLOPT_SSL_OPTIONS values */
 #define HB_CURLSSLOPT_ALLOW_BEAST             hb_bitShift( 1, 0 )
+#define HB_CURLSSLOPT_NO_REVOKE               hb_bitShift( 1, 1 )
 
 /* HB_CURLOPT_HTTPAUTH option */
 #define HB_CURLAUTH_NONE                      0                    /* nothing */
