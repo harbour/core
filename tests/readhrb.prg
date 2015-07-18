@@ -6,8 +6,6 @@
  * readhrb <hrb file>
  */
 
-#include "fileio.ch"
-
 #define HRB_HEADER      ( hb_BChar( 0xC0 ) + "HRB" )
 
 #define HB_FS_PUBLIC    0x0001
