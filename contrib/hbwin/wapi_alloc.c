@@ -1,7 +1,7 @@
 /*
  * Low-level Windows object handling functions
  *
- * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2015 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -294,7 +294,7 @@ HB_FUNC( __WAPI_TYPE )
    else                               hb_retc_null();
 }
 
-#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
 static int s_iDbgUnsafeMode = 2;  /* 0 = disallow, 1 = trace, 2 = trace + RTE, other = allow */
 
 HB_FUNC( __WAPI_DBGUNSAFEHANDLES )
@@ -336,11 +336,13 @@ static HB_BOOL s_handle_trace( int n )
    else
       return HB_FALSE;
 }
+#else
+HB_FUNC( __WAPI_DBGUNSAFEHANDLES ) { ; }
 #endif
 
 void * __hbwapi_par_handle( int n )
 {
-#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
    if( HB_ISNUM( n ) )
       return s_handle_trace( n ) ? ( void * ) ( HB_PTRDIFF ) hb_parnint( n ) : NULL;
    else
@@ -350,7 +352,7 @@ void * __hbwapi_par_handle( int n )
 
 void * __hbwapi_parv_handle( int n, int i )
 {
-#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
    if( HB_ISNUM( n ) )
       return s_handle_trace( n ) ? ( void * ) ( HB_PTRDIFF ) hb_parvnint( n, i ) : NULL;
    else
@@ -360,7 +362,7 @@ void * __hbwapi_parv_handle( int n, int i )
 
 void * hbwapi_itemGet_HANDLE( PHB_ITEM pItem )
 {
-#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
    if( pItem && HB_IS_NUMERIC( pItem ) )
       return ( void * ) ( HB_PTRDIFF ) hb_itemGetNInt( pItem );
    else
@@ -376,7 +378,7 @@ void * hbwapi_arrayGet_HANDLE( PHB_ITEM pArray, HB_SIZE nIndex )
 
 HB_BOOL hbwapi_is_HANDLE( int iParam )
 {
-#if ! defined( __HBWIN_NO_UNSAFE_HANDLES )
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
    return hb_param( iParam, HB_IT_POINTER | HB_IT_NUMERIC ) != NULL;
 #else
    return hb_param( iParam, HB_IT_POINTER ) != NULL;
