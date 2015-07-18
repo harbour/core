@@ -288,7 +288,7 @@ STATIC FUNCTION win_PEChecksumCalc( cData, nPECheckSumPos )
       IF nPos != nPECheckSumPos
          nChecksum := hb_bitAnd( nChecksum, 0xFFFFFFFF ) + ;
             ( Bin2W( hb_BSubStr( cData, nPos + 0, 2 ) ) + ;
-                     Bin2W( hb_BSubStr( cData, nPos + 2, 2 ) ) * 0x10000 ) + ;
+              Bin2W( hb_BSubStr( cData, nPos + 2, 2 ) ) * 0x10000 ) + ;
             hb_bitShift( nChecksum, -32 )
          IF nChecksum > 0x100000000
             nChecksum := hb_bitAnd( nChecksum, 0xFFFFFFFF ) + hb_bitShift( nChecksum, -32 )
