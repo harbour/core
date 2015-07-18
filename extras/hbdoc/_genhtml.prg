@@ -47,8 +47,6 @@
 
 #include "hbclass.ch"
 
-#include "fileio.ch"
-
 #ifdef __PLATFORM__DOS
    #define EXTENSION ".htm"
 #else
@@ -84,7 +82,7 @@ CREATE CLASS GenerateHTML INHERIT TPLGenerate
    METHOD Tagged( cText, cTag, ... )
    METHOD CloseTag( cText )
    METHOD Append( cText, cFormat )
-   METHOD Newline() INLINE FWrite( ::nHandle, "<br />" + hb_eol() ), self
+   METHOD Newline() INLINE hb_vfWrite( ::nHandle, "<br />" + hb_eol() ), self
 
    CLASS VAR lCreateStyleDocument AS LOGICAL INIT .T.
    VAR TargetFilename AS STRING INIT ""
@@ -105,7 +103,7 @@ ENDCLASS
 
 METHOD NewFile() CLASS GenerateHTML
 
-   FWrite( ::nHandle, "<!DOCTYPE html>" + hb_eol() )
+   hb_vfWrite( ::nHandle, "<!DOCTYPE html>" + hb_eol() )
 
    ::OpenTag( "html", "lang", "en" )
    ::OpenTag( "head" )
@@ -198,11 +196,9 @@ METHOD AddEntry( oEntry ) CLASS GenerateHTML
 
 METHOD Generate() CLASS GenerateHTML
 
-   IF ::nHandle != F_ERROR
+   IF ::nHandle != NIL
       ::CloseTag( "body" )
       ::CloseTag( "html" )
-      FClose( ::nHandle )
-      ::nHandle := F_ERROR
    ENDIF
 
    RETURN self
@@ -237,7 +233,7 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted ) CLASS GenerateHTML
             ENDIF
 #if 0
             IF Len( cEntry ) > 0 .AND. ! lPreformatted
-               FWrite( ::nHandle, hb_eol() )
+               hb_vfWrite( ::nHandle, hb_eol() )
             ENDIF
 #endif
          ENDDO
@@ -262,7 +258,7 @@ METHOD OpenTag( cText, ... ) CLASS GenerateHTML
       cText += " " + aArgs[ idx ] + "=" + '"' + aArgs[ idx + 1 ] + '"'
    NEXT
 
-   FWrite( ::nHandle, "<" + cText + ">" + hb_eol() )
+   hb_vfWrite( ::nHandle, "<" + cText + ">" + hb_eol() )
 
    RETURN self
 
@@ -276,17 +272,17 @@ METHOD Tagged( cText, cTag, ... ) CLASS GenerateHTML
       cResult += " " + aArgs[ idx ] + "=" + '"' + aArgs[ idx + 1 ] + '"'
    NEXT
 
-   FWrite( ::nHandle, "<" + cTag + cResult + ">" + cText + "</" + cTag + ">" + hb_eol() )
+   hb_vfWrite( ::nHandle, "<" + cTag + cResult + ">" + cText + "</" + cTag + ">" + hb_eol() )
 
    RETURN self
 
 METHOD CloseTag( cText ) CLASS GenerateHTML
 
-   FWrite( ::nHandle, "</" + cText + ">" + hb_eol() )
+   hb_vfWrite( ::nHandle, "</" + cText + ">" + hb_eol() )
 
    IF cText == "html"
-      FClose( ::nHandle )
-      ::nHandle := F_ERROR
+      hb_vfClose( ::nHandle )
+      ::nHandle := NIL
    ENDIF
 
    RETURN self
@@ -313,7 +309,7 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
          cText := hb_StrShrink( cText, Len( hb_eol() ) )
       ENDDO
 
-      FWrite( ::nHandle, cText + hb_eol() )
+      hb_vfWrite( ::nHandle, cText + hb_eol() )
 
    ENDIF
 

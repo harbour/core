@@ -292,7 +292,7 @@ PROCEDURE Main( ... )
       hb_MemoWrit( FILE_STOP, "" )
       RETURN
    ELSE
-      FErase( FILE_STOP )
+      hb_vfErase( FILE_STOP )
    ENDIF
 
    // Parse ini file
@@ -399,7 +399,7 @@ PROCEDURE Main( ... )
          cApplicationRoot := "." + hb_ps()
       ENDIF
       cI := cApplicationRoot
-      IF hb_DirExists( cI )
+      IF hb_vfDirExists( cI )
          s_cApplicationRoot := hb_DirSepDel( cI )
       ELSE
          ? "Invalid application root:", cI
@@ -420,7 +420,7 @@ PROCEDURE Main( ... )
 
    IF HB_ISSTRING( cDocumentRoot )
       cI := hb_DirSepToOS( cDocumentRoot )
-      IF hb_DirExists( cI )
+      IF hb_vfDirExists( cI )
          s_cDocumentRoot := hb_DirSepDel( cI )
       ELSE
          ? "Invalid document root:", cI
@@ -482,29 +482,21 @@ PROCEDURE Main( ... )
 
    hb_DirBuild( hb_FNameDir( cLogAccess ) )
 
-   IF ! hb_FileExists( cLogAccess )
-      hb_MemoWrit( cLogAccess, "" )
-   ENDIF
-
-   IF ( s_hfileLogAccess := FOpen( cLogAccess, FO_CREAT + FO_WRITE ) ) == F_ERROR
+   IF ( s_hfileLogAccess := hb_vfOpen( cLogAccess, FO_CREAT + FO_WRITE ) ) == NIL
       ? "Could not open access log file"
       WAIT
       ErrorLevel( 1 )
       RETURN
    ENDIF
-   FSeek( s_hfileLogAccess, 0, FS_END )
+   hb_vfSeek( s_hfileLogAccess, 0, FS_END )
 
-   IF ! hb_FileExists( cLogError )
-      hb_MemoWrit( cLogError, "" )
-   ENDIF
-
-   IF ( s_hfileLogError := FOpen( cLogError, FO_CREAT + FO_WRITE ) ) == F_ERROR
+   IF ( s_hfileLogError := hb_vfOpen( cLogError, FO_CREAT + FO_WRITE ) ) == NIL
       ? "Could not open error log file"
       WAIT
       ErrorLevel( 1 )
       RETURN
    ENDIF
-   FSeek( s_hfileLogError, 0, FS_END )
+   hb_vfSeek( s_hfileLogError, 0, FS_END )
 
    // MAIN PART
 
@@ -602,8 +594,8 @@ PROCEDURE Main( ... )
          IF Empty( hSocket := hb_socketAccept( hListen, @aRemote, 50 ) )
             IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
                // Checking if I have to quit
-               IF hb_FileExists( FILE_STOP )
-                  FErase( FILE_STOP )
+               IF hb_vfExists( FILE_STOP )
+                  hb_vfErase( FILE_STOP )
                   EXIT
                ENDIF
             ELSE
@@ -633,8 +625,8 @@ PROCEDURE Main( ... )
    hb_socketClose( hListen )
 
    // Close log files
-   FClose( s_hfileLogAccess )
-   FClose( s_hfileLogError )
+   hb_vfClose( s_hfileLogAccess )
+   hb_vfClose( s_hfileLogError )
 
    SetCursor( SC_NORMAL )
 
@@ -1444,7 +1436,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
       // hb_ToOutDebug( "AccessLog: %s \n\r", cAccess )
 
-      FWrite( s_hfileLogAccess, cAccess )
+      hb_vfWrite( s_hfileLogAccess, cAccess )
 
       IF t_nStatusCode != 200  // ok
 
@@ -1458,7 +1450,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
          // hb_ToOutDebug( "ErrorLog: %s \n\r", cError )
 
-         FWrite( s_hfileLogError, cError )
+         hb_vfWrite( s_hfileLogError, cError )
       ENDIF
 
       hb_mutexUnlock( s_hmtxLog )
@@ -1878,12 +1870,12 @@ STATIC FUNCTION uproc_default()
       IF cExt == NIL
 
          // checking if file exists
-         IF hb_FileExists( uhttpd_OSFileName( cFileName ) )
+         IF hb_vfExists( uhttpd_OSFileName( cFileName ) )
 
             cExt := hb_FNameExt( cFileName )
 
             // is it a directory ?
-         ELSEIF hb_DirExists( uhttpd_OSFileName( cFileName ) )
+         ELSEIF hb_vfDirExists( uhttpd_OSFileName( cFileName ) )
 
             // if it exists as directory and it is missing trailing slash I add it and redirect to it
             IF !( Right( cFileName, 1 ) == "/" )
@@ -1892,7 +1884,7 @@ STATIC FUNCTION uproc_default()
             ENDIF
 
             // Search for directory index file, i.e.: index.html
-            IF AScan( s_aDirectoryIndex, {| x | iif( hb_FileExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
+            IF AScan( s_aDirectoryIndex, {| x | iif( hb_vfExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
 
                // I have to check filename again (behaviour changes on extension file name)
                // resetting extension
@@ -1917,14 +1909,14 @@ STATIC FUNCTION uproc_default()
                   EXIT
                ENDIF
 
-               IF hb_FileExists( uhttpd_OSFileName( _SERVER[ "DOCUMENT_ROOT" ] + cBaseFile ) )
+               IF hb_vfExists( uhttpd_OSFileName( _SERVER[ "DOCUMENT_ROOT" ] + cBaseFile ) )
                   cFileName := uhttpd_OSFileName( _SERVER[ "DOCUMENT_ROOT" ] + cBaseFile )
                   lFound := .T.
                   EXIT
                ENDIF
 
                cFile := FileUnAlias( cBaseFile )
-               IF cFile != NIL .AND. hb_FileExists( uhttpd_OSFileName( cFile ) )
+               IF cFile != NIL .AND. hb_vfExists( uhttpd_OSFileName( cFile ) )
                   cFileName := uhttpd_OSFileName( cFile )
                   lFound := .T.
                   EXIT
@@ -2042,7 +2034,7 @@ STATIC PROCEDURE ShowDirectory( cDir )
 
    uhttpd_SetHeader( "Content-Type", "text/html" )
 
-   aDir := hb_Directory( uhttpd_OSFileName( cDir ), "D" )
+   aDir := hb_vfDirectory( uhttpd_OSFileName( cDir ), "D" )
    IF "s" $ _GET
       DO CASE
       CASE _GET[ "s" ] == "s"
@@ -2517,13 +2509,13 @@ STATIC FUNCTION Handler_Default( cFileName )
 
    // If file exists
    DO CASE
-   CASE hb_FileExists( uhttpd_OSFileName( cFileName ) )
+   CASE hb_vfExists( uhttpd_OSFileName( cFileName ) )
 
       uhttpd_SetHeader( "Content-Type", tip_FileNameMimeType( cFileName, "application/octet-stream" ) )
       uhttpd_Write( hb_MemoRead( uhttpd_OSFileName( cFileName ) ) )
 
       // Directory content request
-   CASE hb_DirExists( uhttpd_OSFileName( cFileName ) )
+   CASE hb_vfDirExists( uhttpd_OSFileName( cFileName ) )
 
       // If I'm here it's means that I have no page, so, if it is defined, I will display content directory
       IF s_lIndexes

@@ -475,13 +475,11 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog )
 #endif
    hb_default( @cLog, hb_ps() + "tmp" + hb_ps() + "logfile.log" )
 
-   nHandle := hb_vfOpen( cLog, FO_CREAT + FO_WRITE + FO_SHARED )
-
    // cString := "PROCEDURE: " + ProcName( -2 ) + " " + cString
 
-   IF nHandle != NIL
+   IF ( nHandle := hb_vfOpen( cLog, FO_CREAT + FO_WRITE + FO_SHARED ) ) != NIL
       hb_vfSeek( nHandle, 0, FS_END )
-      hb_vfWrite( nHandle, cString + CRLF )
+      hb_vfWrite( nHandle, cString + hb_eol() )
       hb_vfClose( nHandle )
    ENDIF
 

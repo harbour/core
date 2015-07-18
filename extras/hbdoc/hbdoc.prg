@@ -390,14 +390,14 @@ STATIC PROCEDURE ProcessDir( cDir, aContent )  /* this is a recursive procedure 
 
 STATIC FUNCTION ProcessFile( cFile, aContent )
 
-   LOCAL aHandle := { F_ERROR, 0 } /* file handle and position */
+   LOCAL aHandle := { NIL, 0 } /* file handle and position */
    LOCAL cSectionName
    LOCAL cVersion
    LOCAL o
    LOCAL nOldContentLen := Len( aContent )
 
-   IF ( aHandle[ 1 ] := FOpen( cFile ) ) == F_ERROR
-      OutErr( "error: could not open " + cFile + ", " + hb_ntos( aHandle[ 1 ] ) + hb_eol() )
+   IF ( aHandle[ 1 ] := hb_vfOpen( cFile, FO_READ ) ) == NIL
+      OutErr( "error: could not open", cFile + hb_eol() )
       RETURN .F.
    ENDIF
 
@@ -411,10 +411,10 @@ STATIC FUNCTION ProcessFile( cFile, aContent )
          ProcessBlock( aHandle, @aContent, cFile, cSectionName, @cVersion, @o )
       ENDIF
    ENDDO
-   FClose( aHandle[ 1 ] )
+   hb_vfClose( aHandle[ 1 ] )
 
    IF Len( aContent ) > nOldContentLen
-      OutStd( ">", cFile, "(" + hb_ntos( Len( aContent ) - nOldContentLen ) + " items)" + hb_eol() )
+      OutStd( ">", cFile, "(" + hb_ntos( Len( aContent ) - nOldContentLen ), "items)" + hb_eol() )
    ENDIF
 
    RETURN .T.
@@ -599,7 +599,7 @@ STATIC FUNCTION FReadSection( aHandle, /* @ */ cSectionName, /* @ */ cSection, /
 
    cSectionName := cSection := ""
 
-   IF FReadLn( @aHandle, @cSectionName )
+   IF FReadLn( aHandle, @cSectionName )
       cSectionName := LTrim( SubStr( cSectionName, 3 ) )
       IF Left( cSectionName, 1 ) == s_hSwitches[ "DELIMITER" ] .AND. ;
          Right( cSectionName, 1 ) == s_hSwitches[ "DELIMITER" ]
@@ -608,12 +608,12 @@ STATIC FUNCTION FReadSection( aHandle, /* @ */ cSectionName, /* @ */ cSection, /
          IF o:IsField( cSectionName )
             lLastPreformatted := lPreformatted := o:IsPreformatted( cSectionName )
             nLastIndent := -1
-            DO WHILE ( nPosition := FSeek( aHandle[ 1 ], 0, FS_RELATIVE ) ), FReadLn( @aHandle, @cBuffer )
+            DO WHILE ( nPosition := hb_vfSeek( aHandle[ 1 ], 0, FS_RELATIVE ) ), FReadLn( aHandle, @cBuffer )
                /* TOFIX: this assumes that every line starts with " *" */
                cBuffer := RTrim( SubStr( cBuffer, 3 ) )
                IF Left( LTrim( cBuffer ), 1 ) == s_hSwitches[ "DELIMITER" ] .AND. ;
                   Right( cBuffer, 1 ) == s_hSwitches[ "DELIMITER" ]
-                  FSeek( aHandle[ 1 ], nPosition, FS_SET )
+                  hb_vfSeek( aHandle[ 1 ], nPosition, FS_SET )
                   aHandle[ 2 ]-- /* decrement the line number when rewinding the file */
                   EXIT
                ELSEIF Len( AllTrim( cBuffer ) ) == 0
@@ -672,7 +672,7 @@ STATIC FUNCTION FReadSection( aHandle, /* @ */ cSectionName, /* @ */ cSection, /
 
 STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
 
-   LOCAL aHandle := { F_ERROR, 0 }
+   LOCAL aHandle := { NIL, 0 }
    LOCAL cBuffer
    LOCAL lCloseFile := .F.
 
@@ -681,28 +681,26 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
    DO CASE
    CASE HB_ISSTRING( acFile )
       lCloseFile := .T.
-      IF ( aHandle[ 1 ] := FOpen( acFile ) ) == F_ERROR
+      IF ( aHandle[ 1 ] := hb_vfOpen( acFile, FO_READ ) ) == NIL
          RETURN
       ENDIF
-   CASE HB_ISNUMERIC( acFile )
-      aHandle[ 1 ] := acFile
    OTHERWISE
       aHandle := acFile
    ENDCASE
 
-   DO WHILE FReadLn( @aHandle, @cBuffer, nMaxLine )
+   DO WHILE FReadLn( aHandle, @cBuffer, nMaxLine )
       IF ! hb_defaultValue( Eval( bBlock, cBuffer ), .T. )
          EXIT
       ENDIF
    ENDDO
 
    IF lCloseFile
-      FClose( aHandle )
+      hb_vfClose( aHandle[ 1 ] )
    ENDIF
 
    RETURN
 
-STATIC FUNCTION FReadLn( /* @ */ aHandle, /* @ */ cBuffer, nMaxLine )
+STATIC FUNCTION FReadLn( aHandle, /* @ */ cBuffer, nMaxLine )
 
    STATIC s_aEOL := { Chr( 13 ) + Chr( 10 ), Chr( 10 ), Chr( 13 ) }
 
@@ -710,9 +708,9 @@ STATIC FUNCTION FReadLn( /* @ */ aHandle, /* @ */ cBuffer, nMaxLine )
 
    cBuffer := ""
 
-   nSavePos := FSeek( aHandle[ 1 ], 0, FS_RELATIVE )
+   nSavePos := hb_vfSeek( aHandle[ 1 ], 0, FS_RELATIVE )
    cLine := Space( hb_defaultValue( nMaxLine, 256 ) )
-   nNumRead := FRead( aHandle[ 1 ], @cLine, hb_BLen( cLine ) )
+   nNumRead := hb_vfRead( aHandle[ 1 ], @cLine, hb_BLen( cLine ) )
    cLine := hb_BLeft( cLine, nNumRead )
 
    nEol := 0
@@ -727,7 +725,7 @@ STATIC FUNCTION FReadLn( /* @ */ aHandle, /* @ */ cBuffer, nMaxLine )
       cBuffer := cLine
    ELSE
       cBuffer := hb_BLeft( cLine, nEol - 1 )
-      FSeek( aHandle[ 1 ], nSavePos + hb_BLen( cBuffer ) + 1 + nLenEol, FS_SET )
+      hb_vfSeek( aHandle[ 1 ], nSavePos + hb_BLen( cBuffer ) + 1 + nLenEol, FS_SET )
    ENDIF
 
    aHandle[ 2 ]++

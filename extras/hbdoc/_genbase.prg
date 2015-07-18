@@ -47,6 +47,8 @@
 
 #include "hbclass.ch"
 
+#include "fileio.ch"
+
 #define DOCUMENT_  1
 #define INDEX_     2
 
@@ -68,7 +70,7 @@ CREATE CLASS TPLGenerate
    VAR nType AS INTEGER
    VAR Depth AS INTEGER INIT 0
 
-   VAR nHandle AS NUMERIC
+   VAR nHandle
    VAR cDir AS STRING
    VAR cFilename AS STRING
    VAR cTitle AS STRING
@@ -96,11 +98,11 @@ METHOD New( cDir, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
    ::cExtension := cExtension
    ::nType := nType
 
-   IF ! hb_DirExists( ::cDir )
+   IF ! hb_vfDirExists( ::cDir )
       OutStd( hb_eol() + "Creating directory", "'" + ::cDir + "'" )
-      hb_DirCreate( ::cDir )
+      hb_vfDirMake( ::cDir )
    ENDIF
 
-   ::nHandle := FCreate( ::cDir + hb_ps() + ::cFilename + ::cExtension )
+   ::nHandle := hb_vfOpen( ::cDir + hb_ps() + ::cFilename + ::cExtension, FO_CREAT + FO_TRUNC + FO_WRITE )
 
    RETURN self

@@ -107,7 +107,7 @@ PROCEDURE Main()
          ELSE
             IF ! Empty( GetEnv( _CONFIGENV_ ) )
                cMyName := GetEnv( _CONFIGENV_ )
-            ELSEIF hb_FileExists( cLocalRoot + _CONFIGFIL_ )
+            ELSEIF hb_vfExists( cLocalRoot + _CONFIGFIL_ )
                cMyName := AllTrim( hb_MemoRead( cLocalRoot + _CONFIGFIL_ ) )
             ELSE
                cMyName := "Firstname Lastname (me example.org)"
@@ -199,7 +199,7 @@ STATIC FUNCTION CommitScript()
    LOCAL cBaseName := hb_FNameName( hb_ProgName() ) + ".hb"
    LOCAL cName
 
-   IF hb_FileExists( cName := hb_DirSepToOS( "bin/" ) + cBaseName )
+   IF hb_vfExists( cName := hb_DirSepToOS( "bin/" ) + cBaseName )
       RETURN cName
    ENDIF
 
@@ -227,15 +227,15 @@ STATIC FUNCTION FindChangeLog( cVCS )
    LOCAL cDir
    LOCAL cLogName
 
-   IF hb_FileExists( cLogName := "ChangeLog.txt" ) .OR. ;
-      hb_FileExists( cLogName := "ChangeLog" )
+   IF hb_vfExists( cLogName := "ChangeLog.txt" ) .OR. ;
+      hb_vfExists( cLogName := "ChangeLog" )
       RETURN cLogName
    ENDIF
 
    cDir := iif( cVCS == "git", GitLocalRoot(), "" )
 
-   IF hb_FileExists( cLogName := cDir + "ChangeLog.txt" ) .OR. ;
-      hb_FileExists( cLogName := cDir + "ChangeLog" )
+   IF hb_vfExists( cLogName := cDir + "ChangeLog.txt" ) .OR. ;
+      hb_vfExists( cLogName := cDir + "ChangeLog" )
       RETURN cLogName
    ENDIF
 
@@ -326,11 +326,11 @@ STATIC FUNCTION EntryToCommitMsg( cLog )
 STATIC FUNCTION VCSDetect( /* @ */ cVCSDir, /* @ */ cLocalRoot )
 
    DO CASE
-   CASE hb_DirExists( ".svn" )
+   CASE hb_vfDirExists( ".svn" )
       cVCSDir := hb_DirSepToOS( "./.svn/" )
       cLocalRoot := hb_DirSepToOS( "./" )
       RETURN "svn"
-   CASE hb_DirExists( ".git" )
+   CASE hb_vfDirExists( ".git" )
       cVCSDir := hb_DirSepToOS( "./.git/" )
       cLocalRoot := hb_DirSepToOS( "./" )
       RETURN "git"
@@ -365,7 +365,7 @@ STATIC FUNCTION GitLocalRoot()
    RETURN iif( nResult == 0, hb_DirSepAdd( hb_DirSepToOS( hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) ) ), "" )
 
 STATIC FUNCTION GitIsMerge( cGitDir )
-   RETURN hb_FileExists( cGitDir + "MERGE_MSG" )
+   RETURN hb_vfExists( cGitDir + "MERGE_MSG" )
 
 STATIC FUNCTION GitFileList()
 
@@ -718,7 +718,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
 
    cName := hb_DirSepToOS( cName )
 
-   IF hb_FileExists( iif( lRebase, _HBROOT_, "" ) + cName ) .AND. ;
+   IF hb_vfExists( iif( lRebase, _HBROOT_, "" ) + cName ) .AND. ;
       ! FNameExc( cName, LoadGitignore( cLocalRoot + ".gitignore" ) )
 
       /* filename checks */
@@ -1169,7 +1169,7 @@ STATIC FUNCTION my_DirScanWorker( cMask, aList )
 
    LOCAL file
 
-   IF ! hb_FileExists( hb_FNameDir( cMask ) + ".git" )  /* skip Git submodules */
+   IF ! hb_vfExists( hb_FNameDir( cMask ) + ".git" )  /* skip Git submodules */
       FOR EACH file IN Directory( cMask, "D" )
          IF file[ F_NAME ] == "." .OR. file[ F_NAME ] == ".."
          ELSEIF "D" $ file[ F_ATTR ]

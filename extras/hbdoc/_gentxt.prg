@@ -47,8 +47,6 @@
 
 #include "hbclass.ch"
 
-#include "fileio.ch"
-
 CREATE CLASS GenerateAscii INHERIT GenerateText
 
    METHOD NewIndex( cDir, cFilename, cTitle, cDescription )
@@ -137,7 +135,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateText
       NEXT
 
       IF ! ::lContinuous
-         FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
+         hb_vfWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
       ENDIF
    ENDIF
 
@@ -150,23 +148,23 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateTex
    IF ! Empty( cEntry )
       nIndent := iif( Len( cCaption ) > 0, 6, 0 )
       IF Len( cCaption ) > 0 .AND. nIndent > 0
-         FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
+         hb_vfWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
       ENDIF
       nIndent += ::Depth * 6
       DO WHILE Len( cEntry ) > 0
-         FWrite( ::nHandle, Indent( Parse( @cEntry, hb_eol() ), nIndent, 70, lPreformatted ) )
+         hb_vfWrite( ::nHandle, Indent( Parse( @cEntry, hb_eol() ), nIndent, 70, lPreformatted ) )
       ENDDO
    ENDIF
 
 METHOD Generate() CLASS GenerateText
 
    IF ::IsIndex() .AND. ! ::lContinuous
-      FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
+      hb_vfWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
    ENDIF
 
-   IF ::nHandle != F_ERROR
-      FClose( ::nHandle )
-      ::nHandle := F_ERROR
+   IF ::nHandle != NIL
+      hb_vfClose( ::nHandle )
+      ::nHandle := NIL
    ENDIF
 
    RETURN self

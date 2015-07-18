@@ -73,7 +73,7 @@ PROCEDURE Main( ... )
       IF GetEnvC( "HB_BUILD_PKG" ) == "yes"
 
          /* Display repository timestamp */
-         mk_hb_FSetDateTime()
+         mk_hb_vfTimeSet()
 
          /* Binaries built using the GNU Make system are not
             timestamped after build, so we do it here. This
@@ -84,8 +84,8 @@ PROCEDURE Main( ... )
             GetEnvC( "HB_INSTALL_BIN" ), ;
             GetEnvC( "HB_INSTALL_DYN" ), ;
             GetEnvC( "HB_INSTALL_LIB" ) }
-            FOR EACH tmp1 IN Directory( tmp + hb_ps() + hb_osFileMask() )
-               mk_hb_FSetDateTime( tmp + hb_ps() + tmp1[ F_NAME ] )
+            FOR EACH tmp1 IN hb_vfDirectory( tmp + hb_ps() + hb_osFileMask() )
+               mk_hb_vfTimeSet( tmp + hb_ps() + tmp1[ F_NAME ] )
             NEXT
          NEXT
       ENDIF
@@ -101,13 +101,13 @@ PROCEDURE Main( ... )
             OutStd( "! Copying root documents..." + hb_eol() )
 
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
-               FOR EACH aFile IN Directory( "Change*" )
-                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES.txt", "" ), .T.,, .T. )
+               FOR EACH aFile IN hb_vfDirectory( "Change*" )
+                  mk_hb_vfCopyFile( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES.txt", "" ), .T.,, .T. )
                NEXT
 
-               mk_hb_FCopy( "LICENSE.txt", tmp + hb_ps(), .T.,, .T. )
-               mk_hb_FCopy( "CONTRIBUTING.md", tmp + hb_ps(), .T.,, .T. )
-               mk_hb_FCopy( "README.md", tmp + hb_ps(), .T.,, .T. )
+               mk_hb_vfCopyFile( "LICENSE.txt", tmp + hb_ps(), .T.,, .T. )
+               mk_hb_vfCopyFile( "CONTRIBUTING.md", tmp + hb_ps(), .T.,, .T. )
+               mk_hb_vfCopyFile( "README.md", tmp + hb_ps(), .T.,, .T. )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
@@ -123,7 +123,7 @@ PROCEDURE Main( ... )
          FOR EACH tmp IN { ;
             "bin/3rdpatch.hb", ;
             "bin/commit.hb" }
-            mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps(),,, .T. )
+            mk_hb_vfCopyFile( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps(),,, .T. )
          NEXT
       ENDIF
 
@@ -132,7 +132,7 @@ PROCEDURE Main( ... )
          OutStd( "! Copying *nix config files..." + hb_eol() )
 
          IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_ETC" ) ) )
-            mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnvC( "HB_INSTALL_ETC" ) + hb_ps(),, .T. )
+            mk_hb_vfCopyFile( "src/rtl/gtcrs/hb-charmap.def", GetEnvC( "HB_INSTALL_ETC" ) + hb_ps(),, .T. )
          ELSE
             OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_ETC" ) ) + hb_eol() )
          ENDIF
@@ -163,7 +163,7 @@ PROCEDURE Main( ... )
             FOR EACH tmp IN { ;
                "src/main/harbour.1", ;
                "src/pp/hbpp.1" }
-               mk_hb_FCopy( ;
+               mk_hb_vfCopyFile( ;
                   hb_DirSepToOS( tmp ), ;
                   hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) + "/man1/" ),, .T. )
             NEXT
@@ -174,7 +174,7 @@ PROCEDURE Main( ... )
 
       IF !( GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos|cygwin" ) .AND. ;
          ! Empty( GetEnvC( "HB_INSTALL_DYN" ) ) .AND. ;
-         hb_FileExists( hb_DirSepToOS( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) )
+         hb_vfExists( hb_DirSepToOS( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) )
 
          OutStd( "! Creating dynamic lib symlinks..." + hb_eol() )
 
@@ -182,8 +182,8 @@ PROCEDURE Main( ... )
          cDynVersionComp := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POSC" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXC" )
          cDynVersionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" )                               + GetEnvC( "HB_DYNLIB_EXT" )
 
-         mk_hb_FLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionComp )
-         mk_hb_FLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
+         mk_hb_vfLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionComp )
+         mk_hb_vfLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
 
          DO CASE
          CASE hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
@@ -191,9 +191,9 @@ PROCEDURE Main( ... )
               hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
               hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
 
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionless )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionComp )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionFull )
+            mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionless )
+            mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionComp )
+            mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionFull )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
             /* TOFIX: Rewrite this in .prg:
@@ -215,9 +215,9 @@ PROCEDURE Main( ... )
 
          OutStd( "! Creating core translation (.hbl) files..." + hb_eol() )
 
-         FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
+         FOR EACH tmp IN hb_vfDirectory( "utils" + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
-               FOR EACH aFile IN Directory( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/*.po" ) )
+               FOR EACH aFile IN hb_vfDirectory( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/*.po" ) )
                   mk_hbl( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/" + aFile[ F_NAME ] ), ;
                      hb_DirSepToOS( GetEnvC( "HB_INSTALL_DOC" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
                NEXT
@@ -253,7 +253,7 @@ PROCEDURE Main( ... )
 
             OutStd( "! Creating Harbour release package..." + hb_eol() )
 
-            FErase( tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".7z" )
+            hb_vfErase( tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".7z" )
 
             mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7za" ) + ;
                " a -bd -r -mx" + ;
@@ -261,7 +261,7 @@ PROCEDURE Main( ... )
                " " + FNameEscape( tmp ) + ;
                " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" )
 
-            mk_hb_FSetDateTime( tmp )
+            mk_hb_vfTimeSet( tmp )
 
             OutStd( hb_StrFormat( "! Created Harbour release package: '%1$s' (%2$d bytes)", tmp, hb_FSize( tmp ) ) + hb_eol() )
          ELSE
@@ -287,7 +287,7 @@ PROCEDURE Main( ... )
 
                OutStd( hb_StrFormat( "! Creating Harbour tar release package: '%1$s'", cTar_Path ) + hb_eol() )
 
-               FErase( cTar_Path )
+               hb_vfErase( cTar_Path )
 
                cOwner := "root"
                cGroup := iif( ;
@@ -304,7 +304,7 @@ PROCEDURE Main( ... )
                   iif( lGNU_Tar, " --owner=" + cOwner + " --group=" + cGroup, "" ) + ;
                   " ." )
 
-               mk_hb_FSetDateTime( cTar_Path )
+               mk_hb_vfTimeSet( cTar_Path )
 
                hb_cwd( cOldDir )
 
@@ -323,8 +323,8 @@ PROCEDURE Main( ... )
                         iif( GetEnvC( "HB_PLATFORM" ) == "linux", " && ldconfig", "" ) ) + ;
                      hb_MemoRead( cTar_Path ) )
 
-                  hb_FGetAttr( tmp, @nAttr )
-                  hb_FSetAttr( tmp, hb_bitOr( nAttr, HB_FA_XOTH ) )
+                  hb_vfAttrGet( tmp, @nAttr )
+                  hb_vfAttrSet( tmp, hb_bitOr( nAttr, HB_FA_XOTH ) )
                ENDIF
             ELSE
                OutStd( "! Error: Cannot find 'tar' tool" + hb_eol() )
@@ -387,7 +387,7 @@ PROCEDURE Main( ... )
 
    RETURN
 
-STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
+STATIC FUNCTION mk_hb_vfTimeSet( cFileName )
 
    STATIC s_tVCS
 
@@ -415,12 +415,12 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
       Empty( cFileName ) .OR. ;
       !( GetEnvC( "HB_BUILD_PKG" ) == "yes" ) .OR. ;
       Empty( s_tVCS ) .OR. ;
-      hb_FSetDateTime( cFileName, s_tVCS )
+      hb_vfTimeSet( cFileName, s_tVCS )
 
 STATIC FUNCTION mk_hb_MemoWrit( cFileName, cContent )
 
    IF hb_MemoWrit( cFileName, cContent )
-      mk_hb_FSetDateTime( cFileName )
+      mk_hb_vfTimeSet( cFileName )
       RETURN .T.
    ENDIF
 
@@ -485,7 +485,7 @@ STATIC FUNCTION mk_hbd_core( cDirSource, cDirDest )
    IF ! Empty( aEntry )
       cName := hb_DirSepAdd( hb_DirSepToOS( cDirDest ) ) + cName + ".hbd"
       IF __hbdoc_SaveHBD( cName, aEntry )
-         mk_hb_FSetDateTime( cName )
+         mk_hb_vfTimeSet( cName )
          OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cName, cDirSource ) + hb_eol() )
          RETURN .T.
       ELSE
@@ -514,7 +514,7 @@ STATIC FUNCTION EOLConv( cFile )
 
 /* Like hb_FCopy(), but accepts dir as target, can set attributes
    and translates EOL to target platform */
-STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, lEOL, l644, lTS )
+STATIC PROCEDURE mk_hb_vfCopyFile( cSrc, cDst, lEOL, l644, lTS )
 
    LOCAL cDir, cName, cExt
    LOCAL cFile
@@ -533,10 +533,10 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, lEOL, l644, lTS )
       hb_MemoWrit( cDst, iif( hb_defaultValue( lEOL, .F. ), EOLConv( cFile ), cFile ) )
 
       IF hb_defaultValue( lTS, .F. )
-         mk_hb_FSetDateTime( cDst )
+         mk_hb_vfTimeSet( cDst )
       ELSE
-         hb_FGetDateTime( cSrc, @tDate )
-         hb_FSetDateTime( cDst, tDate )
+         hb_vfTimeGet( cSrc, @tDate )
+         hb_vfTimeSet( cDst, tDate )
       ENDIF
       IF hb_defaultValue( l644, .F. )
          hb_FSetAttr( cDst, hb_bitOr( HB_FA_RUSR, HB_FA_WUSR, HB_FA_RGRP, HB_FA_ROTH ) )
@@ -551,20 +551,20 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, lEOL, l644, lTS )
    RETURN
 
 /* Like hb_FLinkSym(), but with feedback */
-STATIC PROCEDURE mk_hb_FLinkSym( cDst, cSrc )
+STATIC PROCEDURE mk_hb_vfLinkSym( cDst, cSrc )
 
-   FErase( cSrc ) /* remove old links if any */
-   IF hb_FLinkSym( cDst, cSrc ) != F_ERROR
+   hb_vfErase( cSrc ) /* remove old links if any */
+   IF hb_vfLinkSym( cDst, cSrc ) != F_ERROR
       OutStd( hb_StrFormat( "! Symlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
    ELSE
       OutStd( hb_StrFormat( "! Error: Creating symlink %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
       IF FError() == 5 .AND. Empty( hb_FNameDir( cDst ) )
          cDst := hb_FnameMerge( hb_FNameDir( cSrc ), cDst )
-         IF hb_FLink( cDst, cSrc ) != F_ERROR
+         IF hb_vfLink( cDst, cSrc ) != F_ERROR
             OutStd( hb_StrFormat( "! Hardlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
          ELSE
             OutStd( hb_StrFormat( "! Error: Creating hardlink %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
-            IF hb_FCopy( cDst, cSrc ) != F_ERROR
+            IF hb_vfCopyFile( cDst, cSrc ) != F_ERROR
                OutStd( hb_StrFormat( "! Copyfile: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Copying file %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
@@ -607,7 +607,7 @@ STATIC FUNCTION unix_name()
    CASE ! Empty( tmp := query_rpm( "suse-release"        , "sus" ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "openSUSE-release"    , "sus" ) ) ; RETURN tmp
    /* TODO: Rewrite this in Harbour */
-   CASE hb_FileExists( "/etc/pld-release" )
+   CASE hb_vfExists( "/etc/pld-release" )
       RETURN "" /* cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/' */
    ENDCASE
 
@@ -665,10 +665,10 @@ STATIC PROCEDURE mk_hbr( cDestDir )
    LOCAL aFile
    LOCAL cFileName
 
-   FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
+   FOR EACH aFile IN hb_vfDirectory( cDir + hb_osFileMask(), "D" )
       IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
       ELSEIF "D" $ aFile[ F_ATTR ]
-         IF hb_FileExists( cFileName := cDir + aFile[ F_NAME ] + hb_ps() + aFile[ F_NAME ] + ".hbx" )
+         IF hb_vfExists( cFileName := cDir + aFile[ F_NAME ] + hb_ps() + aFile[ F_NAME ] + ".hbx" )
             LoadHBX( cFileName, hAll )
          ENDIF
       ENDIF
@@ -749,10 +749,10 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
    IF ! Empty( cCommand ) .AND. ;
       ! Empty( cRegex )
-      IF hb_FileExists( cInputName )
+      IF hb_vfExists( cInputName )
          cCommand := StrTran( cCommand, "{I}", cInputName )
          IF "{T}" $ cCommand
-            FClose( hb_FTempCreateEx( @cTempFile,,, ".tmp" ) )
+            hb_vfClose( hb_vfTempFile( @cTempFile,,, ".tmp" ) )
             cCommand := StrTran( cCommand, "{T}", cTempFile )
          ENDIF
          IF hb_processRun( cCommand,, @cStdOut, @cStdErr ) == 0
@@ -787,7 +787,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
             ENDIF
          ENDIF
          IF ! Empty( cTempFile )
-            FErase( cTempFile )
+            hb_vfErase( cTempFile )
          ENDIF
       ENDIF
    ENDIF

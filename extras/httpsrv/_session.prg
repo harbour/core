@@ -543,21 +543,21 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
 
    cFile := ::cSavePath + hb_ps() + ::cName + "_" + hb_defaultValue( cID, ::cSID )
    // TraceLog( "SessionRead: cFile", cFile )
-   IF hb_FileExists( cFile )
+   IF hb_vfExists( cFile )
       DO WHILE nRetry++ <= ::nFileRetry
-         IF ( nH := FOpen( cFile, FO_READ + FO_DENYWRITE ) ) != F_ERROR
+         IF ( nH := hb_vfOpen( cFile, FO_READ + FO_DENYWRITE ) ) != NIL
 
             nRetry := 0
             DO WHILE nRetry++ <= ::nFileRetry
-               nFileSize := FSeek( nH, 0, FS_END )
-               FSeek( nH, 0, FS_SET )
+               nFileSize := hb_vfSize( nH )
+               hb_vfSeek( nH, 0, FS_SET )
                cBuffer := Space( nFileSize )
-               IF FRead( nH, @cBuffer,  nFileSize ) != nFileSize
+               IF hb_vfRead( nH, @cBuffer,  nFileSize ) != nFileSize
                   // uhttpd_Die( "ERROR: On reading session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
                   hb_idleSleep( ::nFileWait / 1000 )
                   LOOP
                ENDIF
-               FClose( nH )
+               hb_vfClose( nH )
                EXIT
             ENDDO
          ELSE
@@ -586,13 +586,13 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
    // TraceLog( "SessionWrite() - cFile", cFile )
    IF ! Empty( cData )
       DO WHILE nRetry++ <= ::nFileRetry
-         IF ( nH := hb_FCreate( cFile,, FO_READWRITE + FO_DENYWRITE ) ) != F_ERROR
-            IF FWrite( nH, cData ) != hb_BLen( cData )
+         IF ( nH := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_DENYWRITE ) ) != NIL
+            IF hb_vfWrite( nH, cData ) != hb_BLen( cData )
                uhttpd_Die( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             ELSE
                lOk := .T.
             ENDIF
-            FClose( nH )
+            hb_vfClose( nH )
          ELSE
             // uhttpd_Die( "ERROR: On WRITING session file. I can not create session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             hb_idleSleep( ::nFileWait / 1000 )
@@ -603,8 +603,8 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
    ELSE
       // If session data is empty, I will delete the file if exist
 #if 0
-      IF hb_FileExists( cFile )
-         FErase( cFile )
+      IF hb_vfExists( cFile )
+         hb_vfErase( cFile )
       ENDIF
 #endif
       // Return that all is ok
@@ -629,7 +629,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
 
    lOk := .F.
    DO WHILE nRetry++ <= ::nFileRetry
-      IF ( lOk := ( FErase( cFile ) != F_ERROR ) )
+      IF ( lOk := ( hb_vfErase( cFile ) != F_ERROR ) )
          EXIT
       ELSE
          hb_idleSleep( ::nFileWait / 1000 )
@@ -638,7 +638,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
    ENDDO
 
 #if 0
-   IF !( lOk := ( FErase( cFile ) != F_ERROR ) )
+   IF !( lOk := ( hb_vfErase( cFile ) != F_ERROR ) )
       uhttpd_Die( "ERROR: On deleting session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
    ELSE
 #endif
@@ -660,10 +660,10 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
 
    hb_default( @nMaxLifeTime, ::nGc_MaxLifeTime )
 
-   FOR EACH aFile IN hb_Directory( ::cSavePath + hb_ps() + ::cName + "_*.*" )
+   FOR EACH aFile IN hb_vfDirectory( ::cSavePath + hb_ps() + ::cName + "_*.*" )
       IF ( ( hb_DateTime() - aFile[ F_DATE ] ) * 86400 ) > nMaxLifeTime
          // No error checking here, because if I cannot delete file now I will find it again on next loop
-         FErase( ::cSavePath + hb_ps() + aFile[ F_NAME ] )
+         hb_vfErase( ::cSavePath + hb_ps() + aFile[ F_NAME ] )
       ENDIF
    NEXT
 

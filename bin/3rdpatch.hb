@@ -229,6 +229,7 @@
 #pragma -ko+
 
 #include "directry.ch"
+#include "fileio.ch"
 
 #if defined( _TRACE )
    #define TRACE( str )   OutStd( "T: " + str + hb_eol() )
@@ -275,7 +276,6 @@ PROCEDURE Main( ... )
    LOCAL cCommand             /* patch/diff commands */
    LOCAL nRunResult           /* patch/diff exit vals */
    LOCAL cDiffText            /* diff will return the new diff in this */
-   LOCAL nDiffFD              /* for writing newly created diff file */
    LOCAL cArchiveURL          /* URL for the component */
    LOCAL cTopIndicator        /* file signifying the top of the component's source tree */
    LOCAL cStdOut              /* stdout and stderr for various externally-run apps */
@@ -306,8 +306,8 @@ PROCEDURE Main( ... )
       ENDSWITCH
    NEXT
 
-   IF ! hb_FileExists( cFileName := "Makefile" )
-      IF Empty( aDir := Directory( "*.hbp" ) )
+   IF ! hb_vfExists( cFileName := "Makefile" )
+      IF Empty( aDir := hb_vfDirectory( "*.hbp" ) )
          OutStd( "No `Makefile' or '*.hbp' file in the current directory." + hb_eol() )
          ErrorLevel( 1 )
          RETURN
@@ -409,7 +409,7 @@ PROCEDURE Main( ... )
       RETURN
    ENDIF
 
-   IF ! lRediff .AND. cDiffFile != NIL .AND. ! hb_FileExists( cDiffFile )
+   IF ! lRediff .AND. cDiffFile != NIL .AND. ! hb_vfExists( cDiffFile )
       OutStd( hb_StrFormat( "E: `%1$s' does not exist", cDiffFile ) + hb_eol() )
       ErrorLevel( 2 )
       RETURN
@@ -420,15 +420,15 @@ PROCEDURE Main( ... )
    cRoot := cCWD
 #endif
 
-   FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) )
-   FErase( s_cTempDir )
-   hb_DirCreate( s_cTempDir )
+   hb_vfClose( hb_vfTempFile( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) )
+   hb_vfErase( s_cTempDir )
+   hb_vfDirMake( s_cTempDir )
 
    cThisComponent := hb_FNameName( hb_DirSepDel( cCWD ) )
 
-   hb_DirCreate( CombinePath( s_cTempDir, cThisComponent ) )
-   hb_DirCreate( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
-   hb_DirCreate( CombinePath( s_cTempDir, "root" ) )
+   hb_vfDirMake( CombinePath( s_cTempDir, cThisComponent ) )
+   hb_vfDirMake( CombinePath( s_cTempDir, cThisComponent + ".orig" ) )
+   hb_vfDirMake( CombinePath( s_cTempDir, "root" ) )
 
    IF lRediff .AND. cDiffFile == NIL
       OutStd( "Requested rediff mode with no existing local diff, attempting to create one." + hb_eol() )
@@ -459,13 +459,13 @@ PROCEDURE Main( ... )
    s_nErrors := 0
 
    FOR EACH aOneMap IN s_aChangeMap
-      IF ! hb_FileExists( CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ) )
+      IF ! hb_vfExists( CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ) )
          OutStd( hb_StrFormat( "W: `%1$s' does not exist in the source tree", aOneMap[ FN_ORIG ] ) + hb_eol() )
          OutStd( "   I will do what i can, but you'd better check the results manually." + hb_eol() )
          s_nErrors++
       ELSE
          /* Create the `pristine tree' */
-         hb_FCopy( ;
+         hb_vfCopyFile( ;
             CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ), ;
             CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ) )
 
@@ -476,13 +476,13 @@ PROCEDURE Main( ... )
           * otherwise, duplicate the pristine tree */
 
          IF lRediff
-            hb_FCopy( ;
+            hb_vfCopyFile( ;
                aOneMap[ FN_HB ], ;
                CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
 
          ELSE
             /* Copy it to `our tree' */
-            hb_FCopy( ;
+            hb_vfCopyFile( ;
                CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ), ;
                CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
          ENDIF
@@ -518,14 +518,12 @@ PROCEDURE Main( ... )
       SaveLog( "diff", NIL, cStdErr )
 
       IF Len( cDiffText ) > 0
-         nDiffFD := FCreate( cDiffFile )
-         FWrite( nDiffFD, cDiffText )
-         FClose( nDiffFD )
+         hb_MemoWrit( cDiffFile, cDiffText )
          OutStd( hb_StrFormat( "Local changes saved to `%1$s'; you may need to adjust `DIFF'.", cDiffFile ) + hb_eol() )
       ELSE
          OutStd( "No local changes; you may need to adjust `DIFF'." + hb_eol() )
-         IF hb_FileExists( cDiffFile )
-            FErase( cDiffFile )
+         IF hb_vfExists( cDiffFile )
+            hb_vfErase( cDiffFile )
             OutStd( hb_StrFormat( "Removed existing `%1$s'.", cDiffFile ) + hb_eol() )
          ENDIF
       ENDIF
@@ -537,13 +535,13 @@ PROCEDURE Main( ... )
       IF ! lRediff
          /* Only copy the complete new tree back if not in Rediff mode */
          FOR EACH aOneMap IN s_aChangeMap
-            hb_FCopy( CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ), aOneMap[ FN_HB ] )
+            hb_vfCopyFile( CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ), aOneMap[ FN_HB ] )
          NEXT
       ENDIF
 
       IF cDiffFile != NIL
          /* Copy the diff back to the live tree */
-         hb_FCopy( CombinePath( s_cTempDir, cDiffFile ), cDiffFile )
+         hb_vfCopyFile( CombinePath( s_cTempDir, cDiffFile ), cDiffFile )
          /* Convert path separators */
          DOSToUnixPathSep( cDiffFile )
       ENDIF
@@ -578,7 +576,7 @@ STATIC PROCEDURE SetupTools()
 
    FOR EACH cPathComp IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
       FOR EACH cTool IN hb_HKeys( s_aTools )
-         IF cTool $ "patch|diff|tar" .AND. hb_FileExists( CombinePath( cPathComp, "g" + cTool ) + cExeExt )
+         IF cTool $ "patch|diff|tar" .AND. hb_vfExists( CombinePath( cPathComp, "g" + cTool ) + cExeExt )
             s_aTools[ cTool ] := CombinePath( cPathComp, "g" + cTool )
          ENDIF
       NEXT
@@ -586,7 +584,7 @@ STATIC PROCEDURE SetupTools()
 
    FOR EACH cPathComp IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
       FOR EACH cTool IN hb_HKeys( s_aTools )
-         IF s_aTools[ cTool ] == NIL .AND. hb_FileExists( CombinePath( cPathComp, cTool ) + cExeExt )
+         IF s_aTools[ cTool ] == NIL .AND. hb_vfExists( CombinePath( cPathComp, cTool ) + cExeExt )
             s_aTools[ cTool ] := CombinePath( cPathComp, cTool )
          ENDIF
       NEXT
@@ -619,7 +617,7 @@ STATIC FUNCTION WalkAndFind( cTop, cLookFor )
 
    cTop := hb_DirSepAdd( cTop )
 
-   FOR EACH aDirEntry IN ASort( Directory( cTop + hb_osFileMask(), "D" ),,, {| aLeft | !( "D" $ aLeft[ F_ATTR ] ) } )  /* Files first */
+   FOR EACH aDirEntry IN ASort( hb_vfDirectory( cTop + hb_osFileMask(), "D" ),,, {| aLeft | !( "D" $ aLeft[ F_ATTR ] ) } )  /* Files first */
       IF !( "D" $ aDirEntry[ F_ATTR ] )
          IF aDirEntry[ F_NAME ] == cLookFor
             cRetVal := cTop
@@ -774,19 +772,19 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
 STATIC PROCEDURE SaveLog( cFNTemplate, cStdOut, cStdErr )
 
-   LOCAL nLogFD
+   LOCAL fhnd := hb_vfOpen( CombinePath( s_cTempDir, cFNTemplate + ".log" ), FO_CREAT + FO_TRUNC + FO_WRITE )
 
-   nLogFD := FCreate( CombinePath( s_cTempDir, cFNTemplate + ".log" ) )
-
-   IF cStdOut != NIL
-      FWrite( nLogFd, "stdout:" + hb_eol() )
-      FWrite( nLogFD, cStdOut )
+   IF fhnd != NIL
+      IF cStdOut != NIL
+         hb_vfWrite( fhnd, "stdout:" + hb_eol() )
+         hb_vfWrite( fhnd, cStdOut )
+      ENDIF
+      IF cStdErr != NIL
+         hb_vfWrite( fhnd, "stderr:" + hb_eol() )
+         hb_vfWrite( fhnd, cStdErr )
+      ENDIF
+      hb_vfClose( fhnd )
    ENDIF
-   IF cStdErr != NIL
-      FWrite( nLogFd, "stderr:" + hb_eol() )
-      FWrite( nLogFD, cStdErr )
-   ENDIF
-   FClose( nLogFD )
 
    RETURN
 
@@ -880,7 +878,7 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
    LOCAL nStart
    LOCAL nEnd
 
-   IF cFileName == NIL .OR. ! hb_FileExists( cFileName )
+   IF cFileName == NIL .OR. ! hb_vfExists( cFileName )
       RETURN
    ENDIF
 

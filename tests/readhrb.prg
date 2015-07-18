@@ -53,13 +53,13 @@ PROCEDURE Main( cFrom )
 
    cFrom := hb_FNameExtSetDef( hb_defaultValue( cFrom, hb_FNameName( __FILE__ ) ), ".hrb" )
 
-   IF ( hFile := FOpen( cFrom ) ) == F_ERROR
+   IF ( hFile := hb_vfOpen( cFrom ) ) == NIL
       ? "No such file:", cFrom
    ELSE
-      IF hb_FReadLen( hFile, 4 ) == HRB_HEADER
+      IF hb_vfReadLen( hFile, 4 ) == HRB_HEADER
 
-         hb_FReadLen( hFile, 2 )
-         cBlock := hb_FReadLen( hFile, 4 )
+         hb_vfReadLen( hFile, 2 )
+         cBlock := hb_vfReadLen( hFile, 4 )
          nSymbols := ;
             hb_BPeek( cBlock, 1 ) + ;
             hb_BPeek( cBlock, 2 ) * 0x100 + ;
@@ -75,11 +75,11 @@ PROCEDURE Main( cFrom )
 
          FOR n := 1 TO nSymbols
             cSymbol := ""
-            DO WHILE hb_BCode( cBlock := hb_FReadLen( hFile, 1 ) ) != 0
+            DO WHILE hb_BCode( cBlock := hb_vfReadLen( hFile, 1 ) ) != 0
                cSymbol += cBlock
             ENDDO
-            cScope := hb_FReadLen( hFile, 1 )
-            cBlock := hb_FReadLen( hFile, 1 )
+            cScope := hb_vfReadLen( hFile, 1 )
+            cBlock := hb_vfReadLen( hFile, 1 )
             nIdx   := hb_BCode( cBlock ) + 1
             PrintItem( cSymbol, ;
                hb_ntos( nIdx - 1 ) + " (" + { "NOLINK", "FUNC", "EXTERN", "SYM_DEF" }[ nIdx ] + ")", ;
@@ -93,7 +93,7 @@ PROCEDURE Main( cFrom )
 
          IF m $ "Yy"
             ?
-            cBlock := hb_FReadLen( hFile, 4 )
+            cBlock := hb_vfReadLen( hFile, 4 )
             nFuncs := ;
                hb_BPeek( cBlock, 1 ) + ;
                hb_BPeek( cBlock, 2 ) * 0x100 + ;
@@ -101,10 +101,10 @@ PROCEDURE Main( cFrom )
                hb_BPeek( cBlock, 4 ) * 0x1000000
             FOR n := 1 TO nFuncs
                cSymbol := ""
-               DO WHILE hb_BCode( cBlock := hb_FReadLen( hFile, 1 ) ) != 0
+               DO WHILE hb_BCode( cBlock := hb_vfReadLen( hFile, 1 ) ) != 0
                   cSymbol += cBlock
                ENDDO
-               cBlock := hb_FReadLen( hFile, 4 )
+               cBlock := hb_vfReadLen( hFile, 4 )
                nLenCount := ;
                   hb_BPeek( cBlock, 1 ) + ;
                   hb_BPeek( cBlock, 2 ) * 0x100 + ;
@@ -116,7 +116,7 @@ PROCEDURE Main( cFrom )
                ? "PCode:", ""
 
                FOR m := 1 TO nLenCount
-                  cBlock := hb_FReadLen( hFile, 1 )
+                  cBlock := hb_vfReadLen( hFile, 1 )
                   nVal   := hb_BCode( cBlock )
                   ?? hb_NumToHex( nVal, 2 )
                   IF nVal > 32 .AND. nVal < 128
@@ -132,7 +132,7 @@ PROCEDURE Main( cFrom )
       ELSE
          ? "Invalid input file detected!"
       ENDIF
-      FClose( hFile )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN

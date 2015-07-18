@@ -93,10 +93,10 @@ STATIC PROCEDURE doc_make( cMain )
             hbshell_ProgName(), cTempHRB, StrTran( ArrayToList( hPar[ "docoption" ] ), "{LNG}", cLang ), file ) )
          FToNativeEOL( file )
 
-         FErase( hb_FNameDir( hPar[ "entry" ] ) + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".hbl" )
+         hb_vfErase( hb_FNameDir( hPar[ "entry" ] ) + hb_FNameName( hPar[ "entry" ] ) + "." + cLang + ".hbl" )
       NEXT
 
-      FErase( cTempHRB )
+      hb_vfErase( cTempHRB )
    ENDIF
 
    RETURN
@@ -115,8 +115,8 @@ STATIC PROCEDURE src_push( cMain )
    LOCAL cTempResult
    LOCAL cContent
 
-   FClose( hb_FTempCreateEx( @cTempContent, , , ".pot" ) )
-   FClose( hb_FTempCreateEx( @cTempResult ) )
+   hb_vfClose( hb_vfTempFile( @cTempContent, , , ".pot" ) )
+   hb_vfClose( hb_vfTempFile( @cTempResult ) )
 
    ? hPar[ "name" ], "generating translation source"
 
@@ -170,8 +170,8 @@ STATIC PROCEDURE src_push( cMain )
       ? "API error"
    ENDIF
 
-   FErase( cTempContent )
-   FErase( cTempResult )
+   hb_vfErase( cTempContent )
+   hb_vfErase( cTempResult )
 
    RETURN
 
@@ -199,7 +199,7 @@ STATIC PROCEDURE trs_pull( cMain )
    LOCAL cLang
    LOCAL cTempResult
 
-   FClose( hb_FTempCreateEx( @cTempResult ) )
+   hb_vfClose( hb_vfTempFile( @cTempResult ) )
 
    ? hPar[ "name" ], "pulling translations:"
 
@@ -241,7 +241,7 @@ STATIC PROCEDURE trs_pull( cMain )
       ENDIF
    NEXT
 
-   FErase( cTempResult )
+   hb_vfErase( cTempResult )
 
    RETURN
 
@@ -388,8 +388,8 @@ STATIC PROCEDURE trs_push( cMain )
    LOCAL cTempResult
    LOCAL cContent
 
-   FClose( hb_FTempCreateEx( @cTempContent ) )
-   FClose( hb_FTempCreateEx( @cTempResult ) )
+   hb_vfClose( hb_vfTempFile( @cTempContent ) )
+   hb_vfClose( hb_vfTempFile( @cTempResult ) )
 
    ? hPar[ "name" ], "uploading translation:"
 
@@ -425,8 +425,8 @@ STATIC PROCEDURE trs_push( cMain )
       ENDIF
    NEXT
 
-   FErase( cTempContent )
-   FErase( cTempResult )
+   hb_vfErase( cTempContent )
+   hb_vfErase( cTempResult )
 
    RETURN
 
