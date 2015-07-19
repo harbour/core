@@ -146,7 +146,7 @@ FUNCTION VGA50()
    RETURN SetMode( 50, MaxCol() + 1 )
 
 FUNCTION DiskTotal( cDrive )
-   RETURN hb_DiskSpace( hb_defaultValue( cDrive, hb_CurDrive() ) + hb_osDriveSeparator(), HB_DISK_TOTAL )
+   RETURN hb_vfDirSpace( hb_defaultValue( cDrive, hb_CurDrive() ) + hb_osDriveSeparator(), HB_DISK_TOTAL )
 
 FUNCTION DiskFree( cDrive )
-   RETURN hb_DiskSpace( hb_defaultValue( cDrive, hb_CurDrive() ) + hb_osDriveSeparator(), HB_DISK_FREE )
+   RETURN hb_vfDirSpace( hb_defaultValue( cDrive, hb_CurDrive() ) + hb_osDriveSeparator(), HB_DISK_FREE )
