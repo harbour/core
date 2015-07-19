@@ -26,6 +26,8 @@
 
 -hbx=${hb_name}
 
+aes256.c
+
 bcrypt.c
 
 blake2b.c
