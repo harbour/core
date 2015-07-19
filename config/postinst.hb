@@ -550,7 +550,7 @@ STATIC PROCEDURE mk_hb_vfCopyFile( cSrc, cDst, lEOL, l644, lTS )
 
    RETURN
 
-/* Like hb_FLinkSym(), but with feedback */
+/* Like hb_vfLinkSym(), but with feedback */
 STATIC PROCEDURE mk_hb_vfLinkSym( cDst, cSrc )
 
    hb_vfErase( cSrc ) /* remove old links if any */

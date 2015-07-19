@@ -31,7 +31,7 @@ PROCEDURE Main()
 #endif
    AltD()
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    ? "Initialise"
    fi_Initialise()

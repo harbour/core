@@ -12,7 +12,7 @@ STATIC s_nAngle, s_nCoordX, s_nCoordY
 
 PROCEDURE Main()
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    DrawFlake( .T. )
    DrawFlake( .F. )

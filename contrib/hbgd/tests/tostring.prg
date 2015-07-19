@@ -11,7 +11,7 @@ PROCEDURE Main()
 
    LOCAL oI
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    /* Load an image from file */
    oI := GDImage():LoadFromFile( IMAGES_IN + "conv_tst.jpg" )

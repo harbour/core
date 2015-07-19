@@ -98,7 +98,6 @@ static HB_BOOL hb_ExportVar( PHB_FILE handle, PHB_ITEM pValue, const char * cDel
 
          szString = hb_xstrcpy( NULL, cDelim, szStrEsc, cDelim, NULL );
 
-         /* FWrite( handle, szString ) */
          hb_fileWrite( handle, szString, strlen( szString ), -1 );
 
          /* Orphaned, get rif off it */

@@ -12,7 +12,7 @@ PROCEDURE Main()
    LOCAL im
    LOCAL blue
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    /* This sample shows differences on use of antiliased command between a
       palette based image and a true color image.

@@ -11,7 +11,7 @@ PROCEDURE Main()
 
    LOCAL oI := GDImage():Create( 600, 300 )
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    oI:Rectangle( 0, 0, 600, 300, .T., oI:SetColor( 255, 255, 255 ) )
 

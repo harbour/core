@@ -26,7 +26,7 @@ PROCEDURE Main()
 #endif
    LOCAL ccode128   := "Code 128"
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    /* here is the list of arguments
    1- Barcode Type 13,8  and 128

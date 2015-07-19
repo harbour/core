@@ -46,9 +46,7 @@ procedure main()
    Alert( "Database path:;;" + cPath )
 
    rddSetDefault( "DBFCDX" )
-   if ! hb_DirExists( cPath )
-      hb_DirCreate( cPath )
-   endif
+   hb_vfDirMake( cPath )
    dbCreate( cPath + "mydata.dbf", { ;
       { "F1", "C", 10, 0 }, ;
       { "F2", "=",  8, 0 }, ;

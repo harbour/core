@@ -18,9 +18,9 @@ PROCEDURE Main( cDisk )
 
    hb_default( @cDisk, hb_DirBase() + hb_ps() )
 
-   ? "Bytes available on disk:", Transform( hb_DiskSpace( cDisk, HB_DISK_FREE ), "999,999,999,999" )
-   ? "Bytes available for use:", Transform( hb_DiskSpace( cDisk, HB_DISK_AVAIL ), "999,999,999,999" )
-   ? "             Bytes used:", Transform( hb_DiskSpace( cDisk, HB_DISK_USED ), "999,999,999,999" )
-   ? " Total bytes at", cDisk + ":", Transform( hb_DiskSpace( cDisk, HB_DISK_TOTAL ), "999,999,999,999" )
+   ? "Bytes available on disk:", Transform( hb_vfDirSpace( cDisk, HB_DISK_FREE ), "999,999,999,999" )
+   ? "Bytes available for use:", Transform( hb_vfDirSpace( cDisk, HB_DISK_AVAIL ), "999,999,999,999" )
+   ? "             Bytes used:", Transform( hb_vfDirSpace( cDisk, HB_DISK_USED ), "999,999,999,999" )
+   ? " Total bytes at", cDisk + ":", Transform( hb_vfDirSpace( cDisk, HB_DISK_TOTAL ), "999,999,999,999" )
 
    RETURN

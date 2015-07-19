@@ -19,7 +19,7 @@ PROCEDURE Main()
    LOCAL nFile
    LOCAL cFile := IMAGES_OUT + "anim2.gif"
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    hFile := hb_vfOpen( IMAGES_OUT + "anim0.gif", FO_CREAT + FO_TRUNC + FO_WRITE )
    nFile := FCreate( IMAGES_OUT + "anim1.gif" )           /* Open output file in binary mode */

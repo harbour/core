@@ -654,9 +654,22 @@ EXTERNAL hb_vfAttrSet
 EXTERNAL hb_ZCompress
 EXTERNAL hb_ZUncompress
 
-/* For compatibility with existing plugins */
+/* For compatibility with existing plugins. Use hb_vf*() API instead. */
+EXTERNAL Directory
+EXTERNAL hb_DirCreate
+EXTERNAL hb_DirDelete
+EXTERNAL hb_DirExists
+EXTERNAL hb_Directory
 EXTERNAL hb_FGetAttr
+EXTERNAL hb_FGetDateTime
+EXTERNAL hb_FLink
+EXTERNAL hb_FLinkRead
+EXTERNAL hb_FLinkSym
 EXTERNAL hb_FSetAttr
+EXTERNAL hb_FSetDateTime
+EXTERNAL hb_FTempCreate
+EXTERNAL hb_FTempCreateEx
+EXTERNAL hb_FileExists
 
 /* For hbshell */
 

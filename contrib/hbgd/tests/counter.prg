@@ -28,7 +28,7 @@ PROCEDURE Main( cValue, cBaseImage )
 
    cBaseImage := IMAGES_IN + hb_defaultValue( cBaseImage, "d57chevy.gif" )
 
-   IF ! hb_FileExists( cBaseImage )
+   IF ! hb_vfExists( cBaseImage )
       ? "ERROR: Base Image File", "'" + cBaseImage + "'", "not found"
       RETURN
    ENDIF
@@ -45,7 +45,7 @@ PROCEDURE Main( cValue, cBaseImage )
 
    ? "Value =", cValue
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    /* Load a digits image in memory from file */
    oIDigits := GDImage():LoadFromGif( cBaseImage )

@@ -17,7 +17,7 @@ PROCEDURE Main()
 
    hb_cdpSelect( "UTF8EX" )
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    ? gdVersion()
 

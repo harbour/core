@@ -6,7 +6,7 @@ PROCEDURE Main()
 
    LOCAL im, im2, col, i
 
-   hb_DirCreate( IMAGES_OUT )
+   hb_vfDirMake( IMAGES_OUT )
 
    im := gdImageCreateTrueColor( 100, 100 )
    col := gdImageColorAllocate( im, 255, 255, 255 )
