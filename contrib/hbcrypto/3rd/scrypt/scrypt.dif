@@ -1,23 +1,26 @@
 diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
---- scrypt.orig/c_scrypt.c	2015-07-14 02:04:52.306544000 +0200
-+++ scrypt/c_scrypt.c	2015-07-14 02:04:52.306544000 +0200
-@@ -26,15 +26,12 @@
+--- scrypt.orig/c_scrypt.c	2015-07-19 15:08:46.471882600 +0200
++++ scrypt/c_scrypt.c	2015-07-19 15:08:46.471882600 +0200
+@@ -26,17 +26,9 @@
   * This file was originally written by Colin Percival as part of the Tarsnap
   * online backup system.
   */
 -#include "scrypt_platform.h"
--
++#include "c_scrypt.h"
+ 
  #include <errno.h>
- #include <stdint.h>
- #include <stdlib.h>
- #include <string.h>
- 
- #include "sha256.h"
+-#include <stdint.h>
+-#include <stdlib.h>
+-#include <string.h>
+-
+-#include "sha256.h"
 -#include "sysendian.h"
+-
+-#include "c_scrypt.h"
  
- #include "c_scrypt.h"
- 
-@@ -76,7 +73,7 @@
+ static void blkcpy(uint8_t *, uint8_t *, size_t);
+ static void blkxor(uint8_t *, uint8_t *, size_t);
+@@ -76,7 +68,7 @@
  
  	/* Convert little-endian values in. */
  	for (i = 0; i < 16; i++)
@@ -26,7 +29,7 @@ diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
  
  	/* Compute x = doubleround^4(B32). */
  	for (i = 0; i < 16; i++)
-@@ -117,7 +114,7 @@
+@@ -117,7 +109,7 @@
  
  	/* Convert little-endian values out. */
  	for (i = 0; i < 16; i++)
@@ -35,7 +38,7 @@ diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
  }
  
  /**
-@@ -160,7 +157,7 @@
+@@ -160,7 +152,7 @@
  {
  	uint8_t * X = &B[(2 * r - 1) * 64];
  
@@ -44,8 +47,39 @@ diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
  }
  
  /**
+diff -urN scrypt.orig/c_scrypt.h scrypt/c_scrypt.h
+--- scrypt.orig/c_scrypt.h	2015-07-19 15:08:46.471882600 +0200
++++ scrypt/c_scrypt.h	2015-07-19 15:08:46.471882600 +0200
+@@ -29,7 +29,12 @@
+ #ifndef _CRYPTO_SCRYPT_H_
+ #define _CRYPTO_SCRYPT_H_
+ 
+-#include <stdint.h>
++#include "hbcrypto.h"
++
++#define uint8_t   HB_U8
++#define uint32_t  HB_U32
++#define uint64_t  HB_U32
++#define SIZE_MAX  HB_SIZE_MAX
+ 
+ /**
+  * crypto_scrypt(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen):
+@@ -43,4 +48,13 @@
+ int crypto_scrypt(const uint8_t *, size_t, const uint8_t *, size_t, uint64_t,
+     uint32_t, uint32_t, uint8_t *, size_t);
+ 
++
++/**
++ * PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c, buf, dkLen):
++ * Compute PBKDF2(passwd, salt, c, dkLen) using HMAC-SHA256 as the PRF, and
++ * write the output to buf.  The value dkLen must be at most 32 * (2^32 - 1).
++ */
++void	PBKDF2_SHA256(const uint8_t *, size_t, const uint8_t *, size_t,
++    uint64_t, uint8_t *, size_t);
++
+ #endif /* !_CRYPTO_SCRYPT_H_ */
 diff -urN scrypt.orig/config.h scrypt/config.h
---- scrypt.orig/config.h	2015-07-14 02:04:52.306544000 +0200
+--- scrypt.orig/config.h	2015-07-19 15:08:46.471882600 +0200
 +++ scrypt/config.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,98 +0,0 @@
 -/* config.h.in.  Generated from configure.ac by autoheader.  */
@@ -147,23 +181,23 @@ diff -urN scrypt.orig/config.h scrypt/config.h
 -/* Define for large files, on AIX-style hosts. */
 -#undef _LARGE_FILES
 diff -urN scrypt.orig/sha256.c scrypt/sha256.c
---- scrypt.orig/sha256.c	2015-07-14 02:04:52.306544000 +0200
-+++ scrypt/sha256.c	2015-07-14 02:04:52.306544000 +0200
-@@ -23,337 +23,13 @@
+--- scrypt.orig/sha256.c	2015-07-19 15:08:46.471882600 +0200
++++ scrypt/sha256.c	2015-07-19 15:08:46.487481600 +0200
+@@ -23,336 +23,8 @@
   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
   * SUCH DAMAGE.
   */
 -#include "scrypt_platform.h"
+ 
+-#include <sys/types.h>
 -
- #include <sys/types.h>
- 
- #include <stdint.h>
- #include <string.h>
- 
+-#include <stdint.h>
+-#include <string.h>
+-
 -#include "sysendian.h"
 -
- #include "sha256.h"
- 
+-#include "sha256.h"
+-
 -/*
 - * Encode a length len/4 vector of (uint32_t) into a length len vector of
 - * (unsigned char) in big-endian form.  Assumes len is a multiple of 4.
@@ -483,11 +517,11 @@ diff -urN scrypt.orig/sha256.c scrypt/sha256.c
 -	/* Clean the stack. */
 -	memset(ihash, 0, 32);
 -}
--
++#include "c_scrypt.h"
+ 
  /**
   * PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c, buf, dkLen):
-  * Compute PBKDF2(passwd, salt, c, dkLen) using HMAC-SHA256 as the PRF, and
-@@ -363,7 +39,7 @@
+@@ -363,7 +35,7 @@
  PBKDF2_SHA256(const uint8_t * passwd, size_t passwdlen, const uint8_t * salt,
      size_t saltlen, uint64_t c, uint8_t * buf, size_t dkLen)
  {
@@ -496,7 +530,7 @@ diff -urN scrypt.orig/sha256.c scrypt/sha256.c
  	size_t i;
  	uint8_t ivec[4];
  	uint8_t U[32];
-@@ -373,27 +49,27 @@
+@@ -373,27 +45,27 @@
  	size_t clen;
  
  	/* Compute HMAC state after processing P and S. */
@@ -533,42 +567,10 @@ diff -urN scrypt.orig/sha256.c scrypt/sha256.c
  
  			/* ... xor U_j ... */
  			for (k = 0; k < 32; k++)
-@@ -408,5 +84,5 @@
+@@ -408,5 +80,5 @@
  	}
  
  	/* Clean PShctx, since we never called _Final on it. */
 -	memset(&PShctx, 0, sizeof(HMAC_SHA256_CTX));
 +	memset(&PShctx, 0, sizeof(PShctx));
  }
-diff -urN scrypt.orig/sha256.h scrypt/sha256.h
---- scrypt.orig/sha256.h	2015-07-14 02:04:52.306544000 +0200
-+++ scrypt/sha256.h	2015-07-14 02:04:52.306544000 +0200
-@@ -29,27 +29,9 @@
- #ifndef _SHA256_H_
- #define _SHA256_H_
- 
--#include <sys/types.h>
--
- #include <stdint.h>
- 
--typedef struct SHA256Context {
--	uint32_t state[8];
--	uint32_t count[2];
--	unsigned char buf[64];
--} SHA256_CTX;
--
--typedef struct HMAC_SHA256Context {
--	SHA256_CTX ictx;
--	SHA256_CTX octx;
--} HMAC_SHA256_CTX;
--
--void	SHA256_Init(SHA256_CTX *);
--void	SHA256_Update(SHA256_CTX *, const void *, size_t);
--void	SHA256_Final(unsigned char [32], SHA256_CTX *);
--void	HMAC_SHA256_Init(HMAC_SHA256_CTX *, const void *, size_t);
--void	HMAC_SHA256_Update(HMAC_SHA256_CTX *, const void *, size_t);
--void	HMAC_SHA256_Final(unsigned char [32], HMAC_SHA256_CTX *);
-+#include "hbcrypto.h"
- 
- /**
-  * PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c, buf, dkLen):

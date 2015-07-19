@@ -23,12 +23,8 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  */
-#include <sys/types.h>
 
-#include <stdint.h>
-#include <string.h>
-
-#include "sha256.h"
+#include "c_scrypt.h"
 
 /**
  * PBKDF2_SHA256(passwd, passwdlen, salt, saltlen, c, buf, dkLen):

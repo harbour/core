@@ -20,5 +20,4 @@ sha256.c
 # MAP    lib/crypto/crypto_scrypt-ref.c  c_scrypt.c
 # MAP    lib/crypto/crypto_scrypt.h      c_scrypt.h
 # MAP    lib/crypto/sha256.c             sha256.c
-# MAP    lib/crypto/sha256.h             sha256.h
 # MAP    lib/README                      README.txt

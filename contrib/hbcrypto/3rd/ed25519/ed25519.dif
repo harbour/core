@@ -1,6 +1,37 @@
+diff -urN ed25519.orig/ed25519.h ed25519/ed25519.h
+--- ed25519.orig/ed25519.h	2015-07-19 15:15:34.185253800 +0200
++++ ed25519/ed25519.h	2015-07-19 15:15:34.185253800 +0200
+@@ -25,6 +25,7 @@
+ #endif
+ 
+ void ED25519_DECLSPEC ed25519_create_keypair(unsigned char *public_key, unsigned char *private_key, const unsigned char *seed);
++void ED25519_DECLSPEC ed25519_get_pubkey(unsigned char *public_key, const unsigned char *private_key);
+ void ED25519_DECLSPEC ed25519_sign(unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key, const unsigned char *private_key);
+ int ED25519_DECLSPEC ed25519_verify(const unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key);
+ void ED25519_DECLSPEC ed25519_add_scalar(unsigned char *public_key, unsigned char *private_key, const unsigned char *scalar);
+diff -urN ed25519.orig/precompd.h ed25519/precompd.h
+--- ed25519.orig/precompd.h	2015-07-19 15:15:34.185253800 +0200
++++ ed25519/precompd.h	2015-07-19 15:15:34.200852800 +0200
+@@ -1388,4 +1388,4 @@
+             { -20430234, 14955537, -24126347, 8124619, -5369288, -5990470, 30468147, -13900640, 18423289, 4177476 },
+         },
+     },
+-};
+\ No newline at end of file
++};
+diff -urN ed25519.orig/sc.h ed25519/sc.h
+--- ed25519.orig/sc.h	2015-07-19 15:15:34.200852800 +0200
++++ ed25519/sc.h	2015-07-19 15:15:34.200852800 +0200
+@@ -9,4 +9,4 @@
+ void sc_reduce(unsigned char *s);
+ void sc_muladd(unsigned char *s, const unsigned char *a, const unsigned char *b, const unsigned char *c);
+ 
+-#endif
+\ No newline at end of file
++#endif
 diff -urN ed25519.orig/sha512.h ed25519/sha512.h
---- ed25519.orig/sha512.h	2015-07-13 20:00:57.970187600 +0200
-+++ ed25519/sha512.h	2015-07-13 20:00:57.970187600 +0200
+--- ed25519.orig/sha512.h	2015-07-19 15:15:34.200852800 +0200
++++ ed25519/sha512.h	2015-07-19 15:15:34.200852800 +0200
 @@ -1,21 +1,15 @@
  #ifndef SHA512_H
  #define SHA512_H
@@ -31,3 +62,19 @@ diff -urN ed25519.orig/sha512.h ed25519/sha512.h
 -#endif
 \ No newline at end of file
 +#endif
+diff -urN ed25519.orig/sign.c ed25519/sign.c
+--- ed25519.orig/sign.c	2015-07-19 15:15:34.169654800 +0200
++++ ed25519/sign.c	2015-07-19 15:15:34.169654800 +0200
+@@ -3,6 +3,12 @@
+ #include "ge.h"
+ #include "sc.h"
+ 
++void ed25519_get_pubkey(unsigned char *public_key, const unsigned char *private_key) {
++    ge_p3 A;
++
++    ge_scalarmult_base(&A, private_key);
++    ge_p3_tobytes(public_key, &A);
++}
+ 
+ void ed25519_sign(unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key, const unsigned char *private_key) {
+     sha512_context hash;

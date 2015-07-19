@@ -47,7 +47,11 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
-#include "sha256.h"
+#if defined( HBSCRYPT_VANILLA )
+   #include "sha256.h"
+#else
+   #include "c_scrypt.h"
+#endif
 
 /* hb_pbkdf2_sha256( <cPassword>, <cSalt>, <nCount>, <nKeyLen> ) -> <cKey> */
 HB_FUNC( HB_PBKDF2_SHA256 )
