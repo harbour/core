@@ -386,8 +386,8 @@ STATIC FUNCTION GitFileList()
 
 STATIC FUNCTION GitUser()
 
-   LOCAL cName := ""
-   LOCAL cEMail := ""
+   LOCAL cName
+   LOCAL cEMail
 
    hb_processRun( Shell() + " " + CmdEscape( "git config user.name" ),, @cName )
    hb_processRun( Shell() + " " + CmdEscape( "git config user.email" ),, @cEMail )
@@ -398,7 +398,7 @@ STATIC FUNCTION GitUser()
 
 STATIC FUNCTION GitEditor()
 
-   LOCAL cValue := ""
+   LOCAL cValue
 
    hb_processRun( Shell() + " " + CmdEscape( "git config --global core.editor" ),, @cValue )
 
@@ -517,11 +517,12 @@ STATIC FUNCTION CmdEscape( cCmd )
 
 STATIC FUNCTION Changes( cVCS )
 
-   LOCAL cStdOut := ""
+   LOCAL cStdOut
 
    SWITCH cVCS
    CASE "svn" ; hb_processRun( Shell() + " " + CmdEscape( "svn status -q" ),, @cStdOut ) ; EXIT
    CASE "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status -s" ),, @cStdOut ) ; EXIT
+   OTHERWISE ; cStdOut := ""
    ENDSWITCH
 
    RETURN hb_ATokens( cStdOut, .T. )

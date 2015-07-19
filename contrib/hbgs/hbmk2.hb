@@ -71,7 +71,6 @@ STATIC FUNCTION gs_version_detect( hbmk )
       FOR EACH cBin IN aBin
          IF ( cFileName := hbmk_FindInPath( cBin, cPath ) ) != NIL
 
-            cStdOutErr := ""
             hb_processRun( cFileName + " --version",, @cStdOutErr, @cStdOutErr )
             nVersion := Val( hb_StrReplace( cStdOutErr, Chr( 13 ) + Chr( 10 ) ) )
 

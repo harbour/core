@@ -29,12 +29,10 @@ procedure Main( cURLList )
             switch url[ 3 ]
             case "http"
                OutErr( "Checking...", hb_StrToExp( "https:" + url[ 4 ] ) + hb_eol() )
-               outs := ""
                hb_processRun( "curl -v -L --connect-timeout 2 " + '"' + "https:" + url[ 4 ] + '"',, @outs, @err )
                if Empty( outs )
                   ++cntp
                else
-                  outp := ""
                   hb_processRun( "curl -v -L --connect-timeout 2 " + '"' + "http:" + url[ 4 ] + '"',, @outp, @err )
                   OutStd( url[ 1 ], "->", "https:" + url[ 4 ], iif( outs == outp, "[OK]", "[Different content - verify manually]" ) + hb_eol() )
                   if outs == outp

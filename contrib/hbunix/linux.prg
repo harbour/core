@@ -77,7 +77,7 @@ FUNCTION linux_MoveToTrash( cFileName )
       AAdd( aPath, hb_DirSepAdd( GetEnv( "HOME" ) ) + ".trash" )
 
       FOR EACH tmp IN aPath
-         IF hb_DirExists( tmp )
+         IF hb_vfDirExists( tmp )
             cTrashDir := tmp
             EXIT
          ENDIF
@@ -90,8 +90,8 @@ FUNCTION linux_MoveToTrash( cFileName )
       t_cTrashDirInfo  := hb_DirSepAdd( cTrashDir ) + "info"
       t_cTrashDirFiles := hb_DirSepAdd( cTrashDir ) + "files"
 
-      IF ! hb_DirExists( t_cTrashDirInfo ) .AND. ;
-         ! hb_DirExists( t_cTrashDirFiles )
+      IF ! hb_vfDirExists( t_cTrashDirInfo ) .AND. ;
+         ! hb_vfDirExists( t_cTrashDirFiles )
          /* TODO: create dirs if missing */
          RETURN -3
       ENDIF
@@ -101,7 +101,7 @@ FUNCTION linux_MoveToTrash( cFileName )
 
    cFileName := hb_PathJoin( hb_DirBase(), cFileName )
 
-   IF ! hb_FileExists( cFileName )
+   IF ! hb_vfExists( cFileName )
       RETURN -4
    ENDIF
 
@@ -113,22 +113,24 @@ FUNCTION linux_MoveToTrash( cFileName )
       cInfo := hb_DirSepAdd( t_cTrashDirInfo ) + tmp + ".trashinfo"
       cFile := hb_DirSepAdd( t_cTrashDirFiles ) + tmp
 
-      IF ! hb_FileExists( cInfo ) .AND. ;
-         ! hb_FileExists( cFile )
+      IF ! hb_vfExists( cInfo ) .AND. ;
+         ! hb_vfExists( cFile )
          EXIT
       ENDIF
 
       n++
    ENDDO
 
-   IF FRename( cFileName, cFile ) == F_ERROR
+   IF hb_vfRename( cFileName, cFile ) == F_ERROR
       RETURN -5
    ENDIF
 
    IF hb_MemoWrit( cInfo, hb_StrToUTF8( ;
          e"[Trash Info]\n" + ;
          e"Path=" + cFileName + e"\n" + ;
-         e"DeletionDate=" + hb_DToC( tDate := hb_DateTime(), "yyyy-mm-dd" ) + hb_TToC( tDate, "", "Thh:mm:ss.fffZ" ) + e"\n" ) )
+         e"DeletionDate=" + ;
+            hb_DToC( tDate := hb_DateTime(), "yyyy-mm-dd" ) + ;
+            hb_TToC( tDate, "", "Thh:mm:ss.fffZ" ) + e"\n" ) )
       RETURN 0
    ENDIF
 

@@ -96,8 +96,8 @@ FUNCTION hbmk_plugin_qt( hbmk )
             FOR EACH cSrc, cDst IN hbmk[ "vars" ][ "aMOC_Src" ], hbmk[ "vars" ][ "aMOC_Dst" ]
 
                IF hbmk[ "lINC" ] .AND. ! hbmk[ "lREBUILD" ]
-                  lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
-                              ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                  lBuildIt := ! hb_vfTimeGet( cDst, @tDst ) .OR. ;
+                              ! hb_vfTimeGet( cSrc, @tSrc ) .OR. ;
                               tSrc > tDst
                ELSE
                   lBuildIt := .T.
@@ -136,7 +136,7 @@ FUNCTION hbmk_plugin_qt( hbmk )
    CASE "post_all"
 
       IF ! hbmk[ "lINC" ] .OR. hbmk[ "lCLEAN" ]
-         AEval( hbmk[ "vars" ][ "aMOC_Dst" ], {| tmp | FErase( tmp ) } )
+         AEval( hbmk[ "vars" ][ "aMOC_Dst" ], {| tmp | hb_vfErase( tmp ) } )
       ENDIF
 
       EXIT
@@ -163,7 +163,7 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
       cName += hbmk[ "cCCEXT" ]
 
       IF Empty( cEnv := GetEnv( "HB_QTPATH" ) ) .OR. ;
-         ! hb_FileExists( cBIN := hb_DirSepAdd( cEnv ) + cName )
+         ! hb_vfExists( cBIN := hb_DirSepAdd( cEnv ) + cName )
 
          hb_AIns( aEnvList, 1, "HB_WITH_QT", .T. )
 
@@ -172,12 +172,12 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
             IF cEnv == "no"
                /* Return silently. It shall fail at dependency detection inside hbmk2 */
                RETURN NIL
-            ELSEIF ! hb_FileExists( cBIN := hb_PathNormalize( hb_DirSepAdd( cEnv ) + ".." + hb_ps() + "bin" + hb_ps() + cName ) )
+            ELSEIF ! hb_vfExists( cBIN := hb_PathNormalize( hb_DirSepAdd( cEnv ) + ".." + hb_ps() + "bin" + hb_ps() + cName ) )
                hbmk_OutErr( hbmk, hb_StrFormat( "Warning: HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
                cBIN := ""
             ENDIF
          ELSE
-            IF ! hb_FileExists( cBIN := hb_DirSepAdd( hb_DirBase() ) + cName )
+            IF ! hb_vfExists( cBIN := hb_DirSepAdd( hb_DirBase() ) + cName )
                cBIN := ""
             ENDIF
          ENDIF
@@ -207,25 +207,18 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
 STATIC FUNCTION IsVersionOK( cBIN, /* @ */ cVer )
 
    LOCAL aHit
-
-   LOCAL cStdOutErr := ""
+   LOCAL cStdOutErr
 
    hb_processRun( cBIN + " -v",, @cStdOutErr, @cStdOutErr )
 
-   aHit := hb_regexAll( "([0-9]+)\.([0-9]+)\.([0-9]+)", hb_StrReplace( cStdOutErr, Chr( 13 ) + Chr( 10 ) ) )
-
-   IF Len( aHit ) >= 1
+   IF Len( aHit := hb_regexAll( "([0-9]+)\.([0-9]+)\.([0-9]+)", hb_StrReplace( cStdOutErr, Chr( 13 ) + Chr( 10 ) ) ) ) >= 1
       cVer := aHit[ 1 ][ 1 ]
-      DO CASE
-      CASE Val( aHit[ 1 ][ 2 ] ) >= 5
-         RETURN .T.
-      CASE Val( aHit[ 1 ][ 2 ] ) == 4 .AND. Val( aHit[ 1 ][ 3 ] ) >= 5
-         RETURN .T.
-      ENDCASE
-   ELSE
-      cVer := "unrecognized version"
+      RETURN ;
+         Val( aHit[ 1 ][ 2 ] ) >= 5 .AND. ;
+         ( Val( aHit[ 1 ][ 2 ] ) == 4 .AND. Val( aHit[ 1 ][ 3 ] ) >= 5 )
    ENDIF
 
+   cVer := "unrecognized version"
    RETURN .F.
 
 #else
