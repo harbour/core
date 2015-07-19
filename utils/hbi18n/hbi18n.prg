@@ -225,7 +225,7 @@ STATIC FUNCTION ExpandWildCards( aFiles )
       aRealFiles := {}
       FOR EACH cFile IN aFiles
          IF "*" $ cFile .OR. "?" $ cFile
-            FOR EACH cRealFile IN Directory( cFile )
+            FOR EACH cRealFile IN hb_vfDirectory( cFile )
                AAdd( aRealFiles, cRealFile[ F_NAME ] )
             NEXT
          ELSE

@@ -896,7 +896,7 @@ METHOD Array2File( cFileName, aSource ) CLASS HBFormatCode
    cName := iif( ( i := RAt( ".", cFileName ) ) == 0, cFileName, Left( cFileName, i - 1 ) )
    IF Empty( ::cExtSave )
       cBakName := cName + iif( hb_LeftEq( ::cExtBack, "." ), "", "." ) + ::cExtBack
-      IF hb_FCopy( cFileName, cBakName ) == F_ERROR
+      IF hb_vfCopyFile( cFileName, cBakName ) == F_ERROR
          RETURN .F.
       ENDIF
    ENDIF

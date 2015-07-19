@@ -35,7 +35,7 @@ PROCEDURE Main()
       hb_MemoWrit( ".uhttpd.stop", "" )
       RETURN
    ELSE
-      FErase( ".uhttpd.stop" )
+      hb_vfErase( ".uhttpd.stop" )
    ENDIF
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
@@ -106,7 +106,7 @@ PROCEDURE Main()
          "LogError"            => {| m | oLogError:Add( m + hb_eol() ) }, ;
          "Trace"               => {| ... | QOut( ... ) }, ;
          "Port"                => nPort, ;
-         "Idle"                => {| o | iif( hb_FileExists( ".uhttpd.stop" ), ( FErase( ".uhttpd.stop" ), o:Stop() ), NIL ) }, ;
+         "Idle"                => {| o | iif( hb_vfExists( ".uhttpd.stop" ), ( hb_vfErase( ".uhttpd.stop" ), o:Stop() ), NIL ) }, ;
          "PrivateKeyFilename"  => "private.key", ;
          "CertificateFilename" => "certificate.crt", ;
          "SSL"                 => .T., ;

@@ -96,7 +96,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDCASE
 
    // Delete test_?.* since may be changing RDD flavors (avoid conflicts)
-   AEval( Directory( "test_?.*" ), {| a | hb_dbDrop( a[ F_NAME ] ) } )
+   AEval( hb_vfDirectory( "test_?.*" ), {| a | hb_dbDrop( a[ F_NAME ] ) } )
 
    IF hb_dbExists( "test_2.dbf" )
       NotifyUser( "Cannot delete test_2.dbf" )

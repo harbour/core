@@ -103,6 +103,6 @@ PROCEDURE Main()
 
    hb_run( "address.html" )
 
-   FErase( "address.html" )
+   hb_vfErase( "address.html" )
 
    RETURN

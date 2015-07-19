@@ -29,7 +29,7 @@ PROCEDURE Main( cMode )
 
       OutStd( "! mpkg.hb: Converting newlines in", tmp + hb_eol() )
 
-      FOR EACH file IN Directory( tmp )
+      FOR EACH file IN hb_vfDirectory( tmp )
          FileConvEOL( hb_FNameDir( tmp ) + file[ F_NAME ] )
       NEXT
 
@@ -41,7 +41,7 @@ PROCEDURE Main( cMode )
 
       OutStd( "! mpkg.hb: Setting build times in executable headers of", tmp + hb_eol() )
 
-      FOR EACH file IN Directory( tmp )
+      FOR EACH file IN hb_vfDirectory( tmp )
          /* Use a fixed date to change binaries only if their ingredients have changed */
          win_PESetTimestamp( hb_FNameDir( tmp ) + file[ F_NAME ] )
       NEXT
@@ -101,12 +101,12 @@ PROCEDURE Main( cMode )
                "tests/" }
 
                tmp := hb_DirSepToOS( tmp )
-               FOR EACH file IN iif( Empty( hb_FNameName( tmp ) ), hb_DirScan( tmp ), Directory( tmp ) )
+               FOR EACH file IN iif( Empty( hb_FNameName( tmp ) ), hb_DirScan( tmp ), hb_vfDirectory( tmp ) )
                   file := hb_FNameDir( tmp ) + file[ F_NAME ]
 
                   /* NOTE: To extract proper timestamps we need full commit history */
                   IF lShallow
-                     hb_FSetDateTime( file, tDateHEAD )
+                     hb_vfTimeSet( file, tDateHEAD )
                   ELSE
                      hb_processRun( "git" + ;
                         " " + FNameEscape( "--git-dir=" + cGitRoot ) + ;
@@ -119,7 +119,7 @@ PROCEDURE Main( cMode )
                         tDate -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
                                      ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
                                        Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
-                        hb_FSetDateTime( file, tDate )
+                        hb_vfTimeSet( file, tDate )
                      ENDIF
                   ENDIF
                NEXT
@@ -133,7 +133,7 @@ PROCEDURE Main( cMode )
                IF "D" $ file[ F_ATTR ] .AND. ;
                   !( hb_FNameNameExt( file[ F_NAME ] ) == "." .OR. ;
                      hb_FNameNameExt( file[ F_NAME ] ) == ".." )
-                  hb_FSetDateTime( file[ F_NAME ], tDateHEAD )
+                  hb_vfTimeSet( file[ F_NAME ], tDateHEAD )
                ENDIF
             NEXT
          ENDIF
@@ -149,7 +149,7 @@ PROCEDURE Main( cMode )
 
       OutStd( "! mpkg.hb: Calculating SHA-256 hash for", tmp + hb_eol() )
 
-      FOR EACH file IN Directory( tmp )
+      FOR EACH file IN hb_vfDirectory( tmp )
          OutStd( hb_SHA256( hb_MemoRead( hb_FNameDir( tmp ) + file[ F_NAME ] ) ), hb_FNameDir( tmp ) + file[ F_NAME ] + hb_eol() )
       NEXT
 
@@ -312,9 +312,9 @@ STATIC FUNCTION FileConvEOL( cFileName )
 
    LOCAL cFile, tDate
 
-   hb_FGetDateTime( cFileName, @tDate )
+   hb_vfTimeGet( cFileName, @tDate )
 
    RETURN ;
       ! Empty( cFile := hb_MemoRead( cFileName ) ) .AND. ;
       hb_MemoWrit( cFileName, StringEOLConv( cFile ) ) .AND. ;
-      hb_FSetDateTime( cFileName, tDate )
+      hb_vfTimeSet( cFileName, tDate )

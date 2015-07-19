@@ -753,14 +753,14 @@ METHOD PROCEDURE SendCacheLimiter() CLASS uhttpd_Session
    CASE "private"
       uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )
       uhttpd_SetHeader( "Cache-Control", "private, max-age=" + hb_ntos( ::nCache_Expire * 60 ) )
-      IF hb_FGetDateTime( hb_ProgName(), @dDate )
+      IF hb_vfTimeGet( hb_ProgName(), @dDate )
          uhttpd_SetHeader( "Last-Modified", uhttpd_DateToGMT( dDate ) )
       ENDIF
       EXIT
    CASE "public"
       uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( ,,, ::nCache_Expire * 60 ) )
       uhttpd_SetHeader( "Cache-Control", "public, max-age=" + hb_ntos( ::nCache_Expire * 60 ) )
-      IF hb_FGetDateTime( hb_ProgName(), @dDate )
+      IF hb_vfTimeGet( hb_ProgName(), @dDate )
          uhttpd_SetHeader( "Last-Modified", uhttpd_DateToGMT( dDate ) )
       ENDIF
       EXIT

@@ -16,7 +16,7 @@ procedure Main( cURLList )
 
    hb_default( @cURLList, "_url" )
 
-   if ! hb_FileExists( cURLList )
+   if ! hb_vfExists( cURLList )
       hb_run( 'grep -R -H -I -n -o "http://[a-zA-Z0-9/\.\~\%\?&\+=@:-]*" * > ' + cURLList )
    endif
 

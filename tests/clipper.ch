@@ -1,7 +1,7 @@
 /*
  * Harbour compatibility header for other Clipper compatible languages
  *
- * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2013-2015 Viktor Szakats (vszakats.net/harbour)
  */
 
 #ifndef __HARBOUR__
@@ -41,8 +41,20 @@
 
 #xtranslate hb_MemoRead( <x> )             => MemoRead( <x> )
 #xtranslate hb_MemoWrit( [<x,...>] )       => MemoWrit( <x> )
-#xtranslate hb_FileExists( <t> )           => File( <t> )
+#xtranslate hb_vfExists( <x> )             => File( <x> )
+#xtranslate hb_FileExists( <x> )           => File( <x> )
 #xtranslate hb_FileMatch( <x>, <y> )       => ( Lower( <x> ) == Lower( <y> ) )  /* ~ */
+#xtranslate hb_vfDirectory( [<x,...>] )    => Directory( <x> )
+#xtranslate hb_Directory( [<x,...>] )      => Directory( <x> )
+#xtranslate hb_vfRename( [<x,...>] )       => FRename( <x> )
+#xtranslate hb_vfErase( <x> )              => FErase( <x> )
+#xtranslate hb_vfCopyFile( [<x,...>] )     => __CopyFile( <x> )
+#xtranslate hb_vfDirMake( <x> )            => MakeDir( <x> )
+#xtranslate hb_DirCreate( <x> )            => MakeDir( <x> )
+#xtranslate hb_vfDirSpace( <x> )           => DiskSpace( Left( <x>, 2 ) )
+#xtranslate hb_DiskSpace( <x> )            => DiskSpace( Left( <x>, 2 ) )
+#xtranslate hb_vfDirRemove( <x> )          => DirRemove( <x> )
+#xtranslate hb_DirDelete( <x> )            => DirRemove( <x> )
 
 #xtranslate hb_dbExists( <t> )             => File( <t> )
 #xtranslate hb_dbDrop( <t> )               => FErase( <t> )
@@ -140,6 +152,7 @@
 #xtranslate __mvScope()                    => -1
 #xtranslate HB_SYMBOL_UNUSED( <v> )        =>
 #xtranslate hb_langSelect( [<x>] )         =>
+#xtranslate hb_TToD( <x> )                 => <x>
 
 #ifdef __CLIP__
    #xtranslate hb_SecondsCPU( [<x>] )      => SecondsCPU( [<x>] )

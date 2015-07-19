@@ -14,8 +14,8 @@ PROCEDURE Main()
       ? hb_StrFormat( "failed with errno=%1$d", posix_errno() )
       ErrorLevel( 1 )
    ELSE
-      IF hb_FileExists( cLogFile )
-         FErase( cLogFile )
+      IF hb_vfExists( cLogFile )
+         hb_vfErase( cLogFile )
       ENDIF
 
       ? e"***\n* If you see this, something is b0rked\n***"

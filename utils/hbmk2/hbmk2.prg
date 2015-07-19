@@ -649,10 +649,14 @@ EXTERNAL hb_HKeyAt
 EXTERNAL hb_HDelAt
 EXTERNAL hb_HKeys
 EXTERNAL hb_HKeepOrder
-EXTERNAL hb_FGetAttr
-EXTERNAL hb_FSetAttr
+EXTERNAL hb_vfAttrGet
+EXTERNAL hb_vfAttrSet
 EXTERNAL hb_ZCompress
 EXTERNAL hb_ZUncompress
+
+/* For compatibility with existing plugins */
+EXTERNAL hb_FGetAttr
+EXTERNAL hb_FSetAttr
 
 /* For hbshell */
 

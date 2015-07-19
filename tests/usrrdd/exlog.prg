@@ -10,7 +10,7 @@ REQUEST DBFCDX
 
 PROCEDURE Main()
 
-   hb_FCopy( hb_DirSepToOS( "../test.dbf" ), "test.dbf" )
+   hb_vfCopyFile( hb_DirSepToOS( "../test.dbf" ), "test.dbf" )
 
    // Set LOGRDD as default RDD otherwise I have to set explicitly use
    // with DRIVER option

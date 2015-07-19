@@ -18,9 +18,38 @@ PROCEDURE Main()
 
    ? xdl_mmfile_cmp( pMMFOld, pMMFNew )
 
-   cDiffName := hb_FNameName( __FILE__ ) + ".dif"
+   //
 
-   IF ( hDif := FCreate( cDiffName ) ) != F_ERROR
+   IF ( hDif := hb_vfOpen( cDiffName := hb_FNameName( __FILE__ ) + ".di2", FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+      hb_vfWrite( hDif, "diff ---" + hb_eol() )
+      xdl_diff( pMMFOld, pMMFNew, 0, 3, hDif )
+      hb_vfClose( hDif )
+   ELSE
+      ? "Error"
+   ENDIF
+
+   pDiff := xdl_init_mmfile( XDLT_STD_BLKSIZE, XDL_MMF_ATOMIC )
+   cFileCtx := hb_MemoRead( cDiffName )
+   xdl_write_mmfile( pDiff, cFileCtx )
+
+   hNew := hb_vfOpen( hb_FNameExtSet( cDiffName, ".ne2" ), FO_CREAT + FO_TRUNC + FO_WRITE )
+   hErr := hb_vfOpen( hb_FNameExtSet( cDiffName, ".er2" ), FO_CREAT + FO_TRUNC + FO_WRITE )
+   hOld := hb_vfOpen( hb_FNameExtSet( cDiffName, ".ol2" ), FO_CREAT + FO_TRUNC + FO_WRITE )
+   IF hNew != NIL .AND. ;
+      hErr != NIL .AND. ;
+      hOld != NIL
+      ? xdl_patch( pMMFOld, pDiff, XDL_PATCH_NORMAL, hNew, hErr )
+      ? xdl_patch( pMMFNew, pDiff, XDL_PATCH_REVERSE, hOld, hErr )
+   ELSE
+      ? "Error"
+   ENDIF
+   hb_vfClose( hNew )
+   hb_vfClose( hErr )
+   hb_vfClose( hOld )
+
+   //
+
+   IF ( hDif := FCreate( cDiffName := hb_FNameName( __FILE__ ) + ".dif" ) ) != F_ERROR
       FWrite( hDif, "diff ---" + hb_eol() )
       xdl_diff( pMMFOld, pMMFNew, 0, 3, hDif )
       FClose( hDif )

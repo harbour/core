@@ -70,8 +70,8 @@ PROCEDURE Main()
    ? m_nDoubleH
    ? __mvScope( "m_nInt" )
 
-   FErase( "memempt.mem" )
-   FErase( "memfile.mem" )
-   FErase( "memsome.mem" )
+   hb_vfErase( "memempt.mem" )
+   hb_vfErase( "memfile.mem" )
+   hb_vfErase( "memsome.mem" )
 
    RETURN

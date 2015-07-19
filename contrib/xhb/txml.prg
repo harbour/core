@@ -367,7 +367,7 @@ METHOD New( xElem, nStyle ) CLASS TXMLDocument
       CASE "N"
       CASE "C"
          ::oRoot := TXMLNode():New( HBXML_TYPE_DOCUMENT )
-         IF hb_FileExists( xElem )
+         IF hb_vfExists( xElem )
             ::Read( hb_MemoRead( xElem ), nStyle )
          ELSE
             ::Read( xElem, nStyle )

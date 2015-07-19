@@ -28,6 +28,6 @@ PROCEDURE Main()
    ? "From file:", hb_ntos( Len( cBuffer ) )
    ? "The strings are", iif( cLong == cBuffer, "equal", "not equal" )
 
-   FErase( "longdev.prn" )
+   hb_vfErase( "longdev.prn" )
 
    RETURN

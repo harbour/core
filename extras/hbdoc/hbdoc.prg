@@ -368,7 +368,7 @@ STATIC PROCEDURE ProcessDir( cDir, aContent )  /* this is a recursive procedure 
 
    cDir += hb_ps()
 
-   FOR EACH file IN Directory( cDir + hb_osFileMask(), "D" )
+   FOR EACH file IN hb_vfDirectory( cDir + hb_osFileMask(), "D" )
       IF file[ F_ATTR ] == "D"
          IF !( file[ F_NAME ] == "." ) .AND. ;
             !( file[ F_NAME ] == ".." )

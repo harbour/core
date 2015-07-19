@@ -9,8 +9,6 @@
  *
  */
 
-#include "fileio.ch"
-
 procedure main( cdp, info, unicode )
 
    local cUp, cLo, cUp2, cLo2, cOrd, cOrd2, cOrdMix, cMix, c, i, a
@@ -339,16 +337,11 @@ static function charinfo( c )
 #define HB_CDP_UPPER    8
 
 static function write_file( cName, cBody )
-
-   local lRet := .f.
-   local hFile
-
-   if ( hFile := FCreate( cName ) ) != F_ERROR
-      lRet := FWrite( hFile, cBody ) == hb_BLen( cBody )
-      FClose( hFile )
-   endif
-
-   return lRet
+#ifdef __HARBOUR__
+   return hb_MemoWrit( cName, cBody )
+#else
+   return MemoWrit( cName, cBody )
+#endif
 
 static function genCP( id, info, unicode, lBin, lWarn, lMixed, cUp, cLo )
 

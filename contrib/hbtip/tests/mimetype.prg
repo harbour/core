@@ -6,7 +6,7 @@ PROCEDURE Main( cFileName )
 
    IF ! HB_ISSTRING( cFileName )
       ? hb_StrFormat( "Usage: %1$s <file to test>", hb_ProgName() )
-   ELSEIF hb_FileExists( cFileName )
+   ELSEIF hb_vfExists( cFileName )
       ? cFileName
       ?
       ? "tip_MimeType()", tip_MimeType( hb_MemoRead( cFileName ), "application/octet-stream" )

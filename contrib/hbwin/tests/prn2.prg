@@ -42,7 +42,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cFileName )
    Alert( "win_PrintFileRaw() returned: " + hb_ntos( win_PrintFileRaw( cPrinter, cFileName, "testing raw printing" ) ) )
 
    IF lDelete
-      FErase( cFileName )
+      hb_vfErase( cFileName )
    ENDIF
 
    RETURN

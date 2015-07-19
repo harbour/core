@@ -26,10 +26,10 @@ PROCEDURE Main( cRoot )
    ELSE
       /* Detect Harbour root */
       cRoot := "." + hb_ps()
-      DO WHILE hb_DirExists( cRoot + ".." )
-         IF hb_FileExists( cRoot + "README.md" ) .AND. ;
-            hb_FileExists( cRoot + "LICENSE.txt" ) .AND. ;
-            hb_DirExists( cRoot + "config" )
+      DO WHILE hb_vfDirExists( cRoot + ".." )
+         IF hb_vfExists( cRoot + "README.md" ) .AND. ;
+            hb_vfExists( cRoot + "LICENSE.txt" ) .AND. ;
+            hb_vfExists( cRoot + "config" )
             EXIT
          ENDIF
          cRoot += ".." + hb_ps()
@@ -40,7 +40,7 @@ PROCEDURE Main( cRoot )
 
    aDir := { cRoot }
 
-   FOR EACH aFile IN Directory( cRoot + "contrib" + hb_ps() + hb_osFileMask(), "D" )
+   FOR EACH aFile IN hb_vfDirectory( cRoot + "contrib" + hb_ps() + hb_osFileMask(), "D" )
       IF "D" $ aFile[ F_ATTR ] .AND. ;
          !( aFile[ F_NAME ] == "." ) .AND. ;
          !( aFile[ F_NAME ] == ".." )

@@ -58,7 +58,7 @@ PROCEDURE Main()
       cHdr6 =>, ;
       cHdr7 => }
 
-   FOR EACH aFile IN Directory( hb_osFileMask() )
+   FOR EACH aFile IN hb_vfDirectory( hb_osFileMask() )
 
       cExt := hb_FNameExt( aFile[ F_NAME ] )
 

@@ -9,7 +9,7 @@ PROCEDURE Main( n )
 
    n := Val( hb_defaultValue( n, "0" ) )
 
-   IF ! hb_FileExists( "hrbext.hrb" )
+   IF ! hb_vfExists( "hrbext.hrb" )
       hb_run( "harbour hrbext.prg -gh" )
    ENDIF
 

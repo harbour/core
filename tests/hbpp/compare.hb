@@ -1,15 +1,15 @@
 #!/usr/bin/hbmk2
 
-hb_FCopy( "_pp_test.prg", "_pp_hb.prg" )
-hb_FCopy( "_pp_test.prg", "_pp_cl.prg" )
+hb_vfCopyFile( "_pp_test.prg", "_pp_hb.prg" )
+hb_vfCopyFile( "_pp_test.prg", "_pp_cl.prg" )
 
-hb_run( "harbour -p -s -n _pp_hb.prg" )
+hb_run( "harbour _pp_hb.prg -p -s -n" )
 hb_run( "clipper.exe _pp_cl.prg /p /s /n" )
 
-FErase( "_pp_hb.prg" )
-FErase( "_pp_cl.prg" )
+hb_vfErase( "_pp_hb.prg" )
+hb_vfErase( "_pp_cl.prg" )
 
 hb_run( "diff -u -w _pp_hb.ppo _pp_cl.ppo > pp_test.dif" )
 
-FErase( "_pp_hb.ppo" )
-FErase( "_pp_cl.ppo" )
+hb_vfErase( "_pp_hb.ppo" )
+hb_vfErase( "_pp_cl.ppo" )

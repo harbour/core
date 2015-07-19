@@ -12,7 +12,7 @@ PROCEDURE Main()
 
    LOCAL aFile
 
-   FOR EACH aFile IN Directory( hb_osFileMask() )
+   FOR EACH aFile IN hb_vfDirectory( hb_osFileMask() )
       IF hb_FNameExt( aFile[ F_NAME ] ) == ".c" .OR. ;
          hb_FNameExt( aFile[ F_NAME ] ) == ".prg"
          hb_MemoWrit( aFile[ F_NAME ], __hbdoc_FilterOut( MemoRead( aFile[ F_NAME ] ) ) )

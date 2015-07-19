@@ -55,14 +55,12 @@ PROCEDURE Main( cFileArg )
 
    /* Test the basic functionality */
 
-   hTree := mxmlNewElement( MXML_NO_PARENT, "element" )
-   IF Empty( hTree )
+   IF Empty( hTree := mxmlNewElement( MXML_NO_PARENT, "element" ) )
       ? "ERROR: No parent node in basic test!"
       RETURN
    ENDIF
 
-   nNum := mxmlGetType( hTree )
-   IF nNum != MXML_ELEMENT
+   IF ( nNum := mxmlGetType( hTree ) ) != MXML_ELEMENT
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
          ? hb_StrFormat( "ERROR: Parent has type %1$s (%2$d), expected MXML_ELEMENT!", ;
             "UNKNOWN", nNum )
@@ -76,8 +74,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   cStr := mxmlGetElement( hTree )
-   IF !( cStr == "element" )
+   IF !( ( cStr := mxmlGetElement( hTree ) ) == "element" )
       ? hb_StrFormat( "ERROR: Parent value is '%1$s', expected 'element'", cStr )
 
       mxmlDelete( hTree )
@@ -104,8 +101,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   nNum := mxmlGetType( hNode )
-   IF nNum != MXML_INTEGER
+   IF ( nNum := mxmlGetType( hNode ) ) != MXML_INTEGER
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
          ? hb_StrFormat( "ERROR: First child has type %1$s (%2$d), expected MXML_TEXT!", ;
             "UNKNOWN", nNum )
@@ -119,8 +115,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   nNum := mxmlGetInteger( hNode )
-   IF nNum != 123
+   IF ( nNum := mxmlGetInteger( hNode ) ) != 123
       ? hb_StrFormat( "ERROR: First child value is %1$d, expected 123!", nNum )
 
       mxmlDelete( hTree )
@@ -128,8 +123,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   hNode := mxmlGetNextSibling( hNode )
-   IF Empty( hNode )
+   IF Empty( hNode := mxmlGetNextSibling( hNode ) )
       ? "ERROR: No second child node in basic test!"
 
       mxmlDelete( hTree )
@@ -137,8 +131,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   nNum := mxmlGetType( hNode )
-   IF nNum != MXML_OPAQUE
+   IF ( nNum := mxmlGetType( hNode ) ) != MXML_OPAQUE
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
          ? hb_StrFormat( "ERROR: Second child has type %1$s (%2$d), expected MXML_OPAQUE!", ;
             "UNKNOWN", nNum )
@@ -152,8 +145,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   hNode := mxmlGetNextSibling( hNode )
-   IF Empty( hNode )
+   IF Empty( hNode := mxmlGetNextSibling( hNode ) )
       ? "ERROR: No third child node in basic test!"
 
       mxmlDelete( hTree )
@@ -161,8 +153,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   nNum := mxmlGetType( hNode )
-   IF nNum != MXML_REAL
+   IF ( nNum := mxmlGetType( hNode ) ) != MXML_REAL
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
          ? hb_StrFormat( "ERROR: Third child has type %1$s (%2$d), expected MXML_REAL!", ;
             "UNKNOWN", nNum )
@@ -176,8 +167,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   nNum := mxmlGetReal( hNode )
-   IF nNum != 123.4
+   IF ( nNum := mxmlGetReal( hNode ) ) != 123.4
       ? hb_StrFormat( "ERROR: Third child value is %1$f, expected 123.4!", nNum )
 
       mxmlDelete( hTree )
@@ -185,8 +175,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   hNode := mxmlGetNextSibling( hNode )
-   IF Empty( hNode )
+   IF Empty( hNode := mxmlGetNextSibling( hNode ) )
       ? "ERROR: No fourth child node in basic test!"
 
       mxmlDelete( hTree )
@@ -194,8 +183,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   nNum := mxmlGetType( hNode )
-   IF nNum != MXML_TEXT
+   IF ( nNum := mxmlGetType( hNode ) ) != MXML_TEXT
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
          ? hb_StrFormat( "ERROR: Fourth child has type %1$s (%2$d), expected MXML_TEXT!", ;
             "UNKNOWN", nNum )
@@ -245,8 +233,7 @@ PROCEDURE Main( cFileArg )
 
    /* Test mxmlFindPath */
 
-   hNode := mxmlFindPath( hTree, "*/two" )
-   IF Empty( hNode )
+   IF Empty( hNode := mxmlFindPath( hTree, "*/two" ) )
       ? "ERROR: Cannot find value for '*/two'."
 
       mxmlDelete( hTree )
@@ -260,8 +247,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   hNode := mxmlFindPath( hTree, "foo/*/two" )
-   IF Empty( hNode )
+   IF Empty( hNode := mxmlFindPath( hTree, "foo/*/two" ) )
       ? "ERROR: Cannot find value for 'foo/*/two'."
 
       mxmlDelete( hTree )
@@ -275,8 +261,7 @@ PROCEDURE Main( cFileArg )
       RETURN
    ENDIF
 
-   hNode := mxmlFindPath( hTree, "foo/bar/one/two" )
-   IF Empty( hNode )
+   IF Empty( hNode := mxmlFindPath( hTree, "foo/bar/one/two" ) )
       ? "ERROR: Cannot find value for 'foo/bar/one/two'."
 
       mxmlDelete( hTree )
@@ -292,8 +277,7 @@ PROCEDURE Main( cFileArg )
 
    /* Test indices */
 
-   hInd := mxmlIndexNew( hTree )
-   IF Empty( hInd )
+   IF Empty( hInd := mxmlIndexNew( hTree ) )
       ? "ERROR: Could not create index of all nodes!"
 
       mxmlDelete( hTree )
@@ -322,8 +306,7 @@ PROCEDURE Main( cFileArg )
 
    mxmlIndexDelete( hInd )
 
-   hInd := mxmlIndexNew( hTree, "group" )
-   IF Empty( hInd )
+   IF Empty( hInd := mxmlIndexNew( hTree, "group" ) )
       ? "ERROR: Could not create index of groups!"
 
       mxmlDelete( hTree )
@@ -352,8 +335,7 @@ PROCEDURE Main( cFileArg )
 
    mxmlIndexDelete( hInd )
 
-   hInd := mxmlIndexNew( hTree,, "type" )
-   IF Empty( hInd )
+   IF Empty( hInd := mxmlIndexNew( hTree,, "type" ) )
       ? "ERROR: Coult not create index of type attributes!"
 
       mxmlDelete( hTree )
@@ -382,8 +364,7 @@ PROCEDURE Main( cFileArg )
 
    mxmlIndexDelete( hInd )
 
-   hInd := mxmlIndexNew( hTree, "group", "type" )
-   IF Empty( hInd )
+   IF Empty( hInd := mxmlIndexNew( hTree, "group", "type" ) )
       ? "ERROR: Could not create index of elements and attributes!"
 
       mxmlDelete( hTree )

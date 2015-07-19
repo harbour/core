@@ -178,7 +178,7 @@ METHOD PROCEDURE Generate() CLASS THTML
    ELSE
       ::cContent := ""
 
-      IF hb_FileExists( ::cHTMLFile )
+      IF hb_vfExists( ::cHTMLFile )
          ::cContent := hb_StrReplace( hb_MemoRead( ::cHTMLFile ), ::aReplaceTags )
 
 #if 0

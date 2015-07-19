@@ -751,8 +751,8 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
 
       IF ! IsBinary( cFile )
 
-         IF hb_FileMatch( cName, "ChangeLog.txt" ) .AND. Len( cFile ) > 32768 .AND. ! lApplyFixes
-            cFile := RTrimEOL( Left( cFile, 16384 ) ) + LTrim( Right( cFile, 16384 ) )
+         IF hb_FileMatch( cName, "ChangeLog.txt" ) .AND. hb_BLen( cFile ) > 32768 .AND. ! lApplyFixes
+            cFile := RTrimEOL( hb_BLeft( cFile, 16384 ) ) + LTrim( hb_BRight( cFile, 16384 ) )
          ENDIF
 
          lReBuild := .F.
@@ -770,7 +770,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
             ENDIF
          ENDIF
 
-         IF Right( cFile, 1 ) == Chr( 26 )
+         IF hb_BRight( cFile, 1 ) == Chr( 26 )
             AAdd( aErr, "content: has legacy EOF char" )
             IF lApplyFixes
                cFile := hb_StrShrink( cFile )
@@ -813,7 +813,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
             cFile := RemoveEndingWhitespace( cFile, iif( Empty( cEOL ), hb_eol(), cEOL ), lRemoveEndingWhitespace )
          ENDIF
 
-         IF !( Right( cFile, Len( Chr( 10 ) ) ) == Chr( 10 ) )
+         IF !( hb_BRight( cFile, Len( Chr( 10 ) ) ) == Chr( 10 ) )
             AAdd( aErr, "content: has no EOL at EOF" )
             IF lApplyFixes
                cFile += iif( Empty( cEOL ), hb_eol(), cEOL )
@@ -1170,7 +1170,7 @@ STATIC FUNCTION my_DirScanWorker( cMask, aList )
    LOCAL file
 
    IF ! hb_vfExists( hb_FNameDir( cMask ) + ".git" )  /* skip Git submodules */
-      FOR EACH file IN Directory( cMask, "D" )
+      FOR EACH file IN hb_vfDirectory( cMask, "D" )
          IF file[ F_NAME ] == "." .OR. file[ F_NAME ] == ".."
          ELSEIF "D" $ file[ F_ATTR ]
             my_DirScanWorker( hb_FNameDir( cMask ) + file[ F_NAME ] + hb_ps() + hb_FNameNameExt( cMask ), aList )

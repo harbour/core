@@ -2,6 +2,10 @@
 
 /* ScrollBar class test */
 
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
+
 #include "directry.ch"
 #include "achoice.ch"
 #include "inkey.ch"
@@ -31,7 +35,7 @@ PROCEDURE Main()
    @  5, 28, 15, 60 BOX B_THIN + " " COLOR "W/W*"
 
    /* get files of the current directory to display them on the AChoice() menu */
-   tmpFileList := Directory()
+   tmpFileList := hb_vfDirectory()
 
    FOR i := 1 TO Len( tmpFileList )
       AAdd( aFileList, tmpFileList[ i ][ F_NAME ] )

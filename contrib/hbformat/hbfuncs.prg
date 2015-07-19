@@ -58,7 +58,7 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
    HBXToFuncList( @cFunctions, __harbour_hbx() )
 
    /* from .hbr container files */
-   FOR EACH aFile IN Directory( hb_DirBase() + "*.hbr" )
+   FOR EACH aFile IN hb_vfDirectory( hb_DirBase() + "*.hbr" )
       IF hb_FileMatch( hb_FNameName( aFile[ F_NAME ] ), "contrib" )
          lContribHBR := .T.
       ENDIF
