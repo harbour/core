@@ -1356,36 +1356,36 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       RETURN
    ENDIF
 
-   IF hb_FileExists( UOsFileName( cFileName ) )
+   IF hb_vfExists( UOsFileName( cFileName ) )
       IF "HTTP_IF_MODIFIED_SINCE" $ server .AND. ;
          HttpDateUnformat( server[ "HTTP_IF_MODIFIED_SINCE" ], @tHDate ) .AND. ;
-         hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
+         hb_vfTimeGet( UOsFileName( cFileName ), @tDate ) .AND. ;
          tDate <= tHDate
 
          USetStatusCode( 304 )
 
       ELSEIF "HTTP_IF_UNMODIFIED_SINCE" $ server .AND. ;
          HttpDateUnformat( server[ "HTTP_IF_UNMODIFIED_SINCE" ], @tHDate ) .AND. ;
-         hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
+         hb_vfTimeGet( UOsFileName( cFileName ), @tDate ) .AND. ;
          tDate > tHDate
 
          USetStatusCode( 412 )
       ELSE
          UAddHeader( "Content-Type", tip_FileNameMimeType( cFileName, "application/octet-stream" ) )
 
-         IF hb_FGetDateTime( UOsFileName( cFileName ), @tDate )
+         IF hb_vfTimeGet( UOsFileName( cFileName ), @tDate )
             UAddHeader( "Last-Modified", HttpDateFormat( tDate ) )
          ENDIF
 
          UWrite( hb_MemoRead( UOsFileName( cFileName ) ) )
       ENDIF
-   ELSEIF hb_DirExists( UOsFileName( cFileName ) )
+   ELSEIF hb_vfDirExists( UOsFileName( cFileName ) )
       IF !( Right( cFileName, 1 ) == "/" )
          URedirect( iif( server[ "HTTPS" ], "https", "http" ) + "://" + server[ "HTTP_HOST" ] + server[ "SCRIPT_NAME" ] + "/" )
          RETURN
       ENDIF
       IF AScan( { "index.html", "index.htm" }, ;
-            {| x | iif( hb_FileExists( UOsFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
+            {| x | iif( hb_vfExists( UOsFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
          UAddHeader( "Content-Type", "text/html" )
          UWrite( hb_MemoRead( UOsFileName( cFileName ) ) )
          RETURN
@@ -1397,7 +1397,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
       UAddHeader( "Content-Type", "text/html" )
 
-      aDir := hb_Directory( UOsFileName( cFileName ), "D" )
+      aDir := hb_vfDirectory( UOsFileName( cFileName ), "D" )
       IF "s" $ get
          DO CASE
          CASE get[ "s" ] == "s"
@@ -1577,7 +1577,7 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
    hb_default( @cFileName, MEMVAR->server[ "SCRIPT_NAME" ] )
 
    cFileName := UOsFileName( hb_DirBase() + "tpl/" + cFileName + ".tpl" )
-   IF hb_FileExists( cFileName )
+   IF hb_vfExists( cFileName )
       cTpl := hb_MemoRead( cFileName )
       BEGIN SEQUENCE
          IF ( nPos := compile_buffer( cTpl, 1, aCode ) ) < Len( cTpl ) + 1

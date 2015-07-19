@@ -90,7 +90,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
    cBaseImage := IMAGES_IN + hb_defaultValue( cBaseImage, "57chevy.gif" )
 
-   IF ! hb_FileExists( cBaseImage )
+   IF ! hb_vfExists( cBaseImage )
       RETURN NIL
    ENDIF
 

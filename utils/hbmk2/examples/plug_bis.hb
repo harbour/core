@@ -107,8 +107,8 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
                IF hbmk[ "lINC" ] .AND. ! hbmk[ "lREBUILD" ]
                   lBuildIt := ;
-                     ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
-                     ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                     ! hb_vfTimeGet( cDst, @tDst ) .OR. ;
+                     ! hb_vfTimeGet( cSrc, @tSrc ) .OR. ;
                      tSrc > tDst
                ELSE
                   lBuildIt := .T.
@@ -150,8 +150,8 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
       IF ! hbmk[ "lINC" ] .OR. hbmk[ "lCLEAN" ]
          AEval( hbmk[ "vars" ][ "aBIS_Dst" ], {| tmp | ;
-            FErase( tmp ), ;
-            FErase( hb_FNameExtSet( tmp, ".h" ) ) } )
+            hb_vfErase( tmp ), ;
+            hb_vfErase( hb_FNameExtSet( tmp, ".h" ) ) } )
       ENDIF
 
       EXIT
@@ -170,7 +170,7 @@ STATIC FUNCTION tool_detect( hbmk, cName )
       cName += hbmk[ "cCCEXT" ]
 
       IF Empty( GetEnv( "HB_BISONPATH" ) ) .OR. ;
-         ! hb_FileExists( cBIN := hb_DirSepAdd( GetEnv( "HB_BISONPATH" ) ) + cName )
+         ! hb_vfExists( cBIN := hb_DirSepAdd( GetEnv( "HB_BISONPATH" ) ) + cName )
 
          IF Empty( cBIN := hbmk_FindInPath( cName, GetEnv( "PATH" ) ) )
             hbmk_OutErr( hbmk, hb_StrFormat( "%1$s not set, could not auto-detect '%2$s' executable", hbmk_ArrayToList( aEnvList, ", " ), cName ) )

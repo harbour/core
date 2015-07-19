@@ -16,16 +16,16 @@ PROCEDURE Main()
 
    CLS
 
-   IF ! hb_FileExists( cLockFile )
+   IF ! hb_vfExists( cLockFile )
       hb_MemoWrit( cLockFile, "" )
    ENDIF
 
    ? "Opening lock file"
-   IF ( hLockFile := FOpen( cLockFile, FO_READWRITE ) ) == F_ERROR
+   IF ( hLockFile := hb_vfOpen( cLockFile, FO_READWRITE ) ) == NIL
       ? "ERROR: Cannot open Lock File"
       RETURN
    ENDIF
-   ? "Lock file opened - handle is", hb_ntos( hLockFile )
+   ? "Lock file opened"
    ?
    ShowStatus()
    ? "[+] to get a lock, [-] to release it, [Esc] to exit, [E] for exclusive, [S] for shared, [B] for blocking, [N] for non-blocking"
@@ -36,7 +36,7 @@ PROCEDURE Main()
             ? "Already locked"
          ELSE
             ? "Requesting Lock"
-            IF hb_FLock( hLockFile, 0, 1, hb_bitOr( s_nExclusivity, s_nBlocking ) )
+            IF hb_vfLock( hLockFile, 0, 1, hb_bitOr( s_nExclusivity, s_nBlocking ) )
                ? "Lock has been obtained"
                s_lLocked := .T.
             ELSE
@@ -46,7 +46,7 @@ PROCEDURE Main()
          EXIT
       CASE hb_keyCode( "-" )
          IF s_lLocked
-            IF hb_FUnlock( hLockFile, 0, 1 )
+            IF hb_vfUnlock( hLockFile, 0, 1 )
                ? "Lock has been released"
                s_lLocked := .F.
             ELSE
@@ -94,7 +94,7 @@ PROCEDURE Main()
          EXIT
       CASE K_ESC
          ?
-         FClose( hLockFile )
+         hb_vfClose( hLockFile )
          ? "Exiting"
          RETURN
       OTHERWISE

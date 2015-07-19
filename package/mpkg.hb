@@ -51,7 +51,7 @@ PROCEDURE Main( cMode )
    CASE "ts"
 
       cGitRoot := hb_DirSepAdd( hb_DirSepToOS( hb_defaultValue( hb_PValue( 2 ), "." ) ) ) + ".git"
-      IF hb_DirExists( cGitRoot )
+      IF hb_vfDirExists( cGitRoot )
 
          _DEBUG( __FILE__ + ": cwd:", hb_cwd() + hb_eol() )
          _DEBUG( __FILE__ + ": git:", cGitRoot + hb_eol() )

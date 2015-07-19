@@ -367,10 +367,11 @@ static void GDImageSaveTo( int nType )
       /* Get file name or an output handler or NIL it I want a return string */
       if( ! ( HB_ISNIL( 2 ) ||
               HB_ISCHAR( 2 ) ||
+              hb_fileParamGet( 2 ) ||
               HB_ISNUM( 2 ) ) )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
-                               "Second argument must be NIL or numeric or a string.",
+                               "Second argument must be NIL, a file handle or a string.",
                                HB_ERR_FUNCNAME, 1, hb_paramError( 2 ) );
          return;
       }
@@ -2140,7 +2141,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
 {
 #if HB_GD_VERS( 2, 0, 33 )
    if( hb_isGdImage( 1 ) &&
-       ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
+       ( HB_ISCHAR( 2 ) || hb_fileParamGet( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
@@ -2171,7 +2172,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 {
 #if HB_GD_VERS( 2, 0, 33 )
    if( hb_isGdImage( 1 ) &&
-       ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
+       ( HB_ISCHAR( 2 ) || hb_fileParamGet( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
@@ -2209,7 +2210,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 HB_FUNC( GDIMAGEGIFANIMEND )
 {
 #if HB_GD_VERS( 2, 0, 33 )
-   if( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
+   if( HB_ISCHAR( 1 ) || hb_fileParamGet( 1 ) || HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
    {
       int    size;
       void * iptr = gdImageGifAnimEndPtr( &size );
@@ -2217,8 +2218,8 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       /* Check if 1st parameter is a file name or a handle */
       if( HB_ISCHAR( 1 ) )
          AddImageToFile( hb_parc( 1 ), iptr, size );
-      else if( hb_fileParamGet( 2 ) )
-         SaveImageToFileObject( hb_fileParamGet( 2 ), iptr, size );
+      else if( hb_fileParamGet( 1 ) )
+         SaveImageToFileObject( hb_fileParamGet( 1 ), iptr, size );
       else
          SaveImageToHandle( hb_numToHandle( hb_parnintdef( 1, HB_STDOUT_HANDLE ) ), iptr, size );
    }

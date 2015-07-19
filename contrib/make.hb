@@ -553,7 +553,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
 
       cOptionsPre += " -hbdyn"
 
-      IF hb_FileExists( hb_FNameExtSet( cProjectPath, ".hbc" ) )
+      IF hb_vfExists( hb_FNameExtSet( cProjectPath, ".hbc" ) )
          cOptionsLibDyn += " " + hb_FNameExtSet( cProjectPath, ".hbc" )
       ENDIF
    ELSE
@@ -609,7 +609,7 @@ STATIC FUNCTION mk_hbd( cDir )
       IF ! Empty( aEntry )
          cName := hb_DirSepToOS( cDocDir ) + hb_ps() + cName + ".hbd"
          IF __hbdoc_SaveHBD( cName, aEntry )
-            mk_hb_FSetDateTime( cName )
+            mk_hb_vfTimeSet( cName )
             OutStd( hb_StrFormat( "! Compiled documentation: %1$s <= %2$s", cName, cDir ) + hb_eol() )
             RETURN .T.
          ELSE
@@ -734,7 +734,7 @@ STATIC FUNCTION AddProject( hProjectList, cFileName )
 
       cFileName := hb_FNameMerge( cDir, cName, cExt )
 
-      IF hb_FileExists( hb_DirSepToOS( s_cBase + s_cHome + cFileName ) )
+      IF hb_vfExists( hb_DirSepToOS( s_cBase + s_cHome + cFileName ) )
          cFileName := StrTran( cFileName, "\", "/" )
          IF ! cFileName $ hProjectList
             hProjectList[ cFileName ] := { => }
@@ -758,12 +758,12 @@ STATIC PROCEDURE LoadProjectListAutomatic( hProjectList, cDir )
 
    cDir := hb_DirSepAdd( hb_DirSepToOS( cDir ) )
 
-   FOR EACH aFile IN Directory( cDir, "D" )
+   FOR EACH aFile IN hb_vfDirectory( cDir, "D" )
       IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." )
-         IF hb_FileExists( cDir + ( tmp := aFile[ F_NAME ] + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbp" ) ) )
+         IF hb_vfExists( cDir + ( tmp := aFile[ F_NAME ] + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbp" ) ) )
             AddProject( hProjectList, tmp )
          ENDIF
-         IF hb_FileExists( tmp := ( cDir + aFile[ F_NAME ] + hb_ps() + "makesub.txt" ) )
+         IF hb_vfExists( tmp := ( cDir + aFile[ F_NAME ] + hb_ps() + "makesub.txt" ) )
             FOR EACH tmp IN hb_ATokens( hb_MemoRead( tmp ), .T. )
                IF ! Empty( tmp )
                   AddProject( hProjectList, aFile[ F_NAME ] + hb_ps() + hb_DirSepToOS( tmp ) )
@@ -785,7 +785,7 @@ STATIC PROCEDURE LoadProjectListFromString( hProjectList, cString )
 
    RETURN
 
-STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
+STATIC FUNCTION mk_hb_vfTimeSet( cFileName )
 
    STATIC s_tVCS
 
@@ -806,4 +806,4 @@ STATIC FUNCTION mk_hb_FSetDateTime( cFileName )
       ENDIF
    ENDIF
 
-   RETURN Empty( s_tVCS ) .OR. hb_FSetDateTime( cFileName, s_tVCS )
+   RETURN Empty( s_tVCS ) .OR. hb_vfTimeSet( cFileName, s_tVCS )

@@ -42,6 +42,7 @@
  *
  */
 
+#include "fileio.ch"
 #include "hbclass.ch"
 
 CREATE CLASS TIniFile
@@ -79,13 +80,13 @@ METHOD New( cFileName ) CLASS TIniFile
       ::Contents := {}
       CurrArray := ::Contents
 
-      hFile := iif( hb_FileExists( cFileName ), FOpen( cFilename ), FCreate( cFilename ) )
+      hFile := hb_vfOpen( cFilename, FO_CREAT + FO_WRITE )
 
       cLine := ""
       lDone := .F.
       DO WHILE ! lDone
          cFile := Space( 256 )
-         lDone := ( FRead( hFile, @cFile, hb_BLen( cFile ) ) <= 0 )
+         lDone := ( hb_vfRead( hFile, @cFile, hb_BLen( cFile ) ) <= 0 )
 
          cFile := StrTran( cFile, Chr( 13 ) )  // so we can just search for Chr( 10 )
 
@@ -132,7 +133,7 @@ METHOD New( cFileName ) CLASS TIniFile
          ENDDO
       ENDDO
 
-      FClose( hFile )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN Self
@@ -288,31 +289,31 @@ METHOD PROCEDURE UpdateFile() CLASS TIniFile
 
    LOCAL i, j
 
-   LOCAL hFile := FCreate( ::Filename )
+   LOCAL hFile := hb_vfOpen( ::Filename, FO_CREAT + FO_TRUNC + FO_WRITE )
 
    FOR EACH i IN ::Contents
       DO CASE
       CASE i[ 1 ] == NIL
-         FWrite( hFile, i[ 2 ] + hb_eol() )
+         hb_vfWrite( hFile, i[ 2 ] + hb_eol() )
 
       CASE HB_ISARRAY( i[ 2 ] )
-         FWrite( hFile, "[" + i[ 1 ] + "]" + hb_eol() )
+         hb_vfWrite( hFile, "[" + i[ 1 ] + "]" + hb_eol() )
 
          FOR EACH j IN i[ 2 ]
             IF j[ 1 ] == NIL
-               FWrite( hFile, j[ 2 ] + hb_eol() )
+               hb_vfWrite( hFile, j[ 2 ] + hb_eol() )
             ELSE
-               FWrite( hFile, j[ 1 ] + "=" + j[ 2 ] + hb_eol() )
+               hb_vfWrite( hFile, j[ 1 ] + "=" + j[ 2 ] + hb_eol() )
             ENDIF
          NEXT
-         FWrite( hFile, hb_eol() )
+         hb_vfWrite( hFile, hb_eol() )
 
       CASE HB_ISSTRING( i[ 2 ] )
-         FWrite( hFile, i[ 1 ] + "=" + i[ 2 ] + hb_eol() )
+         hb_vfWrite( hFile, i[ 1 ] + "=" + i[ 2 ] + hb_eol() )
 
       ENDCASE
    NEXT
 
-   FClose( hFile )
+   hb_vfClose( hFile )
 
    RETURN
