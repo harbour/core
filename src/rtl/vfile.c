@@ -815,8 +815,7 @@ HB_FUNC( HB_VFHANDLE )
 {
    PHB_FILE pFile = hb_fileParam( 1 );
 
-   if( pFile )
-      hb_retnint( ( HB_NHANDLE ) hb_fileHandle( pFile ) );
+   hb_retnint( ( HB_NHANDLE ) ( pFile ? hb_fileHandle( pFile ) : FS_ERROR ) );
 }
 
 /* hb_vfTempFile( @<cFileName>, [ <cDir> ], [ <cPrefix> ], [ <cExt> ], [ <nAttr> ] ) -> <pHandle> | NIL */
