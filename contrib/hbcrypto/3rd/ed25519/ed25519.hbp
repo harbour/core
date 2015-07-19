@@ -17,7 +17,7 @@ sc.c
 sign.c
 verify.c
 
-# URL    https://github.com/orlp/ed25519/archive/6d69ff4062483a17d4a6ea55737b1eea0874fe07.zip
+# URL    https://github.com/orlp/ed25519/archive/761f035ad85cf284a80b6cc97056bc9514d4b33b.zip
 # DIFF   ed25519.dif
 #
 # MAP    license.txt         LICENSE.txt
