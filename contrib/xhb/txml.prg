@@ -386,17 +386,17 @@ METHOD Write( fHandle, nStyle ) CLASS TXMLDocument
 
    LOCAL nResult := HBXML_STATUS_ERROR
 
-   IF HB_ISSTRING( fHandle )  // It's a filename!
-      IF ( fHandle := FCreate( fHandle ) ) != F_ERROR
+   IF HB_ISSTRING( fHandle )  // It's a filename
+      IF ( fHandle := hb_vfOpen( fHandle, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
          IF Empty( ::oRoot:oChild ) .OR. !( ::oRoot:oChild:cName == "xml" )
             IF Empty( ::cHeader )
-               FWrite( fHandle, '<?xml version="1.0"?>' + hb_eol() )
+               hb_vfWrite( fHandle, '<?xml version="1.0"?>' + hb_eol() )
             ELSE
-               FWrite( fHandle, ::cHeader + hb_eol() )
+               hb_vfWrite( fHandle, ::cHeader + hb_eol() )
             ENDIF
          ENDIF
          nResult := ::oRoot:Write( fHandle, nStyle )
-         FClose( fHandle )
+         hb_vfClose( fHandle )
       ENDIF
       RETURN nResult
    ENDIF
