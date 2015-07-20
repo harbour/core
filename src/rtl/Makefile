@@ -241,6 +241,7 @@ PRG_SOURCES := \
    gui.prg \
    hbdoc.prg \
    hbfilehi.prg \
+   hbfsize.prg \
    hbi18n2.prg \
    hbini.prg \
    input.prg \

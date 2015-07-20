@@ -1,5 +1,5 @@
 /*
- * hb_FSize() function
+ * hb_fsFSize() function
  *
  * Copyright 2000-2001 Jose Lalin <dezac@corevia.com>
  * Copyright 2000-2001 Viktor Szakats (vszakats.net/harbour)
@@ -45,93 +45,21 @@
  *
  */
 
-#if ! defined( _LARGEFILE64_SOURCE )
-   #define _LARGEFILE64_SOURCE  1
-#endif
-
 #include "hbapi.h"
 #include "hbapifs.h"
-#include "hbvm.h"
-
-#if ! defined( HB_OS_WIN_CE )
-   #include <sys/types.h>
-   #include <sys/stat.h>
-#endif
-
-#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
-   #if defined( __USE_LARGEFILE64 )
-      /*
-       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
-       */
-      #define HB_USE_LARGEFILE64
-   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
-      #define HB_USE_LARGEFILE64
-   #endif
-#endif
-
 
 HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
 {
-   if( bUseDirEntry )
-   {
-#if defined( HB_OS_WIN )
-      PHB_FFIND ffind = hb_fsFindFirst( pszFileName, HB_FA_ALL );
-      hb_fsSetIOError( ffind != NULL, 0 );
-      if( ffind )
-      {
-         HB_FOFFSET size = ffind->size;
-         hb_fsFindClose( ffind );
-         return size;
-      }
-#elif defined( HB_USE_LARGEFILE64 )
-      char * pszFree;
-      HB_BOOL fResult;
-      struct stat64 statbuf;
-      pszFileName = hb_fsNameConv( pszFileName, &pszFree );
-      statbuf.st_size = 0;
-      hb_vmUnlock();
-      fResult = stat64( pszFileName, &statbuf ) == 0;
-      hb_fsSetIOError( fResult, 0 );
-      hb_vmLock();
-      if( pszFree )
-         hb_xfree( pszFree );
-      if( fResult )
-         return ( HB_FOFFSET ) statbuf.st_size;
-#else
-      char * pszFree;
-      HB_BOOL fResult;
-      struct stat statbuf;
-      pszFileName = hb_fsNameConv( pszFileName, &pszFree );
-      statbuf.st_size = 0;
-      hb_vmUnlock();
-      fResult = stat( ( char * ) pszFileName, &statbuf ) == 0;
-      hb_fsSetIOError( fResult, 0 );
-      hb_vmLock();
-      if( pszFree )
-         hb_xfree( pszFree );
-      if( fResult )
-         return ( HB_FOFFSET ) statbuf.st_size;
-#endif
-   }
-   else
-   {
-      PHB_FILE hFileHandle;
+   PHB_FILE hFileHandle;
 
-      if( ( hFileHandle = hb_fileExtOpen( pszFileName, NULL, FO_READ | FO_COMPAT | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
-      {
-         HB_FOFFSET nPos = hb_fileSeek( hFileHandle, 0, FS_END );
-         hb_fileClose( hFileHandle );
-         return nPos;
-      }
+   HB_SYMBOL_UNUSED( bUseDirEntry );  /* TODO: Reimplement this mode using hb_file*() compatible API calls */
+
+   if( ( hFileHandle = hb_fileExtOpen( pszFileName, NULL, FO_READ | FO_COMPAT | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
+   {
+      HB_FOFFSET nPos = hb_fileSeek( hFileHandle, 0, FS_END );
+      hb_fileClose( hFileHandle );
+      return nPos;
    }
+
    return 0;
-}
-
-HB_FUNC( HB_FSIZE )
-{
-   const char * pszFile = hb_parc( 1 );
-
-   hb_retnint( pszFile ? hb_fsFSize( pszFile, hb_parldef( 2, HB_TRUE ) ) : 0 );
 }
