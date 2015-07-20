@@ -43,9 +43,15 @@ PROCEDURE Main()
    ELSE
       ? "Error"
    ENDIF
-   hb_vfClose( hNew )
-   hb_vfClose( hErr )
-   hb_vfClose( hOld )
+   IF hNew != NIL
+      hb_vfClose( hNew )
+   ENDIF
+   IF hErr != NIL
+      hb_vfClose( hErr )
+   ENDIF
+   IF hOld != NIL
+      hb_vfClose( hOld )
+   ENDIF
 
    //
 
