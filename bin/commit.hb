@@ -521,7 +521,7 @@ STATIC FUNCTION Changes( cVCS )
 
    SWITCH cVCS
    CASE "svn" ; hb_processRun( Shell() + " " + CmdEscape( "svn status -q" ),, @cStdOut ) ; EXIT
-   CASE "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status -s" ),, @cStdOut ) ; EXIT
+   CASE "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status --porcelain" ),, @cStdOut ) ; EXIT
    OTHERWISE ; cStdOut := ""
    ENDSWITCH
 
