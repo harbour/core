@@ -131,6 +131,7 @@ static HB_GT_FUNCS SuperTable;
 #define HB_GTTRM_CLRX16     1
 #define HB_GTTRM_CLR256     2
 #define HB_GTTRM_CLRRGB     3
+#define HB_GTTRM_CLRAIX     4
 
 #define NO_STDKEYS          96
 #define NO_EXTDKEYS         30
@@ -1696,6 +1697,31 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
             i += hb_snprintf( buff + i, sizeof( buff ) - i, ";48;2;%d;%d;%d",
                               rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
          }
+         else if( pTerm->iExtColor == HB_GTTRM_CLRAIX )
+         {
+            if( fg < 8 )
+            {
+               buff[ i++ ] = '3';
+               buff[ i++ ] = '0' + fg;
+            }
+            else
+            {
+               buff[ i++ ] = '9';
+               buff[ i++ ] = '0' - 8 + fg;
+            }
+            buff[ i++ ] = ';';
+            if( bg < 8 )
+            {
+               buff[ i++ ] = '4';
+               buff[ i++ ] = '0' + bg;
+            }
+            else
+            {
+               buff[ i++ ] = '1';
+               buff[ i++ ] = '0';
+               buff[ i++ ] = '0' - 8 + bg;
+            }
+         }
          buff[ i++ ] = 'm';
          pTerm->iACSC    = acsc;
          pTerm->iBold    = bold;
@@ -1760,6 +1786,19 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
                i += hb_snprintf( buff + i, sizeof( buff ) - i, "38;2;%d;%d;%d",
                                  rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
             }
+            else if( pTerm->iExtColor == HB_GTTRM_CLRAIX )
+            {
+               if( fg < 8 )
+               {
+                  buff[ i++ ] = '3';
+                  buff[ i++ ] = '0' + fg;
+               }
+               else
+               {
+                  buff[ i++ ] = '9';
+                  buff[ i++ ] = '0' - 8 + fg;
+               }
+            }
             buff[ i++ ] = ';';
             pTerm->iFgColor = fg;
          }
@@ -1797,6 +1836,20 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
                rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
                i += hb_snprintf( buff + i, sizeof( buff ) - i, "48;2;%d;%d;%d",
                                  rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
+            }
+            else if( pTerm->iExtColor == HB_GTTRM_CLRAIX )
+            {
+               if( bg < 8 )
+               {
+                  buff[ i++ ] = '4';
+                  buff[ i++ ] = '0' + bg;
+               }
+               else
+               {
+                  buff[ i++ ] = '1';
+                  buff[ i++ ] = '0';
+                  buff[ i++ ] = '0' - 8 + bg;
+               }
             }
             buff[ i++ ] = ';';
             pTerm->iBgColor = bg;
@@ -3134,6 +3187,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
          case HB_GTTRM_CLRX16:
          case HB_GTTRM_CLR256:
          case HB_GTTRM_CLRRGB:
+         case HB_GTTRM_CLRAIX:
             pTerm->iExtColor = iValue;
             break;
       }
