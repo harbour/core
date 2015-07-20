@@ -121,7 +121,7 @@ PROCEDURE Main( cDL, cUL )
       WAIT
 
       #if ! defined( __PLATFORM__UNIX )
-         IF ! hb_FileExists( _CA_FN_ )
+         IF ! hb_vfExists( _CA_FN_ )
             ? "Downloading", _CA_FN_
             curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
             curl_easy_setopt( curl, HB_CURLOPT_URL, "http://curl.haxx.se/ca/cacert.pem" )

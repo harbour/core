@@ -214,7 +214,7 @@ STATIC FUNCTION IsVersionOK( cBIN, /* @ */ cVer )
    IF Len( aHit := hb_regexAll( "([0-9]+)\.([0-9]+)\.([0-9]+)", hb_StrReplace( cStdOutErr, Chr( 13 ) + Chr( 10 ) ) ) ) >= 1
       cVer := aHit[ 1 ][ 1 ]
       RETURN ;
-         Val( aHit[ 1 ][ 2 ] ) >= 5 .AND. ;
+         Val( aHit[ 1 ][ 2 ] ) >= 5 .OR. ;
          ( Val( aHit[ 1 ][ 2 ] ) == 4 .AND. Val( aHit[ 1 ][ 3 ] ) >= 5 )
    ENDIF
 
