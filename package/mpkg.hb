@@ -189,7 +189,7 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
          IF !( hb_vfReadLen( fhnd, 4 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 ) )
             nPEPos := NIL
          ENDIF
-      ELSEIF cSignature == "PE" .AND. hb_vfReadLen( fhnd, 2 ) == hb_BChar( 0 ) + hb_BChar( 0 )
+      ELSEIF cSignature + hb_vfReadLen( fhnd, 2 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 )
          nPEPos := 0
       ENDIF
       IF nPEPos != NIL

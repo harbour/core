@@ -386,7 +386,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
 
          IF hb_vfReadLen( fhnd, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
 
-            cBuffer := Space( hb_vfSeek( fhnd, 0, FS_END ) - _HBDOC_SIG_LEN )
+            cBuffer := Space( hb_vfSize( fhnd ) - _HBDOC_SIG_LEN )
             hb_vfSeek( fhnd, _HBDOC_SIG_LEN, FS_SET )
             hb_vfRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
             hb_vfClose( fhnd )

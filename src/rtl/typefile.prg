@@ -123,7 +123,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       aSaveSet[ 2 ] := Set( _SET_PRINTER, .T. )
    ENDIF
 
-   nSize   := hb_vfSeek( nHandle, 0, FS_END )
+   nSize   := hb_vfSize( nHandle )
    nBuffer := Min( nSize, BUFFER_LENGTH )
 
    hb_vfSeek( nHandle, 0 )  /* go top */

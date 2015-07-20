@@ -143,7 +143,7 @@ STATIC FUNCTION hb_iniFileLow( cFileSpec )
    ENDIF
 
    /* we'll read the whole file, then we'll break it in lines. */
-   cData := Space( hb_vfSeek( hFile, 0, FS_END ) )
+   cData := Space( hb_vfSize( hFile ) )
    hb_vfSeek( hFile, 0, FS_SET )
    nLen := hb_vfRead( hFile, @cData, hb_BLen( cData ) )
    cData := hb_BLeft( cData, nLen )

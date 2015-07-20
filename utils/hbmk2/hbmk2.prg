@@ -13664,7 +13664,7 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
                /* Recalculate PE checksum */
                IF lModified
-                  tmp := hb_vfSeek( fhnd, FS_END, 0 )
+                  tmp := hb_vfSize( fhnd )
                   hb_vfSeek( fhnd, FS_SET, 0 )
                   nDWORD := win_PEChecksumCalc( hb_vfReadLen( fhnd, tmp ), nPECheckSumPos )
                   IF hb_vfSeek( fhnd, nPEChecksumPos ) == nPEChecksumPos

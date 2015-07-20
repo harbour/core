@@ -223,7 +223,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
       IF hb_vfReadLen( fhnd, _HBMEM_SIG_LEN ) == _HBMEM_SIGNATURE
 
-         cBuffer := Space( hb_vfSeek( fhnd, 0, FS_END ) - _HBMEM_SIG_LEN )
+         cBuffer := Space( hb_vfSize( fhnd ) - _HBMEM_SIG_LEN )
          hb_vfSeek( fhnd, _HBMEM_SIG_LEN, FS_SET )
          hb_vfRead( fhnd, @cBuffer, Len( cBuffer ) )
          hb_vfClose( fhnd )

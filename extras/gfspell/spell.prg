@@ -305,7 +305,7 @@ FUNCTION Sp_LoadAux( cFile )
       Sp_GetSet( AUXILIARY_DICTIONARY, cFile )
 
       IF ( x := hb_vfOpen( cFile, FO_CREAT + FO_READ + FO_DENYNONE ) ) != NIL
-         nSize := hb_vfSeek( x, 0, FS_END )
+         nSize := hb_vfSize( x )
          IF nSize < MAX_STRING
             cStr := Space( nSize )
             hb_vfSeek( x, 0, FS_SET )
@@ -905,7 +905,7 @@ FUNCTION Sp_Init()
          IF hb_LeftEq( cBuf, "JJ" )
             nOther := Bin2L( SubStr( cBuf, 3, 4 ) )
             t_cOffsets := hb_BSubStr( cBuf, 7 )
-            nFileSize := hb_vfSeek( t_nHandle, 0, FS_END )
+            nFileSize := hb_vfSize( t_nHandle )
             IF nFileSize - nOther > 0
                cOther := Space( nFileSize - nOther )
                hb_vfSeek( t_nHandle, nOther, FS_SET )
@@ -1048,7 +1048,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
                ENDDO
                IF ! Empty( temp ) .OR. !( cBits == FOUR_BYTES )
 
-                  nWhere := hb_vfSeek( nH, 0, FS_END )
+                  nWhere := hb_vfSize( nH )
 
                   hb_vfSeek( nH, ( ( i - 1 ) * 26 * EACH_WORD ) + ( ( j - 1 ) * EACH_WORD ) + 6 )
                   hb_vfWrite( nH, L2Bin( nWhere ) + I2Bin( hb_BLen( temp ) + 4 ), EACH_WORD )
@@ -1058,7 +1058,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
             NEXT
          ENDDO
       NEXT
-      j := hb_vfSeek( nH, 0, FS_END )
+      j := hb_vfSize( nH )
       hb_vfSeek( nH, 2, FS_SET )
       hb_vfWrite( nH, L2Bin( j ) )
       IF ! Empty( cOther )

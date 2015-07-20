@@ -223,7 +223,7 @@ METHOD StartSession( cSID ) CLASS TIPCgi
 
       IF hb_vfExists( cFile )
          IF ( nH := hb_vfOpen( cFile ) ) != NIL
-            nFileSize := hb_vfSeek( nH, 0, FS_END )
+            nFileSize := hb_vfSize( nH )
             hb_vfSeek( nH, 0, FS_SET )
             cBuffer := Space( nFileSize )
             IF hb_vfRead( nH, @cBuffer, nFileSize ) != nFileSize

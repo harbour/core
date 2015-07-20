@@ -101,7 +101,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
       cErrorMsg := hb_StrFormat( "cannot open file: %1$s", cFile )
       RETURN NIL
    ENDIF
-   cValue := Space( hb_vfSeek( hFile, 0, FS_END ) )
+   cValue := Space( hb_vfSize( hFile ) )
    hb_vfSeek( hFile, 0, FS_SET )
    n := hb_vfRead( hFile, @cValue, hb_BLen( cValue ) )
    hb_vfClose( hFile )

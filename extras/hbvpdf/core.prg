@@ -2545,7 +2545,7 @@ STATIC FUNCTION NumAt( cSearch, cString )
 STATIC FUNCTION FileSize( nHandle )
 
    LOCAL nCurrent := FilePos( nHandle )  // Get file position
-   LOCAL nLength := hb_vfSeek( nHandle, 0, FS_END )  // Get file length
+   LOCAL nLength := hb_vfSize( nHandle )  // Get file length
 
    // Reset file position
    hb_vfSeek( nHandle, nCurrent )

@@ -496,7 +496,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
    IF ( nFIn := hb_vfOpen( cFile ) ) == NIL
       RETURN .F.
    ENDIF
-   nSize := hb_vfSeek( nFIn, 0, FS_END )
+   nSize := hb_vfSize( nFIn )
    hb_vfSeek( nFIn, 0 )
 
    nBufSize := SND_BUF_SIZE
