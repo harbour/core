@@ -19,17 +19,20 @@ addons:
       - gcc-5
       - g++-5
       - firebird2.5-dev
+     #- liballegro4.2-dev
       - libcairo2-dev
       - libcups2-dev
       - libcurl4-openssl-dev
       - libfreeimage-dev
       - libgd2-xpm-dev
       - libgpm-dev
+     #- libgs-dev
       - libicu-dev
       - libmagic-dev
       - libmysqlclient-dev
       - libncurses5-dev
       - libpq-dev
+     #- libslang2-dev
       - unixodbc-dev
 script: export HB_COMPILER=$CC && make
 before_install:
