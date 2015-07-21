@@ -14159,6 +14159,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
    LOCAL tmp
    LOCAL cOldDir
    LOCAL nOffset
+   LOCAL cGitBase
 
    hCustom := { => }
 
@@ -14174,7 +14175,8 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
       /* fall through */
    CASE _VCS_GIT
       cType := "git"
-      cCommand := "git" + iif( nType == _VCS_GIT_SUB .OR. Empty( cDir ), "", " --git-dir=" + cDir + ".git" ) + " log -1 --format=format:%h%n%H%n%ci%n%cn%n%ce%n%ai%n%an%n%ae --encoding=utf8"
+      cGitBase := "git" + iif( nType == _VCS_GIT_SUB .OR. Empty( cDir ), "", " --git-dir=" + cDir + ".git" + " " )
+      cCommand := cGitBase + "log -1 --format=format:%h%n%H%n%ci%n%cn%n%ce%n%ai%n%an%n%ae --encoding=utf8"
       /* see: https://github.com/golang/go/issues/9341 */
       hb_SetEnv( "GIT_TERMINAL_PROMPT", "0" )
       EXIT
@@ -14249,7 +14251,12 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
             hCustom[ "COMMIT_NAME" ] := aResult[ 4 ] /* UTF-8 */
             hCustom[ "COMMIT_MAIL" ] := aResult[ 5 ] /* UTF-8 */
 
-            hbmk[ _HBMK_tVCSTS ] := tmp - ( ( nOffset - hb_UTCOffset() ) / 86400 )
+            /* Use Git commit timestamp only if there are no local changes */
+            IF hb_processRun( cGitBase + "diff --name-only --quiet",, @cStdOut ) == 0
+               hbmk[ _HBMK_tVCSTS ] := tmp - ( ( nOffset - hb_UTCOffset() ) / 86400 )
+            ELSE
+               hbmk[ _HBMK_tVCSTS ] := hb_DateTime()
+            ENDIF
 
             tmp := hb_CToT( aResult[ 6 ], "yyyy-mm-dd", "hh:mm:ss" )
 
@@ -14261,8 +14268,8 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
             hCustom[ "AUTHOR_NAME" ] := aResult[ 7 ] /* UTF-8 */
             hCustom[ "AUTHOR_MAIL" ] := aResult[ 8 ] /* UTF-8 */
 
-            hb_processRun( "git rev-parse --abbrev-ref HEAD",, @tmp )
-            hb_processRun( hb_StrFormat( "git rev-list %1$s --count", hb_StrReplace( tmp, Chr( 13 ) + Chr( 10 ) ) ),, @cStdOut )
+            hb_processRun( cGitBase + "rev-parse --abbrev-ref HEAD",, @tmp )
+            hb_processRun( cGitBase + hb_StrFormat( "rev-list %1$s --count", hb_StrReplace( tmp, Chr( 13 ) + Chr( 10 ) ) ),, @cStdOut )
             hCustom[ "COMMIT_COUNT" ] := hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) )
             hCustom[ "COMMIT_COUNT_NUM" ] := Val( hb_StrReplace( cStdOut, Chr( 13 ) + Chr( 10 ) ) )
          ENDIF
