@@ -293,7 +293,7 @@ if exist "%HB_SFX_7Z%" (
    del "harbour-%HB_VF%-win.7z"
    del _7zconf
 
-   dir "harbour-%HB_VF%-win.7z.exe"
+   for %%I in ("harbour-%HB_VF%-win.7z.exe") do echo %%~nxI: %%~zI bytes %%~tI
    openssl dgst -sha256 "harbour-%HB_VF%-win.7z.exe"
 )
 

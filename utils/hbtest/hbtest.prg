@@ -90,6 +90,7 @@ STATIC s_aSkipList
 STATIC s_nStartTime
 STATIC s_nEndTime
 STATIC s_lDBFAvail := .F.
+STATIC s_lNoEnv
 
 #ifdef __HARBOUR__
    REQUEST HB_LANG_EN
@@ -98,7 +99,7 @@ STATIC s_lDBFAvail := .F.
    REQUEST HB_GT_CGI_DEFAULT
 #endif
 
-PROCEDURE Main( cPar1, cPar2 )
+PROCEDURE Main( cPar1, cPar2, cPar3 )
 
    OutStd( "Harbour Compatibility and Regression Test Suite" + hb_eol() + ;
            "Copyright (c) 1999-2015, Viktor Szakats" + hb_eol() )
@@ -109,10 +110,11 @@ PROCEDURE Main( cPar1, cPar2 )
    IF cPar2 == NIL
       cPar2 := ""
    ENDIF
+   IF cPar3 == NIL
+      cPar3 := ""
+   ENDIF
 
-   IF "/?" $ Lower( cPar1 ) .OR. ;
-      "/h" $ Lower( cPar1 ) .OR. ;
-      "-?" $ Lower( cPar1 ) .OR. ;
+   IF "-?" $ Lower( cPar1 ) .OR. ;
       "-h" $ Lower( cPar1 ) .OR. ;
       "-help" $ Lower( cPar1 ) .OR. ;
       "--help" $ Lower( cPar1 )
@@ -129,7 +131,7 @@ PROCEDURE Main( cPar1, cPar2 )
 
    /* Initialize test */
 
-   TEST_BEGIN( cPar1 + " " + cPar2 )
+   TEST_BEGIN( cPar1 + " " + cPar2 + " " + cPar3 )
 
    Main_HVM()
    Main_HVMA()
@@ -209,14 +211,9 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 
    /* Options */
 
-   s_lShowAll := ;
-      "/all" $ Lower( cParam ) .OR. ;
-      "-all" $ Lower( cParam )
-
-   s_aSkipList := ListToNArray( CMDLGetValue( Lower( cParam ), "/skip:", "" ) )
-   IF Empty( s_aSkipList )
-      s_aSkipList := ListToNArray( CMDLGetValue( Lower( cParam ), "-skip:", "" ) )
-   ENDIF
+   s_lShowAll := "-all" $ Lower( cParam )
+   s_aSkipList := ListToNArray( CMDLGetValue( Lower( cParam ), "-skip:", "" ) )
+   s_lNoEnv := "-noenv" $ Lower( cParam )
 
    /* Detect presence of shortcutting optimization */
 
@@ -241,8 +238,9 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
       "     Compiler: " + hb_Compiler() + hb_eol() )
 #endif
    OutMsg( s_nFhnd, ;
-      "           OS: " + OS() + hb_eol() + ;
-      "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() + ;
+      iif( s_lNoEnv, "", ;
+         "           OS: " + OS() + hb_eol() + ;
+         "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() ) + ;
       "Shortcut opt.: " + iif( s_lShortcut, "On", "Off" ) + hb_eol() + ;
       "     Switches: " + cParam + hb_eol() + ;
       Replicate( "=", 75 ) + hb_eol() )
