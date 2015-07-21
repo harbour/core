@@ -20,6 +20,7 @@ addons:
       - g++-5
       - firebird2.5-dev
       - libcairo2-dev
+      - libcups2-dev
       - libcurl4-openssl-dev
       - libfreeimage-dev
       - libgd2-xpm-dev
