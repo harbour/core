@@ -629,6 +629,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       ".travis.yml", ;
       ".git*", ;
       ".clang*", ;
+      ".editorconfig", ;
       ".ackrc" }
 
    /* TOFIX: Harbour repo specific */

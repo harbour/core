@@ -33,7 +33,7 @@
 
 #define uint8_t   HB_U8
 #define uint32_t  HB_U32
-#define uint64_t  HB_U32
+#define uint64_t  HB_U64
 #ifndef SIZE_MAX
 #define SIZE_MAX  HB_SIZE_MAX
 #endif

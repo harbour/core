@@ -1,6 +1,6 @@
 diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
---- scrypt.orig/c_scrypt.c	2015-07-19 15:08:46.471882600 +0200
-+++ scrypt/c_scrypt.c	2015-07-19 15:08:46.471882600 +0200
+--- scrypt.orig/c_scrypt.c	2015-07-21 18:05:22.402032100 +0200
++++ scrypt/c_scrypt.c	2015-07-21 18:05:22.402032100 +0200
 @@ -26,17 +26,9 @@
   * This file was originally written by Colin Percival as part of the Tarsnap
   * online backup system.
@@ -48,9 +48,9 @@ diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
  
  /**
 diff -urN scrypt.orig/c_scrypt.h scrypt/c_scrypt.h
---- scrypt.orig/c_scrypt.h	2015-07-19 15:08:46.471882600 +0200
-+++ scrypt/c_scrypt.h	2015-07-19 15:08:46.471882600 +0200
-@@ -29,7 +29,12 @@
+--- scrypt.orig/c_scrypt.h	2015-07-21 18:05:22.402032100 +0200
++++ scrypt/c_scrypt.h	2015-07-21 18:05:22.402032100 +0200
+@@ -29,7 +29,14 @@
  #ifndef _CRYPTO_SCRYPT_H_
  #define _CRYPTO_SCRYPT_H_
  
@@ -59,12 +59,14 @@ diff -urN scrypt.orig/c_scrypt.h scrypt/c_scrypt.h
 +
 +#define uint8_t   HB_U8
 +#define uint32_t  HB_U32
-+#define uint64_t  HB_U32
++#define uint64_t  HB_U64
++#ifndef SIZE_MAX
 +#define SIZE_MAX  HB_SIZE_MAX
++#endif
  
  /**
   * crypto_scrypt(passwd, passwdlen, salt, saltlen, N, r, p, buf, buflen):
-@@ -43,4 +48,13 @@
+@@ -43,4 +50,13 @@
  int crypto_scrypt(const uint8_t *, size_t, const uint8_t *, size_t, uint64_t,
      uint32_t, uint32_t, uint8_t *, size_t);
  
@@ -79,7 +81,7 @@ diff -urN scrypt.orig/c_scrypt.h scrypt/c_scrypt.h
 +
  #endif /* !_CRYPTO_SCRYPT_H_ */
 diff -urN scrypt.orig/config.h scrypt/config.h
---- scrypt.orig/config.h	2015-07-19 15:08:46.471882600 +0200
+--- scrypt.orig/config.h	2015-07-21 18:05:22.402032100 +0200
 +++ scrypt/config.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,98 +0,0 @@
 -/* config.h.in.  Generated from configure.ac by autoheader.  */
@@ -181,8 +183,8 @@ diff -urN scrypt.orig/config.h scrypt/config.h
 -/* Define for large files, on AIX-style hosts. */
 -#undef _LARGE_FILES
 diff -urN scrypt.orig/sha256.c scrypt/sha256.c
---- scrypt.orig/sha256.c	2015-07-19 15:08:46.471882600 +0200
-+++ scrypt/sha256.c	2015-07-19 15:08:46.487481600 +0200
+--- scrypt.orig/sha256.c	2015-07-21 18:05:22.402032100 +0200
++++ scrypt/sha256.c	2015-07-21 18:05:22.417631200 +0200
 @@ -23,336 +23,8 @@
   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
   * SUCH DAMAGE.
