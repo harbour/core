@@ -293,6 +293,7 @@ if exist "%HB_SFX_7Z%" (
    del "harbour-%HB_VF%-win.7z"
    del _7zconf
 
+   dir "harbour-%HB_VF%-win.7z.exe"
    openssl dgst -sha256 "harbour-%HB_VF%-win.7z.exe"
 )
 
