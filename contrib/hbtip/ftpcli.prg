@@ -329,7 +329,7 @@ METHOD LS( cSpec ) CLASS TIPClientFTP
 
    ::inetSendAll( ::SocketCon, "NLST " + hb_defaultValue( cSpec, "" ) + ::cCRLF )
 
-   RETURN iif( ::GetReply(), ::ReadAuxPort(), "" )
+   RETURN hb_defaultValue( ::ReadAuxPort(), "" )
 
 METHOD Rename( cFrom, cTo ) CLASS TIPClientFTP
 
@@ -384,8 +384,8 @@ METHOD Stor( cFile ) CLASS TIPClientFTP
 
    ::inetSendAll( ::SocketCon, "STOR " + cFile + ::cCRLF )
 
-   // It is important not to delete these lines in order not to disrupt the timing of
-   // the responses, which can lead to failures in transfers.
+   /* It is important not to delete these lines in order not to disrupt the timing of
+      the responses, which can lead to failures in transfers. */
    IF ! ::bUsePasv
       ::GetReply()
    ENDIF
@@ -558,9 +558,7 @@ METHOD MGet( cSpec, cLocalPath ) CLASS TIPClientFTP
 
    ::inetSendAll( ::SocketCon, "NLST " + hb_defaultValue( cSpec, "" ) + ::cCRLF )
 
-   cStr := ::ReadAuxPort()
-
-   IF cStr != NIL
+   IF ( cStr := ::ReadAuxPort() ) != NIL
       FOR EACH cFile IN hb_ATokens( cStr, .T. )
          IF ! Empty( cFile )
             ::Downloadfile( cLocalPath + RTrim( cFile ), RTrim( cFile ) )
