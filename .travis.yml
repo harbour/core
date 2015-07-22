@@ -37,27 +37,27 @@ addons:
 script: export HB_COMPILER=$CC && make
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
-      if [ "$CC" = "gcc" ]; then
-         export HB_CCSUFFIX=-5;
-         ls -lA /usr/bin/gcc*;
-      else
-         export HB_CCSUFFIX=-3.6;
-         ls -lA /usr/bin/clang*;
-      fi;
+       if [ "$CC" = "gcc" ]; then
+          export HB_CCSUFFIX=-5;
+          ls -lA /usr/bin/gcc*;
+       else
+          export HB_CCSUFFIX=-3.6;
+          ls -lA /usr/bin/clang*;
+       fi;
     fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
-      brew update;
-      brew install allegro;
-      brew install cairo;
-      brew install curl;
-      brew install freeimage;
-      brew install gd;
-      brew install ghostscript;
-      brew install libmagic;
-      brew install mariadb;
-      brew install ncurses;
-      brew install postgresql;
-      brew install unixodbc;
+       brew update;
+       brew install allegro;
+       brew install cairo;
+       brew install curl;
+       brew install freeimage;
+       brew install gd;
+       brew install ghostscript;
+       brew install libmagic;
+       brew install mariadb;
+       brew install ncurses;
+       brew install postgresql;
+       brew install unixodbc;
     fi
 notifications:
   email: false
