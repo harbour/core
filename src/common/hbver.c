@@ -268,8 +268,161 @@ const char * hb_verPlatformMacro( void )
 #endif
 }
 
+#if defined( HB_OS_WIN )
+
+static HB_BOOL s_fWinVerInit = HB_FALSE;
+
+static HB_BOOL s_fWin10    = HB_FALSE;
+static HB_BOOL s_fWin81    = HB_FALSE;
+static HB_BOOL s_fWin8     = HB_FALSE;
+static HB_BOOL s_fWinVista = HB_FALSE;
+static HB_BOOL s_fWin2K3   = HB_FALSE;
+static HB_BOOL s_fWin2K    = HB_FALSE;
+static int     s_iWinNT    = 0;
+static int     s_iWin9x    = 0;
+
+#if ! defined( HB_OS_WIN_CE )
+
+#if defined( __DMC__ ) || ( defined( _MSC_VER ) && _MSC_VER < 1400 )
+   typedef struct _OSVERSIONINFOEXW
+   {
+      DWORD dwOSVersionInfoSize;
+      DWORD dwMajorVersion;
+      DWORD dwMinorVersion;
+      DWORD dwBuildNumber;
+      DWORD dwPlatformId;
+      WCHAR szCSDVersion[ 128 ];
+      WORD  wServicePackMajor;
+      WORD  wServicePackMinor;
+      WORD  wSuiteMask;
+      BYTE  wProductType;
+      BYTE  wReserved;
+   } OSVERSIONINFOEXW, * LPOSVERSIONINFOEXW;
+#endif
+
+typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEXW, DWORD, DWORDLONG );
+typedef ULONGLONG ( WINAPI * _HB_VERSETCONDITIONMASK )( ULONGLONG, DWORD, BYTE );
+
+static _HB_VERIFYVERSIONINFO   s_pVerifyVersionInfo   = NULL;
+static _HB_VERSETCONDITIONMASK s_pVerSetConditionMask = NULL;
+
+static HB_BOOL s_hb_winVerifyVersionInit( void )
+{
+   if( ! s_pVerifyVersionInfo ||
+       ! s_pVerSetConditionMask )
+   {
+      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+      if( hModule )
+      {
+         s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESS( hModule, "VerifyVersionInfoW" );
+         s_pVerSetConditionMask = ( _HB_VERSETCONDITIONMASK ) HB_WINAPI_GETPROCADDRESS( hModule, "VerSetConditionMask" );
+      }
+   }
+
+   return s_pVerifyVersionInfo &&
+          s_pVerSetConditionMask;
+}
+
+#endif
+
+static void s_hb_winVerInit( void )
+{
+#if ! defined( HB_OS_WIN_CE )
+   OSVERSIONINFO osvi;
+
+   s_fWin10    = hb_iswinver( 10, 0, 0, HB_TRUE );
+   s_fWin81    = hb_iswinver( 6, 3, 0, HB_TRUE );
+   s_fWin8     = hb_iswinver( 6, 2, 0, HB_TRUE );
+   s_fWinVista = hb_iswinver( 6, 0, 0, HB_TRUE );
+   s_fWin2K3   = hb_iswinver( 5, 2, VER_NT_SERVER, HB_TRUE ) || hb_iswinver( 5, 2, VER_NT_DOMAIN_CONTROLLER, HB_TRUE );
+   s_fWin2K    = hb_iswinver( 5, 0, 0, HB_TRUE );
+
+   osvi.dwOSVersionInfoSize = sizeof( osvi );
+   if( GetVersionEx( &osvi ) )
+   {
+      /* NOTE: Value is VER_PLATFORM_WIN32_CE on WinCE */
+      if( osvi.dwPlatformId != VER_PLATFORM_WIN32_WINDOWS )
+         s_iWin9x = 0;
+      else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion < 10 )
+         s_iWin9x = 5;  /* 95 */
+      else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10 )
+         s_iWin9x = 8;  /* 98 */
+      else
+         s_iWin9x = 9;  /* ME */
+
+      if( osvi.dwPlatformId != VER_PLATFORM_WIN32_NT )
+         s_iWinNT = 0;
+      else if( osvi.dwMajorVersion == 3 && osvi.dwMinorVersion == 51 )
+         s_iWinNT = 3;  /* 3.51 */
+      else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 )
+         s_iWinNT = 4;  /* 4.0 */
+      else
+         s_iWinNT = 5;  /* newer */
+   }
+   else
+      s_iWinNT = s_fWin2K ? 5 : 0;
+#endif
+
+   s_fWinVerInit = HB_TRUE;
+}
+
+#elif defined( HB_OS_DOS )
+
+static HB_BOOL s_fWinVerInit = HB_FALSE;
+
+static HB_BOOL s_fWin10    = HB_FALSE;
+static HB_BOOL s_fWin81    = HB_FALSE;
+static HB_BOOL s_fWin8     = HB_FALSE;
+static HB_BOOL s_fWinVista = HB_FALSE;
+static HB_BOOL s_fWin2K3   = HB_FALSE;
+static HB_BOOL s_fWin2K    = HB_FALSE;
+static int     s_iWinNT    = 0;
+static int     s_iWin9x    = 0;
+
+static void s_hb_winVerInit( void )
+{
+   union REGS regs;
+
+   /* TODO */
+   s_fWin10    = HB_FALSE;
+   s_fWin81    = HB_FALSE;
+   s_fWin8     = HB_FALSE;
+   s_fWinVista = HB_FALSE;
+   s_fWin2K3   = s_fWinVista;
+   s_fWin2K    = HB_FALSE;
+
+   /* Host OS detection: Windows NT family */
+
+   {
+      regs.HB_XREGS.ax = 0x3306;
+      HB_DOS_INT86( 0x21, &regs, &regs );
+
+      s_iWinNT = ( regs.HB_XREGS.bx == 0x3205 ) ? 3 : 0;
+   }
+   else
+      s_iWinNT = 0;
+
+   /* Host OS detection: 95/98 */
+
+   if( s_iWinNT == 0 )
+   {
+      regs.HB_XREGS.ax = 0x1600;
+      HB_DOS_INT86( 0x2F, &regs, &regs );
+
+      s_iWin9x = ( regs.h.al != 0x80 &&
+                   regs.h.al != 0xFF &&
+                   regs.h.al >= 4 ) ? 5 : 0;
+   }
+   else
+      s_iWin9x = 0;
+
+   s_fWinVerInit = HB_TRUE;
+}
+
+#endif
+
 /* NOTE: Must be larger than 128, which is the maximum size of
-         osVer.szCSDVersion (Windows). [vszakats] */
+         osvi.szCSDVersion (Windows). [vszakats] */
 #define PLATFORM_BUF_SIZE  255
 
 char * hb_verPlatform( void )
@@ -370,39 +523,35 @@ char * hb_verPlatform( void )
       const char * pszName = "";
       const char * pszWine = "";
 
-      OSVERSIONINFO osVer;
+      OSVERSIONINFO osvi;
 
-      memset( &osVer, 0, sizeof( osVer ) );
-      osVer.dwOSVersionInfoSize = sizeof( osVer );
+      memset( &osvi, 0, sizeof( osvi ) );
 
+#if defined( HB_OS_WIN_CE )
+      pszName = " CE";
+      osvi.dwOSVersionInfoSize = sizeof( osvi );
+      GetVersionEx( &osvi );
+#else
       /* Detection of legacy Windows versions */
-      if( GetVersionEx( &osVer ) )
+      switch( hb_iswin9x() )
       {
-         switch( osVer.dwPlatformId )
-         {
-            case VER_PLATFORM_WIN32_WINDOWS:
-
-               if( osVer.dwMajorVersion == 4 && osVer.dwMinorVersion < 10 )
-                  pszName = " 95";
-               else if( osVer.dwMajorVersion == 4 && osVer.dwMinorVersion == 10 )
-                  pszName = " 98";
-               else
-                  pszName = " ME";
-               break;
-
-            case VER_PLATFORM_WIN32_CE:
-               pszName = " CE";
-               break;
-
-            case VER_PLATFORM_WIN32s:
-               pszName = " 32s";
-               break;
-
-            /* default: determine version by using hb_iswinver() calls */
-         }
+         case 5:
+            osvi.dwMajorVersion = 4;
+            osvi.dwMinorVersion = 0;
+            pszName = " 95";
+            break;
+         case 8:
+            osvi.dwMajorVersion = 4;
+            osvi.dwMinorVersion = 10;
+            pszName = " 98";
+            break;
+         case 9:
+            osvi.dwMajorVersion = 4;
+            osvi.dwMinorVersion = 90;
+            pszName = " ME";
+            break;
       }
 
-#if ! defined( HB_OS_WIN_CE )
       {
          /* NOTE: Unofficial Wine detection.
                   https://www.mail-archive.com/wine-devel@winehq.org/msg48659.html */
@@ -419,14 +568,14 @@ char * hb_verPlatform( void )
 #else
          if( hb_iswinver( 11, 0, 0, HB_TRUE ) )
          {
-            osVer.dwMajorVersion = 11;
-            osVer.dwMinorVersion = 0;
+            osvi.dwMajorVersion = 11;
+            osvi.dwMinorVersion = 0;
             pszName = " 11 or newer";
          }
          else if( hb_iswin10() )
          {
-            osVer.dwMajorVersion = 10;
-            osVer.dwMinorVersion = 0;
+            osvi.dwMajorVersion = 10;
+            osvi.dwMinorVersion = 0;
             if( hb_iswinver( 10, 0, VER_NT_WORKSTATION, HB_FALSE ) )
                pszName = " 10";
             else
@@ -434,8 +583,8 @@ char * hb_verPlatform( void )
          }
          else if( hb_iswin81() )
          {
-            osVer.dwMajorVersion = 6;
-            osVer.dwMinorVersion = 3;
+            osvi.dwMajorVersion = 6;
+            osvi.dwMinorVersion = 3;
             if( hb_iswinver( 6, 3, VER_NT_WORKSTATION, HB_FALSE ) )
                pszName = " 8.1";
             else
@@ -445,8 +594,8 @@ char * hb_verPlatform( void )
          {
             if( hb_iswin8() )
             {
-               osVer.dwMajorVersion = 6;
-               osVer.dwMinorVersion = 2;
+               osvi.dwMajorVersion = 6;
+               osvi.dwMinorVersion = 2;
                if( hb_iswinver( 6, 2, VER_NT_WORKSTATION, HB_FALSE ) )
                   pszName = " 8";
                else
@@ -454,8 +603,8 @@ char * hb_verPlatform( void )
             }
             else if( hb_iswinver( 6, 1, 0, HB_FALSE ) )
             {
-               osVer.dwMajorVersion = 6;
-               osVer.dwMinorVersion = 1;
+               osvi.dwMajorVersion = 6;
+               osvi.dwMinorVersion = 1;
                if( hb_iswinver( 6, 1, VER_NT_WORKSTATION, HB_FALSE ) )
                   pszName = " 7";
                else
@@ -463,8 +612,8 @@ char * hb_verPlatform( void )
             }
             else if( hb_iswinvista() )
             {
-               osVer.dwMajorVersion = 6;
-               osVer.dwMinorVersion = 0;
+               osvi.dwMajorVersion = 6;
+               osvi.dwMinorVersion = 0;
                if( hb_iswinver( 6, 0, VER_NT_WORKSTATION, HB_FALSE ) )
                   pszName = " Vista";
                else
@@ -473,8 +622,8 @@ char * hb_verPlatform( void )
          }
          else if( hb_iswinver( 5, 2, 0, HB_FALSE ) )
          {
-            osVer.dwMajorVersion = 5;
-            osVer.dwMinorVersion = 2;
+            osvi.dwMajorVersion = 5;
+            osvi.dwMinorVersion = 2;
             if( hb_iswinver( 5, 2, VER_NT_WORKSTATION, HB_TRUE ) )
                pszName = " XP x64";
             else if( GetSystemMetrics( SM_SERVERR2 ) != 0 )
@@ -484,14 +633,14 @@ char * hb_verPlatform( void )
          }
          else if( hb_iswinver( 5, 1, 0, HB_FALSE ) )
          {
-            osVer.dwMajorVersion = 5;
-            osVer.dwMinorVersion = 1;
+            osvi.dwMajorVersion = 5;
+            osvi.dwMinorVersion = 1;
             pszName = " XP";
          }
          else if( hb_iswin2k() )
          {
-            osVer.dwMajorVersion = 5;
-            osVer.dwMinorVersion = 0;
+            osvi.dwMajorVersion = 5;
+            osvi.dwMinorVersion = 0;
             pszName = " 2000";
          }
          else
@@ -502,8 +651,8 @@ char * hb_verPlatform( void )
       hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu",
                    pszName,
                    pszWine,
-                   osVer.dwMajorVersion,
-                   osVer.dwMinorVersion );
+                   osvi.dwMajorVersion,
+                   osvi.dwMinorVersion );
 
       /* Add service pack/other info */
 
@@ -522,12 +671,14 @@ char * hb_verPlatform( void )
             }
          }
       }
+#if defined( HB_OS_WIN_CE )
       else
       {
-         /* Win9x and NT */
-         if( osVer.szCSDVersion[ 0 ] != TEXT( '\0' ) )
+         /* Also for Win9x and NT, but GetVersionEx() is deprecated
+            so we avoid it. */
+         if( osvi.szCSDVersion[ 0 ] != TEXT( '\0' ) )
          {
-            char * pszCSDVersion = HB_OSSTRDUP( osVer.szCSDVersion );
+            char * pszCSDVersion = HB_OSSTRDUP( osvi.szCSDVersion );
             int i;
 
             /* Skip the leading spaces (Win95B, Win98) */
@@ -542,6 +693,7 @@ char * hb_verPlatform( void )
             hb_xfree( pszCSDVersion );
          }
       }
+#endif
    }
 
 #elif defined( __CEGCC__ )
@@ -572,142 +724,6 @@ char * hb_verPlatform( void )
 
    return pszPlatform;
 }
-
-#if defined( HB_OS_WIN )
-
-static HB_BOOL s_fWinVerInit = HB_FALSE;
-
-static HB_BOOL s_fWin10    = HB_FALSE;
-static HB_BOOL s_fWin81    = HB_FALSE;
-static HB_BOOL s_fWin8     = HB_FALSE;
-static HB_BOOL s_fWinVista = HB_FALSE;
-static HB_BOOL s_fWin2K3   = HB_FALSE;
-static HB_BOOL s_fWin2K    = HB_FALSE;
-static HB_BOOL s_fWinNT    = HB_FALSE;
-static HB_BOOL s_fWin9x    = HB_FALSE;
-
-#if ! defined( HB_OS_WIN_CE )
-
-#if defined( __DMC__ ) || ( defined( _MSC_VER ) && _MSC_VER < 1400 )
-   typedef struct _OSVERSIONINFOEXW
-   {
-      DWORD dwOSVersionInfoSize;
-      DWORD dwMajorVersion;
-      DWORD dwMinorVersion;
-      DWORD dwBuildNumber;
-      DWORD dwPlatformId;
-      WCHAR szCSDVersion[ 128 ];
-      WORD  wServicePackMajor;
-      WORD  wServicePackMinor;
-      WORD  wSuiteMask;
-      BYTE  wProductType;
-      BYTE  wReserved;
-   } OSVERSIONINFOEXW, * LPOSVERSIONINFOEXW;
-#endif
-
-typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEXW, DWORD, DWORDLONG );
-typedef ULONGLONG ( WINAPI * _HB_VERSETCONDITIONMASK )( ULONGLONG, DWORD, BYTE );
-
-static _HB_VERIFYVERSIONINFO   s_pVerifyVersionInfo   = NULL;
-static _HB_VERSETCONDITIONMASK s_pVerSetConditionMask = NULL;
-
-static HB_BOOL s_hb_winVerifyVersionInit( void )
-{
-   if( ! s_pVerifyVersionInfo ||
-       ! s_pVerSetConditionMask )
-   {
-      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
-      if( hModule )
-      {
-         s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESS( hModule, "VerifyVersionInfoW" );
-         s_pVerSetConditionMask = ( _HB_VERSETCONDITIONMASK ) HB_WINAPI_GETPROCADDRESS( hModule, "VerSetConditionMask" );
-      }
-   }
-
-   return s_pVerifyVersionInfo &&
-          s_pVerSetConditionMask;
-}
-
-#endif
-
-static void s_hb_winVerInit( void )
-{
-#if ! defined( HB_OS_WIN_CE )
-   OSVERSIONINFO osvi;
-
-   s_fWin10    = hb_iswinver( 10, 0, 0, HB_TRUE );
-   s_fWin81    = hb_iswinver( 6, 3, 0, HB_TRUE );
-   s_fWin8     = hb_iswinver( 6, 2, 0, HB_TRUE );
-   s_fWinVista = hb_iswinver( 6, 0, 0, HB_TRUE );
-   s_fWin2K3   = hb_iswinver( 5, 2, VER_NT_SERVER, HB_TRUE ) || hb_iswinver( 5, 2, VER_NT_DOMAIN_CONTROLLER, HB_TRUE );
-   s_fWin2K    = hb_iswinver( 5, 0, 0, HB_TRUE );
-
-   osvi.dwOSVersionInfoSize = sizeof( osvi );
-   if( GetVersionEx( &osvi ) )
-   {
-      /* NOTE: Value is VER_PLATFORM_WIN32_CE on WinCE */
-      s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
-      s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
-   }
-   else
-      s_fWinNT = s_fWin2K;
-#endif
-
-   s_fWinVerInit = HB_TRUE;
-}
-
-#elif defined( HB_OS_DOS )
-
-static HB_BOOL s_fWinVerInit = HB_FALSE;
-
-static HB_BOOL s_fWin10    = HB_FALSE;
-static HB_BOOL s_fWin81    = HB_FALSE;
-static HB_BOOL s_fWin8     = HB_FALSE;
-static HB_BOOL s_fWinVista = HB_FALSE;
-static HB_BOOL s_fWin2K3   = HB_FALSE;
-static HB_BOOL s_fWin2K    = HB_FALSE;
-static HB_BOOL s_fWinNT    = HB_FALSE;
-static HB_BOOL s_fWin9x    = HB_FALSE;
-
-static void s_hb_winVerInit( void )
-{
-   union REGS regs;
-
-   /* TODO */
-   s_fWin10    = HB_FALSE;
-   s_fWin81    = HB_FALSE;
-   s_fWin8     = HB_FALSE;
-   s_fWinVista = HB_FALSE;
-   s_fWin2K3   = s_fWinVista;
-   s_fWin2K    = HB_FALSE;
-
-   /* Host OS detection: Windows NT family */
-
-   {
-      regs.HB_XREGS.ax = 0x3306;
-      HB_DOS_INT86( 0x21, &regs, &regs );
-
-      s_fWinNT = ( regs.HB_XREGS.bx == 0x3205 );
-   }
-
-   /* Host OS detection: 95/98 */
-
-   if( ! s_fWinNT )
-   {
-      regs.HB_XREGS.ax = 0x1600;
-      HB_DOS_INT86( 0x2F, &regs, &regs );
-
-      s_fWin9x = ( regs.h.al != 0x80 &&
-                   regs.h.al != 0xFF &&
-                   regs.h.al >= 4 );
-   }
-   else
-      s_fWin9x = HB_FALSE;
-
-   s_fWinVerInit = HB_TRUE;
-}
-
-#endif
 
 HB_BOOL hb_iswinver( int iMajor, int iMinor, int iType, HB_BOOL fOrUpper )
 {
@@ -835,25 +851,25 @@ HB_BOOL hb_iswin2k( void )
 #endif
 }
 
-HB_BOOL hb_iswinnt( void )
+int hb_iswinnt( void )
 {
 #if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
    if( ! s_fWinVerInit )
       s_hb_winVerInit();
-   return s_fWinNT;
+   return s_iWinNT;
 #else
-   return HB_FALSE;
+   return 0;
 #endif
 }
 
-HB_BOOL hb_iswin9x( void )
+int hb_iswin9x( void )
 {
 #if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
    if( ! s_fWinVerInit )
       s_hb_winVerInit();
-   return s_fWin9x;
+   return s_iWin9x;
 #else
-   return HB_FALSE;
+   return 0;
 #endif
 }
 

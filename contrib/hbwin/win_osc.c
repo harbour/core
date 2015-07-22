@@ -58,29 +58,17 @@ static HB_BOOL getwinver( OSVERSIONINFO * pOSvi )
 
 HB_FUNC( WIN_OSISNT )
 {
-   hb_retl( hb_iswinnt() );
+   hb_retl( hb_iswinnt() != 0 );
 }
 
 HB_FUNC( WIN_OSISNT351 )
 {
-#if defined( HB_LEGACY_LEVEL4 )
-   OSVERSIONINFO osvi;
-
-   hb_retl( hb_iswinnt() && getwinver( &osvi ) && osvi.dwMajorVersion == 3 && osvi.dwMinorVersion == 51 );
-#else
-   hb_retl( hb_iswinnt() );
-#endif
+   hb_retl( hb_iswinnt() == 3 );
 }
 
 HB_FUNC( WIN_OSISNT4 )
 {
-#if defined( HB_LEGACY_LEVEL4 )
-   OSVERSIONINFO osvi;
-
-   hb_retl( hb_iswinnt() && getwinver( &osvi ) && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
-#else
-   hb_retl( hb_iswinnt() );
-#endif
+   hb_retl( hb_iswinnt() == 4 );
 }
 
 HB_FUNC( WIN_OSIS2000 )
@@ -145,35 +133,17 @@ HB_FUNC( WIN_OSIS9X )
 
 HB_FUNC( WIN_OSIS95 )
 {
-#if defined( HB_LEGACY_LEVEL4 )
-   OSVERSIONINFO osvi;
-
-   hb_retl( hb_iswin9x() && getwinver( &osvi ) && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
-#else
-   hb_retl( hb_iswin9x() );
-#endif
+   hb_retl( hb_iswin9x() == 5 );
 }
 
 HB_FUNC( WIN_OSIS98 )
 {
-#if defined( HB_LEGACY_LEVEL4 )
-   OSVERSIONINFO osvi;
-
-   hb_retl( hb_iswin9x() && getwinver( &osvi ) && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10 );
-#else
-   hb_retl( hb_iswin9x() );
-#endif
+   hb_retl( hb_iswin9x() == 8 );
 }
 
 HB_FUNC( WIN_OSISME )
 {
-#if defined( HB_LEGACY_LEVEL4 )
-   OSVERSIONINFO osvi;
-
-   hb_retl( hb_iswin9x() && getwinver( &osvi ) && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 90 );
-#else
-   hb_retl( hb_iswin9x() );
-#endif
+   hb_retl( hb_iswin9x() == 9 );
 }
 
 HB_FUNC( WIN_OSISTSCLIENT )
