@@ -96,6 +96,10 @@
    #define VER_GREATER_EQUAL  3
    #endif
 
+   #ifndef SM_SERVERR2
+   #define SM_SERVERR2  89
+   #endif
+
 #elif defined( HB_OS_OS2 )
    #define INCL_DOSMISC
    #include <os2.h>
@@ -393,73 +397,54 @@ char * hb_verPlatform( void )
 
             case VER_PLATFORM_WIN32_NT:
 
-               if( osVer.dwMajorVersion == 6 )
+               if( hb_iswinver( 6, 0, 0, HB_TRUE ) )
                {
-#if ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
-    ( ! defined( _MSC_VER ) || _MSC_VER >= 1400 )
-                  OSVERSIONINFOEX osVerEx;
-
-                  osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
-
-                  if( GetVersionEx( ( OSVERSIONINFO * ) &osVerEx ) )
+                  if( hb_iswinver( 10, 0, 0, HB_FALSE ) )
                   {
-                     if( osVer.dwMinorVersion == 2 )
-                     {
-                        if( osVerEx.wProductType == VER_NT_WORKSTATION )
-                           pszName = " 8";
-                        else
-                           pszName = " Server 2012";
-                     }
-                     else if( osVer.dwMinorVersion == 1 )
-                     {
-                        if( osVerEx.wProductType == VER_NT_WORKSTATION )
-                           pszName = " 7";
-                        else
-                           pszName = " Server 2008 R2";
-                     }
-                     else if( osVer.dwMinorVersion == 0 )
-                     {
-                        if( osVerEx.wProductType == VER_NT_WORKSTATION )
-                           pszName = " Vista";
-                        else
-                           pszName = " Server 2008";
-                     }
+                     if( hb_iswinver( 10, 0, VER_NT_WORKSTATION, HB_FALSE ) )
+                        pszName = " 10";
                      else
-                        pszName = "";
+                        pszName = " Server 2016";
+                  }
+                  else if( hb_iswinver( 6, 3, 0, HB_FALSE ) )
+                  {
+                     if( hb_iswinver( 6, 3, VER_NT_WORKSTATION, HB_FALSE ) )
+                        pszName = " 8.1";
+                     else
+                        pszName = " Server 2012 R2";
+                  }
+                  else if( hb_iswinver( 6, 2, 0, HB_FALSE ) )
+                  {
+                     if( hb_iswinver( 6, 2, VER_NT_WORKSTATION, HB_FALSE ) )
+                        pszName = " 8";
+                     else
+                        pszName = " Server 2012";
+                  }
+                  else if( hb_iswinver( 6, 1, 0, HB_FALSE ) )
+                  {
+                     if( hb_iswinver( 6, 1, VER_NT_WORKSTATION, HB_FALSE ) )
+                        pszName = " 7";
+                     else
+                        pszName = " Server 2008 R2";
+                  }
+                  else if( hb_iswinver( 6, 0, 0, HB_FALSE ) )
+                  {
+                     if( hb_iswinver( 6, 0, VER_NT_WORKSTATION, HB_FALSE ) )
+                        pszName = " Vista";
+                     else
+                        pszName = " Server 2008";
                   }
                   else
-#endif
                      pszName = "";
                }
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion >= 2 )
                {
-#if ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
-    ( ! defined( _MSC_VER ) || _MSC_VER >= 1400 )
-                  OSVERSIONINFOEX osVerEx;
-
-                  osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
-
-                  if( GetVersionEx( ( OSVERSIONINFO * ) &osVerEx ) )
-                  {
-                     if( osVerEx.wProductType == VER_NT_WORKSTATION )
-                        pszName = " XP x64";
-                     else
-                     {
-                        #ifndef SM_SERVERR2
-                        #define SM_SERVERR2 89
-                        #endif
-
-                        if( GetSystemMetrics( SM_SERVERR2 ) != 0 )
-                           pszName = " Server 2003 R2";
-                        else
-                           pszName = " Server 2003";
-                     }
-                  }
+                  if( hb_iswinver( 5, 2, VER_NT_WORKSTATION, HB_TRUE ) )
+                     pszName = " XP x64";
+                  else if( GetSystemMetrics( SM_SERVERR2 ) != 0 )
+                     pszName = " Server 2003 R2";
                   else
-                     pszName = "";
-#else
-                  pszName = " Server 2003 / XP x64";
-#endif
+                     pszName = " Server 2003";
                }
                else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion == 1 )
                   pszName = " XP";

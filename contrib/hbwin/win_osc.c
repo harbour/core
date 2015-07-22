@@ -135,7 +135,7 @@ HB_FUNC( WIN_OSIS81 )
 
 HB_FUNC( WIN_OSIS10 )
 {
-   hb_retl( hb_iswinver( 6, 4, 0, HB_FALSE ) );
+   hb_retl( hb_iswinver( 10, 0, 0, HB_FALSE ) );
 }
 
 HB_FUNC( WIN_OSIS9X )
@@ -217,14 +217,14 @@ HB_FUNC( WIN_OSVERSIONINFO )
    } HB_ISWINVER;
 
    static const HB_ISWINVER s_vers[] = {
-      { 6, 4, 0 },
-      { 6, 3, 0 },
-      { 6, 2, 0 },
-      { 6, 1, 0 },
-      { 6, 0, 0 },
-      { 5, 2, 0 },
-      { 5, 1, 0 },
-      { 5, 0, 0 } };
+      { 10, 0, 0 },
+      {  6, 3, 0 },
+      {  6, 2, 0 },
+      {  6, 1, 0 },
+      {  6, 0, 0 },
+      {  5, 2, 0 },
+      {  5, 1, 0 },
+      {  5, 0, 0 } };
 
    for( pos = 0; pos < ( int ) HB_SIZEOFARRAY( s_vers ); ++pos )
    {
