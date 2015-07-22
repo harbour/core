@@ -367,21 +367,18 @@ char * hb_verPlatform( void )
 #elif defined( HB_OS_WIN )
 
    {
+      const char * pszName = "";
+      const char * pszWine = "";
+
       OSVERSIONINFO osVer;
 
+      memset( &osVer, 0, sizeof( osVer ) );
       osVer.dwOSVersionInfoSize = sizeof( osVer );
 
+      /* Detection of legacy Windows versions and
+         build number and service pack name on non-legacy Windows versions */
       if( GetVersionEx( &osVer ) )
       {
-         /* NOTE: Unofficial Wine detection.
-                  https://www.mail-archive.com/wine-devel@winehq.org/msg48659.html */
-         HMODULE hntdll = GetModuleHandle( TEXT( "ntdll.dll" ) );
-         const char * pszWine = "";
-         const char * pszName = "";
-
-         if( hntdll && HB_WINAPI_GETPROCADDRESS( hntdll, "wine_get_version" ) )
-            pszWine = " (Wine)";
-
          switch( osVer.dwPlatformId )
          {
             case VER_PLATFORM_WIN32_WINDOWS:
@@ -392,135 +389,143 @@ char * hb_verPlatform( void )
                   pszName = " 98";
                else
                   pszName = " ME";
-
                break;
 
-            case VER_PLATFORM_WIN32_NT:
-
-               if( hb_iswinver( 6, 0, 0, HB_TRUE ) )
-               {
-                  if( hb_iswinver( 10, 0, 0, HB_FALSE ) )
-                  {
-                     if( hb_iswinver( 10, 0, VER_NT_WORKSTATION, HB_FALSE ) )
-                        pszName = " 10";
-                     else
-                        pszName = " Server 2016";
-                  }
-                  else if( hb_iswinver( 6, 3, 0, HB_FALSE ) )
-                  {
-                     if( hb_iswinver( 6, 3, VER_NT_WORKSTATION, HB_FALSE ) )
-                        pszName = " 8.1";
-                     else
-                        pszName = " Server 2012 R2";
-                  }
-                  else if( hb_iswinver( 6, 2, 0, HB_FALSE ) )
-                  {
-                     if( hb_iswinver( 6, 2, VER_NT_WORKSTATION, HB_FALSE ) )
-                        pszName = " 8";
-                     else
-                        pszName = " Server 2012";
-                  }
-                  else if( hb_iswinver( 6, 1, 0, HB_FALSE ) )
-                  {
-                     if( hb_iswinver( 6, 1, VER_NT_WORKSTATION, HB_FALSE ) )
-                        pszName = " 7";
-                     else
-                        pszName = " Server 2008 R2";
-                  }
-                  else if( hb_iswinver( 6, 0, 0, HB_FALSE ) )
-                  {
-                     if( hb_iswinver( 6, 0, VER_NT_WORKSTATION, HB_FALSE ) )
-                        pszName = " Vista";
-                     else
-                        pszName = " Server 2008";
-                  }
-                  else
-                     pszName = "";
-               }
-               else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion >= 2 )
-               {
-                  if( hb_iswinver( 5, 2, VER_NT_WORKSTATION, HB_TRUE ) )
-                     pszName = " XP x64";
-                  else if( GetSystemMetrics( SM_SERVERR2 ) != 0 )
-                     pszName = " Server 2003 R2";
-                  else
-                     pszName = " Server 2003";
-               }
-               else if( osVer.dwMajorVersion == 5 && osVer.dwMinorVersion == 1 )
-                  pszName = " XP";
-               else if( osVer.dwMajorVersion == 5 )
-                  pszName = " 2000";
-               else
-                  pszName = " NT";
-
+            case VER_PLATFORM_WIN32_CE:
+               pszName = " CE";
                break;
 
             case VER_PLATFORM_WIN32s:
                pszName = " 32s";
                break;
 
-            case VER_PLATFORM_WIN32_CE:
-               pszName = " CE";
-               break;
-         }
-
-         if( hb_iswinver( 6, 4, 0, HB_FALSE ) )
-         {
-            pszName = " 10";
-            osVer.dwMajorVersion = 6;
-            osVer.dwMinorVersion = 4;
-            osVer.dwBuildNumber = 0;
-         }
-         else if( hb_iswinver( 6, 3, VER_NT_WORKSTATION, HB_FALSE ) )
-         {
-            pszName = " 8.1";
-            osVer.dwMajorVersion = 6;
-            osVer.dwMinorVersion = 3;
-            osVer.dwBuildNumber = 0;
-         }
-         else if( hb_iswinver( 6, 3, 0, HB_FALSE ) )  /* this must come after 6.3 workstation check */
-         {
-            pszName = " 2012 R2";
-            osVer.dwMajorVersion = 6;
-            osVer.dwMinorVersion = 3;
-            osVer.dwBuildNumber = 0;
-         }
-
-         if( osVer.dwBuildNumber )
-            hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04u",
-                         pszName,
-                         pszWine,
-                         osVer.dwMajorVersion,
-                         osVer.dwMinorVersion,
-                         LOWORD( osVer.dwBuildNumber ) );
-         else
-            hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu",
-                         pszName,
-                         pszWine,
-                         osVer.dwMajorVersion,
-                         osVer.dwMinorVersion );
-
-         /* Add service pack/other info */
-
-         if( osVer.szCSDVersion[ 0 ] != TEXT( '\0' ) )
-         {
-            char * pszCSDVersion = HB_OSSTRDUP( osVer.szCSDVersion );
-            int i;
-
-            /* Skip the leading spaces (Win95B, Win98) */
-            for( i = 0; pszCSDVersion[ i ] != '\0' && HB_ISSPACE( ( int ) pszCSDVersion[ i ] ); i++ )
-               ;
-
-            if( pszCSDVersion[ i ] != '\0' )
-            {
-               hb_strncat( pszPlatform, " ", PLATFORM_BUF_SIZE );
-               hb_strncat( pszPlatform, pszCSDVersion + i, PLATFORM_BUF_SIZE );
-            }
-            hb_xfree( pszCSDVersion );
+            /* default: determine version by using hb_iswinver() calls */
          }
       }
+
+#if ! defined( HB_OS_WIN_CE )
+      {
+         /* NOTE: Unofficial Wine detection.
+                  https://www.mail-archive.com/wine-devel@winehq.org/msg48659.html */
+         HMODULE hntdll = GetModuleHandle( TEXT( "ntdll.dll" ) );
+         if( hntdll && HB_WINAPI_GETPROCADDRESS( hntdll, "wine_get_version" ) )
+            pszWine = " (Wine)";
+      }
+#endif
+
+      if( pszName[ 0 ] == '\0' )
+      {
+#if defined( HB_OS_WIN_CE )
+         pszName = " CE";
+#else
+         if( hb_iswinver( 10, 0, 0, HB_FALSE ) )
+         {
+            osVer.dwMajorVersion = 10;
+            osVer.dwMinorVersion = 0;
+            if( hb_iswinver( 10, 0, VER_NT_WORKSTATION, HB_FALSE ) )
+               pszName = " 10";
+            else
+               pszName = " Server 2016";
+         }
+         else if( hb_iswinver( 6, 3, 0, HB_FALSE ) )
+         {
+            osVer.dwMajorVersion = 6;
+            osVer.dwMinorVersion = 3;
+            if( hb_iswinver( 6, 3, VER_NT_WORKSTATION, HB_FALSE ) )
+               pszName = " 8.1";
+            else
+               pszName = " Server 2012 R2";
+         }
+         else if( hb_iswinver( 6, 0, 0, HB_TRUE ) )
+         {
+            if( hb_iswinver( 6, 2, 0, HB_FALSE ) )
+            {
+               osVer.dwMajorVersion = 6;
+               osVer.dwMinorVersion = 2;
+               if( hb_iswinver( 6, 2, VER_NT_WORKSTATION, HB_FALSE ) )
+                  pszName = " 8";
+               else
+                  pszName = " Server 2012";
+            }
+            else if( hb_iswinver( 6, 1, 0, HB_FALSE ) )
+            {
+               osVer.dwMajorVersion = 6;
+               osVer.dwMinorVersion = 1;
+               if( hb_iswinver( 6, 1, VER_NT_WORKSTATION, HB_FALSE ) )
+                  pszName = " 7";
+               else
+                  pszName = " Server 2008 R2";
+            }
+            else if( hb_iswinver( 6, 0, 0, HB_FALSE ) )
+            {
+               osVer.dwMajorVersion = 6;
+               osVer.dwMinorVersion = 0;
+               if( hb_iswinver( 6, 0, VER_NT_WORKSTATION, HB_FALSE ) )
+                  pszName = " Vista";
+               else
+                  pszName = " Server 2008";
+            }
+         }
+         else if( hb_iswinver( 5, 2, 0, HB_FALSE ) )
+         {
+            osVer.dwMajorVersion = 5;
+            osVer.dwMinorVersion = 2;
+            if( hb_iswinver( 5, 2, VER_NT_WORKSTATION, HB_TRUE ) )
+               pszName = " XP x64";
+            else if( GetSystemMetrics( SM_SERVERR2 ) != 0 )
+               pszName = " Server 2003 R2";
+            else
+               pszName = " Server 2003";
+         }
+         else if( hb_iswinver( 5, 1, 0, HB_FALSE ) )
+         {
+            osVer.dwMajorVersion = 5;
+            osVer.dwMinorVersion = 1;
+            pszName = " XP";
+         }
+         else if( hb_iswinver( 5, 0, 0, HB_FALSE ) )
+         {
+            osVer.dwMajorVersion = 5;
+            osVer.dwMinorVersion = 0;
+            pszName = " 2000";
+         }
+         else
+            pszName = " NT";
+#endif
+      }
+
+      if( osVer.dwBuildNumber )
+         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04u",
+                      pszName,
+                      pszWine,
+                      osVer.dwMajorVersion,
+                      osVer.dwMinorVersion,
+                      LOWORD( osVer.dwBuildNumber ) );
       else
-         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows" );
+         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu",
+                      pszName,
+                      pszWine,
+                      osVer.dwMajorVersion,
+                      osVer.dwMinorVersion );
+
+      /* Add service pack/other info */
+
+      if( osVer.szCSDVersion[ 0 ] != TEXT( '\0' ) )
+      {
+         char * pszCSDVersion = HB_OSSTRDUP( osVer.szCSDVersion );
+         int i;
+
+         /* Skip the leading spaces (Win95B, Win98) */
+         for( i = 0; pszCSDVersion[ i ] != '\0' && HB_ISSPACE( ( int ) pszCSDVersion[ i ] ); i++ )
+            ;
+
+         if( pszCSDVersion[ i ] != '\0' )
+         {
+            hb_strncat( pszPlatform, " ", PLATFORM_BUF_SIZE );
+            hb_strncat( pszPlatform, pszCSDVersion + i, PLATFORM_BUF_SIZE );
+         }
+         hb_xfree( pszCSDVersion );
+      }
    }
 
 #elif defined( __CEGCC__ )
@@ -570,7 +575,7 @@ static void s_hb_winVerInit( void )
 #if ! defined( HB_OS_WIN_CE )
    OSVERSIONINFO osvi;
 
-   s_fWin10    = hb_iswinver( 6, 4, 0, HB_TRUE );
+   s_fWin10    = hb_iswinver( 10, 0, 0, HB_TRUE );
    s_fWin81    = hb_iswinver( 6, 3, 0, HB_TRUE );
    s_fWin8     = hb_iswinver( 6, 2, 0, HB_TRUE );
    s_fWinVista = hb_iswinver( 6, 0, 0, HB_TRUE );

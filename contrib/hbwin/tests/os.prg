@@ -2,6 +2,8 @@
 
 #require "hbwin"
 
+#include "simpleio.ch"
+
 PROCEDURE Main()
 
    ? OS()

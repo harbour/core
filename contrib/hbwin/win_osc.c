@@ -1,7 +1,7 @@
 /*
  * Windows OS version information
  *
- * Copyright 2014 Viktor Szakats (vszakats.net/harbour) (win_osIs81(), win_osIs10())
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  *
  * This program is free software; you can redistribute it and/or modify
@@ -213,22 +213,21 @@ HB_FUNC( WIN_OSVERSIONINFO )
    {
       int iMajor;
       int iMinor;
-      int iType;
    } HB_ISWINVER;
 
    static const HB_ISWINVER s_vers[] = {
-      { 10, 0, 0 },
-      {  6, 3, 0 },
-      {  6, 2, 0 },
-      {  6, 1, 0 },
-      {  6, 0, 0 },
-      {  5, 2, 0 },
-      {  5, 1, 0 },
-      {  5, 0, 0 } };
+      { 10, 0 },
+      { 6, 3 },
+      { 6, 2 },
+      { 6, 1 },
+      { 6, 0 },
+      { 5, 2 },
+      { 5, 1 },
+      { 5, 0 } };
 
    for( pos = 0; pos < ( int ) HB_SIZEOFARRAY( s_vers ); ++pos )
    {
-      if( hb_iswinver( s_vers[ pos ].iMajor, s_vers[ pos ].iMinor, s_vers[ pos ].iType, ( pos == 0 ) ) )
+      if( hb_iswinver( s_vers[ pos ].iMajor, s_vers[ pos ].iMinor, 0, ( pos == 0 ) ) )
       {
          iMajor = s_vers[ pos ].iMajor;
          iMinor = s_vers[ pos ].iMinor;
