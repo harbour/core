@@ -359,8 +359,8 @@ static void s_hb_winVerInit( void )
       else
          s_iWinNT = 5;  /* newer */
    }
-   else
-      s_iWinNT = s_fWin2K ? 5 : 0;
+   else if( s_fWin2K )
+      s_iWinNT = 5;
 #endif
 
    s_fWinVerInit = HB_TRUE;
@@ -397,10 +397,9 @@ static void s_hb_winVerInit( void )
       regs.HB_XREGS.ax = 0x3306;
       HB_DOS_INT86( 0x21, &regs, &regs );
 
-      s_iWinNT = ( regs.HB_XREGS.bx == 0x3205 ) ? 3 : 0;
+      if( regs.HB_XREGS.bx == 0x3205 )
+         s_iWinNT = 5;
    }
-   else
-      s_iWinNT = 0;
 
    /* Host OS detection: 95/98 */
 
@@ -409,12 +408,11 @@ static void s_hb_winVerInit( void )
       regs.HB_XREGS.ax = 0x1600;
       HB_DOS_INT86( 0x2F, &regs, &regs );
 
-      s_iWin9x = ( regs.h.al != 0x80 &&
-                   regs.h.al != 0xFF &&
-                   regs.h.al >= 4 ) ? 5 : 0;
+      if( regs.h.al != 0x80 &&
+          regs.h.al != 0xFF &&
+          regs.h.al >= 4 )
+         s_iWin9x = 5;
    }
-   else
-      s_iWin9x = 0;
 
    s_fWinVerInit = HB_TRUE;
 }
