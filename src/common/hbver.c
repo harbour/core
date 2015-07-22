@@ -328,8 +328,6 @@ static HB_BOOL s_hb_winVerifyVersionInit( void )
 static void s_hb_winVerInit( void )
 {
 #if ! defined( HB_OS_WIN_CE )
-   OSVERSIONINFO osvi;
-
    s_fWin10    = hb_iswinver( 10, 0, 0, HB_TRUE );
    s_fWin81    = hb_iswinver( 6, 3, 0, HB_TRUE );
    s_fWin8     = hb_iswinver( 6, 2, 0, HB_TRUE );
@@ -337,29 +335,35 @@ static void s_hb_winVerInit( void )
    s_fWin2K3   = hb_iswinver( 5, 2, VER_NT_SERVER, HB_TRUE ) || hb_iswinver( 5, 2, VER_NT_DOMAIN_CONTROLLER, HB_TRUE );
    s_fWin2K    = hb_iswinver( 5, 0, 0, HB_TRUE );
 
-   osvi.dwOSVersionInfoSize = sizeof( osvi );
-   if( GetVersionEx( &osvi ) )
+#if !( defined( HB_OS_WIN_64 ) || ( defined( _MSC_VER ) && _MSC_VER > 1310 ) )
    {
-      /* NOTE: Value is VER_PLATFORM_WIN32_CE on WinCE */
-      if( osvi.dwPlatformId != VER_PLATFORM_WIN32_WINDOWS )
-         s_iWin9x = 0;
-      else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion < 10 )
-         s_iWin9x = 5;  /* 95 */
-      else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10 )
-         s_iWin9x = 8;  /* 98 */
-      else
-         s_iWin9x = 9;  /* ME */
+      OSVERSIONINFO osvi;
+      osvi.dwOSVersionInfoSize = sizeof( osvi );
+      if( GetVersionEx( &osvi ) )
+      {
+         /* NOTE: Value is VER_PLATFORM_WIN32_CE on WinCE */
+         if( osvi.dwPlatformId != VER_PLATFORM_WIN32_WINDOWS )
+            s_iWin9x = 0;
+         else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion < 10 )
+            s_iWin9x = 5;  /* 95 */
+         else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10 )
+            s_iWin9x = 8;  /* 98 */
+         else
+            s_iWin9x = 9;  /* ME */
 
-      if( osvi.dwPlatformId != VER_PLATFORM_WIN32_NT )
-         s_iWinNT = 0;
-      else if( osvi.dwMajorVersion == 3 && osvi.dwMinorVersion == 51 )
-         s_iWinNT = 3;  /* 3.51 */
-      else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 )
-         s_iWinNT = 4;  /* 4.0 */
-      else
-         s_iWinNT = 5;  /* newer */
+         if( osvi.dwPlatformId != VER_PLATFORM_WIN32_NT )
+            s_iWinNT = 0;
+         else if( osvi.dwMajorVersion == 3 && osvi.dwMinorVersion == 51 )
+            s_iWinNT = 3;  /* 3.51 */
+         else if( osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 )
+            s_iWinNT = 4;  /* 4.0 */
+         else
+            s_iWinNT = 5;  /* newer */
+      }
    }
-   else if( s_fWin2K )
+#endif
+
+   if( s_fWin2K )
       s_iWinNT = 5;
 #endif
 
