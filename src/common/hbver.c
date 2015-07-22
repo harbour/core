@@ -8,7 +8,7 @@
  *    hb_verPlatform() (support for determining many Windows flavours)
  *    hb_verCompiler() (support for determining some compiler version/revision)
  * Copyright 2000-2014 Viktor Szakats (vszakats.net/harbour)
- *    hb_verCPU(), hb_verHostBitWidth(), hb_iswinver()
+ *    hb_verCPU(), hb_verHostBitWidth(), hb_iswinver(), hb_iswinsp()
  *    hb_verPlatform() (support for detecting Windows NT on DOS, Wine, post-Windows 8, cleanups)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -375,8 +375,7 @@ char * hb_verPlatform( void )
       memset( &osVer, 0, sizeof( osVer ) );
       osVer.dwOSVersionInfoSize = sizeof( osVer );
 
-      /* Detection of legacy Windows versions and
-         build number and service pack name on non-legacy Windows versions */
+      /* Detection of legacy Windows versions */
       if( GetVersionEx( &osVer ) )
       {
          switch( osVer.dwPlatformId )
@@ -418,7 +417,13 @@ char * hb_verPlatform( void )
 #if defined( HB_OS_WIN_CE )
          pszName = " CE";
 #else
-         if( hb_iswinver( 10, 0, 0, HB_FALSE ) )
+         if( hb_iswinver( 11, 0, 0, HB_TRUE ) )
+         {
+            osVer.dwMajorVersion = 11;
+            osVer.dwMinorVersion = 0;
+            pszName = " 11 or newer";
+         }
+         else if( hb_iswin10() )
          {
             osVer.dwMajorVersion = 10;
             osVer.dwMinorVersion = 0;
@@ -427,7 +432,7 @@ char * hb_verPlatform( void )
             else
                pszName = " Server 2016";
          }
-         else if( hb_iswinver( 6, 3, 0, HB_FALSE ) )
+         else if( hb_iswin81() )
          {
             osVer.dwMajorVersion = 6;
             osVer.dwMinorVersion = 3;
@@ -438,7 +443,7 @@ char * hb_verPlatform( void )
          }
          else if( hb_iswinver( 6, 0, 0, HB_TRUE ) )
          {
-            if( hb_iswinver( 6, 2, 0, HB_FALSE ) )
+            if( hb_iswin8() )
             {
                osVer.dwMajorVersion = 6;
                osVer.dwMinorVersion = 2;
@@ -456,7 +461,7 @@ char * hb_verPlatform( void )
                else
                   pszName = " Server 2008 R2";
             }
-            else if( hb_iswinver( 6, 0, 0, HB_FALSE ) )
+            else if( hb_iswinvista() )
             {
                osVer.dwMajorVersion = 6;
                osVer.dwMinorVersion = 0;
@@ -483,7 +488,7 @@ char * hb_verPlatform( void )
             osVer.dwMinorVersion = 1;
             pszName = " XP";
          }
-         else if( hb_iswinver( 5, 0, 0, HB_FALSE ) )
+         else if( hb_iswin2k() )
          {
             osVer.dwMajorVersion = 5;
             osVer.dwMinorVersion = 0;
@@ -494,37 +499,48 @@ char * hb_verPlatform( void )
 #endif
       }
 
-      if( osVer.dwBuildNumber )
-         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04u",
-                      pszName,
-                      pszWine,
-                      osVer.dwMajorVersion,
-                      osVer.dwMinorVersion,
-                      LOWORD( osVer.dwBuildNumber ) );
-      else
-         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu",
-                      pszName,
-                      pszWine,
-                      osVer.dwMajorVersion,
-                      osVer.dwMinorVersion );
+      hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu",
+                   pszName,
+                   pszWine,
+                   osVer.dwMajorVersion,
+                   osVer.dwMinorVersion );
 
       /* Add service pack/other info */
 
-      if( osVer.szCSDVersion[ 0 ] != TEXT( '\0' ) )
+      if( hb_iswin2k() )
       {
-         char * pszCSDVersion = HB_OSSTRDUP( osVer.szCSDVersion );
-         int i;
+         int tmp;
 
-         /* Skip the leading spaces (Win95B, Win98) */
-         for( i = 0; pszCSDVersion[ i ] != '\0' && HB_ISSPACE( ( int ) pszCSDVersion[ i ] ); i++ )
-            ;
-
-         if( pszCSDVersion[ i ] != '\0' )
+         for( tmp = 5; tmp > 0; --tmp )
          {
-            hb_strncat( pszPlatform, " ", PLATFORM_BUF_SIZE );
-            hb_strncat( pszPlatform, pszCSDVersion + i, PLATFORM_BUF_SIZE );
+            if( hb_iswinsp( tmp, HB_TRUE ) )
+            {
+               char szServicePack[ 8 ];
+               hb_snprintf( szServicePack, sizeof( szServicePack ), " SP%u", tmp );
+               hb_strncat( pszPlatform, szServicePack, PLATFORM_BUF_SIZE );
+               break;
+            }
          }
-         hb_xfree( pszCSDVersion );
+      }
+      else
+      {
+         /* Win9x and NT */
+         if( osVer.szCSDVersion[ 0 ] != TEXT( '\0' ) )
+         {
+            char * pszCSDVersion = HB_OSSTRDUP( osVer.szCSDVersion );
+            int i;
+
+            /* Skip the leading spaces (Win95B, Win98) */
+            for( i = 0; pszCSDVersion[ i ] != '\0' && HB_ISSPACE( ( int ) pszCSDVersion[ i ] ); i++ )
+               ;
+
+            if( pszCSDVersion[ i ] != '\0' )
+            {
+               hb_strncat( pszPlatform, " ", PLATFORM_BUF_SIZE );
+               hb_strncat( pszPlatform, pszCSDVersion + i, PLATFORM_BUF_SIZE );
+            }
+            hb_xfree( pszCSDVersion );
+         }
       }
    }
 
@@ -570,6 +586,50 @@ static HB_BOOL s_fWin2K    = HB_FALSE;
 static HB_BOOL s_fWinNT    = HB_FALSE;
 static HB_BOOL s_fWin9x    = HB_FALSE;
 
+#if ! defined( HB_OS_WIN_CE )
+
+#if defined( __DMC__ ) || ( defined( _MSC_VER ) && _MSC_VER < 1400 )
+   typedef struct _OSVERSIONINFOEXW
+   {
+      DWORD dwOSVersionInfoSize;
+      DWORD dwMajorVersion;
+      DWORD dwMinorVersion;
+      DWORD dwBuildNumber;
+      DWORD dwPlatformId;
+      WCHAR szCSDVersion[ 128 ];
+      WORD  wServicePackMajor;
+      WORD  wServicePackMinor;
+      WORD  wSuiteMask;
+      BYTE  wProductType;
+      BYTE  wReserved;
+   } OSVERSIONINFOEXW, * LPOSVERSIONINFOEXW;
+#endif
+
+typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEXW, DWORD, DWORDLONG );
+typedef ULONGLONG ( WINAPI * _HB_VERSETCONDITIONMASK )( ULONGLONG, DWORD, BYTE );
+
+static _HB_VERIFYVERSIONINFO   s_pVerifyVersionInfo   = NULL;
+static _HB_VERSETCONDITIONMASK s_pVerSetConditionMask = NULL;
+
+static HB_BOOL s_hb_winVerifyVersionInit( void )
+{
+   if( ! s_pVerifyVersionInfo ||
+       ! s_pVerSetConditionMask )
+   {
+      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+      if( hModule )
+      {
+         s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESS( hModule, "VerifyVersionInfoW" );
+         s_pVerSetConditionMask = ( _HB_VERSETCONDITIONMASK ) HB_WINAPI_GETPROCADDRESS( hModule, "VerSetConditionMask" );
+      }
+   }
+
+   return s_pVerifyVersionInfo &&
+          s_pVerSetConditionMask;
+}
+
+#endif
+
 static void s_hb_winVerInit( void )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -589,6 +649,8 @@ static void s_hb_winVerInit( void )
       s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
       s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
    }
+   else
+      s_fWinNT = s_fWin2K;
 #endif
 
    s_fWinVerInit = HB_TRUE;
@@ -647,46 +709,10 @@ static void s_hb_winVerInit( void )
 
 #endif
 
-HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fOrUpper )
+HB_BOOL hb_iswinver( int iMajor, int iMinor, int iType, HB_BOOL fOrUpper )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-
-   #if defined( __DMC__ ) || ( defined( _MSC_VER ) && _MSC_VER < 1400 )
-   typedef struct _OSVERSIONINFOEXW
-   {
-      DWORD dwOSVersionInfoSize;
-      DWORD dwMajorVersion;
-      DWORD dwMinorVersion;
-      DWORD dwBuildNumber;
-      DWORD dwPlatformId;
-      WCHAR szCSDVersion[ 128 ];
-      WORD  wServicePackMajor;
-      WORD  wServicePackMinor;
-      WORD  wSuiteMask;
-      BYTE  wProductType;
-      BYTE  wReserved;
-   } OSVERSIONINFOEXW, * LPOSVERSIONINFOEXW;
-   #endif
-
-   typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEXW, DWORD, DWORDLONG );
-   typedef ULONGLONG ( WINAPI * _HB_VERSETCONDITIONMASK )( ULONGLONG, DWORD, BYTE );
-
-   static _HB_VERIFYVERSIONINFO   s_pVerifyVersionInfo   = NULL;
-   static _HB_VERSETCONDITIONMASK s_pVerSetConditionMask = NULL;
-
-   if( ! s_pVerifyVersionInfo ||
-       ! s_pVerSetConditionMask )
-   {
-      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
-      if( hModule )
-      {
-         s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESS( hModule, "VerifyVersionInfoW" );
-         s_pVerSetConditionMask = ( _HB_VERSETCONDITIONMASK ) HB_WINAPI_GETPROCADDRESS( hModule, "VerSetConditionMask" );
-      }
-   }
-
-   if( s_pVerifyVersionInfo &&
-       s_pVerSetConditionMask )
+   if( s_hb_winVerifyVersionInit() )
    {
       OSVERSIONINFOEXW ver;
       DWORD dwTypeMask = VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR;
@@ -694,8 +720,8 @@ HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fO
 
       memset( &ver, 0, sizeof( ver ) );
       ver.dwOSVersionInfoSize = sizeof( ver );
-      ver.dwMajorVersion = ( DWORD ) iMajorVersion;
-      ver.dwMinorVersion = ( DWORD ) iMinorVersion;
+      ver.dwMajorVersion = ( DWORD ) iMajor;
+      ver.dwMinorVersion = ( DWORD ) iMinor;
 
       dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_MAJORVERSION, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
       dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_MINORVERSION, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
@@ -712,9 +738,32 @@ HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fO
       return ( HB_BOOL ) s_pVerifyVersionInfo( &ver, dwTypeMask, dwlConditionMask );
    }
 #else
-   HB_SYMBOL_UNUSED( iMajorVersion );
-   HB_SYMBOL_UNUSED( iMinorVersion );
+   HB_SYMBOL_UNUSED( iMajor );
+   HB_SYMBOL_UNUSED( iMinor );
    HB_SYMBOL_UNUSED( iType );
+   HB_SYMBOL_UNUSED( fOrUpper );
+#endif
+   return HB_FALSE;
+}
+
+HB_BOOL hb_iswinsp( int iServicePackMajor, HB_BOOL fOrUpper )
+{
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+   if( s_hb_winVerifyVersionInit() )
+   {
+      OSVERSIONINFOEXW ver;
+      DWORDLONG dwlConditionMask = 0;
+
+      memset( &ver, 0, sizeof( ver ) );
+      ver.dwOSVersionInfoSize = sizeof( ver );
+      ver.wServicePackMajor = ( DWORD ) iServicePackMajor;
+
+      dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_SERVICEPACKMAJOR, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
+
+      return ( HB_BOOL ) s_pVerifyVersionInfo( &ver, VER_SERVICEPACKMAJOR, dwlConditionMask );
+   }
+#else
+   HB_SYMBOL_UNUSED( iServicePackMajor );
    HB_SYMBOL_UNUSED( fOrUpper );
 #endif
    return HB_FALSE;
