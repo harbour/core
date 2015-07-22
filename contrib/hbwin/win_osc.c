@@ -48,11 +48,13 @@
 #include "hbwapi.h"
 #include "hbapiitm.h"
 
+#if defined( HB_LEGACY_LEVEL4 )
 static HB_BOOL getwinver( OSVERSIONINFO * pOSvi )
 {
    pOSvi->dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
    return ( GetVersionEx( pOSvi ) == TRUE );
 }
+#endif
 
 HB_FUNC( WIN_OSISNT )
 {
@@ -61,16 +63,24 @@ HB_FUNC( WIN_OSISNT )
 
 HB_FUNC( WIN_OSISNT351 )
 {
+#if defined( HB_LEGACY_LEVEL4 )
    OSVERSIONINFO osvi;
 
    hb_retl( hb_iswinnt() && getwinver( &osvi ) && osvi.dwMajorVersion == 3 && osvi.dwMinorVersion == 51 );
+#else
+   hb_retl( hb_iswinnt() );
+#endif
 }
 
 HB_FUNC( WIN_OSISNT4 )
 {
+#if defined( HB_LEGACY_LEVEL4 )
    OSVERSIONINFO osvi;
 
    hb_retl( hb_iswinnt() && getwinver( &osvi ) && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
+#else
+   hb_retl( hb_iswinnt() );
+#endif
 }
 
 HB_FUNC( WIN_OSIS2000 )
@@ -135,23 +145,35 @@ HB_FUNC( WIN_OSIS9X )
 
 HB_FUNC( WIN_OSIS95 )
 {
+#if defined( HB_LEGACY_LEVEL4 )
    OSVERSIONINFO osvi;
 
    hb_retl( hb_iswin9x() && getwinver( &osvi ) && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0 );
+#else
+   hb_retl( hb_iswin9x() );
+#endif
 }
 
 HB_FUNC( WIN_OSIS98 )
 {
+#if defined( HB_LEGACY_LEVEL4 )
    OSVERSIONINFO osvi;
 
    hb_retl( hb_iswin9x() && getwinver( &osvi ) && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10 );
+#else
+   hb_retl( hb_iswin9x() );
+#endif
 }
 
 HB_FUNC( WIN_OSISME )
 {
+#if defined( HB_LEGACY_LEVEL4 )
    OSVERSIONINFO osvi;
 
    hb_retl( hb_iswin9x() && getwinver( &osvi ) && osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 90 );
+#else
+   hb_retl( hb_iswin9x() );
+#endif
 }
 
 HB_FUNC( WIN_OSISTSCLIENT )
@@ -167,6 +189,8 @@ HB_FUNC( WIN_OSISTSCLIENT )
 HB_FUNC( WIN_OSVERSIONINFO )
 {
    PHB_ITEM pArray = hb_itemArrayNew( 5 );
+
+#if defined( HB_LEGACY_LEVEL4 )
    OSVERSIONINFO osvi;
 
    if( ! getwinver( &osvi ) )
@@ -179,5 +203,49 @@ HB_FUNC( WIN_OSVERSIONINFO )
    hb_arraySetNL( pArray, 3, osvi.dwBuildNumber );
    hb_arraySetNL( pArray, 4, osvi.dwPlatformId );
    HB_ARRAYSETSTR( pArray, 5, osvi.szCSDVersion );
+   hb_itemReturnRelease( pArray );
+#else
+   int iMajor = 4;
+   int iMinor = 0;
+   int pos;
+
+   typedef struct
+   {
+      int iMajor;
+      int iMinor;
+      int iType;
+   } HB_ISWINVER;
+
+   static const HB_ISWINVER s_vers[] = {
+      { 6, 4, 0 },
+      { 6, 3, 0 },
+      { 6, 2, 0 },
+      { 6, 1, 0 },
+      { 6, 0, 0 },
+      { 5, 2, 0 },
+      { 5, 1, 0 },
+      { 5, 0, 0 } };
+
+   for( pos = 0; pos < ( int ) HB_SIZEOFARRAY( s_vers ); ++pos )
+   {
+      if( hb_iswinver( s_vers[ pos ].iMajor, s_vers[ pos ].iMinor, s_vers[ pos ].iType, ( pos == 0 ) ) )
+      {
+         iMajor = s_vers[ pos ].iMajor;
+         iMinor = s_vers[ pos ].iMinor;
+         break;
+      }
+   }
+
+   hb_arraySetNL( pArray, 1, iMajor );
+   hb_arraySetNL( pArray, 2, iMinor );
+   hb_arraySetNL( pArray, 3, 0 );
+#if defined( HB_OS_WIN_CE )
+   hb_arraySetNL( pArray, 4, VER_PLATFORM_WIN32_CE );
+#else
+   hb_arraySetNL( pArray, 4, VER_PLATFORM_WIN32_NT );
+#endif
+   hb_arraySetC( pArray, 5, NULL );
+#endif
+
    hb_itemReturnRelease( pArray );
 }

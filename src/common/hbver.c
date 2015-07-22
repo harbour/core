@@ -699,16 +699,18 @@ HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fO
        s_pVerSetConditionMask )
    {
       OSVERSIONINFOEXW ver;
-      DWORD dwTypeMask = VER_MAJORVERSION | VER_MINORVERSION;
+      DWORD dwTypeMask = VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR;
       DWORDLONG dwlConditionMask = 0;
 
-      ZeroMemory( &ver, sizeof( ver ) );
+      memset( &ver, 0, sizeof( ver ) );
       ver.dwOSVersionInfoSize = sizeof( ver );
       ver.dwMajorVersion = ( DWORD ) iMajorVersion;
       ver.dwMinorVersion = ( DWORD ) iMinorVersion;
 
       dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_MAJORVERSION, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
       dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_MINORVERSION, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
+      dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL );
+      dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_SERVICEPACKMINOR, VER_GREATER_EQUAL );
 
       if( iType )
       {
