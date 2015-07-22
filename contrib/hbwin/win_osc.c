@@ -48,14 +48,6 @@
 #include "hbwapi.h"
 #include "hbapiitm.h"
 
-#if defined( HB_LEGACY_LEVEL4 )
-static HB_BOOL getwinver( OSVERSIONINFO * pOSvi )
-{
-   pOSvi->dwOSVersionInfoSize = sizeof( OSVERSIONINFO );
-   return ( GetVersionEx( pOSvi ) == TRUE );
-}
-#endif
-
 HB_FUNC( WIN_OSISNT )
 {
    hb_retl( hb_iswinnt() != 0 );
@@ -160,21 +152,6 @@ HB_FUNC( WIN_OSVERSIONINFO )
 {
    PHB_ITEM pArray = hb_itemArrayNew( 5 );
 
-#if defined( HB_LEGACY_LEVEL4 )
-   OSVERSIONINFO osvi;
-
-   if( ! getwinver( &osvi ) )
-      memset( &osvi, 0, sizeof( osvi ) );
-
-   hb_arraySetNL( pArray, 1, osvi.dwMajorVersion );
-   hb_arraySetNL( pArray, 2, osvi.dwMinorVersion );
-   if( hb_iswin9x() )
-      osvi.dwBuildNumber = LOWORD( osvi.dwBuildNumber );
-   hb_arraySetNL( pArray, 3, osvi.dwBuildNumber );
-   hb_arraySetNL( pArray, 4, osvi.dwPlatformId );
-   HB_ARRAYSETSTR( pArray, 5, osvi.szCSDVersion );
-   hb_itemReturnRelease( pArray );
-#else
    int iMajor = 4;
    int iMinor = 0;
    int pos;
@@ -211,10 +188,25 @@ HB_FUNC( WIN_OSVERSIONINFO )
 #if defined( HB_OS_WIN_CE )
    hb_arraySetNL( pArray, 4, VER_PLATFORM_WIN32_CE );
 #else
-   hb_arraySetNL( pArray, 4, VER_PLATFORM_WIN32_NT );
+   hb_arraySetNL( pArray, 4, hb_iswinnt() ? VER_PLATFORM_WIN32_NT : VER_PLATFORM_WIN32_WINDOWS );
 #endif
    hb_arraySetC( pArray, 5, NULL );
-#endif
+
+   if( hb_iswin2k() )
+   {
+      int tmp;
+
+      for( tmp = 5; tmp > 0; --tmp )
+      {
+         if( hb_iswinsp( tmp, HB_TRUE ) )
+         {
+            char szServicePack[ 8 ];
+            hb_snprintf( szServicePack, sizeof( szServicePack ), "SP%u", tmp );
+            hb_arraySetC( pArray, 5, szServicePack );
+            break;
+         }
+      }
+   }
 
    hb_itemReturnRelease( pArray );
 }
