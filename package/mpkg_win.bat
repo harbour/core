@@ -293,14 +293,12 @@ if exist "%HB_SFX_7Z%" (
    del "%_PKGNAME%"
    del _7zconf
 
-   touch "%_PKGNAME%.exe" -r "%HB_ABSROOT%README.md"
-   for %%I in ("%_PKGNAME%.exe") do echo %%~nxI: %%~zI bytes %%~tI
-   openssl dgst -sha256 "%_PKGNAME%.exe"
-) else (
-   touch "%_PKGNAME%" -r "%HB_ABSROOT%README.md"
-   for %%I in ("%_PKGNAME%") do echo %%~nxI: %%~zI bytes %%~tI
-   openssl dgst -sha256 "%_PKGNAME%"
+   set _PKGNAME=%_PKGNAME%.exe
 )
+
+touch "%_PKGNAME%" -r "%HB_ABSROOT%README.md"
+for %%I in ("%_PKGNAME%") do echo %%~nxI: %%~zI bytes %%~tI
+openssl dgst -sha256 "%_PKGNAME%"
 
 del _hbfiles
 
