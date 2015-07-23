@@ -89,7 +89,7 @@ build_script:
 - set HB_BUILD_CONTRIB_DYN=yes
 - set HB_BUILD_OPTIM=yes
 - set HB_BUILD_PKG=yes
-- set HB_BUILD_POSTRUN=".\hbtest -no#env"
+- set HB_BUILD_POSTRUN=".\hbtest -noenv"
 - rem ".\hbspeed --stdout"
 - set _HB_BUILD_PKG_ARCHIVE=no
 - set _HB_PKG_BUNDLE_C=no
@@ -101,5 +101,5 @@ build_script:
 - win-make.exe clean install HB_VERSION=%HB_VF%
 deploy_script:
 - call package\mpkg_win.bat
-- curl -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
+- curl -fsS -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 - curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
