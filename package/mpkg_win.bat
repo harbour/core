@@ -255,10 +255,12 @@ echo "extras\*"     >> _hbfiles
 echo "tests\*"      >> _hbfiles
 echo "addons\*.txt" >> _hbfiles
 
-if exist "harbour-%HB_VF%-win.7z" del "harbour-%HB_VF%-win.7z"
+set _PKGNAME=harbour-%HB_VF%-win.7z
+
+if exist "%_PKGNAME%" del "%_PKGNAME%"
 pushd "%HB_DR%"
 "%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" ts "%_ROOT%"
-"%HB_DIR_7Z%7za" a -r -mx "..\harbour-%HB_VF%-win.7z" @..\_hbfiles > nul
+"%HB_DIR_7Z%7za" a -r -mx "..\%_PKGNAME%" @..\_hbfiles > nul
 popd
 
 if exist "%HB_SFX_7Z%" (
@@ -285,16 +287,19 @@ if exist "%HB_SFX_7Z%" (
 
    copy /b "%HB_SFX_7Z%" + ^
       _7zconf + ^
-      "harbour-%HB_VF%-win.7z" ^
-      "harbour-%HB_VF%-win.7z.exe"
+      "%_PKGNAME%" ^
+      "%_PKGNAME%.exe"
 
-   touch "harbour-%HB_VF%-win.7z.exe" -r "%HB_ABSROOT%README.md"
-
-   del "harbour-%HB_VF%-win.7z"
+   del "%_PKGNAME%"
    del _7zconf
 
-   for %%I in ("harbour-%HB_VF%-win.7z.exe") do echo %%~nxI: %%~zI bytes %%~tI
-   openssl dgst -sha256 "harbour-%HB_VF%-win.7z.exe"
+   touch "%_PKGNAME%.exe" -r "%HB_ABSROOT%README.md"
+   for %%I in ("%_PKGNAME%.exe") do echo %%~nxI: %%~zI bytes %%~tI
+   openssl dgst -sha256 "%_PKGNAME%.exe"
+) else (
+   touch "%_PKGNAME%" -r "%HB_ABSROOT%README.md"
+   for %%I in ("%_PKGNAME%") do echo %%~nxI: %%~zI bytes %%~tI
+   openssl dgst -sha256 "%_PKGNAME%"
 )
 
 del _hbfiles
