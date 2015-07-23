@@ -397,8 +397,8 @@ on \*nix which are not available through official package managers
 Note that Harbour is tuned to use 3rd party **binary** packages in their
 default, unmodified &ndash; "vanilla" &ndash; install layout created by their
 official/mainstream install kits. If you manually move, rename,
-delete, add files under the 3rd party packages' root directory, or 
-use a source package, the default Harbour build process (especially 
+delete, add files under the 3rd party packages' root directory, or
+use a source package, the default Harbour build process (especially
 Windows implib generation) might not work as expected.
 
 You can set these environment variables before starting
@@ -429,9 +429,7 @@ See contrib-specific dependencies and build notes in the projects'
 
 > NOTES:
 >
->    * you need to use native path format to your shell/OS
->    * spaces in directory names are not supported
->      (you *can* use 8.3 name alias on Windows platform, though)
+>    * you need to use path format native to your shell/OS
 >    * don't put directory names inside double quotes
 >    * use absolute paths
 
@@ -523,8 +521,7 @@ sensitive.
      It's always set to `./pkg/<arch>/<comp>` when
      `HB_BUILD_PKG` is set to `yes`. On non-\*nix systems,
      you must set it to a valid directory when using
-     `install`. Use absolute paths only. For a peace of
-     mind, avoid using spaces and quotes in the name.
+     `install`. Use absolute paths only.
      You have to use path format native to your shell.
      F.e. to specify `C:\dir` on Windows, with Cygwin
      you should use `/cygdrive/c/dir`, with MSYS `/c/dir`.
@@ -741,7 +738,6 @@ executables are required for a cross-build process to succeed.
 > - All code below should be copied to batch files or typed at command
 >   line.
 > - Naturally, you will need to adapt pathnames to valid ones on your system.
->   Don't use spaces in pathnames.
 > - You can use additional `clean`, `install` or `clean install`
 >   make parameters depending on what you want to do.
 > - To redirect all output to a log file, append this after the make
