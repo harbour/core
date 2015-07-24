@@ -105,9 +105,10 @@
 
 /* Constants breaking Cl*pper namespace.
    Leaving it here for compatibility */
-#define FO_CREAT           HB_FO_CREAT /* Harbour extension */
-#define FO_TRUNC           HB_FO_TRUNC /* Harbour extension */
-#define FO_EXCL            HB_FO_EXCL  /* Harbour extension */
+#define FO_CREAT           HB_FO_CREAT     /* Harbour extension */
+#define FO_TRUNC           HB_FO_TRUNC     /* Harbour extension */
+#define FO_EXCL            HB_FO_EXCL      /* Harbour extension */
+#define FO_DEFAULTS        HB_FO_DEFAULTS  /* Use SET command defaults */
 
 /* File sharing flags */
 #define FO_COMPAT          0           /* No sharing specified */

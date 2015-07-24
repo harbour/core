@@ -6871,7 +6871,6 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    {
       PHB_FILE pFile;
       HB_BOOL bRetry, fShared = pArea->dbfarea.fShared && ! fTemporary && ! fExclusive;
-      HB_USHORT uiFlags = FO_READWRITE | ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
       PHB_ITEM pError = NULL;
       char szSpFile[ HB_PATH_MAX ];
 
@@ -6884,7 +6883,8 @@ static HB_ERRCODE hb_nsxOrderCreate( NSXAREAP pArea, LPDBORDERCREATEINFO pOrderI
          }
          else
          {
-            pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
+            pFile = hb_fileExtOpen( szFileName, NULL, FO_READWRITE |
+                                    ( fShared ? FO_DENYNONE : FO_EXCLUSIVE ) |
                                     ( fNewFile ? FXO_TRUNCATE : FXO_APPEND ) |
                                     FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME |
                                     FXO_NOSEEKPOS,
@@ -7857,12 +7857,12 @@ static HB_ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
       fReadonly = pArea->dbfarea.fReadonly;
       fShared = pArea->dbfarea.fShared;
-      uiFlags = ( fReadonly ? FO_READ : FO_READWRITE ) |
-                ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
       do
       {
          fRetry = HB_FALSE;
-         pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
+         pFile = hb_fileExtOpen( szFileName, NULL,
+                                 ( fReadonly ? FO_READ : FO_READWRITE ) |
+                                 ( fShared ? FO_DENYNONE : FO_EXCLUSIVE ) |
                                  FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME |
                                  FXO_NOSEEKPOS,
                                  NULL, pError );

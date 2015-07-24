@@ -49,6 +49,7 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbdate.h"
+#include "directry.ch"
 
 /* extended FILE IO handle destructor */
 static HB_GARBAGE_FUNC( hb_file_Destructor )
@@ -422,40 +423,41 @@ HB_FUNC( HB_VFOPEN )
    if( pszFile )
    {
       char szName[ HB_PATH_MAX ];
-      HB_USHORT uiModeAttr = 0;
+      HB_FATTR nModeAttr = 0;
       PHB_FILE pFile;
       int iMode;
 
       iMode = hb_parnidef( 2, FO_READWRITE | FO_DENYNONE | FO_PRIVATE ) &
-              ( 0xFF | FO_CREAT | FO_TRUNC | FO_EXCL | HB_FO_DEFAULTS );
+              ( 0xFF | FO_CREAT | FO_TRUNC | FO_EXCL | FO_DEFAULTS );
 
       if( iMode & FO_CREAT )
       {
          if( iMode & FO_TRUNC )
-            uiModeAttr |= FXO_TRUNCATE;
+            nModeAttr |= FXO_TRUNCATE;
          else
-            uiModeAttr |= FXO_APPEND;
+            nModeAttr |= FXO_APPEND;
          if( iMode & FO_EXCL )
-            uiModeAttr |= FXO_UNIQUE;
+            nModeAttr |= FXO_UNIQUE;
       }
-      else if( iMode & HB_FO_DEFAULTS )
-         uiModeAttr |= FXO_DEFAULTS;
+
+      if( iMode & FO_DEFAULTS )
+         nModeAttr |= FXO_DEFAULTS;
 
       if( iMode & ( FO_EXCLUSIVE | FO_DENYWRITE | FO_DENYREAD | FO_DENYNONE ) )
-         uiModeAttr |= FXO_SHARELOCK;
+         nModeAttr |= FXO_SHARELOCK;
 
-      uiModeAttr |= ( HB_USHORT ) ( iMode & 0xFF );
+      nModeAttr |= ( HB_FATTR ) ( iMode & 0xFF );
 
       if( HB_ISBYREF( 1 ) )
       {
          hb_strncpy( szName, pszFile, sizeof( szName ) - 1 );
-         uiModeAttr |= FXO_COPYNAME;
+         nModeAttr |= FXO_COPYNAME;
          pszFile = szName;
       }
       else
-         uiModeAttr &= ( HB_USHORT ) ~FXO_COPYNAME;
+         nModeAttr &= ( HB_FATTR ) ~FXO_COPYNAME;
 
-      pFile = hb_fileExtOpen( pszFile, NULL /* pDefExt */, uiModeAttr,
+      pFile = hb_fileExtOpen( pszFile, NULL /* pDefExt */, nModeAttr,
                               NULL /* pPaths */, NULL /* pError */ );
 
       if( pszFile == szName )
@@ -742,15 +744,54 @@ HB_FUNC( HB_VFTRUNC )
    }
 }
 
-/* hb_vfSize( <pHandle> ) -> <nSize> */
+/* hb_vfSize( <pHandle> | <cFileName> [, <lUseDirEntry> ] ) -> <nSize> */
 HB_FUNC( HB_VFSIZE )
 {
-   PHB_FILE pFile = hb_fileParam( 1 );
+   const char * pszFile = hb_parc( 1 );
+   PHB_FILE pFile;
 
-   if( pFile )
+   if( pszFile )
    {
-      hb_retnint( hb_fileSize( pFile ) );
-      hb_fsSetFError( hb_fsError() );
+      HB_ERRCODE uiError = 0;
+      HB_FOFFSET nSize = 0;
+
+      if( hb_parldef( 2, 1 ) )
+      {
+         PHB_ITEM pDir = hb_fileDirectory( pszFile, "HS" );
+
+         uiError = hb_fsError();
+         if( pDir )
+         {
+            PHB_ITEM pEntry = hb_arrayGetPtr( pDir, 1 );
+
+            if( pEntry )
+               nSize = hb_arrayGetNInt( pEntry, F_SIZE );
+            hb_itemRelease( pDir );
+         }
+      }
+      else
+      {
+         pFile = hb_fileExtOpen( pszFile, NULL, FO_READ | FO_COMPAT, NULL, NULL );
+         if( pFile )
+         {
+            nSize = hb_fileSize( pFile );
+            uiError = hb_fsError();
+            hb_fileClose( pFile );
+         }
+         else
+            uiError = hb_fsError();
+      }
+      hb_fsSetFError( uiError );
+      hb_retnint( nSize );
+   }
+   else
+   {
+      pFile = hb_fileParam( 1 );
+      if( pFile )
+      {
+         hb_retnint( hb_fileSize( pFile ) );
+         hb_fsSetFError( hb_fsError() );
+      }
    }
 }
 

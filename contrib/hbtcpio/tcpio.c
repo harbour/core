@@ -75,7 +75,7 @@ static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 }
 
 static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
-                            const char * pszDefExt, HB_USHORT uiExFlags,
+                            const char * pszDefExt, HB_FATTR nExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
    const char * pszHost = pszName + FILE_PREFIX_LEN, * ptr;
@@ -128,7 +128,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
                hb_socketSetKeepAlive( sd, HB_TRUE );
                if( hb_socketConnect( sd, pSockAddr, uiLen, timeout ) == 0 )
                {
-                  switch( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) )
+                  switch( nExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) )
                   {
                      case FO_READ:
                         hb_socketShutdown( sd, HB_SOCKET_SHUT_WR );

@@ -1673,13 +1673,13 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
          }
          else if( pTerm->iExtColor == HB_GTTRM_CLR256 )
          {
-            /* ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m */  /* 0 <= r,g,b <= 5 */
+            /* ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m   0 <= r,g,b <= 5 */
             rgb = pTerm->colors[ iAttr & 0x0F ];
             rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
                         6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
                             ( ( ( rgb >> 16 ) & 0xFF ) / 43 );
             i += hb_snprintf( buff + i, sizeof( buff ) - i, "38;5;%d", rgb );
-            /* ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m */  /* 0 <= r,g,b <= 5 */
+            /* ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m   0 <= r,g,b <= 5 */
             rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
             rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
                         6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
@@ -1772,7 +1772,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
             }
             else if( pTerm->iExtColor == HB_GTTRM_CLR256 )
             {
-               /* ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m /*  /* 0 <= r,g,b <= 5 */
+               /* ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m   0 <= r,g,b <= 5 */
                rgb = pTerm->colors[ iAttr & 0x0F ];
                rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
                            6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
@@ -1823,7 +1823,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
             }
             else if( pTerm->iExtColor == HB_GTTRM_CLR256 )
             {
-               /* ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m */  /* 0 <= r,g,b <= 5 */
+               /* ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m   0 <= r,g,b <= 5 */
                rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
                rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
                            6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +

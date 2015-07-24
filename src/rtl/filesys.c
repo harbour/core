@@ -3726,7 +3726,7 @@ HB_BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
  * caller must free the returned buffer
  */
 char * hb_fsExtName( const char * pszFileName, const char * pDefExt,
-                     HB_USHORT uiExFlags, const char * pPaths )
+                     HB_FATTR nExFlags, const char * pPaths )
 {
    HB_PATHNAMES * pNextPath;
    PHB_FNAME pFilepath;
@@ -3737,14 +3737,14 @@ char * hb_fsExtName( const char * pszFileName, const char * pDefExt,
 
    pFilepath = hb_fsFNameSplit( pszFileName );
 
-   if( pDefExt && ( ( uiExFlags & FXO_FORCEEXT ) || ! pFilepath->szExtension ) )
+   if( pDefExt && ( ( nExFlags & FXO_FORCEEXT ) || ! pFilepath->szExtension ) )
       pFilepath->szExtension = pDefExt;
 
    if( pFilepath->szPath )
    {
       hb_fsFNameMerge( szPath, pFilepath );
    }
-   else if( uiExFlags & FXO_DEFAULTS )
+   else if( nExFlags & FXO_DEFAULTS )
    {
       const char * szDefault = hb_setGetDefault();
       if( szDefault )
@@ -3754,7 +3754,7 @@ char * hb_fsExtName( const char * pszFileName, const char * pDefExt,
          fIsFile = hb_fsFileExists( szPath );
       }
       if( ! fIsFile &&
-          ( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) ) == 0 &&
+          ( nExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) ) == 0 &&
           hb_setGetPath() )
       {
          pNextPath = hb_setGetFirstSetPath();
@@ -3800,14 +3800,14 @@ char * hb_fsExtName( const char * pszFileName, const char * pDefExt,
 }
 
 HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
-                         HB_USHORT uiExFlags, const char * pPaths,
+                         HB_FATTR nExFlags, const char * pPaths,
                          PHB_ITEM pError )
 {
    HB_FHANDLE hFile;
    HB_USHORT uiFlags;
    char * szPath;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsExtOpen(%s, %s, %hu, %p, %p)", pszFileName, pDefExt, uiExFlags, pPaths, pError ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsExtOpen(%s, %s, %u, %p, %p)", pszFileName, pDefExt, nExFlags, pPaths, pError ) );
 
 #if 0
    #define FXO_TRUNCATE   0x0100  /* Create (truncate if exists) */
@@ -3824,18 +3824,18 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
    hb_errGetFileName( pError );
 #endif
 
-   szPath = hb_fsExtName( pszFileName, pDefExt, uiExFlags, pPaths );
+   szPath = hb_fsExtName( pszFileName, pDefExt, nExFlags, pPaths );
 
-   uiFlags = uiExFlags & 0xff;
-   if( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) )
+   uiFlags = ( HB_USHORT ) ( nExFlags & 0xff );
+   if( nExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) )
    {
       uiFlags |= FO_CREAT;
-      if( uiExFlags & FXO_UNIQUE )
+      if( nExFlags & FXO_UNIQUE )
          uiFlags |= FO_EXCL;
 #if defined( HB_USE_SHARELOCKS )
-      else if( ( uiExFlags & ( FXO_TRUNCATE | FXO_SHARELOCK ) ) == FXO_TRUNCATE )
+      else if( ( nExFlags & ( FXO_TRUNCATE | FXO_SHARELOCK ) ) == FXO_TRUNCATE )
 #else
-      else if( uiExFlags & FXO_TRUNCATE )
+      else if( nExFlags & FXO_TRUNCATE )
 #endif
          uiFlags |= FO_TRUNC;
    }
@@ -3843,7 +3843,7 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
    hFile = hb_fsOpen( szPath, uiFlags );
 
 #if defined( HB_USE_SHARELOCKS )
-   if( hFile != FS_ERROR && uiExFlags & FXO_SHARELOCK )
+   if( hFile != FS_ERROR && nExFlags & FXO_SHARELOCK )
    {
 #if defined( HB_USE_BSDLOCKS )
       int iLock, iResult;
@@ -3873,9 +3873,9 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
           * fix for NetErr() support and Clipper compatibility,
           * should be revised with a better multi platform solution.
           */
-         hb_fsSetError( ( uiExFlags & FXO_TRUNCATE ) ? 5 : 32 );
+         hb_fsSetError( ( nExFlags & FXO_TRUNCATE ) ? 5 : 32 );
       }
-      else if( uiExFlags & FXO_TRUNCATE )
+      else if( nExFlags & FXO_TRUNCATE )
       {
          /* truncate the file only if properly locked */
          hb_fsSeek( hFile, 0, FS_SET );
@@ -3893,7 +3893,7 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
     * Temporary fix for NetErr() support and Clipper compatibility,
     * should be revised with a better solution.
     */
-   if( ( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) ) == 0 &&
+   if( ( nExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) ) == 0 &&
        hb_fsError() == 5 )
    {
       hb_fsSetError( 32 );
@@ -3906,11 +3906,11 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
       if( hFile == FS_ERROR )
       {
          hb_errPutOsCode( pError, hb_fsError() );
-         hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
+         hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( nExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
       }
    }
 
-   if( uiExFlags & FXO_COPYNAME && hFile != FS_ERROR )
+   if( nExFlags & FXO_COPYNAME && hFile != FS_ERROR )
       hb_strncpy( ( char * ) pszFileName, szPath, HB_PATH_MAX - 1 );
 
    hb_xfree( szPath );

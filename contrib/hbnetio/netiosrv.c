@@ -785,6 +785,7 @@ HB_FUNC( NETIO_SERVER )
          int iFileNo, iStreamID, iIndex, iResult;
          HB_FATTR ulAttr;
          HB_U32 uiMsg;
+         HB_FATTR nFlags;
          HB_USHORT uiFlags;
          char * szExt;
          PHB_FILE pFile;
@@ -1097,10 +1098,20 @@ HB_FUNC( NETIO_SERVER )
                break;
 
             case NETIO_OPEN:
+            case NETIO_OPEN2:
                size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
-               uiFlags = HB_GET_LE_UINT16( &msgbuf[ 6 ] );
-               szExt = msgbuf[ 8 ] ? hb_strndup( ( const char * ) &msgbuf[ 8 ],
-                                                 NETIO_MSGLEN - 8 ) : NULL;
+               if( uiMsg == NETIO_OPEN2 )
+               {
+                  nFlags = HB_GET_LE_UINT32( &msgbuf[ 6 ] );
+                  szExt = msgbuf[ 10 ] ? hb_strndup( ( const char * ) &msgbuf[ 10 ],
+                                                     NETIO_MSGLEN - 10 ) : NULL;
+               }
+               else
+               {
+                  nFlags = HB_GET_LE_UINT16( &msgbuf[ 6 ] );
+                  szExt = msgbuf[ 8 ] ? hb_strndup( ( const char * ) &msgbuf[ 8 ],
+                                                    NETIO_MSGLEN - 8 ) : NULL;
+               }
                if( size <= 0 )
                   errCode = NETIO_ERR_WRONG_PARAM;
                else
@@ -1120,7 +1131,7 @@ HB_FUNC( NETIO_SERVER )
                         errCode = NETIO_ERR_WRONG_FILE_PATH;
                      else
                      {
-                        pFile = hb_fileExtOpen( szFile, szExt, uiFlags, NULL, NULL );
+                        pFile = hb_fileExtOpen( szFile, szExt, nFlags, NULL, NULL );
                         if( ! pFile )
                            errCode = s_srvFsError();
                         else

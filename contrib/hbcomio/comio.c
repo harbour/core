@@ -247,7 +247,7 @@ static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 }
 
 static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
-                            const char * pszDefExt, HB_USHORT uiExFlags,
+                            const char * pszDefExt, HB_FATTR nExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
@@ -268,7 +268,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
           hb_comInit( iPort, iBaud, iParity, iSize, iStop ) == 0 &&
           hb_comFlowControl( iPort, NULL, iFlow ) == 0 )
       {
-         switch( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) )
+         switch( nExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) )
          {
             case FO_READ:
                fWrite = HB_FALSE;

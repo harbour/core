@@ -461,7 +461,7 @@ static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 }
 
 static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, const char * pDefExt,
-                               HB_USHORT uiExFlags, const char * pPaths,
+                               HB_FATTR nExFlags, const char * pPaths,
                                PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
@@ -479,9 +479,9 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 
    HB_SYMBOL_UNUSED( pFuncs );
 
-   fShared = ( uiExFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE ) ) == 0;
-   fReadonly = ( uiExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ;
-   pszFile = hb_fsExtName( pszFileName, pDefExt, uiExFlags, pPaths );
+   fShared = ( nExFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE ) ) == 0;
+   fReadonly = ( nExFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ;
+   pszFile = hb_fsExtName( pszFileName, pDefExt, nExFlags, pPaths );
 
    hb_vmUnlock();
 #if defined( HB_OS_UNIX )
@@ -498,14 +498,14 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
       pFile = hb_fileFind( statbuf.st_dev, statbuf.st_ino );
       if( pFile )
       {
-         if( ! fShared || ! pFile->shared || ( uiExFlags & FXO_TRUNCATE ) != 0 )
+         if( ! fShared || ! pFile->shared || ( nExFlags & FXO_TRUNCATE ) != 0 )
             fResult = HB_FALSE;
          else if( ! fReadonly && pFile->readonly )
             pFile = NULL;
          else
             pFile->used++;
 
-         if( ( uiExFlags & FXO_NOSEEKPOS ) == 0 )
+         if( ( nExFlags & FXO_NOSEEKPOS ) == 0 )
          {
 #  if defined( HB_OS_VXWORKS )
             fSeek  = ! S_ISFIFO( statbuf.st_mode );
@@ -521,10 +521,10 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
    {
       if( ! fResult )
       {
-         hb_fsSetError( ( uiExFlags & FXO_TRUNCATE ) ? 5 : 32 );
+         hb_fsSetError( ( nExFlags & FXO_TRUNCATE ) ? 5 : 32 );
          pFile = NULL;
       }
-      else if( uiExFlags & FXO_COPYNAME )
+      else if( nExFlags & FXO_COPYNAME )
          hb_strncpy( ( char * ) pszFileName, pszFile, HB_PATH_MAX - 1 );
 
       if( pError )
@@ -533,14 +533,14 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
          if( ! fResult )
          {
             hb_errPutOsCode( pError, hb_fsError() );
-            hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
+            hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( nExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
          }
       }
    }
    else
 #endif
    {
-      HB_FHANDLE hFile = hb_fsExtOpen( pszFileName, pDefExt, uiExFlags, pPaths, pError );
+      HB_FHANDLE hFile = hb_fsExtOpen( pszFileName, pDefExt, nExFlags, pPaths, pError );
       if( hFile != FS_ERROR )
       {
          HB_ULONG device = 0, inode = 0;
@@ -553,7 +553,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
          {
             device = ( HB_ULONG ) statbuf.st_dev;
             inode  = ( HB_ULONG ) statbuf.st_ino;
-            if( ( uiExFlags & FXO_NOSEEKPOS ) == 0 )
+            if( ( nExFlags & FXO_NOSEEKPOS ) == 0 )
             {
 #  if defined( HB_OS_VXWORKS )
                fSeek  = ! S_ISFIFO( statbuf.st_mode );
@@ -1249,15 +1249,15 @@ char * hb_fileLinkRead( const char * pszFileName )
 }
 
 PHB_FILE hb_fileExtOpen( const char * pszFileName, const char * pDefExt,
-                         HB_USHORT uiExFlags, const char * pPaths,
+                         HB_FATTR nExFlags, const char * pPaths,
                          PHB_ITEM pError )
 {
    int i = s_fileFindDrv( pszFileName );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->Open( s_pFileTypes[ i ], pszFileName, pDefExt, uiExFlags, pPaths, pError );
+      return s_pFileTypes[ i ]->Open( s_pFileTypes[ i ], pszFileName, pDefExt, nExFlags, pPaths, pError );
 
-   return s_fileExtOpen( NULL, pszFileName, pDefExt, uiExFlags, pPaths, pError );
+   return s_fileExtOpen( NULL, pszFileName, pDefExt, nExFlags, pPaths, pError );
 }
 
 void hb_fileClose( PHB_FILE pFile )
