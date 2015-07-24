@@ -764,7 +764,7 @@ HB_FUNC( HB_VFSIZE )
          uiError = hb_fsError();
          if( pDir )
          {
-            PHB_ITEM pEntry = hb_arrayGetPtr( pDir, 1 );
+            PHB_ITEM pEntry = hb_arrayGetItemPtr( pDir, 1 );
 
             if( pEntry )
                nSize = hb_arrayGetNInt( pEntry, F_SIZE );
