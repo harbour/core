@@ -3,6 +3,7 @@
  *
  * Copyright 2000-2001 Jose Lalin <dezac@corevia.com>
  * Copyright 2000-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,19 +48,45 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbapiitm.h"
+#include "directry.ch"
 
-HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
+HB_FOFFSET hb_fsFSize( const char * pszFile, HB_BOOL bUseDirEntry )
 {
-   PHB_FILE hFileHandle;
+   HB_FOFFSET nSize = 0;
 
-   HB_SYMBOL_UNUSED( bUseDirEntry );  /* TODO: Reimplement this mode using hb_file*() compatible API calls */
-
-   if( ( hFileHandle = hb_fileExtOpen( pszFileName, NULL, FO_READ | FO_COMPAT | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
+   if( pszFile )
    {
-      HB_FOFFSET nPos = hb_fileSeek( hFileHandle, 0, FS_END );
-      hb_fileClose( hFileHandle );
-      return nPos;
+      HB_ERRCODE uiError = 0;
+
+      if( bUseDirEntry )
+      {
+         PHB_ITEM pDir = hb_fileDirectory( pszFile, "HS" );
+
+         uiError = hb_fsError();
+         if( pDir )
+         {
+            PHB_ITEM pEntry = hb_arrayGetItemPtr( pDir, 1 );
+
+            if( pEntry )
+               nSize = hb_arrayGetNInt( pEntry, F_SIZE );
+            hb_itemRelease( pDir );
+         }
+      }
+      else
+      {
+         PHB_FILE pFile = hb_fileExtOpen( pszFile, NULL, FO_READ | FO_COMPAT, NULL, NULL );
+         if( pFile )
+         {
+            nSize = hb_fileSize( pFile );
+            uiError = hb_fsError();
+            hb_fileClose( pFile );
+         }
+         else
+            uiError = hb_fsError();
+      }
+      hb_fsSetFError( uiError );
    }
 
-   return 0;
+   return nSize;
 }

@@ -263,7 +263,7 @@ PROCEDURE Main( ... )
 
             mk_hb_vfTimeSet( tmp )
 
-            OutStd( hb_StrFormat( "! Created Harbour release package: '%1$s' (%2$d bytes)", tmp, hb_FSize( tmp ) ) + hb_eol() )
+            OutStd( hb_StrFormat( "! Created Harbour release package: '%1$s' (%2$d bytes)", tmp, hb_vfSize( tmp ) ) + hb_eol() )
          ELSE
             cBin_Tar := "tar"
             lGNU_Tar := .T.
@@ -318,7 +318,7 @@ PROCEDURE Main( ... )
                      if cBin_Tar exists in the installation environment */
                   mk_hb_MemoWrit( tmp, ;
                      hb_StrFormat( sfx_tgz_sh(), ;
-                        hb_FSize( cTar_Path ), ;
+                        hb_vfSize( cTar_Path ), ;
                         cTar_NameExt, ;
                         iif( GetEnvC( "HB_PLATFORM" ) == "linux", " && ldconfig", "" ) ) + ;
                      hb_MemoRead( cTar_Path ) )

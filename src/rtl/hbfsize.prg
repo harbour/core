@@ -44,24 +44,10 @@
  *
  */
 
-#include "directry.ch"
-#include "fileio.ch"
-
 FUNCTION hb_FSize( cName, lUseDirEntry )
 
-   LOCAL nSize := 0
-   LOCAL fhnd
-   LOCAL aFiles
-
    IF HB_ISSTRING( cName )
-      IF hb_defaultValue( lUseDirEntry, .T. )
-         IF Len( aFiles := hb_vfDirectory( cName ) ) >= 1
-            nSize := aFiles[ 1 ][ F_SIZE ]
-         ENDIF
-      ELSEIF ( fhnd := hb_vfOpen( cName, FO_READ + FO_COMPAT ) ) != NIL
-         nSize := hb_vfSize( fhnd )
-         hb_vfClose( fhnd )
-      ENDIF
+      RETURN hb_vfSize( cName, lUseDirEntry )
    ENDIF
 
-   RETURN nSize
+   RETURN 0

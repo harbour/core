@@ -51,7 +51,7 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL )
       ? curl_easy_setopt( curl, HB_CURLOPT_UL_FILE_SETUP, cUL )
-      ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, hb_FSize( cUL ) ), hb_FSize( cUL )
+      ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, hb_vfSize( cUL ) ), hb_vfSize( cUL )
 #if 0
       /* May use this instead of embedding in URL */
       ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "username:password" )

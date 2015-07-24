@@ -6397,7 +6397,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
                ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .T., cBin_CompC ) ) .OR. ;
-               hb_FSize( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) == 0
+               hb_vfSize( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) == 0
                AAdd( l_aC_TO_DO, tmp )
             ENDIF
          NEXT
@@ -6420,7 +6420,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
                ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .T., cBin_CompCPP ) ) .OR. ;
-               hb_FSize( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) == 0
+               hb_vfSize( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt ) ) == 0
                AAdd( l_aCPP_TO_DO, tmp )
             ENDIF
          NEXT
@@ -7260,7 +7260,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ! hb_FGetDateTime( tmp, @tmp1 ) .OR. ;
                tmp1 > tmp2 .OR. ;
                ( hbmk[ _HBMK_nHEAD ] != _HEAD_OFF .AND. FindNewerHeaders( hbmk, tmp, tmp2, .T., cBin_CompC ) ) .OR. ;
-               hb_FSize( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ) ) == 0
+               hb_vfSize( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ) ) == 0
                AAdd( l_aRESSRC_TO_DO, tmp )
             ENDIF
          NEXT
@@ -7474,7 +7474,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                IF ! hb_FGetDateTime( FNameDirExtSet( tmp3, hbmk[ _HBMK_cWorkDir ], ".c" ), @tmp1 ) .OR. ;
                   ! hb_FGetDateTime( tmp4, @tmp2 ) .OR. ;
                   tmp1 > tmp2 .OR. ;
-                  hb_FSize( tmp4 ) == 0 .OR. ;
+                  hb_vfSize( tmp4 ) == 0 .OR. ;
                   checkDepTime( hbmk, tmp4, tmp2 )
                   AAdd( l_aPRG_TO_DO, tmp )
                ENDIF
@@ -8380,7 +8380,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ENDIF
 
                IF hb_FileExists( tmp2 )
-                  IF "{TB}" $ cOpt_Sign .AND. hb_FSize( tmp2 ) > 0
+                  IF "{TB}" $ cOpt_Sign .AND. hb_vfSize( tmp2 ) > 0
                      FErase( hbmk[ _HBMK_cPROGNAME ] )
                      FRename( tmp2, hbmk[ _HBMK_cPROGNAME ] )
                   ELSE
