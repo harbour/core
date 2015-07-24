@@ -603,10 +603,8 @@ HB_FUNC( FT_FUSE )
 
    if( HB_ISCHAR( 1 ) )
    {
-      int attr = hb_parnidef( 2, FO_READWRITE | FO_DENYNONE );
-
       ft_text->handles[ ft_text->area ] = hb_fileExtOpen( hb_parc( 1 ), NULL,
-                                                          ( HB_USHORT ) attr,
+                                                          ( HB_FATTR ) ( hb_parnidef( 2, FO_READWRITE | FO_DENYNONE ) & 0xFF ),
                                                           NULL, NULL );
       if( ft_text->handles[ ft_text->area ] == NULL )
          ft_text->error[ ft_text->area ] = hb_fsError();
