@@ -7295,7 +7295,7 @@ static HB_ERRCODE hb_cdxZap( CDXAREAP pArea )
 /* ( DBENTRYP_VOI )   hb_cdxOrderListAdd */
 static HB_ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
-   HB_USHORT uiFlags;
+   HB_FATTR nFlags;
    PHB_FILE pFile;
    char szBaseName[ CDX_MAXTAGNAMELEN + 1 ];
    char szFileName[ HB_PATH_MAX ];
@@ -7331,14 +7331,12 @@ static HB_ERRCODE hb_cdxOrderListAdd( CDXAREAP pArea, LPDBORDERINFO pOrderInfo )
       return HB_SUCCESS;
    }
 
-   uiFlags = ( pArea->dbfarea.fReadonly ? FO_READ : FO_READWRITE ) |
-             ( pArea->dbfarea.fShared ? FO_DENYNONE : FO_EXCLUSIVE );
+   nFlags = ( pArea->dbfarea.fReadonly ? FO_READ : FO_READWRITE ) |
+            ( pArea->dbfarea.fShared ? FO_DENYNONE : FO_EXCLUSIVE ) |
+            FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME | FXO_NOSEEKPOS;
    do
    {
-      pFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
-                              FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME |
-                              FXO_NOSEEKPOS,
-                              NULL, pError );
+      pFile = hb_fileExtOpen( szFileName, NULL, nFlags, NULL, pError );
       if( ! pFile )
          bRetry = hb_cdxErrorRT( pArea, EG_OPEN, EDBF_OPEN_INDEX, szFileName,
                                  hb_fsError(), EF_CANRETRY | EF_CANDEFAULT,

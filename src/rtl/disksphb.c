@@ -391,8 +391,8 @@ HB_FUNC( HB_DISKSPACE )
          szPathBuf[ 1 ] = HB_OS_DRIVE_DELIM_CHR;
          szPathBuf[ 2 ] = HB_OS_PATH_DELIM_CHR;
          szPathBuf[ 3 ] = '\0';
+         pszPath = szPathBuf;
       }
-      pszPath = szPathBuf;
    }
 #endif
 

@@ -399,7 +399,7 @@ static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 }
 
 static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
-                            const char * pszDefExt, HB_USHORT uiExFlags,
+                            const char * pszDefExt, HB_FATTR nExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
    PHB_IOUSR pIO = ( PHB_IOUSR ) pFuncs;
@@ -412,7 +412,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
       hb_vmPushString( pszDefExt, strlen( pszDefExt ) );
    else
       hb_vmPushNil();
-   hb_vmPushInteger( uiExFlags );
+   hb_vmPushInteger( nExFlags );
    if( pPaths )
       hb_vmPushString( pPaths, strlen( pPaths ) );
    else

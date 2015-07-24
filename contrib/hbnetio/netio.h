@@ -122,6 +122,7 @@
 #define NETIO_LINKSYM          40
 #define NETIO_LINKREAD         41
 #define NETIO_CONFIGURE        42
+#define NETIO_OPEN2            43
 
 #define NETIO_CONNECTED        0x4321DEAD
 
@@ -143,7 +144,8 @@
 /* { NETIO_LINKSYM,   len[ 2 ], len2[ 2 ], ... } + target[ len ] + newname[ len2 ] -> { NETIO_LINKSYM, ... } */
 /* { NETIO_LINKREAD,  len[ 2 ], ... } + filename[ len ] -> { NETIO_LINKREAD, size[ 4 ], err[ 4 ], ... } + data[ size ] */
 /* { NETIO_COPY,      len[ 2 ], len2[ 2 ], ... } + filename[ len ] + filename[ len2 ] -> { NETIO_COPY, ... } */
-/* { NETIO_OPEN,      len[ 2 ], flags[ 2 ], def_ext[], 0, ... } + filename[ len ] -> { NETIO_OPEN, file_no[2], ... } */
+/* { NETIO_OPEN,      len[ 2 ], flags[ 2 ], def_ext[], 0, ... } + filename[ len ] -> { NETIO_OPEN, file_no[ 2 ], ... } */
+/* { NETIO_OPEN2,     len[ 2 ], flags[ 4 ], def_ext[], 0, ... } + filename[ len ] -> { NETIO_OPEN, file_no[ 2 ], ... } */
 /* { NETIO_READ,      file_no[2], size[ 4 ], timeout[ 8 ], ... } -> { NETIO_READ, read[ 4 ], err[ 4 ], ... } + data[ read ] */
 /* { NETIO_WRITE,     file_no[2], size[ 4 ], timeout[ 8 ], ... } + data[ size ] -> { NETIO_WRITE, written[ 4 ], err[ 4 ], ... } */
 /* { NETIO_READAT,    file_no[2], size[ 4 ], offset[ 8 ], ... } -> { NETIO_READAT, read[ 4 ], err[ 4 ], ... } + data[ read ] */

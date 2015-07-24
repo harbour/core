@@ -2070,7 +2070,7 @@ static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 }
 
 static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName,
-                            const char * pDefExt, HB_USHORT uiExFlags,
+                            const char * pDefExt, HB_FATTR nExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
@@ -2089,13 +2089,26 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName,
          HB_BYTE msgbuf[ NETIO_MSGLEN ];
          HB_U16 len = ( HB_U16 ) strlen( pszFile );
 
-         HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_OPEN );
-         HB_PUT_LE_UINT16( &msgbuf[ 4 ], len );
-         HB_PUT_LE_UINT16( &msgbuf[ 6 ], uiExFlags );
-         memset( msgbuf + 8, '\0', sizeof( msgbuf ) - 8 );
-         if( pDefExt )
-            hb_strncpy( ( char * ) &msgbuf[ 8 ],
-                        ( const char * ) pDefExt, sizeof( msgbuf ) - 9 );
+         if( nExFlags & 0xFFFF0000 )
+         {
+            HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_OPEN2 );
+            HB_PUT_LE_UINT16( &msgbuf[ 4 ], len );
+            HB_PUT_LE_UINT32( &msgbuf[ 6 ], nExFlags );
+            memset( msgbuf + 10, '\0', sizeof( msgbuf ) - 10 );
+            if( pDefExt )
+               hb_strncpy( ( char * ) &msgbuf[ 10 ],
+                           ( const char * ) pDefExt, sizeof( msgbuf ) - 11 );
+         }
+         else
+         {
+            HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_OPEN );
+            HB_PUT_LE_UINT16( &msgbuf[ 4 ], len );
+            HB_PUT_LE_UINT16( &msgbuf[ 6 ], ( HB_U16 ) nExFlags );
+            memset( msgbuf + 8, '\0', sizeof( msgbuf ) - 8 );
+            if( pDefExt )
+               hb_strncpy( ( char * ) &msgbuf[ 8 ],
+                           ( const char * ) pDefExt, sizeof( msgbuf ) - 9 );
+         }
 
          if( s_fileSendMsg( conn, msgbuf, pszFile, len, HB_TRUE, HB_FALSE ) )
          {
@@ -2117,7 +2130,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName,
       if( pFile == NULL )
       {
          hb_errPutOsCode( pError, hb_fsError() );
-         hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
+         hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( nExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
       }
    }
 

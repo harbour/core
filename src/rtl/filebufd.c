@@ -232,13 +232,13 @@ static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 }
 
 static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
-                            const char * pszDefExt, HB_USHORT uiExFlags,
+                            const char * pszDefExt, HB_FATTR nExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
    HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszName );
    HB_SYMBOL_UNUSED( pszDefExt );
-   HB_SYMBOL_UNUSED( uiExFlags );
+   HB_SYMBOL_UNUSED( nExFlags );
    HB_SYMBOL_UNUSED( pszDefExt );
    HB_SYMBOL_UNUSED( pPaths );
    HB_SYMBOL_UNUSED( pError );

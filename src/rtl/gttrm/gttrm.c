@@ -1650,7 +1650,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
          }
          else if( pTerm->iExtColor == HB_GTTRM_CLRX16 )
          {
-            // ESC [ 38 ; 5 ; <fg> m
+            /* ESC [ 38 ; 5 ; <fg> m */
             buff[ i++ ] = '3';
             buff[ i++ ] = '8';
             buff[ i++ ] = ';';
@@ -1660,7 +1660,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
                buff[ i++ ] = '1';
             buff[ i++ ] = '0' + fg % 10;
             buff[ i++ ] = ';';
-            // ESC [ 48 ; 5 ; <bg> m
+            /* ESC [ 48 ; 5 ; <bg> m */
             buff[ i++ ] = '4';
             buff[ i++ ] = '8';
             buff[ i++ ] = ';';
@@ -1672,13 +1672,13 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
          }
          else if( pTerm->iExtColor == HB_GTTRM_CLR256 )
          {
-            // ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m   // 0 <= r,g,b <= 5
+            /* ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m   0 <= r,g,b <= 5 */
             rgb = pTerm->colors[ iAttr & 0x0F ];
             rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
                         6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
                             ( ( ( rgb >> 16 ) & 0xFF ) / 43 );
             i += hb_snprintf( buff + i, sizeof( buff ) - i, "38;5;%d", rgb );
-            // ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m   // 0 <= r,g,b <= 5
+            /* ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m   0 <= r,g,b <= 5 */
             rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
             rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
                         6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
@@ -1687,11 +1687,11 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
          }
          else if( pTerm->iExtColor == HB_GTTRM_CLRRGB )
          {
-            // ESC [ 38 ; 2 ; <r> ; <g> ; <b> m
+            /* ESC [ 38 ; 2 ; <r> ; <g> ; <b> m */
             rgb = pTerm->colors[ iAttr & 0x0F ];
             i += hb_snprintf( buff + i, sizeof( buff ) - i, "38;2;%d;%d;%d",
                               rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
-            // ESC [ 48 ; 2 ; <r> ; <g> ; <b> m
+            /* ESC [ 48 ; 2 ; <r> ; <g> ; <b> m */
             rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
             i += hb_snprintf( buff + i, sizeof( buff ) - i, ";48;2;%d;%d;%d",
                               rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
@@ -1759,7 +1759,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
             }
             else if( pTerm->iExtColor == HB_GTTRM_CLRX16 )
             {
-               // ESC [ 38 ; 5 ; <fg> m
+               /* ESC [ 38 ; 5 ; <fg> m */
                buff[ i++ ] = '3';
                buff[ i++ ] = '8';
                buff[ i++ ] = ';';
@@ -1771,7 +1771,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
             }
             else if( pTerm->iExtColor == HB_GTTRM_CLR256 )
             {
-               // ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m   // 0 <= r,g,b <= 5
+               /* ESC [ 38 ; 5 ; <16 + 36 * r + 6 * g + b> m   0 <= r,g,b <= 5 */
                rgb = pTerm->colors[ iAttr & 0x0F ];
                rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
                            6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
@@ -1780,7 +1780,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
             }
             else if( pTerm->iExtColor == HB_GTTRM_CLRRGB )
             {
-               // ESC [ 38 ; 2 ; <r> ; <g> ; <b> m
+               /* ESC [ 38 ; 2 ; <r> ; <g> ; <b> m */
                rgb = pTerm->colors[ iAttr & 0x0F ];
                i += hb_snprintf( buff + i, sizeof( buff ) - i, "38;2;%d;%d;%d",
                                  rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );
@@ -1810,7 +1810,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
             }
             else if( pTerm->iExtColor == HB_GTTRM_CLRX16 )
             {
-               // ESC [ 48 ; 5 ; <fg> m
+               /* ESC [ 48 ; 5 ; <fg> m */
                buff[ i++ ] = '4';
                buff[ i++ ] = '8';
                buff[ i++ ] = ';';
@@ -1822,7 +1822,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
             }
             else if( pTerm->iExtColor == HB_GTTRM_CLR256 )
             {
-               // ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m   // 0 <= r,g,b <= 5
+               /* ESC [ 48 ; 5 ; <16 + 36 * r + 6 * g + b> m   0 <= r,g,b <= 5 */
                rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
                rgb = 16 + 36 * ( (   rgb         & 0xFF ) / 43 ) +
                            6 * ( ( ( rgb >> 8  ) & 0xFF ) / 43 ) +
@@ -1831,7 +1831,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
             }
             else if( pTerm->iExtColor == HB_GTTRM_CLRRGB )
             {
-               // ESC [ 48 ; 2 ; <r> ; <g> ; <b> m
+               /* ESC [ 48 ; 2 ; <r> ; <g> ; <b> m */
                rgb = pTerm->colors[ ( iAttr >> 4 ) & 0x0F ];
                i += hb_snprintf( buff + i, sizeof( buff ) - i, "48;2;%d;%d;%d",
                                  rgb & 0xFF, ( rgb >> 8 ) & 0xFF, ( rgb >> 16 ) & 0xFF );

@@ -4248,7 +4248,7 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    char szFileName[ HB_PATH_MAX ];
    PHB_FNAME pFileName;
    PHB_ITEM pError;
-   HB_USHORT uiFlags;
+   HB_FATTR nFlags;
    HB_BOOL bRetry;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_fptOpenMemFile(%p, %p)", pArea, pOpenInfo ) );
@@ -4283,16 +4283,15 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    }
    hb_xfree( pFileName );
 
-   uiFlags = ( pOpenInfo->fReadonly ? FO_READ : FO_READWRITE ) |
-             ( pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE );
+   nFlags = ( pOpenInfo->fReadonly ? FO_READ : FO_READWRITE ) |
+            ( pOpenInfo->fShared ? FO_DENYNONE : FO_EXCLUSIVE ) |
+            FXO_DEFAULTS | FXO_SHARELOCK | FXO_NOSEEKPOS;
    pError = NULL;
 
    /* Try open */
    do
    {
-      pArea->pMemoFile = hb_fileExtOpen( szFileName, NULL, uiFlags |
-                                         FXO_DEFAULTS | FXO_SHARELOCK | FXO_NOSEEKPOS,
-                                         NULL, pError );
+      pArea->pMemoFile = hb_fileExtOpen( szFileName, NULL, nFlags, NULL, pError );
       if( ! pArea->pMemoFile )
       {
          if( ! pError )

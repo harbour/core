@@ -1478,7 +1478,6 @@ static int hb_hsxOpen( const char * szFile, int iBufSize, int iMode )
    HB_BOOL fShared, fReadonly;
    PHB_FILE pFile;
    HB_ULONG ulBufSize;
-   HB_USHORT uiFlags;
    LPHSXINFO pHSX;
    int iRetVal, iRet;
 
@@ -1502,11 +1501,11 @@ static int hb_hsxOpen( const char * szFile, int iBufSize, int iMode )
    fShared = ( iMode & 0x01 ) == 0;
    if( hb_setGetAutoShare() == 2 )
       fShared = HB_FALSE;
-   uiFlags = ( fReadonly ? FO_READ : FO_READWRITE ) |
-             ( fShared ? FO_DENYNONE : FO_EXCLUSIVE );
 
    pFile = hb_fileExtOpen( szFileName, HSX_FILEEXT,
-                           uiFlags | FXO_DEFAULTS | FXO_SHARELOCK |
+                           ( fReadonly ? FO_READ : FO_READWRITE ) |
+                           ( fShared ? FO_DENYNONE : FO_EXCLUSIVE ) |
+                           FXO_DEFAULTS | FXO_SHARELOCK |
                            FXO_COPYNAME | FXO_NOSEEKPOS,
                            NULL, NULL );
 

@@ -103,6 +103,7 @@
 #define FO_CREAT           0x0100      /* create and open file */
 #define FO_TRUNC           0x0200      /* open with truncation */
 #define FO_EXCL            0x0400      /* create and open only if file doesn't exist */
+#define FO_DEFAULTS        0x1000      /* Use SET command defaults */
 
 /* File sharing flags */
 #define FO_COMPAT          0           /* No sharing specified                               */
