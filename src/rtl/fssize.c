@@ -46,47 +46,93 @@
  *
  */
 
+#if ! defined( _LARGEFILE64_SOURCE )
+   #define _LARGEFILE64_SOURCE  1
+#endif
+
 #include "hbapi.h"
 #include "hbapifs.h"
-#include "hbapiitm.h"
-#include "directry.ch"
+#include "hbvm.h"
 
-HB_FOFFSET hb_fsFSize( const char * pszFile, HB_BOOL bUseDirEntry )
+#if ! defined( HB_OS_WIN_CE )
+   #include <sys/types.h>
+   #include <sys/stat.h>
+#endif
+
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * defined and effectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
+#endif
+
+
+HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
 {
-   HB_FOFFSET nSize = 0;
-
-   if( pszFile )
+   if( bUseDirEntry )
    {
-      HB_ERRCODE uiError = 0;
-
-      if( bUseDirEntry )
+#if defined( HB_OS_WIN )
+      PHB_FFIND ffind = hb_fsFindFirst( pszFileName, HB_FA_ALL );
+      hb_fsSetIOError( ffind != NULL, 0 );
+      if( ffind )
       {
-         PHB_ITEM pDir = hb_fileDirectory( pszFile, "HS" );
-
-         uiError = hb_fsError();
-         if( pDir )
-         {
-            PHB_ITEM pEntry = hb_arrayGetItemPtr( pDir, 1 );
-
-            if( pEntry )
-               nSize = hb_arrayGetNInt( pEntry, F_SIZE );
-            hb_itemRelease( pDir );
-         }
+         HB_FOFFSET size = ffind->size;
+         hb_fsFindClose( ffind );
+         return size;
       }
-      else
-      {
-         PHB_FILE pFile = hb_fileExtOpen( pszFile, NULL, FO_READ | FO_COMPAT, NULL, NULL );
-         if( pFile )
-         {
-            nSize = hb_fileSize( pFile );
-            uiError = hb_fsError();
-            hb_fileClose( pFile );
-         }
-         else
-            uiError = hb_fsError();
-      }
-      hb_fsSetFError( uiError );
+#elif defined( HB_USE_LARGEFILE64 )
+      char * pszFree;
+      HB_BOOL fResult;
+      struct stat64 statbuf;
+      pszFileName = hb_fsNameConv( pszFileName, &pszFree );
+      statbuf.st_size = 0;
+      hb_vmUnlock();
+      fResult = stat64( pszFileName, &statbuf ) == 0;
+      hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
+      if( pszFree )
+         hb_xfree( pszFree );
+      if( fResult )
+         return ( HB_FOFFSET ) statbuf.st_size;
+#else
+      char * pszFree;
+      HB_BOOL fResult;
+      struct stat statbuf;
+      pszFileName = hb_fsNameConv( pszFileName, &pszFree );
+      statbuf.st_size = 0;
+      hb_vmUnlock();
+      fResult = stat( ( char * ) pszFileName, &statbuf ) == 0;
+      hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
+      if( pszFree )
+         hb_xfree( pszFree );
+      if( fResult )
+         return ( HB_FOFFSET ) statbuf.st_size;
+#endif
    }
+   else
+   {
+      HB_FHANDLE hFileHandle = hb_fsOpen( pszFileName, FO_READ | FO_COMPAT );
 
-   return nSize;
+      if( hFileHandle != FS_ERROR )
+      {
+         HB_FOFFSET nPos = hb_fsSeekLarge( hFileHandle, 0, FS_END );
+         hb_fsClose( hFileHandle );
+         return nPos;
+      }
+   }
+   return 0;
+}
+
+HB_FUNC( HB_FSIZE )
+{
+   const char * pszFile = hb_parc( 1 );
+
+   hb_retnint( pszFile ? hb_fsFSize( pszFile, hb_parldef( 2, HB_TRUE ) ) : 0 );
 }

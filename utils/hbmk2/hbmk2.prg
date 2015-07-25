@@ -667,6 +667,7 @@ EXTERNAL hb_FLinkRead
 EXTERNAL hb_FLinkSym
 EXTERNAL hb_FSetAttr
 EXTERNAL hb_FSetDateTime
+EXTERNAL hb_FSize
 EXTERNAL hb_FTempCreate
 EXTERNAL hb_FTempCreateEx
 EXTERNAL hb_FileExists
@@ -1613,6 +1614,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL cBin_CompC
    LOCAL cBin_CompCPP
    LOCAL cBin_CompCGEN
+   LOCAL cBin_CompCGEN_CHD
    LOCAL cBin_Link
    LOCAL cBin_Res
    LOCAL cBin_Lib
@@ -4893,7 +4895,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cOpt_CompC += " {FC}"
          cOptIncMask := "-I{DI}"
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
-            IF .T.  /* Proven to be working. Enabled permanently. */
+            IF .T.
                lCHD_Comp := .T.
                cOpt_CompC += " {LC}"
             ELSE
@@ -4928,10 +4930,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cOpt_Lib := "rcs {FA} {OL} {LO}"
          cLibObjPrefix := NIL
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_Lib     := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Lib, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_CompCPP := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompCPP, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_CompC   := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_Link    := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_Lib     := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Lib
+            cBin_CompCPP := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompCPP
+            cBin_CompC   := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC
+            cBin_Link    := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link
          ENDIF
          cBin_LibHBX := hbmk[ _HBMK_cCCPREFIX ] + "nm" + hbmk[ _HBMK_cCCEXT ]
          cOpt_LibHBX := "-g --defined-only -C {LI}"
@@ -5038,7 +5040,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             cResExt := ".reso"
             cOpt_Res := "{FR} {IR} -O coff -o {OS}"
             IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-               cBin_Res := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Res, hbmk[ _HBMK_nCmd_Esc ] )
+               cBin_Res := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Res
             ENDIF
          ENDIF
 
@@ -5154,12 +5156,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #endif
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_Lib     := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Lib, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_CompCPP := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompCPP, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_CompC   := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_Link    := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_Lib     := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Lib
+            cBin_CompCPP := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompCPP
+            cBin_CompC   := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC
+            cBin_Link    := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link
 #if 0
-            cBin_Res     := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Res, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_Res     := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Res
 #endif
          ENDIF
 
@@ -5255,10 +5257,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #endif
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_Lib     := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Lib, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_CompCPP := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompCPP, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_CompC   := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_Link    := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_Lib     := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Lib
+            cBin_CompCPP := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompCPP
+            cBin_CompC   := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC
+            cBin_Link    := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link
          ENDIF
 
       /* Watcom family */
@@ -6101,9 +6103,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
 
          IF ! Empty( hbmk[ _HBMK_cCCPATH ] )
-            cBin_CompCPP := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompCPP, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_CompC   := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC, hbmk[ _HBMK_nCmd_Esc ] )
-            cBin_Link    := FNameEscape( hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link, hbmk[ _HBMK_nCmd_Esc ] )
+            cBin_CompCPP := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompCPP
+            cBin_CompC   := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_CompC
+            cBin_Link    := hbmk[ _HBMK_cCCPATH ] + hb_ps() + cBin_Link
          ENDIF
 
       CASE hbmk[ _HBMK_cPLAT ] == "vxworks" .AND. hbmk[ _HBMK_cCOMP ] == "diab"
@@ -7389,7 +7391,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                hReplace[ "{IR}" ] := FNameEscape( tmp, nOpt_Esc, nOpt_FNF )
                hReplace[ "{OS}" ] := FNameEscape( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), nOpt_Esc, nOpt_FNF )
 
-               cCommand := cBin_Res + " " + AllTrim( hb_StrReplace( cOpt_Res, hReplace ) )
+               cCommand := FNameEscape( cBin_Res, hbmk[ _HBMK_nCmd_Esc ] ) + " " + AllTrim( hb_StrReplace( cOpt_Res, hReplace ) )
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
@@ -7426,7 +7428,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ENDIF
             ENDIF
 
-            cCommand := cBin_Res + " " + cOpt_Res
+            cCommand := FNameEscape( cBin_Res, hbmk[ _HBMK_nCmd_Esc ] ) + " " + cOpt_Res
 
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
@@ -7569,6 +7571,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                               _hbmk_OutStd( hbmk, hb_StrFormat( I_( "'cd' to: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
                            ENDIF
                         ENDIF
+                        cBin_CompCGEN_CHD := hb_PathNormalize( PathMakeAbsolute( cBin_CompCGEN, tmp2 ) )
+                     ELSE
+                        cBin_CompCGEN_CHD := cBin_CompCGEN
                      ENDIF
 
                      aThreads := {}
@@ -7599,7 +7604,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                            ENDIF
                         ENDIF
 
-                        cCommand := cBin_CompCGEN + " " + cOpt_CompCLoop
+                        cCommand := FNameEscape( cBin_CompCGEN_CHD, hbmk[ _HBMK_nCmd_Esc ] ) + " " + cOpt_CompCLoop
 
                         IF hbmk[ _HBMK_lTRACE ]
                            IF ! hbmk[ _HBMK_lQuiet ]
@@ -7790,7 +7795,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ENDIF
                ENDIF
 
-               cCommand := cBin_Link + " " + cOpt_Link
+               cCommand := FNameEscape( cBin_Link, hbmk[ _HBMK_nCmd_Esc ] ) + " " + cOpt_Link
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
@@ -7929,7 +7934,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ENDIF
                ENDIF
 
-               cCommand := cBin_Dyn + " " + cOpt_Dyn
+               cCommand := FNameEscape( cBin_Dyn, hbmk[ _HBMK_nCmd_Esc ] ) + " " + cOpt_Dyn
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
@@ -8020,7 +8025,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ENDIF
                ENDIF
 
-               cCommand := cBin_Lib + " " + cOpt_Lib
+               cCommand := FNameEscape( cBin_Lib, hbmk[ _HBMK_nCmd_Esc ] ) + " " + cOpt_Lib
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
@@ -8181,7 +8186,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF ! Empty( cBin_Post )
 
             cCommand := ;
-               cBin_Post + " " + ;
+               FNameEscape( cBin_Post, hbmk[ _HBMK_nCmd_Esc ] ) + " " + ;
                AllTrim( hb_StrReplace( cOpt_Post, { ;
                   "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ), ;
                   "{OI}" => iif( l_cIMPLIBNAME == NIL, "", FNameEscape( l_cIMPLIBNAME, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) } ) ) /* for implib post-process command */
@@ -8272,7 +8277,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                cOpt_Cprs := StrTran( cOpt_Cprs, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
                cOpt_Cprs := AllTrim( cOpt_Cprs )
 
-               cCommand := cBin_Cprs + " " + cOpt_Cprs
+               cCommand := FNameEscape( cBin_Cprs, hbmk[ _HBMK_nCmd_Esc ] ) + " " + cOpt_Cprs
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
@@ -8357,9 +8362,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   "{TB}" => FNameEscape( tmp2, nOpt_Esc, nOpt_FNF ), ;
                   "{PW}" => cOpt_SignPass }
 
-               cCommand := cBin_Sign + " " + AllTrim( hb_StrReplace( cOpt_Sign, hReplace ) )
+               cCommand := FNameEscape( cBin_Sign, hbmk[ _HBMK_nCmd_Esc ] ) + " " + AllTrim( hb_StrReplace( cOpt_Sign, hReplace ) )
                hReplace[ "{PW}" ] := iif( Empty( cOpt_SignPass ), "", "***" )
-               tmp1     := cBin_Sign + " " + AllTrim( hb_StrReplace( cOpt_Sign, hReplace ) )
+               tmp1     := FNameEscape( cBin_Sign, hbmk[ _HBMK_nCmd_Esc ] ) + " " + AllTrim( hb_StrReplace( cOpt_Sign, hReplace ) )
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
@@ -8426,6 +8431,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       #endif
       IF hbmk[ _HBMK_lGUI ] .OR. ( ! hbmk[ _HBMK_lCLI ] .AND. hbmk[ _HBMK_cGT ] != NIL .AND. ! HBMK_IS_IN( Lower( hbmk[ _HBMK_cGT ] ), "gtcgi|gtstd|gtpca" ) )
          cCommand := LaunchCommand( cCommand )
+      ELSE
+         cCommand := FNameEscape( cCommand, hbmk[ _HBMK_nCmd_Esc ] )
       ENDIF
       cCommand := AllTrim( cCommand + " " + ArrayToList( l_aOPTRUN ) )
       IF hbmk[ _HBMK_lTRACE ]
