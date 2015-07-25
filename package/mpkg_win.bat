@@ -302,8 +302,6 @@ if not "%CI%" == "" (
    reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d "HH:mm" /f
 )
 
-dir "%HB_ABSROOT%README.md"
-
 touch "%_PKGNAME%" -r "%HB_ABSROOT%README.md"
 for %%I in ("%_PKGNAME%") do echo %%~nxI: %%~zI bytes %%~tI
 openssl dgst -sha256 "%_PKGNAME%"
