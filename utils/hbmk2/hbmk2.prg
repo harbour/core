@@ -11279,10 +11279,6 @@ STATIC FUNCTION PathIsRelative( cPath )
 
    LOCAL cDir, cDrive
 
-   IF Empty( cPath )
-      RETURN .T.
-   ENDIF
-
    hb_FNameSplit( cPath, @cDir,,, @cDrive )
 
    RETURN Empty( cDrive ) .AND. !( Left( cDir, 1 ) $ "/\" )
