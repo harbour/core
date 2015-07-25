@@ -176,6 +176,7 @@ static int arc4_seed_win( void )
    static HCRYPTPROV provider;
    unsigned char     buf[ ADD_ENTROPY ];
 
+   /* NOTE: CryptAcquireContext() is not available on Win95 */
    if( ! provider_set &&
        ! CryptAcquireContext( &provider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT ) &&
        GetLastError() != ( DWORD ) NTE_BAD_KEYSET )

@@ -1327,6 +1327,8 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
    hb_vmUnlock();
 
 #if defined( HB_OS_WIN )
+#if defined( __HB_OS_WIN9X_SUPPORT )
+   if( hb_iswin9x() )
    {
       HB_FHANDLE hFile = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
       FILETIME ft, local_ft;
@@ -1373,6 +1375,44 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
          }
       }
    }
+   else
+#endif
+   {
+      HB_BOOL fResult = HB_FALSE;
+      LPCTSTR lpFileName;
+      LPTSTR lpFileNameFree;
+      WIN32_FILE_ATTRIBUTE_DATA attrex;
+
+      lpFileName = HB_FSNAMECONV( pszFileName, &lpFileNameFree );
+
+      memset( &attrex, 0, sizeof( attrex ) );
+
+      if( GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) )
+      {
+         FILETIME local_ft;
+         SYSTEMTIME st;
+
+         if( FileTimeToLocalFileTime( &attrex.ftLastWriteTime, &local_ft ) &&
+             FileTimeToSystemTime( &local_ft, &st ) )
+         {
+            *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
+            *plMillisec = hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
+
+            fResult = HB_TRUE;
+         }
+      }
+
+      if( ! fResult )
+      {
+         *plJulian = 0;
+         *plMillisec = 0;
+      }
+
+      hb_fsSetIOError( fResult, 0 );
+
+      if( lpFileNameFree )
+         hb_xfree( lpFileNameFree );
+   }
 #elif defined( HB_OS_UNIX ) || defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) || defined( __GNUC__ )
    {
       char * pszFree;
@@ -1404,6 +1444,12 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
 #endif
          fResult = HB_TRUE;
       }
+      else
+      {
+         *plJulian = 0;
+         *plMillisec = 0;
+      }
+
       hb_fsSetIOError( fResult, 0 );
 
       if( pszFree )
@@ -1414,8 +1460,9 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
       int iTODO; /* TODO: for given platform */
 
       HB_SYMBOL_UNUSED( pszFileName );
-      HB_SYMBOL_UNUSED( plJulian );
-      HB_SYMBOL_UNUSED( plMillisec );
+
+      *plJulian = 0;
+      *plMillisec = 0;
    }
 #endif
 
@@ -1449,6 +1496,9 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
          *pulAttr = hb_fsAttrFromRaw( dwAttr );
          fResult = HB_TRUE;
       }
+      else
+         *pulAttr = 0;
+
       hb_fsSetIOError( fResult, 0 );
 
       if( lpFree )
@@ -1472,6 +1522,9 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
             *pulAttr = hb_fsAttrFromRaw( attr );
             fResult = HB_TRUE;
          }
+         else
+            *pulAttr = 0;
+
          hb_fsSetIOError( fResult, 0 );
       }
 #  elif defined( HB_OS_OS2 )
@@ -1485,6 +1538,9 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
             *pulAttr = hb_fsAttrFromRaw( fs3.attrFile );
             fResult = HB_TRUE;
          }
+         else
+            *pulAttr = 0;
+
          hb_fsSetIOError( fResult, 0 );
       }
 #  elif defined( HB_OS_UNIX )
@@ -1500,6 +1556,9 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
             *pulAttr = hb_fsAttrFromRaw( statbuf.st_mode );
             fResult = HB_TRUE;
          }
+         else
+            *pulAttr = 0;
+
          hb_fsSetIOError( fResult, 0 );
       }
 #  else
@@ -1507,7 +1566,8 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
          int iTODO; /* TODO: for given platform */
 
          HB_SYMBOL_UNUSED( pszFileName );
-         HB_SYMBOL_UNUSED( pulAttr );
+
+         *pulAttr = 0;
       }
 #  endif
       if( pszFree )

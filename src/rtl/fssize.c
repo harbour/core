@@ -80,38 +80,54 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
    if( bUseDirEntry )
    {
 #if defined( HB_OS_WIN )
-      LPCTSTR lpFileName;
-      LPTSTR lpFileNameFree;
-      WIN32_FILE_ATTRIBUTE_DATA attrex;
-      HB_FOFFSET nSize = 0;
-
-      lpFileName = HB_FSNAMECONV( pszFileName, &lpFileNameFree );
-
-      memset( &attrex, 0, sizeof( attrex ) );
-
-      if( GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) )
+#if defined( __HB_OS_WIN9X_SUPPORT )
+      if( hb_iswin9x() )
       {
-         if( ( attrex.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == 0 )
+         PHB_FFIND ffind = hb_fsFindFirst( pszFileName, HB_FA_ALL );
+         hb_fsSetIOError( ffind != NULL, 0 );
+         if( ffind )
          {
-#if defined( __XCC__ ) || ( defined( __POCC__ ) && __POCC__ >= 500 )
-            /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't
-                     split this into two operations. [vszakats] */
-            nSize  = ( HB_FOFFSET ) attrex.nFileSizeLow;
-            nSize += ( HB_FOFFSET ) attrex.nFileSizeHigh << 32;
-#else
-            nSize = ( HB_FOFFSET ) attrex.nFileSizeLow +
-                  ( ( HB_FOFFSET ) attrex.nFileSizeHigh << 32 );
-#endif
+            HB_FOFFSET size = ffind->size;
+            hb_fsFindClose( ffind );
+            return size;
          }
-         hb_fsSetIOError( HB_TRUE, 0 );
       }
       else
-         hb_fsSetIOError( HB_FALSE, 0 );
+#endif
+      {
+         LPCTSTR lpFileName;
+         LPTSTR lpFileNameFree;
+         WIN32_FILE_ATTRIBUTE_DATA attrex;
+         HB_FOFFSET nSize = 0;
 
-      if( lpFileNameFree )
-         hb_xfree( lpFileNameFree );
+         lpFileName = HB_FSNAMECONV( pszFileName, &lpFileNameFree );
 
-      return nSize;
+         memset( &attrex, 0, sizeof( attrex ) );
+
+         if( GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) )
+         {
+            if( ( attrex.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == 0 )
+            {
+#if defined( __XCC__ ) || ( defined( __POCC__ ) && __POCC__ >= 500 )
+               /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't
+                        split this into two operations. [vszakats] */
+               nSize  = ( HB_FOFFSET ) attrex.nFileSizeLow;
+               nSize += ( HB_FOFFSET ) attrex.nFileSizeHigh << 32;
+#else
+               nSize = ( HB_FOFFSET ) attrex.nFileSizeLow +
+                     ( ( HB_FOFFSET ) attrex.nFileSizeHigh << 32 );
+#endif
+            }
+            hb_fsSetIOError( HB_TRUE, 0 );
+         }
+         else
+            hb_fsSetIOError( HB_FALSE, 0 );
+
+         if( lpFileNameFree )
+            hb_xfree( lpFileNameFree );
+
+         return nSize;
+      }
 #elif defined( HB_USE_LARGEFILE64 )
       char * pszFree;
       HB_BOOL fResult;
