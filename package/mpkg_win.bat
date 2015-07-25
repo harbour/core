@@ -297,7 +297,7 @@ if exist "%HB_SFX_7Z%" (
 )
 
 :: Change to ISO date and 24-hour time format
-if not "%CI%" = "" (
+if not "%CI%" == "" (
    reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d "yyyy-MM-dd" /f
    reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d "HH:mm" /f
 )

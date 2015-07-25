@@ -4,7 +4,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := png
 
-HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
 C_SOURCES := \
@@ -65,7 +64,7 @@ else
 endif
 
 # ORIGIN http://libpng.org/pub/png/libpng.html
-# URL    https://github.com/glennrp/libpng/archive/v1.6.17.tar.gz
+# URL    https://github.com/glennrp/libpng/archive/v1.6.18.tar.gz
 # DIFF   png.dif
 #
 # MAP    LICENSE                        LICENSE.txt
