@@ -1378,7 +1378,6 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
    else
 #endif
    {
-      HB_BOOL fResult = HB_FALSE;
       LPCTSTR lpFileName;
       LPTSTR lpFileNameFree;
       WIN32_FILE_ATTRIBUTE_DATA attrex;
