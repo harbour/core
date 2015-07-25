@@ -300,7 +300,10 @@ if exist "%HB_SFX_7Z%" (
 if not "%CI%" == "" (
    reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d "yyyy-MM-dd" /f
    reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d "HH:mm" /f
+   reg add "HKCU\Control Panel\International" /v sLongTime  /t REG_SZ /d "HH:mm:ss" /f
 )
+
+dir "%HB_ABSROOT%README.md"
 
 touch "%_PKGNAME%" -r "%HB_ABSROOT%README.md"
 for %%I in ("%_PKGNAME%") do echo %%~nxI: %%~zI bytes %%~tI
