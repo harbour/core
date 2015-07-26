@@ -171,11 +171,6 @@ HB_FUNC( WAPI_SETPROCESSWORKINGSETSIZE )
    hbwapi_ret_L( bResult );
 }
 
-HB_FUNC( WAPI_GETLASTERROR )
-{
-   hb_retnint( hbwapi_GetLastError() );
-}
-
 HB_FUNC( WAPI_SETLASTERROR )
 {
    DWORD dwLastError = ( DWORD ) hb_parnl( 1 );
@@ -191,6 +186,19 @@ HB_FUNC( WAPI_SETERRORMODE )
 #else
    hbwapi_ret_UINT( SetErrorMode( hbwapi_par_UINT( 1 ) ) );
 #endif
+}
+
+HB_FUNC( WAPI_LOADLIBRARYEX )
+{
+   void * hFileName;
+   HMODULE hResult = LoadLibraryEx( HB_PARSTRDEF( 1, &hFileName, NULL ),
+                                    NULL,
+                                    hbwapi_par_DWORD( 3 ) );
+
+   hbwapi_SetLastError( GetLastError() );
+   hb_retptr( hResult );
+
+   hb_strfree( hFileName );
 }
 
 HB_FUNC( WAPI_LOADLIBRARY )

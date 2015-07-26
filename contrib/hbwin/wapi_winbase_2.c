@@ -46,6 +46,11 @@
 
 #include "hbwapi.h"
 
+HB_FUNC( WAPI_GETLASTERROR )
+{
+   hb_retnint( hbwapi_GetLastError() );
+}
+
 HB_FUNC( WAPI_GETCURRENTPROCESSID )
 {
    hb_retnint( GetCurrentProcessId() );

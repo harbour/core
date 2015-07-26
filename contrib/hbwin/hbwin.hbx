@@ -169,6 +169,7 @@ DYNAMIC wapi_LoadBitmap
 DYNAMIC wapi_LoadIcon
 DYNAMIC wapi_LoadImage
 DYNAMIC wapi_LoadLibrary
+DYNAMIC wapi_LoadLibraryEx
 DYNAMIC wapi_LoadMenu
 DYNAMIC wapi_LOWORD
 DYNAMIC wapi_MAKELPARAM
