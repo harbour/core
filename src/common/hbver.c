@@ -86,6 +86,13 @@
    #ifndef VER_MAJORVERSION
    #define VER_MAJORVERSION  0x0000002
    #endif
+   #ifndef VER_SERVICEPACKMINOR
+   #define VER_SERVICEPACKMINOR  0x0000010
+   #endif
+   #ifndef VER_SERVICEPACKMAJOR
+   #define VER_SERVICEPACKMAJOR  0x0000020
+   #endif
+
    #ifndef VER_PRODUCT_TYPE
    #define VER_PRODUCT_TYPE  0x0000080
    #endif
