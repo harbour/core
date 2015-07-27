@@ -247,7 +247,7 @@ METHOD GetLine( nRow ) CLASS HBEditor
 
 // Return text length of line n
 METHOD LineLen( nRow ) CLASS HBEditor
-   RETURN Len( ::GetLine( nRow ) )
+   RETURN hb_ULen( ::GetLine( nRow ) )
 
 // Converts an array of text lines to a String
 METHOD GetText( lSoftCR ) CLASS HBEditor
@@ -271,7 +271,7 @@ METHOD GotoLine( nRow ) CLASS HBEditor
    RETURN ::Goto( nRow, ::nCol )
 
 METHOD LineCount() CLASS HBEditor
-   RETURN Len( ::aText )
+   RETURN hb_ULen( ::aText )
 
 METHOD Display() CLASS HBEditor
 
@@ -480,18 +480,18 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
       CASE ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock )
 
-      CASE Len( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
+      CASE hb_ULen( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
                              Space( TabCount( ::nTabWidth, ::nCol ) ), ;
                              hb_keyChar( nKey ) ) ) > 0
          ::lDirty := .T.
          oLine := ::aText[ ::nRow ]
-         IF ::nCol > Len( oLine:cText ) + 1
-            oLine:cText += Space( ::nCol - Len( oLine:cText ) - 1 )
+         IF ::nCol > hb_ULen( oLine:cText ) + 1
+            oLine:cText += Space( ::nCol - hb_ULen( oLine:cText ) - 1 )
          ENDIF
-         oLine:cText := Stuff( oLine:cText, ::nCol, ;
+         oLine:cText := hb_UStuff( oLine:cText, ::nCol, ;
                                iif( Set( _SET_INSERT ), 0, 1 ), cKey )
-         ::nCol += Len( cKey )
-         IF ::lWordWrap .AND. Len( oLine:cText ) > ::nWordWrapCol
+         ::nCol += hb_ULen( cKey )
+         IF ::lWordWrap .AND. hb_ULen( oLine:cText ) > ::nWordWrapCol
             ::ReformParagraph()
          ELSE
             ::GoTo( ::nRow, ::nCol, _REFRESH_LINE )
@@ -501,8 +501,8 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
          IF Set( _SET_INSERT )
             ::lDirty := .T.
             oLine := ::aText[ ::nRow ]
-            ::InsertLine( SubStr( oLine:cText, ::nCol ), oLine:lSoftCR, ::nRow + 1 )
-            oLine:cText := Left( oLine:cText, ::nCol - 1 )
+            ::InsertLine( hb_USubStr( oLine:cText, ::nCol ), oLine:lSoftCR, ::nRow + 1 )
+            oLine:cText := hb_ULeft( oLine:cText, ::nCol - 1 )
             oLine:lSoftCR := .F.
             ::Goto( ::nRow + 1, 1, _REFRESH_ALL )
          ELSE
@@ -519,7 +519,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
       CASE nKeyStd == K_BS
          IF ::nCol > 1
             ::lDirty := .T.
-            ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, --::nCol, 1, "" )
+            ::aText[ ::nRow ]:cText := hb_UStuff( ::aText[ ::nRow ]:cText, --::nCol, 1, "" )
             ::GoTo( ::nRow, ::nCol, _REFRESH_LINE )
          ENDIF
 
@@ -527,17 +527,17 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
          IF ::nRow < ::LineCount .OR. ::nCol <= ::LineLen( ::nRow )
             ::lDirty := .T.
             oLine := ::aText[ ::nRow ]
-            IF ::nCol <= Len( oLine:cText )
-               oLine:cText := Stuff( oLine:cText, ::nCol, 1, "" )
+            IF ::nCol <= hb_ULen( oLine:cText )
+               oLine:cText := hb_UStuff( oLine:cText, ::nCol, 1, "" )
                ::GoTo( ::nRow, ::nCol, _REFRESH_LINE )
             ELSE
-               IF ::nCol > Len( oLine:cText ) + 1
-                  oLine:cText += Space( ::nCol - Len( oLine:cText ) - 1 )
+               IF ::nCol > hb_ULen( oLine:cText ) + 1
+                  oLine:cText += Space( ::nCol - hb_ULen( oLine:cText ) - 1 )
                ENDIF
                oLine:cText += ::aText[ ::nRow + 1 ]:cText
                oLine:lSoftCR := ::aText[ ::nRow + 1 ]:lSoftCR
                ::RemoveLine( ::nRow + 1 )
-               IF ::lWordWrap .AND. Len( oLine:cText ) > ::nWordWrapCol
+               IF ::lWordWrap .AND. hb_ULen( oLine:cText ) > ::nWordWrapCol
                   ::ReformParagraph()
                ELSE
                   ::GoTo( ::nRow, ::nCol, _REFRESH_ALL )
@@ -558,7 +558,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
       CASE nKeyStd == K_CTRL_T
          IF ( nPos := SkipWord( ::GetLine( ::nRow ), ::nCol ) - ::nCol ) > 0
             ::lDirty := .T.
-            ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, nPos, "" )
+            ::aText[ ::nRow ]:cText := hb_UStuff( ::aText[ ::nRow ]:cText, ::nCol, nPos, "" )
             ::GoTo( ::nRow, ::nCol, _REFRESH_LINE )
          ENDIF
 
@@ -649,7 +649,7 @@ METHOD ReformParagraph() CLASS HBEditor
    LOCAL nLines
    LOCAL aPos
 
-   DO WHILE lNext .AND. ::nRow <= Len( ::aText )
+   DO WHILE lNext .AND. ::nRow <= hb_ULen( ::aText )
       cLine += ::aText[ ::nRow ]:cText
       lNext := ::aText[ ::nRow ]:lSoftCR
       ::RemoveLine( ::nRow )
@@ -696,7 +696,7 @@ METHOD Hilite() CLASS HBEditor
       hb_tokenGet( ::cColorSpec, 2, "," ) + "," + ;
       hb_tokenGet( ::cColorSpec, 1, "," )
 
-   ::SetColor( cEnhanced + Right( ::cColorSpec, Len( ::cColorSpec ) - Len( cEnhanced ) ) )
+   ::SetColor( cEnhanced + hb_URight( ::cColorSpec, hb_ULen( ::cColorSpec ) - hb_ULen( cEnhanced ) ) )
 
    RETURN Self
 
@@ -707,7 +707,7 @@ METHOD DeHilite() CLASS HBEditor
       hb_tokenGet( ::cColorSpec, 2, "," ) + "," + ;
       hb_tokenGet( ::cColorSpec, 1, "," )
 
-   ::SetColor( cStandard + Right( ::cColorSpec, Len( ::cColorSpec ) - Len( cStandard ) ) )
+   ::SetColor( cStandard + hb_URight( ::cColorSpec, hb_ULen( ::cColorSpec ) - hb_ULen( cStandard ) ) )
 
    RETURN Self
 
@@ -749,7 +749,7 @@ STATIC FUNCTION Text2Array( cText, nWordWrapCol, nTabWidth )
    LOCAL nLine
 
    FOR EACH cLine IN hb_ATokens( cText, .T. )
-      IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
+      IF nWordWrapCol != NIL .AND. hb_ULen( cLine ) > nWordWrapCol
          nLines := MLCount( cLine, nWordWrapCol + 1, nTabWidth )
          FOR nLine := 1 TO nLines
             AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol + 1, nLine, nTabWidth,,, .F. ), ;
@@ -766,28 +766,28 @@ STATIC FUNCTION Text2Array( cText, nWordWrapCol, nTabWidth )
    RETURN aArray
 
 STATIC FUNCTION SubStrPad( cText, nFrom, nLen )
-   RETURN PadR( SubStr( cText, nFrom, nLen ), nLen )
+   RETURN hb_UPadR( hb_USubStr( cText, nFrom, nLen ), nLen )
 
 STATIC FUNCTION TabCount( nTabWidth, nCol )
    RETURN Int( nTabWidth - ( nCol - 1 ) % nTabWidth )
 
 STATIC FUNCTION SkipWord( cText, nPos )
 
-   DO WHILE nPos < Len( cText ) .AND. SubStr( cText, nPos, 1 ) == " "
+   DO WHILE nPos < hb_ULen( cText ) .AND. hb_USubStr( cText, nPos, 1 ) == " "
       ++nPos
    ENDDO
-   IF ( nPos := hb_At( " ", cText, nPos ) ) == 0
-      nPos := Len( cText ) + 1
+   IF ( nPos := hb_UAt( " ", cText, nPos ) ) == 0
+      nPos := hb_ULen( cText ) + 1
    ENDIF
 
    RETURN nPos
 
 STATIC FUNCTION NextWord( cText, nPos )
 
-   IF ( nPos := hb_At( " ", cText, nPos ) ) == 0
-      nPos := Len( cText ) + 1
+   IF ( nPos := hb_UAt( " ", cText, nPos ) ) == 0
+      nPos := hb_ULen( cText ) + 1
    ELSE
-      DO WHILE SubStr( cText, ++nPos, 1 ) == " "
+      DO WHILE hb_USubStr( cText, ++nPos, 1 ) == " "
       ENDDO
    ENDIF
 
@@ -795,9 +795,9 @@ STATIC FUNCTION NextWord( cText, nPos )
 
 STATIC FUNCTION PrevWord( cText, nPos )
 
-   DO WHILE nPos > 1 .AND. SubStr( cText, --nPos, 1 ) == " "
+   DO WHILE nPos > 1 .AND. hb_USubStr( cText, --nPos, 1 ) == " "
    ENDDO
-   DO WHILE nPos > 1 .AND. ! SubStr( cText, nPos - 1, 1 ) == " "
+   DO WHILE nPos > 1 .AND. ! hb_USubStr( cText, nPos - 1, 1 ) == " "
       --nPos
    ENDDO
 

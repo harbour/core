@@ -613,3 +613,97 @@ HB_FUNC( HB_BRAT )
 
    hb_retns( nPos );
 }
+
+/* hb_BStuff( <cString>, <nAt>, <nDel>, <cIns> ) -> <cResult>
+ */
+HB_FUNC( HB_BSTUFF )
+{
+   const char * szText = hb_parc( 1 );
+   const char * szIns = hb_parc( 4 );
+
+   if( szText && szIns && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
+   {
+      HB_SIZE nLen = hb_parclen( 1 );
+      HB_SIZE nPos = hb_parns( 2 );
+      HB_SIZE nDel = hb_parns( 3 );
+      HB_SIZE nIns = hb_parclen( 4 );
+      HB_SIZE nTot;
+
+      if( nPos )
+      {
+         if( nPos < 1 || nPos > nLen )
+            nPos = nLen;
+         else
+            nPos--;
+      }
+      if( nDel )
+      {
+         if( nDel < 1 || nDel > nLen - nPos )
+            nDel = nLen - nPos;
+      }
+
+      if( ( nTot = nLen + nIns - nDel ) > 0 )
+      {
+         char * szResult = ( char * ) hb_xgrab( nTot + 1 );
+
+         hb_xmemcpy( szResult, szText, nPos );
+         hb_xmemcpy( szResult + nPos, szIns, nIns );
+         hb_xmemcpy( szResult + nPos + nIns, szText + nPos + nDel,
+                     nLen - ( nPos + nDel ) );
+         hb_retclen_buffer( szResult, nTot );
+      }
+      else
+         hb_retc_null();
+   }
+   else
+      hb_retc_null();
+}
+
+/* hb_UStuff( <cString>, <nAt>, <nDel>, <cIns> ) -> <cResult>
+ */
+HB_FUNC( HB_USTUFF )
+{
+   const char * szText = hb_parc( 1 );
+   const char * szIns = hb_parc( 4 );
+
+   if( szText && szIns && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      HB_SIZE nLen = hb_parclen( 1 );
+      HB_SIZE nPos = hb_parns( 2 );
+      HB_SIZE nDel = hb_parns( 3 );
+      HB_SIZE nIns = hb_parclen( 4 );
+      HB_SIZE nTot;
+
+      if( nPos )
+         nPos = nPos < 1 ? nLen : hb_cdpTextPos( cdp, szText, nLen, nPos - 1 );
+      if( nDel )
+      {
+         if( nPos < nLen )
+         {
+            nDel = hb_cdpTextPos( cdp, szText + nPos, nLen - nPos, nDel );
+            if( nDel == 0 )
+               nDel = nLen - nPos;
+         }
+         else
+            nDel = 0;
+      }
+
+      if( ( nTot = nLen + nIns - nDel ) > 0 )
+      {
+         char * szResult = ( char * ) hb_xgrab( nTot + 1 );
+
+         hb_xmemcpy( szResult, szText, nPos );
+         hb_xmemcpy( szResult + nPos, szIns, nIns );
+         hb_xmemcpy( szResult + nPos + nIns, szText + nPos + nDel,
+                     nLen - ( nPos + nDel ) );
+         hb_retclen_buffer( szResult, nTot );
+      }
+      else
+         hb_retc_null();
+   }
+   else
+      hb_retc_null();
+}
+
+/* TODO: PadR(), PadC(), PadL() */

@@ -754,7 +754,7 @@ HB_FUNC( HB_VFSIZE )
 
    if( pszFile )
    {
-      HB_ERRCODE uiError = 0;
+      HB_ERRCODE uiError;
       HB_FOFFSET nSize = 0;
 
       if( hb_parldef( 2, 1 ) )

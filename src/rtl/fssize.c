@@ -55,7 +55,13 @@
 #include "hbapifs.h"
 #include "hbvm.h"
 
-#if ! defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN )
+#  include <windows.h>
+#  include "hbwinuni.h"
+#  if defined( HB_OS_WIN_CE )
+#     include "hbwince.h"
+#  endif
+#else
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #endif
@@ -79,13 +85,47 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
    if( bUseDirEntry )
    {
 #if defined( HB_OS_WIN )
-      PHB_FFIND ffind = hb_fsFindFirst( pszFileName, HB_FA_ALL );
-      hb_fsSetIOError( ffind != NULL, 0 );
-      if( ffind )
+      typedef BOOL ( WINAPI * _HB_GETFILEATTRIBUTESEX )( LPCTSTR, GET_FILEEX_INFO_LEVELS, LPVOID );
+      static _HB_GETFILEATTRIBUTESEX s_pGetFileAttributesEx = ( _HB_GETFILEATTRIBUTESEX ) -1;
+
+      if( s_pGetFileAttributesEx == ( _HB_GETFILEATTRIBUTESEX ) -1 )
       {
-         HB_FOFFSET size = ffind->size;
-         hb_fsFindClose( ffind );
-         return size;
+         HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+         if( hModule )
+            s_pGetFileAttributesEx = ( _HB_GETFILEATTRIBUTESEX )
+               HB_WINAPI_GETPROCADDRESST( hModule, "GetFileAttributesEx" );
+         else
+            s_pGetFileAttributesEx = NULL;
+      }
+
+      if( s_pGetFileAttributesEx )
+      {
+         LPCTSTR lpFileName;
+         LPTSTR lpFree;
+         WIN32_FILE_ATTRIBUTE_DATA attrex;
+         HB_BOOL fResult;
+
+         lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
+         memset( &attrex, 0, sizeof( attrex ) );
+         fResult = GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) &&
+                   ( attrex.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == 0;
+         hb_fsSetIOError( fResult, 0 );
+         if( lpFree )
+            hb_xfree( lpFree );
+         if( fResult )
+            return ( HB_FOFFSET ) attrex.nFileSizeLow +
+                 ( ( HB_FOFFSET ) attrex.nFileSizeHigh << 32 );
+      }
+      else
+      {
+         PHB_FFIND ffind = hb_fsFindFirst( pszFileName, HB_FA_ALL );
+         hb_fsSetIOError( ffind != NULL, 0 );
+         if( ffind )
+         {
+            HB_FOFFSET size = ffind->size;
+            hb_fsFindClose( ffind );
+            return size;
+         }
       }
 #elif defined( HB_USE_LARGEFILE64 )
       char * pszFree;
