@@ -138,6 +138,19 @@ HB_FUNC( HB_BLEN )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* hb_BEmpty( <cText> ) -> <lEmpty>
+ * return string length in bytes
+ */
+HB_FUNC( HB_BEMPTY )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+
+   if( pText )
+      hb_retl( hb_itemGetCLen( pText ) == 0 );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /* hb_UPeek( <cText>, <n> ) -> <nCode>
  * return unicode value of <n>-th character in given string
  */

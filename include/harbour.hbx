@@ -294,6 +294,7 @@ DYNAMIC hb_base64Encode
 DYNAMIC hb_BAt
 DYNAMIC hb_BChar
 DYNAMIC hb_BCode
+DYNAMIC hb_BEmpty
 DYNAMIC hb_bitAnd
 DYNAMIC hb_bitNot
 DYNAMIC hb_bitOr
