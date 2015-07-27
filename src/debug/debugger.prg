@@ -351,7 +351,7 @@ METHOD New() CLASS HBDebugger
       that way if the source is in the same directory it will still be found even if the application
       changes the current directory with the SET DEFAULT command. */
    ::cPathForFiles := GetEnv( "HB_DBG_PATH" )
-   IF Empty( ::cPathForFiles )
+   IF ::cPathForFiles == NIL
       ::cPathForFiles := GetEnv( "PATH" )
    ENDIF
    ::aPathDirs := PathToArray( ::cPathForFiles )
@@ -2067,7 +2067,7 @@ METHOD PROCEDURE Open( cFileName ) CLASS HBDebugger
    IF ! Empty( cFileName ) .AND. ;
       ( ! HB_ISSTRING( ::cPrgName ) .OR. ! hb_FileMatch( cFileName, ::cPrgName ) )
 
-      IF ! hb_FileExists( cFileName ) .AND. ! Empty( ::cPathForFiles )
+      IF ! hb_FileExists( cFileName ) .AND. ::cPathForFiles != NIL
          cRealName := ::LocatePrgPath( cFileName )
          IF Empty( cRealName )
             __dbgAlert( "File '" + cFileName + "' not found!" )
@@ -2186,7 +2186,7 @@ METHOD PROCEDURE Quit() CLASS HBDebugger
 
 METHOD PathForFiles( cPathForFiles ) CLASS HBDebugger
 
-   IF cPathForFiles == NIL
+   IF ! HB_ISSTRING( cPathForFiles )
       cPathForFiles := ::InputBox( "Search path for source files:", ::cPathForFiles )
    ENDIF
    ::cPathForFiles := cPathForFiles
@@ -2436,7 +2436,7 @@ METHOD PROCEDURE SaveSettings( cFileName ) CLASS HBDebugger
       ::cSettingsFileName := cFileName
    ENDIF
 
-   IF ! Empty( ::cPathForFiles )
+   IF ::cPathForFiles != NIL
       cInfo += "Options Path " + ::cPathForFiles + hb_eol()
    ENDIF
 
@@ -2720,7 +2720,7 @@ METHOD PROCEDURE ShowCodeLine( nProc ) CLASS HBDebugger
          IF ! ::ModuleMatch( cPrgName, ::cPrgName ) .OR. ;
             ::oBrwText == NIL
 
-            IF ! hb_FileExists( cPrgName ) .AND. ! Empty( ::cPathForFiles )
+            IF ! hb_FileExists( cPrgName ) .AND. ::cPathForFiles != NIL
                cPrgName := ::LocatePrgPath( cPrgName )
             ENDIF
 

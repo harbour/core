@@ -312,7 +312,7 @@ STATIC FUNCTION proc_account_edit()
       IF Empty( cName )
          session[ "formdata_account/edit" ] := { "name" => cName }
          URedirect( "?err=1" )
-      ELSEIF ( ! Empty( cPassword1 ) .OR. ! Empty( cPassword2 ) ) .AND. ! ( cPassword1 == cPassword2 )
+      ELSEIF ( ! Empty( cPassword1 ) .OR. ! Empty( cPassword2 ) ) .AND. !( cPassword1 == cPassword2 )
          session[ "formdata_account/edit" ] := { "name" => cName }
          URedirect( "?err=2" )
       ELSE

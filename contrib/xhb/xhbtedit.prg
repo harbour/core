@@ -2565,7 +2565,7 @@ METHOD DelTextSelection() CLASS XHBEditor
 
          IF ::nColSelStart > 0 .AND. ::nColSelEnd > 0
 #if 0
-            IF Empty( nRowSelStart )
+            IF nRowSelStart == NIL
                nRowSelStart := ::nColSelRow
             ENDIF
 #endif
@@ -2598,7 +2598,7 @@ METHOD AddText( cString, lAtPos ) CLASS XHBEditor
    LOCAL nAtRow
    LOCAL lSaveIns
 
-   IF ::lEditAllow .AND. ! Empty( cString )
+   IF ::lEditAllow .AND. HB_ISSTRING( cString )
 
       aTmpText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, ) )
       nLines := Len( aTmpText )
@@ -2698,7 +2698,7 @@ METHOD LoadFile( cFileName ) CLASS XHBEditor
 // Saves file being edited, if there is no file name does nothing, returns .T. if OK
 METHOD SaveFile() CLASS XHBEditor
 
-   IF Empty( ::cFile )
+   IF ! HB_ISSTRING( ::cFile ) .OR. Len( ::cFile ) == 0
       RETURN .F.
    ENDIF
 

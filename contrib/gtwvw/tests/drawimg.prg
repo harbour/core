@@ -207,7 +207,7 @@ METHOD PROCEDURE Draw() CLASS wPaintObj
    IF ::lVisible
       DO CASE
       CASE ::nType == WPAINTOBJ_IMAGE
-         IF ! Empty( ::cImage )
+         IF HB_ISSTRING( ::cImage )
             wvw_DrawImage( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
                ::cImage, ::aOffTLBR, ::lTransp )
          ENDIF

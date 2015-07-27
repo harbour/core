@@ -220,7 +220,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       NIL, ;
       {| pConnectionSocket | netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, .F. ) } )
 
-   netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( cPassword )
+   netiosrv[ _NETIOSRV_lEncryption ] := ( cPassword != NIL .AND. Len( cPassword ) > 0 )
    cPassword := NIL
 
    IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
@@ -228,7 +228,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
    ELSE
       netiosrv_LogEvent( "Ready to accept connections." )
 
-      IF ! Empty( cPasswordManagement )
+      IF cPasswordManagement != NIL .AND. Len( cPasswordManagement ) > 0
 
          netiomgm[ _NETIOSRV_pListenSocket ] := netio_MTServer( ;
             netiomgm[ _NETIOSRV_nPort ], ;

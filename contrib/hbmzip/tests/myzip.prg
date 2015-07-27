@@ -74,14 +74,14 @@ PROCEDURE Main()
    FOR tmp := Len( aWild ) - 1 TO 1 STEP -1
       SWITCH Lower( aWild[ tmp ] )
       CASE "--pass"
-         IF Empty( cPassword )
+         IF cPassword == NIL
             cPassword := aWild[ tmp + 1 ]
          ENDIF
          aWild[ tmp ] := ""
          aWild[ tmp + 1 ] := ""
          EXIT
       CASE "--comment"
-         IF Empty( cComment )
+         IF cComment == NIL
             cComment := aWild[ tmp + 1 ]
          ENDIF
          aWild[ tmp ] := ""
@@ -96,7 +96,7 @@ PROCEDURE Main()
    IF ! Empty( hZip := hb_zipOpen( cZipName ) )
       ? "Archive file:", cZipName
       FOR EACH cWild IN aWild
-         IF ! Empty( cWild )
+         IF Len( cWild ) > 0
             hb_FNameSplit( cWild, @cPath, @cFileName, @cExt )
             FOR EACH aFile IN hb_DirScan( cPath, cFileName + cExt )
                IF ! cPath + aFile[ F_NAME ] == cZipName

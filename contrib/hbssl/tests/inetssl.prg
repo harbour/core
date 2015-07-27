@@ -18,7 +18,7 @@ PROCEDURE Main( delay )
 
    LOCAL thrd
 
-   IF ! Empty( delay )
+   IF HB_ISSTRING( delay )
       s_lDelayCli := "C" $ Upper( delay )
       s_lDelaySrv := "S" $ Upper( delay )
    ENDIF
@@ -28,8 +28,7 @@ PROCEDURE Main( delay )
    RAND_seed( Time() + hb_TSToStr( hb_DateTime() ) + hb_DirBase() + NetName() )
 
    /* start server thread */
-   thrd := hb_threadStart( @Server() )
-   IF Empty( thrd )
+   IF Empty( thrd := hb_threadStart( @Server() ) )
       ? "Cannot start thread."
       RETURN
    ENDIF
@@ -82,7 +81,7 @@ STATIC PROCEDURE Client()
          DipsCertInfo( ssl, "CLIENT: " )
 
          hb_inetSendAll( sock, hb_TSToStr( hb_DateTime() ) + EOL )
-         DO WHILE ! Empty( cLine := hb_inetRecvLine( sock ) )
+         DO WHILE hb_BLen( cLine := hb_inetRecvLine( sock ) ) > 0
             ? "CLIENT: RECV:", hb_ValToExp( cLine )
          ENDDO
       ENDIF

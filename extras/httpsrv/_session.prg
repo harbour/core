@@ -584,7 +584,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
 
    cFile := ::cSavePath + hb_ps() + ::cName + "_" + hb_defaultValue( cID, ::cSID )
    // TraceLog( "SessionWrite() - cFile", cFile )
-   IF ! Empty( cData )
+   IF HB_ISSTRING( cData ) .AND. hb_BLen( cData ) > 0
       DO WHILE nRetry++ <= ::nFileRetry
          IF ( nH := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_DENYWRITE ) ) != NIL
             IF hb_vfWrite( nH, cData ) != hb_BLen( cData )

@@ -98,7 +98,7 @@ PROCEDURE Main( cURL, cFile )
    IF oClient:Open()
       ? "Connection status:", iif( Empty( oClient:cReply ), "<connected>", oClient:cReply )
 
-      IF ! Empty( cFile ) .AND. hb_LeftEq( cFile, "+" )
+      IF HB_ISSTRING( cFile ) .AND. hb_LeftEq( cFile, "+" )
          cFile := SubStr( cFile, 2 )
          bWrite := .T.
       ENDIF
@@ -117,20 +117,18 @@ PROCEDURE Main( cURL, cFile )
             ? "Error: Data not sent", oClient:lastErrorMessage()
          ENDIF
       ELSE
-         IF Empty( cFile )
+         IF HB_ISSTRING( cFile )
             cData := oClient:Read()
-            IF ! Empty( cData )
-               ? "First 80 characters:", RTrim( Left( cData, 80 ) )
+            IF hb_BLen( cData ) > 0
+               ? "First 80 characters:", hb_ValToExp( hb_BLeft( cData, 80 ) ) )
             ELSE
                ? "Error: file could not be retrieved", oClient:lastErrorMessage()
             ENDIF
+         ELSEIF oClient:ReadToFile( cFile )
+            ? "File", cFile, "written."
+            ? "Server replied", oClient:cReply
          ELSE
-            IF oClient:ReadToFile( cFile )
-               ? "File", cFile, "written."
-               ? "Server replied", oClient:cReply
-            ELSE
-               ? "Error: Generic error in writing", cFile
-            ENDIF
+            ? "Error: Generic error in writing", cFile
          ENDIF
       ENDIF
 

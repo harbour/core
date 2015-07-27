@@ -301,7 +301,7 @@ METHOD ToString() CLASS TIPMail
    cRet := ::HeadersToString() + e"\r\n"
 
    // Body
-   IF ! Empty( ::cBody )
+   IF hb_BLen( ::cBody ) > 0
       IF Empty( ::aAttachments )
          cRet += ::cBody + iif( ::lBodyEncoded, "", e"\r\n" )
       ELSE

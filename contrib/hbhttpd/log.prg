@@ -81,7 +81,7 @@ METHOD Add( cMsg ) CLASS UHttpdLog
       RETURN .F.
    ENDIF
 
-   IF ::fhnd == NIL .AND. ! Empty( ::cFileName )
+   IF ::fhnd == NIL .AND. Len( ::cFileName ) > 0
       ::fhnd := hb_vfOpen( ::cFileName, FO_CREAT + FO_WRITE + FO_DENYNONE )
    ENDIF
 

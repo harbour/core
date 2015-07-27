@@ -223,7 +223,7 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
    LOCAL aHead
 
    // Now reads the fields and set the content length
-   IF Empty( cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 ) )
+   IF hb_BLen( cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 ) ) == 0
       // In case of timeout or error on receiving
       RETURN .F.
    ENDIF
@@ -250,7 +250,7 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
       ::hHeaders := { => }
    ENDIF
    cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
-   DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! Empty( cLine )
+   DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. hb_BLen( cLine ) > 0
 
       IF Len( aHead := hb_regexSplit( ":", cLine,,, 1 ) ) != 2
          cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
@@ -303,7 +303,7 @@ METHOD Read( nLen ) CLASS TIPClientHTTP
 
       cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 )
 
-      IF Empty( cLine )
+      IF hb_BLen( cLine ) == 0
          RETURN NIL
       ENDIF
 
@@ -311,7 +311,7 @@ METHOD Read( nLen ) CLASS TIPClientHTTP
       IF cLine == "0"
 
          // read the footers.
-         DO WHILE ! Empty( cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 ) )
+         DO WHILE hb_BLen( cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 ) ) > 0
             // add Headers to footers
             IF Len( aHead := hb_regexSplit( ":", cLine,,, 1 ) ) == 2
                ::hHeaders[ aHead[ 1 ] ] := LTrim( aHead[ 2 ] )
@@ -377,7 +377,7 @@ METHOD PROCEDURE setCookie( cLine ) CLASS TIPClientHTTP
    LOCAL cDefaultHost := ::oUrl:cServer, cDefaultPath := ::oUrl:cPath
    LOCAL x
 
-   IF Empty( cDefaultPath )
+   IF Len( cDefaultPath ) == 0
       cDefaultPath := "/"
    ENDIF
 
@@ -430,11 +430,11 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
    IF ! HB_ISSTRING( cPath )
       cPath := ::oUrl:cPath
-      IF Empty( cPath )
+      IF Len( cPath ) == 0
          cPath := "/"
       ENDIF
    ENDIF
-   IF Empty( cHost )
+   IF Len( cHost ) == 0
       RETURN cOut
    ENDIF
 
@@ -459,7 +459,7 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
       FOR EACH a IN ASort( aPathKeys,,, {| cX, cY | Len( cX ) > Len( cY ) } )
          FOR EACH c IN hb_HKeys( ::hCookies[ x ][ a ] )
-            IF ! Empty( cOut )
+            IF Len( cOut ) > 0
                cOut += "; "
             ENDIF
             cOut += c + "=" + ::hCookies[ x ][ a ][ c ]

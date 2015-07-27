@@ -219,7 +219,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
       IF aFile[ i ] == NIL
          EXIT
       ENDIF
-      IF Empty( aFile[ i ] )
+      IF Len( aFile[ i ] ) == 0
          LOOP
       ENDIF
       IF ::bCallBack != NIL
@@ -838,7 +838,7 @@ METHOD ReadIni( cIniName ) CLASS HBFormatCode
       aIni := hb_ATokens( MemoRead( cIniName ), .T. )
       nLen := Len( aIni )
       FOR i := 1 TO nLen
-         IF ! Empty( aIni[ i ] := AllTrim( aIni[ i ] ) ) .AND. ;
+         IF Len( aIni[ i ] := AllTrim( aIni[ i ] ) ) > 0 .AND. ;
                !( ( c := Left( aIni[ i ], 1 ) ) == ";" ) .AND. !( c == "#" )
             IF ! ::SetOption( aIni[ i ], @i, aIni )
                EXIT

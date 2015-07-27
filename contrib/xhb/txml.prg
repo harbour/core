@@ -389,11 +389,7 @@ METHOD Write( fHandle, nStyle ) CLASS TXMLDocument
    IF HB_ISSTRING( fHandle )  // It's a filename
       IF ( fHandle := hb_vfOpen( fHandle, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
          IF Empty( ::oRoot:oChild ) .OR. !( ::oRoot:oChild:cName == "xml" )
-            IF Empty( ::cHeader )
-               hb_vfWrite( fHandle, '<?xml version="1.0"?>' + hb_eol() )
-            ELSE
-               hb_vfWrite( fHandle, ::cHeader + hb_eol() )
-            ENDIF
+            hb_vfWrite( fHandle, hb_defaultValue( ::cHeader, '<?xml version="1.0"?>' ) + hb_eol() )
          ENDIF
          nResult := ::oRoot:Write( fHandle, nStyle )
          hb_vfClose( fHandle )

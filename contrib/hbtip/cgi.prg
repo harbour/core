@@ -167,10 +167,10 @@ METHOD Flush() CLASS TIPCgi
    lRet := ( FWrite( hb_GetStdOut(), cStream ) == hb_BLen( cStream ) )
 
    IF ::lDumpHtml
-      IF Empty( ::cDumpSavePath )
+      IF ::cDumpSavePath == NIL
          ::cDumpSavePath := hb_DirTemp()
       ENDIF
-      hb_MemoWrit( ::cDumpSavePath + "dump.html", ::cHtmlPage )
+      hb_MemoWrit( hb_DirSepAdd( ::cDumpSavePath ) + "dump.html", ::cHtmlPage )
    ENDIF
 
    ::cCgiHeader := ""
@@ -178,7 +178,7 @@ METHOD Flush() CLASS TIPCgi
 
    IF ! Empty( ::cSID )
 
-      cFile := ::cSessionSavePath + "SESSIONID_" + ::cSID
+      cFile := hb_DirSepAdd( ::cSessionSavePath ) + "SESSIONID_" + ::cSID
 
       IF ( nH := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
          cSession := ::SessionEncode()
@@ -211,7 +211,7 @@ METHOD StartSession( cSID ) CLASS TIPCgi
       ENDCASE
    ENDIF
 
-   IF Empty( ::cSessionSavePath )
+   IF ::cSessionSavePath == NIL
       ::cSessionSavePath := hb_DirTemp()
    ENDIF
 
@@ -219,7 +219,7 @@ METHOD StartSession( cSID ) CLASS TIPCgi
 
       ::cSID := cSID
 
-      cFile := ::cSessionSavePath + "SESSIONID_" + cSID
+      cFile := hb_DirSepAdd( ::cSessionSavePath ) + "SESSIONID_" + cSID
 
       IF hb_vfExists( cFile )
          IF ( nH := hb_vfOpen( cFile ) ) != NIL
@@ -267,7 +267,7 @@ METHOD DestroySession( cID ) CLASS TIPCgi
 
       ::hSession := { => }
 
-      cFile := ::cSessionSavePath + "SESSIONID_" + cSID
+      cFile := hb_DirSepAdd( ::cSessionSavePath ) + "SESSIONID_" + cSID
 
       IF ( lOk := ( hb_vfErase( cFile ) != F_ERROR ) )
          ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + tip_DateToGMT( Date() - 1 )

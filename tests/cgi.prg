@@ -168,7 +168,7 @@ METHOD PROCEDURE Generate() CLASS THTML
 #endif
 
    // Is this a meta file or hand generated script?
-   IF Empty( ::cHTMLFile )
+   IF ! HB_ISSTRING( ::cHTMLFile ) .OR. Len( ::cHTMLFile ) == 0
       ::cContent := ;
          "<html><head>" + hb_eol() + ;
          "<title>" + ::cTitle + "</title>" + hb_eol() + ;
