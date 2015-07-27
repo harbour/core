@@ -1318,11 +1318,10 @@ int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
 
 HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMillisec )
 {
-   HB_BOOL fResult;
+   HB_BOOL fResult = HB_FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetFileTime(%s, %p, %p)", pszFileName, plJulian, plMillisec ) );
 
-   fResult = HB_FALSE;
    *plJulian = *plMillisec = 0;
 
    hb_vmUnlock();
@@ -1418,12 +1417,6 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
             }
          }
       }
-
-      if( ! fResult )
-      {
-         *plJulian = 0;
-         *plMillisec = 0;
-      }
    }
 #elif defined( HB_OS_UNIX ) || defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) || defined( __GNUC__ )
    {
@@ -1456,11 +1449,6 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
 #endif
          fResult = HB_TRUE;
       }
-      else
-      {
-         *plJulian = 0;
-         *plMillisec = 0;
-      }
 
       hb_fsSetIOError( fResult, 0 );
 
@@ -1472,9 +1460,6 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
       int iTODO; /* TODO: for given platform */
 
       HB_SYMBOL_UNUSED( pszFileName );
-
-      *plJulian = 0;
-      *plMillisec = 0;
    }
 #endif
 
@@ -1485,14 +1470,14 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
 
 HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
 {
-   HB_BOOL fResult;
+   HB_BOOL fResult = HB_FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetAttr(%s, %p)", pszFileName, pulAttr ) );
 
+   *pulAttr = 0;
+
    hb_vmUnlock();
 
-   *pulAttr = 0;
-   fResult = HB_FALSE;
 #if defined( HB_OS_WIN )
    {
       LPCTSTR lpFileName;
@@ -1508,8 +1493,6 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
          *pulAttr = hb_fsAttrFromRaw( dwAttr );
          fResult = HB_TRUE;
       }
-      else
-         *pulAttr = 0;
 
       hb_fsSetIOError( fResult, 0 );
 
@@ -1534,8 +1517,6 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
             *pulAttr = hb_fsAttrFromRaw( attr );
             fResult = HB_TRUE;
          }
-         else
-            *pulAttr = 0;
 
          hb_fsSetIOError( fResult, 0 );
       }
@@ -1550,8 +1531,6 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
             *pulAttr = hb_fsAttrFromRaw( fs3.attrFile );
             fResult = HB_TRUE;
          }
-         else
-            *pulAttr = 0;
 
          hb_fsSetIOError( fResult, 0 );
       }
@@ -1568,8 +1547,6 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
             *pulAttr = hb_fsAttrFromRaw( statbuf.st_mode );
             fResult = HB_TRUE;
          }
-         else
-            *pulAttr = 0;
 
          hb_fsSetIOError( fResult, 0 );
       }
@@ -1578,8 +1555,6 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pulAttr )
          int iTODO; /* TODO: for given platform */
 
          HB_SYMBOL_UNUSED( pszFileName );
-
-         *pulAttr = 0;
       }
 #  endif
       if( pszFree )
