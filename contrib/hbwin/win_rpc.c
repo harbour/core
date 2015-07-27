@@ -62,13 +62,13 @@ HB_FUNC( WIN_UUIDCREATESTRING )
    typedef RPC_STATUS ( RPC_ENTRY * _HB_UUIDTOSTRING )( UUID *, unsigned char ** );
    typedef RPC_STATUS ( RPC_ENTRY * _HB_RPCSTRINGFREE )( unsigned char ** );
 
+   static HB_BOOL s_fInit = HB_TRUE;
+
    static _HB_UUIDCREATE    s_pUuidCreate    = NULL;
    static _HB_UUIDTOSTRING  s_pUuidToString  = NULL;
    static _HB_RPCSTRINGFREE s_pRpcStringFree = NULL;
 
-   if( ! s_pUuidCreate ||
-       ! s_pUuidToString ||
-       ! s_pRpcStringFree )
+   if( s_fInit )
    {
       HMODULE hRpcrt4 = GetModuleHandle( TEXT( "rpcrt4.dll" ) );
 
@@ -78,6 +78,8 @@ HB_FUNC( WIN_UUIDCREATESTRING )
          s_pUuidToString = ( _HB_UUIDTOSTRING ) HB_WINAPI_GETPROCADDRESST( hRpcrt4, "UuidToString" );
          s_pRpcStringFree = ( _HB_RPCSTRINGFREE ) HB_WINAPI_GETPROCADDRESST( hRpcrt4, "RpcStringFree" );
       }
+
+      s_fInit = HB_FALSE;
    }
 
    if( s_pUuidCreate &&

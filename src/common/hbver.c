@@ -310,13 +310,13 @@ static int     s_iWin9x    = 0;
 typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEXW, DWORD, DWORDLONG );
 typedef ULONGLONG ( WINAPI * _HB_VERSETCONDITIONMASK )( ULONGLONG, DWORD, BYTE );
 
+static HB_BOOL s_fVerInfoInit = HB_TRUE;
 static _HB_VERIFYVERSIONINFO   s_pVerifyVersionInfo   = NULL;
 static _HB_VERSETCONDITIONMASK s_pVerSetConditionMask = NULL;
 
 static HB_BOOL s_hb_winVerifyVersionInit( void )
 {
-   if( ! s_pVerifyVersionInfo ||
-       ! s_pVerSetConditionMask )
+   if( s_fVerInfoInit )
    {
       HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
       if( hModule )
@@ -324,6 +324,7 @@ static HB_BOOL s_hb_winVerifyVersionInit( void )
          s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESS( hModule, "VerifyVersionInfoW" );
          s_pVerSetConditionMask = ( _HB_VERSETCONDITIONMASK ) HB_WINAPI_GETPROCADDRESS( hModule, "VerSetConditionMask" );
       }
+      s_fVerInfoInit = HB_FALSE;
    }
 
    return s_pVerifyVersionInfo &&

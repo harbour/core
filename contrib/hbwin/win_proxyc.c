@@ -138,13 +138,15 @@ HB_FUNC( __WIN_PROXYDETECT )
    typedef BOOL      ( WINAPI * _HB_WINHTTPGETPROXYFORURL )( HINTERNET, LPCWSTR, WINHTTP_AUTOPROXY_OPTIONS *, WINHTTP_PROXY_INFO * );
    typedef BOOL      ( WINAPI * _HB_WINHTTPGETIEPROXYCONFIGFORCURRENTUSER )( WINHTTP_CURRENT_USER_IE_PROXY_CONFIG * );
 
+   static HB_BOOL s_fInit = HB_TRUE;
+
    static _HB_WINHTTPOPEN                           s_pWinHttpOpen = NULL;
    static _HB_WINHTTPSETTIMEOUTS                    s_pWinHttpSetTimeouts = NULL;
    static _HB_WINHTTPCLOSEHANDLE                    s_pWinHttpCloseHandle = NULL;
    static _HB_WINHTTPGETPROXYFORURL                 s_pWinHttpGetProxyForUrl = NULL;
    static _HB_WINHTTPGETIEPROXYCONFIGFORCURRENTUSER s_pWinHttpGetIEProxyConfigForCurrentUser = NULL;
 
-   if( ! s_pWinHttpOpen )
+   if( s_fInit )
    {
       HMODULE hModule = hbwapi_LoadLibrarySystem( TEXT( "winhttp.dll" ) );
       if( hModule )
@@ -155,6 +157,7 @@ HB_FUNC( __WIN_PROXYDETECT )
          s_pWinHttpGetProxyForUrl                 = ( _HB_WINHTTPGETPROXYFORURL )                 HB_WINAPI_GETPROCADDRESS( hModule, "WinHttpGetProxyForUrl" );
          s_pWinHttpGetIEProxyConfigForCurrentUser = ( _HB_WINHTTPGETIEPROXYCONFIGFORCURRENTUSER ) HB_WINAPI_GETPROCADDRESS( hModule, "WinHttpGetIEProxyConfigForCurrentUser" );
       }
+      s_fInit = HB_FALSE;
    }
 
    if( s_pWinHttpOpen != NULL &&

@@ -329,14 +329,16 @@ HB_FUNC( WAPI_GETSHORTPATHNAME )
 HB_FUNC( WAPI_GETLONGPATHNAME )
 {
 #if ! defined( HB_OS_WIN_CE )
-   static _HB_GETPATHNAME s_getPathNameAddr = NULL;
+   static _HB_GETPATHNAME s_getPathNameAddr = ( _HB_GETPATHNAME ) -1;
 
-   if( ! s_getPathNameAddr )
+   if( s_getPathNameAddr == ( _HB_GETPATHNAME ) -1 )
    {
       HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
       if( hModule )
          s_getPathNameAddr = ( _HB_GETPATHNAME )
             HB_WINAPI_GETPROCADDRESST( hModule, "GetLongPathName" );
+      else
+         s_getPathNameAddr = NULL;
 
       if( ! s_getPathNameAddr )
          s_getPathNameAddr = GetShortPathName;
@@ -487,13 +489,15 @@ HB_FUNC( WAPI_COPYFILE )
 #if ! defined( HB_OS_WIN_CE )
    typedef BOOL ( WINAPI * _HB_COPYFILE )( LPCTSTR, LPCTSTR, BOOL );
 
-   static _HB_COPYFILE s_pCopyFile = NULL;
+   static _HB_COPYFILE s_pCopyFile = ( _HB_COPYFILE ) -1;
 
-   if( ! s_pCopyFile )
+   if( s_pCopyFile == ( _HB_COPYFILE ) -1 )
    {
       HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
       if( hModule )
          s_pCopyFile = ( _HB_COPYFILE ) HB_WINAPI_GETPROCADDRESST( hModule, "CopyFile" );
+      else
+         s_pCopyFile = NULL;
    }
 
    if( s_pCopyFile )

@@ -68,14 +68,16 @@ HB_FUNC( WAPI_GETUSERNAMEEX )
    {
       typedef int ( WINAPI * _HB_GETUSERNAMEEX )( EXTENDED_NAME_FORMAT, LPTSTR, PULONG );
 
-      static _HB_GETUSERNAMEEX s_pGetUserNameEx = NULL;
+      static _HB_GETUSERNAMEEX s_pGetUserNameEx = ( _HB_GETUSERNAMEEX ) -1;
 
-      if( ! s_pGetUserNameEx )
+      if( s_pGetUserNameEx == ( _HB_GETUSERNAMEEX ) -1 )
       {
          HMODULE hModule = hbwapi_LoadLibrarySystem( TEXT( "secur32.dll" ) );
          if( hModule )
             s_pGetUserNameEx = ( _HB_GETUSERNAMEEX ) HB_WINAPI_GETPROCADDRESST( hModule,
                "GetUserNameEx" );
+         else
+            s_pGetUserNameEx = NULL;
       }
 
       if( s_pGetUserNameEx )

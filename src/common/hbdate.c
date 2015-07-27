@@ -942,16 +942,16 @@ long hb_timeStampUTCOffset( int iYear, int iMonth, int iDay,
    {
       typedef BOOL ( WINAPI * P_TZSPECIFICLOCALTIMETOSYSTEMTIME )( LPTIME_ZONE_INFORMATION, LPSYSTEMTIME, LPSYSTEMTIME );
 
-      static HB_BOOL s_fInit = HB_TRUE;
-      static P_TZSPECIFICLOCALTIMETOSYSTEMTIME s_pTzSpecificLocalTimeToSystemTime = NULL;
+      static P_TZSPECIFICLOCALTIMETOSYSTEMTIME s_pTzSpecificLocalTimeToSystemTime = ( P_TZSPECIFICLOCALTIMETOSYSTEMTIME ) -1;
 
-      if( s_fInit )
+      if( s_pTzSpecificLocalTimeToSystemTime == ( P_TZSPECIFICLOCALTIMETOSYSTEMTIME ) -1 )
       {
          HMODULE hModule = GetModuleHandle( TEXT( "kernel32" ) );
          if( hModule )
             s_pTzSpecificLocalTimeToSystemTime = ( P_TZSPECIFICLOCALTIMETOSYSTEMTIME )
                HB_WINAPI_GETPROCADDRESS( hModule, "TzSpecificLocalTimeToSystemTime" );
-         s_fInit = HB_FALSE;
+         else
+            s_pTzSpecificLocalTimeToSystemTime = NULL;
       }
 
       if( s_pTzSpecificLocalTimeToSystemTime )

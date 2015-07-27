@@ -70,14 +70,16 @@ HB_FUNC( WAPI_ADDFONTRESOURCEEX )
    {
       typedef int ( WINAPI * _HB_ADDFONTRESOURCEEX )( LPCTSTR, DWORD, PVOID );
 
-      static _HB_ADDFONTRESOURCEEX s_pAddFontResourceEx = NULL;
+      static _HB_ADDFONTRESOURCEEX s_pAddFontResourceEx = ( _HB_ADDFONTRESOURCEEX ) -1;
 
-      if( ! s_pAddFontResourceEx )
+      if( s_pAddFontResourceEx == ( _HB_ADDFONTRESOURCEEX ) -1 )
       {
          HMODULE hModule = GetModuleHandle( TEXT( "gdi32.dll" ) );
          if( hModule )
             s_pAddFontResourceEx = ( _HB_ADDFONTRESOURCEEX ) HB_WINAPI_GETPROCADDRESST( hModule,
                "AddFontResourceEx" );
+         else
+            s_pAddFontResourceEx = NULL;
       }
 
       if( s_pAddFontResourceEx )
@@ -100,14 +102,16 @@ HB_FUNC( WAPI_REMOVEFONTRESOURCEEX )
    {
       typedef int ( WINAPI * _HB_REMOVEFONTRESOURCEEX )( LPCTSTR, DWORD, PVOID );
 
-      static _HB_REMOVEFONTRESOURCEEX s_pRemoveFontResourceEx = NULL;
+      static _HB_REMOVEFONTRESOURCEEX s_pRemoveFontResourceEx = ( _HB_REMOVEFONTRESOURCEEX ) -1;
 
-      if( ! s_pRemoveFontResourceEx )
+      if( s_pRemoveFontResourceEx == ( _HB_REMOVEFONTRESOURCEEX ) -1 )
       {
          HMODULE hModule = GetModuleHandle( TEXT( "gdi32.dll" ) );
          if( hModule )
             s_pRemoveFontResourceEx = ( _HB_REMOVEFONTRESOURCEEX ) HB_WINAPI_GETPROCADDRESST( hModule,
                "RemoveFontResourceEx" );
+         else
+            s_pRemoveFontResourceEx = NULL;
       }
 
       if( s_pRemoveFontResourceEx )
