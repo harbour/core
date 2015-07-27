@@ -756,7 +756,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
             cCommand := StrTran( cCommand, "{T}", cTempFile )
          ENDIF
          IF hb_processRun( cCommand,, @cStdOut, @cStdErr ) == 0
-            IF hb_BLen( cTempFile ) > 0
+            IF Len( cTempFile ) > 0
                cStdOut := MemoRead( cTempFile )
             ENDIF
             IF ! Empty( pRegex := hb_regexComp( cRegex, .T., .T. ) )
@@ -786,7 +786,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
                NEXT
             ENDIF
          ENDIF
-         IF hb_BLen( cTempFile ) > 0
+         IF Len( cTempFile ) > 0
             hb_vfErase( cTempFile )
          ENDIF
       ENDIF
