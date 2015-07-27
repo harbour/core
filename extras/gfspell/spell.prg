@@ -964,6 +964,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    LOCAL cOther := ""
    LOCAL nCurRec := 0
    LOCAL cTempFile
+   LOCAL fhnd
 
    hb_default( @cDictionary, "dict.dic" )
    hb_default( @lTalk, .F. )
@@ -993,7 +994,9 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       nSize := DICT->( LastRec() )
    ENDIF
 
-   hb_vfClose( hb_vfTempFile( @cTempFile,,, IndexExt() ) )
+   IF ( fhnd := hb_vfTempFile( @cTempFile,,, IndexExt() ) ) != NIL
+      hb_vfClose( fhnd )
+   ENDIF
 
    INDEX ON SubStr( field->word, 1, 2 ) + PadR( C_Metafone( AllTrim( field->word ), 5 ), 6 ) TO ( cTempFile )
    dbGoTop()

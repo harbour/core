@@ -284,6 +284,7 @@ PROCEDURE Main( ... )
    LOCAL lValidateOnly := .F. /* syntactic metadata validation only */
    LOCAL cArg
    LOCAL cRoot := NIL
+   LOCAL fhnd
 
    LOCAL hRegexTake1Line := hb_regexComp( "^#[[:blank:]]*(ORIGIN|VER|URL|DIFF)[[:blank:]]+(.+?)[[:blank:]]*$" )
    LOCAL hRegexTake2Line := hb_regexComp( "^#[[:blank:]]*(MAP)[[:blank:]]+(.+?)[[:blank:]]+(.+?)[[:blank:]]*$" )
@@ -420,9 +421,15 @@ PROCEDURE Main( ... )
    cRoot := cCWD
 #endif
 
-   hb_vfClose( hb_vfTempFile( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) )
-   hb_vfErase( s_cTempDir )
-   hb_vfDirMake( s_cTempDir )
+   IF ( fhnd := hb_vfTempFile( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) ) != NIL
+      hb_vfClose( fhnd )
+      hb_vfErase( s_cTempDir )
+      hb_vfDirMake( s_cTempDir )
+   ELSE
+      OutStd( "E: Failed to create temporary directory." + hb_eol() )
+      ErrorLevel( 2 )
+      RETURN
+   ENDIF
 
    cThisComponent := hb_FNameName( hb_DirSepDel( cCWD ) )
 
