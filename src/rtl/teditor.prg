@@ -271,7 +271,7 @@ METHOD GotoLine( nRow ) CLASS HBEditor
    RETURN ::Goto( nRow, ::nCol )
 
 METHOD LineCount() CLASS HBEditor
-   RETURN hb_ULen( ::aText )
+   RETURN Len( ::aText )
 
 METHOD Display() CLASS HBEditor
 
