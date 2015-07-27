@@ -148,9 +148,7 @@ C_SOURCES := \
    oldbox.c \
    oldclear.c \
    pad.c \
-   padc.c \
-   padl.c \
-   padr.c \
+   padx.c \
    philes.c \
    philes53.c \
    rat.c \

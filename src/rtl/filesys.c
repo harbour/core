@@ -1323,46 +1323,64 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetFileTime(%s, %p, %p)", pszFileName, plJulian, plMillisec ) );
 
    fResult = HB_FALSE;
+   *plJulian = *plMillisec = 0;
 
    hb_vmUnlock();
 
 #if defined( HB_OS_WIN )
-#if defined( __HB_OS_WIN9X_SUPPORT )
-   if( hb_iswin9x() )
    {
-      HB_FHANDLE hFile = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
-      FILETIME ft, local_ft;
-      SYSTEMTIME st;
+      typedef BOOL ( WINAPI * _HB_GETFILEATTRIBUTESEX )( LPCTSTR, GET_FILEEX_INFO_LEVELS, LPVOID );
+      static _HB_GETFILEATTRIBUTESEX s_pGetFileAttributesEx = ( _HB_GETFILEATTRIBUTESEX ) -1;
 
-      if( hFile != FS_ERROR )
+      if( s_pGetFileAttributesEx == ( _HB_GETFILEATTRIBUTESEX ) -1 )
       {
-         if( GetFileTime( DosToWinHandle( hFile ), NULL, NULL, &ft ) &&
-             FileTimeToLocalFileTime( &ft, &local_ft ) &&
-             FileTimeToSystemTime( &local_ft, &st ) )
-         {
-            *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
-            *plMillisec = hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
+         HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+         if( hModule )
+            s_pGetFileAttributesEx = ( _HB_GETFILEATTRIBUTESEX )
+               HB_WINAPI_GETPROCADDRESST( hModule, "GetFileAttributesEx" );
+         else
+            s_pGetFileAttributesEx = NULL;
+      }
 
-            fResult = HB_TRUE;
+      if( s_pGetFileAttributesEx )
+      {
+         LPCTSTR lpFileName;
+         LPTSTR lpFree;
+         WIN32_FILE_ATTRIBUTE_DATA attrex;
+
+         lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
+
+         memset( &attrex, 0, sizeof( attrex ) );
+
+         if( GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) )
+         {
+            FILETIME local_ft;
+            SYSTEMTIME st;
+
+            if( FileTimeToLocalFileTime( &attrex.ftLastWriteTime, &local_ft ) &&
+                FileTimeToSystemTime( &local_ft, &st ) )
+            {
+               *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
+               *plMillisec = hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
+
+               fResult = HB_TRUE;
+            }
          }
          hb_fsSetIOError( fResult, 0 );
-         hb_fsClose( hFile );
+
+         if( lpFree )
+            hb_xfree( lpFree );
       }
       else
       {
-         WIN32_FIND_DATA findFileData;
-         HANDLE hFindFile;
-         LPCTSTR lpFileName;
-         LPTSTR lpFree;
+         HB_FHANDLE hFile = hb_fsOpen( pszFileName, FO_READ | FO_SHARED );
+         FILETIME ft, local_ft;
+         SYSTEMTIME st;
 
-         lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
-         hFindFile = FindFirstFile( lpFileName, &findFileData );
-         if( lpFree )
-            hb_xfree( lpFree );
-
-         if( hFindFile != INVALID_HANDLE_VALUE )
+         if( hFile != FS_ERROR )
          {
-            if( FileTimeToLocalFileTime( &findFileData.ftLastWriteTime, &local_ft ) &&
+            if( GetFileTime( DosToWinHandle( hFile ), NULL, NULL, &ft ) &&
+                FileTimeToLocalFileTime( &ft, &local_ft ) &&
                 FileTimeToSystemTime( &local_ft, &st ) )
             {
                *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
@@ -1371,33 +1389,33 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
                fResult = HB_TRUE;
             }
             hb_fsSetIOError( fResult, 0 );
-            FindClose( hFindFile );
+            hb_fsClose( hFile );
          }
-      }
-   }
-   else
-#endif
-   {
-      LPCTSTR lpFileName;
-      LPTSTR lpFileNameFree;
-      WIN32_FILE_ATTRIBUTE_DATA attrex;
-
-      lpFileName = HB_FSNAMECONV( pszFileName, &lpFileNameFree );
-
-      memset( &attrex, 0, sizeof( attrex ) );
-
-      if( GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) )
-      {
-         FILETIME local_ft;
-         SYSTEMTIME st;
-
-         if( FileTimeToLocalFileTime( &attrex.ftLastWriteTime, &local_ft ) &&
-             FileTimeToSystemTime( &local_ft, &st ) )
+         else
          {
-            *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
-            *plMillisec = hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
+            WIN32_FIND_DATA findFileData;
+            HANDLE hFindFile;
+            LPCTSTR lpFileName;
+            LPTSTR lpFree;
 
-            fResult = HB_TRUE;
+            lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
+            hFindFile = FindFirstFile( lpFileName, &findFileData );
+            if( lpFree )
+               hb_xfree( lpFree );
+
+            if( hFindFile != INVALID_HANDLE_VALUE )
+            {
+               if( FileTimeToLocalFileTime( &findFileData.ftLastWriteTime, &local_ft ) &&
+                   FileTimeToSystemTime( &local_ft, &st ) )
+               {
+                  *plJulian = hb_dateEncode( st.wYear, st.wMonth, st.wDay );
+                  *plMillisec = hb_timeEncode( st.wHour, st.wMinute, st.wSecond, st.wMilliseconds );
+
+                  fResult = HB_TRUE;
+               }
+               hb_fsSetIOError( fResult, 0 );
+               FindClose( hFindFile );
+            }
          }
       }
 
@@ -1406,11 +1424,6 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
          *plJulian = 0;
          *plMillisec = 0;
       }
-
-      hb_fsSetIOError( fResult, 0 );
-
-      if( lpFileNameFree )
-         hb_xfree( lpFileNameFree );
    }
 #elif defined( HB_OS_UNIX ) || defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) || defined( __GNUC__ )
    {
