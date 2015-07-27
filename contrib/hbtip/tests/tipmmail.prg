@@ -49,8 +49,7 @@ PROCEDURE Main( ... )
          EXIT
       CASE "-m"
          IF HB_ISSTRING( cData := hb_PValue( ++i ) )
-            cData := MemoRead( cData )
-            IF Empty( cData )
+            IF hb_BLen( cData := hb_MemoRead( cData ) ) == 0
                ? "Fatal: Could not read", hb_PValue( i )
                RETURN
             ENDIF
@@ -58,8 +57,7 @@ PROCEDURE Main( ... )
          ENDIF
          EXIT
       OTHERWISE  // it is an attachment file
-         cData := hb_MemoRead( cData )
-         IF Empty( cData )
+         IF hb_BLen( cData := hb_MemoRead( cData ) ) == 0
             ? "Fatal: Could not read attachment or attachment empty", hb_PValue( i )
             RETURN
          ENDIF

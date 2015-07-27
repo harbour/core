@@ -106,15 +106,12 @@ METHOD SetAddress( cUrl ) CLASS TUrl
    ::cFile := ""
    ::nPort := -1
 
-   IF Empty( cUrl )
+   IF Len( cUrl ) == 0
       RETURN .T.
    ENDIF
 
-   // TOPLEVEL url parsing
-   aMatch := hb_regex( ::cREuri, cUrl )
-
-   // May fail
-   IF Empty( aMatch )
+   // TOPLEVEL url parsing. May fail.
+   IF Empty( aMatch := hb_regex( ::cREuri, cUrl ) )
       RETURN .F.
    ENDIF
 
@@ -148,19 +145,19 @@ METHOD BuildAddress() CLASS TUrl
       ::cProto := Lower( ::cProto )
    ENDIF
 
-   IF ! Empty( ::cProto ) .AND. ! Empty( ::cServer )
+   IF ! Empty( ::cProto ) .AND. Len( ::cServer ) > 0
       cRet := ::cProto + "://"
    ENDIF
 
-   IF ! Empty( ::cUserid )
+   IF Len( ::cUserid ) > 0
       cRet += ::cUserid
-      IF ! Empty( ::cPassword )
+      IF Len( ::cPassword ) > 0
          cRet += ":" + ::cPassword
       ENDIF
       cRet += "@"
    ENDIF
 
-   IF ! Empty( ::cServer )
+   IF Len( ::cServer ) > 0
       cRet += ::cServer
       IF ::nPort > 0
          cRet += ":" + hb_ntos( ::nPort )
@@ -172,7 +169,7 @@ METHOD BuildAddress() CLASS TUrl
    ENDIF
 
    cRet += ::cPath + ::cFile
-   IF ! Empty( ::cQuery )
+   IF Len( ::cQuery ) > 0
       cRet += "?" + ::cQuery
    ENDIF
 
@@ -187,7 +184,7 @@ METHOD BuildQuery() CLASS TUrl
    ENDIF
 
    cLine := ::cPath + ::cFile
-   IF ! Empty( ::cQuery )
+   IF Len( ::cQuery ) > 0
       cLine += "?" + ::cQuery
    ENDIF
 
@@ -221,5 +218,5 @@ METHOD AddGetForm( xPostData ) CLASS TUrl
       cData := xPostData
    ENDCASE
 
-   RETURN iif( Empty( cData ), NIL, ;
-      ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData )
+   RETURN iif( Len( cData ) == 0, NIL, ;
+      ::cQuery += iif( Len( ::cQuery ) == 0, "", "&" ) + cData )

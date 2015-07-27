@@ -421,23 +421,19 @@ STATIC FUNCTION EditorMove( pEdit, nKey )
 
 STATIC FUNCTION EditorSave( oEdit )
 
-   LOCAL nHandle, cFile
+   LOCAL fhnd, cFile
 
    cFile := EditorCargo( oEdit )
-   IF Empty( cFile )
-      cFile := "testfile.txt"     // GetFileName( 10, 10 )
-   ENDIF
-
-   IF Empty( cFile )
+   IF ! HB_ISSTRING( cFile ) .OR. Len( cFile ) == 0
       RETURN .F.
    ENDIF
 
-   IF ( nHandle := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
-      hb_vfWrite( nHandle, EditorGetText( oEdit ) )
-      hb_vfClose( nHandle )
+   IF ( fhnd := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+      hb_vfWrite( fhnd, EditorGetText( oEdit ) )
+      hb_vfClose( fhnd )
    ENDIF
 
-   RETURN nHandle != NIL
+   RETURN fhnd != NIL
 
 FUNCTION SaveBox( top, left, bott, right, color, patt )
 

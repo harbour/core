@@ -250,9 +250,7 @@ METHOD Pasv() CLASS TIPClientFTP
       RETURN .F.
    ENDIF
 
-   aRep := hb_regex( ::RegPasv, ::cReply )
-
-   IF Empty( aRep )
+   IF Empty( aRep := hb_regex( ::RegPasv, ::cReply ) )
       RETURN .F.
    ENDIF
 
@@ -560,8 +558,9 @@ METHOD MGet( cSpec, cLocalPath ) CLASS TIPClientFTP
 
    IF ( cStr := ::ReadAuxPort() ) != NIL
       FOR EACH cFile IN hb_ATokens( cStr, .T. )
-         IF ! Empty( cFile )
-            ::Downloadfile( cLocalPath + RTrim( cFile ), RTrim( cFile ) )
+         cFile := RTrim( cFile )
+         IF Len( cFile ) > 0
+            ::Downloadfile( cLocalPath + cFile, cFile )
          ENDIF
       NEXT
    ENDIF

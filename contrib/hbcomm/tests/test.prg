@@ -68,7 +68,7 @@ STATIC PROCEDURE FSend()
 
    ACCEPT "Enter string to send: " TO cToSend
 
-   IF s_lConnected .AND. ! Empty( cToSend ) .AND. ISWORKING( s_nHandle )
+   IF s_lConnected .AND. hb_BLen( cToSend ) > 0 .AND. ISWORKING( s_nHandle )
       OUTCHR( s_nHandle, cToSend )
    ELSE
       ? "Cannot send data"

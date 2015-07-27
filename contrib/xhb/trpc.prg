@@ -728,8 +728,7 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS TRPCServeCon
 
    LOCAL cChallenge, nCount
 
-   ::cCryptKey := ::oServer:AuthorizeChallenge( cUserid, cPassword )
-   IF Empty( ::cCryptKey )
+   IF ( ::cCryptKey := ::oServer:AuthorizeChallenge( cUserid, cPassword ) ) == NIL
       RETURN .F.
    ENDIF
 
@@ -839,12 +838,13 @@ METHOD FuncCall( cData ) CLASS TRPCServeCon
    LOCAL cFuncName, aParams
 
    /* Deserialize all elements */
-   IF ( cSer := hb_DeserialBegin( cData ) ) == NIL
+   IF ! HB_ISSTRING( cData )
       RETURN .F.
    ENDIF
 
-   cFuncName := hb_DeserialNext( @cSer )
-   aParams := hb_DeserialNext( @cSer )
+   cSer := cData
+   cFuncName := hb_Deserialize( @cSer )
+   aParams := hb_Deserialize( @cSer )
 
    IF aParams == NIL
       RETURN .F.
@@ -860,15 +860,16 @@ METHOD FuncLoopCall( cMode, cData ) CLASS TRPCServeCon
    LOCAL nBegin, nEnd, nStep, cFuncName, aParams
 
    /* Deserialize all elements */
-   IF Empty( cSer := hb_DeserialBegin( cData ) )
+   IF ! HB_ISSTRING( cData )
       RETURN .F.
    ENDIF
 
-   nBegin := hb_DeserialNext( @cSer )
-   nEnd := hb_DeserialNext( @cSer )
-   nStep := hb_DeserialNext( @cSer )
-   cFuncName := hb_DeserialNext( @cSer )
-   aParams := hb_DeserialNext( @cSer )
+   cSer := cData
+   nBegin := hb_Deserialize( @cSer )
+   nEnd := hb_Deserialize( @cSer )
+   nStep := hb_Deserialize( @cSer )
+   cFuncName := hb_Deserialize( @cSer )
+   aParams := hb_Deserialize( @cSer )
 
    IF aParams == NIL
       RETURN .F.
@@ -884,13 +885,14 @@ METHOD FuncForeachCall( cMode, cData ) CLASS TRPCServeCon
    LOCAL cFuncName, aParams, aItems
 
    /* Deserialize all elements */
-   IF Empty( cSer := hb_DeserialBegin( cData ) )
+   IF ! HB_ISSTRING( cData )
       RETURN .F.
    ENDIF
 
-   cFuncName := hb_DeserialNext( @cSer )
-   aParams := hb_DeserialNext( @cSer )
-   aItems := hb_DeserialNext( @cSer )
+   cSer := cData
+   cFuncName := hb_Deserialize( @cSer )
+   aParams := hb_Deserialize( @cSer )
+   aItems := hb_Deserialize( @cSer )
 
    IF aItems == NIL
       RETURN .F.
@@ -1336,12 +1338,12 @@ METHOD Describe( cName ) CLASS TRPCService
 
 METHOD Start( lStartUdp ) CLASS TRPCService
 
-   IF Empty( ::cBindAddress )
-      ::skServer := hb_inetServer( ::nTcpPort )
-      ::skUdp := hb_inetDGramBind( ::nUdpPort )
-   ELSE
+   IF HB_ISSTRING( ::cBindAddress )
       ::skServer := hb_inetServer( ::nTcpPort, ::cBindAddress )
       ::skUdp := hb_inetDGramBind( ::nUdpPort, ::cBindAddress )
+   ELSE
+      ::skServer := hb_inetServer( ::nTcpPort )
+      ::skUdp := hb_inetDGramBind( ::nUdpPort )
    ENDIF
 
    ::thAccept := StartThread( Self, "Accept" )
@@ -1476,19 +1478,17 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS TRPCService
       ENDIF
       /* minimal length to be valid */
       IF nPacketLen > 24
-         cSerial := hb_DeserialBegin( hb_BSubStr( cData, 7 ) )
-         cMatch := hb_DeserialNext( @cSerial )
+         cSerial := hb_BSubStr( cData, 7 )
+         cMatch := hb_Deserialize( @cSerial )
          cNumber := NIL
-         IF Empty( cMatch )
+         IF cMatch == NIL
             cMatch := hb_regexComp( ".*" )
          ELSE
             cMatch := hb_regexComp( cMatch )
-            cNumber := hb_DeserialNext( @cSerial )
+            cNumber := hb_Deserialize( @cSerial )
          ENDIF
 
-         IF Empty( cNumber )
-            cNumber := "00000000.0"
-         ENDIF
+         __defaultNIL( @cNumber, "00000000.0" )
 
          FOR EACH oFunc IN ::aFunctions
             IF hb_regexHas( cMatch, oFunc:cName ) .AND. cNumber <= oFunc:cSerial
@@ -1525,7 +1525,7 @@ METHOD AuthorizeChallenge( cUserId, cData ) CLASS TRPCService
    LOCAL cKey, nPos, cMarker := "PASSWORD:"
 
    cKey := ::GetEncryption( cUserId )
-   IF Empty( cKey )
+   IF ! HB_ISSTRING( cKey ) .OR. hb_BLen( cKey ) == 0
       RETURN NIL
    ENDIF
 

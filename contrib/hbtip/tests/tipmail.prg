@@ -12,7 +12,7 @@ PROCEDURE Main( cFileName )
    LOCAL oMail, cData, i
 
    IF HB_ISSTRING( cFileName )
-      IF Empty( cData := MemoRead( cFileName ) )
+      IF hb_BLen( cData := hb_MemoRead( cFileName ) ) == 0
          ? "Cannot open", cFileName
          RETURN
       ENDIF

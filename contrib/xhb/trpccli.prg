@@ -224,11 +224,12 @@ METHOD Destroy() CLASS TRPCClient
 
 METHOD SetEncryption( cKey ) CLASS TRPCClient
 
-   IF Empty( cKey )
-      ::bEncrypted := .F.
-   ELSE
+   IF HB_ISSTRING( cKey ) .AND. hb_BLen( cKey ) > 0
       ::bEncrypted := .T.
       ::cCryptKey := cKey
+   ELSE
+      ::bEncrypted := .F.
+      ::cCryptKey := NIL
    ENDIF
 
    RETURN .T.
@@ -378,9 +379,9 @@ METHOD UDPParse( cData, nLen ) CLASS TRPCClient
 
    CASE "XHBR11"
       cData := hb_BSubStr( cData, 7 )
-      cSer := hb_DeserialBegin( cData )
-      cName := hb_DeserialNext( @cSer, 64 )
-      cFunc := hb_DeserialNext( @cSer, 64 )
+      cSer := cData
+      cName := hb_Deserialize( @cSer, 64 )
+      cFunc := hb_Deserialize( @cSer, 64 )
       IF cName != NIL .AND. cFunc != NIL
          aLoc := { hb_inetAddress( ::skUDP ), cName, cFunc }
          AAdd( ::aFunctions, aLoc )
@@ -861,8 +862,7 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
             nDataLen := hb_GetLen8( cDataLen )
             cData := Space( nDataLen )
             IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
-               cData := hb_Uncompress( nOrigLen, ::Decrypt( cData ) )
-               IF ! Empty( cData )
+               IF ( cData := hb_Uncompress( nOrigLen, ::Decrypt( cData ) ) ) != NIL
                   ::oResult := hb_Deserialize( cData, nDataLen )
                   IF ::oResult != NIL
                      ::OnFunctionReturn( ::oResult )
@@ -909,8 +909,7 @@ METHOD TCPParse( cCode ) CLASS TRPCClient
                nDataLen := hb_GetLen8( cDataLen )
                cData := Space( nDataLen )
                IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
-                  cData := hb_Uncompress( nOrigLen, cData )
-                  IF ! Empty( cData )
+                  IF ( cData := hb_Uncompress( nOrigLen, cData ) ) != NIL
                      ::oResult := hb_Deserialize( ::Decrypt( cData ), nDataLen )
                      IF ::oResult != NIL
                         lContinue := .T.

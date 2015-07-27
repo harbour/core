@@ -56,7 +56,11 @@ PROCEDURE __Dir( cFileMask )
    LOCAL cName
    LOCAL cExt
 
-   IF Empty( cFileMask )
+   IF Set( _SET_TRIMFILENAME )
+      cFileMask := AllTrim( cFileMask )
+   ENDIF
+
+   IF Len( cFileMask ) == 0
 
       /* NOTE: Although Cl*pper has this string in the national language
                module, it will not use it from there.
@@ -72,9 +76,8 @@ PROCEDURE __Dir( cFileMask )
       AEval( hb_vfDirectory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ), ;
              {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
-      hb_FNameSplit( iif( Set( _SET_TRIMFILENAME ), AllTrim( cFileMask ), cFileMask ), ;
-                     @cPath, @cName, @cExt )
-      IF Empty( cPath )
+      hb_FNameSplit( cFileMask, @cPath, @cName, @cExt )
+      IF Len( cPath ) == 0
          cPath := Set( _SET_DEFAULT )
       ENDIF
 

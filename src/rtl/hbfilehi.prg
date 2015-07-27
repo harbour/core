@@ -56,22 +56,22 @@ FUNCTION hb_PathNormalize( cPath )
       RETURN ""
    ENDIF
 
-   IF ! Empty( cPath )
+   IF Len( cPath ) > 0
 
       aDir := hb_ATokens( cPath, hb_ps() )
 
       FOR EACH cDir IN aDir DESCEND
 
          IF cDir == "." .OR. ;
-            ( Empty( cDir ) .AND. ;
+            ( Len( cDir ) == 0 .AND. ;
             ! cDir:__enumIsLast() .AND. ;
             ( cDir:__enumIndex() > 2 .OR. ;
-            ( cDir:__enumIndex() == 2 .AND. ! Empty( aDir[ 1 ] ) ) ) )
+            ( cDir:__enumIndex() == 2 .AND. Len( aDir[ 1 ] ) > 0 ) ) )
 
             hb_ADel( aDir, cDir:__enumIndex(), .T. )
 
          ELSEIF !( cDir == ".." ) .AND. ;
-            ! Empty( cDir ) .AND. ;
+            Len( cDir ) > 0 .AND. ;
             ! _ISDRIVESPEC( cDir )
 
             IF ! cDir:__enumIsLast() .AND. ;
@@ -90,7 +90,7 @@ FUNCTION hb_PathNormalize( cPath )
          ENDIF
       NEXT
 
-      IF Empty( cPath )
+      IF Len( cPath ) == 0
          cPath := "." + hb_ps()
       ENDIF
    ENDIF
@@ -106,13 +106,13 @@ FUNCTION hb_PathJoin( cPathA, cPathR )
       RETURN ""
    ENDIF
 
-   IF ! HB_ISSTRING( cPathA ) .OR. Empty( cPathA )
+   IF ! HB_ISSTRING( cPathA ) .OR. Len( cPathA ) == 0
       RETURN cPathR
    ENDIF
 
    hb_FNameSplit( cPathR, @cDirR, @cNameR, @cExtR, @cDriveR )
 
-   IF ! Empty( cDriveR ) .OR. ( ! Empty( cDirR ) .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
+   IF ! Empty( cDriveR ) .OR. ( Len( cDirR ) > 0 .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
       RETURN cPathR
    ENDIF
 
@@ -188,7 +188,7 @@ STATIC FUNCTION s_FN_ToArray( cPath, /* @ */ cFileName  )
 
    hb_FNameSplit( cPath, @cDir, @cName, @cExt )
 
-   IF ! Empty( cName ) .OR. ! Empty( cExt )
+   IF Len( cName ) > 0 .OR. ! Empty( cExt )
       cFileName := cName + cExt
    ENDIF
 
@@ -224,7 +224,7 @@ FUNCTION hb_DirSepAdd( cDir )
       RETURN ""
    ENDIF
 
-   IF ! Empty( cDir ) .AND. ;
+   IF Len( cDir ) > 0 .AND. ;
       ! _ISDRIVESPEC( cDir ) .AND. ;
       !( Right( cDir, 1 ) == hb_ps() )
 
@@ -292,10 +292,10 @@ FUNCTION hb_DirBuild( cDir )
       ENDIF
 
       FOR EACH cDirItem IN hb_ATokens( cDir, hb_ps() )
-         IF !( Right( cDirTemp, 1 ) == hb_ps() ) .AND. ! Empty( cDirTemp )
+         IF !( Right( cDirTemp, 1 ) == hb_ps() ) .AND. Len( cDirTemp ) > 0
             cDirTemp += hb_ps()
          ENDIF
-         IF ! Empty( cDirItem )  /* Skip root path, if any */
+         IF Len( cDirItem ) > 0  /* Skip root path, if any */
             cDirTemp += cDirItem
             IF hb_vfExists( cDirTemp )
                RETURN .F.
@@ -324,7 +324,7 @@ FUNCTION hb_DirUnbuild( cDir )
       cDir := hb_DirSepDel( cDir )
 
       cDirTemp := cDir
-      DO WHILE ! Empty( cDirTemp )
+      DO WHILE Len( cDirTemp ) > 0
          IF hb_vfDirExists( cDirTemp )
             IF hb_vfDirRemove( cDirTemp ) != 0
                RETURN .F.

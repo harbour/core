@@ -216,7 +216,7 @@ STATIC FUNCTION InstallHook( cDir, cHookName, cCommand )
       RETURN .T.
    ENDIF
 
-   IF Empty( cFile )
+   IF hb_BLen( cFile ) == 0
       cFile += "#!/bin/sh" + hb_eol()
    ENDIF
 

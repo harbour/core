@@ -131,7 +131,7 @@ STATIC FUNCTION hb_iniFileLow( cFileSpec )
 
    hFile := NIL
    FOR EACH cFile IN aFiles
-      IF ! Empty( cFile ) .AND. hb_vfExists( cFile )
+      IF Len( cFile ) > 0 .AND. hb_vfExists( cFile )
          IF ( hFile := hb_vfOpen( cFile ) ) != NIL
             EXIT
          ENDIF

@@ -106,8 +106,8 @@ EXIT PROCEDURE __hbtest_Exit()
 
 PROCEDURE hbtest_Setup( cName, xValue )
 
-   IF HB_ISSTRING( cName ) .AND. ! Empty( cName )
-      IF PCount() > 1
+   IF HB_ISSTRING( cName ) .AND. Len( cName ) > 0
+      IF PCount() >= 2
          t_hParams[ cName ] := xValue
       ELSEIF cName $ t_hParams
          hb_HDel( t_hParams, cName )

@@ -896,7 +896,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
       /* Exit on first failure */
       IF nResult != _EXIT_OK
          IF lExitStr
-            OutErr( hb_StrFormat( _SELF_NAME_ + iif( Empty( cTargetName ), "", " " + "[" + cTargetName + "]" ) + ;
+            OutErr( hb_StrFormat( _SELF_NAME_ + iif( Len( cTargetName ) == 0, "", " " + "[" + cTargetName + "]" ) + ;
                                   ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
          ENDIF
          IF nResult != _EXIT_STOP
@@ -6352,7 +6352,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                Do not update if the VCS header is already present, but currently extracted
                VCS information is empty (this is sign of extraction command failure). */
             tmp2 := hb_MemoRead( l_cVCSHEAD )
-            IF ( Empty( tmp2 ) .OR. ! Empty( tmp1 ) ) .AND. ;
+            IF ( hb_BLen( tmp2 ) == 0 .OR. ! Empty( tmp1 ) ) .AND. ;
                ( hbmk[ _HBMK_lREBUILD ] .OR. !( tmp2 == tmp ) )
                IF hbmk[ _HBMK_lInfo ]
                   _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating VCS header: %1$s" ), l_cVCSHEAD ) )
@@ -9391,9 +9391,8 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
       ! Empty( t_pRegexRequire ) .AND. ;
       ! Empty( t_pRegexSETPROC )
 
-      cFileBody := hbmk_MemoRead( cFile )
+      IF hb_BLen( cFileBody := hbmk_MemoRead( cFile ) ) > 0
 
-      IF ! Empty( cFileBody )
          FOR EACH tmp IN hb_regexAll( t_pRegexInclude, cFileBody, ;
                                       /* lCaseSensitive */, ;
                                       /* lNewLine */, NIL, ;
@@ -10450,9 +10449,8 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
       cExt := hb_FNameExt( cFileName )
 
-      cFile := hb_MemoRead( cFileName )
+      IF hb_BLen( cFile := hb_MemoRead( cFileName ) ) > 0
 
-      IF ! Empty( cFile )
          lOK := .F.
          /* Optimization: Do not try to load it as .hrb if the extension is .prg, .hb (Harbour script) */
          IF !( Lower( cExt ) == ".prg" ) .AND. ;
@@ -14919,7 +14917,7 @@ STATIC PROCEDURE GetListOfFunctionsKnownLoadHBX( cFileName, cRoot, hAll, cName )
       cName := StrTran( SubStr( cFileName, Len( cRoot ) + 1 ), "\", "/" )
    ENDIF
 
-   IF ! Empty( cFile := hb_MemoRead( cFileName ) )
+   IF hb_BLen( cFile := hb_MemoRead( cFileName ) ) > 0
 
       FOR EACH cFilter IN { ;
          R_( "^DYNAMIC ([a-zA-Z0-9_]*)$" ), ;
@@ -15119,7 +15117,7 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
    aExclude := {}
    hDynamic := { => }
 
-   IF ! Empty( cFile := MemoRead( cInputName ) )
+   IF hb_BLen( cFile := MemoRead( cInputName ) ) > 0
       IF ! Empty( pRegex := hb_regexComp( R_( "[\s]" + _HB_FUNC_INCLUDE_ + "[\s]([a-zA-Z0-9_].[^ \t\n\r]*)" ), .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, tmp[ 2 ] )

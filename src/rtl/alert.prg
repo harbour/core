@@ -131,7 +131,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    aOptionsOK := {}
    FOR EACH cString IN hb_defaultValue( aOptions, {} )
-      IF HB_ISSTRING( cString ) .AND. ! Empty( cString )
+      IF HB_ISSTRING( cString ) .AND. Len( cString ) > 0
          AAdd( aOptionsOK, cString )
       ENDIF
    NEXT

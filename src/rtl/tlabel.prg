@@ -150,7 +150,7 @@ METHOD PROCEDURE New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    lConsoleOn := Set( _SET_CONSOLE )
    Set( _SET_CONSOLE, ! lNoConsole .AND. lConsoleOn )
 
-   IF ! Empty( cAltFile )         // To file
+   IF Len( cAltFile ) > 0         // To file
       lExtraState := Set( _SET_EXTRA, .T. )
       cExtraFile  := Set( _SET_EXTRAFILE, cAltFile )
    ENDIF
@@ -201,7 +201,7 @@ METHOD PROCEDURE New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    Set( _SET_PRINTER, lPrintOn ) // Set the printer back to prior state
    Set( _SET_CONSOLE, lConsoleOn )  // Set the console back to prior state
 
-   IF ! Empty( cAltFile )           // Set extrafile back
+   IF Len( cAltFile ) > 0           // Set extrafile back
       Set( _SET_EXTRAFILE, cExtraFile )
       Set( _SET_EXTRA, lExtraState )
    ENDIF

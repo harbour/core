@@ -291,10 +291,10 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPasswor
       cRequest := ;
          "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.1" + Chr( 13 ) + Chr( 10 ) + ;
          "Proxy-Connection: Keep-Alive" + Chr( 13 ) + Chr( 10 )
-      IF HB_ISSTRING( cUserAgent ) .AND. ! Empty( cUserAgent )
+      IF HB_ISSTRING( cUserAgent ) .AND. Len( cUserAgent ) > 0
          cRequest += "User-Agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
       ENDIF
-      IF HB_ISSTRING( cUserName ) .AND. ! Empty( cUserName )
+      IF HB_ISSTRING( cUserName ) .AND. Len( cUserName ) > 0
          cRequest += "Proxy-Authorization: Basic " + hb_base64Encode( cUserName + ":" + hb_defaultValue( cPassword, "" ) ) + Chr( 13 ) + Chr( 10 )
       ENDIF
       cRequest += Chr( 13 ) + Chr( 10 )
@@ -623,7 +623,7 @@ METHOD inetRecvLine( SocketCon, nRet, size ) CLASS TIPClient
 #if defined( _SSL_DEBUG_TEMP )
          ? "hb_SSL_read_line()", cRet
 #endif
-         IF nRet == 0 .OR. Empty( cRet )
+         IF nRet == 0 .OR. hb_BLen( cRet ) == 0
             cRet := NIL
          ENDIF
          ::nSSLError := iif( nRet < 0, nRet, 0 )
@@ -651,7 +651,7 @@ METHOD inetRecvAll( SocketCon, cRet, size ) CLASS TIPClient
 #if defined( _SSL_DEBUG_TEMP )
          ? "hb_SSL_read_all()", cRet
 #endif
-         IF nRet == 0 .OR. Empty( cRet )
+         IF nRet == 0 .OR. hb_BLen( cRet ) == 0
             cRet := NIL
          ENDIF
          ::nSSLError := iif( nRet < 0, nRet, 0 )

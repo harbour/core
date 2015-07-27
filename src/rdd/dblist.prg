@@ -73,7 +73,7 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
    IF ! Empty( lToPrint )  /* => hb_defaultValue( lToPrint, .F. ) */
       lOldPrinter := Set( _SET_PRINTER, .T. )
    ENDIF
-   IF ! Empty( cToFileName )
+   IF Len( cToFileName ) > 0
       lOldExtra := Set( _SET_EXTRA, .T. )
       cOldExtraFile := Set( _SET_EXTRAFILE, ;
                             iif( Set( _SET_DEFEXTENSIONS ), ;
@@ -88,8 +88,8 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
       IF Empty( lAll ) .AND. ;  /* => hb_defaultValue( lAll, .F. ) */
          Empty( bFor ) .AND. ;
          Empty( bWhile ) .AND. ;
-         Empty( nNext ) .AND. ;
-         Empty( nRecord ) .AND. ;
+         Empty( nNext ) .AND. ;  /* => nNext == NIL .OR. nNext == 0 */
+         Empty( nRecord ) .AND. ;  /* => nRecord == NIL .OR. nRecord == 0 */
          Empty( lRest )  /* => hb_defaultValue( lRest, .F. ) */
 
          Eval( bOutBlock )
@@ -106,7 +106,7 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
    IF ! Empty( lToPrint )  /* => hb_defaultValue( lToPrint, .F. ) */
       Set( _SET_PRINTER, lOldPrinter )
    ENDIF
-   IF ! Empty( cToFileName )
+   IF Len( cToFileName ) > 0
       Set( _SET_EXTRAFILE, cOldExtraFile )
       Set( _SET_EXTRA, lOldExtra )
    ENDIF

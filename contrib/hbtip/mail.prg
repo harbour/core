@@ -556,7 +556,7 @@ METHOD attachFile( cFileName ) CLASS TIPMail
    LOCAL oAttach
    LOCAL nAttr
 
-   IF Empty( cContent )
+   IF hb_BLen( cContent ) == 0
       RETURN .F.
    ENDIF
 
@@ -577,7 +577,7 @@ METHOD detachFile( cPath ) CLASS TIPMail
    LOCAL cContent := ::getBody()
    LOCAL cFileName := ::getFileName()
 
-   IF Empty( cFileName )
+   IF Len( cFileName ) == 0
       RETURN .F.
    ENDIF
 

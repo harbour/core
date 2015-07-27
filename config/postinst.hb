@@ -529,7 +529,7 @@ STATIC PROCEDURE mk_hb_vfCopyFile( cSrc, cDst, lEOL, l644, lTS )
    ENDIF
    cDst := hb_FNameMerge( cDir, cName, cExt )
 
-   IF ! Empty( cFile := hb_MemoRead( cSrc ) ) .AND. ;
+   IF hb_BLen( cFile := hb_MemoRead( cSrc ) ) > 0 .AND. ;
       hb_MemoWrit( cDst, iif( hb_defaultValue( lEOL, .F. ), EOLConv( cFile ), cFile ) )
 
       IF hb_defaultValue( lTS, .F. )
@@ -688,7 +688,7 @@ STATIC FUNCTION LoadHBX( cFileName, hAll )
    LOCAL aDynamic := {}
    LOCAL cFilter
 
-   IF ! Empty( cFile := hb_MemoRead( cFileName ) )
+   IF hb_BLen( cFile := hb_MemoRead( cFileName ) ) > 0
 
       FOR EACH cFilter IN { ;
          "^DYNAMIC ([a-zA-Z0-9_]*)$", ;
@@ -804,7 +804,7 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
    aExclude := {}
    hDynamic := { => }
 
-   IF ! Empty( cFile := MemoRead( cInputName ) )
+   IF hb_BLen( cFile := MemoRead( cInputName ) ) > 0
       IF ! Empty( pRegex := hb_regexComp( "[\s]" + _HB_FUNC_INCLUDE_ + "[\s]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, tmp[ 2 ] )

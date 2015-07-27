@@ -80,7 +80,7 @@ PROCEDURE Main()
       ENDSWITCH
    NEXT
 
-   IF Empty( cTable ) .OR. Empty( cFile ) .OR. Empty( cDatabase )
+   IF Empty( cTable ) .OR. Len( cFile ) == 0 .OR. Empty( cDatabase )
       help()
       RETURN
    ENDIF
