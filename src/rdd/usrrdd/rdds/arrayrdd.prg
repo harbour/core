@@ -121,7 +121,11 @@ STATIC FUNCTION AR_INIT( nRDD )
 
    /* Init DBF Hash */
 
-   USRRDD_RDDDATA( nRDD, { => } )
+   LOCAL hHash := { => }
+
+   hb_HCaseMatch( hHash, .F. )
+
+   USRRDD_RDDDATA( nRDD, hHash )
 
    RETURN HB_SUCCESS
 
@@ -347,9 +351,9 @@ STATIC FUNCTION AR_OPEN( nWA, aOpenInfo )
 
    /* Set WorkArea Infos */
    aWAData := USRRDD_AREADATA( nWA )
-   aWAData[ WADATA_DATABASE ] := aDBFData  /* Put a reference to database */
+   aWAData[ WADATA_DATABASE ] := aDBFData   /* Put a reference to database */
    aWAData[ WADATA_WORKAREA ] := nWA
-   aWAData[ WADATA_OPENINFO ] := aOpenInfo /* Put open informations       */
+   aWAData[ WADATA_OPENINFO ] := aOpenInfo  /* Put open informations */
 
    /* Set fields */
    UR_SUPER_SETFIELDEXTENT( nWA, Len( aStruct ) )
@@ -425,7 +429,7 @@ STATIC FUNCTION AR_CLOSE( nWA )
 
    IF HB_ISARRAY( aDBFData )
       /* decrease open number */
-      aDBFData[ DATABASE_OPENNUMBER ]--
+      --aDBFData[ DATABASE_OPENNUMBER ]
 
       /* unlock file */
       aDBFData[ DATABASE_LOCKED ] := .F.  /* Exclusive mode */
@@ -1452,9 +1456,81 @@ STATIC FUNCTION AR_LOCATE( nWA, lContinue )
 
    RETURN HB_SUCCESS
 
+STATIC FUNCTION AR_DROP( nRddId, cFullName )
+
+   LOCAL nReturn := HB_FAILURE
+   LOCAL aDBFData, oError
+   LOCAL hRDDData
+
+   IF ( hRDDData := USRRDD_RDDDATA( nRddID ) ) != NIL
+      IF HB_ISSTRING( cFullName ) .AND. cFullName $ hRDDData
+
+         /* Get ARRAY DATA */
+         aDBFData := hRDDData[ cFullName ]
+
+         /* Check if there are current opened workarea */
+         IF aDBFData[ DATABASE_OPENNUMBER ] > 0
+            oError := ErrorNew()
+
+            oError:GenCode     := EG_UNSUPPORTED
+            oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
+            oError:Description := hb_langErrMsg( EG_UNSUPPORTED ) + " (" + ;
+               "database in use)"
+            oError:FileName    := cFullName
+            oError:CanDefault  := .T.
+            THROW( oError )
+
+            nReturn := HB_FAILURE
+         ELSE
+            /* Delete database from slot */
+            hb_HDel( hRDDData, cFullName )
+            nReturn := HB_SUCCESS
+         ENDIF
+      ENDIF
+   ELSE
+      oError := ErrorNew()
+
+      oError:GenCode     := EG_UNSUPPORTED
+      oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
+      oError:Description := hb_langErrMsg( EG_UNSUPPORTED ) + " (" + ;
+         "ARRAYRDD not inizialized)"
+      oError:FileName    := cFullName
+      oError:CanDefault  := .T.
+      /* UR_SUPER_ERROR( 0, oError ) */
+      THROW( oError )
+
+      nReturn := HB_FAILURE
+   ENDIF
+
+   RETURN nReturn
+
+STATIC FUNCTION AR_EXISTS( nRddID, cFullName )
+
+   LOCAL nReturn := HB_FAILURE
+   LOCAL oError
+   LOCAL hRDDData
+
+   IF ( hRDDData := USRRDD_RDDDATA( nRddID ) ) != NIL
+      IF HB_ISSTRING( cFullName ) .AND. cFullName $ hRDDData
+         nReturn := HB_SUCCESS
+      ENDIF
+   ELSE
+      oError := ErrorNew()
+
+      oError:GenCode     := EG_UNSUPPORTED
+      oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
+      oError:Description := hb_langErrMsg( EG_UNSUPPORTED ) + " (" + ;
+         "ARRAYRDD not inizialized)"
+      oError:FileName    := cFullName
+      oError:CanDefault  := .T.
+      THROW( oError )
+
+      nReturn := HB_FAILURE
+   ENDIF
+
+   RETURN nReturn == HB_SUCCESS
 
 STATIC FUNCTION AR_DUMMY()
-
    RETURN HB_SUCCESS
 
 /* This function have to exist in all RDD and then name have to be in
@@ -1507,6 +1583,8 @@ FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSu
    aMyFunc[ UR_CLEARLOCATE  ] := @AR_CLEARLOCATE()
    aMyFunc[ UR_SETLOCATE    ] := @AR_SETLOCATE()
    aMyFunc[ UR_LOCATE       ] := @AR_LOCATE()
+   aMyFunc[ UR_DROP         ] := @AR_DROP()
+   aMyFunc[ UR_EXISTS       ] := @AR_EXISTS()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMyFunc, pSuperRddID )
@@ -1517,130 +1595,18 @@ INIT PROCEDURE ARRAYRDD_INIT()
 
    RETURN
 
-/* UTILITY FUNCTIONS */
+#ifdef HB_LEGACY_LEVEL4
 
-/* hb_EraseArrayRdd() function is equivalent of FErase() function, but works here in memory */
+FUNCTION hb_FileArrayRdd( cFullName )
+   RETURN hb_dbDrop( cFullName )
 
 FUNCTION hb_EraseArrayRdd( cFullName )
+   RETURN hb_dbExists( cFullName )
 
-   LOCAL nReturn := HB_FAILURE
-   LOCAL aDBFData, oError
-   LOCAL hRDDData
-
-   IF s_nRddID >= 0
-      hRDDData := USRRDD_RDDDATA( s_nRddID )
-
-      IF hRDDData != NIL
-         IF HB_ISSTRING( cFullName )
-            cFullName := Upper( cFullName )
-            /* First search if memory dbf exists */
-            IF cFullName $ hRDDData
-
-               /* Get ARRAY DATA */
-               aDBFData := hRDDData[ cFullName ]
-
-               /* Check if there are current opened workarea */
-               IF aDBFData[ DATABASE_OPENNUMBER ] > 0
-                  oError := ErrorNew()
-
-                  oError:GenCode     := EG_UNSUPPORTED
-                  oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
-                  oError:Description := hb_langErrMsg( EG_UNSUPPORTED ) + " (" + ;
-                     "database in use)"
-                  oError:FileName    := cFullName
-                  oError:CanDefault  := .T.
-                  THROW( oError )
-
-                  nReturn := HB_FAILURE
-               ELSE
-                  /* Delete database from slot */
-                  hb_HDel( hRDDData, cFullName )
-                  nReturn := HB_SUCCESS
-               ENDIF
-            ENDIF
-         ENDIF
-      ELSE
-         oError := ErrorNew()
-
-         oError:GenCode     := EG_UNSUPPORTED
-         oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
-         oError:Description := hb_langErrMsg( EG_UNSUPPORTED ) + " (" + ;
-            "ARRAYRDD not inizialized)"
-         oError:FileName    := cFullName
-         oError:CanDefault  := .T.
-         /* UR_SUPER_ERROR( 0, oError ) */
-         THROW( oError )
-
-         nReturn := HB_FAILURE
-      ENDIF
-   ELSE
-      oError := ErrorNew()
-
-      oError:GenCode     := EG_UNSUPPORTED
-      oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
-      oError:Description := hb_langErrMsg( EG_UNSUPPORTED ) + " (" + ;
-         "ARRAYRDD not in use)"
-      oError:FileName    := cFullName
-      oError:CanDefault  := .T.
-      THROW( oError )
-
-      nReturn := HB_FAILURE
-   ENDIF
-
-   RETURN nReturn
-
-/* hb_FileArrayRdd( cFullName ) --> lExist
-   This function is equivalent of File() function, but works here in memory
- */
-FUNCTION hb_FileArrayRdd( cFullName )
-
-   LOCAL nReturn := HB_FAILURE
-   LOCAL oError
-   LOCAL hRDDData
-
-   IF s_nRddID >= 0
-      hRDDData := USRRDD_RDDDATA( s_nRddID )
-
-      IF hRDDData != NIL
-         IF HB_ISSTRING( cFullName )
-            cFullName := Upper( cFullName )
-            /* First search if memory dbf exists */
-            IF cFullName $ hRDDData
-               nReturn := HB_SUCCESS
-            ENDIF
-         ENDIF
-      ELSE
-         oError := ErrorNew()
-
-         oError:GenCode     := EG_UNSUPPORTED
-         oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
-         oError:Description := hb_langErrMsg( EG_UNSUPPORTED ) + " (" + ;
-            "ARRAYRDD not inizialized)"
-         oError:FileName    := cFullName
-         oError:CanDefault  := .T.
-         THROW( oError )
-
-         nReturn := HB_FAILURE
-      ENDIF
-   ELSE
-      oError := ErrorNew()
-
-      oError:GenCode     := EG_UNSUPPORTED
-      oError:SubCode     := 1000  /* EDBF_UNSUPPORTED */
-      oError:Description := hb_langErrMsg( EG_UNSUPPORTED ) + " (" + ;
-         "ARRAYRDD not in use)"
-      oError:FileName    := cFullName
-      oError:CanDefault  := .T.
-      THROW( oError )
-
-      nReturn := HB_FAILURE
-   ENDIF
-
-   RETURN nReturn == HB_SUCCESS
+#endif
 
 /* hb_SetArrayRdd( aArray ) --> NIL
-   This function set DBF with aArray like APPEND FROM aArray in an empty DBF
- */
+   This function set DBF with aArray like APPEND FROM aArray in an empty DBF */
 PROCEDURE hb_SetArrayRdd( aArray )
 
    LOCAL aRecInfo
@@ -1698,7 +1664,7 @@ STATIC PROCEDURE ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nIndex: %1$d, xValue: %2$s, aIndex: %3$s, aWAData: %4$s, xValorAnt: %5$s", ;
       nIndex, hb_ValToExp( xValue ), hb_ValToExp( aIndex ), hb_ValToExp( aWAData ), hb_ValToExp( xValorAnt ) ) )
 
-   aOCInfo := aIndex[ INDEX_ORCR, UR_ORCR_CONDINFO ]
+   aOCInfo := aIndex[ INDEX_ORCR ][ UR_ORCR_CONDINFO ]
    lFor    := ( aOCInfo[ UR_ORC_BFOR ] == NIL .OR. Eval( aOCInfo[ UR_ORC_BFOR ] ) )
    lDel    := .F.
 
@@ -1713,16 +1679,16 @@ STATIC PROCEDURE ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
          AAdd( aIndex[ INDEX_RECORDS ], NIL )
       ENDIF
       IF nPos > 0
-         IF aIndex[ INDEX_RECORDS, nPos ] != NIL .AND. aIndex[ INDEX_RECORDS, nPos, INDEXKEY_KEY ] <= xValue
+         IF aIndex[ INDEX_RECORDS ][ nPos ] != NIL .AND. aIndex[ INDEX_RECORDS ][ nPos ][ INDEXKEY_KEY ] <= xValue
             nPos++
          ENDIF
       ELSE
          nPos := Len( aIndex[ INDEX_RECORDS ] )
       ENDIF
       AIns( aIndex[ INDEX_RECORDS ], nPos )
-      aIndex[ INDEX_RECORDS, nPos ] := AR_INDEXKEYINIT()
-      aIndex[ INDEX_RECORDS, nPos, INDEXKEY_KEY ]    := xValue
-      aIndex[ INDEX_RECORDS, nPos, INDEXKEY_RECORD ] := aWAData[ WADATA_RECNO ]
+      aIndex[ INDEX_RECORDS ][ nPos ] := AR_INDEXKEYINIT()
+      aIndex[ INDEX_RECORDS ][ nPos ][ INDEXKEY_KEY ]    := xValue
+      aIndex[ INDEX_RECORDS ][ nPos ][ INDEXKEY_RECORD ] := aWAData[ WADATA_RECNO ]
       IF nIndex == aWAData[ WADATA_INDEX ]
          aWAData[ WADATA_ORDRECNO ] := nPos
       ENDIF
@@ -1732,7 +1698,6 @@ STATIC PROCEDURE ModifyIndex( nIndex, xValue, aIndex, aWAData, xValorAnt )
       IF nIndex == aWAData[ WADATA_INDEX ]
          aWAData[ WADATA_ORDRECNO ] := 0
       ENDIF
-
    ENDIF
 
    RETURN

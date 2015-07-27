@@ -1,8 +1,11 @@
 //NOTEST
 
-/* Donated to the public domain on 2001-04-18 by David G. Holm <dholm@jsd-llc.com> */
+/* Donated to the public domain on 2001-04-18 by David G. Holm <dholm@jsd-llc.com>
+   Test program for COPY TO DELIMITED and APPEND FROM DELIMITED */
 
-// Test program for COPY TO DELIMITED and APPEND FROM DELIMITED
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
 
 PROCEDURE Main()
 
@@ -42,7 +45,7 @@ PROCEDURE Main()
    COPY REST TO test7.txt DELIMITED FOR _field->married
 
    // Try to append from a file that we know does not exist.
-   FErase( "test8.txt" )
+   hb_vfErase( "test8.txt" )
    APPEND FROM test8.txt DELIMITED
 
    RETURN

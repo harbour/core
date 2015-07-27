@@ -1,10 +1,10 @@
-/* Donated to the public domain by David G. Holm <dholm@jsd-llc.com> */
+/* Donated to the public domain by David G. Holm <dholm@jsd-llc.com>
 
-// Test program for SetPos(), DispOut(), ?, and ?? Clipper compatibility.
-// The results should be identical between Harbour with the GT API and
-// Clipper. Inkey() is used to pause the display at certain points to make
-// it easier to compare scrolling compatibility. A Tone() is sounded before
-// each Inkey( 0 ) call.
+   Test program for SetPos(), DispOut(), ?, and ?? Clipper compatibility.
+   The results should be identical between Harbour with the GT API and
+   Clipper. Inkey() is used to pause the display at certain points to make
+   it easier to compare scrolling compatibility. A Tone() is sounded before
+   each Inkey( 0 ) call. */
 
 PROCEDURE Main()
 

@@ -1,9 +1,9 @@
-/* Donated to the public domain by David G. Holm <dholm@jsd-llc.com> */
+/* Donated to the public domain by David G. Holm <dholm@jsd-llc.com>
 
-// Test program for DevPos() and DevOut() Clipper compatibility
-// The result is either dev_cl.prn or dev_hb.prn, depending upon
-// which compiler created the program. Both files should be 263444
-// bytes in size and should be identical.
+   Test program for DevPos() and DevOut() Clipper compatibility
+   The result is either dev_cl.prn or dev_hb.prn, depending upon
+   which compiler created the program. Both files should be 263444
+   bytes in size and should be identical. */
 
 PROCEDURE Main()
 

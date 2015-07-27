@@ -1,6 +1,5 @@
-/* Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com> */
-
-// Testing Harbour device management
+/* Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
+   Testing Harbour device management */
 
 #ifndef __HARBOUR__
 #include "clipper.ch"

@@ -1,6 +1,5 @@
-/* Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com> */
-
-/* Testing Harbour screen scrolling (requires the GT API) */
+/* Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
+   Testing Harbour screen scrolling (requires the GT API) */
 
 #include "box.ch"
 
