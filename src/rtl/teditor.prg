@@ -696,7 +696,7 @@ METHOD Hilite() CLASS HBEditor
       hb_tokenGet( ::cColorSpec, 2, "," ) + "," + ;
       hb_tokenGet( ::cColorSpec, 1, "," )
 
-   ::SetColor( cEnhanced + Right( ::cColorSpec, Len( ::cColorSpec ) - Len( cEnhanced ) ) )
+   ::SetColor( cEnhanced + hb_BRight( ::cColorSpec, hb_BLen( ::cColorSpec ) - hb_BLen( cEnhanced ) ) )
 
    RETURN Self
 
@@ -707,7 +707,7 @@ METHOD DeHilite() CLASS HBEditor
       hb_tokenGet( ::cColorSpec, 2, "," ) + "," + ;
       hb_tokenGet( ::cColorSpec, 1, "," )
 
-   ::SetColor( cStandard + Right( ::cColorSpec, Len( ::cColorSpec ) - Len( cStandard ) ) )
+   ::SetColor( cStandard + hb_BRight( ::cColorSpec, hb_BLen( ::cColorSpec ) - hb_BLen( cStandard ) ) )
 
    RETURN Self
 
