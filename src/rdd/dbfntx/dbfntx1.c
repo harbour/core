@@ -7455,7 +7455,6 @@ static HB_ERRCODE hb_ntxOrderListAdd( NTXAREAP pArea, LPDBORDERINFO pOrderInfo )
    if( ! pIndex )
    {
       PHB_ITEM pError = NULL;
-      HB_USHORT uiFlags;
       LPNTXINDEX * pIndexPtr;
       HB_BOOL fRetry, fReadonly, fShared;
 

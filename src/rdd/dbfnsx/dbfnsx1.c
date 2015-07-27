@@ -7851,7 +7851,6 @@ static HB_ERRCODE hb_nsxOrderListAdd( NSXAREAP pArea, LPDBORDERINFO pOrderInfo )
    if( ! pIndex )
    {
       PHB_ITEM pError = NULL;
-      HB_USHORT uiFlags;
       LPNSXINDEX * pIndexPtr;
       HB_BOOL fRetry, fReadonly, fShared;
 
