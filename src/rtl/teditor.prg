@@ -271,7 +271,7 @@ METHOD GotoLine( nRow ) CLASS HBEditor
    RETURN ::Goto( nRow, ::nCol )
 
 METHOD LineCount() CLASS HBEditor
-   RETURN hb_ULen( ::aText )
+   RETURN Len( ::aText )
 
 METHOD Display() CLASS HBEditor
 
@@ -649,7 +649,7 @@ METHOD ReformParagraph() CLASS HBEditor
    LOCAL nLines
    LOCAL aPos
 
-   DO WHILE lNext .AND. ::nRow <= hb_ULen( ::aText )
+   DO WHILE lNext .AND. ::nRow <= Len( ::aText )
       cLine += ::aText[ ::nRow ]:cText
       lNext := ::aText[ ::nRow ]:lSoftCR
       ::RemoveLine( ::nRow )
@@ -696,7 +696,7 @@ METHOD Hilite() CLASS HBEditor
       hb_tokenGet( ::cColorSpec, 2, "," ) + "," + ;
       hb_tokenGet( ::cColorSpec, 1, "," )
 
-   ::SetColor( cEnhanced + hb_URight( ::cColorSpec, hb_ULen( ::cColorSpec ) - hb_ULen( cEnhanced ) ) )
+   ::SetColor( cEnhanced + hb_BRight( ::cColorSpec, hb_BLen( ::cColorSpec ) - hb_BLen( cEnhanced ) ) )
 
    RETURN Self
 
@@ -707,7 +707,7 @@ METHOD DeHilite() CLASS HBEditor
       hb_tokenGet( ::cColorSpec, 2, "," ) + "," + ;
       hb_tokenGet( ::cColorSpec, 1, "," )
 
-   ::SetColor( cStandard + hb_URight( ::cColorSpec, hb_ULen( ::cColorSpec ) - hb_ULen( cStandard ) ) )
+   ::SetColor( cStandard + hb_BRight( ::cColorSpec, hb_BLen( ::cColorSpec ) - hb_BLen( cStandard ) ) )
 
    RETURN Self
 
