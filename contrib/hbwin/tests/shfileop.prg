@@ -25,11 +25,11 @@ PROCEDURE Main()
    ? lAbort
    FOR EACH tmp IN a
       ? tmp[ 1 ], tmp[ 2 ]
-      FErase( tmp[ 1 ] )
-      FErase( tmp[ 2 ] )
+      hb_vfErase( tmp[ 1 ] )
+      hb_vfErase( tmp[ 2 ] )
    NEXT
 
-   FErase( "rename1.txt" )
+   hb_vfErase( "rename1.txt" )
 
    ? "0x" + hb_NumToHex( win_SHFileOperation( , WIN_FO_COPY, __FILE__ + Chr( 0 ) + "olesrv1.prg" + Chr( 0 ), "testcopy2", ;
       NIL, @lAbort, ;

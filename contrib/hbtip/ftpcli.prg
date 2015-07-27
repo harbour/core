@@ -666,7 +666,7 @@ METHOD FileSize( cFileSpec ) CLASS TIPClientFTP
    DOS style/IIS : 01-29-2010 11:32PM <DIR> prog
  */
 
-// Parse the :list() string into a Directory() compatible 2-dim array
+// Parse the :list() string into a hb_vfDirectory() compatible 2-dim array
 METHOD ListFiles( cFileSpec ) CLASS TIPClientFTP
 
    LOCAL aMonth := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }

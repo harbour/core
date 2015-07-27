@@ -7,14 +7,16 @@
 
 #require "hbtip"
 
+#include "fileio.ch"
+
 PROCEDURE Main( ... )
 
    LOCAL oEncoder, cEncoder := "base64"
    LOCAL lDecode := .F., lHelp := .F.
    LOCAL cData, nLen, cBuffer
 
-   LOCAL hInput := hb_GetStdIn()
-   LOCAL hOutput := hb_GetStdOut()
+   LOCAL fhndInput, hInput := hb_GetStdIn()
+   LOCAL fhndOutput, hOutput := hb_GetStdOut()
 
    /* Parameter parsing */
    FOR EACH cData IN hb_AParams()
@@ -33,10 +35,14 @@ PROCEDURE Main( ... )
          cEncoder := "url"
          EXIT
       OTHERWISE
-         IF hb_FileExists( cData ) .AND. hInput == hb_GetStdIn()
-            hInput := FOpen( cData )
+         IF hb_vfExists( cData ) .AND. hInput == hb_GetStdIn()
+            IF ( fhndInput := hb_vfOpen( cData ) ) != NIL
+               hInput := hb_vfHandle( fhndInput )
+            ENDIF
          ELSEIF hOutput == hb_GetStdOut()
-            hOutput := FCreate( cData )
+            IF ( fhndOutput := hb_vfOpen( cData, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+               hOutput := hb_vfHandle( fhndOutput )
+            ENDIF
          ELSE
             ? "Wrong parameter", cData
             ?
@@ -63,8 +69,8 @@ PROCEDURE Main( ... )
    DO WHILE ( nLen := FRead( hInput, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
       cData += hb_BLeft( cBuffer, nLen )
    ENDDO
-   IF hInput != hb_GetStdIn()
-      FClose( hInput )
+   IF fhndInput != NIL
+      hb_vfClose( fhndInput )
    ENDIF
 
    /* Encoding/decoding */
@@ -77,8 +83,8 @@ PROCEDURE Main( ... )
 
    /* Writing stream */
    FWrite( hOutput, cData )
-   IF hOutput != hb_GetStdOut()
-      FClose( hOutput )
+   IF fhndOutput != NIL
+      hb_vfClose( fhndOutput )
    ENDIF
 
    RETURN

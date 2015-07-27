@@ -283,11 +283,12 @@ STATIC FUNCTION AR_CREATE( nWA, aOpenInfo )
    /* Check if database is already present in memory slots */
    /*
       2008-11-07 FSG - dbCreate() doesn't check if a dbf file exists. So I will not check it.
-      If you need to check if a table exists use hb_FileArrayRdd() function that works in
-      similar way of File(), i.e.:
-      IF hb_FileArrayRdd( cFullName )
+      If you need to check if a table exists use hb_dbExists() function that works in
+      similar way of hb_vfExists(), i.e.:
+      IF ! hb_dbExists( cFullName )
          dbCreate( cFullName, aStructure, "ARRAYRDD" )
-         ....
+         ...
+      ENDIF
     */
 
    /* Setting file attribs */
@@ -1458,7 +1459,6 @@ STATIC FUNCTION AR_LOCATE( nWA, lContinue )
 
 STATIC FUNCTION AR_DROP( nRddId, cFullName )
 
-   LOCAL nReturn := HB_FAILURE
    LOCAL aDBFData, oError
    LOCAL hRDDData
 
@@ -1479,12 +1479,10 @@ STATIC FUNCTION AR_DROP( nRddId, cFullName )
             oError:FileName    := cFullName
             oError:CanDefault  := .T.
             THROW( oError )
-
-            nReturn := HB_FAILURE
          ELSE
             /* Delete database from slot */
             hb_HDel( hRDDData, cFullName )
-            nReturn := HB_SUCCESS
+            RETURN HB_SUCCESS
          ENDIF
       ENDIF
    ELSE
@@ -1496,23 +1494,22 @@ STATIC FUNCTION AR_DROP( nRddId, cFullName )
          "ARRAYRDD not inizialized)"
       oError:FileName    := cFullName
       oError:CanDefault  := .T.
-      /* UR_SUPER_ERROR( 0, oError ) */
+#if 0
+      UR_SUPER_ERROR( 0, oError )
+#endif
       THROW( oError )
-
-      nReturn := HB_FAILURE
    ENDIF
 
-   RETURN nReturn
+   RETURN HB_FAILURE
 
 STATIC FUNCTION AR_EXISTS( nRddID, cFullName )
 
-   LOCAL nReturn := HB_FAILURE
    LOCAL oError
    LOCAL hRDDData
 
    IF ( hRDDData := USRRDD_RDDDATA( nRddID ) ) != NIL
       IF HB_ISSTRING( cFullName ) .AND. cFullName $ hRDDData
-         nReturn := HB_SUCCESS
+         RETURN HB_SUCCESS
       ENDIF
    ELSE
       oError := ErrorNew()
@@ -1524,11 +1521,9 @@ STATIC FUNCTION AR_EXISTS( nRddID, cFullName )
       oError:FileName    := cFullName
       oError:CanDefault  := .T.
       THROW( oError )
-
-      nReturn := HB_FAILURE
    ENDIF
 
-   RETURN nReturn == HB_SUCCESS
+   RETURN HB_FAILURE
 
 STATIC FUNCTION AR_DUMMY()
    RETURN HB_SUCCESS

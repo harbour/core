@@ -120,7 +120,7 @@ FUNCTION win_osNetVRedirOk( /* @ */ nResult )
 
    /* Check for faulty files */
    IF hb_osIsWin9x() .AND. ;
-      Len( aFiles := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" ) ) >= 1
+      Len( aFiles := hb_vfDirectory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" ) ) >= 1
 
       nSize := aFiles[ 1 ][ F_SIZE ]
       cTime := aFiles[ 1 ][ F_TIME ]
