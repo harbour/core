@@ -226,7 +226,7 @@ HB_FUNC( HB_UPADL )
    if( ! HB_CDP_ISCUSTOM( cdp ) )
       cdp = NULL;
 
-   s_hb_strPad( HB_PAD_L, NULL );
+   s_hb_strPad( HB_PAD_L, cdp );
 }
 
 /* right-pads a date, number, or string with spaces or supplied character */
@@ -252,7 +252,7 @@ HB_FUNC( HB_UPADR )
    if( ! HB_CDP_ISCUSTOM( cdp ) )
       cdp = NULL;
 
-   s_hb_strPad( HB_PAD_R, NULL );
+   s_hb_strPad( HB_PAD_R, cdp );
 }
 
 /* centre-pads a date, number, or string with spaces or supplied character */
@@ -278,5 +278,5 @@ HB_FUNC( HB_UPADC )
    if( ! HB_CDP_ISCUSTOM( cdp ) )
       cdp = NULL;
 
-   s_hb_strPad( HB_PAD_C, NULL );
+   s_hb_strPad( HB_PAD_C, cdp );
 }
