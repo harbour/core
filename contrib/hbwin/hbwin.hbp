@@ -29,7 +29,7 @@ mapi.c
 oemansi.c
 olecore.c
 oleuuid.c{watcom}
-hbolesrv.c
+hbolesrv.c{!hbdyn}
 wapi_alloc.c
 wapi_commctrl.c
 wapi_err.c

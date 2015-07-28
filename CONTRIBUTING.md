@@ -150,6 +150,7 @@ Evaluate these points before reporting an issue:
     `xhb` contrib library (including `hbcompat.ch`), nor any 3rd party Harbour
     libraries.
     The example shall reproduce the problem using the latest Harbour revision
+    (with _no_ local commits or pending local modifications)
     at the time of the report. Do not post links to executables and other
     binary files. If your source contains non-ASCII and non-UTF-8 national,
     accented, special chars, make sure to mark the codepage/encoding used
@@ -164,9 +165,9 @@ Evaluate these points before reporting an issue:
       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
 13. <a name="trbl-13"></a> Please do not report warnings or bugs &ndash;
     with the exception of build _errors_ &ndash; in 3rd party component
-    hosted inside the Harbour source tree. You can recognize these from their
-    source path, which always contains a subdirectory named: `/3rd/`. Report
-    these to the maintainers of the respective component instead.
+    hosted inside the Harbour source tree. You can recognize these by their
+    source path, which always contains a subdirectory named `/3rd/`. Report
+    these to the maintainer(s) of the respective component instead.
 14. <a name="trbl-14"></a> If your example or report contains human readable
     text, use English only.
 15. <a name="trbl-15"></a> If your example involves compatibility components,
