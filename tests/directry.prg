@@ -1,4 +1,4 @@
-/* Directory(), hb_vfDirectory() tests */
+/* Directory listing tests */
 
 #ifndef __HARBOUR__
 #include "clipper.ch"

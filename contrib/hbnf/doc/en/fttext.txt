@@ -12,10 +12,9 @@
       the file currently open, if any, will be closed.
 
       ^b<nMode>^n is the open mode for the file.  Please refer to the
-      discussion of open modes under FOpen() in the Clipper manual
-      and fileio.ch for a list of allowable open modes.  If not
-      specified, the file will be opened with a mode of
-      FO_READ + FO_SHARED.
+      discussion of file open modes in fileio.ch for a list of allowable
+      open modes.  If not specified, the file will be opened with a mode
+      of FO_READ + FO_SHARED.
    $RETURNS$
       If ^b<cFile>^n is passed and the file is opened successfully, an
       integer containing the text file's workarea.  If the file cannot be

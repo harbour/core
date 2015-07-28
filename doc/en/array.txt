@@ -313,7 +313,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      AAdd(), AEval(), dbStruct(), Directory()
+      AAdd(), AEval(), dbStruct()
    $END$
  */
 
@@ -361,8 +361,8 @@
       will continue until the value obtained from the code block is a
       logical true (.T.) or until the end of the array has been reached.
    $EXAMPLES$
-      LOCAL aDir := Directory( "*.prg" )
-      AScan( aDir,,, {| x, y | x[ 1 ] := "test.prg" } )
+      LOCAL aDir := hb_vfDirectory( "*.prg" )
+      AScan( aDir,,, {| x, y | x[ 1 ] := "test.prg", HB_SYMBOL_UNUSED( y ) } )
    $STATUS$
       R
    $COMPLIANCE$

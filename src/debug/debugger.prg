@@ -374,7 +374,7 @@ METHOD New() CLASS HBDebugger
    ::BuildCommandWindow()
    ::BuildBrowseStack()
 
-   IF hb_FileExists( ::cSettingsFileName )
+   IF hb_vfExists( ::cSettingsFileName )
       ::LoadSettings()
       ::lGo := ::lRunAtStartup // Once again after settings file is loaded
    ENDIF
@@ -963,7 +963,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
    CASE hb_LeftEqN( "INPUT", cCommand, 4 )
       IF Empty( cParams )
          cParams := AllTrim( ::InputBox( "File name",, ;
-                                         {| cFile | hb_FileExists( cFile ) .OR. ;
+                                         {| cFile | hb_vfExists( cFile ) .OR. ;
                                                     ( __dbgAlert( "File unavailable" ), .F. ) } ) )
          IF LastKey() == K_ESC
             cParams := ""
@@ -1249,7 +1249,7 @@ METHOD PROCEDURE DoScript( cFileName ) CLASS HBDebugger
    LOCAL nPos
    LOCAL cLine
 
-   IF hb_FileExists( cFileName )
+   IF hb_vfExists( cFileName )
       FOR EACH cLine IN __dbgTextToArray( MemoRead( cFileName ) )
          cLine := AllTrim( cLine )
          IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. ;
@@ -1989,8 +1989,8 @@ METHOD LocatePrgPath( cPrgName ) CLASS HBDebugger
    LOCAL cDir
 
    FOR EACH cDir IN ::aPathDirs
-      cRetPrgName := cDir + hb_ps() + cPrgName
-      IF hb_FileExists( cRetPrgName )
+      cRetPrgName := hb_DirSepAdd( cDir ) + cPrgName
+      IF hb_vfExists( cRetPrgName )
          RETURN cRetPrgName
       ENDIF
    NEXT
@@ -2067,7 +2067,7 @@ METHOD PROCEDURE Open( cFileName ) CLASS HBDebugger
    IF ! Empty( cFileName ) .AND. ;
       ( ! HB_ISSTRING( ::cPrgName ) .OR. ! hb_FileMatch( cFileName, ::cPrgName ) )
 
-      IF ! hb_FileExists( cFileName ) .AND. ::cPathForFiles != NIL
+      IF ! hb_vfExists( cFileName ) .AND. ::cPathForFiles != NIL
          cRealName := ::LocatePrgPath( cFileName )
          IF Empty( cRealName )
             __dbgAlert( "File '" + cFileName + "' not found!" )
@@ -2113,11 +2113,11 @@ METHOD OpenPPO() CLASS HBDebugger
 
    IF Lower( hb_FNameExt( ::cPrgName ) ) == ".ppo"
       ::cPrgName := hb_FNameExtSet( ::cPrgName, ".prg" )
-      lSuccess := hb_FileExists( ::cPrgName )
+      lSuccess := hb_vfExists( ::cPrgName )
       ::lPPO := ! lSuccess
    ELSE
       ::cPrgName := hb_FNameExtSet( ::cPrgName, ".ppo" )
-      lSuccess := hb_FileExists( ::cPrgName )
+      lSuccess := hb_vfExists( ::cPrgName )
       ::lPPO := lSuccess
    ENDIF
 
@@ -2720,13 +2720,13 @@ METHOD PROCEDURE ShowCodeLine( nProc ) CLASS HBDebugger
          IF ! ::ModuleMatch( cPrgName, ::cPrgName ) .OR. ;
             ::oBrwText == NIL
 
-            IF ! hb_FileExists( cPrgName ) .AND. ::cPathForFiles != NIL
+            IF ! hb_vfExists( cPrgName ) .AND. ::cPathForFiles != NIL
                cPrgName := ::LocatePrgPath( cPrgName )
             ENDIF
 
             ::cPrgName := cPrgName
 
-            IF ! hb_FileExists( cPrgName )
+            IF ! hb_vfExists( cPrgName )
                ::oBrwText := NIL
                ::oWndCode:Browser := NIL
                ::oWndCode:SetCaption( ::aProcStack[ nProc ][ HB_DBG_CS_MODULE ] + ;
