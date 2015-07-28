@@ -89,7 +89,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
 
    LOCAL pdf := HPDF_New()
 
-   FErase( cFileToSave )
+   hb_vfErase( cFileToSave )
 
    IF pdf == NIL
       Alert( "PDF could not be created!" )
@@ -174,7 +174,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
 
    HPDF_Free( pdf )
 
-   RETURN hb_FileExists( cFileToSave )
+   RETURN hb_vfExists( cFileToSave )
 
 STATIC PROCEDURE Page_Lines( pdf )
 

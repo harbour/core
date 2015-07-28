@@ -48,7 +48,7 @@
  * It does not change current drive or current directory so
  * unlike the xHarbour version it's MT safe.
  * It also returns relative paths which are more similar to
- * Directory() function results so they can be easy used
+ * *Directory() function results so they can be easy used
  * directly in other code, f.e. to create archive without
  * absolute paths. Please note that user can easy convert
  * relative paths to absolte ones by simple adding CurDir()

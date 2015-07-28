@@ -281,7 +281,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
          "/" $ xImage .OR. ;
          "\" $ xImage .OR. ;
          ":" $ xImage .OR. ;
-         hb_FileExists( xImage )
+         hb_vfExists( xImage )
          pBitmap := wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
       ELSE
          pBitmap := wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )

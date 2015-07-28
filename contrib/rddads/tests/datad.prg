@@ -33,16 +33,16 @@ PROCEDURE Main()
 
    ? "Default connection is 0:", AdsConnection()
 
-   FErase( "harbour.add" )
-   FErase( "harbour.ai" )
-   FErase( "harbour.am" )
-   FErase( "table1.adt" )
-   FErase( "table1.adi" )
-   FErase( "table2.adt" )
-   FErase( "table2.adi" )
+   vfErase( "harbour.add" )
+   vfErase( "harbour.ai" )
+   vfErase( "harbour.am" )
+   vfErase( "table1.adt" )
+   vfErase( "table1.adi" )
+   vfErase( "table2.adt" )
+   vfErase( "table2.adi" )
 
    // now Create a Data dictionary and the files if not exist
-   IF ! hb_FileExists( "harbour.add" )
+   IF ! hb_vfExists( "harbour.add" )
 
       AdsDDCreate( "harbour.add", , "Harbour ADS demo for data dictionary" )
       // This also creates an Administrative Handle that is set as the default

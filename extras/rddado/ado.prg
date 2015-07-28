@@ -152,7 +152,7 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
       cParam := ;
          "Provider=Microsoft.Jet.OLEDB.4.0" + ;
          ";Data Source=" + cDataBase
-      IF ! hb_FileExists( cDataBase )
+      IF ! hb_vfExists( cDataBase )
          oCatalog:Create( cParam )
       ENDIF
       oConnection:Open( cParam )
@@ -163,7 +163,7 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
          ";Data Source=" + cDataBase + ;
          ";Extended Properties='Excel 8.0;HDR=YES'" + ;
          ";Persist Security Info=False"
-      IF ! hb_FileExists( cDataBase )
+      IF ! hb_vfExists( cDataBase )
          oCatalog:Create( cParam )
       ENDIF
       oConnection:Open( cParam )
@@ -173,7 +173,7 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
          "Provider=Microsoft.Jet.OLEDB.4.0" + ;
          ";Data Source=" + cDataBase + ;
          ";Extended Properties='Paradox 3.x';"
-      IF ! hb_FileExists( cDataBase )
+      IF ! hb_vfExists( cDataBase )
          oCatalog:Create( cParam )
       ENDIF
       oConnection:Open( cParam )
@@ -184,7 +184,7 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
          ";UID=" + cUserName + ;
          ";PWD=" + cPassword + ;
          ";DbName=" + cDataBase + ";"
-      IF ! hb_FileExists( cDataBase )
+      IF ! hb_vfExists( cDataBase )
          oCatalog:Create( cParam )
       ENDIF
       oConnection:Open( cParam )

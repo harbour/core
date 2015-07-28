@@ -14,9 +14,7 @@ PROCEDURE Main()
    LOCAL cCharSet := "UTF8"
    LOCAL nDialect := 1
 
-   IF hb_FileExists( cDatabase )
-      FErase( cDatabase )
-   ENDIF
+   hb_vfErase( cDatabase )
 
    ? FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect )
 

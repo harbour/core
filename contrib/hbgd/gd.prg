@@ -125,7 +125,7 @@ FUNCTION gdImageFromFile( cFile )
    LOCAL hFile := { => }
    LOCAL oImage
 
-   IF hb_FileExists( cFile )
+   IF hb_vfExists( cFile )
       hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
 
       SWITCH Lower( cExt )

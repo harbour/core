@@ -460,6 +460,7 @@ PROCEDURE Main( cFileArg )
 
    /* Print the XML tree */
 
+   hb_vfErase( "out.xml" )
    mxmlSaveFile( hTree, "out.xml", @whitespace_cb() )
 
    /* XXX: */

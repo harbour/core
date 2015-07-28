@@ -222,13 +222,13 @@ METHOD WvtDialog:Create()
    LOCAL aPalette, i, j
 
    ::oldToolTipActive := wvt_SetToolTipActive( .T. )
-   IF ::nTooltipWidth != NIL
+   IF HB_ISNUMERIC( ::nTooltipWidth )
       wvt_SetToolTipWidth( ::nTooltipWidth )
    ENDIF
-   IF ::nTooltipBkColor != NIL
+   IF HB_ISNUMERIC( ::nTooltipBkColor )
       wvt_SetToolTipBkColor( ::nTooltipBkColor )
    ENDIF
-   IF ::nTooltipTextColor != NIL
+   IF HB_ISNUMERIC( ::nTooltipTextColor )
       wvt_SetToolTipTextColor( ::nTooltipTextColor )
    ENDIF
 
@@ -1128,7 +1128,7 @@ METHOD WvtBrowse:SetTooltip()
       ::RestSettings()
    ENDIF
 
-   IF cTip != NIL
+   IF HB_ISSTRING( cTip )
       ::Tooltip := cTip
    ENDIF
 
@@ -1248,7 +1248,7 @@ METHOD WvtStatusBar:SetPanels( aPanels )
 
    AAdd( ::aPanels, WvtPanel():New( ::oParent, ++nID, ::nTop, 0 ) )
 
-   IF aPanels != NIL
+   IF HB_ISARRAY( aPanels )
       FOR EACH i IN aPanels
          IF ::oParent:MaxCol() > i
             AAdd( ::aPanels, WvtPanel():New( ::oParent, ++nID, ::nTop, i ) )
@@ -1734,7 +1734,7 @@ METHOD WvtImage:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtImage:Create()
 
-   ::bPaint := {|| iif( hb_FileExists( ::cImage ), ;
+   ::bPaint := {|| iif( hb_vfExists( ::cImage ), ;
       wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cImage ), "" ) }
 
    AAdd( ::aPaint, { ::bPaint, ;
@@ -1746,7 +1746,7 @@ METHOD WvtImage:Create()
 
 METHOD WvtImage:SetImage( cImage )
 
-   IF cImage != NIL .AND. hb_FileExists( cImage )
+   IF HB_ISSTRING( cImage ) .AND. hb_vfExists( cImage )
       ::cImageFile := cImage
       ::Refresh()
    ENDIF

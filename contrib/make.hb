@@ -164,7 +164,7 @@ STATIC PROCEDURE Standalone( aParams, hProjectList )
 
    hProjectReqList := { => }
 
-   IF hb_DirExists( AllTrim( cOptionsUser ) )
+   IF hb_vfDirExists( AllTrim( cOptionsUser ) )
       cCustomDir := hb_cwd( AllTrim( cOptionsUser ) )
       cOptionsUser := ""
       lCustom := .F.

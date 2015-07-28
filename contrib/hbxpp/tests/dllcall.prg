@@ -22,7 +22,7 @@ PROCEDURE Main()
 
 #if defined( __PLATFORM__WINDOWS )
 
-   IF hb_FileExists( "pscript.dll" )
+   IF hb_vfExists( "pscript.dll" )
       hDLL := DllLoad( "pscript.dll" )
       cData := Space( 24 )
       DllCall( hDll, DLL_OSAPI, "PSGetVersion", @cData )

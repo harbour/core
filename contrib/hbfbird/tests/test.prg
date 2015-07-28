@@ -23,9 +23,7 @@ PROCEDURE Main()
    LOCAL fetch_stat
    LOCAL tmp
 
-   IF hb_FileExists( cDatabase )
-      FErase( cDatabase )
-   ENDIF
+   hb_vfErase( cDatabase )
 
    ? tmp := FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect ), FBError( tmp )
 
