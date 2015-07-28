@@ -12,7 +12,7 @@ PROCEDURE Main()
 
    mxmlSetErrorCallback( @my_mxmlError() )
 
-   IF hb_FileExists( cFileName := hb_DirBase() + "rem.xml" )
+   IF hb_vfExists( cFileName := hb_DirBase() + "rem.xml" )
       xml := simplexml_load_file( cFileName )
 
       IF ! s_mxml_error
@@ -22,7 +22,7 @@ PROCEDURE Main()
       mxmlDelete( xml )
    ENDIF
 
-   IF hb_FileExists( cFileName := hb_DirBase() + "rem_err.xml" )
+   IF hb_vfExists( cFileName := hb_DirBase() + "rem_err.xml" )
       xml := simplexml_load_file( cFileName )
 
       IF s_mxml_error

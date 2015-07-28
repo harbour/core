@@ -460,7 +460,6 @@ PROCEDURE Main( cFileArg )
 
    /* Print the XML tree */
 
-   FErase( "out.xml" )
    mxmlSaveFile( hTree, "out.xml", @whitespace_cb() )
 
    /* XXX: */

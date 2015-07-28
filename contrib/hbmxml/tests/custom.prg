@@ -16,9 +16,7 @@ PROCEDURE Main()
    mxmlSetErrorCallback( @my_mxmlError() )
    mxmlSetCustomHandlers( @load_c(), @save_c() )
 
-// IF ! hb_FileExists( cFileName )
-      create_cust( cFileName )
-// ENDIF
+   create_cust( cFileName )
 
    tree := mxmlLoadFile( tree, cFileName, @type_cb() )
 
