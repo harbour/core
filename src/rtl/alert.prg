@@ -56,8 +56,8 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
    ELSE
       cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
       cColorHigh := hb_StrReplace( ;
-         iif( ( nPos := At( "/", cColorNorm ) ) > 0, ;
-            SubStr( cColorNorm, nPos + 1 ) + "/" + Left( cColorNorm, nPos - 1 ), ;
+         iif( ( nPos := hb_BAt( "/", cColorNorm ) ) > 0, ;
+            hb_BSubStr( cColorNorm, nPos + 1 ) + "/" + hb_BLeft( cColorNorm, nPos - 1 ), ;
             "N/" + cColorNorm ), "+*" )
    ENDIF
 
@@ -124,14 +124,14 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    ELSE
       cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
       cColorHigh := hb_StrReplace( ;
-         iif( ( nPos := At( "/", cColorNorm ) ) > 0, ;
-            SubStr( cColorNorm, nPos + 1 ) + "/" + Left( cColorNorm, nPos - 1 ), ;
+         iif( ( nPos := hb_BAt( "/", cColorNorm ) ) > 0, ;
+            hb_BSubStr( cColorNorm, nPos + 1 ) + "/" + hb_BLeft( cColorNorm, nPos - 1 ), ;
             "N/" + cColorNorm ), "+*" )
    ENDIF
 
    aOptionsOK := {}
    FOR EACH cString IN hb_defaultValue( aOptions, {} )
-      IF HB_ISSTRING( cString ) .AND. Len( cString ) > 0
+      IF HB_ISSTRING( cString ) .AND. hb_BLen( cString ) > 0
          AAdd( aOptionsOK, cString )
       ENDIF
    NEXT

@@ -85,9 +85,9 @@ PROCEDURE __TypeFile( cFile, lPrint )
 
       cTmp := StrTran( Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH ), ",", ";" )
 
-      i := Len( cTmp )
-      DO WHILE SubStr( cTmp, i, 1 ) == ";"            /* remove last ";" */
-         cTmp := Left( cTmp, --i )
+      i := hb_ULen( cTmp )
+      DO WHILE hb_USubStr( cTmp, i, 1 ) == ";"        /* remove last ";" */
+         cTmp := hb_ULeft( cTmp, --i )
       ENDDO
 
       FOR EACH cPath IN hb_ATokens( cTmp, ";" )

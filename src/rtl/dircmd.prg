@@ -60,7 +60,7 @@ PROCEDURE __Dir( cFileMask )
       cFileMask := AllTrim( cFileMask )
    ENDIF
 
-   IF Len( cFileMask ) == 0
+   IF hb_BLen( cFileMask ) == 0
 
       /* NOTE: Although Cl*pper has this string in the national language
                module, it will not use it from there.
@@ -77,7 +77,7 @@ PROCEDURE __Dir( cFileMask )
              {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
       hb_FNameSplit( cFileMask, @cPath, @cName, @cExt )
-      IF Len( cPath ) == 0
+      IF hb_BLen( cPath ) == 0
          cPath := Set( _SET_DEFAULT )
       ENDIF
 
@@ -117,7 +117,7 @@ STATIC PROCEDURE PutDBF( aDirEntry )
    ENDIF
 
    QOut( ;
-      PadR( aDirEntry[ F_NAME ], 15 ) + ;
+      hb_UPadR( aDirEntry[ F_NAME ], 15 ) + ;
       Str( nRecCount, 12 ), "  ", ;
       DToC( dLastUpdate ) + ;
       Str( aDirEntry[ F_SIZE ], 12 ) )
@@ -134,8 +134,8 @@ STATIC PROCEDURE PutNormal( aDirEntry )
       filenames which do not stick to 8.3 MS-DOS convention */
 
    QOut( ;
-      PadR( cName, 8 ), ;
-      PadR( SubStr( cExt, 2 ), 3 ), ;
+      hb_UPadR( cName, 8 ), ;
+      hb_UPadR( hb_USubStr( cExt, 2 ), 3 ), ;
       Str( aDirEntry[ F_SIZE ], 8 ), "", ;
       aDirEntry[ F_DATE ] )
 

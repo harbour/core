@@ -44,7 +44,7 @@
  *
  */
 
-#define _ISDRIVESPEC( cDir )  ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
+#define _ISDRIVESPEC( cDir )  ( hb_BLen( hb_osDriveSeparator() ) > 0 .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
 
 /* NOTE: Can hurt if there are symlinks on the way. */
 FUNCTION hb_PathNormalize( cPath )
@@ -56,22 +56,22 @@ FUNCTION hb_PathNormalize( cPath )
       RETURN ""
    ENDIF
 
-   IF Len( cPath ) > 0
+   IF hb_BLen( cPath ) > 0
 
       aDir := hb_ATokens( cPath, hb_ps() )
 
       FOR EACH cDir IN aDir DESCEND
 
          IF cDir == "." .OR. ;
-            ( Len( cDir ) == 0 .AND. ;
+            ( hb_BLen( cDir ) == 0 .AND. ;
             ! cDir:__enumIsLast() .AND. ;
             ( cDir:__enumIndex() > 2 .OR. ;
-            ( cDir:__enumIndex() == 2 .AND. Len( aDir[ 1 ] ) > 0 ) ) )
+            ( cDir:__enumIndex() == 2 .AND. hb_BLen( aDir[ 1 ] ) > 0 ) ) )
 
             hb_ADel( aDir, cDir:__enumIndex(), .T. )
 
          ELSEIF !( cDir == ".." ) .AND. ;
-            Len( cDir ) > 0 .AND. ;
+            hb_BLen( cDir ) > 0 .AND. ;
             ! _ISDRIVESPEC( cDir )
 
             IF ! cDir:__enumIsLast() .AND. ;
@@ -90,7 +90,7 @@ FUNCTION hb_PathNormalize( cPath )
          ENDIF
       NEXT
 
-      IF Len( cPath ) == 0
+      IF hb_BLen( cPath ) == 0
          cPath := "." + hb_ps()
       ENDIF
    ENDIF
@@ -106,17 +106,17 @@ FUNCTION hb_PathJoin( cPathA, cPathR )
       RETURN ""
    ENDIF
 
-   IF ! HB_ISSTRING( cPathA ) .OR. Len( cPathA ) == 0
+   IF ! HB_ISSTRING( cPathA ) .OR. hb_BLen( cPathA ) == 0
       RETURN cPathR
    ENDIF
 
    hb_FNameSplit( cPathR, @cDirR, @cNameR, @cExtR, @cDriveR )
 
-   IF ! Empty( cDriveR ) .OR. ( Len( cDirR ) > 0 .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
+   IF hb_BLen( cDriveR ) > 0 .OR. ( hb_BLen( cDirR ) > 0 .AND. Left( cDirR, 1 ) $ hb_osPathDelimiters() )
       RETURN cPathR
    ENDIF
 
-   IF Empty( cDirA := hb_FNameDir( cPathA ) )
+   IF hb_BLen( cDirA := hb_FNameDir( cPathA ) ) == 0
       RETURN cPathR
    ENDIF
 
@@ -167,7 +167,7 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
    ENDIF
 
    /* Different drive spec. There is no way to solve that using relative dirs. */
-   IF ! Empty( hb_osDriveSeparator() ) .AND. ;
+   IF hb_BLen( hb_osDriveSeparator() ) > 0 .AND. ;
       tmp == 1 .AND. ( ;
       Right( aPathBase[ 1 ]  , Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() .OR. ;
       Right( aPathTarget[ 1 ], Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
@@ -188,7 +188,7 @@ STATIC FUNCTION s_FN_ToArray( cPath, /* @ */ cFileName  )
 
    hb_FNameSplit( cPath, @cDir, @cName, @cExt )
 
-   IF Len( cName ) > 0 .OR. ! Empty( cExt )
+   IF hb_BLen( cName ) > 0 .OR. hb_BLen( cExt ) > 0
       cFileName := cName + cExt
    ENDIF
 
@@ -224,7 +224,7 @@ FUNCTION hb_DirSepAdd( cDir )
       RETURN ""
    ENDIF
 
-   IF Len( cDir ) > 0 .AND. ;
+   IF hb_BLen( cDir ) > 0 .AND. ;
       ! _ISDRIVESPEC( cDir ) .AND. ;
       !( Right( cDir, 1 ) == hb_ps() )
 
@@ -239,7 +239,7 @@ FUNCTION hb_DirSepDel( cDir )
       RETURN ""
    ENDIF
 
-   IF Empty( hb_osDriveSeparator() )
+   IF hb_BLen( hb_osDriveSeparator() ) == 0
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
          !( cDir == hb_ps() + hb_ps() )
 
@@ -280,7 +280,7 @@ FUNCTION hb_DirBuild( cDir )
 
       cDir := hb_DirSepAdd( cDir )
 
-      IF ! Empty( hb_osDriveSeparator() ) .AND. ;
+      IF hb_BLen( hb_osDriveSeparator() ) > 0 .AND. ;
          ( tmp := At( hb_osDriveSeparator(), cDir ) ) > 0
          cDirTemp := Left( cDir, tmp )
          cDir := SubStr( cDir, tmp + 1 )
@@ -292,10 +292,10 @@ FUNCTION hb_DirBuild( cDir )
       ENDIF
 
       FOR EACH cDirItem IN hb_ATokens( cDir, hb_ps() )
-         IF !( Right( cDirTemp, 1 ) == hb_ps() ) .AND. Len( cDirTemp ) > 0
+         IF !( Right( cDirTemp, 1 ) == hb_ps() ) .AND. hb_BLen( cDirTemp ) > 0
             cDirTemp += hb_ps()
          ENDIF
-         IF Len( cDirItem ) > 0  /* Skip root path, if any */
+         IF hb_BLen( cDirItem ) > 0  /* Skip root path, if any */
             cDirTemp += cDirItem
             IF hb_vfExists( cDirTemp )
                RETURN .F.
@@ -324,7 +324,7 @@ FUNCTION hb_DirUnbuild( cDir )
       cDir := hb_DirSepDel( cDir )
 
       cDirTemp := cDir
-      DO WHILE Len( cDirTemp ) > 0
+      DO WHILE hb_BLen( cDirTemp ) > 0
          IF hb_vfDirExists( cDirTemp )
             IF hb_vfDirRemove( cDirTemp ) != 0
                RETURN .F.
@@ -334,7 +334,7 @@ FUNCTION hb_DirUnbuild( cDir )
             EXIT
          ENDIF
          cDirTemp := Left( cDirTemp, tmp - 1 )
-         IF ! Empty( hb_osDriveSeparator() ) .AND. ;
+         IF hb_BLen( hb_osDriveSeparator() ) > 0 .AND. ;
             Right( cDirTemp, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator()
             EXIT
          ENDIF
