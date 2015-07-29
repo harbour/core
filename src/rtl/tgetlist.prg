@@ -600,7 +600,7 @@ METHOD GetPostValidate( oGet, aMsg ) CLASS HBGetList
       lUpdated := ::lUpdated
 
       IF HB_ISSTRING( oGet:buffer )
-         SetPos( oGet:row, oGet:col + Len( oGet:buffer ) )
+         SetPos( oGet:row, oGet:col + hb_ULen( oGet:buffer ) )
       ENDIF
       lValid := Eval( oGet:postBlock, oGet, aMsg )
       SetPos( oGet:row, oGet:col )
@@ -791,9 +791,9 @@ METHOD ShowScoreboard() CLASS HBGetList
 
       hb_DispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), ;
          __natMsg( _GET_INSERT_ON ), ;
-         iif( Len( __natMsg( _GET_INSERT_OFF ) ) == Len( __natMsg( _GET_INSERT_ON ) ), ;
+         iif( hb_ULen( __natMsg( _GET_INSERT_OFF ) ) == hb_ULen( __natMsg( _GET_INSERT_ON ) ), ;
             __natMsg( _GET_INSERT_OFF ), ;
-            Space( Len( __natMsg( _GET_INSERT_ON ) ) ) ) ) )
+            Space( hb_ULen( __natMsg( _GET_INSERT_ON ) ) ) ) ) )
 
    ENDIF
 
@@ -811,7 +811,7 @@ METHOD DateMsg() CLASS HBGetList
       ENDDO
       hb_keyIns( nKey )
 
-      hb_DispOutAt( SCORE_ROW, SCORE_COL, Space( Len( __natMsg( _GET_INVD_DATE ) ) ) )
+      hb_DispOutAt( SCORE_ROW, SCORE_COL, Space( hb_ULen( __natMsg( _GET_INVD_DATE ) ) ) )
 
    ENDIF
 
@@ -1416,10 +1416,10 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
    LOCAL lGUI
 
    DO CASE
-   CASE nKey >= K_ALT_Q .AND. nKey <= K_ALT_P ; cKey := SubStr( "qwertyuiop", nKey - K_ALT_Q + 1, 1 )
-   CASE nKey >= K_ALT_A .AND. nKey <= K_ALT_L ; cKey := SubStr( "asdfghjkl", nKey - K_ALT_A + 1, 1 )
-   CASE nKey >= K_ALT_Z .AND. nKey <= K_ALT_M ; cKey := SubStr( "zxcvbnm", nKey - K_ALT_Z + 1, 1 )
-   CASE nKey >= K_ALT_1 .AND. nKey <= K_ALT_0 ; cKey := SubStr( "1234567890", nKey - K_ALT_1 + 1, 1 )
+   CASE nKey >= K_ALT_Q .AND. nKey <= K_ALT_P ; cKey := hb_BSubStr( "qwertyuiop", nKey - K_ALT_Q + 1, 1 )
+   CASE nKey >= K_ALT_A .AND. nKey <= K_ALT_L ; cKey := hb_BSubStr( "asdfghjkl", nKey - K_ALT_A + 1, 1 )
+   CASE nKey >= K_ALT_Z .AND. nKey <= K_ALT_M ; cKey := hb_BSubStr( "zxcvbnm", nKey - K_ALT_Z + 1, 1 )
+   CASE nKey >= K_ALT_1 .AND. nKey <= K_ALT_0 ; cKey := hb_BSubStr( "1234567890", nKey - K_ALT_1 + 1, 1 )
    OTHERWISE
       RETURN 0
    ENDCASE
@@ -1440,9 +1440,9 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
             cCaption := oGet:caption
          ENDIF
 
-         IF ( nHotPos := At( "&", cCaption ) ) == 0
-         ELSEIF nHotPos == Len( cCaption )
-         ELSEIF Lower( SubStr( cCaption, nHotPos + 1, 1 ) ) == cKey
+         IF ( nHotPos := hb_UAt( "&", cCaption ) ) == 0
+         ELSEIF nHotPos == hb_ULen( cCaption )
+         ELSEIF Lower( hb_USubStr( cCaption, nHotPos + 1, 1 ) ) == cKey
 
             // Test the current GUI-GET or Get PostValidation:
             lGUI := HB_ISOBJECT( ::aGetList[ ::nPos ]:control )
@@ -1623,7 +1623,7 @@ METHOD ShowGetMsg( oGet, aMsg ) CLASS HBGetList
 
       IF ! Empty( cMsg )
          lMOldState := MSetCursor( .F. )
-         hb_DispOutAt( aMsg[ MSGROW ], aMsg[ MSGLEFT ], PadC( cMsg, aMsg[ MSGRIGHT ] - aMsg[ MSGLEFT ] + 1 ), aMsg[ MSGCOLOR ] )
+         hb_DispOutAt( aMsg[ MSGROW ], aMsg[ MSGLEFT ], hb_UPadC( cMsg, aMsg[ MSGRIGHT ] - aMsg[ MSGLEFT ] + 1 ), aMsg[ MSGCOLOR ] )
          MSetCursor( lMOldState )
       ENDIF
    ENDIF

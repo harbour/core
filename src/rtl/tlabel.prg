@@ -150,7 +150,7 @@ METHOD PROCEDURE New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    lConsoleOn := Set( _SET_CONSOLE )
    Set( _SET_CONSOLE, ! lNoConsole .AND. lConsoleOn )
 
-   IF Len( cAltFile ) > 0         // To file
+   IF hb_BLen( cAltFile ) > 0     // To file
       lExtraState := Set( _SET_EXTRA, .T. )
       cExtraFile  := Set( _SET_EXTRAFILE, cAltFile )
    ENDIF
@@ -201,7 +201,7 @@ METHOD PROCEDURE New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    Set( _SET_PRINTER, lPrintOn ) // Set the printer back to prior state
    Set( _SET_CONSOLE, lConsoleOn )  // Set the console back to prior state
 
-   IF Len( cAltFile ) > 0           // Set extrafile back
+   IF hb_BLen( cAltFile ) > 0       // Set extrafile back
       Set( _SET_EXTRAFILE, cExtraFile )
       Set( _SET_EXTRA, lExtraState )
    ENDIF
@@ -226,7 +226,7 @@ METHOD ExecuteLabel() CLASS HBLabelForm
       IF aField != NIL
 
          cBuffer := ;
-            PadR( Eval( aField[ LF_EXP ] ), ::aLabelData[ LBL_WIDTH ] ) + ;
+            hb_UPadR( Eval( aField[ LF_EXP ] ), ::aLabelData[ LBL_WIDTH ] ) + ;
             Space( ::aLabelData[ LBL_SPACES ] )
 
          IF aField[ LF_BLANK ]

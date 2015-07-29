@@ -166,9 +166,9 @@ METHOD hitTest( nMRow, nMCol ) CLASS CheckBox
       RETURN HTCLIENT
    ENDIF
 
-   nLenCaption := Len( ::cCaption )
+   nLenCaption := hb_ULen( ::cCaption )
 
-   IF ( nPosAccel := At( "&", ::cCaption ) ) > 0 .AND. ;
+   IF ( nPosAccel := hb_UAt( "&", ::cCaption ) ) > 0 .AND. ;
       nPosAccel < nLenCaption
       nLenCaption--
    ENDIF
@@ -190,20 +190,20 @@ METHOD display() CLASS CheckBox
 
    DispBegin()
 
-   hb_DispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ), ;
+   hb_DispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, hb_USubStr( cStyle, 2, 1 ), hb_USubStr( cStyle, 3, 1 ) ), ;
       hb_ColorIndex( ::cColorSpec, iif( ::lHasFocus, 1, 0 ) ) )
 
    cColor := hb_ColorIndex( ::cColorSpec, 2 )
-   hb_DispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ), cColor )
-   hb_DispOutAt( ::nRow, ::nCol + 2, Right( cStyle, 1 ), cColor )
+   hb_DispOutAt( ::nRow, ::nCol, hb_ULeft( cStyle, 1 ), cColor )
+   hb_DispOutAt( ::nRow, ::nCol + 2, hb_URight( cStyle, 1 ), cColor )
 
    IF ! Empty( cCaption := ::cCaption )
 
-      IF ( nPos := At( "&", cCaption ) ) == 0
-      ELSEIF nPos == Len( cCaption )
+      IF ( nPos := hb_UAt( "&", cCaption ) ) == 0
+      ELSEIF nPos == hb_ULen( cCaption )
          nPos := 0
       ELSE
-         cCaption := Stuff( cCaption, nPos, 1, "" )
+         cCaption := hb_UStuff( cCaption, nPos, 1, "" )
       ENDIF
 
       IF ::lHasFocus
@@ -213,7 +213,7 @@ METHOD display() CLASS CheckBox
       hb_DispOutAt( ::nCapRow, ::nCapCol, cCaption, cColor )
 
       IF ! ::lHasFocus .AND. nPos != 0
-         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
+         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, hb_USubStr( cCaption, nPos, 1 ), ;
             hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
    ENDIF
@@ -312,7 +312,7 @@ METHOD sBlock( bSBlock ) CLASS CheckBox
 METHOD style( cStyle ) CLASS CheckBox
 
    IF cStyle != NIL
-      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 4 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| hb_BLen( cStyle ) == 0 .OR. hb_ULen( cStyle ) == 4 } )
    ENDIF
 
    RETURN ::cStyle

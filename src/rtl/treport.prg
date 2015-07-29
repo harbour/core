@@ -230,7 +230,7 @@ METHOD PROCEDURE New( cFrmName AS STRING, ;
 
    ::lFormFeeds := lPrinter
 
-   IF Len( cAltFile ) > 0       // To file
+   IF hb_BLen( cAltFile ) > 0   // To file
       lExtraState := Set( _SET_EXTRA, .T. )
       cExtraFile := Set( _SET_EXTRAFILE, cAltFile )
    ENDIF
@@ -413,7 +413,7 @@ METHOD PROCEDURE New( cFrmName AS STRING, ;
    Set( _SET_PRINTER, lPrintOn )    // Set the printer back to prior state
    Set( _SET_CONSOLE, lConsoleOn )  // Set the console back to prior state
 
-   IF Len( cAltFile ) > 0          // Set extrafile back
+   IF hb_BLen( cAltFile ) > 0       // Set extrafile back
       Set( _SET_EXTRAFILE, cExtraFile )
       Set( _SET_EXTRA, lExtraState )
    ENDIF
@@ -464,12 +464,12 @@ METHOD ReportHeader() CLASS HBReportForm
 
             FOR nHeadLine := 1 TO nLinesInHeader
                AAdd( aPageHeader, Space( 15 ) + ;
-                  PadC( RTrim( XMEMOLINE( LTrim( cLine ), ;
+                  hb_UPadC( RTrim( XMEMOLINE( LTrim( cLine ), ;
                   nHeadingLength, nHeadLine ) ), nHeadingLength ) )
             NEXT
          NEXT
 
-         aPageHeader[ 1 ] := Stuff( aPageHeader[ 1 ], 1, 14, ;
+         aPageHeader[ 1 ] := hb_UStuff( aPageHeader[ 1 ], 1, 14, ;
             __natMsg( _RFRM_PAGENO ) + Str( ::nPageNumber, 6 ) )
       ENDIF
 
@@ -484,7 +484,7 @@ METHOD ReportHeader() CLASS HBReportForm
 
          cHeader := RTrim( XMEMOLINE( LTrim( cLine ),, nHeadLine ) )
          AAdd( aPageHeader, Space( ( nRPageSize - ::aReportData[ RPT_LMARGIN ] - ;
-            Len( cHeader ) ) / 2 ) + cHeader )
+            hb_ULen( cHeader ) ) / 2 ) + cHeader )
       NEXT
    NEXT
 
@@ -511,10 +511,10 @@ METHOD ReportHeader() CLASS HBReportForm
             aPageHeader[ nLinesInHeader + nLine ] += Space( aCol[ RCT_WIDTH ] )
          ELSEIF aCol[ RCT_TYPE ] == "N"
             aPageHeader[ nLinesInHeader + nLine ] += ;
-               PadL( aCol[ RCT_HEADER ][ nLine ], aCol[ RCT_WIDTH ] )
+               hb_UPadL( aCol[ RCT_HEADER ][ nLine ], aCol[ RCT_WIDTH ] )
          ELSE
             aPageHeader[ nLinesInHeader + nLine ] += ;
-               PadR( aCol[ RCT_HEADER ][ nLine ], aCol[ RCT_WIDTH ] )
+               hb_UPadR( aCol[ RCT_HEADER ][ nLine ], aCol[ RCT_WIDTH ] )
          ENDIF
       NEXT
    NEXT
@@ -754,12 +754,12 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
                   cLine := XMEMOLINE( RTrim( Eval( aCol[ RCT_EXP ] ) ), ;
                      aCol[ RCT_WIDTH ], nLine )
                ENDIF
-               cLine := PadR( cLine, aCol[ RCT_WIDTH ] )
+               cLine := hb_UPadR( cLine, aCol[ RCT_WIDTH ] )
             ELSE
                IF nLine == 1
                   cLine := Transform( Eval( aCol[ RCT_EXP ] ), ;
                      aCol[ RCT_PICT ] )
-                  cLine := PadR( cLine, aCol[ RCT_WIDTH ] )
+                  cLine := hb_UPadR( cLine, aCol[ RCT_WIDTH ] )
                ELSE
                   cLine := Space( aCol[ RCT_WIDTH ] )
                ENDIF
@@ -1055,14 +1055,9 @@ STATIC FUNCTION Occurs( cSearch, cTarget )
 
    LOCAL nPos, nCount := 0
 
-   DO WHILE ! Empty( cTarget )
-      IF ( nPos := At( cSearch, cTarget ) ) > 0
-         nCount++
-         cTarget := SubStr( cTarget, nPos + 1 )
-      ELSE
-         // End of string
-         cTarget := ""
-      ENDIF
+   DO WHILE ( nPos := hb_UAt( cSearch, cTarget ) ) > 0
+      nCount++
+      cTarget := hb_USubStr( cTarget, nPos + 1 )
    ENDDO
 
    RETURN nCount
@@ -1099,12 +1094,12 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 
    DO WHILE ++nItemCount <= nFields
 
-      cItem := Left( cHeaderString, nHeaderLen )
+      cItem := hb_ULeft( cHeaderString, nHeaderLen )
 
       // check for explicit delimiter
-      IF ( nPos := At( ";", cItem ) ) > 0
+      IF ( nPos := hb_UAt( ";", cItem ) ) > 0
          // delimiter present
-         AAdd( aPageHeader, Left( cItem, nPos - 1 ) )
+         AAdd( aPageHeader, hb_ULeft( cItem, nPos - 1 ) )
       ELSE
          // empty string handling for S87 and 5.0 compatibility
          AAdd( aPageHeader, iif( Empty( cItem ), "", cItem ) )
@@ -1112,7 +1107,7 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
          nPos := nHeaderLen
       ENDIF
 
-      cHeaderString := SubStr( cHeaderString, nPos + 1 )
+      cHeaderString := hb_USubStr( cHeaderString, nPos + 1 )
 
    ENDDO
 

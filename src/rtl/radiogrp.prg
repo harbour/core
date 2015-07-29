@@ -181,18 +181,18 @@ METHOD display() CLASS RadioGroup
 
    IF ! Empty( cCaption := ::cCaption )
 
-      IF ( nPos := At( "&", cCaption ) ) > 0
-         IF nPos == Len( cCaption )
+      IF ( nPos := hb_UAt( "&", cCaption ) ) > 0
+         IF nPos == hb_ULen( cCaption )
             nPos := 0
          ELSE
-            cCaption := Stuff( cCaption, nPos, 1, "" )
+            cCaption := hb_UStuff( cCaption, nPos, 1, "" )
          ENDIF
       ENDIF
 
       hb_DispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, 1 ) )
 
       IF nPos > 0
-         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
+         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, hb_USubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
       ENDIF
    ENDIF
 
@@ -215,7 +215,7 @@ METHOD getAccel( xKey ) CLASS RadioGroup
       RETURN 0
    ENDCASE
 
-   IF Len( cKey ) > 0
+   IF hb_BLen( cKey ) > 0
       cKey := Lower( cKey )
       RETURN AScan( ::aItems, {| o | o:isAccel( cKey ) } )
    ENDIF
@@ -267,9 +267,9 @@ METHOD hitTest( nMRow, nMCol ) CLASS RadioGroup
       ENDIF
    ENDCASE
 
-   nLen := Len( ::cCaption )
+   nLen := hb_ULen( ::cCaption )
 
-   IF ( nPos := At( "&", ::cCaption ) ) > 0 .AND. nPos < nLen
+   IF ( nPos := hb_UAt( "&", ::cCaption ) ) > 0 .AND. nPos < nLen
       nLen--
    ENDIF
 
@@ -529,7 +529,7 @@ METHOD caption( cCaption ) CLASS RadioGroup
 METHOD coldBox( cColdBox ) CLASS RadioGroup
 
    IF cColdBox != NIL
-      ::cColdBox := __eInstVar53( Self, "COLDBOX", cColdBox, "C", 1001, {|| Len( cColdBox ) == 0 .OR. Len( cColdBox ) == 8 } )
+      ::cColdBox := __eInstVar53( Self, "COLDBOX", cColdBox, "C", 1001, {|| hb_BLen( cColdBox ) == 0 .OR. hb_ULen( cColdBox ) == 8 } )
    ENDIF
 
    RETURN ::cColdBox
@@ -557,7 +557,7 @@ METHOD hasFocus() CLASS RadioGroup
 METHOD hotBox( cHotBox ) CLASS RadioGroup
 
    IF cHotBox != NIL
-      ::cHotBox := __eInstVar53( Self, "HOTBOX", cHotBox, "C", 1001, {|| Len( cHotBox ) == 0 .OR. Len( cHotBox ) == 8 } )
+      ::cHotBox := __eInstVar53( Self, "HOTBOX", cHotBox, "C", 1001, {|| hb_BLen( cHotBox ) == 0 .OR. hb_ULen( cHotBox ) == 8 } )
    ENDIF
 
    RETURN ::cHotBox

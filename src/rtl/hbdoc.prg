@@ -182,7 +182,7 @@ STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
 
    hMeta[ "_DOCSOURCE" ] := cFileName
 
-   __hbdoc__read_stream( aEntry, MemoRead( cFileName ), cFileName, hMeta, aErrMsg )
+   __hbdoc__read_stream( aEntry, hb_UTF8ToStr( MemoRead( cFileName ) ), cFileName, hMeta, aErrMsg )
 
    RETURN
 
@@ -198,7 +198,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
    nLine := 0
    FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 9 ), " " ), .T. )
 
-      cLine := SubStr( cLine, 4 )
+      cLine := hb_USubStr( cLine, 4 )
       ++nLine
 
       SWITCH AllTrim( cLine )
@@ -226,10 +226,12 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
       OTHERWISE
          IF hEntry == NIL
             /* Ignore line outside entry. Don't warn, this is normal. */
-         ELSEIF Left( LTrim( cLine ), 1 ) == "$" .AND. Right( RTrim( cLine ), 1 ) == "$"
+         ELSEIF hb_ULeft( LTrim( cLine ), 1 ) == "$" .AND. hb_URight( RTrim( cLine ), 1 ) == "$"
             cLine := AllTrim( cLine )
-            cSection := SubStr( cLine, 2, Len( cLine ) - 2 )
-            IF cSection $ hEntry
+            cSection := hb_USubStr( cLine, 2, hb_ULen( cLine ) - 2 )
+            IF Empty( cSection )
+               _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: Empty section name", cFileName, nLine ) )
+            ELSEIF cSection $ hEntry
                _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: Duplicate sections inside the same entry", cFileName, nLine ) )
             ELSE
                hEntry[ cSection ] := ""
@@ -239,11 +241,11 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
                /* some "heuristics" to detect in which column the real content starts,
                   we assume the first line of content is correct, and use this with all
                   consecutive lines. [vszakats] */
-               nStartCol := Len( cLine ) - Len( LTrim( cLine ) ) + 1
+               nStartCol := hb_ULen( cLine ) - hb_ULen( LTrim( cLine ) ) + 1
             ELSE
                hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
             ENDIF
-            hEntry[ cSection ] += SubStr( cLine, nStartCol )
+            hEntry[ cSection ] += hb_USubStr( cLine, nStartCol )
          ELSEIF ! Empty( cLine )
             _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: Content outside section", cFileName, nLine ) )
          ENDIF
@@ -272,7 +274,7 @@ FUNCTION __hbdoc_ToSource( aEntry )
             IF HB_ISSTRING( item ) .AND. ! hb_LeftEq( item:__enumKey(), "_" )
                cSource += "   $" + item:__enumKey() + "$" + hb_eol()
                FOR EACH cLine IN hb_ATokens( item, .T. )
-                  cLineOut := iif( Len( cLine ) == 0, "", Space( 4 ) + cLine )
+                  cLineOut := iif( hb_BLen( cLine ) == 0, "", Space( 4 ) + cLine )
                   cSource += iif( Empty( cLineOut ), "", "  " + cLineOut ) + hb_eol()
                NEXT
             ENDIF
@@ -294,7 +296,7 @@ FUNCTION __hbdoc_FilterOut( cFile )
 
    FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 9 ), " " ), .T. )
 
-      SWITCH AllTrim( SubStr( cLine, 4 ) )
+      SWITCH AllTrim( hb_USubStr( cLine, 4 ) )
       CASE "$DOC$"
          lEntry := .T.
          EXIT

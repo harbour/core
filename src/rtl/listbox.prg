@@ -254,7 +254,7 @@ METHOD display() CLASS ListBox
    IF ::lDropDown
 
       hb_DispOutAt( nTop, nLeft, ;
-         iif( ::nValue == 0, Space( nSize - 1 ), PadR( ::aItems[ ::nValue ][ _ITEM_cText ], nSize - 1 ) ), ;
+         iif( ::nValue == 0, Space( nSize - 1 ), hb_UPadR( ::aItems[ ::nValue ][ _ITEM_cText ], nSize - 1 ) ), ;
          cColorAny )
 
       hb_DispOutAt( nTop++, nLeft + nSize - 1, ::cStyle, hb_ColorIndex( ::cColorSpec, 7 ) )
@@ -284,23 +284,23 @@ METHOD display() CLASS ListBox
       ENDIF
 
       FOR nItem := ::nTopItem TO nEnd
-         hb_DispOutAt( nTop++, nLeft, PadR( ::aItems[ nItem ][ _ITEM_cText ], nSize ), iif( nItem == ::nValue, cColor4, cColor3 ) )
+         hb_DispOutAt( nTop++, nLeft, hb_UPadR( ::aItems[ nItem ][ _ITEM_cText ], nSize ), iif( nItem == ::nValue, cColor4, cColor3 ) )
       NEXT
    ENDIF
 
    IF ! Empty( cCaption := ::cCaption )
 
-      IF ( nPos := At( "&", cCaption ) ) == 0
-      ELSEIF nPos == Len( cCaption )
+      IF ( nPos := hb_UAt( "&", cCaption ) ) == 0
+      ELSEIF nPos == hb_ULen( cCaption )
          nPos := 0
       ELSE
-         cCaption := Stuff( cCaption, nPos, 1, "" )
+         cCaption := hb_UStuff( cCaption, nPos, 1, "" )
       ENDIF
 
       hb_DispOutAt( ::nCapRow, ::nCapCol - 1, cCaption, hb_ColorIndex( ::cColorSpec, 5 ) )
 
       IF nPos != 0
-         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 2, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 6 ) )
+         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 2, hb_USubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 6 ) )
       ENDIF
    ENDIF
 
@@ -879,7 +879,7 @@ METHOD caption( cCaption ) CLASS ListBox
       ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
       IF ::nCapCol == NIL
          ::nCapRow := ::nTop
-         ::nCapCol := ::nLeft - Len( ::cCaption )
+         ::nCapCol := ::nLeft - hb_ULen( ::cCaption )
       ENDIF
    ENDIF
 
@@ -888,7 +888,7 @@ METHOD caption( cCaption ) CLASS ListBox
 METHOD coldBox( cColdBox ) CLASS ListBox
 
    IF cColdBox != NIL
-      ::cColdBox := __eInstVar53( Self, "COLDBOX", cColdBox, "C", 1001, {|| Len( cColdBox ) == 0 .OR. Len( cColdBox ) == 8 } )
+      ::cColdBox := __eInstVar53( Self, "COLDBOX", cColdBox, "C", 1001, {|| hb_BLen( cColdBox ) == 0 .OR. hb_ULen( cColdBox ) == 8 } )
    ENDIF
 
    RETURN ::cColdBox
@@ -933,7 +933,7 @@ METHOD hasFocus() CLASS ListBox
 METHOD hotBox( cHotBox ) CLASS ListBox
 
    IF cHotBox != NIL
-      ::cHotBox := __eInstVar53( Self, "HOTBOX", cHotBox, "C", 1001, {|| Len( cHotBox ) == 0 .OR. Len( cHotBox ) == 8 } )
+      ::cHotBox := __eInstVar53( Self, "HOTBOX", cHotBox, "C", 1001, {|| hb_BLen( cHotBox ) == 0 .OR. hb_ULen( cHotBox ) == 8 } )
    ENDIF
 
    RETURN ::cHotBox
@@ -982,7 +982,7 @@ METHOD sBlock( bSBlock ) CLASS ListBox
 METHOD style( cStyle ) CLASS ListBox
 
    IF cStyle != NIL
-      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 1 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| hb_ULen( cStyle ) == 1 } )
    ENDIF
 
    RETURN ::cStyle
