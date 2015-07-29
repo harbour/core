@@ -2676,6 +2676,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          hbmk[ _HBMK_cHB_INSTALL_CON ], ;
          hbmk[ _HBMK_cHB_INSTALL_ADD ], ;
          hbmk[ _HBMK_cHB_INSTALL_DOC ] ) )
+      IF ! Empty( hb_Version( HB_VERSION_OPTIONS ) )
+         _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Harbour build options: %1$s" ), hb_Version( HB_VERSION_OPTIONS ) ) )
+      ENDIF
 #endif
       IF ! Empty( cPath_CompC )
          IF Empty( hbmk[ _HBMK_cCCPREFIX ] ) .AND. ;
@@ -4372,7 +4375,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDIF
 #endif
 
-      #define _HBLIB_FULLPATH( cName ) ( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) + hb_ps() + cLibLibPrefix + cName + cLibLibExt )
+      #define _HBLIB_FULLPATH( cName )  ( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) + cLibLibPrefix + cName + cLibLibExt )
 
       cLibHBX_Regex := R_( "[\s]_?HB_FUN_([A-Z0-9_]*)[\s]" )
 
