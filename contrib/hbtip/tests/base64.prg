@@ -15,8 +15,8 @@ PROCEDURE Main( ... )
    LOCAL lDecode := .F., lHelp := .F.
    LOCAL cData, nLen, cBuffer
 
-   LOCAL fhndInput, hInput := hb_GetStdIn()
-   LOCAL fhndOutput, hOutput := hb_GetStdOut()
+   LOCAL hFileInput, nFileInput := hb_GetStdIn()
+   LOCAL hFileOutput, nFileOutput := hb_GetStdOut()
 
    /* Parameter parsing */
    FOR EACH cData IN hb_AParams()
@@ -35,13 +35,13 @@ PROCEDURE Main( ... )
          cEncoder := "url"
          EXIT
       OTHERWISE
-         IF hb_vfExists( cData ) .AND. hInput == hb_GetStdIn()
-            IF ( fhndInput := hb_vfOpen( cData ) ) != NIL
-               hInput := hb_vfHandle( fhndInput )
+         IF hb_vfExists( cData ) .AND. nFileInput == hb_GetStdIn()
+            IF ( hFileInput := hb_vfOpen( cData ) ) != NIL
+               nFileInput := hb_vfHandle( hFileInput )
             ENDIF
-         ELSEIF hOutput == hb_GetStdOut()
-            IF ( fhndOutput := hb_vfOpen( cData, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
-               hOutput := hb_vfHandle( fhndOutput )
+         ELSEIF nFileOutput == hb_GetStdOut()
+            IF ( hFileOutput := hb_vfOpen( cData, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+               nFileOutput := hb_vfHandle( hFileOutput )
             ENDIF
          ELSE
             ? "Wrong parameter", cData
@@ -66,11 +66,11 @@ PROCEDURE Main( ... )
    /* Reading input stream */
    cData := ""
    cBuffer := Space( 1024 )
-   DO WHILE ( nLen := FRead( hInput, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
+   DO WHILE ( nLen := FRead( nFileInput, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
       cData += hb_BLeft( cBuffer, nLen )
    ENDDO
-   IF fhndInput != NIL
-      hb_vfClose( fhndInput )
+   IF hFileInput != NIL
+      hb_vfClose( hFileInput )
    ENDIF
 
    /* Encoding/decoding */
@@ -82,9 +82,9 @@ PROCEDURE Main( ... )
    ENDIF
 
    /* Writing stream */
-   FWrite( hOutput, cData )
-   IF fhndOutput != NIL
-      hb_vfClose( fhndOutput )
+   FWrite( nFileOutput, cData )
+   IF hFileOutput != NIL
+      hb_vfClose( hFileOutput )
    ENDIF
 
    RETURN

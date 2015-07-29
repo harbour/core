@@ -81,7 +81,7 @@ STATIC FUNCTION LOGRDD_INIT( nRDD )
    /* Log File will be open later so user can change parameters */
 
    /* Store data in RDD cargo */
-   /* cFileName, nHandle, cTag, lActive, cRDDName, bMsgLogBlock, bUserLogBlock */
+   /* cFileName, hFile, cTag, lActive, cRDDName, bMsgLogBlock, bUserLogBlock */
    USRRDD_RDDDATA( nRDD, { cFileName, NIL, cTag, lActive, cRDDName, NIL, NIL } )
 
    RETURN HB_SUCCESS
@@ -351,22 +351,22 @@ STATIC PROCEDURE OpenLogFile( nWA )
 
    LOCAL aRDDData  := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    LOCAL cFileName := aRDDData[ ARRAY_FILENAME ]
-   LOCAL nHandle   := aRDDData[ ARRAY_FHANDLE ]
+   LOCAL hFile     := aRDDData[ ARRAY_FHANDLE ]
    LOCAL lActive   := aRDDData[ ARRAY_ACTIVE ]
 
 #if 0
-   TraceLog( "nHandle " + CStr( nHandle ) )
+   TraceLog( "hFile " + CStr( hFile ) )
 #endif
 
-   IF lActive .AND. nHandle == NIL
+   IF lActive .AND. hFile == NIL
 
       /* Open Access Log File */
-      IF ( nHandle := hb_vfOpen( cFileName, FO_CREAT + FO_WRITE + FO_SHARED ) ) != NIL
+      IF ( hFile := hb_vfOpen( cFileName, FO_CREAT + FO_WRITE + FO_SHARED ) ) != NIL
          /* Move to end of file */
-         hb_vfSeek( nHandle, 0, FS_END )
+         hb_vfSeek( hFile, 0, FS_END )
       ENDIF
 
-      aRDDData[ ARRAY_FHANDLE  ] := nHandle
+      aRDDData[ ARRAY_FHANDLE  ] := hFile
    ENDIF
 
    RETURN
@@ -410,7 +410,7 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
 
    LOCAL aRDDData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    LOCAL lActive  := aRDDData[ ARRAY_ACTIVE ]
-   LOCAL nHandle, cTag, cRDDName, bMsgLogBlock, bUserLogBlock, cLog
+   LOCAL hFile, cTag, cRDDName, bMsgLogBlock, bUserLogBlock, cLog
 
    // Check if logging system is active
 
@@ -423,14 +423,14 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
       // If not defined a User codeblock
       IF ! HB_ISEVALITEM( bUserLogBlock )
 
-         nHandle := aRDDData[ ARRAY_FHANDLE ]
+         hFile := aRDDData[ ARRAY_FHANDLE ]
 
          // If log file is not already open I open now
-         IF nHandle == NIL
+         IF hFile == NIL
             OpenLogFile( nWA )
          ENDIF
 
-         IF nHandle != NIL
+         IF hFile != NIL
 
             bMsgLogBlock := aRDDData[ ARRAY_MSGLOGBLOCK ]
 
@@ -443,7 +443,7 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
             ENDIF
             // Log to file only if cLog is a valid string
             IF HB_ISSTRING( cLog )
-               hb_vfWrite( nHandle, cLog + hb_eol() )
+               hb_vfWrite( hFile, cLog + hb_eol() )
             ENDIF
          ENDIF
       ELSE

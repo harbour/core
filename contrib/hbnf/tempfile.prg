@@ -29,7 +29,7 @@
 
 #include "fileio.ch"
 
-FUNCTION ft_TempFil( cPath, lHide, /* @ */ fhnd )  /* <fhnd> is a Harbour extension (HB_EXTENSION) */
+FUNCTION ft_TempFil( cPath, lHide, /* @ */ hFile )  /* <hFile> is a Harbour extension (HB_EXTENSION) */
 
    LOCAL cFile
 
@@ -38,10 +38,10 @@ FUNCTION ft_TempFil( cPath, lHide, /* @ */ fhnd )  /* <fhnd> is a Harbour extens
       cPath := AllTrim( cPath )
    ENDIF
 
-   fhnd := hb_vfTempFile( @cFile, cPath,, iif( hb_defaultValue( lHide, .F. ), FC_HIDDEN, FC_NORMAL ) )
+   hFile := hb_vfTempFile( @cFile, cPath,, iif( hb_defaultValue( lHide, .F. ), FC_HIDDEN, FC_NORMAL ) )
 
    IF ! hb_PIsByRef( 3 )
-      hb_vfClose( fhnd )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN cFile

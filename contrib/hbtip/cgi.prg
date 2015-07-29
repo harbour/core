@@ -155,7 +155,7 @@ METHOD Flush() CLASS TIPCgi
    LOCAL cStream
    LOCAL lRet
 
-   LOCAL nH
+   LOCAL hFile
    LOCAL cFile
 
    LOCAL cSession
@@ -180,12 +180,12 @@ METHOD Flush() CLASS TIPCgi
 
       cFile := hb_DirSepAdd( ::cSessionSavePath ) + "SESSIONID_" + ::cSID
 
-      IF ( nH := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
+      IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
          cSession := ::SessionEncode()
-         IF hb_vfWrite( nH, cSession ) != hb_BLen( cSession )
+         IF hb_vfWrite( hFile, cSession ) != hb_BLen( cSession )
             ::Write( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
          ENDIF
-         hb_vfClose( nH )
+         hb_vfClose( hFile )
       ELSE
          ::Write( "ERROR: On writing session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
       ENDIF
@@ -198,7 +198,7 @@ METHOD SaveHtmlPage( cFile ) CLASS TIPCgi
 
 METHOD StartSession( cSID ) CLASS TIPCgi
 
-   LOCAL nH
+   LOCAL hFile
    LOCAL cFile
    LOCAL nFileSize
    LOCAL cBuffer
@@ -222,16 +222,16 @@ METHOD StartSession( cSID ) CLASS TIPCgi
       cFile := hb_DirSepAdd( ::cSessionSavePath ) + "SESSIONID_" + cSID
 
       IF hb_vfExists( cFile )
-         IF ( nH := hb_vfOpen( cFile ) ) != NIL
-            nFileSize := hb_vfSize( nH )
-            hb_vfSeek( nH, 0, FS_SET )
+         IF ( hFile := hb_vfOpen( cFile ) ) != NIL
+            nFileSize := hb_vfSize( hFile )
+            hb_vfSeek( hFile, 0, FS_SET )
             cBuffer := Space( nFileSize )
-            IF hb_vfRead( nH, @cBuffer, nFileSize ) != nFileSize
+            IF hb_vfRead( hFile, @cBuffer, nFileSize ) != nFileSize
                ::ErrHandler( "ERROR: On reading session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
             ELSE
                ::SessionDecode( cBuffer )
             ENDIF
-            hb_vfClose( nH )
+            hb_vfClose( hFile )
          ENDIF
       ELSE
          ::ErrHandler( "ERROR: On opening session file: " + cFile + ", file not exist." )

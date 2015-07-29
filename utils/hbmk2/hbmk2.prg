@@ -1630,7 +1630,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #endif
    LOCAL cLibBCC_CRTL
    LOCAL cScriptFile
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL cFile
    LOCAL aOBJLIST
    LOCAL hReplace
@@ -4203,8 +4203,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             hbmk[ _HBMK_cWorkDir ] := ""
          ELSE
             IF hbmk[ _HBMK_cWorkDir ] == NIL
-               IF ( fhnd := hb_vfTempFile( @hbmk[ _HBMK_cWorkDir ],, "hbmk_", ".dir" ) ) != NIL
-                  hb_vfClose( fhnd )
+               IF ( hFile := hb_vfTempFile( @hbmk[ _HBMK_cWorkDir ],, "hbmk_", ".dir" ) ) != NIL
+                  hb_vfClose( hFile )
                   hb_vfErase( hbmk[ _HBMK_cWorkDir ] )
                   IF hb_vfDirMake( hbmk[ _HBMK_cWorkDir ] ) != 0
                      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Temporary working directory cannot be created: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
@@ -6458,7 +6458,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          _hbmk_OutErr( hbmk, I_( "Warning: Non-Harbour source files ignored for -hbhrb output" ) )
       ENDCASE
 
-      IF ( fhnd := hb_vfTempFile( @l_cHRBSTUB,, "hbmk_", ".prg" ) ) == NIL
+      IF ( hFile := hb_vfTempFile( @l_cHRBSTUB,, "hbmk_", ".prg" ) ) == NIL
          _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .prg program could not be created." ) )
          RETURN _EXIT_STUBCREATE
       ENDIF
@@ -6471,8 +6471,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cFile += "SET PROCEDURE TO " + '"' + tmp + '"' + _FIL_EOL
       NEXT
 
-      hb_vfWrite( fhnd, cFile )
-      hb_vfClose( fhnd )
+      hb_vfWrite( hFile, cFile )
+      hb_vfClose( hFile )
       IF hbmk[ _HBMK_lDEBUGSTUB ]
          OutStd( ".prg stub dump:" + _OUT_EOL )
          OutStd( cFile )
@@ -6976,18 +6976,18 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                IF hbmk[ _HBMK_lINC ]
                   IF hbmk[ _HBMK_lREBUILD ] .OR. !( hb_MemoRead( l_cCSTUB ) == cFile )
-                     fhnd := hb_vfOpen( l_cCSTUB, FO_CREAT + FO_TRUNC + FO_WRITE )
+                     hFile := hb_vfOpen( l_cCSTUB, FO_CREAT + FO_TRUNC + FO_WRITE )
                   ELSE
-                     fhnd := ""
+                     hFile := ""
                   ENDIF
                ELSE
-                  fhnd := hb_vfTempFile( @l_cCSTUB,, "hbmk_", ".c" )
+                  hFile := hb_vfTempFile( @l_cCSTUB,, "hbmk_", ".c" )
                ENDIF
-               IF HB_ISSTRING( fhnd )
+               IF HB_ISSTRING( hFile )
                   AAdd( hbmk[ _HBMK_aC ], l_cCSTUB )
-               ELSEIF fhnd != NIL
-                  hb_vfWrite( fhnd, cFile )
-                  hb_vfClose( fhnd )
+               ELSEIF hFile != NIL
+                  hb_vfWrite( hFile, cFile )
+                  hb_vfClose( hFile )
 
                   IF hbmk[ _HBMK_lDEBUGSTUB ]
                      OutStd( "C stub dump:" + _OUT_EOL )
@@ -7091,18 +7091,18 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                IF hbmk[ _HBMK_lINC ]
                   IF hbmk[ _HBMK_lREBUILD ] .OR. !( hb_MemoRead( l_cCPPSTUB ) == cFile )
-                     fhnd := hb_vfOpen( l_cCPPSTUB, FO_CREAT + FO_TRUNC + FO_WRITE )
+                     hFile := hb_vfOpen( l_cCPPSTUB, FO_CREAT + FO_TRUNC + FO_WRITE )
                   ELSE
-                     fhnd := ""
+                     hFile := ""
                   ENDIF
                ELSE
-                  fhnd := hb_vfTempFile( @l_cCPPSTUB,, "hbmk_", ".cpp" )
+                  hFile := hb_vfTempFile( @l_cCPPSTUB,, "hbmk_", ".cpp" )
                ENDIF
-               IF HB_ISSTRING( fhnd )
+               IF HB_ISSTRING( hFile )
                   AAdd( hbmk[ _HBMK_aCPP ], l_cCPPSTUB )
-               ELSEIF fhnd != NIL
-                  hb_vfWrite( fhnd, cFile )
-                  hb_vfClose( fhnd )
+               ELSEIF hFile != NIL
+                  hb_vfWrite( hFile, cFile )
+                  hb_vfClose( hFile )
 
                   IF hbmk[ _HBMK_lDEBUGSTUB ]
                      OutStd( "C++ stub dump:" + _OUT_EOL )
@@ -7343,18 +7343,18 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
             IF hbmk[ _HBMK_lINC ]
                IF hbmk[ _HBMK_lREBUILD ] .OR. !( hb_MemoRead( l_cRESSTUB ) == cFile )
-                  fhnd := hb_vfOpen( l_cRESSTUB, FO_CREAT + FO_TRUNC + FO_WRITE )
+                  hFile := hb_vfOpen( l_cRESSTUB, FO_CREAT + FO_TRUNC + FO_WRITE )
                ELSE
-                  fhnd := ""
+                  hFile := ""
                ENDIF
             ELSE
-               fhnd := hb_vfTempFile( @l_cRESSTUB,, "hbmk_", ".rc" )
+               hFile := hb_vfTempFile( @l_cRESSTUB,, "hbmk_", ".rc" )
             ENDIF
-            IF HB_ISSTRING( fhnd )
+            IF HB_ISSTRING( hFile )
                hb_AIns( hbmk[ _HBMK_aRESSRC ], 1, l_cRESSTUB, .T. )
-            ELSEIF fhnd != NIL
-               hb_vfWrite( fhnd, cFile )
-               hb_vfClose( fhnd )
+            ELSEIF hFile != NIL
+               hb_vfWrite( hFile, cFile )
+               hb_vfClose( hFile )
 
                IF hbmk[ _HBMK_lDEBUGSTUB ]
                   OutStd( ".rc stub dump:" + _OUT_EOL )
@@ -7430,9 +7430,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             /* Handle moving the whole command-line to a script, if requested. */
             cScriptFile := NIL
             IF "{SCRIPT}" $ cOpt_Res
-               IF ( fhnd := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
-                  hb_vfWrite( fhnd, StrTran( cOpt_Res, "{SCRIPT}" ) )
-                  hb_vfClose( fhnd )
+               IF ( hFile := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
+                  hb_vfWrite( hFile, StrTran( cOpt_Res, "{SCRIPT}" ) )
+                  hb_vfClose( hFile )
                   cOpt_Res := "@" + cScriptFile
                ELSE
                   _hbmk_OutErr( hbmk, I_( "Warning: Resource compiler script could not be created, continuing in command-line." ) )
@@ -7603,9 +7603,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                         /* Handle moving the whole command-line to a script, if requested. */
                         cScriptFile := NIL
                         IF "{SCRIPT}" $ cOpt_CompCLoop
-                           IF ( fhnd := hb_vfTempFile( @cScriptFile,,, ".cpl" ) ) != NIL
-                              hb_vfWrite( fhnd, StrTran( cOpt_CompCLoop, "{SCRIPT}" ) )
-                              hb_vfClose( fhnd )
+                           IF ( hFile := hb_vfTempFile( @cScriptFile,,, ".cpl" ) ) != NIL
+                              hb_vfWrite( hFile, StrTran( cOpt_CompCLoop, "{SCRIPT}" ) )
+                              hb_vfClose( hFile )
                               cOpt_CompCLoop := "@" + cScriptFile
                            ELSE
                               _hbmk_OutErr( hbmk, I_( "Warning: C/C++ compiler script could not be created, continuing in command-line." ) )
@@ -7793,9 +7793,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* Handle moving the whole command-line to a script, if requested. */
                cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Link
-                  IF ( fhnd := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
-                     hb_vfWrite( fhnd, StrTran( cOpt_Link, "{SCRIPT}" ) )
-                     hb_vfClose( fhnd )
+                  IF ( hFile := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
+                     hb_vfWrite( hFile, StrTran( cOpt_Link, "{SCRIPT}" ) )
+                     hb_vfClose( hFile )
                      cOpt_Link := "@" + cScriptFile
                   ELSE
                      _hbmk_OutErr( hbmk, I_( "Warning: Link script could not be created, continuing in command-line." ) )
@@ -7902,9 +7902,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                cScriptFile := NIL
                IF "{SCRIPT_MINGW}" $ cOpt_Dyn
-                  IF ( fhnd := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
-                     hb_vfWrite( fhnd, ArrayToList( aOBJLIST, hb_eol(), nOpt_Esc, nOpt_FNF, "INPUT(" + iif( cDynObjPrefix == NIL, "", cDynObjPrefix ), ")" ) )
-                     hb_vfClose( fhnd )
+                  IF ( hFile := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
+                     hb_vfWrite( hFile, ArrayToList( aOBJLIST, hb_eol(), nOpt_Esc, nOpt_FNF, "INPUT(" + iif( cDynObjPrefix == NIL, "", cDynObjPrefix ), ")" ) )
+                     hb_vfClose( hFile )
                      cOpt_Dyn := StrTran( cOpt_Dyn, "{SCRIPT_MINGW}" )
                      tmp := FNameEscape( cScriptFile, nOpt_Esc, nOpt_FNF )
                   ELSE
@@ -7932,9 +7932,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                /* Handle moving the whole command-line to a script, if requested. */
                IF Empty( cScriptFile ) .AND. "{SCRIPT}" $ cOpt_Dyn
-                  IF ( fhnd := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
-                     hb_vfWrite( fhnd, StrTran( cOpt_Dyn, "{SCRIPT}" ) )
-                     hb_vfClose( fhnd )
+                  IF ( hFile := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
+                     hb_vfWrite( hFile, StrTran( cOpt_Dyn, "{SCRIPT}" ) )
+                     hb_vfClose( hFile )
                      cOpt_Dyn := "@" + cScriptFile
                   ELSE
                      _hbmk_OutErr( hbmk, I_( "Warning: Dynamic lib link script could not be created, continuing in command-line." ) )
@@ -8023,9 +8023,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* Handle moving the whole command-line to a script, if requested. */
                cScriptFile := NIL
                IF "{SCRIPT}" $ cOpt_Lib
-                  IF ( fhnd := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
-                     hb_vfWrite( fhnd, StrTran( cOpt_Lib, "{SCRIPT}" ) )
-                     hb_vfClose( fhnd )
+                  IF ( hFile := hb_vfTempFile( @cScriptFile,,, ".lnk" ) ) != NIL
+                     hb_vfWrite( hFile, StrTran( cOpt_Lib, "{SCRIPT}" ) )
+                     hb_vfClose( hFile )
                      cOpt_Lib := "@" + cScriptFile
                   ELSE
                      _hbmk_OutErr( hbmk, I_( "Warning: Lib script could not be created, continuing in command-line." ) )
@@ -8355,8 +8355,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
             IF ! Empty( cBin_Sign )
 
-               IF ( fhnd := hb_vfTempFile( @tmp2, hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) ) ) != NIL
-                  hb_vfClose( fhnd )
+               IF ( hFile := hb_vfTempFile( @tmp2, hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) ) ) != NIL
+                  hb_vfClose( hFile )
                ENDIF
 
                /* Code signing */
@@ -13359,7 +13359,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, ;
 STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
 
    LOCAL cLNG
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL cPOTemp
    LOCAL cPOCooked
 
@@ -13368,8 +13368,8 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
 
    FOR EACH cLNG IN iif( Empty( hbmk[ _HBMK_aLNG ] ) .OR. !( _LNG_MARKER $ hbmk[ _HBMK_cPO ] ), { _LNG_MARKER }, hbmk[ _HBMK_aLNG ] )
       IF cLNG:__enumIsFirst()
-         IF ( fhnd := hb_vfTempFile( @cPOTemp,,, ".po" ) ) != NIL
-            hb_vfClose( fhnd )
+         IF ( hFile := hb_vfTempFile( @cPOTemp,,, ".po" ) ) != NIL
+            hb_vfClose( hFile )
             IF hbmk[ _HBMK_lDEBUGI18N ]
                _hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: file .pot list: %1$s", ArrayToList( aPOTIN, ", " ) ) )
                _hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: temp unified .po: %1$s", cPOTemp ) )
@@ -13602,7 +13602,7 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
    LOCAL lModified := .F.
 
-   LOCAL fhnd, nPEPos, cSignature, tDate, nSections
+   LOCAL hFile, nPEPos, cSignature, tDate, nSections
    LOCAL nPEChecksumPos, nDWORD, cDWORD
    LOCAL tmp, tmp1
 
@@ -13612,27 +13612,27 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
    hb_vfTimeGet( cFileName, @tDate )
 
-   IF ( fhnd := hb_vfOpen( cFileName, FO_READWRITE + FO_EXCLUSIVE ) ) != NIL
-      IF ( cSignature := hb_vfReadLen( fhnd, 2 ) ) == "MZ"
-         hb_vfSeek( fhnd, 0x003C, FS_SET )
-         nPEPos := Bin2W( hb_vfReadLen( fhnd, 2 ) ) + ;
-                   Bin2W( hb_vfReadLen( fhnd, 2 ) ) * 0x10000
-         hb_vfSeek( fhnd, nPEPos, FS_SET )
-         IF !( hb_vfReadLen( fhnd, 4 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 ) )
+   IF ( hFile := hb_vfOpen( cFileName, FO_READWRITE + FO_EXCLUSIVE ) ) != NIL
+      IF ( cSignature := hb_vfReadLen( hFile, 2 ) ) == "MZ"
+         hb_vfSeek( hFile, 0x003C, FS_SET )
+         nPEPos := Bin2W( hb_vfReadLen( hFile, 2 ) ) + ;
+                   Bin2W( hb_vfReadLen( hFile, 2 ) ) * 0x10000
+         hb_vfSeek( hFile, nPEPos, FS_SET )
+         IF !( hb_vfReadLen( hFile, 4 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 ) )
             nPEPos := NIL
          ENDIF
-      ELSEIF cSignature + hb_vfReadLen( fhnd, 2 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 )
+      ELSEIF cSignature + hb_vfReadLen( hFile, 2 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 )
          nPEPos := 0
       ENDIF
       IF nPEPos != NIL
 
-         hb_vfSeek( fhnd, 0x0002, FS_RELATIVE )
+         hb_vfSeek( hFile, 0x0002, FS_RELATIVE )
 
-         nSections := Bin2W( hb_vfReadLen( fhnd, 2 ) )
+         nSections := Bin2W( hb_vfReadLen( hFile, 2 ) )
 
          nDWORD := Int( ( Max( hb_defaultValue( tDateHdr, hb_SToT() ), hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 )
 
-         IF hb_vfSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008
+         IF hb_vfSeek( hFile, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008
 
             cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
                       hb_BChar( nDWORD / 0x100 )
@@ -13640,42 +13640,42 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
             cDWORD += hb_BChar( nDWORD % 0x100 ) + ;
                       hb_BChar( nDWORD / 0x100 )
 
-            IF !( hb_vfReadLen( fhnd, 4 ) == cDWORD ) .AND. ;
-               hb_vfSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008 .AND. ;
-               hb_vfWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+            IF !( hb_vfReadLen( hFile, 4 ) == cDWORD ) .AND. ;
+               hb_vfSeek( hFile, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008 .AND. ;
+               hb_vfWrite( hFile, cDWORD ) == hb_BLen( cDWORD )
                lModified := .T.
             ENDIF
 
-            IF hb_vfSeek( fhnd, nPEPos + 0x0014, FS_SET ) == nPEPos + 0x0014
+            IF hb_vfSeek( hFile, nPEPos + 0x0014, FS_SET ) == nPEPos + 0x0014
 
                nPEPos += 0x0018
                nPEChecksumPos := nPEPos + 0x0040
 
-               IF Bin2W( hb_vfReadLen( fhnd, 2 ) ) > 0x0058 .AND. ;
-                  hb_vfSeek( fhnd, nPEPos + 0x005C, FS_SET ) == nPEPos + 0x005C
+               IF Bin2W( hb_vfReadLen( hFile, 2 ) ) > 0x0058 .AND. ;
+                  hb_vfSeek( hFile, nPEPos + 0x005C, FS_SET ) == nPEPos + 0x005C
 
                   nPEPos += 0x005C + ;
-                            ( ( Bin2W( hb_vfReadLen( fhnd, 2 ) ) + ;
-                                Bin2W( hb_vfReadLen( fhnd, 2 ) ) * 0x10000 ) * 8 ) + 4
-                  IF hb_vfSeek( fhnd, nPEPos, FS_SET ) == nPEPos
+                            ( ( Bin2W( hb_vfReadLen( hFile, 2 ) ) + ;
+                                Bin2W( hb_vfReadLen( hFile, 2 ) ) * 0x10000 ) * 8 ) + 4
+                  IF hb_vfSeek( hFile, nPEPos, FS_SET ) == nPEPos
                      tmp1 := nPEPos
                      nPEPos := NIL
                      /* IMAGE_SECTION_HEADERs */
                      FOR tmp := 1 TO nSections
-                        hb_vfSeek( fhnd, tmp1 + ( tmp - 1 ) * 0x28, FS_SET )
+                        hb_vfSeek( hFile, tmp1 + ( tmp - 1 ) * 0x28, FS_SET )
                         /* IMAGE_EXPORT_DIRECTORY */
-                        IF hb_vfReadLen( fhnd, 8 ) == ".edata" + hb_BChar( 0 ) + hb_BChar( 0 )
-                           hb_vfSeek( fhnd, 0x000C, FS_RELATIVE )
-                           nPEPos := Bin2W( hb_vfReadLen( fhnd, 2 ) ) + ;
-                                     Bin2W( hb_vfReadLen( fhnd, 2 ) ) * 0x10000
+                        IF hb_vfReadLen( hFile, 8 ) == ".edata" + hb_BChar( 0 ) + hb_BChar( 0 )
+                           hb_vfSeek( hFile, 0x000C, FS_RELATIVE )
+                           nPEPos := Bin2W( hb_vfReadLen( hFile, 2 ) ) + ;
+                                     Bin2W( hb_vfReadLen( hFile, 2 ) ) * 0x10000
                            EXIT
                         ENDIF
                      NEXT
                      IF nPEPos != NIL .AND. ;
-                        hb_vfSeek( fhnd, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004
-                        IF !( hb_vfReadLen( fhnd, 4 ) == cDWORD ) .AND. ;
-                           hb_vfSeek( fhnd, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004 .AND. ;
-                           hb_vfWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+                        hb_vfSeek( hFile, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004
+                        IF !( hb_vfReadLen( hFile, 4 ) == cDWORD ) .AND. ;
+                           hb_vfSeek( hFile, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004 .AND. ;
+                           hb_vfWrite( hFile, cDWORD ) == hb_BLen( cDWORD )
                            lModified := .T.
                         ENDIF
                      ENDIF
@@ -13684,22 +13684,22 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
                /* Recalculate PE checksum */
                IF lModified
-                  tmp := hb_vfSize( fhnd )
-                  hb_vfSeek( fhnd, FS_SET, 0 )
-                  nDWORD := win_PEChecksumCalc( hb_vfReadLen( fhnd, tmp ), nPECheckSumPos )
-                  IF hb_vfSeek( fhnd, nPEChecksumPos ) == nPEChecksumPos
+                  tmp := hb_vfSize( hFile )
+                  hb_vfSeek( hFile, FS_SET, 0 )
+                  nDWORD := win_PEChecksumCalc( hb_vfReadLen( hFile, tmp ), nPECheckSumPos )
+                  IF hb_vfSeek( hFile, nPEChecksumPos ) == nPEChecksumPos
                      cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
                                hb_BChar( nDWORD / 0x100 )
                      nDWORD /= 0x10000
                      cDWORD += hb_BChar( nDWORD % 0x100 ) + ;
                                hb_BChar( nDWORD / 0x100 )
-                     hb_vfWrite( fhnd, cDWORD )
+                     hb_vfWrite( hFile, cDWORD )
                   ENDIF
                ENDIF
             ENDIF
          ENDIF
       ENDIF
-      hb_vfClose( fhnd )
+      hb_vfClose( hFile )
    ENDIF
 
    IF lModified
@@ -13785,12 +13785,12 @@ STATIC FUNCTION win_defgen_command( hbmk, cCommand, cSourceDLL, /* @ */ cDef )
 
 STATIC FUNCTION IsCOFFLib( cFileName )
 
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL cBuffer
 
-   IF ( fhnd := hb_vfOpen( cFileName ) ) != NIL
-      cBuffer := hb_vfReadLen( fhnd, hb_BLen( _COFF_LIB_SIGNATURE ) )
-      hb_vfClose( fhnd )
+   IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+      cBuffer := hb_vfReadLen( hFile, hb_BLen( _COFF_LIB_SIGNATURE ) )
+      hb_vfClose( hFile )
       IF cBuffer == _COFF_LIB_SIGNATURE
          RETURN .T.
       ENDIF
@@ -13802,12 +13802,12 @@ STATIC FUNCTION IsCOFFLib( cFileName )
 
 STATIC FUNCTION IsOMFLib( cFileName )
 
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL cBuffer
 
-   IF ( fhnd := hb_vfOpen( cFileName ) ) != NIL
-      cBuffer := hb_vfReadLen( fhnd, hb_BLen( _OMF_LIB_SIGNATURE ) )
-      hb_vfClose( fhnd )
+   IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+      cBuffer := hb_vfReadLen( hFile, hb_BLen( _OMF_LIB_SIGNATURE ) )
+      hb_vfClose( hFile )
       IF cBuffer == _OMF_LIB_SIGNATURE
          RETURN .T.
       ENDIF
@@ -13904,7 +13904,7 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
 
    LOCAL cDef
    LOCAL cSourceDef
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL tmp
 
    LOCAL lDefSource
@@ -13935,9 +13935,9 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
       /* Try to generate a .def file from the .dll
          This might help in case the supplied .lib doesn't work. */
       IF win_defgen_command( hbmk, "gendef - {ID}", cSourceDLL, @cDef ) == _HBMK_IMPLIB_OK
-         IF ( fhnd := hb_vfTempFile( @cSourceDef,,, ".def" ) ) != NIL
-            hb_vfWrite( fhnd, cDef )
-            hb_vfClose( fhnd )
+         IF ( hFile := hb_vfTempFile( @cSourceDef,,, ".def" ) ) != NIL
+            hb_vfWrite( hFile, cDef )
+            hb_vfClose( hFile )
             IF ( nResult := win_implib_def( hbmk, cCommand, cSourceDef, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
                hb_vfErase( cSourceDef )
                RETURN nResult
@@ -13986,7 +13986,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
    LOCAL nResult
 
    LOCAL cExports
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL cSourceDef
    LOCAL cLine
    LOCAL tmp
@@ -14040,9 +14040,9 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
          ENDIF
       NEXT
 
-      IF ( fhnd := hb_vfTempFile( @cSourceDef ) ) != NIL
-         hb_vfWrite( fhnd, cFuncList )
-         hb_vfClose( fhnd )
+      IF ( hFile := hb_vfTempFile( @cSourceDef ) ) != NIL
+         hb_vfWrite( hFile, cFuncList )
+         hb_vfClose( hFile )
 
          nResult := win_implib_command( hbmk, cCommand, cSourceDef, cTargetLib, cFlags )
 
@@ -15071,7 +15071,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
    LOCAL pRegex
    LOCAL aResult
    LOCAL tmp
-   LOCAL fhnd
+   LOCAL hFile
 
    IF ! Empty( cBin_LibHBX ) .AND. ;
       ! Empty( cLibHBX_Regex )
@@ -15079,8 +15079,8 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
       IF hb_vfExists( cInputName )
 
          IF "{OT}" $ cOpt_LibHBX
-            IF ( fhnd := hb_vfTempFile( @cTempFile,,, ".tmp" ) ) != NIL
-               hb_vfClose( fhnd )
+            IF ( hFile := hb_vfTempFile( @cTempFile,,, ".tmp" ) ) != NIL
+               hb_vfClose( hFile )
             ENDIF
          ELSE
             cTempFile := ""

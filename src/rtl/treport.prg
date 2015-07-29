@@ -836,7 +836,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    LOCAL cSubGroupExp
    LOCAL nColCount                  // Number of columns in report
    LOCAL nCount
-   LOCAL nFrmHandle                 // (.frm) file handle
+   LOCAL hFile                      // (.frm) file handle
    LOCAL nOptionByte                // Contains option byte
 
    LOCAL aReport[ RPT_COUNT ]       // Create report array
@@ -867,7 +867,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
    aReport[ RPT_HEADING ]   := ""
 
    // Open the report file
-   IF ( nFrmHandle := hb_vfOpen( cFrmFile, HB_FO_DEFAULTS ) ) == NIL
+   IF ( hFile := hb_vfOpen( cFrmFile, HB_FO_DEFAULTS ) ) == NIL
       err := ErrorNew()
       err:severity := ES_ERROR
       err:genCode := EG_OPEN
@@ -876,7 +876,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
       err:filename := cFrmFile
       Eval( ErrorBlock(), err )
    ELSE
-      IF hb_vfRead( nFrmHandle, @cFileBuff, SIZE_FILE_BUFF ) > 0 .AND. FError() == 0
+      IF hb_vfRead( hFile, @cFileBuff, SIZE_FILE_BUFF ) > 0 .AND. FError() == 0
          // Is this a .frm type file (2 at start and end of file)
          IF Bin2W( hb_BSubStr( cFileBuff, 1, 2 ) ) == 2 .AND. ;
             Bin2W( hb_BSubStr( cFileBuff, SIZE_FILE_BUFF - 1, 2 ) ) == 2
@@ -999,7 +999,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
             NEXT
          ENDIF
       ENDIF
-      hb_vfClose( nFrmHandle )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN aReport

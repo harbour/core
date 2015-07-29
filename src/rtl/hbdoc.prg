@@ -350,7 +350,7 @@ FUNCTION __hbdoc_FilterOut( cFile )
 
 FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
 
-   LOCAL fhnd
+   LOCAL hFile
 
    IF HB_ISSTRING( cFileName ) .AND. ;
       HB_ISARRAY( aEntry )
@@ -359,10 +359,10 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      IF ( fhnd := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
-         hb_vfWrite( fhnd, _HBDOC_SIGNATURE )
-         hb_vfWrite( fhnd, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
-         hb_vfClose( fhnd )
+      IF ( hFile := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
+         hb_vfWrite( hFile, _HBDOC_SIGNATURE )
+         hb_vfWrite( hFile, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
+         hb_vfClose( hFile )
          RETURN .T.
       ENDIF
    ENDIF
@@ -371,7 +371,7 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
 
 FUNCTION __hbdoc_LoadHBD( cFileName )
 
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL aEntry := NIL
 
    LOCAL cBuffer
@@ -382,14 +382,14 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      IF ( fhnd := hb_vfOpen( cFileName ) ) != NIL
+      IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
 
-         IF hb_vfReadLen( fhnd, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
+         IF hb_vfReadLen( hFile, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
 
-            cBuffer := Space( hb_vfSize( fhnd ) - _HBDOC_SIG_LEN )
-            hb_vfSeek( fhnd, _HBDOC_SIG_LEN, FS_SET )
-            hb_vfRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
-            hb_vfClose( fhnd )
+            cBuffer := Space( hb_vfSize( hFile ) - _HBDOC_SIG_LEN )
+            hb_vfSeek( hFile, _HBDOC_SIG_LEN, FS_SET )
+            hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
+            hb_vfClose( hFile )
 
             aEntry := hb_Deserialize( cBuffer )
             cBuffer := NIL
@@ -398,7 +398,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
                aEntry := NIL
             ENDIF
          ELSE
-            hb_vfClose( fhnd )
+            hb_vfClose( hFile )
          ENDIF
       ENDIF
    ENDIF

@@ -16,7 +16,7 @@
 FUNCTION ft_FlopTst( nDriveNum )
 
    LOCAL cFileName
-   LOCAL fhnd
+   LOCAL hFile
 
    DO CASE
    CASE HB_ISNUMERIC( nDriveNum )
@@ -30,15 +30,15 @@ FUNCTION ft_FlopTst( nDriveNum )
    cFileName := hb_DirSepAdd( cFileName ) + "nf$rwtst.tmp"
 
    IF hb_vfExists( cFileName )
-      IF ( fhnd := hb_vfOpen( cFileName, FO_DENYNONE + FO_READWRITE ) ) == NIL
+      IF ( hFile := hb_vfOpen( cFileName, FO_DENYNONE + FO_READWRITE ) ) == NIL
          RETURN ERR_WRITE_PROTECTED
       ENDIF
-      hb_vfClose( fhnd )
+      hb_vfClose( hFile )
    ELSE
-      IF ( fhnd := hb_vfOpen( cFileName, FO_DENYNONE + FO_READWRITE + FO_CREAT ) ) == NIL
+      IF ( hFile := hb_vfOpen( cFileName, FO_DENYNONE + FO_READWRITE + FO_CREAT ) ) == NIL
          RETURN ERR_WRITE_PROTECTED
       ENDIF
-      hb_vfClose( fhnd )
+      hb_vfClose( hFile )
 
       hb_vfErase( cFileName )
    ENDIF

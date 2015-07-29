@@ -113,13 +113,13 @@ METHOD PROCEDURE CopyTo( oTargetStream ) CLASS TStream
 CREATE CLASS TStreamFileReader INHERIT TStream
 
    VAR cFile
-   VAR fhnd
+   VAR hFile
 
    METHOD New( cFile, nMode ) CONSTRUCTOR
-   METHOD Handle() INLINE hb_vfHandle( ::fhnd )
+   METHOD Handle() INLINE hb_vfHandle( ::hFile )
 
-   METHOD Close() INLINE iif( ::fhnd != NIL, hb_vfClose( ::fhnd ), ), ::fhnd := NIL
-   METHOD Seek( nOffset Origin ) INLINE hb_vfSeek( ::fhnd, nOffset, Origin )
+   METHOD Close() INLINE iif( ::hFile != NIL, hb_vfClose( ::hFile ), ), ::hFile := NIL
+   METHOD Seek( nOffset Origin ) INLINE hb_vfSeek( ::hFile, nOffset, Origin )
 
    METHOD Read( sBuffer, nOffset, nCount )
    METHOD ReadByte()
@@ -134,14 +134,14 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
 
    ::cFile := cFile
 
-   IF ( ::fhnd := hb_vfOpen( cFile, nMode ) ) == NIL
+   IF ( ::hFile := hb_vfOpen( cFile, nMode ) ) == NIL
       Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + hb_ntos( FError() ), hb_AParams() ) )
    ENDIF
 
    ::nPosition := 0
-   ::nLength := hb_vfSize( ::fhnd )
+   ::nLength := hb_vfSize( ::hFile )
 
-   hb_vfSeek( ::fhnd, 0, FS_SET )
+   hb_vfSeek( ::hFile, 0, FS_SET )
 
    RETURN Self
 
@@ -158,10 +158,10 @@ METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
 
    IF HB_ISNUMERIC( nOffset ) .AND. nOffset >= 1
       cBuffer := Space( nCount )
-      nRead := hb_vfRead( ::fhnd, @cBuffer, nCount )
+      nRead := hb_vfRead( ::hFile, @cBuffer, nCount )
       sBuffer := Stuff( sBuffer, nOffSet + 1, nRead, hb_BLeft( cBuffer, nRead ) )
    ELSE
-      nRead := hb_vfRead( ::fhnd, @sBuffer, nCount )
+      nRead := hb_vfRead( ::hFile, @sBuffer, nCount )
    ENDIF
 
    ::nPosition += nRead
@@ -172,7 +172,7 @@ METHOD ReadByte() CLASS TStreamFileReader
 
    LOCAL sBuffer := Space( 1 )
 
-   IF hb_vfRead( ::fhnd, @sBuffer, 1 ) == 1
+   IF hb_vfRead( ::hFile, @sBuffer, 1 ) == 1
       ::nPosition++
       RETURN sBuffer
    ENDIF
@@ -182,13 +182,13 @@ METHOD ReadByte() CLASS TStreamFileReader
 CREATE CLASS TStreamFileWriter INHERIT TStream
 
    VAR cFile
-   VAR fhnd
+   VAR hFile
 
    METHOD New( cFile, nMode, nAttr ) CONSTRUCTOR
-   METHOD Handle() INLINE hb_vfHandle( ::fhnd )
+   METHOD Handle() INLINE hb_vfHandle( ::hFile )
 
-   METHOD Close() INLINE iif( ::fhnd != NIL, hb_vfClose( ::fhnd ), ), ::fhnd := NIL
-   METHOD Seek( nOffset Origin ) INLINE ::nPosition := hb_vfSeek( ::fhnd, nOffset, Origin )
+   METHOD Close() INLINE iif( ::hFile != NIL, hb_vfClose( ::hFile ), ), ::hFile := NIL
+   METHOD Seek( nOffset Origin ) INLINE ::nPosition := hb_vfSeek( ::hFile, nOffset, Origin )
 
    METHOD Write( sBuffer, nOffset, nCount )
    METHOD WriteByte( cByte )
@@ -206,14 +206,14 @@ METHOD New( cFile, nMode, nAttr ) CLASS TStreamFileWriter
    hb_default( @nMode, FO_READWRITE )
 
    IF hb_vfExists( cFile )
-      IF ( ::fhnd := hb_vfOpen( cFile, nMode ) ) == NIL
+      IF ( ::hFile := hb_vfOpen( cFile, nMode ) ) == NIL
          Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + hb_ntos( FError() ), hb_AParams() ) )
       ENDIF
 
-      ::nLength := hb_vfSize( ::fhnd )
+      ::nLength := hb_vfSize( ::hFile )
       ::nPosition := ::nLength
    ELSE
-      IF ( ::fhnd := hb_vfOpen( cFile, hb_bitOr( FO_CREAT + FO_TRUNC + FO_WRITE, nMode ) ) ) == NIL
+      IF ( ::hFile := hb_vfOpen( cFile, hb_bitOr( FO_CREAT + FO_TRUNC + FO_WRITE, nMode ) ) ) == NIL
          Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Create Error: " + hb_ntos( FError() ), hb_AParams() ) )
       ENDIF
 
@@ -242,7 +242,7 @@ METHOD Write( sBuffer, nOffset, nCount ) CLASS TStreamFileWriter
       sBuffer := hb_BSubStr( sBuffer, nOffSet + 1 )
    ENDIF
 
-   nWritten := hb_vfWrite( ::fhnd, sBuffer, nCount )
+   nWritten := hb_vfWrite( ::hFile, sBuffer, nCount )
 
    ::nPosition += nWritten
 
@@ -254,7 +254,7 @@ METHOD Write( sBuffer, nOffset, nCount ) CLASS TStreamFileWriter
 
 METHOD PROCEDURE WriteByte( cByte ) CLASS TStreamFileWriter
 
-   LOCAL nWritten := hb_vfWrite( ::fhnd, cByte, 1 )
+   LOCAL nWritten := hb_vfWrite( ::hFile, cByte, 1 )
 
    ::nPosition += nWritten
 

@@ -42,12 +42,12 @@
    $EXAMPLES$
       // Show header length of a DBF
       PROCEDURE Main()
-         LOCAL fhnd, cBuffer := Space( 2 )
-         IF ( fhnd := hb_vfOpen( "test.dbf" ) ) != NIL
-            hb_vfSeek( fhnd, 8 )
-            hb_vfRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
+         LOCAL hFile, cBuffer := Space( 2 )
+         IF ( hFile := hb_vfOpen( "test.dbf" ) ) != NIL
+            hb_vfSeek( hFile, 8 )
+            hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
             ? "Length of DBF header in bytes:", Bin2W( cBuffer )
-            hb_vfClose( fhnd )
+            hb_vfClose( hFile )
          ELSE
             ? "Can not open file"
          ENDIF
@@ -99,12 +99,12 @@
    $EXAMPLES$
       // Show number of records in DBF
       PROCEDURE Main()
-         LOCAL fhnd, cBuffer := Space( 4 )
-         IF ( fhnd := hb_vfOpen( "test.dbf" ) ) != NIL
-            hb_vfSeek( fhnd, 4 )
-            hb_vfRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
+         LOCAL hFile, cBuffer := Space( 4 )
+         IF ( hFile := hb_vfOpen( "test.dbf" ) ) != NIL
+            hb_vfSeek( hFile, 4 )
+            hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
             ? "Number of records in file:", Bin2U( cBuffer )
-            hb_vfClose( fhnd )
+            hb_vfClose( hFile )
          ELSE
             ? "Can not open file"
          ENDIF

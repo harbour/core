@@ -90,20 +90,20 @@ FUNCTION hb_EmptyLogFileOnOff( lOnOff )
 
 PROCEDURE hb_ToLogFile( cLogFile, ... )
 
-   LOCAL nHandle
+   LOCAL hFile
 
    IF s_lToLogFile
 
-      nHandle := hb_vfOpen( hb_defaultValue( cLogFile, "logfile.log" ), FO_CREAT + iif( s_lEmptyLogFile, FO_TRUNC, 0 ) + FO_WRITE + FO_SHARED )
+      hFile := hb_vfOpen( hb_defaultValue( cLogFile, "logfile.log" ), FO_CREAT + iif( s_lEmptyLogFile, FO_TRUNC, 0 ) + FO_WRITE + FO_SHARED )
 
       s_lEmptyLogFile := .F.
 
       // Writing
-      IF nHandle != NIL
-         hb_vfSeek( nHandle, 0, FS_END )
-         hb_vfWrite( nHandle, sprintf( ... ) )
-         hb_vfWrite( nHandle, hb_eol() )
-         hb_vfClose( nHandle )
+      IF hFile != NIL
+         hb_vfSeek( hFile, 0, FS_END )
+         hb_vfWrite( hFile, sprintf( ... ) )
+         hb_vfWrite( hFile, hb_eol() )
+         hb_vfClose( hFile )
       ENDIF
    ENDIF
 

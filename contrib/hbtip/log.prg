@@ -58,7 +58,7 @@ CREATE CLASS TIPLog
    PROTECTED:
 
    VAR cFileName
-   VAR fhnd      INIT NIL
+   VAR hFile     INIT NIL
 
 ENDCLASS
 
@@ -79,18 +79,18 @@ METHOD Add( cMsg ) CLASS TIPLog
    LOCAL cDir, cName, cExt
    LOCAL n
 
-   IF ::fhnd == NIL
+   IF ::hFile == NIL
 
       hb_FNameSplit( ::cFileName, @cDir, @cName, @cExt )
 
       n := 1
-      DO WHILE ( ::fhnd := hb_vfOpen( hb_FNameMerge( cDir, cName + "-" + hb_ntos( n++ ), cExt ), FO_CREAT + FO_EXCL + FO_WRITE ) ) == NIL .AND. ;
+      DO WHILE ( ::hFile := hb_vfOpen( hb_FNameMerge( cDir, cName + "-" + hb_ntos( n++ ), cExt ), FO_CREAT + FO_EXCL + FO_WRITE ) ) == NIL .AND. ;
          FError() != 3 /* path not found */
       ENDDO
    ENDIF
 
-   IF ::fhnd != NIL
-      RETURN hb_vfWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )
+   IF ::hFile != NIL
+      RETURN hb_vfWrite( ::hFile, cMsg ) == hb_BLen( cMsg )
    ENDIF
 
    RETURN .F.
@@ -99,9 +99,9 @@ METHOD Close() CLASS TIPLog
 
    LOCAL lRetVal
 
-   IF ::fhnd != NIL
-      lRetVal := hb_vfClose( ::fhnd )
-      ::fhnd := NIL
+   IF ::hFile != NIL
+      lRetVal := hb_vfClose( ::hFile )
+      ::hFile := NIL
       RETURN lRetVal
    ENDIF
 

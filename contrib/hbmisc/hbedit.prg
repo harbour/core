@@ -191,22 +191,22 @@ FUNCTION EditorNextLine( oEdit )
 //
 FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
 
-   LOCAL xHandle, nLen, oEdit, lSaved, lClose := .F.
+   LOCAL xFileHandle, nLen, oEdit, lSaved, lClose := .F.
    LOCAL lHandleOk := .F.
 
    IF HB_ISSTRING( xInput )
-      xHandle := hb_vfOpen( xInput )
+      xFileHandle := hb_vfOpen( xInput )
       lClose := .T.
    ELSE
-      xHandle := xInput
+      xFileHandle := xInput
    ENDIF
 
    DO CASE
-   CASE HB_ISNUMERIC( xHandle ) .AND. xHandle != F_ERROR
-      nLen := FSeek( xHandle, 0, FS_END )
+   CASE HB_ISNUMERIC( xFileHandle ) .AND. xFileHandle != F_ERROR
+      nLen := FSeek( xFileHandle, 0, FS_END )
       lHandleOk := .T.
-   CASE HB_ISPOINTER( xHandle ) .AND. xHandle != NIL
-      nLen := hb_vfSize( xHandle )
+   CASE HB_ISPOINTER( xFileHandle ) .AND. xFileHandle != NIL
+      nLen := hb_vfSize( xFileHandle )
       lHandleOk := .T.
    ENDCASE
 
@@ -216,9 +216,9 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
       iif( nLen < 8192, nLen * 2, Int( nLen * 1.5 ) ), nEscape )
 
    IF lHandleOk
-      ed_ReadText( oEdit[ E_EDIT ], xHandle, 0, nLen, hb_defaultValue( lConv, .F. ) )
+      ed_ReadText( oEdit[ E_EDIT ], xFileHandle, 0, nLen, hb_defaultValue( lConv, .F. ) )
       IF lClose
-         hb_vfClose( xHandle )
+         hb_vfClose( xFileHandle )
       ENDIF
    ELSE
       EditorSetText( oEdit, " " )
@@ -234,14 +234,14 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, lConv, nEscape )
 // Reads a text from a file into the editor
 //
 // oEditor  - existing editor
-// xHandle -  handle to an open file to read from
+// xFileHandle -  handle to an open file to read from
 // nOffset - the starting offset
 // nLen - the number of characters to read
 // lConv - specifies if some unprintable characters should be converted
 //    (NOTE: it was used to allow display charcters with ASCII code 27 and 26)
 //
-FUNCTION EditorRead( oEditor, xHandle, nOffset, nLen, lConv )
-   RETURN ed_ReadText( oEditor[ E_EDIT ], xHandle, nOffset, nLen, ;
+FUNCTION EditorRead( oEditor, xFileHandle, nOffset, nLen, lConv )
+   RETURN ed_ReadText( oEditor[ E_EDIT ], xFileHandle, nOffset, nLen, ;
       hb_defaultValue( lConv, .T. ) )
 
 // Start the editor
@@ -421,19 +421,19 @@ STATIC FUNCTION EditorMove( pEdit, nKey )
 
 STATIC FUNCTION EditorSave( oEdit )
 
-   LOCAL fhnd, cFile
+   LOCAL hFile, cFile
 
    cFile := EditorCargo( oEdit )
    IF ! HB_ISSTRING( cFile ) .OR. Len( cFile ) == 0
       RETURN .F.
    ENDIF
 
-   IF ( fhnd := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
-      hb_vfWrite( fhnd, EditorGetText( oEdit ) )
-      hb_vfClose( fhnd )
+   IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+      hb_vfWrite( hFile, EditorGetText( oEdit ) )
+      hb_vfClose( hFile )
    ENDIF
 
-   RETURN fhnd != NIL
+   RETURN hFile != NIL
 
 FUNCTION SaveBox( top, left, bott, right, color, patt )
 

@@ -47,7 +47,7 @@
 FUNCTION TempFile( cDir, cExt, nAttr )
 
    LOCAL cName
-   LOCAL fhnd
+   LOCAL hFile
 
    IF HB_ISSTRING( cDir )
       cDir := hb_DirSepAdd( cDir )
@@ -57,10 +57,10 @@ FUNCTION TempFile( cDir, cExt, nAttr )
       cExt := "." + cExt
    ENDIF
 
-   IF ( fhnd := hb_vfTempFile( @cName, cDir,, cExt, ;
+   IF ( hFile := hb_vfTempFile( @cName, cDir,, cExt, ;
       hb_defaultValue( nAttr, SetFCreate() ) ) ) != NIL
 
-      hb_vfClose( fhnd )
+      hb_vfClose( hFile )
       RETURN cName
    ENDIF
 

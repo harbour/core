@@ -502,7 +502,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
    LOCAL cData := "", item, cBound := ::boundary()
    LOCAL cCrlf := ::cCRlf, aAttachment
    LOCAL cFile, cType
-   LOCAL nFile, cBuffer, nRead
+   LOCAL hFile, cBuffer, nRead
 
    DO CASE
    CASE Empty( xPostData )
@@ -542,12 +542,12 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
          "Content-Type: " + cType + cCrLf + ;
          cCrLf
 
-      IF ( nFile := hb_vfOpen( cFile ) ) != NIL
+      IF ( hFile := hb_vfOpen( cFile ) ) != NIL
          cBuffer := Space( 65536 )
-         DO WHILE ( nRead := hb_vfRead( nFile, @cBuffer, hb_Blen( cBuffer ) ) ) > 0
+         DO WHILE ( nRead := hb_vfRead( hFile, @cBuffer, hb_Blen( cBuffer ) ) ) > 0
             cData += hb_BLeft( cBuffer, nRead )
          ENDDO
-         hb_vfClose( nFile )
+         hb_vfClose( hFile )
       ENDIF
 
       cData := cCrlf
@@ -580,14 +580,14 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
 
 METHOD WriteAll( cFile ) CLASS TIPClientHTTP
 
-   LOCAL nFile
+   LOCAL hFile
    LOCAL lSuccess
    LOCAL cStream
 
-   IF ( nFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
+   IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
       cStream := ::ReadAll()
-      lSuccess := ( hb_vfWrite( nFile, cStream ) == hb_BLen( cStream ) )
-      hb_vfClose( nFile )
+      lSuccess := ( hb_vfWrite( hFile, cStream ) == hb_BLen( cStream ) )
+      hb_vfClose( hFile )
    ELSE
       lSuccess := .F.
    ENDIF

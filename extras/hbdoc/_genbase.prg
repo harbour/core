@@ -70,7 +70,7 @@ CREATE CLASS TPLGenerate
    VAR nType AS INTEGER
    VAR Depth AS INTEGER INIT 0
 
-   VAR nHandle
+   VAR hFile
    VAR cDir AS STRING
    VAR cFilename AS STRING
    VAR cTitle AS STRING
@@ -103,6 +103,6 @@ METHOD New( cDir, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
       hb_vfDirMake( ::cDir )
    ENDIF
 
-   ::nHandle := hb_vfOpen( ::cDir + hb_ps() + ::cFilename + ::cExtension, FO_CREAT + FO_TRUNC + FO_WRITE )
+   ::hFile := hb_vfOpen( ::cDir + hb_ps() + ::cFilename + ::cExtension, FO_CREAT + FO_TRUNC + FO_WRITE )
 
    RETURN self

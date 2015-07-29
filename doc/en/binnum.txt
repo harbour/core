@@ -42,15 +42,15 @@
    $EXAMPLES$
       // Show DBF last update date
       PROCEDURE Main()
-         LOCAL fhnd, cYear, cMonth, cDay
-         IF ( fhnd := hb_vfOpen( "test.dbf" ) ) != NIL
-            hb_vfSeek( fhnd, 1 )
+         LOCAL hFile, cYear, cMonth, cDay
+         IF ( hFile := hb_vfOpen( "test.dbf" ) ) != NIL
+            hb_vfSeek( hFile, 1 )
             cYear := cMonth := cDay := " "
-            hb_vfRead( fhnd, @cYear , hb_BLen( cYear ) )
-            hb_vfRead( fhnd, @cMonth, hb_BLen( cMonth ) )
-            hb_vfRead( fhnd, @cDay  , hb_BLen( cDay ) )
+            hb_vfRead( hFile, @cYear , hb_BLen( cYear ) )
+            hb_vfRead( hFile, @cMonth, hb_BLen( cMonth ) )
+            hb_vfRead( hFile, @cDay  , hb_BLen( cDay ) )
             ? "Last update:", Bin2I( cYear ), Bin2I( cMonth ), Bin2I( cDay )
-            hb_vfClose( fhnd )
+            hb_vfClose( hFile )
          ELSE
             ? "Can not open file"
          ENDIF
@@ -102,12 +102,12 @@
    $EXAMPLES$
       // Show number of records in DBF
       PROCEDURE Main()
-         LOCAL fhnd, cBuffer := Space( 4 )
-         IF ( fhnd := hb_vfOpen( "test.dbf" ) ) != NIL
-            hb_vfSeek( fhnd, 4 )
-            hb_vfRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
+         LOCAL hFile, cBuffer := Space( 4 )
+         IF ( hFile := hb_vfOpen( "test.dbf" ) ) != NIL
+            hb_vfSeek( hFile, 4 )
+            hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
             ? "Number of records in file:", Bin2L( cBuffer )
-            hb_vfClose( fhnd )
+            hb_vfClose( hFile )
          ELSE
             ? "Can not open file"
          ENDIF
@@ -158,19 +158,19 @@
    $EXAMPLES$
       // Update DBF "last update" date
       PROCEDURE Main()
-         LOCAL fhnd, cYear, cMonth, cDay
+         LOCAL hFile, cYear, cMonth, cDay
          USE test
          ? "Original update date is:", LUpdate()
          dbCloseArea()
-         IF ( fhnd := hb_vfOpen( "test.dbf", FO_READWRITE ) ) != NIL
-            hb_vfSeek( fhnd, 1 )
+         IF ( hFile := hb_vfOpen( "test.dbf", FO_READWRITE ) ) != NIL
+            hb_vfSeek( hFile, 1 )
             cYear  := I2Bin( 68 )
             cMonth := I2Bin(  8 )
             cDay   := I2Bin(  1 )
-            hb_vfWrite( fhnd, cYear , 1 )   // write only the first byte
-            hb_vfWrite( fhnd, cMonth, 1 )
-            hb_vfWrite( fhnd, cDay  , 1 )
-            hb_vfClose( fhnd )
+            hb_vfWrite( hFile, cYear , 1 )   // write only the first byte
+            hb_vfWrite( hFile, cMonth, 1 )
+            hb_vfWrite( hFile, cDay  , 1 )
+            hb_vfClose( hFile )
             USE test
             ? "New update date is:", LUpdate()
             dbCloseArea()

@@ -565,7 +565,7 @@ PROCEDURE pdfClose()
 // ---
 STATIC PROCEDURE pdfClosePage()
 
-   LOCAL cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
+   LOCAL cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, hFileImage
 
    AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
 
@@ -711,8 +711,8 @@ STATIC PROCEDURE pdfClosePage()
          t_aReport[ DOCLEN ] += Len( cTemp )
          hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
-         nImageHandle := hb_vfOpen( nI[ 1 ] )
-         hb_vfSeek( nImageHandle, nI[ 3 ][ IMAGE_FROM ] )
+         hFileImage := hb_vfOpen( nI[ 1 ] )
+         hb_vfSeek( hFileImage, nI[ 3 ][ IMAGE_FROM ] )
 
          nBuffer := 8192
          cBuffer := Space( nBuffer )
@@ -723,14 +723,14 @@ STATIC PROCEDURE pdfClosePage()
             ELSE
                nRead := nI[ 3 ][ IMAGE_LENGTH ] - k
             ENDIF
-            hb_vfRead( nImageHandle, @cBuffer, nRead )
+            hb_vfRead( hFileImage, @cBuffer, nRead )
 
             t_aReport[ DOCLEN ] += nRead
             hb_vfWrite( t_aReport[ HANDLE ], cBuffer, nRead )
             k += nRead
          ENDDO
 
-         hb_vfClose( nImageHandle )
+         hb_vfClose( hFileImage )
 
          cTemp := CRLF + "endstream" + CRLF + ;
             "endobj" + CRLF
@@ -1859,13 +1859,13 @@ FUNCTION pdfTIFFInfo( cFile )
 
    LOCAL nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0, yRes := 0
 
-   LOCAL nHandle := hb_vfOpen( cFile )
+   LOCAL hFile := hb_vfOpen( cFile )
 
    c2 := Space( 2 )
-   hb_vfRead( nHandle, @c2, 2 )
-   hb_vfRead( nHandle, @c2, 2 )
+   hb_vfRead( hFile, @c2, 2 )
+   hb_vfRead( hFile, @c2, 2 )
    cIFDNext := Space( 4 )
-   hb_vfRead( nHandle, @cIFDNext, 4 )
+   hb_vfRead( hFile, @cIFDNext, 4 )
 
    cTemp := Space( 12 )
    // nPages := 0
@@ -1874,14 +1874,14 @@ FUNCTION pdfTIFFInfo( cFile )
 
       nIFD := Bin2L( cIFDNext )
 
-      hb_vfSeek( nHandle, nIFD )
+      hb_vfSeek( hFile, nIFD )
       // ? "*** IFD", hb_ntos( ++nPages )
 
-      hb_vfRead( nHandle, @c2, 2 )
+      hb_vfRead( hFile, @c2, 2 )
       nFields := Bin2I( c2 )
 
       FOR nn := 1 TO nFields
-         hb_vfRead( nHandle, @cTemp, 12 )
+         hb_vfRead( hFile, @cTemp, 12 )
 
          nTag := Bin2W( hb_BSubStr( cTemp, 1, 2 ) )
          nFieldType := Bin2W( hb_BSubStr( cTemp, 3, 2 ) )
@@ -1910,12 +1910,12 @@ FUNCTION pdfTIFFInfo( cFile )
          nOffset := Bin2L( hb_BSubStr( cTemp, 9, 4 ) )
 
          IF nCount > 1 .OR. nFieldType == RATIONAL .OR. nFieldType == SRATIONAL
-            nPos := FilePos( nHandle )
-            hb_vfSeek( nHandle, nOffset )
+            nPos := FilePos( hFile )
+            hb_vfSeek( hFile, nOffset )
 
             cValues := Space( nCount * aCount[ nFieldType ] )
-            hb_vfRead( nHandle, @cValues, hb_BLen( cValues ) )
-            hb_vfSeek( nHandle, nPos )
+            hb_vfRead( hFile, @cValues, hb_BLen( cValues ) )
+            hb_vfSeek( hFile, nPos )
          ELSE
             cValues := hb_BSubStr( cTemp, 9, 4 )
          ENDIF
@@ -2425,10 +2425,10 @@ FUNCTION pdfTIFFInfo( cFile )
          ?? " >"
 #endif
       NEXT
-      hb_vfRead( nHandle, @cIFDNext, 4 )
+      hb_vfRead( hFile, @cIFDNext, 4 )
    ENDDO
 
-   hb_vfClose( nHandle )
+   hb_vfClose( hFile )
 
    RETURN { ;
       nWidth, ;
@@ -2446,10 +2446,10 @@ FUNCTION pdfJPEGInfo( cFile )
    LOCAL nWidth, nHeight, nBits := 8, nFrom := 0, nLength, xRes, yRes
    LOCAL nSpace  // := 3 // 3 - RGB, 1 - GREY, 4 - CMYK
 
-   LOCAL nHandle := hb_vfOpen( cFile )
+   LOCAL hFile := hb_vfOpen( cFile )
 
    c255 := Space( 20000 )
-   hb_vfRead( nHandle, @c255, hb_BLen( c255 ) )
+   hb_vfRead( hFile, @c255, hb_BLen( c255 ) )
 
    xRes := hb_BCode( hb_BSubStr( c255, 15, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 16, 1 ) )
    yRes := hb_BCode( hb_BSubStr( c255, 17, 1 ) ) * 256 + hb_BCode( hb_BSubStr( c255, 18, 1 ) )
@@ -2463,9 +2463,9 @@ FUNCTION pdfJPEGInfo( cFile )
 
    nSpace := hb_BCode( hb_BSubStr( c255, nAt + 4, 1 ) )
 
-   nLength := FileSize( nHandle )
+   nLength := FileSize( hFile )
 
-   hb_vfClose( nHandle )
+   hb_vfClose( hFile )
 
    RETURN { ;
       nWidth, ;
@@ -2477,8 +2477,8 @@ FUNCTION pdfJPEGInfo( cFile )
       nLength, ;
       nSpace }
 
-STATIC FUNCTION FilePos( nHandle )
-   RETURN hb_vfSeek( nHandle, 0, FS_RELATIVE )
+STATIC FUNCTION FilePos( hFile )
+   RETURN hb_vfSeek( hFile, 0, FS_RELATIVE )
 
 STATIC FUNCTION Chr_RGB( cChar )
    RETURN Str( hb_BCode( cChar ) / 255, 4, 2 )
@@ -2542,13 +2542,13 @@ STATIC FUNCTION NumAt( cSearch, cString )
 
    RETURN n
 
-STATIC FUNCTION FileSize( nHandle )
+STATIC FUNCTION FileSize( hFile )
 
-   LOCAL nCurrent := FilePos( nHandle )  // Get file position
-   LOCAL nLength := hb_vfSize( nHandle )  // Get file length
+   LOCAL nCurrent := FilePos( hFile )   // Get file position
+   LOCAL nLength := hb_vfSize( hFile )  // Get file length
 
    // Reset file position
-   hb_vfSeek( nHandle, nCurrent )
+   hb_vfSeek( hFile, nCurrent )
 
    RETURN nLength
 

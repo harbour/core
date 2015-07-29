@@ -185,7 +185,7 @@ METHOD ExcelWriterXML:checkStyleID( id )
 
 METHOD ExcelWriterXML:writeData( target )
 
-   LOCAL style, sheet, xml := "", handle, format
+   LOCAL style, sheet, xml := "", hFile, format
 
    IF ! HB_ISSTRING( target ) .OR. Empty( target )
       ::cError := "Target filename missing!"
@@ -198,7 +198,7 @@ METHOD ExcelWriterXML:writeData( target )
       ::errors := .T.
       RETURN .F.
    ENDIF
-   IF ( handle := hb_vfOpen( target, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) == NIL
+   IF ( hFile := hb_vfOpen( target, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) == NIL
       ::cError := "Not able to open " + target + " for writing"
       ::errors := .T.
       RETURN .F.
@@ -234,7 +234,7 @@ METHOD ExcelWriterXML:writeData( target )
       '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel" />' + hb_eol() + ;
       "<Styles>" + hb_eol()
 
-   hb_vfWrite( handle, xml )
+   hb_vfWrite( hFile, xml )
    xml := ""
 
    FOR EACH style IN ::styles
@@ -242,7 +242,7 @@ METHOD ExcelWriterXML:writeData( target )
    NEXT
    xml += "</Styles>" + hb_eol()
 
-   hb_vfWrite( handle, xml )
+   hb_vfWrite( hFile, xml )
    xml := ""
 
    IF Len( ::sheets ) == 0
@@ -258,8 +258,8 @@ METHOD ExcelWriterXML:writeData( target )
       ::errors := .T.
    ENDIF
 
-   hb_vfWrite( handle, xml + "</Workbook>" )
-   hb_vfClose( handle )
+   hb_vfWrite( hFile, xml + "</Workbook>" )
+   hb_vfClose( hFile )
 
    RETURN .T.
 

@@ -97,14 +97,14 @@ PROCEDURE __Dir( cFileMask )
 
 STATIC PROCEDURE PutDBF( aDirEntry )
 
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL buffer
    LOCAL nRecCount := 0
    LOCAL dLastUpdate := hb_SToD()
 
-   IF ( fhnd := hb_vfOpen( aDirEntry[ F_NAME ] ) ) != NIL
+   IF ( hFile := hb_vfOpen( aDirEntry[ F_NAME ] ) ) != NIL
 
-      buffer := hb_vfReadLen( fhnd, 8 )
+      buffer := hb_vfReadLen( hFile, 8 )
 
       IF hb_BLen( buffer ) == 8 .AND. hb_BAt( hb_BLeft( buffer, 1 ), _DBF_HEAD_MARK ) > 0
          nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
@@ -113,7 +113,7 @@ STATIC PROCEDURE PutDBF( aDirEntry )
                                  hb_BPeek( buffer, 4 ) )
       ENDIF
 
-      hb_vfClose( fhnd )
+      hb_vfClose( hFile )
    ENDIF
 
    QOut( ;

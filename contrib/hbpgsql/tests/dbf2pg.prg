@@ -66,7 +66,7 @@ PROCEDURE Main()
    LOCAL cTypePG
    LOCAL cValue
    LOCAL nCommit := 100
-   LOCAL nHandle
+   LOCAL hFile
    LOCAL nCount := 0
    LOCAL nRecno := 0
    LOCAL lTruncate := .F.
@@ -105,7 +105,7 @@ PROCEDURE Main()
    ENDIF
 
    // create log file
-   IF ( nHandle := hb_vfOpen( cTable + ".log", FO_CREAT + FO_TRUNC + FO_WRITE ) ) == NIL
+   IF ( hFile := hb_vfOpen( cTable + ".log", FO_CREAT + FO_TRUNC + FO_WRITE ) ) == NIL
       ? "Cannot create log file"
       RETURN
    ENDIF
@@ -125,8 +125,8 @@ PROCEDURE Main()
          oServer:DeleteTable( cTable )
          IF oServer:NetErr()
             ? oServer:ErrorMsg()
-            hb_vfWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
-            hb_vfClose( nHandle )
+            hb_vfWrite( hFile, "Error: " + oServer:ErrorMsg() + hb_eol() )
+            hb_vfClose( hFile )
             RETURN
          ENDIF
       ENDIF
@@ -134,8 +134,8 @@ PROCEDURE Main()
       oServer:CreateTable( cTable, dbStruct() )
       IF oServer:NetErr()
          ? oServer:ErrorMsg()
-         hb_vfWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
-         hb_vfClose( nHandle )
+         hb_vfWrite( hFile, "Error: " + oServer:ErrorMsg() + hb_eol() )
+         hb_vfClose( hFile )
          RETURN
       ENDIF
    ENDIF
@@ -144,8 +144,8 @@ PROCEDURE Main()
       oServer:Execute( "truncate table " + cTable )
       IF oServer:NetErr()
          ? oServer:ErrorMsg()
-         hb_vfWrite( nHandle, "Error: " + oServer:ErrorMsg() + hb_eol() )
-         hb_vfClose( nHandle )
+         hb_vfWrite( hFile, "Error: " + oServer:ErrorMsg() + hb_eol() )
+         hb_vfClose( hFile )
          RETURN
       ENDIF
    ENDIF
@@ -153,8 +153,8 @@ PROCEDURE Main()
    oTable := oServer:Query( "SELECT * FROM " + cTable + " LIMIT 1" )
    IF oTable:NetErr()
       ? oTable:ErrorMsg()
-      hb_vfWrite( nHandle, "Error: " + oTable:ErrorMsg() + hb_eol() )
-      hb_vfClose( nHandle )
+      hb_vfWrite( hFile, "Error: " + oTable:ErrorMsg() + hb_eol() )
+      hb_vfClose( hFile )
       RETURN
    ENDIF
 
@@ -162,7 +162,7 @@ PROCEDURE Main()
       oServer:StartTransaction()
    ENDIF
 
-   hb_vfWrite( nHandle, "Start: " + Time() + hb_eol() )
+   hb_vfWrite( hFile, "Start: " + Time() + hb_eol() )
 
    ? "Start:", Time()
    ?
@@ -213,7 +213,7 @@ PROCEDURE Main()
          ?
          ? "Error Record:", RecNo(), Left( oTable:ErrorMsg(), 70 )
          ?
-         hb_vfWrite( nHandle, "Error at record: " + hb_ntos( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_eol() )
+         hb_vfWrite( hFile, "Error at record: " + hb_ntos( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_eol() )
       ELSE
          nCount++
       ENDIF
@@ -235,11 +235,11 @@ PROCEDURE Main()
       oServer:commit()
    ENDIF
 
-   hb_vfWrite( nHandle, "End: " + Time() + ", records in dbf: " + hb_ntos( RecNo() ) + ", imported recs: " + hb_ntos( nCount ) + hb_eol() )
+   hb_vfWrite( hFile, "End: " + Time() + ", records in dbf: " + hb_ntos( RecNo() ) + ", imported recs: " + hb_ntos( nCount ) + hb_eol() )
 
    ? "End:", Time()
 
-   hb_vfClose( nHandle )
+   hb_vfClose( hFile )
 
    dbCloseAll()
 

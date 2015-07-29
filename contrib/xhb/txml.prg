@@ -81,7 +81,7 @@ CREATE CLASS TXMLNode
    METHOD Path()
 
    METHOD ToString( nStyle )        INLINE hbxml_node_to_string( Self, nStyle )
-   METHOD Write( fHandle, nStyle )  INLINE hbxml_node_write( Self, fHandle, nStyle )
+   METHOD Write( hFile, nStyle )    INLINE hbxml_node_write( Self, hFile, nStyle )
 
    // Useful for debugging purposes
    METHOD ToArray()                 INLINE { ::nType, ::cName, ::aAttributes, ::cData }
@@ -334,7 +334,7 @@ CREATE CLASS TXMLDocument
    METHOD New( xElem, nStyle )        CONSTRUCTOR
    METHOD Read( xData, nStyle )       INLINE hbxml_dataread( Self, xData, nStyle )
    METHOD ToString( nStyle )          INLINE ::oRoot:ToString( nStyle )
-   METHOD Write( fHandle, nStyle )
+   METHOD Write( hFile, nStyle )
 
    METHOD FindFirst( cName, cAttrib, cValue, cData )
    METHOD FindFirstRegex( cName, cAttrib, cValue, cData )
@@ -382,22 +382,22 @@ METHOD New( xElem, nStyle ) CLASS TXMLDocument
 
    RETURN Self
 
-METHOD Write( fHandle, nStyle ) CLASS TXMLDocument
+METHOD Write( hFile, nStyle ) CLASS TXMLDocument
 
    LOCAL nResult := HBXML_STATUS_ERROR
 
-   IF HB_ISSTRING( fHandle )  // It's a filename
-      IF ( fHandle := hb_vfOpen( fHandle, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+   IF HB_ISSTRING( hFile )  // It's a filename
+      IF ( hFile := hb_vfOpen( hFile, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
          IF Empty( ::oRoot:oChild ) .OR. !( ::oRoot:oChild:cName == "xml" )
-            hb_vfWrite( fHandle, hb_defaultValue( ::cHeader, '<?xml version="1.0"?>' ) + hb_eol() )
+            hb_vfWrite( hFile, hb_defaultValue( ::cHeader, '<?xml version="1.0"?>' ) + hb_eol() )
          ENDIF
-         nResult := ::oRoot:Write( fHandle, nStyle )
-         hb_vfClose( fHandle )
+         nResult := ::oRoot:Write( hFile, nStyle )
+         hb_vfClose( hFile )
       ENDIF
       RETURN nResult
    ENDIF
 
-   RETURN ::oRoot:Write( fHandle, nStyle )
+   RETURN ::oRoot:Write( hFile, nStyle )
 
 METHOD FindFirst( cName, cAttrib, cValue, cData ) CLASS TXMLDocument
 

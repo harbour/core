@@ -468,7 +468,7 @@ FUNCTION uhttpd_HTMLSpace( n )
 
 PROCEDURE uhttpd_WriteToLogFile( cString, cLog )
 
-   LOCAL nHandle
+   LOCAL hFile
 
 #if 0
    hb_default( @cLog, hb_DirBase() + "logfile.log" )
@@ -477,10 +477,10 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog )
 
    // cString := "PROCEDURE: " + ProcName( -2 ) + " " + cString
 
-   IF ( nHandle := hb_vfOpen( cLog, FO_CREAT + FO_WRITE + FO_SHARED ) ) != NIL
-      hb_vfSeek( nHandle, 0, FS_END )
-      hb_vfWrite( nHandle, cString + hb_eol() )
-      hb_vfClose( nHandle )
+   IF ( hFile := hb_vfOpen( cLog, FO_CREAT + FO_WRITE + FO_SHARED ) ) != NIL
+      hb_vfSeek( hFile, 0, FS_END )
+      hb_vfWrite( hFile, cString + hb_eol() )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN

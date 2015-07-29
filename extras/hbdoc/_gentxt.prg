@@ -135,7 +135,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateText
       NEXT
 
       IF ! ::lContinuous
-         hb_vfWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
+         hb_vfWrite( ::hFile, hb_BChar( 12 ) + hb_eol() )
       ENDIF
    ENDIF
 
@@ -148,23 +148,23 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateTex
    IF ! Empty( cEntry )
       nIndent := iif( Len( cCaption ) > 0, 6, 0 )
       IF Len( cCaption ) > 0 .AND. nIndent > 0
-         hb_vfWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
+         hb_vfWrite( ::hFile, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
       ENDIF
       nIndent += ::Depth * 6
       DO WHILE Len( cEntry ) > 0
-         hb_vfWrite( ::nHandle, Indent( Parse( @cEntry, hb_eol() ), nIndent, 70, lPreformatted ) )
+         hb_vfWrite( ::hFile, Indent( Parse( @cEntry, hb_eol() ), nIndent, 70, lPreformatted ) )
       ENDDO
    ENDIF
 
 METHOD Generate() CLASS GenerateText
 
    IF ::IsIndex() .AND. ! ::lContinuous
-      hb_vfWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
+      hb_vfWrite( ::hFile, hb_BChar( 12 ) + hb_eol() )
    ENDIF
 
-   IF ::nHandle != NIL
-      hb_vfClose( ::nHandle )
-      ::nHandle := NIL
+   IF ::hFile != NIL
+      hb_vfClose( ::hFile )
+      ::hFile := NIL
    ENDIF
 
    RETURN self

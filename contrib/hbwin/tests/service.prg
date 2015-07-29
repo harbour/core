@@ -90,25 +90,25 @@ PROCEDURE Main( cMode )
 STATIC PROCEDURE SrvMain( cParam1, cParam2 )
 
    LOCAL n := 0
-   LOCAL fhnd := hb_vfOpen( hb_FNameExtSet( hb_ProgName(), ".out" ), FO_CREAT + FO_TRUNC + FO_WRITE + FO_DENYNONE )
+   LOCAL hFile := hb_vfOpen( hb_FNameExtSet( hb_ProgName(), ".out" ), FO_CREAT + FO_TRUNC + FO_WRITE + FO_DENYNONE )
    LOCAL cParam
 
-   hb_vfWrite( fhnd, ;
+   hb_vfWrite( hFile, ;
       "Startup" + hb_eol() + ;
       "|" + hb_CmdLine() + "|" + hb_eol() + ;
       "|" + hb_defaultValue( cParam1, "" ) + "|" + hb_defaultValue( cParam2, "" ) + "|" + hb_eol() )
 
    FOR EACH cParam IN hb_AParams()
-      hb_vfWrite( fhnd, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_eol() )
+      hb_vfWrite( hFile, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_eol() )
    NEXT
 
    DO WHILE win_serviceGetStatus() == WIN_SERVICE_RUNNING
-      hb_vfWrite( fhnd, "Work in progress " + hb_ntos( ++n ) + hb_eol() )
+      hb_vfWrite( hFile, "Work in progress " + hb_ntos( ++n ) + hb_eol() )
       hb_idleSleep( 0.5 )
    ENDDO
 
-   hb_vfWrite( fhnd, "Exiting..." + hb_eol() )
-   hb_vfClose( fhnd )
+   hb_vfWrite( hFile, "Exiting..." + hb_eol() )
+   hb_vfClose( hFile )
 
    win_serviceSetExitCode( 0 )
    win_serviceStop()

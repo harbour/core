@@ -421,7 +421,7 @@ METHOD Read( nLen ) CLASS TIPClient
 
 METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
-   LOCAL nFOut
+   LOCAL hFile
    LOCAL cData
    LOCAL nSent := 0
 
@@ -443,13 +443,13 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
    DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! ::bEof
       IF ( cData := ::Read( RCV_BUF_SIZE ) ) == NIL
-         IF nFOut != NIL
-            hb_vfClose( nFOut )
+         IF hFile != NIL
+            hb_vfClose( hFile )
          ENDIF
          RETURN ::inetErrorCode( ::SocketCon ) == 0
       ENDIF
-      IF ! lToMemory .AND. nFOut == NIL
-         IF ( nFOut := hb_vfOpen( cFile, hb_bitOr( FO_CREAT + FO_TRUNC + FO_WRITE, hb_defaultValue( nMode, 0 ) ) ) ) == NIL
+      IF ! lToMemory .AND. hFile == NIL
+         IF ( hFile := hb_vfOpen( cFile, hb_bitOr( FO_CREAT + FO_TRUNC + FO_WRITE, hb_defaultValue( nMode, 0 ) ) ) ) == NIL
             ::nStatus := 0
             RETURN .F.
          ENDIF
@@ -457,8 +457,8 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
       IF lToMemory
          cFile += cData
-      ELSEIF hb_vfWrite( nFOut, cData ) != hb_BLen( cData )
-         hb_vfClose( nFOut )
+      ELSEIF hb_vfWrite( hFile, cData ) != hb_BLen( cData )
+         hb_vfClose( hFile )
          RETURN .F.
       ENDIF
 
@@ -466,8 +466,8 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
       IF HB_ISEVALITEM( ::exGauge ) .AND. ;
          ! hb_defaultValue( Eval( ::exGauge, nSent, nSize, Self ), .T. )
-         IF nFOut != NIL
-            hb_vfClose( nFOut )
+         IF hFile != NIL
+            hb_vfClose( hFile )
          ENDIF
          RETURN .F.
       ENDIF
@@ -478,8 +478,8 @@ METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
    ENDIF
 
    ::nStatus := 2
-   IF nFOut != NIL
-      hb_vfClose( nFOut )
+   IF hFile != NIL
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN ::inetErrorCode( ::SocketCon ) == 0

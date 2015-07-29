@@ -26,11 +26,11 @@
 
 FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode, lDropCompatibility /* HB_EXTENSION */ )
 
-   LOCAL nHandle, lRet
+   LOCAL hFile, lRet
 
-   IF ( nHandle := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
-      lRet := _ftsavesub( aArray, nHandle, @nErrorCode, hb_defaultValue( lDropCompatibility, .F. ) )
-      hb_vfClose( nHandle )
+   IF ( hFile := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
+      lRet := _ftsavesub( aArray, hFile, @nErrorCode, hb_defaultValue( lDropCompatibility, .F. ) )
+      hb_vfClose( hFile )
       IF lRet .AND. FError() != 0
          nErrorCode := FError()
          lRet := .F.
@@ -42,16 +42,16 @@ FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode, lDropCompatibility /
 
    RETURN lRet
 
-STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibility )
+STATIC FUNCTION _ftsavesub( xMemVar, hFile, /* @ */ nErrorCode, lDropCompatibility )
 
    LOCAL lRet := .T.
    LOCAL cValType := ValType( xMemVar )
 
-   IF hb_vfWrite( nHandle, cValType ) == hb_BLen( cValType )
+   IF hb_vfWrite( hFile, cValType ) == hb_BLen( cValType )
       SWITCH cValType
       CASE "A"
-         IF hb_vfWrite( nHandle, L2Bin( Len( xMemVar ) ) ) == 4
-            AEval( xMemVar, {| xMemVar1 | lRet := _ftsavesub( xMemVar1, nHandle,, lDropCompatibility ) },, 0x7FFFFFFF )
+         IF hb_vfWrite( hFile, L2Bin( Len( xMemVar ) ) ) == 4
+            AEval( xMemVar, {| xMemVar1 | lRet := _ftsavesub( xMemVar1, hFile,, lDropCompatibility ) },, 0x7FFFFFFF )
             EXIT
          ENDIF
          // fall through
@@ -61,9 +61,9 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
       CASE "N"
          xMemVar := Str( xMemVar )
          // fall through
-      CASE "C" ; hb_vfWrite( nHandle, L2Bin( Min( hb_BLen( xMemVar ), 0x7FFFFFFF ) ) + hb_BLeft( xMemVar, 0x7FFFFFFF ) ) ; EXIT
-      CASE "D" ; hb_vfWrite( nHandle, L2Bin( 8 ) + iif( lDropCompatibility, DToS( xMemVar ), hb_BLeft( DToC( xMemVar ), 8 ) ) ) ; EXIT
-      CASE "L" ; hb_vfWrite( nHandle, L2Bin( 1 ) + iif( xMemVar, "T", "F" ) ) ; EXIT
+      CASE "C" ; hb_vfWrite( hFile, L2Bin( Min( hb_BLen( xMemVar ), 0x7FFFFFFF ) ) + hb_BLeft( xMemVar, 0x7FFFFFFF ) ) ; EXIT
+      CASE "D" ; hb_vfWrite( hFile, L2Bin( 8 ) + iif( lDropCompatibility, DToS( xMemVar ), hb_BLeft( DToC( xMemVar ), 8 ) ) ) ; EXIT
+      CASE "L" ; hb_vfWrite( hFile, L2Bin( 1 ) + iif( xMemVar, "T", "F" ) ) ; EXIT
       ENDSWITCH
    ELSE
       lRet := .F.
@@ -75,11 +75,11 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode, lDropCompatibi
 FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
 
    LOCAL aArray
-   LOCAL nHandle
+   LOCAL hFile
 
-   IF ( nHandle := hb_vfOpen( cFileName ) ) != NIL
-      aArray := _ftrestsub( nHandle, @nErrorCode )
-      hb_vfClose( nHandle )
+   IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+      aArray := _ftrestsub( hFile, @nErrorCode )
+      hb_vfClose( hFile )
    ELSE
       nErrorCode := FError()
       aArray := {}
@@ -87,18 +87,18 @@ FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
 
    RETURN aArray
 
-STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
+STATIC FUNCTION _ftrestsub( hFile, /* @ */ nErrorCode )
 
-   LOCAL cValType := hb_vfReadLen( nHandle, 1 ), xMemVar, tmp
-   LOCAL nLen := Bin2L( hb_vfReadLen( nHandle, 4 ) )
+   LOCAL cValType := hb_vfReadLen( hFile, 1 ), xMemVar, tmp
+   LOCAL nLen := Bin2L( hb_vfReadLen( hFile, 4 ) )
 
    IF ( nErrorCode := FError() ) == 0
       SWITCH cValType
-      CASE "C" ; xMemVar := hb_vfReadLen( nHandle, nLen ) ; EXIT
-      CASE "N" ; xMemVar := Val( hb_vfReadLen( nHandle, nLen ) ) ; EXIT
-      CASE "L" ; xMemVar := ( hb_vfReadLen( nHandle, 1 ) == "T" ) ; EXIT
+      CASE "C" ; xMemVar := hb_vfReadLen( hFile, nLen ) ; EXIT
+      CASE "N" ; xMemVar := Val( hb_vfReadLen( hFile, nLen ) ) ; EXIT
+      CASE "L" ; xMemVar := ( hb_vfReadLen( hFile, 1 ) == "T" ) ; EXIT
       CASE "D"
-         xMemVar := hb_vfReadLen( nHandle, 8 )
+         xMemVar := hb_vfReadLen( hFile, 8 )
          // Fall back to CToD() to handle original Cl*pper NFLIB format:
          // not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load
          xMemVar := iif( Empty( hb_StrReplace( xMemVar, "0123456789" ) ), hb_SToD( xMemVar ), CToD( xMemVar ) )
@@ -106,7 +106,7 @@ STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
       CASE "A"
          xMemVar := {}
          FOR tmp := 1 TO nLen
-            AAdd( xMemVar, _ftrestsub( nHandle ) )  // Recursive call
+            AAdd( xMemVar, _ftrestsub( hFile ) )  // Recursive call
          NEXT
          EXIT
       ENDSWITCH

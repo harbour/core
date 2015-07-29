@@ -76,7 +76,7 @@ STATIC sc_aContracts := { ;
    { "DON'T"       ,"DO NOT"    } }
 
 
-THREAD STATIC t_nHandle
+THREAD STATIC t_hFile
 THREAD STATIC t_cOffsets
 
 
@@ -92,7 +92,7 @@ THREAD STATIC t_cOffsets
 FUNCTION Sp_Add( cWord )
 
    LOCAL was_added := .F.             // Was word written to dictionary?
-   LOCAL nAuxHandle                   // Dictionary file handle
+   LOCAL hFileAux                     // Dictionary file handle
    LOCAL nWritten                     // Number of bytes written
 
    // Initialize the spell checker and make sure
@@ -105,12 +105,12 @@ FUNCTION Sp_Add( cWord )
       // If the auxiliary dictionary does not exist,
       // we will create it for the user
 
-      IF ( nAuxHandle := hb_vfOpen( T_AUXILIARY_DICTIONARY, FO_CREAT + FO_WRITE + FO_DENYWRITE ) ) != NIL
+      IF ( hFileAux := hb_vfOpen( T_AUXILIARY_DICTIONARY, FO_CREAT + FO_WRITE + FO_DENYWRITE ) ) != NIL
 
-         hb_vfSeek( nAuxHandle, 0, FS_END )                      // Bottom of the file
-         nWritten := hb_vfWrite( nAuxHandle, cWord + hb_eol() )  // Write word into file
-         hb_vfClose( nAuxHandle )                                // Close the file
-         Sp_Cache( cWord )                                       // Add word to cache
+         hb_vfSeek( hFileAux, 0, FS_END )                      // Bottom of the file
+         nWritten := hb_vfWrite( hFileAux, cWord + hb_eol() )  // Write word into file
+         hb_vfClose( hFileAux )                                // Close the file
+         Sp_Cache( cWord )                                     // Add word to cache
 
          was_added := ( nWritten == hb_BLen( cWord ) + hb_BLen( hb_eol() ) )
       ENDIF
@@ -148,7 +148,7 @@ FUNCTION Sp_Cache( cWord )
 //    Static:  T_CACHE_WORDS  - String of cache words
 //             T_COMMON_WORDS - String of common words
 //             t_cOffsets     -
-//             t_nHandle      - Handle DIC file is opened on
+//             t_hFile        - Handle DIC file is opened on
 
 FUNCTION Sp_Check( cWord )
 
@@ -192,8 +192,8 @@ FUNCTION Sp_Check( cWord )
                IF x != 0
                   IF !( t_cLast == Left( cLookup, 2 ) )
                      t_cBuf := Space( y )
-                     hb_vfSeek( t_nHandle, x, FS_SET )
-                     hb_vfRead( t_nHandle, @t_cBuf, y )
+                     hb_vfSeek( t_hFile, x, FS_SET )
+                     hb_vfRead( t_hFile, @t_cBuf, y )
                      t_nDicCount++
                   ELSE
                      t_nBuffCount++
@@ -252,8 +252,8 @@ STATIC FUNCTION Sp_GetBuf( cLetters )
       IF x != 0
          y := Bin2W( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
          cBuf := Space( y )
-         hb_vfSeek( t_nHandle, x + 4, FS_SET )
-         hb_vfRead( t_nHandle, @cBuf, y - 4 )
+         hb_vfSeek( t_hFile, x + 4, FS_SET )
+         hb_vfRead( t_hFile, @cBuf, y - 4 )
       ENDIF
    ENDIF
 
@@ -296,7 +296,7 @@ FUNCTION Sp_GetSet( nWhich, xNewSetting )
 FUNCTION Sp_LoadAux( cFile )
 
    LOCAL is_ok := .F.
-   LOCAL x
+   LOCAL hFile
    LOCAL cStr  := ""
    LOCAL nSize
 
@@ -304,16 +304,16 @@ FUNCTION Sp_LoadAux( cFile )
 
       Sp_GetSet( AUXILIARY_DICTIONARY, cFile )
 
-      IF ( x := hb_vfOpen( cFile, FO_CREAT + FO_READ + FO_DENYNONE ) ) != NIL
-         nSize := hb_vfSize( x )
+      IF ( hFile := hb_vfOpen( cFile, FO_CREAT + FO_READ + FO_DENYNONE ) ) != NIL
+         nSize := hb_vfSize( hFile )
          IF nSize < MAX_STRING
             cStr := Space( nSize )
-            hb_vfSeek( x, 0, FS_SET )
-            hb_vfRead( x, @cStr, nSize )
+            hb_vfSeek( hFile, 0, FS_SET )
+            hb_vfRead( hFile, @cStr, nSize )
             T_CACHE_WORDS += Upper( "|" + StrTran( StrTran( cStr, Chr( 13 ) ), Chr( 10 ), "|" ) )
             is_ok := .T.
          ENDIF
-         hb_vfClose( x )
+         hb_vfClose( hFile )
       ENDIF
    ENDIF
 
@@ -897,19 +897,19 @@ FUNCTION Sp_Init()
 
    IF t_cOffsets == NIL
       isok := .F.
-      IF ( t_nHandle := hb_vfOpen( T_DICTIONARY_PATH + T_DICTIONARY_NAME, FO_READ + FO_DENYWRITE ) ) != NIL
+      IF ( t_hFile := hb_vfOpen( T_DICTIONARY_PATH + T_DICTIONARY_NAME, FO_READ + FO_DENYWRITE ) ) != NIL
 
          cBuf := Space( NSIZE + 6 )
-         hb_vfRead( t_nHandle, @cBuf, NSIZE + 6 )
+         hb_vfRead( t_hFile, @cBuf, NSIZE + 6 )
 
          IF hb_LeftEq( cBuf, "JJ" )
             nOther := Bin2L( SubStr( cBuf, 3, 4 ) )
             t_cOffsets := hb_BSubStr( cBuf, 7 )
-            nFileSize := hb_vfSize( t_nHandle )
+            nFileSize := hb_vfSize( t_hFile )
             IF nFileSize - nOther > 0
                cOther := Space( nFileSize - nOther )
-               hb_vfSeek( t_nHandle, nOther, FS_SET )
-               hb_vfRead( t_nHandle, @cOther, nFileSize - nOther )
+               hb_vfSeek( t_hFile, nOther, FS_SET )
+               hb_vfRead( t_hFile, @cOther, nFileSize - nOther )
             ENDIF
             T_CACHE_WORDS += cOther
             isok := .T.
@@ -955,7 +955,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    LOCAL nStatus := 0                 // Status code
    LOCAL i                            // Loop counters
    LOCAL j
-   LOCAL nH                           // File handle
+   LOCAL hFile                        // File handle
    LOCAL nWhere
    LOCAL temp
    LOCAL cBits
@@ -964,7 +964,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    LOCAL cOther := ""
    LOCAL nCurRec := 0
    LOCAL cTempFile
-   LOCAL fhnd
+   LOCAL hFileTemp
 
    hb_default( @cDictionary, "dict.dic" )
    hb_default( @lTalk, .F. )
@@ -994,8 +994,8 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       nSize := DICT->( LastRec() )
    ENDIF
 
-   IF ( fhnd := hb_vfTempFile( @cTempFile,,, IndexExt() ) ) != NIL
-      hb_vfClose( fhnd )
+   IF ( hFileTemp := hb_vfTempFile( @cTempFile,,, IndexExt() ) ) != NIL
+      hb_vfClose( hFileTemp )
    ENDIF
 
    INDEX ON SubStr( field->word, 1, 2 ) + PadR( C_Metafone( AllTrim( field->word ), 5 ), 6 ) TO ( cTempFile )
@@ -1009,17 +1009,17 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    // Create the dictionary file
 
    // ADDED - 1996-02-08 - JAMES
-   IF t_nHandle != NIL                    // Is dictionary already open?
-      hb_vfClose( t_nHandle )             // Yes, close it
-      t_nHandle := NIL
+   IF t_hFile != NIL                    // Is dictionary already open?
+      hb_vfClose( t_hFile )             // Yes, close it
+      t_hFile := NIL
    ENDIF
    // END OF ADDITION
 
-   IF ( nH := hb_vfOpen( cDictionary, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+   IF ( hFile := hb_vfOpen( cDictionary, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
 
       // Write out enough bytes to hold the index information
 
-      hb_vfWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( hb_BChar( 0 ), NSIZE ) + Space( 10 ) )
+      hb_vfWrite( hFile, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( hb_BChar( 0 ), NSIZE ) + Space( 10 ) )
 
       FOR i := 1 TO 26
          DO WHILE hb_LeftEq( DICT->word, Chr( i + 64 ) ) .AND. ! Eof()
@@ -1051,27 +1051,27 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
                ENDDO
                IF ! Empty( temp ) .OR. !( cBits == FOUR_BYTES )
 
-                  nWhere := hb_vfSize( nH )
+                  nWhere := hb_vfSize( hFile )
 
-                  hb_vfSeek( nH, ( ( i - 1 ) * 26 * EACH_WORD ) + ( ( j - 1 ) * EACH_WORD ) + 6 )
-                  hb_vfWrite( nH, L2Bin( nWhere ) + I2Bin( hb_BLen( temp ) + 4 ), EACH_WORD )
-                  hb_vfSeek( nH, 0, FS_END )
-                  hb_vfWrite( nH, cBits + temp )
+                  hb_vfSeek( hFile, ( ( i - 1 ) * 26 * EACH_WORD ) + ( ( j - 1 ) * EACH_WORD ) + 6 )
+                  hb_vfWrite( hFile, L2Bin( nWhere ) + I2Bin( hb_BLen( temp ) + 4 ), EACH_WORD )
+                  hb_vfSeek( hFile, 0, FS_END )
+                  hb_vfWrite( hFile, cBits + temp )
                ENDIF
             NEXT
          ENDDO
       NEXT
-      j := hb_vfSize( nH )
-      hb_vfSeek( nH, 2, FS_SET )
-      hb_vfWrite( nH, L2Bin( j ) )
+      j := hb_vfSize( hFile )
+      hb_vfSeek( hFile, 2, FS_SET )
+      hb_vfWrite( hFile, L2Bin( j ) )
       IF ! Empty( cOther )
-         hb_vfSeek( nH, j, FS_SET )
+         hb_vfSeek( hFile, j, FS_SET )
          cOther += "|"
-         hb_vfWrite( nH, cOther )
+         hb_vfWrite( hFile, cOther )
       ENDIF
-      hb_vfClose( nH )
+      hb_vfClose( hFile )
    ELSE
-      nStatus := nH
+      nStatus := hFile
    ENDIF
 
    IF lTalk
@@ -1137,8 +1137,8 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
       hb_DispOutAt( 10, 31, "Complete:        ", "W/R" )
       hb_DispOutAt( 11, 31, "  Record:        ", "W/R" )
 
-      nSize := hb_vfSize( t_nHandle )
-      hb_vfSeek( t_nHandle, 0, FS_SET )
+      nSize := hb_vfSize( t_hFile )
+      hb_vfSeek( t_hFile, 0, FS_SET )
    ENDIF
 
    j := 2
@@ -1163,8 +1163,8 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
             ENDIF
 
             cBuf := Space( y )
-            hb_vfSeek( t_nHandle, x, FS_SET )
-            hb_vfRead( t_nHandle, @cBuf, y )
+            hb_vfSeek( t_hFile, x, FS_SET )
+            hb_vfRead( t_hFile, @cBuf, y )
             FOR z := 1 TO 26
                IF bit( @cBuf, z )
                   dbAppend()

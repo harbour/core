@@ -146,7 +146,7 @@ STATIC s_lQuitRequest := .F.
 STATIC s_hmtxQueue, s_hmtxServiceThreads, s_hmtxRunningThreads, s_hmtxLog, s_hmtxConsole, s_hmtxBusy
 STATIC s_hmtxHRB
 
-STATIC s_hfileLogAccess, s_hfileLogError, s_cApplicationRoot, s_cDocumentRoot, s_lIndexes, s_lConsole, s_nPort
+STATIC s_hFileLogAccess, s_hFileLogError, s_cApplicationRoot, s_cDocumentRoot, s_lIndexes, s_lConsole, s_nPort
 STATIC s_cSessionPath
 STATIC s_nThreads, s_nStartThreads, s_nMaxThreads
 STATIC s_nServiceThreads, s_nStartServiceThreads, s_nMaxServiceThreads
@@ -482,21 +482,21 @@ PROCEDURE Main( ... )
 
    hb_DirBuild( hb_FNameDir( cLogAccess ) )
 
-   IF ( s_hfileLogAccess := hb_vfOpen( cLogAccess, FO_CREAT + FO_WRITE ) ) == NIL
+   IF ( s_hFileLogAccess := hb_vfOpen( cLogAccess, FO_CREAT + FO_WRITE ) ) == NIL
       ? "Could not open access log file"
       WAIT
       ErrorLevel( 1 )
       RETURN
    ENDIF
-   hb_vfSeek( s_hfileLogAccess, 0, FS_END )
+   hb_vfSeek( s_hFileLogAccess, 0, FS_END )
 
-   IF ( s_hfileLogError := hb_vfOpen( cLogError, FO_CREAT + FO_WRITE ) ) == NIL
+   IF ( s_hFileLogError := hb_vfOpen( cLogError, FO_CREAT + FO_WRITE ) ) == NIL
       ? "Could not open error log file"
       WAIT
       ErrorLevel( 1 )
       RETURN
    ENDIF
-   hb_vfSeek( s_hfileLogError, 0, FS_END )
+   hb_vfSeek( s_hFileLogError, 0, FS_END )
 
    // MAIN PART
 
@@ -625,8 +625,8 @@ PROCEDURE Main( ... )
    hb_socketClose( hListen )
 
    // Close log files
-   hb_vfClose( s_hfileLogAccess )
-   hb_vfClose( s_hfileLogError )
+   hb_vfClose( s_hFileLogAccess )
+   hb_vfClose( s_hFileLogError )
 
    SetCursor( SC_NORMAL )
 
@@ -1436,7 +1436,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
       // hb_ToOutDebug( "AccessLog: %s \n\r", cAccess )
 
-      hb_vfWrite( s_hfileLogAccess, cAccess )
+      hb_vfWrite( s_hFileLogAccess, cAccess )
 
       IF t_nStatusCode != 200  // ok
 
@@ -1450,7 +1450,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
          // hb_ToOutDebug( "ErrorLog: %s \n\r", cError )
 
-         hb_vfWrite( s_hfileLogError, cError )
+         hb_vfWrite( s_hFileLogError, cError )
       ENDIF
 
       hb_mutexUnlock( s_hmtxLog )

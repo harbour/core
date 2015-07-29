@@ -40,14 +40,14 @@ CREATE CLASS TRtf
 
    PROTECTED:
 
-   VAR fhnd
+   VAR hFile
 
 ENDCLASS
 
 METHOD new( cFilename ) CLASS TRtf
 
-   IF ( ::fhnd := hb_vfOpen( cFilename, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
-      hb_vfWrite( ::fhnd, ;
+   IF ( ::hFile := hb_vfOpen( cFilename, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+      hb_vfWrite( ::hFile, ;
          "{\rtf1\ansi\deff0{\fonttbl {\f0\fnil\fcharset0 Courier New;}{\f1\fnil\fcharset0 Arial;}}" + ;
          "\uc1\pard\lang1033\ulnone\f0\fs20" + hb_eol() )
    ENDIF
@@ -78,7 +78,7 @@ METHOD write( cSource ) CLASS TRtf
    LOCAL cChar, cLine, xAtt, i
    LOCAL nChar, y
 
-   IF ::fhnd != NIL
+   IF ::hFile != NIL
 
       ft_FUse( cSource )  // open source file
       DO WHILE ! ft_FEof()  // read the file line by line
@@ -96,30 +96,30 @@ METHOD write( cSource ) CLASS TRtf
                   SubStr( cLine, nChar + 2, 1 ) + ;
                   SubStr( cLine, nChar + 3, 1 )
                IF ( i := AScan( s_attrib, {| e | e[ 1 ] == xAtt } ) ) > 0
-                  hb_vfWrite( ::fhnd, s_attrib[ i ][ 2 ] )
+                  hb_vfWrite( ::hFile, s_attrib[ i ][ 2 ] )
                   nChar += Len( xAtt ) - 1
                ELSE
                   // 3 attributes
                   xatt := Left( xAtt, 3 )
                   IF ( i := AScan( s_attrib, {| e | e[ 1 ] == xAtt } ) ) > 0
-                     hb_vfWrite( ::fhnd, s_attrib[ i ][ 2 ] )
+                     hb_vfWrite( ::hFile, s_attrib[ i ][ 2 ] )
                      nChar += Len( xAtt ) - 1
                   ELSE
                      // 2 attributes
                      xAtt := Left( xAtt, 2 )
                      IF ( i := AScan( s_attrib, {| e | e[ 1 ] == xAtt } ) ) > 0
-                        hb_vfWrite( ::fhnd, s_attrib[ i ][ 2 ] )
+                        hb_vfWrite( ::hFile, s_attrib[ i ][ 2 ] )
                         nChar += Len( xAtt ) - 1
                      ELSE
-                        hb_vfWrite( ::fhnd, cChar )
+                        hb_vfWrite( ::hFile, cChar )
                      ENDIF
                   ENDIF
                ENDIF
             ELSE
-               hb_vfWrite( ::fhnd, cChar )
+               hb_vfWrite( ::hFile, cChar )
             ENDIF
          NEXT
-         hb_vfWrite( ::fhnd, hb_eol() )
+         hb_vfWrite( ::hFile, hb_eol() )
          ft_FSkip()  // read next line
       ENDDO
       ft_FUse()
@@ -129,9 +129,9 @@ METHOD write( cSource ) CLASS TRtf
 
 METHOD close() CLASS TRtf
 
-   IF ::fhnd != NIL
-      hb_vfWrite( ::fhnd, "\f1\fs16\par" + hb_eol() + "}" )
-      hb_vfClose( ::fhnd )
+   IF ::hFile != NIL
+      hb_vfWrite( ::hFile, "\f1\fs16\par" + hb_eol() + "}" )
+      hb_vfClose( ::hFile )
    ENDIF
 
    RETURN self

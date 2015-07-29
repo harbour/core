@@ -242,7 +242,7 @@ STATIC PROCEDURE LogError( oerr )
    LOCAL cLogFile   := s_cErrorLog        // error log file name
    LOCAL lAppendLog := s_lErrorLogAppend  // .F. create a new error log (default), .T. append to a existing one.
 
-   LOCAL nHandle
+   LOCAL hFile
 
    LOCAL nCount
 
@@ -410,16 +410,16 @@ STATIC PROCEDURE LogError( oerr )
    AddLine( @cReport, "" )
    AddLine( @cReport, "" )
 
-   IF ( nHandle := hb_vfOpen( cLogFile, FO_CREAT + iif( lAppendLog, 0, FO_TRUNC ) + FO_WRITE ) ) == NIL .AND. ;
+   IF ( hFile := hb_vfOpen( cLogFile, FO_CREAT + iif( lAppendLog, 0, FO_TRUNC ) + FO_WRITE ) ) == NIL .AND. ;
       ! hb_FileMatch( cLogFile, "error.log" )
       // Force creating error.log in case supplied log file cannot be created for any reason
-      nHandle := hb_vfOpen( "error.log", FO_CREAT + FO_TRUNC + FO_WRITE )
+      hFile := hb_vfOpen( "error.log", FO_CREAT + FO_TRUNC + FO_WRITE )
    ENDIF
 
-   IF nHandle != NIL
-      hb_vfSeek( nHandle, 0, FS_END )
-      hb_vfWrite( nHandle, cReport )
-      hb_vfClose( nHandle )
+   IF hFile != NIL
+      hb_vfSeek( hFile, 0, FS_END )
+      hb_vfWrite( hFile, cReport )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN

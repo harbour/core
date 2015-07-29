@@ -409,7 +409,7 @@ METHOD PROCEDURE Out( ... ) CLASS HB_LogConsole
 CREATE CLASS HB_LogFile INHERIT HB_LogChannel
 
    VAR cFileName
-   VAR nFileHandle
+   VAR hFile
    VAR nFileLimit         INIT -1
    VAR nBackup            INIT 5
 
@@ -443,14 +443,14 @@ METHOD Open( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   IF ( ::nFileHandle := hb_vfOpen( ::cFileName, FO_CREAT + FO_WRITE ) ) == NIL
+   IF ( ::hFile := hb_vfOpen( ::cFileName, FO_CREAT + FO_WRITE ) ) == NIL
       RETURN .F.
    ENDIF
 
-   hb_vfSeek( ::nFileHandle, 0, FS_END )
-   hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "start --", hb_eol() ) )
+   hb_vfSeek( ::hFile, 0, FS_END )
+   hb_vfWrite( ::hFile, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "start --", hb_eol() ) )
 
-   hb_vfCommit( ::nFileHandle )
+   hb_vfCommit( ::hFile )
 
    ::lOpened := .T.
 
@@ -462,10 +462,10 @@ METHOD close( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   IF ::nFileHandle != NIL
-      hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "end --", hb_eol() ) )
-      hb_vfClose( ::nFileHandle )
-      ::nFileHandle := NIL
+   IF ::hFile != NIL
+      hb_vfWrite( ::hFile, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "end --", hb_eol() ) )
+      hb_vfClose( ::hFile )
+      ::hFile := NIL
    ENDIF
 
    ::lOpened := .F.
@@ -476,15 +476,15 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 
    LOCAL nCount
 
-   IF ::nFileHandle != NIL
-      hb_vfWrite( ::nFileHandle, ::Format( nStyle, cMessage, cProgName, nPriority ) + hb_eol() )
-      hb_vfCommit( ::nFileHandle )
+   IF ::hFile != NIL
+      hb_vfWrite( ::hFile, ::Format( nStyle, cMessage, cProgName, nPriority ) + hb_eol() )
+      hb_vfCommit( ::hFile )
 
       // see file limit and eventually swap file.
       IF ::nFileLimit > 0
-         IF hb_vfSeek( ::nFileHandle, 0, FS_RELATIVE ) > ::nFileLimit * 1024
-            hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", hb_eol() ) )
-            hb_vfClose( ::nFileHandle )
+         IF hb_vfSeek( ::hFile, 0, FS_RELATIVE ) > ::nFileLimit * 1024
+            hb_vfWrite( ::hFile, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", hb_eol() ) )
+            hb_vfClose( ::hFile )
 
             IF ::nBackup > 1
                IF hb_vfExists( ::cFileName + "." + StrZero( ::nBackup - 1, 3 ) )
@@ -496,8 +496,8 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
             ENDIF
 
             IF hb_vfRename( ::cFileName, ::cFileName + ".000" ) != F_ERROR
-               IF ( ::nFileHandle := hb_vfOpen( ::cFileName, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
-                  hb_vfWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
+               IF ( ::hFile := hb_vfOpen( ::cFileName, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
+                  hb_vfWrite( ::hFile, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
                ENDIF
             ENDIF
          ENDIF

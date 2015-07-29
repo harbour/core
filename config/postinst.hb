@@ -724,7 +724,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
    LOCAL pRegex
    LOCAL aResult
    LOCAL tmp
-   LOCAL fhnd
+   LOCAL hFile
 
    LOCAL cCommand
    LOCAL cRegex := "[\s]_?HB_FUN_([A-Z0-9_]*)[\s]"
@@ -753,8 +753,8 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
       IF hb_vfExists( cInputName )
          cCommand := StrTran( cCommand, "{I}", cInputName )
          IF "{T}" $ cCommand
-            IF ( fhnd := hb_vfTempFile( @cTempFile,,, ".tmp" ) ) != NIL
-               hb_vfClose( fhnd )
+            IF ( hFile := hb_vfTempFile( @cTempFile,,, ".tmp" ) ) != NIL
+               hb_vfClose( hFile )
             ENDIF
             cCommand := StrTran( cCommand, "{T}", cTempFile )
          ENDIF

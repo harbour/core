@@ -325,7 +325,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
    LOCAL i                                // Counters
    LOCAL cBuff      := Space( BUFFSIZE )  // File buffer
-   LOCAL nHandle                          // File handle
+   LOCAL hFile                            // File handle
    LOCAL nOffset    := FILEOFFSET         // Offset into file
    LOCAL cFieldText                       // Text expression container
    LOCAL err                              // error object
@@ -348,12 +348,12 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
    // Open the label file
 #ifdef HB_CLP_STRICT
-   IF ( nHandle := hb_vfOpen( cLblFile ) ) == NIL .AND. ;
+   IF ( hFile := hb_vfOpen( cLblFile ) ) == NIL .AND. ;
       Empty( hb_FNameDir( cLblFile ) )
 
       // Search through default path; attempt to open label file
       FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
-         IF ( nHandle := hb_vfOpen( hb_DirSepAdd( cPath ) + cLblFile ) ) != NIL
+         IF ( hFile := hb_vfOpen( hb_DirSepAdd( cPath ) + cLblFile ) ) != NIL
             EXIT
          ENDIF
       NEXT
@@ -366,11 +366,11 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
       dBase compatibility. This is fixed in Harbour, unless strict
       compatibility is selected.
       [vszakats] */
-   nHandle := hb_vfOpen( cLblFile, HB_FO_DEFAULTS )
+   hFile := hb_vfOpen( cLblFile, HB_FO_DEFAULTS )
 #endif
 
    // File error
-   IF nHandle == NIL
+   IF hFile == NIL
       err := ErrorNew()
       err:severity := ES_ERROR
       err:genCode := EG_OPEN
@@ -379,7 +379,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
       err:filename := cLblFile
       Eval( ErrorBlock(), err )
    ELSE
-      IF hb_vfRead( nHandle, @cBuff, BUFFSIZE ) > 0 .AND. FError() == 0
+      IF hb_vfRead( hFile, @cBuff, BUFFSIZE ) > 0 .AND. FError() == 0
          // Load label dimension into aLabel
          aLabel[ LBL_REMARK  ] := hb_BSubStr( cBuff, REMARKOFFSET, REMARKSIZE )
          aLabel[ LBL_HEIGHT  ] := Bin2W( hb_BSubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
@@ -406,7 +406,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
          NEXT
       ENDIF
 
-      hb_vfClose( nHandle )  // Close file
+      hb_vfClose( hFile )  // Close file
    ENDIF
 
    RETURN aLabel

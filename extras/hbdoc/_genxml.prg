@@ -69,25 +69,25 @@ ENDCLASS
 METHOD NewDocument( cDir, cFilename, cTitle ) CLASS GenerateXML
 
    ::super:NewDocument( cDir, cFilename, cTitle, ".xml" )
-   hb_vfWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
-   hb_vfWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
+   hb_vfWrite( ::hFile, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
+   hb_vfWrite( ::hFile, '<HarbourReference>' + hb_eol() )
 
    RETURN self
 
 METHOD NewIndex( cDir, cFilename, cTitle ) CLASS GenerateXML
 
    ::super:NewIndex( cDir, cFilename, cTitle, ".xml" )
-   hb_vfWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
-   hb_vfWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
+   hb_vfWrite( ::hFile, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
+   hb_vfWrite( ::hFile, '<HarbourReference>' + hb_eol() )
 
    RETURN self
 
 METHOD BeginSection( cSection, cFilename ) CLASS GenerateXML
 
    IF ::Depth == 0
-      hb_vfWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + '<Section name="' + cSection + '" file="' + cFilename + ::cExtension + '">' + hb_eol() )
+      hb_vfWrite( ::hFile, Replicate( Chr( 9 ), ::Depth ) + '<Section name="' + cSection + '" file="' + cFilename + ::cExtension + '">' + hb_eol() )
    ELSE
-      hb_vfWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + '<Section name="' + cSection + '">' + hb_eol() )
+      hb_vfWrite( ::hFile, Replicate( Chr( 9 ), ::Depth ) + '<Section name="' + cSection + '">' + hb_eol() )
    ENDIF
    ::Depth++
 
@@ -98,7 +98,7 @@ METHOD EndSection( cSection, cFilename ) CLASS GenerateXML
    HB_SYMBOL_UNUSED( cSection )
    HB_SYMBOL_UNUSED( cFilename )
    ::Depth--
-   hb_vfWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + '</Section>' + hb_eol() )
+   hb_vfWrite( ::hFile, Replicate( Chr( 9 ), ::Depth ) + '</Section>' + hb_eol() )
 
    RETURN self
 
@@ -115,24 +115,24 @@ METHOD AddEntry( oEntry ) CLASS GenerateXML
    IF ::IsIndex()
       ::AddIndex( oEntry )
    ELSE
-      hb_vfWrite( ::nHandle, '<Entry>' + hb_eol() )
+      hb_vfWrite( ::hFile, '<Entry>' + hb_eol() )
       ::Depth++
       FOR EACH item IN oEntry:Fields
          ::WriteEntry( item[ 1 ], oEntry:&( item[ 1 ] ), oEntry:IsPreformatted( item[ 1 ] ) )
       NEXT
       ::Depth--
-      hb_vfWrite( ::nHandle, '</Entry>' + hb_eol() )
+      hb_vfWrite( ::hFile, '</Entry>' + hb_eol() )
    ENDIF
 
    RETURN self
 
 METHOD Generate() CLASS GenerateXML
 
-   hb_vfWrite( ::nHandle, '</HarbourReference>' + hb_eol() )
+   hb_vfWrite( ::hFile, '</HarbourReference>' + hb_eol() )
 
-   IF ::nHandle != NIL
-      hb_vfClose( ::nHandle )
-      ::nHandle := NIL
+   IF ::hFile != NIL
+      hb_vfClose( ::hFile )
+      ::hFile := NIL
    ENDIF
 
    RETURN self
@@ -145,13 +145,13 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
          cEntry := hb_eol() + cEntry
       ENDIF
 
-      hb_vfWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + "<" + cCaption + iif( lPreformatted, ' preformatted="yes"', "" ) + ">" )
-      hb_vfWrite( ::nHandle, hb_StrReplace( cEntry, { ;
+      hb_vfWrite( ::hFile, Replicate( Chr( 9 ), ::Depth ) + "<" + cCaption + iif( lPreformatted, ' preformatted="yes"', "" ) + ">" )
+      hb_vfWrite( ::hFile, hb_StrReplace( cEntry, { ;
          "&" => "&amp;", ;
          '"' => "&quot;", ;
          "<" => "&lt;", ;
          ">" => "&gt;" } ) )
-      hb_vfWrite( ::nHandle, /* Replicate( Chr( 9 ), ::Depth ) + */ "</" + cCaption + ">" + hb_eol() )
+      hb_vfWrite( ::hFile, /* Replicate( Chr( 9 ), ::Depth ) + */ "</" + cCaption + ">" + hb_eol() )
    ENDIF
 
    RETURN

@@ -284,7 +284,7 @@ PROCEDURE Main( ... )
    LOCAL lValidateOnly := .F. /* syntactic metadata validation only */
    LOCAL cArg
    LOCAL cRoot := NIL
-   LOCAL fhnd
+   LOCAL hFile
 
    LOCAL hRegexTake1Line := hb_regexComp( "^#[[:blank:]]*(ORIGIN|VER|URL|DIFF)[[:blank:]]+(.+?)[[:blank:]]*$" )
    LOCAL hRegexTake2Line := hb_regexComp( "^#[[:blank:]]*(MAP)[[:blank:]]+(.+?)[[:blank:]]+(.+?)[[:blank:]]*$" )
@@ -421,8 +421,8 @@ PROCEDURE Main( ... )
    cRoot := cCWD
 #endif
 
-   IF ( fhnd := hb_vfTempFile( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) ) != NIL
-      hb_vfClose( fhnd )
+   IF ( hFile := hb_vfTempFile( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) ) != NIL
+      hb_vfClose( hFile )
       hb_vfErase( s_cTempDir )
       hb_vfDirMake( s_cTempDir )
    ELSE
@@ -779,18 +779,18 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
 STATIC PROCEDURE SaveLog( cFNTemplate, cStdOut, cStdErr )
 
-   LOCAL fhnd := hb_vfOpen( CombinePath( s_cTempDir, cFNTemplate + ".log" ), FO_CREAT + FO_TRUNC + FO_WRITE )
+   LOCAL hFile
 
-   IF fhnd != NIL
+   IF ( hFile := hb_vfOpen( CombinePath( s_cTempDir, cFNTemplate + ".log" ), FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
       IF cStdOut != NIL
-         hb_vfWrite( fhnd, "stdout:" + hb_eol() )
-         hb_vfWrite( fhnd, cStdOut )
+         hb_vfWrite( hFile, "stdout:" + hb_eol() )
+         hb_vfWrite( hFile, cStdOut )
       ENDIF
       IF cStdErr != NIL
-         hb_vfWrite( fhnd, "stderr:" + hb_eol() )
-         hb_vfWrite( fhnd, cStdErr )
+         hb_vfWrite( hFile, "stderr:" + hb_eol() )
+         hb_vfWrite( hFile, cStdErr )
       ENDIF
-      hb_vfClose( fhnd )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN

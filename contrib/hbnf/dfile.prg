@@ -13,7 +13,7 @@
    Nanforum Toolkit
  */
 
-THREAD STATIC t_nHandle
+THREAD STATIC t_hFile
 
 FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
       nStart, nCNormal, nCHighlight, cExitKeys, ;
@@ -34,10 +34,10 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
          cExitKeys := {}
       ENDCASE
 
-      t_nHandle := hb_vfOpen( cInFile )
+      t_hFile := hb_vfOpen( cInFile )
 
       IF ( rval := FError() ) == 0
-         rval := _ft_DFInit( t_nHandle, nTop, nLeft, nBottom, nRight, ;
+         rval := _ft_DFInit( t_hFile, nTop, nLeft, nBottom, nRight, ;
             nStart, nCNormal, nCHighlight, cExitKeys, ;
             lBrowse, nColSkip, nRMargin, nBuffSize )
       ENDIF
@@ -49,12 +49,12 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
 
 PROCEDURE ft_DFClose()
 
-   IF t_nHandle != NIL
+   IF t_hFile != NIL
       _ft_DFClos()
 
-      hb_vfClose( t_nHandle )
+      hb_vfClose( t_hFile )
 
-      t_nHandle := NIL
+      t_hFile := NIL
    ENDIF
 
    RETURN

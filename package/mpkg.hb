@@ -170,7 +170,7 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
    LOCAL lModified := .F.
 
-   LOCAL fhnd, nPEPos, cSignature, tDate, nSections
+   LOCAL hFile, nPEPos, cSignature, tDate, nSections
    LOCAL nPEChecksumPos, nDWORD, cDWORD
    LOCAL tmp, tmp1
 
@@ -180,27 +180,27 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
    hb_vfTimeGet( cFileName, @tDate )
 
-   IF ( fhnd := hb_vfOpen( cFileName, FO_READWRITE + FO_EXCLUSIVE ) ) != NIL
-      IF ( cSignature := hb_vfReadLen( fhnd, 2 ) ) == "MZ"
-         hb_vfSeek( fhnd, 0x003C, FS_SET )
-         nPEPos := Bin2W( hb_vfReadLen( fhnd, 2 ) ) + ;
-                   Bin2W( hb_vfReadLen( fhnd, 2 ) ) * 0x10000
-         hb_vfSeek( fhnd, nPEPos, FS_SET )
-         IF !( hb_vfReadLen( fhnd, 4 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 ) )
+   IF ( hFile := hb_vfOpen( cFileName, FO_READWRITE + FO_EXCLUSIVE ) ) != NIL
+      IF ( cSignature := hb_vfReadLen( hFile, 2 ) ) == "MZ"
+         hb_vfSeek( hFile, 0x003C, FS_SET )
+         nPEPos := Bin2W( hb_vfReadLen( hFile, 2 ) ) + ;
+                   Bin2W( hb_vfReadLen( hFile, 2 ) ) * 0x10000
+         hb_vfSeek( hFile, nPEPos, FS_SET )
+         IF !( hb_vfReadLen( hFile, 4 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 ) )
             nPEPos := NIL
          ENDIF
-      ELSEIF cSignature + hb_vfReadLen( fhnd, 2 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 )
+      ELSEIF cSignature + hb_vfReadLen( hFile, 2 ) == "PE" + hb_BChar( 0 ) + hb_BChar( 0 )
          nPEPos := 0
       ENDIF
       IF nPEPos != NIL
 
-         hb_vfSeek( fhnd, 0x0002, FS_RELATIVE )
+         hb_vfSeek( hFile, 0x0002, FS_RELATIVE )
 
-         nSections := Bin2W( hb_vfReadLen( fhnd, 2 ) )
+         nSections := Bin2W( hb_vfReadLen( hFile, 2 ) )
 
          nDWORD := Int( ( Max( hb_defaultValue( tDateHdr, hb_SToT() ), hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 )
 
-         IF hb_vfSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008
+         IF hb_vfSeek( hFile, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008
 
             cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
                       hb_BChar( nDWORD / 0x100 )
@@ -208,42 +208,42 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
             cDWORD += hb_BChar( nDWORD % 0x100 ) + ;
                       hb_BChar( nDWORD / 0x100 )
 
-            IF !( hb_vfReadLen( fhnd, 4 ) == cDWORD ) .AND. ;
-               hb_vfSeek( fhnd, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008 .AND. ;
-               hb_vfWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+            IF !( hb_vfReadLen( hFile, 4 ) == cDWORD ) .AND. ;
+               hb_vfSeek( hFile, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008 .AND. ;
+               hb_vfWrite( hFile, cDWORD ) == hb_BLen( cDWORD )
                lModified := .T.
             ENDIF
 
-            IF hb_vfSeek( fhnd, nPEPos + 0x0014, FS_SET ) == nPEPos + 0x0014
+            IF hb_vfSeek( hFile, nPEPos + 0x0014, FS_SET ) == nPEPos + 0x0014
 
                nPEPos += 0x0018
                nPEChecksumPos := nPEPos + 0x0040
 
-               IF Bin2W( hb_vfReadLen( fhnd, 2 ) ) > 0x0058 .AND. ;
-                  hb_vfSeek( fhnd, nPEPos + 0x005C, FS_SET ) == nPEPos + 0x005C
+               IF Bin2W( hb_vfReadLen( hFile, 2 ) ) > 0x0058 .AND. ;
+                  hb_vfSeek( hFile, nPEPos + 0x005C, FS_SET ) == nPEPos + 0x005C
 
                   nPEPos += 0x005C + ;
-                            ( ( Bin2W( hb_vfReadLen( fhnd, 2 ) ) + ;
-                                Bin2W( hb_vfReadLen( fhnd, 2 ) ) * 0x10000 ) * 8 ) + 4
-                  IF hb_vfSeek( fhnd, nPEPos, FS_SET ) == nPEPos
+                            ( ( Bin2W( hb_vfReadLen( hFile, 2 ) ) + ;
+                                Bin2W( hb_vfReadLen( hFile, 2 ) ) * 0x10000 ) * 8 ) + 4
+                  IF hb_vfSeek( hFile, nPEPos, FS_SET ) == nPEPos
                      tmp1 := nPEPos
                      nPEPos := NIL
                      /* IMAGE_SECTION_HEADERs */
                      FOR tmp := 1 TO nSections
-                        hb_vfSeek( fhnd, tmp1 + ( tmp - 1 ) * 0x28, FS_SET )
+                        hb_vfSeek( hFile, tmp1 + ( tmp - 1 ) * 0x28, FS_SET )
                         /* IMAGE_EXPORT_DIRECTORY */
-                        IF hb_vfReadLen( fhnd, 8 ) == ".edata" + hb_BChar( 0 ) + hb_BChar( 0 )
-                           hb_vfSeek( fhnd, 0x000C, FS_RELATIVE )
-                           nPEPos := Bin2W( hb_vfReadLen( fhnd, 2 ) ) + ;
-                                     Bin2W( hb_vfReadLen( fhnd, 2 ) ) * 0x10000
+                        IF hb_vfReadLen( hFile, 8 ) == ".edata" + hb_BChar( 0 ) + hb_BChar( 0 )
+                           hb_vfSeek( hFile, 0x000C, FS_RELATIVE )
+                           nPEPos := Bin2W( hb_vfReadLen( hFile, 2 ) ) + ;
+                                     Bin2W( hb_vfReadLen( hFile, 2 ) ) * 0x10000
                            EXIT
                         ENDIF
                      NEXT
                      IF nPEPos != NIL .AND. ;
-                        hb_vfSeek( fhnd, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004
-                        IF !( hb_vfReadLen( fhnd, 4 ) == cDWORD ) .AND. ;
-                           hb_vfSeek( fhnd, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004 .AND. ;
-                           hb_vfWrite( fhnd, cDWORD ) == hb_BLen( cDWORD )
+                        hb_vfSeek( hFile, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004
+                        IF !( hb_vfReadLen( hFile, 4 ) == cDWORD ) .AND. ;
+                           hb_vfSeek( hFile, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004 .AND. ;
+                           hb_vfWrite( hFile, cDWORD ) == hb_BLen( cDWORD )
                            lModified := .T.
                         ENDIF
                      ENDIF
@@ -252,22 +252,22 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
                /* Recalculate PE checksum */
                IF lModified
-                  tmp := hb_vfSize( fhnd )
-                  hb_vfSeek( fhnd, FS_SET, 0 )
-                  nDWORD := win_PEChecksumCalc( hb_vfReadLen( fhnd, tmp ), nPECheckSumPos )
-                  IF hb_vfSeek( fhnd, nPEChecksumPos ) == nPEChecksumPos
+                  tmp := hb_vfSize( hFile )
+                  hb_vfSeek( hFile, FS_SET, 0 )
+                  nDWORD := win_PEChecksumCalc( hb_vfReadLen( hFile, tmp ), nPECheckSumPos )
+                  IF hb_vfSeek( hFile, nPEChecksumPos ) == nPEChecksumPos
                      cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
                                hb_BChar( nDWORD / 0x100 )
                      nDWORD /= 0x10000
                      cDWORD += hb_BChar( nDWORD % 0x100 ) + ;
                                hb_BChar( nDWORD / 0x100 )
-                     hb_vfWrite( fhnd, cDWORD )
+                     hb_vfWrite( hFile, cDWORD )
                   ENDIF
                ENDIF
             ENDIF
          ENDIF
       ENDIF
-      hb_vfClose( fhnd )
+      hb_vfClose( hFile )
    ENDIF
 
    IF lModified

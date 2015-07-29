@@ -283,12 +283,12 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
 
 STATIC FUNCTION __i18n_IsBOM_UTF8( cFileName )
 
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL cBuffer
 
-   IF ( fhnd := hb_vfOpen( cFileName ) ) != NIL
-      cBuffer := hb_vfReadLen( fhnd, hb_BLen( _UTF8_BOM ) )
-      hb_vfClose( fhnd )
+   IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+      cBuffer := hb_vfReadLen( hFile, hb_BLen( _UTF8_BOM ) )
+      hb_vfClose( hFile )
       IF cBuffer == _UTF8_BOM
          RETURN .T.
       ENDIF
