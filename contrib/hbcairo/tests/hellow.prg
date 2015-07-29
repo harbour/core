@@ -20,7 +20,7 @@ PROCEDURE Main()
 
    cairo_set_line_width( hCairo, 1 )
    FOR nI := 1 TO 10
-      cairo_set_source_rgb( hCairo, hb_Random(), hb_Random(), hb_Random() )
+      cairo_set_source_rgb( hCairo, hb_randNum(), hb_randNum(), hb_randNum() )
       cairo_rectangle( hCairo, 100 + nI * 5, 50 + nI * 5, 100, 70 )
       cairo_stroke( hCairo )
    NEXT

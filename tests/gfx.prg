@@ -46,13 +46,13 @@ PROCEDURE Main()
       hb_gfxMakeColor( 0, 0, 0 ), hb_gfxMakeColor( 255, 255, 255 ) )
 
    DO WHILE Inkey() == 0
-      nTop := Int( hb_Random( 3.1 * nFontHeight, hb_gtInfo( HB_GTI_SCREENHEIGHT ) ) )
-      nLeft := Int( hb_Random( hb_gtInfo( HB_GTI_SCREENWIDTH ) ) )
-      nHeight := Int( hb_Random( 251 ) )
-      nWidth := Int( hb_Random( 251 ) )
-      nColor := hb_gfxMakeColor( Int( hb_Random( 32, 256 ) ), Int( hb_Random( 32, 256 ) ), Int( hb_Random( 32, 256 ) ) )
+      nTop := hb_randInt( 3.1 * nFontHeight, hb_gtInfo( HB_GTI_SCREENHEIGHT ) )
+      nLeft := hb_randInt( hb_gtInfo( HB_GTI_SCREENWIDTH ) )
+      nHeight := hb_randInt( 251 )
+      nWidth := hb_randInt( 251 )
+      nColor := hb_gfxMakeColor( hb_randInt( 32, 256 ), hb_randInt( 32, 256 ), hb_randInt( 32, 256 ) )
 
-      SWITCH Int( hb_Random( 1, 9 ) )
+      SWITCH hb_randInt( 1, 9 )
       CASE 1
          hb_gfxLine( nTop, nLeft, nTop + nHeight, nLeft + nWidth, nColor )
          EXIT

@@ -29,11 +29,11 @@ STATIC PROCEDURE DrawLightning( hCairo, nX, nY, nLen, nW, nInit )
    nK := 0
    FOR nI := 1 TO nLen
       // AR(1) process
-      nInit := nInit * 0.9 + ( hb_Random() - 0.5 )
+      nInit := nInit * 0.9 + ( hb_randNum() - 0.5 )
       // ARIMA(1, 1, 0) process
       nK += nInit
       // ARIMA(1, 1, 0) + white noise
-      nX2 := nX + nK + hb_Random()
+      nX2 := nX + nK + hb_randNum()
       cairo_line_to( hCairo, nX2, nI + nY )
       nW -= 0.003
       IF nW < nW0 - 0.1

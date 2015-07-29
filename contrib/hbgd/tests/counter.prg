@@ -34,7 +34,7 @@ PROCEDURE Main( cValue, cBaseImage )
    ENDIF
 
    // A value if not passed
-   nValue := Val( hb_defaultValue( cValue, Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) ) )
+   nValue := Val( hb_defaultValue( cValue, Str( hb_randInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) ) )
 
    // Fix num length
    IF nValue > 10 ^ DISPLAY_NUM

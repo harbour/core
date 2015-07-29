@@ -62,7 +62,7 @@ FUNCTION tip_GenerateSID( cCRCKey )
    cSID := ""
    nKey := 0
    FOR n := 1 TO SID_LENGTH
-      nRand := hb_RandomInt( 1, nLenKeys )
+      nRand := hb_randInt( 1, nLenKeys )
       cSID  += SubStr( cBaseKeys, nRand, 1 )
       nKey  += nRand
    NEXT

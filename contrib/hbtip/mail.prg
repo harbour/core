@@ -465,15 +465,12 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
    RETURN nPos
 
 METHOD MakeBoundary() CLASS TIPMail
-
-   LOCAL cBound := "=_0"
-   LOCAL i
-
-   FOR i := 1 TO 17
-      cBound += Chr( Asc( "A" ) + hb_Random( 0, 25 ) )
-   NEXT
-
-   RETURN cBound + "_TIP_" + hb_TToS( hb_DateTime() )
+   RETURN ;
+      "=_0" + ;
+      StrZero( hb_randNum( 0, 9999999999 ), 10, 0 ) + ;
+      StrZero( hb_randNum( 0, 9999999999 ), 10, 0 ) + ;
+      "_TIP_" + ;
+      hb_TToS( hb_DateTime() )
 
 METHOD setHeader( cSubject, cFrom, xTo, xCC ) CLASS TIPMail
 

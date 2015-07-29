@@ -726,7 +726,7 @@ METHOD RecvAuth( lEncrypt ) CLASS TRPCServeCon
 
 METHOD LaunchChallenge( cUserid, cPassword ) CLASS TRPCServeCon
 
-   LOCAL cChallenge, nCount
+   LOCAL cChallenge
 
    IF ( ::cCryptKey := ::oServer:AuthorizeChallenge( cUserid, cPassword ) ) == NIL
       RETURN .F.
@@ -735,10 +735,7 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS TRPCServeCon
    ::cChallengeUserid := cUserid
 
    /* Let's generate the sequence */
-   cChallenge := ""
-   FOR nCount := 1 TO 255
-      cChallenge += hb_BChar( hb_Random( 0, 255 ) )
-   NEXT
+   cChallenge := hb_randStr( 255 )
 
    ::nChallengeCRC := hb_Checksum( cChallenge )
    cChallenge := hb_Crypt( cChallenge, ::cCryptKey )
