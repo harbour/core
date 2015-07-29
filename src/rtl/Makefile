@@ -20,6 +20,7 @@ C_SOURCES := \
    binnum.c \
    box.c \
    cdpapi.c \
+   cdpapich.c \
    cdpapihb.c \
    cdpbox.c \
    cdpdetc.c \

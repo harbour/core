@@ -469,31 +469,26 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
    RETURN cOut
 
+/* nType: 0=as found as the separator in the stdin stream
+          1=as found as the last one in the stdin stream
+          2=as found in the CGI enviroment
+   Examples:
+   0: -----------------------------41184676334     // in the body or stdin stream
+   1: -----------------------------41184676334--   // last one of the stdin stream
+   2: ---------------------------41184676334       // in the header or CGI envirnment
+ */
 METHOD Boundary( nType ) CLASS TIPClientHTTP
-   /*
-      nType: 0=as found as the separator in the stdin stream
-             1=as found as the last one in the stdin stream
-             2=as found in the CGI enviroment
-      Examples:
-      -----------------------------41184676334     // in the body or stdin stream
-      -----------------------------41184676334--   // last one of the stdin stream
-      ---------------------------41184676334       // in the header or CGI envirnment
-    */
 
-   LOCAL cBound := ::cBoundary
-   LOCAL i
-
-   IF Empty( cBound )
-      cBound := Replicate( "-", 27 )
-      FOR i := 1 TO 11
-         cBound += hb_ntos( Int( hb_Random( 0, 9 ) ) )
-      NEXT
-      ::cBoundary := cBound
+   IF ::cBoundary == NIL
+      ::cBoundary := Replicate( "-", 27 ) + StrZero( hb_RandNum( 0, 99999999999 ), 11, 0 )
    ENDIF
 
    hb_default( @nType, 0 )
 
-   RETURN iif( nType < 2, "--", "" ) + cBound + iif( nType == 1, "--", "" )
+   RETURN ;
+      iif( nType <= 1, "--", "" ) + ;
+      ::cBoundary + ;
+      iif( nType == 1, "--", "" )
 
 METHOD PROCEDURE Attach( cName, cFileName, cType ) CLASS TIPClientHTTP
 

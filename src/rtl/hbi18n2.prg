@@ -86,7 +86,7 @@ STATIC FUNCTION __i18n_strDecode( cLine, cValue, lCont )
    RETURN lRet
 
 #define _BOM_VALUE      0xFEFF
-#define _UTF8_BOM       hb_utf8Chr( _BOM_VALUE ) /* e"\xEF\xBB\xBF" */
+#define _UTF8_BOM       e"\xEF\xBB\xBF"  /* hb_utf8Chr( _BOM_VALUE ) */
 
 FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
 

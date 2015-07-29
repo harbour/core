@@ -14192,7 +14192,7 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
       /* fall through */
    CASE _VCS_GIT
       cType := "git"
-      cGitBase := "git" + iif( nType == _VCS_GIT_SUB .OR. Empty( cDir ), "", " --git-dir=" + cDir + ".git" + " " )
+      cGitBase := "git" + iif( nType == _VCS_GIT_SUB .OR. Empty( cDir ), "", " --git-dir=" + cDir + ".git" ) + " "
       cCommand := cGitBase + "log -1 --format=format:%h%n%H%n%ci%n%cn%n%ce%n%ai%n%an%n%ae --encoding=utf8"
       /* see: https://github.com/golang/go/issues/9341 */
       hb_SetEnv( "GIT_TERMINAL_PROMPT", "0" )
@@ -14273,6 +14273,9 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
                hbmk[ _HBMK_tVCSTS ] := tmp - ( ( nOffset - hb_UTCOffset() ) / 86400 )
             ELSE
                hbmk[ _HBMK_tVCSTS ] := hb_DateTime()
+               IF hbmk[ _HBMK_lInfo ] .AND. hbmk[ _HBMK_lVCSTS ]
+                  _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Git repository locally modified" ) ) )
+               ENDIF
             ENDIF
 
             tmp := hb_CToT( aResult[ 6 ], "yyyy-mm-dd", "hh:mm:ss" )
