@@ -95,7 +95,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    ENDIF
 
    // A value if not passed
-   nValue := Val( hb_defaultValue( cValue, Str( hb_randInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) ) )
+   nValue := Val( hb_defaultValue( cValue, Str( hb_randInt( 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) ) )
 
    // Fix num length
    IF nValue > 10 ^ DISPLAY_NUM
@@ -171,7 +171,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
 #if 0
    /* Write Final Counter Image */
-   oI:SaveGif( IMAGES_OUT + "counter" + StrZero( hb_randInt( 1, 99 ), 2 ) + ".gif" )
+   oI:SaveGif( IMAGES_OUT + "counter" + StrZero( hb_randInt( 99 ), 2 ) + ".gif" )
 
    ?
    ? "Look at", IMAGES_OUT, "directory for output images"

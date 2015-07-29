@@ -216,7 +216,7 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
 #endif /* HB_HAS_MKSTEMP */
       {
          int i;
-         double d = hb_random_num(), x;
+         double d = hb_random_num_secure(), x;
 
          for( i = 0; i < 6; i++ )
          {

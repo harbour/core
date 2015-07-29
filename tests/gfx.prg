@@ -52,7 +52,7 @@ PROCEDURE Main()
       nWidth := hb_randInt( 251 )
       nColor := hb_gfxMakeColor( hb_randInt( 32, 256 ), hb_randInt( 32, 256 ), hb_randInt( 32, 256 ) )
 
-      SWITCH hb_randInt( 1, 9 )
+      SWITCH hb_randInt( 9 )
       CASE 1
          hb_gfxLine( nTop, nLeft, nTop + nHeight, nLeft + nWidth, nColor )
          EXIT

@@ -208,7 +208,7 @@ METHOD WvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFon
    ::nFontBold           := nFontBold
    ::nFontQuality        := nFontQuality
 
-   ::cPaintBlockID       := StrZero( hb_Random( 99999998 ), 8 )
+   ::cPaintBlockID       := StrZero( hb_randInt( 99999998 ), 8 )
    ::nObjOver            := 0
    ::nKey                := 0
    ::cColor              := "N/W"

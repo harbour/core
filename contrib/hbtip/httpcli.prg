@@ -480,7 +480,7 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 METHOD Boundary( nType ) CLASS TIPClientHTTP
 
    IF ::cBoundary == NIL
-      ::cBoundary := Replicate( "-", 27 ) + StrZero( hb_randNum( 0, 99999999999 ), 11, 0 )
+      ::cBoundary := Replicate( "-", 27 ) + StrZero( hb_randNum( 99999999999 ), 11, 0 )
    ENDIF
 
    hb_default( @nType, 0 )

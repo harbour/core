@@ -446,7 +446,7 @@ METHOD Connect( cServer, cUserId, cPassword ) CLASS TRPCClient
 
 METHOD BuildChallengePwd( cPassword ) CLASS TRPCClient
 
-   LOCAL nLen := 10 + hb_randInt( 1, 60 )
+   LOCAL nLen := 10 + hb_randInt( 60 )
    LOCAL nCount
    LOCAL cRet := ""
 

@@ -283,7 +283,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
    // Check if we should clean up (call the garbage collection routines)
    // TraceLog( "::nGc_probability: " + hb_CStr( ::nGc_probability ) )
    IF ::nGc_probability > 0
-      nRand := hb_randInt( 1, 100 )
+      nRand := hb_randInt( 100 )
       // TraceLog( "::nGc_probability - nRand: " + hb_CStr( nRand ) )
       IF nRand <= ::nGc_Probability
          ::GC( ::nGc_MaxLifeTime )
