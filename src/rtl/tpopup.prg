@@ -162,7 +162,7 @@ METHOD delItem( nPos ) CLASS PopupMenu
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
 
-      nLen := Len( ::aItems[ nPos ]:caption )
+      nLen := hb_ULen( ::aItems[ nPos ]:caption )
 
       hb_ADel( ::aItems, nPos, .T. )
       ::nItemCount--
@@ -202,7 +202,7 @@ METHOD display() CLASS PopupMenu
       DispBegin()
 
       hb_DispBox( nTop, nLeft, ::nBottom, ::nRight, ;
-                  SubStr( ::cBorder, 1, 8 ) + " ", ;
+                  hb_USubStr( ::cBorder, 1, 8 ) + " ", ;
                   hb_ColorIndex( ::cColorSpec, 5 ) )
 
       IF ::lShadowed
@@ -216,13 +216,16 @@ METHOD display() CLASS PopupMenu
 
          IF item:__issep
 
-            hb_DispOutAtBox( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
+            hb_DispOutAtBox( nTop, nLeft - 1, ;
+               hb_USubStr( ::cBorder, 9, 1 ) + ;
+               Replicate( hb_USubStr( ::cBorder, 10, 1 ), nWidth ) + ;
+               hb_USubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
 
          ELSE
-            cCaption := PadR( item:caption, nWidth - 1 )
+            cCaption := hb_UPadR( item:caption, nWidth - 1 )
 
             IF item:checked
-               cCaption := SubStr( item:style, 1, 1 ) + cCaption
+               cCaption := hb_USubStr( item:style, 1, 1 ) + cCaption
             ELSE
                cCaption := " " + cCaption
             ENDIF
@@ -235,7 +238,7 @@ METHOD display() CLASS PopupMenu
                oPopup:bottom := NIL
                oPopup:right  := NIL
 
-               cCaption += SubStr( item:style, 2, 1 )
+               cCaption += hb_USubStr( item:style, 2, 1 )
             ELSE
                cCaption += " "
             ENDIF
@@ -243,23 +246,23 @@ METHOD display() CLASS PopupMenu
             item:__row := nTop
             item:__col := nLeft
 
-            IF ( nHotKeyPos := At( "&", cCaption ) ) == 0
-               IF ( nCharPos := RAt( SubStr( item:style, 2, 1 ), cCaption ) ) > 0
-                  cCaption := Stuff( cCaption, nCharPos - 1, 1, "" )
+            IF ( nHotKeyPos := hb_UAt( "&", cCaption ) ) == 0
+               IF ( nCharPos := RAt( hb_USubStr( item:style, 2, 1 ), cCaption ) ) > 0  /* TOFIX: use hb_URat() */
+                  cCaption := hb_UStuff( cCaption, nCharPos - 1, 1, "" )
                ELSE
-                  cCaption := hb_StrShrink( cCaption )
+                  cCaption := hb_StrShrink( cCaption )  /* TOFIX: use hb_UStrShrink() */
                ENDIF
-            ELSEIF nHotKeyPos == Len( RTrim( cCaption ) )
-               cCaption := hb_StrShrink( cCaption )
+            ELSEIF nHotKeyPos == hb_ULen( RTrim( cCaption ) )
+               cCaption := hb_StrShrink( cCaption )  /* TOFIX: use hb_UStrShrink() */
                nHotKeyPos := 0
             ELSE
-               cCaption := Stuff( cCaption, nHotKeyPos, 1, "" )
+               cCaption := hb_UStuff( cCaption, nHotKeyPos, 1, "" )
             ENDIF
 
             hb_DispOutAt( nTop, nLeft, cCaption, hb_ColorIndex( ::cColorSpec, iif( item:__enumIndex() == nCurrent, 1, iif( item:enabled, 0, 4 ) ) ) )
 
             IF item:enabled .AND. nHotKeyPos != 0
-               hb_DispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), hb_ColorIndex( ::cColorSpec, iif( item:__enumIndex() == nCurrent, 3, 2 ) ) )
+               hb_DispOutAt( nTop, nLeft + nHotKeyPos - 1, hb_USubStr( cCaption, nHotKeyPos, 1 ), hb_ColorIndex( ::cColorSpec, iif( item:__enumIndex() == nCurrent, 3, 2 ) ) )
             ENDIF
          ENDIF
       NEXT
@@ -284,10 +287,10 @@ METHOD getAccel( xKey ) CLASS PopupMenu
       RETURN 0
    ENDCASE
 
-   IF Len( cKey ) > 0
+   IF hb_BLen( cKey ) > 0
       cKey := "&" + cKey
       FOR EACH item in ::aItems
-         IF hb_AtI( cKey, item:caption ) > 0
+         IF hb_AtI( cKey, item:caption ) > 0  /* use hb_UAti() */
             RETURN item:__enumIndex()
          ENDIF
       NEXT
@@ -528,7 +531,7 @@ METHOD setMetrics() CLASS PopupMenu
 METHOD border( cBorder ) CLASS PopupMenu
 
    IF cBorder != NIL
-      ::cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001, {|| Len( cBorder ) == 0 .OR. Len( cBorder ) == 11 } )
+      ::cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001, {|| hb_BLen( cBorder ) == 0 .OR. hb_ULen( cBorder ) == 11 } )
    ENDIF
 
    RETURN ::cBorder

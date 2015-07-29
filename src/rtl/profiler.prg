@@ -470,11 +470,11 @@ METHOD writeLines( aLines ) CLASS HBProfileReport
 
 METHOD header() CLASS HBProfileReport
    RETURN { ;
-      PadR( "Name",    35 ) + " " + ;
-      PadR( "Type",     8 ) + " " + ;
-      PadR( "Calls",   10 ) + " " + ;
-      PadR( "Ticks",   11 ) + " " + ;
-      PadR( "Seconds", 11 ), ;
+      hb_UPadR( "Name",    35 ) + " " + ;
+      hb_UPadR( "Type",     8 ) + " " + ;
+      hb_UPadR( "Calls",   10 ) + " " + ;
+      hb_UPadR( "Ticks",   11 ) + " " + ;
+      hb_UPadR( "Seconds", 11 ), ;
       Replicate( "=", 35 ) + " " + ;
       Replicate( "=",  8 ) + " " + ;
       Replicate( "=", 10 ) + " " + ;
@@ -489,11 +489,11 @@ METHOD emitHeader() CLASS HBProfileReport
 
 METHOD line( oEntity ) CLASS HBProfileReport
    RETURN { ;
-      PadR( oEntity:cName,      35 ) + " " + ;
-      PadR( oEntity:describe(),  8 ) + " " + ;
-      Str( oEntity:nCalls,      10 ) + " " + ;
-      Str( oEntity:nTicks,      11 ) + " " + ;
-      Str( oEntity:nSeconds,    11, 2 ) }
+      hb_UPadR( oEntity:cName,      35 ) + " " + ;
+      hb_UPadR( oEntity:describe(),  8 ) + " " + ;
+      Str(      oEntity:nCalls,     10 ) + " " + ;
+      Str(      oEntity:nTicks,     11 ) + " " + ;
+      Str(      oEntity:nSeconds,   11, 2 ) }
 
 METHOD emitLine( oEntity ) CLASS HBProfileReport
 
@@ -663,13 +663,13 @@ METHOD generate( bFilter, nTop, nLeft, nBottom, nRight ) CLASS HBProfileReportTo
 
 METHOD addColumns( oBrowse ) CLASS HBProfileReportToTBrowse
 
-   oBrowse:addColumn( TBColumnNew( "Name",         {|| PadR( ::currentEntity():cName,        35    ) } ) )
-   oBrowse:addColumn( TBColumnNew( "Type",         {|| PadR( ::currentEntity():describe(),    8    ) } ) )
-   oBrowse:addColumn( TBColumnNew( "Calls",        {|| PadL( ::currentEntity():nCalls,       10    ) } ) )
-   oBrowse:addColumn( TBColumnNew( "Ticks",        {|| PadL( ::currentEntity():nTicks,       11    ) } ) )
-   oBrowse:addColumn( TBColumnNew( "Seconds",      {|| Str(  ::currentEntity():nSeconds,     11, 2 ) } ) )
-   oBrowse:addColumn( TBColumnNew( "Mean;Ticks",   {|| Str(  ::currentEntity():nMeanTicks,   11, 2 ) } ) )
-   oBrowse:addColumn( TBColumnNew( "Mean;Seconds", {|| Str(  ::currentEntity():nMeanSeconds, 11, 2 ) } ) )
+   oBrowse:addColumn( TBColumnNew( "Name",         {|| hb_UPadR( ::currentEntity():cName,        35    ) } ) )
+   oBrowse:addColumn( TBColumnNew( "Type",         {|| hb_UPadR( ::currentEntity():describe(),    8    ) } ) )
+   oBrowse:addColumn( TBColumnNew( "Calls",        {|| hb_UPadL( ::currentEntity():nCalls,       10    ) } ) )
+   oBrowse:addColumn( TBColumnNew( "Ticks",        {|| hb_UPadL( ::currentEntity():nTicks,       11    ) } ) )
+   oBrowse:addColumn( TBColumnNew( "Seconds",      {|| Str(      ::currentEntity():nSeconds,     11, 2 ) } ) )
+   oBrowse:addColumn( TBColumnNew( "Mean;Ticks",   {|| Str(      ::currentEntity():nMeanTicks,   11, 2 ) } ) )
+   oBrowse:addColumn( TBColumnNew( "Mean;Seconds", {|| Str(      ::currentEntity():nMeanSeconds, 11, 2 ) } ) )
 
    RETURN Self
 

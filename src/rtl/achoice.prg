@@ -604,7 +604,7 @@ STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite, nNumCols )
    ColorSelect( iif( lSelect .AND. HB_ISSTRING( cLine ), ;
       iif( lHiLite, CLR_ENHANCED, CLR_STANDARD ), CLR_UNSELECTED ) )
 
-   hb_DispOutAt( nRow, nCol, iif( HB_ISSTRING( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
+   hb_DispOutAt( nRow, nCol, iif( HB_ISSTRING( cLine ), hb_UPadR( cLine, nNumCols ), Space( nNumCols ) ) )
    IF lHiLite
       SetPos( nRow, nCol )
    ENDIF
@@ -620,7 +620,7 @@ STATIC FUNCTION Ach_Limits( /* @ */ nFrstItem, /* @ */ nLastItem, /* @ */ nItems
    nFrstItem := nLastItem := nItems := 0
 
    FOR nCntr := 1 TO Len( acItems )
-      IF HB_ISSTRING( acItems[ nCntr ] ) .AND. Len( acItems[ nCntr ] ) > 0
+      IF HB_ISSTRING( acItems[ nCntr ] ) .AND. hb_BLen( acItems[ nCntr ] ) > 0
          nItems++
          IF Ach_Select( alSelect, nCntr )
             IF nFrstItem == 0

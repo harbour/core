@@ -614,7 +614,7 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
                aRecordHeader[ Len( aRecordHeader ) ] += " "
             NEXT
             // Get rid of the extra space from the last column
-            aRecordHeader[ Len( aRecordHeader ) ] := hb_StrShrink( ATail( aRecordHeader ) )
+            aRecordHeader[ Len( aRecordHeader ) ] := hb_StrShrink( ATail( aRecordHeader ) )  /* TOFIX: use hb_UStrShrink() */
          ENDIF
       NEXT
    ENDIF

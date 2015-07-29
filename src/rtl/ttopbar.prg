@@ -121,7 +121,7 @@ METHOD delItem( nPos ) CLASS TopBarMenu
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
 
-      nLen := Len( ::aItems[ nPos ]:caption )
+      nLen := hb_ULen( ::aItems[ nPos ]:caption )
 
       hb_ADel( ::aItems, nPos, .T. )
       ::nItemCount--
@@ -160,7 +160,7 @@ METHOD display() CLASS TopBarMenu
    FOR EACH item IN ::aItems
 
       cCaption := " " + RTrim( item:caption ) + " "
-      nCaptionLen := Len( cCaption )
+      nCaptionLen := hb_ULen( cCaption )
 
       IF nCaptionLen == 0
          LOOP
@@ -181,11 +181,11 @@ METHOD display() CLASS TopBarMenu
          oPopUp:right := NIL
       ENDIF
 
-      IF ( nPos := At( "&", cCaption ) ) > 0
-         IF nPos == Len( cCaption )
+      IF ( nPos := hb_UAt( "&", cCaption ) ) > 0
+         IF nPos == hb_ULen( cCaption )
             nPos := 0
          ELSE
-            cCaption := Stuff( cCaption, nPos, 1, "" )
+            cCaption := hb_UStuff( cCaption, nPos, 1, "" )
             nCaptionLen--
          ENDIF
       ENDIF
@@ -195,7 +195,7 @@ METHOD display() CLASS TopBarMenu
             iif( item:enabled, cColor1, hb_ColorIndex( ::cColorSpec, 4 ) ) ) )
 
       IF item:enabled .AND. nPos > 0
-         hb_DispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
+         hb_DispOutAt( nRow, nLeft + nPos - 1, hb_USubStr( cCaption, nPos, 1 ), ;
             iif( item:__enumIndex() == nCurrent, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 2 ) ) )
       ENDIF
 
@@ -283,9 +283,9 @@ METHOD getAccel( nKey ) CLASS TopBarMenu
       K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4, ;
       K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey ) ) > 0
 
-      cKey := "&" + SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 )
+      cKey := "&" + hb_BSubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 )
       FOR EACH item IN ::aItems
-         IF hb_AtI( cKey, item:caption ) > 0
+         IF hb_AtI( cKey, item:caption ) > 0  /* TOFIX: use hb_UAtI() */
             RETURN item:__enumIndex()
          ENDIF
       NEXT
@@ -323,7 +323,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS TopBarMenu
 
          nColumn := item:__col
 
-         IF nMCol >= nColumn .AND. nMCol <= nColumn + Len( item:caption )
+         IF nMCol >= nColumn .AND. nMCol <= nColumn + hb_ULen( item:caption )
             RETURN item:__enumIndex()
          ENDIF
       NEXT

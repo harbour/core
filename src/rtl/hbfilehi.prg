@@ -330,7 +330,7 @@ FUNCTION hb_DirUnbuild( cDir )
                RETURN .F.
             ENDIF
          ENDIF
-         IF ( tmp := RAt( hb_ps(), cDirTemp ) ) == 0
+         IF ( tmp := RAt( hb_ps(), cDirTemp ) ) == 0  /* TOFIX: use hb_URAt() function */
             EXIT
          ENDIF
          cDirTemp := Left( cDirTemp, tmp - 1 )
