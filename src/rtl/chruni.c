@@ -720,5 +720,3 @@ HB_FUNC( HB_USTUFF )
    else
       hb_retc_null();
 }
-
-/* TODO: PadR(), PadC(), PadL() */
