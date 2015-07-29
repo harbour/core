@@ -46,7 +46,7 @@ hbicu.hbc
 
 sqlite3.c
 
-# URL    https://sqlite.org/2015/sqlite-amalgamation-3081002.zip
+# URL    https://sqlite.org/2015/sqlite-amalgamation-3081100.zip
 # DIFF   sqlite3.dif
 #
 # MAP    sqlite3.c

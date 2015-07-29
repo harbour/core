@@ -1,7 +1,7 @@
 diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	2015-05-21 01:02:18.584270000 +0200
-+++ sqlite3/sqlite3.c	2015-05-21 01:02:19.177024400 +0200
-@@ -29174,7 +29174,11 @@
+--- sqlite3.orig/sqlite3.c	2015-07-29 02:54:54.015211000 +0200
++++ sqlite3/sqlite3.c	2015-07-29 02:54:54.561179500 +0200
+@@ -29689,7 +29689,11 @@
        ** This is a similar technique to that used by glibc on systems
        ** that do not have a real fallocate() call.
        */
@@ -13,7 +13,7 @@ diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
        int nWrite = 0;             /* Number of bytes written by seekAndWrite */
        i64 iWrite;                 /* Next offset to write to */
  
-@@ -35204,6 +35208,11 @@
+@@ -35721,6 +35725,11 @@
  ** create a substitute.
  */
  /* #include <time.h> */
@@ -25,7 +25,7 @@ diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
  struct tm *__cdecl localtime(const time_t *t)
  {
    static struct tm y;
-@@ -35211,7 +35220,7 @@
+@@ -35728,7 +35737,7 @@
    SYSTEMTIME pTm;
    sqlite3_int64 t64;
    t64 = *t;
