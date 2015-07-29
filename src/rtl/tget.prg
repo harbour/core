@@ -515,7 +515,7 @@ METHOD varPut( xValue ) CLASS Get
    IF HB_ISEVALITEM( ::bBlock ) .AND. ValType( xValue ) $ "CNDTLU"
       aSubs := ::xSubScript
       IF HB_ISARRAY( aSubs ) .AND. ! Empty( aSubs )
-         nLen := hb_ULen( aSubs )
+         nLen := Len( aSubs )
          aValue := Eval( ::bBlock )
          FOR i := 1 TO nLen - 1
             IF HB_ISNUMERIC( aSubs[ i ] ) .OR. ;
@@ -548,7 +548,7 @@ METHOD varGet() CLASS Get
    IF HB_ISEVALITEM( ::bBlock )
       aSubs := ::xSubScript
       IF HB_ISARRAY( aSubs ) .AND. ! Empty( aSubs )
-         nLen := hb_ULen( aSubs )
+         nLen := Len( aSubs )
          xValue := Eval( ::bBlock )
          FOR i := 1 TO nLen
             IF HB_ISNUMERIC( aSubs[ i ] ) .OR. ;
