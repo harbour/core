@@ -65,6 +65,7 @@
 
 #define _ITEM_cText         1
 #define _ITEM_xData         2
+#define _ITEM_MAX_          2
 
 #define _LISTBOX_ITEMDATA( aItem )  iif( aItem[ _ITEM_xData ] == NIL, aItem[ _ITEM_cText ], aItem[ _ITEM_xData ] )
 
@@ -766,7 +767,7 @@ METHOD setFocus() CLASS ListBox
 METHOD setItem( nPos, aItem ) CLASS ListBox
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
-      Len( aItem ) == 2 .AND. ;
+      Len( aItem ) == _ITEM_MAX_ .AND. ;
       HB_ISSTRING( aItem[ _ITEM_cText ] )
 
       ::aItems[ nPos ] := aItem

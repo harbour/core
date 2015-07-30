@@ -64,8 +64,7 @@ FUNCTION __Wait( xPrompt )
       IF ( bBlock := SetKey( nKey ) ) != NIL
          Eval( bBlock, ProcName( 1 ), ProcLine( 1 ), "" )
       ELSE
-         cKey := hb_keyChar( nKey )
-         IF Len( cKey ) > 0
+         IF hb_BLen( cKey := hb_keyChar( nKey ) ) > 0
             QQOut( cKey )
          ELSE
             cKey := Chr( 0 )

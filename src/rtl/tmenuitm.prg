@@ -165,7 +165,7 @@ METHOD shortcut( nShortcut ) CLASS MenuItem
 METHOD style( cStyle ) CLASS MenuItem
 
    IF cStyle != NIL
-      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 2 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| hb_ULen( cStyle ) == 2 } )
    ENDIF
 
    RETURN ::cStyle

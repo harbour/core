@@ -165,11 +165,11 @@ METHOD SetActiveLine( n ) CLASS HBBrwText
    RETURN Self
 
 METHOD GetLine() CLASS HBBrwText
-   RETURN iif( ::lLineNumbers, PadR( hb_ntos( ::nRow ) + ":", ::nLineNoLen ), "" ) + ;
+   RETURN iif( ::lLineNumbers, hb_UPadR( hb_ntos( ::nRow ) + ":", ::nLineNoLen ), "" ) + ;
       MemoLine( ::aRows[ ::nRow ], ::nMaxLineLen, 1, ::nTabWidth, .F. )
 
 METHOD GetLineText() CLASS HBBrwText
-   RETURN PadR( SubStr( ::GetLine(), ::nLineOffset ), ::nWidth )
+   RETURN hb_UPadR( hb_USubStr( ::GetLine(), ::nLineOffset ), ::nWidth )
 
 METHOD GetLineColor() CLASS HBBrwText
 
@@ -191,11 +191,11 @@ METHOD PROCEDURE LoadFile( cFileName ) CLASS HBBrwText
    ::cFileName := cFileName
    ::aRows := __dbgTextToArray( MemoRead( cFileName ) )
    ::nRows := Len( ::aRows )
-   ::nLineNoLen := Len( hb_ntos( ::nRows ) ) + 2
+   ::nLineNoLen := hb_ULen( hb_ntos( ::nRows ) ) + 2
 
    FOR EACH cLine IN ::aRows
       nMaxLineLen := Max( nMaxLineLen, ;
-         Len( RTrim( MemoLine( cLine, Len( cLine ) + 256, 1, ::nTabWidth, .F. ) ) ) )
+         hb_ULen( RTrim( MemoLine( cLine, hb_ULen( cLine ) + 256, 1, ::nTabWidth, .F. ) ) ) )
    NEXT
    ::nMaxLineLen := nMaxLineLen
    ::nLineOffset := 1

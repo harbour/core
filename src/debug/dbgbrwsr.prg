@@ -184,11 +184,11 @@ METHOD DispRow( nRow, lHiLite ) CLASS HBDbBrowser
             ENDIF
             nWid := oCol:width
             IF nWid == NIL
-               nWid := Len( xData )
+               nWid := hb_ULen( xData )
             ENDIF
             hb_DispOutAt( ::nTop + nRow - 1, nColX, ;
-                          Left( PadR( xData, nWid ) + iif( oCol:__enumIsLast(), "", " " ), ;
-                                ::nRight - nColX + 1 ), ::aColorSpec[ nClr ] )
+                          hb_ULeft( hb_UPadR( xData, nWid ) + iif( oCol:__enumIsLast(), "", " " ), ;
+                                    ::nRight - nColX + 1 ), ::aColorSpec[ nClr ] )
             nColX += nWid + 1
          ENDIF
       NEXT

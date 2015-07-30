@@ -118,7 +118,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 
    BEGIN SEQUENCE
 
-      IF Len( cFileFrom ) == 0
+      IF hb_BLen( cFileFrom ) == 0
 
          dbCreate( cFileName, { ;
             { "FIELD_NAME", "C", 10, 0 }, ;

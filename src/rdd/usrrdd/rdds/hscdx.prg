@@ -241,7 +241,7 @@ FUNCTION HSX_GET( nSlot )
 
    IF Used() .AND. rddName() == "HSCDX"
       aWData := USRRDD_AREADATA( Select() )
-      IF nSlot > 0 .AND. nSlot <= Len( aWData[ 2 ] )
+      IF nSlot >= 1 .AND. nSlot <= Len( aWData[ 2 ] )
          RETURN aWData[ 2 ][ nSlot ]
       ENDIF
    ENDIF

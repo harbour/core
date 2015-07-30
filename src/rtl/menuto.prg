@@ -131,7 +131,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
          IF nMsgRow > 0
 
             IF ! Empty( xMsg )
-               DispOutAt( nMsgRow, nMsgCol, Space( Len( xMsg ) ) )
+               DispOutAt( nMsgRow, nMsgCol, Space( hb_ULen( xMsg ) ) )
             ENDIF
 
             xMsg := t_aLevel[ nPointer - 1 ][ n ][ _ITM_MSG ]
@@ -144,7 +144,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             hb_default( @xMsg, "" )
 
             IF lMsgCenter
-               nMsgCol := Int( ( MaxCol() - Len( xMsg ) ) / 2 )
+               nMsgCol := Int( ( MaxCol() - hb_ULen( xMsg ) ) / 2 )
             ENDIF
 
             DispOutAt( nMsgRow, nMsgCol, xMsg )
@@ -251,7 +251,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             EXIT
          OTHERWISE
             // did user hit a hot key?
-            IF Len( cKey := Upper( hb_keyChar( nKey ) ) ) > 0
+            IF hb_BLen( cKey := Upper( hb_keyChar( nKey ) ) ) > 0
                FOR y := 1 TO nArrLen
                   IF hb_LeftEqI( LTrim( t_aLevel[ nPointer - 1 ][ y ][ _ITM_PROMPT ] ), cKey )
                      n := y
@@ -308,7 +308,7 @@ STATIC FUNCTION HitTest( aMenu, nMRow, nMCol )
    FOR EACH aMenuItem IN aMenu
       IF nMRow == aMenuItem[ _ITM_ROW ] .AND. ;
          nMCol >= aMenuItem[ _ITM_COL ] .AND. ;
-         nMCol < aMenuItem[ _ITM_COL ] + Len( aMenuItem[ _ITM_PROMPT ] )
+         nMCol < aMenuItem[ _ITM_COL ] + hb_ULen( aMenuItem[ _ITM_PROMPT ] )
 
          RETURN aMenuItem:__enumIndex()
       ENDIF

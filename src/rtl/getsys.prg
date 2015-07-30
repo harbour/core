@@ -310,16 +310,16 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
 
    IF Set( _SET_SCOREBOARD )
 
-      cMessage := Left( __natMsg( _GET_RANGE_FROM ) + LTrim( Transform( xLow, "" ) ) + ;
+      cMessage := hb_ULeft( __natMsg( _GET_RANGE_FROM ) + LTrim( Transform( xLow, "" ) ) + ;
          __natMsg( _GET_RANGE_TO ) + LTrim( Transform( xHigh, "" ) ), MaxCol() )
 
-      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), cMessage )
+      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - hb_ULen( cMessage ) ), cMessage )
 
       DO WHILE ( nKey := Inkey( 0 ) ) == 0
       ENDDO
       hb_keyIns( nKey )
 
-      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), Space( Len( cMessage ) ) )
+      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - hb_ULen( cMessage ) ), Space( hb_ULen( cMessage ) ) )
 
    ENDIF
 

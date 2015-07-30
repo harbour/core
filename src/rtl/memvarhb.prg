@@ -225,7 +225,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
          cBuffer := Space( hb_vfSize( hFile ) - _HBMEM_SIG_LEN )
          hb_vfSeek( hFile, _HBMEM_SIG_LEN, FS_SET )
-         hb_vfRead( hFile, @cBuffer, Len( cBuffer ) )
+         hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
          hb_vfClose( hFile )
 
          aVars := hb_Deserialize( cBuffer )

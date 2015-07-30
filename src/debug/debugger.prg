@@ -502,7 +502,7 @@ METHOD PROCEDURE BuildBrowseStack() CLASS HBDebugger
       ::oBrwStack:Cargo := 1 // Actual highligthed row
 
       ::oBrwStack:AddColumn( HBDbColumnNew( "", {|| iif( Len( ::aProcStack ) > 0, ;
-         PadC( ::aProcStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_FUNCTION ], 14 ), Space( 14 ) ) } ) )
+         hb_UPadC( ::aProcStack[ ::oBrwStack:Cargo ][ HB_DBG_CS_FUNCTION ], 14 ), Space( 14 ) ) } ) )
    ENDIF
 
    RETURN
@@ -733,7 +733,7 @@ METHOD PROCEDURE Colors() CLASS HBDebugger
    oCol:defColor := { 1, 2 }
    AAdd( oBrwColors:Cargo[ 2 ], aColors )
    oBrwColors:AddColumn( oCol := HBDbColumnNew( "", ;
-      {|| PadR( '"' + ::aColors[ oBrwColors:Cargo[ 1 ] ] + '"', nWidth - 15 ) } ) )
+      {|| hb_UPadR( '"' + ::aColors[ oBrwColors:Cargo[ 1 ] ] + '"', nWidth - 15 ) } ) )
    AAdd( oBrwColors:Cargo[ 2 ], aColors )
    oCol:defColor := { 1, 3 }
    oCol:Width := 50
@@ -769,11 +769,11 @@ METHOD PROCEDURE CommandWindowDisplay( cLine, lCmd ) CLASS HBDebugger
    n := Len( ::aHistCommands )
    nRow := ::oWndCommand:nBottom
    nSize := ::oWndCommand:nRight - ::oWndCommand:nLeft - 1
-   hb_DispOutAt( --nRow, ::oWndCommand:nLeft + 1, PadR( "> ", nSize ), ;
+   hb_DispOutAt( --nRow, ::oWndCommand:nLeft + 1, hb_UPadR( "> ", nSize ), ;
                  __dbgColors()[ 2 ] )
    DO WHILE --nRow > ::oWndCommand:nTop
       hb_DispOutAt( nRow, ::oWndCommand:nLeft + 1, ;
-                    PadR( iif( n > 0, ::aHistCommands[ n-- ], "" ), nSize ), ;
+                    hb_UPadR( iif( n > 0, ::aHistCommands[ n-- ], "" ), nSize ), ;
                     __dbgColors()[ 2 ] )
    ENDDO
 
@@ -813,7 +813,7 @@ METHOD PROCEDURE CommandWindowProcessKey( nKey ) CLASS HBDebugger
          ::DoCommand( cCommand )
       ENDIF
       hb_DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ;
-                    PadR( "> ", ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ), ;
+                    hb_UPadR( "> ", ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ), ;
                     __dbgColors()[ 2 ] )
       ::oGetCommand:setValue( "" ):display()
       EXIT
@@ -848,20 +848,20 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       RETURN ""
 
    CASE hb_LeftEq( cCommand, "??" )
-      cParams := AllTrim( SubStr( cCommand, 3 ) )
+      cParams := AllTrim( hb_USubStr( cCommand, 3 ) )
       cCommand := "??"
 
    CASE hb_LeftEq( cCommand, "?" )
-      cParams := SubStr( cCommand, 2 )
+      cParams := hb_USubStr( cCommand, 2 )
       cCommand := "?"
 
    OTHERWISE
-      IF ( n := At( " ", cCommand ) ) > 0
-         cParam1 := cParams := AllTrim( SubStr( cCommand, n + 1 ) )
-         cCommand := Left( cCommand, n - 1 )
-         IF ( n := At( " ", cParam1 ) ) > 0
-            cParam2 := AllTrim( SubStr( cParam1, n + 1 ) )
-            cParam1 := Left( cParam1, n - 1 )
+      IF ( n := hb_UAt( " ", cCommand ) ) > 0
+         cParam1 := cParams := AllTrim( hb_USubStr( cCommand, n + 1 ) )
+         cCommand := hb_ULeft( cCommand, n - 1 )
+         IF ( n := hb_UAt( " ", cParam1 ) ) > 0
+            cParam2 := AllTrim( hb_USubStr( cParam1, n + 1 ) )
+            cParam1 := hb_ULeft( cParam1, n - 1 )
          ENDIF
       ENDIF
       cCommand := Upper( cCommand )
@@ -1062,15 +1062,15 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
          IF Empty( cParam2 )
             ::Colors()
          ELSE
-            cParam2 := SubStr( cParam2, At( "{", cParam2 ) + 1 )
+            cParam2 := hb_BSubStr( cParam2, hb_BAt( "{", cParam2 ) + 1 )
             FOR n := 1 TO 11
                IF "," $ cParam2
                   ::aColors[ n ] := ;
-                     StrTran( Left( cParam2, At( ",", cParam2 ) - 1 ), '"' )
-                  cParam2 := SubStr( cParam2, At( ",", cParam2 ) + 1 )
+                     StrTran( hb_BLeft( cParam2, hb_BAt( ",", cParam2 ) - 1 ), '"' )
+                  cParam2 := hb_BSubStr( cParam2, hb_BAt( ",", cParam2 ) + 1 )
                ELSE
                   ::aColors[ n ] := ;
-                     StrTran( Left( cParam2, At( "}", cParam2 ) - 1 ), '"' )
+                     StrTran( hb_BLeft( cParam2, hb_BAt( "}", cParam2 ) - 1 ), '"' )
                ENDIF
             NEXT
             ::LoadColors()
@@ -1194,8 +1194,8 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
             ::NotSupported()
          ELSE
             oWindow := ::aWindows[ ::nCurrentWindow ]
-            IF ( n := At( " ", cParam2 ) ) > 0
-               n := Val( SubStr( cParam2, n ) )
+            IF ( n := hb_BAt( " ", cParam2 ) ) > 0
+               n := Val( hb_BSubStr( cParam2, n ) )
             ENDIF
             oWindow:Resize( Val( cParam2 ), n, ;
                oWindow:nBottom + Val( cParam2 ) - oWindow:nTop, ;
@@ -1207,11 +1207,11 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
             ::NotSupported()
          ELSE
             IF Val( cParam2 ) >= 2 .AND. ;
-              ( n := At( " ", cParam2 ) ) > 0 .AND. Val( SubStr( cParam2, n ) ) > 0
+              ( n := hb_BAt( " ", cParam2 ) ) > 0 .AND. Val( hb_BSubStr( cParam2, n ) ) > 0
                oWindow := ::aWindows[ ::nCurrentWindow ]
                oWindow:Resize( oWindow:nTop, oWindow:nLeft, ;
                                Val( cParam2 ) - 1 + oWindow:nTop, ;
-                               Val( SubStr( cParam2, n ) ) - 1 + oWindow:nLeft )
+                               Val( hb_BSubStr( cParam2, n ) ) - 1 + oWindow:nLeft )
                ::lWindowsAutoSized := .F.
             ENDIF
          ENDIF
@@ -1252,8 +1252,8 @@ METHOD PROCEDURE DoScript( cFileName ) CLASS HBDebugger
    IF hb_vfExists( cFileName )
       FOR EACH cLine IN __dbgTextToArray( MemoRead( cFileName ) )
          cLine := AllTrim( cLine )
-         IF ::lActive .OR. ( ( nPos := At( " ", cLine ) ) > 0 .AND. ;
-            hb_LeftEqI( "OPTIONS", Left( cLine, nPos - 1 ) ) )
+         IF ::lActive .OR. ( ( nPos := hb_UAt( " ", cLine ) ) > 0 .AND. ;
+            hb_LeftEqI( "OPTIONS", hb_ULeft( cLine, nPos - 1 ) ) )
             // In inactive debugger, only "OPTIONS" commands can be executed safely
             ::DoCommand( cLine )
          ENDIF
@@ -1273,7 +1273,7 @@ METHOD PROCEDURE EditColor( nColor, oBrwColors ) CLASS HBDebugger
    IF __dbgInput( Row(), oBrwColors:nLeft + oBrwColors:GetColumn( 1 ):width + 1, ;
                   oBrwColors:getColumn( 2 ):Width, ;
                   @cColor, __dbgExprValidBlock( "C" ), ;
-                  SubStr( ::ClrModal(), 5 ) )
+                  hb_BSubStr( ::ClrModal(), 5 ) )
       ::aColors[ nColor ] := &cColor
    ENDIF
 
@@ -1284,8 +1284,8 @@ METHOD PROCEDURE EditColor( nColor, oBrwColors ) CLASS HBDebugger
 
 METHOD PROCEDURE EditSet( nSet, oBrwSets ) CLASS HBDebugger
 
-   LOCAL cSet  := PadR( __dbgValToExp( Set( nSet ) ), ;
-                        oBrwSets:getColumn( 2 ):Width )
+   LOCAL cSet  := hb_UPadR( __dbgValToExp( Set( nSet ) ), ;
+                            oBrwSets:getColumn( 2 ):Width )
    LOCAL cType := ValType( Set( nSet ) )
 
    oBrwSets:RefreshCurrent()
@@ -1294,7 +1294,7 @@ METHOD PROCEDURE EditSet( nSet, oBrwSets ) CLASS HBDebugger
    IF __dbgInput( Row(), oBrwSets:nLeft + oBrwSets:GetColumn( 1 ):width + 1, ;
                   oBrwSets:getColumn( 2 ):Width, ;
                   @cSet, __dbgExprValidBlock( cType ), ;
-                  SubStr( ::ClrModal(), 5 ), 256 )
+                  hb_BSubStr( ::ClrModal(), 5 ), 256 )
       Set( nSet, &cSet )
    ENDIF
 
@@ -1680,15 +1680,15 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
 
    IF hb_defaultValue( lEditable, .T. )
 
-      IF ! cType == "C" .OR. Len( uValue ) < nWidth
-         uTemp := PadR( iif( cType == "N", hb_ntos( uValue ), ;
-                                           uValue ), nWidth )
+      IF ! cType == "C" .OR. hb_ULen( uValue ) < nWidth
+         uTemp := hb_UPadR( iif( cType == "N", hb_ntos( uValue ), ;
+                                               uValue ), nWidth )
       ENDIF
       IF bValid == NIL .AND. cType $ "N"
          bValid := __dbgExprValidBlock( cType )
       ENDIF
       __dbgInput( nTop + 1, nLeft + 1, nWidth, @uTemp, bValid, ;
-                  __dbgColors()[ 5 ], Max( Max( nWidth, Len( uTemp ) ), 256 ) )
+                  __dbgColors()[ 5 ], Max( Max( nWidth, hb_ULen( uTemp ) ), 256 ) )
       SWITCH cType
       CASE "C" ; uTemp := AllTrim( uTemp ) ; EXIT
       CASE "N" ; uTemp := Val( uTemp )     ; EXIT
@@ -1696,7 +1696,7 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
 
    ELSE
 
-      hb_DispOutAt( nTop + 1, nLeft + 1, left( __dbgValToStr( uValue ), nRight - nLeft - 1 ), ;
+      hb_DispOutAt( nTop + 1, nLeft + 1, hb_ULeft( __dbgValToStr( uValue ), nRight - nLeft - 1 ), ;
                     __dbgColors()[ 2 ] + "," + __dbgColors()[ 5 ] )
       SetPos( nTop + 1, nLeft + 1 )
 
@@ -1787,8 +1787,8 @@ METHOD ListBox( cCaption, aItems ) CLASS HBDebugger
    LOCAL n
 
    nItems := Len( aItems )
-   nMaxWid := Len( cCaption ) + 2
-   AEval( aItems, {| x | nMaxWid := Max( Len( x ), nMaxWid ) } )
+   nMaxWid := hb_ULen( cCaption ) + 2
+   AEval( aItems, {| x | nMaxWid := Max( hb_ULen( x ), nMaxWid ) } )
    nMaxWid += 2
 
    nTop    := Int( ( ::nMaxRow / 2 ) - Min( nItems, ::nMaxRow - 5 ) / 2 )
@@ -2092,7 +2092,7 @@ METHOD PROCEDURE Open( cFileName ) CLASS HBDebugger
 
 METHOD OpenMenu( cName ) CLASS HBDebugger
 
-   LOCAL nPopup := ::oPullDown:GetHotKeyPos( Left( cName, 1 ) )
+   LOCAL nPopup := ::oPullDown:GetHotKeyPos( hb_ULeft( cName, 1 ) )
 
    IF nPopup == 0
       RETURN .F.
@@ -2861,7 +2861,7 @@ METHOD PROCEDURE ShowVars() CLASS HBDebugger
          ::oBrwVars:Cargo[ 1 ] - nOld }
 
       oCol := HBDbColumnNew( "", ;
-         {|| PadR( hb_ntos( ::oBrwVars:Cargo[ 1 ] - 1 ) + ") " + ;
+         {|| hb_UPadR( hb_ntos( ::oBrwVars:Cargo[ 1 ] - 1 ) + ") " + ;
          ::VarGetInfo( ::aVars[ Max( ::oBrwVars:Cargo[ 1 ], 1 ) ] ), ;
          ::oWndVars:nWidth() - 2 ) } )
       ::oBrwVars:AddColumn( oCol )
@@ -3152,7 +3152,7 @@ METHOD PROCEDURE ViewSets() CLASS HBDebugger
    oCol:Width := 14
    oCol:defcolor := { 1, 2 }
    oBrwSets:AddColumn( oCol := HBDbColumnNew( "", ;
-      {|| PadR( __dbgValToExp( Set( aSets[ oBrwSets:cargo[ 1 ] ][ HB_DBG_SET_POS ] ) ), nWidth - 13 ) } ) )
+      {|| hb_UPadR( __dbgValToExp( Set( aSets[ oBrwSets:cargo[ 1 ] ][ HB_DBG_SET_POS ] ) ), nWidth - 13 ) } ) )
    oCol:defcolor := { 1, 3 }
    oCol:width := 40
    oWndSets:bPainted := {|| oBrwSets:ForceStable(), RefreshVarsS( oBrwSets ) }
@@ -3359,10 +3359,10 @@ METHOD PROCEDURE WatchpointsShow() CLASS HBDebugger
          iif( Len( ::aWatch ) > 0, ::oBrwPnt:Cargo[ 1 ] - nOld, 0 ) }
 
       oCol := HBDbColumnNew( "", ;
-         {|| PadR( iif( Len( ::aWatch ) > 0, ;
-                        hb_ntos( ::oBrwPnt:Cargo[ 1 ] - 1 ) + ") " + ;
-                           ::WatchGetInfo( Max( ::oBrwPnt:Cargo[ 1 ], 1 ) ), ;
-                        " " ), ::oWndPnt:nWidth() - 2 ) } )
+         {|| hb_UPadR( iif( Len( ::aWatch ) > 0, ;
+                            hb_ntos( ::oBrwPnt:Cargo[ 1 ] - 1 ) + ") " + ;
+                               ::WatchGetInfo( Max( ::oBrwPnt:Cargo[ 1 ], 1 ) ), ;
+                            " " ), ::oWndPnt:nWidth() - 2 ) } )
       ::oBrwPnt:AddColumn( oCol )
       AAdd( ::oBrwPnt:Cargo[ 2 ], ::aWatch )
       oCol:DefColor := { 1, 2 }
@@ -3557,9 +3557,9 @@ STATIC FUNCTION PathToArray( cList )
 
    IF cList != NIL
 
-      DO WHILE ( nPos := At( cSep, cList ) ) > 0
-         AAdd( aList, Left( cList, nPos - 1 ) )        // Add a new element
-         cList := SubStr( cList, nPos + 1 )
+      DO WHILE ( nPos := hb_UAt( cSep, cList ) ) > 0
+         AAdd( aList, hb_ULeft( cList, nPos - 1 ) )        // Add a new element
+         cList := hb_USubStr( cList, nPos + 1 )
       ENDDO
 
       AAdd( aList, cList )              // Add final element
@@ -3573,7 +3573,7 @@ STATIC FUNCTION PathToArray( cList )
 
 /* Check if a string starts with another string with a min length */
 STATIC FUNCTION hb_LeftEqN( cLine, cStart, nMin )
-   RETURN Len( cStart ) >= nMin .AND. hb_LeftEq( cLine, cStart )
+   RETURN hb_ULen( cStart ) >= nMin .AND. hb_LeftEq( cLine, cStart )
 
 
 FUNCTION __dbgExprValidBlock( cType )
@@ -3629,7 +3629,7 @@ FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
    LOCAL oGet
 
    IF ! HB_ISNUMERIC( nWidth )
-      nWidth := Len( cValue )
+      nWidth := hb_ULen( cValue )
    ENDIF
    oGet := HbDbInput():new( nRow, nCol, nWidth, cValue, cColor, nSize )
 
@@ -3668,7 +3668,7 @@ FUNCTION __dbgAChoice( nTop, nLeft, nBottom, nRight, aItems, cColors )
    oBrw:colorSpec := cColors
    nLen := nRight - nLeft + 1
    nRow := 1
-   oCol := HBDbColumnNew( "", {|| PadR( aItems[ nRow ], nLen ) } )
+   oCol := HBDbColumnNew( "", {|| hb_UPadR( aItems[ nRow ], nLen ) } )
    oBrw:AddColumn( oCol )
    oBrw:goTopBlock := {|| nRow := 1 }
    oBrw:goBottomBlock := {|| nRow := Len( aItems ) }
@@ -3745,7 +3745,7 @@ FUNCTION __dbgValToStr( uVal )
 #else
    CASE "C"
    CASE "M" ; RETURN hb_StrToExp( uVal )
-   CASE "D" ; RETURN Left( hb_TSToStr( uVal, .F. ), 10 )
+   CASE "D" ; RETURN hb_BLeft( hb_TSToStr( uVal, .F. ), 10 )
    CASE "T" ; RETURN hb_TSToStr( uVal, .T. )
    CASE "O" ; RETURN "Class " + uVal:ClassName() + " object"
 #endif
@@ -3777,7 +3777,7 @@ FUNCTION __dbgValToExp( uVal )
 #else
    CASE "C"
    CASE "M" ; RETURN hb_StrToExp( uVal )
-   CASE "D" ; RETURN 'd"' + Left( hb_TSToStr( uVal, .F. ), 10 ) + '"'
+   CASE "D" ; RETURN 'd"' + hb_BLeft( hb_TSToStr( uVal, .F. ), 10 ) + '"'
    CASE "T" ; RETURN 't"' + hb_TSToStr( uVal, .T. ) + '"'
    CASE "O" ; RETURN "{ " + uVal:className() + " Object }"
 #endif
