@@ -290,7 +290,7 @@ METHOD getAccel( xKey ) CLASS PopupMenu
    IF hb_BLen( cKey ) > 0
       cKey := "&" + cKey
       FOR EACH item in ::aItems
-         IF hb_AtI( cKey, item:caption ) > 0  /* use hb_UAti() */
+         IF hb_AtI( cKey, item:caption ) > 0  /* TOFIX: use hb_UAti() */
             RETURN item:__enumIndex()
          ENDIF
       NEXT

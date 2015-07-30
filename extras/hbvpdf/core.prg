@@ -440,7 +440,7 @@ PROCEDURE pdfClose()
       ">>" + CRLF + ;
       "endobj" + CRLF
 
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
    hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    // info
@@ -455,10 +455,10 @@ PROCEDURE pdfClose()
       "/Creator ()" + CRLF + ;
       "/Subject ()" + CRLF + ;
       "/Keywords ()" + CRLF + ;
-      "/CreationDate (D:" + Left( hb_TToS( hb_DateTime() ), 14 ) + ")" + CRLF + ;
+      "/CreationDate (D:" + hb_BLeft( hb_TToS( hb_DateTime() ), 14 ) + ")" + CRLF + ;
       ">>" + CRLF + ;
       "endobj" + CRLF
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
    hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    // root
@@ -467,7 +467,7 @@ PROCEDURE pdfClose()
    cTemp := ;
       hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
       "<< /Type /Catalog /Pages 1 0 R /Outlines " + hb_ntos( t_aReport[ REPORTOBJ ] + 1 ) + " 0 R" + iif( ( nBookLen := Len( t_aReport[ BOOKMARK ] ) ) > 0, " /PageMode /UseOutlines", "" ) + " >>" + CRLF + "endobj" + CRLF
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
    hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    ++t_aReport[ REPORTOBJ ]
@@ -498,7 +498,7 @@ PROCEDURE pdfClose()
 
       cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + "<< /Type /Outlines /Count " + hb_ntos( nCount ) + " /First " + hb_ntos( nFirst ) + " 0 R /Last " + hb_ntos( nLast ) + " 0 R >>" + CRLF + "endobj" // + CRLF
       AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
-      t_aReport[ DOCLEN ] += Len( cTemp )
+      t_aReport[ DOCLEN ] += hb_BLen( cTemp )
       hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
       ++t_aReport[ REPORTOBJ ]
@@ -517,7 +517,7 @@ PROCEDURE pdfClose()
             ">>" + CRLF + "endobj" + CRLF
 
          AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] + 2 )
-         t_aReport[ DOCLEN ] += Len( cTemp )
+         t_aReport[ DOCLEN ] += hb_BLen( cTemp )
          hb_vfWrite( t_aReport[ HANDLE ], cTemp )
          ++nRecno
       NEXT
@@ -527,12 +527,12 @@ PROCEDURE pdfClose()
    ELSE
       cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + "<< /Type /Outlines /Count 0 >>" + CRLF + "endobj" + CRLF
       AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
-      t_aReport[ DOCLEN ] += Len( cTemp )
+      t_aReport[ DOCLEN ] += hb_BLen( cTemp )
       hb_vfWrite( t_aReport[ HANDLE ], cTemp )
    ENDIF
 
    cTemp := CRLF
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
 
    ++t_aReport[ REPORTOBJ ]
 
@@ -582,7 +582,7 @@ STATIC PROCEDURE pdfClosePage()
       ">>" + CRLF + ;
       "endobj" + CRLF
 
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
    hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
@@ -619,7 +619,7 @@ STATIC PROCEDURE pdfClosePage()
 
    cTemp += CRLF + ">>" + CRLF + "endobj" + CRLF
 
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
    hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
@@ -627,7 +627,7 @@ STATIC PROCEDURE pdfClosePage()
       hb_ntos( t_aReport[ REPORTOBJ ] + 1 ) + " 0 R >>" + CRLF + ;
       "stream"
 
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
    hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    IF Len( t_aReport[ PAGEIMAGES ] ) > 0
@@ -653,17 +653,17 @@ STATIC PROCEDURE pdfClosePage()
       CRLF + "endstream" + CRLF + ;
       "endobj" + CRLF
 
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
    hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    AAdd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
 
    cTemp := ;
       hb_ntos( ++t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
-      hb_ntos( Len( t_aReport[ PAGEBUFFER ] ) ) + CRLF + ;
+      hb_ntos( hb_BLen( t_aReport[ PAGEBUFFER ] ) ) + CRLF + ;
       "endobj" + CRLF
 
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
    hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    FOR EACH nI IN t_aReport[ FONTS ]
@@ -682,7 +682,7 @@ STATIC PROCEDURE pdfClosePage()
             ">>" + CRLF + ;
             "endobj" + CRLF
 
-         t_aReport[ DOCLEN ] += Len( cTemp )
+         t_aReport[ DOCLEN ] += hb_BLen( cTemp )
          hb_vfWrite( t_aReport[ HANDLE ], cTemp )
       ENDIF
    NEXT
@@ -708,7 +708,7 @@ STATIC PROCEDURE pdfClosePage()
             ">>" + CRLF + ;
             "stream" + CRLF
 
-         t_aReport[ DOCLEN ] += Len( cTemp )
+         t_aReport[ DOCLEN ] += hb_BLen( cTemp )
          hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
          hFileImage := hb_vfOpen( nI[ 1 ] )
@@ -735,7 +735,7 @@ STATIC PROCEDURE pdfClosePage()
          cTemp := CRLF + "endstream" + CRLF + ;
             "endobj" + CRLF
 
-         t_aReport[ DOCLEN ] += Len( cTemp )
+         t_aReport[ DOCLEN ] += hb_BLen( cTemp )
          hb_vfWrite( t_aReport[ HANDLE ], cTemp )
       ENDIF
    NEXT
@@ -985,7 +985,7 @@ PROCEDURE pdfOpen( cFile, nLen, lOptimize )
 
    t_aReport[ DOCLEN ] := 0
    cTemp := "%PDF-1.3" + CRLF
-   t_aReport[ DOCLEN ] += Len( cTemp )
+   t_aReport[ DOCLEN ] += hb_BLen( cTemp )
    hb_vfWrite( t_aReport[ HANDLE ], cTemp )
 
    RETURN

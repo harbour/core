@@ -102,7 +102,7 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL_MEM )
       ? curl_easy_setopt( curl, HB_CURLOPT_UL_BUFF_SETUP, tmp )
-      ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, Len( tmp ) ), Len( tmp )
+      ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, hb_BLen( tmp ) ), hb_BLen( tmp )
 #if 0
       /* May use this instead of embedding in URL */
       ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "username:password" )

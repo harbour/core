@@ -2047,7 +2047,7 @@ METHOD PROCEDURE Open( cFileName ) CLASS HBDebugger
    LOCAL cRealName
    LOCAL aFiles
 
-   IF Empty( cFileName )
+   IF ! HB_ISSTRING( cFileName ) .OR. hb_BLen( cFileName ) == 0
       aFiles := ::GetSourceFiles()
       ASort( aFiles )
       hb_AIns( aFiles, 1, "(Another file)", .T. )
@@ -2064,12 +2064,11 @@ METHOD PROCEDURE Open( cFileName ) CLASS HBDebugger
       ENDSWITCH
    ENDIF
 
-   IF ! Empty( cFileName ) .AND. ;
+   IF hb_BLen( cFileName ) > 0 .AND. ;
       ( ! HB_ISSTRING( ::cPrgName ) .OR. ! hb_FileMatch( cFileName, ::cPrgName ) )
 
       IF ! hb_vfExists( cFileName ) .AND. ::cPathForFiles != NIL
-         cRealName := ::LocatePrgPath( cFileName )
-         IF Empty( cRealName )
+         IF ( cRealName := ::LocatePrgPath( cFileName ) ) == NIL
             __dbgAlert( "File '" + cFileName + "' not found!" )
             RETURN
          ENDIF
@@ -3004,7 +3003,7 @@ METHOD BreakPointDelete( cPos ) CLASS HBDebugger
 
    LOCAL nAt
 
-   IF Empty( cPos )
+   IF ! HB_ISSTRING( cPos ) .OR. hb_BLen( cPos ) == 0
       cPos := AllTrim( ::InputBox( "Item number to delete", "0" ) )
       IF LastKey() == K_ESC
          cPos := ""
@@ -3059,16 +3058,19 @@ METHOD TracepointAdd( cExpr ) CLASS HBDebugger
 
    LOCAL aWatch
 
-   IF cExpr == NIL
-      cExpr := AllTrim( ::InputBox( "Enter Tracepoint",, __dbgExprValidBlock() ) )
+   IF ! HB_ISSTRING( cExpr )
+      cExpr := ::InputBox( "Enter Tracepoint",, __dbgExprValidBlock() )
       IF LastKey() == K_ESC
          RETURN Self
       ENDIF
    ENDIF
+
    cExpr := AllTrim( cExpr )
+
    IF Empty( cExpr )
       RETURN Self
    ENDIF
+
    aWatch := { "tp", cExpr, NIL }
    ::RestoreAppState()
    __dbgAddWatch( ::pInfo, cExpr, .T. )
@@ -3191,7 +3193,7 @@ METHOD WatchpointAdd( cExpr ) CLASS HBDebugger
 
    LOCAL aWatch
 
-   IF cExpr == NIL
+   IF ! HB_ISSTRING( cExpr )
       cExpr := ::InputBox( "Enter Watchpoint",, __dbgExprValidBlock() )
       IF LastKey() == K_ESC
          RETURN Self
@@ -3217,20 +3219,21 @@ METHOD WatchpointDel( xPos ) CLASS HBDebugger
    LOCAL nPos := -1, lAll := .F.
 
    IF ::oWndPnt != NIL .AND. ::oWndPnt:lVisible
-      IF Empty( xPos )
-         nPos := ::InputBox( "Enter item number to delete", ::oBrwPnt:cargo[ 1 ] - 1 )
-         IF LastKey() == K_ESC
-            nPos := -1
-         ENDIF
-      ELSEIF HB_ISSTRING( xPos )
+      DO CASE
+      CASE HB_ISSTRING( xPos )
          IF Upper( xPos ) == "ALL"
             lAll := .T.
          ELSEIF IsDigit( xPos )
             nPos := Val( xPos )
          ENDIF
-      ELSEIF HB_ISNUMERIC( xPos )
+      CASE HB_ISNUMERIC( xPos )
          nPos := xPos
-      ENDIF
+      OTHERWISE
+         nPos := ::InputBox( "Enter item number to delete", ::oBrwPnt:cargo[ 1 ] - 1 )
+         IF LastKey() == K_ESC
+            nPos := -1
+         ENDIF
+      ENDCASE
 
       IF lAll .OR. ( nPos >= 0 .AND. nPos < Len( ::aWatch ) )
          ::oBrwPnt:gotop()

@@ -615,12 +615,12 @@ METHOD Say( x, y, cString, color, nAlign ) CLASS GDImage
    SWITCH hb_defaultValue( nAlign, gdAlignLeft )
    CASE gdAlignCenter
       nWidth := ::GetFontWidth()
-      nLen   := Len( cString )
+      nLen   := hb_BLen( cString )
       nPosX  := x - ( nLen / 2 * nWidth )
       EXIT
    CASE gdAlignRight
       nWidth := ::GetFontWidth()
-      nLen   := Len( cString )
+      nLen   := hb_BLen( cString )
       nPosX  := x - ( nLen * nWidth )
       EXIT
    OTHERWISE
@@ -643,12 +643,12 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
    SWITCH hb_defaultValue( nAlign, gdAlignLeft )
    CASE gdAlignCenter
       nWidth := nPitch
-      nLen   := Len( cString )
+      nLen   := hb_ULen( cString )
       nPosX  := x - ( ( nLen / 2 ) * nWidth )
       EXIT
    CASE gdAlignRight
       nWidth := gdImageFTWidth( cFontName, nPitch )
-      nLen   := Len( cString )
+      nLen   := hb_ULen( cString )
       nPosX  := x - ( nLen * nWidth )
       EXIT
    OTHERWISE

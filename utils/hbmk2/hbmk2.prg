@@ -896,7 +896,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
       /* Exit on first failure */
       IF nResult != _EXIT_OK
          IF lExitStr
-            OutErr( hb_StrFormat( _SELF_NAME_ + iif( Len( cTargetName ) == 0, "", " " + "[" + cTargetName + "]" ) + ;
+            OutErr( hb_StrFormat( _SELF_NAME_ + iif( hb_BLen( cTargetName ) == 0, "", " " + "[" + cTargetName + "]" ) + ;
                                   ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
          ENDIF
          IF nResult != _EXIT_STOP
@@ -10422,7 +10422,7 @@ STATIC FUNCTION FindInSamePath( cFileName, cFileName2, cPath )
 
    LOCAL cDir, cName, cExt
 
-   IF ! Empty( cFileName := FindInPath( cFileName, cPath ) )
+   IF ( cFileName := FindInPath( cFileName, cPath ) ) != NIL
 
       /* Look for the second filename in the same dir the first one was found. */
 
@@ -11356,7 +11356,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
 
    SWITCH hb_defaultValue( nEscapeMode, _ESC_NONE )
    CASE _ESC_DBLQUOTE
-      IF Len( cFileName ) == 0 .OR. " " $ cFileName .OR. "-" $ cFileName
+      IF hb_BLen( cFileName ) == 0 .OR. " " $ cFileName .OR. "-" $ cFileName
          /* Sloppy */
          IF hb_RightEq( cFileName, "\" )
             cFileName += "\"
@@ -11365,7 +11365,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
       ENDIF
       EXIT
    CASE _ESC_SGLQUOTE_WATCOM
-      IF Len( cFileName ) == 0 .OR. " " $ cFileName
+      IF hb_BLen( cFileName ) == 0 .OR. " " $ cFileName
          /* Sloppy */
          IF hb_RightEq( cFileName, "\" )
             cFileName += "\"
@@ -11374,7 +11374,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
       ENDIF
       EXIT
    CASE _ESC_NIX
-      IF Len( cFileName ) == 0 .OR. StrHasSpecialChar( cFileName )
+      IF hb_BLen( cFileName ) == 0 .OR. StrHasSpecialChar( cFileName )
          cFileName := "'" + StrTran( cFileName, "'", "'\''" ) + "'"
       ENDIF
       EXIT
@@ -11434,7 +11434,7 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    LOCAL aFileList
    LOCAL aFile
 
-   IF Empty( cFileName )
+   IF hb_BLen( cFileName ) == 0
       RETURN {}
    ENDIF
 
@@ -12428,9 +12428,9 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
 
       IF hbmk_builtin_Is( cFileName )
          cFile := hbmk_builtin_Load( cFileName )
-         /* Built-in files will act as if they were part of the parant file,
+         /* Built-in files will act as if they were part of the parent file,
             since their name is fixed and have no useful meaning whatsoever. */
-         IF ! Empty( cParentFileName )
+         IF HB_ISSTRING( cParentFileName ) .AND. hb_BLen( cParentFileName ) > 0
             cFileName := cParentFileName
          ENDIF
       ELSE
@@ -15814,7 +15814,7 @@ FUNCTION hbshell_ext_load( cName )
                   ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSERGT ] )
                   cFileName := FindInPath( tmp := hb_libName( cName + hb_libSuffix() ), ;
                                            iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
-                  IF Empty( cFileName )
+                  IF cFileName == NIL
                      _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "'%1$s' (%2$s) not found." ), cName, tmp ) )
                   ELSE
                      hLib := hb_libLoad( cFileName )
@@ -17546,7 +17546,7 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
             ELSE
                cFileName := _LANG_TO_HBL( cDir, cLang )
             ENDIF
-            IF ! Empty( cFileName ) .AND. ;
+            IF cFileName != NIL .AND. ;
                hb_i18n_Check( cFile := hb_MemoRead( cFileName ) )
                hb_i18n_Set( hb_i18n_RestoreTable( cFile ) )
                BEGIN SEQUENCE WITH __BreakBlock()

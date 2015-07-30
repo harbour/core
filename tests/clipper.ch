@@ -106,6 +106,15 @@
 #xtranslate hb_BAt( <c>, <p> )             => At( <c>, <p> )
 #xtranslate hb_BRAt( <c>, <p> )            => RAt( <c>, <p> )
 
+#xtranslate hb_UPeek( <c>, <p> )           => Asc( SubStr( <c>, <p>, 1 ) )
+#xtranslate hb_UCode( <c> )                => Asc( <c> )
+#xtranslate hb_UChar( <n> )                => Chr( <n> )
+#xtranslate hb_ULen( <c> )                 => Len( <c> )
+#xtranslate hb_USubStr( <c>, <p>[, <l>] )  => SubStr( <c>, <p>, <l> )
+#xtranslate hb_ULeft( <c>, <l> )           => Left( <c>, <l> )
+#xtranslate hb_URight( <c>, <l> )          => Right( <c>, <l> )
+#xtranslate hb_UAt( <c>, <p> )             => At( <c>, <p> )
+
 #ifdef B_SINGLE
    #define HB_B_SINGLE_UNI                 B_SINGLE
    #define HB_B_DOUBLE_UNI                 B_DOUBLE

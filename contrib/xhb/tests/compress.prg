@@ -48,7 +48,6 @@ PROCEDURE Main()
 
    nBufLen := hb_CompressBufLen( Len( cText ) )
    cComp := Space( nBufLen )
-   cDecomp := Space( Len( cText ) )
 
    // we generate an error: 3 is not a valid length for this buffer
    nBuflen := 3

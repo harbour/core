@@ -659,15 +659,15 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS win_Prn
    LOCAL nPosX
 
    IF ! Empty( ::hPrinterDc ) .AND. ;
-      HB_ISSTRING( cString ) .AND. Len( cString ) > 0 .AND. ;
+      HB_ISSTRING( cString ) .AND. hb_BLen( cString ) > 0 .AND. ;
       ::CheckPage()
 
       wapi_SetTextAlign( ::hPrinterDC, hb_bitOr( WIN_TA_NOUPDATECP, hb_defaultValue( nAlign, hb_bitOr( WIN_TA_BOTTOM, WIN_TA_LEFT ) ) ) )
 
       nPosX := 0
       IF ::fCharWidth < 0
-         IF wapi_ExtTextOut( ::hPrinterDC, ::PosX, ::PosY,,, cString, AFill( Array( Len( cString ) ), -::fCharWidth ) )
-            nPosX := Len( cString ) * -::fCharWidth
+         IF wapi_ExtTextOut( ::hPrinterDC, ::PosX, ::PosY,,, cString, AFill( Array( hb_ULen( cString ) ), -::fCharWidth ) )
+            nPosX := hb_ULen( cString ) * -::fCharWidth
          ENDIF
       ELSEIF wapi_ExtTextOut( ::hPrinterDC, ::PosX, ::PosY,,, cString )
          size := { => }
@@ -818,7 +818,7 @@ METHOD GetTextWidth( cString ) CLASS win_Prn
    LOCAL size
 
    IF ::FontWidth[ 2 ] < 0 .AND. ::FontWidth[ 1 ] != 0
-      RETURN Len( cString ) * ::CharWidth
+      RETURN hb_ULen( cString ) * ::CharWidth
    ELSEIF ! Empty( ::hPrinterDc )
       size := { => }
       wapi_GetTextExtentPoint32( ::hPrinterDC, cString, size )

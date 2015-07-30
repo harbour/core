@@ -52,4 +52,10 @@ PROCEDURE Main()
    NEXT
    ?
 
+   ? "Test values:"
+   FOR EACH tmp IN hbtest_AllValues()
+      ? ValType( tmp ), tmp, hb_ValToExp( tmp )
+   NEXT
+   ?
+
    RETURN

@@ -27,6 +27,7 @@ DYNAMIC hbtest_Call
 DYNAMIC hbtest_Object
 DYNAMIC hbtest_Setup
 DYNAMIC hbtest_Table
+DYNAMIC __hbtest_Pointer
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTEST__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

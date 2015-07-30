@@ -299,7 +299,7 @@ STATIC PROCEDURE StatLine( oBrw, lAppend )
       hb_DispOutAt( nTop, nRight - 20, "                <new>" )
    ELSE
       hb_DispOutAt( nTop, nRight - 40, iif( Deleted(), "<Deleted>", "         " ) )
-      hb_DispOutAt( nTop, nRight - 20, PadR( hb_ntos( nRecNo ) + "/" + ;
+      hb_DispOutAt( nTop, nRight - 20, hb_UPadR( hb_ntos( nRecNo ) + "/" + ;
          hb_ntos( nLastRec ), 16 ) + ;
          iif( oBrw:HitTop, "<bof>", "     " ) )
    ENDIF

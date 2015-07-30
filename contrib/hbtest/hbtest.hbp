@@ -7,5 +7,7 @@
 
 -hbx=${hb_name}
 
+corec.c
+
 core.prg
 table.prg

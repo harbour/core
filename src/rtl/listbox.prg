@@ -65,7 +65,6 @@
 
 #define _ITEM_cText         1
 #define _ITEM_xData         2
-#define _ITEM_MAX_          2
 
 #define _LISTBOX_ITEMDATA( aItem )  iif( aItem[ _ITEM_xData ] == NIL, aItem[ _ITEM_cText ], aItem[ _ITEM_xData ] )
 
@@ -767,7 +766,7 @@ METHOD setFocus() CLASS ListBox
 METHOD setItem( nPos, aItem ) CLASS ListBox
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
-      Len( aItem ) == _ITEM_MAX_ .AND. ;
+      Len( aItem ) == _ITEM_xData .AND. ;
       HB_ISSTRING( aItem[ _ITEM_cText ] )
 
       ::aItems[ nPos ] := aItem
@@ -1110,7 +1109,11 @@ FUNCTION _ListBox_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
             o:addItem( xItem )
          CASE Len( xItem ) == _ITEM_cText
             o:addItem( xItem[ _ITEM_cText ] )
-         OTHERWISE
+#ifdef HB_CLP_STRICT
+         OTHERWISE  /* Cl*pper will RTE on empty subarray */
+#else
+         CASE Len( xItem ) >= _ITEM_xData
+#endif
             o:addItem( xItem[ _ITEM_cText ], xItem[ _ITEM_xData ] )
          ENDCASE
       NEXT

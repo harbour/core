@@ -302,29 +302,29 @@ STATIC PROCEDURE DispScreen()
 
    SetColor( "N/W" )
    CLS
-   hb_DispOutAt( 0, 0, PadC( "Harbour GT - New Features", nMaxCol ), "N/GR*" )
+   hb_DispOutAt( 0, 0, hb_UPadC( "Harbour GT - New Features", nMaxCol ), "N/GR*" )
 
    // Contributed by Massimo Belgrano
-   hb_DispOutAt( 2, 0, PadC( "______  __             ______________________                        ", nMaxCol ), "W+/W" )
-   hb_DispOutAt( 3, 0, PadC( "___  / / /_____ ___________ /___________  _________    __  ____/____/", nMaxCol ), "W+/W" )
-   hb_DispOutAt( 4, 0, PadC( "__  /_/ /_  __ `/_  ___/_  __ \  __ \  / / /_  ___/    _  / __ __/   ", nMaxCol ), "W+/W" )
-   hb_DispOutAt( 5, 0, PadC( "_  __  / / /_/ /_  /   _  /_/ / /_/ / /_/ /_  /        / /_/ / _  /  ", nMaxCol ), "W+/W" )
-   hb_DispOutAt( 6, 0, PadC( "/_/ /_/  \__,_/ /_/    /_.___/\____/\__,_/ /_/         \____/  /_/   ", nMaxCol ), "W+/W" )
+   hb_DispOutAt( 2, 0, hb_UPadC( "______  __             ______________________                        ", nMaxCol ), "W+/W" )
+   hb_DispOutAt( 3, 0, hb_UPadC( "___  / / /_____ ___________ /___________  _________    __  ____/____/", nMaxCol ), "W+/W" )
+   hb_DispOutAt( 4, 0, hb_UPadC( "__  /_/ /_  __ `/_  ___/_  __ \  __ \  / / /_  ___/    _  / __ __/   ", nMaxCol ), "W+/W" )
+   hb_DispOutAt( 5, 0, hb_UPadC( "_  __  / / /_/ /_  /   _  /_/ / /_/ / /_/ /_  /        / /_/ / _  /  ", nMaxCol ), "W+/W" )
+   hb_DispOutAt( 6, 0, hb_UPadC( "/_/ /_/  \__,_/ /_/    /_.___/\____/\__,_/ /_/         \____/  /_/   ", nMaxCol ), "W+/W" )
 
-   hb_DispOutAt( 8, 0, PadC( "MODE: " + hb_ntos( MaxRow() + 1 ) + " Rows and " + hb_ntos( nMaxCol ) + " Columns", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F2 MarkCopy    Toggle >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F3 Resizable   Toggle > " + iif( hb_gtInfo( HB_GTI_RESIZABLE ), "On ", "Off" ), nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F4 Closable    Toggle > " + iif( hb_gtInfo( HB_GTI_CLOSABLE ), "On ", "Off" ), nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F5 Palette L   Repeat >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F6 Palette D   Repeat >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F7 Palette By Index R >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F8 MarkCopy menu text >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "<    Click Other Window >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "<    Click X Button     >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F9 Resize Mode Toggle > " + iif( hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, "ROWS", "FONT" ), nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F10 Open New Window   >    ", nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F11 Alt-Enter  Toggle > " + iif( hb_gtInfo( HB_GTI_ALTENTER ), "On ", "Off" ), nMaxCol ), cColor )
-   hb_DispOutAt( ++nRow, 0, PadC( "< F12 Change Font Test  > " + hb_gtInfo( HB_GTI_FONTNAME ) + " " + hb_ntos( hb_gtInfo( HB_GTI_FONTWIDTH ) ) + "x" + hb_ntos( hb_gtInfo( HB_GTI_FONTSIZE ) ), nMaxCol ), cColor )
+   hb_DispOutAt( 8, 0, hb_UPadC( "MODE: " + hb_ntos( MaxRow() + 1 ) + " Rows and " + hb_ntos( nMaxCol ) + " Columns", nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F2 MarkCopy    Toggle >    ", nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F3 Resizable   Toggle > " + iif( hb_gtInfo( HB_GTI_RESIZABLE ), "On ", "Off" ), nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F4 Closable    Toggle > " + iif( hb_gtInfo( HB_GTI_CLOSABLE ), "On ", "Off" ), nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F5 Palette L   Repeat >    ", nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F6 Palette D   Repeat >    ", nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F7 Palette By Index R >    ", nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F8 MarkCopy menu text >    ", nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "<    Click Other Window >    ", nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "<    Click X Button     >    ", nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F9 Resize Mode Toggle > " + iif( hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, "ROWS", "FONT" ), nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F10 Open New Window   >    ", nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F11 Alt-Enter  Toggle > " + iif( hb_gtInfo( HB_GTI_ALTENTER ), "On ", "Off" ), nMaxCol ), cColor )
+   hb_DispOutAt( ++nRow, 0, hb_UPadC( "< F12 Change Font Test  > " + hb_gtInfo( HB_GTI_FONTNAME ) + " " + hb_ntos( hb_gtInfo( HB_GTI_FONTWIDTH ) ) + "x" + hb_ntos( hb_gtInfo( HB_GTI_FONTSIZE ) ), nMaxCol ), cColor )
 
    hb_DispOutAt( MaxRow(), 0, Space( MaxCol() + 1 ), "N/G*" )
 
@@ -422,7 +422,7 @@ STATIC PROCEDURE thFunc()
 
    SetColor( aColor[ s_nColorIndex ] )
 
-   hb_DispOutAt( 0, 0, PadC( "New Window with " + hb_ntos( MaxRow() ) + " Rows and " + hb_ntos( MaxCol() ) + " Columns", MaxCol() + 1 ), "N/GR*" )
+   hb_DispOutAt( 0, 0, hb_UPadC( "New Window with " + hb_ntos( MaxRow() ) + " Rows and " + hb_ntos( MaxCol() ) + " Columns", MaxCol() + 1 ), "N/GR*" )
 
    hb_gtInfo( HB_GTI_SETPOS_XY, s_nZx, s_nZy )  // this does not work until something is displayed
 
@@ -460,7 +460,7 @@ STATIC PROCEDURE thFunc()
             EXIT
 
          CASE HB_K_RESIZE
-            hb_DispOutAt( 0, 0, PadC( "New Window with " + hb_ntos( MaxRow() ) + " Rows and " + hb_ntos( MaxCol() ) + " Columns", MaxCol() + 1 ), "N/GR*" )
+            hb_DispOutAt( 0, 0, hb_UPadC( "New Window with " + hb_ntos( MaxRow() ) + " Rows and " + hb_ntos( MaxCol() ) + " Columns", MaxCol() + 1 ), "N/GR*" )
 
             oBrowse:nBottom := MaxRow()
             oBrowse:nRight := MaxCol()

@@ -106,7 +106,7 @@ EXIT PROCEDURE __hbtest_Exit()
 
 PROCEDURE hbtest_Setup( cName, xValue )
 
-   IF HB_ISSTRING( cName ) .AND. Len( cName ) > 0
+   IF HB_ISSTRING( cName ) .AND. hb_BLen( cName ) > 0
       IF PCount() >= 2
          t_hParams[ cName ] := xValue
       ELSEIF cName $ t_hParams
@@ -295,7 +295,7 @@ FUNCTION hbtest_Object()
 
    RETURN o
 
-/* TODO: add P, M */
+/* TODO: add 'M' */
 
 FUNCTION hbtest_AllValues()
    RETURN { ;
@@ -330,7 +330,9 @@ FUNCTION hbtest_AllValues()
       { => }, ;
       { "a" => "b" }, ;
       {}, ;
-      { 9898 } }
+      { 9898 }, ;
+      __hbtest_Pointer( .T. ), ;
+      __hbtest_Pointer( .F. ) }
 
 FUNCTION hbtest_AllTypes()
    RETURN { ;
@@ -344,4 +346,5 @@ FUNCTION hbtest_AllTypes()
       {|| NIL }, ;
       hbtest_Object(), ;
       { "a" => "b" }, ;
-      { 100 } }
+      { 100 }, ;
+      __hbtest_Pointer() }
