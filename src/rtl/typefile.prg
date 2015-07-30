@@ -62,7 +62,6 @@ PROCEDURE __TypeFile( cFile, lPrint )
    LOCAL aSaveSet[ 2 ]
    LOCAL cDir, cName, cExt
    LOCAL cTmp
-   LOCAL cPath
    LOCAL i
 
    hb_default( @lPrint, .F. )
@@ -81,7 +80,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
 
    hb_FNameSplit( cFile, @cDir, @cName, @cExt )
 
-   IF Empty( cDir )
+   IF hb_BLen( cDir ) == 0
 
       cTmp := StrTran( Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH ), ",", ";" )
 
@@ -90,8 +89,8 @@ PROCEDURE __TypeFile( cFile, lPrint )
          cTmp := hb_ULeft( cTmp, --i )
       ENDDO
 
-      FOR EACH cPath IN hb_ATokens( cTmp, ";" )
-         IF hb_vfExists( cTmp := hb_FNameMerge( cPath, cName, cExt ) )
+      FOR EACH cDir IN hb_ATokens( cTmp, ";" )
+         IF hb_vfExists( cTmp := hb_FNameMerge( cDir, cName, cExt ) )
             cFile := cTmp
             EXIT
          ENDIF

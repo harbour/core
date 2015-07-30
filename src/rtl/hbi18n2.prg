@@ -85,8 +85,7 @@ STATIC FUNCTION __i18n_strDecode( cLine, cValue, lCont )
 
    RETURN lRet
 
-#define _BOM_VALUE      0xFEFF
-#define _UTF8_BOM       e"\xEF\xBB\xBF"  /* hb_utf8Chr( _BOM_VALUE ) */
+#define _UTF8_BOM       e"\xEF\xBB\xBF"  /* hb_utf8Chr( 0xFEFF ) */
 
 FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
 
@@ -110,7 +109,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
       RETURN NIL
    ENDIF
    /* Strip UTF-8 BOM */
-   IF hb_utf8Asc( cValue ) == _BOM_VALUE
+   IF hb_LeftEq( cValue, _UTF8_BOM )
       cValue := SubStr( cValue, Len( _UTF8_BOM ) + 1 )
    ENDIF
    aLines := hb_ATokens( cValue, .T. )
