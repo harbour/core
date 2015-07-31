@@ -374,6 +374,7 @@ extern HB_EXPORT HB_BOOL      hb_fileDirRemove  ( const char * pszDirName );
 extern HB_EXPORT double       hb_fileDirSpace   ( const char * pszDirName, HB_USHORT uiType );
 extern HB_EXPORT PHB_ITEM     hb_fileDirectory  ( const char * pszDirSpec, const char * pszAttr );
 
+extern HB_EXPORT HB_FOFFSET   hb_fileSizeGet    ( const char * pszFileName, HB_BOOL bUseDirEntry );
 extern HB_EXPORT HB_BOOL      hb_fileTimeGet    ( const char * pszFileName, long * plJulian, long * plMillisec );
 extern HB_EXPORT HB_BOOL      hb_fileTimeSet    ( const char * pszFileName, long lJulian, long lMillisec );
 extern HB_EXPORT HB_BOOL      hb_fileAttrGet    ( const char * pszFileName, HB_FATTR * pulAttr );

@@ -51,7 +51,6 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbdate.h"
-#include "directry.ch"
 
 /* extended FILE IO handle destructor */
 static HB_GARBAGE_FUNC( hb_file_Destructor )
@@ -750,45 +749,12 @@ HB_FUNC( HB_VFTRUNC )
 HB_FUNC( HB_VFSIZE )
 {
    const char * pszFile = hb_parc( 1 );
-   PHB_FILE pFile;
 
    if( pszFile )
-   {
-      HB_ERRCODE uiError;
-      HB_FOFFSET nSize = 0;
-
-      if( hb_parldef( 2, 1 ) )
-      {
-         PHB_ITEM pDir = hb_fileDirectory( pszFile, "HS" );
-
-         uiError = hb_fsError();
-         if( pDir )
-         {
-            PHB_ITEM pEntry = hb_arrayGetItemPtr( pDir, 1 );
-
-            if( pEntry )
-               nSize = hb_arrayGetNInt( pEntry, F_SIZE );
-            hb_itemRelease( pDir );
-         }
-      }
-      else
-      {
-         pFile = hb_fileExtOpen( pszFile, NULL, FO_READ | FO_COMPAT, NULL, NULL );
-         if( pFile )
-         {
-            nSize = hb_fileSize( pFile );
-            uiError = hb_fsError();
-            hb_fileClose( pFile );
-         }
-         else
-            uiError = hb_fsError();
-      }
-      hb_fsSetFError( uiError );
-      hb_retnint( nSize );
-   }
+      hb_retnint( hb_fileSizeGet( pszFile, hb_parldef( 2, 1 ) ) );
    else
    {
-      pFile = hb_fileParam( 1 );
+      PHB_FILE pFile = hb_fileParam( 1 );
       if( pFile )
       {
          hb_retnint( hb_fileSize( pFile ) );
