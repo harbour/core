@@ -55,8 +55,10 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
+#include "hbapiitm.h"
 #include "hbthread.h"
 #include "hbvm.h"
+#include "directry.ch"
 
 #if defined( HB_OS_UNIX )
 #  include <sys/types.h>
@@ -1196,6 +1198,49 @@ HB_BOOL hb_fileTimeSet( const char * pszFileName, long lJulian, long lMillisec )
       return s_pFileTypes[ i ]->TimeSet( s_pFileTypes[ i ], pszFileName, lJulian, lMillisec );
 
    return hb_fsSetFileTime( pszFileName, lJulian, lMillisec );
+}
+
+HB_EXPORT HB_FOFFSET hb_fileSizeGet( const char * pszFileName, HB_BOOL bUseDirEntry )
+{
+   int i = s_fileFindDrv( pszFileName );
+
+   if( i >= 0 )
+   {
+      HB_ERRCODE uiError;
+      HB_FOFFSET nSize = 0;
+
+      if( bUseDirEntry )
+      {
+         PHB_ITEM pDir = hb_fileDirectory( pszFileName, "HS" );
+
+         uiError = hb_fsError();
+         if( pDir )
+         {
+            PHB_ITEM pEntry = hb_arrayGetItemPtr( pDir, 1 );
+
+            if( pEntry )
+               nSize = hb_arrayGetNInt( pEntry, F_SIZE );
+            hb_itemRelease( pDir );
+         }
+      }
+      else
+      {
+         PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL, FO_READ | FO_COMPAT, NULL, NULL );
+         if( pFile )
+         {
+            nSize = hb_fileSize( pFile );
+            uiError = hb_fsError();
+            hb_fileClose( pFile );
+         }
+         else
+            uiError = hb_fsError();
+      }
+      hb_fsSetFError( uiError );
+
+      return nSize;
+   }
+
+   return hb_fsFSize( pszFileName, bUseDirEntry );
 }
 
 HB_BOOL hb_fileAttrGet( const char * pszFileName, HB_FATTR * pulAttr )
