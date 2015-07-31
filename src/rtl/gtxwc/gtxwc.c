@@ -3364,12 +3364,12 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
          }
          else if( req->target == s_atomTargets )
          {
-            long aProp[] = { s_atomTimestamp, s_atomTargets,
+            Atom aProp[] = { s_atomTimestamp, s_atomTargets,
                              s_atomString,    s_atomUTF8String,
                              s_atomText };
             XChangeProperty( wnd->dpy, req->requestor, req->property,
                              s_atomAtom, 32, PropModeReplace,
-                             ( unsigned char * ) aProp, sizeof( aProp ) / sizeof( long ) );
+                             ( unsigned char * ) aProp, HB_SIZEOFARRAY( aProp ) );
          }
          else if( req->target == s_atomString || req->target == s_atomText )
          {
