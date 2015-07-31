@@ -390,8 +390,11 @@ HB_FUNC( MEMOLINE )
                   nCol = nIndex < MLC.nLen &&
                          ( MLC.pszString[ nIndex ] == ' ' ||
                            MLC.pszString[ nIndex ] == HB_CHAR_HT ) ? 1 : 0;
-               memset( szLine + nLen, ' ', nCol );
-               nLen += nCol;
+               if( nCol > 0 )
+               {
+                  memset( szLine + nLen, ' ', nCol );
+                  nLen += nCol;
+               }
             }
          }
          hb_mlExit( &MLC );

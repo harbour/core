@@ -2763,7 +2763,11 @@ static HB_SOCKET s_socketSelectCallback( PHB_ITEM pItem )
       if( HB_IS_NUMERIC( pItem ) )
          sd = ( HB_SOCKET ) hb_itemGetNInt( pItem );
       else if( HB_IS_POINTER( pItem ) )
-         sd = ( HB_SOCKET ) ( HB_PTRDIFF ) hb_itemGetPtr( pItem );
+      {
+         sd = hb_socketItemGet( pItem );
+         if( sd == HB_NO_SOCKET )
+            sd = ( HB_SOCKET ) ( HB_PTRDIFF ) hb_itemGetPtr( pItem );
+      }
    }
    return sd;
 }
@@ -2823,10 +2827,19 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    else
       ptv = NULL;
 
-   hb_vmUnlock();
-   ret = select( ( int ) ( maxsd + 1 ), pfds[ 0 ], pfds[ 1 ], pfds[ 2 ], ptv );
-   hb_socketSetOsError( ret == -1 ? HB_SOCK_GETERROR() : 0 );
-   hb_vmLock();
+   if( hb_vmRequestQuery() == 0 )
+   {
+      hb_vmUnlock();
+      ret = select( ( int ) ( maxsd + 1 ), pfds[ 0 ], pfds[ 1 ], pfds[ 2 ], ptv );
+      hb_socketSetOsError( ret == -1 ? HB_SOCK_GETERROR() : 0 );
+      hb_vmLock();
+   }
+   else
+   {
+      hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+      pSet[ 0 ] = pSet[ 1 ] = pSet[ 2 ] = HB_FALSE;
+      ret = -1;
+   }
 
    for( i = 0; i < 3; i++ )
    {
