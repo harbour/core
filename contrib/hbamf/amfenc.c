@@ -1012,9 +1012,6 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
    context = ( amfContext * ) hb_xgrabz( sizeof( amfContext ) );
 
    context->cBuf = ( char * ) hb_xgrab( sizeof( char ) * 8 );
-#if 0
-   memset( context->cBuf, 0, sizeof( char ) * 8 );
-#endif
    context->position  = 0;
    context->length    = sizeof( char ) * 8;
    context->str_rtrim = str_rtrim;
@@ -1374,9 +1371,6 @@ HB_FUNC( AMF3_ENCODE )
    context = ( amfContext * ) hb_xgrabz( sizeof( amfContext ) );
 
    context->cBuf = ( char * ) hb_xgrab( sizeof( char ) * 8 );
-#if 0
-   memset( context->cBuf, 0, sizeof( char ) * 8 );
-#endif
    context->position      = 0;
    context->length        = sizeof( char ) * 8;
    context->str_rtrim     = HB_FALSE;

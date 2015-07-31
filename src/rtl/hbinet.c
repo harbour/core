@@ -91,8 +91,8 @@ typedef struct
    do \
    { \
       HB_INET_INITIALIZE(); \
-      s = ( PHB_SOCKET_STRUCT ) hb_gcAllocate( sizeof( HB_SOCKET_STRUCT ), &s_gcInetFuncs ); \
-      memset( s, 0, sizeof( HB_SOCKET_STRUCT ) ); \
+      s = ( PHB_SOCKET_STRUCT ) hb_gcAllocate( sizeof( *s ), &s_gcInetFuncs ); \
+      memset( s, 0, sizeof( *s ) ); \
       s->sd         = HB_NO_SOCKET; \
       s->readahead  = HB_INET_BUFFER_LEN; \
       s->iTimeout   = -1; \

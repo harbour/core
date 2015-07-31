@@ -4930,7 +4930,7 @@ static HB_ERRCODE hb_dbfSortInit( LPDBSORTREC pSortRec, LPDBSORTINFO pSortInfo )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_dbfSortInit(%p, %p)", pSortInfo, pSortRec ) );
 
-   memset( pSortRec, 0, sizeof( DBSORTREC ) );
+   memset( pSortRec, 0, sizeof( *pSortRec ) );
    pSortRec->pSortInfo = pSortInfo;
 
    for( uiCount = uiDest = 0; uiCount < pSortInfo->uiItemCount; ++uiCount )

@@ -568,7 +568,6 @@ BOOL WINAPI s_ConsoleHandlerRoutine( DWORD dwCtrlType )
 
 static void s_serviceSetHBSig( void )
 {
-
 #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
    struct sigaction act;
 
@@ -592,7 +591,7 @@ static void s_serviceSetHBSig( void )
 
    /* to avoid problems with differ sigaction structures and uninitialized
       fields */
-   memset( &act, 0, sizeof( struct sigaction ) );
+   memset( &act, 0, sizeof( act ) );
 
    #if defined( HB_OS_OS2_GCC ) || defined( __WATCOMC__ )
    act.sa_handler = s_signalHandler;

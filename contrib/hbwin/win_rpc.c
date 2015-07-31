@@ -89,7 +89,7 @@ HB_FUNC( WIN_UUIDCREATESTRING )
       TCHAR * tszUuid = NULL;
       UUID    uuid;
 
-      memset( &uuid, 0, sizeof( UUID ) );
+      memset( &uuid, 0, sizeof( uuid ) );
 
       lRPCStatus = s_pUuidCreate( &uuid );
 

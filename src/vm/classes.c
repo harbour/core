@@ -1168,7 +1168,7 @@ void hb_clsDoInit( void )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_clsDoInit()" ) );
 
-   for( i = 0; i < ( int ) ( sizeof( s_puiHandles ) / sizeof( HB_USHORT * ) ); ++i )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_puiHandles ); ++i )
    {
       PHB_DYNS pFuncSym = hb_dynsymFindName( s_pszFuncNames[i] );
       if( pFuncSym && hb_dynsymIsFunction( pFuncSym ) )

@@ -191,7 +191,7 @@ static void hb_gt_os2_mouse_Hide( PHB_GT pGT )
          con: calling function from another module, GT must be linked in
          con: VioGetMode is been called twice
        */
-      vi.cb = sizeof( VIOMODEINFO );
+      vi.cb = sizeof( vi );
       VioGetMode( &vi, 0 );
       rect.row  = 0;                            /* x-coordinate upper left */
       rect.col  = 0;                            /* y-coordinate upper left */
@@ -522,13 +522,13 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
 
-   s_vi.cb = sizeof( VIOMODEINFO );
+   s_vi.cb = sizeof( s_vi );
    VioGetMode( &s_vi, 0 );        /* fill structure with current video mode settings */
 
    /* Alloc tileable memory for calling a 16 subsystem */
    s_hk = ( PHKBD ) hb_gt_os2_allocMem( sizeof( HKBD ) );
    /* it is a long after all, so I set it to zero only one time since it never changes */
-   memset( s_hk, 0, sizeof( HKBD ) );
+   memset( s_hk, 0, sizeof( *s_hk ) );
    s_key = ( PKBDKEYINFO ) hb_gt_os2_allocMem( sizeof( KBDKEYINFO ) );
 
    /* TODO: Is anything else required to initialize the video subsystem?
@@ -593,10 +593,10 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_ReadKey(%p,%d)", pGT, iEventMask ) );
 
    /* zero out keyboard event record */
-   memset( s_key, 0, sizeof( KBDKEYINFO ) );
+   memset( s_key, 0, sizeof( *s_key ) );
 
    /* Get next character without wait */
-   KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) *s_hk );
+   KbdCharIn( s_key, IO_NOWAIT, *s_hk );
 
    /* extended key codes have 00h or E0h as chChar */
    if( ( s_key->fbStatus & KBDTRF_EXTENDED_CODE ) &&
@@ -645,7 +645,7 @@ static HB_BOOL hb_gt_os2_GetBlink( PHB_GT pGT )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
+   vi.cb   = sizeof( vi );              /* 6                          */
    vi.type = 2;                         /* get intensity/blink toggle */
    VioGetState( &vi, 0 );
 
@@ -660,7 +660,7 @@ static void hb_gt_os2_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
+   vi.cb   = sizeof( vi );              /* 6                          */
    vi.type = 2;                         /* set intensity/blink toggle */
    vi.fs   = ( fBlink ? 0 : 1 );        /* 0 = blink, 1 = intens      */
    VioSetState( &vi, 0 );
@@ -732,7 +732,7 @@ static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 
    if( iRows > 0 && iCols > 0 )
    {
-      s_vi.cb = sizeof( VIOMODEINFO );
+      s_vi.cb = sizeof( s_vi );
       VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
       s_vi.row = iRows;
       s_vi.col = iCols;
@@ -740,7 +740,7 @@ static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 
       if( ! fResult )
       {
-         s_vi.cb = sizeof( VIOMODEINFO );
+         s_vi.cb = sizeof( s_vi );
          VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
       }
 
@@ -771,7 +771,7 @@ static HB_BOOL hb_gt_os2_Resume( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Resume(%p)", pGT ) );
 
-   s_vi.cb = sizeof( VIOMODEINFO );
+   s_vi.cb = sizeof( s_vi );
    VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_os2_GetCursorStyle();

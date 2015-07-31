@@ -141,7 +141,7 @@ static const HB_PLURAL_FORMS s_plural_forms[] =
    { "VI",    HB_I18N_PLURAL_VI    }
 };
 
-#define HB_PLURAL_FOMRS_COUNT  ( sizeof( s_plural_forms ) / sizeof( HB_PLURAL_FORMS ) )
+#define HB_PLURAL_FOMRS_COUNT  HB_SIZEOFARRAY( s_plural_forms )
 
 static const HB_UCHAR s_signature[ 4 ] = { 193, 'H', 'B', 'L' };
 typedef struct _HB_I18N_TRANS

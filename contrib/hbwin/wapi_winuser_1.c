@@ -253,8 +253,8 @@ HB_FUNC( WAPI_GETSCROLLBARINFO )
    PSCROLLBARINFO sbi = ( PSCROLLBARINFO ) hbwapi_par_STRUCT( 3 );
    BOOL           bSuccess;
 
-   memset( &sbi, 0, sizeof( SCROLLBARINFO ) );
-   sbi->cbSize = sizeof( SCROLLBARINFO );
+   memset( &sbi, 0, sizeof( sbi ) );
+   sbi->cbSize = sizeof( sbi );
 
    bSuccess = GetScrollBarInfo( hbwapi_par_raw_HWND( 1 ),
                                 hbwapi_par_LONG( 2 ),

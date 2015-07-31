@@ -164,7 +164,7 @@ RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   memset( p, 0, sizeof( RECT ) );
+   memset( p, 0, sizeof( *p ) );
 
    if( pStru && HB_IS_HASH( pStru ) )
    {
@@ -230,7 +230,7 @@ LOGFONT * hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL bMandatory )
    LPCTSTR pfFaceName;
    HB_SIZE nLen;
 
-   memset( p, 0, sizeof( LOGFONT ) );
+   memset( p, 0, sizeof( *p ) );
 
    if( pStru && HB_IS_HASH( pStru ) )
    {
@@ -298,7 +298,7 @@ LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   memset( p, 0, sizeof( LOGBRUSH ) );
+   memset( p, 0, sizeof( *p ) );
 
    if( pStru && HB_IS_HASH( pStru ) )
    {
@@ -371,9 +371,9 @@ DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void 
 
    *ph = h;
 
-   memset( p, 0, sizeof( DOCINFO ) );
+   memset( p, 0, sizeof( *p ) );
 
-   p->cbSize = sizeof( DOCINFO );
+   p->cbSize = sizeof( *p );
 
    if( pStru )
    {

@@ -270,7 +270,7 @@ static const HB_PP_OPERATOR * hb_pp_operatorFind( PHB_PP_STATE pState,
    }
 
    pOperator = s_operators;
-   i = sizeof( s_operators ) / sizeof( HB_PP_OPERATOR );
+   i = HB_SIZEOFARRAY( s_operators );
 
    do
    {

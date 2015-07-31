@@ -83,7 +83,7 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
          /* Create the destination address */
          memset( &smsaDestination, 0, sizeof( smsaDestination ) );
          smsaDestination.smsatAddressType = ( *sztPhoneNumber == _T( '+' ) ) ? SMSAT_INTERNATIONAL : SMSAT_NATIONAL;
-         memcpy( smsaDestination.ptsAddress, sztPhoneNumber, HB_SIZEOFARRAY( smsaDestination.ptsAddress ) );
+         memcpy( smsaDestination.ptsAddress, sztPhoneNumber, sizeof( smsaDestination.ptsAddress ) );
 
          /* Set up provider specific data */
          tpsd.dwMessageOptions = PS_MESSAGE_OPTION_NONE;
