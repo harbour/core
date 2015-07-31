@@ -309,9 +309,9 @@ static void hb_arraySortStart( PHB_BASEARRAY pBaseArray, PHB_ITEM pBlock,
 
    for( nPos = 0; nPos < nCount; ++nPos )
    {
-      if( nPos != pDest[ nPos ] )
+      if( nPos + nStart != pDest[ nPos ] )
       {
-         hb_itemSwap( pBaseArray->pItems + nPos,
+         hb_itemSwap( pBaseArray->pItems + nPos + nStart,
                       pBaseArray->pItems + pDest[ nPos ] );
          pDest[ pPos[ nPos ] ] = pDest[ nPos ];
          pPos[ pDest[ nPos ] - nStart ] = pPos[ nPos ];
