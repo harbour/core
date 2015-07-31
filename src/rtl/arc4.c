@@ -172,19 +172,19 @@ static HB_ISIZ read_all( int fd, HB_U8 * buf, size_t count )
 static int arc4_seed_win( void )
 {
    /* This is adapted from Tor's crypto_seed_rng() */
-   static int        provider_set = 0;
-   static HCRYPTPROV provider;
+   static int        s_provider_set = 0;
+   static HCRYPTPROV s_provider;
    unsigned char     buf[ ADD_ENTROPY ];
 
    /* NOTE: CryptAcquireContext() is not available on Win95 */
-   if( ! provider_set &&
-       ! CryptAcquireContext( &provider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT ) &&
+   if( ! s_provider_set &&
+       ! CryptAcquireContext( &s_provider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT | CRYPT_SILENT ) &&
        GetLastError() != ( DWORD ) NTE_BAD_KEYSET )
       return -1;
 
-   provider_set = 1;
+   s_provider_set = 1;
 
-   if( ! CryptGenRandom( provider, sizeof( buf ), buf ) )
+   if( ! CryptGenRandom( s_provider, sizeof( buf ), buf ) )
       return -1;
 
    arc4_addrandom( buf, sizeof( buf ) );
