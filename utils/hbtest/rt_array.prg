@@ -356,8 +356,8 @@ PROCEDURE Main_ARRAY()
    HBTEST TAStr( ASort( TARRv(),   0,   0 ) ) IS "ABCDEFGHIJ"
    HBTEST TAStr( ASort( TARRv(),   0,   3 ) ) IS "HIJGFEDCBA"
    HBTEST TAStr( ASort( TARRv(),   0,  20 ) ) IS "ABCDEFGHIJ"
-   HBTEST TAStr( ASort( TARRv(),   5      ) ) IS "JIHGABCDEF"  ///////
-#ifdef __HARBOUR__                                JIHGFEDCBA
+   HBTEST TAStr( ASort( TARRv(),   5      ) ) IS "JIHGABCDEF"
+#ifdef __HARBOUR__
    HBTEST TAStr( ASort( TARRv(),   5,  -2 ) ) IS "JIHGABCDEF"  /* CA-Cl*pper will crash or GPF on that line. */
 #endif
    HBTEST TAStr( ASort( TARRv(),   5,   0 ) ) IS "JIHGABCDEF"
