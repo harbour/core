@@ -310,20 +310,20 @@ PROCEDURE Main_ARRAY()
       sorting algorithms. Anyhow the results pattern should match.
       [vszakats] */
 #ifdef __HARBOUR__
-   HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "0" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "1" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "2" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "a" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "A" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "" } ) )  IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "z" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| .T. } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| .F. } ) ) IS "FEIDGCHBJA"
-   HBTEST TAStr( ASort( TARRv(),,, {|| 2 } ) )   IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| 1 } ) )   IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| 0 } ) )   IS "FEIDGCHBJA"
+   HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "0" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "1" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "2" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "a" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "A" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "" } ) )  IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "z" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .T. } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .F. } ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 2 } ) )   IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 1 } ) )   IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 0 } ) )   IS "JIHGFEDCBA"
 #else
    HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "IHGFEDCBAJ"
    HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "IHGFEDCBAJ"
@@ -356,8 +356,8 @@ PROCEDURE Main_ARRAY()
    HBTEST TAStr( ASort( TARRv(),   0,   0 ) ) IS "ABCDEFGHIJ"
    HBTEST TAStr( ASort( TARRv(),   0,   3 ) ) IS "HIJGFEDCBA"
    HBTEST TAStr( ASort( TARRv(),   0,  20 ) ) IS "ABCDEFGHIJ"
-   HBTEST TAStr( ASort( TARRv(),   5      ) ) IS "JIHGABCDEF"
-#ifdef __HARBOUR__
+   HBTEST TAStr( ASort( TARRv(),   5      ) ) IS "JIHGABCDEF"  ///////
+#ifdef __HARBOUR__                                JIHGFEDCBA
    HBTEST TAStr( ASort( TARRv(),   5,  -2 ) ) IS "JIHGABCDEF"  /* CA-Cl*pper will crash or GPF on that line. */
 #endif
    HBTEST TAStr( ASort( TARRv(),   5,   0 ) ) IS "JIHGABCDEF"
@@ -415,8 +415,8 @@ PROCEDURE Main_ARRAY()
    HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }"
 #else
    HBTEST TAEVSM()                        IS "N10N 9N 8N 7N 6         5"
-   HBTEST TASOSM1()                       IS "NN 5NN 4NN 3NN 2         1{ 3 }"
-   HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2         1{ 3 }"
+   HBTEST TASOSM1()                       IS "NN 5NN 4         3{ 2, 1, 3 }"
+   HBTEST TASOSM2()                       IS "NN 5NN 4         3{ 2, 1, 3 }"
 #endif
 
    RETURN
