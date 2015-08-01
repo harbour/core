@@ -280,9 +280,14 @@ static void hb_arraySortStart( PHB_BASEARRAY pBaseArray, PHB_ITEM pBlock,
    HB_SIZE * pBuffer, * pDest, * pPos, nPos, nTo;
 
    pBuffer = ( HB_SIZE * ) hb_xgrab( sizeof( HB_SIZE ) * 2 * nCount );
-   nPos = nCount;
-   while( nPos-- )
+   for( nPos = 0; nPos < nCount; ++nPos )
+   {
+#ifdef __MINGW64__
+      /* added dummy function call to disable buggy optimization in MinGW64 */
+      hb_gcDummyMark( NULL );
+#endif
       pBuffer[ nPos ] = nStart + nPos;
+   }
 
    if( hb_arraySortDO( pBaseArray, pBlock, pBuffer, &pBuffer[ nCount ], nCount ) )
       pPos = ( pDest = pBuffer ) + nCount;
@@ -290,7 +295,7 @@ static void hb_arraySortStart( PHB_BASEARRAY pBaseArray, PHB_ITEM pBlock,
       pDest = ( pPos = pBuffer ) + nCount;
 
    /* protection against array resizing by user codeblock */
-   if( nStart + nCount >= pBaseArray->nLen )
+   if( nStart + nCount > pBaseArray->nLen )
    {
       if( pBaseArray->nLen > nStart )
       {
