@@ -1,6 +1,6 @@
 diff -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
---- sqlite3.orig/sqlite3.c	2015-07-29 02:54:54.015211000 +0200
-+++ sqlite3/sqlite3.c	2015-07-29 02:54:54.561179500 +0200
+--- sqlite3.orig/sqlite3.c	2015-08-07 00:19:16.769419800 +0200
++++ sqlite3/sqlite3.c	2015-08-07 00:19:17.252988800 +0200
 @@ -29689,7 +29689,11 @@
        ** This is a similar technique to that used by glibc on systems
        ** that do not have a real fallocate() call.
