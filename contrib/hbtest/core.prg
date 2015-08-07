@@ -281,7 +281,7 @@ STATIC FUNCTION __ByteEscape( nByte )
 
    cResult := ""
    FOR nExp := 2 TO 0 STEP -1
-      cResult += SubStr( "01234567", Int( nByte / ( 8 ^ nExp ) ) + 1, 1 )
+      cResult += hb_BSubStr( "01234567", Int( nByte / ( 8 ^ nExp ) ) + 1, 1 )
       nByte %= 8 ^ nExp
    NEXT
 

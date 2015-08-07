@@ -56,6 +56,10 @@
 #include "hbapiitm.h"
 #include "hbvm.h"
 
+#ifdef _HB_OLD_ASORT  /* Allow to fall back to old sort code to avoid compiler bug in mingw64 in LTO mode */
+#define HB_CLP_STRICT
+#endif
+
 static HB_BOOL hb_itemIsLess( PHB_BASEARRAY pBaseArray, PHB_ITEM pBlock,
                               HB_SIZE nItem1, HB_SIZE nItem2 )
 {

@@ -773,9 +773,9 @@ FUNCTION Sp_Quick( cWord )
    // Step Five - Do sound alike substitutions
 
    FOR jj := 1 TO 6
-      IF SubStr( "AEIOUT", jj, 1 ) $ cWord
+      IF hb_BSubStr( "AEIOUT", jj, 1 ) $ cWord
          nold := 1
-         DO WHILE ( ii := hb_At( SubStr( "AEIOUT", jj, 1 ), cWord, ii ) ) > 0
+         DO WHILE ( ii := hb_At( hb_BSubStr( "AEIOUT", jj, 1 ), cWord, ii ) ) > 0
             FOR kk := 1 TO ChrCount( "$", sc_aTryThese[ jj ] )
                ll    := hb_At( "$", sc_aTryThese[ jj ], nOld )
                cTemp := SubStr( sc_aTryThese[ jj ], nOld, ll - nOld )
