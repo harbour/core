@@ -875,7 +875,7 @@ ifeq ($(HB_COMPILER_VER),)
       HB_COMP_PATH_VER_DET := $(HB_COMP_PATH)
    endif
 
-   ifeq ($(HB_COMPILER),clang)
+   ifneq ($(filter $(HB_COMPILER),clang clang64),)
       ifeq ($(HB_COMP_PATH_VER_DET),)
          HB_COMP_PATH_VER_DET := $(HB_CCPREFIX)clang$(HB_CCSUFFIX)
       endif
@@ -970,6 +970,33 @@ ifeq ($(HB_COMPILER_VER),)
       endif
       endif
       endif
+   else
+   ifneq ($(filter $(HB_COMPILER),pocc pocc64 poccarm),)
+      _C_VER := $(shell "$(HB_COMP_PATH_VER_DET)" 2>&1)
+      ifneq ($(findstring 8.00.,$(_C_VER)),)
+         HB_COMPILER_VER := 0800
+      else
+      ifneq ($(findstring 7.00.,$(_C_VER)),)
+         HB_COMPILER_VER := 0700
+      else
+      ifneq ($(findstring 6.50.,$(_C_VER)),)
+         HB_COMPILER_VER := 0605
+      else
+      ifneq ($(findstring 6.00.,$(_C_VER)),)
+         HB_COMPILER_VER := 0600
+      else
+      ifneq ($(findstring 5.00.,$(_C_VER)),)
+         HB_COMPILER_VER := 0500
+      else
+      ifneq ($(findstring 4.50.,$(_C_VER)),)
+         HB_COMPILER_VER := 0405
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+   endif
    endif
    endif
    endif

@@ -2620,26 +2620,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    IF hbmk[ _HBMK_nCOMPVer ] == 0 .AND. ! Empty( cPath_CompC )
 
       DO CASE
-      CASE ( hbmk[ _HBMK_cPLAT ] == "cygwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" )
-
-         IF Len( hb_vfDirectory( hb_FNameDir( cPath_CompC ) + "i686-pc-cygwin-gcc-3.4" + hb_osFileMask() ) ) > 0
-            hbmk[ _HBMK_nCOMPVer ] := 0304
-         ENDIF
-
-      CASE hbmk[ _HBMK_cCOMP ] == "clang"
+      CASE HBMK_ISCOMP( "clang|clang64" )
 
          hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0100 )
 
-      CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw64" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "mingwarm" )
+      CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp" )
 
          hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0304 )
 
-      CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. HBMK_ISCOMP( "msvc|msvc64|msvcia64|icc|iccia64" ) ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "msvcarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
+      CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
 
          /* Compatibility with Harbour GNU Make system */
          IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. "clarm.exe" $ cPath_CompC
@@ -2651,9 +2640,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 1400 )
          ENDIF
 
-      CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "pocc" ) .OR. ;
-           ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "pocc64" ) .OR. ; /* NOTE: Cross-platform: win/amd64 on win/x86 */
-           ( hbmk[ _HBMK_cPLAT ] == "wce" .AND. hbmk[ _HBMK_cCOMP ] == "poccarm" ) /* NOTE: Cross-platform: wce/ARM on win/x86 */
+      CASE HBMK_ISCOMP( "pocc|pocc64|poccarm" )
 
          hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0405 )
 
@@ -5774,7 +5761,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                IF hbmk[ _HBMK_nCOMPVer ] > 1400
                   AAdd( hbmk[ _HBMK_aOPTL ], "-nxcompat" )
                   AAdd( hbmk[ _HBMK_aOPTL ], "-dynamicbase" )
-                  AAdd( hbmk[ _HBMK_aOPTL ], "-fixed:no" ) /* is this useful? */
+                  AAdd( hbmk[ _HBMK_aOPTL ], "-fixed:no" )  /* is this useful? */
                   AAdd( hbmk[ _HBMK_aOPTD ], "-nxcompat" )
                   AAdd( hbmk[ _HBMK_aOPTD ], "-dynamicbase" )
                   IF hbmk[ _HBMK_nCOMPVer ] >= 1700 .AND. HBMK_ISCOMP( "msvc64|msvcia64|iccia64" )
@@ -5979,7 +5966,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ENDIF
                IF hbmk[ _HBMK_nCOMPVer ] >= 0800
                   AAdd( hbmk[ _HBMK_aOPTL ], "-dynamicbase" )
-                  AAdd( hbmk[ _HBMK_aOPTL ], "-fixed:no" ) /* is this useful? */
+                  AAdd( hbmk[ _HBMK_aOPTL ], "-fixed:no" )  /* is this useful? */
                   AAdd( hbmk[ _HBMK_aOPTD ], "-dynamicbase" )
                   IF hbmk[ _HBMK_cCOMP ] == "pocc64"
                      AAdd( hbmk[ _HBMK_aOPTL ], "-highentropyva" )

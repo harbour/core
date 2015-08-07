@@ -35,7 +35,7 @@ ifeq ($(filter $(HB_COMPILER_VER),0450),)
    LDFLAGS += -nxcompat
    DFLAGS += -nxcompat
 endif
-ifeq ($(filter $(HB_COMPILER_VER),0450 0500 0600 0700),)
+ifeq ($(filter $(HB_COMPILER_VER),0450 0500 0600 0605 0700),)
    LDFLAGS += -dynamicbase -fixed:no
    DFLAGS += -dynamicbase
    ifeq ($(HB_COMPILER),pocc64)
