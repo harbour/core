@@ -67,7 +67,7 @@ endif
 # Hack to autoconfig bcc, and not require properly set .cfg files in its bin dir.
 # It only works if we know compiler location.
 ifneq ($(HB_COMP_PATH_PUB),)
-   HB_CFLAGS += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include")
+   HB_CFLAGS += +nul $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include")
    RCFLAGS   += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include")
    ifneq ($(wildcard $(HB_COMP_PATH_PUB)../Include/windows/crtl),)
       HB_CFLAGS += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include/windows/crtl")
@@ -77,8 +77,8 @@ ifneq ($(HB_COMP_PATH_PUB),)
       HB_CFLAGS += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include/windows/sdk")
       RCFLAGS   += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include/windows/sdk")
    endif
-   LDFLAGS   += $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
-   DFLAGS    += $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   LDFLAGS += +nul $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   DFLAGS  += +nul $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
 endif
 
 RC := brcc32.exe

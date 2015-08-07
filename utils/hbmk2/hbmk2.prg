@@ -2564,6 +2564,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF .T. .OR. ;
             ! hb_vfExists( hb_FNameDir( cPath_CompC ) + ".." + hb_ps() + "Bin" + hb_ps() + "bcc32.cfg" ) .OR. ;
             ! hb_vfExists( hb_FNameDir( cPath_CompC ) + ".." + hb_ps() + "Bin" + hb_ps() + "ilink32.cfg" )
+            /* Override default bcc32.cfg/ilink32.cfg with nul files. */
+            AAddNew( hbmk[ _HBMK_aOPTC ], "+nul" )
+            AAddNew( hbmk[ _HBMK_aOPTL ], "+nul" )
+            AAddNew( hbmk[ _HBMK_aOPTD ], "+nul" )
             /* NOTE: BCC 5.8 has different casing: 'include', 'lib', 'psdk' respectively. */
             AAdd( hbmk[ _HBMK_aINCPATH ], hb_PathNormalize( hb_FNameDir( cPath_CompC ) + ".." + hb_ps() + "Include" ) )
             AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_FNameDir( cPath_CompC ) + ".." + hb_ps() + "Lib" ) )
