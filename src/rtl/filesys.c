@@ -1221,7 +1221,6 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
    }
    else
       nWritten = ( HB_SIZE ) iResult;
-                            ( HB_SIZE ) iResult;
 }
 #else
 {
