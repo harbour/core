@@ -14056,7 +14056,7 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
       hb_processRun( '"' + cPath_CompC + '"',, @cStdOutErr, @cStdOutErr )
       tmp := hb_cdpSelect( "cp437" )
       IF ( tmp1 := hb_AtX( R_( "Version ([0-9]*)\.([0-9]*)\." ), cStdOutErr ) ) != NIL
-         tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
+         tmp1 := hb_ATokens( SubStr( tmp1, Len( "Version " ) + 1 ), "." )
          nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
       ENDIF
       hb_cdpSelect( tmp )
