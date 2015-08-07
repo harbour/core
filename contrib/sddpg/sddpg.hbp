@@ -15,6 +15,7 @@ rddsql.hbc
 -depcontrol=pgsql:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=pgsql:${HB_WITH_PGSQL}
 -depincpath=pgsql:/usr/include
+-depincpath=pgsql:/usr/local/include
 -depincpath=pgsql:/usr/local/pgsql/include
 -depincpath=pgsql:/usr/local/pgsql/include/libpq
 -depincpath=pgsql:/usr/include/pgsql
