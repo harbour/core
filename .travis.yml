@@ -47,7 +47,7 @@ before_install:
     fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ]; then
        brew update;
-       # Too many dependencies
+       # Too many dependencies;
       #brew install allegro;
        brew install cairo;
        brew install curl;
@@ -56,9 +56,9 @@ before_install:
        brew install ghostscript;
        brew install libmagic;
        brew install mariadb;
-       # Dupe
+       # Dupe;
       #brew install ncurses;
-       # Installed by default
+       # Installed by default;
       #brew install postgresql;
        brew install unixodbc;
     fi
