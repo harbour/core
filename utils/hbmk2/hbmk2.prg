@@ -2626,6 +2626,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             hbmk[ _HBMK_nCOMPVer ] := 0304
          ENDIF
 
+      CASE hbmk[ _HBMK_cCOMP ] == "clang"
+
+         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0100 )
+
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "gcc" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw" ) .OR. ;
            ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "mingw64" ) .OR. ;
@@ -4511,7 +4515,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W -Weverything" )
                   AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-padded -Wno-cast-align -Wno-float-equal -Wno-missing-prototypes" )
                   AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-variadic-macros -Wno-documentation" )
-                  AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-reserved-id-macro" )
+                  IF hbmk[ _HBMK_nCOMPVer ] >= 0306
+                     AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-reserved-id-macro" )
+                  ENDIF
                   AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-sign-conversion -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast" )
                ELSE
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W -Wall" )
@@ -10046,7 +10052,7 @@ STATIC PROCEDURE dep_show_hint( hbmk, dep )
       _hbmk_OutErr( hbmk, hb_StrFormat( ;
          iif( Len( dep[ _HBMKDEP_aPKG ] ) > 1, ;
             I_( "Hint: Install one of these %1$s packages: %2$s" ), ;
-            I_( "Hint: Install this %1$s package: %2$s" ) ), ;
+            I_( "Hint: Install %1$s package: %2$s" ) ), ;
          hbmk[ _HBMK_cPKGM ], ;
          ArrayToList( dep[ _HBMKDEP_aPKG ], ", " ) ) )
    ENDIF
@@ -14070,6 +14076,17 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
       hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
       tmp := hb_cdpSelect( "cp437" )
       IF ( tmp1 := hb_AtX( "version ([0-9]*)\.([0-9]*)\.([0-9]*)", cStdOutErr ) ) != NIL
+         tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
+         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+      ENDIF
+      hb_cdpSelect( tmp )
+   CASE HBMK_ISCOMP( "clang|clang64" )
+      hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
+      tmp := hb_cdpSelect( "cp437" )
+      IF ( tmp1 := hb_AtX( "based on LLVM [0-9]*\.[0-9]*\.[0-9]*", cStdOutErr ) ) != NIL
+         tmp1 := hb_ATokens( SubStr( tmp1, Len( "based on LLVM " ) + 1 ), "." )
+         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+      ELSEIF ( tmp1 := hb_AtX( "version [0-9]*\.[0-9]*\.[0-9]*", cStdOutErr ) ) != NIL
          tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
          nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
       ENDIF
