@@ -853,11 +853,32 @@ ifeq ($(HB_COMPILER),)
    endif
    endif
 
+   # auto-detect watcom platform by looking at the header path config
+   ifeq ($(HB_COMPILER),watcom)
+      ifneq ($(call find_in_path_prw,os2.h,$(INCLUDE)),)
+         HB_PLATFORM := os2
+      else
+      ifneq ($(call find_in_path_prw,dirent.h,$(INCLUDE)),)
+         HB_PLATFORM := linux
+      else
+      ifeq ($(call find_in_path_prw,windows.h,$(INCLUDE)),)
+         HB_PLATFORM := dos
+      endif
+      endif
+      endif
+   endif
+endif
+
+ifeq ($(HB_COMPILER_VER),)
+
    ifeq ($(HB_COMP_PATH_VER_DET),)
       HB_COMP_PATH_VER_DET := $(HB_COMP_PATH)
    endif
 
    ifeq ($(HB_COMPILER),clang)
+      ifeq ($(HB_COMP_PATH_VER_DET),)
+         HB_COMP_PATH_VER_DET := $(HB_CCPREFIX)clang$(HB_CCSUFFIX)
+      endif
       _C_VER := $(shell "$(HB_COMP_PATH_VER_DET)" -v 2>&1)
       ifneq ($(findstring 3.8.,$(_C_VER)),)
          HB_COMPILER_VER := 0308
@@ -876,6 +897,9 @@ ifeq ($(HB_COMPILER),)
       endif
    else
    ifneq ($(filter $(HB_COMPILER),gcc mingw mingw64 mingwarm),)
+      ifeq ($(HB_COMP_PATH_VER_DET),)
+         HB_COMP_PATH_VER_DET := $(HB_CCPREFIX)gcc$(HB_CCSUFFIX)
+      endif
       _C_VER := $(shell "$(HB_COMP_PATH_VER_DET)" -v 2>&1)
       ifneq ($(findstring 5.1.,$(_C_VER)),)
          HB_COMPILER_VER := 0501
@@ -948,21 +972,6 @@ ifeq ($(HB_COMPILER),)
       endif
    endif
    endif
-   endif
-
-   # auto-detect watcom platform by looking at the header path config
-   ifeq ($(HB_COMPILER),watcom)
-      ifneq ($(call find_in_path_prw,os2.h,$(INCLUDE)),)
-         HB_PLATFORM := os2
-      else
-      ifneq ($(call find_in_path_prw,dirent.h,$(INCLUDE)),)
-         HB_PLATFORM := linux
-      else
-      ifeq ($(call find_in_path_prw,windows.h,$(INCLUDE)),)
-         HB_PLATFORM := dos
-      endif
-      endif
-      endif
    endif
 endif
 
