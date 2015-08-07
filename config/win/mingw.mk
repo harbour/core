@@ -82,7 +82,7 @@ endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    # -O3 is not recommended for GCC 4.x by some packagers (see https://wiki.gentoo.org/wiki/GCC_optimization)
-   CFLAGS += -O3
+   CFLAGS += -O3 -fno-ident
    # This option is not needed in x86_64 mode.
    ifneq ($(HB_COMPILER),mingw64)
       # It makes debugging hard or impossible on x86 systems.

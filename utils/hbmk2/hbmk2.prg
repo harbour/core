@@ -4824,7 +4824,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDCASE
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
-            cOpt_CompC += " -O3"
+            cOpt_CompC += " -O3 -fno-ident"
             IF hbmk[ _HBMK_nCOMPVer ] < 0406 .AND. ;
                ! hbmk[ _HBMK_lDEBUG ] .AND. !( hbmk[ _HBMK_cCOMP ] == "mingw64" )
                cOpt_CompC += " -fomit-frame-pointer"
