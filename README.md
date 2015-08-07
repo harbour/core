@@ -625,16 +625,15 @@ sensitive.
 
    - `HB_COMPILER_VER=[<ver>]`
 
-     Set C compiler version. This is used with clang*,
-     msvc*, mingw*, pocc* and cygwin/gcc targets currently.
-     `<ver>` format:
+     Set C compiler version. `<ver>` format:
 
          <15><00> = <major><minor>
 
          F.e.:
-         - mingw/gcc: 0501 for 5.1.x
+         - gcc/mingw: 0501 for 5.1.x
          - clang: 0306 for 3.6.x
          - msvc: 1900 for 19.00.x
+         - pocc: 0450 for 4.50.x
 
      Default: filled by compiler auto-detection or empty
 

@@ -2642,7 +2642,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       CASE HBMK_ISCOMP( "pocc|pocc64|poccarm" )
 
-         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0405 )
+         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0450 )
 
       ENDCASE
    ENDIF
@@ -14055,8 +14055,9 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
    CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm|pocc|pocc64|poccarm" )
       hb_processRun( '"' + cPath_CompC + '"',, @cStdOutErr, @cStdOutErr )
       tmp := hb_cdpSelect( "cp437" )
-      IF ( tmp1 := hb_AtX( R_( "Version [0-9][0-9]\.[0-9]" ), cStdOutErr ) ) != NIL
-         nVer := Val( Stuff( SubStr( tmp1, Len( "Version " ) + 1 ), 3, 1, "" ) + "0" )
+      IF ( tmp1 := hb_AtX( R_( "Version ([0-9]*)\.([0-9]*)\." ), cStdOutErr ) ) != NIL
+         tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
+         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
       ENDIF
       hb_cdpSelect( tmp )
    CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp" )
