@@ -244,6 +244,10 @@ typedef enum
 
 /* - */
 
+#ifndef WS_EX_LAYERED
+#define WS_EX_LAYERED  0x00080000
+#endif
+
 #ifndef INVALID_FILE_SIZE
 #define INVALID_FILE_SIZE  ( DWORD ) 0xFFFFFFFF
 #endif

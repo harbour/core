@@ -64,6 +64,10 @@
 
 #include "gtwgu.h"
 
+#ifndef WS_EX_LAYERED
+#define WS_EX_LAYERED     0x00080000
+#endif
+
 static int s_GtId;
 static HB_GT_FUNCS SuperTable;
 #define HB_GTSUPER   ( &SuperTable )
@@ -1871,7 +1875,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             case HB_GTS_FACTOR:
                if( pWVT->hWnd )
                {
-#if ( _WIN32_WINNT >= 0x0500 )
+#if ! defined( HB_OS_WIN_CE )
                   if( pWVT->pfnLayered )
                   {
                      SetWindowLong( pWVT->hWnd,

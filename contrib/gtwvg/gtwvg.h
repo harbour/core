@@ -49,10 +49,6 @@
 
 #define HB_GT_NAME  WVG
 
-#ifndef WINVER
-   #define WINVER  0x0500
-#endif
-
 #define WVT_CHAR_QUEUE_SIZE         256
 #define WVT_MAX_TITLE_SIZE          128
 #define WVT_MAX_ROWS                256

@@ -69,10 +69,6 @@
 #define WS_EX_COMPOSITED  0x02000000
 #endif
 
-#ifndef WS_EX_LAYERED
-#define WS_EX_LAYERED     0x00080000
-#endif
-
 #ifndef LWA_ALPHA
 #define LWA_ALPHA         0x00000002
 #endif
@@ -3921,7 +3917,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
                if( pWVT->hWnd )
                {
-#if ( _WIN32_WINNT >= 0x0500 ) && ! defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE )
                   if( s_guiData->pfnLayered )
                   {
                      SetWindowLongPtr( pWVT->hWnd,

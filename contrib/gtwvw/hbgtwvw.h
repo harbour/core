@@ -61,10 +61,6 @@
 #define _WIN32_IE   0x0500
 #endif
 
-#ifndef WINVER
-#define WINVER      0x0500
-#endif
-
 #include "hbwapi.h"
 #include "hbwinole.h"
 

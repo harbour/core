@@ -257,7 +257,6 @@ HB_FUNC( WVG_GETCURRENTFONT )
 /* wvg_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] ) */
 HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
 {
-#if ( _WIN32_WINNT >= 0x0500 )
    HINSTANCE h = GetModuleHandle( TEXT( "user32.dll" ) );
 
    if( h )
@@ -278,7 +277,6 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
       }
       FreeLibrary( h );
    }
-#endif
 }
 
 HB_FUNC( WVG_SENDTOOLBARMESSAGE )
