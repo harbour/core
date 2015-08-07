@@ -1510,7 +1510,7 @@ Supported shells per host platforms:
             `bzip2 -d cegcc_mingw32ce_cygwin1.7_r1399.tar.bz2`<br />
             `tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h`
 
-          * Compiler will be inside the `opt\mingw32ce` subdirectory.
+          * Compiler will be in the `opt\mingw32ce` subdirectory.
      * Clang [multi-platform, free, open-source]
         * <http://llvm.org/builds/> (Windows snapshots)
      * Cygwin [win, free, open-source]

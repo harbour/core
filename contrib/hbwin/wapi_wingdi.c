@@ -1030,20 +1030,58 @@ HB_FUNC( WAPI_ELLIPSE )
 
 HB_FUNC( WAPI_SETDCBRUSHCOLOR )
 {
-#if ( _WIN32_WINNT >= 0x0500 )
-   hbwapi_ret_COLORREF( SetDCBrushColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) ) );
-#else
-   hbwapi_ret_COLORREF( 0 );
+   COLORREF result = 0;
+
+#if ! defined( HB_OS_WIN_CE )
+   {
+      typedef COLORREF ( WINAPI * _HB_SETDCBRUSHCOLOR )( HDC, COLORREF );
+
+      static _HB_SETDCBRUSHCOLOR s_pSetDCBrushColor = ( _HB_SETDCBRUSHCOLOR ) -1;
+
+      if( s_pSetDCBrushColor == ( _HB_SETDCBRUSHCOLOR ) -1 )
+      {
+         HMODULE hModule = GetModuleHandle( TEXT( "gdi32.dll" ) );
+         if( hModule )
+            s_pSetDCBrushColor = ( _HB_SETDCBRUSHCOLOR ) HB_WINAPI_GETPROCADDRESST( hModule,
+               "SetDCBrushColor" );
+         else
+            s_pSetDCBrushColor = NULL;
+      }
+
+      if( s_pSetDCBrushColor )
+         result = s_pSetDCBrushColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) );
+   }
 #endif
+
+   hbwapi_ret_COLORREF( result );
 }
 
 HB_FUNC( WAPI_SETDCPENCOLOR )
 {
-#if ( _WIN32_WINNT >= 0x0500 )
-   hbwapi_ret_COLORREF( SetDCPenColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) ) );
-#else
-   hbwapi_ret_COLORREF( 0 );
+   COLORREF result = 0;
+
+#if ! defined( HB_OS_WIN_CE )
+   {
+      typedef COLORREF ( WINAPI * _HB_SETDCPENCOLOR )( HDC, COLORREF );
+
+      static _HB_SETDCPENCOLOR s_pSetDCPenColor = ( _HB_SETDCPENCOLOR ) -1;
+
+      if( s_pSetDCPenColor == ( _HB_SETDCPENCOLOR ) -1 )
+      {
+         HMODULE hModule = GetModuleHandle( TEXT( "gdi32.dll" ) );
+         if( hModule )
+            s_pSetDCPenColor = ( _HB_SETDCPENCOLOR ) HB_WINAPI_GETPROCADDRESST( hModule,
+               "SetDCPenColor" );
+         else
+            s_pSetDCPenColor = NULL;
+      }
+
+      if( s_pSetDCPenColor )
+         result = s_pSetDCPenColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) );
+   }
 #endif
+
+   hbwapi_ret_COLORREF( result );
 }
 
 HB_FUNC( WAPI_SETARCDIRECTION )
