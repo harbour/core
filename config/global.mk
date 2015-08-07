@@ -540,6 +540,7 @@ endif
 
 HB_COMP_AUTO :=
 HB_COMP_PATH :=
+HB_COMP_PATH_VER_DET :=
 ifeq ($(HB_COMPILER),)
    ifneq ($(filter $(HB_PLATFORM),win wce),)
       HB_COMP_PATH := $(call find_in_path,arm-wince-mingw32ce-gcc)
@@ -603,30 +604,6 @@ ifeq ($(HB_COMPILER),)
                               HB_COMPILER := mingw64
                               HB_CPU := x86_64
                            endif
-                           _C_VER := $(shell "$(HB_COMP_PATH)" -v 2>&1)
-                           ifneq ($(findstring 5.1.,$(_C_VER)),)
-                              HB_COMPILER_VER := 0501
-                           else
-                           ifneq ($(findstring 4.9.,$(_C_VER)),)
-                              HB_COMPILER_VER := 0409
-                           else
-                           ifneq ($(findstring 4.8.,$(_C_VER)),)
-                              HB_COMPILER_VER := 0408
-                           else
-                           ifneq ($(findstring 4.7.,$(_C_VER)),)
-                              HB_COMPILER_VER := 0407
-                           else
-                           ifneq ($(findstring 4.6.,$(_C_VER)),)
-                              HB_COMPILER_VER := 0406
-                           else
-                           ifneq ($(findstring 4.5.,$(_C_VER)),)
-                              HB_COMPILER_VER := 0405
-                           endif
-                           endif
-                           endif
-                           endif
-                           endif
-                           endif
                         else
                            HB_COMP_PATH := $(call find_in_path,gcc)
                            ifneq ($(HB_COMP_PATH),)
@@ -638,72 +615,13 @@ ifeq ($(HB_COMPILER),)
                                     HB_COMPILER := mingw64
                                     HB_CPU := x86_64
                                  endif
-                                 _C_VER := $(shell "$(HB_COMP_PATH)" -v 2>&1)
-                                 ifneq ($(findstring 5.1.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0501
-                                 else
-                                 ifneq ($(findstring 4.9.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0409
-                                 else
-                                 ifneq ($(findstring 4.8.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0408
-                                 else
-                                 ifneq ($(findstring 4.7.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0407
-                                 else
-                                 ifneq ($(findstring 4.6.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0406
-                                 else
-                                 ifneq ($(findstring 4.5.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0405
-                                 endif
-                                 endif
-                                 endif
-                                 endif
-                                 endif
-                                 endif
                               else
                                  ifeq ($(HB_CPU),x86_64)
                                     HB_COMPILER := mingw64
                                  else
                                     HB_COMPILER := mingw
                                  endif
-                                 _C_VER := $(shell "$(dir $(HB_COMP_PATH))gcc" -v 2>&1)
-                                 ifneq ($(findstring 5.1.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0501
-                                 else
-                                 ifneq ($(findstring 4.9.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0409
-                                 else
-                                 ifneq ($(findstring 4.8.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0408
-                                 else
-                                 ifneq ($(findstring 4.7.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0407
-                                 else
-                                 ifneq ($(findstring 4.6.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0406
-                                 else
-                                 ifneq ($(findstring 4.5.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0405
-                                 else
-                                 ifneq ($(findstring 4.4.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0404
-                                 else
-                                 ifneq ($(findstring 4.3.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0403
-                                 else
-                                 ifneq ($(findstring 3.4.,$(_C_VER)),)
-                                    HB_COMPILER_VER := 0304
-                                 endif
-                                 endif
-                                 endif
-                                 endif
-                                 endif
-                                 endif
-                                 endif
-                                 endif
-                                 endif
+                                 HB_COMP_PATH_VER_DET := $(dir $(HB_COMP_PATH))gcc
                               endif
                            else
                               HB_COMP_PATH := $(call find_in_path,wcc386)
@@ -722,30 +640,7 @@ ifeq ($(HB_COMPILER),)
                                        HB_COMPILER := msvcarm
                                        HB_PLATFORM := wce
                                        HB_CPU := arm
-                                       _C_VER := $(shell $(subst armasm.exe,cl.exe,"$(HB_COMP_PATH)" 2>&1))
-                                       ifneq ($(findstring 14.,$(_C_VER)),)
-                                          HB_COMPILER_VER := 1400
-                                       else
-                                       ifneq ($(findstring 15.,$(_C_VER)),)
-                                          HB_COMPILER_VER := 1500
-                                       else
-                                       ifneq ($(findstring 16.,$(_C_VER)),)
-                                          HB_COMPILER_VER := 1600
-                                       else
-                                       ifneq ($(findstring 17.,$(_C_VER)),)
-                                          HB_COMPILER_VER := 1700
-                                       else
-                                       ifneq ($(findstring 18.,$(_C_VER)),)
-                                          HB_COMPILER_VER := 1800
-                                       else
-                                       ifneq ($(findstring 19.,$(_C_VER)),)
-                                          HB_COMPILER_VER := 1900
-                                       endif
-                                       endif
-                                       endif
-                                       endif
-                                       endif
-                                       endif
+                                       HB_COMP_PATH_VER_DET := $(subst armasm.exe,cl.exe,$(HB_COMP_PATH))
                                     else
                                        HB_COMP_PATH := $(call find_in_path_raw,idis.exe)
                                        ifneq ($(HB_COMP_PATH),)
@@ -764,95 +659,16 @@ ifeq ($(HB_COMPILER),)
                                                 ifneq ($(HB_COMP_PATH),)
                                                    HB_COMPILER := msvc64
                                                    HB_CPU := x86_64
-                                                   _C_VER := $(shell "$(subst ml64.exe,cl.exe,$(HB_COMP_PATH))" 2>&1)
-                                                   ifneq ($(findstring 14.,$(_C_VER)),)
-                                                      HB_COMPILER_VER := 1400
-                                                   else
-                                                   ifneq ($(findstring 15.,$(_C_VER)),)
-                                                      HB_COMPILER_VER := 1500
-                                                   else
-                                                   ifneq ($(findstring 16.,$(_C_VER)),)
-                                                      HB_COMPILER_VER := 1600
-                                                   else
-                                                   ifneq ($(findstring 17.,$(_C_VER)),)
-                                                      HB_COMPILER_VER := 1700
-                                                   else
-                                                   ifneq ($(findstring 18.,$(_C_VER)),)
-                                                      HB_COMPILER_VER := 1800
-                                                   else
-                                                   ifneq ($(findstring 19.,$(_C_VER)),)
-                                                      HB_COMPILER_VER := 1900
-                                                   endif
-                                                   endif
-                                                   endif
-                                                   endif
-                                                   endif
-                                                   endif
+                                                   HB_COMP_PATH_VER_DET := $(subst ml64.exe,cl.exe,$(HB_COMP_PATH))
                                                 else
                                                    HB_COMP_PATH := $(call find_in_path_raw,ias.exe)
                                                    ifneq ($(HB_COMP_PATH),)
                                                       HB_COMPILER := msvcia64
                                                       HB_CPU := ia64
-                                                      _C_VER := $(shell "$(HB_COMP_PATH)" 2>&1)
-                                                      ifneq ($(findstring 14.,$(_C_VER)),)
-                                                         HB_COMPILER_VER := 1400
-                                                      else
-                                                      ifneq ($(findstring 15.,$(_C_VER)),)
-                                                         HB_COMPILER_VER := 1500
-                                                      else
-                                                      ifneq ($(findstring 16.,$(_C_VER)),)
-                                                         HB_COMPILER_VER := 1600
-                                                      else
-                                                      ifneq ($(findstring 17.,$(_C_VER)),)
-                                                         HB_COMPILER_VER := 1700
-                                                      else
-                                                      ifneq ($(findstring 18.,$(_C_VER)),)
-                                                         HB_COMPILER_VER := 1800
-                                                      else
-                                                      ifneq ($(findstring 19.,$(_C_VER)),)
-                                                         HB_COMPILER_VER := 1900
-                                                      endif
-                                                      endif
-                                                      endif
-                                                      endif
-                                                      endif
-                                                      endif
                                                    else
                                                       HB_COMP_PATH := $(call find_in_path_raw,cl.exe)
                                                       ifneq ($(HB_COMP_PATH),)
                                                          HB_COMPILER := msvc
-                                                         _C_VER := $(shell "$(HB_COMP_PATH)" 2>&1)
-                                                         ifneq ($(findstring 12.,$(_C_VER)),)
-                                                            HB_COMPILER_VER := 1200
-                                                         else
-                                                         ifneq ($(findstring 13.,$(_C_VER)),)
-                                                            HB_COMPILER_VER := 1300
-                                                         else
-                                                         ifneq ($(findstring 14.,$(_C_VER)),)
-                                                            HB_COMPILER_VER := 1400
-                                                         else
-                                                         ifneq ($(findstring 15.,$(_C_VER)),)
-                                                            HB_COMPILER_VER := 1500
-                                                         else
-                                                         ifneq ($(findstring 16.,$(_C_VER)),)
-                                                            HB_COMPILER_VER := 1600
-                                                         else
-                                                         ifneq ($(findstring 17.,$(_C_VER)),)
-                                                            HB_COMPILER_VER := 1700
-                                                         else
-                                                         ifneq ($(findstring 18.,$(_C_VER)),)
-                                                            HB_COMPILER_VER := 1800
-                                                         else
-                                                         ifneq ($(findstring 19.,$(_C_VER)),)
-                                                            HB_COMPILER_VER := 1900
-                                                         endif
-                                                         endif
-                                                         endif
-                                                         endif
-                                                         endif
-                                                         endif
-                                                         endif
-                                                         endif
                                                       else
                                                          # TODO: Add bcc64 auto-detection
                                                          HB_COMP_PATH := $(call find_in_path_raw,bcc32.exe)
@@ -891,30 +707,6 @@ ifeq ($(HB_COMPILER),)
                                                                         else
                                                                            HB_COMPILER := mingw
                                                                         endif
-                                                                        _C_VER := $(shell "$(HB_COMP_PATH)" -v 2>&1)
-                                                                        ifneq ($(findstring 5.1.,$(_C_VER)),)
-                                                                           HB_COMPILER_VER := 0501
-                                                                        else
-                                                                        ifneq ($(findstring 4.9.,$(_C_VER)),)
-                                                                           HB_COMPILER_VER := 0409
-                                                                        else
-                                                                        ifneq ($(findstring 4.8.,$(_C_VER)),)
-                                                                           HB_COMPILER_VER := 0408
-                                                                        else
-                                                                        ifneq ($(findstring 4.7.,$(_C_VER)),)
-                                                                           HB_COMPILER_VER := 0407
-                                                                        else
-                                                                        ifneq ($(findstring 4.6.,$(_C_VER)),)
-                                                                           HB_COMPILER_VER := 0406
-                                                                        else
-                                                                        ifneq ($(findstring 4.5.,$(_C_VER)),)
-                                                                           HB_COMPILER_VER := 0405
-                                                                        endif
-                                                                        endif
-                                                                        endif
-                                                                        endif
-                                                                        endif
-                                                                        endif
                                                                      else
                                                                         ifeq ($(HB_HOST_CPU),x86_64)
                                                                            # mingw-w64 build
@@ -926,30 +718,6 @@ ifeq ($(HB_COMPILER),)
                                                                               else
                                                                                  HB_COMPILER := mingw64
                                                                                  HB_CPU := x86_64
-                                                                              endif
-                                                                              _C_VER := $(shell "$(HB_COMP_PATH)" -v 2>&1)
-                                                                              ifneq ($(findstring 5.1.,$(_C_VER)),)
-                                                                                 HB_COMPILER_VER := 0501
-                                                                              else
-                                                                              ifneq ($(findstring 4.9.,$(_C_VER)),)
-                                                                                 HB_COMPILER_VER := 0409
-                                                                              else
-                                                                              ifneq ($(findstring 4.8.,$(_C_VER)),)
-                                                                                 HB_COMPILER_VER := 0408
-                                                                              else
-                                                                              ifneq ($(findstring 4.7.,$(_C_VER)),)
-                                                                                 HB_COMPILER_VER := 0407
-                                                                              else
-                                                                              ifneq ($(findstring 4.6.,$(_C_VER)),)
-                                                                                 HB_COMPILER_VER := 0406
-                                                                              else
-                                                                              ifneq ($(findstring 4.5.,$(_C_VER)),)
-                                                                                 HB_COMPILER_VER := 0405
-                                                                              endif
-                                                                              endif
-                                                                              endif
-                                                                              endif
-                                                                              endif
                                                                               endif
                                                                            endif
                                                                         endif
@@ -1085,23 +853,101 @@ ifeq ($(HB_COMPILER),)
    endif
    endif
 
+   ifeq ($(HB_COMP_PATH_VER_DET),)
+      HB_COMP_PATH_VER_DET := $(HB_COMP_PATH)
+   endif
+
    ifeq ($(HB_COMPILER),clang)
-      _C_VER := $(shell "$(HB_COMP_PATH)" -v 2>&1)
-      ifneq ($(findstring 3.5.,$(_C_VER)),)
-         HB_COMPILER_VER := 0305
-      else
-      ifneq ($(findstring 3.6.,$(_C_VER)),)
-         HB_COMPILER_VER := 0306
+      _C_VER := $(shell "$(HB_COMP_PATH_VER_DET)" -v 2>&1)
+      ifneq ($(findstring 3.8.,$(_C_VER)),)
+         HB_COMPILER_VER := 0308
       else
       ifneq ($(findstring 3.7.,$(_C_VER)),)
          HB_COMPILER_VER := 0307
       else
-      ifneq ($(findstring 3.8.,$(_C_VER)),)
-         HB_COMPILER_VER := 0308
+      ifneq ($(findstring 3.6.,$(_C_VER)),)
+         HB_COMPILER_VER := 0306
+      else
+      ifneq ($(findstring 3.5.,$(_C_VER)),)
+         HB_COMPILER_VER := 0305
       endif
       endif
       endif
       endif
+   else
+   ifneq ($(filter $(HB_COMPILER),gcc mingw mingw64 mingwarm),)
+      _C_VER := $(shell "$(HB_COMP_PATH_VER_DET)" -v 2>&1)
+      ifneq ($(findstring 5.1.,$(_C_VER)),)
+         HB_COMPILER_VER := 0501
+      else
+      ifneq ($(findstring 4.9.,$(_C_VER)),)
+         HB_COMPILER_VER := 0409
+      else
+      ifneq ($(findstring 4.8.,$(_C_VER)),)
+         HB_COMPILER_VER := 0408
+      else
+      ifneq ($(findstring 4.7.,$(_C_VER)),)
+         HB_COMPILER_VER := 0407
+      else
+      ifneq ($(findstring 4.6.,$(_C_VER)),)
+         HB_COMPILER_VER := 0406
+      else
+      ifneq ($(findstring 4.5.,$(_C_VER)),)
+         HB_COMPILER_VER := 0405
+      else
+      ifneq ($(findstring 4.4.,$(_C_VER)),)
+         HB_COMPILER_VER := 0404
+      else
+      ifneq ($(findstring 4.3.,$(_C_VER)),)
+         HB_COMPILER_VER := 0403
+      else
+      ifneq ($(findstring 3.4.,$(_C_VER)),)
+         HB_COMPILER_VER := 0304
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+   else
+   ifneq ($(filter $(HB_COMPILER),msvc msvc64 msvcia64 msvcarm),)
+      _C_VER := $(shell "$(HB_COMP_PATH)" 2>&1)
+      ifneq ($(findstring 19.,$(_C_VER)),)
+         HB_COMPILER_VER := 1900
+      else
+      ifneq ($(findstring 18.,$(_C_VER)),)
+         HB_COMPILER_VER := 1800
+      else
+      ifneq ($(findstring 17.,$(_C_VER)),)
+         HB_COMPILER_VER := 1700
+      else
+      ifneq ($(findstring 16.,$(_C_VER)),)
+         HB_COMPILER_VER := 1600
+      else
+      ifneq ($(findstring 15.,$(_C_VER)),)
+         HB_COMPILER_VER := 1500
+      else
+      ifneq ($(findstring 14.,$(_C_VER)),)
+         HB_COMPILER_VER := 1400
+      else
+      ifneq ($(findstring 13.,$(_C_VER)),)
+         HB_COMPILER_VER := 1300
+      else
+      ifneq ($(findstring 12.,$(_C_VER)),)
+         HB_COMPILER_VER := 1200
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+      endif
+   endif
+   endif
    endif
 
    # auto-detect watcom platform by looking at the header path config
