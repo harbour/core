@@ -1085,6 +1085,25 @@ ifeq ($(HB_COMPILER),)
    endif
    endif
 
+   ifeq ($(HB_COMPILER),clang)
+      _C_VER := $(shell "$(HB_COMP_PATH)" -v 2>&1)
+      ifneq ($(findstring 3.5.,$(_C_VER)),)
+         HB_COMPILER_VER := 0305
+      else
+      ifneq ($(findstring 3.6.,$(_C_VER)),)
+         HB_COMPILER_VER := 0306
+      else
+      ifneq ($(findstring 3.7.,$(_C_VER)),)
+         HB_COMPILER_VER := 0307
+      else
+      ifneq ($(findstring 3.8.,$(_C_VER)),)
+         HB_COMPILER_VER := 0308
+      endif
+      endif
+      endif
+      endif
+   endif
+
    # auto-detect watcom platform by looking at the header path config
    ifeq ($(HB_COMPILER),watcom)
       ifneq ($(call find_in_path_prw,os2.h,$(INCLUDE)),)
