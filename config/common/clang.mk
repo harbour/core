@@ -35,7 +35,7 @@ ifneq ($(HB_BUILD_WARN),no)
    ifeq ($(filter $(HB_COMPILER_VER),0305),)
       CFLAGS += -Wno-reserved-id-macro
    endif
-   # these are potentially useful. -Wsign-conversion would require proper HB_SIZE/HB_ISIZ cleanup.
+   # These are potentially useful. -Wsign-conversion would require proper HB_SIZE/HB_ISIZ cleanup.
    CFLAGS += -Wno-sign-conversion -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast
 else
    CFLAGS += -Wmissing-braces -Wreturn-type -Wformat
