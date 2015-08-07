@@ -307,7 +307,24 @@ static PHB_FILE s_fileNew( HB_SOCKET sd, int timeout )
    return pFile;
 }
 
-HB_FUNC( HB_TCPIO ) { ; }
+static PHB_FILE hb_fileFromSocket( HB_SOCKET sd )
+{
+   return sd != HB_NO_SOCKET ? s_fileNew( sd, -1 ) : NULL;
+}
+
+HB_FUNC( HB_VFFROMSOCKET )
+{
+   HB_SOCKET sd = hb_socketParam( 1 );
+   PHB_FILE pFile = hb_fileFromSocket( sd );
+
+   if( pFile )
+   {
+      hb_socketItemClear( hb_param( 1, HB_IT_POINTER ) );
+      hb_fileItemPut( hb_param( -1, HB_IT_ANY ), pFile );
+   }
+}
+
+HB_FUNC( HB_TCPIO ) {}
 
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_file_tcpio_init_ )

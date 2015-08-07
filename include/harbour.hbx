@@ -736,6 +736,7 @@ DYNAMIC hb_processValue
 DYNAMIC hb_ProgName
 DYNAMIC hb_ps
 DYNAMIC hb_PValue
+DYNAMIC hb_PWrite
 DYNAMIC hb_rand32
 DYNAMIC hb_Random
 DYNAMIC hb_RandomInt

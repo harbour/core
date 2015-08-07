@@ -149,7 +149,7 @@ static HB_ISIZ hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, HB_ISIZ lb,
    /* select pivot and exchange with 1st element */
    i = lb + ( ( ub - lb ) >> 1 );
    if( i != lb )
-      hb_itemSwap( pBaseArray->pItems + lb, pBaseArray->pItems + i );
+      hb_itemRawSwap( pBaseArray->pItems + lb, pBaseArray->pItems + i );
 
    /* sort lb+1..ub based on pivot */
    i = lb + 1;
@@ -157,24 +157,24 @@ static HB_ISIZ hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, HB_ISIZ lb,
 
    for( ;; )
    {
-      while( j >= i && ! hb_itemIsLess( pBaseArray, pBlock, j, lb ) )
-         j--;
-
-      while( i < j && ! hb_itemIsLess( pBaseArray, pBlock, lb, i ) )
+      while( i < j && hb_itemIsLess( pBaseArray, pBlock, i, lb ) )
          i++;
+
+      while( j >= i && hb_itemIsLess( pBaseArray, pBlock, lb, j ) )
+         j--;
 
       if( i >= j )
          break;
 
       /* Swap the items */
-      hb_itemSwap( pBaseArray->pItems + i, pBaseArray->pItems + j );
+      hb_itemRawSwap( pBaseArray->pItems + i, pBaseArray->pItems + j );
       j--;
       i++;
    }
 
    /* pivot belongs in pBaseArray->pItems[ j ] */
    if( j > lb && pBaseArray->nLen > ( HB_SIZE ) j )
-      hb_itemSwap( pBaseArray->pItems + lb, pBaseArray->pItems + j );
+      hb_itemRawSwap( pBaseArray->pItems + lb, pBaseArray->pItems + j );
 
    return j;
 }
@@ -317,8 +317,8 @@ static void hb_arraySortStart( PHB_BASEARRAY pBaseArray, PHB_ITEM pBlock,
    {
       if( nPos + nStart != pDest[ nPos ] )
       {
-         hb_itemSwap( pBaseArray->pItems + nPos + nStart,
-                      pBaseArray->pItems + pDest[ nPos ] );
+         hb_itemRawSwap( pBaseArray->pItems + nPos + nStart,
+                         pBaseArray->pItems + pDest[ nPos ] );
          pDest[ pPos[ nPos ] ] = pDest[ nPos ];
          pPos[ pDest[ nPos ] - nStart ] = pPos[ nPos ];
       }

@@ -787,6 +787,7 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
    }
    else
       hPipe[ 0 ] = hPipe[ 1 ] = FS_ERROR;
+   hb_fsSetIOError( fResult, 0 );
 }
 #elif defined( HB_OS_OS2 )
 {
@@ -804,12 +805,14 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
       if( ! fResult )
          hPipe[ 0 ] = hPipe[ 1 ] = FS_ERROR;
 #  endif
+   hb_fsSetIOError( fResult, 0 );
 }
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( HB_OS_SYMBIAN )
 {
    fResult = pipe( hPipe ) == 0;
    if( ! fResult )
       hPipe[ 0 ] = hPipe[ 1 ] = FS_ERROR;
+   hb_fsSetIOError( fResult, 0 );
 }
 #else
 {
@@ -834,38 +837,35 @@ int hb_fsIsPipeOrSock( HB_FHANDLE hPipeHandle )
 {
 #  if defined( HB_USE_LARGEFILE64 )
    struct stat64 statbuf;
-   if( fstat64( hPipeHandle, &statbuf ) == 0 )
+   int ret = fstat64( hPipeHandle, &statbuf );
 #  else
    struct stat statbuf;
-   if( fstat( hPipeHandle, &statbuf ) == 0 )
+   int ret = fstat( hPipeHandle, &statbuf );
 #  endif
-   {
-      if( S_ISFIFO( statbuf.st_mode ) || S_ISSOCK( statbuf.st_mode ) )
-         return 1;
-   }
-   return 0;
+   hb_fsSetIOError( ret == 0, 0 );
+   return ret == 0 &&
+          ( S_ISFIFO( statbuf.st_mode ) || S_ISSOCK( statbuf.st_mode ) ) ? 1 : 0;
 }
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 {
-   return ( GetFileType( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ) ) ==
-            FILE_TYPE_PIPE ) ? 1 : 0;
+   DWORD type = GetFileType( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ) );
+   hb_fsSetIOError( type != FILE_TYPE_UNKNOWN || GetLastError() == NO_ERROR, 0 );
+   return type == FILE_TYPE_PIPE ? 1 : 0;
 }
 #elif defined( HB_OS_OS2 )
 {
    ULONG type = 0, attr = 0;
-   if( DosQueryHType( ( HFILE ) hPipeHandle, &type, &attr ) == NO_ERROR )
-   {
-      if( ( type & 0xFF ) == FHT_PIPE )
-         return 1;
-   }
-   return 0;
+   APIRET ret = DosQueryHType( ( HFILE ) hPipeHandle, &type, &attr );
+   hb_fsSetIOError( ret == NO_ERROR, 0 );
+   return ret == NO_ERROR && ( type & 0xFF ) == FHT_PIPE ? 1 : 0;
 }
 #else
 #  if ! defined( HB_OS_DOS )
       int iTODO; /* TODO: for given platform */
 #  endif
    HB_SYMBOL_UNUSED( hPipeHandle );
-   return -1;
+   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+   return 0;
 #endif
 }
 
@@ -876,12 +876,18 @@ HB_BOOL hb_fsPipeUnblock( HB_FHANDLE hPipeHandle )
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    {
       DWORD dwMode = PIPE_NOWAIT;
+      HB_BOOL fResult;
 
-      if( SetNamedPipeHandleState( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ),
-                                   &dwMode, NULL, NULL ) )
-         return HB_TRUE;
-      else
-         return HB_FALSE;
+      fResult = SetNamedPipeHandleState( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ),
+                                         &dwMode, NULL, NULL ) != 0;
+      hb_fsSetIOError( fResult, 0 );
+      return fResult;
+   }
+#elif defined( HB_OS_OS2 )
+   {
+      APIRET ret = DosSetNPHState( ( HPIPE ) hPipeHandle, NP_NOWAIT );
+      hb_fsSetIOError( ret == NO_ERROR, 0 );
+      return ret == NO_ERROR;
    }
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_MINIX )
    {
@@ -889,12 +895,19 @@ HB_BOOL hb_fsPipeUnblock( HB_FHANDLE hPipeHandle )
 
       if( ret != -1 && ( ret & O_NONBLOCK ) == 0 )
          ret = fcntl( hPipeHandle, F_SETFL, ret | O_NONBLOCK );
+      hb_fsSetIOError( ret != -1, 0 );
 
       return ret != -1;
    }
 #else
-   HB_SYMBOL_UNUSED( hPipeHandle );
-   return HB_FALSE;
+   {
+#  if ! defined( HB_OS_DOS )
+      int iTODO; /* TODO: for given platform */
+#  endif
+      HB_SYMBOL_UNUSED( hPipeHandle );
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+      return HB_FALSE;
+   }
 #endif
 }
 
@@ -995,7 +1008,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       FD_SET( hPipeHandle, &rfds );
       iResult = select( hPipeHandle + 1, &rfds, NULL, NULL, &tv );
       hb_fsSetIOError( iResult >= 0, 0 );
-      if( nTimeOut < 0 && iResult == 0 )
+      if( nTimeOut < 0 && iResult == 0 && hb_vmRequestQuery() == 0 )
          continue;
       if( iResult != -1 || nTimeOut == 0 ||
           hb_fsOsError() != ( HB_ERRCODE ) EINTR ||
@@ -1043,9 +1056,186 @@ HB_SIZE hb_fsPipeRead( HB_FHANDLE hPipeHandle, void * buffer, HB_SIZE nSize,
 
    nRead = hb_fsPipeIsData( hPipeHandle, nSize, nTimeOut );
    if( nRead != ( HB_SIZE ) -1 && nRead > 0 )
+   {
       nRead = hb_fsReadLarge( hPipeHandle, buffer, nRead );
+      if( nRead == 0 )
+         nRead = ( HB_SIZE ) -1;
+   }
 
    return nRead;
+}
+
+HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSize,
+                        HB_MAXINT nTimeOut )
+{
+   HB_SIZE nWritten;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsPipeWrite(%p,%p,%" HB_PFS "u,%" PFHL "d)", ( void * ) ( HB_PTRDIFF ) hPipeHandle, buffer, nSize, nTimeOut ) );
+
+   hb_vmUnlock();
+
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+{
+   HANDLE hPipe = ( HANDLE ) hb_fsGetOsHandle( hPipeHandle );
+   DWORD dwMode = 0;
+
+   nWritten = 0;
+   if( GetNamedPipeHandleState( hPipe, &dwMode, NULL, NULL, NULL, NULL, 0 ) )
+   {
+      HB_MAXUINT end_timer = nTimeOut > 0 ? hb_dateMilliSeconds() + nTimeOut : 0;
+      HB_BOOL fResult = HB_FALSE;
+
+      if( ( dwMode & PIPE_NOWAIT ) == 0 )
+      {
+         DWORD dwNewMode = dwMode | PIPE_NOWAIT;
+         SetNamedPipeHandleState( hPipe, &dwNewMode, NULL, NULL );
+      }
+
+      do
+      {
+         DWORD dwWritten;
+
+         if( fResult )
+            hb_releaseCPU();
+
+         fResult = WriteFile( hPipe, buffer, ( DWORD ) nSize, &dwWritten, NULL ) != 0;
+         nWritten = fResult ? ( HB_SIZE ) dwWritten : ( HB_SIZE ) -1;
+         hb_fsSetIOError( fResult, 0 );
+      }
+      while( fResult && nWritten == 0 &&
+             ( nTimeOut < 0 || ( end_timer > 0 &&
+                                 end_timer > hb_dateMilliSeconds() ) ) &&
+             hb_vmRequestQuery() == 0 );
+
+      if( ( dwMode & PIPE_NOWAIT ) == 0 )
+         SetNamedPipeHandleState( hPipe, &dwMode, NULL, NULL );
+   }
+   else
+      hb_fsSetIOError( HB_FALSE, 0 );
+}
+#elif defined( HB_OS_OS2 )
+{
+   ULONG state = 0;
+
+   nWritten = 0;
+   if( DosQueryNPHState( ( HPIPE ) hPipeHandle, &state ) == NO_ERROR )
+   {
+      HB_MAXUINT end_timer = nTimeOut > 0 ? hb_dateMilliSeconds() + nTimeOut : 0;
+      HB_BOOL fResult = HB_FALSE;
+
+      if( ( state & NP_NOWAIT ) == 0 )
+         DosSetNPHState( ( HPIPE ) hPipeHandle, state | NP_NOWAIT );
+
+      do
+      {
+         ULONG cbActual;
+
+         if( fResult )
+            hb_releaseCPU();
+
+         fResult = DosWrite( ( HPIPE ) hPipeHandle, ( PVOID ) buffer,
+                             ( ULONG ) nSize, &cbActual ) == NO_ERROR;
+         nWritten = fResult ? ( HB_SIZE ) cbActual : ( HB_SIZE ) -1;
+         hb_fsSetIOError( fResult, 0 );
+      }
+      while( fResult && nWritten == 0 &&
+             ( nTimeOut < 0 || ( end_timer > 0 &&
+                                 end_timer > hb_dateMilliSeconds() ) ) &&
+             hb_vmRequestQuery() == 0 );
+
+      if( ( state & NP_NOWAIT ) == 0 )
+         DosSetNPHState( ( HPIPE ) hPipeHandle, state );
+   }
+   else
+      hb_fsSetIOError( HB_FALSE, 0 );
+}
+#elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
+{
+   struct timeval tv;
+   fd_set wfds;
+   int iResult;
+#if ! defined( HB_HAS_SELECT_TIMER )
+   HB_MAXUINT timer = nTimeOut <= 0 ? 0 : hb_dateMilliSeconds();
+#else
+   tv.tv_sec = ( long ) nTimeOut / 1000;
+   tv.tv_usec = ( long ) ( nTimeOut % 1000 ) * 1000;
+#endif
+
+   for( ;; )
+   {
+      if( nTimeOut < 0 )
+      {
+         tv.tv_sec = 1;
+         tv.tv_usec = 0;
+      }
+#if ! defined( HB_HAS_SELECT_TIMER )
+      else
+      {
+         tv.tv_sec = ( long ) nTimeOut / 1000;
+         tv.tv_usec = ( long ) ( nTimeOut % 1000 ) * 1000;
+      }
+#endif
+
+      FD_ZERO( &wfds );
+      FD_SET( hPipeHandle, &wfds );
+      iResult = select( hPipeHandle + 1, NULL, &wfds, NULL, &tv );
+      hb_fsSetIOError( iResult >= 0, 0 );
+      if( nTimeOut < 0 && iResult == 0 && hb_vmRequestQuery() == 0 )
+         continue;
+      if( iResult != -1 || nTimeOut == 0 ||
+          hb_fsOsError() != ( HB_ERRCODE ) EINTR ||
+          hb_vmRequestQuery() != 0 )
+         break;
+#if ! defined( HB_HAS_SELECT_TIMER )
+      else if( nTimeOut > 0 )
+      {
+         HB_MAXUINT timecurr = hb_dateMilliSeconds();
+         if( timecurr > timer )
+         {
+            if( ( nTimeOut -= timecurr - timer ) <= 0 )
+               break;
+            timer = timecurr;
+         }
+      }
+#endif
+   }
+   if( iResult > 0 )
+   {
+      int iFlags = -1;
+
+      iResult = fcntl( hPipeHandle, F_GETFL, 0 );
+      if( iResult != -1 && ( iResult & O_NONBLOCK ) == 0 )
+      {
+         iFlags = iResult;
+         iResult = fcntl( hPipeHandle, F_SETFL, iResult | O_NONBLOCK );
+      }
+      if( iResult == -1 )
+      {
+         hb_fsSetIOError( HB_FALSE, 0 );
+         nWritten = ( HB_SIZE ) -1;
+      }
+      else
+         nWritten = hb_fsWriteLarge( hPipeHandle, buffer, nSize );
+      if( iFlags != -1 )
+         fcntl( hPipeHandle, F_SETFL, iFlags );
+   }
+   else
+      nWritten = ( HB_SIZE ) iResult;
+                            ( HB_SIZE ) iResult;
+}
+#else
+{
+#  if ! defined( HB_OS_DOS )
+      int iTODO; /* TODO: for given platform */
+#  endif
+   HB_SYMBOL_UNUSED( nTimeOut );
+   nWritten = hb_fsWriteLarge( hPipeHandle, buffer, nSize );
+}
+#endif
+
+   hb_vmLock();
+
+   return nWritten;
 }
 
 HB_FHANDLE hb_fsOpen( const char * pszFileName, HB_USHORT uiFlags )
