@@ -55,34 +55,6 @@
 
 static HANDLE s_RegHandle;
 
-typedef HANDLE ( WINAPI * _HB_REGISTEREVENTSOURCE )( LPCTSTR, LPCTSTR );
-typedef BOOL ( WINAPI * _HB_DEREGISTEREVENTSOURCE )( HANDLE );
-typedef BOOL ( WINAPI * _HB_REPORTEVENT )( HANDLE, WORD, WORD, DWORD, PSID, WORD, DWORD, LPCTSTR *, LPVOID );
-
-static HB_BOOL s_fEventInit = HB_TRUE;
-static _HB_REGISTEREVENTSOURCE s_pRegisterEventSource = NULL;
-static _HB_DEREGISTEREVENTSOURCE s_pDeregisterEventSource = NULL;
-static _HB_REPORTEVENT s_pReportEvent = NULL;
-
-static HB_BOOL s_hb_winEventInit( void )
-{
-   if( hb_iswinnt() && s_fEventInit )
-   {
-      HMODULE hModule = GetModuleHandle( TEXT( "advapi32.dll" ) );
-      if( hModule )
-      {
-         s_pRegisterEventSource = ( _HB_REGISTEREVENTSOURCE ) HB_WINAPI_GETPROCADDRESS( hModule, "RegisterEventSourceW" );
-         s_pDeregisterEventSource = ( _HB_DEREGISTEREVENTSOURCE ) HB_WINAPI_GETPROCADDRESS( hModule, "DeregisterEventSource" );
-         s_pReportEvent = ( _HB_REPORTEVENT ) HB_WINAPI_GETPROCADDRESS( hModule, "ReportEventW" );
-      }
-      s_fEventInit = HB_FALSE;
-   }
-
-   return s_pRegisterEventSource &&
-          s_pDeregisterEventSource &&
-          s_pReportEvent;
-}
-
 #elif defined( HB_OS_UNIX ) && \
    ! defined( __WATCOMC__ ) && \
    ! defined( HB_OS_VXWORKS ) && \
@@ -96,20 +68,20 @@ HB_FUNC( HB_SYSLOGOPEN )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 
-   if( s_hb_winEventInit() )
+   if( s_RegHandle == NULL )
    {
       void * hSourceName;
-      s_RegHandle = s_pRegisterEventSource( NULL, HB_PARSTRDEF( 1, &hSourceName, NULL ) );
+      s_RegHandle = RegisterEventSource( NULL, HB_PARSTRDEF( 1, &hSourceName, NULL ) );
       hb_strfree( hSourceName );
       hb_retl( HB_TRUE );
    }
    else
-   {
-      s_RegHandle = NULL;
       hb_retl( HB_FALSE );
-   }
 
-#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) && ! defined( HB_OS_VXWORKS )
+#elif defined( HB_OS_UNIX ) && \
+   ! defined( __WATCOMC__ ) && \
+   ! defined( HB_OS_VXWORKS )
+
    openlog( hb_parcx( 1 ), LOG_NDELAY | LOG_NOWAIT | LOG_PID, LOG_USER );
    hb_retl( HB_TRUE );
 #else
@@ -121,15 +93,18 @@ HB_FUNC( HB_SYSLOGCLOSE )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 
-   if( s_hb_winEventInit() )
+   if( s_RegHandle )
    {
-      s_pDeregisterEventSource( s_RegHandle );
+      DeregisterEventSource( s_RegHandle );
       hb_retl( HB_TRUE );
    }
    else
       hb_retl( HB_FALSE );
 
-#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) && ! defined( HB_OS_VXWORKS )
+#elif defined( HB_OS_UNIX ) && \
+   ! defined( __WATCOMC__ ) && \
+   ! defined( HB_OS_VXWORKS )
+
    closelog();
    hb_retl( HB_TRUE );
 #else
@@ -141,7 +116,7 @@ HB_FUNC( HB_SYSLOGMESSAGE )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 
-   if( s_hb_winEventInit() )
+   if( s_RegHandle )
    {
       WORD    logval;
       void *  hMsg;
@@ -149,21 +124,21 @@ HB_FUNC( HB_SYSLOGMESSAGE )
       switch( hb_parni( 2 ) )
       {
          case HB_LOG_CRITICAL: logval = EVENTLOG_ERROR_TYPE; break;
-         case HB_LOG_ERROR: logval    = EVENTLOG_ERROR_TYPE; break;
-         case HB_LOG_WARN: logval     = EVENTLOG_WARNING_TYPE; break;
-         case HB_LOG_INFO: logval     = EVENTLOG_INFORMATION_TYPE; break;
-         default: logval = EVENTLOG_AUDIT_SUCCESS;
+         case HB_LOG_ERROR:    logval = EVENTLOG_ERROR_TYPE; break;
+         case HB_LOG_WARN:     logval = EVENTLOG_WARNING_TYPE; break;
+         case HB_LOG_INFO:     logval = EVENTLOG_INFORMATION_TYPE; break;
+         default:              logval = EVENTLOG_AUDIT_SUCCESS;
       }
-      hb_retl( s_pReportEvent( s_RegHandle,             /* event log handle */
-                               logval,                  /* event type */
-                               0,                       /* category zero */
-                               ( DWORD ) hb_parnl( 3 ), /* event identifier */
-                               NULL,                    /* no user security identifier */
-                               1,                       /* one substitution string */
-                               0,                       /* no data */
-                               &lpMsg,                  /* pointer to string array */
-                               NULL                     /* pointer to data */
-                               ) ? HB_TRUE : HB_FALSE );
+      hb_retl( ReportEvent( s_RegHandle,             /* event log handle */
+                            logval,                  /* event type */
+                            0,                       /* category zero */
+                            ( DWORD ) hb_parnl( 3 ), /* event identifier */
+                            NULL,                    /* no user security identifier */
+                            1,                       /* one substitution string */
+                            0,                       /* no data */
+                            &lpMsg,                  /* pointer to string array */
+                            NULL                     /* pointer to data */
+                            ) ? HB_TRUE : HB_FALSE );
 
       hb_strfree( hMsg );
    }
