@@ -146,7 +146,7 @@ static void blake2s_update( blake2s_ctx * ctx,
    {
       if( ctx->c == 64 )                /* buffer full ? */
       {
-         ctx->t[ 0 ] += ctx->c;         /* add counters */
+         ctx->t[ 0 ] += ( HB_U32 ) ctx->c;  /* add counters */
          if( ctx->t[ 0 ] < ctx->c )     /* carry overflow ? */
             ctx->t[ 1 ]++;              /* high word */
          blake2s_compress( ctx, 0 );    /* compress (not last) */
@@ -190,7 +190,7 @@ static void blake2s_final( blake2s_ctx * ctx, void * out )
 {
    HB_SIZE i;
 
-   ctx->t[ 0 ] += ctx->c;               /* mark last block offset */
+   ctx->t[ 0 ] += ( HB_U32 ) ctx->c;    /* mark last block offset */
    if( ctx->t[ 0 ] < ctx->c )           /* carry overflow */
       ctx->t[ 1 ]++;                    /* high word */
 

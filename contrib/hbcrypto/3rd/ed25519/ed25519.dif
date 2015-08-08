@@ -1,6 +1,6 @@
 diff -urN ed25519.orig/ed25519.h ed25519/ed25519.h
---- ed25519.orig/ed25519.h	2015-08-08 13:54:45.292933600 +0200
-+++ ed25519/ed25519.h	2015-08-08 13:54:45.292933600 +0200
+--- ed25519.orig/ed25519.h	2015-08-08 14:47:15.436300300 +0200
++++ ed25519/ed25519.h	2015-08-08 14:47:15.436300300 +0200
 @@ -25,6 +25,7 @@
  #endif
  
@@ -9,9 +9,40 @@ diff -urN ed25519.orig/ed25519.h ed25519/ed25519.h
  void ED25519_DECLSPEC ed25519_sign(unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key, const unsigned char *private_key);
  int ED25519_DECLSPEC ed25519_verify(const unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key);
  void ED25519_DECLSPEC ed25519_add_scalar(unsigned char *public_key, unsigned char *private_key, const unsigned char *scalar);
+diff -urN ed25519.orig/fixedint.h ed25519/fixedint.h
+--- ed25519.orig/fixedint.h	2015-08-08 14:47:15.436300300 +0200
++++ ed25519/fixedint.h	2015-08-08 14:47:15.436300300 +0200
+@@ -20,6 +20,7 @@
+     
+     #include <limits.h>
+ 
++    #ifndef defined(_MSC_VER)
+     /* (u)int32_t */
+     #ifndef uint32_t
+         #if (ULONG_MAX == 0xffffffffUL)
+@@ -41,6 +42,7 @@
+             typedef signed short int32_t;
+         #endif
+     #endif
++    #endif
+ 
+ 
+     /* (u)int64_t */
+@@ -66,7 +68,11 @@
+         typedef __int64 int64_t;
+         typedef unsigned __int64 uint64_t;
+ 
++        #ifndef UINT64_C
+         #define UINT64_C(v) v ##UI64
++        #endif
++        #ifndef INT64_C
+         #define INT64_C(v) v ##I64
++        #endif
+     #endif
+ #endif
 diff -urN ed25519.orig/sha512.h ed25519/sha512.h
---- ed25519.orig/sha512.h	2015-08-08 13:54:45.324131400 +0200
-+++ ed25519/sha512.h	2015-08-08 13:54:45.324131400 +0200
+--- ed25519.orig/sha512.h	2015-08-08 14:47:15.451899300 +0200
++++ ed25519/sha512.h	2015-08-08 14:47:15.451899300 +0200
 @@ -1,21 +1,15 @@
  #ifndef SHA512_H
  #define SHA512_H
@@ -41,8 +72,8 @@ diff -urN ed25519.orig/sha512.h ed25519/sha512.h
  
  #endif
 diff -urN ed25519.orig/sign.c ed25519/sign.c
---- ed25519.orig/sign.c	2015-08-08 13:54:45.292933600 +0200
-+++ ed25519/sign.c	2015-08-08 13:54:45.292933600 +0200
+--- ed25519.orig/sign.c	2015-08-08 14:47:15.436300300 +0200
++++ ed25519/sign.c	2015-08-08 14:47:15.436300300 +0200
 @@ -3,6 +3,12 @@
  #include "ge.h"
  #include "sc.h"

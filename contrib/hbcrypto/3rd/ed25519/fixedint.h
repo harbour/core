@@ -20,6 +20,7 @@
     
     #include <limits.h>
 
+    #ifndef defined(_MSC_VER)
     /* (u)int32_t */
     #ifndef uint32_t
         #if (ULONG_MAX == 0xffffffffUL)
@@ -40,6 +41,7 @@
         #elif (SHRT_MAX == 0x7fffffffL)
             typedef signed short int32_t;
         #endif
+    #endif
     #endif
 
 
@@ -66,7 +68,11 @@
         typedef __int64 int64_t;
         typedef unsigned __int64 uint64_t;
 
+        #ifndef UINT64_C
         #define UINT64_C(v) v ##UI64
+        #endif
+        #ifndef INT64_C
         #define INT64_C(v) v ##I64
+        #endif
     #endif
 #endif
