@@ -784,7 +784,7 @@ HB_BOOL hb_iswinsp( int iServicePackMajor, HB_BOOL fOrUpper )
 
       memset( &ver, 0, sizeof( ver ) );
       ver.dwOSVersionInfoSize = sizeof( ver );
-      ver.wServicePackMajor = ( DWORD ) iServicePackMajor;
+      ver.wServicePackMajor = ( WORD ) iServicePackMajor;
 
       dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_SERVICEPACKMAJOR, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
 

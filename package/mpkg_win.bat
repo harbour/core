@@ -103,10 +103,10 @@ del /f "%HB_ABSROOT%bin\hbmk2-temp.exe"
 :: won't remove internal timestamps from generated implibs.
 :: Slow. Requires binutils 2.23 (maybe 2.24/2.25).
 :: Short synonym '-D' is not recognized as of binutils 2.25.
-if exist "%HB_ABSROOT%lib\win\mingw\*-*.*"      strip -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw\*-*.*"
-if exist "%HB_ABSROOT%lib\win\mingw64\*-*.*"    strip -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw64\*-*.*"
-if exist "%HB_ABSROOT%lib\win\mingw\*_dll*.*"   strip -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw\*_dll*.*"
-if exist "%HB_ABSROOT%lib\win\mingw64\*_dll*.*" strip -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw64\*_dll*.*"
+if exist "%HB_ABSROOT%lib\win\mingw\*-*.*"      "%HB_DIR_MINGW%\bin\strip" -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw\*-*.*"
+if exist "%HB_ABSROOT%lib\win\mingw64\*-*.*"    "%HB_DIR_MINGW%\bin\strip" -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw64\*-*.*"
+if exist "%HB_ABSROOT%lib\win\mingw\*_dll*.*"   "%HB_DIR_MINGW%\bin\strip" -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw\*_dll*.*"
+if exist "%HB_ABSROOT%lib\win\mingw64\*_dll*.*" "%HB_DIR_MINGW%\bin\strip" -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw64\*_dll*.*"
 
 :: Copy upx
 

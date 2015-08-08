@@ -123,7 +123,7 @@ void hb_SHA1_Update(HB_SHA_CTX *context, const void *datav, HB_SIZE len) {
     HB_SIZE    i, j;
 
     j = (context->count[0] >> 3) & 63;
-    if ((context->count[0] += len << 3) < (len << 3)) context->count[1]++;
+    if ((context->count[0] += (sha1_quadbyte) len << 3) < ((sha1_quadbyte) len << 3)) context->count[1]++;
     context->count[1] += (len >> 29);
     if ((j + len) > 63) {
         memcpy(&context->buffer[j], data, (i = 64-j));

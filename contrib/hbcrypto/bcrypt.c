@@ -634,7 +634,7 @@ static void bcrypt_hash( HB_U8 * sha2pass, HB_U8 * sha2salt, HB_U8 * out )
    HB_U32 cdata[ BCRYPT_BLOCKS ];
    int    i;
    HB_U16 j;
-   size_t shalen = HB_SHA512_DIGEST_SIZE;
+   HB_U16 shalen = HB_SHA512_DIGEST_SIZE;
 
    /* key expansion */
    hb_Blowfish_initstate( &state );

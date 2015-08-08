@@ -317,7 +317,7 @@ static void hb_inetStartSSL( HB_BOOL fServer )
                pStream->blocking = !pStream->blocking;
 
             SSL_set_mode( ssl, HB_SSL_MODE_AUTO_RETRY );
-            iResult = SSL_set_fd( ssl, sd );
+            iResult = ( int ) SSL_set_fd( ssl, sd );
             while( iResult == 1 )
             {
                if( fServer )

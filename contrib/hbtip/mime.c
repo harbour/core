@@ -58,7 +58,7 @@
 
 typedef struct tag_mime
 {
-   HB_ISIZ            pos;       /* Position in stream from which the match begins */
+   HB_SIZE            pos;       /* Position in stream from which the match begins */
    const char *       pattern;   /* String to match */
    const char *       mime_type; /* MIME type if complete */
    int                next;      /* following entry to determine a MIME type, relative to current position (or 0) */
@@ -571,11 +571,11 @@ static const char * s_findExtMimeType( const char * szFileExt )
    return NULL;
 }
 
-static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, int iElem )
+static const char * s_findMimeStringInTree( const char * cData, HB_SIZE nLen, int iElem )
 {
    const MIME_ENTRY * elem = s_mimeTable + iElem;
-   HB_ISIZ nPos     = elem->pos;
-   HB_ISIZ nDataLen = strlen( elem->pattern );
+   HB_SIZE nPos     = elem->pos;
+   HB_SIZE nDataLen = strlen( elem->pattern );
 
    /* allow \0 to be used for matches */
    if( nDataLen == 0 )
@@ -622,15 +622,15 @@ static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, in
    return NULL;  /* total giveup */
 }
 
-static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
+static const char * s_findStringMimeType( const char * cData, HB_SIZE nLen )
 {
    unsigned int uiCount;
 
    for( uiCount = 0; uiCount < HB_SIZEOFARRAY( s_mimeTable ); uiCount++ )
    {
       const MIME_ENTRY * elem = s_mimeTable + uiCount;
-      HB_ISIZ nPos     = elem->pos;
-      HB_ISIZ nDataLen = strlen( elem->pattern );
+      HB_SIZE nPos     = elem->pos;
+      HB_SIZE nDataLen = ( HB_SIZE ) strlen( elem->pattern );
 
       if( ( elem->flags & MIME_FLAG_CONTINUE ) != 0 )
          continue;
@@ -680,12 +680,12 @@ static const char * s_findFileMimeType( PHB_FILE fileIn )
    char buf[ 512 ];
 
    HB_FOFFSET nPos = hb_fileSeek( fileIn, 0, FS_RELATIVE );
-   int        iLen = hb_fileReadAt( fileIn, buf, sizeof( buf ), 0 );
+   HB_SIZE    nLen = hb_fileReadAt( fileIn, buf, sizeof( buf ), 0 );
 
-   if( iLen > 0 )
+   if( nLen > 0 )
    {
       hb_fileSeek( fileIn, nPos, FS_SET );
-      return s_findStringMimeType( buf, iLen );
+      return s_findStringMimeType( buf, nLen );
    }
 
    return NULL;

@@ -744,7 +744,7 @@ HB_FUNC( FT_FDELETE )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_ft_text );
 
-   int        iBytesRead;
+   HB_SIZE    nBytesRead;
    HB_FOFFSET srcPtr;
    HB_FOFFSET destPtr;
    long       cur_rec = ft_text->recno[ ft_text->area ];
@@ -761,11 +761,11 @@ HB_FUNC( FT_FDELETE )
    /* buffer read retained data, write atop old data */
    do
    {
-      iBytesRead = hb_fileReadAt( ft_text->handles[ ft_text->area ], Buff, BUFFSIZE, srcPtr );  /* now read in a big glob */
-      srcPtr    += iBytesRead;
-      destPtr   += hb_fileWriteAt( ft_text->handles[ ft_text->area ], Buff, iBytesRead, destPtr );
+      nBytesRead = hb_fileReadAt( ft_text->handles[ ft_text->area ], Buff, BUFFSIZE, srcPtr );  /* now read in a big glob */
+      srcPtr    += nBytesRead;
+      destPtr   += hb_fileWriteAt( ft_text->handles[ ft_text->area ], Buff, nBytesRead, destPtr );
    }
-   while( iBytesRead > 0 );
+   while( nBytesRead > 0 );
 
    /* move legacy EOF marker */
    hb_fileWriteAt( ft_text->handles[ ft_text->area ], Buff, 0, srcPtr );
