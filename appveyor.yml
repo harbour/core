@@ -58,6 +58,7 @@ build_script:
 - set HB_DIR_7Z=C:\w\7z\
 - set HB_DIR_UPX=C:\w\upx\
 - set HB_DIR_MINGW=C:\w\mingw64
+- set _ORI_PATH=%PATH%
 - if "%TARGET:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
 - if "%TARGET%" == "mingw" set HB_CPU=x86
 - if "%TARGET%" == "mingw64" set HB_CPU=x86_64
@@ -98,6 +99,12 @@ build_script:
 - set HB_CPU=x86_64
 - set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win64-mingw\include
 - set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
+- win-make.exe clean install HB_VERSION=%HB_VF%
+- set PATH=%_ORI_PATH%
+- call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+- set HB_CPU=x86_64
+- set HB_WITH_CURL=
+- set HB_WITH_OPENSSL=
 - win-make.exe clean install HB_VERSION=%HB_VF%
 deploy_script:
 - call package\mpkg_win.bat
