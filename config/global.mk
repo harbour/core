@@ -980,7 +980,7 @@ ifeq ($(HB_COMPILER_VER),)
          HB_COMPILER_VER := 0700
       else
       ifneq ($(findstring 6.50.,$(_C_VER)),)
-         HB_COMPILER_VER := 0605
+         HB_COMPILER_VER := 0650
       else
       ifneq ($(findstring 6.00.,$(_C_VER)),)
          HB_COMPILER_VER := 0600
@@ -989,7 +989,7 @@ ifeq ($(HB_COMPILER_VER),)
          HB_COMPILER_VER := 0500
       else
       ifneq ($(findstring 4.50.,$(_C_VER)),)
-         HB_COMPILER_VER := 0405
+         HB_COMPILER_VER := 0450
       endif
       endif
       endif
