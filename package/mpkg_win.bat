@@ -107,6 +107,8 @@ if exist "%HB_ABSROOT%lib\win\mingw\*-*.*"      "%HB_DIR_MINGW%\bin\strip" -p --
 if exist "%HB_ABSROOT%lib\win\mingw64\*-*.*"    "%HB_DIR_MINGW%\bin\strip" -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw64\*-*.*"
 if exist "%HB_ABSROOT%lib\win\mingw\*_dll*.*"   "%HB_DIR_MINGW%\bin\strip" -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw\*_dll*.*"
 if exist "%HB_ABSROOT%lib\win\mingw64\*_dll*.*" "%HB_DIR_MINGW%\bin\strip" -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\mingw64\*_dll*.*"
+if exist "%HB_ABSROOT%lib\win\msvc\*.lib"       "%HB_DIR_MINGW%\bin\strip" -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\msvc\*.lib"
+if exist "%HB_ABSROOT%lib\win\msvc64\*.lib"     "%HB_DIR_MINGW%\bin\strip" -p --enable-deterministic-archives -g "%HB_ABSROOT%lib\win\msvc64\*.lib"
 
 :: Copy upx
 
