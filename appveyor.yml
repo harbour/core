@@ -101,10 +101,12 @@ build_script:
 - set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
 - win-make.exe clean install HB_VERSION=%HB_VF%
 - set PATH=%_ORI_PATH%
-- call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
-- set HB_CPU=x86_64
+- set HB_CPU=
 - set HB_WITH_CURL=
 - set HB_WITH_OPENSSL=
+- call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+- win-make.exe clean install HB_VERSION=%HB_VF%
+- call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 - win-make.exe clean install HB_VERSION=%HB_VF%
 deploy_script:
 - call package\mpkg_win.bat
