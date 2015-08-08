@@ -53,7 +53,7 @@
 
    #include "windows.h"
 
-static HANDLE s_RegHandle;
+static HANDLE s_RegHandle = NULL;
 
 #elif defined( HB_OS_UNIX ) && \
    ! defined( __WATCOMC__ ) && \
