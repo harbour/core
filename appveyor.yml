@@ -103,9 +103,9 @@ build_script:
 - set HB_CPU=
 - set HB_WITH_CURL=
 - set HB_WITH_OPENSSL=
-- set PATH=%_ORI_PATH%
-- call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-- win-make.exe clean install HB_VERSION=%HB_VF%
+#- set PATH=%_ORI_PATH%
+#- call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+#- win-make.exe clean install HB_VERSION=%HB_VF%
 - set PATH=%_ORI_PATH%
 - call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 - win-make.exe clean install HB_VERSION=%HB_VF%
