@@ -250,7 +250,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
    // Should we send a cookie?
    IF lSendCookie
-      ::oCookie:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, uhttpd_DateToGMT( ,,, ::nCookie_LifeTime ), ::lCookie_Secure )
+      ::oCookie:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, uhttpd_DateToGMT( ,, ::nCookie_LifeTime ), ::lCookie_Secure )
    ENDIF
 
    // Should we define the SID?
@@ -384,14 +384,14 @@ METHOD RegenerateID() CLASS uhttpd_Session
 
    ::cSID := ::GenerateSID()
    IF ::lUse_Cookies
-      ::oCookie:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, uhttpd_DateToGMT( ,,, ::nCookie_LifeTime ), ::lCookie_Secure )
+      ::oCookie:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, uhttpd_DateToGMT( ,, ::nCookie_LifeTime ), ::lCookie_Secure )
    ENDIF
 
    RETURN ::cSID
 
 METHOD PROCEDURE SaveCookie() CLASS uhttpd_Session
 
-   LOCAL cExpires := uhttpd_DateToGMT( Date(), Time(),, ::nCookie_LifeTime )
+   LOCAL cExpires := uhttpd_DateToGMT( ,, ::nCookie_LifeTime )
    LOCAL cKey
 
    // oCGI:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, cExpires, ::lCookie_Secure )
@@ -412,17 +412,15 @@ METHOD PROCEDURE ReadCookie() CLASS uhttpd_Session
 METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
 
    LOCAL aNotSessionFlds := {}
-   LOCAL aField, cField, aFields
+   LOCAL aField, cField
    LOCAL cName, xValue
    LOCAL cSessPrefix := ::cName + "_"
    LOCAL cFieldsNotInSession := ""
    LOCAL cSessVarName
 
-   aFields := hb_regexSplit( hb_defaultValue( cSeparator, "&" ), cFields )
+   FOR EACH cField IN hb_regexSplit( hb_defaultValue( cSeparator, "&" ), cFields )
 
-   FOR EACH cField in aFields
-      aField := hb_regexSplit( "=", cField, 2 )
-      IF Len( aField ) != 2
+      IF Len( aField := hb_regexSplit( "=", cField, 2 ) ) != 2
          LOOP
       ENDIF
 
@@ -552,7 +550,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
                nFileSize := hb_vfSize( hFile )
                hb_vfSeek( hFile, 0, FS_SET )
                cBuffer := Space( nFileSize )
-               IF hb_vfRead( hFile, @cBuffer,  nFileSize ) != nFileSize
+               IF hb_vfRead( hFile, @cBuffer, nFileSize ) != nFileSize
                   // uhttpd_Die( "ERROR: On reading session file: " + cFile + ", File error: " + hb_CStr( FError() ) )
                   hb_idleSleep( ::nFileWait / 1000 )
                   LOOP
@@ -692,7 +690,9 @@ METHOD Decode( cData ) CLASS uhttpd_Session
    LOCAL cSerial := cData
    LOCAL xVal, aElem
 
-   // LOCAL cKey
+#if 0
+   LOCAL cKey
+#endif
 
    // TraceLog( "Decode - cSerial", cSerial )
    // ::oCGI:ToLogFile( "Decode - cSerial: " + hb_CStr( cSerial ), "/pointtoit/tmp/log.txt" )
@@ -742,7 +742,7 @@ METHOD PROCEDURE SendCacheLimiter() CLASS uhttpd_Session
 #if 0
       uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )
 #endif
-      uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( ,, -1, ) )
+      uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( , -1 ) )
       uhttpd_SetHeader( "Cache-Control", "no-cache" )
 #if 0
       uhttpd_SetHeader( "Cache-Control", "no-store, no-cache, must-revalidate" )  // HTTP/1.1
@@ -758,7 +758,7 @@ METHOD PROCEDURE SendCacheLimiter() CLASS uhttpd_Session
       ENDIF
       EXIT
    CASE "public"
-      uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( ,,, ::nCache_Expire * 60 ) )
+      uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( ,, ::nCache_Expire * 60 ) )
       uhttpd_SetHeader( "Cache-Control", "public, max-age=" + hb_ntos( ::nCache_Expire * 60 ) )
       IF hb_vfTimeGet( hb_ProgName(), @dDate )
          uhttpd_SetHeader( "Last-Modified", uhttpd_DateToGMT( dDate ) )

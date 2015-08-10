@@ -101,7 +101,7 @@ METHOD PROCEDURE SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecu
    hb_default( @cPath, ::cPath )
 
    IF ! HB_ISSTRING( cExpires )
-      cExpires := uhttpd_DateToGMT( Date(), Time(), ::nExpireDays, ::nExpireSecs )
+      cExpires := uhttpd_DateToGMT( , ::nExpireDays, ::nExpireSecs )
    ENDIF
 
    ::lHttpOnly := hb_defaultValue( lHttpOnly, .F. )
@@ -144,8 +144,8 @@ METHOD PROCEDURE SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecu
 
 METHOD PROCEDURE DeleteCookie( cCookieName, cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
 
-   // Setting date in the past delete cookie
-   ::SetCookie( cCookieName, "", cDomain, cPath, uhttpd_DateToGMT( Date() - 1 ), lSecure )
+   // Setting date in the past deletes cookie
+   ::SetCookie( cCookieName, "", cDomain, cPath, uhttpd_DateToGMT( , -1 ), lSecure )
 
    RETURN
 
@@ -162,20 +162,12 @@ METHOD PROCEDURE DeleteAllCookies( cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
 
 METHOD GetCookie( cCookieName ) CLASS uhttpd_Cookie
 
-   LOCAL cHeader, cRet
-   LOCAL nPos := 1
+   LOCAL cHeader
 
-   DO WHILE .T.
-      IF ( cHeader := uhttpd_GetHeader( "Set-Cookie", @nPos ) ) != NIL
-         IF cHeader == cCookieName
-            cRet := cHeader
-            EXIT
-         ELSE
-            nPos++
-         ENDIF
-      ELSE
-         EXIT
-      ENDIF
-   ENDDO
+   IF ( cHeader := uhttpd_GetHeader( "Set-Cookie" ) ) != NIL .AND. ;
+      cHeader == cCookieName
 
-   RETURN cRet
+      RETURN cHeader
+   ENDIF
+
+   RETURN NIL

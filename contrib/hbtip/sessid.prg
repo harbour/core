@@ -100,14 +100,13 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
 
    RETURN Right( cSID, 5 ) == cSIDCRC
 
-FUNCTION tip_DateToGMT( dDate, cTime )
+FUNCTION tip_DateToGMT( tDate )
 
-   hb_default( @dDate, Date() )
-   hb_default( @cTime, Time() )
+   hb_default( @tDate, hb_DateTime() )
 
    RETURN ;
-      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( dDate ) ] + ", " + ;
-      StrZero( Day( dDate ), 2 ) + " " + ;
-      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( dDate ) ] + " " + ;
-      StrZero( Year( dDate ), 4 ) + " " + ;
-      cTime + " GMT"
+      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
+      StrZero( Day( tDate ), 2 ) + " " + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + " " + ;
+      StrZero( Year( tDate ), 4 ) + " " + ;
+      hb_TToC( tDate, "", "hh:mm:ss" ) + " GMT"

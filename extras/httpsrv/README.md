@@ -5,7 +5,7 @@ uHTTPD Micro Web Server
 
    * without GD:
 
-   `hbmk2 uhttpd.hbp   modules.hbp`
+   `hbmk2 uhttpd.hbp modules.hbp`
 
    * with GD (it requires hbgd library):
 

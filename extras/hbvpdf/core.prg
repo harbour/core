@@ -1794,12 +1794,12 @@ PROCEDURE pdfCreateHeader( _file, _size, _orient, _lpi, _width )
    ENDIF
 
    IF _orient == "P"
-      pdfBox(   5.0, 5.0, 274.0 + nAdd, 210.0,  1.0 )
-      pdfBox(   6.5, 6.5, 272.5 + nAdd, 208.5,  0.5 )
+      pdfBox(  5.0, 5.0, 274.0 + nAdd, 210.0,  1.0 )
+      pdfBox(  6.5, 6.5, 272.5 + nAdd, 208.5,  0.5 )
 
-      pdfBox(  11.5, 9.5,  22.0, 205.5,  0.5, 5 )
-      pdfBox(  23.0, 9.5,  33.5, 205.5,  0.5, 5 )
-      pdfBox(  34.5, 9.5, 267.5 + nAdd, 205.5,  0.5 )
+      pdfBox( 11.5, 9.5,  22.0, 205.5,  0.5, 5 )
+      pdfBox( 23.0, 9.5,  33.5, 205.5,  0.5, 5 )
+      pdfBox( 34.5, 9.5, 267.5 + nAdd, 205.5,  0.5 )
    ELSE
       pdfBox(  5.0, 5.0, 210.0, 274.0 + nAdd, 1.0 )
       pdfBox(  6.5, 6.5, 208.5, 272.5 + nAdd, 0.5 )

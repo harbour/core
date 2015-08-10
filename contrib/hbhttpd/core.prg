@@ -202,15 +202,15 @@ METHOD PROCEDURE LogError( cError ) CLASS UHttpd
 
 METHOD PROCEDURE LogAccess() CLASS UHttpd
 
-   LOCAL dDate := Date(), cTime := Time()
+   LOCAL tDate := hb_DateTime()
 
    hb_mutexLock( ::hmtxLog )
    Eval( ::hConfig[ "LogAccess" ], ;
-      server[ "REMOTE_ADDR" ] + " - - [" + StrZero( Day( dDate ), 2 ) + "/" + ;
-      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( dDate ) ] + ;
-      "/" + StrZero( Year( dDate ), 4 ) + ":" + cTime + ' +0000] "' + server[ "REQUEST_ALL" ] + '" ' + ;
+      server[ "REMOTE_ADDR" ] + " - - [" + StrZero( Day( tDate ), 2 ) + "/" + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + ;
+      "/" + StrZero( Year( tDate ), 4 ) + ":" + hb_TToC( tDate, "", "hh:mm:ss" ) + " +0000] " + '"' + server[ "REQUEST_ALL" ] + '"' + " " + ;
       hb_ntos( t_nStatusCode ) + " " + hb_ntos( Len( t_cResult ) ) + ;
-      ' "' + server[ "HTTP_REFERER" ] + '" "' + server[ "HTTP_USER_AGENT" ] + ;
+      " " + '"' + server[ "HTTP_REFERER" ] + '"' + " " + '"' + server[ "HTTP_USER_AGENT" ] + ;
       '"' )
    hb_mutexUnlock( ::hmtxLog )
 
@@ -1271,27 +1271,21 @@ PROCEDURE USessionDestroy()
 
 FUNCTION UOsFileName( cFileName )
 
-   IF !( hb_ps() == "/" )
-      RETURN StrTran( cFileName, "/", hb_ps() )
+   IF hb_ps() == "/"
+      RETURN cFileName
    ENDIF
 
-   RETURN cFileName
+   RETURN StrTran( cFileName, "/", hb_ps() )
 
 FUNCTION UHtmlEncode( cString )
 
-   LOCAL nI, cI, cRet := ""
+   STATIC sc_aTo := { ;
+      "&amp;", ;
+      "&lt;", ;
+      "&gt;", ;
+      "&quot;" }
 
-   FOR nI := 1 TO Len( cString )
-      SWITCH cI := SubStr( cString, nI, 1 )
-      CASE "<"  ; cRet += "&lt;" ; EXIT
-      CASE ">"  ; cRet += "&gt;" ; EXIT
-      CASE "&"  ; cRet += "&amp;" ; EXIT
-      CASE '"'  ; cRet += "&quot;" ; EXIT
-      OTHERWISE ; cRet += cI
-      ENDSWITCH
-   NEXT
-
-   RETURN cRet
+   RETURN hb_StrReplace( cString, "&<>" + '"', sc_aTo )
 
 FUNCTION UUrlEncode( cString )
 

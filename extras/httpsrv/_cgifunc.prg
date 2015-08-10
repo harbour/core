@@ -55,14 +55,12 @@ MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST
 FUNCTION uhttpd_GetVars( cFields, cSeparator )
 
    LOCAL hHashVars := { => }
-   LOCAL aField, cField, aFields
+   LOCAL aField, cField
    LOCAL cName, xValue
 
-   aFields := uhttpd_Split( hb_defaultValue( cSeparator, "&" ), cFields )
+   FOR EACH cField IN uhttpd_Split( hb_defaultValue( cSeparator, "&" ), cFields )
 
-   FOR EACH cField in aFields
-      aField := uhttpd_Split( "=", cField, 1 )
-      IF Len( aField ) == 1
+      IF Len( aField := uhttpd_Split( "=", cField, 1 ) ) == 1
          hHashVars[ aField[ 1 ] ] := NIL
          LOOP
       ELSEIF Len( aField ) != 2
@@ -172,7 +170,6 @@ FUNCTION uhttpd_SplitUrl( cUrl )
 
       // delete anchor from temp string
       cTemp := Left( cTemp, nPos - 1 )
-
    ELSE
       cFragment := ""
    ENDIF
@@ -297,116 +294,64 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    RETURN aLines
 
 /*
- * DateToGMT( dDate, cTime, nDayToAdd ) --> cGMTDate
+ * uhttpd_DateToGMT( tDate, nDayToAdd, nSecsToAdd ) --> cGMTDate
  *
- * dDate     : default Date()
+ * tDate     : default hb_DateTime()
  * cTime     : default "00:00:00"
  * nDayToAdd : default 0 - may be a negative number
  *
  * cGMTDate  : The string return in form of "Sat, 31 Oct 2003 00:00:00 GMT"
  */
 
-FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
+FUNCTION uhttpd_DateToGMT( tDate, nDayToAdd, nSecsToAdd )
 
-   hb_default( @dDate, Date() )
-   hb_default( @cTime, Time() )
-   hb_default( @nDayToAdd, 0 )
-   hb_default( @nSecsToAdd, 0 )
+   hb_default( @tDate, hb_DateTime() )
 
-   // TraceLog( "DateToGMT - StartingValue", dDate, cTime, nDayToAdd, nSecsToAdd )
-
-   cTime := uhttpd_AddSecondsToTime( cTime, nSecsToAdd, @nDayToAdd )
-   dDate += nDayToAdd
+   tDate += hb_defaultValue( nDayToAdd, 0 )
+   tDate += hb_defaultValue( nSecsToAdd, 0 ) / 86400
 
    RETURN ;
-      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( dDate ) ] + ", " + ;
-      StrZero( Day( dDate ), 2 ) + " " + ;
-      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( dDate ) ] + " " + ;
-      StrZero( Year( dDate ), 4 ) + " " + ;
-      cTime + " GMT"
+      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
+      StrZero( Day( tDate ), 2 ) + " " + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + " " + ;
+      StrZero( Year( tDate ), 4 ) + " " + ;
+      hb_TToC( tDate, "", "hh:mm:ss" ) + " GMT"
 
-/*
- * AddSecondsToTime( cTime, nSecsToAdd, @nDaysAdded ) --> cNewTime
- *
- * cTime      : default "00:00:00"
- * nSecsToAdd : default 0 - may be a negative number
- * nDaysAdded : (out) return how many days add (or subtract) to actual date if numbers seconds is
- *                    more than 86400 seconds (1 day)
- *
- * cNewTime   : The new time string
- *
- * Rules: time is converted to seconds from midnight, then added of nSecsToAdd. Divided of 1 day and
- *        then reverted to Time string
- */
+FUNCTION uhttpd_OutputString( cString, hTranslate, lProtected )
 
-FUNCTION uhttpd_AddSecondsToTime( cTime, nSecsToAdd, nDaysAdded )
-
-   LOCAL nOneDaySeconds := 86400  // 24 * 60 * 60
-   LOCAL cNewTime, nSecs
-
-   hb_default( @cTime, Time() )
-   hb_default( @nSecsToAdd, 0 )
-   // nDaysAdded can be already valued, so below i add to this value
-   hb_default( @nDaysAdded, 0 )
-
-   IF nSecsToAdd != 0
-      nSecs      := Secs( cTime ) + nSecsToAdd
-      nDaysAdded += Int( nSecs / nOneDaySeconds )  // Attention! nDaysAdded can be already filled
-      nSecs      := nSecs - nDaysAdded
-      cNewTime   := TString( nSecs )
-   ELSE
-      cNewTime := cTime
-   ENDIF
-
-   RETURN cNewTime
-
-FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
-
-   // TraceLog( "OutputString( cString, aTranslate, lProtected )", cString, aTranslate, lProtected )
+   // TraceLog( "OutputString( cString, hTranslate, lProtected )", cString, hTranslate, lProtected )
 
    RETURN iif( hb_defaultValue( lProtected, .F. ), ;
       uhttpd_HtmlSpecialChars( cString ), ;
-      uhttpd_TranslateStrings( cString, hb_defaultValue( aTranslate, { { '"', "&quot;" }, { " ", "&nbsp;" } } ) ) )
+      uhttpd_TranslateStrings( cString, hb_defaultValue( hTranslate, { '"' => "&quot;", " " => "&nbsp;" } ) ) )
 
 FUNCTION uhttpd_HtmlSpecialChars( cString, cQuote_style )
+   RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, { ;
+      "&" => "&amp;", ;
+      "<" => "&lt;", ;
+      ">" => "&gt;" } )
 
-   LOCAL aTranslations := { ;
-      { "&", "&amp;" }, ;
-      { "<", "&lt;"  }, ;
-      { ">", "&gt;"  } }
-
-   RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
-
-FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
+FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, hTranslations )
 
    SWITCH hb_defaultValue( cQuote_style, "ENT_COMPAT" )
    CASE "ENT_COMPAT"
-      AAdd( aTranslations, { '"', "&quot;" } )
+      hTranslations[ '"' ] := "&quot;"
       EXIT
    CASE "ENT_QUOTES"
-      AAdd( aTranslations, { '"', "&quot;" } )
-      AAdd( aTranslations, { "'", "&#039;" } )
+      hTranslations[ '"' ] := "&quot;"
+      hTranslations[ "'" ] := "&#039;"
       EXIT
    CASE "ENT_NOQUOTES"
       EXIT
    ENDSWITCH
 
-   RETURN uhttpd_TranslateStrings( cString, aTranslations )
+   RETURN uhttpd_TranslateStrings( cString, hTranslations )
 
 FUNCTION uhttpd_CRLF2BR( cString )
    RETURN hb_StrReplace( cString, { CRLF => "<br />" } )
 
-FUNCTION uhttpd_TranslateStrings( cString, aTranslate )
-
-   LOCAL aTran
-
-   FOR EACH aTran IN aTranslate
-      IF aTran[ 1 ] $ cString
-         cString := StrTran( cString, aTran[ 1 ], aTran[ 2 ] )
-      ENDIF
-   NEXT
-
-   RETURN cString
+FUNCTION uhttpd_TranslateStrings( cString, hTranslate )
+   RETURN hb_StrReplace( cString, hTranslate )
 
 FUNCTION uhttpd_StrStr( cString, cSearch )
 
@@ -415,19 +360,22 @@ FUNCTION uhttpd_StrStr( cString, cSearch )
    RETURN iif( nPos > 0, SubStr( cString, nPos ), NIL )
 
 FUNCTION uhttpd_StrIStr( cString, cSearch )
-   RETURN uhttpd_StrStr( Upper( cSearch ), Upper( cString ) )
+
+   LOCAL nPos := hb_AtI( cSearch, cString )
+
+   RETURN iif( nPos > 0, SubStr( cString, nPos ), NIL )
 
 FUNCTION uhttpd_HtmlEntities( cString, cQuote_style )
 
-   LOCAL aTranslations := {}
+   LOCAL hTranslations := { => }
    LOCAL i
 
    // ATTENTION, these chars are visible only with OEM font
    FOR i := 160 TO 255
-      AAdd( aTranslations, { hb_BChar( i ), "&#" + StrZero( i, 3 ) + ";" } )
+      hTranslations[ hb_BChar( i ) ] := "&#" + StrZero( i, 3 ) + ";"
    NEXT
 
-   RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
+   RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, hTranslations )
 
 PROCEDURE uhttpd_Die( cError )
 

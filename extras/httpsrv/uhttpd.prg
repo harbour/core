@@ -541,8 +541,8 @@ PROCEDURE Main( ... )
       WriteToConsole( "Starting main loop" )
 
       IF s_lConsole
-         hb_DispOutAt( 1, 5, APP_NAME + " - web server - v. " + APP_VERSION )
-         hb_DispOutAt( 4, 5, "Server listening (Port: " + hb_ntos( nPort ) + "): ..." )
+         hb_DispOutAt( 1, 5, hb_StrFormat( "%1$s - web server - v. %2$s", APP_NAME, APP_VERSION ) )
+         hb_DispOutAt( 4, 5, hb_StrFormat( "Server listening (Port: %1$d): ...", nPort ) )
          hb_DispOutAt( 10, 9, "Waiting." )
       ENDIF
 
@@ -721,12 +721,12 @@ STATIC FUNCTION AcceptConnections()
 #ifndef FIXED_THREADS
       // Load current state
       IF hb_mutexLock( s_hmtxBusy )
-         nConnections       := s_nConnections
-         nThreads           := s_nThreads
-         nMaxThreads        := s_nMaxThreads
+         nConnections        := s_nConnections
+         nThreads            := s_nThreads
+         nMaxThreads         := s_nMaxThreads
          nServiceConnections := s_nServiceConnections
-         nServiceThreads    := s_nServiceThreads
-         nMaxServiceThreads := s_nMaxServiceThreads
+         nServiceThreads     := s_nServiceThreads
+         nMaxServiceThreads  := s_nMaxServiceThreads
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF
 
@@ -804,7 +804,7 @@ STATIC FUNCTION ProcessConnection()
    PRIVATE _HTTP_RESPONSE
    PRIVATE m_cPost
 
-   nThreadId    := hb_threadID()
+   nThreadId := hb_threadID()
 
 #ifdef DEBUG_ACTIVE
    hb_ToOutDebug( "nThreadId: %s\r\n", nThreadId )
@@ -900,7 +900,9 @@ STATIC FUNCTION ProcessConnection()
             _SESSION := hb_HashI(); _REQUEST := hb_HashI(); _HTTP_REQUEST := hb_HashI(); _HTTP_RESPONSE := hb_HashI()
             m_cPost := NIL
             t_cResult     := ""
-            // t_aHeader     := {}
+#if 0
+            t_aHeader     := {}
+#endif
             t_nStatusCode := 200
             t_cErrorMsg   := ""
 
@@ -1049,7 +1051,9 @@ STATIC FUNCTION ServiceConnection()
             _SESSION := hb_HashI(); _REQUEST := hb_HashI(); _HTTP_REQUEST := hb_HashI(); _HTTP_RESPONSE := hb_HashI()
             m_cPost := NIL
             t_cResult     := ""
-            // t_aHeader     := {}
+#if 0
+            t_aHeader     := {}
+#endif
             t_nStatusCode := 200
             t_cErrorMsg   := ""
 
@@ -1275,9 +1279,10 @@ STATIC FUNCTION MakeResponse()
 
    LOCAL cRet, cReturnCode, v
 
-   // uhttpd_SetHeader( "X-Powered-By", Version() )
-
-   // uhttpd_SetHeader( "Connection", "close" )
+#if 0
+   uhttpd_SetHeader( "X-Powered-By", Version() )
+   uhttpd_SetHeader( "Connection", "close" )
+#endif
 
    IF uhttpd_GetHeader( "Location" ) != NIL
       t_nStatusCode := 301
@@ -1411,24 +1416,24 @@ STATIC FUNCTION DecodeStatusCode()
 
 STATIC PROCEDURE WriteToLog( cRequest )
 
-   LOCAL cTime
    LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-   LOCAL cAccess, cError, dDate, nSize
+   LOCAL cAccess, cError, tDate, nSize
    LOCAL cReferer
 
    IF hb_mutexLock( s_hmtxLog )
 
       // hb_ToOutDebug( "tip_TimeStamp(): %s \n\r", tip_TimeStamp() )
 
-      cTime    := Time()
-      dDate    := Date()
+      tDate    := hb_DateTime()
       nSize    := Len( t_cResult )
       cReferer := _SERVER[ "HTTP_REFERER" ]
 
       cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + ;
-         StrZero( Day( dDate ), 2 ) + "/" + ;
-         aMonths[ Month( dDate ) ] + "/" + ;
-         StrZero( Year( dDate ), 4 ) + ":" + cTime + " " + uhttpd_UTCOffset() + '] "' + ;
+         StrZero( Day( tDate ), 2 ) + "/" + ;
+         aMonths[ Month( tDate ) ] + "/" + ;
+         StrZero( Year( tDate ), 4 ) + ":" + ;
+         hb_TToC( tDate, "", "hh:mm:ss" ) + " " + ;
+         uhttpd_UTCOffset() + '] "' + ;
          Left( cRequest, At( CR_LF, cRequest ) - 1 ) + '" ' + ;
          hb_ntos( t_nStatusCode ) + " " + iif( nSize == 0, "-", hb_ntos( nSize ) ) + ;
          ' "' + iif( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER[ "HTTP_USER_AGENT" ] + ;
@@ -1441,11 +1446,11 @@ STATIC PROCEDURE WriteToLog( cRequest )
       IF t_nStatusCode != 200  // ok
 
          cError := "[" + ;
-            { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( dDate ) ] + " " + ;
-            aMonths[ Month( dDate ) ] + " " + ;
-            StrZero( Day( dDate ), 2 ) + " " + ;
-            PadL( LTrim( cTime ), 8, "0" ) + " " + ;
-            StrZero( Year( dDate ), 4 ) + "] [error] [client " + _SERVER[ "REMOTE_ADDR" ] + "] " + ;
+            { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + " " + ;
+            aMonths[ Month( tDate ) ] + " " + ;
+            StrZero( Day( tDate ), 2 ) + " " + ;
+            hb_TToC( tDate, "", "hh:mm:ss" ) + " " + ;
+            StrZero( Year( tDate ), 4 ) + "] [error] [client " + _SERVER[ "REMOTE_ADDR" ] + "] " + ;
             t_cErrorMsg + hb_eol()
 
          // hb_ToOutDebug( "ErrorLog: %s \n\r", cError )
@@ -1827,20 +1832,22 @@ STATIC FUNCTION uproc_default()
    LOCAL cBaseFile
    LOCAL cPathInfo, lFound, cFile
 
-   // cFileName := StrTran(cRoot + _SERVER["SCRIPT_NAME"], "//", "/")
+#if 0
+   cFileName := StrTran( cRoot + _SERVER[ "SCRIPT_NAME" ], "//", "/" )
+#endif
    cPathInfo := ""
 
    DO WHILE .T.
 
 #ifdef DEBUG_ACTIVE
-      // hb_ToOutDebug( "cFileName: %s, cScript: %s\n\r", cFileName, cScript )
+      hb_ToOutDebug( "cFileName: %s, cScript: %s\n\r", cFileName, cScript )
 #endif
 
       IF cFileName == NIL
          // Special script names
-         IF Upper( cScript ) == "/SERVERSTATUS"
+         IF Lower( cScript ) == "/serverstatus"
             cFileName := "/serverstatus"
-            cExt      := "/serverstatus" // special extension
+            cExt      := "/serverstatus"  // special extension
          ENDIF
       ENDIF
 
@@ -1854,7 +1861,7 @@ STATIC FUNCTION uproc_default()
       ENDIF
 
 #ifdef DEBUG_ACTIVE
-      // hb_ToOutDebug( "cFileName: %s, uhttpd_OSFileName( cFileName ): %s,\n\r", cFileName, uhttpd_OSFileName( cFileName ) )
+      hb_ToOutDebug( "cFileName: %s, uhttpd_OSFileName( cFileName ): %s,\n\r", cFileName, uhttpd_OSFileName( cFileName ) )
 #endif
 
       // Security
@@ -1890,9 +1897,7 @@ STATIC FUNCTION uproc_default()
                // resetting extension
                cExt := NIL
                LOOP
-
             ENDIF
-
          ELSE
 
             // Check for PATH_INFO: I will search if there is a physical file removing parts from right
@@ -2015,7 +2020,7 @@ STATIC PROCEDURE ShowServerStatus()
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
       cThreads := "{ " + iif( Empty( cThreads ), "<empty>", hb_StrShrink( cThreads ) ) + " }"
       uhttpd_Write( "<br />Service Threads: " + cThreads )
-#endif // FIXED_THREADS
+#endif
 
       hb_mutexUnlock( s_hmtxBusy )
    ENDIF
@@ -2256,10 +2261,8 @@ STATIC FUNCTION ParseIni( cConfig )
                         CASE "MAIN"
 
                            SWITCH cKey
-                           CASE "PORT"
-                              xVal := Val( cVal ) ; EXIT
-                           CASE "CONSOLE-ROWS"
-                              xVal := Val( cVal ) ; EXIT
+                           CASE "PORT"  /* fall-through */
+                           CASE "CONSOLE-ROWS"  /* fall-through */
                            CASE "CONSOLE-COLS"
                               xVal := Val( cVal ) ; EXIT
                            CASE "APPLICATION_ROOT"
@@ -2295,8 +2298,7 @@ STATIC FUNCTION ParseIni( cConfig )
                         CASE "LOGFILES"
 
                            SWITCH cKey
-                           CASE "ACCESS"
-                              xVal := cVal ; EXIT
+                           CASE "ACCESS"  /* fall-through */
                            CASE "ERROR"
                               xVal := cVal ; EXIT
                            ENDSWITCH
@@ -2305,10 +2307,8 @@ STATIC FUNCTION ParseIni( cConfig )
                         CASE "THREADS"
 
                            SWITCH cKey
-                           CASE "MAX_WAIT"
-                              xVal := Val( cVal ) ; EXIT
-                           CASE "START_NUM"
-                              xVal := Val( cVal ) ; EXIT
+                           CASE "MAX_WAIT"  /* fall-through */
+                           CASE "START_NUM"  /* fall-through */
                            CASE "MAX_NUM"
                               xVal := Val( cVal ) ; EXIT
                            ENDSWITCH

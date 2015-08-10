@@ -270,7 +270,7 @@ METHOD DestroySession( cID ) CLASS TIPCgi
       cFile := hb_DirSepAdd( ::cSessionSavePath ) + "SESSIONID_" + cSID
 
       IF ( lOk := ( hb_vfErase( cFile ) != F_ERROR ) )
-         ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + tip_DateToGMT( Date() - 1 )
+         ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + tip_DateToGMT( hb_DateTime() - 1 )
          ::CreateSID()
          ::hCookies[ "SESSIONID" ] := ::cSID
       ELSE

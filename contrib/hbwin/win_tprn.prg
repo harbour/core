@@ -310,7 +310,7 @@ METHOD StartDoc( cDocName ) CLASS win_Prn
    IF ! Empty( ::hPrinterDc )
 
       IF ! HB_ISSTRING( cDocName )
-         cDocName := hb_ProgName() + " [" + hb_DToC( Date(), "yyyy-mm-dd" ) + " - " + Time() + "]"
+         cDocName := hb_ProgName() + " [" + hb_TToC( hb_DateTime(), "yyyy-mm-dd", "hh:mm:ss" ) + "]"
       ENDIF
 
       IF ( lResult := ( wapi_StartDoc( ::hPrinterDc, { "lpszDocName" => cDocName } ) > 0 ) )
