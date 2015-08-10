@@ -76,20 +76,13 @@ PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntr
       ENDIF
 
       DO CASE
-      CASE hb_LeftEq( cHKEY, "HKCU"                  ) ; nHKEY := WIN_HKEY_CURRENT_USER
-      CASE hb_LeftEq( cHKEY, "HKLM"                  ) ; nHKEY := WIN_HKEY_LOCAL_MACHINE
-      CASE hb_LeftEq( cHKEY, "HKCR"                  ) ; nHKEY := WIN_HKEY_CLASSES_ROOT
-      CASE hb_LeftEq( cHKEY, "HKU"                   ) ; nHKEY := WIN_HKEY_USERS
-      CASE hb_LeftEq( cHKEY, "HKPD"                  ) ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
-      CASE hb_LeftEq( cHKEY, "HKCC"                  ) ; nHKEY := WIN_HKEY_CURRENT_CONFIG
-      CASE hb_LeftEq( cHKEY, "HKDD"                  ) ; nHKEY := WIN_HKEY_DYN_DATA
-      CASE hb_LeftEq( cHKEY, "HKEY_CURRENT_USER"     ) ; nHKEY := WIN_HKEY_CURRENT_USER
-      CASE hb_LeftEq( cHKEY, "HKEY_LOCAL_MACHINE"    ) ; nHKEY := WIN_HKEY_LOCAL_MACHINE
-      CASE hb_LeftEq( cHKEY, "HKEY_CLASSES_ROOT"     ) ; nHKEY := WIN_HKEY_CLASSES_ROOT
-      CASE hb_LeftEq( cHKEY, "HKEY_USERS"            ) ; nHKEY := WIN_HKEY_USERS
-      CASE hb_LeftEq( cHKEY, "HKEY_PERFORMANCE_DATA" ) ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
-      CASE hb_LeftEq( cHKEY, "HKEY_CURRENT_CONFIG"   ) ; nHKEY := WIN_HKEY_CURRENT_CONFIG
-      CASE hb_LeftEq( cHKEY, "HKEY_DYN_DATA"         ) ; nHKEY := WIN_HKEY_DYN_DATA
+      CASE hb_LeftEq( cHKEY, "HKCU" ) .OR. hb_LeftEq( cHKEY, "HKEY_CURRENT_USER"     ) ; nHKEY := WIN_HKEY_CURRENT_USER
+      CASE hb_LeftEq( cHKEY, "HKLM" ) .OR. hb_LeftEq( cHKEY, "HKEY_LOCAL_MACHINE"    ) ; nHKEY := WIN_HKEY_LOCAL_MACHINE
+      CASE hb_LeftEq( cHKEY, "HKCR" ) .OR. hb_LeftEq( cHKEY, "HKEY_CLASSES_ROOT"     ) ; nHKEY := WIN_HKEY_CLASSES_ROOT
+      CASE hb_LeftEq( cHKEY, "HKU"  ) .OR. hb_LeftEq( cHKEY, "HKEY_USERS"            ) ; nHKEY := WIN_HKEY_USERS
+      CASE hb_LeftEq( cHKEY, "HKPD" ) .OR. hb_LeftEq( cHKEY, "HKEY_PERFORMANCE_DATA" ) ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
+      CASE hb_LeftEq( cHKEY, "HKCC" ) .OR. hb_LeftEq( cHKEY, "HKEY_CURRENT_CONFIG"   ) ; nHKEY := WIN_HKEY_CURRENT_CONFIG
+      CASE hb_LeftEq( cHKEY, "HKDD" ) .OR. hb_LeftEq( cHKEY, "HKEY_DYN_DATA"         ) ; nHKEY := WIN_HKEY_DYN_DATA
       ENDCASE
    ENDIF
 

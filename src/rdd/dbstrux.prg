@@ -96,8 +96,9 @@ FUNCTION __dbCopyXStruct( cFileName )
 
    RETURN .T.
 
-/* NOTE: Compared to CA-Cl*pper, Harbour has two extra parameters
-         (cCodePage, nConnection). */
+/* NOTE: Compared to CA-Cl*pper, Harbour:
+         - has two extra parameters: <cCodePage>, <nConnection>
+         - non-string, non-empty <cFileFrom> values do not cause an RTE */
 
 FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection )
 
@@ -118,7 +119,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 
    BEGIN SEQUENCE
 
-      IF hb_BLen( cFileFrom ) == 0
+      IF ! HB_ISSTRING( cFileFrom ) .OR. hb_BLen( cFileFrom ) == 0
 
          dbCreate( cFileName, { ;
             { "FIELD_NAME", "C", 10, 0 }, ;

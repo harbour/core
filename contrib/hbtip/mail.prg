@@ -574,7 +574,7 @@ METHOD detachFile( cPath ) CLASS TIPMail
    LOCAL cContent := ::getBody()
    LOCAL cFileName := ::getFileName()
 
-   IF hb_BLen( cFileName ) == 0
+   IF hb_BLen( cFileName ) == 0 .OR. ::cBody == NIL
       RETURN .F.
    ENDIF
 
