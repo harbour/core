@@ -2698,7 +2698,7 @@ METHOD LoadFile( cFileName ) CLASS XHBEditor
 // Saves file being edited, if there is no file name does nothing, returns .T. if OK
 METHOD SaveFile() CLASS XHBEditor
 
-   IF ! HB_ISSTRING( ::cFile ) .OR. Len( ::cFile ) == 0
+   IF ! HB_ISSTRING( ::cFile ) .OR. hb_BLen( ::cFile ) == 0
       RETURN .F.
    ENDIF
 

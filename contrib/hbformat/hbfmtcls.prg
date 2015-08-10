@@ -838,7 +838,7 @@ METHOD ReadIni( cIniName ) CLASS HBFormatCode
       aIni := hb_ATokens( MemoRead( cIniName ), .T. )
       nLen := Len( aIni )
       FOR i := 1 TO nLen
-         IF Len( aIni[ i ] := AllTrim( aIni[ i ] ) ) > 0 .AND. ;
+         IF hb_BLen( aIni[ i ] := AllTrim( aIni[ i ] ) ) > 0 .AND. ;
                !( ( c := Left( aIni[ i ], 1 ) ) == ";" ) .AND. !( c == "#" )
             IF ! ::SetOption( aIni[ i ], @i, aIni )
                EXIT
@@ -891,24 +891,20 @@ METHOD File2Array( cFileName ) CLASS HBFormatCode
 
 METHOD Array2File( cFileName, aSource ) CLASS HBFormatCode
 
-   LOCAL i, cName, cBakName, cPath
+   LOCAL cDir, cName, cExt
 
-   cName := iif( ( i := RAt( ".", cFileName ) ) == 0, cFileName, Left( cFileName, i - 1 ) )
-   IF Empty( ::cExtSave )
-      cBakName := cName + iif( hb_LeftEq( ::cExtBack, "." ), "", "." ) + ::cExtBack
-      IF hb_vfCopyFile( cFileName, cBakName ) == F_ERROR
-         RETURN .F.
-      ENDIF
+   IF hb_BLen( ::cExtSave ) == 0 .AND. ;
+      hb_vfCopyFile( cFileName, hb_FNameExtSet( cFileName, ::cExtBack ) ) == F_ERROR
+      RETURN .F.
    ENDIF
 
-   IF ! Empty( ::cExtSave )
-      cFileName := cName + iif( hb_LeftEq( ::cExtSave, "." ), "", "." ) + ::cExtSave
+   IF hb_BLen( ::cExtSave ) > 0
+      cFileName := hb_FNameExtSet( cFileName, ::cExtSave )
    ENDIF
+
    IF ::lFCaseLow
-      cPath := iif( ( i := RAt( "\", cFileName ) ) == 0, ;
-         iif( ( i := RAt( "/", cFileName ) ) == 0, "", Left( cFileName, i ) ), ;
-         Left( cFileName, i ) )
-      cFileName := cPath + Lower( iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) ) )
+      hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+      cFileName := hb_FNameMerge( cDir, Lower( cName ), Lower( cExt ) )
    ENDIF
 
    RETURN hb_MemoWrit( cFileName, ::Array2Source( aSource ) )

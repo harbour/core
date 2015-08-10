@@ -15095,7 +15095,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
             "{OT}" => FNameEscape( cTempFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) } )
 
          IF hb_processRun( cBin_LibHBX + " " + cOpt_LibHBX,, @cStdOut, @cStdErr ) == 0
-            IF ! Empty( cTempFile )
+            IF hb_BLen( cTempFile ) > 0
                cStdOut := MemoRead( cTempFile )
             ENDIF
             IF ! Empty( pRegex := hb_regexComp( cLibHBX_Regex, .T., .T. ) )
@@ -15115,7 +15115,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
             ENDIF
          ENDIF
 
-         IF ! Empty( cTempFile )
+         IF hb_BLen( cTempFile ) > 0
             hb_vfErase( cTempFile )
          ENDIF
       ENDIF

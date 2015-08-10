@@ -29,13 +29,13 @@ CREATE CLASS TFileRead
 
    PROTECTED:
 
-   VAR cFile                   // The filename
-   VAR hFile                   // The open file handle
-   VAR lEOF                    // The end of file reached flag
-   VAR nError                  // The current file error code
-   VAR nLastOp                 // The last operation done (for error messages)
-   VAR cBuffer                 // The readahead buffer
-   VAR nReadSize               // How much to add to the readahead buffer on each read from the file
+   VAR cFile                             // The filename
+   VAR hFile                             // The open file handle
+   VAR lEOF      INIT .T.                // The end of file reached flag
+   VAR nError    INIT 0                  // The current file error code
+   VAR nLastOp   INIT O_F_CREATE_OBJECT  // The last operation done (for error messages)
+   VAR cBuffer   INIT ""                 // The readahead buffer
+   VAR nReadSize                         // How much to add to the readahead buffer on each read from the file
 
    METHOD EOL_pos()
 
@@ -50,10 +50,6 @@ METHOD New( cFile, nSize ) CLASS TFileRead
    ENDIF
 
    ::cFile     := cFile              // Save the file name
-   ::lEOF      := .T.                // So it must be at EOF
-   ::nError    := 0                  // But there haven't been any errors
-   ::nLastOp   := O_F_CREATE_OBJECT  // Because we just created the class
-   ::cBuffer   := ""                 // and nothing has been read yet
    ::nReadSize := nSize              // But will be in this size chunks
 
    RETURN Self

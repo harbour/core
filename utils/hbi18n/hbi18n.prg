@@ -95,7 +95,7 @@ PROCEDURE Main( ... )
                nMode := _HB_I18N_TRANS
             ENDIF
          CASE hb_LeftEq( cParam, "o" )
-            IF Len( cParam := SubStr( cParam, 2 ) ) > 0
+            IF hb_BLen( cParam := SubStr( cParam, 2 ) ) > 0
                cFileOut := cParam
             ELSEIF n < Len( aParams ) .AND. ! hb_LeftEq( aParams[ n + 1 ], "-" )
                cFileOut := aParams[ ++n ]

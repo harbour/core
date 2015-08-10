@@ -56,7 +56,7 @@ REQUEST HB_GT_CGI_DEFAULT
 
 PROCEDURE Main( ... )
 
-   LOCAL oRef, aParams, cFileName, cInitDir, i, cParam, lRecursive := .F.
+   LOCAL oRef, aParams, cFileName, cInitDir, cParam, lRecursive := .F.
 
 #if 0
    AltD( 2 )
@@ -64,14 +64,14 @@ PROCEDURE Main( ... )
 #endif
    aParams := hb_AParams()
 
-   IF Empty( aParams ) .OR. ( Left( cFileName := ATail( aParams ), 1 ) $ "@/-" )
+   IF Empty( aParams ) .OR. Left( cFileName := ATail( aParams ), 1 ) $ "@-"
       About()
       RETURN
    ENDIF
 
    FOR EACH cParam IN aParams
-      IF Left( cParam, 1 ) $ "-/"
-         IF SubStr( cParam, 2 ) == "r"
+      IF hb_LeftEq( cParam, "-" )
+         IF SubStr( cParam, Len( "-" ) + 1 ) == "r"
             lRecursive := .T.
             cParam := "#"
             EXIT
@@ -88,18 +88,17 @@ PROCEDURE Main( ... )
 
    oRef:bCallBack := {| a, i | FCallBack( a, i ) }
 
-   IF "*" $ cFileName
-      IF ( i := RAt( ".", cFileName ) ) == 0 .OR. SubStr( cFileName, i + 1, 1 ) < "A"
+   IF "*" $ cFileName .OR. ;
+      "?" $ cFileName
+
+      IF SubStr( hb_FNameExt( cFileName ), 2, 1 ) < "a"
          OutErr( I_( "Wrong mask" ) + hb_eol() )
       ELSE
-         cInitDir := ;
-            iif( ( i := RAt( "\", cFileName ) ) == 0, ;
-            iif( ( i := RAt( "/", cFileName ) ) == 0, ;
-            "." + hb_ps(), ;
-            Left( cFileName, i ) ), ;
-            Left( cFileName, i ) )
-         cFileName := iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) )
-         DirEval( cInitDir, cFileName, lRecursive, {| name | Reformat( oRef, name ) } )
+         cInitDir := hb_FNameDir( cFileName )
+         IF hb_BLen( cInitDir ) == 0
+            cInitDir := "." + hb_ps()
+         ENDIF
+         DirEval( cInitDir, hb_FNameNameExt( cFileName ), lRecursive, {| name | Reformat( oRef, name ) } )
       ENDIF
    ELSE
       Reformat( oRef, cFileName )
