@@ -377,7 +377,7 @@ METHOD PROCEDURE setCookie( cLine ) CLASS TIPClientHTTP
    LOCAL cDefaultHost := ::oUrl:cServer, cDefaultPath := ::oUrl:cPath
    LOCAL x
 
-   IF Len( cDefaultPath ) == 0
+   IF hb_BLen( cDefaultPath ) == 0
       cDefaultPath := "/"
    ENDIF
 
@@ -430,11 +430,11 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
    IF ! HB_ISSTRING( cPath )
       cPath := ::oUrl:cPath
-      IF Len( cPath ) == 0
+      IF hb_BLen( cPath ) == 0
          cPath := "/"
       ENDIF
    ENDIF
-   IF Len( cHost ) == 0
+   IF hb_BLen( cHost ) == 0
       RETURN cOut
    ENDIF
 
@@ -459,7 +459,7 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
       FOR EACH a IN ASort( aPathKeys,,, {| cX, cY | Len( cX ) > Len( cY ) } )
          FOR EACH c IN hb_HKeys( ::hCookies[ x ][ a ] )
-            IF Len( cOut ) > 0
+            IF hb_BLen( cOut ) > 0
                cOut += "; "
             ENDIF
             cOut += c + "=" + ::hCookies[ x ][ a ][ c ]

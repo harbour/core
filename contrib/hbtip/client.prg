@@ -291,10 +291,10 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPasswor
       cRequest := ;
          "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.1" + Chr( 13 ) + Chr( 10 ) + ;
          "Proxy-Connection: Keep-Alive" + Chr( 13 ) + Chr( 10 )
-      IF HB_ISSTRING( cUserAgent ) .AND. Len( cUserAgent ) > 0
+      IF HB_ISSTRING( cUserAgent ) .AND. hb_BLen( cUserAgent ) > 0
          cRequest += "User-Agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
       ENDIF
-      IF HB_ISSTRING( cUserName ) .AND. Len( cUserName ) > 0
+      IF HB_ISSTRING( cUserName ) .AND. hb_BLen( cUserName ) > 0
          cRequest += "Proxy-Authorization: Basic " + hb_base64Encode( cUserName + ":" + hb_defaultValue( cPassword, "" ) ) + Chr( 13 ) + Chr( 10 )
       ENDIF
       cRequest += Chr( 13 ) + Chr( 10 )
