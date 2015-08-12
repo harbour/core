@@ -744,13 +744,11 @@ FUNCTION wvg_InvalidateRect( w, r, e )
 
 FUNCTION wvg_GetMessageText( w, p1, p2 )
 
-   LOCAL cText := Replicate( Chr( 0 ), 64000 )
+   LOCAL cText := Replicate( hb_BChar( 0 ), 64000 )
 
    wapi_SendMessage( w, p1, p2, @cText )
 
-   cText += Chr( 0 )
-
-   RETURN Left( cText, At( Chr( 0 ), cText ) - 1 )
+   RETURN Left( cText, At( Chr( 0 ), cText + Chr( 0 ) ) - 1 )
 
 FUNCTION wvt_IsLButtonPressed()
    RETURN hb_bitAnd( wapi_GetKeyState( WIN_VK_LBUTTON ), 0x8000 ) != 0

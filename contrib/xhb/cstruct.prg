@@ -500,9 +500,9 @@ STATIC FUNCTION Reset()
 STATIC FUNCTION Buffer( Buffer, lAdopt )
 
    IF HB_ISSTRING( Buffer )
-      IF Len( Buffer ) < QSelf():SizeOf
+      IF hb_BLen( Buffer ) < QSelf():SizeOf
          // TraceLog( Buffer )
-         Buffer := PadR( Buffer, QSelf():SizeOf, Chr( 0 ) )
+         Buffer := hb_BLeft( Buffer + Replicate( hb_BChar( 0 ), QSelf():SizeOf ), QSelf():SizeOf )
       ENDIF
 
       QSelf():InternalBuffer := Buffer
@@ -541,16 +541,16 @@ STATIC FUNCTION DeValue( lAdopt )
    LOCAL Buffer := QSelf():InternalBuffer
 
 #if 0
-   TraceLog( QSelf():ClassName(), QSelf():nAlign, Buffer, Len( Buffer ), lAdopt )
+   TraceLog( QSelf():ClassName(), QSelf():nAlign, Buffer, hb_BLen( Buffer ), lAdopt )
 
    AEval( QSelf(), {| xVal | AAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 #endif
 
-   IF ! HB_ISSTRING( Buffer ) .OR. Len( Buffer ) == 0
+   IF ! HB_ISSTRING( Buffer ) .OR. hb_BLen( Buffer ) == 0
       // TraceLog( "EMPTY Buffer passed to " + ProcName() )
-   ELSEIF Len( Buffer ) < QSelf():SizeOf
+   ELSEIF hb_BLen( Buffer ) < QSelf():SizeOf
       // TraceLog( "Should have been caught at ::Buffer()!!!", Buffer )
-      // Buffer := PadR( Buffer, QSelf():SizeOf, Chr( 0 ) )
+      // Buffer := hb_BLeft( Buffer + Replicate( hb_BChar( 0 ), QSelf():SizeOf ), QSelf():SizeOf )
    ELSE
       hb_StructureToArray( Buffer, QSelf():aCTypes, QSelf():nAlign, lAdopt, QSelf()  )
    ENDIF
@@ -600,12 +600,12 @@ STATIC FUNCTION AsString()
          EXIT
       ENDIF
 
-      IF cChar == 0
-         cString := Left( cString, cChar:__enumIndex() - 1 )
+      IF cChar == hb_BChar( 0 )
+         cString := hb_BLeft( cString, cChar:__enumIndex() - 1 )
          EXIT
       ENDIF
 
-      cString := Stuff( cString, cChar:__enumIndex(), 1, cChar )
+      hb_BPoke( @cString, cChar:__enumIndex(), hb_BCode( cChar ) )
    NEXT
 
    RETURN cString

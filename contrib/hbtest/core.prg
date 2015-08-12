@@ -304,8 +304,8 @@ FUNCTION hbtest_AllValues()
       "Hello", ;
       "", ;
       "   ", ;
-      "A" + Chr( 0 ) + "B", ;
-      Chr( 13 ) + Chr( 10 ) + hb_BChar( 141 ) + Chr( 10 ) + Chr( 9 ), ;
+      "A" + hb_BChar( 0 ) + "B", ;
+      hb_BChar( 13 ) + hb_BChar( 10 ) + hb_BChar( 141 ) + hb_BChar( 10 ) + hb_BChar( 9 ), ;
       "utf8-űŰőŐ©", ;
       0, ;
       0.0, ;
