@@ -4,7 +4,7 @@
 
 #include "hbsocket.ch"
 
-#define CRLF  ( Chr( 13 ) + Chr( 10 ) )
+#define CRLF  ( hb_BChar( 13 ) + hb_BChar( 10 ) )
 
 PROCEDURE Main()
 

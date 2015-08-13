@@ -41,8 +41,8 @@ STATIC PROCEDURE MakeTest( ... )
       ENDIF
       ? hb_StrFormat( "%s: %d -> %d, Ratio %.2f%%, Times %.2f", ;
          e1:__enumKey(), ;
-         Len( iif( lCmp, hb_PValue( 3 ), e2 ) ), Len( cRes ), ;
-         ( Len( cRes ) / Len( iif( lCmp, hb_PValue( 3 ), e2 ) ) ) * 100, ;
+         hb_BLen( iif( lCmp, hb_PValue( 3 ), e2 ) ), hb_BLen( cRes ), ;
+         ( hb_BLen( cRes ) / hb_BLen( iif( lCmp, hb_PValue( 3 ), e2 ) ) ) * 100, ;
          nEnd - nBegin )
    NEXT
    ?

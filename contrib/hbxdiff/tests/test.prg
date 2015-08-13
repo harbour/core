@@ -11,7 +11,7 @@ PROCEDURE Main()
    ? xdl_mmfile_size( pMMF )
    ? xdl_mmfile_iscompact( pMMF )
 
-   ? xdl_write_mmfile( pMMF, cFileCtx ), Len( cFileCtx )
+   ? xdl_write_mmfile( pMMF, cFileCtx ), hb_BLen( cFileCtx )
    ? xdl_mmfile_size( pMMF )
 
    ? xdl_read_mmfile( pMMF, , _SIZE, @nSize )

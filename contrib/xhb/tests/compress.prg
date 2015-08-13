@@ -16,14 +16,14 @@ PROCEDURE Main()
    ?
    ? "TEST 1: using on-the-fly Buffer creation"
 
-   nBufLen := hb_CompressBufLen( Len( cText ) )
+   nBufLen := hb_CompressBufLen( hb_BLen( cText ) )
    // cComp and cDecomp will be created with the correct length
    cComp := hb_Compress( cText )
    cDecomp := hb_Uncompress( nBuflen, cComp )
 
-   ? "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
-   ? "Compressed (" + hb_ntos( Len( cComp ) ) + ")" + hb_StrToHex( cComp ) + "<<"
-   ? "Decompressed: (" + hb_ntos( Len( cDecomp ) ) + ")" + cDecomp + "<<"
+   ? "Uncompressed: (" + hb_ntos( hb_BLen( cText ) ) + ")" + cText + "<<"
+   ? "Compressed (" + hb_ntos( hb_BLen( cComp ) ) + ")" + hb_StrToHex( cComp ) + "<<"
+   ? "Decompressed: (" + hb_ntos( hb_BLen( cDecomp ) ) + ")" + cDecomp + "<<"
 
    ?
    ? "TEST 2: using preallocated buffers"
@@ -34,26 +34,26 @@ PROCEDURE Main()
    cDecomp := Space( Int( nBufLen * 1.1 ) )
 
    // on exit, nBuflen will contain the length of the compressed buffer
-   hb_Compress( cText, Len( cText ), @cComp, @nBuflen )
-   hb_Uncompress( Len( cText ), cComp, nBuflen, @cDecomp )
+   hb_Compress( cText, hb_BLen( cText ), @cComp, @nBuflen )
+   hb_Uncompress( hb_BLen( cText ), cComp, nBuflen, @cDecomp )
 
-   ? "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
+   ? "Uncompressed: (" + hb_ntos( hb_BLen( cText ) ) + ")" + cText + "<<"
    ? "Compressed (" + hb_ntos( nBuflen ) + ")" + hb_StrToHex( cComp ) + "<<"
    // Notice: this time the length of the destination buffer is not the length of
    // the original buffer, but Int(nBufLen * 1.1)
-   ? "Decompressed: (" + hb_ntos( Len( cDecomp ) ) + ")" + cDecomp + "<<"
+   ? "Decompressed: (" + hb_ntos( hb_BLen( cDecomp ) ) + ")" + cDecomp + "<<"
 
    ?
    ? "TEST 3: Generating an error"
 
-   nBufLen := hb_CompressBufLen( Len( cText ) )
+   nBufLen := hb_CompressBufLen( hb_BLen( cText ) )
    cComp := Space( nBufLen )
 
    // we generate an error: 3 is not a valid length for this buffer
    nBuflen := 3
-   nError := hb_Compress( cText, Len( cText ), @cComp, @nBuflen )
+   nError := hb_Compress( cText, hb_BLen( cText ), @cComp, @nBuflen )
 
    ? iif( nError != HB_Z_OK, "Error generated", "NO Error generated" ), ;
-      "(" + hb_ntos( Len( cComp ) ) + ")", hb_CompressErrorDesc( nError )
+      "(" + hb_ntos( hb_BLen( cComp ) ) + ")", hb_CompressErrorDesc( nError )
 
    RETURN

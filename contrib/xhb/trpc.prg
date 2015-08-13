@@ -233,7 +233,7 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS TRPCFunction
    ::cReturn := iif( Len( aFuncDef ) == 4, aFuncDef[ 4 ], aFuncDef[ 5 ] )
 
    // analyze parameter list
-   IF Len( RTrim( cParam ) ) > 0
+   IF hb_BLen( RTrim( cParam ) ) > 0
       ::aParameters := {}
       FOR EACH cParam IN hb_ATokens( cParam, "," )
          cParam := AllTrim( Upper( cParam ) )
@@ -316,11 +316,8 @@ METHOD CheckTypes( aParams ) CLASS TRPCFunction
 
    LOCAL oElem, i
 
-   IF ! HB_ISARRAY( aParams )
-      RETURN .F.
-   ENDIF
-
-   IF Len( aParams ) != Len( ::aParameters )
+   IF ! HB_ISARRAY( aParams ) .OR. ;
+      Len( aParams ) != Len( ::aParameters )
       RETURN .F.
    ENDIF
 

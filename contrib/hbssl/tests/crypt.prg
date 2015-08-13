@@ -87,7 +87,7 @@ PROCEDURE Main()
    ? pub := PEM_READ_BIO_PUBKEY( "pubkey.pem", "test" )
 
    ? "EVP_SealInit()", EVP_SealInit( ctx, "AES256", @a, @iv, { pub } )
-   ? ValType( a ), Len( a )
+   ? ValType( a ), hb_BLen( a )
    ? ValType( a[ 1 ] ), ">" + hb_StrToHex( a[ 1 ] ) + "<"
    ? ValType( iv ), ">" + hb_StrToHex( iv ) + "<"
 
