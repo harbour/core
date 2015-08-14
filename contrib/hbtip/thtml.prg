@@ -661,7 +661,7 @@ METHOD isOptional() CLASS THtmlNode
 
 // checks if this is a node (leafs contain no further nodes, e.g. <br />,<hr>,_text_)
 METHOD isNode() CLASS THtmlNode
-   RETURN HB_ISARRAY( ::htmlContent ) .AND. hb_BLen( ::htmlContent ) > 0
+   RETURN HB_ISARRAY( ::htmlContent ) .AND. Len( ::htmlContent ) > 0
 
 // checks if this is a block node that must be closed with an ending tag: eg: <table></table>, <ul></ul>
 METHOD isBlock() CLASS THtmlNode
