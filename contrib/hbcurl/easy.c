@@ -216,8 +216,6 @@ static size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nme
 
    if( hb_curl )
    {
-      size_t ret;
-
       if( hb_curl->ul_file == NULL && hb_curl->ul_name )
       {
          hb_curl->ul_file = hb_fileExtOpen( hb_curl->ul_name, NULL,
@@ -231,9 +229,12 @@ static size_t hb_curl_read_file_callback( void * buffer, size_t size, size_t nme
          hb_curl->ul_onfree = HB_CURL_ONFREE_CLOSE;
       }
 
-      ret = ( size_t ) hb_fileRead( hb_curl->ul_file, buffer, size * nmemb, -1 );
+      if( hb_curl->ul_file )
+      {
+         size_t ret = ( size_t ) hb_fileRead( hb_curl->ul_file, buffer, size * nmemb, -1 );
 
-      return hb_fsError() ? CURL_READFUNC_ABORT : ret;
+         return hb_fsError() ? CURL_READFUNC_ABORT : ret;
+      }
    }
 
    return ( size_t ) -1;
@@ -280,7 +281,8 @@ static size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nm
          hb_curl->dl_onfree = HB_CURL_ONFREE_CLOSE;
       }
 
-      return hb_fileWrite( hb_curl->dl_file, buffer, size * nmemb, -1 );
+      if( hb_curl->dl_file )
+         return hb_fileWrite( hb_curl->dl_file, buffer, size * nmemb, -1 );
    }
 
    return ( size_t ) -1;

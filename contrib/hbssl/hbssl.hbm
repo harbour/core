@@ -9,7 +9,7 @@
 -w3 -es2
 
 -depurlbase=openssl:https://www.openssl.org/
--depurlbase=openssl:https://www.openssl.org/related/binaries.html
+-depurlbase=openssl:https://www.openssl.org/community/binaries.html
 -deppkgname=openssl:libssl-dev{deb}
 -deppkgname=openssl:openssl-devel{rpm}
 -deppkgname=openssl:openssl{homebrew}
