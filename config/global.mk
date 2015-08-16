@@ -901,6 +901,9 @@ ifeq ($(HB_COMPILER_VER),)
          HB_COMP_PATH_VER_DET := $(HB_CCPREFIX)gcc$(HB_CCSUFFIX)
       endif
       _C_VER := $(shell "$(HB_COMP_PATH_VER_DET)" -v 2>&1)
+      ifneq ($(findstring 5.2.,$(_C_VER)),)
+         HB_COMPILER_VER := 0502
+      else
       ifneq ($(findstring 5.1.,$(_C_VER)),)
          HB_COMPILER_VER := 0501
       else
@@ -927,6 +930,7 @@ ifeq ($(HB_COMPILER_VER),)
       else
       ifneq ($(findstring 3.4.,$(_C_VER)),)
          HB_COMPILER_VER := 0304
+      endif
       endif
       endif
       endif
