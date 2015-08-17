@@ -158,7 +158,7 @@ static HB_BOOL socketaddrParam( int iParam, void ** pAddr, unsigned int * puiLen
 }
 
 
-static void socket_exit( void * cargo )
+static void s_socket_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
@@ -169,16 +169,20 @@ static void socket_exit( void * cargo )
    }
 }
 
-static void socket_init( void )
+static void s_socket_init( void )
 {
    if( ! s_fInit )
    {
       hb_socketInit();
-      hb_vmAtQuit( socket_exit, NULL );
+      hb_vmAtQuit( s_socket_exit, NULL );
       s_fInit = HB_TRUE;
    }
 }
 
+void hb_socketAutoInit( void )
+{
+   s_socket_init();
+}
 
 HB_FUNC( HB_SOCKETGETERROR )
 {
@@ -257,7 +261,7 @@ HB_FUNC( HB_SOCKETOPEN )
    int iType = hb_parnidef( 2, HB_SOCKET_PT_STREAM );
    int iProtocol = hb_parni( 3 );
 
-   socket_init();
+   s_socket_init();
    if( ( socket = hb_socketOpen( iDomain, iType, iProtocol ) ) != HB_NO_SOCKET )
       hb_socketItemPut( hb_stackReturnItem(), socket );
    else
@@ -600,7 +604,7 @@ static HB_SOCKET socketSelectCallback( PHB_ITEM pItem )
 
 HB_FUNC( HB_SOCKETSELECT )
 {
-   socket_init();
+   s_socket_init();
    hb_retni( hb_socketSelect( hb_param( 1, HB_IT_ARRAY ), hb_parl( 2 ),
                               hb_param( 3, HB_IT_ARRAY ), hb_parl( 4 ),
                               hb_param( 5, HB_IT_ARRAY ), hb_parl( 6 ),
@@ -612,7 +616,7 @@ HB_FUNC( HB_SOCKETRESOLVEINETADDR )
    void * addr;
    unsigned int len;
 
-   socket_init();
+   s_socket_init();
    if( hb_socketResolveInetAddr( &addr, &len, hb_parc( 1 ), hb_parni( 2 ) ) )
    {
       PHB_ITEM pItem = hb_socketAddrToItem( addr, len );
@@ -633,7 +637,7 @@ HB_FUNC( HB_SOCKETRESOLVEADDR )
 {
    char * szAddr;
 
-   socket_init();
+   s_socket_init();
    szAddr = hb_socketResolveAddr( hb_parc( 1 ), hb_parnidef( 2, HB_SOCKET_AF_INET ) );
    if( szAddr )
       hb_retc_buffer( szAddr );
@@ -667,7 +671,7 @@ HB_FUNC( HB_SOCKETGETHOSTS )
    {
       PHB_ITEM pItem;
 
-      socket_init();
+      s_socket_init();
       pItem = hb_socketGetHosts( szAddr, hb_parnidef( 2, HB_SOCKET_AF_INET ) );
       if( pItem )
          hb_itemReturnRelease( pItem );
@@ -688,7 +692,7 @@ HB_FUNC( HB_SOCKETGETALIASES )
    {
       PHB_ITEM pItem;
 
-      socket_init();
+      s_socket_init();
       pItem = hb_socketGetAliases( szAddr, hb_parnidef( 2, HB_SOCKET_AF_INET ) );
       if( pItem )
          hb_itemReturnRelease( pItem );
@@ -704,7 +708,7 @@ HB_FUNC( HB_SOCKETGETIFACES )
 {
    PHB_ITEM pItem;
 
-   socket_init();
+   s_socket_init();
    pItem = hb_socketGetIFaces( hb_parni( 1 ), hb_parl( 2 ) );
    if( pItem )
       hb_itemReturnRelease( pItem );

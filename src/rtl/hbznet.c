@@ -46,12 +46,8 @@
 
 #define _HB_ZNET_INTERNAL_
 
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbsocket.h"
-#include "hbbfish.h"
 #include "hbznet.h"
+#include "hbbfish.h"
 #include "hbzlib.ch"
 
 #include <zlib.h>
@@ -73,7 +69,7 @@ typedef struct _HB_ZNETSTREAM
 }
 HB_ZNETSTREAM;
 
-#define HB_ZNET_BUFSIZE 0x4000
+#define HB_ZNET_BUFSIZE       0x4000
 
 #if MAX_MEM_LEVEL >= 8
    #define HB_ZNET_MEM_LEVEL   8
@@ -278,7 +274,10 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
  */
       if( pStream->err != Z_OK &&
           ! ( pStream->err == Z_BUF_ERROR && pStream->rd.avail_in == 0 ) )
+      {
+         hb_socketSetError( HB_SOCKET_ERR_OTHER );
          break;
+      }
    }
 
    len -= pStream->rd.avail_out;

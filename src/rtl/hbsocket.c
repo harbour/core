@@ -390,7 +390,7 @@ const char * hb_socketErrorStr( int iError )
       return "";
 }
 
-static void hb_socketSetRawError( int err )
+void hb_socketSetError( int err )
 {
    PHB_IOERRORS pError = hb_stackIOErrors();
 
@@ -415,7 +415,7 @@ HB_BOOL hb_socketLocalAddr( void ** pSockAddr, unsigned * puiLen,
                             const char * szAddr )
 {
    HB_SYMBOL_UNUSED( szAddr );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    *pSockAddr = NULL;
    *puiLen = 0;
    return HB_FALSE;
@@ -426,7 +426,7 @@ HB_BOOL hb_socketInetAddr( void ** pSockAddr, unsigned * puiLen,
 {
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( iPort );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    *pSockAddr = NULL;
    *puiLen = 0;
    return HB_FALSE;
@@ -437,7 +437,7 @@ HB_BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
 {
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( iPort );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    *pSockAddr = NULL;
    *puiLen = 0;
    return HB_FALSE;
@@ -447,7 +447,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
 {
    HB_SYMBOL_UNUSED( pSockAddr );
    HB_SYMBOL_UNUSED( len );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return NULL;
 }
 
@@ -455,14 +455,14 @@ int hb_socketAddrGetPort( const void * pSockAddr, unsigned len )
 {
    HB_SYMBOL_UNUSED( pSockAddr );
    HB_SYMBOL_UNUSED( len );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return -1;
 }
 
 HB_BOOL hb_socketAddrFromItem( void ** pSockAddr, unsigned * puiLen, PHB_ITEM pAddrItm )
 {
    HB_SYMBOL_UNUSED( pAddrItm );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    *pSockAddr = NULL;
    *puiLen = 0;
    return HB_FALSE;
@@ -472,14 +472,14 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
 {
    HB_SYMBOL_UNUSED( pSockAddr );
    HB_SYMBOL_UNUSED( len );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return NULL;
 }
 
 int hb_socketGetSockName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
 {
    HB_SYMBOL_UNUSED( sd );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    *pSockAddr = NULL;
    *puiLen = 0;
    return -1;
@@ -488,7 +488,7 @@ int hb_socketGetSockName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
 int hb_socketGetPeerName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
 {
    HB_SYMBOL_UNUSED( sd );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    *pSockAddr = NULL;
    *puiLen = 0;
    return -1;
@@ -499,14 +499,14 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
    HB_SYMBOL_UNUSED( domain );
    HB_SYMBOL_UNUSED( type );
    HB_SYMBOL_UNUSED( protocol );
-   hb_socketSetRawError( HB_SOCKET_ERR_PFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_PFNOSUPPORT );
    return HB_NO_SOCKET;
 }
 
 int hb_socketClose( HB_SOCKET sd )
 {
    HB_SYMBOL_UNUSED( sd );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -514,7 +514,7 @@ int hb_socketShutdown( HB_SOCKET sd, int iMode )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( iMode );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -523,7 +523,7 @@ int hb_socketBind( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen )
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( pSockAddr );
    HB_SYMBOL_UNUSED( uiLen );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -531,7 +531,7 @@ int hb_socketListen( HB_SOCKET sd, int iBacklog )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( iBacklog );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -539,7 +539,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( timeout );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    *pSockAddr = NULL;
    *puiLen = 0;
    return HB_NO_SOCKET;
@@ -551,7 +551,7 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_M
    HB_SYMBOL_UNUSED( pSockAddr );
    HB_SYMBOL_UNUSED( uiLen );
    HB_SYMBOL_UNUSED( timeout );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -562,7 +562,7 @@ long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_MAX
    HB_SYMBOL_UNUSED( len );
    HB_SYMBOL_UNUSED( flags );
    HB_SYMBOL_UNUSED( timeout );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -575,7 +575,7 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags, cons
    HB_SYMBOL_UNUSED( pSockAddr );
    HB_SYMBOL_UNUSED( uiSockLen );
    HB_SYMBOL_UNUSED( timeout );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -586,7 +586,7 @@ long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_MAXINT ti
    HB_SYMBOL_UNUSED( len );
    HB_SYMBOL_UNUSED( flags );
    HB_SYMBOL_UNUSED( timeout );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -597,7 +597,7 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
    HB_SYMBOL_UNUSED( len );
    HB_SYMBOL_UNUSED( flags );
    HB_SYMBOL_UNUSED( timeout );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    *pSockAddr = NULL;
    *puiSockLen = 0;
    return -1;
@@ -607,7 +607,7 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, HB_BOOL fBlocking )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fBlocking );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -615,7 +615,7 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fNoDelay );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -623,7 +623,7 @@ int hb_socketSetExclusiveAddr( HB_SOCKET sd, HB_BOOL fExclusive )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fExclusive );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -631,7 +631,7 @@ int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fReuse );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -639,7 +639,7 @@ int hb_socketSetKeepAlive( HB_SOCKET sd, HB_BOOL fKeepAlive )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fKeepAlive );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -647,7 +647,7 @@ int hb_socketSetBroadcast( HB_SOCKET sd, HB_BOOL fBroadcast )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fBroadcast );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -655,7 +655,7 @@ int hb_socketSetSndBufSize( HB_SOCKET sd, int iSize )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( iSize );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -663,7 +663,7 @@ int hb_socketSetRcvBufSize( HB_SOCKET sd, int iSize )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( iSize );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -671,7 +671,7 @@ int hb_socketGetSndBufSize( HB_SOCKET sd, int * piSize )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( piSize );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -679,7 +679,7 @@ int hb_socketGetRcvBufSize( HB_SOCKET sd, int * piSize )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( piSize );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -688,7 +688,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( af );
    HB_SYMBOL_UNUSED( szAddr );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -696,7 +696,7 @@ int hb_socketSelectRead( HB_SOCKET sd, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( timeout );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -704,7 +704,7 @@ int hb_socketSelectWrite( HB_SOCKET sd, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( timeout );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -713,7 +713,7 @@ int hb_socketSelectWriteEx( HB_SOCKET sd, HB_MAXINT timeout )
 {
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( timeout );
-   hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+   hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
    return -1;
 }
 
@@ -730,7 +730,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    HB_SYMBOL_UNUSED( fSetEX );
    HB_SYMBOL_UNUSED( timeout );
    HB_SYMBOL_UNUSED( pFunc );
-   hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_NOSUPPORT );
    return -1;
 }
 
@@ -738,7 +738,7 @@ HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const ch
 {
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( iPort );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    *pSockAddr = NULL;
    *puiLen = 0;
    return HB_FALSE;
@@ -748,7 +748,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
 {
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( af );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return NULL;
 }
 
@@ -756,7 +756,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 {
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( af );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return NULL;
 }
 
@@ -764,7 +764,7 @@ PHB_ITEM hb_socketGetAliases( const char * szAddr, int af )
 {
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( af );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return NULL;
 }
 
@@ -772,7 +772,7 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
 {
    HB_SYMBOL_UNUSED( pSockAddr );
    HB_SYMBOL_UNUSED( len );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return NULL;
 }
 
@@ -780,7 +780,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 {
    HB_SYMBOL_UNUSED( af );
    HB_SYMBOL_UNUSED( fNoAliases );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return NULL;
 }
 
@@ -1702,7 +1702,7 @@ HB_BOOL hb_socketLocalAddr( void ** pSockAddr, unsigned * puiLen,
    HB_SYMBOL_UNUSED( szAddr );
    *pSockAddr = NULL;
    *puiLen = 0;
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return HB_FALSE;
 #endif
 }
@@ -1740,12 +1740,12 @@ HB_BOOL hb_socketInetAddr( void ** pSockAddr, unsigned * puiLen,
          return HB_TRUE;
       }
       else
-         hb_socketSetRawError( HB_SOCKET_ERR_WRONGADDR );
+         hb_socketSetError( HB_SOCKET_ERR_WRONGADDR );
    }
 #else
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( iPort );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
 #endif
    *pSockAddr = NULL;
    *puiLen = 0;
@@ -1785,9 +1785,9 @@ HB_BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
          return HB_TRUE;
       }
       else if( err == 0 )
-         hb_socketSetRawError( HB_SOCKET_ERR_WRONGADDR );
+         hb_socketSetError( HB_SOCKET_ERR_WRONGADDR );
       else
-         hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+         hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
 #else
       int iTODO;
 #endif
@@ -1795,7 +1795,7 @@ HB_BOOL hb_socketInet6Addr( void ** pSockAddr, unsigned * puiLen,
 #else
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( iPort );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
 #endif
    *pSockAddr = NULL;
    *puiLen = 0;
@@ -1872,7 +1872,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
          break;
 #endif
    }
-   hb_socketSetRawError( szName ? 0 : HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( szName ? 0 : HB_SOCKET_ERR_AFNOSUPPORT );
    return szName;
 }
 
@@ -1911,7 +1911,7 @@ int hb_socketAddrGetPort( const void * pSockAddr, unsigned len )
          break;
 #endif
    }
-   hb_socketSetRawError( iPort != -1 ? 0 : HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( iPort != -1 ? 0 : HB_SOCKET_ERR_AFNOSUPPORT );
    return iPort;
 }
 
@@ -1949,7 +1949,7 @@ HB_BOOL hb_socketAddrFromItem( void ** pSockAddr, unsigned * puiLen, PHB_ITEM pA
          }
       }
    }
-   hb_socketSetRawError( fOK ? 0 : HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( fOK ? 0 : HB_SOCKET_ERR_AFNOSUPPORT );
    return fOK;
 }
 
@@ -2033,7 +2033,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
          break;
 #endif
    }
-   hb_socketSetRawError( pAddrItm ? 0 : HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( pAddrItm ? 0 : HB_SOCKET_ERR_AFNOSUPPORT );
    return pAddrItm;
 }
 
@@ -2066,7 +2066,7 @@ int hb_socketGetPeerName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
 #if defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && ( __WATCOMC__ <= 1290 )
    /* it's still not supported by Linux OpenWatcom port :-( */
    ret = -1;
-   hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_NOSUPPORT );
 #else
    HB_SOCKADDR_STORAGE st;
    socklen_t len = sizeof( st );
@@ -2108,7 +2108,7 @@ HB_SOCKET hb_socketOpen( int domain, int type, int protocol )
       hb_socketSetOsError( sd != HB_NO_SOCKET ? 0 : HB_SOCK_GETERROR() );
    }
    else
-      hb_socketSetRawError( err );
+      hb_socketSetError( err );
 
    return sd;
 }
@@ -2178,7 +2178,7 @@ int hb_socketShutdown( HB_SOCKET sd, int iMode )
 #endif
    else
    {
-      hb_socketSetRawError( HB_SOCKET_ERR_PARAMVALUE );
+      hb_socketSetError( HB_SOCKET_ERR_PARAMVALUE );
       return -1;
    }
 
@@ -2187,7 +2187,7 @@ int hb_socketShutdown( HB_SOCKET sd, int iMode )
    int iTODO;
    /* it's still not supported by Linux OpenWatcom port :-( */
    ret = -1;
-   hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_NOSUPPORT );
 }
 #else
    hb_vmUnlock();
@@ -2269,7 +2269,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
       hb_socketSetOsError( err );
    }
    else if( ret == 0 )
-      hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
+      hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
    hb_vmLock();
    return newsd;
 }
@@ -2295,12 +2295,12 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_M
       ret = hb_socketSelectWRE( sd, timeout );
       if( ret > 0 )
       {
-         hb_socketSetRawError( 0 );
+         hb_socketSetError( 0 );
          ret = 0;
       }
       else if( ret == 0 )
       {
-         hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
+         hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
          ret = -1;
       }
    }
@@ -2316,7 +2316,7 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_M
       if( err )
          hb_socketSetOsError( err );
       else
-         hb_socketSetRawError( rawerr );
+         hb_socketSetError( rawerr );
    }
 
    hb_vmLock();
@@ -2334,7 +2334,7 @@ long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_MAX
       lSent = hb_socketSelectWR( sd, timeout );
       if( lSent == 0 )
       {
-         hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
+         hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
          lSent = -1;
       }
    }
@@ -2376,7 +2376,7 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
       lSent = hb_socketSelectWR( sd, timeout );
       if( lSent == 0 )
       {
-         hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
+         hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
          lSent = -1;
       }
    }
@@ -2414,7 +2414,7 @@ long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_MAXINT ti
       lReceived = hb_socketSelectRD( sd, timeout );
       if( lReceived == 0 )
       {
-         hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
+         hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
          lReceived = -1;
       }
    }
@@ -2453,7 +2453,7 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
       lReceived = hb_socketSelectRD( sd, timeout );
       if( lReceived == 0 )
       {
-         hb_socketSetRawError( HB_SOCKET_ERR_TIMEOUT );
+         hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
          lReceived = -1;
       }
    }
@@ -2530,7 +2530,7 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, HB_BOOL fBlocking )
    int iTODO;
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fBlocking );
-   hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_NOSUPPORT );
    ret = -1;
 #endif
    return ret;
@@ -2555,7 +2555,7 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
    int iTODO;
    HB_SYMBOL_UNUSED( sd );
    HB_SYMBOL_UNUSED( fNoDelay );
-   hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_NOSUPPORT );
    ret = -1;
 #endif
    return ret;
@@ -2576,7 +2576,7 @@ int hb_socketSetExclusiveAddr( HB_SOCKET sd, HB_BOOL fExclusive )
       #else
          HB_SYMBOL_UNUSED( sd );
          HB_SYMBOL_UNUSED( fExclusive );
-         hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+         hb_socketSetError( HB_SOCKET_ERR_NOSUPPORT );
          ret = -1;
       #endif
    #else
@@ -2601,7 +2601,7 @@ int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
        */
       HB_SYMBOL_UNUSED( sd );
       HB_SYMBOL_UNUSED( fReuse );
-      hb_socketSetRawError( HB_SOCKET_ERR_NOSUPPORT );
+      hb_socketSetError( HB_SOCKET_ERR_NOSUPPORT );
       ret = -1;
    #else
    {
@@ -2716,9 +2716,9 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
          return ret;
       }
       else if( err == 0 )
-         hb_socketSetRawError( HB_SOCKET_ERR_WRONGADDR );
+         hb_socketSetError( HB_SOCKET_ERR_WRONGADDR );
       else
-         hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+         hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
       return -1;
 #else
       int iTODO;
@@ -2726,7 +2726,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
    }
 #endif
 
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return -1;
 }
 
@@ -2845,7 +2845,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    }
    else
    {
-      hb_socketSetRawError( HB_SOCKET_ERR_INVALIDHANDLE );
+      hb_socketSetError( HB_SOCKET_ERR_INVALIDHANDLE );
       pSet[ 0 ] = pSet[ 1 ] = pSet[ 2 ] = HB_FALSE;
       ret = -1;
    }
@@ -2951,7 +2951,7 @@ HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const ch
 #else
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( iPort );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
 #endif
    *pSockAddr = NULL;
    *puiLen = 0;
@@ -3192,7 +3192,7 @@ PHB_ITEM hb_socketGetAliases( const char * szAddr, int af )
    /* TODO: implement it */
    HB_SYMBOL_UNUSED( szAddr );
    HB_SYMBOL_UNUSED( af );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
    return NULL;
 }
 
@@ -3695,7 +3695,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
    int iTODO;
    HB_SYMBOL_UNUSED( af );
    HB_SYMBOL_UNUSED( fNoAliases );
-   hb_socketSetRawError( HB_SOCKET_ERR_AFNOSUPPORT );
+   hb_socketSetError( HB_SOCKET_ERR_AFNOSUPPORT );
 #endif
 
    if( pItem )

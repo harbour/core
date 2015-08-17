@@ -111,6 +111,8 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
    {
       char * pszAddr, * pszIpAddr;
 
+      hb_socketAutoInit();
+
       pszAddr = hb_strndup( pszHost, nLen );
       pszIpAddr = hb_socketResolveAddr( pszAddr, HB_SOCKET_AF_INET );
       hb_xfree( pszAddr );

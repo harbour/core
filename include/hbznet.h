@@ -48,6 +48,7 @@
 #define HB_ZNET_H_
 
 #include "hbapi.h"
+#include "hbsocket.h"
 
 HB_EXTERN_BEGIN
 
@@ -81,13 +82,13 @@ extern HB_EXPORT long    hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, con
 
 extern HB_EXPORT HB_SOCKET hb_znetInetFD( PHB_ITEM pItem, HB_BOOL fError );
 extern HB_EXPORT HB_MAXINT hb_znetInetTimeout( PHB_ITEM pItem, HB_BOOL fError );
-extern HB_EXPORT HB_BOOL hb_znetInetInitialize( PHB_ITEM, PHB_ZNETSTREAM,
-                                                HB_INET_RDFUNC,
-                                                HB_INET_WRFUNC,
-                                                HB_INET_FLFUNC,
-                                                HB_INET_CLFUNC,
-                                                HB_INET_ERFUNC,
-                                                HB_INET_ESFUNC );
+extern HB_EXPORT HB_BOOL   hb_znetInetInitialize( PHB_ITEM, PHB_ZNETSTREAM,
+                                                  HB_INET_RDFUNC,
+                                                  HB_INET_WRFUNC,
+                                                  HB_INET_FLFUNC,
+                                                  HB_INET_CLFUNC,
+                                                  HB_INET_ERFUNC,
+                                                  HB_INET_ESFUNC );
 
 HB_EXTERN_END
 
