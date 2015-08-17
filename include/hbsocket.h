@@ -64,11 +64,13 @@ typedef HB_SOCKET ( * HB_SOCKET_FUNC )( PHB_ITEM );
 
 #define HB_NO_SOCKET          ( ( HB_SOCKET ) -1 )
 
+extern HB_EXPORT void         hb_socketAutoInit( void );
 extern HB_EXPORT int          hb_socketInit( void );
 extern HB_EXPORT void         hb_socketCleanup( void );
 extern HB_EXPORT int          hb_socketGetError( void );
 extern HB_EXPORT int          hb_socketGetOsError( void );
 extern HB_EXPORT const char * hb_socketErrorStr( int iError );
+extern HB_EXPORT void         hb_socketSetError( int iError );
 extern HB_EXPORT int          hb_socketGetAddrFamily( const void * pSockAddr, unsigned len );
 extern HB_EXPORT HB_BOOL      hb_socketLocalAddr( void ** pSockAddr, unsigned * puiLen, const char * szAddr );
 extern HB_EXPORT HB_BOOL      hb_socketInetAddr( void ** pSockAddr, unsigned * puiLen, const char * szAddr, int iPort );
