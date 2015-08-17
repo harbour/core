@@ -24,6 +24,7 @@
 #endif
 
 DYNAMIC wapi_AbortDoc
+DYNAMIC wapi_AddFontMemResourceEx
 DYNAMIC wapi_AddFontResource
 DYNAMIC wapi_AddFontResourceEx
 DYNAMIC wapi_AppendMenu
@@ -188,6 +189,7 @@ DYNAMIC wapi_QueryPerformanceFrequency
 DYNAMIC wapi_Rectangle
 DYNAMIC wapi_RedrawWindow
 DYNAMIC wapi_ReleaseMutex
+DYNAMIC wapi_RemoveFontMemResourceEx
 DYNAMIC wapi_RemoveFontResource
 DYNAMIC wapi_RemoveFontResourceEx
 DYNAMIC wapi_RemoveMenu
