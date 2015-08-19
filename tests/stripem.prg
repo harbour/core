@@ -109,8 +109,8 @@ METHOD Read() CLASS TTextFile
       ? "File", ::cFileName, "not open for reading"
    ELSEIF ! ::lEoF
 
-      IF Len( ::cBlock ) == 0                   // Read new block
-         IF Len( cBlock := hb_vfReadLen( ::hFile, ::nBlockSize ) ) == 0
+      IF hb_BLen( ::cBlock ) == 0               // Read new block
+         IF hb_BLen( cBlock := hb_vfReadLen( ::hFile, ::nBlockSize ) ) == 0
             ::nError := FError()                // Error or EOF
             ::lEoF   := .T.
          ELSE

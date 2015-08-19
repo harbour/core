@@ -146,12 +146,12 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateTex
    LOCAL nIndent
 
    IF ! Empty( cEntry )
-      nIndent := iif( Len( cCaption ) > 0, 6, 0 )
-      IF Len( cCaption ) > 0 .AND. nIndent > 0
+      nIndent := iif( hb_BLen( cCaption ) > 0, 6, 0 )
+      IF hb_BLen( cCaption ) > 0 .AND. nIndent > 0
          hb_vfWrite( ::hFile, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
       ENDIF
       nIndent += ::Depth * 6
-      DO WHILE Len( cEntry ) > 0
+      DO WHILE hb_BLen( cEntry ) > 0
          hb_vfWrite( ::hFile, Indent( Parse( @cEntry, hb_eol() ), nIndent, 70, lPreformatted ) )
       ENDDO
    ENDIF

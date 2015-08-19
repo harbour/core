@@ -781,7 +781,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
 
          cEOL := EOLDetect( cFile, @nLines )
 
-         IF Len( cEOL ) == 0
+         IF hb_BLen( cEOL ) == 0
             AAdd( aErr, "content: has mixed EOL types" )
             IF lApplyFixes
                lReBuild := .T.

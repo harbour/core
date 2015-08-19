@@ -292,7 +292,7 @@ METHOD WvgComboBox:itemMarked( ... )
 
    IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_itemMarked := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_itemMarked )
+   ELSEIF HB_ISEVALITEM( ::sl_itemMarked )
       Eval( ::sl_itemMarked, , , Self )
    ENDIF
 
@@ -304,7 +304,7 @@ METHOD WvgComboBox:itemSelected( ... )
 
    IF Len( a_ ) == 1 .AND. HB_ISEVALITEM( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
-   ELSEIF Len( a_ ) >= 0 .AND. HB_ISEVALITEM( ::sl_itemSelected )
+   ELSEIF HB_ISEVALITEM( ::sl_itemSelected )
       Eval( ::sl_itemSelected, , , Self )
    ENDIF
 

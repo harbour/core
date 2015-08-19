@@ -57,7 +57,7 @@ PROCEDURE Main()
    HBTEST CharSList( NIL )             IS ""
 
    HBTEST CharHist( "Hello World !" )[ 109 ] IS 3
-   HBTEST ( nTotal := 0, AEval( CharHist( "Hello World !" ), {| x | nTotal += x } ), nTotal ) IS Len( "Hello World !" )
+   HBTEST ( nTotal := 0, AEval( CharHist( "Hello World !" ), {| x | nTotal += x } ), nTotal ) IS hb_BLen( "Hello World !" )
 
    HBTEST CharList( "Hello World !" ) IS "Helo Wrd!"
    HBTEST CharList( NIL )             IS ""

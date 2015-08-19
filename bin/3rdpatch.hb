@@ -524,7 +524,7 @@ PROCEDURE Main( ... )
 
       SaveLog( "diff", NIL, cStdErr )
 
-      IF Len( cDiffText ) > 0
+      IF hb_BLen( cDiffText ) > 0
          hb_MemoWrit( cDiffFile, cDiffText )
          OutStd( hb_StrFormat( "Local changes saved to `%1$s'; you may need to adjust `DIFF'.", cDiffFile ) + hb_eol() )
       ELSE
@@ -901,7 +901,7 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
          /* If anything is left in the input string, stick it to the end
           * of the output string. No path searching as that would be
           * an invalid diff anyway */
-         IF Len( SubStr( cFile, nStart ) ) > 0
+         IF hb_BLen( SubStr( cFile, nStart ) ) > 0
             cNewFile := SubStr( cFile, nStart )
          ENDIF
          EXIT

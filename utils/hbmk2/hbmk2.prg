@@ -8724,10 +8724,10 @@ STATIC PROCEDURE convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
 /* Same as hb_vfCopyFile() but it preserves timestamps */
 STATIC FUNCTION hbmk_hb_vfCopyFile( cSrc, cDst )
 
-   LOCAL nResult := hb_vfCopyFile( cSrc, cDst )
+   LOCAL nResult
    LOCAL tDate
 
-   IF nResult != F_ERROR
+   IF ( nResult := hb_vfCopyFile( cSrc, cDst ) ) != F_ERROR
       hb_vfTimeGet( cSrc, @tDate )
       hb_vfTimeSet( cDst, tDate )
    ENDIF
@@ -8987,68 +8987,66 @@ STATIC PROCEDURE DoInstCopy( hbmk )
 
    LOCAL cLink
 
-   IF ! Empty( hbmk[ _HBMK_aINSTPATH ] )
+   FOR EACH aInstPath IN hbmk[ _HBMK_aINSTPATH ]
 
-      FOR EACH aInstPath IN hbmk[ _HBMK_aINSTPATH ]
+      cInstPath := aInstPath[ _INST_cData ]
 
-         cInstPath := aInstPath[ _INST_cData ]
+      nCopied := 0  /* files copied */
+      FOR EACH aInstFile IN hbmk[ _HBMK_aINSTFILE ]
 
-         nCopied := 0 /* files copied */
-         FOR EACH aInstFile IN hbmk[ _HBMK_aINSTFILE ]
+         IF HB_ISARRAY( aInstFile[ _INST_cData ] )
+            cInstFile := aInstFile[ _INST_cData ][ 1 ]
+            cLink := aInstFile[ _INST_cData ][ 2 ]
+         ELSE
+            cInstFile := aInstFile[ _INST_cData ]
+            cLink := NIL
+         ENDIF
 
-            IF HB_ISARRAY( aInstFile[ _INST_cData ] )
-               cInstFile := aInstFile[ _INST_cData ][ 1 ]
-               cLink := aInstFile[ _INST_cData ][ 2 ]
+         IF aInstPath[ _INST_cGroup ] == aInstFile[ _INST_cGroup ]
+            IF Empty( hb_FNameNameExt( cInstPath ) )
+               cDestFileName := hb_DirSepAdd( cInstPath ) + hb_FNameNameExt( cInstFile )
             ELSE
-               cInstFile := aInstFile[ _INST_cData ]
-               cLink := NIL
-            ENDIF
-
-            IF aInstPath[ _INST_cGroup ] == aInstFile[ _INST_cGroup ]
-               IF Empty( hb_FNameNameExt( cInstPath ) )
-                  cDestFileName := hb_DirSepAdd( cInstPath ) + hb_FNameNameExt( cInstFile )
+               /* If destination is a full name, do not copy the extra files, only the first one.
+                  (for the empty group name, this will be the build target) */
+               IF nCopied > 0
+                  IF hbmk[ _HBMK_lInfo ]
+                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Install path not a directory (%1$s). Extra install files not copied." ), cInstPath ) )
+                  ENDIF
+                  EXIT
                ELSE
-                  /* If destination is a full name, do not copy the extra files, only the first one.
-                     (for the empty group name, this will be the build target) */
-                  IF nCopied > 0
-                     IF hbmk[ _HBMK_lInfo ]
-                        _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Install path not a directory (%1$s). Extra install files not copied." ), cInstPath ) )
-                     ENDIF
-                     EXIT
-                  ELSE
-                     cDestFileName := cInstPath
-                  ENDIF
-               ENDIF
-
-               IF ! hbmk[ _HBMK_lINC ] .OR. ;
-                  ! hb_vfTimeGet( cDestFileName, @tDst ) .OR. ;
-                  ! hb_vfTimeGet( cInstFile, @tSrc ) .OR. ;
-                  tSrc > tDst
-
-                  IF hb_DirBuild( hb_FNameDir( cDestFileName ) )
-                     ++nCopied
-                     IF cLink != NIL
-                        hb_vfErase( cDestFileName )
-                        IF hb_vfLinkSym( cLink, cDestFileName ) == F_ERROR
-                           _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying symbolic link %1$s to %2$s failed with %3$d." ), cInstFile, cDestFileName, FError() ) )
-                        ELSEIF hbmk[ _HBMK_lInfo ]
-                           _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied symbolic link %1$s to %2$s" ), cInstFile, cDestFileName ) )
-                        ENDIF
-                     ELSE
-                        IF hbmk_hb_vfCopyFile( cInstFile, cDestFileName ) == F_ERROR
-                           _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$d." ), cInstFile, cDestFileName, FError() ) )
-                        ELSEIF hbmk[ _HBMK_lInfo ]
-                           _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), cInstFile, cDestFileName ) )
-                        ENDIF
-                     ENDIF
-                  ELSE
-                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create install directory for install target %1$s." ), cDestFileName ) )
-                  ENDIF
+                  cDestFileName := cInstPath
                ENDIF
             ENDIF
-         NEXT
+
+            IF ! hbmk[ _HBMK_lINC ] .OR. ;
+               ! hb_vfTimeGet( cDestFileName, @tDst ) .OR. ;
+               ! hb_vfTimeGet( cInstFile, @tSrc ) .OR. ;
+               tSrc > tDst .OR. ;
+               aInstPath[ _INST_cGroup ] == "depimplibsrc"  /* always overwrite these because we're not building them ourselves so their timestamps may be arbitrary. */
+
+               IF hb_DirBuild( hb_FNameDir( cDestFileName ) )
+                  ++nCopied
+                  IF cLink != NIL
+                     hb_vfErase( cDestFileName )
+                     IF hb_vfLinkSym( cLink, cDestFileName ) == F_ERROR
+                        _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying symbolic link %1$s to %2$s failed with %3$d." ), cInstFile, cDestFileName, FError() ) )
+                     ELSEIF hbmk[ _HBMK_lInfo ]
+                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied symbolic link %1$s to %2$s" ), cInstFile, cDestFileName ) )
+                     ENDIF
+                  ELSE
+                     IF hbmk_hb_vfCopyFile( cInstFile, cDestFileName ) == F_ERROR
+                        _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$d." ), cInstFile, cDestFileName, FError() ) )
+                     ELSEIF hbmk[ _HBMK_lInfo ]
+                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), cInstFile, cDestFileName ) )
+                     ENDIF
+                  ENDIF
+               ELSE
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create install directory for install target %1$s." ), cDestFileName ) )
+               ENDIF
+            ENDIF
+         ENDIF
       NEXT
-   ENDIF
+   NEXT
 
    RETURN
 

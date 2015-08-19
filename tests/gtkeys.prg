@@ -291,7 +291,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) > 0
          ? " key:", Str( aKeys[ i ][ 2 ], 7 ), PadR( aKeys[ i ][ 1 ], 18 ) + aKeys[ i ][ 3 ]
       ELSEIF ( k >= 32 .AND. k <= 126 ) .OR. ( k >= 160 .AND. k <= 255 ) .OR. ;
-             Len( hb_keyChar( k ) ) > 0
+             hb_BLen( hb_keyChar( k ) ) > 0
 #ifdef __HARBOUR__
          ? "char:", iif( k > 256, " U+" + hb_NumToHex( hb_keyVal( k ), 4 ), Str( k, 7 ) ), ;
            " " + hb_keyChar( k )

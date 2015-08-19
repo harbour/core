@@ -86,10 +86,10 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    cOldScreen := SaveScreen( nBoxTop, nBoxLeft, nBoxBottom + 1, nBoxRight + 2 )
    cOldCursor := SetCursor( SC_NONE )
    // draw box
-   cOldColor := SetColor( aInfo[ 2, Len( aInfo[ 2 ] ) ] )
+   cOldColor := SetColor( aInfo[ 2 ][ Len( aInfo[ 2 ] ) ] )
 
    hb_DispBox( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight, cnBoxString, ;
-      aInfo[ 2, Len( aInfo[ 2 ] ) ] )
+      aInfo[ 2 ][ Len( aInfo[ 2 ] ) ] )
    IF lShadow
       hb_Shadow( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight )
    ENDIF
@@ -97,33 +97,33 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    // fill array with left positions for each row
    aLeft := Array( Len( aInfo[ 1 ] ) )
    FOR i := 1 TO Len( aInfo[ 1 ] )
-      IF Len( aInfo[ 1, i ] ) == nWidest
+      IF Len( aInfo[ 1 ][ i ] ) == nWidest
          aLeft[ i ] := nLeft
       ELSE
-         aLeft[ i ] := nLeft + Round( ( nWidest - Len( aInfo[ 1, i ] ) ) / 2, 0 )
+         aLeft[ i ] := nLeft + Round( ( nWidest - Len( aInfo[ 1 ][ i ] ) ) / 2, 0 )
       ENDIF
    NEXT
 
    // fill array of colors
    FOR i := 2 TO Len( aInfo[ 2 ] )
-      IF aInfo[ 2, i ] == NIL
-         aInfo[ 2, i ] := aInfo[ 2, i - 1 ]
+      IF aInfo[ 2 ][ i ] == NIL
+         aInfo[ 2 ][ i ] := aInfo[ 2 ][ i - 1 ]
       ENDIF
    NEXT
 
    // display messages
    FOR i := 1 TO Len( aInfo[ 1 ] )
-      hb_DispOutAt( nBoxTop + i, aLeft[ i ], aInfo[ 1, i ], aInfo[ 2, i ] )
+      hb_DispOutAt( nBoxTop + i, aLeft[ i ], aInfo[ 1 ][ i ], aInfo[ 2 ][ i ] )
    NEXT
 
    // highlight characters
    FOR i := 1 TO Len( aPos )
       FOR j := 1 TO Len( aPos[ i ] )
          ft_SetAttr( nBoxTop + i, ;
-            aPos[ i, j, 1 ] + aLeft[ i ] - 1, ;
+            aPos[ i ][ j ][ 1 ] + aLeft[ i ] - 1, ;
             nBoxTop + i, ;
-            aPos[ i, j, 2 ] + aLeft[ i ] - 1, ;
-            ft_Color2N( aInfo[ 2, Len( aInfo[ 2 ] ) ] ) )
+            aPos[ i ][ j ][ 2 ] + aLeft[ i ] - 1, ;
+            ft_Color2N( aInfo[ 2 ][ Len( aInfo[ 2 ] ) ] ) )
       NEXT
    NEXT
 

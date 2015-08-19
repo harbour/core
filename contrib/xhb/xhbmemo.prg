@@ -191,7 +191,7 @@ METHOD Edit() CLASS xhb_TMemoEditor
 
       IF ::bKeyBlock == NIL
 
-         IF ( Len( hb_keyChar( nKey ) ) > 0 .OR. ;
+         IF ( hb_BLen( hb_keyChar( nKey ) ) > 0 .OR. ;
               AScan( ::aEditKeys, nKey ) > 0 .OR. ;
               AScan( ::aConfigurableKeys, nKey ) > 0 .OR. ;
               AScan( ::aExtKeys, nKey ) > 0 .OR. ;
@@ -212,7 +212,7 @@ METHOD Edit() CLASS xhb_TMemoEditor
 
       IF ::ExistUdf()
 
-         IF Len( hb_keyChar( nKey ) ) > 0 .OR. ;
+         IF hb_BLen( hb_keyChar( nKey ) ) > 0 .OR. ;
             AScan( ::aEditKeys, nKey ) > 0 .OR. ;
             AScan( ::aConfigurableKeys, nKey ) > 0 .OR. ;
             AScan( ::aExtKeys, nKey ) > 0 .OR. ;
@@ -268,7 +268,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
       // HBEditor is not able to handle keys with a value higher than 256 or lower than 1
 
       IF ! lEdited .AND. ;
-         ( Len( hb_keyChar( nKey ) ) > 0 .OR. ;
+         ( hb_BLen( hb_keyChar( nKey ) ) > 0 .OR. ;
            AScan( { K_ALT_W, K_CTRL_W }, nKey ) > 0 .OR. ;
            AScan( ::aExtKeys, nKey ) > 0 .OR. ;
            nKey == K_ESC .OR. ;
@@ -288,7 +288,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
    CASE ME_DATA
 
       IF ! lEdited .AND. ;
-         ( Len( hb_keyChar( nKey ) ) > 0 .OR. ;
+         ( hb_BLen( hb_keyChar( nKey ) ) > 0 .OR. ;
            AScan( ::aExtKeys, nKey ) > 0 .OR. ;
            nKey == K_ESC .OR. ;
            nKey == K_INS )

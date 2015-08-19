@@ -219,7 +219,7 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
       IF aFile[ i ] == NIL
          EXIT
       ENDIF
-      IF Len( aFile[ i ] ) == 0
+      IF hb_BLen( aFile[ i ] ) == 0
          LOOP
       ENDIF
       IF ::bCallBack != NIL

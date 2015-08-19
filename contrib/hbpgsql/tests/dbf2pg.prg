@@ -99,7 +99,7 @@ PROCEDURE Main()
       ENDSWITCH
    NEXT
 
-   IF Empty( cTable ) .OR. Len( cFile ) == 0
+   IF Empty( cTable ) .OR. hb_BLen( cFile ) == 0
       help()
       RETURN
    ENDIF

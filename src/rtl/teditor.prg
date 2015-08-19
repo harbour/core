@@ -480,7 +480,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
       CASE ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock )
 
-      CASE hb_ULen( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
+      CASE hb_BLen( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
                              Space( TabCount( ::nTabWidth, ::nCol ) ), ;
                              hb_keyChar( nKey ) ) ) > 0
          ::lDirty := .T.

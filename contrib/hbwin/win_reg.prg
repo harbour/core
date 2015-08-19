@@ -112,7 +112,7 @@ FUNCTION win_regDelete( cRegPath, nRegSam )
 
    win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
-   IF Len( cEntry ) == 0
+   IF hb_BLen( cEntry ) == 0
       lRetVal := win_regDeleteKey( nHKEY, cKey )
    ELSE
       IF win_regOpenKeyEx( nHKEY, cKey, 0, hb_bitOr( KEY_SET_VALUE, hb_defaultValue( nRegSam, 0 ) ), @pKeyHandle )
