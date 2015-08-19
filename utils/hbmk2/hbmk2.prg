@@ -7864,7 +7864,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ENDIF
                   tmp += hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ) + ".app" + hb_ps() + "Contents"
                   IF hb_DirBuild( tmp + hb_ps() + "MacOS" )
-                     hbmk_hb_FCopy( hbmk[ _HBMK_cPROGNAME ], tmp + hb_ps() + "MacOS" + hb_ps() + hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ) )
+                     hbmk_hb_vfCopyFile( hbmk[ _HBMK_cPROGNAME ], tmp + hb_ps() + "MacOS" + hb_ps() + hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ) )
                      IF ! hb_vfExists( tmp + hb_ps() + "Info.plist" )
                         hb_MemoWrit( tmp + hb_ps() + "Info.plist", Apple_App_Template_Files( hbmk, "Info.plist", hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ) ) )
                      ENDIF
@@ -7874,7 +7874,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      IF ! Empty( hbmk[ _HBMK_aICON ] )
                         IF hb_DirBuild( tmp + hb_ps() + "Resources" )
                            FOR EACH tmp1 IN hbmk[ _HBMK_aICON ]
-                              hbmk_hb_FCopy( tmp1, tmp + hb_ps() + "Resources" + hb_ps() + hb_FNameNameExt( tmp1 ) )
+                              hbmk_hb_vfCopyFile( tmp1, tmp + hb_ps() + "Resources" + hb_ps() + hb_FNameNameExt( tmp1 ) )
                            NEXT
                         ENDIF
                      ENDIF
@@ -8721,10 +8721,10 @@ STATIC PROCEDURE convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
 
    RETURN
 
-/* Same as hb_FCopy() but it preserves timestamps */
-STATIC FUNCTION hbmk_hb_FCopy( cSrc, cDst )
+/* Same as hb_vfCopyFile() but it preserves timestamps */
+STATIC FUNCTION hbmk_hb_vfCopyFile( cSrc, cDst )
 
-   LOCAL nResult := hb_FCopy( cSrc, cDst )
+   LOCAL nResult := hb_vfCopyFile( cSrc, cDst )
    LOCAL tDate
 
    IF nResult != F_ERROR
@@ -9035,7 +9035,7 @@ STATIC PROCEDURE DoInstCopy( hbmk )
                            _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied symbolic link %1$s to %2$s" ), cInstFile, cDestFileName ) )
                         ENDIF
                      ELSE
-                        IF hbmk_hb_FCopy( cInstFile, cDestFileName ) == F_ERROR
+                        IF hbmk_hb_vfCopyFile( cInstFile, cDestFileName ) == F_ERROR
                            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Copying %1$s to %2$s failed with %3$d." ), cInstFile, cDestFileName, FError() ) )
                         ELSEIF hbmk[ _HBMK_lInfo ]
                            _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Copied %1$s to %2$s" ), cInstFile, cDestFileName ) )
@@ -13382,7 +13382,7 @@ STATIC PROCEDURE RebuildPO( hbmk, aPOTIN )
          IF hbmk[ _HBMK_lDEBUGI18N ]
             _hbmk_OutStd( hbmk, hb_StrFormat( "RebuildPO: creating unified .po: %1$s", cPOCooked ) )
          ENDIF
-         hb_FCopy( cPOTemp, cPOCooked )
+         hb_vfCopyFile( cPOTemp, cPOCooked )
          AAdd( aNew, cLNG )
       ENDIF
    NEXT
@@ -13820,7 +13820,7 @@ STATIC FUNCTION win_implib_coff( hbmk, cSourceDLL, cTargetLib )
       ENDIF
       RETURN iif( ;
          hb_FileMatch( cSourceLib, cTargetLib ) .OR. ;
-         hbmk_hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+         hbmk_hb_vfCopyFile( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
@@ -13838,7 +13838,7 @@ STATIC FUNCTION win_implib_omf( hbmk, cSourceDLL, cTargetLib )
       ENDIF
       RETURN iif( ;
          hb_FileMatch( cSourceLib, cTargetLib ) .OR. ;
-         hbmk_hb_FCopy( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+         hbmk_hb_vfCopyFile( cSourceLib, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND
@@ -13865,7 +13865,7 @@ STATIC FUNCTION win_implib_copy( hbmk, cSourceDLL, cTargetLib )
       /* Use .dll directly if all other attempts failed */
       RETURN iif( ;
          hb_FileMatch( cSourceDLL, cTargetLib ) .OR. ;
-         hbmk_hb_FCopy( cSourceDLL, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
+         hbmk_hb_vfCopyFile( cSourceDLL, cTargetLib ) != F_ERROR, _HBMK_IMPLIB_OK, _HBMK_IMPLIB_FAILED )
    ENDIF
 
    RETURN _HBMK_IMPLIB_NOTFOUND

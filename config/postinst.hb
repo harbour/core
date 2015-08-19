@@ -512,7 +512,7 @@ STATIC FUNCTION EOLConv( cFile )
       StrTran( cFile, Chr( 10 ), Chr( 13 ) + Chr( 10 ) ), ;
       cFile )
 
-/* Like hb_FCopy(), but accepts dir as target, can set attributes
+/* Like hb_vfCopyFile(), but accepts dir as target, can set attributes
    and translates EOL to target platform */
 STATIC PROCEDURE mk_hb_vfCopyFile( cSrc, cDst, lEOL, l644, lTS )
 
