@@ -1,6 +1,6 @@
 diff -urN ed25519.orig/ed25519.h ed25519/ed25519.h
---- ed25519.orig/ed25519.h	2015-08-09 19:54:24.583832700 +0200
-+++ ed25519/ed25519.h	2015-08-09 19:54:24.583832700 +0200
+--- ed25519.orig/ed25519.h	2015-08-19 18:55:52.613592100 +0200
++++ ed25519/ed25519.h	2015-08-19 18:55:52.613592100 +0200
 @@ -25,6 +25,7 @@
  #endif
  
@@ -10,13 +10,13 @@ diff -urN ed25519.orig/ed25519.h ed25519/ed25519.h
  int ED25519_DECLSPEC ed25519_verify(const unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key);
  void ED25519_DECLSPEC ed25519_add_scalar(unsigned char *public_key, unsigned char *private_key, const unsigned char *scalar);
 diff -urN ed25519.orig/fixedint.h ed25519/fixedint.h
---- ed25519.orig/fixedint.h	2015-08-09 19:54:24.583832700 +0200
-+++ ed25519/fixedint.h	2015-08-09 19:54:24.583832700 +0200
+--- ed25519.orig/fixedint.h	2015-08-19 18:55:52.629191200 +0200
++++ ed25519/fixedint.h	2015-08-19 18:55:52.629191200 +0200
 @@ -20,6 +20,7 @@
      
      #include <limits.h>
  
-+    #if defined(_MSC_VER)
++    #if ! defined(_MSC_VER)
      /* (u)int32_t */
      #ifndef uint32_t
          #if (ULONG_MAX == 0xffffffffUL)
@@ -41,8 +41,8 @@ diff -urN ed25519.orig/fixedint.h ed25519/fixedint.h
      #endif
  #endif
 diff -urN ed25519.orig/sha512.h ed25519/sha512.h
---- ed25519.orig/sha512.h	2015-08-09 19:54:24.599431800 +0200
-+++ ed25519/sha512.h	2015-08-09 19:54:24.599431800 +0200
+--- ed25519.orig/sha512.h	2015-08-19 18:55:52.644790300 +0200
++++ ed25519/sha512.h	2015-08-19 18:55:52.644790300 +0200
 @@ -1,21 +1,15 @@
  #ifndef SHA512_H
  #define SHA512_H
@@ -72,8 +72,8 @@ diff -urN ed25519.orig/sha512.h ed25519/sha512.h
  
  #endif
 diff -urN ed25519.orig/sign.c ed25519/sign.c
---- ed25519.orig/sign.c	2015-08-09 19:54:24.568233600 +0200
-+++ ed25519/sign.c	2015-08-09 19:54:24.568233600 +0200
+--- ed25519.orig/sign.c	2015-08-19 18:55:52.613592100 +0200
++++ ed25519/sign.c	2015-08-19 18:55:52.613592100 +0200
 @@ -3,6 +3,12 @@
  #include "ge.h"
  #include "sc.h"
