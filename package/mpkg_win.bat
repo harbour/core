@@ -52,8 +52,18 @@ xcopy /y /s /q "%~dp0..\addons\*.txt"                                           
 xcopy /y /s /q "%~dp0..\extras\*.*"                                               "%HB_ABSROOT%extras\"
 xcopy /y /s /q "%~dp0..\tests\*.*"                                                "%HB_ABSROOT%tests\"
 
-if "%LIB_TARGET%" == "32" xcopy /y /s /q "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw" "%HB_ABSROOT%"
-if "%LIB_TARGET%" == "64" xcopy /y /s /q "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64" "%HB_ABSROOT%"
+:: Copy these first to let 3rd party .dlls with overlapping names
+:: be overwritten by selected native target's binaries.
+xcopy /y       "%~dp0..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll"  "%HB_ABSROOT%bin\" 2> nul
+
+if "%LIB_TARGET%" == "32" (
+   xcopy /y       "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll"  "%HB_ABSROOT%bin\" 2> nul
+   xcopy /y /s /q "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw"                "%HB_ABSROOT%"
+)
+if "%LIB_TARGET%" == "64" (
+   xcopy /y       "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw\bin\*.dll"    "%HB_ABSROOT%bin\" 2> nul
+   xcopy /y /s /q "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64"            "%HB_ABSROOT%"
+)
 
 xcopy /y /s    "%~dp0..\pkg\linux\watcom\harbour-%HB_VF%-linux-watcom\lib"        "%HB_ABSROOT%lib\linux\watcom\" 2> nul
 xcopy /y /s    "%~dp0..\pkg\dos\watcom\hb%HB_VL%wa\lib"                           "%HB_ABSROOT%lib\" 2> nul
@@ -66,9 +76,6 @@ xcopy /y /s    "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\lib"        
 xcopy /y /s    "%~dp0..\pkg\win\msvc\harbour-%HB_VF%-win-msvc\lib"                "%HB_ABSROOT%lib\" 2> nul
 xcopy /y /s    "%~dp0..\pkg\win\msvc64\harbour-%HB_VF%-win-msvc64\lib"            "%HB_ABSROOT%lib\" 2> nul
 xcopy /y /s    "%~dp0..\pkg\win\watcom\harbour-%HB_VF%-win-watcom\lib"            "%HB_ABSROOT%lib\" 2> nul
-
-xcopy /y       "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\bin\*.dll"    "%HB_ABSROOT%bin\" 2> nul
-xcopy /y       "%~dp0..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\bin\*.dll"  "%HB_ABSROOT%bin\" 2> nul
 
 :: Create special implibs for Borland (requires BCC in PATH)
 :: NOTE: Using intermediate .def files, because direct .dll to .lib conversion
