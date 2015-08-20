@@ -10,6 +10,10 @@ FUNCTION ft_MDblClk( nClick, nButton, nInterval, nRow, nCol, nStart )
    LOCAL lDouble       // double click actually occurred
    LOCAL lDone         // loop flag
    LOCAL nPrs          // number of presses which occurred
+#if ! defined( __PLATFORM__DOS )
+   LOCAL nButtStat     // current button status
+   LOCAL nButtPrev     // previous button status
+#endif
 
    __defaultNIL( @nClick, 1 )
    __defaultNIL( @nButton, 0 )
@@ -22,11 +26,33 @@ FUNCTION ft_MDblClk( nClick, nButton, nInterval, nRow, nCol, nStart )
    nHorz := nCol
    lDouble := lDone := ( nClick == 0 )
 
+#if ! defined( __PLATFORM__DOS )
+   nButtPrev := nPrs := 0
+#endif
+
    // Wait for first press if requested
    DO WHILE ! lDone
+
+#if defined( __PLATFORM__DOS )
       ft_MButPrs( nButton, @nPrs, @nVert, @nHorz )
       nVert := Int( nVert / 8 )
       nHorz := Int( nHorz / 8 )
+#else
+      nButtStat := hb_bitAnd( ft_MGetCoord( @nVert, @nHorz ), 2 ^ nButton )
+      IF nButtStat != nButtPrev
+         IF nButtStat != 0
+            nButtPrev := nButtStat
+            nRow := nVert
+            nCol := nHorz
+         ELSEIF nButtPrev != 0
+            // end of click
+            IF nButtPrev == ( 2 ^ nButton )
+               ++nPrs
+            ENDIF
+            nButtPrev := 0
+         ENDIF
+      ENDIF
+#endif
 
       lDouble := ( nPrs > 0 )
       lDone := Seconds() - nStart >= nInterval .OR. lDouble
@@ -46,10 +72,31 @@ FUNCTION ft_MDblClk( nClick, nButton, nInterval, nRow, nCol, nStart )
    IF lDouble
       lDouble := lDone := .F.
 
+#if ! defined( __PLATFORM__DOS )
+      nButtPrev := nPrs := 0
+#endif
+
       DO WHILE ! lDone
+#if defined( __PLATFORM__DOS )
          ft_MButPrs( nButton, @nPrs, @nVert, @nHorz )
          nVert := Int( nVert / 8 )
          nHorz := Int( nHorz / 8 )
+#else
+         nButtStat := hb_bitAnd( ft_MGetCoord( @nVert, @nHorz ), 2 ^ nButton )
+         IF nButtStat != nButtPrev
+            IF nButtStat != 0
+               nButtPrev := nButtStat
+               nRow := nVert
+               nCol := nHorz
+            ELSEIF nButtPrev != 0
+               // end of click
+               IF nButtPrev == ( 2 ^ nButton )
+                  nPrs := nPrs + 1
+               ENDIF
+               nButtPrev := 0
+            ENDIF
+         ENDIF
+#endif
 
          lDouble := ( nPrs > 0 )
          lDone := Seconds() - nStart >= nInterval .OR. lDouble
