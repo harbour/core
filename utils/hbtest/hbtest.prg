@@ -427,8 +427,8 @@ STATIC PROCEDURE TEST_END()
 
    OutMsg( s_nFhnd, ;
       Replicate( "=", 75 ) + hb_eol() + ;
-      "Test calls passed: " + Str( s_nPass ) + " ( " + LTrim( Str( Round( ( 1 - ( s_nFail / s_nPass ) ) * 100, 2 ), 6, 2 ) ) + " % )" + hb_eol() + ;
-      "Test calls failed: " + Str( s_nFail ) + " ( " + LTrim( Str( Round( ( s_nFail / s_nPass ) * 100, 2 ), 6, 2 ) ) + " % )" + hb_eol() + ;
+      "Test calls passed: " + Str( s_nPass ) + " ( " + Str( Round( s_nPass / ( s_nPass + s_nFail ) * 100, 2 ), 6, 2 ) + " % )" + hb_eol() + ;
+      "Test calls failed: " + Str( s_nFail ) + " ( " + Str( Round( s_nFail / ( s_nPass + s_nFail ) * 100, 2 ), 6, 2 ) + " % )" + hb_eol() + ;
       "                   ----------" + hb_eol() + ;
       "            Total: " + Str( s_nPass + s_nFail ) + ;
       " ( Time elapsed: " + LTrim( Str( s_nEndTime - s_nStartTime ) ) + " seconds )" + hb_eol() + ;

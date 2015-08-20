@@ -90,14 +90,15 @@ STATIC PROCEDURE hbtest_Banner()
 EXIT PROCEDURE __hbtest_Exit()
 
    IF s_lBanner
-
-      Eval( hb_HGetDef( t_hParams, "output", {| ... | OutStd( ... ) } ), ;
-         Replicate( "=", 75 ) + hb_eol() + ;
-         "Test calls passed:", Str( s_nPass ), "(", hb_ntos( Round( ( 1 - ( s_nFail / s_nPass ) ) * 100, 2 ) ), "% )" + hb_eol() + ;
-         "Test calls failed:", Str( s_nFail ), "(", hb_ntos( Round( ( s_nFail / s_nPass ) * 100, 2 ) ), "% )" + hb_eol() + ;
-         "                   ----------" + hb_eol() + ;
-         "            Total:", Str( s_nPass + s_nFail ), ;
-         "( Time elapsed:", hb_ntos( hb_milliSeconds() - s_nStartTime ), "ms )" + hb_eol() )
+      IF s_nPass + s_nFail > 0
+         Eval( hb_HGetDef( t_hParams, "output", {| ... | OutStd( ... ) } ), ;
+            Replicate( "=", 75 ) + hb_eol() + ;
+            "Test calls passed:", Str( s_nPass ), "(", Str( Round( s_nPass / ( s_nPass + s_nFail ) * 100, 2 ), 6, 2 ), "% )" + hb_eol() + ;
+            "Test calls failed:", Str( s_nFail ), "(", Str( Round( s_nFail / ( s_nPass + s_nFail ) * 100, 2 ), 6, 2 ), "% )" + hb_eol() + ;
+            "                   ----------" + hb_eol() + ;
+            "            Total:", Str( s_nPass + s_nFail ), ;
+            "( Time elapsed:", hb_ntos( hb_milliSeconds() - s_nStartTime ), "ms )" + hb_eol() )
+      ENDIF
 
       ErrorLevel( iif( s_nFail == 0, 0, 1 ) )
    ENDIF

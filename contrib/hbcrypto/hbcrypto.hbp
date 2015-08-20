@@ -33,6 +33,8 @@ blake2s.c
 
 ed25519.c
 
+sha3.c
+
 pbkdf2.c
 scrypt.c
 strcmpc.c
