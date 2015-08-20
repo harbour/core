@@ -1573,7 +1573,7 @@ Supported shells per host platforms:
      * Git (1.7 or upper) [multi-platform, free, open-source]
         * <https://git-scm.com/>
         * Windows binaries:
-           * <https://git-for-windows.github.io>
+           * <https://git-for-windows.github.io/>
      * GitHub Client [multi-platform, free]
         * <https://windows.github.com/>
         * <https://mac.github.com/>
