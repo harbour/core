@@ -9,11 +9,10 @@ clone_folder: C:\hb\
 environment:
   HB_VF: daily
   matrix:
-# Do not set HB_COMPILER here, it will prevent compiler version auto-detection.
-# - TARGET: msvc64
-# - TARGET: msvc
-# - TARGET: mingw64
-  - TARGET: mingw
+# - HB_COMPILER: msvc64
+# - HB_COMPILER: msvc
+# - HB_COMPILER: mingw64
+  - HB_COMPILER: mingw
     BINTRAY_APIKEY:
       secure: ZrOhbhL3M2mVTZu+MU2WPDB/4rJArq4rEdND/eKa9iNHFCiLNUF49jvfbuXfnCGE
     BINTRAY_USER:
@@ -59,22 +58,22 @@ build_script:
 - set HB_DIR_UPX=C:\w\upx\
 - set HB_DIR_MINGW=C:\w\mingw64
 - set _ORI_PATH=%PATH%
-- if "%TARGET:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
-- if "%TARGET%" == "mingw" set HB_CPU=x86
-- if "%TARGET%" == "mingw64" set HB_CPU=x86_64
-- if "%TARGET%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-- if "%TARGET%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
-- if "%TARGET%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
-- if "%TARGET%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
-#- if "%TARGET:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
-- if "%TARGET%" == "mingw" set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win32-mingw\include
-- if "%TARGET%" == "mingw" set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win32-mingw\include
-#- if "%TARGET%" == "mingw" set HB_WITH_QT=C:\w\Qt\5.4\mingw491_32\include
-- if "%TARGET%" == "mingw64" set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win64-mingw\include
-- if "%TARGET%" == "mingw64" set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
-#- if "%TARGET%" == "msvc" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
-#- if "%TARGET%" == "msvc64" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
-- if "%TARGET:~0,5%-%HB_BUILD_MODE%" == "mingw-cpp" set HB_USER_LDFLAGS=-static-libgcc -static-libstdc++
+- if "%HB_COMPILER:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
+- if "%HB_COMPILER%" == "mingw" set HB_CPU=x86
+- if "%HB_COMPILER%" == "mingw64" set HB_CPU=x86_64
+- if "%HB_COMPILER%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+- if "%HB_COMPILER%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
+- if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+- if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+#- if "%HB_COMPILER:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
+- if "%HB_COMPILER%" == "mingw" set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win32-mingw\include
+- if "%HB_COMPILER%" == "mingw" set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win32-mingw\include
+#- if "%HB_COMPILER%" == "mingw" set HB_WITH_QT=C:\w\Qt\5.4\mingw491_32\include
+- if "%HB_COMPILER%" == "mingw64" set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win64-mingw\include
+- if "%HB_COMPILER%" == "mingw64" set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
+#- if "%HB_COMPILER%" == "msvc" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
+#- if "%HB_COMPILER%" == "msvc64" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
+- if "%HB_COMPILER:~0,5%-%HB_BUILD_MODE%" == "mingw-cpp" set HB_USER_LDFLAGS=-static-libgcc -static-libstdc++
 #- set HB_WITH_ADS=C:\w\ads\acesdk
 #- set HB_WITH_CAIRO=C:\w\cairo\include\cairo
 #- set HB_WITH_FIREBIRD=C:\w\firebird\include
