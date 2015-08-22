@@ -94,10 +94,12 @@ build_script:
 - set _HB_PKG_BUNDLE_C=no
 #- set _HB_PKG_DEBUG=yes
 - win-make.exe clean install HB_VERSION=%HB_VF%
+- set HB_COMPILER=mingw64
 - set HB_CPU=x86_64
 - set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win64-mingw\include
 - set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
 - win-make.exe clean install HB_VERSION=%HB_VF%
+#- set HB_COMPILER=
 #- set HB_CPU=
 #- set HB_WITH_CURL=
 #- set HB_WITH_OPENSSL=
