@@ -90,7 +90,7 @@ build_script:
 - set HB_BUILD_CONTRIB_DYN=yes
 - set HB_BUILD_OPTIM=yes
 - set HB_BUILD_PKG=yes
-- set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --stdout"
+- set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
 - set _HB_BUILD_PKG_ARCHIVE=no
 - set _HB_PKG_BUNDLE_C=no
 #- set _HB_PKG_DEBUG=yes

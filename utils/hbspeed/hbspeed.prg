@@ -138,6 +138,7 @@
       return { ProcName() + ": " + iif( <.info.>, <(info)>, #<testExp> ), time }
 
 static s_lStdOut := .f.
+static s_lNoEnv := .f.
 
 #ifdef __HARBOUR__
 #ifndef __XHARBOUR__
@@ -201,6 +202,8 @@ procedure main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
          next
       elseif cParam == "--scale"
          lScale := .t.
+      elseif cParam == "--noenv"
+         s_lNoEnv := .t.
       elseif cParam == "--stdout"
          s_lStdOut := .t.
       else
@@ -528,7 +531,9 @@ procedure test( nMT, cExclude, lScale )
          nMT := 0
       endif
    endif
-   ? Date(), Time(), OS()
+   if ! s_lNoEnv
+      ? Date(), Time(), OS()
+   endif
    ? Version() + iif( hb_mtvm(), " (MT)" + iif( nMT != 0, "+", "" ), "" ), ""
 #ifdef __HARBOUR__
    ?? hb_Compiler(), ""
