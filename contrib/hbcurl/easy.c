@@ -844,6 +844,11 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_ADDRESS_SCOPE, hb_parnl( 3 ) );
                break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x072D00
+            case HB_CURLOPT_DEFAULT_PROTOCOL:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_DEFAULT_PROTOCOL, hb_parc( 3 ) );
+               break;
+#endif
 #if LIBCURL_VERSION_NUM >= 0x071304
             case HB_CURLOPT_PROTOCOLS:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROTOCOLS, hb_parnl( 3 ) );
