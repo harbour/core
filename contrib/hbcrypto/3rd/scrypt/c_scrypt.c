@@ -28,8 +28,6 @@
  */
 #include "c_scrypt.h"
 
-#include <errno.h>
-
 static void blkcpy(uint8_t *, uint8_t *, size_t);
 static void blkxor(uint8_t *, uint8_t *, size_t);
 static void salsa20_8(uint8_t[64]);
@@ -214,19 +212,21 @@ crypto_scrypt(const uint8_t * passwd, size_t passwdlen,
 	uint8_t * XY;
 	uint32_t i;
 
+	int fail = -1;
+
 	/* Sanity-check parameters. */
 #if SIZE_MAX > UINT32_MAX
 	if (buflen > (((uint64_t)(1) << 32) - 1) * 32) {
-		errno = EFBIG;
+		fail = -2 /* EFBIG */;
 		goto err0;
 	}
 #endif
 	if ((uint64_t)(r) * (uint64_t)(p) >= (1 << 30)) {
-		errno = EFBIG;
+		fail = -2 /* EFBIG */;
 		goto err0;
 	}
 	if (((N & (N - 1)) != 0) || (N == 0)) {
-		errno = EINVAL;
+		fail = -3 /* EINVAL */;
 		goto err0;
 	}
 	if ((r > SIZE_MAX / 128 / p) ||
@@ -234,7 +234,7 @@ crypto_scrypt(const uint8_t * passwd, size_t passwdlen,
 	    (r > SIZE_MAX / 256) ||
 #endif
 	    (N > SIZE_MAX / 128 / r)) {
-		errno = ENOMEM;
+		fail = -4 /* ENOMEM */;
 		goto err0;
 	}
 
@@ -272,5 +272,5 @@ err1:
 	free(B);
 err0:
 	/* Failure! */
-	return (-1);
+	return (fail);
 }

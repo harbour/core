@@ -1,14 +1,13 @@
 diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
---- scrypt.orig/c_scrypt.c	2015-07-21 18:05:22.402032100 +0200
-+++ scrypt/c_scrypt.c	2015-07-21 18:05:22.402032100 +0200
-@@ -26,17 +26,9 @@
+--- scrypt.orig/c_scrypt.c	2015-08-24 19:05:22.620101800 +0200
++++ scrypt/c_scrypt.c	2015-08-24 19:05:22.620101800 +0200
+@@ -26,16 +26,6 @@
   * This file was originally written by Colin Percival as part of the Tarsnap
   * online backup system.
   */
 -#include "scrypt_platform.h"
-+#include "c_scrypt.h"
- 
- #include <errno.h>
+-
+-#include <errno.h>
 -#include <stdint.h>
 -#include <stdlib.h>
 -#include <string.h>
@@ -16,11 +15,10 @@ diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
 -#include "sha256.h"
 -#include "sysendian.h"
 -
--#include "c_scrypt.h"
+ #include "c_scrypt.h"
  
  static void blkcpy(uint8_t *, uint8_t *, size_t);
- static void blkxor(uint8_t *, uint8_t *, size_t);
-@@ -76,7 +68,7 @@
+@@ -76,7 +66,7 @@
  
  	/* Convert little-endian values in. */
  	for (i = 0; i < 16; i++)
@@ -29,7 +27,7 @@ diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
  
  	/* Compute x = doubleround^4(B32). */
  	for (i = 0; i < 16; i++)
-@@ -117,7 +109,7 @@
+@@ -117,7 +107,7 @@
  
  	/* Convert little-endian values out. */
  	for (i = 0; i < 16; i++)
@@ -38,7 +36,7 @@ diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
  }
  
  /**
-@@ -160,7 +152,7 @@
+@@ -160,7 +150,7 @@
  {
  	uint8_t * X = &B[(2 * r - 1) * 64];
  
@@ -47,9 +45,50 @@ diff -urN scrypt.orig/c_scrypt.c scrypt/c_scrypt.c
  }
  
  /**
+@@ -222,19 +212,21 @@
+ 	uint8_t * XY;
+ 	uint32_t i;
+ 
++	int fail = -1;
++
+ 	/* Sanity-check parameters. */
+ #if SIZE_MAX > UINT32_MAX
+ 	if (buflen > (((uint64_t)(1) << 32) - 1) * 32) {
+-		errno = EFBIG;
++		fail = -2 /* EFBIG */;
+ 		goto err0;
+ 	}
+ #endif
+ 	if ((uint64_t)(r) * (uint64_t)(p) >= (1 << 30)) {
+-		errno = EFBIG;
++		fail = -2 /* EFBIG */;
+ 		goto err0;
+ 	}
+ 	if (((N & (N - 1)) != 0) || (N == 0)) {
+-		errno = EINVAL;
++		fail = -3 /* EINVAL */;
+ 		goto err0;
+ 	}
+ 	if ((r > SIZE_MAX / 128 / p) ||
+@@ -242,7 +234,7 @@
+ 	    (r > SIZE_MAX / 256) ||
+ #endif
+ 	    (N > SIZE_MAX / 128 / r)) {
+-		errno = ENOMEM;
++		fail = -4 /* ENOMEM */;
+ 		goto err0;
+ 	}
+ 
+@@ -280,5 +272,5 @@
+ 	free(B);
+ err0:
+ 	/* Failure! */
+-	return (-1);
++	return (fail);
+ }
 diff -urN scrypt.orig/c_scrypt.h scrypt/c_scrypt.h
---- scrypt.orig/c_scrypt.h	2015-07-21 18:05:22.402032100 +0200
-+++ scrypt/c_scrypt.h	2015-07-21 18:05:22.402032100 +0200
+--- scrypt.orig/c_scrypt.h	2015-08-24 19:05:22.620101800 +0200
++++ scrypt/c_scrypt.h	2015-08-24 19:05:22.620101800 +0200
 @@ -29,7 +29,14 @@
  #ifndef _CRYPTO_SCRYPT_H_
  #define _CRYPTO_SCRYPT_H_
@@ -81,7 +120,7 @@ diff -urN scrypt.orig/c_scrypt.h scrypt/c_scrypt.h
 +
  #endif /* !_CRYPTO_SCRYPT_H_ */
 diff -urN scrypt.orig/config.h scrypt/config.h
---- scrypt.orig/config.h	2015-07-21 18:05:22.402032100 +0200
+--- scrypt.orig/config.h	2015-08-24 19:05:22.620101800 +0200
 +++ scrypt/config.h	1970-01-01 01:00:00.000000000 +0100
 @@ -1,98 +0,0 @@
 -/* config.h.in.  Generated from configure.ac by autoheader.  */
@@ -183,8 +222,8 @@ diff -urN scrypt.orig/config.h scrypt/config.h
 -/* Define for large files, on AIX-style hosts. */
 -#undef _LARGE_FILES
 diff -urN scrypt.orig/sha256.c scrypt/sha256.c
---- scrypt.orig/sha256.c	2015-07-21 18:05:22.402032100 +0200
-+++ scrypt/sha256.c	2015-07-21 18:05:22.417631200 +0200
+--- scrypt.orig/sha256.c	2015-08-24 19:05:22.620101800 +0200
++++ scrypt/sha256.c	2015-08-24 19:05:22.620101800 +0200
 @@ -23,336 +23,8 @@
   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
   * SUCH DAMAGE.
