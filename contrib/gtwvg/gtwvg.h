@@ -317,4 +317,8 @@ extern HB_EXPORT void          hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT *uR
 
 HB_EXTERN_END
 
+#ifndef LWA_ALPHA
+#define LWA_ALPHA         0x00000002
+#endif
+
 #endif /* HB_WVG_H_ */
