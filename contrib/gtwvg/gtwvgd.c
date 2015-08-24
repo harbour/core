@@ -2216,6 +2216,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             return 0;
 
          case HB_MSG_NOTIFYICON:
+#if ! defined( HB_OS_WIN_CE )
             if( lParam == WM_RBUTTONUP )
             {
                NOTIFYICONDATA tnid;
@@ -2227,6 +2228,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                Shell_NotifyIcon( NIM_DELETE, &tnid );
                ShowWindow( hWnd, SW_RESTORE );
             }
+#endif
             return 0;
 
          case WM_COMMAND:
@@ -3812,6 +3814,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             case HB_GTS_SYSTRAYICON:
 
+#if ! defined( HB_OS_WIN_CE )
                if( pWVT->hWnd && ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_ARRAY ) )
                {
                   int            mode = hb_arrayGetNI( pInfo->pNewVal2, 1 );
@@ -3852,6 +3855,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
                   ShowWindow( pWVT->hWnd, SW_HIDE );
                }
+#endif
                break;
 
             case HB_GTS_WNDSTATE:
