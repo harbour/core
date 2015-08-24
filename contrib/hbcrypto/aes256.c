@@ -360,7 +360,7 @@ void hb_aes256_decrypt_ecb(hb_aes256_context *ctx, HB_BYTE *buf)
     aes_addRoundKey(buf, ctx->key);
 }
 
-HB_FUNC( HB_AES256_ENCRYPT )
+HB_FUNC( HB_AES256_ENCRYPT_ECB )
 {
    PHB_ITEM pBuffer = hb_param( 1, HB_IT_STRING );
 
@@ -389,7 +389,7 @@ HB_FUNC( HB_AES256_ENCRYPT )
       hb_errRT_BASE( EG_ARG, 2101, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_AES256_DECRYPT )
+HB_FUNC( HB_AES256_DECRYPT_ECB )
 {
    PHB_ITEM pBuffer = hb_param( 1, HB_IT_STRING );
 
