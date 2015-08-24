@@ -26,7 +26,7 @@ rem ---------------------------------------------------------------
 
 pushd
 
-cd %~dp0
+cd "%~dp0"
 
 echo ! Self: %0
 
@@ -38,10 +38,10 @@ echo ! Downloading Harbour sources...
 
 if exist core-master rd /q /s core-master
 del master.
-%_HB_DIR_TOOL%wget --no-check-certificate https://github.com/harbour/core/archive/master.zip
+"%_HB_DIR_TOOL%wget" --no-check-certificate https://github.com/harbour/core/archive/master.zip
 if errorlevel 1 goto _EXIT
 
-%_HB_DIR_TOOL%unzip master.
+"%_HB_DIR_TOOL%unzip" master.
 cd core-master
 
 echo ! Setting up generic build parameters...
@@ -103,12 +103,12 @@ rem endlocal
 
 rem echo ! Uploading Harbour Windows binaries...
 rem
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.exe  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-mingw.zip  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.exe    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-bcc.zip    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.exe %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% harbour-nightly-win-watcom.zip %HB_SFNET_USER%%_HB_SFNET_URL%
+rem "%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" harbour-nightly-win-mingw.exe  %HB_SFNET_USER%%_HB_SFNET_URL%
+rem "%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" harbour-nightly-win-mingw.zip  %HB_SFNET_USER%%_HB_SFNET_URL%
+rem "%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" harbour-nightly-win-bcc.exe    %HB_SFNET_USER%%_HB_SFNET_URL%
+rem "%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" harbour-nightly-win-bcc.zip    %HB_SFNET_USER%%_HB_SFNET_URL%
+rem "%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" harbour-nightly-win-watcom.exe %HB_SFNET_USER%%_HB_SFNET_URL%
+rem "%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" harbour-nightly-win-watcom.zip %HB_SFNET_USER%%_HB_SFNET_URL%
 
 echo ! Creating unified Windows package...
 
@@ -116,15 +116,15 @@ call package\winuni\mpkg_win_uni.bat
 
 echo ! Uploading Harbour unified Windows package...
 
-%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.exe            %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win.7z             %HB_SFNET_USER%%_HB_SFNET_URL%
+"%_HB_DIR_TOOL%pscp.exe -i" "%HB_SFNET_FRS_PRIVATE_KEY%" "%HB_RT%harbour-nightly-win.exe"            %HB_SFNET_USER%%_HB_SFNET_URL%
+"%_HB_DIR_TOOL%pscp.exe -i" "%HB_SFNET_FRS_PRIVATE_KEY%" "%HB_RT%harbour-nightly-win.7z"             %HB_SFNET_USER%%_HB_SFNET_URL%
 
 :_EXIT
 
-%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-log.txt        %HB_SFNET_USER%%_HB_SFNET_URL%
-%_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-mingw-log.txt  %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-bcc-log.txt    %HB_SFNET_USER%%_HB_SFNET_URL%
-rem %_HB_DIR_TOOL%pscp.exe -i %HB_SFNET_FRS_PRIVATE_KEY% %HB_RT%harbour-nightly-win-watcom-log.txt %HB_SFNET_USER%%_HB_SFNET_URL%
+"%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" "%HB_RT%harbour-nightly-win-log.txt"        %HB_SFNET_USER%%_HB_SFNET_URL%
+"%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" "%HB_RT%harbour-nightly-win-mingw-log.txt"  %HB_SFNET_USER%%_HB_SFNET_URL%
+rem "%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" "%HB_RT%harbour-nightly-win-bcc-log.txt"    %HB_SFNET_USER%%_HB_SFNET_URL%
+rem "%_HB_DIR_TOOL%pscp.exe" -i "%HB_SFNET_FRS_PRIVATE_KEY%" "%HB_RT%harbour-nightly-win-watcom-log.txt" %HB_SFNET_USER%%_HB_SFNET_URL%
 
 echo ! Finished.
 

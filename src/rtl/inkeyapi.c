@@ -353,30 +353,6 @@ void hb_inkeyReset( void )
    }
 }
 
-HB_SIZE hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize )
-{
-   HB_SIZE nLen = 0;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeyKeyString(%d,%p, %" HB_PFS "u)", iKey, buffer, nSize ) );
-
-   if( HB_INKEY_ISUNICODE( iKey ) )
-   {
-      nLen = hb_cdpTextPutU16( hb_vmCDP(), buffer, nSize, HB_INKEY_VALUE( iKey ) );
-   }
-   else
-   {
-      if( HB_INKEY_ISCHAR( iKey ) )
-         iKey = HB_INKEY_VALUE( iKey );
-      if( iKey >= 32 && iKey <= 255 && iKey != 127 )
-      {
-         PHB_CODEPAGE cdp = hb_vmCDP();
-         nLen = hb_cdpTextPutU16( cdp, buffer, nSize,
-                                  hb_cdpGetU16( cdp, ( HB_UCHAR ) iKey ) );
-      }
-   }
-   return nLen;
-}
-
 static int s_inkeyTransChar( int iKey, int iFlags, const HB_KEY_VALUE * pKeyVal )
 {
    if( ( iFlags & HB_KF_KEYPAD ) != 0 &&
@@ -425,6 +401,41 @@ static int s_inkeyTransChar( int iKey, int iFlags, const HB_KEY_VALUE * pKeyVal 
       return pKeyVal->shift_key;
    else
       return pKeyVal->key;
+}
+
+HB_SIZE hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize )
+{
+   HB_SIZE nLen = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeyKeyString(%d,%p, %" HB_PFS "u)", iKey, buffer, nSize ) );
+
+   if( HB_INKEY_ISUNICODE( iKey ) )
+   {
+      nLen = hb_cdpTextPutU16( hb_vmCDP(), buffer, nSize, HB_INKEY_VALUE( iKey ) );
+   }
+   else
+   {
+      if( HB_INKEY_ISCHAR( iKey ) )
+         iKey = HB_INKEY_VALUE( iKey );
+      else if( HB_INKEY_ISKEY( iKey ) )
+      {
+         int iFlags = HB_INKEY_FLAGS( iKey );
+
+         iKey = HB_INKEY_VALUE( iKey );
+
+         if( iKey > 0 && iKey <= ( int ) HB_SIZEOFARRAY( s_transKeyFun ) )
+            iKey = s_inkeyTransChar( iKey, iFlags, &s_transKeyFun[ iKey - 1 ] );
+         else if( iKey >= 32 && iKey <= 127 )
+            iKey = s_inkeyTransChar( iKey, iFlags, &s_transKeyStd[ iKey - 32 ] );
+      }
+      if( iKey >= 32 && iKey <= 255 && iKey != 127 )
+      {
+         PHB_CODEPAGE cdp = hb_vmCDP();
+         nLen = hb_cdpTextPutU16( cdp, buffer, nSize,
+                                  hb_cdpGetU16( cdp, ( HB_UCHAR ) iKey ) );
+      }
+   }
+   return nLen;
 }
 
 int hb_inkeyKeyStd( int iKey )

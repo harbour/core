@@ -2756,7 +2756,7 @@ HB_FUNC( WVT_LOADPICTUREEX )
    hb_strfree( hImage );
    if( iPicture )
    {
-      hb_retnl( ( HB_PTRDIFF ) iPicture );
+      hb_retnint( ( HB_PTRDIFF ) iPicture );
    }
 #endif
 }
@@ -2796,7 +2796,7 @@ HB_FUNC( WVT_LOADPICTUREFROMRESOURCEEX )
    hb_strfree( hSection );
    if( iPicture )
    {
-      hb_retnl( ( HB_PTRDIFF ) iPicture );
+      hb_retnint( ( HB_PTRDIFF ) iPicture );
    }
 #endif
 }

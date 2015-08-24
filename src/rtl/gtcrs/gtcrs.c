@@ -361,14 +361,14 @@ static int getClipKey( int nKey )
          if( n >= 0 && n < NO_STDKEYS )
          {
             if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
-                 stdKeyTab[n].shift_key != 0 )
-               nRet = stdKeyTab[n].shift_key;
-            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[n].alt_key != 0 )
-               nRet = stdKeyTab[n].alt_key;
-            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[n].ctrl_key != 0 )
-               nRet = stdKeyTab[n].ctrl_key;
+                 stdKeyTab[ n ].shift_key != 0 )
+               nRet = stdKeyTab[ n ].shift_key;
+            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[ n ].alt_key != 0 )
+               nRet = stdKeyTab[ n ].alt_key;
+            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[ n ].ctrl_key != 0 )
+               nRet = stdKeyTab[ n ].ctrl_key;
             else
-               nRet = stdKeyTab[n].key;
+               nRet = stdKeyTab[ n ].key;
          }
          else
             nRet = nKey;
@@ -395,9 +395,9 @@ static void sig_handler( int signo )
    {
       case SIGCHLD:
       {
-         int stat;
+         int status;
          pid_t pid;
-         while( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
+         while( ( pid = waitpid( -1, &status, WNOHANG ) ) > 0 ) ;
          break;
       }
       case SIGWINCH:
@@ -447,10 +447,10 @@ static void sig_handler( int signo )
    {
       case SIGCHLD:
       {
-         int stat;
+         int status;
          pid_t pid;
          pszSig = "SIGCHLD";
-         while( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) ;
+         while( ( pid = waitpid( -1, &status, WNOHANG ) ) > 0 ) ;
          break;
       }
       case SIGWINCH:
@@ -1864,7 +1864,7 @@ static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE 
    }
 }
 
-static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, int box )
+static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, int transBox )
 {
    int i, aSet;
    chtype ch;
@@ -1906,10 +1906,7 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
           ( ioBase->std_chmap[ i ] & A_ALTCHARSET ) == 0 )
       {
          if( ioBase->out_transtbl == NULL )
-         {
-            ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
-            memset( ioBase->out_transtbl, 0, 256 );
-         }
+            ioBase->out_transtbl = ( unsigned char * ) hb_xgrabz( 256 );
          ioBase->out_transtbl[ i ] = ch & A_CHARTEXT;
       }
    }
@@ -1923,15 +1920,12 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
                                hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
 
             ioBase->std_chmap[ i ] = uc | A_NORMAL;
-            if( box )
+            if( transBox )
                ioBase->box_chmap[ i ] = uc | A_NORMAL;
             if( i != ( int ) uc )
             {
                if( ioBase->out_transtbl == NULL )
-               {
-                  ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
-                  memset( ioBase->out_transtbl, 0, 256 );
-               }
+                  ioBase->out_transtbl = ( unsigned char * ) hb_xgrabz( 256 );
                ioBase->out_transtbl[ i ] = uc;
             }
          }
@@ -1947,8 +1941,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
    unsigned int i, n;
    char buf[ 256 ], * ptr, * crsterm = NULL;
 
-   ioBase = ( InOutBase * ) hb_xgrab( sizeof( InOutBase ) );
-   memset( ioBase, 0, sizeof( InOutBase ) );
+   ioBase = ( InOutBase * ) hb_xgrabz( sizeof( InOutBase ) );
 
    if( ! term || ! *term )
       term = getenv( "HB_TERM" );

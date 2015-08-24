@@ -93,15 +93,9 @@ HB_FUNC( HPDF_LOADJPEGIMAGEFROMFILE )
 HB_FUNC( HPDF_LOADPNGIMAGEFROMMEM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   HPDF_UINT   size = ( HPDF_UINT ) hb_parclen( 2 );
-   HPDF_BYTE * buffer;
-
-   buffer = ( HPDF_BYTE * ) hb_xgrab( size + 1 );
-
-   hb_retptr( ( HPDF_Image ) HPDF_LoadPngImageFromMem( hb_HPDF_Doc_par( 1 ), buffer, size ) );
-
-   if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
-      hb_xfree( buffer );
+   hb_retptr( ( HPDF_Image ) HPDF_LoadPngImageFromMem( hb_HPDF_Doc_par( 1 ),
+                                          ( const HPDF_BYTE * ) hb_parcx( 2 ),
+                                          ( HPDF_UINT ) hb_parclen( 2 ) ) );
 #else
    hb_storc( NULL, 2 );
    hb_retptr( NULL );
@@ -116,15 +110,9 @@ HB_FUNC( HPDF_LOADPNGIMAGEFROMMEM )
 HB_FUNC( HPDF_LOADJPEGIMAGEFROMMEM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
-   HPDF_UINT   size = ( HPDF_UINT ) hb_parclen( 2 );
-   HPDF_BYTE * buffer;
-
-   buffer = ( HPDF_BYTE * ) hb_xgrab( size + 1 );
-
-   hb_retptr( ( HPDF_Image ) HPDF_LoadJpegImageFromMem( hb_HPDF_Doc_par( 1 ), buffer, size ) );
-
-   if( ! hb_storclen_buffer( ( char * ) buffer, size, 2 ) )
-      hb_xfree( buffer );
+   hb_retptr( ( HPDF_Image ) HPDF_LoadJpegImageFromMem( hb_HPDF_Doc_par( 1 ),
+                                          ( const HPDF_BYTE * ) hb_parcx( 2 ),
+                                          ( HPDF_UINT ) hb_parclen( 2 ) ) );
 #else
    hb_storc( NULL, 2 );
    hb_retptr( NULL );
@@ -171,7 +159,12 @@ HB_FUNC( HPDF_IMAGE_GETBITSPERCOMPONENT )
  */
 HB_FUNC( HPDF_IMAGE_GETCOLORSPACE )
 {
-   hb_retc( HPDF_Image_GetColorSpace( ( HPDF_Image ) hb_parptr( 1 ) ) );
+   HPDF_Image image = ( HPDF_Image ) hb_parptr( 1 );
+
+   if( image )
+      hb_retc( HPDF_Image_GetColorSpace( image ) );
+   else
+      hb_retc_null();
 }
 
 /* HPDF_Image_SetColorMask( hImage, nRGB_R_Min, nRGB_R_Max, nRGB_G_Min, nRGB_G_Max, nRGB_B_Min, nRGB_B_Max )

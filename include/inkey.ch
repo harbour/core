@@ -84,9 +84,9 @@
 #define K_MBUTTONDOWN           1008   /* Middle Button Down */
 #define K_MBUTTONUP             1009   /* Middle Button Up */
 #define K_MDBLCLK               1010   /* Middle Button Double Click */
-#define K_MMLEFTDOWN            1011   /* Mouse Move Left Down (COMPATIBILITY with removed Clipper incompatible Harbour extension, isn't used anymore) */
-#define K_MMRIGHTDOWN           1012   /* Mouse Move Right Down (COMPATIBILITY with removed Clipper incompatible Harbour extension, isn't used anymore) */
-#define K_MMMIDDLEDOWN          1013   /* Mouse Move Middle Down (COMPATIBILITY with removed Clipper incompatible Harbour extension, isn't used anymore) */
+#define K_MMLEFTDOWN            1011   /* Mouse Move Left Down (COMPATIBILITY with removed Cl*pper incompatible Harbour extension, isn't used anymore) */
+#define K_MMRIGHTDOWN           1012   /* Mouse Move Right Down (COMPATIBILITY with removed Cl*pper incompatible Harbour extension, isn't used anymore) */
+#define K_MMMIDDLEDOWN          1013   /* Mouse Move Middle Down (COMPATIBILITY with removed Cl*pper incompatible Harbour extension, isn't used anymore) */
 #define K_MWFORWARD             1014   /* Mouse Wheel Forward */
 #define K_MWBACKWARD            1015   /* Mouse Wheel Backward */
 #define K_NCMOUSEMOVE           1016   /* Non-Client Area Mouse Movement */
@@ -100,6 +100,8 @@
 #define HB_K_LOSTFOCUS          1104
 #define HB_K_CONNECT            1105
 #define HB_K_DISCONNECT         1106
+#define HB_K_TERMINATE          1107
+#define HB_K_MENU               1108
 
 /* Cursor movement keys */
 
@@ -366,6 +368,5 @@
 #define HB_KX_CENTER            27
 #define HB_KX_PRTSCR            28
 #define HB_KX_PAUSE             29
-
 
 #endif /* HB_INKEY_CH_ */

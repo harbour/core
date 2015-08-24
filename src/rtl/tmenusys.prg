@@ -147,10 +147,10 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
    oTopMenu:select( nSelection )
 
-   IF !( oTopMenu:ClassName() == "TOPBARMENU" ) .AND. ! oTopMenu:isOpen
-      oTopMenu:open()
-   ELSE
+   IF oTopMenu:ClassName() == "TOPBARMENU" .OR. oTopMenu:isOpen
       oTopMenu:display()
+   ELSE
+      oTopMenu:open()
    ENDIF
 
    IF nSelection <= 0
@@ -617,7 +617,7 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
    LOCAL nCurrent
    LOCAL cMsg
 
-   IF HB_ISLOGICAL( ::lOldMsgFlag ) .AND. ::lOldMsgFlag
+   IF hb_defaultValue( ::lOldMsgFlag, .F. )
       RestScreen( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight, ::cMsgSaveS )
    ENDIF
 

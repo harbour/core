@@ -1,7 +1,7 @@
 %pure-parser
 %parse-param { PHB_MACRO pMacro }
 %lex-param   { PHB_MACRO pMacro }
-%name-prefix = "hb_macro_yy"
+%name-prefix "hb_macro_yy"
 
 %{
 /*
@@ -79,6 +79,9 @@
 #elif defined( __WATCOMC__ )
 #  pragma warning 13 9
 #  pragma warning 368 9
+#elif defined( _MSC_VER )
+#  pragma warning( disable : 4244 )
+#  pragma warning( disable : 4702 )
 #endif
 
 #undef alloca

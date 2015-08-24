@@ -95,9 +95,9 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
    oBrowse := TBrowseDB( nTop, nLeft, nBottom, nRight )
    oBrowse:headSep   := iif( HB_ISSTRING( xHeadingSeparators ), xHeadingSeparators, hb_UTF8ToStrBox( "═╤═" ) )
    oBrowse:colSep    := iif( HB_ISSTRING( xColumnSeparators ), xColumnSeparators, hb_UTF8ToStrBox( " │ " ) )
-   oBrowse:footSep   := iif( HB_ISSTRING( xFootingSeparators ), xFootingSeparators, "" )
+   oBrowse:footSep   := hb_defaultValue( xFootingSeparators, "" )
    oBrowse:skipBlock := {| nRecs | Skipped( nRecs, lAppend ) }
-   oBrowse:autoLite  := .F. /* Set to .F. just like in CA-Cl*pper. [vszakats] */
+   oBrowse:autoLite  := .F.  /* Set to .F. just like in CA-Cl*pper. [vszakats] */
 
    IF HB_ISARRAY( acColumns )
       nColCount := 0
@@ -123,8 +123,8 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
       IF HB_ISARRAY( acColumns )
          cBlock := acColumns[ nPos ]
          IF ( nAliasPos := At( "->", cBlock ) ) > 0
-            cHeading := SubStr( cBlock, 1, nAliasPos - 1 ) + "->;" + ;
-               SubStr( cBlock, nAliasPos + 2 )
+            cHeading := Left( cBlock, nAliasPos - 1 ) + "->;" + ;
+                        SubStr( cBlock, nAliasPos + 2 )
          ELSE
             cHeading := cBlock
          ENDIF
@@ -177,7 +177,6 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
       ENDIF
 
       oBrowse:addColumn( oColumn )
-
    NEXT
 
    nOldCUrsor := SetCursor( SC_NONE )

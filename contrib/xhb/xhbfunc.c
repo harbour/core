@@ -212,7 +212,7 @@ HB_FUNC( HB_F_EOF )
 HB_FUNC( CURDIRX )
 {
    HB_ERRCODE uiErrorOld = hb_fsError();
-   char *     pbyBuffer  = ( char * ) hb_xgrab( HB_PATH_MAX + 1 );
+   char *     pbyBuffer  = ( char * ) hb_xgrab( HB_PATH_MAX );
    PHB_ITEM   pDrv       = hb_param( 1, HB_IT_STRING );
    int        iCurDrv    = hb_fsCurDrv();
    int        iDrv;

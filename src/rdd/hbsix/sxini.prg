@@ -76,7 +76,6 @@ STATIC FUNCTION _sx_INIlogical( cVal )
 
 FUNCTION _sx_IniInit( nArea )
 
-   LOCAL cFile, cPath, cName, cExt, cDrive
    LOCAL xShared, xReadOnly, xAlias, xTrigger
    LOCAL hIni, item, sect, h, a
 
@@ -85,7 +84,7 @@ FUNCTION _sx_IniInit( nArea )
     * by workarea number. In Harbour we are using hash arrays.
     */
 
-   IF Left( Type( "SxIniInfo" ), 1 ) == "U"
+   IF hb_LeftEq( Type( "SxIniInfo" ), "U" )
       PUBLIC SxIniInfo := { => }
       hb_HCaseMatch( SxIniInfo, .F. )
       hb_HAutoAdd( SxIniInfo, HB_HAUTOADD_ASSIGN )
@@ -95,10 +94,7 @@ FUNCTION _sx_IniInit( nArea )
       RETURN .F.
    ENDIF
 
-   cFile := ( nArea )->( dbInfo( DBI_FULLPATH ) )
-   hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
-   cFile := hb_FNameMerge( cPath, cName, ".ini", cDrive )
-   hIni := hb_iniRead( cFile, .F.,, .F. )
+   hIni := hb_iniRead( hb_FNameExtSet( ( nArea )->( dbInfo( DBI_FULLPATH ) ), ".ini" ), .F.,, .F. )
 
    IF ! Empty( hIni )
       IF HB_SIX_SECTION $ hIni

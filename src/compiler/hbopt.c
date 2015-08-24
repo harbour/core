@@ -1298,7 +1298,7 @@ static int hb_compPCodeTraceAssignedUnused( PHB_HFUNC pFunc, HB_SIZE nPos, HB_BY
                if( fCanBreak )
                {
                   nPos += hb_compPCodeSize( pFunc, nPos );
-                  while( pFunc->pCode[ nPos ] != HB_P_ENDPROC && pFunc->pCode[ nPos ] != HB_P_ENDBLOCK && 
+                  while( pFunc->pCode[ nPos ] != HB_P_ENDPROC && pFunc->pCode[ nPos ] != HB_P_ENDBLOCK &&
                          pFunc->pCode[ nPos ] != HB_P_SEQBEGIN && pFunc->pCode[ nPos ] != HB_P_SEQEND )
                   {
                      nPos += hb_compPCodeSize( pFunc, nPos );
@@ -1618,8 +1618,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    }
 
    /* Initial scan */
-   pLocals = ( PHB_OPT_LOCAL ) hb_xgrab( sizeof( HB_OPT_LOCAL ) * usLocalCount );
-   memset( pLocals, 0, sizeof( HB_OPT_LOCAL ) * usLocalCount );
+   pLocals = ( PHB_OPT_LOCAL ) hb_xgrabz( sizeof( HB_OPT_LOCAL ) * usLocalCount );
    hb_compPCodeEnumScanLocals( pFunc, pLocals );
 
    /* Check */

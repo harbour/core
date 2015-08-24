@@ -85,7 +85,7 @@ static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
-static SDDNODE mysqldd =
+static SDDNODE s_mysqldd =
 {
    NULL,
    "MYSQL",
@@ -104,7 +104,7 @@ static void hb_mysqldd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &mysqldd ) ||
+   if( ! hb_sddRegister( &s_mysqldd ) ||
        ( sizeof( MYSQL_ROW_OFFSET ) != sizeof( void * ) ) )
    {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
@@ -238,7 +238,6 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    HB_USHORT     uiFields, uiCount;
    HB_ERRCODE    errCode = 0;
    HB_BOOL       bError;
-   DBFIELDINFO   pFieldInfo;
    MYSQL_FIELD * pMyField;
    void **       pRow;
 
@@ -260,95 +259,107 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    }
 
    uiFields = ( HB_USHORT ) mysql_num_fields( pSDDData->pResult );
-   SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
+   SELF_SETFIELDEXTENT( &pArea->area, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
 
    bError = HB_FALSE;
    for( uiCount = 0; uiCount < uiFields; uiCount++ )
    {
+      DBFIELDINFO dbFieldInfo;
+
       pMyField = mysql_fetch_field_direct( pSDDData->pResult, uiCount );
 
-      pFieldInfo.atomName = pMyField->name;
-      pFieldInfo.uiLen    = ( HB_USHORT ) pMyField->length;
-      pFieldInfo.uiDec    = 0;
+      memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
+      dbFieldInfo.atomName = pMyField->name;
+      dbFieldInfo.uiLen    = ( HB_USHORT ) pMyField->length;
 
       switch( pMyField->type )
       {
          case MYSQL_TYPE_TINY:
          case MYSQL_TYPE_SHORT:
-            pFieldInfo.uiType = HB_FT_INTEGER;
+            dbFieldInfo.uiType = HB_FT_INTEGER;
             break;
 
          case MYSQL_TYPE_LONG:
          case MYSQL_TYPE_LONGLONG:
          case MYSQL_TYPE_INT24:
-            pFieldInfo.uiType = HB_FT_LONG;
+            dbFieldInfo.uiType = HB_FT_LONG;
             break;
 
          case MYSQL_TYPE_DECIMAL:
          case MYSQL_TYPE_NEWDECIMAL:
          case MYSQL_TYPE_FLOAT:
          case MYSQL_TYPE_DOUBLE:
-            pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiDec  = ( HB_USHORT ) pMyField->decimals;
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiDec  = ( HB_USHORT ) pMyField->decimals;
             break;
 
          case MYSQL_TYPE_STRING:
          case MYSQL_TYPE_VAR_STRING:
          case MYSQL_TYPE_ENUM:
-            pFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiType = HB_FT_STRING;
             break;
 
          case MYSQL_TYPE_DATE:
-            pFieldInfo.uiType = HB_FT_DATE;
+            dbFieldInfo.uiType = HB_FT_DATE;
             break;
 
          case MYSQL_TYPE_TINY_BLOB:
          case MYSQL_TYPE_MEDIUM_BLOB:
          case MYSQL_TYPE_LONG_BLOB:
          case MYSQL_TYPE_BLOB:
-            pFieldInfo.uiType = HB_FT_MEMO;
+            dbFieldInfo.uiType = HB_FT_MEMO;
             break;
 
          case MYSQL_TYPE_TIMESTAMP:
          case MYSQL_TYPE_DATETIME:
-            pFieldInfo.uiType = HB_FT_TIMESTAMP;
-            pFieldInfo.uiLen  = 8;
+#if MYSQL_VERSION_ID >= 50610
+         case MYSQL_TYPE_TIMESTAMP2:
+         case MYSQL_TYPE_DATETIME2:
+#endif
+            dbFieldInfo.uiType = HB_FT_TIMESTAMP;
+            dbFieldInfo.uiLen  = 8;
             break;
 
          case MYSQL_TYPE_TIME:
-            pFieldInfo.uiType = HB_FT_TIME;
-            pFieldInfo.uiLen  = 4;
+#if MYSQL_VERSION_ID >= 50610
+         case MYSQL_TYPE_TIME2:
+#endif
+            dbFieldInfo.uiType = HB_FT_TIME;
+            dbFieldInfo.uiLen  = 4;
             break;
 
 /*
+         case MYSQL_TYPE_NULL:
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
          case MYSQL_TYPE_ENUM:
          case MYSQL_TYPE_SET:
+         case MYSQL_TYPE_VARCHAR:
+         case MYSQL_TYPE_BIT:
+         case MYSQL_TYPE_GEOMETRY:
  */
 
          default:
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) pMyField->type;
-            pFieldInfo.uiType = 0;
             break;
       }
 
       if( ! bError )
       {
-         switch( pFieldInfo.uiType )
+         switch( dbFieldInfo.uiType )
          {
             case HB_FT_STRING:
             {
                char * pStr;
 
-               pStr = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
-               memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ] = '\0';
+               pStr = ( char * ) hb_xgrab( dbFieldInfo.uiLen + 1 );
+               memset( pStr, ' ', dbFieldInfo.uiLen );
+               pStr[ dbFieldInfo.uiLen ] = '\0';
 
-               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+               pItem = hb_itemPutCL( NULL, pStr, dbFieldInfo.uiLen );
                hb_xfree( pStr );
                break;
             }
@@ -387,12 +398,12 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
          hb_itemRelease( pItem );
 
-/*       if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
-            pFieldInfo.uiType = HB_IT_LONG;
+/*       if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
+            dbFieldInfo.uiType = HB_IT_LONG;
  */
 
          if( ! bError )
-            bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
+            bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
       }
 
       if( bError )
@@ -407,18 +418,16 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
    }
 
    pArea->ulRecCount = ( HB_ULONG ) mysql_num_rows( pSDDData->pResult );
+   pArea->ulRecMax   = pArea->ulRecCount + 1;
 
    pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-   memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-   pArea->ulRecMax = pArea->ulRecCount + 1;
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
    pRow = pArea->pRow;
 
-   *pRow = pItemEof;
+   *pRow++ = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
-   pRow++;
    for( ulIndex = 1; ulIndex <= pArea->ulRecCount; ulIndex++ )
    {
       *pRow++ = ( void * ) mysql_row_tell( pSDDData->pResult );
@@ -508,8 +517,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
          /* Expand strings to field length */
          pStr = ( char * ) hb_xgrab( pField->uiLen + 1 );
-         if( pValue )
-            memcpy( pStr, pValue, ulLen );
+         memcpy( pStr, pValue, ulLen );
 
          if( ( HB_SIZE ) pField->uiLen > ulLen )
             memset( pStr + ulLen, ' ', pField->uiLen - ulLen );
@@ -518,48 +526,27 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
          hb_itemPutCRaw( pItem, pStr, pField->uiLen );
 #else
          /* Do not expand strings */
-         if( pValue )
-            hb_itemPutCL( pItem, pValue, ulLen );
-         else
-            hb_itemPutC( pItem, NULL );
+         hb_itemPutCL( pItem, pValue, ulLen );
 #endif
          break;
       }
 
       case HB_FT_MEMO:
-         if( pValue )
-            hb_itemPutCL( pItem, pValue, ulLen );
-         else
-            hb_itemPutC( pItem, NULL );
-
+         hb_itemPutCL( pItem, pValue, ulLen );
          hb_itemSetCMemo( pItem );
          break;
 
       case HB_FT_INTEGER:
       case HB_FT_LONG:
       case HB_FT_DOUBLE:
-         if( pValue )
-         {
-            hb_strncpy( szBuffer, pValue, sizeof( szBuffer ) - 1 );
+         hb_strncpy( szBuffer, pValue, sizeof( szBuffer ) - 1 );
 
-            if( pField->uiDec )
-            {
-               hb_itemPutNDLen( pItem, atof( szBuffer ),
-                                ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
-                                ( int ) pField->uiDec );
-            }
-            else
-               hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
-         }
+         if( pField->uiDec )
+            hb_itemPutNDLen( pItem, atof( szBuffer ),
+                             ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
+                             ( int ) pField->uiDec );
          else
-         {
-            if( pField->uiDec )
-               hb_itemPutNDLen( pItem, 0.0,
-                                ( int ) pField->uiLen - ( ( int ) pField->uiDec + 1 ),
-                                ( int ) pField->uiDec );
-            else
-               hb_itemPutNLLen( pItem, 0, ( int ) pField->uiLen );
-         }
+            hb_itemPutNLLen( pItem, atol( szBuffer ), ( int ) pField->uiLen );
          break;
 
       case HB_FT_DATE:
@@ -638,7 +625,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );
-      SELF_ERROR( ( AREAP ) pArea, pError );
+      SELF_ERROR( &pArea->area, pError );
       hb_itemRelease( pError );
       return HB_FAILURE;
    }

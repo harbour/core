@@ -80,6 +80,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbwinuni.h"
+#include "hbdate.h"
 
 #include "hbapicdp.h"
 
@@ -820,6 +821,45 @@ static HB_BOOL hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 #endif
 }
 
+static HWND hb_getConsoleWindowHandle( void )
+{
+   TCHAR oldTitle[ 256 ], tmpTitle[ 32 ];
+   HWND hWnd = NULL;
+
+   if( GetConsoleTitle( oldTitle, HB_SIZEOFARRAY( oldTitle ) ) )
+   {
+      int iTmp = 0;
+      DWORD dwVal;
+
+      tmpTitle[ iTmp++ ] = TEXT( '>' );
+      tmpTitle[ iTmp++ ] = TEXT( '>' );
+      dwVal = GetCurrentProcessId();
+      do
+         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+      while( ( dwVal /= 26 ) );
+      tmpTitle[ iTmp++ ] = TEXT( ':' );
+      dwVal = GetTickCount();
+      do
+         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+      while( ( dwVal /= 26 ) );
+      tmpTitle[ iTmp++ ] = TEXT( '<' );
+      tmpTitle[ iTmp++ ] = TEXT( '<' );
+      tmpTitle[ iTmp ] = TEXT( '\0' );
+
+      if( SetConsoleTitle( tmpTitle ) )
+      {
+         HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 200;
+         /* repeat in a loop to be sure title is changed */
+         do
+            hWnd = FindWindow( NULL, tmpTitle );
+         while( hWnd == NULL && hb_dateMilliSeconds() < nTimeOut );
+         SetConsoleTitle( oldTitle );
+      }
+   }
+
+   return hWnd;
+}
+
 static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 {
    static HB_BOOL s_bChecked = HB_FALSE;
@@ -833,6 +873,7 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 #endif
 
    HB_BOOL bOldClosable = HB_TRUE;
+   HWND hWnd;
 
    if( ! s_bChecked )
    {
@@ -848,8 +889,13 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
    }
 
    if( s_pGetConsoleWindow )
+      hWnd = s_pGetConsoleWindow();
+   else
+      hWnd = hb_getConsoleWindowHandle();
+
+   if( hWnd )
    {
-      HMENU hSysMenu = GetSystemMenu( s_pGetConsoleWindow(), FALSE );
+      HMENU hSysMenu = GetSystemMenu( hWnd, FALSE );
 
       if( hSysMenu )
       {
@@ -903,10 +949,13 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
     * so I used this hack with checking OSTYPE environemnt variable. [druzus]
     */
    {
-      TCHAR lpOsType[ 10 ];
+      TCHAR lpOsType[ 16 ];
+      DWORD dwLen;
 
-      lpOsType[ 0 ] = lpOsType[ 9 ] = 0;
-      if( GetEnvironmentVariable( TEXT( "OSTYPE" ), lpOsType, 9 ) > 0 )
+      lpOsType[ 0 ] = lpOsType[ HB_SIZEOFARRAY( lpOsType ) - 1 ] = TEXT( '\0' );
+      dwLen = GetEnvironmentVariable( TEXT( "OSTYPE" ), lpOsType,
+                                      HB_SIZEOFARRAY( lpOsType ) - 1 );
+      if( dwLen > 0 && dwLen < HB_SIZEOFARRAY( lpOsType ) - 1 )
       {
          if( lstrcmp( lpOsType, TEXT( "msys" ) ) == 0 )
             FreeConsole();
@@ -1412,7 +1461,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   /* First check for Ctrl+Break, which is handled by gt/gtwin.c */
+   /* First check for Ctrl+Break, which is handled by gtwin.c */
    if( s_bBreak )
    {
       /* Reset the global Ctrl+Break flag */
@@ -1500,7 +1549,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
          WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
          DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
 
-         HB_BOOL bNotHandled = HB_TRUE;
+         HB_BOOL bHandled = HB_FALSE;
 
          /* Only process key down events */
 
@@ -1524,7 +1573,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                    ( dwState & NUMLOCK_ON ) )
                {
                   s_altisdown = HB_TRUE;
-                  bNotHandled = HB_FALSE;
+                  bHandled = HB_TRUE;
 #ifdef _TRACE
                   printf( "alt went down\n" );
 #endif
@@ -1532,12 +1581,16 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             }
          }
 
-         if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown && bNotHandled )
+         if( bHandled )
+         {
+            /* key event already processed */
+         }
+         else if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
          {
 #if defined( UNICODE )
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
 #else
-            ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
+            ch = ( HB_UCHAR ) s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
 #endif
 
             /*
@@ -1635,8 +1688,6 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                clipKey = &s_stdKeyTab[ ch - K_SPACE ];
             else if( ch > 0 && ch < K_SPACE && ( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
                clipKey = &s_stdKeyTab[ ch + '@' ];
-            else if( ch < 0 ) /* international keys */
-               ch += 256;
 
             if( extKey > -1 )
                clipKey = &extKeyTab[ extKey ];
@@ -1673,6 +1724,26 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                   ch = HB_INKEY_NEW_UNICODE( u );
             }
 #endif
+         }
+         else if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode == VK_MENU )
+            /* && s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode == 0x38 */
+         {
+#if defined( UNICODE )
+            ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
+#else
+            ch = ( HB_UCHAR ) s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
+#endif
+            if( ch != 0 )
+            {
+#if defined( UNICODE )
+               if( ch >= 127 )
+                  ch = HB_INKEY_NEW_UNICODE( ch );
+#else
+               int u = HB_GTSELF_KEYTRANS( pGT, ch );
+               if( u )
+                  ch = HB_INKEY_NEW_UNICODE( u );
+#endif
+            }
          }
       }
       else if( s_bMouseEnable &&

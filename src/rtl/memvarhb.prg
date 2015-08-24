@@ -86,7 +86,6 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
    LOCAL tmp
 
    LOCAL oError
-   LOCAL xRecover
    LOCAL nRetries
 
    IF HB_ISSTRING( cFileName )
@@ -96,7 +95,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
       ENDIF
 
       IF ! HB_ISSTRING( cMask ) .OR. ;
-         Empty( cMask ) .OR. Left( cMask, 1 ) == "*"
+         Empty( cMask ) .OR. hb_LeftEq( cMask, "*" )
          cMask := "*"
       ENDIF
 
@@ -119,8 +118,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
 
       nRetries := 0
       DO WHILE .T.
-         fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE )
-         IF fhnd == F_ERROR
+         IF ( fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) == F_ERROR
             oError := ErrorNew()
 
             oError:severity    := ES_ERROR
@@ -133,8 +131,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
             oError:osCode      := FError()
             oError:tries       := ++nRetries
 
-            xRecover := Eval( ErrorBlock(), oError )
-            IF HB_ISLOGICAL( xRecover ) .AND. xRecover
+            IF hb_defaultValue( Eval( ErrorBlock(), oError ), .F. )
                LOOP
             ENDIF
          ENDIF
@@ -176,14 +173,11 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
    LOCAL fhnd
 
    LOCAL oError
-   LOCAL xRecover
    LOCAL nRetries
 
    IF HB_ISSTRING( cFileName )
 
-      hb_default( @lAdditive, .T. )
-
-      IF ! lAdditive
+      IF ! hb_defaultValue( lAdditive, .T. )
          __mvClear()
       ENDIF
 
@@ -192,7 +186,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
       ENDIF
 
       IF ! HB_ISSTRING( cFileName ) .OR. ;
-         Empty( cMask ) .OR. Left( cMask, 1 ) == "*"
+         Empty( cMask ) .OR. hb_LeftEq( cMask, "*" )
          cMask := "*"
       ENDIF
 
@@ -200,8 +194,8 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
       nRetries := 0
       DO WHILE .T.
-         fhnd := FOpen( cFileName, FO_READ )
-         IF fhnd == F_ERROR
+
+         IF ( fhnd := FOpen( cFileName ) ) == F_ERROR
             oError := ErrorNew()
 
             oError:severity    := ES_ERROR
@@ -214,8 +208,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
             oError:osCode      := FError()
             oError:tries       := ++nRetries
 
-            xRecover := Eval( ErrorBlock(), oError )
-            IF HB_ISLOGICAL( xRecover ) .AND. xRecover
+            IF hb_defaultValue( Eval( ErrorBlock(), oError ), .F. )
                LOOP
             ENDIF
          ENDIF
@@ -228,9 +221,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
       xValue := NIL
 
-      cBuffer := Space( _HBMEM_SIG_LEN )
-      FRead( fhnd, @cBuffer, Len( cBuffer ) )
-      IF cBuffer == _HBMEM_SIGNATURE
+      IF hb_FReadLen( fhnd, _HBMEM_SIG_LEN ) == _HBMEM_SIGNATURE
 
          cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBMEM_SIG_LEN )
          FSeek( fhnd, _HBMEM_SIG_LEN, FS_SET )

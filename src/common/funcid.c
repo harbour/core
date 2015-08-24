@@ -62,6 +62,7 @@ static _HB_FUNCID s_funcId[] =
 {
    { "AADD",                    0, HB_FN_RESERVED, HB_F_AADD                 },
    { "ABS",                     0, HB_FN_RESERVED, HB_F_ABS                  },
+   { "ARRAY",                   0, HB_FN_UDF,      HB_F_ARRAY                },
    { "ASC",                     0, HB_FN_RESERVED, HB_F_ASC                  },
    { "AT",                      0, HB_FN_RESERVED, HB_F_AT                   },
    { "BOF",                     0, HB_FN_RESERVED, HB_F_BOF                  },

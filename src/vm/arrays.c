@@ -120,8 +120,6 @@ static HB_GARBAGE_FUNC( hb_arrayGarbageRelease )
          HB_STACK_TLS_PRELOAD
          hb_arrayPushBase( pBaseArray );
          hb_objDestructorCall( hb_stackItemFromTop( -1 ) );
-//         /* Clear object properities before hb_stackPop(), [druzus] */
-//         pBaseArray->uiClass = 0;
          hb_stackPop();
       }
 
@@ -1454,12 +1452,14 @@ HB_BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, HB_SIZE * pnStart,
          if( nTarget <= nDstLen )
          {
 #endif
+            if( pDstBaseArray->pItems + nTarget != pSrcBaseArray->pItems + nStart )
+            {
+               if( nCount > nDstLen - nTarget )
+                  nCount = nDstLen - nTarget + 1;
 
-            if( nCount > nDstLen - nTarget )
-               nCount = nDstLen - nTarget + 1;
-
-            for( nTarget--, nStart--; nCount > 0; nCount--, nStart++, nTarget++ )
-               hb_itemCopy( pDstBaseArray->pItems + nTarget, pSrcBaseArray->pItems + nStart );
+               for( nTarget--, nStart--; nCount > 0; nCount--, nStart++, nTarget++ )
+                  hb_itemCopy( pDstBaseArray->pItems + nTarget, pSrcBaseArray->pItems + nStart );
+            }
          }
       }
 
@@ -1469,112 +1469,117 @@ HB_BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, HB_SIZE * pnStart,
       return HB_FALSE;
 }
 
-static void hb_arrayCloneBody( PHB_BASEARRAY pSrcBaseArray, PHB_BASEARRAY pDstBaseArray, PHB_NESTED_CLONED pClonedList )
+static void hb_arrayCloneBody( PHB_ITEM pDest, PHB_ITEM pArray, PHB_NESTED_CLONED pClonedList )
 {
    PHB_ITEM pSrcItem, pDstItem;
    HB_SIZE nLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_arrayCloneBody(%p, %p, %p)", pSrcBaseArray, pDstBaseArray, pClonedList ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_arrayCloneBody(%p, %p, %p)", pDest, pArray, pClonedList ) );
 
-   pSrcItem = pSrcBaseArray->pItems;
-   pDstItem = pDstBaseArray->pItems;
+   nLen = pArray->item.asArray.value->nLen;
+   hb_arrayNew( pDest, nLen );
+   pDest->item.asArray.value->uiClass = pArray->item.asArray.value->uiClass;
+   pSrcItem = pArray->item.asArray.value->pItems;
+   pDstItem = pDest->item.asArray.value->pItems;
 
-   pDstBaseArray->uiClass = pSrcBaseArray->uiClass;
-
-   for( nLen = pSrcBaseArray->nLen; nLen; --nLen, ++pSrcItem, ++pDstItem )
-      hb_cloneNested( pDstItem, pSrcItem, pClonedList );
+   while( nLen-- )
+      hb_nestedCloneDo( pDstItem++, pSrcItem++, pClonedList );
 }
 
-void hb_cloneNested( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pClonedList )
+void hb_nestedCloneInit( PHB_NESTED_CLONED pClonedList, void * pValue, PHB_ITEM pDest )
+{
+   pClonedList->nSize  = 16;
+   pClonedList->nCount = 1;
+   pClonedList->pRefs  = ( PHB_NESTED_REF )
+                     hb_xgrab( pClonedList->nSize * sizeof( HB_NESTED_REF ) );
+   pClonedList->pRefs[ 0 ].value = pValue;
+   pClonedList->pRefs[ 0 ].pDest = pDest;
+}
+
+void hb_nestedCloneFree( PHB_NESTED_CLONED pClonedList )
+{
+   hb_xfree( pClonedList->pRefs );
+}
+
+static HB_BOOL hb_nestedCloneFind( PHB_NESTED_CLONED pClonedList, void * pValue, PHB_ITEM pDest )
+{
+   HB_SIZE nFirst, nLast, nMiddle;
+   PHB_NESTED_REF pRef;
+
+   nFirst = 0;
+   nLast = pClonedList->nCount;
+   nMiddle = ( nFirst + nLast ) >> 1;
+   pRef = pClonedList->pRefs;
+
+   while( nFirst < nLast )
+   {
+      if( ( HB_PTRUINT ) pRef[ nMiddle ].value < ( HB_PTRUINT ) pValue )
+         nFirst = nMiddle + 1;
+      else if( ( HB_PTRUINT ) pRef[ nMiddle ].value > ( HB_PTRUINT ) pValue )
+         nLast = nMiddle;
+      else
+      {
+         hb_itemCopy( pDest, pRef[ nMiddle ].pDest );
+         return HB_TRUE;
+      }
+      nMiddle = ( nFirst + nLast ) >> 1;
+   }
+
+   if( pClonedList->nCount >= pClonedList->nSize )
+   {
+      pClonedList->nSize += pClonedList->nSize >> 1;
+      pClonedList->pRefs = ( PHB_NESTED_REF )
+                  hb_xrealloc( pClonedList->pRefs,
+                               pClonedList->nSize * sizeof( HB_NESTED_REF ) );
+   }
+
+   pRef = &pClonedList->pRefs[ nMiddle ];
+   if( nMiddle < pClonedList->nCount )
+      memmove( pRef + 1, pRef,
+               ( pClonedList->nCount - nMiddle ) * sizeof( HB_NESTED_REF ) );
+   pClonedList->nCount++;
+
+   pRef->value = pValue;
+   pRef->pDest = pDest;
+
+   return HB_FALSE;
+}
+
+void hb_nestedCloneDo( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pClonedList )
 {
    /* Clipper clones nested array ONLY if NOT an Object!!! */
    if( HB_IS_ARRAY( pSrcItem ) )
    {
-      PHB_NESTED_CLONED pCloned = pClonedList;
-      PHB_BASEARRAY pBaseArray = pSrcItem->item.asArray.value;
-
-      do
+      if( ! hb_nestedCloneFind( pClonedList, ( void * ) pSrcItem->item.asArray.value, pDstItem ) )
       {
-         if( pCloned->value == ( void * ) pBaseArray )
-            break;
-         pCloned = pCloned->pNext;
-      }
-      while( pCloned );
-
-      if( pCloned )
-         hb_itemCopy( pDstItem, pCloned->pDest );
-      else if( pSrcItem->item.asArray.value->uiClass != 0 )
-         hb_objCloneTo( pDstItem, pSrcItem, pClonedList );
-      else
-      {
-         hb_arrayNew( pDstItem, pBaseArray->nLen );
-
-         pCloned = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
-         pCloned->value     = ( void * ) pBaseArray;
-         pCloned->pDest     = pDstItem;
-         pCloned->pNext     = pClonedList->pNext;
-         pClonedList->pNext = pCloned;
-
-         hb_arrayCloneBody( pBaseArray, pDstItem->item.asArray.value, pClonedList );
+         if( pSrcItem->item.asArray.value->uiClass != 0 )
+            hb_objCloneBody( pDstItem, pSrcItem, pClonedList );
+         else
+            hb_arrayCloneBody( pDstItem, pSrcItem, pClonedList );
       }
    }
    else if( HB_IS_HASH( pSrcItem ) )
    {
-      PHB_NESTED_CLONED pCloned = pClonedList;
-      PHB_BASEHASH pBaseHash = pSrcItem->item.asHash.value;
-
-      do
-      {
-         if( pCloned->value == ( void * ) pBaseHash )
-            break;
-         pCloned = pCloned->pNext;
-      }
-      while( pCloned );
-
-      if( pCloned )
-         hb_itemCopy( pDstItem, pCloned->pDest );
-      else
-      {
-         pCloned = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
-         pCloned->value     = ( void * ) pBaseHash;
-         pCloned->pDest     = pDstItem;
-         pCloned->pNext     = pClonedList->pNext;
-         pClonedList->pNext = pCloned;
-
-         hb_hashCloneBody( pSrcItem, pDstItem, pClonedList );
-      }
+      if( ! hb_nestedCloneFind( pClonedList, ( void * ) pSrcItem->item.asHash.value, pDstItem ) )
+         hb_hashCloneBody( pDstItem, pSrcItem, pClonedList );
    }
    else
       hb_itemCopy( pDstItem, pSrcItem );
 }
 
-PHB_ITEM hb_arrayCloneTo( PHB_ITEM pDstArray, PHB_ITEM pSrcArray )
+PHB_ITEM hb_arrayCloneTo( PHB_ITEM pDest, PHB_ITEM pArray )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_arrayCloneTo(%p,%p)", pDstArray, pSrcArray ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_arrayCloneTo(%p,%p)", pDest, pArray ) );
 
-   if( HB_IS_ARRAY( pSrcArray ) )
+   if( HB_IS_ARRAY( pArray ) )
    {
-      PHB_NESTED_CLONED pClonedList, pCloned;
-      PHB_BASEARRAY pSrcBaseArray = pSrcArray->item.asArray.value;
-      HB_SIZE nSrcLen = pSrcBaseArray->nLen;
+      HB_NESTED_CLONED clonedList;
 
-      hb_arrayNew( pDstArray, nSrcLen );
-      pClonedList = ( PHB_NESTED_CLONED ) hb_xgrab( sizeof( HB_NESTED_CLONED ) );
-      pClonedList->value = ( void * ) pSrcBaseArray;
-      pClonedList->pDest = pDstArray;
-      pClonedList->pNext = NULL;
-
-      hb_arrayCloneBody( pSrcBaseArray, pDstArray->item.asArray.value, pClonedList );
-
-      do
-      {
-         pCloned = pClonedList;
-         pClonedList = pClonedList->pNext;
-         hb_xfree( pCloned );
-      }
-      while( pClonedList );
+      hb_nestedCloneInit( &clonedList, ( void * ) pArray->item.asArray.value, pDest );
+      hb_arrayCloneBody( pDest, pArray, &clonedList );
+      hb_nestedCloneFree( &clonedList );
    }
-   return pDstArray;
+   return pDest;
 }
 
 PHB_ITEM hb_arrayClone( PHB_ITEM pArray )

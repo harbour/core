@@ -47,7 +47,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapierr.h"
 
 #include "hbssl.h"
 
@@ -73,7 +72,7 @@ HB_FUNC( RAND_EVENT )
 #if defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
    hb_retni( RAND_event( hb_parni( 1 ), ( WPARAM ) hb_parnint( 2 ), ( LPARAM ) hb_parnint( 3 ) ) );
 #else
-   hb_retni( 0 );
+   hb_retni( 1 );
 #endif
 }
 

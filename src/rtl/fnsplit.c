@@ -69,7 +69,6 @@ HB_FUNC( HB_FNAMEMERGE )
    pFileName.szPath = hb_parc( 1 );
    pFileName.szName = hb_parc( 2 );
    pFileName.szExtension = hb_parc( 3 );
-   pFileName.szDrive = hb_parc( 4 );
 
    hb_retc( hb_fsFNameMerge( szFileName, &pFileName ) );
 }

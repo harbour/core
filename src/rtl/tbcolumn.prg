@@ -57,7 +57,7 @@ CREATE CLASS TBColumn
 
    EXPORTED:
 
-   /* === Start of CA-Cl*pper compatible TBColumn instance area === */
+   /* --- Start of CA-Cl*pper compatible TBColumn instance area --- */
    VAR cargo                                         /* 01. User-definable variable */
    VAR nWidth       PROTECTED                        /* 02. */
    VAR bBlock       PROTECTED                        /* 03. */
@@ -74,7 +74,7 @@ CREATE CLASS TBColumn
    VAR bPostBlock   PROTECTED                        /* 13. */
    VAR aSetStyle    PROTECTED INIT { .F., .F., .F. } /* 14. TBC_READWRITE, TBC_MOVE, TBC_SIZE */
 #endif
-   /* === End of CA-Cl*pper compatible TBColumn instance area === */
+   /* --- End of CA-Cl*pper compatible TBColumn instance area --- */
 
    METHOD block( bBlock ) SETGET                     /* Code block to retrieve data for the column */
    METHOD colorBlock( bColorBlock ) SETGET           /* Code block that determines color of data items */
@@ -190,7 +190,7 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBColumn
    /* NOTE: CA-Cl*pper 5.3 does no checks on the value of nStyle, so in case
             it is zero or non-numeric, a regular RTE will happen. [vszakats] */
 
-   IF nStyle > Len( ::aSetStyle ) .AND. nStyle <= 4096 /* Some reasonable limit for maximum number of styles */
+   IF nStyle > Len( ::aSetStyle ) .AND. nStyle <= 4096  /* Some reasonable limit for maximum number of styles */
       ASize( ::aSetStyle, nStyle )
    ENDIF
 
@@ -204,8 +204,8 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBColumn
 
 METHOD New( cHeading, bBlock ) CLASS TBColumn
 
-   ::cHeading := cHeading /* NOTE: CA-Cl*pper will allow any types for the heading here. [vszakats] */
-   ::bBlock := bBlock /* NOTE: CA-Cl*pper allows any types here. [vszakats] */
+   ::cHeading := cHeading  /* NOTE: CA-Cl*pper allows any type here. [vszakats] */
+   ::bBlock := bBlock      /* NOTE: CA-Cl*pper allows any type here. [vszakats] */
 
    RETURN Self
 

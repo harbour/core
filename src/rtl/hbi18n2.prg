@@ -60,8 +60,6 @@
 #define _I18N_EOL          Chr( 10 )
 #define _I18N_DELIM        ( Chr( 0 ) + Chr( 3 ) + Chr( 0 ) )
 
-#define LEFTEQUAL( l, r )  ( Left( l, Len( r ) ) == r )
-
 STATIC FUNCTION __i18n_fileName( cFileName )
 
    IF Set( _SET_DEFEXTENSIONS )
@@ -102,7 +100,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
    LOCAL hFile
 
    __i18n_fileName( @cFile )
-   IF ( hFile := FOpen( cFile, FO_READ ) ) == F_ERROR
+   IF ( hFile := FOpen( cFile ) ) == F_ERROR
       cErrorMsg := hb_StrFormat( "cannot open file: %1$s", cFile )
       RETURN NIL
    ENDIF
@@ -140,8 +138,8 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
       IF lCont
          cValue += hb_eol()
       ELSE
-         IF LEFTEQUAL( cLine, "#" ) .AND. nMode == _I18N_NONE
-            IF LEFTEQUAL( cLine, "#:" )   // source code references
+         IF hb_LeftEq( cLine, "#" ) .AND. nMode == _I18N_NONE
+            IF hb_LeftEq( cLine, "#:" )   // source code references
                IF Empty( aItem[ _I18N_SOURCE ] )
                   aItem[ _I18N_SOURCE ] := ""
                ELSE
@@ -149,7 +147,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
                ENDIF
                aItem[ _I18N_SOURCE ] += StrTran( LTrim( SubStr( cLine, 3 ) ), "\", "/" )
 #if 0
-            ELSEIF LEFTEQUAL( cLine, "#," )  // flags
+            ELSEIF hb_LeftEq( cLine, "#," )  // flags
                cLine := LTrim( SubStr( cLine, 3 ) )
                IF cLine == "c-format"
                ELSE
@@ -159,11 +157,11 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
 #endif
             ENDIF
             cLine := ""
-         ELSEIF LEFTEQUAL( cLine, "msgctxt " ) .AND. nMode == _I18N_NONE
+         ELSEIF hb_LeftEq( cLine, "msgctxt " ) .AND. nMode == _I18N_NONE
             cLine := LTrim( SubStr( cLine, 9 ) )
             nMode := _I18N_CONTEXT
             cValue := NIL
-         ELSEIF LEFTEQUAL( cLine, "msgid " ) .AND. ;
+         ELSEIF hb_LeftEq( cLine, "msgid " ) .AND. ;
                ( nMode == _I18N_NONE .OR. nMode == _I18N_CONTEXT )
             nIndex := 1
             cLine := LTrim( SubStr( cLine, 7 ) )
@@ -176,7 +174,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
             ENDIF
             nMode := _I18N_MSGID
             cValue := NIL
-         ELSEIF LEFTEQUAL( cLine, "msgid_plural" ) .AND. nMode == _I18N_MSGID
+         ELSEIF hb_LeftEq( cLine, "msgid_plural" ) .AND. nMode == _I18N_MSGID
             nOldIndex := nIndex
             nIndex := 2
             n := 13
@@ -202,7 +200,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
             AAdd( aItem[ _I18N_MSGID ], cValue )
             cLine := LTrim( SubStr( cLine, n ) )
             cValue := NIL
-         ELSEIF LEFTEQUAL( cLine, "msgstr " ) .AND. nMode == _I18N_MSGID
+         ELSEIF hb_LeftEq( cLine, "msgstr " ) .AND. nMode == _I18N_MSGID
             nIndex := 0
             cLine := LTrim( SubStr( cLine, 8 ) )
             nMode := _I18N_MSGSTR
@@ -212,7 +210,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
             ENDIF
             AAdd( aItem[ _I18N_MSGID ], cValue )
             cValue := NIL
-         ELSEIF LEFTEQUAL( cLine, "msgstr[" ) .AND. ;
+         ELSEIF hb_LeftEq( cLine, "msgstr[" ) .AND. ;
                ( nMode == _I18N_MSGID .OR. nMode == _I18N_MSGSTR )
             nOldIndex := iif( nMode == _I18N_MSGSTR, nIndex, -1 )
             nIndex := 0
@@ -296,12 +294,9 @@ STATIC FUNCTION __i18n_IsBOM_UTF8( cFileName )
 
    LOCAL fhnd
    LOCAL cBuffer
-   LOCAL nLen
 
-   IF ( fhnd := FOpen( cFileName, FO_READ ) ) != F_ERROR
-      nLen := hb_BLen( _UTF8_BOM )
-      cBuffer := Space( nLen )
-      FRead( fhnd, @cBuffer, nLen )
+   IF ( fhnd := FOpen( cFileName ) ) != F_ERROR
+      cBuffer := hb_FReadLen( fhnd, hb_BLen( _UTF8_BOM ) )
       FClose( fhnd )
       IF cBuffer == _UTF8_BOM
          RETURN .T.
@@ -311,10 +306,7 @@ STATIC FUNCTION __i18n_IsBOM_UTF8( cFileName )
    RETURN .F.
 
 FUNCTION __i18n_potArraySort( aTrans )
-
-   ASort( aTrans,,, {| item1, item2 | __i18n_ItemToStr( item1 ) < __i18n_ItemToStr( item2 ) } )
-
-   RETURN aTrans
+   RETURN ASort( aTrans,,, {| item1, item2 | __i18n_ItemToStr( item1 ) < __i18n_ItemToStr( item2 ) } )
 
 STATIC FUNCTION __i18n_ItemToStr( item )
 
@@ -408,13 +400,16 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, /* @ */ cErrorMsg, lVersionNo, lSou
          cPOT += cEol
       ENDIF
       FOR EACH msg IN aItem[ _I18N_MSGID ]
-         IF msg:__enumIndex() == 1
+         SWITCH msg:__enumIndex()
+         CASE 1
             cPOT += "msgid "
-         ELSEIF msg:__enumIndex() == 2
+            EXIT
+         CASE 2
             cPOT += "msgid_plural "
-         ELSE
+            EXIT
+         OTHERWISE
             cPOT += "msgid_plural" + hb_ntos( msg:__enumIndex() - 1 ) + " "
-         ENDIF
+         ENDSWITCH
          cPOT += __i18n_strEncode( msg )
          cPOT += cEol
       NEXT
@@ -458,10 +453,10 @@ FUNCTION __i18n_potArrayToHash( aTrans, lEmpty, hI18N )
    FOR EACH aItem IN aTrans
       IF lEmpty .OR. ! Empty( aItem[ _I18N_MSGSTR, 1 ] )
          cContext := aItem[ _I18N_CONTEXT ]
-         IF ! cContext $ hTrans
-            hTrans[ cContext ] := hContext := { => }
-         ELSE
+         IF cContext $ hTrans
             hContext := hTrans[ cContext ]
+         ELSE
+            hTrans[ cContext ] := hContext := { => }
          ENDIF
          IF Empty( aItem[ _I18N_MSGSTR, 1 ] )
             IF ! aItem[ _I18N_MSGID, 1 ] $ hContext
@@ -515,9 +510,7 @@ FUNCTION __i18n_hashJoin( hTrans, hTrans2 )
 
    hContext := hTrans[ "CONTEXT" ]
    FOR EACH hCtx in hTrans2[ "CONTEXT" ]
-      IF ! hCtx:__enumKey() $ hContext
-         hContext[ hCtx:__enumKey() ] := hb_HClone( hCtx )
-      ELSE
+      IF hCtx:__enumKey() $ hContext
          hDstCtx := hContext[ hCtx:__enumKey() ]
          FOR EACH xTrans IN hCtx
             IF ! Empty( xTrans ) .AND. ;
@@ -527,6 +520,8 @@ FUNCTION __i18n_hashJoin( hTrans, hTrans2 )
                   AClone( xTrans ), xTrans )
             ENDIF
          NEXT
+      ELSE
+         hContext[ hCtx:__enumKey() ] := hb_HClone( hCtx )
       ENDIF
    NEXT
 
@@ -547,10 +542,7 @@ FUNCTION __i18n_potArrayJoin( aTrans, aTrans2, hIndex )
 
    FOR EACH aItem in aTrans2
       ctx := aItem[ _I18N_CONTEXT ] + _I18N_DELIM + aItem[ _I18N_MSGID, 1 ]
-      IF ! ctx $ hIndex
-         AAdd( aTrans, AClone( aItem ) )
-         hIndex[ ctx ] := Len( aTrans )
-      ELSE
+      IF ctx $ hIndex
          aDest := aTrans[ hIndex[ ctx ] ]
          IF aItem[ _I18N_PLURAL ]
             aDest[ _I18N_PLURAL ] := .T.
@@ -574,6 +566,9 @@ FUNCTION __i18n_potArrayJoin( aTrans, aTrans2, hIndex )
             Empty( aDest[ _I18N_MSGSTR, 1 ] ) ) )
             aDest[ _I18N_MSGSTR ] := AClone( aItem[ _I18N_MSGSTR ] )
          ENDIF
+      ELSE
+         AAdd( aTrans, AClone( aItem ) )
+         hIndex[ ctx ] := Len( aTrans )
       ENDIF
    NEXT
 

@@ -366,6 +366,7 @@ DYNAMIC win_osNetRegOk
 DYNAMIC win_osNetVRedirOk
 DYNAMIC win_osVersionInfo
 DYNAMIC win_P2N
+DYNAMIC win_PrintDataRaw
 DYNAMIC win_PrintDlgDC
 DYNAMIC win_printerExists
 DYNAMIC win_printerGetDefault
@@ -429,6 +430,7 @@ DYNAMIC __oleIsDisp
 DYNAMIC __oleVariantGetType
 DYNAMIC __oleVariantGetValue
 DYNAMIC __oleVariantNew
+DYNAMIC __oleVariantNullDate
 DYNAMIC __wapi_DEVMODE_Get
 DYNAMIC __wapi_DEVMODE_New
 DYNAMIC __wapi_DEVMODE_Set

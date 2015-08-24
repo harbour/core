@@ -56,29 +56,25 @@
  *
  */
 
-#define SID_LENGTH      25
-#define BASE_KEY_STRING "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-#define CRC_KEY_STRING  "Ak3yStR1Ng"  // Max Length must be 10 chars
+#define SID_LENGTH       25
+#define BASE_KEY_STRING  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+#define CRC_KEY_STRING   "Ak3yStR1Ng"  // Max Length must be 10 chars
 
 FUNCTION tip_GenerateSID( cCRCKey )
 
-   LOCAL cSID, nSIDCRC, cSIDCRC, n, cTemp
-   LOCAL nLenSID     := SID_LENGTH
+   LOCAL cSID, nSIDCRC, cSIDCRC, n, cTemp, nKey, nRand
    LOCAL cBaseKeys   := BASE_KEY_STRING
    LOCAL nLenKeys    := Len( cBaseKeys )
-   LOCAL cRet
-   LOCAL nRand, nKey := 0
 
-   hb_default( @cCRCKey, CRC_KEY_STRING )
-
-   cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
+   cCRCKey := Left( hb_defaultValue( cCRCKey, CRC_KEY_STRING ), 10 )  // Max Length must to be of 10 chars
 
    /* Let's generate the sequence */
-   cSID := Space( nLenSID )
-   FOR n := 1 TO nLenSID
-      nRand     := hb_RandomInt( 1, nLenKeys )
-      cSID      := Stuff( cSID, n, 1, SubStr( cBaseKeys, nRand, 1 ) )
-      nKey      += nRand
+   cSID := ""
+   nKey := 0
+   FOR n := 1 TO SID_LENGTH
+      nRand := hb_RandomInt( 1, nLenKeys )
+      cSID  += SubStr( cBaseKeys, nRand, 1 )
+      nKey  += nRand
    NEXT
 
    nSIDCRC := nKey * 51 // Max Value is 99603 a 5 chars number
@@ -88,30 +84,24 @@ FUNCTION tip_GenerateSID( cCRCKey )
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
    NEXT
 
-   cRet := cSID + cSIDCRC
-
-   RETURN cRet
+   RETURN cSID + cSIDCRC
 
 FUNCTION tip_CheckSID( cSID, cCRCKey )
 
-   LOCAL nSIDCRC, cSIDCRC, n, cTemp
-   LOCAL nLenSID     := SID_LENGTH
-   LOCAL cBaseKeys   := BASE_KEY_STRING
-   LOCAL nRand, nKey := 0
+   LOCAL nSIDCRC, cSIDCRC, n, cTemp, nKey
 
-   hb_default( @cCRCKey, CRC_KEY_STRING )
-
-   cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
+   cCRCKey := Left( hb_defaultValue( cCRCKey, CRC_KEY_STRING ), 10 )  // Max Length must to be of 10 chars
 
    /* Calculate the key */
-   FOR n := 1 TO nLenSID
-      nRand := At( SubStr( cSID, n, 1 ), cBaseKeys )
-      nKey  += nRand
+   nKey := 0
+   FOR n := 1 TO SID_LENGTH
+      nKey += At( SubStr( cSID, n, 1 ), BASE_KEY_STRING )
    NEXT
 
-   // Recalculate the CRC
+   /* Recalculate the CRC */
    nSIDCRC := nKey * 51 // Max Value is 99603. a 5 chars number
    cTemp   := StrZero( nSIDCRC, 5 )
+
    cSIDCRC := ""
    FOR n := 1 TO Len( cTemp )
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )

@@ -49,7 +49,7 @@
 #include "error.ch"
 #include "fileio.ch"
 
-#define BUFFER_LENGTH 8192
+#define BUFFER_LENGTH  8192
 
 PROCEDURE __TypeFile( cFile, lPrint )
 
@@ -60,7 +60,6 @@ PROCEDURE __TypeFile( cFile, lPrint )
    LOCAL nSize
    LOCAL nBuffer
    LOCAL oErr
-   LOCAL xRecover
    LOCAL nRetries
    LOCAL aSaveSet[ 2 ]
    LOCAL cDir, cName, cExt
@@ -113,8 +112,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       oErr:fileName    := cFile
       oErr:OsCode      := FError()
       oErr:tries       := ++nRetries
-      xRecover := Eval( ErrorBlock(), oErr )
-      IF HB_ISLOGICAL( xRecover ) .AND. ! xRecover      /* user select "Default" */
+      IF ! hb_defaultValue( Eval( ErrorBlock(), oErr ), .T. )  /* user select "Default" */
          RETURN
       ENDIF
    ENDDO
@@ -130,7 +128,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
    nSize   := FSeek( nHandle, 0, FS_END )
    nBuffer := Min( nSize, BUFFER_LENGTH )
 
-   FSeek( nHandle, 0 ) /* go top */
+   FSeek( nHandle, 0 )  /* go top */
 
    /* Here we try to read a line at a time but I think we could just
       display the whole buffer since it said:
@@ -138,7 +136,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
 
    nHasRead := 0
    cBuffer := Space( nBuffer )
-   QOut()                                                 /* starting a new line */
+   QOut()  /* starting a new line */
    DO WHILE ( nRead := FRead( nHandle, @cBuffer, nBuffer ) ) > 0
       nHasRead += nRead
       QQOut( cBuffer )

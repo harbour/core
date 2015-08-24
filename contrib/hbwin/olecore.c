@@ -87,6 +87,7 @@ typedef struct
 typedef struct
 {
    HRESULT lOleError;
+   HB_BOOL fNullDate;
    int     iInit;
 } HB_OLEDATA, * PHB_OLEDATA;
 
@@ -132,10 +133,20 @@ void hb_oleSetError( HRESULT lOleError )
    hb_getOleData()->lOleError = lOleError;
 }
 
-
 HRESULT hb_oleGetError( void )
 {
    return hb_getOleData()->lOleError;
+}
+
+
+static void hb_oleSetNullDateFlag( HB_BOOL fNullDate )
+{
+   hb_getOleData()->fNullDate = fNullDate;
+}
+
+static HB_BOOL hb_oleGetNullDateFlag( void )
+{
+   return hb_getOleData()->fNullDate;
 }
 
 
@@ -605,25 +616,54 @@ static void hb_oleItemToVariantRef( VARIANT * pVariant, PHB_ITEM pItem,
          break;
 
       case HB_IT_DATE:
-         V_VT( pVariant ) = VT_DATE;
-         V_R8( pVariant ) = ( double ) ( hb_itemGetDL( pItem ) - HB_OLE_DATE_BASE );
-         if( pVarRef )
+      {
+         long lDate = hb_itemGetDL( pItem );
+
+         if( lDate == 0 && hb_oleGetNullDateFlag() )
          {
-            V_VT( pVarRef ) = VT_DATE | VT_BYREF;
-            V_R8REF( pVarRef ) = &V_R8( pVariant );
+            V_VT( pVariant ) = VT_NULL;
+            if( pVarRef )
+            {
+               V_VT( pVarRef ) = VT_VARIANT | VT_BYREF;
+               V_VARIANTREF( pVarRef ) = pVariant;
+            }
+         }
+         else
+         {
+            V_VT( pVariant ) = VT_DATE;
+            V_R8( pVariant ) = ( double ) ( lDate - HB_OLE_DATE_BASE );
+            if( pVarRef )
+            {
+               V_VT( pVarRef ) = VT_DATE | VT_BYREF;
+               V_R8REF( pVarRef ) = &V_R8( pVariant );
+            }
          }
          break;
-
+      }
       case HB_IT_TIMESTAMP:
-         V_VT( pVariant ) = VT_DATE;
-         V_R8( pVariant ) = hb_itemGetTD( pItem ) - HB_OLE_DATE_BASE;
-         if( pVarRef )
+      {
+         double dDate = hb_itemGetTD( pItem );
+         if( dDate == 0 && hb_oleGetNullDateFlag() )
          {
-            V_VT( pVarRef ) = VT_DATE | VT_BYREF;
-            V_R8REF( pVarRef ) = &V_R8( pVariant );
+            V_VT( pVariant ) = VT_NULL;
+            if( pVarRef )
+            {
+               V_VT( pVarRef ) = VT_VARIANT | VT_BYREF;
+               V_VARIANTREF( pVarRef ) = pVariant;
+            }
+         }
+         else
+         {
+            V_VT( pVariant ) = VT_DATE;
+            V_R8( pVariant ) = dDate - HB_OLE_DATE_BASE;
+            if( pVarRef )
+            {
+               V_VT( pVarRef ) = VT_DATE | VT_BYREF;
+               V_R8REF( pVarRef ) = &V_R8( pVariant );
+            }
          }
          break;
-
+      }
       case HB_IT_POINTER:
       {
          IDispatch * pDisp;
@@ -1659,6 +1699,9 @@ HB_FUNC( WIN_OLEERROR )
 }
 
 
+#ifndef DISP_E_BUFFERTOOSMALL
+   #define DISP_E_BUFFERTOOSMALL    0x80020013L
+#endif
 HB_FUNC( WIN_OLEERRORTEXT )
 {
    HRESULT lOleError;
@@ -1675,22 +1718,35 @@ HB_FUNC( WIN_OLEERRORTEXT )
       case OLE_E_WRONGCOMPOBJ:      hb_retc_const( "OLE_E_WRONGCOMPOBJ" );       break;
       case REGDB_E_CLASSNOTREG:     hb_retc_const( "REGDB_E_CLASSNOTREG" );      break;
       case REGDB_E_WRITEREGDB:      hb_retc_const( "REGDB_E_WRITEREGDB" );       break;
+      case E_PENDING:               hb_retc_const( "E_PENDING" );                break;
+      case E_NOTIMPL:               hb_retc_const( "E_NOTIMPL" );                break;
+      case E_NOINTERFACE:           hb_retc_const( "E_NOINTERFACE" );            break;
+      case E_POINTER:               hb_retc_const( "E_POINTER" );                break;
+      case E_ABORT:                 hb_retc_const( "E_ABORT" );                  break;
+      case E_FAIL:                  hb_retc_const( "E_FAIL" );                   break;
+      case E_UNEXPECTED:            hb_retc_const( "E_UNEXPECTED" );             break;
+      case E_ACCESSDENIED:          hb_retc_const( "E_ACCESSDENIED" );           break;
+      case E_HANDLE:                hb_retc_const( "E_HANDLE" );                 break;
       case E_OUTOFMEMORY:           hb_retc_const( "E_OUTOFMEMORY" );            break;
       case E_INVALIDARG:            hb_retc_const( "E_INVALIDARG" );             break;
-      case E_UNEXPECTED:            hb_retc_const( "E_UNEXPECTED" );             break;
-      case E_NOTIMPL:               hb_retc_const( "E_NOTIMPL" );                break;
-      case DISP_E_UNKNOWNNAME:      hb_retc_const( "DISP_E_UNKNOWNNAME" );       break;
-      case DISP_E_UNKNOWNLCID:      hb_retc_const( "DISP_E_UNKNOWNLCID" );       break;
-      case DISP_E_BADPARAMCOUNT:    hb_retc_const( "DISP_E_BADPARAMCOUNT" );     break;
-      case DISP_E_BADVARTYPE:       hb_retc_const( "DISP_E_BADVARTYPE" );        break;
-      case DISP_E_EXCEPTION:        hb_retc_const( "DISP_E_EXCEPTION" );         break;
+      case DISP_E_UNKNOWNINTERFACE: hb_retc_const( "DISP_E_UNKNOWNINTERFACE" );  break;
       case DISP_E_MEMBERNOTFOUND:   hb_retc_const( "DISP_E_MEMBERNOTFOUND" );    break;
-      case DISP_E_NONAMEDARGS:      hb_retc_const( "DISP_E_NONAMEDARGS" );       break;
-      case DISP_E_OVERFLOW:         hb_retc_const( "DISP_E_OVERFLOW" );          break;
       case DISP_E_PARAMNOTFOUND:    hb_retc_const( "DISP_E_PARAMNOTFOUND" );     break;
       case DISP_E_TYPEMISMATCH:     hb_retc_const( "DISP_E_TYPEMISMATCH" );      break;
-      case DISP_E_UNKNOWNINTERFACE: hb_retc_const( "DISP_E_UNKNOWNINTERFACE" );  break;
+      case DISP_E_UNKNOWNNAME:      hb_retc_const( "DISP_E_UNKNOWNNAME" );       break;
+      case DISP_E_NONAMEDARGS:      hb_retc_const( "DISP_E_NONAMEDARGS" );       break;
+      case DISP_E_BADVARTYPE:       hb_retc_const( "DISP_E_BADVARTYPE" );        break;
+      case DISP_E_EXCEPTION:        hb_retc_const( "DISP_E_EXCEPTION" );         break;
+      case DISP_E_OVERFLOW:         hb_retc_const( "DISP_E_OVERFLOW" );          break;
+      case DISP_E_BADINDEX:         hb_retc_const( "DISP_E_BADINDEX" );          break;
+      case DISP_E_UNKNOWNLCID:      hb_retc_const( "DISP_E_UNKNOWNLCID" );       break;
+      case DISP_E_ARRAYISLOCKED:    hb_retc_const( "DISP_E_ARRAYISLOCKED" );     break;
+      case DISP_E_BADPARAMCOUNT:    hb_retc_const( "DISP_E_BADPARAMCOUNT" );     break;
       case DISP_E_PARAMNOTOPTIONAL: hb_retc_const( "DISP_E_PARAMNOTOPTIONAL" );  break;
+      case DISP_E_BADCALLEE:        hb_retc_const( "DISP_E_BADCALLEE" );         break;
+      case DISP_E_NOTACOLLECTION:   hb_retc_const( "DISP_E_NOTACOLLECTION" );    break;
+      case DISP_E_DIVBYZERO:        hb_retc_const( "DISP_E_DIVBYZERO" );         break;
+      case DISP_E_BUFFERTOOSMALL:   hb_retc_const( "DISP_E_BUFFERTOOSMALL" );    break;
       default:
       {
          char buf[ 16 ];
@@ -2314,6 +2370,13 @@ HB_FUNC( __OLEVARIANTNEW )
       hb_errRT_OLE( EG_ARG, 1018, 0, NULL, HB_ERR_FUNCNAME, NULL );
 }
 
+/* __oleVariantNullDate( [<lNewNullFlag>] ) -> <lPrevNullFlag> */
+HB_FUNC( __OLEVARIANTNULLDATE )
+{
+   hb_retl( hb_oleGetNullDateFlag() );
+   if( HB_ISLOG( 1 ) )
+      hb_oleSetNullDateFlag( hb_parl( 1 ) );
+}
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_olecore_init_ )
    hb_vmAtInit( hb_olecore_init, NULL );

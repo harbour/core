@@ -162,7 +162,6 @@ DYNAMIC dbSkip
 DYNAMIC dbStruct
 DYNAMIC dbTableExt
 DYNAMIC dbUnlock
-DYNAMIC dbUnlockAl
 DYNAMIC dbUnlockAll
 DYNAMIC dbUseArea
 DYNAMIC DefPath
@@ -280,6 +279,7 @@ DYNAMIC HBScalar
 DYNAMIC HBScrollBar
 DYNAMIC HBTextLine
 DYNAMIC HBTopBarMenu
+DYNAMIC hb_ACmdLine
 DYNAMIC hb_ADel
 DYNAMIC hb_Adler32
 DYNAMIC hb_AIns
@@ -323,9 +323,14 @@ DYNAMIC hb_blowfishDecrypt_CFB
 DYNAMIC hb_blowfishEncrypt
 DYNAMIC hb_blowfishEncrypt_CFB
 DYNAMIC hb_blowfishKey
+DYNAMIC hb_BPadC
+DYNAMIC hb_BPadL
+DYNAMIC hb_BPadR
 DYNAMIC hb_BPeek
 DYNAMIC hb_BPoke
+DYNAMIC hb_BRAt
 DYNAMIC hb_BRight
+DYNAMIC hb_BStuff
 DYNAMIC hb_BSubStr
 DYNAMIC hb_BuildDate
 DYNAMIC hb_ByteSwapI
@@ -333,9 +338,11 @@ DYNAMIC hb_ByteSwapL
 DYNAMIC hb_ByteSwapLL
 DYNAMIC hb_ByteSwapU
 DYNAMIC hb_ByteSwapW
+DYNAMIC hb_CDay
 DYNAMIC hb_cdpCharMax
 DYNAMIC hb_cdpExists
 DYNAMIC hb_cdpInfo
+DYNAMIC hb_cdpIsCharIdx
 DYNAMIC hb_cdpIsUTF8
 DYNAMIC hb_cdpList
 DYNAMIC hb_cdpOS
@@ -401,6 +408,7 @@ DYNAMIC hb_DirBase
 DYNAMIC hb_DirBuild
 DYNAMIC hb_DirCreate
 DYNAMIC hb_DirDelete
+DYNAMIC hb_Directory
 DYNAMIC hb_DirExists
 DYNAMIC hb_DirScan
 DYNAMIC hb_DirSepAdd
@@ -446,6 +454,7 @@ DYNAMIC hb_FNameName
 DYNAMIC hb_FNameNameExt
 DYNAMIC hb_FNameSplit
 DYNAMIC hb_ForNext
+DYNAMIC hb_FReadLen
 DYNAMIC hb_FSetAttr
 DYNAMIC hb_FSetDateTime
 DYNAMIC hb_FSetDevMode
@@ -649,6 +658,8 @@ DYNAMIC hb_langMessage
 DYNAMIC hb_langName
 DYNAMIC hb_langNew
 DYNAMIC hb_langSelect
+DYNAMIC hb_LeftEq
+DYNAMIC hb_LeftEqI
 DYNAMIC hb_libError
 DYNAMIC hb_libExt
 DYNAMIC hb_libFree
@@ -657,6 +668,7 @@ DYNAMIC hb_libLoad
 DYNAMIC hb_libName
 DYNAMIC hb_libPostfix
 DYNAMIC hb_libPrefix
+DYNAMIC hb_libSuffix
 DYNAMIC hb_lppCreate
 DYNAMIC hb_lppDestroy
 DYNAMIC hb_lppError
@@ -724,6 +736,7 @@ DYNAMIC hb_processValue
 DYNAMIC hb_ProgName
 DYNAMIC hb_ps
 DYNAMIC hb_PValue
+DYNAMIC hb_PWrite
 DYNAMIC hb_rand32
 DYNAMIC hb_Random
 DYNAMIC hb_RandomInt
@@ -812,6 +825,7 @@ DYNAMIC hb_StrCDecode
 DYNAMIC hb_StrClear
 DYNAMIC hb_StrDecodEscape
 DYNAMIC hb_StrFormat
+DYNAMIC hb_StrIsUTF8
 DYNAMIC hb_StrReplace
 DYNAMIC hb_StrShrink
 DYNAMIC hb_StrToExp
@@ -855,11 +869,15 @@ DYNAMIC hb_UChar
 DYNAMIC hb_UCode
 DYNAMIC hb_ULeft
 DYNAMIC hb_ULen
+DYNAMIC hb_UPadC
+DYNAMIC hb_UPadL
+DYNAMIC hb_UPadR
 DYNAMIC hb_UPeek
 DYNAMIC hb_UPoke
 DYNAMIC hb_URight
 DYNAMIC hb_UserLang
 DYNAMIC hb_UserName
+DYNAMIC hb_UStuff
 DYNAMIC hb_USubStr
 DYNAMIC hb_UTCOffset
 DYNAMIC hb_utf8Asc
@@ -876,6 +894,7 @@ DYNAMIC hb_utf8Stuff
 DYNAMIC hb_utf8SubStr
 DYNAMIC hb_UTF8ToStr
 DYNAMIC hb_UTF8ToStrBox
+DYNAMIC hb_Val
 DYNAMIC hb_ValToExp
 DYNAMIC hb_ValToStr
 DYNAMIC hb_Version
@@ -903,6 +922,7 @@ DYNAMIC hb_vfLockTest
 DYNAMIC hb_vfOpen
 DYNAMIC hb_vfRead
 DYNAMIC hb_vfReadAt
+DYNAMIC hb_vfReadLen
 DYNAMIC hb_vfRename
 DYNAMIC hb_vfSeek
 DYNAMIC hb_vfSize
@@ -945,6 +965,8 @@ DYNAMIC IndexKey
 DYNAMIC IndexOrd
 DYNAMIC Inkey
 DYNAMIC Int
+DYNAMIC IOUSR_Register
+DYNAMIC IOUSR_SetError
 DYNAMIC IsAffirm
 DYNAMIC IsAlpha
 DYNAMIC IsColor
@@ -1289,6 +1311,7 @@ DYNAMIC __AtPrompt
 DYNAMIC __Box
 DYNAMIC __BoxD
 DYNAMIC __BoxS
+DYNAMIC __BreakBlock
 DYNAMIC __CapLength
 DYNAMIC __CapMetrics
 DYNAMIC __Caption
@@ -1332,7 +1355,7 @@ DYNAMIC __dbArrange
 DYNAMIC __dbClearIndex
 DYNAMIC __dbClearRelation
 DYNAMIC __dbClose
-DYNAMIC __dbClosearea
+DYNAMIC __dbCloseArea
 DYNAMIC __dbCommit
 DYNAMIC __dbCommitAll
 DYNAMIC __dbContinue
@@ -1540,6 +1563,7 @@ DYNAMIC __vmModulesVerify
 DYNAMIC __vmNoInternals
 DYNAMIC __Wait
 DYNAMIC __wapi_GetACP
+DYNAMIC __wapi_GetConsoleOutputCP
 DYNAMIC __wapi_GetOEMCP
 DYNAMIC __XHelp
 DYNAMIC __XRestScreen

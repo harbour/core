@@ -109,8 +109,7 @@ void * hb_rddNewAreaNode( LPRDDNODE pRddNode, HB_USHORT uiRddID )
    {
       HB_USHORT uiSize;
 
-      pArea = ( AREAP ) hb_xgrab( sizeof( AREA ) );
-      memset( pArea, 0, sizeof( AREA ) );
+      pArea = ( AREAP ) hb_xgrabz( sizeof( AREA ) );
       pArea->lprfsHost = &pRddNode->pTable;
       pArea->rddID = uiRddID;
 
@@ -130,8 +129,7 @@ void * hb_rddNewAreaNode( LPRDDNODE pRddNode, HB_USHORT uiRddID )
    }
    else
    {
-      pArea = ( AREAP ) hb_xgrab( pRddNode->uiAreaSize );
-      memset( pArea, 0, pRddNode->uiAreaSize );
+      pArea = ( AREAP ) hb_xgrabz( pRddNode->uiAreaSize );
       pArea->lprfsHost = &pRddNode->pTable;
       pArea->rddID = uiRddID;
    }
@@ -164,40 +162,29 @@ HB_ERRCODE hb_rddGetTempAlias( char * szAliasTmp )
  */
 void * hb_rddAllocWorkAreaAlias( const char * szAlias, int iArea )
 {
-   PHB_DYNS pSymAlias;
    int iDummyArea;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_rddAllocWorkAreaAlias(%s, %d)", szAlias, iArea ) );
 
    /* Verify if the alias name is valid symbol */
    if( hb_rddVerifyAliasName( szAlias ) != HB_SUCCESS )
-   {
       hb_errRT_DBCMD_Ext( EG_BADALIAS, EDBCMD_BADALIAS, NULL, szAlias, EF_CANDEFAULT );
-      return NULL;
-   }
    /* Verify if the alias is already in use */
-   if( hb_rddGetAliasNumber( szAlias, &iDummyArea ) == HB_SUCCESS )
-   {
+   else if( hb_rddGetAliasNumber( szAlias, &iDummyArea ) == HB_SUCCESS )
       hb_errRT_DBCMD_Ext( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, szAlias, EF_CANDEFAULT );
-      return NULL;
-   }
-
-   pSymAlias = hb_dynsymGet( szAlias );
-   if( hb_dynsymAreaHandle( pSymAlias ) != 0 )
-   {
-      pSymAlias = NULL;
-   }
    else
    {
-      hb_dynsymSetAreaHandle( pSymAlias, iArea );
-   }
+      PHB_DYNS pSymAlias = hb_dynsymGet( szAlias );
 
-   if( ! pSymAlias )
-   {
+      if( hb_dynsymAreaHandle( pSymAlias ) == 0 )
+      {
+         hb_dynsymSetAreaHandle( pSymAlias, iArea );
+         return pSymAlias;
+      }
       hb_errRT_DBCMD_Ext( EG_DUPALIAS, EDBCMD_DUPALIAS, NULL, szAlias, EF_CANDEFAULT );
    }
 
-   return pSymAlias;
+   return NULL;
 }
 
 /*
@@ -205,28 +192,41 @@ void * hb_rddAllocWorkAreaAlias( const char * szAlias, int iArea )
  */
 HB_USHORT hb_rddFieldIndex( AREAP pArea, const char * szName )
 {
-   HB_USHORT uiCount = 0;
-   LPFIELD pField;
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_rddFieldIndex(%p, %s)", pArea, szName ) );
 
    while( HB_ISSPACE( *szName ) )
-   {
       ++szName;
-   }
 
    if( *szName )
    {
-      char szSym[ HB_SYMBOL_NAME_LEN + 1 ];
-      hb_strncpyUpperTrim( szSym, szName, sizeof( szSym ) - 1 );
+      HB_SIZE nLen = strlen( szName );
 
-      pField = pArea->lpFields;
-      while( pField )
+      while( HB_ISSPACE( szName[ nLen - 1 ] ) )
+         --nLen;
+
+      if( nLen <= HB_SYMBOL_NAME_LEN )
       {
-         ++uiCount;
-         if( strcmp( szSym, hb_dynsymName( ( PHB_DYNS ) pField->sym ) ) == 0 )
-            return uiCount;
-         pField = pField->lpfNext;
+         char szFieldName[ HB_SYMBOL_NAME_LEN + 1 ];
+         PHB_DYNS pDynSym;
+
+         szFieldName[ nLen ] = '\0';
+         while( nLen-- )
+            szFieldName[ nLen ] = HB_TOUPPER( szName[ nLen ] );
+
+         pDynSym = hb_dynsymFind( szFieldName );
+         if( pDynSym )
+         {
+            LPFIELD pField = pArea->lpFields;
+            HB_USHORT uiCount = 0;
+
+            while( pField )
+            {
+               ++uiCount;
+               if( pDynSym == ( PHB_DYNS ) pField->sym )
+                  return uiCount;
+               pField = pField->lpfNext;
+            }
+         }
       }
    }
    return 0;
@@ -524,8 +524,11 @@ HB_ERRCODE hb_rddGetFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
        * generate an error with retry possibility
        * (user created error handler can make this field accessible)
        */
-      PHB_ITEM pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, EDBCMD_NOVAR,
-                                      NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
+      PHB_ITEM pError;
+
+      pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, EDBCMD_NOVAR,
+                             NULL, pFieldSymbol->szName, 0, EF_CANRETRY );
+      hb_itemClear( pItem );
 
       while( hb_errLaunch( pError ) == E_RETRY )
       {
@@ -856,6 +859,57 @@ static const char * hb_dbTransFieldPos( PHB_ITEM pFields, HB_USHORT uiField )
    return szField;
 }
 
+static const HB_GC_FUNCS s_gcTransInfo =
+{
+   hb_gcDummyClear,
+   hb_gcDummyMark
+};
+
+PHB_ITEM hb_dbTransInfoPut( PHB_ITEM pItem, LPDBTRANSINFO lpdbTransInfo )
+{
+   LPDBTRANSINFO * pHolder;
+
+   pHolder = ( LPDBTRANSINFO * ) hb_gcAllocate( sizeof( LPDBTRANSINFO ), &s_gcTransInfo );
+   *pHolder = lpdbTransInfo;
+
+   return hb_itemPutPtrGC( pItem, pHolder );
+}
+
+LPDBTRANSINFO hb_dbTransInfoGet( PHB_ITEM pItem )
+{
+   LPDBTRANSINFO * pHolder = ( LPDBTRANSINFO * ) hb_itemGetPtrGC( pItem, &s_gcTransInfo );
+
+   return pHolder ? * pHolder : NULL;
+}
+
+/* update counters for autoinc and rowver fields */
+HB_ERRCODE hb_dbTransCounters( LPDBTRANSINFO lpdbTransInfo )
+{
+   PHB_ITEM pItem = hb_itemNew( NULL );
+   HB_USHORT uiCount;
+
+   for( uiCount = 0; uiCount < lpdbTransInfo->uiItemCount; ++uiCount )
+   {
+      LPDBTRANSITEM lpdbTransItem = &lpdbTransInfo->lpTransItems[ uiCount ];
+
+      if( SELF_FIELDINFO( lpdbTransInfo->lpaSource, lpdbTransItem->uiSource,
+                          DBS_COUNTER, pItem ) == HB_SUCCESS &&
+          SELF_FIELDINFO( lpdbTransInfo->lpaDest, lpdbTransItem->uiDest,
+                          DBS_COUNTER, pItem ) == HB_SUCCESS )
+      {
+         hb_itemClear( pItem );
+         if( SELF_FIELDINFO( lpdbTransInfo->lpaSource, lpdbTransItem->uiSource,
+                             DBS_STEP, pItem ) == HB_SUCCESS )
+             SELF_FIELDINFO( lpdbTransInfo->lpaDest, lpdbTransItem->uiDest,
+                             DBS_STEP, pItem );
+      }
+      hb_itemClear( pItem );
+   }
+   hb_itemRelease( pItem );
+
+   return HB_SUCCESS;
+}
+
 HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
                              LPDBTRANSINFO lpdbTransInfo,
                              PHB_ITEM * pStruct, PHB_ITEM pFields )
@@ -1090,10 +1144,8 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
                                       HB_TRUE,
                                       szCpId, ulConnection, pStruct, pDelim );
          if( errCode == HB_SUCCESS )
-         {
             dbTransInfo.lpaDest = lpaClose =
                                  ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-         }
       }
    }
    else
@@ -1150,6 +1202,8 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
 
    if( errCode == HB_SUCCESS )
    {
+      PHB_ITEM pTransItm;
+
       hb_rddSelectWorkAreaNumber( dbTransInfo.lpaSource->uiArea );
 
       dbTransInfo.dbsci.itmCobFor   = pCobFor;
@@ -1166,7 +1220,22 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
       dbTransInfo.dbsci.fIgnoreDuplicates = HB_FALSE;
       dbTransInfo.dbsci.fBackward         = HB_FALSE;
 
-      errCode = SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
+      pTransItm = hb_dbTransInfoPut( NULL, &dbTransInfo );
+      errCode = SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+      if( errCode == HB_SUCCESS )
+      {
+         errCode = dbTransInfo.uiItemCount == 0 ? HB_FAILURE :
+                   SELF_TRANS( dbTransInfo.lpaSource, &dbTransInfo );
+         /* we always call DBI_TRANSREC second time after TRANS() method
+          * even if TRANS() failed - it's for RDDs which may need to store
+          * pointer to dbTransInfo in first call and then release it and/or
+          * clean some structures allocated for transfer operation [druzus]
+          */
+         SELF_INFO( dbTransInfo.lpaDest, DBI_TRANSREC, pTransItm );
+         if( errCode == HB_SUCCESS && ( dbTransInfo.uiFlags & DBTF_CPYCTR ) )
+            errCode = hb_dbTransCounters( &dbTransInfo );
+      }
+      hb_itemRelease( pTransItm );
    }
 
    if( dbTransInfo.lpTransItems )

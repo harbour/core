@@ -99,7 +99,7 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea );
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
-static SDDNODE pgsqldd = {
+static SDDNODE s_pgsqldd = {
    NULL,
    "POSTGRESQL",
    ( SDDFUNC_CONNECT ) pgsqlConnect,
@@ -117,7 +117,7 @@ static void hb_pgsqldd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! hb_sddRegister( &pgsqldd ) )
+   if( ! hb_sddRegister( &s_pgsqldd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 }
 
@@ -246,7 +246,6 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    PHB_ITEM       pItemEof, pItem;
    HB_USHORT      uiFields, uiCount;
    HB_BOOL        bError;
-   DBFIELDINFO    pFieldInfo;
 
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
    pSDDData        = ( SDDDATA * ) pArea->pSDDData;
@@ -269,7 +268,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    pSDDData->pResult = pResult;
 
    uiFields = ( HB_USHORT ) PQnfields( pResult );
-   SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
+   SELF_SETFIELDEXTENT( &pArea->area, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
    pItem    = hb_itemNew( NULL );
@@ -277,134 +276,133 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    bError = HB_FALSE;
    for( uiCount = 0; uiCount < uiFields; uiCount++ )
    {
-      pFieldInfo.atomName = PQfname( pResult, ( int ) uiCount );
-      pFieldInfo.uiDec    = 0;
+      DBFIELDINFO dbFieldInfo;
+
+      memset( &dbFieldInfo, 0, sizeof( dbFieldInfo ) );
+      dbFieldInfo.atomName = PQfname( pResult, ( int ) uiCount );
 
       switch( PQftype( pResult, ( int ) uiCount ) )
       {
          case BPCHAROID:
          case VARCHAROID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = ( HB_USHORT ) PQfmod( pResult, uiCount ) - 4;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = ( HB_USHORT ) PQfmod( pResult, uiCount ) - 4;
             break;
 
          case TEXTOID:
-            pFieldInfo.uiType = HB_FT_MEMO;
-            pFieldInfo.uiLen  = 10;
+            dbFieldInfo.uiType = HB_FT_MEMO;
+            dbFieldInfo.uiLen  = 10;
             break;
 
          case NUMERICOID:
-            pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiLen  = ( PQfmod( pResult, uiCount ) - 4 ) >> 16;
-            pFieldInfo.uiDec  = ( PQfmod( pResult, uiCount ) - 4 ) & 0xFFFF;
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiLen  = ( PQfmod( pResult, uiCount ) - 4 ) >> 16;
+            dbFieldInfo.uiDec  = ( PQfmod( pResult, uiCount ) - 4 ) & 0xFFFF;
             break;
 
          case INT2OID:
-            pFieldInfo.uiType = HB_FT_INTEGER;
-            pFieldInfo.uiLen  = 6;
+            dbFieldInfo.uiType = HB_FT_INTEGER;
+            dbFieldInfo.uiLen  = 6;
             break;
 
          case INT4OID:
-            pFieldInfo.uiType = HB_FT_INTEGER;
-            pFieldInfo.uiLen  = 11;
+            dbFieldInfo.uiType = HB_FT_INTEGER;
+            dbFieldInfo.uiLen  = 11;
             break;
 
          case INT8OID:
          case OIDOID:
-            pFieldInfo.uiType = HB_FT_LONG;
-            pFieldInfo.uiLen  = 20;
+            dbFieldInfo.uiType = HB_FT_LONG;
+            dbFieldInfo.uiLen  = 20;
             break;
 
          case FLOAT4OID:
          case FLOAT8OID:
          case CASHOID:  /* TODO: ??? */
-            pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiLen  = 16;
-            pFieldInfo.uiDec  = 2;   /* TODO: hb_set.SET_DECIMALS ??? */
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiLen  = 16;
+            dbFieldInfo.uiDec  = 2;   /* TODO: hb_set.SET_DECIMALS ??? */
             break;
 
          case BOOLOID:
-            pFieldInfo.uiType = HB_FT_LOGICAL;
-            pFieldInfo.uiLen  = 1;
+            dbFieldInfo.uiType = HB_FT_LOGICAL;
+            dbFieldInfo.uiLen  = 1;
             break;
 
          case DATEOID:
-            pFieldInfo.uiType = HB_FT_DATE;
-            pFieldInfo.uiLen  = 8;
+            dbFieldInfo.uiType = HB_FT_DATE;
+            dbFieldInfo.uiLen  = 8;
             break;
 
          case INETOID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = 29;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = 29;
             break;
 
          case CIDROID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = 32;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = 32;
             break;
 
          case MACADDROID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = 17;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = 17;
             break;
 
          case BITOID:
          case VARBITOID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = ( HB_USHORT ) PQfsize( pResult, uiCount );
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = ( HB_USHORT ) PQfsize( pResult, uiCount );
             break;
 
          case TIMEOID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = 12;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = 12;
             break;
 
          case TIMESTAMPOID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = 23;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = 23;
             break;
 
          case TIMETZOID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = 15;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = 15;
             break;
 
          case TIMESTAMPTZOID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = 26;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = 26;
             break;
 
          case NAMEOID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = 63;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen  = 63;
             break;
 
          case BYTEAOID:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = 0;
+            dbFieldInfo.uiType = HB_FT_STRING;
             break;
 
          default:
-            pFieldInfo.uiType = 0;
-            pFieldInfo.uiLen  = 0;
             bError = HB_TRUE;
             break;
       }
-      /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", pFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
+      /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", dbFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
 
       if( ! bError )
       {
-         switch( pFieldInfo.uiType )
+         switch( dbFieldInfo.uiType )
          {
             case HB_FT_STRING:
             {
                char * pStr;
 
-               pStr = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
-               memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ] = '\0';
+               pStr = ( char * ) hb_xgrab( dbFieldInfo.uiLen + 1 );
+               memset( pStr, ' ', dbFieldInfo.uiLen );
+               pStr[ dbFieldInfo.uiLen ] = '\0';
 
-               hb_itemPutCL( pItem, pStr, pFieldInfo.uiLen );
+               hb_itemPutCL( pItem, pStr, dbFieldInfo.uiLen );
                hb_xfree( pStr );
                break;
             }
@@ -441,12 +439,12 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
 
-/*       if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
-            pFieldInfo.uiType = HB_IT_LONG;
+/*       if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
+            dbFieldInfo.uiType = HB_IT_LONG;
  */
 
          if( ! bError )
-            bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
+            bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
       }
 
       if( bError )
@@ -464,12 +462,12 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    }
 
    pArea->ulRecCount = ( HB_ULONG ) PQntuples( pResult );
+   pArea->ulRecMax   = pArea->ulRecCount + 1;
 
    pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
-   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-   memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrabz( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
-   *pArea->pRow = pItemEof;
+   pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
    pArea->fFetched       = HB_TRUE;
 
@@ -507,6 +505,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    pField = pArea->area.lpFields + uiIndex;
 
    if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
+      /* TOFIX: it breaks defined field type */
       return HB_SUCCESS;
 
    pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
@@ -573,7 +572,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );
-      SELF_ERROR( ( AREAP ) pArea, pError );
+      SELF_ERROR( &pArea->area, pError );
       hb_itemRelease( pError );
       return HB_FAILURE;
    }

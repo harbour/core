@@ -65,31 +65,48 @@ CREATE CLASS HBMemoEditor INHERIT HBEditor
    METHOD KeyboardHook( nKey )               // Gets called every time there is a key not handled directly by HBEditor
    METHOD IdleHook()                         // Gets called every time there are no more keys to hanlde
 
-   METHOD HandleUserKey( nKey, nUserKey )    // Handles keys returned to MemoEdit() by user function
+   METHOD HandleUserKey( nKey, nUdfReturn )  // Handles keys returned to MemoEdit() by user function
    METHOD xDo( nStatus )                     // Calls xUserFunction saving and restoring cursor position and shape
 
    METHOD MoveCursor( nKey )                 // Redefined to properly managed CTRL-W
+   METHOD InsertState( lInsState )           // Redefined for _SET_SCOREBOARD messages
+
+   PROTECTED:
+
+   METHOD UserFunctionIsValid()
 
 ENDCLASS
 
+METHOD UserFunctionIsValid() CLASS HBMemoEditor
+#ifdef HB_CLP_STRICT
+   RETURN HB_ISSTRING( ::xUserFunction )
+#else
+   RETURN HB_ISSTRING( ::xUserFunction ) .OR. HB_ISEVALITEM( ::xUserFunction )
+#endif
+
 METHOD MemoInit( xUserFunction ) CLASS HBMemoEditor
 
-   LOCAL nKey
+   LOCAL nUdfReturn
 
    // Save/Init object internal representation of user function
    ::xUserFunction := xUserFunction
 
-   IF HB_ISSTRING( ::xUserFunction )
-      // Keep calling user function until it returns ME_DEFAULT
-      DO WHILE ( nKey := ::xDo( ME_INIT ) ) != ME_DEFAULT
+   IF ::UserFunctionIsValid()
 
-         // At this time there is no input from user of MemoEdit() only handling
-         // of values returned by ::xUserFunction, so I pass these value on both
-         // parameters of ::HandleUserKey()
-         ::HandleUserKey( nKey, nKey )
-
+      DO WHILE .T.
+         SWITCH nUdfReturn := ::xDo( ME_INIT )
+         // Tested with CL52 that only these 3 actions are processed and
+         // then ME_INIT call repeated
+         CASE K_INS
+         CASE ME_TOGGLEWRAP
+         CASE ME_TOGGLESCROLL
+            // At this time there is no input from user of MemoEdit() only handling
+            // of values returned by ::xUserFunction, so I pass NIL as the key code.
+            ::HandleUserKey( , nUdfReturn )
+            LOOP
+         ENDSWITCH
+         EXIT
       ENDDO
-
    ENDIF
 
    RETURN Self
@@ -98,14 +115,14 @@ METHOD Edit() CLASS HBMemoEditor
 
    LOCAL nKey
 
-   // NOTE: K_ALT_W is not compatible with clipper exit memo and save key, but I cannot discriminate
-   //       K_CTRL_W and K_CTRL_END from harbour code.
+   // NOTE: K_ALT_W is not compatible with Cl*pper exit memo and save key, but I cannot discriminate
+   //       K_CTRL_W and K_CTRL_END from Harbour code.
    LOCAL aConfigurableKeys := { K_CTRL_Y, K_CTRL_T, K_CTRL_B, K_CTRL_V, K_ALT_W, K_ESC }
    LOCAL bKeyBlock
 
    // If I have an user function I need to trap configurable keys and ask to
    // user function if handle them the standard way or not
-   IF ::lEditAllow .AND. HB_ISSTRING( ::xUserFunction )
+   IF ::lEditAllow .AND. ::UserFunctionIsValid()
 
       DO WHILE ! ::lExitEdit
 
@@ -121,7 +138,7 @@ METHOD Edit() CLASS HBMemoEditor
             LOOP
          ENDIF
 
-         // Is it a configurable key ?
+         // Is it a configurable key?
          IF AScan( aConfigurableKeys, nKey ) > 0
             ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
          ELSE
@@ -145,36 +162,35 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
    LOCAL nRow
    LOCAL nCol
 
-   IF HB_ISSTRING( ::xUserFunction )
-      IF ! ::lCallKeyboardHook // To avoid recursive calls in endless loop. [jarabal]
-         ::lCallKeyboardHook := .T.
-         ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
-         ::lCallKeyboardHook := .F.
-      ENDIF
-   ELSE
-      IF nKey == K_ESC
-         IF ::lDirty .AND. Set( _SET_SCOREBOARD )
-            cBackScr := SaveScreen( 0, MaxCol() - 18, 0, MaxCol() )
+   IF ::UserFunctionIsValid() .AND. ! ::lCallKeyboardHook  // To avoid recursive calls in endless loop. [jarabal]
 
-            nRow := Row()
-            nCol := Col()
-            hb_DispOutAt( 0, MaxCol() - 18, "Abort Edit? (Y/N)" )
-            SetPos( 0, MaxCol() - 1 )
+      ::lCallKeyboardHook := .T.
+      ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
+      ::lCallKeyboardHook := .F.
 
-            nYesNoKey := Inkey( 0 )
+   ELSEIF nKey == K_ESC
 
-            RestScreen( 0, MaxCol() - 18, 0, MaxCol(), cBackScr )
-            SetPos( nRow, nCol )
+      IF ::lDirty .AND. Set( _SET_SCOREBOARD )
+         cBackScr := SaveScreen( 0, MaxCol() - 19, 0, MaxCol() )
 
-            IF nYesNoKey == Asc( "Y" ) .OR. nYesNoKey == Asc( "y" )
-               hb_keySetLast( K_ESC ) /* Cl*pper compatibility */
-               ::lSaved := .F.
-               ::lExitEdit := .T.
-            ENDIF
-         ELSE
+         nRow := Row()
+         nCol := Col()
+         hb_DispOutAt( 0, MaxCol() - 19, "Abort Edit? (Y/N)" )
+         SetPos( 0, MaxCol() - 2 )
+
+         nYesNoKey := Inkey( 0 )
+
+         RestScreen( 0, MaxCol() - 19, 0, MaxCol(), cBackScr )
+         SetPos( nRow, nCol )
+
+         IF Upper( hb_keyChar( nYesNoKey ) ) == "Y"
+            hb_keySetLast( K_ESC )  /* Cl*pper compatibility */
             ::lSaved := .F.
             ::lExitEdit := .T.
          ENDIF
+      ELSE
+         ::lSaved := .F.
+         ::lExitEdit := .T.
       ENDIF
    ENDIF
 
@@ -182,59 +198,82 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
 
 METHOD IdleHook() CLASS HBMemoEditor
 
-   IF HB_ISSTRING( ::xUserFunction )
+   IF ::UserFunctionIsValid()
       ::xDo( ME_IDLE )
    ENDIF
 
    RETURN Self
 
-METHOD HandleUserKey( nKey, nUserKey ) CLASS HBMemoEditor
+METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
 
-   DO CASE
-   // I won't reach this point during ME_INIT since ME_DEFAULT ends initialization phase of MemoEdit()
-   CASE nUserKey == ME_DEFAULT
+   SWITCH nUdfReturn
+   CASE ME_DEFAULT
 
-      // HBEditor is not able to handle keys with a value higher than 256, but I have to tell him
-      // that user wants to save text
-      DO CASE
-      CASE nKey == K_ESC
-         ::lSaved := .F.
-         ::lExitEdit := .T.
-      CASE nKey <= 256 .OR. nKey == K_ALT_W
-         ::super:Edit( nKey )
-      ENDCASE
+      // I won't reach this point during ME_INIT since ME_DEFAULT ends initialization phase of MemoEdit()
 
-   // TOFIX: Not CA-Cl*pper compatible, see teditor.prg
-   CASE ( nUserKey >= 1 .AND. nUserKey <= 31 ) .OR. nUserKey == K_ALT_W
-      ::super:Edit( nUserKey )
-
-   CASE nUserKey == ME_DATA
-      IF nKey <= 256
-         ::super:Edit( nKey )
+      IF HB_ISNUMERIC( nKey )
+         // HBEditor is not able to handle keys with a value higher than 256, but I have to tell him
+         // that user wants to save text
+         DO CASE
+         CASE nKey == K_ESC
+            ::lSaved := .F.
+            ::lExitEdit := .T.
+         CASE nKey <= 256 .OR. nKey == K_ALT_W .OR. HB_ULen( hb_keyChar( nKey ) ) > 0
+            ::super:Edit( nKey )
+         ENDCASE
+      ELSE
+         RETURN .F.
       ENDIF
+      EXIT
 
-   CASE nUserKey == ME_TOGGLEWRAP
+   CASE ME_DATA
+      IF HB_ISNUMERIC( nKey )
+         IF nKey <= 256 .OR. HB_ULen( hb_keyChar( nKey ) ) > 0
+            ::super:Edit( nKey )
+         ENDIF
+      ELSE
+         RETURN .F.
+      ENDIF
+      EXIT
+
+   CASE ME_TOGGLEWRAP
       ::lWordWrap := ! ::lWordWrap
+      EXIT
 
-   CASE nUserKey == ME_TOGGLESCROLL
+   CASE ME_TOGGLESCROLL
       // TODO: HBEditor does not support vertical scrolling of text inside window without moving cursor position
+      EXIT
 
-   CASE nUserKey == ME_WORDRIGHT
+   CASE ME_WORDRIGHT
       ::MoveCursor( K_CTRL_RIGHT )
+      EXIT
 
-   CASE nUserKey == ME_BOTTOMRIGHT
+   CASE ME_BOTTOMRIGHT
       ::MoveCursor( K_CTRL_END )
+      EXIT
 
 #ifndef HB_CLP_STRICT
-   CASE nUserKey == ME_PASTE /* Xbase++ compatibility */
+   CASE ME_PASTE  /* Xbase++ compatibility */
       hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
+      EXIT
 #endif
 
-   OTHERWISE
-      // Do nothing
-   ENDCASE
+   CASE ME_IGNORE
+      /* do nothing */
+      EXIT
 
-   RETURN Self
+   OTHERWISE
+
+      // TOFIX: Not CA-Cl*pper compatible, see teditor.prg
+      IF ( nUdfReturn >= 1 .AND. nUdfReturn <= 31 ) .OR. nUdfReturn == K_ALT_W
+         ::super:Edit( nUdfReturn )
+      ELSE
+         RETURN .F.
+      ENDIF
+
+   ENDSWITCH
+
+   RETURN .T.
 
 METHOD xDo( nStatus ) CLASS HBMemoEditor
 
@@ -244,70 +283,85 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 
    LOCAL xResult := Do( ::xUserFunction, nStatus, ::nRow, ::nCol - 1 )
 
-   hb_default( @xResult, ME_DEFAULT )
-
-   ::SetPos( nOldRow, nOldCol )
+   SetPos( nOldRow, nOldCol )
    SetCursor( nOldCur )
 
-   RETURN xResult
+   RETURN hb_defaultValue( xResult, ME_DEFAULT )
 
 METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 
-   IF nKey == K_CTRL_END .OR. ;
-      nKey == K_CTRL_W
-
+   IF nKey == K_CTRL_W
       ::lSaved := .T.
       ::lExitEdit := .T.
    ELSE
-      RETURN ::Super:MoveCursor( nKey )
+      RETURN ::super:MoveCursor( nKey )
    ENDIF
 
    RETURN .F.
 
+METHOD InsertState( lInsState ) CLASS HBMemoEditor
+
+   IF HB_ISLOGICAL( lInsState ) .AND. ::lEditAllow
+      Set( _SET_INSERT, lInsState )
+      SetCursor( iif( lInsState, SC_INSERT, SC_NORMAL ) )
+      IF SET( _SET_SCOREBOARD )
+         hb_dispOutAt( 0, MaxCol() - 19, iif( lInsState, "<insert>", "        " ) )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
 /* ------------------------------------------ */
 
 FUNCTION MemoEdit( ;
-   cString,;
-   nTop,;
-   nLeft,;
-   nBottom,;
-   nRight,;
-   lEditMode,;
-   xUserFunction,;
-   nLineLength,;
-   nTabSize,;
-   nTextBuffRow,;
-   nTextBuffColumn,;
-   nWindowRow,;
+   cString, ;
+   nTop, ;
+   nLeft, ;
+   nBottom, ;
+   nRight, ;
+   lEditMode, ;
+   xUserFunction, ;
+   nLineLength, ;
+   nTabSize, ;
+   nTextBuffRow, ;
+   nTextBuffColumn, ;
+   nWindowRow, ;
    nWindowColumn )
 
    LOCAL oEd
 
    LOCAL nOldCursor
 
-   hb_default( @nTop            , 0                  )
-   hb_default( @nLeft           , 0                  )
-   hb_default( @nBottom         , MaxRow()           )
-   hb_default( @nRight          , MaxCol()           )
-   hb_default( @lEditMode       , .T.                )
+   hb_default( @nLeft           , 0 )
+   hb_default( @nRight          , MaxCol() )
    hb_default( @nLineLength     , nRight - nLeft + 1 )
-   hb_default( @nTabSize        , 4                  )
-   hb_default( @nTextBuffRow    , 1                  )
-   hb_default( @nTextBuffColumn , 0                  )
-   hb_default( @nWindowRow      , 0                  )
-   hb_default( @nWindowColumn   , nTextBuffColumn    )
-   hb_default( @cString         , ""                 )
+   hb_default( @nTextBuffColumn , 0 )
+   hb_default( @nWindowColumn   , nTextBuffColumn )
+   hb_default( @cString         , "" )
 
-   // Original MemoEdit() converts Tabs into spaces;
-   oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )
+   oEd := HBMemoEditor():New( cString, ;
+      hb_defaultValue( nTop, 0 ), ;
+      nLeft, ;
+      hb_defaultValue( nBottom, MaxRow() ), ;
+      nRight, ;
+      hb_defaultValue( lEditMode, .T. ), ;
+      nLineLength, ;
+      hb_defaultValue( nTabSize, 4 ), ;
+      hb_defaultValue( nTextBuffRow, 1 ), ;
+      nTextBuffColumn, ;
+      hb_defaultValue( nWindowRow, 0 ), ;
+      nWindowColumn )
    oEd:MemoInit( xUserFunction )
    oEd:display()
 
-   IF ! HB_ISLOGICAL( xUserFunction ) .OR. xUserFunction
-      nOldCursor := SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
+   /* Contrary to what the NG says, any logical value will make it pass
+      through without any editing. */
+   IF ! HB_ISLOGICAL( xUserFunction )
+      nOldCursor := SetCursor()
+      oEd:InsertState( Set( _SET_INSERT ) )
       oEd:Edit()
       IF oEd:Changed() .AND. oEd:Saved()
-         cString := oEd:GetText()
+         cString := oEd:GetText( .T. )
       ENDIF
       SetCursor( nOldCursor )
    ENDIF

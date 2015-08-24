@@ -238,6 +238,7 @@ static void s_consrv_disconnect( PHB_CONSRV conn )
 {
    if( conn->sd != HB_NO_SOCKET )
    {
+      hb_socketShutdown( conn->sd, HB_SOCKET_SHUT_RDWR );
       hb_socketClose( conn->sd );
       conn->sd = HB_NO_SOCKET;
    }
@@ -267,7 +268,10 @@ static void s_consrv_close( PHB_CONSRV conn )
       hb_itemRelease( conn->mutex );
 
    if( conn->sd != HB_NO_SOCKET )
+   {
+      hb_socketShutdown( conn->sd, HB_SOCKET_SHUT_RDWR );
       hb_socketClose( conn->sd );
+   }
 
    if( conn->zstream )
       hb_znetClose( conn->zstream );
@@ -356,7 +360,7 @@ static PHB_CONSRV s_consrvNew( HB_SOCKET connsd, const char * szRootPath, HB_BOO
    return conn;
 }
 
-static long s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
+static HB_BOOL s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
    long lRead = 0, l;
@@ -385,10 +389,10 @@ static long s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
       }
    }
 
-   return lRead;
+   return lRead == len;
 }
 
-static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
+static HB_BOOL s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
    long lSent = 0, lLast = 1, l;
@@ -427,7 +431,7 @@ static long s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
       if( conn->mutex )
          hb_threadMutexUnlock( conn->mutex );
    }
-   return lSent;
+   return lSent == len;
 }
 
 static HB_GARBAGE_FUNC( s_listensd_destructor )
@@ -486,7 +490,7 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath, HB_BOOL rpc )
       {
          if( ! s_isDirSep( lsd->rootPath[ iLen - 1 ] ) )
          {
-            if( iLen == sizeof( lsd->rootPath ) - 1 )
+            if( iLen == ( int ) sizeof( lsd->rootPath ) - 1 )
                --iLen;
             lsd->rootPath[ iLen ] = HB_OS_PATH_DELIM_CHR;
          }
@@ -726,21 +730,21 @@ static HB_BOOL s_netio_login_accept( PHB_CONSRV conn )
    {
       HB_BYTE msgbuf[ NETIO_MSGLEN ];
 
-      if( s_srvRecvAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN &&
+      if( s_srvRecvAll( conn, msgbuf, NETIO_MSGLEN ) &&
           HB_GET_LE_INT32( msgbuf ) == NETIO_LOGIN )
       {
          long len = HB_GET_LE_INT16( &msgbuf[ 4 ] );
 
          if( len < ( long ) sizeof( msgbuf ) &&
              len == ( long ) strlen( NETIO_LOGINSTRID ) &&
-             s_srvRecvAll( conn, msgbuf, len ) == len )
+             s_srvRecvAll( conn, msgbuf, len ) )
          {
             if( memcmp( NETIO_LOGINSTRID, msgbuf, len ) == 0 )
             {
                HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_LOGIN );
                HB_PUT_LE_UINT32( &msgbuf[ 4 ], NETIO_CONNECTED );
                memset( msgbuf + 8, '\0', NETIO_MSGLEN - 8 );
-               if( s_srvSendAll( conn, msgbuf, NETIO_MSGLEN ) == NETIO_MSGLEN )
+               if( s_srvSendAll( conn, msgbuf, NETIO_MSGLEN ) )
                   conn->login = HB_TRUE;
             }
          }
@@ -784,6 +788,7 @@ HB_FUNC( NETIO_SERVER )
          int iFileNo, iStreamID, iIndex, iResult;
          HB_FATTR ulAttr;
          HB_U32 uiMsg;
+         HB_FATTR nFlags;
          HB_USHORT uiFlags;
          char * szExt;
          PHB_FILE pFile;
@@ -792,7 +797,7 @@ HB_FUNC( NETIO_SERVER )
 
          msg = buffer;
 
-         if( s_srvRecvAll( conn, msgbuf, NETIO_MSGLEN ) != NETIO_MSGLEN )
+         if( ! s_srvRecvAll( conn, msgbuf, NETIO_MSGLEN ) )
             break;
 
          uiMsg = HB_GET_LE_UINT32( msgbuf );
@@ -811,7 +816,7 @@ HB_FUNC( NETIO_SERVER )
                   if( size + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else
                   {
@@ -844,7 +849,7 @@ HB_FUNC( NETIO_SERVER )
                   if( size + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else
                   {
@@ -875,7 +880,7 @@ HB_FUNC( NETIO_SERVER )
                   if( HB_MAX( size, size2 ) + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( HB_MAX( size, size2 ) + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else
                   {
@@ -885,7 +890,7 @@ HB_FUNC( NETIO_SERVER )
                      pszDirSpec = pszName ? hb_strdup( pszName ) : NULL;
 
                      msg[ size2 ] = '\0';
-                     if( size2 && s_srvRecvAll( conn, msg, size2 ) != size2 )
+                     if( size2 && ! s_srvRecvAll( conn, msg, size2 ) )
                         errCode = NETIO_ERR_READ;
                      else if( ! pszName )
                         errCode = NETIO_ERR_WRONG_FILE_PATH;
@@ -939,7 +944,7 @@ HB_FUNC( NETIO_SERVER )
                   if( size + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else
                   {
@@ -990,7 +995,7 @@ HB_FUNC( NETIO_SERVER )
                   if( HB_MAX( size, size2 ) + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( HB_MAX( size, size2 ) + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else
                   {
@@ -1001,7 +1006,7 @@ HB_FUNC( NETIO_SERVER )
                         szOldName = hb_strdup( szFile );
 
                      msg[ size2 ] = '\0';
-                     if( s_srvRecvAll( conn, msg, size2 ) != size2 )
+                     if( ! s_srvRecvAll( conn, msg, size2 ) )
                         errCode = NETIO_ERR_READ;
                      else if( ! szOldName )
                         errCode = NETIO_ERR_WRONG_FILE_PATH;
@@ -1038,7 +1043,7 @@ HB_FUNC( NETIO_SERVER )
                   if( size + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else
                   {
@@ -1072,7 +1077,7 @@ HB_FUNC( NETIO_SERVER )
                   if( size + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else
                   {
@@ -1096,10 +1101,20 @@ HB_FUNC( NETIO_SERVER )
                break;
 
             case NETIO_OPEN:
+            case NETIO_OPEN2:
                size = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
-               uiFlags = HB_GET_LE_UINT16( &msgbuf[ 6 ] );
-               szExt = msgbuf[ 8 ] ? hb_strndup( ( const char * ) &msgbuf[ 8 ],
-                                                 NETIO_MSGLEN - 8 ) : NULL;
+               if( uiMsg == NETIO_OPEN2 )
+               {
+                  nFlags = HB_GET_LE_UINT32( &msgbuf[ 6 ] );
+                  szExt = msgbuf[ 10 ] ? hb_strndup( ( const char * ) &msgbuf[ 10 ],
+                                                     NETIO_MSGLEN - 10 ) : NULL;
+               }
+               else
+               {
+                  nFlags = HB_GET_LE_UINT16( &msgbuf[ 6 ] );
+                  szExt = msgbuf[ 8 ] ? hb_strndup( ( const char * ) &msgbuf[ 8 ],
+                                                    NETIO_MSGLEN - 8 ) : NULL;
+               }
                if( size <= 0 )
                   errCode = NETIO_ERR_WRONG_PARAM;
                else
@@ -1107,7 +1122,7 @@ HB_FUNC( NETIO_SERVER )
                   if( size + conn->rootPathLen >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size + conn->rootPathLen + 1 );
                   msg[ size ] = '\0';
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else if( conn->filesCount >= NETIO_FILES_MAX )
                      errCode = NETIO_ERR_FILES_MAX;
@@ -1119,7 +1134,7 @@ HB_FUNC( NETIO_SERVER )
                         errCode = NETIO_ERR_WRONG_FILE_PATH;
                      else
                      {
-                        pFile = hb_fileExtOpen( szFile, szExt, uiFlags, NULL, NULL );
+                        pFile = hb_fileExtOpen( szFile, szExt, nFlags, NULL, NULL );
                         if( ! pFile )
                            errCode = s_srvFsError();
                         else
@@ -1154,7 +1169,7 @@ HB_FUNC( NETIO_SERVER )
                {
                   if( size >= ( long ) ( sizeof( buffer ) - NETIO_MSGLEN ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size + NETIO_MSGLEN );
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else
                   {
@@ -1273,7 +1288,7 @@ HB_FUNC( NETIO_SERVER )
                {
                   if( size >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size );
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else
                   {
@@ -1456,7 +1471,7 @@ HB_FUNC( NETIO_SERVER )
                {
                   if( size >= ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size );
-                  if( s_srvRecvAll( conn, msg, size ) != size )
+                  if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
                   else if( ! conn->rpc )
                      errCode = NETIO_ERR_UNSUPPORTED;
@@ -1642,7 +1657,7 @@ HB_FUNC( NETIO_SERVER )
          else
             len += NETIO_MSGLEN;
 
-         errCode = s_srvSendAll( conn, msg, len ) != len;
+         errCode = ! s_srvSendAll( conn, msg, len );
 
          if( ptr )
             hb_xfree( ptr );
@@ -1690,7 +1705,7 @@ HB_FUNC( NETIO_SRVSENDITEM )
             stream = stream->next;
          }
          if( stream && stream->type == NETIO_SRVITEM )
-            fResult = s_srvSendAll( conn, msg, lLen ) == lLen;
+            fResult = s_srvSendAll( conn, msg, lLen );
          hb_threadMutexUnlock( conn->mutex );
       }
       hb_xfree( msg );
@@ -1730,7 +1745,7 @@ HB_FUNC( NETIO_SRVSENDDATA )
             stream = stream->next;
          }
          if( stream && stream->type == NETIO_SRVDATA )
-            fResult = s_srvSendAll( conn, msg, lLen ) == lLen;
+            fResult = s_srvSendAll( conn, msg, lLen );
          hb_threadMutexUnlock( conn->mutex );
       }
       hb_xfree( msg );

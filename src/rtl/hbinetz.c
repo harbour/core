@@ -61,14 +61,14 @@ HB_FUNC( HB_INETCOMPRESS )
        iStrategy = hb_parnidef( 3, HB_ZLIB_STRATEGY_DEFAULT );
 
    if( iLevel == HB_ZLIB_COMPRESSION_DISABLE )
-      hb_znetInetInitialize( pItem, NULL, NULL, NULL, NULL, NULL );
+      hb_znetInetInitialize( pItem, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
    else
    {
       PHB_ZNETSTREAM pStream = hb_znetOpen( iLevel, iStrategy );
       if( pStream == NULL )
          pItem = NULL;  /* to force RTE */
       if( hb_znetInetInitialize( pItem, pStream, hb_znetRead, hb_znetWrite,
-                                 hb_znetFlush, hb_znetClose ) )
+                                 hb_znetFlush, hb_znetClose, NULL, NULL ) )
       {
          int keylen = ( int ) hb_parclen( 4 );
          if( keylen )

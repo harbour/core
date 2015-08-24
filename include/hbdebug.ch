@@ -61,4 +61,50 @@
 #define HB_DBG_ACTIVATE       7  /* activate debugger interface */
 #define HB_DBG_VMQUIT         8  /* call internal debugger destructors */
 
+
+/* Information structure stored in aCallStack */
+#define HB_DBG_CS_MODULE      1  /* module name (.prg file) */
+#define HB_DBG_CS_FUNCTION    2  /* function name */
+#define HB_DBG_CS_LINE        3  /* start line */
+#define HB_DBG_CS_LEVEL       4  /* eval stack level of the function */
+#define HB_DBG_CS_LOCALS      5  /* an array with local variables */
+#define HB_DBG_CS_STATICS     6  /* an array with static variables */
+#define HB_DBG_CS_LEN         6
+
+/* Information structure stored in aModules */
+#define HB_DBG_MOD_NAME       1  /* module name */
+#define HB_DBG_MOD_STATICS    2  /* module static variables */
+#define HB_DBG_MOD_GLOBALS    3  /* module global variables */
+#define HB_DBG_MOD_EXTGLOBALS 4  /* module extern global variables */
+#define HB_DBG_MOD_LEN        4
+
+/* Information structure stored in:
+ *    aCallStack[ n ][ HB_DBG_CS_LOCALS | HB_DBG_CS_STATICS ]
+ *    aModules[ n ][ HB_DBG_MOD_STATICS | HB_DBG_MOD_GLOBALS | HB_DBG_MOD_EXTGLOBALS ]
+ */
+#define HB_DBG_VAR_NAME          1  /* variable name */
+#define HB_DBG_VAR_INDEX         2  /* index */
+#define HB_DBG_VAR_TYPE          3  /* type of variable: "L", "S", "G" */
+#define HB_DBG_VAR_FRAME         4  /* eval stack level of the function or static frame */
+#define HB_DBG_VAR_LEN           4
+
+/* Information structure stored in __dbgGetWatchPoints() array */
+#define HB_DBG_WP_EXPR           1  /* expression */
+#define HB_DBG_WP_ISTRACE        2  /* .T. -> tracepoint, .F. -> watchpoint */
+#define HB_DBG_WP_VALID          3  /* is valid expression? */
+#define HB_DBG_WP_RESULT         4  /* expression result */
+#define HB_DBG_WP_LEN            4
+
+/* Information structure stored in __dbgGetBreakPoints array */
+#define HB_DBG_BP_LINE           1  /* line number */
+#define HB_DBG_BP_MODULE         2  /* module name */
+#define HB_DBG_BP_FUNC           3  /* function name */
+#define HB_DBG_BP_LEN            3
+
+/* Information structure stored in __dbgGetSETs() array */
+#define HB_DBG_SET_POS           1  /* expression */
+#define HB_DBG_SET_NAME          2  /* .T. -> tracepoint, .F. -> watchpoint */
+#define HB_DBG_SET_VALUE         3  /* is valid expression? */
+#define HB_DBG_SET_LEN           3
+
 #endif /* HB_DEBUGGER_CH_ */

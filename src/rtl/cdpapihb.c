@@ -112,6 +112,26 @@ HB_FUNC( HB_CDPINFO )
    hb_retc( cdp ? cdp->info : NULL );
 }
 
+HB_FUNC( HB_CDPISCHARIDX )
+{
+   const char * id = hb_parc( 1 );
+   PHB_CODEPAGE cdp = id ? hb_cdpFindExt( id ) : hb_vmCDP();
+   HB_BOOL fResult = HB_FALSE;
+
+   if( cdp )
+   {
+      fResult = HB_CDP_ISCHARIDX( cdp );
+      if( HB_CDP_ISCUSTOM( cdp ) && HB_ISLOG( 2 ) )
+      {
+         if( hb_parl( 2 ) )
+            cdp->type |= HB_CDP_TYPE_CHARIDX;
+         else
+            cdp->type &= ~HB_CDP_TYPE_CHARIDX;
+      }
+   }
+   hb_retl( fResult );
+}
+
 HB_FUNC( HB_CDPCHARMAX )
 {
    hb_retnl( ( 1 << ( ( int ) ( hb_cdpIsUTF8( hb_cdpFindExt( hb_parc( 1 ) ) ) ? sizeof( HB_WCHAR ) : sizeof( HB_UCHAR ) ) * 8 ) ) - 1 );

@@ -409,7 +409,7 @@ HB_PP_TOKEN, * PHB_PP_TOKEN;
 /* Clipper allows only 16 nested includes */
 #define HB_PP_MAX_INCLUDED_FILES    64
 
-#define HB_PP_HASHID(t)       ( ( HB_UCHAR ) HB_PP_UPPER( (t)->value[0] ) )
+#define HB_PP_HASHID(t)       ( ( HB_UCHAR ) HB_PP_UPPER( (t)->value[ 0 ] ) )
 #define HB_PP_HASHID_MAX      256
 #define HB_PP_DEFINE          1
 #define HB_PP_TRANSLATE       2
@@ -590,6 +590,7 @@ typedef struct
 
    HB_BOOL   fQuietSet;             /* do not show standard information (default) */
    HB_BOOL   fQuiet;                /* do not show standard information (current) */
+   HB_BOOL   fGauge;                /* do not show line counter gauge */
    HB_BOOL   fEscStr;               /* use \ in strings as escape character */
    HB_BOOL   fMultiLineStr;         /* allow to define multiline [] and e"" strings using ; as line concatenator */
    HB_BOOL   fError;                /* indicates error in last operation */
@@ -649,7 +650,7 @@ extern HB_EXPORT PHB_PP_STATE hb_pp_new( void );
 extern HB_EXPORT void    hb_pp_free( PHB_PP_STATE pState );
 extern HB_EXPORT void    hb_pp_reset( PHB_PP_STATE pState );
 extern HB_EXPORT void    hb_pp_init( PHB_PP_STATE pState, HB_BOOL fQuiet,
-                   int iCycles, void * cargo,
+                   HB_BOOL fGauge, int iCycles, void * cargo,
                    PHB_PP_OPEN_FUNC  pOpenFunc, PHB_PP_CLOSE_FUNC pCloseFunc,
                    PHB_PP_ERROR_FUNC pErrorFunc, PHB_PP_DISP_FUNC  pDispFunc,
                    PHB_PP_DUMP_FUNC  pDumpFunc, PHB_PP_INLINE_FUNC pInLineFunc,

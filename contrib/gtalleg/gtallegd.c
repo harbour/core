@@ -1195,4 +1195,5 @@ int _mangled_main( int argc, char * argv[] )
 
 typedef int ( *_hballeg_main_t )( int argc, char * argv[] );
 
+extern _hballeg_main_t _mangled_main_address;
 _hballeg_main_t _mangled_main_address = _mangled_main;

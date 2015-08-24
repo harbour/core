@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * User input class for debugger
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -68,7 +66,6 @@ CREATE CLASS HbDbInput
    VAR nSize   AS INTEGER
    VAR cValue  AS CHARACTER
    VAR acColor AS ARRAY
-   VAR lFocus  AS LOGICAL     INIT .F.
 
    EXPORTED:
 
@@ -76,9 +73,8 @@ CREATE CLASS HbDbInput
    METHOD applyKey( nKey )
    METHOD getValue()
    METHOD setValue( cValue )
-   METHOD setFocus()
-   METHOD killFocus()
    METHOD display()
+   METHOD showCursor()
    METHOD newPos( nRow, nCol )
    METHOD setColor( cColor )
 
@@ -91,7 +87,6 @@ METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize ) CLASS HbDbInput
    ::nWidth := nWidth
    ::nSize  := iif( HB_ISNUMERIC( nSize ), nSize, nWidth )
    ::cValue := PadR( cValue, ::nSize )
-   ::nRow   := nRow
 
    ::setColor( cColor )
 
@@ -99,16 +94,10 @@ METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize ) CLASS HbDbInput
 
 METHOD SetColor( cColor ) CLASS HbDbInput
 
-   ::acColor := { ;
-      hb_ColorIndex( cColor, CLR_STANDARD ), ;
-      hb_ColorIndex( cColor, CLR_ENHANCED ) }
+   ::acColor := { hb_ColorIndex( cColor, CLR_STANDARD ), ;
+                  hb_ColorIndex( cColor, CLR_ENHANCED ) }
    IF hb_ColorToN( ::acColor[ 2 ] ) == -1
-      ::acColor[ 2 ] := iif( hb_ColorToN( ::acColor[ 1 ] ) != -1, ;
-         ::acColor[ 1 ], ;
-         hb_ColorIndex( SetColor(), CLR_ENHANCED ) )
-   ENDIF
-   IF hb_ColorToN( ::acColor[ 1 ] ) == -1
-      ::acColor[ 1 ] := hb_ColorIndex( SetColor(), CLR_STANDARD )
+      ::acColor[ 2 ] := ::acColor[ 1 ]
    ENDIF
 
    RETURN Self
@@ -117,24 +106,6 @@ METHOD newPos( nRow, nCol ) CLASS HbDbInput
 
    ::nRow := nRow
    ::nCol := nCol
-
-   RETURN Self
-
-METHOD setFocus() CLASS HbDbInput
-
-   IF ! ::lFocus
-      ::lFocus := .T.
-      ::display()
-   ENDIF
-
-   RETURN Self
-
-METHOD killFocus() CLASS HbDbInput
-
-   IF ::lFocus
-      ::lFocus := .F.
-      ::display()
-   ENDIF
 
    RETURN Self
 
@@ -156,11 +127,14 @@ METHOD display() CLASS HbDbInput
       ::nFirst := ::nPos - ::nWidth + 1
    ENDIF
    hb_DispOutAt( ::nRow, ::nCol, SubStr( ::cValue, ::nFirst, ::nWidth ), ;
-      ::acColor[ iif( ::lFocus, 2, 1 ) ] )
-   IF ::lFocus
-      SetPos( ::nRow, ::nCol + ::nPos - ::nFirst )
-      SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
-   ENDIF
+                 ::acColor[ 2 ] )
+
+   RETURN Self
+
+METHOD showCursor() CLASS HbDbInput
+
+   SetPos( ::nRow, ::nCol + ::nPos - ::nFirst )
+   SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
 
    RETURN Self
 
@@ -205,7 +179,9 @@ METHOD applyKey( nKey ) CLASS HbDbInput
       Set( _SET_INSERT, ! Set( _SET_INSERT ) )
       EXIT
    OTHERWISE
-      IF !( hb_keyChar( nKey ) == "" )
+      IF hb_keyChar( nKey ) == ""
+         lUpdate := .F.
+      ELSE
          IF Set( _SET_INSERT )
             ::cValue := Left( Stuff( ::cValue, ::nPos, 0, hb_keyChar( nKey ) ), ::nSize )
          ELSE
@@ -214,8 +190,6 @@ METHOD applyKey( nKey ) CLASS HbDbInput
          IF ::nPos < ::nSize
             ::nPos++
          ENDIF
-      ELSE
-         lUpdate := .F.
       ENDIF
    ENDSWITCH
 

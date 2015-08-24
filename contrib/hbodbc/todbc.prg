@@ -129,15 +129,15 @@ CREATE CLASS TODBC
    METHOD Next()
    METHOD Prior()
    METHOD First()
-   METHOD last()
+   METHOD Last()
    METHOD MoveBy( nSteps )
    METHOD GoTo( nRecNo )
    METHOD Skip()
    METHOD Eof()
    METHOD Bof()
+   METHOD RecNo()
    METHOD RecCount()
    METHOD LastRec()
-   METHOD RecNo()
 
    METHOD SQLErrorMessage()
 
@@ -270,6 +270,7 @@ METHOD Open() CLASS TODBC
    LOCAL nNul
    LOCAL nResult
    LOCAL aCurRow
+   LOCAL oField
 
    DO WHILE .T.
 
@@ -309,20 +310,20 @@ METHOD Open() CLASS TODBC
          ::nRecCount := nRows
       ENDIF
 
-      ::Fields := {}
+      ::Fields := Array( nCols )
 
       FOR i := 1 TO nCols
 
          SQLDescribeCol( ::hStmt, i, @cColName, 255, @nNameLen, @nDataType, ;
             @nColSize, @nDecimals, @nNul )
 
-         AAdd( ::Fields, TODBCField():New() )
-         ::Fields[ Len( ::Fields ) ]:FieldID   := i
-         ::Fields[ Len( ::Fields ) ]:FieldName := cColName
-         ::Fields[ Len( ::Fields ) ]:DataSize  := nColsize
-         ::Fields[ Len( ::Fields ) ]:DataType  := nDataType
-         ::Fields[ Len( ::Fields ) ]:DataDecs  := nDecimals
-         ::Fields[ Len( ::Fields ) ]:AllowNull := ( nNul != 0 )
+         ::Fields[ i ] := oField := TODBCField():New()
+         oField:FieldID   := i
+         oField:FieldName := cColName
+         oField:DataSize  := nColsize
+         oField:DataType  := nDataType
+         oField:DataDecs  := nDecimals
+         oField:AllowNull := ( nNul != 0 )
 
       NEXT
 
@@ -331,9 +332,9 @@ METHOD Open() CLASS TODBC
          ::aRecordSet := {}
          DO WHILE ::Fetch( SQL_FETCH_NEXT, 1 ) == SQL_SUCCESS
 
-            aCurRow := {}
+            aCurRow := Array( nCols )
             FOR i := 1 TO nCols
-               AAdd( aCurRow, ::Fields[ i ]:value )
+               aCurRow[ i ] := ::Fields[ i ]:value
             NEXT
             AAdd( ::aRecordSet, aCurRow )
          ENDDO
@@ -496,12 +497,11 @@ METHOD Next() CLASS TODBC
    LOCAL nResult := ::Fetch( SQL_FETCH_NEXT, 1 )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := ::nRecno + 1
-      IF ::nRecNo > ::nRecCount
+      IF ++::nRecNo > ::nRecCount
          ::nRecCount := ::nRecNo
       ENDIF
    ELSEIF nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == ::nRecCount // permit skip on last row, so that Eof() can work properly
-      ::nRecno := ::nRecno + 1
+      ++::nRecNo
    ELSE
       // TODO: Error handling
    ENDIF
@@ -514,9 +514,9 @@ METHOD Prior() CLASS TODBC
    LOCAL nResult := ::Fetch( SQL_FETCH_PRIOR, 1 )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := ::nRecno - 1
+      --::nRecNo
    ELSEIF nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == 1 // permit skip-1 on first row, so that Bof() can work properly
-      ::nRecno := ::nRecno - 1
+      --::nRecNo
       ::Next()
       ::lBof := .T.
    ELSE
@@ -531,7 +531,7 @@ METHOD First() CLASS TODBC
    LOCAL nResult := ::Fetch( SQL_FETCH_FIRST, 1 )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := 1
+      ::nRecNo := 1
    ELSE
       // TODO: Error handling
    ENDIF
@@ -539,12 +539,12 @@ METHOD First() CLASS TODBC
    RETURN nResult
 
 // Moves to the last record on DataSet
-METHOD last() CLASS TODBC
+METHOD Last() CLASS TODBC
 
    LOCAL nResult := ::Fetch( SQL_FETCH_LAST, 1 )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := ::nRecCount
+      ::nRecNo := ::nRecCount
    ELSE
       // TODO: Error handling
    ENDIF
@@ -558,7 +558,7 @@ METHOD MoveBy( nSteps ) CLASS TODBC
    LOCAL nResult := ::Fetch( SQL_FETCH_RELATIVE, nSteps )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := ::nRecNo + nSteps
+      ::nRecNo += nSteps
    ELSE
       // TODO: Error handling
    ENDIF
@@ -571,7 +571,7 @@ METHOD GoTo( nRecNo ) CLASS TODBC
    LOCAL nResult := ::Fetch( SQL_FETCH_ABSOLUTE, nRecNo )
 
    IF nResult == SQL_SUCCESS
-      ::nRecno := nRecNo
+      ::nRecNo := nRecNo
    ELSE
       // TODO: Error handling
    ENDIF
@@ -587,17 +587,8 @@ METHOD Skip() CLASS TODBC
 // NOTE: Current implementation usable only with drivers that report number of records in last select
 METHOD Eof() CLASS TODBC
 
-   LOCAL lResult
+   RETURN ::nRecCount == 0 .OR. ::nRecNo > ::nRecCount
 
-   // Do we have any data in recordset?
-
-   IF ::nRecCount > 0
-      lResult := ( ::nRecNo > ::nRecCount )
-   ELSE
-      lResult := .T.
-   ENDIF
-
-   RETURN lResult
 
 // Checks for Begining of File
 METHOD Bof() CLASS TODBC
@@ -610,72 +601,48 @@ METHOD RecNo() CLASS TODBC
    RETURN ::nRecNo
 
 // Returns number of rows ( if that function is supported by ODBC driver )
-METHOD LastRec() CLASS TODBC
+METHOD RecCount() CLASS TODBC
 
    RETURN ::nRecCount
 
 // Returns number of rows ( if that function is supported by ODBC driver )
-METHOD RecCount() CLASS TODBC
+METHOD LastRec() CLASS TODBC
 
    RETURN ::nRecCount
 
 // Loads current record data into the Fields collection
 METHOD LoadData( nPos ) CLASS TODBC
 
-   LOCAL uData
-   LOCAL i
+   LOCAL xValue
+   LOCAL oField
 
-   FOR i := 1 TO Len( ::Fields )
-
-      uData := ""
-
+   FOR EACH oField IN ::Fields
       IF ::lCacheRS .AND. ::Active
-         IF nPos > 0 .AND. nPos <= ::nRecCount
-            uData := ::aRecordSet[ nPos, i ]
-         ENDIF
+         xValue := iif( nPos > 0 .AND. nPos <= ::nRecCount, ;
+                        ::aRecordSet[ nPos, oField:__enumIndex() ], NIL )
       ELSE
+         SQLGetData( ::hStmt, oField:FieldID, oField:DataType,, @xValue )
 
-         SQLGetData( ::hStmt, ::Fields[ i ]:FieldID, SQL_CHAR, 256, @uData )
-
-         SWITCH ::Fields[ i ]:DataType
-         CASE SQL_LONGVARCHAR
-            uData := AllTrim( uData )
-            EXIT
-
+         SWITCH oField:DataType
          CASE SQL_CHAR
-         CASE SQL_VARCHAR
-         CASE SQL_NVARCHAR
-            uData := PadR( uData, ::Fields[ i ]:DataSize )
+         CASE SQL_WCHAR
+            xValue := PadR( xValue, oField:DataSize )
             EXIT
-
-         CASE SQL_TIMESTAMP
-         CASE SQL_DATE
-            uData := hb_SToD( SubStr( uData, 1, 4 ) + SubStr( uData, 6, 2 ) + SubStr( uData, 9, 2 ) )
-            EXIT
-
-         CASE SQL_BIT
-            uData := Val( uData ) == 1
-            EXIT
-
          CASE SQL_NUMERIC
          CASE SQL_DECIMAL
          CASE SQL_DOUBLE
+         CASE SQL_FLOAT
+         CASE SQL_REAL
          CASE SQL_TINYINT
          CASE SQL_SMALLINT
          CASE SQL_BIGINT
          CASE SQL_INTEGER
-         CASE SQL_FLOAT
-         CASE SQL_REAL
-            uData := Round( Val( StrTran( uData, ",", "." ) ), ::Fields[ i ]:DataDecs )
-            uData := hb_odbcNumSetLen( uData, ::Fields[ i ]:DataSize, ::Fields[ i ]:DataDecs )
+            xValue := hb_odbcNumSetLen( xValue, oField:DataSize, oField:DataDecs )
             EXIT
-
          ENDSWITCH
-
       ENDIF
 
-      ::Fields[ i ]:Value := uData
-
+      oField:Value := xValue
    NEXT
 
    RETURN NIL

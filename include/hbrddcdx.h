@@ -58,16 +58,16 @@ HB_EXTERN_BEGIN
 #define CDX_MAXKEY                                  240
 #define CDX_MAXEXP                                  255
 #define CDX_MAXTAGNAMELEN                            10
-#define CDX_PAGELEN                                 512
+#define CDX_PAGELEN_BITS                              9
+#define CDX_PAGELEN               (1<<CDX_PAGELEN_BITS)
+#define CDX_PAGELEN_MAX                          0x2000
 #define CDX_HEADERLEN                              1024
 #define CDX_HEADEREXPLEN          (CDX_HEADERLEN - 512)
-#define CDX_HEADERPAGES   ((CDX_HEADERLEN+CDX_PAGELEN-1)/CDX_PAGELEN)
-#define CDX_INT_FREESPACE              (CDX_PAGELEN-12) /* 500 */
-#define CDX_EXT_FREESPACE              (CDX_PAGELEN-24) /* 488 */
-#define CDX_DUMMYNODE                       0xFFFFFFFFL
+#define CDX_INT_HEADSIZE                             12
+#define CDX_EXT_HEADSIZE                             24
 
-/* #define CDX_LOCKOFFSET                      0x7FFFFFFEL */
-/* #define CDX_LOCKSIZE                                 1L */
+#define CDX_HARBOUR_SIGNATURE               0x52434842L /* Harbour index signature: RCHB */
+
 #define CDX_STACKSIZE                                64
 #define CDX_PAGECACHESIZE                             8
 #define CDX_NODE_BRANCH                               0
@@ -76,6 +76,7 @@ HB_EXTERN_BEGIN
 #define CDX_NODE_UNUSED                            0xFF
 #define CDX_IGNORE_REC_NUM                         0x0L
 #define CDX_MAX_REC_NUM                     0xFFFFFFFFL
+#define CDX_DUMMYNODE                       0xFFFFFFFFL
 #define CDX_BALANCE_LEAFPAGES                         3
 #define CDX_BALANCE_INTPAGES                          3
 
@@ -125,7 +126,6 @@ HB_EXTERN_BEGIN
 #define CURKEY_REFRESH(pTag)
 */
 
-#define HB_CDXMAXKEY( x )     ( ( HB_USHORT ) ( ( x ) > CDX_MAXKEY ? CDX_MAXKEY : ( x ) ) )
 #define HB_CDXBITMASK( x )    ( ( HB_LONG ) ( ( 1L << ( x ) ) - 1 ) )
 
 /* #define FAST_GOCOLD( A )      ((A)->dbfarea.fRecordChanged || (A)->fCdxAppend ? (SELF_GOCOLD((AREAP)(A))) : HB_SUCCESS) */
@@ -133,7 +133,7 @@ HB_EXTERN_BEGIN
 
 
 #define CDX_TYPE_UNIQUE        0x01    /* unique index */
-#define CDX_TYPE_TEMPORARY     0x02    /* temporary index */
+#define CDX_TYPE_PARTIAL       0x02    /* temporary index */
 #define CDX_TYPE_CUSTOM        0x04    /* custom index */
 #define CDX_TYPE_FORFILTER     0x08    /* for expression present */
 #define CDX_TYPE_BITVECTOR     0x10    /* SoftC? */
@@ -147,12 +147,12 @@ HB_EXTERN_BEGIN
 
 /*
  SIx3 order temperature flags:
-   switch ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) )
-      case CDX_TYPE_TEMPORARY:
+   switch ( indexOpt & ( CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM ) )
+      case CDX_TYPE_PARTIAL:
          PARTIAL_RYO
       case CDX_TYPE_CUSTOM:
          PARTIAL_RYO | CHGONLY_RYO
-      case CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM:
+      case CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM:
          PARTIAL_RYO | NOUPDATE_RYO
          if index key begin with:
             'sxChar(' or 'sxNum(' or 'sxDate(' or 'sxLog('
@@ -160,29 +160,29 @@ HB_EXTERN_BEGIN
             | TEMPLATE_RYO
 
    sx_Chill()  if ( ! NOUPDATE_RYO ) then set ( CHGONLY_RYO | PARTIAL_RYO )
-                  if ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) !=
-                        CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM )
+                  if ( indexOpt & ( CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM ) !=
+                        CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM )
                   {
                      indexOpt &= ~CDX_TYPE_CUSTOM;
-                     indexOpt |= CDX_TYPE_TEMPORARY
+                     indexOpt |= CDX_TYPE_PARTIAL
                   }
 
    sx_Warm()   if ( ! NOUPDATE_RYO ) then clear CHGONLY_RYO
-                  if ( indexOpt & ( CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM ) !=
-                        CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM )
+                  if ( indexOpt & ( CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM ) !=
+                        CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM )
                   {
                      indexOpt |= CDX_TYPE_CUSTOM;
-                     indexOpt &= ~CDX_TYPE_TEMPORARY
+                     indexOpt &= ~CDX_TYPE_PARTIAL
                   }
 
    sx_Freeze() set NOUPDATE_RYO
-                  indexOpt |= CDX_TYPE_TEMPORARY | CDX_TYPE_CUSTOM;
+                  indexOpt |= CDX_TYPE_PARTIAL | CDX_TYPE_CUSTOM;
 */
 /*
  indexSig:
    0x01     - CLIP like, ignoreCase significant
-   0x20     - ASCII ADI
-   0x00     - UNICODE ADI
+   0x20     - in index header: ADI file, in ADI tag header: ASCII
+   0x00     - in ADI tag header: UNICODE
 */
 /* CDX index node strucutres */
 /* Compact Index Header Record */
@@ -190,7 +190,7 @@ typedef struct _CDXTAGHEADER
 {
    HB_BYTE     rootPtr  [ 4 ];   /* offset of the root node */
    HB_BYTE     freePtr  [ 4 ];   /* offset of list of free pages or -1 */
-   HB_BYTE     reserved1[ 4 ];   /* Version number ??? */
+   HB_BYTE     counter  [ 4 ];   /* update counter (in root node) */
    HB_BYTE     keySize  [ 2 ];   /* key length */
    HB_BYTE     indexOpt;         /* index options see CDX_TYPE_* */
    HB_BYTE     indexSig;         /* index signature */
@@ -210,8 +210,7 @@ typedef struct _CDXTAGHEADER
    HB_BYTE     keyExpPos[ 2 ];   /* offset of key expression */
    HB_BYTE     keyExpLen[ 2 ];   /* length of key expression */
    HB_BYTE     keyExpPool[ CDX_HEADEREXPLEN ];
-} CDXTAGHEADER;
-typedef CDXTAGHEADER * LPCDXTAGHEADER;
+} CDXTAGHEADER, * LPCDXTAGHEADER;
 
 /* Compact Index Interior Node Record */
 typedef struct _CDXINTNODE
@@ -220,11 +219,7 @@ typedef struct _CDXINTNODE
    HB_BYTE     nKeys   [ 2 ];    /* number of keys */
    HB_BYTE     leftPtr [ 4 ];    /* offset of left node or -1 */
    HB_BYTE     rightPtr[ 4 ];    /* offset of right node or -1 */
-   HB_BYTE     keyPool [ CDX_INT_FREESPACE ];
 } CDXINTNODE;
-typedef CDXINTNODE * LPCDXINTNODE;
-typedef CDXINTNODE CDXNODE;
-typedef CDXNODE * LPCDXNODE;
 
 /* Compact Index Exterior Node Record */
 typedef struct _CDXEXTNODE
@@ -241,9 +236,7 @@ typedef struct _CDXEXTNODE
    HB_BYTE     dupBits;          /* number of bits for duplicate count */
    HB_BYTE     trlBits;          /* number of bits for trailing count */
    HB_BYTE     keyBytes;         /* total number of bytes for recnn/dup/trail info */
-   HB_BYTE     keyPool [ CDX_EXT_FREESPACE ];      /* rec/dup/trl */
 } CDXEXTNODE;
-typedef CDXEXTNODE * LPCDXEXTNODE;
 
 
 
@@ -255,12 +248,11 @@ struct _CDXTAG;   /* forward declaration */
 
 typedef struct _CDXKEY
 {
-   HB_BYTE * val;
-   HB_USHORT len;
-   HB_USHORT mode;
    HB_ULONG  rec;
-} CDXKEY;
-typedef CDXKEY * LPCDXKEY;
+   HB_USHORT mode;
+   HB_USHORT len;
+   HB_BYTE   val[ 1 ];
+} CDXKEY, * LPCDXKEY;
 
 typedef struct _CDXPAGE
 {
@@ -268,56 +260,54 @@ typedef struct _CDXPAGE
    HB_ULONG  Left;
    HB_ULONG  Right;
 
-   HB_BYTE   PageType;
    int       iKeys;
    int       iCurKey;
 
-   HB_BOOL   fChanged;
-   HB_BYTE   bUsed;
-
    HB_ULONG  RNMask;
-   HB_BYTE   ReqByte;
+   HB_USHORT DCMask;
+   HB_USHORT TCMask;
    HB_BYTE   RNBits;
    HB_BYTE   DCBits;
    HB_BYTE   TCBits;
-   HB_BYTE   DCMask;
-   HB_BYTE   TCMask;
+   HB_BYTE   ReqByte;
+
+   HB_BYTE   PageType;
+   HB_BYTE   bUsed;
+   HB_BOOL   fChanged;
    HB_BOOL   fBufChanged;
-   union
-   {
-      CDXEXTNODE extNode;
-      CDXINTNODE intNode;
-   } node;
-   HB_BYTE   bufKeyVal[ CDX_MAXKEY ];      /* buffer for leaf key val or added branch key */
+
    HB_SHORT  bufKeyNum;                    /* do not change these vars' order             */
    HB_SHORT  bufKeyPos;                    /* they have to be just after the node         */
    HB_SHORT  bufKeyLen;                    /* and maybe temporary overwriten when adding  */
    HB_SHORT  iFree;                        /* new key to interior node record.            */
+
    HB_BYTE * pKeyBuf;                      /* pointer to uncompressed leaf page key pool  */
-   /* HB_SHORT iKeyInBuf; */
 
    struct _CDXPAGE * Owner;
    struct _CDXPAGE * Child;
    struct _CDXTAG  * TagParent;
    struct _CDXPAGE * pPoolPrev;
    struct _CDXPAGE * pPoolNext;
-} CDXPAGE;
-typedef CDXPAGE * LPCDXPAGE;
+
+   union
+   {
+      CDXEXTNODE extNode;
+      CDXINTNODE intNode;
+   } node;
+} CDXPAGE, * LPCDXPAGE;
 
 typedef struct _CDXSTACK
 {
    LPCDXPAGE Page;
    int       iKey;
-} CDXSTACK;
-typedef CDXSTACK * LPCDXSTACK;
+} CDXSTACK, * LPCDXSTACK;
 
 typedef struct _CDXLIST
 {
-   HB_ULONG ulAddr;
+   HB_ULONG nextPage;
    HB_BOOL  fStat;
    struct _CDXLIST * pNext;
-} CDXLIST;
-typedef CDXLIST * LPCDXLIST;
+} CDXLIST, * LPCDXLIST;
 
 typedef struct _CDXTAG
 {
@@ -333,7 +323,6 @@ typedef struct _CDXTAG
    HB_BYTE   OptFlags;        /* index options flag */
    HB_BOOL   AscendKey;       /* ascending/descending order flag */
    HB_BOOL   UniqueKey;       /* unique order flag */
-   HB_BOOL   Temporary;       /* temporary order flag */
    HB_BOOL   Custom;          /* custom order flag */
    HB_BOOL   Template;        /* user keyadata in ordKeyAdd()/ordKeyDel() accepted */
    HB_BOOL   MultiKey;        /* repeated key values in custom indexes accepted */
@@ -375,8 +364,7 @@ typedef struct _CDXTAG
    LPCDXKEY   bottomScopeKey; /* Bottom index key */
 
    LPCDXPAGE  pagePool;       /* page buffer in memory */
-} CDXTAG;
-typedef CDXTAG * LPCDXTAG;
+} CDXTAG, * LPCDXTAG;
 
 typedef struct _CDXINDEX
 {
@@ -390,6 +378,11 @@ typedef struct _CDXINDEX
    HB_BOOL    fShared;        /* Shared file */
    HB_BOOL    fReadonly;      /* Read only file */
    HB_BOOL    fDelete;        /* delete on close flag */
+   HB_BOOL    fLargeFile;     /* page numbers instead of page offsets in index file */
+   HB_USHORT  uiHeaderLen;    /* length of tag header */
+   HB_USHORT  uiPageLen;      /* length of index page */
+   HB_USHORT  uiPageBits;     /* length of index page in bits */
+   HB_USHORT  uiMaxKeyLen;    /* maximum index key length */
    HB_ULONG   nextAvail;      /* offset to next free page in the end of index file */
    HB_ULONG   freePage;       /* offset to next free page inside index file */
    LPCDXLIST  freeLst;        /* list of free pages in index file */
@@ -401,10 +394,9 @@ typedef struct _CDXINDEX
    HB_BOOL    WrLck;
 #endif
    HB_BOOL    fChanged;       /* changes written to index, need upadte ulVersion */
-   HB_ULONG   ulVersion;      /* network version/update flag */
    HB_BOOL    fFlush;         /* changes written to index, need upadte ulVersion */
-} CDXINDEX;
-typedef CDXINDEX * LPCDXINDEX;
+   HB_ULONG   ulVersion;      /* network version/update flag */
+} CDXINDEX, * LPCDXINDEX;
 
 /* for index creation */
 typedef struct
@@ -414,8 +406,7 @@ typedef struct
    HB_ULONG   ulKeyBuf;        /* number of keys in memory buffer */
    HB_ULONG   ulCurKey;        /* current key in memory buffer */
    HB_BYTE *  pKeyPool;        /* memory buffer */
-} CDXSWAPPAGE;
-typedef CDXSWAPPAGE * LPCDXSWAPPAGE;
+} CDXSWAPPAGE, * LPCDXSWAPPAGE;
 
 typedef struct
 {
@@ -434,18 +425,18 @@ typedef struct
    HB_ULONG   ulPgKeys;       /* maximum number of key in page memory buffer */
    HB_ULONG   ulMaxKey;       /* maximum number of keys in single page */
    HB_BYTE *  pKeyPool;       /* memory buffer for current page then for pages */
+   HB_BYTE *  pStartKey;      /* begining of key pool after sorting */
    LPCDXSWAPPAGE pSwapPage;   /* list of pages */
    LPCDXPAGE  NodeList[ CDX_STACKSIZE ];  /* Stack of pages */
    HB_ULONG   ulFirst;
    HB_ULONG * pSortedPages;
-   HB_BYTE    pLastKey[ CDX_MAXKEY ];  /* last key val */
+   HB_BYTE *  pLastKey;       /* last key val */
    HB_ULONG   ulLastRec;
    HB_BYTE *  pRecBuff;
 #ifndef HB_CDX_PACKTRAIL
    int        iLastTrl;       /* last key trailing spaces */
 #endif
-} CDXSORTINFO;
-typedef CDXSORTINFO * LPCDXSORTINFO;
+} CDXSORTINFO, * LPCDXSORTINFO;
 
 
 
@@ -475,9 +466,7 @@ typedef struct _CDXAREA
    HB_BOOL        fSortCDP;      /* Use CDP functions for sorting */
    HB_USHORT      uiTag;         /* current tag focus */
 
-} CDXAREA;
-
-typedef CDXAREA * LPCDXAREA;
+} CDXAREA, * LPCDXAREA;
 
 #ifndef CDXAREAP
 #define CDXAREAP LPCDXAREA

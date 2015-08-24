@@ -559,3 +559,151 @@ HB_FUNC( HB_BAT )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+/* hb_BRAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+ */
+HB_FUNC( HB_BRAT )
+{
+   HB_SIZE nSubLen = hb_parclen( 1 );
+   HB_SIZE nPos = 0;
+
+   if( nSubLen )
+   {
+      HB_SIZE nLen = hb_parclen( 2 );
+      HB_ISIZ nTo = nLen - nSubLen;
+
+      if( nTo >= 0 )
+      {
+         const char * pszSub = hb_parc( 1 );
+         const char * pszText = hb_parc( 2 );
+         HB_ISIZ nStart = hb_parns( 3 );
+         HB_ISIZ nFrom;
+
+         if( nStart <= 1 )
+            nFrom = 0;
+         else
+            nFrom = --nStart;
+
+         if( nTo >= nFrom )
+         {
+            if( HB_ISNUM( 4 ) )
+            {
+               HB_ISIZ nEnd = hb_parns( 4 ) - nSubLen;
+
+               if( nEnd < nTo )
+                  nTo = nEnd;
+            }
+
+            if( nTo >= nFrom )
+            {
+               do
+               {
+                  if( pszText[ nTo ] == *pszSub &&
+                      memcmp( pszSub, pszText + nTo, nSubLen ) == 0 )
+                  {
+                     nPos = nTo + 1;
+                     break;
+                  }
+               }
+               while( --nTo >= nFrom );
+            }
+         }
+      }
+   }
+
+   hb_retns( nPos );
+}
+
+/* hb_BStuff( <cString>, <nAt>, <nDel>, <cIns> ) -> <cResult>
+ */
+HB_FUNC( HB_BSTUFF )
+{
+   const char * szText = hb_parc( 1 );
+   const char * szIns = hb_parc( 4 );
+
+   if( szText && szIns && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
+   {
+      HB_SIZE nLen = hb_parclen( 1 );
+      HB_SIZE nPos = hb_parns( 2 );
+      HB_SIZE nDel = hb_parns( 3 );
+      HB_SIZE nIns = hb_parclen( 4 );
+      HB_SIZE nTot;
+
+      if( nPos )
+      {
+         if( nPos < 1 || nPos > nLen )
+            nPos = nLen;
+         else
+            nPos--;
+      }
+      if( nDel )
+      {
+         if( nDel < 1 || nDel > nLen - nPos )
+            nDel = nLen - nPos;
+      }
+
+      if( ( nTot = nLen + nIns - nDel ) > 0 )
+      {
+         char * szResult = ( char * ) hb_xgrab( nTot + 1 );
+
+         hb_xmemcpy( szResult, szText, nPos );
+         hb_xmemcpy( szResult + nPos, szIns, nIns );
+         hb_xmemcpy( szResult + nPos + nIns, szText + nPos + nDel,
+                     nLen - ( nPos + nDel ) );
+         hb_retclen_buffer( szResult, nTot );
+      }
+      else
+         hb_retc_null();
+   }
+   else
+      hb_retc_null();
+}
+
+/* hb_UStuff( <cString>, <nAt>, <nDel>, <cIns> ) -> <cResult>
+ */
+HB_FUNC( HB_USTUFF )
+{
+   const char * szText = hb_parc( 1 );
+   const char * szIns = hb_parc( 4 );
+
+   if( szText && szIns && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      HB_SIZE nLen = hb_parclen( 1 );
+      HB_SIZE nPos = hb_parns( 2 );
+      HB_SIZE nDel = hb_parns( 3 );
+      HB_SIZE nIns = hb_parclen( 4 );
+      HB_SIZE nTot;
+
+      if( nPos )
+         nPos = nPos < 1 ? nLen : hb_cdpTextPos( cdp, szText, nLen, nPos - 1 );
+      if( nDel )
+      {
+         if( nPos < nLen )
+         {
+            nDel = hb_cdpTextPos( cdp, szText + nPos, nLen - nPos, nDel );
+            if( nDel == 0 )
+               nDel = nLen - nPos;
+         }
+         else
+            nDel = 0;
+      }
+
+      if( ( nTot = nLen + nIns - nDel ) > 0 )
+      {
+         char * szResult = ( char * ) hb_xgrab( nTot + 1 );
+
+         hb_xmemcpy( szResult, szText, nPos );
+         hb_xmemcpy( szResult + nPos, szIns, nIns );
+         hb_xmemcpy( szResult + nPos + nIns, szText + nPos + nDel,
+                     nLen - ( nPos + nDel ) );
+         hb_retclen_buffer( szResult, nTot );
+      }
+      else
+         hb_retc_null();
+   }
+   else
+      hb_retc_null();
+}
+
+/* TODO: PadR(), PadC(), PadL() */

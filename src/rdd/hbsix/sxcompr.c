@@ -62,7 +62,7 @@
    original bytes from input string instead of position and match length in
    the ring buffer when the match length does not reach some limit. In SIX
    the minimum match length is 3 and it is used to increase to match length
-   in 4 bit offset by adding 3 also so the efective maximum match length is
+   in 4 bit offset by adding 3 also so the effective maximum match length is
    18. Of course we have to store the information about the type of item in
    compressed data to know it is (offset+length) pair or simple byte.
    SIX put 1 byte in compressed data which inform about the type of next
@@ -300,9 +300,9 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
 {
    HB_BOOL fResult = HB_TRUE;
    HB_USHORT itemMask;
-   int offset, length, index, c, h;
+   int offset, length, rbufidx, c, h;
 
-   index = RBUFLENGTH - MAXLENGTH;
+   rbufidx = RBUFLENGTH - MAXLENGTH;
    itemMask = 0;
 
    do
@@ -326,8 +326,8 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
             fResult = HB_FALSE;
             break;
          }
-         pCompr->ring_buffer[ index ] = ( HB_UCHAR ) c;
-         index = RBUFINDEX( index + 1 );
+         pCompr->ring_buffer[ rbufidx ] = ( HB_UCHAR ) c;
+         rbufidx = RBUFINDEX( rbufidx + 1 );
       }
       else /* we have an item pair (ring buffer offset : match length) */
       {
@@ -349,9 +349,9 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
             /* SIX does not use additional buffers and dynamically
                overwrite the ring buffer - we have to make exactly
                the same or our results will be differ when
-               abs( offset - index ) < length */
-            pCompr->ring_buffer[ index ] = ( HB_UCHAR ) c;
-            index = RBUFINDEX( index + 1 );
+               abs( offset - rbufidx ) < length */
+            pCompr->ring_buffer[ rbufidx ] = ( HB_UCHAR ) c;
+            rbufidx = RBUFINDEX( rbufidx + 1 );
          }
       }
    }
@@ -631,7 +631,7 @@ HB_FUNC( SX_FCOMPRESS )
             /* store uncompressed file size in first 4 bytes of destination
              * file in little endian order - for SIX3 compatibility
              */
-            nSize = hb_fileSize( pInput );
+            nSize = ( HB_SIZE ) hb_fileSize( pInput );
             if( hb_fileSeek( pInput, 0, FS_SET ) == 0 )
             {
                HB_PUT_LE_UINT32( buf, nSize );

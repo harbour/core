@@ -4,6 +4,7 @@
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
+ * Copyright 2015 Jean Lefebvre (TLS support) 
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -62,6 +63,10 @@
       Added data ::nWrite to work like ::nRead
    2009-06-29, Luiz Rafael Culik (luiz at xharbour dot com dot br)
       Added support for proxy connection
+   2015-01-29, Jean Lefebvre
+      added FUNCTION ActivateSSL(Self) 
+      to be used here and into smtpcli (needed to post activate SSL as request in TLS)  
+      Also, changed all reference to TLS to SSL 
 */
 
 #include "hbclass.ch"
@@ -70,7 +75,7 @@
 #include "fileio.ch"
 
 #if defined( _SSL_DEBUG_TEMP )
-#  include "simpleio.ch"
+   #include "simpleio.ch"
 #endif
 
 #include "hbssl.ch"
@@ -80,9 +85,7 @@
 #define RCV_BUF_SIZE Int( ::InetRcvBufSize( ::SocketCon ) / 2 )
 #define SND_BUF_SIZE Int( ::InetSndBufSize( ::SocketCon ) / 2 )
 
-/**
-* Inet Client class
-*/
+/* Inet Client class */
 CREATE CLASS TIPClient
 
    CLASS VAR bInitSocks  INIT .F.
@@ -115,7 +118,7 @@ CREATE CLASS TIPClient
 
    VAR exGauge              /* Gauge control; it can be a codeblock or a function pointer. */
 
-   VAR lTLS              INIT .F.
+   VAR lSSL              INIT .F.
 
    VAR lHasSSL           INIT tip_SSL()
    VAR ssl_ctx
@@ -133,17 +136,15 @@ CREATE CLASS TIPClient
    METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl )
 
-   METHOD EnableTLS( lEnable )
+   METHOD EnableSSL( lEnable )
 
    METHOD Read( nLen )
    METHOD ReadToFile( cFile, nMode, nSize )
-   METHOD Write( cData, nLen, bCommit )
+   METHOD Write( cData, nLen, lCommit )
    METHOD Commit()
    METHOD WriteFromFile( cFile )
    METHOD Reset()
    METHOD Close()
-
-   /* METHOD Data( cData ) */                   // commented: calls undeclared METHOD :getOk
 
    METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword )
 
@@ -161,8 +162,8 @@ CREATE CLASS TIPClient
 
    VAR nLastError INIT 0
 
-   METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, cUserAgent )
-   METHOD ReadHTTPProxyResponse( sResponse )
+   METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassword, cUserAgent )
+   METHOD ReadHTTPProxyResponse( cResponse )
 
    /* Methods to log data if needed */
    METHOD inetRecv( SocketCon, cStr1, len )
@@ -182,12 +183,9 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
 
    LOCAL oErr
    LOCAL oLog
+   LOCAL lSSL
 
-   LOCAL aProtoAccepted := { "ftp", "http", "pop", "smtp" }
-   LOCAL aProtoAcceptedSSL := iif( ::lHasSSL, { "ftps", "https", "pop3s", "pops", "smtps" }, {} )
-
-   IF HB_ISSTRING( xTrace ) .OR. ;
-      ( HB_ISLOGICAL( xTrace ) .AND. xTrace )
+   IF HB_ISSTRING( xTrace ) .OR. hb_defaultValue( xTrace, .F. )
       oLog := TIPLog():New( iif( HB_ISSTRING( xTrace ), xTrace, NIL ) )
       ::bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
    ELSEIF HB_ISEVALITEM( xTrace )
@@ -198,9 +196,23 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       oUrl := TUrl():New( oUrl )
    ENDIF
 
-   IF AScan( aProtoAccepted   , {| tmp | tmp == oURL:cProto } ) == 0 .AND. ;
-      AScan( aProtoAcceptedSSL, {| tmp | tmp == oURL:cProto } ) == 0
-
+   SWITCH oURL:cProto
+   CASE "ftp"
+   CASE "http"
+   CASE "pop"
+   CASE "smtp"
+      lSSL := .F.
+      EXIT
+   CASE "ftps"
+   CASE "https"
+   CASE "pop3s"
+   CASE "pops"
+   CASE "smtps"
+      IF ::lHasSSL
+         lSSL := .T.
+         EXIT
+      ENDIF
+   OTHERWISE
       oErr := ErrorNew()
       oErr:Args          := { Self, oURL:cProto }
       oErr:CanDefault    := .F.
@@ -213,71 +225,57 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       oErr:SubCode       := 1081
       oErr:SubSystem     := "BASE"
       Eval( ErrorBlock(), oErr )
-   ENDIF
+   ENDSWITCH
 
    IF ! ::bInitSocks
       hb_inetInit()
       IF ::lHasSSL
          SSL_init()
-         RAND_seed( Time() + hb_UserName() + DToS( Date() ) + hb_DirBase() + NetName() )
+         RAND_seed( hb_randStr( 20 ) + hb_TToS( hb_DateTime() ) + NetName() )
       ENDIF
       ::bInitSocks := .T.
    ENDIF
 
-   IF ::lHasSSL
-      IF oURL:cProto == "ftps" .OR. ;
-         oURL:cProto == "https" .OR. ;
-         oURL:cProto == "pop3s" .OR. oURL:cProto == "pops" .OR. ;
-         oURL:cProto == "smtps"
-         ::EnableTLS( .T. )
-      ENDIF
+   IF ::lHasSSL .AND. lSSL
+      ::EnableSSL( .T. )
    ENDIF
 
    ::oUrl         := oUrl
    ::oCredentials := oCredentials
 
-   RETURN self
+   RETURN Self
 
 METHOD Open( cUrl ) CLASS TIPClient
 
    LOCAL nPort
-   LOCAL cResp
 
    IF HB_ISSTRING( cUrl )
       ::oUrl := TUrl():New( cUrl )
    ENDIF
 
-   IF ::oUrl:nPort == -1
-      nPort := ::nDefaultPort
-   ELSE
-      nPort := ::oUrl:nPort
-   ENDIF
+   nPort := iif( ::oUrl:nPort == -1, ::nDefaultPort, ::oUrl:nPort )
 
    ::SocketCon := hb_inetCreate()
 
    ::InetTimeOut( ::SocketCon )
 
-   IF ! Empty( ::cProxyHost )
-      cResp := ""
-      IF ! ::OpenProxy( ::oUrl:cServer, nPort, ::cProxyHost, ::nProxyPort, @cResp, ::cProxyUser, ::cProxyPassword, "Mozilla/3.0 compatible" )
-         RETURN .F.
-      ENDIF
-   ELSE
+   IF Empty( ::cProxyHost )
       ::inetConnect( ::oUrl:cServer, nPort, ::SocketCon )
-
       IF ::inetErrorCode( ::SocketCon ) != 0
          RETURN .F.
       ENDIF
+   ELSEIF ! ::OpenProxy( ::oUrl:cServer, nPort, ::cProxyHost, ::nProxyPort,, ::cProxyUser, ::cProxyPassword, "Mozilla/3.0 compatible" )
+      RETURN .F.
    ENDIF
    ::isOpen := .T.
 
    RETURN .T.
 
-METHOD EnableTLS( lEnable ) CLASS TIPClient
+METHOD EnableSSL( lEnable ) CLASS TIPClient
 
    LOCAL lSuccess
 
-   IF ::lTLS == lEnable
+   IF ::lSSL == lEnable
       RETURN .T.
    ENDIF
 
@@ -285,14 +283,14 @@ METHOD EnableTLS( lEnable ) CLASS TIPClient
       IF ::lHasSSL
          ::ssl_ctx := SSL_CTX_new()
          ::ssl := SSL_new( ::ssl_ctx )
-         ::lTLS := .T.
+         ::lSSL := .T.
          lSuccess := .T.
       ELSE
          lSuccess := .F.
       ENDIF
    ELSE
       IF ::lHasSSL
-         ::lTLS := .F.
+         ::lSSL := .F.
          lSuccess := .T.
       ELSE
          lSuccess := .T.
@@ -301,7 +299,7 @@ METHOD EnableTLS( lEnable ) CLASS TIPClient
 
    RETURN lSuccess
 
-METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, cUserAgent ) CLASS TIPClient
+METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassword, cUserAgent ) CLASS TIPClient
 
    LOCAL cRequest
    LOCAL lRet := .F.
@@ -310,51 +308,43 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
    ::inetConnect( cProxy, nProxyPort, ::SocketCon )
 
    IF ( tmp := ::inetErrorCode( ::SocketCon ) ) == 0
-      cRequest := "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.1" + Chr( 13 ) + Chr( 10 )
-      IF ! Empty( cUserAgent )
-         cRequest += "User-agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
+      cRequest := ;
+         "CONNECT " + cServer + ":" + hb_ntos( nPort ) + " HTTP/1.1" + Chr( 13 ) + Chr( 10 ) + ;
+         "Proxy-Connection: Keep-Alive" + Chr( 13 ) + Chr( 10 )
+      IF HB_ISSTRING( cUserAgent ) .AND. ! Empty( cUserAgent )
+         cRequest += "User-Agent: " + cUserAgent + Chr( 13 ) + Chr( 10 )
       ENDIF
-      IF ! Empty( cUserName )
-         cRequest += "Proxy-authorization: Basic " + hb_base64Encode( cUserName + ":" + cPassWord ) + Chr( 13 ) + Chr( 10 )
+      IF HB_ISSTRING( cUserName ) .AND. ! Empty( cUserName )
+         cRequest += "Proxy-Authorization: Basic " + hb_base64Encode( cUserName + ":" + hb_defaultValue( cPassword, "" ) ) + Chr( 13 ) + Chr( 10 )
       ENDIF
       cRequest += Chr( 13 ) + Chr( 10 )
       ::inetSendAll( ::SocketCon, cRequest )
       cResp := ""
-      IF ::ReadHTTPProxyResponse( @cResp )
-         tmp := At( " ", cResp )
-         IF tmp > 0 .AND. Val( SubStr( cResp, tmp + 1 ) ) == 200
-            lRet := .T.
-         ENDIF
-      ENDIF
-      IF ! lRet
+      IF ::ReadHTTPProxyResponse( @cResp ) .AND. ;
+         ( tmp := At( " ", cResp ) ) > 0 .AND. ;
+         Val( SubStr( cResp, tmp + 1 ) ) == 200
+         lRet := .T.
+      ELSE
          ::close()
       ENDIF
    ELSE
       cResp := hb_ntos( tmp )
-      lRet := .F.
    ENDIF
 
    RETURN lRet
 
-METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS TIPClient
+METHOD ReadHTTPProxyResponse( /* @ */ cResponse ) CLASS TIPClient
 
-   LOCAL bMoreDataToRead := .T.
-   LOCAL nLength, nData
-   LOCAL szResponse
+   LOCAL cBuffer
 
-   DO WHILE bMoreDataToRead
-
-      szResponse := Space( 1 )
-      nData := ::inetRecv( ::SocketCon, @szResponse, Len( szResponse ) )
-      IF nData == 0
+   DO WHILE .T.
+      cBuffer := Space( 1 )
+      IF ::inetRecv( ::SocketCon, @cBuffer, hb_BLen( cBuffer ) ) <= 0
          RETURN .F.
       ENDIF
-      sResponse += szResponse
-
-      nLength := Len( sResponse )
-      IF nLength >= 4
-         bMoreDataToRead := !( SubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) .AND. SubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) .AND. ;
-            SubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) .AND. SubStr( sResponse, nLength, 1 ) == Chr( 10 ) )
+      cResponse += cBuffer
+      IF hb_BRight( cResponse, 4 ) == e"\r\n\r\n"
+         EXIT
       ENDIF
    ENDDO
 
@@ -362,13 +352,14 @@ METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS TIPClient
 
 METHOD Close() CLASS TIPClient
 
-   LOCAL nRet := -1
+   LOCAL nRet
 
-   IF ! Empty( ::SocketCon )
-
+   IF Empty( ::SocketCon )
+      nRet := -1
+   ELSE
       nRet := hb_inetClose( ::SocketCon )
 
-      IF ::lHasSSL .AND. ::lTLS
+      IF ::lSSL .AND. ::lHasSSL
          SSL_shutdown( ::ssl )
          ::ssl := NIL
          ::ssl_ctx := NIL
@@ -404,31 +395,27 @@ METHOD Read( nLen ) CLASS TIPClient
       RETURN NIL
    ENDIF
 
-   IF Empty( nLen ) .OR. nLen < 0 .OR. ( ::nLength > 0 .AND. nLen > ::nLength - ::nRead )
+   IF ! HB_ISNUMERIC( nLen ) .OR. nLen <= 0 .OR. ( ::nLength > 0 .AND. nLen > ::nLength - ::nRead )
       nLen := ::nLength - ::nRead
    ENDIF
 
-   IF Empty( nLen ) .OR. nLen < 0
+   IF nLen <= 0
       // read till end of stream
       cStr1 := Space( RCV_BUF_SIZE )
       cStr0 := ""
-      ::nLastRead := ::inetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE )
-      DO WHILE ::nLastRead > 0
+      DO WHILE ( ::nLastRead := ::inetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE ) ) > 0
          ::nRead += ::nLastRead
-         cStr0 += Left( cStr1, ::nLastRead )
-         ::nLastRead := ::inetRecv( ::SocketCon, @cStr1, RCV_BUF_SIZE )
+         cStr0 += hb_BLeft( cStr1, ::nLastRead )
       ENDDO
       ::bEof := .T.
    ELSE
       // read an amount of data
       cStr0 := Space( nLen )
 
-      IF ::lTLS
-         IF ::lHasSSL
-            /* Getting around implementing the hack used in non-SSL branch for now.
-               IMO the proper fix would have been done to hb_inetRecvAll(). [vszakats] */
-            ::nLastRead := ::inetRecvAll( ::SocketCon, @cStr0, nLen )
-         ENDIF
+      IF ::lSSL .AND. ::lHasSSL
+         /* Getting around implementing the hack used in non-SSL branch for now.
+            IMO the proper fix would have been done to hb_inetRecvAll(). [vszakats] */
+         ::nLastRead := ::inetRecvAll( ::SocketCon, @cStr0, nLen )
       ELSE
          // S.R. if len of file is less than RCV_BUF_SIZE hb_inetRecvAll return 0
          //      ::nLastRead := ::InetRecvAll( ::SocketCon, @cStr0, nLen )
@@ -439,8 +426,10 @@ METHOD Read( nLen ) CLASS TIPClient
 
       IF ::nLastRead != nLen
          ::bEof := .T.
-         cStr0 := Left( cStr0, ::nLastRead )
-         // S.R.         RETURN NIL
+         cStr0 := hb_BLeft( cStr0, ::nLastRead )
+#if 0
+         RETURN NIL
+#endif
       ENDIF
 
       IF ::nRead == ::nLength
@@ -450,49 +439,53 @@ METHOD Read( nLen ) CLASS TIPClient
 
    RETURN cStr0
 
-METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
+METHOD ReadToFile( /* @ */ cFile, nMode, nSize ) CLASS TIPClient
 
-   LOCAL nFout
+   LOCAL nFOut
    LOCAL cData
-   LOCAL nSent
+   LOCAL nSent := 0
 
-   hb_default( @nMode, FC_NORMAL )
+   LOCAL lToMemory := hb_PIsByRef( 1 )
 
-   nSent := 0
+   hb_default( @nSize, 0 )
 
-   IF ! Empty( ::exGauge )
-      hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
+   IF lToMemory
+      cFile := ""
+   ENDIF
+
+   IF HB_ISEVALITEM( ::exGauge )
+      Eval( ::exGauge, nSent, nSize, Self )
    ENDIF
 
    ::nRead   := 0
    ::nStatus := 1
 
    DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! ::bEof
-      cData := ::Read( RCV_BUF_SIZE )
-      IF cData == NIL
-         IF nFout != NIL
-            FClose( nFout )
+      IF ( cData := ::Read( RCV_BUF_SIZE ) ) == NIL
+         IF nFOut != NIL
+            FClose( nFOut )
          ENDIF
          RETURN ::inetErrorCode( ::SocketCon ) == 0
       ENDIF
-      IF nFout == NIL
-         nFout := FCreate( cFile, nMode )
-         IF nFout == F_ERROR
+      IF ! lToMemory .AND. nFOut == NIL
+         IF ( nFOut := FCreate( cFile, nMode ) ) == F_ERROR
             ::nStatus := 0
             RETURN .F.
          ENDIF
       ENDIF
 
-      IF FWrite( nFout, cData ) != hb_BLen( cData )
-         FClose( nFout )
+      IF lToMemory
+         cFile += cData
+      ELSEIF FWrite( nFOut, cData ) != hb_BLen( cData )
+         FClose( nFOut )
          RETURN .F.
       ENDIF
 
-      nSent += Len( cData )
-      IF ! Empty( ::exGauge )
-         hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
-      ENDIF
+      nSent += hb_BLen( cData )
 
+      IF HB_ISEVALITEM( ::exGauge )
+         Eval( ::exGauge, nSent, nSize, Self )
+      ENDIF
    ENDDO
 
    IF nSent > 0
@@ -500,50 +493,47 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
    ENDIF
 
    ::nStatus := 2
-   FClose( nFout )
-   IF ::inetErrorCode( ::SocketCon ) != 0
-      RETURN .F.
+   IF nFOut != NIL
+      FClose( nFOut )
    ENDIF
 
-   RETURN .T.
+   RETURN ::inetErrorCode( ::SocketCon ) == 0
 
 METHOD WriteFromFile( cFile ) CLASS TIPClient
 
-   LOCAL nFin
+   LOCAL nFIn
    LOCAL cData
    LOCAL nLen
    LOCAL nSize, nSent, nBufSize
 
    ::nWrite  := 0
    ::nStatus := 0
-   nFin := FOpen( cFile, FO_READ )
-   IF nFin == F_ERROR
+   IF ( nFIn := FOpen( cFile ) ) == F_ERROR
       RETURN .F.
    ENDIF
-   nSize := FSeek( nFin, 0, FS_END )
-   FSeek( nFin, 0 )
+   nSize := FSeek( nFIn, 0, FS_END )
+   FSeek( nFIn, 0 )
 
    nBufSize := SND_BUF_SIZE
 
    // allow initialization of the gauge
    nSent := 0
-   IF ! Empty( ::exGauge )
-      hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
+
+   IF HB_ISEVALITEM( ::exGauge )
+      Eval( ::exGauge, nSent, nSize, Self )
    ENDIF
 
    ::nStatus := 1
    cData := Space( nBufSize )
-   nLen := FRead( nFin, @cData, nBufSize )
-   DO WHILE nLen > 0
+   DO WHILE ( nLen := FRead( nFIn, @cData, nBufSize ) ) > 0
       IF ::Write( @cData, nLen ) != nLen
-         FClose( nFin )
+         FClose( nFIn )
          RETURN .F.
       ENDIF
       nSent += nLen
-      IF ! Empty( ::exGauge )
-         hb_ExecFromArray( ::exGauge, { nSent, nSize, Self } )
+      IF HB_ISEVALITEM( ::exGauge )
+         Eval( ::exGauge, nSent, nSize, Self )
       ENDIF
-      nLen := FRead( nFin, @cData, nBufSize )
    ENDDO
 
    // it may happen that the file has length 0
@@ -552,32 +542,19 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
    ENDIF
 
    ::nStatus := 2
-   FClose( nFin )
+   FClose( nFIn )
 
    RETURN .T.
 
-#if 0
+METHOD Write( cData, nLen, lCommit ) CLASS TIPClient
 
-/* HZ: METHOD :getOk() is not declared in TIPClient */
-METHOD Data( cData ) CLASS TIPClient
-   ::InetSendall( ::SocketCon, "DATA" + ::cCRLF )
-   IF ! ::GetOk()
-      RETURN .F.
-   ENDIF
-   ::InetSendall(::SocketCon, cData + ::cCRLF + "." + ::cCRLF )
-   RETURN ::GetOk()
-
-#endif
-
-METHOD Write( cData, nLen, bCommit ) CLASS TIPClient
-
-   IF Empty( nLen )
-      nLen := Len( cData )
+   IF ! HB_ISNUMERIC( nLen ) .OR. nLen <= 0
+      nLen := hb_BLen( cData )
    ENDIF
 
    ::nLastWrite := ::inetSendAll( ::SocketCon, cData, nLen )
 
-   IF ! Empty( bCommit ) .AND. bCommit
+   IF hb_defaultValue( lCommit, .F. )
       ::Commit()
    ENDIF
 
@@ -589,11 +566,11 @@ METHOD inetSendAll( SocketCon, cData, nLen ) CLASS TIPClient
 
    LOCAL nRet
 
-   IF Empty( nLen )
-      nLen := Len( cData )
+   IF ! HB_ISNUMERIC( nLen ) .OR. nLen <= 0
+      nLen := hb_BLen( cData )
    ENDIF
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
 #if defined( _SSL_DEBUG_TEMP )
          ? "SSL_write()", cData
@@ -627,7 +604,7 @@ METHOD inetRecv( SocketCon, cStr1, len ) CLASS TIPClient
 
    LOCAL nRet
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
 #if defined( _SSL_DEBUG_TEMP )
          ? "SSL_read()"
@@ -651,7 +628,7 @@ METHOD inetRecvLine( SocketCon, nRet, size ) CLASS TIPClient
 
    LOCAL cRet
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
          nRet := hb_SSL_read_line( ::ssl, @cRet, size, ::nConnTimeout )
 #if defined( _SSL_DEBUG_TEMP )
@@ -679,7 +656,7 @@ METHOD inetRecvAll( SocketCon, cRet, size ) CLASS TIPClient
 
    LOCAL nRet
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
          nRet := hb_SSL_read_all( ::ssl, @cRet, size, ::nConnTimeout )
 #if defined( _SSL_DEBUG_TEMP )
@@ -707,7 +684,7 @@ METHOD inetErrorCode( SocketCon ) CLASS TIPClient
 
    LOCAL nRet
 
-   IF ::lTLS
+   IF ::lSSL
       IF ::lHasSSL
          nRet := iif( ::nSSLError == 0, 0, SSL_get_error( ::ssl, ::nSSLError ) )
       ELSE
@@ -727,46 +704,42 @@ METHOD inetErrorCode( SocketCon ) CLASS TIPClient
 
 METHOD inetErrorDesc( SocketCon ) CLASS TIPClient
 
-   LOCAL cMsg := ""
-
    hb_default( @SocketCon, ::SocketCon )
 
    IF ! Empty( SocketCon )
-      IF ::lTLS
-         IF ::lHasSSL
-            IF ::nSSLError != 0
-               cMsg := ERR_error_string( SSL_get_error( ::ssl, ::nSSLError ) )
-            ENDIF
+      IF ::lSSL
+         IF ::lHasSSL .AND. ::nSSLError != 0
+            RETURN ERR_error_string( SSL_get_error( ::ssl, ::nSSLError ) )
          ENDIF
       ELSE
-         cMsg := hb_inetErrorDesc( SocketCon )
+         RETURN hb_inetErrorDesc( SocketCon )
       ENDIF
    ENDIF
 
-   RETURN cMsg
+   RETURN ""
 
-/* BROKEN, should test number of parameters and act accordingly, see doc\inet.txt */
+/* BROKEN, should test number of parameters and act accordingly, see doc/inet.txt */
 METHOD inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
 
    hb_inetConnect( cServer, nPort, SocketCon )
 
-   IF hb_inetStatus( SocketCon ) == -1   /* IMPORTANT: if internet connection is off and address is not resolved and it is SSL compliant, then RTE , must be avoided - Pritpal*/
+   /* IMPORTANT: if internet connection is off and address is not
+                 resolved and it is SSL compliant, then RTE must
+                 be avoided [pritpal] */
+   IF hb_inetStatus( SocketCon ) == -1
       RETURN NIL
    ENDIF
 
-   IF ! Empty( ::nDefaultSndBuffSize )
+   IF hb_defaultValue( ::nDefaultSndBuffSize, 0 ) > 0
       ::InetSndBufSize( SocketCon, ::nDefaultSndBuffSize )
    ENDIF
 
-   IF ! Empty( ::nDefaultRcvBuffSize )
+   IF hb_defaultValue( ::nDefaultRcvBuffSize, 0 ) > 0
       ::InetRcvBufSize( SocketCon, ::nDefaultRcvBuffSize )
    ENDIF
 
-   IF ::lHasSSL .AND. ::lTLS
-      SSL_set_mode( ::ssl, HB_SSL_MODE_AUTO_RETRY )
-      SSL_set_fd( ::ssl, hb_inetFD( SocketCon ) )
-      SSL_connect( ::ssl )
-      /* TODO: Add error handling */
+   IF ::lSSL .AND. ::lHasSSL
+      __tip_SSLConnectFD( ::ssl, SocketCon )
    ENDIF
 
    IF HB_ISEVALITEM( ::bTrace )
@@ -778,7 +751,7 @@ METHOD inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
 /* Methods to manage buffers */
 METHOD InetRcvBufSize( SocketCon, nSizeBuff ) CLASS TIPClient
 
-   IF ! Empty( nSizeBuff )
+   IF HB_ISNUMERIC( nSizeBuff ) .AND. nSizeBuff > 0
       hb_inetSetRcvBufSize( SocketCon, nSizeBuff )
    ENDIF
 
@@ -786,7 +759,7 @@ METHOD InetRcvBufSize( SocketCon, nSizeBuff ) CLASS TIPClient
 
 METHOD InetSndBufSize( SocketCon, nSizeBuff ) CLASS TIPClient
 
-   IF ! Empty( nSizeBuff )
+   IF HB_ISNUMERIC( nSizeBuff ) .AND. nSizeBuff > 0
       hb_inetSetSndBufSize( SocketCon, nSizeBuff )
    ENDIF
 
@@ -806,8 +779,7 @@ METHOD InetTimeOut( SocketCon, nConnTimeout ) CLASS TIPClient
 /* Called from another method with list of parameters and, as last parameter, return code
    of function being logged.
    Example, I want to log MyFunc( a, b, c ) which returns m,
-            ::Log( a, b, c, m )
-*/
+            ::Log( a, b, c, m ) */
 METHOD Log( ... ) CLASS TIPClient
 
    LOCAL xVar
@@ -822,18 +794,18 @@ METHOD Log( ... ) CLASS TIPClient
       FOR EACH xVar IN hb_AParams()
 
          // Preserves CRLF on result
-         IF xVar:__enumIndex() < PCount()
-            cMsg += StrTran( StrTran( AllTrim( hb_CStr( xVar ) ), Chr( 13 ), "<cr>" ), Chr( 10 ), "<lf>" )
-         ELSE
+         IF xVar:__enumIsLast()
             cMsg += hb_CStr( xVar )
+         ELSE
+            cMsg += hb_StrReplace( AllTrim( hb_CStr( xVar ) ), Chr( 13 ) + Chr( 10 ), { "<cr>", "<lf>" } )
          ENDIF
 
-         cMsg += iif( xVar:__enumIndex() < PCount() - 1, ", ", "" )
-
-         IF xVar:__enumIndex() == PCount() - 1
-            cMsg += " )" + hb_eol() + ">> "
-         ELSEIF xVar:__enumIndex() == PCount()
+         IF xVar:__enumIsLast()
             cMsg += " <<" + hb_eol() + hb_eol()
+         ELSEIF xVar:__enumIndex() == PCount() - 1
+            cMsg += " )" + hb_eol() + ">> "
+         ELSE
+            cMsg += ", "
          ENDIF
       NEXT
 
@@ -844,12 +816,29 @@ METHOD Log( ... ) CLASS TIPClient
 
 METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword ) CLASS TIPClient
 
-   ::cProxyHost     := cProxyHost
-   ::nProxyPort     := nProxyPort
-   ::cProxyUser     := cProxyUser
-   ::cProxyPassword := cProxyPassword
+   IF __clsParent( cProxyHost:classH(), "TURL" )
+      ::cProxyHost     := cProxyHost:cServer
+      ::nProxyPort     := cProxyHost:nPort
+      ::cProxyUser     := cProxyHost:cUserid
+      ::cProxyPassword := cProxyHost:cPassword
+   ELSE
+      ::cProxyHost     := hb_defaultValue( cProxyHost, "" )
+      ::nProxyPort     := hb_defaultValue( nProxyPort, 0 )
+      ::cProxyUser     := hb_defaultValue( cProxyUser, "" )
+      ::cProxyPassword := hb_defaultValue( cProxyPassword, "" )
+   ENDIF
 
    RETURN Self
 
 FUNCTION tip_SSL()
    RETURN hb_IsFunction( "__HBEXTERN__HBSSL__" )
+
+FUNCTION __tip_SSLConnectFD( ssl, SocketCon )
+
+   SSL_set_mode( ssl, HB_SSL_MODE_AUTO_RETRY )
+   SSL_set_fd( ssl, hb_inetFD( SocketCon ) )
+   SSL_connect( ssl )
+
+   /* TODO: Add error handling */
+
+   RETURN .T.

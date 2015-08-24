@@ -311,6 +311,19 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             }
          }
       }
+      else if( hb_strnicmp( szSwitch, "gc", 2 ) == 0 )
+      {
+         if( fSet )
+         {
+            if( iValue == HB_COMPGENC_REALCODE ||
+                iValue == HB_COMPGENC_VERBOSE ||
+                iValue == HB_COMPGENC_NORMAL ||
+                iValue == HB_COMPGENC_COMPACT )
+               HB_COMP_PARAM->iGenCOutput = iValue;
+         }
+         else
+            iValue = HB_COMP_PARAM->iGenCOutput;
+      }
       else if( hb_strnicmp( szSwitch, "es", 2 ) == 0 )
       {
          if( fSet )
@@ -378,14 +391,14 @@ static void hb_pp_fileIncluded( void * cargo, const char * szFileName )
    *pIncFilePtr = pIncFile;
 }
 
-void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
-                    PHB_PP_OPEN_FUNC pOpenFunc )
+void hb_compInitPP( HB_COMP_DECL, PHB_PP_OPEN_FUNC pOpenFunc )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_compInitPP()" ) );
 
    if( HB_COMP_PARAM->pLex->pPP )
    {
-      hb_pp_init( HB_COMP_PARAM->pLex->pPP, HB_COMP_PARAM->fQuiet,
+      hb_pp_init( HB_COMP_PARAM->pLex->pPP,
+                  HB_COMP_PARAM->fQuiet, HB_COMP_PARAM->fGauge,
                   HB_COMP_PARAM->iMaxTransCycles,
                   HB_COMP_PARAM, pOpenFunc, NULL,
                   hb_pp_ErrorGen, hb_pp_Disp, hb_pp_PragmaDump,
@@ -405,7 +418,7 @@ void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
       hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP, ! HB_COMP_PARAM->fNoArchDefs );
 
       /* Add /D and /undef: command line or envvar defines */
-      hb_compChkDefines( HB_COMP_PARAM, argc, argv );
+      hb_compChkSetDefines( HB_COMP_PARAM );
 
       /* add extended definitions files (-u+<file>) */
       if( HB_COMP_PARAM->iStdChExt > 0 )

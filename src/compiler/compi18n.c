@@ -205,11 +205,11 @@ void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount
       for( ul = 1; ul < ulCount && pString->uiPlurals < HB_I18N_PLURAL_MAX; ++ul )
       {
          const char * szText = hb_compIdentifierNew( HB_COMP_PARAM, szTexts[ ul ], HB_IDENT_COPY );
-         HB_ULONG ulPlural;
+         HB_UINT uiPlural;
 
-         for( ulPlural = 0; ulPlural < pString->uiPlurals; ++ulPlural )
+         for( uiPlural = 0; uiPlural < pString->uiPlurals; ++uiPlural )
          {
-            if( pString->szPlurals[ ulPlural ] == szText )
+            if( pString->szPlurals[ uiPlural ] == szText )
             {
                szText = NULL;
                break;

@@ -69,9 +69,9 @@
 
 /* Use spinlock instead of mutex */
 
-#  if defined( HB_SPINLOCK_INIT ) && 1
+#  if defined( HB_SPINLOCK_INIT ) && ! defined( HB_HELGRIND_FRIENDLY )
 
-      HB_SPINLOCK_T s_gcSpinLock = HB_SPINLOCK_INIT;
+      static HB_SPINLOCK_T s_gcSpinLock = HB_SPINLOCK_INIT;
 #     define HB_GC_LOCK()       HB_SPINLOCK_ACQUIRE( &s_gcSpinLock )
 #     define HB_GC_UNLOCK()     HB_SPINLOCK_RELEASE( &s_gcSpinLock )
 
@@ -333,6 +333,11 @@ HB_COUNTER hb_gcRefCount( void * pBlock )
    return hb_xRefCount( HB_GC_PTR( pBlock ) );
 }
 
+
+HB_GARBAGE_FUNC( hb_gcDummyClear )
+{
+   HB_SYMBOL_UNUSED( Cargo );
+}
 
 HB_GARBAGE_FUNC( hb_gcDummyMark )
 {

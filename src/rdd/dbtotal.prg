@@ -50,7 +50,7 @@
 #include "error.ch"
 
 /* NOTE: Compared to CA-Cl*pper, Harbour:
-         - will accept character expressions for xKey, xFor and xWhile.
+         - will accept character expressions and symbols for xKey, xFor and xWhile.
          - has three extra parameters (cRDD, nConnection, cCodePage).
          - will default to active index key for xKey parameter.
          - won't crash with "No exported method: EVAL" if xKey is not
@@ -99,15 +99,13 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    IF nRec != NIL
       dbGoto( nRec )
       nNext := 1
-   ELSE
-      IF nNext == NIL
-         nNext := -1
-         IF ! lRest
-            dbGoTop()
-         ENDIF
-      ELSE
-         lRest := .T.
+   ELSEIF nNext == NIL
+      nNext := -1
+      IF ! lRest
+         dbGoTop()
       ENDIF
+   ELSE
+      lRest := .T.
    ENDIF
 
    nOldArea := Select()
@@ -138,7 +136,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
       aFieldsSum := Array( Len( aGetField ) )
 
       /* Keep it open after creating it. */
-      dbCreate( cFile, aNewDbStruct, cRDD, .T., "", NIL, cCodePage, nConnection )
+      dbCreate( cFile, aNewDbStruct, cRDD, .T., "", , cCodePage, nConnection )
       nNewArea := Select()
 
       dbSelectArea( nOldArea )
@@ -191,10 +189,10 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    RETURN .T.
 
 STATIC FUNCTION __GetField( cField )
+
    LOCAL nCurrArea := Select()
    LOCAL nPos
    LOCAL oError
-   LOCAL lError
 
    /* Is the field aliased? */
    IF ( nPos := At( "->", cField ) ) > 0
@@ -209,8 +207,7 @@ STATIC FUNCTION __GetField( cField )
          oError:operation  := cField
          oError:subCode    := 1101
 
-         lError := Eval( ErrorBlock(), oError )
-         IF ! HB_ISLOGICAL( lError ) .OR. lError
+         IF hb_defaultValue( Eval( ErrorBlock(), oError ), .T. )
             __errInHandler()
          ENDIF
 
@@ -218,10 +215,9 @@ STATIC FUNCTION __GetField( cField )
       ENDIF
 
       cField := SubStr( cField, nPos + 2 )
-
    ENDIF
 
    RETURN FieldBlock( cField )
 
 FUNCTION __dbTransRec( nDstArea, aFieldsStru )
-   RETURN __dbTrans( nDstArea, aFieldsStru, NIL, NIL, 1 )
+   RETURN __dbTrans( nDstArea, aFieldsStru, , , 1 )

@@ -56,6 +56,8 @@
 #xtranslate MAKELONG( <nLow>, <nHigh> )   => ( ( <nLow> ) + ( <nHigh> ) * 65536 )
 #xtranslate MAKELPARAM( <nLow>, <nHigh> ) => ( ( <nLow> ) + ( <nHigh> ) * 65536 )
 
+#define MAX_PATH                                  256
+
 /*
  *   Wvt_DrawButton() constants
  */
@@ -1120,7 +1122,7 @@
 #define DRAFT_QUALITY                             1
 #define PROOF_QUALITY                             2
 #define NONANTIALIASED_QUALITY                    3                   // (WINVER >= 0x0400)
-#define ANTIALISED_QUALITY                        4                   // (WINVER >= 0x0400)
+#define ANTIALIASED_QUALITY                       4                   // (WINVER >= 0x0400)
 
 #define ANSI_CHARSET                              0
 #define DEFAULT_CHARSET                           1
@@ -1894,8 +1896,6 @@
 #define R2_WHITE                                  16  /*  1       */
 #define R2_LAST                                   16
 
-/*-*/
-
 #define TOOLTIPS_CLASS                            "tooltips_class32"
 
 #define TTS_ALWAYSTIP                             0x01
@@ -1982,8 +1982,6 @@
 #define TTM_GETCURRENTTOOL                        TTM_GETCURRENTTOOLW
 #define TTM_SETTITLE                              TTM_SETTITLEW
 
-/*-*/
-
 #define CW_USEDEFAULT                             0x80000000
 
 #define HWND_TOP                                  0
@@ -2018,5 +2016,892 @@
 
 #define PBS_SMOOTH                               1
 #define PBS_VERTICAL                             4
+
+#define DRIVERVERSION                             0     // Device driver version
+#define TECHNOLOGY                                2     // Device classification
+#define HORZSIZE                                  4     // Horizontal size in millimeters
+#define VERTSIZE                                  6     // Vertical size in millimeters
+#define HORZRES                                   8     // Horizontal width in pixels
+#define VERTRES                                   10    // Vertical height in pixels
+#define BITSPIXEL                                 12    // Number of bits per pixel
+#define PLANES                                    14    // Number of planes
+#define NUMBRUSHES                                16    // Number of brushes the device has
+#define NUMPENS                                   18    // Number of pens the device has
+#define NUMMARKERS                                20    // Number of markers the device has
+#define NUMFONTS                                  22    // Number of fonts the device has
+#define NUMCOLORS                                 24    // Number of colors the device supports
+#define PDEVICESIZE                               26    // Size required for device descriptor
+#define CURVECAPS                                 28    // Curve capabilities
+#define LINECAPS                                  30    // Line capabilities
+#define POLYGONALCAPS                             32    // Polygonal capabilities
+#define TEXTCAPS                                  34    // Text capabilities
+#define CLIPCAPS                                  36    // Clipping capabilities
+#define RASTERCAPS                                38    // Bitblt capabilities
+#define ASPECTX                                   40    // Length of the X leg
+#define ASPECTY                                   42    // Length of the Y leg
+#define ASPECTXY                                  44    // Length of the hypotenuse
+
+#define LOGPIXELSX                                88    // Logical pixels/inch in X
+#define LOGPIXELSY                                90    // Logical pixels/inch in Y
+
+#define SIZEPALETTE                               104    // Number of entries in physical palette
+#define NUMRESERVED                               106    // Number of reserved entries in palette
+#define COLORRES                                  108    // Actual color resolution
+
+#define OUT_DEFAULT_PRECIS                        0
+#define OUT_STRING_PRECIS                         1
+#define OUT_CHARACTER_PRECIS                      2
+#define OUT_STROKE_PRECIS                         3
+#define OUT_TT_PRECIS                             4
+#define OUT_DEVICE_PRECIS                         5
+#define OUT_RASTER_PRECIS                         6
+#define OUT_TT_ONLY_PRECIS                        7
+#define OUT_OUTLINE_PRECIS                        8
+#define OUT_SCREEN_OUTLINE_PRECIS                 9
+#define OUT_PS_ONLY_PRECIS                        10
+
+#define CLIP_DEFAULT_PRECIS                       0
+#define CLIP_CHARACTER_PRECIS                     1
+#define CLIP_STROKE_PRECIS                        2
+#define CLIP_MASK                                 15
+
+#define DEFAULT_PITCH                             0
+#define FIXED_PITCH                               1
+#define VARIABLE_PITCH                            2
+
+#define MONO_FONT                                 8
+
+#define MM_TEXT                                   1
+#define MM_LOMETRIC                               2
+#define MM_HIMETRIC                               3
+#define MM_LOENGLISH                              4
+#define MM_HIENGLISH                              5
+#define MM_TWIPS                                  6
+#define MM_ISOTROPIC                              7
+#define MM_ANISOTROPIC                            8
+
+#define MM_MIN                                    MM_TEXT
+#define MM_MAX                                    MM_ANISOTROPIC
+#define MM_MAX_FIXEDSCALE                         MM_TWIPS
+
+#define TRANSPARENT                               1
+#define OPAQUE                                    2
+#define BKMODE_LAST                               2
+
+#define TA_NOUPDATECP                             0
+#define TA_UPDATECP                               1
+
+#define TA_LEFT                                   0
+#define TA_RIGHT                                  2
+#define TA_CENTER                                 6
+
+#define TA_TOP                                    0
+#define TA_BOTTOM                                 8
+#define TA_BASELINE                               24
+#define TA_RTLREADING                             256
+#define TA_MASK                                   (TA_BASELINE+TA_CENTER+TA_UPDATECP+TA_RTLREADING)
+#define VTA_BASELINE                              TA_BASELINE
+#define VTA_LEFT                                  TA_BOTTOM
+#define VTA_RIGHT                                 TA_TOP
+#define VTA_CENTER                                TA_CENTER
+#define VTA_BOTTOM                                TA_RIGHT
+#define VTA_TOP                                   TA_LEFT
+
+#define ETO_OPAQUE                                2
+#define ETO_CLIPPED                               4
+#define ETO_GLYPH_INDEX                           16
+#define ETO_RTLREADING                            128
+#define ETO_NUMERICSLOCAL                         1024
+#define ETO_NUMERICSLATIN                         2048
+#define ETO_IGNORELANGUAGE                        4096
+#define ETO_PDY                                   8192
+#define ASPECT_FILTERING                          1
+
+#define LR_DEFAULTCOLOR                           0
+#define LR_MONOCHROME                             1
+#define LR_COLOR                                  2
+#define LR_COPYRETURNORG                          4
+#define LR_COPYDELETEORG                          8
+#define LR_LOADFROMFILE                           16
+#define LR_LOADTRANSPARENT                        32
+#define LR_DEFAULTSIZE                            64
+#define LR_VGACOLOR                               128
+#define LR_LOADMAP3DCOLORS                        4096
+#define LR_CREATEDIBSECTION                       8192
+#define LR_COPYFROMRESOURCE                       16384
+#define LR_SHARED                                 32768
+
+#define CTLCOLOR_MSGBOX                           0
+#define CTLCOLOR_EDIT                             1
+#define CTLCOLOR_LISTBOX                          2
+#define CTLCOLOR_BTN                              3
+#define CTLCOLOR_DLG                              4
+#define CTLCOLOR_SCROLLBAR                        5
+#define CTLCOLOR_STATIC                           6
+#define CTLCOLOR_MAX                              7
+
+#define COLOR_SCROLLBAR                           0
+#define COLOR_BACKGROUND                          1
+#define COLOR_ACTIVECAPTION                       2
+#define COLOR_INACTIVECAPTION                     3
+#define COLOR_MENU                                4
+#define COLOR_WINDOW                              5
+#define COLOR_WINDOWFRAME                         6
+#define COLOR_MENUTEXT                            7
+#define COLOR_WINDOWTEXT                          8
+#define COLOR_CAPTIONTEXT                         9
+#define COLOR_ACTIVEBORDER                        10
+#define COLOR_INACTIVEBORDER                      11
+#define COLOR_APPWORKSPACE                        12
+#define COLOR_HIGHLIGHT                           13
+#define COLOR_HIGHLIGHTTEXT                       14
+#define COLOR_BTNFACE                             15
+#define COLOR_BTNSHADOW                           16
+#define COLOR_GRAYTEXT                            17
+#define COLOR_BTNTEXT                             18
+#define COLOR_INACTIVECAPTIONTEXT                 19
+#define COLOR_BTNHIGHLIGHT                        20
+
+#define COLOR_3DDKSHADOW                          21
+#define COLOR_3DLIGHT                             22
+#define COLOR_INFOTEXT                            23
+#define COLOR_INFOBK                              24
+#define COLOR_HOTLIGHT                            26
+#define COLOR_GRADIENTACTIVECAPTION               27
+#define COLOR_GRADIENTINACTIVECAPTION             28
+
+#define COLOR_DESKTOP                             COLOR_BACKGROUND
+#define COLOR_3DFACE                              COLOR_BTNFACE
+#define COLOR_3DSHADOW                            COLOR_BTNSHADOW
+#define COLOR_3DHIGHLIGHT                         COLOR_BTNHIGHLIGHT
+#define COLOR_3DHILIGHT                           COLOR_BTNHIGHLIGHT
+#define COLOR_BTNHILIGHT                          COLOR_BTNHIGHLIGHT
+
+#define RBS_TOOLTIPS                              256
+#define RBS_VARHEIGHT                             512
+#define RBS_BANDBORDERS                           1024
+#define RBS_FIXEDORDER                            2048
+#define RBS_REGISTERDROP                          4096
+#define RBS_AUTOSIZE                              8192
+#define RBS_VERTICALGRIPPER                       16384  // this always has the vertical gripper (default for horizontal mode)
+#define RBS_DBLCLKTOGGLE                          32768
+
+#define RBBS_BREAK                                1  // break to new line
+#define RBBS_FIXEDSIZE                            2  // band can't be sized
+#define RBBS_CHILDEDGE                            4  // edge around top & bottom of child window
+#define RBBS_HIDDEN                               8  // don't show
+#define RBBS_NOVERT                               16  // don't show when vertical
+#define RBBS_FIXEDBMP                             32  // bitmap doesn't move during band resize
+#define RBBS_VARIABLEHEIGHT                       64  // allow autosizing of this child vertically
+#define RBBS_GRIPPERALWAYS                        128  // always show the gripper
+#define RBBS_NOGRIPPER                            256  // never show the gripper
+#define RBBS_USECHEVRON                           512  // display drop-down button for this band if it's sized smaller than ideal width
+#define RBBS_HIDETITLE                            1024  // keep band title hidden
+
+#define RBBIM_STYLE                               1
+#define RBBIM_COLORS                              2
+#define RBBIM_TEXT                                4
+#define RBBIM_IMAGE                               8
+#define RBBIM_CHILD                               16
+#define RBBIM_CHILDSIZE                           32
+#define RBBIM_SIZE                                64
+#define RBBIM_BACKGROUND                          128
+#define RBBIM_ID                                  256
+#define RBBIM_IDEALSIZE                           512
+#define RBBIM_LPARAM                              1024
+#define RBBIM_HEADERSIZE                          2048  // control the size of the header
+
+#define DMRES_DRAFT                               (-1)
+#define DMRES_LOW                                 (-2)
+#define DMRES_MEDIUM                              (-3)
+#define DMRES_HIGH                                (-4)
+
+#define DMCOLOR_MONOCHROME                        1
+#define DMCOLOR_COLOR                             2
+
+#define DMDUP_SIMPLEX                             1
+#define DMDUP_VERTICAL                            2
+#define DMDUP_HORIZONTAL                          3
+
+#define DMTT_BITMAP                               1       // print TT fonts as graphics
+#define DMTT_DOWNLOAD                             2       // download TT fonts as soft fonts
+#define DMTT_SUBDEV                               3       // substitute device fonts for TT fonts
+#define DMTT_DOWNLOAD_OUTLINE                     4 // download TT fonts as outline soft fonts
+
+#define DMCOLLATE_FALSE                           0
+#define DMCOLLATE_TRUE                            1
+
+#define DM_GRAYSCALE                              0x00000001 /* This flag is no longer valid */
+#define DM_INTERLACED                             0x00000002 /* This flag is no longer valid */
+#define DMDISPLAYFLAGS_TEXTMODE                   4
+
+#define DMNUP_SYSTEM                              1
+#define DMNUP_ONEUP                               2
+
+#define DMICMMETHOD_NONE                          1   // ICM disabled
+#define DMICMMETHOD_SYSTEM                        2   // ICM handled by system
+#define DMICMMETHOD_DRIVER                        3   // ICM handled by driver
+#define DMICMMETHOD_DEVICE                        4   // ICM handled by device
+
+#define DMICMMETHOD_USER                          256   // Device-specific methods start here
+
+#define DMICM_SATURATE                            1   // Maximize color saturation
+#define DMICM_CONTRAST                            2   // Maximize color contrast
+#define DMICM_COLORIMETRIC                        3   // Use specific color metric
+#define DMICM_ABS_COLORIMETRIC                    4   // Use specific color metric
+
+#define DMICM_USER                                256   // Device-specific intents start here
+
+#define PHYSICALWIDTH                             110 // Physical Width in device units
+#define PHYSICALHEIGHT                            111 // Physical Height in device units
+#define PHYSICALOFFSETX                           112 // Physical Printable Area x margin
+#define PHYSICALOFFSETY                           113 // Physical Printable Area y margin
+#define SCALINGFACTORX                            114 // Scaling factor x
+#define SCALINGFACTORY                            115 // Scaling factor y
+
+#define SRCCOPY                                   13369376   // dest = source
+#define SRCPAINT                                  15597702   // dest = source OR dest
+#define SRCAND                                    8913094    // dest = source AND dest
+#define SRCINVERT                                 6684742    // dest = source XOR dest
+#define SRCERASE                                  4457256    // dest = source AND (NOT dest )
+#define NOTSRCCOPY                                3342344    // dest = (NOT source)
+#define NOTSRCERASE                               1114278    // dest = (NOT src) AND (NOT dest)
+#define MERGECOPY                                 12583114   // dest = (source AND pattern)
+#define MERGEPAINT                                12255782   // dest = (NOT source) OR dest
+#define PATCOPY                                   15728673   // dest = pattern
+#define PATPAINT                                  16452105   // dest = DPSnoo
+#define PATINVERT                                 5898313    // dest = pattern XOR dest
+#define DSTINVERT                                 5570569    // dest = (NOT dest)
+#define BLACKNESS                                 66         // dest = BLACK
+#define WHITENESS                                 16711778   // dest = WHITE
+#define NOMIRRORBITMAP                            2147483648 // Do not Mirror the bitmap in this call
+#define CAPTUREBLT                                1073741824 // Include layered windows
+
+#define GDI_ERROR                                 ( 4294967295)
+#define HGDI_ERROR                                ( 4294967295)
+
+#define CS_VREDRAW                                1
+#define CS_HREDRAW                                2
+#define CS_DBLCLKS                                8
+#define CS_OWNDC                                  32
+#define CS_CLASSDC                                64
+#define CS_PARENTDC                               128
+#define CS_NOCLOSE                                512
+#define CS_SAVEBITS                               2048
+#define CS_BYTEALIGNCLIENT                        4096
+#define CS_BYTEALIGNWINDOW                        8192
+#define CS_GLOBALCLASS                            16384
+
+#define CF_TEXT                                   1
+#define CF_BITMAP                                 2
+#define CF_METAFILEPICT                           3
+#define CF_SYLK                                   4
+#define CF_DIF                                    5
+#define CF_TIFF                                   6
+#define CF_OEMTEXT                                7
+#define CF_DIB                                    8
+#define CF_PALETTE                                9
+#define CF_PENDATA                                10
+#define CF_RIFF                                   11
+#define CF_WAVE                                   12
+#define CF_UNICODETEXT                            13
+#define CF_ENHMETAFILE                            14
+
+#define IDC_ARROW                                 32512
+#define IDC_IBEAM                                 32513
+#define IDC_WAIT                                  32514
+#define IDC_CROSS                                 32515
+#define IDC_UPARROW                               32516
+
+#define IDC_SIZENWSE                              32642
+#define IDC_SIZENESW                              32643
+#define IDC_SIZEWE                                32644
+#define IDC_SIZENS                                32645
+#define IDC_SIZEALL                               32646
+#define IDC_NO                                    32648
+#define IDC_HAND                                  32649
+#define IDC_APPSTARTING                           32650
+#define IDC_HELP                                  32651
+
+#define ICC_LISTVIEW_CLASSES                      1      // listview, header
+#define ICC_TREEVIEW_CLASSES                      2      // treeview, tooltips
+#define ICC_BAR_CLASSES                           4      // toolbar, statusbar, trackbar, tooltips
+#define ICC_TAB_CLASSES                           8      // tab, tooltips
+#define ICC_UPDOWN_CLASS                          16     // updown
+#define ICC_PROGRESS_CLASS                        32     // progress
+#define ICC_HOTKEY_CLASS                          64     // hotkey
+#define ICC_ANIMATE_CLASS                         128    // animate
+#define ICC_WIN95_CLASSES                         255
+#define ICC_DATE_CLASSES                          256    // month picker, date picker, time picker, updown
+#define ICC_USEREX_CLASSES                        512    // comboex
+#define ICC_COOL_CLASSES                          1024   // rebar (coolbar) control
+#define ICC_INTERNET_CLASSES                      2048
+#define ICC_PAGESCROLLER_CLASS                    4096   // page scroller
+#define ICC_NATIVEFNTCTL_CLASS                    8192   // native font control
+
+#define HINST_COMMCTRL                            ((HINSTANCE)-1)
+#define IDB_STD_SMALL_COLOR                       0
+#define IDB_STD_LARGE_COLOR                       1
+#define IDB_VIEW_SMALL_COLOR                      4
+#define IDB_VIEW_LARGE_COLOR                      5
+#define IDB_HIST_SMALL_COLOR                      8
+#define IDB_HIST_LARGE_COLOR                      9
+
+#define TB_ENABLEBUTTON                           (WM_USER + 1)
+#define TB_CHECKBUTTON                            (WM_USER + 2)
+#define TB_PRESSBUTTON                            (WM_USER + 3)
+#define TB_HIDEBUTTON                             (WM_USER + 4)
+#define TB_INDETERMINATE                          (WM_USER + 5)
+#define TB_MARKBUTTON                             (WM_USER + 6)
+#define TB_ISBUTTONENABLED                        (WM_USER + 9)
+#define TB_ISBUTTONCHECKED                        (WM_USER + 10)
+#define TB_ISBUTTONPRESSED                        (WM_USER + 11)
+#define TB_ISBUTTONHIDDEN                         (WM_USER + 12)
+#define TB_ISBUTTONINDETERMINATE                  (WM_USER + 13)
+#define TB_ISBUTTONHIGHLIGHTED                    (WM_USER + 14)
+#define TB_SETSTATE                               (WM_USER + 17)
+#define TB_GETSTATE                               (WM_USER + 18)
+
+
+#define REBARCLASSNAME                            "ReBarWindow32"
+
+#define RBIM_IMAGELIST                            1
+#ifdef UNICODE
+  #define REBARBANDINFO                           REBARBANDINFOW
+  #define LPREBARBANDINFO                         LPREBARBANDINFOW
+  #define LPCREBARBANDINFO                        LPCREBARBANDINFOW
+  #define REBARBANDINFO_V3_SIZE                   REBARBANDINFOW_V3_SIZE
+#else
+  #define REBARBANDINFO                           REBARBANDINFOA
+  #define LPREBARBANDINFO                         LPREBARBANDINFOA
+  #define LPCREBARBANDINFO                        LPCREBARBANDINFOA
+  #define REBARBANDINFO_V3_SIZE                   REBARBANDINFOA_V3_SIZE
+#endif
+
+#ifdef UNICODE
+  #define RB_INSERTBAND                           RB_INSERTBANDW
+  #define RB_SETBANDINFO                          RB_SETBANDINFOW
+#else
+  #define RB_INSERTBAND                           RB_INSERTBANDA
+  #define RB_SETBANDINFO                          RB_SETBANDINFOA
+#endif
+
+#define RB_INSERTBANDA                            (WM_USER +  1)
+#define RB_DELETEBAND                             (WM_USER +  2)
+#define RB_GETBARINFO                             (WM_USER +  3)
+#define RB_SETBARINFO                             (WM_USER +  4)
+#define RB_SETBANDINFOA                           (WM_USER +  6)
+#define RB_SETPARENT                              (WM_USER +  7)
+#define RB_HITTEST                                (WM_USER +  8)
+#define RB_GETRECT                                (WM_USER +  9)
+#define RB_INSERTBANDW                            (WM_USER +  10)
+#define RB_SETBANDINFOW                           (WM_USER +  11)
+#define RB_GETBANDCOUNT                           (WM_USER +  12)
+#define RB_GETROWCOUNT                            (WM_USER +  13)
+#define RB_GETROWHEIGHT                           (WM_USER +  14)
+#define RB_IDTOINDEX                              (WM_USER +  16) // wParam == id
+#define RB_GETTOOLTIPS                            (WM_USER +  17)
+#define RB_SETTOOLTIPS                            (WM_USER +  18)
+#define RB_SETBKCOLOR                             (WM_USER +  19) // sets the default BK color
+#define RB_GETBKCOLOR                             (WM_USER +  20) // defaults to CLR_NONE
+#define RB_SETTEXTCOLOR                           (WM_USER +  21)
+#define RB_GETTEXTCOLOR                           (WM_USER +  22) // defaults to 0x00000000
+#define RB_SIZETORECT                             (WM_USER +  23) // resize the rebar/break bands and such to this rect (lparam)
+
+#define TCN_FIRST                                 (0-550)       // tab control
+#define TCN_LAST                                  (0-580)
+
+#define TCN_SELCHANGE                             (TCN_FIRST - 1)
+#define TCN_SELCHANGING                           (TCN_FIRST - 2)
+#define TCN_GETOBJECT                             (TCN_FIRST - 3)
+#define TCN_FOCUSCHANGE                           (TCN_FIRST - 4)
+
+#define GW_HWNDFIRST                              0
+#define GW_HWNDLAST                               1
+#define GW_HWNDNEXT                               2
+#define GW_HWNDPREV                               3
+#define GW_OWNER                                  4
+#define GW_CHILD                                  5
+#define GW_MAX                                    5
+
+#define SPI_GETBEEP                               1
+#define SPI_SETBEEP                               2
+#define SPI_GETMOUSE                              3
+#define SPI_SETMOUSE                              4
+#define SPI_GETBORDER                             5
+#define SPI_SETBORDER                             6
+#define SPI_GETKEYBOARDSPEED                      10
+#define SPI_SETKEYBOARDSPEED                      11
+#define SPI_LANGDRIVER                            12
+#define SPI_ICONHORIZONTALSPACING                 13
+#define SPI_GETSCREENSAVETIMEOUT                  14
+#define SPI_SETSCREENSAVETIMEOUT                  15
+#define SPI_GETSCREENSAVEACTIVE                   16
+#define SPI_SETSCREENSAVEACTIVE                   17
+#define SPI_GETGRIDGRANULARITY                    18
+#define SPI_SETGRIDGRANULARITY                    19
+#define SPI_SETDESKWALLPAPER                      20
+#define SPI_SETDESKPATTERN                        21
+#define SPI_GETKEYBOARDDELAY                      22
+#define SPI_SETKEYBOARDDELAY                      23
+#define SPI_ICONVERTICALSPACING                   24
+#define SPI_GETICONTITLEWRAP                      25
+#define SPI_SETICONTITLEWRAP                      26
+#define SPI_GETMENUDROPALIGNMENT                  27
+#define SPI_SETMENUDROPALIGNMENT                  28
+#define SPI_SETDOUBLECLKWIDTH                     29
+#define SPI_SETDOUBLECLKHEIGHT                    30
+#define SPI_GETICONTITLELOGFONT                   31
+#define SPI_SETDOUBLECLICKTIME                    32
+#define SPI_SETMOUSEBUTTONSWAP                    33
+#define SPI_SETICONTITLELOGFONT                   34
+#define SPI_GETFASTTASKSWITCH                     35
+#define SPI_SETFASTTASKSWITCH                     36
+#define SPI_SETDRAGFULLWINDOWS                    37
+#define SPI_GETDRAGFULLWINDOWS                    38
+#define SPI_GETNONCLIENTMETRICS                   41
+#define SPI_SETNONCLIENTMETRICS                   42
+#define SPI_GETMINIMIZEDMETRICS                   43
+#define SPI_SETMINIMIZEDMETRICS                   44
+#define SPI_GETICONMETRICS                        45
+#define SPI_SETICONMETRICS                        46
+#define SPI_SETWORKAREA                           47
+#define SPI_GETWORKAREA                           48
+#define SPI_SETPENWINDOWS                         49
+
+#define SPI_GETHIGHCONTRAST                       66
+#define SPI_SETHIGHCONTRAST                       67
+#define SPI_GETKEYBOARDPREF                       68
+#define SPI_SETKEYBOARDPREF                       69
+#define SPI_GETSCREENREADER                       70
+#define SPI_SETSCREENREADER                       71
+#define SPI_GETANIMATION                          72
+#define SPI_SETANIMATION                          73
+#define SPI_GETFONTSMOOTHING                      74
+#define SPI_SETFONTSMOOTHING                      75
+#define SPI_SETDRAGWIDTH                          76
+#define SPI_SETDRAGHEIGHT                         77
+#define SPI_SETHANDHELD                           78
+#define SPI_GETLOWPOWERTIMEOUT                    79
+#define SPI_GETPOWEROFFTIMEOUT                    80
+#define SPI_SETLOWPOWERTIMEOUT                    81
+#define SPI_SETPOWEROFFTIMEOUT                    82
+#define SPI_GETLOWPOWERACTIVE                     83
+#define SPI_GETPOWEROFFACTIVE                     84
+#define SPI_SETLOWPOWERACTIVE                     85
+#define SPI_SETPOWEROFFACTIVE                     86
+#define SPI_SETCURSORS                            87
+#define SPI_SETICONS                              88
+#define SPI_GETDEFAULTINPUTLANG                   89
+#define SPI_SETDEFAULTINPUTLANG                   90
+#define SPI_SETLANGTOGGLE                         91
+#define SPI_GETWINDOWSEXTENSION                   92
+#define SPI_SETMOUSETRAILS                        93
+#define SPI_GETMOUSETRAILS                        94
+#define SPI_SETSCREENSAVERRUNNING                 97
+#define SPI_SCREENSAVERRUNNING                    SPI_SETSCREENSAVERRUNNING
+#define SPI_GETFILTERKEYS                         50
+#define SPI_SETFILTERKEYS                         51
+#define SPI_GETTOGGLEKEYS                         52
+#define SPI_SETTOGGLEKEYS                         53
+#define SPI_GETMOUSEKEYS                          54
+#define SPI_SETMOUSEKEYS                          55
+#define SPI_GETSHOWSOUNDS                         56
+#define SPI_SETSHOWSOUNDS                         57
+#define SPI_GETSTICKYKEYS                         58
+#define SPI_SETSTICKYKEYS                         59
+#define SPI_GETACCESSTIMEOUT                      60
+#define SPI_SETACCESSTIMEOUT                      61
+#define SPI_GETSERIALKEYS                         62
+#define SPI_SETSERIALKEYS                         63
+#define SPI_GETSOUNDSENTRY                        64
+#define SPI_SETSOUNDSENTRY                        65
+#define SPI_GETSNAPTODEFBUTTON                    95
+#define SPI_SETSNAPTODEFBUTTON                    96
+#define SPI_GETMOUSEHOVERWIDTH                    98
+#define SPI_SETMOUSEHOVERWIDTH                    99
+#define SPI_GETMOUSEHOVERHEIGHT                   100
+#define SPI_SETMOUSEHOVERHEIGHT                   101
+#define SPI_GETMOUSEHOVERTIME                     102
+#define SPI_SETMOUSEHOVERTIME                     103
+#define SPI_GETWHEELSCROLLLINES                   104
+#define SPI_SETWHEELSCROLLLINES                   105
+#define SPI_GETMENUSHOWDELAY                      106
+#define SPI_SETMENUSHOWDELAY                      107
+
+
+#define SPI_GETSHOWIMEUI                          110
+#define SPI_SETSHOWIMEUI                          111
+#define SPI_GETMOUSESPEED                         112
+#define SPI_SETMOUSESPEED                         113
+#define SPI_GETSCREENSAVERRUNNING                 114
+#define SPI_GETDESKWALLPAPER                      115
+
+#define SPI_GETACTIVEWINDOWTRACKING               4096
+#define SPI_SETACTIVEWINDOWTRACKING               4097
+#define SPI_GETMENUANIMATION                      4098
+#define SPI_SETMENUANIMATION                      4099
+#define SPI_GETCOMBOBOXANIMATION                  4100
+#define SPI_SETCOMBOBOXANIMATION                  4101
+#define SPI_GETLISTBOXSMOOTHSCROLLING             4102
+#define SPI_SETLISTBOXSMOOTHSCROLLING             4103
+#define SPI_GETGRADIENTCAPTIONS                   4104
+#define SPI_SETGRADIENTCAPTIONS                   4105
+#define SPI_GETKEYBOARDCUES                       4106
+#define SPI_SETKEYBOARDCUES                       4107
+#define SPI_GETMENUUNDERLINES                     SPI_GETKEYBOARDCUES
+#define SPI_SETMENUUNDERLINES                     SPI_SETKEYBOARDCUES
+#define SPI_GETACTIVEWNDTRKZORDER                 4108
+#define SPI_SETACTIVEWNDTRKZORDER                 4109
+#define SPI_GETHOTTRACKING                        4110
+#define SPI_SETHOTTRACKING                        4111
+#define SPI_GETMENUFADE                           4114
+#define SPI_SETMENUFADE                           4115
+#define SPI_GETSELECTIONFADE                      4116
+#define SPI_SETSELECTIONFADE                      4117
+#define SPI_GETTOOLTIPANIMATION                   4118
+#define SPI_SETTOOLTIPANIMATION                   4119
+#define SPI_GETTOOLTIPFADE                        4120
+#define SPI_SETTOOLTIPFADE                        4121
+#define SPI_GETCURSORSHADOW                       4122
+#define SPI_SETCURSORSHADOW                       4123
+
+#define SPI_GETUIEFFECTS                          4158
+#define SPI_SETUIEFFECTS                          4159
+
+#define SPI_GETFOREGROUNDLOCKTIMEOUT              8192
+#define SPI_SETFOREGROUNDLOCKTIMEOUT              8193
+#define SPI_GETACTIVEWNDTRKTIMEOUT                8194
+#define SPI_SETACTIVEWNDTRKTIMEOUT                8195
+#define SPI_GETFOREGROUNDFLASHCOUNT               8196
+#define SPI_SETFOREGROUNDFLASHCOUNT               8197
+#define SPI_GETCARETWIDTH                         8198
+#define SPI_SETCARETWIDTH                         8199
+
+#define SPIF_UPDATEINIFILE                        1
+#define SPIF_SENDWININICHANGE                     2
+#define SPIF_SENDCHANGE                           SPIF_SENDWININICHANGE
+
+#define SM_CXSCREEN                               0
+#define SM_CYSCREEN                               1
+#define SM_CXVSCROLL                              2
+#define SM_CYHSCROLL                              3
+#define SM_CYCAPTION                              4
+#define SM_CXBORDER                               5
+#define SM_CYBORDER                               6
+#define SM_CXDLGFRAME                             7
+#define SM_CYDLGFRAME                             8
+#define SM_CYVTHUMB                               9
+#define SM_CXHTHUMB                               10
+#define SM_CXICON                                 11
+#define SM_CYICON                                 12
+#define SM_CXCURSOR                               13
+#define SM_CYCURSOR                               14
+#define SM_CYMENU                                 15
+#define SM_CXFULLSCREEN                           16
+#define SM_CYFULLSCREEN                           17
+#define SM_CYKANJIWINDOW                          18
+#define SM_MOUSEPRESENT                           19
+#define SM_CYVSCROLL                              20
+#define SM_CXHSCROLL                              21
+#define SM_DEBUG                                  22
+#define SM_SWAPBUTTON                             23
+#define SM_RESERVED1                              24
+#define SM_RESERVED2                              25
+#define SM_RESERVED3                              26
+#define SM_RESERVED4                              27
+#define SM_CXMIN                                  28
+#define SM_CYMIN                                  29
+#define SM_CXSIZE                                 30
+#define SM_CYSIZE                                 31
+#define SM_CXFRAME                                32
+#define SM_CYFRAME.c                              33
+#define SM_CXMINTRACK                             34
+#define SM_CYMINTRACK                             35
+
+#define WC_HEADER                                 "SysHeader32"
+
+#define HDS_HORZ                                  0
+#define HDS_BUTTONS                               2
+#define HDS_HOTTRACK                              4
+#define HDS_HIDDEN                                8
+
+#define HDS_DRAGDROP                              64
+#define HDS_FULLDRAG                              128
+#define HDS_FILTERBAR                             256
+
+#define HDFT_ISSTRING                             0      // HD_ITEM.pvFilter points to a HD_TEXTFILTER
+#define HDFT_ISNUMBER                             1      // HD_ITEM.pvFilter points to a INT
+
+#define HDFT_HASNOVALUE                           32768  // clear the filter, by setting this bit
+
+#ifdef UNICODE
+  #define HD_TEXTFILTER                           HD_TEXTFILTERW
+  #define HDTEXTFILTER                            HD_TEXTFILTERW
+  #define LPHD_TEXTFILTER                         LPHD_TEXTFILTERW
+  #define LPHDTEXTFILTER                          LPHD_TEXTFILTERW
+#else
+  #define HD_TEXTFILTER                           HD_TEXTFILTERA
+  #define HDTEXTFILTER                            HD_TEXTFILTERA
+  #define LPHD_TEXTFILTER                         LPHD_TEXTFILTERA
+  #define LPHDTEXTFILTER                          LPHD_TEXTFILTERA
+#endif
+
+#define HDI_WIDTH                                 1
+#define HDI_HEIGHT                                HDI_WIDTH
+#define HDI_TEXT                                  2
+#define HDI_FORMAT                                4
+#define HDI_LPARAM                                8
+#define HDI_BITMAP                                16
+#define HDI_IMAGE                                 32
+#define HDI_DI_SETITEM                            64
+#define HDI_ORDER                                 128
+#define HDI_FILTER                                256
+
+#define HDF_LEFT                                  0
+#define HDF_RIGHT                                 1
+#define HDF_CENTER                                2
+#define HDF_JUSTIFYMASK                           3
+#define HDF_RTLREADING                            4
+
+#define HDF_OWNERDRAW                             32768
+#define HDF_STRING                                16384
+#define HDF_BITMAP                                8192
+#define HDF_BITMAP_ON_RIGHT                       4096
+#define HDF_IMAGE                                 2048
+
+#define HDM_GETITEMCOUNT                          (HDM_FIRST + 0)
+#define HDM_INSERTITEMA                           (HDM_FIRST + 1)
+#define HDM_INSERTITEMW                           (HDM_FIRST + 10)
+
+#ifdef UNICODE
+  #define HDM_INSERTITEM                          HDM_INSERTITEMW
+#else
+  #define HDM_INSERTITEM                          HDM_INSERTITEMA
+#endif
+
+#define HDM_DELETEITEM                            (HDM_FIRST + 2)
+#define HDM_GETITEMA                              (HDM_FIRST + 3)
+#define HDM_GETITEMW                              (HDM_FIRST + 11)
+
+#ifdef UNICODE
+  #define HDM_GETITEM                             HDM_GETITEMW
+#else
+  #define HDM_GETITEM                             HDM_GETITEMA
+#endif
+
+#define HDM_SETITEMA                              (HDM_FIRST + 4)
+#define HDM_SETITEMW                              (HDM_FIRST + 12)
+
+#ifdef UNICODE
+  #define HDM_SETITEM                             HDM_SETITEMW
+#else
+  #define HDM_SETITEM                             HDM_SETITEMA
+#endif
+
+#define HD_LAYOUT                                 HDLAYOUT
+
+#define HDM_LAYOUT                                (HDM_FIRST + 5)
+
+#define HHT_NOWHERE                               1
+#define HHT_ONHEADER                              2
+#define HHT_ONDIVIDER                             4
+#define HHT_ONDIVOPEN                             8
+#define HHT_ONFILTER                              16
+#define HHT_ONFILTERBUTTON                        32
+#define HHT_ABOVE                                 256
+#define HHT_BELOW                                 512
+#define HHT_TORIGHT                               1024
+#define HHT_TOLEFT                                2048
+
+#define HD_HITTESTINFO                            HDHITTESTINFO
+
+#define HDM_HITTEST                               (HDM_FIRST + 6)
+#define HDM_GETITEMRECT                           (HDM_FIRST + 7)
+#define HDM_SETIMAGELIST                          (HDM_FIRST + 8)
+#define HDM_GETIMAGELIST                          (HDM_FIRST + 9)
+#define HDM_ORDERTOINDEX                          (HDM_FIRST + 15)
+#define HDM_CREATEDRAGIMAGE                       (HDM_FIRST + 16)  // wparam = which item (by index)
+#define HDM_GETORDERARRAY                         (HDM_FIRST + 17)
+#define HDM_SETORDERARRAY                         (HDM_FIRST + 18)
+#define HDM_SETHOTDIVIDER                         (HDM_FIRST + 19)
+#define HDM_SETBITMAPMARGIN                       (HDM_FIRST + 20)
+#define HDM_GETBITMAPMARGIN                       (HDM_FIRST + 21)
+#define HDM_SETUNICODEFORMAT                      CCM_SETUNICODEFORMAT
+#define HDM_GETUNICODEFORMAT                      CCM_GETUNICODEFORMAT
+#define HDM_SETFILTERCHANGETIMEOUT                (HDM_FIRST+22)
+#define HDM_EDITFILTER                            (HDM_FIRST+23)
+#define HDM_CLEARFILTER                           (HDM_FIRST+24)
+
+#define HDN_ITEMCHANGINGA                         (HDN_FIRST-0)
+#define HDN_ITEMCHANGINGW                         (HDN_FIRST-20)
+#define HDN_ITEMCHANGEDA                          (HDN_FIRST-1)
+#define HDN_ITEMCHANGEDW                          (HDN_FIRST-21)
+#define HDN_ITEMCLICKA                            (HDN_FIRST-2)
+#define HDN_ITEMCLICKW                            (HDN_FIRST-22)
+#define HDN_ITEMDBLCLICKA                         (HDN_FIRST-3)
+#define HDN_ITEMDBLCLICKW                         (HDN_FIRST-23)
+#define HDN_DIVIDERDBLCLICKA                      (HDN_FIRST-5)
+#define HDN_DIVIDERDBLCLICKW                      (HDN_FIRST-25)
+#define HDN_BEGINTRACKA                           (HDN_FIRST-6)
+#define HDN_BEGINTRACKW                           (HDN_FIRST-26)
+#define HDN_ENDTRACKA                             (HDN_FIRST-7)
+#define HDN_ENDTRACKW                             (HDN_FIRST-27)
+#define HDN_TRACKA                                (HDN_FIRST-8)
+#define HDN_TRACKW                                (HDN_FIRST-28)
+#define HDN_GETDISPINFOA                          (HDN_FIRST-9)
+#define HDN_GETDISPINFOW                          (HDN_FIRST-29)
+#define HDN_BEGINDRAG                             (HDN_FIRST-10)
+#define HDN_ENDDRAG                               (HDN_FIRST-11)
+#define HDN_FILTERCHANGE                          (HDN_FIRST-12)
+#define HDN_FILTERBTNCLICK                        (HDN_FIRST-13)
+
+#ifdef UNICODE
+  #define HDN_ITEMCHANGING                        HDN_ITEMCHANGINGW
+  #define HDN_ITEMCHANGED                         HDN_ITEMCHANGEDW
+  #define HDN_ITEMCLICK                           HDN_ITEMCLICKW
+  #define HDN_ITEMDBLCLICK                        HDN_ITEMDBLCLICKW
+  #define HDN_DIVIDERDBLCLICK                     HDN_DIVIDERDBLCLICKW
+  #define HDN_BEGINTRACK                          HDN_BEGINTRACKW
+  #define HDN_ENDTRACK                            HDN_ENDTRACKW
+  #define HDN_TRACK                               HDN_TRACKW
+  #define HDN_GETDISPINFO                         HDN_GETDISPINFOW
+#else
+  #define HDN_ITEMCHANGING                        HDN_ITEMCHANGINGA
+  #define HDN_ITEMCHANGED                         HDN_ITEMCHANGEDA
+  #define HDN_ITEMCLICK                           HDN_ITEMCLICKA
+  #define HDN_ITEMDBLCLICK                        HDN_ITEMDBLCLICKA
+  #define HDN_DIVIDERDBLCLICK                     HDN_DIVIDERDBLCLICKA
+  #define HDN_BEGINTRACK                          HDN_BEGINTRACKA
+  #define HDN_ENDTRACK                            HDN_ENDTRACKA
+  #define HDN_TRACK                               HDN_TRACKA
+  #define HDN_GETDISPINFO                         HDN_GETDISPINFOA
+#endif
+
+#define HD_NOTIFY                                 NMHEADER
+
+#ifdef UNICODE
+  #define NMHDDISPINFO                            NMHDDISPINFOW
+  #define LPNMHDDISPINFO                          LPNMHDDISPINFOW
+#else
+  #define NMHDDISPINFO                            NMHDDISPINFOA
+  #define LPNMHDDISPINFO                          LPNMHDDISPINFOA
+#endif
+
+#define HDN_FIRST                                 (0-300)       // header
+#define HDN_LAST                                  (0-399)
+
+#define DLGC_WANTARROWS                           1             // Control wants arrow keys
+#define DLGC_WANTTAB                              2             // Control wants tab keys
+#define DLGC_WANTALLKEYS                          4             // Control wants all keys
+#define DLGC_WANTMESSAGE                          4             // Pass message to control
+#define DLGC_HASSETSEL                            8             // Understands EM_SETSEL message
+#define DLGC_DEFPUSHBUTTON                        16            // Default pushbutton
+#define DLGC_UNDEFPUSHBUTTON                      32            // Non-default pushbutton
+#define DLGC_RADIOBUTTON                          64            // Radio button
+#define DLGC_WANTCHARS                            128           // Want WM_CHAR messages
+#define DLGC_STATIC                               256           // Static item: don't include
+#define DLGC_BUTTON                               8192          // Button item: can be checked
+
+#define RDW_INVALIDATE                            1
+#define RDW_INTERNALPAINT                         2
+#define RDW_ERASE                                 4
+
+#define RDW_VALIDATE                              8
+#define RDW_NOINTERNALPAINT                       16
+#define RDW_NOERASE                               32
+
+#define RDW_NOCHILDREN                            64
+#define RDW_ALLCHILDREN                           128
+
+#define RDW_UPDATENOW                             256
+#define RDW_ERASENOW                              512
+
+#define RDW_FRAME                                 1024
+#define RDW_NOFRAME                               2048
+
+#define CLR_NONE                                  4294967295
+#define CLR_DEFAULT                               4278190080
+
+#define ILD_NORMAL                                0
+#define ILD_TRANSPARENT                           1
+#define ILD_MASK                                  16
+#define ILD_IMAGE                                 32
+#define ILD_ROP                                   64
+#define ILD_BLEND25                               2
+#define ILD_BLEND50                               4
+#define ILD_OVERLAYMASK                           3840
+
+#define ILD_SELECTED                              ILD_BLEND50
+#define ILD_FOCUS                                 ILD_BLEND25
+#define ILD_BLEND                                 ILD_BLEND50
+#define CLR_HILIGHT                               CLR_DEFAULT
+
+#define SIF_RANGE                                 1
+#define SIF_PAGE                                  2
+#define SIF_POS                                   4
+#define SIF_DISABLENOSCROLL                       8
+#define SIF_TRACKPOS                              16
+#define SIF_ALL                                   (SIF_RANGE + SIF_PAGE + SIF_POS + SIF_TRACKPOS)
+
+#define WH_MIN                                    (-1)
+#define WH_MSGFILTER                              (-1)
+#define WH_JOURNALRECORD                          0
+#define WH_JOURNALPLAYBACK                        1
+#define WH_KEYBOARD                               2
+#define WH_GETMESSAGE                             3
+#define WH_CALLWNDPROC                            4
+#define WH_CBT                                    5
+#define WH_SYSMSGFILTER                           6
+#define WH_MOUSE                                  7
+#define WH_HARDWARE                               8
+#define WH_DEBUG                                  9
+#define WH_SHELL                                  10
+#define WH_FOREGROUNDIDLE                         11
+#define WH_CALLWNDPROCRET                         12
+
+#define WH_KEYBOARD_LL                            13
+#define WH_MOUSE_LL                               14
+#define WH_MAX                                    11
+
+#define WH_MINHOOK                                WH_MIN
+#define WH_MAXHOOK                                WH_MAX
+
+#define HC_ACTION                                 0
+#define HC_GETNEXT                                1
+#define HC_SKIP                                   2
+#define HC_NOREMOVE                               3
+#define HC_NOREM                                  HC_NOREMOVE
+#define HC_SYSMODALON                             4
+#define HC_SYSMODALOFF                            5
+
+#define HCBT_MOVESIZE                             0
+#define HCBT_MINMAX                               1
+#define HCBT_QS                                   2
+#define HCBT_CREATEWND                            3
+#define HCBT_DESTROYWND                           4
+#define HCBT_ACTIVATE                             5
+#define HCBT_CLICKSKIPPED                         6
+#define HCBT_KEYSKIPPED                           7
+#define HCBT_SYSCOMMAND                           8
+#define HCBT_SETFOCUS                             9
+
+#define SND_FILENAME                              (0x00020000)
+#define SND_RESOURCE                              (0x00040004)
+#define SND_PURGE                                 0x0040
+#define SND_APPLICATION                           0x0080
+#define SND_SYNC                                  0x0000
+#define SND_ASYNC                                 0x0001
+#define SND_NODEFAULT                             0x0002
+#define SND_MEMORY                                0x0004
+#define SND_LOOP                                  0x0008
+#define SND_NOSTOP                                0x0010
+
+#define SND_ALIAS_START                           0
+
+#define CCHDEVICENAME                             32
+#define CCHFORMNAME                               32
+#define LF_FACESIZE                               32
+#define LF_FULLFACESIZE                           64
 
 #endif

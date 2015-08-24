@@ -686,113 +686,42 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
 }
 #endif
 
+int hb_setGetFileCase( void )
+{
+   return s_iFileCase;
+}
+
+int hb_setGetDirCase( void )
+{
+   return s_iDirCase;
+}
+
 int hb_setGetDirSeparator( void )
 {
    return s_cDirSep;
 }
 
-void hb_compChkFileSwitches( int argc, char * argv[] )
+HB_BOOL hb_setGetTrimFileName( void )
 {
-   int i, n;
+   return s_fFnTrim;
+}
 
-   for( i = 1; i < argc; ++i )
-   {
-      if( HB_ISOPTSEP( argv[ i ][ 0 ] ) && argv[ i ][ 1 ] == 'f' )
-      {
-         n = 0;
-         switch( argv[ i ][ 2 ] )
-         {
-            case 'n':
-               if( ! argv[ i ][ 3 ] )
-               {
-                  s_iFileCase = HB_SET_CASE_MIXED;
-                  n = 3;
-               }
-               else if( argv[ i ][ 3 ] == ':' )
-               {
-                  if( argv[ i ][ 4 ] == 'u' )
-                  {
-                     s_iFileCase = HB_SET_CASE_UPPER;
-                     n = 5;
-                  }
-                  else if( argv[ i ][ 4 ] == 'l' )
-                  {
-                     s_iFileCase = HB_SET_CASE_LOWER;
-                     n = 5;
-                  }
-               }
-               else if( argv[ i ][ 3 ] == '-' )
-               {
-                  s_iFileCase = HB_SET_CASE_MIXED;
-                  n = 4;
-               }
-               break;
+void hb_setSetFileCase( int iFileCase )
+{
+   s_iFileCase = iFileCase;
+}
 
-            case 'd':
-               if( ! argv[ i ][ 3 ] )
-               {
-                  s_iDirCase = HB_SET_CASE_MIXED;
-                  n = 3;
-               }
-               else if( argv[ i ][ 3 ] == ':' )
-               {
-                  if( argv[ i ][ 4 ] == 'u' )
-                  {
-                     s_iDirCase = HB_SET_CASE_UPPER;
-                     n = 5;
-                  }
-                  else if( argv[ i ][ 4 ] == 'l' )
-                  {
-                     s_iDirCase = HB_SET_CASE_LOWER;
-                     n = 5;
-                  }
-               }
-               else if( argv[ i ][ 3 ] == '-' )
-               {
-                  s_iDirCase = HB_SET_CASE_MIXED;
-                  n = 4;
-               }
-               break;
+void hb_setSetDirCase( int iDirCase )
+{
+   s_iDirCase = iDirCase;
+}
 
-            case 'p':
-               if( ! argv[ i ][ 3 ] )
-               {
-                  s_cDirSep = HB_OS_PATH_DELIM_CHR;
-                  n = 3;
-               }
-               else if( argv[ i ][ 3 ] == '-' )
-               {
-                  s_cDirSep = HB_OS_PATH_DELIM_CHR;
-                  n = 4;
-               }
-               else if( argv[ i ][ 3 ] == ':' && argv[ i ][ 4 ] )
-               {
-                  s_cDirSep = argv[ i ][ 4 ];
-                  n = 5;
-               }
-               break;
+void hb_setSetDirSeparator( int iSeparator )
+{
+   s_cDirSep = ( char ) iSeparator;
+}
 
-            case 's':
-               if( ! argv[ i ][ 3 ] )
-               {
-                  s_fFnTrim = HB_TRUE;
-                  n = 3;
-               }
-               else if( argv[ i ][ 3 ] == '-' )
-               {
-                  s_fFnTrim = HB_FALSE;
-                  n = 4;
-               }
-               break;
-         }
-         if( n )
-         {
-            argv[ i ] += n;
-            if( argv[ i ][ 0 ] )
-               --i;
-            else
-               argv[ i ] = ( char * ) "-";
-         }
-      }
-   }
+void hb_setSetTrimFileName( HB_BOOL fTrim )
+{
+   s_fFnTrim = fTrim;
 }

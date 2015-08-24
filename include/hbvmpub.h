@@ -66,6 +66,7 @@ struct _HB_SYMB;
 #  define HB_ITEM_TYPE( p )      ( HB_ITEM_TYPERAW( p ) & ~ HB_IT_DEFAULT )
 #  define HB_OBJ_CLASS( p )      ( ( p )->item.asArray.value->uiClass )
 #  define HB_ARRAY_OBJ( p )      ( ( p )->item.asArray.value->uiClass != 0 )
+#  define HB_VM_PUSHNIL()        do { hb_stackAllocItem()->type = HB_IT_NIL; } while( 0 )
 
 #  define HB_ITEM_GET_NUMINTRAW( p )  ( HB_IS_INTEGER( p ) ? \
                                         ( HB_MAXINT ) (p)->item.asInteger.value : \

@@ -1,4 +1,4 @@
-/* Last Translator: pemedina (pablo.medina sysadminonline.com) */
+/* Last Translator: Pablo Emilio Medina (pablo.medina sysadminonline.com) */
 
 #include "hbapilng.h"
 

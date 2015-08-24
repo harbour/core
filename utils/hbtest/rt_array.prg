@@ -208,8 +208,15 @@ PROCEDURE Main_ARRAY()
 #endif
    HBTEST Array( 1 )                      IS "{.[1].}"
    HBTEST Array( -1 )                     IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
+#ifdef __HARBOUR__
+   /* disable Harbour extended optimizations to test correct RTE message */
+   #pragma -ko-
+#endif
    HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
    HBTEST Array( 1, 0, "A" )              IS NIL
+#ifdef __HARBOUR__
+   #pragma -ko+
+#endif
    HBTEST Array( 1, 0, 2 )                IS "{.[1].}"
    HBTEST Array( 4, 3, 2 )                IS "{.[4].}"
    HBTEST Array( 0, 3, 2 )                IS "{.[0].}"
@@ -289,20 +296,20 @@ PROCEDURE Main_ARRAY()
       sorting algorithms. Anyhow the results pattern should match.
       [vszakats] */
 #ifdef __HARBOUR__
-   HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "0" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "1" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "2" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "a" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "A" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "" } ) )  IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "z" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| .T. } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| .F. } ) ) IS "FEIDGCHBJA"
-   HBTEST TAStr( ASort( TARRv(),,, {|| 2 } ) )   IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| 1 } ) )   IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| 0 } ) )   IS "FEIDGCHBJA"
+   HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "0" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "1" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "2" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "a" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "A" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "" } ) )  IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "z" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .T. } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .F. } ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 2 } ) )   IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 1 } ) )   IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 0 } ) )   IS "JIHGFEDCBA"
 #else
    HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "IHGFEDCBAJ"
    HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "IHGFEDCBAJ"

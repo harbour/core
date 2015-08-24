@@ -90,8 +90,7 @@ PHB_HASH_TABLE hb_hashTableCreate( HB_SIZE nSize,
    pTable->pCompFunc = pComp;
    pTable->nCount = pTable->nUsed = 0;
 
-   pTable->pItems = ( PHB_HASH_ITEM * ) hb_xgrab( sizeof( PHB_HASH_ITEM ) * nSize );
-   memset( pTable->pItems, 0, sizeof( PHB_HASH_ITEM ) * nSize );
+   pTable->pItems = ( PHB_HASH_ITEM * ) hb_xgrabz( sizeof( PHB_HASH_ITEM ) * nSize );
 
    return pTable;
 }

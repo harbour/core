@@ -109,9 +109,7 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
-   pGTCGI = ( PHB_GTCGI ) hb_xgrab( sizeof( HB_GTCGI ) );
-   memset( pGTCGI, 0, sizeof( HB_GTCGI ) );
-   HB_GTLOCAL( pGT ) = pGTCGI;
+   HB_GTLOCAL( pGT ) = pGTCGI = ( PHB_GTCGI ) hb_xgrabz( sizeof( HB_GTCGI ) );
 
    pGTCGI->hStdout = hFilenoStdout;
 
@@ -262,10 +260,15 @@ static void hb_gt_cgi_conOut( PHB_GT pGT, const char * szText, HB_SIZE nLength,
 
    if( cdpTerm && cdpHost && cdpTerm != cdpHost )
    {
-      HB_SIZE nLen = nLength;
-      char * buffer = hb_cdpnDup( szText, &nLen, cdpHost, cdpTerm );
+      HB_SIZE nLen = nLength, nBufSize = 0;
+      char * pBuf = NULL;
+      const char * buffer = hb_cdpnDup3( szText, nLen,
+                                         NULL, &nLen,
+                                         &pBuf, &nBufSize,
+                                         cdpHost, cdpTerm );
       hb_gt_cgi_termOut( pGTCGI, buffer, nLen );
-      hb_xfree( buffer );
+      if( pBuf )
+         hb_xfree( pBuf );
    }
    else
       hb_gt_cgi_termOut( pGTCGI, szText, nLength );

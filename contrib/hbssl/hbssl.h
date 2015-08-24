@@ -61,10 +61,108 @@
 
 #include "hbssl.ch"
 
-#if OPENSSL_VERSION_NUMBER < 0x0090806fL
+#if OPENSSL_VERSION_NUMBER < 0x00906000L
+   /* #error "unsupported OpenSSL version, required 0.9.6 or higher" */
+#endif
+
+#if OPENSSL_VERSION_NUMBER < 0x00908060L
    #ifndef OPENSSL_NO_SEED
       #define OPENSSL_NO_SEED
    #endif
+#endif
+#if OPENSSL_VERSION_NUMBER < 0x00908030L
+   #ifndef OPENSSL_NO_CAMELLIA
+      #define OPENSSL_NO_CAMELLIA
+   #endif
+#endif
+#if OPENSSL_VERSION_NUMBER < 0x00908000L
+   #ifndef OPENSSL_NO_DGRAM
+      #define OPENSSL_NO_DGRAM
+   #endif
+#endif
+#if OPENSSL_VERSION_NUMBER < 0x00907000L
+   #ifndef OPENSSL_NO_AES
+      #define OPENSSL_NO_AES
+   #endif
+   #if ! defined( SSLEAY_DIR )
+      #define SSLEAY_DIR   5
+   #endif
+   #if ! defined( SSL_ERROR_WANT_ACCEPT )
+      #define SSL_ERROR_WANT_ACCEPT    8
+   #endif
+
+   /* translate old configuration macros to new ones */
+   #if defined( NO_BF ) && ! defined( OPENSSL_NO_BF )
+      #define OPENSSL_NO_BF
+   #endif
+   #if defined( NO_CAST ) && ! defined( OPENSSL_NO_CAST )
+      #define OPENSSL_NO_CAST
+   #endif
+   #if defined( NO_DES ) && ! defined( OPENSSL_NO_DES )
+      #define OPENSSL_NO_DES
+   #endif
+   #if defined( NO_DSA ) && ! defined( OPENSSL_NO_DSA )
+      #define OPENSSL_NO_DSA
+   #endif
+   #if defined( NO_IDEA ) && ! defined( OPENSSL_NO_IDEA )
+      #define OPENSSL_NO_IDEA
+   #endif
+   #if defined( NO_MDC2 ) && ! defined( OPENSSL_NO_MDC2 )
+      #define OPENSSL_NO_MDC2
+   #endif
+   #if defined( NO_MD2 ) && ! defined( OPENSSL_NO_MD2 )
+      #define OPENSSL_NO_MD2
+   #endif
+   #if defined( NO_MD4 ) && ! defined( OPENSSL_NO_MD4 )
+      #define OPENSSL_NO_MD4
+   #endif
+   #if defined( NO_MD5 ) && ! defined( OPENSSL_NO_MD5 )
+      #define OPENSSL_NO_MD5
+   #endif
+   #if defined( NO_RC2 ) && ! defined( OPENSSL_NO_RC2 )
+      #define OPENSSL_NO_RC2
+   #endif
+   #if defined( NO_RC4 ) && ! defined( OPENSSL_NO_RC4 )
+      #define OPENSSL_NO_RC4
+   #endif
+   #if defined( NO_RC5 ) && ! defined( OPENSSL_NO_RC5 )
+      #define OPENSSL_NO_RC5
+   #endif
+   #if defined( NO_RIPEMD ) && ! defined( OPENSSL_NO_RIPEMD )
+      #define OPENSSL_NO_RIPEMD
+   #endif
+   #if defined( NO_RSA ) && ! defined( OPENSSL_NO_RSA )
+      #define OPENSSL_NO_RSA
+   #endif
+   #if defined( NO_FP_API ) && ! defined( OPENSSL_NO_FP_API )
+      #define OPENSSL_NO_FP_API
+   #endif
+   #if defined( NO_STDIO ) && ! defined( OPENSSL_NO_STDIO )
+      #define OPENSSL_NO_STDIO
+   #endif
+
+#endif
+#if OPENSSL_VERSION_NUMBER < 0x00908000L
+   #if OPENSSL_VERSION_NUMBER < 0x00907080L || ! defined( OPENSSL_FIPS )
+      #ifndef OPENSSL_NO_SHA256
+         #define OPENSSL_NO_SHA256
+      #endif
+      #ifndef OPENSSL_NO_SHA512
+         #define OPENSSL_NO_SHA512
+      #endif
+   #endif
+#endif
+#if OPENSSL_VERSION_NUMBER < 0x00906030L
+   #define SSL_get_rfd  SSL_get_fd
+   #define SSL_get_wfd  SSL_get_fd
+#endif
+
+/* use macro to pacify warnings with missing 'const' in some function
+   declarations in OpenSSL prior 0.9.8 */
+#if OPENSSL_VERSION_NUMBER < 0x0090800fL
+   #define HB_SSL_CONST
+#else
+   #define HB_SSL_CONST const
 #endif
 
 HB_EXTERN_BEGIN

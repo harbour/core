@@ -22,6 +22,7 @@
 #endif
 
 DYNAMIC HB_TCPIO
+DYNAMIC hb_vfFromSocket
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTCPIO__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

@@ -119,8 +119,7 @@ static PHB_DYNS hb_dynsymInsert( PHB_SYMB pSymbol, HB_UINT uiPos )
                sizeof( DYNHB_ITEM ) * ( s_uiDynSymbols - uiPos - 1 ) );
    }
 
-   pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
-   memset( pDynSym, 0, sizeof( HB_DYNS ) );
+   pDynSym = ( PHB_DYNS ) hb_xgrabz( sizeof( HB_DYNS ) );
    pDynSym->pSymbol  = pSymbol;
    pDynSym->uiSymNum = s_uiDynSymbols;
 

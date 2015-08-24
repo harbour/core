@@ -46,6 +46,10 @@
  *
  */
 
+#if ! defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE  1
+#endif
+
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hb_io.h"
@@ -73,6 +77,19 @@
    #include <errno.h>
 #endif
 
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * defined and effectively enables lseek64/flock64/ftruncate64 functions
+       * on 32bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
+#endif
+
 /*
  * Function that adds zero or more paths to a list of pathnames to search
  */
@@ -83,18 +100,16 @@ void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
    HB_BOOL fFree = HB_TRUE;
 
    while( *pSearchList )
-   {
       pSearchList = &( *pSearchList )->pNext;
-   }
 
    pPath = hb_strdup( szPath );
    while( ( pDelim = strchr( pPath, HB_OS_PATH_LIST_SEP_CHR ) ) != NULL )
    {
       *pDelim = '\0';
       *pSearchList = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
-      (*pSearchList)->szPath = pPath;
-      (*pSearchList)->fFree  = fFree;
-      pSearchList = &(*pSearchList)->pNext;
+      ( *pSearchList )->szPath = pPath;
+      ( *pSearchList )->fFree  = fFree;
+      pSearchList = &( *pSearchList )->pNext;
       pPath = pDelim + 1;
       fFree = HB_FALSE;
    }
@@ -220,7 +235,7 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 
 /* NOTE: szFileName buffer must be at least HB_PATH_MAX long.
  *       Because some freign code may not be updated yet then
- *       hb_fsFNameMerge() efectively uses only HB_PATH_MAX buffer
+ *       hb_fsFNameMerge() effectively uses only HB_PATH_MAX buffer
  *       but it will be changed in the future.
  */
 
@@ -282,7 +297,6 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
       HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:   szPath: |%s|", pFileName->szPath ) );
       HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:   szName: |%s|", pFileName->szName ) );
       HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:    szExt: |%s|", pFileName->szExtension ) );
-      HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:  szDrive: |%s|", pFileName->szDrive ) );
       HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge: Filename: |%s|", pszFileName ) );
    }
 
@@ -323,8 +337,13 @@ HB_BOOL hb_fsNameExists( const char * pszFileName )
          fExist = DosQueryPathInfo( ( PCSZ ) pszFileName, FIL_STANDARD,
                                     &fs3, sizeof( fs3 ) ) == NO_ERROR;
 #  elif defined( HB_OS_UNIX )
+#     if defined( HB_USE_LARGEFILE64 )
+         struct stat64 statbuf;
+         fExist = stat64( pszFileName, &statbuf ) == 0;
+#     else
          struct stat statbuf;
          fExist = stat( pszFileName, &statbuf ) == 0;
+#     endif
 #  else
          int iTODO; /* To force warning */
 #  endif
@@ -379,10 +398,15 @@ HB_BOOL hb_fsFileExists( const char * pszFileName )
                                     &fs3, sizeof( fs3 ) ) == NO_ERROR &&
                   ( fs3.attrFile & FILE_DIRECTORY ) == 0;
 #  elif defined( HB_OS_UNIX )
+#     if defined( HB_USE_LARGEFILE64 )
+         struct stat64 statbuf;
+         fExist = stat64( pszFileName, &statbuf ) == 0 &&
+                  S_ISREG( statbuf.st_mode );
+#     else
          struct stat statbuf;
-
          fExist = stat( pszFileName, &statbuf ) == 0 &&
                   S_ISREG( statbuf.st_mode );
+#     endif
 #  else
          int iTODO; /* To force warning */
 #  endif
@@ -436,9 +460,15 @@ HB_BOOL hb_fsDirExists( const char * pszDirName )
                                     &fs3, sizeof( fs3 ) ) == NO_ERROR &&
                   ( fs3.attrFile & FILE_DIRECTORY ) != 0;
 #  elif defined( HB_OS_UNIX )
+#     if defined( HB_USE_LARGEFILE64 )
+         struct stat64 statbuf;
+         fExist = stat64( pszDirName, &statbuf ) == 0 &&
+                  S_ISDIR( statbuf.st_mode );
+#     else
          struct stat statbuf;
          fExist = stat( pszDirName, &statbuf ) == 0 &&
                   S_ISDIR( statbuf.st_mode );
+#     endif
 #  else
          int iTODO; /* To force warning */
 #  endif

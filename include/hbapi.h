@@ -134,8 +134,8 @@ HB_EXTERN_BEGIN
 #define HB_IS_SYMBOL( p )     HB_IS_OF_TYPE( p, HB_IT_SYMBOL )
 #define HB_IS_POINTER( p )    HB_IS_OF_TYPE( p, HB_IT_POINTER )
 #define HB_IS_HASH( p )       HB_IS_OF_TYPE( p, HB_IT_HASH )
-#define HB_IS_MEMVAR( p )     HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
 #define HB_IS_MEMO( p )       HB_IS_OF_TYPE( p, HB_IT_MEMO )
+#define HB_IS_MEMVAR( p )     HB_IS_OF_TYPE( p, HB_IT_MEMVAR )
 #define HB_IS_ENUM( p )       HB_IS_OF_TYPE( p, HB_IT_ENUM )
 #define HB_IS_EXTREF( p )     HB_IS_OF_TYPE( p, HB_IT_EXTREF )
 #define HB_IS_STRING( p )     ( ( HB_ITEM_TYPE( p ) & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )
@@ -230,7 +230,7 @@ HB_EXTERN_BEGIN
 #define HB_ISLOG( n )         ( hb_param( n, HB_IT_LOGICAL ) != NULL )
 #define HB_ISDATE( n )        ( hb_param( n, HB_IT_DATE ) != NULL )
 #define HB_ISTIMESTAMP( n )   ( hb_param( n, HB_IT_TIMESTAMP ) != NULL )
-#define HB_ISMEMO( n )        ( hb_param( n, HB_IT_MEMO ) != NULL )
+#define HB_ISMEMO( n )        ( hb_param( n, HB_IT_MEMOFLAG ) != NULL )
 #define HB_ISBYREF( n )       ( ( hb_parinfo( n ) & HB_IT_BYREF ) != 0 )   /* NOTE: Intentionally using a different method */
 #define HB_ISARRAY( n )       ( hb_param( n, HB_IT_ARRAY ) != NULL )
 #define HB_ISOBJECT( n )      ( hb_extIsObject( n ) )
@@ -238,6 +238,7 @@ HB_EXTERN_BEGIN
 #define HB_ISPOINTER( n )     ( hb_param( n, HB_IT_POINTER ) != NULL )
 #define HB_ISHASH( n )        ( hb_param( n, HB_IT_HASH ) != NULL )
 #define HB_ISSYMBOL( n )      ( hb_param( n, HB_IT_SYMBOL ) != NULL )
+#define HB_ISEVALITEM( n )    ( hb_param( n, HB_IT_EVALITEM ) != NULL )
 #define HB_ISDATETIME( n )    ( hb_param( n, HB_IT_DATETIME ) != NULL )
 
 /* Compatibility #defines, deprecated */
@@ -459,11 +460,17 @@ typedef struct _HB_EXTREF
    HB_EXTREF_FUNC0 mark;
 } HB_EXTREF, * PHB_EXTREF;
 
-typedef struct _HB_NESTED_CLONED
+typedef struct
 {
    void *   value;
    PHB_ITEM pDest;
-   struct _HB_NESTED_CLONED * pNext;
+} HB_NESTED_REF, * PHB_NESTED_REF;
+
+typedef struct
+{
+   HB_SIZE        nSize;
+   HB_SIZE        nCount;
+   PHB_NESTED_REF pRefs;
 } HB_NESTED_CLONED, * PHB_NESTED_CLONED;
 
 #endif /* _HB_API_INTERNAL_ */
@@ -592,6 +599,7 @@ extern HB_EXPORT  void     hb_gcMark( void * pAlloc ); /* mark given block as us
 extern HB_EXPORT  void     hb_gcRefInc( void * pAlloc );  /* increment reference counter */
 extern HB_EXPORT  void     hb_gcRefFree( void * pAlloc ); /* decrement reference counter and free the block when 0 reached */
 
+extern HB_EXPORT  void     hb_gcDummyClear( void * Cargo ); /* dummy GC clear function */
 extern HB_EXPORT  void     hb_gcDummyMark( void * Cargo ); /* dummy GC mark function */
 
 extern PHB_ITEM   hb_gcGripGet( PHB_ITEM pItem );
@@ -862,8 +870,10 @@ extern HB_EXPORT HB_LONGLONG  hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE nIndex );
 /* internal array API not exported */
 extern void hb_arrayPushBase( PHB_BASEARRAY pBaseArray );
 extern void hb_arraySwap( PHB_ITEM pArray1, PHB_ITEM pArray2 );
-extern void hb_cloneNested( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pClonedList );
-extern void hb_hashCloneBody( PHB_ITEM pHash, PHB_ITEM pDest, PHB_NESTED_CLONED pClonedList );
+extern void hb_nestedCloneInit( PHB_NESTED_CLONED pClonedList, void * pValue, PHB_ITEM pDest );
+extern void hb_nestedCloneFree( PHB_NESTED_CLONED pClonedList );
+extern void hb_nestedCloneDo( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pClonedList );
+extern void hb_hashCloneBody( PHB_ITEM pDest, PHB_ITEM pHash, PHB_NESTED_CLONED pClonedList );
 #endif
 
 
@@ -956,6 +966,7 @@ extern HB_EXPORT HB_BOOL   hb_strMatchCaseWildExact( const char * szString, cons
 extern HB_EXPORT HB_BOOL   hb_strEmpty( const char * szText, HB_SIZE nLen ); /* returns whether a string contains only white space */
 extern HB_EXPORT void      hb_strDescend( char * szStringTo, const char * szStringFrom, HB_SIZE nLen ); /* copy a string to a buffer, inverting each character */
 extern HB_EXPORT HB_SIZE   hb_strAt( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen ); /* returns an index to a sub-string within another string */
+extern HB_EXPORT HB_SIZE   hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen ); /* returns an index to a sub-string within another, ignore the case of the characters */
 extern HB_EXPORT HB_ISIZ   hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_ISIZ n );
 
 /* Warning: this functions works only with byte oriented CPs */
@@ -1048,7 +1059,7 @@ extern HB_EXPORT char *        hb_cmdargBaseProgName( void ); /* return applicat
 extern           int           hb_cmdargPushArgs( void ); /* places application parameters on the HVM stack */
 extern           void          hb_cmdargUpdate( void ); /* update arguments after HVM initialization */
 extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
-extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */
+extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //GT:cgi) */
 extern           int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
 extern           void          hb_cmdargProcess( void ); /* Check for command line internal arguments */
 #if defined( HB_OS_WIN )
@@ -1193,7 +1204,11 @@ extern HB_EXPORT HB_BOOL hb_iswinnt( void );    /* return HB_TRUE if OS == Windo
 extern HB_EXPORT HB_BOOL hb_iswin2k( void );    /* return HB_TRUE if OS == Windows 2000 or newer */
 extern HB_EXPORT HB_BOOL hb_iswin2k3( void );   /* return HB_TRUE if OS == Windows 2003 Server or newer */
 extern HB_EXPORT HB_BOOL hb_iswinvista( void ); /* return HB_TRUE if OS == Windows Vista or newer */
+extern HB_EXPORT HB_BOOL hb_iswin8( void );     /* return HB_TRUE if OS == Windows 8 or newer */
+extern HB_EXPORT HB_BOOL hb_iswin81( void );    /* return HB_TRUE if OS == Windows 8.1 or newer */
+extern HB_EXPORT HB_BOOL hb_iswin10( void );    /* return HB_TRUE if OS == Windows 10 or newer */
 extern HB_EXPORT HB_BOOL hb_iswince( void );    /* return HB_TRUE if OS is Windows CE or Windows Mobile */
+extern HB_EXPORT HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fOrUpper );
 
 extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );
 

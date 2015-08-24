@@ -48,22 +48,44 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbapicdp.h"
 
 static char * hb_strHardCR( char * pszString, HB_SIZE nStringLen )
 {
    HB_SIZE nStringPos;
+   PHB_CODEPAGE cdp;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_strHardCR(%s, %" HB_PFS "u)", pszString, nStringLen ) );
 
-   for( nStringPos = 0; nStringPos < nStringLen; nStringPos++ )
+   cdp = hb_vmCDP();
+   if( HB_CDP_ISCUSTOM( cdp ) )
    {
-      if( pszString[ nStringPos ]     == HB_CHAR_SOFT1 &&
-          pszString[ nStringPos + 1 ] == HB_CHAR_SOFT2 )
+      HB_WCHAR wc;
+
+      nStringPos = 0;
+      while( nStringPos < nStringLen )
       {
-         pszString[ nStringPos ] = HB_CHAR_HARD1;
+         if( pszString[ nStringPos ]     == HB_CHAR_SOFT1 &&
+             pszString[ nStringPos + 1 ] == HB_CHAR_SOFT2 )
+         {
+            pszString[ nStringPos ] = HB_CHAR_HARD1;
+            nStringPos += 2;
+         }
+         else if( ! HB_CDPCHAR_GET( cdp, pszString, nStringLen, &nStringPos, &wc ) )
+            break;
       }
    }
-
+   else
+   {
+      for( nStringPos = 0; nStringPos < nStringLen; nStringPos++ )
+      {
+         if( pszString[ nStringPos ]     == HB_CHAR_SOFT1 &&
+             pszString[ nStringPos + 1 ] == HB_CHAR_SOFT2 )
+         {
+            pszString[ nStringPos++ ] = HB_CHAR_HARD1;
+         }
+      }
+   }
    return pszString;
 }
 

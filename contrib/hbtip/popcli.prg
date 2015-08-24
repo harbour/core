@@ -77,6 +77,11 @@ CREATE CLASS TIPClientPOP FROM TIPClient
    METHOD Read( nLen )
    METHOD retrieveAll( lDelete )
 
+   METHOD getTop( nMsgId, lAsArray )
+   METHOD getMessageRaw( nMsgId, lAsArray )
+   METHOD getBody( nMsgId, lAsArray )
+   METHOD getSubject( nMsgId )
+
 ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientPOP
@@ -212,6 +217,7 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
    ENDIF
 
    cRet := ""
+
    nRetLen := 0
    /* 2004-05-04 - <maurilio.longo@libero.it>
       Instead of receiving a single char at a time until after we have the full mail, let's receive as
@@ -269,7 +275,7 @@ METHOD Top( nMsgId ) CLASS TIPClientPOP
    LOCAL nPos
    LOCAL cStr, cRet
 
-   ::inetSendAll( ::SocketCon, "TOP " + hb_ntos( nMsgId ) + " 0 " + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "TOP " + hb_ntos( nMsgId ) + " 0" + ::cCRLF )
    IF ! ::GetOk()
       RETURN NIL
    ENDIF
@@ -378,7 +384,7 @@ METHOD Read( nLen ) CLASS TIPClientPOP
 
    RETURN ::Retrieve( Val( ::oUrl:cFile ), nLen )
 
-METHOD retrieveAll( lDelete )
+METHOD retrieveAll( lDelete ) CLASS TIPClientPOP
 
    LOCAL aMails, i, imax, cMail
 
@@ -405,3 +411,124 @@ METHOD retrieveAll( lDelete )
    NEXT
 
    RETURN aMails
+
+/*----------------------------------------------------------------------*/
+//                      Pritpal Bedi   20Oct2013
+/*----------------------------------------------------------------------*/
+
+METHOD getTop( nMsgId, lAsArray ) CLASS TIPClientPOP
+
+   LOCAL nPos, cStr, xRet
+
+   ::inetSendAll( ::SocketCon, "TOP " + hb_ntos( nMsgId ) + " 0" + ::cCRLF )
+   IF ! ::GetOk()
+      RETURN NIL
+   ENDIF
+
+   hb_default( @lAsArray, .F. )
+
+   xRet := iif( lAsArray, {}, "" )
+   DO WHILE ! ( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
+      cStr := ::inetRecvLine( ::SocketCon, @nPos, 1024 )
+      IF ! ( cStr == "." )
+         IF lAsArray
+            AAdd( xRet, cStr )
+         ELSE
+            xRet += cStr + ::cCRLF
+         ENDIF
+      ENDIF
+   ENDDO
+
+   RETURN xRet
+
+
+METHOD getMessageRaw( nMsgId, lAsArray ) CLASS TIPClientPOP
+
+   LOCAL cLine, nBytes, xRet
+
+   ::inetSendAll( ::SocketCon, "RETR " + hb_ntos( nMsgId ) + ::cCRLF )
+   IF ! ::GetOk()
+      RETURN NIL
+   ENDIF
+
+   hb_default( @lAsArray, .F. )
+
+   xRet := iif( lAsArray, {}, "" )
+   DO WHILE ::inetErrorCode( ::SocketCon ) == 0
+      cLine := ::inetRecvLine( ::SocketCon, @nBytes, 8192 )
+      IF nBytes <= 0
+         EXIT
+      ENDIF
+      IF cLine == "."
+         EXIT
+      ENDIF
+      IF lAsArray
+         AAdd( xRet, cLine )
+      ELSE
+         xRet += cLine + ::cCRLF
+      ENDIF
+   ENDDO
+
+   RETURN xRet
+
+
+METHOD getBody( nMsgId, lAsArray ) CLASS TIPClientPOP
+
+   LOCAL xRet, n, n1, i, nBoundry, cBoundary
+   LOCAL aMsg := ::getMessageRaw( nMsgId, .T. )
+
+   IF Empty( aMsg )
+      RETURN NIL
+   ENDIF
+
+   hb_default( @lAsArray, .F. )
+   xRet := iif( lAsArray, {}, "" )
+
+   IF ( nBoundry := AScan( aMsg, { | cLine | n1 := At( "boundary=", Lower( cLine ) ), n1 > 0 } ) ) > 0
+      cBoundary := SubStr( aMsg[ nBoundry ], n1 + 1 )
+      cBoundary := AllTrim( StrTran( cBoundary, '"', "" ) )
+   ENDIF
+
+   IF ! Empty( cBoundary )
+      n := AScan( aMsg, { | cLine | cBoundary $ cLine }, nBoundry + 1 )
+      IF n > 0
+         n1 := AScan( aMsg, { | cLine | cBoundary $ cLine }, n + 1 )
+         IF n1 > 0                                // This must not happen, but
+            FOR i := n + 3 TO n1 - 1
+               IF lAsArray
+                  AAdd( xRet, aMsg[ i ] )
+               ELSE
+                  xRet += aMsg[ i ] + ::cCRLF
+               ENDIF
+            NEXT
+         ENDIF
+      ENDIF
+   ELSE
+      n := AScan( aMsg, { | cLine | Empty( cLine ) } )
+      IF n > 0
+         FOR i := n + 1 TO Len( aMsg )
+            IF lAsArray
+               AAdd( xRet, aMsg[ i ] )
+            ELSE
+               xRet += aMsg[ i ] + ::cCRLF
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN xRet
+
+
+METHOD getSubject( nMsgId ) CLASS TIPClientPOP
+
+   LOCAL cHeader
+   LOCAL aTop := ::getTop( nMsgId, .T. )
+
+   FOR EACH cHeader IN aTop
+      IF Lower( Left( cHeader, 9 ) ) == "subject: "
+         RETURN SubStr( cHeader, 10 )
+      ENDIF
+   NEXT
+
+   RETURN NIL
+

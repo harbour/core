@@ -113,7 +113,7 @@ METHOD setFocus() CLASS RadioButtn
       ::lHasFocus := .T.
       ::display()
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF
@@ -127,7 +127,7 @@ METHOD select( lState ) CLASS RadioButtn
    ::lBuffer := iif( HB_ISLOGICAL( lState ), lState, ! ::lBuffer )
 
    IF lOldState != ::lBuffer .AND. ;
-      HB_ISBLOCK( ::bSBlock )
+      HB_ISEVALITEM( ::bSBlock )
 
       Eval( ::bSBlock )
    ENDIF
@@ -139,7 +139,7 @@ METHOD killFocus() CLASS RadioButtn
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -325,11 +325,9 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RadioButtn
       RETURN NIL
    ENDIF
 
-   hb_default( @cCaption, "" )
-
    ::nCapRow  := nRow
    ::nCapCol  := nCol + 3 + 1
-   ::cCaption := cCaption
+   ::cCaption := hb_defaultValue( cCaption, "" )
    ::nCol     := nCol
    ::nRow     := nRow
    ::cData    := cData /* NOTE: Every type is allowed here to be fully compatible */

@@ -30,23 +30,6 @@ Both these extra layers are activated by default.
 
 * See also -k Compiler switch.
 
-LIST Command
-------------
-
-LIST &cMacro
-
-LIST in CA-Cl*pper [superficially] supports macros of lists expressions.
-No error will be produced, and all expressions in the list will be
-evaluated, but *only* the *last* expression will be displayed. This is
-not documented in either the LIST Command or the Macro Operator
-descriptions, but is the de-facto behavior in all CA-Cl*pper 5.x versions.
-
-Harbour instead will not only evaluate all of the expressions in
-such list macro, but will also display all such values. This default
-behavior may be disabled with hb_SetMacro( HB_SM_XBASE, .F. )*
-
-* See also -k Compiler switch.
-
 INIT/EXIT and startup procedures
 --------------------------------
 
@@ -67,17 +50,37 @@ Harbour has support enumeration loop with the following syntax:
    NEXT
 
 Note:
-   - expr can be a string or an array
+   - expr can be a string, an array, an hash array or an object with
+     custom FOR EACH action
    - enumerator variable 'var<n>' stores a reference to the element of
-     an array or a string specified by 'expr<n>' thus assigments to the
-     enumerator changes the value of given array element
-   - after the loop the controlling variable(s) store the value which
+     an hash, array or a string specified by 'expr<n>' thus assignments
+     to the enumerator changes the value of given element of iterated
+     item. If FOR EACH is used to iterate string items them assignment
+     to enumerator item changes the original string only if it was passed
+     to FOR EACH statement by reference, i.e.:
+         FOR EACH c IN @string
+            IF ! isAlpha( c )
+               c := "*"
+            ELSE
+               c := upper( c )
+            ENDIF
+         NEXT
+   - after the loop the controlling variable(s) restore the value which
      they had before entering the loop
-   - the enumeraqtor variable supports the following properties
-     :__enumindex - the loop counter for variable
-     :__enumbase  - the value that is being traversed
-     :__enumvalue - the value of variable
-
+   - the enumerator variable supports the following properties
+      :__enumIndex   - the loop counter for variable
+      :__enumKey     - the hash key value of traversed hash item pair
+      :__enumBase    - the value that is being traversed
+      :__enumValue   - the value of variable
+      :__enumIsFirst - is it the first enumerated item?
+      :__enumIsLast  - is it the last enumerated item?
+   - defining new class or overloading existing one user can define
+     his own behavior of FOR EACH iterating overloading chosen of above
+     methods and/or the following ones:
+      :__enumStart
+      :__enumSkip
+      :__enumStop
+     By default FOR EACH iterate all object instance variables
 
 for example:
    a := 'A'

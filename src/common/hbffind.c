@@ -178,7 +178,7 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * define and efectively enables lseek64/flock64/ftruncate64 functions
+       * defined and effectively enables lseek64/flock64/ftruncate64 functions
        * on 32bit machines.
        */
       #define HB_USE_LARGEFILE64
@@ -413,6 +413,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    int iHour = 0;
    int iMin  = 0;
    int iSec  = 0;
+   int iMSec = 0;
 
    HB_FATTR raw_attr = 0, nAttr = 0;
 
@@ -679,6 +680,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                   iHour  = time.wHour;
                   iMin   = time.wMinute;
                   iSec   = time.wSecond;
+                  iMSec  = time.wMilliseconds;
                }
             }
          }
@@ -784,6 +786,19 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                iHour = lt.tm_hour;
                iMin  = lt.tm_min;
                iSec  = lt.tm_sec;
+
+#  if defined( HB_OS_LINUX ) && \
+      defined( __GLIBC__ ) && defined( __GLIBC_MINOR__ ) && \
+      ( __GLIBC__ > 2 || ( __GLIBC__ == 2 && __GLIBC_MINOR__ >= 6 ) )
+#     if defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
+         ( __GLIBC_MINOR__ >= 12 && \
+           ( ( defined( _POSIX_C_SOURCE ) || _POSIX_C_SOURCE >= 200809L ) || \
+             ( defined( _XOPEN_SOURCE ) || _XOPEN_SOURCE >= 700 ) ) )
+               iMSec = sStat.st_mtim.tv_nsec / 1000000;
+#     else
+               iMSec = sStat.st_mtimensec / 1000000;
+#     endif
+#  endif
             }
             else
                bFound = HB_FALSE;
@@ -805,6 +820,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       HB_SYMBOL_UNUSED( iHour );
       HB_SYMBOL_UNUSED( iMin );
       HB_SYMBOL_UNUSED( iSec );
+      HB_SYMBOL_UNUSED( iMSec );
       HB_SYMBOL_UNUSED( raw_attr );
 
       bFound = HB_FALSE;
@@ -838,6 +854,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       ffind->attr = hb_fsAttrFromRaw( raw_attr ) | nAttr;
 
       ffind->lDate = hb_dateEncode( iYear, iMonth, iDay );
+      ffind->lTime = hb_timeEncode( iHour, iMin, iSec, iMSec );
       hb_dateStrPut( ffind->szDate, iYear, iMonth, iDay );
       ffind->szDate[ 8 ] = '\0';
 
@@ -850,14 +867,10 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
 PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
 {
-   PHB_FFIND ffind;
-
-   ffind = ( PHB_FFIND ) hb_xgrab( sizeof( HB_FFIND ) );
-   memset( ffind, 0, sizeof( HB_FFIND ) );
+   PHB_FFIND ffind = ( PHB_FFIND ) hb_xgrabz( sizeof( HB_FFIND ) );
 
    /* Allocate platform dependent file find info storage */
-   ffind->info = ( void * ) hb_xgrab( sizeof( HB_FFIND_INFO ) );
-   memset( ffind->info, 0, sizeof( HB_FFIND_INFO ) );
+   ffind->info = ( void * ) hb_xgrabz( sizeof( HB_FFIND_INFO ) );
 
    /* Store search parameters */
 #if defined( HB_OS_WIN )

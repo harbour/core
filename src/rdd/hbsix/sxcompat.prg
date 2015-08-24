@@ -78,10 +78,12 @@
  */
 
 #include "dbinfo.ch"
+#include "dbstruct.ch"
+#include "fileio.ch"
 #include "ord.ch"
 #include "hbsxdef.ch"
 
-FUNCTION sxChar( nLen, xKeyVal )
+FUNCTION sxChar( nLen, /* @ */ xKeyVal )
 
    SWITCH ValType( xKeyVal )
    CASE "C"
@@ -93,6 +95,9 @@ FUNCTION sxChar( nLen, xKeyVal )
    CASE "D"
       xKeyVal := DToS( xKeyVal )
       EXIT
+   CASE "T"
+      xKeyVal := hb_TToS( xKeyVal )
+      EXIT
    CASE "L"
       xKeyVal := iif( xKeyVal, "T", "F" )
       EXIT
@@ -101,9 +106,13 @@ FUNCTION sxChar( nLen, xKeyVal )
       EXIT
    ENDSWITCH
 
-   RETURN iif( HB_ISNUMERIC( nLen ), PadR( LTrim( xKeyVal ), nLen ), xKeyVal )
+   IF HB_ISNUMERIC( nLen )
+      xKeyVal := PadR( LTrim( xKeyVal ), nLen )
+   ENDIF
 
-FUNCTION sxNum( xKeyVal )
+   RETURN xKeyVal
+
+FUNCTION sxNum( /* @ */ xKeyVal )
 
    SWITCH ValType( xKeyVal )
    CASE "N"
@@ -112,6 +121,7 @@ FUNCTION sxNum( xKeyVal )
    CASE "M"
       xKeyVal := Val( xKeyVal )
       EXIT
+   CASE "T"
    CASE "D"
       xKeyVal := xKeyVal - hb_SToD()
       EXIT
@@ -125,10 +135,13 @@ FUNCTION sxNum( xKeyVal )
 
    RETURN xKeyVal
 
-FUNCTION sxDate( xKeyVal )
+FUNCTION sxDate( /* @ */ xKeyVal )
 
    SWITCH ValType( xKeyVal )
    CASE "D"
+      EXIT
+   CASE "T"
+      xKeyVal := hb_TToD( xKeyVal )
       EXIT
    CASE "C"
    CASE "M"
@@ -144,7 +157,7 @@ FUNCTION sxDate( xKeyVal )
 
    RETURN xKeyVal
 
-FUNCTION sxLog( xKeyVal )
+FUNCTION sxLog( /* @ */ xKeyVal )
 
    SWITCH ValType( xKeyVal )
    CASE "L"
@@ -338,7 +351,7 @@ FUNCTION sx_KillTag( xTag, xIndex )
          ENDIF
          IF ! Empty( cIndex )
             IF ordBagClear( cIndex )
-               lRet := FErase( cIndex ) != -1
+               lRet := FErase( cIndex ) != F_ERROR
             ENDIF
          ENDIF
       ENDIF
@@ -480,18 +493,18 @@ FUNCTION sx_dbCreate( cFileName, aStruct, cRDD )
 
    aDbStruct := AClone( aStruct )
    FOR EACH aField IN aDbStruct
-      SWITCH aField[ 2 ]
+      SWITCH aField[ DBS_TYPE ]
       CASE "V"
-         aField[ 3 ] += 6
+         aField[ DBS_LEN ] += 6
          EXIT
       CASE "D"
-         IF aField[ 3 ] == 3
-            aField[ 2 ] := "V"
+         IF aField[ DBS_LEN ] == 3
+            aField[ DBS_TYPE ] := "V"
          ENDIF
          EXIT
       CASE "I"
-         IF aField[ 3 ] == 4
-            aField[ 2 ] := "V"
+         IF aField[ DBS_LEN ] == 4
+            aField[ DBS_TYPE ] := "V"
          ENDIF
          EXIT
       ENDSWITCH

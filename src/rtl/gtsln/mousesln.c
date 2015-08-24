@@ -55,7 +55,6 @@
     #include <sys/stat.h>
     #include <fcntl.h>
     #include <gpm.h>
-    Gpm_Connect Conn;
 #endif
 
 /* *********************************************************************** */
@@ -347,6 +346,7 @@ void hb_gt_sln_mouse_Init( void )
 #if defined( HB_HAS_GPM )
    else if( hb_sln_UnderLinuxConsole )
    {
+      Gpm_Connect Conn;
 #ifdef HB_GPM_NOICE_DISABLE
       int iNull, iErr;
 
@@ -359,8 +359,11 @@ void hb_gt_sln_mouse_Init( void )
       /* give me move events but handle them anyway */
       Conn.defaultMask= GPM_MOVE | GPM_HARD;
       /* only pure mouse events, no Ctrl,Alt,Shft events */
-      Conn.minMod = 0;    Conn.maxMod = 0;
-      gpm_zerobased = 1;  gpm_visiblepointer = 1;
+      Conn.minMod = 0;
+      Conn.maxMod = 0;
+
+      gpm_zerobased = 1;
+      gpm_visiblepointer = 1;
 
       if( Gpm_Open( &Conn, 0 ) >= 0 && gpm_fd >= 0 )
       {
@@ -368,7 +371,7 @@ void hb_gt_sln_mouse_Init( void )
 
          s_bMousePresent = HB_TRUE;
 
-         while( GetGpmEvent( &Evt ) );
+         while( GetGpmEvent( &Evt ) )
          {
             s_iMouseRow = Evt.y;
             s_iMouseCol = Evt.x;

@@ -11,6 +11,8 @@
 -depkeyhead=openssl:openssl/ssl.h
 -depcontrol=openssl:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=openssl:${HB_WITH_OPENSSL}
+-depincpath=openssl:/usr/local/opt/openssl/include
+-depincpath=openssl:/usr/local/opt/libressl/include
 -depincpath=openssl:/usr/include
 -depincpath=openssl:/usr/local/include
 -depincpath=openssl:/usr/local/ssl/include
@@ -21,7 +23,6 @@
 {darwin}-cflag=-DOPENSSL_NO_SHA256
 {darwin}-cflag=-DOPENSSL_NO_SHA512
 {darwin}-cflag=-DOPENSSL_NO_CAMELLIA
-{darwin}-cflag=-DOPENSSL_NO_SEED
 {darwin}-cflag=-DOPENSSL_NO_DGRAM
 {darwin}-cflag=-DHB_OPENSSL_OLD_OSX_
 
@@ -38,6 +39,7 @@
 hbssl.hbx
 
 ssl_hb.c
+ssl_inet.c
 bio.c
 err.c
 evp.c

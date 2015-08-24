@@ -91,6 +91,7 @@ DYNAMIC sqlite3_last_insert_rowid
 DYNAMIC sqlite3_libversion
 DYNAMIC sqlite3_libversion_number
 DYNAMIC sqlite3_limit
+DYNAMIC sqlite3_load_extension
 DYNAMIC sqlite3_memory_highwater
 DYNAMIC sqlite3_memory_used
 DYNAMIC sqlite3_open

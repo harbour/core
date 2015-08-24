@@ -207,7 +207,7 @@ void hb_winmainArgVBuild( void )
                because in console apps the name may be truncated
                in some cases, and in GUI apps it's not filled
                at all. [vszakats] */
-      if( GetModuleFileName( NULL, lpArgV[ 0 ], nModuleName ) != 0 )
+      if( GetModuleFileName( NULL, lpArgV[ 0 ], ( DWORD ) nModuleName ) != 0 )
       {
          /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
          lpArgV[ 0 ][ nModuleName - 1 ] = 0;
@@ -740,6 +740,22 @@ HB_FUNC( HB_ARGSHIFT )
          ++iArg;
       }
    }
+}
+
+HB_FUNC( HB_ACMDLINE )
+{
+   if( s_argc > 1 )
+   {
+      int iPos, iLen = s_argc - 1;
+      PHB_ITEM pArray = hb_itemArrayNew( iLen );
+
+      for( iPos = 1; iPos <= iLen; ++iPos )
+         hb_arraySetCPtr( pArray, iPos, hb_cmdargDup( iPos ) );
+
+      hb_itemReturnRelease( pArray );
+   }
+   else
+      hb_reta( 0 );
 }
 
 HB_FUNC( HB_CMDLINE )

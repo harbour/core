@@ -241,7 +241,7 @@ HB_FUNC( FREADSTR )
 
       if( nToRead > 0 )
       {
-         HB_FHANDLE fhnd = ( HB_FHANDLE ) hb_parni( 1 );
+         HB_FHANDLE fhnd = hb_numToHandle( hb_parnint( 1 ) );
          char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
          HB_SIZE nRead;
 
@@ -254,6 +254,27 @@ HB_FUNC( FREADSTR )
       }
       else
          hb_retc_null();
+   }
+   else
+      hb_retc_null();
+   hb_fsSetFError( uiError );
+}
+
+HB_FUNC( HB_FREADLEN )
+{
+   HB_ERRCODE uiError = 0;
+   HB_SIZE nToRead = hb_parns( 2 );
+
+   if( nToRead > 0 && HB_ISNUM( 1 ) )
+   {
+      HB_FHANDLE fhnd = hb_numToHandle( hb_parnint( 1 ) );
+      char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
+      HB_SIZE nRead;
+
+      nRead = hb_fsReadLarge( fhnd, buffer, nToRead );
+      uiError = hb_fsError();
+
+      hb_retclen_buffer( buffer, nRead );
    }
    else
       hb_retc_null();
@@ -504,12 +525,12 @@ HB_FUNC( HB_FISDEVICE )
       -> <nBytesRead> */
 HB_FUNC( HB_PREAD )
 {
-   HB_FHANDLE hStdHandle = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
+   HB_FHANDLE hPipe = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    char * buffer;
    HB_SIZE nSize;
 
-   if( hStdHandle != FS_ERROR && pBuffer && HB_ISBYREF( 2 ) &&
+   if( hPipe != FS_ERROR && pBuffer && HB_ISBYREF( 2 ) &&
        hb_itemGetWriteCL( pBuffer, &buffer, &nSize ) )
    {
       HB_ERRCODE uiError = 0;
@@ -524,11 +545,9 @@ HB_FUNC( HB_PREAD )
 
       if( nSize > 0 )
       {
-         nSize = hb_fsPipeRead( hStdHandle, buffer, nSize, hb_parnint( 4 ) );
+         nSize = hb_fsPipeRead( hPipe, buffer, nSize, hb_parnint( 4 ) );
          uiError = hb_fsError();
       }
-      else
-         nSize = 0;
 
       if( nSize == ( HB_SIZE ) -1 )
          hb_retni( -1 );
@@ -540,6 +559,29 @@ HB_FUNC( HB_PREAD )
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* hb_PWrite( <nPipeHandle>, <cBuffer>, [<nBytes>], [<nTimeOut>] )
+      -> <nBytesWritten> */
+HB_FUNC( HB_PWRITE )
+{
+   HB_FHANDLE hPipe = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
+   const char * data = hb_parc( 2 );
+
+   if( hPipe != FS_ERROR && data != NULL )
+   {
+      HB_SIZE nLen = hb_parclen( 2 );
+
+      if( HB_ISNUM( 3 ) )
+      {
+         HB_SIZE nWrite = hb_parns( 3 );
+         if( nWrite < nLen )
+            nLen = nWrite;
+      }
+      hb_retns( hb_fsPipeWrite( hPipe, data, nLen, hb_parnint( 4 ) ) );
+      hb_fsSetFError( hb_fsError() );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
 
 HB_FUNC( HB_OSERROR )
 {

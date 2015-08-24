@@ -127,6 +127,7 @@ extern HB_EXPORT HB_USHORT hb_vmRequestQuery( void );
 extern HB_EXPORT HB_BOOL   hb_vmRequestReenter( void );
 extern HB_EXPORT void      hb_vmRequestRestore( void );
 extern HB_EXPORT HB_BOOL   hb_vmRequestReenterExt( void );
+extern HB_EXPORT HB_BOOL   hb_vmTryEval( PHB_ITEM * pResult, PHB_ITEM pItem, HB_ULONG ulPCount, ... );
 
 extern HB_EXPORT HB_BOOL   hb_vmIsActive( void );
 extern HB_EXPORT HB_BOOL   hb_vmIsReady( void );

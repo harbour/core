@@ -166,7 +166,7 @@
 #     define _x_long_dbl      long double
 #     if defined( HB_NO_MODFL ) || \
          defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( HB_OS_CYGWIN ) || \
-         defined( HB_OS_BEOS ) || defined( HB_OS_IPHONE ) || defined( HB_OS_SYMBIAN ) || \
+         defined( HB_OS_BEOS ) || defined( HB_OS_SYMBIAN ) || \
          defined( __OpenBSD__ ) || defined( __NetBSD__ ) || defined( __DragonFly__ ) || \
          defined( __TINYC__ ) || \
          ( defined( __FreeBSD_version ) && __FreeBSD_version < 603000 ) || \
@@ -765,11 +765,10 @@ static size_t put_wstr( char *buffer, size_t bufsize, size_t size,
                         const _x_wstr wstr, int flags, int width,
                         int precision )
 {
+   const _x_wchar wstr_null[] = { '(', 'n', 'u', 'l', 'l', ')', 0 };
+
    if( ! wstr )
-   {
-      const _x_wchar wstr_null[] = { '(', 'n', 'u', 'l', 'l', ')', 0 };
       wstr = wstr_null;
-   }
 
    if( precision < 0 )
    {

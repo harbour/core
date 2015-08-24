@@ -110,8 +110,8 @@ typedef struct _HB_MEMFS_FILE
 
 typedef struct _HB_MEMFS_FS
 {
-   HB_ULONG ulInodeCount;
-   HB_ULONG ulInodeAlloc;
+   HB_ULONG          ulInodeCount;
+   HB_ULONG          ulInodeAlloc;
    PHB_MEMFS_INODE * pInodes;
    HB_ULONG          ulFileAlloc;
    HB_ULONG          ulFileLast;
@@ -413,7 +413,7 @@ HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char 
    pDirArray = hb_itemArrayNew( nLen );
    for( ul = 0; ( HB_SIZE ) ul < nLen; ul++ )
    {
-      PHB_ITEM pSubarray = hb_arrayGetItemPtr( pDirArray, ++nLen );
+      PHB_ITEM pSubarray = hb_arrayGetItemPtr( pDirArray, ul + 1 );
 
       hb_arrayNew    ( pSubarray, F_LEN );
       hb_arraySetCPtr( pSubarray, F_NAME, pDirEn[ ul ].szName );
@@ -806,7 +806,7 @@ static HB_BOOL s_fileExists( PHB_FILE_FUNCS pFuncs, const char * pszFileName, ch
    {
       /* Warning: return buffer could be the same memory place as filename parameter! */
       if( pRetPath && pRetPath != pszFileName )
-         hb_strncpy( pRetPath, pszFileName, HB_PATH_MAX );
+         hb_strncpy( pRetPath, pszFileName, HB_PATH_MAX - 1 );
       return HB_TRUE;
    }
    return HB_FALSE;
@@ -946,11 +946,11 @@ static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 
 
 static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
-                            const char * szDefExt, HB_USHORT uiExFlags,
+                            const char * szDefExt, HB_FATTR nExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
    HB_FHANDLE hFile;
-   char       szNameNew[ HB_PATH_MAX + 1 ];
+   char       szNameNew[ HB_PATH_MAX ];
    HB_USHORT  uiFlags;
    HB_SIZE    nLen;
 
@@ -958,7 +958,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
    HB_SYMBOL_UNUSED( pPaths );
    HB_SYMBOL_UNUSED( pError );
 
-   hb_strncpy( szNameNew, szName + FILE_PREFIX_LEN, HB_PATH_MAX );
+   hb_strncpy( szNameNew, szName + FILE_PREFIX_LEN, HB_PATH_MAX - 1 );
 
    if( szDefExt )
    {
@@ -967,20 +967,20 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
       {
          if( nLen == 0 || strchr( HB_OS_PATH_DELIM_CHR_LIST, szNameNew[ nLen - 1 ] ) )
          {
-            hb_strncat( szNameNew, szDefExt, HB_PATH_MAX );
+            hb_strncat( szNameNew, szDefExt, HB_PATH_MAX - 1 );
             break;
          }
       }
       while( szNameNew[ --nLen ] != '.' );
    }
 
-   uiFlags = uiExFlags & 0xff;
-   if( uiExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) )
+   uiFlags = nExFlags & 0xff;
+   if( nExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) )
    {
       uiFlags |= FO_CREAT;
-      if( uiExFlags & FXO_UNIQUE )
+      if( nExFlags & FXO_UNIQUE )
          uiFlags |= FO_EXCL;
-      else if( uiExFlags & FXO_TRUNCATE )
+      else if( nExFlags & FXO_TRUNCATE )
          uiFlags |= FO_TRUNC;
    }
 
@@ -994,7 +994,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
       {
          hb_errPutFileName( pError, szName );
          hb_errPutOsCode( pError, hb_memfsError() );
-         hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
+         hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( nExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
       }
       return NULL;
    }

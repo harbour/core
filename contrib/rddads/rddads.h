@@ -68,8 +68,10 @@
 #include "ace.h"
 
 /* Autodetect ACE version. */
-#if   defined( ADS_GET_FORMAT_WEB )
-   #define _ADS_LIB_VERSION  1100 /* or upper */
+#if   defined( ADS_ROOT_DD_ALIAS )
+   #define _ADS_LIB_VERSION  1110 /* or upper */
+#elif defined( ADS_GET_FORMAT_WEB )
+   #define _ADS_LIB_VERSION  1100
 #elif defined( ADS_GET_UTF8 )
    #define _ADS_LIB_VERSION  1010
 #elif defined( ADS_DEFAULT_SQL_TIMEOUT )
@@ -187,6 +189,8 @@ extern HB_BOOL hb_ads_bTestRecLocks;
 extern ADSHANDLE  hb_ads_getConnection( void );
 extern ADSHANDLE  hb_ads_defConnection( ADSHANDLE hConnect, const char * szName );
 extern void       hb_ads_setConnection( ADSHANDLE hConnect );
+extern int        hb_ads_getIndexPageSize( void );
+extern void       hb_ads_setIndexPageSize( int iIndexPageSize );
 
 extern HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea );
 extern ADSAREAP   hb_adsGetWorkAreaPointer( void );

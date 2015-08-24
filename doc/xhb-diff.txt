@@ -121,7 +121,7 @@ file system(s) and with different OS(s).
               "=>", x:__enumBase()[ x:__enumKey() ]
          NEXT
    f) it gives very flexible OOP mechanism to overload FOR EACH behavior
-      for user define objects adding to above enumerator methods also
+      for user defined classes adding to above enumerator methods also
       __enumStart(), __enumStop(), __enumSkip() methods what allows to
       implement many different enumeration algorithms depending on used
       data
@@ -551,14 +551,14 @@ generate runtime error
    Error BASE/1002  Alias does not exist: TABLE
 for the second QOUT() call. It means that it correctly recognized scope
 of both variables and also bound alias TABLE with field F though it was
-declared two lines below codeblock initialization.
+declared one line below codeblock initialization.
 
 In fact Clipper probably does not make two passes but parsing declarations
 which have to be at the beginning of function or module it stores names of
 variables which should be initialized with the initialization expressions.
 Then when all declarations are processed for each line with declared and
 initialized variables it generates code which pushes on VM stack results
-of initialization expressions and then code which pops it initializing
+of initialization expressions and then code which pops them initializing
 variables. As result in Clipper this code cannot work:
       local x := 10, y := x + 2
 because Clipper generate PCODE like:
@@ -602,13 +602,14 @@ initialization expressions but then it generates slightly different code
 initializing variables one by one without line groping like in Clipper.
 
 Please also note that in Clipper PRIVATE and PUBLIC declarations are
-executable statements so they are not used used as declarations by
+executable statements so they are not used as declarations by
 Clipper compiler even if -a compiler switch is used. So when we talk
 about initialization then it means that we are talking about LOCAL
 variables. STATIC variables are initialized in different way at
-application startup so cannot use local variables though due to but
-in Clipper in some cases compiler can accept local variables and then
-it may cause VM crash or runtime error, i.e. this code:
+application startup so cannot use local variables as initializers though
+due to bug in Clipper in some cases compiler can accept local variables
+in such context and then it may cause VM crash or error at runtime,
+i.e. this code:
 
       proc main()
          local n
@@ -2334,7 +2335,7 @@ or SMT and size of memo block. It's limited by maximal number of memo
 blocks = 2^32 and size of memo block so it's 2^32*<size_of_memo_block>.
 The default memo block size for DBT is 512 bytes, FPT - 64 bytes and
 for SMT 32 bytes. So for standard memo block sizes the maximum are:
-DBT->2TB, FPT->256GB, SMT->128GB. The maximal memo block size in
+DBT->l2TB, FPT->256GB, SMT->128GB. The maximal memo block size in
 Harbour is 2^32 and minimal is 1 byte and it can be any value between
 1 and 65536 and then any number of 64KB blocks. The last limitation
 is introduced as workaround for some wrongly implemented in other
@@ -2354,19 +2355,34 @@ for multitag indexes or using record number as hidden part of index key
 and many others which are unique to [x]Harbour. In practice all of CDX
 extensions are supported by NTX in [x]Harbour.
 The NSX format in [x]Harbour is also limited by default to 4GB but like
-in NTX enabling 64bit locking extend it to 4TB. It also supports common
-to NTX and CDX set of features.
+in NTX enabling 64bit locking extend this limit to 4TB. It also supports
+common to NTX and CDX set of features.
+The CDX format is limited to 4GB by it's internal structure. In Harbour
+just like in NTX and NSX enabling 64bit locking slightly change the
+format increasing maximum index size to 2TB for standard CDX page length
+(512 bytes). DBFCDX and SIXCDX RDDs in Harbour support also user defined
+index page size. It can be set as power of 2 value from 512 up to 8192.
+Longer index pages also increase maximum file size. For 8192 bytes pages
+maximum CDX file size in Harbour is 32TB. Enabling longer index pages
+automatically change internal index format to the same as used with
+64bit locking. Longer index pages allow to use longer index key and can
+interact with total index size and performance. User can make test with
+different values. Harbour RDDs automatically recognize index format so
+can open to work with all versions without any user settings.
+I plan to add support for defined by user index page size to NTX and
+NSX RDDs in the future.
+So far xHarbour does not support this extended format in DBFCDX so it
+cannot read such indexes created by Harbour.
 
-The CDX format is limited to 4GB and so far [x]Harbour does not support
-extended mode which can increase the size up to 2TB with standard page
-length and it can be bigger in all formats if we introduce support for
-bigger index pages. Of course all such extended formats are not binary
-compatible with original ones and so far can be used only by [x]Harbour
-RDDs though in ADS the .adi format is such extended CDX format so maybe
-in the future it will be possible to use .adi indexes in our CDX RDD.
+Of course all such extended formats are not binary compatible with
+original ones and so far can be used only by Harbour and xHarbour
+(except DBFCDX) RDDs. In ADS the .adi format is modified CDX format
+so Harbour can recognize them as modified CDX indexes anyhow in ADI
+indexes the key values are converted to follow collation rules when
+binary comparison is used and in Harbour doesn't.
 
-Of course all of the above sizes can be reduced by operating system (OS)
-or file system (FS) limitations so it's necessary to check what is
+All of the above sizes can be reduced by operating system (OS) or
+file system (FS) limitations so it's necessary to check what is
 supported by environment where [x]Harbour applications are executed.
 
 

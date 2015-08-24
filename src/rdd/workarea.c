@@ -243,10 +243,9 @@ static HB_ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    /* Validate the name of field */
    szPtr = pFieldInfo->atomName;
    while( HB_ISSPACE( *szPtr ) )
-   {
       ++szPtr;
-   }
-   hb_strncpyUpperTrim( szFieldName, szPtr, sizeof( szFieldName ) - 1 );
+   hb_strncpyUpperTrim( szFieldName, szPtr,
+                        HB_MIN( HB_SYMBOL_NAME_LEN, pArea->uiMaxFieldNameLength ) );
    if( szFieldName[ 0 ] == 0 )
       return HB_FAILURE;
 
@@ -261,6 +260,7 @@ static HB_ERRCODE hb_waAddField( AREAP pArea, LPDBFIELDINFO pFieldInfo )
    pField->uiFlags = pFieldInfo->uiFlags;
    pField->uiArea = pArea->uiArea;
    pArea->uiFieldCount++;
+
    return HB_SUCCESS;
 }
 
@@ -271,8 +271,9 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 {
    HB_USHORT uiItems, uiCount, uiLen, uiDec;
    HB_ERRCODE errCode = HB_SUCCESS;
-   DBFIELDINFO pFieldInfo;
+   DBFIELDINFO dbFieldInfo;
    PHB_ITEM pFieldDesc;
+   const char * szType;
    int iData;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_waCreateFields(%p, %p)", pArea, pStruct ) );
@@ -283,83 +284,125 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
 
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
-      pFieldInfo.uiTypeExtended = 0;
+      dbFieldInfo.uiTypeExtended = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
-      pFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
+      dbFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
       iData = hb_arrayGetNI( pFieldDesc, DBS_LEN );
       if( iData < 0 )
          iData = 0;
-      uiLen = pFieldInfo.uiLen = ( HB_USHORT ) iData;
+      uiLen = dbFieldInfo.uiLen = ( HB_USHORT ) iData;
       iData = hb_arrayGetNI( pFieldDesc, DBS_DEC );
       if( iData < 0 )
          iData = 0;
       uiDec = ( HB_USHORT ) iData;
-      pFieldInfo.uiDec = 0;
+      dbFieldInfo.uiDec = 0;
+      szType = hb_arrayGetCPtr( pFieldDesc, DBS_TYPE );
+      iData = HB_TOUPPER( *szType );
 #ifdef DBS_FLAG
-      pFieldInfo.uiFlags = hb_arrayGetNI( pFieldDesc, DBS_FLAG );
+      dbFieldInfo.uiFlags = hb_arrayGetNI( pFieldDesc, DBS_FLAG );
 #else
-      pFieldInfo.uiFlags = 0;
+      dbFieldInfo.uiFlags = 0;
+      while( *++szType )
+      {
+         if( *szType == ':' )
+         {
+            while( *++szType )
+            {
+               switch( HB_TOUPPER( *szType ) )
+               {
+                  case 'N':
+                     dbFieldInfo.uiFlags |= HB_FF_NULLABLE;
+                     break;
+                  case 'B':
+                     dbFieldInfo.uiFlags |= HB_FF_BINARY;
+                     break;
+                  case '+':
+                     dbFieldInfo.uiFlags |= HB_FF_AUTOINC;
+                     break;
+                  case 'Z':
+                     dbFieldInfo.uiFlags |= HB_FF_COMPRESSED;
+                     break;
+                  case 'E':
+                     dbFieldInfo.uiFlags |= HB_FF_ENCRYPTED;
+                     break;
+                  case 'U':
+                     dbFieldInfo.uiFlags |= HB_FF_UNICODE;
+                     break;
+               }
+            }
+            break;
+         }
+      }
 #endif
-      iData = HB_TOUPPER( hb_arrayGetCPtr( pFieldDesc, DBS_TYPE )[ 0 ] );
       switch( iData )
       {
          case 'C':
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen = uiLen;
+            dbFieldInfo.uiType = HB_FT_STRING;
+            dbFieldInfo.uiLen = uiLen;
 /* Too many people reported the behavior with code below as a
-   Clipper compatibility bug so I commented this code. Druzus.
+   Clipper compatibility bug so I commented this code, Druzus.
 #ifdef HB_CLP_STRICT
-            pFieldInfo.uiLen = uiLen;
+            dbFieldInfo.uiLen = uiLen;
 #else
-            pFieldInfo.uiLen = uiLen + uiDec * 256;
+            dbFieldInfo.uiLen = uiLen + uiDec * 256;
 #endif
 */
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
             break;
 
          case 'L':
-            pFieldInfo.uiType = HB_FT_LOGICAL;
-            pFieldInfo.uiLen = 1;
+            dbFieldInfo.uiType = HB_FT_LOGICAL;
+            dbFieldInfo.uiLen = 1;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case 'D':
-            pFieldInfo.uiType = HB_FT_DATE;
-            pFieldInfo.uiLen = ( uiLen == 3 || uiLen == 4 ) ? uiLen : 8;
+            dbFieldInfo.uiType = HB_FT_DATE;
+            dbFieldInfo.uiLen = ( uiLen == 3 || uiLen == 4 ) ? uiLen : 8;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case 'I':
-            pFieldInfo.uiType = HB_FT_INTEGER;
-            pFieldInfo.uiLen = ( ( uiLen > 0 && uiLen <= 4 ) || uiLen == 8 ) ? uiLen : 4;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_INTEGER;
+            dbFieldInfo.uiLen = ( ( uiLen > 0 && uiLen <= 4 ) || uiLen == 8 ) ? uiLen : 4;
+            dbFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'Y':
-            pFieldInfo.uiType = HB_FT_CURRENCY;
-            pFieldInfo.uiLen = 8;
-            pFieldInfo.uiDec = 4;
+            dbFieldInfo.uiType = HB_FT_CURRENCY;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiDec = 4;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case 'Z':
-            pFieldInfo.uiType = HB_FT_CURDOUBLE;
-            pFieldInfo.uiLen = 8;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_CURDOUBLE;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case '2':
          case '4':
-            pFieldInfo.uiType = HB_FT_INTEGER;
-            pFieldInfo.uiLen = ( HB_USHORT ) ( iData - '0' );
+            dbFieldInfo.uiType = HB_FT_INTEGER;
+            dbFieldInfo.uiLen = ( HB_USHORT ) ( iData - '0' );
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'B':
          case '8':
-            pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiLen = 8;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_DOUBLE;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'N':
-            pFieldInfo.uiType = HB_FT_LONG;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_LONG;
+            dbFieldInfo.uiDec = uiDec;
             /* DBASE documentation defines maximum numeric field size as 20
              * but Clipper alows to create longer fileds so I remove this
              * limit, Druzus
@@ -369,77 +412,96 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             */
             if( uiLen > 255 )
                errCode = HB_FAILURE;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'F':
-            pFieldInfo.uiType = HB_FT_FLOAT;
-            pFieldInfo.uiDec = uiDec;
+            dbFieldInfo.uiType = HB_FT_FLOAT;
+            dbFieldInfo.uiDec = uiDec;
             /* see note above */
             if( uiLen > 255 )
                errCode = HB_FAILURE;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_AUTOINC;
             break;
 
          case 'T':
             if( uiLen == 8 )
             {
-               pFieldInfo.uiType = HB_FT_TIMESTAMP;
-               pFieldInfo.uiLen = 8;
+               dbFieldInfo.uiType = HB_FT_TIMESTAMP;
+               dbFieldInfo.uiLen = 8;
             }
             else
             {
-               pFieldInfo.uiType = HB_FT_TIME;
-               pFieldInfo.uiLen = 4;
+               dbFieldInfo.uiType = HB_FT_TIME;
+               dbFieldInfo.uiLen = 4;
             }
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case '@':
-            pFieldInfo.uiType = HB_FT_TIMESTAMP;
-            pFieldInfo.uiLen = 8;
+            dbFieldInfo.uiType = HB_FT_TIMESTAMP;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE;
             break;
 
          case '=':
-            pFieldInfo.uiType = HB_FT_MODTIME;
-            pFieldInfo.uiLen = 8;
+            dbFieldInfo.uiType = HB_FT_MODTIME;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiFlags = 0;
             break;
 
          case '^':
-            pFieldInfo.uiType = HB_FT_ROWVER;
-            pFieldInfo.uiLen = 8;
+            dbFieldInfo.uiType = HB_FT_ROWVER;
+            dbFieldInfo.uiLen = 8;
+            dbFieldInfo.uiFlags = 0;
             break;
 
          case '+':
-            pFieldInfo.uiType = HB_FT_AUTOINC;
-            pFieldInfo.uiLen = 4;
+            dbFieldInfo.uiType = HB_FT_AUTOINC;
+            dbFieldInfo.uiLen = 4;
+            dbFieldInfo.uiFlags = 0;
             break;
 
          case 'Q':
-            pFieldInfo.uiType = HB_FT_VARLENGTH;
-            pFieldInfo.uiLen = uiLen > 255 ? 255 : ( uiLen == 0 ? 1 : uiLen );
-            break;
-
-         case 'M':
-            pFieldInfo.uiType = HB_FT_MEMO;
-            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiType = HB_FT_VARLENGTH;
+            dbFieldInfo.uiLen = uiLen > 255 ? 255 : ( uiLen == 0 ? 1 : uiLen );
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
             break;
 
          case 'V':
-            pFieldInfo.uiType = HB_FT_ANY;
-            pFieldInfo.uiLen = ( uiLen < 3 || uiLen == 5 ) ? 6 : uiLen;
+            dbFieldInfo.uiType = HB_FT_ANY;
+            dbFieldInfo.uiLen = ( uiLen < 3 || uiLen == 5 ) ? 6 : uiLen;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
+            break;
+
+         case 'M':
+            dbFieldInfo.uiType = HB_FT_MEMO;
+            dbFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiFlags &= HB_FF_NULLABLE | HB_FF_BINARY |
+                                   HB_FF_COMPRESSED | HB_FF_ENCRYPTED |
+                                   HB_FF_UNICODE;
             break;
 
          case 'P':
-            pFieldInfo.uiType = HB_FT_IMAGE;
-            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiType = HB_FT_IMAGE;
+            dbFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiFlags &= HB_FF_BINARY;
             break;
 
          case 'W':
-            pFieldInfo.uiType = HB_FT_BLOB;
-            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiType = HB_FT_BLOB;
+            dbFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiFlags &= HB_FF_BINARY;
             break;
 
          case 'G':
-            pFieldInfo.uiType = HB_FT_OLE;
-            pFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiType = HB_FT_OLE;
+            dbFieldInfo.uiLen = ( uiLen == 4 ) ? 4 : 10;
+            dbFieldInfo.uiFlags &= HB_FF_BINARY;
             break;
 
          default:
@@ -453,7 +515,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
          return errCode;
       }
       /* Add field */
-      else if( SELF_ADDFIELD( pArea, &pFieldInfo ) != HB_SUCCESS )
+      else if( SELF_ADDFIELD( pArea, &dbFieldInfo ) != HB_SUCCESS )
          return HB_FAILURE;
    }
    return HB_SUCCESS;
@@ -490,94 +552,140 @@ static HB_ERRCODE hb_waFieldInfo( AREAP pArea, HB_USHORT uiIndex, HB_USHORT uiTy
          break;
 
       case DBS_TYPE:
+      {
+         HB_USHORT uiFlags = 0;
+         char szType[ 8 ];
+         char cType;
+         int iLen = 0;
+
          switch( pField->uiType )
          {
             case HB_FT_STRING:
-               hb_itemPutC( pItem, "C" );
+               cType = 'C';
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_UNICODE |
+                         HB_FF_ENCRYPTED | HB_FF_COMPRESSED;
                break;
 
             case HB_FT_LOGICAL:
-               hb_itemPutC( pItem, "L" );
+               cType = 'L';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_DATE:
-               hb_itemPutC( pItem, "D" );
+               cType = 'D';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_LONG:
-               hb_itemPutC( pItem, "N" );
+               cType = 'N';
+               uiFlags = HB_FF_NULLABLE | HB_FF_AUTOINC;
                break;
 
             case HB_FT_INTEGER:
-               hb_itemPutC( pItem, "I" );
+               cType = 'I';
+               uiFlags = HB_FF_NULLABLE | HB_FF_AUTOINC;
                break;
 
             case HB_FT_DOUBLE:
-               hb_itemPutC( pItem, "B" );
+               cType = 'B';
+               uiFlags = HB_FF_NULLABLE | HB_FF_AUTOINC;
                break;
 
             case HB_FT_FLOAT:
-               hb_itemPutC( pItem, "F" );
+               cType = 'F';
+               uiFlags = HB_FF_NULLABLE | HB_FF_AUTOINC;
                break;
 
             case HB_FT_TIME:
-               hb_itemPutC( pItem, "T" );
+               cType = 'T';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_TIMESTAMP:
-               hb_itemPutC( pItem, "@" );
+               cType = '@';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_MODTIME:
-               hb_itemPutC( pItem, "=" );
+               cType = '=';
                break;
 
             case HB_FT_ROWVER:
-               hb_itemPutC( pItem, "^" );
+               cType = '^';
                break;
 
             case HB_FT_AUTOINC:
-               hb_itemPutC( pItem, "+" );
+               cType = '+';
+               uiFlags = HB_FF_AUTOINC;
                break;
 
             case HB_FT_CURRENCY:
-               hb_itemPutC( pItem, "Y" );
+               cType = 'Y';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_CURDOUBLE:
-               hb_itemPutC( pItem, "Z" );
+               cType = 'Z';
+               uiFlags = HB_FF_NULLABLE;
                break;
 
             case HB_FT_VARLENGTH:
-               hb_itemPutC( pItem, "Q" );
-               break;
-
-            case HB_FT_MEMO:
-               hb_itemPutC( pItem, "M" );
+               cType = 'Q';
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_UNICODE |
+                         HB_FF_ENCRYPTED | HB_FF_COMPRESSED;
                break;
 
             case HB_FT_ANY:
-               hb_itemPutC( pItem, "V" );
+               cType = 'V';
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_UNICODE |
+                         HB_FF_ENCRYPTED | HB_FF_COMPRESSED;
+               break;
+
+            case HB_FT_MEMO:
+               cType = 'M';
+               uiFlags = HB_FF_NULLABLE | HB_FF_BINARY | HB_FF_UNICODE |
+                         HB_FF_ENCRYPTED | HB_FF_COMPRESSED;
                break;
 
             case HB_FT_IMAGE:
-               hb_itemPutC( pItem, "P" );
+               cType = 'P';
                break;
 
             case HB_FT_BLOB:
-               hb_itemPutC( pItem, "W" );
+               cType = 'W';
                break;
 
             case HB_FT_OLE:
-               hb_itemPutC( pItem, "G" );
+               cType = 'G';
                break;
 
             default:
-               hb_itemPutC( pItem, "U" );
+               cType = 'U';
                break;
          }
+         szType[ iLen++ ] = cType;
+         uiFlags &= pField->uiFlags;
+         if( uiFlags != 0 )
+         {
+#ifndef DBS_FLAG
+            szType[ iLen++ ] = ':';
+            if( uiFlags & HB_FF_NULLABLE )
+               szType[ iLen++ ] = 'N';
+            if( uiFlags & HB_FF_BINARY )
+               szType[ iLen++ ] = 'B';
+            if( uiFlags & HB_FF_AUTOINC )
+               szType[ iLen++ ] = '+';
+            if( uiFlags & HB_FF_COMPRESSED )
+               szType[ iLen++ ] = 'Z';
+            if( uiFlags & HB_FF_ENCRYPTED )
+               szType[ iLen++ ] = 'E';
+            if( uiFlags & HB_FF_UNICODE )
+               szType[ iLen++ ] = 'U';
+#endif
+         }
+         hb_itemPutCL( pItem, szType, iLen );
          break;
-
+      }
       case DBS_LEN:
          hb_itemPutNL( pItem, pField->uiLen );
          break;
@@ -628,10 +736,7 @@ static HB_ERRCODE hb_waSetFieldExtent( AREAP pArea, HB_USHORT uiFieldExtent )
 
    /* Alloc field array */
    if( uiFieldExtent )
-   {
-      pArea->lpFields = ( LPFIELD ) hb_xgrab( uiFieldExtent * sizeof( FIELD ) );
-      memset( pArea->lpFields, 0, uiFieldExtent * sizeof( FIELD ) );
-   }
+      pArea->lpFields = ( LPFIELD ) hb_xgrabz( uiFieldExtent * sizeof( FIELD ) );
 
    return HB_SUCCESS;
 }
@@ -685,6 +790,7 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
       case DBI_CANPUTREC:
       case DBI_ISFLOCK:
       case DBI_SHARED:
+      case DBI_TRANSREC:
          hb_itemPutL( pItem, HB_FALSE );
          break;
 
@@ -822,12 +928,12 @@ static HB_ERRCODE hb_waInfo( AREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
  * Retrieve information about the current order that SELF could not.
  * Called by SELF_ORDINFO if uiIndex is not supported.
  */
-static HB_ERRCODE hb_waOrderInfo( AREAP pArea, HB_USHORT index, LPDBORDERINFO pInfo )
+static HB_ERRCODE hb_waOrderInfo( AREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_waOrderInfo(%p, %hu, %p)", pArea, index, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_waOrderInfo(%p, %hu, %p)", pArea, uiIndex, pInfo ) );
 
    HB_SYMBOL_UNUSED( pArea );
-   HB_SYMBOL_UNUSED( index );
+   HB_SYMBOL_UNUSED( uiIndex );
 
    if( pInfo->itmResult )
       hb_itemClear( pInfo->itmResult );
@@ -850,7 +956,7 @@ static HB_ERRCODE hb_waNewArea( AREAP pArea )
    pArea->valResult = hb_itemNew( NULL );
    pArea->lpdbRelations = NULL;
    pArea->uiParents = 0;
-   pArea->uiMaxFieldNameLength = 10;
+   pArea->uiMaxFieldNameLength = HB_SYMBOL_NAME_LEN;
 
    return HB_SUCCESS;
 }
@@ -867,7 +973,7 @@ static HB_ERRCODE hb_waOpen( AREAP pArea, LPDBOPENINFO pInfo )
                                                    ( int ) pInfo->uiArea );
       if( ! pArea->atomAlias )
       {
-         SELF_CLOSE( ( AREAP ) pArea );
+         SELF_CLOSE( pArea );
          return HB_FAILURE;
       }
    }
@@ -971,6 +1077,8 @@ static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
    else if( pEvalInfo->dbsci.lNext )
    {
       lNext = hb_itemGetNL( pEvalInfo->dbsci.lNext );
+      if( lNext <= 0 )
+         return HB_SUCCESS;
    }
    else if( ! pEvalInfo->dbsci.itmCobWhile &&
             ! hb_itemGetLX( pEvalInfo->dbsci.fRest ) )
@@ -981,45 +1089,42 @@ static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
 
    /* TODO: use SKIPSCOPE() method and fRest parameter */
 
-   if( ! pEvalInfo->dbsci.lNext || lNext > 0 )
+   for( ;; )
    {
-      for( ;; )
+      if( SELF_EOF( pArea, &fEof ) != HB_SUCCESS )
+         return HB_FAILURE;
+
+      if( fEof )
+         break;
+
+      if( pEvalInfo->dbsci.itmCobWhile )
       {
-         if( SELF_EOF( pArea, &fEof ) != HB_SUCCESS )
+         if( SELF_EVALBLOCK( pArea, pEvalInfo->dbsci.itmCobWhile ) != HB_SUCCESS )
             return HB_FAILURE;
-
-         if( fEof )
+         if( ! hb_itemGetLX( pArea->valResult ) )
             break;
+      }
 
-         if( pEvalInfo->dbsci.itmCobWhile )
-         {
-            if( SELF_EVALBLOCK( pArea, pEvalInfo->dbsci.itmCobWhile ) != HB_SUCCESS )
-               return HB_FAILURE;
-            if( ! hb_itemGetLX( pArea->valResult ) )
-               break;
-         }
+      if( pEvalInfo->dbsci.itmCobFor )
+      {
+         if( SELF_EVALBLOCK( pArea, pEvalInfo->dbsci.itmCobFor ) != HB_SUCCESS )
+            return HB_FAILURE;
+         fFor = hb_itemGetLX( pArea->valResult );
+      }
+      else
+         fFor = HB_TRUE;
 
-         if( pEvalInfo->dbsci.itmCobFor )
-         {
-            if( SELF_EVALBLOCK( pArea, pEvalInfo->dbsci.itmCobFor ) != HB_SUCCESS )
-               return HB_FAILURE;
-            fFor = hb_itemGetLX( pArea->valResult );
-         }
-         else
-            fFor = HB_TRUE;
-
-         if( fFor )
-         {
-            if( SELF_EVALBLOCK( pArea, pEvalInfo->itmBlock ) != HB_SUCCESS )
-               return HB_FAILURE;
-         }
-
-         if( pEvalInfo->dbsci.itmRecID || ( pEvalInfo->dbsci.lNext && --lNext < 1 ) )
-            break;
-
-         if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
+      if( fFor )
+      {
+         if( SELF_EVALBLOCK( pArea, pEvalInfo->itmBlock ) != HB_SUCCESS )
             return HB_FAILURE;
       }
+
+      if( pEvalInfo->dbsci.itmRecID || ( pEvalInfo->dbsci.lNext && --lNext < 1 ) )
+         break;
+
+      if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
+         return HB_FAILURE;
    }
 
    return HB_SUCCESS;
@@ -1051,6 +1156,8 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, HB_BOOL fContinue )
    else if( pArea->dbsi.lNext )
    {
       lNext = hb_itemGetNL( pArea->dbsi.lNext );
+      if( lNext <= 0 )
+         return HB_SUCCESS;
    }
    else if( ! pArea->dbsi.itmCobWhile &&
             ! hb_itemGetLX( pArea->dbsi.fRest ) )
@@ -1063,48 +1170,45 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, HB_BOOL fContinue )
 
    /* TODO: use SKIPSCOPE() method and fRest parameter */
 
-   if( ! pArea->dbsi.lNext || lNext > 0 )
+   for( ;; )
    {
-      for( ;; )
+      if( SELF_EOF( pArea, &fEof ) != HB_SUCCESS )
+         return HB_FAILURE;
+
+      if( fEof )
+         break;
+
+      if( ! fContinue && pArea->dbsi.itmCobWhile )
       {
-         if( SELF_EOF( pArea, &fEof ) != HB_SUCCESS )
+         if( SELF_EVALBLOCK( pArea, pArea->dbsi.itmCobWhile ) != HB_SUCCESS )
+            return HB_FAILURE;
+         if( ! hb_itemGetLX( pArea->valResult ) )
+            break;
+      }
+
+      if( ! pArea->dbsi.itmCobFor )
+      {
+         pArea->fFound = HB_TRUE;
+         break;
+      }
+      else
+      {
+         if( SELF_EVALBLOCK( pArea, pArea->dbsi.itmCobFor ) != HB_SUCCESS )
             return HB_FAILURE;
 
-         if( fEof )
-            break;
-
-         if( ! fContinue && pArea->dbsi.itmCobWhile )
-         {
-            if( SELF_EVALBLOCK( pArea, pArea->dbsi.itmCobWhile ) != HB_SUCCESS )
-               return HB_FAILURE;
-            if( ! hb_itemGetLX( pArea->valResult ) )
-               break;
-         }
-
-         if( ! pArea->dbsi.itmCobFor )
+         if( hb_itemGetLX( pArea->valResult ) )
          {
             pArea->fFound = HB_TRUE;
             break;
          }
-         else
-         {
-            if( SELF_EVALBLOCK( pArea, pArea->dbsi.itmCobFor ) != HB_SUCCESS )
-               return HB_FAILURE;
-
-            if( hb_itemGetLX( pArea->valResult ) )
-            {
-               pArea->fFound = HB_TRUE;
-               break;
-            }
-         }
-
-         if( ! fContinue &&
-             ( pArea->dbsi.itmRecID || ( pArea->dbsi.lNext && --lNext < 1 ) ) )
-            break;
-
-         if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
-            return HB_FAILURE;
       }
+
+      if( ! fContinue &&
+          ( pArea->dbsi.itmRecID || ( pArea->dbsi.lNext && --lNext < 1 ) ) )
+         break;
+
+      if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
+         return HB_FAILURE;
    }
 
    return HB_SUCCESS;
@@ -1128,6 +1232,8 @@ static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
    else if( pTransInfo->dbsci.lNext )
    {
       lNext = hb_itemGetNL( pTransInfo->dbsci.lNext );
+      if( lNext <= 0 )
+         return HB_SUCCESS;
    }
    else if( ! pTransInfo->dbsci.itmCobWhile &&
             ! hb_itemGetLX( pTransInfo->dbsci.fRest ) )
@@ -1138,45 +1244,42 @@ static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
 
    /* TODO: use SKIPSCOPE() method and fRest parameter */
 
-   if( ! pTransInfo->dbsci.lNext || lNext > 0 )
+   for( ;; )
    {
-      for( ;; )
+      if( SELF_EOF( pArea, &fEof ) != HB_SUCCESS )
+         return HB_FAILURE;
+
+      if( fEof )
+         break;
+
+      if( pTransInfo->dbsci.itmCobWhile )
       {
-         if( SELF_EOF( pArea, &fEof ) != HB_SUCCESS )
+         if( SELF_EVALBLOCK( pArea, pTransInfo->dbsci.itmCobWhile ) != HB_SUCCESS )
             return HB_FAILURE;
-
-         if( fEof )
+         if( ! hb_itemGetLX( pArea->valResult ) )
             break;
+      }
 
-         if( pTransInfo->dbsci.itmCobWhile )
-         {
-            if( SELF_EVALBLOCK( pArea, pTransInfo->dbsci.itmCobWhile ) != HB_SUCCESS )
-               return HB_FAILURE;
-            if( ! hb_itemGetLX( pArea->valResult ) )
-               break;
-         }
+      if( pTransInfo->dbsci.itmCobFor )
+      {
+         if( SELF_EVALBLOCK( pArea, pTransInfo->dbsci.itmCobFor ) != HB_SUCCESS )
+            return HB_FAILURE;
+         fFor = hb_itemGetLX( pArea->valResult );
+      }
+      else
+         fFor = HB_TRUE;
 
-         if( pTransInfo->dbsci.itmCobFor )
-         {
-            if( SELF_EVALBLOCK( pArea, pTransInfo->dbsci.itmCobFor ) != HB_SUCCESS )
-               return HB_FAILURE;
-            fFor = hb_itemGetLX( pArea->valResult );
-         }
-         else
-            fFor = HB_TRUE;
-
-         if( fFor )
-         {
-            if( SELF_TRANSREC( pArea, pTransInfo ) != HB_SUCCESS )
-               return HB_FAILURE;
-         }
-
-         if( pTransInfo->dbsci.itmRecID || ( pTransInfo->dbsci.lNext && --lNext < 1 ) )
-            break;
-
-         if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
+      if( fFor )
+      {
+         if( SELF_TRANSREC( pArea, pTransInfo ) != HB_SUCCESS )
             return HB_FAILURE;
       }
+
+      if( pTransInfo->dbsci.itmRecID || ( pTransInfo->dbsci.lNext && --lNext < 1 ) )
+         break;
+
+      if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
+         return HB_FAILURE;
    }
 
    return HB_SUCCESS;
@@ -1193,24 +1296,24 @@ static HB_ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_waTransRec(%p, %p)", pArea, pTransInfo ) );
 
-   /* Record deleted? */
-   errCode = SELF_DELETED( ( AREAP ) pArea, &bDeleted );
-   if( errCode != HB_SUCCESS )
-      return errCode;
-
    if( pTransInfo->uiFlags & DBTF_MATCH && pTransInfo->uiFlags & DBTF_PUTREC )
    {
-      errCode = SELF_GETREC( ( AREAP ) pArea, &pRecord );
+      /* Record deleted? */
+      errCode = SELF_DELETED( pArea, &bDeleted );
+      if( errCode != HB_SUCCESS )
+         return errCode;
+
+      errCode = SELF_GETREC( pArea, &pRecord );
       if( errCode != HB_SUCCESS )
          return errCode;
 
       /* Append a new record */
-      errCode = SELF_APPEND( ( AREAP ) pTransInfo->lpaDest, HB_TRUE );
+      errCode = SELF_APPEND( pTransInfo->lpaDest, HB_TRUE );
       if( errCode != HB_SUCCESS )
          return errCode;
 
       /* Copy record */
-      errCode = SELF_PUTREC( ( AREAP ) pTransInfo->lpaDest, pRecord );
+      errCode = SELF_PUTREC( pTransInfo->lpaDest, pRecord );
    }
    else
    {
@@ -1218,8 +1321,18 @@ static HB_ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
       PHB_ITEM pItem;
       HB_USHORT uiCount;
 
+      if( pTransInfo->uiFlags & DBTF_RECALL )
+         bDeleted = HB_FALSE;
+      else
+      {
+         /* Record deleted? */
+         errCode = SELF_DELETED( pArea, &bDeleted );
+         if( errCode != HB_SUCCESS )
+            return errCode;
+      }
+
       /* Append a new record */
-      errCode = SELF_APPEND( ( AREAP ) pTransInfo->lpaDest, HB_TRUE );
+      errCode = SELF_APPEND( pTransInfo->lpaDest, HB_TRUE );
       if( errCode != HB_SUCCESS )
          return errCode;
 
@@ -1227,11 +1340,10 @@ static HB_ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
       pTransItem = pTransInfo->lpTransItems;
       for( uiCount = pTransInfo->uiItemCount; uiCount; --uiCount )
       {
-         errCode = SELF_GETVALUE( ( AREAP ) pArea,
-                                  pTransItem->uiSource, pItem );
+         errCode = SELF_GETVALUE( pArea, pTransItem->uiSource, pItem );
          if( errCode != HB_SUCCESS )
             break;
-         errCode = SELF_PUTVALUE( ( AREAP ) pTransInfo->lpaDest,
+         errCode = SELF_PUTVALUE( pTransInfo->lpaDest,
                                   pTransItem->uiDest, pItem );
          if( errCode != HB_SUCCESS )
             break;
@@ -1242,16 +1354,17 @@ static HB_ERRCODE hb_waTransRec( AREAP pArea, LPDBTRANSINFO pTransInfo )
 
    /* Delete the new record if copy fail */
    if( errCode != HB_SUCCESS )
+      SELF_DELETE( pTransInfo->lpaDest );
+   else if( bDeleted )
    {
-      SELF_DELETE( ( AREAP ) pTransInfo->lpaDest );
-      return errCode;
+      /* Record with deleted flag */
+      if( pTransInfo->uiFlags & DBTF_RECALL )
+         errCode = SELF_RECALL( pTransInfo->lpaDest );
+      else
+         errCode = SELF_DELETE( pTransInfo->lpaDest );
    }
 
-   /* Delete the new record */
-   if( bDeleted )
-      return SELF_DELETE( ( AREAP ) pTransInfo->lpaDest );
-
-   return HB_SUCCESS;
+   return errCode;
 }
 
 /*
@@ -1504,7 +1617,7 @@ static HB_ERRCODE hb_waSetRel( AREAP pArea, LPDBRELINFO lpdbRelInf )
    lpdbRelations->abKey = lpdbRelInf->abKey;
    lpdbRelations->lpdbriNext = lpdbRelInf->lpdbriNext;
 
-   return SELF_CHILDSTART( ( AREAP ) lpdbRelInf->lpaChild, lpdbRelations );
+   return SELF_CHILDSTART( lpdbRelInf->lpaChild, lpdbRelations );
 }
 
 /*
@@ -1717,7 +1830,7 @@ static HB_ERRCODE hb_waEvalBlock( AREAP pArea, PHB_ITEM pBlock )
 
    if( ! pArea->valResult )
       pArea->valResult = hb_itemNew( NULL );
-   hb_itemCopy( pArea->valResult, pItem );
+   hb_itemMove( pArea->valResult, pItem );
 
    hb_rddSelectWorkAreaNumber( iCurrArea );
 
@@ -1787,10 +1900,10 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_AUTOORDER:
-         fResult = hb_setGetAutOrder();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         iResult = hb_setGetAutOrder();
+         if( hb_itemType( pItem ) & HB_IT_NUMERIC )
             hb_setSetItem( HB_SET_AUTORDER, pItem );
-         hb_itemPutL( pItem, fResult );
+         hb_itemPutNI( pItem, iResult );
          break;
       case RDDI_AUTOSHARE:
          fResult = hb_setGetAutoShare();
@@ -2145,8 +2258,7 @@ int hb_rddRegister( const char * szDriver, HB_USHORT uiType )
       return 2;              /* Not valid RDD */
 
    /* Create a new RDD node */
-   pRddNewNode = ( LPRDDNODE ) hb_xgrab( sizeof( RDDNODE ) );
-   memset( pRddNewNode, 0, sizeof( RDDNODE ) );
+   pRddNewNode = ( LPRDDNODE ) hb_xgrabz( sizeof( RDDNODE ) );
 
    /* Fill the new RDD node */
    hb_strncpy( pRddNewNode->szName, szDriver, sizeof( pRddNewNode->szName ) - 1 );

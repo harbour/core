@@ -1,9 +1,15 @@
 /*
- * Harbour Project source code:
  * Version detection functions
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
+ * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+ *    hb_verPlatform() (support for determining the Windows version)
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    hb_verPlatform() (support for determining many Windows flavours)
+ *    hb_verCompiler() (support for determining some compiler version/revision)
+ * Copyright 2000-2014 Viktor Szakats (vszakats.net/harbour)
+ *    hb_verCPU(), hb_verHostBitWidth(), hb_iswinver()
+ *    hb_verPlatform() (support for detecting Windows NT on DOS, Wine, post-Windows 8, cleanups)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +24,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,28 +52,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    hb_verPlatform() (support for determining the Windows version)
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_verPlatform() (support for determining many Windows flavours)
- *    hb_verCompiler() (support for determining some compiler version/revision)
- *
- * Copyright 2000-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_verCPU()
- *    hb_verPlatform() (support for detecting Windows NT on DOS)
- *    hb_verPlatform() (rearrangment and cleanup)
- *    hb_verPlatform() (Wine detection and some more)
- *    hb_verHostBitWidth()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbmemory.ch"
 
@@ -80,10 +64,30 @@
    #endif
 
    #ifndef VER_PLATFORM_WIN32_WINDOWS
-      #define VER_PLATFORM_WIN32_WINDOWS  1
+   #define VER_PLATFORM_WIN32_WINDOWS  1
    #endif
    #ifndef VER_PLATFORM_WIN32_CE
-      #define VER_PLATFORM_WIN32_CE       3
+   #define VER_PLATFORM_WIN32_CE  3
+   #endif
+
+   #ifndef VER_NT_WORKSTATION
+   #define VER_NT_WORKSTATION  0x0000001
+   #endif
+
+   #ifndef VER_MINORVERSION
+   #define VER_MINORVERSION  0x0000001
+   #endif
+   #ifndef VER_MAJORVERSION
+   #define VER_MAJORVERSION  0x0000002
+   #endif
+   #ifndef VER_PRODUCT_TYPE
+   #define VER_PRODUCT_TYPE  0x0000080
+   #endif
+   #ifndef VER_EQUAL
+   #define VER_EQUAL  1
+   #endif
+   #ifndef VER_GREATER_EQUAL
+   #define VER_GREATER_EQUAL  3
    #endif
 
 #elif defined( HB_OS_OS2 )
@@ -115,6 +119,8 @@ const char * hb_verCPU( void )
    return "SPARC64";
 #elif defined( HB_CPU_ARM )
    return "ARM";
+#elif defined( HB_CPU_ARM_64 )
+   return "ARM64";
 #elif defined( HB_CPU_MIPS )
    return "MIPS";
 #elif defined( HB_CPU_SH )
@@ -381,10 +387,6 @@ char * hb_verPlatform( void )
 
             case VER_PLATFORM_WIN32_NT:
 
-               #ifndef VER_NT_WORKSTATION
-               #define VER_NT_WORKSTATION  0x0000001
-               #endif
-
                if( osVer.dwMajorVersion == 6 )
                {
 #if ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
@@ -471,16 +473,45 @@ char * hb_verPlatform( void )
                break;
          }
 
-         hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04u",
-                      pszName,
-                      pszWine,
-                      osVer.dwMajorVersion,
-                      osVer.dwMinorVersion,
-                      LOWORD( osVer.dwBuildNumber ) );
+         if( hb_iswinver( 6, 4, 0, HB_FALSE ) )
+         {
+            pszName = " 10";
+            osVer.dwMajorVersion = 6;
+            osVer.dwMinorVersion = 4;
+            osVer.dwBuildNumber = 0;
+         }
+         else if( hb_iswinver( 6, 3, VER_NT_WORKSTATION, HB_FALSE ) )
+         {
+            pszName = " 8.1";
+            osVer.dwMajorVersion = 6;
+            osVer.dwMinorVersion = 3;
+            osVer.dwBuildNumber = 0;
+         }
+         else if( hb_iswinver( 6, 3, 0, HB_FALSE ) )  /* this must come after 6.3 workstation check */
+         {
+            pszName = " 2012 R2";
+            osVer.dwMajorVersion = 6;
+            osVer.dwMinorVersion = 3;
+            osVer.dwBuildNumber = 0;
+         }
+
+         if( osVer.dwBuildNumber )
+            hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu.%04u",
+                         pszName,
+                         pszWine,
+                         osVer.dwMajorVersion,
+                         osVer.dwMinorVersion,
+                         LOWORD( osVer.dwBuildNumber ) );
+         else
+            hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu",
+                         pszName,
+                         pszWine,
+                         osVer.dwMajorVersion,
+                         osVer.dwMinorVersion );
 
          /* Add service pack/other info */
 
-         if( osVer.szCSDVersion )
+         if( osVer.szCSDVersion[ 0 ] != TEXT( '\0' ) )
          {
             char * pszCSDVersion = HB_OSSTRDUP( osVer.szCSDVersion );
             int i;
@@ -534,6 +565,9 @@ char * hb_verPlatform( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin10    = HB_FALSE;
+static HB_BOOL s_fWin81    = HB_FALSE;
+static HB_BOOL s_fWin8     = HB_FALSE;
 static HB_BOOL s_fWinVista = HB_FALSE;
 static HB_BOOL s_fWin2K3   = HB_FALSE;
 static HB_BOOL s_fWin2K    = HB_FALSE;
@@ -544,27 +578,20 @@ static void s_hb_winVerInit( void )
 {
    OSVERSIONINFO osvi;
 
+   s_fWin10    = hb_iswinver( 6, 4, 0, HB_TRUE );
+   s_fWin81    = hb_iswinver( 6, 3, 0, HB_TRUE );
+   s_fWin8     = hb_iswinver( 6, 2, 0, HB_TRUE );
+   s_fWinVista = hb_iswinver( 6, 0, 0, HB_TRUE );
+   s_fWin2K3   = hb_iswinver( 5, 2, VER_NT_SERVER, HB_TRUE ) || hb_iswinver( 5, 2, VER_NT_DOMAIN_CONTROLLER, HB_TRUE );
+   s_fWin2K    = hb_iswinver( 5, 0, 0, HB_TRUE );
+
    osvi.dwOSVersionInfoSize = sizeof( osvi );
    if( GetVersionEx( &osvi ) )
    {
-      s_fWinVista = osvi.dwMajorVersion >= 6;
-      s_fWin2K3   = s_fWinVista;
-      s_fWin2K    = osvi.dwMajorVersion >= 5;
-      s_fWinNT    = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
-      s_fWin9x    = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
-
-#if ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
-      ( ! defined( _MSC_VER ) || _MSC_VER >= 1400 )
-
-      if( ! s_fWin2K3 && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 2 )
-      {
-         OSVERSIONINFOEX osVerEx;
-         osVerEx.dwOSVersionInfoSize = sizeof( osVerEx );
-         if( GetVersionEx( ( OSVERSIONINFO * ) &osVerEx ) )
-            s_fWin2K3 = ( osVerEx.wProductType != VER_NT_WORKSTATION );
-      }
-#endif
+      s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
+      s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
    }
+
    s_fWinVerInit = HB_TRUE;
 }
 
@@ -572,6 +599,9 @@ static void s_hb_winVerInit( void )
 
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
+static HB_BOOL s_fWin10    = HB_FALSE;
+static HB_BOOL s_fWin81    = HB_FALSE;
+static HB_BOOL s_fWin8     = HB_FALSE;
 static HB_BOOL s_fWinVista = HB_FALSE;
 static HB_BOOL s_fWin2K3   = HB_FALSE;
 static HB_BOOL s_fWin2K    = HB_FALSE;
@@ -583,6 +613,9 @@ static void s_hb_winVerInit( void )
    union REGS regs;
 
    /* TODO */
+   s_fWin10    = HB_FALSE;
+   s_fWin81    = HB_FALSE;
+   s_fWin8     = HB_FALSE;
    s_fWinVista = HB_FALSE;
    s_fWin2K3   = s_fWinVista;
    s_fWin2K    = HB_FALSE;
@@ -614,6 +647,110 @@ static void s_hb_winVerInit( void )
 }
 
 #endif
+
+HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fOrUpper )
+{
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+
+   #if defined( __DMC__ ) || ( defined( _MSC_VER ) && _MSC_VER < 1400 )
+   typedef struct _OSVERSIONINFOEXW
+   {
+      DWORD dwOSVersionInfoSize;
+      DWORD dwMajorVersion;
+      DWORD dwMinorVersion;
+      DWORD dwBuildNumber;
+      DWORD dwPlatformId;
+      WCHAR szCSDVersion[ 128 ];
+      WORD  wServicePackMajor;
+      WORD  wServicePackMinor;
+      WORD  wSuiteMask;
+      BYTE  wProductType;
+      BYTE  wReserved;
+   } OSVERSIONINFOEXW, * LPOSVERSIONINFOEXW;
+   #endif
+
+   typedef BOOL ( WINAPI * _HB_VERIFYVERSIONINFO )( LPOSVERSIONINFOEXW, DWORD, DWORDLONG );
+   typedef ULONGLONG ( WINAPI * _HB_VERSETCONDITIONMASK )( ULONGLONG, DWORD, BYTE );
+
+   static _HB_VERIFYVERSIONINFO   s_pVerifyVersionInfo   = NULL;
+   static _HB_VERSETCONDITIONMASK s_pVerSetConditionMask = NULL;
+
+   if( ! s_pVerifyVersionInfo ||
+       ! s_pVerSetConditionMask )
+   {
+      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+      if( hModule )
+      {
+         s_pVerifyVersionInfo = ( _HB_VERIFYVERSIONINFO ) HB_WINAPI_GETPROCADDRESS( hModule, "VerifyVersionInfoW" );
+         s_pVerSetConditionMask = ( _HB_VERSETCONDITIONMASK ) HB_WINAPI_GETPROCADDRESS( hModule, "VerSetConditionMask" );
+      }
+   }
+
+   if( s_pVerifyVersionInfo &&
+       s_pVerSetConditionMask )
+   {
+      OSVERSIONINFOEXW ver;
+      DWORD dwTypeMask = VER_MAJORVERSION | VER_MINORVERSION;
+      DWORDLONG dwlConditionMask = 0;
+
+      ZeroMemory( &ver, sizeof( ver ) );
+      ver.dwOSVersionInfoSize = sizeof( ver );
+      ver.dwMajorVersion = ( DWORD ) iMajorVersion;
+      ver.dwMinorVersion = ( DWORD ) iMinorVersion;
+
+      dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_MAJORVERSION, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
+      dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_MINORVERSION, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
+
+      if( iType )
+      {
+         dwTypeMask |= VER_PRODUCT_TYPE;
+         ver.wProductType = ( BYTE ) iType;
+         dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_PRODUCT_TYPE, VER_EQUAL );
+      }
+
+      return ( HB_BOOL ) s_pVerifyVersionInfo( &ver, dwTypeMask, dwlConditionMask );
+   }
+#else
+   HB_SYMBOL_UNUSED( iMajorVersion );
+   HB_SYMBOL_UNUSED( iMinorVersion );
+   HB_SYMBOL_UNUSED( iType );
+   HB_SYMBOL_UNUSED( fOrUpper );
+#endif
+   return HB_FALSE;
+}
+
+HB_BOOL hb_iswin10( void )
+{
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin10;
+#else
+   return HB_FALSE;
+#endif
+}
+
+HB_BOOL hb_iswin81( void )
+{
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin81;
+#else
+   return HB_FALSE;
+#endif
+}
+
+HB_BOOL hb_iswin8( void )
+{
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_fWin8;
+#else
+   return HB_FALSE;
+#endif
+}
 
 HB_BOOL hb_iswinvista( void )
 {
@@ -840,7 +977,7 @@ char * hb_verCompiler( void )
 
 #elif defined( _MSC_VER )
 
-   #if ( _MSC_VER >= 800 )
+   #if _MSC_VER >= 800
       pszName = "Microsoft Visual C";
    #else
       pszName = "Microsoft C";
@@ -854,7 +991,7 @@ char * hb_verCompiler( void )
    iVerMinor = _MSC_VER % 100;
 
    #if defined( _MSC_FULL_VER )
-      #if ( _MSC_VER >= 1400 )
+      #if _MSC_VER >= 1400
          iVerPatch = _MSC_FULL_VER - ( _MSC_VER * 100000 );
       #else
          iVerPatch = _MSC_FULL_VER - ( _MSC_VER * 10000 );
@@ -865,8 +1002,8 @@ char * hb_verCompiler( void )
 
 #elif defined( __BORLANDC__ )
 
-   #if ( __BORLANDC__ >= 0x0590 ) /* Version 5.9 */
-      #if ( __BORLANDC__ >= 0x0620 ) /* Version 6.2 */
+   #if __BORLANDC__ >= 0x0590  /* Version 5.9 */
+      #if __BORLANDC__ >= 0x0620  /* Version 6.2 */
          pszName = "Borland/Embarcadero C++";
       #else
          pszName = "Borland/CodeGear C++";
@@ -874,23 +1011,23 @@ char * hb_verCompiler( void )
    #else
       pszName = "Borland C++";
    #endif
-   #if   ( __BORLANDC__ == 0x0400 ) /* Version 3.0 */
+   #if   __BORLANDC__ == 0x0400  /* Version 3.0 */
       iVerMajor = 3;
       iVerMinor = 0;
       iVerPatch = 0;
-   #elif ( __BORLANDC__ == 0x0410 ) /* Version 3.1 */
+   #elif __BORLANDC__ == 0x0410  /* Version 3.1 */
       iVerMajor = 3;
       iVerMinor = 1;
       iVerPatch = 0;
-   #elif ( __BORLANDC__ == 0x0452 ) /* Version 4.0 */
+   #elif __BORLANDC__ == 0x0452  /* Version 4.0 */
       iVerMajor = 4;
       iVerMinor = 0;
       iVerPatch = 0;
-   #elif ( __BORLANDC__ == 0x0460 ) /* Version 4.5 */
+   #elif __BORLANDC__ == 0x0460  /* Version 4.5 */
       iVerMajor = 4;
       iVerMinor = 5;
       iVerPatch = 0;
-   #elif ( __BORLANDC__ >= 0x0500 ) /* Version 5.x */
+   #elif __BORLANDC__ >= 0x0500  /* Version 5.x */
       iVerMajor = __BORLANDC__ >> 8;
       iVerMinor = ( __BORLANDC__ & 0xFF ) >> 4;
       iVerPatch = __BORLANDC__ & 0xF;
@@ -1026,7 +1163,7 @@ char * hb_verCompiler( void )
 
 #else
 
-   pszName = ( char * ) NULL;
+   pszName = NULL;
    iVerMajor = iVerMinor = iVerPatch = 0;
 
 #endif

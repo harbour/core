@@ -182,7 +182,7 @@ HB_FUNC( HB_IDLESLEEP )
 /* add a new background task and return its handle */
 HB_FUNC( HB_IDLEADD )
 {
-   PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
+   PHB_ITEM pBlock = hb_param( 1, HB_IT_EVALITEM );
 
    if( pBlock )
    {

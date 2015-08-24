@@ -1,8 +1,8 @@
 /*
  * Harbour Project source code:
- * SORT RDD module
+ * hb_StrIsUTF8() function
  *
- * Copyright 1999 Bruno Cantero <bruno@issnet.net>
+ * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,44 +46,44 @@
  *
  */
 
-#ifndef HB_DBSORT_H_
-#define HB_DBSORT_H_
+#include "hbapi.h"
 
-#include "hbrdddbf.h"
-
-HB_EXTERN_BEGIN
-
-/*
- *  DBQUICKSORT
- *  -----------
- *  The Quick Sort Item Structure
- */
-
-typedef struct _DBQUICKSORT
+HB_FUNC( HB_STRISUTF8 )
 {
-   PHB_FILE pFile;
-   char szTempName[ HB_PATH_MAX ];
-   HB_BYTE * pBuffer;
-   HB_BYTE * pSwapBufferA;
-   HB_BYTE * pSwapBufferB;
-   HB_BYTE * pCmpBufferA;
-   HB_BYTE * pCmpBufferB;
-   HB_USHORT uiRecordLen;
-   HB_USHORT uiMaxRecords;
-   LPDBSORTINFO pSortInfo;
-} DBQUICKSORT;
+   HB_SIZE nLen = hb_parclen( 1 );
+   HB_BOOL fUtf8 = HB_FALSE;
 
-typedef DBQUICKSORT * LPDBQUICKSORT;
+   if( nLen > 0 )
+   {
+      const char * szText = hb_parc( 1 );
 
-/*
- *  PROTOTYPES
- *  ----------
- */
-extern HB_BOOL hb_dbQSortInit( LPDBQUICKSORT pQuickSort, LPDBSORTINFO pSortInfo, HB_USHORT uiRecordLen );
-extern void    hb_dbQSortExit( LPDBQUICKSORT pQuickSort );
-extern HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, HB_USHORT uiCount );
-extern void    hb_dbQSortComplete( LPDBQUICKSORT pQuickSort );
+      do
+      {
+         char c = *szText++;
 
-HB_EXTERN_END
+         if( c & 0x80 )
+         {
+            int i = 0;
 
-#endif /* HB_DBSORT_H_ */
+            while( ( c <<= 1 ) & 0x80  )
+               ++i;
+            if( i == 0 || ( HB_SIZE ) i >= nLen )
+               break;
+            nLen -= i;
+            do
+               if( ( *szText++ & 0xC0 ) != 0x80 )
+                  break;
+            while( --i );
+            if( i != 0 )
+               break;
+
+            fUtf8 = HB_TRUE;
+         }
+      }
+      while( --nLen );
+      if( nLen != 0 )
+         fUtf8 = HB_FALSE;
+   }
+
+   hb_retl( fUtf8 );
+}

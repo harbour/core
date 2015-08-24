@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Text file browser class
  *
  * Copyright 2008 Lorenzo Fiorini <lorenzo.fiorini@gmail.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -177,7 +175,7 @@ METHOD GetLineColor() CLASS HBBrwText
 
    LOCAL aColor
 
-   IF __dbgIsBreak( __Dbg():pInfo, ::cFileName, ::nRow ) >= 0
+   IF __dbgIsBreak( __dbg():pInfo, ::cFileName, ::nRow ) >= 0
       aColor := iif( ::nRow == ::nActiveLine, { 4, 4 }, { 3, 3 } )
    ELSE
       aColor := iif( ::nRow == ::nActiveLine, { 2, 2 }, { 1, 1 } )
@@ -185,42 +183,42 @@ METHOD GetLineColor() CLASS HBBrwText
 
    RETURN aColor
 
-METHOD LoadFile( cFileName ) CLASS HBBrwText
+METHOD PROCEDURE LoadFile( cFileName ) CLASS HBBrwText
 
    LOCAL nMaxLineLen := 0
    LOCAL cLine
 
    ::cFileName := cFileName
-   ::aRows := Text2Array( MemoRead( cFileName ) )
+   ::aRows := __dbgTextToArray( MemoRead( cFileName ) )
    ::nRows := Len( ::aRows )
    ::nLineNoLen := Len( hb_ntos( ::nRows ) ) + 2
 
-   FOR EACH cLine in ::aRows
+   FOR EACH cLine IN ::aRows
       nMaxLineLen := Max( nMaxLineLen, ;
          Len( RTrim( MemoLine( cLine, Len( cLine ) + 256, 1, ::nTabWidth, .F. ) ) ) )
    NEXT
    ::nMaxLineLen := nMaxLineLen
    ::nLineOffset := 1
 
-   RETURN NIL
+   RETURN
 
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBBrwText
 
    LOCAL lResize := .F.
 
-   IF nTop != NIL .AND. nTop != ::nTop
+   IF HB_ISNUMERIC( nTop ) .AND. nTop != ::nTop
       ::nTop := nTop
       lResize := .T.
    ENDIF
-   IF nLeft != NIL .AND. nLeft != ::nLeft
+   IF HB_ISNUMERIC( nLeft ) .AND. nLeft != ::nLeft
       ::nLeft := nLeft
       lResize := .T.
    ENDIF
-   IF nBottom != NIL .AND. nBottom != ::nBottom
+   IF HB_ISNUMERIC( nBottom ) .AND. nBottom != ::nBottom
       ::nBottom := nBottom
       lResize := .T.
    ENDIF
-   IF nRight != NIL .AND. nRight != ::nRight
+   IF HB_ISNUMERIC( nRight ) .AND. nRight != ::nRight
       ::nRight := nRight
       lResize := .T.
    ENDIF
@@ -241,15 +239,18 @@ METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
       cString := Upper( cString )
    ENDIF
 
-   DO CASE
-   CASE nMode == 0 // From Top
+   SWITCH hb_defaultValue( nMode, 0 )
+   CASE 0  // From Top
       ::GoTop()
       bMove := {|| ::Skip( 1 ) }
-   CASE nMode == 1 // Forward
+      EXIT
+   CASE 1  // Forward
       bMove := {|| ::Skip( 1 ) }
-   CASE nMode == 2 // Backward
+      EXIT
+   CASE 2  // Backward
       bMove := {|| ::Skip( -1 ) }
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    n := ::nRow
 
@@ -315,22 +316,3 @@ METHOD GoNext() CLASS HBBrwText
    ENDIF
 
    RETURN lMoved
-
-STATIC FUNCTION WhichEOL( cString )
-
-   LOCAL nCRPos := At( Chr( 13 ), cString )
-   LOCAL nLFPos := At( Chr( 10 ), cString )
-
-   IF nCRPos > 0 .AND. nLFPos == 0
-      RETURN Chr( 13 )
-   ELSEIF nCRPos == 0 .AND. nLFPos >  0
-      RETURN Chr( 10 )
-   ELSEIF nCRPos > 0 .AND. nLFPos == nCRPos + 1
-      RETURN Chr( 13 ) + Chr( 10 )
-   ENDIF
-
-   RETURN hb_eol()
-
-STATIC FUNCTION Text2Array( cString )
-
-   RETURN hb_ATokens( cString, WhichEOL( cString ) )

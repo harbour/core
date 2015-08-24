@@ -169,7 +169,7 @@ HB_FUNC( __PP_INIT )
       *pStatePtr = pState;
       ppItem = hb_itemPutPtrGC( NULL, ( void * ) pStatePtr );
 
-      hb_pp_init( pState, HB_TRUE, 0, NULL, NULL, NULL,
+      hb_pp_init( pState, HB_TRUE, HB_FALSE, 0, NULL, NULL, NULL,
                   hb_pp_ErrorMessage, hb_pp_Disp, NULL, NULL,
                   hb_pp_CompilerSwitch );
 

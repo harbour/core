@@ -477,22 +477,12 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
 /* Decode a date. */
 static HB_BOOL amf3_decode_epoch( amfContext * context, PHB_ITEM pItem )
 {
-   double   dJulian, dTime;
    double   epoch_millisecs;
-   double * epoch_p = &epoch_millisecs;
 
-   if( ! amfX_decode_double( context, epoch_p ) )
+   if( ! amfX_decode_double( context, &epoch_millisecs ) )
       return HB_FALSE;
 
-   /* 210866760000000 unix_epoch milliseconds base in JD */
-   dTime = modf( ( 210866760000000 + epoch_millisecs + 0.5 ) / HB_MILLISECS_PER_DAY, &dJulian );
-
-   hb_itemPutTDT( pItem, ( long ) dJulian, ( long ) ( dTime * HB_MILLISECS_PER_DAY ) );
-
-   /* TOFIX: why following Harbour function doesn't work out of the box?
-      C compiler was MSVC 7.1 (Visual Studio 2003)
-      hb_itemPutTD( pItem, epoch_millisecs + 210866803200000 );
-    */
+   hb_itemPutTD( pItem, ( epoch_millisecs + 210866803200000.4 ) / HB_MILLISECS_PER_DAY );
 
    return HB_TRUE;
 }

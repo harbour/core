@@ -49,13 +49,18 @@
 #ifndef HBODBC_CH_
 #define HBODBC_CH_
 
-/* RETCODEs */
+/* Result codes */
 #define SQL_INVALID_HANDLE              -2
 #define SQL_ERROR                       -1
 #define SQL_SUCCESS                     0
 #define SQL_SUCCESS_WITH_INFO           1
-#define SQL_NO_DATA_FOUND               100
+#define SQL_STILL_EXECUTING             2
+#define SQL_NO_DATA                     100
+#define SQL_NO_DATA_FOUND               SQL_NO_DATA
 #define SQL_NEED_DATA                   99
+
+/* Test for SQL_SUCCESS or SQL_SUCCESS_WITH_INFO */
+#define SQL_SUCCEEDED( rc )             ( hb_bitAnd( rc, hb_bitNot( SQL_SUCCESS_WITH_INFO ) ) == SQL_SUCCESS )
 
 /* Standard SQL datatypes, using ANSI type numbering */
 #define SQL_CHAR                        1
@@ -70,22 +75,29 @@
 #define SQL_TIME                        10
 #define SQL_TIMESTAMP                   11
 #define SQL_VARCHAR                     12
-#define SQL_BIT                         -7
+#define SQL_TYPE_DATE                   91
+#define SQL_TYPE_TIME                   92
+#define SQL_TYPE_TIMESTAMP              93
 #define SQL_LONGVARCHAR                 -1
+#define SQL_BINARY                      -2
+#define SQL_VARBINARY                   -3
 #define SQL_LONGVARBINARY               -4
 #define SQL_BIGINT                      -5
 #define SQL_TINYINT                     -6
-
-#define SQL_NVARCHAR                    -9
+#define SQL_BIT                         -7
+#define SQL_WCHAR                       -8
+#define SQL_WVARCHAR                    -9
+#define SQL_NVARCHAR                    SQL_WVARCHAR
+#define SQL_WLONGVARCHAR                -10
 
 #define SQL_TYPE_NULL                   0
-#define SQL_TYPE_MIN                    SQL_BIT
-#define SQL_TYPE_MAX                    SQL_VARCHAR
+#define SQL_TYPE_MIN                    SQL_WLONGVARCHAR
+#define SQL_TYPE_MAX                    SQL_TYPE_TIMESTAMP
 #define SQL_ALL_TYPES                   0
 
-/* NULL status constants.  These are used in SQLColumns, SQLColAttributes,
-SQLDescribeCol, SQLDescribeParam, and SQLSpecialColumns to describe the
-nullablity of a column in a table. */
+/* NULL status constants.  These are used in SQLColumns(), SQLColAttribute(),
+   SQLDescribeCol(), SQLDescribeParam() and SQLSpecialColumns() to describe the
+   nullablity of a column in a table. */
 #define SQL_NO_NULLS                    0
 #define SQL_NULLABLE                    1
 #define SQL_NULLABLE_UNKNOWN            2
@@ -95,17 +107,13 @@ nullablity of a column in a table. */
 #define SQL_DATA_AT_EXEC                -2
 #define SQL_NTS                         -3
 
-/* SQLFreeStmt defines */
+/* SQLFreeStmt() defines */
 #define SQL_CLOSE                       0
 #define SQL_DROP                        1
 #define SQL_UNBIND                      2
 #define SQL_RESET_PARAMS                3
 
-/* SQLTransact defines */
-#define SQL_COMMIT                      0
-#define SQL_ROLLBACK                    1
-
-/* SQLColAttributes defines */
+/* SQLColAttribute() defines */
 #define SQL_COLUMN_COUNT                0
 #define SQL_COLUMN_NAME                 1
 #define SQL_COLUMN_TYPE                 2
@@ -130,23 +138,19 @@ nullablity of a column in a table. */
 
 #define SQL_COLATT_OPT_MIN              SQL_COLUMN_COUNT
 
-/* SQLColAttributes subdefines for SQL_COLUMN_UPDATABLE */
+/* SQLColAttribute() subdefines for SQL_COLUMN_UPDATABLE */
 #define SQL_ATTR_READONLY               0
 #define SQL_ATTR_WRITE                  1
 #define SQL_ATTR_READWRITE_UNKNOWN      2
 
-/* SQLColAttributes subdefines for SQL_COLUMN_SEARCHABLE */
-/* These are also used by SQLGetInfo                     */
+/* SQLColAttribute() subdefines for SQL_COLUMN_SEARCHABLE */
+/* These are also used by SQLGetInfo() */
 #define SQL_UNSEARCHABLE                0
 #define SQL_LIKE_ONLY                   1
 #define SQL_ALL_EXCEPT_LIKE             2
 #define SQL_SEARCHABLE                  3
 
-/* SQLError defines */
-#define SQL_NULL_HENV                   0
-#define SQL_NULL_HDBC                   0
-#define SQL_NULL_HSTMT                  0
-
+/* SQLFetchScroll() types */
 #define SQL_FETCH_NEXT                  1
 #define SQL_FETCH_FIRST                 2
 #define SQL_FETCH_LAST                  3
@@ -249,6 +253,7 @@ nullablity of a column in a table. */
 #define SQL_ASYNC_ENABLE                4
 #define SQL_BIND_TYPE                   5
 
+/* SQLGetDiagRec() handle types */
 #define SQL_HANDLE_ENV                  1
 #define SQL_HANDLE_DBC                  2
 #define SQL_HANDLE_STMT                 3

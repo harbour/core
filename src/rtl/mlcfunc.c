@@ -66,6 +66,7 @@ typedef struct
    HB_SIZE        nLineLength;
    HB_SIZE        nTabSize;
    HB_BOOL        fWordWrap;
+   HB_BOOL        fPos;
    int            iEOLs;
    PHB_EOL_INFO   pEOLs;
    PHB_CODEPAGE   cdp;
@@ -73,9 +74,7 @@ typedef struct
    HB_SIZE        nOffset;
    HB_SIZE        nMaxCol;
    HB_SIZE        nMaxPos;
-   HB_SIZE        nLine;
    HB_SIZE        nCol;
-   HB_SIZE        nEOL;
 
    HB_EOL_INFO    EOL_buffer[ HB_EOL_BUFFER_SIZE ];
 }
@@ -154,8 +153,8 @@ static HB_BOOL hb_mlInit( PHB_MLC_INFO pMLC, int iParAdd )
    pMLC->pszString = hb_parc( 1 );
    if( pMLC->pszString && nSize > 0 )
    {
-      pMLC->nOffset = pMLC->nMaxCol = pMLC->nMaxPos = pMLC->nLine =
-      pMLC->nCol = pMLC->nEOL = 0;
+      pMLC->nOffset = pMLC->nMaxCol = pMLC->nMaxPos = pMLC->nCol = 0;
+      pMLC->fPos = HB_FALSE;
 
       pMLC->nLineLength = nSize;
       pMLC->nLen = hb_parclen( 1 );
@@ -209,17 +208,15 @@ static int hb_mlEol( PHB_MLC_INFO pMLC )
 
 static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
 {
-   HB_SIZE nBlankCol = 0, nBlankPos = 0, nLastPos;
+   HB_SIZE nBlankCol = 0, nBlankPos = 0, nLastCol = 0, nLastPos;
    int i;
 
-   pMLC->nCol = pMLC->nEOL = 0;
+   pMLC->nCol = 0;
 
-   if( pMLC->nOffset >= pMLC->nLen ||
-       ( pMLC->nMaxPos > 0 && pMLC->nOffset >= pMLC->nMaxPos ) )
+   if( pMLC->nOffset >= pMLC->nLen )
       return HB_FALSE;
 
-   while( pMLC->nOffset < pMLC->nLen &&
-          ( pMLC->nMaxPos == 0 || pMLC->nOffset < pMLC->nMaxPos ) )
+   while( pMLC->nOffset < pMLC->nLen )
    {
       HB_WCHAR ch;
 
@@ -239,9 +236,8 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
       i = hb_mlEol( pMLC );
       if( i >= 0 )
       {
-         pMLC->nEOL = pMLC->pEOLs[ i ].nLen;
          if( pMLC->nMaxCol == 0 )
-            pMLC->nOffset += pMLC->nEOL;
+            pMLC->nOffset += pMLC->pEOLs[ i ].nLen;
          break;
       }
       else if( ! pMLC->fWordWrap && pMLC->nCol >= pMLC->nLineLength )
@@ -256,12 +252,8 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
       else
          ch = pMLC->pszString[ pMLC->nOffset++ ];
 
-      if( ch == ' ' || ch == HB_CHAR_HT )
-      {
-         nBlankCol = pMLC->nCol;
-         nBlankPos = pMLC->nOffset;
-      }
-
+      if( pMLC->nOffset <= pMLC->nMaxPos )
+         nLastCol = pMLC->nCol;
       pMLC->nCol += ch == HB_CHAR_HT ?
                     pMLC->nTabSize - ( pMLC->nCol % pMLC->nTabSize ) : 1;
 
@@ -275,27 +267,31 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
       {
          if( pMLC->fWordWrap )
          {
-            if( nBlankCol != 0 )
+            if( pMLC->fPos && ( ch == ' ' || ch == HB_CHAR_HT ) )
+               break;
+            else if( nBlankCol != 0 )
             {
-               if( pMLC->nMaxPos )
-                  pMLC->nCol = nBlankCol + 1;
-               else
-                  pMLC->nCol = nBlankCol;
+               pMLC->nCol = nBlankCol;
                pMLC->nOffset = nBlankPos;
             }
             else
                pMLC->nOffset = nLastPos;
          }
-         else if( pMLC->nCol > pMLC->nLineLength )
+         else
             pMLC->nOffset = nLastPos;
          break;
       }
+      if( ch == ' ' || ch == HB_CHAR_HT )
+      {
+         nBlankCol = pMLC->nCol;
+         nBlankPos = pMLC->nOffset;
+      }
    }
 
-   if( pMLC->nCol > pMLC->nLineLength )
+   if( pMLC->nMaxPos && pMLC->nCol > nLastCol )
+      pMLC->nCol = nLastCol;
+   else if( pMLC->nCol > pMLC->nLineLength )
       pMLC->nCol = pMLC->nLineLength;
-   else if( pMLC->nMaxPos && pMLC->nCol )
-      pMLC->nCol--;
 
    return HB_TRUE;
 }
@@ -304,12 +300,17 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
 /* MemoLine( <cString>, [ <nLineLength>=79 ],
  *           [ <nLineNumber>=1 ],
  *           [ <nTabSize>=4 ], [ <lWrap>=.T. ],
- *           [ <cEOL>|<acEOLs> ] ) -> <cLine>
+ *           [ <cEOL>|<acEOLs> ],
+ *           [ <lPad>=.T. ] ) -> <cLine>
+ *
+ * NOTE: <lPad> is undocumented parameter and will be removed and
+ *       replaced by other solution in the future.
  */
 HB_FUNC( MEMOLINE )
 {
    HB_MLC_INFO MLC;
    HB_ISIZ nLine = hb_parnsdef( 3, 1 );
+   HB_BOOL fPad = hb_parldef( 7, 1 );
    char * szLine = NULL;
    HB_SIZE nIndex, nLen = 0, nSize, nCol;
 
@@ -385,8 +386,15 @@ HB_FUNC( MEMOLINE )
                nCol = MLC.nLineLength - nCol;
                if( nCol > nSize - nLen )
                   nCol = nSize - nLen;
-               memset( szLine + nLen, ' ', nCol );
-               nLen += nCol;
+               if( ! fPad && nCol > 0 )
+                  nCol = nIndex < MLC.nLen &&
+                         ( MLC.pszString[ nIndex ] == ' ' ||
+                           MLC.pszString[ nIndex ] == HB_CHAR_HT ) ? 1 : 0;
+               if( nCol > 0 )
+               {
+                  memset( szLine + nLen, ' ', nCol );
+                  nLen += nCol;
+               }
             }
          }
          hb_mlExit( &MLC );
@@ -431,6 +439,8 @@ HB_FUNC( MLPOS )
    {
       if( hb_mlInit( &MLC, 1 ) )
       {
+         MLC.fPos = HB_TRUE;
+
          while( --nLine && hb_mlGetLine( &MLC ) )
             ;
          nOffset = MLC.nOffset;
@@ -462,6 +472,8 @@ HB_FUNC( MLCTOPOS )
       {
          if( MLC.nLineLength > 4 )
          {
+            MLC.fPos = HB_TRUE;
+
             while( --nLine && hb_mlGetLine( &MLC ) )
                ;
             if( nCol && nLine == 0 )
@@ -503,12 +515,16 @@ HB_FUNC( MPOSTOLC )
             nPos += nRest;
          }
          MLC.nMaxPos = nPos;
-         if( MLC.nMaxPos <= MLC.nLen )
+         if( MLC.nMaxPos <= MLC.nLen + 1 )
          {
-            while( hb_mlGetLine( &MLC ) )
+            for( ;; )
             {
+               HB_SIZE nOffset = MLC.nOffset;
+               hb_mlGetLine( &MLC );
                nCol = MLC.nCol;
                ++nLine;
+               if( MLC.nOffset == nOffset || MLC.nOffset >= MLC.nMaxPos )
+                  break;
             }
          }
          hb_mlExit( &MLC );

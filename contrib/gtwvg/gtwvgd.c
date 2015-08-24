@@ -81,6 +81,11 @@
 #include "hbwinole.h"
 #include "gtwvg.h"
 
+
+#ifndef WS_EX_COMPOSITED
+#define WS_EX_COMPOSITED  0x02000000
+#endif
+
 #ifndef WS_EX_LAYERED
 #define WS_EX_LAYERED     0x00080000
 #endif
@@ -423,6 +428,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bResizable        = HB_TRUE;
    pWVT->bMaximizable      = HB_TRUE;
    pWVT->bClosable         = HB_TRUE;
+   pWVT->CloseMode         = 0;
 
    {
       PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
@@ -432,8 +438,10 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    }
 
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
-
    pWVT->bResizing         = HB_FALSE;
+   pWVT->bAlreadySizing    = HB_FALSE;
+
+   pWVT->bComposited       = HB_FALSE;
 
    pWVT->pPP               = ( HB_GT_PARAMS * ) hb_xgrab( sizeof( HB_GT_PARAMS ) );
    pWVT->pPP->style        = WS_THICKFRAME|WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX|WS_MAXIMIZEBOX;
@@ -736,6 +744,34 @@ static int hb_gt_wvt_key_ansi_to_oem( int c )
    return pszDst[ 0 ];
 }
 #endif
+
+
+static void hb_gt_wvt_SetCloseButton( PHB_GTWVT pWVT )
+{
+   HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+
+   if( hSysMenu )
+      EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND |
+                      ( pWVT->CloseMode < 2 ? MF_ENABLED : MF_GRAYED ) );
+}
+
+
+static void hb_gt_wvt_Composited( PHB_GTWVT pWVT, HB_BOOL fEnable )
+{
+#if defined( HB_OS_WIN_CE )
+   HB_SYMBOL_UNUSED( pWVT );
+   HB_SYMBOL_UNUSED( fEnable );
+#else
+   if( hb_iswinvista() && ! GetSystemMetrics( SM_REMOTESESSION ) )
+   {
+      pWVT->bComposited = fEnable;
+      if( fEnable )
+         SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_COMPOSITED );
+      else
+         SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) & ~WS_EX_COMPOSITED );
+   }
+#endif
+}
 
 static HB_BOOL hb_gt_wvt_FitRows( PHB_GTWVT pWVT )
 {
@@ -2130,20 +2166,24 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             return 0;
 
          case WM_CLOSE:  /* Clicked 'X' on system menu */
-         {
-            PHB_ITEM pEvParams = hb_itemNew( NULL );
-            if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, pEvParams ) == 0 )
+            if( pWVT->CloseMode == 0 )
+            {
+               PHB_ITEM pEvParams = hb_itemNew( NULL );
+               if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, pEvParams ) == 0 )
+               {
+#if 1
+                  hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
+#else
+                  hb_vmRequestQuit();
+#endif
+               }
+            }
+            else
             {
                hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
-#if 0
-               PHB_ITEM pItem = hb_itemPutL( NULL, HB_TRUE );
-               hb_setSetItem( HB_SET_CANCEL, pItem );
-               hb_itemRelease( pItem );
-               hb_vmRequestCancel();
-#endif
             }
             return 0;
-         }
+
          case WM_QUIT:
          case WM_DESTROY:
             return 0;
@@ -3572,7 +3612,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
          }
          break;
-
+#if 0
       case HB_GTI_CLOSABLE:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bClosable );
          if( pInfo->pNewVal )
@@ -3591,6 +3631,33 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
                else
                   pWVT->bClosable = bNewValue;
+            }
+         }
+         break;
+#endif
+      case HB_GTI_CLOSABLE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->CloseMode == 0 );
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL ) &&
+             ( hb_itemGetL( pInfo->pNewVal ) ? ( pWVT->CloseMode != 0 ) :
+                                               ( pWVT->CloseMode == 0 ) ) )
+         {
+            iVal = pWVT->CloseMode;
+            pWVT->CloseMode = iVal == 0 ? 1 : 0;
+            if( pWVT->hWnd )
+               hb_gt_wvt_SetCloseButton( pWVT );
+         }
+         break;
+
+      case HB_GTI_CLOSEMODE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->CloseMode );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            if( iVal >= 0 && iVal <= 2 && pWVT->CloseMode != iVal )
+            {
+               pWVT->CloseMode = iVal;
+               if( pWVT->hWnd )
+                  hb_gt_wvt_SetCloseButton( pWVT );
             }
          }
          break;
@@ -3646,6 +3713,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SETPOS_ROWCOL:
          if( pWVT->hWnd )
          {
+            int i1 = -1;
+            int i2 = -1;
             RECT rect = { 0, 0, 0, 0 };
             GetWindowRect( pWVT->hWnd, &rect );
 
@@ -3655,7 +3724,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( iType == HB_GTI_SETPOS_ROWCOL )
             {
                hb_arraySetNI( pInfo->pResult, 1, rect.top / pWVT->PTEXTSIZE.y );    /* Will only return approx value */
-               hb_arraySetNI( pInfo->pResult, 2, rect.left / pWVT->PTEXTSIZE.x );   /* Will only return approx value */
+               hb_arraySetNI( pInfo->pResult, 2, rect.left / pWVT->PTEXTSIZE.x );    /* Will only return approx value */
             }
             else
             {
@@ -3666,17 +3735,30 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
                               ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
             {
+               i1 = hb_itemGetNI( pInfo->pNewVal );
+               i2 = hb_itemGetNI( pInfo->pNewVal2 );
+            }
+            else if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
+            {
+               i1 = hb_arrayGetNI( pInfo->pNewVal, 1 );
+               i2 = hb_arrayGetNI( pInfo->pNewVal, 2 );
+            }
+            else
+               break;
+
+            if( i1 > -1 && i2 > -1 )
+            {
                int x, y;
 
                if( iType == HB_GTI_SETPOS_ROWCOL )
                {
-                  y = hb_itemGetNI( pInfo->pNewVal ) * pWVT->PTEXTSIZE.y;
-                  x = hb_itemGetNI( pInfo->pNewVal2 ) * pWVT->PTEXTSIZE.x;
+                  y = i1 * pWVT->PTEXTSIZE.y;
+                  x = i2 * pWVT->PTEXTSIZE.x;
                }
                else
                {
-                  x = hb_itemGetNI( pInfo->pNewVal );
-                  y = hb_itemGetNI( pInfo->pNewVal2 );
+                  x = i1;
+                  y = i2;
                }
                hb_retl( SetWindowPos( pWVT->hWnd, NULL,
                                       x,
@@ -4053,6 +4135,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
    HDC       hdc;
    HPEN      hPen, hOldPen;
    HBRUSH    hBrush, hOldBrush;
+   RECT      r;
    int       iRet = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
@@ -4061,6 +4144,9 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
    if( pWVT->hWnd )
    {
+      if( pWVT->bComposited )
+         hb_gt_wvt_Composited( pWVT, HB_FALSE );
+
       switch( iType )
       {
          case HB_GFX_ACQUIRESCREEN:
@@ -4069,7 +4155,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             break;
 
          case HB_GFX_MAKECOLOR:
-            iRet = ( iTop << 16 ) | ( iLeft << 8 ) | ( iBottom );
+            iRet = ( iTop << 16 ) | ( iLeft << 8 ) | iBottom;
             break;
 
          case HB_GFX_PUTPIXEL:
@@ -4091,13 +4177,10 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
             break;
 
          case HB_GFX_RECT:
-         {
-            RECT r;
-
-            r.left = iLeft;
-            r.top = iTop;
-            r.right = iRight;
-            r.bottom = iBottom;
+            r.left   = HB_MIN( iLeft, iRight );
+            r.top    = HB_MIN( iTop, iBottom );
+            r.right  = HB_MAX( iLeft, iRight ) + 1;
+            r.bottom = HB_MAX( iTop, iBottom ) + 1;
 
             SetGFXContext( iColor );
 
@@ -4105,11 +4188,16 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
             ClearGFXContext();
             break;
-         }
+
          case HB_GFX_FILLEDRECT:
             SetGFXContext( iColor );
 
-            iRet = Rectangle( hdc, iLeft, iTop, iRight, iBottom ) ? 1 : 0;
+            r.left   = HB_MIN( iLeft, iRight );
+            r.top    = HB_MIN( iTop, iBottom );
+            r.right  = HB_MAX( iLeft, iRight ) + 1;
+            r.bottom = HB_MAX( iTop, iBottom ) + 1;
+
+            iRet = Rectangle( hdc, r.left, r.top, r.right, r.bottom ) ? 1 : 0;
 
             ClearGFXContext();
             break;
@@ -4117,7 +4205,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          case HB_GFX_CIRCLE:
             SetGFXContext( iRight );
 
-            iRet = Arc( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2, 0, 0, 0, 0 ) ? 1 : 0;
+            iRet = Arc( hdc, iLeft - iBottom, iTop - iBottom, iLeft + iBottom + 1, iTop + iBottom + 1, 0, 0, 0, 0 ) ? 1 : 0;
 
             ClearGFXContext();
             break;
@@ -4125,7 +4213,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          case HB_GFX_FILLEDCIRCLE:
             SetGFXContext( iRight );
 
-            iRet = Ellipse( hdc, iLeft - iBottom / 2, iTop - iBottom / 2, iLeft + iBottom / 2, iTop + iBottom / 2 ) ? 1 : 0;
+            iRet = Ellipse( hdc, iLeft - iBottom, iTop - iBottom, iLeft + iBottom + 1, iTop + iBottom + 1 ) ? 1 : 0;
 
             ClearGFXContext();
             break;
@@ -4133,7 +4221,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          case HB_GFX_ELLIPSE:
             SetGFXContext( iColor );
 
-            iRet = Arc( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2, 0, 0, 0, 0 ) ? 1 : 0;
+            iRet = Arc( hdc, iLeft - iRight, iTop - iBottom, iLeft + iRight + 1, iTop + iBottom + 1, 0, 0, 0, 0 ) ? 1 : 0;
 
             ClearGFXContext();
             break;
@@ -4141,7 +4229,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          case HB_GFX_FILLEDELLIPSE:
             SetGFXContext( iColor );
 
-            iRet = Ellipse( hdc, iLeft - iRight / 2, iTop - iBottom / 2, iLeft + iRight / 2, iTop + iBottom / 2 ) ? 1 : 0;
+            iRet = Ellipse( hdc, iLeft - iRight, iTop - iBottom, iLeft + iRight, iTop + iBottom ) ? 1 : 0;
 
             ClearGFXContext();
             break;
@@ -4159,7 +4247,7 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
    return iRet;
 }
 
-/*
+#if 0
 static void hb_gt_wvt_gfx_Text( PHB_GT pGT, int iTop, int iLeft, const char *cBuf, int iColor, int iSize, int iWidth )
 {
    HB_SYMBOL_UNUSED( pGT );
@@ -4170,7 +4258,7 @@ static void hb_gt_wvt_gfx_Text( PHB_GT pGT, int iTop, int iLeft, const char *cBu
    HB_SYMBOL_UNUSED( iSize );
    HB_SYMBOL_UNUSED( iWidth );
 }
-*/
+#endif
 
 /* ********************************************************************** */
 

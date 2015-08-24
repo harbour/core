@@ -1,7 +1,7 @@
 %pure-parser
 %parse-param { PHB_COMP pComp }
 %lex-param   { PHB_COMP pComp }
-%name-prefix = "hb_comp_yy"
+%name-prefix "hb_comp_yy"
 %{
 /*
  * Harbour Project source code:
@@ -48,6 +48,9 @@
 #elif defined( __WATCOMC__ )
 #  pragma warning 13 9
 #  pragma warning 368 9
+#elif defined( _MSC_VER )
+#  pragma warning( disable : 4244 )
+#  pragma warning( disable : 4702 )
 #endif
 
 #undef alloca
@@ -1286,7 +1289,7 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   PHB_HCLASS pClass;
                   char       szSetData[ HB_SYMBOL_NAME_LEN + 1 ];
                   int        iLen;
-                  char       cVarType = $3->cVarType;
+                  HB_BYTE    cVarType = $3->cVarType;
 
                   /* List Type overrides if exists. */
                   if( HB_COMP_PARAM->cDataListType )
@@ -1321,8 +1324,8 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   HB_COMP_PARAM->pLastMethod->cParamTypes = ( HB_BYTE * ) hb_xgrab( 1 );
                   HB_COMP_PARAM->pLastMethod->pParamClasses = ( PHB_HCLASS * ) hb_xgrab( sizeof( HB_HCLASS ) );
 
-                  HB_COMP_PARAM->pLastMethod->cParamTypes[0] = cVarType;
-                  HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
+                  HB_COMP_PARAM->pLastMethod->cParamTypes[ 0 ] = cVarType;
+                  HB_COMP_PARAM->pLastMethod->pParamClasses[ 0 ] = pClass;
 
                   if( HB_TOUPPER( cVarType ) == 'S' )
                   {

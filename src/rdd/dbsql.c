@@ -171,11 +171,11 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
          }
          else
          {
-            hb_addStrnToFBuffer( pFileBuf, &szDate[0], 4 );
+            hb_addStrnToFBuffer( pFileBuf, &szDate[ 0 ], 4 );
             hb_addToFBuffer( pFileBuf, '-' );
-            hb_addStrnToFBuffer( pFileBuf, &szDate[4], 2 );
+            hb_addStrnToFBuffer( pFileBuf, &szDate[ 4 ], 2 );
             hb_addToFBuffer( pFileBuf, '-' );
-            hb_addStrnToFBuffer( pFileBuf, &szDate[6], 2 );
+            hb_addStrnToFBuffer( pFileBuf, &szDate[ 6 ], 2 );
          }
          hb_addStrToFBuffer( pFileBuf, szDelim );
          break;

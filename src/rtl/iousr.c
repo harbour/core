@@ -141,10 +141,9 @@ static PHB_IOUSR s_iousrAddNew( const char * pszPrefix )
    {
       if( s_iCount == 0 )
          hb_vmAtQuit( s_iousrFreeAll, NULL );
-      pIO = ( PHB_IOUSR ) hb_xgrab( sizeof( HB_IOUSR ) );
-      memset( pIO, 0, sizeof( HB_IOUSR ) );
+      pIO = ( PHB_IOUSR ) hb_xgrabz( sizeof( HB_IOUSR ) );
       pIO->prefix = hb_strdup( pszPrefix );
-      pIO->prefix_len = strlen( pszPrefix );
+      pIO->prefix_len = ( int ) strlen( pszPrefix );
       s_ioUsrs[ s_iCount++ ] = pIO;
    }
 
@@ -400,7 +399,7 @@ static char * s_fileLinkRead( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 }
 
 static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
-                            const char * pszDefExt, HB_USHORT uiExFlags,
+                            const char * pszDefExt, HB_FATTR nExFlags,
                             const char * pPaths, PHB_ITEM pError )
 {
    PHB_IOUSR pIO = ( PHB_IOUSR ) pFuncs;
@@ -413,7 +412,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
       hb_vmPushString( pszDefExt, strlen( pszDefExt ) );
    else
       hb_vmPushNil();
-   hb_vmPushInteger( uiExFlags );
+   hb_vmPushInteger( nExFlags );
    if( pPaths )
       hb_vmPushString( pPaths, strlen( pPaths ) );
    else
@@ -758,10 +757,10 @@ HB_FUNC( IOUSR_SETERROR )
 
    if( HB_ISNUM( 1 ) )
    {
-      HB_ERRCODE errCode = ( HB_ERRCODE ) hb_parni( 1 );
-      if( errCode != 0 )
-         errCode += ( HB_ERRCODE ) hb_parni( 2 );
-      hb_fsSetError( errCode );
+      HB_ERRCODE errCodeNew = ( HB_ERRCODE ) hb_parni( 1 );
+      if( errCodeNew != 0 )
+         errCodeNew += ( HB_ERRCODE ) hb_parni( 2 );
+      hb_fsSetError( errCodeNew );
    }
 
    hb_retni( errCode );

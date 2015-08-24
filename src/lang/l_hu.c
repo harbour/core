@@ -1,4 +1,4 @@
-/* Last Translator: vszakats */
+/* Last Translator: hbtest */
 
 #include "hbapilng.h"
 
@@ -112,9 +112,9 @@ static HB_LANG s_lang =
       /* Internal error names */
 
       "Kezelhetetlen hiba %d: ",
-      "Hiba kezelési hiba",
+      "Hibakezelési hiba",
       "Nincs ERRORBLOCK() a hiba kezeléséhez",
-      "Túl sok rekurzív hiba kezelő hívás",
+      "Túl sok rekurzív hibakezelő hívás",
       "Az RDD hibás vagy nem sikerült betölteni",
       "Nem megfelelő típusú metódus (%s)",
       "hb_xgrab nem tud memóriát foglalni",

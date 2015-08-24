@@ -32,6 +32,7 @@ DYNAMIC BIO_free_all
 DYNAMIC BIO_gets
 DYNAMIC BIO_get_close
 DYNAMIC BIO_get_conn_hostname
+DYNAMIC BIO_get_conn_int_port
 DYNAMIC BIO_get_conn_ip
 DYNAMIC BIO_get_conn_port
 DYNAMIC BIO_get_fd
@@ -171,6 +172,8 @@ DYNAMIC EVP_VerifyInit_ex
 DYNAMIC EVP_VerifyUpdate
 DYNAMIC hb_EVP_CIPHER_ctx_create
 DYNAMIC hb_EVP_ENCODE_ctx_create
+DYNAMIC hb_inetSSL_accept
+DYNAMIC hb_inetSSL_connect
 DYNAMIC hb_SSL_read_all
 DYNAMIC hb_SSL_read_line
 DYNAMIC OpenSSL_add_all_algorithms

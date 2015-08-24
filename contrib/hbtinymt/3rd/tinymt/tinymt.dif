@@ -1,6 +1,6 @@
 diff -urN tinymt.orig/tinymt32.c tinymt/tinymt32.c
---- tinymt.orig/tinymt32.c	2014-02-02 19:13:11.908020910 +0100
-+++ tinymt/tinymt32.c	2014-02-02 19:13:11.908020910 +0100
+--- tinymt.orig/tinymt32.c	2014-10-07 00:55:24.212007613 +0200
++++ tinymt/tinymt32.c	2014-10-07 00:55:24.212007613 +0200
 @@ -60,17 +60,18 @@
   * @param seed a 32-bit unsigned integer used as a seed.
   */
@@ -23,8 +23,8 @@ diff -urN tinymt.orig/tinymt32.c tinymt/tinymt32.c
      }
  }
 diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
---- tinymt.orig/tinymt32.h	2014-02-02 19:13:11.912020910 +0100
-+++ tinymt/tinymt32.h	2014-02-02 19:13:11.912020910 +0100
+--- tinymt.orig/tinymt32.h	2014-10-07 00:55:24.212007613 +0200
++++ tinymt/tinymt32.h	2014-10-07 00:55:24.212007613 +0200
 @@ -16,8 +16,17 @@
   * LICENSE.txt
   */
@@ -45,7 +45,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
  
  #define TINYMT32_MEXP 127
  #define TINYMT32_SH0 1
-@@ -52,12 +61,12 @@
+@@ -52,12 +61,13 @@
   * @param random not used
   * @return always 127
   */
@@ -57,10 +57,11 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
  #else
 -inline static int tinymt32_get_mexp(tinymt32_t * random) {
 +_HB_INLINE_ static int tinymt32_get_mexp(tinymt32_t * random) {
++    HB_SYMBOL_UNUSED( random );
      return TINYMT32_MEXP;
  }
  #endif
-@@ -67,7 +76,7 @@
+@@ -67,7 +77,7 @@
   * Users should not call this function directly.
   * @param random tinymt internal status
   */
@@ -69,7 +70,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      uint32_t x;
      uint32_t y;
  
-@@ -91,7 +100,7 @@
+@@ -91,7 +101,7 @@
   * @param random tinymt internal status
   * @return 32-bit unsigned pseudorandom number
   */
@@ -78,7 +79,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      uint32_t t0, t1;
      t0 = random->status[3];
  #if defined(LINEARITY_CHECK)
-@@ -112,7 +121,7 @@
+@@ -112,7 +122,7 @@
   * @param random tinymt internal status
   * @return floating point number r (1.0 <= r < 2.0)
   */
@@ -87,7 +88,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      uint32_t t0, t1;
      union {
  	uint32_t u;
-@@ -139,7 +148,7 @@
+@@ -139,7 +149,7 @@
   * @param random tinymt internal status
   * @return floating point number r (1.0 < r < 2.0)
   */
@@ -96,7 +97,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      uint32_t t0, t1;
      union {
  	uint32_t u;
-@@ -165,7 +174,7 @@
+@@ -165,7 +175,7 @@
   * @param random tinymt internal status
   * @return 32-bit unsigned integer r (0 <= r < 2^32)
   */
@@ -105,7 +106,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      tinymt32_next_state(random);
      return tinymt32_temper(random);
  }
-@@ -178,7 +187,7 @@
+@@ -178,7 +188,7 @@
   * @param random tinymt internal status
   * @return floating point number r (0.0 <= r < 1.0)
   */
@@ -114,7 +115,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      tinymt32_next_state(random);
      return tinymt32_temper(random) * TINYMT32_MUL;
  }
-@@ -189,7 +198,7 @@
+@@ -189,7 +199,7 @@
   * @param random tinymt internal status
   * @return floating point number r (1.0 <= r < 2.0)
   */
@@ -123,7 +124,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      tinymt32_next_state(random);
      return tinymt32_temper_conv(random);
  }
-@@ -200,7 +209,7 @@
+@@ -200,7 +210,7 @@
   * @param random tinymt internal status
   * @return floating point number r (0.0 <= r < 1.0)
   */
@@ -132,7 +133,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      tinymt32_next_state(random);
      return tinymt32_temper_conv(random) - 1.0f;
  }
-@@ -211,7 +220,7 @@
+@@ -211,7 +221,7 @@
   * @param random tinymt internal status
   * @return floating point number r (0.0 < r <= 1.0)
   */
@@ -141,7 +142,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      tinymt32_next_state(random);
      return 1.0f - tinymt32_generate_float(random);
  }
-@@ -222,7 +231,7 @@
+@@ -222,7 +232,7 @@
   * @param random tinymt internal status
   * @return floating point number r (0.0 < r < 1.0)
   */
@@ -150,7 +151,7 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      tinymt32_next_state(random);
      return tinymt32_temper_conv_open(random) - 1.0f;
  }
-@@ -235,7 +244,7 @@
+@@ -235,7 +245,7 @@
   * @param random tinymt internal status
   * @return floating point number r (0.0 < r <= 1.0)
   */
@@ -160,8 +161,8 @@ diff -urN tinymt.orig/tinymt32.h tinymt/tinymt32.h
      return tinymt32_temper(random) * (1.0 / 4294967296.0);
  }
 diff -urN tinymt.orig/tinymt64.c tinymt/tinymt64.c
---- tinymt.orig/tinymt64.c	2014-02-02 19:13:11.908020910 +0100
-+++ tinymt/tinymt64.c	2014-02-02 19:13:11.908020910 +0100
+--- tinymt.orig/tinymt64.c	2014-10-07 00:55:24.212007613 +0200
++++ tinymt/tinymt64.c	2014-10-07 00:55:24.212007613 +0200
 @@ -56,9 +56,10 @@
   * @param seed a 64-bit unsigned integer used as a seed.
   */
@@ -175,8 +176,8 @@ diff -urN tinymt.orig/tinymt64.c tinymt/tinymt64.c
  	    * (random->status[(i - 1) & 1]
  	       ^ (random->status[(i - 1) & 1] >> 62));
 diff -urN tinymt.orig/tinymt64.h tinymt/tinymt64.h
---- tinymt.orig/tinymt64.h	2014-02-02 19:13:11.912020910 +0100
-+++ tinymt/tinymt64.h	2014-02-02 19:13:11.912020910 +0100
+--- tinymt.orig/tinymt64.h	2014-10-07 00:55:24.216007613 +0200
++++ tinymt/tinymt64.h	2014-10-07 00:55:24.216007613 +0200
 @@ -16,8 +16,23 @@
   * LICENSE.txt
   */

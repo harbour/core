@@ -118,9 +118,7 @@ FUNCTION hb_PathJoin( cPathA, cPathR )
       RETURN cPathR
    ENDIF
 
-   hb_FNameSplit( cPathA, @cDirA )
-
-   IF Empty( cDirA )
+   IF Empty( cDirA := hb_FNameDir( cPathA ) )
       RETURN cPathR
    ENDIF
 
@@ -141,8 +139,6 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
    IF ! HB_ISSTRING( cPathBase ) .OR. ! HB_ISSTRING( cPathTarget )
       RETURN ""
    ENDIF
-
-   hb_default( @lForceRelative, .T. )
 
    cPathBase   := hb_PathJoin( hb_DirBase(), hb_DirSepAdd( cPathBase ) )
    cPathTarget := hb_PathJoin( hb_DirBase(), cPathTarget )
@@ -181,7 +177,8 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
    ENDIF
 
    /* Force to return relative paths even when base is different. */
-   IF lForceRelative .AND. hb_DirExists( cPathBase + ( cTestTarget := s_FN_FromArray( aPathTarget, tmp, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) ) ) )
+   IF hb_defaultValue( lForceRelative, .T. ) .AND. ;
+      hb_DirExists( cPathBase + ( cTestTarget := s_FN_FromArray( aPathTarget, tmp, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) ) ) )
       RETURN cTestTarget
    ENDIF
 

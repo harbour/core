@@ -9,7 +9,8 @@
 ${hb_name}.hbx
 
 encurlc.c
-utils.c
+mime.c
+misc.c
 
 cgi.prg
 client.prg

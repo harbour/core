@@ -14,9 +14,10 @@
 -depcontrol=qt5:${HB_WITH_QT}
 -depkeyhead=qt5:QtCore/QJsonObject
 -depoptional=qt5:yes
+-depincpath=qt5:/usr/local/opt/qt5/include{darwin}
 -depfinish=qt5
 
-{!HBMK_HAS_QT5&!android}-deppkgname=qt:QtCore
+{!HBMK_HAS_QT5&!darwin&!android}-deppkgname=qt:QtCore
 {!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h
 {!HBMK_HAS_QT5}-depcontrol=qt:${HB_WITH_QT}
 {!HBMK_HAS_QT5&HB_BUILD_3RDEXT='no'}-depcontrol=qt:no
@@ -25,9 +26,9 @@
 {!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/include
 {!HBMK_HAS_QT5&bsd}-depincpath=qt:/usr/local/include/qt4
 {!HBMK_HAS_QT5&beos}-depincpath=qt:/boot/common/include
-{darwin}-depincpath=qt:/Developer/qt/include
-{darwin}-depincpath=qt:/Library/Frameworks
-{darwin}-depincpath=qt:/usr/local/include
+{!HBMK_HAS_QT5&darwin}-depincpath=qt:/Developer/qt/include
+{!HBMK_HAS_QT5&darwin}-depincpath=qt:/Library/Frameworks
+{!HBMK_HAS_QT5&darwin}-depincpath=qt:/usr/local/include
 
 gtqtc1.cpp
 gtqtc.h

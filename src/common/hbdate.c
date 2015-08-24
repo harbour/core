@@ -934,7 +934,7 @@ long hb_timeUTCOffset( void ) /* in seconds */
       utc = mktime( gmtime_r( &current, &timeinfo ) );
       local = mktime( localtime_r( &current, &timeinfo ) );
 #else
-      timeinfo = *gmtime( &local );
+      timeinfo = *gmtime( &current );
       utc = mktime( &timeinfo );
       timeinfo = *localtime( &current );
       local = mktime( &timeinfo );
@@ -979,13 +979,15 @@ long hb_timeStampUTCOffset( int iYear, int iMonth, int iDay,
          lt.wDayOfWeek    = 0;
 
          if( s_pTzSpecificLocalTimeToSystemTime( NULL, &lt, &st ) )
-            return ( long ) ( ( hb_timeStampPack( lt.wYear, lt.wMonth, lt.wDay,
-                                                  lt.wHour, lt.wMinute, lt.wSecond,
-                                                  lt.wMilliseconds ) -
-                                hb_timeStampPack( st.wYear, st.wMonth, st.wDay,
-                                                  st.wHour, st.wMinute, st.wSecond,
-                                                  st.wMilliseconds ) ) * HB_SECONDS_PER_DAY +
-                              0.5 );
+         {
+            double dOffset = ( hb_timeStampPack( lt.wYear, lt.wMonth, lt.wDay,
+                                                 lt.wHour, lt.wMinute, lt.wSecond,
+                                                 lt.wMilliseconds ) -
+                               hb_timeStampPack( st.wYear, st.wMonth, st.wDay,
+                                                 st.wHour, st.wMinute, st.wSecond,
+                                                 st.wMilliseconds ) ) * HB_SECONDS_PER_DAY;
+            return ( long ) ( dOffset + ( dOffset < 0 ? -0.5 : 0.5 ) );
+         }
       }
 
       return hb_timeUTCOffset();

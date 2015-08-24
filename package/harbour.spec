@@ -73,17 +73,18 @@
 %define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
 %define hb_proot  export HB_INSTALL_PKG_ROOT=${RPM_BUILD_ROOT}
 %define hb_bdir   export HB_INSTALL_BIN=${RPM_BUILD_ROOT}%{_bindir}
-%define hb_idir   export HB_INSTALL_INC=${RPM_BUILD_ROOT}%{_includedir}/%{name}
 %define hb_ldir   export HB_INSTALL_LIB=${RPM_BUILD_ROOT}%{_libdir}/%{name}
 %define hb_ddir   export HB_INSTALL_DYN=${RPM_BUILD_ROOT}%{_libdir}/%{name}
-%define hb_edir   export HB_INSTALL_ETC=${RPM_BUILD_ROOT}%{hb_etcdir}
+%define hb_idir   export HB_INSTALL_INC=${RPM_BUILD_ROOT}%{_includedir}/%{name}
+%define hb_tdir   export HB_INSTALL_DOC=${RPM_BUILD_ROOT}%{_docdir}/%{name}
 %define hb_mdir   export HB_INSTALL_MAN=${RPM_BUILD_ROOT}%{_mandir}
-%define hb_tdir   export HB_INSTALL_DOC=${RPM_BUILD_ROOT}%{_docdir}
+%define hb_edir   export HB_INSTALL_ETC=${RPM_BUILD_ROOT}%{hb_etcdir}
+%define hb_cdir   export HB_INSTALL_CONTRIB=${RPM_BUILD_ROOT}%{_datadir}/%{name}/contrib
 %define hb_blds   export HB_BUILD_STRIP=all
 %define hb_bldsh  export HB_BUILD_SHARED=%{!?_with_static:yes}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
 %define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbct hbgt hbmisc hbmzip hbbz2 hbnetio hbtip hbtpathy hbcomm hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbm rddsql hbsqlit3 sddsqlt3 hbnf hbhttpd hbformat hbunix hbzebra hblzf hbmemio hbmlzo hbmxml hbexpat %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_firebird:hbfbird sddfb} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_ads:rddads} hbrun"
-%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_ssl} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
+%define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_ssl} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_cdir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
 ######################################################################
 ## Preamble.
 ######################################################################
@@ -99,7 +100,7 @@ License:        GPL (plus exception)
 Group:          Development/Languages
 URL:            http://harbour-project.org/
 Source:         %{name}-%{version}.src.tar.gz
-BuildPrereq:    gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
+BuildRequires:  gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
 Provides:       %{name} harbour lib%{name}.so
 BuildRoot:      /tmp/%{name}-%{version}-root
@@ -411,15 +412,15 @@ make install %{?_smp_mflags}
 rm -fR %{!?hb_ldconf:$HB_INSTALL_ETC/ld.so.conf.d}
 rm -f %{?hb_ldconf:$RPM_BUILD_ROOT/%{_libdir}/*.so*}
 rm -f $RPM_BUILD_ROOT/%{_bindir}/{3rdpatch.hb,check.hb,commit.hb,harbour.ucf}
-rm -f $HB_INSTALL_LIB/libbz2.a \
-      $HB_INSTALL_LIB/libjpeg.a \
-      $HB_INSTALL_LIB/liblibhpdf.a \
+rm -f $HB_INSTALL_LIB/libjpeg.a \
       $HB_INSTALL_LIB/libpng.a \
+      $HB_INSTALL_LIB/libtiff.a \
+      $HB_INSTALL_LIB/libbz2.a \
+      $HB_INSTALL_LIB/liblibhpdf.a \
       $HB_INSTALL_LIB/libsqlite3.a \
       $HB_INSTALL_LIB/libexpat.a \
       $HB_INSTALL_LIB/liblzf.a \
-      $HB_INSTALL_LIB/libminilzo.a \
-      $HB_INSTALL_LIB/libmxml.a
+      $HB_INSTALL_LIB/libminilzo.a
 
 ######################################################################
 ## Post install/uninstall scripts
@@ -443,6 +444,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root,755)
 %{_docdir}/*
 
+%dir /
+%dir /etc
+%dir /usr
 %dir %{hb_etcdir}
 %verify(not md5 mtime) %config %{hb_etcdir}/hb-charmap.def
 %{_bindir}/harbour
@@ -482,18 +486,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbvmmt.a
 %{_libdir}/%{name}/libhbusrrdd.a
 %{_libdir}/%{name}/libhbuddall.a
-%{_libdir}/%{name}/libhbbz2.a
-%{_libdir}/%{name}/libhbcomm.a
-%{_libdir}/%{name}/libhbexpat.a
-%{_libdir}/%{name}/libhbformat.a
-%{_libdir}/%{name}/libhblzf.a
-%{_libdir}/%{name}/libhbmemio.a
-%{_libdir}/%{name}/libhbmlzo.a
-%{_libdir}/%{name}/libhbmxml.a
-%{_libdir}/%{name}/libhbsqlit3.a
-%{_libdir}/%{name}/libhbunix.a
-%{_libdir}/%{name}/libhbzebra.a
-%{_libdir}/%{name}/libhbhttpd.a
 %{?_with_localzlib:%{_libdir}/%{name}/libhbzlib.a}
 %{?_with_localpcre:%{_libdir}/%{name}/libhbpcre.a}
 
@@ -507,86 +499,217 @@ rm -rf $RPM_BUILD_ROOT
 %files contrib
 %defattr(644,root,root,755)
 %dir %{_libdir}/%{name}
+%dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/contrib
+%dir %{_datadir}/%{name}/contrib/hbnf
+%{_datadir}/%{name}/contrib/hbnf/*
 %{_libdir}/%{name}/libhbnf.a
+%dir %{_datadir}/%{name}/contrib/hbblink
+%{_datadir}/%{name}/contrib/hbblink/*
 %{_libdir}/%{name}/libhbblink.a
+%dir %{_datadir}/%{name}/contrib/hbmisc
+%{_datadir}/%{name}/contrib/hbmisc/*
 %{_libdir}/%{name}/libhbmisc.a
+%dir %{_datadir}/%{name}/contrib/hbexpat
+%{_datadir}/%{name}/contrib/hbexpat/*
+%{_libdir}/%{name}/libhbexpat.a
+%dir %{_datadir}/%{name}/contrib/hbmxml
+%{_datadir}/%{name}/contrib/hbmxml/*
+%{_libdir}/%{name}/libhbmxml.a
+%{_libdir}/%{name}/libmxml.a
+%dir %{_datadir}/%{name}/contrib/hbmzip
+%{_datadir}/%{name}/contrib/hbmzip/*
 %{_libdir}/%{name}/libminizip.a
 %{_libdir}/%{name}/libhbmzip.a
+%dir %{_datadir}/%{name}/contrib/hbbz2
+%{_datadir}/%{name}/contrib/hbbz2/*
+%{_libdir}/%{name}/libhbbz2.a
+%dir %{_datadir}/%{name}/contrib/hblzf
+%{_datadir}/%{name}/contrib/hblzf/*
+%{_libdir}/%{name}/libhblzf.a
+%dir %{_datadir}/%{name}/contrib/hbmlzo
+%{_datadir}/%{name}/contrib/hbmlzo/*
+%{_libdir}/%{name}/libhbmlzo.a
+%dir %{_datadir}/%{name}/contrib/hbcomm
+%{_datadir}/%{name}/contrib/hbcomm/*
+%{_libdir}/%{name}/libhbcomm.a
+%dir %{_datadir}/%{name}/contrib/hbmemio
+%{_datadir}/%{name}/contrib/hbmemio/*
+%{_libdir}/%{name}/libhbmemio.a
+%dir %{_datadir}/%{name}/contrib/hbnetio
+%{_datadir}/%{name}/contrib/hbnetio/*
 %{_libdir}/%{name}/libhbnetio.a
+%dir %{_datadir}/%{name}/contrib/hbct
+%{_datadir}/%{name}/contrib/hbct/*
 %{_libdir}/%{name}/libhbct.a
-%{_libdir}/%{name}/libhbtip*.a
+%dir %{_datadir}/%{name}/contrib/hbtip
+%{_datadir}/%{name}/contrib/hbtip/*
+%{_libdir}/%{name}/libhbtip.a
+%dir %{_datadir}/%{name}/contrib/hbfoxpro
+%{_datadir}/%{name}/contrib/hbfoxpro/*
 %{_libdir}/%{name}/libhbfoxpro.a
+%dir %{_datadir}/%{name}/contrib/hbfship
+%{_datadir}/%{name}/contrib/hbfship/*
 %{_libdir}/%{name}/libhbfship.a
+%dir %{_datadir}/%{name}/contrib/hbxpp
+%{_datadir}/%{name}/contrib/hbxpp/*
 %{_libdir}/%{name}/libhbxpp.a
+%dir %{_datadir}/%{name}/contrib/xhb
+%{_datadir}/%{name}/contrib/xhb/*
 %{_libdir}/%{name}/libxhb.a
+%dir %{_datadir}/%{name}/contrib/hbhpdf
+%{_datadir}/%{name}/contrib/hbhpdf/*
 %{_libdir}/%{name}/libhbhpdf.a
+%dir %{_datadir}/%{name}/contrib/hbgt
+%{_datadir}/%{name}/contrib/hbgt/*
 %{_libdir}/%{name}/libhbgt.a
+%dir %{_datadir}/%{name}/contrib/hbtpathy
+%{_datadir}/%{name}/contrib/hbtpathy/*
 %{_libdir}/%{name}/libhbtpathy.a
+%dir %{_datadir}/%{name}/contrib/hbziparc
+%{_datadir}/%{name}/contrib/hbziparc/*
 %{_libdir}/%{name}/libhbziparc.a
+%dir %{_datadir}/%{name}/contrib/hbzebra
+%{_datadir}/%{name}/contrib/hbzebra/*
+%{_libdir}/%{name}/libhbzebra.a
+%dir %{_datadir}/%{name}/contrib/hbformat
+%{_datadir}/%{name}/contrib/hbformat/*
+%{_libdir}/%{name}/libhbformat.a
+%dir %{_datadir}/%{name}/contrib/hbhttpd
+%{_datadir}/%{name}/contrib/hbhttpd/*
+%{_libdir}/%{name}/libhbhttpd.a
+%dir %{_datadir}/%{name}/contrib/rddbm
+%{_datadir}/%{name}/contrib/rddbm/*
 %{_libdir}/%{name}/librddbm.a
+%dir %{_datadir}/%{name}/contrib/rddsql
+%{_datadir}/%{name}/contrib/rddsql/*
 %{_libdir}/%{name}/librddsql.a
+%dir %{_datadir}/%{name}/contrib/hbsqlit3
+%{_datadir}/%{name}/contrib/hbsqlit3/*
+%{_libdir}/%{name}/libhbsqlit3.a
+%dir %{_datadir}/%{name}/contrib/sddsqlt3
+%{_datadir}/%{name}/contrib/sddsqlt3/*
 %{_libdir}/%{name}/libsddsqlt3.a
+%dir %{_datadir}/%{name}/contrib/hbsms
+%{_datadir}/%{name}/contrib/hbsms/*
 %{_libdir}/%{name}/libhbsms.a
+%dir %{_datadir}/%{name}/contrib/hbunix
+%{_datadir}/%{name}/contrib/hbunix/*
+%{_libdir}/%{name}/libhbunix.a
+
+%{?_with_openssl:%dir %{_datadir}/%{name}/contrib/hbssl}
+%{?_with_openssl:%{_datadir}/%{name}/contrib/hbssl/*}
 %{?_with_openssl:%{_libdir}/%{name}/libhbssl.a}
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}
 %{?_with_ads:%dir %{_libdir}/%{name}}
+%{?_with_ads:%dir %{_datadir}/%{name}}
+%{?_with_ads:%dir %{_datadir}/%{name}/contrib}
+%{?_with_ads:%dir %{_datadir}/%{name}/contrib/rddads}
+%{?_with_ads:%{_datadir}/%{name}/contrib/rddads/*}
 %{?_with_ads:%{_libdir}/%{name}/librddads.a}
 
 %{?_with_allegro:%files allegro}
 %{?_with_allegro:%defattr(644,root,root,755)}
 %{?_with_allegro:%dir %{_libdir}/%{name}}
+%{?_with_allegro:%dir %{_datadir}/%{name}}
+%{?_with_allegro:%dir %{_datadir}/%{name}/contrib}
+%{?_with_allegro:%dir %{_datadir}/%{name}/contrib/gtalleg}
+%{?_with_allegro:%{_datadir}/%{name}/contrib/gtalleg/*}
 %{?_with_allegro:%{_libdir}/%{name}/libgtalleg.a}
 
 %{?_with_cairo:%files cairo}
 %{?_with_cairo:%defattr(644,root,root,755)}
 %{?_with_cairo:%dir %{_libdir}/%{name}}
+%{?_with_cairo:%dir %{_datadir}/%{name}}
+%{?_with_cairo:%dir %{_datadir}/%{name}/contrib}
+%{?_with_cairo:%dir %{_datadir}/%{name}/contrib/hbcairo}
 %{?_with_cairo:%{_libdir}/%{name}/libhbcairo.a}
+%{?_with_cairo:%{_datadir}/%{name}/contrib/hbcairo/*}
 
 %{?_with_cups:%files cups}
 %{?_with_cups:%defattr(644,root,root,755)}
 %{?_with_cups:%dir %{_libdir}/%{name}}
+%{?_with_cups:%dir %{_datadir}/%{name}}
+%{?_with_cups:%dir %{_datadir}/%{name}/contrib}
+%{?_with_cups:%dir %{_datadir}/%{name}/contrib/hbcups}
 %{?_with_cups:%{_libdir}/%{name}/libhbcups.a}
+%{?_with_cups:%{_datadir}/%{name}/contrib/hbcups/*}
 
 %{?_with_curl:%files curl}
 %{?_with_curl:%defattr(644,root,root,755)}
 %{?_with_curl:%dir %{_libdir}/%{name}}
+%{?_with_curl:%dir %{_datadir}/%{name}}
+%{?_with_curl:%dir %{_datadir}/%{name}/contrib}
+%{?_with_curl:%dir %{_datadir}/%{name}/contrib/hbcurl}
 %{?_with_curl:%{_libdir}/%{name}/libhbcurl.a}
+%{?_with_curl:%{_datadir}/%{name}/contrib/hbcurl/*}
 
 %{?_with_firebird:%files firebird}
 %{?_with_firebird:%defattr(644,root,root,755)}
 %{?_with_firebird:%dir %{_libdir}/%{name}}
+%{?_with_firebird:%dir %{_datadir}/%{name}}
+%{?_with_firebird:%dir %{_datadir}/%{name}/contrib}
+%{?_with_firebird:%dir %{_datadir}/%{name}/contrib/hbfbird}
 %{?_with_firebird:%{_libdir}/%{name}/libhbfbird.a}
 %{?_with_firebird:%{_libdir}/%{name}/libsddfb.a}
+%{?_with_firebird:%{_datadir}/%{name}/contrib/sddfb/*}
+%{?_with_firebird:%{_datadir}/%{name}/contrib/hbfbird/*}
 
 #%{?_with_freeimage:%files freeimage}
 #%{?_with_freeimage:%defattr(644,root,root,755)}
 #%{?_with_freeimage:%dir %{_libdir}/%{name}}
+#%{?_with_freeimage:%dir %{_datadir}/%{name}}
+#%{?_with_freeimage:%dir %{_datadir}/%{name}/contrib}
+#%{?_with_freeimage:%dir %{_datadir}/%{name}/contrib/hbfimage}
 #%{?_with_freeimage:%{_libdir}/%{name}/libhbfimage.a}
+#%{?_with_freeimage:%{_datadir}/%{name}/contrib/hbfimage/*}
 
 %{?_with_gd:%files gd}
 %{?_with_gd:%defattr(644,root,root,755)}
 %{?_with_gd:%dir %{_libdir}/%{name}}
+%{?_with_gd:%dir %{_datadir}/%{name}}
+%{?_with_gd:%dir %{_datadir}/%{name}/contrib}
+%{?_with_gd:%dir %{_datadir}/%{name}/contrib/hbgd}
 %{?_with_gd:%{_libdir}/%{name}/libhbgd.a}
+%{?_with_gd:%{_datadir}/%{name}/contrib/hbgd/*}
 
 %{?_with_mysql:%files mysql}
 %{?_with_mysql:%defattr(644,root,root,755)}
 %{?_with_mysql:%dir %{_libdir}/%{name}}
+%{?_with_mysql:%dir %{_datadir}/%{name}}
+%{?_with_mysql:%dir %{_datadir}/%{name}/contrib}
+%{?_with_mysql:%dir %{_datadir}/%{name}/contrib/hbmysql}
+%{?_with_mysql:%dir %{_datadir}/%{name}/contrib/sddmy}
 %{?_with_mysql:%{_libdir}/%{name}/libhbmysql.a}
 %{?_with_mysql:%{_libdir}/%{name}/libsddmy.a}
+%{?_with_mysql:%{_datadir}/%{name}/contrib/hbmysql/*}
+%{?_with_mysql:%{_datadir}/%{name}/contrib/sddmy/*}
 
 %{?_with_odbc:%files odbc}
 %{?_with_odbc:%defattr(644,root,root,755)}
 %{?_with_odbc:%dir %{_libdir}/%{name}}
+%{?_with_odbc:%dir %{_datadir}/%{name}}
+%{?_with_odbc:%dir %{_datadir}/%{name}/contrib}
+%{?_with_odbc:%dir %{_datadir}/%{name}/contrib/hbodbc}
+%{?_with_odbc:%dir %{_datadir}/%{name}/contrib/sddodbc}
 %{?_with_odbc:%{_libdir}/%{name}/libhbodbc.a}
 %{?_with_odbc:%{_libdir}/%{name}/libsddodbc.a}
+%{?_with_odbc:%{_datadir}/%{name}/contrib/hbodbc/*}
+%{?_with_odbc:%{_datadir}/%{name}/contrib/sddodbc/*}
 
 %{?_with_pgsql:%files pgsql}
 %{?_with_pgsql:%defattr(644,root,root,755)}
 %{?_with_pgsql:%dir %{_libdir}/%{name}}
+%{?_with_pgsql:%dir %{_datadir}/%{name}}
+%{?_with_pgsql:%dir %{_datadir}/%{name}/contrib}
+%{?_with_pgsql:%dir %{_datadir}/%{name}/contrib/hbpgsql}
+%{?_with_pgsql:%dir %{_datadir}/%{name}/contrib/sddpg}
 %{?_with_pgsql:%{_libdir}/%{name}/libhbpgsql.a}
 %{?_with_pgsql:%{_libdir}/%{name}/libsddpg.a}
+%{?_with_pgsql:%{_datadir}/%{name}/contrib/hbpgsql/*}
+%{?_with_pgsql:%{_datadir}/%{name}/contrib/sddpg/*}
 
 ######################################################################
 ## Spec file Changelog.

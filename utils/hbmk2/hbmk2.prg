@@ -813,22 +813,21 @@ STATIC PROCEDURE hbmk_local_entry( ... )
 
       /* Exit on first failure */
       IF nResult != _EXIT_OK
-         EXIT
+         IF lExitStr
+            OutErr( hb_StrFormat( _SELF_NAME_ + iif( ! Empty( cTargetName ), "[" + cTargetName + "]", "" ) + ;
+                                  ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
+         ENDIF
+         IF nResult != _EXIT_STOP
+            IF lPause
+               OutStd( I_( "Press any key to continue..." ) )
+               Inkey( 0 )
+            ENDIF
+            EXIT
+         ENDIF
       ENDIF
 
       ++nTargetTO_DO
    ENDDO
-
-   IF nResult != _EXIT_OK
-      IF lExitStr
-         OutErr( hb_StrFormat( _SELF_NAME_ + iif( ! Empty( cTargetName ), "[" + cTargetName + "]", "" ) + ;
-                               ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
-      ENDIF
-      IF lPause
-         OutStd( I_( "Press any key to continue..." ) )
-         Inkey( 0 )
-      ENDIF
-   ENDIF
 
    ErrorLevel( nResult )
 
@@ -5242,9 +5241,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF ! HBMK_ISCOMP( "icc|iccia64" )
             cBin_Res := "rc.exe"
             cOpt_Res := "{FR} -fo {OS} {IR}"
+#if 0
+            /* NOTE: Compiler version is not enough to detect supported parameters when Platform SDK rc.exe is used. */
             IF hbmk[ _HBMK_nCOMPVer ] >= 1600
                cOpt_Res := "-nologo " + cOpt_Res  /* NOTE: Only in MSVC 2010 and upper. [vszakats] */
             ENDIF
+#endif
             cResExt := ".res"
          ENDIF
 
@@ -6868,9 +6870,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
                         IF ! hbmk[ _HBMK_lDONTEXEC ]
                            IF hb_mtvm() .AND. Len( aTO_DO:__enumBase() ) > 1
-                              AAdd( aThreads, { hb_threadStart( @hb_processRun(), cCommand ), cCommand } )
+                              AAdd( aThreads, { hb_threadStart( @hbmk_hb_processRunFile(), cCommand, cScriptFile ), cCommand } )
                            ELSE
-                              IF ( tmp := hb_processRun( cCommand ) ) != 0
+                              IF ( tmp := hbmk_hb_processRunFile( cCommand, cScriptFile ) ) != 0
                                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running C/C++ compiler. %1$d" ), tmp ) )
                                  IF ! hbmk[ _HBMK_lQuiet ]
                                     OutErr( cCommand + _OUT_EOL )
@@ -6881,11 +6883,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                                  ENDIF
                               ENDIF
                            ENDIF
-                        ENDIF
-
-                        IF ! Empty( cScriptFile )
+                        ELSEIF ! Empty( cScriptFile )
                            FErase( cScriptFile )
                         ENDIF
+
                      NEXT
 
                      FOR EACH thread IN aThreads
@@ -9271,8 +9272,7 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSkipDep
          ENDIF
       ELSE
          /* Check in parent dir */
-         tmp := hb_DirSepAdd( hb_DirSepToOS( cParentDir ) ) + hb_DirSepToOS( cFileName )
-         IF hb_FileExists( tmp )
+         IF hb_FileExists( tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cParentDir ) ), hb_DirSepToOS( cFileName ) ) )
             RETURN tmp
          ENDIF
       ENDIF
@@ -9282,16 +9282,14 @@ STATIC FUNCTION FindHeader( hbmk, cFileName, cParentDir, lSystemHeader, lSkipDep
    IF lSkipDept
       FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
          IF !( cDir $ hbmk[ _HBMK_hDEPTSDIR ] )
-            tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName )
-            IF hb_FileExists( tmp )
+            IF hb_FileExists( tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cDir ) ), hb_DirSepToOS( cFileName ) ) )
                RETURN tmp
             ENDIF
          ENDIF
       NEXT
    ELSE
       FOR EACH cDir IN hbmk[ _HBMK_aINCPATH ]
-         tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName )
-         IF hb_FileExists( tmp )
+         IF hb_FileExists( tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cDir ) ), hb_DirSepToOS( cFileName ) ) )
             RETURN tmp
          ENDIF
       NEXT
@@ -9306,13 +9304,12 @@ STATIC FUNCTION HeaderExists( cDir, cFileName )
    LOCAL nPos
 
    IF ( nPos := At( "/", cFileName ) ) > 0
-      tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + Left( cFileName, nPos - 1 ) + ".framework" + hb_ps() + "Headers" + hb_ps() + SubStr( cFileName, nPos + 1 )
-      IF hb_FileExists( tmp )
+      IF hb_FileExists( tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cDir ) ), Left( cFileName, nPos - 1 ) + ".framework" + hb_ps() + "Headers" + hb_ps() + SubStr( cFileName, nPos + 1 ) ) )
          RETURN tmp
       ENDIF
    ENDIF
 #endif
-   tmp := hb_DirSepAdd( hb_DirSepToOS( cDir ) ) + hb_DirSepToOS( cFileName )
+   tmp := hb_PathJoin( hb_DirSepAdd( hb_DirSepToOS( cDir ) ), hb_DirSepToOS( cFileName ) )
 
    RETURN iif( hb_FileExists( tmp ), tmp, NIL )
 
@@ -11397,7 +11394,8 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
                               aArgs := AClone( hbmk[ _HBMK_aArgs ] )
                               aArgs[ hbmk[ _HBMK_nArgTarget ] ] := cHBP
                               nResult := __hbmk( aArgs, hbmk[ _HBMK_nArgTarget ], hbmk[ _HBMK_nLevel ] + 1, @hbmk[ _HBMK_lPause ] )
-                              IF nResult != 0
+                              IF nResult != _EXIT_OK .AND. ;
+                                 nResult != _EXIT_STOP
                                  RETURN nResult
                               ENDIF
                            ELSE
@@ -13160,6 +13158,18 @@ STATIC FUNCTION Apple_App_Template_Info_plist()
 </dict>
 </plist>
 #pragma __endtext
+
+STATIC FUNCTION hbmk_hb_processRunFile( cCommand, cTempFile )
+
+   LOCAL nResult
+
+   nResult := hb_processRun( cCommand )
+
+   IF ! Empty( cTempFile )
+      FErase( cTempFile )
+   ENDIF
+
+   RETURN nResult
 
 STATIC FUNCTION hbmk_hb_processRunCatch( cCommand, /* @ */ cStdOutErr )
 

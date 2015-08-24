@@ -317,8 +317,7 @@ static PHB_I18N_TRANS hb_i18n_new( void )
    PHB_I18N_TRANS pI18N;
    PHB_ITEM pKey;
 
-   pI18N = ( PHB_I18N_TRANS ) memset( hb_xgrab( sizeof( HB_I18N_TRANS ) ),
-                                      0, sizeof( HB_I18N_TRANS ) );
+   pI18N = ( PHB_I18N_TRANS ) hb_xgrabz( sizeof( HB_I18N_TRANS ) );
    hb_atomic_set( &pI18N->iUsers, 1 );
    pI18N->table = hb_hashNew( hb_itemNew( NULL ) );
    pI18N->context_table = hb_hashNew( hb_itemNew( NULL ) );
@@ -394,8 +393,7 @@ static PHB_I18N_TRANS hb_i18n_initialize( PHB_ITEM pTable )
 
       if( pContext && pDefContext )
       {
-         pI18N = ( PHB_I18N_TRANS ) memset( hb_xgrab( sizeof( HB_I18N_TRANS ) ),
-                                            0, sizeof( HB_I18N_TRANS ) );
+         pI18N = ( PHB_I18N_TRANS ) hb_xgrabz( sizeof( HB_I18N_TRANS ) );
          hb_atomic_set( &pI18N->iUsers, 1 );
          pI18N->table = pTable;
          pI18N->context_table = hb_itemNew( pContext );
@@ -596,7 +594,7 @@ static HB_BOOL hb_i18n_setpluralform( PHB_I18N_TRANS pI18N, PHB_ITEM pForm,
 
    if( pI18N && pForm )
    {
-      if( HB_IS_BLOCK( pForm ) )
+      if( HB_IS_EVALITEM( pForm ) )
       {
          if( fBase )
          {
@@ -993,7 +991,7 @@ HB_FUNC( HB_I18N_PLURALFORM )
    if( pI18N )
    {
       PHB_ITEM pOldForm = hb_itemNew( NULL );
-      PHB_ITEM pForm = hb_param( iParam, HB_IT_STRING | HB_IT_BLOCK );
+      PHB_ITEM pForm = hb_param( iParam, HB_IT_STRING | HB_IT_EVALITEM );
       HB_BOOL fBase = hb_parl( iParam + 1 );
 
       if( hb_i18n_getpluralform( pI18N, pOldForm, fBase ) )
@@ -1121,7 +1119,7 @@ HB_FUNC( HB_I18N_CHECK )
    hb_retl( hb_i18n_headercheck( hb_parc( 1 ), hb_parclen( 1 ) ) );
 }
 
-/* unoffical function to access ineternal hash table used by i18n set */
+/* unofficial function to access internal hash table used by i18n set */
 HB_FUNC( __I18N_HASHTABLE )
 {
    PHB_I18N_TRANS pI18N;

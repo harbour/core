@@ -48,12 +48,8 @@
 
 #define _HB_ZNET_INTERNAL_
 
-#include "hbapi.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbsocket.h"
-#include "hbbfish.h"
 #include "hbznet.h"
+#include "hbbfish.h"
 #include "hbzlib.ch"
 
 #include <zlib.h>
@@ -75,7 +71,7 @@ typedef struct _HB_ZNETSTREAM
 }
 HB_ZNETSTREAM;
 
-#define HB_ZNET_BUFSIZE 16384
+#define HB_ZNET_BUFSIZE       0x4000
 
 #if MAX_MEM_LEVEL >= 8
 #  define HB_ZNET_MEM_LEVEL   8
@@ -112,9 +108,7 @@ void hb_znetClose( PHB_ZNETSTREAM pStream )
  */
 PHB_ZNETSTREAM hb_znetOpen( int level, int strategy )
 {
-   PHB_ZNETSTREAM pStream = ( PHB_ZNETSTREAM ) hb_xgrab( sizeof( HB_ZNETSTREAM ) );
-
-   memset( pStream, 0, sizeof( HB_ZNETSTREAM ) );
+   PHB_ZNETSTREAM pStream = ( PHB_ZNETSTREAM ) hb_xgrabz( sizeof( HB_ZNETSTREAM ) );
 
    if( level != Z_DEFAULT_COMPRESSION &&
        !( level >= Z_NO_COMPRESSION && level <= Z_BEST_COMPRESSION ) )
@@ -264,10 +258,16 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
                pStream->crypt_size -= rec;
             }
          }
+
          pStream->rd.avail_in += ( uInt ) rec;
-         if( pStream->rd.avail_in == 0 )
-            break;
          rec = 0;
+         if( pStream->rd.avail_in == 0 )
+         {
+            if( pStream->rd.avail_out == ( uInt ) len )
+               continue;
+            else
+               break;
+         }
       }
       pStream->err = inflate( &pStream->rd, Z_SYNC_FLUSH );
 /*
@@ -276,7 +276,10 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
  */
       if( pStream->err != Z_OK &&
           ! ( pStream->err == Z_BUF_ERROR && pStream->rd.avail_in == 0 ) )
+      {
+         hb_socketSetError( HB_SOCKET_ERR_OTHER );
          break;
+      }
    }
 
    len -= pStream->rd.avail_out;
@@ -286,47 +289,41 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
 
 static long hb_znetStreamWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT timeout )
 {
-   long tosnd = HB_ZNET_BUFSIZE - pStream->wr.avail_out;
-   long snd = 0, rest =  0;
+   long snd = 0, rest =  0, tosnd;
 
    if( pStream->crypt )
    {
-      long size = ( long ) ( pStream->wr.next_out - pStream->crypt_out );
-
-      if( size > 2 )
+      rest = ( long ) ( pStream->wr.next_out - pStream->crypt_out );
+      if( rest > 2 )
       {
-         HB_U16 uiLen = ( HB_U16 ) ( size - 2 );
+         HB_U16 uiLen = ( HB_U16 ) ( rest - 2 );
          HB_PUT_BE_UINT16( pStream->crypt_out, uiLen );
-         uiLen = ( HB_U16 ) ( ( ( size + 7 ) ^ 0x07 ) & 0x07 );
-         if( ( uInt ) uiLen > pStream->wr.avail_out )
-         {
-            /* it may happen only if encryption was enabled in non empty
-             * buffer and the unencrypted part has not been flushed yet.
-             */
-            rest = size;
-         }
-         else
+         uiLen = ( HB_U16 ) ( ( ( rest + 0x07 ) ^ 0x07 ) & 0x07 );
+         if( ( uInt ) uiLen <= pStream->wr.avail_out )
          {
             while( uiLen-- )
             {
                *pStream->wr.next_out++ = ( Byte ) 0; /* TODO: use better hashing data */
                pStream->wr.avail_out--;
-               size++;
+               rest++;
             }
             /* encrypt the buffer */
-            for( tosnd = 0; tosnd < size; tosnd += 8 )
+            for( tosnd = 0; tosnd < rest; tosnd += 8 )
                hb_znetEncrypt( pStream, pStream->crypt_out + tosnd );
+            rest = 0;
             pStream->crypt_out = pStream->wr.next_out;
             pStream->wr.next_out += 2;
             if( pStream->wr.avail_out < 2 )
                pStream->skip_out = 2 - pStream->wr.avail_out;
             pStream->wr.avail_out -= 2 - pStream->skip_out;
          }
-         tosnd = ( long ) ( pStream->crypt_out - pStream->outbuf );
       }
       else
-         tosnd -= 2;
+         rest = 0;
+      tosnd = ( long ) ( pStream->crypt_out - pStream->outbuf );
    }
+   else
+      tosnd = HB_ZNET_BUFSIZE - pStream->wr.avail_out;
 
    if( tosnd > 0 )
    {

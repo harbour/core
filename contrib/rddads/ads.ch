@@ -100,6 +100,7 @@
 #define ADS_RESPECTFILTERS                1
 #define ADS_IGNOREFILTERS                 2
 #define ADS_RESPECTSCOPES                 3
+#define ADS_REFRESHCOUNT                  4
 
 /* Server type constants for ORing with AdsSetServerType() */
 #define ADS_LOCAL_SERVER                  1
@@ -122,7 +123,7 @@
 #define ADS_MGMT_NETWARE5_OR_NEWER_SERVER 5
 #define ADS_MGMT_LINUX_SERVER             6
 
-/* ACE Handle types */
+/* ACE handle types */
 #define ADS_CONNECTION                    1
 #define ADS_TABLE                         2
 #define ADS_INDEX_ORDER                   3
@@ -141,13 +142,13 @@
 #define ADS_DD_COLUMN_OBJECT              4
 #define ADS_DD_INDEX_OBJECT               5
 #define ADS_DD_VIEW_OBJECT                6
-#define ADS_DD_VIEW_OR_TABLE_OBJECT       7  /* Used in AdsFindFirst/NextTable */
+#define ADS_DD_VIEW_OR_TABLE_OBJECT       7  /* Used in AdsFindFirstTable()/AdsFindNextTable() */
 #define ADS_DD_USER_OBJECT                8
 #define ADS_DD_USER_GROUP_OBJECT          9
 #define ADS_DD_PROCEDURE_OBJECT           10
 #define ADS_DD_DATABASE_OBJECT            11
 #define ADS_DD_LINK_OBJECT                12
-#define ADS_DD_TABLE_VIEW_OR_LINK_OBJECT  13  /* Used in v6.2 AdsFindFirst/NextTable */
+#define ADS_DD_TABLE_VIEW_OR_LINK_OBJECT  13  /* Used in 6.2 AdsFindFirstTable()/AdsFindNextTable() */
 
 /* Common properties numbers < 100 */
 #define ADS_DD_COMMENT                    1
@@ -166,7 +167,7 @@
 #define ADS_DD_INTERNET_SECURITY_LEVEL    108
 #define ADS_DD_MAX_FAILED_ATTEMPTS        109
 #define ADS_DD_ALLOW_ADSSYS_NET_ACCESS    110
-#define ADS_DD_VERSION_MAJOR              111  /* properties for customer dd version */
+#define ADS_DD_VERSION_MAJOR              111  /* properties for customer DD version */
 #define ADS_DD_VERSION_MINOR              112
 
 /* Table properties between 200 and 299 */

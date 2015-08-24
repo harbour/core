@@ -53,9 +53,9 @@
 #include "hbapicdp.h"
 #include "hbapierr.h"
 
-static HB_SIZE hb_strAtI( PHB_CODEPAGE cdp, const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
+static HB_SIZE s_strAtI( PHB_CODEPAGE cdp, const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strAtI(%p, %s, %" HB_PFS "u, %s, %" HB_PFS "u)", cdp, szSub, nSubLen, szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "s_strAtI(%p, %s, %" HB_PFS "u, %s, %" HB_PFS "u)", cdp, szSub, nSubLen, szText, nLen ) );
 
    if( nSubLen > 0 && nLen >= nSubLen )
    {
@@ -125,8 +125,8 @@ HB_FUNC( HB_ATI )
 
          if( nTo > 0 )
          {
-            nPos = hb_strAtI( cdp, hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                              pszText, nTo );
+            nPos = s_strAtI( cdp, hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                             pszText, nTo );
             if( nPos > 0 )
                nPos += HB_CDP_ISCHARIDX( cdp ) ? nStart : nFrom;
          }

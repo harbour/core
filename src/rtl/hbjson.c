@@ -50,6 +50,7 @@
 #include "hbapiitm.h"
 #include "hbapistr.h"
 #include "hbset.h"
+#include "hbjson.h"
 
 /*
    The application/json Media Type for JavaScript Object Notation (JSON)
@@ -231,10 +232,19 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
    }
    else if( HB_IS_NUMINT( pValue ) )
    {
-      char buf[ 32 ];
+      char buf[ 24 ];
+      HB_MAXINT nVal = hb_itemGetNInt( pValue );
+      HB_BOOL fNeg = nVal < 0;
+      int i = 0;
 
-      hb_snprintf( buf, sizeof( buf ), "%" PFHL "d", hb_itemGetNInt( pValue ) );
-      _hb_jsonCtxAdd( pCtx, buf, strlen( buf ) );
+      if( fNeg )
+         nVal = -nVal;
+      do
+         buf[ sizeof( buf ) - ++i ] = ( nVal % 10 ) + '0';
+      while( ( nVal /= 10 ) != 0 );
+      if( fNeg )
+         buf[ sizeof( buf ) - ++i ] = '-';
+      _hb_jsonCtxAdd( pCtx, &buf[ sizeof( buf ) - i ], i );
    }
    else if( HB_IS_NUMERIC( pValue ) )
    {
@@ -334,7 +344,6 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
             if( HB_IS_STRING( pKey ) )
             {
                PHB_ITEM pItem = hb_hashGetValueAt( pValue, nIndex );
-               HB_BOOL fEOL = HB_FALSE;
 
                if( nIndex > 1 )
                   _hb_jsonCtxAdd( pCtx, ",", 1 );
@@ -352,7 +361,10 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
                   fEOL = ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) && hb_itemSize( pItem ) > 0;
                }
                else
+               {
                   _hb_jsonCtxAdd( pCtx, ":", 1 );
+                  fEOL = HB_FALSE;
+               }
 
                _hb_jsonEncode( pItem, pCtx, nLevel + 1, fEOL );
             }
@@ -654,6 +666,8 @@ char * hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman )
    pCtx->iEolLen = ( int ) strlen( pCtx->szEol );
 
    _hb_jsonEncode( pValue, pCtx, 0, HB_FALSE );
+   if( fHuman )
+      _hb_jsonCtxAdd( pCtx, pCtx->szEol, pCtx->iEolLen );
 
    nLen = pCtx->pHead - pCtx->pBuffer;
    szRet = ( char * ) hb_xrealloc( pCtx->pBuffer, nLen + 1 );

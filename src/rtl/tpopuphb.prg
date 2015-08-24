@@ -58,8 +58,8 @@ CREATE CLASS hb_PopupMenu INHERIT HBPopupMenu
    METHOD shadowed( lShadowed ) SETGET
 
    METHOD setCoors( nRow, nCol, lTop )
-   METHOD isShortCut( nKey, nID )
-   METHOD isQuick( nKey, nID )
+   METHOD isShortCut( nKey, /* @ */ nID )
+   METHOD isQuick( nKey, /* @ */ nID )
 
 ENDCLASS
 
@@ -121,7 +121,7 @@ METHOD setCoors( nRow, nCol, lTop ) CLASS hb_PopupMenu
 
    RETURN Self
 
-METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
+METHOD isShortCut( nKey, /* @ */ nID ) CLASS hb_PopupMenu
 
    LOCAL nItem
    LOCAL nTotal
@@ -152,9 +152,9 @@ METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
 
       // Loop to wrap around through TopMenu from Current Item:
       FOR i := 1 TO nTotal
-         IF !( oItem := ::getItem( nItem ) ):enabled
-         ELSEIF ! oItem:isPopUp()
-         ELSEIF oItem:data:isQuick( nKey, @nID )
+         IF ( oItem := ::getItem( nItem ) ):enabled .AND. ;
+            oItem:isPopUp() .AND. ;
+            oItem:data:isQuick( nKey, @nID )
             RETURN .T.
          ENDIF
          IF ++nItem > nTotal
@@ -166,21 +166,17 @@ METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
 
    RETURN .F.
 
-METHOD isQuick( nKey, nID ) CLASS hb_PopupMenu
+METHOD isQuick( nKey, /* @ */ nID ) CLASS hb_PopupMenu
 
-   LOCAL nItem
-   LOCAL nTotal
    LOCAL nShortCut
    LOCAL oItem
 
    IF ( nShortCut := ::getShortCt( nKey ) ) == 0
 
-      nTotal := ::nItemCount
-
-      FOR nItem := 1 TO nTotal
-         IF !( oItem := ::getItem( nItem ) ):Enabled
-         ELSEIF ! oItem:isPopUp()
-         ELSEIF oItem:Data:isQuick( nKey, @nID )
+      FOR EACH oItem IN ::aItems
+         IF oItem:Enabled .AND. ;
+            oItem:isPopUp() .AND. ;
+            oItem:data:isQuick( nKey, @nID )
             RETURN .T.
          ENDIF
       NEXT
@@ -189,7 +185,7 @@ METHOD isQuick( nKey, nID ) CLASS hb_PopupMenu
 
       IF oItem:enabled
          ::select( nShortCut )
-         Eval( oItem:Data, oItem )
+         Eval( oItem:data, oItem )
          nID := oItem:id
          RETURN .T.
       ENDIF

@@ -33,14 +33,15 @@ FUNCTION hb_udpds_Find( nPort, cName )
    IF ! Empty( hSocket := hb_socketOpen( , HB_SOCKET_PT_DGRAM ) )
       hb_socketSetBroadcast( hSocket, .T. )
       cName := hb_StrToUTF8( cName )
-      IF hb_socketSendTo( hSocket, hb_BChar( 5 ) + cName + hb_BChar( 0 ), , , { HB_SOCKET_AF_INET, "255.255.255.255", nPort } ) == hb_BLen( cName ) + 2
+      IF s_sendBroadcastMessages( hSocket, nPort, hb_BChar( 5 ) + cName + hb_BChar( 0 ) )
          nTime := hb_MilliSeconds()
          nEnd := nTime + 100   /* 100ms delay is enough on LAN */
          aRet := {}
          DO WHILE nEnd > nTime
             cBuffer := Space( 2000 )
             nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, nEnd - nTime )
-            IF hb_BLeft( cBuffer, hb_BLen( cName ) + 2 ) == hb_BChar( 6 ) + cName + hb_BChar( 0 )
+            IF hb_BLeft( cBuffer, hb_BLen( cName ) + 2 ) == hb_BChar( 6 ) + cName + hb_BChar( 0 ) .AND. ;
+               AScan( aRet, {|x| x[ 1 ] == aAddr[ 2 ] } ) == 0
                AAdd( aRet, { aAddr[ 2 ], hb_BSubStr( cBuffer, hb_BLen( cName ) + 3, nLen - hb_BLen( cName ) - 2 ) } )
             ENDIF
             nTime := hb_MilliSeconds()
@@ -50,6 +51,43 @@ FUNCTION hb_udpds_Find( nPort, cName )
    ENDIF
 
    RETURN aRet
+
+STATIC FUNCTION s_sendBroadcastMessages( hSocket, nPort, cMessage )
+
+   LOCAL lResult, cAddr
+
+   lResult := .F.
+   FOR EACH cAddr IN s_getBroadcastAddresses()
+      IF hb_socketSendTo( hSocket, cMessage, , , ;
+                          { HB_SOCKET_AF_INET, cAddr, nPort } ) == hb_BLen( cMessage )
+         lResult := .t.
+      ENDIF
+   NEXT
+RETURN lResult
+
+STATIC FUNCTION s_getBroadcastAddresses()
+   LOCAL aAddrs, aIF, cAddr, lLo
+
+   lLo := .F.
+   aAddrs := {}
+   FOR EACH aIF IN hb_socketGetIFaces()
+      cAddr := aIF[ HB_SOCKET_IFINFO_BROADCAST ]
+      IF Empty( cAddr )
+         IF !lLo .AND. aIF[ HB_SOCKET_IFINFO_ADDR ] == "127.0.0.1"
+            lLo := .T.
+         ENDIF
+      ELSEIF HB_AScan( aAddrs, cAddr,,, .T. ) == 0
+         AAdd( aAddrs, cAddr )
+      ENDIF
+   NEXT
+   IF Empty( aAddrs )
+      AAdd( aAddrs, "255.255.255.255" )
+   ENDIF
+   IF lLo
+      HB_AIns( aAddrs, 1, "127.0.0.1", .T. )
+   ENDIF
+
+RETURN aAddrs
 
 /* Server */
 

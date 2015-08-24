@@ -49,6 +49,7 @@
 
 #include "hbcomp.h"
 #include "hbhash.h"
+#include "hbset.h"
 
 static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuffer, int iStartLine );
 static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PHB_HFUNC pFunc, HB_BOOL fError );
@@ -62,11 +63,17 @@ int hb_compMainExt( int argc, const char * const argv[],
                                   PHB_PP_MSG_FUNC pMsgFunc )
 {
    HB_COMP_DECL;
-   int iStatus = EXIT_SUCCESS;
-   HB_BOOL bAnyFiles = HB_FALSE;
+   int iStatus = EXIT_SUCCESS, iFileCount = 0;
+   int iFileCase, iDirCase, iDirSep;
+   HB_BOOL fTrimFN;
    int i;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_compMain()" ) );
+
+   iFileCase = hb_setGetFileCase();
+   iDirCase = hb_setGetDirCase();
+   iDirSep = hb_setGetDirSeparator();
+   fTrimFN = hb_setGetTrimFileName();
 
    if( pBufPtr && pnSize )
    {
@@ -82,11 +89,12 @@ int hb_compMainExt( int argc, const char * const argv[],
    HB_COMP_PARAM->pOutPath = NULL;
 
    /* First check the environment variables */
-   hb_compChkCompilerSwitch( HB_COMP_PARAM, 0, NULL );
+   hb_compChkEnvironment( HB_COMP_PARAM );
 
    /* Then check command line arguments
       This will override duplicated environment settings */
-   hb_compChkCompilerSwitch( HB_COMP_PARAM, argc, argv );
+   hb_compChkCommandLine( HB_COMP_PARAM, argc, argv );
+
    if( ! HB_COMP_PARAM->fExit )
    {
       if( HB_COMP_PARAM->iTraceInclude == 0 &&
@@ -114,18 +122,12 @@ int hb_compMainExt( int argc, const char * const argv[],
       if( HB_COMP_PARAM->fCredits )
          hb_compPrintCredits( HB_COMP_PARAM );
 
-      if( HB_COMP_PARAM->fBuildInfo || HB_COMP_PARAM->fCredits )
-      {
-         hb_comp_free( HB_COMP_PARAM );
-         return iStatus;
-      }
-
       /* Set Search Path */
       if( HB_COMP_PARAM->fINCLUDE )
-         hb_compChkPaths( HB_COMP_PARAM );
+         hb_compChkAddIncPaths( HB_COMP_PARAM );
 
       /* Set standard rules */
-      hb_compInitPP( HB_COMP_PARAM, argc, argv, pOpenFunc );
+      hb_compInitPP( HB_COMP_PARAM, pOpenFunc );
 
       /* Prepare the table of identifiers */
       hb_compIdentifierOpen( HB_COMP_PARAM );
@@ -133,7 +135,7 @@ int hb_compMainExt( int argc, const char * const argv[],
 
    if( szSource )
    {
-      bAnyFiles = HB_TRUE;
+      iFileCount++;
       iStatus = hb_compCompile( HB_COMP_PARAM, "{SOURCE}", szSource, iStartLine );
    }
    else
@@ -144,7 +146,7 @@ int hb_compMainExt( int argc, const char * const argv[],
          HB_TRACE( HB_TR_DEBUG, ( "main LOOP(%i,%s)", i, argv[ i ] ) );
          if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
          {
-            bAnyFiles = HB_TRUE;
+            iFileCount++;
             iStatus = hb_compCompile( HB_COMP_PARAM, argv[ i ], NULL, 0 );
             if( iStatus != EXIT_SUCCESS )
                break;
@@ -152,27 +154,34 @@ int hb_compMainExt( int argc, const char * const argv[],
       }
    }
 
-   if( ! bAnyFiles && ! HB_COMP_PARAM->fQuiet && ! HB_COMP_PARAM->fExit )
+   if( iFileCount == 0 && ! HB_COMP_PARAM->fQuiet && ! HB_COMP_PARAM->fExit &&
+       ! HB_COMP_PARAM->fBuildInfo && ! HB_COMP_PARAM->fCredits )
    {
       hb_compPrintUsage( HB_COMP_PARAM, argv[ 0 ] );
       iStatus = EXIT_FAILURE;
    }
-
-   if( HB_COMP_PARAM->iErrorCount > 0 )
+   else if( HB_COMP_PARAM->iErrorCount > 0 )
       iStatus = EXIT_FAILURE;
 
-   if( iStatus == EXIT_SUCCESS )
+   if( iFileCount > 0 && iStatus == EXIT_SUCCESS )
+   {
       hb_compI18nSave( HB_COMP_PARAM, HB_TRUE );
 
-   if( pBufPtr && pnSize && iStatus == EXIT_SUCCESS )
-   {
-      *pBufPtr = HB_COMP_PARAM->pOutBuf;
-      *pnSize  = HB_COMP_PARAM->nOutBufSize;
-      HB_COMP_PARAM->pOutBuf = NULL;
-      HB_COMP_PARAM->nOutBufSize = 0;
+      if( pBufPtr && pnSize && iStatus == EXIT_SUCCESS )
+      {
+         *pBufPtr = HB_COMP_PARAM->pOutBuf;
+         *pnSize  = HB_COMP_PARAM->nOutBufSize;
+         HB_COMP_PARAM->pOutBuf = NULL;
+         HB_COMP_PARAM->nOutBufSize = 0;
+      }
    }
 
    hb_comp_free( HB_COMP_PARAM );
+
+   hb_setSetFileCase( iFileCase );
+   hb_setSetDirCase( iDirCase );
+   hb_setSetDirSeparator( iDirSep );
+   hb_setSetTrimFileName( fTrimFN );
 
    return iStatus;
 }
@@ -1282,7 +1291,7 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VART
    }
 }
 
-PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char* szFromClass )
+PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, HB_BYTE cVarType, const char* szFromClass )
 {
    PHB_VARTYPE   pVT = HB_COMP_PARAM->pVarType;
    PHB_VARTYPE*  ppVT = &( HB_COMP_PARAM->pVarType );
@@ -1882,10 +1891,7 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
  */
 static PHB_HFUNC hb_compFunctionNew( HB_COMP_DECL, const char * szName, HB_SYMBOLSCOPE cScope )
 {
-   PHB_HFUNC pFunc;
-
-   pFunc = ( PHB_HFUNC ) hb_xgrab( sizeof( HB_HFUNC ) );
-   memset( pFunc, 0, sizeof( HB_HFUNC ) );
+   PHB_HFUNC pFunc = ( PHB_HFUNC ) hb_xgrabz( sizeof( HB_HFUNC ) );
 
    pFunc->szName         = szName;
    pFunc->cScope         = cScope;
@@ -1899,9 +1905,7 @@ static PHB_HFUNC hb_compFunctionNew( HB_COMP_DECL, const char * szName, HB_SYMBO
 
 static PHB_HINLINE hb_compInlineNew( HB_COMP_DECL, const char * szName, int iLine )
 {
-   PHB_HINLINE pInline;
-
-   pInline = ( PHB_HINLINE ) hb_xgrab( sizeof( HB_HINLINE ) );
+   PHB_HINLINE pInline = ( PHB_HINLINE ) hb_xgrab( sizeof( HB_HINLINE ) );
 
    pInline->szName     = szName;
    pInline->pCode      = NULL;
@@ -3965,6 +3969,15 @@ void hb_compCompileEnd( HB_COMP_DECL )
       hb_xfree( pIncFile );
    }
 
+   while( HB_COMP_PARAM->ppdefines )
+   {
+      PHB_PPDEFINE pDefine = HB_COMP_PARAM->ppdefines;
+
+      HB_COMP_PARAM->ppdefines = pDefine->pNext;
+      hb_xfree( pDefine->szName );
+      hb_xfree( pDefine );
+   }
+
    while( HB_COMP_PARAM->inlines.pFirst )
    {
       PHB_HINLINE pInline = HB_COMP_PARAM->inlines.pFirst;
@@ -4105,6 +4118,7 @@ static void hb_compGenIncluded( HB_COMP_DECL )
 static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 {
    pSwitches->fDebugInfo        = HB_COMP_PARAM->fDebugInfo;
+   pSwitches->fHideSource       = HB_COMP_PARAM->fHideSource;
    pSwitches->fAutoMemvarAssume = HB_COMP_PARAM->fAutoMemvarAssume;
    pSwitches->fI18n             = HB_COMP_PARAM->fI18n;
    pSwitches->fLineNumbers      = HB_COMP_PARAM->fLineNumbers;
@@ -4114,6 +4128,7 @@ static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
    pSwitches->fForceMemvars     = HB_COMP_PARAM->fForceMemvars;
    pSwitches->iStartProc        = HB_COMP_PARAM->iStartProc;
    pSwitches->iWarnings         = HB_COMP_PARAM->iWarnings;
+   pSwitches->iGenCOutput       = HB_COMP_PARAM->iGenCOutput;
    pSwitches->iExitLevel        = HB_COMP_PARAM->iExitLevel;
    pSwitches->iHidden           = HB_COMP_PARAM->iHidden;
    pSwitches->supported         = HB_COMP_PARAM->supported;
@@ -4122,6 +4137,7 @@ static void hb_compSaveSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
 {
    HB_COMP_PARAM->fDebugInfo        = pSwitches->fDebugInfo;
+   HB_COMP_PARAM->fHideSource       = pSwitches->fHideSource;
    HB_COMP_PARAM->fAutoMemvarAssume = pSwitches->fAutoMemvarAssume;
    HB_COMP_PARAM->fI18n             = pSwitches->fI18n;
    HB_COMP_PARAM->fLineNumbers      = pSwitches->fLineNumbers;
@@ -4131,6 +4147,7 @@ static void hb_compRestoreSwitches( HB_COMP_DECL, PHB_COMP_SWITCHES pSwitches )
    HB_COMP_PARAM->fForceMemvars     = pSwitches->fForceMemvars;
    HB_COMP_PARAM->iStartProc        = pSwitches->iStartProc;
    HB_COMP_PARAM->iWarnings         = pSwitches->iWarnings;
+   HB_COMP_PARAM->iGenCOutput       = pSwitches->iGenCOutput;
    HB_COMP_PARAM->iExitLevel        = pSwitches->iExitLevel;
    HB_COMP_PARAM->iHidden           = pSwitches->iHidden;
    HB_COMP_PARAM->supported         = pSwitches->supported;

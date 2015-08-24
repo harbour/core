@@ -153,6 +153,9 @@
       defined( __MINGW64__ )
    #define HB_CPU_X86_64
 
+#elif defined( __arm64__ )
+   #define HB_CPU_ARM_64
+
 #elif defined( __arm__ ) || \
       defined( __arm ) || \
       defined( ARM ) || \
@@ -280,6 +283,7 @@
    Visual Studio 2008, version 9.0         1500
    Visual Studio 2010, version 10.0        1600
    Visual Studio 2012, version 11.0        1700
+   Visual Studio 2013, version 12.0        1800
 */
 
 /* ***********************************************************************
@@ -369,7 +373,8 @@
 
 /* Sub-option inside HB_OS_DARWIN */
 #ifndef HB_OS_IOS /* Experimental */
-   #if defined( HB_OS_DARWIN ) && defined( HB_CPU_ARM )
+   #if defined( HB_OS_DARWIN ) && \
+       ( defined( HB_CPU_ARM ) || defined( __IPHONE_OS_VERSION_MIN_REQUIRED ) )
       #define HB_OS_IOS
    #endif
 #endif

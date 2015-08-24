@@ -287,7 +287,7 @@ PROCEDURE __SetFormat( bFormat )
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
-      IF HB_ISBLOCK( bFormat )
+      IF HB_ISEVALITEM( bFormat )
          oGetList:SetFormat( bFormat )
       ELSE
          oGetList:SetFormat()
