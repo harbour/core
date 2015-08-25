@@ -476,7 +476,7 @@
 #define HB_CURLINFO_OS_ERRNO                  27
 #define HB_CURLINFO_NUM_CONNECTS              28
 #define HB_CURLINFO_COOKIELIST                29
-#define HB_CURLINFO_LASTSOCKET                30
+#define HB_CURLINFO_LASTSOCKET                30  /* deprecated */
 #define HB_CURLINFO_FTP_ENTRY_PATH            31
 #define HB_CURLINFO_PRIMARY_IP                32
 #define HB_CURLINFO_APPCONNECT_TIME           33
@@ -489,6 +489,7 @@
 #define HB_CURLINFO_PRIMARY_PORT              40
 #define HB_CURLINFO_LOCAL_IP                  41
 #define HB_CURLINFO_LOCAL_PORT                42
+#define HB_CURLINFO_ACTIVESOCKET              43
 
 /* curl result codes. */
 

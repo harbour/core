@@ -2033,7 +2033,13 @@ HB_FUNC( CURL_EASY_GETINFO )
 #endif
             type = HB_CURL_INFO_TYPE_SLIST;
             break;
-         case HB_CURLINFO_LASTSOCKET:
+         case HB_CURLINFO_ACTIVESOCKET:
+#if LIBCURL_VERSION_NUM >= 0x072D00
+            res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_ACTIVESOCKET, &ret_ptr );
+#endif
+            type = HB_CURL_INFO_TYPE_PTR;
+            break;
+         case HB_CURLINFO_LASTSOCKET:  /* NOTE: Not compatible with 64-bit Windows builds */
 #if LIBCURL_VERSION_NUM >= 0x070F02
             res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_LASTSOCKET, &ret_long );
 #endif
