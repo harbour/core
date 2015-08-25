@@ -135,25 +135,13 @@ if not "%HB_DIR_7Z%" == "" (
 
 xcopy /y /s /q /i "%~dp0..\src\3rd\*.h" "%HB_ABSROOT%src\3rd\"
 
-:: Copy C compiler
-
 :: TODO: This whole section should only be relevant
 ::       if the distro is MinGW based. Much of it is
 ::       useful only if MinGW _is_ actually bundled
 ::       with the package, which is probably something
 ::       that should be avoided in the future.
 
-set MINGW_HOST=32
-if exist "%HB_DIR_MINGW%\x86_64-w64-mingw32" set MINGW_HOST=64
-
-if "%MINGW_HOST%" == "32" set MINGW_ROOT=comp\mingw\
-if "%MINGW_HOST%" == "64" set MINGW_ROOT=comp\mingw64\
-
-if "%_HB_PKG_BUNDLE_C%" == "yes" (
-   xcopy /y /s /q /e "%HB_DIR_MINGW%" "%HB_ABSROOT%%MINGW_ROOT%"
-) else (
-   xcopy /y /q "%~dp0getmingw.bat" "%HB_ABSROOT%bin\"
-)
+xcopy /y /q "%~dp0getmingw.bat" "%HB_ABSROOT%bin\"
 
 :: Copy MinGW runtime .dlls
 
@@ -167,57 +155,6 @@ if exist "%_MINGW_DLL_DIR%\libgcc_s_*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s
 if exist "%_MINGW_DLL_DIR%\mingwm*.dll"    xcopy /y "%HB_DIR_MINGW%\bin\mingwm*.dll"    "%HB_ABSROOT%bin\"
 :: for posix cc1.exe to run without putting MinGW bin directory into PATH
 rem if exist "%_MINGW_DLL_DIR%\libwinpthread-*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libwinpthread-*.dll" "%HB_ABSROOT%bin\"
-
-:: Delete stuff from C compiler directory we don't need:
-:: - secondary target from multi-target MinGWs
-:: - non-C/C++ language support
-:: - gdb (along with Python)
-:: - 3rd party libraries
-
-rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%etc\" 2> nul
-rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%opt\" 2> nul
-rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%share\" 2> nul
-del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\gdb*.exe" 2> nul
-del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\gfortran.exe" 2> nul
-del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\gnat*.exe" 2> nul
-del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\libgfortran-*.dll" 2> nul
-del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\libgnarl-*.dll" 2> nul
-del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\libgnat-*.dll" 2> nul
-
-if "%MINGW_HOST%" == "32" (
-
-   for /f %%I in ('dir /b "%HB_DIR_MINGW%\lib\gcc\i686-w64-mingw32\?.*"') do set MINGW_VER=%%I
-
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib64\" 2> nul
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\64\" 2> nul
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\adainclude\" 2> nul
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\%MINGW_VER%\adalib\" 2> nul
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\i686-w64-mingw32\lib64\" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\i686-w64-mingw32-gfortran.exe" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgfortran-*.dll" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnarl-*.dll" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%i686-w64-mingw32\lib\libgnat-*.dll" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%MINGW_VER%\f951.exe" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\i686-w64-mingw32\%MINGW_VER%\gnat1.exe" 2> nul
-
-) else if "%MINGW_HOST%" == "64" (
-
-   for /f %%I in ('dir /b "%HB_DIR_MINGW%\lib\gcc\x86_64-w64-mingw32\?.*"') do set MINGW_VER=%%I
-
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib32\" 2> nul
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\32\" 2> nul
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\adainclude\" 2> nul
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\%MINGW_VER%\adalib\" 2> nul
-   rd /s /q  "%HB_ABSROOT%%MINGW_ROOT%lib\gcc\x86_64-w64-mingw32\lib32\" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%bin\x86_64-w64-mingw32-gfortran.exe" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgfortran-*.dll" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnarl-*.dll" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%x86_64-w64-mingw32\lib\libgnat-*.dll" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%MINGW_VER%\f951.exe" 2> nul
-   del /f /q "%HB_ABSROOT%%MINGW_ROOT%libexec\gcc\x86_64-w64-mingw32\%MINGW_VER%\gnat1.exe" 2> nul
-)
-
-echo ! MinGW version: %MINGW_VER% (%MINGW_HOST%-bit hosted)
 
 :: Burn build information into RELNOTES.txt
 
@@ -258,7 +195,6 @@ echo "include\*"    >> _hbfiles
 echo "lib\*"        >> _hbfiles
 echo "src\*"        >> _hbfiles
 echo "doc\*"        >> _hbfiles
-echo "comp\*"       >> _hbfiles
 echo "contrib\*"    >> _hbfiles
 echo "extras\*"     >> _hbfiles
 echo "tests\*"      >> _hbfiles
