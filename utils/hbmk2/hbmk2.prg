@@ -4502,7 +4502,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( hbmk[ _HBMK_aOPTC ], "-W -Weverything" )
                   AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-padded -Wno-cast-align -Wno-float-equal -Wno-missing-prototypes" )
                   AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-variadic-macros -Wno-documentation" )
-                  IF hbmk[ _HBMK_nCOMPVer ] >= 0306
+                  IF !( hbmk[ _HBMK_cPLAT ] == "darwin" ) .AND. ;
+                     hbmk[ _HBMK_nCOMPVer ] >= 0306
                      AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-reserved-id-macro" )
                   ENDIF
                   AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-sign-conversion -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast" )
@@ -14069,7 +14070,7 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
    CASE HBMK_ISCOMP( "clang|clang64" )
       hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
       tmp := hb_cdpSelect( "cp437" )
-      IF ( tmp1 := hb_AtX( "based on LLVM [0-9]*\.[0-9]*\.[0-9]*", cStdOutErr ) ) != NIL
+      IF ( tmp1 := hb_AtX( "based on LLVM [0-9]*\.[0-9]*(\.[0-9]*)?", cStdOutErr ) ) != NIL
          tmp1 := hb_ATokens( SubStr( tmp1, Len( "based on LLVM " ) + 1 ), "." )
          nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
       ELSEIF ( tmp1 := hb_AtX( "version [0-9]*\.[0-9]*\.[0-9]*", cStdOutErr ) ) != NIL

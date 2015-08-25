@@ -32,8 +32,10 @@ ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Weverything
    CFLAGS += -Wno-padded -Wno-cast-align -Wno-float-equal -Wno-missing-prototypes
    CFLAGS += -Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-variadic-macros -Wno-documentation
-   ifeq ($(filter $(HB_COMPILER_VER),0305),)
-      CFLAGS += -Wno-reserved-id-macro
+   ifneq ($(HB_PLATFORM),darwin)
+      ifeq ($(filter $(HB_COMPILER_VER),0305),)
+         CFLAGS += -Wno-reserved-id-macro
+      endif
    endif
    # These are potentially useful. -Wsign-conversion would require proper HB_SIZE/HB_ISIZ cleanup.
    CFLAGS += -Wno-sign-conversion -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast

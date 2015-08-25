@@ -880,16 +880,16 @@ ifeq ($(HB_COMPILER_VER),)
          HB_COMP_PATH_VER_DET := $(HB_CCPREFIX)clang$(HB_CCSUFFIX)
       endif
       _C_VER := $(shell "$(HB_COMP_PATH_VER_DET)" -v 2>&1)
-      ifneq ($(findstring 3.8.,$(_C_VER)),)
+      ifneq ($(findstring 3.8,$(_C_VER)),)
          HB_COMPILER_VER := 0308
       else
-      ifneq ($(findstring 3.7.,$(_C_VER)),)
+      ifneq ($(findstring 3.7,$(_C_VER)),)
          HB_COMPILER_VER := 0307
       else
-      ifneq ($(findstring 3.6.,$(_C_VER)),)
+      ifneq ($(findstring 3.6,$(_C_VER)),)
          HB_COMPILER_VER := 0306
       else
-      ifneq ($(findstring 3.5.,$(_C_VER)),)
+      ifneq ($(findstring 3.5,$(_C_VER)),)
          HB_COMPILER_VER := 0305
       endif
       endif
