@@ -372,7 +372,7 @@ HB_FUNC( LASTDAYOM )
       bLeap = ct_isleap( iYear );
    }
 
-   hb_retni( ( iMonth && ( iMonth <= 12 ) ? ct_daysinmonth( iMonth, bLeap ) : 0 ) );
+   hb_retni( iMonth && iMonth <= 12 ? ct_daysinmonth( iMonth, bLeap ) : 0 );
 }
 
 HB_FUNC( NTOCDOW )

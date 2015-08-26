@@ -53,7 +53,7 @@ HB_FUNC( POSCHAR )
 
    if( hb_parclen( 1 ) > 0 )
    {
-      if( ( hb_parclen( 2 ) > 0 ) || HB_ISNUM( 2 ) )
+      if( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) )
       {
          const char * pcString = hb_parc( 1 );
          HB_SIZE sStrLen = hb_parclen( 1 );

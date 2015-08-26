@@ -82,7 +82,7 @@ HB_FUNC( CHARMIRR )
       if( iDontMirrorSpaces )
       {
          pc2 = pcRet + sStrLen - 1;
-         while( ( pc1 >= pcString ) && ( *pc1 == 0x20 ) )
+         while( pc1 >= pcString && *pc1 == 0x20 )
          {
             *pc2 = 0x20;
             pc1--;
