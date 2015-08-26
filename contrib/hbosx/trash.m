@@ -47,6 +47,7 @@
 #include "hbapi.h"
 #include "hbapistr.h"
 
+#import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
 
 HB_FUNC( OSX_MOVETOTRASH )
@@ -57,28 +58,42 @@ HB_FUNC( OSX_MOVETOTRASH )
    {
       void * hFileName;
 
-      NSString * path;
-
-      FSRef ref;
-
-      path = [ [ NSString alloc ] initWithUTF8String: hb_parstr_utf8( 1, &hFileName, NULL ) ];
-      hb_strfree( hFileName );
-
-      status = FSPathMakeRefWithOptions(
-         ( const UInt8 * ) [ path fileSystemRepresentation ],
-         kFSPathMakeRefDoNotFollowLeafSymlink,
-         &ref,
-         NULL
-         );
-
-      if( status == 0 )
+#if defined( NSAppKitVersionNumber10_8 )
+      if( NSAppKitVersionNumber >= NSAppKitVersionNumber10_8 )
       {
-         status = FSMoveObjectToTrashSync(
-            &ref,
-            NULL,
-            kFSFileOperationDefaultOptions
-            );
+         NSFileManager * fm = [ NSFileManager defaultManager ];
+         NSURL * url = [ NSURL fileURLWithPath:@( hb_parstr_utf8( 1, &hFileName, NULL ) ) ];
+
+         if( [ fm trashItemAtURL:url resultingItemURL:nil error:nil ] )
+            status = 0;
       }
+      else
+#else
+      {
+         NSString * path;
+
+         FSRef ref;
+
+         path = [ [ NSString alloc ] initWithUTF8String: hb_parstr_utf8( 1, &hFileName, NULL ) ];
+
+         status = FSPathMakeRefWithOptions(
+            ( const UInt8 * ) [ path fileSystemRepresentation ],
+            kFSPathMakeRefDoNotFollowLeafSymlink,
+            &ref,
+            NULL
+            );
+
+         if( status == 0 )
+         {
+            status = FSMoveObjectToTrashSync(
+               &ref,
+               NULL,
+               kFSFileOperationDefaultOptions
+               );
+         }
+      }
+
+      hb_strfree( hFileName );
    }
 
    hb_retnl( status );
