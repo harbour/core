@@ -783,12 +783,15 @@ DYNAMIC hb_SHA384
 DYNAMIC hb_SHA512
 DYNAMIC hb_Shadow
 DYNAMIC hb_socketAccept
+DYNAMIC hb_socketAutoFlush
 DYNAMIC hb_socketBind
 DYNAMIC hb_socketClose
 DYNAMIC hb_socketConnect
 DYNAMIC hb_socketErrorString
+DYNAMIC hb_socketFlush
 DYNAMIC hb_socketGetError
 DYNAMIC hb_socketGetFD
+DYNAMIC hb_socketGetFilter
 DYNAMIC hb_socketGetHostName
 DYNAMIC hb_socketGetHosts
 DYNAMIC hb_socketGetIFaces
@@ -798,7 +801,11 @@ DYNAMIC hb_socketGetRcvBufSize
 DYNAMIC hb_socketGetSndBufSize
 DYNAMIC hb_socketGetSockName
 DYNAMIC hb_socketListen
+DYNAMIC hb_socketNewBFSock
+DYNAMIC hb_socketNewZNet
+DYNAMIC hb_socketNewZSock
 DYNAMIC hb_socketOpen
+DYNAMIC hb_socketRead
 DYNAMIC hb_socketRecv
 DYNAMIC hb_socketRecvFrom
 DYNAMIC hb_socketResolveAddr
@@ -812,6 +819,7 @@ DYNAMIC hb_socketSendTo
 DYNAMIC hb_socketSetBlockingIO
 DYNAMIC hb_socketSetBroadcast
 DYNAMIC hb_socketSetExclusiveAddr
+DYNAMIC hb_socketSetFilter
 DYNAMIC hb_socketSetKeepAlive
 DYNAMIC hb_socketSetMulticast
 DYNAMIC hb_socketSetNoDelay
@@ -819,6 +827,7 @@ DYNAMIC hb_socketSetRcvBufSize
 DYNAMIC hb_socketSetReuseAddr
 DYNAMIC hb_socketSetSndBufSize
 DYNAMIC hb_socketShutdown
+DYNAMIC hb_socketWrite
 DYNAMIC hb_SToD
 DYNAMIC hb_SToT
 DYNAMIC hb_StrCDecode

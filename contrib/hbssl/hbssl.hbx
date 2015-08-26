@@ -174,6 +174,8 @@ DYNAMIC hb_EVP_CIPHER_ctx_create
 DYNAMIC hb_EVP_ENCODE_ctx_create
 DYNAMIC hb_inetSSL_accept
 DYNAMIC hb_inetSSL_connect
+DYNAMIC hb_socketNewSSL_accept
+DYNAMIC hb_socketNewSSL_connect
 DYNAMIC hb_SSL_read_all
 DYNAMIC hb_SSL_read_line
 DYNAMIC OpenSSL_add_all_algorithms

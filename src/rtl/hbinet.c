@@ -164,6 +164,10 @@ static void hb_inetGetError( PHB_SOCKET_STRUCT socket )
 
 static void hb_inetCloseStream( PHB_SOCKET_STRUCT socket )
 {
+   if( socket->flushFunc && socket->sd != HB_NO_SOCKET )
+      socket->flushFunc( socket->stream, socket->sd,
+                         HB_MAX( socket->iTimeout, 10000 ), HB_TRUE );
+
    if( socket->cleanFunc )
       socket->cleanFunc( socket->stream );
 
@@ -1081,7 +1085,8 @@ static void s_inetSendInternal( HB_BOOL lAll )
          /* TODO: safe information about unflushed data and try to call
                   flush before entering receive wait sate */
          socket->flushFunc( socket->stream, socket->sd, socket->iTimeout < 0 ?
-                            socket->iTimeout : HB_MAX( socket->iTimeout, 10000 ) );
+                            socket->iTimeout : HB_MAX( socket->iTimeout, 10000 ),
+                            HB_FALSE );
       }
 
       hb_retni( iSent > 0 ? iSent : iLen );
