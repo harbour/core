@@ -56,7 +56,7 @@
 
 #if ! defined( HB_DYNLIB ) && ( defined( __DMC__ ) || defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
 HB_EXTERN_BEGIN
-#if defined( __MINGW32__ ) && defined( HB_CPU_X86 ) && ! defined( HB_OS_WIN_CE )
+#if defined( __MINGW32__ ) && ! defined( HB_OS_WIN_CE )
    HB_EXPORT_ATTR void hb_forceLinkMainWin( void );
 #endif
 void hb_forceLinkMainWin( void ) {}

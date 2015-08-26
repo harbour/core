@@ -133,6 +133,6 @@ int main( int argc, char * argv[] )
    #include "hbwmain.c"
 #endif
 
-#if defined( __MINGW32__ ) && defined( HB_CPU_X86 ) && ! defined( HB_OS_WIN_CE )
+#if defined( __MINGW32__ ) && ! defined( HB_OS_WIN_CE )
    HB_EXPORT_ATTR void __hb_force_reloc( void ) {}
 #endif

@@ -46,9 +46,9 @@
 
 #include "hbapi.h"
 
-static const int s_test = 42;
+static int s_test = 42;
 
 HB_FUNC( __HBTEST_POINTER )
 {
-   hb_retptr( hb_parl( 1 ) ? ( int * ) &s_test : NULL );
+   hb_retptr( hb_parl( 1 ) ? ( void * ) &s_test : NULL );
 }
