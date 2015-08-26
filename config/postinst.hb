@@ -750,14 +750,20 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
    IF ! Empty( cCommand ) .AND. ;
       ! Empty( cRegex )
+
       IF hb_vfExists( cInputName )
+
          cCommand := StrTran( cCommand, "{I}", cInputName )
+
          IF "{T}" $ cCommand
             IF ( hFile := hb_vfTempFile( @cTempFile,,, ".tmp" ) ) != NIL
                hb_vfClose( hFile )
             ENDIF
             cCommand := StrTran( cCommand, "{T}", cTempFile )
+         ELSE
+            cTempFile := ""
          ENDIF
+
          IF hb_processRun( cCommand,, @cStdOut, @cStdErr ) == 0
             IF hb_BLen( cTempFile ) > 0
                cStdOut := MemoRead( cTempFile )
