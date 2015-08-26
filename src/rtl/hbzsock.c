@@ -251,7 +251,7 @@ static long s_sockexWrite( PHB_SOCKEX pSock, const void * data, long len, HB_MAX
          }
       }
 
-      return lWritten >= 0 ? len - pZ->z_write.avail_in : lWritten;
+      return lWritten >= 0 ? ( long ) ( len - pZ->z_write.avail_in ) : lWritten;
    }
    else
       return hb_sockexWrite( pSock, data, len, timeout );
