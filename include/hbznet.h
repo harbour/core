@@ -58,6 +58,8 @@ HB_EXTERN_BEGIN
 #define HB_INET_ERR_BUFFOVERRUN   ( -3 )
 #define HB_INET_ERR_CLOSEDSOCKET  ( -4 )
 
+#define HB_ZNET_SOCK_ERROR_BASE   100
+
 #if defined( _HB_ZNET_INTERNAL_ )
    struct _HB_ZNETSTREAM;
    typedef struct _HB_ZNETSTREAM * PHB_ZNETSTREAM;
@@ -67,7 +69,7 @@ HB_EXTERN_BEGIN
 
 typedef long ( * HB_INET_RDFUNC ) ( PHB_ZNETSTREAM, HB_SOCKET, void *, long, HB_MAXINT );
 typedef long ( * HB_INET_WRFUNC ) ( PHB_ZNETSTREAM, HB_SOCKET, const void *, long, HB_MAXINT, long * );
-typedef long ( * HB_INET_FLFUNC ) ( PHB_ZNETSTREAM, HB_SOCKET, HB_MAXINT );
+typedef long ( * HB_INET_FLFUNC ) ( PHB_ZNETSTREAM, HB_SOCKET, HB_MAXINT, HB_BOOL );
 typedef void ( * HB_INET_CLFUNC ) ( PHB_ZNETSTREAM );
 typedef int  ( * HB_INET_ERFUNC ) ( PHB_ZNETSTREAM );
 typedef const char * ( * HB_INET_ESFUNC ) ( PHB_ZNETSTREAM, int );
@@ -77,7 +79,7 @@ extern HB_EXPORT void    hb_znetEncryptKey( PHB_ZNETSTREAM pStream, const void *
 extern HB_EXPORT void    hb_znetClose( PHB_ZNETSTREAM pStream );
 extern HB_EXPORT int     hb_znetError( PHB_ZNETSTREAM pStream );
 extern HB_EXPORT long    hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len, HB_MAXINT timeout );
-extern HB_EXPORT long    hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT timeout );
+extern HB_EXPORT long    hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT timeout, HB_BOOL fSync );
 extern HB_EXPORT long    hb_znetWrite( PHB_ZNETSTREAM pStream, HB_SOCKET sd, const void * buffer, long len, HB_MAXINT timeout, long * plast );
 
 extern HB_EXPORT HB_SOCKET hb_znetInetFD( PHB_ITEM pItem, HB_BOOL fError );
@@ -89,6 +91,9 @@ extern HB_EXPORT HB_BOOL   hb_znetInetInitialize( PHB_ITEM, PHB_ZNETSTREAM,
                                                   HB_INET_CLFUNC,
                                                   HB_INET_ERFUNC,
                                                   HB_INET_ESFUNC );
+
+extern HB_EXPORT PHB_SOCKEX hb_sockexNewZNet( HB_SOCKET sd, const void * keydata, int keylen,
+                                              int level, int strategy );
 
 HB_EXTERN_END
 

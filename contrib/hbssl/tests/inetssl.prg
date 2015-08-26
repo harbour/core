@@ -78,7 +78,7 @@ STATIC PROCEDURE Client()
                        ERR_error_string( nErr ) )
       IF nResult == 1
          ? "CLIENT: connected with", SSL_get_cipher( ssl ), "encryption."
-         DipsCertInfo( ssl, "CLIENT: " )
+         DispCertInfo( ssl, "CLIENT: " )
 
          hb_inetSendAll( sock, hb_TSToStr( hb_DateTime() ) + EOL )
          DO WHILE hb_BLen( cLine := hb_inetRecvLine( sock ) ) > 0
@@ -180,7 +180,7 @@ STATIC PROCEDURE LoadCertificates( ssl_ctx, cCertFile, cKeyFile )
 
    RETURN
 
-STATIC PROCEDURE DipsCertInfo( ssl, cWho )
+STATIC PROCEDURE DispCertInfo( ssl, cWho )
 
    LOCAL cert
 

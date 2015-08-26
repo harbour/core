@@ -76,6 +76,7 @@ C_SOURCES := \
    hbascii.c \
    hbbffnc.c \
    hbbfish.c \
+   hbbfsock.c \
    hbbit.c \
    hbbyte.c \
    hbcom.c \
@@ -118,6 +119,7 @@ C_SOURCES := \
    hbzlibc.c \
    hbzlibgz.c \
    hbznet.c \
+   hbzsock.c \
    idle.c \
    inkey.c \
    inkeyapi.c \
