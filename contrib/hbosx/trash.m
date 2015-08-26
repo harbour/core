@@ -68,7 +68,7 @@ HB_FUNC( OSX_MOVETOTRASH )
             status = 0;
       }
       else
-#else
+#endif
       {
          NSString * path;
 
