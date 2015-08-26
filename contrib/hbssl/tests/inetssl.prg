@@ -12,7 +12,9 @@ STATIC s_lStop := .F.
 STATIC s_lDelaySrv := .F.
 STATIC s_lDelayCli := .F.
 
+#if ! defined( __HBSCRIPT__HBSHELL )
 REQUEST HB_MT
+#endif
 
 PROCEDURE Main( delay )
 
