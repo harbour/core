@@ -623,20 +623,6 @@ sensitive.
      Build space separated <l> list of additional `.hbp`
      projects.
 
-   - `HB_COMPILER_VER=[<ver>]`
-
-     Set C compiler version. `<ver>` format:
-
-         <15><00> = <major><minor>
-
-         F.e.:
-         - gcc/mingw: 0501 for 5.1.x
-         - clang: 0306 for 3.6.x
-         - msvc: 1900 for 19.00.x
-         - pocc: 0450 for 4.50.x
-
-     Default: filled by compiler auto-detection or empty
-
    - `HB_USER_LIBS=[<list>]`
 
      Add space separated `<list>` of libs to link process.

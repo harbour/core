@@ -2062,13 +2062,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       { cLIB_BASE_ZLIB } } )
 #endif
 
-   hbmk[ _HBMK_nCOMPVer ] := Val( GetEnv( "HB_COMPILER_VER" ) )  /* Format: <15><00> == <major><minor> */
 #if 1
-   /* Convert old-style ('xy') mingw version number to new format ('0x0y'),
-      to keep a level of compatibility while migrating to the new format. */
-   IF Len( hb_ntos( tmp := hbmk[ _HBMK_nCOMPVer ] ) ) == 2
-      hbmk[ _HBMK_nCOMPVer ] := Int( hbmk[ _HBMK_nCOMPVer ] % 10 ) + Int( hbmk[ _HBMK_nCOMPVer ] / 10 ) * 100
-      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Old style HB_COMPILER_VER value (%1$d) detected. Update it to: %2$s" ), tmp, StrZero( hbmk[ _HBMK_nCOMPVer ], 4 ) ) )
+   IF Len( tmp := GetEnv( "_HB_COMPILER_VER" ) ) != 4
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Invalid _HB_COMPILER_VER value '%1$s' ignored. Format should be: <MMmm>, where <MM> is major version and <mm> is minor version." ), tmp ) )
+   ELSE
+      hbmk[ _HBMK_nCOMPVer ] := Val( tmp )
    ENDIF
 #endif
 
@@ -2630,15 +2628,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
 
-         /* Compatibility with Harbour GNU Make system */
-         IF hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. "clarm.exe" $ cPath_CompC
-            hbmk[ _HBMK_nCOMPVer ] := 1310 /* Visual Studio .NET 2003 */
-         ELSE
-            IF hbmk[ _HBMK_cCOMP ] == "msvc64"
-               cPath_CompC := StrTran( cPath_CompC, "ml64.exe", "cl.exe" )
-            ENDIF
-            hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 1400 )
+         IF hbmk[ _HBMK_cCOMP ] == "msvc64"
+            cPath_CompC := StrTran( cPath_CompC, "ml64.exe", "cl.exe" )
          ENDIF
+         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, ;
+            iif( hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. "clarm.exe" $ cPath_CompC, 1310, 1400 ) )
 
       CASE HBMK_ISCOMP( "pocc|pocc64|poccarm" )
 
@@ -18035,7 +18029,6 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "HB_USER_LDFLAGS"    , I_( "options to be passed to linker (executable) (before command-line options)" ) }, ;
       { "HB_USER_DFLAGS"     , I_( "options to be passed to linker (dynamic library) (before command-line options)" ) }, ;
       { "HB_USER_AFLAGS"     , I_( "options to be passed to linker (static library) (before command-line options)" ) }, ;
-      { "HB_COMPILER_VER"    , I_( "override C compiler version auto-detection (gcc and msvc compiler families only). Format: <15><00> = <major><minor>" ) }, ;
       { "HB_CCPATH"          , I_( "override C compiler executable directory (gcc compiler families only)" ) }, ;
       { "HB_CCPREFIX"        , I_( "override C compiler executable prefix (gcc compiler families only)" ) }, ;
       { "HB_CCSUFFIX"        , I_( "override C compiler executable suffix (gcc compiler families only)" ) }, ;
@@ -18327,7 +18320,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { '"vars"'         , I_( "hash of plugin custom variables. Writable, local to each plugin" ) }, ;
       { '"cPLAT"'        , hb_StrFormat( I_( "%1$s value" ), "-plat" ) }, ;
       { '"cCOMP"'        , hb_StrFormat( I_( "%1$s value" ), "-comp" ) }, ;
-      { '"nCOMPVer"'     , hb_StrFormat( I_( "see %1$s envvar" ), "HB_COMPILER_VER" ) }, ;
+      { '"nCOMPVer"'     , I_( "detected compiler version in <MMmm> format" ) }, ;
       { '"cCPU"'         , hb_StrFormat( I_( "%1$s value" ), "-cpu" )    }, ;
       { '"cBUILD"'       , hb_StrFormat( I_( "%1$s value" ), "-build=" ) }, ;
       { '"cOUTPUTNAME"'  , hb_StrFormat( I_( "%1$s value" ), "-o" )      }, ;

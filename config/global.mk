@@ -573,9 +573,6 @@ ifeq ($(HB_COMPILER),)
                ifneq ($(HB_COMP_PATH),)
                   HB_COMPILER := gcc
                   HB_PLATFORM := cygwin
-                  ifneq ($(wildcard $(dir $(HB_COMP_PATH))i686-pc-cygwin-gcc-3.4*),)
-                     HB_COMPILER_VER := 0304
-                  endif
                else
                   HB_COMP_PATH := $(call find_in_path,djasm)
                   ifneq ($(HB_COMP_PATH),)
@@ -630,7 +627,6 @@ ifeq ($(HB_COMPILER),)
                               else
                                  HB_COMP_PATH := $(call find_in_path_raw,clarm.exe)
                                  ifneq ($(HB_COMP_PATH),)
-                                    HB_COMPILER_VER := 1310
                                     HB_COMPILER := msvcarm
                                     HB_PLATFORM := wce
                                     HB_CPU := arm
