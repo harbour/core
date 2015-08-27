@@ -145,4 +145,12 @@
 #define HB_DISK_USED       2
 #define HB_DISK_TOTAL      3
 
+/* hb_vfConfig() settings */
+#define HB_VF_TIMEOUT      1
+#define HB_VF_PORT         2
+#define HB_VF_EOF          3
+#define HB_VF_SHUTDOWN     4
+#define HB_VF_RDHANDLE     5
+#define HB_VF_WRHANDLE     6
+
 #endif /* _FILEIO_CH */

@@ -49,6 +49,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbinit.h"
 
@@ -353,9 +354,54 @@ static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * data,
 
 static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
 {
-   HB_SYMBOL_UNUSED( pFile );
-   HB_SYMBOL_UNUSED( iIndex );
-   HB_SYMBOL_UNUSED( pValue );
+   switch( iIndex )
+   {
+      case HB_VF_TIMEOUT:
+      {
+         HB_MAXINT timeout = pFile->timeout;
+
+         if( HB_IS_NUMERIC( pValue ) )
+            pFile->timeout = hb_itemGetNInt( pValue );
+         hb_itemPutNInt( pValue, timeout );
+         return HB_TRUE;
+      }
+
+      case HB_VF_PORT:
+         hb_itemPutNInt( pValue, pFile->port );
+         return HB_TRUE;
+
+      case HB_VF_SHUTDOWN:
+      {
+         int iMode = pFile->fRead ?
+                     ( pFile->fWrite ? FO_READWRITE : FO_READ ) :
+                     ( pFile->fWrite ? FO_WRITE : -1 );
+
+         if( HB_IS_NUMERIC( pValue ) )
+         {
+            switch( hb_itemGetNI( pValue ) )
+            {
+               case FO_READ:
+                  pFile->fRead = HB_FALSE;
+                  break;
+               case FO_WRITE:
+                  pFile->fWrite = HB_FALSE;
+                  break;
+               case FO_READWRITE:
+                  pFile->fRead = pFile->fWrite = HB_FALSE;
+                  break;
+            }
+         }
+         hb_itemPutNI( pValue, iMode );
+         return HB_TRUE;
+      }
+      case HB_VF_RDHANDLE:
+         hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_comGetDeviceHandle( pFile->port ) );
+         return HB_TRUE;
+
+      case HB_VF_WRHANDLE:
+         hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_comGetDeviceHandle( pFile->port ) );
+         return HB_TRUE;
+   }
 
    return HB_FALSE;
 }
