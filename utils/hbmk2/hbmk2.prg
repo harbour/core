@@ -2309,7 +2309,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
       IF ! hbmk_harbour_dirlayout_detect( hbmk, .F. )
-         hbmk_OutErr( hbmk, hb_StrFormat( I_( e"Error: %1$s not set, failed to auto-detect.\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory." ), _HBMK_ENV_INSTALL_PFX ) )
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( e"Error: %1$s not set, failed to auto-detect.\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory." ), _HBMK_ENV_INSTALL_PFX ) )
          RETURN _EXIT_FAILHBDETECT
       ENDIF
    ELSE
