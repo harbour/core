@@ -36,6 +36,7 @@ addons:
       - unixodbc-dev
 script: export HB_COMPILER=$CC && make
 before_install:
+  - sed -i 's/git:/https:/g' .git/config
   - if [ "$TRAVIS_OS_NAME" = "linux" ]; then
        if [ "$CC" = "gcc" ]; then
           export HB_CCSUFFIX=-5;
