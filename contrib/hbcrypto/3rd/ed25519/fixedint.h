@@ -20,7 +20,7 @@
     
     #include <limits.h>
 
-    #if ! defined(_MSC_VER)
+    #if ! defined(_MSC_VER) || ( _MSC_VER <= 1600 )
     /* (u)int32_t */
     #ifndef uint32_t
         #if (ULONG_MAX == 0xffffffffUL)
