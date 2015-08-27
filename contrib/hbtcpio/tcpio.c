@@ -51,6 +51,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbinit.h"
 
@@ -257,9 +258,44 @@ static void s_fileFlush( PHB_FILE pFile, HB_BOOL fDirty )
 
 static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
 {
-   HB_SYMBOL_UNUSED( pFile );
-   HB_SYMBOL_UNUSED( iIndex );
-   HB_SYMBOL_UNUSED( pValue );
+   switch( iIndex )
+   {
+      case HB_VF_TIMEOUT:
+      {
+         HB_MAXINT timeout = pFile->timeout;
+
+         if( HB_IS_NUMERIC( pValue ) )
+            pFile->timeout = hb_itemGetNInt( pValue );
+         hb_itemPutNInt( pValue, timeout );
+         return HB_TRUE;
+      }
+      case HB_VF_SHUTDOWN:
+      {
+         HB_SOCKET sd = hb_sockexGetHandle( pFile->sock );
+
+         if( HB_IS_NUMERIC( pValue ) && sd != HB_NO_SOCKET )
+         {
+            switch( hb_itemGetNI( pValue ) )
+            {
+               case FO_READ:
+                  hb_socketShutdown( sd, HB_SOCKET_SHUT_RD );
+                  break;
+               case FO_WRITE:
+                  hb_socketShutdown( sd, HB_SOCKET_SHUT_WR );
+                  break;
+               case FO_READWRITE:
+                  hb_socketShutdown( sd, HB_SOCKET_SHUT_RDWR );
+                  break;
+            }
+         }
+         hb_itemClear( pValue );
+         return HB_TRUE;
+      }
+      case HB_VF_RDHANDLE:
+      case HB_VF_WRHANDLE:
+         hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_sockexGetHandle( pFile->sock ) );
+         return HB_TRUE;
+   }
 
    return HB_FALSE;
 }
