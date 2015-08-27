@@ -2063,8 +2063,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #endif
 
 #if 1
-   IF Len( tmp := GetEnv( "_HB_COMPILER_VER" ) ) != 4
+   IF hb_BLen( tmp := GetEnv( "_HB_COMPILER_VER" ) ) != 0 .AND. Len( tmp ) != 4
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Invalid _HB_COMPILER_VER value '%1$s' ignored. Format should be: <MMmm>, where <MM> is major version and <mm> is minor version." ), tmp ) )
+      hbmk[ _HBMK_nCOMPVer ] := 0
    ELSE
       hbmk[ _HBMK_nCOMPVer ] := Val( tmp )
    ENDIF
