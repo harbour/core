@@ -6826,6 +6826,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
               ( l_cMAIN != NIL .OR. ;
                 ! Empty( hbmk[ _HBMK_aREQUEST ] ) .OR. ;
                 ! Empty( hbmk[ _HBMK_aGT ] ) .OR. ;
+                ( hbmk[ _HBMK_lGUI ] .AND. HBMK_ISCOMP( "mingw|mingw64" ) .AND. hbmk[ _HBMK_lHARDEN ] ) .OR. ;
                 hbmk[ _HBMK_cGT ] != NIL .OR. ;
                 l_cCMAIN != NIL ) ) .OR. lHBMAINDLLP
 
@@ -6883,6 +6884,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ""                                                                        + _FIL_EOL + ;
                   '#include "hbapi.h"'                                                      + _FIL_EOL + ;
                   ""                                                                        + _FIL_EOL
+
+               /* Force generating a relocation table for ASLR to work.
+                  For console (-std) apps the equivalent logic is built into hbmainstd
+                  library, so it's not necessary to repeate it here. */
+               IF hbmk[ _HBMK_lGUI ] .AND. HBMK_ISCOMP( "mingw|mingw64" ) .AND. hbmk[ _HBMK_lHARDEN ]
+                  cFile += ;
+                     "HB_EXPORT_ATTR void __hbmk_force_reloc( void ) {}"                    + _FIL_EOL + ;
+                     ""                                                                     + _FIL_EOL
+               ENDIF
 
                IF ! Empty( array ) .OR. ( l_cCMAIN != NIL .AND. ! lHBMAINDLLP )
 
