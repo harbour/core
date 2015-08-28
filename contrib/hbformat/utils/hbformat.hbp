@@ -5,6 +5,7 @@ hbformat.hbc
 -o${hb_name}
 
 hbformat.prg
+hbformat.rc
 
 # Always build in shared mode for these platforms because the
 # tool is included in std distro and we want to minimize its size.

@@ -19,6 +19,9 @@ PRG_SOURCES := \
 C_SOURCES := \
    rt_miscc.c \
 
+RC_SOURCES := \
+   hbtest.rc
+
 PRG_MAIN := hbtest.prg
 
 LIBS = $(HB_LIBS_ST_RDD)
