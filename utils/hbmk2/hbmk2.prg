@@ -1,3 +1,4 @@
+#pragma linenumber=on
 /*
  * Harbour Make (alias mk/hbmk/hbmk2/hbrun)
  *
@@ -1141,10 +1142,6 @@ STATIC FUNCTION hbmk_new( lShellMode )
 
    hbmk[ _HBMK_nArgTarget ] := 0
 
-   RETURN hbmk
-
-STATIC PROCEDURE hbmk_init_stage2( hbmk )
-
    hbmk[ _HBMK_aPRG ] := {}
    hbmk[ _HBMK_aCH ] := {}
    hbmk[ _HBMK_aC ] := {}
@@ -1194,7 +1191,7 @@ STATIC PROCEDURE hbmk_init_stage2( hbmk )
    hbmk[ _HBMK_lHBXUpdate ] := .T.
    hbmk[ _HBMK_cSignTime ] := _HBMK_SIGN_TIMEURL_DEF
 
-   RETURN
+   RETURN hbmk
 
 #ifdef HARBOUR_SUPPORT
 STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, lIgnoreEnvVar )
@@ -2694,8 +2691,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    ENDIF
 
    /* Process command-line */
-
-   hbmk_init_stage2( hbmk )
 
    hbmk[ _HBMK_lHARDEN ] := HBMK_ISPLAT( "win" ) /* TODO: later enable this for all platforms */
 
@@ -15521,7 +15516,6 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    /* Detect Harbour dir layout */
 
-   hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, .T. )
       IF __hbshell_CanLoadDyn()
          _hbmk_OutErr( hbmk, I_( e"Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ) )
@@ -17344,7 +17338,6 @@ STATIC PROCEDURE __extra_initenv( hbmk, aArgs, cSelf )
 
    LOCAL cArg
 
-   hbmk_init_stage2( hbmk )
    hbmk_harbour_dirlayout_detect( hbmk, .T. )
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
    hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
