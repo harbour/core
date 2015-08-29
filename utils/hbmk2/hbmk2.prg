@@ -1,4 +1,3 @@
-#pragma linenumber=on
 /*
  * Harbour Make (alias mk/hbmk/hbmk2/hbrun)
  *
