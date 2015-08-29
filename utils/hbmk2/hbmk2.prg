@@ -17775,7 +17775,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-hblib"             , I_( "create static library" ) }, ;
       { "-hbdyn"             , S_( "create dynamic library" ) }, ;
       { "-hbdyn"             , H_( "create dynamic library (without linked Harbour VM)" ) }, ;
-      { "-hbdynvm"           , H_( "create dynamic library (with linked Harbour VM)" ) } }
+      { "-hbdynvm"           , H_( "create dynamic library (with linked Harbour VM)" ) }, ;
+      { "-strip[-]"          , I_( "strip (or don't) debugging (and other extra) information from target binary. They are included by default by certain C compilers, f.e.: gcc*, clang, mingw*, djgpp." ) } }
 
    LOCAL aLst_Opt_Help := { ;
       { "-help"              , I_( "more help" ) } }
@@ -17800,7 +17801,6 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-implib[-]"         , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a suffix added." ) }, ;
       { "-implib=<output>"   , I_( "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)" ) }, ;
       { "-ln=<link>"         , I_( "create symbolic link pointing to <output> (<link> is considered relative to <output>)" ) }, ;
-      { "-strip[-]"          , I_( "strip (no strip) binaries" ) }, ;
       { "-trace[-]"          , I_( "show commands executed" ) }, ;
       { "-beep[-]"           , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) }, ;
       { "-ignore[-]"         , I_( "ignore errors when running compiler tools (default: off)" ) }, ;
