@@ -36,6 +36,18 @@ pushd ..
 set _TRG=%CD%\comp\
 popd
 
+:: Requires Windows 7 or OpenSSL in PATH
+certutil > nul 2>&1
+if %ERRORLEVEL% equ 0 (
+   certutil -hashfile "%_TRG%" SHA256
+   goto _DONE
+)
+openssl version > nul 2>&1
+if %ERRORLEVEL% equ 0 (
+   openssl dgst -sha256 "%_TRG%"
+)
+:_DONE
+
 echo Unpacking to '%_TRG%'...
 if exist "%TEMP%\mingw.7z" (
    7za x -y -o..\comp "%TEMP%\mingw.7z" > nul
