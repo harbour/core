@@ -45,18 +45,29 @@ pushd ..
 set _TRG=%CD%\comp\
 popd
 
-echo Expected SHA256 hash: %_MINGW_SUM%
-
 :: Requires Windows 7 or OpenSSL in PATH
-certutil > nul 2>&1
-if %ERRORLEVEL% equ 0 (
-   certutil -hashfile "%TEMP%\mingw.7z" SHA256
+
+:_WIN7
+   certutil > nul 2>&1
+   if %ERRORLEVEL% neq 0 goto _OPENSSL
+   setlocal EnableDelayedExpansion
+   for /f "skip=1 tokens=*" %%I in ('certutil -hashfile "%TEMP%\mingw.7z" SHA256') do if "!_HASH!" == "" set "_HASH=%%I"
+   echo %_HASH: =% | findstr /i /c:"%_MINGW_SUM%"
+   if %ERRORLEVEL% equ 1 goto _HASH_ERR
+   goto _HASH_OK
+:_OPENSSL
+   openssl version > nul 2>&1
+   if %ERRORLEVEL% neq 0 goto _MANUAL
+   openssl dgst -sha256 "%TEMP%\mingw.7z" | findstr /i /c:"%_MINGW_SUM%"
+   if %ERRORLEVEL% equ 1 goto _HASH_ERR
+:_HASH_OK
+   echo Checksum OK.
    goto _DONE
-)
-openssl version > nul 2>&1
-if %ERRORLEVEL% equ 0 (
-   openssl dgst -sha256 "%TEMP%\mingw.7z"
-)
+:_HASH_ERR
+   echo Error: Checksum mismatch - corrupted download. Please retry.
+   exit /b 1
+:_MANUAL
+   echo Expected SHA256 hash: %_MINGW_SUM%
 :_DONE
 
 echo Unpacking to '%_TRG%'...
