@@ -1225,6 +1225,8 @@ HB_FUNC( NETIO_SERVER )
                      HB_PUT_LE_UINT32( &msg[ 4 ], len );
                      HB_PUT_LE_UINT32( &msg[ 8 ], errFsCode );
                      memset( msg + 12, '\0', NETIO_MSGLEN - 12 );
+                     if( len == FS_ERROR )
+                        len = 0;
                   }
                }
                break;

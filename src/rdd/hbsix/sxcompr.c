@@ -287,6 +287,8 @@ static int hb_LZSSxRead( PHB_LZSSX_COMPR pCompr )
    {
       pCompr->inBuffRead = hb_fileRead( pCompr->pInput, pCompr->inBuffer,
                                         pCompr->inBuffSize, -1 );
+      if( pCompr->inBuffRead == ( HB_SIZE ) FS_ERROR )
+         pCompr->inBuffRead = 0;
       pCompr->inBuffPos = 0;
       if( pCompr->inBuffPos < pCompr->inBuffRead )
          return ( HB_UCHAR ) pCompr->inBuffer[ pCompr->inBuffPos++ ];

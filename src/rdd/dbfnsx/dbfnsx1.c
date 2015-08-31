@@ -1195,7 +1195,7 @@ static HB_BOOL hb_nsxBlockRead( LPNSXINDEX pIndex, HB_ULONG ulBlock, void * buff
       hb_errInternal( 9103, "hb_nsxBlockRead on not locked index file.", NULL, NULL );
 
    if( hb_fileReadAt( pIndex->pFile, buffer, iSize,
-                      hb_nsxFileOffset( pIndex, ulBlock ) ) != ( HB_ULONG ) iSize )
+                      hb_nsxFileOffset( pIndex, ulBlock ) ) != ( HB_SIZE ) iSize )
    {
       hb_nsxErrorRT( pIndex->pArea, EG_READ, EDBF_READ,
                      pIndex->IndexName, hb_fsError(), 0, NULL );
@@ -1213,7 +1213,7 @@ static HB_BOOL hb_nsxBlockWrite( LPNSXINDEX pIndex, HB_ULONG ulBlock, const void
       hb_errInternal( 9102, "hb_nsxBlockWrite on not locked index file.", NULL, NULL );
 
    if( hb_fileWriteAt( pIndex->pFile, buffer, iSize,
-                       hb_nsxFileOffset( pIndex, ulBlock ) ) != ( HB_ULONG ) iSize )
+                       hb_nsxFileOffset( pIndex, ulBlock ) ) != ( HB_SIZE ) iSize )
    {
       hb_nsxErrorRT( pIndex->pArea, EG_WRITE, EDBF_WRITE,
                      pIndex->IndexName, hb_fsError(), 0, NULL );

@@ -547,8 +547,8 @@ HB_FUNC( HB_PREAD )
          uiError = hb_fsError();
       }
 
-      if( nSize == ( HB_SIZE ) -1 )
-         hb_retni( -1 );
+      if( nSize == ( HB_SIZE ) FS_ERROR )
+         hb_retni( FS_ERROR );
       else
          hb_retns( nSize );
       hb_fsSetFError( uiError );
@@ -574,8 +574,12 @@ HB_FUNC( HB_PWRITE )
          if( nWrite < nLen )
             nLen = nWrite;
       }
-      hb_retns( hb_fsPipeWrite( hPipe, data, nLen, hb_parnint( 4 ) ) );
+      nLen = hb_fsPipeWrite( hPipe, data, nLen, hb_parnint( 4 ) );
       hb_fsSetFError( hb_fsError() );
+      if( nLen == ( HB_SIZE ) FS_ERROR )
+         hb_retni( FS_ERROR );
+      else
+         hb_retns( nLen );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

@@ -748,10 +748,9 @@ static HB_ERRCODE hb_fptReadGCdata( FPTAREAP pArea, LPMEMOGCTABLE pGCtable )
    hb_fptDestroyGCdata( pGCtable );
    memset( &pGCtable->fptHeader, 0, sizeof( FPTHEADER ) );
 
-   nRead = hb_fileReadAt( pArea->pMemoFile, &pGCtable->fptHeader, sizeof( FPTHEADER ), 0 );
-
-   if( nRead >= 512 &&
-       nRead != ( HB_SIZE ) FS_ERROR )
+   nRead = hb_fileReadAt( pArea->pMemoFile, &pGCtable->fptHeader,
+                          sizeof( FPTHEADER ), 0 );
+   if( nRead >= 512 && nRead != ( HB_SIZE ) FS_ERROR )
    {
       int i;
 
@@ -1006,21 +1005,20 @@ static HB_ULONG hb_fptGetMemoLen( FPTAREAP pArea, HB_USHORT uiIndex )
             if( pArea->bMemoType == DB_MEMO_DBT )
             {
                HB_BYTE pBlock[ DBT_DEFBLOCKSIZE ];
-               HB_SIZE u;
+               HB_SIZE nLen, n;
 
                do
                {
-                  HB_SIZE ulLen = hb_fileReadAt( pArea->pMemoFile, pBlock, DBT_DEFBLOCKSIZE, fOffset );
-                  if( ulLen == 0 ||
-                      ulLen == ( HB_SIZE ) FS_ERROR )
+                  nLen = hb_fileReadAt( pArea->pMemoFile, pBlock, DBT_DEFBLOCKSIZE, fOffset );
+                  if( nLen == 0 || nLen == ( HB_SIZE ) FS_ERROR )
                      break;
-                  fOffset += ulLen;
-                  u = 0;
-                  while( u < ulLen && pBlock[ u ] != 0x1A )
-                     u++;
-                  ulSize += ( HB_ULONGCAST ) u;
+                  fOffset += nLen;
+                  n = 0;
+                  while( n < nLen && pBlock[ n ] != 0x1A )
+                     n++;
+                  ulSize += ( HB_ULONGCAST ) n;
                }
-               while( u == DBT_DEFBLOCKSIZE );
+               while( n == DBT_DEFBLOCKSIZE );
             }
             else if( hb_fileReadAt( pArea->pMemoFile, &fptBlock,
                                     sizeof( FPTBLOCK ), fOffset ) ==
@@ -2354,6 +2352,7 @@ static HB_ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, HB_BYTE ** pbMemoBuf, HB_B
                char * pszStr = ( char * ) ( *pbMemoBuf );
                *pbMemoBuf += ulLen;
 
+
                if( iTrans == FPT_TRANS_UNICODE )
                {
                   hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_LITTLE,
@@ -2417,24 +2416,23 @@ static HB_ERRCODE hb_fptCopyToRawFile( PHB_FILE pSrc, HB_FOFFSET from,
    if( size )
    {
       HB_FOFFSET written = 0;
-      HB_ULONG ulBufSize;
+      HB_SIZE nBufSize;
       HB_BYTE * pBuffer;
 
-      ulBufSize = ( HB_ULONG ) HB_MIN( 0x10000, size );
-      pBuffer = ( HB_BYTE * ) hb_xgrab( ulBufSize );
+      nBufSize = ( HB_SIZE ) HB_MIN( 0x10000, size );
+      pBuffer = ( HB_BYTE * ) hb_xgrab( nBufSize );
 
       do
       {
-         HB_ULONG ulRead = ( HB_ULONGCAST ) hb_fileReadAt( pSrc, pBuffer, ( HB_ULONG )
-                              HB_MIN( ( HB_FOFFSET ) ulBufSize, size - written ),
-                              from + written );
-         if( ulRead == 0 ||
-             ulRead == ( HB_ULONG ) FS_ERROR )
+         HB_SIZE nRead = hb_fileReadAt( pSrc, pBuffer, ( HB_SIZE )
+                                        HB_MIN( ( HB_FOFFSET ) nBufSize, size - written ),
+                                        from + written );
+         if( nRead == 0 || nRead == ( HB_SIZE ) FS_ERROR )
             errCode = EDBF_READ;
-         else if( hb_fileWrite( pDst, pBuffer, ulRead, -1 ) != ulRead )
+         else if( hb_fileWrite( pDst, pBuffer, nRead, -1 ) != nRead )
             errCode = EDBF_WRITE;
          else
-            written += ulRead;
+            written += nRead;
       }
       while( errCode == HB_SUCCESS && written < size );
 
@@ -2453,25 +2451,24 @@ static HB_ERRCODE hb_fptCopyToFile( PHB_FILE pSrc, HB_FOFFSET from,
    if( size )
    {
       HB_FOFFSET written = 0;
-      HB_ULONG ulBufSize;
+      HB_SIZE nBufSize;
       HB_BYTE * pBuffer;
 
-      ulBufSize = ( HB_ULONG ) HB_MIN( 0x10000, size );
-      pBuffer = ( HB_BYTE * ) hb_xgrab( ulBufSize );
+      nBufSize = ( HB_SIZE ) HB_MIN( 0x10000, size );
+      pBuffer = ( HB_BYTE * ) hb_xgrab( nBufSize );
 
       do
       {
-         HB_ULONG ulRead = ( HB_ULONGCAST ) hb_fileReadAt( pSrc, pBuffer, ( HB_ULONG )
-                              HB_MIN( ( HB_FOFFSET ) ulBufSize, size - written ),
-                              from + written );
-         if( ulRead == 0 ||
-             ulRead == ( HB_ULONG ) FS_ERROR )
+         HB_SIZE nRead = hb_fileReadAt( pSrc, pBuffer, ( HB_SIZE )
+                                        HB_MIN( ( HB_FOFFSET ) nBufSize, size - written ),
+                                        from + written );
+         if( nRead == 0 || nRead == ( HB_SIZE ) FS_ERROR )
             errCode = EDBF_READ;
-         else if( hb_fileWriteAt( pDst, pBuffer, ulRead,
-                                  to + written ) != ulRead )
+         else if( hb_fileWriteAt( pDst, pBuffer, nRead,
+                                  to + written ) != nRead )
             errCode = EDBF_WRITE;
          else
-            written += ulRead;
+            written += nRead;
       }
       while( errCode == HB_SUCCESS && written < size );
 
@@ -2926,26 +2923,25 @@ static HB_ERRCODE hb_fptWriteMemo( FPTAREAP pArea, HB_ULONG ulBlock, HB_ULONG ul
          /* TODO: uiMode => BLOB_IMPORT_COMPRESS, BLOB_IMPORT_ENCRYPT */
          if( pFile != NULL )
          {
-            HB_ULONG ulWritten = 0, ulBufSize = HB_MIN( ( 1 << 16 ), ulLen );
-            HB_BYTE * bBuffer = ( HB_BYTE * ) hb_xgrab( ulBufSize );
+            HB_SIZE nWritten = 0, nBufSize = HB_MIN( ( 1 << 16 ), ulLen );
+            HB_BYTE * bBuffer = ( HB_BYTE * ) hb_xgrab( nBufSize );
 
             do
             {
-               HB_ULONG ulRead = ( HB_ULONGCAST ) hb_fileRead( pFile, bBuffer,
-                                                   HB_MIN( ulBufSize, ulLen - ulWritten ), -1 );
-               if( ulRead == 0 ||
-                   ulRead == ( HB_ULONG ) FS_ERROR )
+               HB_SIZE nRead = hb_fileRead( pFile, bBuffer,
+                                            HB_MIN( nBufSize, ulLen - nWritten ), -1 );
+               if( nRead == 0 || nRead == ( HB_SIZE ) FS_ERROR )
                   errCode = EDBF_READ;
                else if( hb_fileWriteAt( pArea->pMemoFile, bBuffer,
-                                        ulRead, fOffset ) != ulRead )
+                                        nRead, fOffset ) != nRead )
                   errCode = EDBF_WRITE;
                else
                {
-                  ulWritten += ulRead;
-                  fOffset += ulRead;
+                  nWritten += nRead;
+                  fOffset += nRead;
                }
             }
-            while( errCode == HB_SUCCESS && ulWritten < ulLen );
+            while( errCode == HB_SUCCESS && nWritten < ulLen );
 
             hb_xfree( bBuffer );
          }
@@ -4269,10 +4265,9 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
       memset( &fptHeader, 0, sizeof( fptHeader ) );
       if( hb_fptFileLockSh( pArea, HB_TRUE ) )
       {
-         HB_SIZE nRead = hb_fileReadAt( pArea->pMemoFile, &fptHeader, sizeof( FPTHEADER ), 0 );
-
-         if( nRead >= 512 &&
-             nRead != ( HB_SIZE ) FS_ERROR )
+         HB_SIZE nRead = hb_fileReadAt( pArea->pMemoFile, &fptHeader,
+                                        sizeof( FPTHEADER ), 0 );
+         if( nRead >= 512 && nRead != ( HB_SIZE ) FS_ERROR )
          {
             pArea->uiMemoVersion = DB_MEMOVER_STD;
             if( pArea->bMemoType == DB_MEMO_SMT )
@@ -4764,6 +4759,7 @@ static HB_ERRCODE hb_fptPack( FPTAREAP pArea )
                else
                   HB_PUT_BE_UINT32( buffer, ulNextBlock );
                hb_fileWriteAt( pArea->pMemoTmpFile, buffer, sizeof( buffer ), 0 );
+
                errCode = hb_fptCopyToFile( pArea->pMemoTmpFile, 0,
                                            pArea->pMemoFile, 0, size );
                hb_fileTruncAt( pArea->pMemoFile, size );

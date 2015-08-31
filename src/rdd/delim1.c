@@ -206,8 +206,9 @@ static int hb_delimNextChar( DELIMAREAP pArea )
                                           pArea->pBuffer + nLeft,
                                           pArea->nBufferSize - nLeft,
                                           pArea->nBufferStart + nLeft );
+      if( pArea->nBufferRead == ( HB_SIZE ) FS_ERROR )
+         pArea->nBufferRead = 0;
       if( pArea->nBufferRead > 0 &&
-          pArea->nBufferRead != ( HB_SIZE ) FS_ERROR &&
           pArea->pBuffer[ pArea->nBufferRead + nLeft - 1 ] == '\032' )
          pArea->nBufferRead--;
       pArea->nBufferRead += nLeft;
