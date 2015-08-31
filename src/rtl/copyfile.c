@@ -130,7 +130,7 @@ static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest )
             while( nWritten < nRead )
             {
                HB_SIZE nDone = hb_fileWrite( pDest, buffer + nWritten, nRead - nWritten, -1 );
-               if( nDone > 0 )
+               if( nDone != ( HB_SIZE ) FS_ERROR )
                   nWritten += nDone;
                if( nWritten < nRead )
                {
