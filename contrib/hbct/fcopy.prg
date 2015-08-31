@@ -87,7 +87,7 @@ FUNCTION FileCopy( cSource, cDest, lMode )
          hb_default( @lMode, .F. )
          cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            IF ( nSrcBytes := hb_vfRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
+            IF ( nSrcBytes := hb_vfRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) <= 0
                lDone := .T.
                EXIT
             ENDIF
@@ -142,7 +142,7 @@ FUNCTION FileCCont( cDest )
       IF ( hDstFile := hb_vfOpen( cDest, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
          cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            IF ( nSrcBytes := hb_vfRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) == 0
+            IF ( nSrcBytes := hb_vfRead( t_hSrcFile, @cBuffer, F_BLOCK ) ) <= 0
                lDone := .T.
                EXIT
             ENDIF
@@ -195,7 +195,7 @@ FUNCTION FileAppend( cSrc, cDest )
       IF hDstFile != NIL
          cBuffer := Space( F_BLOCK )
          DO WHILE .T.
-            IF ( nSrcBytes := hb_vfRead( hSrcFile, @cBuffer, F_BLOCK ) ) == 0
+            IF ( nSrcBytes := hb_vfRead( hSrcFile, @cBuffer, F_BLOCK ) ) <= 0
                EXIT
             ENDIF
             IF ( nDstBytes := hb_vfWrite( hDstFile, cBuffer, nSrcBytes ) ) < nSrcBytes

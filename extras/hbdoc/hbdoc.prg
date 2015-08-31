@@ -730,7 +730,7 @@ STATIC FUNCTION FReadLn( aHandle, /* @ */ cBuffer, nMaxLine )
 
    aHandle[ 2 ]++
 
-   RETURN nNumRead != 0
+   RETURN nNumRead > 0
 
 STATIC FUNCTION Decode( cType, hsBlock, cKey )
 

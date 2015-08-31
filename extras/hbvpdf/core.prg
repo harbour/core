@@ -2594,7 +2594,7 @@ STATIC FUNCTION WriteData( hFile, xData )
    OTHERWISE ; cData += I2Bin( 0 )  // NIL
    ENDSWITCH
 
-   RETURN hb_vfWrite( hFile, cData )
+   RETURN Max( hb_vfWrite( hFile, cData ), 0 )
 
 // written by Peter Kulek
 STATIC FUNCTION File2Array( cFile, nLen, hFile )  /* TODO: replace with hb_Deserialize() */

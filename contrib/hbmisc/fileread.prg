@@ -97,7 +97,7 @@ METHOD ReadLine() CLASS TFileRead
          // Maybe means that we found either a CR or an LF, but we don't
          // have enough characters to discriminate between the three types
          // of end of line conditions that the class recognizes (see below).
-         IF ( nRead := hb_vfRead( ::hFile, @cLine, hb_BLen( cLine ) ) ) == 0
+         IF ( nRead := hb_vfRead( ::hFile, @cLine, hb_BLen( cLine ) ) ) <= 0
             // There was nothing more to be read. Why? (Error or EOF.)
             ::nError := FError()
             IF ::nError == 0

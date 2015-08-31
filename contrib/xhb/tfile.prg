@@ -72,7 +72,7 @@ CREATE CLASS TCgiFile
    METHOD Tell() INLINE hb_vfSeek( ::hFile, 0, FS_RELATIVE )
    METHOD Pointer() INLINE hb_vfSeek( ::hFile, 0, FS_RELATIVE )
    METHOD ReadStr( n ) INLINE ::Buffer := hb_vfReadLen( ::hFile, n )
-   METHOD Write( c, n ) INLINE hb_vfWrite( ::hFile, c, n )
+   METHOD Write( c, n ) INLINE Max( hb_vfWrite( ::hFile, c, n ), 0 )
    METHOD WriteByte( nByte )
    METHOD WriteInt( nInt )
    METHOD WriteLong( nLong )
@@ -138,7 +138,7 @@ METHOD _Read( nSize, /* @ */ cBuff ) CLASS TCgiFile
    hb_default( @nSize, 1024 )
    hb_default( @cBuff, Space( nSize ) )
 
-   ::BytesRead := hb_vfRead( ::hFile, @cBuff, nSize )
+   ::BytesRead := Max( hb_vfRead( ::hFile, @cBuff, nSize ), 0 )
    ::Buffer    := cBuff
 
    RETURN cBuff    // nBytesRead
@@ -155,7 +155,7 @@ METHOD ReadAhead( nSize, /* @ */ cBuff ) CLASS TCgiFile
    nCurrent := hb_vfSeek( ::hFile, 0, FS_RELATIVE )
 
    // read ahead
-   ::BytesRead := hb_vfRead( ::hFile, @cBuff, nSize )
+   ::BytesRead := Max( hb_vfRead( ::hFile, @cBuff, nSize ), 0 )
 
    // return to saved position
    hb_vfSeek( ::hFile, nCurrent )
