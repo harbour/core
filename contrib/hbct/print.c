@@ -151,6 +151,8 @@ HB_FUNC( PRINTSEND )
       if( hFile )
       {
          nRet = hb_fileWrite( hFile, szStr, nLen, -1 );
+         if( nRet == ( HB_SIZE ) FS_ERROR )
+            nRet = 0;
          hb_fileClose( hFile );
       }
    }

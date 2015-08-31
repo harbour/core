@@ -157,16 +157,18 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
    {
       if( pArea->nNextOffset == 0 )
       {
-         HB_USHORT uiRead, uiToRead, uiEolPos, uiRest = 0;
+         HB_USHORT uiToRead, uiEolPos, uiRest = 0;
          HB_FOFFSET ulOffset = pArea->nRecordOffset;
 
          uiToRead = pArea->uiRecordLen + pArea->uiEolLen + 2;
 
          do
          {
-            uiRead = ( HB_USHORT ) hb_fileReadAt( pArea->pFile, pArea->pRecord + uiRest,
-                                                  uiToRead - uiRest, ulOffset + uiRest ) + uiRest;
-            if( uiRead > 0 && uiRead < uiToRead &&
+            HB_USHORT uiRead = ( HB_USHORT ) hb_fileReadAt( pArea->pFile, pArea->pRecord + uiRest,
+                                                            uiToRead - uiRest, ulOffset + uiRest ) + uiRest;
+            if( uiRead > 0 &&
+                uiRead != ( HB_USHORT ) FS_ERROR &&
+                uiRead < uiToRead &&
                 pArea->pRecord[ uiRead - 1 ] == '\032' )
                --uiRead;
 

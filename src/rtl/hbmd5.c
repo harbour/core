@@ -297,15 +297,15 @@ HB_BOOL hb_md5file( const char * pszFileName, char * digest )
    if( pFile != NULL )
    {
       MD5_BUF md5;
-      HB_SIZE n;
+      HB_ISIZ n;
       int i;
       HB_FOFFSET flen = 0;
       HB_UCHAR buf[ 128 ];
       HB_BYTE * readbuf = ( HB_BYTE * ) hb_xgrab( MAX_FBUF );
 
       hb_md5accinit( md5.accum );
-      n = hb_fileRead( pFile, readbuf, MAX_FBUF, -1 );
-      flen += n;
+      if( ( n = hb_fileRead( pFile, readbuf, MAX_FBUF, -1 ) ) > 0 )
+         flen += n;
       while( n == MAX_FBUF )
       {
          for( i = 0; i < ( MAX_FBUF >> 6 ); i++ )
@@ -313,8 +313,8 @@ HB_BOOL hb_md5file( const char * pszFileName, char * digest )
             memcpy( md5.buf, readbuf + ( i << 6 ), 64 );
             hb_md5go( &md5 );
          }
-         n = hb_fileRead( pFile, readbuf, MAX_FBUF, -1 );
-         flen += n;
+         if( ( n = hb_fileRead( pFile, readbuf, MAX_FBUF, -1 ) ) > 0 )
+            flen += n;
       }
       hb_fileClose( pFile );
       i = 0;

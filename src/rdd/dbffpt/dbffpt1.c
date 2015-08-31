@@ -743,11 +743,15 @@ static void hb_fptDestroyGCdata( LPMEMOGCTABLE pGCtable )
  */
 static HB_ERRCODE hb_fptReadGCdata( FPTAREAP pArea, LPMEMOGCTABLE pGCtable )
 {
+   HB_SIZE nRead;
+
    hb_fptDestroyGCdata( pGCtable );
    memset( &pGCtable->fptHeader, 0, sizeof( FPTHEADER ) );
 
-   if( hb_fileReadAt( pArea->pMemoFile, &pGCtable->fptHeader,
-                      sizeof( FPTHEADER ), 0 ) >= 512 )
+   nRead = hb_fileReadAt( pArea->pMemoFile, &pGCtable->fptHeader, sizeof( FPTHEADER ), 0 );
+
+   if( nRead >= 512 &&
+       nRead != ( HB_SIZE ) FS_ERROR )
    {
       int i;
 
@@ -1002,14 +1006,15 @@ static HB_ULONG hb_fptGetMemoLen( FPTAREAP pArea, HB_USHORT uiIndex )
             if( pArea->bMemoType == DB_MEMO_DBT )
             {
                HB_BYTE pBlock[ DBT_DEFBLOCKSIZE ];
-               HB_SIZE ulLen, u;
+               HB_SIZE u;
 
                do
                {
-                  ulLen = hb_fileReadAt( pArea->pMemoFile, pBlock, DBT_DEFBLOCKSIZE, fOffset );
-                  fOffset += ulLen;
-                  if( ulLen == 0 )
+                  HB_SIZE ulLen = hb_fileReadAt( pArea->pMemoFile, pBlock, DBT_DEFBLOCKSIZE, fOffset );
+                  if( ulLen == 0 ||
+                      ulLen == ( HB_SIZE ) FS_ERROR )
                      break;
+                  fOffset += ulLen;
                   u = 0;
                   while( u < ulLen && pBlock[ u ] != 0x1A )
                      u++;
@@ -2423,7 +2428,8 @@ static HB_ERRCODE hb_fptCopyToRawFile( PHB_FILE pSrc, HB_FOFFSET from,
          HB_ULONG ulRead = ( HB_ULONGCAST ) hb_fileReadAt( pSrc, pBuffer, ( HB_ULONG )
                               HB_MIN( ( HB_FOFFSET ) ulBufSize, size - written ),
                               from + written );
-         if( ulRead == 0 )
+         if( ulRead == 0 ||
+             ulRead == ( HB_ULONG ) FS_ERROR )
             errCode = EDBF_READ;
          else if( hb_fileWrite( pDst, pBuffer, ulRead, -1 ) != ulRead )
             errCode = EDBF_WRITE;
@@ -2458,7 +2464,8 @@ static HB_ERRCODE hb_fptCopyToFile( PHB_FILE pSrc, HB_FOFFSET from,
          HB_ULONG ulRead = ( HB_ULONGCAST ) hb_fileReadAt( pSrc, pBuffer, ( HB_ULONG )
                               HB_MIN( ( HB_FOFFSET ) ulBufSize, size - written ),
                               from + written );
-         if( ulRead == 0 )
+         if( ulRead == 0 ||
+             ulRead == ( HB_ULONG ) FS_ERROR )
             errCode = EDBF_READ;
          else if( hb_fileWriteAt( pDst, pBuffer, ulRead,
                                   to + written ) != ulRead )
@@ -2926,7 +2933,8 @@ static HB_ERRCODE hb_fptWriteMemo( FPTAREAP pArea, HB_ULONG ulBlock, HB_ULONG ul
             {
                HB_ULONG ulRead = ( HB_ULONGCAST ) hb_fileRead( pFile, bBuffer,
                                                    HB_MIN( ulBufSize, ulLen - ulWritten ), -1 );
-               if( ulRead == 0 )
+               if( ulRead == 0 ||
+                   ulRead == ( HB_ULONG ) FS_ERROR )
                   errCode = EDBF_READ;
                else if( hb_fileWriteAt( pArea->pMemoFile, bBuffer,
                                         ulRead, fOffset ) != ulRead )
@@ -4261,8 +4269,10 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
       memset( &fptHeader, 0, sizeof( fptHeader ) );
       if( hb_fptFileLockSh( pArea, HB_TRUE ) )
       {
-         if( hb_fileReadAt( pArea->pMemoFile, &fptHeader,
-                            sizeof( FPTHEADER ), 0 ) >= 512 )
+         HB_SIZE nRead = hb_fileReadAt( pArea->pMemoFile, &fptHeader, sizeof( FPTHEADER ), 0 );
+
+         if( nRead >= 512 &&
+             nRead != ( HB_SIZE ) FS_ERROR )
          {
             pArea->uiMemoVersion = DB_MEMOVER_STD;
             if( pArea->bMemoType == DB_MEMO_SMT )
@@ -4754,7 +4764,6 @@ static HB_ERRCODE hb_fptPack( FPTAREAP pArea )
                else
                   HB_PUT_BE_UINT32( buffer, ulNextBlock );
                hb_fileWriteAt( pArea->pMemoTmpFile, buffer, sizeof( buffer ), 0 );
-
                errCode = hb_fptCopyToFile( pArea->pMemoTmpFile, 0,
                                            pArea->pMemoFile, 0, size );
                hb_fileTruncAt( pArea->pMemoFile, size );
