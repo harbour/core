@@ -315,7 +315,7 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * data,
                            HB_SIZE nSize, HB_MAXINT timeout )
 {
    HB_ERRCODE errcode;
-   long lRead = 0;
+   long lRead = -1;
 
    if( pFile->fRead )
    {
@@ -324,20 +324,24 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * data,
          timeout = pFile->timeout;
       lRead = hb_comRecv( pFile->port, data, lRead, timeout );
       errcode = hb_comGetError( pFile->port );
+      if( lRead <= 0 && errcode == HB_COM_ERR_TIMEOUT )
+         lRead = 0;
+      else if( lRead == 0 )
+         lRead = -1;
    }
    else
       errcode = HB_COM_ERR_ACCESS;
 
    hb_fsSetError( errcode );
 
-   return HB_MAX( lRead, 0 );
+   return lRead;
 }
 
 static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * data,
                             HB_SIZE nSize, HB_MAXINT timeout )
 {
    HB_ERRCODE errcode;
-   long lSent = 0;
+   long lSent = -1;
 
    if( pFile->fWrite )
    {
@@ -346,13 +350,17 @@ static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * data,
          timeout = pFile->timeout;
       lSent = hb_comSend( pFile->port, data, lSent, timeout );
       errcode = hb_comGetError( pFile->port );
+      if( lSent <= 0 && errcode == HB_COM_ERR_TIMEOUT )
+         lSent = 0;
+      else if( lSent == 0 )
+         lSent = -1;
    }
    else
       errcode = HB_COM_ERR_ACCESS;
 
    hb_fsSetError( errcode );
 
-   return HB_MAX( 0, lSent );
+   return lSent;
 }
 
 static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
