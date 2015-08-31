@@ -124,11 +124,11 @@ Platform specific prerequisites:
 1. Windows 7 or upper system is recommended to *build* Harbour.
 2. Make sure to have your C compiler of choice installed
    in `PATH`. Refer to your C compiler installation and setup
-   instructions for details. It's recommended to make sure no tools
-   in your `PATH` belonging to other C compilers are interfering with
-   your setup. It's also discouraged to keep multiple copies
-   of the same compiler, or different versions of the same compiler
-   in `PATH` at the same time. For the list of supported compilers,
+   instructions for details. Make sure no tools in your `PATH`
+   belonging to other C compilers are interfering with
+   your setup. Also avoid to keep multiple copies of the same
+   compiler, or different versions of the same compiler in
+   `PATH` at the same time. For the list of supported compilers,
    look up [Supported Platforms and C Compilers](#supported-platforms-and-c-compilers).
 3. GNU Make 3.81 or upper is required. A copy of this tool
    is included in the source package, so you don't have to do
@@ -1704,6 +1704,12 @@ Supported shells per host platforms:
    and does not represent any future commitment by the participants
    of the project.
 
+   This and related documents use the term "recommended" for practices
+   and tools *tested most*, *focused on*, *used and deployed* by
+   the maintainer/developer of this fork. While this is strongly believed
+   to result in the best Harbour experience for most situations, it's
+   ultimately a subjective decision. If you don't like it, use anything
+   you feel the best.
 
 ---
 This document Copyright &copy;&nbsp;2009&ndash;2015 Viktor Szakáts (vszakats.net/harbour)<br />

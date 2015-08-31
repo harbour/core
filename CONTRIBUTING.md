@@ -104,7 +104,7 @@ Evaluate these points before reporting an issue:
         set PATH=C:\<c_compiler_bin_dir>
 
     > If you use Harbour official binary distro on Windows, even above is
-    > unnecessary and not recommended.
+    > unnecessary and should be avoided.
 6.  <a name="trbl-6"></a> Remove all old, unnecessary environment variables
     (for both Harbour and C compiler) from your environment. Also remove
     any custom settings for your C compiler.
@@ -154,8 +154,8 @@ Evaluate these points before reporting an issue:
     at the time of the report. Do not post links to executables and other
     binary files. If your source contains non-ASCII and non-UTF-8 national,
     accented, special chars, make sure to mark the codepage/encoding used
-    and use `Chr()`/`hb_BCode()` calls to form the strings. UTF-8 is
-    recommended. Notice that code examples are likely to be executed as
+    and use `Chr()`/`hb_BCode()` calls to form the strings. Use UTF-8 if
+    possible. Notice that code examples are likely to be executed as
     `hbrun` scripts for testing, so it's a good idea to make them work this
     way.<br />
     Also make sure not to report multiple issues under a single GitHub Issue.<br />
