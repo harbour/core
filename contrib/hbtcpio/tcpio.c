@@ -227,17 +227,28 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * data,
 static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * data,
                             HB_SIZE nSize, HB_MAXINT timeout )
 {
-   long lSend = nSize > LONG_MAX ? LONG_MAX : ( long ) nSize;
+   long lSent = nSize > LONG_MAX ? LONG_MAX : ( long ) nSize;
+   HB_ERRCODE errcode;
 
    if( timeout == -1 )
       timeout = pFile->timeout;
-   lSend = hb_sockexWrite( pFile->sock, data, lSend, timeout );
-   hb_fsSetError( hb_socketGetError() );
+   lSent = hb_sockexWrite( pFile->sock, data, lSent, timeout );
+   errcode = hb_socketGetError();
+   hb_fsSetError( errcode );
 
-   if( lSend < 0 )
-      lSend = 0;
+   if( lSent < 0 )
+   {
+      switch( errcode )
+      {
+         case HB_SOCKET_ERR_TIMEOUT:
+         case HB_SOCKET_ERR_AGAIN:
+         case HB_SOCKET_ERR_TRYAGAIN:
+            lSent = 0;
+            break;
+      }
+   }
 
-   return lSend;
+   return lSent;
 }
 
 static HB_BOOL s_fileEof( PHB_FILE pFile )

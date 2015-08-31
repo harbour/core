@@ -1055,7 +1055,6 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
    HANDLE hPipe = ( HANDLE ) hb_fsGetOsHandle( hPipeHandle );
    DWORD dwMode = 0;
 
-   nWritten = 0;
    if( GetNamedPipeHandleState( hPipe, &dwMode, NULL, NULL, NULL, NULL, 0 ) )
    {
       HB_MAXUINT end_timer = nTimeOut > 0 ? hb_dateMilliSeconds() + nTimeOut : 0;
@@ -1087,13 +1086,15 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
          SetNamedPipeHandleState( hPipe, &dwMode, NULL, NULL );
    }
    else
+   {
       hb_fsSetIOError( HB_FALSE, 0 );
+      nWritten = ( HB_SIZE ) -1;
+   }
 }
 #elif defined( HB_OS_OS2 )
 {
    ULONG state = 0;
 
-   nWritten = 0;
    if( DosQueryNPHState( ( HPIPE ) hPipeHandle, &state ) == NO_ERROR )
    {
       HB_MAXUINT end_timer = nTimeOut > 0 ? hb_dateMilliSeconds() + nTimeOut : 0;
@@ -1123,7 +1124,10 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
          DosSetNPHState( ( HPIPE ) hPipeHandle, state );
    }
    else
+   {
       hb_fsSetIOError( HB_FALSE, 0 );
+      nWritten = ( HB_SIZE ) -1;
+   }
 }
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
 {
