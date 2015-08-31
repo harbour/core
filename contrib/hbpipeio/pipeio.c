@@ -167,7 +167,7 @@ static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * data,
 
    if( pFile->hPipeWR == FS_ERROR )
       hb_fsSetError( 6 );
-   else 
+   else
    {
       if( timeout == -1 )
          timeout = pFile->timeout;
