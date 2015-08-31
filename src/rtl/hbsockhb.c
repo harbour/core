@@ -88,6 +88,7 @@
  * hb_socketWrite( hSocket, cBuffer, [ nLen = Len( cBuffer ) ], [ nTimeout = FOREVER ] ) --> nBytesWritten
  * hb_socketFlush( hSocket, [ nTimeout = FOREVER ], [ lSync ] ) --> nBytesLeft
  * hb_socketAutoFlush( hSocket, [ nNewSetting ] ) --> nPrevSetting
+ * hb_socketAutoShutdown( hSocket, [ lNewSetting ] ) --> lPrevSetting
  */
 
 /* this has to be declared before hbsocket.h is included */
@@ -1479,5 +1480,17 @@ HB_FUNC( HB_SOCKETAUTOFLUSH )
       hb_retni( hb_sockexGetAutoFlush( pSock ) );
       if( HB_ISNUM( 2 ) )
          hb_sockexSetAutoFlush( pSock, hb_parni( 2 ) );
+   }
+}
+
+HB_FUNC( HB_SOCKETAUTOSHUTDOWN )
+{
+   PHB_SOCKEX pSock = hb_sockexParam( 1 );
+
+   if( pSock )
+   {
+      hb_retl( hb_sockexGetShutDown( pSock ) );
+      if( HB_ISLOG( 2 ) )
+         hb_sockexSetShutDown( pSock, hb_parl( 2 ) );
    }
 }

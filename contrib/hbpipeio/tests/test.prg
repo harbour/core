@@ -29,7 +29,7 @@ PROCEDURE Main()
       ENDDO
       ? "total bytes written:", hb_ntos( nDone ) + ;
          ", error:",  hb_ntos( FError() )
-      /* close input stream fro GZIP process to indicate end of data */
+      /* close input stream for GZIP process to indicate end of data */
       hb_vfConfig( pFile, HB_VF_SHUTDOWN, FO_WRITE )
       ?
 
@@ -50,9 +50,9 @@ PROCEDURE Main()
       ?
 
       hb_vfErase( "data.gz" )
-      ? "write data.gz", hb_ntos( hb_BLen( cResult ) ) + " "
-      ?? iif( hb_BLen( cResult ) == 0, ( hb_vfErase( "data.gz" ), .F. ), ;
-                                       hb_MemoWrit( "data.gz", cResult ) )
+      ? "write data.gz", hb_ntos( hb_BLen( cResult ) ), "->", ;
+         iif( hb_BLen( cResult ) > 0 .AND. hb_MemoWrit( "data.gz", cResult ), ;
+            "OK", "ERROR" )
       /* check if we can decode data compressed by GZIP */
       IF hb_ZUncompress( cResult ) == cData
          ? "OK, GZIP output decompressed correctly and matches the source"
