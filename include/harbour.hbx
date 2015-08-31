@@ -760,6 +760,7 @@ DYNAMIC hb_SHA512
 DYNAMIC hb_Shadow
 DYNAMIC hb_socketAccept
 DYNAMIC hb_socketAutoFlush
+DYNAMIC hb_socketAutoShutdown
 DYNAMIC hb_socketBind
 DYNAMIC hb_socketClose
 DYNAMIC hb_socketConnect
