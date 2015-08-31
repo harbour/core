@@ -582,7 +582,10 @@ HB_FUNC( HB_VFREAD )
          uiError = hb_fsError();
       }
 
-      hb_retns( nRead );
+      if( nRead == ( HB_SIZE ) -1 )
+         hb_retni( -1 );
+      else
+         hb_retns( nRead );
       hb_fsSetFError( uiError );
    }
 }
@@ -605,6 +608,8 @@ HB_FUNC( HB_VFREADLEN )
          nRead = hb_fileRead( pFile, buffer, nToRead, hb_parnintdef( 3, -1 ) );
          uiError = hb_fsError();
 
+         if( nRead == ( HB_SIZE ) -1 )
+            nRead = 0;
          hb_retclen_buffer( buffer, nRead );
       }
       else
@@ -634,8 +639,12 @@ HB_FUNC( HB_VFWRITE )
                nLen = nWrite;
          }
 
-         hb_retns( hb_fileWrite( pFile, hb_parc( 2 ), nLen,
-                                 hb_parnintdef( 4, -1 ) ) );
+         nLen = hb_fileWrite( pFile, hb_parc( 2 ), nLen,
+                              hb_parnintdef( 4, -1 ) );
+         if( nLen == ( HB_SIZE ) -1 )
+            hb_retni( -1 );
+         else
+            hb_retns( nLen );
          uiError = hb_fsError();
       }
       else
@@ -672,7 +681,10 @@ HB_FUNC( HB_VFREADAT )
          uiError = hb_fsError();
       }
 
-      hb_retns( nRead );
+      if( nRead == ( HB_SIZE ) -1 )
+         hb_retni( -1 );
+      else
+         hb_retns( nRead );
       hb_fsSetFError( uiError );
    }
 }
@@ -698,8 +710,12 @@ HB_FUNC( HB_VFWRITEAT )
                nLen = nWrite;
          }
 
-         hb_retns( hb_fileWriteAt( pFile, pszData, nLen,
-                                   ( HB_FOFFSET ) hb_parnintdef( 4, -1 ) ) );
+         nLen = hb_fileWriteAt( pFile, pszData, nLen,
+                                ( HB_FOFFSET ) hb_parnintdef( 4, -1 ) );
+         if( nLen == ( HB_SIZE ) -1 )
+            hb_retni( -1 );
+         else
+            hb_retns( nLen );
          uiError = hb_fsError();
       }
       else
