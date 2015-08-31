@@ -74,6 +74,8 @@ static void hb_memoread( HB_BOOL bHandleEOF )
             char * pbyBuffer = ( char * ) hb_xgrab( nSize + 1 );
 
             nSize = hb_fileReadAt( pFile, pbyBuffer, nSize, 0 );
+            if( nSize == ( HB_SIZE ) FS_ERROR )
+               nSize = 0;
 
             /* Don't read the file terminating EOF character */
             if( bHandleEOF && nSize > 0 )

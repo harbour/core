@@ -124,13 +124,16 @@ static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest, PHB_IT
          if( pBlock && HB_IS_EVALITEM( pBlock ) )
             pCount = hb_itemNew( NULL );
 
-         while( ( nRead = hb_fileRead( pSource, buffer, BUFFER_SIZE, -1 ) ) != 0 )
+         while( ( nRead = hb_fileRead( pSource, buffer, BUFFER_SIZE, -1 ) ) != 0 &&
+                nRead != ( HB_SIZE ) FS_ERROR )
          {
             HB_SIZE nWritten = 0;
 
             while( nWritten < nRead )
             {
-               nWritten += hb_fileWrite( pDest, buffer + nWritten, nRead - nWritten, -1 );
+               HB_SIZE nDone = hb_fileWrite( pDest, buffer + nWritten, nRead - nWritten, -1 );
+               if( nDone != ( HB_SIZE ) FS_ERROR )
+                  nWritten += nDone;
                if( nWritten < nRead )
                {
                   pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, pszDest );

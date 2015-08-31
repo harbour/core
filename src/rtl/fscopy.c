@@ -72,7 +72,8 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 
          for( ;; )
          {
-            if( ( nBytesRead = hb_fileRead( pSrcFile, pbyBuffer, HB_FSCOPY_BUFFERSIZE, -1 ) ) > 0 )
+            if( ( nBytesRead = hb_fileRead( pSrcFile, pbyBuffer, HB_FSCOPY_BUFFERSIZE, -1 ) ) > 0 &&
+                nBytesRead != ( HB_SIZE ) FS_ERROR )
             {
                if( nBytesRead != hb_fileWrite( pDstFile, pbyBuffer, nBytesRead, -1 ) )
                {
@@ -84,7 +85,7 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
             else
             {
                errCode = hb_fsError();
-               bRetVal = ( errCode == 0 );
+               bRetVal = ( errCode == 0 && nBytesRead != ( HB_SIZE ) FS_ERROR );
                break;
             }
          }
