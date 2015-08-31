@@ -2034,7 +2034,7 @@ static void mxml_refill_from_handle_func( MXML_REFIL * ref )
 {
    HB_ISIZ len = hb_fileRead( ref->u.hFile, ref->buffer, ref->bufsize, -1 );
 
-   if( len == -1 )
+   if( len == FS_ERROR )
    {
       ref->status = MXML_STATUS_ERROR;
       ref->error  = MXML_ERROR_IO;
