@@ -60,36 +60,18 @@ static void hb_memoread( HB_BOOL bHandleEOF )
 
    if( pszFileName )
    {
-      PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL,
-                                       FO_READ | FO_SHARED | FO_PRIVATE |
-                                       FXO_SHARELOCK | FXO_NOSEEKPOS,
-                                       NULL, NULL );
+      HB_SIZE nSize;
+      char * pBuffer = ( char * ) hb_fileLoad( pszFileName, 0, &nSize );
 
-      if( pFile != NULL )
+      if( pBuffer )
       {
-         HB_SIZE nSize = ( HB_SIZE ) hb_fileSize( pFile );
-
-         if( nSize != 0 )
+         /* Don't read the file terminating EOF character */
+         if( bHandleEOF && nSize > 0 )
          {
-            char * pbyBuffer = ( char * ) hb_xgrab( nSize + 1 );
-
-            nSize = hb_fileReadAt( pFile, pbyBuffer, nSize, 0 );
-            if( nSize == ( HB_SIZE ) FS_ERROR )
-               nSize = 0;
-
-            /* Don't read the file terminating EOF character */
-            if( bHandleEOF && nSize > 0 )
-            {
-               if( pbyBuffer[ nSize - 1 ] == HB_CHAR_EOF )
-                  --nSize;
-            }
-
-            hb_retclen_buffer( pbyBuffer, nSize );
+            if( pBuffer[ nSize - 1 ] == HB_CHAR_EOF )
+               --nSize;
          }
-         else
-            hb_retc_null();
-
-         hb_fileClose( pFile );
+         hb_retclen_buffer( pBuffer, nSize );
       }
       else
          hb_retc_null();
@@ -118,21 +100,30 @@ static HB_BOOL hb_memowrit( HB_BOOL bHandleEOF )
    {
       PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL,
                                        FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
-                                       FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                       FXO_TRUNCATE | FXO_SHARELOCK,
                                        NULL, NULL );
 
       if( pFile != NULL )
       {
          HB_SIZE nSize = hb_itemGetCLen( pString );
+         const char * pData = hb_itemGetCPtr( pString );
 
-         bRetVal = hb_fileWriteAt( pFile, hb_itemGetCPtr( pString ), nSize, 0 ) == nSize;
+         while( nSize > 0 )
+         {
+            HB_SIZE nWritten = hb_fileWrite( pFile, pData, nSize, 0 );
+            if( nWritten == 0 || nWritten == ( HB_SIZE ) FS_ERROR )
+               break;
+            nSize -= nWritten;
+            pData += nWritten;
+         }
+         bRetVal = nSize == 0;
 
          /* NOTE: CA-Cl*pper will add the EOF even if the write failed. [vszakats] */
          /* NOTE: CA-Cl*pper will not return .F. when the EOF could not be written. [vszakats] */
          if( bHandleEOF && bRetVal )  /* if true, then write EOF */
          {
             char cEOF = HB_CHAR_EOF;
-            hb_fileWriteAt( pFile, &cEOF, sizeof( char ), nSize );
+            hb_fileWrite( pFile, &cEOF, sizeof( char ), -1 );
          }
 
          hb_fileClose( pFile );

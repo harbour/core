@@ -325,8 +325,6 @@ static PHB_FILE hb_fileProcessOpen( const char * pszCommand, HB_FATTR nMode,
          return NULL;
    }
 
-   printf( "\nOPEN( '%s', %p, %p ), nMode=%ld\n", pszCommand, phStdIn, phStdOut, ( long ) nMode ); fflush( stdout );
-
    hProcess = hb_fsProcessOpen( pszCommand, phStdIn, phStdOut, NULL,
                                 fDetach, NULL );
    return hProcess != FS_ERROR ? s_fileNew( hProcess, hPipeRD, hPipeWR, timeout ) : NULL;
