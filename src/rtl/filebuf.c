@@ -1481,3 +1481,8 @@ PHB_FILE hb_filePOpen( const char * pszFileName, const char * pszMode )
 
    return pFile;
 }
+
+HB_SIZE hb_fileResult( HB_SIZE nSize )
+{
+   return nSize == ( HB_SIZE ) FS_ERROR ? 0 : nSize;
+}
