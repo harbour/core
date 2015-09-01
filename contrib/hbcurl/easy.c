@@ -282,7 +282,11 @@ static size_t hb_curl_write_file_callback( void * buffer, size_t size, size_t nm
       }
 
       if( hb_curl->dl_file )
-         return hb_fileWrite( hb_curl->dl_file, buffer, size * nmemb, -1 );
+      {
+         HB_SIZE nDone;
+         if( ( nDone = hb_fileWrite( hb_curl->dl_file, buffer, size * nmemb, -1 ) ) != ( HB_SIZE ) FS_ERROR )
+            return ( size_t ) nDone;
+      }
    }
 
    return ( size_t ) -1;

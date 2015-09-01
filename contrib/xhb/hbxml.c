@@ -1890,9 +1890,7 @@ static MXML_STATUS mxml_output_string_escape( MXML_OUTPUT * out, const char * s 
 /* Useful function to output to file handles */
 static void mxml_output_func_to_handle( MXML_OUTPUT * out, const char * s, HB_ISIZ len )
 {
-   HB_ISIZ olen = hb_fileWrite( out->u.hFile, s, len, -1 );
-
-   if( olen < len )
+   if( ( HB_ISIZ ) hb_fileWrite( out->u.hFile, s, len, -1 ) != len )
    {
       out->status = MXML_STATUS_ERROR;
       out->error  = MXML_ERROR_IO;
@@ -2032,9 +2030,9 @@ void mxml_refil_ungetc( MXML_REFIL * ref, int chr )
 /* Useful "fill" function that reads from a file handle */
 static void mxml_refill_from_handle_func( MXML_REFIL * ref )
 {
-   HB_ISIZ len = hb_fileRead( ref->u.hFile, ref->buffer, ref->bufsize, -1 );
+   HB_ISIZ len;
 
-   if( len == FS_ERROR )
+   if( ( len = hb_fileRead( ref->u.hFile, ref->buffer, ref->bufsize, -1 ) ) == FS_ERROR )
    {
       ref->status = MXML_STATUS_ERROR;
       ref->error  = MXML_ERROR_IO;

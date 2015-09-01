@@ -167,8 +167,8 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
          do
          {
             HB_SIZE nRead = hb_fileReadAt( pArea->pFile, pArea->pRecord + uiRest,
-                                           uiToRead - uiRest, ulOffset + uiRest ) + uiRest;
-            HB_USHORT uiRead = ( HB_USHORT ) ( nRead == ( HB_SIZE ) FS_ERROR ? 0 : nRead );
+                                           uiToRead - uiRest, ulOffset + uiRest );
+            HB_USHORT uiRead = ( HB_USHORT ) ( nRead == ( HB_SIZE ) FS_ERROR ? 0 : ( nRead + uiRest ) );
             if( uiRead > 0 && uiRead < uiToRead &&
                 pArea->pRecord[ uiRead - 1 ] == '\032' )
                --uiRead;

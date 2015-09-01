@@ -155,7 +155,7 @@ static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE n
       else if( bOpen )
          hb_fileSeek( hFile, 0, FS_END );
 
-      nWrite = hb_fileWrite( hFile, pcStr, nLen, -1 );
+      nWrite = hb_fileResult( hb_fileWrite( hFile, pcStr, nLen, -1 ) );
       if( nWrite == nLen && bOpen && bTrunc )
          hb_fileWrite( hFile, NULL, 0, -1 );
 
