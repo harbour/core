@@ -680,9 +680,9 @@ static const char * s_findFileMimeType( PHB_FILE fileIn )
    char buf[ 512 ];
 
    HB_FOFFSET nPos = hb_fileSeek( fileIn, 0, FS_RELATIVE );
-   HB_SIZE    nLen = hb_fileReadAt( fileIn, buf, sizeof( buf ), 0 );
+   HB_SIZE    nLen = hb_fileResult( hb_fileReadAt( fileIn, buf, sizeof( buf ), 0 ) );
 
-   if( nLen > 0 && nLen != ( HB_SIZE ) FS_ERROR )
+   if( nLen > 0 )
    {
       hb_fileSeek( fileIn, nPos, FS_SET );
       return s_findStringMimeType( buf, nLen );

@@ -816,14 +816,18 @@ HB_FUNC( ED_READTEXT )
       {
          PHB_FILE file = hb_fileFromHandle( hb_numToHandle( hb_parnint( 2 ) ) );
 
-         if( ( nSize = hb_fileReadAt( file, pEd->begin, nSize, nSeek ) ) != FS_ERROR )
+         if( ( nSize = hb_fileReadAt( file, pEd->begin, nSize, nSeek ) ) == FS_ERROR )
+            nSize = 0;
+         else
             lSuccess = HB_TRUE;
 
          hb_fileDetach( file );
       }
       else if( hb_fileParamGet( 2 ) )
       {
-         if( ( nSize = hb_fileReadAt( hb_fileParamGet( 2 ), pEd->begin, nSize, nSeek ) ) != FS_ERROR )
+         if( ( nSize = hb_fileReadAt( hb_fileParamGet( 2 ), pEd->begin, nSize, nSeek ) ) == FS_ERROR )
+            nSize = 0;
+         else
             lSuccess = HB_TRUE;
       }
 

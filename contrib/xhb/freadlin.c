@@ -83,8 +83,7 @@ static char * s_ReadLine( PHB_FILE hFileHandle, HB_ISIZ * plBuffLen, const char 
       }
 
       /* read from file */
-      if( ( nRead = hb_fileRead( hFileHandle, pBuff + nOffset, nSize - nOffset, -1 ) ) == FS_ERROR )
-         nRead = 0;
+      nRead = hb_fileResult( hb_fileRead( hFileHandle, pBuff + nOffset, nSize - nOffset, -1 ) );
 
       /* scan the read buffer */
 

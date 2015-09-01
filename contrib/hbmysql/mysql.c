@@ -596,9 +596,7 @@ static char * filetoBuff( const char * fname, unsigned long * size )
    {
       *size = ( unsigned long ) hb_fileSize( handle );
       buffer = ( char * ) hb_xgrab( *size + 1 );
-      *size  = ( unsigned long ) hb_fileReadAt( handle, buffer, *size, 0 );
-      if( *size == ( unsigned long ) FS_ERROR )
-         *size = 0;
+      *size  = ( unsigned long ) hb_fileResult( hb_fileReadAt( handle, buffer, *size, 0 ) );
       buffer[ *size ] = '\0';
       hb_fileClose( handle );
    }

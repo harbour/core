@@ -150,9 +150,7 @@ HB_FUNC( PRINTSEND )
                                        NULL, NULL );
       if( hFile )
       {
-         nRet = hb_fileWrite( hFile, szStr, nLen, -1 );
-         if( nRet == ( HB_SIZE ) FS_ERROR )
-            nRet = 0;
+         nRet = hb_fileResult( hb_fileWrite( hFile, szStr, nLen, -1 ) );
          hb_fileClose( hFile );
       }
    }

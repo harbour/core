@@ -204,10 +204,7 @@ HB_FUNC( FILESTR )
 
          pcResult = ( char * ) hb_xgrab( nLength + 1 );
          if( nLength > 0 )
-         {
-            if( ( nLength = hb_fileRead( hFile, pcResult, ( HB_SIZE ) nLength, -1 ) ) == FS_ERROR )
-               nLength = 0;
-         }
+            nLength = hb_fileResult( hb_fileRead( hFile, pcResult, ( HB_SIZE ) nLength, -1 ) );
 
          if( bCtrlZ )
          {
@@ -268,8 +265,7 @@ HB_FUNC( FILESCREEN )
          hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &nSize );
          pBuffer = ( char * ) hb_xgrab( nSize );
 
-         if( ( nLength = hb_fileRead( hFile, pBuffer, nSize, -1 ) ) == ( HB_SIZE ) FS_ERROR )
-            nLength = 0;
+         nLength = hb_fileResult( hb_fileRead( hFile, pBuffer, nSize, -1 ) );
          hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
          hb_xfree( pBuffer );

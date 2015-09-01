@@ -1819,14 +1819,10 @@ HB_FUNC( SQLITE3_FILE_TO_BUFF )
 
    if( handle )
    {
-      char *  buffer;
-      HB_SIZE nSize;
+      HB_SIZE nSize = hb_fileSize( handle );
+      char *  buffer = ( char * ) hb_xgrab( nSize + 1 );
 
-      nSize  = ( HB_SIZE ) hb_fileSize( handle );
-      buffer = ( char * ) hb_xgrab( nSize + 1 );
-      nSize  = ( HB_SIZE ) hb_fileReadAt( handle, buffer, nSize, 0 );
-      if( nSize == ( HB_SIZE ) FS_ERROR )
-         nSize = 0;
+      nSize = hb_fileResult( hb_fileReadAt( handle, buffer, nSize, 0 ) );
       buffer[ nSize ] = '\0';
       hb_fileClose( handle );
 

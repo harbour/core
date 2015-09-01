@@ -120,8 +120,7 @@ static HB_FOFFSET getblock( PFT_DISPC dispc, HB_FOFFSET offset )
 
    /* read in the file and set the buffer bottom variable equal
       to the number of bytes actually read in. */
-   if( ( dispc->buffbot = hb_fileRead( dispc->infile, dispc->buffer, dispc->buffsize, -1 ) ) == FS_ERROR )
-      dispc->buffbot = 0;
+   dispc->buffbot = hb_fileResult( hb_fileRead( dispc->infile, dispc->buffer, dispc->buffsize, -1 ) );
 
    /* if a full buffer's worth was not read in, make it full. */
    if( dispc->buffbot != dispc->buffsize && dispc->fsize > dispc->buffsize )
@@ -131,8 +130,7 @@ static HB_FOFFSET getblock( PFT_DISPC dispc, HB_FOFFSET offset )
       else
          hb_fileSeek( dispc->infile, dispc->buffsize, FS_SET );
 
-      if( ( dispc->buffbot = hb_fileRead( dispc->infile, dispc->buffer, dispc->buffsize, -1 ) ) == FS_ERROR )
-         dispc->buffbot = 0;
+      dispc->buffbot = hb_fileResult( hb_fileRead( dispc->infile, dispc->buffer, dispc->buffsize, -1 ) );
    }
 
    /* return the actual file position */
