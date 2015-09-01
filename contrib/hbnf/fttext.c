@@ -269,7 +269,7 @@ static int _ins_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
 
    /* do initial load of both buffers */
    WriteLen = hb_fileResult( hb_fileReadAt( ft_text->handles[ ft_text->area ], WriteBuff, BUFFSIZE, fpRead ) );
-   fpRead += WriteLen;
+   fpRead  += WriteLen;
 
    ReadLen = hb_fileResult( hb_fileRead( ft_text->handles[ ft_text->area ], ReadBuff, BUFFSIZE, -1 ) );
    fpRead += ReadLen;
@@ -348,7 +348,7 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
 
    /* do initial load of buffer */
    WriteLen = hb_fileResult( hb_fileReadAt( ft_text->handles[ ft_text->area ], WriteBuff, BUFFSIZE, fpRead ) );
-   fpRead += WriteLen;
+   fpRead  += WriteLen;
 
    ft_text->error[ ft_text->area ] = 0;
 
@@ -358,7 +358,9 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
 
       /* position to beginning of write area */
       SaveLen = hb_fileResult( hb_fileWriteAt( ft_text->handles[ ft_text->area ], WriteBuff, WriteLen, fpWrite ) );
-      fpWrite += SaveLen;  /* move write pointer */
+
+      /* move write pointer */
+      fpWrite += SaveLen;
 
       if( SaveLen != WriteLen )
       {
@@ -369,7 +371,7 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
 
       /* return to read area and read another buffer */
       WriteLen = hb_fileResult( hb_fileReadAt( ft_text->handles[ ft_text->area ], WriteBuff, BUFFSIZE, fpRead ) );
-      fpRead += WriteLen;
+      fpRead  += WriteLen;
    }
 
    /* store length in bytes, set legacy EOF marker */
@@ -732,7 +734,7 @@ HB_FUNC( FT_FDELETE )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_ft_text );
 
-   HB_ISIZ    nBytesRead;
+   HB_SIZE    nBytesRead;
    HB_FOFFSET srcPtr;
    HB_FOFFSET destPtr;
    long       cur_rec = ft_text->recno[ ft_text->area ];
@@ -749,15 +751,9 @@ HB_FUNC( FT_FDELETE )
    /* buffer read retained data, write atop old data */
    do
    {
-      if( ( nBytesRead = hb_fileResult( hb_fileReadAt( ft_text->handles[ ft_text->area ], Buff, BUFFSIZE, srcPtr ) ) ) != 0 )  /* now read in a big glob */
-      {
-         HB_ISIZ nWritten;
-
-         srcPtr += nBytesRead;
-
-         nWritten = hb_fileResult( hb_fileWriteAt( ft_text->handles[ ft_text->area ], Buff, nBytesRead, destPtr ) );
-         destPtr += nWritten;
-      }
+      nBytesRead = hb_fileResult( hb_fileReadAt( ft_text->handles[ ft_text->area ], Buff, BUFFSIZE, srcPtr ) ) )  /* now read in a big glob */
+      srcPtr    += nBytesRead;
+      destPtr   += hb_fileResult( hb_fileWriteAt( ft_text->handles[ ft_text->area ], Buff, nBytesRead, destPtr ) );
    }
    while( nBytesRead > 0 );
 
@@ -886,9 +882,7 @@ HB_FUNC( FT_FWRITELN )
    if( bInsert )
    {
       /* insert mode, insert the length of new string + EOL */
-      err = _ins_buff( ft_text, iDataLen + 2 );
-
-      if( ! err )
+      if( ( err = _ins_buff( ft_text, iDataLen + 2 ) ) == 0 )
       {
          hb_fileSeek( ft_text->handles[ ft_text->area ], ft_text->offset[ ft_text->area ], FS_SET );
          err = _writeLine( ft_text, theData, iDataLen );
@@ -908,7 +902,6 @@ HB_FUNC( FT_FWRITELN )
          HB_ISIZ iEOL;
 
          iRead = hb_fileResult( hb_fileRead( ft_text->handles[ ft_text->area ], buffer, BUFFSIZE, -1 ) );
-
          if( ( iEOL = _findeol( buffer, iRead, NULL ) ) == 0 )
             iLineLen += iRead;
          else
