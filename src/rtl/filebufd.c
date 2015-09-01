@@ -50,8 +50,6 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#define HB_FILE_ERR_UNSUPPORTED  ( ( HB_ERRCODE ) FS_ERROR )
-
 static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
    HB_SYMBOL_UNUSED( pFuncs );

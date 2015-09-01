@@ -47,11 +47,6 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#if defined( HB_OS_UNIX )
-   #include <sys/stat.h>
-   #include <unistd.h>
-#endif
-
 #define HB_FSCOPY_BUFFERSIZE  65536
 
 HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
