@@ -202,12 +202,10 @@ static int hb_delimNextChar( DELIMAREAP pArea )
                  pArea->pBuffer + pArea->nBufferIndex, nLeft );
       pArea->nBufferStart += pArea->nBufferIndex;
       pArea->nBufferIndex = 0;
-      pArea->nBufferRead = hb_fileReadAt( pArea->pFile,
-                                          pArea->pBuffer + nLeft,
-                                          pArea->nBufferSize - nLeft,
-                                          pArea->nBufferStart + nLeft );
-      if( pArea->nBufferRead == ( HB_SIZE ) FS_ERROR )
-         pArea->nBufferRead = 0;
+      pArea->nBufferRead = hb_fileResult( hb_fileReadAt( pArea->pFile,
+                                                         pArea->pBuffer + nLeft,
+                                                         pArea->nBufferSize - nLeft,
+                                                         pArea->nBufferStart + nLeft ) );
       if( pArea->nBufferRead > 0 &&
           pArea->pBuffer[ pArea->nBufferRead + nLeft - 1 ] == '\032' )
          pArea->nBufferRead--;

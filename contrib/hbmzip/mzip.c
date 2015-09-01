@@ -683,16 +683,17 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( PHB_FILE pFile, HB_U32 * pulCRC, HB_
    if( pFile != NULL )
    {
       unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-      HB_SIZE         nRead, u;
+      HB_SIZE         nRead;
 
       do
       {
-         nRead = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 );
-         if( nRead > 0 && nRead != ( HB_SIZE ) FS_ERROR )
+         nRead = hb_fileResult( hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) );
+         if( nRead > 0 )
          {
             ulCRC = crc32( ulCRC, pString, ( uInt ) nRead );
             if( fText )
             {
+               HB_SIZE u;
                for( u = 0; u < nRead; ++u )
                {
                   if( pString[ u ] < 0x20 ?
@@ -1043,8 +1044,7 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
          if( iResult == 0 )
          {
             pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-            while( ( nLen = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) > 0 &&
-                   nLen != ( HB_SIZE ) FS_ERROR )
+            while( ( nLen = hb_fileResult( hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) ) > 0 )
                zipWriteInFileInZip( hZip, pString, ( unsigned ) nLen );
 
             hb_xfree( pString );
@@ -1150,8 +1150,7 @@ static int hb_zipStoreFileHandle( zipFile hZip, PHB_FILE pFile, int iParamZipNam
    {
       char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
       hb_fileSeek( pFile, 0, FS_SET );
-      while( ( nLen = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) > 0 &&
-             nLen != ( HB_SIZE ) FS_ERROR )
+      while( ( nLen = hb_fileResult( hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) ) > 0 )
          zipWriteInFileInZip( hZip, pString, ( unsigned ) nLen );
       hb_xfree( pString );
 

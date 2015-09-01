@@ -391,8 +391,7 @@ HB_FUNC( WIN_PRINTFILERAW )
                   HB_SIZE nRead;
 
                   nResult = 1;
-                  while( ( nRead = hb_fileRead( pFile, pbyBuffer, HB_PRINT_BUFFER_SIZE, -1 ) ) > 0 &&
-                         nRead != ( HB_SIZE ) FS_ERROR )
+                  while( ( nRead = hb_fileResult( hb_fileRead( pFile, pbyBuffer, HB_PRINT_BUFFER_SIZE, -1 ) ) ) > 0 )
                   {
                      HB_SIZE nWritten = 0;
 

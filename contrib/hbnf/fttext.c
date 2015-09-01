@@ -751,7 +751,7 @@ HB_FUNC( FT_FDELETE )
    /* buffer read retained data, write atop old data */
    do
    {
-      nBytesRead = hb_fileResult( hb_fileReadAt( ft_text->handles[ ft_text->area ], Buff, BUFFSIZE, srcPtr ) ) )  /* now read in a big glob */
+      nBytesRead = hb_fileResult( hb_fileReadAt( ft_text->handles[ ft_text->area ], Buff, BUFFSIZE, srcPtr ) );  /* now read in a big glob */
       srcPtr    += nBytesRead;
       destPtr   += hb_fileResult( hb_fileWriteAt( ft_text->handles[ ft_text->area ], Buff, nBytesRead, destPtr ) );
    }
