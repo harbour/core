@@ -83,7 +83,7 @@
 %define hb_blds   export HB_BUILD_STRIP=all
 %define hb_bldsh  export HB_BUILD_SHARED=%{!?_with_static:yes}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
-%define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbct hbgt hbmisc hbmzip hbbz2 hbnetio hbtip hbtpathy hbcomm hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbm rddsql hbsqlit3 sddsqlt3 hbnf hbhttpd hbformat hbunix hbzebra hblzf hbmemio hbmlzo hbmxml hbexpat %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_firebird:hbfbird sddfb} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_ads:rddads} hbrun"
+%define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbct hbgt hbmisc hbmzip hbbz2 hbtip hbtpathy hbcomm hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbm rddsql hbsqlit3 sddsqlt3 hbnf hbhttpd hbformat hbunix hbzebra hblzf hbcomio hbmemio hbnetio hbpipeio hbtcpio hbmlzo hbmxml hbexpat %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_firebird:hbfbird sddfb} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_ads:rddads} hbrun"
 %define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_ssl} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_cdir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
 ######################################################################
 ## Preamble.
@@ -533,12 +533,21 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_datadir}/%{name}/contrib/hbcomm
 %{_datadir}/%{name}/contrib/hbcomm/*
 %{_libdir}/%{name}/libhbcomm.a
+%dir %{_datadir}/%{name}/contrib/hbcomio
+%{_datadir}/%{name}/contrib/hbcomio/*
+%{_libdir}/%{name}/libhbcomio.a
 %dir %{_datadir}/%{name}/contrib/hbmemio
 %{_datadir}/%{name}/contrib/hbmemio/*
 %{_libdir}/%{name}/libhbmemio.a
 %dir %{_datadir}/%{name}/contrib/hbnetio
 %{_datadir}/%{name}/contrib/hbnetio/*
 %{_libdir}/%{name}/libhbnetio.a
+%dir %{_datadir}/%{name}/contrib/hbpipeio
+%{_datadir}/%{name}/contrib/hbpipeio/*
+%{_libdir}/%{name}/libhbpipeio.a
+%dir %{_datadir}/%{name}/contrib/hbtcpio
+%{_datadir}/%{name}/contrib/hbtcpio/*
+%{_libdir}/%{name}/libhbtcpio.a
 %dir %{_datadir}/%{name}/contrib/hbct
 %{_datadir}/%{name}/contrib/hbct/*
 %{_libdir}/%{name}/libhbct.a
