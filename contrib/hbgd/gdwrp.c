@@ -222,32 +222,12 @@ static void * LoadImageFromFileObject( PHB_FILE fhandle, int sz )
 
 static void * LoadImageFromFile( const char * szFile, int * sz )
 {
-   void * iptr;
+   HB_SIZE nSize;
+   char * iptr = ( char * ) hb_fileLoad( szFile, INT_MAX - 1, &nSize );
 
-   PHB_FILE fhandle = hb_fileExtOpen( szFile, NULL,
-                                      FO_READ | FO_SHARED | FO_PRIVATE |
-                                      FXO_SHARELOCK,
-                                      NULL, NULL );
+   *sz = iptr ? ( int ) nSize : 0;
 
-   if( fhandle )
-   {
-      /* get length */
-      *sz = ( int ) hb_fileSize( fhandle );
-
-      /* Read file */
-      iptr = hb_xgrab( *sz );
-      hb_fileReadAt( fhandle, iptr, ( HB_SIZE ) *sz, 0 );
-
-      hb_fileClose( fhandle );
-   }
-   else
-   {
-      /* File error */
-      iptr = NULL;
-      *sz  = 0;
-   }
-
-   return iptr;
+   return ( void * ) iptr;
 }
 
 static void SaveImageToFileObject( PHB_FILE fhandle, const void * iptr, int sz )

@@ -1815,19 +1815,11 @@ HB_FUNC( SQLITE3_TRACE )
 
 HB_FUNC( SQLITE3_FILE_TO_BUFF )
 {
-   PHB_FILE handle = hb_fileExtOpen( hb_parcx( 1 ), NULL, FO_READ | FO_SHARED | FO_PRIVATE | FXO_SHARELOCK, NULL, NULL );
+   HB_SIZE nSize;
+   char * pBuffer = ( char * ) hb_fileLoad( hb_parcx( 1 ), 0, &nSize );
 
-   if( handle )
-   {
-      HB_SIZE nSize = hb_fileSize( handle );
-      char *  buffer = ( char * ) hb_xgrab( nSize + 1 );
-
-      nSize = hb_fileResult( hb_fileReadAt( handle, buffer, nSize, 0 ) );
-      buffer[ nSize ] = '\0';
-      hb_fileClose( handle );
-
-      hb_retclen_buffer( buffer, nSize );
-   }
+   if( pBuffer )
+      hb_retclen_buffer( pBuffer, nSize );
    else
       hb_retc_null();
 }

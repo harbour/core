@@ -584,37 +584,15 @@ HB_FUNC( MYSQL_ESCAPE_STRING )
    hb_retclen_buffer( ( char * ) buffer, nSize );
 }
 
-static char * filetoBuff( const char * fname, unsigned long * size )
-{
-   char *   buffer = NULL;
-   PHB_FILE handle;
-
-   if( ( handle = hb_fileExtOpen( fname, NULL,
-                                  FO_READ | FO_SHARED | FO_PRIVATE |
-                                  FXO_SHARELOCK,
-                                  NULL, NULL ) ) != NULL )
-   {
-      *size = ( unsigned long ) hb_fileSize( handle );
-      buffer = ( char * ) hb_xgrab( *size + 1 );
-      *size  = ( unsigned long ) hb_fileResult( hb_fileReadAt( handle, buffer, *size, 0 ) );
-      buffer[ *size ] = '\0';
-      hb_fileClose( handle );
-   }
-   else
-      *size = 0;
-
-   return buffer;
-}
-
 HB_FUNC( MYSQL_ESCAPE_STRING_FROM_FILE )
 {
-   unsigned long nSize;
-   char *        from = filetoBuff( hb_parc( 1 ), &nSize );
+   HB_SIZE nSize;
+   char * from = ( char * ) hb_fileLoad( hb_parcx( 1 ), ( ULONG_MAX / 2 ) - 1, &nSize );
 
    if( from )
    {
       char * buffer = ( char * ) hb_xgrab( nSize * 2 + 1 );
-      nSize = mysql_escape_string( buffer, from, nSize );
+      nSize = mysql_escape_string( buffer, from, ( unsigned long ) nSize );
       hb_retclen_buffer( buffer, nSize );
       hb_xfree( from );
    }
