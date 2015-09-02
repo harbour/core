@@ -854,3 +854,19 @@ HB_FUNC( HB_VFTEMPFILE )
    hb_fsSetFError( hb_fsError() );
    hb_storc( szName, 1 );
 }
+
+/* hb_vfLoad( <cFileName>, [ <nMaxSize> ] ) -> <cFileBody> | NIL */
+HB_FUNC( HB_VFLOAD )
+{
+   const char * pszFileName = hb_parc( 1 );
+
+   if( pszFileName )
+   {
+      HB_SIZE nSize;
+      char * pBuffer = ( char * ) hb_fileLoad( pszFileName, hb_parns( 2 ), &nSize );
+      if( pBuffer )
+         hb_retclen_buffer( pBuffer, nSize );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 2021, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

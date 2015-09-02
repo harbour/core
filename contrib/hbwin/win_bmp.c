@@ -88,34 +88,25 @@ HB_FUNC( WIN_BITMAPTYPE )
 
 HB_FUNC( WIN_LOADBITMAPFILE )
 {
-   char * pBuffer = NULL;
-   PHB_FILE pFile = hb_fileExtOpen( hb_parcx( 1 ), NULL,
-                                    FO_READ | FO_SHARED | FO_PRIVATE |
-                                    FXO_SHARELOCK,
-                                    NULL, NULL );
-   if( pFile != NULL )
-   {
-      HB_SIZE nSize = ( HB_SIZE ) hb_fileSize( pFile );
+   HB_SIZE nSize;
+   char * pBuffer = ( char * ) hb_fileLoad( hb_parcx( 1 ), HB_MAX_BMP_SIZE, &nSize );
 
+   if( pBuffer )
+   {
       /* TOFIX: No check is done on read data from disk which is a large security hole
                 and may cause GPF even in simple error cases, like invalid file content.
                 [vszakats] */
-      if( nSize > 2 && nSize <= HB_MAX_BMP_SIZE )
-      {
-         pBuffer = ( char * ) hb_xgrab( nSize + 1 );
 
-         if( hb_fileReadAt( pFile, pBuffer, nSize, 0 ) != nSize ||
-             hbwin_bitmapType( pBuffer, nSize ) == HB_WIN_BITMAP_UNKNOWN )
-         {
-            hb_xfree( pBuffer );
-            pBuffer = NULL;
-         }
-         else
-            hb_retclen_buffer( pBuffer, nSize );
+      if( nSize <= 2 || hbwin_bitmapType( pBuffer, nSize ) == HB_WIN_BITMAP_UNKNOWN )
+      {
+         hb_xfree( pBuffer );
+         pBuffer = NULL;
       }
-      hb_fileClose( pFile );
    }
-   if( pBuffer == NULL )
+
+   if( pBuffer )
+      hb_retclen_buffer( pBuffer, nSize );
+   else
       hb_retc_null();
 }
 

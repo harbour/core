@@ -904,6 +904,7 @@ DYNAMIC hb_vfHandle
 DYNAMIC hb_vfLink
 DYNAMIC hb_vfLinkRead
 DYNAMIC hb_vfLinkSym
+DYNAMIC hb_vfLoad
 DYNAMIC hb_vfLock
 DYNAMIC hb_vfLockTest
 DYNAMIC hb_vfOpen
