@@ -65,7 +65,8 @@ win_proxyc.c
 win_regc.c
 win_rpc.c
 win_shell.c
-win_svc.c
+win_svc_1.c
+win_svc_2.c
 
 oleauto.prg
 axfunc.prg

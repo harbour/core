@@ -443,9 +443,11 @@ DYNAMIC win_regSetValueEx
 DYNAMIC win_regWrite
 DYNAMIC win_ReportEvent
 DYNAMIC win_RunDetached
+DYNAMIC win_serviceControl
 DYNAMIC win_serviceDelete
 DYNAMIC win_serviceGetStatus
 DYNAMIC win_serviceInstall
+DYNAMIC win_serviceRun
 DYNAMIC win_serviceSetExitCode
 DYNAMIC win_serviceSetStatus
 DYNAMIC win_serviceStart
