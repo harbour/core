@@ -544,20 +544,6 @@ sensitive.
 
 ## Special
 
-   - `HB_BUILD_NAME=[<name>]`
-
-     Create named build. This allows to keep multiple builds in parallel for any
-     given platform/compiler. F.e. debug / release.
-
-     > In current implementation it's appended to compiler directory name, so
-     > all filesystem/platform name rules and limits apply. (Back)slashes will be
-     > stripped from the name though.
-
-   - `HB_BUILD_PKG=yes`
-
-     Create release package. Default: `no`
-     Requires `clean install` in root source dir.
-
    - `HB_BUILD_DYN=no`
 
      Create Harbour dynamic libraries. Default: `yes`
@@ -566,6 +552,11 @@ sensitive.
 
      Create contrib dynamic libraries. Default: `no`,
      except Windows platform, where it's `yes`.
+
+   - `HB_BUILD_PKG=yes`
+
+     Create release package. Default: `no`
+     Requires `clean install` in root source dir.
 
    - `HB_BUILD_SHARED=yes`
 
@@ -623,6 +614,15 @@ sensitive.
      Build space separated <l> list of additional `.hbp`
      projects.
 
+   - `HB_BUILD_NAME=[<name>]`
+
+     Create named build. This allows to keep multiple builds in parallel for any
+     given platform/compiler. F.e. debug / release.
+
+     > In current implementation it's appended to compiler directory name, so
+     > all filesystem/platform name rules and limits apply. (Back)slashes will be
+     > stripped from the name though.
+
    - `HB_USER_LIBS=[<list>]`
 
      Add space separated `<list>` of libs to link process.
@@ -665,10 +665,9 @@ sensitive.
 
    - `HB_REBUILD_PARSER=yes`
 
-     Rebuild language parser sources. Typically
-     you only need this if your are Harbour core
-     developer modifying grammar rules (.y).
-     Requires GNU Bison 1.28 or upper in `PATH`.
+     Rebuild language parser sources. You only need this
+     if your are Harbour core developer modifying grammar
+     rules (.y). Requires GNU Bison 1.28 or upper in `PATH`.
      Default: `no`
 
    - `HB_CCPATH=[<dir>/]`

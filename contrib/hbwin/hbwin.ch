@@ -1067,7 +1067,7 @@
 #define WIN_SERVICE_PAUSE_PENDING          6
 #define WIN_SERVICE_PAUSED                 7
 
-/* win_serviceInstall() start type */
+/* win_serviceInstall() start types */
 #define WIN_SERVICE_AUTO_START             0x00000002
 #define WIN_SERVICE_BOOT_START             0x00000000
 #define WIN_SERVICE_DEMAND_START           0x00000003

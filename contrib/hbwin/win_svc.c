@@ -76,7 +76,7 @@ static VOID WINAPI hbwin_SvcControlHandler( DWORD fdwControl )
          return;
    }
 
-   SetServiceStatus( s_hStatus, &s_ServiceStatus ); /* Report current status */
+   SetServiceStatus( s_hStatus, &s_ServiceStatus );  /* Report current status */
 }
 
 static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
@@ -146,9 +146,13 @@ HB_FUNC( WIN_SERVICEGETSTATUS )
 HB_FUNC( WIN_SERVICESETSTATUS )
 {
 #if ! defined( HB_OS_WIN_CE )
+   HB_BOOL bRetVal;
    s_ServiceStatus.dwCurrentState = ( DWORD ) hb_parnl( 1 );
-   hb_retl( SetServiceStatus( s_hStatus, &s_ServiceStatus ) );
+   bRetVal = ( HB_BOOL ) SetServiceStatus( s_hStatus, &s_ServiceStatus );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retl( bRetVal );
 #else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
    hb_retl( HB_FALSE );
 #endif
 }
@@ -156,9 +160,13 @@ HB_FUNC( WIN_SERVICESETSTATUS )
 HB_FUNC( WIN_SERVICESETEXITCODE )
 {
 #if ! defined( HB_OS_WIN_CE )
+   HB_BOOL bRetVal;
    s_ServiceStatus.dwWin32ExitCode = ( DWORD ) hb_parnl( 1 );
-   hb_retl( SetServiceStatus( s_hStatus, &s_ServiceStatus ) );
+   bRetVal = ( HB_BOOL ) SetServiceStatus( s_hStatus, &s_ServiceStatus );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retl( bRetVal );
 #else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
    hb_retl( HB_FALSE );
 #endif
 }
@@ -166,8 +174,14 @@ HB_FUNC( WIN_SERVICESETEXITCODE )
 HB_FUNC( WIN_SERVICESTOP )
 {
 #if ! defined( HB_OS_WIN_CE )
+   HB_BOOL bRetVal;
    s_ServiceStatus.dwCurrentState = SERVICE_STOPPED;
-   SetServiceStatus( s_hStatus, &s_ServiceStatus );
+   bRetVal = ( HB_BOOL ) SetServiceStatus( s_hStatus, &s_ServiceStatus );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retl( bRetVal );
+#else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
+   hb_retl( HB_FALSE );
 #endif
 }
 
@@ -222,14 +236,14 @@ HB_FUNC( WIN_SERVICEINSTALL )
                                  lpAccountName,             /* default: LocalSystem account */
                                  lpPassword );              /* default: no password */
 
+         hbwapi_SetLastError( GetLastError() );
+
          if( schSrv )
          {
             bRetVal = HB_TRUE;
 
             CloseServiceHandle( schSrv );
          }
-         else
-            hbwapi_SetLastError( GetLastError() );
 
          hb_strfree( hServiceName );
          hb_strfree( hDisplayName );
@@ -243,8 +257,10 @@ HB_FUNC( WIN_SERVICEINSTALL )
    }
 
    hb_strfree( hPath );
-
+#else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
 #endif
+
    hb_retl( bRetVal );
 }
 
@@ -268,6 +284,7 @@ HB_FUNC( WIN_SERVICEDELETE )
          /* TODO: check if service is up and then stop it */
 
          bRetVal = ( HB_BOOL ) DeleteService( schSrv );
+         hbwapi_SetLastError( GetLastError() );
 
          CloseServiceHandle( schSrv );
       }
@@ -280,6 +297,8 @@ HB_FUNC( WIN_SERVICEDELETE )
    }
    else
       hbwapi_SetLastError( GetLastError() );
+#else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
 #endif
    hb_retl( bRetVal );
 }
@@ -312,11 +331,10 @@ HB_FUNC( WIN_SERVICESTART )
    lpServiceTable[ 1 ].lpServiceName = NULL;
    lpServiceTable[ 1 ].lpServiceProc = NULL;
 
-   if( StartServiceCtrlDispatcher( lpServiceTable ) )
-      bRetVal = HB_TRUE;
-   else
-      hbwapi_SetLastError( GetLastError() );
-
+   bRetVal = ( HB_BOOL ) StartServiceCtrlDispatcher( lpServiceTable );
+   hbwapi_SetLastError( GetLastError() );
+#else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
 #endif
    hb_retl( bRetVal );
 }
