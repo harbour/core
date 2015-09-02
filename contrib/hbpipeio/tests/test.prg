@@ -15,7 +15,7 @@ PROCEDURE Main()
    IF Empty( pFile := hb_vfOpenProcess( "gzip", FO_READWRITE, 1000 ) )
       ? "Cannot open file."
    ELSE
-      ? "writting..."
+      ? "writing..."
       cData := hb_TSToStr( hb_DateTime() ) + hb_eol() + ;
                Version() + hb_eol() + ;
                OS() + hb_eol() + ;
