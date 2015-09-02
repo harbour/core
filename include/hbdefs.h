@@ -556,15 +556,21 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
 /* typedef USHORT HB_TYPE; */
 typedef HB_U32 HB_TYPE;
 
-/* type of reference counter */
-typedef unsigned long HB_COUNTER;
-#if ULONG_MAX <= UINT32_MAX
-#  define HB_COUNTER_SIZE     4
-#else
-#  define HB_COUNTER_SIZE     8
-#endif
-
+/* type of file attributes */
 typedef HB_U32 HB_FATTR;
+
+/* type of reference counter */
+#if defined( HB_OS_WIN_64 )
+   typedef HB_ULONGLONG    HB_COUNTER;
+#  define HB_COUNTER_SIZE  8
+#else
+   typedef unsigned long   HB_COUNTER;
+#  if ULONG_MAX <= UINT32_MAX
+#     define HB_COUNTER_SIZE  4
+#  else
+#     define HB_COUNTER_SIZE  8
+#  endif
+#endif
 
 /* type for memory pointer diff */
 #if defined( HB_OS_WIN_64 )
@@ -575,6 +581,7 @@ typedef HB_U32 HB_FATTR;
    typedef unsigned long HB_PTRUINT;
 #endif
 
+/* type for file offsets */
 #if defined( HB_LONG_LONG_OFF ) || ULONG_MAX == ULONGLONG_MAX
    typedef HB_LONG HB_FOFFSET;
    /* we can add hack with double as work around what should
