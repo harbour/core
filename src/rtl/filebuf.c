@@ -1490,11 +1490,70 @@ HB_SIZE hb_fileResult( HB_SIZE nSize )
 
 #define HB_FILELOAD_BUFFERSIZE  65536
 
+HB_BYTE * hb_fileLoadData( PHB_FILE pFile, HB_SIZE nMaxSize,
+                           HB_SIZE * pnSize )
+{
+   HB_BYTE * pFileBuf = NULL;
+   HB_SIZE nSize = 0;
+   HB_FOFFSET nFileSize = hb_fileSize( pFile );
+
+   if( nFileSize == FS_ERROR ||
+       ( nFileSize == 0 && hb_fsError() == HB_FILE_ERR_UNSUPPORTED ) )
+   {
+      HB_SIZE nRead, nBufSize = 0;
+
+      for( ;; )
+      {
+         if( nBufSize == nSize )
+         {
+            nBufSize += nBufSize == 0 ? HB_FILELOAD_BUFFERSIZE : nBufSize >> 1;
+            if( nMaxSize > 0 && nBufSize > nMaxSize )
+            {
+               nBufSize = nMaxSize;
+               if( nBufSize == nSize )
+                  break;
+            }
+            pFileBuf = ( HB_BYTE * ) hb_xrealloc( pFileBuf, nBufSize );
+         }
+         nRead = hb_fileRead( pFile, pFileBuf + nSize, nBufSize - nSize, -1 );
+         if( nRead == 0 || nRead == ( HB_SIZE ) FS_ERROR )
+            break;
+         nSize += nRead;
+      }
+   }
+   else
+   {
+      nSize = ( HB_SIZE ) nFileSize;
+      if( nMaxSize > 0 && nSize > nMaxSize )
+         nSize = nMaxSize;
+
+      pFileBuf = ( HB_BYTE * ) hb_xgrab( nSize + 1 );
+      nSize = hb_fileReadAt( pFile, pFileBuf, nSize, 0 );
+      if( nSize == ( HB_SIZE ) FS_ERROR )
+         nSize = 0;
+   }
+
+   if( nSize > 0 )
+   {
+      pFileBuf = ( HB_BYTE * ) hb_xrealloc( pFileBuf, nSize + 1 );
+      pFileBuf[ nSize ] = '\0';
+   }
+   else if( pFileBuf )
+   {
+      hb_xfree( pFileBuf );
+      pFileBuf = NULL;
+   }
+
+   if( pnSize )
+      *pnSize = nSize;
+
+   return pFileBuf;
+}
+
 HB_BYTE * hb_fileLoad( const char * pszFileName, HB_SIZE nMaxSize,
                        HB_SIZE * pnSize )
 {
    HB_BYTE * pFileBuf = NULL;
-   HB_SIZE nSize = 0;
    PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL,
                                     FO_READ | FO_SHARED | FO_PRIVATE |
                                     FXO_SHARELOCK | FXO_NOSEEKPOS,
@@ -1502,60 +1561,11 @@ HB_BYTE * hb_fileLoad( const char * pszFileName, HB_SIZE nMaxSize,
 
    if( pFile != NULL )
    {
-      HB_FOFFSET nFileSize = hb_fileSize( pFile );
-
-      if( nFileSize == FS_ERROR ||
-          ( nFileSize == 0 && hb_fsError() == HB_FILE_ERR_UNSUPPORTED ) )
-      {
-         HB_SIZE nRead, nBufSize = 0;
-
-         for( ;; )
-         {
-            if( nBufSize == nSize )
-            {
-               nBufSize += nBufSize == 0 ? HB_FILELOAD_BUFFERSIZE : nBufSize >> 1;
-               if( nMaxSize > 0 && nBufSize > nMaxSize )
-               {
-                  nBufSize = nMaxSize;
-                  if( nBufSize == nSize )
-                     break;
-               }
-               pFileBuf = ( HB_BYTE * ) hb_xrealloc( pFileBuf, nBufSize );
-            }
-            nRead = hb_fileRead( pFile, pFileBuf + nSize, nBufSize - nSize, -1 );
-            if( nRead == 0 || nRead == ( HB_SIZE ) FS_ERROR )
-               break;
-            nSize += nRead;
-         }
-      }
-      else
-      {
-         nSize = ( HB_SIZE ) nFileSize;
-         if( nMaxSize > 0 && nSize > nMaxSize )
-            nSize = nMaxSize;
-
-         pFileBuf = ( HB_BYTE * ) hb_xgrab( nSize + 1 );
-         nSize = hb_fileReadAt( pFile, pFileBuf, nSize, 0 );
-         if( nSize == ( HB_SIZE ) FS_ERROR )
-            nSize = 0;
-      }
-
+      pFileBuf = hb_fileLoadData( pFile, nMaxSize, pnSize );
       hb_fileClose( pFile );
-
-      if( nSize > 0 )
-      {
-         pFileBuf = ( HB_BYTE * ) hb_xrealloc( pFileBuf, nSize + 1 );
-         pFileBuf[ nSize ] = '\0';
-      }
-      else if( pFileBuf )
-      {
-         hb_xfree( pFileBuf );
-         pFileBuf = NULL;
-      }
    }
-
-   if( pnSize )
-      *pnSize = nSize;
+   else if( pnSize )
+      *pnSize = 0;
 
    return pFileBuf;
 }
