@@ -771,6 +771,21 @@ HB_FUNC( SSL_GET_SHARED_CIPHERS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( SSL_SET_TLSEXT_HOST_NAME )
+{
+   if( hb_SSL_is( 1 ) )
+   {
+#if defined( SSL_CTRL_SET_TLSEXT_HOSTNAME )
+      SSL * ssl = hb_SSL_par( 1 );
+
+      if( ssl )
+         hb_retni( SSL_set_tlsext_host_name( ssl, hb_parc( 2 ) ) );
+#endif
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( SSL_ALERT_DESC_STRING )
 {
    hb_retc( SSL_alert_desc_string( hb_parni( 1 ) ) );
