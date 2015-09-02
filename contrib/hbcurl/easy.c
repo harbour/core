@@ -1064,6 +1064,50 @@ HB_FUNC( CURL_EASY_SETOPT )
                }
                break;
             }
+            case HB_CURLOPT_HTTPPOST_FORM:
+            {
+               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
+               if( pArray )
+               {
+                  HB_SIZE ulPos;
+                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
+                  {
+                     PHB_ITEM pSubArray = hb_arrayGetItemPtr( pArray, ulPos + 1 );
+
+                     int type = hb_arrayGetNI( pSubArray, 1 );
+
+                     switch( type )
+                     {
+                        case HB_CURLOPT_HTTPPOST_FORM_CONTENT:
+
+                           curl_formadd( &hb_curl->pHTTPPOST_First,
+                                         &hb_curl->pHTTPPOST_Last,
+                                         CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 2 ),
+                                         CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 2 ),
+                                         CURLFORM_COPYCONTENTS, hb_arrayGetCPtr( pSubArray, 3 ),
+                                         CURLFORM_CONTENTSLENGTH, hb_arrayGetCLen( pSubArray, 3 ),
+                                         CURLFORM_END );
+
+                           break;
+                        case HB_CURLOPT_HTTPPOST_FORM_FILE:
+                           curl_formadd( &hb_curl->pHTTPPOST_First,
+                                         &hb_curl->pHTTPPOST_Last,
+                                         CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 2 ),
+                                         CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 2 ),
+                                         CURLFORM_FILE, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pSubArray, 3 ) ),
+                                         CURLFORM_END );
+                           break;
+                     }
+
+                  }
+
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, hb_curl->pHTTPPOST_First );
+               }
+            }
+            break;
             case HB_CURLOPT_REFERER:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_REFERER, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
                break;

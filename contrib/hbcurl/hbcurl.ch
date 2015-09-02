@@ -279,6 +279,7 @@
 #define HB_CURLOPT_DL_BUFF_GET                1009
 #define HB_CURLOPT_UL_NULL_SETUP              1010
 #define HB_CURLOPT_HTTPPOST_CONTENT           1013
+#define HB_CURLOPT_HTTPPOST_FORM              1014
 #define HB_CURLOPT_PROGRESSBLOCK              HB_CURLOPT_XFERINFOBLOCK
 /* Compatibility ones. Please don't use these. */
 #define HB_CURLOPT_UL_FHANDLE_SETUP           HB_CURLOPT_UL_FILE_SETUP
@@ -604,5 +605,9 @@
 #define HB_CURLVERINFO_ICONV_VER_NUM          12
 #define HB_CURLVERINFO_LIBSSH_VERSION         13
 #define HB_CURLVERINFO_LEN                    13
+
+/* HB_CURLOPT_HTTPPOST_FORM type */
+#define HB_CURLOPT_HTTPPOST_FORM_CONTENT      1
+#define HB_CURLOPT_HTTPPOST_FORM_FILE         2
 
 #endif /* HBCURL_CH_ */
