@@ -1119,7 +1119,7 @@ os2-make
 
 ## on Linux hosts
 
-```bash
+```sh
 # Open Watcom C/C++ for OS/2
 # (requires preceding build for Linux target)
 export WATCOM="/opt/lng/watcom"
@@ -1129,7 +1129,7 @@ export HB_BUILD_3RDEXT=no
 make
 ```
 
-```bash
+```sh
 # Borland C++ 5.5.1
 export PATH=~/.wine/drive_c/Borland/BCC55/Bin:$PATH
 export HB_PLATFORM=win
@@ -1140,7 +1140,7 @@ make
 
 ## on Darwin (OS X) hosts
 
-```bash
+```sh
 # To create "Universal" binaries, compatible with pre-Lion 32-bit Intel systems
 export HB_USER_LDFLAGS="-arch x86_64 -arch i386"
 export HB_USER_CFLAGS="$HB_USER_LDFLAGS"
@@ -1150,16 +1150,16 @@ make
 
 ## on \*nix hosts in general
 
-```bash
+```sh
 make
 ```
 
-```bash
+```sh
 # MinGW GCC for Windows x86
 make HB_PLATFORM=win
 ```
 
-```bash
+```sh
 # MinGW GCC for Windows CE ARM
 make HB_PLATFORM=wce
 ```
