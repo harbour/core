@@ -123,6 +123,84 @@ extern HB_EXPORT HB_SOCKET hb_socketItemGet( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM  hb_socketItemPut( PHB_ITEM pItem, HB_SOCKET sd );
 extern HB_EXPORT void      hb_socketItemClear( PHB_ITEM pItem );
 
+#define HB_SOCKET_FILTER_MAX  128
+
+struct _HB_SOCKEX;
+typedef struct _HB_SOCKEX * PHB_SOCKEX;
+
+#if defined( _HB_SOCKEX_IMPLEMENTATION_ )
+
+typedef struct
+{
+   const char * pszName;
+   PHB_SOCKEX  ( * New )      ( HB_SOCKET sd, PHB_ITEM pParams );
+   PHB_SOCKEX  ( * Next )     ( PHB_SOCKEX pSock, PHB_ITEM pParams );
+   int         ( * Close )    ( PHB_SOCKEX pSock, HB_BOOL fClose );
+   long        ( * Read )     ( PHB_SOCKEX pSock, void * data, long len, HB_MAXINT timeout );
+   long        ( * Write )    ( PHB_SOCKEX pSock, const void * data, long len, HB_MAXINT timeout );
+   long        ( * Flush )    ( PHB_SOCKEX pSock, HB_MAXINT timeout, HB_BOOL fSync );
+   int         ( * CanRead )  ( PHB_SOCKEX pSock, HB_BOOL fBuffer, HB_MAXINT timeout );
+   int         ( * CanWrite ) ( PHB_SOCKEX pSock, HB_BOOL fBuffer, HB_MAXINT timeout );
+   char *      ( * Name )     ( PHB_SOCKEX pSock );
+   const char *( * ErrorStr ) ( PHB_SOCKEX pSock, int iError );
+}
+HB_SOCKET_FILTER, * PHB_SOCKET_FILTER;
+
+typedef struct _HB_SOCKEX
+{
+   HB_SOCKET sd;
+   HB_BOOL   fRedirAll;
+   HB_BOOL   fShutDown;
+   int       iAutoFlush;
+   long      inbuffer;
+   long      posbuffer;
+   long      readahead;
+   HB_BYTE * buffer;
+   void *    cargo;
+   const HB_SOCKET_FILTER * pFilter;
+}
+HB_SOCKEX;
+
+extern HB_EXPORT int  hb_sockexRegister( const HB_SOCKET_FILTER * pFilter );
+
+#endif /* _HB_SOCKEX_IMPLEMENTATION_ */
+
+extern HB_EXPORT int  hb_sockexClose( PHB_SOCKEX pSock, HB_BOOL fClose );
+extern HB_EXPORT long hb_sockexRead ( PHB_SOCKEX pSock, void * data, long len, HB_MAXINT timeout );
+extern HB_EXPORT long hb_sockexWrite( PHB_SOCKEX pSock, const void * data, long len, HB_MAXINT timeout );
+extern HB_EXPORT long hb_sockexFlush( PHB_SOCKEX pSock, HB_MAXINT timeout, HB_BOOL fSync );
+
+extern HB_EXPORT int  hb_sockexCanRead ( PHB_SOCKEX pSock, HB_BOOL fBuffer, HB_MAXINT timeout );
+extern HB_EXPORT int  hb_sockexCanWrite( PHB_SOCKEX pSock, HB_BOOL fBuffer, HB_MAXINT timeout );
+extern HB_EXPORT int  hb_sockexSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
+                                       PHB_ITEM pArrayWR, HB_BOOL fSetWR,
+                                       PHB_ITEM pArrayEX, HB_BOOL fSetEX,
+                                       HB_MAXINT timeout, HB_SOCKET_FUNC pFunc );
+
+extern HB_EXPORT HB_BOOL    hb_sockexIsRaw( PHB_SOCKEX pSock );
+extern HB_EXPORT int        hb_sockexRawClear( PHB_SOCKEX pSock, HB_BOOL fClear );
+extern HB_EXPORT HB_SOCKET  hb_sockexGetHandle( PHB_SOCKEX pSock );
+extern HB_EXPORT void       hb_sockexClearHandle( PHB_SOCKEX pSock );
+extern HB_EXPORT void       hb_sockexSetShutDown( PHB_SOCKEX pSock, HB_BOOL fShutDown );
+extern HB_EXPORT HB_BOOL    hb_sockexGetShutDown( PHB_SOCKEX pSock );
+extern HB_EXPORT void       hb_sockexSetAutoFlush( PHB_SOCKEX pSock, int iAutoFlush );
+extern HB_EXPORT int        hb_sockexGetAutoFlush( PHB_SOCKEX pSock );
+
+extern HB_EXPORT void       hb_socekxParamsInit( PHB_SOCKEX pSock, PHB_ITEM pParams );
+extern HB_EXPORT void       hb_socekxParamsGetStd( PHB_ITEM pParams,
+                                                   const void ** pKeydata, int * pKeylen,
+                                                   const void ** pIV, int * pIVlen,
+                                                   int * pLevel, int * pStrategy );
+extern HB_EXPORT PHB_SOCKEX hb_sockexNew( HB_SOCKET sd, const char * pszFilter, PHB_ITEM pParams );
+extern HB_EXPORT PHB_SOCKEX hb_sockexNext( PHB_SOCKEX pSock, const char * pszFilter, PHB_ITEM pParams );
+extern HB_EXPORT char *     hb_sockexName( PHB_SOCKEX pSock );
+extern HB_EXPORT const char * hb_sockexErrorStr( PHB_SOCKEX pSock, int iError );
+extern HB_EXPORT PHB_SOCKEX hb_sockexParam( int iParam );
+extern HB_EXPORT PHB_SOCKEX hb_sockexItemGet( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM   hb_sockexItemPut( PHB_ITEM pItem, PHB_SOCKEX pSock );
+extern HB_EXPORT void       hb_sockexItemClear( PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL    hb_sockexItemSetFilter( PHB_ITEM pItem, const char * pszFilter, PHB_ITEM pParams );
+
 HB_EXTERN_END
 
 #endif /* HB_SOCKET_H_ */

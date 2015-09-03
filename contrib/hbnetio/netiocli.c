@@ -115,8 +115,7 @@ typedef struct _HB_CONCLI
    HB_ERRCODE          errcode;
    int                 timeout;
    int                 port;
-   HB_SOCKET           sd;
-   PHB_ZNETSTREAM      zstream;
+   PHB_SOCKEX          sock;
    PHB_SRVDATA         srvdata;
    struct _HB_CONCLI * next;
    int                 level;
@@ -189,10 +188,7 @@ static long s_fileRecvAll( PHB_CONCLI conn, void * buffer, long len )
 
    while( lRead < len )
    {
-      if( conn->zstream )
-         l = hb_znetRead( conn->zstream, conn->sd, ptr + lRead, len - lRead, conn->timeout );
-      else
-         l = hb_socketRecv( conn->sd, ptr + lRead, len - lRead, 0, conn->timeout );
+      l = hb_sockexRead( conn->sock, ptr + lRead, len - lRead, conn->timeout );
       if( l <= 0 )
          break;
       lRead += l;
@@ -208,10 +204,7 @@ static long s_fileRecvTest( PHB_CONCLI conn, void * buffer, long len )
 
    while( lRead < len )
    {
-      if( conn->zstream )
-         l = hb_znetRead( conn->zstream, conn->sd, ptr + lRead, len - lRead, timeout );
-      else
-         l = hb_socketRecv( conn->sd, ptr + lRead, len - lRead, 0, timeout );
+      l = hb_sockexRead( conn->sock, ptr + lRead, len - lRead, timeout );
       if( l <= 0 )
          break;
       lRead += l;
@@ -371,7 +364,7 @@ static HB_BOOL s_fileSendMsg( PHB_CONCLI conn, HB_BYTE * msgbuf,
 {
    HB_BYTE buffer[ 2048 ];
    HB_BYTE * msg, * ptr = NULL;
-   HB_LONG lSent = 0, lLast = 1, l;
+   HB_LONG lSent = 0, l;
    HB_BOOL fResult = HB_FALSE;
 
    if( len == 0 )
@@ -392,14 +385,10 @@ static HB_BOOL s_fileSendMsg( PHB_CONCLI conn, HB_BYTE * msgbuf,
 
    while( lSent < len )
    {
-      if( conn->zstream )
-         l = hb_znetWrite( conn->zstream, conn->sd, msg + lSent, len - lSent, conn->timeout, &lLast );
-      else
-         l = lLast = hb_socketSend( conn->sd, msg + lSent, len - lSent, 0, conn->timeout );
-      if( l > 0 )
-         lSent += l;
-      if( lLast <= 0 )
+      l = hb_sockexWrite( conn->sock, msg + lSent, len - lSent, conn->timeout );
+      if( l <= 0 )
          break;
+      lSent += l;
    }
 
    if( ptr )
@@ -407,8 +396,7 @@ static HB_BOOL s_fileSendMsg( PHB_CONCLI conn, HB_BYTE * msgbuf,
 
    if( lSent == len )
    {
-      if( conn->zstream &&
-          hb_znetFlush( conn->zstream, conn->sd, conn->timeout ) != 0 )
+      if( hb_sockexFlush( conn->sock, conn->timeout, HB_FALSE ) != 0 )
       {
          conn->errcode = hb_socketGetError();
          if( ! fNoError )
@@ -527,6 +515,24 @@ static HB_BOOL s_fileProcessData( PHB_CONCLI conn )
    return fResult;
 }
 
+static void s_fileConFree( PHB_CONCLI conn )
+{
+   hb_sockexClose( conn->sock, HB_TRUE );
+   while( conn->srvdata )
+   {
+      PHB_SRVDATA pSrvData = conn->srvdata;
+      conn->srvdata = pSrvData->next;
+      if( pSrvData->array )
+         hb_itemRelease( pSrvData->array );
+      if( pSrvData->data )
+         hb_xfree( pSrvData->data );
+      hb_xfree( pSrvData );
+   }
+   if( conn->mutex )
+      hb_itemRelease( conn->mutex );
+   hb_xfree( conn );
+}
+
 static PHB_CONCLI s_fileConNew( HB_SOCKET sd, const char * pszServer,
                                 int iPort, int iTimeOut,
                                 const char * pszPasswd, int iPassLen,
@@ -541,8 +547,6 @@ static PHB_CONCLI s_fileConNew( HB_SOCKET sd, const char * pszServer,
    hb_atomic_set( &conn->usrcount, 0 );
    conn->mutex = hb_threadMutexCreate();
    conn->errcode = 0;
-   conn->sd = sd;
-   conn->zstream = NULL;
    conn->srvdata = NULL;
    conn->next = NULL;
    conn->timeout = iTimeOut;
@@ -554,28 +558,21 @@ static PHB_CONCLI s_fileConNew( HB_SOCKET sd, const char * pszServer,
    if( iPassLen )
       memcpy( conn->passwd, pszPasswd, iPassLen );
 
-   return conn;
-}
+   if( iLevel == HB_ZLIB_COMPRESSION_DISABLE )
+      conn->sock = hb_sockexNew( sd, NULL, NULL );
+   else
+      conn->sock = hb_sockexNewZNet( sd, pszPasswd, iPassLen,
+                                     iLevel, iStrategy );
 
-static void s_fileConFree( PHB_CONCLI conn )
-{
-   hb_socketShutdown( conn->sd, HB_SOCKET_SHUT_RDWR );
-   hb_socketClose( conn->sd );
-   while( conn->srvdata )
+   if( conn->sock == NULL )
    {
-      PHB_SRVDATA pSrvData = conn->srvdata;
-      conn->srvdata = pSrvData->next;
-      if( pSrvData->array )
-         hb_itemRelease( pSrvData->array );
-      if( pSrvData->data )
-         hb_xfree( pSrvData->data );
-      hb_xfree( pSrvData );
+      s_fileConFree( conn );
+      conn = NULL;
    }
-   if( conn->zstream )
-      hb_znetClose( conn->zstream );
-   if( conn->mutex )
-      hb_itemRelease( conn->mutex );
-   hb_xfree( conn );
+   else
+      hb_sockexSetShutDown( conn->sock, HB_TRUE );
+
+   return conn;
 }
 
 static void s_fileConRegister( PHB_CONCLI conn )
@@ -842,7 +839,6 @@ static PHB_CONCLI s_fileConnect( const char ** pFileName,
                                  int iLevel, int iStrategy )
 {
    PHB_CONCLI conn;
-   HB_SOCKET sd;
    char server[ NETIO_SERVERNAME_MAX ];
    char * pszIpAddres;
 
@@ -863,7 +859,7 @@ static PHB_CONCLI s_fileConnect( const char ** pFileName,
    conn = s_fileConFind( pszIpAddres, iPort );
    if( conn == NULL )
    {
-      sd = hb_socketOpen( HB_SOCKET_PF_INET, HB_SOCKET_PT_STREAM, 0 );
+      HB_SOCKET sd = hb_socketOpen( HB_SOCKET_PF_INET, HB_SOCKET_PT_STREAM, 0 );
       if( sd != HB_NO_SOCKET )
       {
          void * pSockAddr;
@@ -874,35 +870,18 @@ static PHB_CONCLI s_fileConnect( const char ** pFileName,
             hb_socketSetKeepAlive( sd, HB_TRUE );
             if( hb_socketConnect( sd, pSockAddr, uiLen, iTimeOut ) == 0 )
             {
-               HB_BYTE msgbuf[ NETIO_MSGLEN ];
-               HB_U16 len = ( HB_U16 ) strlen( NETIO_LOGINSTRID );
-
-               HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_LOGIN );
-               HB_PUT_LE_UINT16( &msgbuf[ 4 ], len );
-               memset( msgbuf + 6, '\0', sizeof( msgbuf ) - 6 );
-
                hb_socketSetNoDelay( sd, HB_TRUE );
                conn = s_fileConNew( sd, pszIpAddres, iPort, iTimeOut,
                                     pszPasswd, iPassLen, iLevel, iStrategy );
-               sd = HB_NO_SOCKET;
-
-               if( iLevel != HB_ZLIB_COMPRESSION_DISABLE )
-               {
-                  conn->zstream = hb_znetOpen( iLevel, iStrategy );
-                  if( conn->zstream != NULL )
-                  {
-                     if( iPassLen )
-                        hb_znetEncryptKey( conn->zstream, pszPasswd, iPassLen );
-                  }
-                  else
-                  {
-                     s_fileConFree( conn );
-                     conn = NULL;
-                  }
-               }
-
                if( conn )
                {
+                  HB_BYTE msgbuf[ NETIO_MSGLEN ];
+                  HB_U16 len = ( HB_U16 ) strlen( NETIO_LOGINSTRID );
+
+                  HB_PUT_LE_UINT32( &msgbuf[ 0 ], NETIO_LOGIN );
+                  HB_PUT_LE_UINT16( &msgbuf[ 4 ], len );
+                  memset( msgbuf + 6, '\0', sizeof( msgbuf ) - 6 );
+
                   if( ! s_fileSendMsg( conn, msgbuf, NETIO_LOGINSTRID, len,
                                        HB_TRUE, fNoError ) ||
                       HB_GET_LE_UINT32( &msgbuf[ 4 ] ) != NETIO_CONNECTED )
@@ -912,6 +891,8 @@ static PHB_CONCLI s_fileConnect( const char ** pFileName,
                   }
                   else
                      s_fileConRegister( conn );
+
+                  sd = HB_NO_SOCKET;
                }
             }
             hb_xfree( pSockAddr );
@@ -2225,7 +2206,7 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * data, HB_SIZE ulSize,
       {
          HB_ERRCODE errCode = ( HB_ERRCODE ) HB_GET_LE_UINT32( &msgbuf[ 8 ] );
          ulResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
-         if( ulResult > 0 )
+         if( ulResult > 0 && ulResult != ( HB_SIZE ) FS_ERROR )
          {
             if( ulResult > ulSize ) /* error, it should not happen, enemy attack? */
             {
@@ -2293,7 +2274,7 @@ static HB_SIZE s_fileReadAt( PHB_FILE pFile, void * data, HB_SIZE ulSize,
       {
          HB_ERRCODE errCode = ( HB_ERRCODE ) HB_GET_LE_UINT32( &msgbuf[ 8 ] );
          ulResult = HB_GET_LE_UINT32( &msgbuf[ 4 ] );
-         if( ulResult > 0 )
+         if( ulResult > 0 && ulResult != ( HB_SIZE ) FS_ERROR )
          {
             if( ulResult > ulSize ) /* error, it should not happen, enemy attack? */
             {
@@ -2517,7 +2498,7 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
 
 static HB_FHANDLE s_fileHandle( PHB_FILE pFile )
 {
-   return pFile ? pFile->conn->sd : HB_NO_SOCKET;
+   return pFile ? hb_sockexGetHandle( pFile->conn->sock ) : HB_NO_SOCKET;
 }
 
 static const HB_FILE_FUNCS * s_fileMethods( void )

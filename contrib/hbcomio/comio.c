@@ -51,6 +51,7 @@
 
 #include "hbapi.h"
 #include "hbapifs.h"
+#include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbinit.h"
 
@@ -314,7 +315,7 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * data,
                            HB_SIZE nSize, HB_MAXINT timeout )
 {
    HB_ERRCODE errcode;
-   long lRead = 0;
+   long lRead = -1;
 
    if( pFile->fRead )
    {
@@ -323,20 +324,24 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * data,
          timeout = pFile->timeout;
       lRead = hb_comRecv( pFile->port, data, lRead, timeout );
       errcode = hb_comGetError( pFile->port );
+      if( lRead <= 0 && errcode == HB_COM_ERR_TIMEOUT )
+         lRead = 0;
+      else if( lRead == 0 )
+         lRead = -1;
    }
    else
       errcode = HB_COM_ERR_ACCESS;
 
    hb_fsSetError( errcode );
 
-   return HB_MAX( lRead, 0 );
+   return lRead;
 }
 
 static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * data,
                             HB_SIZE nSize, HB_MAXINT timeout )
 {
    HB_ERRCODE errcode;
-   long lSent = 0;
+   long lSent = -1;
 
    if( pFile->fWrite )
    {
@@ -345,20 +350,69 @@ static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * data,
          timeout = pFile->timeout;
       lSent = hb_comSend( pFile->port, data, lSent, timeout );
       errcode = hb_comGetError( pFile->port );
+      if( lSent <= 0 && errcode == HB_COM_ERR_TIMEOUT )
+         lSent = 0;
+      else if( lSent == 0 )
+         lSent = -1;
    }
    else
       errcode = HB_COM_ERR_ACCESS;
 
    hb_fsSetError( errcode );
 
-   return HB_MAX( 0, lSent );
+   return lSent;
 }
 
 static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
 {
-   HB_SYMBOL_UNUSED( pFile );
-   HB_SYMBOL_UNUSED( iIndex );
-   HB_SYMBOL_UNUSED( pValue );
+   switch( iIndex )
+   {
+      case HB_VF_TIMEOUT:
+      {
+         HB_MAXINT timeout = pFile->timeout;
+
+         if( HB_IS_NUMERIC( pValue ) )
+            pFile->timeout = hb_itemGetNInt( pValue );
+         hb_itemPutNInt( pValue, timeout );
+         return HB_TRUE;
+      }
+
+      case HB_VF_PORT:
+         hb_itemPutNInt( pValue, pFile->port );
+         return HB_TRUE;
+
+      case HB_VF_SHUTDOWN:
+      {
+         int iMode = pFile->fRead ?
+                     ( pFile->fWrite ? FO_READWRITE : FO_READ ) :
+                     ( pFile->fWrite ? FO_WRITE : -1 );
+
+         if( HB_IS_NUMERIC( pValue ) )
+         {
+            switch( hb_itemGetNI( pValue ) )
+            {
+               case FO_READ:
+                  pFile->fRead = HB_FALSE;
+                  break;
+               case FO_WRITE:
+                  pFile->fWrite = HB_FALSE;
+                  break;
+               case FO_READWRITE:
+                  pFile->fRead = pFile->fWrite = HB_FALSE;
+                  break;
+            }
+         }
+         hb_itemPutNI( pValue, iMode );
+         return HB_TRUE;
+      }
+      case HB_VF_RDHANDLE:
+         hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_comGetDeviceHandle( pFile->port ) );
+         return HB_TRUE;
+
+      case HB_VF_WRHANDLE:
+         hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_comGetDeviceHandle( pFile->port ) );
+         return HB_TRUE;
+   }
 
    return HB_FALSE;
 }

@@ -942,7 +942,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
           hb_vmRequestQuery() == 0 );
 
    if( ! fResult )
-      nToRead = ( HB_SIZE ) -1;
+      nToRead = ( HB_SIZE ) FS_ERROR;
    else if( dwAvail > 0 )
       nToRead = ( ( HB_SIZE ) dwAvail < nBufferSize ) ? dwAvail : nBufferSize;
 }
@@ -972,7 +972,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
           hb_vmRequestQuery() == 0 );
 
    if( ! fResult )
-      nToRead = ( HB_SIZE ) -1;
+      nToRead = ( HB_SIZE ) FS_ERROR;
    else if( avail.cbpipe > 0 )
       nToRead = ( ( HB_SIZE ) avail.cbpipe < nBufferSize ) ? avail.cbpipe :
                                                              nBufferSize;
@@ -1055,11 +1055,11 @@ HB_SIZE hb_fsPipeRead( HB_FHANDLE hPipeHandle, void * buffer, HB_SIZE nSize,
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsPipeRead(%p,%p,%" HB_PFS "u,%" PFHL "d)", ( void * ) ( HB_PTRDIFF ) hPipeHandle, buffer, nSize, nTimeOut ) );
 
    nRead = hb_fsPipeIsData( hPipeHandle, nSize, nTimeOut );
-   if( nRead != ( HB_SIZE ) -1 && nRead > 0 )
+   if( nRead != ( HB_SIZE ) FS_ERROR && nRead > 0 )
    {
       nRead = hb_fsReadLarge( hPipeHandle, buffer, nRead );
       if( nRead == 0 )
-         nRead = ( HB_SIZE ) -1;
+         nRead = ( HB_SIZE ) FS_ERROR;
    }
 
    return nRead;
@@ -1079,7 +1079,6 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
    HANDLE hPipe = ( HANDLE ) hb_fsGetOsHandle( hPipeHandle );
    DWORD dwMode = 0;
 
-   nWritten = 0;
    if( GetNamedPipeHandleState( hPipe, &dwMode, NULL, NULL, NULL, NULL, 0 ) )
    {
       HB_MAXUINT end_timer = nTimeOut > 0 ? hb_dateMilliSeconds() + nTimeOut : 0;
@@ -1099,7 +1098,7 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
             hb_releaseCPU();
 
          fResult = WriteFile( hPipe, buffer, ( DWORD ) nSize, &dwWritten, NULL ) != 0;
-         nWritten = fResult ? ( HB_SIZE ) dwWritten : ( HB_SIZE ) -1;
+         nWritten = fResult ? ( HB_SIZE ) dwWritten : ( HB_SIZE ) FS_ERROR;
          hb_fsSetIOError( fResult, 0 );
       }
       while( fResult && nWritten == 0 &&
@@ -1111,13 +1110,15 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
          SetNamedPipeHandleState( hPipe, &dwMode, NULL, NULL );
    }
    else
+   {
       hb_fsSetIOError( HB_FALSE, 0 );
+      nWritten = ( HB_SIZE ) FS_ERROR;
+   }
 }
 #elif defined( HB_OS_OS2 )
 {
    ULONG state = 0;
 
-   nWritten = 0;
    if( DosQueryNPHState( ( HPIPE ) hPipeHandle, &state ) == NO_ERROR )
    {
       HB_MAXUINT end_timer = nTimeOut > 0 ? hb_dateMilliSeconds() + nTimeOut : 0;
@@ -1135,7 +1136,7 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
 
          fResult = DosWrite( ( HPIPE ) hPipeHandle, ( PVOID ) buffer,
                              ( ULONG ) nSize, &cbActual ) == NO_ERROR;
-         nWritten = fResult ? ( HB_SIZE ) cbActual : ( HB_SIZE ) -1;
+         nWritten = fResult ? ( HB_SIZE ) cbActual : ( HB_SIZE ) FS_ERROR;
          hb_fsSetIOError( fResult, 0 );
       }
       while( fResult && nWritten == 0 &&
@@ -1147,7 +1148,10 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
          DosSetNPHState( ( HPIPE ) hPipeHandle, state );
    }
    else
+   {
       hb_fsSetIOError( HB_FALSE, 0 );
+      nWritten = ( HB_SIZE ) FS_ERROR;
+   }
 }
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
 {
@@ -1212,7 +1216,7 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
       if( iResult == -1 )
       {
          hb_fsSetIOError( HB_FALSE, 0 );
-         nWritten = ( HB_SIZE ) -1;
+         nWritten = ( HB_SIZE ) FS_ERROR;
       }
       else
          nWritten = hb_fsWriteLarge( hPipeHandle, buffer, nSize );

@@ -145,6 +145,13 @@ SSL * hb_SSL_par( int iParam )
    return ph ? ( SSL * ) *ph : NULL;
 }
 
+SSL * hb_SSL_itemGet( PHB_ITEM pItem )
+{
+   void ** ph = ( void ** ) hb_itemGetPtrGC( pItem, &s_gcSSL_funcs );
+
+   return ph ? ( SSL * ) *ph : NULL;
+}
+
 HB_FUNC( SSL_NEW )
 {
    if( hb_SSL_CTX_is( 1 ) )

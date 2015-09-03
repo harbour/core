@@ -82,6 +82,8 @@
 #define HB_SSL_ERROR_WANT_CONNECT                           7
 #define HB_SSL_ERROR_WANT_ACCEPT                            8
 
+#define HB_SSL_SOCK_ERROR_BASE                              100
+
 #define HB_SSL_OP_MICROSOFT_SESS_ID_BUG                     0x00000001
 #define HB_SSL_OP_NETSCAPE_CHALLENGE_BUG                    0x00000002
 #define HB_SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG          0x00000008
