@@ -97,14 +97,13 @@ static void hb_sdfClearRecordBuffer( SDFAREAP pArea )
 static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
 {
    HB_USHORT uiRead, uiToRead, uiEolPos;
-   HB_SIZE nRead;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_sdfReadRecord(%p)", pArea ) );
 
    uiToRead = pArea->uiRecordLen + pArea->uiEolLen + 2;
-   nRead = hb_fileReadAt( pArea->pFile, pArea->pRecord, uiToRead,
-                          pArea->nRecordOffset );
-   uiRead = ( HB_USHORT ) ( nRead == ( HB_SIZE ) FS_ERROR ? 0 : nRead );
+   uiRead = ( HB_USHORT ) hb_fileResult(
+                        hb_fileReadAt( pArea->pFile, pArea->pRecord, uiToRead,
+                                       pArea->nRecordOffset ) );
    if( uiRead > 0 && uiRead < uiToRead && pArea->pRecord[ uiRead - 1 ] == '\032' )
       --uiRead;
 
@@ -168,9 +167,9 @@ static HB_ERRCODE hb_sdfNextRecord( SDFAREAP pArea )
 
          do
          {
-            HB_SIZE nRead = hb_fileReadAt( pArea->pFile, pArea->pRecord + uiRest,
-                                           uiToRead - uiRest, ulOffset + uiRest ) + uiRest;
-            uiRead = ( HB_USHORT ) ( nRead == ( HB_SIZE ) FS_ERROR ? 0 : nRead );
+            uiRead = ( HB_USHORT ) hb_fileResult(
+                     hb_fileReadAt( pArea->pFile, pArea->pRecord + uiRest,
+                                    uiToRead - uiRest, ulOffset + uiRest ) ) + uiRest;
             if( uiRead > 0 && uiRead < uiToRead &&
                 pArea->pRecord[ uiRead - 1 ] == '\032' )
                --uiRead;
