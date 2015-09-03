@@ -14,7 +14,7 @@ environment:
 # - HB_COMPILER: mingw64
   - HB_COMPILER: mingw
     BINTRAY_APIKEY:
-      secure: ZrOhbhL3M2mVTZu+MU2WPDB/4rJArq4rEdND/eKa9iNHFCiLNUF49jvfbuXfnCGE
+      secure: FUQVzdqjaAvLYH/yTdL1rdtrVcAheHbK4YUvNNpvArR09vfkkuAk+8ntrg2MRYa2
     BINTRAY_USER:
       secure: jfLq1ApyVLNouxv07skhrg==
     BINTRAY_PATH:

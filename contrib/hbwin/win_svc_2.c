@@ -237,8 +237,8 @@ HB_FUNC( WIN_SERVICERUN )
          if( hb_pcount() >= 2 )
          {
             dwArgs = hb_pcount() - 1;
-            hArgs = hb_xgrab( dwArgs * sizeof( void * ) );
-            lpArgs = hb_xgrab( dwArgs * sizeof( LPCTSTR ) );
+            hArgs = ( void ** ) hb_xgrab( dwArgs * sizeof( void * ) );
+            lpArgs = ( LPCTSTR * ) hb_xgrab( dwArgs * sizeof( LPCTSTR ) );
 
             for( pos = 0; pos < dwArgs; ++pos )
                lpArgs[ pos ] = HB_PARSTRDEF( pos + 2, &hArgs[ pos ], NULL );
