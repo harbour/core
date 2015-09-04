@@ -242,12 +242,6 @@ if exist "%HB_SFX_7Z%" (
    set _PKGNAME=%_PKGNAME%.exe
 )
 
-:: Change to ISO date and 24-hour time format
-if not "%CI%" == "" (
-   reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d "yyyy-MM-dd" /f
-   reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d "HH:mm" /f
-)
-
 touch "%_PKGNAME%" -r "%HB_ABSROOT%README.md"
 for %%I in ("%_PKGNAME%") do echo %%~nxI: %%~zI bytes %%~tI
 openssl dgst -sha256 "%_PKGNAME%"

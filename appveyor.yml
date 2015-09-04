@@ -52,6 +52,9 @@ install:
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.zip -o openssl-win-mingw64.zip
 - openssl dgst -sha256 openssl-win-mingw64.zip | findstr /i /c:"13dcc5c8675ffa2aabf7f73b7e200684e9e7246b294207c84b1e7e9683d1a7d2"
 - 7z x -y -oC:\w\ openssl-win-mingw64.zip > nul
+# Change to ISO date and 24-hour time format
+- reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d "yyyy-MM-dd" /f
+- reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d "HH:mm" /f
 build_script:
 - set HB_SFX_7Z=C:\w\7zsfx\7zsd.sfx
 - set HB_DIR_7Z=C:\w\7z\
