@@ -1559,6 +1559,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
    LOCAL aCOMPSUP
 
    LOCAL cLibPrefix
+   LOCAL cLibPostOption
    LOCAL cLibExt
    LOCAL cObjPrefix
    LOCAL cObjExt
@@ -4411,6 +4412,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
+#if 0
+         IF hbmk[ _HBMK_lSTATICFULL ]
+            cLibPostOption := " -Wl,-Bstatic"
+         ENDIF
+#endif
          IF hbmk[ _HBMK_cPLAT ] == "darwin"
             cBin_Lib := "libtool"
             cOpt_Lib := "-static {FA} -o {OL} {LO}"
@@ -4788,6 +4794,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cLibPrefix := "-l"
          cLibExt := ""
          cObjExt := ".o"
+         IF hbmk[ _HBMK_lSTATICFULL ]
+            cLibPostOption := " -Wl,-Bstatic"
+         ENDIF
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "clang"
             cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "clang++" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ]
@@ -5053,6 +5062,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ]
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ] )
          cOpt_CompC := "-c"
+         IF hbmk[ _HBMK_lSTATICFULL ]
+            cLibPostOption := " -Wl,-Bstatic"
+         ENDIF
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
@@ -5175,6 +5187,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "gpp" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ]
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ] )
          cOpt_CompC := "-c"
+         IF hbmk[ _HBMK_lSTATICFULL ]
+            cLibPostOption := " -Wl,-Bstatic"
+         ENDIF
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
          ENDIF
@@ -7777,7 +7792,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   "{LO}" => ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cObjPrefix ), ;
                   "{LS}" => ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ), ;
                   "{LA}" => ArrayToList( l_aOBJA,, nOpt_Esc, nOpt_FNF ), ;
-                  "{LL}" => ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ), ;
+                  "{LL}" => ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix, cLibPostOption ), ;
                   "{LB}" => ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ), ;
                   "{LF}" => iif( Empty( hbmk[ _HBMK_aOPTLPOST ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTLPOST ] ) ), ;
                   "{IM}" => ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, nOpt_FNF, cDefPrefix ), ;
@@ -7917,7 +7932,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   "{TU}" => hb_ntos( Int( ( Max( hbmk[ _HBMK_tVCSTS ], hb_SToT( "19700101000000" ) ) - hb_SToT( "19700101000000" ) ) * 86400 ) ), ;
                   "{LO}" => tmp, ;
                   "{LS}" => ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ), ;
-                  "{LL}" => ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ), ;
+                  "{LL}" => ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix, cLibPostOption ), ;
                   "{LB}" => ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ), ;
                   "{LF}" => iif( Empty( hbmk[ _HBMK_aOPTDPOST ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTDPOST ] ) ), ;
                   "{IM}" => ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, nOpt_FNF, cDefPrefix ), ;
