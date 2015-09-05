@@ -366,10 +366,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
 
    SWITCH hb_keyStd( nKey )
    CASE K_DOWN
-      IF ! ::lEditAllow
-         ::Goto( ::nFirstRow + ::nNumRows, ::nCol )
-      ELSE
+      IF ::lEditAllow
          ::Goto( ::nRow + 1, ::nCol )
+      ELSE
+         ::Goto( ::nFirstRow + ::nNumRows, ::nCol )
       ENDIF
       EXIT
 
@@ -382,10 +382,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       EXIT
 
    CASE K_UP
-      IF ! ::lEditAllow
-         ::Goto( ::nFirstRow - 1, ::nCol )
-      ELSE
+      IF ::lEditAllow
          ::Goto( ::nRow - 1, ::nCol )
+      ELSE
+         ::Goto( ::nFirstRow - 1, ::nCol )
       ENDIF
       EXIT
 

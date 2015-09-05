@@ -4,6 +4,13 @@ PROCEDURE Main()
 
    LOCAL kX, k
 
+#if defined( __HBSCRIPT__HBSHELL )
+   /* GTWIN doesn't support extended keycodes */
+   #if defined( __PLATFORM__WINDOWS )
+      hbshell_gtSelect( "GTWVT" )
+   #endif
+#endif
+
    ? hb_gtVersion(), hb_gtVersion( 1 )
 
    Set( _SET_EVENTMASK, hb_bitOr( HB_INKEY_ALL, HB_INKEY_EXT ) )
@@ -33,3 +40,13 @@ PROCEDURE Main()
    ENDDO
 
    RETURN
+
+#if ! defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+
+PROCEDURE hb_GTSYS()  /* must be a public function */
+
+   REQUEST HB_GT_WVT_DEFAULT
+
+   RETURN
+
+#endif
