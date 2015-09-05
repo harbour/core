@@ -40,18 +40,18 @@ install:
 - openssl dgst -sha256 mingw.7z | findstr /i /c:"65b30e0469f03d0e219a1ebe022f135692ed6ecdaf4f9a86923ece7689157244"
 # Will unpack into C:\w\mingw64
 - 7z x -y -oC:\w\ mingw.7z > nul
-- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win32-mingw.zip -o curl-win-mingw.zip
-- openssl dgst -sha256 curl-win-mingw.zip | findstr /i /c:"54228f90e4d77ff254c9ecb34f3577b62d32313327f4c9c4c57998712a9cb552"
-- 7z x -y -oC:\w\ curl-win-mingw.zip > nul
-- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win64-mingw.zip -o curl-win-mingw64.zip
-- openssl dgst -sha256 curl-win-mingw64.zip | findstr /i /c:"7ffa8e80953246404a01b137dd14cdeff464a6f6c30068365c7065bf84429bd0"
-- 7z x -y -oC:\w\ curl-win-mingw64.zip > nul
-- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win32-mingw.zip -o openssl-win-mingw.zip
-- openssl dgst -sha256 openssl-win-mingw.zip | findstr /i /c:"e6ccda33bd24a9af895aaf66776682cc679cb948463776270b632a36943be4f8"
-- 7z x -y -oC:\w\ openssl-win-mingw.zip > nul
-- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.zip -o openssl-win-mingw64.zip
-- openssl dgst -sha256 openssl-win-mingw64.zip | findstr /i /c:"19be9b9aec5ec1e956d9009331c6bb06035314357469274751028c489a9f6a8a"
-- 7z x -y -oC:\w\ openssl-win-mingw64.zip > nul
+- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win32-mingw.7z -o openssl-win-mingw.7z
+- openssl dgst -sha256 openssl-win-mingw.7z | findstr /i /c:"4cc400a0a958aa743ea52866683ead246355b812267e7178d40cebfbe0f08e94"
+- 7z x -y -oC:\w\ openssl-win-mingw.7z > nul
+- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.7z -o openssl-win-mingw64.7z
+- openssl dgst -sha256 openssl-win-mingw64.7z | findstr /i /c:"5e080afb86a8568c1e342a5d779cc976a3aa7cb1c27badec4edc853cd5359700"
+- 7z x -y -oC:\w\ openssl-win-mingw64.7z > nul
+- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win32-mingw.7z -o curl-win-mingw.7z
+- openssl dgst -sha256 curl-win-mingw.7z | findstr /i /c:"1ef82d47141c2bdc2cb59aefbce7e80776711132a8bca45d0910596769000e0f"
+- 7z x -y -oC:\w\ curl-win-mingw.7z > nul
+- curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win64-mingw.7z -o curl-win-mingw64.7z
+- openssl dgst -sha256 curl-win-mingw64.7z | findstr /i /c:"5cf8482e2634fc12c4e94178c08a8070f00676eaf1ff94d24f8e7be43c828631"
+- 7z x -y -oC:\w\ curl-win-mingw64.7z > nul
 # Change to ISO date and 24-hour time format
 - reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d "yyyy-MM-dd" /f
 - reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d "HH:mm" /f
