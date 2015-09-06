@@ -51,7 +51,7 @@ FUNCTION __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
 
 FUNCTION __MenuTo( bBlock, cVariable )
 
-   LOCAL nKey
+   LOCAL nKey, nKeyStd
    LOCAL cKey
    LOCAL y
    LOCAL q
@@ -181,13 +181,14 @@ FUNCTION __MenuTo( bBlock, cVariable )
             EXIT
          ENDIF
 
-         nKey := 0
+         nKey := nKeyStd := 0
          DO WHILE nKey == 0
 
             // wait for a keystroke
-            nKey := Inkey( 0 )
+            nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
-            IF ( bAction := SetKey( nKey ) ) != NIL
+            IF ( bAction := SetKey( nKey ) ) != NIL .OR. ;
+               ( bAction := SetKey( nKeyStd ) ) != NIL
 
                Eval( bBlock, n )
                Eval( bAction, ProcName( 1 ), ProcLine( 1 ), hb_asciiUpper( cVariable ) )
@@ -200,13 +201,13 @@ FUNCTION __MenuTo( bBlock, cVariable )
                   n := nArrLen
                ENDCASE
 
-               nKey := 0
+               nKey := nKeyStd := 0
 
             ENDIF
          ENDDO
 
          // check for keystrokes
-         SWITCH nKey
+         SWITCH nKeyStd
 #ifdef HB_COMPAT_C53
          CASE K_MOUSEMOVE
             EXIT
@@ -218,7 +219,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             ENDIF
             /* QUESTION: Clipper does this, but shouldn't we only
                          exit when HitTest() was successful? */
-            IF nKey == K_LDBLCLK
+            IF nKeyStd == K_LDBLCLK
                lExit := .T.
             ENDIF
             EXIT
@@ -251,7 +252,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             EXIT
          OTHERWISE
             // did user hit a hot key?
-            IF hb_BLen( cKey := Upper( hb_keyChar( nKey ) ) ) > 0
+            IF hb_BLen( cKey := Upper( hb_keyChar( nKeyStd ) ) ) > 0
                FOR y := 1 TO nArrLen
                   IF hb_LeftEqI( LTrim( t_aLevel[ nPointer - 1 ][ y ][ _ITM_PROMPT ] ), cKey )
                      n := y

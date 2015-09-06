@@ -940,26 +940,28 @@ STATIC PROCEDURE AddMiscObjects( nWinNum, bAction )
 
 /* this is for use with SetInkeyAfterBlock() */
 
-STATIC FUNCTION nAfterInkey( nkey )
+STATIC FUNCTION nAfterInkey( nKey )
 
    // check if nkey is:
    // (1) menu command, or
    // (2) mouse button action
    LOCAL bAction
+   LOCAL nKeyStd := hb_keyStd( nKey )
 
-   IF nkey == WVW_DEFAULT_MENUKEYEVENT
+   IF nKey == WVW_DEFAULT_MENUKEYEVENT
       // MenuKeyEvent
       RETURN nMenuChecker( wvw_GetLastMenuEvent() )
-      // was: elseif AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE }, nKey ) > 0
-   ELSEIF AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE, K_MMLEFTDOWN, K_LDBLCLK }, nKey ) > 0
+      // was: ELSEIF AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE }, nKeyStd ) > 0
+   ELSEIF AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE, K_MMLEFTDOWN, K_LDBLCLK }, nKeyStd ) > 0
       // MouseEvent
       RETURN wvwm_nMouseChecker( nkey )
-   ELSEIF ( bAction := SetKey( nKey ) ) != NIL
+   ELSEIF ( bAction := SetKey( nKey ) ) != NIL .OR. ;
+          ( bAction := SetKey( nKeyStd ) ) != NIL
       Eval( bAction, ProcName(), ProcLine(), ReadVar() )
       RETURN 0
    ENDIF
 
-   RETURN nkey
+   RETURN nKey
 
 // MENU handler
 

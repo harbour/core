@@ -226,7 +226,7 @@ FUNCTION NetFunc( bBlock, nSeconds )
          RETURN .T.
       ENDIF
 
-      Inkey( 0.5 )
+      hb_idleSleep( 0.5 )
       nSeconds -= 0.5
    ENDDO
 

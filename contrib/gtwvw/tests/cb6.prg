@@ -145,7 +145,7 @@ STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
              * But do NOT assign oGetList:oGet into this oNewGet
              * from within here!
              * Remember that the reader() is still suspended
-             * on Inkey(0). If we change the ActiveGet from here, then
+             * on Inkey( 0 ). If we change the ActiveGet from here, then
              * when we leave this CB (eg. by means of K_TAB)
              * this reader() will resume, but alas the active get
              * is no longer the same! Thus reader() most likely
@@ -153,7 +153,7 @@ STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
              *
              * The trick is simple:
              * reject the SETFOCUS. This will cause reader()
-             * resume its action on Inkey(0).
+             * resume its action on Inkey( 0 ).
              * All we have to do here is emulate the mouseclick
              * event on oNewGet object beneath the CB, ie.
              * putting K_LBUTTONDOWN into keyboard buffer
@@ -192,7 +192,7 @@ STATIC PROCEDURE CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 //
 STATIC PROCEDURE CBreader( oGet )
 
-   LOCAL nKey, bKeyBlock
+   LOCAL nKey, nKeyStd, bKeyBlock
    LOCAL oGetList := __GetListActive()
 
    IF ! wvw_cbIsFocused( , oGet:cargo )
@@ -200,41 +200,41 @@ STATIC PROCEDURE CBreader( oGet )
    ENDIF
 
    oGet:setfocus()
-   nKey := Inkey( 0 )
+   nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
    DO CASE
-   CASE nKey == K_ENTER
+   CASE nKeyStd == K_ENTER
       // NOTE that in WVW_CB_KBD_CLIPPER mode we will never get here
       oGet:exitState := GE_DOWN
 
-   CASE nKey == K_UP
+   CASE nKeyStd == K_UP
       oGet:exitState := GE_UP
 
-   CASE nKey == K_SH_TAB
+   CASE nKeyStd == K_SH_TAB
       oGet:exitState := GE_UP
 
-   CASE nKey == K_DOWN
+   CASE nKeyStd == K_DOWN
       // NOTE that in WVW_CB_KBD_STANDARD mode we will never get here
       oGet:exitState := GE_DOWN
 
-   CASE nKey == K_TAB
+   CASE nKeyStd == K_TAB
       oGet:exitState := GE_DOWN
 
-   CASE nKey == K_ESC
+   CASE nKeyStd == K_ESC
       IF Set( _SET_ESCAPE )
          oGet:exitState := GE_ESCAPE
       ENDIF
 
-   CASE nKey == K_PGUP
+   CASE nKeyStd == K_PGUP
       oGet:exitState := GE_WRITE
 
-   CASE nKey == K_PGDN
+   CASE nKeyStd == K_PGDN
       oGet:exitState := GE_WRITE
 
-   CASE nKey == K_CTRL_HOME
+   CASE nKeyStd == K_CTRL_HOME
       oGet:exitState := GE_TOP
 
-   CASE nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
+   CASE nKeyStd == K_LBUTTONDOWN .OR. nKeyStd == K_LDBLCLK
       // is there any GET object hit?
       IF Empty( HitTest( oGetList:aGetList, MRow(), MCol() ) )
          oGet:exitState := GE_NOEXIT
@@ -242,7 +242,9 @@ STATIC PROCEDURE CBreader( oGet )
          oGet:exitState := GE_MOUSEHIT
       ENDIF
 
-   CASE HB_ISEVALITEM( bKeyBlock := SetKey( nKey ) )
+   CASE HB_ISEVALITEM( bKeyBlock := SetKey( nKey ) ) .OR. ;
+        HB_ISEVALITEM( bKeyBlock := SetKey( nKeyStd ) )
+
       oGetList:GetDoSetKey( bKeyBlock )  // Eval(bKeyBlock)
       oGet:exitState := GE_NOEXIT
 

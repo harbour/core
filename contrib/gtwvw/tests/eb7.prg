@@ -91,7 +91,7 @@ PROCEDURE Main()
 
    // wait until user click the close button
    DO WHILE ! lClosepermitted
-      Inkey( 0.2 )
+      hb_idleSleep( 0.2 )
    ENDDO
    SetKey( K_F8, bSetKey )
 
@@ -243,7 +243,7 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
    LOCAL nOKbutton, nCancelbutton, nClosebutton, ldone := .F.
    LOCAL lclosePermitted := .F.
    LOCAL nNumGets := Len( aEBGets )
-   LOCAL ch
+   LOCAL nKey, nKeyStd
    LOCAL nfocus, lchangefocus
 
    IF nNumGets == 0
@@ -302,20 +302,23 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
 
    wvw_ebSetFocus( nwinnum, aEBGets[ 1 ][ __GET_NEBID ] )
    nFocus := 1
-   ch := Inkey( 0.5 )
    DO WHILE ! lDone
-      IF HB_ISEVALITEM( SetKey( ch ) )
-         Eval( SetKey( ch ) )
-      ELSEIF ch != 0
+      nKeyStd := hb_keyStd( nKey := Inkey( 0.5, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
+      DO CASE
+      CASE HB_ISEVALITEM( SetKey( nKey ) )
+         Eval( SetKey( nKey ) )
+      CASE HB_ISEVALITEM( SetKey( nKeyStd ) )
+         Eval( SetKey( nKeyStd ) )
+      CASE nKeyStd != 0
          lchangefocus := .T.
          DO CASE
-         CASE ch == K_TAB .OR. ch == K_DOWN .OR. ch == K_ENTER
+         CASE nKeyStd == K_TAB .OR. nKeyStd == K_DOWN .OR. nKeyStd == K_ENTER
             IF nFocus < ( nNumGets + 2 )  // incl buttons
                nFocus++
             ELSE
                nFocus := 1
             ENDIF
-         CASE ch == K_SH_TAB .OR. ch == K_UP
+         CASE nKeyStd == K_SH_TAB .OR. nKeyStd == K_UP
             IF nFocus > 1
                nFocus--
             ELSE
@@ -333,7 +336,7 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
                wvw_pbSetFocus( nwinnum, nCancelbutton )
             ENDIF
          ENDIF
-      ENDIF
+      ENDCASE
       IF wvw_pbIsFocused( nwinnum, nOKbutton )
          nFocus := nNumGets + 1
       ELSEIF wvw_pbIsFocused( nwinnum, nCancelbutton )
@@ -341,7 +344,6 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
       ELSE
          nFocus := nFocused( aEBGets )
       ENDIF
-      ch := Inkey( 0.5 )
    ENDDO
 
    // session ended (already ended by OK or Cancel)
@@ -349,7 +351,7 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
    lClosepermitted := ( nwinnum == wvw_nNumWindows() - 1 )
    // wait until user click the close button
    DO WHILE ! lClosepermitted
-      Inkey( 0.5 )
+      hb_idleSleep( 0.5 )
    ENDDO
 
    RETURN

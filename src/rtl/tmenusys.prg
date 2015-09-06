@@ -107,7 +107,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
    LOCAL nReturn := 0
 
-   LOCAL nKey
+   LOCAL nKey, nKeyStd
    LOCAL nNewItem
    LOCAL lLeftDown
    LOCAL oNewMenu
@@ -152,9 +152,9 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
       DO WHILE nSelection <= 0
 
-         nKey := Inkey( 0, hb_bitOr( INKEY_KEYBOARD, INKEY_LDOWN ) )
+         nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( hb_bitOr( INKEY_KEYBOARD, INKEY_LDOWN ), HB_INKEY_EXT ) ) )
 
-         IF nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
+         IF nKeyStd == K_LBUTTONDOWN .OR. nKeyStd == K_LDBLCLK
             nSelection := oTopMenu:hitTest( MRow(), MCol() )
 
          ELSEIF ( nSelection := oTopMenu:getAccel( nKey ) ) != 0
@@ -184,15 +184,16 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
    DO WHILE .T.
 
-      nKey := Inkey( 0 )
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
-      IF ( bKeyBlock := SetKey( nKey ) ) != NIL
+      IF ( bKeyBlock := SetKey( nKey ) ) != NIL .OR. ;
+         ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock, ProcName( 1 ), ProcLine( 1 ), "" )
          LOOP
       ENDIF
 
       DO CASE
-      CASE nKey == K_MOUSEMOVE
+      CASE nKeyStd == K_MOUSEMOVE
 
          IF lLeftDown
 
@@ -222,7 +223,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ENDIF
          ENDIF
 
-      CASE nKey == K_DOWN
+      CASE nKeyStd == K_DOWN
 
          IF ::oMenu:ClassName() == "TOPBARMENU"
             IF ::PushMenu()
@@ -238,7 +239,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ::ShowMsg( .T. )
          ENDIF
 
-      CASE nKey == K_UP
+      CASE nKeyStd == K_UP
 
          IF !( ::oMenu:ClassName() == "TOPBARMENU" )
             nTemp := ::oMenu:getPrev()
@@ -250,7 +251,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ::ShowMsg( .T. )
          ENDIF
 
-      CASE nKey == K_LEFT
+      CASE nKeyStd == K_LEFT
 
          IF ( lSubMenu := ( ::nMenuLevel > 1 ) )
             ::PopMenu()
@@ -269,7 +270,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          ENDIF
          ::ShowMsg( .T. )
 
-      CASE nKey == K_RIGHT
+      CASE nKeyStd == K_RIGHT
 
          IF ( lSubMenu := ( ::nMenuLevel > 1 ) )
             ::PopMenu()
@@ -288,7 +289,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          ENDIF
          ::ShowMsg( .T. )
 
-      CASE nKey == K_ENTER
+      CASE nKeyStd == K_ENTER
 
          IF ::PushMenu()
             ::ShowMsg( .T. )
@@ -300,7 +301,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ENDIF
          ENDIF
 
-      CASE nKey == K_ESC  // go to previous menu
+      CASE nKeyStd == K_ESC  // go to previous menu
 
          IF ::PopMenu()
             ::oMenu:display()
@@ -314,7 +315,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             EXIT
          ENDIF
 
-      CASE nKey == K_LBUTTONDOWN
+      CASE nKeyStd == K_LBUTTONDOWN
 
          IF ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem )
 
@@ -358,7 +359,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
          lLeftDown := .T.
 
-      CASE nKey == K_LBUTTONUP
+      CASE nKeyStd == K_LBUTTONUP
 
          lLeftDown := .F.
 

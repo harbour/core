@@ -2596,9 +2596,12 @@ METHOD message( cMessage ) CLASS TBrowse
 
 METHOD applyKey( nKey ) CLASS TBrowse
 
-   LOCAL bBlock := ::SetKey( nKey )
+   LOCAL nKeyStd := hb_keyStd( nKey )
+   LOCAL bBlock
 
-   IF bBlock == NIL
+   IF ( bBlock := ::SetKey( nKey ) ) == NIL .AND. ;
+      ( bBlock := ::SetKey( nKeyStd ) ) == NIL
+
       bBlock := ::SetKey( 0 )
 
       IF bBlock == NIL
@@ -2606,7 +2609,7 @@ METHOD applyKey( nKey ) CLASS TBrowse
       ENDIF
    ENDIF
 
-   RETURN Eval( bBlock, Self, nKey )
+   RETURN Eval( bBlock, Self, nKeyStd )
 
 
 METHOD setKey( nKey, bBlock ) CLASS TBrowse

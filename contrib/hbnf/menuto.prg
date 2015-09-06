@@ -114,7 +114,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
    LOCAL nCount  := Len( t_aRow[ nMenu ] )
    LOCAL lChoice := .F.
    LOCAL nCursor := SetCursor( SC_NONE )
-   LOCAL nKey, bKey, nScan, lWrap, cScreen, nPrev
+   LOCAL nKey, nKeyStd, bKey, nScan, lWrap, cScreen, nPrev
 
    hb_default( @lCold, .F. )
 
@@ -198,22 +198,23 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
 
       DispEnd()
 
-      nKey := Inkey( 0 )
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
       // If the key was an alphabetic char, convert to uppercase
-      IF IsLower( hb_keyChar( nKey ) )
-         nKey := hb_keyCode( Upper( hb_keyChar( nKey ) ) )
+      IF IsLower( hb_keyChar( nKeyStd ) )
+         nKeyStd := hb_keyCode( Upper( hb_keyChar( nKeyStd ) ) )
       ENDIF
 
       // Set nPrev to the currently active menu item
       nPrev := nActive
 
       DO CASE
-      CASE ( bKey := SetKey( nKey ) ) != NIL
+      CASE ( bKey := SetKey( nKey ) ) != NIL .OR. ;
+           ( bKey := SetKey( nKeyStd ) ) != NIL
          // Check for a hotkey, and evaluate the associated block if present
          Eval( bKey, ProcName( 1 ), ProcLine( 1 ), cReadVar )
 
-      CASE nKey == K_ENTER
+      CASE nKeyStd == K_ENTER
          // If Enter was pressed, either exit the menu or evaluate the
          // associated code block.
          IF t_aExecute[ nMenu, nActive ] != NIL
@@ -222,68 +223,61 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
             lChoice := .T.
          ENDIF
 
-      CASE nKey == K_ESC
+      CASE nKeyStd == K_ESC
          // If ESC was pressed, set the selected item to zero and exit
          lChoice := .T.
          nActive := 0
 
-      CASE nKey == K_HOME
+      CASE nKeyStd == K_HOME
          // If Home was pressed, go to the designated menu item
          nActive := iif( t_aHome[ nMenu, nActive ] == NIL, 1, t_aHome[ nMenu, nActive ] )
 
-      CASE nKey == K_END
+      CASE nKeyStd == K_END
          // If End was pressed, go to the designated menu item
          nActive := iif( t_aEnd[ nMenu, nActive ] == NIL, nCount, t_aEnd[ nMenu, nActive ] )
 
-      CASE nKey == K_UP
+      CASE nKeyStd == K_UP
          // If Up Arrow was pressed, go to the designated menu item
          IF t_aUp[ nMenu, nActive ] == NIL
             IF --nActive < 1
                nActive := iif( lWrap, nCount, 1 )
             ENDIF
-         ELSE
-            IF isOkay( t_aUp[ nMenu, nActive ] )
-               nActive := t_aUp[ nMenu, nActive ]
-            ENDIF
+         ELSEIF isOkay( t_aUp[ nMenu, nActive ] )
+            nActive := t_aUp[ nMenu, nActive ]
          ENDIF
 
-      CASE nKey == K_DOWN
+      CASE nKeyStd == K_DOWN
          // If Down Arrow was pressed, go to the designated menu item
          IF t_aDown[ nMenu, nActive ] == NIL
             IF ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
             ENDIF
-         ELSE
-            IF isOkay( t_aDown[ nMenu, nActive ] )
-               nActive := t_aDown[ nMenu, nActive ]
-            ENDIF
+         ELSEIF isOkay( t_aDown[ nMenu, nActive ] )
+            nActive := t_aDown[ nMenu, nActive ]
          ENDIF
 
-      CASE nKey == K_LEFT
+      CASE nKeyStd == K_LEFT
          // If Left Arrow was pressed, go to the designated menu item
          IF t_aLeft[ nMenu, nActive ] == NIL
             IF --nActive < 1
                nActive := iif( lWrap, nCount, 1 )
             ENDIF
-         ELSE
-            IF isOkay( t_aLeft[ nMenu, nActive ] )
-               nActive := t_aLeft[ nMenu, nActive ]
-            ENDIF
+         ELSEIF isOkay( t_aLeft[ nMenu, nActive ] )
+            nActive := t_aLeft[ nMenu, nActive ]
          ENDIF
 
-      CASE nKey == K_RIGHT
+      CASE nKeyStd == K_RIGHT
          // If Right Arrow was pressed, go to the designated menu item
          IF t_aRight[ nMenu, nActive ] == NIL
             IF ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
             ENDIF
-         ELSE
-            IF isOkay( t_aRight[ nMenu, nActive ] )
-               nActive := t_aRight[ nMenu, nActive ]
-            ENDIF
+         ELSEIF isOkay( t_aRight[ nMenu, nActive ] )
+            nActive := t_aRight[ nMenu, nActive ]
          ENDIF
 
-      CASE ( nScan := AScan( t_aTriggerInkey[ nMenu ], nKey ) ) > 0
+      CASE ( nScan := AScan( t_aTriggerInkey[ nMenu ], nKey ) ) > 0 .OR. ;
+           ( nScan := AScan( t_aTriggerInkey[ nMenu ], nKeyStd ) ) > 0
          // If a trigger letter was pressed, handle it based on the COLD parameter
          nActive := nScan
          IF ! lCold

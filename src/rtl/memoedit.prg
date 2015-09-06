@@ -94,17 +94,18 @@ METHOD MemoInit( xUserFunction ) CLASS HBMemoEditor
    IF ::UserFunctionIsValid()
 
       DO WHILE .T.
-         SWITCH nUdfReturn := ::xDo( ME_INIT )
+         nUdfReturn := ::xDo( ME_INIT )
+         DO CASE
          // Tested with CL52 that only these 3 actions are processed and
          // then ME_INIT call repeated
-         CASE K_INS
-         CASE ME_TOGGLEWRAP
-         CASE ME_TOGGLESCROLL
+         CASE hb_keyStd( nUdfReturn ) == K_INS
+         CASE nUdfReturn == ME_TOGGLEWRAP
+         CASE nUdfReturn == ME_TOGGLESCROLL
             // At this time there is no input from user of MemoEdit() only handling
             // of values returned by ::xUserFunction, so I pass NIL as the key code.
             ::HandleUserKey( , nUdfReturn )
             LOOP
-         ENDSWITCH
+         ENDCASE
          EXIT
       ENDDO
    ENDIF
@@ -113,11 +114,7 @@ METHOD MemoInit( xUserFunction ) CLASS HBMemoEditor
 
 METHOD Edit() CLASS HBMemoEditor
 
-   LOCAL nKey
-
-   // NOTE: K_ALT_W is not compatible with Cl*pper exit memo and save key, but I cannot discriminate
-   //       K_CTRL_W and K_CTRL_END from Harbour code.
-   LOCAL aConfigurableKeys := { K_CTRL_Y, K_CTRL_T, K_CTRL_B, K_CTRL_V, K_ALT_W, K_ESC }
+   LOCAL nKey, nKeyStd
    LOCAL bKeyBlock
 
    // If I have an user function I need to trap configurable keys and ask to
@@ -128,18 +125,22 @@ METHOD Edit() CLASS HBMemoEditor
 
          // I need to test this condition here since I never block inside HBEditor:Edit()
          // if there is an user function
-         IF ( nKey := Inkey() ) == 0
+         IF ( nKey := Inkey(, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) ) == 0
             ::IdleHook()
-            nKey := Inkey( 0 )
+            nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) )
          ENDIF
+         nKeyStd := hb_keyStd( nKey )
 
-         IF ( bKeyBlock := SetKey( nKey ) ) != NIL
+         IF ( bKeyBlock := SetKey( nKey ) ) != NIL .OR. ;
+            ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
             Eval( bKeyBlock )
             LOOP
          ENDIF
 
          // Is it a configurable key?
-         IF AScan( aConfigurableKeys, nKey ) > 0
+         // K_ALT_W is a Harbour extension, it is Ctrl+W in Cl*pper
+         IF AScan( { K_CTRL_Y, K_CTRL_T, K_CTRL_B, K_CTRL_V, K_ALT_W, K_ESC }, nKeyStd ) > 0 .OR. ;
+            ( hb_keyMod( nKey ) == HB_GTI_KBD_CTRL .AND. Upper( hb_keyChar( nKey ) ) == "W" )
             ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
          ELSE
             ::super:Edit( nKey )
@@ -168,7 +169,7 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
       ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
       ::lCallKeyboardHook := .F.
 
-   ELSEIF nKey == K_ESC
+   ELSEIF hb_keyStd( nKey ) == K_ESC
 
       IF ::lDirty .AND. Set( _SET_SCOREBOARD )
          cBackScr := SaveScreen( 0, MaxCol() - 19, 0, MaxCol() )
@@ -206,19 +207,26 @@ METHOD IdleHook() CLASS HBMemoEditor
 
 METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
 
+   LOCAL nKeyStd
+
    SWITCH nUdfReturn
    CASE ME_DEFAULT
 
       // I won't reach this point during ME_INIT since ME_DEFAULT ends initialization phase of MemoEdit()
 
       IF HB_ISNUMERIC( nKey )
+         nKeyStd := hb_keyStd( nKey )
          // HBEditor is not able to handle keys with a value higher than 256, but I have to tell him
          // that user wants to save text
          DO CASE
-         CASE nKey == K_ESC
+         CASE nKeyStd == K_ESC
             ::lSaved := .F.
             ::lExitEdit := .T.
-         CASE nKey <= 256 .OR. nKey == K_ALT_W .OR. hb_BLen( hb_keyChar( nKey ) ) > 0
+         CASE nKeyStd <= 256 .OR. ;
+            nKeyStd == K_ALT_W .OR. ;
+            ( hb_keyMod( nKey ) == HB_GTI_KBD_CTRL .AND. Upper( hb_keyChar( nKey ) ) == "W" ) .OR. ;
+            hb_BLen( hb_keyChar( nKeyStd ) ) > 0
+
             ::super:Edit( nKey )
          ENDCASE
       ELSE
@@ -228,7 +236,8 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
 
    CASE ME_DATA
       IF HB_ISNUMERIC( nKey )
-         IF nKey <= 256 .OR. hb_BLen( hb_keyChar( nKey ) ) > 0
+         nKeyStd := hb_keyStd( nKey )
+         IF nKeyStd <= 256 .OR. hb_BLen( hb_keyChar( nKeyStd ) ) > 0
             ::super:Edit( nKey )
          ENDIF
       ELSE
@@ -264,8 +273,10 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
 
    OTHERWISE
 
-      // TOFIX: Not CA-Cl*pper compatible, see teditor.prg
-      IF ( nUdfReturn >= 1 .AND. nUdfReturn <= 31 ) .OR. nUdfReturn == K_ALT_W
+      nKeyStd := hb_keyStd( nUdfReturn )
+      IF ( nKeyStd >= 1 .AND. nKeyStd <= 31 ) .OR. ;
+         nKeyStd == K_ALT_W .OR. ;
+         ( hb_keyMod( nUdfReturn ) == HB_GTI_KBD_CTRL .AND. Upper( hb_keyChar( nUdfReturn ) ) == "W" )
          ::super:Edit( nUdfReturn )
       ELSE
          RETURN .F.
@@ -290,7 +301,7 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 
 METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 
-   IF nKey == K_CTRL_W
+   IF hb_keyStd( nKey ) == K_CTRL_W
       ::lSaved := .T.
       ::lExitEdit := .T.
    ELSE

@@ -253,7 +253,7 @@ FUNCTION EditorRead( oEditor, xFileHandle, nOffset, nLen, lConv )
 //
 FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 
-   LOCAL nRow, nCol := 0, nKey, bKey, oBox, nCursor, nState
+   LOCAL nRow, nCol := 0, nKey, nKeyStd, bKey, oBox, nCursor, nState
    LOCAL nTop, nLeft, nBottom, nRight
    LOCAL lSaveAllowed, lSaved := .F.
 
@@ -307,41 +307,39 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
       ENDIF
       SetPos( nTop + ed_WinRow( oEdit[ E_EDIT ] ), nLeft + ed_WinCol( oEdit[ E_EDIT ] ) )
 
-#if 0
-      nKey := WaitForKey()
-#endif
-      nKey := Inkey( 0 )
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
       DO CASE
-      CASE !( hb_keyChar( nKey ) == "" )
+      CASE !( hb_keyChar( nKeyStd ) == "" )
          IF oEdit[ E_MODE ]
-            ed_PutChar( oEdit[ E_EDIT ], Asc( hb_keyChar( nKey ) ), oEdit[ E_INSERT ] )
+            ed_PutChar( oEdit[ E_EDIT ], Asc( hb_keyChar( nKeyStd ) ), oEdit[ E_INSERT ] )
          ENDIF
 
-      CASE nKey == K_F2 .AND. lSaveAllowed
+      CASE nKeyStd == K_F2 .AND. lSaveAllowed
          lSaved := EditorSave( oEdit )     // save the copy of edited buffer
 
-      CASE EditorMove( oEdit[ E_EDIT ], nKey )
+      CASE EditorMove( oEdit[ E_EDIT ], nKeyStd )
 
-      CASE nKey == K_DOWN
+      CASE nKeyStd == K_DOWN
          IF ! ed_Down( oEdit[ E_EDIT ] )
             hb_Scroll( nTop, nLeft, nBottom, nRight, 1 )
          ENDIF
 
-      CASE nKey == K_UP
+      CASE nKeyStd == K_UP
          IF ! ed_Up( oEdit[ E_EDIT ] )
             hb_Scroll( nTop, nLeft, nBottom, nRight, -1 )
          ENDIF
 
-      CASE nKey == K_ESC
+      CASE nKeyStd == K_ESC
          EXIT
 
       OTHERWISE
-         IF HB_ISEVALITEM( bKey := SetKey( nKey ) )
+         IF HB_ISEVALITEM( bKey := SetKey( nKey ) ) .OR. ;
+            HB_ISEVALITEM( bKey := SetKey( nKeyStd ) )
             Eval( bKey, oEdit )
          ELSE
             IF oEdit[ E_MODE ]
-               EditorKeys( oEdit, nKey )
+               EditorKeys( oEdit, nKeyStd )
             ENDIF
          ENDIF
       ENDCASE
@@ -352,11 +350,11 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 
    RETURN lSaved
 
-STATIC PROCEDURE EditorKeys( oEdit, nKey )
+STATIC PROCEDURE EditorKeys( oEdit, nKeyStd )
 
    LOCAL i
 
-   SWITCH nKey
+   SWITCH nKeyStd
    CASE K_CTRL_Y
       ed_DelLine( oEdit[ E_EDIT ] )
       EXIT
@@ -399,9 +397,9 @@ STATIC PROCEDURE EditorKeys( oEdit, nKey )
 
    RETURN
 
-STATIC FUNCTION EditorMove( pEdit, nKey )
+STATIC FUNCTION EditorMove( pEdit, nKeyStd )
 
-   SWITCH nKey
+   SWITCH nKeyStd
    CASE K_PGDN       ; ed_PgDown( pEdit ) ; EXIT
    CASE K_PGUP       ; ed_PgUp( pEdit ) ; EXIT
    CASE K_CTRL_PGUP  ; ed_Top( pEdit ) ; EXIT

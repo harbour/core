@@ -703,7 +703,7 @@ STATIC PROCEDURE _ftPushKeys()
 
    LOCAL nKey
 
-   DO WHILE ( nKey := Inkey() ) != 0
+   DO WHILE ( nKey := Inkey(, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) ) != 0
       AAdd( t_aKeys, nKey )
    ENDDO
 
@@ -1073,13 +1073,20 @@ STATIC FUNCTION _ftCountLeft( cString )
 
 STATIC FUNCTION _ftInkey()
 
-   LOCAL nVar
+   LOCAL nKey, nKeyStd, bBlock
 
-   DO WHILE SetKey( nVar := Inkey( 0 ) ) != NIL
-      Eval( SetKey( nVar ), ProcName(), ProcLine(), "nKey" )
+   DO WHILE .T.
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
+
+      IF ( bBlock := SetKey( nKey ) ) != NIL .OR. ;
+         ( bBlock := SetKey( nKeyStd ) ) != NIL
+         Eval( bBlock, ProcName(), ProcLine(), "nKey" )
+      ELSE
+         EXIT
+      ENDIF
    ENDDO
 
-   RETURN nVar
+   RETURN nKeyStd
 
 STATIC PROCEDURE _ftDispMessage( cMessage, nT, nL, nB, nR )
 

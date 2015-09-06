@@ -46,7 +46,7 @@
 
       The idle state is a state when there is no real application code
       executed. For example, the user code is stopped for 0.1 of a second
-      during Inkey(0.1) - Harbour is checking the keyboard only
+      during Inkey( 0.1 ) - Harbour is checking the keyboard only
       during this time. It leaves however quite enough time for
       many other background tasks. One such background task can be looking
       for unreferenced memory blocks.

@@ -58,7 +58,7 @@ FUNCTION hb_odbcBrowse( nTop, nLeft, nBottom, nRight, oDataSource )
    LOCAL oBrw
    LOCAL cOldScreen
    LOCAL nOldCursor, f
-   LOCAL nKey
+   LOCAL nKey, nKeyStd
    LOCAL bAction
 
    IF !( oDataSource:ClassName() == "TODBC" ) .OR. ! oDataSource:Active
@@ -94,7 +94,7 @@ FUNCTION hb_odbcBrowse( nTop, nLeft, nBottom, nRight, oDataSource )
    DO WHILE .T.
 
       DO WHILE .T.
-         nKey := Inkey()
+         nKey := Inkey(, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) )
          IF oBrw:stabilize() .OR. nKey != 0
             EXIT
          ENDIF
@@ -105,9 +105,10 @@ FUNCTION hb_odbcBrowse( nTop, nLeft, nBottom, nRight, oDataSource )
          oBrw:forceStable()
          StatLine( oBrw, oDataSource )
 
-         nKey := Inkey( 0 )
+         nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
-         IF ( bAction := SetKey( nKey ) ) != NIL
+         IF ( bAction := SetKey( nKey ) ) != NIL .OR. ;
+            ( bAction := SetKey( nKeyStd ) ) != NIL
             Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
             LOOP
          ENDIF

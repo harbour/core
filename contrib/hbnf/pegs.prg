@@ -167,7 +167,7 @@ STATIC PROCEDURE err_msg( msg )
    SetCursor( SC_NONE )
    SetColor( "+w/r" )
    hb_DispOutAt( 23, 33, msg )
-   Inkey( 2 )
+   hb_idleSleep( 2 )
    SetCursor( SC_NORMAL )
    RestScreen( 23, 33, 23, 47, buffer )
 

@@ -391,7 +391,7 @@ STATIC PROCEDURE ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
       oPBar2:Display( i, 100 )
       oPBar3:Display( i, 100 )
       oPBar4:Display( i, 100 )
-      Inkey( 0.3 )
+      hb_idleSleep( 0.3 )
    NEXT
    Inkey( 0 )
    oPBar:DeActivate()
@@ -411,7 +411,7 @@ STATIC PROCEDURE ExeProgressBar( oPBar, oPBar3 )
    FOR i := 1 TO 100
       oPBar:Display( i, 100 )
       oPBar3:Display( i, 100 )
-      Inkey( 0.3 )
+      hb_idleSleep( 0.3 )
    NEXT
    oPBar:DeActivate()
    oPBar3:DeActivate()

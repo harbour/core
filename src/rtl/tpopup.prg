@@ -355,9 +355,11 @@ METHOD getPrev() CLASS PopupMenu
 METHOD getShortCt( nKey ) CLASS PopupMenu
 
    LOCAL item
+   LOCAL nKeyStd := hb_keyStd( nKey )
 
    FOR EACH item IN ::aItems
-      IF item:shortcut == nKey
+      IF item:shortcut == nKey .OR. ;
+         item:shortcut == nKeyStd
          RETURN item:__enumIndex()
       ENDIF
    NEXT

@@ -50,7 +50,7 @@
 
 FUNCTION __Wait( xPrompt )
 
-   LOCAL nKey
+   LOCAL nKey, nKeyStd
    LOCAL cKey
    LOCAL bBlock
 
@@ -59,12 +59,13 @@ FUNCTION __Wait( xPrompt )
 
    DO WHILE .T.
 
-      nKey := Inkey( 0 )
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
-      IF ( bBlock := SetKey( nKey ) ) != NIL
+      IF ( bBlock := SetKey( nKey ) ) != NIL .OR. ;
+         ( bBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bBlock, ProcName( 1 ), ProcLine( 1 ), "" )
       ELSE
-         IF hb_BLen( cKey := hb_keyChar( nKey ) ) > 0
+         IF hb_BLen( cKey := hb_keyChar( nKeyStd ) ) > 0
             QQOut( cKey )
          ELSE
             cKey := Chr( 0 )
