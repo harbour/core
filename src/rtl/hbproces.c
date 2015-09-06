@@ -88,6 +88,49 @@
 #  endif
 #endif
 
+#if defined( HB_OS_OS2 )
+
+static char * hb_buildArgsOS2( const char *pszFileName )
+{
+   char * pArgs, * pszFree = NULL, cQuote = 0;
+   HB_SIZE nLen;
+
+   while( HB_ISSPACE( *pszFileName ) )
+      ++pszFileName;
+
+   pszFileName = hb_osEncodeCP( pszFileName, &pszFree, NULL );
+
+   nLen = strlen( pszFileName );
+   pArgs = ( char * ) hb_xgrab( nLen + 2 );
+   memcpy( pArgs, pszFileName, nLen + 1 );
+   pArgs[ nLen + 1 ] = '\0';
+
+   if( pszFree )
+      hb_xfree( pszFree );
+
+   pszFree = pArgs;
+   while( *pszFree )
+   {
+      if( *pszFree == cQuote )
+         cQuote = 0;
+      else if( cQuote == 0 )
+      {
+         if( *pszFree == '"' )
+            cQuote = *pszFree;
+         else if( HB_ISSPACE( *pszFree ) )
+         {
+            *pszFree = '\0';
+            break;
+         }
+      }
+      ++pszFree;
+   }
+
+   return pArgs;
+}
+
+#endif
+
 #if defined( HB_OS_DOS ) || defined( HB_OS_OS2 ) || defined( HB_OS_UNIX )
 
 /* convert command to argument list using standard bourne shell encoding:
@@ -494,6 +537,155 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
          hResult = ( HB_FHANDLE ) pi.hProcess;
       }
 
+#elif defined( HB_OS_OS2 )
+
+      HFILE hStdIn  = ( HFILE ) FS_ERROR,
+            hStdErr = ( HFILE ) FS_ERROR,
+            hStdOut = ( HFILE ) FS_ERROR,
+            hNull   = ( HFILE ) FS_ERROR,
+            hDup;
+      APIRET ret = NO_ERROR;
+      ULONG ulState, ulStateIn, ulStateOut, ulStateErr;
+      PID pid = ( PID ) -1;
+
+      ulStateIn = ulStateOut = ulStateErr = OPEN_FLAGS_NOINHERIT;
+      ulState = 0;
+      if( fDetach && ( ! phStdin || ! phStdout || ! phStderr ) )
+         ret = DosOpen( "NUL:", &hNull, &ulState, 0,
+                        FILE_NORMAL, OPEN_ACCESS_READWRITE,
+                        OPEN_ACTION_OPEN_IF_EXISTS, NULL );
+
+      if( ret == NO_ERROR && phStdin != NULL )
+      {
+         ret = DosQueryFHState( hPipeIn[ 1 ], &ulState );
+         if( ret == NO_ERROR && ( ulState & OPEN_FLAGS_NOINHERIT ) == 0 )
+            ret = DosSetFHState( hPipeIn[ 1 ], ( ulState & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
+      }
+      if( ret == NO_ERROR && phStdout != NULL )
+      {
+         ret = DosQueryFHState( hPipeOut[ 0 ], &ulState);
+         if( ret == NO_ERROR && ( ulState & OPEN_FLAGS_NOINHERIT ) == 0 )
+            ret = DosSetFHState( hPipeOut[ 0 ], ( ulState & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
+      }
+      if( ret == NO_ERROR && phStderr != NULL && phStdout != phStderr )
+      {
+         ret = DosQueryFHState( hPipeErr[ 0 ], &ulState);
+         if( ret == NO_ERROR && ( ulState & OPEN_FLAGS_NOINHERIT ) == 0 )
+            ret = DosSetFHState( hPipeErr[ 0 ], ( ulState & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
+      }
+
+      if( ret == NO_ERROR && ( phStdin != NULL || fDetach ) )
+      {
+         hDup = 0;
+         ret = DosDupHandle( hDup, &hStdIn );
+         if( ret == NO_ERROR )
+         {
+            ret = DosQueryFHState( hStdIn, &ulStateIn );
+            if( ret == NO_ERROR && ( ulStateIn & OPEN_FLAGS_NOINHERIT ) == 0 )
+               ret = DosSetFHState( hStdIn, ( ulStateIn & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
+            if( ret == NO_ERROR )
+               ret = DosDupHandle( phStdin != NULL ? hPipeIn[ 0 ] : hNull, &hDup );
+         }
+      }
+
+      if( ret == NO_ERROR && ( phStdout != NULL || fDetach ) )
+      {
+         hDup = 1;
+         ret = DosDupHandle( hDup, &hStdOut );
+         if( ret == NO_ERROR )
+         {
+            ret = DosQueryFHState( hStdOut, &ulStateOut );
+            if( ret == NO_ERROR && ( ulStateOut & OPEN_FLAGS_NOINHERIT ) == 0 )
+               ret = DosSetFHState( hStdOut, ( ulStateOut & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
+            if( ret == NO_ERROR )
+               ret = DosDupHandle( phStdout != NULL ? hPipeOut[ 1 ] : hNull, &hDup );
+         }
+      }
+
+      if( ret == NO_ERROR && ( phStderr != NULL || fDetach ) )
+      {
+         hDup = 2;
+         ret = DosDupHandle( hDup, &hStdErr );
+         if( ret == NO_ERROR )
+         {
+            ret = DosQueryFHState( hStdErr, &ulStateErr );
+            if( ret == NO_ERROR && ( ulStateErr & OPEN_FLAGS_NOINHERIT ) == 0 )
+               ret = DosSetFHState( hStdErr, ( ulStateErr & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
+            if( ret == NO_ERROR )
+               ret = DosDupHandle( phStderr != NULL ? hPipeErr[ 1 ] : hNull, &hDup );
+         }
+      }
+
+      if( ret == NO_ERROR )
+      {
+         char * pArgs = hb_buildArgsOS2( pszFileName );
+         char uchLoadError[ CCHMAXPATH ] = { 0 };
+         RESULTCODES ChildRC = { 0, 0 };
+
+         ret = DosExecPgm( uchLoadError, sizeof( uchLoadError ),
+                           fDetach ? EXEC_BACKGROUND : EXEC_ASYNCRESULT,
+                           pArgs, NULL /* env */,
+                           &ChildRC,
+                           pArgs );
+         if( ret == NO_ERROR )
+            pid = ChildRC.codeTerminate;
+
+         hb_xfree( pArgs );
+      }
+
+      if( hNull != ( HFILE ) FS_ERROR )
+         DosClose( hNull );
+
+      if( hStdIn != ( HFILE ) FS_ERROR )
+      {
+         hDup = 0;
+         DosDupHandle( hStdIn, &hDup );
+         DosClose( hStdIn );
+         if( ( ulStateIn & OPEN_FLAGS_NOINHERIT ) == 0 )
+            DosSetFHState( hDup, ulStateIn & 0xFF00 );
+      }
+      if( hStdOut != ( HFILE ) FS_ERROR )
+      {
+         hDup = 1;
+         DosDupHandle( hStdOut, &hDup );
+         DosClose( hStdOut );
+         if( ( ulStateOut & OPEN_FLAGS_NOINHERIT ) == 0 )
+            DosSetFHState( hDup, ulStateOut & 0xFF00 );
+      }
+      if( hStdErr != ( HFILE ) FS_ERROR )
+      {
+         hDup = 2;
+         DosDupHandle( hStdErr, &hDup );
+         DosClose( hStdErr );
+         if( ( ulStateErr & OPEN_FLAGS_NOINHERIT ) == 0 )
+            DosSetFHState( hDup, ulStateErr & 0xFF00 );
+      }
+
+      fError = ret != NO_ERROR;
+      if( ! fError )
+      {
+         if( phStdin != NULL )
+         {
+            *phStdin = ( HB_FHANDLE ) hPipeIn[ 1 ];
+            hPipeIn[ 1 ] = FS_ERROR;
+         }
+         if( phStdout != NULL )
+         {
+            *phStdout = ( HB_FHANDLE ) hPipeOut[ 0 ];
+            hPipeOut[ 0 ] = FS_ERROR;
+         }
+         if( phStderr != NULL )
+         {
+            *phStderr = ( HB_FHANDLE ) hPipeErr[ 0 ];
+            hPipeErr[ 0 ] = FS_ERROR;
+         }
+         if( pulPID )
+            *pulPID = pid;
+         hResult = ( HB_FHANDLE ) pid;
+      }
+
+      hb_fsSetError( ( HB_ERRCODE ) ret );
+
 #elif defined( HB_OS_UNIX ) && \
       ! defined( HB_OS_VXWORKS ) && ! defined( HB_OS_SYMBIAN )
 
@@ -581,6 +773,8 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
             exit( -1 );
          }
       }
+      hb_fsSetIOError( ! fError, 0 );
+
       hb_freeArgs( argv );
 
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
@@ -660,6 +854,8 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
          hResult = ( HB_FHANDLE ) pid;
       }
 
+      hb_fsSetIOError( ! fError, 0 );
+
 #else
    int iTODO; /* TODO: for given platform */
 
@@ -670,8 +866,6 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
    hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 #endif
    }
-
-   hb_fsSetIOError( ! fError, 0 );
 
    if( hPipeIn[ 0 ] != FS_ERROR )
       hb_fsClose( hPipeIn[ 0 ] );
@@ -721,7 +915,29 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 }
-#elif defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
+#elif defined( HB_OS_OS2 )
+{
+   PID pid = ( PID ) hProcess;
+
+   if( pid > 0 )
+   {
+      RESULTCODES resultCodes = { 0, 0 };
+      APIRET ret;
+
+      hb_vmUnlock();
+      ret = DosWaitChild( DCWA_PROCESS, fWait ? DCWW_WAIT : DCWW_NOWAIT,
+                          &resultCodes, &pid, pid );
+      hb_fsSetError( ( HB_ERRCODE ) ret );
+      if( ret == NO_ERROR )
+         iRetStatus = resultCodes.codeResult;
+      else
+         iRetStatus = -2;
+      hb_vmLock();
+   }
+   else
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+}
+#elif defined( HB_OS_UNIX )
 {
    int iStatus;
    pid_t pid = ( pid_t ) hProcess;
@@ -741,50 +957,6 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
          iRetStatus = -1;
       else
          iRetStatus = WIFEXITED( iStatus ) ? WEXITSTATUS( iStatus ) : 0;
-      hb_vmLock();
-   }
-   else
-      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
-}
-#elif defined( HB_OS_OS2 )
-{
-   PID pid = ( PID ) hProcess;
-
-   if( pid > 0 )
-   {
-      RESULTCODES resultCodes = { 0, 0 };
-      APIRET ret;
-
-      hb_vmUnlock();
-      ret = DosWaitChild( DCWA_PROCESS, fWait ? DCWW_WAIT : DCWW_NOWAIT,
-                          &resultCodes, &pid, pid );
-      hb_fsSetIOError( ret == NO_ERROR, 0 );
-      if( ret == NO_ERROR )
-         iRetStatus = resultCodes.codeResult;
-      else
-         iRetStatus = -2;
-      hb_vmLock();
-   }
-   else
-      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
-}
-#elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
-{
-   int iPid = ( int ) hProcess;
-
-   HB_SYMBOL_UNUSED( fWait );
-
-   if( iPid > 0 )
-   {
-      hb_vmUnlock();
-#if defined( __BORLANDC__ )
-      iPid = cwait( &iRetStatus, iPid, 0 );
-#else
-      iPid = _cwait( &iRetStatus, iPid, 0 );
-#endif
-      hb_fsSetIOError( iPid > 0, 0 );
-      if( iPid != ( int ) hProcess )
-         iRetStatus = -1;
       hb_vmLock();
    }
    else
@@ -817,24 +989,10 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
 
    if( hProc )
    {
-      if( TerminateProcess( hProc, fGentle ? 0 : 1 ) )
-         fResult = HB_TRUE;
+      fResult = TerminateProcess( hProc, fGentle ? 0 : 1 ) != 0;
       hb_fsSetIOError( fResult, 0 );
       /* hProc has to be closed by hb_fsProcessValue() */
       /* CloseHandle( hProc ); */
-   }
-   else
-      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
-}
-#elif ( defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN ) ) || \
-      ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
-{
-   pid_t pid = ( pid_t ) hProcess;
-   if( pid > 0 )
-   {
-      if( kill( pid, fGentle ? SIGTERM : SIGKILL ) == 0 )
-         fResult = HB_TRUE;
-      hb_fsSetIOError( fResult, 0 );
    }
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -847,8 +1005,20 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
 
    if( pid > 0 )
    {
-      if( DosKillProcess( DKP_PROCESS, pid ) == NO_ERROR )
-         fResult = HB_TRUE;
+      APIRET ret = DosKillProcess( DKP_PROCESS, pid );
+
+      fResult = ret == NO_ERROR;
+      hb_fsSetError( ( HB_ERRCODE ) ret );
+   }
+   else
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+}
+#elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
+{
+   pid_t pid = ( pid_t ) hProcess;
+   if( pid > 0 )
+   {
+      fResult = kill( pid, fGentle ? SIGTERM : SIGKILL ) == 0;
       hb_fsSetIOError( fResult, 0 );
    }
    else
