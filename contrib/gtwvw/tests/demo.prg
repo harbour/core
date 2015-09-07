@@ -79,7 +79,7 @@ PROCEDURE Main()
    LOCAL kF1, kF2, kF3
    LOCAL kF9, kF10, kF11
    LOCAL oMouse
-   LOCAL ch
+   LOCAL nKeyStd
 
    ErrorBlock( {| e | MyError( e ) } )
 
@@ -202,16 +202,16 @@ PROCEDURE Main()
    @ MaxRow() - 1, 0 SAY "This is line " + hb_ntos( MaxRow() - 1 )
    @ MaxRow(), 0 SAY "This is line " + hb_ntos( MaxRow() )
 
-   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
+   DO WHILE ( nKeyStd := hb_keyStd( Inkey( 0 ) ) ) != K_ESC
       // experiment with different paintrefresh interval:
       DO CASE
-      CASE ch == hb_keyCode( "<" )
+      CASE nKeyStd == hb_keyCode( "<" )
          wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() / 2 ) )
          Alert( wvw_SetPaintRefresh() )
-      CASE ch == hb_keyCode( ">" )
+      CASE nKeyStd == hb_keyCode( ">" )
          wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() * 2 ) )
          Alert( wvw_SetPaintRefresh() )
-      CASE ch == hb_keyCode( "0" )
+      CASE nKeyStd == hb_keyCode( "0" )
          wvw_SetPaintRefresh( 0 )
          Alert( wvw_SetPaintRefresh() )
       OTHERWISE
@@ -268,7 +268,7 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    LOCAL cWinName, nCurWindow
    LOCAL nCursor
    LOCAL cColor
-   LOCAL ch
+   LOCAL nKeyStd
    LOCAL lMouseMove
    LOCAL lEchoing := .F.
 
@@ -296,28 +296,28 @@ STATIC PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    ?? "Press <Ctrl+E> to toggle between echoing what you type to previous window"
    ?
    CLEAR TYPEAHEAD
-   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
-      IF ch == K_ENTER
-         ?? hb_keyChar( ch ) + Chr( 10 )
+   DO WHILE ( nKeyStd := hb_keyStd( Inkey( 0 ) ) ) != K_ESC
+      IF nKeyStd == K_ENTER
+         ?? hb_keyChar( nKeyStd ) + Chr( 10 )
          IF lEchoing
             // write the same thing to previous window
             wvw_nSetCurWindow( nCurWindow - 1 )
-            ?? hb_keyChar( ch ) + Chr( 10 )
+            ?? hb_keyChar( nKeyStd ) + Chr( 10 )
             wvw_nSetCurWindow( nCurWindow )
          ENDIF
-      ELSEIF ch == K_CTRL_W
+      ELSEIF nKeyStd == K_CTRL_W
          // Recursively call (another) typewriter, bigger one
          Demo_Console( nTop + 2, nLeft + 2, nBottom + 4, nRight + 6 )
-      ELSEIF ch == K_CTRL_E
+      ELSEIF nKeyStd == K_CTRL_E
          // toggle echoing output to prev window
          lEchoing := ! lEchoing
       ELSE
          // any other char goes here
-         ?? hb_keyChar( ch )
+         ?? hb_keyChar( nKeyStd )
          IF lEchoing
             // write the same thing to previous window
             wvw_nSetCurWindow( nCurWindow - 1 )
-            ?? hb_keyChar( ch )
+            ?? hb_keyChar( nKeyStd )
             wvw_nSetCurWindow( nCurWindow )
          ENDIF
       ENDIF
@@ -490,7 +490,7 @@ STATIC PROCEDURE DEMO_Browse()
    RefreshVXB( oBrowse, nCurWindow, nVScrollBar )  // 2004-07-04
 
    DO WHILE ! lEnd
-      nKey := Inkey( 0 )
+      nKey := hb_keyStd( Inkey( 0 ) )
 
       DO CASE
       CASE nKey == K_ESC .OR. nKey == K_ENTER

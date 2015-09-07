@@ -44,7 +44,7 @@ procedure Main( cGT )
    next
 
    ? "Waiting for threads"
-   while Inkey() != K_ESC
+   while hb_keyStd( Inkey() ) != K_ESC
       if hb_threadWait( aThreads, 0.1, .T. ) == Len( aThreads )
          wait
          exit

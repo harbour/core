@@ -211,7 +211,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          hb_DispOutAt( LI_Y1 + 2 + Int( iif( LI_PRFLT, LI_TEKZP, &fbar1 ) * ( LI_Y2 - LI_Y1 - 4 ) / iif( LI_PRFLT, LI_KOLZ, &fbar2 ) ), LI_X2, Right( str_bar, 1 ) )
       ENDIF
       //
-      nKey := iif( LI_LVIEW, K_ESC, Inkey( 0 ) )
+      nKey := iif( LI_LVIEW, K_ESC, hb_keyStd( Inkey( 0 ) ) )
       VIVSTR( mslist, LI_NSTR + LI_Y1, 0 )
       DO CASE
       CASE nKey == K_DOWN

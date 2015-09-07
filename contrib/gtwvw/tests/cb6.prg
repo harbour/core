@@ -91,7 +91,7 @@ PROCEDURE Main()
    ? "Comboboxes have now been removed"
    ? "Now press ESC to exit"
 
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
    ENDDO
 
    RETURN

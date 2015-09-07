@@ -133,7 +133,7 @@
 
        STATIC FUNCTION outputstuff( nPercent )  /* The "callback" function */
           ? "output stuff", nPercent
-          RETURN Inkey() == K_ESC  /* If press ESC, returns .T. to abort. */
+          RETURN hb_keyStd( Inkey() ) == K_ESC  /* If press ESC, returns .T. to abort. */
       </table>
 
       For programmers who are already familiar with the ACE engine,

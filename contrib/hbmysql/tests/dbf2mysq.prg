@@ -121,7 +121,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   DO WHILE ! Eof() .AND. Inkey() != K_ESC
+   DO WHILE ! Eof() .AND. hb_keyStd( Inkey() ) != K_ESC
 
       oRecord := oTable:GetBlankRow()
 

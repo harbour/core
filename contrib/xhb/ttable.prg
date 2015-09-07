@@ -76,7 +76,7 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, lNew, lShared, lReadOnl
    hb_keyIns( 255 )
    Inkey()
 
-   DO WHILE ( lForever .OR. nSeconds > 0 ) .AND. LastKey() != K_ESC
+   DO WHILE ( lForever .OR. nSeconds > 0 ) .AND. hb_keyStd( LastKey() ) != K_ESC
       IF ! lFirstPass
          hb_DispOutAt( MaxRow(), 0, ;
             PadC( "Network retry | " + ;
@@ -104,7 +104,7 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, lNew, lShared, lReadOnl
          RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cOldScreen )
          EXIT
       ELSE
-         nKey := Inkey( 0.5 )
+         nKey := hb_keyStd( Inkey( 0.5 ) )
          nSeconds -= 0.5
       ENDIF
 
@@ -161,7 +161,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
    DO WHILE lContinue
 
 #if 0
-      IF Inkey() == K_ESC
+      IF hb_keyStd( Inkey() ) == K_ESC
          RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
          EXIT
       ENDIF
@@ -188,7 +188,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
                s_cNetMsgColor )
 
             nSeconds--
-            IF Inkey( 1 ) == K_ESC
+            IF hb_keyStd( Inkey( 1 ) ) == K_ESC
                RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
                EXIT
             ENDIF

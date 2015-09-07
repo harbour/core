@@ -46,7 +46,7 @@ PROCEDURE Main()
    CreateToolbar( 0 )
    CreateStatusbar( 0 )
 
-   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
+   DO WHILE ( ch := hb_keyStd( Inkey( 0 ) ) ) != K_ESC
       IF ch == wvw_SetMenuKeyEvent( 0 )
          MenuAction( 0, wvw_GetLastMenuEvent( 0 ) )
       ENDIF
@@ -142,7 +142,7 @@ STATIC FUNCTION OpenNewWindow()
 
    // then echoing user input, until user press ESC
    SetCursor( SC_NORMAL )
-   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
+   DO WHILE ( ch := hb_keyStd( Inkey( 0 ) ) ) != K_ESC
       typing( ch )
    ENDDO
 

@@ -42,7 +42,7 @@ PROCEDURE Main()
    LOCAL nTop, nLeft, nBottom, nRight
    LOCAL cColor
    LOCAL oBrw, oCol1, oCol2, oCol3, oCol4
-   LOCAL nKey, nCol
+   LOCAL nKey, nKeyStd, nCol
 
    nTop    := 2
    nLeft   := 10
@@ -115,17 +115,17 @@ PROCEDURE Main()
    DO WHILE .T.
       DO WHILE ! oBrw:stabilize() .AND. NextKey() == 0
       ENDDO
-      nKey := Inkey( 0 )
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
       DO CASE
-      CASE nKey == K_ESC
+      CASE nKeyStd == K_ESC
          EXIT
-      CASE nKey == K_INS
+      CASE nKeyStd == K_INS
          oBrw:colorRect( { oBrw:rowPos, 1, oBrw:rowPos, 4 }, { 7, 6 } )
-      CASE nKey == K_DEL
+      CASE nKeyStd == K_DEL
          oBrw:refreshCurrent()
-      CASE nKey >= hb_keyCode( "0" ) .AND. nKey <= hb_keyCode( "3" )
-         oBrw:freeze := nKey - hb_keyCode( "0" )
-      CASE nKey == K_LBUTTONDOWN .AND. ;
+      CASE nKeyStd >= hb_keyCode( "0" ) .AND. nKeyStd <= hb_keyCode( "3" )
+         oBrw:freeze := nKeyStd - hb_keyCode( "0" )
+      CASE nKeyStd == K_LBUTTONDOWN .AND. ;
             oBrw:HitTest( MRow(), MCol() ) == HTHEADSEP .AND. ;
             ( ( nCol := oBrw:mColPos ) == 2 .OR. nCol == 3 )
          IF nCol == 2
@@ -134,7 +134,7 @@ PROCEDURE Main()
             oCol3:width := 0
          ENDIF
          oBrw:configure()
-      CASE nKey == K_LBUTTONDOWN .AND. ;
+      CASE nKeyStd == K_LBUTTONDOWN .AND. ;
             oBrw:HitTest( MRow(), MCol() ) == HTHEADING .AND. ;
             oBrw:mColPos == 4
          oCol2:width := 10

@@ -88,6 +88,8 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ar, nElem, aHeadings, aBlocks, bG
          nKey := Inkey( 0 )
       ENDIF
 
+      nKey := hb_keyStd( nKey )
+
       IF ( meth_no := AScan( tb_methods, {| elem | nKey == elem[ KEY_ELEM ] } ) ) > 0
          Eval( tb_methods[ meth_no ][ BLK_ELEM ], b )
       ELSE

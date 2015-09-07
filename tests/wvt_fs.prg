@@ -24,7 +24,7 @@ PROCEDURE Main()
    WAIT
    ?  hb_gtInfo( HB_GTI_ISFULLSCREEN, .F. ), "we should be windowed"
    ?  hb_gtInfo( HB_GTI_ALTENTER, .T. ), "<Alt+Enter> is now enabled, try it"
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
       ? Row()
    ENDDO
 

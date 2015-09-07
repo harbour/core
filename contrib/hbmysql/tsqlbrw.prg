@@ -305,7 +305,7 @@ METHOD EditField() CLASS TBrowseSQL
 
 METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
 
-   LOCAL nKey
+   LOCAL nKey, nKeyStd
 
    hb_default( @lCanEdit, .F. )
    hb_default( @aExitKeys, { K_ESC } )
@@ -323,28 +323,33 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
          nKey := Inkey( 0 )
       ENDIF
 
+      nKeyStd := hb_keyStd( nKey )
+
       DO CASE
-      CASE AScan( aExitKeys, nKey ) > 0 ; EXIT
+      CASE AScan( aExitKeys, nKey ) > 0 .OR. ;
+           AScan( aExitKeys, nKeyStd ) > 0
 
-      CASE nKey == K_DOWN       ; ::down()
-      CASE nKey == K_PGDN       ; ::pageDown()
-      CASE nKey == K_CTRL_PGDN  ; ::goBottom()
-      CASE nKey == K_UP         ; ::up()
-      CASE nKey == K_PGUP       ; ::pageUp()
-      CASE nKey == K_CTRL_PGUP  ; ::goTop()
-      CASE nKey == K_RIGHT      ; ::right()
-      CASE nKey == K_LEFT       ; ::left()
-      CASE nKey == K_HOME       ; ::home()
-      CASE nKey == K_END        ; ::end()
-      CASE nKey == K_CTRL_LEFT  ; ::panLeft()
-      CASE nKey == K_CTRL_RIGHT ; ::panRight()
-      CASE nKey == K_CTRL_HOME  ; ::panHome()
-      CASE nKey == K_CTRL_END   ; ::panEnd()
+           EXIT
 
-      CASE nKey == K_ENTER .AND. lCanEdit
+      CASE nKeyStd == K_DOWN       ; ::down()
+      CASE nKeyStd == K_PGDN       ; ::pageDown()
+      CASE nKeyStd == K_CTRL_PGDN  ; ::goBottom()
+      CASE nKeyStd == K_UP         ; ::up()
+      CASE nKeyStd == K_PGUP       ; ::pageUp()
+      CASE nKeyStd == K_CTRL_PGUP  ; ::goTop()
+      CASE nKeyStd == K_RIGHT      ; ::right()
+      CASE nKeyStd == K_LEFT       ; ::left()
+      CASE nKeyStd == K_HOME       ; ::home()
+      CASE nKeyStd == K_END        ; ::end()
+      CASE nKeyStd == K_CTRL_LEFT  ; ::panLeft()
+      CASE nKeyStd == K_CTRL_RIGHT ; ::panRight()
+      CASE nKeyStd == K_CTRL_HOME  ; ::panHome()
+      CASE nKeyStd == K_CTRL_END   ; ::panEnd()
+
+      CASE nKeyStd == K_ENTER .AND. lCanEdit
          ::EditField()
 #if 0
-      CASE nKey == K_DEL
+      CASE nKeyStd == K_DEL
          IF lCanEdit
             IF ! ::oQuery:Delete( ::oCurRow )
                Alert( "not deleted " + ::oQuery:Error() )

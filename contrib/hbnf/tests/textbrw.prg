@@ -22,7 +22,7 @@ STATIC PROCEDURE RunTxtBrowse( oTBrowse )
    DO WHILE lRun
       oTBrowse:forceStable()
 
-      SWITCH nKey := Inkey( 0 )
+      SWITCH hb_keyStd( nKey := Inkey( 0 ) )
       CASE K_LEFT
          IF oTBrowse:cargo > 1
             oTBrowse:cargo--

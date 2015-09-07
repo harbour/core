@@ -33,7 +33,7 @@ STATIC PROCEDURE Test( cLang )
       IF nTemp % 1000 == 0
          ? nTemp
       ENDIF
-      IF nTemp % 10000 == 0 .AND. Inkey() == K_ESC
+      IF nTemp % 10000 == 0 .AND. hb_keyStd( Inkey() ) == K_ESC
          EXIT
       ENDIF
    NEXT

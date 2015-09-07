@@ -52,7 +52,7 @@ PROCEDURE Main()
    DispInfo( "Background functions running manually" )
    FOR n := 1 TO 100000
       hb_backgroundRunForced()  // Runs background tasks also if SET BACKGROUND TASKS is OFF
-      IF n % 1000 == 0 .AND. Inkey() == K_ESC
+      IF n % 1000 == 0 .AND. hb_keyStd( Inkey() ) == K_ESC
          EXIT
       ENDIF
    NEXT
@@ -78,7 +78,7 @@ PROCEDURE Main()
       /* NOTE: we must pull these manually under Harbour. Maybe better to hook it with hb_idleAdd() */
       hb_backgroundRunForced()
       hb_DispOutAt( 18, 32, Str( ++n, 10 ) )
-      IF n % 1000 == 0 .AND. Inkey() == K_ESC
+      IF n % 1000 == 0 .AND. hb_keyStd( Inkey() ) == K_ESC
          EXIT
       ENDIF
       IF n % 20000 == 0

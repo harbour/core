@@ -371,14 +371,14 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
       SetColor( "W+/N" )
       hb_DispOutAt( nR, nC * 3 + 26, "" ) /* LOW-ASCII "►" */
       hb_DispOutAt( nR, nC * 3 + 29, "" ) /* LOW-ASCII "◄" */
-      nKey := Inkey( 0 )
+      nKey := hb_keyStd( Inkey( 0 ) )
       hb_DispOutAt( nR, nC * 3 + 26, " " )
       hb_DispOutAt( nR, nC * 3 + 29, " " )
 
       // check key movement and modify co-ordinates
       DO CASE
       CASE nKey == K_ESC   ; EXIT
-      CASE nKey == K_ENTER ; cClr := aClrPal[ nR, nC ] ; EXIT
+      CASE nKey == K_ENTER ; cClr := aClrPal[ nR ][ nC ] ; EXIT
       CASE nKey == K_UP    ; --nR
       CASE nKey == K_DOWN  ; ++nR
       CASE nKey == K_LEFT  ; --nC
@@ -438,7 +438,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
       SetColor( "W+/N" )
       hb_DispOutAt( n, 28, "" ) /* LOW-ASCII "►" */
       hb_DispOutAt( n, 39, "" ) /* LOW-ASCII "◄" */
-      nKey := Inkey( 0 )
+      nKey := hb_keyStd( Inkey( 0 ) )
       hb_DispOutAt( n, 28, " " )
       hb_DispOutAt( n, 39, " " )
 

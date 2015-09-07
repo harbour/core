@@ -709,7 +709,7 @@
 
       STATIC FUNCTION outputstuff( nPercent )  /* The "callback" function */
          ? "output stuff", nPercent
-         RETURN Inkey() == K_ESC  /* If press ESC, returns .T. to abort. */
+         RETURN hb_keyStd( Inkey() ) == K_ESC  /* If press ESC, returns .T. to abort. */
    $STATUS$
       R
    $COMPLIANCE$

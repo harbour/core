@@ -30,7 +30,7 @@ PROCEDURE Main()
    wvw_Maximize( 0 )
 
    updatescr()
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
       // refresh screen, probably in a new dimension
       // (You may alternatively call updatescr() from WVW_SIZE instead)
       updatescr()

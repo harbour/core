@@ -30,7 +30,7 @@ PROCEDURE Main()
    ShowStatus()
    ? "[+] to get a lock, [-] to release it, [Esc] to exit, [E] for exclusive, [S] for shared, [B] for blocking, [N] for non-blocking"
    DO WHILE .T.
-      SWITCH Inkey( 0 )
+      SWITCH hb_keyStd( Inkey( 0 ) )
       CASE hb_keyCode( "+" )
          IF s_lLocked
             ? "Already locked"

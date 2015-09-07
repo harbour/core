@@ -148,4 +148,4 @@ STATIC FUNCTION ShowGauge( nSent, nSize )
    SetPos( Row(), 0 )
    ?? "Sending:", nSent, "/", nSize
 
-   RETURN Inkey() != K_ESC
+   RETURN hb_keyStd( Inkey() ) != K_ESC

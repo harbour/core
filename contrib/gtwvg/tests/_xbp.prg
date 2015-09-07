@@ -245,7 +245,7 @@ PROCEDURE demoxbp()
    oCrt:sendMessage( WIN_WM_SIZE, 0, 0 )
    oCrt:show()
 
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
    ENDDO
 
    oCrt:Destroy()

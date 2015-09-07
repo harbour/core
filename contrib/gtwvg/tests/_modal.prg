@@ -65,7 +65,7 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, nTop, nTime )
 
    LOCAL nLinesRqd, nColRqd, nLeft, nBottom, nRight, oCrt
    LOCAL nColTxt, nColCap, nColBut, nBtnRow
-   LOCAL i, nTopReq, lGo, nKey, nMCol, nMRow, nTrg
+   LOCAL i, nTopReq, lGo, nKey, nKeyStd, nMCol, nMRow, nTrg
    LOCAL maxCol  := MaxCol()
    LOCAL maxRow  := MaxRow()
    LOCAL nBtnCol_
@@ -176,11 +176,14 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, nTop, nTime )
 
    lGo := .T.
    DO WHILE lGo
-      IF ( nKey := Inkey() ) == 0
+
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
+
+      IF nKey == 0
          LOOP
       ENDIF
 
-      IF nKey == K_ESC
+      IF nKeyStd == K_ESC
          sel := 0
          EXIT
       ENDIF
@@ -188,10 +191,10 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, nTop, nTime )
       nMCol := MCol()
 
       DO CASE
-      CASE nKey == K_RIGHT_DOWN
+      CASE nKeyStd == K_RIGHT_DOWN
          sel := 0
          lGo := .F.
-      CASE nKey == K_LEFT_DOWN
+      CASE nKeyStd == K_LEFT_DOWN
          IF nMRow == nTop
             IF nMCol >= nLeft .AND. nMCol <= nLeft + 3
                sel := 0
@@ -205,22 +208,22 @@ STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, nTop, nTime )
                ENDIF
             NEXT
          ENDIF
-      CASE nKey == K_ESC
+      CASE nKeyStd == K_ESC
          sel := 0
          lGo := .F.
-      CASE nKey == K_ENTER
+      CASE nKeyStd == K_ENTER
          lGo := .F.
-      CASE nKey == K_LEFT .OR. nKey == K_DOWN
-         sel--
-      CASE nKey == K_RIGHT .OR. nKey == K_UP
-         sel++
+      CASE nKeyStd == K_LEFT .OR. nKeyStd == K_DOWN
+         --sel
+      CASE nKeyStd == K_RIGHT .OR. nKeyStd == K_UP
+         ++sel
       CASE ( nTrg := hb_AScanI( aTrg_, hb_keyChar( nKey ), , , .T. ) ) > 0
          sel := nTrg
          lGo := .F.
-      OTHERWISE
-         IF SetKey( nKey ) != NIL
-            Eval( SetKey( nKey ) )
-         ENDIF
+      CASE SetKey( nKey ) != NIL
+         Eval( SetKey( nKey ) )
+      CASE SetKey( nKeyStd ) != NIL
+         Eval( SetKey( nKeyStd ) )
       ENDCASE
 
       IF sel > Len( aButtons_ )

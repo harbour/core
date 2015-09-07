@@ -157,7 +157,7 @@ FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       ENDIF
 
       // process key
-      SWITCH nKey
+      SWITCH hb_keyStd( nKey )
       CASE K_DOWN       ; b:down() ; EXIT
       CASE K_UP         ; b:up() ; EXIT
       CASE K_PGDN       ; b:pageDown() ; EXIT

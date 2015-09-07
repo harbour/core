@@ -86,7 +86,7 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
       nKey := 0
       DO WHILE nKey == 0
          hb_DispOutAt( nRow + 1, nCol + 3, "    " + Time() )
-         nKey := Inkey( 1 )
+         nKey := hb_keyStd( Inkey( 1 ) )
       ENDDO
 
       aRetVal[ 8 ] := Time()

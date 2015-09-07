@@ -92,7 +92,7 @@ STATIC PROCEDURE SubMain()
    SetKey( K_F8, NIL )
 
    hb_SetKeyArray( aKeyArray, {| x | QOut( hb_keyChar( x ) ) } )
-   DO WHILE ( n := Inkey( 0 ) ) != K_ESC
+   DO WHILE hb_keyStd( ( n := Inkey( 0 ) ) ) != K_ESC
       IF hb_SetKeyCheck( n, ProcName(), ProcLine(), ReadVar() )
          ?? " hit hot"
       ELSE

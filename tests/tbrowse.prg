@@ -56,7 +56,7 @@ PROCEDURE Main()
    nCol := Col()
    hb_DispBox( 4, 4, 17, 31, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
 #ifdef HB_COMPAT_C53
-   oBrowse:SetKey( 0, {| ob, nkey | DefProc( ob, nKey ) } )
+   oBrowse:SetKey( 0, {| ob, nKey | DefProc( ob, nKey ) } )
    DO WHILE .T.
       oBrowse:ForceStable()
       IF oBrowse:applykey( Inkey( 0 ) ) == -1
@@ -67,7 +67,7 @@ PROCEDURE Main()
    DO WHILE ! lEnd
       oBrowse:ForceStable()
 
-      SWITCH Inkey( 0 )
+      SWITCH hb_keyStd( Inkey( 0 ) )
       CASE K_ESC
          SetPos( 17, 0 )
          lEnd := .T.

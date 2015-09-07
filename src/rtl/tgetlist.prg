@@ -811,7 +811,7 @@ METHOD DateMsg() CLASS HBGetList
 
       hb_DispOutAt( SCORE_ROW, SCORE_COL, __natMsg( _GET_INVD_DATE ) )
 
-      DO WHILE ( nKeyStd := Inkey( 0 ) ) == 0
+      DO WHILE ( nKeyStd := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) ) == 0
       ENDDO
       hb_keyIns( nKeyStd )
 

@@ -480,7 +480,7 @@ PROCEDURE MyError( oError )
    ? ProcName( 2 ), ProcLine( 2 )
    ? ProcName( 3 ), ProcLine( 3 )
    ? ProcName( 4 ), ProcLine( 4 )
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
    ENDDO
 
    RETURN

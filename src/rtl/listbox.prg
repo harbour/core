@@ -595,7 +595,7 @@ METHOD scroll( nMethod ) CLASS ListBox
 
          nPrevMRow := MRow()
 
-         DO WHILE ( ( nKey := Inkey( 0 ) ) != K_LBUTTONUP )
+         DO WHILE ( ( nKey := hb_keyStd( Inkey( 0 ) ) ) != K_LBUTTONUP )
 
             IF nKey == K_MOUSEMOVE
 

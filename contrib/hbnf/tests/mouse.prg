@@ -20,7 +20,7 @@ PROCEDURE Main()
    ? ft_MYLimit( 0, 8 * MaxRow() )
    Inkey( 0 )
 
-   DO WHILE Inkey() != K_ESC
+   DO WHILE hb_keyStd( Inkey() ) != K_ESC
       ? "mouse row is", ft_MGetX()
       ? "mouse col is", ft_MGetY()
    ENDDO

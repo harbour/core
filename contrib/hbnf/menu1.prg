@@ -191,19 +191,19 @@ STATIC FUNCTION _ftBailOut( cBorder, cBox )
 
    LOCAL nOldCursor := SetCursor( SC_NONE )
    LOCAL sOldScreen := SaveScreen( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
-   LOCAL nKeyPress
+   LOCAL nKeyStd
 
    hb_Shadow( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
    hb_DispBox( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55, HB_B_DOUBLE_UNI + " ", cBorder )
    hb_DispOutAt( t_nMaxRow / 2, 26, "Press ESCape To Confirm Exit", cBox )
    hb_DispOutAt( t_nMaxRow / 2 + 1, 27, "Or Any Other Key To Resume", cBox )
 
-   nKeyPress := Inkey( 0 )
+   nKeyStd := hb_keyStd( Inkey( 0 ) )
 
    RestScreen( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55, sOldScreen )
    SetCursor( nOldCursor )
 
-   RETURN nKeyPress != K_ESC
+   RETURN nKeyStd != K_ESC
 
 STATIC PROCEDURE _ftValKeys( nNum, t_aChoices, t_aValidKeys )
 

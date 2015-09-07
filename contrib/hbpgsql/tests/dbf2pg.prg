@@ -171,7 +171,7 @@ PROCEDURE Main()
       dbGoto( nRecno )
    ENDIF
 
-   DO WHILE ! Eof() .AND. Inkey() != K_ESC .AND. ( nRecno == 0 .OR. nRecno == RecNo() )
+   DO WHILE ! Eof() .AND. hb_keyStd( Inkey() ) != K_ESC .AND. ( nRecno == 0 .OR. nRecno == RecNo() )
       oRecord := oTable:GetBlankRow()
 
       FOR i := 1 TO oTable:FCount()

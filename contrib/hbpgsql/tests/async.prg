@@ -35,7 +35,7 @@ STATIC PROCEDURE Query( conn, cQuery, lCancel )
    cTime := Time()
    CLEAR TYPEAHEAD
 
-   DO WHILE Inkey() != K_ESC
+   DO WHILE hb_keyStd( Inkey() ) != K_ESC
       DevPos( Row(), 20 )
       DevOut( "Processing:", ElapTime( cTime, Time() ) )
 
@@ -54,7 +54,7 @@ STATIC PROCEDURE Query( conn, cQuery, lCancel )
       ENDIF
    ENDDO
 
-   IF Inkey() != K_ESC
+   IF hb_keyStd( Inkey() ) != K_ESC
       ? "PQgetResult", hb_ValToExp( res := PQgetResult( conn ) )
 
       IF ! Empty( res )

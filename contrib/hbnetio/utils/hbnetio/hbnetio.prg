@@ -283,7 +283,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       ENDIF
 
       /* Command prompt */
-      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .AND. Inkey() != K_ESC
+      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .AND. hb_keyStd( Inkey() ) != K_ESC
          hb_idleSleep( 5 )
       ENDDO
 

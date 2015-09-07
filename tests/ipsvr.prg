@@ -38,7 +38,7 @@ PROCEDURE Main()
          ? "accept socket request"
          hb_threadDetach( hb_threadStart( @process(), hSocket ) )
       ENDIF
-      IF Inkey() == K_ESC
+      IF hb_keyStd( Inkey() ) == K_ESC
          ? "quitting - esc pressed"
          EXIT
       ENDIF

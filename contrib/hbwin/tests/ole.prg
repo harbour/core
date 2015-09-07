@@ -13,7 +13,7 @@
 
 PROCEDURE Main()
 
-   LOCAL nOption
+   LOCAL cOption
 
    CLS
 
@@ -38,26 +38,25 @@ PROCEDURE Main()
       ? "q) Quit"
       ? ">", ""
 
-      nOption := Inkey( 0 )
-      ?? hb_keyChar( nOption )
+      ?? cOption := Lower( hb_keyChar( Inkey( 0 ) ) )
 
       DO CASE
-      CASE nOption == hb_keyCode( "1" ) ; Exm_MSExcel()
-      CASE nOption == hb_keyCode( "2" ) ; Exm_MSWord()
-      CASE nOption == hb_keyCode( "3" ) ; Exm_MSOutlook()
-      CASE nOption == hb_keyCode( "4" ) ; Exm_MSOutlook2()
-      CASE nOption == hb_keyCode( "5" ) ; Exm_IExplorer()
-      CASE nOption == hb_keyCode( "6" ) ; Exm_OOCalc()
-      CASE nOption == hb_keyCode( "7" ) ; Exm_OOWriter()
-      CASE nOption == hb_keyCode( "8" ) ; Exm_OOOpen()
-      CASE nOption == hb_keyCode( "9" ) ; Exm_CDO()
-      CASE nOption == hb_keyCode( "a" ) ; Exm_ADODB()
-      CASE nOption == hb_keyCode( "b" ) ; Exm_SOAP()
-      CASE nOption == hb_keyCode( "c" ) ; Exm_PocketSOAP()
-      CASE nOption == hb_keyCode( "d" ) ; Exm_IExplorer2()
-      CASE nOption == hb_keyCode( "e" ) ; Exm_CreateShortcut()
-      CASE nOption == hb_keyCode( "f" ) ; Exm_DownloadHTTPS()
-      CASE nOption == hb_keyCode( "q" ) ; EXIT
+      CASE cOption == "1" ; Exm_MSExcel()
+      CASE cOption == "2" ; Exm_MSWord()
+      CASE cOption == "3" ; Exm_MSOutlook()
+      CASE cOption == "4" ; Exm_MSOutlook2()
+      CASE cOption == "5" ; Exm_IExplorer()
+      CASE cOption == "6" ; Exm_OOCalc()
+      CASE cOption == "7" ; Exm_OOWriter()
+      CASE cOption == "8" ; Exm_OOOpen()
+      CASE cOption == "9" ; Exm_CDO()
+      CASE cOption == "a" ; Exm_ADODB()
+      CASE cOption == "b" ; Exm_SOAP()
+      CASE cOption == "c" ; Exm_PocketSOAP()
+      CASE cOption == "d" ; Exm_IExplorer2()
+      CASE cOption == "e" ; Exm_CreateShortcut()
+      CASE cOption == "f" ; Exm_DownloadHTTPS()
+      CASE cOption == "q" ; RETURN
       ENDCASE
    ENDDO
 

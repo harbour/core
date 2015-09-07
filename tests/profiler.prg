@@ -56,7 +56,7 @@ STATIC PROCEDURE DrawScreen( cTitle )
 
 STATIC PROCEDURE DoNothingForTwoSeconds()
 
-   Inkey( 2 )
+   hb_idleSleep( 2 )
 
    RETURN
 
@@ -71,7 +71,7 @@ STATIC PROCEDURE Browser( oBrowse )
 
       oBrowse:forceStable()
 
-      SWITCH Inkey( 0 )
+      SWITCH hb_keyStd( Inkey( 0 ) )
       CASE K_ESC
          lBrowsing := .F.
          EXIT

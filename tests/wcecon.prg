@@ -83,7 +83,7 @@ procedure main()
 
    ?
    ? "@ - interrupt, keycodes test "
-   while ( k := Inkey( 0 ) ) != hb_keyCode( "@" )
+   while hb_keyStd( k := Inkey( 0 ) ) != hb_keyCode( "@" )
       ? ; DevOut( "key=" + Str( k, 12 ) + ", char='" + hb_keyChar( k ) + "'" )
    enddo
 

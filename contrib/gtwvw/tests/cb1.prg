@@ -24,7 +24,7 @@ ANNOUNCE HB_NOSTARTUPWINDOW
 PROCEDURE Main()
 
    LOCAL nMaxWidth, nCBid, nPBid, nPos
-   LOCAL ch, ncursor
+   LOCAL nKeyStd, ncursor
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
@@ -62,23 +62,26 @@ PROCEDURE Main()
    wvw_ShowWindow()
 
    nPos := 1
-   DO WHILE ( ch := Inkey( 0 ) ) != _SECRET_KEY
+   DO WHILE ( nKeyStd := hb_keyStd( Inkey( 0 ) ) ) != _SECRET_KEY
+
       DO CASE
-      CASE ch == K_TAB .OR. ch == K_ENTER
-         IF nPos == 2 .AND. ch == K_ENTER .AND. wvw_pbEnable( , nPBid )
+      CASE nKeyStd == K_TAB .OR. nKeyStd == K_ENTER
+         IF nPos == 2 .AND. nKeyStd == K_ENTER .AND. wvw_pbEnable( , nPBid )
             hb_keyPut( _SECRET_KEY )
             LOOP
          ELSE
-            nPos++
+            ++nPos
          ENDIF
-      CASE ch == K_SH_TAB
-         nPos--
+      CASE nKeyStd == K_SH_TAB
+         --nPos
       ENDCASE
+
       IF nPos > 2
          nPos := 1
       ELSEIF nPos < 1
          nPos := 2
       ENDIF
+
       DO CASE
       CASE nPos == 1
          wvw_cbSetFocus( , nCBid )

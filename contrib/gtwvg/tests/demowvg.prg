@@ -329,7 +329,7 @@ PROCEDURE WvtPartialScreen()  /* must be a public function */
 
    wvtScr1 := wvt_SaveScreen( 7, 20, 15, 60 )
 
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
    ENDDO
 
    hb_DispBox( 7, 20, 15, 60, "         ", "W/B*" )
@@ -338,12 +338,12 @@ PROCEDURE WvtPartialScreen()  /* must be a public function */
    @ 13, 25 SAY "Press Esc "       COLOR "N/B*"
    wvt_DrawBoxRecessed( 8, 22, 14, 58 )
 
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
    ENDDO
 
    wvt_RestScreen( 7, 20, 15, 60, wvtScr1 )
 
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
    ENDDO
 
    RestScreen( 7, 20, 15, 60, scr )
@@ -398,7 +398,7 @@ PROCEDURE WvtLines()  /* must be a public function */
    @ 15, 8 SAY "D"
    @ 16, 9 SAY "E"
 
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
    ENDDO
 
    //  Restore Environments

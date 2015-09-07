@@ -222,7 +222,7 @@ PROCEDURE ExecuteActiveX( nActiveX, xParam )
 #else
    HB_SYMBOL_UNUSED( nActiveX )
    oCrt:show()
-   DO WHILE Inkey( 0 ) != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
    ENDDO
 #endif
 
@@ -363,7 +363,7 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
 
    STATIC s_nTurn := 0
 
-   LOCAL nKey, sData
+   LOCAL nKeyStd, sData
 
    // After :Create() Messages
    SWITCH nActiveX
@@ -394,13 +394,15 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
 
    ENDSWITCH
 
-   DO WHILE ( nKey := Inkey( 0 ) ) != K_ESC
+   DO WHILE ( nKeyStd := hb_keyStd( Inkey( 0 ) ) ) != K_ESC
 
       IF nActiveX == 2
          oCom:Value := Seconds() / 86400
       ENDIF
 
-      IF nKey == K_F12
+      SWITCH nKeyStd
+      CASE K_F12
+
          SWITCH nActiveX
          CASE 1
             oCom:Navigate( hb_Version( HB_VERSION_URL_BASE ) )
@@ -422,8 +424,9 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
             oCom:Draw( .T. )
             EXIT
          ENDSWITCH
+         EXIT
 
-      ELSEIF nKey == K_F11
+      CASE K_F11
          IF nActiveX == 4
             s_nTurn++
             IF s_nTurn > 6
@@ -586,7 +589,8 @@ STATIC PROCEDURE ExeActiveX( nActiveX, oCom, xParam )
             oCom:RMCFile := sData
             oCom:Draw( .T. )
          ENDIF
-      ENDIF
+         EXIT
+      ENDSWITCH
    ENDDO
 
    RETURN
