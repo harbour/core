@@ -850,6 +850,22 @@ static HB_BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
 
+      case HB_GTI_CODEPAGE:
+      {
+         USHORT usCodePageNew = ( USHORT ) hb_itemGetNI( pInfo->pNewVal );
+         USHORT usCodePage = 0;
+
+         VioGetCp( 0, &usCodePage, 0 );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, usCodePage );
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
+             usCodePageNew != usCodePage )
+         {
+            if( VioSetCp( 0, usCodePageNew, 0 ) != NO_ERROR )
+               VioSetCp( 0, usCodePage, 0 );
+         }
+         break;
+      }
+
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
