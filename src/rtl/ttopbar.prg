@@ -277,7 +277,7 @@ METHOD getAccel( nKey ) CLASS TopBarMenu
    LOCAL item
 
    DO CASE
-   CASE hb_keyMod( nKey ) == HB_GTI_KBD_ALT .AND. hb_BLen( hb_keyChar( nKey ) ) > 0
+   CASE hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_ALT ) != 0 .AND. hb_BLen( hb_keyChar( nKey ) ) > 0
 
       cKey := hb_keyChar( nKey )
 

@@ -805,15 +805,15 @@ METHOD ShowScoreboard() CLASS HBGetList
 
 METHOD DateMsg() CLASS HBGetList
 
-   LOCAL nKeyStd
+   LOCAL nKey
 
    IF Set( _SET_SCOREBOARD )
 
       hb_DispOutAt( SCORE_ROW, SCORE_COL, __natMsg( _GET_INVD_DATE ) )
 
-      DO WHILE ( nKeyStd := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) ) == 0
+      DO WHILE ( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) ) == 0
       ENDDO
-      hb_keyIns( nKeyStd )
+      hb_keyIns( nKey )
 
       hb_DispOutAt( SCORE_ROW, SCORE_COL, Space( hb_ULen( __natMsg( _GET_INVD_DATE ) ) ) )
 
@@ -1430,7 +1430,7 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
 
    LOCAL nKeyStd
 
-   IF hb_keyMod( nKey ) == HB_GTI_KBD_ALT .AND. hb_BLen( hb_keyChar( nKey ) ) > 0
+   IF hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_ALT ) != 0 .AND. hb_BLen( hb_keyChar( nKey ) ) > 0
       cKey := hb_keyChar( nKey )
    ELSE
       nKeyStd := hb_keyStd( nKey )

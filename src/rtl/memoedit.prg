@@ -140,7 +140,7 @@ METHOD Edit() CLASS HBMemoEditor
          // Is it a configurable key?
          // K_ALT_W is a Harbour extension, it is Ctrl+W in Cl*pper
          IF AScan( { K_CTRL_Y, K_CTRL_T, K_CTRL_B, K_CTRL_V, K_ALT_W, K_ESC }, nKeyStd ) > 0 .OR. ;
-            ( hb_keyMod( nKey ) == HB_GTI_KBD_CTRL .AND. Upper( hb_keyChar( nKey ) ) == "W" )
+            ( hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" )
             ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
          ELSE
             ::super:Edit( nKey )
@@ -224,7 +224,7 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
             ::lExitEdit := .T.
          CASE nKeyStd <= 256 .OR. ;
             nKeyStd == K_ALT_W .OR. ;
-            ( hb_keyMod( nKey ) == HB_GTI_KBD_CTRL .AND. Upper( hb_keyChar( nKey ) ) == "W" ) .OR. ;
+            ( hb_keyMod( nKey ) == HB_GTI_KBD_CTRL .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" ) .OR. ;
             hb_BLen( hb_keyChar( nKeyStd ) ) > 0
 
             ::super:Edit( nKey )
@@ -276,7 +276,7 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
       nKeyStd := hb_keyStd( nUdfReturn )
       IF ( nKeyStd >= 1 .AND. nKeyStd <= 31 ) .OR. ;
          nKeyStd == K_ALT_W .OR. ;
-         ( hb_keyMod( nUdfReturn ) == HB_GTI_KBD_CTRL .AND. Upper( hb_keyChar( nUdfReturn ) ) == "W" )
+         ( hb_bitAnd( hb_keyMod( nUdfReturn ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nUdfReturn ) ) ) == "W" )
          ::super:Edit( nUdfReturn )
       ELSE
          RETURN .F.
