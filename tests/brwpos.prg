@@ -13,7 +13,7 @@ PROCEDURE Main()
    CLS
    @ 0, 4        SAY "Is current RecNo but not repositioned until FixPos .T. <F2> Change FixPos"
    @ MaxRow(), 1 SAY "Please press <Enter> to select or <Esc> to exit and <F2> to FixPos is"
-   DO WHILE hb_keyStd( LastKey() ) != K_ESC
+   DO WHILE LastKey() != K_ESC
       @ 0, 0 SAY s_nRecNo PICTURE "###"
       @ MaxRow(), 68 SAY iif( s_lFixPos, ".T.", ".F." )
       nRow := TestBrw( nRow  )

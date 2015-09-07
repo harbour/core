@@ -2414,7 +2414,7 @@ METHOD PROCEDURE SaveAppState() CLASS HBDebugger
    ::nAppDirCase := Set( _SET_DIRCASE, HB_SET_CASE_MIXED )
    ::nAppFileCase := Set( _SET_FILECASE, HB_SET_CASE_MIXED )
    ::nAppTypeAhead := Set( _SET_TYPEAHEAD, 16 )
-   ::nAppLastKey := LastKey()
+   ::nAppLastKey := hb_keyLast()
 
    RETURN
 

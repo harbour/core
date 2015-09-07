@@ -86,7 +86,7 @@ PROCEDURE ft_Adder()
    LOCAL nOldRow     := Row()
    LOCAL nOldCol     := Col()
    LOCAL bOldF10
-   LOCAL nOldLastKey := LastKey()
+   LOCAL nOldLastKey := hb_keyLast()
    LOCAL lShowRight  := .T.
    LOCAL aAdder      := Array( 23 )
    LOCAL tmp, tmp1
@@ -723,7 +723,7 @@ STATIC PROCEDURE _ftPopKeys()
 STATIC PROCEDURE _ftPushMessage( cMessage, cTitle, cBotTitle )
 
    LOCAL cOldColor   := SetColor()
-   LOCAL nOldLastkey := LastKey()
+   LOCAL nOldLastkey := hb_keyLast()
    LOCAL nOldRow     := Row()
    LOCAL nOldCol     := Col()
    LOCAL nOldCurs    := SetCursor( SC_NONE )
@@ -761,7 +761,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid )
       iif( cVarType == "D", 10, ;
       iif( cVarType == "L", 1, ;
       iif( cVarType == "N", iif( cPict == NIL, 9, Len( cPict ) ), 0 ) ) ) )
-   LOCAL nOldLastKey := LastKey()
+   LOCAL nOldLastKey := hb_keyLast()
 
    LOCAL nOldRow   := Row()
    LOCAL nOldCol   := Col()
@@ -852,7 +852,7 @@ STATIC PROCEDURE _ftError( cMessage )
    LOCAL nTop, nLeft, nBot, nRight
    LOCAL cErrorScr, nMessLen, nWide, nNumRows
 
-   LOCAL nOldLastKey := LastKey()
+   LOCAL nOldLastKey := hb_keyLast()
    LOCAL nOldRow := Row()
    LOCAL nOldCol := Col()
    LOCAL nOldCurs := SetCursor( SC_NONE )
@@ -879,7 +879,6 @@ STATIC PROCEDURE _ftError( cMessage )
    SetCursor( nOldCurs )
    SetColor( cOldColor )
    SetPos( nOldRow, nOldCol )
-
    _ftSetLastKey( nOldLastKey )
 
    RETURN

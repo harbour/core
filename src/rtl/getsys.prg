@@ -47,6 +47,8 @@
 
 #ifdef HB_COMPAT_C53
 
+#include "inkey.ch"
+
 #define SLUPDATED       1
 #define SOACTIVEGET     8
 #define SXREADVAR       9
