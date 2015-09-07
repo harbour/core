@@ -551,12 +551,20 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
             is equal to 437
     */
 
+   /* 2015-09-07 If someone wants to use CP437 regardless of default OS2
+      settings then he should add to his code:
+         hb_gtInfo( HB_GTI_CODEPAGE, 437 )
+      [druzus]
+    */
+
    VioGetCp( 0, &s_usOldCodePage, 0 );
 
+#if 0
    /* If I could not set codepage 437 I reset previous codepage,
       maybe I do not need to do this */
    if( VioSetCp( 0, 437, 0 ) != NO_ERROR )
       VioSetCp( 0, s_usOldCodePage, 0 );
+#endif
 
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_os2_GetCursorStyle();
@@ -836,6 +844,22 @@ static HB_BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
+
+      case HB_GTI_CODEPAGE:
+      {
+         USHORT usCodePageNew = ( USHORT ) hb_itemGetNI( pInfo->pNewVal );
+         USHORT usCodePage = 0;
+
+         VioGetCp( 0, &usCodePage, 0 );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, usCodePage );
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
+             usCodePageNew != usCodePage )
+         {
+            if( VioSetCp( 0, usCodePageNew, 0 ) != NO_ERROR )
+               VioSetCp( 0, usCodePage, 0 );
+         }
+         break;
+      }
 
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
