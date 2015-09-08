@@ -332,7 +332,7 @@ EXTERNAL hbmk_KEYW
    system libs. [vszakats] */
 #define _IS_AUTOLIBSYSPRE( c )  ( hbmk[ _HBMK_cPLAT ] == "win" .AND. Lower( hb_FNameName( c ) ) == "unicows" )
 
-#define _OUT_EOL                e"\n"     /* used when displaying text */
+#define _OUT_EOL                hb_eol()  /* used when displaying text */
 #define _CHR_EOL                Chr( 10 ) /* used when consuming text files */
 #define _FIL_EOL                Chr( 10 ) /* used when creating source files */
 
@@ -765,9 +765,6 @@ STATIC PROCEDURE hbmk_local_entry( ... )
    ENDIF
 
    /* Handle multitarget command lines */
-
-   hb_FSetDevMode( hb_gtInfo( HB_GTI_OUTPUTFD ), FD_TEXT )
-   hb_FSetDevMode( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
 
    nTargetTO_DO := 1
    WHILE .T.
@@ -15577,7 +15574,7 @@ STATIC FUNCTION ToMarkdown( cText, cStyle )
       "<"        => "&lt;", ;
       ">"        => "&gt;", ;
       "(c)"      => "&copy;", ;
-      e"\n"      => "  " + _OUT_EOL, ;
+      e"\n"      => "  " + Chr( 10 ), ;
       "\"        => "\\", ;
       "`"        => "\`", ;
       "*"        => "\*", ;

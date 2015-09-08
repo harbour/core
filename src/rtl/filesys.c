@@ -1585,21 +1585,15 @@ int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsSetDevMode(%p, %d)", ( void * ) ( HB_PTRDIFF ) hFileHandle, iDevMode ) );
 
-#if defined( __BORLANDC__ ) || defined( __IBMCPP__ ) || defined( __DJGPP__ ) || \
-    defined( __WATCOMC__ ) || defined( HB_OS_OS2 )
+#if defined( HB_OS_DOS )
 {
-   int iRet = -1;
+   int iRet = O_BINARY;
 
-#if defined( HB_OS_WIN )
-   if( hFileHandle == ( HB_FHANDLE ) 0 ||
-       hFileHandle == ( HB_FHANDLE ) 1 ||
-       hFileHandle == ( HB_FHANDLE ) 2 )
-#endif
    switch( iDevMode )
    {
       case FD_TEST:
          iRet = setmode( ( int ) hFileHandle, O_BINARY );
-         if( iRet != -1 )
+         if( iRet != -1 && iRet != O_BINARY )
             setmode( ( int ) hFileHandle, iRet );
          break;
 
@@ -1614,39 +1608,6 @@ int hb_fsSetDevMode( HB_FHANDLE hFileHandle, int iDevMode )
 
    if( iRet != -1 )
       iRet = ( iRet & O_TEXT ) == O_TEXT ? FD_TEXT : FD_BINARY;
-   hb_fsSetIOError( iRet != -1, 0 );
-
-   return iRet;
-}
-#elif ( defined( _MSC_VER ) || defined( __MINGW32__ ) || defined( __DMC__ ) ) && \
-      ! defined( HB_OS_WIN_CE )
-{
-   int iRet = -1;
-
-#if defined( HB_OS_WIN )
-   if( hFileHandle == ( HB_FHANDLE ) 0 ||
-       hFileHandle == ( HB_FHANDLE ) 1 ||
-       hFileHandle == ( HB_FHANDLE ) 2 )
-#endif
-   switch( iDevMode )
-   {
-      case FD_TEST:
-         iRet = _setmode( ( int ) hFileHandle, _O_BINARY );
-         if( iRet != -1 )
-            ( void ) _setmode( ( int ) hFileHandle, iRet );
-         break;
-
-      case FD_BINARY:
-         iRet = _setmode( ( int ) hFileHandle, _O_BINARY );
-         break;
-
-      case FD_TEXT:
-         iRet = _setmode( ( int ) hFileHandle, _O_TEXT );
-         break;
-   }
-
-   if( iRet != -1 )
-      iRet = ( iRet & _O_TEXT ) == _O_TEXT ? FD_TEXT : FD_BINARY;
    hb_fsSetIOError( iRet != -1, 0 );
 
    return iRet;
