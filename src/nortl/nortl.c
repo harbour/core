@@ -490,6 +490,10 @@ void hb_fsSetIOError( HB_BOOL fResult, HB_USHORT uiOperation )
    HB_SYMBOL_UNUSED( uiOperation );
 }
 
+void  hb_fsSetError( HB_ERRCODE uiError )
+{
+   HB_SYMBOL_UNUSED( uiError );
+}
 
 /* file name conversion */
 

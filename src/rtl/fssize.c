@@ -125,6 +125,10 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
             return size;
          }
       }
+#elif defined( HB_OS_OS2 )
+      HB_FOFFSET nSize = 0;
+      if( hb_fsOS2QueryPathInfo( pszFileName, &nSize, NULL, NULL, NULL ) )
+         return nSize;
 #elif defined( HB_USE_LARGEFILE64 )
       char * pszFree;
       HB_BOOL fResult;
