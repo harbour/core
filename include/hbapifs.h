@@ -300,6 +300,22 @@ extern HB_EXPORT const char * hb_fsNameConv( const char * pszFileName, char ** p
 #if defined( HB_OS_WIN )
 extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
 #endif
+#if defined( HB_OS_OS2 )
+extern HB_EXPORT HB_BOOL  hb_isWSeB( void );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosOpenL( const char * pszFileName,
+                                            HB_FHANDLE * pHFile, HB_ULONG * pulAction,
+                                            HB_FOFFSET nInitSize, HB_ULONG ulAttribute,
+                                            HB_ULONG fsOpenFlags, HB_ULONG fsOpenMode );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosSetFileLocksL( HB_FHANDLE hFile,
+                                                    void * pflUnlock, void * pflLock,
+                                                    HB_ULONG timeout, HB_ULONG flags );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosSetFilePtrL( HB_FHANDLE hFile, HB_FOFFSET nPos,
+                                                 HB_ULONG method, HB_FOFFSET * pnCurPos );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosSetFileSizeL( HB_FHANDLE hFile, HB_FOFFSET nSize );
+extern HB_EXPORT HB_BOOL  hb_fsOS2QueryPathInfo( const char * pszPathName,
+                                                 HB_FOFFSET * pnSize, HB_FATTR * pnAttr,
+                                                 long * plJulian, long * plMillisec );
+#endif
 
 /* Harbour file functions with shared file handles and locks
  * (buffers in the future)
