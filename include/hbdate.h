@@ -150,12 +150,24 @@ HB_EXTERN_END
 
 #define HB_TIMEDIFF_DEC       6     /* default number of decimal places in numeric timestamp diff values */
 
-#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
-      defined( HB_OS_SUNOS ) || defined( HB_OS_BEOS ) || \
-      defined( HB_OS_ANDROID ) ) && \
-   ! defined( HB_OS_DARWIN_5 ) && ! defined( HB_HAS_LOCALTIME_R )
-#  define HB_HAS_LOCALTIME_R
+#if ! defined( HB_HAS_LOCALTIME_R )
+#  if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+        defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
+        defined( HB_OS_SUNOS ) || defined( HB_OS_BEOS ) || \
+        defined( HB_OS_ANDROID ) ) && \
+      ! defined( HB_OS_DARWIN_5 )
+#     define HB_HAS_LOCALTIME_R
+#  elif defined( __WATCOMC__ )
+#     if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__ == 1
+#        define HB_HAS_LOCALTIME_R
+#        define localtime_r   localtime_s
+#        define gmtime_r      gmtime_s
+#     elif ! defined( NO_EXT_KEYS )
+#        define HB_HAS_LOCALTIME_R
+#        define localtime_r   _localtime
+#        define gmtime_r      _gmtime
+#     endif
+#  endif
 #endif
 
 #endif /* HB_DATE_H_ */
