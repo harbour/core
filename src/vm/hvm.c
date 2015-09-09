@@ -484,60 +484,66 @@ static void hb_vmRequestTest( void )
 /* unlock VM, allow GC and other exclusive single task code execution */
 void hb_vmUnlock( void )
 {
-   HB_STACK_TLS_PRELOAD
-
-   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   if( s_fHVMActive )
    {
-      if( hb_stackUnlock() == 1 )
-      {
-         HB_VM_LOCK();
-         s_iRunningCount--;
-         if( hb_vmThreadRequest )
-         {
-            if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
-            {
-               if( ! hb_stackQuitState() )
-               {
-                  hb_stackSetQuitState( HB_TRUE );
-                  hb_stackSetActionRequest( HB_QUIT_REQUESTED );
-               }
-            }
-            hb_threadCondBroadcast( &s_vmCond );
-         }
-         HB_VM_UNLOCK();
-      }
-   }
+      HB_STACK_TLS_PRELOAD
 
-   HB_TASK_SHEDULER();
+      if( hb_stackId() )   /* check if thread has associated HVM stack */
+      {
+         if( hb_stackUnlock() == 1 )
+         {
+            HB_VM_LOCK();
+            s_iRunningCount--;
+            if( hb_vmThreadRequest )
+            {
+               if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+               {
+                  if( ! hb_stackQuitState() )
+                  {
+                     hb_stackSetQuitState( HB_TRUE );
+                     hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+                  }
+               }
+               hb_threadCondBroadcast( &s_vmCond );
+            }
+            HB_VM_UNLOCK();
+         }
+      }
+
+      HB_TASK_SHEDULER();
+   }
 }
 
 /* lock VM blocking GC and other exclusive single task code execution */
 void hb_vmLock( void )
 {
-   HB_STACK_TLS_PRELOAD
-
-   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   if( s_fHVMActive )
    {
-      if( hb_stackLock() == 0 )
+      HB_STACK_TLS_PRELOAD
+
+      if( hb_stackId() )   /* check if thread has associated HVM stack */
       {
-         HB_VM_LOCK();
-         for( ;; )
+         if( hb_stackLock() == 0 )
          {
-            if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+            HB_VM_LOCK();
+            for( ;; )
             {
-               if( ! hb_stackQuitState() )
+               if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
                {
-                  hb_stackSetQuitState( HB_TRUE );
-                  hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+                  if( ! hb_stackQuitState() )
+                  {
+                     hb_stackSetQuitState( HB_TRUE );
+                     hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+                  }
                }
+               if( hb_vmThreadRequest & HB_THREQUEST_STOP )
+                  hb_threadCondWait( &s_vmCond, &s_vmMtx );
+               else
+                  break;
             }
-            if( hb_vmThreadRequest & HB_THREQUEST_STOP )
-               hb_threadCondWait( &s_vmCond, &s_vmMtx );
-            else
-               break;
+            s_iRunningCount++;
+            HB_VM_UNLOCK();
          }
-         s_iRunningCount++;
-         HB_VM_UNLOCK();
       }
    }
 }
@@ -8850,40 +8856,41 @@ HB_USHORT hb_vmRequestQuery( void )
 
 HB_BOOL hb_vmRequestReenter( void )
 {
-   HB_STACK_TLS_PRELOAD
-   PHB_ITEM pItem;
-   int iLocks = 0;
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmRequestReenter()" ) );
 
-#if defined( HB_MT_VM )
-   if( ! s_fHVMActive || hb_stackId() == NULL )
-      return HB_FALSE;
-   else
+   if( s_fHVMActive )
    {
-      while( hb_stackLockCount() > 0 )
+      HB_STACK_TLS_PRELOAD
+      PHB_ITEM pItem;
+      int iLocks = 0;
+
+#if defined( HB_MT_VM )
+      if( hb_stackId() == NULL )
+         return HB_FALSE;
+      else
       {
-         hb_vmLock();
-         ++iLocks;
+         while( hb_stackLockCount() > 0 )
+         {
+            hb_vmLock();
+            ++iLocks;
+         }
       }
-   }
-#else
-   if( ! s_fHVMActive )
-      return HB_FALSE;
 #endif
 
-   hb_stackPushReturn();
+      hb_stackPushReturn();
 
-   pItem = hb_stackAllocItem();
-   pItem->type = HB_IT_RECOVER;
-   pItem->item.asRecover.recover = NULL;
-   pItem->item.asRecover.base    = iLocks;
-   pItem->item.asRecover.flags   = 0;
-   pItem->item.asRecover.request = hb_stackGetActionRequest();
+      pItem = hb_stackAllocItem();
+      pItem->type = HB_IT_RECOVER;
+      pItem->item.asRecover.recover = NULL;
+      pItem->item.asRecover.base    = iLocks;
+      pItem->item.asRecover.flags   = 0;
+      pItem->item.asRecover.request = hb_stackGetActionRequest();
 
-   hb_stackSetActionRequest( 0 );
+      hb_stackSetActionRequest( 0 );
 
-   return HB_TRUE;
+      return HB_TRUE;
+   }
+   return HB_FALSE;
 }
 
 void hb_vmRequestRestore( void )
@@ -8933,9 +8940,7 @@ HB_BOOL hb_vmRequestReenterExt( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmRequestReenterExt()" ) );
 
-   if( ! s_fHVMActive )
-      return HB_FALSE;
-   else
+   if( s_fHVMActive )
    {
       HB_USHORT uiAction = 0;
       int iLocks = 0;
@@ -8973,9 +8978,11 @@ HB_BOOL hb_vmRequestReenterExt( void )
       pItem->item.asRecover.request = uiAction | hb_stackGetActionRequest();
 
       hb_stackSetActionRequest( 0 );
+
+      return HB_TRUE;
    }
 
-   return HB_TRUE;
+   return HB_FALSE;
 }
 
 HB_BOOL hb_vmTryEval( PHB_ITEM * pResult, PHB_ITEM pItem, HB_ULONG ulPCount, ... )
@@ -9067,12 +9074,16 @@ HB_BOOL hb_vmIsActive( void )
 
 HB_BOOL hb_vmIsReady( void )
 {
-   HB_STACK_TLS_PRELOAD
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmIsReady()" ) );
 
 #if defined( HB_MT_VM )
-   return s_fHVMActive && hb_stackId();
+   if( s_fHVMActive )
+   {
+      HB_STACK_TLS_PRELOAD
+      return hb_stackId() != NULL;
+   }
+   else
+      return HB_FALSE;
 #else
    return s_fHVMActive;
 #endif
