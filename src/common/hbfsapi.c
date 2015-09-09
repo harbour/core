@@ -334,9 +334,9 @@ HB_BOOL hb_isWSeB( void )
 
       /* what is the suggested form? [druzus] */
 #if 1
-      ret = DosQueryModuleHandle( "DOSCALLS", &hModule );
+      ret = DosQueryModuleHandle( ( PCSZ ) "DOSCALLS", &hModule );
 #else
-      ret = DosLoadModule( NULL, 0, "DOSCALL1", &hModule );
+      ret = DosLoadModule( NULL, 0, ( PCSZ ) "DOSCALL1", &hModule );
 #endif
       if( ret == NO_ERROR )
          ret = DosQueryProcAddr( hModule, 981, NULL, ( PFN * ) &s_DosOpenL );
@@ -463,7 +463,7 @@ HB_BOOL hb_fsOS2QueryPathInfo( const char * pszPathName,
    HB_BOOL fIsWSeB = hb_isWSeB();
 
    pszPathName = hb_fsNameConv( pszPathName, &pszFree );
-   ret = DosFindFirst( pszPathName, &hdirFindHandle,
+   ret = DosFindFirst( ( PCSZ ) pszPathName, &hdirFindHandle,
                        FILE_ARCHIVED | FILE_DIRECTORY |
                        FILE_SYSTEM | FILE_HIDDEN | FILE_READONLY,
                        &findBuffer, sizeof( findBuffer ), &ulFindCount,
@@ -529,8 +529,7 @@ HB_BOOL hb_fsNameExists( const char * pszFileName )
       if( lpFree )
          hb_xfree( lpFree );
 #elif defined( HB_OS_OS2 )
-      fExist = hb_fsOS2QueryPathInfo( ( PCSZ ) pszFileName,
-                                      NULL, NULL, NULL, NULL );
+      fExist = hb_fsOS2QueryPathInfo( pszFileName, NULL, NULL, NULL, NULL );
 #else
       char * pszFree = NULL;
 
@@ -587,8 +586,7 @@ HB_BOOL hb_fsFileExists( const char * pszFileName )
          hb_xfree( lpFree );
 #elif defined( HB_OS_OS2 )
       HB_FATTR nAttr;
-      fExist = hb_fsOS2QueryPathInfo( ( PCSZ ) pszFileName,
-                                      NULL, &nAttr, NULL, NULL ) &&
+      fExist = hb_fsOS2QueryPathInfo( pszFileName, NULL, &nAttr, NULL, NULL ) &&
                ( nAttr & HB_FA_DIRECTORY ) == 0;
 #else
       char * pszFree = NULL;
@@ -649,8 +647,7 @@ HB_BOOL hb_fsDirExists( const char * pszDirName )
          hb_xfree( lpFree );
 #elif defined( HB_OS_OS2 )
       HB_FATTR nAttr;
-      fExist = hb_fsOS2QueryPathInfo( ( PCSZ ) pszDirName,
-                                      NULL, &nAttr, NULL, NULL ) &&
+      fExist = hb_fsOS2QueryPathInfo( pszDirName, NULL, &nAttr, NULL, NULL ) &&
                ( nAttr & HB_FA_DIRECTORY ) != 0;
 #else
       char * pszFree = NULL;
