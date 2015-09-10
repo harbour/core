@@ -158,7 +158,7 @@ METHOD Edit() CLASS HBMemoEditor
 // if there is an user function I leave to it its handling
 METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
 
-   LOCAL nYesNoKey
+   LOCAL nKeyStd
    LOCAL cBackScr
    LOCAL nRow
    LOCAL nCol
@@ -179,12 +179,12 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
          hb_DispOutAt( 0, MaxCol() - 19, "Abort Edit? (Y/N)" )
          SetPos( 0, MaxCol() - 2 )
 
-         nYesNoKey := Inkey( 0 )
+         nKeyStd := Inkey( 0 )
 
          RestScreen( 0, MaxCol() - 19, 0, MaxCol(), cBackScr )
          SetPos( nRow, nCol )
 
-         IF Upper( hb_keyChar( nYesNoKey ) ) == "Y"
+         IF Upper( hb_keyChar( nKeyStd ) ) == "Y"
             hb_keySetLast( K_ESC )  /* Cl*pper compatibility */
             ::lSaved := .F.
             ::lExitEdit := .T.
