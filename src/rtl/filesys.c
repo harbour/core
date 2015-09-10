@@ -4513,9 +4513,10 @@ HB_BOOL hb_fsEof( HB_FHANDLE hFileHandle )
 
    hb_vmUnlock();
 
-#if defined( __DJGPP__ ) || defined( __CYGWIN__ ) || \
-    defined( HB_OS_WIN ) || defined( HB_OS_WIN_CE ) || \
-    defined( HB_OS_UNIX )
+#if defined( HB_OS_DOS ) && ! defined( __DJGPP__ )
+   fResult = eof( hFileHandle ) != 0;
+   hb_fsSetIOError( fResult, 0 );
+#else
 {
    HB_FOFFSET curPos;
    HB_FOFFSET endPos;
@@ -4536,9 +4537,6 @@ HB_BOOL hb_fsEof( HB_FHANDLE hFileHandle )
    hb_fsSetIOError( fResult, 0 );
    fResult = ! fResult || curPos >= endPos;
 }
-#else
-   fResult = eof( hFileHandle ) != 0;
-   hb_fsSetIOError( fResult, 0 );
 #endif
 
    hb_vmLock();
