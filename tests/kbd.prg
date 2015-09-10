@@ -31,7 +31,7 @@ PROCEDURE Main()
          ?? "", ;
             "char:", iif( k > 256, ;
             "U+" + hb_NumToHex( hb_keyVal( k ), 4 ), ;
-            Str( k, 6 ) ), "", hb_keyChar( k ), , hb_keyChar( kX )
+            Str( k, 6 ) ), "", hb_keyChar( k ), hb_keyChar( kX )
       ENDIF
 
       IF k == hb_keyCode( "@" ) .AND. NextKey() == 0
