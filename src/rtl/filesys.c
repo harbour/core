@@ -844,6 +844,20 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
    return hFileHandle;
 }
 
+#if defined( HB_OS_OS2 )
+
+/* In OS2 anonymous pipes are not simulated by named pipes and
+   unlike in MS-Windows functions for named pipes cannot be used
+   with anonymous ones. Read/Write operations from/to anonymous
+   pipes are always blocking on OS2. For unblocking access we
+   have to emulate anonymous pipe using named one [druzus] */
+#  define HB_OS2_USENAMEDPIPES
+
+/* the size of sustem IO buffers in OS2 pipes */
+#  define HB_OS2_PIPEBUFSIZE        4096
+
+#endif
+
 HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
 {
    HB_BOOL fResult;
@@ -871,12 +885,65 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
 }
 #elif defined( HB_OS_OS2 )
 {
-   HFILE hPipeRd, hPipeWr;
-   APIRET ret = DosCreatePipe( &hPipeRd, &hPipeWr, 4096 );
+   HPIPE hPipeRd = 0;
+   HPIPE hPipeWr = 0;
+   APIRET ret;
+
+#  if ! defined( HB_OS2_USENAMEDPIPES )
+
+   /* create anonymous pipe */
+   ret = DosCreatePipe( &hPipeRd, &hPipeWr, HB_OS2_PIPEBUFSIZE );
+
+#  else
+
+   /* emulate anonymous pipe using named one */
+   ULONG ulOpenMode = NP_INHERIT | NP_ACCESS_DUPLEX;
+   ULONG ulPipeMode = NP_NOWAIT | NP_TYPE_BYTE | NP_READMODE_BYTE | 1 /*instance*/;
+   ULONG ulPid;
+   PPIB ppib = NULL;
+
+   ret = DosGetInfoBlocks( NULL, &ppib );
+   ulPid = ret == NO_ERROR ? ppib->pib_ulpid : 0;
+
+   while( ret == NO_ERROR )
+   {
+      static int s_iPipeCnt = 0;
+      char szPipeName[ 24 ];
+
+      hb_snprintf( szPipeName, sizeof( szPipeName ), "\\PIPE\\%08lX.%03X",
+                   ++s_iPipeCnt, ulPid & 0xFFFL );
+
+      /* create the read end of the named pipe. */
+      ret = DosCreateNPipe( ( PSZ ) szPipeName, &hPipeRd, ulOpenMode, ulPipeMode,
+                            HB_OS2_PIPEBUFSIZE, HB_OS2_PIPEBUFSIZE, NP_DEFAULT_WAIT );
+      if( ret == NO_ERROR )
+      {
+         ret = DosConnectNPipe( hPipeRd );
+         if( ret == NO_ERROR || ret == ERROR_PIPE_NOT_CONNECTED )
+         {
+            /* open the write end of then named pipe */
+            ULONG ulAction = 0;
+            ret = DosOpen( ( PSZ ) szPipeName, &hPipeWr, &ulAction, 0,
+                           FILE_NORMAL,
+                           OPEN_ACTION_FAIL_IF_NEW | OPEN_ACTION_OPEN_IF_EXISTS,
+                           OPEN_ACCESS_WRITEONLY | OPEN_SHARE_DENYNONE | OPEN_FLAGS_FAIL_ON_ERROR,
+                           NULL );
+            if( ret == NO_ERROR )
+               break;
+         }
+         DosClose( hPipeRd );
+      }
+      if( ret == ERROR_PIPE_BUSY || ret == ERROR_ACCESS_DENIED )
+         ret = NO_ERROR;
+   }
+
+#  endif
+
    hb_fsSetError( ( HB_ERRCODE ) ret );
    fResult = ret == NO_ERROR;
    if( fResult )
    {
+      DosSetNPHState( hPipeRd, NP_WAIT | NP_READMODE_BYTE );
       hPipe[ 0 ] = ( HB_FHANDLE ) hPipeRd;
       hPipe[ 1 ] = ( HB_FHANDLE ) hPipeWr;
    }
@@ -1024,12 +1091,24 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
 }
 #elif defined( HB_OS_OS2 )
 {
+
+#  if ! defined( HB_OS2_USENAMEDPIPES )
+
+   HB_SYMBOL_UNUSED( hPipeHandle );
+   HB_SYMBOL_UNUSED( nTimeOut );
+   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+
+   nToRead += nBufferSize;
+
+#  else
+
    HB_MAXUINT end_timer = nTimeOut > 0 ? hb_dateMilliSeconds() + nTimeOut : 0;
    HB_BOOL fResult = HB_FALSE;
    AVAILDATA avail;
 
    do
    {
+      ULONG ulState = 0, cbActual = 0;
       APIRET ret;
 
       if( fResult )
@@ -1038,7 +1117,9 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       avail.cbpipe = 0;
       avail.cbmessage = 0;
       ret = DosPeekNPipe( ( HPIPE ) hPipeHandle,
-                          NULL, 0, NULL, &avail, NULL );
+                          NULL, 0, &cbActual, &avail, &ulState );
+      if( ret == NO_ERROR && avail.cbpipe == 0 && ulState != NP_STATE_CONNECTED )
+         ret = ERROR_BROKEN_PIPE;
       hb_fsSetError( ( HB_ERRCODE ) ret );
       fResult = ret == NO_ERROR || ret == ERROR_PIPE_BUSY;
    }
@@ -1052,6 +1133,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
    else if( avail.cbpipe > 0 )
       nToRead = ( ( HB_SIZE ) avail.cbpipe < nBufferSize ) ? avail.cbpipe :
                                                              nBufferSize;
+#  endif
 }
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
 {
@@ -1203,6 +1285,13 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
 }
 #elif defined( HB_OS_OS2 )
 {
+#  if ! defined( HB_OS2_USENAMEDPIPES )
+
+   HB_SYMBOL_UNUSED( nTimeOut );
+   nWritten = hb_fsWriteLarge( hPipeHandle, buffer, nSize );
+
+#  else
+
    ULONG state = 0;
    APIRET ret;
 
@@ -1213,17 +1302,18 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
       HB_BOOL fResult = HB_FALSE;
 
       if( ( state & NP_NOWAIT ) == 0 )
-         DosSetNPHState( ( HPIPE ) hPipeHandle, state | NP_NOWAIT );
+         DosSetNPHState( ( HPIPE ) hPipeHandle, NP_NOWAIT );
 
+      nWritten = 0;
       do
       {
-         ULONG cbActual;
+         ULONG cbActual = ( ULONG ) ( nSize - nWritten );
 
          if( fResult )
             hb_releaseCPU();
 
-         ret = DosWrite( ( HPIPE ) hPipeHandle, ( PVOID ) buffer,
-                         ( ULONG ) nSize, &cbActual );
+         ret = DosWrite( ( HPIPE ) hPipeHandle, ( PSZ ) buffer + nWritten,
+                         cbActual, &cbActual );
          hb_fsSetError( ( HB_ERRCODE ) ret );
          fResult = ret == NO_ERROR;
          nWritten = fResult ? ( HB_SIZE ) cbActual : ( HB_SIZE ) FS_ERROR;
@@ -1234,13 +1324,14 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
              hb_vmRequestQuery() == 0 );
 
       if( ( state & NP_NOWAIT ) == 0 )
-         DosSetNPHState( ( HPIPE ) hPipeHandle, state );
+         DosSetNPHState( ( HPIPE ) hPipeHandle, NP_WAIT );
    }
    else
    {
       hb_fsSetError( ( HB_ERRCODE ) ret );
       nWritten = ( HB_SIZE ) FS_ERROR;
    }
+#  endif
 }
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
 {

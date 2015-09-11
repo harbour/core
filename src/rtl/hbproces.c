@@ -551,7 +551,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
       ulStateIn = ulStateOut = ulStateErr = OPEN_FLAGS_NOINHERIT;
       ulState = 0;
       if( fDetach && ( ! phStdin || ! phStdout || ! phStderr ) )
-         ret = DosOpen( "NUL:", &hNull, &ulState, 0,
+         ret = DosOpen( ( PCSZ ) "NUL:", &hNull, &ulState, 0,
                         FILE_NORMAL, OPEN_ACCESS_READWRITE,
                         OPEN_ACTION_OPEN_IF_EXISTS, NULL );
 
@@ -584,7 +584,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
             if( ret == NO_ERROR && ( ulStateIn & OPEN_FLAGS_NOINHERIT ) == 0 )
                ret = DosSetFHState( hStdIn, ( ulStateIn & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
             if( ret == NO_ERROR )
-               ret = DosDupHandle( phStdin != NULL ? hPipeIn[ 0 ] : hNull, &hDup );
+               ret = DosDupHandle( phStdin != NULL ? ( HFILE ) hPipeIn[ 0 ] : hNull, &hDup );
          }
       }
 
@@ -598,7 +598,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
             if( ret == NO_ERROR && ( ulStateOut & OPEN_FLAGS_NOINHERIT ) == 0 )
                ret = DosSetFHState( hStdOut, ( ulStateOut & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
             if( ret == NO_ERROR )
-               ret = DosDupHandle( phStdout != NULL ? hPipeOut[ 1 ] : hNull, &hDup );
+               ret = DosDupHandle( phStdout != NULL ? ( HFILE ) hPipeOut[ 1 ] : hNull, &hDup );
          }
       }
 
@@ -612,7 +612,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
             if( ret == NO_ERROR && ( ulStateErr & OPEN_FLAGS_NOINHERIT ) == 0 )
                ret = DosSetFHState( hStdErr, ( ulStateErr & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
             if( ret == NO_ERROR )
-               ret = DosDupHandle( phStderr != NULL ? hPipeErr[ 1 ] : hNull, &hDup );
+               ret = DosDupHandle( phStderr != NULL ? ( HFILE ) hPipeErr[ 1 ] : hNull, &hDup );
          }
       }
 
@@ -624,9 +624,9 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
 
          ret = DosExecPgm( uchLoadError, sizeof( uchLoadError ),
                            fDetach ? EXEC_BACKGROUND : EXEC_ASYNCRESULT,
-                           pArgs, NULL /* env */,
+                           ( PCSZ ) pArgs, NULL /* env */,
                            &ChildRC,
-                           pArgs );
+                           ( PCSZ ) pArgs );
          if( ret == NO_ERROR )
             pid = ChildRC.codeTerminate;
 
