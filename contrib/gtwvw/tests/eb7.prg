@@ -91,7 +91,7 @@ PROCEDURE Main()
 
    // wait until user click the close button
    DO WHILE ! lClosepermitted
-      hb_idleSleep( 0.2 )
+      Inkey( 0.2 )
    ENDDO
    SetKey( K_F8, bSetKey )
 
@@ -351,7 +351,7 @@ STATIC PROCEDURE EBReadGets( nwinnum, aEBGets )
    lClosepermitted := ( nwinnum == wvw_nNumWindows() - 1 )
    // wait until user click the close button
    DO WHILE ! lClosepermitted
-      hb_idleSleep( 0.5 )
+      Inkey( 0.5 )
    ENDDO
 
    RETURN
@@ -369,13 +369,14 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
    ELSEIF ch == 0
       RETURN
    ENDIF
-   IF wvw_pbIsFocused( nwinnum, nOKbutton )
+   DO CASE
+   CASE wvw_pbIsFocused( nwinnum, nOKbutton )
       nFocus := nNumGets + 1
-   ELSEIF wvw_pbIsFocused( nwinnum, nCancelbutton )
+   CASE wvw_pbIsFocused( nwinnum, nCancelbutton )
       nFocus := nNumGets + 2
-   ELSE
+   OTHERWISE
       nFocus := nFocused( aEBGets )
-   ENDIF
+   ENDCASE
    lchangefocus := .T.
    DO CASE
    CASE ch == K_TAB .AND. ! lShiftPressed()
@@ -394,13 +395,14 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
       lchangefocus := .F.
    ENDCASE
    IF lchangefocus
-      IF nFocus <= nNumGets
+      DO CASE
+      CASE nFocus <= nNumGets
          wvw_ebSetFocus( nwinnum, aEBGets[ nFocus ][ __GET_NEBID ] )
-      ELSEIF nFocus == nNumGets + 1
+      CASE nFocus == nNumGets + 1
          wvw_pbSetFocus( nwinnum, nOKbutton )
-      ELSEIF nFocus == nNumGets + 2
+      CASE nFocus == nNumGets + 2
          wvw_pbSetFocus( nwinnum, nCancelbutton )
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN
@@ -485,6 +487,7 @@ STATIC FUNCTION nFocused( aEBGets )
 STATIC PROCEDURE MaskEditBox( nWinNum, nId, nEvent, aEBGets )
 
    STATIC s_bBusy := .F.
+
    LOCAL ctext
    LOCAL nIndex := nGetIndex( aEBGets, nId )
    LOCAL mcvaltype, mcpict, mlmultiline
@@ -548,14 +551,16 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    LOCAL Output
    LOCAL ol
 
-   DO CASE
-   CASE mcvaltype == "N"
+   SWITCH mcvaltype
+   CASE "N"
       Mask := GetNumMask( mcpict, mcvaltype )
-   CASE mcvaltype == "D"
+      EXIT
+   CASE "D"
       Mask := mcpict  // "9999-99-99"
+      EXIT
    OTHERWISE
       Mask := mcpict
-   ENDCASE
+   ENDSWITCH
 
    // Store Initial CaretPos
    wvw_ebGetSel( mnwinnum, mnebid, , @icp )
@@ -625,8 +630,9 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
       CB := SubStr( InBuffer, x, 1 )
       CM := SubStr( Mask, x, 1 )
 
-      DO CASE
-      CASE CM == "A" .OR. CM == "!"
+      SWITCH CM
+      CASE "A"
+      CASE "!"
          IF IsAlpha( CB ) .OR. CB == " "
             IF CM == "!"
                OutBuffer += Upper( CB )
@@ -641,8 +647,9 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
                OutBuffer += " "
             ENDIF
          ENDIF
+         EXIT
 
-      CASE CM == "9"
+      CASE "9"
          IF IsDigit( CB ) .OR. CB == " " .OR. ;
             ( mcvaltype == "N" .AND. ;
             CB == "-" .AND. x == fnb .AND. PCount() > 1 )
@@ -656,8 +663,9 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
                OutBuffer += " "
             ENDIF
          ENDIF
+         EXIT
 
-      CASE CM == " "
+      CASE " "
          IF CB == " "
             OutBuffer += CB
          ELSE
@@ -668,14 +676,16 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
                OutBuffer += " "
             ENDIF
          ENDIF
+         EXIT
 
-      CASE CM == "X"
+      CASE "X"
          OutBuffer += CB
+         EXIT
 
       OTHERWISE
          OutBuffer += CM
 
-      ENDCASE
+      ENDSWITCH
    NEXT
 
    // Replace Content
@@ -735,23 +745,26 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
 STATIC FUNCTION CharMaskTekstOK( cString, cValType, cMask )
 
-   // LOCAL lPassed := .T.
+#if 0
+   LOCAL lPassed := .T.
+#endif
    LOCAL CB, CM, x
 
    IF cValType == "D"
       FOR x := 1 TO Min( Len( cString ), Len( cMask ) )
          CB := SubStr( cString, x, 1 )
          CM := SubStr( cMask, x, 1 )
-         DO CASE
-         CASE CM == "9"
+         SWITCH CM
+         CASE "9"
             IF IsDigit( CB ) .OR. CB == " "
                // lPassed := .T.
+               EXIT
             ELSE
                RETURN .F.
             ENDIF
          OTHERWISE
             // lPassed := .T.
-         ENDCASE
+         ENDSWITCH
       NEXT
       RETURN .T.
    ENDIF
@@ -759,29 +772,33 @@ STATIC FUNCTION CharMaskTekstOK( cString, cValType, cMask )
    FOR x := 1 TO Min( Len( cString ), Len( cMask ) )
       CB := SubStr( cString, x, 1 )
       CM := SubStr( cMask, x, 1 )
-      DO CASE
+      SWITCH CM
          // JK
-      CASE CM == "A" .OR. CM == "!"
+      CASE "A"
+      CASE "!"
          IF IsAlpha( CB ) .OR. CB == " "
             // lPassed := .T.
+            EXIT
          ELSE
             RETURN .F.
          ENDIF
-      CASE CM == "9"
+      CASE "9"
          IF IsDigit( CB ) .OR. CB == " "
             // lPassed := .T.
+            EXIT
          ELSE
             RETURN .F.
          ENDIF
-      CASE CM == " "
+      CASE " "
          IF CB == " "
             // lPassed := .T.
+            EXIT
          ELSE
             RETURN .F.
          ENDIF
       OTHERWISE
          // lPassed := .T.
-      ENDCASE
+      ENDSWITCH
    NEXT
 
    RETURN .T. // lPassed
@@ -793,12 +810,12 @@ STATIC FUNCTION GetValFromText( Text, mcvaltype )
    // eg. GetValFromText( "999,999.99" ) --> 999999.99
    LOCAL x, c, s
 
-   DO CASE
-   CASE mcvaltype == "C"
+   SWITCH mcvaltype
+   CASE "C"
       RETURN Text
-   CASE mcvaltype == "D"
+   CASE "D"
       RETURN CToD( Text )
-   ENDCASE
+   ENDSWITCH
 
    // ASSUME numeric
    s := ""
