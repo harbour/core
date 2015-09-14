@@ -1077,6 +1077,11 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       dwAvail = 0;
       fResult = PeekNamedPipe( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ),
                                NULL, 0, NULL, &dwAvail, NULL ) != 0;
+      if( !fResult && GetLastError() == ERROR_BROKEN_PIPE )
+      {
+         hb_fsSetError( 0 );
+         break;
+      }
       hb_fsSetIOError( fResult, 0 );
    }
    while( fResult && dwAvail == 0 &&
@@ -1118,10 +1123,9 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       avail.cbmessage = 0;
       ret = DosPeekNPipe( ( HPIPE ) hPipeHandle,
                           NULL, 0, &cbActual, &avail, &ulState );
-      if( ret == NO_ERROR && avail.cbpipe == 0 && ulState != NP_STATE_CONNECTED )
-         ret = ERROR_BROKEN_PIPE;
       hb_fsSetError( ( HB_ERRCODE ) ret );
-      fResult = ret == NO_ERROR || ret == ERROR_PIPE_BUSY;
+      fResult = ret == NO_ERROR &&
+                ( avail.cbpipe != 0 || ulState == NP_STATE_CONNECTED );
    }
    while( fResult && avail.cbpipe == 0 &&
           ( nTimeOut < 0 || ( end_timer > 0 &&
