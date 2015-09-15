@@ -326,17 +326,46 @@ static void hb_vmAddModuleFunction( PHB_FUNC_LIST * pLstPtr, HB_INIT_FUNC pFunc,
 
    pLst->pFunc = pFunc;
    pLst->cargo = cargo;
+   pLst->hDynLib = s_hDynLibID;
    HB_ATINIT_LOCK();
    pLst->pNext = *pLstPtr;
    *pLstPtr = pLst;
    HB_ATINIT_UNLOCK();
 }
 
-static void hb_vmDoModuleFunctions( PHB_FUNC_LIST pLst )
+static void hb_vmDoModuleFunctions( PHB_FUNC_LIST * pLstPtr )
+{
+   while( *pLstPtr )
+   {
+      PHB_FUNC_LIST pLst = *pLstPtr;
+      *pLstPtr = pLst->pNext;
+      pLst->pFunc( pLst->cargo );
+      hb_xfree( pLst );
+   }
+}
+
+static void hb_vmDoModuleLibFunctions( PHB_FUNC_LIST * pLstPtr, void * hDynLib )
+{
+   while( *pLstPtr )
+   {
+      PHB_FUNC_LIST pLst = *pLstPtr;
+      if( pLst->hDynLib == hDynLib )
+      {
+         *pLstPtr = pLst->pNext;
+         pLst->pFunc( pLst->cargo );
+         hb_xfree( pLst );
+      }
+      else
+         pLstPtr = &pLst->pNext;
+   }
+}
+
+static void hb_vmDoModuleSetLibID( PHB_FUNC_LIST pLst, void * hDynLib, void * hNewDynLib )
 {
    while( pLst )
    {
-      pLst->pFunc( pLst->cargo );
+      if( pLst->hDynLib == hDynLib )
+         pLst->hDynLib = hNewDynLib;
       pLst = pLst->pNext;
    }
 }
@@ -382,17 +411,17 @@ void hb_vmAtQuit( HB_INIT_FUNC pFunc, void * cargo )
 
 static void hb_vmDoModuleInitFunctions( void )
 {
-   hb_vmDoModuleFunctions( s_InitFunctions );
+   hb_vmDoModuleFunctions( &s_InitFunctions );
 }
 
 static void hb_vmDoModuleExitFunctions( void )
 {
-   hb_vmDoModuleFunctions( s_ExitFunctions );
+   hb_vmDoModuleFunctions( &s_ExitFunctions );
 }
 
 static void hb_vmDoModuleQuitFunctions( void )
 {
-   hb_vmDoModuleFunctions( s_QuitFunctions );
+   hb_vmDoModuleFunctions( &s_QuitFunctions );
 }
 
 
@@ -7811,6 +7840,14 @@ void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, const char * argv[] )
          pLastSymbols = pLastSymbols->pNext;
       }
 
+      /* library symbols are modified beforeinit functions
+         execution intentionally because init functions may
+         load new modules [druzus] */
+      hb_vmDoModuleSetLibID( s_InitFunctions, hDynLib, hNewDynLib );
+      hb_vmDoModuleSetLibID( s_ExitFunctions, hDynLib, hNewDynLib );
+      hb_vmDoModuleSetLibID( s_QuitFunctions, hDynLib, hNewDynLib );
+      hb_vmDoModuleLibFunctions( &s_InitFunctions, hNewDynLib );
+
       if( fFound )
       {
          HB_BOOL fClipInit = HB_TRUE;
@@ -7889,15 +7926,16 @@ void hb_vmExitSymbolGroup( void * hDynLib )
          pLastSymbols = pLastSymbols->pNext;
       }
 
+      hb_vmDoModuleLibFunctions( &s_ExitFunctions, hDynLib );
+      hb_vmDoModuleLibFunctions( &s_QuitFunctions, hDynLib );
+
       if( fFound )
       {
          pLastSymbols = s_pSymbols;
          while( pLastSymbols )
          {
             if( pLastSymbols->hDynLib == hDynLib )
-            {
                hb_vmFreeSymbols( pLastSymbols );
-            }
             pLastSymbols = pLastSymbols->pNext;
          }
       }

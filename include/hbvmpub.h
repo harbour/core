@@ -219,12 +219,13 @@ typedef HB_CARGO_FUNC( ( * PHB_CARGO_FUNC ) );
 
 typedef void * ( * PHB_ALLOCUPDT_FUNC )( void *, int );
 
-typedef void (*HB_INIT_FUNC)(void *);
+typedef void ( * HB_INIT_FUNC )( void * );
 /* List of functions used by hb_vmAtInit()/hb_vmAtExit() */
 typedef struct _HB_FUNC_LIST
 {
    HB_INIT_FUNC   pFunc;
    void *         cargo;
+   void *         hDynLib;
    struct _HB_FUNC_LIST * pNext;
 } HB_FUNC_LIST, * PHB_FUNC_LIST;
 
