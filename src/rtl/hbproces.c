@@ -1159,6 +1159,7 @@ int hb_fsProcessRun( const char * pszFileName,
    if( hProcess != FS_ERROR )
    {
 #if defined( HB_OS_WIN )
+
       HB_BOOL fFinished = HB_FALSE;
       int iPipeCount = 0;
 
@@ -1283,6 +1284,7 @@ int hb_fsProcessRun( const char * pszFileName,
       CloseHandle( ( HANDLE ) hb_fsGetOsHandle( hProcess ) );
 
 #elif defined( HB_OS_OS2 )
+
       HB_MAXINT nTimeOut = 0;
       int iPipeCount = 0;
 
