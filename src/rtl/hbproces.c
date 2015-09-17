@@ -1165,7 +1165,7 @@ int hb_fsProcessRun( const char * pszFileName,
    {
 #if defined( HB_OS_WIN )
 
-      HB_BOOL fFinished = HB_FALSE;
+      HB_BOOL fFinished = HB_FALSE, fBlocked;
       int iPipeCount = 0;
 
       if( nStdInLen == 0 && hStdin != FS_ERROR )
@@ -1183,7 +1183,8 @@ int hb_fsProcessRun( const char * pszFileName,
       if( hStderr != FS_ERROR )
          ++iPipeCount;
 
-      if( iPipeCount > 1 )
+      fBlocked = iPipeCount <= 1;
+      if( ! fBlocked )
       {
          if( hStdin != FS_ERROR )
             hb_fsPipeUnblock( hStdin );
@@ -1213,11 +1214,11 @@ int hb_fsProcessRun( const char * pszFileName,
             nLen = hb_fsReadLarge( hStdout, pOutBuf + nOutBuf, nOutSize - nOutBuf );
             if( nLen > 0 )
                nOutBuf += nLen;
-            else if( iPipeCount == 1 )
+            else if( fBlocked )
             {
                hb_fsClose( hStdout );
                hStdout = FS_ERROR;
-               iPipeCount = 0;
+               --iPipeCount;
             }
             dwWait = nLen > 0 ? 0 : 10;
          }
@@ -1235,11 +1236,11 @@ int hb_fsProcessRun( const char * pszFileName,
             nLen = hb_fsReadLarge( hStderr, pErrBuf + nErrBuf, nErrSize - nErrBuf );
             if( nLen > 0 )
                nErrBuf += nLen;
-            else if( iPipeCount == 1 )
+            else if( fBlocked )
             {
                hb_fsClose( hStderr );
                hStderr = FS_ERROR;
-               iPipeCount = 0;
+               --iPipeCount;
             }
             if( dwWait )
                dwWait = nLen > 0 ? 0 : 10;
@@ -1252,15 +1253,15 @@ int hb_fsProcessRun( const char * pszFileName,
          }
          else if( hStdin != FS_ERROR )
          {
-            nLen = hb_fsWriteLarge( hStdin, pStdInBuf, nStdInLen );
+            nLen = ! fBlocked && nStdInLen > 4096 ? 4096 : nStdInLen;
+            nLen = hb_fsWriteLarge( hStdin, pStdInBuf, nLen );
             pStdInBuf += nLen;
             nStdInLen -= nLen;
-            if( nStdInLen == 0 || ( iPipeCount == 1 && nLen == 0 ) )
+            if( nStdInLen == 0 || ( fBlocked && nLen == 0 ) )
             {
                hb_fsClose( hStdin );
                hStdin = FS_ERROR;
-               if( iPipeCount == 1 )
-                  iPipeCount = 0;
+               --iPipeCount;
             }
             else if( dwWait )
                dwWait = nLen > 0 ? 0 : 10;
@@ -1288,7 +1289,7 @@ int hb_fsProcessRun( const char * pszFileName,
 
       CloseHandle( ( HANDLE ) hb_fsGetOsHandle( hProcess ) );
 
-#elif defined( HB_OS_OS2 )
+#elif defined( HB_OS_OS2 ) || defined( HB_OS_WIN )
 
       HB_MAXINT nTimeOut = 0;
       int iPipeCount = 0;
@@ -1320,16 +1321,18 @@ int hb_fsProcessRun( const char * pszFileName,
             else
                nLen = hb_fsPipeWrite( hStdin, pStdInBuf, nStdInLen, nTimeOut );
             if( nLen == ( HB_SIZE ) ( iPipeCount == 1 ? 0 : FS_ERROR ) )
-            {
-               hb_fsClose( hStdin );
-               hStdin = FS_ERROR;
-               --iPipeCount;
-            }
+               nStdInLen = 0;
             else if( nLen > 0 )
             {
                pStdInBuf += nLen;
                nStdInLen -= nLen;
                nNextTOut = 0;
+            }
+            if( nStdInLen == 0 )
+            {
+               hb_fsClose( hStdin );
+               hStdin = FS_ERROR;
+               --iPipeCount;
             }
          }
 
