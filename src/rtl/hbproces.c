@@ -88,6 +88,12 @@
 #  endif
 #endif
 
+#ifndef HB_PROCESS_USEFILES
+#  if defined( HB_OS_DOS ) || defined( HB_OS_WIN_CE ) || defined( HB_OS_OS2 )
+#    define HB_PROCESS_USEFILES
+#  endif
+#endif
+
 #if defined( HB_OS_OS2 )
 
 static char * hb_buildArgsOS2( const char *pszFileName )
@@ -131,7 +137,45 @@ static char * hb_buildArgsOS2( const char *pszFileName )
 
 #endif
 
-#if defined( HB_OS_DOS ) || defined( HB_OS_UNIX )
+#if defined( HB_OS_WIN_CE ) && defined( HB_PROCESS_USEFILES )
+
+static void hb_getCommand( const char * pszFileName,
+                           LPTSTR * lpAppName, LPTSTR * lpParams )
+{
+   const char * src, * params;
+   char cQuote = 0;
+
+   while( HB_ISSPACE( *pszFileName ) )
+      ++pszFileName;
+
+   params = NULL;
+   src = pszFileName;
+   while( *src )
+   {
+      if( *src == cQuote )
+         cQuote = 0;
+      else if( cQuote == 0 )
+      {
+         if( *src == '"' )
+            cQuote = *src;
+         else if( HB_ISSPACE( *src ) )
+         {
+            params = src;
+            while( HB_ISSPACE( *params ) )
+               ++params;
+            if( *params == 0 )
+               params = NULL;
+            break;
+         }
+      }
+      ++src;
+   }
+
+   *lpParams = params ? HB_CHARDUP( params ) : NULL;
+   *lpAppName = HB_CHARDUPN( pszFileName, src - pszFileName );
+}
+
+#elif defined( HB_PROCESS_USEFILES ) || defined( HB_OS_UNIX )
 
 /* convert command to argument list using standard bourne shell encoding:
  * "" and '' can be used to group parameters with blank characters,
@@ -237,46 +281,9 @@ static void hb_freeArgs( char ** argv )
    hb_xfree( argv );
 }
 
-#elif defined( HB_OS_WIN_CE )
-
-static void hb_getCommand( const char * pszFileName,
-                           LPTSTR * lpAppName, LPTSTR * lpParams )
-{
-   const char * src, * params;
-   char cQuote = 0;
-
-   while( HB_ISSPACE( *pszFileName ) )
-      ++pszFileName;
-
-   params = NULL;
-   src = pszFileName;
-   while( *src )
-   {
-      if( *src == cQuote )
-         cQuote = 0;
-      else if( cQuote == 0 )
-      {
-         if( *src == '"' )
-            cQuote = *src;
-         else if( HB_ISSPACE( *src ) )
-         {
-            params = src;
-            while( HB_ISSPACE( *params ) )
-               ++params;
-            if( *params == 0 )
-               params = NULL;
-            break;
-         }
-      }
-      ++src;
-   }
-
-   *lpParams = params ? HB_CHARDUP( params ) : NULL;
-   *lpAppName = HB_CHARDUPN( pszFileName, src - pszFileName );
-}
 #endif
 
-#if defined( HB_OS_DOS ) || defined( HB_OS_WIN_CE )
+#if defined( HB_PROCESS_USEFILES )
 static int hb_fsProcessExec( const char * pszFileName,
                              HB_FHANDLE hStdin, HB_FHANDLE hStdout,
                              HB_FHANDLE hStderr )
@@ -1059,7 +1066,7 @@ int hb_fsProcessRun( const char * pszFileName,
    phStderr = pStdErrPtr && pulStdErr ?
               ( pStdOutPtr == pStdErrPtr ? phStdout : &hStderr ) : NULL;
 
-#if defined( HB_OS_DOS ) || defined( HB_OS_WIN_CE )
+#if defined( HB_PROCESS_USEFILES )
 {
 
 #if defined( HB_OS_WIN_CE )

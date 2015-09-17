@@ -59,7 +59,7 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 
    if( ( pSrcFile = hb_fileExtOpen( pszSource, NULL, FO_READ | FO_SHARED | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
    {
-      HB_ERRCODE errCode = 0;
+      HB_ERRCODE errCode;
 
       if( ( pDstFile = hb_fileExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
       {
