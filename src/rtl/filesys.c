@@ -907,11 +907,11 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
 
    while( ret == NO_ERROR )
    {
-      static int s_iPipeCnt = 0;
+      static unsigned long s_ulPipeCnt = 0;
       char szPipeName[ 24 ];
 
-      hb_snprintf( szPipeName, sizeof( szPipeName ), "\\PIPE\\%08lX.%03X",
-                   ++s_iPipeCnt, ulPid & 0xFFFL );
+      hb_snprintf( szPipeName, sizeof( szPipeName ), "\\PIPE\\%08lX.%03lX",
+                   ++s_ulPipeCnt, ulPid & 0xFFFL );
 
       /* create the read end of the named pipe. */
       ret = DosCreateNPipe( ( PSZ ) szPipeName, &hPipeRd, ulOpenMode, ulPipeMode,
