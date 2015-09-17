@@ -1008,11 +1008,9 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
 {
    PID pid = ( PID ) hProcess;
 
-   HB_SYMBOL_UNUSED( fGentle );
-
    if( pid > 0 )
    {
-      APIRET ret = DosKillProcess( DKP_PROCESS, pid );
+      APIRET ret = DosKillProcess( fGentle ? DKP_PROCESS : DKP_PROCESSTREE, pid );
 
       fResult = ret == NO_ERROR;
       hb_fsSetError( ( HB_ERRCODE ) ret );
