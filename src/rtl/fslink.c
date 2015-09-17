@@ -92,7 +92,6 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
 
             fResult = s_pCreateHardLink( lpFileName, lpExistingFileName, NULL ) != 0;
             hb_fsSetIOError( fResult, 0 );
-            hb_fsSetFError( hb_fsError() );
 
             if( lpFileNameFree )
                hb_xfree( lpFileNameFree );
@@ -101,7 +100,7 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
          }
          else
          {
-            hb_fsSetFError( 1 );
+            hb_fsSetError( 1 );
             fResult = HB_FALSE;
          }
       }
@@ -115,7 +114,6 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
 
          fResult = ( link( pszExisting, pszNewFile ) == 0 );
          hb_fsSetIOError( fResult, 0 );
-         hb_fsSetFError( hb_fsError() );
 
          if( pszExistingFree )
             hb_xfree( pszExistingFree );
@@ -124,7 +122,7 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
       }
 #else
       {
-         hb_fsSetFError( 1 );
+         hb_fsSetError( 1 );
          fResult = HB_FALSE;
       }
 #endif
@@ -133,7 +131,7 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
    }
    else
    {
-      hb_fsSetFError( 2 );
+      hb_fsSetError( 2 );
       fResult = HB_FALSE;
    }
 
@@ -182,7 +180,6 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
 
             fResult = s_pCreateSymbolicLink( lpSymlinkFileName, lpTargetFileName, fDir ? SYMBOLIC_LINK_FLAG_DIRECTORY : 0 ) != 0;
             hb_fsSetIOError( fResult, 0 );
-            hb_fsSetFError( hb_fsError() );
 
             if( lpSymlinkFileNameFree )
                hb_xfree( lpSymlinkFileNameFree );
@@ -191,7 +188,7 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
          }
          else
          {
-            hb_fsSetFError( 1 );
+            hb_fsSetError( 1 );
             fResult = HB_FALSE;
          }
       }
@@ -205,7 +202,6 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
 
          fResult = ( symlink( pszTarget, pszNewFile ) == 0 );
          hb_fsSetIOError( fResult, 0 );
-         hb_fsSetFError( hb_fsError() );
 
          if( pszTargetFree )
             hb_xfree( pszTargetFree );
@@ -214,7 +210,7 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
       }
 #else
       {
-         hb_fsSetFError( 1 );
+         hb_fsSetError( 1 );
          fResult = HB_FALSE;
       }
 #endif
@@ -223,7 +219,7 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
    }
    else
    {
-      hb_fsSetFError( 2 );
+      hb_fsSetError( 2 );
       fResult = HB_FALSE;
    }
 
@@ -295,10 +291,7 @@ char * hb_fsLinkRead( const char * pszFile )
                                 NULL );
 
             if( hFile == INVALID_HANDLE_VALUE )
-            {
                hb_fsSetIOError( HB_FALSE, 0 );
-               hb_fsSetFError( hb_fsError() );
-            }
             else
             {
                DWORD size;
@@ -313,17 +306,16 @@ char * hb_fsLinkRead( const char * pszFile )
                   }
 
                   hb_fsSetIOError( HB_TRUE, 0 );
-                  hb_fsSetFError( hb_fsError() );
                }
                else
-                  hb_fsSetFError( 1 );
+                  hb_fsSetError( 9 );
             }
 
             if( lpFileNameFree )
                hb_xfree( lpFileNameFree );
          }
          else
-            hb_fsSetFError( 1 );
+            hb_fsSetError( 1 );
       }
 #elif defined( HB_OS_UNIX )
       {
@@ -335,7 +327,6 @@ char * hb_fsLinkRead( const char * pszFile )
          pszLink = ( char * ) hb_xgrab( HB_PATH_MAX + 1 );
          size = readlink( pszFile, pszLink, HB_PATH_MAX );
          hb_fsSetIOError( size != ( size_t ) -1, 0 );
-         hb_fsSetFError( hb_fsError() );
          if( size == ( size_t ) -1 )
          {
             hb_xfree( pszLink );
@@ -353,53 +344,59 @@ char * hb_fsLinkRead( const char * pszFile )
       }
 #else
       {
-         hb_fsSetFError( 1 );
+         hb_fsSetError( 1 );
       }
 #endif
 
       hb_vmLock();
    }
    else
-      hb_fsSetFError( 2 );
+      hb_fsSetError( 2 );
 
    return pszLink;
 }
 
 HB_FUNC( HB_FLINK )
 {
+   HB_ERRCODE uiError = 2;
+   HB_BOOL fResult = HB_FALSE;
    const char * pszExisting = hb_parc( 1 ), * pszNewFile = hb_parc( 2 );
 
    if( pszExisting && pszNewFile )
-      hb_retni( hb_fsLink( pszExisting, pszNewFile ) ? 0 : F_ERROR );
-   else
    {
-      hb_fsSetFError( 2 );
-      hb_retni( F_ERROR );
+      fResult = hb_fsLink( pszExisting, pszNewFile );
+      uiError = hb_fsError();
    }
+   hb_retni( fResult ? 0 : F_ERROR );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( HB_FLINKSYM )
 {
+   HB_ERRCODE uiError = 2;
+   HB_BOOL fResult = HB_FALSE;
    const char * pszTarget = hb_parc( 1 ), * pszNewFile = hb_parc( 2 );
 
    if( pszTarget && pszNewFile )
-      hb_retni( hb_fsLinkSym( pszTarget, pszNewFile ) ? 0 : F_ERROR );
-   else
    {
-      hb_fsSetFError( 2 );
-      hb_retni( F_ERROR );
+      fResult = hb_fsLinkSym( pszTarget, pszNewFile );
+      uiError = hb_fsError();
    }
+   hb_retni( fResult ? 0 : F_ERROR );
+   hb_fsSetFError( uiError );
 }
 
 HB_FUNC( HB_FLINKREAD )
 {
+   HB_ERRCODE uiError = 2;
+   char * pszResult = NULL;
    const char * pszFile = hb_parc( 1 );
 
    if( pszFile )
-      hb_retc_buffer( hb_fsLinkRead( pszFile ) );
-   else
    {
-      hb_fsSetFError( 2 );
-      hb_retc_null();
+      pszResult = hb_fsLinkRead( pszFile );
+      uiError = hb_fsError();
    }
+   hb_retc_buffer( pszResult );
+   hb_fsSetFError( uiError );
 }
