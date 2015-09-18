@@ -785,7 +785,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             struct stat64 sStat, sStatL;
             if( lstat64( dirname, &sStat ) == 0 )
             {
-               if( S_ISLNK( sStat.st_mode ) )
+               if( S_ISLNK( sStat.st_mode ) && ( ffind->attrmask & HB_FA_LINK ) == 0 )
                {
                   if( stat64( dirname, &sStatL ) == 0 )
                      memcpy( &sStat, &sStatL, sizeof( sStat ) );
@@ -795,7 +795,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             struct stat sStat, sStatL;
             if( lstat( dirname, &sStat ) == 0 )
             {
-               if( S_ISLNK( sStat.st_mode ) )
+               if( S_ISLNK( sStat.st_mode ) && ( ffind->attrmask & HB_FA_LINK ) == 0 )
                {
                   if( stat( dirname, &sStatL ) == 0 )
                      memcpy( &sStat, &sStatL, sizeof( sStat ) );
