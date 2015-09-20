@@ -6385,7 +6385,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             "#define _HBMK_BUILD_DATE_          " + '"' +                DToS( tmp1 )                 + '"' + hb_eol() + ;
             "#define _HBMK_BUILD_TIME_          " + '"' +             hb_TToC( tmp1, "", "hh:mm:ss" ) + '"' + hb_eol() + ;
             "#define _HBMK_BUILD_TIMESTAMP_     " + '"' +             hb_TToS( tmp1 )                 + '"' + hb_eol() + ;
-            "#define _HBMK_BUILD_TIMESTAMP_UTC_ " + '"' + hb_TToS( hb_TSToUTC( tmp1 ) )               + '"' + hb_eol() )
+            "#define _HBMK_BUILD_TIMESTAMP_UTC_ " + '"' + hb_TToS( hb_TSToUTC( tmp1 ) )               + '"' + hb_eol() + ;
+            "#define _HBMK_BUILD_RANDSTR_32_    " + '"' + Lower( hb_StrToHex( hb_randStr( 32 ) ) )    + '"' + hb_eol() )
       ENDIF
    ENDIF
 
@@ -17835,7 +17836,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-compr=<level>"     , I_( e"compress executable/dynamic lib (needs UPX tool)\n<level> can be: yes, no, min, high, max" ) }, ;
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
       { "-vcshead=<file>"    , H_( "generate .ch header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. VCS specific information is added as _HBMK_VCS_<TYPE>_*_ constants, where supported. If no VCS system is detected, a sequential number will be rolled automatically on each build." ) }, ;
-      { "-bldhead=<file>"    , H_( "generate .ch header file with build information, like build sequence number and timestamp. Generated header will define preprocessor constants _HBMK_BUILD_ID_ and _HBMK_BUILD_ID_NUM_ with sequence number (incremented on each build) and _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
+      { "-bldhead=<file>"    , H_( "generate .ch header file with build information, like build sequence number and timestamp. Generated header will define preprocessor constants _HBMK_BUILD_ID_ and _HBMK_BUILD_ID_NUM_ with sequence number (incremented on each build), _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build and _HBMK_BUILD_RANDSTR_32_ with a random string of 32 bytes in hexadecimal format" ) }, ;
       { "-vcshead=<file>"    , S_( "generate C header file with local repository information. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository. VCS specific information is added as _HBMK_VCS_<TYPE>_*_ constants, where supported. If no VCS system is detected, a sequential number will be rolled automatically on each build." ) }, ;
       { "-bldhead=<file>"    , S_( "generate C header file with build information, like build sequence number and timestamp. Generated header will define preprocessor constants _HBMK_BUILD_ID_ with sequence number (incremented on each build) and _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
       { "-haltrev[-]"        , I_( "do not increase revision numbers in -bldhead= (_HBMK_BUILD_ID_) and -vcshead= (_HBMK_VCS_ID_) options (default: do increase)" ) }, ;
