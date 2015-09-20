@@ -1053,7 +1053,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       dwAvail = 0;
       fResult = PeekNamedPipe( ( HANDLE ) hb_fsGetOsHandle( hPipeHandle ),
                                NULL, 0, NULL, &dwAvail, NULL ) != 0;
-      if( !fResult && GetLastError() == ERROR_BROKEN_PIPE )
+      if( ! fResult && GetLastError() == ERROR_BROKEN_PIPE )
       {
          hb_fsSetError( 0 );
          break;

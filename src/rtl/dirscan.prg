@@ -76,25 +76,24 @@ FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
       hb_defaultValue( cAttr, "" ), ;
       hb_ps() )
 
-
 FUNCTION hb_DirRemoveAll( cDir )
 
    LOCAL aFile, cPath
 
-   IF hb_DirExists( cDir )
+   IF hb_vfDirExists( cDir )
       cPath := hb_DirSepAdd( cDir )
-      FOR EACH aFile IN hb_Directory( cPath + hb_osFileMask(), "HSDL" )
+      FOR EACH aFile IN hb_vfDirectory( cPath + hb_osFileMask(), "HSDL" )
          IF "D" $ aFile[ F_ATTR ] .AND. ! "L" $ aFile[ F_ATTR ]
             IF !( aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".." .OR. aFile[ F_NAME ] == "" )
                IF ! hb_DirRemoveAll( cPath + aFile[ F_NAME ] )
                   RETURN .F.
                ENDIF
             ENDIF
-         ELSEIF ! FErase( cPath + aFile[ F_NAME ] ) == 0
+         ELSEIF ! hb_vfErase( cPath + aFile[ F_NAME ] ) == 0
             RETURN .F.
          ENDIF
       NEXT
-      RETURN hb_DirDelete( cDir ) == 0
+      RETURN hb_vfDirRemove( cDir ) == 0
    ENDIF
 
    RETURN .F.

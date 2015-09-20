@@ -396,6 +396,7 @@ DYNAMIC hb_DirCreate
 DYNAMIC hb_DirDelete
 DYNAMIC hb_Directory
 DYNAMIC hb_DirExists
+DYNAMIC hb_DirRemoveAll
 DYNAMIC hb_DirScan
 DYNAMIC hb_DirSepAdd
 DYNAMIC hb_DirSepDel
