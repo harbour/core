@@ -2610,30 +2610,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    /* Detect compiler version (where applicable) */
 
-   IF hbmk[ _HBMK_nCOMPVer ] == 0 .AND. ! Empty( cPath_CompC )
-
-      DO CASE
-      CASE HBMK_ISCOMP( "clang|clang64" )
-
-         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0100 )
-
-      CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp" )
-
-         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0304 )
-
-      CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm" )
-
-         IF hbmk[ _HBMK_cCOMP ] == "msvc64"
-            cPath_CompC := StrTran( cPath_CompC, "ml64.exe", "cl.exe" )
-         ENDIF
-         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, ;
-            iif( hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. "clarm.exe" $ cPath_CompC, 1310, 1400 ) )
-
-      CASE HBMK_ISCOMP( "pocc|pocc64|poccarm" )
-
-         hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC, 0450 )
-
-      ENDCASE
+   IF hbmk[ _HBMK_nCOMPVer ] == 0
+      IF hbmk[ _HBMK_cCOMP ] == "msvc64"
+         cPath_CompC := StrTran( cPath_CompC, "ml64.exe", "cl.exe" )
+      ENDIF
+      hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cPath_CompC )
    ENDIF
 
    /* Finish detecting bin/lib/include dirs */
@@ -4451,7 +4432,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          OTHERWISE
             cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCSUFFIX ]
             cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] )
-            IF hbmk[ _HBMK_lHARDEN ]
+         ENDCASE
+         IF hbmk[ _HBMK_nCOMPVer ] == 0
+            hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cBin_CompC )
+         ENDIF
+         IF hbmk[ _HBMK_lHARDEN ]
+            IF hbmk[ _HBMK_cCOMP ] == "gcc"
                /* EXPERIMENTAL */
                DO CASE
                CASE hbmk[ _HBMK_nCOMPVer ] >= 0409
@@ -4465,7 +4451,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #endif
                ENDCASE
             ENDIF
-         ENDCASE
+         ENDIF
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -5059,6 +5045,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cObjExt := ".o"
          cBin_CompCPP := hbmk[ _HBMK_cCCPREFIX ] + "g++" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ]
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ] )
+         IF hbmk[ _HBMK_nCOMPVer ] == 0
+            hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cBin_CompC )
+         ENDIF
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lSTATICFULL ]
             cLibPostOption := " -Wl,-Bstatic"
@@ -14058,47 +14047,71 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
 
    RETURN nResult
 
-STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
+STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC )
 
+   LOCAL nVer
    LOCAL cStdOutErr
    LOCAL tmp, tmp1
 
    DO CASE
    CASE HBMK_ISCOMP( "msvc|msvc64|msvcia64|msvcarm|pocc|pocc64|poccarm" )
-      hb_processRun( '"' + cPath_CompC + '"',, @cStdOutErr, @cStdOutErr )
-      tmp := hb_cdpSelect( "cp437" )
-      IF ( tmp1 := hb_AtX( R_( "Version ([0-9]*)\.([0-9]*)\." ), cStdOutErr ) ) != NIL
-         tmp1 := hb_ATokens( SubStr( tmp1, Len( "Version " ) + 1 ), "." )
-         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+      IF ! Empty( cPath_CompC )
+         hb_processRun( '"' + cPath_CompC + '"',, @cStdOutErr, @cStdOutErr )
+         tmp := hb_cdpSelect( "cp437" )
+         IF ( tmp1 := hb_AtX( R_( "Version ([0-9]*)\.([0-9]*)\." ), cStdOutErr ) ) != NIL
+            tmp1 := hb_ATokens( SubStr( tmp1, Len( "Version " ) + 1 ), "." )
+            nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+         ELSE
+            DO CASE
+            CASE HBMK_ISCOMP( "pocc|pocc64|poccarm" )
+               nVer := 0450
+            CASE hbmk[ _HBMK_cCOMP ] == "msvcarm" .AND. "clarm.exe" $ cPath_CompC
+               nVer := 1310
+            OTHERWISE
+               nVer := 1400
+            ENDCASE
+         ENDIF
+         hb_cdpSelect( tmp )
       ENDIF
-      hb_cdpSelect( tmp )
    CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp" )
-      hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
-      tmp := hb_cdpSelect( "cp437" )
-      IF ( tmp1 := hb_AtX( R_( "version ([0-9]*)\.([0-9]*)\.([0-9]*)" ), cStdOutErr ) ) != NIL
-         tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
-         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+      IF ! Empty( cPath_CompC )
+         hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
+         tmp := hb_cdpSelect( "cp437" )
+         IF ( tmp1 := hb_AtX( R_( "version ([0-9]*)\.([0-9]*)\.([0-9]*)" ), cStdOutErr ) ) != NIL
+            tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
+            nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+         ELSE
+            nVer := 0304
+         ENDIF
+         hb_cdpSelect( tmp )
       ENDIF
-      hb_cdpSelect( tmp )
    CASE HBMK_ISCOMP( "clang|clang64" )
-      hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
-      tmp := hb_cdpSelect( "cp437" )
-      DO CASE
-      CASE ( tmp1 := hb_AtX( R_( "based on LLVM [0-9]*\.[0-9]*(\.[0-9]*)?" ), cStdOutErr ) ) != NIL
-         tmp1 := hb_ATokens( SubStr( tmp1, Len( "based on LLVM " ) + 1 ), "." )
-         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
-      CASE ( tmp1 := hb_AtX( R_( "Apple LLVM version [0-9]*\.[0-9]*\.[0-9]*" ), cStdOutErr ) ) != NIL
-         tmp1 := hb_ATokens( SubStr( tmp1, Len( "Apple LLVM version " ) + 1 ), "." )
-         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+      IF ! Empty( cPath_CompC )
+         hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
+         tmp := hb_cdpSelect( "cp437" )
          DO CASE
-         CASE nVer == 700 ; nVer := 0307
+         CASE ( tmp1 := hb_AtX( R_( "based on LLVM [0-9]*\.[0-9]*(\.[0-9]*)?" ), cStdOutErr ) ) != NIL
+            tmp1 := hb_ATokens( SubStr( tmp1, Len( "based on LLVM " ) + 1 ), "." )
+            nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+         CASE ( tmp1 := hb_AtX( R_( "Apple LLVM version [0-9]*\.[0-9]*\.[0-9]*" ), cStdOutErr ) ) != NIL
+            tmp1 := hb_ATokens( SubStr( tmp1, Len( "Apple LLVM version " ) + 1 ), "." )
+            nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+            DO CASE
+            CASE nVer == 700 ; nVer := 0307
+            ENDCASE
+         CASE ( tmp1 := hb_AtX( R_( "version [0-9]*\.[0-9]*\.[0-9]*" ), cStdOutErr ) ) != NIL
+            tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
+            nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+         OTHERWISE
+            nVer := 0100
          ENDCASE
-      CASE ( tmp1 := hb_AtX( R_( "version [0-9]*\.[0-9]*\.[0-9]*" ), cStdOutErr ) ) != NIL
-         tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
-         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
-      ENDCASE
-      hb_cdpSelect( tmp )
+         hb_cdpSelect( tmp )
+      ENDIF
    ENDCASE
+
+   IF nVer == NIL
+      nVer := 0
+   ENDIF
 
    RETURN nVer
 
