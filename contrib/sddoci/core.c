@@ -108,14 +108,15 @@ static SDDNODE s_ocidd =
 
 static HB_BOOL s_fOCI_CharsetMetaDataUni = HB_FALSE;
 static HB_BOOL s_fOCI_CharsetUserDataUni = HB_FALSE;
+static HB_BOOL s_fInit = HB_FALSE;
 
 static void hb_ocidd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT | OCI_ENV_THREADED ) )
-      hb_errInternal( 8000, NULL, NULL, NULL );
-   else if( ! hb_sddRegister( &s_ocidd ) )
+   s_fInit = OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT | OCI_ENV_THREADED );
+
+   if( ! hb_sddRegister( &s_ocidd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
 
    s_fOCI_CharsetMetaDataUni = ( OCI_GetCharsetMetaData() == OCI_CHAR_WIDE );
@@ -136,6 +137,11 @@ static void hb_ocidd_exit( void * cargo )
 HB_FUNC( HB_SDDOCI_REGISTER )
 {
    hb_ocidd_init( NULL );
+}
+
+HB_FUNC( HB_SDDOCI_ISINITIALIZED )
+{
+   hb_retl( s_fInit );
 }
 
 /* force SQLBASE linking */

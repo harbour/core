@@ -21,6 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC hb_SDDOCI_IsInitialized
 DYNAMIC hb_SDDOCI_Register
 DYNAMIC OCI_GetCharsetMetaData
 DYNAMIC OCI_GetCharsetUserData
