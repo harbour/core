@@ -14074,7 +14074,7 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
    CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp" )
       hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
       tmp := hb_cdpSelect( "cp437" )
-      IF ( tmp1 := hb_AtX( "version ([0-9]*)\.([0-9]*)\.([0-9]*)", cStdOutErr ) ) != NIL
+      IF ( tmp1 := hb_AtX( R_( "version ([0-9]*)\.([0-9]*)\.([0-9]*)" ), cStdOutErr ) ) != NIL
          tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
          nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
       ENDIF
@@ -14082,13 +14082,20 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC, nVer )
    CASE HBMK_ISCOMP( "clang|clang64" )
       hb_processRun( '"' + cPath_CompC + '"' + " " + "-v",, @cStdOutErr, @cStdOutErr )
       tmp := hb_cdpSelect( "cp437" )
-      IF ( tmp1 := hb_AtX( "based on LLVM [0-9]*\.[0-9]*(\.[0-9]*)?", cStdOutErr ) ) != NIL
+      DO CASE
+      CASE ( tmp1 := hb_AtX( R_( "based on LLVM [0-9]*\.[0-9]*(\.[0-9]*)?" ), cStdOutErr ) ) != NIL
          tmp1 := hb_ATokens( SubStr( tmp1, Len( "based on LLVM " ) + 1 ), "." )
          nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
-      ELSEIF ( tmp1 := hb_AtX( "version [0-9]*\.[0-9]*\.[0-9]*", cStdOutErr ) ) != NIL
+      CASE ( tmp1 := hb_AtX( R_( "Apple LLVM version [0-9]*\.[0-9]*\.[0-9]*" ), cStdOutErr ) ) != NIL
+         tmp1 := hb_ATokens( SubStr( tmp1, Len( "Apple LLVM version " ) + 1 ), "." )
+         nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
+         DO CASE
+         CASE nVer == 700 ; nVer := 0307
+         ENDCASE
+      CASE ( tmp1 := hb_AtX( R_( "version [0-9]*\.[0-9]*\.[0-9]*" ), cStdOutErr ) ) != NIL
          tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
          nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
-      ENDIF
+      ENDCASE
       hb_cdpSelect( tmp )
    ENDCASE
 
