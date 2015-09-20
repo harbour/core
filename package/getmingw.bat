@@ -5,10 +5,10 @@
 setlocal
 pushd "%~dp0"
 
-set "_MINGW_URL_32=https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/5.1.0/threads-posix/sjlj/i686-5.1.0-release-posix-sjlj-rt_v4-rev0.7z"
-set  _MINGW_SUM_32=e9b69423a026a0106e7b34a6674bfd9894f78208fed91a5fdf547d11a775334a
-set "_MINGW_URL_64=https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.1.0/threads-posix/sjlj/x86_64-5.1.0-release-posix-sjlj-rt_v4-rev0.7z"
-set  _MINGW_SUM_64=65b30e0469f03d0e219a1ebe022f135692ed6ecdaf4f9a86923ece7689157244
+set "_MINGW_URL_32=https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/5.2.0/threads-posix/sjlj/i686-5.2.0-release-posix-sjlj-rt_v4-rev0.7z"
+set  _MINGW_SUM_32=76faee6e1644e3ba49a38b803413c75e5c9e0bf1716dcf862824439ad1a32773
+set "_MINGW_URL_64=https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.2.0/threads-posix/sjlj/x86_64-5.2.0-release-posix-sjlj-rt_v4-rev0.7z"
+set  _MINGW_SUM_64=c0536c55a1d12882987afd0a9be377413eaf6cee105e921c949899fa9b308b35
 
 if not exist "harbour.exe" (
    echo Error: This script has to be run from a Harbour binary installation.

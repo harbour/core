@@ -34,23 +34,22 @@ install:
 - curl -fsS -L --proto-redir =https https://fossies.org/windows/misc/upx391w.zip -o upx.zip
 - openssl dgst -sha256 upx.zip | findstr /i /c:"d7d4817f46d2616c209c46fb8bce44e4bec93ab5adef5e4dfc93ee879527be1b"
 - 7z e -y -oC:\w\upx upx.zip > nul
-# Long URL: "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.1.0/threads-win32/sjlj/x86_64-5.1.0-release-win32-sjlj-rt_v4-rev0.7z" https://goo.gl/HF6raX
-# Long URL: "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.1.0/threads-posix/sjlj/x86_64-5.1.0-release-posix-sjlj-rt_v4-rev0.7z"
-- curl -fsS -L --proto-redir =https https://goo.gl/kS5jx4 -o mingw.7z
-- openssl dgst -sha256 mingw.7z | findstr /i /c:"65b30e0469f03d0e219a1ebe022f135692ed6ecdaf4f9a86923ece7689157244"
+# Long URL: "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.2.0/threads-posix/sjlj/x86_64-5.2.0-release-posix-sjlj-rt_v4-rev0.7z"
+- curl -fsS -L --proto-redir =https https://goo.gl/mQF6vO -o mingw.7z
+- openssl dgst -sha256 mingw.7z | findstr /i /c:"c0536c55a1d12882987afd0a9be377413eaf6cee105e921c949899fa9b308b35"
 # Will unpack into C:\w\mingw64
 - 7z x -y -oC:\w\ mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win32-mingw.7z -o openssl-win-mingw.7z
-- openssl dgst -sha256 openssl-win-mingw.7z | findstr /i /c:"4cc400a0a958aa743ea52866683ead246355b812267e7178d40cebfbe0f08e94"
+- openssl dgst -sha256 openssl-win-mingw.7z | findstr /i /c:"f2993e1792a88bfc0a057b34e29c66b51382ef7bcca980f5f9caca3b3a7a4e56"
 - 7z x -y -oC:\w\ openssl-win-mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.7z -o openssl-win-mingw64.7z
-- openssl dgst -sha256 openssl-win-mingw64.7z | findstr /i /c:"5e080afb86a8568c1e342a5d779cc976a3aa7cb1c27badec4edc853cd5359700"
+- openssl dgst -sha256 openssl-win-mingw64.7z | findstr /i /c:"85bac9f9f829c1231e464c74050a2f030ec49318d3137efa37163fd8ee25e982"
 - 7z x -y -oC:\w\ openssl-win-mingw64.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win32-mingw.7z -o curl-win-mingw.7z
-- openssl dgst -sha256 curl-win-mingw.7z | findstr /i /c:"1ef82d47141c2bdc2cb59aefbce7e80776711132a8bca45d0910596769000e0f"
+- openssl dgst -sha256 curl-win-mingw.7z | findstr /i /c:"5ce7ea4c1c170b693c579edcc4bb73760c4f493e2eb534e4889828224414f633"
 - 7z x -y -oC:\w\ curl-win-mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win64-mingw.7z -o curl-win-mingw64.7z
-- openssl dgst -sha256 curl-win-mingw64.7z | findstr /i /c:"5cf8482e2634fc12c4e94178c08a8070f00676eaf1ff94d24f8e7be43c828631"
+- openssl dgst -sha256 curl-win-mingw64.7z | findstr /i /c:"cffad01e51d668e58f5d5a27a72b0db9c0091952e07eb85cf09bfcf317e83932"
 - 7z x -y -oC:\w\ curl-win-mingw64.7z > nul
 # Change to ISO date and 24-hour time format
 - reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d "yyyy-MM-dd" /f
