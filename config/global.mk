@@ -761,7 +761,18 @@ ifeq ($(HB_COMPILER),)
          endif
       endif
    else
-   ifneq ($(filter $(HB_PLATFORM),aix hpux bsd beos qnx cygwin),)
+   ifeq ($(HB_PLATFORM),bsd)
+      HB_COMP_PATH := $(call find_in_path_par,clang,/usr/bin)
+      ifneq ($(HB_COMP_PATH),)
+         HB_COMPILER := clang
+      else
+         HB_COMP_PATH := $(call find_in_path_par,gcc,/usr/bin)
+         ifneq ($(HB_COMP_PATH),)
+            HB_COMPILER := gcc
+         endif
+      endif
+   else
+   ifneq ($(filter $(HB_PLATFORM),aix hpux beos qnx cygwin),)
       HB_COMP_PATH := $(call find_in_path,gcc)
       ifneq ($(HB_COMP_PATH),)
          HB_COMPILER := gcc
@@ -839,6 +850,7 @@ ifeq ($(HB_COMPILER),)
          HB_COMPILER := gcc
          HB_CCPREFIX := ntox86-
       endif
+   endif
    endif
    endif
    endif

@@ -1,5 +1,5 @@
 /*
- * hb_DirScan()
+ * hb_DirScan(), hb_DirRemoveAll()
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -75,3 +75,26 @@ FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
       iif( HB_ISSTRING( cFileMask ), cFileMask, hb_osFileMask() ), ;
       hb_defaultValue( cAttr, "" ), ;
       hb_ps() )
+
+
+FUNCTION hb_DirRemoveAll( cDir )
+
+   LOCAL aFile, cPath
+
+   IF hb_DirExists( cDir )
+      cPath := hb_DirSepAdd( cDir )
+      FOR EACH aFile IN hb_Directory( cPath + hb_osFileMask(), "HSDL" )
+         IF "D" $ aFile[ F_ATTR ] .AND. ! "L" $ aFile[ F_ATTR ]
+            IF !( aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".." .OR. aFile[ F_NAME ] == "" )
+               IF ! hb_DirRemoveAll( cPath + aFile[ F_NAME ] )
+                  RETURN .F.
+               ENDIF
+            ENDIF
+         ELSEIF ! FErase( cPath + aFile[ F_NAME ] ) == 0
+            RETURN .F.
+         ENDIF
+      NEXT
+      RETURN hb_DirDelete( cDir ) == 0
+   ENDIF
+
+   RETURN .F.

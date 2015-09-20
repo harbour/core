@@ -115,7 +115,7 @@ extern HB_EXPORT const char * hb_clsMethodName( HB_USHORT uiClass, HB_USHORT uiM
 extern HB_EXPORT PHB_SYMB   hb_clsFuncSym( HB_USHORT uiClass );
 extern HB_EXPORT HB_BOOL    hb_clsIsParent( HB_USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
 extern HB_EXPORT HB_SIZE    hb_clsGetVarIndex( HB_USHORT uiClass, PHB_DYNS pVarSym );
-extern HB_EXPORT HB_USHORT  hb_clsFindClass( const char * szClass, const char * szFunc );
+extern HB_EXPORT HB_USHORT  hb_clsFindClass( const char * szClass, const char * szClassFunc );
 
 /* object management */
 extern HB_EXPORT HB_USHORT  hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */

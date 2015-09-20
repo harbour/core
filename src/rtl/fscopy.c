@@ -51,13 +51,14 @@
 
 HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 {
-   HB_ERRCODE errCode;
-   HB_BOOL bRetVal;
+   HB_BOOL fResult = HB_FALSE;
    PHB_FILE pSrcFile;
 
    if( ( pSrcFile = hb_fileExtOpen( pszSource, NULL, FO_READ | FO_SHARED | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
    {
       PHB_FILE pDstFile;
+      HB_ERRCODE errCode;
+
       if( ( pDstFile = hb_fileExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
       {
          void * pbyBuffer = hb_xgrab( HB_FSCOPY_BUFFERSIZE );
@@ -71,14 +72,13 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
                if( nBytesRead != hb_fileWrite( pDstFile, pbyBuffer, nBytesRead, -1 ) )
                {
                   errCode = hb_fsError();
-                  bRetVal = HB_FALSE;
                   break;
                }
             }
             else
             {
                errCode = hb_fsError();
-               bRetVal = ( errCode == 0 && nBytesRead != ( HB_SIZE ) FS_ERROR );
+               fResult = errCode == 0;
                break;
             }
          }
@@ -88,41 +88,39 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
          hb_fileClose( pDstFile );
       }
       else
-      {
          errCode = hb_fsError();
-         bRetVal = HB_FALSE;
-      }
 
       hb_fileClose( pSrcFile );
 
-      if( bRetVal )
+      if( fResult )
       {
          HB_FATTR ulAttr;
 
          if( hb_fileAttrGet( pszSource, &ulAttr ) )
             hb_fileAttrSet( pszDest, ulAttr );
       }
-   }
-   else
-   {
-      errCode = hb_fsError();
-      bRetVal = HB_FALSE;
+      hb_fsSetError( errCode );
    }
 
-   hb_fsSetFError( errCode );
-
-   return bRetVal;
+   return fResult;
 }
 
 HB_FUNC( HB_FCOPY )
 {
+   HB_ERRCODE errCode = 2; /* file not found */
+   HB_BOOL fResult = HB_FALSE;
    const char * pszSource = hb_parc( 1 ), * pszDest = hb_parc( 2 );
 
    if( pszSource && pszDest )
-      hb_retni( hb_fsCopy( pszSource, pszDest ) ? 0 : F_ERROR );
+   {
+      fResult = hb_fsCopy( pszSource, pszDest );
+      errCode = hb_fsError();
+   }
    else
    {
       hb_fsSetFError( 2 /* file not found */ );
       hb_retni( F_ERROR );
    }
+   hb_fsSetFError( errCode );
+   hb_retni( fResult ? 0 : F_ERROR );
 }

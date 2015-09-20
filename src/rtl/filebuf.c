@@ -1206,14 +1206,12 @@ HB_EXPORT HB_FOFFSET hb_fileSizeGet( const char * pszFileName, HB_BOOL bUseDirEn
 
    if( i >= 0 )
    {
-      HB_ERRCODE uiError;
       HB_FOFFSET nSize = 0;
 
       if( bUseDirEntry )
       {
          PHB_ITEM pDir = hb_fileDirectory( pszFileName, "HS" );
 
-         uiError = hb_fsError();
          if( pDir )
          {
             PHB_ITEM pEntry = hb_arrayGetItemPtr( pDir, 1 );
@@ -1228,14 +1226,13 @@ HB_EXPORT HB_FOFFSET hb_fileSizeGet( const char * pszFileName, HB_BOOL bUseDirEn
          PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL, FO_READ | FO_COMPAT, NULL, NULL );
          if( pFile )
          {
+            HB_ERRCODE uiError;
             nSize = hb_fileSize( pFile );
             uiError = hb_fsError();
             hb_fileClose( pFile );
+            hb_fsSetError( uiError );
          }
-         else
-            uiError = hb_fsError();
       }
-      hb_fsSetFError( uiError );
 
       return nSize;
    }

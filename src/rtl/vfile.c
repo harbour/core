@@ -765,7 +765,10 @@ HB_FUNC( HB_VFSIZE )
    const char * pszFile = hb_parc( 1 );
 
    if( pszFile )
+   {
       hb_retnint( hb_fileSizeGet( pszFile, hb_parldef( 2, 1 ) ) );
+      hb_fsSetFError( hb_fsError() );
+   }
    else
    {
       PHB_FILE pFile = hb_fileParam( 1 );
