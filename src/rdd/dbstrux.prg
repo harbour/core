@@ -59,6 +59,8 @@ FUNCTION __dbCopyXStruct( cFileName )
    LOCAL oError
    LOCAL lError := .F.
 
+   LOCAL aField, lExtended
+
    IF Empty( aStruct := dbStruct() )
       RETURN .F.
    ENDIF
@@ -67,8 +69,16 @@ FUNCTION __dbCopyXStruct( cFileName )
 
    BEGIN SEQUENCE
 
+      lExtended := .F.
+      FOR EACH aField IN aStruct
+         IF Len( aField[ DBS_TYPE ] ) > 1
+            lExtended := .T.
+            EXIT
+         ENDIF
+      NEXT
+
       dbSelectArea( 0 )
-      __dbCreate( cFileName, , , .F. )
+      __dbCreate( cFileName, , , .F., , , , lExtended )
 
       AEval( aStruct, {| aField | ;
          iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255, ;
@@ -97,10 +107,10 @@ FUNCTION __dbCopyXStruct( cFileName )
    RETURN .T.
 
 /* NOTE: Compared to CA-Cl*pper, Harbour:
-         - has two extra parameters: <cCodePage>, <nConnection>
+         - has three extra parameters: <cCodePage>, <nConnection>, <lExtended>
          - non-string, non-empty <cFileFrom> values do not cause an RTE */
 
-FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection )
+FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection, lExtended )
 
    LOCAL nOldArea := Select()
    LOCAL aStruct := {}
@@ -123,7 +133,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 
          dbCreate( cFileName, { ;
             { "FIELD_NAME", "C", 10, 0 }, ;
-            { "FIELD_TYPE", "C",  6, 0 }, ;
+            { "FIELD_TYPE", "C",  iif( hb_defaultValue( lExtended, .F. ), 6, 1 ), 0 }, ;
             { "FIELD_LEN" , "N",  5, 0 }, ;
             { "FIELD_DEC" , "N",  3, 0 } }, ;
             cRDD, .F., cAlias, , cCodePage, nConnection )

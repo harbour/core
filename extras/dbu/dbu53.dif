@@ -512,7 +512,7 @@ diff -u dbu53ori/dbunet.prg dbu53pat/dbunet.prg
 +   RETURN ""
 diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
 --- dbu53ori/dbustru.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbustru.prg	2015-04-09 04:07:20.000000000 +0200
++++ dbu53pat/dbustru.prg	2015-09-20 21:04:00.000000000 +0200
 @@ -32,8 +32,8 @@
  * local arrays..constant values
  DECLARE ffield[4]
@@ -623,7 +623,7 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  							keystroke = 13
  
  						CASE keystroke = 32
-@@ -248,9 +284,9 @@
+@@ -248,18 +284,32 @@
  
  					ENDCASE
  
@@ -635,12 +635,14 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  
  						DO CASE
  							* set field_len and field_dec according to type
-@@ -259,7 +295,21 @@
+ 
+-							CASE field_type = "C"
++							CASE LEFT(field_type, 1) = "C"
  								* character..any len will do, but not any dec
  								REPLACE field_dec WITH 0
  
 -							CASE field_type = "N"
-+							CASE field_type = "Q"
++							CASE LEFT(field_type, 1) = "Q"
 +								IF field_len > 255
 +									REPLACE field_len WITH 255
 +								ELSEIF field_len = 0
@@ -648,13 +650,13 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
 +								ENDIF
 +								REPLACE field_dec WITH 0
 +
-+							CASE field_type = "V"
++							CASE LEFT(field_type, 1) = "V"
 +								IF field_len <> 4 .AND. field_len < 6
 +									REPLACE field_len WITH 6
 +								ENDIF
 +								REPLACE field_dec WITH 0
 +
-+							CASE field_type $ "NF"
++							CASE LEFT(field_type, 1) $ "NF"
  								* numeric
  
  								IF m_item = "C" .AND. (field_dec <> 0 .OR.;
@@ -664,57 +666,58 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  
 -							CASE field_type = "D"
 -								* date..always 8
-+							CASE field_type = "I"
++							CASE LEFT(field_type, 1) = "I"
 +								IF field_len = 0 .OR. (field_len > 4 .AND. field_len <> 8)
 +									REPLACE field_len WITH 4
 +								ENDIF
 +
-+							CASE field_type = "Y"
++							CASE LEFT(field_type, 1) = "Y"
 +								REPLACE field_len WITH 8,field_dec WITH 4
 +
-+							CASE field_type $ "8BZ"
++							CASE LEFT(field_type, 1) $ "8BZ"
 +								IF field_len <> 8
 +									REPLACE field_len WITH 8
 +								ENDIF
 +
-+							CASE field_type = "2"
++							CASE LEFT(field_type, 1) = "2"
 +								REPLACE field_len WITH 2,field_dec WITH 0
 +
-+							CASE field_type = "4"
++							CASE LEFT(field_type, 1) = "4"
 +								REPLACE field_len WITH 4,field_dec WITH 0
 +
-+							CASE field_type = "T"
++							CASE LEFT(field_type, 1) = "T"
 +								IF field_len <> 4 .AND. field_len <> 8
 +									REPLACE field_len WITH 8
 +								ENDIF
 +								REPLACE field_dec WITH 0
 +
-+							CASE field_type = "@"
++							CASE LEFT(field_type, 1) = "@"
  								REPLACE field_len WITH 8,field_dec WITH 0
  
-+							CASE field_type = "D"
+-							CASE field_type = "L"
++							CASE LEFT(field_type, 1) = "D"
 +								IF field_len <> 3 .AND. field_len <> 4 .AND. field_len <> 8
 +									REPLACE field_len WITH 8
 +								ENDIF
 +								REPLACE field_dec WITH 0
 +
- 							CASE field_type = "L"
++							CASE LEFT(field_type, 1) = "L"
  								* logical..always 1
  								REPLACE field_len WITH 1,field_dec WITH 0
  
 -							CASE field_type = "M"
 -								* memo..always 10
 -								REPLACE field_len WITH 10,field_dec WITH 0
-+							CASE field_type $ "MVWPG"
++							CASE LEFT(field_type, 1) $ "MVWPG"
 +								IF field_len <> 10 .AND. field_len <> 4
 +									REPLACE field_len WITH 10
 +								ENDIF
 +								REPLACE field_dec WITH 0
 +
-+							CASE field_type = "+"
++							CASE LEFT(field_type, 1) = "+"
 +								REPLACE field_len WITH 4,field_dec WITH 0
 +
-+							CASE field_type $ "=^"
++							CASE LEFT(field_type, 1) $ "=^"
 +								REPLACE field_len WITH 8,field_dec WITH 0
  
  						ENDCASE
@@ -723,10 +726,28 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  						@ cur_row,field_col[3] SAY STR(field_len,4)
  
 -						IF field_type = "N"
-+						IF field_type $ "NFYI8BZ"
++						IF LEFT(field_type, 1) $ "NFYI8BZ"
  							* display new field_dec
  							@ cur_row,field_col[4] SAY field_dec
  
+@@ -300,7 +388,7 @@
+ 				CASE n = 3
+ 					* get is for field_len
+ 
+-					IF field_type = "C"
++					IF LEFT(field_type, 1) = "C"
+ 						* get Clipper extended field length into memvar
+ 						len_temp = (256 * field_dec) + field_len
+ 
+@@ -320,7 +408,7 @@
+ 					IF menu_key() = 0
+ 						* no menu request
+ 
+-						IF field_type = "C"
++						IF LEFT(field_type, 1) = "C"
+ 							* put Clipper extended field length into len/dec
+ 							REPLACE field_len WITH (len_temp % 256)
+ 							REPLACE field_dec WITH INT(len_temp / 256)
 @@ -488,7 +576,7 @@
  		CASE keystroke = 4
  			* right arrow
@@ -782,7 +803,8 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
 -SAY field_name + " ³ " + data_type[AT(field_type, "CNDLM")] + " ³ "
 +SAY field_name + hb_UTF8ToStr( " â”‚ " ) + data_type[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")] + hb_UTF8ToStr( " â”‚ " )
  
- IF field_type = "C"
+-IF field_type = "C"
++IF LEFT(field_type, 1) = "C"
  	* display Clipper extended field length
  	@ fill_row,field_col[3] SAY STR(((256 * field_dec) + field_len), 4) +;
 -								" ³    "
@@ -794,11 +816,11 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
 +	@ fill_row,field_col[3] SAY STR(field_len, 4) + hb_UTF8ToStr( " â”‚    " )
  
 -	IF field_type = "N"
-+	IF field_type $ "NFYI8BZ"
++	IF LEFT(field_type, 1) $ "NFYI8BZ"
  		* display decimals for numeric field
  		@ fill_row,field_col[4] SAY field_dec
  
-@@ -940,7 +1028,7 @@
+@@ -940,11 +1028,11 @@
  
  	CASE n = 2
  		* display field_type as character string
@@ -807,12 +829,26 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  
  	CASE n = 3
  
+-		IF field_type = "C"
++		IF LEFT(field_type, 1) = "C"
+ 			* display Clipper extended field length
+ 			@ cur_row,field_col[n] SAY STR(((256 * field_dec) +;
+ 										   field_len),4)
+@@ -1079,7 +1167,7 @@
+ IF status = 0
+ 	* test for valid field_len
+ 
+-	IF field_type = "C"
++	IF LEFT(field_type, 1) = "C"
+ 		test_num = (256 * field_dec) + field_len
+ 
+ 		IF test_num <= 0 .OR. test_num > 1024
 @@ -1110,7 +1198,7 @@
  	ENDIF
  ENDIF
  
 -IF field_type = "N" .AND. status = 0
-+IF field_type $ "NFYI8BZ" .AND. status = 0
++IF LEFT(field_type, 1) $ "NFYI8BZ" .AND. status = 0
  	* test for valid field_dec
  
  	IF field_dec > IF(field_len < 3, 0, IF(field_len > 17, 15, field_len - 2))
