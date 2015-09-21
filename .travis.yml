@@ -55,6 +55,7 @@ before_install:
        brew install icu4c;
        brew install libmagic;
        brew install mariadb;
+       brew install openssl;
        brew install unixodbc;
     fi
 notifications:
