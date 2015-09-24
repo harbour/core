@@ -9087,50 +9087,52 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
          IF ! dep[ _HBMKDEP_lFound ]
             cName := AllTrim( cName )
 
-            cStdOut := ""
-            hb_processRun( "pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+            hb_processRun( "pkg-config --libs --cflags " + cName,, @cStdOut, @cStdErr )
+            hb_processRun( "pkg-config --modversion " + cName,, @cVersion, @cStdErr )
             IF Empty( cStdOut )
-               hb_processRun( cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               hb_processRun( cName + "-config --libs --cflags",, @cStdOut, @cStdErr )
+               hb_processRun( cName + "-config --version",, @cVersion, @cStdErr )
             ENDIF
 #if defined( __PLATFORM__DARWIN )
             /* Homebrew */
             IF Empty( cStdOut )
-               IF hb_FileExists( "/usr/local/bin/pkg-config" )
-                  hb_processRun( "/usr/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+               IF hb_vfExists( tmp := "/usr/local/bin/pkg-config" )
+                  hb_processRun( tmp + " --libs --cflags " + cName,, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --modversion " + cName,, @cVersion, @cStdErr )
                ENDIF
             ENDIF
             IF Empty( cStdOut )
-               IF hb_FileExists( "/usr/local/bin/" + cName + "-config" )
-                  hb_processRun( "/usr/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               IF hb_vfExists( tmp := "/usr/local/bin/" + cName + "-config" )
+                  hb_processRun( tmp + " --libs --cflags",, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --version",, @cVersion, @cStdErr )
                ENDIF
             ENDIF
             /* MacPorts/DarwinPorts */
             IF Empty( cStdOut )
-               IF hb_FileExists( "/opt/local/bin/pkg-config" )
-                  hb_processRun( "/opt/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+               IF hb_vfExists( tmp := "/opt/local/bin/pkg-config" )
+                  hb_processRun( tmp + " --libs --cflags " + cName,, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --modversion " + cName,, @cVersion, @cStdErr )
                ENDIF
             ENDIF
             IF Empty( cStdOut )
-               IF hb_FileExists( "/opt/local/bin/" + cName + "-config" )
-                  hb_processRun( "/opt/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               IF hb_vfExists( tmp := "/opt/local/bin/" + cName + "-config" )
+                  hb_processRun( tmp + " --libs --cflags",, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --version",, @cVersion, @cStdErr )
                ENDIF
             ENDIF
 #endif
 
             IF ! Empty( cStdOut )
 
-               cStdOut := StrTran( cStdOut, Chr( 13 ) )
-               IF ( tmp := At( Chr( 10 ), cStdOut ) ) > 0
-                  cVersion := Left( cStdOut, tmp - 1 )
-                  cStdOut := SubStr( cStdOut, tmp + 1 )
-               ELSE
-                  cVersion := "unknown version"
+               cVersion := hb_StrReplace( cVersion, Chr( 13 ) + Chr( 10 ) )
+               IF Empty( cVersion )
+                  cVersion := "unrecognized version"
                ENDIF
 
-               cStdOut := StrTran( cStdOut, Chr( 10 ), " " )
+               cStdOut := StrTran( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ), " " )
 
                FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
-                  IF Left( cItem, Len( "-I" ) ) == "-I"
+                  IF hb_LeftEq( cItem, "-I" )
                      dep[ _HBMKDEP_lFound ] := .T.
                      EXIT
                   ENDIF
@@ -9140,17 +9142,17 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
 
                   FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
                      DO CASE
-                     CASE Left( cItem, Len( "-l" ) ) == "-l"
+                     CASE hb_LeftEq( cItem, "-l" )
                         cItem := SubStr( cItem, Len( "-l" ) + 1 )
                         IF _IS_AUTOLIBSYSPRE( cItem )
                            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cItem )
                         ELSE
                            AAdd( hbmk[ _HBMK_aLIBUSER ], cItem )
                         ENDIF
-                     CASE Left( cItem, Len( "-L" ) ) == "-L"
+                     CASE hb_LeftEq( cItem, "-L" )
                         cItem := SubStr( cItem, Len( "-L" ) + 1 )
                         AAdd( hbmk[ _HBMK_aLIBPATH ], hb_DirSepDel( hb_DirSepToOS( cItem ) ) )
-                     CASE Left( cItem, Len( "-I" ) ) == "-I"
+                     CASE hb_LeftEq( cItem, "-I" )
                         cItem := hb_DirSepDel( hb_DirSepToOS( SubStr( cItem, Len( "-I" ) + 1 ) ) )
                         IF Empty( cIncludeDir )
                            cIncludeDir := cItem
