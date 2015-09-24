@@ -508,7 +508,14 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       /* atexit( restore_input_mode ); */
       s_curr_TIO.c_lflag &= ~( ICANON | ECHO );
       s_curr_TIO.c_iflag &= ~ICRNL;
+#if 0
       s_curr_TIO.c_cc[ VMIN ] = 0;
+#else
+      /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
+         Ubuntu) in which select() unconditionally accepts stdin for
+         reading if c_cc[ VMIN ] = 0 [druzus] */
+      s_curr_TIO.c_cc[ VMIN ] = 1;
+#endif
       s_curr_TIO.c_cc[ VTIME ] = 0;
       tcsetattr( hFilenoStdin, TCSAFLUSH, &s_curr_TIO );
 

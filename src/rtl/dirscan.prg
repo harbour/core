@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- *    hb_DirScan(), hb_DirRemoveAll()
+ *    hb_DirScan()
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
@@ -47,6 +47,8 @@
  */
 
 #include "directry.ch"
+#include "fileio.ch"
+
 
 STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
 
@@ -54,7 +56,7 @@ STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
    LOCAL lMatch
    LOCAL aResult := {}
 
-   FOR EACH aFile IN hb_Directory( cPath + hb_osFileMask(), cAttr + "D" )
+   FOR EACH aFile IN hb_vfDirectory( cPath + hb_osFileMask(), cAttr + "D" )
       lMatch := hb_FileMatch( aFile[ F_NAME ], cMask )
       IF "D" $ aFile[ F_ATTR ]
          IF lMatch .AND. "D" $ cAttr
@@ -73,30 +75,56 @@ STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
    RETURN aResult
 
 FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
-   RETURN HB_DoScan( hb_DirSepAdd( hb_defaultValue( cPath, "" ) ), ;
+   RETURN hb_DoScan( hb_DirSepAdd( hb_defaultValue( cPath, "" ) ), ;
       iif( HB_ISSTRING( cFileMask ), cFileMask, hb_osFileMask() ), ;
       hb_defaultValue( cAttr, "" ), ;
       hb_ps() )
 
-
 FUNCTION hb_DirRemoveAll( cDir )
 
-   LOCAL aFile, cPath
+   LOCAL aFile, cPath, cFile, nAttr
 
-   IF hb_DirExists( cDir )
+   IF hb_vfDirExists( cDir )
       cPath := hb_DirSepAdd( cDir )
-      FOR EACH aFile IN hb_Directory( cPath + hb_osFileMask(), "HSDL" )
+      FOR EACH aFile IN hb_vfDirectory( cPath + hb_osFileMask(), "HSDL" )
          IF "D" $ aFile[ F_ATTR ] .AND. ! "L" $ aFile[ F_ATTR ]
             IF !( aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".." .OR. aFile[ F_NAME ] == "" )
                IF ! hb_DirRemoveAll( cPath + aFile[ F_NAME ] )
                   RETURN .F.
                ENDIF
             ENDIF
-         ELSEIF ! FErase( cPath + aFile[ F_NAME ] ) == 0
-            RETURN .F.
+         ELSE
+            cFile := cPath + aFile[ F_NAME ]
+            IF "R" $ aFile[ F_ATTR ] .AND. hb_vfAttrGet( cFile, @nAttr )
+               hb_vfAttrSet( cFile, hb_bitAnd( nAttr, hb_bitNot( HB_FA_READONLY ) ) )
+            ENDIF
+            IF ! hb_vfErase( cFile ) == 0
+               RETURN .F.
+            ENDIF
          ENDIF
       NEXT
-      RETURN hb_DirDelete( cDir ) == 0
+      RETURN hb_vfDirRemove( cDir ) == 0
    ENDIF
 
    RETURN .F.
+
+FUNCTION hb_FileDelete( cFileMask, cAttr )
+
+   LOCAL lAny := .F., aFile, cPath, cFile, cAttrMask, nAttr
+
+   IF HB_ISSTRING( cFileMask ) .AND. ! Empty( cFileMask ) .AND. ;
+      ! hb_vfDirExists( cFileMask )
+      cPath := hb_FNameDir( cFileMask )
+      cAttrMask := StrTran( hb_defaultValue( cAttr, "" ), "D" ) + "L"
+      FOR EACH aFile IN hb_vfDirectory( cFileMask, cAttrMask )
+         cFile := cPath + aFile[ F_NAME ]
+         IF "R" $ aFile[ F_ATTR ] .AND. hb_vfAttrGet( cFile, @nAttr )
+            hb_vfAttrSet( cFile, hb_bitAnd( nAttr, hb_bitNot( HB_FA_READONLY ) ) )
+         ENDIF
+         IF hb_vfErase( cFile ) == 0
+            lAny := .T.
+         ENDIF
+      NEXT
+   ENDIF
+
+RETURN lAny
