@@ -784,21 +784,21 @@ void hb_socekxParamsGetStd( PHB_ITEM pParams,
           HB_IS_STRING( pItem ) )
       {
          *pKeydata = hb_itemGetCPtr( pItem );
-         *pKeylen  = hb_itemGetCLen( pItem );
+         *pKeylen  = ( int ) hb_itemGetCLen( pItem );
       }
       else if( pKeydata && pKeylen &&
                ( pItem = hb_hashGetCItemPtr( pParams, "pass" ) ) != NULL &&
                HB_IS_STRING( pItem ) )
       {
          *pKeydata = hb_itemGetCPtr( pItem );
-         *pKeylen  = hb_itemGetCLen( pItem );
+         *pKeylen  = ( int ) hb_itemGetCLen( pItem );
       }
       if( pIV && pIVlen &&
           ( pItem = hb_hashGetCItemPtr( pParams, "iv" ) ) != NULL &&
           HB_IS_STRING( pItem ) )
       {
          *pIV    = hb_itemGetCPtr( pItem );
-         *pIVlen = hb_itemGetCLen( pItem );
+         *pIVlen = ( int ) hb_itemGetCLen( pItem );
       }
       if( pLevel &&
           ( pItem = hb_hashGetCItemPtr( pParams, "zlib" ) ) != NULL &&

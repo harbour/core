@@ -1203,7 +1203,7 @@ HB_BOOL hb_fileTimeSet( const char * pszFileName, long lJulian, long lMillisec )
    return hb_fsSetFileTime( pszFileName, lJulian, lMillisec );
 }
 
-HB_EXPORT HB_FOFFSET hb_fileSizeGet( const char * pszFileName, HB_BOOL bUseDirEntry )
+HB_FOFFSET hb_fileSizeGet( const char * pszFileName, HB_BOOL bUseDirEntry )
 {
    int i = s_fileFindDrv( pszFileName );
 
