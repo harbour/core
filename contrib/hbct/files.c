@@ -235,15 +235,18 @@ HB_FUNC( SETFDATI )
 
 HB_FUNC( FILEDELETE )
 {
-   HB_BOOL bReturn = HB_FALSE;
+   const char * pszDirSpec = hb_parc( 1 );
+   HB_BOOL fResult = HB_FALSE;
 
-   if( HB_ISCHAR( 1 ) )
+   if( pszDirSpec )
    {
-      const char * pszDirSpec = hb_parc( 1 );
-      HB_FATTR ulAttr = hb_parnldef( 2, HB_FA_ALL );
+      HB_FATTR nAttr = hb_parnldef( 2, HB_FA_ALL );
       PHB_FFIND ffind;
 
-      if( ( ffind = hb_fsFindFirst( pszDirSpec, ulAttr ) ) != NULL )
+      /* In CT3 this function does not remove directories */
+      nAttr &= ~HB_FA_DIRECTORY;
+
+      if( ( ffind = hb_fsFindFirst( pszDirSpec, nAttr ) ) != NULL )
       {
          PHB_FNAME pFilepath;
 
@@ -257,8 +260,15 @@ HB_FUNC( FILEDELETE )
             pFilepath->szName = ffind->szName;
             hb_fsFNameMerge( szPath, pFilepath );
 
+            if( ffind->attr & HB_FA_READONLY )
+            {
+               if( nAttr & HB_FA_READONLY )
+                  hb_fsSetAttr( szPath, ffind->attr & ~ ( HB_FATTR ) HB_FA_READONLY );
+               else
+                  continue;
+            }
             if( hb_fsDelete( szPath ) )
-               bReturn = HB_TRUE;
+               fResult = HB_TRUE;
          }
          while( hb_fsFindNext( ffind ) );
 
@@ -267,7 +277,7 @@ HB_FUNC( FILEDELETE )
       }
    }
 
-   hb_retl( bReturn );
+   hb_retl( fResult );
 }
 
 HB_FUNC( FILEMOVE )

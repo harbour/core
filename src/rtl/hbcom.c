@@ -1316,7 +1316,14 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
          tio.c_cflag |= ( CLOCAL | CREAD );
 
          tio.c_cc[ VTIME ] = 0;  /* inter-character timer in 1/10 sec. */
+#if 0
          tio.c_cc[ VMIN ]  = 0;  /* minimum number of characters for read */
+#else
+         /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
+            Ubuntu) in which select() unconditionally accepts stdin for
+            reading if c_cc[ VMIN ] = 0 [druzus] */
+         tio.c_cc[ VMIN ] = 1;
+#endif
 
          if( iBaud )
          {

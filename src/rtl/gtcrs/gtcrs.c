@@ -1875,6 +1875,11 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
       /* ioBase->curr_TIO.c_oflag |= ONLCR | OPOST; */
 
       memset( ioBase->curr_TIO.c_cc, 0, NCCS );
+
+      /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
+         Ubuntu) in which select() unconditionally accepts stdin for
+         reading if c_cc[ VMIN ] = 0 [druzus] */
+      ioBase->curr_TIO.c_cc[ VMIN ] = 1;
    }
 
 
