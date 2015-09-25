@@ -352,7 +352,7 @@ HB_FUNC( HB_VFFROMPIPES )
 HB_FUNC( HB_VFOPENPROCESS )
 {
    const char * pszCommand = hb_parc( 1 );
-   HB_FATTR nMode = hb_parnintdef( 2, FO_READ );
+   HB_FATTR nMode = hb_parnldef( 2, FO_READ );
    HB_MAXINT timeout = hb_parnintdef( 3, -1 );
    HB_BOOL fDetach = hb_parl( 4 );
    PHB_FILE pFile;

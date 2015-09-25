@@ -63,10 +63,11 @@ typedef struct _HB_FILE
    const HB_FILE_FUNCS * pFuncs;
    PHB_SOCKEX            sock;
    HB_BOOL               fEof;
-   int                   timeout;
-} HB_FILE;
+   HB_MAXINT             timeout;
+}
+HB_FILE;
 
-static PHB_FILE s_fileNew( PHB_SOCKEX sock, int timeout );
+static PHB_FILE s_fileNew( PHB_SOCKEX sock, HB_MAXINT timeout );
 
 static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
@@ -84,7 +85,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
    HB_ERRCODE errcode = 0;
    HB_SIZE nLen = 0;
    int iPort = 0;
-   int timeout = -1;
+   HB_MAXINT timeout = -1;
 
    HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDefExt );
@@ -355,7 +356,7 @@ static HB_FILE_FUNCS s_fileFuncs =
    s_fileHandle
 };
 
-static PHB_FILE s_fileNew( PHB_SOCKEX sock, int timeout )
+static PHB_FILE s_fileNew( PHB_SOCKEX sock, HB_MAXINT timeout )
 {
    PHB_FILE pFile = ( PHB_FILE ) hb_xgrab( sizeof( HB_FILE ) );
 
