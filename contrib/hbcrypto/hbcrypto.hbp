@@ -1,3 +1,5 @@
+-stop{msvcall}
+
 -hblib
 -inc
 
