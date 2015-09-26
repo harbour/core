@@ -56,18 +56,18 @@ hb_rmflst='yes'
 hb_flst='bin/hb_flst.tmp'
 if [ -d "$hb_rootdir/.git" ] ; then
    hb_rmflst='yes'
-   (cd "$hb_rootdir";hb_collect_all_git) > "$hb_rootdir/$hb_flst"
+   (cd "$hb_rootdir" || exit; hb_collect_all_git) > "$hb_rootdir/$hb_flst"
    echo "$hb_flst" >> "$hb_rootdir/$hb_flst"
 else
    hb_rmflst='yes'
-   (cd "$hb_rootdir";hb_collect_all_tree) > "$hb_rootdir/$hb_flst"
+   (cd "$hb_rootdir" || exit; hb_collect_all_tree) > "$hb_rootdir/$hb_flst"
 fi
 
 if [ "$hb_archbin" = 'zip' ]; then
-   (cd "$hb_rootdir";$hb_archbin -r -q "$hb_filename" . "-i@$hb_flst")
+   (cd "$hb_rootdir" || exit; $hb_archbin -r -q "$hb_filename" . "-i@$hb_flst")
 else
-   (cd "$hb_rootdir";$hb_archbin $hb_archopt "$hb_filename" --files-from "$hb_flst")
+   (cd "$hb_rootdir" || exit; $hb_archbin $hb_archopt "$hb_filename" --files-from "$hb_flst")
 fi
-[ "$hb_rmflst" != 'yes' ] || rm -fR "$hb_rootdir/$hb_flst"
+[ "$hb_rmflst" != 'yes' ] || rm -fR "${hb_rootdir:?}/$hb_flst"
 
-cd "$hb_currdir"
+cd "$hb_currdir" || exit

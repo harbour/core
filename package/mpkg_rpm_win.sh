@@ -53,7 +53,7 @@ fi
 HB_CCPREFIX="$TARGET-"
 HB_CCPATH="$MINGW_DIR/bin"
 
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit
 . ./mpkg_ver.sh
 hb_ver=$(get_hbver)
 hb_verstat=$(get_hbverstat)
@@ -115,7 +115,8 @@ then
       else
          RPMBLD='rpm'
       fi
-      cd "${RPMDIR}/SPECS"
+      cd "${RPMDIR}/SPECS" || exit
+      # shellcheck disable=SC2086
       ${RPMBLD} -ba harbour-win.spec ${INST_PARAM}
    else
       echo "Cannot find archive file: ${hb_filename}"

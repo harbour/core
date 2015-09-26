@@ -152,7 +152,7 @@ done
 
 if [ -z "${TOINST_LST}" ] || [ "${FORCE}" = 'yes' ]
 then
-   cd "$(dirname "$0")"
+   cd "$(dirname "$0")" || exit
    . ./mpkg_src.sh
    stat="$?"
    if [ -z "${hb_filename}" ]
@@ -184,7 +184,8 @@ then
       else
          RPMBLD='rpm'
       fi
-      cd "${RPMDIR}/SPECS"
+      cd "${RPMDIR}/SPECS" || exit
+      # shellcheck disable=SC2086
       ${RPMBLD} -ba harbour.spec ${INST_PARAM}
    else
       echo "Cannot find archive file: ${hb_filename}"
