@@ -166,8 +166,8 @@ STATIC s_hActions := { ;
    "server-status"   => @Handler_ServerStatus() }
 
 STATIC s_hHandlers := { ;
-   "hrb"            => "hrb-script", ;
-   "exe"            => "cgi-script", ;
+   ".hrb"           => "hrb-script", ;
+   ".exe"           => "cgi-script", ;
    "/serverstatus"  => "server-status" }
 
 // STATIC s_lAcceptPathInfo   := .T.
@@ -1928,7 +1928,7 @@ STATIC FUNCTION uproc_default()
                ENDIF
             ENDDO
 
-            // hb_ToOutDebug( "Uscita: cBaseFile: %s, cPathInfo: %s\n\r", cBaseFile, cPathInfo )
+            // hb_ToOutDebug( "Output: cBaseFile: %s, cPathInfo: %s\n\r", cBaseFile, cPathInfo )
 
             // Found a script file name
             IF lFound .AND. ! Empty( cPathInfo )
