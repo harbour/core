@@ -112,8 +112,7 @@ REQUEST gdImageChar
 #endif
 
 #define APP_NAME      "uhttpd"
-#define APP_VER_NUM   "0.4.4"
-#define APP_VERSION   APP_VER_NUM + APP_GD_SUPPORT + APP_DT_SUPPORT
+#define APP_VERSION   hb_Version() + APP_GD_SUPPORT + APP_DT_SUPPORT
 
 // default values - they can changes using line command switch or ini file
 
@@ -541,7 +540,7 @@ PROCEDURE Main( ... )
       WriteToConsole( "Starting main loop" )
 
       IF s_lConsole
-         hb_DispOutAt( 1, 5, hb_StrFormat( "%1$s - web server - v. %2$s", APP_NAME, APP_VERSION ) )
+         hb_DispOutAt( 1, 5, hb_StrFormat( "%1$s - web server - %2$s", APP_NAME, APP_VERSION ) )
          hb_DispOutAt( 4, 5, hb_StrFormat( "Server listening (Port: %1$d): ...", nPort ) )
          hb_DispOutAt( 10, 9, "Waiting." )
       ENDIF
@@ -2111,9 +2110,9 @@ STATIC FUNCTION HRB_LoadFromFile( cFile )
 STATIC PROCEDURE Help()
 
    ?
-   ? "(C) 2009 Francesco Saverio Giudice <info@fsgiudice.com>"
+   ? "Copyright (c) 2009, Francesco Saverio Giudice <info@fsgiudice.com>"
    ?
-   ? APP_NAME + " - web server - v. " + APP_VERSION
+   ? APP_NAME, "- web server -", APP_VERSION
    ? "Based on original work of Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>"
    ?
    ? "Parameters: (all optionals)"
