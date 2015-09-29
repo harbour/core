@@ -2320,8 +2320,8 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
                PHB_ITEM pItem = hb_stackAllocItem();
 
                pItem->type = HB_IT_TIMESTAMP;
-               pItem->item.asDateTime.julian = ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] );;
-               pItem->item.asDateTime.time = ( long ) HB_PCODE_MKLONG( &pCode[ 5 ] );;
+               pItem->item.asDateTime.julian = ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] );
+               pItem->item.asDateTime.time = ( long ) HB_PCODE_MKLONG( &pCode[ 5 ] );
                pCode += 9;
             }
             break;
@@ -3087,7 +3087,7 @@ static void hb_vmAddInt( PHB_ITEM pResult, HB_LONG lAdd )
       else
       {
          pResult->type = HB_IT_DOUBLE;
-         pResult->item.asDouble.value = ( double ) nVal + lAdd;;
+         pResult->item.asDouble.value = ( double ) nVal + lAdd;
          pResult->item.asDouble.length = HB_DBL_LENGTH( pResult->item.asDouble.value );
          pResult->item.asDouble.decimal = 0;
       }

@@ -2280,7 +2280,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_MOUSE, pEvParams );
 
             pWVT->bTracking = HB_FALSE;
-            return DefWindowProc( hWnd, message, wParam, lParam );;
+            return DefWindowProc( hWnd, message, wParam, lParam );
          }
 #endif
          case WM_NOTIFY:
