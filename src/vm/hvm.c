@@ -595,23 +595,26 @@ void hb_vmLock( void )
 
 void hb_vmLockForce( void )
 {
-   HB_STACK_TLS_PRELOAD
-
-   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   if( s_fHVMActive )
    {
-      if( hb_stackLock() == 0 )
+      HB_STACK_TLS_PRELOAD
+
+      if( hb_stackId() )   /* check if thread has associated HVM stack */
       {
-         HB_VM_LOCK();
-         if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+         if( hb_stackLock() == 0 )
          {
-            if( ! hb_stackQuitState() )
+            HB_VM_LOCK();
+            if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
             {
-               hb_stackSetQuitState( HB_TRUE );
-               hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+               if( ! hb_stackQuitState() )
+               {
+                  hb_stackSetQuitState( HB_TRUE );
+                  hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+               }
             }
+            s_iRunningCount++;
+            HB_VM_UNLOCK();
          }
-         s_iRunningCount++;
-         HB_VM_UNLOCK();
       }
    }
 }
@@ -795,8 +798,6 @@ static void hb_vmStackInit( PHB_THREADSTATE pState )
       hb_vmStackAdd( pState );
    }
    HB_VM_UNLOCK();
-
-   hb_vmLock();
 }
 
 static void hb_vmStackRelease( void )
@@ -879,6 +880,7 @@ void hb_vmThreadInit( void * Cargo )
       pState = hb_threadStateNew();
 
    hb_vmStackInit( pState );  /* initialize HVM thread stack */
+   hb_vmLock();
    {
       HB_STACK_TLS_PRELOAD
 
@@ -1113,6 +1115,9 @@ void hb_vmInit( HB_BOOL bStartMainProc )
 
    /* enable executing PCODE (HVM reenter request) */
    s_fHVMActive = HB_TRUE;
+
+   /* lock main HVM thread */
+   hb_vmLock();
 
 #ifndef HB_NO_DEBUG
    s_pDynsDbgEntry = hb_dynsymFind( "__DBGENTRY" );
