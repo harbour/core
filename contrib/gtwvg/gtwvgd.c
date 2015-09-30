@@ -2325,7 +2325,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_MOUSE, pEvParams );
 
             pWVT->bTracking = HB_FALSE;
-            return DefWindowProc( hWnd, message, wParam, lParam );;
+            return DefWindowProc( hWnd, message, wParam, lParam );
          }
 #endif
          case WM_NOTIFY:
@@ -2565,7 +2565,7 @@ static HWND hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT, HB_BOOL bResizable )
 
                if( pWVT->pPP->bRowCols )
                {
-                  iWidth = ( iBorderLeft * 2 ) + ( pWVT->COLS * pWVT->PTEXTSIZE.x ) + ( iBorderLeft * 2 );;
+                  iWidth = ( iBorderLeft * 2 ) + ( pWVT->COLS * pWVT->PTEXTSIZE.x ) + ( iBorderLeft * 2 );
                   iHeight = iTitlebarHeight + iBorderLeft + ( pWVT->ROWS * pWVT->PTEXTSIZE.y ) + iTitlebarHeight + iBorderLeft;
                   pWVT->pPP->width = iWidth;
                   pWVT->pPP->height = iHeight;

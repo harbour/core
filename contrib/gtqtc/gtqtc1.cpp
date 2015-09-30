@@ -3072,11 +3072,11 @@ void QTConsole::mouseDoubleClickEvent( QMouseEvent * event )
          break;
 
       case Qt::RightButton:
-         iKey = K_RDBLCLK;;
+         iKey = K_RDBLCLK;
          break;
 
       case Qt::MidButton:
-         iKey = K_MDBLCLK;;
+         iKey = K_MDBLCLK;
          break;
 
       default:

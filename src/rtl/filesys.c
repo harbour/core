@@ -3358,7 +3358,7 @@ int hb_fsLockTest( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
 #  if defined( HB_USE_LARGEFILE64 )
       struct flock64 lock_info;
 
-      lock_info.l_type   = ( uiMode & FLX_SHARED ) ? F_RDLCK : F_WRLCK;;
+      lock_info.l_type   = ( uiMode & FLX_SHARED ) ? F_RDLCK : F_WRLCK;
       lock_info.l_start  = nStart;
       lock_info.l_len    = nLength;
       lock_info.l_whence = SEEK_SET;
@@ -3368,7 +3368,7 @@ int hb_fsLockTest( HB_FHANDLE hFileHandle, HB_FOFFSET nStart,
 #  else
       struct flock lock_info;
 
-      lock_info.l_type   = ( uiMode & FLX_SHARED ) ? F_RDLCK : F_WRLCK;;
+      lock_info.l_type   = ( uiMode & FLX_SHARED ) ? F_RDLCK : F_WRLCK;
       lock_info.l_start  = nStart;
       lock_info.l_len    = nLength;
       lock_info.l_whence = SEEK_SET;

@@ -320,7 +320,7 @@ static HB_BOOL file_read( FILE * stream, char * string, int * iCharCount )
 
    memset( string, ' ', MAX_READ );
 
-   for(;; )
+   for( ;; )
    {
       ch = fgetc( stream );
 

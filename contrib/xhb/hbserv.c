@@ -306,7 +306,7 @@ static void * s_signalListener( void * my_stack )
    pthread_setcanceltype( PTHREAD_CANCEL_DEFERRED, NULL );
    pthread_setcancelstate( PTHREAD_CANCEL_ENABLE, NULL );
 
-   for(;; )
+   for( ;; )
    {
       /* allow safe cancelation */
       HB_STACK_UNLOCK;

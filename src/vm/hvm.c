@@ -2341,8 +2341,8 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
                PHB_ITEM pItem = hb_stackAllocItem();
 
                pItem->type = HB_IT_TIMESTAMP;
-               pItem->item.asDateTime.julian = ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] );;
-               pItem->item.asDateTime.time = ( long ) HB_PCODE_MKLONG( &pCode[ 5 ] );;
+               pItem->item.asDateTime.julian = ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] );
+               pItem->item.asDateTime.time = ( long ) HB_PCODE_MKLONG( &pCode[ 5 ] );
                pCode += 9;
             }
             break;
@@ -3108,7 +3108,7 @@ static void hb_vmAddInt( PHB_ITEM pResult, HB_LONG lAdd )
       else
       {
          pResult->type = HB_IT_DOUBLE;
-         pResult->item.asDouble.value = ( double ) nVal + lAdd;;
+         pResult->item.asDouble.value = ( double ) nVal + lAdd;
          pResult->item.asDouble.length = HB_DBL_LENGTH( pResult->item.asDouble.value );
          pResult->item.asDouble.decimal = 0;
       }
@@ -12374,6 +12374,24 @@ HB_FUNC( __VMMODULESVERIFY )
    HB_STACK_TLS_PRELOAD
 
    hb_vmVerifySymbols( hb_stackReturnItem() );
+}
+
+HB_FUNC( __VMCOUNTTHREADS )
+{
+   int iStacks, iThreads;
+   HB_STACK_TLS_PRELOAD
+
+   HB_VM_LOCK();
+
+   iStacks = s_iStackCount;
+   iThreads = s_iRunningCount;
+
+   HB_VM_UNLOCK();
+
+   hb_storni( iStacks, 1 );
+   hb_storni( iThreads, 2 );
+
+   hb_retni( iThreads );
 }
 
 HB_FUNC( __BREAKBLOCK )
