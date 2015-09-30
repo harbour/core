@@ -12368,6 +12368,29 @@ HB_FUNC( __VMMODULESVERIFY )
    hb_vmVerifySymbols( hb_stackReturnItem() );
 }
 
+HB_FUNC( __VMCOUNTTHREADS )
+{
+   int iStacks, iThreads;
+
+#if defined( HB_MT_VM )
+   HB_STACK_TLS_PRELOAD
+
+   HB_VM_LOCK();
+
+   iStacks = s_iStackCount;
+   iThreads = s_iRunningCount;
+
+   HB_VM_UNLOCK();
+#else
+   iStacks = iThreads = 0;
+#endif
+
+   hb_storni( iStacks, 1 );
+   hb_storni( iThreads, 2 );
+
+   hb_retni( iThreads );
+}
+
 HB_FUNC( __BREAKBLOCK )
 {
    hb_itemReturn( hb_breakBlock() );
