@@ -485,8 +485,8 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
                              hb_keyChar( nKey ) ) ) > 0
          ::lDirty := .T.
          oLine := ::aText[ ::nRow ]
-         IF ::nCol > hb_ULen( oLine:cText ) + 1
-            oLine:cText += Space( ::nCol - hb_ULen( oLine:cText ) - 1 )
+         IF ( nPos := ::nCol - hb_ULen( oLine:cText ) - 1 ) > 0
+            oLine:cText += Space( nPos )
          ENDIF
          oLine:cText := hb_UStuff( oLine:cText, ::nCol, ;
                                iif( Set( _SET_INSERT ), 0, 1 ), cKey )
@@ -644,27 +644,25 @@ METHOD IdleHook() CLASS HBEditor
 METHOD ReformParagraph() CLASS HBEditor
 
    LOCAL lNext := .T.
-   LOCAL cLine := ""
-   LOCAL nLine
-   LOCAL nLines
-   LOCAL aPos
+   LOCAL cText := ""
+   LOCAL nLine, nRow, nCol
 
+   nCol := Min( hb_ULen( ::aText[ ::nRow ]:cText ) + 1, ::nCol )
    DO WHILE lNext .AND. ::nRow <= Len( ::aText )
-      cLine += ::aText[ ::nRow ]:cText
+      cText += ::aText[ ::nRow ]:cText
       lNext := ::aText[ ::nRow ]:lSoftCR
       ::RemoveLine( ::nRow )
    ENDDO
-   nLines := MLCount( cLine, ::nWordWrapCol + 1, ::nTabWidth )
-   aPos := MPosToLC( cLine, ::nWordWrapCol + 1, ::nCol, ::nTabWidth )
-   IF ::nRow + aPos[ 1 ] - 1 > ::LineCount + nLines
-      ++nLines
-   ENDIF
-   FOR nLine := 1 TO nLines
-      ::InsertLine( MemoLine( cLine, ::nWordWrapCol + 1, nLine, ::nTabWidth,,, .F. ), ;
-                    nLine < nLines, ::nRow + nLine - 1 )
-   NEXT
 
-   RETURN ::GoTo( ::nRow + aPos[ 1 ] - 1, aPos[ 2 ] + 1, _REFRESH_ALL )
+   nLine := ::nRow
+   hb_MLEval( cText, {| cLine, lSoftCR | ::InsertLine( cLine, lSoftCR, nLine++ ) }, ;
+              ::nWordWrapCol + 1, ::nTabWidth,, nCol, @nRow, @nCol )
+   IF nRow > 0
+      ::nRow += nRow - 1
+      ::nCol := nCol + 1
+   ENDIF
+
+   RETURN ::GoTo( ::nRow, ::nCol, _REFRESH_ALL )
 
 // Changes insert state and insertion / overstrike mode of editor
 METHOD InsertState( lInsState ) CLASS HBEditor
@@ -744,21 +742,11 @@ METHOD hitTest( nMRow, nMCol ) CLASS HBEditor
 STATIC FUNCTION Text2Array( cText, nWordWrapCol, nTabWidth )
 
    LOCAL aArray := {}
-   LOCAL cLine
-   LOCAL nLines
-   LOCAL nLine
 
-   FOR EACH cLine IN hb_ATokens( cText, .T. )
-      IF nWordWrapCol != NIL .AND. hb_ULen( cLine ) > nWordWrapCol
-         nLines := MLCount( cLine, nWordWrapCol + 1, nTabWidth )
-         FOR nLine := 1 TO nLines
-            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol + 1, nLine, nTabWidth,,, .F. ), ;
-                                            nLine < nLines ) )
-         NEXT
-      ELSE
-         AAdd( aArray, HBTextLine():New( cLine, .F. ) )
-      ENDIF
-   NEXT
+   hb_MLEval( cText, {| cLine, lSoftCR | AAdd( aArray, HBTextLine():New( cLine, lSoftCR ) ) }, ;
+              iif( nWordWrapCol != NIL, nWordWrapCol + 1, 0xFFFF ), ;
+              nTabWidth, nWordWrapCol != NIL )
+
    IF Empty( aArray )
       AAdd( aArray, HBTextLine():New() )
    ENDIF

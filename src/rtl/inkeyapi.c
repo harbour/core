@@ -508,3 +508,19 @@ int hb_inkeyKeyVal( int iKey )
 
    return iValue;
 }
+
+int hb_inkeyKeyExt( int iKey )
+{
+   int iValue = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeyKeyVal(%d)", iKey ) );
+
+   if( HB_INKEY_ISKEY( iKey ) )
+   {
+      iValue = HB_INKEY_VALUE( iKey );
+      if( iValue < 1 || iValue > ( int ) HB_SIZEOFARRAY( s_transKeyFun ) )
+         iValue = 0;
+   }
+
+   return iValue;
+}

@@ -757,10 +757,6 @@ HB_BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, HB_ULON
 
    return HB_COND_TIMEDWAIT( cond, mutex, ulMilliSec ) != 0;
 
-#elif defined( HB_TASK_THREAD )
-
-   return HB_COND_WAIT( cond, mutex ) != 0;
-
 #elif defined( HB_PTHREAD_API )
    struct timespec ts;
 

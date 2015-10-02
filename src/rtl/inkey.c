@@ -258,6 +258,11 @@ HB_FUNC( HB_KEYSTD )
    hb_retni( hb_inkeyKeyStd( hb_parni( 1 ) ) );
 }
 
+HB_FUNC( HB_KEYEXT )
+{
+   hb_retni( hb_inkeyKeyExt( hb_parni( 1 ) ) );
+}
+
 HB_FUNC( HB_KEYMOD )
 {
    hb_retni( hb_inkeyKeyMod( hb_parni( 1 ) ) );
