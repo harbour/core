@@ -48,6 +48,7 @@
 #include "hbapiitm.h"
 #include "hbapicdp.h"
 #include "hbset.h"
+#include "hbvm.h"
 
 #define HB_EOL_BUFFER_SIZE    4
 
@@ -64,7 +65,6 @@ typedef struct
    HB_SIZE        nLineLength;
    HB_SIZE        nTabSize;
    HB_BOOL        fWordWrap;
-   HB_BOOL        fPos;
    int            iEOLs;
    PHB_EOL_INFO   pEOLs;
    PHB_CODEPAGE   cdp;
@@ -152,12 +152,11 @@ static HB_BOOL hb_mlInit( PHB_MLC_INFO pMLC, int iParAdd )
    if( pMLC->pszString && nSize > 0 )
    {
       pMLC->nOffset = pMLC->nMaxCol = pMLC->nMaxPos = pMLC->nCol = 0;
-      pMLC->fPos = HB_FALSE;
 
       pMLC->nLineLength = nSize;
       pMLC->nLen = hb_parclen( 1 );
 
-      pMLC->nTabSize = hb_parnldef( 3 + iParAdd, 4 );
+      pMLC->nTabSize = hb_parnsdef( 3 + iParAdd, 4 );
       pMLC->fWordWrap = hb_parldef( 4 + iParAdd, HB_TRUE );
 
 #ifdef HB_CLP_STRICT
@@ -223,6 +222,8 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
       {
          if( pMLC->nMaxCol && pMLC->nCol )
             break;
+         if( pMLC->nOffset < pMLC->nMaxPos )
+            nLastCol = pMLC->nCol;
          pMLC->nOffset += 2;
          if( ! pMLC->fWordWrap )
             break;
@@ -234,6 +235,8 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
       i = hb_mlEol( pMLC );
       if( i >= 0 )
       {
+         if( pMLC->nOffset < pMLC->nMaxPos )
+            nLastCol = pMLC->nCol;
          if( pMLC->nMaxCol == 0 )
             pMLC->nOffset += pMLC->pEOLs[ i ].nLen;
          break;
@@ -265,7 +268,7 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
       {
          if( pMLC->fWordWrap )
          {
-            if( pMLC->fPos && ( ch == ' ' || ch == HB_CHAR_HT ) )
+            if( ch == ' ' || ch == HB_CHAR_HT )
                break;
             else if( nBlankCol != 0 )
             {
@@ -279,7 +282,7 @@ static HB_SIZE hb_mlGetLine( PHB_MLC_INFO pMLC )
             pMLC->nOffset = nLastPos;
          break;
       }
-      if( ch == ' ' || ch == HB_CHAR_HT )
+      if( pMLC->nCol > 1 && ( ch == ' ' || ch == HB_CHAR_HT ) )
       {
          nBlankCol = pMLC->nCol;
          nBlankPos = pMLC->nOffset;
@@ -441,15 +444,19 @@ HB_FUNC( MLPOS )
    {
       if( hb_mlInit( &MLC, 1 ) )
       {
-         MLC.fPos = HB_TRUE;
-
-         while( --nLine && hb_mlGetLine( &MLC ) )
-            ;
-         nOffset = MLC.nOffset;
-         if( MLC.cdp )
-            nOffset = hb_cdpTextLen( MLC.cdp, MLC.pszString, nOffset );
-         if( MLC.nOffset < MLC.nLen )
-            ++nOffset;
+         while( --nLine )
+         {
+            if( ! hb_mlGetLine( &MLC ) )
+               break;
+         }
+         if( nLine <= 1 )
+         {
+            nOffset = MLC.nOffset;
+            if( MLC.cdp )
+               nOffset = hb_cdpTextLen( MLC.cdp, MLC.pszString, nOffset );
+            if( MLC.nOffset < MLC.nLen )
+               ++nOffset;
+         }
          hb_mlExit( &MLC );
       }
    }
@@ -474,10 +481,11 @@ HB_FUNC( MLCTOPOS )
       {
          if( MLC.nLineLength > 4 )
          {
-            MLC.fPos = HB_TRUE;
-
-            while( --nLine && hb_mlGetLine( &MLC ) )
-               ;
+            while( --nLine )
+            {
+               if( ! hb_mlGetLine( &MLC ) )
+                  break;
+            }
             if( nCol && nLine == 0 )
             {
                MLC.nMaxCol = nCol;
@@ -535,4 +543,166 @@ HB_FUNC( MPOSTOLC )
    hb_reta( 2 );
    hb_storvns( nLine, -1, 1 );
    hb_storvns( nCol, -1, 2 );
+}
+
+/* hb_MLEval( <cString>, <bCode>, [ <nLineLength>=79 ],
+ *            [ <nTabSize>=4 ], [ <lWrap>=.T. ],
+ *            [ <nPos> ], [ @<nRow> ], [ @<nCol> ] ) -> <nLines>
+ */
+HB_FUNC( HB_MLEVAL )
+{
+   const char * pszString = hb_parc( 1 );
+   PHB_ITEM pBlock = hb_param( 2, HB_IT_EVALITEM );
+   HB_ISIZ nSize = hb_parnsdef( 3, 79 );
+   HB_SIZE nRowPos = 0, nColPos = 0, nLines = 0;
+
+   if( pszString && pBlock && nSize > 0 )
+   {
+      HB_SIZE nOffset = 0;
+      HB_SIZE nLineLength = nSize;
+      HB_SIZE nLen = hb_parclen( 1 );
+      HB_SIZE nTabSize = hb_parnsdef( 4, 4 );
+      HB_SIZE nPos = hb_parns( 6 ) - 1;
+      HB_BOOL fWordWrap = hb_parldef( 5, 1 );
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      PHB_ITEM pLineItem = NULL, pSoftItem = NULL;
+      HB_BOOL fSoftCR;
+      char * pszLine;
+
+      if( ! HB_CDP_ISCHARIDX( cdp ) )
+         cdp = NULL;
+
+#ifdef HB_CLP_STRICT
+      if( nLineLength > 254 )
+         nLineLength = 79;
+#else
+      if( nLineLength > 0xFFFF )
+         nLineLength = 0xFFFF;
+#endif
+      if( nTabSize >= nLineLength )
+         nTabSize = nLineLength - 1;
+      if( nTabSize == 0 )
+         nTabSize = 1;
+
+      pszLine = ( char * ) hb_xgrab( nLineLength + 1 );
+
+      do
+      {
+         HB_SIZE nBlankCol = 0, nBlankPos = 0, nBlankDst = 0, nCol = 0, nDst = 0;
+
+         fSoftCR = HB_FALSE;
+         ++nLines;
+         do
+         {
+            HB_SIZE nRepl;
+            HB_WCHAR ch;
+
+            if( pszString[ nOffset ] == HB_CHAR_SOFT1 &&
+                pszString[ nOffset + 1 ] == HB_CHAR_SOFT2 )
+            {
+               nOffset += 2;
+               if( fWordWrap )
+                  continue;
+               break;
+            }
+            else if( pszString[ nOffset ] == HB_CHAR_CR )
+            {
+               ++nOffset;
+               if( pszString[ nOffset ] == HB_CHAR_LF )
+                  ++nOffset;
+               break;
+            }
+            else if( pszString[ nOffset ] == HB_CHAR_LF )
+            {
+               ++nOffset;
+               if( pszString[ nOffset ] == HB_CHAR_CR )
+                  ++nOffset;
+               break;
+            }
+
+            if( cdp )
+            {
+               if( ! HB_CDPCHAR_GET( cdp, pszString, nLen, &nOffset, &ch ) )
+                  continue;
+               if( ! HB_CDPCHAR_PUT( cdp, pszLine, nLineLength + 1, &nDst, ch ) )
+                  break;
+            }
+            else
+               ch = pszLine[ nDst++ ] = pszString[ nOffset++ ];
+
+            if( nRowPos == 0 && nOffset > nPos )
+            {
+               nRowPos = nLines;
+               nColPos = nCol;
+            }
+
+            if( ch == ' ' || ch == HB_CHAR_HT )
+            {
+               nBlankPos = nOffset;
+               nBlankCol = nCol;
+               nBlankDst = nDst;
+            }
+
+            nRepl = ch == HB_CHAR_HT ? nTabSize - ( nCol % nTabSize ) -1 : 0;
+            for( ;; )
+            {
+               if( ++nCol >= nLineLength )
+               {
+                  if( fWordWrap && nBlankCol > 0 )
+                  {
+                     nOffset = nBlankPos;
+                     nCol = nBlankCol;
+                     nDst = nBlankDst;
+                     if( nOffset <= nPos )
+                        nRowPos = nColPos = 0;
+                  }
+                  fSoftCR = HB_TRUE;
+                  break;
+               }
+               if( nRepl-- == 0 )
+                  break;
+               if( !cdp )
+                  pszLine[ nDst++ ] = ch;
+               else if( ! HB_CDPCHAR_PUT( cdp, pszLine, nLineLength + 1, &nDst, ch ) )
+                  break;
+            }
+         }
+         while( ! fSoftCR && nOffset < nLen );
+
+         if( nRowPos == 0 && nOffset >= nPos && ! fSoftCR )
+         {
+            nRowPos = nLines;
+            nColPos = nCol;
+         }
+
+         pLineItem = hb_itemPutCL( pLineItem, pszLine, nDst );
+         pSoftItem = hb_itemPutL( pSoftItem, fSoftCR );
+         hb_vmEvalBlockV( pBlock, 2, pLineItem, pSoftItem );
+      }
+      while( nOffset < nLen && hb_vmRequestQuery() == 0 );
+
+      if( nRowPos == 0 && nOffset >= nPos )
+      {
+         nRowPos = nLines + 1;
+         nColPos = 0;
+      }
+
+      if( fSoftCR )
+      {
+         pLineItem = hb_itemPutC( pLineItem, NULL );
+         pSoftItem = hb_itemPutL( pSoftItem, HB_FALSE );
+         hb_vmEvalBlockV( pBlock, 2, pLineItem, pSoftItem );
+      }
+
+      hb_itemRelease( pLineItem );
+      hb_itemRelease( pSoftItem );
+      hb_xfree( pszLine );
+   }
+
+   if( hb_vmRequestQuery() == 0 )
+   {
+      hb_storns( nRowPos, 7 );
+      hb_storns( nColPos, 8 );
+      hb_retns( nLines );
+   }
 }

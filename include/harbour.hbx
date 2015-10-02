@@ -629,6 +629,7 @@ DYNAMIC hb_jsonEncode
 DYNAMIC hb_keyChar
 DYNAMIC hb_keyClear
 DYNAMIC hb_keyCode
+DYNAMIC hb_keyExt
 DYNAMIC hb_keyIns
 DYNAMIC hb_keyLast
 DYNAMIC hb_keyMod
@@ -673,6 +674,7 @@ DYNAMIC hb_MethodName
 DYNAMIC hb_MGetBounds
 DYNAMIC hb_MilliSeconds
 DYNAMIC hb_Minute
+DYNAMIC hb_MLEval
 DYNAMIC hb_MMiddleDown
 DYNAMIC hb_mtvm
 DYNAMIC hb_mutexCreate
