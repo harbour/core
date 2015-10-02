@@ -212,6 +212,8 @@ METHOD IdleHook() CLASS HBMemoEditor
 
 METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
 
+   LOCAL cKeyStd
+
    SWITCH nUdfReturn
    CASE ME_DEFAULT
 
