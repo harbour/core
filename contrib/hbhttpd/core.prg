@@ -976,7 +976,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
       "Error: " + oErr:subsystem + "/" + ErrDescCode( oErr:genCode ) + "(" + hb_ntos( oErr:genCode ) + ") " + ;
       hb_ntos( oErr:subcode ) + hb_eol()
 
-   IF ! Empty( oErr:filename );      cRet += "File: " + oErr:filename + hb_eol()
+   IF ! HB_ISNULL( oErr:filename );  cRet += "File: " + oErr:filename + hb_eol()
    ENDIF
    IF ! Empty( oErr:description );   cRet += "Description: " + oErr:description + hb_eol()
    ENDIF

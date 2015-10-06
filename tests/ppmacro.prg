@@ -35,7 +35,7 @@ STATIC FUNCTION ErrMsg( oErr )
       "/" + hb_ntos( oErr:subCode ), "/???" ) + ;
       iif( HB_ISSTRING( oErr:description ), ;
       " " + oErr:description, "" ) + ;
-      iif( ! Empty( oErr:filename ), ;
+      iif( ! HB_ISNULL( oErr:filename ), ;
       " " + oErr:filename, ;
       iif( ! Empty( oErr:operation ), ;
       " " + oErr:operation, "" ) )

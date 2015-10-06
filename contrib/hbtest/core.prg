@@ -218,7 +218,7 @@ STATIC FUNCTION ErrorMessage( oError )
    IF ! Empty( oError:operation )
       cMessage += "(" + oError:operation + ") "
    ENDIF
-   IF ! Empty( oError:filename )
+   IF ! HB_ISNULL( oError:filename )
       cMessage += "<" + oError:filename + "> "
    ENDIF
    IF HB_ISNUMERIC( oError:osCode )

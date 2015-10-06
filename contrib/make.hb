@@ -57,7 +57,7 @@ PROCEDURE Main( ... )
 
    s_cBase := ""
    s_cReBase := ""
-   IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+   IF HB_ISNULL( GetEnv( "HB_HOST_BIN_DIR" ) )
       s_cHome := StrTran( hb_DirBase(), hb_ps(), "/" )
       s_cRoot := s_cHome + "../"
    ELSE
@@ -87,7 +87,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    /* Build */
-   IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+   IF HB_ISNULL( GetEnv( "HB_HOST_BIN_DIR" ) )
       Standalone( aParams, hProjectList )
    ELSE
       GNUMake( aParams, hProjectList )
@@ -196,7 +196,7 @@ STATIC PROCEDURE Standalone( aParams, hProjectList )
 
    build_projects( nAction, hProjectList, hProjectReqList, cOptionsUser, .T. )
 
-   IF ! Empty( cCustomDir )
+   IF ! HB_ISNULL( cCustomDir )
       hb_cwd( cCustomDir )
    ENDIF
 
@@ -233,7 +233,7 @@ STATIC PROCEDURE GNUMake( aParams, hProjectList )
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
-      Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+      HB_ISNULL( GetEnv( "HB_HOST_BIN_DIR" ) )
       ErrorLevel( 9 )
       RETURN
    ENDIF
@@ -594,7 +594,7 @@ STATIC FUNCTION mk_hbd( cDir )
    LOCAL aErrMsg
    LOCAL aEntry
 
-   IF ! Empty( cDocDir := GetEnv( "HB_INSTALL_DOC" ) ) .AND. ! cDocDir == "no"
+   IF ! HB_ISNULL( cDocDir := GetEnv( "HB_INSTALL_DOC" ) ) .AND. ! cDocDir == "no"
 
       IF Empty( cName := DirGetName( cDir ) )
          cName := "harbour"
@@ -625,7 +625,7 @@ STATIC FUNCTION DirGetName( cDir )
 
    LOCAL cName := hb_FNameName( hb_DirSepDel( cDir ) )
 
-   IF Empty( cName ) .OR. cName == "." .OR. cName == ".."
+   IF HB_ISNULL( cName ) .OR. cName == "." .OR. cName == ".."
       RETURN ""
    ENDIF
 
@@ -718,17 +718,18 @@ STATIC FUNCTION AddProject( hProjectList, cFileName )
    LOCAL cName
    LOCAL cExt
 
-   IF ! Empty( cFileName )
+   IF ! HB_ISNULL( cFileName )
 
       cFileName := hb_DirSepToOS( AllTrim( cFileName ) )
 
       hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
 
-      IF Empty( cName )
+      DO CASE
+      CASE HB_ISNULL( cName )
          cName := DirGetName( cDir )
-      ELSEIF Empty( cDir )
+      CASE HB_ISNULL( cDir )
          cDir := cName
-      ENDIF
+      ENDCASE
       IF Empty( cExt )
          cExt := ".hbp"
       ENDIF
@@ -766,7 +767,7 @@ STATIC PROCEDURE LoadProjectListAutomatic( hProjectList, cDir )
          ENDIF
          IF hb_vfExists( tmp := ( cDir + aFile[ F_NAME ] + hb_ps() + "makesub.txt" ) )
             FOR EACH tmp IN hb_ATokens( hb_MemoRead( tmp ), .T. )
-               IF ! Empty( tmp )
+               IF ! HB_ISNULL( tmp )
                   AddProject( hProjectList, aFile[ F_NAME ] + hb_ps() + hb_DirSepToOS( tmp ) )
                ENDIF
             NEXT

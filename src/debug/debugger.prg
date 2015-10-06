@@ -2348,7 +2348,7 @@ METHOD PROCEDURE RestoreAppState() CLASS HBDebugger
 
 METHOD PROCEDURE RestoreSettings( cFileName ) CLASS HBDebugger
 
-   IF Empty( cFileName )
+   IF ! HB_ISSTRING( cFileName ) .OR. HB_ISNULL( cFileName )
       ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
       IF LastKey() == K_ESC
          RETURN
@@ -2426,7 +2426,7 @@ METHOD PROCEDURE SaveSettings( cFileName ) CLASS HBDebugger
    LOCAL oWnd
    LOCAL aBreak, aWatch
 
-   IF Empty( cFileName )
+   IF ! HB_ISSTRING( cFileName ) .OR. HB_ISNULL( cFileName )
       ::cSettingsFileName := ::InputBox( "File name", ::cSettingsFileName )
       IF LastKey() == K_ESC
          RETURN

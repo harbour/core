@@ -2809,14 +2809,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          /* Command-line option were already processed in the first pass, ignore those. */
 
-         IF ! Empty( aParam[ _PAR_cFileName ] )
+         IF ! HB_ISNULL( aParam[ _PAR_cFileName ] )
             _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored option valid only on command-line: %1$s" ), ParamToString( aParam ) ) )
          ENDIF
 
       /* -env options used inside makefiles */
       CASE hb_LeftEq( cParamL, "-env:" )
 
-         IF ! Empty( aParam[ _PAR_cFileName ] )
+         IF ! HB_ISNULL( aParam[ _PAR_cFileName ] )
             ProcEnvOption( SubStr( cParam, 5 + 1 ) )
          ENDIF
 
@@ -3455,7 +3455,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-instfile=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF inst_split_arg( cParam, @tmp, @cParam )
-            FOR EACH cParam IN FN_Expand( PathMakeAbsolute( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+            FOR EACH cParam IN FN_Expand( PathMakeAbsolute( cParam, aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
                AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { tmp, cParam } )
             NEXT
          ELSE
@@ -3651,7 +3651,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hb_LeftEq( cParamL, "-pi=" )
 
          cParam := hb_DirSepToOS( MacroProc( hbmk, SubStr( cParam, Len( "-pi=" ) + 1 ), aParam[ _PAR_cFileName ] ) )
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( cParam, aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aPLUGINPars ], cParam )
          NEXT
 
@@ -3910,7 +3910,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cParam := PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             IF Empty( HBC_FindAndProcess( hbmk, cParam ) )
-               IF Empty( aParam[ _PAR_cFileName ] )
+               IF HB_ISNULL( aParam[ _PAR_cFileName ] )
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), tmp1 ) )
                ELSE
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, aParam[ _PAR_cFileName ] ) )
@@ -3933,21 +3933,21 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hb_FNameExt( cParamL ) == ".prg" .OR. ;
            hb_FNameExt( cParamL ) == ".hb"
 
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aPRG ], cParam )
             hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
          NEXT
 
       CASE hb_FNameExt( cParamL ) == ".ch"
 
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAddNew( hbmk[ _HBMK_aCH ], cParam )
          NEXT
 #endif
 
       CASE hb_FNameExt( cParamL ) == ".rc"
 
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aRESSRC ], cParam )
          NEXT
 
@@ -3959,11 +3959,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             /* For MinGW/EMX GCC family add .res files as source input, as they
                will need to be converted to coff format with windres (just
                like plain .rc files) before feeding them to gcc. */
-            FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+            FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
                AAdd( hbmk[ _HBMK_aRESSRC ], cParam )
             NEXT
          ELSE
-            FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+            FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
                AAdd( hbmk[ _HBMK_aRESCMP ], cParam )
             NEXT
          ENDIF
@@ -3975,14 +3975,14 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
       CASE hb_FNameExt( cParamL ) == ".def"
 
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aDEF ], cParam )
          NEXT
 
       CASE hb_FNameExt( cParamL ) == ".o" .OR. ;
            hb_FNameExt( cParamL ) == ".obj"
 
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aOBJUSER ], cParam )
             hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
          NEXT
@@ -3993,7 +3993,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
            hb_FNameExt( cParamL ) == ".cx" .OR. ;
            hb_FNameExt( cParamL ) == ".mm"
 
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aCPP ], cParam )
             hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
          NEXT
@@ -4001,21 +4001,21 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hb_FNameExt( cParamL ) == ".c" .OR. ;
            hb_FNameExt( cParamL ) == ".m"
 
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aC ], cParam )
             hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
          NEXT
 
       CASE hb_FNameExt( cParamL ) == ".d"
 
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             deplst_read( hbmk, hbmk[ _HBMK_hDEPTS ], cParam )
          NEXT
 
       CASE hb_FNameExt( cParamL ) == ".po" .OR. ;
            hb_FNameExt( cParamL ) == ".pot"
 
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( hb_DirSepToOS( cParam ), aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aPO ], cParam )
          NEXT
 
@@ -4027,7 +4027,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE hb_FNameExt( cParamL ) $ hbmk[ _HBMK_hPLUGINExt ]
 
          cParam := hb_DirSepToOS( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ) )
-         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( cParam, aParam[ _PAR_cFileName ] ), HB_ISNULL( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aPLUGINPars ], cParam )
          NEXT
 
@@ -8522,8 +8522,8 @@ STATIC PROCEDURE PointlessPairWarning( hbmk, /* @ */ aParam1, aParam2, cParam2L,
    RETURN
 
 STATIC FUNCTION ParamToString( aParam )
-   RETURN iif( Empty( aParam[ _PAR_cFileName ] ), ;
-      hb_StrFormat( "'%1$s'", aParam[ _PAR_cParam ] ), ; /* on the command-line */
+   RETURN iif( HB_ISNULL( aParam[ _PAR_cFileName ] ), ;
+      hb_StrFormat( "'%1$s'", aParam[ _PAR_cParam ] ), ;  /* on the command-line */
       hb_StrFormat( "'%1$s' in %2$s:%3$d", aParam[ _PAR_cParam ], aParam[ _PAR_cFileName ], aParam[ _PAR_nLine ] ) )
 
 STATIC FUNCTION InvalidOptionValue( hbmk, aParam )

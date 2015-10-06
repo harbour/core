@@ -394,7 +394,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    IF HB_ISSTRING( cApplicationRoot )
-      IF Empty( cApplicationRoot )
+      IF HB_ISNULL( cApplicationRoot )
          cApplicationRoot := "." + hb_ps()
       ENDIF
       cI := cApplicationRoot
@@ -2097,7 +2097,7 @@ STATIC FUNCTION HRB_LoadFromFileEncrypted( cFile, cKey )
 // Reverse function to save is:
 PROCEDURE HRB_SaveToFileEncrypted( cHrbBody, cKey, cEncFileName )
 
-   IF ! Empty( cHrbBody )
+   IF ! HB_ISNULL( cHrbBody )
       hb_MemoWrit( cEncFileName, sx_Encrypt( hb_ZCompress( cHrbBody ), cKey ) )
    ENDIF
 
@@ -2493,7 +2493,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
    // add either filename or operation
    DO CASE
-   CASE ! Empty( oError:filename )
+   CASE ! HB_ISNULL( oError:filename )
       cMessage += ": " + oError:filename
    CASE ! Empty( oError:operation )
       cMessage += ": " + oError:operation

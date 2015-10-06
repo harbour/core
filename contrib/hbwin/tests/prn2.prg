@@ -32,7 +32,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cFileName )
 
    LOCAL lDelete
 
-   IF Empty( cFileName )
+   IF HB_ISNULL( cFileName )
       hb_MemoWrit( cFileName := hb_FNameExtSet( __FILE__, ".prn" ), "Hello World!" + Chr( 12 ) )
       lDelete := .T.
    ELSE
