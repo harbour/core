@@ -101,7 +101,7 @@ static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char * szText, c
 {
    PHB_I18NTABLE  pI18n;
    PHB_I18NSTRING pString;
-   HB_UINT        uiLeft, uiRight, uiMiddle;
+   HB_UINT        uiLeft, uiRight;
 
    if( ! HB_COMP_PARAM->pI18n )
       HB_COMP_PARAM->pI18n = hb_compI18nCreate();
@@ -131,11 +131,8 @@ static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char * szText, c
 
    while( uiLeft < uiRight )
    {
-      int iCompare;
-
-      uiMiddle = ( uiLeft + uiRight ) >> 1;
-
-      iCompare = hb_compI18nCompare( &pI18n->pString[ uiMiddle ], szText, szContext );
+      HB_UINT uiMiddle = ( uiLeft + uiRight ) >> 1;
+      int iCompare = hb_compI18nCompare( &pI18n->pString[ uiMiddle ], szText, szContext );
 
       if( iCompare == 0 )
       {
@@ -185,7 +182,8 @@ void hb_compI18nAdd( HB_COMP_DECL, const char * szText, const char * szContext,
    hb_compI18nAddSingle( HB_COMP_PARAM, szText, szContext, szModule, uiLine );
 }
 
-void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount, const char * szContext, const char * szModule, HB_UINT uiLine )
+void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount,
+                           const char * szContext, const char * szModule, HB_UINT uiLine )
 {
    PHB_I18NSTRING pString = hb_compI18nAddSingle( HB_COMP_PARAM, szTexts[ 0 ], szContext, szModule, uiLine );
 
@@ -205,9 +203,9 @@ void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount
       for( ul = 1; ul < ulCount && pString->uiPlurals < HB_I18N_PLURAL_MAX; ++ul )
       {
          const char * szText = hb_compIdentifierNew( HB_COMP_PARAM, szTexts[ ul ], HB_IDENT_COPY );
-         HB_UINT uiPlural;
+         HB_UINT uiPlural = pString->uiPlurals;
 
-         for( uiPlural = 0; uiPlural < pString->uiPlurals; ++uiPlural )
+         while( uiPlural-- )
          {
             if( pString->szPlurals[ uiPlural ] == szText )
             {
