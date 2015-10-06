@@ -8506,7 +8506,7 @@ STATIC PROCEDURE PointlessPairWarning( hbmk, /* @ */ aParam1, aParam2, cParam2L,
       !( aParam1[ 4 ] == aParam2[ _PAR_cParam ] )  /* different effective option */
 
       _hbmk_OutErr( hbmk, hb_StrFormat( ;
-         iif( Empty( aParam1[ _PAR_cFileName ] ), ;
+         iif( HB_ISNULL( aParam1[ _PAR_cFileName ] ), ;
             I_( "Warning: Pointless usage of %1$s and %2$s options together on command-line." ), ;
             I_( "Warning: Pointless usage of %1$s and %2$s options together in '%3$s' line %4$d and %5$d." ) ), ;
          aParam1[ _PAR_cParam ], ;
@@ -10839,7 +10839,7 @@ STATIC FUNCTION hbmk_ErrorMessage( oError )
 
    /* add either filename or operation */
    DO CASE
-   CASE ! Empty( oError:filename )
+   CASE ! HB_ISNULL( oError:filename )
       cMessage += ": " + oError:filename
    CASE ! Empty( oError:operation )
       cMessage += ": " + oError:operation

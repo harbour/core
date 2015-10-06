@@ -288,7 +288,7 @@ STATIC PROCEDURE Merge( aFiles, cFileOut )
 
    LOCAL cErrorMsg
 
-   IF Empty( cFileOut )
+   IF ! HB_ISSTRING( cFileOut ) .OR. HB_ISNULL( cFileOut )
       cFileOut := hb_FNameExtSet( aFiles[ 1 ], ".po" )
    ELSE
       cFileOut := hb_FNameExtSetDef( cFileOut, ".po" )
@@ -302,7 +302,7 @@ STATIC PROCEDURE Merge( aFiles, cFileOut )
 
 STATIC PROCEDURE GenHBL( aFiles, cFileOut, lEmpty )
 
-   IF Empty( cFileOut )
+   IF ! HB_ISSTRING( cFileOut ) .OR. HB_ISNULL( cFileOut )
       cFileOut := hb_FNameExtSet( aFiles[ 1 ], ".hbl" )
    ELSE
       cFileOut := hb_FNameExtSetDef( cFileOut, ".hbl" )
@@ -320,7 +320,7 @@ STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
 
    LOCAL cErrorMsg
 
-   IF Empty( cFileOut )
+   IF ! HB_ISSTRING( cFileOut ) .OR. HB_ISNULL( cFileOut )
       cFileOut := hb_FNameExtSet( cFileIn, ".po" )
    ELSE
       cFileOut := hb_FNameExtSetDef( cFileOut, ".po" )

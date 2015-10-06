@@ -109,7 +109,7 @@ FUNCTION hb_FileDelete( cFileMask, cAttr )
 
    LOCAL lAny := .F., aFile, cPath, cFile, cAttrMask, nAttr
 
-   IF HB_ISSTRING( cFileMask ) .AND. ! Empty( cFileMask ) .AND. ;
+   IF HB_ISSTRING( cFileMask ) .AND. ! HB_ISNULL( cFileMask ) .AND. ;
       ! hb_vfDirExists( cFileMask )
       cPath := hb_FNameDir( cFileMask )
       cAttrMask := StrTran( hb_defaultValue( cAttr, "" ), "D" ) + "L"

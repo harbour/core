@@ -187,7 +187,7 @@ STATIC FUNCTION DShowProperties( oVar, nScope, lRecursive, nIndent, nRecursionLe
          cString += Space( nIndent ) + " |     " + hb_eol()
       ENDIF
    ENDIF
-   IF Empty( cString )
+   IF HB_ISNULL( cString )
       cString := Space( nIndent ) + " | " + hb_eol()
    ENDIF
 
