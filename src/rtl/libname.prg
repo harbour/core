@@ -52,10 +52,10 @@ FUNCTION hb_libName( cLibName, cLibDir )
 
       hb_FNameSplit( cLibName, @cDir, @cName, @cExt )
 
-      IF hb_BLen( cDir ) == 0 .AND. HB_ISSTRING( cLibDir )
+      IF HB_ISNULL( cDir ) .AND. HB_ISSTRING( cLibDir )
          cDir := cLibDir
       ENDIF
-      IF hb_BLen( cExt ) == 0
+      IF HB_ISNULL( cExt )
          cExt := hb_libExt()
       ENDIF
 

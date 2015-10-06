@@ -72,7 +72,7 @@ METHOD New( cFileName ) CLASS TIniFile
    LOCAL lDone, hFile, cFile, cLine, cIdent, nPos
    LOCAL CurrArray
 
-   IF ! HB_ISSTRING( cFileName ) .OR. hb_BLen( cFileName ) == 0
+   IF ! HB_ISSTRING( cFileName ) .OR. HB_ISNULL( cFileName )
       // raise an error?
       RETURN NIL
    ELSE
@@ -92,12 +92,12 @@ METHOD New( cFileName ) CLASS TIniFile
 
          // prepend last read
          cFile := cLine + cFile
-         DO WHILE hb_BLen( cFile ) > 0
+         DO WHILE ! HB_ISNULL( cFile )
             IF ( nPos := At( Chr( 10 ), cFile ) ) > 0
                cLine := Left( cFile, nPos - 1 )
                cFile := SubStr( cFile, nPos + 1 )
 
-               IF hb_BLen( cLine ) > 0
+               IF ! HB_ISNULL( cLine )
                   DO CASE
                   CASE hb_LeftEq( cLine, "[" )  // new section
                      IF ( nPos := At( "]", cLine ) ) > 1

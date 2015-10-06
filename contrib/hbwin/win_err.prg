@@ -64,7 +64,7 @@ PROCEDURE Main( cInputFile )
 
    ? "Input file:", cInputFile
 
-   IF hb_BLen( cFile := hb_MemoRead( cInputFile ) ) == 0
+   IF HB_ISNULL( cFile := hb_MemoRead( cInputFile ) )
       ? "Input file not found"
    ELSEIF Empty( pRegex := hb_regexComp( "[ \t]*#[ \t]*define[ \t]+([a-zA-Z0-9_]+)[ \t]+([\-A-F0-9]+)+L([ \t\n\r]|$)", .T., .T. ) )
       ? "Invalid regexp"

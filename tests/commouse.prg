@@ -56,7 +56,7 @@ PROCEDURE Main( cParam )
       IF ( nLen := hb_comRecv( nPort, @cBuf ) ) > 0
          cBuffer += hb_BLeft( cBuf, nLen )
       ENDIF
-      IF hb_BLen( cBuffer ) == 0
+      IF HB_ISNULL( cBuffer )
          hb_idleSleep( 0.05 )
          LOOP
       ENDIF

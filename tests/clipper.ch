@@ -78,7 +78,7 @@
 #xtranslate HB_ISDATETIME( <v> )           => .F.
 #xtranslate HB_ISHASH( <v> )               => .F.
 #xtranslate HB_ISHASHKEY( <v> )            => .F.
-#xtranslate HB_ISNULL( <v> )               => .F.
+#xtranslate HB_ISNULL( <v> )               => Len( <v> ) == 0
 #xtranslate HB_ISPOINTER( <v> )            => .F.
 #xtranslate HB_ISSYMBOL( <v> )             => .F.
 #xtranslate HB_ISTIMESTAMP( <v> )          => .F.

@@ -216,7 +216,7 @@ STATIC FUNCTION InstallHook( cDir, cHookName, cCommand )
       RETURN .T.
    ENDIF
 
-   IF hb_BLen( cFile ) == 0
+   IF HB_ISNULL( cFile )
       cFile += "#!/bin/sh" + hb_eol()
    ENDIF
 
@@ -781,7 +781,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
 
          cEOL := EOLDetect( cFile, @nLines )
 
-         IF hb_BLen( cEOL ) == 0
+         IF HB_ISNULL( cEOL )
             AAdd( aErr, "content: has mixed EOL types" )
             IF lApplyFixes
                lReBuild := .T.

@@ -134,8 +134,8 @@ METHOD Open( cUrl ) CLASS TIPClientFTP
       ::oUrl := TUrl():New( cUrl )
    ENDIF
 
-   IF hb_BLen( ::oUrl:cUserid ) > 0 .AND. ;
-      hb_BLen( ::oUrl:cPassword ) > 0
+   IF ! HB_ISNULL( ::oUrl:cUserid ) .AND. ;
+      ! HB_ISNULL( ::oUrl:cPassword )
 
       IF ::super:Open()
          IF ::GetReply()
@@ -473,7 +473,7 @@ METHOD ReadAuxPort() CLASS TIPClientFTP
    IF ::TransferStart()
 
       cList := ""
-      DO WHILE ( cRet := ::super:Read( 512 ) ) != NIL .AND. hb_BLen( cRet ) > 0
+      DO WHILE ( cRet := ::super:Read( 512 ) ) != NIL .AND. ! HB_ISNULL( cRet )
          cList += cRet
       ENDDO
 
@@ -559,7 +559,7 @@ METHOD MGet( cSpec, cLocalPath ) CLASS TIPClientFTP
    IF ( cStr := ::ReadAuxPort() ) != NIL
       FOR EACH cFile IN hb_ATokens( cStr, .T. )
          cFile := RTrim( cFile )
-         IF hb_BLen( cFile ) > 0
+         IF ! HB_ISNULL( cFile )
             ::Downloadfile( cLocalPath + cFile, cFile )
          ENDIF
       NEXT

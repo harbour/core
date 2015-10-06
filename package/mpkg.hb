@@ -315,6 +315,6 @@ STATIC FUNCTION FileConvEOL( cFileName )
    hb_vfTimeGet( cFileName, @tDate )
 
    RETURN ;
-      hb_BLen( cFile := hb_MemoRead( cFileName ) ) > 0 .AND. ;
+      ! HB_ISNULL( cFile := hb_MemoRead( cFileName ) ) .AND. ;
       hb_MemoWrit( cFileName, StringEOLConv( cFile ) ) .AND. ;
       hb_vfTimeSet( cFileName, tDate )

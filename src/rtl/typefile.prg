@@ -80,7 +80,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
 
    hb_FNameSplit( cFile, @cDir, @cName, @cExt )
 
-   IF hb_BLen( cDir ) == 0
+   IF HB_ISNULL( cDir )
 
       cTmp := StrTran( Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH ), ",", ";" )
 

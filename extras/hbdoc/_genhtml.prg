@@ -219,27 +219,27 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted ) CLASS GenerateHTML
 #endif
 
       hb_default( @cCaption, "" )
-      IF hb_BLen( cCaption ) > 0
+      IF ! HB_ISNULL( cCaption )
          ::Tagged( cCaption, "div", "class", "itemtitle" )
       ENDIF
 
       IF lPreformatted
          ::OpenTag( "pre", "class", cTagClass )
-         DO WHILE hb_BLen( cEntry ) > 0
+         DO WHILE ! HB_ISNULL( cEntry )
             IF Lower( cField ) + "|" $ "examples|tests|"
                ::Append( SubStr( Parse( @cEntry, hb_eol() ), 5 ), "" )
             ELSE
                ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, , .T. ), "" )
             ENDIF
 #if 0
-            IF hb_BLen( cEntry ) > 0 .AND. ! lPreformatted
+            IF ! HB_ISNULL( cEntry ) .AND. ! lPreformatted
                hb_vfWrite( ::hFile, hb_eol() )
             ENDIF
 #endif
          ENDDO
          ::CloseTag( "pre" )
       ELSE
-         DO WHILE hb_BLen( cEntry ) > 0
+         DO WHILE ! HB_ISNULL( cEntry )
             ::OpenTag( "div", "class", cTagClass )
             ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, 70 ), "" ):Newline()
             ::CloseTag( "div" )
@@ -291,7 +291,7 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
 
    LOCAL idx
 
-   IF hb_BLen( cText ) > 0
+   IF ! HB_ISNULL( cText )
 
       cText := hb_StrReplace( cText, { ;
          "&" => "&amp;", ;

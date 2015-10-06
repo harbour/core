@@ -215,7 +215,7 @@ METHOD getAccel( xKey ) CLASS RadioGroup
       RETURN 0
    ENDCASE
 
-   IF hb_BLen( cKey ) > 0
+   IF ! HB_ISNULL( cKey )
       cKey := Lower( cKey )
       RETURN AScan( ::aItems, {| o | o:isAccel( cKey ) } )
    ENDIF
@@ -529,7 +529,7 @@ METHOD caption( cCaption ) CLASS RadioGroup
 METHOD coldBox( cColdBox ) CLASS RadioGroup
 
    IF cColdBox != NIL
-      ::cColdBox := __eInstVar53( Self, "COLDBOX", cColdBox, "C", 1001, {|| hb_BLen( cColdBox ) == 0 .OR. hb_ULen( cColdBox ) == 8 } )
+      ::cColdBox := __eInstVar53( Self, "COLDBOX", cColdBox, "C", 1001, {|| HB_ISNULL( cColdBox ) .OR. hb_ULen( cColdBox ) == 8 } )
    ENDIF
 
    RETURN ::cColdBox
@@ -557,7 +557,7 @@ METHOD hasFocus() CLASS RadioGroup
 METHOD hotBox( cHotBox ) CLASS RadioGroup
 
    IF cHotBox != NIL
-      ::cHotBox := __eInstVar53( Self, "HOTBOX", cHotBox, "C", 1001, {|| hb_BLen( cHotBox ) == 0 .OR. hb_ULen( cHotBox ) == 8 } )
+      ::cHotBox := __eInstVar53( Self, "HOTBOX", cHotBox, "C", 1001, {|| HB_ISNULL( cHotBox ) .OR. hb_ULen( cHotBox ) == 8 } )
    ENDIF
 
    RETURN ::cHotBox

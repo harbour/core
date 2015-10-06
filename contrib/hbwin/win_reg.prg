@@ -112,15 +112,13 @@ FUNCTION win_regDelete( cRegPath, nRegSam )
 
    win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
-   IF hb_BLen( cEntry ) == 0
+   IF HB_ISNULL( cEntry )
       lRetVal := win_regDeleteKey( nHKEY, cKey )
+   ELSEIF win_regOpenKeyEx( nHKEY, cKey, 0, hb_bitOr( KEY_SET_VALUE, hb_defaultValue( nRegSam, 0 ) ), @pKeyHandle )
+      lRetVal := win_regDeleteValue( pKeyHandle, cEntry )
+      win_regCloseKey( pKeyHandle )
    ELSE
-      IF win_regOpenKeyEx( nHKEY, cKey, 0, hb_bitOr( KEY_SET_VALUE, hb_defaultValue( nRegSam, 0 ) ), @pKeyHandle )
-         lRetVal := win_regDeleteValue( pKeyHandle, cEntry )
-         win_regCloseKey( pKeyHandle )
-      ELSE
-         lRetVal := .F.
-      ENDIF
+      lRetVal := .F.
    ENDIF
 
    RETURN lRetVal

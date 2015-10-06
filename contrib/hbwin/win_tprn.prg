@@ -659,7 +659,7 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS win_Prn
    LOCAL nPosX
 
    IF ! Empty( ::hPrinterDc ) .AND. ;
-      HB_ISSTRING( cString ) .AND. hb_BLen( cString ) > 0 .AND. ;
+      HB_ISSTRING( cString ) .AND. ! HB_ISNULL( cString ) .AND. ;
       ::CheckPage()
 
       wapi_SetTextAlign( ::hPrinterDC, hb_bitOr( WIN_TA_NOUPDATECP, hb_defaultValue( nAlign, hb_bitOr( WIN_TA_BOTTOM, WIN_TA_LEFT ) ) ) )

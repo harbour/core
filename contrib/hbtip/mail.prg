@@ -301,7 +301,7 @@ METHOD ToString() CLASS TIPMail
    cRet := ::HeadersToString() + e"\r\n"
 
    // Body
-   IF ::cBody != NIL .AND. hb_BLen( ::cBody ) > 0
+   IF ::cBody != NIL .AND. ! HB_ISNULL( ::cBody )
       IF Empty( ::aAttachments )
          cRet += ::cBody + iif( ::lBodyEncoded, "", e"\r\n" )
       ELSE
@@ -553,7 +553,7 @@ METHOD attachFile( cFileName ) CLASS TIPMail
    LOCAL oAttach
    LOCAL nAttr
 
-   IF hb_BLen( cContent ) == 0
+   IF HB_ISNULL( cContent )
       RETURN .F.
    ENDIF
 
@@ -574,7 +574,7 @@ METHOD detachFile( cPath ) CLASS TIPMail
    LOCAL cContent := ::getBody()
    LOCAL cFileName := ::getFileName()
 
-   IF hb_BLen( cFileName ) == 0 .OR. ::cBody == NIL
+   IF HB_ISNULL( cFileName ) .OR. ::cBody == NIL
       RETURN .F.
    ENDIF
 

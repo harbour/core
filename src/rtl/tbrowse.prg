@@ -1324,10 +1324,10 @@ METHOD doConfigure() CLASS TBrowse
       aCol[ _TBCI_DEFCOLOR    ] := _COLDEFCOLORS( oCol:defColor, Len( ::aColors ) )
       aCol[ _TBCI_FROZENSPACE ] := 0
       aCol[ _TBCI_LASTSPACE   ] := 0
-      IF hb_BLen( cHeadSep ) > 0
+      IF ! HB_ISNULL( cHeadSep )
          lHeadSep := .T.
       ENDIF
-      IF hb_BLen( cFootSep ) > 0
+      IF ! HB_ISNULL( cFootSep )
          lFootSep := .T.
       ENDIF
       cHeading := oCol:heading
@@ -1501,7 +1501,7 @@ STATIC FUNCTION _DECODE_FH( cName, nHeight, nWidth )
    nHeight := nWidth := 0
    IF HB_ISSTRING( cName )
 
-      IF hb_BLen( cName ) > 0
+      IF ! HB_ISNULL( cName )
          /* When last character of heading/footing is ';' then CA-Cl*pper
           * does not calculate it as separator
           */
@@ -2562,7 +2562,7 @@ METHOD border( cBorder ) CLASS TBrowse
 
       cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001 )
 
-      IF hb_BLen( cBorder ) == 0 .OR. hb_ULen( cBorder ) == 8
+      IF HB_ISNULL( cBorder ) .OR. hb_ULen( cBorder ) == 8
 
          IF Empty( ::cBorder ) .AND. ! Empty( cBorder )
             ::n_Top++

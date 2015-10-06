@@ -163,7 +163,7 @@ PROCEDURE Main()
    bmpinfoheader:Reset()
 #endif
 
-   IF hb_BLen( cStr := hb_MemoRead( IMAGES_IN + "sample1.jpg" ) ) > 0
+   IF ! HB_ISNULL( cStr := hb_MemoRead( IMAGES_IN + "sample1.jpg" ) )
       ? "Load JPEG from memory"
       im := fi_LoadFromMemory( FIF_JPEG, cStr, JPEG_DEFAULT )
 

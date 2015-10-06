@@ -233,15 +233,13 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS TRPCFunction
    ::cReturn := iif( Len( aFuncDef ) == 4, aFuncDef[ 4 ], aFuncDef[ 5 ] )
 
    // analyze parameter list
-   IF hb_BLen( RTrim( cParam ) ) > 0
-      ::aParameters := {}
+   ::aParameters := {}
+   IF ! HB_ISNULL( RTrim( cParam ) )
       FOR EACH cParam IN hb_ATokens( cParam, "," )
          cParam := AllTrim( Upper( cParam ) )
          ::CheckParam( cParam )
          AAdd( ::aParameters, cParam )
       NEXT
-   ELSE
-      ::aParameters := {}
    ENDIF
 
    // Analyze function definition return
@@ -1519,7 +1517,7 @@ METHOD AuthorizeChallenge( cUserId, cData ) CLASS TRPCService
    LOCAL cKey, nPos, cMarker := "PASSWORD:"
 
    cKey := ::GetEncryption( cUserId )
-   IF ! HB_ISSTRING( cKey ) .OR. hb_BLen( cKey ) == 0
+   IF ! HB_ISSTRING( cKey ) .OR. HB_ISNULL( cKey )
       RETURN NIL
    ENDIF
 

@@ -448,7 +448,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             EXIT
          ENDIF
 
-      ELSEIF hb_BLen( cSectionName ) == 0
+      ELSEIF HB_ISNULL( cSectionName )
 
       ELSEIF o:IsField( cSectionName )
 
@@ -748,7 +748,7 @@ STATIC FUNCTION Decode( cType, hsBlock, cKey )
    CASE "STATUS"
       IF "," $ cCode .AND. hb_AScan( sc_hConstraint[ "status" ], Parse( cCode, "," ), , , .T. ) > 0
          cResult := ""
-         DO WHILE hb_BLen( cCode ) > 0
+         DO WHILE ! HB_ISNULL( cCode )
             cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
          ENDDO
          RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
@@ -758,7 +758,7 @@ STATIC FUNCTION Decode( cType, hsBlock, cKey )
          RETURN sc_hConstraint[ "status" ][ idx ][ 2 ]
       ELSEIF Len( cCode ) > 1
          RETURN cCode
-      ELSEIF hb_BLen( cCode ) > 0
+      ELSEIF ! HB_ISNULL( cCode )
          RETURN "Unrecognized 'STATUS' code: '" + cCode + "'"
       ELSE
          RETURN ATail( sc_hConstraint[ "status" ] )[ 2 ]
@@ -767,7 +767,7 @@ STATIC FUNCTION Decode( cType, hsBlock, cKey )
    CASE "PLATFORMS"
       IF "," $ cCode .AND. hb_AScan( sc_hConstraint[ "platforms" ], Parse( cCode, "," ), , , .T. ) > 0
          cResult := ""
-         DO WHILE hb_BLen( cCode ) > 0
+         DO WHILE ! HB_ISNULL( cCode )
             cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
          ENDDO
          RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
@@ -782,7 +782,7 @@ STATIC FUNCTION Decode( cType, hsBlock, cKey )
    CASE "COMPLIANCE"
       IF "," $ cCode .AND. hb_AScan( sc_hConstraint[ "compliance" ], Parse( cCode, "," ), , , .T. ) > 0
          cResult := ""
-         DO WHILE hb_BLen( cCode ) > 0
+         DO WHILE ! HB_ISNULL( cCode )
             cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
          ENDDO
          RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
@@ -1043,7 +1043,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
                cLine := LTrim( SubStr( cLine, idx + 1 ) )
             ENDDO
 
-            IF hb_BLen( cLine ) > 0
+            IF ! HB_ISNULL( cLine )
                cResult += Space( nLeftMargin ) + cLine + hb_eol()
             ENDIF
 

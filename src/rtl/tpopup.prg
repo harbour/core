@@ -287,7 +287,7 @@ METHOD getAccel( xKey ) CLASS PopupMenu
       RETURN 0
    ENDCASE
 
-   IF hb_BLen( cKey ) > 0
+   IF ! HB_ISNULL( cKey )
       cKey := "&" + cKey
       FOR EACH item in ::aItems
          IF hb_AtI( cKey, item:caption ) > 0  /* TOFIX: use hb_UAti() */
@@ -533,7 +533,7 @@ METHOD setMetrics() CLASS PopupMenu
 METHOD border( cBorder ) CLASS PopupMenu
 
    IF cBorder != NIL
-      ::cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001, {|| hb_BLen( cBorder ) == 0 .OR. hb_ULen( cBorder ) == 11 } )
+      ::cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001, {|| HB_ISNULL( cBorder ) .OR. hb_ULen( cBorder ) == 11 } )
    ENDIF
 
    RETURN ::cBorder

@@ -1430,7 +1430,7 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
 
    LOCAL nKeyStd
 
-   IF hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_ALT ) != 0 .AND. hb_BLen( hb_keyChar( nKey ) ) > 0
+   IF hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_ALT ) != 0 .AND. ! HB_ISNULL( hb_keyChar( nKey ) )
       cKey := hb_keyChar( nKey )
    ELSE
       nKeyStd := hb_keyStd( nKey )

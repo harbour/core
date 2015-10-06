@@ -58,7 +58,7 @@ PROCEDURE Main()
       ? "Querying device"
       FOR tmp := 1 TO 500
          libusb_bulk_transfer( pDeviceHandle, LIBUSB_ENDPOINT_IN, 100, @cData, @nLength )
-         IF hb_BLen( cData ) > 0
+         IF ! HB_ISNULL( cData )
             SWITCH hb_BPeek( cData, hb_BLen( cData ) - 1 )
             CASE 0
                ? "Clear"

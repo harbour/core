@@ -11,11 +11,11 @@ PROCEDURE Main( cFileName )
 
    LOCAL oMail, cData, i
 
-   IF HB_ISSTRING( cFileName )
-      IF hb_BLen( cData := hb_MemoRead( cFileName ) ) == 0
-         ? "Cannot open", cFileName
-         RETURN
-      ENDIF
+   IF ! HB_ISSTRING( cFileName ) .OR. ;
+      HB_ISNULL( cData := hb_MemoRead( cFileName ) )
+
+      ? "Cannot open", cFileName
+      RETURN
    ENDIF
 
    oMail := TIPMail():New()

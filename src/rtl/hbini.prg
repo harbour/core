@@ -131,7 +131,7 @@ STATIC FUNCTION hb_iniFileLow( cFileSpec )
 
    hFile := NIL
    FOR EACH cFile IN aFiles
-      IF hb_BLen( cFile ) > 0 .AND. hb_vfExists( cFile )
+      IF ! HB_ISNULL( cFile ) .AND. hb_vfExists( cFile )
          IF ( hFile := hb_vfOpen( cFile ) ) != NIL
             EXIT
          ENDIF
@@ -195,14 +195,14 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       IF ! Empty( aKeyVal := hb_regex( reInclude, cLine ) )
          /* ignore void includes */
          aKeyVal[ 2 ] := AllTrim( aKeyVal[ 2 ] )
-         IF hb_BLen( aKeyVal[ 2 ] ) == 0
+         IF HB_ISNULL( aKeyVal[ 2 ] )
             LOOP
          ENDIF
          hb_iniStringLow( hIni, hb_iniFileLow( aKeyVal[ 2 ] ), lKeyCaseSens, cSplitters, lAutoMain )
       /* Is it a NEW section? */
       ELSEIF ! Empty( aKeyVal := hb_regex( reSection, cLine ) )
          cLine := AllTrim( aKeyVal[ 2 ] )
-         IF hb_BLen( cLine ) > 0
+         IF ! HB_ISNULL( cLine )
             hCurrentSection := { => }
             IF ! lKeyCaseSens
                cLine := Upper( cLine )

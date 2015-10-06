@@ -144,7 +144,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors, lLineNumbers ) CLA
    ::oBrw:goBottomBlock := {|| ::nRow := ::nRows }
    ::oBrw:skipBlock := {| n | ::Skip( n ) }
 
-   IF HB_ISSTRING( cFileName ) .AND. hb_BLen( cFileName ) > 0
+   IF HB_ISSTRING( cFileName ) .AND. ! HB_ISNULL( cFileName )
       ::LoadFile( cFileName )
    ENDIF
 

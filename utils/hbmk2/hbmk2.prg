@@ -893,7 +893,7 @@ STATIC PROCEDURE hbmk_local_entry( ... )
       /* Exit on first failure */
       IF nResult != _EXIT_OK
          IF lExitStr
-            OutErr( hb_StrFormat( _SELF_NAME_ + iif( hb_BLen( cTargetName ) == 0, "", " " + "[" + cTargetName + "]" ) + ;
+            OutErr( hb_StrFormat( _SELF_NAME_ + iif( HB_ISNULL( cTargetName ), "", " " + "[" + cTargetName + "]" ) + ;
                                   ": " + I_( "Exit code: %1$d: %2$s" ), nResult, ExitCodeStr( nResult ) ) + _OUT_EOL )
          ENDIF
          IF nResult != _EXIT_STOP
@@ -2057,7 +2057,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #endif
 
 #if 1
-   IF hb_BLen( tmp := GetEnv( "_HB_COMPILER_VER" ) ) != 0 .AND. Len( tmp ) != 4
+   IF ! HB_ISNULL( tmp := GetEnv( "_HB_COMPILER_VER" ) ) .AND. Len( tmp ) != 4
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Invalid _HB_COMPILER_VER value '%1$s' ignored. Format should be: <MMmm>, where <MM> is major version and <mm> is minor version." ), tmp ) )
       hbmk[ _HBMK_nCOMPVer ] := 0
    ELSE
@@ -6353,7 +6353,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                Do not update if the VCS header is already present, but currently extracted
                VCS information is empty (this is sign of extraction command failure). */
             tmp2 := hb_MemoRead( l_cVCSHEAD )
-            IF ( hb_BLen( tmp2 ) == 0 .OR. ! Empty( tmp1 ) ) .AND. ;
+            IF ( HB_ISNULL( tmp2 ) .OR. ! Empty( tmp1 ) ) .AND. ;
                ( hbmk[ _HBMK_lREBUILD ] .OR. !( tmp2 == tmp ) )
                IF hbmk[ _HBMK_lInfo ]
                   _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Creating VCS header: %1$s" ), l_cVCSHEAD ) )
@@ -9401,7 +9401,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
       ! Empty( t_pRegexRequire ) .AND. ;
       ! Empty( t_pRegexSETPROC )
 
-      IF hb_BLen( cFileBody := hbmk_MemoRead( cFile ) ) > 0
+      IF ! HB_ISNULL( cFileBody := hbmk_MemoRead( cFile ) )
 
          FOR EACH tmp IN hb_regexAll( t_pRegexInclude, cFileBody, ;
                                       /* lCaseSensitive */, ;
@@ -10459,7 +10459,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
       cExt := hb_FNameExt( cFileName )
 
-      IF hb_BLen( cFile := hb_MemoRead( cFileName ) ) > 0
+      IF ! HB_ISNULL( cFile := hb_MemoRead( cFileName ) )
 
          lOK := .F.
          /* Optimization: Do not try to load it as .hrb if the extension is .prg, .hb (Harbour script) */
@@ -11349,7 +11349,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
 
    SWITCH hb_defaultValue( nEscapeMode, _ESC_NONE )
    CASE _ESC_DBLQUOTE
-      IF hb_BLen( cFileName ) == 0 .OR. " " $ cFileName .OR. "-" $ cFileName
+      IF HB_ISNULL( cFileName ) .OR. " " $ cFileName .OR. "-" $ cFileName
          /* Sloppy */
          IF hb_RightEq( cFileName, "\" )
             cFileName += "\"
@@ -11358,7 +11358,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
       ENDIF
       EXIT
    CASE _ESC_SGLQUOTE_WATCOM
-      IF hb_BLen( cFileName ) == 0 .OR. " " $ cFileName
+      IF HB_ISNULL( cFileName ) .OR. " " $ cFileName
          /* Sloppy */
          IF hb_RightEq( cFileName, "\" )
             cFileName += "\"
@@ -11367,7 +11367,7 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
       ENDIF
       EXIT
    CASE _ESC_NIX
-      IF hb_BLen( cFileName ) == 0 .OR. StrHasSpecialChar( cFileName )
+      IF HB_ISNULL( cFileName ) .OR. StrHasSpecialChar( cFileName )
          cFileName := "'" + StrTran( cFileName, "'", "'\''" ) + "'"
       ENDIF
       EXIT
@@ -11427,7 +11427,7 @@ STATIC FUNCTION FN_Expand( cFileName, lCommandLine )
    LOCAL aFileList
    LOCAL aFile
 
-   IF hb_BLen( cFileName ) == 0
+   IF HB_ISNULL( cFileName )
       RETURN {}
    ENDIF
 
@@ -12423,7 +12423,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
          cFile := hbmk_builtin_Load( cFileName )
          /* Built-in files will act as if they were part of the parent file,
             since their name is fixed and have no useful meaning whatsoever. */
-         IF HB_ISSTRING( cParentFileName ) .AND. hb_BLen( cParentFileName ) > 0
+         IF HB_ISSTRING( cParentFileName ) .AND. ! HB_ISNULL( cParentFileName )
             cFileName := cParentFileName
          ENDIF
       ELSE
@@ -14968,7 +14968,7 @@ STATIC PROCEDURE GetListOfFunctionsKnownLoadHBX( cFileName, cRoot, hAll, cName )
       cName := StrTran( SubStr( cFileName, Len( cRoot ) + 1 ), "\", "/" )
    ENDIF
 
-   IF hb_BLen( cFile := hb_MemoRead( cFileName ) ) > 0
+   IF ! HB_ISNULL( cFile := hb_MemoRead( cFileName ) )
 
       FOR EACH cFilter IN { ;
          R_( "^DYNAMIC ([a-zA-Z0-9_]*)$" ), ;
@@ -15127,7 +15127,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
             "{OT}" => FNameEscape( cTempFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) } )
 
          IF hb_processRun( cBin_LibHBX + " " + cOpt_LibHBX,, @cStdOut, @cStdErr ) == 0
-            IF hb_BLen( cTempFile ) > 0
+            IF ! HB_ISNULL( cTempFile )
                cStdOut := MemoRead( cTempFile )
             ENDIF
             IF ! Empty( pRegex := hb_regexComp( cLibHBX_Regex, .T., .T. ) )
@@ -15147,7 +15147,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
             ENDIF
          ENDIF
 
-         IF hb_BLen( cTempFile ) > 0
+         IF ! HB_ISNULL( cTempFile )
             hb_vfErase( cTempFile )
          ENDIF
       ENDIF
@@ -15171,7 +15171,7 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
    aExclude := {}
    hDynamic := { => }
 
-   IF hb_BLen( cFile := MemoRead( cInputName ) ) > 0
+   IF ! HB_ISNULL( cFile := MemoRead( cInputName ) )
       IF ! Empty( pRegex := hb_regexComp( R_( "[\s]" + _HB_FUNC_INCLUDE_ + "[\s]([a-zA-Z0-9_].[^ \t\n\r]*)" ), .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, tmp[ 2 ] )

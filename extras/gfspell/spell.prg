@@ -1027,7 +1027,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
                temp  := ""
                cBits := FOUR_BYTES
                DO WHILE ! IsAlpha( SubStr( DICT->word, 2, 1 ) ) .AND. ! Eof()
-                  IF hb_BLen( AllTrim( DICT->word ) ) > 0
+                  IF ! HB_ISNULL( AllTrim( DICT->word ) )
                      cOther += "|" + AllTrim( DICT->word )
                   ENDIF
                   dbSkip()

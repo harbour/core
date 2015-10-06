@@ -129,7 +129,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 
    BEGIN SEQUENCE
 
-      IF ! HB_ISSTRING( cFileFrom ) .OR. hb_BLen( cFileFrom ) == 0
+      IF ! HB_ISSTRING( cFileFrom ) .OR. HB_ISNULL( cFileFrom )
 
          dbCreate( cFileName, { ;
             { "FIELD_NAME", "C", 10, 0 }, ;

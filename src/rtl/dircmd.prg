@@ -60,7 +60,7 @@ PROCEDURE __Dir( cFileMask )
       cFileMask := AllTrim( cFileMask )
    ENDIF
 
-   IF hb_BLen( cFileMask ) == 0
+   IF HB_ISNULL( cFileMask )
 
       /* NOTE: Although Cl*pper has this string in the national language
                module, it will not use it from there.
@@ -77,7 +77,7 @@ PROCEDURE __Dir( cFileMask )
              {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
       hb_FNameSplit( cFileMask, @cPath, @cName, @cExt )
-      IF hb_BLen( cPath ) == 0
+      IF HB_ISNULL( cPath )
          cPath := Set( _SET_DEFAULT )
       ENDIF
 

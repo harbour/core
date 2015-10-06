@@ -73,7 +73,7 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
    IF ! Empty( lToPrint )  /* => hb_defaultValue( lToPrint, .F. ) */
       lOldPrinter := Set( _SET_PRINTER, .T. )
    ENDIF
-   IF HB_ISSTRING( cToFileName ) .AND. hb_BLen( cToFileName ) > 0
+   IF HB_ISSTRING( cToFileName ) .AND. ! HB_ISNULL( cToFileName )
       lOldExtra := Set( _SET_EXTRA, .T. )
       cOldExtraFile := Set( _SET_EXTRAFILE, ;
                             iif( Set( _SET_DEFEXTENSIONS ), ;
@@ -106,7 +106,7 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
    IF ! Empty( lToPrint )  /* => hb_defaultValue( lToPrint, .F. ) */
       Set( _SET_PRINTER, lOldPrinter )
    ENDIF
-   IF HB_ISSTRING( cToFileName ) .AND. hb_BLen( cToFileName ) > 0
+   IF HB_ISSTRING( cToFileName ) .AND. ! HB_ISNULL( cToFileName )
       Set( _SET_EXTRAFILE, cOldExtraFile )
       Set( _SET_EXTRA, lOldExtra )
    ENDIF

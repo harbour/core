@@ -2047,7 +2047,7 @@ METHOD PROCEDURE Open( cFileName ) CLASS HBDebugger
    LOCAL cRealName
    LOCAL aFiles
 
-   IF ! HB_ISSTRING( cFileName ) .OR. hb_BLen( cFileName ) == 0
+   IF ! HB_ISSTRING( cFileName ) .OR. HB_ISNULL( cFileName )
       aFiles := ::GetSourceFiles()
       ASort( aFiles )
       hb_AIns( aFiles, 1, "(Another file)", .T. )
@@ -2064,7 +2064,7 @@ METHOD PROCEDURE Open( cFileName ) CLASS HBDebugger
       ENDSWITCH
    ENDIF
 
-   IF hb_BLen( cFileName ) > 0 .AND. ;
+   IF ! HB_ISNULL( cFileName ) .AND. ;
       ( ! HB_ISSTRING( ::cPrgName ) .OR. ! hb_FileMatch( cFileName, ::cPrgName ) )
 
       IF ! hb_vfExists( cFileName ) .AND. ::cPathForFiles != NIL
@@ -3003,7 +3003,7 @@ METHOD BreakPointDelete( cPos ) CLASS HBDebugger
 
    LOCAL nAt
 
-   IF ! HB_ISSTRING( cPos ) .OR. hb_BLen( cPos ) == 0
+   IF ! HB_ISSTRING( cPos ) .OR. HB_ISNULL( cPos )
       cPos := AllTrim( ::InputBox( "Item number to delete", "0" ) )
       IF LastKey() == K_ESC
          cPos := ""

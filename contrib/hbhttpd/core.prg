@@ -638,7 +638,7 @@ STATIC FUNCTION ProcessConnection( oServer )
          // Send response
          cBuf := MakeResponse( oServer:hConfig )
 
-         DO WHILE hb_BLen( cBuf ) > 0 .AND. ! oServer:lStop
+         DO WHILE ! HB_ISNULL( cBuf ) .AND. ! oServer:lStop
             IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
                nLen := MY_SSL_WRITE( oServer:hConfig, hSSL, hSocket, cBuf, 1000, @nErr )
             ELSE

@@ -196,7 +196,7 @@ METHOD IsOpen() CLASS TFileRead
 // Returns .T. if there is more to be read from either the file or the
 // readahead buffer. Only when both are exhausted is there no more to read.
 METHOD MoreToRead() CLASS TFileRead
-   RETURN ! ::lEOF .OR. hb_BLen( ::cBuffer ) > 0
+   RETURN ! ::lEOF .OR. ! HB_ISNULL( ::cBuffer )
 
 // Returns .T. if an error was recorded.
 METHOD Error() CLASS TFileRead

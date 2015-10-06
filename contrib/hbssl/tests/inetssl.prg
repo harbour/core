@@ -83,7 +83,7 @@ STATIC PROCEDURE Client()
          DispCertInfo( ssl, "CLIENT:" )
 
          hb_inetSendAll( sock, hb_TSToStr( hb_DateTime() ) + EOL )
-         DO WHILE hb_BLen( cLine := hb_inetRecvLine( sock ) ) > 0
+         DO WHILE ! HB_ISNULL( cLine := hb_inetRecvLine( sock ) )
             ? "CLIENT: RECV:", hb_ValToExp( cLine )
          ENDDO
       ENDIF

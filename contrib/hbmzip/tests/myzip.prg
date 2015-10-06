@@ -96,7 +96,7 @@ PROCEDURE Main()
    IF ! Empty( hZip := hb_zipOpen( cZipName ) )
       ? "Archive file:", cZipName
       FOR EACH cWild IN aWild
-         IF hb_BLen( cWild ) > 0
+         IF ! HB_ISNULL( cWild )
             hb_FNameSplit( cWild, @cPath, @cFileName, @cExt )
             FOR EACH aFile IN hb_DirScan( cPath, cFileName + cExt )
                IF ! cPath + aFile[ F_NAME ] == cZipName

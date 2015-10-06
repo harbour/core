@@ -287,7 +287,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    ENDDO
 
    // Check last line
-   IF hb_BLen( cBuffer ) > 0
+   IF ! HB_ISNULL( cBuffer )
       AAdd( aLines, cBuffer )
    ENDIF
 

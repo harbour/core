@@ -46,7 +46,7 @@ STATIC FUNCTION LangToPO( cLang )
    cPO += Item( "English", hb_langMessage( 2, cLang ), nPos++ )
 
    FOR tmp := HB_LANG_ITEM_BASE_MONTH TO HB_LANG_ITEM_MAX_ - 1
-      IF hb_BLen( hb_langMessage( tmp, "en" ) ) > 0
+      IF ! HB_ISNULL( hb_langMessage( tmp, "en" ) )
          cPO += Item( ;
             hb_langMessage( tmp, "en" ), ;
             iif( hb_langMessage( tmp, "en" ) == hb_langMessage( tmp, cLang ) .AND. ;
@@ -141,7 +141,7 @@ STATIC FUNCTION Item( cOri, cTrs, nPos )
       iif( Empty( cComment ), "", "#  " + cComment + hb_eol() ) + ;
       "#: lang_id:" + hb_ntos( nPos ) + hb_eol() + ;
       "#, c-format" + hb_eol() + ;
-      "msgid " + ItemString( iif( hb_BLen( cOri ) == 0 .AND. nPos != 0, "{" + StrZero( nPos, 3 ) + "}", cOri ) ) + ;
+      "msgid " + ItemString( iif( HB_ISNULL( cOri ) .AND. nPos != 0, "{" + StrZero( nPos, 3 ) + "}", cOri ) ) + ;
       "msgstr " + ItemString( cTrs ) + hb_eol()
 
 STATIC FUNCTION ItemString( cString )
