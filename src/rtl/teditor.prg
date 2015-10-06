@@ -218,7 +218,7 @@ METHOD LoadText( cText ) CLASS HBEditor
 
 // Saves file being edited, if there is no file name does nothing, returns .T. if OK
 METHOD SaveFile() CLASS HBEditor
-   RETURN hb_BLen( ::cFile ) > 0 .AND. ;
+   RETURN ! HB_ISNULL( ::cFile ) .AND. ;
           ! ::lDirty := ! hb_MemoWrit( ::cFile, ::GetText() )
 
 // Add a new Line of text at end of current text
@@ -482,9 +482,9 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
            ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock )
 
-      CASE hb_BLen( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
-                             Space( TabCount( ::nTabWidth, ::nCol ) ), ;
-                             hb_keyChar( nKey ) ) ) > 0
+      CASE ! HB_ISNULL( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
+                                     Space( TabCount( ::nTabWidth, ::nCol ) ), ;
+                                     hb_keyChar( nKey ) ) )
          ::lDirty := .T.
          oLine := ::aText[ ::nRow ]
          IF ( nPos := ::nCol - hb_ULen( oLine:cText ) - 1 ) > 0

@@ -662,7 +662,7 @@ HB_FUNC( HB_MLEVAL )
                if( nRepl-- == 0 )
                   break;
                if( !cdp )
-                  pszLine[ nDst++ ] = ch;
+                  pszLine[ nDst++ ] = ( char ) ch;
                else if( ! HB_CDPCHAR_PUT( cdp, pszLine, nLineLength + 1, &nDst, ch ) )
                   break;
             }
