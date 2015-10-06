@@ -217,7 +217,7 @@ METHOD LoadText( cText ) CLASS HBEditor
 
 // Saves file being edited, if there is no file name does nothing, returns .T. if OK
 METHOD SaveFile() CLASS HBEditor
-   RETURN ! Empty( ::cFile ) .AND. ;
+   RETURN ! HB_ISNULL( ::cFile ) .AND. ;
           ! ::lDirty := ! hb_MemoWrit( ::cFile, ::GetText() )
 
 // Add a new Line of text at end of current text
@@ -243,7 +243,7 @@ METHOD RemoveLine( nRow ) CLASS HBEditor
 
 // Return line n of text
 METHOD GetLine( nRow ) CLASS HBEditor
-   RETURN iif( nRow >=1 .AND. nRow <= ::LineCount, ::aText[ nRow ]:cText, "" )
+   RETURN iif( nRow >= 1 .AND. nRow <= ::LineCount, ::aText[ nRow ]:cText, "" )
 
 // Return text length of line n
 METHOD LineLen( nRow ) CLASS HBEditor
@@ -366,10 +366,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
 
    SWITCH hb_keyStd( nKey )
    CASE K_DOWN
-      IF ! ::lEditAllow
-         ::Goto( ::nFirstRow + ::nNumRows, ::nCol )
-      ELSE
+      IF ::lEditAllow
          ::Goto( ::nRow + 1, ::nCol )
+      ELSE
+         ::Goto( ::nFirstRow + ::nNumRows, ::nCol )
       ENDIF
       EXIT
 
@@ -382,10 +382,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       EXIT
 
    CASE K_UP
-      IF ! ::lEditAllow
-         ::Goto( ::nFirstRow - 1, ::nCol )
-      ELSE
+      IF ::lEditAllow
          ::Goto( ::nRow - 1, ::nCol )
+      ELSE
+         ::Goto( ::nFirstRow - 1, ::nCol )
       ENDIF
       EXIT
 
@@ -480,9 +480,9 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
       CASE ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock )
 
-      CASE hb_ULen( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
-                             Space( TabCount( ::nTabWidth, ::nCol ) ), ;
-                             hb_keyChar( nKey ) ) ) > 0
+      CASE ! HB_ISNULL( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
+                                     Space( TabCount( ::nTabWidth, ::nCol ) ), ;
+                                     hb_keyChar( nKey ) ) )
          ::lDirty := .T.
          oLine := ::aText[ ::nRow ]
          IF ( nPos := ::nCol - hb_ULen( oLine:cText ) - 1 ) > 0
@@ -602,9 +602,9 @@ METHOD BrowseText( nPassedKey ) CLASS HBEditor
 
    DO WHILE ! ::lExitEdit
       IF nPassedKey == NIL
-         IF ( nKey := Inkey() ) == 0
+         IF ( nKey := Inkey(, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) ) == 0
             ::IdleHook()
-            nKey := Inkey( 0 )
+            nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) )
          ENDIF
       ELSE
          nKey := nPassedKey

@@ -1,6 +1,6 @@
 /*
  * Harbour Project source code:
- *    Harbour extended socket filter with ZLIB compression
+ *    Harbour extended socket filter with BlowFish encryption
  *
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

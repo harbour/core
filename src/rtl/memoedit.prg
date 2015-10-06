@@ -305,8 +305,8 @@ METHOD InsertState( lInsState ) CLASS HBMemoEditor
    IF HB_ISLOGICAL( lInsState ) .AND. ::lEditAllow
       Set( _SET_INSERT, lInsState )
       SetCursor( iif( lInsState, SC_INSERT, SC_NORMAL ) )
-      IF SET( _SET_SCOREBOARD )
-         hb_dispOutAt( 0, MaxCol() - 19, iif( lInsState, "<insert>", "        " ) )
+      IF Set( _SET_SCOREBOARD )
+         hb_DispOutAt( 0, MaxCol() - 19, iif( lInsState, "<insert>", "        " ) )
       ENDIF
    ENDIF
 
