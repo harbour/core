@@ -69,7 +69,7 @@
 #undef HB_HAS_WIN9X_TONE
 
 #if defined( HB_CPU_X86 ) && \
-    ( ( defined( _MSC_VER ) && _MSC_VER <= 1900 ) || \
+    ( ( defined( _MSC_VER ) && _MSC_VER < 1900 ) || \
       defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || \
       defined( __MINGW32__ ) )
 
