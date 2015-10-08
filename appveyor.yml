@@ -46,10 +46,10 @@ install:
 # Will unpack into C:\w\mingw64
 - 7z x -y -oC:\w\ mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win32-mingw.7z -o openssl-win-mingw.7z
-- openssl dgst -sha256 openssl-win-mingw.7z | findstr /i /c:"b310991441691e6a3cd7bc8d91590bd906d777557b6512b0dafdd4ce77ecf9a0"
+- openssl dgst -sha256 openssl-win-mingw.7z | findstr /i /c:"4b3dca65875918c179f15d395046a35d3ff1a8bd7ee2875e0e8b1816e62cb5b4"
 - 7z x -y -oC:\w\ openssl-win-mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.7z -o openssl-win-mingw64.7z
-- openssl dgst -sha256 openssl-win-mingw64.7z | findstr /i /c:"8d9ed9015101fbacdbccbff7a7e3309039fb40978ef1486273109fe844a11d19"
+- openssl dgst -sha256 openssl-win-mingw64.7z | findstr /i /c:"2450a81b59cbb57db40128fefea3d4a2bd6d00d24b97b7d1b96ced75e66d9ef6"
 - 7z x -y -oC:\w\ openssl-win-mingw64.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win32-mingw.7z -o curl-win-mingw.7z
 - openssl dgst -sha256 curl-win-mingw.7z | findstr /i /c:"de582e8eaf0280a63194d094af12120b2ef1a063dbb3739b3c6f3980a3bdf90e"
