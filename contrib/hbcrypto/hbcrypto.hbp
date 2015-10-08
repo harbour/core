@@ -1,4 +1,4 @@
--stop{msvcall}
+-stop{allmsvc}
 
 -hblib
 -inc
