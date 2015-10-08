@@ -252,7 +252,7 @@ static long s_sockexWrite( PHB_SOCKEX pSock, const void * data, long len, HB_MAX
       return lWritten >= 0 ? ( long ) ( len - pZ->z_write.avail_in ) : lWritten;
    }
    else
-      return hb_sockexWrite( pSock, data, len, timeout );
+      return hb_sockexWrite( pZ->sock, data, len, timeout );
 }
 
 static long s_sockexFlush( PHB_SOCKEX pSock, HB_MAXINT timeout, HB_BOOL fSync )
@@ -282,7 +282,7 @@ static long s_sockexFlush( PHB_SOCKEX pSock, HB_MAXINT timeout, HB_BOOL fSync )
          hb_socketSetError( HB_ZSOCK_ERROR_BASE - err );
       lResult = HB_ZSOCK_WRBUFSIZE - pZ->z_write.avail_out;
    }
-   return lResult + hb_sockexFlush( HB_ZSOCK_GET( pSock )->sock, timeout, fSync );
+   return lResult + hb_sockexFlush( pZ->sock, timeout, fSync );
 }
 
 static int s_sockexCanRead( PHB_SOCKEX pSock, HB_BOOL fBuffer, HB_MAXINT timeout )
