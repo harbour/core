@@ -13595,7 +13595,7 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
    LOCAL lModified := .F.
 
-   LOCAL hFile, nPEPos, cSignature, tDate, nSections
+   LOCAL hFile, nPEPos, cSignature, tDate, nSections, nSizeOfOptionalHeader
    LOCAL nPEChecksumPos, nDWORD, cDWORD
    LOCAL tmp, tmp1
 
@@ -13627,6 +13627,7 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
 
          IF hb_vfSeek( hFile, nPEPos + 0x0008, FS_SET ) == nPEPos + 0x0008
 
+            /* IMAGE_FILE_HEADER.TimeDateStamp */
             cDWORD := hb_BChar( nDWORD % 0x100 ) + ;
                       hb_BChar( nDWORD / 0x100 )
             nDWORD /= 0x10000
@@ -13639,38 +13640,39 @@ STATIC FUNCTION win_PESetTimestamp( cFileName, tDateHdr )
                lModified := .T.
             ENDIF
 
+            /* IMAGE_FILE_HEADER.SizeOfOptionalHeader */
             IF hb_vfSeek( hFile, nPEPos + 0x0014, FS_SET ) == nPEPos + 0x0014
 
+               nSizeOfOptionalHeader := Bin2W( hb_vfReadLen( hFile, 2 ) )
+
+               /* IMAGE_OPTIONAL_HEADER */
                nPEPos += 0x0018
+               /* IMAGE_OPTIONAL_HEADER.Checksum */
                nPEChecksumPos := nPEPos + 0x0040
 
-               IF Bin2W( hb_vfReadLen( hFile, 2 ) ) > 0x0058 .AND. ;
-                  hb_vfSeek( hFile, nPEPos + 0x005C, FS_SET ) == nPEPos + 0x005C
+               nPEPos += nSizeOfOptionalHeader
 
-                  nPEPos += 0x005C + ;
-                            ( ( Bin2W( hb_vfReadLen( hFile, 2 ) ) + ;
-                                Bin2W( hb_vfReadLen( hFile, 2 ) ) * 0x10000 ) * 8 ) + 4
-                  IF hb_vfSeek( hFile, nPEPos, FS_SET ) == nPEPos
-                     tmp1 := nPEPos
-                     nPEPos := NIL
-                     /* IMAGE_SECTION_HEADERs */
-                     FOR tmp := 1 TO nSections
-                        hb_vfSeek( hFile, tmp1 + ( tmp - 1 ) * 0x28, FS_SET )
-                        /* IMAGE_EXPORT_DIRECTORY */
-                        IF hb_vfReadLen( hFile, 8 ) == ".edata" + hb_BChar( 0 ) + hb_BChar( 0 )
-                           hb_vfSeek( hFile, 0x000C, FS_RELATIVE )
-                           nPEPos := Bin2W( hb_vfReadLen( hFile, 2 ) ) + ;
-                                     Bin2W( hb_vfReadLen( hFile, 2 ) ) * 0x10000
-                           EXIT
-                        ENDIF
-                     NEXT
-                     IF nPEPos != NIL .AND. ;
-                        hb_vfSeek( hFile, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004
-                        IF !( hb_vfReadLen( hFile, 4 ) == cDWORD ) .AND. ;
-                           hb_vfSeek( hFile, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004 .AND. ;
-                           hb_vfWrite( hFile, cDWORD ) == hb_BLen( cDWORD )
-                           lModified := .T.
-                        ENDIF
+               IF nSizeOfOptionalHeader > 0 .AND. ;
+                  hb_vfSeek( hFile, nPEPos, FS_SET ) == nPEPos
+                  tmp1 := nPEPos
+                  nPEPos := NIL
+                  /* IMAGE_SECTION_HEADERs */
+                  FOR tmp := 1 TO nSections
+                     hb_vfSeek( hFile, tmp1 + ( tmp - 1 ) * 0x28, FS_SET )
+                     /* IMAGE_EXPORT_DIRECTORY */
+                     IF hb_vfReadLen( hFile, 8 ) == ".edata" + hb_BChar( 0 ) + hb_BChar( 0 )
+                        hb_vfSeek( hFile, 0x000C, FS_RELATIVE )
+                        nPEPos := Bin2W( hb_vfReadLen( hFile, 2 ) ) + ;
+                                  Bin2W( hb_vfReadLen( hFile, 2 ) ) * 0x10000
+                        EXIT
+                     ENDIF
+                  NEXT
+                  IF nPEPos != NIL .AND. ;
+                     hb_vfSeek( hFile, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004
+                     IF !( hb_vfReadLen( hFile, 4 ) == cDWORD ) .AND. ;
+                        hb_vfSeek( hFile, nPEPos + 0x0004, FS_SET ) == nPEPos + 0x0004 .AND. ;
+                        hb_vfWrite( hFile, cDWORD ) == hb_BLen( cDWORD )
+                        lModified := .T.
                      ENDIF
                   ENDIF
                ENDIF
