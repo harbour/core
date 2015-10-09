@@ -168,6 +168,7 @@
 #        define HB_HAS_INET_PTON
 #        define HB_HAS_INET_NTOP
 #        define HB_HAS_ADDRINFO
+#        define HB_HAS_NAMEINFO
 #     endif
 #  endif
 #  define HB_IS_INET_NTOA_MT_SAFE
