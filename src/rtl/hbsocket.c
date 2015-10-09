@@ -166,10 +166,11 @@
 #  elif defined( __POCC__ ) && ! defined( __XCC__ )
 #     define HB_HAS_SOCKADDR_STORAGE
 #  elif defined( _MSC_VER )
-#     if _MSC_VER >= 1900 )
+#     if _MSC_VER >= 1900
 #        define HB_HAS_INET_PTON
 #        define HB_HAS_INET_NTOP
 #        define HB_HAS_ADDRINFO
+#        define HB_HAS_NAMEINFO
 #     endif
 #  endif
 #  define HB_IS_INET_NTOA_MT_SAFE
