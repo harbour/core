@@ -55,7 +55,7 @@ install:
 - openssl dgst -sha256 curl-win-mingw.7z | findstr /i /c:"de582e8eaf0280a63194d094af12120b2ef1a063dbb3739b3c6f3980a3bdf90e"
 - 7z x -y -oC:\w\ curl-win-mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win64-mingw.7z -o curl-win-mingw64.7z
-- openssl dgst -sha256 curl-win-mingw64.7z | findstr /i /c:"1655c2858739fc5c44db0732e19d76270008d97abf8d873a66dba21dd1bf4782"
+- openssl dgst -sha256 curl-win-mingw64.7z | findstr /i /c:"97cfc7700d0f89dadb2c11e8f199f70c17d3b34d71302367c3bdea2317c1c4b0"
 - 7z x -y -oC:\w\ curl-win-mingw64.7z > nul
 # Change to ISO date and 24-hour time format
 - reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d "yyyy-MM-dd" /f
