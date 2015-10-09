@@ -16671,6 +16671,7 @@ STATIC FUNCTION __hbshell_detect_CUI_extern_positive()
       "HB_DISPOUTAT"     =>, ;
       "HB_DISPOUTATBOX"  =>, ;
       "HB_KEYCLEAR"      =>, ;
+      "HB_KEYEXT"        =>, ;
       "HB_KEYINS"        =>, ;
       "HB_KEYLAST"       =>, ;
       "HB_KEYMOD"        =>, ;
