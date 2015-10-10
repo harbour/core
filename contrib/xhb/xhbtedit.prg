@@ -664,28 +664,28 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
       CASE nKeyStd == K_MWBACKWARD
          ::K_Mouse( nKey )
 
-      CASE hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "A"
+      CASE hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "A"
          ::SetTextSelection( "ALL" )  // Select all
 
-      CASE hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "C"
+      CASE hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "C"
          hb_gtInfo( HB_GTI_CLIPBOARDDATA, ::GetTextSelection() )  // Copy
          #if 0
          ::ClrTextSelection()
          #endif
 
-      CASE hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "X"
+      CASE hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "X"
          hb_gtInfo( HB_GTI_CLIPBOARDDATA, ::GetTextSelection() )  // Cut
          IF ::lEditAllow
             ::DelTextSelection()
          ENDIF
 
-      CASE hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "V"
+      CASE hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "V"
          IF ::lEditAllow
             ::AddText( StrTran( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 0 ), " " ), .T. )  // Paste
             ::ClrTextSelection()
          ENDIF
 
-      CASE ( hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" ) .OR. ;
+      CASE ( hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" ) .OR. ;
            nKeyStd == K_ALT_W .OR. ;
            nKey == K_CTRL_W  /* for GTs not supporting extended keys */
          // Exit and return text buffer content.
@@ -693,7 +693,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ::lExitEdit := .T.
          SetCursor( ::nOrigCursor )   // restore original cursor saved at startup
 
-      CASE hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "B"
+      CASE hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "B"
          // Reformat paragraph
          IF ::lEditAllow
             ::ClrTextSelection()

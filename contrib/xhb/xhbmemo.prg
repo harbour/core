@@ -45,7 +45,6 @@
  */
 
 #include "hbclass.ch"
-#include "hbgtinfo.ch"
 #include "memoedit.ch"
 #include "inkey.ch"
 
@@ -124,20 +123,20 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
       K_CTRL_W, ;
       K_CTRL_RETURN }
    ::aExtKeys := { ;
-      hb_keyMake( "W", HB_GTI_KBD_ALT  ), ;
-      hb_keyMake( "A", HB_GTI_KBD_CTRL ), ;
-      hb_keyMake( "B", HB_GTI_KBD_CTRL ), ;
-      hb_keyMake( "C", HB_GTI_KBD_CTRL ), ;
-      hb_keyMake( "V", HB_GTI_KBD_CTRL ), ;
-      hb_keyMake( "X", HB_GTI_KBD_CTRL ), ;
-      hb_keyMake( HB_KX_INS   , HB_GTI_KBD_SHIFT ), ;
-      hb_keyMake( HB_KX_DOWN  , HB_GTI_KBD_SHIFT ), ;
-      hb_keyMake( HB_KX_UP    , HB_GTI_KBD_SHIFT ), ;
-      hb_keyMake( HB_KX_DEL   , HB_GTI_KBD_SHIFT ), ;
-      hb_keyMake( HB_KX_RIGHT , HB_GTI_KBD_SHIFT ), ;
-      hb_keyMake( HB_KX_LEFT  , HB_GTI_KBD_SHIFT ), ;
-      hb_keyMake( HB_KX_END   , HB_GTI_KBD_SHIFT ), ;
-      hb_keyMake( HB_KX_HOME  , HB_GTI_KBD_SHIFT ) }
+      hb_keyMake( "W", HB_KF_ALT  ), ;
+      hb_keyMake( "A", HB_KF_CTRL ), ;
+      hb_keyMake( "B", HB_KF_CTRL ), ;
+      hb_keyMake( "C", HB_KF_CTRL ), ;
+      hb_keyMake( "V", HB_KF_CTRL ), ;
+      hb_keyMake( "X", HB_KF_CTRL ), ;
+      hb_keyMake( HB_KX_INS   , HB_KF_SHIFT ), ;
+      hb_keyMake( HB_KX_DOWN  , HB_KF_SHIFT ), ;
+      hb_keyMake( HB_KX_UP    , HB_KF_SHIFT ), ;
+      hb_keyMake( HB_KX_DEL   , HB_KF_SHIFT ), ;
+      hb_keyMake( HB_KX_RIGHT , HB_KF_SHIFT ), ;
+      hb_keyMake( HB_KX_LEFT  , HB_KF_SHIFT ), ;
+      hb_keyMake( HB_KX_END   , HB_KF_SHIFT ), ;
+      hb_keyMake( HB_KX_HOME  , HB_KF_SHIFT ) }
 
    ::aMouseKeys := { K_LBUTTONUP, K_MWFORWARD, K_MWBACKWARD }
 

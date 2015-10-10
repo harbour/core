@@ -54,7 +54,6 @@
 #include "color.ch"
 #include "error.ch"
 #include "fileio.ch"
-#include "hbgtinfo.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -567,11 +566,11 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
       CASE ::MoveCursor( nKey )
          // if it's a movement key ::MoveCursor() handles it
 
-      CASE ( hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "B" ) .OR. ;
+      CASE ( hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "B" ) .OR. ;
            nKeyStd == K_ALT_B  /* K_ALT_B is not Cl*pper compatible */
          ::ReformParagraph()
 
-      CASE ( hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" ) .OR. ;
+      CASE ( hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" ) .OR. ;
            nKeyStd == K_ALT_W  /* K_ALT_W is not Cl*pper compatible */
          ::lSaved := .T.
          ::lExitEdit := .T.

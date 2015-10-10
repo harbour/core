@@ -145,7 +145,7 @@ METHOD Edit() CLASS HBMemoEditor
          // Is it a configurable key?
          // K_ALT_W is a Harbour extension, it is Ctrl+W in Cl*pper
          IF nKeyStd $ hConfigurableKeys .OR. ;
-            ( hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" )
+            ( hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" )
             ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
          ELSE
             ::super:Edit( nKey )
@@ -275,7 +275,7 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
       nKeyStd := hb_keyStd( nUdfReturn )
       IF ( nKeyStd >= 1 .AND. nKeyStd <= 31 ) .OR. ;
          nKeyStd == K_ALT_W .OR. ;
-         ( hb_bitAnd( hb_keyMod( nUdfReturn ), HB_GTI_KBD_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nUdfReturn ) ) ) == "W" )
+         ( hb_bitAnd( hb_keyMod( nUdfReturn ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nUdfReturn ) ) ) == "W" )
          ::super:Edit( nUdfReturn )
       ELSE
          RETURN .F.

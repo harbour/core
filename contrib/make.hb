@@ -196,7 +196,7 @@ STATIC PROCEDURE Standalone( aParams, hProjectList )
 
    build_projects( nAction, hProjectList, hProjectReqList, cOptionsUser, .T. )
 
-   IF ! HB_ISNULL( cCustomDir )
+   IF HB_ISSTRING( cCustomDir ) .AND. ! HB_ISNULL( cCustomDir )
       hb_cwd( cCustomDir )
    ENDIF
 

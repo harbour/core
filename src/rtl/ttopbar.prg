@@ -50,7 +50,6 @@
 
 #include "button.ch"
 #include "color.ch"
-#include "hbgtinfo.ch"
 #include "inkey.ch"
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
@@ -277,7 +276,7 @@ METHOD getAccel( nKey ) CLASS TopBarMenu
    LOCAL item
 
    DO CASE
-   CASE hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_ALT ) != 0 .AND. ! HB_ISNULL( hb_keyChar( nKey ) )
+   CASE hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. ! HB_ISNULL( hb_keyChar( nKey ) )
 
       cKey := hb_keyChar( nKey )
 

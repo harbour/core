@@ -49,7 +49,6 @@
 
 #include "button.ch"
 #include "getexit.ch"
-#include "hbgtinfo.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "tbrowse.ch"
@@ -1430,7 +1429,7 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
 
    LOCAL nKeyStd
 
-   IF hb_bitAnd( hb_keyMod( nKey ), HB_GTI_KBD_ALT ) != 0 .AND. ! HB_ISNULL( hb_keyChar( nKey ) )
+   IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. ! HB_ISNULL( hb_keyChar( nKey ) )
       cKey := hb_keyChar( nKey )
    ELSE
       nKeyStd := hb_keyStd( nKey )
