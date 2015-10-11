@@ -69,15 +69,6 @@ CREATE CLASS xhb_TMemoEditor INHERIT XHBEditor
 
 ENDCLASS
 
-#define HB_INKEY_EXT_BIT            0x40000000
-#define HB_INKEY_EXT_KEY            0x01000000
-#define HB_INKEY_EXT_VALBITS        16
-
-STATIC FUNCTION hb_keyMake( cChar, nMod )
-   RETURN hb_bitOr( HB_INKEY_EXT_BIT, HB_INKEY_EXT_KEY, ;
-      hb_bitShift( hb_defaultValue( nMod, 0 ), HB_INKEY_EXT_VALBITS ), ;
-      Asc( hb_defaultValue( cChar, "" ) ) )
-
 METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
 
    LOCAL nUdfReturn
@@ -123,20 +114,20 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
       K_CTRL_W, ;
       K_CTRL_RETURN }
    ::aExtKeys := { ;
-      hb_keyMake( "W", HB_KF_ALT  ), ;
-      hb_keyMake( "A", HB_KF_CTRL ), ;
-      hb_keyMake( "B", HB_KF_CTRL ), ;
-      hb_keyMake( "C", HB_KF_CTRL ), ;
-      hb_keyMake( "V", HB_KF_CTRL ), ;
-      hb_keyMake( "X", HB_KF_CTRL ), ;
-      hb_keyMake( HB_KX_INS   , HB_KF_SHIFT ), ;
-      hb_keyMake( HB_KX_DOWN  , HB_KF_SHIFT ), ;
-      hb_keyMake( HB_KX_UP    , HB_KF_SHIFT ), ;
-      hb_keyMake( HB_KX_DEL   , HB_KF_SHIFT ), ;
-      hb_keyMake( HB_KX_RIGHT , HB_KF_SHIFT ), ;
-      hb_keyMake( HB_KX_LEFT  , HB_KF_SHIFT ), ;
-      hb_keyMake( HB_KX_END   , HB_KF_SHIFT ), ;
-      hb_keyMake( HB_KX_HOME  , HB_KF_SHIFT ) }
+      hb_keyNew( "W", HB_KF_ALT  ), ;
+      hb_keyNew( "A", HB_KF_CTRL ), ;
+      hb_keyNew( "B", HB_KF_CTRL ), ;
+      hb_keyNew( "C", HB_KF_CTRL ), ;
+      hb_keyNew( "V", HB_KF_CTRL ), ;
+      hb_keyNew( "X", HB_KF_CTRL ), ;
+      hb_keyNew( HB_KX_INS   , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_DOWN  , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_UP    , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_DEL   , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_RIGHT , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_LEFT  , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_END   , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_HOME  , HB_KF_SHIFT ) }
 
    ::aMouseKeys := { K_LBUTTONUP, K_MWFORWARD, K_MWBACKWARD }
 

@@ -16168,7 +16168,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
 
    SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
-   SetKey( hb_keyMake( "V", HB_KF_CTRL ), {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+   SetKey( hb_keyNew( "V", HB_KF_CTRL ), {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
 
    Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
    Set( _SET_INSERT, .T. )
@@ -16402,13 +16402,13 @@ STATIC FUNCTION __hbshell_GetHidden()
 
    SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
    bKeyPaste1 := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
-   bKeyPaste2 := SetKey( hb_keyMake( "V", HB_KF_CTRL ), {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+   bKeyPaste2 := SetKey( hb_keyNew( "V", HB_KF_CTRL ), {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
 
    ReadModal( GetList )
 
    /* Positions the cursor on the line previously saved */
    SetPos( nSavedRow, MaxCol() - 1 )
-   SetKey( hb_keyMake( "V", HB_KF_CTRL ), bKeyPaste2 )
+   SetKey( hb_keyNew( "V", HB_KF_CTRL ), bKeyPaste2 )
    SetKey( K_ALT_V, bKeyPaste1 )
 
    QQOut( hb_eol() )
@@ -17604,15 +17604,6 @@ STATIC PROCEDURE SetUILang( hbmk, cUILNG )
    ENDIF
 
    RETURN
-
-#define HB_INKEY_EXT_BIT            0x40000000
-#define HB_INKEY_EXT_KEY            0x01000000
-#define HB_INKEY_EXT_VALBITS        16
-
-STATIC FUNCTION hb_keyMake( cChar, nMod )
-   RETURN hb_bitOr( HB_INKEY_EXT_BIT, HB_INKEY_EXT_KEY, ;
-      hb_bitShift( hb_defaultValue( nMod, 0 ), HB_INKEY_EXT_VALBITS ), ;
-      Asc( hb_defaultValue( cChar, "" ) ) )
 
 INIT PROCEDURE ClipInit()
 

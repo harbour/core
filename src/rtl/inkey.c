@@ -2,7 +2,7 @@
  * The Keyboard API
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- * Copyright 1999-2012 Viktor Szakats (vszakats.net/harbour) (hb_keyPut())
+ * Copyright 1999-2012 Viktor Szakats (vszakats.net/harbour) (hb_keyPut(), hb_keyNew())
  * Copyright 2003-2012 Przemyslaw Czerpak <druzus@acn.waw.pl> (hb_keySetLast(), hb_keyChar(), hb_keyStd())
  *
  * This program is free software; you can redistribute it and/or modify
@@ -257,4 +257,21 @@ HB_FUNC( HB_KEYMOD )
 HB_FUNC( HB_KEYVAL )
 {
    hb_retni( hb_inkeyKeyVal( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( HB_KEYNEW )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+   int iMod = hb_parni( 2 );
+   int iKey = pText ? hb_cdpTextGetU16( hb_vmCDP(), hb_itemGetCPtr( pText ),
+                                                    hb_itemGetCLen( pText ) ) : hb_parni( 1 );
+
+   if( ( iMod & HB_KF_CTRL ) != 0 )
+      iKey = HB_INKEY_NEW_KEY( iKey, iMod );
+   else if( iKey >= 128 )
+      iKey = HB_INKEY_NEW_UNICODEF( iKey, iMod );
+   else
+      iKey = HB_INKEY_NEW_CHARF( iKey, iMod );
+
+   hb_retni( iKey );
 }
