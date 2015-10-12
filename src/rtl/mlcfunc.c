@@ -564,7 +564,7 @@ HB_FUNC( HB_MLEVAL )
       HB_BOOL fWordWrap = hb_parldef( 5, 1 );
       PHB_CODEPAGE cdp = hb_vmCDP();
       PHB_ITEM pLineItem = NULL, pSoftItem = NULL;
-      HB_BOOL fSoftCR;
+      HB_BOOL fSoftCR, fEOL;
       char * pszLine;
 
       if( ! HB_CDP_ISCHARIDX( cdp ) )
@@ -588,7 +588,7 @@ HB_FUNC( HB_MLEVAL )
       {
          HB_SIZE nBlankCol = 0, nBlankPos = 0, nBlankDst = 0, nCol = 0, nDst = 0;
 
-         fSoftCR = HB_FALSE;
+         fSoftCR = fEOL = HB_FALSE;
          ++nLines;
          do
          {
@@ -608,6 +608,7 @@ HB_FUNC( HB_MLEVAL )
                ++nOffset;
                if( pszString[ nOffset ] == HB_CHAR_LF )
                   ++nOffset;
+               fEOL = HB_TRUE;
                break;
             }
             else if( pszString[ nOffset ] == HB_CHAR_LF )
@@ -615,6 +616,7 @@ HB_FUNC( HB_MLEVAL )
                ++nOffset;
                if( pszString[ nOffset ] == HB_CHAR_CR )
                   ++nOffset;
+               fEOL = HB_TRUE;
                break;
             }
 
@@ -685,7 +687,7 @@ HB_FUNC( HB_MLEVAL )
          nColPos = 0;
       }
 
-      if( fSoftCR )
+      if( fSoftCR || fEOL )
       {
          pLineItem = hb_itemPutC( pLineItem, NULL );
          pSoftItem = hb_itemPutL( pSoftItem, HB_FALSE );
