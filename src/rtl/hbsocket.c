@@ -1820,7 +1820,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
             const char * szAddr;
 #  if defined( HB_HAS_INET_NTOP )
             char buf[ INET_ADDRSTRLEN ];
-            szAddr = inet_ntop( AF_INET, &sa->sin_addr, buf, sizeof( buf ) );
+            szAddr = inet_ntop( AF_INET, ( void * ) &sa->sin_addr, buf, sizeof( buf ) );
 #  elif defined( HB_IS_INET_NTOA_MT_SAFE )
             szAddr = inet_ntoa( sa->sin_addr );
 #  else
@@ -1840,7 +1840,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
             const char * szAddr;
 #  if defined( HB_HAS_INET_NTOP )
             char buf[ INET6_ADDRSTRLEN ];
-            szAddr = inet_ntop( AF_INET6, &sa->sin6_addr, buf, sizeof( buf ) );
+            szAddr = inet_ntop( AF_INET6, ( void * ) &sa->sin6_addr, buf, sizeof( buf ) );
 #  else
             {
                int iTODO;
@@ -1969,7 +1969,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
             const char * szAddr;
 #  if defined( HB_HAS_INET_NTOP )
             char buf[ INET_ADDRSTRLEN ];
-            szAddr = inet_ntop( AF_INET, &sa->sin_addr, buf, sizeof( buf ) );
+            szAddr = inet_ntop( AF_INET, ( void * ) &sa->sin_addr, buf, sizeof( buf ) );
 #  elif defined( HB_IS_INET_NTOA_MT_SAFE )
             szAddr = inet_ntoa( sa->sin_addr );
 #  else
@@ -1994,7 +1994,7 @@ PHB_ITEM hb_socketAddrToItem( const void * pSockAddr, unsigned len )
             const char * szAddr;
 #  if defined( HB_HAS_INET_NTOP )
             char buf[ INET6_ADDRSTRLEN ];
-            szAddr = inet_ntop( AF_INET6, &sa->sin6_addr, buf, sizeof( buf ) );
+            szAddr = inet_ntop( AF_INET6, ( void * ) &sa->sin6_addr, buf, sizeof( buf ) );
 #  else
             {
                int iTODO;
