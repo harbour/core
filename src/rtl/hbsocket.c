@@ -3281,7 +3281,7 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
  * IFACEs
  */
 #if defined( HB_OS_WIN ) || ( defined( SIOCGIFCONF ) && \
-    !( ( defined( HB_OS_LINUX ) || defined( HB_OS_DOS ) ) && defined( __WATCOMC__ ) ) )
+    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) ) )
 static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,
                                        const void * pSockAddr, unsigned len )
 {
@@ -3357,17 +3357,23 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
  *       of 'struct ifreq' and SIOCGIF*
  */
 #if defined( SIOCGIFCONF ) && \
-    !( ( defined( HB_OS_LINUX ) || defined( HB_OS_DOS ) ) && defined( __WATCOMC__ ) )
-   struct ifconf ifc;
-   struct ifreq * pifr;
-   char * buf, * ptr;
-   const char * pLastName = NULL;
-   int len = 0, size, iLastName = 0, iLastFamily = 0, flags, family;
+    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
    HB_SOCKET sd;
 
    sd = hb_socketOpen( af ? af : HB_SOCKET_AF_INET, HB_SOCKET_PT_DGRAM, 0 );
    if( sd != HB_NO_SOCKET )
    {
+      struct ifconf ifc;
+      struct ifreq * pifr;
+      char * buf, * ptr;
+      const char * pLastName = NULL;
+      int len = 0, size, iLastName = 0, iLastFamily = 0, flags, family;
+
+#  if defined( HB_OS_DOS )
+#     undef ioctl
+#     define ioctl( s, cmd, argp )  ioctlsocket( ( s ), ( cmd ), ( char * ) ( argp ) )
+#  endif
+
 #  if defined( HB_SOCKET_TRANSLATE_DOMAIN )
       af = hb_socketTransDomain( af, NULL );
 #  endif
@@ -3381,7 +3387,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
       buf = ( char * ) hb_xgrab( len );
 
       ifc.ifc_len = len;
-      ifc.ifc_buf = buf;
+      ifc.ifc_buf = ( caddr_t ) buf;
 
       /* Warning: On some platforms this code can effectively work only with
        *          IP4 interfaces and IP6 will need different implementation.
@@ -3389,7 +3395,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 
       if( ioctl( sd, SIOCGIFCONF, &ifc ) != -1 )
       {
-         for( ptr = ifc.ifc_buf, size = ifc.ifc_len; size > 0; )
+         for( ptr = ( char * ) ifc.ifc_buf, size = ifc.ifc_len; size > 0; )
          {
             pifr = ( struct ifreq * ) ptr;
             family = pifr->ifr_addr.sa_family;
