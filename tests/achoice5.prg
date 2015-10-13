@@ -4,8 +4,13 @@ PROCEDURE Main()
 
    LOCAL nb
 
-   // hb_keyPut( { K_END, K_END, K_UP, K_HOME } )            // Visual glitch
-   // hb_keyPut( { K_CTRL_END, K_CTRL_END, K_CTRL_HOME } )   // RTE
+   #if 0
+   hb_keyPut( { K_END, K_END, K_UP, K_HOME } )           // Visual glitch
+   #endif
+
+   #if 0
+   hb_keyPut( { K_CTRL_END, K_CTRL_END, K_CTRL_HOME } )  // RTE
+   #endif
 
    CLS
    nb := 20
