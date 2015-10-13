@@ -33,7 +33,7 @@ PROCEDURE Main()
 
    CLS
    @ 7, 25 TO 8 + Len( m_aItems ), 57
-   IF ( nResult := AChoice( 8, 26, 8 + Len( m_aItems ), 55, m_aItems,, "HotChoice" ) ) > 0
+   IF ( nResult := AChoice( 8, 26, 8 + Len( m_aItems ), 56, m_aItems,, "HotChoice" ) ) > 0
       Alert( m_aItems[ nResult ] + " selected" )
    ENDIF
 
