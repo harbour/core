@@ -369,7 +369,7 @@ FUNCTION MemoEdit( ;
       nOldCursor := SetCursor()
       oEd:InsertState( Set( _SET_INSERT ) )
       oEd:Edit()
-      IF oEd:Changed() .AND. oEd:Saved()
+      IF oEd:Saved()
          cString := oEd:GetText( .T. )
       ENDIF
       SetCursor( nOldCursor )
