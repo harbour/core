@@ -98,20 +98,6 @@ BOOL WINAPI SetEnvironmentVariableW( LPCWSTR name, LPCWSTR value )
    return FALSE;
 }
 
-BOOL WINAPI GetProcessTimes( HANDLE hprocess,
-                             LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
-                             LPFILETIME lpKernelTime, LPFILETIME lpUserTime )
-{
-
-   HB_SYMBOL_UNUSED( hprocess );
-   HB_SYMBOL_UNUSED( lpCreationTime );
-   HB_SYMBOL_UNUSED( lpExitTime );
-   HB_SYMBOL_UNUSED( lpKernelTime );
-   HB_SYMBOL_UNUSED( lpUserTime );
-
-   return 0;
-}
-
 BOOL WINAPI GetUserNameW( LPWSTR buffer, LPDWORD len )
 {
    if( len && buffer )

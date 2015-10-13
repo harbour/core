@@ -77,9 +77,6 @@ HB_EXTERN_BEGIN
       #endif
    #endif
 
-   WINBASEAPI BOOL WINAPI GetProcessTimes( HANDLE hprocess,
-                                           LPFILETIME lpCreationTime, LPFILETIME lpExitTime,
-                                           LPFILETIME lpKernelTime, LPFILETIME lpUserTime );
    WINBASEAPI BOOL WINAPI LockFile( HANDLE hFile,
                                     DWORD dwFileOffsetLow, DWORD dwFileOffsetHigh,
                                     DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh );
