@@ -590,7 +590,7 @@ HB_FUNC( HB_MLEVAL )
 
          fSoftCR = fEOL = HB_FALSE;
          ++nLines;
-         do
+         while( ! fSoftCR && nOffset < nLen )
          {
             HB_SIZE nRepl;
             HB_WCHAR ch;
@@ -667,7 +667,6 @@ HB_FUNC( HB_MLEVAL )
                   break;
             }
          }
-         while( ! fSoftCR && nOffset < nLen );
 
          if( nRowPos == 0 && nOffset >= nPos && ! fSoftCR )
          {
@@ -681,17 +680,18 @@ HB_FUNC( HB_MLEVAL )
       }
       while( nOffset < nLen && hb_vmRequestQuery() == 0 );
 
-      if( nRowPos == 0 && nOffset >= nPos )
-      {
-         nRowPos = nLines + 1;
-         nColPos = 0;
-      }
-
       if( fSoftCR || fEOL )
       {
+         ++nLines;
          pLineItem = hb_itemPutC( pLineItem, NULL );
          pSoftItem = hb_itemPutL( pSoftItem, HB_FALSE );
          hb_vmEvalBlockV( pBlock, 2, pLineItem, pSoftItem );
+      }
+
+      if( nRowPos == 0 && nOffset >= nPos )
+      {
+         nRowPos = nLines;
+         nColPos = 0;
       }
 
       hb_itemRelease( pLineItem );
