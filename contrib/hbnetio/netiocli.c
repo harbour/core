@@ -808,7 +808,7 @@ static const char * s_fileDecode( const char * pszFileName,
    return pszFileName;
 }
 
-static PHB_CONCLI s_fileConnCheck( PHB_CONCLI conn, const char ** pFileName )
+static PHB_CONCLI s_fileConnCheck( PHB_CONCLI conn, const char ** pFileName, HB_BOOL fDefault )
 {
    if( conn )
    {
@@ -817,7 +817,14 @@ static PHB_CONCLI s_fileConnCheck( PHB_CONCLI conn, const char ** pFileName )
       char * pszIpAddres;
       int iPort = 0;
 
-      s_fileGetConnParam( &pszServer, &iPort, NULL, NULL, NULL );
+      if( ! fDefault )
+      {
+         pszServer = conn->server;
+         iPort = conn->port;
+      }
+      else
+         s_fileGetConnParam( &pszServer, &iPort, NULL, NULL, NULL );
+
       *pFileName = s_fileDecode( *pFileName, server,
                                  &pszServer, &iPort, NULL,
                                  NULL, NULL, NULL, NULL );
@@ -1721,14 +1728,24 @@ static HB_BOOL s_fileRename( PHB_FILE_FUNCS pFuncs, const char * pszFileName, co
    PHB_CONCLI conn;
 
    pszFileName += NETIO_FILE_PREFIX_LEN;
-   if( s_fileAccept( pFuncs, pszNewName ) )
-      pszNewName += NETIO_FILE_PREFIX_LEN;
-
    conn = s_fileConnect( &pszFileName, NULL, 0, 0, HB_FALSE,
                          NULL, 0, HB_ZLIB_COMPRESSION_DISABLE, 0 );
    if( conn )
    {
-      if( s_fileConLock( conn ) )
+      fResult = HB_TRUE;
+
+      if( s_fileAccept( pFuncs, pszNewName ) )
+      {
+         pszNewName += NETIO_FILE_PREFIX_LEN;
+         fResult = s_fileConnCheck( conn, &pszNewName, HB_FALSE ) != NULL;
+      }
+
+      if( ! fResult )
+      {
+         conn->errcode = 2;
+         hb_fsSetError( conn->errcode );
+      }
+      else if( s_fileConLock( conn ) )
       {
          HB_BYTE msgbuf[ NETIO_MSGLEN ];
          HB_U16 len1 = ( HB_U16 ) strlen( pszFileName );
@@ -1766,7 +1783,7 @@ static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pszSrcFile, const
                          NULL, 0, HB_ZLIB_COMPRESSION_DISABLE, 0 );
    if( conn )
    {
-      if( s_fileConnCheck( conn, &pszDestin ) == NULL )
+      if( s_fileConnCheck( conn, &pszDestin, HB_TRUE ) == NULL )
          fResult = hb_fsCopy( pszSrcFile, pszDstFile );
       else if( s_fileConLock( conn ) )
       {
@@ -1930,14 +1947,24 @@ static HB_BOOL s_fileLink( PHB_FILE_FUNCS pFuncs, const char * pszExisting, cons
    PHB_CONCLI conn;
 
    pszExisting += NETIO_FILE_PREFIX_LEN;
-   if( s_fileAccept( pFuncs, pszNewName ) )
-      pszNewName += NETIO_FILE_PREFIX_LEN;
-
    conn = s_fileConnect( &pszExisting, NULL, 0, 0, HB_FALSE,
                          NULL, 0, HB_ZLIB_COMPRESSION_DISABLE, 0 );
    if( conn )
    {
-      if( s_fileConLock( conn ) )
+      fResult = HB_TRUE;
+
+      if( s_fileAccept( pFuncs, pszNewName ) )
+      {
+         pszNewName += NETIO_FILE_PREFIX_LEN;
+         fResult = s_fileConnCheck( conn, &pszNewName, HB_FALSE ) != NULL;
+      }
+
+      if( ! fResult )
+      {
+         conn->errcode = 2;
+         hb_fsSetError( conn->errcode );
+      }
+      else if( s_fileConLock( conn ) )
       {
          HB_BYTE msgbuf[ NETIO_MSGLEN ];
          HB_U16 len1 = ( HB_U16 ) strlen( pszExisting );
@@ -1967,14 +1994,24 @@ static HB_BOOL s_fileLinkSym( PHB_FILE_FUNCS pFuncs, const char * pszTarget, con
    PHB_CONCLI conn;
 
    pszTarget += NETIO_FILE_PREFIX_LEN;
-   if( s_fileAccept( pFuncs, pszNewName ) )
-      pszNewName += NETIO_FILE_PREFIX_LEN;
-
    conn = s_fileConnect( &pszTarget, NULL, 0, 0, HB_FALSE,
                          NULL, 0, HB_ZLIB_COMPRESSION_DISABLE, 0 );
    if( conn )
    {
-      if( s_fileConLock( conn ) )
+      fResult = HB_TRUE;
+
+      if( s_fileAccept( pFuncs, pszNewName ) )
+      {
+         pszNewName += NETIO_FILE_PREFIX_LEN;
+         fResult = s_fileConnCheck( conn, &pszNewName, HB_FALSE ) != NULL;
+      }
+
+      if( ! fResult )
+      {
+         conn->errcode = 2;
+         hb_fsSetError( conn->errcode );
+      }
+      else if( s_fileConLock( conn ) )
       {
          HB_BYTE msgbuf[ NETIO_MSGLEN ];
          HB_U16 len1 = ( HB_U16 ) strlen( pszTarget );
