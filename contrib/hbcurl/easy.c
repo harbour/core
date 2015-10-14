@@ -323,6 +323,8 @@ static size_t hb_curl_write_buff_callback( void * buffer, size_t size, size_t nm
 #if LIBCURL_VERSION_NUM >= 0x072000
 static int hb_curl_xferinfo_callback( void * Cargo, curl_off_t dltotal, curl_off_t dlnow, curl_off_t ultotal, curl_off_t ulnow )
 {
+   int result = 0;
+
    if( Cargo )
    {
       if( hb_vmRequestReenter() )
@@ -334,18 +336,20 @@ static int hb_curl_xferinfo_callback( void * Cargo, curl_off_t dltotal, curl_off
          hb_vmSend( 2 );
 
          if( hb_parl( -1 ) )
-            return 1;  /* Abort */
+            result = 1;  /* Abort */
 
          hb_vmRequestRestore();
       }
    }
 
-   return 0;
+   return result;
 }
 #else
 
 static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow, double ultotal, double ulnow )
 {
+   int result = 0;
+
    if( Cargo )
    {
       if( hb_vmRequestReenter() )
@@ -357,13 +361,13 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
          hb_vmSend( 2 );
 
          if( hb_parl( -1 ) )
-            return 1;  /* Abort */
+            result = 1;  /* Abort */
 
          hb_vmRequestRestore();
       }
    }
 
-   return 0;
+   return result;
 }
 #endif
 
