@@ -1917,12 +1917,13 @@ HB_FUNC( CURL_EASY_DL_BUFF_GET )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#define HB_CURL_INFO_TYPE_INVALID  0
-#define HB_CURL_INFO_TYPE_STR      1
-#define HB_CURL_INFO_TYPE_PTR      2
-#define HB_CURL_INFO_TYPE_LONG     3
-#define HB_CURL_INFO_TYPE_DOUBLE   4
-#define HB_CURL_INFO_TYPE_SLIST    5
+#define HB_CURL_INFO_TYPE_INVALID    0
+#define HB_CURL_INFO_TYPE_STR        1
+#define HB_CURL_INFO_TYPE_PTR        2
+#define HB_CURL_INFO_TYPE_PTR_SLIST  3
+#define HB_CURL_INFO_TYPE_LONG       4
+#define HB_CURL_INFO_TYPE_DOUBLE     5
+#define HB_CURL_INFO_TYPE_SLIST      6
 
 #define HB_CURL_EASY_GETINFO( hb_curl, n, p )  ( hb_curl ? curl_easy_getinfo( hb_curl->curl, n, p ) : ( CURLcode ) HB_CURLE_ERROR )
 
@@ -2088,9 +2089,9 @@ HB_FUNC( CURL_EASY_GETINFO )
             break;
          case HB_CURLINFO_ACTIVESOCKET:
 #if LIBCURL_VERSION_NUM >= 0x072D00
-            res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_ACTIVESOCKET, &ret_ptr );
+            res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_ACTIVESOCKET, &ret_slist );
 #endif
-            type = HB_CURL_INFO_TYPE_PTR;
+            type = HB_CURL_INFO_TYPE_PTR_SLIST;
             break;
          case HB_CURLINFO_LASTSOCKET:  /* NOTE: Not compatible with 64-bit Windows builds */
 #if LIBCURL_VERSION_NUM >= 0x070F02
@@ -2179,6 +2180,9 @@ HB_FUNC( CURL_EASY_GETINFO )
             break;
          case HB_CURL_INFO_TYPE_PTR:
             hb_retptr( ret_ptr );
+            break;
+         case HB_CURL_INFO_TYPE_PTR_SLIST:
+            hb_retptr( ret_slist );
             break;
          case HB_CURL_INFO_TYPE_LONG:
             hb_retnl( ret_long );
