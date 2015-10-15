@@ -44,7 +44,7 @@
 
 hbicu.hbc
 
-{HBMK_HAS_ICU}-cflag=-DSQLITE_ENABLE_ICU
+{HBMK_HAS_ICU}-cflag=-DSQLITE_ENABLE_ICU=1
 
 sqlite3.c
 
