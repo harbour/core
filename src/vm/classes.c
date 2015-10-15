@@ -2496,7 +2496,7 @@ PHB_ITEM hb_objSendMessage( PHB_ITEM pObject, PHB_DYNS pMsgSym, HB_ULONG ulArg, 
       hb_vmSend( ( HB_USHORT ) ulArg );
    }
    else
-      hb_errRT_BASE( EG_ARG, 3000, NULL, "__ObjSendMessage()", 0 );
+      hb_errRT_BASE( EG_ARG, 3000, NULL, "__objSendMessage()", 0 );
 
    {
       HB_STACK_TLS_PRELOAD
