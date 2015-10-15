@@ -897,29 +897,26 @@ STATIC PROCEDURE DOSToUnixPathSep( cFileName )
 
    DO WHILE .T.
 
-      IF ( nEnd := At( cLookFor, SubStr( cFile, nStart ) ) - 1 ) == -1
+      IF ( nEnd := hb_BAt( cLookFor, cFile, nStart ) ) == 0
          /* If anything is left in the input string, stick it to the end
           * of the output string. No path searching as that would be
           * an invalid diff anyway */
-         IF ! HB_ISNULL( SubStr( cFile, nStart ) )
-            cNewFile := SubStr( cFile, nStart )
-         ENDIF
+         cNewFile += hb_BSubStr( cFile, nStart )
          EXIT
       ENDIF
 
-      cMemoLine := SubStr( cFile, nStart, nEnd )
+      cMemoLine := hb_BSubStr( cFile, nStart, nEnd - nStart + hb_BLen( cLookFor ) )
 
       IF ( hb_LeftEq( cMemoLine, "diff " ) .OR. ;
            hb_LeftEq( cMemoLine, "+++ " ) .OR. ;
            hb_LeftEq( cMemoLine, "--- " ) ) .AND. "\" $ cMemoLine
 
-         cNewFile += StrTran( cMemoLine, "\", "/" ) + cLookFor
+         cMemoLine := StrTran( cMemoLine, "\", "/" )
          s_nErrors++
-      ELSE
-         cNewFile += cMemoLine + cLookFor
       ENDIF
 
-      nStart += nEnd + Len( cLookFor )
+      cNewFile += cMemoLine
+      nStart := hb_BLen( cNewFile ) + 1
 
    ENDDO
 
