@@ -220,3 +220,18 @@ HB_FUNC( ORDNAME ) { hb_retc_null(); }
 HB_FUNC( ORDKEY ) { hb_retc_null(); }
 
 HB_FUNC( ORDFOR ) { hb_retc_null(); }
+
+
+HB_FUNC( HB_DBDROP ) { hb_retl( HB_FALSE ); }
+
+HB_FUNC( HB_DBEXISTS ) { hb_retl( HB_FALSE ); }
+
+HB_FUNC( HB_DBRENAME ) { hb_retl( HB_FALSE ); }
+
+HB_FUNC( HB_FIELDLEN ) { hb_retni( 0 ); }
+
+HB_FUNC( HB_FIELDDEC ) { hb_retni( 0 ); }
+
+HB_FUNC( HB_FIELDTYPE ) { hb_retc_null(); }
+
+HB_FUNC( HB_WAEVAL ) { hb_retc_null(); }
