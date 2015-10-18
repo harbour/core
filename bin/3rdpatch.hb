@@ -514,7 +514,7 @@ PROCEDURE Main( ... )
       ENDIF
 
       /* Re-create the diff */
-      cCommand := hb_StrFormat( "%1$s -urN %2$s %3$s", ;
+      cCommand := hb_StrFormat( "%1$s -wurN %2$s %3$s", ;
          s_aTools[ "diff" ], cThisComponent + ".orig", cThisComponent )
 
       DirChange( s_cTempDir )
