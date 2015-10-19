@@ -42,8 +42,6 @@ class Harbour < Formula
     ENV["HB_INSTALL_PREFIX"] = prefix
     ENV["HB_WITH_X11"] = "no" if build.without? "x11"
 
-    ENV.deparallelize
-
     system "make", "install"
 
     # This is not longer needed in recent builds
