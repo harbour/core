@@ -139,6 +139,9 @@
 #  endif
 #  if defined( HB_OS_LINUX )
 #     define HB_HAS_SELECT_TIMER
+#     if defined( HB_CPU_MIPS )
+#        define HB_SOCKET_TRANSLATE_TYPE
+#     endif
 #  endif
 #  if defined( HB_OS_SUNOS )
 #     if ! defined( BSD_COMP )
