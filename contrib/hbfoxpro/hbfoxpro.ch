@@ -106,6 +106,7 @@
 
 #xtranslate USED( <wa> )    => __fox_Used( <wa> )
 
+#xtranslate At( <sub>, <str>, <occur> )   => fox_At( <sub>, <str>, <occur> )
 
 /* other commands */
 #command SCAN [FOR <for>] [WHILE <while>] [NEXT <next>] ;

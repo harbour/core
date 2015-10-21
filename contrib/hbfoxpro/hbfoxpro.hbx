@@ -23,6 +23,7 @@
 
 DYNAMIC AElement
 DYNAMIC Filter
+DYNAMIC fox_At
 DYNAMIC fox___DynCall
 DYNAMIC FSize
 DYNAMIC InsMode
