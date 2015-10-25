@@ -44,6 +44,7 @@ FUNCTION hbmk_plugin_qt( hbmk )
    SWITCH hbmk[ "cSTATE" ]
    CASE "init"
 
+      hbmk_Register_Input_File_Extension( hbmk, ".qrc" )
       hbmk_Register_Input_File_Extension( hbmk, ".h" )
 
       EXIT
@@ -52,17 +53,33 @@ FUNCTION hbmk_plugin_qt( hbmk )
 
       /* Gather input parameters */
 
+      hbmk[ "vars" ][ "aQRC_Src" ] := {}
       hbmk[ "vars" ][ "aMOC_Src" ] := {}
 
       FOR EACH cSrc IN hbmk[ "params" ]
-         IF ! hb_LeftEq( cSrc, "-" ) .AND. ;
-            Lower( hb_FNameExt( cSrc ) ) == ".h"
-
-            AAdd( hbmk[ "vars" ][ "aMOC_Src" ], cSrc )
+         IF ! hb_LeftEq( cSrc, "-" )
+            SWITCH Lower( hb_FNameExt( cSrc ) )
+            CASE ".qrc"
+               AAdd( hbmk[ "vars" ][ "aQRC_Src" ], cSrc )
+               EXIT
+            CASE ".h"
+               AAdd( hbmk[ "vars" ][ "aMOC_Src" ], cSrc )
+               EXIT
+            ENDSWITCH
          ENDIF
       NEXT
 
       /* Create output file lists */
+
+      hbmk[ "vars" ][ "aQRC_Dst" ] := {}
+      hbmk[ "vars" ][ "aQRC_PRG" ] := {}
+      FOR EACH cSrc IN hbmk[ "vars" ][ "aQRC_Src" ]
+         cDst := hbmk_FNameDirExtSet( "rcc_" + hb_FNameName( cSrc ), hbmk[ "cWorkDir" ], ".qrb" )
+         AAdd( hbmk[ "vars" ][ "aQRC_Dst" ], cDst )
+         cDst := hbmk_FNameDirExtSet( "rcc_" + hb_FNameName( cSrc ), hbmk[ "cWorkDir" ], ".prg" )
+         AAdd( hbmk[ "vars" ][ "aQRC_PRG" ], cDst )
+         hbmk_AddInput_PRG( hbmk, cDst )
+      NEXT
 
       hbmk[ "vars" ][ "aMOC_Dst" ] := {}
       FOR EACH cSrc IN hbmk[ "vars" ][ "aMOC_Src" ]
@@ -74,6 +91,12 @@ FUNCTION hbmk_plugin_qt( hbmk )
       /* Detect tool locations */
 
       IF ! hbmk[ "lCLEAN" ]
+         IF ! Empty( hbmk[ "vars" ][ "aQRC_Src" ] )
+            hbmk[ "vars" ][ "cRCC_BIN" ] := qt_tool_detect( hbmk, "rcc", "RCC_BIN", .F. )
+            IF Empty( hbmk[ "vars" ][ "cRCC_BIN" ] )
+               cRetVal := I_( "Required QT tool not found" )
+            ENDIF
+         ENDIF
          IF ! Empty( hbmk[ "vars" ][ "aMOC_Src" ] )
             hbmk[ "vars" ][ "cMOC_BIN" ] := qt_tool_detect( hbmk, "moc", "MOC_BIN", .T. )
             IF Empty( hbmk[ "vars" ][ "cMOC_BIN" ] )
@@ -83,6 +106,72 @@ FUNCTION hbmk_plugin_qt( hbmk )
       ENDIF
 
       EXIT
+
+   CASE "pre_prg"
+
+      IF ! hbmk[ "lCLEAN" ] .AND. ;
+         ! Empty( hbmk[ "vars" ][ "aQRC_Src" ] )
+
+         IF ! Empty( hbmk[ "vars" ][ "cRCC_BIN" ] )
+
+            /* Execute 'rcc' commands on input files */
+
+            FOR EACH cSrc, cDst, cPRG IN hbmk[ "vars" ][ "aQRC_Src" ], hbmk[ "vars" ][ "aQRC_Dst" ], hbmk[ "vars" ][ "aQRC_PRG" ]
+
+               IF hbmk[ "lINC" ] .AND. ! hbmk[ "lREBUILD" ]
+                  lBuildIt := ! hb_vfTimeGet( cDst, @tDst ) .OR. ;
+                              ! hb_vfTimeGet( cSrc, @tSrc ) .OR. ;
+                              tSrc > tDst
+               ELSE
+                  lBuildIt := .T.
+               ENDIF
+
+               IF lBuildIt
+
+                  cCommand := hbmk[ "vars" ][ "cRCC_BIN" ] +;
+                     " -binary" +;
+                     " " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cSrc ) ) +;
+                     " -o " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cDst ) )
+
+                  IF hbmk[ "lTRACE" ]
+                     IF ! hbmk[ "lQUIET" ]
+                        hbmk_OutStd( hbmk, I_( "'rcc' command:" ) )
+                     ENDIF
+                     hbmk_OutStdRaw( hbmk, cCommand )
+                  ENDIF
+
+                  IF ! hbmk[ "lDONTEXEC" ]
+                     IF ( nError := hb_processRun( cCommand ) ) != 0
+                        hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running 'rcc' executable. %1$d" ), nError ) )
+                        IF ! hbmk[ "lQUIET" ]
+                           hbmk_OutErrRaw( hbmk, cCommand )
+                        ENDIF
+                        IF ! hbmk[ "lIGNOREERROR" ]
+                           cRetVal := "error"
+                           EXIT
+                        ENDIF
+                     ELSE
+                        /* Create little .prg stub which includes the binary */
+                        cTmp := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_eol() +;
+                                hb_eol() +;
+                                "#pragma -km+" + hb_eol() +;
+                                hb_eol() +;
+                                "FUNCTION hbqtres_" + hbmk_FuncNameEncode( hb_FNameName( cSrc ) ) + "()" + hb_eol() +;
+                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hb_FNameNameExt( cDst ) + Chr( 34 ) + " | RETURN %s" + hb_eol()
+
+                        IF ! hb_MemoWrit( cPRG, cTmp )
+                           hbmk_OutErr( hbmk, hb_StrFormat( "Error: Cannot create file: %1$s", cPRG ) )
+                           IF ! hbmk[ "lIGNOREERROR" ]
+                              cRetVal := "error"
+                              EXIT
+                           ENDIF
+                        ENDIF
+                     ENDIF
+                  ENDIF
+               ENDIF
+            NEXT
+         ENDIF
+      ENDIF
 
    CASE "pre_c"
 
@@ -136,6 +225,8 @@ FUNCTION hbmk_plugin_qt( hbmk )
    CASE "post_all"
 
       IF ! hbmk[ "lINC" ] .OR. hbmk[ "lCLEAN" ]
+         AEval( hbmk[ "vars" ][ "aQRC_Dst" ], {| tmp | hb_vfErase( tmp ) } )
+         AEval( hbmk[ "vars" ][ "aQRC_PRG" ], {| tmp | hb_vfErase( tmp ) } )
          AEval( hbmk[ "vars" ][ "aMOC_Dst" ], {| tmp | hb_vfErase( tmp ) } )
       ENDIF
 
