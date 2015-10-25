@@ -298,7 +298,7 @@ typedef struct
    HB_BOOL  fInit;                        /* logical variable indicating that window should be open */
 
    HICON    hIcon;                        /* Title Bar and Task List icon. Can be NULL. */
-   HB_BOOL  bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
+   HICON    hIconToFree;                  /* Do we need to free this icon when it's not NULL? */
 
    void *   hWindowTitle;
    LPCTSTR  lpWindowTitle;

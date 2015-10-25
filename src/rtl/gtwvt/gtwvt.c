@@ -261,8 +261,8 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    if( pWVT->hWnd )
       DestroyWindow( pWVT->hWnd );
 
-   if( pWVT->hIcon && pWVT->bIconToFree )
-      DestroyIcon( pWVT->hIcon );
+   if( pWVT->hIconToFree )
+      DestroyIcon( pWVT->hIconToFree );
 
    if( pWVT->TextLine )
       hb_xfree( pWVT->TextLine );
@@ -3800,75 +3800,44 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 #endif
       case HB_GTI_ICONFILE:
-
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
-            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
-            void * hImageName;
-
-            pWVT->bIconToFree = HB_TRUE;
-#if defined( HB_OS_WIN_CE )
-            pWVT->hIcon = ( HICON ) LoadImage( NULL,
-                                               HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ),
-                                               IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-#else
-            pWVT->hIcon = ( HICON ) LoadImage( NULL,
-                                               HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ),
-                                               IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE );
-#endif
-            hb_strfree( hImageName );
-            if( pWVT->hWnd )
-            {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
-            }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
-         }
-         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, ( void * ) ( HB_PTRDIFF ) pWVT->hIcon );
-         break;
-
       case HB_GTI_ICONRES:
+      {
+         HICON hIcon = NULL, hIconToFree = NULL;
 
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
             void * hIconName;
 
-            pWVT->bIconToFree = HB_FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
+            if( iType == HB_GTI_ICONFILE )
+               hIcon = hIconToFree = ( HICON )
+                       LoadImage( ( HINSTANCE ) NULL,
+                                  HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ),
+                                  IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE );
+            else
+               hIcon = LoadIcon( pWVT->hInstance,
+                                 HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
             hb_strfree( hIconName );
-            if( pWVT->hWnd )
-            {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
-            }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
-
-            pWVT->bIconToFree = HB_FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    MAKEINTRESOURCE( hb_itemGetNI( pInfo->pNewVal ) ) );
-
+            hIcon = LoadIcon( pWVT->hInstance,
+                              MAKEINTRESOURCE( hb_itemGetNI( pInfo->pNewVal ) ) );
+         }
+         if( hIcon != pWVT->hIcon )
+         {
             if( pWVT->hWnd )
             {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
+               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
+               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
             }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
+            if( pWVT->hIconToFree )
+               DestroyIcon( pWVT->hIconToFree );
+            pWVT->hIconToFree = hIconToFree;
+            pWVT->hIcon = hIcon;
          }
          pInfo->pResult = hb_itemPutPtr( pInfo->pResult, ( void * ) ( HB_PTRDIFF ) pWVT->hIcon );
          break;
-
+      }
       case HB_GTI_VIEWPORTWIDTH:
       case HB_GTI_VIEWMAXWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->COLS );

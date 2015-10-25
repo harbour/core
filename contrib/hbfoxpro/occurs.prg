@@ -1,5 +1,5 @@
 /*
- * FoxPro compatible Occurs() function
+ * FoxPro compatible Occurs() and At() functions
  *
  * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -56,3 +56,15 @@ FUNCTION Occurs( cSub, cStr )
    ENDIF
 
    RETURN nCount
+
+
+FUNCTION fox_At( cSub, cStr, nOccurrence )
+   LOCAL nPos := 0
+
+   IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
+      hb_default( @nOccurrence, 1 )
+      DO WHILE --nOccurrence >= 0 .AND. ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) != 0
+      ENDDO
+   ENDIF
+
+RETURN nPos

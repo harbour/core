@@ -203,8 +203,10 @@ static const char * hb_comGetNameRaw( PHB_COM pCom, char * buffer, int size )
 #  else /* defined( HB_OS_LINUX ) || defined( HB_OS_CYGWIN ) || ... */
       hb_snprintf( buffer, size, "/dev/ttyS%d", pCom->port - 1 );
 #  endif
+#elif defined( HB_OS_WIN_CE )
+      hb_snprintf( buffer, size, "COM%d:", pCom->port );
 #else
-      if( hb_iswinnt() )
+      if( hb_iswinnt() || hb_iswince() )
          hb_snprintf( buffer, size, "\\\\.\\COM%d", pCom->port );
       else
          hb_snprintf( buffer, size, "COM%d", pCom->port );
