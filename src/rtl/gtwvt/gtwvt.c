@@ -3809,10 +3809,17 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             void * hIconName;
 
             if( iType == HB_GTI_ICONFILE )
+#if defined( HB_OS_WIN_CE )
+               hIcon = hIconToFree = ( HICON )
+                       LoadImage( ( HINSTANCE ) NULL,
+                                  HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ),
+                                  IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+#else
                hIcon = hIconToFree = ( HICON )
                        LoadImage( ( HINSTANCE ) NULL,
                                   HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ),
                                   IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE );
+#endif
             else
                hIcon = LoadIcon( pWVT->hInstance,
                                  HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );

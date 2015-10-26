@@ -57,8 +57,8 @@ FUNCTION Occurs( cSub, cStr )
 
    RETURN nCount
 
-
 FUNCTION fox_At( cSub, cStr, nOccurrence )
+
    LOCAL nPos := 0
 
    IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
@@ -67,4 +67,4 @@ FUNCTION fox_At( cSub, cStr, nOccurrence )
       ENDDO
    ENDIF
 
-RETURN nPos
+   RETURN nPos
