@@ -160,7 +160,7 @@ FUNCTION hbmk_plugin_qt( hbmk )
                               "#pragma -km+" + hb_eol() +;
                               hb_eol() +;
                               "FUNCTION hbqtres_" + hbmk_FuncNameEncode( hb_FNameName( cSrc ) ) + "()" + hb_eol() +;
-                              "   #pragma __binarystreaminclude " + Chr( 34 ) + hb_FNameNameExt( cDst ) + Chr( 34 ) + " | RETURN %s" + hb_eol() )
+                              "   #pragma __binarystreaminclude " + '"' + hb_FNameNameExt( cDst ) + '"' + " | RETURN %s" + hb_eol() )
 
                            hbmk_OutErr( hbmk, hb_StrFormat( "Error: Cannot create file: %1$s", cPRG ) )
                            IF ! hbmk[ "lIGNOREERROR" ]
