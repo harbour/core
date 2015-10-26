@@ -37,6 +37,8 @@ FUNCTION hbmk_plugin_qt( hbmk )
    LOCAL tSrc
    LOCAL tDst
 
+   LOCAL cPRG
+
    LOCAL cCommand
    LOCAL nError
    LOCAL lBuildIt
@@ -152,14 +154,14 @@ FUNCTION hbmk_plugin_qt( hbmk )
                         ENDIF
                      ELSE
                         /* Create little .prg stub which includes the binary */
-                        cTmp := "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_eol() +;
-                                hb_eol() +;
-                                "#pragma -km+" + hb_eol() +;
-                                hb_eol() +;
-                                "FUNCTION hbqtres_" + hbmk_FuncNameEncode( hb_FNameName( cSrc ) ) + "()" + hb_eol() +;
-                                "   #pragma __binarystreaminclude " + Chr( 34 ) + hb_FNameNameExt( cDst ) + Chr( 34 ) + " | RETURN %s" + hb_eol()
+                        IF ! hb_MemoWrit( cPRG, ;
+                              "/* WARNING: Automatically generated source file. DO NOT EDIT! */" + hb_eol() +;
+                              hb_eol() +;
+                              "#pragma -km+" + hb_eol() +;
+                              hb_eol() +;
+                              "FUNCTION hbqtres_" + hbmk_FuncNameEncode( hb_FNameName( cSrc ) ) + "()" + hb_eol() +;
+                              "   #pragma __binarystreaminclude " + Chr( 34 ) + hb_FNameNameExt( cDst ) + Chr( 34 ) + " | RETURN %s" + hb_eol() )
 
-                        IF ! hb_MemoWrit( cPRG, cTmp )
                            hbmk_OutErr( hbmk, hb_StrFormat( "Error: Cannot create file: %1$s", cPRG ) )
                            IF ! hbmk[ "lIGNOREERROR" ]
                               cRetVal := "error"
