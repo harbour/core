@@ -281,7 +281,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
       CASE nKey == K_CTRL_PGDN .OR. ( nKey == K_END .AND. ! lUserFunc )
 
          IF nPos == nLastItem
-            IF nAtTop == Min( nLastItem, nItems - nNumRows + 1 )
+            IF nAtTop == Min( nLastItem, nItems - Min( nItems, nNumRows ) + 1 )
                nMode := AC_HITBOTTOM
             ELSE
                nAtTop := Min( nLastItem, nItems - nNumRows + 1 )
@@ -323,7 +323,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
       CASE nKey == K_CTRL_END
 
          IF nPos == nLastItem
-            IF nAtTop == Min( nPos, nItems - nNumRows + 1 ) .OR. nPos == nItems
+            IF nAtTop == Min( nPos, nItems - Min( nItems, nNumRows ) + 1 ) .OR. nPos == nItems
                nMode := AC_HITBOTTOM
             ELSE
                nAtTop := Min( nPos, nItems - nNumRows + 1 )
