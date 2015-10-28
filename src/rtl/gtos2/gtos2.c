@@ -140,11 +140,61 @@ static VIOMODEINFO s_vi;
 
 /* keyboard event record */
 static PKBDKEYINFO s_key;
-/* keyboard handle, 0 == default */
-static PHKBD s_hk;
+
+/* keyboard status data */
+static PKBDINFO s_kbd;
 
 /* mouse logical handle */
 static HMOU s_uMouHandle;
+
+
+/* helper functions */
+
+#ifndef KBDSTF_SHIFT
+   #define KBDSTF_SHIFT ( KBDSTF_RIGHTSHIFT | KBDSTF_LEFTSHIFT )
+#endif
+
+static int hb_gt_os2_keyFlags( HB_USHORT fsState )
+{
+   int iFlags = 0;
+
+   if( fsState & KBDSTF_SHIFT )
+      iFlags |= HB_KF_SHIFT;
+   if( fsState & KBDSTF_CONTROL )
+      iFlags |= HB_KF_CTRL;
+   if( fsState & KBDSTF_ALT )
+      iFlags |= HB_KF_ALT;
+
+   return iFlags;
+}
+
+static int hb_gt_os2_getKbdState( void )
+{
+   int iKbdState = 0;
+
+   memset( s_kbd, 0, sizeof( KBDINFO ) );
+   if( KbdGetStatus( s_kbd, 0 ) == NO_ERROR )
+   {
+      if( s_kbd->fsState & KBDSTF_SHIFT         ) iKbdState |= HB_GTI_KBD_SHIFT;
+      if( s_kbd->fsState & KBDSTF_CONTROL       ) iKbdState |= HB_GTI_KBD_CTRL;
+      if( s_kbd->fsState & KBDSTF_ALT           ) iKbdState |= HB_GTI_KBD_ALT;
+      if( s_kbd->fsState & KBDSTF_SCROLLLOCK_ON ) iKbdState |= HB_GTI_KBD_SCROLOCK;
+      if( s_kbd->fsState & KBDSTF_NUMLOCK_ON    ) iKbdState |= HB_GTI_KBD_NUMLOCK;
+      if( s_kbd->fsState & KBDSTF_CAPSLOCK_ON   ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
+      if( s_kbd->fsState & KBDSTF_INSERT_ON     ) iKbdState |= HB_GTI_KBD_INSERT;
+      if( s_kbd->fsState & KBDSTF_LEFTSHIFT     ) iKbdState |= HB_GTI_KBD_LSHIFT;
+      if( s_kbd->fsState & KBDSTF_RIGHTSHIFT    ) iKbdState |= HB_GTI_KBD_RSHIFT;
+      if( s_kbd->fsState & KBDSTF_LEFTCONTROL   ) iKbdState |= HB_GTI_KBD_LCTRL;
+      if( s_kbd->fsState & KBDSTF_RIGHTCONTROL  ) iKbdState |= HB_GTI_KBD_RCTRL;
+      if( s_kbd->fsState & KBDSTF_LEFTALT       ) iKbdState |= HB_GTI_KBD_LALT;
+      if( s_kbd->fsState & KBDSTF_RIGHTALT      ) iKbdState |= HB_GTI_KBD_RALT;
+   }
+
+   return iKbdState;
+}
+
+
+/* GT methods */
 
 static void hb_gt_os2_mouse_Init( PHB_GT pGT )
 {
@@ -539,10 +589,8 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    VioGetMode( &s_vi, 0 );        /* fill structure with current video mode settings */
 
    /* Alloc tileable memory for calling a 16 subsystem */
-   s_hk = ( PHKBD ) hb_gt_os2_allocMem( sizeof( HKBD ) );
-   /* it is a long after all, so I set it to zero only one time since it never changes */
-   memset( s_hk, 0, sizeof( HKBD ) );
    s_key = ( PKBDKEYINFO ) hb_gt_os2_allocMem( sizeof( KBDKEYINFO ) );
+   s_kbd = ( PKBDINFO ) hb_gt_os2_allocMem( sizeof( KBDINFO ) );
 
    /* TODO: Is anything else required to initialize the video subsystem?
             I (Maurilio Longo) think that we should set correct codepage
@@ -603,13 +651,13 @@ static void hb_gt_os2_Exit( PHB_GT pGT )
    }
 
    DosFreeMem( s_key );
-   DosFreeMem( s_hk );
+   DosFreeMem( s_kbd );
    VioSetCp( 0, s_usOldCodePage, 0 );
 }
 
 static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   int ch;              /* next char if any */
+   int iKey = 0, iFlags = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_ReadKey(%p,%d)", pGT, iEventMask ) );
 
@@ -617,36 +665,51 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
    memset( s_key, 0, sizeof( KBDKEYINFO ) );
 
    /* Get next character without wait */
-   KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) *s_hk );
-
-   /* extended key codes have 00h or E0h as chChar */
-   if( ( s_key->fbStatus & KBDTRF_EXTENDED_CODE ) &&
-       ( s_key->chChar == 0x00 || s_key->chChar == 0xE0 ) )
+   if( KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) 0 ) == NO_ERROR )
    {
-      /* It was an extended function key lead-in code, so read the actual function key and then offset it by 256,
-         unless extended keyboard events are allowed, in which case offset it by 512 */
-      if( ( s_key->chChar == 0xE0 ) && ( iEventMask & HB_INKEY_RAW ) )
-         ch = ( int ) s_key->chScan + 512;
-      else
-         ch = ( int ) s_key->chScan + 256;
+      iFlags = hb_gt_os2_keyFlags( s_key->fsState );
+
+      /* extended key codes have 00h or E0h as chChar */
+      if( ( s_key->fbStatus & KBDTRF_EXTENDED_CODE ) &&
+          ( s_key->chChar == 0x00 || s_key->chChar == 0xE0 ) )
+         iKey = hb_gt_dos_keyCodeTranslate( ( int ) s_key->chScan + 256,
+                                            iFlags, HB_GTSELF_CPIN( pGT ) );
+      else if( s_key->fbStatus & KBDTRF_FINAL_CHAR_IN )
+      {
+         iKey = ( int ) s_key->chChar;
+         if( ( iFlags & HB_KF_CTRL ) != 0 && ( iKey >= 0 && iKey < 32 ) )
+         {
+            iKey += 'A' - 1;
+            iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+         }
+         else if( iKey < 128 && ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) )
+         {
+            iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+         }
+         else
+         {
+            int uc = HB_GTSELF_KEYTRANS( pGT, iKey );
+            if( uc )
+               iKey = HB_INKEY_NEW_UNICODEF( uc, iFlags );
+            else
+               iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
+         }
+      }
    }
-   else if( s_key->fbStatus & KBDTRF_FINAL_CHAR_IN )
-      ch = ( int ) s_key->chChar;
-   else
-      ch = 0;
 
-   ch = hb_gt_dos_keyCodeTranslate( ch );
-
-   if( ch == 0 )
-      ch = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
-   else
+   if( iKey == 0 )
    {
-      int u = HB_GTSELF_KEYTRANS( pGT, ch );
-      if( u )
-         ch = HB_INKEY_NEW_UNICODE( u );
+      iKey = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
+      if( iKey != 0 && ! HB_INKEY_ISEXT( iKey ) && iKey != K_MOUSEMOVE )
+      {
+         memset( s_kbd, 0, sizeof( KBDINFO ) );
+         if( KbdGetStatus( s_kbd, 0 ) == NO_ERROR )
+            iFlags = hb_gt_os2_keyFlags( s_kbd->fsState );
+         iKey = HB_INKEY_NEW_MKEY( iKey, iFlags );
+      }
    }
 
-   return ch;
+   return iKey;
 }
 
 static HB_BOOL hb_gt_os2_IsColor( PHB_GT pGT )
@@ -856,6 +919,10 @@ static HB_BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_ISSCREENPOS:
       case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
+         break;
+
+      case HB_GTI_KBDSHIFTS:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_os2_getKbdState() );
          break;
 
       case HB_GTI_CODEPAGE:

@@ -17,16 +17,16 @@ REQUEST HB_CODEPAGE_PL852
 REQUEST HB_CODEPAGE_PLWIN
 REQUEST HB_CODEPAGE_UTF8EX
 #else
-#xtranslate hb_keyStd( n )  ( n )
-#xtranslate hb_keyCode( n ) Asc( n )
-#xtranslate hb_keyChar( c ) iif( c >= 32 .AND. c <= 255, Chr( c ), "" )
-#xtranslate hb_ntos( n )    LTrim( Str( n ) )
+#xtranslate hb_keyStd( <n> )  => ( <n> )
+#xtranslate hb_keyCode( <n> ) => Asc( <n> )
+#xtranslate hb_keyChar( <c> ) => iif( <c> >= 32 .AND. <c> <= 255 .AND. <c> != 127, Chr( <c> ), "" )
+#xtranslate hb_ntos( <n> )    => LTrim( Str( <n> ) )
 #endif
 #ifndef HB_K_RESIZE
 #define HB_K_RESIZE 1101
 #endif
 
-PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
+PROCEDURE Main( cTermCP, cHostCP, lBoxChar, lRawKey )
 
    LOCAL k, kX, i, s
    LOCAL aKeys := { ;
@@ -58,10 +58,10 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       { "K_RETURN",          13, "Return, Ctrl-M"                  }, ;
       { "K_SPACE",           32, "Space bar"                       }, ;
       { "K_ESC",             27, "Esc, Ctrl-["                     }, ;
-      { "K_CTRL_ENTER",      10, "Ctrl-Enter"                      }, ;
-      { "K_CTRL_RETURN",     10, "Ctrl-Return"                     }, ;
+      { "K_CTRL_ENTER",      10, "Ctrl-Enter, Ctrl-J"              }, ;
+      { "K_CTRL_RETURN",     10, "Ctrl-Return, Ctrl-J"             }, ;
       { "K_CTRL_RET",        10, "Ctrl-Return (Compat.)"           }, ;
-      { "K_CTRL_PRTSCR",    379, "Ctrl-Print Screen"               }, ;
+      { "K_CTRL_PRTSCR",    379, "Ctrl-Print Screen, Alt-4"        }, ;
       { "K_ALT_COMMA",      307, "Alt-,"                           }, ;
       { "K_ALT_PERIOD",     308, "Alt-."                           }, ;
       { "K_CTRL_QUESTION",  309, "Ctrl-?, Alt-Slash"               }, ;
@@ -262,6 +262,14 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    // hb_gtInfo( HB_GTI_ALTENTER, .T. )
    hb_gtInfo( HB_GTI_CLOSABLE, .F. )
    hb_gtInfo( HB_GTI_SELECTCOPY, .T. )
+   IF PCount() >= 4
+      lRawKey := !Empty( lRawKey )
+   ELSEIF ! Empty( cTermCP ) .AND. Upper( cTermCP ) = "X"
+      lRawKey := .T.
+      cTermCP := NIL
+   ELSE
+      lRawKey := .F.
+   ENDIF
    IF Empty( cTermCP )
       cTermCP := "UTF8"
    ELSE
@@ -279,6 +287,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 #ifdef _SET_EVENTMASK
    Set( _SET_EVENTMASK, INKEY_ALL )
 #endif
+   lRawKey := .f.
 #endif
 
    MDblClk( 250 )
@@ -298,18 +307,31 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       k := hb_keyStd( kX )
       IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) != 0
          ? " key:" + Str( aKeys[ i, 2 ], 7 ) + "  " + PadR( aKeys[ i, 1 ], 18 ) + aKeys[ i, 3 ]
+#ifdef __HARBOUR__
+         IF kX != k
+            ?? " ext: 0x" + hb_numToHex( kX, 8 ) + " -> " + ;
+               hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ) + ;
+               " [" + hb_keyChar( k ) + "]"
+         ENDIF
+#endif
       ELSEIF ( k >= 32 .AND. k <= 126 ) .OR. ( k >= 160 .AND. k <= 255 ) .OR. ;
              Len( hb_keyChar( k ) ) > 0
 #ifdef __HARBOUR__
          ? "char:" + iif( k > 256, " U+" + hb_numToHex( hb_keyVal( k ), 4 ), Str( k, 7 ) ) + ;
            "  " + hb_keyChar( k )
+         IF kX != k .or. k > 256
+            ?? " ext: 0x" + hb_numToHex( kX, 8 ) + " -> " + ;
+               hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ) + ;
+               " [" + hb_keyChar( k ) + "]"
+         ENDIF
 #else
          ? "char:" + Str( k, 7 ) + "  " + hb_keyChar( k )
 #endif
       ELSE
 #ifdef __HARBOUR__
          ? " key:" + Str( k, 7 ) + " ext: 0x" + hb_numToHex( kX, 8 ) + " -> " + ;
-           hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 )
+           hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ) + ;
+           " [" + hb_keyChar( k ) + "]"
 #else
          ? " key:" + Str( k, 7 )
 #endif
@@ -318,7 +340,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
       IF k == hb_keyCode( "@" ) .AND. NextKey() == 0
          EXIT
-      ELSEIF k == K_INS
+      ELSEIF k == K_INS .AND. ! lRawKey
          Set( _SET_CURSOR, ( Set( _SET_CURSOR ) + 1 ) % 5 )
          ?? "  cursor:" + hb_ntos( Set( _SET_CURSOR ) )
       ELSEIF k == HB_K_RESIZE
@@ -326,12 +348,12 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       ELSEIF k >= 1000 .AND. k < 1100
          ?? "  mpos(" + hb_ntos( MRow() ) + "," + hb_ntos( MCol() ) + ")"
 #ifdef __HARBOUR__
-      ELSEIF k == K_CTRL_INS
+      ELSEIF k == K_CTRL_INS .AND. ! lRawKey
          IF Alert( "Would you like to show clipboard text?", { "YES", "NO" } ) == 1
             s := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
             ? "Clipboard text: [" + s + "]"
          ENDIF
-      ELSEIF k == K_CTRL_END
+      ELSEIF k == K_CTRL_END .AND. ! lRawKey
          IF Alert( "Would you like to set clipboard text?", { "YES", "NO" } ) == 1
             s := hb_TSToStr( hb_DateTime() ) + hb_eol() + ;
                "Harbour GT" + hb_gtVersion() + " clipboard test" + hb_eol()

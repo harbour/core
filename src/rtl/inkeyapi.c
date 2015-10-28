@@ -153,7 +153,7 @@ static const HB_KEY_VALUE s_transKeyStd[] = {
    { '=',       K_ALT_EQUALS,    0,               0 },   /*  61 */
    { '>',       0,               0,               0 },   /*  62 */
    { '?',       0,               K_CTRL_QUESTION, 0 },   /*  63 */
-   { '@',       0,               0,               0 },   /*  64 */
+   { '@',       0,               259,             0 },   /*  64 */
    { 'A',       K_ALT_A,         K_CTRL_A,        0 },   /*  65 */
    { 'B',       K_ALT_B,         K_CTRL_B,        0 },   /*  66 */
    { 'C',       K_ALT_C,         K_CTRL_C,        0 },   /*  67 */
