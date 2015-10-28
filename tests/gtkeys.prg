@@ -247,11 +247,11 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar, lRawKey )
    hb_gtInfo( HB_GTI_CURSORBLINKRATE, 1000 )
    hb_gtInfo( HB_GTI_ESCDELAY, 50 )
 #ifdef _COMMENT_
-   hb_gtinfo( HB_GTI_FONTATTRIBUTE, 0 )
-   hb_gtinfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_DRAWBOX, hb_gtinfo( HB_GTI_FONTATTRIBUTE ) ) )
-   hb_gtinfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_CTRLCHARS, hb_gtinfo( HB_GTI_FONTATTRIBUTE ) ) )
-   hb_gtinfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_FIXMETRIC, hb_gtinfo( HB_GTI_FONTATTRIBUTE ) ) )
-   hb_gtinfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_CLRBKG, hb_gtinfo( HB_GTI_FONTATTRIBUTE ) ) )
+   hb_gtInfo( HB_GTI_FONTATTRIBUTE, 0 )
+   hb_gtInfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_DRAWBOX, hb_gtInfo( HB_GTI_FONTATTRIBUTE ) ) )
+   hb_gtInfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_CTRLCHARS, hb_gtInfo( HB_GTI_FONTATTRIBUTE ) ) )
+   hb_gtInfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_FIXMETRIC, hb_gtInfo( HB_GTI_FONTATTRIBUTE ) ) )
+   hb_gtInfo( HB_GTI_FONTATTRIBUTE, hb_bitOr( HB_GTI_FONTA_CLRBKG, hb_gtInfo( HB_GTI_FONTATTRIBUTE ) ) )
    hb_gtInfo( HB_GTI_RESIZABLE, .F. )
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
@@ -297,23 +297,23 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar, lRawKey )
    DO WHILE .T.
       kX := Inkey( 0 )
       k := hb_keyStd( kX )
-      IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) != 0
+      IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) > 0
          ? " key:", Str( aKeys[ i ][ 2 ], 7 ), PadR( aKeys[ i ][ 1 ], 18 ) + aKeys[ i ][ 3 ]
 #ifdef __HARBOUR__
          IF kX != k
-            ?? " ext: 0x" + hb_numToHex( kX, 8 ), "->", ;
-               hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ), ;
+            ?? " ext: 0x" + hb_NumToHex( kX, 8 ), "->", ;
+               hb_NumToHex( hb_keyMod( kX ), 2 ) + ":" + hb_NumToHex( hb_keyVal( kX ), 8 ), ;
                "[" + hb_keyChar( k ) + "]"
          ENDIF
 #endif
       ELSEIF ( k >= 32 .AND. k <= 126 ) .OR. ( k >= 160 .AND. k <= 255 ) .OR. ;
              ! HB_ISNULL( hb_keyChar( k ) )
 #ifdef __HARBOUR__
-         ? "char:", iif( k > 256, " U+" + hb_numToHex( hb_keyVal( k ), 4 ), Str( k, 7 ) ), ;
+         ? "char:", iif( k > 256, " U+" + hb_NumToHex( hb_keyVal( k ), 4 ), Str( k, 7 ) ), ;
            " " + hb_keyChar( k )
          IF kX != k .or. k > 256
-            ?? " ext: 0x" + hb_numToHex( kX, 8 ), "->", ;
-               hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ), ;
+            ?? " ext: 0x" + hb_NumToHex( kX, 8 ), "->", ;
+               hb_NumToHex( hb_keyMod( kX ), 2 ) + ":" + hb_NumToHex( hb_keyVal( kX ), 8 ), ;
                "[" + hb_keyChar( k ) + "]"
          ENDIF
 #else
@@ -321,8 +321,8 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar, lRawKey )
 #endif
       ELSE
 #ifdef __HARBOUR__
-         ? " key:", Str( k, 7 ), "ext: 0x" + hb_numToHex( kX, 8 ), "->", ;
-           hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ), ;
+         ? " key:", Str( k, 7 ), "ext: 0x" + hb_NumToHex( kX, 8 ), "->", ;
+           hb_NumToHex( hb_keyMod( kX ), 2 ) + ":" + hb_NumToHex( hb_keyVal( kX ), 8 ), ;
            "[" + hb_keyChar( k ) + "]"
 #else
          ? " key:", Str( k, 7 )
