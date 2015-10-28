@@ -49,8 +49,16 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    hb_default( @nBottom, 0 )
    hb_default( @nRight, 0 )
 
+   IF nTop != Int( nTop )
+      nTop := Int( nTop )
+   ENDIF
+
    IF nRight > MaxCol()
       nRight := MaxCol()
+   ENDIF
+
+   IF nBottom != Int( nBottom )
+      nBottom := Int( nBottom ) + 1
    ENDIF
 
    IF nBottom > MaxRow()
