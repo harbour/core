@@ -262,8 +262,8 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar, lRawKey )
    hb_gtInfo( HB_GTI_CLOSABLE, .F. )
    hb_gtInfo( HB_GTI_SELECTCOPY, .T. )
    IF PCount() >= 4
-      lRawKey := !Empty( lRawKey )
-   ELSEIF ! Empty( cTermCP ) .AND. Upper( cTermCP ) = "X"
+      lRawKey := ! Empty( lRawKey )
+   ELSEIF HB_ISSTRING( cTermCP ) .AND. Upper( cTermCP ) == "X"
       lRawKey := .T.
       cTermCP := NIL
    ELSE
@@ -301,9 +301,9 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar, lRawKey )
          ? " key:", Str( aKeys[ i ][ 2 ], 7 ), PadR( aKeys[ i ][ 1 ], 18 ) + aKeys[ i ][ 3 ]
 #ifdef __HARBOUR__
          IF kX != k
-            ?? " ext: 0x" + hb_numToHex( kX, 8 ) + " -> " + ;
-               hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ) + ;
-               " [" + hb_keyChar( k ) + "]"
+            ?? " ext: 0x" + hb_numToHex( kX, 8 ), "->", ;
+               hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ), ;
+               "[" + hb_keyChar( k ) + "]"
          ENDIF
 #endif
       ELSEIF ( k >= 32 .AND. k <= 126 ) .OR. ( k >= 160 .AND. k <= 255 ) .OR. ;
@@ -312,9 +312,9 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar, lRawKey )
          ? "char:", iif( k > 256, " U+" + hb_numToHex( hb_keyVal( k ), 4 ), Str( k, 7 ) ), ;
            " " + hb_keyChar( k )
          IF kX != k .or. k > 256
-            ?? " ext: 0x" + hb_numToHex( kX, 8 ) + " -> " + ;
-               hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ) + ;
-               " [" + hb_keyChar( k ) + "]"
+            ?? " ext: 0x" + hb_numToHex( kX, 8 ), "->", ;
+               hb_numToHex( hb_keyMod( kX ), 2 ) + ":" + hb_numToHex( hb_keyVal( kX ), 8 ), ;
+               "[" + hb_keyChar( k ) + "]"
          ENDIF
 #else
          ? "char:", Str( k, 7 ), " " + hb_keyChar( k )

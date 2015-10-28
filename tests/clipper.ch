@@ -89,9 +89,9 @@
 #xtranslate hb_StrShrink( <l>, <r> )       => Left( <l>, Len( <l> ) - <r> )
 #xtranslate hb_RAt( <c>, <p> )             => RAt( <c>, <p> )
 
-#xtranslate hb_keyStd( <n> )               => ( n )
+#xtranslate hb_keyStd( <n> )               => ( <n> )
 #xtranslate hb_keyCode( <n> )              => Asc( <n> )
-#xtranslate hb_keyChar( <c> )              => iif( <c> >= 32 .AND. <c> <= 255, Chr( <c> ), "" )
+#xtranslate hb_keyChar( <c> )              => iif( <c> >= 32 .AND. <c> <= 255 .AND. <c> != 127, Chr( <c> ), "" )
 #xtranslate hb_keyPut( <n> )               => __Keyboard( Chr( <n> ) )
 #xtranslate hb_keyIns( <n> )               => __Keyboard( Chr( <n> ) )
 
@@ -148,15 +148,15 @@
 #xtranslate hb_ntos( <n> )                 => LTrim( Str( <n> ) )
 #xtranslate hb_Date()                      => Date()
 #xtranslate hb_Date( <y>, <m>, <d> )       => hb_SToD( StrZero( Int( <y> ), 4 ) + StrZero( Int( <m> ), 2 ) + StrZero( Int( <d> ), 2 ) )
-#xtranslate hb_CToD( [<s>] )               => CToD( s )
-#xtranslate hb_DToC( [<s>] )               => DToC( s )
+#xtranslate hb_CToD( [<s>] )               => CToD( <s> )
+#xtranslate hb_DToC( [<s>] )               => DToC( <s> )
 #xtranslate hb_CToD( [<s>], <f> )          => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, <f> ), dt := CToD( s ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
 #xtranslate hb_DToC( [<s>], <f> )          => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, <f> ), dt := DToC( s ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
 #xtranslate hb_SToD( [<s>] )               => Eval( {| s, df, dt | df := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt := CToD( Stuff( Stuff( s, 7, 0, "-" ), 5, 0, "-" ) ), Set( _SET_DATEFORMAT, df ), dt }, <s> )
 #xtranslate hb_Compiler()                  => "C"
 #xtranslate hb_cdpIsUTF8( [<c>] )          => .F.
 #xtranslate hb_cdpCharMax()                => 255
-#xtranslate hb_IsFunction( c )             => ( Type( c + "()" ) == "UI" )
+#xtranslate hb_IsFunction( <c> )           => ( Type( <c> + "()" ) == "UI" )
 #xtranslate hb_NToColor( <n> )             => LTrim( Str( Int( <n> % 16 ), 2 ) ) + "/" + LTrim( Str( Int( <n> / 16 ), 2 ) )
 #xtranslate __mvScope()                    => -1
 #xtranslate HB_SYMBOL_UNUSED( <v> )        =>
