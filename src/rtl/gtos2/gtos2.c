@@ -117,6 +117,9 @@
    #endif
 #endif
 #include <conio.h>
+#if defined( __WATCOMC__ )
+   #include <signal.h>
+#endif
 
 static int s_GtId;
 static HB_GT_FUNCS SuperTable;
@@ -149,6 +152,23 @@ static HMOU s_uMouHandle;
 
 
 /* helper functions */
+
+#if defined( __WATCOMC__ )
+
+static HB_BOOL s_fBreak;
+
+static void hb_gt_os2_CtrlBreak_Handler( int iSignal )
+{
+   s_fBreak = HB_TRUE;
+   signal( iSignal, hb_gt_os2_CtrlBreak_Handler );
+}
+
+static void hb_gt_os2_CtrlBrkRestore( void )
+{
+   signal( SIGINT, SIG_DFL );
+   signal( SIGBREAK, SIG_DFL );
+}
+#endif
 
 #ifndef KBDSTF_SHIFT
    #define KBDSTF_SHIFT ( KBDSTF_RIGHTSHIFT | KBDSTF_LEFTSHIFT )
@@ -627,6 +647,14 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       VioSetCp( 0, s_usOldCodePage, 0 );
 #endif
 
+#if defined( __WATCOMC__ )
+   s_fBreak = HB_FALSE;
+   signal( SIGINT, hb_gt_os2_CtrlBreak_Handler );
+   signal( SIGBREAK, hb_gt_os2_CtrlBreak_Handler );
+   atexit( hb_gt_os2_CtrlBrkRestore );
+#endif
+
+
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_os2_GetCursorStyle();
 
@@ -653,6 +681,10 @@ static void hb_gt_os2_Exit( PHB_GT pGT )
    DosFreeMem( s_key );
    DosFreeMem( s_kbd );
    VioSetCp( 0, s_usOldCodePage, 0 );
+
+#if defined( __WATCOMC__ )
+   hb_gt_os2_CtrlBrkRestore();
+#endif
 }
 
 static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
@@ -664,8 +696,13 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
    /* zero out keyboard event record */
    memset( s_key, 0, sizeof( KBDKEYINFO ) );
 
+   if( s_fBreak )
+   {
+      s_fBreak = HB_FALSE; /* Indicate that Ctrl+Break has been handled */
+      iKey = HB_BREAK_FLAG; /* Note that Ctrl+Break was pressed */
+   }
    /* Get next character without wait */
-   if( KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) 0 ) == NO_ERROR )
+   else if( KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) 0 ) == NO_ERROR )
    {
       iFlags = hb_gt_os2_keyFlags( s_key->fsState );
 

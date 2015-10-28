@@ -64,30 +64,6 @@ int hb_gt_dos_keyCodeTranslate( int iKey, int iFlags, PHB_CODEPAGE cdp )
 
    iFlags &= ( HB_KF_SHIFT | HB_KF_CTRL | HB_KF_ALT );
 
-/*
-TODO:
-   259: K_CTRL_AT
-   127: K_CTRL_BS
-   270: K_ALT_BS
-   271: K_SHIFT_TAB
-   404: K_CTRL_TAB
-   421: K_ALT_TAB
-   272 - 283: ALT + qwertyuiop[]
-   284: K_ALT_RETURN
-   285: ???
-   286 - 296: ALT + asdfghjkl;'
-   297: K_ALT_BACKQUOTE
-   298: ???
-
-   299: K_ALT_BACKSLASH
-   300 - 309: ALT + zxcvbnm,./
-   310: ???
-   312 - 314: ???
-
-   370: K_CTRL_PRINT
-   376 - 387: ALT + 1234567890-=
-*/
-
    /* Perform key translations */
    switch( iKey )
    {
@@ -380,17 +356,16 @@ TODO:
          iKey = HB_KX_HOME;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;
-
       case 388:   /* Ctrl + Page Up */
          iKey = HB_KX_PGUP;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;
       case 397:   /*  Ctrl + Up arrow */
-         iKey = HB_KX_LEFT;
+         iKey = HB_KX_UP;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;
       case 401:   /* Ctrl + Down arrow */
-         iKey = HB_KX_RIGHT;
+         iKey = HB_KX_DOWN;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;
 
