@@ -86,7 +86,7 @@ double hb_secondsCPU( int n )
 {
    double d = 0.0;
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_UNIX )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) && ! defined( HB_OS_UNIX )
    FILETIME Create, Exit, Kernel, User;
 #endif
 

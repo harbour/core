@@ -161,8 +161,13 @@ static void hb_gt_dos_CtrlBreak_Handler( int iSignal )
    /* Ctrl-Break was pressed */
    /* NOTE: the layout of this function is forced by the compiler
     */
-   HB_SYMBOL_UNUSED( iSignal );
    s_bBreak = HB_TRUE;
+
+#if defined( __WATCOMC__ )
+   signal( iSignal, hb_gt_dos_CtrlBreak_Handler );
+#else
+   HB_SYMBOL_UNUSED( iSignal );
+#endif
 }
 #else
 static int s_iOldCtrlBreak = 0;
@@ -179,6 +184,7 @@ static void hb_gt_dos_CtrlBrkRestore( void )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_CtrlBrkRestore()" ) );
 
 #if defined( __WATCOMC__ )
+   signal( SIGINT, SIG_DFL );
    signal( SIGBREAK, SIG_DFL );
 #elif defined( _MSC_VER )
    signal( SIGINT, SIG_DFL );
@@ -187,6 +193,53 @@ static void hb_gt_dos_CtrlBrkRestore( void )
 #endif
 }
 #endif
+
+#define HB_BIOS_LSHIFT    0x01
+#define HB_BIOS_RSHIFT    0x02
+#define HB_BIOS_CTRL      0x04
+#define HB_BIOS_ALT       0x08
+#define HB_BIOS_SHIFT     ( HB_BIOS_LSHIFT | HB_BIOS_RSHIFT )
+#define HB_BIOS_SCROLL    0x10
+#define HB_BIOS_NUMLOCK   0x20
+#define HB_BIOS_CAPSLOCK  0x40
+#define HB_BIOS_INSERT    0x80
+
+static int hb_gt_dos_getKbdState( void )
+{
+   int iKbdState = 0;
+   HB_UCHAR ucStat;
+
+   ucStat = HB_PEEK_BYTE( 0x0040, 0x0017 );
+
+   if( ucStat & HB_BIOS_SHIFT    ) iKbdState |= HB_GTI_KBD_SHIFT;
+   if( ucStat & HB_BIOS_CTRL     ) iKbdState |= HB_GTI_KBD_CTRL;
+   if( ucStat & HB_BIOS_ALT      ) iKbdState |= HB_GTI_KBD_ALT;
+   if( ucStat & HB_BIOS_SCROLL   ) iKbdState |= HB_GTI_KBD_SCROLOCK;
+   if( ucStat & HB_BIOS_NUMLOCK  ) iKbdState |= HB_GTI_KBD_NUMLOCK;
+   if( ucStat & HB_BIOS_CAPSLOCK ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
+   if( ucStat & HB_BIOS_INSERT   ) iKbdState |= HB_GTI_KBD_INSERT;
+   if( ucStat & HB_BIOS_LSHIFT   ) iKbdState |= HB_GTI_KBD_LSHIFT;
+   if( ucStat & HB_BIOS_RSHIFT   ) iKbdState |= HB_GTI_KBD_RSHIFT;
+
+   return iKbdState;
+}
+
+static void hb_gt_dos_setKbdState( int iKbdState )
+{
+   HB_UCHAR ucStat = 0;
+
+   ucStat |= ( iKbdState & HB_GTI_KBD_SHIFT    ) ? HB_BIOS_SHIFT    : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_CTRL     ) ? HB_BIOS_CTRL     : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_ALT      ) ? HB_BIOS_ALT      : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_SCROLOCK ) ? HB_BIOS_SCROLL   : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_NUMLOCK  ) ? HB_BIOS_NUMLOCK  : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_CAPSLOCK ) ? HB_BIOS_CAPSLOCK : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_INSERT   ) ? HB_BIOS_INSERT   : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_LSHIFT   ) ? HB_BIOS_LSHIFT   : 0;
+   ucStat |= ( iKbdState & HB_GTI_KBD_RSHIFT   ) ? HB_BIOS_RSHIFT   : 0;
+
+   HB_POKE_BYTE( 0x0040, 0x0017, ucStat );
+}
 
 static int hb_gt_dos_GetScreenMode( void )
 {
@@ -770,6 +823,8 @@ static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 #elif defined( __WATCOMC__ )
 
+   break_off();
+   signal( SIGINT, hb_gt_dos_CtrlBreak_Handler );
    signal( SIGBREAK, hb_gt_dos_CtrlBreak_Handler );
    atexit( hb_gt_dos_CtrlBrkRestore );
 
@@ -811,7 +866,7 @@ static void hb_gt_dos_Exit( PHB_GT pGT )
 
 static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   int ch = 0;
+   int iKey = 0, iFlags = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_ReadKey(%p,%d)", pGT, iEventMask ) );
 
@@ -820,7 +875,7 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
    if( __djgpp_cbrk_count )
    {
       __djgpp_cbrk_count = 0; /* Indicate that Ctrl+Break has been handled */
-      ch = HB_BREAK_FLAG;     /* Note that Ctrl+Break was pressed */
+      iKey = HB_BREAK_FLAG;     /* Note that Ctrl+Break was pressed */
    }
 #else
    /* First check for Ctrl+Break, which is handled by gt/gtdos.c,
@@ -828,57 +883,55 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
    if( s_bBreak )
    {
       s_bBreak = HB_FALSE; /* Indicate that Ctrl+Break has been handled */
-      ch = HB_BREAK_FLAG; /* Note that Ctrl+Break was pressed */
+      iKey = HB_BREAK_FLAG; /* Note that Ctrl+Break was pressed */
    }
 #endif
    else if( kbhit() )
    {
       /* A key code is available in the BIOS keyboard buffer, so read it */
 #if defined( __DJGPP__ )
-      if( iEventMask & HB_INKEY_RAW )
-         ch = getxkey();
-      else
-         ch = getkey();
-      if( ch == 256 )
+      iKey = getxkey();
+      if( iKey == 256 )
          /* Ignore Ctrl+Break, because it is being handled as soon as it
             happens (see above) rather than waiting for it to show up in
             the keyboard input queue */
-         ch = -1;
+         iKey = -1;
+      iFlags = HB_KF_KEYPAD;
 #else
       /* A key code is available in the BIOS keyboard buffer */
-      ch = getch();                  /* Get the key code */
-      if( ch == 0 && kbhit() )
+      iKey = getch();                  /* Get the key code */
+      if( iKey == 0 && kbhit() )
       {
          /* It was a function key lead-in code, so read the actual
             function key and then offset it by 256 */
-         ch = getch() + 256;
+         iKey = getch();
+         if( iKey != -1 )
+            iKey += 256;
       }
-      else if( ch == 224 && kbhit() )
+#if ! ( defined( __WATCOMC__ ) || defined( __BORLANDC__ ) )
+      /* Watcom and Borland C use only 0x00 to indicate extended keycode
+         and do not use 224 (0xE0) */
+      else if( iKey == 224 && kbhit() )
       {
-         /* It was an extended function key lead-in code, so read
-            the actual function key and then offset it by 256,
-            unless extended keyboard events are allowed, in which
-            case offset it by 512 */
-         if( iEventMask & HB_INKEY_RAW )
-            ch = getch() + 512;
-         else
-            ch = getch() + 256;
+         iKey = getch();
+         if( iKey != -1 )
+            iKey += 256;
       }
+#endif
 #endif
    }
 
-   ch = hb_gt_dos_keyCodeTranslate( ch );
-
-   if( ch == 0 )
-      ch = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
-   else
+   if( iKey == 0 || iKey == -1 )
    {
-      int u = HB_GTSELF_KEYTRANS( pGT, ch );
-      if( u )
-         ch = HB_INKEY_NEW_UNICODE( u );
+      iKey = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
+      if( iKey != 0 && ! HB_INKEY_ISEXT( iKey ) && iKey != K_MOUSEMOVE )
+         iKey = HB_INKEY_NEW_MKEY( iKey, hb_gt_dos_getKbdState() );
    }
+   else
+      iKey = hb_gt_dos_keyCodeTranslate( iKey, hb_gt_dos_getKbdState() | iFlags,
+                                         HB_GTSELF_CPIN( pGT ) );
 
-   return ch;
+   return iKey;
 }
 
 static HB_BOOL hb_gt_dos_IsColor( PHB_GT pGT )
@@ -1276,49 +1329,6 @@ static void hb_gt_dos_Refresh( PHB_GT pGT )
          iStyle = SC_NONE;
    }
    hb_gt_dos_SetCursorStyle( iStyle );
-}
-
-#define HB_BIOS_LSHIFT    0x01
-#define HB_BIOS_RSHIFT    0x02
-#define HB_BIOS_CTRL      0x04
-#define HB_BIOS_ALT       0x08
-#define HB_BIOS_SHIFT     ( HB_BIOS_LSHIFT | HB_BIOS_RSHIFT )
-#define HB_BIOS_SCROLL    0x10
-#define HB_BIOS_NUMLOCK   0x20
-#define HB_BIOS_CAPSLOCK  0x40
-#define HB_BIOS_INSERT    0x80
-
-static int hb_gt_dos_getKbdState( void )
-{
-   int iKbdState = 0;
-   HB_UCHAR ucStat;
-
-   ucStat = HB_PEEK_BYTE( 0x0040, 0x0017 );
-
-   if( ucStat & HB_BIOS_SHIFT    ) iKbdState |= HB_GTI_KBD_SHIFT;
-   if( ucStat & HB_BIOS_CTRL     ) iKbdState |= HB_GTI_KBD_CTRL;
-   if( ucStat & HB_BIOS_ALT      ) iKbdState |= HB_GTI_KBD_ALT;
-   if( ucStat & HB_BIOS_SCROLL   ) iKbdState |= HB_GTI_KBD_SCROLOCK;
-   if( ucStat & HB_BIOS_NUMLOCK  ) iKbdState |= HB_GTI_KBD_NUMLOCK;
-   if( ucStat & HB_BIOS_CAPSLOCK ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
-   if( ucStat & HB_BIOS_INSERT   ) iKbdState |= HB_GTI_KBD_INSERT;
-
-   return iKbdState;
-}
-
-static void hb_gt_dos_setKbdState( int iKbdState )
-{
-   HB_UCHAR ucStat = 0;
-
-   ucStat |= ( iKbdState & HB_GTI_KBD_SHIFT    ) ? HB_BIOS_SHIFT    : 0;
-   ucStat |= ( iKbdState & HB_GTI_KBD_CTRL     ) ? HB_BIOS_CTRL     : 0;
-   ucStat |= ( iKbdState & HB_GTI_KBD_ALT      ) ? HB_BIOS_ALT      : 0;
-   ucStat |= ( iKbdState & HB_GTI_KBD_SCROLOCK ) ? HB_BIOS_SCROLL   : 0;
-   ucStat |= ( iKbdState & HB_GTI_KBD_NUMLOCK  ) ? HB_BIOS_NUMLOCK  : 0;
-   ucStat |= ( iKbdState & HB_GTI_KBD_CAPSLOCK ) ? HB_BIOS_CAPSLOCK : 0;
-   ucStat |= ( iKbdState & HB_GTI_KBD_INSERT   ) ? HB_BIOS_INSERT   : 0;
-
-   HB_POKE_BYTE( 0x0040, 0x0017, ucStat );
 }
 
 static HB_BOOL hb_gt_dos_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )

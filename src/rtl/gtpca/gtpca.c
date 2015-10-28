@@ -610,7 +610,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    /* _read_kbd() returns -1 for no key, the switch statement will handle
       this. */
 
-   ch = hb_gt_dos_keyCodeTranslate( ch );
+   ch = hb_gt_dos_keyCodeTranslate( ch, 0, HB_GTSELF_CPIN( pGT ) );
 #elif defined( HB_HAS_TERMIOS )
    {
       struct timeval tv;
@@ -636,9 +636,11 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
          {
             /* It was a function key lead-in code, so read the actual
                function key and then offset it by 256 */
-            ch = _getch() + 256;
+            ch = _getch();
+            if( ch != -1 )
+               ch += 256;
          }
-         ch = hb_gt_dos_keyCodeTranslate( ch );
+         ch = hb_gt_dos_keyCodeTranslate( ch, 0, HB_GTSELF_CPIN( pGT ) );
       }
    }
    else if( ! _eof( ( int ) s_hFilenoStdin ) )
@@ -661,13 +663,15 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
       if( kbhit() )
       {
          ch = getch();
-         if( ( ch == 0 || ch == 224 ) && kbhit() )
+         if( ch == 0 && kbhit() )
          {
             /* It was a function key lead-in code, so read the actual
                function key and then offset it by 256 */
-            ch = getch() + 256;
+            ch = getch();
+            if( ch != -1 )
+               ch += 256;
          }
-         ch = hb_gt_dos_keyCodeTranslate( ch );
+         ch = hb_gt_dos_keyCodeTranslate( ch, 0, HB_GTSELF_CPIN( pGT ) );
       }
    }
    else if( ! eof( s_hFilenoStdin ) )
