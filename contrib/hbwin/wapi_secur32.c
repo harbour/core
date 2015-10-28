@@ -51,7 +51,7 @@
 #endif
 
 /* Workaround for unfixed 'w32api' (as of 3.17.2) bug:
-   https://web.archive.org/web/20150529182414/http://sourceforge.net/p/mingw/bugs/279/#efbc */
+   https://web.archive.org/web/20150529182414/https://sourceforge.net/p/mingw/bugs/279/#efbc */
 #if ! defined( _WIN32_WINNT ) || _WIN32_WINNT < 0x0500
    #undef _WIN32_WINNT
    #define _WIN32_WINNT  0x0500
