@@ -104,31 +104,26 @@
 #  define HB_GTWIN_USE_SETCONSOLEMENUCLOSE  /* Enable undocumented Windows API function call */
 #endif
 
-#if ( defined( NTDDI_VERSION ) && ( ( defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA ) || \
-                                    ( defined( NTDDI_LONGHORN ) && NTDDI_VERSION >= NTDDI_LONGHORN ) ) ) && ! defined( __POCC__ )
-#  if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
-#     define HB_GTWIN_USE_PCONSOLEINFOEX
-#  endif
-#else
-#  if ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 )
-      typedef struct _HB_CONSOLE_SCREEN_BUFFER_INFOEX
-      {
-         ULONG cbSize;
-         COORD dwSize;
-         COORD dwCursorPosition;
-         WORD wAttributes;
-         SMALL_RECT srWindow;
-         COORD dwMaximumWindowSize;
-         WORD wPopupAttributes;
-         BOOL bFullscreenSupported;
-         COLORREF ColorTable[ 16 ];
-      } HB_CONSOLE_SCREEN_BUFFER_INFOEX, * HB_PCONSOLE_SCREEN_BUFFER_INFOEX;
-      #define CONSOLE_SCREEN_BUFFER_INFOEX  HB_CONSOLE_SCREEN_BUFFER_INFOEX
-      #define PCONSOLE_SCREEN_BUFFER_INFOEX HB_PCONSOLE_SCREEN_BUFFER_INFOEX
-#  endif
-#  if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
-#     define HB_GTWIN_USE_PCONSOLEINFOEX
-#  endif
+#if ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 )
+   typedef struct _HB_CONSOLE_SCREEN_BUFFER_INFOEX
+   {
+      ULONG cbSize;
+      COORD dwSize;
+      COORD dwCursorPosition;
+      WORD wAttributes;
+      SMALL_RECT srWindow;
+      COORD dwMaximumWindowSize;
+      WORD wPopupAttributes;
+      BOOL bFullscreenSupported;
+      COLORREF ColorTable[ 16 ];
+   } HB_CONSOLE_SCREEN_BUFFER_INFOEX, * HB_PCONSOLE_SCREEN_BUFFER_INFOEX;
+   #undef CONSOLE_SCREEN_BUFFER_INFOEX
+   #undef PCONSOLE_SCREEN_BUFFER_INFOEX
+   #define CONSOLE_SCREEN_BUFFER_INFOEX  HB_CONSOLE_SCREEN_BUFFER_INFOEX
+   #define PCONSOLE_SCREEN_BUFFER_INFOEX HB_PCONSOLE_SCREEN_BUFFER_INFOEX
+#endif
+#if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
+#  define HB_GTWIN_USE_PCONSOLEINFOEX
 #endif
 
 #ifndef MOUSE_WHEELED
@@ -609,7 +604,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
       case CTRL_SHUTDOWN_EVENT:
       default:
 #if 0
-         printf( " Event %ld ", dwCtrlType );
+         printf( " Event %lu ", ( HB_ULONG ) dwCtrlType );
 #endif
          bHandled = FALSE;
    }
@@ -621,7 +616,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
 
 static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
 {
-   int iRow, iCol, i;
+   int iRow, iCol;
 
 #if ! defined( UNICODE )
    PHB_CODEPAGE cdp;
@@ -645,7 +640,7 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
 
    for( iRow = psrWin->Top; iRow <= psrWin->Bottom; ++iRow )
    {
-      i = iRow * _GetScreenWidth() + psrWin->Left;
+      int i = iRow * _GetScreenWidth() + psrWin->Left;
       for( iCol = psrWin->Left; iCol <= psrWin->Right; ++iCol )
       {
 #if defined( UNICODE )
@@ -823,37 +818,60 @@ static HB_BOOL hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 
 static HWND hb_getConsoleWindowHandle( void )
 {
-   TCHAR oldTitle[ 256 ], tmpTitle[ 32 ];
-   HWND hWnd = NULL;
+   static HB_BOOL s_bChecked = HB_FALSE;
 
-   if( GetConsoleTitle( oldTitle, HB_SIZEOFARRAY( oldTitle ) ) )
+   typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
+   static P_GETCONSOLEWINDOW s_pGetConsoleWindow = NULL;
+
+   HWND hWnd;
+
+   if( ! s_bChecked )
    {
-      int iTmp = 0;
-      DWORD dwVal;
+      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+      if( hModule )
+         s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleWindow" );
+      s_bChecked = HB_TRUE;
+   }
 
-      tmpTitle[ iTmp++ ] = TEXT( '>' );
-      tmpTitle[ iTmp++ ] = TEXT( '>' );
-      dwVal = GetCurrentProcessId();
-      do
-         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
-      while( ( dwVal /= 26 ) );
-      tmpTitle[ iTmp++ ] = TEXT( ':' );
-      dwVal = GetTickCount();
-      do
-         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
-      while( ( dwVal /= 26 ) );
-      tmpTitle[ iTmp++ ] = TEXT( '<' );
-      tmpTitle[ iTmp++ ] = TEXT( '<' );
-      tmpTitle[ iTmp ] = TEXT( '\0' );
+   if( s_pGetConsoleWindow )
+      hWnd = s_pGetConsoleWindow();
+   else
+   {
+      TCHAR oldTitle[ 256 ];
 
-      if( SetConsoleTitle( tmpTitle ) )
+      hWnd = NULL;
+
+      if( GetConsoleTitle( oldTitle, HB_SIZEOFARRAY( oldTitle ) ) )
       {
-         HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 200;
-         /* repeat in a loop to be sure title is changed */
+         TCHAR tmpTitle[ 32 ];
+
+         int iTmp = 0;
+         DWORD dwVal;
+
+         tmpTitle[ iTmp++ ] = TEXT( '>' );
+         tmpTitle[ iTmp++ ] = TEXT( '>' );
+         dwVal = GetCurrentProcessId();
          do
-            hWnd = FindWindow( NULL, tmpTitle );
-         while( hWnd == NULL && hb_dateMilliSeconds() < nTimeOut );
-         SetConsoleTitle( oldTitle );
+            tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+         while( ( dwVal /= 26 ) );
+         tmpTitle[ iTmp++ ] = TEXT( ':' );
+         dwVal = GetTickCount();
+         do
+            tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+         while( ( dwVal /= 26 ) );
+         tmpTitle[ iTmp++ ] = TEXT( '<' );
+         tmpTitle[ iTmp++ ] = TEXT( '<' );
+         tmpTitle[ iTmp ] = TEXT( '\0' );
+
+         if( SetConsoleTitle( tmpTitle ) )
+         {
+            HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 200;
+            /* repeat in a loop to be sure title is changed */
+            do
+               hWnd = FindWindow( NULL, tmpTitle );
+            while( hWnd == NULL && hb_dateMilliSeconds() < nTimeOut );
+            SetConsoleTitle( oldTitle );
+         }
       }
    }
 
@@ -862,36 +880,9 @@ static HWND hb_getConsoleWindowHandle( void )
 
 static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 {
-   static HB_BOOL s_bChecked = HB_FALSE;
-
-   typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
-   static P_GETCONSOLEWINDOW s_pGetConsoleWindow = NULL;
-
-#if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
-   typedef BOOL ( WINAPI * P_SETCONSOLEMENUCLOSE )( BOOL );
-   static P_SETCONSOLEMENUCLOSE s_pSetConsoleMenuClose = NULL;
-#endif
-
    HB_BOOL bOldClosable = HB_TRUE;
-   HWND hWnd;
 
-   if( ! s_bChecked )
-   {
-      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
-      if( hModule )
-      {
-         s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleWindow" );
-#if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
-         s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleMenuClose" );
-#endif
-      }
-      s_bChecked = HB_TRUE;
-   }
-
-   if( s_pGetConsoleWindow )
-      hWnd = s_pGetConsoleWindow();
-   else
-      hWnd = hb_getConsoleWindowHandle();
+   HWND hWnd = hb_getConsoleWindowHandle();
 
    if( hWnd )
    {
@@ -904,6 +895,19 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
          if( bSet )
          {
 #if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
+            typedef BOOL ( WINAPI * P_SETCONSOLEMENUCLOSE )( BOOL );
+
+            static HB_BOOL s_bChecked = HB_FALSE;
+            static P_SETCONSOLEMENUCLOSE s_pSetConsoleMenuClose = NULL;
+
+            if( ! s_bChecked )
+            {
+               HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+               if( hModule )
+                  s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleMenuClose" );
+               s_bChecked = HB_TRUE;
+            }
+
             if( s_pSetConsoleMenuClose )
                s_pSetConsoleMenuClose( bClosable );
 #endif
@@ -939,6 +943,9 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_iOldCurStyle = s_iCursorStyle = SC_NORMAL;
    s_bSpecialKeyHandling = HB_FALSE;
    s_bAltKeyHandling = HB_TRUE;
+
+   /* AllocConsole() initializes standard input, standard output,
+      and standard error handles for the new console. [jarabal] */
 
 #ifndef HB_NO_ALLOC_CONSOLE
    /*
@@ -980,8 +987,6 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
          hb_errInternal( 10001, "Can't allocate console", NULL, NULL );
    }
 
-   /* AllocConsole() initializes standard input, standard output,
-      and standard error handles for the new console. [jarabal] */
    /* Add Ctrl+Break handler [vszakats] */
    SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, TRUE );
 
@@ -1270,7 +1275,7 @@ static int Handle_Alt_Key( HB_BOOL * paltisdown, int * paltnum, WORD wKey, int c
          case 0x38:
             /* Alt key ... */
 #if 0
-            printf( " the state %ld\n", s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState );
+            printf( " the state %lu\n", ( HB_ULONG ) s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState );
 #endif
 
             if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState &
@@ -1524,7 +1529,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                        "scan 0x%04x "
                        "achar %d "
                        "wchar %d "
-                       "state %ld "
+                       "state %lu "
                        "repeat %d\n",
                        s_irInBuf[ tmp ].EventType,
                        ( int ) s_irInBuf[ tmp ].Event.KeyEvent.bKeyDown,
@@ -1532,7 +1537,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                        s_irInBuf[ tmp ].Event.KeyEvent.wVirtualScanCode,  /* scan code */
                        s_irInBuf[ tmp ].Event.KeyEvent.uChar.AsciiChar,   /* char */
                        s_irInBuf[ tmp ].Event.KeyEvent.uChar.UnicodeChar, /* char unicode */
-                       s_irInBuf[ tmp ].Event.KeyEvent.dwControlKeyState, /* state */
+                       ( HB_ULONG ) s_irInBuf[ tmp ].Event.KeyEvent.dwControlKeyState, /* state */
                        s_irInBuf[ tmp ].Event.KeyEvent.wRepeatCount );
          }
 #endif
@@ -1628,7 +1633,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             if( s_wRepeated > 0 ) /* Might not be redundant */
                s_wRepeated--;
 #ifdef _TRACE
-            printf( "hb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d\n", dwState, wChar, wKey, ch );
+            printf( "hb_gt_ReadKey(): dwState is %lu, wChar is %d, wKey is %d, ch is %d\n", ( HB_ULONG ) dwState, wChar, wKey, ch );
 #endif
 
             if( wChar == 8 )                   /* VK_BACK */
@@ -1765,7 +1770,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
          else if( iEventMask & INKEY_MWHEEL &&
                   s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_WHEELED )
          {
-            ch = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState & 0xFF000000 ?
+            ch = ( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState & 0xFF000000 ) ?
                  K_MWBACKWARD : K_MWFORWARD;
          }
          else if( iEventMask & INKEY_LDOWN &&
@@ -1975,22 +1980,6 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, ! hb_iswinvista() );
          break;
 
-      case HB_GTI_FONTNAME:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-         break;
-
-      case HB_GTI_FONTSIZE:
-      case HB_GTI_FONTWIDTH:
-      case HB_GTI_FONTWEIGHT:
-      case HB_GTI_FONTQUALITY:
-      case HB_GTI_FONTATTRIBUTE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, 0 );
-         break;
-
-      case HB_GTI_FONTSEL:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-         break;
-
       case HB_GTI_PALETTE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
@@ -2109,6 +2098,10 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             hb_gt_winapi_getClipboard( CF_OEMTEXT, pInfo->pResult );
 #endif
          }
+         break;
+
+      case HB_GTI_WINHANDLE:
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, hb_getConsoleWindowHandle() );
          break;
 
       default:
