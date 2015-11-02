@@ -44,9 +44,10 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    LOCAL cKey
    LOCAL nAux
 
-   hb_default( @nTop, 0 )
+   nTop := Int( hb_defaultValue( nTop, 0 ) )
+   nBottom := Int( hb_defaultValue( nBottom, 0 ) )
+
    hb_default( @nLeft, 0 )
-   hb_default( @nBottom, 0 )
    hb_default( @nRight, 0 )
 
    IF nRight > MaxCol()
