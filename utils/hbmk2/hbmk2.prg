@@ -16167,7 +16167,6 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
 
    hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
 
-   SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
    SetKey( hb_keyNew( "V", HB_KF_CTRL ), {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
 
    Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
@@ -16388,8 +16387,7 @@ STATIC FUNCTION __hbshell_GetHidden()
    LOCAL GetList := {}
    LOCAL cPassword := Space( 128 )
    LOCAL nSavedRow
-   LOCAL bKeyPaste1
-   LOCAL bKeyPaste2
+   LOCAL bKeyPaste
 
    QQOut( I_( "Enter password:" ) + " " )
 
@@ -16401,15 +16399,13 @@ STATIC FUNCTION __hbshell_GetHidden()
    ATail( GetList ):display()
 
    SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-   bKeyPaste1 := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
-   bKeyPaste2 := SetKey( hb_keyNew( "V", HB_KF_CTRL ), {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+   bKeyPaste := SetKey( hb_keyNew( "V", HB_KF_CTRL ), {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
 
    ReadModal( GetList )
 
    /* Positions the cursor on the line previously saved */
    SetPos( nSavedRow, MaxCol() - 1 )
-   SetKey( hb_keyNew( "V", HB_KF_CTRL ), bKeyPaste2 )
-   SetKey( K_ALT_V, bKeyPaste1 )
+   SetKey( hb_keyNew( "V", HB_KF_CTRL ), bKeyPaste )
 
    QQOut( hb_eol() )
 
