@@ -2427,29 +2427,29 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                iKey = HB_KX_ESC;
                break;
 
-            case VK_UP:
-               iKeyPad = HB_KX_UP;
-               break;
-            case VK_DOWN:
-               iKeyPad = HB_KX_DOWN;
-               break;
-            case VK_LEFT:
-               iKeyPad = HB_KX_LEFT;
-               break;
-            case VK_RIGHT:
-               iKeyPad = HB_KX_RIGHT;
-               break;
-            case VK_HOME:
-               iKeyPad = HB_KX_HOME;
-               break;
-            case VK_END:
-               iKeyPad = HB_KX_END;
-               break;
             case VK_PRIOR:
                iKeyPad = HB_KX_PGUP;
                break;
             case VK_NEXT:
                iKeyPad = HB_KX_PGDN;
+               break;
+            case VK_END:
+               iKeyPad = HB_KX_END;
+               break;
+            case VK_HOME:
+               iKeyPad = HB_KX_HOME;
+               break;
+            case VK_LEFT:
+               iKeyPad = HB_KX_LEFT;
+               break;
+            case VK_UP:
+               iKeyPad = HB_KX_UP;
+               break;
+            case VK_RIGHT:
+               iKeyPad = HB_KX_RIGHT;
+               break;
+            case VK_DOWN:
+               iKeyPad = HB_KX_DOWN;
                break;
             case VK_INSERT:
                iKeyPad = HB_KX_INS;
@@ -2607,7 +2607,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
             else
             {
 #if defined( UNICODE )
-               if( iKey >= 128 )
+               if( iKey >= 127 )
                   iKey = HB_INKEY_NEW_UNICODEF( iKey, iFlags );
                else
                   iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
