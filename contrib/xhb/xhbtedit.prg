@@ -686,8 +686,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ENDIF
 
       CASE ( hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" ) .OR. ;
-           nKeyStd == K_ALT_W .OR. ;
-           nKey == K_CTRL_W  /* for GTs not supporting extended keys */
+           nKeyStd == K_ALT_W
          // Exit and return text buffer content.
          ::lSaved := .T.
          ::lExitEdit := .T.
@@ -750,8 +749,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ENDIF
 
       CASE nKeyStd == K_DOWN
-         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0 .OR. ;
-            hb_bitAnd( hb_gtInfo( HB_GTI_KBDSHIFTS ), HB_GTI_KBD_SHIFT ) != 0
+         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0
             IF ::nRow <= ::LastRow()
                ::SetTextSelection( "ROW", + 1 )
             ENDIF
@@ -769,8 +767,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ::GoBottom()
 
       CASE nKeyStd == K_UP
-         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0 .OR. ;
-            hb_bitAnd( hb_gtInfo( HB_GTI_KBDSHIFTS ), HB_GTI_KBD_SHIFT ) != 0
+         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0
             IF ::nRow > 1
                ::SetTextSelection( "ROW", -1 )
             ENDIF
@@ -788,8 +785,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ::GoTop()
 
       CASE nKeyStd == K_RIGHT
-         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0 .OR. ;
-            hb_bitAnd( hb_gtInfo( HB_GTI_KBDSHIFTS ), HB_GTI_KBD_SHIFT ) != 0
+         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0
             IF ::nCol < ::nWordWrapCol + 1
                ::SetTextSelection( "COL", + 1 )
             ENDIF
@@ -803,8 +799,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ::WordRight()
 
       CASE nKeyStd == K_LEFT
-         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0 .OR. ;
-            hb_bitAnd( hb_gtInfo( HB_GTI_KBDSHIFTS ), HB_GTI_KBD_SHIFT ) != 0
+         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0
             IF ::nCol > 1
                ::SetTextSelection( "COL", -1 )
             ENDIF
@@ -818,8 +813,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ::WordLeft()
 
       CASE nKeyStd == K_HOME
-         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0 .OR. ;
-            hb_bitAnd( hb_gtInfo( HB_GTI_KBDSHIFTS ), HB_GTI_KBD_SHIFT ) != 0
+         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0
             IF ::nCol > 1
                ::SetTextSelection( "HOME" )
             ENDIF
@@ -833,8 +827,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ::Top()
 
       CASE nKeyStd == K_END
-         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0 .OR. ;
-            hb_bitAnd( hb_gtInfo( HB_GTI_KBDSHIFTS ), HB_GTI_KBD_SHIFT ) != 0
+         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0
             IF ::nCol < ::nWordWrapCol + 1
                ::SetTextSelection( "END" )
             ENDIF
@@ -852,8 +845,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ::K_Return()
 
       CASE nKeyStd == K_INS
-         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0 .OR. ;
-            hb_bitAnd( hb_gtInfo( HB_GTI_KBDSHIFTS ), HB_GTI_KBD_SHIFT ) != 0
+         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0
             IF ::lEditAllow
                ::AddText( StrTran( hb_gtInfo( HB_GTI_CLIPBOARDDATA ), Chr( 0 ), " " ), .T. )
                ::ClrTextSelection()
@@ -867,8 +859,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ENDIF
 
       CASE nKeyStd == K_DEL
-         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0 .OR. ;
-            hb_bitAnd( hb_gtInfo( HB_GTI_KBDSHIFTS ), HB_GTI_KBD_SHIFT ) != 0
+         IF hb_bitAnd( hb_keyMod( nKey ), HB_KF_SHIFT ) != 0
             hb_gtInfo( HB_GTI_CLIPBOARDDATA, ::GetTextSelection() )
             IF ::lEditAllow
                ::DelTextSelection()
