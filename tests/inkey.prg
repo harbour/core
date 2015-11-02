@@ -9,7 +9,7 @@
 #include "clipper.ch"
 #endif
 
-PROCEDURE Main( cSkip, cRaw )
+PROCEDURE Main( cSkip, cExt )
 
    AltD( 0 )
 
@@ -34,7 +34,7 @@ PROCEDURE Main( cSkip, cRaw )
       WAIT
    ENDIF
 
-   TEST7( cSkip, cRaw )
+   TEST7( cSkip, cExt )
    ?
 
    RETURN
@@ -190,7 +190,7 @@ STATIC PROCEDURE TEST6()
 
    RETURN
 
-STATIC PROCEDURE TEST7( cSkip, cRaw )
+STATIC PROCEDURE TEST7( cSkip, cExt )
 
    LOCAL nKey, nMask
 
@@ -204,8 +204,8 @@ STATIC PROCEDURE TEST7( cSkip, cRaw )
 
    nMask := HB_INKEY_ALL
 
-   IF HB_ISSTRING( cRaw ) .AND. hb_LeftEqI( cRaw, "R" )
-      nMask += HB_INKEY_RAW
+   IF HB_ISSTRING( cExt ) .AND. "E" $ cExt
+      nMask += HB_INKEY_EXT
    ENDIF
 
    Set( _SET_EVENTMASK, nMask )
