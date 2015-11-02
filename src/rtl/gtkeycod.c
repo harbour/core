@@ -4,10 +4,9 @@
  *       getkey()/getch()/_read_kbd()/KbdCharIn() or similar function
  *       for keyboard input
  *
+ * Copyright 2006, 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * based on hb_gt_ReadKey() from GTDOS code by:
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *
- * Copyright 2006, 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +48,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
 
 /* NOTE: User programs should never call this layer directly! */
 
