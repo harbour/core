@@ -1034,7 +1034,7 @@ HB_FUNC( CURL_EASY_SETOPT )
                         curl_formadd( &hb_curl->pHTTPPOST_First,
                                       &hb_curl->pHTTPPOST_Last,
                                       CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 1 ),
-                                      CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 1 ),
+                                      CURLFORM_NAMELENGTH, ( long ) hb_arrayGetCLen( pSubArray, 1 ),
                                       CURLFORM_FILE, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pSubArray, 2 ) ),
                                       CURLFORM_END );
                   }
@@ -1057,13 +1057,23 @@ HB_FUNC( CURL_EASY_SETOPT )
                      PHB_ITEM pSubArray = hb_arrayGetItemPtr( pArray, ulPos + 1 );
 
                      if( pSubArray && HB_IS_ARRAY( pSubArray ) && hb_arrayLen( pSubArray ) >= 2 )
+#if defined( CURLFORM_CONTENTLEN )
                         curl_formadd( &hb_curl->pHTTPPOST_First,
                                       &hb_curl->pHTTPPOST_Last,
                                       CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 1 ),
-                                      CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 1 ),
+                                      CURLFORM_NAMELENGTH, ( long ) hb_arrayGetCLen( pSubArray, 1 ),
                                       CURLFORM_COPYCONTENTS, hb_arrayGetCPtr( pSubArray, 2 ),
-                                      CURLFORM_CONTENTSLENGTH, hb_arrayGetCLen( pSubArray, 2 ),
+                                      CURLFORM_CONTENTLEN, ( curl_off_t ) hb_arrayGetCLen( pSubArray, 2 ),
                                       CURLFORM_END );
+#else
+                        curl_formadd( &hb_curl->pHTTPPOST_First,
+                                      &hb_curl->pHTTPPOST_Last,
+                                      CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 1 ),
+                                      CURLFORM_NAMELENGTH, ( long ) hb_arrayGetCLen( pSubArray, 1 ),
+                                      CURLFORM_COPYCONTENTS, hb_arrayGetCPtr( pSubArray, 2 ),
+                                      CURLFORM_CONTENTSLENGTH, ( long ) hb_arrayGetCLen( pSubArray, 2 ),
+                                      CURLFORM_END );
+#endif
                   }
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPPOST, hb_curl->pHTTPPOST_First );
@@ -1088,20 +1098,30 @@ HB_FUNC( CURL_EASY_SETOPT )
                         switch( hb_arrayGetNI( pSubArray, 1 ) )
                         {
                            case HB_CURLOPT_HTTPPOST_FORM_CONTENT:
+#if defined( CURLFORM_CONTENTLEN )
                               curl_formadd( &hb_curl->pHTTPPOST_First,
                                             &hb_curl->pHTTPPOST_Last,
                                             CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 2 ),
-                                            CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 2 ),
+                                            CURLFORM_NAMELENGTH, ( long ) hb_arrayGetCLen( pSubArray, 2 ),
                                             CURLFORM_COPYCONTENTS, hb_arrayGetCPtr( pSubArray, 3 ),
-                                            CURLFORM_CONTENTSLENGTH, hb_arrayGetCLen( pSubArray, 3 ),
+                                            CURLFORM_CONTENTLEN, ( curl_off_t ) hb_arrayGetCLen( pSubArray, 3 ),
                                             CURLFORM_END );
+#else
+                              curl_formadd( &hb_curl->pHTTPPOST_First,
+                                            &hb_curl->pHTTPPOST_Last,
+                                            CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 2 ),
+                                            CURLFORM_NAMELENGTH, ( long ) hb_arrayGetCLen( pSubArray, 2 ),
+                                            CURLFORM_COPYCONTENTS, hb_arrayGetCPtr( pSubArray, 3 ),
+                                            CURLFORM_CONTENTSLENGTH, ( long ) hb_arrayGetCLen( pSubArray, 3 ),
+                                            CURLFORM_END );
+#endif
 
                               break;
                            case HB_CURLOPT_HTTPPOST_FORM_FILE:
                               curl_formadd( &hb_curl->pHTTPPOST_First,
                                             &hb_curl->pHTTPPOST_Last,
                                             CURLFORM_COPYNAME, hb_arrayGetCPtr( pSubArray, 2 ),
-                                            CURLFORM_NAMELENGTH, hb_arrayGetCLen( pSubArray, 2 ),
+                                            CURLFORM_NAMELENGTH, ( long ) hb_arrayGetCLen( pSubArray, 2 ),
                                             CURLFORM_FILE, hb_curl_StrHash( hb_curl, hb_arrayGetCPtr( pSubArray, 3 ) ),
                                             CURLFORM_END );
                               break;
