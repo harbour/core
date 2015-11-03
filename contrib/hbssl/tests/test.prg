@@ -42,11 +42,11 @@ PROCEDURE Main()
    SSL_init()
 
    ? SSLeay_version()
-   ? SSLeay_version( HB_SSLEAY_VERSION )
-   ? SSLeay_version( HB_SSLEAY_CFLAGS )
-   ? SSLeay_version( HB_SSLEAY_BUILT_ON )
-   ? SSLeay_version( HB_SSLEAY_PLATFORM )
-   ? SSLeay_version( HB_SSLEAY_DIR )
+   ? SSLeay_version( HB_OPENSSL_VERSION )
+   ? SSLeay_version( HB_OPENSSL_CFLAGS )
+   ? SSLeay_version( HB_OPENSSL_BUILT_ON )
+   ? SSLeay_version( HB_OPENSSL_PLATFORM )
+   ? SSLeay_version( HB_OPENSSL_DIR )
 
    ? "RAND_seed()", RAND_seed( "some entropy" )
 

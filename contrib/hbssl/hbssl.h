@@ -156,6 +156,14 @@
    #define SSL_get_wfd  SSL_get_fd
 #endif
 
+#if ! defined( OPENSSL_VERSION )
+   #define OPENSSL_VERSION   SSLEAY_VERSION
+   #define OPENSSL_CFLAGS    SSLEAY_CFLAGS
+   #define OPENSSL_BUILT_ON  SSLEAY_BUILT_ON
+   #define OPENSSL_PLATFORM  SSLEAY_PLATFORM
+   #define OPENSSL_DIR       SSLEAY_DIR
+#endif
+
 /* use macro to pacify warnings with missing 'const' in some function
    declarations in OpenSSL prior 0.9.8 */
 #if OPENSSL_VERSION_NUMBER < 0x0090800fL

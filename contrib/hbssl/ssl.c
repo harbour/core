@@ -90,17 +90,17 @@ HB_FUNC( SSLEAY_VERSION )
 
    switch( value )
    {
-      case HB_SSLEAY_VERSION:   value = SSLEAY_VERSION;  break;
-      case HB_SSLEAY_CFLAGS:    value = SSLEAY_CFLAGS;   break;
-      case HB_SSLEAY_BUILT_ON:  value = SSLEAY_BUILT_ON; break;
-      case HB_SSLEAY_PLATFORM:  value = SSLEAY_PLATFORM; break;
-      case HB_SSLEAY_DIR:       value = SSLEAY_DIR;      break;
+      case HB_OPENSSL_VERSION:   value = OPENSSL_VERSION;  break;
+      case HB_OPENSSL_CFLAGS:    value = OPENSSL_CFLAGS;   break;
+      case HB_OPENSSL_BUILT_ON:  value = OPENSSL_BUILT_ON; break;
+      case HB_OPENSSL_PLATFORM:  value = OPENSSL_PLATFORM; break;
+      case HB_OPENSSL_DIR:       value = OPENSSL_DIR;      break;
    }
 
    hb_retc( SSLeay_version( value ) );
 }
 
-HB_FUNC( OPENSSL_VERSION )
+HB_FUNC( OPENSSL_VERSION_NUMBER )
 {
    hb_retnint( OPENSSL_VERSION_NUMBER );
 }
