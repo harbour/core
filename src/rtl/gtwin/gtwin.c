@@ -121,6 +121,9 @@
 #ifndef MOUSE_WHEELED
 #  define MOUSE_WHEELED                0x0004
 #endif
+#ifndef MOUSE_HWHEELED
+#  define MOUSE_HWHEELED               0x0008
+#endif
 
 #ifndef CONSOLE_FULLSCREEN_HARDWARE
 #  define CONSOLE_FULLSCREEN_HARDWARE  2
@@ -1589,7 +1592,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
       {
          int iFlags = hb_gt_win_keyFlags( pInRec->Event.MouseEvent.dwControlKeyState );
 
-         /* mouse wheel events use screen based mouse possition */
+         /* mouse wheel events use screen based mouse position */
          if( pInRec->Event.MouseEvent.dwEventFlags == MOUSE_HWHEELED )
          {
             /* unsupported */
