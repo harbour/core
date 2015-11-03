@@ -18451,7 +18451,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
          "are detected, when '%3$s' [*] is automatically selected (except for INIT PROCEDUREs)." ), ;
          iif( hbmk[ _HBMK_lShellMode ], I_( ".hb, .prg, .hrb or .dbf" ), I_( ".hb, .hrb or .dbf" ) ), ;
          Lower( _HBMK_GT_DEF_ ), Lower( __hbshell_gtDefault() ) ), ;
-      I_( "You can use key <Alt+V> in interactive Harbour shell to paste text from the clipboard." ), ;
+      I_( "You can use key <Ctrl+V> in interactive Harbour shell to paste text from the clipboard." ), ;
       hb_StrFormat( I_( "Values marked with [*] may be host platform and/or configuration " + ;
          "dependent. This help was generated on '%1$s' host platform." ), ;
          Lower( hb_Version( HB_VERSION_PLATFORM ) ) ) }
