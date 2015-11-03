@@ -121,9 +121,6 @@
 #ifndef MOUSE_WHEELED
 #  define MOUSE_WHEELED                0x0004
 #endif
-#ifndef MOUSE_HWHEELED
-#  define MOUSE_HWHEELED               0x0008
-#endif
 
 #ifndef MOUSE_HWHEELED
 #  define MOUSE_HWHEELED               0x0008
