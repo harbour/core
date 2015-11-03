@@ -125,6 +125,10 @@
 #  define MOUSE_HWHEELED               0x0008
 #endif
 
+#ifndef MOUSE_HWHEELED
+#  define MOUSE_HWHEELED               0x0008
+#endif
+
 #ifndef CONSOLE_FULLSCREEN_HARDWARE
 #  define CONSOLE_FULLSCREEN_HARDWARE  2
 #endif
