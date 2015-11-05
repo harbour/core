@@ -38,9 +38,13 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
    ifeq ($(filter $(HB_PLATFORM),win wince dos vxworks),)
       HB_CFLAGS +=  -DHAVE_STDINT_H
    else
-      ifeq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 msvcarm icc iccia64 djgpp),)
-         ifeq ($(filter $(HB_PLATFORM),vxworks),)
-            HB_CFLAGS +=  -DHAVE_STDINT_H
+      ifeq ($(HB_PLATFORM),sunos)
+         HB_CFLAGS += -DHAVE_INTTYPES_H
+      else
+         ifeq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 msvcarm icc iccia64 djgpp),)
+            ifeq ($(filter $(HB_PLATFORM),vxworks),)
+               HB_CFLAGS +=  -DHAVE_STDINT_H
+            endif
          endif
       endif
    endif
