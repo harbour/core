@@ -1434,37 +1434,39 @@ STATIC FUNCTION hbmk_harbour_docdir_detect()
 
 STATIC FUNCTION DetectPackageManager()
 
+   LOCAL cPkgMgr := ""
+
    #if defined( __PLATFORM__DARWIN )
       DO CASE
       CASE hb_vfExists( "/usr/local/bin/brew" )
-         RETURN "homebrew"
+         cPkgMgr := "homebrew"
       CASE hb_vfExists( "/usr/local/bin/rudix" )
-         RETURN "rudix"
+         cPkgMgr := "rudix"
       CASE hb_vfExists( "/opt/local/bin/port" )
-         RETURN "macports"
+         cPkgMgr := "macports"
       CASE hb_vfExists( "/sw/bin/fink" )
-         RETURN "fink"
+         cPkgMgr := "fink"
       ENDCASE
    #elif defined( __PLATFORM__LINUX )
       DO CASE
       CASE hb_vfExists( "/etc/debian_version" )
-         RETURN "deb"
+         cPkgMgr := "deb"
       CASE hb_vfExists( "/etc/gentoo-release" )
-         RETURN "portage"
+         cPkgMgr := "portage"
       OTHERWISE
-         RETURN "rpm"
+         cPkgMgr := "rpm"
       ENDCASE
    /* extend below as needed */
    #elif defined( __PLATFORM__BSD )
    #elif defined( __PLATFORM__SUNOS )
-      RETURN "pkg"
+      cPkgMgr := "pkg"
    #elif defined( __PLATFORM__HPUX )
    #elif defined( __PLATFORM__CYGWIN )
-      RETURN "cygwin"
+      cPkgMgr := "cygwin"
    #elif defined( __PLATFORM__AIX )
    #endif
 
-   RETURN ""
+   RETURN cPkgMgr
 
 STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExitStr )
 
