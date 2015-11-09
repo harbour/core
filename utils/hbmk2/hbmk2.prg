@@ -1434,7 +1434,7 @@ STATIC FUNCTION hbmk_harbour_docdir_detect()
 
 STATIC FUNCTION DetectPackageManager()
 
-   LOCAL cPkgMgr := ""
+   LOCAL cPkgMgr
 
    #if defined( __PLATFORM__DARWIN )
       DO CASE
@@ -1446,6 +1446,8 @@ STATIC FUNCTION DetectPackageManager()
          cPkgMgr := "macports"
       CASE hb_vfExists( "/sw/bin/fink" )
          cPkgMgr := "fink"
+      OTHERWISE
+         cPkgMgr := ""
       ENDCASE
    #elif defined( __PLATFORM__LINUX )
       DO CASE
@@ -1456,14 +1458,13 @@ STATIC FUNCTION DetectPackageManager()
       OTHERWISE
          cPkgMgr := "rpm"
       ENDCASE
-   /* extend below as needed */
-   #elif defined( __PLATFORM__BSD )
    #elif defined( __PLATFORM__SUNOS )
       cPkgMgr := "pkg"
-   #elif defined( __PLATFORM__HPUX )
    #elif defined( __PLATFORM__CYGWIN )
       cPkgMgr := "cygwin"
-   #elif defined( __PLATFORM__AIX )
+   /* extend below as needed */
+   #else
+      cPkgMgr := ""
    #endif
 
    RETURN cPkgMgr
