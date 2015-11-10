@@ -39,7 +39,7 @@ ifneq ($(HB_HAS_PCRE2_LOCAL),)
    HB_CFLAGS_STA := -DPCRE2_STATIC
 
    ifneq ($(filter $(HB_COMPILER),clang gcc mingw mingw64),)
-      ifneq ($(filter $(PLATFORM)-$(HB_COMPILER),win-clang),)
+      ifeq ($(filter $(HB_PLATFORM)-$(HB_COMPILER),win-clang),)
          HB_CFLAGS += -DHAVE_INTTYPES_H
       endif
    endif
