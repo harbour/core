@@ -38,7 +38,7 @@ ifneq ($(HB_HAS_PCRE2_LOCAL),)
    # only needed for win/wce, for other platforms this is noop
    HB_CFLAGS_STA := -DPCRE2_STATIC
 
-   ifneq ($(filter $(HB_COMPILER),clang gcc mingw mingw64),)
+   ifneq ($(filter $(HB_COMPILER),clang gcc mingw mingw64 sunpro),)
       ifeq ($(filter $(HB_PLATFORM)-$(HB_COMPILER),win-clang),)
          HB_CFLAGS += -DHAVE_INTTYPES_H
       endif
