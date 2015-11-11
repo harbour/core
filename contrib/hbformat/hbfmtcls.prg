@@ -116,14 +116,14 @@ CREATE CLASS HBFormatCode
    VAR cCommands      INIT ","
    VAR cClauses       INIT ","
    VAR cFunctions     INIT ","
-   VAR aContr         INIT { { "if"    , ""        , "|else|elseif|"   , "|endif|"       }, ;
-                             { "do"    , "while"   , ""                , "|enddo|"       }, ;
-                             { "while" , ""        , ""                , "|enddo|"       }, ;
-                             { "for"   , ""        , ""                , "|next|endfor|" }, ;
-                             { "do"    , "case"    , "|case|otherwise|", "|endcase|"     }, ;
-                             { "with"  , "object"  , ""                , "|end|"         }, ;
-                             { "begin" , "sequence", "|recover|always|", "|end|"         }, ;
-                             { "switch", ""        , "|case|otherwise|", "|endswitch|"   } }
+   VAR aContr         INIT { { "if"    , ""        , { "else", "elseif" }   , { "endif" }          }, ;
+                             { "do"    , "while"   , { "" }                 , { "enddo" }          }, ;
+                             { "while" , ""        , { "" }                 , { "enddo" }          }, ;
+                             { "for"   , ""        , { "" }                 , { "next", "endfor" } }, ;
+                             { "do"    , "case"    , { "case", "otherwise" }, { "endcase" }        }, ;
+                             { "with"  , "object"  , { "" }                 , { "end" }            }, ;
+                             { "begin" , "sequence", { "recover", "always" }, { "end" }            }, ;
+                             { "switch", ""        , { "case", "otherwise" }, { "endswitch" }      } }
 
    VAR bCallback
 
@@ -227,10 +227,9 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
       ENDIF
       nPosComment := 0
       IF ::lIndent
-         aFile[ i ] := StrTran( RTrim( aFile[ i ] ), Chr( 9 ), " " )
-      ELSE
-         aFile[ i ] := RTrim( aFile[ i ] )
+         aFile[ i ] := StrTran( aFile[ i ], Chr( 9 ), " " )
       ENDIF
+      aFile[ i ] := RTrim( aFile[ i ] )
 
       IF Empty( aFile[ i ] )
          aFile[ i ] := ""
@@ -372,11 +371,11 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
                            AAdd( aDeep, NIL )
                         ENDIF
                         aDeep[ nDeep ] := nContrState
-                     ELSEIF Len( cToken1 ) < 4 .OR. ( nContrState := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 3 ] } ) ) == 0
-                        IF ( nPos := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 4 ] } ) ) > 0 .OR. ;
+                     ELSEIF Len( cToken1 ) < 4 .OR. ( nContrState := AScan( ::aContr, {| a | AScan( a[ 3 ], {| e | hb_LeftEq( e, cToken1 ) } ) > 0 } ) ) == 0
+                        IF ( nPos := AScan( ::aContr, {| a | AScan( a[ 4 ], {| e | hb_LeftEq( e, cToken1 ) } ) > 0 } ) ) > 0 .OR. ;
                               cToken1 == "end"
                            IF nPos > 0 .AND. nDeep > 0 .AND. aDeep[ nDeep ] != nPos
-                              DO WHILE ( nPos := AScan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 4 ] }, ;
+                              DO WHILE ( nPos := AScan( ::aContr, {| a | AScan( a[ 4 ], {| e | hb_LeftEq( e, cToken1 ) } ) > 0 }, ;
                                     nPos + 1 ) ) > 0 .AND. aDeep[ nDeep ] != nPos
                               ENDDO
                            ENDIF
