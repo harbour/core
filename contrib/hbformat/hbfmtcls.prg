@@ -694,6 +694,9 @@ METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS HBFormatCode
          ::cLineErr := cLine
          RETURN .F.
       ELSE
+         IF SubStr( cLine, nEnd, 1 ) == "("
+            RETURN .F.
+         ENDIF
 
          hb_default( @lFirstOnly, .F. )
 
