@@ -1592,8 +1592,6 @@ Supported shells per host platforms:
            * <http://bzip.org/downloads.html>
      * Win-builds [multi-platform, free, open-source]
         * <http://win-builds.org/>
-     * Chocolatey (Windows package manager) [free, open-source]
-        * <https://chocolatey.org/>
      * GNU Make
 
         Windows binary + source:
