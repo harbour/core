@@ -118,6 +118,7 @@ deploy_script:
 - call package\mpkg_win.bat
 - curl -fsS -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 # NOTE: After 180 days the release version number should be deleted and recreated
-#       (along with download stats) or incremented, otherwise Bintray will reject 
-#       further updates to it. Without publishing, the upload disappears in 6 days.
-- curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.1dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
+#       (along with download stats), otherwise Bintray will reject further updates 
+#       to it. Without publishing, the upload disappears in 6 days. Incrementing
+#       it fails too if the same filename exist under another version number.
+- curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
