@@ -4490,7 +4490,8 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
 {
    HB_FHANDLE hFile;
    HB_USHORT uiFlags;
-   char * szPath;
+   const char * szPath;
+   char * szFree = NULL;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsExtOpen(%s, %s, %u, %p, %p)", pszFileName, pDefExt, nExFlags, pPaths, pError ) );
 
@@ -4509,7 +4510,11 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
    hb_errGetFileName( pError );
 #endif
 
-   szPath = hb_fsExtName( pszFileName, pDefExt, nExFlags, pPaths );
+   if( pDefExt || pPaths || pError ||
+       ( nExFlags & ( FXO_DEFAULTS | FXO_COPYNAME ) ) != 0 )
+      szPath = szFree = hb_fsExtName( pszFileName, pDefExt, nExFlags, pPaths );
+   else
+      szPath = pszFileName;
 
    uiFlags = ( HB_USHORT ) ( nExFlags & 0xff );
    if( nExFlags & ( FXO_TRUNCATE | FXO_APPEND | FXO_UNIQUE ) )
@@ -4528,11 +4533,11 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
    hFile = hb_fsOpen( szPath, uiFlags );
 
 #if defined( HB_USE_SHARELOCKS )
-   if( hFile != FS_ERROR && nExFlags & FXO_SHARELOCK )
+   if( hFile != FS_ERROR && ( nExFlags & FXO_SHARELOCK ) != 0 )
    {
 #if defined( HB_USE_BSDLOCKS )
       int iLock, iResult;
-      if( ( uiFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ ||
+      if( /* ( uiFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) ) == FO_READ || */
           ( uiFlags & ( FO_DENYREAD | FO_DENYWRITE | FO_EXCLUSIVE ) ) == 0 )
          iLock = LOCK_SH | LOCK_NB;
       else
@@ -4598,7 +4603,9 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
    if( nExFlags & FXO_COPYNAME && hFile != FS_ERROR )
       hb_strncpy( ( char * ) pszFileName, szPath, HB_PATH_MAX - 1 );
 
-   hb_xfree( szPath );
+   if( szFree )
+      hb_xfree( szFree );
+
    return hFile;
 }
 
