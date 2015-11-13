@@ -706,8 +706,6 @@ static void s_fileClose( PHB_FILE pFile )
 
       hb_xfree( pFile );
    }
-   else
-      pFile = NULL;
 
    hb_threadLeaveCriticalSection( &s_fileMtx );
    hb_vmLock();
