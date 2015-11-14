@@ -557,7 +557,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
    if( fResult && pFile == NULL )
 #endif /* HB_OS_UNIX */
    {
-      HB_FHANDLE hFile = hb_fsExtOpen( pszFileName, NULL,
+      HB_FHANDLE hFile = hb_fsExtOpen( pszFile, NULL,
                             nExFlags & ~ ( HB_FATTR ) ( FXO_DEFAULTS | FXO_COPYNAME ),
                             NULL, NULL );
       if( hFile != FS_ERROR )
