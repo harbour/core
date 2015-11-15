@@ -64,8 +64,7 @@ else
 endif
 
 # ORIGIN http://libpng.org/pub/png/libpng.html
-# URL    https://github.com/glennrp/libpng/archive/v1.6.18.tar.gz
-# DIFF   png.dif
+# URL    https://github.com/glennrp/libpng/archive/v1.6.19.tar.gz
 #
 # MAP    LICENSE                        LICENSE.txt
 # MAP    png.c
