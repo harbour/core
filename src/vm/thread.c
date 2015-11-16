@@ -1622,7 +1622,7 @@ HB_FUNC( HB_THREADONCE )
 HB_FUNC( HB_THREADONCEINIT )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
-   PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
 
    if( pItem && pValue && HB_ISBYREF( 1 ) && ! HB_ISBYREF( 2 ) )
    {
