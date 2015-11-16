@@ -64,11 +64,6 @@
    /* #error "unsupported OpenSSL version, required 0.9.6 or higher" */
 #endif
 
-#if OPENSSL_VERSION_NUMBER < 0x00908060L
-   #ifndef OPENSSL_NO_SEED
-      #define OPENSSL_NO_SEED
-   #endif
-#endif
 #if OPENSSL_VERSION_NUMBER < 0x00908030L
    #ifndef OPENSSL_NO_CAMELLIA
       #define OPENSSL_NO_CAMELLIA
@@ -94,23 +89,11 @@
    #if defined( NO_BF ) && ! defined( OPENSSL_NO_BF )
       #define OPENSSL_NO_BF
    #endif
-   #if defined( NO_CAST ) && ! defined( OPENSSL_NO_CAST )
-      #define OPENSSL_NO_CAST
-   #endif
    #if defined( NO_DES ) && ! defined( OPENSSL_NO_DES )
       #define OPENSSL_NO_DES
    #endif
    #if defined( NO_DSA ) && ! defined( OPENSSL_NO_DSA )
       #define OPENSSL_NO_DSA
-   #endif
-   #if defined( NO_IDEA ) && ! defined( OPENSSL_NO_IDEA )
-      #define OPENSSL_NO_IDEA
-   #endif
-   #if defined( NO_MDC2 ) && ! defined( OPENSSL_NO_MDC2 )
-      #define OPENSSL_NO_MDC2
-   #endif
-   #if defined( NO_MD2 ) && ! defined( OPENSSL_NO_MD2 )
-      #define OPENSSL_NO_MD2
    #endif
    #if defined( NO_MD4 ) && ! defined( OPENSSL_NO_MD4 )
       #define OPENSSL_NO_MD4
@@ -123,12 +106,6 @@
    #endif
    #if defined( NO_RC4 ) && ! defined( OPENSSL_NO_RC4 )
       #define OPENSSL_NO_RC4
-   #endif
-   #if defined( NO_RC5 ) && ! defined( OPENSSL_NO_RC5 )
-      #define OPENSSL_NO_RC5
-   #endif
-   #if defined( NO_RIPEMD ) && ! defined( OPENSSL_NO_RIPEMD )
-      #define OPENSSL_NO_RIPEMD
    #endif
    #if defined( NO_RSA ) && ! defined( OPENSSL_NO_RSA )
       #define OPENSSL_NO_RSA

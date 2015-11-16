@@ -26,14 +26,9 @@
 -depincpath=openssl:/usr/pkg/include
 -depfinish=openssl
 
-{darwin}-cflag=-DOPENSSL_NO_SHA256
-{darwin}-cflag=-DOPENSSL_NO_SHA512
 {darwin}-cflag=-DOPENSSL_NO_CAMELLIA
 {darwin}-cflag=-DOPENSSL_NO_DGRAM
 {darwin}-cflag=-DHB_OPENSSL_OLD_OSX_
-
-# Patent expires in 2010/2011
--cflag=-DOPENSSL_NO_IDEA
 
 # to suppress Apple's deprecation warnings that apply to
 # the complete OpenSSL API, starting with OS X Lion 10.7

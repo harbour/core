@@ -195,8 +195,6 @@
 #define HB_EVP_MD_SHA256                                    10
 #define HB_EVP_MD_SHA384                                    11
 #define HB_EVP_MD_SHA512                                    12
-#define HB_EVP_MD_MDC2                                      13
-#define HB_EVP_MD_RIPEMD160                                 14
 
 #define HB_EVP_CIPHER_UNSUPPORTED                           ( -1 )
 #define HB_EVP_CIPHER_ENC_NULL                              0
@@ -224,11 +222,6 @@
 #define HB_EVP_CIPHER_DESX_CBC                              22
 #define HB_EVP_CIPHER_RC4                                   23
 #define HB_EVP_CIPHER_RC4_40                                24
-#define HB_EVP_CIPHER_IDEA_ECB                              25
-#define HB_EVP_CIPHER_IDEA_CFB64                            26
-#define HB_EVP_CIPHER_IDEA_CFB                              27
-#define HB_EVP_CIPHER_IDEA_OFB                              28
-#define HB_EVP_CIPHER_IDEA_CBC                              29
 #define HB_EVP_CIPHER_RC2_ECB                               30
 #define HB_EVP_CIPHER_RC2_CBC                               31
 #define HB_EVP_CIPHER_RC2_40_CBC                            32
@@ -241,16 +234,6 @@
 #define HB_EVP_CIPHER_BF_CFB64                              39
 #define HB_EVP_CIPHER_BF_CFB                                40
 #define HB_EVP_CIPHER_BF_OFB                                41
-#define HB_EVP_CIPHER_CAST5_ECB                             42
-#define HB_EVP_CIPHER_CAST5_CBC                             43
-#define HB_EVP_CIPHER_CAST5_CFB64                           44
-#define HB_EVP_CIPHER_CAST5_CFB                             45
-#define HB_EVP_CIPHER_CAST5_OFB                             46
-#define HB_EVP_CIPHER_RC5_32_12_16_CBC                      47
-#define HB_EVP_CIPHER_RC5_32_12_16_ECB                      48
-#define HB_EVP_CIPHER_RC5_32_12_16_CFB64                    49
-#define HB_EVP_CIPHER_RC5_32_12_16_CFB                      50
-#define HB_EVP_CIPHER_RC5_32_12_16_OFB                      51
 #define HB_EVP_CIPHER_AES_128_GCM                           99
 #define HB_EVP_CIPHER_AES_128_ECB                           52
 #define HB_EVP_CIPHER_AES_128_CBC                           53
@@ -296,11 +279,6 @@
 #define HB_EVP_CIPHER_CAMELLIA_256_CFB128                   91
 #define HB_EVP_CIPHER_CAMELLIA_256_CFB                      92
 #define HB_EVP_CIPHER_CAMELLIA_256_OFB                      93
-#define HB_EVP_CIPHER_SEED_ECB                              94
-#define HB_EVP_CIPHER_SEED_CBC                              95
-#define HB_EVP_CIPHER_SEED_CFB128                           96
-#define HB_EVP_CIPHER_SEED_CFB                              97
-#define HB_EVP_CIPHER_SEED_OFB                              98
 
 #define HB_BIO_METHOD_UNSUPPORTED                           ( -1 )
 #define HB_BIO_METHOD_S_NULL                                0
