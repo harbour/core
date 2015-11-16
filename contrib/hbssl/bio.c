@@ -255,7 +255,7 @@ HB_FUNC( BIO_TEST_FLAGS )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
-#if OPENSSL_VERSION_NUMBER >= 0x00908050L && ! defined( HB_OPENSSL_OLD_OSX_ )
+#if OPENSSL_VERSION_NUMBER >= 0x00908050L
       hb_retni( BIO_test_flags( bio, hb_parni( 2 ) ) );
 #else
       hb_retni( 0 );

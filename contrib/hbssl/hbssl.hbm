@@ -26,14 +26,6 @@
 -depincpath=openssl:/usr/pkg/include
 -depfinish=openssl
 
-{darwin}-cflag=-DOPENSSL_NO_CAMELLIA
-{darwin}-cflag=-DOPENSSL_NO_DGRAM
-{darwin}-cflag=-DHB_OPENSSL_OLD_OSX_
-
-# to suppress Apple's deprecation warnings that apply to
-# the complete OpenSSL API, starting with OS X Lion 10.7
--cflag={allgcc&darwin}-Wno-deprecated
-
 # for openssl/applink.c
 -cflag={lngcpp&allgcc}-fpermissive
 

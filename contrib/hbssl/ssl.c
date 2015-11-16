@@ -1286,7 +1286,7 @@ HB_FUNC( SSL_SET_MTU )
 {
    if( hb_SSL_is( 1 ) )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00908000L && ! defined( HB_OPENSSL_OLD_OSX_ )
+#if OPENSSL_VERSION_NUMBER >= 0x00908000L
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )

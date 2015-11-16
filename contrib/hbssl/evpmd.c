@@ -120,7 +120,7 @@ const EVP_MD * hb_EVP_MD_par( int iParam )
       case HB_EVP_MD_SHA1:       p = EVP_sha1();      break;
       case HB_EVP_MD_DSS:        p = EVP_dss();       break;
       case HB_EVP_MD_DSS1:       p = EVP_dss1();      break;
-#if OPENSSL_VERSION_NUMBER >= 0x00908000L && ! defined( HB_OPENSSL_OLD_OSX_ )
+#if OPENSSL_VERSION_NUMBER >= 0x00908000L
       case HB_EVP_MD_ECDSA:      p = EVP_ecdsa();     break;
 #endif
 #endif
@@ -154,7 +154,7 @@ static int hb_EVP_MD_ptr_to_id( const EVP_MD * p )
    else if( p == EVP_sha1()      ) n = HB_EVP_MD_SHA1;
    else if( p == EVP_dss()       ) n = HB_EVP_MD_DSS;
    else if( p == EVP_dss1()      ) n = HB_EVP_MD_DSS1;
-#if OPENSSL_VERSION_NUMBER >= 0x00908000L && ! defined( HB_OPENSSL_OLD_OSX_ )
+#if OPENSSL_VERSION_NUMBER >= 0x00908000L
    else if( p == EVP_ecdsa()     ) n = HB_EVP_MD_ECDSA;
 #endif
 #endif
