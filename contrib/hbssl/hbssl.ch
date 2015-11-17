@@ -195,6 +195,7 @@
 #define HB_EVP_MD_SHA256                                    10
 #define HB_EVP_MD_SHA384                                    11
 #define HB_EVP_MD_SHA512                                    12
+#define HB_EVP_MD_RIPEMD160                                 14
 
 #define HB_EVP_CIPHER_UNSUPPORTED                           ( -1 )
 #define HB_EVP_CIPHER_ENC_NULL                              0

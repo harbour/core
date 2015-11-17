@@ -107,6 +107,9 @@
    #if defined( NO_RC4 ) && ! defined( OPENSSL_NO_RC4 )
       #define OPENSSL_NO_RC4
    #endif
+   #if defined( NO_RIPEMD ) && ! defined( OPENSSL_NO_RIPEMD )
+      #define OPENSSL_NO_RIPEMD
+   #endif
    #if defined( NO_RSA ) && ! defined( OPENSSL_NO_RSA )
       #define OPENSSL_NO_RSA
    #endif

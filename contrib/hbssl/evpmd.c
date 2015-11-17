@@ -132,6 +132,9 @@ const EVP_MD * hb_EVP_MD_par( int iParam )
       case HB_EVP_MD_SHA384:     p = EVP_sha384();    break;
       case HB_EVP_MD_SHA512:     p = EVP_sha512();    break;
 #endif
+#ifndef OPENSSL_NO_RIPEMD
+      case HB_EVP_MD_RIPEMD160:  p = EVP_ripemd160(); break;
+#endif
       default:                   p = NULL;
    }
 
@@ -165,6 +168,9 @@ static int hb_EVP_MD_ptr_to_id( const EVP_MD * p )
 #ifndef OPENSSL_NO_SHA512
    else if( p == EVP_sha384()    ) n = HB_EVP_MD_SHA384;
    else if( p == EVP_sha512()    ) n = HB_EVP_MD_SHA512;
+#endif
+#ifndef OPENSSL_NO_RIPEMD
+   else if( p == EVP_ripemd160() ) n = HB_EVP_MD_RIPEMD160;
 #endif
    else                            n = HB_EVP_MD_UNSUPPORTED;
 
