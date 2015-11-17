@@ -1577,8 +1577,6 @@ Supported shells per host platforms:
         * <https://github.com/danmar/cppcheck>
      * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
         * <http://valgrind.org/>
-     * ack (programmer grep) [multi-platform, free, open-source]
-        * <http://beyondgrep.com/>
      * Uncrustify (source formatter) [multi-platform, free, open-source]
         * <https://github.com/bengardner/uncrustify>
      * UPX (executable compressor) [win, dos, \*nix, free, open-source]
