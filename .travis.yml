@@ -12,10 +12,10 @@ sudo: false
 addons:
   apt:
     sources:
-      - llvm-toolchain-precise-3.6
+      - llvm-toolchain-precise-3.7
       - ubuntu-toolchain-r-test
     packages:
-      - clang-3.6
+      - clang-3.7
       - gcc-5
       - g++-5
       - firebird2.5-dev
@@ -41,7 +41,7 @@ before_install:
           export HB_CCSUFFIX=-5;
           ls -lA /usr/bin/gcc*;
        else
-          export HB_CCSUFFIX=-3.6;
+          export HB_CCSUFFIX=-3.7;
           ls -lA /usr/bin/clang*;
        fi;
     fi
