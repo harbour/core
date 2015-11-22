@@ -125,6 +125,9 @@ deploy:
     branch: master
     appveyor_repo_tag: false
 before_deploy:
+- set GOPATH=C:\gomy\
+- mkdir %GOPATH%
+- set PATH=%GOPATH%;%PATH%
 - go get github.com/c4milo/github-release
 - github-release delete --tag v3.4.0dev
 - cmd: 'curl -fsS -H "Authorization: token %GITHUB_TOKEN%" -X DELETE "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev"'
