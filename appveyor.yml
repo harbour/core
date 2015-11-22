@@ -120,16 +120,16 @@ artifacts:
   name: pkg-win
 deploy:
 - provider: GitHub
-   auth_token:
-     secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
-   release: v3.4.0dev
-   description: 'Snapshot release of Harbour'
-   artifact: pkg-win
-   draft: false
-   prerelease: true
-   on:
-     branch: master
-     appveyor_repo_tag: false
+  auth_token:
+    secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
+  release: v3.4.0dev
+  description: 'Snapshot release of Harbour'
+  artifact: pkg-win
+  draft: false
+  prerelease: true
+  on:
+    branch: master
+    appveyor_repo_tag: false
 deploy_script:
 - curl -fsS -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 # NOTE: After 180 days the release version number should be deleted and recreated
