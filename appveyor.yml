@@ -13,6 +13,8 @@ environment:
 # - HB_COMPILER: msvc
 # - HB_COMPILER: mingw64
   - HB_COMPILER: mingw
+    GITHUB_TOKEN:
+      secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
     VIRUSTOTAL_APIKEY:
       secure: TdJYONfrpH45DuyKxraVqgHYy25IQ/F8TKHzYf+u5zz1aiM2yR0YTMaGxyj2EMReEearSI9kD9D2ZykybSVEbRyEaotZlceUb2lPDKELl3M=
 install:
@@ -112,10 +114,11 @@ build_script:
 artifacts:
 - path: harbour-daily-win.7z.exe
   name: pkg-win
+before_deploy:
+- curl -fsS -H "Authorization: token %GITHUB_TOKEN%" -X DELETE "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev"
 deploy:
 - provider: GitHub
-  auth_token:
-    secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
+  auth_token: $(github_token)
   tag: v3.4.0dev
   release: 'Harbour 3.4.0dev daily'
   description: 'Snapshot build generated after each commit.'
