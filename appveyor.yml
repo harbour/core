@@ -84,12 +84,10 @@ build_script:
 #- set HB_WITH_MYSQL=C:\w\mariadb\include\mysql
 #- set HB_WITH_OCILIB=C:\w\ocilib\include
 #- set HB_WITH_PGSQL=C:\w\pgsql\include
-#- set HB_BUILD_CONTRIBS=no
+- set HB_BUILD_CONTRIBS=no
 - set HB_INSTALL_3RDDYN=yes
 - set HB_BUILD_STRIP=bin
-- set HB_BUILD_DYN=no
 - set HB_BUILD_CONTRIB_DYN=yes
-- set HB_BUILD_OPTIM=yes
 - set HB_BUILD_PKG=yes
 - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
 - set _HB_BUILD_PKG_ARCHIVE=no
@@ -99,7 +97,7 @@ build_script:
 - set HB_CPU=x86_64
 - set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win64-mingw\include
 - set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
-- win-make.exe clean install HB_VERSION=%HB_VF%
+#- win-make.exe clean install HB_VERSION=%HB_VF%
 #- set HB_COMPILER=
 #- set HB_CPU=
 #- set HB_WITH_CURL=
@@ -114,8 +112,6 @@ build_script:
 artifacts:
 - path: harbour-daily-win.7z.exe
   name: pkg-win
-before_deploy:
-- curl -fsS -H "Authorization: token %GITHUB_TOKEN%" -X DELETE "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev"
 deploy:
 - provider: GitHub
   auth_token: $(github_token)
@@ -128,6 +124,10 @@ deploy:
   on:
     branch: master
     appveyor_repo_tag: false
+before_deploy:
+- echo "trace #1"
+- curl -fsS -H "Authorization: token %GITHUB_TOKEN%" -X DELETE "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev"
+- echo "trace #2 %ERRORLEVEL%"
 after_deploy:
 - curl -fsS -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 build:
