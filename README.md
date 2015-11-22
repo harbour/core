@@ -4,7 +4,7 @@
 [![Commits](https://img.shields.io/github/commits-since/vszakats/harbour-core/v3.0.0.svg)](https://github.com/vszakats/harbour-core/commits/v3.4.0dev)<br />
 [![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core)
 [![Build status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master)
-[![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208)<br />
+[![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208)
 [![Download](https://img.shields.io/github/downloads/vszakats/harbour-core/total.svg)](https://github.com/vszakats/harbour-core/releases)
 
 Harbour is the free software implementation of a multi-platform,
