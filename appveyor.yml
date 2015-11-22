@@ -125,9 +125,13 @@ deploy:
     branch: master
     appveyor_repo_tag: false
 before_deploy:
-- echo "trace #1"
-- curl -fsS -H "Authorization: token %GITHUB_TOKEN%" -X DELETE "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev"
-- echo "trace #2 %ERRORLEVEL%"
+- echo trace-1
+- curl --version
+- cmd: curl --version
+- cmd: curl -fsS -H "Authorization: token __" -X DELETE "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev"
+- cmd: curl -fsS -H "Authorization: token %GITHUB_TOKEN%" -X DELETE "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev"
+- echo trace-2
+- echo %ERRORLEVEL%
 after_deploy:
 - curl -fsS -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 build:
