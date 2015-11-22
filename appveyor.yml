@@ -123,7 +123,7 @@ deploy:
   auth_token:
     secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
   tag: v3.4.0dev
-  release: v3.4.0dev
+  release: 'Harbour 3.4.0dev daily'
   description: 'Snapshot release of Harbour'
   artifact: pkg-win
   draft: false
@@ -138,5 +138,4 @@ after_deploy:
 #       to it. Without publishing, the upload disappears in 6 days. Incrementing
 #       it fails too if the same filename exist under another version number.
 - #curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
-build:
-  verbosity: detailed
+
