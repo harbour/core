@@ -122,9 +122,9 @@ deploy:
 - provider: GitHub
   auth_token:
     secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
-  #tag: v3.4.0dev
+  tag: v3.4.0dev
   release: 'Harbour 3.4.0dev daily'
-  description: 'Snapshot release of Harbour'
+  description: 'Daily release of Harbour'
   artifact: pkg-win
   draft: false
   prerelease: true
