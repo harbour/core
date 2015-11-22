@@ -114,11 +114,26 @@ build_script:
 #- set PATH=%_ORI_PATH%
 #- call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 #- win-make.exe clean install HB_VERSION=%HB_VF%
-deploy_script:
 - call package\mpkg_win.bat
+artifacts:
+- path: harbour-daily-win.7z.exe
+  name: pkg-win
+deploy:
+- provider: GitHub
+   auth_token:
+     secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
+   release: v3.4.0dev
+   description: 'Snapshot release of Harbour'
+   artifact: pkg-win
+   draft: false
+   prerelease: true
+   on:
+     branch: master
+     appveyor_repo_tag: false
+deploy_script:
 - curl -fsS -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 # NOTE: After 180 days the release version number should be deleted and recreated
 #       (along with download stats), otherwise Bintray will reject further updates 
 #       to it. Without publishing, the upload disappears in 6 days. Incrementing
 #       it fails too if the same filename exist under another version number.
-- curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
+- #curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
