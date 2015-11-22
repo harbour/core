@@ -13,12 +13,6 @@ environment:
 # - HB_COMPILER: msvc
 # - HB_COMPILER: mingw64
   - HB_COMPILER: mingw
-    BINTRAY_APIKEY:
-      secure: FUQVzdqjaAvLYH/yTdL1rdtrVcAheHbK4YUvNNpvArR09vfkkuAk+8ntrg2MRYa2
-    BINTRAY_USER:
-      secure: jfLq1ApyVLNouxv07skhrg==
-    BINTRAY_PATH:
-      secure: +CyA1IIhoPpI7EY54BsRADDxb1V62HDWLSekCX4mTxk=
     VIRUSTOTAL_APIKEY:
       secure: TdJYONfrpH45DuyKxraVqgHYy25IQ/F8TKHzYf+u5zz1aiM2yR0YTMaGxyj2EMReEearSI9kD9D2ZykybSVEbRyEaotZlceUb2lPDKELl3M=
 install:
@@ -124,7 +118,7 @@ deploy:
     secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
   tag: v3.4.0dev
   release: 'Harbour 3.4.0dev daily'
-  description: 'Daily release of Harbour'
+  description: 'Snapshot build generated after each commit.'
   artifact: pkg-win
   draft: false
   prerelease: true
@@ -133,10 +127,5 @@ deploy:
     appveyor_repo_tag: false
 after_deploy:
 - curl -fsS -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
-# NOTE: After 180 days the release version number should be deleted and recreated
-#       (along with download stats), otherwise Bintray will reject further updates 
-#       to it. Without publishing, the upload disappears in 6 days. Incrementing
-#       it fails too if the same filename exist under another version number.
-- #curl -fsS -u "%BINTRAY_USER%:%BINTRAY_APIKEY%" -X PUT "https://api.bintray.com/content/%BINTRAY_PATH%/3.4.0dev/harbour-daily-win.7z.exe?override=1&publish=1" --data-binary @harbour-daily-win.7z.exe
 build:
   verbosity: detailed
