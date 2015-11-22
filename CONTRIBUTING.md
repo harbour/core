@@ -161,6 +161,7 @@ Evaluate these points before reporting an issue:
     Also make sure not to report multiple issues under a single GitHub Issue.<br />
     * See more on self-contained examples:
       <http://sscce.org/>
+      <https://stackoverflow.com/help/mcve>
     * See more on how to report issues in an effective and useful way:
       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
 13. <a name="trbl-13"></a> Please do not report warnings or bugs &ndash;
