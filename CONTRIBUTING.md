@@ -55,8 +55,8 @@
   with care - most existing sources are well-formatted, so make
   sure to only apply it to newly added or modified code sections)
 
-        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <source{.c|.h}>
-        $ <harbour_dir>/bin/hbformat <source{.prg|.hb|.ch}>
+        $ uncrustify -c <harbour-dir>/bin/harbour.ucf <source{.c|.h}>
+        $ <harbour-dir>/bin/hbformat <source{.prg|.hb|.ch}>
 
 - Text editor setting for Harbour files
   - Encoding is either 7-bit ASCII or UTF-8, without [BOM](https://en.wikipedia.org/wiki/Byte_order_mark)
@@ -101,7 +101,7 @@ Evaluate these points before reporting an issue:
     tools or other Harbour versions when building Harbour. The surest way
     to achieve this is to leave only the C compiler directory in `PATH`:
 
-        set PATH=C:\<c_compiler_bin_dir>
+        set PATH=C:\<c-compiler-bin-dir>
 
     > If you use Harbour official binary distro on Windows, even above is
     > unnecessary and should be avoided.

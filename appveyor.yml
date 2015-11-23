@@ -125,14 +125,7 @@ deploy:
     branch: master
     appveyor_repo_tag: false
 before_deploy:
-- set GOPATH=C:\gomy
-- mkdir %GOPATH%
-- set PATH=%GOPATH%\bin;%PATH%
-- go get github.com/c4milo/github-release
-- set GITHUB_USER=vszakats
-- set GITHUB_REPO=harbour-core
-- github-release delete --tag v3.4.0dev
-- cmd: 'curl -fsS -H "Authorization: token %GITHUB_TOKEN%" -X DELETE "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev"'
+- cmd: 'curl -fsS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev" --data @git_tag_patch.txt'
 after_deploy:
 - curl -fsS -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 build:

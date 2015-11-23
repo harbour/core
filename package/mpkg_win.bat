@@ -167,6 +167,11 @@ sed -e "s/_VCS_ID_/%VCS_ID%/g"^
     -e "s/_HB_VERSION_/%_HB_VER%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
 touch -c "%HB_ABSROOT%RELNOTES.txt" -r "%HB_ABSROOT%README.md"
 
+:: Create tag modify reguest
+:: https://developer.github.com/v3/git/refs/#update-a-reference
+
+for /f %%I in ('git rev-parse --verify HEAD') do echo {"sha":"%%I","force":true}> git_tag_patch.txt
+
 :: Register build information
 
 "%HB_ABSROOT%bin\harbour" -build 2>&1 | sed -nr "/^(Version:|Platform:|Extra )/!p" > "%HB_ABSROOT%BUILD.txt"
