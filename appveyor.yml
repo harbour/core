@@ -13,12 +13,17 @@ environment:
 # - HB_COMPILER: msvc
 # - HB_COMPILER: mingw64
   - HB_COMPILER: mingw
+    GITHUB_TOKEN:
+      secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
     VIRUSTOTAL_APIKEY:
       secure: TdJYONfrpH45DuyKxraVqgHYy25IQ/F8TKHzYf+u5zz1aiM2yR0YTMaGxyj2EMReEearSI9kD9D2ZykybSVEbRyEaotZlceUb2lPDKELl3M=
 install:
 - set VER_CURL=7.45.0
 - set VER_OPENSSL=1.0.2d
 - ps: rm alias:curl
+# Use curl [1] provided by Git for Windows. The other one [2] fails in spectacular ways in the PATCH request.
+# [1] curl 7.45.0 (x86_64-w64-mingw32) libcurl/7.45.0 OpenSSL/1.0.2d zlib/1.2.8 libidn/1.32 libssh2/1.6.0 librtmp/2.3
+# [2] curl 7.45.0 (x86_64-pc-msys) libcurl/7.45.0 OpenSSL/1.0.2d zlib/1.2.8 libidn/1.32 libssh2/1.6.0
 - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
 - mkdir C:\w\
 - curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/s/se/sevenzip/7-Zip/9.20/7za920.zip -o 7z.7z
@@ -111,6 +116,8 @@ build_script:
 artifacts:
 - path: harbour-daily-win.7z.exe
   name: pkg-win
+before_deploy:
+- cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev' -d @git_tag_patch.json
 deploy:
 - provider: GitHub
   auth_token: $(github_token)
@@ -123,14 +130,6 @@ deploy:
   on:
     branch: master
     appveyor_repo_tag: false
-before_deploy:
-- dir git_tag_patch.json
-- type git_tag_patch.json
-- set GITHUB_TOKEN=ZXZXZXZXZXZXZ
-- cmd: 'curl --trace out.txt -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH -d @git_tag_patch.json https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev'
-- type out.txt
-- cmd: 'curl --trace out.txt -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH -d "@git_tag_patch.json" https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev'
-- type out.txt
 after_deploy:
 - curl -fsS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 build:
