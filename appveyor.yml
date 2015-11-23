@@ -123,10 +123,10 @@ deploy:
     branch: master
     appveyor_repo_tag: false
 before_deploy:
-- dir git_tag_patch.txt
-- type git_tag_patch.txt
+- dir git_tag_patch.json
+- type git_tag_patch.json
 - set GITHUB_TOKEN=ZXZXZXZXZXZXZ
-- cmd: 'curl --trace out.txt -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH -d @git_tag_patch.txt https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev'
+- cmd: 'curl --trace out.txt -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH -d @git_tag_patch.json https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev'
 - type out.txt
 after_deploy:
 - curl -fsS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe

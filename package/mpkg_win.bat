@@ -170,8 +170,8 @@ touch -c "%HB_ABSROOT%RELNOTES.txt" -r "%HB_ABSROOT%README.md"
 :: Create tag update JSON request
 :: https://developer.github.com/v3/git/refs/#update-a-reference
 
-for /f %%I in ('git rev-parse --verify HEAD') do echo {"sha":"%%I","force":true}> git_tag_patch.txt
-dos2unix git_tag_patch.txt
+for /f %%I in ('git rev-parse --verify HEAD') do echo {"sha":"%%I","force":true}> git_tag_patch.json
+dos2unix git_tag_patch.json
 
 :: Register build information
 
