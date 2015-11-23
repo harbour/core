@@ -125,7 +125,9 @@ deploy:
     branch: master
     appveyor_repo_tag: false
 before_deploy:
-- cmd: 'curl -fsS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev" --data @git_tag_patch.txt'
+- dir git_tag_patch.txt
+- type git_tag_patch.txt
+- cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev" --data @git_tag_patch.txt'
 after_deploy:
 - curl -fsS -X POST "https://www.virustotal.com/vtapi/v2/file/scan" --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 build:

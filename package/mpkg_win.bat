@@ -167,7 +167,7 @@ sed -e "s/_VCS_ID_/%VCS_ID%/g"^
     -e "s/_HB_VERSION_/%_HB_VER%/g" "%~dp0RELNOTES.txt" > "%HB_ABSROOT%RELNOTES.txt"
 touch -c "%HB_ABSROOT%RELNOTES.txt" -r "%HB_ABSROOT%README.md"
 
-:: Create tag modify reguest
+:: Create tag update JSON request
 :: https://developer.github.com/v3/git/refs/#update-a-reference
 
 for /f %%I in ('git rev-parse --verify HEAD') do echo {"sha":"%%I","force":true}> git_tag_patch.txt
