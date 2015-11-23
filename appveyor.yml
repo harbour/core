@@ -117,7 +117,7 @@ artifacts:
 - path: harbour-daily-win.7z.exe
   name: pkg-win
 before_deploy:
-- cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev' -d @git_tag_patch.json
+- cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev -d @git_tag_patch.json'
 deploy:
 - provider: GitHub
   auth_token: $(github_token)
