@@ -3095,10 +3095,10 @@ static HB_ERRCODE hb_dbfClose( DBFAREAP pArea )
  */
 static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 {
-   HB_ERRCODE errCode = HB_SUCCESS;
+   HB_ERRCODE errCode = HB_SUCCESS, errSubCode = 0;
    HB_SIZE nSize;
    HB_USHORT uiCount, uiLen;
-   HB_BOOL fError, fRawBlob;
+   HB_BOOL fRawBlob;
    DBFFIELD * pThisField;
    HB_BYTE * pBuffer;
    PHB_FNAME pFileName;
@@ -3175,8 +3175,9 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    if( pItem )
       hb_itemRelease( pItem );
 
-   if( pArea->area.uiFieldCount * sizeof( DBFFIELD ) + sizeof( DBFHEADER ) +
-       ( pArea->bTableType == DB_DBF_VFP ? 1 : 2 ) > UINT16_MAX )
+   nSize = ( HB_SIZE ) pArea->area.uiFieldCount * sizeof( DBFFIELD ) +
+           ( pArea->bTableType == DB_DBF_VFP ? 264 : 2 );
+   if( nSize + sizeof( DBFHEADER ) > UINT16_MAX )
    {
       hb_dbfErrorRT( pArea, EG_CREATE, EDBF_DATAWIDTH, pCreateInfo->abName, 0, 0, NULL );
       pArea->lpdbOpenInfo = NULL;
@@ -3213,12 +3214,10 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    pArea->szDataFileName = hb_strdup( szFileName );
 
-   nSize = ( HB_SIZE ) pArea->area.uiFieldCount * sizeof( DBFFIELD ) +
-           ( pArea->bTableType == DB_DBF_VFP ? 1 : 2 );
    pBuffer = ( HB_BYTE * ) hb_xgrabz( nSize + sizeof( DBFFIELD ) + 1 );
    pThisField = ( DBFFIELD * ) pBuffer;
 
-   pArea->fHasMemo = fError = HB_FALSE;
+   pArea->fHasMemo = HB_FALSE;
 
    /* Size for deleted flag */
    pArea->uiRecordLen = 1;
@@ -3300,7 +3299,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
          case HB_FT_ANY:
             if( pArea->bTableType == DB_DBF_VFP )
-               fError = HB_TRUE;
+               errSubCode = EDBF_DATATYPE;
             else
             {
                pThisField->bType = 'V';
@@ -3449,18 +3448,13 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             break;
 
          default:
-            fError = HB_TRUE;
+            errSubCode = EDBF_DATATYPE;
       }
 
-      if( fError || pArea->pFieldOffset[ uiCount ] > pArea->uiRecordLen )
-      {
-         hb_xfree( pBuffer );
-         SELF_CLOSE( &pArea->area );
-         hb_dbfErrorRT( pArea, EG_CREATE, fError ? EDBF_DATATYPE : EDBF_DATAWIDTH,
-                        pCreateInfo->abName, 0, 0, NULL );
-         pArea->lpdbOpenInfo = NULL;
-         return HB_FAILURE;
-      }
+      if( pArea->pFieldOffset[ uiCount ] > pArea->uiRecordLen )
+         errSubCode = EDBF_DATATYPE;
+      if( errSubCode != 0 )
+         break;
 
       if( ( pField->uiFlags & HB_FF_NULLABLE ) != 0 )
          hb_dbfAllocNullFlag( pArea, uiCount, HB_FALSE );
@@ -3468,7 +3462,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       pThisField++;
    }
 
-   if( pArea->uiNullCount )
+   if( errSubCode == 0 && pArea->uiNullCount )
    {
       hb_strncpy( ( char * ) pThisField->bName, "_NullFlags", sizeof( pThisField->bName ) - 1 );
       HB_PUT_LE_UINT16( pThisField->bReserved1, pArea->uiRecordLen );
@@ -3480,7 +3474,22 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       pArea->uiNullOffset = pArea->uiRecordLen;
       pArea->uiRecordLen += uiCount;
       nSize += sizeof( DBFFIELD );
+      pThisField++;
+      if( nSize + sizeof( DBFHEADER ) > UINT16_MAX || pArea->uiNullOffset > pArea->uiRecordLen )
+         errSubCode = EDBF_DATAWIDTH;
    }
+
+   if( errSubCode != 0 )
+   {
+      hb_xfree( pBuffer );
+      SELF_CLOSE( &pArea->area );
+      hb_dbfErrorRT( pArea, EG_CREATE, errSubCode, pCreateInfo->abName, 0, 0, NULL );
+      pArea->lpdbOpenInfo = NULL;
+      return HB_FAILURE;
+   }
+
+   /* set end of fields marker */
+   pThisField->bName[ 0 ] = '\r';
 
    pArea->fShared = HB_FALSE;    /* pCreateInfo->fShared */
    pArea->fReadonly = HB_FALSE;  /* pCreateInfo->fReadonly */
@@ -3539,13 +3548,6 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       }
 
       /* Write fields and eof mark */
-      if( pArea->bTableType == DB_DBF_VFP )
-         pBuffer[ nSize - 1 ] = '\r';
-      else
-      {
-         pBuffer[ nSize - 2 ] = '\r';
-         pBuffer[ nSize - 1 ] = '\0';
-      }
       pBuffer[ nSize ] = '\032';
       if( hb_fileWriteAt( pArea->pDataFile, pBuffer, nSize + 1,
                           sizeof( DBFHEADER ) ) != nSize + 1 )
