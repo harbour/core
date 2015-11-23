@@ -19,6 +19,7 @@ install:
 - set VER_CURL=7.45.0
 - set VER_OPENSSL=1.0.2d
 - ps: rm alias:curl
+- set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
 - mkdir C:\w\
 - curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/s/se/sevenzip/7-Zip/9.20/7za920.zip -o 7z.7z
 - openssl dgst -sha256 7z.7z | findstr /i /c:2a3afe19c180f8373fa02ff00254d5394fec0349f5804e0ad2f6067854ff28ac
@@ -127,6 +128,8 @@ before_deploy:
 - type git_tag_patch.json
 - set GITHUB_TOKEN=ZXZXZXZXZXZXZ
 - cmd: 'curl --trace out.txt -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH -d @git_tag_patch.json https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev'
+- type out.txt
+- cmd: 'curl --trace out.txt -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH -d "@git_tag_patch.json" https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev'
 - type out.txt
 after_deploy:
 - curl -fsS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
