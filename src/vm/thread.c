@@ -59,7 +59,7 @@
   hb_threadWaitForAll() -> NIL
   hb_threadWait( <pThID> | <apThID>, [ <nTimeOut> ] [, <lAll> ] ) => <nThInd> | <nThCount> | 0
   hb_threadOnce( @<onceControl> [, <bAction> | <@sAction()> ] ) -> <lFirstCall>
-  hb_threadOnceInit( @<item> <value> ) -> <lInitialized>
+  hb_threadOnceInit( @<item>, <value> ) -> <lInitialized>
   hb_mutexCreate() -> <pMtx>
   hb_mutexLock( <pMtx> [, <nTimeOut> ] ) -> <lLocked>
   hb_mutexUnlock( <pMtx> ) -> <lOK>
@@ -1616,7 +1616,7 @@ HB_FUNC( HB_THREADONCE )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_threadOnceInit( @<item> <value> ) -> <lInitialized>
+/* hb_threadOnceInit( @<item>, <value> ) -> <lInitialized>
  * assign <value> to @<item> only if <item> is NIL
  */
 HB_FUNC( HB_THREADONCEINIT )
