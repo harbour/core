@@ -21,9 +21,8 @@ install:
 - set VER_CURL=7.45.0
 - set VER_OPENSSL=1.0.2d
 - ps: rm alias:curl
-# Use curl [1] provided by Git for Windows. The other one [2] fails in spectacular ways in the PATCH request.
-# [1] curl 7.45.0 (x86_64-w64-mingw32) libcurl/7.45.0 OpenSSL/1.0.2d zlib/1.2.8 libidn/1.32 libssh2/1.6.0 librtmp/2.3
-# [2] curl 7.45.0 (x86_64-pc-msys) libcurl/7.45.0 OpenSSL/1.0.2d zlib/1.2.8 libidn/1.32 libssh2/1.6.0
+# Use the _native_ curl build provided by Git for Windows because the default,
+# msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
 - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
 - mkdir C:\w\
 - curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/s/se/sevenzip/7-Zip/9.20/7za920.zip -o 7z.7z
