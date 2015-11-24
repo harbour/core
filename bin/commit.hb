@@ -43,6 +43,7 @@ PROCEDURE Main()
    LOCAL cMyName
    LOCAL cLogName
    LOCAL lWasChangeLog
+   LOCAL cEOL
 
    IF "-c" $ cli_Options()
       CheckFileList( iif( Empty( cli_Values() ),, cli_Values() ) )
@@ -71,7 +72,7 @@ PROCEDURE Main()
    IF CheckFileList( aFiles, cLocalRoot, .F. )
 
       cLogName := FindChangeLog( cVCS )
-      IF Empty( cLogName )
+      IF HB_ISNULL( cLogName )
          OutStd( hb_ProgName() + ": " + "cannot find ChangeLog file" + hb_eol() )
          ErrorLevel( 2 )
       ENDIF
@@ -86,7 +87,7 @@ PROCEDURE Main()
          ELSE
             IF ! GitIsMerge( cVCSDir )
                cLog := GetLastEntry( MemoRead( cLogName ), @nStart, @nEnd )
-               IF ! Empty( cLog )
+               IF ! HB_ISNULL( cLog )
                   IF "--prepare-commit" $ cli_Options() .AND. ! Empty( cli_Values() )
                      hb_MemoWrit( cli_Values()[ 1 ], EntryToCommitMsg( cLog ) + hb_MemoRead( cli_Values()[ 1 ] ) )
                   ELSE
@@ -105,7 +106,7 @@ PROCEDURE Main()
          IF cVCS == "git"
             cMyName := GitUser()
          ELSE
-            IF ! Empty( GetEnv( _CONFIGENV_ ) )
+            IF ! HB_ISNULL( GetEnv( _CONFIGENV_ ) )
                cMyName := GetEnv( _CONFIGENV_ )
             ELSEIF hb_vfExists( cLocalRoot + _CONFIGFIL_ )
                cMyName := AllTrim( hb_MemoRead( cLocalRoot + _CONFIGFIL_ ) )
@@ -117,6 +118,10 @@ PROCEDURE Main()
          //
 
          cLog := MemoRead( cLogName )
+
+         IF HB_ISNULL( cEOL := EOLDetect( cLog ) )
+            cEOL := hb_eol()
+         ENDIF
 
          GetLastEntry( cLog, @nStart, @nEnd )
 
@@ -132,15 +137,15 @@ PROCEDURE Main()
 
             cLog := ;
                Left( cLog, nStart - 1 ) + ;
-               MakeEntry( aChanges, cMyName, cLogName, lWasChangeLog ) + hb_eol() + ;
+               MakeEntry( aChanges, cMyName, cLogName, lWasChangeLog, cEOL ) + cEOL + ;
                SubStr( cLog, nStart )
          ELSE
-            cLog += hb_eol() + MakeEntry( aChanges, cMyName, cLogName, .T. )
+            cLog += cEOL + MakeEntry( aChanges, cMyName, cLogName, .T., cEOL )
          ENDIF
 
          hb_MemoWrit( cLogName, cLog )
 
-         IF ! Empty( cLogName )
+         IF ! HB_ISNULL( cLogName )
             OutStd( hb_ProgName() + ": " + hb_StrFormat( "Edit %1$s and commit", cLogName ) + hb_eol() )
 #if 0
             LaunchCommand( GitEditor(), cLogName )
@@ -217,10 +222,10 @@ STATIC FUNCTION InstallHook( cDir, cHookName, cCommand )
    ENDIF
 
    IF HB_ISNULL( cFile )
-      cFile += "#!/bin/sh" + hb_eol()
+      cFile += "#!/bin/sh" + Chr( 10 )
    ENDIF
 
-   RETURN hb_MemoWrit( cName, cFile + hb_eol() + cCommand + hb_eol() )
+   RETURN hb_MemoWrit( cName, cFile + Chr( 10 ) + cCommand + Chr( 10 ) )
 
 STATIC FUNCTION FindChangeLog( cVCS )
 
@@ -243,7 +248,7 @@ STATIC FUNCTION FindChangeLog( cVCS )
 
 STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
 
-   LOCAL cLogHeaderExp := "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-6][0-9] UTC[\-+][0-1][0-9][0-5][0-9] [\S ]*" + hb_eol()
+   LOCAL cLogHeaderExp := "\n[1-2][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9] [0-2][0-9]:[0-6][0-9] UTC[\-+][0-1][0-9][0-5][0-9] [\S ]*"
 
    LOCAL cOldCP := hb_cdpSelect( "cp437" )
    LOCAL cHit
@@ -264,7 +269,7 @@ STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
          nEnd := Len( cLog )
       ENDIF
 
-      cLog := hb_StrShrink( SubStr( cLog, nStart, nEnd - nStart ), Len( hb_eol() ) )
+      cLog := RTrimEOL( SubStr( cLog, nStart, nEnd - nStart ) )
    ELSE
       cLog := ""
    ENDIF
@@ -273,7 +278,7 @@ STATIC FUNCTION GetLastEntry( cLog, /* @ */ nStart, /* @ */ nEnd )
 
    RETURN cLog
 
-STATIC FUNCTION MakeEntry( aChanges, cMyName, cLogName, lAllowChangeLog )
+STATIC FUNCTION MakeEntry( aChanges, cMyName, cLogName, lAllowChangeLog, cEOL )
 
    LOCAL nOffset := hb_UTCOffset()
 
@@ -282,13 +287,13 @@ STATIC FUNCTION MakeEntry( aChanges, cMyName, cLogName, lAllowChangeLog )
       iif( nOffset < 0, "-", "+" ), ;
       Int( Abs( nOffset ) / 3600 ), ;
       Int( Abs( nOffset ) % 3600 / 60 ), ;
-      cMyName ) + hb_eol()
+      cMyName ) + cEOL
 
    LOCAL cLine
 
    FOR EACH cLine IN aChanges
       IF lAllowChangeLog .OR. !( SubStr( cLine, 5 ) == hb_FNameNameExt( cLogName ) )
-         cLog += cLine + hb_eol()
+         cLog += cLine + cEOL
       ENDIF
    NEXT
 
@@ -306,10 +311,8 @@ STATIC FUNCTION IsLastEntryEmpty( cLog, cLogName, /* @ */ lChangeLog )
             IF SubStr( cLine, 5 ) == hb_FNameNameExt( cLogName )
                lChangeLog := .T.
             ENDIF
-         ELSE
-            IF ! Empty( cLine )
-               RETURN .F.
-            ENDIF
+         ELSEIF ! Empty( cLine )
+            RETURN .F.
          ENDIF
       ENDIF
    NEXT
@@ -375,7 +378,7 @@ STATIC FUNCTION GitFileList()
    LOCAL cItem
 
    FOR EACH cItem IN aList DESCEND
-      IF Empty( cItem )
+      IF HB_ISNULL( cItem )
          hb_ADel( aList, cItem:__enumIndex(), .T. )
       ELSE
          cItem := hb_DirSepToOS( cItem )
@@ -439,7 +442,7 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
             CASE "X"  ; cStart := "" ; EXIT
             OTHERWISE ; cStart := "?"
             ENDSWITCH
-            IF ! Empty( cStart )
+            IF ! HB_ISNULL( cStart )
                AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 8 + 1 ), "\", "/" ) )
                IF !( cStart == "-" )
                   AAdd( aFiles, SubStr( cLine, 8 + 1 ) )
@@ -469,7 +472,7 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges, aFiles )
             CASE "D"  ; cStart := "-" ; EXIT
             OTHERWISE ; cStart := "?"
             ENDSWITCH
-            IF ! Empty( cStart )
+            IF ! HB_ISNULL( cStart )
                AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 3 + 1 ), "\", "/" ) )
                IF !( cStart == "-" )
                   cFile := SubStr( cLine, 3 + 1 )
@@ -497,7 +500,7 @@ STATIC FUNCTION Shell()
    cShell := GetEnv( "COMSPEC" )
 #endif
 
-   IF ! Empty( cShell )
+   IF ! HB_ISNULL( cShell )
 #if defined( __PLATFORM__UNIX )
       cShell += " -c"
 #else
@@ -521,15 +524,18 @@ STATIC FUNCTION Changes( cVCS )
 
    SWITCH cVCS
    CASE "svn" ; hb_processRun( Shell() + " " + CmdEscape( "svn status -q" ),, @cStdOut ) ; EXIT
+   /* TOFIX: This will inconveniently (for us) return all files as changed, where
+             automatic EOL conversion is going to be done by Git on commit. */
    CASE "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status --porcelain" ),, @cStdOut ) ; EXIT
    OTHERWISE ; cStdOut := ""
    ENDSWITCH
 
    RETURN hb_ATokens( cStdOut, .T. )
 
+#if 0
 STATIC FUNCTION LaunchCommand( cCommand, cArg )
 
-   IF Empty( cCommand )
+   IF HB_ISNULL( cCommand )
       RETURN -1
    ENDIF
 
@@ -544,6 +550,7 @@ STATIC FUNCTION LaunchCommand( cCommand, cArg )
 #endif
 
    RETURN hb_run( cCommand + " " + cArg )
+#endif
 
 /* ---- */
 
@@ -585,7 +592,7 @@ STATIC FUNCTION CheckFileList( xName, cLocalRoot, lRebase )
                tmp += file + " "
             ENDIF
          NEXT
-         IF ! Empty( tmp )
+         IF ! HB_ISNULL( tmp )
             hb_run( hbshell_ProgName() + " -fixcase " + tmp )
          ENDIF
       ELSE
@@ -733,7 +740,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
          AAdd( aErr, "filename: non MS-DOS compatible" )
       ENDIF
 
-      IF Empty( hb_FNameExt( cName ) )
+      IF HB_ISNULL( hb_FNameExt( cName ) )
          IF ! FNameExc( cName, aCanHaveNoExtension )
             AAdd( aErr, "filename: missing extension" )
          ENDIF
@@ -812,13 +819,13 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
          ENDIF
 
          IF lReBuild
-            cFile := RemoveEndingWhitespace( cFile, iif( Empty( cEOL ), hb_eol(), cEOL ), lRemoveEndingWhitespace )
+            cFile := RemoveEndingWhitespace( cFile, iif( HB_ISNULL( cEOL ), hb_eol(), cEOL ), lRemoveEndingWhitespace )
          ENDIF
 
          IF !( hb_BRight( cFile, Len( Chr( 10 ) ) ) == Chr( 10 ) )
             AAdd( aErr, "content: has no EOL at EOF" )
             IF lApplyFixes
-               cFile += iif( Empty( cEOL ), hb_eol(), cEOL )
+               cFile += iif( HB_ISNULL( cEOL ), hb_eol(), cEOL )
             ENDIF
          ENDIF
 
@@ -1117,7 +1124,7 @@ STATIC FUNCTION LoadGitignore( cFileName )
                iif( Left( cLine, 1 ) $ "?*/!", "", "*/" ) + ;
                cLine + ;
                iif( Right( cLine, 1 ) == "/", "*", ;
-               iif( Empty( hb_FNameExt( cLine ) ) .AND. !( Right( cLine, 2 ) == "*/" ), "/*", "" ) ) )
+               iif( HB_ISNULL( hb_FNameExt( cLine ) ) .AND. !( Right( cLine, 2 ) == "*/" ), "/*", "" ) ) )
             IF !( ATail( t_aIgnore ) == cLine )
                IF hb_LeftEq( ATail( t_aIgnore ), "*/" )
                   AAdd( t_aIgnore, SubStr( ATail( t_aIgnore ), 3 ) )
@@ -1198,7 +1205,7 @@ STATIC FUNCTION FixFuncCaseFilter( cFileName )
       "*/3rd/*" }  /* foreign code */
 
    RETURN ;
-      ! Empty( hb_FNameExt( cFileName ) ) .AND. ;
+      ! HB_ISNULL( hb_FNameExt( cFileName ) ) .AND. ;
       ! hb_FNameNameExt( cFileName ) $ sc_hFileExceptions .AND. ;
       AScan( sc_aMaskExceptions, {| tmp | hb_FileMatch( cFileName, hb_DirSepToOS( tmp ) ) } ) == 0
 
