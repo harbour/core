@@ -1234,7 +1234,7 @@ extern HB_EXPORT HB_ERRCODE   hb_rddEvalWA( PHB_ITEM pBlock );
 
 extern HB_EXPORT HB_ERRCODE   hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo );
 extern HB_EXPORT AREAP        hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
-                                                 HB_BOOL fNewArea, HB_BOOL fWait );
+                                                 HB_BOOL fNewArea, HB_ULONG ulMilliSec );
 extern HB_EXPORT PHB_ITEM     hb_rddDetachedList( void );
 
 typedef HB_ERRCODE ( * WACALLBACK )( AREAP, void * );

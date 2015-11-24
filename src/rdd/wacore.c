@@ -572,7 +572,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
 }
 
 AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
-                         HB_BOOL fNewArea, HB_BOOL fWait )
+                         HB_BOOL fNewArea, HB_ULONG ulMilliSec )
 {
    PHB_DYNS pSymAlias = NULL;
    AREAP pArea = NULL;
@@ -642,14 +642,18 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
          }
       }
 
-      if( pArea || ! fWait )
+      if( pArea || ulMilliSec == 0 )
          break;
 
       hb_vmUnlock();
       /* wait for detached workareas */
-      hb_threadCondWait( &s_waCond, &s_waMtx );
+      if( ulMilliSec == HB_THREAD_INFINITE_WAIT )
+         hb_threadCondWait( &s_waCond, &s_waMtx );
+      else if( ! hb_threadCondTimedWait( &s_waCond, &s_waMtx, ulMilliSec ) )
+         ulMilliSec = 0;
       hb_vmLock();
-      if( hb_vmRequestQuery() != 0 )
+
+      if( ulMilliSec == 0 || hb_vmRequestQuery() != 0 )
          break;
    }
    /* leave critical section */

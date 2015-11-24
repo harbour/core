@@ -50,6 +50,7 @@
 #include "hbapirdd.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbthread.h"
 
 /*
  * hb_dbDetach( [<nWorkArea>|<cAlias>], [<xCargo>] ) -> <lSuccess>
@@ -91,24 +92,28 @@ HB_FUNC( HB_DBDETACH )
 }
 
 /*
- * hb_dbRequest( [<cAlias>], [<lFreeArea>], [<@xCargo>], [<lWait>] )
+ * hb_dbRequest( [<cAlias>], [<lFreeArea>], [<@xCargo>], [<nTimeOut>|<lWait>] )
  *          -> <lSuccess>
  */
 HB_FUNC( HB_DBREQUEST )
 {
-   const char * szAlias;
-   PHB_ITEM pCargo;
-   HB_BOOL fNewArea, fWait;
-   AREAP pArea;
-
    if( HB_ISNIL( 1 ) || HB_ISCHAR( 1 ) )
    {
-      szAlias = hb_parc( 1 );
-      fNewArea = hb_parl( 2 );
-      fWait = hb_parl( 4 );
-      pCargo = HB_ISBYREF( 3 ) ? hb_itemNew( NULL ) : NULL;
+      const char * szAlias = hb_parc( 1 );
+      HB_BOOL fNewArea = hb_parl( 2 );
+      PHB_ITEM pCargo = HB_ISBYREF( 3 ) ? hb_itemNew( NULL ) : NULL;
+      HB_ULONG ulMilliSec = HB_THREAD_INFINITE_WAIT;
+      AREAP pArea;
 
-      pArea = hb_rddRequestArea( szAlias, pCargo, fNewArea, fWait );
+      if( HB_ISNUM( 4 ) )
+      {
+         double dTimeOut = hb_parnd( 4 );
+         ulMilliSec = dTimeOut > 0 ? ( HB_ULONG ) ( dTimeOut * 1000 ) : 0;
+      }
+      else if( ! hb_parl( 4 ) )
+         ulMilliSec = 0;
+
+      pArea = hb_rddRequestArea( szAlias, pCargo, fNewArea, ulMilliSec );
       if( pArea )
          hb_rddSelectWorkAreaNumber( pArea->uiArea );
 
