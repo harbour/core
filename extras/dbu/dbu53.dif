@@ -1,6 +1,6 @@
 diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
 --- dbu53ori/dbu.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbu.prg	2015-05-29 02:19:55.000000000 +0200
++++ dbu53pat/dbu.prg	2015-11-24 16:10:21.000000000 +0100
 @@ -9,8 +9,10 @@
  *
  ***/
@@ -26,6 +26,15 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
     *  Parameters may be specified in any order
     ***
  
+@@ -58,7 +65,7 @@
+    ENDIF
+ 
+    // Combine all the command line params together
+-   param1 := UPPER( param1 + "~" + param2 + "~" + param3 + "~" )
++   param1 := param1 + "~" + param2 + "~" + param3 + "~"
+ 
+    // Process the command line parameters where com_line will contain the
+    // view/file name to open and param2 will contain the color directive
 @@ -71,6 +78,14 @@
     SET SCOREBOARD OFF                            // who's keeping score, anyhow
     SET KEY 28 TO                                 // some folks need help
@@ -56,6 +65,15 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
  
     // global variables
     STORE .F. TO need_field,need_ntx,need_relat,need_filtr,box_open
+@@ -135,7 +150,7 @@
+               "All Rights Reserved."
+ 
+    // search for help file
+-   IF FILE( "dbu.hlp" )
++   IF hb_FileExists( "dbu.hlp" )
+       helpfile := "dbu.hlp"
+ 
+    ELSE
 @@ -146,7 +161,7 @@
     ***
     *  Arrays declared in main module are considered public and
@@ -117,27 +135,28 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
  
     // default to set view
     local_func := 0                                // local menu
-@@ -384,7 +399,7 @@
+@@ -384,21 +399,21 @@
  
        DO CASE
  
 -      CASE RAT(".", com_line) > RAT("\", com_line)
 +      CASE RAT(".", com_line) > RAT(hb_ps(), com_line)
      // file extension entered
-     IF !( FILE( com_line ) )
+-    IF !( FILE( com_line ) )
++    IF !( hb_FileExists( com_line ) )
         // file must exist
-@@ -392,13 +407,13 @@
+        com_line := ""
  
      ENDIF
  
 -      CASE FILE(com_line + ".VEW")
-+      CASE FILE(com_line + ".vew")
++      CASE hb_FileExists(com_line + ".vew")
      // look for file name with .VEW extension
 -    com_line := com_line + ".VEW"
 +    com_line := com_line + ".vew"
  
 -      CASE FILE(com_line + ".DBF")
-+      CASE FILE(com_line + ".dbf")
++      CASE hb_FileExists(com_line + ".dbf")
      // look for file name with .DBF extension
 -    com_line := com_line + ".DBF"
 +    com_line := com_line + ".dbf"
@@ -187,7 +206,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
      cur_area := 0                            // re-draw view screen
      sysfunc := 0                             // back to the main view screen
  
-@@ -796,12 +811,12 @@
+@@ -796,15 +811,15 @@
        nPos  := AT( ";", cPath )
  
        // Account for backslash in path
@@ -201,7 +220,11 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
 +            IIF( nPos == 0, LEN( cPath ), nPos - 1 ) ) + hb_ps() + "dbu.hlp"
        ENDIF
  
-       IF FILE( cFile )
+-      IF FILE( cFile )
++      IF hb_FileExists( cFile )
+          EXIT     // We found it, time to bail...
+       ENDIF
+ 
 diff -u dbu53ori/dbucopy.prg dbu53pat/dbucopy.prg
 --- dbu53ori/dbucopy.prg	1996-05-20 05:31:00.000000000 +0200
 +++ dbu53pat/dbucopy.prg	2012-05-02 17:23:13.000000000 +0200
