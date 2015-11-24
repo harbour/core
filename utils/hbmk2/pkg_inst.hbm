@@ -43,4 +43,5 @@
 -instpath=misc:${hb_addons}/${hb_name}/
 -instpath=inc:${hb_addons}/${hb_name}/
 -instpath=inc_sub:${hb_addons}/${hb_name}/include/
+-instpath=po_sub:${hb_addons}/${hb_name}/po/
 -instpath=tests:${hb_addons}/${hb_name}/tests/
