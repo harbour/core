@@ -132,18 +132,18 @@ Evaluate these points before reporting an issue:
 10. <a name="trbl-10"></a> Do not alter the directory layout and files in
     Harbour and 3rd party packages and tools (including C compilers).
 11. <a name="trbl-11"></a> If you are to report a build problem with
-    a Harbour application, all of the above points apply, plus make sure
+    a Harbour application, all the above points apply, plus make sure
     to use `hbmk2` with the `-trace` command-line option and redirect its
     output to a file (see above how). Also include your full command-line
     and any referenced build script in your report.
-    It's good idea to first remove all manual references to Harbour
+    It is good idea to first remove all manual references to Harbour
     core components from makefiles and custom environment. F.e. it's
     commom mistake to add C compiler header and/or lib dirs, Harbour core
     header and/or lib dirs, built-in constants to makefiles or environment.
     No such thing is necessary as all of these are automatically handled
     by `hbmk2`. IOW start simple and don't be overbusy with *fine-tuning*
     your configuration. If you need to, the problem is most probably
-    elsewhere. It's also good idea to try with latest Harbour revision
+    elsewhere. It's also good idea to try with the latest Harbour revision
     or Harbour's mainline branch first.
 12. <a name="trbl-12"></a> If you are to report a problem with Harbour
     itself, provide self-contained, minimal source code example. Do not use
@@ -165,9 +165,9 @@ Evaluate these points before reporting an issue:
     * See more on how to report issues in an effective and useful way:
       <http://www.chiark.greenend.org.uk/~sgtatham/bugs.html>
 13. <a name="trbl-13"></a> Please do not report warnings or bugs &ndash;
-    with the exception of build _errors_ &ndash; in 3rd party component
-    hosted inside the Harbour source tree. You can recognize these by their
-    source path, which always contains a subdirectory named `/3rd/`. Report
+    except of _build errors_ &ndash; in 3rd party component hosted inside
+    the Harbour source tree. You can recognize these by their source path,
+    which always contains a subdirectory named `/3rd/`. Report
     these to the maintainer(s) of the respective component instead.
 14. <a name="trbl-14"></a> If your example or report contains human readable
     text, use English only.

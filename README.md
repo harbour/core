@@ -393,7 +393,7 @@ system locations.
 
 You only need to use manual setup if the dependency isn't available
 on your platform on a system location, or you wish to use
-a non-standard location. Typically you need to do this on non-\*nix
+a non-standard location. Typically, you need to do this on non-\*nix
 (Windows, MS-DOS, OS/2) systems for all packages and for a few packages
 on \*nix which are not available through official package managers
 (f.e. ADS Client).
@@ -511,8 +511,8 @@ get the correct permissions:
 You can fine-tune Harbour builds with below listed
 environment variables. You can add most of these via the
 GNU Make command-line also, using `make VARNAME=value` syntax.
-All of these settings are optional and all settings are case
-sensitive.
+All of these settings are optional and all settings are 
+case-sensitive.
 
 ## General
 
@@ -570,7 +570,7 @@ sensitive.
 
    - `HB_BUILD_DEBUG=yes`
 
-     Create a debug build. Default: `no`
+     Create debug build. Default: `no`
 
    - `HB_BUILD_STRIP=[all|bin|lib|no]`
 
@@ -620,7 +620,7 @@ sensitive.
 
    - `HB_BUILD_NAME=[<name>]`
 
-     Create named build. This allows to keep multiple builds in parallel for any
+     Create named build. This allows keeping multiple builds in parallel for any
      given platform/compiler. F.e. debug / release.
 
      > In current implementation it's appended to compiler directory name, so
@@ -701,10 +701,10 @@ sensitive.
 
 ## Cross-builds
 
-You can build Harbour for target platforms different than host
+You can build Harbour for target platforms different from host
 platform. F.e. you can create Windows build on \*nix systems, Linux
 builds on Windows systems, etc. It's also possible to build targets
-for different than host CPU architectures. F.e. you can create
+for different from host CPU architectures. F.e. you can create
 Windows 64-bit build on 32-bit Windows platform, or Linux x86-64
 build on x86 hosts, or Linux MIPS build on x86 host, etc.
 
@@ -1447,7 +1447,7 @@ Press `<Alt+D>` in the app.
      x | darwin   | android/gcc       | x86
      x | darwin   | android/gccarm    | arm
        | hpux     | hpux/gcc          | (CPU cross-builds possible)
-       | qnx      | qnx/gcc           | (CPU cross-builds possible - no tested)
+       | qnx      | qnx/gcc           | (CPU cross-builds possible - not tested)
        | beos     | beos/gcc          | x86
      x | hpux     | wce/mingwarm      | arm
      x | hpux     | wce/mingw         | x86
