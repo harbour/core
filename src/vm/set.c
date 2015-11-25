@@ -383,6 +383,20 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    *set_value = szFileName;
 }
 
+int hb_setUpdateEpoch( int iYear )
+{
+   if( iYear >= 0 && iYear < 100 )
+   {
+      int iEpoch = hb_setGetEpoch();
+      int iCentury = iEpoch / 100;
+
+      if( iYear < iEpoch % 100 )
+         ++iCentury;
+      iYear += iCentury * 100;
+   }
+   return iYear;
+}
+
 HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
 {
    HB_STACK_TLS_PRELOAD
