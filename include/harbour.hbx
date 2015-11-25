@@ -677,6 +677,7 @@ DYNAMIC hb_MilliSeconds
 DYNAMIC hb_Minute
 DYNAMIC hb_MLEval
 DYNAMIC hb_MMiddleDown
+DYNAMIC hb_MSecToT
 DYNAMIC hb_mtvm
 DYNAMIC hb_mutexCreate
 DYNAMIC hb_mutexEval
@@ -745,6 +746,7 @@ DYNAMIC hb_ScrMaxRow
 DYNAMIC hb_Scroll
 DYNAMIC hb_Sec
 DYNAMIC hb_SecondsCPU
+DYNAMIC hb_SecToT
 DYNAMIC hb_Serialize
 DYNAMIC hb_SetDispCP
 DYNAMIC hb_SetEnv

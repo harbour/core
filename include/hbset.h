@@ -259,6 +259,8 @@ extern HB_EXPORT HB_BOOL      hb_setSetItem2( HB_set_enum set_specifier, PHB_ITE
 
 extern HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void );
 
+extern HB_EXPORT int          hb_setUpdateEpoch( int iYear );
+
 extern HB_EXPORT HB_BOOL      hb_setGetCentury( void );
 extern HB_EXPORT HB_BOOL      hb_setSetCentury( HB_BOOL );
 

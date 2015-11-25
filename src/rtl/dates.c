@@ -324,17 +324,7 @@ static int hb_dateUnformatRaw( const char * szDate, const char * szDateFormat, l
       }
       iSize = count;
 
-      if( y_value >= 0 && y_value < 100 )
-      {
-         count = hb_setGetEpoch();
-         digit = count / 100;
-         count %= 100;
-
-         if( y_value >= count )
-            y_value += ( digit * 100 );
-         else
-            y_value += ( ( digit * 100 ) + 100 );
-      }
+      y_value = hb_setUpdateEpoch( y_value );
    }
 
    *plDate = hb_dateEncode( y_value, m_value, d_value );

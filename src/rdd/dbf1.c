@@ -3617,7 +3617,9 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
          break;
 
       case DBI_LASTUPDATE:
-         hb_itemPutD( pItem, 1900 + pArea->dbfHeader.bYear,
+         hb_itemPutD( pItem, pArea->dbfHeader.bYear > 99 ?
+                             1900 + pArea->dbfHeader.bYear :
+                             hb_setUpdateEpoch( pArea->dbfHeader.bYear ),
                              pArea->dbfHeader.bMonth,
                              pArea->dbfHeader.bDay );
          break;
@@ -6118,9 +6120,10 @@ static HB_ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
       {
          pArea->fAutoInc = pArea->fModStamp =
          pArea->fTableEncrypted = pArea->fHasMemo = HB_FALSE;
-         pArea->bTableType = DB_DBF_STD;
          pArea->bMemoType  = DB_MEMO_NONE;
          pArea->bCryptType = DB_CRYPT_NONE;
+         if( pArea->bTableType == DB_DBF_VFP )
+            pArea->bTableType = DB_DBF_STD;
 
          pArea->fHasTags = ( pArea->dbfHeader.bHasTags & 0x01 ) != 0;
 
@@ -6130,7 +6133,6 @@ static HB_ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
                pArea->fAutoInc = HB_TRUE;
             case 0x30:
             case 0x32:
-               pArea->bTableType = DB_DBF_VFP;
                if( pArea->dbfHeader.bHasTags & 0x02 )
                {
                   pArea->bMemoType = DB_MEMO_FPT;
@@ -6248,7 +6250,8 @@ static HB_ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
    }
 
    hb_dateToday( &iYear, &iMonth, &iDay );
-   pArea->dbfHeader.bYear = ( HB_BYTE ) ( iYear - 1900 );
+   pArea->dbfHeader.bYear = ( HB_BYTE ) ( pArea->bTableType == DB_DBF_STD ?
+                                          iYear - 1900 : iYear % 100 );
    pArea->dbfHeader.bMonth = ( HB_BYTE ) iMonth;
    pArea->dbfHeader.bDay = ( HB_BYTE ) iDay;
 

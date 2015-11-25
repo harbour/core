@@ -292,6 +292,26 @@ HB_FUNC( HB_TTON )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_SECTOT )
+{
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNum )
+      hb_rettd( hb_itemGetND( pNum ) / HB_SECONDS_PER_DAY );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_MSECTOT )
+{
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNum )
+      hb_rettd( hb_itemGetND( pNum ) / HB_MILLISECS_PER_DAY );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_TTOC )
 {
    long lDate, lTime;
