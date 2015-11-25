@@ -644,6 +644,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
       "ChangeLog.txt", ;
       ".git*", ;
       ".clang*", ;
+      ".editorconfig", ;
       "*.po", ;
       "*.md", ;
       "*.html", ;
