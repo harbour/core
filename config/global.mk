@@ -1467,9 +1467,6 @@ ifeq ($(HB_HOST_PKGM),)
       ifneq ($(wildcard /usr/local/bin/brew),)
          HB_HOST_PKGM += homebrew
       endif
-      ifneq ($(wildcard /usr/local/bin/rudix),)
-         HB_HOST_PKGM += rudix
-      endif
       ifneq ($(wildcard /opt/local/bin/port),)
          HB_HOST_PKGM += macports
       endif
@@ -1487,6 +1484,22 @@ ifeq ($(HB_HOST_PKGM),)
          HB_HOST_PKGM += rpm
       endif
       endif
+   else
+   ifeq ($(HB_PLATFORM),bsd)
+      ifneq ($(wildcard /etc/pkg),)
+         HB_HOST_PKGM += pkg
+      else
+         HB_HOST_PKGM += ports
+      endif
+   else
+   ifeq ($(HB_PLATFORM),sunos)
+      HB_HOST_PKGM += pkg
+   else
+   ifeq ($(HB_PLATFORM),cygwin)
+      HB_HOST_PKGM += cygwin
+   endif
+   endif
+   endif
    endif
    endif
 endif

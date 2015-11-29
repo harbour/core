@@ -1440,8 +1440,6 @@ STATIC FUNCTION DetectPackageManager()
       DO CASE
       CASE hb_vfExists( "/usr/local/bin/brew" )
          cPkgMgr := "homebrew"
-      CASE hb_vfExists( "/usr/local/bin/rudix" )
-         cPkgMgr := "rudix"
       CASE hb_vfExists( "/opt/local/bin/port" )
          cPkgMgr := "macports"
       CASE hb_vfExists( "/sw/bin/fink" )
@@ -1457,6 +1455,13 @@ STATIC FUNCTION DetectPackageManager()
          cPkgMgr := "portage"
       OTHERWISE
          cPkgMgr := "rpm"
+      ENDCASE
+   #elif defined( __PLATFORM__BSD )
+      DO CASE
+      CASE hb_vfDirExists( "/etc/pkg" )
+         cPkgMgr := "pkg"
+      CASE
+         cPkgMgr := "ports"
       ENDCASE
    #elif defined( __PLATFORM__SUNOS )
       cPkgMgr := "pkg"
