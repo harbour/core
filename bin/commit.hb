@@ -767,114 +767,121 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes, cLocalRoot, lRebase
 
          lReBuild := .F.
 
-         /* text content checks */
-
-         IF ! FNameExc( cName, aCanHaveTab ) .AND. e"\t" $ cFile
-            AAdd( aErr, "content: has tab" )
-         ENDIF
-
-         IF hb_BLeft( cFile, hb_BLen( UTF8_BOM() ) ) == UTF8_BOM()
-            AAdd( aErr, "content: has BOM" )
-            IF lApplyFixes
-               cFile := hb_BSubStr( cFile, hb_BLen( UTF8_BOM() ) + 1 )
-            ENDIF
-         ENDIF
-
-         IF hb_BRight( cFile, 1 ) == Chr( 26 )
-            AAdd( aErr, "content: has legacy EOF char" )
-            IF lApplyFixes
-               cFile := hb_StrShrink( cFile )
-            ENDIF
-         ENDIF
-
-         cEOL := EOLDetect( cFile, @nLines )
-
-         IF HB_ISNULL( cEOL )
-            AAdd( aErr, "content: has mixed EOL types" )
-            IF lApplyFixes
-               lReBuild := .T.
-            ENDIF
-         ENDIF
-
-         IF FNameExc( cName, aForcedCRLF ) .AND. !( cEOL == Chr( 13 ) + Chr( 10 ) )
-            AAdd( aErr, "content: must use CRLF EOL for file type" )
-            IF lApplyFixes
-               cFile := StrTran( StrTran( cFile, Chr( 13 ) ), Chr( 10 ), cEOL := Chr( 13 ) + Chr( 10 ) )
-            ENDIF
-         ENDIF
-
-         IF FNameExc( cName, aForcedLF ) .AND. !( cEOL == Chr( 10 ) )
-            AAdd( aErr, "content: must use LF EOL for file type" )
-            IF lApplyFixes
-               cFile := StrTran( cFile, Chr( 13 ) )
-               cEOL := Chr( 10 )
-            ENDIF
-         ENDIF
-
-         IF ! FNameExc( cName, aCanHaveSpaceAtEol ) .AND. EndingWhitespace( cFile )
-            AAdd( aErr, "content: has ending whitespace" )
-            IF lApplyFixes
-               lRemoveEndingWhitespace := .T.
-               lReBuild := .T.
-            ENDIF
-         ENDIF
-
-         IF lReBuild
-            cFile := RemoveEndingWhitespace( cFile, iif( HB_ISNULL( cEOL ), hb_eol(), cEOL ), lRemoveEndingWhitespace )
-         ENDIF
-
-         IF !( hb_BRight( cFile, Len( Chr( 10 ) ) ) == Chr( 10 ) )
-            AAdd( aErr, "content: has no EOL at EOF" )
-            IF lApplyFixes
-               cFile += iif( HB_ISNULL( cEOL ), hb_eol(), cEOL )
-            ENDIF
-         ENDIF
-
-         IF Right( cFile, Len( Chr( 10 ) ) * 2 ) == Replicate( Chr( 10 ), 2 )
-            AAdd( aErr, "content: has multiple EOL at EOF" )
-            IF lApplyFixes
-               DO WHILE Right( cFile, Len( Chr( 10 ) ) * 2 ) == Replicate( Chr( 10 ), 2 )
-                  cFile := hb_StrShrink( cFile, Len( Chr( 10 ) ) )
-               ENDDO
-            ENDIF
-         ELSEIF Right( cFile, Len( Chr( 13 ) + Chr( 10 ) ) * 2 ) == Replicate( Chr( 13 ) + Chr( 10 ), 2 )
-            AAdd( aErr, "content: has multiple EOL at EOF" )
-            IF lApplyFixes
-               DO WHILE Right( cFile, Len( Chr( 13 ) + Chr( 10 ) ) * 2 ) == Replicate( Chr( 13 ) + Chr( 10 ), 2 )
-                  cFile := hb_StrShrink( cFile, Len( Chr( 13 ) + Chr( 10 ) ) )
-               ENDDO
-            ENDIF
-         ENDIF
-
-         IF ! FNameExc( cName, aCanHaveAnyEncoding )
-            tmp := -1
-            IF ! IsASCII7( cFile, @tmp ) .AND. ! hb_StrIsUTF8( cFile )
-               AAdd( aErr, hb_StrFormat( "content: is non-UTF-8/ASCII-7: %1$d", tmp ) )
-            ENDIF
-         ENDIF
-
-         IF ! FNameExc( cName, aAnyIdent ) .AND. ;
-            ( tmp := ( ( "$" + "Id" ) $ cFile ) ) != FNameExc( cName, aCanHaveIdent )
-            IF tmp
-               AAdd( aErr, "content: has " + "$" + "Id" )
-            ELSE
-               AAdd( aErr, "content: missing " + "$" + "Id" )
-            ENDIF
-         ENDIF
-
          /* TOFIX: Harbour repo specific */
-         IF "|" + hb_FNameExt( cName ) + "|" $ "|.c|.h|.api|.prg|.hb|.ch|" .AND. ;
-            nLines > 20 .AND. ;
-            ! FNameExc( cName, aNoCopyrightOk ) .AND. ;
-            ! "public domain" $ Lower( cFile ) .AND. ;
-            ! "copyright" $ Lower( cFile ) .AND. ;
-            ! "license" $ Lower( cFile )
-            AAdd( aErr, "content: source code missing copyright/license" )
-         ENDIF
+         IF !( hb_DirSepToOS( "/3rd/" ) $ cName ) .OR. ;
+            hb_FNameName( cName ) == "Makefile" .OR. ;
+            hb_FNameExt( cName ) == ".hbc" .OR. ;
+            hb_FNameExt( cName ) == ".hbp"
 
-         IF "|" + hb_FNameExt( cName ) + "|" $ "|.c|.h|.api|"
-            IF "//" $ StripCStrings( StripCComments( cFile ) )
-               AAdd( aErr, "content: C file with C++ comment" )
+            /* text content checks */
+
+            IF ! FNameExc( cName, aCanHaveTab ) .AND. e"\t" $ cFile
+               AAdd( aErr, "content: has tab" )
+            ENDIF
+
+            IF hb_BLeft( cFile, hb_BLen( UTF8_BOM() ) ) == UTF8_BOM()
+               AAdd( aErr, "content: has BOM" )
+               IF lApplyFixes
+                  cFile := hb_BSubStr( cFile, hb_BLen( UTF8_BOM() ) + 1 )
+               ENDIF
+            ENDIF
+
+            IF hb_BRight( cFile, 1 ) == Chr( 26 )
+               AAdd( aErr, "content: has legacy EOF char" )
+               IF lApplyFixes
+                  cFile := hb_StrShrink( cFile )
+               ENDIF
+            ENDIF
+
+            cEOL := EOLDetect( cFile, @nLines )
+
+            IF HB_ISNULL( cEOL )
+               AAdd( aErr, "content: has mixed EOL types" )
+               IF lApplyFixes
+                  lReBuild := .T.
+               ENDIF
+            ENDIF
+
+            IF FNameExc( cName, aForcedCRLF ) .AND. !( cEOL == Chr( 13 ) + Chr( 10 ) )
+               AAdd( aErr, "content: must use CRLF EOL for file type" )
+               IF lApplyFixes
+                  cFile := StrTran( StrTran( cFile, Chr( 13 ) ), Chr( 10 ), cEOL := Chr( 13 ) + Chr( 10 ) )
+               ENDIF
+            ENDIF
+
+            IF FNameExc( cName, aForcedLF ) .AND. !( cEOL == Chr( 10 ) )
+               AAdd( aErr, "content: must use LF EOL for file type" )
+               IF lApplyFixes
+                  cFile := StrTran( cFile, Chr( 13 ) )
+                  cEOL := Chr( 10 )
+               ENDIF
+            ENDIF
+
+            IF ! FNameExc( cName, aCanHaveSpaceAtEol ) .AND. EndingWhitespace( cFile )
+               AAdd( aErr, "content: has ending whitespace" )
+               IF lApplyFixes
+                  lRemoveEndingWhitespace := .T.
+                  lReBuild := .T.
+               ENDIF
+            ENDIF
+
+            IF lReBuild
+               cFile := RemoveEndingWhitespace( cFile, iif( HB_ISNULL( cEOL ), hb_eol(), cEOL ), lRemoveEndingWhitespace )
+            ENDIF
+
+            IF !( hb_BRight( cFile, Len( Chr( 10 ) ) ) == Chr( 10 ) )
+               AAdd( aErr, "content: has no EOL at EOF" )
+               IF lApplyFixes
+                  cFile += iif( HB_ISNULL( cEOL ), hb_eol(), cEOL )
+               ENDIF
+            ENDIF
+
+            IF Right( cFile, Len( Chr( 10 ) ) * 2 ) == Replicate( Chr( 10 ), 2 )
+               AAdd( aErr, "content: has multiple EOL at EOF" )
+               IF lApplyFixes
+                  DO WHILE Right( cFile, Len( Chr( 10 ) ) * 2 ) == Replicate( Chr( 10 ), 2 )
+                     cFile := hb_StrShrink( cFile, Len( Chr( 10 ) ) )
+                  ENDDO
+               ENDIF
+            ELSEIF Right( cFile, Len( Chr( 13 ) + Chr( 10 ) ) * 2 ) == Replicate( Chr( 13 ) + Chr( 10 ), 2 )
+               AAdd( aErr, "content: has multiple EOL at EOF" )
+               IF lApplyFixes
+                  DO WHILE Right( cFile, Len( Chr( 13 ) + Chr( 10 ) ) * 2 ) == Replicate( Chr( 13 ) + Chr( 10 ), 2 )
+                     cFile := hb_StrShrink( cFile, Len( Chr( 13 ) + Chr( 10 ) ) )
+                  ENDDO
+               ENDIF
+            ENDIF
+
+            IF ! FNameExc( cName, aCanHaveAnyEncoding )
+               tmp := -1
+               IF ! IsASCII7( cFile, @tmp ) .AND. ! hb_StrIsUTF8( cFile )
+                  AAdd( aErr, hb_StrFormat( "content: is non-UTF-8/ASCII-7: %1$d", tmp ) )
+               ENDIF
+            ENDIF
+
+            IF ! FNameExc( cName, aAnyIdent ) .AND. ;
+               ( tmp := ( ( "$" + "Id" ) $ cFile ) ) != FNameExc( cName, aCanHaveIdent )
+               IF tmp
+                  AAdd( aErr, "content: has " + "$" + "Id" )
+               ELSE
+                  AAdd( aErr, "content: missing " + "$" + "Id" )
+               ENDIF
+            ENDIF
+
+            /* TOFIX: Harbour repo specific */
+            IF "|" + hb_FNameExt( cName ) + "|" $ "|.c|.h|.api|.prg|.hb|.ch|" .AND. ;
+               nLines > 20 .AND. ;
+               ! FNameExc( cName, aNoCopyrightOk ) .AND. ;
+               ! "public domain" $ Lower( cFile ) .AND. ;
+               ! "copyright" $ Lower( cFile ) .AND. ;
+               ! "license" $ Lower( cFile )
+               AAdd( aErr, "content: source code missing copyright/license" )
+            ENDIF
+
+            IF "|" + hb_FNameExt( cName ) + "|" $ "|.c|.h|.api|"
+               IF "//" $ StripCStrings( StripCComments( cFile ) )
+                  AAdd( aErr, "content: C file with C++ comment" )
+               ENDIF
             ENDIF
          ENDIF
       ENDIF

@@ -286,6 +286,7 @@ PROCEDURE Main( ... )
    LOCAL cArg
    LOCAL cRoot := NIL
    LOCAL hFile
+   LOCAL nStatus
 
    LOCAL hRegexTake1Line := hb_regexComp( "^#[[:blank:]]*(ORIGIN|VER|URL|DIFF)[[:blank:]]+(.+?)[[:blank:]]*$" )
    LOCAL hRegexTake2Line := hb_regexComp( "^#[[:blank:]]*(MAP)[[:blank:]]+(.+?)[[:blank:]]+(.+?)[[:blank:]]*$" )
@@ -515,13 +516,20 @@ PROCEDURE Main( ... )
       ENDIF
 
       /* Re-create the diff */
-      cCommand := hb_StrFormat( "%1$s -urNZ %2$s %3$s", ;
+      cCommand := hb_StrFormat( "%1$s --strip-trailing-cr -urN %2$s %3$s", ;
          s_aTools[ "diff" ], cThisComponent + ".orig", cThisComponent )
 
       DirChange( s_cTempDir )
       TRACE( "Running " + cCommand )
-      hb_processRun( cCommand, , @cDiffText, @cStdErr, .F. )
+      nStatus := hb_processRun( cCommand, , @cDiffText, @cStdErr, .F. )
       hb_cwd( cCWD )
+
+      IF nStatus != 0 .AND. nStatus != 1
+         OutStd( hb_StrFormat( "E: `diff' command failed with exit status %1$d.", nStatus ) + hb_eol() )
+         OutStd( hb_StrFormat( "   Inspect `%1$s' for further clues.", s_cTempDir ) + hb_eol() )
+         ErrorLevel( 2 )
+         RETURN
+      ENDIF
 
       SaveLog( "diff", NIL, cStdErr )
 
