@@ -230,6 +230,7 @@
 
 #include "directry.ch"
 #include "fileio.ch"
+#include "hbver.ch"
 
 #if defined( _TRACE )
    #define TRACE( str )   OutStd( "T: " + str + hb_eol() )
@@ -711,6 +712,10 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
                                        aActionMap[ cPattern ][ "ExtractedFile" ] )
             cArchiver := aActionMap[ cPattern ][ "Archiver" ]
             cArchiverArgs := aActionMap[ cPattern ][ "ArchiverArgs" ]
+            IF hb_Version( HB_VERSION_PLATFORM ) $ "|DARWIN|BSD|" .AND. cArchiver == "tar"
+               /* Not supported by BSD tar */
+               cArchiverArgs := StrTran( cArchiverArgs, "--force-local" )
+            ENDIF
             EXIT
          ENDIF
       NEXT
