@@ -9,6 +9,8 @@ headers=${hb_name}.ch
 {!(HB_STATIC_CURL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 { (HB_STATIC_CURL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}s${_HB_DYNSUFF}
 
+libpaths=/usr/local/opt/curl/lib{darwin}
+
 {!allwin}libs=curl
 { allwin&!(HB_STATIC_CURL&!hbdyn)}libs=libcurl
 { allwin& (HB_STATIC_CURL&!hbdyn)&!allmingw}libs=libcurl libssh2
