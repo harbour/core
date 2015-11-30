@@ -48,11 +48,14 @@
 #define HB_JSON_H_
 
 #include "hbapi.h"
+#include "hbapicdp.h"
 
 HB_EXTERN_BEGIN
 
 extern HB_EXPORT char *  hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman );
+extern HB_EXPORT char *  hb_jsonEncodeCP( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman, PHB_CODEPAGE cdp );
 extern HB_EXPORT HB_SIZE hb_jsonDecode( const char * szSource, PHB_ITEM pValue );
+extern HB_EXPORT HB_SIZE hb_jsonDecodeCP( const char * szSource, PHB_ITEM pValue, PHB_CODEPAGE cdp );
 
 HB_EXTERN_END
 
