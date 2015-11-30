@@ -803,9 +803,8 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
    RETURN aExtern
 
-STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude, /* @ */ hDynamic )
+STATIC PROCEDURE __hb_extern_get_exception_list( cFile, /* @ */ aInclude, /* @ */ aExclude, /* @ */ hDynamic )
 
-   LOCAL cFile
    LOCAL pRegex
    LOCAL tmp
 
@@ -813,7 +812,7 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
    aExclude := {}
    hDynamic := { => }
 
-   IF ! HB_ISNULL( cFile := MemoRead( cInputName ) )
+   IF ! HB_ISNULL( cFile )
       IF ! Empty( pRegex := hb_regexComp( "[\s]" + _HB_FUNC_INCLUDE_ + "[\s]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, tmp[ 2 ] )
@@ -845,13 +844,16 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
 
    LOCAL cSelfName := _HB_SELF_PREFIX + Upper( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
 
-   LOCAL cLine := "/* " + Replicate( "-", 68 ) + hb_eol()
-   LOCAL cHelp := ;
-      " *          Syntax: // HB_FUNC_INCLUDE <func>" + hb_eol() + ;
-      " *                  // HB_FUNC_EXCLUDE <func>" + hb_eol() + ;
-      " */" + hb_eol()
+   LOCAL cFile := MemoRead( cOutputName )
+   LOCAL cEOL := EOLDetect( cFile )
 
-   __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
+   LOCAL cLine := "/* " + Replicate( "-", 68 ) + cEOL
+   LOCAL cHelp := ;
+      " *          Syntax: // HB_FUNC_INCLUDE <func>" + cEOL + ;
+      " *                  // HB_FUNC_EXCLUDE <func>" + cEOL + ;
+      " */" + cEOL
+
+   __hb_extern_get_exception_list( cFile, @aInclude, @aExclude, @hDynamic, @cEOL )
 
    cExtern := ""
 
@@ -860,49 +862,49 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
 
       cExtern += ;
          cLine + ;
-         " * NOTE: You can add manual override which functions to include or" + hb_eol() + ;
-         " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol() + ;
+         " * NOTE: You can add manual override which functions to include or" + cEOL + ;
+         " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + cEOL + ;
          cHelp
    ELSE
 
       cExtern += ;
          cLine + ;
-         " * NOTE: Following comments are control commands for the generator." + hb_eol() + ;
-         " *       Do not edit them unless you know what you are doing." + hb_eol() + ;
+         " * NOTE: Following comments are control commands for the generator." + cEOL + ;
+         " *       Do not edit them unless you know what you are doing." + cEOL + ;
          cHelp
 
       IF ! Empty( aInclude )
-         cExtern += hb_eol()
+         cExtern += cEOL
          FOR EACH tmp IN aInclude
-            cExtern += "// " + _HB_FUNC_INCLUDE_ + " " + tmp + hb_eol()
+            cExtern += "// " + _HB_FUNC_INCLUDE_ + " " + tmp + cEOL
          NEXT
       ENDIF
       IF ! Empty( aExclude )
-         cExtern += hb_eol()
+         cExtern += cEOL
          FOR EACH tmp IN aExclude
-            cExtern += "// " + _HB_FUNC_EXCLUDE_ + " " + tmp + hb_eol()
+            cExtern += "// " + _HB_FUNC_EXCLUDE_ + " " + tmp + cEOL
          NEXT
       ENDIF
    ENDIF
 
    cExtern += ;
-      hb_eol() + ;
+      cEOL + ;
       cLine + ;
-      " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol() + ;
-      " *          Regenerate with HB_REBUILD_EXTERN=yes build option." + hb_eol() + ;
-      " */" + hb_eol() + ;
-      hb_eol() + ;
-      "#ifndef " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
-      "#define " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
-      hb_eol() + ;
-      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol() + ;
-      "   ANNOUNCE " + cSelfName + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol() + ;
-      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
-      "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol()
+      " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + cEOL + ;
+      " *          Regenerate with HB_REBUILD_EXTERN=yes build option." + cEOL + ;
+      " */" + cEOL + ;
+      cEOL + ;
+      "#ifndef " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + cEOL + ;
+      "#define " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + cEOL + ;
+      cEOL + ;
+      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + cEOL + ;
+      "   ANNOUNCE " + cSelfName + cEOL + ;
+      "#endif" + cEOL + ;
+      cEOL + ;
+      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + cEOL + ;
+      "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + cEOL + ;
+      "#endif" + cEOL + ;
+      cEOL
 
    IF Empty( aInclude )
       aExtern := aFuncList
@@ -918,16 +920,46 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
       IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp, .T. ) .AND. ;
          ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp, .T. ) .AND. ;
          AScan( aExclude, {| flt | hb_WildMatchI( flt, tmp, .T. ) } ) == 0
-         cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + hb_eol()
+         cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + cEOL
       ENDIF
    NEXT
 
    cExtern += ;
-      hb_eol() + ;
-      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
-      "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol() + ;
-      "#endif" + hb_eol()
+      cEOL + ;
+      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + cEOL + ;
+      "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + cEOL + ;
+      "#endif" + cEOL + ;
+      cEOL + ;
+      "#endif" + cEOL
 
    RETURN hb_MemoWrit( cOutputName, cExtern )
+
+STATIC FUNCTION EOLDetect( cFile )
+
+   LOCAL nCR := 0
+   LOCAL nLF := 0
+   LOCAL tmp
+
+   FOR EACH tmp IN cFile
+      SWITCH tmp
+      CASE Chr( 13 )
+         ++nCR
+         EXIT
+      CASE Chr( 10 )
+         ++nLF
+         EXIT
+      ENDSWITCH
+   NEXT
+
+   DO CASE
+   CASE nCR > 0 .AND. nLF == 0
+      RETURN Chr( 13 )
+   CASE nCR == 0 .AND. nLF > 0
+      RETURN Chr( 10 )
+   CASE nCR == 0 .AND. nLF == 0
+      /* fall through */
+   CASE nCR == nLF
+      RETURN Chr( 13 ) + Chr( 10 )
+   ENDCASE
+
+   RETURN hb_eol()
