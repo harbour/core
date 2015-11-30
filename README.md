@@ -1503,7 +1503,7 @@ Supported shells per host platforms:
 
           * Compiler will be in the `opt\mingw32ce` subdirectory.
      * Clang [multi-platform, free, open-source]
-        * <http://llvm.org/builds/> (Windows snapshots)
+        * <http://llvm.org/releases/>
      * Cygwin [win, free, open-source]
         * <https://cygwin.com/>
      * OS/2 GCC [os2, free, open-source]
@@ -1592,8 +1592,6 @@ Supported shells per host platforms:
      * bzip2 [multi-platform, free, open-source]
         * Windows binary:
            * <http://bzip.org/downloads.html>
-     * Win-builds [multi-platform, free, open-source]
-        * <http://win-builds.org/>
      * GNU Make
 
         Windows binary + source:
