@@ -118,10 +118,7 @@ PROCEDURE Main()
          //
 
          cLog := MemoRead( cLogName )
-
-         IF HB_ISNULL( cEOL := EOLDetect( cLog ) )
-            cEOL := hb_eol()
-         ENDIF
+         cEOL := hb_StrEOL( cLog )
 
          GetLastEntry( cLog, @nStart, @nEnd )
 

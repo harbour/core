@@ -15220,7 +15220,7 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    LOCAL cSelfName := _HB_SELF_PREFIX + StrToDefine( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
 
    LOCAL cFile := MemoRead( cOutputName )
-   LOCAL cEOL := EOLDetect( cFile )
+   LOCAL cEOL := hb_StrEOL( cFile )
 
    LOCAL cLine := "/* " + Replicate( "-", 68 ) + cEOL
    LOCAL cHelp := ;
@@ -15323,36 +15323,6 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    _hbmk_OutErr( hbmk, I_( "Error: Updating extern header." ) )
 
    RETURN .F.
-
-STATIC FUNCTION EOLDetect( cFile )
-
-   LOCAL nCR := 0
-   LOCAL nLF := 0
-   LOCAL tmp
-
-   FOR EACH tmp IN cFile
-      SWITCH tmp
-      CASE Chr( 13 )
-         ++nCR
-         EXIT
-      CASE Chr( 10 )
-         ++nLF
-         EXIT
-      ENDSWITCH
-   NEXT
-
-   DO CASE
-   CASE nCR > 0 .AND. nLF == 0
-      RETURN Chr( 13 )
-   CASE nCR == 0 .AND. nLF > 0
-      RETURN Chr( 10 )
-   CASE nCR == 0 .AND. nLF == 0
-      /* fall through */
-   CASE nCR == nLF
-      RETURN Chr( 13 ) + Chr( 10 )
-   ENDCASE
-
-   RETURN hb_eol()
 
 #ifdef HARBOUR_SUPPORT
 /* TODO: Consider dropping all embedded headers, now that the runner

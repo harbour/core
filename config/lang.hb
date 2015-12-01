@@ -365,10 +365,10 @@ STATIC FUNCTION StrUnspace( cString )
 STATIC FUNCTION PO_Clean( cFNSource, cFNTarget, ... )
 
    LOCAL aTrans
-   LOCAL cErrorMsg
+   LOCAL cErrorMsg, cEOL
 
-   IF ( aTrans := __i18n_potArrayLoad( cFNSource, @cErrorMsg ) ) != NIL .AND. ;
-      __i18n_potArraySave( cFNTarget, __i18n_potArrayClean( aTrans, ... ), @cErrorMsg, .F. )
+   IF ( aTrans := __i18n_potArrayLoad( cFNSource, @cErrorMsg, @cEOL ) ) != NIL .AND. ;
+      __i18n_potArraySave( cFNTarget, __i18n_potArrayClean( aTrans, ... ), @cErrorMsg, .F.,, cEOL )
       RETURN .T.
    ENDIF
 

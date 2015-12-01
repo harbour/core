@@ -87,13 +87,15 @@ STATIC FUNCTION __i18n_strDecode( cLine, cValue, lCont )
 
 #define _UTF8_BOM       e"\xEF\xBB\xBF"  /* hb_utf8Chr( 0xFEFF ) */
 
-FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
+FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg, /* @ */ cEOL )
 
    LOCAL cLine, cValue
    LOCAL nMode, nIndex, nOldIndex, nLine, n
    LOCAL aTrans, aItem, aLines
    LOCAL lCont
    LOCAL hFile
+
+   cEOL := hb_eol()
 
    __i18n_fileName( @cFile )
    IF ( hFile := hb_vfOpen( cFile ) ) == NIL
@@ -112,6 +114,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg )
    IF hb_LeftEq( cValue, _UTF8_BOM )
       cValue := SubStr( cValue, Len( _UTF8_BOM ) + 1 )
    ENDIF
+   cEOL := hb_StrEOL( cValue )
    aLines := hb_ATokens( cValue, .T. )
 
    cErrorMsg := NIL
@@ -358,19 +361,19 @@ FUNCTION __i18n_potArrayClean( aTrans, lKeepSource, lKeepVoidTranslations, bTran
 
    RETURN aTrans
 
-FUNCTION __i18n_potArraySave( cFile, aTrans, /* @ */ cErrorMsg, lVersionNo, lSourceRef )
+FUNCTION __i18n_potArraySave( cFile, aTrans, /* @ */ cErrorMsg, lVersionNo, lSourceRef, cEol )
 
    LOCAL aItem
    LOCAL hFile
    LOCAL lRet, lPlural
-   LOCAL cEol, cPOT, cFlg
+   LOCAL cPOT, cFlg
    LOCAL msg
 
    hb_default( @lVersionNo, .T. )
    hb_default( @lSourceRef, .T. )
+   hb_default( @cEol, hb_eol() )
 
    lRet := .F.
-   cEol := hb_eol()
    cFlg := "#, c-format" + cEol
    cPOT := iif( hb_vfExists( cFile ) .AND. __i18n_IsBOM_UTF8( cFile ), _UTF8_BOM + cEol, "" ) + ; /* Put it in separate line to less confuse non-BOM aware parsers */
       "#" + cEol + ;
