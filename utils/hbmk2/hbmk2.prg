@@ -4710,10 +4710,17 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          IF IsGTRequested( hbmk, "gtcrs" )
             /* TOFIX: Sometimes 'ncur194' is needed. */
             AAdd( l_aLIBSYS, iif( HBMK_ISPLAT( "sunos|bsd|minix" ), "curses", "ncurses" ) )
+            /* Add paths, where this is not a system component */
+            DO CASE
+            CASE hbmk[ _HBMK_cPLAT ] == "darwin"
+               IF hb_vfDirExists( "/usr/local/opt/ncurses/lib" )
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/opt/ncurses/lib" )  /* For Homebrew */
+               ENDIF
+            ENDCASE
          ENDIF
          IF IsGTRequested( hbmk, "gtsln" )
             IF hbmk[ _HBMK_cPLAT ] == "bsd" .AND. ;
-               hb_vfExists( "/usr/pkg/lib/libslang2.so" ) /* For pkgsrc */
+               hb_vfExists( "/usr/pkg/lib/libslang2.so" )  /* For pkgsrc */
                AAdd( l_aLIBSYS, "slang2" )
             ELSE
                AAdd( l_aLIBSYS, "slang" )
@@ -4722,17 +4729,17 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             DO CASE
             CASE hbmk[ _HBMK_cPLAT ] == "darwin"
                IF hb_vfDirExists( "/usr/local/lib" )
-                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" ) /* For Homebrew */
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )  /* For Homebrew */
                ENDIF
                IF hb_vfDirExists( "/opt/local/lib" )
-                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/opt/local/lib" ) /* For MacPorts (formerly DarwinPorts) */
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/opt/local/lib" )  /* For MacPorts (formerly DarwinPorts) */
                ENDIF
                IF hb_vfDirExists( "/sw/lib" )
-                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/sw/lib" ) /* For Fink */
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/sw/lib" )  /* For Fink */
                ENDIF
             CASE hbmk[ _HBMK_cPLAT ] == "bsd"
-               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" ) /* For ports */
-               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/lib" ) /* For pkgsrc */
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" )  /* For ports */
+               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/lib" )  /* For pkgsrc */
             ENDCASE
          ENDIF
          IF IsGTRequested( hbmk, "gtxwc" )

@@ -6,6 +6,9 @@ ifneq ($(HB_LINKING_RTL),)
    endif
    ifneq ($(HB_HAS_CURSES),)
       SYSLIBS += $(HB_LIBNAME_CURSES)
+      ifneq ($(wildcard /usr/local/opt/ncurses/lib),)
+         SYSLIBPATHS += /usr/local/opt/ncurses/lib
+      endif
    endif
    ifneq ($(HB_HAS_SLANG),)
       SYSLIBS += slang
