@@ -854,7 +854,6 @@ static void hb_dbfTableCrypt( DBFAREAP pArea, PHB_ITEM pPasswd, HB_BOOL fEncrypt
          if( errCode == HB_SUCCESS )
          {
             pArea->fTableEncrypted = fEncrypt;
-            pArea->fUpdateHeader = HB_TRUE;
             SELF_WRITEDBHEADER( &pArea->area );
          }
       }
@@ -2431,15 +2430,8 @@ static HB_ERRCODE hb_dbfGoCold( DBFAREAP pArea )
       if( ! hb_dbfWriteRecord( pArea ) )
          return HB_FAILURE;
 
-      if( pArea->fAppend )
-      {
-         pArea->fUpdateHeader = HB_TRUE;
-         pArea->fAppend = HB_FALSE;
-      }
-
-      /* Update header */
-      if( pArea->fShared && pArea->fUpdateHeader )
-         return SELF_WRITEDBHEADER( &pArea->area );
+      pArea->fUpdateHeader = HB_TRUE;
+      pArea->fAppend = HB_FALSE;
    }
    return HB_SUCCESS;
 }
@@ -3535,8 +3527,6 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    if( ! fRawBlob )
    {
-      /* Force write new header */
-      pArea->fUpdateHeader = HB_TRUE;
       /* Write header */
       errCode = SELF_WRITEDBHEADER( &pArea->area );
       if( errCode != HB_SUCCESS )
@@ -4844,8 +4834,6 @@ static HB_ERRCODE hb_dbfPack( DBFAREAP pArea )
    if( pArea->ulRecCount != ulRecOut )
    {
       pArea->ulRecCount = ulRecOut;
-      /* Force write new header */
-      pArea->fUpdateHeader = HB_TRUE;
       if( SELF_WRITEDBHEADER( &pArea->area ) != HB_SUCCESS )
          return HB_FAILURE;
    }
@@ -5577,7 +5565,6 @@ static HB_ERRCODE hb_dbfZap( DBFAREAP pArea )
    if( SELF_GOCOLD( &pArea->area ) != HB_SUCCESS )
       return HB_FAILURE;
 
-   pArea->fUpdateHeader = HB_TRUE;
    pArea->ulRecCount = 0;
 
    if( SELF_WRITEDBHEADER( &pArea->area ) != HB_SUCCESS )
