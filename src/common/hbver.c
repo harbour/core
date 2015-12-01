@@ -602,7 +602,7 @@ char * hb_verPlatform( void )
             else
                pszName = " Server 2012 R2";
          }
-         else if( hb_iswinver( 6, 0, 0, HB_TRUE ) )
+         else if( hb_iswinvista() )
          {
             if( hb_iswin8() )
             {
@@ -622,7 +622,7 @@ char * hb_verPlatform( void )
                else
                   pszName = " Server 2008 R2";
             }
-            else if( hb_iswinvista() )
+            else
             {
                osvi.dwMajorVersion = 6;
                osvi.dwMinorVersion = 0;
@@ -636,7 +636,7 @@ char * hb_verPlatform( void )
          {
             osvi.dwMajorVersion = 5;
             osvi.dwMinorVersion = 2;
-            if( hb_iswinver( 5, 2, VER_NT_WORKSTATION, HB_TRUE ) )
+            if( hb_iswinver( 5, 2, VER_NT_WORKSTATION, HB_FALSE ) )
                pszName = " XP x64";
             else if( GetSystemMetrics( SM_SERVERR2 ) != 0 )
                pszName = " Server 2003 R2";
@@ -743,7 +743,7 @@ HB_BOOL hb_iswinver( int iMajor, int iMinor, int iType, HB_BOOL fOrUpper )
    if( s_hb_winVerifyVersionInit() )
    {
       OSVERSIONINFOEXW ver;
-      DWORD dwTypeMask = VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR;
+      DWORD dwTypeMask = VER_MAJORVERSION | VER_MINORVERSION;
       DWORDLONG dwlConditionMask = 0;
 
       memset( &ver, 0, sizeof( ver ) );
@@ -753,8 +753,25 @@ HB_BOOL hb_iswinver( int iMajor, int iMinor, int iType, HB_BOOL fOrUpper )
 
       dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_MAJORVERSION, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
       dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_MINORVERSION, fOrUpper ? VER_GREATER_EQUAL : VER_EQUAL );
+
+      /* MSDN says <https://msdn.microsoft.com/en-us/library/windows/desktop/ms725492.aspx>:
+           "If you are testing the major version, you must also test the
+            minor version and the service pack major and minor versions."
+         However, Wine (as of 1.7.53) breaks on this. Since native Windows
+         apparently doesn't care, we're not doing it for now.
+         Wine (emulating Windows 7) will erroneously return HB_FALSE from
+         these calls:
+           hb_iswinver( 6, 1, 0, HB_FALSE );
+           hb_iswinver( 6, 1, VER_NT_WORKSTATION, HB_FALSE );
+         Removing the Service Pack check, or changing HB_FALSE to HB_TRUE
+         in above calls, both fixes the problem. [vszakats] */
+#if defined( __HB_DISABLE_WINE_VERIFYVERSIONINFO_BUG_WORKAROUND )
+      ver.wServicePackMajor =
+      ver.wServicePackMinor = ( WORD ) 0;
+      dwTypeMask |= VER_SERVICEPACKMAJOR | VER_SERVICEPACKMINOR;
       dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_SERVICEPACKMAJOR, VER_GREATER_EQUAL );
       dwlConditionMask = s_pVerSetConditionMask( dwlConditionMask, VER_SERVICEPACKMINOR, VER_GREATER_EQUAL );
+#endif
 
       if( iType )
       {
