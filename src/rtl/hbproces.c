@@ -89,7 +89,7 @@
 #endif
 
 #ifndef HB_PROCESS_USEFILES
-#  if defined( HB_OS_DOS ) || defined( HB_OS_WIN_CE ) || defined( HB_OS_OS2 )
+#  if defined( HB_OS_DOS ) || defined( HB_OS_WIN_CE )
 #    define HB_PROCESS_USEFILES
 #  endif
 #endif
@@ -98,39 +98,59 @@
 
 static char * hb_buildArgsOS2( const char *pszFileName )
 {
-   char * pArgs, * pszFree = NULL, cQuote = 0;
-   HB_SIZE nLen;
+   PHB_FNAME pFilepath;
+   char szFileBuf[ HB_PATH_MAX ];
+   char * pArgs, * pszFree = NULL, cQuote = 0, c;
+   HB_SIZE nLen = 0, nLen2;
 
    while( HB_ISSPACE( *pszFileName ) )
       ++pszFileName;
 
    pszFileName = hb_osEncodeCP( pszFileName, &pszFree, NULL );
 
-   nLen = strlen( pszFileName );
-   pArgs = ( char * ) hb_xgrab( nLen + 2 );
-   memcpy( pArgs, pszFileName, nLen + 1 );
-   pArgs[ nLen + 1 ] = '\0';
+   while( ( c = *pszFileName ) != '\0' )
+   {
+      ++pszFileName;
+      if( c == '"' )
+         cQuote = cQuote ? 0 : c;
+      else
+      {
+         if( cQuote == 0 && HB_ISSPACE( c ) )
+            break;
+         if( nLen < sizeof( szFileBuf ) - 1 )
+            szFileBuf[ nLen++ ] = c;
+      }
+   }
+   szFileBuf[ nLen ] = '\0';
+
+   while( HB_ISSPACE( *pszFileName ) )
+      ++pszFileName;
+   nLen2 = strlen( pszFileName );
+
+   pFilepath = hb_fsFNameSplit( szFileBuf );
+   if( pFilepath->szPath && ! pFilepath->szExtension )
+   {
+      pFilepath->szExtension = ".com";
+      if( ! hb_fsFileExists( hb_fsFNameMerge( szFileBuf, pFilepath ) ) )
+      {
+         pFilepath->szExtension = ".exe";
+         if( ! hb_fsFileExists( hb_fsFNameMerge( szFileBuf, pFilepath ) ) )
+         {
+            pFilepath->szExtension = NULL;
+            hb_fsFNameMerge( szFileBuf, pFilepath );
+         }
+      }
+      nLen = strlen( szFileBuf );
+   }
+   hb_xfree( pFilepath );
+
+   pArgs = ( char * ) hb_xgrab( nLen + nLen2 + 3 );
+   memcpy( pArgs, szFileBuf, nLen + 1 );
+   memcpy( pArgs + nLen + 1, pszFileName, nLen2 + 1 );
+   pArgs[ nLen + nLen2 + 2 ] = '\0';
 
    if( pszFree )
       hb_xfree( pszFree );
-
-   pszFree = pArgs;
-   while( *pszFree )
-   {
-      if( *pszFree == cQuote )
-         cQuote = 0;
-      else if( cQuote == 0 )
-      {
-         if( *pszFree == '"' )
-            cQuote = *pszFree;
-         else if( HB_ISSPACE( *pszFree ) )
-         {
-            *pszFree = '\0';
-            break;
-         }
-      }
-      ++pszFree;
-   }
 
    return pArgs;
 }
@@ -447,6 +467,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
               hPipeOut[ 2 ] = { FS_ERROR, FS_ERROR },
               hPipeErr[ 2 ] = { FS_ERROR, FS_ERROR };
    HB_FHANDLE hResult = FS_ERROR;
+   HB_ERRCODE errCode;
    HB_BOOL fError = HB_FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFileName, phStdin, phStdout, phStderr, fDetach, pulPID ) );
@@ -874,6 +895,8 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
 #endif
    }
 
+   errCode = hb_fsError();
+
    if( hPipeIn[ 0 ] != FS_ERROR )
       hb_fsClose( hPipeIn[ 0 ] );
    if( hPipeIn[ 1 ] != FS_ERROR )
@@ -889,6 +912,8 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
       if( hPipeErr[ 1 ] != FS_ERROR )
          hb_fsClose( hPipeErr[ 1 ] );
    }
+
+   hb_fsSetError( errCode );
 
    return hResult;
 }
