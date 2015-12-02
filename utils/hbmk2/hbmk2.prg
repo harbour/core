@@ -13515,7 +13515,7 @@ STATIC PROCEDURE MakeHBL( hbmk, cHBL )
 
    RETURN
 
-STATIC FUNCTION LoadPOTFiles( hbmk, aFiles, cFileBase, lIgnoreError )
+STATIC FUNCTION LoadPOTFiles( hbmk, aFiles, cFileBase, lIgnoreError, /* @ */ cEOL )
 
    LOCAL aTrans, aTrans2
    LOCAL hIndex
@@ -13523,7 +13523,7 @@ STATIC FUNCTION LoadPOTFiles( hbmk, aFiles, cFileBase, lIgnoreError )
    LOCAL cFileName
 
    IF ! Empty( cFileBase )
-      aTrans := __i18n_potArrayLoad( cFileBase, @cErrorMsg )
+      aTrans := __i18n_potArrayLoad( cFileBase, @cErrorMsg, @cEOL )
    ENDIF
 
    IF aTrans == NIL
@@ -13566,11 +13566,11 @@ STATIC FUNCTION LoadPOTFilesAsHash( hbmk, aFiles )
 
 STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
 
-   LOCAL cErrorMsg
+   LOCAL cErrorMsg, cEOL
    LOCAL aTrans
 
-   IF ( aTrans := LoadPOTFiles( hbmk, aFiles, cFileBase, .T. ) ) != NIL .AND. ;
-      ! __i18n_potArraySave( cFileOut, aTrans, @cErrorMsg, .F., ! hbmk[ _HBMK_lMINIPO ] )
+   IF ( aTrans := LoadPOTFiles( hbmk, aFiles, cFileBase, .T., @cEOL ) ) != NIL .AND. ;
+      ! __i18n_potArraySave( cFileOut, aTrans, @cErrorMsg, .F., ! hbmk[ _HBMK_lMINIPO ], cEOL )
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( ".pot merge error: %1$s" ), cErrorMsg ) )
    ENDIF
 
@@ -13578,13 +13578,13 @@ STATIC PROCEDURE POTMerge( hbmk, aFiles, cFileBase, cFileOut )
 
 STATIC PROCEDURE AutoTrans( hbmk, cFileIn, aFiles, cFileOut )
 
-   LOCAL cErrorMsg
+   LOCAL cErrorMsg, cEOL
    LOCAL hTrans
 
    IF ( hTrans := LoadPOTFilesAsHash( hbmk, aFiles ) ) != NIL .AND. ;
       ! __i18n_potArraySave( cFileOut, ;
-         __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F. ), ;
-                               hTrans ), @cErrorMsg, .F., ! hbmk[ _HBMK_lMINIPO ] )
+         __i18n_potArrayTrans( LoadPOTFiles( hbmk, {}, cFileIn, .F., @cEOL ), ;
+                               hTrans ), @cErrorMsg, .F., ! hbmk[ _HBMK_lMINIPO ], cEOL )
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s" ), cErrorMsg ) )
    ENDIF
 
