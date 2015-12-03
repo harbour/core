@@ -442,7 +442,7 @@ See contrib-specific dependencies and build notes in the projects'
 1. Install [Homebrew :beer:](http://brew.sh/)
 2. Install packages:
 
-        $ brew install brew-cask pcre pcre2 upx uncrustify ack optipng jpegoptim
+        $ brew install brew-cask pcre pcre2 slang upx uncrustify ack optipng jpegoptim
 
 3. Install [X11](https://xquartz.macosforge.org/landing/) (optional, for gtxwc)
 
