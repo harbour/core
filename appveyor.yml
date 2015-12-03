@@ -18,7 +18,7 @@ environment:
     VIRUSTOTAL_APIKEY:
       secure: TdJYONfrpH45DuyKxraVqgHYy25IQ/F8TKHzYf+u5zz1aiM2yR0YTMaGxyj2EMReEearSI9kD9D2ZykybSVEbRyEaotZlceUb2lPDKELl3M=
 install:
-- set VER_CURL=7.45.0
+- set VER_CURL=7.46.0
 - set VER_OPENSSL=1.0.2d
 - ps: rm alias:curl
 # Use the _native_ curl build provided by Git for Windows because the default,
