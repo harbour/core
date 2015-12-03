@@ -1402,15 +1402,16 @@ HB_FUNC( NETIO_SERVER )
                   while( *pStreamPtr )
                   {
                      if( ( *pStreamPtr )->id == iStreamID )
-                     {
-                        PHB_CONSTREAM stream = *pStreamPtr;
-                        *pStreamPtr = stream->next;
-                        hb_xfree( stream );
                         break;
-                     }
                      pStreamPtr = &( *pStreamPtr )->next;
                   }
-                  if( *pStreamPtr == NULL )
+                  if( *pStreamPtr != NULL )
+                  {
+                     PHB_CONSTREAM stream = *pStreamPtr;
+                     *pStreamPtr = stream->next;
+                     hb_xfree( stream );
+                  }
+                  else
                      iStreamID = 0;
                   hb_threadMutexUnlock( conn->mutex );
                }
@@ -1508,17 +1509,22 @@ HB_FUNC( NETIO_SERVER )
                                     iStreamID = 0;
                                  if( iStreamID )
                                  {
-                                    PHB_CONSTREAM stream = ( PHB_CONSTREAM )
-                                            hb_xgrab( sizeof( HB_CONSTREAM ) );
-                                    stream->id = iStreamID;
-                                    stream->type = iStreamType;
-                                    stream->next = conn->streams;
-                                    conn->streams = stream;
-
                                     if( conn->mutex == NULL )
                                        conn->mutex = hb_threadMutexCreate();
-                                    if( ! hb_threadMutexLock( conn->mutex ) )
+                                    if( hb_threadMutexLock( conn->mutex ) )
+                                    {
+                                       PHB_CONSTREAM stream = ( PHB_CONSTREAM )
+                                               hb_xgrab( sizeof( HB_CONSTREAM ) );
+                                       stream->id = iStreamID;
+                                       stream->type = iStreamType;
+                                       stream->next = conn->streams;
+                                       conn->streams = stream;
+                                    }
+                                    else
+                                    {
                                        errCode = NETIO_ERR_REFUSED;
+                                       iStreamID = 0;
+                                    }
                                  }
                                  else
                                     errCode = NETIO_ERR_WRONG_PARAM;
