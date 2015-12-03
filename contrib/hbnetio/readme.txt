@@ -144,6 +144,7 @@ Server side functions:
                    [<cPass>], [<nCompressionLevel>], [<nStrategy>] ) -> NIL
    netio_VerifyClient( <pConnectionSocket> ) -> <lAccepted>
    netio_Server( <pConnectionSocket> ) -> NIL
+   netio_ServedConnection() -> <pConnectionSocket>
    netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
    netio_RPCFilter( <pConnectionSocket>,
                     <sFuncSym> | <hValue> | NIL ) -> NIL
