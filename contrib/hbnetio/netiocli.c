@@ -248,6 +248,23 @@ static PHB_SRVDATA s_fileFindSrvData( PHB_CONCLI conn, int iStreamID, int iType 
    return NULL;
 }
 
+static int s_fileNewSrvData( PHB_CONCLI conn, int iType )
+{
+   PHB_SRVDATA pSrvData = ( PHB_SRVDATA ) hb_xgrabz( sizeof( HB_SRVDATA ) );
+
+   pSrvData->id = s_fileGenSrvDataID( conn );
+   pSrvData->type = iType;
+   if( iType == NETIO_SRVITEM )
+      pSrvData->maxsize = 4096;
+   else if( iType == NETIO_SRVDATA )
+      pSrvData->maxsize = 0x10000;
+   pSrvData->next = conn->srvdata;
+   if( ! conn->srvdata )
+      hb_atomic_inc( &conn->used );
+   conn->srvdata = pSrvData;
+   return pSrvData->id;
+}
+
 static HB_BOOL s_fileCloseSrvData( PHB_CONCLI conn, int iStreamID )
 {
    PHB_SRVDATA * pSrvDataPtr = &conn->srvdata;
@@ -271,26 +288,6 @@ static HB_BOOL s_fileCloseSrvData( PHB_CONCLI conn, int iStreamID )
    }
 
    return HB_FALSE;
-}
-
-static void s_fileNewSrvData( PHB_CONCLI conn, int iStreamID, int iType )
-{
-   PHB_SRVDATA pSrvData = s_fileFindSrvData( conn, iStreamID, 0 );
-
-   if( ! pSrvData )
-   {
-      pSrvData = ( PHB_SRVDATA ) hb_xgrabz( sizeof( HB_SRVDATA ) );
-      pSrvData->id = iStreamID;
-      pSrvData->type = iType;
-      if( iType == NETIO_SRVITEM )
-         pSrvData->maxsize = 4096;
-      else if( iType == NETIO_SRVDATA )
-         pSrvData->maxsize = 0x10000;
-      pSrvData->next = conn->srvdata;
-      if( ! conn->srvdata )
-         hb_atomic_inc( &conn->used );
-      conn->srvdata = pSrvData;
-   }
 }
 
 static HB_BOOL s_fileRecvSrvData( PHB_CONCLI conn, long len, int iStreamID, int iType )
@@ -1207,7 +1204,7 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
             HB_PUT_LE_UINT32( &msgbuf[ 4 ], size );
             if( iMsg == NETIO_FUNCCTRL )
             {
-               iStreamID = s_fileGenSrvDataID( conn );
+               iStreamID = s_fileNewSrvData( conn, iType );
                HB_PUT_LE_UINT32( &msgbuf[ 8 ], iStreamID );
                HB_PUT_LE_UINT32( &msgbuf[ 12 ], iType );
                memset( msgbuf + 16, '\0', sizeof( msgbuf ) - 16 );
@@ -1243,7 +1240,7 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
                      if( iMsg == NETIO_FUNCCTRL )
                      {
                         if( iStreamID == hb_itemGetNI( pItem ) )
-                           s_fileNewSrvData( conn, iStreamID, iType );
+                           iStreamID = 0;
                         else
                            hb_itemPutNI( pItem, -1 );
                      }
@@ -1262,6 +1259,8 @@ static HB_BOOL s_netio_procexec( int iMsg, int iType )
                   }
                }
             }
+            if( iStreamID != 0 )
+               s_fileCloseSrvData( conn, iStreamID );
             if( buffer )
                hb_xfree( buffer );
             s_fileConUnlock( conn );
