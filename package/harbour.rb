@@ -35,7 +35,7 @@ class Harbour < Formula
   depends_on "openssl" => :optional
   depends_on :postgresql => :optional
   depends_on "qt5" => :optional
-  depends_on "slang" => :optional
+  depends_on "s-lang" => :optional
   depends_on "unixodbc" => :optional
   depends_on :x11 => :optional
 
