@@ -1212,6 +1212,23 @@ HB_ISIZ hb_stackBaseProcOffset( int iLevel )
       return -1;
 }
 
+HB_ISIZ hb_stackBaseSymbolOffset( PHB_SYMB pSymbol )
+{
+   HB_STACK_TLS_PRELOAD
+   HB_ISIZ nOffset = hb_stack.pBase - hb_stack.pItems;
+
+   while( nOffset > 0 )
+   {
+      PHB_ITEM pItem = hb_stack.pItems[ nOffset ];
+      if( pItem->item.asSymbol.value == pSymbol ||
+          ( pSymbol->pDynSym != NULL &&
+            pItem->item.asSymbol.value->pDynSym == pSymbol->pDynSym ) )
+         return nOffset;
+      nOffset = pItem->item.asSymbol.stackstate->nBaseItem;
+   }
+   return -1;
+}
+
 void hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine )
 {
    /*

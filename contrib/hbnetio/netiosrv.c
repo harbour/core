@@ -1632,6 +1632,29 @@ HB_FUNC( NETIO_SERVER )
    }
 }
 
+/* netio_ServedConnection() -> <pConnectionSocket>
+ */
+HB_FUNC( NETIO_SERVEDCONNECTION )
+{
+   static PHB_DYNS s_pDyns_netio_server = NULL;
+
+   if( s_pDyns_netio_server == NULL )
+      s_pDyns_netio_server = hb_dynsymGetCase( "NETIO_SERVER" );
+
+   if( s_pDyns_netio_server != NULL )
+   {
+      HB_ISIZ nOffset = hb_stackBaseSymbolOffset( hb_dynsymGetSymbol( s_pDyns_netio_server ) );
+
+      if( nOffset > 0 )
+      {
+         PHB_ITEM pItem = hb_stackItem( nOffset + 2 );
+
+         if( hb_itemGetPtrGC( pItem, &s_gcConSrvFuncs ) != NULL )
+            hb_itemReturn( pItem );
+      }
+   }
+}
+
 /* netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
  */
 HB_FUNC( NETIO_SRVSENDITEM )
