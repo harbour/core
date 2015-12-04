@@ -1,7 +1,7 @@
 /*
  * Regression tests for the runtime library (main)
  *
- * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -102,7 +102,7 @@ STATIC s_lNoEnv
 PROCEDURE Main( cPar1, cPar2, cPar3 )
 
    OutStd( "Harbour Compatibility and Regression Test Suite" + hb_eol() + ;
-           "Copyright (c) 1999-2015, Viktor Szakats" + hb_eol() )
+           "Copyright (c) 1999-2016, Viktor Szakats" + hb_eol() )
 
    IF cPar1 == NIL
       cPar1 := ""

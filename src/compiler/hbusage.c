@@ -1,7 +1,7 @@
 /*
  * Compile help & info related functions
  *
- * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -260,6 +260,6 @@ void hb_compPrintLogo( HB_COMP_DECL )
 
    hb_compOutStd( HB_COMP_PARAM, szVer );
    hb_compOutStd( HB_COMP_PARAM,
-                  "\nCopyright (c) 1999-2015, https://github.com/vszakats/harbour-core/\n" );
+                  "\nCopyright (c) 1999-2016, https://github.com/vszakats/harbour-core/\n" );
    hb_xfree( szVer );
 }
