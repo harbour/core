@@ -2603,7 +2603,7 @@ static HB_EXPR_FUNC( hb_compExprUseSetGet )
          if( ! HB_SUPPORT_HARBOUR )
             pSelf->value.asSetGet.pVar = hb_compExprListStrip( pSelf->value.asSetGet.pVar, HB_COMP_PARAM );
 #endif
-         HB_EXPR_USE( pSelf->value.asSetGet.pVar, HB_EA_LVALUE );
+         HB_EXPR_USE( pSelf->value.asSetGet.pExpr, HB_EA_LVALUE );
          break;
       case HB_EA_ARRAY_AT:
       case HB_EA_ARRAY_INDEX:
