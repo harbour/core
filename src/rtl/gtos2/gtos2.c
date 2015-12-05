@@ -696,13 +696,16 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
    /* zero out keyboard event record */
    memset( s_key, 0, sizeof( KBDKEYINFO ) );
 
+#if defined( __WATCOMC__ )
    if( s_fBreak )
    {
       s_fBreak = HB_FALSE; /* Indicate that Ctrl+Break has been handled */
       iKey = HB_BREAK_FLAG; /* Note that Ctrl+Break was pressed */
    }
+   else
+#endif
    /* Get next character without wait */
-   else if( KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) 0 ) == NO_ERROR )
+   if( KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) 0 ) == NO_ERROR )
    {
       iFlags = hb_gt_os2_keyFlags( s_key->fsState );
 
