@@ -1,10 +1,12 @@
 /*
- * Harbour Project source code:
- *    test code for GET SetGet block for aliased macro variables
+ * Test code for GET SetGet block for aliased macro variables
  *
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  */
+
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
 
 PROCEDURE Main()
 
@@ -12,17 +14,18 @@ PROCEDURE Main()
    MEMVAR idx, fld, als
    PRIVATE idx, fld, als
 
-   aStr := { { "F1", "C", 10, 0 }, ;
-             { "F2", "C", 10, 0 } }
+   aStr := { ;
+      { "F1", "C", 10, 0 }, ;
+      { "F2", "C", 10, 0 } }
 
-   dbCreate( "_tst1", aStr )
-   USE _tst1 NEW
+   dbCreate( "_tst1.dbf", aStr )
+   USE _tst1.dbf NEW
    dbAppend()
    field->F1 := "FIRST"
    field->F2 := "SECOND"
 
-   dbCreate( "_tst2", aStr )
-   USE _tst2 NEW
+   dbCreate( "_tst2.dbf", aStr )
+   USE _tst2.dbf NEW
    dbAppend()
    field->F1 := "first"
    field->F2 := "second"
@@ -49,7 +52,7 @@ PROCEDURE Main()
    @ 13, 0 GET &als->F1
    @ 14, 0 GET _tst&idx->F1
 
-   InKey( 0 )
+   Inkey( 0 )
 
    idx := "2"
    fld := "F" + idx
@@ -57,4 +60,7 @@ PROCEDURE Main()
 
    READ
 
-RETURN
+   hb_dbDrop( "_tst1.dbf" )
+   hb_dbDrop( "_tst2.dbf" )
+
+   RETURN
