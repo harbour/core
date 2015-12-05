@@ -1649,7 +1649,7 @@ HB_FUNC( NETIO_SERVEDCONNECTION )
 
    if( s_pDyns_netio_server != NULL )
    {
-      HB_ISIZ nOffset = hb_stackBaseSymbolOffset( hb_dynsymGetSymbol( s_pDyns_netio_server ) );
+      HB_ISIZ nOffset = hb_stackBaseSymbolOffset( hb_dynsymSymbol( s_pDyns_netio_server ) );
 
       if( nOffset > 0 )
       {
