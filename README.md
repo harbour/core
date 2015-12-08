@@ -47,7 +47,7 @@ and interfaces to popular APIs.
   * [Twitter](https://twitter.com/vszakats)
   * [GitHub](https://github.com/vszakats)
   * [PGP](https://keybase.io/vszakats) [key](https://keybase.io/vszakats/key.asc)
-  * [Homepage](http://vszakats.net/)
+  * [Homepage](https://vszakats.net/)
 
 # How to Get
 
