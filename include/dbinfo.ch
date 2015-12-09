@@ -102,6 +102,7 @@
 #define RDDI_DIRTYREAD           44   /* Get/Set index dirty read flag */
 #define RDDI_INDEXPAGESIZE       45   /* Get/Set default index page size */
 #define RDDI_DECIMALS            46   /* Get/Set default number of decimal places for numeric fields if it's undefined */
+#define RDDI_SETHEADER           47   /* DBF header updating modes */
 
 /* Constants for SELF_ORDINFO() */
 #define DBOI_CONDITION            1   /* The order's conditional expression */
@@ -285,6 +286,7 @@
 #define DBI_LOCKTEST            146  /* record / file lock test */
 #define DBI_CODEPAGE            147  /* Codepage used */
 #define DBI_TRANSREC            148  /* Is it destination table of currently processed COPY TO or APPEND FROM operation? */
+#define DBI_SETHEADER           149  /* DBF header updating modes */
 
 /* RECORD MAP (RM) support */
 #define DBI_RM_SUPPORTED        150  /* has WA RDD record map support? */
@@ -374,5 +376,26 @@
    #define DB_DBFLOCK_CL53         DB_DBFLOCK_COMIX
    #define DB_DBFLOCK_CL53EXT      DB_DBFLOCK_HB32
 #endif
+
+/* DBF HEADER UPDATING */
+#define DB_SETHEADER_CLOSE    0  /* update in CLOSE method - it always happens if necessary */
+#define DB_SETHEADER_COMMIT   1  /* update in FLUSH method */
+#define DB_SETHEADER_WRITE    2  /* update in GOCOLD method */
+#define DB_SETHEADER_APPEND   0  /* record append sets update header flag (always enabled) */
+#define DB_SETHEADER_REPLACE  4  /* record modification sets update header flag */
+#define DB_SETHEADER_YYEAR    16 /* store year() % 100 instead of year - 1900 */
+
+/* update in CLOSE after append only */
+#define DB_SETHEADER_MINIMAL     DB_SETHEADER_CLOSE
+/* update in COMMIT and CLOSE after append only */
+#define DB_SETHEADER_COMMITSYNC  DB_SETHEADER_COMMIT
+/* update in GOCOLD after append only - default */
+#define DB_SETHEADER_APPENDSYNC  DB_SETHEADER_WRITE
+/* update in CLOSE after any record modification */
+#define DB_SETHEADER_CHANGE      ( DB_SETHEADER_CLOSE + DB_SETHEADER_REPLACE )
+/* update in COMMIT and CLOSE after any record modification - Cl*pper compatible */
+#define DB_SETHEADER_CLIPPER     ( DB_SETHEADER_COMMIT + DB_SETHEADER_REPLACE )
+/* update in GOCOLD after any record modification */
+#define DB_SETHEADER_FULL        ( DB_SETHEADER_WRITE + DB_SETHEADER_REPLACE )
 
 #endif /* HB_DBINFO_CH_ */

@@ -141,6 +141,7 @@ typedef struct _DBFDATA
    HB_BYTE   bMemoType;        /* DB_MEMO_FPT */
    HB_BYTE   bMemoExtType;     /* DB_MEMOVER_FLEX */
    HB_BYTE   bDecimals;        /* RDDI_DECIMALS */
+   HB_USHORT uiSetHeader;      /* RDDI_SETHEADER */
    HB_USHORT uiDirtyRead;      /* HB_IDXREAD_CLEANMASK */
    HB_USHORT uiIndexPageSize;  /* 0 */
    HB_ULONG  ulMemoBlockSize;  /* 0 */
@@ -205,6 +206,7 @@ typedef struct _DBFAREA
    HB_BYTE     bMemoType;           /* MEMO type used in DBF memo fields */
    HB_BYTE     bLockType;           /* Type of locking shemes */
    HB_BYTE     bCryptType;          /* Type of used encryption */
+   HB_UINT     uiSetHeader;         /* DBF header updating modes DBI_SETHEADER */
    DBFHEADER   dbfHeader;           /* DBF header buffer */
    HB_USHORT * pFieldOffset;        /* Pointer to field offset array */
    PHB_DBFFIELDBITS pFieldBits;     /* Pointer to extended DBF field info array */
