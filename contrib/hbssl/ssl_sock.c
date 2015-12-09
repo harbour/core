@@ -361,6 +361,8 @@ static PHB_SOCKEX s_sockexNew( HB_SOCKET sd, PHB_ITEM pParams )
    {
       PHB_ITEM pItem;
 
+      if( ssl == NULL && ( pItem = hb_hashGetCItemPtr( pParams, "ssl" ) ) != NULL )
+         ssl = hb_SSL_itemGet( pItem );
       if( ssl == NULL && ( pItem = hb_hashGetCItemPtr( pParams, "ctx" ) ) != NULL )
          ssl = hb_SSL_itemGet( pItem );
       if( ssl == NULL && ( pItem = hb_hashGetCItemPtr( pParams, "key" ) ) != NULL )
