@@ -1683,7 +1683,7 @@ Supported shells per host platforms:
      * Harbour [online documentation](https://vszakats.github.io/harbour-core/harbour.html)
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
-     * [Stack Exchange](https://stackoverflow.com/questions/tagged/clipper)
+     * [Stack Overflow](https://stackoverflow.com/questions/tagged/clipper)
 
 
 # Guarantees and Liability
