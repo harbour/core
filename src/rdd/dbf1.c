@@ -2062,7 +2062,7 @@ static HB_ERRCODE hb_dbfFlush( DBFAREAP pArea )
    errCode = SELF_GOCOLD( &pArea->area );
    if( errCode == HB_SUCCESS )
    {
-      if( pArea->fUpdateHeader )
+      if( pArea->fUpdateHeader && ( pArea->uiSetHeader & DB_SETHEADER_COMMIT ) != 0 )
          errCode = SELF_WRITEDBHEADER( &pArea->area );
    }
 
@@ -2410,6 +2410,8 @@ static HB_ERRCODE hb_dbfGetVarLen( DBFAREAP pArea, HB_USHORT uiIndex, HB_SIZE * 
  */
 static HB_ERRCODE hb_dbfGoCold( DBFAREAP pArea )
 {
+   HB_ERRCODE errCode = HB_SUCCESS;
+
    HB_TRACE( HB_TR_DEBUG, ( "hb_dbfGoCold(%p)", pArea ) );
 
    if( pArea->fRecordChanged )
@@ -2432,12 +2434,18 @@ static HB_ERRCODE hb_dbfGoCold( DBFAREAP pArea )
 
       /* Write current record */
       if( ! hb_dbfWriteRecord( pArea ) )
-         return HB_FAILURE;
-
-      pArea->fUpdateHeader = HB_TRUE;
-      pArea->fAppend = HB_FALSE;
+         errCode = HB_FAILURE;
+      else
+      {
+         if( pArea->uiSetHeader & DB_SETHEADER_REPLACE )
+            pArea->fUpdateHeader = HB_TRUE;
+         pArea->fAppend = HB_FALSE;
+         if( pArea->fShared && pArea->fUpdateHeader &&
+             ( pArea->uiSetHeader & DB_SETHEADER_WRITE ) != 0 )
+            errCode = SELF_WRITEDBHEADER( &pArea->area );
+      }
    }
-   return HB_SUCCESS;
+   return errCode;
 }
 
 /*
@@ -3772,6 +3780,14 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
          }
          break;
       }
+      case DBI_SETHEADER:
+      {
+         int iMode = hb_itemGetNI( pItem );
+         hb_itemPutNI( pItem, pArea->uiSetHeader );
+         if( ( iMode & ~0xFF ) == 0 )
+            pArea->uiSetHeader = iMode;
+         break;
+      }
       case DBI_ROLLBACK:
          if( pArea->fRecordChanged )
          {
@@ -4073,11 +4089,15 @@ static HB_ERRCODE hb_dbfNewArea( DBFAREAP pArea )
    pArea->uiDirtyRead = HB_IDXREAD_DEFAULT;
    /* Size for deleted records flag */
    pArea->uiRecordLen = 1;
+   /* DBF header update mode */
+   pArea->uiSetHeader = DB_SETHEADER_APPENDSYNC;
 
    {
       PHB_ITEM pItem = hb_itemPutNI( NULL, 0 );
       if( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_TABLETYPE, 0, pItem ) == HB_SUCCESS )
          pArea->bTableType = ( HB_BYTE ) hb_itemGetNI( pItem );
+      if( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_SETHEADER, 0, pItem ) == HB_SUCCESS )
+         pArea->uiSetHeader = ( HB_BYTE ) hb_itemGetNI( pItem );
       hb_itemRelease( pItem );
    }
 
@@ -6237,7 +6257,8 @@ static HB_ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
    }
 
    hb_dateToday( &iYear, &iMonth, &iDay );
-   pArea->dbfHeader.bYear = ( HB_BYTE ) ( pArea->bTableType == DB_DBF_STD ?
+   pArea->dbfHeader.bYear = ( HB_BYTE ) ( pArea->bTableType == DB_DBF_STD &&
+                                          ( pArea->uiSetHeader & DB_SETHEADER_YYEAR ) == 0 ?
                                           iYear - 1900 : iYear % 100 );
    pArea->dbfHeader.bMonth = ( HB_BYTE ) iMonth;
    pArea->dbfHeader.bDay = ( HB_BYTE ) iDay;
@@ -6630,6 +6651,15 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
 #endif
                pData->bLockType = ( HB_BYTE ) iScheme;
          }
+         break;
+      }
+      case RDDI_SETHEADER:
+      {
+         int iMode = hb_itemGetNI( pItem );
+
+         hb_itemPutNI( pItem, pData->uiSetHeader );
+         if( ( iMode & ~0xFF ) == 0 )
+            pData->uiSetHeader = iMode;
          break;
       }
       case RDDI_DIRTYREAD:

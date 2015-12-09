@@ -1029,6 +1029,11 @@ static void s_fileposCommit( PHB_FILE pFilePos )
    _PHB_FILE->pFuncs->Commit( _PHB_FILE );
 }
 
+static HB_BOOL s_fileposConfigure( PHB_FILE pFilePos, int iIndex, PHB_ITEM pValue )
+{
+   return _PHB_FILE->pFuncs->Configure( _PHB_FILE, iIndex, pValue );
+}
+
 static HB_FHANDLE s_fileposHandle( PHB_FILE pFilePos )
 {
    return pFilePos ? _PHB_FILE->pFuncs->Handle( _PHB_FILE ) : FS_ERROR;
@@ -1075,7 +1080,7 @@ static const HB_FILE_FUNCS * s_fileposMethods( void )
       s_fileposEof,
       s_fileposFlush,
       s_fileposCommit,
-      s_fileConfigure,
+      s_fileposConfigure,
       s_fileposHandle
    };
 

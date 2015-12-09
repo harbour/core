@@ -1594,6 +1594,7 @@ _WCRTLINK long sysconf( int __name )
          return 1024;
       case _SC_CLK_TCK:
          return 100;
+      case _SC_PAGESIZE:
       case /* _SC_PAGE_SIZE */ 30:
          return 4096;
    }
