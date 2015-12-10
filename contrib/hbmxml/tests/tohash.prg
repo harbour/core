@@ -7,23 +7,23 @@
 
 PROCEDURE Main( cFile )
 
-   LOCAL pRoot := mxmlLoadString( , hb_MemoRead( hb_defaultValue( cFile, "test.xml" ) ), @type_cb() )
+   LOCAL pRoot := mxmlLoadString( , hb_MemoRead( hb_defaultValue( cFile, "test.xml" ) ), @s_type_cb() )
 
-   ? hb_ValToExp( XMLtoHash( pRoot, "group" ) )
+   ? hb_ValToExp( XMLToHash( pRoot, "group" ) )
 
    mxmlDelete( pRoot )
 
    RETURN
 
-FUNCTION XMLtoHash( pRoot, cElement )
+FUNCTION XMLToHash( pRoot, cElement )
 
    IF HB_ISSTRING( cElement )
       pRoot := mxmlFindElement( pRoot, pRoot, cElement,,, MXML_DESCEND )
    ENDIF
 
-   RETURN iif( Empty( pRoot ), { => }, NodeToHash( mxmlWalkNext( pRoot, pRoot, MXML_DESCEND ) ) )
+   RETURN iif( Empty( pRoot ), { => }, s_NodeToHash( mxmlWalkNext( pRoot, pRoot, MXML_DESCEND ) ) )
 
-STATIC FUNCTION NodeToHash( pNode )
+STATIC FUNCTION s_NodeToHash( pNode )
 
    LOCAL hNext
    LOCAL hHashChild
@@ -49,7 +49,7 @@ STATIC FUNCTION NodeToHash( pNode )
                IF Empty( hHash[ mxmlGetElement( pNode ) ] )
                   hHash[ mxmlGetElement( pNode ) ] := {}
                ENDIF
-               IF ! Empty( hHashChild := NodeToHash( hNext ) )
+               IF ! Empty( hHashChild := s_NodeToHash( hNext ) )
                   AAdd( hHash[ mxmlGetElement( pNode ) ], hHashChild )
                ENDIF
             ENDIF
@@ -61,5 +61,5 @@ STATIC FUNCTION NodeToHash( pNode )
 
    RETURN hHash
 
-STATIC FUNCTION type_cb()
+STATIC FUNCTION s_type_cb()
    RETURN MXML_OPAQUE
