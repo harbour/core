@@ -15,7 +15,7 @@ PROCEDURE Main( cFile )
 
    RETURN
 
-FUNCTION XMLToHash( pRoot, cElement )
+STATIC FUNCTION XMLToHash( pRoot, cElement )
 
    IF HB_ISSTRING( cElement )
       pRoot := mxmlFindElement( pRoot, pRoot, cElement,,, MXML_DESCEND )
