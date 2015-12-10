@@ -132,7 +132,7 @@ static HB_TSD_NEW( s_error_cb_var, sizeof( HB_ERROR_CB_VAR ), hb_error_cb_var_in
 
 /* mxml_node_t * support */
 
-static void hbmxml_relese( mxml_node_t * node )
+static void hbmxml_release( mxml_node_t * node )
 {
    if( mxmlGetRefCount( node ) <= ( node->parent ? 2 : 1 ) )
    {
@@ -159,7 +159,7 @@ static HB_GARBAGE_FUNC( hbmxml_nodeDestructor )
 
    if( pHbnode->node )
    {
-      hbmxml_relese( pHbnode->node );
+      hbmxml_release( pHbnode->node );
       pHbnode->node = NULL;
    }
 }
@@ -1064,7 +1064,7 @@ HB_FUNC( MXMLDELETE )
    if( pHbnode && pHbnode->node )
    {
       mxmlRemoveRef( pHbnode->node );
-      hbmxml_relese( pHbnode->node );
+      hbmxml_release( pHbnode->node );
       pHbnode->node = NULL;
    }
    else
