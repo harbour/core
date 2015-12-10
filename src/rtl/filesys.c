@@ -845,13 +845,16 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
 }
 
 #if defined( HB_OS_OS2 )
+#  if ! defined( HB_OS2_NONAMEDPIPES ) && ! defined( HB_OS2_USENAMEDPIPES )
 
 /* In OS2 anonymous pipes are not simulated by named pipes and
    unlike in MS-Windows functions for named pipes cannot be used
    with anonymous ones. Read/Write operations from/to anonymous
    pipes are always blocking on OS2. For unblocking access we
    have to emulate anonymous pipe using named one [druzus] */
-#  define HB_OS2_USENAMEDPIPES
+#     define HB_OS2_USENAMEDPIPES
+
+#  endif
 
 /* the size of sustem IO buffers in OS2 pipes */
 #  define HB_OS2_PIPEBUFSIZE        4096

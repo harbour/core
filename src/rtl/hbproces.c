@@ -591,13 +591,13 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
       }
       if( ret == NO_ERROR && phStdout != NULL )
       {
-         ret = DosQueryFHState( hPipeOut[ 0 ], &ulState);
+         ret = DosQueryFHState( hPipeOut[ 0 ], &ulState );
          if( ret == NO_ERROR && ( ulState & OPEN_FLAGS_NOINHERIT ) == 0 )
             ret = DosSetFHState( hPipeOut[ 0 ], ( ulState & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
       }
       if( ret == NO_ERROR && phStderr != NULL && phStdout != phStderr )
       {
-         ret = DosQueryFHState( hPipeErr[ 0 ], &ulState);
+         ret = DosQueryFHState( hPipeErr[ 0 ], &ulState );
          if( ret == NO_ERROR && ( ulState & OPEN_FLAGS_NOINHERIT ) == 0 )
             ret = DosSetFHState( hPipeErr[ 0 ], ( ulState & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
       }
