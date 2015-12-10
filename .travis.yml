@@ -56,7 +56,7 @@ before_install:
        brew install libmagic;
        brew install mariadb;
        brew install openssl;
-       brew install slang;
+       brew install s-lang;
        brew install unixodbc;
     fi
 notifications:
