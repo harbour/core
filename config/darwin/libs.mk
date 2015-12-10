@@ -16,11 +16,14 @@ ifneq ($(HB_LINKING_RTL),)
       ifneq ($(HB_HAS_CURSES),)
          SYSLIBS += $(HB_LIBNAME_CURSES)
       endif
-      ifneq ($(wildcard /sw/lib),)
-         SYSLIBPATHS += /sw/lib
+      ifneq ($(wildcard /usr/local/lib),)
+         SYSLIBPATHS += /usr/local/lib
       endif
       ifneq ($(wildcard /opt/local/lib),)
          SYSLIBPATHS += /opt/local/lib
+      endif
+      ifneq ($(wildcard /sw/lib),)
+         SYSLIBPATHS += /sw/lib
       endif
    endif
    ifneq ($(HB_HAS_X11),)
