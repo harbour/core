@@ -503,7 +503,7 @@ STATIC FUNCTION ProcessConnection( oServer )
          aServer[ "SSL_PROTOCOL" ] := SSL_get_version( hSSL )
          aServer[ "SSL_CIPHER_USEKEYSIZE" ] := SSL_get_cipher_bits( hSSL, @nErr )
          aServer[ "SSL_CIPHER_ALGKEYSIZE" ] := nErr
-         aServer[ "SSL_VERSION_LIBRARY" ] := SSLeay_version( HB_OPENSSL_VERSION )
+         aServer[ "SSL_VERSION_LIBRARY" ] := OpenSSL_version( HB_OPENSSL_VERSION )
          aServer[ "SSL_SERVER_I_DN" ] := X509_name_oneline( X509_get_issuer_name( SSL_get_certificate( hSSL ) ) )
          aServer[ "SSL_SERVER_S_DN" ] := X509_name_oneline( X509_get_subject_name( SSL_get_certificate( hSSL ) ) )
       ENDIF

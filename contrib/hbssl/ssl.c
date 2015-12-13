@@ -84,7 +84,7 @@ HB_FUNC( SSL_INIT )
    SSL_load_error_strings();
 }
 
-HB_FUNC( SSLEAY_VERSION )
+HB_FUNC( OPENSSL_VERSION )
 {
    int value = hb_parni( 1 );
 
@@ -97,7 +97,11 @@ HB_FUNC( SSLEAY_VERSION )
       case HB_OPENSSL_DIR:       value = OPENSSL_DIR;      break;
    }
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+   hb_retc( OpenSSL_version( value ) );
+#else
    hb_retc( SSLeay_version( value ) );
+#endif
 }
 
 HB_FUNC( OPENSSL_VERSION_NUMBER )
@@ -105,10 +109,19 @@ HB_FUNC( OPENSSL_VERSION_NUMBER )
    hb_retnint( OPENSSL_VERSION_NUMBER );
 }
 
-HB_FUNC( SSLEAY )
+HB_FUNC( OPENSSL_VERSION_NUM )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+   hb_retnint( OpenSSL_version_num() );
+#else
    hb_retnint( SSLeay() );
+#endif
 }
+
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( SSLEAY_VERSION, OPENSSL_VERSION )
+HB_FUNC_TRANSLATE( SSLEAY, OPENSSL_VERSION_NUM )
+#endif
 
 static HB_GARBAGE_FUNC( SSL_release )
 {

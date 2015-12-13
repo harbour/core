@@ -38,7 +38,7 @@ static sha1_quadbyte rol( sha1_quadbyte value, int bits )
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
 /* blk0() and blk() perform the initial expand. */
-/* I got the idea of expanding during the round function from SSLeay */
+/* I got the idea of expanding during the round function from OpenSSL */
 
 #ifdef HB_LITTLE_ENDIAN
 #define blk0(i) (block->l[i] = (rol(block->l[i],24)&(sha1_quadbyte)0xFF00FF00) \
