@@ -4,6 +4,10 @@ include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(DYNDIRLIST_BASE),)
 
+   ifeq ($(HB_MT),no)
+      __HB_BUILD_DYN_ST := yes
+   endif
+
    ifeq ($(__HB_BUILD_DYN_ST),yes)
       DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm
    else
