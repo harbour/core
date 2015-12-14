@@ -71,6 +71,7 @@
 #  if defined( HB_OS_OS2 ) && defined( __GNUC__ )
 #    include <sys/wait.h>
 #  endif
+#  include "hbgtcore.h"
 #elif defined( HB_OS_DOS )
 #  include <process.h>
 #  include <fcntl.h>
@@ -575,6 +576,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
       APIRET ret = NO_ERROR;
       ULONG ulState, ulStateIn, ulStateOut, ulStateErr;
       PID pid = ( PID ) -1;
+      PHB_GT pGT;
 
       ulStateIn = ulStateOut = ulStateErr = OPEN_FLAGS_NOINHERIT;
       ulState = 0;
@@ -602,91 +604,97 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
             ret = DosSetFHState( hPipeErr[ 0 ], ( ulState & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
       }
 
-      if( ret == NO_ERROR && ( phStdin != NULL || fDetach ) )
+      pGT = hb_gt_Base();
+      if( pGT )
       {
-         hDup = 0;
-         ret = DosDupHandle( hDup, &hStdIn );
+         if( ret == NO_ERROR && ( phStdin != NULL || fDetach ) )
+         {
+            hDup = 0;
+            ret = DosDupHandle( hDup, &hStdIn );
+            if( ret == NO_ERROR )
+            {
+               ret = DosQueryFHState( hStdIn, &ulStateIn );
+               if( ret == NO_ERROR && ( ulStateIn & OPEN_FLAGS_NOINHERIT ) == 0 )
+                  ret = DosSetFHState( hStdIn, ( ulStateIn & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
+               if( ret == NO_ERROR )
+                  ret = DosDupHandle( phStdin != NULL ? ( HFILE ) hPipeIn[ 0 ] : hNull, &hDup );
+            }
+         }
+
+         if( ret == NO_ERROR && ( phStdout != NULL || fDetach ) )
+         {
+            hDup = 1;
+            ret = DosDupHandle( hDup, &hStdOut );
+            if( ret == NO_ERROR )
+            {
+               ret = DosQueryFHState( hStdOut, &ulStateOut );
+               if( ret == NO_ERROR && ( ulStateOut & OPEN_FLAGS_NOINHERIT ) == 0 )
+                  ret = DosSetFHState( hStdOut, ( ulStateOut & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
+               if( ret == NO_ERROR )
+                  ret = DosDupHandle( phStdout != NULL ? ( HFILE ) hPipeOut[ 1 ] : hNull, &hDup );
+            }
+         }
+
+         if( ret == NO_ERROR && ( phStderr != NULL || fDetach ) )
+         {
+            hDup = 2;
+            ret = DosDupHandle( hDup, &hStdErr );
+            if( ret == NO_ERROR )
+            {
+               ret = DosQueryFHState( hStdErr, &ulStateErr );
+               if( ret == NO_ERROR && ( ulStateErr & OPEN_FLAGS_NOINHERIT ) == 0 )
+                  ret = DosSetFHState( hStdErr, ( ulStateErr & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
+               if( ret == NO_ERROR )
+                  ret = DosDupHandle( phStderr != NULL ? ( HFILE ) hPipeErr[ 1 ] : hNull, &hDup );
+            }
+         }
+
          if( ret == NO_ERROR )
          {
-            ret = DosQueryFHState( hStdIn, &ulStateIn );
-            if( ret == NO_ERROR && ( ulStateIn & OPEN_FLAGS_NOINHERIT ) == 0 )
-               ret = DosSetFHState( hStdIn, ( ulStateIn & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
-            if( ret == NO_ERROR )
-               ret = DosDupHandle( phStdin != NULL ? ( HFILE ) hPipeIn[ 0 ] : hNull, &hDup );
-         }
-      }
+            char * pArgs = hb_buildArgsOS2( pszFileName );
+            char uchLoadError[ CCHMAXPATH ] = { 0 };
+            RESULTCODES ChildRC = { 0, 0 };
 
-      if( ret == NO_ERROR && ( phStdout != NULL || fDetach ) )
-      {
-         hDup = 1;
-         ret = DosDupHandle( hDup, &hStdOut );
-         if( ret == NO_ERROR )
+            ret = DosExecPgm( uchLoadError, sizeof( uchLoadError ),
+                              fDetach ? EXEC_BACKGROUND : EXEC_ASYNCRESULT,
+                              ( PCSZ ) pArgs, NULL /* env */,
+                              &ChildRC,
+                              ( PCSZ ) pArgs );
+            if( ret == NO_ERROR )
+               pid = ChildRC.codeTerminate;
+
+            hb_xfree( pArgs );
+         }
+
+         if( hNull != ( HFILE ) FS_ERROR )
+            DosClose( hNull );
+
+         if( hStdIn != ( HFILE ) FS_ERROR )
          {
-            ret = DosQueryFHState( hStdOut, &ulStateOut );
-            if( ret == NO_ERROR && ( ulStateOut & OPEN_FLAGS_NOINHERIT ) == 0 )
-               ret = DosSetFHState( hStdOut, ( ulStateOut & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
-            if( ret == NO_ERROR )
-               ret = DosDupHandle( phStdout != NULL ? ( HFILE ) hPipeOut[ 1 ] : hNull, &hDup );
+            hDup = 0;
+            DosDupHandle( hStdIn, &hDup );
+            DosClose( hStdIn );
+            if( ( ulStateIn & OPEN_FLAGS_NOINHERIT ) == 0 )
+               DosSetFHState( hDup, ulStateIn & 0xFF00 );
          }
-      }
-
-      if( ret == NO_ERROR && ( phStderr != NULL || fDetach ) )
-      {
-         hDup = 2;
-         ret = DosDupHandle( hDup, &hStdErr );
-         if( ret == NO_ERROR )
+         if( hStdOut != ( HFILE ) FS_ERROR )
          {
-            ret = DosQueryFHState( hStdErr, &ulStateErr );
-            if( ret == NO_ERROR && ( ulStateErr & OPEN_FLAGS_NOINHERIT ) == 0 )
-               ret = DosSetFHState( hStdErr, ( ulStateErr & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
-            if( ret == NO_ERROR )
-               ret = DosDupHandle( phStderr != NULL ? ( HFILE ) hPipeErr[ 1 ] : hNull, &hDup );
+            hDup = 1;
+            DosDupHandle( hStdOut, &hDup );
+            DosClose( hStdOut );
+            if( ( ulStateOut & OPEN_FLAGS_NOINHERIT ) == 0 )
+               DosSetFHState( hDup, ulStateOut & 0xFF00 );
          }
-      }
+         if( hStdErr != ( HFILE ) FS_ERROR )
+         {
+            hDup = 2;
+            DosDupHandle( hStdErr, &hDup );
+            DosClose( hStdErr );
+            if( ( ulStateErr & OPEN_FLAGS_NOINHERIT ) == 0 )
+               DosSetFHState( hDup, ulStateErr & 0xFF00 );
+         }
 
-      if( ret == NO_ERROR )
-      {
-         char * pArgs = hb_buildArgsOS2( pszFileName );
-         char uchLoadError[ CCHMAXPATH ] = { 0 };
-         RESULTCODES ChildRC = { 0, 0 };
-
-         ret = DosExecPgm( uchLoadError, sizeof( uchLoadError ),
-                           fDetach ? EXEC_BACKGROUND : EXEC_ASYNCRESULT,
-                           ( PCSZ ) pArgs, NULL /* env */,
-                           &ChildRC,
-                           ( PCSZ ) pArgs );
-         if( ret == NO_ERROR )
-            pid = ChildRC.codeTerminate;
-
-         hb_xfree( pArgs );
-      }
-
-      if( hNull != ( HFILE ) FS_ERROR )
-         DosClose( hNull );
-
-      if( hStdIn != ( HFILE ) FS_ERROR )
-      {
-         hDup = 0;
-         DosDupHandle( hStdIn, &hDup );
-         DosClose( hStdIn );
-         if( ( ulStateIn & OPEN_FLAGS_NOINHERIT ) == 0 )
-            DosSetFHState( hDup, ulStateIn & 0xFF00 );
-      }
-      if( hStdOut != ( HFILE ) FS_ERROR )
-      {
-         hDup = 1;
-         DosDupHandle( hStdOut, &hDup );
-         DosClose( hStdOut );
-         if( ( ulStateOut & OPEN_FLAGS_NOINHERIT ) == 0 )
-            DosSetFHState( hDup, ulStateOut & 0xFF00 );
-      }
-      if( hStdErr != ( HFILE ) FS_ERROR )
-      {
-         hDup = 2;
-         DosDupHandle( hStdErr, &hDup );
-         DosClose( hStdErr );
-         if( ( ulStateErr & OPEN_FLAGS_NOINHERIT ) == 0 )
-            DosSetFHState( hDup, ulStateErr & 0xFF00 );
+         hb_gt_BaseFree( pGT );
       }
 
       fError = ret != NO_ERROR;
