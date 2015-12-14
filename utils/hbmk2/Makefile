@@ -10,7 +10,7 @@ RC_SOURCES := \
 
 PRG_MAIN := hbmk2.prg
 
-ifeq ($(HB_MT),no)
+ifeq ($(__HB_MT),no)
    LIBS = $(HB_LIBS_ST_RDD)
 else
    LIBS = $(HB_LIBS_MT_RDD)

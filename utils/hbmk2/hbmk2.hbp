@@ -7,7 +7,7 @@
 
 -cflag=-Zm200{wce&allmsvc}
 
-{!HB_MT='no'}-mt
+{!__HB_MT='no'}-mt
 
 hbmk2.prg
 

@@ -4,7 +4,7 @@ include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(DYNDIRLIST_BASE),)
 
-   ifeq ($(HB_MT),no)
+   ifeq ($(__HB_MT),no)
       __HB_BUILD_DYN_ST := yes
    endif
 
