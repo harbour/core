@@ -52,6 +52,7 @@ HB_DYN_LIBS := \
    gtgui \
    gtwin \
    gtos2 \
+   gtdos \
    gttrm \
    gtcrs \
    gtsln \
@@ -65,16 +66,12 @@ endif
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    HB_DYN_LIBS += hbzlib
 endif
+ifeq ($(HB_PLATFORM),dos)
+   HB_DYN_LIBS += hbpmcom
+endif
 
 #   hbcplr \
 #   hbdebug \
-
-ifneq ($(HB_HAS_PCRE_LOCAL),)
-   HB_DYN_LIBS += hbpcre
-endif
-ifneq ($(HB_HAS_ZLIB_LOCAL),)
-   HB_DYN_LIBS += hbzlib
-endif
 
 
 DYN_FILE :=
