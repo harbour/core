@@ -59,6 +59,19 @@
    #include "hbwinuni.h"
 #endif
 
+#if ( defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) || defined( HB_OS_DOS ) ) && \
+    ( defined( __WATCOMC__ ) || defined( _MSC_VER ) || \
+      defined( __MINGW32__ ) || defined( __BORLANDC__ ) || \
+      defined( __DMC__ ) )
+   #define HB_USE_FSOPEN
+   #include <share.h>
+   #if ! defined( SH_DENYNO ) && defined( _SH_DENYNO )
+      #define SH_DENYNO _SH_DENYNO
+   #endif
+#endif
+
+
+
 FILE * hb_fopen( const char * path, const char * mode )
 {
    FILE * file;
@@ -71,8 +84,11 @@ FILE * hb_fopen( const char * path, const char * mode )
    lpMode = HB_FSNAMECONV( mode, &lpFreeM );
 
    hb_vmUnlock();
-   #if defined( _MSC_VER ) && _MSC_VER >= 1400 && ! defined( _CRT_SECURE_NO_WARNINGS )
-      _wfopen_s( &file, lpPath, lpMode );
+   #if defined( HB_USE_FSOPEN )
+      file = _wfsopen( lpPath, lpMode, SH_DENYNO );
+   #elif defined( _MSC_VER ) && _MSC_VER >= 1400 && ! defined( _CRT_SECURE_NO_WARNINGS )
+      if( _wfopen_s( &file, lpPath, lpMode ) != 0 )
+         file = NULL;
    #else
       file = _wfopen( lpPath, lpMode );
    #endif
@@ -88,8 +104,11 @@ FILE * hb_fopen( const char * path, const char * mode )
    path = hb_fsNameConv( path, &pszFree );
 
    hb_vmUnlock();
-   #if defined( _MSC_VER ) && _MSC_VER >= 1400 && ! defined( _CRT_SECURE_NO_WARNINGS )
-      fopen_s( &file, path, mode );
+   #if defined( HB_USE_FSOPEN )
+      file = _fsopen( path, mode, SH_DENYNO );
+   #elif defined( _MSC_VER ) && _MSC_VER >= 1400 && ! defined( _CRT_SECURE_NO_WARNINGS )
+      if( fopen_s( &file, path, mode ) != 0 )
+         file = NULL;
    #else
       file = fopen( path, mode );
    #endif
