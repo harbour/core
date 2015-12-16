@@ -68,6 +68,13 @@
    #endif
 #elif defined( HB_OS_OS2 )
    #include <os2.h>
+#elif defined( HB_OS_DOS ) && defined( __WATCOMC__ ) && !defined( HB_CAUSEWAY_DLL )
+   /* it's broken in recent OpenWatcom builds so enable it
+      for tests only in harbur.dll [druzus] */
+   #if defined( HB_DYNLIB )
+      #define HB_CAUSEWAY_DLL
+      #include <cwdllfnc.h>
+   #endif
 #endif
 
 /* NOTE: VxWorks supports dlopen() functionality only in shared
@@ -141,6 +148,8 @@ PHB_ITEM hb_libLoad( PHB_ITEM pLibName, PHB_ITEM pArgs )
          {
             HB_TRACE( HB_TR_DEBUG, ( "hb_libLoad(): dlopen(): %s", dlerror() ) );
          }
+#elif defined( HB_CAUSEWAY_DLL )
+         hDynLib = LoadLibrary( hb_itemGetCPtr( pLibName ) );
 #else
          {
             int iTODO;
@@ -185,6 +194,9 @@ HB_BOOL hb_libFree( PHB_ITEM pDynLib )
          fResult = DosFreeModule( ( HMODULE ) hDynLib ) == NO_ERROR;
 #elif defined( HB_HAS_DLFCN )
          fResult = dlclose( hDynLib ) == 0;
+#elif defined( HB_CAUSEWAY_DLL )
+         FreeLibrary( hDynLib );
+         fResult = HB_TRUE;
 #endif
       }
       hb_vmUnlockModuleSymbols();
@@ -219,6 +231,8 @@ void * hb_libSymAddr( PHB_ITEM pDynLib, const char * pszSymbol )
          return ( void * ) pProcAddr;
 #elif defined( HB_HAS_DLFCN )
       return dlsym( hDynLib, pszSymbol );
+#elif defined( HB_CAUSEWAY_DLL )
+      return GetProcAddress( hDynLib, pszSymbol );
 #else
       HB_SYMBOL_UNUSED( pszSymbol );
 #endif

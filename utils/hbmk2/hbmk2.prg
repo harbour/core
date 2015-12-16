@@ -2690,30 +2690,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    /* Process build-time configuration */
 
-   IF hbmk[ _HBMK_cPLAT ] == "dos"
-      SWITCH hbmk[ _HBMK_cCOMP ]
-      CASE "djgpp"  ; tmp := "watt"     ; cLibLibPrefix := "lib" ; cLibExt := ".a"   ; EXIT
-      CASE "watcom" ; tmp := "wattcpwf" ; cLibLibPrefix := ""    ; cLibExt := ".lib" ; EXIT
-      OTHERWISE     ; tmp := NIL
-      ENDSWITCH
-
-      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbpmcom" )
-      IF ! Empty( tmp )
-         IF HB_HAS_OPTION( "watt" )
-            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
-            IF hb_vfDirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
-            ENDIF
-         ELSE
-            IF hb_vfDirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" ) .AND. ;
-               hb_vfExists( tmp1 + hb_ps() + cLibLibPrefix + tmp + cLibExt )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
-               AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
-            ENDIF
-         ENDIF
-      ENDIF
-   ENDIF
-
    /* Process automatic make files in current dir. */
    IF hbmk[ _HBMK_lAutoHBM ] .AND. hb_vfExists( _HBMK_AUTOHBM_NAME )
       IF ! hbmk[ _HBMK_lQuiet ]
@@ -4059,6 +4035,54 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDCASE
    NEXT
 
+   IF hbmk[ _HBMK_cPLAT ] == "dos"
+      SWITCH hbmk[ _HBMK_cCOMP ]
+      CASE "djgpp"  ; tmp := "watt"     ; cLibLibPrefix := "lib" ; cLibExt := ".a"   ; EXIT
+      CASE "watcom" ; tmp := "wattcpwf" ; cLibLibPrefix := ""    ; cLibExt := ".lib" ; EXIT
+      OTHERWISE     ; tmp := NIL
+      ENDSWITCH
+
+      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbpmcom" )
+      IF ! Empty( tmp )
+         IF HB_HAS_OPTION( "watt" )
+            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
+            IF hb_vfDirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
+            ENDIF
+         ELSE
+            IF hb_vfDirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" ) .AND. ;
+               hb_vfExists( tmp1 + hb_ps() + cLibLibPrefix + tmp + cLibExt )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
+               AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+
+   IF hbmk[ _HBMK_cPLAT ] == "dos" .AND. ! hbmk[ _HBMK_lSHARED ]
+      SWITCH hbmk[ _HBMK_cCOMP ]
+      CASE "djgpp"  ; tmp := "watt"     ; cLibLibPrefix := "lib" ; cLibExt := ".a"   ; EXIT
+      CASE "watcom" ; tmp := "wattcpwf" ; cLibLibPrefix := ""    ; cLibExt := ".lib" ; EXIT
+      OTHERWISE     ; tmp := NIL
+      ENDSWITCH
+
+      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbpmcom" )
+      IF ! Empty( tmp )
+         IF HB_HAS_OPTION( "watt" )
+            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
+            IF hb_vfDirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
+            ENDIF
+         ELSE
+            IF hb_vfDirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" ) .AND. ;
+               hb_vfExists( tmp1 + hb_ps() + cLibLibPrefix + tmp + cLibExt )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
+               AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+
    IF hbmk[ _HBMK_lDEBUGPARS ]
       FOR EACH aParam IN aParams
          _hbmk_OutStd( hbmk, hb_StrFormat( "debugpars: %1$3d %2$s", aParam:__enumIndex(), ParamToString( aParam ) ) )
@@ -5369,14 +5393,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cBin_Link := "wlink" + hbmk[ _HBMK_cCCEXT ]
          DO CASE
          CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Link := "OP quiet SYS linux {FL} NAME {OE} {LO} {DL} {LL} {LB} {LF}{SCRIPT}"
-         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cOpt_Link := "OP quiet SYS dos32a {FL} NAME {OE} {LO} {DL} {LL} {LB} {LF}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cOpt_Link := iif( hbmk[ _HBMK_lSHARED ], ;
+                                                                 "OP quiet,map,stub=cwstub.exe SYS causeway {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}", ;
+                                                                 "OP quiet SYS dos32a {FL} NAME {OE} {LO} {DL} {LL} {LB} {LF}{SCRIPT}" )
          CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Link := "OP quiet {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
          CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Link := "OP quiet SYS os2v2 {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
          ENDCASE
          cBin_Dyn := cBin_Link
          cDynObjPrefix := cObjPrefix
          DO CASE
-         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cBin_Dyn := NIL
+         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cOpt_Dyn := "OP quiet SYS cwdllr OP map,stub=cwstub.exe {FD} {IM} NAME {OD} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
          CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Dyn := "OP quiet FORM elf dll OP exportall {FD} NAME {OD} {LO} {DL} {LL} {LB} {LF}{SCRIPT}"
             IF hbmk[ _HBMK_lCreateDyn ]
                AAdd( hbmk[ _HBMK_aLIBPATH ], hb_DirSepToOS( GetEnv( "WATCOM") + hb_ps() + "lib386" ) )
@@ -5403,7 +5429,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             /* register callconv (-6r, -5r) puts an underscore after names */
             cLibHBX_Regex := R_( "[\s]_?HB_FUN_([A-Z0-9_]*)_[\s]" )
          ENDIF
-         IF HBMK_ISPLAT( "win|os2" )
+         IF HBMK_ISPLAT( "win|os2|dos" )
             bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_watcom( hbmk, cBin_Lib + " -q -o={OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          ENDIF
          cLibLibExt := cLibExt
@@ -5470,6 +5496,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* TOFIX: This line is plain guessing. */
                AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + hb_FNameExtSet( hbmk[ _HBMK_cHB_INSTALL_LIB ] + hb_ps() + iif( hbmk[ _HBMK_lGUI ], "hbmainstd", "hbmainstd" ), cLibExt ) )
             ENDIF
+#endif
+         CASE hbmk[ _HBMK_cPLAT ] == "dos"
+            l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
+#ifdef HARBOUR_SUPPORT
+            l_aLIBSHARED := { cHarbourDyn + cLibExt }
+            AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + hb_FNameExtSet( hbmk[ _HBMK_cHB_INSTALL_LIB ] + hb_ps() + "hbmainstd", cLibExt ) )
 #endif
          CASE hbmk[ _HBMK_cPLAT ] == "linux"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )

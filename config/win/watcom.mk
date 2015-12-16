@@ -2,7 +2,7 @@ OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
-HB_DYN_COPT := -DHB_DYNLIB
+HB_DYN_COPT := -DHB_DYNLIB -bd
 
 ifeq ($(HB_BUILD_MODE),cpp)
    CC := wpp386

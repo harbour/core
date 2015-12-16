@@ -361,7 +361,7 @@
 #  endif
 #endif
 
-#if defined(OS2) && defined(__WATCOMC__)
+#if ( defined(__OS2__) || defined(__DOS__) ) && defined(__WATCOMC__)
 #  ifdef ZLIB_DLL
 #    ifdef ZLIB_INTERNAL
 #      define ZEXTERN   extern __declspec(dllexport)

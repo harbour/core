@@ -55,6 +55,8 @@ LDFLAGS += SYS linux
 LDLIBS := $(HB_USER_LIBS)
 LDLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
+#HB_DYN_COPT := -DHB_DYNLIB -bd
+#
 #DY := $(LD)
 #DFLAGS += OP quiet FORM elf dll LIBPATH $(WATCOM)/lib386 LIBPATH $(WATCOM)/lib386/linux OP exportall
 #DY_OUT :=

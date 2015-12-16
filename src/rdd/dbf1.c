@@ -6661,7 +6661,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
 
          hb_itemPutNI( pItem, pData->uiSetHeader );
          if( ( iMode & ~0xFF ) == 0 )
-            pData->uiSetHeader = iMode;
+            pData->uiSetHeader = ( HB_USHORT ) iMode;
          break;
       }
       case RDDI_DIRTYREAD:

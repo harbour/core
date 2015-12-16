@@ -49,7 +49,9 @@
 
 #include "hbsetup.h"
 
-#if   defined( HB_MAIN_STD )
+#if defined( HB_DYNLIB ) && defined( __WATCOMC__ ) && defined( HB_OS_DOS )
+   #include "maindllh.c"
+#elif defined( HB_MAIN_STD )
    #include "mainstd.c"
 #elif defined( HB_MAIN_WIN )
    #include "mainwin.c"
