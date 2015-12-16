@@ -4035,30 +4035,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDCASE
    NEXT
 
-   IF hbmk[ _HBMK_cPLAT ] == "dos"
-      SWITCH hbmk[ _HBMK_cCOMP ]
-      CASE "djgpp"  ; tmp := "watt"     ; cLibLibPrefix := "lib" ; cLibExt := ".a"   ; EXIT
-      CASE "watcom" ; tmp := "wattcpwf" ; cLibLibPrefix := ""    ; cLibExt := ".lib" ; EXIT
-      OTHERWISE     ; tmp := NIL
-      ENDSWITCH
-
-      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbpmcom" )
-      IF ! Empty( tmp )
-         IF HB_HAS_OPTION( "watt" )
-            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
-            IF hb_vfDirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
-            ENDIF
-         ELSE
-            IF hb_vfDirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" ) .AND. ;
-               hb_vfExists( tmp1 + hb_ps() + cLibLibPrefix + tmp + cLibExt )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
-               AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
-            ENDIF
-         ENDIF
-      ENDIF
-   ENDIF
-
    IF hbmk[ _HBMK_cPLAT ] == "dos" .AND. ! hbmk[ _HBMK_lSHARED ]
       SWITCH hbmk[ _HBMK_cCOMP ]
       CASE "djgpp"  ; tmp := "watt"     ; cLibLibPrefix := "lib" ; cLibExt := ".a"   ; EXIT
