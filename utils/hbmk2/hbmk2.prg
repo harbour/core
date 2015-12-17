@@ -8490,6 +8490,9 @@ STATIC FUNCTION LaunchCommand( cCommand )
    cCommand := 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
 #elif defined( __PLATFORM__DARWIN )
    cCommand := "open " + FNameEscape( cCommand, _ESC_NIX )
+#elif defined( __PLATFORM__LINUX ) .OR. ;
+      defined( __PLATFORM__BSD )
+   cCommand := "xdg-open " + FNameEscape( cCommand, _ESC_NIX )
 #endif
 
    RETURN cCommand
