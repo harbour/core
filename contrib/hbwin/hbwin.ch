@@ -1514,4 +1514,34 @@
 #define WIN_LOAD_LIBRARY_SEARCH_SYSTEM32         0x0800
 #define WIN_LOAD_LIBRARY_SEARCH_DEFAULT_DIRS     0x1000
 
+/* win_PrintDlgDC() flags */
+#define WIN_PD_ALLPAGES                          0x00000000
+#define WIN_PD_SELECTION                         0x00000001
+#define WIN_PD_PAGENUMS                          0x00000002
+#define WIN_PD_NOSELECTION                       0x00000004
+#define WIN_PD_NOPAGENUMS                        0x00000008
+#define WIN_PD_COLLATE                           0x00000010
+#define WIN_PD_PRINTTOFILE                       0x00000020
+#define WIN_PD_PRINTSETUP                        0x00000040
+#define WIN_PD_NOWARNING                         0x00000080
+#define WIN_PD_RETURNDC                          0x00000100
+#define WIN_PD_RETURNIC                          0x00000200
+#define WIN_PD_RETURNDEFAULT                     0x00000400
+#define WIN_PD_SHOWHELP                          0x00000800
+#define WIN_PD_ENABLEPRINTHOOK                   0x00001000
+#define WIN_PD_ENABLESETUPHOOK                   0x00002000
+#define WIN_PD_ENABLEPRINTTEMPLATE               0x00004000
+#define WIN_PD_ENABLESETUPTEMPLATE               0x00008000
+#define WIN_PD_ENABLEPRINTTEMPLATEHANDLE         0x00010000
+#define WIN_PD_ENABLESETUPTEMPLATEHANDLE         0x00020000
+#define WIN_PD_USEDEVMODECOPIES                  0x00040000
+#define WIN_PD_USEDEVMODECOPIESANDCOLLATE        0x00040000
+#define WIN_PD_DISABLEPRINTTOFILE                0x00080000
+#define WIN_PD_HIDEPRINTTOFILE                   0x00100000
+#define WIN_PD_NONETWORKBUTTON                   0x00200000
+#define WIN_PD_CURRENTPAGE                       0x00400000
+#define WIN_PD_NOCURRENTPAGE                     0x00800000
+#define WIN_PD_EXCLUSIONFLAGS                    0x01000000
+#define WIN_PD_USELARGETEMPLATE                  0x10000000
+
 #endif /* HBWIN_CH_ */

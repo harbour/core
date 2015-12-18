@@ -52,7 +52,7 @@
 #endif
 #include <commdlg.h>
 
-/* win_PrintDlgDC( [@<cDevice>], [<nFromPage>], [<nToPage>], [<nCopies>] )
+/* win_PrintDlgDC( [@<cDevice>], [<nFromPage>], [<nToPage>], [<nCopies>], [nFlags] )
  *                -> <hDC>
  */
 HB_FUNC( WIN_PRINTDLGDC )
@@ -64,7 +64,7 @@ HB_FUNC( WIN_PRINTDLGDC )
 #if ! defined( HB_OS_WIN_CE )
    pd.lStructSize = sizeof( pd );
    pd.hwndOwner = GetActiveWindow();
-   pd.Flags = PD_RETURNDC | PD_USEDEVMODECOPIESANDCOLLATE;
+   pd.Flags = ( DWORD ) hb_parnl( 5 ) | PD_RETURNDC | PD_USEDEVMODECOPIESANDCOLLATE;
    pd.nFromPage = ( WORD ) hb_parnidef( 2, 1 );
    pd.nToPage = ( WORD ) hb_parnidef( 3, 1 );
    pd.nCopies = ( WORD ) hb_parnidef( 4, 1 );
