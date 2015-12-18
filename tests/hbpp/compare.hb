@@ -1,4 +1,4 @@
-#!/usr/bin/hbmk2
+#!/usr/bin/env hbmk2
 
 hb_vfCopyFile( "_pp_test.prg", "_pp_hb.prg" )
 hb_vfCopyFile( "_pp_test.prg", "_pp_cl.prg" )

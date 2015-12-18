@@ -1,3 +1,5 @@
+#!/usr/bin/env hbmk2
+
 /* Copyright 2013 Viktor Szakats (vszakats.net/harbour) */
 
 /* Check alignment dependent lang item(s) */

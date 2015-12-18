@@ -1,3 +1,5 @@
+#!/usr/bin/env hbmk2
+
 /* Copyright 2014 Viktor Szakats (vszakats.net/harbour) */
 
 /* Fetch all http URLs from source base and check

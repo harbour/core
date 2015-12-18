@@ -1,3 +1,5 @@
+#!/usr/bin/env hbmk2
+
 /* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 /* HBDOC extractor from source */

@@ -1,4 +1,4 @@
-#!/usr/bin/hbmk2
+#!/usr/bin/env hbmk2
 /*
  * Manage translations and automatic doc generation
  *

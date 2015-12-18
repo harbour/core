@@ -1,4 +1,4 @@
-#!/usr/bin/hbmk2
+#!/usr/bin/env hbmk2
 /*
  * Commit preparer and source checker/fixer
  *
