@@ -1,3 +1,5 @@
+#!/usr/bin/env hbmk2
+
 /* Copyright 2015 Viktor Szakats (vszakats.net/harbour) */
 
 /* Set timestamps for non-generated (repository) files

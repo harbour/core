@@ -1,3 +1,5 @@
+#!/usr/bin/env hbmk2
+
 /*
  * This Harbour script is part of the GNU Make-based build system.
  * WARNING: Running it separately is not supported.

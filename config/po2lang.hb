@@ -1,3 +1,5 @@
+#!/usr/bin/env hbmk2
+
 /*
  * Converts .po files to core lang modules
  *
