@@ -12,6 +12,9 @@ set  _MINGW_SUM_64=c0536c55a1d12882987afd0a9be377413eaf6cee105e921c949899fa9b308
 
 if not exist "harbour.exe" (
    echo Error: This script has to be run from a Harbour binary installation.
+   echo        Download it from:
+   echo           https://github.com/vszakats/harbour-core/releases/tag/v3.4.0dev
+   pause
    exit /b
 )
 
