@@ -49,10 +49,10 @@ install:
 - openssl dgst -sha256 openssl-win-mingw64.7z | findstr /i /c:82d25df66124ca94b3c52545a0cc3266f2db8f1bcc758709d922aaa32477f5c0
 - 7z x -y -oC:\w\ openssl-win-mingw64.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win32-mingw.7z -o curl-win-mingw.7z
-- openssl dgst -sha256 curl-win-mingw.7z | findstr /i /c:fba8de622143023639c23530e91ff6d1b44eaae07cd33622d35bf6285a8d98c8
+- openssl dgst -sha256 curl-win-mingw.7z | findstr /i /c:b81be04f887438e0445fd252eba17e7d4436557e297f5eb15d816248c81b1ea3
 - 7z x -y -oC:\w\ curl-win-mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win64-mingw.7z -o curl-win-mingw64.7z
-- openssl dgst -sha256 curl-win-mingw64.7z | findstr /i /c:021a49f54f0ba1799d0386b2289ec1512a58a474d1ab1a9b1f0f162cf2542be8
+- openssl dgst -sha256 curl-win-mingw64.7z | findstr /i /c:383f792fb207aa11fdc7e2029f07b61730918c6e5a3d3d63379dba67b61b3232
 - 7z x -y -oC:\w\ curl-win-mingw64.7z > nul
 # Change to ISO date and 24-hour time format
 - reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d yyyy-MM-dd /f
