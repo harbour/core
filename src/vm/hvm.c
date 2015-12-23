@@ -12398,6 +12398,8 @@ HB_FUNC( __BREAKBLOCK )
 
 HB_FUNC( __RECOVERERRORBLOCK )
 {
+   HB_STACK_TLS_PRELOAD
+
    HB_ISIZ nRecoverBase = hb_stackGetRecoverBase();
 
    if( nRecoverBase > 0 && nRecoverBase < hb_stackTopOffset() )
