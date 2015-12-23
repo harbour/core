@@ -17,5 +17,6 @@ libpaths=/usr/local/opt/curl/lib{darwin}
 { allwin& (HB_STATIC_CURL&!hbdyn)& allmingw}libs=curl ssh2 wldap32
 
 # NOTE: Static mode requires additional libs to be linked:
-#       f.e. OpenSSL, NSS, GnuTLS or else, depending on
-#       which TLS backend was chosen when building libcurl.
+#       f.e. OpenSSL, nghttp2 or else, depending on which
+#       TLS backend and other optional dependencies were
+#       enabled during the libcurl build.

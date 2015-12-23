@@ -52,6 +52,11 @@
 
 #include <openssl/evp.h>
 
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+   #define EVP_MD_CTX_new   EVP_MD_CTX_create
+   #define EVP_MD_CTX_free  EVP_MD_CTX_destroy
+#endif
+
 HB_FUNC( OPENSSL_ADD_ALL_DIGESTS )
 {
    OpenSSL_add_all_digests();
@@ -66,7 +71,7 @@ static HB_GARBAGE_FUNC( EVP_MD_CTX_release )
    {
 #if OPENSSL_VERSION_NUMBER >= 0x00907000L
       /* Destroy the object */
-      EVP_MD_CTX_destroy( ( EVP_MD_CTX * ) *ph );
+      EVP_MD_CTX_free( ( EVP_MD_CTX * ) *ph );
 #else
       hb_xfree( *ph );
 #endif
@@ -232,12 +237,12 @@ HB_FUNC( EVP_MD_BLOCK_SIZE )
    hb_retni( md ? EVP_MD_block_size( md ) : 0 );
 }
 
-HB_FUNC( EVP_MD_CTX_CREATE )
+HB_FUNC( EVP_MD_CTX_NEW )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_MD_CTX * ), &s_gcEVP_MD_CTX_funcs );
 
 #if OPENSSL_VERSION_NUMBER >= 0x00907000L
-   EVP_MD_CTX * ctx = EVP_MD_CTX_create();
+   EVP_MD_CTX * ctx = EVP_MD_CTX_new();
 #else
    EVP_MD_CTX * ctx = ( EVP_MD_CTX * ) hb_xgrabz( sizeof( EVP_MD_CTX ) );
 #endif
@@ -247,6 +252,10 @@ HB_FUNC( EVP_MD_CTX_CREATE )
    hb_retptrGC( ph );
 }
 
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( EVP_MD_CTX_CREATE, EVP_MD_CTX_NEW )
+#endif
+
 HB_FUNC( EVP_MD_CTX_INIT )
 {
    if( hb_EVP_MD_CTX_is( 1 ) )
@@ -255,14 +264,21 @@ HB_FUNC( EVP_MD_CTX_INIT )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+         hb_retni( EVP_MD_CTX_init( ctx ) );
+#else
          EVP_MD_CTX_init( ctx );
+         hb_retni( 1 );
+#endif
+      }
 #endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( EVP_MD_CTX_CLEANUP )
+HB_FUNC( EVP_MD_CTX_CLEANUP )  /* deprecated for EVP_MD_CTX_init() by OpenSSL 1.1.0 */
 {
    if( hb_EVP_MD_CTX_is( 1 ) )
    {
@@ -270,7 +286,9 @@ HB_FUNC( EVP_MD_CTX_CLEANUP )
 
       if( ctx )
       {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+         hb_retni( EVP_MD_CTX_init( ctx ) );
+#elif OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_MD_CTX_cleanup( ctx ) );
 #else
          hb_retni( 0 );
