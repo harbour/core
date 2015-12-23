@@ -12404,6 +12404,21 @@ HB_FUNC( __BREAKBLOCK )
    hb_itemReturn( hb_breakBlock() );
 }
 
+HB_FUNC( __RECOVERERRORBLOCK )
+{
+   HB_ISIZ nRecoverBase = hb_stackGetRecoverBase();
+
+   if( nRecoverBase > 0 && nRecoverBase < hb_stackTopOffset() )
+   {
+      PHB_ITEM pItem = hb_stackItem( nRecoverBase );
+
+      if( HB_IS_POINTER( pItem ) &&
+          pItem->item.asPointer.collect && pItem->item.asPointer.single &&
+          hb_gcFuncs( pItem->item.asPointer.value ) == &s_gcSeqBlockFuncs )
+         hb_itemReturn( pItem->item.asPointer.value );
+   }
+}
+
 HB_FUNC( HB_ARRAYTOPARAMS )
 {
    HB_STACK_TLS_PRELOAD

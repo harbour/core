@@ -6145,6 +6145,7 @@ static HB_ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
                   pArea->bMemoType = DB_MEMO_FPT;
                   pArea->fHasMemo = HB_TRUE;
                }
+               pArea->bTableType = DB_DBF_VFP;
                break;
 
             case 0x03:
