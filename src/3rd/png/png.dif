@@ -1,7 +1,7 @@
-diff -urNZ png.orig/png.h png/png.h
---- png.orig/png.h	2015-11-15 18:38:06.998778500 +0100
-+++ png/png.h	2015-11-15 18:38:06.998778500 +0100
-@@ -331,7 +331,7 @@
+diff --strip-trailing-cr -urN png.orig/png.h png/png.h
+--- png.orig/png.h	2015-12-23 02:11:52.000000000 +0100
++++ png/png.h	2015-12-23 02:11:52.000000000 +0100
+@@ -332,7 +332,7 @@
      /* If pnglibconf.h is missing, you can
       * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
       */
@@ -10,9 +10,9 @@ diff -urNZ png.orig/png.h png/png.h
  #endif
  
  #ifndef PNG_VERSION_INFO_ONLY
-diff -urNZ png.orig/pnglconf.h png/pnglconf.h
---- png.orig/pnglconf.h	2015-11-15 18:38:06.968228200 +0100
-+++ png/pnglconf.h	2015-11-15 18:38:06.968228200 +0100
+diff --strip-trailing-cr -urN png.orig/pnglconf.h png/pnglconf.h
+--- png.orig/pnglconf.h	2015-12-23 02:11:52.000000000 +0100
++++ png/pnglconf.h	2015-12-23 02:11:52.000000000 +0100
 @@ -26,8 +26,8 @@
  #define PNG_BUILD_GRAYSCALE_PALETTE_SUPPORTED
  #define PNG_CHECK_FOR_INVALID_INDEX_SUPPORTED
@@ -47,9 +47,9 @@ diff -urNZ png.orig/pnglconf.h png/pnglconf.h
  #define PNG_DEFAULT_READ_MACROS 1
  #define PNG_GAMMA_THRESHOLD_FIXED 5000
  #define PNG_IDAT_READ_SIZE PNG_ZBUF_SIZE
-diff -urNZ png.orig/pngpriv.h png/pngpriv.h
---- png.orig/pngpriv.h	2015-11-15 18:38:07.028688200 +0100
-+++ png/pngpriv.h	2015-11-15 18:38:07.044812000 +0100
+diff --strip-trailing-cr -urN png.orig/pngpriv.h png/pngpriv.h
+--- png.orig/pngpriv.h	2015-12-23 02:11:52.000000000 +0100
++++ png/pngpriv.h	2015-12-23 02:11:52.000000000 +0100
 @@ -67,7 +67,7 @@
   * before png.h is included, but load the configuration now if it is available.
   */
