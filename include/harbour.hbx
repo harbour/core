@@ -1529,6 +1529,7 @@ DYNAMIC __QQPub
 DYNAMIC __Quit
 DYNAMIC __QuitCancel
 DYNAMIC __rddPreallocate
+DYNAMIC __RecoverErrorBlock
 DYNAMIC __ReportForm
 DYNAMIC __Run
 DYNAMIC __Sender
