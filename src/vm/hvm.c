@@ -12409,7 +12409,7 @@ HB_FUNC( __RECOVERERRORBLOCK )
       if( HB_IS_POINTER( pItem ) &&
           pItem->item.asPointer.collect && pItem->item.asPointer.single &&
           hb_gcFuncs( pItem->item.asPointer.value ) == &s_gcSeqBlockFuncs )
-         hb_itemReturn( pItem->item.asPointer.value );
+         hb_itemReturn( ( PHB_ITEM ) pItem->item.asPointer.value );
    }
 }
 
