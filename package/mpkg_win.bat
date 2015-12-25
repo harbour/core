@@ -175,7 +175,7 @@ for /f %%I in ('git rev-parse --verify HEAD') do echo {"sha":"%%I","force":true}
 :: Register build information
 
 "%HB_ABSROOT%bin\harbour" -build 2>&1 | sed -nr "/^(Version:|Platform:|Extra )/!p" > "%HB_ABSROOT%BUILD.txt"
-set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_PLATFORM|HB_COMPILER|HB_CPU|HB_WITH_|HB_STATIC_)/p" >> "%HB_ABSROOT%BUILD.txt"
+set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_)/p" >> "%HB_ABSROOT%BUILD.txt"
 echo --------------------------->> "%HB_ABSROOT%BUILD.txt"
 dir /s /b /ad "%HB_ABSROOT%lib\" | sed -e "s|%HB_ABSROOT:\=.%lib.||g" | sed -nr "/[^a-z0-9]/p" >> "%HB_ABSROOT%BUILD.txt"
 touch -c "%HB_ABSROOT%BUILD.txt" -r "%HB_ABSROOT%README.md"
