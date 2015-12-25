@@ -256,29 +256,7 @@ HB_FUNC( EVP_MD_CTX_NEW )
 HB_FUNC_TRANSLATE( EVP_MD_CTX_CREATE, EVP_MD_CTX_NEW )
 #endif
 
-HB_FUNC( EVP_MD_CTX_INIT )
-{
-   if( hb_EVP_MD_CTX_is( 1 ) )
-   {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
-      EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
-
-      if( ctx )
-      {
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
-         hb_retni( EVP_MD_CTX_init( ctx ) );
-#else
-         EVP_MD_CTX_init( ctx );
-         hb_retni( 1 );
-#endif
-      }
-#endif
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( EVP_MD_CTX_CLEANUP )  /* deprecated for EVP_MD_CTX_init() by OpenSSL 1.1.0 */
+HB_FUNC( EVP_MD_CTX_RESET )
 {
    if( hb_EVP_MD_CTX_is( 1 ) )
    {
@@ -287,7 +265,7 @@ HB_FUNC( EVP_MD_CTX_CLEANUP )  /* deprecated for EVP_MD_CTX_init() by OpenSSL 1.
       if( ctx )
       {
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
-         hb_retni( EVP_MD_CTX_init( ctx ) );
+         hb_retni( EVP_MD_CTX_reset( ctx ) );
 #elif OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_MD_CTX_cleanup( ctx ) );
 #else
@@ -298,6 +276,11 @@ HB_FUNC( EVP_MD_CTX_CLEANUP )  /* deprecated for EVP_MD_CTX_init() by OpenSSL 1.
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( EVP_MD_CTX_INIT, EVP_MD_CTX_RESET )
+HB_FUNC_TRANSLATE( EVP_MD_CTX_CLEANUP, EVP_MD_CTX_RESET )
+#endif
 
 HB_FUNC( EVP_MD_CTX_MD )
 {
