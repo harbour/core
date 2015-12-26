@@ -185,6 +185,7 @@ touch -c "%HB_ABSROOT%BUILD.txt" -r "%HB_ABSROOT%README.md"
 "%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" nl "%HB_ABSROOT%*.md"
 "%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" nl "%HB_ABSROOT%*.txt"
 "%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" nl "%HB_ABSROOT%addons\*.txt"
+"%HB_ABSROOT%bin\hbmk2.exe" "%_SCRIPT%" nl "%HB_ABSROOT%doc\*.txt"
 
 :: Create installer/archive
 
