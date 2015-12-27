@@ -45,18 +45,19 @@ addons:
       - binutils-mingw-w64
       - gcc-mingw-w64
       - wine
-script: export HB_COMPILER=$CC && make
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
        if   [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
+          make HB_COMPILER=gcc
           export HB_CCPREFIX=i686-w64-mingw32-;
           export HB_PLATFORM=win;
-          export HB_COMPILER=mingw;
+          export CC=mingw;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
        elif [ "$CC" = "x86_64-w64-mingw32-gcc" ] ; then
+          make HB_COMPILER=gcc
           export HB_CCPREFIX=x86_64-w64-mingw32-;
           export HB_PLATFORM=win;
-          export HB_COMPILER=mingw64;
+          export CC=mingw64;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
        elif [ "$CC" = "gcc" ] ; then
           export HB_CCSUFFIX=-5;
@@ -80,6 +81,7 @@ before_install:
        brew install s-lang;
        brew install unixodbc;
     fi
+script: export HB_COMPILER=$CC && make
 notifications:
   email: false
 git:
