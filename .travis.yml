@@ -42,6 +42,9 @@ addons:
       - libpq-dev
      #- libslang2-dev
       - unixodbc-dev
+      - binutils-mingw-w64
+      - gcc-mingw-w64
+      - wine
 script: export HB_COMPILER=$CC && make
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
