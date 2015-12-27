@@ -3,11 +3,11 @@ branches:
   - master
   - test_travis
 language: c
+env:
+  - HB_CI_THREADS=4
 os:
   - linux
   - osx
-env:
-  - HB_CI_THREADS=4
 compiler:
   - clang
   - gcc
@@ -88,6 +88,9 @@ script:
        fi;
     fi
   - export HB_COMPILER=$CC && make -j $HB_CI_THREADS
+  - if [ "$HB_PLATFORM" = "win" ] ; then
+       bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
+    fi
 notifications:
   email: false
 git:
