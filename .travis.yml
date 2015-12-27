@@ -48,13 +48,13 @@ addons:
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
        if   [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
-          make HB_COMPILER=gcc
+          make HB_COMPILER=gcc;
           export HB_CCPREFIX=i686-w64-mingw32-;
           export HB_PLATFORM=win;
           export CC=mingw;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
        elif [ "$CC" = "x86_64-w64-mingw32-gcc" ] ; then
-          make HB_COMPILER=gcc
+          make HB_COMPILER=gcc;
           export HB_CCPREFIX=x86_64-w64-mingw32-;
           export HB_PLATFORM=win;
           export CC=mingw64;
