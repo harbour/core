@@ -11,11 +11,11 @@ os:
 compiler:
   - clang
   - gcc
-  - cross-windows
+  - i686-w64-mingw32-gcc
 matrix:
   exclude:
     - os: osx
-      compiler: cross-windows
+      compiler: i686-w64-mingw32-gcc
 sudo: false
 addons:
   apt:
@@ -62,7 +62,7 @@ before_install:
     fi
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
-       if [ "$CC" = "cross-windows" ] ; then
+       if [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
           export HB_COMPILER=clang && make -j $HB_CI_THREADS HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
           export HB_BUILD_3RDEXT=no;
           export HB_PLATFORM=win;
