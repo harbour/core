@@ -46,27 +46,6 @@ addons:
       - gcc-mingw-w64
       - wine
 before_install:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
-       if   [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
-          export _BUILD_NATIVE=yes;
-          export HB_CCPREFIX=i686-w64-mingw32-;
-          export HB_PLATFORM=win;
-          export CC=mingw;
-          ls -lA /usr/bin/${HB_CCPREFIX}*;
-       elif [ "$CC" = "x86_64-w64-mingw32-gcc" ] ; then
-          export _BUILD_NATIVE=yes;
-          export HB_CCPREFIX=x86_64-w64-mingw32-;
-          export HB_PLATFORM=win;
-          export CC=mingw64;
-          ls -lA /usr/bin/${HB_CCPREFIX}*;
-       elif [ "$CC" = "gcc" ] ; then
-          export HB_CCSUFFIX=-5;
-          ls -lA /usr/bin/gcc*;
-       else
-          export HB_CCSUFFIX=-3.7;
-          ls -lA /usr/bin/clang*;
-       fi;
-    fi
   - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then
        brew update > /dev/null;
        brew install cairo;
@@ -82,7 +61,27 @@ before_install:
        brew install unixodbc;
     fi
 script:
-  - if [ "${_BUILD_NATIVE}" = "yes" ] make HB_PLATFORM=linux HB_COMPILER=gcc HB_CCPREFIX=
+  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
+       if   [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
+          export HB_COMPILER=gcc && make;
+          export HB_CCPREFIX=i686-w64-mingw32-;
+          export HB_PLATFORM=win;
+          export CC=mingw;
+          ls -lA /usr/bin/${HB_CCPREFIX}*;
+       elif [ "$CC" = "x86_64-w64-mingw32-gcc" ] ; then
+          export HB_COMPILER=gcc && make;
+          export HB_CCPREFIX=x86_64-w64-mingw32-;
+          export HB_PLATFORM=win;
+          export CC=mingw64;
+          ls -lA /usr/bin/${HB_CCPREFIX}*;
+       elif [ "$CC" = "gcc" ] ; then
+          export HB_CCSUFFIX=-5;
+          ls -lA /usr/bin/gcc*;
+       else
+          export HB_CCSUFFIX=-3.7;
+          ls -lA /usr/bin/clang*;
+       fi;
+    fi
   - export HB_COMPILER=$CC && make
 notifications:
   email: false
