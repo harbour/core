@@ -11,14 +11,11 @@ os:
 compiler:
   - clang
   - gcc
-  - i686-w64-mingw32-gcc
-  - x86_64-w64-mingw32-gcc
+  - cross-windows
 matrix:
   exclude:
     - os: osx
-      compiler: i686-w64-mingw32-gcc
-    - os: osx
-      compiler: x86_64-w64-mingw32-gcc
+      compiler: cross-windows
 sudo: false
 addons:
   apt:
@@ -65,31 +62,29 @@ before_install:
     fi
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
-       if   [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
+       if [ "$CC" = "cross-windows" ] ; then
           export HB_COMPILER=clang && make -j $HB_CI_THREADS HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
+          export HB_BUILD_3RDEXT=no;
+          export HB_PLATFORM=win;
           export HB_CCPREFIX=i686-w64-mingw32-;
-          export HB_PLATFORM=win;
-          export CC=mingw;
-          export HB_BUILD_3RDEXT=no;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
-       elif [ "$CC" = "x86_64-w64-mingw32-gcc" ] ; then
-          export HB_COMPILER=clang && make -j $HB_CI_THREADS HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
+          export HB_COMPILER=mingw && make -j $HB_CI_THREADS;
+          bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
           export HB_CCPREFIX=x86_64-w64-mingw32-;
-          export HB_PLATFORM=win;
-          export CC=mingw64;
-          export HB_BUILD_3RDEXT=no;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
+          export HB_COMPILER=mingw64 && make -j $HB_CI_THREADS;
+          bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
        elif [ "$CC" = "gcc" ] ; then
           export HB_CCSUFFIX=-5;
           ls -lA /usr/bin/gcc*;
+          export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
        else
           export HB_CCSUFFIX=-3.7;
           ls -lA /usr/bin/clang*;
+          export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
        fi;
-    fi
-  - export HB_COMPILER=$CC && make -j $HB_CI_THREADS
-  - if [ "$HB_PLATFORM" = "win" ] ; then
-       bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
+    else
+       export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
     fi
 notifications:
   email: false
