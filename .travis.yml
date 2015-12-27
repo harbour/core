@@ -64,7 +64,7 @@ before_install:
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
        if   [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
-          export HB_COMPILER=clang && make HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
+          export HB_COMPILER=clang && make -j 8 HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
           export HB_CCPREFIX=i686-w64-mingw32-;
           export HB_PLATFORM=win;
           export CC=mingw;
@@ -72,7 +72,7 @@ script:
           export HB_BUILD_VERBOSE=yes;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
        elif [ "$CC" = "x86_64-w64-mingw32-gcc" ] ; then
-          export HB_COMPILER=clang && make HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
+          export HB_COMPILER=clang && make -j 8 HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
           export HB_CCPREFIX=x86_64-w64-mingw32-;
           export HB_PLATFORM=win;
           export CC=mingw64;
@@ -87,7 +87,7 @@ script:
           ls -lA /usr/bin/clang*;
        fi;
     fi
-  - export HB_COMPILER=$CC && make
+  - export HB_COMPILER=$CC && make -j 8
 notifications:
   email: false
 git:
