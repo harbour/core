@@ -69,11 +69,11 @@ script:
           export HB_CCPREFIX=i686-w64-mingw32-;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
           export HB_COMPILER=mingw && make -j $HB_CI_THREADS;
-          bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
+          wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
           export HB_CCPREFIX=x86_64-w64-mingw32-;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
           export HB_COMPILER=mingw64 && make -j $HB_CI_THREADS;
-          bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
+          wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
        elif [ "$CC" = "gcc" ] ; then
           export HB_CCSUFFIX=-5;
           ls -lA /usr/bin/gcc*;
