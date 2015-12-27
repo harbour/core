@@ -12252,10 +12252,14 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE hb_LeftEq( cLineL, "depcontrol="   ) ; cLine := SubStr( cLine, Len( "depcontrol="   ) + 1 )
 
-         IF dep_split_arg( hbmk, cLine, @cName, @cLine )
-            hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_cControl ] := AllTrim( MacroProc( hbmk, cLine, cFileName ) )
-            AAddNewA( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aControlMacro ], MacroList( cLine ) )
-            AAddNew( hbmk[ _HBMK_hDEP ][ cName ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
+         cLine := MacroProc( hbmk, tmp1 := cLine, cFileName )
+         IF dep_split_arg( hbmk, cLine, @cLine, @tmp )
+            hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_cControl ] := AllTrim( tmp )
+            AAddNew( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aINCPATH ], _HBMK_DEP_CTRL_MARKER )
+         ENDIF
+
+         IF dep_split_arg( hbmk, tmp1, @cLine, @tmp )
+            AAddNewA( hbmk[ _HBMK_hDEP ][ cLine ][ _HBMKDEP_aControlMacro ], MacroList( tmp ) )
          ENDIF
 
       CASE hb_LeftEq( cLineL, "depincroot="   ) ; cLine := SubStr( cLine, Len( "depincroot="   ) + 1 )
