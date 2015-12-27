@@ -6403,6 +6403,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDIF
    ENDIF
 
+   IF hbmk[ _HBMK_lInfo ]
+      _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Compilation threads: %1$d" ), l_nJOBS ) )
+   ENDIF
+
    /* Header paths */
 
    IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ]

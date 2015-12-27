@@ -11,11 +11,11 @@ compiler:
   - i686-w64-mingw32-gcc
   - x86_64-w64-mingw32-gcc
 matrix:
-    exclude:
-        - os: osx
-          compiler: i686-w64-mingw32-gcc
-        - os: osx
-          compiler: x86_64-w64-mingw32-gcc
+  exclude:
+    - os: osx
+      compiler: i686-w64-mingw32-gcc
+    - os: osx
+      compiler: x86_64-w64-mingw32-gcc
 sudo: false
 addons:
   apt:
