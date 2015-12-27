@@ -6,6 +6,8 @@ language: c
 os:
   - linux
   - osx
+env:
+  - HB_CI_THREADS=4
 compiler:
   - clang
   - gcc
@@ -64,20 +66,18 @@ before_install:
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
        if   [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
-          export HB_COMPILER=clang && make -j 8 HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
+          export HB_COMPILER=clang && make -j $HB_CI_THREADS HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
           export HB_CCPREFIX=i686-w64-mingw32-;
           export HB_PLATFORM=win;
           export CC=mingw;
           export HB_BUILD_3RDEXT=no;
-          export HB_BUILD_VERBOSE=yes;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
        elif [ "$CC" = "x86_64-w64-mingw32-gcc" ] ; then
-          export HB_COMPILER=clang && make -j 8 HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
+          export HB_COMPILER=clang && make -j $HB_CI_THREADS HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
           export HB_CCPREFIX=x86_64-w64-mingw32-;
           export HB_PLATFORM=win;
           export CC=mingw64;
           export HB_BUILD_3RDEXT=no;
-          export HB_BUILD_VERBOSE=yes;
           ls -lA /usr/bin/${HB_CCPREFIX}*;
        elif [ "$CC" = "gcc" ] ; then
           export HB_CCSUFFIX=-5;
@@ -87,7 +87,7 @@ script:
           ls -lA /usr/bin/clang*;
        fi;
     fi
-  - export HB_COMPILER=$CC && make -j 8
+  - export HB_COMPILER=$CC && make -j $HB_CI_THREADS
 notifications:
   email: false
 git:
