@@ -902,6 +902,8 @@ ifeq ($(HB_COMPILER_VER),)
       else
       ifneq ($(findstring 3.5,$(_C_VER)),)
          HB_COMPILER_VER := 0305
+      else
+         HB_COMPILER_VER := 0304
       endif
       endif
       endif
@@ -943,9 +945,7 @@ ifeq ($(HB_COMPILER_VER),)
       ifneq ($(findstring version 4.3.,$(_C_VER)),)
          HB_COMPILER_VER := 0403
       else
-      ifneq ($(findstring version 3.4.,$(_C_VER)),)
          HB_COMPILER_VER := 0304
-      endif
       endif
       endif
       endif
@@ -980,9 +980,7 @@ ifeq ($(HB_COMPILER_VER),)
       ifneq ($(findstring Version 13.,$(_C_VER)),)
          HB_COMPILER_VER := 1300
       else
-      ifneq ($(findstring Version 12.,$(_C_VER)),)
          HB_COMPILER_VER := 1200
-      endif
       endif
       endif
       endif
@@ -1008,9 +1006,7 @@ ifeq ($(HB_COMPILER_VER),)
       ifneq ($(findstring 5.00.,$(_C_VER)),)
          HB_COMPILER_VER := 0500
       else
-      ifneq ($(findstring 4.50.,$(_C_VER)),)
          HB_COMPILER_VER := 0450
-      endif
       endif
       endif
       endif

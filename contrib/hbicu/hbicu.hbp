@@ -9,7 +9,7 @@
 -deppkgname=icu:libicu-dev{deb}
 -deppkgname=icu:libicu-devel{rpm}
 -deppkgname=icu:icu4c{homebrew}
--depcontrol=icu:local{HB_BUILD_3RDEXT='no'}
+-depcontrol=icu:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=icu:${HB_WITH_ICU}
 -depkeyhead=icu:unicode/utypes.h
 -depincpath=icu:/usr/include
