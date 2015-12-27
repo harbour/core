@@ -45,6 +45,7 @@ addons:
       - binutils-mingw-w64
       - gcc-mingw-w64
       - wine
+      - p7zip-full
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then
        brew update > /dev/null;
@@ -59,6 +60,7 @@ before_install:
        brew install openssl;
        brew install s-lang;
        brew install unixodbc;
+       brew install p7zip;
     fi
 script:
   - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then

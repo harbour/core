@@ -21,48 +21,49 @@ environment:
 install:
 - set VER_CURL=7.46.0
 - set VER_OPENSSL=1.0.2e
+- set DEVL=C:\w\
 - ps: rm alias:curl
 # Use the _native_ curl build provided by Git for Windows because the default,
 # msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
 - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
-- mkdir C:\w\
+- mkdir %DEVL%
 - curl -fsS -L http://www.7-zip.org/a/7z1512-extra.7z -o 7z.7z
 - openssl dgst -sha256 7z.7z | findstr /i /c:155b6dac5b8490c1ee0680e2062b0ce6f0cce3ecd2645dda858e92b5e25c67fd
-- 7z x -y -oC:\w\7z 7z.7z > nul
+- 7z x -y -o%DEVL%7z 7z.7z > nul
 - curl -fsS http://7zsfx.info/files/7zsd_150_2712.7z -o 7zsfx.7z
 - openssl dgst -sha256 7zsfx.7z | findstr /i /c:e5a2a05997553cde6318149951da1e449b0fd277a6e671ac06bfde8572754739
-- 7z x -y -oC:\w\7zsfx 7zsfx.7z > nul
+- 7z x -y -o%DEVL%7zsfx 7zsfx.7z > nul
 - curl -fsS -L --proto-redir =https https://fossies.org/windows/misc/upx391w.zip -o upx.zip
 - openssl dgst -sha256 upx.zip | findstr /i /c:d7d4817f46d2616c209c46fb8bce44e4bec93ab5adef5e4dfc93ee879527be1b
-- 7z e -y -oC:\w\upx upx.zip > nul
+- 7z e -y -o%DEVL%upx upx.zip > nul
 #- ps: curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.2.0/threads-posix/dwarf/i686-5.2.0-release-posix-dwarf-rt_v4-rev0.7z -o mingw.7z
 #- openssl dgst -sha256 mingw.7z | findstr /i /c:25de3b1164df7a3d06978900664462fa2f651036491291d90ca8870be451f439
 #- ps: curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.2.0/threads-posix/seh/x86_64-5.2.0-release-posix-seh-rt_v4-rev0.7z -o mingw.7z
 #- openssl dgst -sha256 mingw.7z | findstr /i /c:3876e8a73218f07761f0f2966725510dfc7294160ba728d1a0e6bdfca93f03f5
 - ps: curl -fsS https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.2.0/threads-posix/sjlj/x86_64-5.2.0-release-posix-sjlj-rt_v4-rev0.7z -o mingw.7z
 - openssl dgst -sha256 mingw.7z | findstr /i /c:c0536c55a1d12882987afd0a9be377413eaf6cee105e921c949899fa9b308b35
-# Will unpack into C:\w\mingw64
-- 7z x -y -oC:\w\ mingw.7z > nul
+# Will unpack into %DEVL%mingw64
+- 7z x -y -o%DEVL% mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win32-mingw.7z -o openssl-win-mingw.7z
 - openssl dgst -sha256 openssl-win-mingw.7z | findstr /i /c:f9191a81fedbc42eae6249b838ffbab24e43ab17dcc47b7902bbacde4998b8ec
-- 7z x -y -oC:\w\ openssl-win-mingw.7z > nul
+- 7z x -y -o%DEVL% openssl-win-mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/openssl-%VER_OPENSSL%-win64-mingw.7z -o openssl-win-mingw64.7z
 - openssl dgst -sha256 openssl-win-mingw64.7z | findstr /i /c:82d25df66124ca94b3c52545a0cc3266f2db8f1bcc758709d922aaa32477f5c0
-- 7z x -y -oC:\w\ openssl-win-mingw64.7z > nul
+- 7z x -y -o%DEVL% openssl-win-mingw64.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win32-mingw.7z -o curl-win-mingw.7z
 - openssl dgst -sha256 curl-win-mingw.7z | findstr /i /c:5b5041f2fdd6bb4ea6209d2fa13a7f364e864497da318e9d5b4465bc987359ab
-- 7z x -y -oC:\w\ curl-win-mingw.7z > nul
+- 7z x -y -o%DEVL% curl-win-mingw.7z > nul
 - curl -fsS -L --proto-redir =https https://dl.bintray.com/vszakats/generic/curl-%VER_CURL%-win64-mingw.7z -o curl-win-mingw64.7z
 - openssl dgst -sha256 curl-win-mingw64.7z | findstr /i /c:a231f16d866c6b594a7bfe029e12df46fa536f64cb237be0198ca8f3fae62d2b
-- 7z x -y -oC:\w\ curl-win-mingw64.7z > nul
+- 7z x -y -o%DEVL% curl-win-mingw64.7z > nul
 # Change to ISO date and 24-hour time format
 - reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d yyyy-MM-dd /f
 - reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d HH:mm /f
 build_script:
-- set HB_SFX_7Z=C:\w\7zsfx\7zsd.sfx
-- set HB_DIR_7Z=C:\w\7z\
-- set HB_DIR_UPX=C:\w\upx\
-- set HB_DIR_MINGW=C:\w\mingw64
+- set HB_SFX_7Z=%DEVL%7zsfx\7zsd.sfx
+- set HB_DIR_7Z=%DEVL%7z\
+- set HB_DIR_UPX=%DEVL%upx\
+- set HB_DIR_MINGW=%DEVL%mingw64
 - set _ORI_PATH=%PATH%
 - if "%HB_COMPILER:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
 - if "%HB_COMPILER%" == "mingw" set HB_CPU=x86
@@ -72,22 +73,22 @@ build_script:
 - if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
 - if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 #- if "%HB_COMPILER:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
-- if "%HB_COMPILER%" == "mingw" set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win32-mingw\include
-- if "%HB_COMPILER%" == "mingw" set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win32-mingw\include
-#- if "%HB_COMPILER%" == "mingw" set HB_WITH_QT=C:\w\Qt\5.4\mingw491_32\include
-- if "%HB_COMPILER%" == "mingw64" set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win64-mingw\include
-- if "%HB_COMPILER%" == "mingw64" set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
-#- if "%HB_COMPILER%" == "msvc" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
-#- if "%HB_COMPILER%" == "msvc64" set HB_WITH_QT=C:\w\Qt\5.4\msvc2013_64_opengl\include
+- if "%HB_COMPILER%" == "mingw" set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win32-mingw\include
+- if "%HB_COMPILER%" == "mingw" set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win32-mingw\include
+#- if "%HB_COMPILER%" == "mingw" set HB_WITH_QT=%DEVL%Qt\5.4\mingw491_32\include
+- if "%HB_COMPILER%" == "mingw64" set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win64-mingw\include
+- if "%HB_COMPILER%" == "mingw64" set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win64-mingw\include
+#- if "%HB_COMPILER%" == "msvc" set HB_WITH_QT=%DEVL%Qt\5.4\msvc2013_64_opengl\include
+#- if "%HB_COMPILER%" == "msvc64" set HB_WITH_QT=%DEVL%Qt\5.4\msvc2013_64_opengl\include
 - if "%HB_COMPILER:~0,5%-%HB_BUILD_MODE%" == "mingw-cpp" set HB_USER_LDFLAGS=-static-libgcc -static-libstdc++
-#- set HB_WITH_ADS=C:\w\ads\acesdk
-#- set HB_WITH_CAIRO=C:\w\cairo\include\cairo
-#- set HB_WITH_FIREBIRD=C:\w\firebird\include
-#- set HB_WITH_FREEIMAGE=C:\w\freeimage\Dist
-#- set HB_WITH_GD=C:\w\gd\include
-#- set HB_WITH_MYSQL=C:\w\mariadb\include\mysql
-#- set HB_WITH_OCILIB=C:\w\ocilib\include
-#- set HB_WITH_PGSQL=C:\w\pgsql\include
+#- set HB_WITH_ADS=%DEVL%ads\acesdk
+#- set HB_WITH_CAIRO=%DEVL%cairo\include\cairo
+#- set HB_WITH_FIREBIRD=%DEVL%firebird\include
+#- set HB_WITH_FREEIMAGE=%DEVL%freeimage\Dist
+#- set HB_WITH_GD=%DEVL%gd\include
+#- set HB_WITH_MYSQL=%DEVL%mariadb\include\mysql
+#- set HB_WITH_OCILIB=%DEVL%ocilib\include
+#- set HB_WITH_PGSQL=%DEVL%pgsql\include
 #- set HB_BUILD_CONTRIBS=no
 - set HB_INSTALL_3RDDYN=yes
 - set HB_BUILD_STRIP=bin
@@ -99,8 +100,8 @@ build_script:
 - win-make.exe clean install HB_VERSION=%HB_VF%
 - set HB_COMPILER=mingw64
 - set HB_CPU=x86_64
-- set HB_WITH_CURL=C:\w\curl-%VER_CURL%-win64-mingw\include
-- set HB_WITH_OPENSSL=C:\w\openssl-%VER_OPENSSL%-win64-mingw\include
+- set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win64-mingw\include
+- set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win64-mingw\include
 - win-make.exe clean install HB_VERSION=%HB_VF%
 #- set HB_COMPILER=
 #- set HB_CPU=
