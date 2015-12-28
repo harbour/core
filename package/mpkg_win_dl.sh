@@ -2,7 +2,8 @@
 
 # Copyright 2015 Viktor Szakats (vszakats.net/harbour)
 
-# NOTE: Requires Git for Windows or busybox to run on Windows
+# - Requires Git for Windows or busybox to run on Windows
+# - Requires HB_DL_ROOT, VER_* envvars
 
 mkdir -p "${HB_DL_ROOT}"
 
