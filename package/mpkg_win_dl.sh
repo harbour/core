@@ -31,18 +31,18 @@ openssl dgst -sha256 mingw.7z | grep -q c0536c55a1d12882987afd0a9be377413eaf6cee
 
 # Dependencies for Windows builds
 
-curl -fsS -L --proto-redir =https 'https://dl.bintray.com/vszakats/generic/openssl-${VER_OPENSSL}-win32-mingw.7z' -o openssl-win-mingw.7z
+curl -fsS -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${VER_OPENSSL}-win32-mingw.7z" -o openssl-win-mingw.7z
 openssl dgst -sha256 openssl-win-mingw.7z | grep -q f9191a81fedbc42eae6249b838ffbab24e43ab17dcc47b7902bbacde4998b8ec || exit 1
 7z x -y "-o${HB_DL_ROOT}" openssl-win-mingw.7z > /dev/null
 
-curl -fsS -L --proto-redir =https 'https://dl.bintray.com/vszakats/generic/openssl-${VER_OPENSSL}-win64-mingw.7z' -o openssl-win-mingw64.7z
+curl -fsS -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${VER_OPENSSL}-win64-mingw.7z" -o openssl-win-mingw64.7z
 openssl dgst -sha256 openssl-win-mingw64.7z | grep -q 82d25df66124ca94b3c52545a0cc3266f2db8f1bcc758709d922aaa32477f5c0 || exit 1
 7z x -y "-o${HB_DL_ROOT}" openssl-win-mingw64.7z > /dev/null
 
-curl -fsS -L --proto-redir =https 'https://dl.bintray.com/vszakats/generic/curl-${VER_CURL}-win32-mingw.7z' -o curl-win-mingw.7z
+curl -fsS -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${VER_CURL}-win32-mingw.7z" -o curl-win-mingw.7z
 openssl dgst -sha256 curl-win-mingw.7z | grep -q 5b5041f2fdd6bb4ea6209d2fa13a7f364e864497da318e9d5b4465bc987359ab || exit 1
 7z x -y "-o${HB_DL_ROOT}" curl-win-mingw.7z > /dev/null
 
-curl -fsS -L --proto-redir =https 'https://dl.bintray.com/vszakats/generic/curl-${VER_CURL}-win64-mingw.7z' -o curl-win-mingw64.7z
+curl -fsS -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${VER_CURL}-win64-mingw.7z" -o curl-win-mingw64.7z
 openssl dgst -sha256 curl-win-mingw64.7z | grep -q a231f16d866c6b594a7bfe029e12df46fa536f64cb237be0198ca8f3fae62d2b || exit 1
 7z x -y "-o${HB_DL_ROOT}" curl-win-mingw64.7z > /dev/null
