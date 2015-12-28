@@ -19,91 +19,91 @@ environment:
     VIRUSTOTAL_APIKEY:
       secure: TdJYONfrpH45DuyKxraVqgHYy25IQ/F8TKHzYf+u5zz1aiM2yR0YTMaGxyj2EMReEearSI9kD9D2ZykybSVEbRyEaotZlceUb2lPDKELl3M=
 install:
-- set VER_CURL=7.46.0
-- set VER_OPENSSL=1.0.2e
-- set DEVL=C:\w\
-- ps: rm alias:curl
-# Use the _native_ curl build provided by Git for Windows because the default,
-# msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
-- set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
-- set HB_DL_ROOT=%DEVL:\=/%
-- sh -c ./package/mpkg_win_dl.sh
-# Change to ISO date and 24-hour time format
-- reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d yyyy-MM-dd /f
-- reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d HH:mm /f
+  - set VER_CURL=7.46.0
+  - set VER_OPENSSL=1.0.2e
+  - set DEVL=C:\w\
+  - ps: rm alias:curl
+  # Use the _native_ curl build provided by Git for Windows because the default,
+  # msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
+  - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
+  - set HB_DL_ROOT=%DEVL:\=/%
+  - sh -c ./package/mpkg_win_dl.sh
+  # Change to ISO date and 24-hour time format
+  - reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d yyyy-MM-dd /f
+  - reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d HH:mm /f
 build_script:
-- set HB_SFX_7Z=%DEVL%7zsfx\7zsd.sfx
-- set HB_DIR_7Z=%DEVL%7z\
-- set HB_DIR_UPX=%DEVL%upx\
-- set HB_DIR_MINGW=%DEVL%mingw64
-- set _ORI_PATH=%PATH%
-- if "%HB_COMPILER:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
-- if "%HB_COMPILER%" == "mingw" set HB_CPU=x86
-- if "%HB_COMPILER%" == "mingw64" set HB_CPU=x86_64
-- if "%HB_COMPILER%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
-- if "%HB_COMPILER%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-- if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
-- if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
-#- if "%HB_COMPILER:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
-- if "%HB_COMPILER%" == "mingw" set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win32-mingw\include
-- if "%HB_COMPILER%" == "mingw" set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win32-mingw\include
-#- if "%HB_COMPILER%" == "mingw" set HB_WITH_QT=%DEVL%Qt\5.4\mingw491_32\include
-- if "%HB_COMPILER%" == "mingw64" set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win64-mingw\include
-- if "%HB_COMPILER%" == "mingw64" set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win64-mingw\include
-#- if "%HB_COMPILER%" == "msvc" set HB_WITH_QT=%DEVL%Qt\5.4\msvc2013_64_opengl\include
-#- if "%HB_COMPILER%" == "msvc64" set HB_WITH_QT=%DEVL%Qt\5.4\msvc2013_64_opengl\include
-- if "%HB_COMPILER:~0,5%-%HB_BUILD_MODE%" == "mingw-cpp" set HB_USER_LDFLAGS=-static-libgcc -static-libstdc++
-#- set HB_WITH_ADS=%DEVL%ads\acesdk
-#- set HB_WITH_CAIRO=%DEVL%cairo\include\cairo
-#- set HB_WITH_FIREBIRD=%DEVL%firebird\include
-#- set HB_WITH_FREEIMAGE=%DEVL%freeimage\Dist
-#- set HB_WITH_GD=%DEVL%gd\include
-#- set HB_WITH_MYSQL=%DEVL%mariadb\include\mysql
-#- set HB_WITH_OCILIB=%DEVL%ocilib\include
-#- set HB_WITH_PGSQL=%DEVL%pgsql\include
-#- set HB_BUILD_CONTRIBS=no
-- set HB_INSTALL_3RDDYN=yes
-- set HB_BUILD_STRIP=bin
-- set HB_BUILD_CONTRIB_DYN=yes
-- set HB_BUILD_PKG=yes
-- set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
-- set _HB_BUILD_PKG_ARCHIVE=no
-#- set _HB_PKG_DEBUG=yes
-- win-make.exe clean install HB_VERSION=%HB_VF%
-- set HB_COMPILER=mingw64
-- set HB_CPU=x86_64
-- set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win64-mingw\include
-- set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win64-mingw\include
-- win-make.exe clean install HB_VERSION=%HB_VF%
-#- set HB_COMPILER=
-#- set HB_CPU=
-#- set HB_WITH_CURL=
-#- set HB_WITH_OPENSSL=
-#- set PATH=%_ORI_PATH%
-#- call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-#- win-make.exe clean install HB_VERSION=%HB_VF%
-#- set PATH=%_ORI_PATH%
-#- call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
-#- win-make.exe clean install HB_VERSION=%HB_VF%
-- call package\mpkg_win.bat
+  - set HB_SFX_7Z=%DEVL%7zsfx\7zsd.sfx
+  - set HB_DIR_7Z=%DEVL%7z\
+  - set HB_DIR_UPX=%DEVL%upx\
+  - set HB_DIR_MINGW=%DEVL%mingw64
+  - set _ORI_PATH=%PATH%
+  - if "%HB_COMPILER:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
+  - if "%HB_COMPILER%" == "mingw" set HB_CPU=x86
+  - if "%HB_COMPILER%" == "mingw64" set HB_CPU=x86_64
+  - if "%HB_COMPILER%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
+  - if "%HB_COMPILER%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+  - if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+  - if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+# - if "%HB_COMPILER:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
+  - if "%HB_COMPILER%" == "mingw" set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win32-mingw\include
+  - if "%HB_COMPILER%" == "mingw" set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win32-mingw\include
+# - if "%HB_COMPILER%" == "mingw" set HB_WITH_QT=%DEVL%Qt\5.4\mingw491_32\include
+  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win64-mingw\include
+  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win64-mingw\include
+# - if "%HB_COMPILER%" == "msvc" set HB_WITH_QT=%DEVL%Qt\5.4\msvc2013_64_opengl\include
+# - if "%HB_COMPILER%" == "msvc64" set HB_WITH_QT=%DEVL%Qt\5.4\msvc2013_64_opengl\include
+  - if "%HB_COMPILER:~0,5%-%HB_BUILD_MODE%" == "mingw-cpp" set HB_USER_LDFLAGS=-static-libgcc -static-libstdc++
+# - set HB_WITH_ADS=%DEVL%ads\acesdk
+# - set HB_WITH_CAIRO=%DEVL%cairo\include\cairo
+# - set HB_WITH_FIREBIRD=%DEVL%firebird\include
+# - set HB_WITH_FREEIMAGE=%DEVL%freeimage\Dist
+# - set HB_WITH_GD=%DEVL%gd\include
+# - set HB_WITH_MYSQL=%DEVL%mariadb\include\mysql
+# - set HB_WITH_OCILIB=%DEVL%ocilib\include
+# - set HB_WITH_PGSQL=%DEVL%pgsql\include
+# - set HB_BUILD_CONTRIBS=no
+  - set HB_INSTALL_3RDDYN=yes
+  - set HB_BUILD_STRIP=bin
+  - set HB_BUILD_CONTRIB_DYN=yes
+  - set HB_BUILD_PKG=yes
+  - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
+  - set _HB_BUILD_PKG_ARCHIVE=no
+# - set _HB_PKG_DEBUG=yes
+  - win-make.exe clean install HB_VERSION=%HB_VF%
+  - set HB_COMPILER=mingw64
+  - set HB_CPU=x86_64
+  - set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win64-mingw\include
+  - set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win64-mingw\include
+  - win-make.exe clean install HB_VERSION=%HB_VF%
+# - set HB_COMPILER=
+# - set HB_CPU=
+# - set HB_WITH_CURL=
+# - set HB_WITH_OPENSSL=
+# - set PATH=%_ORI_PATH%
+# - call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+# - win-make.exe clean install HB_VERSION=%HB_VF%
+# - set PATH=%_ORI_PATH%
+# - call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+# - win-make.exe clean install HB_VERSION=%HB_VF%
+  - call package\mpkg_win.bat
 artifacts:
-- path: harbour-daily-win.7z.exe
-  name: pkg-win
+  - path: harbour-daily-win.7z.exe
+    name: pkg-win
 before_deploy:
-- cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev -d @git_tag_patch.json'
+  - cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev -d @git_tag_patch.json'
 deploy:
-- provider: GitHub
-  auth_token: $(github_token)
-  tag: v3.4.0dev
-  release: 'Harbour 3.4.0dev daily'
-  description: 'Snapshot build generated after each commit.'
-  artifact: pkg-win
-  draft: false
-  prerelease: true
-  on:
-    branch: master
-    appveyor_repo_tag: false
+  - provider: GitHub
+    auth_token: $(github_token)
+    tag: v3.4.0dev
+    release: 'Harbour 3.4.0dev daily'
+    description: 'Snapshot build generated after each commit.'
+    artifact: pkg-win
+    draft: false
+    prerelease: true
+    on:
+      branch: master
+      appveyor_repo_tag: false
 after_deploy:
-- curl -fsS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
+  - curl -fsS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form apikey=%VIRUSTOTAL_APIKEY% --form file=@harbour-daily-win.7z.exe
 build:
   verbosity: detailed
