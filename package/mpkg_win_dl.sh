@@ -44,9 +44,9 @@ openssl dgst -sha256 pack.7z | grep -q 82d25df66124ca94b3c52545a0cc3266f2db8f1bc
 7z x -y "-o${HB_DL_ROOT}" pack.7z > /dev/null
 
 curl -fsS -o pack.7z -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${VER_CURL}-win32-mingw.7z"
-openssl dgst -sha256 pack.7z | grep -q 5b5041f2fdd6bb4ea6209d2fa13a7f364e864497da318e9d5b4465bc987359ab
+openssl dgst -sha256 pack.7z | grep -q 894f4d3e79bc4684fda1919ff53cd04e81bdc54916b3f61817a1be39a0486800
 7z x -y "-o${HB_DL_ROOT}" pack.7z > /dev/null
 
 curl -fsS -o pack.7z -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${VER_CURL}-win64-mingw.7z"
-openssl dgst -sha256 pack.7z | grep -q a231f16d866c6b594a7bfe029e12df46fa536f64cb237be0198ca8f3fae62d2b
+openssl dgst -sha256 pack.7z | grep -q 75916c7b81445e23a49f9a958ce3af8e8ea13d732d0ee8ca1da6f1d01ba3a729
 7z x -y "-o${HB_DL_ROOT}" pack.7z > /dev/null
