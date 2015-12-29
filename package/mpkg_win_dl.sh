@@ -14,15 +14,15 @@ mkdir -p "${HB_DL_ROOT}"
 
 curl -fsS -o pack.7z -L 'http://www.7-zip.org/a/7z1512-extra.7z'
 openssl dgst -sha256 pack.7z | grep -q 155b6dac5b8490c1ee0680e2062b0ce6f0cce3ecd2645dda858e92b5e25c67fd
-7z x -y "-o${HB_DL_ROOT}7z" pack.7z > /dev/null
+7z x -y "-o${HB_DL_ROOT}/7z" pack.7z > /dev/null
 
 curl -fsS -o pack.7z 'http://7zsfx.info/files/7zsd_150_2712.7z'
 openssl dgst -sha256 pack.7z | grep -q e5a2a05997553cde6318149951da1e449b0fd277a6e671ac06bfde8572754739
-7z x -y "-o${HB_DL_ROOT}7zsfx" pack.7z > /dev/null
+7z x -y "-o${HB_DL_ROOT}/7zsfx" pack.7z > /dev/null
 
 curl -fsS -o pack.zip -L --proto-redir =https 'https://fossies.org/windows/misc/upx391w.zip'
 openssl dgst -sha256 pack.zip | grep -q d7d4817f46d2616c209c46fb8bce44e4bec93ab5adef5e4dfc93ee879527be1b
-7z e -y "-o${HB_DL_ROOT}upx" pack.zip > /dev/null
+7z e -y "-o${HB_DL_ROOT}/upx" pack.zip > /dev/null
 
 # curl -fsS -o pack.7z 'https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.2.0/threads-posix/dwarf/i686-5.2.0-release-posix-dwarf-rt_v4-rev0.7z'
 # openssl dgst -sha256 pack.7z | grep -q 25de3b1164df7a3d06978900664462fa2f651036491291d90ca8870be451f439
@@ -30,7 +30,7 @@ openssl dgst -sha256 pack.zip | grep -q d7d4817f46d2616c209c46fb8bce44e4bec93ab5
 # openssl dgst -sha256 pack.7z | grep -q 3876e8a73218f07761f0f2966725510dfc7294160ba728d1a0e6bdfca93f03f5
 curl -fsS -o pack.7z 'https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.2.0/threads-posix/sjlj/x86_64-5.2.0-release-posix-sjlj-rt_v4-rev0.7z'
 openssl dgst -sha256 pack.7z | grep -q c0536c55a1d12882987afd0a9be377413eaf6cee105e921c949899fa9b308b35
-# Will unpack into "${HB_DL_ROOT}mingw64"
+# Will unpack into "${HB_DL_ROOT}/mingw64"
 7z x -y "-o${HB_DL_ROOT}" pack.7z > /dev/null
 
 # Dependencies for Windows builds

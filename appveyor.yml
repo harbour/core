@@ -21,21 +21,21 @@ environment:
 install:
   - set VER_CURL=7.46.0
   - set VER_OPENSSL=1.0.2e
-  - set DEVL=C:\w\
+  - set DEVL=%APPVEYOR_BUILD_FOLDER%
   - ps: rm alias:curl
   # Use the _native_ curl build provided by Git for Windows because the default,
   # msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
   - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
-  - set HB_DL_ROOT=%DEVL:\=/%
+  - set HB_DL_ROOT=%APPVEYOR_BUILD_FOLDER:\=/%
   - sh -c ./package/mpkg_win_dl.sh
   # Change to ISO date and 24-hour time format
   - reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d yyyy-MM-dd /f
   - reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d HH:mm /f
 build_script:
-  - set HB_SFX_7Z=%DEVL%7zsfx\7zsd.sfx
-  - set HB_DIR_7Z=%DEVL%7z\
-  - set HB_DIR_UPX=%DEVL%upx\
-  - set HB_DIR_MINGW=%DEVL%mingw64
+  - set HB_SFX_7Z=%DEVL%\7zsfx\7zsd.sfx
+  - set HB_DIR_7Z=%DEVL%\7z\
+  - set HB_DIR_UPX=%DEVL%\upx\
+  - set HB_DIR_MINGW=%DEVL%\mingw64
   - set _ORI_PATH=%PATH%
   - if "%HB_COMPILER:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
   - if "%HB_COMPILER%" == "mingw" set HB_CPU=x86
@@ -45,22 +45,22 @@ build_script:
   - if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
   - if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 # - if "%HB_COMPILER:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
-  - if "%HB_COMPILER%" == "mingw" set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win32-mingw\include
-  - if "%HB_COMPILER%" == "mingw" set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win32-mingw\include
-# - if "%HB_COMPILER%" == "mingw" set HB_WITH_QT=%DEVL%Qt\5.4\mingw491_32\include
-  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win64-mingw\include
-  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win64-mingw\include
-# - if "%HB_COMPILER%" == "msvc" set HB_WITH_QT=%DEVL%Qt\5.4\msvc2013_64_opengl\include
-# - if "%HB_COMPILER%" == "msvc64" set HB_WITH_QT=%DEVL%Qt\5.4\msvc2013_64_opengl\include
+  - if "%HB_COMPILER%" == "mingw" set HB_WITH_CURL=%DEVL%\curl-%VER_CURL%-win32-mingw\include
+  - if "%HB_COMPILER%" == "mingw" set HB_WITH_OPENSSL=%DEVL%\openssl-%VER_OPENSSL%-win32-mingw\include
+# - if "%HB_COMPILER%" == "mingw" set HB_WITH_QT=%DEVL%\Qt\5.4\mingw491_32\include
+  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_CURL=%DEVL%\curl-%VER_CURL%-win64-mingw\include
+  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_OPENSSL=%DEVL%\openssl-%VER_OPENSSL%-win64-mingw\include
+# - if "%HB_COMPILER%" == "msvc" set HB_WITH_QT=%DEVL%\Qt\5.4\msvc2013_64_opengl\include
+# - if "%HB_COMPILER%" == "msvc64" set HB_WITH_QT=%DEVL%\Qt\5.4\msvc2013_64_opengl\include
   - if "%HB_COMPILER:~0,5%-%HB_BUILD_MODE%" == "mingw-cpp" set HB_USER_LDFLAGS=-static-libgcc -static-libstdc++
-# - set HB_WITH_ADS=%DEVL%ads\acesdk
-# - set HB_WITH_CAIRO=%DEVL%cairo\include\cairo
-# - set HB_WITH_FIREBIRD=%DEVL%firebird\include
-# - set HB_WITH_FREEIMAGE=%DEVL%freeimage\Dist
-# - set HB_WITH_GD=%DEVL%gd\include
-# - set HB_WITH_MYSQL=%DEVL%mariadb\include\mysql
-# - set HB_WITH_OCILIB=%DEVL%ocilib\include
-# - set HB_WITH_PGSQL=%DEVL%pgsql\include
+# - set HB_WITH_ADS=%DEVL%\ads\acesdk
+# - set HB_WITH_CAIRO=%DEVL%\cairo\include\cairo
+# - set HB_WITH_FIREBIRD=%DEVL%\firebird\include
+# - set HB_WITH_FREEIMAGE=%DEVL%\freeimage\Dist
+# - set HB_WITH_GD=%DEVL%\gd\include
+# - set HB_WITH_MYSQL=%DEVL%\mariadb\include\mysql
+# - set HB_WITH_OCILIB=%DEVL%\ocilib\include
+# - set HB_WITH_PGSQL=%DEVL%\pgsql\include
 # - set HB_BUILD_CONTRIBS=no
   - set HB_INSTALL_3RDDYN=yes
   - set HB_BUILD_STRIP=bin
@@ -72,8 +72,8 @@ build_script:
   - win-make.exe clean install HB_VERSION=%HB_VF%
   - set HB_COMPILER=mingw64
   - set HB_CPU=x86_64
-  - set HB_WITH_CURL=%DEVL%curl-%VER_CURL%-win64-mingw\include
-  - set HB_WITH_OPENSSL=%DEVL%openssl-%VER_OPENSSL%-win64-mingw\include
+  - set HB_WITH_CURL=%DEVL%\curl-%VER_CURL%-win64-mingw\include
+  - set HB_WITH_OPENSSL=%DEVL%\openssl-%VER_OPENSSL%-win64-mingw\include
   - win-make.exe clean install HB_VERSION=%HB_VF%
 # - set HB_COMPILER=
 # - set HB_CPU=
