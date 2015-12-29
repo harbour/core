@@ -63,33 +63,28 @@ before_install:
        brew install p7zip;
     fi
 script:
-  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
-       if [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
-          export HB_COMPILER=clang && make -j $HB_CI_THREADS HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
-          export HB_BUILD_3RDEXT=no;
-          export HB_PLATFORM=win;
-          export HB_CCPREFIX=i686-w64-mingw32-;
-          ls -lA /usr/bin/${HB_CCPREFIX}*;
-          export HB_COMPILER=mingw && make -j $HB_CI_THREADS;
-          wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
-          export HB_CCPREFIX=x86_64-w64-mingw32-;
-          ls -lA /usr/bin/${HB_CCPREFIX}*;
-          export HB_COMPILER=mingw64 && make -j $HB_CI_THREADS;
-          wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
-       elif [ "$CC" = "gcc" ] ; then
-          export HB_USER_CFLAGS='-fstack-protector-strong -D_FORTIFY_SOURCE=2';
+  - if [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
+       export HB_COMPILER=clang && make -j $HB_CI_THREADS HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
+       export HB_BUILD_3RDEXT=no;
+       export HB_PLATFORM=win;
+       export HB_CCPREFIX=i686-w64-mingw32-;
+       ls -lA /usr/bin/${HB_CCPREFIX}*;
+       export HB_COMPILER=mingw && make -j $HB_CI_THREADS;
+       wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
+       export HB_CCPREFIX=x86_64-w64-mingw32-;
+       ls -lA /usr/bin/${HB_CCPREFIX}*;
+       export HB_COMPILER=mingw64 && make -j $HB_CI_THREADS;
+       wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
+    else 
+       if [ "$CC" = "gcc" ] ; then
           export HB_CCSUFFIX=-5;
-          ls -lA /usr/bin/gcc*;
-          export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
        else
-          export HB_USER_CFLAGS='-fstack-protector-strong -D_FORTIFY_SOURCE=2';
           export HB_CCSUFFIX=-3.7;
-          ls -lA /usr/bin/clang*;
-          export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
        fi;
-    else
+       export HB_USER_CFLAGS='-fstack-protector-strong -D_FORTIFY_SOURCE=2';
+       ls -lA /usr/bin/$CC*;
        export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
-    fi
+    fi;
 notifications:
   email: false
 git:
