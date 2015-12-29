@@ -608,6 +608,11 @@ typedef struct _HB_MODULE
    struct _HB_MODULE *  pNext;
 } HB_MODULE, * PHB_MODULE;
 
+/* definitions for hb_compPCodeEval() support */
+typedef void * PHB_VOID;
+#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PHB_HFUNC pFunc, HB_SIZE nPCodePos, type cargo )
+typedef HB_PCODE_FUNC( ( * PHB_PCODE_FUNC ), PHB_VOID );
+
 typedef struct _HB_DEBUGINFO
 {
    char *    pszModuleName;
@@ -627,6 +632,7 @@ typedef struct _HB_LABEL_INFO
    HB_BOOL   fEndRequest;
    int       iNestedBlock;
    HB_SIZE * pnLabels;
+   const PHB_PCODE_FUNC * pFuncTable;
 } HB_LABEL_INFO, * PHB_LABEL_INFO;
 
 #define HB_MODE_COMPILER      1

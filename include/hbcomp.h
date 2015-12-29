@@ -58,11 +58,6 @@
 
 HB_EXTERN_BEGIN
 
-/* definitions for hb_compPCodeEval() support */
-typedef void * PHB_VOID;
-#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PHB_HFUNC pFunc, HB_SIZE nPCodePos, type cargo )
-typedef HB_PCODE_FUNC( ( * PHB_PCODE_FUNC ), PHB_VOID );
-
 extern HB_ISIZ hb_compPCodeSize( PHB_HFUNC, HB_SIZE );
 extern void hb_compPCodeEval( PHB_HFUNC, const PHB_PCODE_FUNC *, void * );
 extern void hb_compPCodeTrace( PHB_HFUNC, const PHB_PCODE_FUNC *, void * );
