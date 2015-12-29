@@ -84,8 +84,9 @@ script:
           else
              export HB_CCSUFFIX=-3.7;
           fi;
+          export HB_USER_CFLAGS='-fstack-protector-strong';
        fi;
-       export HB_USER_CFLAGS='-fstack-protector-strong -D_FORTIFY_SOURCE=2';
+       export HB_USER_CFLAGS="${HB_USER_CFLAGS} -D_FORTIFY_SOURCE=2";
        ls -lA /usr/bin/$CC*;
        export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
     fi;
