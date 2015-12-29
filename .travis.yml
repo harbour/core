@@ -77,7 +77,7 @@ script:
        ls -lA /usr/bin/${HB_CCPREFIX}*;
        export HB_COMPILER=mingw64 && make -j $HB_CI_THREADS;
        wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
-    else 
+    else
        if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
           if [ "$CC" = "gcc" ] ; then
              export HB_CCSUFFIX=-5;
