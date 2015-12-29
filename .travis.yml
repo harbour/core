@@ -77,10 +77,12 @@ script:
           export HB_COMPILER=mingw64 && make -j $HB_CI_THREADS;
           wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
        elif [ "$CC" = "gcc" ] ; then
+          export HB_CFLAGS='-fstack-protector-strong -D_FORTIFY_SOURCE=2';
           export HB_CCSUFFIX=-5;
           ls -lA /usr/bin/gcc*;
           export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
        else
+          export HB_CFLAGS='-fstack-protector-strong -D_FORTIFY_SOURCE=2';
           export HB_CCSUFFIX=-3.7;
           ls -lA /usr/bin/clang*;
           export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
