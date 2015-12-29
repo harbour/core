@@ -34,7 +34,6 @@
 *.sfc     text
 *.spec    text
 *.svg     text
-*.sx      text
 *.tpl     text
 *.txt     text
 *.ucf     text

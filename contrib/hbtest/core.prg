@@ -287,3 +287,65 @@ STATIC FUNCTION __ByteEscape( nByte )
    NEXT
 
    RETURN cResult
+
+FUNCTION hbtest_Object()
+
+   LOCAL o := ErrorNew()
+
+   o:description := "Harbour"
+
+   RETURN o
+
+/* TODO: add 'M' */
+
+FUNCTION hbtest_AllValues()
+   RETURN { ;
+      NIL, ;
+      "HELLO", ;
+      "Hello", ;
+      "", ;
+      "   ", ;
+      "A" + hb_BChar( 0 ) + "B", ;
+      hb_BChar( 13 ) + hb_BChar( 10 ) + hb_BChar( 141 ) + hb_BChar( 10 ) + hb_BChar( 9 ), ;
+      "utf8-űŰőŐ©", ;
+      0, ;
+      0.0, ;
+      10, ;
+      65, ;
+      100000, ;
+      10.567, ;  /* Use different number of decimals than the default */
+      -10, ;
+      -100000, ;
+      -10.567, ;  /* Use different number of decimals than the default */
+      1234567654321, ;
+      hb_SToD( "19840325" ), ;
+      hb_SToD(), ;
+      hb_SToT( "19850325123456789" ), ;
+      hb_SToT(), ;
+      .F., ;
+      .T., ;
+      @hbtest_AllValues(), ;
+      {|| NIL }, ;
+      {|| "(string)" }, ;
+      hbtest_Object(), ;
+      { => }, ;
+      { "a" => "b" }, ;
+      {}, ;
+      { 9898 }, ;
+      __hbtest_Pointer( .T. ), ;
+      __hbtest_Pointer( .F. ) }
+
+FUNCTION hbtest_AllTypes()
+   RETURN { ;
+      NIL, ;
+      "a", ;
+      10, ;
+      hb_SToD( "19840325" ), ;
+      hb_SToT( "19850325123456789" ), ;
+      .T., ;
+      @hbtest_AllTypes(), ;
+      {|| NIL }, ;
+      hbtest_Object(), ;
+      { "a" => "b" }, ;
+      { 100 }, ;
+      __hbtest_Pointer() }
