@@ -9,15 +9,15 @@ clone_depth: 8
 clone_folder: C:\hb\
 environment:
   HB_VF: daily
+  GITHUB_TOKEN:
+    secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
+  VIRUSTOTAL_APIKEY:
+    secure: TdJYONfrpH45DuyKxraVqgHYy25IQ/F8TKHzYf+u5zz1aiM2yR0YTMaGxyj2EMReEearSI9kD9D2ZykybSVEbRyEaotZlceUb2lPDKELl3M=
   matrix:
-# - HB_COMPILER: msvc64
-# - HB_COMPILER: msvc
-# - HB_COMPILER: mingw64
-  - HB_COMPILER: mingw
-    GITHUB_TOKEN:
-      secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
-    VIRUSTOTAL_APIKEY:
-      secure: TdJYONfrpH45DuyKxraVqgHYy25IQ/F8TKHzYf+u5zz1aiM2yR0YTMaGxyj2EMReEearSI9kD9D2ZykybSVEbRyEaotZlceUb2lPDKELl3M=
+#   - HB_COMPILER: msvc64
+#   - HB_COMPILER: msvc
+#   - HB_COMPILER: mingw64
+    - HB_COMPILER: mingw
 install:
   - set VER_CURL=7.46.0
   - set VER_OPENSSL=1.0.2e
