@@ -67,7 +67,7 @@ ifneq ($(HB_LINKING_RTL),)
    ifneq ($(HB_HAS_WATT),)
       LDLIBS += $(HB_LIB_WATT)/wattcpwf
    endif
-   LDLIBS += $(LIB_DIR)/hbpmcom
+   LDLIBS += $(LIB_DIR)/hbdossrl
 endif
 
 # workaround for not included automatically CLIB in pure C mode builds
