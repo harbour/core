@@ -19,7 +19,7 @@ hbmk2.prg
 
 -DHBMK_WITH_BUILTIN_HEADERS_ALL
 
--lhbpmcom{dos}
+-lhbdossrl{dos}
 
 # not using these together with .rc input, because some compilers (mingw)
 # do not support multiple .rc inputs

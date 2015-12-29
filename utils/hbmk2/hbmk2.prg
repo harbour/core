@@ -4042,7 +4042,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       OTHERWISE     ; tmp := NIL
       ENDSWITCH
 
-      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbpmcom" )
+      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbdossrl" )
       IF ! Empty( tmp )
          IF HB_HAS_OPTION( "watt" )
             AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
