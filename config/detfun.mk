@@ -104,6 +104,7 @@ ifeq ($($(_DET_VAR_HAS_)),)
                            endif
                            $(call do_info,$(_DET_RES_TEXT))
                         else
+                           $(_DET_VAR_HAS_) := $(subst $(_DET_INC_HEAD),,$($(_DET_VAR_HAS_)))
                            # detect if the component was found in locally hosted dir
                            ifneq ($(_DET_INC_LOCL),)
                               ifneq ($(filter $(_DET_INC_LOCL),$($(_DET_VAR_HAS_))),)
