@@ -43,7 +43,9 @@ _SCRIPT="$(realpath "$(pwd)/mpkg.hb")"
 _ROOT="$(realpath "$(pwd)/..")"
 
 # hack for AppVeyor
-readonly _FIND=/usr/bin/find
+if [ -n "${APPVEYOR}" ] ; then
+   readonly _FIND=/usr/bin/find
+fi
 
 # Auto-detect the base bitness, by default it will be 32-bit,
 # and 64-bit if it's the only one available.
