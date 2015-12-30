@@ -22,8 +22,6 @@ fi
 
 echo "! Self: $0"
 
-HB_DIR_MINGW="$(echo "${HB_DIR_MINGW}" | sed 's|\\|/|g')"
-
 readonly HB_VS_DEF=34
 readonly HB_VL_DEF=340
 readonly HB_VM_DEF=3.4
@@ -35,6 +33,9 @@ readonly HB_RT_DEF=C:/hb/
 [ -z "${HB_VM}" ] && HB_VM="${HB_VM_DEF}"
 [ -z "${HB_VF}" ] && HB_VF="${HB_VF_DEF}"
 [ -z "${HB_RT}" ] && HB_RT="${HB_RT_DEF}"
+
+HB_RT="$(echo "${HB_RT}" | sed 's|\\|/|g')"
+HB_DIR_MINGW="$(echo "${HB_DIR_MINGW}" | sed 's|\\|/|g')"
 
 HB_DR="hb${HB_VS}/"
 HB_ABSROOT="${HB_RT}${HB_DR}"
