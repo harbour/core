@@ -155,7 +155,7 @@ if "%LIB_TARGET%" == "64" if exist "%HB_DIR_MINGW%\i686-w64-mingw32\lib64"   set
 if exist "%_MINGW_DLL_DIR%\libgcc_s_*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libgcc_s_*.dll" "%HB_ABSROOT%bin\"
 if exist "%_MINGW_DLL_DIR%\mingwm*.dll"    xcopy /y "%HB_DIR_MINGW%\bin\mingwm*.dll"    "%HB_ABSROOT%bin\"
 :: for posix cc1.exe to run without putting MinGW bin directory into PATH
-rem if exist "%_MINGW_DLL_DIR%\libwinpthread-*.dll" xcopy /y "%HB_DIR_MINGW%\bin\libwinpthread-*.dll" "%HB_ABSROOT%bin\"
+rem if exist "%_MINGW_DLL_DIR%\libwinpthread-*.dll" xcopy /y "%_MINGW_DLL_DIR%\libwinpthread-*.dll" "%HB_ABSROOT%bin\"
 
 :: Burn build information into RELNOTES.txt
 
