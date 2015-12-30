@@ -145,18 +145,6 @@ PROCEDURE Main( cMode )
 
       EXIT
 
-   CASE "ch"
-
-      tmp := hb_DirSepToOS( hb_defaultValue( hb_PValue( 2 ), "" ) )
-
-      OutStd( "! mpkg.hb: Calculating SHA-256 hash for", tmp + hb_eol() )
-
-      FOR EACH file IN hb_vfDirectory( tmp )
-         OutStd( hb_SHA256( hb_MemoRead( hb_FNameDir( tmp ) + file[ F_NAME ] ) ), hb_FNameDir( tmp ) + file[ F_NAME ] + hb_eol() )
-      NEXT
-
-      EXIT
-
    OTHERWISE
       OutStd( __FILE__ + ": Error: Wrong mode:", "'" + cMode + "'" + hb_eol() )
    ENDSWITCH
