@@ -62,7 +62,7 @@ if "%LIB_TARGET%" == "32" (
    xcopy /y /s /q "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw"                "%HB_ABSROOT%"
 )
 if "%LIB_TARGET%" == "64" (
-   xcopy /y       "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw\bin\*.dll"    "%HB_ABSROOT%bin\" 2> nul
+   xcopy /y       "%~dp0..\pkg\win\mingw\harbour-%HB_VF%-win-mingw\bin\*.dll"      "%HB_ABSROOT%bin\" 2> nul
    xcopy /y /s /q "%~dp0..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64"            "%HB_ABSROOT%"
 )
 

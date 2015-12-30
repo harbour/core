@@ -57,8 +57,6 @@ endif
 
 _DET_RES_TEXT :=
 
-find_in_path_raw = $(strip $(subst $(substpat), ,$(firstword $(subst |, ,$(subst $(subst x, ,x),$(substpat),$(filter-out |,$(foreach dir, $(subst $(PTHSEP), ,$(subst $(subst x, ,x),$(substpat),$(2))),|$(wildcard $(subst //,/,$(subst $(substpat),\ ,$(subst \,/,$(dir)))/$(1))))))))))
-
 ifeq ($($(_DET_VAR_HAS_)),)
    $(_DET_VAR_HAS_)_LOCAL :=
    ifneq ($($(_DET_VAR_INC_)),no)
@@ -96,7 +94,7 @@ ifeq ($($(_DET_VAR_HAS_)),)
                   endif
                   ifneq ($($(_DET_VAR_HAS_)),)
                      ifneq ($($(_DET_VAR_HAS_)),.)
-                        $(_DET_VAR_HAS_) := $(call find_in_path_raw,$(_DET_INC_HEAD),$($(_DET_VAR_HAS_)))
+                        $(_DET_VAR_HAS_) := $(call find_in_path_prw,$(_DET_INC_HEAD),$($(_DET_VAR_HAS_)))
                         ifeq ($($(_DET_VAR_HAS_)),)
                            _DET_RES_TEXT := '$(_DET_DSP_NAME)' not found
                            ifneq ($(HB_HOST_PLAT_UNIX),yes)
