@@ -45,6 +45,8 @@ _ROOT="$(realpath "$(pwd)/..")"
 # hack for AppVeyor
 if [ -n "${APPVEYOR}" ] ; then
    readonly _FIND=/usr/bin/find
+else
+   readonly _FIND=find
 fi
 
 # Auto-detect the base bitness, by default it will be 32-bit,
