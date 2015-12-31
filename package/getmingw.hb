@@ -60,9 +60,7 @@ PROCEDURE Main()
          OutStd( "Error: Downloading MinGW." + hb_eol() )
       ENDIF
 
-      IF cFileName != NIL
-         hb_vfErase( cFileName )
-      ENDIF
+      hb_vfErase( cFileName )
    ENDIF
 
    RETURN
