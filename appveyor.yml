@@ -26,6 +26,8 @@ install:
   # Use the _native_ curl build provided by Git for Windows because the default,
   # msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
   - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
+  - del "C:\Program Files\Git\usr\bin\curl.exe"
+  - dir "C:\Program Files\Git\usr\bin\curl*.*"
   - set HB_DL_ROOT=%APPVEYOR_BUILD_FOLDER:\=/%
   - sh -c ./package/mpkg_win_dl.sh
   # Change to ISO date and 24-hour time format
@@ -68,7 +70,7 @@ build_script:
   - set HB_BUILD_PKG=yes
   - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
   - set _HB_BUILD_PKG_ARCHIVE=no
-# - set _HB_PKG_DEBUG=yes
+  - set _HB_PKG_DEBUG=yes
   - win-make.exe clean install HB_VERSION=%HB_VF%
   - set HB_COMPILER=mingw64
   - set HB_CPU=x86_64
