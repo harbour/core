@@ -1,6 +1,6 @@
 #!/usr/bin/env hbmk2
 
-/* Copyright 2015 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2015-2016 Viktor Szakats (vszakats.net/harbour) */
 
 /* Requires: hbrun */
 
@@ -76,14 +76,15 @@ STATIC FUNCTION dl_file( cURL, cFileName )
 #if defined( __PLATFORM__WINDOWS )
    LOCAL tmp
    LOCAL cScript
+   LOCAL cJS
 #endif
 
    IF hb_processRun( ;
-      "curl " + ;
-      "-fsS " + ;
-      "-o " + FNameEscape( cFileName ) + " " + ;
-      "-L --proto-redir =https " + ;
-      Chr( 34 ) + StrTran( cURL, " ", "%20" ) + Chr( 34 ) ) >= 0
+         "curl " + ;
+         "-fsS " + ;
+         "-o " + FNameEscape( cFileName ) + " " + ;
+         "-L --proto-redir =https " + ;
+         Chr( 34 ) + StrTran( cURL, " ", "%20" ) + Chr( 34 ) ) >= 0
 
       RETURN .T.
    ENDIF
@@ -92,7 +93,7 @@ STATIC FUNCTION dl_file( cURL, cFileName )
 
 #if defined( __PLATFORM__WINDOWS )
 
-#pragma __cstream | LOCAL cJS := %s
+#pragma __cstream | cJS := %s
 var http = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
 http.Open("GET", "%1$s", false);
 http.Send();
