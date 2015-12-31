@@ -76,6 +76,8 @@ mkdir -p "${HB_ABSROOT}"
    cp -f -p --parents $(${_FIND} 'tests'  -type f -name '*')     "${HB_ABSROOT}"
 )
 
+mkdir -p "${HB_ABSROOT}bin/"
+
 # Copy these first to let 3rd party .dlls with overlapping names
 # be overwritten by selected native target's binaries.
 if ls       ../pkg/wce/mingwarm/harbour-${HB_VF}-wce-mingwarm/bin/*.dll > /dev/null 2>&1 ; then
@@ -210,6 +212,9 @@ touch -c "${HB_ABSROOT}RELNOTES.txt" -r "${HB_ABSROOT}README.md"
 # https://developer.github.com/v3/git/refs/#update-a-reference
 
 echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > git_tag_patch.json
+
+curl -V
+cat git_tag_patch.json
 
 # Register build information
 
