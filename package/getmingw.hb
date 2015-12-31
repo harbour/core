@@ -2,7 +2,7 @@
 
 /* Copyright 2015-2016 Viktor Szakats (vszakats.net/harbour) */
 
-/* Requires: hbrun */
+/* Requires: hbmk2 or hbrun */
 
 #include "hbver.ch"
 
