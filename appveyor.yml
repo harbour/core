@@ -70,7 +70,7 @@ build_script:
   - set HB_BUILD_PKG=yes
   - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
   - set _HB_BUILD_PKG_ARCHIVE=no
-  - set _HB_PKG_DEBUG=yes
+# - set _HB_PKG_DEBUG=yes
   - win-make.exe clean install HB_VERSION=%HB_VF%
   - set HB_COMPILER=mingw64
   - set HB_CPU=x86_64
@@ -88,13 +88,11 @@ build_script:
 # - call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 # - win-make.exe clean install HB_VERSION=%HB_VF%
   - set HB_RT=%DEVL%\
-# - call package\mpkg_win.bat
   - sh -c ./package/mpkg_win.sh
 artifacts:
   - path: harbour-daily-win.7z.exe
     name: pkg-win
 before_deploy:
-  - unix2dos git_tag_patch.json
   - cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev -d @git_tag_patch.json'
 deploy:
   - provider: GitHub

@@ -116,6 +116,22 @@ for dir in \
    fi
 done
 
+# Create special implibs for Borland (requires BCC in PATH)
+# NOTE: Using intermediate .def files, because direct .dll to .lib conversion
+#       is buggy in BCC55 and BCC58 (no other versions tested), leaving off
+#       leading underscore from certain ("random") symbols, resulting in
+#       unresolved externals, when trying to use it. [vszakats]
+if [ -d "${HB_ABSROOT}lib/win/bcc" ; then
+   for file in ${HB_ABSROOT}bin/*-${HB_VS}.dll ; do
+      bfile="$(basename ${file})"
+      "${HB_DIR_BCC_IMPLIB}impdef.exe" -a "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.defraw" "${file}"
+      sed -f "s/LIBRARY     ${bfile}.DLL/LIBRARY     \"${bfile}.dll\"/Ig" < "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.defraw" > "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.def"
+      "${HB_DIR_BCC_IMPLIB}implib.exe" -c -a "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.lib" "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.def"
+      touch -c "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.lib" -r "${HB_ABSROOT}README.md"
+      rm -f "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.defraw" "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.def"
+   done
+fi
+
 # Workaround for ld --no-insert-timestamp bug that exist as of
 # binutils 2.25, when the PE build timestamp field is often
 # filled with random bytes instead of zeroes. -s option is not
@@ -211,7 +227,7 @@ touch -c "${HB_ABSROOT}RELNOTES.txt" -r "${HB_ABSROOT}README.md"
 # Create tag update JSON request
 # https://developer.github.com/v3/git/refs/#update-a-reference
 
-echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > git_tag_patch.json
+echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/git_tag_patch.json"
 
 # Register build information
 
@@ -251,15 +267,15 @@ touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
       echo 'extras/*'
       echo 'tests/*'
       echo 'addons/*.txt'
-   ) >> _hbfiles
+   ) >> "${_ROOT}/_hbfiles"
 
-   _PKGNAME="harbour-${HB_VF}-win.7z"
+   _PKGNAME="${_ROOT}/harbour-${HB_VF}-win.7z"
 
    rm -f "${_PKGNAME}"
    (
       cd "${HB_DR}" || exit
       bin/hbmk2.exe "${_SCRIPT}" ts "${_ROOT}"
-      "${HB_DIR_7Z}7za" a -r -mx "../${_PKGNAME}" @../_hbfiles > /dev/null
+      "${HB_DIR_7Z}7za" a -r -mx "${_PKGNAME}" "@${_ROOT}/_hbfiles" > /dev/null
    )
 
    if [ -f "${HB_SFX_7Z}" ] ; then
@@ -289,10 +305,11 @@ EOF
       cat "${HB_SFX_7Z}" _7zconf "${_PKGNAME}" > "${_PKGNAME}.exe"
 
       rm "${_PKGNAME}"
-      rm _7zconf
 
       _PKGNAME="${_PKGNAME}.exe"
    fi
+
+   rm "${_ROOT}/_hbfiles"
 
    touch -c "${_PKGNAME}" -r "${HB_ABSROOT}README.md"
 
@@ -302,6 +319,4 @@ EOF
       *)           stat -c '%n: %s bytes %z' "${_PKGNAME}";;
    esac
    openssl dgst -sha256 "${_PKGNAME}"
-
-   rm _hbfiles
 )
