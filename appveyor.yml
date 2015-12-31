@@ -28,7 +28,7 @@ install:
   - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
   # Delete msys curl.exe just to be sure
   - del "C:\Program Files\Git\usr\bin\curl.exe"
-  - set HB_DL_ROOT=%APPVEYOR_BUILD_FOLDER:\=/%
+  - set HB_DL_ROOT=%APPVEYOR_BUILD_FOLDER%
   - sh -c ./package/mpkg_win_dl.sh
   # Change to ISO date and 24-hour time format
   - reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d yyyy-MM-dd /f

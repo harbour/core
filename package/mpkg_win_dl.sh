@@ -8,6 +8,8 @@
 # Quit if any of the lines fail
 set -e
 
+HB_DL_ROOT="$(echo "${HB_DL_ROOT}" | sed 's|\\|/|g')"
+
 mkdir -p "${HB_DL_ROOT}"
 
 # Dependencies for the Windows distro package
