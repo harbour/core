@@ -121,7 +121,7 @@ done
 #       is buggy in BCC55 and BCC58 (no other versions tested), leaving off
 #       leading underscore from certain ("random") symbols, resulting in
 #       unresolved externals, when trying to use it. [vszakats]
-if [ -d "${HB_ABSROOT}lib/win/bcc" ; then
+if [ -d "${HB_ABSROOT}lib/win/bcc" ] ; then
    for file in ${HB_ABSROOT}bin/*-${HB_VS}.dll ; do
       bfile="$(basename ${file})"
       "${HB_DIR_BCC_IMPLIB}impdef.exe" -a "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.defraw" "${file}"
@@ -188,7 +188,7 @@ fi
 #       with the package, which is probably something
 #       that should be avoided in the future.
 
-cp -f -p 'getmingw.bat' "${HB_ABSROOT}bin/"
+cp -f -p 'getmingw.hb' "${HB_ABSROOT}bin/"
 
 # Copy MinGW runtime .dlls
 
