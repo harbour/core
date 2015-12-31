@@ -213,9 +213,6 @@ touch -c "${HB_ABSROOT}RELNOTES.txt" -r "${HB_ABSROOT}README.md"
 
 echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > git_tag_patch.json
 
-curl -V
-cat git_tag_patch.json
-
 # Register build information
 
 (

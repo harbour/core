@@ -26,7 +26,7 @@ install:
   # Use the _native_ curl build provided by Git for Windows because the default,
   # msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
   - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
-  # Delete msys curl.exe otherwise it's called from shell scripts
+  # Delete msys curl.exe just to be sure
   - del "C:\Program Files\Git\usr\bin\curl.exe"
   - set HB_DL_ROOT=%APPVEYOR_BUILD_FOLDER:\=/%
   - sh -c ./package/mpkg_win_dl.sh
@@ -94,6 +94,7 @@ artifacts:
   - path: harbour-daily-win.7z.exe
     name: pkg-win
 before_deploy:
+  - unix2dos git_tag_patch.json
   - cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev -d @git_tag_patch.json'
 deploy:
   - provider: GitHub
