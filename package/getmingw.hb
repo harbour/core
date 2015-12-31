@@ -23,9 +23,11 @@ PROCEDURE Main()
    CASE 32
       cURL := "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/5.2.0/threads-posix/sjlj/i686-5.2.0-release-posix-sjlj-rt_v4-rev0.7z"
       cSUM := "76faee6e1644e3ba49a38b803413c75e5c9e0bf1716dcf862824439ad1a32773"
+      EXIT
    CASE 64
       cURL := "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.2.0/threads-posix/sjlj/x86_64-5.2.0-release-posix-sjlj-rt_v4-rev0.7z"
       cSUM := "c0536c55a1d12882987afd0a9be377413eaf6cee105e921c949899fa9b308b35"
+      EXIT
    ENDSWITCH
 
    IF HB_ISSTRING( cURL )
