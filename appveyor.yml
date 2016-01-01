@@ -29,9 +29,6 @@ install:
 #  - del "C:\Program Files\Git\usr\bin\curl.exe"
   - set HB_DL_ROOT=%APPVEYOR_BUILD_FOLDER%
   - sh -c ./package/mpkg_win_dl.sh
-  # Change to ISO date and 24-hour time format
-  - reg add "HKCU\Control Panel\International" /v sShortDate /t REG_SZ /d yyyy-MM-dd /f
-  - reg add "HKCU\Control Panel\International" /v sShortTime /t REG_SZ /d HH:mm /f
 build_script:
   - set HB_SFX_7Z=%DEVL%\7zsfx\7zsd.sfx
   - set HB_DIR_7Z=%DEVL%\7z\
