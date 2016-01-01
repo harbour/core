@@ -18,6 +18,7 @@ environment:
 #   - HB_COMPILER: msvc
 #   - HB_COMPILER: mingw64
     - HB_COMPILER: mingw
+
 install:
   - set VER_CURL=7.46.0
   - set VER_OPENSSL=1.0.2e
@@ -29,6 +30,7 @@ install:
   - del "C:\Program Files\Git\usr\bin\curl.exe"
   - set HB_DL_ROOT=%APPVEYOR_BUILD_FOLDER%
   - sh -c ./package/mpkg_win_dl.sh
+
 build_script:
   - set HB_SFX_7Z=%DEVL%\7zsfx\7zsd.sfx
   - set HB_DIR_7Z=%DEVL%\7z\
@@ -85,11 +87,14 @@ build_script:
 # - win-make.exe clean install HB_VERSION=%HB_VF%
   - set HB_RT=%DEVL%\
   - sh -c ./package/mpkg_win.sh
+
 artifacts:
   - path: harbour-daily-win.7z.exe
     name: pkg-win
+
 before_deploy:
   - cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev -d @git_tag_patch.json'
+
 deploy:
   - provider: GitHub
     auth_token: $(github_token)
@@ -105,7 +110,9 @@ deploy:
   - provider: Local
     on:
       branch: test_appveyor
+
 after_deploy:
   - curl -fsS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form "apikey=%VIRUSTOTAL_APIKEY%" --form file=@harbour-daily-win.7z.exe
+
 build:
   verbosity: detailed
