@@ -22,7 +22,6 @@ install:
   - set VER_CURL=7.46.0
   - set VER_OPENSSL=1.0.2e
   - set DEVL=%APPVEYOR_BUILD_FOLDER%
-  - ps: rm alias:curl
   # Use the _native_ curl build provided by Git for Windows because the default,
   # msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
   - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
