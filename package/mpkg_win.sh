@@ -13,6 +13,7 @@ else
    set +x
 fi
 
+# - Requires Git for Windows or busybox (untested) to run on Windows
 # - Adjust target dir, MinGW dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
 #   create required packages beforehand.
 # - Run this from vanilla official source tree only.
