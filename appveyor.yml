@@ -28,9 +28,7 @@ install:
   - set DEVL=%APPVEYOR_BUILD_FOLDER%
   # Use the _native_ curl build provided by Git for Windows because the default,
   # msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
-#  - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
-  # Delete msys curl.exe just to be sure
-  - del "C:\Program Files\Git\usr\bin\curl.exe"
+  - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
   - set HB_DL_ROOT=%APPVEYOR_BUILD_FOLDER%
   - sh -c ./package/mpkg_win_dl.sh
 
