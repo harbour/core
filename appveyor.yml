@@ -25,13 +25,13 @@ environment:
 install:
   - set VER_CURL=7.46.0
   - set VER_OPENSSL=1.0.2e
-  - set DEVL=%APPVEYOR_BUILD_FOLDER%
   # Use the _native_ curl build provided by Git for Windows because the default,
   # msys one in 'usr\bin' fails in spectacular ways in the PATCH request.
   - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
   - sh -c ./package/mpkg_win_dl.sh
 
 build_script:
+  - set DEVL=%APPVEYOR_BUILD_FOLDER%
   - set HB_SFX_7Z=%DEVL%\7zsfx\7zsd.sfx
   - set HB_DIR_7Z=%DEVL%\7z\
   - set HB_DIR_UPX=%DEVL%\upx\
