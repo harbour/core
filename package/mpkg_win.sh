@@ -326,6 +326,6 @@ EOF
    set +x
    curl -sS \
       -H "Authorization: token ${GITHUB_TOKEN}" \
-      -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v${HB_VF} \
+      -X PATCH "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v${HB_VF_DEF}" \
       -d "@${_ROOT}/git_tag_patch.json"
 )

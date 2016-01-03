@@ -30,9 +30,6 @@ environment:
   CURL_HASH_64: e9bbd8d4fefe484f583c7abfc4ebd9cbd81bf2e49557fc21c72d0c46063d3681
 
 install:
-  # Use the _native_ curl build provided by Git for Windows because the default,
-  # msys one in 'usr/bin' fails in spectacular ways in the PATCH request.
-  - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
   - sh -c ./package/mpkg_win_dl.sh
 
 build_script:
