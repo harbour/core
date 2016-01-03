@@ -13,7 +13,7 @@ PROCEDURE Main()
    IF ! hb_vfExists( "harbour.exe" )
       OutStd( "Error: This script has to be run from a Harbour binary installation." + hb_eol() )
       OutStd( "       Download it from:" + hb_eol() )
-      OutStd( "          https://github.com/vszakats/harbour-core/releases/tag/v3.4.0dev" + hb_eol() )
+      OutStd( "          https://github.com/vszakats/harbour-core/releases/tag/v_HB_VF_DEF_" + hb_eol() )
       Inkey( 0 )
       ErrorLevel( 1 )
       RETURN

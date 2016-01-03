@@ -210,8 +210,6 @@ fi
 #       with the package, which is probably something
 #       that should be avoided in the future.
 
-cp -f -p 'getmingw.hb' "${HB_ABSROOT}bin/"
-
 # Copy MinGW runtime .dlls
 
 # Pick the ones from a multi-target MinGW distro
@@ -233,6 +231,11 @@ fi
 # if ls       ${_MINGW_DLL_DIR}/libwinpthread-*.dll > /dev/null 2>&1 ; then
 #    cp -f -p ${_MINGW_DLL_DIR}/libwinpthread-*.dll "${HB_ABSROOT}bin/"
 # fi
+
+# Copy getmingw.hb with some burn-in
+
+sed -e "s/_HB_VF_DEF_/${HB_VF_DEF}/g" 'getmingw.hb' > "${HB_ABSROOT}bin/getmingw.hb"
+touch -c "${HB_ABSROOT}bin/getmingw.hb" -r "${HB_ABSROOT}README.md"
 
 # Burn build information into RELNOTES.txt
 
