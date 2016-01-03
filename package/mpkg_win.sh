@@ -170,7 +170,7 @@ done
 
 if [ -n "${HB_DIR_UPX}" ] ; then
    cp -f -p "${HB_DIR_UPX}upx.exe" "${HB_ABSROOT}bin/"
-   cp -f -p "${HB_DIR_UPX}LICENSE" "${HB_ABSROOT}bin/upx_LICENSE.txt"
+   cp -f -p "${HB_DIR_UPX}LICENSE" "${HB_ABSROOT}LICENSE_upx.txt"
 fi
 
 # Copy 7z
@@ -181,7 +181,7 @@ if [ -n "${HB_DIR_7Z}" ] ; then
    else
       cp -f -p "${HB_DIR_7Z}7za.exe"     "${HB_ABSROOT}bin/"
    fi
-   cp -f -p "${HB_DIR_7Z}license.txt" "${HB_ABSROOT}bin/7za_LICENSE.txt"
+   cp -f -p "${HB_DIR_7Z}license.txt" "${HB_ABSROOT}LICENSE_7za.txt"
 fi
 
 # Copy curl
@@ -193,7 +193,7 @@ else
 fi
 if [ -n "${HB_DIR_CURL}" ] ; then
    cp -f -p "${HB_DIR_CURL}bin/curl.exe" "${HB_ABSROOT}bin/"
-   cp -f -p "${HB_DIR_CURL}COPYING.txt"  "${HB_ABSROOT}bin/curl_LICENSE.txt"
+   cp -f -p "${HB_DIR_CURL}COPYING.txt"  "${HB_ABSROOT}LICENSE_curl.txt"
 fi
 
 # Copy core 3rd party headers
@@ -279,11 +279,9 @@ touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
    (
       echo '*.md'
       echo '*.txt'
-      echo 'bin/*.bat'
       echo 'bin/*.dll'
       echo 'bin/*.exe'
       echo 'bin/*.hb'
-      echo 'bin/*.txt'
       echo 'include/*'
       echo 'lib/*'
       echo 'src/*'
