@@ -41,10 +41,14 @@ build_script:
   - set HB_DIR_7Z=%HB_RT%\7z\
   - set HB_DIR_UPX=%HB_RT%\upx\
   - set HB_DIR_MINGW=%HB_RT%\mingw64
-  - set HB_DIR_CURL_32=%HB_RT%\curl-mingw32\
-  - set HB_DIR_CURL_64=%HB_RT%\curl-mingw64\
   - set HB_DIR_OPENSSL_32=%HB_RT%\openssl-mingw32\
   - set HB_DIR_OPENSSL_64=%HB_RT%\openssl-mingw64\
+  - set HB_DIR_LIBSSH2_32=%HB_RT%\libssh2-mingw32\
+  - set HB_DIR_LIBSSH2_64=%HB_RT%\libssh2-mingw64\
+  - set HB_DIR_NGHTTP2_32=%HB_RT%\nghttp2-mingw32\
+  - set HB_DIR_NGHTTP2_64=%HB_RT%\nghttp2-mingw64\
+  - set HB_DIR_CURL_32=%HB_RT%\curl-mingw32\
+  - set HB_DIR_CURL_64=%HB_RT%\curl-mingw64\
   - set _ORI_PATH=%PATH%
 
   # common settings
