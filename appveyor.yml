@@ -67,6 +67,7 @@ build_script:
 # - set HB_WITH_OCILIB=%HB_RT%\ocilib\include
 # - set HB_WITH_PGSQL=%HB_RT%\pgsql\include
 # - set HB_BUILD_CONTRIBS=no
+# - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BUILD_CONTRIBS=hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio
   - set HB_INSTALL_3RDDYN=yes
   - set HB_BUILD_STRIP=bin
   - set HB_BUILD_CONTRIB_DYN=yes
