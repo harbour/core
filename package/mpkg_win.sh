@@ -258,7 +258,7 @@ echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/g
 
 (
    "${HB_ABSROOT}bin/harbour" -build 2>&1 | sed -nr "/^(Version:|Platform:|Extra )/!p"
-   set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_)/p"
+   set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_|_VER=)/p"
    echo ---------------------------
    cd "${HB_ABSROOT}/lib" || exit
    find . -type d | grep -Eo '\./[a-z]+?/[a-z]+?$' | cut -c 3-

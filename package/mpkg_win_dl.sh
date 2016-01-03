@@ -39,15 +39,19 @@ openssl dgst -sha256 pack.bin | grep -q ec28b6640ad4f183be7afcd6e9c5eabb24b89729
 curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${OPENSSL_VER}-win32-mingw.7z"
 openssl dgst -sha256 pack.bin | grep -q "${OPENSSL_HASH_32}"
 7z x -y pack.bin > /dev/null
+mv "openssl-${OPENSSL_VER}-win32-mingw.7z" openssl-mingw
 
 curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${OPENSSL_VER}-win64-mingw.7z"
 openssl dgst -sha256 pack.bin | grep -q "${OPENSSL_HASH_64}"
 7z x -y pack.bin > /dev/null
+mv "openssl-${OPENSSL_VER}-win64-mingw.7z" openssl-mingw64
 
 curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${CURL_VER}-win32-mingw.7z"
 openssl dgst -sha256 pack.bin | grep -q "${CURL_HASH_32}"
 7z x -y pack.bin > /dev/null
+mv "curl-${OPENSSL_VER}-win32-mingw.7z" curl-mingw
 
 curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${CURL_VER}-win64-mingw.7z"
 openssl dgst -sha256 pack.bin | grep -q "${CURL_HASH_64}"
 7z x -y pack.bin > /dev/null
+mv "curl-${OPENSSL_VER}-win64-mingw.7z" curl-mingw64
