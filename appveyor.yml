@@ -30,9 +30,6 @@ environment:
   CURL_HASH_64: e9bbd8d4fefe484f583c7abfc4ebd9cbd81bf2e49557fc21c72d0c46063d3681
 
 install:
-  # Use the _native_ curl build provided by Git for Windows because the default,
-  # msys one in 'usr/bin' fails in spectacular ways in the PATCH request.
-  - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
   - sh -c ./package/mpkg_win_dl.sh
 
 build_script:
@@ -91,14 +88,13 @@ build_script:
 # - set PATH=%_ORI_PATH%
 # - call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 # - win-make.exe clean install HB_VERSION=%HB_VF%
-  - sh -c ./package/mpkg_win.sh
 
 artifacts:
   - path: harbour-daily-win.7z.exe
     name: pkg-win
 
 before_deploy:
-  - cmd: 'curl -sS -H "Authorization: token %GITHUB_TOKEN%" -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v3.4.0dev -d @git_tag_patch.json'
+  - sh -c ./package/mpkg_win.sh
 
 deploy:
   - provider: GitHub
