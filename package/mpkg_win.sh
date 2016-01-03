@@ -51,7 +51,7 @@ case "$(uname)" in
    *_NT*) alias find=/usr/bin/find;;
 esac
 
-if [ -n "${HB_BASE}" ] ; then
+if [ -z "${HB_BASE}" ] ; then
    # Auto-detect the base bitness, by default it will be 32-bit,
    # and 64-bit if it's the only one available.
    if [ -d "../pkg/win/mingw/harbour-${HB_VF}-win-mingw" ] ; then
