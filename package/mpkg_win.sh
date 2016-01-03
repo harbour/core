@@ -17,6 +17,7 @@ fi
 # - Adjust target dir, MinGW dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
 #   create required packages beforehand.
 # - Run this from vanilla official source tree only.
+# - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (only when including BCC build).
 # - Requires GNU sed, touch and OpenSSL tools in PATH
 # - Optional HB_SFX_7Z envvar pointed to 7z SFX module
 #   found in: http://7zsfx.info/files/7zsd_150_2712.7z
