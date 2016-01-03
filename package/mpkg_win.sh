@@ -64,7 +64,7 @@ else
    LIB_TARGET="${HB_BASE}"
 fi
 
-echo "! ${LIB_TARGET}-bit hosted"
+echo "! Creating ${LIB_TARGET}-bit hosted package"
 
 # Assemble package from per-target builds
 
