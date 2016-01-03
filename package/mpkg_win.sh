@@ -45,11 +45,11 @@ _SCRIPT="$(realpath "$(pwd)/mpkg.hb")"
 _ROOT="$(realpath "$(pwd)/..")"
 
 # hack for AppVeyor
-#if [ -n "${APPVEYOR}" ] ; then
-#   readonly _FIND=/usr/bin/find
-#else
+if [ -n "${APPVEYOR}" ] ; then
+   readonly _FIND=/usr/bin/find
+else
    readonly _FIND=find
-#fi
+fi
 
 # Auto-detect the base bitness, by default it will be 32-bit,
 # and 64-bit if it's the only one available.
@@ -322,6 +322,10 @@ EOF
    openssl dgst -sha256 "${_PKGNAME}"
 )
 
-curl -sS -H "Authorization: token ${GITHUB_TOKEN}" \
-   -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v${HB_VF} \
-   -d "@${_ROOT}/git_tag_patch.json"
+(
+   set +x
+   curl -sS \
+      -H "Authorization: token ${GITHUB_TOKEN}" \
+      -X PATCH https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v${HB_VF} \
+      -d "@${_ROOT}/git_tag_patch.json"
+)
