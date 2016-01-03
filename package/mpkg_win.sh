@@ -344,7 +344,7 @@ EOF
    openssl dgst -sha256 "${_PKGNAME}"
 )
 
-if [ "${APPVEYOR_REPO_BRANCH}" = "master" ] ; then
+if [ "$(git rev-parse --abbrev-ref HEAD)" = "master" ] ; then
    (
       set +x
       curl -sS \
