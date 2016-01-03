@@ -22,20 +22,25 @@ environment:
 #   - HB_COMPILER: mingw64
     - HB_COMPILER: mingw
 
+  OPENSSL_VER: 1.0.2e
+  OPENSSL_HASH_32: 5247ef88294f873e81f31012e947fbb9cfc45ef5048070345cd0b25df5d0a4a3
+  OPENSSL_HASH_64: 378c05aa9752a49619d092d3968382b1f03bceb4fb258b77b2e54c997cb038be
+  CURL_VER: 7.46.0
+  CURL_HASH_32: b8c2d7ab620b198aeabf9573ed63059bc28ea5921d008c267c16db7409fbc4cb
+  CURL_HASH_64: e9bbd8d4fefe484f583c7abfc4ebd9cbd81bf2e49557fc21c72d0c46063d3681
+
 install:
-  - set VER_CURL=7.46.0
-  - set VER_OPENSSL=1.0.2e
   # Use the _native_ curl build provided by Git for Windows because the default,
   # msys one in 'usr/bin' fails in spectacular ways in the PATCH request.
   - set PATH=C:\Program Files\Git\mingw64\bin;%PATH%
   - sh -c ./package/mpkg_win_dl.sh
 
 build_script:
-  - set DEVL=%APPVEYOR_BUILD_FOLDER%
-  - set HB_SFX_7Z=%DEVL%\7zsfx\7zsd.sfx
-  - set HB_DIR_7Z=%DEVL%\7z\
-  - set HB_DIR_UPX=%DEVL%\upx\
-  - set HB_DIR_MINGW=%DEVL%\mingw64
+  - set HB_RT=%APPVEYOR_BUILD_FOLDER%
+  - set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd.sfx
+  - set HB_DIR_7Z=%HB_RT%\7z\
+  - set HB_DIR_UPX=%HB_RT%\upx\
+  - set HB_DIR_MINGW=%HB_RT%\mingw64
   - set _ORI_PATH=%PATH%
   - if "%HB_COMPILER:~0,5%" == "mingw" set PATH=%HB_DIR_MINGW%\bin;%PATH%
   - if "%HB_COMPILER%" == "mingw" set HB_CPU=x86
@@ -45,22 +50,22 @@ build_script:
   - if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
   - if "%HB_COMPILER%" == "msvc64" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 # - if "%HB_COMPILER:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
-  - if "%HB_COMPILER%" == "mingw" set HB_WITH_CURL=%DEVL%\curl-%VER_CURL%-win32-mingw\include
-  - if "%HB_COMPILER%" == "mingw" set HB_WITH_OPENSSL=%DEVL%\openssl-%VER_OPENSSL%-win32-mingw\include
-# - if "%HB_COMPILER%" == "mingw" set HB_WITH_QT=%DEVL%\Qt\5.4\mingw491_32\include
-  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_CURL=%DEVL%\curl-%VER_CURL%-win64-mingw\include
-  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_OPENSSL=%DEVL%\openssl-%VER_OPENSSL%-win64-mingw\include
-# - if "%HB_COMPILER%" == "msvc" set HB_WITH_QT=%DEVL%\Qt\5.4\msvc2013_64_opengl\include
-# - if "%HB_COMPILER%" == "msvc64" set HB_WITH_QT=%DEVL%\Qt\5.4\msvc2013_64_opengl\include
+  - if "%HB_COMPILER%" == "mingw" set HB_WITH_CURL=%HB_RT%\curl-%CURL_VER%-win32-mingw\include
+  - if "%HB_COMPILER%" == "mingw" set HB_WITH_OPENSSL=%HB_RT%\openssl-%OPENSSL_VER%-win32-mingw\include
+# - if "%HB_COMPILER%" == "mingw" set HB_WITH_QT=%HB_RT%\Qt\5.4\mingw491_32\include
+  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_CURL=%HB_RT%\curl-%CURL_VER%-win64-mingw\include
+  - if "%HB_COMPILER%" == "mingw64" set HB_WITH_OPENSSL=%HB_RT%\openssl-%OPENSSL_VER%-win64-mingw\include
+# - if "%HB_COMPILER%" == "msvc" set HB_WITH_QT=%HB_RT%\Qt\5.4\msvc2013_64_opengl\include
+# - if "%HB_COMPILER%" == "msvc64" set HB_WITH_QT=%HB_RT%\Qt\5.4\msvc2013_64_opengl\include
   - if "%HB_COMPILER:~0,5%-%HB_BUILD_MODE%" == "mingw-cpp" set HB_USER_LDFLAGS=-static-libgcc -static-libstdc++
-# - set HB_WITH_ADS=%DEVL%\ads\acesdk
-# - set HB_WITH_CAIRO=%DEVL%\cairo\include\cairo
-# - set HB_WITH_FIREBIRD=%DEVL%\firebird\include
-# - set HB_WITH_FREEIMAGE=%DEVL%\freeimage\Dist
-# - set HB_WITH_GD=%DEVL%\gd\include
-# - set HB_WITH_MYSQL=%DEVL%\mariadb\include\mysql
-# - set HB_WITH_OCILIB=%DEVL%\ocilib\include
-# - set HB_WITH_PGSQL=%DEVL%\pgsql\include
+# - set HB_WITH_ADS=%HB_RT%\ads\acesdk
+# - set HB_WITH_CAIRO=%HB_RT%\cairo\include\cairo
+# - set HB_WITH_FIREBIRD=%HB_RT%\firebird\include
+# - set HB_WITH_FREEIMAGE=%HB_RT%\freeimage\Dist
+# - set HB_WITH_GD=%HB_RT%\gd\include
+# - set HB_WITH_MYSQL=%HB_RT%\mariadb\include\mysql
+# - set HB_WITH_OCILIB=%HB_RT%\ocilib\include
+# - set HB_WITH_PGSQL=%HB_RT%\pgsql\include
 # - set HB_BUILD_CONTRIBS=no
   - set HB_INSTALL_3RDDYN=yes
   - set HB_BUILD_STRIP=bin
@@ -72,8 +77,8 @@ build_script:
   - win-make.exe clean install HB_VERSION=%HB_VF%
   - set HB_COMPILER=mingw64
   - set HB_CPU=x86_64
-  - set HB_WITH_CURL=%DEVL%\curl-%VER_CURL%-win64-mingw\include
-  - set HB_WITH_OPENSSL=%DEVL%\openssl-%VER_OPENSSL%-win64-mingw\include
+  - set HB_WITH_CURL=%HB_RT%\curl-%CURL_VER%-win64-mingw\include
+  - set HB_WITH_OPENSSL=%HB_RT%\openssl-%OPENSSL_VER%-win64-mingw\include
   - win-make.exe clean install HB_VERSION=%HB_VF%
 # - set HB_COMPILER=
 # - set HB_CPU=
@@ -85,7 +90,6 @@ build_script:
 # - set PATH=%_ORI_PATH%
 # - call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 # - win-make.exe clean install HB_VERSION=%HB_VF%
-  - set HB_RT=%DEVL%\
   - sh -c ./package/mpkg_win.sh
 
 artifacts:
@@ -113,4 +117,3 @@ deploy:
 
 after_deploy:
   - curl -fsS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form "apikey=%VIRUSTOTAL_APIKEY%" --form file=@harbour-daily-win.7z.exe
-

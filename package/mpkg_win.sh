@@ -27,7 +27,7 @@ readonly HB_VS_DEF=34
 readonly HB_VL_DEF=340
 readonly HB_VM_DEF=3.4
 readonly HB_VF_DEF=3.4.0dev
-readonly HB_RT_DEF=C:/hb/
+readonly HB_RT_DEF=C:/hb
 
 [ -z "${HB_VS}" ] && HB_VS="${HB_VS_DEF}"
 [ -z "${HB_VL}" ] && HB_VL="${HB_VL_DEF}"
@@ -39,7 +39,7 @@ HB_RT="$(echo "${HB_RT}" | sed 's|\\|/|g')"
 HB_DIR_MINGW="$(echo "${HB_DIR_MINGW}" | sed 's|\\|/|g')"
 
 HB_DR="hb${HB_VS}/"
-HB_ABSROOT="${HB_RT}${HB_DR}"
+HB_ABSROOT="${HB_RT}/${HB_DR}"
 
 _SCRIPT="$(realpath "$(pwd)/mpkg.hb")"
 _ROOT="$(realpath "$(pwd)/..")"

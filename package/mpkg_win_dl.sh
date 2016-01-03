@@ -3,7 +3,9 @@
 # Copyright 2015-2016 Viktor Szakats (vszakats.net/harbour)
 
 # - Requires Git for Windows or busybox to run on Windows
-# - Requires VER_* envvars
+# - Requires *_VER and *_HASH_* envvars
+
+set | grep _VER
 
 # Quit if any of the lines fail
 set -e
@@ -34,18 +36,18 @@ openssl dgst -sha256 pack.bin | grep -q ec28b6640ad4f183be7afcd6e9c5eabb24b89729
 
 # Dependencies for Windows builds
 
-curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${VER_OPENSSL}-win32-mingw.7z"
-openssl dgst -sha256 pack.bin | grep -q 5247ef88294f873e81f31012e947fbb9cfc45ef5048070345cd0b25df5d0a4a3
+curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${OPENSSL_VER}-win32-mingw.7z"
+openssl dgst -sha256 pack.bin | grep -q "${OPENSSL_HASH_32}"
 7z x -y pack.bin > /dev/null
 
-curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${VER_OPENSSL}-win64-mingw.7z"
-openssl dgst -sha256 pack.bin | grep -q 378c05aa9752a49619d092d3968382b1f03bceb4fb258b77b2e54c997cb038be
+curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${OPENSSL_VER}-win64-mingw.7z"
+openssl dgst -sha256 pack.bin | grep -q "${OPENSSL_HASH_64}"
 7z x -y pack.bin > /dev/null
 
-curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${VER_CURL}-win32-mingw.7z"
-openssl dgst -sha256 pack.bin | grep -q b8c2d7ab620b198aeabf9573ed63059bc28ea5921d008c267c16db7409fbc4cb
+curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${CURL_VER}-win32-mingw.7z"
+openssl dgst -sha256 pack.bin | grep -q "${CURL_HASH_32}"
 7z x -y pack.bin > /dev/null
 
-curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${VER_CURL}-win64-mingw.7z"
-openssl dgst -sha256 pack.bin | grep -q e9bbd8d4fefe484f583c7abfc4ebd9cbd81bf2e49557fc21c72d0c46063d3681
+curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${CURL_VER}-win64-mingw.7z"
+openssl dgst -sha256 pack.bin | grep -q "${CURL_HASH_64}"
 7z x -y pack.bin > /dev/null
