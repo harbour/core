@@ -538,8 +538,16 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
 
                   if( bDoNotScale )
                   {
-                     iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
-                     iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+                     if( lHeight > lWidth )
+                     {
+                        iWd = ( int ) ( ( float )  ht * lWidth / lHeight );
+                        iHt = ( int ) ( ( float ) iWd * lHeight / lWidth );
+                     }
+                     else
+                     {
+                        iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
+                        iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+                     }
                      x  += abs( ( iWd - wd ) / 2 );
                      y  += abs( ( iHt - ht ) / 2 );
                      wd  = iWd;

@@ -1534,8 +1534,16 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
       if( gObj->iData == 1 )
       {
-         iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
-         iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+         if( lHeight > lWidth )
+         {
+            iWd = ( int ) ( ( float )  ht * lWidth / lHeight );
+            iHt = ( int ) ( ( float ) iWd * lHeight / lWidth );
+         }
+         else
+         {
+            iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
+            iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+         }
          x  += abs( ( iWd - wd ) / 2 );
          y  += abs( ( iHt - ht ) / 2 );
          wd  = iWd;
