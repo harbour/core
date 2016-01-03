@@ -72,7 +72,7 @@ build_script:
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_32%include
 # - set HB_WITH_QT=%HB_RT%\Qt\5.4\mingw491_32\include
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if "%_DO_MINGW" == "yes" win-make.exe clean install HB_VERSION=%HB_VF%
+  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe clean install HB_VERSION=%HB_VF%
 
   - set HB_COMPILER=mingw64
   - set HB_CPU=x86_64
@@ -80,7 +80,7 @@ build_script:
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_64%include
   - set HB_WITH_QT=
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if "%_DO_MINGW" == "yes" win-make.exe clean install HB_VERSION=%HB_VF%
+  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe clean install HB_VERSION=%HB_VF%
 
   # msvc
 
