@@ -37,7 +37,12 @@ PROCEDURE Main()
 
       hb_vfClose( hb_vfTempFile( @cFileName,,, ".7z" ) )
 
-      IF dl_file( cURL, cFileName )
+      IF hb_processRun( ;
+         "curl " + ;
+         "-fsS " + ;
+         "-o " + FNameEscape( cFileName ) + " " + ;
+         "-L --proto-redir =https " + ;
+         Chr( 34 ) + StrTran( cURL, " ", "%20" ) + Chr( 34 ) ) >= 0
 
          IF hb_SHA256( hb_MemoRead( cFileName ) ) == cSUM
 
@@ -69,12 +74,3 @@ PROCEDURE Main()
 
 STATIC FUNCTION FNameEscape( cFileName )
    RETURN '"' + cFileName + '"'
-
-STATIC FUNCTION dl_file( cURL, cFileName )
-   RETURN ;
-      hb_processRun( ;
-         "curl " + ;
-         "-fsS " + ;
-         "-o " + FNameEscape( cFileName ) + " " + ;
-         "-L --proto-redir =https " + ;
-         Chr( 34 ) + StrTran( cURL, " ", "%20" ) + Chr( 34 ) ) >= 0
