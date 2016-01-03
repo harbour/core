@@ -176,8 +176,24 @@ fi
 # Copy 7z
 
 if [ -n "${HB_DIR_7Z}" ] ; then
-   cp -f -p "${HB_DIR_7Z}7za.exe"     "${HB_ABSROOT}bin/"
+   if [ "${LIB_TARGET}" = "64" ] ; then
+      cp -f -p "${HB_DIR_7Z}x64/7za.exe" "${HB_ABSROOT}bin/"
+   else
+      cp -f -p "${HB_DIR_7Z}7za.exe"     "${HB_ABSROOT}bin/"
+   fi
    cp -f -p "${HB_DIR_7Z}license.txt" "${HB_ABSROOT}bin/7za_LICENSE.txt"
+fi
+
+# Copy curl
+
+if [ "${LIB_TARGET}" = "64" ] ; then
+   HB_DIR_CURL="${HB_DIR_CURL_64}"
+else
+   HB_DIR_CURL="${HB_DIR_CURL_32}"
+fi
+if [ -n "${HB_DIR_CURL}" ] ; then
+   cp -f -p "${HB_DIR_CURL}bin/curl.exe" "${HB_ABSROOT}bin/"
+   cp -f -p "${HB_DIR_CURL}COPYING.txt"  "${HB_ABSROOT}bin/curl_LICENSE.txt"
 fi
 
 # Copy core 3rd party headers

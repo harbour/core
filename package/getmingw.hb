@@ -71,55 +71,10 @@ STATIC FUNCTION FNameEscape( cFileName )
    RETURN '"' + cFileName + '"'
 
 STATIC FUNCTION dl_file( cURL, cFileName )
-
-   LOCAL lSuccess
-#if defined( __PLATFORM__WINDOWS )
-   LOCAL tmp
-   LOCAL cScript
-   LOCAL cJS
-#endif
-
-   IF hb_processRun( ;
+   RETURN ;
+      hb_processRun( ;
          "curl " + ;
          "-fsS " + ;
          "-o " + FNameEscape( cFileName ) + " " + ;
          "-L --proto-redir =https " + ;
          Chr( 34 ) + StrTran( cURL, " ", "%20" ) + Chr( 34 ) ) >= 0
-
-      RETURN .T.
-   ENDIF
-
-   lSuccess := .F.
-
-#if defined( __PLATFORM__WINDOWS )
-
-#pragma __cstream | cJS := %s
-var http = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
-http.Open("GET", "%1$s", false);
-http.Send();
-if(http.Status() == 200) {
-   var f = new ActiveXObject("ADODB.Stream");
-   f.type = 1; f.open(); f.write(http.responseBody);
-   f.savetofile("%2$s", 2);
-}
-#pragma __endtext
-
-   hb_vfClose( hb_vfTempFile( @cScript,,, ".tmp" ) )
-
-   IF hb_MemoWrit( cScript, ;
-         hb_StrFormat( cJS, ;
-            cURL, ;
-            StrTran( cFileName, "\", "\\" ) ) )
-
-      IF hb_processRun( "cscript" + ;
-            " //nologo" + ;
-            " /e:jscript" + ;
-            " " + FNameEscape( cScript ),, @tmp, @tmp ) == 0
-         lSuccess := .T.
-      ENDIF
-   ENDIF
-
-   hb_vfErase( cScript )
-#endif
-
-   RETURN lSuccess
