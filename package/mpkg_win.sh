@@ -196,6 +196,30 @@ if [ -n "${HB_DIR_CURL}" ] ; then
    cp -f -p "${HB_DIR_CURL}COPYING.txt"  "${HB_ABSROOT}LICENSE_curl.txt"
 fi
 
+# Copy 3rd party static libraries
+
+if [ "${_HB_BUNDLE_3RDLIBS}" = "yes" ] ; then
+   for name in \
+         'openssl' \
+         'libssh2' \
+         'nghttp2' \
+         'curl' \
+   ; do
+      dir_32="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_32"
+      dir_64="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_64"
+      for file in ${!dir_32}lib/*.a ; do
+         if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
+            cp -f -p "${file}" "${HB_ABSROOT}lib/win/mingw/"
+         fi
+      done
+      for file in ${!dir_64}lib/*.a ; do
+         if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
+            cp -f -p "${file}" "${HB_ABSROOT}lib/win/mingw64/"
+         fi
+      done
+   done
+fi
+
 # Copy core 3rd party headers
 
 (

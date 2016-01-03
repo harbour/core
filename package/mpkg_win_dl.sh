@@ -3,7 +3,7 @@
 # Copyright 2015-2016 Viktor Szakats (vszakats.net/harbour)
 
 # - Requires Git for Windows or busybox to run on Windows
-# - Requires *_VER and *_HASH_* envvars
+# - Requires '[PACKAGE]_VER' and '[PACKAGE]_HASH_[32|64]' envvars
 
 set | grep _VER=
 
@@ -36,22 +36,20 @@ openssl dgst -sha256 pack.bin | grep -q ec28b6640ad4f183be7afcd6e9c5eabb24b89729
 
 # Dependencies for Windows builds
 
-curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${OPENSSL_VER}-win32-mingw.7z"
-openssl dgst -sha256 pack.bin | grep -q "${OPENSSL_HASH_32}"
-7z x -y pack.bin > /dev/null
-mv "openssl-${OPENSSL_VER}-win32-mingw.7z" openssl-mingw
+readonly base='https://bintray.com/artifact/download/vszakats/generic/'
 
-curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/openssl-${OPENSSL_VER}-win64-mingw.7z"
-openssl dgst -sha256 pack.bin | grep -q "${OPENSSL_HASH_64}"
-7z x -y pack.bin > /dev/null
-mv "openssl-${OPENSSL_VER}-win64-mingw.7z" openssl-mingw64
-
-curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${CURL_VER}-win32-mingw.7z"
-openssl dgst -sha256 pack.bin | grep -q "${CURL_HASH_32}"
-7z x -y pack.bin > /dev/null
-mv "curl-${OPENSSL_VER}-win32-mingw.7z" curl-mingw
-
-curl -fsS -o pack.bin -L --proto-redir =https "https://dl.bintray.com/vszakats/generic/curl-${CURL_VER}-win64-mingw.7z"
-openssl dgst -sha256 pack.bin | grep -q "${CURL_HASH_64}"
-7z x -y pack.bin > /dev/null
-mv "curl-${OPENSSL_VER}-win64-mingw.7z" curl-mingw64
+for plat in '32' '64' ; do
+   for name in \
+         'openssl' \
+         'libssh2' \
+         'nghttp2' \
+         'curl' \
+   ; do
+      ver="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_VER"
+      hash="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_HASH_${plat}"
+      curl -fsS -o pack.bin -L --proto-redir =https "${base}${name}-${!ver}-win${plat}-mingw.7z"
+      openssl dgst -sha256 pack.bin | grep -q "${!hash}"
+      7z x -y pack.bin > /dev/null
+      mv "${name}-${!ver}-win${plat}-mingw" "${name}-mingw${plat}"
+   done
+done

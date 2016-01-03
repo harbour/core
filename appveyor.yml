@@ -32,7 +32,6 @@ environment:
   CURL_HASH_64: e9bbd8d4fefe484f583c7abfc4ebd9cbd81bf2e49557fc21c72d0c46063d3681
 
 install:
-  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set _HB_BUNDLE_3RDLIBS=yes
   - sh -c ./package/mpkg_win_dl.sh
 
 build_script:
@@ -42,9 +41,9 @@ build_script:
   - set HB_DIR_7Z=%HB_RT%\7z\
   - set HB_DIR_UPX=%HB_RT%\upx\
   - set HB_DIR_MINGW=%HB_RT%\mingw64
-  - set HB_DIR_CURL_32=%HB_RT%\curl-mingw\
+  - set HB_DIR_CURL_32=%HB_RT%\curl-mingw32\
   - set HB_DIR_CURL_64=%HB_RT%\curl-mingw64\
-  - set HB_DIR_OPENSSL_32=%HB_RT%\openssl-mingw\
+  - set HB_DIR_OPENSSL_32=%HB_RT%\openssl-mingw32\
   - set HB_DIR_OPENSSL_64=%HB_RT%\openssl-mingw64\
   - set _ORI_PATH=%PATH%
 
@@ -52,6 +51,8 @@ build_script:
 
 # - set HB_BUILD_CONTRIBS=no
 # - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BUILD_CONTRIBS=hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio
+  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set _HB_BUNDLE_3RDLIBS=yes
+  - set _HB_BUNDLE_3RDLIBS=yes
   - set HB_INSTALL_3RDDYN=yes
   - set HB_BUILD_STRIP=bin
   - set HB_BUILD_CONTRIB_DYN=yes
