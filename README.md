@@ -484,7 +484,7 @@ You will need these packages to compile optional core Harbour features:
 
 > NOTES:
 >
->   * See [this](http://distrowatch.com/dwres.php?resource=package-management) on
+>   * See [this](https://distrowatch.com/dwres.php?resource=package-management) on
 >       package management in various distros.
 >   * On openSUSE, if you want to build 32-bit Harbour on a 64-bit host, install
 >       above packages with `-32bit` suffix, f.e. `slang-devel-32bit`
@@ -1570,7 +1570,7 @@ Supported shells per host platforms:
      * Travis CI [continuous integration, web service, free plan]
         * <https://travis-ci.org/>
      * AppVeyor CI [continuous integration, web service, free plan]
-        * <http://www.appveyor.com/>
+        * <https://www.appveyor.com/>
      * Read the Docs [online documentation creator, web service, free]
         * <https://readthedocs.org/>
      * ReadMe.io [online documentation creator, web service, free plan]
