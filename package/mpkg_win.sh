@@ -44,12 +44,11 @@ HB_ABSROOT="${HB_RT}/${HB_DR}"
 _SCRIPT="$(realpath "$(pwd)/mpkg.hb")"
 _ROOT="$(realpath "$(pwd)/..")"
 
-# hack for AppVeyor
-if [ -n "${APPVEYOR}" ] ; then
-   readonly _FIND=/usr/bin/find
-else
-   readonly _FIND=find
-fi
+# Hack for Git for Windows. Windows system paths may override
+# standard tools.
+case "$(uname)" in
+   *_NT*) alias find=/usr/bin/find;;
+esac
 
 if [ -n "${HB_BASE}" ] ; then
    # Auto-detect the base bitness, by default it will be 32-bit,
@@ -75,11 +74,11 @@ mkdir -p "${HB_ABSROOT}"
 (
    cd .. || exit
    # shellcheck disable=SC2046
-   cp -f -p --parents $(${_FIND} 'addons' -type f -name '*.txt') "${HB_ABSROOT}"
+   cp -f -p --parents $(find 'addons' -type f -name '*.txt') "${HB_ABSROOT}"
    # shellcheck disable=SC2046
-   cp -f -p --parents $(${_FIND} 'extras' -type f -name '*')     "${HB_ABSROOT}"
+   cp -f -p --parents $(find 'extras' -type f -name '*')     "${HB_ABSROOT}"
    # shellcheck disable=SC2046
-   cp -f -p --parents $(${_FIND} 'tests'  -type f -name '*')     "${HB_ABSROOT}"
+   cp -f -p --parents $(find 'tests'  -type f -name '*')     "${HB_ABSROOT}"
 )
 
 mkdir -p "${HB_ABSROOT}bin/"
@@ -117,7 +116,7 @@ for dir in \
       (
          cd "${dir}" || exit
          # shellcheck disable=SC2046
-         cp -f -p --parents $(${_FIND} 'lib' -type f -name '*') "${HB_ABSROOT}"
+         cp -f -p --parents $(find 'lib' -type f -name '*') "${HB_ABSROOT}"
       )
    fi
 done
@@ -129,7 +128,7 @@ done
 #       unresolved externals, when trying to use it. [vszakats]
 if [ -d "${HB_ABSROOT}lib/win/bcc" ] ; then
    for file in ${HB_ABSROOT}bin/*-${HB_VS}.dll ; do
-      bfile="$(basename ${file})"
+      bfile="$(basename "${file}")"
       "${HB_DIR_BCC_IMPLIB}impdef.exe" -a "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.defraw" "${file}"
       sed -f "s/LIBRARY     ${bfile}.DLL/LIBRARY     \"${bfile}.dll\"/Ig" < "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.defraw" > "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.def"
       "${HB_DIR_BCC_IMPLIB}implib.exe" -c -a "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.lib" "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.def"
@@ -185,7 +184,7 @@ fi
 (
    cd .. || exit
    # shellcheck disable=SC2046
-   cp -f -p --parents $(${_FIND} 'src/3rd' -name '*.h') "${HB_ABSROOT}"
+   cp -f -p --parents $(find 'src/3rd' -name '*.h') "${HB_ABSROOT}"
 )
 
 # TODO: This whole section should only be relevant
@@ -242,7 +241,7 @@ echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/g
    set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_)/p"
    echo ---------------------------
    cd "${HB_ABSROOT}/lib" || exit
-   ${_FIND} . -type d | grep -Eo '\./[a-z]+?/[a-z]+?$' | cut -c 3-
+   find . -type d | grep -Eo '\./[a-z]+?/[a-z]+?$' | cut -c 3-
 ) >> "${HB_ABSROOT}BUILD.txt"
 touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
 
