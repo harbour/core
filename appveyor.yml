@@ -88,13 +88,11 @@ build_script:
 # - set PATH=%_ORI_PATH%
 # - call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
 # - win-make.exe clean install HB_VERSION=%HB_VF%
+  - sh -c ./package/mpkg_win.sh
 
 artifacts:
   - path: harbour-daily-win.7z.exe
     name: pkg-win
-
-before_deploy:
-  - sh -c ./package/mpkg_win.sh
 
 deploy:
   - provider: GitHub
