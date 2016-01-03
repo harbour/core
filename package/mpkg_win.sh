@@ -51,16 +51,21 @@ else
    readonly _FIND=find
 fi
 
-# Auto-detect the base bitness, by default it will be 32-bit,
-# and 64-bit if it's the only one available.
-
-if [ -d "../pkg/win/mingw/harbour-${HB_VF}-win-mingw" ] ; then
-   # MinGW 32-bit base system
-   LIB_TARGET='32'
-elif [ -d "../pkg/win/mingw64/harbour-${HB_VF}-win-mingw64" ] ; then
-   # MinGW 64-bit base system
-   LIB_TARGET='64'
+if [ -n "${HB_BASE}" ] ; then
+   # Auto-detect the base bitness, by default it will be 32-bit,
+   # and 64-bit if it's the only one available.
+   if [ -d "../pkg/win/mingw/harbour-${HB_VF}-win-mingw" ] ; then
+      # MinGW 32-bit base system
+      LIB_TARGET='32'
+   elif [ -d "../pkg/win/mingw64/harbour-${HB_VF}-win-mingw64" ] ; then
+      # MinGW 64-bit base system
+      LIB_TARGET='64'
+   fi
+else
+   LIB_TARGET="${HB_BASE}"
 fi
+
+echo "! ${LIB_TARGET}-bit hosted"
 
 # Assemble package from per-target builds
 
