@@ -80,7 +80,7 @@ static HB_SIZE s_gzip_write( PHB_FILE pFile, HB_MAXINT nTimeout )
    {
       if( nWritten < nSize )
          memmove( pFile->buffer, pFile->buffer + nWritten, nSize - nWritten );
-      pFile->gz.avail_out += nWritten;
+      pFile->gz.avail_out += ( uInt ) nWritten;
       pFile->gz.next_out -= nWritten;
    }
 
