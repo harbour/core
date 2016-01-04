@@ -1558,7 +1558,7 @@ static const RDDFUNCS delimTable =
    ( DBENTRYP_L ) hb_delimSkipRaw,
    ( DBENTRYP_VF ) hb_delimAddField,
    ( DBENTRYP_B ) hb_delimAppend,
-     NULL /* hb_delimCreateFields */,
+   NULL /* hb_delimCreateFields */,
    ( DBENTRYP_V ) hb_delimDeleteRec,
    ( DBENTRYP_BP ) hb_delimDeleted,
    NULL /* hb_delimFieldCount */,
