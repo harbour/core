@@ -4,6 +4,7 @@ branches:
   - master
   - test_appveyor
   - lto
+  - msvc
 skip_tags: true
 os: Windows Server 2012 R2
 clone_depth: 8
