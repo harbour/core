@@ -289,12 +289,21 @@ echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/g
 # Register build information
 
 (
+   set -x
+   cd "${HB_ABSROOT}lib" || exit
+   echo "$(pwd)"
+   find . -type d
+   find . -type d | grep -Eo '\./[a-z]+?/[a-z0-9]+?$'
+   find . -type d | grep -Eo '\./[a-z]+?/[a-z0-9]+?$' | cut -c 3-
+)
+
+(
    "${HB_ABSROOT}bin/harbour" -build 2>&1 | grep -Ev '^(Version:|Platform:|Extra )'
    set | grep '_VER=' | grep -v '^_'
    echo ---------------------------
-   set | grep -E '^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_)'
+   set | grep -E '^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_)' | grep -Ev '(HB_BUILD_POSTRUN=|HB_BUILD_PKG=)'
    echo ---------------------------
-   cd "${HB_ABSROOT}/lib" || exit
+   cd "${HB_ABSROOT}lib" || exit
    find . -type d | grep -Eo '\./[a-z]+?/[a-z0-9]+?$' | cut -c 3-
 ) >> "${HB_ABSROOT}BUILD.txt"
 touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
