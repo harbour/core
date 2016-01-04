@@ -291,12 +291,11 @@
       German                ISO-8859-1     DEWIN
       Greek                 737            EL
       Greek                 Windows-1253   ELWIN
-      Hungarian (ntxhu852)  852            HU852
-      Hungarian (sixhu852)  852            HU852S
-      Hungarian (ntxhu852)  ISO-8859-2     HUISO
-      Hungarian (sixhu852)  ISO-8859-2     HUISOS
-      Hungarian (ntxhu852)  Windows-1250   HUWIN
-      Hungarian (sixhu852)  Windows-1250   HUWINS
+      Hungarian (ntxhu852)  852            HU852C
+      Hungarian (sixhu852)  852            HU852
+      Hungarian (sixhu852)  CWI-2          HUCWI
+      Hungarian             ISO-8859-2     HUISO
+      Hungarian             Windows-1250   HUWIN
       Italian               437            IT437
       Italian               850            IT850
       Italian               ISO-8859-1b    ITISB
