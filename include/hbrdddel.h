@@ -74,31 +74,29 @@ typedef struct _DELIMAREA
    *  example.
    */
 
-   PHB_FILE    pFile;                  /* Data file handle */
-   char *      szFileName;             /* Name of data file */
-   char *      szEol;                  /* EOL marker */
-   HB_USHORT   uiEolLen;               /* Size of EOL marker */
-   char        cDelim;                 /* Character field delimiter */
-   char        cSeparator;             /* Field separator */
-   HB_USHORT   uiRecordLen;            /* Size of record */
-   HB_USHORT * pFieldOffset;           /* Pointer to field offset array */
-   HB_BYTE *   pRecord;                /* Buffer of record data */
-   HB_BYTE *   pBuffer;                /* Read/Write */
-   HB_SIZE     nBufferSize;            /* IO buffer size */
-   HB_SIZE     nBufferRead;            /* Number of bytes in read buffer */
-   HB_SIZE     nBufferIndex;           /* Index to read read buffer */
-   HB_FOFFSET  nRecordOffset;          /* Current record offest */
-   HB_FOFFSET  nNextOffset;            /* Next record offest */
-   HB_FOFFSET  nFileSize;              /* File table size in export mode */
-   HB_FOFFSET  nBufferStart;           /* Start offset of read buffer */
-   HB_ULONG    ulRecNo;                /* Current record */
-   HB_ULONG    ulRecCount;             /* Number of records (in export) */
-   HB_BOOL     fTransRec;              /* Can put whole records */
-   HB_BOOL     fFlush;                 /* Data was written to table and not commited */
-   HB_BOOL     fShared;                /* Shared file */
-   HB_BOOL     fReadonly;              /* Read only file */
-   HB_BOOL     fPositioned;            /* Positioned record */
-   HB_BOOL     fRecordChanged;         /* Record changed */
+   PHB_FILE    pFile;               /* Data file handle */
+   char *      szFileName;          /* Name of data file */
+   char *      szEol;               /* EOL marker */
+   HB_USHORT   uiEolLen;            /* Size of EOL marker */
+   char        cDelim;              /* Character field delimiter */
+   char        cSeparator;          /* Field separator */
+   HB_USHORT   uiRecordLen;         /* Size of record */
+   HB_USHORT * pFieldOffset;        /* Pointer to field offset array */
+   HB_BYTE *   pRecord;             /* Buffer of record data */
+   HB_BYTE *   pBuffer;             /* Read/Write */
+   HB_SIZE     nBufferSize;         /* IO buffer size */
+   HB_SIZE     nBufferRead;         /* Number of bytes in read buffer */
+   HB_SIZE     nBufferAtRead;       /* The index in the buffer where we should read next peace of data */
+   HB_SIZE     nBufferIndex;        /* Index to read read buffer */
+   HB_ULONG    ulRecNo;             /* Current record */
+   HB_ULONG    ulRecCount;          /* Number of records (in export) */
+   HB_BOOL     fTransRec;           /* Can put whole records */
+   HB_BOOL     fFlush;              /* Data was written to table and not commited */
+   HB_BOOL     fShared;             /* Shared file */
+   HB_BOOL     fReadonly;           /* Read only file */
+   HB_BOOL     fPositioned;         /* Positioned record */
+   HB_BOOL     fRecordChanged;      /* Record changed */
+   HB_BOOL     fAnyEol;             /* Check for CRLF, LF, CR and LFCR EOLs */
 } DELIMAREA;
 
 typedef DELIMAREA * LPDELIMAREA;
