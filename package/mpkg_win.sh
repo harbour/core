@@ -197,8 +197,8 @@ if [ -n "${HB_DIR_CURL}" ] ; then
 fi
 
 # Copy 3rd party static libraries
-
-if [ "${_HB_BUNDLE_3RDLIBS}" = "yes" ] ; then
+set -x
+if [ "${_HB_BUNDLE_3RDLIB}" = "yes" ] ; then
    for name in \
          'openssl' \
          'libssh2' \
@@ -207,19 +207,23 @@ if [ "${_HB_BUNDLE_3RDLIBS}" = "yes" ] ; then
    ; do
       dir_32="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_32"
       dir_64="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_64"
-      for file in ${!dir_32}lib/*.a ; do
+      echo "DEBUG ${!dir_32}"
+      for file in $(echo "${!dir_32}" | sed 's|\\|/|g')lib/*.a ; do
+         echo "DEBUG ${file}"
          if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
             cp -f -p "${file}" "${HB_ABSROOT}lib/win/mingw/"
          fi
       done
-      for file in ${!dir_64}lib/*.a ; do
+      echo "DEBUG ${!dir_64}"
+      for file in $(echo "${!dir_64}" | sed 's|\\|/|g')lib/*.a ; do
+         echo "DEBUG ${file}"
          if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
             cp -f -p "${file}" "${HB_ABSROOT}lib/win/mingw64/"
          fi
       done
    done
 fi
-
+set +x
 # Copy core 3rd party headers
 
 (
@@ -282,7 +286,8 @@ echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/g
 
 (
    "${HB_ABSROOT}bin/harbour" -build 2>&1 | grep -Ev '^(Version:|Platform:|Extra )'
-   set | grep '_VER='
+   set | grep '_VER=' | grep -v '^_'
+   echo ---------------------------
    set | grep -E '^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_)'
    echo ---------------------------
    cd "${HB_ABSROOT}/lib" || exit

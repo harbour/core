@@ -12,7 +12,6 @@ build:
   verbosity: detailed
 
 environment:
-  HB_VF: daily
   GITHUB_TOKEN:
     secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
   VIRUSTOTAL_APIKEY:
@@ -36,6 +35,7 @@ install:
 
 build_script:
 
+  - set HB_VF=daily
   - set HB_RT=%APPVEYOR_BUILD_FOLDER%
   - set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd.sfx
   - set HB_DIR_7Z=%HB_RT%\7z\
@@ -53,16 +53,22 @@ build_script:
 
   # common settings
 
-# - set HB_BUILD_CONTRIBS=no
 # - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BUILD_CONTRIBS=hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio
-  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set _HB_BUNDLE_3RDLIBS=yes
-  - set _HB_BUNDLE_3RDLIBS=yes
-  - set HB_INSTALL_3RDDYN=yes
+  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set _HB_BUNDLE_3RDLIB=yes
   - set HB_BUILD_STRIP=bin
-  - set HB_BUILD_CONTRIB_DYN=yes
   - set HB_BUILD_PKG=yes
   - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
-  - set _HB_BUILD_PKG_ARCHIVE=no
+
+  # can disable to save time/space
+
+  - set HB_INSTALL_3RDDYN=yes
+  - set HB_BUILD_CONTRIB_DYN=yes
+
+  # debug
+
+# - set HB_BUILD_CONTRIBS=no
+# - set HB_BUILD_VERBOSE=yes
+  - set _HB_BUNDLE_3RDLIB=yes
 # - set _HB_PKG_DEBUG=yes
 
   # mingw
