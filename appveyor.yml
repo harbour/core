@@ -140,4 +140,4 @@ deploy:
       branch: test_appveyor
 
 after_deploy:
-  - if "%APPVEYOR_REPO_BRANCH%" == "master" curl -fsS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form "apikey=%VIRUSTOTAL_APIKEY%" --form file=@harbour-daily-win.7z.exe
+  - if "%APPVEYOR_REPO_BRANCH%" == "master" curl -sS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form "apikey=%VIRUSTOTAL_APIKEY%" --form file=@harbour-daily-win.7z.exe

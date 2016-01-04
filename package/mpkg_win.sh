@@ -181,7 +181,7 @@ if [ -n "${HB_DIR_7Z}" ] ; then
    else
       cp -f -p "${HB_DIR_7Z}7za.exe"     "${HB_ABSROOT}bin/"
    fi
-   cp -f -p "${HB_DIR_7Z}license.txt" "${HB_ABSROOT}LICENSE_7za.txt"
+   cp -f -p "${HB_DIR_7Z}License.txt" "${HB_ABSROOT}LICENSE_7za.txt"
 fi
 
 # Copy curl
@@ -197,7 +197,7 @@ if [ -n "${HB_DIR_CURL}" ] ; then
 fi
 
 # Copy 3rd party static libraries
-set -x
+
 if [ "${_HB_BUNDLE_3RDLIB}" = "yes" ] ; then
    for name in \
          'openssl' \
@@ -207,23 +207,23 @@ if [ "${_HB_BUNDLE_3RDLIB}" = "yes" ] ; then
    ; do
       dir_32="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_32"
       dir_64="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_64"
-      echo "DEBUG ${!dir_32}"
       for file in $(echo "${!dir_32}" | sed 's|\\|/|g')lib/*.a ; do
-         echo "DEBUG ${file}"
          if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
             cp -f -p "${file}" "${HB_ABSROOT}lib/win/mingw/"
          fi
       done
-      echo "DEBUG ${!dir_64}"
       for file in $(echo "${!dir_64}" | sed 's|\\|/|g')lib/*.a ; do
-         echo "DEBUG ${file}"
          if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
             cp -f -p "${file}" "${HB_ABSROOT}lib/win/mingw64/"
          fi
       done
    done
+
+   cp -f -p "${HB_DIR_OPENSSL_64}LICENSE.txt" "${HB_ABSROOT}LICENSE_openssl.txt"
+   cp -f -p "${HB_DIR_LIBSSH2_64}COPYING.txt" "${HB_ABSROOT}LICENSE_libssh2.txt"
+   cp -f -p "${HB_DIR_NGHTTP2_64}COPYING.txt" "${HB_ABSROOT}LICENSE_nghttp2.txt"
 fi
-set +x
+
 # Copy core 3rd party headers
 
 (
