@@ -21,6 +21,7 @@ hbfship/hbfship.hbp
 hbgd/hbgd.hbp
 hbgs/hbgs.hbp
 hbgt/hbgt.hbp
+hbgzio/hbgzio.hbp
 hbhpdf/hbhpdf.hbp                # uses: libhpdf (locally hosted)
 hbhttpd/hbhttpd.hbp
 hblzf/hblzf.hbp                  # uses: liblzf (locally hosted)
