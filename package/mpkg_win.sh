@@ -205,8 +205,8 @@ if [ "${_HB_BUNDLE_3RDLIBS}" = "yes" ] ; then
          'nghttp2' \
          'curl' \
    ; do
-      dir_32="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_32"
-      dir_64="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_64"
+      dir_32="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_32"
+      dir_64="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_64"
       for file in ${!dir_32}lib/*.a ; do
          if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
             cp -f -p "${file}" "${HB_ABSROOT}lib/win/mingw/"
@@ -281,8 +281,9 @@ echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/g
 # Register build information
 
 (
-   "${HB_ABSROOT}bin/harbour" -build 2>&1 | sed -nr "/^(Version:|Platform:|Extra )/!p"
-   set | sed -nr "/^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_|_VER=)/p"
+   "${HB_ABSROOT}bin/harbour" -build 2>&1 | grep -Ev '^(Version:|Platform:|Extra )'
+   set | grep '_VER='
+   set | grep -E '^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_)'
    echo ---------------------------
    cd "${HB_ABSROOT}/lib" || exit
    find . -type d | grep -Eo '\./[a-z]+?/[a-z]+?$' | cut -c 3-

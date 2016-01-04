@@ -5,7 +5,7 @@
 # - Requires Git for Windows or busybox to run on Windows
 # - Requires '[PACKAGE]_VER' and '[PACKAGE]_HASH_[32|64]' envvars
 
-set | grep _VER=
+set | grep '_VER='
 
 # Quit if any of the lines fail
 set -e
