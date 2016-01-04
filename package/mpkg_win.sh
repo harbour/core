@@ -295,7 +295,7 @@ echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/g
    set | grep -E '^(HB_USER_|HB_BUILD_|HB_WITH_|HB_STATIC_)'
    echo ---------------------------
    cd "${HB_ABSROOT}/lib" || exit
-   find . -type d | grep -Eo '\./[a-z]+?/[a-z]+?$' | cut -c 3-
+   find . -type d | grep -Eo '\./[a-z]+?/[a-z0-9]+?$' | cut -c 3-
 ) >> "${HB_ABSROOT}BUILD.txt"
 touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
 

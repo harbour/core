@@ -54,7 +54,7 @@ build_script:
 
   # common settings
 
-# - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BUILD_CONTRIBS=hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio
+  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BUILD_CONTRIBS=hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio
   - if "%APPVEYOR_REPO_BRANCH%" == "lto" set _HB_BUNDLE_3RDLIB=yes
   - set HB_BUILD_STRIP=bin
   - set HB_BUILD_PKG=yes
