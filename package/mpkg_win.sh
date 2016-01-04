@@ -206,22 +206,22 @@ if [ "${_HB_BUNDLE_3RDLIB}" = "yes" ] ; then
          'curl' \
    ; do
       dir_32="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_32"
+      dir_32=$(echo "${!dir_32}" | sed 's|\\|/|g')
       dir_64="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_64"
-      for file in $(echo "${!dir_32}" | sed 's|\\|/|g')lib/*.a ; do
+      dir_64=$(echo "${!dir_64}" | sed 's|\\|/|g')
+      for file in ${dir_32}lib/*.a ; do
          if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
             cp -f -p "${file}" "${HB_ABSROOT}lib/win/mingw/"
          fi
       done
-      for file in $(echo "${!dir_64}" | sed 's|\\|/|g')lib/*.a ; do
+      for file in ${dir_64}lib/*.a ; do
          if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
             cp -f -p "${file}" "${HB_ABSROOT}lib/win/mingw64/"
          fi
       done
+      [ -f "${dir_64}COPYING.txt" ] && cp -f -p "${dir_64}COPYING.txt" "${HB_ABSROOT}LICENSE_${name}.txt"
+      [ -f "${dir_64}LICENSE.txt" ] && cp -f -p "${dir_64}LICENSE.txt" "${HB_ABSROOT}LICENSE_${name}.txt"
    done
-
-   cp -f -p "${HB_DIR_OPENSSL_64}LICENSE.txt" "${HB_ABSROOT}LICENSE_openssl.txt"
-   cp -f -p "${HB_DIR_LIBSSH2_64}COPYING.txt" "${HB_ABSROOT}LICENSE_libssh2.txt"
-   cp -f -p "${HB_DIR_NGHTTP2_64}COPYING.txt" "${HB_ABSROOT}LICENSE_nghttp2.txt"
 fi
 
 # Copy core 3rd party headers
