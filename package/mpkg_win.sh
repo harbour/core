@@ -42,6 +42,7 @@ HB_DIR_MINGW="$(echo "${HB_DIR_MINGW}" | sed 's|\\|/|g')"
 HB_DR="hb${HB_VS}/"
 HB_ABSROOT="${HB_RT}/${HB_DR}"
 
+_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 _SCRIPT="$(realpath "$(pwd)/mpkg.hb")"
 _ROOT="$(realpath "$(pwd)/..")"
 
@@ -181,7 +182,7 @@ if [ -n "${HB_DIR_7Z}" ] ; then
    else
       cp -f -p "${HB_DIR_7Z}7za.exe"     "${HB_ABSROOT}bin/"
    fi
-   cp -f -p "${HB_DIR_7Z}License.txt" "${HB_ABSROOT}LICENSE_7za.txt"
+   cp -f -p "${HB_DIR_7Z}License.txt" "${HB_ABSROOT}LICENSE_7z.txt"
 fi
 
 # Copy curl
@@ -192,8 +193,9 @@ else
    HB_DIR_CURL="${HB_DIR_CURL_32}"
 fi
 if [ -n "${HB_DIR_CURL}" ] ; then
-   cp -f -p "${HB_DIR_CURL}bin/curl.exe" "${HB_ABSROOT}bin/"
-   cp -f -p "${HB_DIR_CURL}COPYING.txt"  "${HB_ABSROOT}LICENSE_curl.txt"
+   cp -f -p "${HB_DIR_CURL}bin/curl.exe"           "${HB_ABSROOT}bin/"
+   cp -f -p "${HB_DIR_CURL}bin/curl-ca-bundle.crt" "${HB_ABSROOT}bin/"
+   cp -f -p "${HB_DIR_CURL}COPYING.txt"            "${HB_ABSROOT}LICENSE_curl.txt"
 fi
 
 # Copy 3rd party static libraries
@@ -265,6 +267,8 @@ fi
 sed -e "s/_HB_VF_DEF_/${HB_VF_DEF}/g" 'getmingw.hb' > "${HB_ABSROOT}bin/getmingw.hb"
 touch -c "${HB_ABSROOT}bin/getmingw.hb" -r "${HB_ABSROOT}README.md"
 
+cp -f -p 'getsrc.hb' "${HB_ABSROOT}bin/"
+
 # Burn build information into RELNOTES.txt
 
 _HB_VER="${HB_VF}"
@@ -309,6 +313,7 @@ touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
    (
       echo '*.md'
       echo '*.txt'
+      echo 'bin/*.crt'
       echo 'bin/*.dll'
       echo 'bin/*.exe'
       echo 'bin/*.hb'
@@ -374,7 +379,7 @@ EOF
    openssl dgst -sha256 "${_PKGNAME}"
 )
 
-if [ "$(git rev-parse --abbrev-ref HEAD)" = "master" ] ; then
+if [ "${_BRANCH}" = "master" ] ; then
    (
       set +x
       curl -sS \
