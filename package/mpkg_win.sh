@@ -289,15 +289,6 @@ echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/g
 # Register build information
 
 (
-   set -x
-   cd "${HB_ABSROOT}lib" || exit
-   echo "$(pwd)"
-   find . -type d
-   find . -type d | grep -Eo '\./[a-z]+?/[a-z0-9]+?$'
-   find . -type d | grep -Eo '\./[a-z]+?/[a-z0-9]+?$' | cut -c 3-
-)
-
-(
    "${HB_ABSROOT}bin/harbour" -build 2>&1 | grep -Ev '^(Version:|Platform:|Extra )'
    set | grep '_VER=' | grep -v '^_'
    echo ---------------------------
