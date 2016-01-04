@@ -211,7 +211,7 @@ static long s_sockexRead( PHB_SOCKEX pSock, void * data, long len, HB_MAXINT tim
       if( pZ->z_read.total_out != 0 )
          lRecv = ( long ) pZ->z_read.total_out;
 
-      return pZ->z_read.total_out != 0 ? ( long ) pZ->z_read.total_out : lRecv;
+      return lRecv;
    }
    else
       return hb_sockexRead( pZ->sock, data, len, timeout );
@@ -277,7 +277,7 @@ static long s_sockexFlush( PHB_SOCKEX pSock, HB_MAXINT timeout, HB_BOOL fSync )
       {
          if( s_zsock_write( pZ, timeout ) <= 0 )
             break;
-         if( err == Z_OK )
+         if( err == Z_OK || err == Z_BUF_ERROR )
             err = deflate( &pZ->z_write, fSync ? Z_FULL_FLUSH : Z_PARTIAL_FLUSH );
       }
       if( err != Z_OK && err != Z_BUF_ERROR )

@@ -383,7 +383,7 @@ long hb_znetFlush( PHB_ZNETSTREAM pStream, HB_SOCKET sd, HB_MAXINT timeout,
       if( hb_znetStreamWrite( pStream, sd, timeout ) <= 0 )
          break;
 
-      if( pStream->err == Z_OK )
+      if( pStream->err == Z_OK || pStream->err == Z_BUF_ERROR )
          pStream->err = deflate( &pStream->wr,
                                  fSync ? Z_FULL_FLUSH : Z_PARTIAL_FLUSH );
    }
