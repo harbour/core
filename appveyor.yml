@@ -58,6 +58,7 @@ build_script:
   - set HB_BUILD_STRIP=bin
   - set HB_BUILD_PKG=yes
   - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
+  - set _HB_BUILD_PKG_ARCHIVE=no
 
   # can disable to save time/space
 
@@ -67,9 +68,10 @@ build_script:
   # debug
 
 # - set HB_BUILD_CONTRIBS=no
+# - set HB_BUILD_OPTIMIZE=no
 # - set HB_BUILD_VERBOSE=yes
-  - set _HB_BUNDLE_3RDLIB=yes
-  - set _HB_PKG_DEBUG=yes
+# - set _HB_PKG_DEBUG=yes
+# - set _HB_BUNDLE_3RDLIB=yes
 
   # mingw
 

@@ -1590,9 +1590,6 @@ Supported shells per host platforms:
         * <http://7-zip.org/>
      * 7-Zip SFX modules [win, free, open-source]
         * <http://7zsfx.info/en/>
-     * bzip2 [multi-platform, free, open-source]
-        * Windows binary:
-           * <http://bzip.org/downloads.html>
      * GNU Make
 
         Windows binary + source:
