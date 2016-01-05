@@ -14,7 +14,7 @@ else
    echo "Warning!!! Cannot find 'GNU tar'"
 fi
 
-hb_currdir=$(pwd)
+hb_currdir="$(pwd)"
 
 hb_archopt='-czf'
 [ -n "${hb_ext}" ] || hb_ext='.tar.gz'
@@ -25,6 +25,7 @@ else
    hb_rootdir=$(dirname "$0")
    hb_rootdir=$(dirname "${hb_rootdir}")
 fi
+# shellcheck source=./mpkg_ver.sh
 . "${hb_rootdir}/package/mpkg_ver.sh"
 
 hb_ver=$(get_hbver "${hb_rootdir}")

@@ -6,19 +6,22 @@
 
 PROCEDURE Main()
 
-   LOCAL cURL, cSUM, cFileName, tmp, cDst, cTarget
+   LOCAL cURL, cSUM, cFileName, tmp, cDst, cTarget, cCBase, cCOpt
    LOCAL cDirBase := hb_FNameDir( hbshell_ScriptName() )
    LOCAL cOldDir := hb_cwd( cDirBase )
 
    IF hb_vfExists( "harbour.exe" )
 
+//    cCBase := "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi"; cCOpt := ""
+      cCBase := "https://downloads.sourceforge.net"; cCOpt := "-L"
+
       SWITCH hb_Version( HB_VERSION_BITWIDTH )
       CASE 32
-         cURL := "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/5.3.0/threads-posix/sjlj/i686-5.3.0-release-posix-sjlj-rt_v4-rev0.7z"
+         cURL := cCBase + "/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/5.3.0/threads-posix/sjlj/i686-5.3.0-release-posix-sjlj-rt_v4-rev0.7z"
          cSUM := "870d50cfab3c8df9da1b890691b60bda2ccf92f122121dc75f11fe1612c6aff7"
          EXIT
       CASE 64
-         cURL := "https://www.mirrorservice.org/sites/dl.sourceforge.net/pub/sourceforge/m/mi/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.3.0/threads-posix/sjlj/x86_64-5.3.0-release-posix-sjlj-rt_v4-rev0.7z"
+         cURL := cCBase + "/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.3.0/threads-posix/sjlj/x86_64-5.3.0-release-posix-sjlj-rt_v4-rev0.7z"
          cSUM := "ec28b6640ad4f183be7afcd6e9c5eabb24b89729ca3fec7618755555b5d70c19"
          EXIT
       ENDSWITCH
@@ -33,7 +36,7 @@ PROCEDURE Main()
          IF hb_processRun( "curl" + ;
                " -fsS" + ;
                " -o " + FNameEscape( cFileName ) + ;
-               " -L --proto-redir =https" + ;
+               " " + cCOpt + ;
                " " + FNameEscape( StrTran( cURL, " ", "%20" ) ) ) == 0
 
             IF hb_SHA256( hb_MemoRead( cFileName ) ) == cSUM
