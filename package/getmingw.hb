@@ -17,11 +17,11 @@ PROCEDURE Main()
 
       SWITCH hb_Version( HB_VERSION_BITWIDTH )
       CASE 32
-         cURL := cCBase + "/mingw-w64/Toolchains targetting Win32/Personal Builds/mingw-builds/5.3.0/threads-posix/sjlj/i686-5.3.0-release-posix-sjlj-rt_v4-rev0.7z"
+         cURL := cCBase + "/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.3.0/threads-posix/sjlj/i686-5.3.0-release-posix-sjlj-rt_v4-rev0.7z"
          cSUM := "870d50cfab3c8df9da1b890691b60bda2ccf92f122121dc75f11fe1612c6aff7"
          EXIT
       CASE 64
-         cURL := cCBase + "/mingw-w64/Toolchains targetting Win64/Personal Builds/mingw-builds/5.3.0/threads-posix/sjlj/x86_64-5.3.0-release-posix-sjlj-rt_v4-rev0.7z"
+         cURL := cCBase + "/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.3.0/threads-posix/sjlj/x86_64-5.3.0-release-posix-sjlj-rt_v4-rev0.7z"
          cSUM := "ec28b6640ad4f183be7afcd6e9c5eabb24b89729ca3fec7618755555b5d70c19"
          EXIT
       ENDSWITCH
@@ -37,7 +37,7 @@ PROCEDURE Main()
                " -fsS" + ;
                " -o " + FNameEscape( cFileName ) + ;
                " " + cCOpt + ;
-               " " + FNameEscape( StrTran( cURL, " ", "%20" ) ) ) == 0
+               " " + cURL ) == 0
 
             IF hb_SHA256( hb_MemoRead( cFileName ) ) == cSUM
 
