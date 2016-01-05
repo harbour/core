@@ -1085,7 +1085,7 @@ static int read_bufch( PHB_GTTRM pTerm, int fd )
 
 static int get_inch( PHB_GTTRM pTerm, int milisec )
 {
-   int nRet = 0, npfd = -1, nchk = pTerm->efds_no, lRead = 0;
+   int nRet = 0, nNext = 0, npfd = -1, nchk = pTerm->efds_no, lRead = 0;
    int mode, i, n, counter;
    struct timeval tv, * ptv;
    evtFD * pefd = NULL;
@@ -1111,21 +1111,24 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
       {
          if( pTerm->event_fds[ i ]->status == EVTFDSTAT_RUN )
          {
-            if( pTerm->event_fds[ i ]->mode == O_RDWR
-                || pTerm->event_fds[ i ]->mode == O_RDONLY )
+            if( pTerm->event_fds[ i ]->mode == O_RDWR ||
+                pTerm->event_fds[ i ]->mode == O_RDONLY )
             {
                FD_SET( pTerm->event_fds[ i ]->fd, &rfds );
                if( n < pTerm->event_fds[ i ]->fd )
                   n = pTerm->event_fds[ i ]->fd;
             }
-            if( pTerm->event_fds[ i ]->mode == O_RDWR
-                || pTerm->event_fds[ i ]->mode == O_WRONLY )
+            if( pTerm->event_fds[ i ]->mode == O_RDWR ||
+                pTerm->event_fds[ i ]->mode == O_WRONLY )
             {
                FD_SET( pTerm->event_fds[ i ]->fd, &wfds );
                if( n < pTerm->event_fds[ i ]->fd )
                   n = pTerm->event_fds[ i ]->fd;
             }
          }
+         else if( pTerm->event_fds[ i ]->status == EVTFDSTAT_STOP &&
+                  pTerm->event_fds[ i ]->eventFunc == NULL )
+            nNext = HB_INKEY_NEW_EVENT( HB_K_TERMINATE );
       }
 
       counter = pTerm->key_counter;
@@ -1142,7 +1145,10 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
                   lRead = 1;
                   n = read_bufch( pTerm, pTerm->event_fds[ i ]->fd );
                   if( n == 0 )
+                  {
                      pTerm->event_fds[ i ]->status = EVTFDSTAT_STOP;
+                     nRet = HB_INKEY_NEW_EVENT( HB_K_CLOSE );
+                  }
                }
                else if( nRet == 0 && counter == pTerm->key_counter )
                {
@@ -1201,7 +1207,7 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
       pTerm->event_fds[ n++ ] = pefd;
    pTerm->efds_no = n;
 
-   return nRet;
+   return nRet == 0 ? nNext : nRet;
 }
 
 static int test_bufch( PHB_GTTRM pTerm, int n, int delay )
@@ -3548,7 +3554,7 @@ static int hb_gt_trm_ReadKey( PHB_GT pGT, int iEventMask )
       if( hb_gt_trm_getSize( HB_GTTRM_GET( pGT ), &iRows, &iCols ) )
       {
          HB_GTSELF_RESIZE( pGT, iRows, iCols );
-         iKey = HB_K_RESIZE;
+         iKey = HB_INKEY_NEW_EVENT( HB_K_RESIZE );
       }
       else
          iKey = 0;
