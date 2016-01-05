@@ -140,13 +140,13 @@ PROCEDURE Main( cMode )
             NEXT
          ENDIF
       ELSE
-         OutStd( __FILE__ + ": Error: Repository not found:", cGitRoot + hb_eol() )
+         OutStd( "! mpkg.hb: Error: Repository not found:", cGitRoot + hb_eol() )
       ENDIF
 
       EXIT
 
    OTHERWISE
-      OutStd( __FILE__ + ": Error: Wrong mode:", "'" + cMode + "'" + hb_eol() )
+      OutStd( "! mpkg.hb: Error: Wrong mode:", "'" + cMode + "'" + hb_eol() )
    ENDSWITCH
 
    _DEBUG( __FILE__ + ": FINISH" + hb_eol() )

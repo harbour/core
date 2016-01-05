@@ -153,6 +153,7 @@ CREATE CLASS win_Prn
    VAR BinNumber        INIT 0
    VAR Landscape        INIT .F.
    VAR Copies           INIT 1
+   VAR Collate          INIT .F.
    VAR PaperLength      INIT 0                           // Value is * 1/10 of mm   1000 == 10cm
    VAR PaperWidth       INIT 0                           //   "    "    "     "       "     "
 
@@ -223,7 +224,7 @@ METHOD Create() CLASS win_Prn
    IF ! Empty( ::hPrinterDC := wapi_CreateDC( , ::PrinterName ) )
 
       // Set Form Type
-      // Set Number of Copies
+      // Set Number of Copies, optionally enable collation
       // Set Orientation
       // Set Duplex mode
       // Set PrintQuality
@@ -233,13 +234,15 @@ METHOD Create() CLASS win_Prn
             @::FormType, @::Landscape, ;
             @::Copies, @::BinNumber, ;
             @::fDuplexType, @::fPrintQuality, ;
-            @::PaperLength, @::PaperWidth )
+            @::PaperLength, @::PaperWidth, ;
+            @::Collate )
       ELSE
          lResult := win_SetDocumentProperties( ::hPrinterDC, ::PrinterName, ;
             ::FormType, ::Landscape, ;
             ::Copies, ::BinNumber, ;
             ::fDuplexType, ::fPrintQuality, ;
-            ::PaperLength, ::PaperWidth )
+            ::PaperLength, ::PaperWidth, ;
+            ::Collate )
       ENDIF
 
       IF lResult
@@ -457,7 +460,8 @@ METHOD GetDocumentProperties() CLASS win_Prn
       @::FormType, @::Landscape, ;
       @::Copies, @::BinNumber, ;
       @::fDuplexType, @::fPrintQuality, ;
-      @::PaperLength, @::PaperWidth )
+      @::PaperLength, @::PaperWidth, ;
+      @::Collate )
 
 // If font width is specified it is in "characters per inch" to emulate DotMatrix
 // An array { nMul, nDiv } is used to get precise size such a the Dot Matric equivalent

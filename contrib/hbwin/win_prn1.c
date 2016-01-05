@@ -396,7 +396,8 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
                              HB_ISBYREF( 7 ) ||
                              HB_ISBYREF( 8 ) ||
                              HB_ISBYREF( 9 ) ||
-                             HB_ISBYREF( 10 );
+                             HB_ISBYREF( 10 ) ||
+                             HB_ISBYREF( 11 );
 
                if( ( iProp = hb_parni( 3 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
                {
@@ -414,6 +415,12 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
                {
                   pDevMode->dmCopies = ( short ) iProp;
                   dmFields |= DM_COPIES;
+
+                  if( hb_parl( 11 ) )
+                  {
+                     pDevMode->dmCollate = DMCOLLATE_TRUE;
+                     dmFields |= DM_COLLATE;
+                  }
                }
 
                if( ( iProp = hb_parni( 6 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
@@ -504,6 +511,7 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
             hb_storni( pDevMode->dmPrintQuality, 7 );
             hb_storni( pDevMode->dmPaperLength, 8 );
             hb_storni( pDevMode->dmPaperWidth, 9 );
+            hb_storl( pDevMode->dmCollate == DMCOLLATE_TRUE, 10 );
             bResult = HB_TRUE;
          }
 
