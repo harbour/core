@@ -55,13 +55,13 @@ build_script:
   # common settings
 
   - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BUILD_CONTRIBS=hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio hbgzio
-  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set _HB_BUNDLE_3RDLIB=yes
   - set HB_BUILD_STRIP=bin
   - set HB_BUILD_PKG=yes
   - set _HB_BUILD_PKG_ARCHIVE=no
 
   # can disable to save time/space
 
+  - set _HB_BUNDLE_3RDLIB=yes
   - set HB_INSTALL_3RDDYN=yes
   - set HB_BUILD_CONTRIB_DYN=yes
   - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
