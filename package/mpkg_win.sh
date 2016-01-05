@@ -20,7 +20,7 @@ fi
 # - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (only when including BCC build).
 # - Requires GNU sed, touch and OpenSSL tools in PATH
 # - Optional HB_SFX_7Z envvar pointed to 7z SFX module
-#   found in: http://7zsfx.info/files/7zsd_150_2712.7z
+#   found in: http://7zsfx.info/files/7zsd_extra_160_2712.7z
 
 echo "! Self: $0"
 

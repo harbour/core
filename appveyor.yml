@@ -35,10 +35,10 @@ install:
   - sh -c ./package/mpkg_win_dl.sh
 
 build_script:
-
   - set HB_VF=daily
   - set HB_RT=%APPVEYOR_BUILD_FOLDER%
-  - set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd.sfx
+  - if not "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd_All.sfx
+  - if     "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd_All_x64.sfx
   - set HB_DIR_7Z=%HB_RT%\7z\
   - set HB_DIR_UPX=%HB_RT%\upx\
   - set HB_DIR_MINGW=%HB_RT%\mingw64
