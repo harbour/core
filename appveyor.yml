@@ -61,7 +61,7 @@ build_script:
 
   # can disable to save time/space
 
-  - set _HB_BUNDLE_3RDLIB=yes
+  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" set _HB_BUNDLE_3RDLIB=yes
   - set HB_INSTALL_3RDDYN=yes
   - set HB_BUILD_CONTRIB_DYN=yes
   - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
@@ -143,4 +143,4 @@ deploy:
       branch: test_appveyor
 
 after_deploy:
-  - if "%APPVEYOR_REPO_BRANCH%" == "master" curl -sS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form "apikey=%VIRUSTOTAL_APIKEY%" --form file=@harbour-daily-win.7z.exe
+  - if not "%_HB_BUNDLE_3RDLIB%" == "yes" curl -sS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form "apikey=%VIRUSTOTAL_APIKEY%" --form file=@harbour-daily-win.7z.exe
