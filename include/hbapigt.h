@@ -337,6 +337,7 @@ extern HB_EXPORT int        hb_inkeyKeyVal( int iKey );     /* extract key/chara
 #define HB_INKEY_NEW_MPOS( x, y )   ( ( ( ( y ) & HB_INKEY_EXT_POSMASK ) << HB_INKEY_EXT_POSBITS ) | \
                                       ( ( x ) & HB_INKEY_EXT_POSMASK ) | \
                                       ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEPOS ) )
+#define HB_INKEY_NEW_EVENT( e )      ( ( e ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_EVENT ) )
 
 #define HB_INKEY_MOUSEPOSX( n )     ( ( n ) & HB_INKEY_EXT_POSMASK )
 #define HB_INKEY_MOUSEPOSY( n )     ( ( ( n ) >> HB_INKEY_EXT_POSBITS ) & HB_INKEY_EXT_POSMASK )
