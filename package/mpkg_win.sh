@@ -306,6 +306,12 @@ touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
 "${HB_ABSROOT}bin/hbmk2.exe" "${_SCRIPT}" nl "${HB_ABSROOT}addons/*.txt"
 "${HB_ABSROOT}bin/hbmk2.exe" "${_SCRIPT}" nl "${HB_ABSROOT}doc/*.txt"
 
+# Reset Windows attributes
+
+case "$(uname)" in
+   *_NT*) find "${HB_ABSROOT}" -exec attrib +A -R {} \;
+esac
+
 # Create installer/archive
 (
    cd "${HB_RT}" || exit
@@ -333,6 +339,7 @@ touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
    (
       cd "${HB_DR}" || exit
       bin/hbmk2.exe "${_SCRIPT}" ts "${_ROOT}"
+      # NOTE: add -stl option after updating to 15.12 or upper
       "${HB_DIR_7Z}7za" a -r -mx "${_PKGNAME}" "@${_ROOT}/_hbfiles" > /dev/null
    )
 
