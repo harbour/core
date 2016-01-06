@@ -1460,7 +1460,7 @@ STATIC FUNCTION DetectPackageManager()
       DO CASE
       CASE hb_vfDirExists( "/etc/pkg" )
          cPkgMgr := "pkg"
-      CASE
+      OTHERWISE
          cPkgMgr := "ports"
       ENDCASE
    #elif defined( __PLATFORM__SUNOS )
