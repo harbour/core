@@ -1528,13 +1528,13 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
             int iWd;
             if( nHeight > nWidth )
             {
-               iWd = ( int ) ( ( float ) ht * nWidth / nHeight );
-               iHt = ( int ) ( ( float ) iWd * nHeight / nWidth );
+               iWd = HB_MIN( wd, ( int ) ( ( float ) ht * nWidth / nHeight ) );
+               iHt =             ( int ) ( ( float ) iWd * nHeight / nWidth );
             }
             else
             {
-               iHt = ( int ) ( ( float ) wd * nHeight / nWidth );
-               iWd = ( int ) ( ( float ) iHt * nWidth / nHeight );
+               iHt = HB_MIN( ht, ( int ) ( ( float ) wd * nHeight / nWidth ) );
+               iWd =             ( int ) ( ( float ) iHt * nWidth / nHeight );
             }
             x += abs( ( iWd - wd ) / 2 );
             y += abs( ( iHt - ht ) / 2 );
