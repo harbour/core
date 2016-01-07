@@ -1,6 +1,6 @@
-diff -urNw sqlite3.orig/sqlite3.c.rej sqlite3/sqlite3.c.rej
+diff --strip-trailing-cr -urN sqlite3.orig/sqlite3.c.rej sqlite3/sqlite3.c.rej
 --- sqlite3.orig/sqlite3.c.rej	1970-01-01 01:00:00.000000000 +0100
-+++ sqlite3/sqlite3.c.rej	2015-11-02 23:53:01.559289500 +0100
++++ sqlite3/sqlite3.c.rej	2016-01-07 01:07:22.000000000 +0100
 @@ -0,0 +1,35 @@
 +--- sqlite3.c	2015-10-18 15:47:07.083537600 +0200
 ++++ sqlite3.c	2015-10-18 15:47:07.380213000 +0200
