@@ -1593,10 +1593,10 @@ INIT PROCEDURE ARRAYRDD_INIT()
 #ifdef HB_LEGACY_LEVEL4
 
 FUNCTION hb_FileArrayRdd( cFullName )
-   RETURN hb_dbDrop( cFullName )
+   RETURN hb_dbExists( cFullName )
 
 FUNCTION hb_EraseArrayRdd( cFullName )
-   RETURN hb_dbExists( cFullName )
+   RETURN hb_dbDrop( cFullName )
 
 #endif
 
