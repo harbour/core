@@ -1,39 +1,36 @@
-diff --strip-trailing-cr -urN sqlite3.orig/sqlite3.c.rej sqlite3/sqlite3.c.rej
---- sqlite3.orig/sqlite3.c.rej	1970-01-01 01:00:00.000000000 +0100
-+++ sqlite3/sqlite3.c.rej	2016-01-07 01:07:22.000000000 +0100
-@@ -0,0 +1,35 @@
-+--- sqlite3.c	2015-10-18 15:47:07.083537600 +0200
-++++ sqlite3.c	2015-10-18 15:47:07.380213000 +0200
-+@@ -30351,7 +30351,11 @@
-+       ** This is a similar technique to that used by glibc on systems
-+       ** that do not have a real fallocate() call.
-+       */
-++#if __minix
-++      int nBlk = 4096;            /* MFS default; good enough for now */
-++#else
-+       int nBlk = buf.st_blksize;  /* File-system block size */
-++#endif
-+       int nWrite = 0;             /* Number of bytes written by seekAndWrite */
-+       i64 iWrite;                 /* Next offset to write to */
-+ 
-+@@ -36384,6 +36388,11 @@
-+ ** create a substitute.
-+ */
-+ /* #include <time.h> */
-++#if defined( _MSC_VER )
-++#define _LL( num )   num
-++#else
-++#define _LL( num )   num##LL
-++#endif
-+ struct tm *__cdecl localtime(const time_t *t)
-+ {
-+   static struct tm y;
-+@@ -36391,7 +36400,7 @@
-+   SYSTEMTIME pTm;
-+   sqlite3_int64 t64;
-+   t64 = *t;
-+-  t64 = (t64 + 11644473600)*10000000;
-++  t64 = (t64 + _LL(11644473600))*10000000;
-+   uTm.dwLowDateTime = (DWORD)(t64 & 0xFFFFFFFF);
-+   uTm.dwHighDateTime= (DWORD)(t64 >> 32);
-+   osFileTimeToLocalFileTime(&uTm,&lTm);
+diff --strip-trailing-cr -urN sqlite3.orig/sqlite3.c sqlite3/sqlite3.c
+--- sqlite3.orig/sqlite3.c	2016-01-07 01:16:08.000000000 +0100
++++ sqlite3/sqlite3.c	2016-01-07 01:16:08.000000000 +0100
+@@ -30714,7 +30714,11 @@
+       ** This is a similar technique to that used by glibc on systems
+       ** that do not have a real fallocate() call.
+       */
++#if __minix
++      int nBlk = 4096;            /* MFS default; good enough for now */
++#else
+       int nBlk = buf.st_blksize;  /* File-system block size */
++#endif
+       int nWrite = 0;             /* Number of bytes written by seekAndWrite */
+       i64 iWrite;                 /* Next offset to write to */
+ 
+@@ -36755,6 +36759,11 @@
+ ** create a substitute.
+ */
+ /* #include <time.h> */
++#if defined( _MSC_VER )
++#define _LL( num )   num
++#else
++#define _LL( num )   num##LL
++#endif
+ struct tm *__cdecl localtime(const time_t *t)
+ {
+   static struct tm y;
+@@ -36762,7 +36771,7 @@
+   SYSTEMTIME pTm;
+   sqlite3_int64 t64;
+   t64 = *t;
+-  t64 = (t64 + 11644473600)*10000000;
++  t64 = (t64 + _LL(11644473600))*10000000;
+   uTm.dwLowDateTime = (DWORD)(t64 & 0xFFFFFFFF);
+   uTm.dwHighDateTime= (DWORD)(t64 >> 32);
+   osFileTimeToLocalFileTime(&uTm,&lTm);
