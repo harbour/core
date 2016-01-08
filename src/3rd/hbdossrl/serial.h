@@ -22,6 +22,10 @@
 #ifndef SERIAL__HEADER
 #define SERIAL__HEADER
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* COM Ports */
 #define COM_1                           0
 #define COM_2                           1
@@ -192,5 +196,9 @@ int serial_get_tx_buffered(int comport);
 int serial_get_rx_buffered(int comport);
 int serial_clear_tx_buffer(int comport);
 int serial_clear_rx_buffer(int comport);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
