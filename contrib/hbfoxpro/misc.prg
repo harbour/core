@@ -54,7 +54,9 @@ FUNCTION Sys( nValue, xPar1 )
 
       SWITCH nValue
       CASE 0
-         RETURN NetName() + " # " + hb_UserName()
+         RETURN Id()
+      CASE 1
+         RETURN hb_ntos( Date() - CToD( "" ) )
       CASE 2
          RETURN hb_ntos( Seconds() )
       CASE 5
@@ -62,7 +64,11 @@ FUNCTION Sys( nValue, xPar1 )
       CASE 6
          RETURN Set( _SET_PRINTFILE )
       CASE 10
-         RETURN hb_SToD() + hb_defaultValue( xPar1, 0 )
+         RETURN DToC( CToD( "" ) + hb_defaultValue( xPar1, 0 ) )
+      CASE 11
+         RETURN hb_ntos( iif( HB_ISDATETIME( xPar1 ), xPar1, ;
+                              iif( HB_ISSTRING( xPar1 ), CToD( xPar1 ), ;
+                              Date() ) ) - CToD( "" ) )
       CASE 100
          RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
       CASE 101
@@ -71,17 +77,24 @@ FUNCTION Sys( nValue, xPar1 )
          RETURN iif( Set( _SET_PRINTER ), "ON", "OFF" )
       CASE 2002
          RETURN SetCursor( hb_defaultValue( xPar1, SC_NONE ) )
+      CASE 2003
+         RETURN CurDir()
       CASE 2011
          RETURN iif( ! dbInfo( DBOI_SHARED ),     "Exclusive", ;
                 iif( dbInfo( DBI_ISFLOCK ),       "File locked", ;
                 iif( dbRecordInfo( DBRI_LOCKED ), "Record locked", ;
                                                   "Not locked" ) ) )
+      CASE 2020
+         RETURN hb_DiskSpace( Set( _SET_DEFAULT ) )
       OTHERWISE
          /* Throw RTE? */
       ENDSWITCH
    ENDIF
 
    RETURN NIL
+
+FUNCTION Id()
+   RETURN NetName() + " # " + hb_UserName()
 
 STATIC FUNCTION AFillNested( aValue, xVal )
 

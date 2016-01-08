@@ -51,7 +51,10 @@
 
 /* messages in FP */
 #xtranslate .<!msg!> => :<msg>
+#translate THIS. => Self:
 
+/* Harbour does not support NULL */
+#xtranslate .NULL. => NIL
 
 /* array declarations */
 #xtranslate __FP_DIM( <exp> ) => <exp>
@@ -116,6 +119,6 @@
 #command EJECT PAGE => __Eject()
 #command FLUSH      => dbCommitAll()
 #command REGIONAL [<defs,...>] => LOCAL <defs>
-
+#command CD <(path)> => hb_cwd( <(path)> )
 
 #endif /* HBFOXPRO_CH_ */
