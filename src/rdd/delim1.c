@@ -50,6 +50,7 @@
 #include "hbinit.h"
 #include "hbvm.h"
 #include "hbset.h"
+#include "hbstack.h"
 #include "hbdate.h"
 #include "hbapirdd.h"
 #include "hbapiitm.h"
@@ -96,6 +97,69 @@ static void hb_delimInitArea( DELIMAREAP pArea, char * szFileName )
    pArea->ulRecCount = 0;
    pArea->nBufferIndex = pArea->nBufferRead = pArea->nBufferSize;
    pArea->nBufferAtRead = pArea->nBufferSize - HB_MAX( pArea->uiEolLen, 2 );
+}
+
+static HB_ERRCODE hb_delimWrite( DELIMAREAP pArea, const void * pBuffer, HB_SIZE nSize )
+{
+   if( hb_fileWrite( pArea->pFile, pBuffer, nSize, -1 ) != nSize )
+   {
+      PHB_ITEM pError = hb_errNew();
+
+      hb_errPutGenCode( pError, EG_WRITE );
+      hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_WRITE ) );
+      hb_errPutSubCode( pError, EDBF_WRITE );
+      hb_errPutOsCode( pError, hb_fsError() );
+      hb_errPutFileName( pError, pArea->szFileName );
+      SELF_ERROR( &pArea->area, pError );
+      hb_itemRelease( pError );
+      return HB_FAILURE;
+   }
+   return HB_SUCCESS;
+}
+
+static HB_ERRCODE hb_delimWriteHeader( DELIMAREAP pArea )
+{
+   HB_ERRCODE errCode = HB_SUCCESS;
+   const char * pszFieldName;
+   HB_BYTE * pBuffer;
+   HB_SIZE nSize, nS;
+   HB_USHORT uiCount;
+
+   nSize = 0;
+   pBuffer = pArea->pBuffer;
+
+   for( uiCount = 0; uiCount < pArea->area.uiFieldCount; uiCount++ )
+   {
+      pszFieldName = hb_dynsymName( ( PHB_DYNS )
+                                     ( pArea->area.lpFields + uiCount )->sym );
+      nSize += strlen( pszFieldName ) + 3;
+   }
+   if( nSize > 0 )
+   {
+      nSize += pArea->uiEolLen - 1;
+      if( nSize > pArea->nBufferSize )
+         pBuffer = ( HB_BYTE * ) hb_xgrab( nSize );
+
+      nSize = 0;
+      for( uiCount = 0; uiCount < pArea->area.uiFieldCount; uiCount++ )
+      {
+         pszFieldName = hb_dynsymName( ( PHB_DYNS )
+                                     ( pArea->area.lpFields + uiCount )->sym );
+         nS = strlen( pszFieldName );
+         if( uiCount )
+            pBuffer[ nSize++ ] = pArea->cSeparator;
+         pBuffer[ nSize++ ] = pArea->cDelim;
+         memcpy( pBuffer + nSize, pszFieldName, nS );
+         nSize += nS;
+         pBuffer[ nSize++ ] = pArea->cDelim;
+      }
+      memcpy( pBuffer + nSize, pArea->szEol, pArea->uiEolLen );
+      nSize += pArea->uiEolLen;
+      errCode = hb_delimWrite( pArea, pBuffer, nSize );
+      if( pBuffer != pArea->pBuffer )
+         hb_xfree( pBuffer );
+   }
+   return errCode;
 }
 
 static void hb_delimClearRecordBuffer( DELIMAREAP pArea )
@@ -910,19 +974,8 @@ static HB_ERRCODE hb_delimGoCold( DELIMAREAP pArea )
    {
       HB_SIZE nSize = hb_delimEncodeBuffer( pArea );
 
-      if( hb_fileWrite( pArea->pFile, pArea->pBuffer, nSize, -1 ) != nSize )
-      {
-         PHB_ITEM pError = hb_errNew();
-
-         hb_errPutGenCode( pError, EG_WRITE );
-         hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_WRITE ) );
-         hb_errPutSubCode( pError, EDBF_WRITE );
-         hb_errPutOsCode( pError, hb_fsError() );
-         hb_errPutFileName( pError, pArea->szFileName );
-         SELF_ERROR( &pArea->area, pError );
-         hb_itemRelease( pError );
+      if( hb_delimWrite( pArea, pArea->pBuffer, nSize ) != HB_SUCCESS )
          return HB_FAILURE;
-      }
       pArea->fRecordChanged = HB_FALSE;
       pArea->fFlush = HB_TRUE;
    }
@@ -1402,19 +1455,29 @@ static HB_ERRCODE hb_delimCreate( DELIMAREAP pArea, LPDBOPENINFO pCreateInfo )
       return HB_FAILURE;
 
    errCode = SUPER_CREATE( &pArea->area, pCreateInfo );
-   if( errCode != HB_SUCCESS )
+   if( errCode == HB_SUCCESS )
    {
-      SELF_CLOSE( &pArea->area );
-      return errCode;
+      PHB_ITEM pItem = hb_itemPutNI( NULL, 0 );
+
+      hb_delimInitArea( pArea, szFileName );
+
+      pArea->ulRecNo = 1;
+      pArea->area.fEof = HB_TRUE;
+      pArea->fPositioned = HB_FALSE;
+      hb_delimClearRecordBuffer( pArea );
+
+      if( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_SETHEADER,
+                        pCreateInfo->ulConnection, pItem ) == HB_SUCCESS &&
+          hb_itemGetNI( pItem ) > 0 )
+         errCode = hb_delimWriteHeader( pArea );
+
+      hb_itemRelease( pItem );
    }
 
-   hb_delimInitArea( pArea, szFileName );
-   pArea->ulRecNo = 1;
-   pArea->area.fEof = HB_TRUE;
-   pArea->fPositioned = HB_FALSE;
-   hb_delimClearRecordBuffer( pArea );
+   if( errCode != HB_SUCCESS )
+      SELF_CLOSE( &pArea->area );
 
-   return HB_SUCCESS;
+   return errCode;
 }
 
 /*
@@ -1520,6 +1583,45 @@ static HB_ERRCODE hb_delimOpen( DELIMAREAP pArea, LPDBOPENINFO pOpenInfo )
 }
 
 /*
+ * RDD init
+ */
+static HB_ERRCODE hb_delimInit( LPRDDNODE pRDD )
+{
+   PHB_TSD pTSD;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_delimInit(%p)", pRDD ) );
+
+   pTSD = ( PHB_TSD ) hb_xgrab( sizeof( HB_TSD ) );
+   HB_TSD_INIT( pTSD, sizeof( DELIMDATA ), NULL, NULL );
+   pRDD->lpvCargo = ( void * ) pTSD;
+
+   if( ISSUPER_INIT( pRDD ) )
+      return SUPER_INIT( pRDD );
+   else
+      return HB_SUCCESS;
+}
+
+/*
+ * RDD exit
+ */
+static HB_ERRCODE hb_delimExit( LPRDDNODE pRDD )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_delimExit(%p)", pRDD ) );
+
+   if( pRDD->lpvCargo )
+   {
+      hb_stackReleaseTSD( ( PHB_TSD ) pRDD->lpvCargo );
+      hb_xfree( pRDD->lpvCargo );
+      pRDD->lpvCargo = NULL;
+   }
+
+   if( ISSUPER_EXIT( pRDD ) )
+      return SUPER_EXIT( pRDD );
+   else
+      return HB_SUCCESS;
+}
+
+/*
  * Retrieve information about the current driver.
  */
 static HB_ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConnect, PHB_ITEM pItem )
@@ -1534,9 +1636,30 @@ static HB_ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG u
          break;
 
       case RDDI_TABLEEXT:
-         hb_itemPutC( pItem, DELIM_TABLEEXT );
-         break;
+      {
+         LPDELIMDATA pData = DELIMNODE_DATA( pRDD );
+         const char * szNew = hb_itemGetCPtr( pItem );
+         char * szNewVal;
 
+         szNewVal = szNew[ 0 ] == '.' && szNew[ 1 ] ? hb_strdup( szNew ) : NULL;
+         hb_itemPutC( pItem, pData->szTableExt[ 0 ] ? pData->szTableExt : DELIM_TABLEEXT );
+         if( szNewVal )
+         {
+            hb_strncpy( pData->szTableExt, szNewVal, sizeof( pData->szTableExt ) - 1 );
+            hb_xfree( szNewVal );
+         }
+         break;
+      }
+      case RDDI_SETHEADER:
+      {
+         LPDELIMDATA pData = DELIMNODE_DATA( pRDD );
+         int iMode = hb_itemGetNI( pItem );
+
+         hb_itemPutNI( pItem, pData->uiSetHeader );
+         if( iMode == 0 || iMode == 1 )
+            pData->uiSetHeader = ( HB_USHORT ) iMode;
+         break;
+      }
       default:
          return SUPER_RDDINFO( pRDD, uiIndex, ulConnect, pItem );
 
@@ -1550,50 +1673,50 @@ static const RDDFUNCS delimTable = { NULL /* hb_delimBof */,
                                      NULL /* hb_delimEof */,
                                      NULL /* hb_delimFound */,
                                      NULL /* hb_delimGoBottom */,
-                                   ( DBENTRYP_UL ) hb_delimGoTo,
-                                   ( DBENTRYP_I ) hb_delimGoToId,
-                                   ( DBENTRYP_V ) hb_delimGoTop,
+                                     ( DBENTRYP_UL ) hb_delimGoTo,
+                                     ( DBENTRYP_I ) hb_delimGoToId,
+                                     ( DBENTRYP_V ) hb_delimGoTop,
                                      NULL /* hb_delimSeek */,
                                      NULL /* hb_delimSkip */,
                                      NULL /* hb_delimSkipFilter */,
-                                   ( DBENTRYP_L ) hb_delimSkipRaw,
-                                   ( DBENTRYP_VF ) hb_delimAddField,
-                                   ( DBENTRYP_B ) hb_delimAppend,
+                                     ( DBENTRYP_L ) hb_delimSkipRaw,
+                                     ( DBENTRYP_VF ) hb_delimAddField,
+                                     ( DBENTRYP_B ) hb_delimAppend,
                                      NULL /* hb_delimCreateFields */,
-                                   ( DBENTRYP_V ) hb_delimDeleteRec,
-                                   ( DBENTRYP_BP ) hb_delimDeleted,
+                                     ( DBENTRYP_V ) hb_delimDeleteRec,
+                                     ( DBENTRYP_BP ) hb_delimDeleted,
                                      NULL /* hb_delimFieldCount */,
                                      NULL /* hb_delimFieldDisplay */,
                                      NULL /* hb_delimFieldInfo */,
                                      NULL /* hb_delimFieldName */,
-                                   ( DBENTRYP_V ) hb_delimFlush,
-                                   ( DBENTRYP_PP ) hb_delimGetRec,
-                                   ( DBENTRYP_SI ) hb_delimGetValue,
+                                     ( DBENTRYP_V ) hb_delimFlush,
+                                     ( DBENTRYP_PP ) hb_delimGetRec,
+                                     ( DBENTRYP_SI ) hb_delimGetValue,
                                      NULL /* hb_delimGetVarLen */,
-                                   ( DBENTRYP_V ) hb_delimGoCold,
-                                   ( DBENTRYP_V ) hb_delimGoHot,
-                                   ( DBENTRYP_P ) hb_delimPutRec,
-                                   ( DBENTRYP_SI ) hb_delimPutValue,
-                                   ( DBENTRYP_V ) hb_delimRecall,
-                                   ( DBENTRYP_ULP ) hb_delimRecCount,
+                                     ( DBENTRYP_V ) hb_delimGoCold,
+                                     ( DBENTRYP_V ) hb_delimGoHot,
+                                     ( DBENTRYP_P ) hb_delimPutRec,
+                                     ( DBENTRYP_SI ) hb_delimPutValue,
+                                     ( DBENTRYP_V ) hb_delimRecall,
+                                     ( DBENTRYP_ULP ) hb_delimRecCount,
                                      NULL /* hb_delimRecInfo */,
-                                   ( DBENTRYP_ULP ) hb_delimRecNo,
-                                   ( DBENTRYP_I ) hb_delimRecId,
-                                   ( DBENTRYP_S ) hb_delimSetFieldExtent,
+                                     ( DBENTRYP_ULP ) hb_delimRecNo,
+                                     ( DBENTRYP_I ) hb_delimRecId,
+                                     ( DBENTRYP_S ) hb_delimSetFieldExtent,
                                      NULL /* hb_delimAlias */,
-                                   ( DBENTRYP_V ) hb_delimClose,
-                                   ( DBENTRYP_VO ) hb_delimCreate,
-                                   ( DBENTRYP_SI ) hb_delimInfo,
-                                   ( DBENTRYP_V ) hb_delimNewArea,
-                                   ( DBENTRYP_VO ) hb_delimOpen,
+                                     ( DBENTRYP_V ) hb_delimClose,
+                                     ( DBENTRYP_VO ) hb_delimCreate,
+                                     ( DBENTRYP_SI ) hb_delimInfo,
+                                     ( DBENTRYP_V ) hb_delimNewArea,
+                                     ( DBENTRYP_VO ) hb_delimOpen,
                                      NULL /* hb_delimRelease */,
-                                   ( DBENTRYP_SP ) hb_delimStructSize,
+                                     ( DBENTRYP_SP ) hb_delimStructSize,
                                      NULL /* hb_delimSysName */,
                                      NULL /* hb_delimEval */,
                                      NULL /* hb_delimPack */,
                                      NULL /* hb_delimPackRec */,
                                      NULL /* hb_delimSort */,
-                                   ( DBENTRYP_VT ) hb_delimTrans,
+                                     ( DBENTRYP_VT ) hb_delimTrans,
                                      NULL /* hb_delimTransRec */,
                                      NULL /* hb_delimZap */,
                                      NULL /* hb_delimChildEnd */,
@@ -1639,12 +1762,12 @@ static const RDDFUNCS delimTable = { NULL /* hb_delimBof */,
                                      NULL /* hb_delimPutValueFile */,
                                      NULL /* hb_delimReadDBHeader */,
                                      NULL /* hb_delimWriteDBHeader */,
-                                     NULL /* hb_delimInit */,
-                                     NULL /* hb_delimExit */,
+                                     ( DBENTRYP_R ) hb_delimInit,
+                                     ( DBENTRYP_R ) hb_delimExit,
                                      NULL /* hb_delimDrop */,
                                      NULL /* hb_delimExists */,
                                      NULL /* hb_delimRename */,
-                                   ( DBENTRYP_RSLV ) hb_delimRddInfo,
+                                     ( DBENTRYP_RSLV ) hb_delimRddInfo,
                                      NULL /* hb_delimWhoCares */
                                    };
 

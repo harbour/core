@@ -56,6 +56,17 @@ HB_EXTERN_BEGIN
 /* DELIMITED default file extensions */
 #define DELIM_TABLEEXT                    ".txt"
 
+#define DELIMNODE_DATA( r )   ( ( LPDELIMDATA ) hb_stackGetTSD( ( PHB_TSD ) ( r )->lpvCargo ) )
+
+/*
+ * Private DELIM RDD data kept in RDDNODE
+ */
+typedef struct _DELIMDATA
+{
+   char      szTableExt[ HB_MAX_FILE_EXT + 1 ];
+   HB_USHORT uiSetHeader;      /* RDDI_SETHEADER */
+} DELIMDATA, * LPDELIMDATA;
+
 
 /*
  *  DELIM WORKAREA
