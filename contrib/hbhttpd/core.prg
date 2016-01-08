@@ -1179,7 +1179,7 @@ PROCEDURE UWrite( cString )
 
 STATIC PROCEDURE USessionCreateInternal()
 
-   LOCAL cSID := hb_SHA256( hb_TToS( hb_DateTime() ) + hb_randStr( 32 ) )
+   LOCAL cSID := hb_SHA256( hb_TToS( hb_DateTime() ) + hb_randStr( 15 ) )
    LOCAL hMtx := hb_mutexCreate()
 
    hb_mutexLock( hMtx )
