@@ -4,7 +4,6 @@
       <https://web.archive.org/web/20071108113537/http://www.the-oasis.net/files/library/supfree.zip>
 
    sha256: `48114a59c8a9ebf51749f74e31dac39e12403180ae2920afb9f93d82794a8fc6`
-   blake2: `5737debd5cfec6b239c220d7f6d40b9e58dca23390f3952daece744f48a8dcc677557674895534a4835d1169bf235dc8fb5a2ab21fb5ab0a1fbd1d6b86282aa8`
 
 2. Unpack it:
 

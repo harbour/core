@@ -16,15 +16,15 @@ PROCEDURE Main()
    bioe := BIO_new_fd( 1, HB_BIO_NOCLOSE )
 
    ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", {| lWrite | Output( "Callback (block)", lWrite, hb_eol() ), "test" } )
-   ? ; ERR_print_errors( bioe )
+   ? 1; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", @cb_function() )
-   ? ; ERR_print_errors( bioe )
+   ? 2; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", "test" )
-   ? ; ERR_print_errors( bioe )
+   ? 3; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPUBLICKEY( "privkey.pem", {| lWrite | Output( "Callback (block)", lWrite, hb_eol() ), "test" } )
-   ? ; ERR_print_errors( bioe )
+   ? 4; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPUBLICKEY( "privkey.pem", "test" )
-   ? ; ERR_print_errors( bioe )
+   ? 5; ERR_print_errors( bioe )
 
 #pragma __cstream|cString:=%s
 -----BEGIN RSA PRIVATE KEY-----
@@ -48,13 +48,13 @@ B0NDIZKbaPJHHPb9Ne7nQECzv0/kzmAley9UMTZ1M7fq6KYemR0LsA==
 #pragma __endtext
 
    ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), {| lWrite | QOut( "Callback", lWrite, hb_eol() ), "test" } )
-   ? ; ERR_print_errors( bioe )
+   ? 6; ERR_print_errors( bioe )
    BIO_free( bio )
    ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), "test" )
-   ? ; ERR_print_errors( bioe )
+   ? 7; ERR_print_errors( bioe )
    BIO_free( bio )
    ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), "<wrong>" )
-   ? ; ERR_print_errors( bioe )
+   ? 8; ERR_print_errors( bioe )
    BIO_free( bio )
 
    BIO_free( bioe )
