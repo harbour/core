@@ -51,7 +51,6 @@ PROCEDURE Main()
    ? EVP_EncryptFinal( ctx, @result )
    encrypted += result
    ? "ENCRYPTED", ">" + hb_StrToHex( encrypted ) + "<"
-   ? ">" + encrypted + "<"
 
    ? "decrypt"
 
@@ -87,7 +86,7 @@ PROCEDURE Main()
    ? pub := PEM_READ_BIO_PUBKEY( "pubkey.pem", "test" )
 
    ? "EVP_SealInit()", EVP_SealInit( ctx, "AES256", @a, @iv, { pub } )
-   ? ValType( a ), hb_BLen( a )
+   ? ValType( a ), iif( HB_ISSTRING( a ), hb_BLen( a ), NIL )
    ? ValType( a[ 1 ] ), ">" + hb_StrToHex( a[ 1 ] ) + "<"
    ? ValType( iv ), ">" + hb_StrToHex( iv ) + "<"
 

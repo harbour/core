@@ -10,6 +10,9 @@ PROCEDURE Main()
 
    SSL_init()
 
+   ? "Version built against:", hb_NumToHex( OPENSSL_VERSION_NUMBER() )
+   ? "Version loaded:", hb_NumToHex( OpenSSL_version_num() )
+
    ? ERR_load_PEM_strings()
    ? OpenSSL_add_all_algorithms()
 

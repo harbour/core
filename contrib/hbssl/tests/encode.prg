@@ -23,7 +23,7 @@ PROCEDURE Main()
    encoded += result
    EVP_EncodeFinal( ctx, @result )
    encoded += result
-   ? "ENCODED", ">" + encoded + "<"
+   ? "ENCODED", ">" + hb_StrToHex( encoded ) + "<"
 
    ctx := hb_EVP_ENCODE_ctx_create()
 
