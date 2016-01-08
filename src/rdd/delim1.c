@@ -172,7 +172,7 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
    HB_SIZE nSize;
    HB_USHORT uiField, uiLen;
    LPFIELD pField;
-   HB_BYTE * pBuffer, * pFieldBuf;
+   HB_BYTE * pBuffer;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_delimEncodeBuffer(%p)", pArea ) );
 
@@ -183,6 +183,7 @@ static HB_SIZE hb_delimEncodeBuffer( DELIMAREAP pArea )
    nSize = 0;
    for( uiField = 0; uiField < pArea->area.uiFieldCount; ++uiField )
    {
+      HB_BYTE * pFieldBuf;
       pField = pArea->area.lpFields + uiField;
       pFieldBuf = pArea->pRecord + pArea->pFieldOffset[ uiField ];
       if( nSize )
@@ -766,8 +767,7 @@ static HB_ERRCODE hb_delimGetValue( DELIMAREAP pArea, HB_USHORT uiIndex, PHB_ITE
 
       default:
       {
-         PHB_ITEM pError;
-         pError = hb_errNew();
+         PHB_ITEM pError = hb_errNew();
          hb_errPutGenCode( pError, EG_DATATYPE );
          hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
          hb_errPutOperation( pError, hb_dynsymName( ( PHB_DYNS ) pField->sym ) );
@@ -987,13 +987,11 @@ static HB_ERRCODE hb_delimGoCold( DELIMAREAP pArea )
  */
 static HB_ERRCODE hb_delimGoHot( DELIMAREAP pArea )
 {
-   PHB_ITEM pError;
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_delimGoHot(%p)", pArea ) );
 
    if( pArea->fReadonly )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_READONLY );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_READONLY ) );
       hb_errPutSubCode( pError, EDBF_READONLY );
@@ -1669,107 +1667,109 @@ static HB_ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG u
 }
 
 
-static const RDDFUNCS delimTable = { NULL /* hb_delimBof */,
-                                     NULL /* hb_delimEof */,
-                                     NULL /* hb_delimFound */,
-                                     NULL /* hb_delimGoBottom */,
-                                     ( DBENTRYP_UL ) hb_delimGoTo,
-                                     ( DBENTRYP_I ) hb_delimGoToId,
-                                     ( DBENTRYP_V ) hb_delimGoTop,
-                                     NULL /* hb_delimSeek */,
-                                     NULL /* hb_delimSkip */,
-                                     NULL /* hb_delimSkipFilter */,
-                                     ( DBENTRYP_L ) hb_delimSkipRaw,
-                                     ( DBENTRYP_VF ) hb_delimAddField,
-                                     ( DBENTRYP_B ) hb_delimAppend,
-                                     NULL /* hb_delimCreateFields */,
-                                     ( DBENTRYP_V ) hb_delimDeleteRec,
-                                     ( DBENTRYP_BP ) hb_delimDeleted,
-                                     NULL /* hb_delimFieldCount */,
-                                     NULL /* hb_delimFieldDisplay */,
-                                     NULL /* hb_delimFieldInfo */,
-                                     NULL /* hb_delimFieldName */,
-                                     ( DBENTRYP_V ) hb_delimFlush,
-                                     ( DBENTRYP_PP ) hb_delimGetRec,
-                                     ( DBENTRYP_SI ) hb_delimGetValue,
-                                     NULL /* hb_delimGetVarLen */,
-                                     ( DBENTRYP_V ) hb_delimGoCold,
-                                     ( DBENTRYP_V ) hb_delimGoHot,
-                                     ( DBENTRYP_P ) hb_delimPutRec,
-                                     ( DBENTRYP_SI ) hb_delimPutValue,
-                                     ( DBENTRYP_V ) hb_delimRecall,
-                                     ( DBENTRYP_ULP ) hb_delimRecCount,
-                                     NULL /* hb_delimRecInfo */,
-                                     ( DBENTRYP_ULP ) hb_delimRecNo,
-                                     ( DBENTRYP_I ) hb_delimRecId,
-                                     ( DBENTRYP_S ) hb_delimSetFieldExtent,
-                                     NULL /* hb_delimAlias */,
-                                     ( DBENTRYP_V ) hb_delimClose,
-                                     ( DBENTRYP_VO ) hb_delimCreate,
-                                     ( DBENTRYP_SI ) hb_delimInfo,
-                                     ( DBENTRYP_V ) hb_delimNewArea,
-                                     ( DBENTRYP_VO ) hb_delimOpen,
-                                     NULL /* hb_delimRelease */,
-                                     ( DBENTRYP_SP ) hb_delimStructSize,
-                                     NULL /* hb_delimSysName */,
-                                     NULL /* hb_delimEval */,
-                                     NULL /* hb_delimPack */,
-                                     NULL /* hb_delimPackRec */,
-                                     NULL /* hb_delimSort */,
-                                     ( DBENTRYP_VT ) hb_delimTrans,
-                                     NULL /* hb_delimTransRec */,
-                                     NULL /* hb_delimZap */,
-                                     NULL /* hb_delimChildEnd */,
-                                     NULL /* hb_delimChildStart */,
-                                     NULL /* hb_delimChildSync */,
-                                     NULL /* hb_delimSyncChildren */,
-                                     NULL /* hb_delimClearRel */,
-                                     NULL /* hb_delimForceRel */,
-                                     NULL /* hb_delimRelArea */,
-                                     NULL /* hb_delimRelEval */,
-                                     NULL /* hb_delimRelText */,
-                                     NULL /* hb_delimSetRel */,
-                                     NULL /* hb_delimOrderListAdd */,
-                                     NULL /* hb_delimOrderListClear */,
-                                     NULL /* hb_delimOrderListDelete */,
-                                     NULL /* hb_delimOrderListFocus */,
-                                     NULL /* hb_delimOrderListRebuild */,
-                                     NULL /* hb_delimOrderCondition */,
-                                     NULL /* hb_delimOrderCreate */,
-                                     NULL /* hb_delimOrderDestroy */,
-                                     NULL /* hb_delimOrderInfo */,
-                                     NULL /* hb_delimClearFilter */,
-                                     NULL /* hb_delimClearLocate */,
-                                     NULL /* hb_delimClearScope */,
-                                     NULL /* hb_delimCountScope */,
-                                     NULL /* hb_delimFilterText */,
-                                     NULL /* hb_delimScopeInfo */,
-                                     NULL /* hb_delimSetFilter */,
-                                     NULL /* hb_delimSetLocate */,
-                                     NULL /* hb_delimSetScope */,
-                                     NULL /* hb_delimSkipScope */,
-                                     NULL /* hb_delimLocate */,
-                                     NULL /* hb_delimCompile */,
-                                     NULL /* hb_delimError */,
-                                     NULL /* hb_delimEvalBlock */,
-                                     NULL /* hb_delimRawLock */,
-                                     NULL /* hb_delimLock */,
-                                     NULL /* hb_delimUnLock */,
-                                     NULL /* hb_delimCloseMemFile */,
-                                     NULL /* hb_delimCreateMemFile */,
-                                     NULL /* hb_delimGetValueFile */,
-                                     NULL /* hb_delimOpenMemFile */,
-                                     NULL /* hb_delimPutValueFile */,
-                                     NULL /* hb_delimReadDBHeader */,
-                                     NULL /* hb_delimWriteDBHeader */,
-                                     ( DBENTRYP_R ) hb_delimInit,
-                                     ( DBENTRYP_R ) hb_delimExit,
-                                     NULL /* hb_delimDrop */,
-                                     NULL /* hb_delimExists */,
-                                     NULL /* hb_delimRename */,
-                                     ( DBENTRYP_RSLV ) hb_delimRddInfo,
-                                     NULL /* hb_delimWhoCares */
-                                   };
+static const RDDFUNCS delimTable =
+{
+   NULL /* hb_delimBof */,
+   NULL /* hb_delimEof */,
+   NULL /* hb_delimFound */,
+   NULL /* hb_delimGoBottom */,
+   ( DBENTRYP_UL ) hb_delimGoTo,
+   ( DBENTRYP_I ) hb_delimGoToId,
+   ( DBENTRYP_V ) hb_delimGoTop,
+   NULL /* hb_delimSeek */,
+   NULL /* hb_delimSkip */,
+   NULL /* hb_delimSkipFilter */,
+   ( DBENTRYP_L ) hb_delimSkipRaw,
+   ( DBENTRYP_VF ) hb_delimAddField,
+   ( DBENTRYP_B ) hb_delimAppend,
+   NULL /* hb_delimCreateFields */,
+   ( DBENTRYP_V ) hb_delimDeleteRec,
+   ( DBENTRYP_BP ) hb_delimDeleted,
+   NULL /* hb_delimFieldCount */,
+   NULL /* hb_delimFieldDisplay */,
+   NULL /* hb_delimFieldInfo */,
+   NULL /* hb_delimFieldName */,
+   ( DBENTRYP_V ) hb_delimFlush,
+   ( DBENTRYP_PP ) hb_delimGetRec,
+   ( DBENTRYP_SI ) hb_delimGetValue,
+   NULL /* hb_delimGetVarLen */,
+   ( DBENTRYP_V ) hb_delimGoCold,
+   ( DBENTRYP_V ) hb_delimGoHot,
+   ( DBENTRYP_P ) hb_delimPutRec,
+   ( DBENTRYP_SI ) hb_delimPutValue,
+   ( DBENTRYP_V ) hb_delimRecall,
+   ( DBENTRYP_ULP ) hb_delimRecCount,
+   NULL /* hb_delimRecInfo */,
+   ( DBENTRYP_ULP ) hb_delimRecNo,
+   ( DBENTRYP_I ) hb_delimRecId,
+   ( DBENTRYP_S ) hb_delimSetFieldExtent,
+   NULL /* hb_delimAlias */,
+   ( DBENTRYP_V ) hb_delimClose,
+   ( DBENTRYP_VO ) hb_delimCreate,
+   ( DBENTRYP_SI ) hb_delimInfo,
+   ( DBENTRYP_V ) hb_delimNewArea,
+   ( DBENTRYP_VO ) hb_delimOpen,
+   NULL /* hb_delimRelease */,
+   ( DBENTRYP_SP ) hb_delimStructSize,
+   NULL /* hb_delimSysName */,
+   NULL /* hb_delimEval */,
+   NULL /* hb_delimPack */,
+   NULL /* hb_delimPackRec */,
+   NULL /* hb_delimSort */,
+   ( DBENTRYP_VT ) hb_delimTrans,
+   NULL /* hb_delimTransRec */,
+   NULL /* hb_delimZap */,
+   NULL /* hb_delimChildEnd */,
+   NULL /* hb_delimChildStart */,
+   NULL /* hb_delimChildSync */,
+   NULL /* hb_delimSyncChildren */,
+   NULL /* hb_delimClearRel */,
+   NULL /* hb_delimForceRel */,
+   NULL /* hb_delimRelArea */,
+   NULL /* hb_delimRelEval */,
+   NULL /* hb_delimRelText */,
+   NULL /* hb_delimSetRel */,
+   NULL /* hb_delimOrderListAdd */,
+   NULL /* hb_delimOrderListClear */,
+   NULL /* hb_delimOrderListDelete */,
+   NULL /* hb_delimOrderListFocus */,
+   NULL /* hb_delimOrderListRebuild */,
+   NULL /* hb_delimOrderCondition */,
+   NULL /* hb_delimOrderCreate */,
+   NULL /* hb_delimOrderDestroy */,
+   NULL /* hb_delimOrderInfo */,
+   NULL /* hb_delimClearFilter */,
+   NULL /* hb_delimClearLocate */,
+   NULL /* hb_delimClearScope */,
+   NULL /* hb_delimCountScope */,
+   NULL /* hb_delimFilterText */,
+   NULL /* hb_delimScopeInfo */,
+   NULL /* hb_delimSetFilter */,
+   NULL /* hb_delimSetLocate */,
+   NULL /* hb_delimSetScope */,
+   NULL /* hb_delimSkipScope */,
+   NULL /* hb_delimLocate */,
+   NULL /* hb_delimCompile */,
+   NULL /* hb_delimError */,
+   NULL /* hb_delimEvalBlock */,
+   NULL /* hb_delimRawLock */,
+   NULL /* hb_delimLock */,
+   NULL /* hb_delimUnLock */,
+   NULL /* hb_delimCloseMemFile */,
+   NULL /* hb_delimCreateMemFile */,
+   NULL /* hb_delimGetValueFile */,
+   NULL /* hb_delimOpenMemFile */,
+   NULL /* hb_delimPutValueFile */,
+   NULL /* hb_delimReadDBHeader */,
+   NULL /* hb_delimWriteDBHeader */,
+   ( DBENTRYP_R ) hb_delimInit,
+   ( DBENTRYP_R ) hb_delimExit,
+   NULL /* hb_delimDrop */,
+   NULL /* hb_delimExists */,
+   NULL /* hb_delimRename */,
+   ( DBENTRYP_RSLV ) hb_delimRddInfo,
+   NULL /* hb_delimWhoCares */
+};
 
 HB_FUNC( DELIM ) { ; }
 
