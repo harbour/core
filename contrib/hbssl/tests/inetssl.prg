@@ -13,7 +13,7 @@ STATIC s_lDelaySrv := .F.
 STATIC s_lDelayCli := .F.
 
 #if ! defined( __HBSCRIPT__HBSHELL )
-REQUEST HB_MT
+REQUEST HB_MT  /* Require this to be built with '-mt' option */
 #endif
 
 PROCEDURE Main( delay )
