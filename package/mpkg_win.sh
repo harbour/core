@@ -308,7 +308,7 @@ touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
 # Reset Windows attributes
 
 case "$(uname)" in
-   *_NT*) find "${HB_ABSROOT}" -exec attrib +A -R {} \;
+   *_NT*) find "$(echo "${HB_ABSROOT}" | sed 's|/$||g')" -exec attrib +A -R {} \;
 esac
 
 # Create installer/archive
