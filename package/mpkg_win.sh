@@ -379,8 +379,8 @@ EOF
 
    # <filename>: <size> bytes <YYYY-MM-DD> <HH:MM>
    case "$(uname)" in
-      *BSD|Darwin) stat -f '%N: %z bytes %Sa' -t '%Y-%m-%d %H:%M' "${_PKGNAME}";;
-      *)           stat -c '%n: %s bytes %z' "${_PKGNAME}";;
+      *BSD|Darwin) stat -f '%N: %z bytes %Sm' -t '%Y-%m-%d %H:%M' "${_PKGNAME}";;
+      *)           stat -c '%n: %s bytes %y' "${_PKGNAME}";;
    esac
    openssl dgst -sha256 "${_PKGNAME}"
 )
