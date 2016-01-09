@@ -447,8 +447,14 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * buffer, HB_SIZE nSize,
          }
       }
       if( pFile->bz2.total_out_lo32 != 0 || pFile->bz2.total_out_hi32 != 0 )
+      {
+#if HB_SIZE_MAX <= UINT_MAX
+         nResult = ( HB_SIZE ) pFile->bz2.total_out_lo32;
+#else
          nResult = ( ( HB_SIZE ) pFile->bz2.total_out_hi32 << 32 ) |
                    ( HB_SIZE ) pFile->bz2.total_out_lo32;
+#endif
+      }
       pFile->seek_pos += hb_fileResult( nResult );
    }
    else
