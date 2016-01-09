@@ -419,7 +419,7 @@ static HB_SIZE s_fileRead( PHB_FILE pFile, void * buffer, HB_SIZE nSize,
          if( err == Z_BUF_ERROR && pFile->gz.avail_in == 0 )
          {
             nResult = _PHB_FILE->pFuncs->Read( _PHB_FILE, pFile->buffer,
-                    HB_GZIP_BUFSIZE, pFile->gz.total_out == 0 ? nTimeout : 0 );
+                                               HB_GZIP_BUFSIZE, nTimeout );
             if( nResult == 0 || nResult == ( HB_SIZE ) - 1 )
                break;
             pFile->gz.next_in = ( Bytef * ) pFile->buffer;
@@ -484,7 +484,6 @@ static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * buffer, HB_SIZE nSize,
             nResult = s_gzip_write( pFile, nTimeout );
             if( nResult == 0 || nResult == ( HB_SIZE ) - 1 )
                break;
-            nTimeout = 0;
          }
          err = deflate( &pFile->gz, Z_NO_FLUSH );
          if( err != Z_OK )
