@@ -3923,6 +3923,16 @@ static void hb_vmExactlyEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
+   else if( HB_IS_SYMBOL( pItem1 ) && HB_IS_SYMBOL( pItem2 ) )
+   {
+      pItem1->item.asLogical.value =
+               pItem1->item.asSymbol.value == pItem2->item.asSymbol.value ||
+               ( pItem1->item.asSymbol.value->pDynSym != NULL &&
+                 pItem1->item.asSymbol.value->pDynSym ==
+                 pItem2->item.asSymbol.value->pDynSym );
+      pItem1->type = HB_IT_LOGICAL;
+      hb_stackDec();
+   }
    else if( HB_IS_ARRAY( pItem1 ) && HB_IS_ARRAY( pItem2 ) &&
             ! hb_objHasOperator( pItem1, HB_OO_OP_EXACTEQUAL ) )
    {
