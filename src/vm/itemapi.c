@@ -2192,6 +2192,126 @@ HB_BOOL hb_itemEqual( PHB_ITEM pItem1, PHB_ITEM pItem2 )
       fResult = HB_IS_BLOCK( pItem2 ) &&
                 pItem1->item.asBlock.value == pItem2->item.asBlock.value;
 
+   else if( HB_IS_SYMBOL( pItem1 ) )
+      fResult = HB_IS_SYMBOL( pItem2 ) &&
+                ( pItem1->item.asSymbol.value == pItem2->item.asSymbol.value ||
+                  ( pItem1->item.asSymbol.value->pDynSym != NULL &&
+                    pItem1->item.asSymbol.value->pDynSym ==
+                    pItem2->item.asSymbol.value->pDynSym ) );
+
+   return fResult;
+}
+
+/* For compatible types compare pItem1 with pItem2 setting piResult
+   to -1, 0 or 1 if pItem1 is <, == or > then pItem2 and return true
+   otherwise return false.
+ */
+HB_BOOL hb_itemCompare( PHB_ITEM pItem1, PHB_ITEM pItem2, HB_BOOL bForceExact, int * piResult )
+{
+   HB_BOOL fResult = HB_FALSE;
+
+   if( HB_IS_NUMERIC( pItem1 ) )
+   {
+      if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
+      {
+         HB_MAXINT n1 = HB_ITEM_GET_NUMINTRAW( pItem1 ),
+                   n2 = HB_ITEM_GET_NUMINTRAW( pItem2 );
+         *piResult = n1 < n2 ? -1 : ( n1 > n2 ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+      else if( HB_IS_NUMERIC( pItem2 ) )
+      {
+         double d1 = hb_itemGetND( pItem1 ),
+                d2 = hb_itemGetND( pItem2 );
+         *piResult = d1 < d2 ? -1 : ( d1 > d2 ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_STRING( pItem1 ) )
+   {
+      if( HB_IS_STRING( pItem2 ) )
+      {
+         *piResult = hb_itemStrCmp( pItem1, pItem2, bForceExact );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_NIL( pItem1 ) )
+   {
+      if( HB_IS_NIL( pItem2 ) )
+      {
+         *piResult = 0;
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_DATETIME( pItem1 ) )
+   {
+      if( HB_IS_DATETIME( pItem2 ) )
+      {
+         *piResult = pItem1->item.asDateTime.julian < pItem2->item.asDateTime.julian ? -1 :
+                   ( pItem1->item.asDateTime.julian > pItem2->item.asDateTime.julian ? 1 :
+                   ( pItem1->item.asDateTime.time < pItem2->item.asDateTime.time ? -1 :
+                   ( pItem1->item.asDateTime.time > pItem2->item.asDateTime.time ? 1 : 0 ) ) );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_LOGICAL( pItem1 ) )
+   {
+      if( HB_IS_LOGICAL( pItem2 ) )
+      {
+         *piResult = pItem1->item.asLogical.value ?
+                     ( pItem2->item.asLogical.value ? 0 : 1 ) :
+                     ( pItem2->item.asLogical.value ? -1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_ARRAY( pItem1 ) )
+   {
+      if( HB_IS_ARRAY( pItem2 ) )
+      {
+         *piResult = pItem1->item.asArray.value < pItem2->item.asArray.value ? -1 :
+                   ( pItem1->item.asArray.value > pItem2->item.asArray.value ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_HASH( pItem1 ) )
+   {
+      if( HB_IS_HASH( pItem2 ) )
+      {
+         *piResult = pItem1->item.asHash.value < pItem2->item.asHash.value ? -1 :
+                   ( pItem1->item.asHash.value > pItem2->item.asHash.value ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_POINTER( pItem1 ) )
+   {
+      if( HB_IS_POINTER( pItem2 ) )
+      {
+         *piResult = pItem1->item.asPointer.value < pItem2->item.asPointer.value ? -1 :
+                   ( pItem1->item.asPointer.value > pItem2->item.asPointer.value ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_BLOCK( pItem1 ) )
+   {
+      if( HB_IS_BLOCK( pItem2 ) )
+      {
+         *piResult = pItem1->item.asBlock.value < pItem2->item.asBlock.value ? -1 :
+                   ( pItem1->item.asBlock.value > pItem2->item.asBlock.value ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_SYMBOL( pItem1 ) )
+   {
+      if( HB_IS_SYMBOL( pItem2 ) )
+      {
+         *piResult = ( pItem1->item.asSymbol.value == pItem2->item.asSymbol.value ||
+                       ( pItem1->item.asSymbol.value->pDynSym != NULL &&
+                         pItem1->item.asSymbol.value->pDynSym ==
+                         pItem2->item.asSymbol.value->pDynSym ) ) ? 0 :
+                     ( pItem1->item.asSymbol.value < pItem2->item.asSymbol.value ? -1 : 1 );
+         fResult = HB_TRUE;
+      }
+   }
    return fResult;
 }
 
