@@ -5,6 +5,7 @@ hbamf/hbamf.hbp
 hbblat/hbblat.hbp
 hbblink/hbblink.hbp
 hbbz2/hbbz2.hbp                  # uses: bz2 (locally hosted)
+hbbz2io/hbbz2io.hbp              # uses: bz2 (locally hosted)
 hbcairo/hbcairo.hbp
 hbcomio/hbcomio.hbp
 hbcomm/hbcomm.hbp

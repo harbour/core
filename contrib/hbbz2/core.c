@@ -47,26 +47,12 @@
  */
 
 #include "hbapi.h"
-
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
 #include <bzlib.h>
 
 #include "hbbz2.ch"
-
-/* Required if bz2 lib was built with BZ_NO_STDIO [vszakats] */
-#ifdef __cplusplus
-extern "C" {
-#endif
-extern void bz_internal_error ( int errcode );
-#ifdef __cplusplus
-}
-#endif
-void bz_internal_error( int errcode )
-{
-   hb_errInternal( ( HB_ERRCODE ) errcode, "libbzip2", NULL, NULL );
-}
 
 static void * hb_bz2Alloc( void * cargo, int nmemb, int size )
 {
