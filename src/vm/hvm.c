@@ -3907,6 +3907,17 @@ static void hb_vmExactlyEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
+#ifndef HB_CLP_STRICT
+   else if( HB_IS_BLOCK( pItem1 ) && HB_IS_BLOCK( pItem2 ) )
+   {
+      HB_BOOL fResult = pItem1->item.asBlock.value == pItem2->item.asBlock.value;
+
+      hb_stackPop();
+      hb_itemClear( pItem1 );
+      pItem1->type = HB_IT_LOGICAL;
+      pItem1->item.asLogical.value = fResult;
+   }
+#endif
    else if( HB_IS_SYMBOL( pItem1 ) && HB_IS_SYMBOL( pItem2 ) )
    {
       pItem1->item.asLogical.value =
