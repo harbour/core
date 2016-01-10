@@ -70,7 +70,7 @@ build_script:
   # debug
 
 # - set HB_BUILD_CONTRIBS=no
-# - set HB_BUILD_OPTIMIZE=no
+# - set HB_BUILD_OPTIM=no
 # - set HB_BUILD_VERBOSE=yes
 # - set _HB_PKG_DEBUG=yes
 # - set _HB_BUNDLE_3RDLIB=yes
