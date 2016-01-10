@@ -36,6 +36,7 @@ install:
 
 build_script:
   - set HB_VF=daily
+  - set HB_MKFLAGS=clean install HB_VERSION=%HB_VF%
   - set HB_RT=%APPVEYOR_BUILD_FOLDER%
   - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BASE=64
   - if not "%HB_BASE%" == "64" set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd_All.sfx
@@ -70,7 +71,7 @@ build_script:
   # debug
 
 # - set HB_BUILD_CONTRIBS=no
-# - set HB_BUILD_OPTIM=no
+# - set HB_MKFLAGS=%HB_MKFLAGS% HB_BUILD_OPTIM=no
 # - set HB_BUILD_VERBOSE=yes
 # - set _HB_PKG_DEBUG=yes
 # - set _HB_BUNDLE_3RDLIB=yes
@@ -86,7 +87,7 @@ build_script:
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_32%include
 # - set HB_WITH_QT=%HB_RT%\Qt\5.4\mingw491_32\include
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe clean install HB_VERSION=%HB_VF%
+  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe %HB_MKFLAGS%
 
   - set HB_COMPILER=mingw64
   - set HB_CPU=x86_64
@@ -94,7 +95,7 @@ build_script:
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_64%include
   - set HB_WITH_QT=
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe clean install HB_VERSION=%HB_VF%
+  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe %HB_MKFLAGS%
 
   # msvc
 
@@ -111,12 +112,12 @@ build_script:
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set PATH=%_ORI_PATH%
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe clean install HB_VERSION=%HB_VF%
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe %HB_MKFLAGS%
 
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set PATH=%_ORI_PATH%
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe clean install HB_VERSION=%HB_VF%
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe %HB_MKFLAGS%
 
   # packaging
 
