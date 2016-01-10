@@ -55,7 +55,7 @@ build_script:
 
   # common settings
 
-  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BUILD_CONTRIBS=hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio hbgzio
+  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BUILD_CONTRIBS=hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio hbgzio hbbz2io
   - set HB_BUILD_STRIP=bin
   - set HB_BUILD_PKG=yes
   - set _HB_BUILD_PKG_ARCHIVE=no
@@ -77,8 +77,8 @@ build_script:
 
   # mingw
 
-  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_USER_CFLAGS=-flto -ffat-lto-objects
-  - if "%HB_BUILD_MODE%" == "cpp" set HB_USER_LDFLAGS=-static-libgcc -static-libstdc++
+  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_USER_CFLAGS=%HB_USER_CFLAGS% -flto -ffat-lto-objects
+  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" if "%HB_BUILD_MODE%" == "cpp" set HB_USER_LDFLAGS=%HB_USER_LDFLAGS% -static-libgcc -static-libstdc++
 
   - set HB_COMPILER=mingw
   - set HB_CPU=x86
