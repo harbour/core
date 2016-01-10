@@ -50,9 +50,11 @@
 
 #ifndef __HARBOUR__
    #ifndef __XPP__
-      #ifndef FlagShip
-         #ifndef __VO__ /* QUESTION: is this the correct constant ? */
-            #define __CLIPPER__
+      #ifndef __CLIP__
+         #ifndef FlagShip
+            #ifndef __VO__ /* QUESTION: is this the correct constant ? */
+               #define __CLIPPER__
+            #endif
          #endif
       #endif
    #endif

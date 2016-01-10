@@ -53,7 +53,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern void bz_internal_error ( int errcode );
+extern HB_EXPORT void bz_internal_error( int errcode );
 #ifdef __cplusplus
 }
 #endif

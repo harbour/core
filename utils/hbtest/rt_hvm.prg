@@ -490,7 +490,13 @@ PROCEDURE Main_HVM()
    HBTEST soObject == TBColumnNew()       IS .F.
    HBTEST saArray == saArray              IS .T.
    HBTEST {} == {}                        IS .F.
+#ifdef __CLIPPER__
    HBTEST {|| NIL } == {|| NIL }          IS "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:B:{||...};B:{||...} F:S"
+   HBTEST sbBlock == sbBlock              IS "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:B:{||...};B:{||...} F:S"
+#else
+   HBTEST {|| NIL } == {|| NIL }          IS .F.
+   HBTEST sbBlock == sbBlock              IS .T.
+#endif
 
    /* = special */
 
