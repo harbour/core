@@ -1,4 +1,4 @@
-# Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+# Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
 
 # Build in shared mode for these platforms because
 # it's required for dynamic extension loading. (only
@@ -17,7 +17,7 @@
 -DHBMK_WITH_GTXWC{HBMK_WITH_GTXWC='yes'}
 -gtxwc{HBMK_WITH_GTXWC='yes'}
 
-{__HBMKDYN='yes'}-env:_HBMK_WITH_EXTS=hbct|hbexpat|hbmzip|hbcomio|hbmemio|hbnetio|hbpipeio|hbtcpio
+{__HBMKDYN='yes'}-env:_HBMK_WITH_EXTS=hbct|hbexpat|hbmzip|hbbz2io|hbcomio|hbgzio|hbmemio|hbnetio|hbpipeio|hbtcpio
 {__HBMKDYN='yes'&unix}-env:_HBMK_WITH_EXTS+|hbunix
 {__HBMKDYN='yes'&allwin}-env:_HBMK_WITH_EXTS+|hbwin
 {__HBMKDYN='yes'&darwin}-env:_HBMK_WITH_EXTS+|hbosx
@@ -26,7 +26,9 @@
 {!(__HBMKDYN='yes')}hbct.hbc         {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBCT__
 {!(__HBMKDYN='yes')}hbexpat.hbc      {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBEXPAT__
 {!(__HBMKDYN='yes')}hbmzip.hbc       {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBMZIP__
+{!(__HBMKDYN='yes')}hbbz2io.hbc      {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBBZ2IO__
 {!(__HBMKDYN='yes')}hbcomio.hbc      {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBCOMIO__
+{!(__HBMKDYN='yes')}hbgzio.hbc       {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBGZIO__
 {!(__HBMKDYN='yes')}hbmemio.hbc      {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBMEMIO__
 {!(__HBMKDYN='yes')}hbnetio.hbc      {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBNETIO__
 {!(__HBMKDYN='yes')}hbpipeio.hbc     {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBPIPEIO__
