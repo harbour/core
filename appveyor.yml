@@ -36,8 +36,8 @@ install:
 
 build_script:
   - set HB_VF=daily
-  - set HB_MKFLAGS=clean install HB_VERSION=%HB_VF%
   - set HB_RT=%APPVEYOR_BUILD_FOLDER%
+  - set HB_MKFLAGS=clean install HB_VERSION=%HB_VF%
   - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BASE=64
   - if not "%HB_BASE%" == "64" set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd_All.sfx
   - if     "%HB_BASE%" == "64" set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd_All_x64.sfx

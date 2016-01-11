@@ -209,6 +209,9 @@ STATIC FUNCTION CommitScript()
 
 STATIC FUNCTION InstallHook( cDir, cHookName, cCommand )
 
+#if defined( __PLATFORM__UNIX ) .OR. ;
+    defined( __PLATFORM__WINDOWS )
+
    LOCAL cName := hb_DirSepAdd( cDir ) + hb_DirSepToOS( "hooks/" ) + cHookName
    LOCAL cFile := hb_MemoRead( cName )
 
@@ -223,6 +226,9 @@ STATIC FUNCTION InstallHook( cDir, cHookName, cCommand )
    ENDIF
 
    RETURN hb_MemoWrit( cName, cFile + Chr( 10 ) + cCommand + Chr( 10 ) )
+#else
+   RETURN .T.
+#endif
 
 STATIC FUNCTION FindChangeLog( cVCS )
 
