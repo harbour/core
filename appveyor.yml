@@ -41,6 +41,7 @@ build_script:
   - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BASE=64
   - if not "%HB_BASE%" == "64" set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd_All.sfx
   - if     "%HB_BASE%" == "64" set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd_All_x64.sfx
+  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_SFX_7Z=
   - set HB_DIR_7Z=%HB_RT%\7z\
   - set HB_DIR_UPX=%HB_RT%\upx\
   - set HB_DIR_MINGW=%HB_RT%\mingw64
@@ -124,7 +125,7 @@ build_script:
   - sh -c ./package/mpkg_win.sh
 
 artifacts:
-  - path: harbour-daily-win.7z.exe
+  - path: harbour-daily-win.7z*
     name: pkg-win
 
 deploy:
