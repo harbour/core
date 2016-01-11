@@ -334,10 +334,7 @@ static int hb_fsProcessExec( const char * pszFileName,
                              NULL );         /* lpProcessInformation */
    hb_fsSetIOError( ! fError, 0 );
    if( ! fError )
-   {
-      hb_fsSetIOError( ! fError, 0 );
       iResult = 0;
-   }
    hb_vmLock();
 
    if( lpAppName )
@@ -454,7 +451,7 @@ static int hb_fsProcessExec( const char * pszFileName,
 
    return iResult;
 }
-#endif
+#endif /* HB_PROCESS_USEFILES */
 
 HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
                              HB_FHANDLE * phStdin, HB_FHANDLE * phStdout,
@@ -565,18 +562,12 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
 
 #elif defined( HB_OS_OS2 )
 
-      HFILE hStdIn  = ( HFILE ) FS_ERROR,
-            hStdErr = ( HFILE ) FS_ERROR,
-            hStdOut = ( HFILE ) FS_ERROR,
-            hNull   = ( HFILE ) FS_ERROR,
-            hDup;
+      HFILE hNull = ( HFILE ) FS_ERROR;
+      ULONG ulState = 0;
       APIRET ret = NO_ERROR;
-      ULONG ulState, ulStateIn, ulStateOut, ulStateErr;
       PID pid = ( PID ) -1;
       PHB_GT pGT;
 
-      ulStateIn = ulStateOut = ulStateErr = OPEN_FLAGS_NOINHERIT;
-      ulState = 0;
       if( fDetach && ( ! phStdin || ! phStdout || ! phStderr ) )
          ret = DosOpen( ( PCSZ ) "NUL:", &hNull, &ulState, 0,
                         FILE_NORMAL, OPEN_ACCESS_READWRITE,
@@ -604,6 +595,12 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
       pGT = hb_gt_Base();
       if( pGT )
       {
+         ULONG ulStateIn, ulStateOut, ulStateErr;
+         HFILE hStdIn, hStdErr, hStdOut, hDup;
+
+         ulStateIn = ulStateOut = ulStateErr = OPEN_FLAGS_NOINHERIT;
+         hStdIn  = hStdErr = hStdOut = ( HFILE ) FS_ERROR;
+
          if( ret == NO_ERROR && ( phStdin != NULL || fDetach ) )
          {
             hDup = 0;
@@ -692,6 +689,12 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
          }
 
          hb_gt_BaseFree( pGT );
+      }
+      else
+      {
+         if( hNull != ( HFILE ) FS_ERROR )
+            DosClose( hNull );
+         ret = ( APIRET ) FS_ERROR;
       }
 
       fError = ret != NO_ERROR;
@@ -890,13 +893,13 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
       hb_fsSetIOError( ! fError, 0 );
 
 #else
-   int iTODO; /* TODO: for given platform */
+      int iTODO; /* TODO: for given platform */
 
-   HB_SYMBOL_UNUSED( pszFileName );
-   HB_SYMBOL_UNUSED( fDetach );
-   HB_SYMBOL_UNUSED( pulPID );
+      HB_SYMBOL_UNUSED( pszFileName );
+      HB_SYMBOL_UNUSED( fDetach );
+      HB_SYMBOL_UNUSED( pulPID );
 
-   hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
+      hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
 #endif
    }
 
@@ -1182,7 +1185,7 @@ int hb_fsProcessRun( const char * pszFileName,
    }
 }
 
-#else
+#else /* ! HB_PROCESS_USEFILES */
 {
    HB_FHANDLE hProcess;
 
@@ -1570,10 +1573,10 @@ int hb_fsProcessRun( const char * pszFileName,
       HB_SYMBOL_UNUSED( nErrSize );
 
 #endif
-      hb_vmLock();
    }
+   hb_vmLock();
 }
-#endif
+#endif /* ! HB_PROCESS_USEFILES */
 
    if( phStdout )
    {

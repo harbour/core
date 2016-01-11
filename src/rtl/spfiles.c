@@ -117,7 +117,7 @@ HB_BOOL hb_spFileExists( const char * pszFileName, char * pszRetPath )
    HB_BOOL bIsFile = HB_FALSE;
    PHB_FNAME pFilepath;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_spFile(%s, %p)", pszFileName, pszRetPath ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spFileExists(%s, %p)", pszFileName, pszRetPath ) );
 
    if( pszRetPath )
       pszPath = pszRetPath;
