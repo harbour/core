@@ -121,42 +121,30 @@ HB_FUNC( CSETSAFETY )
 }
 
 static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE nLen,
-                           HB_BOOL bOverwrite, HB_FOFFSET nOffset, HB_BOOL bTrunc )
+                           HB_BOOL bAppend, HB_FOFFSET nOffset, HB_BOOL bTrunc )
 {
-   PHB_FILE hFile;
-   HB_BOOL bOpen = HB_FALSE;
-   HB_BOOL bFile = hb_fileExists( pFileName, NULL );
    HB_SIZE nWrite = 0;
+   HB_BOOL bFile = hb_fileExists( pFileName, NULL );
 
-   if( bFile && bOverwrite )
-   {
-      hFile = hb_fileExtOpen( pFileName, NULL,
-                              FO_WRITE | FO_PRIVATE |
-                              FXO_SHARELOCK,
-                              NULL, NULL );
-      bOpen = HB_TRUE;
-   }
-   else if( ! bFile || ! ct_getsafety() )
-   {
-      hFile = hb_fileExtOpen( pFileName, NULL,
-                              FO_WRITE | FO_PRIVATE |
-                              FXO_TRUNCATE | FXO_SHARELOCK,
-                              NULL, NULL );
-      if( ! bFile )
-         hb_fileAttrSet( pFileName, ct_getfcreate() );
-   }
-   else
-      hFile = NULL;
+   PHB_FILE hFile = hb_fileExtOpen( pFileName, NULL,
+                                    FO_WRITE | FO_PRIVATE |
+                                    FXO_SHARELOCK |
+                                    ( bAppend ? FXO_APPEND : FXO_TRUNCATE ) |
+                                    ( ct_getsafety() ? FXO_UNIQUE : 0 ),
+                                    NULL, NULL );
 
    if( hFile )
    {
+      if( ! bFile )
+         hb_fileAttrSet( pFileName, ct_getfcreate() );
+
       if( nOffset )
          hb_fileSeek( hFile, nOffset, FS_SET );
-      else if( bOpen )
+      else
          hb_fileSeek( hFile, 0, FS_END );
 
       nWrite = hb_fileResult( hb_fileWrite( hFile, pcStr, nLen, -1 ) );
-      if( nWrite == nLen && bOpen && bTrunc )
+      if( nWrite == nLen && bTrunc )
          hb_fileWrite( hFile, NULL, 0, -1 );
 
       hb_fileClose( hFile );
