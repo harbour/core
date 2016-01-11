@@ -203,29 +203,20 @@ ENDCLASS
 
 METHOD New( cFile, nMode, nAttr ) CLASS TStreamFileWriter
 
-   ::lCanWrite := .T.
+   LOCAL lExisting := hb_vfExists( cFile )
 
+   ::lCanWrite := .T.
    ::cFile := cFile
 
-   hb_default( @nMode, FO_READWRITE )
-
-   IF hb_vfExists( cFile )
-      IF ( ::hFile := hb_vfOpen( cFile, nMode ) ) == NIL
-         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + hb_ntos( FError() ), hb_AParams() ) )
-      ENDIF
-
-      ::nLength := hb_vfSize( ::hFile )
-      ::nPosition := ::nLength
-   ELSE
-      IF ( ::hFile := hb_vfOpen( cFile, hb_bitOr( FO_CREAT + FO_TRUNC + FO_WRITE, nMode ) ) ) == NIL
-         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Create Error: " + hb_ntos( FError() ), hb_AParams() ) )
-      ENDIF
-
-      hb_vfAttrSet( cFile, nAttr )
-
-      ::nPosition := 0
-      ::nLength := 0
+   IF ( ::hFile := hb_vfOpen( cFile, hb_bitOr( FO_CREAT, hb_defaultValue( nMode, FO_READWRITE ) ) ) ) == NIL
+      Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open/Create Error: " + hb_ntos( FError() ), hb_AParams() ) )
    ENDIF
+
+   IF ! lExisting
+      hb_vfAttrSet( cFile, nAttr )
+   ENDIF
+
+   ::nPosition := ::nLength := hb_vfSeek( ::hFile, 0, FS_END )
 
    RETURN Self
 
