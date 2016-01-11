@@ -54,9 +54,9 @@ PROCEDURE Main()
    cVCS := VCSDetect( @cVCSDir, @cLocalRoot )
 
    IF cVCS == "git"
-      InstallHook( cVCSDir, "pre-commit"        , hb_StrFormat( "exec hbrun %1$s --check-only", CommitScript() ) )
+      InstallHook( cVCSDir, "pre-commit"        , hb_StrFormat( "exec %1$s %2$s --check-only", hb_FNameNameExt( hbshell_ProgName() ), CommitScript() ) )
 #if 0
-      InstallHook( cVCSDir, "prepare-commit-msg", hb_StrFormat( "exec hbrun %1$s $1 --prepare-commit", CommitScript() )
+      InstallHook( cVCSDir, "prepare-commit-msg", hb_StrFormat( "exec %1$s %2$s $1 --prepare-commit", hb_FNameNameExt( hbshell_ProgName() ), CommitScript() )
 #endif
    ENDIF
 
@@ -81,7 +81,7 @@ PROCEDURE Main()
          "--prepare-commit" $ cli_Options()
 
          IF hb_AScan( aFiles, hb_FNameNameExt( cLogName ),,, .T. ) == 0
-            OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run 'hbrun %2$s' and retry.", cLogName, CommitScript() ) + hb_eol() )
+            OutStd( hb_ProgName() + ": " + hb_StrFormat( "%1$s not updated. Run '%2$s %3$s' and retry.", cLogName, hb_FNameNameExt( hbshell_ProgName() ), CommitScript() ) + hb_eol() )
             ErrorLevel( 3 )
             RETURN
          ELSE
