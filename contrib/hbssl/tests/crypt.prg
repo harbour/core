@@ -1,4 +1,4 @@
-/* Copyright 2009 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbssl"
 
@@ -37,8 +37,7 @@ PROCEDURE Main()
 
    ? "encrypt"
 
-   ctx := hb_EVP_CIPHER_ctx_create()
-   EVP_CIPHER_CTX_init( ctx )
+   ctx := EVP_CIPHER_CTX_new()
 
    ? EVP_EncryptInit( ctx, "AES256", cKey, hb_rand32( 40 ) )
    ? EVP_CIPHER_CTX_cipher( ctx )
@@ -54,7 +53,7 @@ PROCEDURE Main()
 
    ? "decrypt"
 
-   ctx := hb_EVP_CIPHER_ctx_create()
+   ctx := EVP_CIPHER_CTX_new()
 
    ? EVP_DecryptInit( ctx, "AES256", cKey )
 
@@ -70,7 +69,7 @@ PROCEDURE Main()
    ? ERR_load_PEM_strings()
    ? OpenSSL_add_all_algorithms()
 
-   ctx := hb_EVP_CIPHER_ctx_create()
+   ctx := EVP_CIPHER_CTX_new()
 
    ? Replicate( "=", 15 )
    bioe := BIO_new_fd( hb_GetStdOut(), HB_BIO_NOCLOSE )

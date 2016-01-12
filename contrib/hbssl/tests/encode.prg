@@ -1,4 +1,4 @@
-/* Copyright 2009 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbssl"
 
@@ -13,7 +13,7 @@ PROCEDURE Main()
 
    OpenSSL_add_all_ciphers()
 
-   ctx := hb_EVP_ENCODE_ctx_create()
+   ctx := EVP_ENCODE_CTX_new()
 
    EVP_EncodeInit( ctx )
 
@@ -25,7 +25,7 @@ PROCEDURE Main()
    encoded += result
    ? "ENCODED", ">" + hb_StrToHex( encoded ) + "<"
 
-   ctx := hb_EVP_ENCODE_ctx_create()
+   ctx := EVP_ENCODE_CTX_new()
 
    EVP_DecodeInit( ctx )
 

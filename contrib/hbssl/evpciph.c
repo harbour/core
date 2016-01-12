@@ -1,7 +1,7 @@
 /*
  * OpenSSL API (EVP CIPHER) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,10 +64,14 @@ static HB_GARBAGE_FUNC( EVP_CIPHER_CTX_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && *ph )
    {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      EVP_CIPHER_CTX_free( ( EVP_CIPHER_CTX * ) *ph );
+#else
       /* Cleanup the object */
       EVP_CIPHER_CTX_cleanup( ( EVP_CIPHER_CTX * ) *ph );
       /* Destroy the object */
       hb_xfree( *ph );
+#endif
 
       /* set pointer to NULL just in case */
       *ph = NULL;
@@ -377,21 +381,21 @@ HB_FUNC( EVP_CIPHER_KEY_LENGTH )
    hb_retni( cipher ? EVP_CIPHER_key_length( cipher ) : 0 );
 }
 
-HB_FUNC( EVP_CIPHER_KEY_IV_LENGTH )
+HB_FUNC( EVP_CIPHER_IV_LENGTH )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
 
    hb_retni( cipher ? EVP_CIPHER_iv_length( cipher ) : 0 );
 }
 
-HB_FUNC( EVP_CIPHER_KEY_FLAGS )
+HB_FUNC( EVP_CIPHER_FLAGS )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
 
    hb_retnint( cipher ? EVP_CIPHER_flags( cipher ) : 0 );
 }
 
-HB_FUNC( EVP_CIPHER_KEY_MODE )
+HB_FUNC( EVP_CIPHER_MODE )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
 
@@ -410,44 +414,48 @@ HB_FUNC( EVP_CIPHER_TYPE )
    hb_retni( cipher ? EVP_CIPHER_type( cipher ) : 0 );
 }
 
-HB_FUNC( HB_EVP_CIPHER_CTX_CREATE )
+HB_FUNC( EVP_CIPHER_CTX_NEW )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_CIPHER_CTX * ), &s_gcEVP_CIPHER_CTX_funcs );
+   EVP_CIPHER_CTX * ctx;
 
-   EVP_CIPHER_CTX * ctx = ( EVP_CIPHER_CTX * ) hb_xgrab( sizeof( EVP_CIPHER_CTX ) );
-
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+   ctx = EVP_CIPHER_CTX_new();
+#else
+   ctx = ( EVP_CIPHER_CTX * ) hb_xgrab( sizeof( EVP_CIPHER_CTX ) );
    EVP_CIPHER_CTX_init( ctx );
+#endif
 
    *ph = ctx;
 
    hb_retptrGC( ph );
 }
 
-HB_FUNC( EVP_CIPHER_CTX_INIT )
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( HB_EVP_CIPHER_CTX_CREATE, EVP_CIPHER_CTX_NEW )
+#endif
+
+HB_FUNC( EVP_CIPHER_CTX_RESET )
 {
    if( hb_EVP_CIPHER_CTX_is( 1 ) )
    {
       EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
 
       if( ctx )
-         EVP_CIPHER_CTX_init( ctx );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( EVP_CIPHER_CTX_CLEANUP )
-{
-   if( hb_EVP_CIPHER_CTX_is( 1 ) )
-   {
-      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
-
-      if( ctx )
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+         hb_retni( EVP_CIPHER_CTX_reset( ctx ) );
+#else
          hb_retni( EVP_CIPHER_CTX_cleanup( ctx ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( EVP_CIPHER_CTX_INIT, EVP_CIPHER_CTX_RESET )
+HB_FUNC_TRANSLATE( EVP_CIPHER_CTX_CLEANUP, EVP_CIPHER_CTX_RESET )
+#endif
 
 HB_FUNC( EVP_CIPHER_CTX_SET_PADDING )
 {

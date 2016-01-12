@@ -1,7 +1,7 @@
 /*
  * OpenSSL API (EVP MD) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -240,11 +240,12 @@ HB_FUNC( EVP_MD_BLOCK_SIZE )
 HB_FUNC( EVP_MD_CTX_NEW )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_MD_CTX * ), &s_gcEVP_MD_CTX_funcs );
+   EVP_MD_CTX * ctx;
 
 #if OPENSSL_VERSION_NUMBER >= 0x00907000L
-   EVP_MD_CTX * ctx = EVP_MD_CTX_new();
+   ctx = EVP_MD_CTX_new();
 #else
-   EVP_MD_CTX * ctx = ( EVP_MD_CTX * ) hb_xgrabz( sizeof( EVP_MD_CTX ) );
+   ctx = ( EVP_MD_CTX * ) hb_xgrabz( sizeof( EVP_MD_CTX ) );
 #endif
 
    *ph = ctx;

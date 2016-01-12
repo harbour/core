@@ -1,7 +1,7 @@
 /*
  * OpenSSL API (EVP ENCODE) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,8 +59,12 @@ static HB_GARBAGE_FUNC( EVP_ENCODE_CTX_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && *ph )
    {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      EVP_ENCODE_CTX_free( ( EVP_ENCODE_CTX * ) *ph );
+#else
       /* Destroy the object */
       hb_xfree( *ph );
+#endif
 
       /* set pointer to NULL just in case */
       *ph = NULL;
@@ -85,16 +89,25 @@ static EVP_ENCODE_CTX * hb_EVP_ENCODE_CTX_par( int iParam )
    return ph ? ( EVP_ENCODE_CTX * ) *ph : NULL;
 }
 
-HB_FUNC( HB_EVP_ENCODE_CTX_CREATE )
+HB_FUNC( EVP_ENCODE_CTX_NEW )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_ENCODE_CTX * ), &s_gcEVP_ENCODE_CTX_funcs );
+   EVP_ENCODE_CTX * ctx;
 
-   EVP_ENCODE_CTX * ctx = ( EVP_ENCODE_CTX * ) hb_xgrab( sizeof( EVP_ENCODE_CTX ) );
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+   ctx = EVP_ENCODE_CTX_new();
+#else
+   ctx = ( EVP_ENCODE_CTX * ) hb_xgrab( sizeof( EVP_ENCODE_CTX ) );
+#endif
 
    *ph = ctx;
 
    hb_retptrGC( ph );
 }
+
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( HB_EVP_ENCODE_CTX_CREATE, EVP_ENCODE_CTX_NEW )
+#endif
 
 HB_FUNC( EVP_ENCODEINIT )
 {
