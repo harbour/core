@@ -1,7 +1,7 @@
 /*
  * OpenSSL API (BIO) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -492,6 +492,7 @@ HB_FUNC( BIO_NEW_FD )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+#if defined( HB_LEGACY_LEVEL5 )
 HB_FUNC( BIO_NEW_FILE )
 {
    if( HB_ISCHAR( 1 ) )
@@ -499,6 +500,7 @@ HB_FUNC( BIO_NEW_FILE )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+#endif
 
 HB_FUNC( BIO_NEW_MEM_BUF )
 {

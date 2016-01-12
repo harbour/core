@@ -73,7 +73,7 @@ PROCEDURE Main()
    ctx := hb_EVP_CIPHER_ctx_create()
 
    ? Replicate( "=", 15 )
-   bioe := BIO_new_fd( 1, HB_BIO_NOCLOSE )
+   bioe := BIO_new_fd( hb_GetStdOut(), HB_BIO_NOCLOSE )
    FOR EACH tmp IN all
       ? tmp:__enumIndex(), pub := tmp:exec( "pubkey.pem", "test" )
       IF ! Empty( pub )

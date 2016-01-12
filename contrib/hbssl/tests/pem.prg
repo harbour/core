@@ -16,7 +16,7 @@ PROCEDURE Main()
    ? ERR_load_PEM_strings()
    ? OpenSSL_add_all_algorithms()
 
-   bioe := BIO_new_fd( 1, HB_BIO_NOCLOSE )
+   bioe := BIO_new_fd( hb_GetStdOut(), HB_BIO_NOCLOSE )
 
    ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", {| lWrite | Output( "Callback (block)", lWrite, hb_eol() ), "test" } )
    ? 1; ERR_print_errors( bioe )
