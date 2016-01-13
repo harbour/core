@@ -1228,7 +1228,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                      nLen += hb_membufLen( pState->pBuffer ) - u;
                      pBuffer = hb_membufPtr( pState->pBuffer ) + u - n;
                      --n;
-                     while( ++n < nLen && pBuffer[ n ] != ch );
+                     while( ++n < nLen && pBuffer[ n ] != ch ) {}
                   }
                   else
                   {
