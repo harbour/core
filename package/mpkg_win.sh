@@ -7,7 +7,7 @@
 
 cd "$(dirname "$0")" || exit
 
-if [ "${_HB_PKG_DEBUG}" = "yes" ] ; then
+if [ "${_HB_PKG_DEBUG}" = 'yes' ] ; then
    set -x
 else
    set +x
@@ -90,12 +90,12 @@ if ls       ../pkg/wce/mingwarm/harbour-${HB_VF}-wce-mingwarm/bin/*.dll > /dev/n
    cp -f -p ../pkg/wce/mingwarm/harbour-${HB_VF}-wce-mingwarm/bin/*.dll "${HB_ABSROOT}bin/"
 fi
 
-if [ "${LIB_TARGET}" = "32" ] ; then
+if [ "${LIB_TARGET}" = '32' ] ; then
    if ls       ../pkg/win/mingw64/harbour-${HB_VF}-win-mingw64/bin/*.dll > /dev/null 2>&1 ; then
       cp -f -p ../pkg/win/mingw64/harbour-${HB_VF}-win-mingw64/bin/*.dll "${HB_ABSROOT}bin/"
    fi
    ( cd "../pkg/win/mingw/harbour-${HB_VF}-win-mingw" && cp -f -p -R ./* "${HB_ABSROOT}" )
-elif [ "${LIB_TARGET}" = "64" ] ; then
+elif [ "${LIB_TARGET}" = '64' ] ; then
    if ls       ../pkg/win/mingw/harbour-${HB_VF}-win-mingw/bin/*.dll > /dev/null 2>&1 ; then
       cp -f -p ../pkg/win/mingw/harbour-${HB_VF}-win-mingw/bin/*.dll "${HB_ABSROOT}bin/"
    fi
@@ -176,7 +176,7 @@ fi
 # Copy 7z
 
 if [ -n "${HB_DIR_7Z}" ] ; then
-   if [ "${LIB_TARGET}" = "64" ] ; then
+   if [ "${LIB_TARGET}" = '64' ] ; then
       cp -f -p "${HB_DIR_7Z}x64/7za.exe" "${HB_ABSROOT}bin/"
    else
       cp -f -p "${HB_DIR_7Z}7za.exe"     "${HB_ABSROOT}bin/"
@@ -186,7 +186,7 @@ fi
 
 # Copy curl
 
-if [ "${LIB_TARGET}" = "64" ] ; then
+if [ "${LIB_TARGET}" = '64' ] ; then
    HB_DIR_CURL="${HB_DIR_CURL_64}"
 else
    HB_DIR_CURL="${HB_DIR_CURL_32}"
@@ -199,7 +199,7 @@ fi
 
 # Copy 3rd party static libraries
 
-if [ "${_HB_BUNDLE_3RDLIB}" = "yes" ] ; then
+if [ "${_HB_BUNDLE_3RDLIB}" = 'yes' ] ; then
    for name in \
          'openssl' \
          'libssh2' \
@@ -244,8 +244,8 @@ fi
 # Pick the ones from a multi-target MinGW distro
 # that match the bitness of our base target.
 _MINGW_DLL_DIR="${HB_DIR_MINGW}/bin"
-[ "${LIB_TARGET}" = "32" ] && [ -d "${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32" ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32"
-[ "${LIB_TARGET}" = "64" ] && [ -d "${HB_DIR_MINGW}/i686-w64-mingw32/lib64"   ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/i686-w64-mingw32/lib64"
+[ "${LIB_TARGET}" = '32' ] && [ -d "${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32" ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32"
+[ "${LIB_TARGET}" = '64' ] && [ -d "${HB_DIR_MINGW}/i686-w64-mingw32/lib64"   ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/i686-w64-mingw32/lib64"
 
 # shellcheck disable=SC2086
 if ls       ${_MINGW_DLL_DIR}/libgcc_s_*.dll > /dev/null 2>&1 ; then
@@ -384,7 +384,23 @@ EOF
    openssl dgst -sha256 "${_PKGNAME}"
 )
 
-if [ "${_BRANCH}" = "master" ] ; then
+if [ "${_BRANCH}" = 'master' ] &&
+   [ -n "${PUSHOVER_USER}" ] ; then
+   (
+      # https://pushover.net/api
+      set +x
+      curl -sS \
+         --form-string "user=${PUSHOVER_USER}" \
+         --form-string "token=${PUSHOVER_TOKEN}" \
+         --form-string 'title=Harbour' \
+         --form-string "message=Build ready: ${_BRANCH}" \
+         --form-string 'html=1' \
+         --form-string 'priority=-1' \
+         https://api.pushover.net/1/messages.json
+   )
+fi
+
+if [ "${_BRANCH}" = 'master' ] ; then
    (
       set +x
       curl -sS \
