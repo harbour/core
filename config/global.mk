@@ -161,9 +161,9 @@ ifeq ($(HB_INIT_DONE),)
       endif
    endif
 
-   ifneq ($(HB_MT),)
-      ifeq ($(filter $(HB_MT),yes no),)
-         export HB_MT :=
+   ifneq ($(__HB_MT),)
+      ifeq ($(filter $(__HB_MT),yes no),)
+         export __HB_MT :=
       endif
    endif
 endif
@@ -277,8 +277,8 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_INSTALL_IMPLIB),)
       $(info ! HB_INSTALL_IMPLIB: $(HB_INSTALL_IMPLIB))
    endif
-   ifneq ($(HB_MT),)
-      $(info ! HB_MT: $(HB_MT))
+   ifneq ($(__HB_MT),)
+      $(info ! __HB_MT: $(__HB_MT))
    endif
 endif
 

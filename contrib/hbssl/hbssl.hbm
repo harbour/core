@@ -32,7 +32,7 @@
 # For _fileno() in openssl/applink.c
 #-c=gnu90
 
-ssl_hbcon.prg
+ssl_hbco.prg
 
 ssl_hb.c
 ssl_inet.c
