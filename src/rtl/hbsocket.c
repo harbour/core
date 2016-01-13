@@ -206,7 +206,9 @@
 #if defined( HB_OS_WIN )
 #  include <winsock2.h>
 #  include <ws2tcpip.h>
-#  include <iphlpapi.h>
+#  if ! defined( __DMC__ )
+#     include <iphlpapi.h>
+#  endif
 #else
 #  include <errno.h>
 #  if defined( HB_OS_DOS )
