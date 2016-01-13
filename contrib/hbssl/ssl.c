@@ -1,7 +1,7 @@
 /*
  * OpenSSL API (SSL) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,12 +45,19 @@
  */
 
 /* for applink.c */
-#if ! defined( HB_OPENSSL_STATIC )
-   #if defined( _MSC_VER )
-      #ifndef _CRT_SECURE_NO_WARNINGS
-      #define _CRT_SECURE_NO_WARNINGS
-      #endif
+#if defined( _MSC_VER )
+   #ifndef _CRT_SECURE_NO_WARNINGS
+   #define _CRT_SECURE_NO_WARNINGS
    #endif
+#elif defined( __BORLANDC__ )
+   /* NOTE: To avoid these with BCC 5.5:
+            Warning W8065 openssl/applink.c 40: Call to function '_setmode' with no prototype in function app_fsetmod
+            Error E2451 openssl/applink.c 82: Undefined symbol '_lseek' in function OPENSSL_Applink
+    */
+   #include "io.h"
+   #define _setmode setmode
+   #undef _lseek
+   #define _lseek   lseek
 #endif
 
 #include "hbapi.h"
@@ -65,23 +72,82 @@
 
 #include "hbssl.h"
 
+#if defined( HB_OS_WIN ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
+   /* Enable this to add support for various scenarios
+      when OpenSSL is build with OPENSSL_USE_APPLINK.
+      In such case care must be taken to initialize
+      pointers to C RTL function to avoid crashes. */
+   #if ! defined( HB_OPENSSL_STATIC )
+      #define HB_OPENSSL_HAS_APPLINK
+   #endif
+#endif
+
 /* NOTE: See: https://www.openssl.org/support/faq.html#PROG2
          Application must call SSL_init(), so that this module gets linked.
          [vszakats] */
-#if defined( HB_OS_WIN ) && ! defined( HB_OPENSSL_STATIC ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
-   /* NOTE: It doesn't build in BCC 5.5:
-            Warning W8065 openssl/applink.c 40: Call to function '_setmode' with no prototype in function app_fsetmod
-            Error E2451 openssl/applink.c 82: Undefined symbol '_lseek' in function OPENSSL_Applink
-    */
-   #if ! defined( __BORLANDC__ )
-      #include "openssl/applink.c"
+#if defined( HB_OPENSSL_HAS_APPLINK )
+   /* Pull a stub that returns a table with some selected
+      C RTL function pointers. When linking to OpenSSL shared
+      libraries, the function OPENSSL_Applink() exported from
+      the application executable will be dynamically called
+      from the OpenSSL crypto .dll. When linking OpenSSL statically,
+      we will call it manually from SSL_init(). This will not
+      work when using 'hbssl' as a dynamic lib, because
+      OPENSSL_Applink() must be exported from the main executable.
+      Consequently 'hbrun' will fail with operations that require
+      C RTL calls internally. Such calls are currently made when
+      using BIO_new_fd() BIO_new_file() IO API. */
+   #include "openssl/applink.c"
+   #if defined( HB_OPENSSL_STATIC )
+      extern void * OPENSSL_UplinkTable[];  /* available when OpenSSL was built with -DOPENSSL_USE_APPLINK option */
    #endif
 #endif
 
 HB_FUNC( SSL_INIT )
 {
+   #if defined( HB_OPENSSL_HAS_APPLINK ) && defined( HB_OPENSSL_STATIC )
+   {
+      /* Initialize "applink" function table with C RTL function pointers
+         when OpenSSL is statically linked and the static OpenSSL libraries
+         were built with `-DOPENSSL_USE_APPLINK` option (which is the
+         default in mingw 32-bit). This is required, otherwise the UP_*()
+         macros will resolve to NULL pointers and crash those OpenSSL functions
+         that rely on them, f.e. BIO_write() on a BIO_new_fd(). The
+         hack-free solution would be to build OpenSSL static libraries
+         _without_ OPENSSL_USE_APPLINK option, and build shared libraries
+         (.dlls) _with_ OPENSSL_USE_APPLINK in two separate build pass.
+         Unfortunately there is no way to find out if the OpenSSL build
+         we're linking against was built with or without OPENSSL_USE_APPLINK,
+         so this whole house of cards may fail with non-default configurations,
+         manifesting in an unresolved `OPENSSL_UplinkTable` external. */
+
+      void ** up = OPENSSL_Applink();
+      size_t count = ( size_t ) up[ 0 ];
+      for( ; count; --count )
+         OPENSSL_UplinkTable[ count ] = up[ count ];
+   }
+   #endif
+
    SSL_library_init();
    SSL_load_error_strings();
+}
+
+HB_FUNC( HB_SSL_APPLINK )
+{
+#if defined( HB_OPENSSL_HAS_APPLINK )
+   hb_retl( HB_TRUE );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
+
+HB_FUNC( HB_SSL_STATIC )
+{
+#if defined( HB_DYNLIB )
+   hb_retl( HB_FALSE );
+#else
+   hb_retl( HB_TRUE );
+#endif
 }
 
 HB_FUNC( OPENSSL_VERSION )

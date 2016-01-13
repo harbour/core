@@ -43,6 +43,7 @@ DYNAMIC BIO_new_accept
 DYNAMIC BIO_new_connect
 DYNAMIC BIO_new_dgram
 DYNAMIC BIO_new_fd
+DYNAMIC BIO_new_file
 DYNAMIC BIO_new_mem_buf
 DYNAMIC BIO_new_socket
 DYNAMIC BIO_puts
@@ -173,11 +174,13 @@ DYNAMIC hb_inetSSL_accept
 DYNAMIC hb_inetSSL_connect
 DYNAMIC hb_socketNewSSL_accept
 DYNAMIC hb_socketNewSSL_connect
+DYNAMIC hb_SSL_APPLINK
 DYNAMIC hb_SSL_connect_inet
 DYNAMIC hb_SSL_connect_socket
 DYNAMIC hb_SSL_new
 DYNAMIC hb_SSL_read_all
 DYNAMIC hb_SSL_read_line
+DYNAMIC hb_SSL_STATIC
 DYNAMIC OpenSSL_add_all_algorithms
 DYNAMIC OpenSSL_add_all_ciphers
 DYNAMIC OpenSSL_add_all_digests
