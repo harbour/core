@@ -11,6 +11,7 @@
 -deppkgname=cups:libcups2-dev{deb}
 -deppkgname=cups:libcups2-devel{rpm}
 -depkeyhead=cups:cups/cups.h
+-depcontrol=cups:force{darwin}
 -depcontrol=cups:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=cups:${HB_WITH_CUPS}
 -depincpath=cups:/usr/include
