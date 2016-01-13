@@ -384,7 +384,7 @@ EOF
    openssl dgst -sha256 "${_PKGNAME}"
 )
 
-if [ "${_BRANCH}" = 'master' ] &&
+if [ "${_BRANCH}" = 'lto' ] && \
    [ -n "${PUSHOVER_USER}" ] ; then
    (
       # https://pushover.net/api
