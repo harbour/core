@@ -162,6 +162,12 @@ ifeq ($(HB_INIT_DONE),)
          $(warning ! Warning: HB_INSTALL_IMPLIB option has an effect only if 'install' is requested.)
       endif
    endif
+
+   ifneq ($(HB_MT),)
+      ifeq ($(filter $(HB_MT),yes no),)
+         export HB_MT :=
+      endif
+   endif
 endif
 
 # Make platform detection
@@ -272,6 +278,9 @@ ifeq ($(HB_INIT_DONE),)
    endif
    ifneq ($(HB_INSTALL_IMPLIB),)
       $(info ! HB_INSTALL_IMPLIB: $(HB_INSTALL_IMPLIB))
+   endif
+   ifneq ($(HB_MT),)
+      $(info ! HB_MT: $(HB_MT))
    endif
 endif
 
