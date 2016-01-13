@@ -275,7 +275,7 @@
    #xtranslate NextKey( [<x>] )                => hb_keyNext( <x> )
    #xtranslate Alert( [<x,...>] )              => hb_Alert( <x> )
 
-   #xtranslate Str( <x>, [<y>], [<y>], <z> )   => iif( <z>, hb_ntos( <x> ), Str( <x> ) )
+   #xtranslate Str( <x>, [<y>], [<w>], <z> )   => iif( <z>, LTrim( Str( <x>, <y>, <w> ) ), Str( <x>, <y>, <w> ) )
 
    #xuntranslate NetName(                      =>
    #xuntranslate MemoWrit(                     =>
