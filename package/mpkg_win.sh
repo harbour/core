@@ -397,6 +397,7 @@ if [ "${_BRANCH}" = 'master' ] &&
          --form-string 'html=1' \
          --form-string 'priority=-1' \
          https://api.pushover.net/1/messages.json
+      echo "! Push notification: Build ready."
    )
 fi
 
