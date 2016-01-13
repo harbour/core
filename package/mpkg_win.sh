@@ -396,7 +396,7 @@ if [ "${_BRANCH}" = 'lto' ] ; then
          --form-string 'title=Harbour' \
          --form-string "message=Build ready: ${_BRANCH}" \
          --form-string 'html=1' \
-         --form-string 'priority=-1' \
+         --form-string 'priority=1' \
          https://api.pushover.net/1/messages.json
       echo
       echo "! Push notification: Build ready."
