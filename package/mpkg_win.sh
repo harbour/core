@@ -41,9 +41,11 @@ HB_DIR_MINGW="$(echo "${HB_DIR_MINGW}" | sed 's|\\|/|g')"
 HB_DR="hb${HB_VS}/"
 HB_ABSROOT="${HB_RT}/${HB_DR}"
 
-_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+_BRANCH="${APPVEYOR_REPO_BRANCH}${TRAVIS_BRANCH}${GIT_BRANCH}"
 _SCRIPT="$(realpath "$(pwd)/mpkg.hb")"
 _ROOT="$(realpath "$(pwd)/..")"
+
+echo "! Branch: '${_BRANCH}'"
 
 # Hack for Git for Windows. Windows system paths may override
 # standard tools.
@@ -384,8 +386,7 @@ EOF
    openssl dgst -sha256 "${_PKGNAME}"
 )
 
-if [ "${_BRANCH}" = 'lto' ] && \
-   [ -n "${PUSHOVER_USER}" ] ; then
+if [ "${_BRANCH}" = 'lto' ] ; then
    (
       # https://pushover.net/api
       set +x
@@ -397,6 +398,7 @@ if [ "${_BRANCH}" = 'lto' ] && \
          --form-string 'html=1' \
          --form-string 'priority=-1' \
          https://api.pushover.net/1/messages.json
+      echo
       echo "! Push notification: Build ready."
    )
 fi

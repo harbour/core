@@ -18,7 +18,7 @@ environment:
   VIRUSTOTAL_APIKEY:
     secure: TdJYONfrpH45DuyKxraVqgHYy25IQ/F8TKHzYf+u5zz1aiM2yR0YTMaGxyj2EMReEearSI9kD9D2ZykybSVEbRyEaotZlceUb2lPDKELl3M=
   PUSHOVER_USER:
-    secure: r0t3XEOacCfk+DgkHyrg5yXc6rXbxTMTCNZfgyIfgmY=
+    secure: zKEcvmxcPuch0HUR9NuvXSXrMJL13qbQ0Ixh65VQUi0=
   PUSHOVER_TOKEN:
     secure: DjWTkh5sUw6dUQkHv3KhTvi2llF9GN17z60h9kRGYX4=
 
