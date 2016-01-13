@@ -101,7 +101,7 @@ HB_FUNC( __OSX_PROXYDETECT )
 
          if( hostString )
          {
-            NSString * str = ( __bridge NSString * ) hostString;
+            const NSString * str = ( __bridge const NSString * ) hostString;
             hb_retstr_utf8( [ str UTF8String ] );
 
             aNum = CFDictionaryGetValue( proxyDict, keyPort );

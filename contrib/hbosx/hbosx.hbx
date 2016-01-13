@@ -22,8 +22,8 @@
 #endif
 
 DYNAMIC osx_MoveToTrash
-DYNAMIC osx_ProxyGet
-DYNAMIC __osx_ProxyGet
+DYNAMIC osx_ProxyDetect
+DYNAMIC __osx_ProxyDetect
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBOSX__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
