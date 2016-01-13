@@ -94,7 +94,7 @@
 
 #if defined( HB_OS_OS2 )
 
-static char * hb_buildArgsOS2( const char *pszFileName )
+static char * hb_buildArgsOS2( const char *pszFileName, APIRET * ret )
 {
    PHB_FNAME pFilepath;
    char szFileBuf[ HB_PATH_MAX ];
@@ -142,15 +142,25 @@ static char * hb_buildArgsOS2( const char *pszFileName )
    }
    hb_xfree( pFilepath );
 
-   pArgs = ( char * ) hb_xgrab( nLen + nLen2 + 3 );
-   memcpy( pArgs, szFileBuf, nLen + 1 );
-   memcpy( pArgs + nLen + 1, pszFileName, nLen2 + 1 );
-   pArgs[ nLen + nLen2 + 2 ] = '\0';
+   *ret = DosAllocMem( ( PPVOID ) &pArgs,  nLen + nLen2 + 3, OBJ_TILE | PAG_COMMIT | PAG_WRITE );
+   if( *ret == NO_ERROR )
+   {
+      memcpy( pArgs, szFileBuf, nLen + 1 );
+      memcpy( pArgs + nLen + 1, pszFileName, nLen2 + 1 );
+      pArgs[ nLen + nLen2 + 2 ] = '\0';
+   }
+   else
+      pArgs = NULL;
 
    if( pszFree )
       hb_xfree( pszFree );
 
    return pArgs;
+}
+
+static void hb_freeArgsOS2( char * pArgs )
+{
+   DosFreeMem( pArgs );
 }
 
 #endif
@@ -592,8 +602,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
             ret = DosSetFHState( hPipeErr[ 0 ], ( ulState & 0xFF00 ) | OPEN_FLAGS_NOINHERIT );
       }
 
-      pGT = hb_gt_Base();
-      if( pGT )
+      if( ret == NO_ERROR && ( pGT = hb_gt_Base() ) != NULL )
       {
          ULONG ulStateIn, ulStateOut, ulStateErr;
          HFILE hStdIn, hStdErr, hStdOut, hDup;
@@ -645,19 +654,21 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
 
          if( ret == NO_ERROR )
          {
-            char * pArgs = hb_buildArgsOS2( pszFileName );
+            char * pArgs = hb_buildArgsOS2( pszFileName, &ret );
             char uchLoadError[ CCHMAXPATH ] = { 0 };
             RESULTCODES ChildRC = { 0, 0 };
 
-            ret = DosExecPgm( uchLoadError, sizeof( uchLoadError ),
-                              fDetach ? EXEC_BACKGROUND : EXEC_ASYNCRESULT,
-                              ( PCSZ ) pArgs, NULL /* env */,
-                              &ChildRC,
-                              ( PCSZ ) pArgs );
-            if( ret == NO_ERROR )
-               pid = ChildRC.codeTerminate;
-
-            hb_xfree( pArgs );
+            if( pArgs )
+            {
+               ret = DosExecPgm( uchLoadError, sizeof( uchLoadError ),
+                                 fDetach ? EXEC_BACKGROUND : EXEC_ASYNCRESULT,
+                                 ( PCSZ ) pArgs, NULL /* env */,
+                                 &ChildRC,
+                                 ( PCSZ ) pArgs );
+               if( ret == NO_ERROR )
+                  pid = ChildRC.codeTerminate;
+               hb_freeArgsOS2( pArgs );
+            }
          }
 
          if( hNull != ( HFILE ) FS_ERROR )
@@ -694,7 +705,8 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
       {
          if( hNull != ( HFILE ) FS_ERROR )
             DosClose( hNull );
-         ret = ( APIRET ) FS_ERROR;
+         if( ret == NO_ERROR )
+            ret = ( APIRET ) FS_ERROR;
       }
 
       fError = ret != NO_ERROR;
