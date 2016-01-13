@@ -561,8 +561,6 @@ METHOD attachFile( cFileName ) CLASS TIPMail
    oAttach   := TIPMail():new( cContent, "base64" )
    cBaseName := hb_FNameNameExt( cFileName )
 
-   oAttach:setFieldPart( "Content-Type", tip_FileMimeType( cFileName ) )
-   oAttach:setFieldOption( "Content-type", "name", cBaseName )
    oAttach:setFieldPart( "Content-Disposition", "attachment" )
    oAttach:setFieldOption( "Content-Disposition", "filename", cBaseName )
    oAttach:setFieldPart( "Content-Type", tip_FileMimeType( cFileName, "application/unknown" ) )
