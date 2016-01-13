@@ -81,7 +81,7 @@ double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
    if( uiType > HB_DISK_TOTAL )
       uiType = HB_DISK_AVAIL;
 
-   if( ! pszPath )
+   if( ! pszPath || pszPath[ 0 ] == '\0' )
    {
       szPathBuf[ 0 ] = HB_OS_PATH_DELIM_CHR;
       szPathBuf[ 1 ] = '\0';
@@ -220,8 +220,7 @@ double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
    {
       HB_USHORT uiDrive;
 
-      uiDrive = pszPath == NULL || pszPath[ 0 ] == 0 ||
-                pszPath[ 1 ] != HB_OS_DRIVE_DELIM_CHR ? 0 :
+      uiDrive = pszPath[ 1 ] != HB_OS_DRIVE_DELIM_CHR ? 0 :
                 ( pszPath[ 0 ] >= 'A' && pszPath[ 0 ] <= 'Z' ?
                   pszPath[ 0 ] - 'A' + 1 :
                 ( pszPath[ 0 ] >= 'a' && pszPath[ 0 ] <= 'z' ?
