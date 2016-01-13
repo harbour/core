@@ -98,8 +98,9 @@ static char * hb_buildArgsOS2( const char *pszFileName, APIRET * ret )
 {
    PHB_FNAME pFilepath;
    char szFileBuf[ HB_PATH_MAX ];
-   char * pArgs, * pszFree = NULL, cQuote = 0, c;
+   char * pArgs = NULL, * pszFree = NULL, cQuote = 0, c;
    HB_SIZE nLen = 0, nLen2;
+   void * pMem;
 
    while( HB_ISSPACE( *pszFileName ) )
       ++pszFileName;
@@ -142,15 +143,15 @@ static char * hb_buildArgsOS2( const char *pszFileName, APIRET * ret )
    }
    hb_xfree( pFilepath );
 
-   *ret = DosAllocMem( ( PPVOID ) &pArgs,  nLen + nLen2 + 3, OBJ_TILE | PAG_COMMIT | PAG_WRITE );
+   *ret = DosAllocMem( &pMem, nLen + nLen2 + 3,
+                       PAG_COMMIT | PAG_READ | PAG_WRITE | OBJ_TILE );
    if( *ret == NO_ERROR )
    {
+      pArgs = ( char * ) pMem;
       memcpy( pArgs, szFileBuf, nLen + 1 );
       memcpy( pArgs + nLen + 1, pszFileName, nLen2 + 1 );
       pArgs[ nLen + nLen2 + 2 ] = '\0';
    }
-   else
-      pArgs = NULL;
 
    if( pszFree )
       hb_xfree( pszFree );

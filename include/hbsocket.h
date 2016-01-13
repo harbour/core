@@ -197,6 +197,7 @@ extern HB_EXPORT PHB_SOCKEX hb_sockexParam( int iParam );
 extern HB_EXPORT PHB_SOCKEX hb_sockexItemGet( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM   hb_sockexItemPut( PHB_ITEM pItem, PHB_SOCKEX pSock );
 extern HB_EXPORT void       hb_sockexItemClear( PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL    hb_sockexItemReplace( PHB_ITEM pItem, PHB_SOCKEX pSock );
 extern HB_EXPORT HB_BOOL    hb_sockexItemSetFilter( PHB_ITEM pItem, const char * pszFilter, PHB_ITEM pParams );
 
 HB_EXTERN_END

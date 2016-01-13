@@ -581,7 +581,7 @@ static PVOID hb_gt_os2_allocMem( int iSize )
    APIRET rc;     /* return code from DosXXX api call */
    PVOID pMem;
 
-   rc = DosAllocMem( &pMem, iSize, PAG_COMMIT | OBJ_TILE | PAG_WRITE );
+   rc = DosAllocMem( &pMem, iSize, PAG_COMMIT | PAG_READ | PAG_WRITE | OBJ_TILE );
    if( rc != NO_ERROR )
       hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_os2_allocMem() memory allocation failure.", NULL, NULL );
 

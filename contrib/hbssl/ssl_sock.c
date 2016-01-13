@@ -566,19 +566,26 @@ static void s_sslSocketNew( HB_BOOL fServer )
 
       if( pSock )
       {
-         hb_socketItemClear( hb_param( 1, HB_IT_POINTER ) );
-         hb_sockexItemPut( hb_param( -1, HB_IT_ANY ), pSock );
+         PHB_ITEM pSockItm = hb_param( 1, HB_IT_POINTER );
+
+         if( HB_ISBYREF( 1 ) && hb_sockexItemReplace( pSockItm, pSock ) )
+            hb_itemReturn( pSockItm );
+         else
+         {
+            hb_socketItemClear( pSockItm );
+            hb_sockexItemPut( hb_param( -1, HB_IT_ANY ), pSock );
+         }
       }
    }
 }
 
-/* hb_socketNewSSL_connect( <pSocket>, <pSSL> [, <nTimeout> ] ) */
+/* hb_socketNewSSL_connect( [@]<pSocket>, <pSSL> [, <nTimeout> ] ) */
 HB_FUNC( HB_SOCKETNEWSSL_CONNECT )
 {
    s_sslSocketNew( HB_FALSE );
 }
 
-/* hb_socketNewSSL_accept( <pSocket>, <pSSL> [, <nTimeout> ] ) */
+/* hb_socketNewSSL_accept( [@]<pSocket>, <pSSL> [, <nTimeout> ] ) */
 HB_FUNC( HB_SOCKETNEWSSL_ACCEPT )
 {
    s_sslSocketNew( HB_TRUE );

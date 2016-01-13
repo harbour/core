@@ -444,6 +444,20 @@ void hb_sockexItemClear( PHB_ITEM pItem )
       *pSockPtr = NULL;
 }
 
+HB_BOOL hb_sockexItemReplace( PHB_ITEM pItem, PHB_SOCKEX pSock )
+{
+   PHB_SOCKEX * pSockPtr = ( PHB_SOCKEX * ) hb_itemGetPtrGC( pItem, &s_gcSocketFuncs );
+
+   if( pSockPtr )
+   {
+      if( *pSockPtr )
+         hb_sockexClose( *pSockPtr, HB_FALSE );
+      *pSockPtr = pSock;
+      return HB_TRUE;
+   }
+   return HB_FALSE;
+}
+
 HB_BOOL hb_sockexItemSetFilter( PHB_ITEM pItem, const char * pszFilter, PHB_ITEM pParams )
 {
    PHB_SOCKEX * pSockPtr = ( PHB_SOCKEX * ) hb_itemGetPtrGC( pItem, &s_gcSocketFuncs );

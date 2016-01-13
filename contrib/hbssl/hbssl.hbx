@@ -173,6 +173,9 @@ DYNAMIC hb_inetSSL_accept
 DYNAMIC hb_inetSSL_connect
 DYNAMIC hb_socketNewSSL_accept
 DYNAMIC hb_socketNewSSL_connect
+DYNAMIC hb_SSL_connect_inet
+DYNAMIC hb_SSL_connect_socket
+DYNAMIC hb_SSL_new
 DYNAMIC hb_SSL_read_all
 DYNAMIC hb_SSL_read_line
 DYNAMIC OpenSSL_add_all_algorithms

@@ -550,6 +550,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC ) CLASS TIPMail
 METHOD attachFile( cFileName ) CLASS TIPMail
 
    LOCAL cContent := hb_MemoRead( cFileName )
+   LOCAL cBaseName
    LOCAL oAttach
    LOCAL nAttr
 
@@ -557,12 +558,15 @@ METHOD attachFile( cFileName ) CLASS TIPMail
       RETURN .F.
    ENDIF
 
-   oAttach := TIPMail():new( cContent, "base64" )
+   oAttach   := TIPMail():new( cContent, "base64" )
+   cBaseName := hb_FNameNameExt( cFileName )
 
+   oAttach:setFieldPart( "Content-Type", tip_FileMimeType( cFileName ) )
+   oAttach:setFieldOption( "Content-type", "name", cBaseName )
    oAttach:setFieldPart( "Content-Disposition", "attachment" )
-   oAttach:setFieldOption( "Content-Disposition", "filename", hb_FNameNameExt( cFileName ) )
+   oAttach:setFieldOption( "Content-Disposition", "filename", cBaseName )
    oAttach:setFieldPart( "Content-Type", tip_FileMimeType( cFileName, "application/unknown" ) )
-   oAttach:setFieldOption( "Content-Type", "name", hb_FNameNameExt( cFileName ) )
+   oAttach:setFieldOption( "Content-Type", "name", cBaseName )
    IF hb_vfAttrGet( cFileName, @nAttr ) .AND. nAttr != 0
       oAttach:setFieldOption( "Content-Type", "x-unix-mode", hb_NumToHex( __tip_FAttrToUmask( nAttr ), 4 ) )
    ENDIF

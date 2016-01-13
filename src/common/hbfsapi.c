@@ -339,13 +339,13 @@ HB_BOOL hb_isWSeB( void )
       ret = DosLoadModule( NULL, 0, ( PCSZ ) "DOSCALL1", &hModule );
 #endif
       if( ret == NO_ERROR )
-         ret = DosQueryProcAddr( hModule, 981, NULL, ( PFN * ) &s_DosOpenL );
+         ret = DosQueryProcAddr( hModule, 981, NULL, ( PFN * ) ( void * ) &s_DosOpenL );
       if( ret == NO_ERROR )
-         ret = DosQueryProcAddr( hModule, 986, NULL, ( PFN * ) &s_DosSetFileLocksL );
+         ret = DosQueryProcAddr( hModule, 986, NULL, ( PFN * ) ( void * ) &s_DosSetFileLocksL );
       if( ret == NO_ERROR )
-         ret = DosQueryProcAddr( hModule, 988, NULL, ( PFN * ) &s_DosSetFilePtrL );
+         ret = DosQueryProcAddr( hModule, 988, NULL, ( PFN * ) ( void * ) &s_DosSetFilePtrL );
       if( ret == NO_ERROR )
-         ret = DosQueryProcAddr( hModule, 989, NULL, ( PFN * ) &s_DosSetFileSizeL );
+         ret = DosQueryProcAddr( hModule, 989, NULL, ( PFN * ) ( void * ) &s_DosSetFileSizeL );
       s_iWSeB = ret == NO_ERROR;
    }
    return s_iWSeB;

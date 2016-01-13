@@ -516,7 +516,8 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
          info->hFindFile = HDIR_CREATE;
          info->findCount = info->findInitCnt;
-         ret = DosAllocMem( &info->entry, info->findSize, OBJ_TILE | PAG_COMMIT | PAG_WRITE );
+         ret = DosAllocMem( &info->entry, info->findSize,
+                            PAG_COMMIT | PAG_READ | PAG_WRITE | OBJ_TILE );
          if( ret == NO_ERROR )
          {
             ret = DosFindFirst( ( PCSZ ) ffind->pszFileMask,
