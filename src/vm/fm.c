@@ -1548,10 +1548,10 @@ HB_BOOL hb_xtraced( void )
 
 HB_FUNC( __FM_ALLOCLIMIT )
 {
-   hb_xclean();
 #if defined( HB_FM_DLMT_ALLOC )
    HB_STACK_TLS_PRELOAD;
 
+   hb_xclean();
    hb_retns( mspace_footprint_limit( hb_mspace() ) );
    if( HB_ISNUM( 1 ) )
    {
@@ -1564,6 +1564,7 @@ HB_FUNC( __FM_ALLOCLIMIT )
 #elif defined( HB_FM_DL_ALLOC )
    HB_STACK_TLS_PRELOAD;
 
+   hb_xclean();
    hb_retns( dlmalloc_footprint_limit() );
    if( HB_ISNUM( 1 ) )
    {
@@ -1576,6 +1577,7 @@ HB_FUNC( __FM_ALLOCLIMIT )
 #elif defined( HB_FM_STATISTICS )
    HB_STACK_TLS_PRELOAD;
 
+   hb_xclean();
    hb_retns( s_nMemoryLimConsumed ? s_nMemoryLimConsumed : -1 );
    if( HB_ISNUM( 1 ) )
    {
@@ -1584,6 +1586,7 @@ HB_FUNC( __FM_ALLOCLIMIT )
       s_nMemoryLimConsumed = HB_MAX( nLimit, 0 );
    }
 #else
+   hb_xclean();
    hb_retni( 0 );
 #endif
 }
