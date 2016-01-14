@@ -41,6 +41,7 @@ ifneq ($(HB_BUILD_WARN),no)
          CFLAGS += -Wno-reserved-id-macro
       endif
    endif
+   CFLAGS += -Wno-empty-translation-unit
    # These are potentially useful. -Wsign-conversion would require proper HB_SIZE/HB_ISIZ cleanup.
    CFLAGS += -Wno-sign-conversion -Wno-shorten-64-to-32 -Wno-conversion -Wno-bad-function-cast
 else
