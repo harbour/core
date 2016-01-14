@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    AChoice() test
+ * AChoice() test
  *
  * Copyright 2009 Vladislav Lavrecky <lavr / at / ldz.lv>
- * www - http://harbour-project.org
  *
  */
 

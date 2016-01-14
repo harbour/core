@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for GFX operations
+ * demonstration/test code for GFX operations
  *
  * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for using memvars in threads
+ * demonstration/test code for using memvars in threads
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

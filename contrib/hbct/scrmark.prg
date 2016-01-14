@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *   CT3 video functions (screen-like functions):
+ * CT3 video functions (screen-like functions):
  *
  * ScreenMark()
  * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
- * www - http://harbour-project.org
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *   modified for better CT3 compatibility and GT drivers which do not use
@@ -23,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.

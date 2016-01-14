@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration code for FOR EACH overloading
+ * demonstration code for FOR EACH overloading
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

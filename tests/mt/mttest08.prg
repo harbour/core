@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for using memvar variables sharing and
+ * demonstration/test code for using memvar variables sharing and
  *    copping
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

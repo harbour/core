@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    test code for GET SetGet block for aliased macro variables
+ * test code for GET SetGet block for aliased macro variables
  *
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  */
 
 PROCEDURE Main()

@@ -8,8 +8,6 @@
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  *    Exm_CDO(), Exm_OOOpen(), Exm_CreateShortcut()
  *
- * www - http://harbour-project.org
- *
  */
 
 #require "hbwin"

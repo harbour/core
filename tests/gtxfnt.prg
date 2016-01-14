@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for changing font in X-Window GTs
+ * demonstration/test code for changing font in X-Window GTs
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

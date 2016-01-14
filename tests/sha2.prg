@@ -1,8 +1,6 @@
 /*
- * Harbour Project source code:
  *
  * Rewritten from C: Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  */
 
 PROCEDURE Main()

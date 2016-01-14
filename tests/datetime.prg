@@ -1,8 +1,6 @@
 /*
- * Harbour Project source code:
  *
  * Copyright 2010 Carlos Bacco
- * www - http://harbour-project.org
  *
  */
 

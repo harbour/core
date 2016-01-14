@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour Make (alias hbmk/hbmk2/hbrun)
  *
  * Copyright 1999-2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  * License extensions:
  *   - This source code must be kept and distributed as part
@@ -77,8 +75,8 @@
    Man page HOWTO:
       http://www.schweikhardt.net/man_page_howto.html
    Groff manual:
-      http://www.gnu.org/software/groff/manual/html_node/index.html
-      http://www.gnu.org/software/groff/manual/groff.pdf
+      https://www.gnu.org/software/groff/manual/html_node/index.html
+      https://www.gnu.org/software/groff/manual/groff.pdf
    Troff manual:
       http://cm.bell-labs.com/sys/doc/troff.pdf
  */
@@ -14200,11 +14198,9 @@ FUNCTION hbshell_ext_get_list()
 STATIC FUNCTION __plugin_ext()
 #pragma __cstream | RETURN %s
 /*
- * Harbour Project source code:
  * extension manager plugin
  *
  * Copyright 2012-2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  */
 
 FUNCTION __hbshell_plugin()
@@ -16820,7 +16816,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
-their web site at http://www.gnu.org/).
+their web site at https://www.gnu.org/).
 
 License extensions:
   - This source code must be kept and distributed as part

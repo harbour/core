@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * IRM (Independent Record Map) API
  *
  * Released to Public Domain in 2010 by Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * DISCLAIMER: USE AT YOUR OWN RISK. NO GUARANTEES.
  *

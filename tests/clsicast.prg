@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for instance variables casting and allocating
+ * demonstration/test code for instance variables casting and allocating
  *    in multiinherited classes
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

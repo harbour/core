@@ -1,6 +1,5 @@
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  *    Documentation for: __mvPublic(), __mvPrivate(), __mvXRelease(),

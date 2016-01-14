@@ -1,6 +1,5 @@
 /*
  * Copyright 2015 Przemyslaw Czerpak (druzus/at/poczta.onet.pl)
- * www - http://harbour-project.org
  */
 
 #require "hbssl"

@@ -12,7 +12,6 @@
  * http://www.pdfforge.org/content/com-interface
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
- * www - http://harbour-project.org
  *
  */
 

@@ -1,6 +1,5 @@
 /*
  * The following are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 2000 Paul Tucker <ptucker@sympatico.ca>
  *    Documentation for: DiskSpace() and related functions

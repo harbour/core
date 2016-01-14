@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    example/test code for object destructors
+ * example/test code for object destructors
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

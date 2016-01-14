@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    new Hb_inLine {} test
+ * new Hb_inLine {} test
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

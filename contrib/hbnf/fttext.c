@@ -118,7 +118,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999-2008 Viktor Szakats (vszakats.net/harbour)
  *    _findeol(), _findbol()

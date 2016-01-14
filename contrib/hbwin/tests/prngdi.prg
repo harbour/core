@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    GDI calls and passing structures.
+ * GDI calls and passing structures.
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  */
 

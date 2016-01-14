@@ -2,7 +2,6 @@
  * Converts .po files to core lang modules
  *
  * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  */
 

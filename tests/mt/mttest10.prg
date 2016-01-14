@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for using independent console window in
+ * demonstration/test code for using independent console window in
  *    different thread. It needs GT driver which supports such functionality.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

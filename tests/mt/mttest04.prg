@@ -1,13 +1,11 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for modifying simple variable by different
+ * demonstration/test code for modifying simple variable by different
  *    threads with and without protection and also complex variables
  *    like array without protection. Because each thread will access
  *    different item in this array then it should be safe and our HVM
  *    should make necessary internal protections automatically.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

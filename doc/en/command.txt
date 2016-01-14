@@ -1,6 +1,5 @@
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
  *    Documentation for the commands

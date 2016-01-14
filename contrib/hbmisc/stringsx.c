@@ -1,6 +1,5 @@
 /*
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  */
 
 #include "hbapi.h"
