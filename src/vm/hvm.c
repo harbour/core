@@ -1287,7 +1287,7 @@ int hb_vmQuit( void )
    hb_cdpReleaseAll();              /* releases codepages */
 
    /* release all known garbage */
-   if( hb_xquery( HB_MEM_USEDMAX ) == 0 ) /* check if fmstat is ON */
+   if( hb_xquery( HB_MEM_STATISTICS ) == 0 ) /* check if fmstat is ON */
       hb_gcReleaseAll();
 
    hb_vmUnsetExceptionHandler();
