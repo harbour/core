@@ -1038,7 +1038,6 @@ STATIC FUNCTION AR_PACK( nWA )
       FOR nRec := Len( aIndex[ INDEX_RECORDS ] ) TO 1 STEP -1
          IF aRecInfo[ aIndex[ INDEX_RECORDS ][ nRec ][ INDEXKEY_RECORD ] ][ RECDATA_DELETED ]
             ADel( aIndex[ INDEX_RECORDS ], nRec )
-            ? "DEL"
             nDel++
          ENDIF
       NEXT
