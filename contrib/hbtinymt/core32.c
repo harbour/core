@@ -2,7 +2,6 @@
  * Harbour interface to TinyMT, Pseudo Random Generator
  *
  * Copyright 2012 Andi Jahja <xharbour@telkom.net.id>
- * www - http://www.harbour-project.org http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

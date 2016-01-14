@@ -2,7 +2,6 @@
  * Source file for the Wvg*Classes
  *
  * Copyright 2008-2011 Pritpal Bedi <bedipritpal@hotmail.com>
- * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

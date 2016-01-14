@@ -8,7 +8,6 @@
  *      NumMirrX()
  *
  * Copyright 2001 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

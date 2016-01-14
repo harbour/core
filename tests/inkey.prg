@@ -1,8 +1,6 @@
 /* Testing Harbour keyboard input. */
 
-/* Harbour Project source code
-   http://harbour-project.org/
-   Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
+/* Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
 
    Modularization and display improvements by
    Alejandro de Garate <alex_degarate hotmail com>

@@ -194,11 +194,9 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState, const char * 
    int iDefs = 0, iTrans = 0, iCmds = 0;
 
    fprintf( fout, "/*\n * $" "Id" "$\n */\n\n/*\n"
-            " * Harbour Project source code:\n"
-            " *    Build in preprocessor rules.\n"
+            " * Build in preprocessor rules.\n"
             " *\n"
             " * Copyright 2006-2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
-            " * www - http://harbour-project.org\n"
             " *\n"
             " * This file is generated automatically by Harbour preprocessor\n"
             " * and is covered by the same license as Harbour PP\n"
@@ -339,11 +337,9 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
       char * pszEscaped;
 
       fprintf( fout, "/*\n"
-               " * Harbour Project source code:\n"
-               " *    Version information and build time switches.\n"
+               " * Version information and build time switches.\n"
                " *\n"
                " * Copyright 2008-2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
-               " * www - http://harbour-project.org\n"
                " *\n"
                " * This file is generated automatically by Harbour preprocessor\n"
                " * and is covered by the same license as Harbour PP\n"
