@@ -1561,7 +1561,7 @@ HB_SIZE hb_xquery( int iMode )
 #endif
          break;
 
-      case HB_MEM_ISLIMIT:    /* Harbour extension (Is used memory limit supported?) */
+      case HB_MEM_CANLIMIT:   /* Harbour extension (Is used memory limit supported?) */
 #if defined( HB_FM_DLMT_ALLOC )
          nResult = 1;
 #elif defined( HB_FM_DL_ALLOC )

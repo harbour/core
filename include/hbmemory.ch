@@ -73,5 +73,5 @@
 #define HB_MEM_STACK_TOP     1005   /* Total items currently on the stack */
 #define HB_MEM_BLOCKS        1007   /* Total number of memory blocks allocated */
 #define HB_MEM_STATISTICS    1008   /* Return non 0 value if FM statistic is enabled */
-#define HB_MEM_ISLIMIT       1009   /* Return non 0 value if used memory limit is supported */
+#define HB_MEM_CANLIMIT      1009   /* Return non 0 value if used memory limit is supported */
 #endif /* HB_MEMORY_CH_ */
