@@ -1420,6 +1420,7 @@ DYNAMIC __errInHandler
 DYNAMIC __errRT_BASE
 DYNAMIC __errRT_SBASE
 DYNAMIC __FLedit
+DYNAMIC __fm_AllocLimit
 DYNAMIC __Get
 DYNAMIC __GetA
 DYNAMIC __GetListActive
