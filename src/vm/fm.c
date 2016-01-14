@@ -334,8 +334,9 @@ static HB_BOOL s_fStatistic = HB_FALSE;
 
 static HB_ISIZ s_nMemoryBlocks      = 0; /* memory blocks used */
 static HB_ISIZ s_nMemoryMaxBlocks   = 0; /* maximum number of used memory blocks */
-static HB_ISIZ s_nMemoryMaxConsumed = 0; /* memory size consumed */
-static HB_ISIZ s_nMemoryConsumed    = 0; /* memory max size consumed */
+static HB_ISIZ s_nMemoryConsumed    = 0; /* memory size consumed */
+static HB_ISIZ s_nMemoryMaxConsumed = 0; /* memory max size consumed */
+static HB_ISIZ s_nMemoryLimConsumed = 0; /* limit the size of memory consumed */
 
 static PHB_MEMINFO s_pFirstBlock = NULL;
 static PHB_MEMINFO s_pLastBlock  = NULL;
@@ -666,6 +667,12 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
 
       HB_FM_UNLOCK();
 
+      if( s_nMemoryLimConsumed > 0 && s_nMemoryConsumed > s_nMemoryLimConsumed )
+      {
+         free( pMem );
+         return NULL;
+      }
+
 #ifdef HB_PARANOID_MEM_CHECK
       memset( HB_MEM_PTR( pMem ), HB_MEMFILER, nSize );
 #endif
@@ -751,10 +758,15 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
 
       HB_FM_UNLOCK();
 
+      if( s_nMemoryLimConsumed > 0 && s_nMemoryConsumed > s_nMemoryLimConsumed )
+      {
+         s_nMemoryLimConsumed = 0;
+         hb_errInternal( HB_EI_XGRABALLOC, NULL, NULL, NULL );
+      }
+
 #ifdef HB_PARANOID_MEM_CHECK
       memset( HB_MEM_PTR( pMem ), HB_MEMFILER, nSize );
 #endif
-
    }
 
 #endif /* HB_FM_STATISTICS */
@@ -844,6 +856,12 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
       }
 
       HB_FM_UNLOCK();
+
+      if( s_nMemoryLimConsumed > 0 && s_nMemoryConsumed > s_nMemoryLimConsumed )
+      {
+         s_nMemoryLimConsumed = 0;
+         hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
+      }
 
 #if defined( HB_PARANOID_MEM_CHECK ) || defined( HB_FM_FORCE_REALLOC )
 #  ifdef HB_PARANOID_MEM_CHECK
@@ -943,7 +961,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
 #endif
       }
 
-      free( ( void * ) pMemBlock );
+      free( pMemBlock );
 
 #else
 
@@ -1449,6 +1467,10 @@ HB_SIZE hb_xquery( int iMode )
       case HB_MEM_USED:       /* Harbour extension (Memory used [bytes]) */
 #ifdef HB_FM_STATISTICS
          nResult = s_nMemoryConsumed;
+#elif defined( HB_FM_DLMT_ALLOC )
+         nResult = mspace_footprint( hb_mspace() );
+#elif defined( HB_FM_DL_ALLOC )
+         nResult = dlmalloc_footprint();
 #else
          nResult = 0;
 #endif
@@ -1465,6 +1487,10 @@ HB_SIZE hb_xquery( int iMode )
       case HB_MEM_USEDMAX:    /* Harbour extension (Maximum memory used [bytes]) */
 #ifdef HB_FM_STATISTICS
          nResult = s_nMemoryMaxConsumed;
+#elif defined( HB_FM_DLMT_ALLOC )
+         nResult = mspace_max_footprint( hb_mspace() );
+#elif defined( HB_FM_DL_ALLOC )
+         nResult = dlmalloc_max_footprint();
 #else
          nResult = 0;
 #endif
@@ -1484,6 +1510,26 @@ HB_SIZE hb_xquery( int iMode )
          nResult = hb_stackTopOffset();
          break;
       }
+      case HB_MEM_STATISTICS: /* Harbour extension (Is FM statistic is enabled?) */
+#ifdef HB_FM_STATISTICS
+         nResult = s_fStatistic;
+#else
+         nResult = 0;
+#endif
+         break;
+
+      case HB_MEM_ISLIMIT:    /* Harbour extension (Is used memory limit supported?) */
+#if defined( HB_FM_DLMT_ALLOC )
+         nResult = 1;
+#elif defined( HB_FM_DL_ALLOC )
+         nResult = 1;
+#elif defined( HB_FM_STATISTICS )
+         nResult = s_fStatistic;
+#else
+         nResult = 0;
+#endif
+         break;
+
       default:
          nResult = 0;
    }
@@ -1497,5 +1543,41 @@ HB_BOOL hb_xtraced( void )
    return HB_TRUE;
 #else
    return HB_FALSE;
+#endif
+}
+
+HB_FUNC( __FM_ALLOCLIMIT )
+{
+   hb_xclean();
+#if defined( HB_FM_DLMT_ALLOC )
+   hb_retns( mspace_footprint_limit( hb_mspace() ) );
+   if( HB_ISNUM( 1 ) )
+   {
+      HB_ISIZE nLimit = hb_parns( 1 );
+
+      if( nLimit <= 0 )
+         nLimit = -1;
+      mspace_set_footprint_limit( hb_mspace(), nLimit );
+   }
+#elif defined( HB_FM_DL_ALLOC )
+   hb_retns( dlmalloc_footprint_limit() );
+   if( HB_ISNUM( 1 ) )
+   {
+      HB_ISIZE nLimit = hb_parns( 1 );
+
+      if( nLimit <= 0 )
+         nLimit = -1;
+      dlmalloc_set_footprint_limit( ( size_t ) nLimit );
+   }
+#elif defined( HB_FM_STATISTICS )
+   hb_retns( s_nMemoryLimConsumed ? s_nMemoryLimConsumed : -1 );
+   if( HB_ISNUM( 1 ) )
+   {
+      HB_ISIZE nLimit = hb_parns( 1 );
+
+      s_nMemoryLimConsumed = HB_MAX( nLimit, 0 );
+   }
+#else
+   hb_retni( 0 );
 #endif
 }

@@ -608,7 +608,7 @@ static void convert_open_flags( HB_BOOL fCreate, HB_FATTR nAttr, HB_USHORT uiFla
 #endif
 
    /* dos file attributes */
-#if defined( HB_FS_DOSATTR )
+#if defined( HB_FS_DOSCREAT )
    if( nAttr == FC_NORMAL )
    {
       *attr = _A_NORMAL;
@@ -634,7 +634,6 @@ static void convert_open_flags( HB_BOOL fCreate, HB_FATTR nAttr, HB_USHORT uiFla
    }
    else
    {
-      *attr = 0;
       *flags = O_BINARY | O_LARGEFILE;
       switch( uiFlags & ( FO_READ | FO_WRITE | FO_READWRITE ) )
       {
@@ -1430,9 +1429,16 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
 
 HB_FHANDLE hb_fsOpen( const char * pszFileName, HB_USHORT uiFlags )
 {
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsOpen(%s, %hu)", pszFileName, uiFlags ) );
+
+   return hb_fsOpenEx( pszFileName, FC_NORMAL, uiFlags );
+}
+
+HB_FHANDLE hb_fsOpenEx( const char * pszFileName, HB_FATTR nAttr, HB_USHORT uiFlags )
+{
    HB_FHANDLE hFileHandle;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsOpen(%s, %hu)", pszFileName, uiFlags ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsOpenEx(%s, %u, %hu)", pszFileName, nAttr, uiFlags ) );
 
 #if defined( HB_OS_WIN )
    {
@@ -1443,7 +1449,7 @@ HB_FHANDLE hb_fsOpen( const char * pszFileName, HB_USHORT uiFlags )
 
       lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
 
-      convert_open_flags( HB_FALSE, FC_NORMAL, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
+      convert_open_flags( HB_FALSE, nAttr, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
 
       hb_vmUnlock();
       hFile = CreateFile( lpFileName, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
@@ -1459,7 +1465,7 @@ HB_FHANDLE hb_fsOpen( const char * pszFileName, HB_USHORT uiFlags )
    {
       ULONG ulAction = 0, ulAttribute, fsOpenFlags, fsOpenMode;
 
-      convert_open_flags( HB_FALSE, FC_NORMAL, uiFlags,
+      convert_open_flags( HB_FALSE, nAttr, uiFlags,
                           &ulAttribute, &fsOpenFlags, &fsOpenMode );
       hb_vmUnlock();
       hb_fsOS2DosOpenL( pszFileName, &hFileHandle, &ulAction, 0,
@@ -1474,7 +1480,7 @@ HB_FHANDLE hb_fsOpen( const char * pszFileName, HB_USHORT uiFlags )
 
       pszFileName = hb_fsNameConv( pszFileName, &pszFree );
 
-      convert_open_flags( HB_FALSE, FC_NORMAL, uiFlags, &flags, &mode, &share, &attr );
+      convert_open_flags( HB_FALSE, nAttr, uiFlags, &flags, &mode, &share, &attr );
 
       hb_vmUnlock();
 #if defined( _MSC_VER ) || defined( __DMC__ )
@@ -4544,7 +4550,7 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
          uiFlags |= FO_TRUNC;
    }
 
-   hFile = hb_fsOpen( szPath, uiFlags );
+   hFile = hb_fsOpenEx( szPath, FC_NORMAL, uiFlags );
 
 #if defined( HB_USE_SHARELOCKS )
    if( hFile != FS_ERROR && ( nExFlags & FXO_SHARELOCK ) != 0 )

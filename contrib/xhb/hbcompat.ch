@@ -274,7 +274,9 @@
    #xtranslate MaxCol( .T. )                   => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
    #xtranslate NextKey( [<x>] )                => hb_keyNext( <x> )
 
-   #xtranslate Str( <x>, [<y>], [<y>], <z> )   => iif( <z>, hb_ntos( <x> ), Str( <x> ) )
+   #xtranslate Str( <x>, <n>, <d>, <l> )       => iif( <l>, LTrim( Str( <x>, <n>, <d> ) ), Str( <x>, <n>, <d> ) )
+   #xtranslate Str( <x>, <n>,, <l> )           => iif( <l>, LTrim( Str( <x>, <n> ) ), Str( <x>, <n> ) )
+   #xtranslate Str( <x>,,, <l> )               => iif( <l>, hb_ntos( <x> ), Str( <x> ) )
 
    #xuntranslate NetName(                      =>
    #xuntranslate MemoWrit(                     =>
