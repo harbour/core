@@ -1,4 +1,3 @@
-#pragma linenumber=on
 /*
  * ARRAY RDD
  *
