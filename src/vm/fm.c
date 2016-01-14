@@ -1562,15 +1562,20 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_CANLIMIT:   /* Harbour extension (Is used memory limit supported?) */
+         if( hb_vmInternalsEnabled() )
+         {
 #if defined( HB_FM_DLMT_ALLOC )
-         nResult = 1;
+            nResult = 1;
 #elif defined( HB_FM_DL_ALLOC )
-         nResult = 1;
+            nResult = 1;
 #elif defined( HB_FM_STATISTICS )
-         nResult = s_fStatistic;
+            nResult = s_fStatistic;
 #else
-         nResult = 0;
+            nResult = 0;
 #endif
+         }
+         else
+            nResult = 0;
          break;
 
       default:
@@ -1591,45 +1596,53 @@ HB_BOOL hb_xtraced( void )
 
 HB_FUNC( __FM_ALLOCLIMIT )
 {
+   if( hb_vmInternalsEnabled() )
+   {
 #if defined( HB_FM_DLMT_ALLOC )
-   HB_STACK_TLS_PRELOAD;
+      HB_STACK_TLS_PRELOAD;
 
-   hb_xclean();
-   hb_retns( mspace_footprint_limit( hb_mspace() ) );
-   if( HB_ISNUM( 1 ) )
-   {
-      HB_ISIZ nLimit = hb_parns( 1 );
+      hb_xclean();
+      hb_retns( mspace_footprint_limit( hb_mspace() ) );
+      if( HB_ISNUM( 1 ) )
+      {
+         HB_ISIZ nLimit = hb_parns( 1 );
 
-      if( nLimit <= 0 )
-         nLimit = -1;
-      mspace_set_footprint_limit( hb_mspace(), nLimit );
-   }
+         if( nLimit <= 0 )
+            nLimit = -1;
+         mspace_set_footprint_limit( hb_mspace(), nLimit );
+      }
 #elif defined( HB_FM_DL_ALLOC )
-   HB_STACK_TLS_PRELOAD;
+      HB_STACK_TLS_PRELOAD;
 
-   hb_xclean();
-   hb_retns( dlmalloc_footprint_limit() );
-   if( HB_ISNUM( 1 ) )
-   {
-      HB_ISIZ nLimit = hb_parns( 1 );
+      hb_xclean();
+      hb_retns( dlmalloc_footprint_limit() );
+      if( HB_ISNUM( 1 ) )
+      {
+         HB_ISIZ nLimit = hb_parns( 1 );
 
-      if( nLimit <= 0 )
-         nLimit = -1;
-      dlmalloc_set_footprint_limit( ( size_t ) nLimit );
-   }
+         if( nLimit <= 0 )
+            nLimit = -1;
+         dlmalloc_set_footprint_limit( ( size_t ) nLimit );
+      }
 #elif defined( HB_FM_STATISTICS )
-   HB_STACK_TLS_PRELOAD;
+      HB_STACK_TLS_PRELOAD;
 
-   hb_xclean();
-   hb_retns( s_nMemoryLimConsumed ? s_nMemoryLimConsumed : -1 );
-   if( HB_ISNUM( 1 ) )
-   {
-      HB_ISIZ nLimit = hb_parns( 1 );
+      hb_xclean();
+      hb_retns( s_nMemoryLimConsumed ? s_nMemoryLimConsumed : -1 );
+      if( HB_ISNUM( 1 ) )
+      {
+         HB_ISIZ nLimit = hb_parns( 1 );
 
-      s_nMemoryLimConsumed = HB_MAX( nLimit, 0 );
-   }
+         s_nMemoryLimConsumed = HB_MAX( nLimit, 0 );
+      }
 #else
-   hb_xclean();
-   hb_retni( 0 );
+      hb_xclean();
+      hb_retni( 0 );
 #endif
+   }
+   else
+   {
+      hb_xclean();
+      hb_retni( 0 );
+   }
 }
