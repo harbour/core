@@ -95,12 +95,12 @@ static void hb_PEM_read_bio( PEM_READ_BIO * func )
 {
    BIO * bio = NULL;
    HB_BYTE * pBuffer = NULL;
+   HB_SIZE nSize = 0;
 
    if( hb_BIO_is( 1 ) )
       bio = hb_BIO_par( 1 );
    else if( HB_ISCHAR( 1 ) )
    {
-      HB_SIZE nSize;
       pBuffer = hb_fileLoad( hb_parc( 1 ), 0, &nSize );
       if( pBuffer )
          bio = BIO_new_mem_buf( ( char * ) pBuffer, ( int ) nSize );
@@ -121,7 +121,10 @@ static void hb_PEM_read_bio( PEM_READ_BIO * func )
          BIO_free( bio );
 
       if( pBuffer )
+      {
+         OPENSSL_cleanse( pBuffer, nSize );
          hb_xfree( pBuffer );
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
