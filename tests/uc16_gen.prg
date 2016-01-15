@@ -161,12 +161,10 @@ proc main()
 
    cResult := ;
       "/*" + hb_eol() + ;
-      " * Harbour Project source code:" + hb_eol() + ;
-      " *    Unicode character tables" + hb_eol() + ;
-      " *    code generated automatically by tests/uc_gen.prg" + hb_eol() + ;
+      " * Unicode character tables" + hb_eol() + ;
+      " * code generated automatically by tests/uc_gen.prg" + hb_eol() + ;
       " *" + hb_eol() + ;
       " * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>" + hb_eol() + ;
-      " * www - http://harbour-project.org" + hb_eol() + ;
       " *" + hb_eol() + ;
       " */" + hb_eol() + ;
       hb_eol()

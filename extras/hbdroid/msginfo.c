@@ -1,6 +1,4 @@
 /*
- * Harbour Project source code
- *
  * Copyright (C) 2012 {list of individual authors and e-mail addresses}
  *
  * This program is free software; you can redistribute it and/or modify

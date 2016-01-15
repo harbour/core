@@ -1,6 +1,4 @@
 /*
- * Harbour Project source code
- *
  * This file contains source for a script of a Guestbook
  *
  * Copyright (C) 1999 Felipe G. Coury <fcoury@creation.com.br>

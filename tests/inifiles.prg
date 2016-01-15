@@ -1,6 +1,4 @@
 /*
- * Harbour Project source code
- *
  * Copyright (C) 1999 Matthew Hamilton
  *
  * This program is free software; you can redistribute it and/or modify

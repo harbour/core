@@ -1,6 +1,4 @@
 /*
- * Harbour Project source code
- *
  * hbole library demo/test code
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it

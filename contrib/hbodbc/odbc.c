@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code
  * This file contains source for first ODBC routines.
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)

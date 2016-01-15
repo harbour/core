@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code
  * header file for POSIX function wrappers
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

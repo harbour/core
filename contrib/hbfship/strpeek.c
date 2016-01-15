@@ -1,5 +1,5 @@
 /*
- * Harbour Project source code FlagShip compatible functions:
+ * FlagShip compatible functions:
  * StrPeek( cStr, nPos ) -> nASC
  * StrPoke( cStr, nPos, nASCval ) -> cStr
  *

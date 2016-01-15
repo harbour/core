@@ -1,6 +1,4 @@
 /*
- * Harbour Project source code
- *
  * Copyright (C) 2012 Doug (dougf at people dot net dot au)
  *
  * This program is free software; you can redistribute it and/or modify

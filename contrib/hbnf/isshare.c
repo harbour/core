@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code
  * ft_IsShare() function
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>

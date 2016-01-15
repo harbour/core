@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code
  * Support functions for Nanfor Library
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>

@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code
  * Demonstration code for generating .pdf documents using PDFCreator
  *   COM interface.
  *

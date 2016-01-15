@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code
  * ft_GetVPg()/ft_SetVpg() functions
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>

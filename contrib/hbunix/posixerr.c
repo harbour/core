@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code
  * POSIX function errno handling
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
