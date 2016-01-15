@@ -2042,11 +2042,6 @@ export HARBOURCMD :=
 export CLIPPER :=
 export CLIPPERCMD :=
 
-# in OS2 increase maximum number of file handle from 20 to 100 for -j<n> build switch
-ifeq ($(HB_HOST_PLAT),os2)
-   export HARBOUR := F:100
-endif
-
 # relevant only on non-*nix hosts where --print-directory is on by default
 ifeq ($(findstring w,$(MAKEFLAGS)),)
    MKFLAGS := --no-print-directory

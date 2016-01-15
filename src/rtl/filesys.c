@@ -914,13 +914,17 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
          {
             /* open the write end of then named pipe */
             ULONG ulAction = 0;
-            ret = DosOpen( ( PSZ ) szPipeName, &hPipeWr, &ulAction, 0,
-                           FILE_NORMAL,
-                           OPEN_ACTION_FAIL_IF_NEW | OPEN_ACTION_OPEN_IF_EXISTS,
-                           OPEN_ACCESS_WRITEONLY | OPEN_SHARE_DENYNONE | OPEN_FLAGS_FAIL_ON_ERROR,
-                           NULL );
+            HB_FHANDLE hFile;
+
+            ret = hb_fsOS2DosOpen( szPipeName, &hFile, &ulAction, 0,
+                                   FILE_NORMAL,
+                                   OPEN_ACTION_FAIL_IF_NEW | OPEN_ACTION_OPEN_IF_EXISTS,
+                                   OPEN_ACCESS_WRITEONLY | OPEN_SHARE_DENYNONE | OPEN_FLAGS_FAIL_ON_ERROR );
             if( ret == NO_ERROR )
+            {
+               hPipeWr = ( HFILE ) hFile;
                break;
+            }
          }
          DosClose( hPipeRd );
       }

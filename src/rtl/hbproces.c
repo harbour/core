@@ -580,9 +580,15 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
       PHB_GT pGT;
 
       if( fDetach && ( ! phStdin || ! phStdout || ! phStderr ) )
-         ret = DosOpen( ( PCSZ ) "NUL:", &hNull, &ulState, 0,
-                        FILE_NORMAL, OPEN_ACCESS_READWRITE,
-                        OPEN_ACTION_OPEN_IF_EXISTS, NULL );
+      {
+         HB_FHANDLE hFile;
+
+         ret = hb_fsOS2DosOpen( "NUL:", &hFile, &ulState, 0,
+                                FILE_NORMAL, OPEN_ACCESS_READWRITE,
+                                OPEN_ACTION_OPEN_IF_EXISTS );
+         if( ret == NO_ERROR )
+            hNull = ( HFILE ) hFile;
+      }
 
       if( ret == NO_ERROR && phStdin != NULL )
       {

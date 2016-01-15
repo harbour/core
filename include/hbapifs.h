@@ -301,6 +301,10 @@ extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
 #endif
 #if defined( HB_OS_OS2 )
 extern HB_EXPORT HB_BOOL  hb_isWSeB( void );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosOpen( const char * pszFileName,
+                                           HB_FHANDLE * pHFile, HB_ULONG * pulAction,
+                                           HB_ULONG nInitSize, HB_ULONG ulAttribute,
+                                           HB_ULONG fsOpenFlags, HB_ULONG fsOpenMode );
 extern HB_EXPORT HB_ULONG hb_fsOS2DosOpenL( const char * pszFileName,
                                             HB_FHANDLE * pHFile, HB_ULONG * pulAction,
                                             HB_FOFFSET nInitSize, HB_ULONG ulAttribute,

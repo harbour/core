@@ -351,29 +351,82 @@ HB_BOOL hb_isWSeB( void )
    return s_iWSeB;
 }
 
+HB_ULONG hb_fsOS2DosOpen( const char * pszFileName,
+                          HB_FHANDLE * pHFile, HB_ULONG * pulAction,
+                          HB_ULONG nInitSize, HB_ULONG ulAttribute,
+                          HB_ULONG fsOpenFlags, HB_ULONG fsOpenMode )
+{
+   ULONG cbMaxFH = 20;
+   HFILE hFile = ( HFILE ) -1;
+   APIRET ret;
+
+   for( ;; )
+   {
+      ret = DosOpen( ( PSZ ) pszFileName, &hFile, pulAction, nInitSize,
+                     ulAttribute, fsOpenFlags, fsOpenMode, NULL );
+      if( ret == ERROR_TOO_MANY_OPEN_FILES )
+      {
+         LONG  cbReqCount = 64;
+         ULONG cbCurMaxFH = 0;
+         ret = DosSetRelMaxFH( &cbReqCount, &cbCurMaxFH );
+         if( ret == NO_ERROR && cbCurMaxFH > cbMaxFH )
+         {
+            cbMaxFH = cbCurMaxFH;
+            continue;
+         }
+         ret = ERROR_TOO_MANY_OPEN_FILES;
+      }
+      break;
+   }
+   /* Hack to make error reporting more DOS compatible, anyhow I'm
+      not sure it's good idea to have it [druzus] */
+   if( ret == ERROR_OPEN_FAILED )
+      ret = ERROR_FILE_NOT_FOUND;
+
+   *pHFile = ret == NO_ERROR ? ( HB_FHANDLE ) hFile : FS_ERROR;
+
+   return ret;
+}
+
 HB_ULONG hb_fsOS2DosOpenL( const char * pszFileName,
                            HB_FHANDLE * pHFile, HB_ULONG * pulAction,
                            HB_FOFFSET nInitSize, HB_ULONG ulAttribute,
                            HB_ULONG fsOpenFlags, HB_ULONG fsOpenMode )
 {
+   ULONG cbMaxFH = 20;
    char * pszFree;
    HFILE hFile = ( HFILE ) -1;
    APIRET ret;
 
    pszFileName = hb_fsNameConv( pszFileName, &pszFree );
-   if( hb_isWSeB() )
-      /* if other process open file using DosOpen() then it will block
-         long file support for us, we can block other processes against
-         using DosOpen() by setting OPEN_SHARE_DENYLEGACY in fsOpenMode.
-         Is it good idea? [druzus] */
-      ret = s_DosOpenL( ( PSZ ) pszFileName, &hFile, pulAction,
-                        ( LONGLONG ) nInitSize, ulAttribute,
+   for( ;; )
+   {
+      if( hb_isWSeB() )
+         /* if other process open file using DosOpen() then it will block
+            long file support for us, we can block other processes against
+            using DosOpen() by setting OPEN_SHARE_DENYLEGACY in fsOpenMode.
+            Is it good idea? [druzus] */
+         ret = s_DosOpenL( ( PSZ ) pszFileName, &hFile, pulAction,
+                           ( LONGLONG ) nInitSize, ulAttribute,
+                           fsOpenFlags, fsOpenMode, NULL );
+      else
+         ret = DosOpen( ( PSZ ) pszFileName, &hFile, pulAction,
+                        ( ULONG ) nInitSize, ulAttribute,
                         fsOpenFlags, fsOpenMode, NULL );
-   else
-      ret = DosOpen( ( PSZ ) pszFileName, &hFile, pulAction,
-                     ( ULONG ) nInitSize, ulAttribute,
-                     fsOpenFlags, fsOpenMode, NULL );
-
+      if( ret == ERROR_TOO_MANY_OPEN_FILES )
+      {
+         LONG  cbReqCount = 64;
+         ULONG cbCurMaxFH = 0;
+         ret = DosSetRelMaxFH( &cbReqCount, &cbCurMaxFH );
+         if( ret == NO_ERROR && cbCurMaxFH > cbMaxFH )
+         {
+            cbMaxFH = cbCurMaxFH;
+            continue;
+         }
+         ret = ERROR_TOO_MANY_OPEN_FILES;
+      }
+      break;
+   }
    /* Hack to make error reporting more DOS compatible, anyhow I'm
       not sure it's good idea to have it [druzus] */
    if( ret == ERROR_OPEN_FAILED )
