@@ -1,10 +1,10 @@
 #include "hbmemory.ch"
 
-procedure main()
+procedure Main()
 
    local s, a, i
 
-   if Memory( HB_MEM_ISLIMIT ) > 0
+   if Memory( HB_MEM_CANLIMIT ) > 0
       ? "FM supports used memory limit."
    else
       ? "FM does not support used memory limit !!!"
@@ -29,7 +29,7 @@ procedure main()
    ? "    used memory:", Memory( HB_MEM_USED )
    ?
    ?
-   ? "    alloc limit:", __fm_allocLimit()
+   ? "    alloc limit:", __fm_AllocLimit()
    ? "    used memory:", Memory( HB_MEM_USED )
    s := Space( 100000000 ); HB_SYMBOL_UNUSED( s )
    ? "    used memory:", Memory( HB_MEM_USED )
@@ -38,8 +38,8 @@ procedure main()
    ?
    wait
    ?
-   __fm_allocLimit( 50000000 )
-   ? "    alloc limit:", __fm_allocLimit()
+   __fm_AllocLimit( 50000000 )
+   ? "    alloc limit:", __fm_AllocLimit()
    a := Array( 10 )
    for i := 1 to Len( a )
       a[ i ] := Space( 5000000 )
