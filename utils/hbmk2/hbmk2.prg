@@ -10212,7 +10212,7 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
                   dep[ _HBMKDEP_cFound ] := iif( Empty( cIncludeDir ), "(system)", cIncludeDir )
                   IF ! Empty( cIncludeDir )
                      hbmk[ _HBMK_hDEPTSDIR ][ cIncludeDir ] := NIL
-                     hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_DIR_TPL, StrToDefine( cName ) ) ] := cIncludeDir
+                     hb_SetEnv( hb_StrFormat( _HBMK_DIR_TPL, StrToDefine( cName ) ), cIncludeDir )
                      /* Adjust implib source names with component path */
                      FOR EACH tmp IN dep[ _HBMKDEP_aIMPLIBSRC ]
                         tmp := hb_PathNormalize( PathMakeAbsolute( tmp, hb_DirSepAdd( cIncludeDir ) ) )
@@ -10265,7 +10265,7 @@ STATIC FUNCTION dep_try_header_detection( hbmk, dep )
                   AAddNew( hbmk[ _HBMK_aINCPATH ], hb_DirSepDel( hb_DirSepToOS( cDir ) ) )
                   AAdd( hbmk[ _HBMK_aOPTC ], "-D" + hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) )
                   hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_HAS_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) ] := NIL
-                  hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_DIR_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) ] := hb_DirSepDel( hb_DirSepToOS( cDir ) )
+                  hb_SetEnv( hb_StrFormat( _HBMK_DIR_TPL, StrToDefine( dep[ _HBMKDEP_cName ] ) ), hb_DirSepDel( hb_DirSepToOS( cDir ) ) )
                   IF dep[ _HBMKDEP_lFoundLOCAL ]
                      hbmk[ _HBMK_hDEPTMACRO ][ hb_StrFormat( _HBMK_HAS_TPL_LOCAL, StrToDefine( dep[ _HBMKDEP_cName ] ) ) ] := NIL
                   ENDIF

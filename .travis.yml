@@ -51,7 +51,6 @@ addons:
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then
        brew update > /dev/null;
-       brew install allegro;
        brew install cairo;
        brew install curl;
        brew install freeimage;

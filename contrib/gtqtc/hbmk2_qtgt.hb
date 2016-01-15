@@ -258,21 +258,19 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
       IF Empty( cEnv := GetEnv( "HB_QTPATH" ) ) .OR. ;
          ! hb_vfExists( cBIN := hb_DirSepAdd( cEnv ) + cName )
 
-         hb_AIns( aEnvList, 1, "HB_WITH_QT", .T. )
+         hb_AIns( aEnvList, 1, iif( Empty( GetEnv( "HBMK_DIR_QT5" ) ), "HBMK_DIR_QT", "HBMK_DIR_QT5" ), .T. )
 
-         IF ! Empty( cEnv := GetEnv( "HB_WITH_QT" ) )
+         IF ! Empty( cEnv := GetEnv( aEnvList[ 1 ] ) )
 
             IF cEnv == "no"
                /* Return silently. It shall fail at dependency detection inside hbmk2 */
                RETURN NIL
             ELSEIF ! hb_vfExists( cBIN := hb_PathNormalize( hb_DirSepAdd( cEnv ) + ".." + hb_ps() + "bin" + hb_ps() + cName ) )
-               hbmk_OutErr( hbmk, hb_StrFormat( "Warning: HB_WITH_QT points to incomplete QT installation. '%1$s' executable not found.", cName ) )
+               hbmk_OutErr( hbmk, hb_StrFormat( "Warning: %1$s points to incomplete QT installation at '%2$s'. '%3$s' executable not found.", aEnvList[ 1 ], cEnv, cName ) )
                cBIN := ""
             ENDIF
-         ELSE
-            IF ! hb_vfExists( cBIN := hb_DirSepAdd( hb_DirBase() ) + cName )
-               cBIN := ""
-            ENDIF
+         ELSEIF ! hb_vfExists( cBIN := hb_DirSepAdd( hb_DirBase() ) + cName )
+            cBIN := ""
          ENDIF
 
          IF Empty( cBIN )
