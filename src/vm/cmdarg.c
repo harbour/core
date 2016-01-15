@@ -868,6 +868,14 @@ void hb_cmdargProcess( void )
          #endif
       #endif
    }
+   else if( iHandles < 0 )
+   {
+      #if defined( __WATCOMC__ )
+         #if defined( HB_OS_OS2 )
+            DosSetMaxFH( 256 );
+         #endif
+      #endif
+   }
 }
 
 /* Source repository ID string */

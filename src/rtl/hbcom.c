@@ -3060,19 +3060,23 @@ int hb_comOpen( int iPort )
          char buffer[ HB_COM_DEV_NAME_MAX ];
          const char * pszName = hb_comGetName( pCom, buffer, sizeof( buffer ) );
          ULONG ulAction = 0;
+         HB_FHANDLE hFile;
+
 
          hb_vmUnlock();
 
-         rc = DosOpen( ( PSZ ) pszName,
-                       &pCom->hFile,
-                       &ulAction,
-                       0L,
-                       FILE_NORMAL,
-                       OPEN_ACTION_OPEN_IF_EXISTS,
-                       OPEN_ACCESS_READWRITE | OPEN_SHARE_DENYREADWRITE,
-                       0L );
+         rc = hb_fsOS2DosOpen( pszName,
+                               &hFile,
+                               &ulAction,
+                               0L,
+                               FILE_NORMAL,
+                               OPEN_ACTION_OPEN_IF_EXISTS,
+                               OPEN_ACCESS_READWRITE | OPEN_SHARE_DENYREADWRITE );
          if( rc == NO_ERROR )
+         {
+            pCom->hFile = ( HFILE ) hFile;
             pCom->status |= HB_COM_OPEN;
+         }
 
          hb_comSetOsError( pCom, rc );
 
