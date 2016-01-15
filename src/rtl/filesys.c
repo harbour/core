@@ -606,7 +606,7 @@ static void convert_open_flags( HB_BOOL fCreate, HB_FATTR nAttr, HB_USHORT uiFla
    {
       *attr = _A_ARCH;
       if( nAttr & FC_READONLY )
-         *attr |= _A_READONLY;
+         *attr |= _A_RDONLY;
       if( nAttr & FC_HIDDEN )
          *attr |= _A_HIDDEN;
       if( nAttr & FC_SYSTEM )
