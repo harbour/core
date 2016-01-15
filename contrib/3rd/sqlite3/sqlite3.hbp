@@ -48,7 +48,7 @@ hbicu.hbc
 
 sqlite3.c
 
-# URL    https://sqlite.org/2016/sqlite-autoconf-3100000.tar.gz
+# URL    https://sqlite.org/2016/sqlite-autoconf-3100100.tar.gz
 # DIFF   sqlite3.dif
 #
 # MAP    sqlite3.c
