@@ -1083,7 +1083,7 @@ HB_FUNC( SQLGETCONNECTATTR ) /* hDbc, nOption, @cOption */
 #if ODBCVER >= 0x0300
       SQLPOINTER buffer[ 512 ];
       SQLINTEGER lLen = 0;
-      buffer[ 0 ] = '\0';
+      buffer[ 0 ] = NULL;
       hb_retni( SQLGetConnectAttr( hDbc,
                                    ( SQLINTEGER ) hb_parnl( 2 ),
                                    ( SQLPOINTER ) buffer,
@@ -1112,7 +1112,7 @@ HB_FUNC( SQLGETSTMTATTR ) /* hStmt, nOption, @cOption */
 #if ODBCVER >= 0x0300
       SQLPOINTER buffer[ 512 ];
       SQLINTEGER lLen = 0;
-      buffer[ 0 ] = '\0';
+      buffer[ 0 ] = NULL;
       hb_retni( SQLGetStmtAttr( hStmt,
                                 ( SQLINTEGER ) hb_parnl( 2 ),
                                 ( SQLPOINTER ) buffer,

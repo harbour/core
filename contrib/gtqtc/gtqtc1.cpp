@@ -2544,7 +2544,7 @@ HB_CALL_ON_STARTUP_END( _hb_startup_gt_Init_ )
 
 /* *********************************************************************** */
 
-QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parent ) : QWidget( parent )
+QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parnt ) : QWidget( parnt )
 {
    pQTC = pStructQTC;
 
@@ -2718,7 +2718,7 @@ void QTConsole::setImageSize( void )
    }
 }
 
-void QTConsole::resizeEvent( QResizeEvent * event )
+void QTConsole::resizeEvent( QResizeEvent * evt )
 {
    int iWidth  = width();
    int iHeight = height();
@@ -2741,7 +2741,7 @@ void QTConsole::resizeEvent( QResizeEvent * event )
       update();
    }
    else
-      QWidget::resizeEvent( event );
+      QWidget::resizeEvent( evt );
 }
 
 static QRect hb_gt_qtc_cellToPixel( PHB_GTQTC pQTC, const QRect & rc )
@@ -2891,10 +2891,10 @@ void QTConsole::repaintChars( const QRect & rx )
    update( rx.translated( pQTC->marginLeft, pQTC->marginTop ) );
 }
 
-void QTConsole::paintEvent( QPaintEvent * event )
+void QTConsole::paintEvent( QPaintEvent * evt )
 {
    QPainter painter( this );
-   QRect rEvt = event->rect();
+   QRect rEvt = evt->rect();
 
    if( rEvt.left() < pQTC->marginLeft )
    {
@@ -2975,9 +2975,9 @@ void QTConsole::paintEvent( QPaintEvent * event )
    }
 }
 
-void QTConsole::timerEvent( QTimerEvent * event )
+void QTConsole::timerEvent( QTimerEvent * evt )
 {
-   if( event->timerId() == timer->timerId() )
+   if( evt->timerId() == timer->timerId() )
    {
       if( hasFocus() )
       {
@@ -2986,58 +2986,58 @@ void QTConsole::timerEvent( QTimerEvent * event )
       }
    }
    else
-      QWidget::timerEvent( event );
+      QWidget::timerEvent( evt );
 }
 
-void QTConsole::focusInEvent( QFocusEvent * event )
+void QTConsole::focusInEvent( QFocusEvent * evt )
 {
    hb_gt_qtc_addKeyToInputQueue( pQTC, HB_K_GOTFOCUS );
-   QWidget::focusInEvent( event );
+   QWidget::focusInEvent( evt );
 #if defined( HB_OS_ANDROID ) || defined( HB_OS_IOS ) || defined( HB_OS_WIN_CE )
    QEvent reqSIPevent( QEvent::RequestSoftwareInputPanel );
    QApplication::sendEvent( pQTC->qWnd, &reqSIPevent );
 #endif
 }
 
-void QTConsole::focusOutEvent( QFocusEvent * event )
+void QTConsole::focusOutEvent( QFocusEvent * evt )
 {
    hb_gt_qtc_addKeyToInputQueue( pQTC, HB_K_LOSTFOCUS );
-   QWidget::focusOutEvent( event );
+   QWidget::focusOutEvent( evt );
 }
 
-void QTConsole::mouseMoveEvent( QMouseEvent * event )
+void QTConsole::mouseMoveEvent( QMouseEvent * evt )
 {
    if( pQTC->fSelectCopy &&
-       ( event->buttons() & Qt::LeftButton ) &&
-       ( event->modifiers() & Qt::ShiftModifier ) )
+       ( evt->buttons() & Qt::LeftButton ) &&
+       ( evt->modifiers() & Qt::ShiftModifier ) )
    {
       if( ! selectMode )
       {
          selectMode = true;
-         selectRect.setCoords( event->x(), event->y(), event->x(), event->y() );
+         selectRect.setCoords( evt->x(), evt->y(), evt->x(), evt->y() );
          update( hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) ) );
       }
       else
       {
          QRect rSel1 = hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) );
-         selectRect.setBottomRight( event->pos() );
+         selectRect.setBottomRight( evt->pos() );
          QRect rSel2 = hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) );
          if( rSel1 != rSel2 )
             update( QRegion( rSel1 ).xored( QRegion( rSel2 ) ) );
       }
    }
 
-   hb_gt_qtc_setMouseKey( pQTC, event->x(), event->y(), 0, event->modifiers() );
+   hb_gt_qtc_setMouseKey( pQTC, evt->x(), evt->y(), 0, evt->modifiers() );
 }
 
-void QTConsole::wheelEvent( QWheelEvent * event )
+void QTConsole::wheelEvent( QWheelEvent * evt )
 {
    int iKey;
 
-   switch( event->orientation() )
+   switch( evt->orientation() )
    {
       case Qt::Vertical:
-         if( event->delta() < 0 )
+         if( evt->delta() < 0 )
             iKey = K_MWBACKWARD;
          else
             iKey = K_MWFORWARD;
@@ -3046,18 +3046,18 @@ void QTConsole::wheelEvent( QWheelEvent * event )
       case Qt::Horizontal:
          /* TODO? add support for horizontal wheels */
       default:
-         QWidget::wheelEvent( event );
+         QWidget::wheelEvent( evt );
          return;
    }
 
-   hb_gt_qtc_setMouseKey( pQTC, event->x(), event->y(), iKey, event->modifiers() );
+   hb_gt_qtc_setMouseKey( pQTC, evt->x(), evt->y(), iKey, evt->modifiers() );
 }
 
-void QTConsole::mouseDoubleClickEvent( QMouseEvent * event )
+void QTConsole::mouseDoubleClickEvent( QMouseEvent * evt )
 {
    int iKey;
 
-   switch( event->button() )
+   switch( evt->button() )
    {
       case Qt::LeftButton:
 #if defined( HB_OS_ANDROID ) || defined( HB_OS_IOS ) || defined( HB_OS_WIN_CE )
@@ -3078,18 +3078,18 @@ void QTConsole::mouseDoubleClickEvent( QMouseEvent * event )
          break;
 
       default:
-         QWidget::mouseDoubleClickEvent( event );
+         QWidget::mouseDoubleClickEvent( evt );
          return;
    }
 
-   hb_gt_qtc_setMouseKey( pQTC, event->x(), event->y(), iKey, event->modifiers() );
+   hb_gt_qtc_setMouseKey( pQTC, evt->x(), evt->y(), iKey, evt->modifiers() );
 }
 
-void QTConsole::mousePressEvent( QMouseEvent * event )
+void QTConsole::mousePressEvent( QMouseEvent * evt )
 {
    int iKey;
 
-   switch( event->button() )
+   switch( evt->button() )
    {
       case Qt::LeftButton:
          iKey = K_LBUTTONDOWN;
@@ -3104,18 +3104,18 @@ void QTConsole::mousePressEvent( QMouseEvent * event )
          break;
 
       default:
-         QWidget::mousePressEvent( event );
+         QWidget::mousePressEvent( evt );
          return;
    }
 
-   hb_gt_qtc_setMouseKey( pQTC, event->x(), event->y(), iKey, event->modifiers() );
+   hb_gt_qtc_setMouseKey( pQTC, evt->x(), evt->y(), iKey, evt->modifiers() );
 }
 
-void QTConsole::mouseReleaseEvent( QMouseEvent * event )
+void QTConsole::mouseReleaseEvent( QMouseEvent * evt )
 {
    int iKey;
 
-   switch( event->button() )
+   switch( evt->button() )
    {
       case Qt::LeftButton:
          iKey = K_LBUTTONUP;
@@ -3130,18 +3130,18 @@ void QTConsole::mouseReleaseEvent( QMouseEvent * event )
          break;
 
       default:
-         QWidget::mouseReleaseEvent( event );
+         QWidget::mouseReleaseEvent( evt );
          return;
    }
 
-   hb_gt_qtc_setMouseKey( pQTC, event->x(), event->y(), iKey, event->modifiers() );
+   hb_gt_qtc_setMouseKey( pQTC, evt->x(), evt->y(), iKey, evt->modifiers() );
 }
 
-bool QTConsole::event( QEvent * event )
+bool QTConsole::event( QEvent * evt )
 {
    if( resizeMode )
    {
-      switch( event->type() )
+      switch( evt->type() )
       {
          case QEvent::Enter:
          case QEvent::Leave:
@@ -3159,14 +3159,14 @@ bool QTConsole::event( QEvent * event )
       }
    }
 
-   return QWidget::event( event );
+   return QWidget::event( evt );
 }
 
-void QTConsole::inputMethodEvent( QInputMethodEvent * event )
+void QTConsole::inputMethodEvent( QInputMethodEvent * evt )
 {
    /* It's for SoftwareInputPanel in Andorid. */
 
-   QString qStr = event->commitString();
+   QString qStr = evt->commitString();
 
    if( qStr.size() > 0 )
    {
@@ -3175,29 +3175,29 @@ void QTConsole::inputMethodEvent( QInputMethodEvent * event )
          HB_WCHAR wc = qStr[ i ].unicode();
          hb_gt_qtc_addKeyToInputQueue( pQTC, HB_INKEY_NEW_UNICODE( wc ) );
       }
-      event->accept();
+      evt->accept();
    }
    else
-      QWidget::inputMethodEvent( event );
+      QWidget::inputMethodEvent( evt );
 }
 
-void QTConsole::keyReleaseEvent( QKeyEvent * event )
+void QTConsole::keyReleaseEvent( QKeyEvent * evt )
 {
-   if( selectMode && ( event->modifiers() & Qt::ShiftModifier ) == 0 )
+   if( selectMode && ( evt->modifiers() & Qt::ShiftModifier ) == 0 )
       copySelection();
 
-   QWidget::keyReleaseEvent( event );
+   QWidget::keyReleaseEvent( evt );
 }
 
-void QTConsole::keyPressEvent( QKeyEvent * event )
+void QTConsole::keyPressEvent( QKeyEvent * evt )
 {
-   int iKey = 0, iFlags = hb_gt_qtc_getKeyFlags( event->modifiers() ),
+   int iKey = 0, iFlags = hb_gt_qtc_getKeyFlags( evt->modifiers() ),
        iSize, i;
 
    /* support for national characters */
-   if( ( iSize = event->text().size() ) > 0 )
+   if( ( iSize = evt->text().size() ) > 0 )
    {
-      QString qStr = event->text();
+      QString qStr = evt->text();
       HB_WCHAR wc = qStr[ 0 ].unicode();
 
       if( iSize > 1 || ( wc >= 32 && wc != 127 ) )
@@ -3215,7 +3215,7 @@ void QTConsole::keyPressEvent( QKeyEvent * event )
       }
    }
 
-   switch( event->key() )
+   switch( evt->key() )
    {
       case Qt::Key_F1:
          iKey = HB_KX_F1;
@@ -3533,7 +3533,7 @@ void QTConsole::keyPressEvent( QKeyEvent * event )
    if( iKey != 0 )
       hb_gt_qtc_addKeyToInputQueue( pQTC, HB_INKEY_NEW_KEY( iKey, iFlags ) );
    else
-      QWidget::keyPressEvent( event );
+      QWidget::keyPressEvent( evt );
 }
 
 /* *********************************************************************** */
@@ -3584,14 +3584,14 @@ QTCWindow::~QTCWindow( void )
    delete qConsole;
 }
 
-void QTCWindow::closeEvent( QCloseEvent * event )
+void QTCWindow::closeEvent( QCloseEvent * evt )
 {
    if( qConsole->pQTC->iCloseMode == 0 )
       hb_vmRequestQuit();
    else
       hb_gt_qtc_addKeyToInputQueue( qConsole->pQTC, HB_K_CLOSE );
 
-   event->ignore();
+   evt->ignore();
 }
 
 void QTCWindow::setWindowSize( void )

@@ -1218,7 +1218,7 @@ HB_FUNC( FI_CONVERTTOTYPE )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagID(FITAG *tag, WORD id); */
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagType(FITAG *tag, FREE_IMAGE_MDTYPE type); */
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagCount(FITAG *tag, DWORD count); */
-/* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagLength(FITAG *tag, DWORD length) */;
+/* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagLength(FITAG *tag, DWORD length) */
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagValue(FITAG *tag, const void *value); */
 
 /* iterator */

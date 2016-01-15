@@ -584,19 +584,13 @@ static void convert_open_flags( HB_BOOL fCreate, HB_FATTR nAttr, HB_USHORT uiFla
    *mode = HB_FA_POSIX_ATTR( nAttr );
    if( *mode == 0 )
    {
-      *mode = ( nAttr & FC_HIDDEN ) ? S_IRUSR : ( S_IRUSR | S_IRGRP | S_IROTH );
-      if( ! ( nAttr & FC_READONLY ) )
-      {
-         if( *mode & S_IRUSR ) *mode |= S_IWUSR;
-         if( *mode & S_IRGRP ) *mode |= S_IWGRP;
-         if( *mode & S_IROTH ) *mode |= S_IWOTH;
-      }
-      if( nAttr & FC_SYSTEM )
-      {
-         if( *mode & S_IRUSR ) *mode |= S_IXUSR;
-         if( *mode & S_IRGRP ) *mode |= S_IXGRP;
-         if( *mode & S_IROTH ) *mode |= S_IXOTH;
-      }
+      *mode = S_IRUSR | S_IRGRP | S_IROTH;
+      if( ! ( nAttr & HB_FA_READONLY ) )
+         *mode |= S_IWUSR | S_IWGRP | S_IWOTH;
+      if( nAttr & HB_FA_SYSTEM )
+         *mode |= S_IXUSR | S_IXGRP | S_IXOTH;
+      if( nAttr & HB_FA_HIDDEN )
+         *mode &= S_IRUSR | S_IWUSR | S_IXUSR;
    }
 #else
    *mode = S_IREAD |
@@ -605,11 +599,9 @@ static void convert_open_flags( HB_BOOL fCreate, HB_FATTR nAttr, HB_USHORT uiFla
 #endif
 
    /* dos file attributes */
-#if defined( HB_FS_DOSCREAT )
+#if defined( HB_OS_DOS )
    if( nAttr == FC_NORMAL )
-   {
       *attr = _A_NORMAL;
-   }
    else
    {
       *attr = _A_ARCH;
@@ -1480,7 +1472,14 @@ HB_FHANDLE hb_fsOpenEx( const char * pszFileName, HB_FATTR nAttr, HB_USHORT uiFl
       convert_open_flags( HB_FALSE, nAttr, uiFlags, &flags, &mode, &share, &attr );
 
       hb_vmUnlock();
-#if defined( _MSC_VER ) || defined( __DMC__ )
+
+#if defined( HB_OS_DOS )
+      if( ( nAttr & ( FC_HIDDEN | FC_SYSTEM ) ) == 0 ||
+          access( pszFileName, F_OK ) == 0 )
+         attr = 0;
+#endif
+
+#if defined( _MSC_VER )
       if( share )
          hFileHandle = _sopen( pszFileName, flags, share, mode );
       else
@@ -1495,6 +1494,16 @@ HB_FHANDLE hb_fsOpenEx( const char * pszFileName, HB_FATTR nAttr, HB_USHORT uiFl
 #else
       HB_FAILURE_RETRY( hFileHandle, open( pszFileName, flags | share, mode ) );
 #endif
+
+#if defined( HB_OS_DOS )
+      if( attr != 0 && hFileHandle != ( HB_FHANDLE ) FS_ERROR )
+#     if defined( __DJGPP__ ) || defined( __BORLANDC__ )
+         _chmod( pszFileName, 1, attr );
+#     else
+         _dos_setfileattr( pszFileName, attr );
+#     endif
+#endif
+
       hb_vmLock();
 
       if( pszFree )
@@ -2228,19 +2237,13 @@ HB_BOOL hb_fsSetAttr( const char * pszFileName, HB_FATTR nAttr )
          int iAttr = HB_FA_POSIX_ATTR( nAttr ), iResult;
          if( iAttr == 0 )
          {
-            iAttr = ( nAttr & HB_FA_HIDDEN ) ? S_IRUSR : ( S_IRUSR | S_IRGRP | S_IROTH );
+            iAttr = S_IRUSR | S_IRGRP | S_IROTH;
             if( ! ( nAttr & HB_FA_READONLY ) )
-            {
-               if( iAttr & S_IRUSR ) iAttr |= S_IWUSR;
-               if( iAttr & S_IRGRP ) iAttr |= S_IWGRP;
-               if( iAttr & S_IROTH ) iAttr |= S_IWOTH;
-            }
+               iAttr |= S_IWUSR | S_IWGRP | S_IWOTH;
             if( nAttr & HB_FA_SYSTEM )
-            {
-               if( iAttr & S_IRUSR ) iAttr |= S_IXUSR;
-               if( iAttr & S_IRGRP ) iAttr |= S_IXGRP;
-               if( iAttr & S_IROTH ) iAttr |= S_IXOTH;
-            }
+               iAttr |= S_IXUSR | S_IXGRP | S_IXOTH;
+            if( nAttr & HB_FA_HIDDEN )
+               iAttr &= S_IRUSR | S_IWUSR | S_IXUSR;
          }
          HB_FAILURE_RETRY( iResult, chmod( pszFileName, iAttr ) );
          fResult = iResult != -1;
