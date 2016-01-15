@@ -9,7 +9,7 @@ depcontrol=icu:${HB_WITH_ICU}
 depkeyhead=icu:unicode/utypes.h
 depoptional=icu:yes
 depincpath=icu:/usr/include
-depincpath=icu:/usr/local/opt/icu4c
+depincpath=icu:/usr/local/opt/icu4c/include
 depfinish=icu
 
 incpaths=.
