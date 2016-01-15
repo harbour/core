@@ -46,10 +46,10 @@
 
 /*
  * A simple RDD which adds automatically update HSX indexes to DBFCDX
- * To create new HSX index for current work area use: HSX_CREATE()
- * To open already existing one use HSX_OPEN(),
- * To close use: HSX_CLOSE()
- * To retieve an handle use: HSX_HANDLE()
+ * To create new HSX index for current work area use: hsx_Create()
+ * To open already existing one use hsx_Open(),
+ * To close use: hsx_Close()
+ * To retieve an handle use: hsx_Handle()
  */
 
 #include "dbinfo.ch"
