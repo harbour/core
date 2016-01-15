@@ -1597,7 +1597,6 @@ HB_BOOL hb_xtraced( void )
 HB_FUNC( __FM_ALLOCLIMIT )
 {
    HB_STACK_TLS_PRELOAD;
-
    hb_xclean();
 
    if( hb_vmInternalsEnabled() )

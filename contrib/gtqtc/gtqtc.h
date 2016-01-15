@@ -341,7 +341,7 @@ class QTConsole : public QWidget
    Q_OBJECT
 
 public:
-   QTConsole( PHB_GTQTC pStructQTC, QWidget *parent = 0 );
+   QTConsole( PHB_GTQTC pStructQTC, QWidget *parnt = 0 );
    virtual ~QTConsole( void );
 
    PHB_GTQTC      pQTC;
@@ -361,20 +361,20 @@ public:
    void repaintChars( const QRect & rect );
 
 protected:
-   void inputMethodEvent( QInputMethodEvent * event );
-   void keyPressEvent( QKeyEvent * event );
-   void keyReleaseEvent( QKeyEvent * event );
-   void mousePressEvent( QMouseEvent * event );
-   void mouseMoveEvent( QMouseEvent * event );
-   void mouseReleaseEvent( QMouseEvent * event );
-   void mouseDoubleClickEvent( QMouseEvent * event );
-   void paintEvent( QPaintEvent * event );
-   void resizeEvent( QResizeEvent * event );
-   void wheelEvent( QWheelEvent * event );
-   void timerEvent( QTimerEvent * event );
-   void focusInEvent( QFocusEvent * event );
-   void focusOutEvent( QFocusEvent * event );
-   bool event( QEvent * event );
+   void inputMethodEvent( QInputMethodEvent * evt );
+   void keyPressEvent( QKeyEvent * evt );
+   void keyReleaseEvent( QKeyEvent * evt );
+   void mousePressEvent( QMouseEvent * evt );
+   void mouseMoveEvent( QMouseEvent * evt );
+   void mouseReleaseEvent( QMouseEvent * evt );
+   void mouseDoubleClickEvent( QMouseEvent * evt );
+   void paintEvent( QPaintEvent * evt );
+   void resizeEvent( QResizeEvent * evt );
+   void wheelEvent( QWheelEvent * evt );
+   void timerEvent( QTimerEvent * evt );
+   void focusInEvent( QFocusEvent * evt );
+   void focusOutEvent( QFocusEvent * evt );
+   bool event( QEvent * evt );
 };
 
 
@@ -391,7 +391,7 @@ public:
     void setResizing( void );
 
 protected:
-    void closeEvent( QCloseEvent * event );
+    void closeEvent( QCloseEvent * evt );
 };
 
 #endif /* HB_QTC_H_ */

@@ -742,8 +742,8 @@ static void hb_pp_usage( char * szName )
            "          -o<file>      \tcreates .c file with PP rules\n"
            "          -v<file>      \tcreates .h file with version information\n"
            "          -w            \twrite preprocessed (.ppo) file\n"
-           "          -q[012]       \tdisable information messages\n"
-           "\n"
+           "          -q[012]       \tdisable information messages\n" );
+   printf( "\n"
            "Note:  if neither -o nor -v is specified then -w is default action\n\n" );
 }
 
