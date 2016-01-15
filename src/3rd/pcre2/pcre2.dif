@@ -1,6 +1,6 @@
-diff -urN pcre2.orig/p2jicomp.c pcre2/p2jicomp.c
---- pcre2.orig/p2jicomp.c	2015-07-03 22:00:50.473403900 +0200
-+++ pcre2/p2jicomp.c	2015-07-03 22:00:51.190985500 +0200
+diff --strip-trailing-cr -urN pcre2.orig/p2jicomp.c pcre2/p2jicomp.c
+--- pcre2.orig/p2jicomp.c	2016-01-15 13:03:36.000000000 +0100
++++ pcre2/p2jicomp.c	2016-01-15 13:03:37.000000000 +0100
 @@ -76,7 +76,7 @@
  allocator->free(ptr, allocator->memory_data);
  }
@@ -10,9 +10,9 @@ diff -urN pcre2.orig/p2jicomp.c pcre2/p2jicomp.c
  
  #if defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED
  #error Unsupported architecture
-diff -urN pcre2.orig/sjconfi.h pcre2/sjconfi.h
---- pcre2.orig/sjconfi.h	2015-07-03 22:00:50.644999500 +0200
-+++ pcre2/sjconfi.h	2015-07-03 22:00:51.190985500 +0200
+diff --strip-trailing-cr -urN pcre2.orig/sjconfi.h pcre2/sjconfi.h
+--- pcre2.orig/sjconfi.h	2016-01-15 13:03:36.000000000 +0100
++++ pcre2/sjconfi.h	2016-01-15 13:03:37.000000000 +0100
 @@ -477,8 +477,12 @@
  
  #if defined(__GNUC__) && !defined(__APPLE__)
