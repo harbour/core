@@ -5,6 +5,9 @@
 
 -w3 -es2
 
+# Tone down warnings due to problems with cairo headers when using clang 7.00
+-warn=low{darwin&clang}
+
 # Look for these components: cairo-dev_*_win*.zip, cairo_*_win*.zip, libpng_*_win*.zip
 -depurlbase=cairo:http://www.gtk.org/download/
 -deppkgname=cairo:libcairo2-dev{deb}

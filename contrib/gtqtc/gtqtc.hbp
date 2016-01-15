@@ -5,6 +5,9 @@
 
 -w3 -es2
 
+# Tone down warnings for both QT4 and QT5
+-warn=low{darwin&clang}
+
 -stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc}
 
 -pic
