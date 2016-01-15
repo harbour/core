@@ -1,0 +1,17 @@
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-hbx=${hb_name}
+
+../../src/rdd/usrrdd/rdds/arrayrdd.prg
+../../src/rdd/usrrdd/rdds/dbtcdx.prg
+../../src/rdd/usrrdd/rdds/fptcdx.prg
+../../src/rdd/usrrdd/rdds/hscdx.prg
+../../src/rdd/usrrdd/rdds/logrdd.prg
+../../src/rdd/usrrdd/rdds/rlcdx.prg
+../../src/rdd/usrrdd/rdds/smtcdx.prg
+../../src/rdd/usrrdd/rdds/vfpcdx.prg

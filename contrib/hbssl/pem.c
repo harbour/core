@@ -122,7 +122,7 @@ static void hb_PEM_read_bio( PEM_READ_BIO * func )
 
       if( pBuffer )
       {
-         OPENSSL_cleanse( pBuffer, nSize );
+         OPENSSL_cleanse( pBuffer, ( size_t ) nSize );
          hb_xfree( pBuffer );
       }
    }
