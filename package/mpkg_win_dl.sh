@@ -46,10 +46,10 @@ readonly base='https://bintray.com/artifact/download/vszakats/generic/'
 
 for plat in '32' '64' ; do
    for name in \
-         'openssl' \
-         'libssh2' \
-         'nghttp2' \
-         'curl' \
+      'openssl' \
+      'libssh2' \
+      'nghttp2' \
+      'curl' \
    ; do
       ver="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_VER"
       hash="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_HASH_${plat}"

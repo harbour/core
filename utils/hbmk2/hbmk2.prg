@@ -16694,6 +16694,7 @@ STATIC FUNCTION __hbshell_win_reg_app( lRegister, lAllUser, cAppPath )
    a full-screen CUI ("interactive") app */
 STATIC FUNCTION __hbshell_detect_CUI_extern_positive()
    RETURN { ;
+      "BROWSE"           =>, ;
       "COL"              =>, ;
       "DISPBEGIN"        =>, ;
       "DISPBOX"          =>, ;
