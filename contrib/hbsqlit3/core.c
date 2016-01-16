@@ -2178,12 +2178,33 @@ HB_FUNC( SQLITE3_STATUS )
 
       hb_storni( iCurrent, 2 );
       hb_storni( iHighwater, 3 );
+
+      return;
    }
-   else
-      hb_retni( -1 );
-#else
-   hb_retni( -1 );
 #endif
+   hb_storni( 0, 3 );
+   hb_storni( 0, 4 );
+   hb_retni( -1 );
+}
+
+HB_FUNC( SQLITE3_STATUS64 )
+{
+#if SQLITE_VERSION_NUMBER >= 3080900 && ! defined( HB_LONG_LONG_OFF )
+   if( hb_pcount() > 3 && ( HB_ISNUM( 2 ) && HB_ISBYREF( 2 ) ) && ( HB_ISNUM( 3 ) && HB_ISBYREF( 3 ) ) )
+   {
+      sqlite3_int64 iCurrent, iHighwater;
+
+      hb_retni( sqlite3_status( hb_parni( 1 ), &iCurrent, &iHighwater, ( int ) hb_parl( 4 ) ) );
+
+      hb_stornint( iCurrent, 2 );
+      hb_stornint( iHighwater, 3 );
+
+      return;
+   }
+#endif
+   hb_stornint( 0, 2 );
+   hb_stornint( 0, 3 );
+   hb_retni( -1 );
 }
 
 /**
@@ -2206,12 +2227,13 @@ HB_FUNC( SQLITE3_DB_STATUS )
 
       hb_storni( iCurrent, 3 );
       hb_storni( iHighwater, 4 );
+
+      return;
    }
-   else
-      hb_retni( -1 );
-#else
-   hb_retni( -1 );
 #endif
+   hb_storni( 0, 3 );
+   hb_storni( 0, 4 );
+   hb_retni( -1 );
 }
 
 /**
