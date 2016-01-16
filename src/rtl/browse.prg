@@ -48,9 +48,6 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#define HB_INKEY_EXT_BIT            0x40000000
-#define HB_INKEY_EXT_KEY            0x01000000
-
 FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
    LOCAL oBrw
@@ -99,7 +96,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
    DispEnd()
 
    IF LastRec() == 0
-      nKey := hb_bitOr( HB_INKEY_EXT_BIT, HB_INKEY_EXT_KEY, HB_KX_DOWN )
+      nKey := hb_keyNew( HB_KX_DOWN )
       lKeyPressed := .T.
    ENDIF
 
@@ -257,7 +254,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
          IF lAppend .OR. RecNo() != LastRec() + 1
             lKeyPressed := ( nKey := DoGet( oBrw, lAppend ) ) != 0
          ELSE
-            nKey := hb_bitOr( HB_INKEY_EXT_BIT, HB_INKEY_EXT_KEY, HB_KX_DOWN )
+            nKey := hb_keyNew( HB_KX_DOWN )
             lKeyPressed := .T.
          ENDIF
          EXIT
@@ -269,7 +266,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
       OTHERWISE
          IF ! hb_keyChar( nKey ) == ""
             hb_keyIns( nKey )
-            nKey := hb_bitOr( HB_INKEY_EXT_BIT, HB_INKEY_EXT_KEY, HB_KX_ENTER )
+            nKey := hb_keyNew( HB_KX_ENTER )
             lKeyPressed := .T.
          ENDIF
       ENDSWITCH
@@ -375,20 +372,16 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
 
 STATIC FUNCTION ExitKey( lAppend )
 
-   LOCAL nKey, nKeyStd
+   LOCAL nKeyStd
 
-   SWITCH nKeyStd := hb_keyStd( ( nKey := hb_keyLast( hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) ) )
-   CASE K_PGDN
-      RETURN iif( lAppend, 0, hb_bitOr( HB_INKEY_EXT_BIT, HB_INKEY_EXT_KEY, HB_KX_DOWN ) )
-   CASE K_PGUP
-      RETURN iif( lAppend, 0, hb_bitOr( HB_INKEY_EXT_BIT, HB_INKEY_EXT_KEY, HB_KX_UP ) )
-   CASE K_DOWN
-   CASE K_UP
-      RETURN nKey
+   SWITCH nKeyStd := LastKey()
+   CASE K_PGDN ; RETURN iif( lAppend, 0, hb_keyNew( HB_KX_DOWN ) )
+   CASE K_PGUP ; RETURN iif( lAppend, 0, hb_keyNew( HB_KX_UP ) )
+   CASE K_DOWN ; RETURN hb_keyNew( HB_KX_DOWN )
+   CASE K_UP   ; RETURN hb_keyNew( HB_KX_UP )
    ENDSWITCH
 
-   RETURN iif( nKeyStd != K_ENTER .AND. hb_keyChar( nKeyStd ) == "", ;
-      0, hb_bitOr( HB_INKEY_EXT_BIT, HB_INKEY_EXT_KEY, HB_KX_RIGHT ) )
+   RETURN iif( nKeyStd != K_ENTER .AND. hb_keyChar( nKeyStd ) == "", 0, hb_keyNew( HB_KX_RIGHT ) )
 
 STATIC PROCEDURE FreshOrder( oBrw )
 
