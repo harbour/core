@@ -217,8 +217,8 @@ and xHarbour <>, f.e.:
                 return p1 + p2 + p3
               >, 1, 2, 3 )
 
-In Harbour extended codeblocks works like nested functions and support
-all functions attributes, f.e. they can have own static variables or
+In Harbour extended codeblocks works like nested functions and supports
+all function attributes, f.e. they can have own static variables or
 other declarations which are local to extended codeblocks only and
 do not effect upper function body.
 In xHarbour the compiler was not fully updated for such functionality
