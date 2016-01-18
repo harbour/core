@@ -445,7 +445,7 @@ See contrib-specific dependencies and build notes in the projects'
         $ brew install pcre pcre2 s-lang upx uncrustify ack optipng jpegoptim eg
         $ brew tap caskroom/cask
 
-3. Install [X11](https://xquartz.macosforge.org/landing/) (optional, for gtxwc)
+3. Install [X11](http://www.xquartz.org/) (optional, for gtxwc)
 
         $ brew cask install xquartz
 
