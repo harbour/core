@@ -53,6 +53,7 @@
 
 #ifndef __XHARBOUR__
    #pragma -ks+
+   #pragma -kd+
    REQUEST xhb_Lib
 
    #xtranslate __Keyboard( [<x,...>] )           => xhb__Keyboard( <x> )
