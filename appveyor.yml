@@ -98,7 +98,7 @@ build_script:
   - set HB_CPU=x86
   - set HB_WITH_CURL=%HB_DIR_CURL_32%include
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_32%include
-# - set HB_WITH_QT=%HB_RT%\Qt\5.4\mingw491_32\include
+# - set HB_WITH_QT=C:\Qt\5.5\mingw492_32\include
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
   - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS%
 
@@ -114,12 +114,11 @@ build_script:
 
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_USER_CFLAGS=
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_USER_LDFLAGS=
-
-# - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_CPU=
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_CURL=
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_OPENSSL=
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_QT=%HB_RT%\Qt\5.4\msvc2013_64_opengl\include
+
+# - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
 
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2008" set HB_COMPILER_VER=1500
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2010" set HB_COMPILER_VER=1600
@@ -128,6 +127,7 @@ build_script:
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2015" set HB_COMPILER_VER=1900
 
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_QT=C:\Qt\5.5\msvc2013\include
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2008" call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2010" call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2012" call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86
@@ -136,6 +136,7 @@ build_script:
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc
 
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_QT=C:\Qt\5.5\msvc2013_64\include
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2008" call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86_amd64
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2010" call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86_amd64
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2012" call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
