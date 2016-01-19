@@ -145,15 +145,19 @@ static const char * hb_compChkOptionFName( const char * szSwitch,
 {
    HB_SIZE nLen = hb_compChkOptionLen( szSwitch, fEnv );
 
-   if( szSwitch[ nLen ] != '\0' )
+   if( nLen > 0 )
    {
-      char * szVal = hb_strndup( szSwitch, nLen );
-      *pResult = hb_fsFNameSplit( szVal );
-      hb_xfree( szVal );
+      if( *pResult )
+         hb_xfree( *pResult );
+      if( szSwitch[ nLen ] != '\0' )
+      {
+         char * szVal = hb_strndup( szSwitch, nLen );
+         *pResult = hb_fsFNameSplit( szVal );
+         hb_xfree( szVal );
+      }
+      else
+         *pResult = hb_fsFNameSplit( szSwitch );
    }
-   else
-      *pResult = hb_fsFNameSplit( szSwitch );
-
    return szSwitch + nLen;
 }
 
@@ -261,12 +265,6 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
             {
                switch( szSwPtr[ 2 ] )
                {
-                  case '0':
-                     ++szSwPtr;
-                  case '\0':
-                     szSwPtr += 2;
-                     HB_COMP_PARAM->iExitLevel = HB_EXITLEVEL_DEFAULT;
-                     break;
                   case '1':
                      szSwPtr += 3;
                      HB_COMP_PARAM->iExitLevel = HB_EXITLEVEL_SETEXIT;
@@ -274,6 +272,14 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   case '2':
                      szSwPtr += 3;
                      HB_COMP_PARAM->iExitLevel = HB_EXITLEVEL_DELTARGET;
+                     break;
+                  case '0':
+                     ++szSwPtr;
+                     /* no break; */
+                  default:
+                     szSwPtr += 2;
+                     HB_COMP_PARAM->iExitLevel = HB_EXITLEVEL_DEFAULT;
+                     break;
                }
             }
             break;
@@ -362,11 +368,6 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   szSwPtr += 2;
                   switch( *szSwPtr )
                   {
-                     case '0':
-                        ++szSwPtr;
-                     case '\0':
-                        HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_COMPACT;
-                        break;
                      case '1':
                         ++szSwPtr;
                         HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_NORMAL;
@@ -378,6 +379,13 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                      case '3':
                         ++szSwPtr;
                         HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_REALCODE;
+                        break;
+                     case '0':
+                        ++szSwPtr;
+                        /* no break; */
+                     default:
+                        HB_COMP_PARAM->iGenCOutput = HB_COMPGENC_COMPACT;
+                        break;
                   }
                   break;
 
@@ -410,14 +418,16 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   szSwPtr += 2;
                   switch( *szSwPtr )
                   {
-                     case '0':
-                        ++szSwPtr;
-                     case '\0':
-                        HB_COMP_PARAM->iErrorFmt = HB_ERRORFMT_CLIPPER;
-                        break;
                      case '1':
                         ++szSwPtr;
                         HB_COMP_PARAM->iErrorFmt = HB_ERRORFMT_IDE;
+                        break;
+                     case '0':
+                        ++szSwPtr;
+                        /* no break; */
+                     default:
+                        HB_COMP_PARAM->iErrorFmt = HB_ERRORFMT_CLIPPER;
+                        break;
                   }
                   break;
 
@@ -620,15 +630,17 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   HB_COMP_PARAM->iStartProc = 0;
                   ++szSwPtr;
                   break;
-               case '0':
-               case '1':
-                  ++szSwPtr;
-               case '\0':
-                  HB_COMP_PARAM->iStartProc = 1;
-                  break;
                case '2':
                   HB_COMP_PARAM->iStartProc = 2;
                   ++szSwPtr;
+                  break;
+               case '0':
+               case '1':
+                  ++szSwPtr;
+                  /* no break; */
+               default:
+                  HB_COMP_PARAM->iStartProc = 1;
+                  break;
             }
             break;
 
@@ -712,9 +724,6 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
             ++szSwPtr;
             switch( *szSwPtr )
             {
-               case '\0':
-                  HB_COMP_PARAM->iSyntaxCheckOnly = 1;
-                  break;
                case '-':
                   HB_COMP_PARAM->iSyntaxCheckOnly = 0;
                   ++szSwPtr;
@@ -723,6 +732,10 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                case 'M':
                   HB_COMP_PARAM->iSyntaxCheckOnly = 2;
                   ++szSwPtr;
+                  break;
+               default:
+                  HB_COMP_PARAM->iSyntaxCheckOnly = 1;
+                  break;
             }
             break;
 
@@ -749,7 +762,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
             /* extended definitions file: -u+<file> */
             if( *szSwPtr == '+' )
             {
-               if( szSwPtr[ 1 ] )
+               if( szSwPtr[ 1 ] && hb_compChkOptionLen( szSwPtr + 1, fEnv ) > 0 )
                {
                   HB_COMP_PARAM->szStdChExt = ( char ** )
                      ( HB_COMP_PARAM->iStdChExt == 0 ?
@@ -784,12 +797,10 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
          case 'W':
             ++szSwPtr;
             HB_COMP_PARAM->iWarnings = 1;
-            if( *szSwPtr )
+            if( *szSwPtr >= '0' && *szSwPtr <= '3' )
             {
                HB_COMP_PARAM->iWarnings = *szSwPtr - '0';
-               if( HB_COMP_PARAM->iWarnings >= 0 &&
-                   HB_COMP_PARAM->iWarnings <= 3 )
-                  ++szSwPtr;
+               ++szSwPtr;
             }
             break;
 
