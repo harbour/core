@@ -94,29 +94,24 @@ build_script:
   - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_USER_CFLAGS=%HB_USER_CFLAGS% -flto -ffat-lto-objects
   - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" if "%HB_BUILD_MODE%" == "cpp" set HB_USER_LDFLAGS=%HB_USER_LDFLAGS% -static-libgcc -static-libstdc++
 
-  - set HB_COMPILER=mingw
-  - set HB_CPU=x86
   - set HB_WITH_CURL=%HB_DIR_CURL_32%include
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_32%include
 # - set HB_WITH_QT=C:\Qt\5.5\mingw492_32\include
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS%
+  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER=mingw HB_CPU=x86
 
-  - set HB_COMPILER=mingw64
-  - set HB_CPU=x86_64
   - set HB_WITH_CURL=%HB_DIR_CURL_64%include
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_64%include
-  - set HB_WITH_QT=
+# - set HB_WITH_QT=
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS%
+  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER=mingw64 HB_CPU=x86_64
 
   # msvc
 
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_USER_CFLAGS=
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_USER_LDFLAGS=
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_CPU=
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_CURL=
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_OPENSSL=
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_USER_CFLAGS= "
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_USER_LDFLAGS= "
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_WITH_CURL= "
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_WITH_OPENSSL= "
 
 # - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
 
