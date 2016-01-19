@@ -122,19 +122,19 @@ build_script:
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_QT=%HB_RT%\Qt\5.4\msvc2013_64_opengl\include
 
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc0900" call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc1000" call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc1100" call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc1200" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc1400" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc0900" "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc1000" "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc1100" "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc1200" "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc1400" "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER_VER=%APPVEYOR_REPO_BRANCH:~4,4% HB_COMPILER=msvc
 
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc0900" call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc1000" call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc1100" call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc1200" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH" == "msvc1400" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc0900" "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc1000" "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc1100" "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc1200" "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc1400" "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER_VER=%APPVEYOR_REPO_BRANCH:~4,4% HB_COMPILER=msvc64
 
   # packaging
