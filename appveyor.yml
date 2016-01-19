@@ -4,11 +4,11 @@ branches:
   - master
   - test_appveyor
   - lto
-  - msvc0900
-  - msvc1000
-  - msvc1100
-  - msvc1200
-  - msvc1400
+  - msvc2008
+  - msvc2010
+  - msvc2012
+  - msvc2013
+  - msvc2015
 skip_tags: true
 os: Windows Server 2012 R2
 clone_depth: 8
@@ -120,6 +120,12 @@ build_script:
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_CURL=
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_OPENSSL=
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_QT=%HB_RT%\Qt\5.4\msvc2013_64_opengl\include
+
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2008" set APPVEYOR_REPO_BRANCH=msvc1500
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2010" set APPVEYOR_REPO_BRANCH=msvc1600
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2012" set APPVEYOR_REPO_BRANCH=msvc1700
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2013" set APPVEYOR_REPO_BRANCH=msvc1800
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2015" set APPVEYOR_REPO_BRANCH=msvc1900
 
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc0900" "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86
