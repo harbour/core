@@ -102,17 +102,18 @@ build_script:
 
   - set HB_WITH_CURL=%HB_DIR_CURL_64%include
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_64%include
-# - set HB_WITH_QT=
+# - ps: $env:HB_WITH_QT = ''
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
   - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER=mingw64 HB_CPU=x86_64
 
   # msvc
 
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_USER_CFLAGS= "
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_USER_LDFLAGS= "
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_WITH_CURL= "
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_WITH_OPENSSL= "
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_WITH_QT= "
+  # use terrible hack to clear envvars under AppVeyor
+  - ps: $env:HB_USER_CFLAGS = ''
+  - ps: $env:HB_USER_LDFLAGS = ''
+  - ps: $env:HB_WITH_CURL = ''
+  - ps: $env:HB_WITH_OPENSSL = ''
+  - ps: $env:HB_WITH_QT = ''
 
 # - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
 
