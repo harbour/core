@@ -112,6 +112,7 @@ build_script:
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_USER_LDFLAGS= "
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_WITH_CURL= "
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_WITH_OPENSSL= "
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set "HB_WITH_QT= "
 
 # - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
 
@@ -132,6 +133,8 @@ build_script:
 
   - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2013" set HB_WITH_QT=C:\Qt\5.5\msvc2013_64\include
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2008" set APPVEYOR_REPO_BRANCH=_msvc
+  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2010" set APPVEYOR_REPO_BRANCH=_msvc
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2012" call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2013" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
   - if "%APPVEYOR_REPO_BRANCH%" == "msvc2015" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
