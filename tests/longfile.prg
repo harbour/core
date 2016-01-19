@@ -24,8 +24,8 @@ function main()
       long->FIELD1 := PadL( nRec, 30, Space( 1 ) )
    next
 
-   ? "File size is : " + Transform( FileSize( cFileName + ".dbf" ), "@ZE ###,###,###,###" )
-   ? "Index size is: " + Transform( FileSize( cFileName + IndexExt() ), "@ZE ###,###,###,###" )
+   ? "File size is : " + Transform( hb_fSize( cFileName + ".dbf" ), "@ZE ###,###,###,###" )
+   ? "Index size is: " + Transform( hb_fSize( cFileName + IndexExt() ), "@ZE ###,###,###,###" )
 
    ? "Testing index..."
    for nRec := 1 to nTotalRecs / 10
