@@ -4,7 +4,11 @@ branches:
   - master
   - test_appveyor
   - lto
-  - msvc
+  - msvc0900
+  - msvc1000
+  - msvc1100
+  - msvc1200
+  - msvc1400
 skip_tags: true
 os: Windows Server 2012 R2
 clone_depth: 8
@@ -35,8 +39,13 @@ environment:
   CURL_HASH_32: c7bfd0a3edccb25f84ce6c479e523e235cdb0514cecb891bdb0427a3f7313365
   CURL_HASH_64: 5317dc93f276ccb9282bdd453a2e31d53d289574256807b59997dbb970c2eba2
 
+#init:
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 install:
-  - sh -c ./package/mpkg_win_dl.sh
+  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" sh -c ./package/mpkg_win_dl.sh
 
 build_script:
   - set HB_VF=daily
@@ -67,7 +76,7 @@ build_script:
 
   # can disable to save time/space
 
-  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" set _HB_BUNDLE_3RDLIB=yes
+  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set _HB_BUNDLE_3RDLIB=yes
   - set HB_INSTALL_3RDDYN=yes
   - set HB_BUILD_CONTRIB_DYN=yes
   - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
@@ -83,7 +92,7 @@ build_script:
   # mingw
 
   - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_USER_CFLAGS=%HB_USER_CFLAGS% -flto -ffat-lto-objects
-  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" if "%HB_BUILD_MODE%" == "cpp" set HB_USER_LDFLAGS=%HB_USER_LDFLAGS% -static-libgcc -static-libstdc++
+  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" if "%HB_BUILD_MODE%" == "cpp" set HB_USER_LDFLAGS=%HB_USER_LDFLAGS% -static-libgcc -static-libstdc++
 
   - set HB_COMPILER=mingw
   - set HB_CPU=x86
@@ -91,7 +100,7 @@ build_script:
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_32%include
 # - set HB_WITH_QT=%HB_RT%\Qt\5.4\mingw491_32\include
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe %HB_MKFLAGS%
+  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS%
 
   - set HB_COMPILER=mingw64
   - set HB_CPU=x86_64
@@ -99,29 +108,34 @@ build_script:
   - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_64%include
   - set HB_WITH_QT=
   - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if not "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe %HB_MKFLAGS%
+  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS%
 
   # msvc
 
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set HB_USER_CFLAGS=
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set HB_USER_LDFLAGS=
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_USER_CFLAGS=
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_USER_LDFLAGS=
 
-# - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set _HB_MSVC_ANALYZE=yes
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set HB_COMPILER=
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set HB_CPU=
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set HB_WITH_CURL=
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set HB_WITH_OPENSSL=
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set HB_WITH_QT=%HB_RT%\Qt\5.4\msvc2013_64_opengl\include
+# - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_CPU=
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_CURL=
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_OPENSSL=
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set HB_WITH_QT=%HB_RT%\Qt\5.4\msvc2013_64_opengl\include
 
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set PATH=%_ORI_PATH%
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe %HB_MKFLAGS%
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc0900" call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc1000" call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc1100" call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc1200" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc1400" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER_VER=%APPVEYOR_REPO_BRANCH:~4,4% HB_COMPILER=msvc
 
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" set PATH=%_ORI_PATH%
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" if exist "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc" win-make.exe %HB_MKFLAGS%
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc0900" call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc1000" call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc1100" call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc1200" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH" == "msvc1400" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
+  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER_VER=%APPVEYOR_REPO_BRANCH:~4,4% HB_COMPILER=msvc64
 
   # packaging
 
