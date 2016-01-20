@@ -25,9 +25,6 @@ procedure Main()
       long->FIELD1 := PadL( nRec, 30 )
    next
 
-   ? "File size is :", Transform( hb_vfSize( cFileName + ".dbf" ), "@ZE ###,###,###,###" )
-   ? "Index size is:", Transform( hb_vfSize( cFileName + IndexExt() ), "@ZE ###,###,###,###" )
-
    ? "Testing index..."
    for nRec := 1 to nTotalRecs / 10
       if ! long->( dbSeek( PadL( nRec, 30 ) ) )
@@ -35,10 +32,14 @@ procedure Main()
       endif
    next
    ? "Index test ended"
-   ? "Press any key..."
-   Inkey( 0 )
 
    long->( dbCloseArea() )
+
+   ? "File size is :", Transform( hb_vfSize( cFileName + ".dbf" ), "@ZE ###,###,###,###" )
+   ? "Index size is:", Transform( hb_vfSize( cFileName + IndexExt() ), "@ZE ###,###,###,###" )
+
+   ? "Press any key..."
+   Inkey( 0 )
 
    hb_dbDrop( cFileName + ".dbf" )
 
