@@ -1241,8 +1241,7 @@ STATIC FUNCTION AR_ORDLSTREBUILD( nWA )
    LOCAL nReg, aIndex
 
    FOR EACH aIndex IN aIndexes
-      nReg := aIndex[ INDEX_ORCR ][ UR_ORCR_CONDINFO ][ UR_ORC_RECORD ]
-      IF nReg != NIL
+      IF ( nReg := aIndex[ INDEX_ORCR ][ UR_ORCR_CONDINFO ][ UR_ORC_RECORD ] ) != NIL
          AR_GOTO( nWA, nReg )
       ENDIF
       aIndex[ INDEX_RECORDS ] := {}
