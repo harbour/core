@@ -17,7 +17,7 @@ class Harbour < Formula
     version "3.4.0"
   end
 
-  head "https://github.com/vszakats/harbour-core/core.git"
+  head "https://github.com/vszakats/harbour-core.git"
 
   # This one is "vendored", but is used if found on the system
   depends_on "pcre"
