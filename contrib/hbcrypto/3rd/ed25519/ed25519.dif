@@ -1,6 +1,6 @@
-diff -urN ed25519.orig/ed25519.h ed25519/ed25519.h
---- ed25519.orig/ed25519.h	2015-08-27 22:07:04.157101000 +0200
-+++ ed25519/ed25519.h	2015-08-27 22:07:04.157101000 +0200
+diff --strip-trailing-cr -urN ed25519.orig/ed25519.h ed25519/ed25519.h
+--- ed25519.orig/ed25519.h	2016-01-20 12:10:04.000000000 +0100
++++ ed25519/ed25519.h	2016-01-20 12:10:04.000000000 +0100
 @@ -25,6 +25,7 @@
  #endif
  
@@ -9,26 +9,19 @@ diff -urN ed25519.orig/ed25519.h ed25519/ed25519.h
  void ED25519_DECLSPEC ed25519_sign(unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key, const unsigned char *private_key);
  int ED25519_DECLSPEC ed25519_verify(const unsigned char *signature, const unsigned char *message, size_t message_len, const unsigned char *public_key);
  void ED25519_DECLSPEC ed25519_add_scalar(unsigned char *public_key, unsigned char *private_key, const unsigned char *scalar);
-diff -urN ed25519.orig/fixedint.h ed25519/fixedint.h
---- ed25519.orig/fixedint.h	2015-08-27 22:07:04.157101000 +0200
-+++ ed25519/fixedint.h	2015-08-27 22:07:04.157101000 +0200
-@@ -20,6 +20,7 @@
-     
-     #include <limits.h>
+diff --strip-trailing-cr -urN ed25519.orig/fixedint.h ed25519/fixedint.h
+--- ed25519.orig/fixedint.h	2016-01-20 12:10:04.000000000 +0100
++++ ed25519/fixedint.h	2016-01-20 12:10:04.000000000 +0100
+@@ -4,7 +4,7 @@
+     Not a compatible replacement for <stdint.h>, do not blindly use it as such.
+ */
  
-+    #if ! defined(_MSC_VER) || ( _MSC_VER <= 1600 )
-     /* (u)int32_t */
-     #ifndef uint32_t
-         #if (ULONG_MAX == 0xffffffffUL)
-@@ -41,6 +42,7 @@
-             typedef signed short int32_t;
-         #endif
-     #endif
-+    #endif
+-#if ((defined(__STDC__) && __STDC__ && __STDC_VERSION__ >= 199901L) || (defined(__WATCOMC__) && (defined(_STDINT_H_INCLUDED) || __WATCOMC__ >= 1250)) || (defined(__GNUC__) && (defined(_STDINT_H) || defined(_STDINT_H_) || defined(__UINT_FAST64_TYPE__)) )) && !defined(FIXEDINT_H_INCLUDED)
++#if ((defined(__STDC__) && __STDC__ && __STDC_VERSION__ >= 199901L) || (defined(_MSC_VER) && _MSC_VER >= 1600) || (defined(__WATCOMC__) && (defined(_STDINT_H_INCLUDED) || __WATCOMC__ >= 1250)) || (defined(__GNUC__) && (defined(_STDINT_H) || defined(_STDINT_H_) || defined(__UINT_FAST64_TYPE__)) )) && !defined(FIXEDINT_H_INCLUDED)
+     #include <stdint.h>
+     #define FIXEDINT_H_INCLUDED
  
- 
-     /* (u)int64_t */
-@@ -66,7 +68,11 @@
+@@ -66,7 +66,11 @@
          typedef __int64 int64_t;
          typedef unsigned __int64 uint64_t;
  
@@ -40,9 +33,9 @@ diff -urN ed25519.orig/fixedint.h ed25519/fixedint.h
 +        #endif
      #endif
  #endif
-diff -urN ed25519.orig/sha512.h ed25519/sha512.h
---- ed25519.orig/sha512.h	2015-08-27 22:07:04.172700100 +0200
-+++ ed25519/sha512.h	2015-08-27 22:07:04.172700100 +0200
+diff --strip-trailing-cr -urN ed25519.orig/sha512.h ed25519/sha512.h
+--- ed25519.orig/sha512.h	2016-01-20 12:10:04.000000000 +0100
++++ ed25519/sha512.h	2016-01-20 12:10:04.000000000 +0100
 @@ -1,21 +1,15 @@
  #ifndef SHA512_H
  #define SHA512_H
@@ -71,9 +64,9 @@ diff -urN ed25519.orig/sha512.h ed25519/sha512.h
 +#define sha512         hb_sha512
  
  #endif
-diff -urN ed25519.orig/sign.c ed25519/sign.c
---- ed25519.orig/sign.c	2015-08-27 22:07:04.141501900 +0200
-+++ ed25519/sign.c	2015-08-27 22:07:04.157101000 +0200
+diff --strip-trailing-cr -urN ed25519.orig/sign.c ed25519/sign.c
+--- ed25519.orig/sign.c	2016-01-20 12:10:04.000000000 +0100
++++ ed25519/sign.c	2016-01-20 12:10:04.000000000 +0100
 @@ -3,6 +3,12 @@
  #include "ge.h"
  #include "sc.h"

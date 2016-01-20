@@ -1,5 +1,3 @@
--stop{allmsvc}
-
 -hblib
 -inc
 
