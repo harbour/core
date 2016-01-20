@@ -1014,12 +1014,11 @@ STATIC FUNCTION AR_RECCOUNT( nWA, nRecords )
 
 STATIC FUNCTION AR_PACK( nWA )
 
-   LOCAL oError, nRec, aIndex
+   LOCAL oError, nRec
    LOCAL aWAData  := USRRDD_AREADATA( nWA )
    LOCAL aDBFData := aWAData[ WADATA_DATABASE ]
    LOCAL aRecords := aDBFData[ DATABASE_RECORDS ]
    LOCAL aRecInfo := aDBFData[ DATABASE_RECINFO ]
-   LOCAL aIndexes := aDBFData[ DATABASE_INDEX ]
    LOCAL nDel     := 0
 
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d", nWA ) )
@@ -1033,20 +1032,6 @@ STATIC FUNCTION AR_PACK( nWA )
       RETURN FAILURE
    ENDIF
 
-   AEval( aIndexes, {| aIndex, n | ModifyIndex( n, Eval( aIndex[ INDEX_ORCR ][ UR_ORCR_BKEY ] ), aIndex, aWAData ) } )
-   FOR EACH aIndex IN aIndexes
-      FOR nRec := Len( aIndex[ INDEX_RECORDS ] ) TO 1 STEP -1
-         IF aRecInfo[ aIndex[ INDEX_RECORDS ][ nRec ][ INDEXKEY_RECORD ] ][ RECDATA_DELETED ]
-            ADel( aIndex[ INDEX_RECORDS ], nRec )
-            nDel++
-         ENDIF
-      NEXT
-      IF nDel > 0
-         ASize( aIndex[ INDEX_RECORDS ], Len( aIndex[ INDEX_RECORDS ] ) - nDel )
-         nDel := 0
-      ENDIF
-   NEXT
-
    FOR nRec := Len( aRecInfo ) TO 1 STEP -1
       IF aRecInfo[ nRec ][ RECDATA_DELETED ]
          ADel( aRecInfo, nRec )
@@ -1058,7 +1043,8 @@ STATIC FUNCTION AR_PACK( nWA )
       ASize( aRecInfo, Len( aRecInfo ) - nDel )
       ASize( aRecords, Len( aRecInfo ) )
    ENDIF
-   AR_GOTOP( nWA )
+
+   AR_ORDLSTREBUILD( nWA )
 
    RETURN SUCCESS
 
@@ -1198,11 +1184,78 @@ STATIC FUNCTION AR_ORDLSTFOCUS( nWA, aOrderInfo )
 
    RETURN HB_SUCCESS
 
+STATIC PROCEDURE indexing( nWA, aWAData, aIndex, aOCInfo )
+
+   LOCAL bWhile, nRec, bNext, bEval, bEvalOCI, nStep
+   LOCAL nNext     := aOCInfo[ UR_ORC_NEXT ]
+   LOCAL nContNext := 1
+   LOCAL nContStep := 0
+
+   IF aOCInfo[ UR_ORC_BWHILE ] == NIL .AND. nNext == 0
+      nRec := 1
+      AR_GOTO( nWA, nRec )
+   ELSE
+      nRec := aOCInfo[ UR_ORC_STARTREC ]
+      AR_GOTO( nWA, nRec )
+   ENDIF
+   IF aOCInfo[ UR_ORC_BWHILE ] == NIL
+      bWhile := {|| .T. }
+   ELSE
+      bWhile := aOCInfo[ UR_ORC_BWHILE ]
+   ENDIF
+   IF nNext == 0
+      bNext := {|| .T. }
+   ELSE
+      bNext := {|| nContNext++ <= nNext }
+   ENDIF
+   IF aOCInfo[ UR_ORC_BEVAL ] == NIL
+      HB_TRACE( HB_TR_DEBUG, "bEval: {|| .T. }" )
+      bEval := {|| .T. }
+   ELSEIF aOCInfo[ UR_ORC_STEP ] == NIL
+      bEval := aOCInfo[ UR_ORC_BEVAL ]
+      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "bEval: %1$s", hb_ValToExp( bEval ) ) )
+   ELSE
+      bEvalOCI := aOCInfo[ UR_ORC_BEVAL ]
+      nStep    := aOCInfo[ UR_ORC_STEP ]
+      bEval    := {|| iif( ++nContStep == nStep, ( nContStep := 0, Eval( bEvalOCI ) ), .T. ) }
+      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "bEvalOCI: %1$s, nStep: %2$d, bEval: %3$s", hb_ValToExp( bEvalOCI ), nStep, hb_ValToExp( bEval ) ) )
+   ENDIF
+
+   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_EOF ]: %1$s", hb_ValToExp( aWAData[ WADATA_EOF ] ) ) )
+
+   DO WHILE ! aWAData[ WADATA_EOF ] .AND. Eval( bEval ) .AND. Eval( bNext ) .AND. Eval( bWhile )
+      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_INDEX ]: %1$s, Eval( aIndex[ INDEX_ORCR ][ UR_ORCR_BKEY ] ): %2$s, aIndex: %3$s, aWAData: %4$s", ;
+         hb_ValToExp( aWAData[ WADATA_INDEX ] ), hb_ValToExp( Eval( aIndex[ INDEX_ORCR ][ UR_ORCR_BKEY ] ) ), ;
+         hb_ValToExp( hb_ValToExp( aIndex ) ), hb_ValToExp( aWAData ) ) )
+      ModifyIndex( aWAData[ WADATA_INDEX ], Eval( aIndex[ INDEX_ORCR ][ UR_ORCR_BKEY ] ), aIndex, aWAData )
+      AR_GOTO( nWA, ++nRec )
+   ENDDO
+
+   RETURN
+
+STATIC FUNCTION AR_ORDLSTREBUILD( nWA )
+
+   LOCAL aWAData  := USRRDD_AREADATA( nWA )
+   LOCAL aDBFData := aWAData[ WADATA_DATABASE ]
+   LOCAL aIndexes := aDBFData[ DATABASE_INDEX ]
+   LOCAL nReg, aIndex
+
+   FOR EACH aIndex IN aIndexes
+      nReg := aIndex[ INDEX_ORCR ][ UR_ORCR_CONDINFO ][ UR_ORC_RECORD ]
+      IF nReg != NIL
+         AR_GOTO( nWA, nReg )
+      ENDIF
+      aIndex[ INDEX_RECORDS ] := {}
+      indexing( nWA, aWAData, aIndex, aIndex[ INDEX_ORCR ][ UR_ORCR_CONDINFO ] )
+   NEXT
+
+   RETURN AR_GOTOP( nWA )
+
 STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
 
-   LOCAL aWAData, aDBFData, aOCInfo, nNext
-   LOCAL aIndexes, nContNext, nContStep
-   LOCAL bWhile, nRec, bNext, bEval, bEvalOCI, nStep, nIndex, cIndex, aIndex
+   LOCAL aWAData, aDBFData, aOCInfo
+   LOCAL aIndexes
+   LOCAL nIndex, cIndex, aIndex
 
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA: %1$d, aOrderCreate: %2$s", nWA, hb_ValToExp( aOrderCreate ) ) )
 
@@ -1239,10 +1292,7 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
       }
    ENDIF
 
-   nNext     := aOCInfo[ UR_ORC_NEXT ]
-   aIndexes  := aDBFData[ DATABASE_INDEX ]
-   nContNext := 1
-   nContStep := 0
+   aIndexes := aDBFData[ DATABASE_INDEX ]
 
    IF Empty( aOrderCreate[ UR_ORCR_TAGNAME ] )
       aOrderCreate[ UR_ORCR_TAGNAME ] := aOrderCreate[ UR_ORCR_BAGNAME ]
@@ -1258,48 +1308,10 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
       AAdd( aIndexes, aIndex )
    ENDIF
 
-   IF aOCInfo[ UR_ORC_BWHILE ] == NIL .AND. nNext == 0
-      nRec := 1
-      AR_GOTO( nWA, nRec )
-   ELSE
-      nRec := aOCInfo[ UR_ORC_STARTREC ]
-      AR_GOTO( nWA, nRec )
-   ENDIF
-   IF aOCInfo[ UR_ORC_BWHILE ] == NIL
-      bWhile := {|| .T. }
-   ELSE
-      bWhile := aOCInfo[ UR_ORC_BWHILE ]
-   ENDIF
-   IF nNext == 0
-      bNext := {|| .T. }
-   ELSE
-      bNext := {|| nContNext++ <= nNext }
-   ENDIF
-   IF aOCInfo[ UR_ORC_BEVAL ] == NIL
-      HB_TRACE( HB_TR_DEBUG, "bEval: {|| .T. }" )
-      bEval := {|| .T. }
-   ELSEIF aOCInfo[ UR_ORC_STEP ] == NIL
-      bEval := aOCInfo[ UR_ORC_BEVAL ]
-      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "bEval: %1$s", hb_ValToExp( bEval ) ) )
-   ELSE
-      bEvalOCI := aOCInfo[ UR_ORC_BEVAL ]
-      nStep    := aOCInfo[ UR_ORC_STEP ]
-      bEval    := {|| iif( ++nContStep == nStep, ( nContStep := 0, Eval( bEvalOCI ) ), .T. ) }
-      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "bEvalOCI: %1$s, nStep: %2$d, bEval: %3$s", hb_ValToExp( bEvalOCI ), nStep, hb_ValToExp( bEval ) ) )
-   ENDIF
-
    AAdd( aWAData[ WADATA_WAORDINFO ], AR_WAOIINIT() )
    aWAData[ WADATA_INDEX ] := Len( aIndexes )
 
-   HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_EOF ]: %1$s", hb_ValToExp( aWAData[ WADATA_EOF ] ) ) )
-
-   DO WHILE ! aWAData[ WADATA_EOF ] .AND. Eval( bEval ) .AND. Eval( bNext ) .AND. Eval( bWhile )
-      HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "aWAData[ WADATA_INDEX ]: %1$s, Eval( aIndex[ INDEX_ORCR ][ UR_ORCR_BKEY ] ): %2$s, aIndex: %3$s, aWAData: %4$s", ;
-         hb_ValToExp( aWAData[ WADATA_INDEX ] ), hb_ValToExp( Eval( aIndex[ INDEX_ORCR ][ UR_ORCR_BKEY ] ) ), ;
-         hb_ValToExp( hb_ValToExp( aIndex ) ), hb_ValToExp( aWAData ) ) )
-      ModifyIndex( aWAData[ WADATA_INDEX ], Eval( aIndex[ INDEX_ORCR ][ UR_ORCR_BKEY ] ), aIndex, aWAData )
-      AR_GOTO( nWA, ++nRec )
-   ENDDO
+   indexing( nWA, aWAData, aIndex, aOCInfo )
 
    RETURN AR_GOTOP( nWA )
 
@@ -1538,48 +1550,49 @@ FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSu
 
    s_nRddID := nRddID
 
-   aMyFunc[ UR_INIT         ] := @AR_INIT()
-   aMyFunc[ UR_NEW          ] := @AR_NEW()
-   aMyFunc[ UR_FLUSH        ] := @AR_DUMMY()
-   aMyFunc[ UR_CREATE       ] := @AR_CREATE()
-   aMyFunc[ UR_CREATEFIELDS ] := @AR_CREATEFIELDS()
-   aMyFunc[ UR_OPEN         ] := @AR_OPEN()
-   aMyFunc[ UR_CLOSE        ] := @AR_CLOSE()
-   aMyFunc[ UR_BOF          ] := @AR_BOF()
-   aMyFunc[ UR_EOF          ] := @AR_EOF()
-   aMyFunc[ UR_APPEND       ] := @AR_APPEND()
-   aMyFunc[ UR_DELETE       ] := @AR_DELETE()
-   aMyFunc[ UR_DELETED      ] := @AR_DELETED()
-   aMyFunc[ UR_RECALL       ] := @AR_RECALL()
-   aMyFunc[ UR_SETFILTER    ] := @AR_SETFILTER()
-   aMyFunc[ UR_CLEARFILTER  ] := @AR_CLEARFILTER()
-   aMyFunc[ UR_SKIPFILTER   ] := @AR_SKIPFILTER()
-   aMyFunc[ UR_SKIPRAW      ] := @AR_SKIPRAW()
-   aMyFunc[ UR_GOTO         ] := @AR_GOTO()
-   aMyFunc[ UR_GOTOID       ] := @AR_GOTOID()
-   aMyFunc[ UR_GOTOP        ] := @AR_GOTOP()
-   aMyFunc[ UR_GOBOTTOM     ] := @AR_GOBOTTOM()
-   aMyFunc[ UR_RECID        ] := @AR_RECID()
-   aMyFunc[ UR_LOCK         ] := @AR_LOCK()
-   aMyFunc[ UR_UNLOCK       ] := @AR_UNLOCK()
-   aMyFunc[ UR_RECCOUNT     ] := @AR_RECCOUNT()
-   aMyFunc[ UR_GETVALUE     ] := @AR_GETVALUE()
-   aMyFunc[ UR_PUTVALUE     ] := @AR_PUTVALUE()
-   aMyFunc[ UR_PACK         ] := @AR_PACK()
-   aMyFunc[ UR_ZAP          ] := @AR_ZAP()
-   aMyFunc[ UR_GOCOLD       ] := @AR_GOCOLD()
-   aMyFunc[ UR_FOUND        ] := @AR_FOUND()
-   aMyFunc[ UR_SEEK         ] := @AR_SEEK()
-   aMyFunc[ UR_INFO         ] := @AR_INFO()
-   aMyFunc[ UR_ORDLSTADD    ] := @AR_ORDLSTADD()
-   aMyFunc[ UR_ORDLSTFOCUS  ] := @AR_ORDLSTFOCUS()
-   aMyFunc[ UR_ORDCREATE    ] := @AR_ORDCREATE()
-   aMyFunc[ UR_ORDINFO      ] := @AR_ORDINFO()
-   aMyFunc[ UR_CLEARLOCATE  ] := @AR_CLEARLOCATE()
-   aMyFunc[ UR_SETLOCATE    ] := @AR_SETLOCATE()
-   aMyFunc[ UR_LOCATE       ] := @AR_LOCATE()
-   aMyFunc[ UR_DROP         ] := @AR_DROP()
-   aMyFunc[ UR_EXISTS       ] := @AR_EXISTS()
+   aMyFunc[ UR_INIT          ] := @AR_INIT()
+   aMyFunc[ UR_NEW           ] := @AR_NEW()
+   aMyFunc[ UR_FLUSH         ] := @AR_DUMMY()
+   aMyFunc[ UR_CREATE        ] := @AR_CREATE()
+   aMyFunc[ UR_CREATEFIELDS  ] := @AR_CREATEFIELDS()
+   aMyFunc[ UR_OPEN          ] := @AR_OPEN()
+   aMyFunc[ UR_CLOSE         ] := @AR_CLOSE()
+   aMyFunc[ UR_BOF           ] := @AR_BOF()
+   aMyFunc[ UR_EOF           ] := @AR_EOF()
+   aMyFunc[ UR_APPEND        ] := @AR_APPEND()
+   aMyFunc[ UR_DELETE        ] := @AR_DELETE()
+   aMyFunc[ UR_DELETED       ] := @AR_DELETED()
+   aMyFunc[ UR_RECALL        ] := @AR_RECALL()
+   aMyFunc[ UR_SETFILTER     ] := @AR_SETFILTER()
+   aMyFunc[ UR_CLEARFILTER   ] := @AR_CLEARFILTER()
+   aMyFunc[ UR_SKIPFILTER    ] := @AR_SKIPFILTER()
+   aMyFunc[ UR_SKIPRAW       ] := @AR_SKIPRAW()
+   aMyFunc[ UR_GOTO          ] := @AR_GOTO()
+   aMyFunc[ UR_GOTOID        ] := @AR_GOTOID()
+   aMyFunc[ UR_GOTOP         ] := @AR_GOTOP()
+   aMyFunc[ UR_GOBOTTOM      ] := @AR_GOBOTTOM()
+   aMyFunc[ UR_RECID         ] := @AR_RECID()
+   aMyFunc[ UR_LOCK          ] := @AR_LOCK()
+   aMyFunc[ UR_UNLOCK        ] := @AR_UNLOCK()
+   aMyFunc[ UR_RECCOUNT      ] := @AR_RECCOUNT()
+   aMyFunc[ UR_GETVALUE      ] := @AR_GETVALUE()
+   aMyFunc[ UR_PUTVALUE      ] := @AR_PUTVALUE()
+   aMyFunc[ UR_PACK          ] := @AR_PACK()
+   aMyFunc[ UR_ZAP           ] := @AR_ZAP()
+   aMyFunc[ UR_GOCOLD        ] := @AR_GOCOLD()
+   aMyFunc[ UR_FOUND         ] := @AR_FOUND()
+   aMyFunc[ UR_SEEK          ] := @AR_SEEK()
+   aMyFunc[ UR_INFO          ] := @AR_INFO()
+   aMyFunc[ UR_ORDLSTADD     ] := @AR_ORDLSTADD()
+   aMyFunc[ UR_ORDLSTFOCUS   ] := @AR_ORDLSTFOCUS()
+   aMyFunc[ UR_ORDLSTREBUILD ] := @AR_ORDLSTREBUILD()
+   aMyFunc[ UR_ORDCREATE     ] := @AR_ORDCREATE()
+   aMyFunc[ UR_ORDINFO       ] := @AR_ORDINFO()
+   aMyFunc[ UR_CLEARLOCATE   ] := @AR_CLEARLOCATE()
+   aMyFunc[ UR_SETLOCATE     ] := @AR_SETLOCATE()
+   aMyFunc[ UR_LOCATE        ] := @AR_LOCATE()
+   aMyFunc[ UR_DROP          ] := @AR_DROP()
+   aMyFunc[ UR_EXISTS        ] := @AR_EXISTS()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMyFunc, pSuperRddID )
