@@ -12919,7 +12919,8 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
    LOCAL cFuncList, cExecNM, cFuncName, cExt, cLine, n, c
 
    cFuncName := ""
-   IF HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|gccomf|clang" )
+   IF hb_vfExists( cFile ) .AND. ;
+      HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|gccomf|clang" )
       cExt := hb_FNameExt( cFile )
       IF cExt == ".c"
          FOR EACH cLine IN hb_ATokens( hb_MemoRead( cFile ), .T. )
@@ -12939,7 +12940,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          /* do nothing */
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
          hb_processRun( cExecNM + " " + FNameEscape( cFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) + ;
-            " -g -n" + iif( hbmk[ _HBMK_cCOMP ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
+            " -g -n" + iif( hbmk[ _HBMK_cPLAT ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) > 0
             n += 10
          ELSEIF ( n := At( " T _HB_FUN_", cFuncList ) ) > 0
