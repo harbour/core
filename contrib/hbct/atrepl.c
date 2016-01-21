@@ -119,13 +119,13 @@ HB_FUNC( ATREPL )
             switch( iAtLike )
             {
                case CT_SETATLIKE_EXACT:
-                  pc = ( char * ) ct_at_exact_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
-                                                       nStrToMatchLen, &nMatchStrLen );
+                  pc = ( char * ) HB_UNCONST( ct_at_exact_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
+                                                                   nStrToMatchLen, &nMatchStrLen ) );
                   break;
 
                case CT_SETATLIKE_WILDCARD:
-                  pc = ( char * ) ct_at_wildcard_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
-                                                          nStrToMatchLen, cAtLike, &nMatchStrLen );
+                  pc = ( char * ) HB_UNCONST( ct_at_wildcard_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
+                                                                      nStrToMatchLen, cAtLike, &nMatchStrLen ) );
                   break;
 
                default:
@@ -188,14 +188,14 @@ HB_FUNC( ATREPL )
          switch( iAtLike )
          {
             case CT_SETATLIKE_EXACT:
-               pc = ( char * ) ct_at_exact_backward( pcRetStr + nIgnore, nRetStrLen - nIgnore,
-                                                     pcStringToMatch, nStrToMatchLen, &nMatchStrLen );
+               pc = ( char * ) HB_UNCONST( ct_at_exact_backward( pcRetStr + nIgnore, nRetStrLen - nIgnore,
+                                                                 pcStringToMatch, nStrToMatchLen, &nMatchStrLen ) );
                break;
 
             case CT_SETATLIKE_WILDCARD:
-               pc = ( char * ) ct_at_wildcard_backward( pcRetStr + nIgnore, nRetStrLen - nIgnore,
-                                                        pcStringToMatch, nStrToMatchLen,
-                                                        cAtLike, &nMatchStrLen );
+               pc = ( char * ) HB_UNCONST( ct_at_wildcard_backward( pcRetStr + nIgnore, nRetStrLen - nIgnore,
+                                                                    pcStringToMatch, nStrToMatchLen,
+                                                                    cAtLike, &nMatchStrLen ) );
                break;
 
             default:

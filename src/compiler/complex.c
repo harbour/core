@@ -251,7 +251,7 @@ static int hb_comp_keywordType( PHB_PP_TOKEN pToken )
       {
          if( HB_PP_TOKEN_ALLOC( pToken->type ) && pToken->len == pKey->maxlen )
          {
-            hb_xfree( ( void * ) pToken->value );
+            hb_xfree( HB_UNCONST( pToken->value ) );
             pToken->value = pKey->value;
             pToken->type |= HB_PP_TOKEN_STATIC;
          }
@@ -277,7 +277,7 @@ static const char * hb_comp_tokenIdentifer( HB_COMP_DECL, PHB_PP_TOKEN pToken )
 static const char * hb_comp_tokenString( YYSTYPE * yylval_ptr, HB_COMP_DECL, PHB_PP_TOKEN pToken )
 {
    yylval_ptr->valChar.length = pToken->len;
-   yylval_ptr->valChar.string = ( char * ) pToken->value;
+   yylval_ptr->valChar.string = ( char * ) HB_UNCONST( pToken->value );
    yylval_ptr->valChar.dealloc = HB_FALSE;
    if( HB_PP_TOKEN_ALLOC( pToken->type ) )
    {
@@ -285,7 +285,7 @@ static const char * hb_comp_tokenString( YYSTYPE * yylval_ptr, HB_COMP_DECL, PHB
       pToken->value = hb_compIdentifierNew( HB_COMP_PARAM, pToken->value,
                yylval_ptr->valChar.dealloc ? HB_IDENT_COPY : HB_IDENT_FREE );
       if( ! yylval_ptr->valChar.dealloc )
-         yylval_ptr->valChar.string = ( char * ) pToken->value;
+         yylval_ptr->valChar.string = ( char * ) HB_UNCONST( pToken->value );
       pToken->type |= HB_PP_TOKEN_STATIC;
    }
    return pToken->value;

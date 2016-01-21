@@ -467,7 +467,7 @@ Statement  : ExecFlow CrlfStmnt
 CompTimeStr : LITERAL {
                if( $1.dealloc )
                {
-                  $1.string = ( char * ) hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE );
+                  $1.string = ( char * ) HB_UNCONST( hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE ) );
                   $1.dealloc = HB_FALSE;
                }
                hb_compModuleAdd( HB_COMP_PARAM, $1.string, HB_FALSE );

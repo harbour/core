@@ -311,7 +311,7 @@ static PHB_SOCKEX s_sockexNext( PHB_SOCKEX pSock, PHB_ITEM pParams )
       if( keylen > 0 )
       {
          PHB_SOCKEX_BF pBF = ( PHB_SOCKEX_BF ) hb_xgrabz( sizeof( HB_SOCKEX_BF ) );
-         HB_BYTE * pVect =  ( HB_BYTE * ) ( ivlen > 0 ? iv : NULL );
+         const HB_BYTE * pVect = ( const HB_BYTE * ) ( ivlen > 0 ? iv : NULL );
          int i;
 
          hb_blowfishInit( &pBF->bf, keydata, keylen );

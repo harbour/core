@@ -1463,6 +1463,9 @@ typedef HB_U32 HB_FATTR;
 
 #define HB_SIZEOFARRAY( var )       ( sizeof( var ) / sizeof( *var ) )
 
+#define HB_UNCONST( p )       ( ( void * ) ( HB_PTRUINT ) ( const void * ) ( p ) )
+#define HB_DECONST( c, p )    ( ( c )  HB_UNCONST( p ) )
+
 
 #if defined( __POCC__ ) || defined( __XCC__ )
    #define HB_SYMBOL_UNUSED( symbol )  do if( symbol ) {;} while( 0 )

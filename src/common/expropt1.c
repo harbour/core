@@ -363,7 +363,7 @@ PHB_EXPR hb_compExprNewString( const char * szValue, HB_SIZE nLen, HB_BOOL fDeal
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
 
-   pExpr->value.asString.string  = ( char * ) szValue;
+   pExpr->value.asString.string  = ( char * ) HB_UNCONST( szValue );
    pExpr->value.asString.dealloc = fDealloc;
    pExpr->nLength = nLen;
    pExpr->ValType = HB_EV_STRING;

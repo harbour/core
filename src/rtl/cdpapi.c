@@ -2232,7 +2232,7 @@ const char * hb_cdpnDup3( const char * pSrc, HB_SIZE nSrc,
       {
          pDst = *pFree;
          if( pDst == NULL && *pnSize > 0 )
-            pDst = ( char * ) pSrc;
+            pDst = ( char * ) HB_UNCONST( pSrc );
       }
 
       if( nDst >= *pnSize || ( pDst == pSrc && HB_CDP_ISCUSTOM( cdpOut ) ) )

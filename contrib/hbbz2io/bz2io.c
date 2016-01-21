@@ -341,7 +341,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName,
    if( ( nExFlags & FXO_COPYNAME ) != 0 )
    {
       if( pFile )
-         hb_strncpy( ( char * ) pszFileName + iPref, pszNameBuf,
+         hb_strncpy( ( char * ) HB_UNCONST( pszFileName + iPref ), pszNameBuf,
                      HB_PATH_MAX - 1 - iPref );
       hb_xfree( pszNameBuf );
    }
@@ -488,7 +488,7 @@ static HB_SIZE s_fileWrite( PHB_FILE pFile, const void * buffer, HB_SIZE nSize,
       if( nTimeout == -1 )
          nTimeout = pFile->nTimeout;
 
-      pFile->bz2.next_in  = ( char * ) buffer;
+      pFile->bz2.next_in  = ( char * ) HB_UNCONST( buffer );
       pFile->bz2.avail_in = ( unsigned int ) nSize;
 
       while( pFile->bz2.avail_in )

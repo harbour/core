@@ -74,7 +74,7 @@ HB_FUNC( HPDF_LOADRAWIMAGEFROMFILE )
  */
 HB_FUNC( HPDF_LOADRAWIMAGEFROMMEM )
 {
-   hb_retptr( ( void * ) HPDF_LoadRawImageFromMem( hb_HPDF_Doc_par( 1 ), ( HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ), hb_parni( 6 ) ) );
+   hb_retptr( ( void * ) HPDF_LoadRawImageFromMem( hb_HPDF_Doc_par( 1 ), ( const HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ), hb_parni( 6 ) ) );
 }
 
 /* HPDF_LoadJpegImageFromFile( hDoc, cHPEGFileName ) -> hImage

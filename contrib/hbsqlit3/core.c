@@ -1795,7 +1795,7 @@ HB_FUNC( SQLITE3_PROFILE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
       sqlite3_profile( pHbSqlite3->db, hb_parl( 2 ) ? SQL3ProfileLog : NULL,
-                       ( void * ) ( HB_ISCHAR( 3 ) ? hb_parcx( 3 ) : NULL ) );
+                       HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parcx( 3 ) ) : NULL );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -1806,7 +1806,7 @@ HB_FUNC( SQLITE3_TRACE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
       sqlite3_trace( pHbSqlite3->db, hb_parl( 2 ) ? SQL3TraceLog : NULL,
-                     ( void * ) ( HB_ISCHAR( 3 ) ? hb_parcx( 3 ) : NULL ) );
+                     HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parcx( 3 ) ) : NULL );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

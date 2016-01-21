@@ -203,20 +203,20 @@ HB_WCHAR * hb_wstrunshare( void ** phStr, const HB_WCHAR * pStr, HB_SIZE nLen )
       return NULL;
 
    if( nLen > 0 &&
-       ( *phStr == ( void * ) s_szConstStr || hb_xRefCount( *phStr ) > 1 ) )
+       ( *phStr == ( const void * ) s_szConstStr || hb_xRefCount( *phStr ) > 1 ) )
    {
       HB_WCHAR * pszDest = ( HB_WCHAR * ) hb_xgrab( ( nLen + 1 ) *
                                                     sizeof( HB_WCHAR ) );
       memcpy( pszDest, pStr, nLen * sizeof( HB_WCHAR ) );
       pszDest[ nLen ] = 0;
-      if( *phStr != ( void * ) s_szConstStr )
+      if( *phStr != ( const void * ) s_szConstStr )
          hb_xRefDec( *phStr );
       *phStr = ( void * ) pszDest;
 
       return pszDest;
    }
 
-   return ( HB_WCHAR * ) pStr;
+   return ( HB_WCHAR * ) HB_UNCONST( pStr );
 }
 
 char * hb_strunshare( void ** phStr, const char * pStr, HB_SIZE nLen )
@@ -227,19 +227,19 @@ char * hb_strunshare( void ** phStr, const char * pStr, HB_SIZE nLen )
       return NULL;
 
    if( nLen > 0 &&
-       ( *phStr == ( void * ) s_szConstStr || hb_xRefCount( *phStr ) > 1 ) )
+       ( *phStr == ( const void * ) s_szConstStr || hb_xRefCount( *phStr ) > 1 ) )
    {
       char * pszDest = ( char * ) hb_xgrab( ( nLen + 1 ) * sizeof( char ) );
       memcpy( pszDest, pStr, nLen * sizeof( char ) );
       pszDest[ nLen ] = 0;
-      if( *phStr != ( void * ) s_szConstStr )
+      if( *phStr != ( const void * ) s_szConstStr )
          hb_xRefDec( *phStr );
       *phStr = ( void * ) pszDest;
 
       return pszDest;
    }
 
-   return ( char * ) pStr;
+   return ( char * ) HB_UNCONST( pStr );
 }
 
 const char * hb_strnull( const char * str )
@@ -260,7 +260,7 @@ void hb_strfree( void * hString )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_strfree(%p)", hString ) );
 
-   if( hString && hString != ( void * ) s_szConstStr )
+   if( hString && hString != ( const void * ) s_szConstStr )
       hb_xRefFree( hString );
 }
 
@@ -284,7 +284,7 @@ const char * hb_itemGetStr( PHB_ITEM pItem, void * cdp, void ** phString, HB_SIZ
       if( pFree != NULL )
          *phString = ( void * ) pFree;
       else if( pItem->item.asString.allocated == 0 )
-         *phString = ( void * ) s_szConstStr;
+         *phString = HB_UNCONST( s_szConstStr );
       else
       {
          *phString = ( void * ) pItem->item.asString.value;
@@ -329,7 +329,7 @@ const char * hb_itemGetStrUTF8( PHB_ITEM pItem, void ** phString, HB_SIZE * pnLe
          hb_xRefInc( pItem->item.asString.value );
       }
       else
-         *phString = ( void * ) s_szConstStr;
+         *phString = HB_UNCONST( s_szConstStr );
       return pItem->item.asString.value;
    }
 
@@ -356,7 +356,7 @@ const HB_WCHAR * hb_itemGetStrU16( PHB_ITEM pItem, int iEndian,
 
       if( nLen == 0 )
       {
-         *phString = ( void * ) s_szConstStr;
+         *phString = HB_UNCONST( s_szConstStr );
          return s_szConstStr;
       }
 

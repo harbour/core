@@ -3899,7 +3899,7 @@ static HB_BOOL hb_gtTryInit( const char * szGtName, HB_BOOL fFree )
       }
 
       if( fFree )
-         hb_xfree( ( void * ) szGtName );
+         hb_xfree( HB_UNCONST( szGtName ) );
    }
 
    return hb_stackGetGT() != NULL;

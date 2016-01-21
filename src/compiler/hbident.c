@@ -50,7 +50,7 @@ const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType 
                        ( const void * ) szIdent, ( const void * ) szIdent );
    }
    else if( iType == HB_IDENT_FREE )
-      hb_xfree( ( void * ) szName );
+      hb_xfree( HB_UNCONST( szName ) );
 
    return szIdent;
 }
@@ -73,7 +73,7 @@ static HB_HASH_FUNC( hb_comp_IdentKey )    /* HB_SIZE func (void *Value, void *C
 /* deletes an identifier */
 static HB_HASH_FUNC( hb_comp_IdentDel )
 {
-   hb_xfree( ( void * ) Value );
+   hb_xfree( HB_UNCONST( Value ) );
    HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
    return 1;

@@ -655,7 +655,7 @@ HB_FUNC( SSL_GET_CURRENT_CIPHER )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retptr( ( void * ) SSL_get_current_cipher( ssl ) );
+         hb_retptr( HB_UNCONST( SSL_get_current_cipher( ssl ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1461,7 +1461,7 @@ HB_FUNC( SSL_USE_RSAPRIVATEKEY_ASN1 )
          /* 'const' not used in 2nd param because ssh.h misses it, too.
              Bug report sent: #1988
              [vszakats] */
-         hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( unsigned char * ) hb_parc( 2 ), ( int ) hb_parclen( 2 ) ) );
+         hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( unsigned char * ) HB_UNCONST( hb_parc( 2 ) ), ( int ) hb_parclen( 2 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
