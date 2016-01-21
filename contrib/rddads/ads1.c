@@ -2065,46 +2065,19 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
          hb_itemPutL( pItem, u16Null != 0 );
          break;
       }
-
+#if ADS_LIB_VERSION >= 710
       case DBS_TYPE:
       {
          LPFIELD pField = pArea->area.lpFields + uiIndex - 1;
-         const char * szType = NULL;
 
-         switch( pField->uiType )
+         if( pField->uiTypeExtended == ADS_CISTRING )
          {
-            case HB_FT_STRING:
-               if( pField->uiFlags & HB_FF_BINARY )
-                  szType = "RAW";
-               else if( pField->uiFlags & HB_FF_UNICODE )
-                  szType = "NCHAR";
-#if ADS_LIB_VERSION >= 710
-               else if( pField->uiTypeExtended == ADS_CISTRING )
-                  szType = "CICHARACTER";
-#endif
-               break;
-
-            case HB_FT_VARLENGTH:
-               if( pField->uiFlags & HB_FF_BINARY )
-                  szType = "VARBINARY";
-               else if( pField->uiFlags & HB_FF_UNICODE )
-                  szType = "NVARCHAR";
-               else
-                  szType = "VARCHAR";
-               break;
-
-            case HB_FT_MEMO:
-               if( pField->uiFlags & HB_FF_UNICODE )
-                  szType = "NMEMO";
-               break;
-         }
-         if( szType != NULL )
-         {
-            hb_itemPutC( pItem, szType );
+            hb_itemPutC( pItem, "CICHARACTER" );
             break;
          }
          /* no break */
       }
+#endif
       default:
          return SUPER_FIELDINFO( &pArea->area, uiIndex, uiType, pItem );
    }
@@ -3031,7 +3004,8 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
       switch( pField->uiType )
       {
          case HB_FT_STRING:
-            if( pField->uiTypeExtended == ADS_RAW )
+            if( pField->uiFlags & HB_FF_BINARY ||
+                pField->uiTypeExtended == ADS_RAW )
                cType = "Raw";
             else if( pField->uiFlags & HB_FF_UNICODE )
             {
