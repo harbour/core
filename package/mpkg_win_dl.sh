@@ -4,7 +4,6 @@
 
 # - Requires Git for Windows or busybox to run on Windows
 # - Requires '[PACKAGE]_VER' and '[PACKAGE]_HASH_[32|64]' envvars
-# - This script requires indirect expansion, so it's not POSIX compliant
 
 set | grep '_VER='
 
@@ -52,17 +51,17 @@ for plat in '32' '64' ; do
       'nghttp2' \
       'curl' \
    ; do
-      ver="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_VER"
-      hash="$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_HASH_${plat}"
+      eval ver="\$$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_VER"
+      eval hash="\$$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_HASH_${plat}"
       (
          set -x
-         # shellcheck disable=SC2039
-         curl -fsS -o pack.bin -L --proto-redir =https "${base}${name}-${!ver}-win${plat}-mingw.7z"
-         # shellcheck disable=SC2039
-         openssl dgst -sha256 pack.bin | grep -q "${!hash}"
+         # shellcheck disable=SC2154
+         curl -fsS -o pack.bin -L --proto-redir =https "${base}${name}-${ver}-win${plat}-mingw.7z"
+         # shellcheck disable=SC2154
+         openssl dgst -sha256 pack.bin | grep -q "${hash}"
          7z x -y pack.bin > /dev/null
-         # shellcheck disable=SC2039
-         mv "${name}-${!ver}-win${plat}-mingw" "${name}-mingw${plat}"
+         # shellcheck disable=SC2154
+         mv "${name}-${ver}-win${plat}-mingw" "${name}-mingw${plat}"
       )
    done
 done
