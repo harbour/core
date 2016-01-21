@@ -9988,6 +9988,8 @@ STATIC PROCEDURE dep_postprocess_one( hbmk, dep )
       FOR EACH tmp IN dep[ _HBMKDEP_aINCPATH ]
          IF tmp == _HBMK_DEP_CTRL_MARKER
             tmp := dep[ _HBMKDEP_cControl ]
+            /* disable `pkg-config`-based detection when a custom search path is specified */
+            dep[ _HBMKDEP_aPKG ] := {}
             EXIT
          ENDIF
       NEXT
