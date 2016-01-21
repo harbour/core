@@ -4129,7 +4129,7 @@ static void hb_vmNotEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
-/*
+#if 0
    else if( HB_IS_HASH( pItem1 ) && HB_IS_HASH( pItem2 ) )
    {
       HB_BOOL fResult = pItem1->item.asHash.value != pItem2->item.asHash.value;
@@ -4138,7 +4138,7 @@ static void hb_vmNotEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
- */
+#endif
    else if( hb_objOperatorCall( HB_OO_OP_NOTEQUAL, pItem1, pItem1, pItem2, NULL ) )
       hb_stackPop();
    else
@@ -4717,14 +4717,14 @@ static void hb_vmEnumStart( int nVars, int nDescend )
    HB_BOOL fStart = HB_TRUE;
    int i;
 
-/*
+#if 0
    pItem = hb_itemUnRef( hb_stackItemFromTop( -( ( int ) nVars << 1 ) ) );
    if( ( pItem->type & ( HB_IT_ARRAY | HB_IT_HASH | HB_IT_STRING ) ) == 0 )
    {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pItem );
       return;
    }
- */
+#endif
 
    for( i = ( int ) nVars << 1; i > 0 && fStart; i -= 2 )
    {

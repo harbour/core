@@ -20,6 +20,7 @@ fi
 # - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (only when including BCC build).
 # - Requires GNU sed, touch and OpenSSL tools in PATH
 # - Optional HB_SFX_7Z envvar pointed to 7z SFX module
+# - This script requires indirect expansion, so it's not POSIX compliant
 
 echo "! Self: $0"
 
@@ -209,8 +210,10 @@ if [ "${_HB_BUNDLE_3RDLIB}" = 'yes' ] ; then
          'curl' \
    ; do
       dir_32="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_32"
+      # shellcheck disable=SC2039
       dir_32=$(echo "${!dir_32}" | sed 's|\\|/|g')
       dir_64="HB_DIR_$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_64"
+      # shellcheck disable=SC2039
       dir_64=$(echo "${!dir_64}" | sed 's|\\|/|g')
       for file in ${dir_32}lib/*.a ; do
          if [ -f "${file}" ] && echo "${file}" | grep -v 'dll' > /dev/null 2>&1 ; then
