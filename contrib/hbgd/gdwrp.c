@@ -1523,7 +1523,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       /* Write string */
       err = gdImageStringFTEx( im, &aRect[ 0 ], fgcolor, ( char * ) HB_UNCONST( fontname ),
                                ptsize, angle, x, y, ( char * ) HB_UNCONST( hb_parstr_utf8( 9, &hText, NULL ) ),
-                               ( flags != 0 ? &extra : NULL ) );
+                               flags != 0 ? &extra : NULL );
 
       hb_strfree( hText );
 
