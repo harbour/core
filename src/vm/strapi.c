@@ -216,7 +216,7 @@ HB_WCHAR * hb_wstrunshare( void ** phStr, const HB_WCHAR * pStr, HB_SIZE nLen )
       return pszDest;
    }
 
-   return ( HB_WCHAR * ) pStr;
+   return ( HB_WCHAR * ) HB_UNCONST( pStr );
 }
 
 char * hb_strunshare( void ** phStr, const char * pStr, HB_SIZE nLen )
@@ -239,7 +239,7 @@ char * hb_strunshare( void ** phStr, const char * pStr, HB_SIZE nLen )
       return pszDest;
    }
 
-   return ( char * ) pStr;
+   return ( char * ) HB_UNCONST( pStr );
 }
 
 const char * hb_strnull( const char * str )
@@ -284,7 +284,7 @@ const char * hb_itemGetStr( PHB_ITEM pItem, void * cdp, void ** phString, HB_SIZ
       if( pFree != NULL )
          *phString = ( void * ) pFree;
       else if( pItem->item.asString.allocated == 0 )
-         *phString = ( void * ) s_szConstStr;
+         *phString = HB_UNCONST( s_szConstStr );
       else
       {
          *phString = ( void * ) pItem->item.asString.value;
@@ -329,7 +329,7 @@ const char * hb_itemGetStrUTF8( PHB_ITEM pItem, void ** phString, HB_SIZE * pnLe
          hb_xRefInc( pItem->item.asString.value );
       }
       else
-         *phString = ( void * ) s_szConstStr;
+         *phString = HB_UNCONST( s_szConstStr );
       return pItem->item.asString.value;
    }
 
@@ -356,7 +356,7 @@ const HB_WCHAR * hb_itemGetStrU16( PHB_ITEM pItem, int iEndian,
 
       if( nLen == 0 )
       {
-         *phString = ( void * ) s_szConstStr;
+         *phString = HB_UNCONST( s_szConstStr );
          return s_szConstStr;
       }
 

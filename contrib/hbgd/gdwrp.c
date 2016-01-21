@@ -1415,7 +1415,7 @@ HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int 
       int color = hb_parni( 6 );
 
       /* Write string */
-      gdImageString( im, font, x, y, ( unsigned char * ) hb_parc( 5 ), color );
+      gdImageString( im, font, x, y, ( unsigned char * ) HB_UNCONST( hb_parc( 5 ) ), color );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1440,7 +1440,7 @@ HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
       int color = hb_parni( 6 );
 
       /* Write string */
-      gdImageStringUp( im, font, x, y, ( unsigned char * ) hb_parc( 5 ), color );
+      gdImageStringUp( im, font, x, y, ( unsigned char * ) HB_UNCONST( hb_parc( 5 ) ), color );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1521,8 +1521,9 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       }
 
       /* Write string */
-      err = gdImageStringFTEx( im, &aRect[ 0 ], fgcolor, ( char * ) fontname,
-                               ptsize, angle, x, y, ( char * ) hb_parstr_utf8( 9, &hText, NULL ), flags != 0 ? &extra : NULL );
+      err = gdImageStringFTEx( im, &aRect[ 0 ], fgcolor, ( char * ) HB_UNCONST( fontname ),
+                               ptsize, angle, x, y, ( char * ) HB_UNCONST( hb_parstr_utf8( 9, &hText, NULL ) ),
+                               ( flags != 0 ? &extra : NULL ) );
 
       hb_strfree( hText );
 
@@ -1571,9 +1572,9 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
 
       /* Write string */
       hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion,
-                                      ( char * ) fontname, points,
-                                      ( char * ) ( HB_ISCHAR( 9 ) ? hb_parstr_utf8( 9, &hTop, NULL ) : "" ),
-                                      ( char * ) ( HB_ISCHAR( 10 ) ? hb_parstr_utf8( 10, &hBottom, NULL ) : "" ), fgcolor ) );
+                                      ( char * ) HB_UNCONST( fontname ), points,
+                                      ( char * ) HB_UNCONST( HB_ISCHAR( 9 ) ? hb_parstr_utf8( 9, &hTop, NULL ) : "" ),
+                                      ( char * ) HB_UNCONST( HB_ISCHAR( 10 ) ? hb_parstr_utf8( 10, &hBottom, NULL ) : "" ), fgcolor ) );
 
       hb_strfree( hTop );
       hb_strfree( hBottom );

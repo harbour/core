@@ -47,7 +47,7 @@ extern HB_BOOL hbamf_is_cls_externalizable( HB_USHORT uiClass );
 static void _ref_realItemPtr( PHB_ITEM pKey, PHB_ITEM pItem )
 {
    if( HB_IS_STRING( pItem ) )
-      hb_itemPutPtr( pKey, ( void * ) hb_itemGetCPtr( pItem ) );
+      hb_itemPutPtr( pKey, HB_UNCONST( hb_itemGetCPtr( pItem ) ) );
    else if( HB_IS_ARRAY( pItem ) )
       hb_itemPutPtr( pKey, hb_arrayId( pItem ) );
    else if( HB_IS_HASH( pItem ) )

@@ -91,7 +91,7 @@ HB_FUNC( HB_GS )
          #else
          pszParam = hb_arrayGetCPtr( pParam, pos );
          #endif
-         gsargv[ pos ] = ( char * ) ( pszParam ? pszParam : "" );
+         gsargv[ pos ] = ( char * ) HB_UNCONST( pszParam ? pszParam : "" );
       }
 
       if( gsapi_new_instance( &minst, NULL ) >= 0 )

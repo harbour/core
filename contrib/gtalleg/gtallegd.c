@@ -881,7 +881,7 @@ static HB_BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_WINTITLE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-            al_set_window_title( ( char * ) hb_itemGetCPtr( pInfo->pNewVal ) );
+            al_set_window_title( ( char * ) HB_UNCONST( hb_itemGetCPtr( pInfo->pNewVal ) ) );
 
          break;
 

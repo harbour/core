@@ -1342,7 +1342,7 @@ static HB_ERRCODE hb_usrPutRec( AREAP pArea, const HB_BYTE * pBuffer )
       return SUPER_PUTREC( pArea, pBuffer );
 
    hb_vmPushInteger( pArea->uiArea );
-   hb_vmPushPointer( ( void * ) pBuffer );
+   hb_vmPushPointer( HB_UNCONST( pBuffer ) );
    hb_vmDo( 2 );
 
    return hb_usrReturn();
@@ -1369,7 +1369,7 @@ static HB_ERRCODE hb_usrGetRec( AREAP pArea, HB_BYTE ** pBuffer )
 
    pItem = hb_stackItemFromBase( nOffset );
    if( HB_IS_STRING( pItem ) )
-      *pBuffer = ( HB_BYTE * ) hb_itemGetCPtr( pItem );
+      *pBuffer = ( HB_BYTE * ) HB_UNCONST( hb_itemGetCPtr( pItem ) );
    else
       *pBuffer = ( HB_BYTE * ) hb_itemGetPtr( pItem );
    hb_stackPop();

@@ -421,7 +421,7 @@ void hb_cmdargUpdate( void )
                   hb_strncat( s_szAppName, pFName->szPath, HB_PATH_MAX - 1 );
                   pFName->szPath = hb_strdup( s_szAppName );
                   hb_fsFNameMerge( s_szAppName, pFName );
-                  hb_xfree( ( void * ) pFName->szPath );
+                  hb_xfree( HB_UNCONST( pFName->szPath ) );
                   s_argv[ 0 ] = s_szAppName;
                }
             }
@@ -814,7 +814,7 @@ HB_FUNC( HB_CMDLINE )
          *--ptr = '\0';
 
          /* Convert from OS codepage */
-         hb_retc_buffer( ( char * ) hb_osDecodeCP( pszBuffer, NULL, NULL ) );
+         hb_retc_buffer( ( char * ) HB_UNCONST( hb_osDecodeCP( pszBuffer, NULL, NULL ) ) );
       }
    }
    else

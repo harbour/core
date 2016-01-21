@@ -1648,7 +1648,7 @@ HB_FUNC( MXMLGETCUSTOM )
 
    if( node )
    {
-      PHB_ITEM pItem = ( PHB_ITEM ) mxmlGetCustom( node );
+      PHB_ITEM pItem = ( PHB_ITEM ) HB_UNCONST( mxmlGetCustom( node ) );
 
       if( pItem )
          hb_itemReturn( pItem );

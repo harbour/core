@@ -782,7 +782,7 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
 #if defined( __WATCOMC__ )
                HB_FAILURE_RETRY( iResult, execv( "/bin/sh", argv ) );
 #else
-               HB_FAILURE_RETRY( iResult, execv( "/bin/sh", ( char ** ) argv ) );
+               HB_FAILURE_RETRY( iResult, execv( "/bin/sh", ( char ** ) HB_UNCONST( argv ) ) );
 #endif
                exit( 1 );
             }
@@ -4617,7 +4617,7 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
    }
 
    if( nExFlags & FXO_COPYNAME && hFile != FS_ERROR )
-      hb_strncpy( ( char * ) pszFileName, szPath, HB_PATH_MAX - 1 );
+      hb_strncpy( ( char * ) HB_UNCONST( pszFileName ), szPath, HB_PATH_MAX - 1 );
 
    if( szFree )
       hb_xfree( szFree );
@@ -4720,7 +4720,7 @@ const char * hb_fsNameConv( const char * pszFileName, char ** pszFree )
 
       if( cDirSep != HB_OS_PATH_DELIM_CHR )
       {
-         char * p = ( char * ) pszFileName;
+         char * p = ( char * ) HB_UNCONST( pszFileName );
          while( *p )
          {
             if( *p == cDirSep )
@@ -4739,14 +4739,14 @@ const char * hb_fsNameConv( const char * pszFileName, char ** pszFree )
             nLen = strlen( pFileName->szName );
             nLen = hb_strRTrimLen( pFileName->szName, nLen, HB_FALSE );
             pFileName->szName = hb_strLTrim( pFileName->szName, &nLen );
-            ( ( char * ) pFileName->szName )[ nLen ] = '\0';
+            ( ( char * ) HB_UNCONST( pFileName->szName ) )[ nLen ] = '\0';
          }
          if( pFileName->szExtension )
          {
             nLen = strlen( pFileName->szExtension );
             nLen = hb_strRTrimLen( pFileName->szExtension, nLen, HB_FALSE );
             pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &nLen );
-            ( ( char * ) pFileName->szExtension )[ nLen ] = '\0';
+            ( ( char * ) HB_UNCONST( pFileName->szExtension ) )[ nLen ] = '\0';
          }
       }
 
@@ -4775,7 +4775,7 @@ const char * hb_fsNameConv( const char * pszFileName, char ** pszFree )
             pFileName->szPath = pszPath = hb_cdpnDupUpper( hb_vmCDP(), pFileName->szPath, NULL );
       }
 
-      hb_fsFNameMerge( ( char * ) pszFileName, pFileName );
+      hb_fsFNameMerge( ( char * ) HB_UNCONST( pszFileName ), pFileName );
       hb_xfree( pFileName );
       if( pszPath )
          hb_xfree( pszPath );
@@ -4791,8 +4791,8 @@ const char * hb_fsNameConv( const char * pszFileName, char ** pszFree )
          pszFileName = hb_osEncodeCP( pszFileName, pszFree, &nLen );
          if( pszFree == NULL && pszFileName != pszPrev )
          {
-            hb_strncpy( ( char * ) pszPrev, pszFileName, HB_PATH_MAX - 1 );
-            hb_xfree( ( void * ) pszFileName );
+            hb_strncpy( ( char * ) HB_UNCONST( pszPrev ), pszFileName, HB_PATH_MAX - 1 );
+            hb_xfree( HB_UNCONST( pszFileName ) );
             pszFileName = pszPrev;
          }
       }

@@ -72,12 +72,12 @@ HB_FUNC( CHARPACK )
          n_in += n_count;
       }
       if( n_out < len )
-         hb_retclen( ( char * ) out, n_out );
+         hb_retclen( ( const char * ) out, n_out );
       hb_xfree( out );
       if( n_out < len )
          return;
    }
-   hb_retclen( ( char * ) in, len );
+   hb_retclen( ( const char * ) in, len );
 }
 
 static HB_UCHAR * buf_append( HB_UCHAR * buf, HB_SIZE * buf_size, HB_SIZE count,
@@ -107,7 +107,7 @@ HB_FUNC( CHARUNPACK )
 
       if( ! ( in[ 0 ] == 158 && in[ 1 ] == 158 ) )
       {
-         hb_retclen( ( char * ) in, len );
+         hb_retclen( ( const char * ) in, len );
          return;
       }
       out = ( HB_UCHAR * ) hb_xgrab( buf_size );
@@ -116,14 +116,14 @@ HB_FUNC( CHARUNPACK )
          if( in[ i ] != 0 )
          {
             hb_xfree( out );
-            hb_retclen( ( char * ) in, len );
+            hb_retclen( ( const char * ) in, len );
             return;
          }
          out = buf_append( out, &buf_size, in[ i + 1 ], in[ i + 2 ], &out_len );
       }
-      hb_retclen( ( char * ) out, out_len );
+      hb_retclen( ( const char * ) out, out_len );
       hb_xfree( out );
       return;
    }
-   hb_retclen( ( char * ) in, len );
+   hb_retclen( ( const char * ) in, len );
 }

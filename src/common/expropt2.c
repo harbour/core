@@ -2065,14 +2065,14 @@ HB_BOOL hb_compExprReduceCHR( PHB_EXPR pSelf, HB_COMP_DECL )
          }
          else
          {
-            pExpr->value.asString.string = ( char * ) hb_szAscii[ ( int ) pArg->value.asNum.val.l & 0xff ];
+            pExpr->value.asString.string = ( char * ) HB_UNCONST( hb_szAscii[ ( int ) pArg->value.asNum.val.l & 0xff ] );
             pExpr->value.asString.dealloc = HB_FALSE;
             pExpr->nLength = 1;
          }
       }
       else
       {
-         pExpr->value.asString.string = ( char * ) hb_szAscii[ ( unsigned int ) pArg->value.asNum.val.d & 0xff ];
+         pExpr->value.asString.string = ( char * ) HB_UNCONST( hb_szAscii[ ( unsigned int ) pArg->value.asNum.val.d & 0xff ] );
          pExpr->value.asString.dealloc = HB_FALSE;
          pExpr->nLength = 1;
       }
@@ -2098,9 +2098,9 @@ HB_BOOL hb_compExprReduceBCHAR( PHB_EXPR pSelf, HB_COMP_DECL )
 
       pExpr->ValType = HB_EV_STRING;
       pExpr->value.asString.string =
-         ( char * ) hb_szAscii[ ( pArg->value.asNum.NumType == HB_ET_LONG ?
-                           ( unsigned int ) pArg->value.asNum.val.l :
-                           ( unsigned int ) pArg->value.asNum.val.d ) & 0xff ];
+         ( char * ) HB_UNCONST( hb_szAscii[ ( pArg->value.asNum.NumType == HB_ET_LONG ?
+                                ( unsigned int ) pArg->value.asNum.val.l :
+                                ( unsigned int ) pArg->value.asNum.val.d ) & 0xff ] );
       pExpr->value.asString.dealloc = HB_FALSE;
       pExpr->nLength = 1;
 
@@ -2409,8 +2409,8 @@ HB_BOOL hb_compExprReduceUPPER( PHB_EXPR pSelf, HB_COMP_DECL )
          {
             if( pArg->nLength == 1 )
             {
-               szValue = ( char * ) hb_szAscii[ HB_TOUPPER( ( unsigned char )
-                                          pArg->value.asString.string[ 0 ] ) ];
+               szValue = ( char * ) HB_UNCONST( hb_szAscii[ HB_TOUPPER( ( unsigned char )
+                                                   pArg->value.asString.string[ 0 ] ) ] );
                fDealloc = HB_FALSE;
             }
             else

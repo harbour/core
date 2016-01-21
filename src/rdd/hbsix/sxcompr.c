@@ -205,7 +205,7 @@ static void hb_LZSSxExit( PHB_LZSSX_COMPR pCompr )
 }
 
 static PHB_LZSSX_COMPR hb_LZSSxInit(
-                        PHB_FILE pInput, HB_BYTE * pSrcBuf, HB_SIZE nSrcBuf,
+                        PHB_FILE pInput, const HB_BYTE * pSrcBuf, HB_SIZE nSrcBuf,
                         PHB_FILE pOutput, HB_BYTE * pDstBuf, HB_SIZE nDstBuf )
 {
    PHB_LZSSX_COMPR pCompr = ( PHB_LZSSX_COMPR ) hb_xgrab( sizeof( HB_LZSSX_COMPR ) );
@@ -216,7 +216,7 @@ static PHB_LZSSX_COMPR hb_LZSSxInit(
       nDstBuf = LZSS_IOBUFLEN;
 
    pCompr->pInput      = pInput;
-   pCompr->inBuffer    = pSrcBuf;
+   pCompr->inBuffer    = HB_UNCONST( pSrcBuf );
    pCompr->inBuffSize  = nSrcBuf;
    pCompr->inBuffPos   = 0;
    pCompr->inBuffRead  = ( pInput == NULL ) ? nSrcBuf : 0;
@@ -563,7 +563,7 @@ HB_BOOL hb_LZSSxCompressMem( const char * pSrcBuf, HB_SIZE nSrcLen,
    PHB_LZSSX_COMPR pCompr;
    HB_SIZE nSize;
 
-   pCompr = hb_LZSSxInit( NULL, ( HB_BYTE * ) pSrcBuf, nSrcLen,
+   pCompr = hb_LZSSxInit( NULL, ( const HB_BYTE * ) pSrcBuf, nSrcLen,
                           NULL, ( HB_BYTE * ) pDstBuf, nDstLen );
    nSize = hb_LZSSxEncode( pCompr );
    hb_LZSSxExit( pCompr );
@@ -578,7 +578,7 @@ HB_BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, HB_SIZE nSrcLen,
    PHB_LZSSX_COMPR pCompr;
    HB_BOOL fResult;
 
-   pCompr = hb_LZSSxInit( NULL, ( HB_BYTE * ) pSrcBuf, nSrcLen,
+   pCompr = hb_LZSSxInit( NULL, ( const HB_BYTE * ) pSrcBuf, nSrcLen,
                           NULL, ( HB_BYTE * ) pDstBuf, nDstLen );
    fResult = hb_LZSSxDecode( pCompr );
    hb_LZSSxExit( pCompr );

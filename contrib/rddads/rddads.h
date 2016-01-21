@@ -209,8 +209,8 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
                                          UNSIGNED32 * pulLen );
 
 #else
-   #define hb_adsOemToAnsi( s, l )  ( ( char * ) ( s ) )
-   #define hb_adsAnsiToOem( s, l )  ( ( char * ) ( s ) )
+   #define hb_adsOemToAnsi( s, l )  ( ( char * ) HB_UNCONST( s ) )
+   #define hb_adsAnsiToOem( s, l )  ( ( char * ) HB_UNCONST( s ) )
    #define hb_adsOemAnsiFree( s )
 #endif
 

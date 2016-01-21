@@ -4397,7 +4397,7 @@ static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE 
          wnd->ClipboardData[ ulSize ] = '\0';
       }
       else
-         wnd->ClipboardData = ( unsigned char * ) szData;
+         wnd->ClipboardData = ( unsigned char * ) HB_UNCONST( szData );
 
       XSetSelectionOwner( wnd->dpy, s_atomPrimary, wnd->window, wnd->ClipboardTime );
       if( XGetSelectionOwner( wnd->dpy, s_atomPrimary ) == wnd->window )
@@ -5735,7 +5735,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                int iHeight = hb_arrayGetNI( pInfo->pNewVal, 3 );
                int iDepth  = hb_arrayGetNI( pInfo->pNewVal, 4 );
                int iPad    = 32;
-               char * pFreeImage = NULL;
+               const char * pFreeImage = NULL;
 
                if( iDepth == 0 )
                   iDepth = DefaultDepth( wnd->dpy, DefaultScreen( wnd->dpy ) );
@@ -5747,17 +5747,18 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      {
                         int iPitch = ( iWidth * iDepth + iPad - 1 ) / iPad;
                         if( nSize == ( HB_SIZE ) ( iHeight * iPitch ) )
-                           pFreeImage = ( char * ) hb_arrayGetCPtr( pInfo->pNewVal, 1 );
+                           pFreeImage = hb_arrayGetCPtr( pInfo->pNewVal, 1 );
                         else
                            iPad >>= 1;
                      }
                   }
                   else
-                     pFreeImage = ( char * ) hb_arrayGetPtr( pInfo->pNewVal, 1 );
+                     pFreeImage = hb_arrayGetPtr( pInfo->pNewVal, 1 );
                }
                if( pFreeImage != NULL )
                   xImage = XCreateImage( wnd->dpy, DefaultVisual( wnd->dpy, DefaultScreen( wnd->dpy ) ),
-                                         iDepth, ZPixmap, 0, pFreeImage, iWidth, iHeight, iPad, 0 );
+                                         iDepth, ZPixmap, 0, ( char * ) HB_UNCONST( pFreeImage ),
+                                         iWidth, iHeight, iPad, 0 );
             }
 
             rx.left = rx.top = 0;

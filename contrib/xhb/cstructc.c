@@ -70,12 +70,12 @@ static PHB_ITEM hb_itemPutCRaw( PHB_ITEM pItem, const char * szText, HB_SIZE nLe
    if( nLen == 0 )
    {
       if( szText )
-         hb_xfree( ( void * ) szText );
+         hb_xfree( HB_UNCONST( szText ) );
       szText = "";
    }
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length    = nLen;
-   pItem->item.asString.value     = ( char * ) szText;
+   pItem->item.asString.value     = ( char * ) HB_UNCONST( szText );
    pItem->item.asString.allocated = nLen;
 
    return pItem;
@@ -97,7 +97,7 @@ static PHB_ITEM hb_itemPutCRawStatic( PHB_ITEM pItem, const char * szText, HB_SI
    pItem->type = HB_IT_STRING;
    pItem->item.asString.allocated = 0;
    pItem->item.asString.length    = nLen;
-   pItem->item.asString.value     = ( char * ) szText;
+   pItem->item.asString.value     = ( char * ) HB_UNCONST( szText );
 
    return pItem;
 }
@@ -1300,7 +1300,7 @@ HB_FUNC( HB_STRING2POINTER )
    const char * pszString = hb_parc( 1 );
 
    if( pszString )
-      hb_retptr( ( void * ) pszString );
+      hb_retptr( HB_UNCONST( pszString ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 }

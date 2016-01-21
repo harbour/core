@@ -354,7 +354,7 @@ HB_FUNC( FI_LOADFROMMEMORY )
       const char *      szImage = hb_parc( 2 );
       int flags = hb_parni( 3 );
 
-      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) szImage, ( DWORD ) hb_parclen( 2 ) );
+      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) HB_UNCONST( szImage ), ( DWORD ) hb_parclen( 2 ) );
       FIBITMAP * dib    = FreeImage_LoadFromMemory( fif, stream, flags );
       FreeImage_CloseMemory( stream );
 
@@ -625,7 +625,7 @@ HB_FUNC( FI_GETFILETYPEFROMMEMORY )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) hb_parc( 1 ), ( int ) hb_parclen( 1 ) );
+      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) HB_UNCONST( hb_parc( 1 ) ), ( int ) hb_parclen( 1 ) );
       int        size   = hb_parni( 1 );
 
       hb_retni( FreeImage_GetFileTypeFromMemory( stream, size ) );
@@ -945,7 +945,7 @@ HB_FUNC( FI_SETBACKGROUNDCOLOR )
        HB_ISCHAR( 2 ) && hb_parclen( 2 ) >= sizeof( RGBQUAD ) )
    {
       FIBITMAP * dib     = hb_FIBITMAP_par( 1 );
-      RGBQUAD *  bkcolor = ( RGBQUAD * ) hb_itemGetCPtr( hb_param( 2, HB_IT_STRING ) );
+      RGBQUAD *  bkcolor = ( RGBQUAD * ) HB_UNCONST( hb_itemGetCPtr( hb_param( 2, HB_IT_STRING ) ) );
 
       hb_fi_retl( FreeImage_SetBackgroundColor( dib, bkcolor ) );
    }

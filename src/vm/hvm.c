@@ -6955,8 +6955,8 @@ void hb_vmPushStringPcode( const char * szText, HB_SIZE nLength )
    pItem->type = HB_IT_STRING;
    pItem->item.asString.allocated = 0;
    pItem->item.asString.length = nLength;
-   pItem->item.asString.value = ( char * ) ( nLength <= 1 ?
-                        hb_szAscii[ ( unsigned char ) szText[ 0 ] ] : szText );
+   pItem->item.asString.value = ( char * ) HB_UNCONST( ( nLength <= 1 ?
+                        hb_szAscii[ ( unsigned char ) szText[ 0 ] ] : szText ) );
 }
 
 void hb_vmPushSymbol( PHB_SYMB pSym )
@@ -9183,7 +9183,7 @@ void hb_vmSetLang( PHB_LANG pLang )
 {
    HB_STACK_TLS_PRELOAD
 
-   hb_stackSetLang( ( void * ) pLang );
+   hb_stackSetLang( HB_UNCONST( pLang ) );
 }
 
 void * hb_vmI18N( void )

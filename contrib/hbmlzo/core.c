@@ -133,7 +133,7 @@ HB_FUNC( HB_LZO1X_1_COMPRESS )
          }
          else
          {
-            r = lzo1x_1_compress( ( lzo_bytep ) src, src_len, dst, &dst_len, wrkmem );
+            r = lzo1x_1_compress( ( const lzo_bytep ) src, src_len, dst, &dst_len, wrkmem );
             hb_xfree( wrkmem );
          }
 
@@ -183,7 +183,7 @@ HB_FUNC( HB_LZO1X_DECOMPRESS )
          hb_storni( LZO_E_OUT_OF_MEMORY, 3 );  /* out of memory */
       else
       {
-         int r = lzo1x_decompress( ( lzo_bytep ) src, src_len, dst, &dst_len, NULL );
+         int r = lzo1x_decompress( ( const lzo_bytep ) src, src_len, dst, &dst_len, NULL );
 
          hb_storni( r, 3 );
 
@@ -218,7 +218,7 @@ HB_FUNC( HB_LZO1X_DECOMPRESS_SAFE )
          hb_storni( LZO_E_OUT_OF_MEMORY, 3 );  /* out of memory */
       else
       {
-         int r = lzo1x_decompress_safe( ( lzo_bytep ) src, src_len, dst, &dst_len, NULL );
+         int r = lzo1x_decompress_safe( ( const lzo_bytep ) src, src_len, dst, &dst_len, NULL );
 
          hb_storni( r, 3 );
 
@@ -260,7 +260,7 @@ HB_FUNC( LZO_ADLER32 )
    const char * src = hb_parc( 1 );
 
    if( src )
-      hb_retnint( ( HB_MAXINT ) hb_adler32( 1, ( lzo_bytep ) src, hb_parclen( 1 ) ) );
+      hb_retnint( ( HB_MAXINT ) hb_adler32( 1, src, hb_parclen( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

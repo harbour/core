@@ -100,7 +100,7 @@ HB_FUNC( ENVPARAM )
    }
 
    if( pResult )
-      hb_retc_buffer( ( char * ) hb_osDecodeCP( pResult, NULL, NULL ) );
+      hb_retc_buffer( ( char * ) HB_UNCONST( hb_osDecodeCP( pResult, NULL, NULL ) ) );
    else
       hb_retc_null();
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )

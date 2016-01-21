@@ -77,14 +77,14 @@ HB_FUNC( SX_FNAMEPARSER )
             nLen = strlen( pFileName->szName );
             nLen = hb_strRTrimLen( pFileName->szName, nLen, HB_FALSE );
             pFileName->szName = hb_strLTrim( pFileName->szName, &nLen );
-            ( ( char * ) pFileName->szName )[ nLen ] = '\0';
+            ( ( char * ) HB_UNCONST( pFileName->szName ) )[ nLen ] = '\0';
          }
          if( pFileName->szExtension )
          {
             nLen = strlen( pFileName->szExtension );
             nLen = hb_strRTrimLen( pFileName->szExtension, nLen, HB_FALSE );
             pFileName->szExtension = hb_strLTrim( pFileName->szExtension, &nLen );
-            ( ( char * ) pFileName->szExtension )[ nLen ] = '\0';
+            ( ( char * ) HB_UNCONST( pFileName->szExtension ) )[ nLen ] = '\0';
          }
       }
 

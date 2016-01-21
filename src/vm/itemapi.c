@@ -236,7 +236,7 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.value     = ( char * ) szText;
+   pItem->item.asString.value     = ( char * ) HB_UNCONST( szText );
    pItem->item.asString.length    = nLen;
    pItem->item.asString.allocated = nAlloc;
 
@@ -253,7 +253,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
    if( nLen <= 1 )
    {
       nAlloc = 0;
-      szValue = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
+      szValue = ( char * ) HB_UNCONST( hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
    }
    else
    {
@@ -301,8 +301,8 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = nLen;
    pItem->item.asString.allocated = 0;
-   pItem->item.asString.value = ( char * ) ( nLen > 1 ? szText :
-                     hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
+   pItem->item.asString.value = ( char * ) HB_UNCONST( ( nLen > 1 ? szText :
+                     hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] ) );
 
    return pItem;
 }
@@ -324,9 +324,9 @@ PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
    pItem->item.asString.allocated = 0;
 
    if( nLen <= 1 )
-      pItem->item.asString.value = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
+      pItem->item.asString.value = ( char * ) HB_UNCONST( hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
    else if( szText[ nLen ] == '\0' )
-      pItem->item.asString.value = ( char * ) szText;
+      pItem->item.asString.value = ( char * ) HB_UNCONST( szText );
    else
       hb_errInternal( 6003, "Internal error: hb_itemPutCLConst() missing termination character", NULL, NULL );
 
@@ -354,7 +354,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
    if( nLen <= 1 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
+      pItem->item.asString.value = ( char * ) HB_UNCONST( hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
       if( szText )
          hb_xfree( szText );
    }
@@ -384,7 +384,7 @@ PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, HB_SIZE nLen )
    if( nLen <= 1 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
+      pItem->item.asString.value = ( char * ) HB_UNCONST( hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
       hb_xfree( szText );
    }
    else
@@ -2761,7 +2761,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
    {
       case HB_IT_STRING:
       case HB_IT_MEMO:
-         buffer = ( char * ) hb_itemGetCPtr( pItem );
+         buffer = ( char * ) HB_UNCONST( hb_itemGetCPtr( pItem ) );
          * nLen = hb_itemGetCLen( pItem );
          * bFreeReq = HB_FALSE;
          break;

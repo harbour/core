@@ -1314,7 +1314,7 @@ static char * tiGetS( const char * capname )
 {
    char * ptr;
 
-   ptr = tigetstr( ( char * ) capname );
+   ptr = tigetstr( ( char * ) HB_UNCONST( capname ) );
    if( ptr )
    {
       if( ptr == ( char * ) -1 )

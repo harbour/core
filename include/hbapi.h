@@ -556,7 +556,7 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_S
 #else
    /* NOTE: otherwise, the hb_xmemcpy and hb_xmemset functions
             will be used to copy and/or set HB_SIZE data blocks */
-extern HB_EXPORT void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE nLen ); /* copy more than memcpy() can */
+extern HB_EXPORT void * hb_xmemcpy( void * pDestArg, const void * pSourceArg, HB_SIZE nLen ); /* copy more than memcpy() can */
 extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE nLen ); /* set more than memset() can */
 #endif
 

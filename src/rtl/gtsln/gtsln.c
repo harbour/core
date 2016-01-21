@@ -155,8 +155,8 @@ static void hb_sln_colorTrans( void )
        * the same.
        */
       clr = ( bg << 4 ) | ( fg ^ 0x07 );
-      SLtt_set_color( clr, NULL, ( char * ) s_colorNames[ fg ],
-                                 ( char * ) s_colorNames[ bg ] );
+      SLtt_set_color( clr, NULL, ( char * ) HB_UNCONST( s_colorNames[ fg ] ),
+                                 ( char * ) HB_UNCONST( s_colorNames[ bg ] ) );
 #ifdef HB_SLN_UTF8
       s_colorTab[ i ] = clr;
 #else

@@ -659,7 +659,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
    if( ! fResult )
       hb_fsSetError( ( nExFlags & FXO_TRUNCATE ) ? 5 : 32 );
    if( ( nExFlags & FXO_COPYNAME ) != 0 && pFile )
-      hb_strncpy( ( char * ) pszFileName, pszFile, HB_PATH_MAX - 1 );
+      hb_strncpy( ( char * ) HB_UNCONST( pszFileName ), pszFile, HB_PATH_MAX - 1 );
    if( pError )
    {
       hb_errPutFileName( pError, pszFile );

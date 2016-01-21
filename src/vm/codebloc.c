@@ -68,7 +68,7 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
    if( pCBlock->pCode && pCBlock->dynBuffer )
    {
       pCBlock->dynBuffer = HB_FALSE;
-      hb_xfree( ( void * ) pCBlock->pCode );
+      hb_xfree( HB_UNCONST( pCBlock->pCode ) );
    }
    pCBlock->pCode = s_pCode;
 

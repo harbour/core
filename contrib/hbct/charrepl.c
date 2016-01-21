@@ -106,9 +106,9 @@ HB_FUNC( CHARREPL )
          {
             /* multiple replacements: searching & replacing in pcRet */
             char * pcw = pcRet;
-            while( ( pcw = ( char * ) ct_at_exact_forward( pcw, sStrLen - ( pcw - pcRet ),
-                                                           pcSearch + sIndex, 1,
-                                                           &sMatchStrLen ) ) != NULL )
+            while( ( pcw = ( char * ) HB_UNCONST( ct_at_exact_forward( pcw, sStrLen - ( pcw - pcRet ),
+                                                                       pcSearch + sIndex, 1,
+                                                                       &sMatchStrLen ) ) ) != NULL )
             {
                *pcw++ = *( pcReplace + sReplIndex );
             }

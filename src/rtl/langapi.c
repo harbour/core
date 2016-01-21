@@ -301,7 +301,7 @@ static HB_BOOL hb_langTranslate( const char * szNewId, PHB_LANG lang, PHB_CODEPA
       {
          HB_SIZE nLen = strlen( trans.pItemList[ i ] ) + 1;
          memcpy( ptr, trans.pItemList[ i ], nLen );
-         hb_xfree( ( void * ) trans.pItemList[ i ] );
+         hb_xfree( HB_UNCONST( trans.pItemList[ i ] ) );
          trans.pItemList[ i ] = ptr;
          ptr += nLen;
       }
