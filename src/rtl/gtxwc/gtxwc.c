@@ -5753,7 +5753,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      }
                   }
                   else
-                     pFreeImage = hb_arrayGetPtr( pInfo->pNewVal, 1 );
+                     pFreeImage = ( const char * ) hb_arrayGetPtr( pInfo->pNewVal, 1 );
                }
                if( pFreeImage != NULL )
                   xImage = XCreateImage( wnd->dpy, DefaultVisual( wnd->dpy, DefaultScreen( wnd->dpy ) ),
