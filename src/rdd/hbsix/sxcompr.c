@@ -216,7 +216,7 @@ static PHB_LZSSX_COMPR hb_LZSSxInit(
       nDstBuf = LZSS_IOBUFLEN;
 
    pCompr->pInput      = pInput;
-   pCompr->inBuffer    = HB_UNCONST( pSrcBuf );
+   pCompr->inBuffer    = ( HB_BYTE * ) HB_UNCONST( pSrcBuf );
    pCompr->inBuffSize  = nSrcBuf;
    pCompr->inBuffPos   = 0;
    pCompr->inBuffRead  = ( pInput == NULL ) ? nSrcBuf : 0;

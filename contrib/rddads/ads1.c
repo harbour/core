@@ -2634,7 +2634,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                if( nLen > ( HB_SIZE ) pField->uiLen )
                   nLen = pField->uiLen;
                u32RetVal = AdsSetStringW( pArea->hTable, ADSFIELD( uiIndex ),
-                                          HB_UNCONST( pwBuffer ),
+                                          ( WCHAR * ) HB_UNCONST( pwBuffer ),
                                           ( UNSIGNED32 ) nLen );
                hb_strfree( hString );
             }
@@ -2762,7 +2762,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                const HB_WCHAR * pwBuffer = hb_itemGetStrU16( pItem, HB_CDP_ENDIAN_LITTLE,
                                                              &hString, &nLen );
                u32RetVal = AdsSetStringW( pArea->hTable, ADSFIELD( uiIndex ),
-                                          HB_UNCONST( pwBuffer ),
+                                          ( WCHAR * ) HB_UNCONST( pwBuffer ),
                                           ( UNSIGNED32 ) nLen );
                hb_strfree( hString );
             }
