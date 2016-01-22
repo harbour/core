@@ -654,7 +654,7 @@ HB_FUNC( BIO_SET_CONN_HOSTNAME )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio && HB_ISCHAR( 2 ) )
-      hb_retnl( BIO_set_conn_hostname( bio, hb_parc( 2 ) ) );
+      hb_retnl( BIO_set_conn_hostname( bio, HB_UNCONST( hb_parc( 2 ) ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -664,7 +664,7 @@ HB_FUNC( BIO_SET_CONN_PORT )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio && HB_ISCHAR( 2 ) )
-      hb_retnl( BIO_set_conn_port( bio, hb_parc( 2 ) ) );
+      hb_retnl( BIO_set_conn_port( bio, HB_UNCONST( hb_parc( 2 ) ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -687,7 +687,7 @@ HB_FUNC( BIO_SET_CONN_IP )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio && HB_ISCHAR( 2 ) && hb_parclen( 2 ) == 4 )
-      hb_retnl( BIO_set_conn_ip( bio, hb_parc( 2 ) ) );
+      hb_retnl( BIO_set_conn_ip( bio, HB_UNCONST( hb_parc( 2 ) ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

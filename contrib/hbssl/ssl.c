@@ -858,7 +858,7 @@ HB_FUNC( SSL_SET_TLSEXT_HOST_NAME )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-         hb_retni( SSL_set_tlsext_host_name( ssl, hb_parc( 2 ) ) );
+         hb_retni( SSL_set_tlsext_host_name( ssl, HB_UNCONST( hb_parc( 2 ) ) ) );
 #endif
    }
    else
