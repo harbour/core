@@ -196,7 +196,7 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState, const char * 
    fprintf( fout, "/*\n * $" "Id" "$\n */\n\n/*\n"
             " * Build in preprocessor rules.\n"
             " *\n"
-            " * Copyright 2006-2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+            " * Copyright 2006-2016 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
             " *\n"
             " * This file is generated automatically by Harbour preprocessor\n"
             " * and is covered by the same license as Harbour PP\n"
@@ -339,7 +339,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
       fprintf( fout, "/*\n"
                " * Version information and build time switches.\n"
                " *\n"
-               " * Copyright 2008-2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+               " * Copyright 2008-2016 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
                " *\n"
                " * This file is generated automatically by Harbour preprocessor\n"
                " * and is covered by the same license as Harbour PP\n"
@@ -786,7 +786,7 @@ int main( int argc, char * argv[] )
    {
       printf( "Harbour Preprocessor %d.%d.%d%s\n",
               HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS );
-      printf( "Copyright (c) 1999-2015, http://harbour-project.org/\n" );
+      printf( "Copyright (c) 1999-2016, http://harbour-project.org/\n" );
    }
 
    if( szFile )

@@ -15627,12 +15627,12 @@ STATIC PROCEDURE ShowHeader( hbmk )
    IF hbmk[ _HBMK_lShellMode ]
       cText := ;
          "Harbour Shell / Script Runner " + HBRawVersion() + e"\n" + ;
-         "Copyright (c) 2007-2013, Viktor Szakáts" + e"\n" + ;
+         "Copyright (c) 2007-2016, Viktor Szakáts" + e"\n" + ;
          "Copyright (c) 2003-2007, Przemysław Czerpak" + e"\n"
    ELSE
       cText := ;
          "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" + ;
-         "Copyright (c) 1999-2013, Viktor Szakáts" + e"\n"
+         "Copyright (c) 1999-2016, Viktor Szakáts" + e"\n"
    ENDIF
 
    IF hbmk[ _HBMK_lMarkdown ]
