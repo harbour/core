@@ -1,7 +1,7 @@
 Harbour Make \(hbmk2\) 3\.4\.0dev \(e114a31\) \(2015\-05\-08 19:20\)  
-Copyright &copy; 1999\-2015, Viktor Szakáts  
+Copyright &copy; 1999\-2016, Viktor Szakáts  
 <https://github\.com/vszakats/harbour\-core/>  
-Magyar \(hu\) fordítás: Copyright &copy; 2009\-2013, Szakáts Viktor  
+Magyar \(hu\) fordítás: Copyright &copy; 2009\-2016, Szakáts Viktor  
 
 Használat:  
   
