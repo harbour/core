@@ -327,9 +327,9 @@
             They are optimized by Harbour compiler the same way (and even
             more) as these C-like operators, without any bad side-effects. */
    #if defined( XHB_BITOP )
-      #translate ( <exp1> | <exp2> )      => hb_bitOr( <exp1>, <exp2> )
-      #translate ( <exp1> & <exp2> )      => hb_bitAnd( <exp1>, <exp2> )
-      #translate ( <exp1> ^^ <exp2> )     => hb_bitXor( <exp1>, <exp2> )
+      #translate ( <exp1> | <exp2> )      => xhb_bitOr( <exp1>, <exp2> )
+      #translate ( <exp1> & <exp2> )      => xhb_bitAnd( <exp1>, <exp2> )
+      #translate ( <exp1> ^^ <exp2> )     => xhb_bitXor( <exp1>, <exp2> )
    #endif
 
    #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;

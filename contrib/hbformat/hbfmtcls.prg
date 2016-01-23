@@ -54,24 +54,8 @@
 #define RF_STATE_RET    4
 
 // TOFIX:
-//   1. 'var ++'
-//   2. '- 1' for numeric literals.
-//   3. wrongly breaks line: 'FUNCTION Hello( /* comment */ )'
-//   4. INIT PROCEDURE/EXIT PROCEDURE are not recognized as PROCEDURE statement
-//   5. ".T.," / ".F.," gets wrongly corrected to ".T. ," / ".F. ,"
-//   6. "end class" is converted to "end CLASS" instead of "END CLASS"
-//   7. in PP commands "<var>" should not be converted to "< var >"
-//   8. Certain lines outside any procs f.e. at beginning of file, sometimes
-//      will be indented to one level:
-//      ---
-//      /* a1 */
-//      REQUEST a1
-//      ANNOUNCE a3
-//      STATIC a4
-//      THREAD STATIC a5
-//      ---
-//
-//   a. To add a space between "!" operator and its argument
+//   1. in PP commands "<var>" should not be converted to "< var >"
+//   2. To add a space between "!" operator and its argument
 //      unless it's beginning with a parenthesis:
 //        'IF ! Empty()' and 'IF !( "a" == b )'
 
@@ -565,10 +549,9 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFormatCode
                i--
                IF ( SubStr( cLine, i + 1, 1 ) == "," .AND. ! SubStr( cLine, nEnd - 1, 1 ) $ "(," ) .OR. ;
                      "*" + SubStr( cLine, nEnd - 1, 1 ) + SubStr( cLine, i + 1, 1 ) + "*" $ "*{}*()*][*{|*||*" .OR. ;
-                     SubStr( cLine, i + 1, 2 ) == "->" .OR. ;
-                     SubStr( cLine, nEnd - 2, 2 ) == "->" .OR. ;
-                     ( nState == FL_STATE_STRING .AND. ( SubStr( cLine, i + 1, 1 ) == "[" .OR. "*" + SubStr( cLine, i + 1, 3 ) + "*" $ "*-- *++ *" ) ) .OR. ;
-                     ( nState != FL_STATE_STRING .AND. "*" + SubStr( cLine, nEnd - 3, 3 ) + "*" $ "* --* ++*" )
+                     ( nState == FL_STATE_STRING .AND. ( SubStr( cLine, i + 1, 1 ) == "[" .OR. "*" + SubStr( cLine, i + 1, 2 ) + "*" $ "*--*++*->*" ) ) .OR. ;
+                     ( nState != FL_STATE_STRING .AND. "*" + SubStr( cLine, nEnd - 2, 2 ) + "*" $ "*--*++*->*" ) .OR. ;
+                     SubStr( cLine, nEnd - 1, 1 ) == "-" .AND. SubStr( cLine, i + 1, 1 ) $ "0123456789."
                   cLine := Left( cLine, nEnd - 1 ) + SubStr( cLine, i + 1 )
                   nLen  := Len( cLine )
                   i := nEnd
@@ -622,25 +605,27 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFormatCode
                ENDIF
                nState := iif( SubStr( cLine, i + 1, 1 ) == "=", FL_STATE_OP, FL_STATE_ANY )
             ELSEIF c $ cOperators .OR. ( c == ":" .AND. SubStr( cLine, i + 1, 1 ) == "=" )
-               nB := i
-               IF SubStr( cLine, i + 1, 1 ) $ cOperators
-                  i++
-               ENDIF
-               IF c == "-" // .AND. SubStr( cLine, i + 1, 1 ) $ "1234567890"
-                  IF nState == FL_STATE_STRING
-                     IF ::ConvertCmd( @cLine, nBegin, nEnd )
-                        nState := FL_STATE_ANY
-                     ELSE
-                        nA := i
-                        nState := FL_STATE_OP
-                     ENDIF
-                  ELSEIF nState == FL_STATE_OP
-                     nState := FL_STATE_ANY
+               IF ! ( "*" + SubStr( cLine, i - 1, 2 ) + "*" $ "*--*++*->*" )
+                  nB := i
+                  IF SubStr( cLine, i + 1, 1 ) $ cOperators
+                     i++
                   ENDIF
-               ELSE
-                  nA := i
-                  nState := FL_STATE_OP
-               ENDIF
+                  IF c == "-" // .AND. SubStr( cLine, i + 1, 1 ) $ "1234567890"
+                     IF nState == FL_STATE_STRING
+                        IF ::ConvertCmd( @cLine, nBegin, nEnd )
+                           nState := FL_STATE_ANY
+                        ELSE
+                           nA := i
+                           nState := FL_STATE_OP
+                        ENDIF
+                     ELSEIF nState == FL_STATE_OP
+                        nState := FL_STATE_ANY
+                     ENDIF
+                  ELSE
+                     nA := i
+                     nState := FL_STATE_OP
+                  ENDIF
+               endif
             ELSEIF c == "|" .AND. SubStr( cLine, i + 1, 1 ) != "|"
                nA := i
             ELSEIF c == ")" .OR. c == "}" .OR. c == "]"

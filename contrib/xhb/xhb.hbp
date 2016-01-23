@@ -39,6 +39,7 @@ txtline.c
 xhbarr.c
 xhbarrex.c
 xhbat.c
+xhbbit.c
 xhbcopyf.c
 xhbctbit.c
 xhbdate.c
