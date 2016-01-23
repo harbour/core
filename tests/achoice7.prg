@@ -2,7 +2,7 @@
 #include "inkey.ch"
 
 /* Callback recreates AChoice() output with different color
-   and expect it to left alone by AChoice() upon return. */
+   and expect it to be left alone by AChoice() upon return. */
 
 MEMVAR tab
 
