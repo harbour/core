@@ -94,7 +94,7 @@ endif
 # VER    4.0.4devel-2014-06-07
 
 # ORIGIN http://remotesensing.org/libtiff/
-# URL    http://download.osgeo.org/libtiff/tiff-4.0.4.zip
+# URL    http://download.osgeo.org/libtiff/tiff-4.0.6.zip
 # DIFF   tiff.dif
 #
 # MAP    COPYRIGHT                LICENSE.txt
