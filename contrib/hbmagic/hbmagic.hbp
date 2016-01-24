@@ -13,7 +13,7 @@
 -depcontrol=libmagic:${HB_WITH_LIBMAGIC}
 -depincpath=libmagic:/usr/include
 -depincpath=libmagic:/usr/local/include
--depincpath=libmagic:/opt/local/include
+-depincpath=libmagic:/usr/local/opt/libmagic/include
 
 -hbx=${hb_name}
 

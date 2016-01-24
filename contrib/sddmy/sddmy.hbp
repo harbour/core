@@ -22,7 +22,8 @@ rddsql.hbc
 -depcontrol=mysql:${HB_WITH_MYSQL}
 -depincpath=mysql:/usr/include/mysql
 -depincpath=mysql:/usr/local/include/mysql
--depincpath=mysql:/opt/local/include/mysql5/mysql
+-depincpath=mysql:/usr/local/opt/mariadb/include
+-depincpath=mysql:/usr/local/opt/mysql/include
 -depimplibs=mysql:../lib/opt/libmySQL.dll
 -depimplibs=mysql:../lib/libmySQL.dll
 -depimplibs=mysql:../../lib/libmysql.dll

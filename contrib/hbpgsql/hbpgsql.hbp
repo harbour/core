@@ -18,9 +18,8 @@
 -depincpath=pgsql:/usr/local/pgsql/include/libpq
 -depincpath=pgsql:/usr/include/pgsql
 -depincpath=pgsql:/usr/include/postgresql
+-depincpath=pqsql:/usr/local/opt/postgresql/include
 -depincpath=pgsql:/postgres/include
--depincpath=pgsql:/opt/local/include/postgresql84
--depincpath=pgsql:/opt/local/include/postgresql83
 -depimplibs=pgsql:../lib/libpq.dll
 
 -iflag={bcc}-a

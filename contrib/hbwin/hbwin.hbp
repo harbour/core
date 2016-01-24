@@ -14,7 +14,7 @@
 -depcontrol=png:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=png:${HB_WITH_PNG}
 -depincpath=png:/usr/include
--depincpath=png:/opt/local/include
+-depincpath=png:/usr/local/include
 -depincpathlocal=png:../../src/3rd/png
 
 -instfile=contrib:hbwapi.h
