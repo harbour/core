@@ -3,7 +3,8 @@ description=RDDSQL MariaDB/MySQL backend
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 {unix}libs=mysqlclient
-{darwin}libpaths=/opt/local/lib/mysql5/mysql
+{darwin}libpaths=/usr/local/opt/mariadb/lib
+{darwin}libpaths=/usr/local/opt/mysql/lib
 {win|dos}libs=libmysql
 {os2}libs=mysqlclient
 
