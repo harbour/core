@@ -164,6 +164,3 @@ deploy:
   - provider: Local
     on:
       branch: test_appveyor
-
-after_deploy:
-  - if not "%_HB_BUNDLE_3RDLIB%" == "yes" curl -sS -X POST https://www.virustotal.com/vtapi/v2/file/scan --form "apikey=%VIRUSTOTAL_APIKEY%" --form file=@harbour-daily-win.7z.exe

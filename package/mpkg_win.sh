@@ -313,39 +313,39 @@ case "$(uname)" in
 esac
 
 # Create installer/archive
+
+cd "${HB_RT}" || exit
+
 (
-   cd "${HB_RT}" || exit
+   echo '*.md'
+   echo '*.txt'
+   echo 'bin/*.crt'
+   echo 'bin/*.dll'
+   echo 'bin/*.exe'
+   echo 'bin/*.hb'
+   echo 'include/*'
+   echo 'lib/*'
+   echo 'src/*'
+   echo 'doc/*'
+   echo 'contrib/*'
+   echo 'extras/*'
+   echo 'tests/*'
+   echo 'addons/*.txt'
+) >> "${_ROOT}/_hbfiles"
 
-   (
-      echo '*.md'
-      echo '*.txt'
-      echo 'bin/*.crt'
-      echo 'bin/*.dll'
-      echo 'bin/*.exe'
-      echo 'bin/*.hb'
-      echo 'include/*'
-      echo 'lib/*'
-      echo 'src/*'
-      echo 'doc/*'
-      echo 'contrib/*'
-      echo 'extras/*'
-      echo 'tests/*'
-      echo 'addons/*.txt'
-   ) >> "${_ROOT}/_hbfiles"
+_PKGNAME="${_ROOT}/harbour-${HB_VF}-win.7z"
 
-   _PKGNAME="${_ROOT}/harbour-${HB_VF}-win.7z"
+rm -f "${_PKGNAME}"
+(
+   cd "${HB_DR}" || exit
+   bin/hbmk2.exe "${_SCRIPT}" ts "${_ROOT}"
+   # NOTE: add -stl option after updating to 15.12 or upper
+   "${HB_DIR_7Z}7za" a -r -mx "${_PKGNAME}" "@${_ROOT}/_hbfiles" > /dev/null
+)
 
-   rm -f "${_PKGNAME}"
-   (
-      cd "${HB_DR}" || exit
-      bin/hbmk2.exe "${_SCRIPT}" ts "${_ROOT}"
-      # NOTE: add -stl option after updating to 15.12 or upper
-      "${HB_DIR_7Z}7za" a -r -mx "${_PKGNAME}" "@${_ROOT}/_hbfiles" > /dev/null
-   )
+if [ -f "${HB_SFX_7Z}" ] ; then
 
-   if [ -f "${HB_SFX_7Z}" ] ; then
-
-      cat << EOF > "_7zconf"
+   cat << EOF > "_7zconf"
 ;!@Install@!UTF-8!
 Title="Harbour ${HB_VF}"
 BeginPrompt="Do you want to install Harbour ${HB_VF}?"
@@ -367,24 +367,25 @@ RunProgram="nowait:notepad.exe \"%%T\\\\RELNOTES.txt\""
 ;!@InstallEnd@!
 EOF
 
-      cat "${HB_SFX_7Z}" _7zconf "${_PKGNAME}" > "${_PKGNAME}.exe"
+   cat "${HB_SFX_7Z}" _7zconf "${_PKGNAME}" > "${_PKGNAME}.exe"
 
-      rm "${_PKGNAME}"
+   rm "${_PKGNAME}"
 
-      _PKGNAME="${_PKGNAME}.exe"
-   fi
+   _PKGNAME="${_PKGNAME}.exe"
+fi
 
-   rm "${_ROOT}/_hbfiles"
+rm "${_ROOT}/_hbfiles"
 
-   touch -c "${_PKGNAME}" -r "${HB_ABSROOT}README.md"
+touch -c "${_PKGNAME}" -r "${HB_ABSROOT}README.md"
 
-   # <filename>: <size> bytes <YYYY-MM-DD> <HH:MM>
-   case "$(uname)" in
-      *BSD|Darwin) stat -f '%N: %z bytes %Sm' -t '%Y-%m-%d %H:%M' "${_PKGNAME}";;
-      *)           stat -c '%n: %s bytes %y' "${_PKGNAME}";;
-   esac
-   openssl dgst -sha256 "${_PKGNAME}"
-)
+# <filename>: <size> bytes <YYYY-MM-DD> <HH:MM>
+case "$(uname)" in
+   *BSD|Darwin) stat -f '%N: %z bytes %Sm' -t '%Y-%m-%d %H:%M' "${_PKGNAME}";;
+   *)           stat -c '%n: %s bytes %y' "${_PKGNAME}";;
+esac
+openssl dgst -sha256 "${_PKGNAME}"
+
+cd - || exit
 
 if [ "${_BRANCH}" = 'lto' ] ; then
    (
@@ -411,4 +412,17 @@ if [ "${_BRANCH}" = 'master' ] ; then
          -X PATCH "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v${HB_VF_DEF}" \
          -d "@${_ROOT}/git_tag_patch.json"
    )
+fi
+
+# https://www.virustotal.com/en/documentation/public-api/#scanning-files
+if [ "$(wc -c < "${_PKGNAME}")" -lt 32000000 ]; then
+   (
+      set +x
+      curl -sS \
+         -X POST https://www.virustotal.com/vtapi/v2/file/scan \
+         --form "apikey=${VIRUSTOTAL_APIKEY}" \
+         --form "file=@${_PKGNAME}"
+   )
+else
+   echo "! File too large for VirusTotal Public API. Upload skipped."
 fi
