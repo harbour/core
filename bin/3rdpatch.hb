@@ -831,8 +831,6 @@ STATIC FUNCTION URL_GetFileName( cURL )
    ENDIF
 
    cName := aComponents[ nIdx ]
-   cName := iif( "?" $ cName, Left( cName, At( "?", cName ) - 1 ), cName ) /* strip params */
-
    DO WHILE !( "." $ cName )
       cName := aComponents[ --nIdx ]
       IF nIdx < 4  /* don't drain all components */
