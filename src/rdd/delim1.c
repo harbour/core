@@ -263,7 +263,7 @@ static int hb_delimNextChar( DELIMAREAP pArea )
 {
    for( ;; )
    {
-      char ch;
+      unsigned char ch;
 
       if( pArea->nBufferIndex >= pArea->nBufferAtRead &&
           pArea->nBufferRead == pArea->nBufferSize )
