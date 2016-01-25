@@ -119,7 +119,7 @@ if [ "${_BRANC4}" = 'msvc' ] ; then
    [ "${_BRANCH}" = 'msvc2013' ] && HB_COMPILER_VER='1800' && _VCVARSALL='12.0'
    [ "${_BRANCH}" = 'msvc2015' ] && HB_COMPILER_VER='1900' && _VCVARSALL='14.0'
 
-   export _VCVARSALL="%ProgramFiles(x86)%\Microsoft Visual Studio %{_VCVARSALL}\VC\vcvarsall.bat"
+   export _VCVARSALL="%ProgramFiles(x86)%\Microsoft Visual Studio ${_VCVARSALL}\VC\vcvarsall.bat"
 
    [ "${_BRANCH}" = 'msvc2013' ] && HB_WITH_QT='C:\Qt\5.5\msvc2013\include'
 
