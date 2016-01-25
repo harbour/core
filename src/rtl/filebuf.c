@@ -355,7 +355,7 @@ static HB_BOOL s_fileExists( PHB_FILE_FUNCS pFuncs, const char * pszFileName, ch
 {
    HB_SYMBOL_UNUSED( pFuncs );
 
-   return hb_spFileExists( pszFileName, pRetPath );
+   return pRetPath ? hb_spFileExists( pszFileName, pRetPath ) : hb_fsFileExists( pszFileName );
 }
 
 static HB_BOOL s_fileDelete( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
@@ -1150,7 +1150,7 @@ HB_BOOL hb_fileExists( const char * pszFileName, char * pRetPath )
    if( i >= 0 )
       return s_pFileTypes[ i ]->Exists( s_pFileTypes[ i ], pszFileName, pRetPath );
 
-   return hb_spFileExists( pszFileName, pRetPath );
+   return pRetPath ? hb_spFileExists( pszFileName, pRetPath ) : hb_fsFileExists( pszFileName );
 }
 
 HB_BOOL hb_fileDelete( const char * pszFileName )

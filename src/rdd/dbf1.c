@@ -6342,7 +6342,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
    hb_fsFNameMerge( szFileName, pFileName );
    hb_xfree( pFileName );
 
-   /* Use hb_fileExists first to locate table which can be in differ path */
+   /* Use hb_fileExists() first to locate table which can be in different path */
    if( hb_fileExists( szFileName, szFileName ) )
    {
       fResult = hb_fileDelete( szFileName );
@@ -6425,7 +6425,7 @@ static HB_ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
    if( pFileExt )
       hb_itemRelease( pFileExt );
 
-   return hb_fileExists( szFileName, NULL ) ? HB_SUCCESS : HB_FAILURE;
+   return hb_fileExists( szFileName, szFileName ) ? HB_SUCCESS : HB_FAILURE;
 }
 
 static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItemIndex, PHB_ITEM pItemNew, HB_ULONG ulConnect )
@@ -6461,7 +6461,7 @@ static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
    hb_xfree( pFileName );
 
    szFile = hb_itemGetCPtr( pItemNew );
-   /* Use hb_fileExists first to locate table which can be in differ path */
+   /* Use hb_fileExists() first to locate table which can be in different path */
    if( szFile[ 0 ] && hb_fileExists( szFileName, szFileName ) )
    {
       char szFileNew[ HB_PATH_MAX ];

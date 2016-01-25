@@ -43,15 +43,6 @@ export HB_MKFLAGS="clean install HB_VERSION=${HB_VF}"
 # [ "${HB_BASE}"  = '64' ] && export HB_SFX_7Z="${HB_RT}/7zsfx/7zsd_All_x64.sfx"
 export HB_DIR_7Z="${HB_RT}/7z/"
 export HB_DIR_UPX="${HB_RT}/upx/"
-export HB_DIR_MINGW="${HB_RT}/mingw64"
-export HB_DIR_OPENSSL_32="${HB_RT}/openssl-mingw32/"
-export HB_DIR_OPENSSL_64="${HB_RT}/openssl-mingw64/"
-export HB_DIR_LIBSSH2_32="${HB_RT}/libssh2-mingw32/"
-export HB_DIR_LIBSSH2_64="${HB_RT}/libssh2-mingw64/"
-export HB_DIR_NGHTTP2_32="${HB_RT}/nghttp2-mingw32/"
-export HB_DIR_NGHTTP2_64="${HB_RT}/nghttp2-mingw64/"
-export HB_DIR_CURL_32="${HB_RT}/curl-mingw32/"
-export HB_DIR_CURL_64="${HB_RT}/curl-mingw64/"
 _ORI_PATH="${PATH}"
 
 # common settings
@@ -82,6 +73,18 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
 
    [ "${_BRANCH}" = 'lto' ] && export HB_USER_CFLAGS="${HB_USER_CFLAGS} -flto -ffat-lto-objects"
    [ "${HB_BUILD_MODE}" = 'cpp' ] && export HB_USER_LDFLAGS="${HB_USER_LDFLAGS} -static-libgcc -static-libstdc++"
+
+   export HB_DIR_MINGW="${HB_RT}/mingw64"
+   export HB_DIR_OPENSSL_32="${HB_RT}/openssl-mingw32/"
+   export HB_DIR_OPENSSL_64="${HB_RT}/openssl-mingw64/"
+   export HB_DIR_LIBSSH2_32="${HB_RT}/libssh2-mingw32/"
+   export HB_DIR_LIBSSH2_64="${HB_RT}/libssh2-mingw64/"
+   export HB_DIR_NGHTTP2_32="${HB_RT}/nghttp2-mingw32/"
+   export HB_DIR_NGHTTP2_64="${HB_RT}/nghttp2-mingw64/"
+   export HB_DIR_CURL_32="${HB_RT}/curl-mingw32/"
+   export HB_DIR_CURL_64="${HB_RT}/curl-mingw64/"
+
+   #
 
    export HB_WITH_CURL="${HB_DIR_CURL_32}include"
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_32}include"

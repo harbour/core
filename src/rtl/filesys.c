@@ -4423,7 +4423,7 @@ HB_BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
    return fResult;
 }
 
-/* convert file name for hb_fsExtOpen
+/* convert file name for hb_fsExtOpen()
  * caller must free the returned buffer
  */
 char * hb_fsExtName( const char * pszFileName, const char * pDefExt,
