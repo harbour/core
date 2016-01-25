@@ -44,10 +44,9 @@ environment:
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
-install:
+build_script:
   - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" sh -c ./package/mpkg_win_dl.sh
 
-build_script:
   - set HB_VF=daily
   - set HB_RT=%APPVEYOR_BUILD_FOLDER%
   - set HB_MKFLAGS=clean install HB_VERSION=%HB_VF%
