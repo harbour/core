@@ -85,17 +85,17 @@ cd "$(dirname "$0")" || exit
 
      export HB_WITH_CURL="${HB_DIR_CURL_32}include"
      export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_32}include"
-#    export HB_WITH_QT='C:\Qt\5.5\mingw492_32\include'
+   # export HB_WITH_QT='C:\Qt\5.5\mingw492_32\include'
      export PATH="${HB_DIR_MINGW}\bin;${_ORI_PATH}"
      # shellcheck disable=SC2086
-     win-make.exe ${HB_MKFLAGS} HB_COMPILER=mingw HB_CPU=x86
+     ./win-make.exe ${HB_MKFLAGS} HB_COMPILER=mingw HB_CPU=x86
 
      export HB_WITH_CURL="${HB_DIR_CURL_64}include"
      export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_64}include"
-#    export HB_WITH_QT=
+   # export HB_WITH_QT=
      export PATH="${HB_DIR_MINGW}\bin;${_ORI_PATH}"
      # shellcheck disable=SC2086
-     win-make.exe ${HB_MKFLAGS} HB_COMPILER=mingw64 HB_CPU=x86_64
+     ./win-make.exe ${HB_MKFLAGS} HB_COMPILER=mingw64 HB_CPU=x86_64
   fi
 
   # msvc
@@ -109,25 +109,24 @@ cd "$(dirname "$0")" || exit
      export HB_WITH_OPENSSL=
      export HB_WITH_QT=
 
-#    _HB_MSVC_ANALYZE='yes'
+   # export _HB_MSVC_ANALYZE='yes'
 
      export HB_COMPILER_VER
-     export HB_WITH_QT
-     export HB_MKFLAGS
-     export _VCVARSALL
 
-     [ "${_BRANCH}" = 'msvc2008' ] && HB_COMPILER_VER='1500' && _VCVARSALL='%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat'
-     [ "${_BRANCH}" = 'msvc2010' ] && HB_COMPILER_VER='1600' && _VCVARSALL='%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat'
-     [ "${_BRANCH}" = 'msvc2012' ] && HB_COMPILER_VER='1700' && _VCVARSALL='%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat'
-     [ "${_BRANCH}" = 'msvc2013' ] && HB_COMPILER_VER='1800' && _VCVARSALL='%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat'
-     [ "${_BRANCH}" = 'msvc2015' ] && HB_COMPILER_VER='1900' && _VCVARSALL='%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat'
+     [ "${_BRANCH}" = 'msvc2008' ] && HB_COMPILER_VER='1500' && _VCVARSALL='9.0'
+     [ "${_BRANCH}" = 'msvc2010' ] && HB_COMPILER_VER='1600' && _VCVARSALL='10.0'
+     [ "${_BRANCH}" = 'msvc2012' ] && HB_COMPILER_VER='1700' && _VCVARSALL='11.0'
+     [ "${_BRANCH}" = 'msvc2013' ] && HB_COMPILER_VER='1800' && _VCVARSALL='12.0'
+     [ "${_BRANCH}" = 'msvc2015' ] && HB_COMPILER_VER='1900' && _VCVARSALL='14.0'
+
+     export _VCVARSALL="%ProgramFiles(x86)%\Microsoft Visual Studio %{_VCVARSALL}\VC\vcvarsall.bat"
 
      [ "${_BRANCH}" = 'msvc2013' ] && HB_WITH_QT='C:\Qt\5.5\msvc2013\include'
 
      if [ -n "${_VCVARSALL}" ] ; then
         cat << EOF > _make.bat
            call "%_VCVARSALL%" x86
-           win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc
+           .\win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc
 EOF
         ./_make.bat
      fi
@@ -141,7 +140,7 @@ EOF
      if [ -n "${_VCVARSALL}" ] ; then
         cat << EOF > _make.bat
            call "%_VCVARSALL%" x86_amd64
-           win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc64
+           .\win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc64
 EOF
         ./_make.bat
      fi
