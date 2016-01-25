@@ -32,7 +32,7 @@ environment:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 build_script:
-  - sh -c ./appveyor.sh
+  - sh -c ./package/mpkg_win_ci.sh
 
 artifacts:
   - path: harbour-daily-win.7z*

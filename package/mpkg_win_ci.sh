@@ -7,7 +7,7 @@
 
 [ "${APPVEYOR}" = 'True' ] || exit
 
-cd "$(dirname "$0")" || exit
+cd "$(dirname "$0")/.." || exit
 
 _BRANCH="${APPVEYOR_REPO_BRANCH}${TRAVIS_BRANCH}${GIT_BRANCH}"
 _BRANC4="$(echo "${_BRANCH}" | cut -c -4)"
@@ -36,7 +36,7 @@ export CURL_HASH_64='5317dc93f276ccb9282bdd453a2e31d53d289574256807b59997dbb970c
 # export HB_BUILD_VERBOSE='yes'
 # export _HB_BUNDLE_3RDLIB='yes'
 
-[ "${_BRANC4}" = 'msvc' ] || ./package/mpkg_win_dl.sh
+[ "${_BRANC4}" = 'msvc' ] || "$(dirname "$0")/mpkg_win_dl.sh"
 
 export HB_VF='daily'
 export HB_RT="${_ROOT}"
@@ -154,4 +154,4 @@ fi
 
 # packaging
 
-[ "${_BRANC4}" = 'msvc' ] || ./package/mpkg_win.sh
+[ "${_BRANC4}" = 'msvc' ] || "$(dirname "$0")/mpkg_win.sh"
