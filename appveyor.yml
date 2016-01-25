@@ -26,123 +26,13 @@ environment:
   PUSHOVER_TOKEN:
     secure: DjWTkh5sUw6dUQkHv3KhTvi2llF9GN17z60h9kRGYX4=
 
-  NGHTTP2_VER: 1.6.0
-  NGHTTP2_HASH_32: 0e20a0a3c33123aba7e032cae2a0c3db7383e2b53e91e04c12a579075e08659e
-  NGHTTP2_HASH_64: 2f3050587c7147643c1ed267c671bd71234711028e941b0dc4f852f77e498abe
-  OPENSSL_VER: 1.0.2e
-  OPENSSL_HASH_32: 46cca8b7e073f948266819c878b9e95eff06c1b277c88c3d84e48a06cc615d78
-  OPENSSL_HASH_64: 337e595354327776a974f71b026d24b1d349181867de1259f918d1f93df87663
-  LIBSSH2_VER: 1.6.0
-  LIBSSH2_HASH_32: b955334c27c0fdb9e17b003050b05e43bdada9ac73f0d4a6e956585bc58b5c6c
-  LIBSSH2_HASH_64: 4882e42b6ecfd77a0167e77ffdda1006b020058660e6684e7e4b7fc06f95dbac
-  CURL_VER: 7.46.0
-  CURL_HASH_32: c7bfd0a3edccb25f84ce6c479e523e235cdb0514cecb891bdb0427a3f7313365
-  CURL_HASH_64: 5317dc93f276ccb9282bdd453a2e31d53d289574256807b59997dbb970c2eba2
-
 #init:
 #  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 #on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 build_script:
-  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" sh -c ./package/mpkg_win_dl.sh
-
-  - set HB_VF=daily
-  - set HB_RT=%APPVEYOR_BUILD_FOLDER%
-  - set HB_MKFLAGS=clean install HB_VERSION=%HB_VF%
-  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BASE=64
-  - if not "%HB_BASE%" == "64" set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd_All.sfx
-# - if     "%HB_BASE%" == "64" set HB_SFX_7Z=%HB_RT%\7zsfx\7zsd_All_x64.sfx
-  - set HB_DIR_7Z=%HB_RT%\7z\
-  - set HB_DIR_UPX=%HB_RT%\upx\
-  - set HB_DIR_MINGW=%HB_RT%\mingw64
-  - set HB_DIR_OPENSSL_32=%HB_RT%\openssl-mingw32\
-  - set HB_DIR_OPENSSL_64=%HB_RT%\openssl-mingw64\
-  - set HB_DIR_LIBSSH2_32=%HB_RT%\libssh2-mingw32\
-  - set HB_DIR_LIBSSH2_64=%HB_RT%\libssh2-mingw64\
-  - set HB_DIR_NGHTTP2_32=%HB_RT%\nghttp2-mingw32\
-  - set HB_DIR_NGHTTP2_64=%HB_RT%\nghttp2-mingw64\
-  - set HB_DIR_CURL_32=%HB_RT%\curl-mingw32\
-  - set HB_DIR_CURL_64=%HB_RT%\curl-mingw64\
-  - set _ORI_PATH=%PATH%
-
-  # common settings
-
-  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_BUILD_CONTRIBS=hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio hbgzio hbbz2io
-  - set HB_BUILD_STRIP=bin
-  - set HB_BUILD_PKG=yes
-  - set _HB_BUILD_PKG_ARCHIVE=no
-
-  # can disable to save time/space
-
-  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set _HB_BUNDLE_3RDLIB=yes
-  - set HB_INSTALL_3RDDYN=yes
-  - set HB_BUILD_CONTRIB_DYN=yes
-  - set HB_BUILD_POSTRUN=".\hbtest -noenv" ".\hbspeed --noenv --stdout"
-
-  # debug
-
-# - set HB_BUILD_CONTRIBS=no
-# - set HB_MKFLAGS=%HB_MKFLAGS% HB_BUILD_OPTIM=no
-# - set HB_BUILD_VERBOSE=yes
-# - set _HB_PKG_DEBUG=yes
-# - set _HB_BUNDLE_3RDLIB=yes
-
-  # mingw
-
-  - if "%APPVEYOR_REPO_BRANCH%" == "lto" set HB_USER_CFLAGS=%HB_USER_CFLAGS% -flto -ffat-lto-objects
-  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" if "%HB_BUILD_MODE%" == "cpp" set HB_USER_LDFLAGS=%HB_USER_LDFLAGS% -static-libgcc -static-libstdc++
-
-  - set HB_WITH_CURL=%HB_DIR_CURL_32%include
-  - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_32%include
-# - set HB_WITH_QT=C:\Qt\5.5\mingw492_32\include
-  - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER=mingw HB_CPU=x86
-
-  - set HB_WITH_CURL=%HB_DIR_CURL_64%include
-  - set HB_WITH_OPENSSL=%HB_DIR_OPENSSL_64%include
-# - ps: $env:HB_WITH_QT = ''
-  - set PATH=%HB_DIR_MINGW%\bin;%_ORI_PATH%
-  - if not "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER=mingw64 HB_CPU=x86_64
-
-  # msvc
-
-  # use terrible hack to clear envvars under AppVeyor
-  - ps: $env:HB_USER_CFLAGS = ''
-  - ps: $env:HB_USER_LDFLAGS = ''
-  - ps: $env:HB_WITH_CURL = ''
-  - ps: $env:HB_WITH_OPENSSL = ''
-  - ps: $env:HB_WITH_QT = ''
-
-# - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set _HB_MSVC_ANALYZE=yes
-
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2008" set HB_COMPILER_VER=1500
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2010" set HB_COMPILER_VER=1600
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2012" set HB_COMPILER_VER=1700
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2013" set HB_COMPILER_VER=1800
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2015" set HB_COMPILER_VER=1900
-
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2013" set HB_WITH_QT=C:\Qt\5.5\msvc2013\include
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2008" call "%ProgramFiles(x86)%\Microsoft Visual Studio 9.0\VC\vcvarsall.bat"  x86
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2010" call "%ProgramFiles(x86)%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2012" call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2013" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2015" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc
-
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" set PATH=%_ORI_PATH%
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2013" set HB_WITH_QT=C:\Qt\5.5\msvc2013_64\include
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2008" set APPVEYOR_REPO_BRANCH=_msvc
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2010" set APPVEYOR_REPO_BRANCH=_msvc
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2012" call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2013" call "%ProgramFiles(x86)%\Microsoft Visual Studio 12.0\VC\vcvarsall.bat" x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH%" == "msvc2015" call "%ProgramFiles(x86)%\Microsoft Visual Studio 14.0\VC\vcvarsall.bat" x86_amd64
-  - if "%APPVEYOR_REPO_BRANCH:~0,4%" == "msvc" win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc64
-
-  # packaging
-
-  - sh -c ./package/mpkg_win.sh
+  - sh -c ./appveyor.sh
 
 artifacts:
   - path: harbour-daily-win.7z*
