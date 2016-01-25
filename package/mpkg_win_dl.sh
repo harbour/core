@@ -46,9 +46,9 @@ readonly base='https://bintray.com/artifact/download/vszakats/generic/'
 
 for plat in '32' '64' ; do
    for name in \
+      'nghttp2' \
       'openssl' \
       'libssh2' \
-      'nghttp2' \
       'curl' \
    ; do
       eval ver="\$$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_VER"
