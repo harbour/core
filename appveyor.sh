@@ -80,7 +80,7 @@ cd "$(dirname "$0")" || exit
 
   if [ "${_BRANC4}" != 'msvc' ] ; then
 
-     [ "${_BRANCH}" = 'lto' ] export HB_USER_CFLAGS="${HB_USER_CFLAGS} -flto -ffat-lto-objects"
+     [ "${_BRANCH}" = 'lto' ] && export HB_USER_CFLAGS="${HB_USER_CFLAGS} -flto -ffat-lto-objects"
      [ "${HB_BUILD_MODE}" = 'cpp' ] && export HB_USER_LDFLAGS="${HB_USER_LDFLAGS} -static-libgcc -static-libstdc++"
 
      export HB_WITH_CURL="${HB_DIR_CURL_32}include"
