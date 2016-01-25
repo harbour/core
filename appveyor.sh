@@ -30,7 +30,6 @@ cd "$(dirname "$0")" || exit
 # export HB_BUILD_CONTRIBS='no'
 # export HB_MKFLAGS="${HB_MKFLAGS} HB_BUILD_OPTIM=no"
 # export HB_BUILD_VERBOSE='yes'
-# export _HB_PKG_DEBUG='yes'
 # export _HB_BUNDLE_3RDLIB='yes'
 
   [ "${_BRANC4}" = 'msvc' ] || ./package/mpkg_win_dl.sh
@@ -41,17 +40,17 @@ cd "$(dirname "$0")" || exit
   [ "${_BRANCH}" = 'lto' ] && export HB_BASE='64'
   [ "${HB_BASE}" != '64' ] && export HB_SFX_7Z="${HB_RT}/7zsfx/7zsd_All.sfx"
 # [ "${HB_BASE}"  = '64' ] && export HB_SFX_7Z="${HB_RT}/7zsfx/7zsd_All_x64.sfx"
-  export HB_DIR_7Z="${HB_RT}\\7z\\"
-  export HB_DIR_UPX="${HB_RT}\\upx\\"
-  export HB_DIR_MINGW="${HB_RT}\\mingw64"
-  export HB_DIR_OPENSSL_32="${HB_RT}\\openssl-mingw32\\"
-  export HB_DIR_OPENSSL_64="${HB_RT}\\openssl-mingw64\\"
-  export HB_DIR_LIBSSH2_32="${HB_RT}\\libssh2-mingw32\\"
-  export HB_DIR_LIBSSH2_64="${HB_RT}\\libssh2-mingw64\\"
-  export HB_DIR_NGHTTP2_32="${HB_RT}\\nghttp2-mingw32\\"
-  export HB_DIR_NGHTTP2_64="${HB_RT}\\nghttp2-mingw64\\"
-  export HB_DIR_CURL_32="${HB_RT}\\curl-mingw32\\"
-  export HB_DIR_CURL_64="${HB_RT}\\curl-mingw64\\"
+  export HB_DIR_7Z="${HB_RT}/7z/"
+  export HB_DIR_UPX="${HB_RT}/upx/"
+  export HB_DIR_MINGW="${HB_RT}/mingw64"
+  export HB_DIR_OPENSSL_32="${HB_RT}/openssl-mingw32/"
+  export HB_DIR_OPENSSL_64="${HB_RT}/openssl-mingw64/"
+  export HB_DIR_LIBSSH2_32="${HB_RT}/libssh2-mingw32/"
+  export HB_DIR_LIBSSH2_64="${HB_RT}/libssh2-mingw64/"
+  export HB_DIR_NGHTTP2_32="${HB_RT}/nghttp2-mingw32/"
+  export HB_DIR_NGHTTP2_64="${HB_RT}/nghttp2-mingw64/"
+  export HB_DIR_CURL_32="${HB_RT}/curl-mingw32/"
+  export HB_DIR_CURL_64="${HB_RT}/curl-mingw64/"
   _ORI_PATH="${PATH}"
 
   # common settings
@@ -66,7 +65,7 @@ cd "$(dirname "$0")" || exit
   [ "${_BRANC4}" = 'msvc' ] || export _HB_BUNDLE_3RDLIB='yes'
   export HB_INSTALL_3RDDYN='yes'
   export HB_BUILD_CONTRIB_DYN='yes'
-  export HB_BUILD_POSTRUN='".\hbtest -noenv" ".\hbspeed --noenv --stdout"'
+  export HB_BUILD_POSTRUN='"./hbtest -noenv" "./hbspeed --noenv --stdout"'
 
   # debug
 
@@ -86,14 +85,14 @@ cd "$(dirname "$0")" || exit
      export HB_WITH_CURL="${HB_DIR_CURL_32}include"
      export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_32}include"
    # export HB_WITH_QT='C:\Qt\5.5\mingw492_32\include'
-     export PATH="${HB_DIR_MINGW}\bin;${_ORI_PATH}"
+     export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
      # shellcheck disable=SC2086
      ./win-make.exe ${HB_MKFLAGS} HB_COMPILER=mingw HB_CPU=x86
 
      export HB_WITH_CURL="${HB_DIR_CURL_64}include"
      export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_64}include"
    # export HB_WITH_QT=
-     export PATH="${HB_DIR_MINGW}\bin;${_ORI_PATH}"
+     export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
      # shellcheck disable=SC2086
      ./win-make.exe ${HB_MKFLAGS} HB_COMPILER=mingw64 HB_CPU=x86_64
   fi
@@ -126,7 +125,7 @@ cd "$(dirname "$0")" || exit
      if [ -n "${_VCVARSALL}" ] ; then
         cat << EOF > _make.bat
            call "%_VCVARSALL%" x86
-           .\win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc
+           win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc
 EOF
         ./_make.bat
      fi
@@ -140,7 +139,7 @@ EOF
      if [ -n "${_VCVARSALL}" ] ; then
         cat << EOF > _make.bat
            call "%_VCVARSALL%" x86_amd64
-           .\win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc64
+           win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc64
 EOF
         ./_make.bat
      fi
