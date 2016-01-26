@@ -334,7 +334,7 @@ HB_FUNC( HB_ISNIL )
 
 HB_FUNC( __XHB_P2N )  /* NOTE: Unsafe: will reveal the numeric value of a pointer */
 {
-   hb_retnint( HB_ISNUM( 1 ) ? hb_parnint( 1 ) : ( HB_PTRDIFF ) hb_parptr( 1 ) );
+   hb_retnint( HB_ISNUM( 1 ) ? hb_parnint( 1 ) : ( HB_PTRUINT ) hb_parptr( 1 ) );
 }
 
 HB_FUNC_TRANSLATE( METHODNAME     , HB_METHODNAME )

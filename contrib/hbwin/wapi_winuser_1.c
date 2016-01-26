@@ -72,7 +72,7 @@ HB_FUNC( WAPI_SETWINDOWPOS )
    {
       /* Do not delete this, it will be active if
          numeric pointers are not accepted above */
-      hWndInsertAfter = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 2 );
+      hWndInsertAfter = ( HWND ) ( HB_PTRUINT ) hb_parnint( 2 );
 
       if( !( hWndInsertAfter == HWND_TOP ||
              hWndInsertAfter == HWND_BOTTOM ||
@@ -172,7 +172,7 @@ HB_FUNC( WAPI_CREATEWINDOWEX )
       hbwapi_par_INT( 7 ),                              /* nWidth */
       hbwapi_par_INT( 8 ),                              /* nHeight */
       hbwapi_par_raw_HWND( 9 ),                         /* hWndParent, default to HWND_DESKTOP */
-      HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 10 ) : hbwapi_par_raw_HMENU( 10 ),  /* hMenu */
+      HB_ISNUM( 10 ) ? ( HMENU ) ( HB_PTRUINT ) hb_parnint( 10 ) : hbwapi_par_raw_HMENU( 10 ),  /* hMenu */
       hbwapi_par_raw_HINSTANCE( 11 ),                   /* hInstance */
       ( LPVOID ) hb_parptr( 12 ) );                     /* lpParam */
 
@@ -650,7 +650,7 @@ HB_FUNC( WAPI_INSERTMENU )
          uFlags |= MF_STRING;
       else if( HB_ISNUM( 5 ) )
       {
-         lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 5 );
+         lpNewItem = ( LPCTSTR ) ( HB_PTRUINT ) hb_parnint( 5 );
          if( lpNewItem )
             uFlags |= MF_OWNERDRAW;
       }
@@ -700,7 +700,7 @@ HB_FUNC( WAPI_APPENDMENU )
          uFlags |= MF_STRING;
       else if( HB_ISNUM( 4 ) )
       {
-         lpNewItem = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 4 );
+         lpNewItem = ( LPCTSTR ) ( HB_PTRUINT ) hb_parnint( 4 );
          if( lpNewItem )
             uFlags |= MF_OWNERDRAW;
       }
@@ -886,7 +886,7 @@ HB_FUNC( WAPI_DESTROYACCELERATORTABLE )
 
 HB_FUNC( WAPI_GETKEYBOARDLAYOUT )
 {
-   hbwapi_ret_NINT( ( HB_MAXINT ) ( HB_PTRDIFF ) GetKeyboardLayout( hbwapi_par_DWORD( 1 ) ) );
+   hbwapi_ret_NINT( ( HB_MAXINT ) ( HB_PTRUINT ) GetKeyboardLayout( hbwapi_par_DWORD( 1 ) ) );
 }
 
 HB_FUNC( WAPI_GETKEYBOARDLAYOUTNAME )
@@ -1208,7 +1208,7 @@ HB_FUNC( WAPI_SENDMESSAGETIMEOUT )  /* NOTE: unsafe function, may write past buf
    else
       hb_storc( NULL, 4 );
 
-   hb_stornint( ( HB_PTRDIFF ) pdwResult, 7 );
+   hb_stornint( ( HB_PTRUINT ) pdwResult, 7 );
 
    hb_strfree( hText );
 }

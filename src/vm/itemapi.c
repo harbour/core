@@ -2851,7 +2851,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
       {
          int size = ( sizeof( void * ) << 1 ) + 3; /* n bytes for address + 0x + \0 */
 
-         HB_PTRDIFF addr = hb_vmInternalsEnabled() ?
+         HB_PTRUINT addr = hb_vmInternalsEnabled() ?
             ( HB_PTRUINT ) hb_itemGetPtr( pItem ) :
             ( HB_PTRUINT ) ( hb_itemGetPtr( pItem ) ? -1 : 0 );
 

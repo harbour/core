@@ -1130,5 +1130,5 @@ HB_FUNC( WVT_GETFONTHANDLE )
 
 HB_FUNC( WVG_N2P )  /* NOTE: Unsafe: allows to pass arbitary pointers to functions, potentially causing a crash or worse. */
 {
-   hb_retptr( HB_ISPOINTER( 1 ) ? hb_parptr( 1 ) : ( void * ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
+   hb_retptr( HB_ISPOINTER( 1 ) ? hb_parptr( 1 ) : ( void * ) ( HB_PTRUINT ) hb_parnint( 1 ) );
 }

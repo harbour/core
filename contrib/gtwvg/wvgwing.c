@@ -463,7 +463,7 @@ HB_FUNC( WVG_GETNMHDRINFO )
    PHB_ITEM pEvParams = hb_itemArrayNew( 3 );
 
    hb_arraySetNI( pEvParams, 1, lpnmh->code );
-   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lpnmh->idFrom );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRUINT ) lpnmh->idFrom );
    hbwapi_arraySet_HANDLE( pEvParams, 3, lpnmh->hwndFrom );
 
    hb_itemReturnRelease( pEvParams );
@@ -478,9 +478,9 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
    PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
 
    hb_arraySetNI( pEvParams, 1, nmh.code );
-   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRUINT ) nmh.idFrom );
    hbwapi_arraySet_HANDLE( pEvParams, 3, nmh.hwndFrom );
-   hb_arraySetNInt( pEvParams, 4, ( HB_PTRDIFF ) nmm->dwItemSpec );
+   hb_arraySetNInt( pEvParams, 4, ( HB_PTRUINT ) nmm->dwItemSpec );
 
    hb_itemReturnRelease( pEvParams );
 }
@@ -494,7 +494,7 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
    PHB_ITEM pEvParams = hb_itemArrayNew( 4 );
 
    hb_arraySetNI( pEvParams, 1, nmh.code );
-   hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) nmh.idFrom );
+   hb_arraySetNInt( pEvParams, 2, ( HB_PTRUINT ) nmh.idFrom );
    hbwapi_arraySet_HANDLE( pEvParams, 3, nmh.hwndFrom );
    hb_arraySetNI( pEvParams, 4, pnmtv->action );
 
@@ -673,8 +673,8 @@ static UINT_PTR CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wP
       hb_vmPush( block );
       hbwapi_vmPush_HANDLE( hwnd );
       hb_vmPushNumInt( msg );
-      hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
-      hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
+      hb_vmPushNumInt( ( HB_PTRUINT ) wParam );
+      hb_vmPushNumInt( ( HB_PTRUINT ) lParam );
       hb_vmDo( 4 );
 
       bret = ( UINT_PTR ) hbwapi_par_RESULT( -1 );
@@ -752,7 +752,7 @@ HB_FUNC( WVG_CHOOSEFONT )
    cf.Flags       = Flags;
    cf.rgbColors   = RGB( 0, 0, 0 );
 
-   cf.lCustData = ( HB_PTRDIFF ) hb_param( 2, HB_IT_EVALITEM );
+   cf.lCustData = ( HB_PTRUINT ) hb_param( 2, HB_IT_EVALITEM );
    cf.lpfnHook  = ( LPCFHOOKPROC ) WvgDialogProcChooseFont;
 
    cf.lpTemplateName = NULL;
@@ -865,7 +865,7 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
    #define GCL_HBRBACKGROUND  GCLP_HBRBACKGROUND
    #endif
 
-   SetClassLongPtr( hbwapi_par_raw_HWND( 1 ), GCL_HBRBACKGROUND, ( HB_PTRDIFF ) hbwapi_par_HBRUSH( 2 ) );
+   SetClassLongPtr( hbwapi_par_raw_HWND( 1 ), GCL_HBRBACKGROUND, ( HB_PTRUINT ) hbwapi_par_HBRUSH( 2 ) );
 #endif
 }
 
@@ -982,8 +982,8 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
       }
       hbwapi_vmPush_HANDLE( hwnd );
       hb_vmPushNumInt( msg );
-      hb_vmPushNumInt( ( HB_PTRDIFF ) wParam );
-      hb_vmPushNumInt( ( HB_PTRDIFF ) lParam );
+      hb_vmPushNumInt( ( HB_PTRUINT ) wParam );
+      hb_vmPushNumInt( ( HB_PTRUINT ) lParam );
       hb_vmDo( 4 );
       return ( LRESULT ) hbwapi_par_RESULT( -1 );
    }
@@ -1006,7 +1006,7 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
    #define GWL_WNDPROC  GWLP_WNDPROC
    #endif
 
-   hbwapi_ret_raw_HANDLE( ( WNDPROC ) SetWindowLongPtr( hWnd, GWL_WNDPROC, ( HB_PTRDIFF ) ControlWindowProcedure ) );
+   hbwapi_ret_raw_HANDLE( ( WNDPROC ) SetWindowLongPtr( hWnd, GWL_WNDPROC, ( HB_PTRUINT ) ControlWindowProcedure ) );
 }
 
 HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )

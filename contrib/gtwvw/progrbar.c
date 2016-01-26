@@ -147,7 +147,7 @@ HB_FUNC( WVW_PGCREATE )
          iRight - iLeft + 1,
          iBottom - iTop + 1,
          wvw_win->hWnd,
-         ( HMENU ) ( HB_PTRDIFF ) nCtrlId,
+         ( HMENU ) ( HB_PTRUINT ) nCtrlId,
          GetModuleHandle( NULL ),
          NULL );
 

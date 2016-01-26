@@ -128,7 +128,7 @@ HB_FUNC( WIN_CHOOSECOLOR )
    cc.lpCustColors   = crCustClr;
    cc.Flags          = hbwapi_par_WORD( 5 );
 #if ! defined( HB_OS_WIN_CE )
-   cc.lCustData      = ( LPARAM ) ( HB_PTRDIFF ) hb_param( 6, HB_IT_EVALITEM );
+   cc.lCustData      = ( LPARAM ) ( HB_PTRUINT ) hb_param( 6, HB_IT_EVALITEM );
    cc.lpfnHook       = cc.lCustData ? CCHookProc : NULL;
 #endif
    cc.lpTemplateName = HB_PARSTR( 7, &hTpl, NULL );

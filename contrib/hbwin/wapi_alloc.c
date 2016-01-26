@@ -344,7 +344,7 @@ void * __hbwapi_par_handle( int n )
 {
 #if defined( __HBWIN_WITH_UNSAFE_HANDLES )
    if( HB_ISNUM( n ) )
-      return s_handle_trace( n ) ? ( void * ) ( HB_PTRDIFF ) hb_parnint( n ) : NULL;
+      return s_handle_trace( n ) ? ( void * ) ( HB_PTRUINT ) hb_parnint( n ) : NULL;
    else
 #endif
       return hb_parptr( n );
@@ -354,7 +354,7 @@ void * __hbwapi_parv_handle( int n, int i )
 {
 #if defined( __HBWIN_WITH_UNSAFE_HANDLES )
    if( HB_ISNUM( n ) )
-      return s_handle_trace( n ) ? ( void * ) ( HB_PTRDIFF ) hb_parvnint( n, i ) : NULL;
+      return s_handle_trace( n ) ? ( void * ) ( HB_PTRUINT ) hb_parvnint( n, i ) : NULL;
    else
 #endif
       return hb_parvptr( n, i );
@@ -364,7 +364,7 @@ void * hbwapi_itemGet_HANDLE( PHB_ITEM pItem )
 {
 #if defined( __HBWIN_WITH_UNSAFE_HANDLES )
    if( pItem && HB_IS_NUMERIC( pItem ) )
-      return ( void * ) ( HB_PTRDIFF ) hb_itemGetNInt( pItem );
+      return ( void * ) ( HB_PTRUINT ) hb_itemGetNInt( pItem );
    else
 #endif
       return hb_itemGetPtr( pItem );
