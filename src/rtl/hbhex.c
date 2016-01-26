@@ -102,7 +102,7 @@ HB_FUNC( HB_NUMTOHEX )
    if( HB_ISNUM( 1 ) )
       nNum = hb_parnint( 1 );
    else if( HB_ISPOINTER( 1 ) )
-      ulNum = hb_vmInternalsEnabled() ?
+      nNum = hb_vmInternalsEnabled() ?
          ( HB_PTRUINT ) hb_parptr( 1 ) :
          ( HB_PTRUINT ) ( hb_parptr( 1 ) ? -1 : 0 );
    else
