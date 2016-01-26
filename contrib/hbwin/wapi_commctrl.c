@@ -460,14 +460,14 @@ HB_FUNC( WAPI_TABCTRL_GETROWCOUNT )
 /* (HIMAGELIST)SNDMSG((hwnd), TCM_GETIMAGELIST, 0, 0) */
 HB_FUNC( WAPI_TABCTRL_GETIMAGELIST )
 {
-   hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetImageList( hbwapi_par_raw_HWND( 1 ) ) );
+   hbwapi_ret_NINT( ( HB_PTRUINT ) TabCtrl_GetImageList( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
 /* #define TabCtrl_SetImageList(hwnd, himl) */
 /* (HIMAGELIST)SNDMSG((hwnd), TCM_SETIMAGELIST, 0, (LPARAM)(HIMAGELIST)(himl)) */
 HB_FUNC( WAPI_TABCTRL_SETIMAGELIST )
 {
-   hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_SetImageList( hbwapi_par_raw_HWND( 1 ),
+   hbwapi_ret_NINT( ( HB_PTRUINT ) TabCtrl_SetImageList( hbwapi_par_raw_HWND( 1 ),
                                                          hbwapi_par_raw_HIMAGELIST( 2 ) ) );
 }
 
@@ -569,7 +569,7 @@ HB_FUNC( WAPI_TABCTRL_SETPADDING )
 HB_FUNC( WAPI_TABCTRL_GETTOOLTIPS )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetToolTips( hbwapi_par_raw_HWND( 1 ) ) );
+   hbwapi_ret_NINT( ( HB_PTRUINT ) TabCtrl_GetToolTips( hbwapi_par_raw_HWND( 1 ) ) );
 #else
    hbwapi_ret_NINT( -1 );
 #endif

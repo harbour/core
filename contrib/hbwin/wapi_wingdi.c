@@ -910,7 +910,7 @@ HB_FUNC( WAPI_SELECTOBJECT )
 #if _TODO_REGION
       /* TODO: Solve reference counting to 'h' handle. Also for returned one. */
       if( bRegion )
-         hb_retnint( ( HB_PTRDIFF ) SelectObject( hDC, h ) );
+         hb_retnint( ( HB_PTRUINT ) SelectObject( hDC, h ) );
       else
 #endif
          hb_retl( SelectObject( hDC, h ) != NULL );  /* NOTE: We don't return a raw pointer. */

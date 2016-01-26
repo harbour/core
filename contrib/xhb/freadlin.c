@@ -59,7 +59,7 @@ static char * s_ReadLine( PHB_FILE hFileHandle, HB_ISIZ * plBuffLen, const char 
    HB_ISIZ nRead = 0, nOffset, nSize;
    char *  pBuff;
 
-   HB_TRACE( HB_TR_DEBUG, ( "s_ReadLine(%p, %" HB_PFS "d, %p, %p, %" HB_PFS "d, %p, %p)", hFileHandle, *plBuffLen, pTerm, pnTermSizes, nTerms, pbFound, pbEOF ) );
+   HB_TRACE( HB_TR_DEBUG, ( "s_ReadLine(%p, %" HB_PFS "d, %p, %p, %" HB_PFS "d, %p, %p)", ( void * ) ( HB_PTRUINT ) hFileHandle, *plBuffLen, pTerm, pnTermSizes, nTerms, pbFound, pbEOF ) );
 
    *pbFound = HB_FALSE;
    *pbEOF   = HB_FALSE;

@@ -229,17 +229,17 @@ HB_FUNC( WAPI_GETPROCADDRESS )
    LPCTSTR lpProcName = HB_PARSTR( 2, &hProcName, NULL );
    pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ),
                            lpProcName ? lpProcName :
-                           ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+                           ( LPCTSTR ) ( HB_PTRUINT ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
    hb_strfree( hProcName );
 #else
    pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ),
                            HB_ISCHAR( 2 ) ? hb_parc( 2 ) :
-                           ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+                           ( LPCSTR ) ( HB_PTRUINT ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
 #endif
    hbwapi_SetLastError( dwLastError );
-   hb_retptr( ( void * ) ( HB_PTRDIFF ) pProc );
+   hb_retptr( ( void * ) ( HB_PTRUINT ) pProc );
 }
 
 /* HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName ); */

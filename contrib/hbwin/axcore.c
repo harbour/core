@@ -102,7 +102,7 @@ HB_BOOL hb_oleAxInit( void )
       PHB_AX_WININIT pAtlAxWinInit;
 
       s_hLib = hbwapi_LoadLibrarySystem( TEXT( "atl.dll" ) );
-      if( ( unsigned long ) ( HB_PTRDIFF ) s_hLib <= 32 )
+      if( ( HB_PTRUINT ) s_hLib <= 32 )
       {
          s_hLib = NULL;
          return HB_FALSE;

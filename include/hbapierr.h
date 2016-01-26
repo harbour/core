@@ -89,7 +89,7 @@ HB_EXTERN_BEGIN
 #define HB_ERR_ARGS_BASEPARAMS          0xFFFFFFFF
 #define HB_ERR_ARGS_SELFPARAMS          0xFFFFFFFE
 
-#define HB_ERR_FUNCNAME                 ( ( const char * ) ( HB_PTRDIFF ) 1 )
+#define HB_ERR_FUNCNAME                 ( ( const char * ) ( HB_PTRUINT ) 1 )
 
 /* Standard API */
 

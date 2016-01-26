@@ -123,7 +123,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
          "    Flags:%08X\n",
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode, szCode,
-         ( HB_PTRDIFF ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         ( HB_PTRUINT ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
          pCtx->Rax, pCtx->Rbx, pCtx->Rcx, pCtx->Rdx,
          pCtx->Rsi, pCtx->Rdi, pCtx->Rbp,
          pCtx->R8 , pCtx->R9 , pCtx->R10, pCtx->R11,
@@ -445,7 +445,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                      char buf[ 256 ];
 #if defined( HB_OS_WIN_64 )
                      /* TOFIX: me32.szExePath seemed trashed in some (standalone) tests. */
-                     hb_snprintf( buf, sizeof( buf ), "%016" PFLL "X %016" PFLL "X %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, me32.szExePath );
+                     hb_snprintf( buf, sizeof( buf ), "%016" PFLL "X %016" PFLL "X %s\n", ( HB_PTRUINT ) me32.modBaseAddr, ( HB_PTRUINT ) me32.modBaseSize, me32.szExePath );
 #else
                      char szBuffer[ MAX_PATH ];
                      #if defined( HB_OS_WIN_CE )
@@ -453,7 +453,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                      #else
                         hb_strncpy( szBuffer, me32.szExePath, HB_SIZEOFARRAY( szBuffer ) - 1 );
                      #endif
-                     hb_snprintf( buf, sizeof( buf ), "%08lX %08lX %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, szBuffer );
+                     hb_snprintf( buf, sizeof( buf ), "%08lX %08lX %s\n", ( HB_PTRUINT ) me32.modBaseAddr, ( HB_PTRUINT ) me32.modBaseSize, szBuffer );
 #endif
                      hb_strncat( errmsg, buf, errmsglen );
                   }
