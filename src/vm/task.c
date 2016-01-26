@@ -501,6 +501,7 @@ static void hb_taskRun( void )
 static PHB_TASKINFO hb_taskNew( long stack_size )
 {
    PHB_TASKINFO pTask;
+   HB_PTRUINT new_size;
 
    if( stack_size < HB_TASK_STACK_MIN )
       stack_size = HB_TASK_STACK_MIN;
@@ -508,11 +509,11 @@ static PHB_TASKINFO hb_taskNew( long stack_size )
    pTask = ( PHB_TASKINFO ) hb_xgrabz( sizeof( HB_TASKINFO ) );
    pTask->stack = ( char * ) hb_xgrab( stack_size );
 
-   stack_size += ( HB_PTRDIFF ) pTask->stack;
-   stack_size &= ~( HB_TASK_STACK_ALIGN - 1 );
-   stack_size -= ( HB_PTRDIFF ) pTask->stack;
+   new_size = ( HB_PTRUINT ) pTask->stack + stack_size;
+   new_size &= ~ ( HB_PTRUINT ) ( HB_TASK_STACK_ALIGN - 1 );
+   new_size -= ( HB_PTRUINT ) pTask->stack;
 
-   pTask->stack_size = stack_size;
+   pTask->stack_size = ( long ) new_size;
    pTask->id = ++s_iTaskID;
 
    pTask->state = TASK_INIT;

@@ -210,12 +210,12 @@ HB_FUNC( WIN_UNICODE )
 
 HB_FUNC( WIN_N2P )
 {
-   hb_retptr( ( void * ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
+   hb_retptr( ( void * ) ( HB_PTRUINT ) hb_parnint( 1 ) );
 }
 
 HB_FUNC( WIN_P2N )
 {
-   hb_retnint( ( HB_PTRDIFF ) hb_parptr( 1 ) );
+   hb_retnint( ( HB_PTRUINT ) hb_parptr( 1 ) );
 }
 
 HB_FUNC( WIN_HINSTANCE )

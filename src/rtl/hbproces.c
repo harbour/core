@@ -319,7 +319,7 @@ static int hb_fsProcessExec( const char * pszFileName,
 {
    int iResult = FS_ERROR;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessExec(%s, %p, %p, %p)", pszFileName, ( void * ) ( HB_PTRDIFF ) hStdin, ( void * ) ( HB_PTRDIFF ) hStdout, ( void * ) ( HB_PTRDIFF ) hStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessExec(%s, %p, %p, %p)", pszFileName, ( void * ) ( HB_PTRUINT ) hStdin, ( void * ) ( HB_PTRUINT ) hStdout, ( void * ) ( HB_PTRUINT ) hStderr ) );
 
 #if defined( HB_OS_WIN_CE )
 {
@@ -949,7 +949,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
 {
    int iRetStatus = -1;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessValue(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fWait ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessValue(%p, %d)", ( void * ) ( HB_PTRUINT ) hProcess, fWait ) );
 
 #if defined( HB_OS_WIN )
 {
@@ -1040,7 +1040,7 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
 {
    HB_BOOL fResult = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessClose(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fGentle ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessClose(%p, %d)", ( void * ) ( HB_PTRUINT ) hProcess, fGentle ) );
 
 #if defined( HB_OS_WIN )
 {

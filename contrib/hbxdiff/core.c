@@ -358,8 +358,8 @@ HB_FUNC( XDL_MMFILE_COMPACT )
 
 /* callbacks */
 
-#define hb_ptrToHandle( p )   ( ( HB_FHANDLE ) ( HB_PTRDIFF ) ( p ) )
-#define hb_parHandlePtr( n )  ( ( void * ) ( HB_PTRDIFF ) hb_numToHandle( hb_parnint( n ) ) )
+#define hb_ptrToHandle( p )   ( ( HB_FHANDLE ) ( HB_PTRUINT ) ( p ) )
+#define hb_parHandlePtr( n )  ( ( void * ) ( HB_PTRUINT ) hb_numToHandle( hb_parnint( n ) ) )
 
 static int xdlt_outf( void * priv, mmbuffer_t * mb, int nbuf )
 {

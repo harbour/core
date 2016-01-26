@@ -214,7 +214,7 @@ HB_FUNC( WVG_SETGOBJDATA )
 #if ! defined( HB_OS_WIN_CE )
                case GOBJ_OBJDATA_PICTUREEX:
                   if( HB_ISNUM( 3 )  )
-                     gObj->iPicture = ( IPicture * ) ( HB_PTRDIFF ) hb_parni( 3 );
+                     gObj->iPicture = ( IPicture * ) ( HB_PTRUINT ) hb_parni( 3 );
                   break;
                case GOBJ_OBJDATA_PICTURE:
                   if( HB_ISNUM( 3 ) && hb_parni( 3 ) <= WVT_PICTURES_MAX )
@@ -256,29 +256,29 @@ HB_FUNC( WVG_SETGOBJDATA )
                case GOBJ_OBJDATA_HFONT:
                   if( gObj->hFont && gObj->bDestroyFont )
                      DeleteObject( gObj->hFont );
-                  gObj->hFont        = ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->hFont        = ( HFONT ) ( HB_PTRUINT ) hb_parnint( 3 );
                   gObj->bDestroyFont = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_HPEN:
                   if( gObj->hPen && gObj->bDestroyPen )
                      DeleteObject( gObj->hPen );
-                  gObj->hPen        = ( HPEN ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->hPen        = ( HPEN ) ( HB_PTRUINT ) hb_parnint( 3 );
                   gObj->bDestroyPen = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_HBRUSH:
                   if( gObj->hBrush && gObj->bDestroyBrush )
                      DeleteObject( gObj->hBrush );
-                  gObj->hBrush        = ( HBRUSH ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->hBrush        = ( HBRUSH ) ( HB_PTRUINT ) hb_parnint( 3 );
                   gObj->bDestroyBrush = HB_TRUE;
                   break;
                case GOBJ_OBJDATA_COLORTEXT:
                   if( HB_ISNUM( 3 ) )
-                     gObj->crRGBText = ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                     gObj->crRGBText = ( COLORREF ) ( HB_PTRUINT ) hb_parnint( 3 );
                   else
                      bSuccess = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_COLORBK:
-                  gObj->crRGBBk = ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->crRGBBk = ( COLORREF ) ( HB_PTRUINT ) hb_parnint( 3 );
                   break;
                case GOBJ_OBJDATA_BLOCK:
                   if( gObj->bBlock )
@@ -1334,7 +1334,7 @@ HB_FUNC( WVG_TEXTBOX )
    gObj->crRGBText = ( COLORREF ) hb_parnint( 9 );
    gObj->crRGBBk   = ( COLORREF ) hb_parnint( 10 );
 
-   gObj->hFont        = ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 11 );
+   gObj->hFont        = ( HFONT ) ( HB_PTRUINT ) hb_parnint( 11 );
    gObj->bDestroyFont = HB_FALSE;
 
    gObj->gObjNext = pWVT->gObjs;
@@ -1420,7 +1420,7 @@ HB_FUNC( WVG_PICTUREEX )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 6 );
+      gObj->iPicture        = ( IPicture * ) ( HB_PTRUINT ) hb_parnint( 6 );
       gObj->iData           = ( hb_parl( 7 ) ? 1 : 0 );
       gObj->bDestroyPicture = HB_FALSE;
 
