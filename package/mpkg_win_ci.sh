@@ -135,6 +135,7 @@ if [ "${_BRANC4}" = 'msvc' ] ; then
          win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc
 EOF
       ./_make.bat
+      rm _make.bat
    fi
 
    # 64-bit target not supported by these MSVC versions
@@ -149,6 +150,7 @@ EOF
          win-make.exe %HB_MKFLAGS% HB_COMPILER=msvc64
 EOF
       ./_make.bat
+      rm _make.bat
    fi
 fi
 

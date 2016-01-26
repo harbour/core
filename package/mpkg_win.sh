@@ -414,7 +414,7 @@ if [ "$(wc -c < "${_PKGNAME}")" -lt 32000000 ]; then
       set +x
       curl -sS \
          -X POST https://www.virustotal.com/vtapi/v2/file/scan \
-         --form "apikey=${VIRUSTOTAL_APIKEY}" \
+         --form-string "apikey=${VIRUSTOTAL_APIKEY}" \
          --form "file=@${_PKGNAME}"
    )
 else
