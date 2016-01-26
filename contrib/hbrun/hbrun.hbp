@@ -6,7 +6,7 @@
 # are actual dynamic extensions to load.)
 # This must come before including hbmk2.hbp.
 {_HB_BUILD_&(!(HB_BUILD_DYN='no')&!(HB_BUILD_CONTRIB_DYN='no')&(win|wce|os2))}-shared
-{shared|(unix&!(HB_BUILD_CONTRIB_DYN='no'))}-env:__HBMKDYN=yes
+{shared}-env:__HBMKDYN=yes
 
 @../../utils/hbmk2/hbmk2.hbp
 
