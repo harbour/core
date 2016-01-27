@@ -8459,19 +8459,21 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       IF Empty( hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) )
          cCommand := "." + hb_ps() + hbmk[ _HBMK_cPROGNAME ]
       ENDIF
-      #if defined( __PLATFORM__DARWIN )
-         IF hbmk[ _HBMK_lGUI ]
-            /* TOFIX: Find a way to pass arbitrary options to an .app. */
-            l_aOPTRUN := {}
-            cCommand += ".app"
-         ENDIF
-      #endif
       IF hbmk[ _HBMK_lGUI ] .OR. ( ! hbmk[ _HBMK_lCLI ] .AND. hbmk[ _HBMK_cGT ] != NIL .AND. ! HBMK_IS_IN( Lower( hbmk[ _HBMK_cGT ] ), "gtcgi|gtstd|gtpca" ) )
-         cCommand := LaunchCommand( cCommand )
+         #if defined( __PLATFORM__DARWIN )
+            cCommand := "open -a " + FNameEscape( hb_PathNormalize( PathMakeAbsolute( cCommand + ".app", hb_cwd() ) ), _ESC_NIX ) + " --args"
+         #else
+            cCommand := LaunchCommand( cCommand )
+         #endif
       ELSE
          cCommand := FNameEscape( cCommand, hbmk[ _HBMK_nCmd_Esc ] )
       ENDIF
       cCommand := AllTrim( cCommand + " " + ArrayToList( l_aOPTRUN ) )
+      #if defined( __PLATFORM__DARWIN )
+         IF hbmk[ _HBMK_lGUI ]
+            cCommand += " &"
+         ENDIF
+      #endif
       IF hbmk[ _HBMK_lTRACE ]
          IF ! hbmk[ _HBMK_lQuiet ]
             _hbmk_OutStd( hbmk, I_( "Running executable:" ) )
