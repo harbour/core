@@ -327,6 +327,7 @@
 #define HB_CURL_HTTP_VERSION_1_1              2  /* please use HTTP 1.1 in the request */
 #define HB_CURL_HTTP_VERSION_2_0              3  /* please use HTTP 2.0 in the request */
 #define HB_CURL_HTTP_VERSION_2                HB_CURL_HTTP_VERSION_2_0
+#define HB_CURL_HTTP_VERSION_2TLS             4
 
 /* HB_CURLOPT_USE_SSL option */
 #define HB_CURLUSESSL_NONE                    0  /* do not attempt to use SSL */
