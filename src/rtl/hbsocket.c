@@ -2921,7 +2921,7 @@ HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const ch
       if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
       {
          if( ( int ) res->ai_addrlen >= ( int ) sizeof( struct sockaddr_in ) &&
-             hb_socketGetAddrFamily( res->ai_addr, res->ai_addrlen ) == AF_INET )
+             hb_socketGetAddrFamily( res->ai_addr, ( unsigned ) res->ai_addrlen ) == AF_INET )
          {
             sa.sin_addr.s_addr = ( ( struct sockaddr_in * ) res->ai_addr )->sin_addr.s_addr;
             fTrans = HB_TRUE;
@@ -3046,7 +3046,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
       hints.ai_family = af;
       if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
       {
-         szResult = hb_socketAddrGetName( res->ai_addr, res->ai_addrlen );
+         szResult = hb_socketAddrGetName( res->ai_addr, ( unsigned ) res->ai_addrlen );
          freeaddrinfo( res );
       }
       hb_vmLock();
@@ -3089,7 +3089,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
          iCount = 0;
          while( ai )
          {
-            char * szResult = hb_socketAddrGetName( res->ai_addr, res->ai_addrlen );
+            char * szResult = hb_socketAddrGetName( res->ai_addr, ( unsigned ) res->ai_addrlen );
             if( szResult )
             {
                for( i = 1; i <= iCount; ++i )
