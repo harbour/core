@@ -1279,6 +1279,10 @@ STATIC PROCEDURE Page_Images( pdf )
    LOCAL x, y, angle, angle1, angle2, rad, rad1, rad2,  iw,  ih
    LOCAL cImagePath := hb_DirBase() + "files" + hb_ps()
 
+   IF ! hb_vfDirExists( cImagePath )
+      ? hb_StrFormat( "Warning: '%1$s' directory missing", cImagePath )
+   ENDIF
+
    /* create default-font */
    font := HPDF_GetFont( pdf, "Helvetica", NIL )
 
