@@ -3939,7 +3939,17 @@ static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd,
    wnd->fInvalidChr = HB_TRUE;
 }
 
-static void hb_gt_xwc_InvalidateFull( PXWND_DEF wnd,
+static void hb_gt_xwc_InvalidateFull( PXWND_DEF wnd )
+{
+   HB_SIZE nSize = wnd->cols * wnd->rows;
+
+   while( nSize-- )
+      wnd->pCurrScr[ nSize ] = 0xFFFFFFFF;
+
+   hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
+}
+
+static void hb_gt_xwc_InvalidatePart( PXWND_DEF wnd,
                                       int left, int top, int right, int bottom )
 {
    int row, col, scridx;
@@ -4112,19 +4122,18 @@ static HB_BOOL hb_gt_xwc_SetScrBuff( PXWND_DEF wnd, HB_USHORT cols, HB_USHORT ro
    if( rows <= XWC_MAX_ROWS && cols <= XWC_MAX_COLS &&
        ( wnd->cols != cols || wnd->rows != rows || wnd->pCurrScr == NULL ) )
    {
-      HB_SIZE nSize = cols * rows;
+      if( HB_GTSELF_RESIZE( wnd->pGT, rows, cols ) )
+      {
+         wnd->cols = cols;
+         wnd->rows = rows;
 
-      wnd->cols = cols;
-      wnd->rows = rows;
+         if( wnd->pCurrScr != NULL )
+            hb_xfree( wnd->pCurrScr );
+         wnd->pCurrScr = ( HB_U32 * ) hb_xgrab( cols * rows * sizeof( HB_U32 ) );
+         hb_gt_xwc_InvalidateFull( wnd );
 
-      if( wnd->pCurrScr != NULL )
-         hb_xfree( wnd->pCurrScr );
-      wnd->pCurrScr = ( HB_U32 * ) hb_xgrab( nSize * sizeof( HB_U32 ) );
-      memset( wnd->pCurrScr, 0xFF, nSize * sizeof( HB_U32 ) );
-
-      hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
-
-      return HB_GTSELF_RESIZE( wnd->pGT, wnd->rows, wnd->cols );
+         return HB_TRUE;
+      }
    }
 
    return HB_FALSE;
@@ -4139,14 +4148,19 @@ static void hb_gt_xwc_CreatePixmap( PXWND_DEF wnd )
    width  = wnd->cols * wnd->fontWidth;
    height = wnd->rows * wnd->fontHeight;
 
-   if( wnd->pm )
-      XFreePixmap( wnd->dpy, wnd->pm );
+   if( ! wnd->pm || wnd->width != width || wnd->height != height )
+   {
+      if( wnd->pm )
+         XFreePixmap( wnd->dpy, wnd->pm );
 
-   wnd->pm = XCreatePixmap( wnd->dpy, wnd->window, width, height,
-                            DefaultDepth( wnd->dpy, DefaultScreen( wnd->dpy ) ) );
-   wnd->drw = wnd->pm;
-   wnd->width = width;
-   wnd->height = height;
+      wnd->pm = XCreatePixmap( wnd->dpy, wnd->window, width, height,
+                               DefaultDepth( wnd->dpy, DefaultScreen( wnd->dpy ) ) );
+      wnd->drw = wnd->pm;
+      wnd->width = width;
+      wnd->height = height;
+
+      hb_gt_xwc_InvalidateFull( wnd );
+   }
 }
 
 /* *********************************************************************** */
@@ -5258,9 +5272,20 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             wnd->fontHeight = iVal;
             if( wnd->fInit )
             {
-               hb_gt_xwc_SetFont( wnd, wnd->szFontName, wnd->fontWeight,
-                                  wnd->fontHeight, wnd->szFontEncoding );
-               hb_gt_xwc_CreateWindow( wnd );
+               HB_BOOL fInit;
+               HB_XWC_XLIB_LOCK();
+               fInit = hb_gt_xwc_SetFont( wnd, wnd->szFontName, wnd->fontWeight,
+                                          wnd->fontHeight, wnd->szFontEncoding );
+               HB_XWC_XLIB_UNLOCK();
+               if( fInit )
+                  hb_gt_xwc_CreateWindow( wnd );
+            }
+            else if( wnd->xfs )
+            {
+               HB_XWC_XLIB_LOCK();
+               XFreeFont( wnd->dpy, wnd->xfs );
+               wnd->xfs = NULL;
+               HB_XWC_XLIB_UNLOCK();
             }
          }
          break;
@@ -5326,8 +5351,8 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             {
                HB_XWC_XLIB_LOCK();
                hb_gt_xwc_ResetCharTrans( wnd );
-               hb_gt_xwc_InvalidateFull( wnd, 0, 0, wnd->cols - 1, wnd->rows );
                HB_XWC_XLIB_UNLOCK();
+               hb_gt_xwc_InvalidateFull( wnd );
             }
          }
          break;
@@ -5664,10 +5689,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      {
                         HB_XWC_XLIB_LOCK();
                         if( hb_gt_xwc_setPalette( wnd ) )
-                        {
-                           memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_U32 ) );
-                           hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
-                        }
+                           hb_gt_xwc_InvalidateFull( wnd );
                         HB_XWC_XLIB_UNLOCK();
                      }
                   }
@@ -5697,10 +5719,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                {
                   HB_XWC_XLIB_LOCK();
                   if( hb_gt_xwc_setPalette( wnd ) )
-                  {
-                     memset( wnd->pCurrScr, 0xFF, wnd->cols * wnd->rows * sizeof( HB_U32 ) );
-                     hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
-                  }
+                     hb_gt_xwc_InvalidateFull( wnd );
                   HB_XWC_XLIB_UNLOCK();
                }
             }
@@ -5813,7 +5832,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   hb_gt_xwc_InvalidatePts( wnd, rx.left, rx.top, rx.right, rx.bottom );
                }
                else
-                  hb_gt_xwc_InvalidateFull( wnd, rx.left / wnd->fontWidth,
+                  hb_gt_xwc_InvalidatePart( wnd, rx.left / wnd->fontWidth,
                                                  rx.top / wnd->fontHeight,
                                                  rx.right / wnd->fontWidth,
                                                  rx.bottom / wnd->fontHeight );
