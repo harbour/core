@@ -1958,7 +1958,8 @@ PHB_EXPR hb_compExprListStrip( PHB_EXPR pSelf, HB_COMP_DECL )
 {
    while( pSelf->ExprType == HB_ET_LIST &&
           hb_compExprListLen( pSelf ) == 1 &&
-          pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE )
+          pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE &&
+          ! hb_compExprIsArrayToParams( pSelf->value.asList.pExprList ) )
    {
       /* replace the list with a simple expression
        *  ( EXPR ) -> EXPR

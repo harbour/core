@@ -12438,7 +12438,10 @@ HB_FUNC( HB_ARRAYTOPARAMS )
 {
    HB_STACK_TLS_PRELOAD
 
-   hb_retni( 0 );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
+   if( pArray )
+      hb_arrayLast( pArray, hb_stackReturnItem() );
 }
 
 HB_FUNC( ERRORLEVEL )
