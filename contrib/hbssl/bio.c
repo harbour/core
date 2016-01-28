@@ -732,7 +732,7 @@ HB_FUNC( BIO_GET_CONN_INT_PORT )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
-#if OPENSSL_VERSION_NUMBER == 0x1000205fL /* 1.0.2f */ || \
+#if OPENSSL_VERSION_NUMBER == 0x1000206fL /* 1.0.2f */ || \
     OPENSSL_VERSION_NUMBER == 0x1000112fL /* 1.0.1r */
       /* workaround for header regression */
       hb_retnl( BIO_int_ctrl( b, BIO_C_GET_CONNECT, 3, 0 ) );
