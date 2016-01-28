@@ -154,6 +154,7 @@ extern HB_EXPORT_INT HB_SIZE hb_compExprAsStringLen( PHB_EXPR );
 extern HB_EXPORT_INT HB_MAXINT hb_compExprAsLongNum( PHB_EXPR );
 extern HB_EXPORT_INT const char * hb_compExprAsString( PHB_EXPR );
 extern HB_EXPORT_INT const char * hb_compExprAsSymbol( PHB_EXPR );
+extern HB_EXPORT_INT HB_BOOL hb_compExprIsArrayToParams( PHB_EXPR );
 
 extern HB_EXPORT_INT PHB_EXPR hb_compExprListStrip( PHB_EXPR, HB_COMP_DECL );
 

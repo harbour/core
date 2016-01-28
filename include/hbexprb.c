@@ -1039,9 +1039,6 @@ static HB_EXPR_FUNC( hb_compExprUseList )
       case HB_EA_REDUCE:
          pSelf = hb_compExprReduceList( pSelf, HB_COMP_PARAM );
 
-         if( HB_SUPPORT_HARBOUR )
-            pSelf = hb_compExprListStrip( pSelf, HB_COMP_PARAM );
-
          if( HB_SUPPORT_XBASE && pSelf->ExprType == HB_ET_LIST )
          {
             if( hb_compExprListLen( pSelf ) == 1 )
@@ -1056,6 +1053,9 @@ static HB_EXPR_FUNC( hb_compExprUseList )
                }
             }
          }
+         if( HB_SUPPORT_HARBOUR )
+            pSelf = hb_compExprListStrip( pSelf, HB_COMP_PARAM );
+
          break;
 
       case HB_EA_ARRAY_AT:
@@ -1406,9 +1406,10 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             if( HB_SUPPORT_XBASE )
             {
-               if( pSelf->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-                   pSelf->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-                   pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
+               if( pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
+                   pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_REFER &&
+                   pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_ALIASED &&
+                   ( pSelf->value.asList.pIndex->value.asMacro.SubType & HB_ET_MACRO_PARE ) == 0 )
                {
                   pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_LIST;
                   fMacroIndex = HB_TRUE;
@@ -1486,9 +1487,10 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
          {
             if( HB_SUPPORT_XBASE )
             {
-               if( pSelf->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-                   pSelf->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-                   pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
+               if( pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
+                   pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_REFER &&
+                   pSelf->value.asList.pIndex->value.asMacro.SubType != HB_ET_MACRO_ALIASED &&
+                   ( pSelf->value.asList.pIndex->value.asMacro.SubType & HB_ET_MACRO_PARE ) == 0 )
                {
                   pSelf->value.asList.pIndex->value.asMacro.SubType |= HB_ET_MACRO_LIST;
                   fMacroIndex = HB_TRUE;

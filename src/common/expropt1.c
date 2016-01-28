@@ -1345,6 +1345,15 @@ HB_ULONG hb_compExprParamListLen( PHB_EXPR pExpr )
    return nLen;
 }
 
+/*  Check if expression is hb_ArrayToParams( aParams ) function call
+ */
+HB_BOOL hb_compExprIsArrayToParams( PHB_EXPR pExpr )
+{
+   return pExpr->ExprType == HB_ET_FUNCALL &&
+          pExpr->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME &&
+          pExpr->value.asFunCall.pFunName->value.asSymbol.funcid == HB_F_ARRAYTOPARAMS;
+}
+
 HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    HB_SIZE nLen = 0, nItems = 0;
@@ -1359,13 +1368,11 @@ HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, PHB_EXPR pExpr )
          if( ( pElem->ExprType == HB_ET_MACRO && HB_SUPPORT_XBASE &&
                pElem->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
                pElem->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-               pElem->value.asMacro.SubType != HB_ET_MACRO_ALIASED ) ||
+               pElem->value.asMacro.SubType != HB_ET_MACRO_ALIASED &&
+               ( pElem->value.asMacro.SubType & HB_ET_MACRO_PARE ) == 0 ) ||
              ( pElem->ExprType == HB_ET_ARGLIST &&
                pElem->value.asList.reference ) ||
-             ( pElem->ExprType == HB_ET_FUNCALL &&
-               pElem->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME &&
-               pElem->value.asFunCall.pFunName->value.asSymbol.funcid ==
-               HB_F_ARRAYTOPARAMS ) )
+             hb_compExprIsArrayToParams( pElem ) )
          {
             /* &macro was passed
                or optional parameters list passed, f.e.: f(a,b,...)
