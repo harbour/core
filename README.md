@@ -1656,6 +1656,7 @@ Supported shells per host platforms:
      * [Harbour mainline development](https://groups.google.com/forum/#!forum/harbour-devel)
      * [HMG](http://hmgforum.com/viewforum.php?f=7)
      * [hbqt](https://groups.google.com/forum/#!forum/qtcontribs)
+     * [hwgui](https://sourceforge.net/p/hwgui/mailman/hwgui-developers/)
      * [FiveWin](http://forums.fivetechsupport.com/viewforum.php?f=3)
      * [xHarbour](https://groups.google.com/forum/#!forum/comp.lang.xharbour)
 
