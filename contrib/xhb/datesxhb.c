@@ -134,10 +134,10 @@ static int s_daystomonth( int iMonth, HB_BOOL bLeap )
 
 HB_FUNC( DAYSTOMONTH )
 {
-   hb_retni( ct_daystomonth( hb_parni( 1 ), hb_parl( 2 ) ) );
+   hb_retni( s_daystomonth( hb_parni( 1 ), hb_parl( 2 ) ) );
 }
 
 HB_FUNC( DAYSINMONTH )
 {
-   hb_retni( ct_daysinmonth( hb_parni( 1 ), hb_parl( 2 ) ) );
+   hb_retni( s_daysinmonth( hb_parni( 1 ), hb_parl( 2 ) ) );
 }
