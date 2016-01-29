@@ -23,6 +23,7 @@
 
 DYNAMIC linux_MoveToTrash
 DYNAMIC posix_chdir
+DYNAMIC posix_chown
 DYNAMIC posix_errno
 DYNAMIC posix_getegid
 DYNAMIC posix_geteuid

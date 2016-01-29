@@ -69,7 +69,7 @@ FUNCTION linux_MoveToTrash( cFileName )
 
       aPath := {}
 
-      IF ! Empty( tmp := GetEnv( "XDG_DATA_HOME" ) )
+      IF ! HB_ISNULL( tmp := GetEnv( "XDG_DATA_HOME" ) )
          AAdd( aPath, hb_DirSepAdd( tmp ) + "Trash" )
       ENDIF
 
@@ -83,7 +83,7 @@ FUNCTION linux_MoveToTrash( cFileName )
          ENDIF
       NEXT
 
-      IF Empty( cTrashDir )
+      IF cTrashDir == NIL
          RETURN -2
       ENDIF
 

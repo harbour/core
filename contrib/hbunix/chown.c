@@ -1,7 +1,7 @@
 /*
- * header file for POSIX function wrappers
+ * UNIX function wrappers (chown)
  *
- * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,32 +44,9 @@
  *
  */
 
-#ifndef __HBPOSIX_H
-#define __HBPOSIX_H
+#include "hbposix.h"
 
-#include "hbapi.h"
-
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
-
-
-#define hb_par_uid( n )   ( ( uid_t ) hb_parnl( n ) )
-#define hb_par_gid( n )   ( ( gid_t ) hb_parnl( n ) )
-#define hb_ret_uid( n )   hb_retnint( n )
-#define HB_PARLUNIX( n )  ( HB_ISLOG( n ) ? ( int ) hb_parl( n ) : hb_parni( n ) )
-
-HB_EXTERN_BEGIN
-
-void hb_posix_param_error( void );
-void hb_posix_result( int iResult );
-
-void hb_posix_save_errno( void );
-void hb_posix_set_errno( int iErrNo );
-int  hb_posix_get_errno( void );
-
-HB_EXTERN_END
-
-#endif /* __HBPOSIX_H */
+HB_FUNC( POSIX_CHOWN )
+{
+   hb_retni( chown( hb_parcx( 1 ), hb_par_uid( 2 ), hb_par_gid( 3 ) ) );
+}

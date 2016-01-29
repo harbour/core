@@ -12,6 +12,7 @@
 -hbx=${hb_name}
 
 chdir.c
+chown.c
 chroot.c
 daemon.c
 posix.c

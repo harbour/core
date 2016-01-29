@@ -53,7 +53,7 @@
 #include "hbdate.h"
 
 static const int s_daysinmonth[ 12 ] =
-{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+   { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 static HB_BOOL hb_isleapyear( int iYear )
 {
@@ -157,7 +157,6 @@ HB_FUNC( HBMISC_DAYSINMONTH )
 }
 
 /* Return the nWeek of the year (1 - 52, 0 - 52 if ISO) */
-
 HB_FUNC( WOY )
 {
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
