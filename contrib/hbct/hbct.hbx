@@ -149,8 +149,6 @@ DYNAMIC CToN
 DYNAMIC ctwinit
 DYNAMIC ctwLastKey
 DYNAMIC CurrentGet
-DYNAMIC DaysInMonth
-DYNAMIC DaysToMonth
 DYNAMIC DbfSize
 DYNAMIC DeleteFile
 DYNAMIC DirMake

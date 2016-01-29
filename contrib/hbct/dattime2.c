@@ -1,8 +1,6 @@
 /*
  * CT3 Date & Time functions, part II:
  *   AddMonth()
- *   DaysInMonth()
- *   DaysToMonth()
  *   DMY()
  *   DoY()
  *   IsLeap()
@@ -325,22 +323,6 @@ HB_FUNC( ISLEAP )
       hb_dateToday( &iYear, &iMonth, &iDay );
 
    hb_retl( ct_isleap( iYear ) );
-}
-
-HB_FUNC( DAYSTOMONTH )
-{
-   int iMonth = hb_parni( 1 );
-   HB_BOOL bLeap = hb_parl( 2 );
-
-   hb_retni( ct_daystomonth( iMonth, bLeap ) );
-}
-
-HB_FUNC( DAYSINMONTH )
-{
-   int iMonth = hb_parni( 1 );
-   HB_BOOL bLeap = hb_parl( 2 );
-
-   hb_retni( ct_daysinmonth( iMonth, bLeap ) );
 }
 
 HB_FUNC( QUARTER )
