@@ -6,7 +6,7 @@
 
 -w3 -es2
 
--depurlbase=curl:http://curl.haxx.se/
+-depurlbase=curl:https://curl.haxx.se/
 -deppkgname=curl:libcurl4-openssl-dev{deb}
 -deppkgname=curl:curl-devel{rpm}
 -deppkgname=curl:curl{homebrew}

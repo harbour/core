@@ -1,3 +1,5 @@
+/* Copyright 2008-2016 Viktor Szakats (vszakats.net/harbour) */
+
 /* NOTE: Redirect STDERR to a file to see the verbose output. */
 
 #require "hbcurl"
@@ -124,7 +126,8 @@ PROCEDURE Main( cDL, cUL )
          IF ! hb_vfExists( _CA_FN_ )
             ? "Downloading", _CA_FN_
             curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
-            curl_easy_setopt( curl, HB_CURLOPT_URL, "http://curl.haxx.se/ca/cacert.pem" )
+            curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, 0 )  /* we don't have a CA database yet, so skip checking */
+            curl_easy_setopt( curl, HB_CURLOPT_URL, "https://curl.haxx.se/ca/cacert.pem" )
             curl_easy_setopt( curl, HB_CURLOPT_DL_FILE_SETUP, _CA_FN_ )
             curl_easy_perform( curl )
             curl_easy_reset( curl )
