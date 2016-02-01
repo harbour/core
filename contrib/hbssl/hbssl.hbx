@@ -28,7 +28,6 @@ DYNAMIC BIO_do_connect
 DYNAMIC BIO_eof
 DYNAMIC BIO_flush
 DYNAMIC BIO_free
-DYNAMIC BIO_free_all
 DYNAMIC BIO_gets
 DYNAMIC BIO_get_close
 DYNAMIC BIO_get_conn_hostname
@@ -69,7 +68,6 @@ DYNAMIC BIO_should_retry
 DYNAMIC BIO_should_write
 DYNAMIC BIO_tell
 DYNAMIC BIO_test_flags
-DYNAMIC BIO_vfree
 DYNAMIC BIO_write
 DYNAMIC ERR_error_string
 DYNAMIC ERR_free_strings

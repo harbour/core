@@ -506,9 +506,14 @@ HB_FUNC( BIO_NEW_MEM_BUF )
 
    if( pBuffer )
    {
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L || \
+    OPENSSL_VERSION_NUMBER > 0x1000206fL /* 1.0.2g or upper */
+      hb_BIO_ret( BIO_new_mem_buf( hb_itemGetCPtr( pBuffer ), ( int ) hb_itemGetCLen( pBuffer ) ), NULL );
+#else
       char * pszBuffer = hb_itemGetC( pBuffer );
 
       hb_BIO_ret( BIO_new_mem_buf( pszBuffer, ( int ) hb_itemGetCLen( pBuffer ) ), pszBuffer );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -599,16 +604,6 @@ HB_FUNC( BIO_PUTS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( BIO_VFREE )
-{
-   BIO * bio = hb_BIO_par( 1 );
-
-   if( bio )
-      BIO_vfree( bio );
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( BIO_FREE )
 {
    BIO * bio = hb_BIO_par( 1 );
@@ -619,15 +614,10 @@ HB_FUNC( BIO_FREE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( BIO_FREE_ALL )
-{
-   BIO * bio = hb_BIO_par( 1 );
-
-   if( bio )
-      BIO_free_all( bio );
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( BIO_VFREE, BIO_FREE )
+HB_FUNC_TRANSLATE( BIO_FREE_ALL, BIO_FREE )  /* These wrappers don't allow to create chained BIOs, so this is valid. */
+#endif
 
 /* --- connect --- */
 
