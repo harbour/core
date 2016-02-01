@@ -607,6 +607,7 @@ HB_FUNC( BIO_PUTS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+#if defined( HB_LEGACY_LEVEL5 )
 HB_FUNC( BIO_FREE )
 {
    HB_BIO ** ptr = ( HB_BIO ** ) hb_parptrGC( &s_gcBIOFuncs, 1 );
@@ -630,7 +631,6 @@ HB_FUNC( BIO_FREE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if defined( HB_LEGACY_LEVEL5 )
 HB_FUNC_TRANSLATE( BIO_VFREE, BIO_FREE )
 HB_FUNC_TRANSLATE( BIO_FREE_ALL, BIO_FREE )  /* These wrappers don't allow to create chained BIOs, so this is valid. */
 #endif

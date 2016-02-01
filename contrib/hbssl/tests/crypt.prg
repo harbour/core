@@ -80,7 +80,7 @@ PROCEDURE Main()
       ENDIF
       ? ; ERR_print_errors( bioe )
    NEXT
-   BIO_free( bioe )
+   bioe := NIL
 
    ? pub := PEM_READ_BIO_PUBKEY( "pubkey.pem", "test" )
 

@@ -5,7 +5,6 @@
 PROCEDURE Main()
 
    LOCAL cString
-   LOCAL bio
    LOCAL bioe
 
    SSL_init()
@@ -50,17 +49,16 @@ B0NDIZKbaPJHHPb9Ne7nQECzv0/kzmAley9UMTZ1M7fq6KYemR0LsA==
 -----END RSA PRIVATE KEY-----
 #pragma __endtext
 
-   ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), {| lWrite | QOut( "Callback", lWrite, hb_eol() ), "test" } )
+   ? PEM_READ_BIO_RSAPRIVATEKEY( BIO_new_mem_buf( cString ), {| lWrite | QOut( "Callback", lWrite, hb_eol() ), "test" } )
    ? 6; ERR_print_errors( bioe )
-   BIO_free( bio )
-   ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), "test" )
-   ? 7; ERR_print_errors( bioe )
-   BIO_free( bio )
-   ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), "<wrong>" )
-   ? 8; ERR_print_errors( bioe )
-   BIO_free( bio )
 
-   BIO_free( bioe )
+   ? PEM_READ_BIO_RSAPRIVATEKEY( BIO_new_mem_buf( cString ), "test" )
+   ? 7; ERR_print_errors( bioe )
+
+   ? PEM_READ_BIO_RSAPRIVATEKEY( BIO_new_mem_buf( cString ), "<wrong>" )
+   ? 8; ERR_print_errors( bioe )
+
+   bioe := NIL
 
    RETURN
 
