@@ -50,50 +50,21 @@
 
 #include "hbssl.h"
 
-/* */
-
-typedef struct
-{
-   BIO *    bio;
-   char *   pszBuffer;
-} HB_BIO, * PHB_BIO;
-
-static PHB_BIO PHB_BIO_create( BIO * bio, char * pszBuffer )
-{
-   PHB_BIO hb_bio = ( PHB_BIO ) hb_xgrab( sizeof( HB_BIO ) );
-
-   hb_bio->bio       = bio;
-   hb_bio->pszBuffer = pszBuffer;
-
-   return hb_bio;
-}
-
-static void PHB_BIO_free( PHB_BIO hb_bio )
-{
-   if( hb_bio->pszBuffer )
-      hb_itemFreeC( hb_bio->pszBuffer );
-
-   if( hb_bio->bio )
-      BIO_free( hb_bio->bio );
-
-   hb_xfree( hb_bio );
-}
-
-/* HB_BIO GC handler */
+/* BIO GC handler */
 
 /* BIO destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( HB_BIO_Destructor )
 {
-   /* Retrieve image pointer holder */
-   HB_BIO ** ptr = ( HB_BIO ** ) Cargo;
+   void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( *ptr )
+   if( ph && *ph )
    {
-      PHB_BIO_free( *ptr );
+      /* Destroy the object */
+      BIO_free( ( BIO * ) *ph );
 
-      /* set pointer to NULL to avoid multiple freeing */
-      *ptr = NULL;
+      /* set pointer to NULL just in case */
+      *ph = NULL;
    }
 }
 
@@ -105,25 +76,25 @@ static const HB_GC_FUNCS s_gcBIOFuncs =
 
 BIO * hb_BIO_par( int iParam )
 {
-   HB_BIO ** ptr = ( HB_BIO ** ) hb_parptrGC( &s_gcBIOFuncs, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcBIOFuncs, iParam );
 
-   return ptr ? ( *ptr )->bio : NULL;
+   return ph ? ( BIO * ) *ph : NULL;
 }
 
 void * hb_BIO_is( int iParam )
 {
-   HB_BIO ** ptr = ( HB_BIO ** ) hb_parptrGC( &s_gcBIOFuncs, iParam );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcBIOFuncs, iParam );
 
-   return ptr ? ( *ptr )->bio : NULL;
+   return ph ? *ph : NULL;
 }
 
-static void hb_BIO_ret( BIO * bio, char * pszBuffer )
+static void hb_BIO_ret( BIO * bio )
 {
-   HB_BIO ** ptr = ( HB_BIO ** ) hb_gcAllocate( sizeof( HB_BIO * ), &s_gcBIOFuncs );
+   void ** ph = ( void ** ) hb_gcAllocate( sizeof( BIO * ), &s_gcBIOFuncs );
 
-   *ptr = PHB_BIO_create( bio, pszBuffer );
+   *ph = ( void * ) bio;
 
-   hb_retptrGC( ( void * ) ptr );
+   hb_retptrGC( ph );
 }
 
 /* */
@@ -208,7 +179,7 @@ static int hb_BIO_METHOD_ptr_to_id( const BIO_METHOD * p )
 HB_FUNC( BIO_NEW )
 {
    if( hb_BIO_METHOD_is( 1 ) )
-      hb_BIO_ret( BIO_new( hb_BIO_METHOD_par( 1 ) ), NULL );
+      hb_BIO_ret( BIO_new( hb_BIO_METHOD_par( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -470,7 +441,7 @@ HB_FUNC( BIO_GET_CLOSE )
 HB_FUNC( BIO_NEW_SOCKET )
 {
    if( HB_ISNUM( 1 ) )
-      hb_BIO_ret( BIO_new_socket( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ), NULL );
+      hb_BIO_ret( BIO_new_socket( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -479,7 +450,7 @@ HB_FUNC( BIO_NEW_DGRAM )
 {
 #ifndef OPENSSL_NO_DGRAM
    if( HB_ISNUM( 1 ) )
-      hb_BIO_ret( BIO_new_dgram( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ), NULL );
+      hb_BIO_ret( BIO_new_dgram( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #else
@@ -490,7 +461,7 @@ HB_FUNC( BIO_NEW_DGRAM )
 HB_FUNC( BIO_NEW_FD )
 {
    if( HB_ISNUM( 1 ) )
-      hb_BIO_ret( BIO_new_fd( hb_parnl( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ), NULL );
+      hb_BIO_ret( BIO_new_fd( hb_parnl( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -498,7 +469,7 @@ HB_FUNC( BIO_NEW_FD )
 HB_FUNC( BIO_NEW_FILE )
 {
    if( HB_ISCHAR( 1 ) )
-      hb_BIO_ret( BIO_new_file( hb_parc( 1 ), hb_parcx( 2 ) ), NULL );
+      hb_BIO_ret( BIO_new_file( hb_parc( 1 ), hb_parcx( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -511,11 +482,9 @@ HB_FUNC( BIO_NEW_MEM_BUF )
    {
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L || \
     OPENSSL_VERSION_NUMBER >  0x1000206fL /* 1.0.2g or upper */
-      hb_BIO_ret( BIO_new_mem_buf( hb_itemGetCPtr( pBuffer ), ( int ) hb_itemGetCLen( pBuffer ) ), NULL );
+      hb_BIO_ret( BIO_new_mem_buf( hb_itemGetCPtr( pBuffer ), ( int ) hb_itemGetCLen( pBuffer ) ) );
 #else
-      char * pszBuffer = hb_itemGetC( pBuffer );
-
-      hb_BIO_ret( BIO_new_mem_buf( pszBuffer, ( int ) hb_itemGetCLen( pBuffer ) ), pszBuffer );
+      hb_BIO_ret( BIO_new_mem_buf( HB_UNCONST( hb_itemGetCPtr( pBuffer ) ), ( int ) hb_itemGetCLen( pBuffer ) ) );
 #endif
    }
    else
@@ -610,22 +579,16 @@ HB_FUNC( BIO_PUTS )
 #if defined( HB_LEGACY_LEVEL5 )
 HB_FUNC( BIO_FREE )
 {
-   HB_BIO ** ptr = ( HB_BIO ** ) hb_parptrGC( &s_gcBIOFuncs, 1 );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcBIOFuncs, 1 );
 
-   if( ptr )
+   if( ph )
    {
-      HB_BIO * hb_bio = *ptr;
-
-      if( hb_bio->pszBuffer )
-         hb_itemFreeC( hb_bio->pszBuffer );
-
-      if( hb_bio->bio )
-         hb_retni( BIO_free( hb_bio->bio ) );
+      if( *ph )
+         hb_retni( BIO_free( ( BIO * ) *ph ) );
       else
          hb_retni( 0 );
 
-      hb_bio->bio       = NULL;
-      hb_bio->pszBuffer = NULL;
+      *ph = NULL;
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -641,7 +604,7 @@ HB_FUNC( BIO_NEW_CONNECT )
 {
    if( HB_ISCHAR( 1 ) )
       /* NOTE: Discarding 'const', OpenSSL will strdup() */
-      hb_BIO_ret( BIO_new_connect( ( char * ) HB_UNCONST( hb_parc( 1 ) ) ), NULL );
+      hb_BIO_ret( BIO_new_connect( ( char * ) HB_UNCONST( hb_parc( 1 ) ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -650,7 +613,7 @@ HB_FUNC( BIO_NEW_ACCEPT )
 {
    if( HB_ISCHAR( 1 ) )
       /* NOTE: Discarding 'const', OpenSSL will strdup() */
-      hb_BIO_ret( BIO_new_accept( ( char * ) HB_UNCONST( hb_parc( 1 ) ) ), NULL );
+      hb_BIO_ret( BIO_new_accept( ( char * ) HB_UNCONST( hb_parc( 1 ) ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
