@@ -4594,7 +4594,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_lSTATICFULL ]
-            AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
+            IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "clang"
+               _hbmk_OutErr( hbmk, I_( "Warning: '-fullstatic' option not supported on this platform/compiler and it was therefore ignored." ) )
+            ELSE
+               AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
+            ENDIF
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
             IF hbmk[ _HBMK_lSHARED ]

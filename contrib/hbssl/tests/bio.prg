@@ -16,16 +16,13 @@ PROCEDURE Main()
    ? "BIO_read()", BIO_read( bio, @buffer, 10 )
    ? ">" + buffer + "<"
    ? "BIO_flush()", BIO_flush( bio )
-   bio := NIL
 
    ? bio := BIO_new_fd( hb_GetStdOut(), HB_BIO_NOCLOSE )
    ? "BIO_write()", BIO_write( bio, "Hello world!" + hb_eol() )
    ? "BIO_flush()", BIO_flush( bio )
-   bio := NIL
 
    ? bio := BIO_new_file( "bio_test.txt", "a+" )
    ? "BIO_write()", BIO_write( bio, "Hello world!" + hb_eol() )
    ? "BIO_flush()", BIO_flush( bio )
-   bio := NIL
 
    RETURN
