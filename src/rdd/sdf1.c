@@ -120,8 +120,8 @@ static HB_ERRCODE hb_sdfReadRecord( SDFAREAP pArea )
       if( pArea->nBufferRead - pArea->nBufferIndex < ( HB_SIZE ) pArea->uiEolLen + 1 &&
           pArea->nBufferRead == pArea->nBufferSize )
       {
-         HB_SIZE nLeft = nRead >= ( HB_SIZE ) pArea->uiRecordLen ? 0 :
-                         pArea->nBufferRead - pArea->nBufferIndex;
+         HB_SIZE nLeft = pArea->nBufferRead - pArea->nBufferIndex;
+
          if( nLeft )
             memmove( pArea->pBuffer,
                      pArea->pBuffer + pArea->nBufferIndex, nLeft );
