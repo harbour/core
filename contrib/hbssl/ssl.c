@@ -1558,10 +1558,14 @@ HB_FUNC( SSL_USE_RSAPRIVATEKEY_ASN1 )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+         hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( const unsigned char * ) hb_parc( 2 ), ( int ) hb_parclen( 2 ) ) );
+#else
          /* 'const' not used in 2nd param because ssh.h misses it, too.
-             Bug report sent: #1988
+             Bug reported: #1988 [Fixed in 1.1.0 after submitting patch]
              [vszakats] */
          hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( unsigned char * ) HB_UNCONST( hb_parc( 2 ) ), ( int ) hb_parclen( 2 ) ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
