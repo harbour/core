@@ -280,7 +280,7 @@
 #define HB_CURLOPT_UL_NULL_SETUP              1010
 #define HB_CURLOPT_HTTPPOST_CONTENT           1013
 #define HB_CURLOPT_HTTPPOST_FORM              1014
-#define HB_CURLOPT_PROGRESSBLOCK              HB_CURLOPT_XFERINFOBLOCK
+#define HB_CURLOPT_DEBUGBLOCK                 1015
 /* Compatibility ones. Please don't use these. */
 #define HB_CURLOPT_UL_FHANDLE_SETUP           HB_CURLOPT_UL_FILE_SETUP
 #define HB_CURLOPT_SETUPLOADFILE              HB_CURLOPT_UL_FILE_SETUP
@@ -288,7 +288,8 @@
 #define HB_CURLOPT_DL_FHANDLE_SETUP           HB_CURLOPT_DL_FILE_SETUP
 #define HB_CURLOPT_SETDOWNLOADFILE            HB_CURLOPT_DL_FILE_SETUP
 #define HB_CURLOPT_CLOSEDOWNLOADFILE          HB_CURLOPT_DL_FILE_CLOSE
-#define HB_CURLOPT_SETPROGRESS                HB_CURLOPT_PROGRESSBLOCK
+#define HB_CURLOPT_SETPROGRESS                HB_CURLOPT_XFERINFOBLOCK
+#define HB_CURLOPT_PROGRESSBLOCK              HB_CURLOPT_XFERINFOBLOCK
 
 /* HB_CURLOPT_PROXYTYPE option */
 #define HB_CURLPROXY_HTTP                     0  /* added in 7.10 */
@@ -610,5 +611,14 @@
 /* HB_CURLOPT_HTTPPOST_FORM type */
 #define HB_CURLOPT_HTTPPOST_FORM_CONTENT      1
 #define HB_CURLOPT_HTTPPOST_FORM_FILE         2
+
+/* HB_CURLOPT_DEBUGBLOCK callback modes */
+#define HB_CURLINFO_TEXT                      0
+#define HB_CURLINFO_HEADER_IN                 1
+#define HB_CURLINFO_HEADER_OUT                2
+#define HB_CURLINFO_DATA_IN                   3
+#define HB_CURLINFO_DATA_OUT                  4
+#define HB_CURLINFO_SSL_DATA_IN               5
+#define HB_CURLINFO_SSL_DATA_OUT              6
 
 #endif /* HBCURL_CH_ */

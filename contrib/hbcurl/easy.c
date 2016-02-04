@@ -122,6 +122,7 @@ typedef struct _HB_CURL
    size_t          dl_pos;
 
    PHB_ITEM pXferInfoCallback;
+   PHB_ITEM pDebugCallback;
 
    PHB_HASH_TABLE pHash;
 
@@ -345,7 +346,6 @@ static int hb_curl_xferinfo_callback( void * Cargo, curl_off_t dltotal, curl_off
    return result;
 }
 #else
-
 static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow, double ultotal, double ulnow )
 {
    int result = 0;
@@ -368,6 +368,29 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
    }
 
    return result;
+}
+#endif
+
+#if LIBCURL_VERSION_NUM >= 0x070906
+static int hb_curl_debug_callback( CURL * curl, curl_infotype type, char * data, size_t size, void * Cargo )
+{
+   HB_SYMBOL_UNUSED( curl );
+
+   if( Cargo )
+   {
+      if( hb_vmRequestReenter() )
+      {
+         hb_vmPushEvalSym();
+         hb_vmPush( ( PHB_ITEM ) Cargo );
+         hb_vmPushInteger( ( int ) type );
+         hb_vmPushString( data, ( HB_SIZE ) size );
+         hb_vmSend( 2 );
+
+         hb_vmRequestRestore();
+      }
+   }
+
+   return 0;
 }
 #endif
 
@@ -505,6 +528,12 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
       hb_curl->pXferInfoCallback = NULL;
    }
 
+   if( hb_curl->pDebugCallback )
+   {
+      hb_itemRelease( hb_curl->pDebugCallback );
+      hb_curl->pDebugCallback = NULL;
+   }
+
    if( hb_curl->pHash )
    {
       hb_hashTableKill( hb_curl->pHash );
@@ -564,6 +593,9 @@ static HB_GARBAGE_FUNC( PHB_CURL_mark )
 
       if( hb_curl->pXferInfoCallback )
          hb_gcMark( hb_curl->pXferInfoCallback );
+
+      if( hb_curl->pDebugCallback )
+         hb_gcMark( hb_curl->pDebugCallback );
    }
 }
 
@@ -777,8 +809,10 @@ HB_FUNC( CURL_EASY_SETOPT )
             /* HB_CURLOPT_PROGRESSDATA */
             /* HB_CURLOPT_HEADERFUNCTION */
             /* HB_CURLOPT_HEADERDATA / CURLOPT_WRITEHEADER */
+#if LIBCURL_VERSION_NUM >= 0x070906
             /* HB_CURLOPT_DEBUGFUNCTION */
             /* HB_CURLOPT_DEBUGDATA */
+#endif
 #if LIBCURL_VERSION_NUM >= 0x070B00
             /* HB_CURLOPT_SSL_CTX_FUNCTION */
             /* HB_CURLOPT_SSL_CTX_DATA */
@@ -1780,7 +1814,7 @@ HB_FUNC( CURL_EASY_SETOPT )
 
             case HB_CURLOPT_XFERINFOBLOCK:
             {
-               PHB_ITEM pXferInfoCallback = hb_param( 3, HB_IT_EVALITEM );
+               PHB_ITEM pCallback = hb_param( 3, HB_IT_EVALITEM );
 
                if( hb_curl->pXferInfoCallback )
                {
@@ -1796,9 +1830,9 @@ HB_FUNC( CURL_EASY_SETOPT )
                   hb_curl->pXferInfoCallback = NULL;
                }
 
-               if( pXferInfoCallback )
+               if( pCallback )
                {
-                  hb_curl->pXferInfoCallback = hb_itemNew( pXferInfoCallback );
+                  hb_curl->pXferInfoCallback = hb_itemNew( pCallback );
                   /* unlock the item so GC will not mark them as used */
                   hb_gcUnlock( hb_curl->pXferInfoCallback );
 
@@ -1810,6 +1844,33 @@ HB_FUNC( CURL_EASY_SETOPT )
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROGRESSDATA, hb_curl->pXferInfoCallback );
 #endif
                }
+               break;
+            }
+
+            case HB_CURLOPT_DEBUGBLOCK:
+            {
+#if LIBCURL_VERSION_NUM >= 0x070906
+               PHB_ITEM pCallback = hb_param( 3, HB_IT_EVALITEM );
+
+               if( hb_curl->pDebugCallback )
+               {
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_DEBUGFUNCTION, NULL );
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_DEBUGDATA, NULL );
+
+                  hb_itemRelease( hb_curl->pDebugCallback );
+                  hb_curl->pDebugCallback = NULL;
+               }
+
+               if( pCallback )
+               {
+                  hb_curl->pDebugCallback = hb_itemNew( pCallback );
+                  /* unlock the item so GC will not mark them as used */
+                  hb_gcUnlock( hb_curl->pDebugCallback );
+
+                  curl_easy_setopt( hb_curl->curl, CURLOPT_DEBUGFUNCTION, hb_curl_debug_callback );
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_DEBUGDATA, hb_curl->pDebugCallback );
+               }
+#endif
                break;
             }
 
