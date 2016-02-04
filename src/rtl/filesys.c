@@ -2685,14 +2685,12 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
    }
    else
    {
-      HB_FOFFSET nPos;
       ULONG ulOffsetLow  = ( ULONG ) ( nOffset & 0xFFFFFFFF ),
             ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
       ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                     ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                     SEEK_SET );
-      nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
-      if( nPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
+      if( ulOffsetLow == ( ULONG ) INVALID_SET_FILE_POINTER && GetLastError() != NO_ERROR )
       {
          hb_fsSetIOError( HB_FALSE, 0 );
          nRead = 0;
@@ -2826,14 +2824,12 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
    }
    else
    {
-      HB_FOFFSET nPos;
       ULONG ulOffsetLow  = ( ULONG ) ( nOffset & 0xFFFFFFFF ),
             ulOffsetHigh = ( ULONG ) ( nOffset >> 32 );
       ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                     ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                     SEEK_SET );
-      nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
-      if( nPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
+      if( ulOffsetLow == ( ULONG ) INVALID_SET_FILE_POINTER && GetLastError() != NO_ERROR )
       {
          hb_fsSetIOError( HB_FALSE, 0 );
          nWritten = 0;
@@ -3419,7 +3415,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
    /* This DOS hack creates 2GB file size limit, Druzus */
    if( lOffset < 0 && nFlags == SEEK_SET )
    {
-      ulPos = ( HB_ULONG ) INVALID_SET_FILE_POINTER;
+      ulPos = ( ULONG ) INVALID_SET_FILE_POINTER;
       hb_fsSetError( 25 ); /* 'Seek Error' */
    }
    else
@@ -3503,7 +3499,7 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT
       hb_vmUnlock();
       if( nOffset < 0 && nFlags == SEEK_SET )
       {
-         nPos = ( HB_FOFFSET ) INVALID_SET_FILE_POINTER;
+         nPos = ( HB_FOFFSET ) -1;
          hb_fsSetError( 25 ); /* 'Seek Error' */
       }
       else
@@ -3511,18 +3507,22 @@ HB_FOFFSET hb_fsSeekLarge( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                        ulOffsetLow, ( PLONG ) &ulOffsetHigh,
                                        ( DWORD ) nFlags );
-         nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
-         hb_fsSetIOError( nPos != ( HB_FOFFSET ) INVALID_SET_FILE_POINTER, 0 );
+         if( ulOffsetLow == ( ULONG ) INVALID_SET_FILE_POINTER && GetLastError() != NO_ERROR )
+            nPos = ( HB_FOFFSET ) -1;
+         else
+            nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
+         hb_fsSetIOError( nPos != ( HB_FOFFSET ) -1, 0 );
       }
 
-      if( nPos == ( HB_FOFFSET ) INVALID_SET_FILE_POINTER )
+      if( nPos == ( HB_FOFFSET ) -1 )
       {
          ulOffsetHigh = 0;
          ulOffsetLow = SetFilePointer( DosToWinHandle( hFileHandle ),
                                        0, ( PLONG ) &ulOffsetHigh, SEEK_CUR );
-         nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
-         if( nPos == ( ULONG ) INVALID_SET_FILE_POINTER )
+         if( ulOffsetLow == ( ULONG ) INVALID_SET_FILE_POINTER && GetLastError() != NO_ERROR )
             nPos = 0;
+         else
+            nPos = ( ( HB_FOFFSET ) ulOffsetHigh << 32 ) | ulOffsetLow;
       }
       hb_vmLock();
    }
@@ -3592,6 +3592,26 @@ HB_FOFFSET hb_fsTell( HB_FHANDLE hFileHandle )
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsTell(%p)", ( void * ) ( HB_PTRUINT ) hFileHandle ) );
 
    return hb_fsSeekLarge( hFileHandle, 0, FS_RELATIVE );
+}
+
+HB_FOFFSET hb_fsGetSize( HB_FHANDLE hFileHandle )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetSize(%p)", ( void * ) ( HB_PTRUINT ) hFileHandle ) );
+
+#if defined( HB_OS_WIN )
+   {
+      DWORD dwFileSizeLow, dwFileSizeHigh = 0;
+      HB_BOOL fOK = HB_FALSE;
+
+      dwFileSizeLow = GetFileSize( DosToWinHandle( hFileHandle ), &dwFileSizeHigh );
+      fOK = dwFileSizeLow != INVALID_FILE_SIZE || GetLastError() == NO_ERROR;
+      hb_fsSetIOError( fOK, 0 );
+
+      return fOK ? ( ( HB_FOFFSET ) dwFileSizeHigh << 32 ) | dwFileSizeLow : 0;
+   }
+#else
+   return hb_fsSeekLarge( hFileHandle, 0, FS_END );
+#endif
 }
 
 HB_BOOL hb_fsDelete( const char * pszFileName )

@@ -828,7 +828,7 @@ static HB_FOFFSET s_fileSeek( PHB_FILE pFile, HB_FOFFSET nOffset,
 
 static HB_FOFFSET s_fileSize( PHB_FILE pFile )
 {
-   return hb_fsSeekLarge( pFile->hFile, 0, FS_END );
+   return hb_fsGetSize( pFile->hFile );
 }
 
 static HB_BOOL s_fileEof( PHB_FILE pFile )
