@@ -646,6 +646,7 @@ HB_FUNC( BIO_SET_CONN_PORT )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+#if defined( HB_LEGACY_LEVEL5 )
 HB_FUNC( BIO_SET_CONN_INT_PORT )
 {
    BIO * bio = hb_BIO_par( 1 );
@@ -658,13 +659,24 @@ HB_FUNC( BIO_SET_CONN_INT_PORT )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+#endif
 
 HB_FUNC( BIO_SET_CONN_IP )
 {
    BIO * bio = hb_BIO_par( 1 );
 
-   if( bio && HB_ISCHAR( 2 ) && hb_parclen( 2 ) == 4 )
-      hb_retnl( BIO_set_conn_ip( bio, HB_UNCONST( hb_parc( 2 ) ) ) );
+   if( bio && HB_ISCHAR( 2 ) )
+   {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      HB_SYMBOL_UNUSED( bio );  /* TODO: reimplement using BIO_set_conn_address() */
+      hb_retnl( 0 );
+#else
+      if( hb_parclen( 2 ) == 4 )
+         hb_retnl( BIO_set_conn_ip( bio, HB_UNCONST( hb_parc( 2 ) ) ) );
+      else
+         hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -694,15 +706,21 @@ HB_FUNC( BIO_GET_CONN_IP )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
-#if OPENSSL_VERSION_NUMBER >= 0x00906040L
+   {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      HB_SYMBOL_UNUSED( bio );  /* TODO: reimplement using BIO_get_conn_address() */
+      hb_retc_null();
+#elif OPENSSL_VERSION_NUMBER >= 0x00906040L
       hb_retc( BIO_get_conn_ip( bio ) );
 #else
       hb_retc( BIO_get_conn_ip( bio, 0 ) );
 #endif
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+#if defined( HB_LEGACY_LEVEL5 )
 HB_FUNC( BIO_GET_CONN_INT_PORT )
 {
 #if OPENSSL_VERSION_NUMBER >= 0x10001000L  /* fixed here: https://rt.openssl.org/Ticket/Display.html?id=1989&user=guest&pass=guest */
@@ -722,6 +740,7 @@ HB_FUNC( BIO_GET_CONN_INT_PORT )
    hb_errRT_BASE( EG_UNSUPPORTED, 2001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #endif
 }
+#endif
 
 HB_FUNC( BIO_SET_NBIO )
 {

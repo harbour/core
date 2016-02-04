@@ -30,7 +30,6 @@ DYNAMIC BIO_flush
 DYNAMIC BIO_gets
 DYNAMIC BIO_get_close
 DYNAMIC BIO_get_conn_hostname
-DYNAMIC BIO_get_conn_int_port
 DYNAMIC BIO_get_conn_ip
 DYNAMIC BIO_get_conn_port
 DYNAMIC BIO_get_fd
@@ -52,7 +51,6 @@ DYNAMIC BIO_seek
 DYNAMIC BIO_set
 DYNAMIC BIO_set_close
 DYNAMIC BIO_set_conn_hostname
-DYNAMIC BIO_set_conn_int_port
 DYNAMIC BIO_set_conn_ip
 DYNAMIC BIO_set_conn_port
 DYNAMIC BIO_set_fd
