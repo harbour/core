@@ -507,7 +507,7 @@ procedure test( nMT, cExclude, lScale )
       ? "Warning !!! Memory statistics enabled."
       ?
    endif
-   if Type( "__DBGENTRY()" ) == "UI"
+   if Type( "__dbgEntry()" ) == "UI"
       ? "Warning !!! HVM debugger enabled."
       ?
    endif

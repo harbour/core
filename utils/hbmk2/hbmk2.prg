@@ -4510,8 +4510,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             ENDSWITCH
          ENDIF
          IF !( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ] )
-            AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-demangle" )
-            AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-demangle" )
+            IF !( hbmk[ _HBMK_cPLAT ] == "darwin" )
+               AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--no-demangle" )
+               AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--no-demangle" )
+            ENDIF
          ENDIF
          IF hbmk[ _HBMK_lHARDEN ]
             IF HBMK_ISPLAT( "linux" )
@@ -15896,26 +15898,27 @@ FUNCTION hbshell_ext_load( cName )
                AEval( hbsh[ _HBSH_hbmk ][ _HBMK_aCH ], {| tmp | AAdd( hbsh[ _HBSH_hCH ][ cName ], tmp ) } )
                AAddNew( hbsh[ _HBSH_hOPTPRG ][ cName ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( cName ) ) + "=" + cVersion )
 
+               IF ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSER ] ) .OR. ;
+                  ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSERGT ] )
                /* NOTE: Hack. We detect if the .hbc had defined any libs to load.
                         (f.e. there will not be any libs if the .hbc was skipped due
                         to filters)
                   TODO: In the future the .hbc should specify a list of dynamic libs
                         to load, and we should load those, if any. */
-               IF ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSER ] ) .OR. ;
-                  ! Empty( hbsh[ _HBSH_hbmk ][ _HBMK_aLIBUSERGT ] )
-                  cFileName := FindInPath( tmp := hb_libName( cName + hb_libSuffix() ), ;
-                                           iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
-                  IF cFileName == NIL
-                     _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "'%1$s' (%2$s) not found." ), cName, tmp ) )
-                  ELSE
-                     hLib := hb_libLoad( cFileName )
-                     IF Empty( hLib )
-                        _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "Error loading '%1$s' (%2$s)." ), cName, cFileName ) )
-                     ELSE
-                        hbsh[ _HBSH_hLibExt ][ cName ] := hLib
-                        RETURN .T.
-                     ENDIF
-                  ENDIF
+               ENDIF
+            ENDIF
+
+            cFileName := FindInPath( tmp := hb_libName( cName + hb_libSuffix() ), ;
+                                     iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
+            IF cFileName == NIL
+               _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "'%1$s' (%2$s) not found." ), cName, tmp ) )
+            ELSE
+               hLib := hb_libLoad( cFileName )
+               IF Empty( hLib )
+                  _hbmk_OutErr( hbsh[ _HBSH_hbmk ], hb_StrFormat( I_( "Error loading '%1$s' (%2$s)." ), cName, cFileName ) )
+               ELSE
+                  hbsh[ _HBSH_hLibExt ][ cName ] := hLib
+                  RETURN .T.
                ENDIF
             ENDIF
          ENDIF
