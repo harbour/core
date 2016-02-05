@@ -452,11 +452,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
             IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
                /* Is this a platform where import libs are used? */
                IF "|" + hProjectList[ cProject ][ "cPlatform" ] + "|" $ "|win|dos|os2|"
-                  IF Empty( hProjectList[ cProject ][ "cDynSuffix" ] )
-                     cDynSuffix := "_dll"
-                  ELSE
-                     cDynSuffix := hProjectList[ cProject ][ "cDynSuffix" ]
-                  ENDIF
+                  cDynSuffix := "_dll"
                ELSE
                   cDynSuffix := hb_libExt()
                ENDIF
