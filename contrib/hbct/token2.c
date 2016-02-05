@@ -203,7 +203,7 @@ static void sTokEnvDel( TOKEN_ENVIRONMENT env )
 /* Harbour functions */
 
 /* static data */
-static const char * sc_spcSeparatorStr =
+static const char sc_spcSeparatorStr[] =
    "\x00" "\x09" "\x0A" "\x0C" "\x1A" "\x20" "\x8A" "\x8C" ",.;:!\?/\\<>()#&%+-*";
 
 static void s_token_exit( void * cargo )
@@ -294,7 +294,7 @@ HB_FUNC( TOKENINIT )
       else
       {
          pcSeparatorStr = sc_spcSeparatorStr;
-         sSeparatorStrLen = strlen( sc_spcSeparatorStr );
+         sSeparatorStrLen = sizeof( sc_spcSeparatorStr ) - 1;
       }
 
       /* skip width */
