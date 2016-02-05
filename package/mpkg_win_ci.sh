@@ -36,7 +36,7 @@ export CURL_HASH_64='4b214a01e4d7dbb9516344328988fd91be10b0335f739b67e2254d8fe97
 # export HB_BUILD_VERBOSE='yes'
 # export _HB_BUNDLE_3RDLIB='yes'
 
-[ "${_BRANC4}" = 'msvc' ] || "$(dirname "$0")/mpkg_win_dl.sh"
+[ "${_BRANC4}" = 'msvc' ] || "$(dirname "$0")/mpkg_win_dl.sh" || exit
 
 export HB_VF='daily'
 export HB_RT="${_ROOT}"
