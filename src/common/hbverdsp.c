@@ -124,7 +124,7 @@ void hb_verBuildInfo( void )
    }
 
    hb_conOutErr( "Build options: ", 0 );
-   if( hb_xquery( HB_MEM_USEDMAX ) != 0 )
+   if( hb_xquery( HB_MEM_BLOCKS ) != 0 )
       hb_conOutErr( "(memory tracking) ", 0 );
 #if defined( HB_TR_INFO ) && ( HB_TR_LEVEL == HB_TR_INFO || HB_TR_LEVEL == HB_TR_DEBUG )
    hb_conOutErr( "(tracing) ", 0 );

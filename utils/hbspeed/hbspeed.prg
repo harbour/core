@@ -503,7 +503,7 @@ procedure test( nMT, cExclude, lScale )
 
 #ifdef __HARBOUR__
    #include "hbmemory.ch"
-   if Memory( HB_MEM_USEDMAX ) != 0
+   if Memory( HB_MEM_BLOCKS ) != 0
       ? "Warning !!! Memory statistics enabled."
       ?
    endif
