@@ -2,9 +2,7 @@
 
 # dynamic lib creation settings
 {hbdyn}-shared
-{hbdyn}-implib=lib/${hb_plat}/${hb_comp}${hb_build}/
-{hbdyn&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}
-{hbdyn&!hb_dynsuffix}-implib=${hb_outputname}_dll
+{hbdyn}-implib=lib/${hb_plat}/${hb_comp}${hb_build}/${hb_outputname}_dll
 {hbdyn&unix&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}
 {hbdyn&unix&!darwin&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}
 {hbdyn&unix&darwin}-ln=${hb_dynprefix}${hb_outputname}.${hb_major}.${hb_minor}${hb_dynext}
