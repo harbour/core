@@ -2003,6 +2003,7 @@ endif
 ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_BUILD_DYN),no)
 
+      HB_IMPLIB_PLOC :=
       HB_DYNLIB_PLOC :=
       HB_DYNLIB_POST :=
       HB_DYNLIB_PEXT :=
@@ -2014,6 +2015,7 @@ ifeq ($(HB_INIT_DONE),)
          # harbour-xy[-subtype][.dll|.lib]
 
          HB_DYNLIB_PLOC := -$(HB_VER_MAJOR)$(HB_VER_MINOR)
+         HB_IMPLIB_PLOC := _dll
 
          ifeq ($(HB_PLATFORM),win)
             ifeq ($(HB_COMPILER),bcc)
@@ -2076,9 +2078,11 @@ ifeq ($(HB_INIT_DONE),)
       export HB_DYNLIB_PEXC
 
       export HB_DYNLIB_BASE := harbour$(HB_DYNLIB_PLOC)
+      export HB_IMPLIB_BASE := harbour$(HB_IMPLIB_PLOC)
 
       ifeq ($(__HB_BUILD_DYN_2ND),yes)
          export HB_DYNLIB_BASE_2ND := harbour2$(HB_DYNLIB_PLOC)
+         export HB_IMPLIB_BASE_2ND := harbour2$(HB_IMPLIB_PLOC)
       endif
    endif
 endif

@@ -10,6 +10,7 @@ ifneq ($(DYNDIRLIST_BASE),)
       DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm
    endif
    DYNNAME := $(HB_DYNLIB_BASE_2ND)
+   IMPNAME := $(HB_IMPLIB_BASE_2ND)
 
    include $(TOP)$(ROOT)config/dyn.mk
 
