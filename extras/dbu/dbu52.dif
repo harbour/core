@@ -223,7 +223,7 @@ diff -u dbu52ori/dbu.prg dbu52pat/dbu.prg
  
 diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
 --- dbu52ori/dbucopy.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbucopy.prg	2012-05-02 16:47:47.000000000 +0200
++++ dbu52pat/dbucopy.prg	2016-02-06 17:26:41.000000000 +0100
 @@ -62,8 +62,8 @@
  	filename = ""
  
@@ -253,14 +253,35 @@ diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
  							  " to...")
  
  
-@@ -208,7 +208,7 @@
+@@ -187,7 +187,7 @@
+ 	OTHERWISE
+ 		* ok to copy file
+ 
+-		IF FILE(M->filename)
++		IF hb_dbExists(M->filename)
+ 
+ 			IF rsvp("Target File " + IF(aseek(M->dbf, M->filename) > 0,;
+ 					"Is Open", "Exists") + "...Overwrite? (Y/N)") <> "Y"
+@@ -208,9 +208,9 @@
  
  		SELECT (M->cur_area)
  
 -		IF RAT(M->def_ext, M->filename) = LEN(M->filename) - 3
 +		IF RAT(Lower( M->def_ext ), Lower( M->filename )) = LEN(M->filename) - 3
  			* target has default extension..does it exists in current dir?
- 			add_name = .NOT. FILE(name(M->filename) + M->def_ext)
+-			add_name = .NOT. FILE(name(M->filename) + M->def_ext)
++			add_name = .NOT. hb_dbExists(name(M->filename) + M->def_ext)
+ 
+ 		ELSE
+ 			add_name = .F.
+@@ -268,7 +268,7 @@
+ 
+ 		ENDIF
+ 
+-		IF FILE(name(M->filename) + M->def_ext) .AND. M->add_name
++		IF hb_dbExists(name(M->filename) + M->def_ext) .AND. M->add_name
+ 			* add only .dbf files in the current directory
+ 			new_el = afull(&files) + 1
  
 @@ -301,7 +301,7 @@
  PARAMETERS sysparam
@@ -271,6 +292,15 @@ diff -u dbu52ori/dbucopy.prg dbu52pat/dbucopy.prg
  							  " from")
  
  
+@@ -341,7 +341,7 @@
+ 	CASE M->filename == M->cur_dbf
+ 		error_msg("File cannot be appended from itself")
+ 
+-	CASE .NOT. FILE(M->filename)
++	CASE .NOT. hb_dbExists(M->filename)
+ 		error_msg("Can't open " + M->filename)
+ 
+ 	CASE .NOT. EMPTY(M->for_cond) .AND. TYPE(M->for_cond) <> "L"
 @@ -433,7 +433,7 @@
  PARAMETERS sysparam
  
@@ -974,7 +1004,7 @@ diff -u dbu52ori/dbuutil.prg dbu52pat/dbuutil.prg
  
 diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
 --- dbu52ori/dbuview.prg	1993-03-04 04:20:00.000000000 +0100
-+++ dbu52pat/dbuview.prg	2012-05-02 16:53:34.000000000 +0200
++++ dbu52pat/dbuview.prg	2016-02-06 17:23:20.000000000 +0100
 @@ -906,15 +906,15 @@
  ENDIF
  
@@ -1022,6 +1052,15 @@ diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
  						  "do_opendbf", .F., 8) <> 0
  
  	ENDIF
+@@ -1196,7 +1196,7 @@
+ 		error_msg("Data file not selected")
+ 		done = .F.
+ 
+-	CASE .NOT. FILE(M->filename)
++	CASE .NOT. hb_dbExists(M->filename)
+ 		error_msg("Can't open " + M->filename)
+ 		done = .F.
+ 
 @@ -1269,12 +1269,12 @@
  	KEYBOARD CHR(M->keystroke)
  
@@ -1036,6 +1075,15 @@ diff -u dbu52ori/dbuview.prg dbu52pat/dbuview.prg
 +		IF .NOT. (RAT(".", M->filename) > RAT(hb_ps(), M->filename))
  			* extension not entered..provide default
  			filename = filename + INDEXEXT()
+ 
+@@ -1339,7 +1339,7 @@
+ 		error_msg("Index file not selected")
+ 		done = .F.
+ 
+-	CASE .NOT. FILE(M->filename)
++	CASE .NOT. hb_dbExists(M->filename)
+ 		error_msg("Can't open " + M->filename)
+ 		done = .F.
  
 @@ -2120,7 +2120,7 @@
  
