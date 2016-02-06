@@ -1,6 +1,6 @@
 diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
 --- dbu53ori/dbu.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbu.prg	2015-11-24 16:10:21.000000000 +0100
++++ dbu53pat/dbu.prg	2016-02-06 15:54:58.000000000 +0100
 @@ -9,8 +9,10 @@
  *
  ***/
@@ -143,7 +143,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
 +      CASE RAT(".", com_line) > RAT(hb_ps(), com_line)
      // file extension entered
 -    IF !( FILE( com_line ) )
-+    IF !( hb_FileExists( com_line ) )
++    IF !( hb_FileExists( com_line ) ) .AND. !( hb_dbExists( com_line ) )
         // file must exist
         com_line := ""
  
@@ -156,7 +156,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
 +    com_line := com_line + ".vew"
  
 -      CASE FILE(com_line + ".DBF")
-+      CASE hb_FileExists(com_line + ".dbf")
++      CASE hb_dbExists(com_line + ".dbf")
      // look for file name with .DBF extension
 -    com_line := com_line + ".DBF"
 +    com_line := com_line + ".dbf"
