@@ -10,8 +10,7 @@ are available for download:
 Package content:
 
 * Harbour tools, static/shared libraries, sample sources
-* x86/x64 dual-target MinGW C compiler (downloadable)
-* All executables are x86 hosted.
+* x86 hosted executables
 
 Usage:
 
