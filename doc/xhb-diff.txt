@@ -728,10 +728,53 @@ hb_ArrayToParams() or similar function.
 
 ###    MACROS WITH DECLARED SYMBOLS    ###
 ==========================================
-Harbour supports macro expansion for expressions with declared symbols.
-This functionality can be enabled by -kd compiler switch:
+In Clipper all constant strings in PRG code with "&" character inside
+are preprocessed at runtime by macro compiler. It checks if characters
+after "&" are valid variable name (starts with "_" or letter and then
+mix of "_", letters and digits until first different character) and if
+yes and such private or public variable exists and it contains string
+then the original string is modified and &<varname>[.] is substitute
+by variable contents, i.e.
+   private var := "ABC"
+   ? "[&var-rest][&var.rest]" // prints: [ABC-rest][ABCrest]
+Please note that "." at the end of variable name has special meaning.
+It can be used to mark end of macro variable name and is eaten during
+substitution. This feature works only for memvars (private and public)
+variables. If Clipper detects that variable declared as local, static
+or field is used in such context then it generates compile time error,
+i.e.:
+   local var := "text"
+   ? "&var"
+
+   clipper tst.prg
+   [...]
+   Compiling T48.PRG
+
+   TST.PRG(2) Error C2081  Macro of declared symbol: '&OK'
+
+By default Harbour is Cl*pper compatible and also generates such
+compile time error (E0042).
+Many people do not know about this functionality in Clipper and Harbour
+and are quite often surprised when hear about it.
+Harbour offers two compiler switches to control this feature. It can be
+completely disabled by -km compiler switch.
+   -km => turn off macrotext substitution
+When this switch is used for constant strings with "&" character inside
+faster code is generate which does not activate macrocompiler at runtime
+so they are taken as is. This switch does not affect real macros.
+It only changes the runtime behavior of strings constants with "&"
+character inside (macrotext).
+The second switch -kd extends above functionality and allows to use
+macrotexts and macros with declared symbols:
    -kd => accept macros with declared symbols
-It allows to write code like:
+It means that also fields, local and static variables can be used in
+macrotexts and macros.
+The above example compiled with -kd switch does not generate compile
+time error and final application shows "text" on the screen.
+When -km switch is used then "&var" is shown by final application.
+
+Harbour supports macro expansion for expressions with declared symbols
+also for codeblocks when -kd is used. It allows to write code like:
    cbVar := {|| &cLocal + cPrivate }
 or:
    cbVar := {|| &cLocalPref.func&cPriv1( cPriv2 ) }
@@ -742,12 +785,17 @@ If it's possible then for macrocodeblocks Harbour compiler tries to
 generate early eval code in which macros are expanded when codeblock
 is created. Otherwise macros are expanded each time codeblock is
 evaluated.
-xHarbour has also similar extension but limited to macro variables
-and it works only if other macros are not used in the same expression.
-When more complicated examples are created xHarbour compiler generates
-broken code which causes RTE or GPF during execution. It also does not
-support codeblocks which contain mixed macros and refuse to compile
-such code.
+In xHarbour macrotext substitution for pure strings is always enabled
+like in Clipper but it does not detect situation when fields, local
+or static variables are used in macrotexts so it does not generate
+compile time errors in such case.
+xHarbour has similar to -kd extension always enabled but limited to
+macro variables used inside code blocks and it works only if other
+macros are not used in the same expression. When more complicated
+examples are used xHarbour compiler generates broken code which
+causes RTE or GPF during execution. It also does not support
+codeblocks which contain mixed macros and refuse to compile such
+code.
 
 This example illustrates macros with declared symbols.
 
@@ -800,16 +848,18 @@ Clipper does not. This example shows such macro messages usage:
          private var := "CAR"
 
          o:&msg := "<cargo>"
-         o:&( Upper( msg ) ) += "<value>"
-         ? o:&var.go
+         o:&var.go += "<value1>"
+         o:&msg += "<value2>"
+         o:&( msg ) += "<value3>"
+         o:&( Upper( msg ) ) += "<value4>"
 
-Users who want to test it in xHarbour should change:
-      o:&( Upper( msg ) ) += "<value>"
-to:
-      o:&( Upper( msg ) ) := o:&( Upper( msg ) ) + "<value>"
-because using macro messages with <op>= operators or pre/post
-incrementation/decrementation causes that xHarbour compiler GPFs during
-compilation.
+xHarbour does not support macro messages in assignment context.
+Older xHarbour versions for macro messages with <op>= operators
+or pre/post incrementation/decrementation GPF at runtime and
+current ones compile above PRG code without any errors but
+generate broken PCODE which may cause different side effects
+(RTE, silent wrong processing or even memory corruption) - it
+depends on the used context.
 
 
 
