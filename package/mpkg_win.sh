@@ -412,10 +412,12 @@ fi
 if [ "$(wc -c < "${_PKGNAME}")" -lt 32000000 ]; then
    (
       set +x
-      curl -sS \
+      out="$(curl -sS \
          -X POST https://www.virustotal.com/vtapi/v2/file/scan \
          --form-string "apikey=${VIRUSTOTAL_APIKEY}" \
-         --form "file=@${_PKGNAME}"
+         --form "file=@${_PKGNAME}")"
+      echo "VirusTotal URL for '${_PKGNAME}':"
+      echo "$(echo "${out}" | grep -o 'https://[a-zA-Z0-9./]*')"
    )
 else
    echo "! File too large for VirusTotal Public API. Upload skipped."
