@@ -416,6 +416,7 @@ if [ "$(wc -c < "${_PKGNAME}")" -lt 32000000 ]; then
          -X POST https://www.virustotal.com/vtapi/v2/file/scan \
          --form-string "apikey=${VIRUSTOTAL_APIKEY}" \
          --form "file=@${_PKGNAME}")"
+      echo "${out}"
       echo "VirusTotal URL for '${_PKGNAME}':"
       echo "$(echo "${out}" | grep -o 'https://[a-zA-Z0-9./]*')"
    )
