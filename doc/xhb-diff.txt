@@ -755,12 +755,12 @@ i.e.:
 By default Harbour is Cl*pper compatible and also generates such
 compile time error (E0042).
 Many people do not know about this functionality in Clipper and Harbour
-and are quite often surprised when hear about it.
+and are quite often surprised when hearing about it.
 Harbour offers two compiler switches to control this feature. It can be
 completely disabled by -km compiler switch.
    -km => turn off macrotext substitution
 When this switch is used for constant strings with "&" character inside
-faster code is generate which does not activate macrocompiler at runtime
+faster code is generated which does not activate macrocompiler at runtime
 so they are taken as is. This switch does not affect real macros.
 It only changes the runtime behavior of strings constants with "&"
 character inside (macrotext).
@@ -794,7 +794,7 @@ macro variables used inside code blocks and it works only if other
 macros are not used in the same expression. When more complicated
 examples are used xHarbour compiler generates broken code which
 causes RTE or GPF during execution. It also does not support
-codeblocks which contain mixed macros and refuse to compile such
+codeblocks which contain mixed macros and refuses to compile such
 code.
 
 This example illustrates macros with declared symbols.
