@@ -21,8 +21,4 @@ PROCEDURE Main()
    ? "BIO_write()", BIO_write( bio, "Hello world!" + hb_eol() )
    ? "BIO_flush()", BIO_flush( bio )
 
-   ? bio := BIO_new_file( "bio_test.txt", "a+" )
-   ? "BIO_write()", BIO_write( bio, "Hello world!" + hb_eol() )
-   ? "BIO_flush()", BIO_flush( bio )
-
    RETURN

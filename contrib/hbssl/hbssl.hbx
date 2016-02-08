@@ -40,7 +40,6 @@ DYNAMIC BIO_new_accept
 DYNAMIC BIO_new_connect
 DYNAMIC BIO_new_dgram
 DYNAMIC BIO_new_fd
-DYNAMIC BIO_new_file
 DYNAMIC BIO_new_mem_buf
 DYNAMIC BIO_new_socket
 DYNAMIC BIO_puts
