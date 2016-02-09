@@ -1552,7 +1552,8 @@ HB_FUNC( SSL_USE_RSAPRIVATEKEY_ASN1 )
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
          hb_retni( SSL_use_RSAPrivateKey_ASN1( ssl, ( const unsigned char * ) hb_parc( 2 ), ( int ) hb_parclen( 2 ) ) );
 #else
          /* 'const' not used in 2nd param because ssh.h misses it, too.
