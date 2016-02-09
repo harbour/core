@@ -3601,7 +3601,7 @@ HB_FOFFSET hb_fsGetSize( HB_FHANDLE hFileHandle )
 #if defined( HB_OS_WIN )
    {
       DWORD dwFileSizeLow, dwFileSizeHigh = 0;
-      HB_BOOL fOK = HB_FALSE;
+      HB_BOOL fOK;
 
       dwFileSizeLow = GetFileSize( DosToWinHandle( hFileHandle ), &dwFileSizeHigh );
       fOK = dwFileSizeLow != INVALID_FILE_SIZE || GetLastError() == NO_ERROR;
