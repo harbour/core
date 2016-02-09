@@ -163,7 +163,8 @@ HB_FUNC( OPENSSL_VERSION )
       case HB_OPENSSL_DIR:       value = OPENSSL_DIR;      break;
    }
 
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
    hb_retc( OpenSSL_version( value ) );
 #else
    hb_retc( SSLeay_version( value ) );
@@ -177,7 +178,8 @@ HB_FUNC( OPENSSL_VERSION_NUMBER )
 
 HB_FUNC( OPENSSL_VERSION_NUM )
 {
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
    hb_retnint( OpenSSL_version_num() );
 #else
    hb_retnint( SSLeay() );
@@ -704,15 +706,7 @@ HB_FUNC( SSL_GET_SSL_METHOD )
 #endif
          int n;
 
-         if(      p == SSLv3_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV3;
-         else if( p == SSLv3_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV3_SERVER;
-         else if( p == SSLv3_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV3_CLIENT;
-#if OPENSSL_VERSION_NUMBER < 0x10000000L
-         else if( p == SSLv2_method()         ) n = HB_SSL_CTX_NEW_METHOD_SSLV2;
-         else if( p == SSLv2_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER;
-         else if( p == SSLv2_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_SSLV2_CLIENT;
-#endif
-         else if( p == TLSv1_method()         ) n = HB_SSL_CTX_NEW_METHOD_TLSV1;
+         if(      p == TLSv1_method()         ) n = HB_SSL_CTX_NEW_METHOD_TLSV1;
          else if( p == TLSv1_server_method()  ) n = HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER;
          else if( p == TLSv1_client_method()  ) n = HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT;
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L

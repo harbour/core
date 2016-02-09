@@ -59,7 +59,8 @@ static HB_GARBAGE_FUNC( EVP_ENCODE_CTX_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && *ph )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
       EVP_ENCODE_CTX_free( ( EVP_ENCODE_CTX * ) *ph );
 #else
       /* Destroy the object */
@@ -94,10 +95,11 @@ HB_FUNC( EVP_ENCODE_CTX_NEW )
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_ENCODE_CTX * ), &s_gcEVP_ENCODE_CTX_funcs );
    EVP_ENCODE_CTX * ctx;
 
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
    ctx = EVP_ENCODE_CTX_new();
 #else
-   ctx = ( EVP_ENCODE_CTX * ) hb_xgrab( sizeof( EVP_ENCODE_CTX ) );
+   ctx = ( EVP_ENCODE_CTX * ) hb_xgrabz( sizeof( EVP_ENCODE_CTX ) );
 #endif
 
    *ph = ctx;

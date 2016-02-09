@@ -258,7 +258,7 @@ fi
 
 # Copy getmingw.hb with some burn-in
 
-sed -e "s/_HB_VF_DEF_/${HB_VF_DEF}/g" 'getmingw.hb' > "${HB_ABSROOT}bin/getmingw.hb"
+sed "s/_HB_VF_DEF_/${HB_VF_DEF}/g" 'getmingw.hb' > "${HB_ABSROOT}bin/getmingw.hb"
 touch -c "${HB_ABSROOT}bin/getmingw.hb" -r "${HB_ABSROOT}README.md"
 
 cp -f -p 'getsrc.hb' "${HB_ABSROOT}bin/"

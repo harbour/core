@@ -482,8 +482,9 @@ HB_FUNC( BIO_NEW_MEM_BUF )
 
    if( pBuffer )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L || \
-    OPENSSL_VERSION_NUMBER >  0x1000206fL /* 1.0.2g or upper */
+#if ( OPENSSL_VERSION_NUMBER >= 0x10100000L || \
+      OPENSSL_VERSION_NUMBER >  0x1000206fL /* 1.0.2g or upper */ ) && \
+      ! defined( LIBRESSL_VERSION_NUMBER )
       hb_BIO_ret( BIO_new_mem_buf( hb_itemGetCPtr( pBuffer ), ( int ) hb_itemGetCLen( pBuffer ) ) );
 #else
       hb_BIO_ret( BIO_new_mem_buf( HB_UNCONST( hb_itemGetCPtr( pBuffer ) ), ( int ) hb_itemGetCLen( pBuffer ) ) );
@@ -605,7 +606,8 @@ HB_FUNC_TRANSLATE( BIO_FREE_ALL, BIO_FREE )  /* These wrappers don't allow to cr
 HB_FUNC( BIO_NEW_CONNECT )
 {
    if( HB_ISCHAR( 1 ) )
-#if OPENSSL_VERSION_NUMBER >= 0x10002000L
+#if OPENSSL_VERSION_NUMBER >= 0x10002000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
       hb_BIO_ret( BIO_new_connect( hb_parc( 1 ) ) );
 #else
       /* NOTE: Discarding 'const', OpenSSL will strdup() */
@@ -618,7 +620,8 @@ HB_FUNC( BIO_NEW_CONNECT )
 HB_FUNC( BIO_NEW_ACCEPT )
 {
    if( HB_ISCHAR( 1 ) )
-#if OPENSSL_VERSION_NUMBER >= 0x10002000L
+#if OPENSSL_VERSION_NUMBER >= 0x10002000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
       hb_BIO_ret( BIO_new_accept( hb_parc( 1 ) ) );
 #else
       /* NOTE: Discarding 'const', OpenSSL will strdup() */

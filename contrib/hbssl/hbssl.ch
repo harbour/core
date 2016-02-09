@@ -51,12 +51,6 @@
 
 #define HB_SSL_CTX_NEW_METHOD_UNKNOWN                       ( -2 )
 #define HB_SSL_CTX_NEW_METHOD_DEFAULT                       ( -1 )
-#define HB_SSL_CTX_NEW_METHOD_SSLV2                         0
-#define HB_SSL_CTX_NEW_METHOD_SSLV2_SERVER                  1
-#define HB_SSL_CTX_NEW_METHOD_SSLV2_CLIENT                  2
-#define HB_SSL_CTX_NEW_METHOD_SSLV3                         3
-#define HB_SSL_CTX_NEW_METHOD_SSLV3_SERVER                  4
-#define HB_SSL_CTX_NEW_METHOD_SSLV3_CLIENT                  5
 #define HB_SSL_CTX_NEW_METHOD_TLSV1                         6
 #define HB_SSL_CTX_NEW_METHOD_TLSV1_SERVER                  7
 #define HB_SSL_CTX_NEW_METHOD_TLSV1_CLIENT                  8

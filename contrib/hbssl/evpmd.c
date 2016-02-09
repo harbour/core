@@ -69,8 +69,10 @@ static HB_GARBAGE_FUNC( EVP_MD_CTX_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && *ph )
    {
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
       /* Destroy the object */
+#if defined( LIBRESSL_VERSION_NUMBER )
+      EVP_MD_CTX_destroy( ( EVP_MD_CTX * ) *ph );
+#elif OPENSSL_VERSION_NUMBER >= 0x00907000L
       EVP_MD_CTX_free( ( EVP_MD_CTX * ) *ph );
 #else
       hb_xfree( *ph );
@@ -121,7 +123,9 @@ const EVP_MD * hb_EVP_MD_par( int iParam )
       case HB_EVP_MD_MD5:        p = EVP_md5();       break;
 #endif
 #ifndef OPENSSL_NO_SHA
+#if ! defined( LIBRESSL_VERSION_NUMBER )
       case HB_EVP_MD_SHA:        p = EVP_sha();       break;
+#endif
       case HB_EVP_MD_SHA1:       p = EVP_sha1();      break;
       case HB_EVP_MD_DSS:        p = EVP_dss();       break;
       case HB_EVP_MD_DSS1:       p = EVP_dss1();      break;
@@ -158,7 +162,9 @@ static int hb_EVP_MD_ptr_to_id( const EVP_MD * p )
    else if( p == EVP_md5()       ) n = HB_EVP_MD_MD5;
 #endif
 #ifndef OPENSSL_NO_SHA
+#if ! defined( LIBRESSL_VERSION_NUMBER )
    else if( p == EVP_sha()       ) n = HB_EVP_MD_SHA;
+#endif
    else if( p == EVP_sha1()      ) n = HB_EVP_MD_SHA1;
    else if( p == EVP_dss()       ) n = HB_EVP_MD_DSS;
    else if( p == EVP_dss1()      ) n = HB_EVP_MD_DSS1;
@@ -242,7 +248,8 @@ HB_FUNC( EVP_MD_CTX_NEW )
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_MD_CTX * ), &s_gcEVP_MD_CTX_funcs );
    EVP_MD_CTX * ctx;
 
-#if OPENSSL_VERSION_NUMBER >= 0x00907000L
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
    ctx = EVP_MD_CTX_new();
 #else
    ctx = ( EVP_MD_CTX * ) hb_xgrabz( sizeof( EVP_MD_CTX ) );
@@ -265,7 +272,9 @@ HB_FUNC( EVP_MD_CTX_RESET )
 
       if( ctx )
       {
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if defined( LIBRESSL_VERSION_NUMBER )
+         hb_retni( EVP_MD_CTX_cleanup( ctx ) );
+#elif OPENSSL_VERSION_NUMBER >= 0x10100000L
          hb_retni( EVP_MD_CTX_reset( ctx ) );
 #elif OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_MD_CTX_cleanup( ctx ) );

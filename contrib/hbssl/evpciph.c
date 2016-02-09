@@ -442,7 +442,8 @@ HB_FUNC( EVP_CIPHER_CTX_RESET )
       EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
 
       if( ctx )
-#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
          hb_retni( EVP_CIPHER_CTX_reset( ctx ) );
 #else
          hb_retni( EVP_CIPHER_CTX_cleanup( ctx ) );
