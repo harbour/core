@@ -733,7 +733,7 @@ are preprocessed at runtime by macro compiler. It checks if characters
 after "&" are valid variable name (starts with "_" or letter and then
 mix of "_", letters and digits until first different character) and if
 yes and such private or public variable exists and it contains string
-then the original string is modified and &<varname>[.] is substitute
+then the original string is modified and &<varname>[.] is substituted
 by variable contents, i.e.
    private var := "ABC"
    ? "[&var-rest][&var.rest]" // prints: [ABC-rest][ABCrest]

@@ -1780,7 +1780,7 @@ void hb_itemMoveToRef( PHB_ITEM pDest, PHB_ITEM pSource )
 
 void hb_itemMoveFromRef( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopyFromRef(%p, %p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMoveFromRef(%p, %p)", pDest, pSource ) );
 
    if( HB_IS_BYREF( pSource ) )
    {

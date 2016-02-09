@@ -57,7 +57,7 @@ Client side functions:
    netio_GetConnection( [<cServer>], [<nPort>], [<nTimeOut>], ;
                         [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
          -> <pConnection> | NIL
-      Get pointer item with HBNTIO connection. It can be used to speedup
+      Get pointer item with HBNETIO connection. It can be used to speedup
       RPC calls and stream functions when <pConnection> is passed as
       parameter to these functions.
 
@@ -71,11 +71,22 @@ Client side functions:
          -> <lDecoded>
       Decode connection parameters from <cFullName> and default settings.
       Return .T. if <cFullName> contains any connection settings.
-      <cFullName> should not contain "net:" prefix.
+      <cFullName> does not need to be prefixed with "net:"
 
 
    netio_TimeOut( <pConnection> [, <nTimeOut>] ) -> [<nTimeOut>]
       Get/Set client side timeout for messages
+
+
+   netio_SetPath( <pConnection> [, <cPath>] ) -> [<cPrevPath>]
+      Set/Get path prefix for automatic file redirection to HBNETIO.
+      If automatic redirection is activated then <cPath> is removed
+      from file name passed to HBNETIO server, i.e.:
+
+         netio_SetPath( netio_GetConnection(), "//myserver/myshare" )
+         [...]
+         /* open "/data/table" on HBNETIO server */
+         use "//myserver/myshare/data/table"
 
 
    netio_ProcExists( [<pConnection>,] <cProcName> ) -> <lExists>

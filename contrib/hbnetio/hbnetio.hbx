@@ -43,6 +43,7 @@ DYNAMIC netio_ServedConnection
 DYNAMIC netio_Server
 DYNAMIC netio_ServerStop
 DYNAMIC netio_ServerTimeOut
+DYNAMIC netio_SetPath
 DYNAMIC netio_SrvSendData
 DYNAMIC netio_SrvSendItem
 DYNAMIC netio_SrvStatus
