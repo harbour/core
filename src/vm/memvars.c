@@ -269,7 +269,14 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
       pPrivateStack->stack[ pPrivateStack->count ].pDynSym = pDynSym;
       pPrivateStack->stack[ pPrivateStack->count++ ].pPrevMemvar = hb_dynsymGetMemvar( pDynSym );
 
-      pMemvar = hb_memvarValueNew();
+      if( pValue && HB_IS_MEMVAR( pValue ) )
+      {
+         pMemvar = pValue->item.asMemvar.value;
+         hb_xRefInc( pMemvar );
+         pValue = NULL;
+      }
+      else
+         pMemvar = hb_memvarValueNew();
       hb_dynsymSetMemvar( pDynSym, pMemvar );
    }
 
@@ -1217,7 +1224,7 @@ HB_FUNC( __MVDBGINFO )
       if( pValue )   /* the requested variable was found */
       {
          hb_storc( szName, 3 );
-         hb_itemReturn( pValue );
+         hb_itemCopyFromRef( hb_stackReturnItem(), pValue );
       }
       else
       {
