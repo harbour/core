@@ -1503,6 +1503,8 @@ Supported shells per host platforms:
             `tar -xvf cegcc_mingw32ce_cygwin1.7_r1399.tar -h`
 
           * Compiler will be in the `opt\mingw32ce` subdirectory.
+     * MSYS2 [Windows, free, open-source]
+        * <https://msys2.github.io/>
      * Clang [multi-platform, free, open-source]
         * <http://llvm.org/releases/>
      * Cygwin [win, free, open-source]
