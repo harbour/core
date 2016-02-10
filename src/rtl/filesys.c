@@ -1399,6 +1399,22 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
    return nWritten;
 }
 
+HB_FHANDLE hb_fsCreate( const char * pszFileName, HB_FATTR nAttr )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsCreate(%s, %u)", pszFileName, nAttr ) );
+
+   return hb_fsOpenEx( pszFileName, nAttr, FO_READWRITE | FO_CREAT | FO_TRUNC | FO_EXCLUSIVE );
+}
+
+HB_FHANDLE hb_fsCreateEx( const char * pszFileName, HB_FATTR nAttr, HB_USHORT uiFlags )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsCreateEx(%s, %u, %hu)", pszFileName, nAttr, uiFlags ) );
+
+   uiFlags &= ~( FO_READ | FO_WRITE | FO_READWRITE );
+
+   return hb_fsOpenEx( pszFileName, nAttr, FO_READWRITE | FO_CREAT | FO_TRUNC | uiFlags );
+}
+
 HB_FHANDLE hb_fsOpen( const char * pszFileName, HB_USHORT uiFlags )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsOpen(%s, %hu)", pszFileName, uiFlags ) );
@@ -1487,145 +1503,6 @@ HB_FHANDLE hb_fsOpenEx( const char * pszFileName, HB_FATTR nAttr, HB_USHORT uiFl
 #     endif
 #endif
 
-      hb_vmLock();
-
-      if( pszFree )
-         hb_xfree( pszFree );
-   }
-#endif
-
-   return hFileHandle;
-}
-
-HB_FHANDLE hb_fsCreate( const char * pszFileName, HB_FATTR nAttr )
-{
-   HB_FHANDLE hFileHandle;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsCreate(%s, %u)", pszFileName, nAttr ) );
-
-#if defined( HB_OS_WIN )
-   {
-      LPCTSTR lpFileName;
-      LPTSTR lpFree;
-      DWORD dwMode, dwShare, dwCreat, dwAttr;
-      HANDLE hFile;
-
-      lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
-
-      convert_open_flags( HB_TRUE, nAttr, FO_EXCLUSIVE, &dwMode, &dwShare, &dwCreat, &dwAttr );
-
-      hb_vmUnlock();
-      hFile = CreateFile( lpFileName, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
-      hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
-      hb_vmLock();
-
-      if( lpFree )
-         hb_xfree( lpFree );
-
-      hFileHandle = ( HB_FHANDLE ) hFile;
-   }
-#elif defined( HB_OS_OS2 )
-   {
-      ULONG ulAction = 0, ulAttribute, fsOpenFlags, fsOpenMode;
-
-      convert_open_flags( HB_TRUE, nAttr, FO_EXCLUSIVE,
-                          &ulAttribute, &fsOpenFlags, &fsOpenMode );
-      hb_vmUnlock();
-      hb_fsOS2DosOpenL( pszFileName, &hFileHandle, &ulAction, 0,
-                        ulAttribute, fsOpenFlags, fsOpenMode );
-      hb_vmLock();
-   }
-#else
-   {
-      char * pszFree;
-      int flags, share, attr;
-      unsigned mode;
-
-      pszFileName = hb_fsNameConv( pszFileName, &pszFree );
-
-      convert_open_flags( HB_TRUE, nAttr, FO_EXCLUSIVE, &flags, &mode, &share, &attr );
-
-      hb_vmUnlock();
-#if defined( HB_FS_DOSCREAT )
-      hFileHandle = _creat( pszFileName, attr );
-      hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
-#elif defined( HB_FS_SOPEN )
-      hFileHandle = open( pszFileName, flags, mode );
-      hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
-#else
-      HB_FAILURE_RETRY( hFileHandle, open( pszFileName, flags | share, mode ) );
-#endif
-      hb_vmLock();
-
-      if( pszFree )
-         hb_xfree( pszFree );
-   }
-#endif
-
-   return hFileHandle;
-}
-
-/* Derived from hb_fsCreate()
-
-   NOTE: The default opening mode differs from the one used in hb_fsCreate()
-         [vszakats]
- */
-
-HB_FHANDLE hb_fsCreateEx( const char * pszFileName, HB_FATTR nAttr, HB_USHORT uiFlags )
-{
-   HB_FHANDLE hFileHandle;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsCreateEx(%s, %u, %hu)", pszFileName, nAttr, uiFlags ) );
-
-#if defined( HB_OS_WIN )
-   {
-      LPCTSTR lpFileName;
-      LPTSTR lpFree;
-      DWORD dwMode, dwShare, dwCreat, dwAttr;
-      HANDLE hFile;
-
-      lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
-
-      convert_open_flags( HB_TRUE, nAttr, uiFlags, &dwMode, &dwShare, &dwCreat, &dwAttr );
-
-      hb_vmUnlock();
-      hFile = CreateFile( lpFileName, dwMode, dwShare, NULL, dwCreat, dwAttr, NULL );
-      hb_fsSetIOError( hFile != ( HANDLE ) INVALID_HANDLE_VALUE, 0 );
-      hb_vmLock();
-
-      if( lpFree )
-         hb_xfree( lpFree );
-
-      hFileHandle = ( HB_FHANDLE ) hFile;
-   }
-#elif defined( HB_OS_OS2 )
-   {
-      ULONG ulAction = 0, ulAttribute, fsOpenFlags, fsOpenMode;
-
-      convert_open_flags( HB_TRUE, nAttr, uiFlags,
-                          &ulAttribute, &fsOpenFlags, &fsOpenMode );
-      hb_vmUnlock();
-      hb_fsOS2DosOpenL( pszFileName, &hFileHandle, &ulAction, 0,
-                        ulAttribute, fsOpenFlags, fsOpenMode );
-      hb_vmLock();
-   }
-#else
-   {
-      char * pszFree;
-      int flags, share, attr;
-      unsigned mode;
-
-      pszFileName = hb_fsNameConv( pszFileName, &pszFree );
-
-      convert_open_flags( HB_TRUE, nAttr, uiFlags, &flags, &mode, &share, &attr );
-
-      hb_vmUnlock();
-#if defined( HB_FS_SOPEN )
-      hFileHandle = open( pszFileName, flags, mode );
-      hb_fsSetIOError( hFileHandle != FS_ERROR, 0 );
-#else
-      HB_FAILURE_RETRY( hFileHandle, open( pszFileName, flags | share, mode ) );
-#endif
       hb_vmLock();
 
       if( pszFree )
@@ -3593,7 +3470,7 @@ HB_FOFFSET hb_fsGetSize( HB_FHANDLE hFileHandle )
 #if defined( HB_OS_WIN )
    {
       DWORD dwFileSizeLow, dwFileSizeHigh = 0;
-      HB_BOOL fOK = HB_FALSE;
+      HB_BOOL fOK;
 
       dwFileSizeLow = GetFileSize( DosToWinHandle( hFileHandle ), &dwFileSizeHigh );
       fOK = dwFileSizeLow != INVALID_FILE_SIZE || GetLastError() == NO_ERROR;
