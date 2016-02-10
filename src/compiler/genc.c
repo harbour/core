@@ -427,7 +427,10 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          pInline = pInline->pNext;
       }
       if( ! fHasHbInline )
+      {
          fprintf( yyc, "\n/* Empty source file */\n" );
+         fprintf( yyc, "\nstatic void * dummy = &dummy;\n" );
+      }
    }
 
    fclose( yyc );
