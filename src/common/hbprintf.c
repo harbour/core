@@ -1,5 +1,5 @@
 /*
- * hb_sprintf() function.
+ * hb_snprintf() function.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
