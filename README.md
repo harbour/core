@@ -485,7 +485,7 @@ You will need these packages to compile optional core Harbour features:
 
 For Windows/MSYS2 environment:
 
-      base-devel msys2-devel mingw-w64-{x86_64,i686}-toolchain p7zip
+      git base-devel msys2-devel mingw-w64-{x86_64,i686}-toolchain upx uncrustify p7zip
 
 Packages for optional core Harbour features:
 
