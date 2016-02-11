@@ -29,7 +29,7 @@ set -e
    7z e -y -oupx pack.bin > /dev/null
 
 #  if [ "${_BRANCH#*msys*}" = "${_BRANCH}" ] ; then
-   if [ "${_BRANCH}" = 'lto' ] ; then
+   if [ "${_BRANCH}" != 'lto' ] ; then
       readonly mingwbase='https://downloads.sourceforge.net'; readonly option='-L'
 #     curl -fsS -o pack.bin "${option}" "${mingwbase}/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.3.0/threads-posix/dwarf/i686-5.3.0-release-posix-dwarf-rt_v4-rev0.7z"
 #     openssl dgst -sha256 pack.bin | grep -q 6e067b2917583e9c654b611263d5d5e8c3215b67d76d55fa3f5f484f16f0f0b6
