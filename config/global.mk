@@ -1483,10 +1483,14 @@ ifeq ($(HB_HOST_PKGM),)
       ifneq ($(wildcard /etc/debian_version),)
          HB_HOST_PKGM += deb
       else
+      ifneq ($(wildcard /etc/pacman.conf),)
+         HB_HOST_PKGM += pacman
+      else
       ifneq ($(wildcard /etc/gentoo-release),)
          HB_HOST_PKGM += portage
       else
          HB_HOST_PKGM += rpm
+      endif
       endif
       endif
    else
@@ -1500,8 +1504,14 @@ ifeq ($(HB_HOST_PKGM),)
    ifeq ($(HB_PLATFORM),sunos)
       HB_HOST_PKGM += pkg
    else
+   ifeq ($(HB_PLATFORM),win)
+      ifneq ($(wildcard /etc/pacman.conf),)
+         HB_HOST_PKGM += pacman
+      endif
+   else
    ifeq ($(HB_PLATFORM),cygwin)
       HB_HOST_PKGM += cygwin
+   endif
    endif
    endif
    endif

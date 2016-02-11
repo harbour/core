@@ -1451,6 +1451,8 @@ STATIC FUNCTION DetectPackageManager()
       DO CASE
       CASE hb_vfExists( "/etc/debian_version" )
          cPkgMgr := "deb"
+      CASE hb_vfExists( "/etc/pacman.conf" )
+         cPkgMgr := "pacman"
       CASE hb_vfExists( "/etc/gentoo-release" )
          cPkgMgr := "portage"
       OTHERWISE
@@ -1467,6 +1469,11 @@ STATIC FUNCTION DetectPackageManager()
       cPkgMgr := "pkg"
    #elif defined( __PLATFORM__CYGWIN )
       cPkgMgr := "cygwin"
+   #elif defined( __PLATFORM__WINDOWS )
+      DO CASE
+      CASE hb_vfExists( "/etc/pacman.conf" )
+         cPkgMgr := "pacman"
+      ENDCASE
    /* extend below as needed */
    #else
       cPkgMgr := ""
