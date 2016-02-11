@@ -176,6 +176,9 @@ fi
 # Copy 7z
 
 if [ -n "${HB_DIR_7Z}" ] ; then
+   case "$(uname)" in
+      *_NT*) export PATH="${HB_DIR_7Z}:${PATH}"
+   esac
    if [ "${LIB_TARGET}" = '64' ] ; then
       cp -f -p "${HB_DIR_7Z}x64/7za.exe" "${HB_ABSROOT}bin/"
    else
@@ -347,7 +350,7 @@ rm -f "${_PKGNAME}"
    cd "${HB_DR}" || exit
    bin/hbmk2.exe "${_SCRIPT}" ts "${_ROOT}"
    # NOTE: add -stl option after updating to 15.12 or upper
-   "${HB_DIR_7Z}7za" a -r -mx "${_PKGNAME}" "@${_ROOT}/_hbfiles" > /dev/null
+   7za a -r -mx "${_PKGNAME}" "@${_ROOT}/_hbfiles" > /dev/null
 )
 
 if [ -f "${HB_SFX_7Z}" ] ; then
@@ -431,7 +434,7 @@ if [ "$(wc -c < "${_PKGNAME}")" -lt 32000000 ]; then
          --form "file=@${_PKGNAME}")"
       echo "${out}"
       echo "VirusTotal URL for '${_PKGNAME}':"
-      echo "$(echo "${out}" | grep -o 'https://[a-zA-Z0-9./]*')"
+      echo "${out}" | grep -o 'https://[a-zA-Z0-9./]*'
    )
 else
    echo "! File too large for VirusTotal Public API. Upload skipped."
