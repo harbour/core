@@ -1403,7 +1403,7 @@ HB_FHANDLE hb_fsCreate( const char * pszFileName, HB_FATTR nAttr )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsCreate(%s, %u)", pszFileName, nAttr ) );
 
-   return hb_fsOpenEx( pszFileName, nAttr, FO_READWRITE | FO_CREAT | FO_TRUNC | FO_EXCLUSIVE );
+   return hb_fsOpenEx( pszFileName, FO_READWRITE | FO_CREAT | FO_TRUNC | FO_EXCLUSIVE, nAttr );
 }
 
 HB_FHANDLE hb_fsCreateEx( const char * pszFileName, HB_FATTR nAttr, HB_USHORT uiFlags )
@@ -1412,21 +1412,21 @@ HB_FHANDLE hb_fsCreateEx( const char * pszFileName, HB_FATTR nAttr, HB_USHORT ui
 
    uiFlags &= ~( FO_READ | FO_WRITE | FO_READWRITE );
 
-   return hb_fsOpenEx( pszFileName, nAttr, FO_READWRITE | FO_CREAT | FO_TRUNC | uiFlags );
+   return hb_fsOpenEx( pszFileName, FO_READWRITE | FO_CREAT | FO_TRUNC | uiFlags, nAttr );
 }
 
 HB_FHANDLE hb_fsOpen( const char * pszFileName, HB_USHORT uiFlags )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsOpen(%s, %hu)", pszFileName, uiFlags ) );
 
-   return hb_fsOpenEx( pszFileName, FC_NORMAL, uiFlags );
+   return hb_fsOpenEx( pszFileName, uiFlags, FC_NORMAL );
 }
 
-HB_FHANDLE hb_fsOpenEx( const char * pszFileName, HB_FATTR nAttr, HB_USHORT uiFlags )
+HB_FHANDLE hb_fsOpenEx( const char * pszFileName, HB_USHORT uiFlags, HB_FATTR nAttr )
 {
    HB_FHANDLE hFileHandle;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsOpenEx(%s, %u, %hu)", pszFileName, nAttr, uiFlags ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsOpenEx(%s, %hu, %u)", pszFileName, uiFlags, nAttr ) );
 
 #if defined( HB_OS_WIN )
    {
@@ -4443,7 +4443,7 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
          uiFlags |= FO_TRUNC;
    }
 
-   hFile = hb_fsOpenEx( szPath, FC_NORMAL, uiFlags );
+   hFile = hb_fsOpenEx( szPath, uiFlags, FC_NORMAL );
 
 #if defined( HB_USE_SHARELOCKS )
    if( hFile != FS_ERROR && ( nExFlags & FXO_SHARELOCK ) != 0 )
