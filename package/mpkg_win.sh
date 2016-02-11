@@ -302,8 +302,8 @@ touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
 
 # Copy optional text files containing compiler details
 
-if ls       BUILD*.txt > /dev/null 2>&1 ; then
-   cp -f -p BUILD*.txt "${HB_ABSROOT}"
+if ls       ../BUILD*.txt > /dev/null 2>&1 ; then
+   cp -f -p ../BUILD*.txt "${HB_ABSROOT}"
 fi
 
 # Convert EOLs
