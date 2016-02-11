@@ -54,8 +54,7 @@ PROCEDURE Main()
 
          IF HB_ISSTRING( pkg[ "url" ] )
 
-            OutStd( hb_StrFormat( "! Downloading %1$d-bit hosted dual-target mingw...", ;
-               hb_Version( HB_VERSION_BITWIDTH ) ) + hb_eol() )
+            OutStd( pkg[ "dsc" ] + hb_eol() )
 
             hb_vfClose( hb_vfTempFile( @cFileName,,, ".7z" ) )
 
@@ -99,7 +98,7 @@ PROCEDURE Main()
 
    IF Empty( aPkg )
       OutStd( "! Error: This script has to be run from a Harbour binary installation." + hb_eol() )
-      OutStd( "         Download it from:" + hb_eol() )
+      OutStd( "         Download from:" + hb_eol() )
       OutStd( "            https://github.com/vszakats/harbour-core/releases/tag/v_HB_VF_DEF_" + hb_eol() )
       Inkey( 0 )
       ErrorLevel( 1 )
