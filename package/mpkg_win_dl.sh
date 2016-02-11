@@ -1,6 +1,9 @@
 #!/bin/sh
 
+# ---------------------------------------------------------------
 # Copyright 2015-2016 Viktor Szakats (vszakats.net/harbour)
+# See LICENSE.txt for licensing terms.
+# ---------------------------------------------------------------
 
 # - Requires '[PACKAGE]_VER' and '[PACKAGE]_HASH_[32|64]' envvars
 

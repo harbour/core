@@ -7,13 +7,15 @@
 
 cd "$(dirname "$0")" || exit
 
-# - Requires Git for Windows or busybox (untested) to run on Windows
+# - Requires MSYS2 or Git for Windows to run on Windows
+# - Requires 7z in PATH
 # - Adjust target dir, MinGW dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
 #   create required packages beforehand.
-# - Run this from vanilla official source tree only.
-# - Requires BCC in PATH or HB_DIR_BCC_IMPLIB (only when including BCC build).
-# - Requires GNU sed, touch and OpenSSL tools in PATH
 # - Optional HB_SFX_7Z envvar pointed to 7z SFX module
+# - Run this from vanilla official source tree only.
+
+# TOFIX: hbmk2.exe invocations break cross-builds.
+#        A native hbmk2 copy would need to be called instead.
 
 echo "! Self: $0"
 
@@ -118,28 +120,12 @@ for dir in \
    fi
 done
 
-# Create special implibs for Borland (requires BCC in PATH)
-# NOTE: Using intermediate .def files, because direct .dll to .lib conversion
-#       is buggy in BCC55 and BCC58 (no other versions tested), leaving off
-#       leading underscore from certain ("random") symbols, resulting in
-#       unresolved externals, when trying to use it. [vszakats]
-if [ -d "${HB_ABSROOT}lib/win/bcc" ] ; then
-   for file in ${HB_ABSROOT}bin/*-${HB_VS}.dll ; do
-      bfile="$(basename "${file}")"
-      "${HB_DIR_BCC_IMPLIB}impdef.exe" -a "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.defraw" "${file}"
-      sed -f "s/LIBRARY     ${bfile}.DLL/LIBRARY     \"${bfile}.dll\"/Ig" < "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.defraw" > "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.def"
-      "${HB_DIR_BCC_IMPLIB}implib.exe" -c -a "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.lib" "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.def"
-      touch -c "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.lib" -r "${HB_ABSROOT}README.md"
-      rm -f "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.defraw" "${HB_ABSROOT}lib/win/bcc/${bfile}-bcc.def"
-   done
-fi
-
 # Workaround for ld --no-insert-timestamp bug that exist as of
 # binutils 2.25, when the PE build timestamp field is often
 # filled with random bytes instead of zeroes. -s option is not
 # fixing this, 'strip' randomly fails either, so we're
 # patching manually. Do this while only Harbour built binaries are
-# copied into the bin directory to not modify 3rd party binaries.
+# present in the bin directory to not modify 3rd party binaries.
 cp -f -p "${HB_ABSROOT}bin/hbmk2.exe" "${HB_ABSROOT}bin/hbmk2-temp.exe"
 "${HB_ABSROOT}bin/hbmk2-temp.exe" "${_SCRIPT}" pe "${_ROOT}" "${HB_ABSROOT}bin/*.exe"
 "${HB_ABSROOT}bin/hbmk2-temp.exe" "${_SCRIPT}" pe "${_ROOT}" "${HB_ABSROOT}bin/*.dll"
@@ -176,9 +162,6 @@ fi
 # Copy 7z
 
 if [ -n "${HB_DIR_7Z}" ] ; then
-   case "$(uname)" in
-      *_NT*) export PATH="${HB_DIR_7Z}:${PATH}"
-   esac
    if [ "${LIB_TARGET}" = '64' ] ; then
       cp -f -p "${HB_DIR_7Z}x64/7za.exe" "${HB_ABSROOT}bin/"
    else
@@ -350,7 +333,7 @@ rm -f "${_PKGNAME}"
    cd "${HB_DR}" || exit
    bin/hbmk2.exe "${_SCRIPT}" ts "${_ROOT}"
    # NOTE: add -stl option after updating to 15.12 or upper
-   7za a -r -mx "${_PKGNAME}" "@${_ROOT}/_hbfiles" > /dev/null
+   7z a -bd -r -mx "${_PKGNAME}" "@${_ROOT}/_hbfiles" > /dev/null
 )
 
 if [ -f "${HB_SFX_7Z}" ] ; then
