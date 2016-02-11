@@ -158,7 +158,11 @@ for files in \
    "${HB_ABSROOT}lib/win/msvc64/*.lib" ; do
    # shellcheck disable=SC2086
    if ls ${files} > /dev/null 2>&1 ; then
-      "${HB_DIR_MINGW}/bin/strip" -p --enable-deterministic-archives -g "${files}"
+      if [ -d "${HB_DIR_MINGW}/bin" ] ; then
+         "${HB_DIR_MINGW}/bin/strip" -p --enable-deterministic-archives -g "${files}"
+      else
+         strip -p --enable-deterministic-archives -g "${files}"
+      fi
    fi
 done
 
@@ -240,20 +244,23 @@ fi
 # Pick the ones from a multi-target MinGW distro
 # that match the bitness of our base target.
 _MINGW_DLL_DIR="${HB_DIR_MINGW}/bin"
-[ "${LIB_TARGET}" = '32' ] && [ -d "${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32" ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32"
-[ "${LIB_TARGET}" = '64' ] && [ -d "${HB_DIR_MINGW}/i686-w64-mingw32/lib64"   ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/i686-w64-mingw32/lib64"
+if [ -d "${_MINGW_DLL_DIR}" ] ; then
 
-# shellcheck disable=SC2086
-if ls       ${_MINGW_DLL_DIR}/libgcc_s_*.dll > /dev/null 2>&1 ; then
-   cp -f -p ${_MINGW_DLL_DIR}/libgcc_s_*.dll "${HB_ABSROOT}bin/"
-fi
-# shellcheck disable=SC2086
-if ls       ${_MINGW_DLL_DIR}/mingwm*.dll > /dev/null 2>&1 ; then
-   cp -f -p ${_MINGW_DLL_DIR}/mingwm*.dll "${HB_ABSROOT}bin/"
-fi
-# shellcheck disable=SC2086
-if ls       ${_MINGW_DLL_DIR}/libwinpthread-*.dll > /dev/null 2>&1 ; then
-   cp -f -p ${_MINGW_DLL_DIR}/libwinpthread-*.dll "${HB_ABSROOT}bin/"
+   [ "${LIB_TARGET}" = '32' ] && [ -d "${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32" ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32"
+   [ "${LIB_TARGET}" = '64' ] && [ -d "${HB_DIR_MINGW}/i686-w64-mingw32/lib64"   ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/i686-w64-mingw32/lib64"
+
+   # shellcheck disable=SC2086
+   if ls       ${_MINGW_DLL_DIR}/libgcc_s_*.dll > /dev/null 2>&1 ; then
+      cp -f -p ${_MINGW_DLL_DIR}/libgcc_s_*.dll "${HB_ABSROOT}bin/"
+   fi
+   # shellcheck disable=SC2086
+   if ls       ${_MINGW_DLL_DIR}/libwinpthread-*.dll > /dev/null 2>&1 ; then
+      cp -f -p ${_MINGW_DLL_DIR}/libwinpthread-*.dll "${HB_ABSROOT}bin/"
+   fi
+   # shellcheck disable=SC2086
+   if ls       ${_MINGW_DLL_DIR}/mingwm*.dll > /dev/null 2>&1 ; then
+      cp -f -p ${_MINGW_DLL_DIR}/mingwm*.dll "${HB_ABSROOT}bin/"
+   fi
 fi
 
 # Copy getmingw.hb with some burn-in
@@ -292,6 +299,12 @@ echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/g
    find . -type d | grep -Eo '\./[a-z]+?/[a-z0-9]+?$' | cut -c 3-
 ) >> "${HB_ABSROOT}BUILD.txt"
 touch -c "${HB_ABSROOT}BUILD.txt" -r "${HB_ABSROOT}README.md"
+
+# Copy optional text files containing compiler details
+
+if ls       BUILD*.txt > /dev/null 2>&1 ; then
+   cp -f -p BUILD*.txt "${HB_ABSROOT}"
+fi
 
 # Convert EOLs
 

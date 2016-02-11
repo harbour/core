@@ -92,14 +92,25 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    export HB_WITH_CURL="${HB_DIR_CURL_32}include"
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_32}include"
  # export HB_WITH_QT='C:\Qt\5.5\mingw492_32\include'
-   export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
+   if [ -d "${HB_DIR_MINGW}/bin" ] ; then
+      export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
+      gcc -v > BUILD-mingw.txt
+   else
+      export PATH="/c/msys64/mingw32/bin:${_ORI_PATH}"
+      gcc -v > BUILD-mingw32.txt
+   fi
    # shellcheck disable=SC2086
    ./win-make.exe ${HB_MKFLAGS} HB_COMPILER=mingw HB_CPU=x86
 
    export HB_WITH_CURL="${HB_DIR_CURL_64}include"
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_64}include"
  # export HB_WITH_QT=
-   export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
+   if [ -d "${HB_DIR_MINGW}/bin" ] ; then
+      export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
+   else
+      export PATH="/c/msys64/mingw64/bin:${_ORI_PATH}"
+      gcc -v > BUILD-mingw64.txt
+   fi
    # shellcheck disable=SC2086
    ./win-make.exe ${HB_MKFLAGS} HB_COMPILER=mingw64 HB_CPU=x86_64
 fi

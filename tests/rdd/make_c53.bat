@@ -1,7 +1,7 @@
 @echo off
 
 :: DBFCDX
-clipper rddmktst /m/n/w/es2/d_TEST_DESCEND_ /d_TEST_UNIQUE_ /d_TEST_SCOPE_ /d_TEST_CMPDIDX_
+clipper rddmktst /m/n/w/es2/d_TEST_CMPDIDX_ /d_TEST_DESCEND_ /d_TEST_UNIQUE_ /d_TEST_SCOPE_
 exospace fi rddmktst lib _dbfcdx, dbfcdx
 del *.obj
 rddmktst cdxcl53.prg dbfcdx
@@ -17,7 +17,7 @@ clipper ntxcl53 /m/n/w/es2
 exospace fi ntxcl53 lib _dbfcdx, dbfcdx
 
 :: DBFCDX for ADS RDD
-clipper rddmktst /m/n/w/es2/d_TEST_ADS_ /d_TEST_SCOPE_ /d_TEST_CMPDIDX_
+clipper rddmktst /m/n/w/es2/d_TEST_ADS_ /d_TEST_CMPDIDX_ /d_TEST_SCOPE_
 exospace fi rddmktst lib _dbfcdx, dbfcdx
 del *.obj
 rddmktst adscl53.prg dbfcdx
