@@ -12,6 +12,7 @@ hbwin.hbc{allwin}
 -depurlbase=freeimage:https://duckduckgo.com/?q=freeimage+library
 -deppkgname=freeimage:libfreeimage-dev{deb}
 -deppkgname=freeimage:freeimage-devel{rpm}
+-deppkgname=freeimage:freeimage{pacman}
 -deppkgname=freeimage:freeimage{homebrew}
 -depkeyhead=freeimage:FreeImage.h
 -depcontrol=freeimage:no{HB_BUILD_3RDEXT='no'}

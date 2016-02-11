@@ -10,6 +10,7 @@
 -depurlbase=cups:https://cups.org/
 -deppkgname=cups:libcups2-dev{deb}
 -deppkgname=cups:libcups2-devel{rpm}
+-deppkgname=cups:libcups{pacman}
 -depkeyhead=cups:cups/cups.h
 -depcontrol=cups:force{darwin}
 -depcontrol=cups:no{HB_BUILD_3RDEXT='no'}

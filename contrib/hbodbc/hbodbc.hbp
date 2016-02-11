@@ -11,6 +11,7 @@
 -deppkgname=odbc:unixodbc-devel{rpm}
 -deppkgname=odbc:unixODBC-devel{rpm}
 -deppkgname=odbc:unixodbc-dev{deb}
+-deppkgname=odbc:unixodbc{pacman&!win}
 -deppkgname=odbc:unixodbc{homebrew}
 -depkeyhead=odbc:sql.h
 -depcontrol=odbc:no{!allwin&HB_BUILD_3RDEXT='no'}

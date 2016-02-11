@@ -12,6 +12,7 @@
 -depurlbase=cairo:http://www.gtk.org/download/
 -deppkgname=cairo:libcairo2-dev{deb}
 -deppkgname=cairo:cairo-devel{rpm}
+-deppkgname=cairo:cairo{pacman}
 -deppkgname=cairo:cairo{homebrew}
 -depkeyhead=cairo:cairo.h
 -depcontrol=cairo:no{HB_BUILD_3RDEXT='no'}

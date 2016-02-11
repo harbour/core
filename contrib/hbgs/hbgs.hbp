@@ -12,6 +12,7 @@
 -depurlbase=gs:http://ghostscript.com/
 -deppkgname=gs:ghostscript-devel{rpm}
 -deppkgname=gs:libgs-dev{deb}
+-deppkgname=gs:ghostscript{pacman}
 -deppkgname=gs:ghostscript{homebrew}
 -depkeyhead=gs:iapi.h
 -depcontrol=gs:${HB_WITH_GS}

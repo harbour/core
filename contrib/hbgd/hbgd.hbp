@@ -11,6 +11,7 @@ hbct.hbc
 -deppkgname=gd:gd-devel{rpm}
 -deppkgname=gd:libgd2-xpm-dev{deb}
 -deppkgname=gd:libgd-xpm-dev{deb}
+-deppkgname=gd:gd{pacman}
 -deppkgname=gd:gd{homebrew}
 -depkeyhead=gd:gd.h
 -depcontrol=gd:no{HB_BUILD_3RDEXT='no'}

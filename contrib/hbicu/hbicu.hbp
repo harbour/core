@@ -8,6 +8,7 @@
 -depurlbase=icu:https:/ssl.icu-project.org/
 -deppkgname=icu:libicu-dev{deb}
 -deppkgname=icu:libicu-devel{rpm}
+-deppkgname=icu:icu{pacman}
 -deppkgname=icu:icu4c{homebrew}
 -depcontrol=icu:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=icu:${HB_WITH_ICU}

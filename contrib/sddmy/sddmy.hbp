@@ -15,6 +15,7 @@ rddsql.hbc
 -deppkgname=mysql:MySQL-devel{rpm}
 -deppkgname=mysql:libmariadb-client-lgpl-dev{deb}
 -deppkgname=mysql:libmysqlclient-dev{deb}
+-deppkgname=mysql:mariadb{pacman}
 -deppkgname=mysql:mariadb{homebrew}
 -deppkgname=mysql:mysql{homebrew}
 -depkeyhead=mysql:mysql.h

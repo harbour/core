@@ -7,6 +7,7 @@
 
 -depurlbase=expat:http://www.libexpat.org
 -deppkgname=expat:libexpat1-dev{deb}
+-deppkgname=expat:expat{pacman}
 -deppkgname=expat:expat{homebrew}
 -depkeyhead=expat:expat.h
 -depcontrol=expat:local{HB_BUILD_3RDEXT='no'}

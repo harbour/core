@@ -10,6 +10,7 @@
 
 -depurlbase=minizip:http://zlib.net/
 -depurlbase=minizip:http://winimage.com/zLibDll/minizip.html
+-deppkgname=minizip:minizip{pacman}
 -deppkgname=minizip:minizip{homebrew}
 # component named libzip also has a header
 # named zip.h, so we look for unzip.h to detect minizip

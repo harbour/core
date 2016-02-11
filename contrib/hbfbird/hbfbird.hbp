@@ -10,6 +10,7 @@
 -depurlbase=firebird:http://firebirdsql.org/
 -deppkgname=firebird:firebird2.5-dev{deb}
 -deppkgname=firebird:firebird-devel{rpm}
+-deppkgname=firebird:libfbclient{pacman}
 -depkeyhead=firebird:ibase.h
 -depcontrol=firebird:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=firebird:${HB_WITH_FIREBIRD}

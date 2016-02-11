@@ -9,6 +9,7 @@
 -depurlbase=curl:https://curl.haxx.se/
 -deppkgname=curl:libcurl4-openssl-dev{deb}
 -deppkgname=curl:curl-devel{rpm}
+-deppkgname=curl:curl{pacman}
 -deppkgname=curl:curl{homebrew}
 -depkeyhead=curl:curl/curl.h
 -depcontrol=curl:no{HB_BUILD_3RDEXT='no'}

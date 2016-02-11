@@ -11,6 +11,7 @@
 -depurlbase=allegro:https://github.com/liballeg/allegro5
 -deppkgname=allegro:allegro-devel{rpm}
 -deppkgname=allegro:liballegro4.2-dev{deb}
+-deppkgname=allegro:allegro4{pacman}
 -deppkgname=allegro:allegro{homebrew}
 -depkeyhead=allegro:allegro.h
 -depcontrol=allegro:no{HB_BUILD_3RDEXT='no'}

@@ -481,6 +481,18 @@ You will need these packages to compile optional core Harbour features:
       for gtxwc terminal lib:    xorg-x11-devel OR XFree86-devel
       for console mouse support: gpm-devel OR gpm
 
+## pacman based systems (Windows/MSYS2, Arch Linux)
+
+For Windows/MSYS2 environment:
+
+      base-devel msys2-devel mingw-w64-{x86_64,i686}-toolchain p7zip
+
+Packages for optional core Harbour features:
+
+      for gtcrs terminal lib:    ncurses
+      for gtsln terminal lib:    slang
+      for gtxwc terminal lib:    libx11
+      for console mouse support: gpm
 
 > NOTES:
 >

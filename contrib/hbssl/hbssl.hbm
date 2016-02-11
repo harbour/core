@@ -12,6 +12,7 @@
 -depurlbase=openssl:https://www.openssl.org/community/binaries.html
 -deppkgname=openssl:libssl-dev{deb}
 -deppkgname=openssl:openssl-devel{rpm}
+-deppkgname=openssl:openssl{pacman}
 -deppkgname=openssl:openssl{homebrew}
 -deppkgname=openssl:libressl{homebrew}
 -depkeyhead=openssl:openssl/ssl.h
