@@ -73,13 +73,11 @@
 #include "hbssl.h"
 
 #if defined( HB_OS_WIN ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
-   /* Enable this to add support for various scenarios
-      when OpenSSL is build with OPENSSL_USE_APPLINK.
-      In such case care must be taken to initialize
-      pointers to C RTL function to avoid crashes. */
-   #if ! defined( HB_OPENSSL_STATIC )
-      #define HB_OPENSSL_HAS_APPLINK
-   #endif
+   /* Enable this to add support for various scenarios when
+      OpenSSL is build with OPENSSL_USE_APPLINK (the default).
+      In such case care must be taken to initialize pointers
+      to C RTL function to avoid crashes. */
+   #define HB_OPENSSL_HAS_APPLINK
 #endif
 
 /* NOTE: See: https://www.openssl.org/support/faq.html#PROG2
@@ -98,14 +96,17 @@
       C RTL calls internally. Such calls are currently made when
       using BIO_new_fd() BIO_new_file() IO API. */
    #include "openssl/applink.c"
-   #if defined( HB_OPENSSL_STATIC )
+   #if defined( HB_OPENSSL_STATIC ) && \
+       OPENSSL_VERSION_NUMBER <= 0x1000206fL /* 1.0.2f or lower */
       extern void * OPENSSL_UplinkTable[];  /* available when OpenSSL was built with -DOPENSSL_USE_APPLINK option */
    #endif
 #endif
 
 HB_FUNC( SSL_INIT )
 {
-   #if defined( HB_OPENSSL_HAS_APPLINK ) && defined( HB_OPENSSL_STATIC )
+   #if defined( HB_OPENSSL_HAS_APPLINK ) && \
+       defined( HB_OPENSSL_STATIC ) && \
+       OPENSSL_VERSION_NUMBER <= 0x1000206fL /* 1.0.2f or lower */
    {
       /* Initialize "applink" function table with C RTL function pointers
          when OpenSSL is statically linked and the static OpenSSL libraries
