@@ -556,18 +556,19 @@ METHOD Open( cProgName ) CLASS HB_LogDbf
       RETURN .F.
    ENDIF
 
-   IF ! hb_dbExists( ::cDBFName )
+   DO CASE
+   CASE ! hb_dbExists( ::cDBFName )
       dbCreate( ::cDBFName, ::aStruct )
       dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
       INDEX ON DToS( FIELD->date ) + FIELD->time + Str( FIELD->priority, 2 ) + FIELD->MESSAGE TAG "datetime" TO ( ::cIndexName )
       INDEX ON Str( FIELD->priority, 2 ) + DToS( FIELD->date ) + FIELD->time + FIELD->MESSAGE TAG "priority" TO ( ::cIndexName )
       LogDbf->( dbCloseArea() )
-   ELSEIF ! hb_dbExists( ::cIndexName )
+   CASE ! hb_dbExists( ::cDBFName, ::cIndexName )
       dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
       INDEX ON DToS( FIELD->date ) + FIELD->time + Str( FIELD->priority, 2 ) + FIELD->MESSAGE TAG "datetime" TO ( ::cIndexName )
       INDEX ON Str( FIELD->priority, 2 ) + DToS( FIELD->date ) + FIELD->time + FIELD->MESSAGE TAG "priority" TO ( ::cIndexName )
       LogDbf->( dbCloseArea() )
-   ENDIF
+   ENDCASE
    // __OutDebug( "::cDriver, ::cDBFName", ::cDriver, ::cDBFName )
    dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
    SET INDEX TO ( ::cIndexName )

@@ -42,42 +42,45 @@ PROCEDURE Main()
 
    rddSetDefault( "DBFCDX" )
 
-   IF ! hb_dbExists( "users.dbf" )
-      hb_dbDrop( "users.cdx" )
-      dbCreate( "users", { { "USER", "C", 16, 0 }, { "PASSWORD", "C", 16, 0 }, { "NAME", "C", 50, 0 } }, , .T., "user" )
+   DO CASE
+   CASE ! hb_dbExists( "users.dbf" )
+      hb_dbDrop( "users.dbf", "users.cdx" )
+      dbCreate( "users.dbf", { { "USER", "C", 16, 0 }, { "PASSWORD", "C", 16, 0 }, { "NAME", "C", 50, 0 } }, , .T., "user" )
       dbAppend()
       FIELD->USER := "demo"
       FIELD->PASSWORD := "demo"
       FIELD->NAME := "Demo"
-      ordCreate( "users", "user", "USER" )
+      ordCreate( "users.cdx", "user", "USER" )
       dbCloseArea()
-   ELSEIF ! hb_dbExists( "users.cdx" )
-      dbUseArea( .T., , "users", , .F., .F. )
-      ordCreate( "users", "user", "USER" )
+   CASE ! hb_dbExists( "users.dbf", "users.cdx" )
+      dbUseArea( .T., , "users.dbf", , .F., .F. )
+      ordCreate( "users.cdx", "user", "USER" )
       dbCloseArea()
-   ENDIF
+   ENDCASE
 
-   IF ! hb_dbExists( "carts.dbf" )
-      hb_dbDrop( "carts.cdx" )
-      dbCreate( "carts", { { "USER", "C", 16, 0 }, { "CODE", "C", 16, 0 }, { "AMOUNT", "N", 6, 0 }, { "TOTAL", "N", 9, 2 } }, , .T., "cart" )
-      ordCreate( "carts", "user", "USER+CODE" )
+   DO CASE
+   CASE ! hb_dbExists( "carts.dbf" )
+      hb_dbDrop( "carts.dbf", "carts.cdx" )
+      dbCreate( "carts.dbf", { { "USER", "C", 16, 0 }, { "CODE", "C", 16, 0 }, { "AMOUNT", "N", 6, 0 }, { "TOTAL", "N", 9, 2 } }, , .T., "cart" )
+      ordCreate( "carts.cdx", "user", "USER+CODE" )
       dbCloseArea()
-   ELSEIF ! hb_dbExists( "carts.cdx" )
-      dbUseArea( .T., , "carts", , .F., .F. )
-      ordCreate( "carts", "user", "USER+CODE" )
+   CASE ! hb_dbExists( "carts.dbf", "carts.cdx" )
+      dbUseArea( .T., , "carts.dbf", , .F., .F. )
+      ordCreate( "carts.cdx", "user", "USER+CODE" )
       dbCloseArea()
-   ENDIF
+   ENDCASE
 
-   IF ! hb_dbExists( "items.dbf" )
-      hb_dbDrop( "items.cdx" )
-      dbCreate( "items", { { "CODE", "C", 16, 0 }, { "TITLE", "C", 80, 0 }, { "PRICE", "N", 9, 2 } }, , .T., "items" )
-      ordCreate( "items", "code", "CODE" )
+   DO CASE
+   CASE ! hb_dbExists( "items.dbf" )
+      hb_dbDrop( "items.dbf", "items.cdx" )
+      dbCreate( "items.dbf", { { "CODE", "C", 16, 0 }, { "TITLE", "C", 80, 0 }, { "PRICE", "N", 9, 2 } }, , .T., "items" )
+      ordCreate( "items.cdx", "code", "CODE" )
       dbCloseArea()
-   ELSEIF ! hb_dbExists( "item.cdx" )
-      dbUseArea( .T., , "items", , .F., .F. )
-      ordCreate( "items", "code", "CODE" )
+   CASE ! hb_dbExists( "items.dbf", "item.cdx" )
+      dbUseArea( .T., , "items.dbf", , .F., .F. )
+      ordCreate( "items.cdx", "code", "CODE" )
       dbCloseArea()
-   ENDIF
+   ENDCASE
 
    oLogAccess := UHttpdLog():New( "eshop_access.log" )
 

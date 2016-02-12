@@ -72,8 +72,8 @@ PROCEDURE Main()
 
    dbCloseArea()
 
-   hb_dbDrop( "test1.ntx" )
-   hb_dbDrop( "test2.ntx" )
-   hb_dbDrop( "test3.ntx" )
+   hb_dbDrop( "test.dbf", "test1.ntx" )
+   hb_dbDrop( "test.dbf", "test2.ntx" )
+   hb_dbDrop( "test.dbf", "test3.ntx" )
 
    RETURN

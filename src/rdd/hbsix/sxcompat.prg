@@ -349,7 +349,7 @@ FUNCTION sx_KillTag( xTag, xIndex )
          ENDCASE
          IF ! Empty( cIndex )
             IF ordBagClear( cIndex )
-               lRet := hb_dbDrop( cIndex )
+               lRet := hb_dbDrop( dbInfo( DBI_FULLPATH ), cIndex )
             ENDIF
          ENDIF
       ENDIF

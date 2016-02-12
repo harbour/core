@@ -251,7 +251,7 @@ FUNCTION NetOpenFiles( aFiles )
       IF NetDbUse( xFile[ 1 ], xFile[ 2 ], s_nNetDelay, "DBFCDX" )
          IF HB_ISARRAY( xFile[ 3 ] )
             FOR EACH cIndex IN xFile[ 3 ]
-               IF hb_dbExists( cIndex )
+               IF hb_dbExists( xFile[ 1 ], cIndex )
                   ordListAdd( cIndex )
                ELSE
                   RETURN -3
@@ -489,7 +489,7 @@ METHOD PROCEDURE Put() CLASS HBRecord
 
    FOR EACH xField IN ::aFields
       IF !( xField:Value == ::buffer[ xField:__enumIndex() ] )
-         xField:PUT( ::buffer[ xField:__enumIndex() ] )
+         xField:Put( ::buffer[ xField:__enumIndex() ] )
          ::buffer[ xField:__enumIndex() ] := xField:value
       ENDIF
    NEXT
@@ -660,7 +660,7 @@ METHOD Open() CLASS HBTable
 
    dbSelectArea( ::Alias )
    ::Area := Select()
-   IF HB_ISSTRING( ::cOrderBag ) .AND. hb_dbExists( ::cPath + ::cOrderFile )
+   IF HB_ISSTRING( ::cOrderBag ) .AND. hb_dbExists( ::cDbf, ::cPath + ::cOrderFile )
       SET INDEX TO ( ::cPath + ::cOrderBag )
       ( ::Alias )->( ordSetFocus( 1 ) )
    ENDIF
@@ -748,7 +748,7 @@ METHOD FldInit() CLASS HBTable
 
    oNew:Read()
 
-   IF HB_ISSTRING( oNew:cOrderBag ) .AND. hb_dbExists( oNew:cPath + oNew:cOrderFile )
+   IF HB_ISSTRING( oNew:cOrderBag ) .AND. hb_dbExists( oNew:cDbf, oNew:cPath + oNew:cOrderFile )
       SET INDEX TO ( oNew:cPath + oNew:cOrderBag )
       ( oNew:Alias )->( ordSetFocus( 1 ) )
    ENDIF
@@ -1046,10 +1046,10 @@ METHOD Reindex() CLASS HBTable
 
       ::Isnet := .F.
 
-      IF hb_dbExists( ::cPath + ::cOrderFile )
-         IF ! hb_dbDrop( ::cPath + ::cOrderFile )
+      IF hb_dbExists( ::cDbf, ::cPath + ::cOrderFile )
+         IF ! hb_dbDrop( ::cDbf, ::cPath + ::cOrderFile )
 #if 0
-            Alert( ".cdx *NOT* Deleted !!!" )
+            Alert( "Index *NOT* Deleted !!!" )
 #endif
          ENDIF
       ENDIF
@@ -1086,10 +1086,10 @@ METHOD FastReindex() CLASS HBTable
       ::Kill()
 
       ::Isnet := .F.
-      IF hb_dbExists( ::cPath + ::cOrderFile )
-         IF ! hb_dbDrop( ::cPath + ::cOrderFile )
+      IF hb_dbExists( ::cDbf, ::cPath + ::cOrderFile )
+         IF ! hb_dbDrop( ::cDbf, ::cPath + ::cOrderFile )
 #if 0
-            Alert( ".cdx *NOT* Deleted !!!" )
+            Alert( "Index *NOT* Deleted !!!" )
 #endif
          ENDIF
       ENDIF

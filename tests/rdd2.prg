@@ -355,12 +355,12 @@ STATIC PROCEDURE NotifyUser( cErr )
 
    dbCloseAll()
 
-   hb_dbDrop( "test_2" )
-   hb_dbDrop( "test_e.idx" )
-   hb_dbDrop( "test_c.idx" )
-   hb_dbDrop( "test_n.idx" )
-   hb_dbDrop( "test_d.idx" )
-   hb_dbDrop( "test_l.idx" )
+   hb_dbDrop( "test_2.dbf" )
+   hb_dbDrop( "test_2.dbf", "test_e.idx" )
+   hb_dbDrop( "test_2.dbf", "test_c.idx" )
+   hb_dbDrop( "test_2.dbf", "test_n.idx" )
+   hb_dbDrop( "test_2.dbf", "test_d.idx" )
+   hb_dbDrop( "test_2.dbf", "test_l.idx" )
 
    QUIT
 

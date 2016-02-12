@@ -23,7 +23,7 @@ PROCEDURE Main()
 
    USE tbnames.dbf
 
-   IF ! hb_dbExists( "tbnames.ntx" )
+   IF ! hb_dbExists( "tbnames.dbf", "tbnames.ntx" )
       INDEX ON FIELD->LAST + FIELD->FIRST TO tbnames.ntx
    ENDIF
 
@@ -66,7 +66,7 @@ PROCEDURE Main()
 
    dbCloseArea()
    hb_dbDrop( "tbnames.dbf" )
-   hb_dbDrop( "tbnames.ntx" )
+   hb_dbDrop( "tbnames.dbf", "tbnames.ntx" )
 
    WAIT
    SetColor( cOldColor )
