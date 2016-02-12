@@ -5,13 +5,13 @@
 # See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
-[ "${APPVEYOR}" = 'True' ] || exit
+[ "${CI}" = 'True' ] || exit
 
 cd "$(dirname "$0")/.." || exit
 
 _BRANCH="${APPVEYOR_REPO_BRANCH}${TRAVIS_BRANCH}${GIT_BRANCH}"
 _BRANC4="$(echo "${_BRANCH}" | cut -c -4)"
-_ROOT="${APPVEYOR_BUILD_FOLDER}"
+_ROOT="$(realpath '.')"
 
 # Don't remove these markers.
 #hashbegin
@@ -96,7 +96,7 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
       export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
       gcc -v 2> BUILD-mingw.txt
    else
-      export PATH="/c/msys64/mingw32/bin:${_ORI_PATH}"
+      export PATH="/mingw32/bin:${_ORI_PATH}"
       gcc -v 2> BUILD-mingw32.txt
    fi
    # shellcheck disable=SC2086
@@ -108,7 +108,7 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    if [ -d "${HB_DIR_MINGW}/bin" ] ; then
       export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
    else
-      export PATH="/c/msys64/mingw64/bin:${_ORI_PATH}"
+      export PATH="/mingw64/bin:${_ORI_PATH}"
       gcc -v 2> BUILD-mingw64.txt
    fi
    # shellcheck disable=SC2086
