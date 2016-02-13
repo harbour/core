@@ -55,7 +55,7 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc tcc),)
          include $(TOP)$(ROOT)config/none.mk
       endif
    else
-      HB_SKIP_REASON := unused
+      HB_SKIP_REASON := local copy unused
       include $(TOP)$(ROOT)config/none.mk
    endif
 else

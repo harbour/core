@@ -80,7 +80,7 @@ ifeq ($(filter $(HB_COMPILER),<>),)
 
       include $(TOP)$(ROOT)config/lib.mk
    else
-      HB_SKIP_REASON := unused
+      HB_SKIP_REASON := local copy unused
       include $(TOP)$(ROOT)config/none.mk
    endif
 else
