@@ -44,8 +44,7 @@ _ROOT="$(realpath '..')"
 
 echo "! Branch: '${_BRANCH}'"
 
-# Hack for Git for Windows. Windows system paths may override
-# standard tools.
+# Hack for Git for Windows. Windows system paths may override standard tools.
 case "$(uname)" in
    *_NT*) alias find=/usr/bin/find;;
 esac
