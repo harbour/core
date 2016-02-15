@@ -32,7 +32,7 @@ environment:
 
 build_script:
   - set PATH=C:\msys64\usr\bin;%PATH%
-  - pacman --noconfirm --noprogressbar -S p7zip
+  - pacman --noconfirm --noprogressbar -S p7zip mc
   - sh -c ./package/mpkg_win_ci.sh
 
 artifacts:
