@@ -1577,7 +1577,7 @@ static void hb_gt_def_BoxW( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iR
       HB_WCHAR szBoxW[ 10 ];
       HB_WCHAR wcPadCh = ( HB_WCHAR ) HB_GTSELF_GETCLEARCHAR( pGT );
 
-      if( szFrame )
+      if( szFrame && *szFrame )
       {
          for( i = 0; *szFrame && i < 9; ++i )
             wcPadCh = szBoxW[ i ] = *szFrame++;
