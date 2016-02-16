@@ -2094,24 +2094,25 @@ HB_FUNC( HB_RDDINFO )
 
 HB_FUNC( HB_DBDROP )
 {
-   LPRDDNODE  pRDDNode;
-   HB_USHORT  uiRddID;
-   HB_ULONG   ulConnection;
-   const char * szDriver;
-   PHB_ITEM   pName;
+   LPRDDNODE pRDDNode = NULL;
+   HB_ULONG ulConnection = hb_parnl( 4 );
+   const char * szName = hb_parc( 1 );
 
-   szDriver = hb_parc( 3 );
-   if( ! szDriver ) /* no VIA RDD parameter, use default */
+   if( szName )
    {
-      szDriver = hb_rddDefaultDrv( NULL );
+      const char * szDriver;
+
+      if( ! szName[ 0 ] )
+         szName = hb_parc( 2 );
+      szDriver = hb_rddFindDrv( hb_parc( 3 ), szName );
+      if( szDriver )
+         pRDDNode = hb_rddFindNode( szDriver, NULL );  /* find the RDDNODE */
    }
-   ulConnection = hb_parnl( 4 );
 
-   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
-   pName = hb_param( 1, HB_IT_STRING );
-
-   if( pRDDNode && pName )
-      hb_retl( SELF_DROP( pRDDNode, pName, hb_param( 2, HB_IT_STRING ),
+   if( pRDDNode )
+      hb_retl( SELF_DROP( pRDDNode,
+                          hb_param( 1, HB_IT_STRING ),
+                          hb_param( 2, HB_IT_STRING ),
                           ulConnection ) == HB_SUCCESS );
    else
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -2119,23 +2120,24 @@ HB_FUNC( HB_DBDROP )
 
 HB_FUNC( HB_DBEXISTS )
 {
-   LPRDDNODE  pRDDNode;
-   HB_USHORT  uiRddID;
-   HB_ULONG   ulConnection;
-   const char * szDriver;
-   PHB_ITEM   pName;
+   LPRDDNODE pRDDNode = NULL;
+   HB_ULONG ulConnection = hb_parnl( 4 );
+   const char * szName = hb_parc( 1 );
 
-   szDriver = hb_parc( 3 );
-   if( ! szDriver ) /* no VIA RDD parameter, use default */
-      szDriver = hb_rddDefaultDrv( NULL );
+   if( szName )
+   {
+      const char * szDriver;
 
-   ulConnection = hb_parnl( 4 );
-
-   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
-   pName = hb_param( 1, HB_IT_STRING );
-
-   if( pRDDNode && pName )
-      hb_retl( SELF_EXISTS( pRDDNode, pName, hb_param( 2, HB_IT_STRING ),
+      if( ! szName[ 0 ] )
+         szName = hb_parc( 2 );
+      szDriver = hb_rddFindDrv( hb_parc( 3 ), szName );
+      if( szDriver )
+         pRDDNode = hb_rddFindNode( szDriver, NULL );  /* find the RDDNODE */
+   }
+   if( pRDDNode )
+      hb_retl( SELF_EXISTS( pRDDNode,
+                            hb_param( 1, HB_IT_STRING ),
+                            hb_param( 2, HB_IT_STRING ),
                             ulConnection ) == HB_SUCCESS );
    else
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -2143,19 +2145,22 @@ HB_FUNC( HB_DBEXISTS )
 
 HB_FUNC( HB_DBRENAME )
 {
-   LPRDDNODE  pRDDNode;
-   HB_USHORT  uiRddID;
-   HB_ULONG   ulConnection;
-   const char * szDriver;
-   PHB_ITEM   pTable, pIndex, pNewName;
+   LPRDDNODE pRDDNode = NULL;
+   HB_ULONG ulConnection = hb_parnl( 5 );
+   const char * szName = hb_parc( 1 );
+   PHB_ITEM pTable, pIndex, pNewName;
 
-   szDriver = hb_parc( 4 );
-   if( ! szDriver ) /* no VIA RDD parameter, use default */
-      szDriver = hb_rddDefaultDrv( NULL );
+   if( szName )
+   {
+      const char * szDriver;
 
-   ulConnection = hb_parnl( 5 );
+      if( ! szName[ 0 ] )
+         szName = hb_parc( 2 );
+      szDriver = hb_rddFindDrv( hb_parc( 4 ), szName );
+      if( szDriver )
+         pRDDNode = hb_rddFindNode( szDriver, NULL );  /* find the RDDNODE */
+   }
 
-   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
    pTable = hb_param( 1, HB_IT_STRING );
    pIndex = hb_param( 2, HB_IT_STRING );
    pNewName = hb_param( 3, HB_IT_STRING );

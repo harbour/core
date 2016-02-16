@@ -331,7 +331,7 @@ HB_ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
    HB_ERRCODE errCode = HB_SUCCESS;
    HB_USHORT uiIndex;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_rddIterateWorkAreas(%p,%p)", pCallBack, cargo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddIterateWorkAreas(%p, %p)", pCallBack, cargo ) );
 
    pRddInfo = hb_stackRDD();
    for( uiIndex = 1; uiIndex < pRddInfo->uiWaMax; uiIndex++ )
@@ -362,7 +362,11 @@ void hb_rddSetNetErr( HB_BOOL fNetErr )
  */
 const char * hb_rddDefaultDrv( const char * szDriver )
 {
-   PHB_STACKRDD pRddInfo = hb_stackRDD();
+   PHB_STACKRDD pRddInfo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddDefaultDrv(%s)", szDriver ) );
+
+   pRddInfo = hb_stackRDD();
 
    if( szDriver && *szDriver )
    {
@@ -378,11 +382,11 @@ const char * hb_rddDefaultDrv( const char * szDriver )
    }
    else if( ! pRddInfo->szDefaultRDD && hb_rddGetNode( 0 ) )
    {
-      const char * szDrvTable[] = { "DBFNTX", "DBFCDX", "DBFFPT", "DBF", NULL };
+      const char * szDrvTable[] = { "DBFNTX", "DBFCDX", "DBFFPT", "DBF" };
       int i;
 
       pRddInfo->szDefaultRDD = "";
-      for( i = 0; szDrvTable[ i ]; ++i )
+      for( i = 0; i < ( int ) HB_SIZEOFARRAY( szDrvTable ); ++i )
       {
          if( hb_rddFindNode( szDrvTable[ i ], NULL ) )
          {
@@ -393,6 +397,52 @@ const char * hb_rddDefaultDrv( const char * szDriver )
    }
 
    return pRddInfo->szDefaultRDD;
+}
+
+/*
+ * Get default RDD driver respecting passed table/file name
+ */
+const char * hb_rddFindDrv( const char * szDriver, const char * szFileName )
+{
+   LPRDDNODE pRddNode = NULL;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddFindDrv(%s, %s)", szDriver, szFileName ) );
+
+   if( szDriver && *szDriver )
+   {
+      char szNewDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
+
+      hb_strncpyUpper( szNewDriver, szDriver, sizeof( szNewDriver ) - 1 );
+      pRddNode = hb_rddFindNode( szNewDriver, NULL );
+   }
+   else
+   {
+      PHB_STACKRDD pRddInfo = hb_stackRDD();
+
+      if( pRddInfo->szDefaultRDD )
+      {
+         if( pRddInfo->szDefaultRDD[ 0 ] )
+            pRddNode = hb_rddFindNode( pRddInfo->szDefaultRDD, NULL );
+      }
+      else if( hb_rddGetNode( 0 ) )
+      {
+         const char * szDrvTable[] = { "DBFNTX", "DBFCDX", "DBFFPT", "DBF" };
+         int i;
+
+         pRddInfo->szDefaultRDD = "";
+         for( i = 0; i < ( int ) HB_SIZEOFARRAY( szDrvTable ); ++i )
+         {
+            pRddNode = hb_rddFindNode( szDrvTable[ i ], NULL );
+            if( pRddNode )
+            {
+               pRddInfo->szDefaultRDD = szDrvTable[ i ];
+               break;
+            }
+         }
+      }
+   }
+
+   return pRddNode ? hb_rddFindFileNode( pRddNode, szFileName )->szName : NULL;
 }
 
 /*
@@ -513,7 +563,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    HB_SIZE nPos;
    int iArea;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_rddDetachArea(%p,%p)", pArea, pCargo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddDetachArea(%p, %p)", pArea, pCargo ) );
 
    /* save current WA number */
    iArea = hb_rddGetCurrentWorkAreaNumber();
