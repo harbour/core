@@ -40,9 +40,19 @@ ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400),)
 endif
 endif
 
+#CFLAGS += -D_FORTIFY_SOURCE=2
+ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401),)
+   # https://gcc.gnu.org/gcc-4.2/changes.html
+   #CFLAGS += -fno-strict-overflow
+endif
+
 ifneq ($(HB_COMPILER_VER),)
    ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407),)
+      LDFLAGS += -static-libgcc
       DFLAGS += -static-libgcc
+#     ifeq ($(HB_BUILD_MODE),cpp)
+#        LDFLAGS += -static-libstdc++
+#     endif
    endif
 endif
 
@@ -72,7 +82,11 @@ endif
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
-   # CFLAGS += -Wextra -Wformat-security -D_FORTIFY_SOURCE=2
+   # CFLAGS += -Wextra -Wformat-security
+#  ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401),)
+#     # https://gcc.gnu.org/gcc-4.2/changes.html
+#     CFLAGS += -Wstrict-overflow=4
+#  endif
    ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407 0408 0409 0501 0502 0503),)
       CFLAGS += -Wlogical-op -Wduplicated-cond -Wshift-negative-value -Wnull-dereference -Wunused-variable
    endif

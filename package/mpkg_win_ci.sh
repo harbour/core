@@ -75,7 +75,7 @@ export HB_BUILD_POSTRUN='"./hbtest -noenv" "./hbspeed --noenv --stdout"'
 if [ "${_BRANC4}" != 'msvc' ] ; then
 
    [ "${_BRANCH}" = 'lto' ] && export HB_USER_CFLAGS="${HB_USER_CFLAGS} -flto -ffat-lto-objects"
-   [ "${HB_BUILD_MODE}" = 'cpp' ] && export HB_USER_LDFLAGS="${HB_USER_LDFLAGS} -static-libgcc -static-libstdc++"
+   [ "${HB_BUILD_MODE}" = 'cpp' ] && export HB_USER_LDFLAGS="${HB_USER_LDFLAGS} -static-libstdc++"
 
    export HB_DIR_MINGW="${HB_RT}/mingw64"
    export HB_DIR_OPENSSL_32="${HB_RT}/openssl-mingw32/"
