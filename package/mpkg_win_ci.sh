@@ -77,6 +77,8 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] && export HB_USER_CFLAGS="${HB_USER_CFLAGS} -flto -ffat-lto-objects"
    [ "${HB_BUILD_MODE}" = 'cpp' ] && export HB_USER_LDFLAGS="${HB_USER_LDFLAGS} -static-libstdc++"
 
+   HB_DIR_MINGW_32='/mingw32/bin'
+   HB_DIR_MINGW_64='/mingw64/bin'
    export HB_DIR_MINGW="${HB_RT}/mingw64"
    export HB_DIR_OPENSSL_32="${HB_RT}/openssl-mingw32/"
    export HB_DIR_OPENSSL_64="${HB_RT}/openssl-mingw64/"
@@ -96,7 +98,7 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
       export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
       gcc -v 2> BUILD-mingw.txt
    else
-      export PATH="/mingw32/bin:${_ORI_PATH}"
+      export PATH="${HB_DIR_MINGW_32}:${_ORI_PATH}"
       gcc -v 2> BUILD-mingw32.txt
    fi
    # shellcheck disable=SC2086
@@ -108,11 +110,16 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    if [ -d "${HB_DIR_MINGW}/bin" ] ; then
       export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
    else
-      export PATH="/mingw64/bin:${_ORI_PATH}"
+      export PATH="${HB_DIR_MINGW_64}:${_ORI_PATH}"
       gcc -v 2> BUILD-mingw64.txt
    fi
    # shellcheck disable=SC2086
    mingw32-make ${HB_MKFLAGS} HB_COMPILER=mingw64 HB_CPU=x86_64
+
+   if [ ! -d "${HB_DIR_MINGW}/bin" ] ; then
+      [ "${HB_BASE}" != '64' ] && export HB_DIR_MINGW="${HB_DIR_MINGW_32}"
+      [ "${HB_BASE}"  = '64' ] && export HB_DIR_MINGW="${HB_DIR_MINGW_64}"
+   fi
 fi
 
 # msvc

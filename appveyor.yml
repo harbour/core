@@ -2,7 +2,8 @@ version: 3.4.{build}
 branches:
   only:
   - master
-  - test_appveyor
+  - test-appveyor
+  - test-msysmingw
   - lto
   - lto-msysmingw
   - msvc2008

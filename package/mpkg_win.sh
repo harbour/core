@@ -243,6 +243,7 @@ if [ -d "${_MINGW_DLL_DIR}" ] ; then
    if ls       ${_MINGW_DLL_DIR}/libwinpthread-*.dll > /dev/null 2>&1 ; then
       cp -f -p ${_MINGW_DLL_DIR}/libwinpthread-*.dll "${HB_ABSROOT}bin/"
    fi
+   # Not present anymore in newer (~2013-) mingw distros
    # shellcheck disable=SC2086
    if ls       ${_MINGW_DLL_DIR}/mingwm*.dll > /dev/null 2>&1 ; then
       cp -f -p ${_MINGW_DLL_DIR}/mingwm*.dll "${HB_ABSROOT}bin/"
