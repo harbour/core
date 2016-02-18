@@ -72,7 +72,9 @@
 
 #include "hbssl.h"
 
-#if defined( HB_OS_WIN ) && OPENSSL_VERSION_NUMBER >= 0x00908000L
+#if defined( HB_OS_WIN ) && \
+    defined( HB_CPU_X86 ) && \
+    OPENSSL_VERSION_NUMBER >= 0x00908000L
    /* Enable this to add support for various scenarios when
       OpenSSL is build with OPENSSL_USE_APPLINK (the default).
       In such case care must be taken to initialize pointers
