@@ -53,7 +53,7 @@ HB_EXTERN_BEGIN
 
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols, const char * szModuleName, HB_ULONG ulID, HB_USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
-#define HB_INIT_SYMBOLS_END( func ) HB_INIT_SYMBOLS_EX_END( func, __FILE__, 0L, 0x0000 )
+#define HB_INIT_SYMBOLS_END( func ) HB_INIT_SYMBOLS_EX_END( func, "", 0L, 0x0000 )
 
 /* By default in all C++ builds use static vars initialization as startup code */
 #if defined( __cplusplus ) && ! defined( HB_STATIC_STARTUP ) && \
