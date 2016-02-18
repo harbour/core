@@ -223,7 +223,7 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
    LOCAL aHead
 
    // Now reads the fields and set the content length
-   IF hb_BLen( cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 ) ) == 0
+   IF HB_ISNULL( cLine := hb_defaultValue( ::inetRecvLine( ::SocketCon, @nPos, 500 ), "" ) )
       // In case of timeout or error on receiving
       RETURN .F.
    ENDIF
@@ -250,7 +250,7 @@ METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
       ::hHeaders := { => }
    ENDIF
    cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
-   DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! HB_ISNULL( cLine )
+   DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. HB_ISSTRING( cLine ) .AND. ! HB_ISNULL( cLine )
 
       IF Len( aHead := hb_regexSplit( ":", cLine,,, 1 ) ) != 2
          cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
@@ -303,7 +303,7 @@ METHOD Read( nLen ) CLASS TIPClientHTTP
 
       cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 )
 
-      IF HB_ISNULL( cLine )
+      IF ! HB_ISSTRING( cLine ) .OR. HB_ISNULL( cLine )
          RETURN NIL
       ENDIF
 
@@ -311,7 +311,7 @@ METHOD Read( nLen ) CLASS TIPClientHTTP
       IF cLine == "0"
 
          // read the footers.
-         DO WHILE hb_BLen( cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 ) ) > 0
+         DO WHILE ! HB_ISNULL( cLine := hb_defaultValue( ::inetRecvLine( ::SocketCon, @nPos, 1024 ), "" ) )
             // add Headers to footers
             IF Len( aHead := hb_regexSplit( ":", cLine,,, 1 ) ) == 2
                ::hHeaders[ aHead[ 1 ] ] := LTrim( aHead[ 2 ] )
