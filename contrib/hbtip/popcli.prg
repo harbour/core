@@ -302,7 +302,7 @@ METHOD UIDL( nMsgId ) CLASS TIPClientPOP
       cRet := ""
       DO WHILE !( cStr == "." ) .AND. ::inetErrorCode( ::SocketCon ) == 0
          cStr := ::inetRecvLine( ::SocketCon, @nPos, 256 )
-         IF ! HB_ISSTRING( cString ) .OR. cStr == "."
+         IF ! HB_ISSTRING( cStr ) .OR. cStr == "."
             ::bEof := .T.
          ELSE
             cRet += cStr + ::cCRLF
