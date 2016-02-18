@@ -152,5 +152,6 @@
 #define HB_VF_SHUTDOWN     4
 #define HB_VF_RDHANDLE     5
 #define HB_VF_WRHANDLE     6
+#define HB_VF_IONAME       7
 
 #endif /* _FILEIO_CH */

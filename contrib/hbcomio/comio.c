@@ -404,11 +404,12 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
          return HB_TRUE;
       }
       case HB_VF_RDHANDLE:
+      case HB_VF_WRHANDLE:
          hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_comGetDeviceHandle( pFile->port ) );
          return HB_TRUE;
 
-      case HB_VF_WRHANDLE:
-         hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_comGetDeviceHandle( pFile->port ) );
+      case HB_VF_IONAME:
+         hb_itemPutC( pValue, "COM:" );
          return HB_TRUE;
    }
 

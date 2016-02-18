@@ -5184,11 +5184,10 @@ static LPCDXTAG hb_cdxFindTag( CDXAREAP pArea, PHB_ITEM pTagItem,
    if( ! szTag[ 0 ] )
       iFind = hb_itemGetNI( pTagItem );
 
-   fBag = hb_itemGetCLen( pBagItem ) > 0;
+   fBag = szTag[ 0 ] && hb_itemGetCLen( pBagItem ) > 0;
    if( fBag )
    {
-      if( szTag[ 0 ] )
-         pIndex = hb_cdxFindBag( pArea, hb_itemGetCPtr( pBagItem ) );
+      pIndex = hb_cdxFindBag( pArea, hb_itemGetCPtr( pBagItem ) );
    }
    else
    {

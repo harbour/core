@@ -849,8 +849,13 @@ static void s_fileCommit( PHB_FILE pFile )
 static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
 {
    HB_SYMBOL_UNUSED( pFile );
-   HB_SYMBOL_UNUSED( iIndex );
-   HB_SYMBOL_UNUSED( pValue );
+
+   switch( iIndex )
+   {
+      case HB_VF_IONAME:
+         hb_itemPutC( pValue, "FILE:" );
+         return HB_TRUE;
+   }
 
    return HB_FALSE;
 }

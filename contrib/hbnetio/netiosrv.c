@@ -1095,6 +1095,7 @@ HB_FUNC( NETIO_SERVER )
                         errCode = NETIO_ERR_WRONG_FILE_PATH;
                      else
                      {
+                        nFlags &= ~ ( HB_FATTR ) ( FXO_COPYNAME );
                         pFile = hb_fileExtOpen( szFile, szExt, nFlags, NULL, NULL );
                         if( ! pFile )
                            errCode = s_srvFsError();

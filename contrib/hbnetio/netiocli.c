@@ -2608,6 +2608,8 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
                {
                   hb_itemMove( pValue, pResult );
                   hb_itemRelease( pResult );
+                  if( iIndex == HB_VF_IONAME )
+                     hb_itemPutCPtr( pValue, hb_xstrcpy( NULL, NETIO_FILE_PREFIX, hb_itemGetCPtr( pValue ), NULL ) );
                }
             }
             hb_xfree( buffer );
