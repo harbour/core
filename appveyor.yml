@@ -4,6 +4,7 @@ branches:
   - master
   - test_appveyor
   - lto
+  - lto-msysmingw
   - msvc2008
   - msvc2010
   - msvc2012
