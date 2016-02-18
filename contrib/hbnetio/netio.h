@@ -54,7 +54,7 @@
 #include "hbnetio.ch"
 
 /* file name prefix used by this file IO implementation */
-#define NETIO_FILE_PREFIX      "net:"
+#define NETIO_FILE_PREFIX      "NET:"
 #define NETIO_FILE_PREFIX_LEN  strlen( NETIO_FILE_PREFIX )
 
 /* default server address, port and timeout */

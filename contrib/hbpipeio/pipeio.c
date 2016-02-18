@@ -230,6 +230,10 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
       case HB_VF_WRHANDLE:
          hb_itemPutNInt( pValue, ( HB_NHANDLE ) pFile->hPipeWR );
          return HB_TRUE;
+
+      case HB_VF_IONAME:
+         hb_itemPutC( pValue, FILE_PREFIX );
+         return HB_TRUE;
    }
 
    return HB_FALSE;

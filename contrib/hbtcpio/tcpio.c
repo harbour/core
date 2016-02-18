@@ -55,7 +55,7 @@
 
 #include "hbsocket.h"
 
-#define FILE_PREFIX      "tcp:"
+#define FILE_PREFIX      "TCP:"
 #define FILE_PREFIX_LEN  strlen( FILE_PREFIX )
 
 typedef struct _HB_FILE
@@ -303,6 +303,10 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
       case HB_VF_RDHANDLE:
       case HB_VF_WRHANDLE:
          hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_sockexGetHandle( pFile->sock ) );
+         return HB_TRUE;
+
+      case HB_VF_IONAME:
+         hb_itemPutC( pValue, FILE_PREFIX );
          return HB_TRUE;
    }
 

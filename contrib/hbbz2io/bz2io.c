@@ -626,6 +626,20 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
          hb_itemPutNInt( pValue, _PHB_FILE->pFuncs->Handle( _PHB_FILE ) );
          return HB_TRUE;
 
+      case HB_VF_IONAME:
+      {
+         const char * pszNext = NULL;
+
+         if( _PHB_FILE->pFuncs->Configure( _PHB_FILE, iIndex, pValue ) )
+         {
+            pszNext = hb_itemGetCPtr( pValue );
+            if( *pszNext == '\0' )
+               pszNext = NULL;
+         }
+         hb_itemPutCPtr( pValue, hb_xstrcpy( NULL, "BZ:", pszNext, NULL ) );
+         return HB_TRUE;
+      }
+
       /* TODO? GET/SET BZIP2 compression blockSize100k? */
    }
 

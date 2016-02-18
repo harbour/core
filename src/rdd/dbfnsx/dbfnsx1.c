@@ -3925,13 +3925,10 @@ static LPTAGINFO hb_nsxFindTag( NSXAREAP pArea, PHB_ITEM pTagItem,
        ( hb_itemType( pTagItem ) & ( HB_IT_STRING | HB_IT_NUMERIC ) ) == 0 )
       return pArea->lpCurTag;
 
-   fBag = hb_itemGetCLen( pBagItem ) > 0;
+   fBag = HB_IS_STRING( pTagItem ) && hb_itemGetCLen( pBagItem ) > 0;
    if( fBag )
    {
-      if( hb_itemType( pTagItem ) & HB_IT_STRING )
-         pIndex = hb_nsxFindBag( pArea, hb_itemGetCPtr( pBagItem ) );
-      else
-         pIndex = pArea->lpIndexes;
+      pIndex = hb_nsxFindBag( pArea, hb_itemGetCPtr( pBagItem ) );
    }
    else
    {
@@ -4030,7 +4027,7 @@ static int hb_nsxFindTagNum( NSXAREAP pArea, LPTAGINFO pTag )
 }
 
 /*
- * find the given tag number
+ * count number of tags
  */
 static int hb_nsxTagCount( NSXAREAP pArea )
 {

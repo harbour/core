@@ -3671,13 +3671,10 @@ static LPTAGINFO hb_ntxFindTag( NTXAREAP pArea, PHB_ITEM pTagItem,
        ( hb_itemType( pTagItem ) & ( HB_IT_STRING | HB_IT_NUMERIC ) ) == 0 )
       return pArea->lpCurTag;
 
-   fBag = hb_itemGetCLen( pBagItem ) > 0;
+   fBag = HB_IS_STRING( pTagItem ) && hb_itemGetCLen( pBagItem ) > 0;
    if( fBag )
    {
-      if( hb_itemType( pTagItem ) & HB_IT_STRING )
-         pIndex = hb_ntxFindBag( pArea, hb_itemGetCPtr( pBagItem ) );
-      else
-         pIndex = pArea->lpIndexes;
+      pIndex = hb_ntxFindBag( pArea, hb_itemGetCPtr( pBagItem ) );
    }
    else
    {
@@ -3776,6 +3773,23 @@ static int hb_ntxFindTagNum( NTXAREAP pArea, LPTAGINFO pTag )
 }
 
 /*
+ * count number of tags
+ */
+static int hb_ntxTagCount( NTXAREAP pArea )
+{
+   LPNTXINDEX pIndex = pArea->lpIndexes;
+   int i = 0;
+
+   while( pIndex )
+   {
+      i += pIndex->iTags;
+      pIndex = pIndex->pNext;
+   }
+
+   return i;
+}
+
+/*
  * count number of keys in given tag
  */
 static HB_ULONG hb_ntxOrdKeyCount( LPTAGINFO pTag )
@@ -3808,6 +3822,7 @@ static HB_ULONG hb_ntxOrdKeyCount( LPTAGINFO pTag )
          pTag->keyCount = ulKeyCount;
       hb_ntxTagUnLockRead( pTag );
    }
+
    return ulKeyCount;
 }
 
@@ -6793,18 +6808,17 @@ static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
       }
       case DBOI_ORDERCOUNT:
       {
-         int i = 0;
-         HB_BOOL fBag = hb_itemGetCLen( pInfo->atomBagName ) > 0;
-         LPNTXINDEX pIndex = fBag ?
-               hb_ntxFindBag( pArea, hb_itemGetCPtr( pInfo->atomBagName ) ) :
-               pArea->lpIndexes;
-         while( pIndex )
+         int i;
+
+         if( hb_itemGetCLen( pInfo->atomBagName ) > 0 )
          {
-            i += pIndex->iTags;
-            if( fBag )
-               break;
-            pIndex = pIndex->pNext;
+            LPNTXINDEX pIndex = hb_ntxFindBag( pArea,
+                                       hb_itemGetCPtr( pInfo->atomBagName ) );
+            i = pIndex ? pIndex->iTags : 0;
          }
+         else
+            i = hb_ntxTagCount( pArea );
+
          pInfo->itmResult = hb_itemPutNI( pInfo->itmResult, i );
          return HB_SUCCESS;
       }
