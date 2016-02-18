@@ -380,7 +380,7 @@ openssl dgst -sha256 "${_PKGNAME}"
 
 cd - || exit
 
-if [ "${_BRANCH}" = 'lto' ] ; then
+if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] ; then
    (
       # https://pushover.net/api
       set +x
@@ -397,7 +397,7 @@ if [ "${_BRANCH}" = 'lto' ] ; then
    )
 fi
 
-if [ "${_BRANCH}" = 'master' ] ; then
+if [ "${_BRANCH#*master*}" != "${_BRANCH}" ] ; then
    (
       set +x
       curl -sS \

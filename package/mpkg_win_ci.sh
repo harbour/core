@@ -41,7 +41,7 @@ export CURL_HASH_64='43488acac8b0dd93d815fc3df4a3620890f308d35868938368717dd7356
 export HB_VF='daily'
 export HB_RT="${_ROOT}"
 export HB_MKFLAGS="clean install HB_VERSION=${HB_VF}"
-[ "${_BRANCH}" = 'lto' ] && export HB_BASE='64'
+[ "${_BRANCH#*lto*}" != "${_BRANCH}" ] && export HB_BASE='64'
 [ "${HB_BASE}" != '64' ] && export HB_SFX_7Z="${HB_RT}/7zsfx/7zsd_All.sfx"
 # [ "${HB_BASE}"  = '64' ] && export HB_SFX_7Z="${HB_RT}/7zsfx/7zsd_All_x64.sfx"
 export HB_DIR_7Z="${HB_RT}/7z/"
@@ -50,7 +50,7 @@ _ORI_PATH="${PATH}"
 
 # common settings
 
-[ "${_BRANCH}" = 'lto' ] && export HB_BUILD_CONTRIBS='hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio hbgzio hbbz2io'
+[ "${_BRANCH#*lto*}" != "${_BRANCH}" ] && export HB_BUILD_CONTRIBS='hbrun hbformat/utils hbct hbcurl hbhpdf hbmzip hbwin hbsqlit3 hbtip hbssl hbexpat hbmemio rddsql hbzebra sddsqlt3 sddodbc hbunix hbmisc hbmxml hbcups hbtest hbtcpio hbcomio hbcrypto hbnetio hbpipeio hbgzio hbbz2io'
 export HB_BUILD_STRIP='bin'
 export HB_BUILD_PKG='yes'
 export _HB_BUILD_PKG_ARCHIVE='no'
@@ -74,7 +74,7 @@ export HB_BUILD_POSTRUN='"./hbtest -noenv" "./hbspeed --noenv --stdout"'
 
 if [ "${_BRANC4}" != 'msvc' ] ; then
 
-   [ "${_BRANCH}" = 'lto' ] && export HB_USER_CFLAGS="${HB_USER_CFLAGS} -flto -ffat-lto-objects"
+   [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] && export HB_USER_CFLAGS="${HB_USER_CFLAGS} -flto -ffat-lto-objects"
    [ "${HB_BUILD_MODE}" = 'cpp' ] && export HB_USER_LDFLAGS="${HB_USER_LDFLAGS} -static-libstdc++"
 
    export HB_DIR_MINGW="${HB_RT}/mingw64"
