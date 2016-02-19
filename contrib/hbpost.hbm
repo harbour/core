@@ -19,12 +19,10 @@
 
 #{win&allmsvc&HB_COMP_VER>'1600'}-cflag=-sdl
 {win&allmsvc&HB_COMP_VER>'1700'&_HB_MSVC_ANALYZE='yes'}-cflag=-analyze
-{win&mingw&HB_COMP_VER>'0407'}-ldflag=-static-libgcc
-{win&mingw&HB_COMP_VER>'0407'}-dflag=-static-libgcc
-#{win&mingw&HB_COMP_VER>'0407'&lngcpp}-ldflag=-static-libstdc++
-#{win&mingw}-cflag=-D_FORTIFY_SOURCE=2
-#{win&mingw&HB_COMP_VER>'0401'}-cflag=-fno-strict-overflow
-#{win&mingw&HB_COMP_VER>'0401'}-cflag=-Wstrict-overflow=4
+{win&allmingw&HB_COMP_VER>'0407'}-ldflag=-static-libgcc
+{win&allmingw&HB_COMP_VER>'0407'}-dflag=-static-libgcc
+#{win&allmingw&HB_COMP_VER>'0407'&lngcpp}-ldflag=-static-libstdc++
+#{win&allmingw&HB_COMP_VER>'0401'}-cflag=-Wstrict-overflow=4
 
 {allwin}-winuni
 {allwin&HB_LIB3RD}-lunicows

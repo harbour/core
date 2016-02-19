@@ -4452,6 +4452,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             hbmk[ _HBMK_nCOMPVer ] := CompVersionDetect( hbmk, cBin_CompC )
          ENDIF
          IF hbmk[ _HBMK_lHARDEN ]
+#if 0
+            IF hbmk[ _HBMK_nCOMPVer ] >= 0400
+               AAdd( hbmk[ _HBMK_aOPTC ], "-D_FORTIFY_SOURCE=2" )
+            ENDIF
+#endif
             IF hbmk[ _HBMK_cCOMP ] == "gcc"
                /* EXPERIMENTAL */
                DO CASE
@@ -4861,6 +4866,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          IF hbmk[ _HBMK_lHARDEN ]
             IF hbmk[ _HBMK_cPLAT ] == "win"
+#if 0
+               /* Enable this, once better than a no-op */
+               IF hbmk[ _HBMK_nCOMPVer ] >= 0400
+                  AAdd( hbmk[ _HBMK_aOPTC ], "-D_FORTIFY_SOURCE=2" )
+               ENDIF
+#endif
                DO CASE
                CASE hbmk[ _HBMK_nCOMPVer ] >= 0409
 #if 0

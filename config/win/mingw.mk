@@ -40,12 +40,6 @@ ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400),)
 endif
 endif
 
-#CFLAGS += -D_FORTIFY_SOURCE=2
-ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401),)
-   # https://gcc.gnu.org/gcc-4.2/changes.html
-   #CFLAGS += -fno-strict-overflow
-endif
-
 ifneq ($(HB_COMPILER_VER),)
    ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407),)
       LDFLAGS += -static-libgcc
@@ -79,6 +73,11 @@ ifneq ($(HB_COMPILER_VER),)
       ARFLAGS += -D
    endif
 endif
+
+# Enable this, once better than a no-op
+#ifeq ($(filter $(HB_COMPILER_VER),0209 0304),)
+#   CFLAGS += -D_FORTIFY_SOURCE=2
+#endif
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall

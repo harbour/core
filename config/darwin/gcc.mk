@@ -33,6 +33,8 @@ else
    endif
 endif
 
+#CFLAGS += -D_FORTIFY_SOURCE=2
+
 ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O3
 endif
