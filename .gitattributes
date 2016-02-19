@@ -24,7 +24,6 @@
 *.js      text
 *.m       text
 *.md      text
-*.mft     text
 *.mk      text
 *.pem     text
 *.po      text

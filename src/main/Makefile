@@ -5,7 +5,7 @@ C_SOURCES := \
 C_MAIN := harbour.c
 
 RC_SOURCES := \
-   harbour.rc
+   $(TOP)$(ROOT)package/harbour.rc
 
 LIBS := \
    hbcplr \

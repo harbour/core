@@ -4,7 +4,7 @@ PRG_SOURCES := \
    hbi18n.prg \
 
 RC_SOURCES := \
-   hbi18n.rc
+   $(TOP)$(ROOT)package/harbour.rc
 
 PRG_MAIN := hbi18n.prg
 

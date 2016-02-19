@@ -20,7 +20,7 @@ C_SOURCES := \
    rt_miscc.c \
 
 RC_SOURCES := \
-   hbtest.rc
+   $(TOP)$(ROOT)package/harbour.rc
 
 PRG_MAIN := hbtest.prg
 

@@ -4,7 +4,7 @@ PRG_SOURCES := \
    hbspeed.prg \
 
 RC_SOURCES := \
-   hbspeed.rc
+   $(TOP)$(ROOT)package/harbour.rc
 
 PRG_MAIN := hbspeed.prg
 

@@ -1,4 +1,0 @@
-#if !( defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 ) )
-#include "../../package/harbour.rc"
-__HB_CREATEPROCESS_MANIFEST_RESOURCE_ID __HB_RT_MANIFEST "../package/harbour.mft"
-#endif

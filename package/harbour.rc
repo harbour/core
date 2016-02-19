@@ -1,5 +1,7 @@
 /* Copyright 2011-2016 Viktor Szakats (vszakats.net/harbour) */
 
+#if !( defined( OS2 ) || defined( __OS2__ ) || defined( OS_2 ) )
+
 #include "hbver.h"
 
 #define HB_MACRO2STRING( macro )       HB_MACRO2STRING_( macro )
@@ -47,10 +49,42 @@ BEGIN
    END
 END
 
-/* Preparation for manifest */
+/* Manifest */
 
 /* Not using predefined Windows macros here, because some C compilers
    will fail badly with their own definitions (f.e. pocc) and/or their
    own Windows headers. [vszakats] */
 #define __HB_CREATEPROCESS_MANIFEST_RESOURCE_ID 1
 #define __HB_RT_MANIFEST                        24
+
+/* Escaping rules:
+      https://msdn.microsoft.com/en-us/library/windows/desktop/aa381050.aspx */
+__HB_CREATEPROCESS_MANIFEST_RESOURCE_ID __HB_RT_MANIFEST
+BEGIN
+   "<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>"
+   "<assembly xmlns=""urn:schemas-microsoft-com:asm.v1"" manifestVersion=""1.0"">"
+      "<trustInfo xmlns=""urn:schemas-microsoft-com:asm.v3"">"
+         "<security>\n"
+            "<requestedPrivileges>\n"
+               "<requestedExecutionLevel level=""asInvoker"" uiAccess=""false""/>"
+            "</requestedPrivileges>"
+         "</security>"
+      "</trustInfo>"
+      "<dependency>"
+         "<dependentAssembly>"
+            "<assemblyIdentity type=""win32"" name=""Microsoft.Windows.Common-Controls"" version=""6.0.0.0"" processorArchitecture=""*"" publicKeyToken=""6595b64144ccf1df"" language=""*""/>"
+         "</dependentAssembly>"
+      "</dependency>"
+      "<compatibility xmlns=""urn:schemas-microsoft-com:compatibility.v1"">"
+         "<application>"
+            "<supportedOS Id=""{e2011457-1546-43c5-a5fe-008deee3d3f0}""/><!-- Vista -->"
+            "<supportedOS Id=""{35138b9a-5d96-4fbd-8e2d-a2440225f93a}""/><!-- 7 -->"
+            "<supportedOS Id=""{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}""/><!-- 8 -->"
+            "<supportedOS Id=""{1f676c76-80e1-4239-95bb-83d0f6d0da78}""/><!-- 8.1 -->"
+            "<supportedOS Id=""{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}""/><!-- 10 -->"
+         "</application>"
+      "< /compatibility>"
+   "</assembly>"
+END
+
+#endif
