@@ -35,6 +35,7 @@ environment:
 
 build_script:
   - set PATH=C:\msys64\usr\bin;%PATH%
+  - pacman --noconfirm --noprogressbar -Syu
   - pacman --noconfirm --noprogressbar -S p7zip mc
   - sh -c ./package/mpkg_win_ci.sh
 
