@@ -601,7 +601,11 @@ HB_ISIZ hb_parns( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
+#if defined( __GNUC__ )
+         return ( HB_ISIZ ) ( HB_SIZE ) pItem->item.asDouble.value;
+#else
          return ( HB_ISIZ ) pItem->item.asDouble.value;
+#endif
    }
 
    return 0;
@@ -625,7 +629,11 @@ HB_ISIZ hb_parnsdef( int iParam, HB_ISIZ nDefValue )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
+#if defined( __GNUC__ )
+         return ( HB_ISIZ ) ( HB_SIZE ) pItem->item.asDouble.value;
+#else
          return ( HB_ISIZ ) pItem->item.asDouble.value;
+#endif
    }
 
    return nDefValue;

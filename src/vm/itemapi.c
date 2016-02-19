@@ -673,7 +673,11 @@ HB_ISIZ hb_itemGetNS( PHB_ITEM pItem )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
+#if defined( __GNUC__ )
+         return ( HB_ISIZ ) ( HB_SIZE ) pItem->item.asDouble.value;
+#else
          return ( HB_ISIZ ) pItem->item.asDouble.value;
+#endif
    }
 
    return 0;
