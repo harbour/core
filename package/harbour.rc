@@ -4,24 +4,23 @@
 
 #include "hbver.h"
 
-#define HB_MACRO2STRING( macro )       HB_MACRO2STRING_( macro )
-#define HB_MACRO2STRING_( macro )      #macro
+#define HB_MACRO2STRING( macro )   HB_MACRO2STRING_( macro )
+#define HB_MACRO2STRING_( macro )  #macro
 
-#define HB_VER_PRODUCTVERSION          HB_VER_MAJOR,HB_VER_MINOR,HB_VER_RELEASE,0
-#define HB_VER_PRODUCTVERSION_STR      HB_MACRO2STRING( HB_VER_MAJOR ) "." HB_MACRO2STRING( HB_VER_MINOR ) "." HB_MACRO2STRING( HB_VER_RELEASE ) HB_VER_STATUS "\0"
-#define HB_VER_FILEVERSION             HB_VER_PRODUCTVERSION
-#define HB_VER_FILEVERSION_STR         HB_VER_PRODUCTVERSION_STR
+#define HB_VER_PRODUCT             HB_VER_MAJOR,HB_VER_MINOR,HB_VER_RELEASE,0
+#define HB_VER_PRODUCT_STR         HB_MACRO2STRING( HB_VER_MAJOR ) "." HB_MACRO2STRING( HB_VER_MINOR ) "." HB_MACRO2STRING( HB_VER_RELEASE ) HB_VER_STATUS
+#define HB_VER_FILE                HB_VER_PRODUCT
+#define HB_VER_FILE_STR            HB_VER_PRODUCT_STR
 
-#define HB_NAME                        "Harbour\0"
-#define HB_COPYRIGHT                   "Copyright \xA9 1999-2016 (see application banner)\0"
+#define HB_NAME                    "Harbour"
 
 /* Version info */
 
 #include <winver.h>
 
 VS_VERSION_INFO VERSIONINFO
-FILEVERSION    HB_VER_FILEVERSION
-PRODUCTVERSION HB_VER_PRODUCTVERSION
+FILEVERSION    HB_VER_FILE
+PRODUCTVERSION HB_VER_PRODUCT
 FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
 FILEFLAGS      0
 FILEOS         VOS__WINDOWS32
@@ -32,13 +31,13 @@ BEGIN
       /* LANGUAGE: US English ENCODING: Windows-1250 (0x04E2) */
       BLOCK "040904B0"
       BEGIN
-         VALUE "Comments",         "See LICENSE.txt for licensing terms.\0"
-         VALUE "CompanyName",      HB_NAME
-         VALUE "FileDescription",  HB_NAME
-         VALUE "FileVersion",      HB_VER_FILEVERSION_STR
-         VALUE "LegalCopyright",   HB_COPYRIGHT
-         VALUE "ProductName",      HB_NAME
-         VALUE "ProductVersion",   HB_VER_PRODUCTVERSION_STR
+         VALUE "Comments",         "See LICENSE.txt for licensing terms." "\0"
+         VALUE "CompanyName",      HB_NAME "\0"
+         VALUE "FileDescription",  HB_NAME "\0"
+         VALUE "FileVersion",      HB_VER_FILE_STR "\0"
+         VALUE "LegalCopyright",   "Copyright \xA9 1999-2016 (see application banner)" "\0"
+         VALUE "ProductName",      HB_NAME "\0"
+         VALUE "ProductVersion",   HB_VER_PRODUCT_STR "\0"
       END
    END
 
@@ -51,18 +50,17 @@ END
 
 /* Manifest */
 
-/* Not using predefined Windows macros here, because some C compilers
-   will fail badly with their own definitions (f.e. pocc) and/or their
-   own Windows headers. [vszakats] */
-#define __HB_CREATEPROCESS_MANIFEST_RESOURCE_ID 1
-#define __HB_RT_MANIFEST                        24
-
-/* Escaping rules:
+/* String escaping rules:
       https://msdn.microsoft.com/en-us/library/windows/desktop/aa381050.aspx */
-__HB_CREATEPROCESS_MANIFEST_RESOURCE_ID __HB_RT_MANIFEST
+
+/* Avoiding predefined Windows macros here, because some C compilers
+   fail badly with their own definitions (f.e. pocc) and/or their
+   own Windows headers. [vszakats] */
+1 /* CREATEPROCESS_MANIFEST_RESOURCE_ID */ 24 /* RT_MANIFEST */
 BEGIN
    "<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>"
    "<assembly xmlns=""urn:schemas-microsoft-com:asm.v1"" manifestVersion=""1.0"">"
+      "<assemblyIdentity name=""" HB_NAME """ version=""" HB_VER_PRODUCT_STR """ type=""win32""/>"
       "<trustInfo xmlns=""urn:schemas-microsoft-com:asm.v3"">"
          "<security>"
             "<requestedPrivileges>"
@@ -72,7 +70,7 @@ BEGIN
       "</trustInfo>"
       "<dependency>"
          "<dependentAssembly>"
-            "<assemblyIdentity type=""win32"" name=""Microsoft.Windows.Common-Controls"" version=""6.0.0.0"" processorArchitecture=""*"" publicKeyToken=""6595b64144ccf1df"" language=""*""/>"
+            "<assemblyIdentity name=""Microsoft.Windows.Common-Controls"" version=""6.0.0.0"" type=""win32"" publicKeyToken=""6595b64144ccf1df""/>"
          "</dependentAssembly>"
       "</dependency>"
       "<compatibility xmlns=""urn:schemas-microsoft-com:compatibility.v1"">"
