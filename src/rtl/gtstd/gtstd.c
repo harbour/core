@@ -242,7 +242,7 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       pGTSTD->curr_TIO.c_cc[ VMIN ] = 0;
 #else
       /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
-         Ubuntu) in which select() unconditionally accepts stdin for
+         *buntu) in which select() unconditionally accepts stdin for
          reading if c_cc[ VMIN ] = 0 [druzus] */
       pGTSTD->curr_TIO.c_cc[ VMIN ] = 1;
 #endif

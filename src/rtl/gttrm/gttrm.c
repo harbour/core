@@ -3358,7 +3358,7 @@ static void hb_gt_trm_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
       memset( pTerm->curr_TIO.c_cc, 0, NCCS );
       /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
-         Ubuntu) in which select() unconditionally accepts stdin for
+         *buntu) in which select() unconditionally accepts stdin for
          reading if c_cc[ VMIN ] = 0 [druzus] */
       pTerm->curr_TIO.c_cc[ VMIN ] = 1;
       /* pTerm->curr_TIO.c_cc[ VMIN ] = 0; */

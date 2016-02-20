@@ -450,7 +450,7 @@ See contrib-specific dependencies and build notes in the projects'
         $ brew cask install xquartz
 
 
-## Linux (.deb based distros: Debian, Ubuntu)
+## Linux (.deb based distros: Debian, *buntu)
 
 You will need these base packages to build/package/test/use Harbour:
 
