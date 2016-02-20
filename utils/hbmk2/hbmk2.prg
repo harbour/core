@@ -4409,8 +4409,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #if 0
          IF hbmk[ _HBMK_lSTATICFULL ]
             IF !( hbmk[ _HBMK_cPLAT ] == "darwin" )
-               cLibModePrefix :=  "-Wl,-Bstatic "
-               cLibModeSuffix := " -Wl,-Bdynamic"
+               cLibModePrefix :=       "-Wl,-Bstatic" + " "
+               cLibModeSuffix := " " + "-Wl,-Bdynamic"
             ENDIF
          ENDIF
 #endif
@@ -4818,8 +4818,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cLibExt := ""
          cObjExt := ".o"
          IF hbmk[ _HBMK_lSTATICFULL ]
-            cLibModePrefix :=  "-Wl,-static "
-            cLibModeSuffix := " -Wl,-dynamic"
+            cLibModePrefix :=       "-Wl,-Bstatic" + " "
+            cLibModeSuffix := " " + "-Wl,-Bdynamic"
          ENDIF
          DO CASE
          CASE hbmk[ _HBMK_cCOMP ] == "clang"
@@ -5096,8 +5096,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lSTATICFULL ]
-            cLibModePrefix :=  "-Wl,-static "
-            cLibModeSuffix := " -Wl,-dynamic"
+            cLibModePrefix :=       "-Wl,-Bstatic" + " "
+            cLibModeSuffix := " " + "-Wl,-Bdynamic"
          ENDIF
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
@@ -5222,8 +5222,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cBin_CompC := iif( hbmk[ _HBMK_lCPP ] != NIL .AND. hbmk[ _HBMK_lCPP ], cBin_CompCPP, hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCSUFFIX ] + hbmk[ _HBMK_cCCEXT ] )
          cOpt_CompC := "-c"
          IF hbmk[ _HBMK_lSTATICFULL ]
-            cLibModePrefix :=  "-Wl,-static "
-            cLibModeSuffix := " -Wl,-dynamic"
+            cLibModePrefix :=       "-Wl,-Bstatic" + " "
+            cLibModeSuffix := " " + "-Wl,-Bdynamic"
          ENDIF
          IF hbmk[ _HBMK_lOPTIM ]
             cOpt_CompC += " -O3"
