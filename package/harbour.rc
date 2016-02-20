@@ -7,10 +7,10 @@
 #define HB_MACRO2STRING( macro )   HB_MACRO2STRING_( macro )
 #define HB_MACRO2STRING_( macro )  #macro
 
-#define HB_VER_PRODUCT             HB_VER_MAJOR,HB_VER_MINOR,HB_VER_RELEASE,0
-#define HB_VER_PRODUCT_STR         HB_MACRO2STRING( HB_VER_MAJOR ) "." HB_MACRO2STRING( HB_VER_MINOR ) "." HB_MACRO2STRING( HB_VER_RELEASE ) HB_VER_STATUS
-#define HB_VER_FILE                HB_VER_PRODUCT
-#define HB_VER_FILE_STR            HB_VER_PRODUCT_STR
+#define HB_VER_PROD                HB_VER_MAJOR,HB_VER_MINOR,HB_VER_RELEASE,0
+#define HB_VER_PROD_STR            HB_MACRO2STRING( HB_VER_MAJOR ) "." HB_MACRO2STRING( HB_VER_MINOR ) "." HB_MACRO2STRING( HB_VER_RELEASE )
+#define HB_VER_FILE                HB_VER_PROD
+#define HB_VER_FILE_STR            HB_VER_PROD_STR
 
 #define HB_NAME                    "Harbour"
 
@@ -20,7 +20,7 @@
 
 VS_VERSION_INFO VERSIONINFO
 FILEVERSION    HB_VER_FILE
-PRODUCTVERSION HB_VER_PRODUCT
+PRODUCTVERSION HB_VER_PROD
 FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
 FILEFLAGS      0
 FILEOS         VOS__WINDOWS32
@@ -34,10 +34,10 @@ BEGIN
          VALUE "Comments",         "See LICENSE.txt for licensing terms." "\0"
          VALUE "CompanyName",      HB_NAME "\0"
          VALUE "FileDescription",  HB_NAME "\0"
-         VALUE "FileVersion",      HB_VER_FILE_STR "\0"
+         VALUE "FileVersion",      HB_VER_FILE_STR HB_VER_STATUS "\0"
          VALUE "LegalCopyright",   "Copyright \xA9 1999-2016 (see application banner)" "\0"
          VALUE "ProductName",      HB_NAME "\0"
-         VALUE "ProductVersion",   HB_VER_PRODUCT_STR "\0"
+         VALUE "ProductVersion",   HB_VER_PROD_STR HB_VER_STATUS "\0"
       END
    END
 
@@ -60,7 +60,7 @@ END
 BEGIN
    "<?xml version=""1.0"" encoding=""UTF-8"" standalone=""yes""?>"
    "<assembly xmlns=""urn:schemas-microsoft-com:asm.v1"" manifestVersion=""1.0"">"
-      "<assemblyIdentity name=""" HB_NAME """ version=""" HB_VER_PRODUCT_STR """ type=""win32""/>"
+      "<assemblyIdentity name=""" HB_NAME """ version=""" HB_VER_PROD_STR ".0"" type=""win32"" processorArchitecture=""*""/>"
       "<trustInfo xmlns=""urn:schemas-microsoft-com:asm.v3"">"
          "<security>"
             "<requestedPrivileges>"
