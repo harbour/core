@@ -20,14 +20,14 @@ PROCEDURE Main()
          SWITCH hb_Version( HB_VERSION_BITWIDTH )
          CASE 32
             AAdd( aPkg, { ;
-               "dsc" => "! Downloading 32-bit hosted dual-target mingw...", ;
+               "dsc" => "! Downloading 32-bit hosted dual-target (multilib) mingw...", ;
                "url" => cCBase + "/mingw-w64/Toolchains%20targetting%20Win32/Personal%20Builds/mingw-builds/5.3.0/threads-posix/sjlj/i686-5.3.0-release-posix-sjlj-rt_v4-rev0.7z", ;
                "sum" => "870d50cfab3c8df9da1b890691b60bda2ccf92f122121dc75f11fe1612c6aff7", ;
                "fil" => "mingw" } )
             EXIT
          CASE 64
             AAdd( aPkg, { ;
-               "dsc" => "! Downloading 64-bit hosted dual-target mingw...", ;
+               "dsc" => "! Downloading 64-bit hosted dual-target (multilib) mingw...", ;
                "url" => cCBase + "/mingw-w64/Toolchains%20targetting%20Win64/Personal%20Builds/mingw-builds/5.3.0/threads-posix/sjlj/x86_64-5.3.0-release-posix-sjlj-rt_v4-rev0.7z", ;
                "sum" => "ec28b6640ad4f183be7afcd6e9c5eabb24b89729ca3fec7618755555b5d70c19", ;
                "fil" => "mingw" } )
