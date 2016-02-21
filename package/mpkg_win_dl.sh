@@ -41,6 +41,17 @@ set -e
       openssl dgst -sha256 pack.bin | grep -q ec28b6640ad4f183be7afcd6e9c5eabb24b89729ca3fec7618755555b5d70c19
       # Will unpack into "./mingw64"
       7z x -y pack.bin > /dev/null
+   else
+      # Bad hack to avoid duplicate manifests being linked into slightly
+      # "off" binaries, that are in turn impossible to UPX.
+      #    https://github.com/Alexpux/MSYS2-packages/issues/454
+      #    https://gcc.gnu.org/bugzilla/show_bug.cgi?id=69880
+      for file in \
+         /usr/lib/default-manifest.o \
+         /mingw32/i686-w64-mingw32/lib/default-manifest.o \
+         /mingw64/x86_64-w64-mingw32/lib/default-manifest.o ; do
+         mv "${file}" "${file}-ORI"
+      done
    fi
 )
 
