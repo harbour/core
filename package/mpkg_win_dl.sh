@@ -50,7 +50,7 @@ set -e
          /usr/lib/default-manifest.o \
          /mingw32/i686-w64-mingw32/lib/default-manifest.o \
          /mingw64/x86_64-w64-mingw32/lib/default-manifest.o ; do
-         mv "${file}" "${file}-ORI"
+         [ -f "${file}" ] && mv -f "${file}" "${file}-ORI"
       done
    fi
 )
