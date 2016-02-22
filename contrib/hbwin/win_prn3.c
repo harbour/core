@@ -83,7 +83,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
       }
 
       /* Allocate enough space for PRINTER_INFO_2. */
-      ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+      ppi2 = ( PRINTER_INFO_2 * ) hb_xgrabz( dwNeeded );
 
       /* The second GetPrinter() will fill in all the current information
          so that all you have to do is modify what you are interested in. */
@@ -162,7 +162,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          }
 
          /* Allocate enough space for PRINTER_INFO_2. */
-         ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+         ppi2 = ( PRINTER_INFO_2 * ) hb_xgrabz( dwNeeded );
 
          /* The second GetPrinter() fills in all the current
             information. */
