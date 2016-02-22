@@ -49,6 +49,8 @@
 #include "hbapifs.h"
 #include "hbapiitm.h"
 
+#include "hbwin.ch"
+
 #if ! defined( HB_OS_WIN_CE )
    #include <winspool.h>
 #endif
