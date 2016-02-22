@@ -276,10 +276,9 @@ HB_FUNC( WIN_PRINTERSTATUS )
 
          if( nStatus == 0 )
          {
-            JOB_INFO_2 * pJobs;
+            JOB_INFO_2 * pJobs = NULL;
             DWORD dwJobs = 0;
 
-            /* TOFIX: This code doesn't really make sense. */
             if( hb_GetJobs( hPrinter, &pJobs, &dwJobs ) )
             {
                DWORD i;
