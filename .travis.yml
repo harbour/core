@@ -69,6 +69,7 @@ before_install:
 script:
   - if [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
        export HB_COMPILER=clang && make -j $HB_CI_THREADS HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
+       export __HB_HARBOUR_DLL_UNICOWS=no;
        export HB_BUILD_3RDEXT=no;
        export HB_PLATFORM=win;
        export HB_CCPREFIX=i686-w64-mingw32-;
