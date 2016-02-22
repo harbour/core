@@ -16374,87 +16374,135 @@ STATIC PROCEDURE __hbshell_Completion( hbmk )
 
    LOCAL oGet := GetActive()
    LOCAL cGet := oGet:VarGet()
-   LOCAL lComplete
-   LOCAL nPos, cChar
-   LOCAL cWord
+   LOCAL lCompleteFunc
+   LOCAL nPos, nPosFunc, nPosFile, cChar
+   LOCAL cWord, cMode
+   LOCAL cFunc, cFile
 
-   cWord := ""
-   FOR nPos := oGet:pos - 1 TO 1 STEP -1
-      cChar := SubStr( cGet, nPos, 1 )
+   cFunc := ""
+   FOR nPosFunc := oGet:pos - 1 TO 1 STEP -1
+      cChar := SubStr( cGet, nPosFunc, 1 )
       IF !( hb_asciiIsAlpha( cChar ) .OR. hb_asciiIsDigit( cChar ) .OR. cChar == "_" )
          EXIT
       ENDIF
-      cWord := cChar + cWord
+      cFunc := cChar + cFunc
    NEXT
 
-   IF ! Empty( cWord := __hbshell_CompletionFunc( hbmk, cWord, @lComplete ) )
-      IF lComplete
+   cFile := ""
+   FOR nPosFile := oGet:pos - 1 TO 1 STEP -1
+      cChar := SubStr( cGet, nPosFile, 1 )
+      IF !( IsAlpha( cChar ) .OR. IsDigit( cChar ) .OR. cChar $ "_-./\" )
+         EXIT
+      ENDIF
+      cFile := cChar + cFile
+   NEXT
+
+   IF hb_BLen( cWord := __hbshell_CompletionFunc( hbmk, cFunc, cFile, @cMode, @lCompleteFunc ) ) > 0
+      IF lCompleteFunc
          cWord += "()"
       ENDIF
+      nPos := iif( cMode == "func", nPosFunc, nPosFile )
       oGet:VarPut( PadR( Left( cGet, nPos ) + cWord + SubStr( cGet, oGet:pos ), Len( cGet ) ) )
-      oGet:pos := nPos + Len( cWord ) + 1 + iif( lComplete, -1, 0 )
+      oGet:pos := nPos + Len( cWord ) + 1 + iif( lCompleteFunc, -1, 0 )
    ENDIF
 
    RETURN
 
 /* BEWARE: Rough code. Likely suboptimal and misses or gets wrong some cases. */
-STATIC FUNCTION __hbshell_CompletionFunc( hbmk, cFunc, /* @ */ lComplete )
+STATIC FUNCTION __hbshell_CompletionFunc( hbmk, cFunc, cFile, /* @ */ cModeRet, /* @ */ lCompleteFunc )
 
    THREAD STATIC t_aAll
+   THREAD STATIC t_aDir, t_nDir
 
-   LOCAL cFunc1, nMaxLen
+   LOCAL cWord, cWord1, nMaxLen
    LOCAL nPos, nCount
    LOCAL tmp, tmp1, tmp2, tmp3
+   LOCAL cMode, aSortedList
+   LOCAL bUpper
 
    LOCAL cResult := ""
 
-   lComplete := .F.
+   lCompleteFunc := .F.
 
-   IF t_aAll == NIL
-      t_aAll := ASort( hb_HKeys( GetListOfFunctionsKnown( hbmk, .T. ) ),,, {| x, y | hb_asciiUpper( x ) < hb_asciiUpper( y ) } )
-   ENDIF
+   FOR EACH cMode IN { "func", "file" }
 
-   IF ( tmp := AScan( t_aAll, {| tmp | hb_LeftEqI( tmp, cFunc ) } ) ) > 0
-      IF ( tmp1 := hb_RAScan( t_aAll, {| tmp | hb_LeftEqI( tmp, cFunc ) },, Len( t_aAll ) - tmp + 1 ) ) > 0
-         nMaxLen := 0
-         FOR tmp2 := tmp TO tmp1
-            IF nMaxLen < Len( t_aAll[ tmp2 ] )
-               nMaxLen := Len( t_aAll[ tmp2 ] )
-            ENDIF
-         NEXT
-         cFunc1 := cFunc
-         lComplete := .T.
-         FOR tmp3 := Len( cFunc ) + 1 TO nMaxLen
-            cFunc1 := Left( t_aAll[ tmp ], tmp3 )
-            lComplete := tmp3 == Len( t_aAll[ tmp ] )
-            nPos := NIL
-            nCount := 0
+      SWITCH cMode
+      CASE "func"
+         bUpper := {| x | hb_asciiUpper( x ) }
+         IF t_aAll == NIL
+            t_aAll := ASort( hb_HKeys( GetListOfFunctionsKnown( hbmk, .T. ) ),,, {| x, y | Eval( bUpper, x ) < Eval( bUpper, y ) } )
+         ENDIF
+         aSortedList := t_aAll
+         cWord := cFunc
+         EXIT
+      CASE "file"
+         #if defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS )
+            bUpper := {| x | Upper( x ) }
+         #else
+            bUpper := {| x | x }
+         #endif
+         IF t_aDir == NIL .OR. ( hb_MilliSeconds() - t_nDir ) > 5000
+            t_nDir := hb_MilliSeconds()
+            tmp := Directory( "." + hb_ps() + hb_osFileMask() )
+            t_aDir := Array( Len( tmp ) )
+            FOR EACH tmp1, tmp2 IN t_aDir, tmp
+               tmp1 := tmp2[ F_NAME ]
+            NEXT
+            t_aDir := ASort( t_aDir,,, {| x, y | Eval( bUpper, x ) < Eval( bUpper, y ) } )
+         ENDIF
+         aSortedList := t_aDir
+         cWord := cFile
+         EXIT
+      ENDSWITCH
+
+      IF ( tmp := AScan( aSortedList, {| tmp | hb_LeftEq( Eval( bUpper, tmp ), Eval( bUpper, cWord ) ) } ) ) > 0
+         IF ( tmp1 := hb_RAScan( aSortedList, {| tmp | hb_LeftEq( Eval( bUpper, tmp ), Eval( bUpper, cWord ) ) },, Len( aSortedList ) - tmp + 1 ) ) > 0
+            nMaxLen := 0
             FOR tmp2 := tmp TO tmp1
-               IF ! hb_asciiUpper( t_aAll[ tmp2 ] ) == hb_asciiUpper( cFunc )
-                  nCount++
-                  nPos := tmp2
-                  IF ! hb_LeftEqI( t_aAll[ tmp2 ], cFunc1 )
-                     EXIT
-                  ENDIF
+               IF nMaxLen < Len( aSortedList[ tmp2 ] )
+                  nMaxLen := Len( aSortedList[ tmp2 ] )
                ENDIF
             NEXT
-            IF tmp2 < tmp1 + 1
-               cFunc1 := hb_StrShrink( cFunc1, 1 )
-               EXIT
-            ELSE
-               IF hb_asciiUpper( cFunc1 ) == hb_asciiUpper( cFunc ) .AND. nCount == 1
-                  cFunc1 := t_aAll[ nPos ]
-                  lComplete := .T.
+            cWord1 := cWord
+            lCompleteFunc := .T.
+            FOR tmp3 := Len( cWord ) + 1 TO nMaxLen
+               cWord1 := Left( aSortedList[ tmp ], tmp3 )
+               lCompleteFunc := tmp3 == Len( aSortedList[ tmp ] )
+               nPos := NIL
+               nCount := 0
+               FOR tmp2 := tmp TO tmp1
+                  IF ! Eval( bUpper, aSortedList[ tmp2 ] ) == Upper( cWord )
+                     nCount++
+                     nPos := tmp2
+                     IF ! hb_LeftEq( Eval( bUpper, aSortedList[ tmp2 ] ), Eval( bUpper, cWord1 ) )
+                        EXIT
+                     ENDIF
+                  ENDIF
+               NEXT
+               IF tmp2 < tmp1 + 1
+                  cWord1 := hb_StrShrink( cWord1, 1 )
+                  EXIT
+               ELSEIF Eval( bUpper, cWord1 ) == Eval( bUpper, cWord ) .AND. nCount == 1
+                  cWord1 := aSortedList[ nPos ]
+                  lCompleteFunc := .T.
                   EXIT
                ENDIF
-            ENDIF
-         NEXT
-         cResult := cFunc1
-      ELSE
-         cResult := t_aAll[ tmp ]
-         lComplete := .T.
+            NEXT
+            cResult := cWord1
+         ELSE
+            cResult := aSortedList[ tmp ]
+            lCompleteFunc := .T.
+         ENDIF
       ENDIF
-   ENDIF
+
+      IF hb_BLen( cResult ) > 0
+         cModeRet := cMode
+         IF !( cMode == "func" )
+            lCompleteFunc := .F.
+         ENDIF
+         EXIT
+      ENDIF
+   NEXT
 
    RETURN cResult
 
