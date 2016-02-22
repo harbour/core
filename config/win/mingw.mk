@@ -30,10 +30,10 @@ ifneq ($(HB_COMPILER),mingw64)
 endif
 
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 # Similar to MSVC -GS (default) option:
 ifeq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405 0406 0407 0408),)

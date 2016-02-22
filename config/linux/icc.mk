@@ -11,10 +11,10 @@ LIB_EXT := .a
 HB_DYN_COPT := -DHB_DYNLIB -fPIC
 
 CC := $(HB_CCACHE) $(HB_CMP)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -D_GNU_SOURCE
 #CFLAGS += -fast

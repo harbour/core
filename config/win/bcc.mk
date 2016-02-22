@@ -17,10 +17,10 @@ ifeq ($(HB_COMPILER),bcc64)
 else
    CC := bcc32.exe
 endif
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -q -tWM -CP437
 

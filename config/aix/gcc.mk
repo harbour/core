@@ -11,10 +11,10 @@ LIB_EXT := .a
 HB_DYN_COPT := -DHB_DYNLIB -fPIC
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 # uncomment this if you want to force creating 64bit binaries
 #CFLAGS += -maix64

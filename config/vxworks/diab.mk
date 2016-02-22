@@ -37,14 +37,14 @@ endif
 endif
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
 CFLAGS += -t$(_DIAB_CPU):rtp -WDVSB_DIR=$(WIND_BASE)/target/lib
 LDFLAGS += -t$(_DIAB_CPU):rtp -WDVSB_DIR=$(WIND_BASE)/target/lib
 DFLAGS += -t$(_DIAB_CPU):rtp -WDVSB_DIR=$(WIND_BASE)/target/lib
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 CFLAGS += -I$(WIND_BASE)/target/usr/h
 CFLAGS += -I$(WIND_BASE)/target/usr/h/wrn/coreip
 CFLAGS += -D_VX_CPU=$(_HB_VXCPU)

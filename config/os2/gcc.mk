@@ -13,10 +13,10 @@ else
 endif
 
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 ifeq ($(HB_COMPILER),gccomf)
    CFLAGS += -Zomf

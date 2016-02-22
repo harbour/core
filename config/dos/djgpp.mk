@@ -10,10 +10,10 @@ LIB_EXT := .a
 DYN_EXT := .dxe
 
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall

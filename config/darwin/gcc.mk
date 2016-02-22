@@ -11,12 +11,12 @@ LIB_PREF := lib
 LIB_EXT := .a
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 # -no-cpp-precomp prevents from using buggy precompiled headers
 # CFLAGS += -no-cpp-precomp

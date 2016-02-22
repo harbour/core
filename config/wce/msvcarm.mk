@@ -10,10 +10,10 @@ ifeq ($(HB_COMPILER),msvcarm)
       CC := clarm.exe
    endif
 endif
-CC_IN := -c
+CC_IN :=
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -nologo
 

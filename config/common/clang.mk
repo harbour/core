@@ -19,14 +19,13 @@ ifneq ($(HB_PLATFORM),darwin)
 endif
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-ifneq ($(filter --analyze, $(HB_USER_CFLAGS)),)
-   CC_IN :=
-else
-   CC_IN := -c
-endif
+CC_IN :=
 CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_HOST_INC)
+ifeq ($(filter --analyze, $(HB_USER_CFLAGS)),)
+   CFLAGS += -c
+endif
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Weverything

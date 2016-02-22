@@ -16,10 +16,10 @@ HB_BUILD_MODE := c
 else
 CC := cl.exe
 endif
-CC_IN := -c
+CC_IN :=
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -nologo
 

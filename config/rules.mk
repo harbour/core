@@ -17,12 +17,9 @@ else
 endif
 
 # Double space
-_SPCD :=
-_SPCD +=
-_SPCD +=
+_SPCD := $(subst x,x,  )
 # Single space
-_SPCS :=
-_SPCS +=
+_SPCD := $(subst x,x, )
 
 # How to run Harbour
 HB := $(HB_HOST_BIN_DIR)/harbour$(HB_HOST_BIN_EXT)

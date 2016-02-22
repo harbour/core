@@ -5,10 +5,10 @@ LIB_EXT := .lib
 HB_DYN_COPT := -DHB_DYNLIB
 
 CC := pocc.exe
-CC_IN := -c
+CC_IN :=
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 # Required by pocc Windows headers
 CFLAGS += -D_WINCE
 

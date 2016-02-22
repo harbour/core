@@ -11,14 +11,14 @@ LIB_EXT := .a
 HB_DYN_COPT := -DHB_DYNLIB -KPIC
 
 CC := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
 CXX := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)sunCC$(HB_CCSUFFIX)
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 # try to keep `-fast' as left as possible, as later optim
 # flags may override values set by `-fast', and this way
