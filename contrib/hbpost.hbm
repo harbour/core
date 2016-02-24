@@ -51,6 +51,8 @@
 "{hbdyn&darwin}-dflag=-current_version ${hb_major}.${hb_minor}.${hb_release}"
 "{hbdyn&linux}-dflag=-Wl,-soname,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
 "{hbdyn&sunos}-dflag=-Wl,-h,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
+"{hbdyn&win&allmingw}-dflag=-Wl,--major-image-version,${hb_major}"
+"{hbdyn&win&allmingw}-dflag=-Wl,--minor-image-version,${hb_minor}"
 
 # output name tweaks for dynamic libs
 # NOTE: We're altering previously set output name value here
