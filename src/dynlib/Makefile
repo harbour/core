@@ -15,7 +15,7 @@ ifneq ($(DYNDIRLIST_BASE),)
    endif
    DYNNAME := $(HB_DYNLIB_BASE)
    IMPNAME := $(HB_IMPLIB_BASE)
-   DEFNAME := $(TOP)$(ROOT)/src/harbour.def
+   DEFNAME := $(TOP)$(ROOT)src/harbour.def
 
    include $(TOP)$(ROOT)config/dyn.mk
 
