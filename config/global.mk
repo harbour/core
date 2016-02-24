@@ -34,6 +34,9 @@ HB_VER_STATUS    := dev
 # Short status (d, a1, a2, b1, b2, r1, r2, empty for final)
 HB_VER_STATUS_SH := d
 
+export HB_VER_MAJOR
+export HB_VER_MINOR
+
 ifeq ($(HB_VER_STATUS_SH),)
    HB_VER_STATUS_SH := $(HB_VER_MINOR)$(HB_VER_RELEASE)
 endif
