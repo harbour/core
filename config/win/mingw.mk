@@ -68,8 +68,8 @@ ifneq ($(HB_COMPILER_VER),)
       DFLAGS += -Wl,--nxcompat -Wl,--dynamicbase
       ifeq ($(filter $(HB_COMPILER_VER),0405 0406 0407 0408 0409),)
          ifeq ($(HB_COMPILER),mingw64)
-            LDFLAGS += -Wl,--high-entropy-va
-            DFLAGS += -Wl,--high-entropy-va
+            LDFLAGS += -Wl,--high-entropy-va -Wl,--image-base,0x140000000
+            DFLAGS += -Wl,--high-entropy-va -Wl,--image-base,0x180000000
          endif
          # '--no-insert-timestamp' has a bug failing to properly
          # reset timestamp in many (apparently random) cases as

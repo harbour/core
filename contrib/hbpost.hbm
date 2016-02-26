@@ -24,6 +24,12 @@
 #{win&allmingw&HB_COMP_VER>'0407'&lngcpp}-ldflag=-static-libstdc++
 #{win&allmingw&HB_COMP_VER>'0401'}-cflag=-Wstrict-overflow=4
 
+# Unlock even higher entropy ASLR when using `-Wl,--high-entropy-va`.
+# Safe to do if 64-bit pointers are correctly handled and never truncated to 32-bit.
+#   Ref: https://lists.ffmpeg.org/pipermail/ffmpeg-devel/2015-September/179243.html
+{win&mingw64}-ldflag=-Wl,--image-base,0x140000000
+{win&mingw64}-dflag=-Wl,--image-base,0x180000000
+
 {allwin}-winuni
 {allwin&HB_LIB3RD}-lunicows
 
