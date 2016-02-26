@@ -4913,6 +4913,12 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                      IF hbmk[ _HBMK_cCOMP ] == "mingw64"
                         AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--high-entropy-va" )
                         AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--high-entropy-va" )
+                        /* Unlock even higher entropy ASLR. Safe to do if 64-bit pointers are
+                           correctly handled and never truncated to 32-bit.
+                              https://blogs.technet.com/b/srd/archive/2013/12/11/software-defense-mitigating-common-exploitation-techniques.aspx
+                              https://lists.ffmpeg.org/pipermail/ffmpeg-devel/2015-September/179243.html */
+                        AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--image-base,0x140000000" )
+                        AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--image-base,0x180000000" )
                      ENDIF
 #if 0
                      /* '--no-insert-timestamp' has a bug failing to properly
