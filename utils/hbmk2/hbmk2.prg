@@ -4900,6 +4900,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--dynamicbase" )
                   AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--nxcompat" )
                   AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,--dynamicbase" )
+                  /* Required to make -Wl,--dynamicbase work, by forcing a relocation
+                     table to be generated and thus making the executable be relocatable.
+                     Ref:
+                        https://lists.ffmpeg.org/pipermail/ffmpeg-devel/2015-September/179242.html */
+                  IF hbmk[ _HBMK_cCOMP ] == "mingw64"
+                     AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--pic-executable,-e,mainCRTStartup" )
+                  ELSE
+                     AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--pic-executable,-e,_mainCRTStartup" )
+                  ENDIF
                   IF hbmk[ _HBMK_nCOMPVer ] >= 0500  /* binutils 2.25 */
                      IF hbmk[ _HBMK_cCOMP ] == "mingw64"
                         AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,--high-entropy-va" )
@@ -6884,7 +6893,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
               ( l_cMAIN != NIL .OR. ;
                 ! Empty( hbmk[ _HBMK_aREQUEST ] ) .OR. ;
                 ! Empty( hbmk[ _HBMK_aGT ] ) .OR. ;
-                ( hbmk[ _HBMK_lGUI ] .AND. HBMK_ISCOMP( "mingw|mingw64" ) .AND. hbmk[ _HBMK_lHARDEN ] ) .OR. ;
                 hbmk[ _HBMK_cGT ] != NIL .OR. ;
                 l_cCMAIN != NIL ) ) .OR. lHBMAINDLLP
 
@@ -6942,15 +6950,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                   ""                                                                        + _FIL_EOL + ;
                   '#include "hbapi.h"'                                                      + _FIL_EOL + ;
                   ""                                                                        + _FIL_EOL
-
-               /* Force generating a relocation table for ASLR to work.
-                  For console (-std) apps the equivalent logic is built into hbmainstd
-                  library, so it's not necessary to repeate it here. */
-               IF hbmk[ _HBMK_lGUI ] .AND. HBMK_ISCOMP( "mingw|mingw64" ) .AND. hbmk[ _HBMK_lHARDEN ]
-                  cFile += ;
-                     "HB_EXPORT_ATTR void __hbmk_force_reloc( void ) {}"                    + _FIL_EOL + ;
-                     ""                                                                     + _FIL_EOL
-               ENDIF
 
                IF ! Empty( array ) .OR. ( l_cCMAIN != NIL .AND. ! lHBMAINDLLP )
 
