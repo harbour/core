@@ -58,7 +58,7 @@
    https://www.codeproject.com/Articles/20574/Open-Source-QRCode-Library
    https://osdn.jp/projects/reedsolomon/
    http://twit88.com/home/
-   http://qrcode.osdn.jp
+   https://qrcode.osdn.jp
    https://zxing.org/w/decode.jspx                         Online decoder
    http://blog.qr4.nl/Online-QR-Code_Decoder.aspx          Online decoder (not all codes are decoded)
    http://www.thonky.com/qr-code-tutorial/                 Tutorial
