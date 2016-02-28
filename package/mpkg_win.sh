@@ -37,7 +37,7 @@ HB_DIR_MINGW="$(echo "${HB_DIR_MINGW}" | sed 's|\\|/|g')"
 HB_DR="hb${HB_VS}/"
 HB_ABSROOT="${HB_RT}/${HB_DR}"
 
-export _BRANCH="${APPVEYOR_REPO_BRANCH}${TRAVIS_BRANCH}${GIT_BRANCH}"
+_BRANCH="${APPVEYOR_REPO_BRANCH}${TRAVIS_BRANCH}${GIT_BRANCH}"
 [ -n "${_BRANCH}" ] || _BRANCH="$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')"
 _SCRIPT="$(realpath 'mpkg.hb')"
 _ROOT="$(realpath '..')"
@@ -54,16 +54,16 @@ if [ -z "${HB_BASE}" ] ; then
    # and 64-bit if it's the only one available.
    if [ -d "../pkg/win/mingw/harbour-${HB_VF}-win-mingw" ] ; then
       # MinGW 32-bit base system
-      LIB_TARGET='32'
+      _lib_target='32'
    elif [ -d "../pkg/win/mingw64/harbour-${HB_VF}-win-mingw64" ] ; then
       # MinGW 64-bit base system
-      LIB_TARGET='64'
+      _lib_target='64'
    fi
 else
-   LIB_TARGET="${HB_BASE}"
+   _lib_target="${HB_BASE}"
 fi
 
-echo "! Creating ${LIB_TARGET}-bit hosted package"
+echo "! Creating ${_lib_target}-bit hosted package"
 
 # Assemble package from per-target builds
 
@@ -88,12 +88,12 @@ if ls       ../pkg/wce/mingwarm/harbour-${HB_VF}-wce-mingwarm/bin/*.dll > /dev/n
    cp -f -p ../pkg/wce/mingwarm/harbour-${HB_VF}-wce-mingwarm/bin/*.dll "${HB_ABSROOT}bin/"
 fi
 
-if [ "${LIB_TARGET}" = '32' ] ; then
+if [ "${_lib_target}" = '32' ] ; then
    if ls       ../pkg/win/mingw64/harbour-${HB_VF}-win-mingw64/bin/*.dll > /dev/null 2>&1 ; then
       cp -f -p ../pkg/win/mingw64/harbour-${HB_VF}-win-mingw64/bin/*.dll "${HB_ABSROOT}bin/"
    fi
    ( cd "../pkg/win/mingw/harbour-${HB_VF}-win-mingw" && cp -f -p -R ./* "${HB_ABSROOT}" )
-elif [ "${LIB_TARGET}" = '64' ] ; then
+elif [ "${_lib_target}" = '64' ] ; then
    if ls       ../pkg/win/mingw/harbour-${HB_VF}-win-mingw/bin/*.dll > /dev/null 2>&1 ; then
       cp -f -p ../pkg/win/mingw/harbour-${HB_VF}-win-mingw/bin/*.dll "${HB_ABSROOT}bin/"
    fi
@@ -162,7 +162,7 @@ fi
 # Copy 7z
 
 if [ -n "${HB_DIR_7Z}" ] ; then
-   if [ "${LIB_TARGET}" = '64' ] ; then
+   if [ "${_lib_target}" = '64' ] ; then
       cp -f -p "${HB_DIR_7Z}x64/7za.exe" "${HB_ABSROOT}bin/"
    else
       cp -f -p "${HB_DIR_7Z}7za.exe"     "${HB_ABSROOT}bin/"
@@ -172,7 +172,7 @@ fi
 
 # Copy curl
 
-if [ "${LIB_TARGET}" = '64' ] ; then
+if [ "${_lib_target}" = '64' ] ; then
    HB_DIR_CURL="${HB_DIR_CURL_64}"
 else
    HB_DIR_CURL="${HB_DIR_CURL_32}"
@@ -232,8 +232,8 @@ fi
 _MINGW_DLL_DIR="${HB_DIR_MINGW}/bin"
 if [ -d "${_MINGW_DLL_DIR}" ] ; then
 
-   [ "${LIB_TARGET}" = '32' ] && [ -d "${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32" ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32"
-   [ "${LIB_TARGET}" = '64' ] && [ -d "${HB_DIR_MINGW}/i686-w64-mingw32/lib64"   ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/i686-w64-mingw32/lib64"
+   [ "${_lib_target}" = '32' ] && [ -d "${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32" ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/x86_64-w64-mingw32/lib32"
+   [ "${_lib_target}" = '64' ] && [ -d "${HB_DIR_MINGW}/i686-w64-mingw32/lib64"   ] && _MINGW_DLL_DIR="${HB_DIR_MINGW}/i686-w64-mingw32/lib64"
 
    # shellcheck disable=SC2086
    if ls       ${_MINGW_DLL_DIR}/libgcc_s_*.dll > /dev/null 2>&1 ; then
@@ -259,14 +259,14 @@ cp -f -p 'getsrc.hb' "${HB_ABSROOT}bin/"
 
 # Burn build information into RELNOTES.txt
 
-_HB_VER="${HB_VF}"
+_hb_ver="${HB_VF}"
 if [ "${HB_VF}" != "${HB_VF_DEF}" ] ; then
-   _HB_VER="${HB_VF_DEF} ${_HB_VER}"
+   _hb_ver="${HB_VF_DEF} ${_hb_ver}"
 fi
 
-VCS_ID="$(git rev-parse --short HEAD)"
-sed -e "s/_VCS_ID_/${VCS_ID}/g" \
-    -e "s/_HB_VERSION_/${_HB_VER}/g" 'RELNOTES.txt' > "${HB_ABSROOT}RELNOTES.txt"
+_vcs_id="$(git rev-parse --short HEAD)"
+sed -e "s/_VCS_ID_/${_vcs_id}/g" \
+    -e "s/_HB_VERSION_/${_hb_ver}/g" 'RELNOTES.txt' > "${HB_ABSROOT}RELNOTES.txt"
 touch -c "${HB_ABSROOT}RELNOTES.txt" -r "${HB_ABSROOT}README.md"
 
 # Create tag update JSON request
@@ -327,14 +327,14 @@ cd "${HB_RT}" || exit
    echo 'addons/*.txt'
 ) >> "${_ROOT}/_hbfiles"
 
-_PKGNAME="${_ROOT}/harbour-${HB_VF}-win.7z"
+_pkgname="${_ROOT}/harbour-${HB_VF}-win.7z"
 
-rm -f "${_PKGNAME}"
+rm -f "${_pkgname}"
 (
    cd "${HB_DR}" || exit
    bin/hbmk2.exe "${_SCRIPT}" ts "${_ROOT}"
    # NOTE: add -stl option after updating to 15.12 or upper
-   7z a -bd -r -mx "${_PKGNAME}" "@${_ROOT}/_hbfiles" > /dev/null
+   7z a -bd -r -mx "${_pkgname}" "@${_ROOT}/_hbfiles" > /dev/null
 )
 
 if [ -f "${HB_SFX_7Z}" ] ; then
@@ -361,23 +361,23 @@ RunProgram="nowait:notepad.exe \"%%T\\\\RELNOTES.txt\""
 ;!@InstallEnd@!
 EOF
 
-   cat "${HB_SFX_7Z}" _7zconf "${_PKGNAME}" > "${_PKGNAME}.exe"
+   cat "${HB_SFX_7Z}" _7zconf "${_pkgname}" > "${_pkgname}.exe"
 
-   rm "${_PKGNAME}"
+   rm "${_pkgname}"
 
-   _PKGNAME="${_PKGNAME}.exe"
+   _pkgname="${_pkgname}.exe"
 fi
 
 rm "${_ROOT}/_hbfiles"
 
-touch -c "${_PKGNAME}" -r "${HB_ABSROOT}README.md"
+touch -c "${_pkgname}" -r "${HB_ABSROOT}README.md"
 
 # <filename>: <size> bytes <YYYY-MM-DD> <HH:MM>
 case "$(uname)" in
-   *BSD|Darwin) stat -f '%N: %z bytes %Sm' -t '%Y-%m-%d %H:%M' "${_PKGNAME}";;
-   *)           stat -c '%n: %s bytes %y' "${_PKGNAME}";;
+   *BSD|Darwin) stat -f '%N: %z bytes %Sm' -t '%Y-%m-%d %H:%M' "${_pkgname}";;
+   *)           stat -c '%n: %s bytes %y' "${_pkgname}";;
 esac
-openssl dgst -sha256 "${_PKGNAME}"
+openssl dgst -sha256 "${_pkgname}"
 
 cd - || exit
 
@@ -409,15 +409,15 @@ if [ "${_BRANCH#*master*}" != "${_BRANCH}" ] ; then
 fi
 
 # https://www.virustotal.com/en/documentation/public-api/#scanning-files
-if [ "$(wc -c < "${_PKGNAME}")" -lt 32000000 ]; then
+if [ "$(wc -c < "${_pkgname}")" -lt 32000000 ]; then
    (
       set +x
       out="$(curl -sS \
          -X POST https://www.virustotal.com/vtapi/v2/file/scan \
          --form-string "apikey=${VIRUSTOTAL_APIKEY}" \
-         --form "file=@${_PKGNAME}")"
+         --form "file=@${_pkgname}")"
       echo "${out}"
-      echo "VirusTotal URL for '${_PKGNAME}':"
+      echo "VirusTotal URL for '${_pkgname}':"
       echo "${out}" | grep -o 'https://[a-zA-Z0-9./]*'
    )
 else

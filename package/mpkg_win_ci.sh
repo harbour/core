@@ -46,7 +46,7 @@ export HB_MKFLAGS="clean install HB_VERSION=${HB_VF}"
 # [ "${HB_BASE}"  = '64' ] && export HB_SFX_7Z="${HB_RT}/7zsfx/7zsd_All_x64.sfx"
 export HB_DIR_7Z="${HB_RT}/7z/"
 export HB_DIR_UPX="${HB_RT}/upx/"
-_ORI_PATH="${PATH}"
+_ori_path="${PATH}"
 
 # common settings
 
@@ -99,10 +99,10 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_32}include"
  # export HB_WITH_QT='C:\Qt\5.5\mingw492_32\include'
    if [ -d "${HB_DIR_MINGW}/bin" ] ; then
-      export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
+      export PATH="${HB_DIR_MINGW}/bin:${_ori_path}"
       gcc -v 2> BUILD-mingw.txt
    else
-      export PATH="${HB_DIR_MINGW_32}/bin:${_ORI_PATH}"
+      export PATH="${HB_DIR_MINGW_32}/bin:${_ori_path}"
       gcc -v 2> BUILD-mingw32.txt
    fi
    # shellcheck disable=SC2086
@@ -112,9 +112,9 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_64}include"
  # export HB_WITH_QT=
    if [ -d "${HB_DIR_MINGW}/bin" ] ; then
-      export PATH="${HB_DIR_MINGW}/bin:${_ORI_PATH}"
+      export PATH="${HB_DIR_MINGW}/bin:${_ori_path}"
    else
-      export PATH="${HB_DIR_MINGW_64}/bin:${_ORI_PATH}"
+      export PATH="${HB_DIR_MINGW_64}/bin:${_ori_path}"
       gcc -v 2> BUILD-mingw64.txt
    fi
    # shellcheck disable=SC2086
@@ -130,7 +130,7 @@ fi
 
 if [ "${_BRANC4}" = 'msvc' ] ; then
 
-   export PATH="${_ORI_PATH}"
+   export PATH="${_ori_path}"
    export HB_USER_CFLAGS=
    export HB_USER_LDFLAGS=
    export HB_WITH_CURL=
