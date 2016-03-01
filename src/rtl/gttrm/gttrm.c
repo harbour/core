@@ -124,8 +124,9 @@ static HB_GT_FUNCS SuperTable;
 #define TERM_ANSI          1
 #define TERM_LINUX         2
 #define TERM_XTERM         3
-#define TERM_PUTTY         4
-#define TERM_CONS          8
+#define TERM_CONS          4
+#define TERM_CYGWIN        5
+#define TERM_PUTTY         16
 
 #define HB_GTTRM_CLRSTD    0
 #define HB_GTTRM_CLRX16    1
@@ -905,7 +906,7 @@ static void set_tmevt( PHB_GTTRM pTerm, unsigned char * cMBuf, mouseEvent * mEvt
          break;
    }
    chk_mevtdblck( pTerm );
-   /* printf( "\n\rmouse event: %02x, %02x, %02x\n\r", cMBuf[ 0 ], cMBuf[ 1 ], cMBuf[ 2 ] ); */
+   /* printf( "\r\nmouse event: %02x, %02x, %02x\r\n", cMBuf[ 0 ], cMBuf[ 1 ], cMBuf[ 2 ] ); */
 }
 
 #if defined( HB_HAS_GPM )
@@ -2712,8 +2713,27 @@ static void init_keys( PHB_GTTRM pTerm )
 
       { 0, NULL } };
 
-   static const keySeq xtermModKeySeq[] = {
+   static const keySeq cygwinModKeySeq[] = {
+      { EXKEY_F1 |KEY_CTRLMASK, "\033[11^" },
+      { EXKEY_F2 |KEY_CTRLMASK, "\033[12^" },
+      { EXKEY_F3 |KEY_CTRLMASK, "\033[13^" },
+      { EXKEY_F4 |KEY_CTRLMASK, "\033[14^" },
+      { EXKEY_F5 |KEY_CTRLMASK, "\033[15^" },
+      { EXKEY_F6 |KEY_CTRLMASK, "\033[17^" },
+      { EXKEY_F7 |KEY_CTRLMASK, "\033[18^" },
+      { EXKEY_F8 |KEY_CTRLMASK, "\033[19^" },
+      { EXKEY_F9 |KEY_CTRLMASK, "\033[20^" },
+      { EXKEY_F10|KEY_CTRLMASK, "\033[21^" },
+      { EXKEY_F11|KEY_CTRLMASK, "\033[23^" },
+      { EXKEY_F12|KEY_CTRLMASK, "\033[24^" },
 
+      { EXKEY_F11|KEY_SHIFTMASK, "\033[23$" },
+      { EXKEY_F12|KEY_SHIFTMASK, "\033[24$" },
+
+      { 0, NULL } };
+
+   static const keySeq xtermModKeySeq[] = {
+      /* XTerm  with modifiers */
       { EXKEY_F1 |KEY_CTRLMASK, "\033O5P" },
       { EXKEY_F2 |KEY_CTRLMASK, "\033O5Q" },
       { EXKEY_F3 |KEY_CTRLMASK, "\033O5R" },
@@ -2739,6 +2759,24 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_PGUP  |KEY_CTRLMASK, "\033[5;5~" },
       { EXKEY_PGDN  |KEY_CTRLMASK, "\033[6;5~" },
 
+      { EXKEY_UP    |KEY_CTRLMASK, "\033[1;5A" },
+      { EXKEY_DOWN  |KEY_CTRLMASK, "\033[1;5B" },
+      { EXKEY_RIGHT |KEY_CTRLMASK, "\033[1;5C" },
+      { EXKEY_LEFT  |KEY_CTRLMASK, "\033[1;5D" },
+      { EXKEY_CENTER|KEY_CTRLMASK, "\033[1;5E" },
+      { EXKEY_END   |KEY_CTRLMASK, "\033[1;5F" },
+      { EXKEY_CENTER|KEY_CTRLMASK, "\033[1;5G" },
+      { EXKEY_HOME  |KEY_CTRLMASK, "\033[1;5H" },
+
+      { EXKEY_UP    |KEY_CTRLMASK, "\033[5A" },
+      { EXKEY_DOWN  |KEY_CTRLMASK, "\033[5B" },
+      { EXKEY_RIGHT |KEY_CTRLMASK, "\033[5C" },
+      { EXKEY_LEFT  |KEY_CTRLMASK, "\033[5D" },
+      { EXKEY_CENTER|KEY_CTRLMASK, "\033[5E" }, /* --- */
+      { EXKEY_END   |KEY_CTRLMASK, "\033[5F" }, /* --- */
+      { EXKEY_CENTER|KEY_CTRLMASK, "\033[5G" }, /* --- */
+      { EXKEY_HOME  |KEY_CTRLMASK, "\033[5H" }, /* --- */
+
       { EXKEY_F1 |KEY_ALTMASK, "\033O3P" },
       { EXKEY_F2 |KEY_ALTMASK, "\033O3Q" },
       { EXKEY_F3 |KEY_ALTMASK, "\033O3R" },
@@ -2763,6 +2801,24 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_END   |KEY_ALTMASK, "\033[4;3~" },
       { EXKEY_PGUP  |KEY_ALTMASK, "\033[5;3~" },
       { EXKEY_PGDN  |KEY_ALTMASK, "\033[6;3~" },
+
+      { EXKEY_UP    |KEY_ALTMASK, "\033[1;3A" },
+      { EXKEY_DOWN  |KEY_ALTMASK, "\033[1;3B" },
+      { EXKEY_RIGHT |KEY_ALTMASK, "\033[1;3C" },
+      { EXKEY_LEFT  |KEY_ALTMASK, "\033[1;3D" },
+      { EXKEY_CENTER|KEY_ALTMASK, "\033[1;3E" },
+      { EXKEY_END   |KEY_ALTMASK, "\033[1;3F" },
+      { EXKEY_CENTER|KEY_ALTMASK, "\033[1;3G" },
+      { EXKEY_HOME  |KEY_ALTMASK, "\033[1;3H" },
+
+      { EXKEY_UP    |KEY_ALTMASK, "\033[3A" },
+      { EXKEY_DOWN  |KEY_ALTMASK, "\033[3B" },
+      { EXKEY_RIGHT |KEY_ALTMASK, "\033[3C" },
+      { EXKEY_LEFT  |KEY_ALTMASK, "\033[3D" },
+      { EXKEY_CENTER|KEY_ALTMASK, "\033[3E" }, /* --- */
+      { EXKEY_END   |KEY_ALTMASK, "\033[3F" }, /* --- */
+      { EXKEY_CENTER|KEY_ALTMASK, "\033[3G" }, /* --- */
+      { EXKEY_HOME  |KEY_ALTMASK, "\033[3H" }, /* --- */
 
       { EXKEY_F1 |KEY_SHIFTMASK, "\033O2P" },
       { EXKEY_F2 |KEY_SHIFTMASK, "\033O2Q" },
@@ -2799,6 +2855,24 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_PGUP  |KEY_SHIFTMASK, "\033[5;2~" },
       { EXKEY_PGDN  |KEY_SHIFTMASK, "\033[6;2~" },
 
+      { EXKEY_UP    |KEY_SHIFTMASK, "\033[1;2A" },
+      { EXKEY_DOWN  |KEY_SHIFTMASK, "\033[1;2B" },
+      { EXKEY_RIGHT |KEY_SHIFTMASK, "\033[1;2C" },
+      { EXKEY_LEFT  |KEY_SHIFTMASK, "\033[1;2D" },
+      { EXKEY_CENTER|KEY_SHIFTMASK, "\033[1;2E" },
+      { EXKEY_END   |KEY_SHIFTMASK, "\033[1;2F" },
+      { EXKEY_CENTER|KEY_SHIFTMASK, "\033[1;2G" },
+      { EXKEY_HOME  |KEY_SHIFTMASK, "\033[1;2H" },
+
+      { EXKEY_UP    |KEY_SHIFTMASK, "\033[2A" },
+      { EXKEY_DOWN  |KEY_SHIFTMASK, "\033[2B" },
+      { EXKEY_RIGHT |KEY_SHIFTMASK, "\033[2C" },
+      { EXKEY_LEFT  |KEY_SHIFTMASK, "\033[2D" },
+      { EXKEY_CENTER|KEY_SHIFTMASK, "\033[2E" }, /* --- */
+      { EXKEY_END   |KEY_SHIFTMASK, "\033[2F" }, /* --- */
+      { EXKEY_CENTER|KEY_SHIFTMASK, "\033[2G" }, /* --- */
+      { EXKEY_HOME  |KEY_SHIFTMASK, "\033[2H" }, /* --- */
+
       { EXKEY_BS |KEY_ALTMASK,     "\033\010" },
 
       { 0, NULL } };
@@ -2831,31 +2905,6 @@ static void init_keys( PHB_GTTRM pTerm )
 
       { EXKEY_TAB   |KEY_SHIFTMASK, "\033[Z" }, /* kcbt, XTerm */
 
-      /* XTerm  with modifiers */
-      { EXKEY_UP    |KEY_CTRLMASK, "\033[1;5A" },
-      { EXKEY_DOWN  |KEY_CTRLMASK, "\033[1;5B" },
-      { EXKEY_RIGHT |KEY_CTRLMASK, "\033[1;5C" },
-      { EXKEY_LEFT  |KEY_CTRLMASK, "\033[1;5D" },
-      { EXKEY_CENTER|KEY_CTRLMASK, "\033[1;5E" },
-      { EXKEY_END   |KEY_CTRLMASK, "\033[1;5F" },
-      { EXKEY_HOME  |KEY_CTRLMASK, "\033[1;5H" },
-
-      { EXKEY_UP    |KEY_ALTMASK, "\033[1;3A" },
-      { EXKEY_DOWN  |KEY_ALTMASK, "\033[1;3B" },
-      { EXKEY_RIGHT |KEY_ALTMASK, "\033[1;3C" },
-      { EXKEY_LEFT  |KEY_ALTMASK, "\033[1;3D" },
-      { EXKEY_CENTER|KEY_ALTMASK, "\033[1;3E" },
-      { EXKEY_END   |KEY_ALTMASK, "\033[1;3F" },
-      { EXKEY_HOME  |KEY_ALTMASK, "\033[1;3H" },
-
-      { EXKEY_UP    |KEY_SHIFTMASK, "\033[1;2A" },
-      { EXKEY_DOWN  |KEY_SHIFTMASK, "\033[1;2B" },
-      { EXKEY_RIGHT |KEY_SHIFTMASK, "\033[1;2C" },
-      { EXKEY_LEFT  |KEY_SHIFTMASK, "\033[1;2D" },
-      { EXKEY_CENTER|KEY_SHIFTMASK, "\033[1;2E" },
-      { EXKEY_END   |KEY_SHIFTMASK, "\033[1;2F" },
-      { EXKEY_HOME  |KEY_SHIFTMASK, "\033[1;2H" },
-
       /* Konsole */
       { EXKEY_ENTER |KEY_SHIFTMASK, "\033OM" },
 
@@ -2865,30 +2914,6 @@ static void init_keys( PHB_GTTRM pTerm )
       { EXKEY_END,    "\033OF"  }, /* kend  */
       { EXKEY_HOME,   "\033OH"  }, /* khome */
       { EXKEY_ENTER |KEY_ALTMASK, "\033\012" },
-
-      { EXKEY_UP    |KEY_CTRLMASK, "\033[5A" },
-      { EXKEY_DOWN  |KEY_CTRLMASK, "\033[5B" },
-      { EXKEY_RIGHT |KEY_CTRLMASK, "\033[5C" },
-      { EXKEY_LEFT  |KEY_CTRLMASK, "\033[5D" },
-      { EXKEY_CENTER|KEY_CTRLMASK, "\033[5E" }, /* --- */
-      { EXKEY_END   |KEY_CTRLMASK, "\033[5F" }, /* --- */
-      { EXKEY_HOME  |KEY_CTRLMASK, "\033[5H" }, /* --- */
-
-      { EXKEY_UP    |KEY_ALTMASK, "\033[3A" },
-      { EXKEY_DOWN  |KEY_ALTMASK, "\033[3B" },
-      { EXKEY_RIGHT |KEY_ALTMASK, "\033[3C" },
-      { EXKEY_LEFT  |KEY_ALTMASK, "\033[3D" },
-      { EXKEY_CENTER|KEY_ALTMASK, "\033[3E" }, /* --- */
-      { EXKEY_END   |KEY_ALTMASK, "\033[3F" }, /* --- */
-      { EXKEY_HOME  |KEY_ALTMASK, "\033[3H" }, /* --- */
-
-      { EXKEY_UP    |KEY_SHIFTMASK, "\033[2A" },
-      { EXKEY_DOWN  |KEY_SHIFTMASK, "\033[2B" },
-      { EXKEY_RIGHT |KEY_SHIFTMASK, "\033[2C" },
-      { EXKEY_LEFT  |KEY_SHIFTMASK, "\033[2D" },
-      { EXKEY_CENTER|KEY_SHIFTMASK, "\033[2E" }, /* --- */
-      { EXKEY_END   |KEY_SHIFTMASK, "\033[2F" }, /* --- */
-      { EXKEY_HOME  |KEY_SHIFTMASK, "\033[2H" }, /* --- */
 
 #if 0
       /* key added for gnome-terminal and teraterm */
@@ -3027,7 +3052,8 @@ static void init_keys( PHB_GTTRM pTerm )
       addKeyTab( pTerm, haikuStdKeySeq );
 #endif
    }
-   else if( pTerm->terminal_type == TERM_LINUX )
+   else if( pTerm->terminal_type == TERM_LINUX ||
+            pTerm->terminal_type == TERM_CYGWIN )
    {
       addKeyTab( pTerm, linuxKeySeq );
       addKeyTab( pTerm, stdFnKeySeq );
@@ -3037,6 +3063,8 @@ static void init_keys( PHB_GTTRM pTerm )
       addKeyTab( pTerm, puttyKeySeq );
       /* if( pTerm->terminal_ext & TERM_PUTTY ) for PuTTY */
       addKeyTab( pTerm, rxvtKeySeq );
+      if( pTerm->terminal_type == TERM_CYGWIN )
+         addKeyTab( pTerm, cygwinModKeySeq );
    }
    else if( pTerm->terminal_type == TERM_CONS )
    {
@@ -3227,6 +3255,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->terminal_type  = TERM_XTERM;
    }
    else if( strncmp( szTerm, "linux", 5 ) == 0 ||
+            strcmp( szTerm, "cygwin" ) == 0 ||
             strcmp( szTerm, "tterm" ) == 0 ||
             strcmp( szTerm, "teraterm" ) == 0 )
    {
@@ -3242,7 +3271,13 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->Tone           = hb_gt_trm_LinuxTone;
       pTerm->Bell           = hb_gt_trm_AnsiBell;
       pTerm->szAcsc         = szExtAcsc;
-      pTerm->terminal_type  = TERM_LINUX;
+      if( strcmp( szTerm, "cygwin" ) == 0 )
+      {
+         pTerm->terminal_type  = TERM_CYGWIN;
+         pTerm->fAM            = HB_TRUE;
+      }
+      else
+         pTerm->terminal_type  = TERM_LINUX;
    }
    else if( strncmp( szTerm, "cons", 4 ) == 0 )
    {
@@ -3288,7 +3323,8 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->hFileno     = pTerm->hFilenoStdin;
       pTerm->fOutTTY     = HB_TRUE;
    }
-   pTerm->fPosAnswer     = pTerm->fOutTTY && ! hb_trm_Param( "NOPOS", NULL );
+   pTerm->fPosAnswer     = pTerm->fOutTTY && ! hb_trm_Param( "NOPOS", NULL ) &&
+                           pTerm->terminal_type != TERM_CYGWIN;
    pTerm->fUTF8          = HB_FALSE;
 
    hb_fsSetDevMode( pTerm->hFileno, FD_BINARY );
@@ -3425,7 +3461,7 @@ static void hb_gt_trm_Exit( PHB_GT pGT )
       pTerm->Exit( pTerm );
       hb_gt_trm_ResetPalette( pTerm );
       if( pTerm->fOutTTY && pTerm->iCol > 0 )
-         hb_gt_trm_termOut( pTerm, "\n\r", 2 );
+         hb_gt_trm_termOut( pTerm, "\r\n", 2 );
       hb_gt_trm_termFlush( pTerm );
    }
 
@@ -3603,6 +3639,8 @@ static HB_BOOL hb_gt_trm_Suspend( PHB_GT pGT )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Suspend(%p)", pGT ) );
 
    pTerm = HB_GTTRM_GET( pGT );
+   if( pTerm->mouse_type & MOUSE_XTERM )
+      hb_gt_trm_termOut( pTerm, s_szMouseOff, strlen( s_szMouseOff ) );
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    if( pTerm->fRestTTY )
       tcsetattr( pTerm->hFilenoStdin, TCSANOW, &pTerm->saved_TIO );
@@ -3660,7 +3698,7 @@ static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
          /* update our internal row position */
          do
          {
-            hb_gt_trm_termOut( pTerm, "\n\r", 2 );
+            hb_gt_trm_termOut( pTerm, "\r\n", 2 );
          }
          while( --iRows > 0 );
          pTerm->iCol = 0;
@@ -3762,6 +3800,8 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    pTerm->SetTermMode( pTerm, 0 );
    if( iRow < pTerm->iRow )
       pTerm->SetCursorStyle( pTerm, SC_NONE );
+   if( pTerm->fAM && iRow == pTerm->iHeight - 1 && iCol + iSize == pTerm->iWidth )
+      iSize--;
    while( iSize-- )
    {
 #ifdef HB_GT_UNICODE_BUF
@@ -3832,15 +3872,11 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          iAttribute = iColor;
       }
       pTerm->pLineBuf[ iLen++ ] = ( char ) usChar;
+      ++iChars;
 #endif
    }
    if( iLen )
-   {
-      if( pTerm->fAM &&
-          iRow == pTerm->iHeight - 1 && iCol + iLen == pTerm->iWidth )
-         --iLen;
       hb_gt_trm_PutStr( pTerm, iRow, iCol, iAttribute, pTerm->pLineBuf, iLen, iChars );
-   }
 }
 
 static void hb_gt_trm_Refresh( PHB_GT pGT )
