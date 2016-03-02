@@ -144,7 +144,7 @@ for _cpu in '' '64' ; do
       "${HB_ABSROOT}lib/win/msvc${_cpu}/*.lib" ; do
       # shellcheck disable=SC2086
       if ls ${files} > /dev/null 2>&1 ; then
-         "${HB_DIR_MINGW}/bin/strip" -p --enable-deterministic-archives -g "${files}"
+         "${_mingw_dir}/bin/strip" -p --enable-deterministic-archives -g "${files}"
       fi
    done
 done
