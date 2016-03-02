@@ -9,7 +9,8 @@ cd "$(dirname "$0")" || exit
 
 # - Requires MSYS2 or Git for Windows to run on Windows
 # - Requires 7z in PATH
-# - Adjust target dir, MinGW dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
+# - Adjust target dir, MinGW dirs,
+#   set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW, HB_DIR_MINGW_32, HB_DIR_MINGW_64
 #   create required packages beforehand.
 # - Optional HB_SFX_7Z envvar pointed to 7z SFX module
 # - Run this from vanilla official source tree only.
@@ -33,6 +34,8 @@ readonly HB_RT_DEF=C:/hb
 
 HB_RT="$(echo "${HB_RT}" | sed 's|\\|/|g')"
 HB_DIR_MINGW="$(echo "${HB_DIR_MINGW}" | sed 's|\\|/|g')"
+HB_DIR_MINGW_32="$(echo "${HB_DIR_MINGW_32}" | sed 's|\\|/|g')"
+HB_DIR_MINGW_64="$(echo "${HB_DIR_MINGW_64}" | sed 's|\\|/|g')"
 
 HB_DR="hb${HB_VS}/"
 HB_ABSROOT="${HB_RT}/${HB_DR}"
@@ -136,8 +139,8 @@ rm -f "${HB_ABSROOT}bin/hbmk2-temp.exe"
 # Slow. Requires binutils 2.23 (maybe 2.24/2.25).
 # Short synonym '-D' is not recognized as of binutils 2.25.
 for _cpu in '' '64' ; do
-   [ "${_cpu}" != '64' ] && _mingw_dir="${HB_MINGW_DIR_32}"
-   [ "${_cpu}"  = '64' ] && _mingw_dir="${HB_MINGW_DIR_64}"
+   [ "${_cpu}" != '64' ] && _mingw_dir="${HB_DIR_MINGW_32}"
+   [ "${_cpu}"  = '64' ] && _mingw_dir="${HB_DIR_MINGW_64}"
    for files in \
       "${HB_ABSROOT}lib/win/mingw${_cpu}/*-*.*" \
       "${HB_ABSROOT}lib/win/mingw${_cpu}/*_dll*.*" \
