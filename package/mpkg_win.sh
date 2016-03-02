@@ -135,21 +135,18 @@ rm -f "${HB_ABSROOT}bin/hbmk2-temp.exe"
 # won't remove internal timestamps from generated implibs.
 # Slow. Requires binutils 2.23 (maybe 2.24/2.25).
 # Short synonym '-D' is not recognized as of binutils 2.25.
-for files in \
-   "${HB_ABSROOT}lib/win/mingw/*-*.*" \
-   "${HB_ABSROOT}lib/win/mingw64/*-*.*" \
-   "${HB_ABSROOT}lib/win/mingw/*_dll*.*" \
-   "${HB_ABSROOT}lib/win/mingw64/*_dll*.*" \
-   "${HB_ABSROOT}lib/win/msvc/*.lib" \
-   "${HB_ABSROOT}lib/win/msvc64/*.lib" ; do
-   # shellcheck disable=SC2086
-   if ls ${files} > /dev/null 2>&1 ; then
-      if [ -d "${HB_DIR_MINGW}/bin" ] ; then
+for _cpu in '' '64' ; do
+   [ "${_cpu}" != '64' ] && _mingw_dir="${HB_MINGW_DIR_32}"
+   [ "${_cpu}"  = '64' ] && _mingw_dir="${HB_MINGW_DIR_64}"
+   for files in \
+      "${HB_ABSROOT}lib/win/mingw${_cpu}/*-*.*" \
+      "${HB_ABSROOT}lib/win/mingw${_cpu}/*_dll*.*" \
+      "${HB_ABSROOT}lib/win/msvc${_cpu}/*.lib" ; do
+      # shellcheck disable=SC2086
+      if ls ${files} > /dev/null 2>&1 ; then
          "${HB_DIR_MINGW}/bin/strip" -p --enable-deterministic-archives -g "${files}"
-      else
-         strip -p --enable-deterministic-archives -g "${files}"
       fi
-   fi
+   done
 done
 
 # Copy upx

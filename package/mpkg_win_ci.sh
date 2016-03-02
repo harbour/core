@@ -81,9 +81,22 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    # Get double the build speed in return.
    export __HB_HARBOUR_DLL_UNICOWS=no
 
-   HB_DIR_MINGW_32='/mingw32'
-   HB_DIR_MINGW_64='/mingw64'
    export HB_DIR_MINGW="${HB_RT}/mingw64"
+   if [ -d "${HB_DIR_MINGW}/bin" ] ; then
+      # Use the same toolchain for both targets
+      export HB_DIR_MINGW_32="${HB_DIR_MINGW}"
+      export HB_DIR_MINGW_64="${HB_DIR_MINGW}"
+      _build_info_32='BUILD-mingw.txt'
+      _build_info_64=/dev/null
+   else
+      export HB_DIR_MINGW_32='/mingw32'
+      export HB_DIR_MINGW_64='/mingw64'
+      [ "${HB_BASE}" != '64' ] && HB_DIR_MINGW="${HB_DIR_MINGW_32}"
+      [ "${HB_BASE}"  = '64' ] && HB_DIR_MINGW="${HB_DIR_MINGW_64}"
+      _build_info_32='BUILD-mingw32.txt'
+      _build_info_64='BUILD-mingw64.txt'
+   fi
+
    export HB_DIR_OPENSSL_32="${HB_RT}/openssl-mingw32/"
    export HB_DIR_OPENSSL_64="${HB_RT}/openssl-mingw64/"
    export HB_DIR_LIBSSH2_32="${HB_RT}/libssh2-mingw32/"
@@ -98,32 +111,18 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    export HB_WITH_CURL="${HB_DIR_CURL_32}include"
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_32}include"
  # export HB_WITH_QT='C:\Qt\5.5\mingw492_32\include'
-   if [ -d "${HB_DIR_MINGW}/bin" ] ; then
-      export PATH="${HB_DIR_MINGW}/bin:${_ori_path}"
-      gcc -v 2> BUILD-mingw.txt
-   else
-      export PATH="${HB_DIR_MINGW_32}/bin:${_ori_path}"
-      gcc -v 2> BUILD-mingw32.txt
-   fi
+   export PATH="${HB_DIR_MINGW_32}/bin:${_ori_path}"
+   gcc -v 2> "${_build_info_32}"
    # shellcheck disable=SC2086
    mingw32-make ${HB_MKFLAGS} HB_COMPILER=mingw HB_CPU=x86
 
    export HB_WITH_CURL="${HB_DIR_CURL_64}include"
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_64}include"
  # export HB_WITH_QT=
-   if [ -d "${HB_DIR_MINGW}/bin" ] ; then
-      export PATH="${HB_DIR_MINGW}/bin:${_ori_path}"
-   else
-      export PATH="${HB_DIR_MINGW_64}/bin:${_ori_path}"
-      gcc -v 2> BUILD-mingw64.txt
-   fi
+   export PATH="${HB_DIR_MINGW_64}/bin:${_ori_path}"
+   gcc -v 2> "${_build_info_64}"
    # shellcheck disable=SC2086
    mingw32-make ${HB_MKFLAGS} HB_COMPILER=mingw64 HB_CPU=x86_64
-
-   if [ ! -d "${HB_DIR_MINGW}/bin" ] ; then
-      [ "${HB_BASE}" != '64' ] && HB_DIR_MINGW="${HB_DIR_MINGW_32}"
-      [ "${HB_BASE}"  = '64' ] && HB_DIR_MINGW="${HB_DIR_MINGW_64}"
-   fi
 fi
 
 # msvc
