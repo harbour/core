@@ -359,13 +359,14 @@ STATIC PROCEDURE Exm_OOOpen()
 
 STATIC FUNCTION OO_ConvertToURL( cString )
 
+   cString := StrTran( cString, "\", "/" )
+
    // Handle UNC paths
-   IF ! hb_LeftEq( cString, "\\" )
+   IF ! hb_LeftEq( cString, "//" )
       cString := StrTran( cString, ":", "|" )
       cString := "///" + cString
    ENDIF
 
-   cString := StrTran( cString, "\", "/" )
    cString := StrTran( cString, " ", "%20" )
 
    RETURN "file:" + cString
