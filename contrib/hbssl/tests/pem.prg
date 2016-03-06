@@ -1,4 +1,4 @@
-/* Copyright 2009 Viktor Szakats (vszakats.net/harbour) */
+/* Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbssl"
 
@@ -27,7 +27,7 @@ PROCEDURE Main()
    ? 4; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPUBLICKEY( "privkey.pem", "test" )
    ? 5; ERR_print_errors( bioe )
-   
+
    #pragma __streaminclude "privkey.pem" | cString := %s
 
    ? PEM_READ_BIO_RSAPRIVATEKEY( BIO_new_mem_buf( cString ), {| lWrite | QOut( "Callback", lWrite, hb_eol() ), "test" } )
