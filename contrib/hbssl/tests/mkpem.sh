@@ -5,7 +5,7 @@
 openssl=openssl
 
 # Generate
-$openssl genrsa -des3 -passout pass:test -out privkey-pkcs1.pem 1024
+$openssl genrsa -aes256 -passout pass:test -out privkey-pkcs1.pem 1024
 $openssl pkcs8 -topk8 -inform pem -outform pem -passin pass:test -passout pass:test < privkey-pkcs1.pem > privkey-pkcs8.pem
 $openssl rsa -inform PEM -passin pass:test -in privkey-pkcs8.pem -pubout > pubkey.pem
 
