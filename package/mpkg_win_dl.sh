@@ -14,6 +14,8 @@ set | grep '_VER='
 # Quit if any of the lines fail
 set -e
 
+gpg --version | grep gpg
+
 # Dependencies for the Windows distro package
 
 (
@@ -57,6 +59,8 @@ set -e
 
 # Dependencies for Windows builds
 
+gpg -q --keyserver hkps://pgp.mit.edu --recv-keys 379CE192D401AB61
+
 readonly base='https://bintray.com/artifact/download/vszakats/generic/'
 
 for plat in '32' '64' ; do
@@ -68,14 +72,14 @@ for plat in '32' '64' ; do
    ; do
       eval ver="\$$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_VER"
       eval hash="\$$(echo "${name}" | tr '[:lower:]' '[:upper:]' 2> /dev/null)_HASH_${plat}"
+      # shellcheck disable=SC2154
       (
          set -x
-         # shellcheck disable=SC2154
          curl -fsS -o pack.bin -L --proto-redir =https "${base}${name}-${ver}-win${plat}-mingw.7z"
-         # shellcheck disable=SC2154
+         curl -fsS -o pack.sig -L --proto-redir =https "${base}${name}-${ver}-win${plat}-mingw.7z.asc"
+         gpg --verify pack.sig pack.bin
          openssl dgst -sha256 pack.bin | grep -q "${hash}"
          7z x -y pack.bin > /dev/null
-         # shellcheck disable=SC2154
          mv "${name}-${ver}-win${plat}-mingw" "${name}-mingw${plat}"
       )
    done
