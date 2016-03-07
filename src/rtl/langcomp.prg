@@ -215,7 +215,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "da-dk"      ; EXIT
       CASE "da"         ; EXIT
 #endif
-      CASE "de-at"
+      CASE "de-at"      ; RETURN "de_at"
       CASE "de-ch"
       CASE "de-de"
       CASE "de-li"
