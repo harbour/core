@@ -525,17 +525,6 @@ HB_FUNC( WIN_PRINTDATARAW )
    hb_retns( nResult );
 }
 
-
-/* Positions for win_printerList() array */
-
-#define HB_WINPRN_NAME    1
-#define HB_WINPRN_PORT    2
-#define HB_WINPRN_TYPE    3
-#define HB_WINPRN_DRIVER  4
-#define HB_WINPRN_SHARE   5
-#define HB_WINPRN_SERVER  6
-#define HB_WINPRN_LEN_    6
-
 HB_FUNC( WIN_PRINTERLIST )
 {
    PHB_ITEM pPrinterArray = hb_itemArrayNew( 0 );
