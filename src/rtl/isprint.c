@@ -113,7 +113,8 @@ HB_BOOL hb_printerIsReady( const char * pszPrinterName )
 #endif
 
       pFile = hb_fileExtOpen( pszPrinterName, NULL,
-                              FXO_APPEND | FO_WRITE | FO_SHARED | FO_PRIVATE, NULL, NULL );
+                              FXO_APPEND | FO_WRITE | FO_SHARED | FO_PRIVATE,
+                              NULL, NULL );
       bIsPrinter = ( pFile != NULL );
       if( bIsPrinter )
          hb_fileClose( pFile );
