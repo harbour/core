@@ -298,9 +298,9 @@ FUNCTION hb_ZipFile( ;
       aProcFile := {}
       FOR EACH cFN IN hb_defaultValue( acFiles, {} )
          hb_FNameSplit( cFN, @cPath, NIL, NIL, @cDrive )
-         IF hb_LeftEq( cPath, "." + hb_ps() )  /* strip current dir if any */
+         DO WHILE hb_LeftEq( cPath, "." + hb_ps() )  /* strip current dir if any */
             cPath := SubStr( cPath, Len( "." + hb_ps() ) + 1 )
-         ENDIF
+         ENDDO
          IF "?" $ cFN .OR. "*" $ cFN
             IF lFullPath
                cPath := hb_PathJoin( hb_cwd(), cPath )
@@ -342,10 +342,19 @@ FUNCTION hb_ZipFile( ;
             hb_FGetDateTime( cFileToZip, @tTime )
 
             hb_FNameSplit( cFileToZip, @cPath, @cName, @cExt, @cDrive )
-            IF ! lWithDrive .AND. ! Empty( cDrive ) .AND. hb_LeftEq( cPath, cDrive + hb_osDriveSeparator() )
-               cPath := SubStr( cPath, Len( cDrive + hb_osDriveSeparator() ) + 1 )
+            IF lWithPath
+               IF ! lWithDrive
+                  IF ! Empty( cDrive ) .AND. hb_LeftEq( cPath, cDrive += hb_osDriveSeparator() )
+                     cPath := SubStr( cPath, Len( cDrive ) + 1 )
+                  ENDIF
+                  DO WHILE Left( cPath, 1 ) $ "\/"
+                     cPath := SubStr( cPath, 2 )
+                  ENDDO
+               ENDIF
+            ELSE
+               cPath := NIL
             ENDIF
-            hb_zipFileCreate( hZip, StrTran( hb_FNameMerge( iif( lWithPath, cPath, NIL ), cName, cExt ), "\", "/" ), ;
+            hb_zipFileCreate( hZip, hb_FNameMerge( cPath, cName, cExt ), ;
                tTime,,,,, nLevel, cPassword, iif( Empty( cPassword ), NIL, hb_zipFileCRC32( cFileToZip ) ), NIL )
 
             DO WHILE ( nLen := FRead( hHandle, @cBuffer, hb_BLen( cBuffer ) ) ) > 0
