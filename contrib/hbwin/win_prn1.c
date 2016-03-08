@@ -387,7 +387,7 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 
          if( lSize > 0 )
          {
-            PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+            PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrabz( lSize );
 
             if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
             {
@@ -494,7 +494,7 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
 
       if( lSize > 0 )
       {
-         PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+         PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrabz( lSize );
 
          if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
          {

@@ -288,7 +288,7 @@ HB_FUNC( __WAPI_DEVMODE_NEW )
 
       if( lSize > 0 )
       {
-         PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrab( lSize );
+         PDEVMODE pDevMode = ( PDEVMODE ) hb_xgrabz( lSize );
 
          if( DocumentProperties( 0, hPrinter, ( LPTSTR ) lpDeviceName, pDevMode, pDevMode, DM_OUT_BUFFER ) == IDOK )
             hbwapi_ret_PDEVMODE( pDevMode );
