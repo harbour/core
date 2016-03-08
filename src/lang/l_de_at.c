@@ -1,4 +1,4 @@
-/* Last Translator: hbtest */
+/* Last Translator: byte-one.com */
 
 #include "hbapilng.h"
 
@@ -7,68 +7,68 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "is",
-      "Icelandic",
-      "Íslenska",
+      "de_AT",
+      "German-Austria",
+      "Deutsch-Österreich",
       "",
       "UTF8",
       "",
 
       /* Month names */
 
-      "Janúar",
-      "Febrúar",
-      "Mars",
-      "Apríl",
-      "Maí",
-      "Júní",
-      "Júlí",
-      "Ágúst",
+      "Jänner",
+      "Feber",
+      "März",
+      "April",
+      "Mai",
+      "Juni",
+      "Juli",
+      "August",
       "September",
-      "Október",
-      "Nóvember",
-      "Desember",
+      "Oktober",
+      "November",
+      "Dezember",
 
       /* Day names */
 
-      "Sunnudagur",
-      "Mánudagur",
-      "Þriðjudagur",
-      "Miðvikudagur",
-      "Fimmtudagur",
-      "Föstudagur",
-      "Laugardagur",
+      "Sonntag",
+      "Montag",
+      "Dienstag",
+      "Mittwoch",
+      "Donnerstag",
+      "Freitag",
+      "Samstag",
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Gagnagrunnar      Skráartal    Síðast Breytt   Stærð",
-      "Viltu fleiri prófanir?",
-      "Blaðsíða",
-      "** Millisamtala **",
-      "* Milli milli samtala *",
-      "*** Samtals ***",
-      "Ins",
-      "   ",
-      "Röng dagsetning",
-      "Bil: ",
+      "Datenbank Dateien Anz. Sätze   Letzte Änderung Größe",
+      "Möchten Sie mehr Beispiele?",
+      "Anz. Seiten",
+      "** Zwischensumme **",
+      "* Teilsumme *",
+      "*** Summe ***",
+      "Einfg.",
+      "      ",
+      "Ungültiges Datum",
+      "Bereich: ",
       " - ",
       "J/N",
-      "ÓGILD EXPRESSION",
+      "UNGÜLTIGER AUSDRUCK",
 
       /* Error description names */
 
-      "Óþekkt villa",
+      "Unknown error",
       "Argument error",
       "Bound error",
       "String overflow",
-      "Of há tala",
-      "Deilt með núll",
+      "Numeric overflow",
+      "Zero divisor",
       "Numeric error",
       "Syntax error",
       "Operation too complex",
       "",
       "",
-      "Lágt minni",
+      "Memory low",
       "Undefined function",
       "No exported method",
       "Variable does not exist",
@@ -80,9 +80,9 @@ static HB_LANG s_lang =
       "Create error",
       "Open error",
       "Close error",
-      "Les villa",
-      "Skrif villa",
-      "Prent villa",
+      "Read error",
+      "Write error",
+      "Print error",
       "",
       "",
       "",
@@ -146,5 +146,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      IS
+#define HB_LANG_ID      DE_AT
 #include "hbmsgreg.h"

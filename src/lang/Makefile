@@ -6,6 +6,7 @@ C_SOURCES := \
    l_ca.c \
    l_cs.c \
    l_de.c \
+   l_de_at.c \
    l_el.c \
    l_eo.c \
    l_es.c \
