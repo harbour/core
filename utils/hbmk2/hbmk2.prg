@@ -11549,10 +11549,6 @@ STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile )
    LOCAL aFile
    LOCAL tmp
 
-   LOCAL aDir := { ;
-      hbmk[ _HBMK_cHB_INSTALL_CON ], ;
-      hbmk[ _HBMK_cHB_INSTALL_ADD ] }
-
    FOR EACH cLibPath IN hbmk[ _HBMK_aLIBPATH ]
       IF hb_vfExists( hb_DirSepAdd( hb_DirSepToOS( MacroProc( hbmk, cLibPath, cFile, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cFile ) )
          cFile := hb_DirSepAdd( hb_DirSepToOS( MacroProc( hbmk, cLibPath, cFile, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cFile )
@@ -11560,7 +11556,9 @@ STATIC FUNCTION HBC_FindStd( hbmk, /* @ */ cFile )
       ENDIF
    NEXT
 
-   FOR EACH cDir IN aDir
+   FOR EACH cDir IN { ;
+      hbmk[ _HBMK_cHB_INSTALL_CON ], ;
+      hbmk[ _HBMK_cHB_INSTALL_ADD ] }
 
       IF ! Empty( cDir )
          FOR EACH aFile IN hb_vfDirectory( hb_DirSepAdd( cDir ), "D" )
