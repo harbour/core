@@ -64,7 +64,7 @@ gpg -q --keyserver hkps://pgp.mit.edu --recv-keys 379CE192D401AB61
 
 # Builder public key
 curl -fsS -o pack.gpg 'https://bintray.com/user/downloadSubjectPublicKey?username=vszakats'
-gpg -q --import pack.gpg
+gpg --import pack.gpg
 
 readonly base='https://bintray.com/artifact/download/vszakats/generic/'
 
