@@ -5,6 +5,8 @@
 -depimplibs=openssl:../dll/ssleay32.dll
 -depimplibs=openssl:../libeay32.dll
 -depimplibs=openssl:../ssleay32.dll
+-depimplibs=openssl:../lib/libcrypto.dll.a:libeay32{allmingw}
+-depimplibs=openssl:../lib/libssl.dll.a:ssleay32{allmingw}
 
 hbssl.hbm
 

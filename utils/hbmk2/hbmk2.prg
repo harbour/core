@@ -13980,22 +13980,37 @@ STATIC FUNCTION win_implib_command_gcc( hbmk, cCommand, cSourceDLL, cTargetLib, 
 
    LOCAL lDefSource
    LOCAL lNoDefSource := .F.
+   LOCAL cDrive
 
-   /* ugly hack to make it configurable to force skip COFF .lib processing and
-      skip to .def lookup, and if that fails, to .def generation */
-   IF hb_FNameExt( cSourceDLL ) == ".def"
+   /* Extract optional target-name override specified
+      after a colon ':', without confusing this colon
+      with a drive separator. */
+   hb_FNameSplit( cSourceDLL,,,, @cDrive )
+   IF ( tmp := hb_At( ":", cSourceDLL, Min( Len( cDrive ), 1 ) + Len( ":" ) + 1 ) ) > 0
+      cTargetLib := hb_FNameDir( cTargetLib ) + hb_FNameName( SubStr( cSourceDLL, tmp + 1 ) )
+      cSourceDLL := Left( cSourceDLL, tmp - 1 )
+   ENDIF
+
+   SWITCH hb_FNameExt( cSourceDLL )
+   CASE ".a"
+      /* use these as-is, if specified */
+      RETURN win_implib_copy( hbmk, cSourceDLL, cTargetLib )
+   CASE ".def"
+      /* ugly hack to make it configurable to force skip COFF .lib processing and
+         skip to .def lookup, and if that fails, to .def generation */
       cSourceDLL := hb_FNameExtSet( cSourceDLL, ".dll" )
       lDefSource := .T.
-   ELSE
-      IF hb_FNameExt( cSourceDLL ) == ".nodef"
-         cSourceDLL := hb_FNameExtSet( cSourceDLL, ".dll" )
-         lNoDefSource := .T.
-      ENDIF
+      EXIT
+   CASE ".nodef"
+      cSourceDLL := hb_FNameExtSet( cSourceDLL, ".dll" )
+      lNoDefSource := .T.
+      /* fall through */
+   OTHERWISE
       lDefSource := .F.
       IF ( nResult := win_implib_coff( hbmk, cSourceDLL, cTargetLib ) ) != _HBMK_IMPLIB_NOTFOUND
          RETURN nResult
       ENDIF
-   ENDIF
+   ENDSWITCH
 
    IF ! lNoDefSource .AND. ;
       ( nResult := win_implib_def( hbmk, cCommand, cSourceDLL, cTargetLib, cFlags ) ) != _HBMK_IMPLIB_NOTFOUND
@@ -18039,17 +18054,17 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-hbx[-]"            , H_( "update (or don't) .hbx file specified in -hbx= option (default: update)" ) }, ;
       { "-autohbc=<.ch:.hbc>", I_( "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. (EXPERIMENTAL)" ) }, ;
       , ;
-      { "-depurlbase=<d:u>"      , I_( "<d> is the name of the dependency. <u> is the URL of the project. Can be specified multiple times." ) }, ;
-      { "-deppkgname=<d:n>"      , I_( "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times." ) }, ;
-      { "-depkeyhead=<d:h>"      , I_( "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified." ) }, ;
-      { "-depoptional=<d:f>"     , I_( "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) }, ;
-      { "-depcontrol=<d:v>"      , I_( "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>" ) }, ;
-      { "-depincroot=<d:r>"      , I_( "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options." ) }, ;
-      { "-depincpath=<d:i>"      , I_( "<d> is the name of the dependency. Add <i> to the header detection path list." ) }, ;
-      { "-depincpathlocal=<d:i>" , I_( "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency." ) }, ;
-      { "-depimplibs=<d:dll>"    , I_( "<d> is the name of the dependency. Add <dll> to the import library source list." ) }, ;
-      { "-depimplibd=<d:lib>"    , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) }, ;
-      { "-depfinish=<d>"         , I_( "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly. Optional, if omitted, detection will take place after processing all options." ) }, ;
+      { "-depurlbase=<d:u>"        , I_( "<d> is the name of the dependency. <u> is the URL of the project. Can be specified multiple times." ) }, ;
+      { "-deppkgname=<d:n>"        , I_( "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times." ) }, ;
+      { "-depkeyhead=<d:h>"        , I_( "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified." ) }, ;
+      { "-depoptional=<d:f>"       , I_( "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no" ) }, ;
+      { "-depcontrol=<d:v>"        , I_( "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of environment variable HBMK_WITH_<d>" ) }, ;
+      { "-depincroot=<d:r>"        , I_( "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options." ) }, ;
+      { "-depincpath=<d:i>"        , I_( "<d> is the name of the dependency. Add <i> to the header detection path list." ) }, ;
+      { "-depincpathlocal=<d:i>"   , I_( "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (aka. 'locally hosted') dependency." ) }, ;
+      { "-depimplibs=<d:dll[:lib]>", I_( "<d> is the name of the dependency. Add <dll> to the import library source list. Optionally override the name of the generated implib to become <lib>." ) }, ;
+      { "-depimplibd=<d:lib>"      , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) }, ;
+      { "-depfinish=<d>"           , I_( "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly. Optional, if omitted, detection will take place after processing all options." ) }, ;
       , ;
       { "-plugin=<filename>" , H_( "add plugin. <filename> can be: .hb, .prg, .hrb" ) }, ;
       { "-plugin=<filename>" , S_( "add plugin. <filename> can be: .hrb" ) }, ;
