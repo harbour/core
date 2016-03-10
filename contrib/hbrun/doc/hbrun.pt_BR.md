@@ -1,19 +1,19 @@
-Harbour Shell / Script Runner 3\.4\.0dev \(9dea61d\) \(2016\-03\-09 22:28\)
-Copyright &copy; 2007\-2016, Viktor Szakáts
-Copyright &copy; 2003\-2007, Przemysław Czerpak
-<https://github\.com/vszakats/harbour\-core/>
-Tradução \(pt\_BR\): Sami Laham &lt;sami@laham\.com\.br&gt; / Vailton Renato &lt;vailtom@gmail\.com&gt;
+Harbour Shell / Script Runner 3\.4\.0dev \(9dea61d\) \(2016\-03\-09 22:28\)  
+Copyright &copy; 2007\-2016, Viktor Szakáts  
+Copyright &copy; 2003\-2007, Przemysław Czerpak  
+<https://github\.com/vszakats/harbour\-core/>  
+Tradução \(pt\_BR\): Sami Laham &lt;sami@laham\.com\.br&gt; / Vailton Renato &lt;vailtom@gmail\.com&gt;  
 
-Sintaxe:
-
-  hbrun &lt;arquivo \[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;opção&gt; \[&lt;parâmetro\[s\]&gt;\]
-
-Descrição:
+Sintaxe:  
+  
+  hbrun &lt;arquivo \[\.hb|\.prg|\.hrb|\.dbf\]&gt;|&lt;opção&gt; \[&lt;parâmetro\[s\]&gt;\]  
+  
+Descrição:  
 
 
   hbrun está habilitado a rodar scripts Harbour \(ambos fonte e pré\-compilado\), e dispõe também de um "prompt shell" interativo\.
-
-Opções abaixo estão disponíveis em linha de comando:
+  
+Opções abaixo estão disponíveis em linha de comando:  
 
 
  - **\-\-hb:debug** ativar debugação de script
@@ -23,8 +23,8 @@ Opções abaixo estão disponíveis em linha de comando:
  - **\-viewhelp** full help in text viewer
  - **\-fullhelp** full help
  - **\-fullhelpmd** full help in [Markdown](https://daringfireball.net/projects/markdown/) format
-
-Arquivos:
+  
+Arquivos:  
 
 
  - **\*\.hb** script Harbour
@@ -40,79 +40,79 @@ Constantes pré\-definidas nos fontes \(não defini\-las manualmente\):
 
  - **\_\_HBSCRIPT\_\_HBSHELL** quando um programa fonte Harbour está rodando como "shell script"
  - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.
-
-Variáveis ​​de ambiente:
+  
+Variáveis ​​de ambiente:  
 
 
  - **HB\_EXTENSION** lista de extensões para carga no shell interativo do Harbour separada por espaço
+  
+Shell API disponível nos scripts em Harbour:  
 
-Shell API disponível nos scripts em Harbour:
 
-
- - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**
+ - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
 Mudar GT\. Padrão \[\*\]: 'gttrm'
- - **hbshell\_Clipper\(\) \-&gt; NIL**
+ - **hbshell\_Clipper\(\) \-&gt; NIL**  
 Enable Cl\*pper compatibility \(non\-Unicode\) mode\.
- - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Carregar cabeçalho "header" Harbour\.
- - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Descarregar cabeçalho "header" Harbour\.
- - **hbshell\_include\_list\(\) \-&gt; NIL**
+ - **hbshell\_include\_list\(\) \-&gt; NIL**  
 Mostra a lista de cabeçalhos Harbour carregados\.
- - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 carregar pacote\. Similar para diretivas de \#request PP\.
- - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Descarregar pacote\.
- - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**
+ - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 Lista de pacotes carregados\.
- - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**
+ - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
 hb\_DirBase\(\) não mapeado para script\.
- - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**
+ - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 hb\_ProgName\(\) não mapeado para script\.
- - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**
+ - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**  
 Nome do script em execução\.
-
-Notas:
+  
+Notas:  
 
 
   - \.hb, \.prg, \.hrb ou \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be auto\-detected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. SET EXACT is set to ON\. Set\( \_SET\_EOL \) is set to OFF\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gttrm' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
   - You can use key &lt;Ctrl\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
   - Valores marcados com \[\*\] pode ser plataforma hospedagem e/ou configuração dependente\. Esta ajuda foi gerada em 'darwin' plataforma de hospedagem\.
-
-Licença:
-
-
-  This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-\(at your option\) any later version\.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\.  See the
-GNU General Public License for more details\.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit
-their web site at https://www\.gnu\.org/\)\.
-
-License extensions:
-  \- This source code must be kept and distributed as part
-    of the Harbour package and/or the placement of the tool sources
-    and files must reflect that it is part of Harbour Project\.
-  \- Copyright information must always be presented by
-    projects including this tool or help text\.
-  \- Modified versions of the tool must clearly state this
-    fact on the copyright screen\.
-  \- Source code modifications shall always be made available
-    along with binaries\.
-  \- Help text and documentation is licensed under
-    Creative Commons Attribution\-ShareAlike 4\.0 International:
-    https://creativecommons\.org/licenses/by\-sa/4\.0/
+  
+Licença:  
 
 
-Autor:
+  This program is free software; you can redistribute it and/or modify  
+it under the terms of the GNU General Public License as published by  
+the Free Software Foundation; either version 2 of the License, or  
+\(at your option\) any later version\.  
+  
+This program is distributed in the hope that it will be useful,  
+but WITHOUT ANY WARRANTY; without even the implied warranty of  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\.  See the  
+GNU General Public License for more details\.  
+  
+You should have received a copy of the GNU General Public License  
+along with this program; if not, write to the Free Software  
+Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit  
+their web site at https://www\.gnu\.org/\)\.  
+  
+License extensions:  
+  \- This source code must be kept and distributed as part  
+    of the Harbour package and/or the placement of the tool sources  
+    and files must reflect that it is part of Harbour Project\.  
+  \- Copyright information must always be presented by  
+    projects including this tool or help text\.  
+  \- Modified versions of the tool must clearly state this  
+    fact on the copyright screen\.  
+  \- Source code modifications shall always be made available  
+    along with binaries\.  
+  \- Help text and documentation is licensed under  
+    Creative Commons Attribution\-ShareAlike 4\.0 International:  
+    https://creativecommons\.org/licenses/by\-sa/4\.0/  
+
+  
+Autor:  
 
 
  - Viktor Szakáts \(vszakats\.net/harbour\) 

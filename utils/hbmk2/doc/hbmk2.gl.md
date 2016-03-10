@@ -1,19 +1,19 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(9dea61d\) \(2016\-03\-09 22:28\)
-Copyright &copy; 1999\-2016, Viktor Szakáts
-<https://github\.com/vszakats/harbour\-core/>
-Traducción \(gl\): JLalín
+Harbour Make \(hbmk2\) 3\.4\.0dev \(9dea61d\) \(2016\-03\-09 22:28\)  
+Copyright &copy; 1999\-2016, Viktor Szakáts  
+<https://github\.com/vszakats/harbour\-core/>  
+Traducción \(gl\): JLalín  
 
-Sintaxe:
+Sintaxe:  
+  
+  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.hbc|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
+  
+Descripción:  
 
-  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.hbc|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;
 
-Descripción:
-
-
-  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will auto\-detect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.
+  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will auto\-detect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
 Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
-
-Opcións:
+  
+Opcións:  
 
 
  - **\-o&lt;outname&gt;** nome do arquivo de saída
@@ -58,12 +58,12 @@ Opcións:
  - **\-nolibgrouping\[\-\]** desactivar agrupamento de bibliotecas para compiladores basados en gcc
  - **\-nomiscsyslib\[\-\]** non engadir lista extra de bibliotecas do sistema á lista predeterminada de bibliotecas
  - **\-traceonly** mostrar comandos para executar pero sen executalos
- - **\-warn=&lt;level&gt;** Establecer o nivel de aviso do compilador C
-
+ - **\-warn=&lt;level&gt;** Establecer o nivel de aviso do compilador C  
+  
 &lt;level&gt; pode ser: max, yes, low, no, def \(predeterminado: yes\)
  - **\-harden\[\-\]** enable hardening options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
  - **\-vcsts\[\-\]** set timestamp of output file\(s\) to the last repository commit \(Supported with: Git\)
- - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)
+ - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
 &lt;level&gt; can be: yes, no, min, high, max
  - **\-run\[\-\]** executar/non executar o executable de saída
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
@@ -105,14 +105,14 @@ Opcións:
  - **\-3rd=&lt;f&gt;** opcións/parámetros reservados para ferramentas externas, ignoradas sempre por hbmk2
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** modifica o ámbito local\. &lt;e&gt; é o nome de unha variable de ámbito para modificar\. &lt;o&gt; pode ser '=' para establecer, '\-' para eliminar, '\+' para engadir ao final, '\#' para insertar ao comezo\. &lt;v&gt; é o valor para establecer, engadir, insertar\.
  - **\-jobs=&lt;n&gt;** start n compilation threads \(multiprocess platforms only\) \(default: number of processors available or 1 if not detectable/applicable; on this system: 2\)
- - **\-head=&lt;m&gt;** controla a análise dos fontes \(en modo de construcción incremental\)
-
+ - **\-head=&lt;m&gt;** controla a análise dos fontes \(en modo de construcción incremental\)  
+  
 &lt;m&gt; pode ser: native \(usa o compilador para extraer dependencias\), full \(predeterminado, usa análise sinxelo de texto no arquivo\), dep, off
  - **\-rebuild** Reconstruir \(en modo construcción incremental\)
  - **\-rebuildall** Reconstruir con subproxectos \(en modo de construcción incremental\)
  - **\-clean** limpar \(en modo de construcción incremental\)
- - **\-workdir=&lt;dir&gt;** directorio de traballo
-
+ - **\-workdir=&lt;dir&gt;** directorio de traballo  
+  
 \(predeterminado: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] en modo incremental, nos uotros casos o directorio temporal do sistema operativo\)
 
 
@@ -121,8 +121,8 @@ Opcións:
 
 
  - **\-hbl\[=&lt;output&gt;\]** arquivo \.hbl de saída\. A macro %\{hb\_lng\} é aceptada no nome do arquivo
- - **\-lng=&lt;languages&gt;** lista de idiomas para reemprazar nas macros %\{hb\_lng\} nos arquivos \.pot/\.po e arquivos de saída \.hbl/\.po\. Lista separada por comas:
-
+ - **\-lng=&lt;languages&gt;** lista de idiomas para reemprazar nas macros %\{hb\_lng\} nos arquivos \.pot/\.po e arquivos de saída \.hbl/\.po\. Lista separada por comas:  
+  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** crear/actualizar arquivo \.po a partir dos fontes\. Mesturar co arquivo \.po anterior co mesmo nome
  - **\-minipo\[\-\]** do \(not\) add source file reference to \.po \(default: add them\)
@@ -150,8 +150,8 @@ Opcións:
  - **\-plugin=&lt;filename&gt;** engadir complemento\. &lt;filename&gt; pode ser: \.hb, \.prg, \.hrb
  - **\-pi=&lt;filename&gt;** Pasar arquivos a os complementos
  - **\-pflag=&lt;f&gt;** pasar opción para os complementos
-
-As seguintes opcións están dispoñibles na liña de comandos:
+  
+As seguintes opcións están dispoñibles na liña de comandos:  
 
 
  - **\-target=&lt;script&gt;** Indica un tipo novo de arquivo de saída\. &lt;script&gt; pode ser un arquivo \.prg \(ou sen extensión\) ou un arquivo \.hbp\. Cada arquivo \.hbp considérase automáticamente como tipos de arquivos de saída separados\.
@@ -159,11 +159,11 @@ As seguintes opcións están dispoñibles na liña de comandos:
 
  - **\-hbrun** Executar arquivo de saída
  - **\-hbraw** Deter despois de executar o compilador Harbour
- - **\-hbcmp|\-clipper** deter despois de crear os arquivos obxeto
-
+ - **\-hbcmp|\-clipper** deter despois de crear os arquivos obxeto  
+  
 crear enlace/copia a hbmk2 de hbcmp/clipper para o mesmo efecto
- - **\-hbcc** aceptar opcións de C tal cuál
-
+ - **\-hbcc** aceptar opcións de C tal cuál  
+  
 crear enlace/copia de hbmk2 para hbcc para o mesmo resultado
  - **\-hblnk** aceptar parámetros para o enlazador
  - **\-autohbm\[\-\]** permitir \(ou impedir\) o procesamento de hbmk\.hbm no directorio actual \(Predeterminado: yes\)
@@ -173,7 +173,7 @@ crear enlace/copia de hbmk2 para hbcc para o mesmo resultado
  - **\-hb32** enable Harbour 3\.2\.0dev compatibility mode
  - **\-xhb** activar o modo xhb
  - **\-hbc** activar modo C puro
- - **\-blinker** emulate Cl\*pper compatible linker behavior
+ - **\-blinker** emulate Cl\*pper compatible linker behavior  
 create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\-exospace** see above
  - **\-rtlink** see above
@@ -204,8 +204,8 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
  - **\-plat=&lt;platform&gt;** substituír a plataforma destino predeterminada \(predeterminado: automático\)
  - **\-cpu=&lt;cpu&gt;** substituír CPU predeterminado de destino \(predeterminado: automático\) \(EXPERIMENTAL\)
- - **\-comp=&lt;compiler&gt;** override C compiler auto\-detection
-Special value:
+ - **\-comp=&lt;compiler&gt;** override C compiler auto\-detection  
+Special value:  
  \- bld: use original build settings \(default on \*nix\)
  - **\-build=&lt;name&gt;** Indique un nome de construcción
  - **\-lang=&lt;lang&gt;** substituír idioma predeterminado\. &lt;lang&gt; é o código ISO do idioma\.
@@ -218,8 +218,8 @@ Special value:
  - **\-credits** Créditos do compilador Harbour
  - **\-build** Información da construcción do compilador Harbour
  - **\-version** mostrar só información de versión
-
-As seguintes opcións son internas/para uso de desenvolvedores \(non se garantiza a compatibilidade\):
+  
+As seguintes opcións son internas/para uso de desenvolvedores \(non se garantiza a compatibilidade\):  
 
 
  - **\-debugtime** medir tempo empleado na construcción
@@ -252,8 +252,8 @@ Pode engadir un enlace simbólico/copia/renomear hbmk2 a os seguintes nomes para
  - **hbexe\*|\*hbexe** modo \-hbexe
  - **hblib\*|\*hblib** modo \-hblib
  - **hbdyn\*|\*hbdyn** modo \-hbdyn
-
-Arquivos:
+  
+Arquivos:  
 
 
  - **\*\.hbp** arquivo de proxecto\. Pode conter calquera número de opcións que se necesiten para crear o arquivo de saída\. As liñas que comezan con caracter '\#' son ignoradas, o caracter de fin de liña/retorno é opcional e as opcións sepáranse con espazos, igual que nas opcións da liña de comandos\. As opcións que conteñan espazos deben ser postas entre comiñas dobles\. Cada arquivo \.hbp referenciado será executado como un subproxecto\.
@@ -272,8 +272,8 @@ Arquivos:
  - **shell plugins** complementos \.hb e \.hrb para o intérprete interactivo de Harbour\. Poden ubicarse en \[\*\]: $HOME/\.harbour/
  - **\.hb\_history** garda o historial do intérprete interactivo de Harbour\. Pode omitirse o historial usando 'no' na primeira liña \(sen comiñas e con retorno de carro/nova liña\)\. Atópase en \[\*\]: $HOME/\.harbour/
  - **hb\_extension** lista de extensións para cargar no intérprete interactivo\. Unha extensión por liña, ignórase a partir do caracter '\#' \. Nome de arquivo alternativo en MS\-DOS: hb\_ext\.ini\. Reside en \[\*\]: $HOME/\.harbour/
-
-Macro variables:
+  
+Macro variables:  
 
 
  - **$\{hb\_root\}** directorio de hbmk2
@@ -317,8 +317,8 @@ Macro variables:
  - **$\{hb\_level\}** nivel de recursión para subproxectos
  - **$\{&lt;depname&gt;\}** retorna o directorio de cabeceira da dependencia &lt;depname&gt;, ou '1' cando non se pode detectar
  - **$\{&lt;envvar&gt;\}** Retorna o valor da variable de entorno &lt;envvar&gt;
-
-Filtros \(poden combinarse e/ou negarse\):
+  
+Filtros \(poden combinarse e/ou negarse\):  
 
 
  - **\{&lt;platform&gt;\}** plataforma destino\. Donde &lt;platform&gt; pode ser calquera valor aceptado pola opción \-plat=\.
@@ -377,8 +377,8 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
  - **HBMK\_HAS\_&lt;depname&gt;** cando a dependencia &lt;depname&gt; foi detectada
  - **HBMK\_DIR\_&lt;depname&gt;** retorna o directorio de cabeceira donde &lt;depname&gt; se detectou, ou vacío cando non se atopa\.
  - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** cando a dependencia &lt;depname&gt; se detectou nun lugar configurado pola opción \-depincpathlocal=
-
-Variables de ámbito:
+  
+Variables de ámbito:  
 
 
  - **HBMK\_OPTIONS** acepta calquera opción como se foran pasadas ao principio da liña de comando
@@ -403,8 +403,8 @@ Variables de ámbito:
 
 
  - **HB\_EXTENSION** lista separada por espazos de extensións para cargar no intérprete interactivo de Harbour
-
-directivas \.hbc \(deben ser escritas en liñas separadas\):
+  
+directivas \.hbc \(deben ser escritas en liñas separadas\):  
 
 
  - **echo=&lt;msg&gt;** Amosar &lt;msg&gt;
@@ -477,56 +477,56 @@ directivas \.hbc \(deben ser escritas en liñas separadas\):
  - **repository=** lista separada por espazos de referencias a repositorios de fontes
 
 
-API para complementos:
-
+API para complementos:  
+  
 \('hbmk' é a variable de context recibida pola función de entrada do complemento\)
 
 
- - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**
+ - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
 Register input file extension to be passed to plugin \(by default all unrecognized file extensions are passed to Harbour compiler\)\.
- - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Engadir un arquivo de Harbour ao proxecto\.
- - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Engadir un arquivo C ao proxecto\.
- - **hbmk\_AddInput\_CPP\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_CPP\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Engade un arquivo C\+\+ ao proxecto\.
- - **hbmk\_AddInput\_RC\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_RC\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Engadir un arquivo de recursos Windows ao proxecto\.
- - **hbmk\_AddInput\_OBJ\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_OBJ\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Engadir un arquivo binario ao proxecto\.
- - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**
+ - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Engadir un arquivo para ser instalado, con un nome de grupo opcional para \-instpath=\.
- - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**
+ - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
 Add a Harbour compiler option\.
- - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**
+ - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
 Add a C compiler option\.
- - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**
+ - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Enviar texto a saída de estándar 'stdout'\.
- - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**
+ - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Enviar texto a saída de erro estándar 'stderr'\.
- - **hbmk\_OutStdRaw\( hbmk, &hellip; \) \-&gt; NIL**
+ - **hbmk\_OutStdRaw\( hbmk, &hellip; \) \-&gt; NIL**  
 Enviar texto á saída estándar \(stdout\) sen ningún formato\.
- - **hbmk\_OutErrRaw\( hbmk, &hellip; \) \-&gt; NIL**
+ - **hbmk\_OutErrRaw\( hbmk, &hellip; \) \-&gt; NIL**  
 Enviar texto á saída de erro estándar \(stderr\) sen ningún formato\.
- - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**
+ - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Avaliar a macro expresión hbmk2\.
- - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**
+ - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Citar/poñer entre comiñas o nome do arquivo para ser usado como parámetro para comandos externos\.
- - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**
+ - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Convertir nomes de arquivo ao formato requerido pola plataforma/compilador C\.
- - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**
+ - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
 Converter nome de arquivo para usar a barra invertida coma separadores de directorio\.
- - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**
+ - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
 Retorna a ruta relativa do valor de \-workdir= dende o directorio de traballo actual\.
- - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**
+ - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
 Atopar arquivo en &lt;xPath&gt; \(matriz ou literais delimitados por separador de directorios son válidos\) con lista de extensións alternativas &lt;aExtDef&gt; \(predeterminado para binarios executables\)\. Retorna o nome de arquivo cando se atopa e NIL cando non\.
- - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**
+ - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**  
 Cambiar directorio e/ou extensión no nome do arquivo\.
- - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**
+ - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
 Codificar nomes de funcións de acordo ás normas do compilador Harbour para xenerar funcións de tipo HB\_FUNC\(\) en código C\.
- - **hbmk\_StrStripQuote\( &lt;cString&gt; \) \-&gt; &lt;cString&gt;**
+ - **hbmk\_StrStripQuote\( &lt;cString&gt; \) \-&gt; &lt;cString&gt;**  
 Quitar redundantes/dobres comiñas en literais\.
- - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**
+ - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**  
 Convirte unha lista de literais en un literal\. O separador predeterminado é un espazo\.
 
 
@@ -564,84 +564,84 @@ Variables para os complementos: \(elementos hash do contexto de 'hbmk', sen dist
  - **"cCCEXT"** ver variable de ámbito HB\_CCEXT
  - **"cWorkDir"** valor \-workdir=
  - **"nExitCode"** Código actual de saída
+  
+Intérprete interactivo de Harbour dispoñible en guións:  
 
-Intérprete interactivo de Harbour dispoñible en guións:
 
-
- - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**
+ - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
 Cambiar controlador de terminal \(GT\)\. Predeterminado \[\*\]: 'gttrm'
- - **hbshell\_Clipper\(\) \-&gt; NIL**
+ - **hbshell\_Clipper\(\) \-&gt; NIL**  
 Enable Cl\*pper compatibility \(non\-Unicode\) mode\.
- - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Cargar cabeceira de Harbour\.
- - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Descargar cabeceira de Harbour\.
- - **hbshell\_include\_list\(\) \-&gt; NIL**
+ - **hbshell\_include\_list\(\) \-&gt; NIL**  
 Mostra a lista de cabeceiras de Harbour cargadas\.
- - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Cargar paquete\. Similar á directiva \#request do preprocesador\.
- - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Descargar paquete\.
- - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**
+ - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 Lista de paquetes cargados\.
- - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**
+ - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
 hb\_DirBase\(\) non mapeada para o guión\.
- - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**
+ - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 hb\_ProgName\(\) non mapeada para script\.
- - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**
+ - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**  
 Name of the script executing\.
 
 
 Exemplos para empezar con hbmk2:
 
 
- - **Para executar o intérprete interactivo \('punto' interactivo\)**
+ - **Para executar o intérprete interactivo \('punto' interactivo\)**  
 $ hbmk2 \.
- - **Para executar un guión de Harbour**
+ - **Para executar un guión de Harbour**  
 $ hbmk2 myscript\.hb \[&lt;parameter\[s\]&gt;\]
 
 
 Exemplos para construir e executar binarios portables de Harbour \(conocidos coma guións de Harbour\)
 
 
- - **Para construir**
+ - **Para construir**  
 $ hbmk2 \-gh myscript\.hb
- - **Para executar resultado anterior**
+ - **Para executar resultado anterior**  
 $ hbmk2 myscript\.hrb \[&lt;parameter\[s\]&gt;\]
 
 
 Exemplos para construir unha aplicación con Harbour:
 
 
- - **Para construir un único arquivo \.prg**
+ - **Para construir un único arquivo \.prg**  
 $ hbmk2 hello\.prg
- - **Para construir unha aplicación con varias fontes \.prg en modo incremental**
+ - **Para construir unha aplicación con varias fontes \.prg en modo incremental**  
 $ hbmk2 mymain\.prg myfuncs\.prg \-inc
- - **Para construir unha aplicación usando un arquivo de proxecto**
+ - **Para construir unha aplicación usando un arquivo de proxecto**  
 $ hbmk2 myapp\.hbp
- - **Para construir unha aplicación usando o modo incremental**
+ - **Para construir unha aplicación usando o modo incremental**  
 $ hbmk2 myapp\.hbp \-inc
- - **Para construir unha aplicación que use un paquete de contribución ou que use un paquete de terceiros que inclúa un arquivo \.hbc**
+ - **Para construir unha aplicación que use un paquete de contribución ou que use un paquete de terceiros que inclúa un arquivo \.hbc**  
 $ hbmk2 myapp\.prg hbct\.hbc
- - **Para construir unha aplicación que usa unha biblioteca**
+ - **Para construir unha aplicación que usa unha biblioteca**  
 $ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
- - **Para construir unha aplicación que usa recursos de Windows**
+ - **Para construir unha aplicación que usa recursos de Windows**  
 $ hbmk2 mymain\.prg myres\.rc
- - **Para construir unha aplicación enlazada coas bibliotecas dinámicas de Harbour**
+ - **Para construir unha aplicación enlazada coas bibliotecas dinámicas de Harbour**  
 $ hbmk2 \-shared myapp\.prg
- - **Para construir unha aplicación con todos os arquivos fonte \.prg e \.c do subdirectorio 'source'**
+ - **Para construir unha aplicación con todos os arquivos fonte \.prg e \.c do subdirectorio 'source'**  
 $ hbmk2 \-omyapp src/\*\.prg src/\*\.c
 
 
 Exemplos para construir unha biblioteca estática de Harbour:
 
 
- - **Para construir a biblioteca 'mylib' dende os fontes**
+ - **Para construir a biblioteca 'mylib' dende os fontes**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib
- - **Para construir a biblioteca 'mylib' desde as fontes usando o modo incremental**
+ - **Para construir a biblioteca 'mylib' desde as fontes usando o modo incremental**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
-
-Códigos de saída \("errorlevels"\):
+  
+Códigos de saída \("errorlevels"\):  
 
 
  - **0** Sen error
@@ -659,27 +659,27 @@ Códigos de saída \("errorlevels"\):
  - **30** Aniñamento demasiado profundo\.
  - **50** parada solicitada
  - **&lt;other&gt;** cando a opción \-run e usada, o código de saída será retornado polo executable
+  
+Notas:  
 
-Notas:
 
-
-  - &lt;script&gt; pode ser:
-
-&lt;@script&gt; ou &lt;script\.hbm&gt;: arquivo de opcións de liña de comandos
-
-&lt;script\.hbp&gt;: arquivo de opcións de liña de comandos, también marca un novo destino de construcción cando se especifica na liña de comandos
-
+  - &lt;script&gt; pode ser:  
+  
+&lt;@script&gt; ou &lt;script\.hbm&gt;: arquivo de opcións de liña de comandos  
+  
+&lt;script\.hbp&gt;: arquivo de opcións de liña de comandos, también marca un novo destino de construcción cando se especifica na liña de comandos  
+  
 &lt;script\.hbc&gt;: arquivo de configuración do paquete
   - Cando o nome do arquivo fonte non ten extensión cargarase o arquivo \.hbp se o arquivo existe no directorio actual\. Se non existe usarase a extensión \.prg\.
   - Acéptanse parámetros \-l, \-L, \-i e &lt;script&gt; múltiples\.
-  - As opcións habituáis do compilador Harbour acéptanse tal cuál\.
-
+  - As opcións habituáis do compilador Harbour acéptanse tal cuál\.  
+  
 \(ver opción \-harbourhelp\)
   - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - o guión de construcción hbmk\.hbm no directorio actual sempre é procesado se existe\.
   - Recoméndase o uso da barra invertida como separador de directorios pero a barra estándar tamén se acepta\.
-  - Os filtros poden ser usados en cada liña do arquivo \.hbc e na maioría das opcións\.
-
+  - Os filtros poden ser usados en cada liña do arquivo \.hbc e na maioría das opcións\.  
+  
 Tamén se poden combinar os filtros usando os operadores '&amp;' \(and\), '|' \(or\), negados co operador '\!' e agrupados con chaves\. Por exemplo: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - A maioría de liñas en arquivos \.hbc \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) e os correspondentes parámetros de liña de comandos aceptar macro variables\. libpaths= tamén acepta %\{hb\_name\} que será reemprazado polo nome do arquivo \.hbc buscado\.
   - As opcións que aceptan macro variables tamén admiten reemprazo de comandos\. Debe arrodear os comandos con \`\`, e cando o comando teña espazos debe arrodear con dobres comiñas\. A saída estándar do comando será usada coma o seu valor\. Por exemplo: "\-cflag=\`wx\-config \-\-cflags\`", ou ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
@@ -715,41 +715,41 @@ Valor soportado en &lt;compiler&gt; para cada valor de &lt;platform&gt;:
  - **minix** clang, gcc
  - **aix** gcc
  - **sunos** gcc, sunpro
-
-Licencia:
-
-
-  This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-\(at your option\) any later version\.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\.  See the
-GNU General Public License for more details\.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit
-their web site at https://www\.gnu\.org/\)\.
-
-License extensions:
-  \- This source code must be kept and distributed as part
-    of the Harbour package and/or the placement of the tool sources
-    and files must reflect that it is part of Harbour Project\.
-  \- Copyright information must always be presented by
-    projects including this tool or help text\.
-  \- Modified versions of the tool must clearly state this
-    fact on the copyright screen\.
-  \- Source code modifications shall always be made available
-    along with binaries\.
-  \- Help text and documentation is licensed under
-    Creative Commons Attribution\-ShareAlike 4\.0 International:
-    https://creativecommons\.org/licenses/by\-sa/4\.0/
+  
+Licencia:  
 
 
-Autor:
+  This program is free software; you can redistribute it and/or modify  
+it under the terms of the GNU General Public License as published by  
+the Free Software Foundation; either version 2 of the License, or  
+\(at your option\) any later version\.  
+  
+This program is distributed in the hope that it will be useful,  
+but WITHOUT ANY WARRANTY; without even the implied warranty of  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\.  See the  
+GNU General Public License for more details\.  
+  
+You should have received a copy of the GNU General Public License  
+along with this program; if not, write to the Free Software  
+Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit  
+their web site at https://www\.gnu\.org/\)\.  
+  
+License extensions:  
+  \- This source code must be kept and distributed as part  
+    of the Harbour package and/or the placement of the tool sources  
+    and files must reflect that it is part of Harbour Project\.  
+  \- Copyright information must always be presented by  
+    projects including this tool or help text\.  
+  \- Modified versions of the tool must clearly state this  
+    fact on the copyright screen\.  
+  \- Source code modifications shall always be made available  
+    along with binaries\.  
+  \- Help text and documentation is licensed under  
+    Creative Commons Attribution\-ShareAlike 4\.0 International:  
+    https://creativecommons\.org/licenses/by\-sa/4\.0/  
+
+  
+Autor:  
 
 
  - Viktor Szakáts \(vszakats\.net/harbour\) 

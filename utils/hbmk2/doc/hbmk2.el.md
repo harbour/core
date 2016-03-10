@@ -1,19 +1,19 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(9dea61d\) \(2016\-03\-09 22:28\)
-Copyright &copy; 1999\-2016, Viktor Szakáts
-<https://github\.com/vszakats/harbour\-core/>
-Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)
+Harbour Make \(hbmk2\) 3\.4\.0dev \(9dea61d\) \(2016\-03\-09 22:28\)  
+Copyright &copy; 1999\-2016, Viktor Szakáts  
+<https://github\.com/vszakats/harbour\-core/>  
+Μετάφραση \(el\): Pete D\. \(pete\_westg@yahoo\.gr\)  
 
-Σύνταξη:
+Σύνταξη:  
+  
+  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.hbc|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
+  
+Περιγραφή:  
 
-  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.hbc|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;
 
-Περιγραφή:
-
-
-  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will auto\-detect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.
+  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will auto\-detect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
 Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
-
-Επιλογές:
+  
+Επιλογές:  
 
 
  - **\-o&lt;outname&gt;** όνομα αρχείου εξόδου
@@ -58,11 +58,11 @@ Besides building executables, hbmk2 is able to run Harbour scripts \(both source
  - **\-nolibgrouping\[\-\]** απενεργοποίηση ομαδοποίησης βιβλιοθηκών σε gcc μεταγλωττιστές
  - **\-nomiscsyslib\[\-\]** μη προσθέτετε επιπλέον λιστα βιβλιοθηκών συστήματος στην προεπιλεγμένη λιστα βιβλιοθηκών
  - **\-traceonly** εμφάνιση των προς εκτέλεση εντολών, αλλά χωρίς να εκτελεστούν
- - **\-warn=&lt;level&gt;** ορισμός επίπεδου ειδοποιήσεων του μεταγλωττιστή C 
+ - **\-warn=&lt;level&gt;** ορισμός επίπεδου ειδοποιήσεων του μεταγλωττιστή C   
 το &lt;lev&gt; μπορεί να είναι: max, yes, low, no, def \(προεπιλογή: yes\)
  - **\-harden\[\-\]** ενεργοποίηση προστατευτικών επιλογών στο μεταγλωττιστή/συνδέτη C \(προεπιλογή: ενεργοποιημένο σε Windows, απενεργοποιημένο σε άλλα συστήματα\)
  - **\-vcsts\[\-\]** set timestamp of output file\(s\) to the last repository commit \(Supported with: Git\)
- - **\-compr=&lt;level&gt;** συμπίεση εκτελέσιμου/δυναμικής βιβλιοθήκης \(απαιτεί το εργαλείο UPX\)
+ - **\-compr=&lt;level&gt;** συμπίεση εκτελέσιμου/δυναμικής βιβλιοθήκης \(απαιτεί το εργαλείο UPX\)  
 το &lt;level&gt; μπορεί να είναι: yes, no, min, high, max
  - **\-run\[\-\]** εκτέλεση/ή όχι, του εκτελέσιμου που θα δημιουργηθεί
  - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
@@ -104,12 +104,12 @@ Besides building executables, hbmk2 is able to run Harbour scripts \(both source
  - **\-3rd=&lt;f&gt;** επιλογές/σημαίες εφεδρικές για 3rd party εργαλεία, πάντοτε αγνοούνται από το ίδιο το hbmk2
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** τροποποίηση τοπικού περιβάλλοντος\. &lt;e&gt; είναι το όνομα μεταβλητής περιβάλλοντος για αλλαγή\. &lt;o&gt; μπορεί να είναι '=' για ορισμό/επικάλυψη, '\-' για διαγραφή, '\+' για προσθήκη στο τέλος της υπάρχουσας τιμής, '\#' για εισαγωγή στην αρχή της υπάρχουσας τιμής\. &lt;v&gt; είναι η τιμή που θα οριστεί/προστεθεί/εισαχθεί\.
  - **\-jobs=&lt;n&gt;** start n compilation threads \(multiprocess platforms only\) \(default: number of processors available or 1 if not detectable/applicable; on this system: 2\)
- - **\-head=&lt;m&gt;** έλεγχος της ανάλυσης του πηγαίου header \(σε αυξητικό \-incremental\- ρυθμό κατασκευής\)
+ - **\-head=&lt;m&gt;** έλεγχος της ανάλυσης του πηγαίου header \(σε αυξητικό \-incremental\- ρυθμό κατασκευής\)  
 &lt;m&gt; μπορεί να είναι: native \(χρήση του μεταγλωττιστή για εξαγωγή των εξαρτήσεων\), full \(προεπιλογή, χρήση απλού αναλυτή κειμένου σε όλο το αρχείο\), dep, off
  - **\-rebuild** ανακατασκευή \(σε incremental ρυθμό\)
  - **\-rebuildall** ανακατασκευή μαζί με τα υπο\-έργα \(με αυξητική \-incremental\- μέθοδο κατασκευής\)
  - **\-clean** καθαρισμός \(σε incremental ρυθμό\)
- - **\-workdir=&lt;dir&gt;** κατάλογος εργασίας
+ - **\-workdir=&lt;dir&gt;** κατάλογος εργασίας  
 \(προεπιλογή: \.hbmk/&lt;platform&gt;/&lt;compiler&gt; \[\*\] σε incremental μέθοδο κατασκευής, αλλιώς ο temp κατάλογος του Λ\.Σ\.\)
 
 
@@ -118,7 +118,7 @@ Besides building executables, hbmk2 is able to run Harbour scripts \(both source
 
 
  - **\-hbl\[=&lt;output&gt;\]** έξοδος \.hbl αρχειοονόματος\. %\{hb\_lng\} macro είναι δεκτή στο αρχειοόναμα
- - **\-lng=&lt;languages&gt;** λίστα των γλωσσών προς αντικατάσταση σε %\{hb\_lng\} macros σε \.pot/\.po filenames and output \.hbl/\.po filenames\. Λίστα διαχωριζόμενη με κόμμα:
+ - **\-lng=&lt;languages&gt;** λίστα των γλωσσών προς αντικατάσταση σε %\{hb\_lng\} macros σε \.pot/\.po filenames and output \.hbl/\.po filenames\. Λίστα διαχωριζόμενη με κόμμα:  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** δημιουργία/ενημέρωση αρχείου \.po από το πηγαίο\. Συγχώνευσή του με προηγούμενο αρχείο \.po ίδιου ονόματος
  - **\-minipo\[\-\]** do \(not\) add source file reference to \.po \(default: add them\)
@@ -146,8 +146,8 @@ Besides building executables, hbmk2 is able to run Harbour scripts \(both source
  - **\-plugin=&lt;filename&gt;** προσθήκη plugin\. το &lt;filename&gt; μπορεί να είναι: \.hb, \.prg, \.hrb
  - **\-pi=&lt;filename&gt;** πέρασμα του αρχείου εισόδου στα plugins
  - **\-pflag=&lt;f&gt;** απλό πέρασμα σημαίας \-flag\- στα plugins
-
-Οι παρακάτω επιλογές είναι διαθέσιμες στη γραμμή\-εντολών:
+  
+Οι παρακάτω επιλογές είναι διαθέσιμες στη γραμμή\-εντολών:  
 
 
  - **\-target=&lt;script&gt;** καθορίζει ένα νέο έργο προς κατασκευή\. το &lt;script&gt; μπορεί να είναι \.prg \(ή καμμία κατάληξη\) ή \.hbp αρχείο\. Σημειώστε ότι τα αρχεία \.hbp θεωρούνται αυτόματα ως ξεχωριστές κατασκευές\.
@@ -155,9 +155,9 @@ Besides building executables, hbmk2 is able to run Harbour scripts \(both source
 
  - **\-hbrun** εκτέλεση του κατασκευασμένου έργου
  - **\-hbraw** διακοπή μετά το τρέξιμο του μεταγλωττιστή
- - **\-hbcmp|\-clipper** τερματισμός μετά την δημιουργία των object αρχείων
+ - **\-hbcmp|\-clipper** τερματισμός μετά την δημιουργία των object αρχείων  
 δημιουργείστε δεσμό/αντιγράψτε το hbmk2 σε hbcmp/clipper για να επιτύχετε το αυτό αποτέλεσμα
- - **\-hbcc** αποδοχή σημαιών C χωρίς έλεγχο
+ - **\-hbcc** αποδοχή σημαιών C χωρίς έλεγχο  
 δημιουργείστε σύνδεσμο/αντιγράψτε το hbmk2 σε hbcc για να επιτύχετε όμοια λειτουργικότητα
  - **\-hblnk** αποδοχή ανεπεξέργαστων flags συνδέτη
  - **\-autohbm\[\-\]** ενεργοποίηση \(ή απενεργοποίηση\) επεξεργασίας του hbmk\.hbm στο τρέχοντα κατάλογο \(προεπιλογή: yes\)
@@ -167,7 +167,7 @@ Besides building executables, hbmk2 is able to run Harbour scripts \(both source
  - **\-hb32** enable Harbour 3\.2\.0dev compatibility mode
  - **\-xhb** ενεργοποίηση xhb mode
  - **\-hbc** ενεργοποίηση καθαρού C mode
- - **\-blinker** emulate Cl\*pper compatible linker behavior
+ - **\-blinker** emulate Cl\*pper compatible linker behavior  
 create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
  - **\-exospace** see above
  - **\-rtlink** see above
@@ -198,8 +198,8 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
  - **\-plat=&lt;platform&gt;** επικάλυψη προεπιλεγμένης πλατφόρμας\-έργου \(προεπιλογή: αυτομάτως\)
  - **\-cpu=&lt;cpu&gt;** υπερισχύει έναντι της προεπιλεγμένης CPU\-στόχου \(προεπιλογή: αυτομάτως\) \(ΠΕΙΡΑΜΑΤΙΚΟ\)
- - **\-comp=&lt;compiler&gt;** override C compiler auto\-detection
-Special value:
+ - **\-comp=&lt;compiler&gt;** override C compiler auto\-detection  
+Special value:  
  \- bld: use original build settings \(default on \*nix\)
  - **\-build=&lt;name&gt;** ορισμός ονόματος κατασκευής
  - **\-lang=&lt;lang&gt;** υπερισχύει έναντι της προεπιλεγμένης γλώσσας\. Το &lt;lang&gt; είναι ένας κατά ISO κωδικός γλώσσας\.
@@ -212,8 +212,8 @@ Special value:
  - **\-credits** Διαπιστευτήρια του μεταγλωτιστή Harbour
  - **\-build** Πληροφορία κατασκευής μεταγλωτιστή Harbour
  - **\-version** εμφάνιση κεφαλίδας έκδοσης μόνο
-
-Οι παρακάτω επιλογές είναι εσωτερικές/developer \(η συμβατότητα δεν είναι εγγυημένη\)
+  
+Οι παρακάτω επιλογές είναι εσωτερικές/developer \(η συμβατότητα δεν είναι εγγυημένη\)  
 
 
  - **\-debugtime** μέτρηση χρόνου κατασκευής
@@ -246,8 +246,8 @@ Special value:
  - **hbexe\*|\*hbexe** μέθοδος \-hbexe
  - **hblib\*|\*hblib** μέθοδος \-hblib
  - **hbdyn\*|\*hbdyn** μέθοδος \-hbdyn
-
-Αρχεία:
+  
+Αρχεία:  
 
 
  - **\*\.hbp** αρχείο έργου\. Μπορεί να περιέχει οποιοδήποτε αριθμό επιλογών γραμμής\-εντολών, οι οποίες αναμένεται να αποφέρουν ένα αποτέλεσμα, δηλ\. δημιουργία μιας εφαρμογής\. Γραμμές που αρχίζουν με το χαρακτήρα '\#' αγνοούνται, κατα τ'άλλα, η δημιουργία ξεχωριστών γραμμών είναι προαιρετική και οι επιλογές μπαίνουν διαχωρισμένες με κενό διάστημα, ακριβώς όπως στη γραμμή\-εντολών\. Επιλογή που περιέχει κενό διάστημα πρέπει να εγκλειστεί σε "εισαγωγικα"\. Κάθε αναφορά αρχείου \.hbp θα εκτελεστεί σαν υπο\-έργο\.
@@ -266,8 +266,8 @@ Special value:
  - **shell plugins** \.hb και \.hrb plugins για το διαδραστικό κέλυφος του Harbour\. Πρέπει να βρίσκονται μέσα στο \[\*\]: $HOME/\.harbour/
  - **\.hb\_history** αποθηκεύει ιστορικό εντολών για το διαδραστικό κέλυφος του Harbour\. Μπορείτε να απενεργοποιήσετε το ιστορικό κάνοντας την πρώτη γραμμή 'no' \(χωρίς τα εισαγωγικά και με νεα γραμμή\)\. Βρίσκεται στο \[\*\]: $HOME/\.harbour/
  - **hb\_extension** λίστα καταλήξεων προς φόρτωση στο διαδραστικό κέλυφος του Harbour\. Μία κατάληξη ανα γραμμή, το τμήμα της γραμμής μετά από ένα χαρακτήρα '\#' αγνοείται\. Εναλλακτικά ονομα\-αρχείου στο Ms\-DOS: Το hb\_ext\.ini\. Βρίσκεται μεσα στο \[\*\]: $HOME/\.harbour/
-
-Μεταβλητές Macro:
+  
+Μεταβλητές Macro:  
 
 
  - **$\{hb\_root\}** κατάλογος του hbmk2
@@ -311,8 +311,8 @@ Special value:
  - **$\{hb\_level\}** επίπεδο αναδρομικότητας υπο\-έργου
  - **$\{&lt;depname&gt;\}** επιστρέφει τον επικεφαλής κατάλογο της εξάρτησης &lt;depname&gt;, ή '1' αν δεν ανιχνευτεί
  - **$\{&lt;envvar&gt;\}** επιστρέφει την τιμή της μεταβλητής\-περιβάλλοντος &lt;envvar&gt;
-
-Φίλτρα \(μπορείτε να τα συνδυάσετε και/ή να τα αναιρέσετε\):
+  
+Φίλτρα \(μπορείτε να τα συνδυάσετε και/ή να τα αναιρέσετε\):  
 
 
  - **\{&lt;platform&gt;\}** η πλατφόρμα\-στόχος\. Οπου &lt;platform&gt; μπορεί να είναι κάθε τιμή αποδεκτή από την επιλογή \-plat= \.
@@ -371,8 +371,8 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
  - **HBMK\_HAS\_&lt;depname&gt;** όταν &lt;depname&gt; εξάρτηση ανιχνεύτηκε
  - **HBMK\_DIR\_&lt;depname&gt;** επιστρέφει τον επικεφαλής κατάλογο όπου η &lt;depname&gt; ανιχνεύτηκε, ή κενό αν δεν ανιχνεύτηκε\.
  - **HBMK\_HAS\_&lt;depname&gt;\_LOCAL** οταν η εξάρτηση &lt;depname&gt; ανιχνεύτηκε σε μια θέση που ορίστηκε με την επιλογή \-depincpathlocal=
-
-Μεταβλητές περιβάλλοντος:
+  
+Μεταβλητές περιβάλλοντος:  
 
 
  - **HBMK\_OPTIONS** δέχεται οποιεσδήποτε επιλογές σαν να είχαν αυτές περαστεί στην αρχή της γραμμής\-εντολών
@@ -397,8 +397,8 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
 
 
  - **HB\_EXTENSION** λίστα καταλήξεων, διαχωρισμένων με κενό διάστημα, προς φόρτωση στο διαδραστικό κέλυφος του Harbour
-
-\.hbc ντιρεκτίβες \(πρέπει να αναγράφονται σε ξεχωριστές γραμμές\):
+  
+\.hbc ντιρεκτίβες \(πρέπει να αναγράφονται σε ξεχωριστές γραμμές\):  
 
 
  - **echo=&lt;msg&gt;** εμφάνιση &lt;msg&gt;
@@ -471,59 +471,59 @@ Predefined constants in build files \(they are available after '\-depfinish=&lt;
  - **repository=** λίστα αναφορών πηγαίων αποθηκών \-repository\-, διαχωρισμένων με κενό διάστημα
 
 
-Plugin API:
+Plugin API:  
 \(η 'hbmk' είναι η μεταβλητή περιβάλλοντος που λαμβάνεται από τη συνάρτηση εισόδου του plugin\)
 
 
- - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**
+ - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
 Register input file extension to be passed to plugin \(by default all unrecognized file extensions are passed to Harbour compiler\)\.
- - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Προσθήκη ενός Harbour αρχείου εισόδου στο έργο\.
- - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Προσθήκη ενός C αρχείου εισόδου στο έργο\.
- - **hbmk\_AddInput\_CPP\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_CPP\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Προσθήκη ενός C\+\+ αρχείου εισόδου στο έργο\.
- - **hbmk\_AddInput\_RC\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_RC\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Προσθήκη ενός Windows resource αρχείου στο έργο\.
- - **hbmk\_AddInput\_OBJ\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**
+ - **hbmk\_AddInput\_OBJ\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Προσθήκη ενός δυαδικού object αρχείου στο έργο\.
- - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**
+ - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Προσθήκη αρχείου προς εγκατάσταση, με ένα προαιρετικό \-instpath= όνομα ομάδας\.
- - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**
+ - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
 Add a Harbour compiler option\.
- - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**
+ - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
 Add a C compiler option\.
- - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**
+ - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Εξοδος κειμένου στο stdout\.
- - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**
+ - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Εξοδος κειμένου στο
- - **hbmk\_OutStdRaw\( hbmk, &hellip; \) \-&gt; NIL**
+ - **hbmk\_OutStdRaw\( hbmk, &hellip; \) \-&gt; NIL**  
 Εξοδος κειμένου στο stdout χωρίς καμμία μορφοποίηση\.
- - **hbmk\_OutErrRaw\( hbmk, &hellip; \) \-&gt; NIL**
+ - **hbmk\_OutErrRaw\( hbmk, &hellip; \) \-&gt; NIL**  
 Εξοδος κειμένου στο stderr χωρίς καμμία μορφοποίηση\.
- - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**
+ - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Αξιολόγηση της macro έκφρασης hbmk2 \.
- - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**
+ - **hbmk\_FNameEscape\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Οριοθετημενο με Escape ή εισαγωγικά όνομα αρχείου που θα χρησιμοποιηθεί ως παραμέτρος εξωτερικής εντολή\.
- - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**
+ - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Μετατροπή ονόματος αρχείου στη μορφή που απαιτείται για την πλατφόρμα προορισμού/μεταγλωττιστή C\.
- - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**
+ - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
 Μετατροπή του ονόματος αρχείου ωστε να έχει, ως διαχωριστικό καταλόγου, την εμπρός κάθετη παύλα / \.
- - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**
+ - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
 Επιστροφή σχετικού μονοπατιού της τιμής του \-workdir= από το τρέχοντα κατάλογο εργασίας\.
- - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**
+ - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
 Ευρεση αρχείου στο &lt;xPath&gt; \(είναι δεκτά, πίνακας ή συμβολοσειρά διαχωρισμένη με διαχωριστές καταλόγου\) που περιέχει λίστα από &lt;aExtDef&gt; εναλλακτικές καταλήξεις \(defaults to executable binaries\)\. Επιστρέφει όνομα\-αρχείου αν βρεθεί και NIL αν όχι\.
- - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**
+ - **hbmk\_FNameDirExtSet\( &lt;cFileName&gt;, \[&lt;cDirNew&gt;\], \[&lt;cExtNew&gt;\] \) \-&gt; &lt;cFileName&gt;**  
 Αλλαγή του καταλόγου και της κατάληξης του αρχείου
- - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**
+ - **hbmk\_FuncNameEncode\( &lt;cFuncName&gt; \) \-&gt; &lt;cFuncNameEncoded&gt;**  
 Κωδικοποίηση ονόματος συνάρτησης σύμφωνα με τους κανόνες Harbour περί μορφοποίησης ονόματων των HB\_FUNC\(\) συναρτήσεων σε κώδικα C \.
- - **hbmk\_StrStripQuote\( &lt;cString&gt; \) \-&gt; &lt;cString&gt;**
+ - **hbmk\_StrStripQuote\( &lt;cString&gt; \) \-&gt; &lt;cString&gt;**  
 Αφαίρεση των διπλών εισαγωγικών εγκλεισμού από μία συμβολοσειρά\.
- - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**
+ - **hbmk\_ArrayToList\( &lt;aList&gt;, \[&lt;cSeparator&gt;\] \) \-&gt; &lt;cList&gt;**  
 Μετατροπή ενός πίνακα συμβολοσειρών σε συμβολοσειρά\. Προεπιλεγμένος διαχωριστής είναι ένα κενό διάστημα\.
 
 
-Μεταβλητές Plugin:
+Μεταβλητές Plugin:  
 \(στοιχεία hash συναφή με 'hbmk', ευαίσθητα σε πεζά\-κεφαλαία, μόνο\-για ανάγνωση, εκτός κι αν σημειώνεται κάτι άλλο\)
 
 
@@ -558,84 +558,84 @@ Add a C compiler option\.
  - **"cCCEXT"** δες HB\_CCEXT μεταβλητή περιβάλοντος
  - **"cWorkDir"** \-workdir= τιμή
  - **"nExitCode"** Τρέχων κωδικός εξόδου
+  
+Shell API διαθέσιμο σε σενάρια Harbour:  
 
-Shell API διαθέσιμο σε σενάρια Harbour:
 
-
- - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**
+ - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
 Αλλαγή GT\. Προεπιλογή \[\*\]: 'gttrm'
- - **hbshell\_Clipper\(\) \-&gt; NIL**
+ - **hbshell\_Clipper\(\) \-&gt; NIL**  
 Enable Cl\*pper compatibility \(non\-Unicode\) mode\.
- - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Φόρτωση Harbour header\.
- - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Αποφόρτωση Harbour header\.
- - **hbshell\_include\_list\(\) \-&gt; NIL**
+ - **hbshell\_include\_list\(\) \-&gt; NIL**  
 Εμφάνιση λίστας των φορτωμένων Harbour header\.
- - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_ext\_load\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Φόρτωση πακέτου\. Παρόμοιο με τη ντιρεκτίβα \#request PP\.
- - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**
+ - **hbshell\_ext\_unload\( &lt;cPackageName&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Αποφόρτωση πακέτου
- - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**
+ - **hbshell\_ext\_get\_list\(\) \-&gt; &lt;aPackages&gt;**  
 Λίστα φορτωμένων πακέτων
- - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**
+ - **hbshell\_DirBase\(\) \-&gt; &lt;cBaseDir&gt;**  
 Το hb\_DirBase\(\) δεν χαρτογραφήθηκε σε σενάριο\.
- - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**
+ - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 Το hb\_ProgName\(\) δεν χαρτογραφήθηκε σε σενάριο\.
- - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**
+ - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**  
 Name of the script executing\.
 
 
 Παραδείγματα για να ξεκινήσετε τη χρήση του hbmk2:
 
 
- - **Για εκτέλεση το διαδραστικού κελύφους \('dot' prompt\)**
+ - **Για εκτέλεση το διαδραστικού κελύφους \('dot' prompt\)**  
 $ hbmk2 \.
- - **Για να εκτελέσετε ένα σενάριο Harbour**
+ - **Για να εκτελέσετε ένα σενάριο Harbour**  
 $ hbmk2 myscript\.hb \[&lt;παραμετρος\[ι\]&gt;\]
 
 
 Παραδείγματα δημιουργίας &amp; εκετέλεσης μεταφέρσιμου δυαδικού αρχείου Harbour \(γνωστό και ως προκατασκευασμένο σενάριο\):
 
 
- - **Για δημιουργία**
+ - **Για δημιουργία**  
 $ hbmk2 \-gh myscript\.hb
- - **Για να εκτελέσετε το αποτέλεσμα των παραπάνω**
+ - **Για να εκτελέσετε το αποτέλεσμα των παραπάνω**  
 $ hbmk2 myscript\.hrb \[&lt;παραμετρος\[ι\]&gt;\]
 
 
 Παραδείγματα δημιουργίας μιας εφαρμογής Harbour:
 
 
- - **Για την κατασκευή ενός μοναδικού**
+ - **Για την κατασκευή ενός μοναδικού**  
 $ hbmk2 hello\.prg
- - **Για να δημιουργήσετε μία εφαρμογή που περιλαμβάνει πολλαπλά \.prg αρχεία με αυξητικό ρυθμό \-incremetnal\-**
+ - **Για να δημιουργήσετε μία εφαρμογή που περιλαμβάνει πολλαπλά \.prg αρχεία με αυξητικό ρυθμό \-incremetnal\-**  
 $ hbmk2 mymain\.prg myfuncs\.prg \-inc
- - **Για να δημιουργήσετε μία εφαρμογή με χρήση ενός αρχείου Εργου**
+ - **Για να δημιουργήσετε μία εφαρμογή με χρήση ενός αρχείου Εργου**  
 $ hbmk2 myapp\.hbp
- - **Για να δημιουργήσετε μία εφαρμογή χρησιμοποιώντας σταδιακά\-αυξητική \-incremental\- μέθοδο**
+ - **Για να δημιουργήσετε μία εφαρμογή χρησιμοποιώντας σταδιακά\-αυξητική \-incremental\- μέθοδο**  
 $ hbmk2 myapp\.hbp \-inc
- - **Για κατασκευή μιάς εφαρμογής που χρησιμοποιεί πακέτο contrib ή πακέτο 3rd party \(πρόσθετο\) το οποίο συμπεριλαμβάνει ένα \.hbc αρχείο**
+ - **Για κατασκευή μιάς εφαρμογής που χρησιμοποιεί πακέτο contrib ή πακέτο 3rd party \(πρόσθετο\) το οποίο συμπεριλαμβάνει ένα \.hbc αρχείο**  
 $ hbmk2 myapp\.prg hbct\.hbc
- - **Για να δημιουργήσετε μία εφαρμογή που χρησιμοποιεί μία raw βιβλιοθήκη**
+ - **Για να δημιουργήσετε μία εφαρμογή που χρησιμοποιεί μία raw βιβλιοθήκη**  
 $ hbmk2 myapp\.prg \-lmylib \-L&lt;path\_to\_mylib&gt;
- - **Για να δημιουργήσετε μία εφαρμογή που χρησιμοποιεί ένα Windows resource**
+ - **Για να δημιουργήσετε μία εφαρμογή που χρησιμοποιεί ένα Windows resource**  
 $ hbmk2 mymain\.prg myres\.rc
- - **Για να δημιουργήσετε μία εφαρμογή με αναφορές σε δυναμικές βιβλιοθήκες Harbour**
+ - **Για να δημιουργήσετε μία εφαρμογή με αναφορές σε δυναμικές βιβλιοθήκες Harbour**  
 $ hbmk2 \-shared myapp\.prg
- - **Για δημιουργία εφαρμογής από όλα τα \.prg και \.c αρχεία που υπάρχουν μεσα σε ένα 'πηγαίο' υποκατάλογο**
+ - **Για δημιουργία εφαρμογής από όλα τα \.prg και \.c αρχεία που υπάρχουν μεσα σε ένα 'πηγαίο' υποκατάλογο**  
 $ hbmk2 \-omyapp src/\*\.prg src/\*\.c
 
 
 Παραδείγματα δημιουργίας μιας στατικής βιβλιοθήκης:
 
 
- - **Για κατασκευή της βιβλιοθήκης 'mylib' από πηγαία αρχεία**
+ - **Για κατασκευή της βιβλιοθήκης 'mylib' από πηγαία αρχεία**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib
- - **Για κατασκευή της βιβλιοθήκης 'mylib' από πηγαίο κώδικα με επαυξητικό "incremental" τρόπο**
+ - **Για κατασκευή της βιβλιοθήκης 'mylib' από πηγαίο κώδικα με επαυξητικό "incremental" τρόπο**  
 $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
-
-Κωδικοί εξόδου \("errorlevels"\):
+  
+Κωδικοί εξόδου \("errorlevels"\):  
 
 
  - **0** κανένα λάθος
@@ -653,22 +653,22 @@ $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
  - **30** πολύ βαθειά εμφώλευση
  - **50** ζητήθηκε σταμάτημα
  - **&lt;other&gt;** όταν γίνει χρήση της επιλογής \-run, κωδικός εξόδου θα είναι αυτός που θα επιστραφεί από το δημιουργημένο εκτελέσιμο\.
+  
+Σημειώσεις:  
 
-Σημειώσεις:
 
-
-  - Το &lt;script&gt; μπορεί να είναι:
-&lt;@script&gt; ή &lt;script\.hbm&gt;: επιλογές γραμμής\-εντολών σε αρχείο
-&lt;script\.hbp&gt;: επιλογές γραμμής εντολών σε αρχείο, σηματοδοτεί επίσης ενα νέο έργο αν οριστεί στην γραμμή\-εντολών
+  - Το &lt;script&gt; μπορεί να είναι:  
+&lt;@script&gt; ή &lt;script\.hbm&gt;: επιλογές γραμμής\-εντολών σε αρχείο  
+&lt;script\.hbp&gt;: επιλογές γραμμής εντολών σε αρχείο, σηματοδοτεί επίσης ενα νέο έργο αν οριστεί στην γραμμή\-εντολών  
 &lt;script\.hbc&gt;: αρχείο πακέτου διαμόρφωσης
   - Πηγαίο όνομα\-αρχείου χωρίς κατάληξη θα φορτώσει το \.hbp αρχείο, αν υπάρχει τέτοιο \.hbp αρχείο στον τρέχοντα κατάλογο\. Αν όχι, θα γίνει χρήση \.prg κατάληξης\.
   - Πολλαπλές \-l, \-L, \-i και &lt;script&gt; παράμετροι είναι δεκτές\.
-  - Οι συνηθισμένες επιλογές του μεταγλωττιστή Harbour γίνονται επίσης δεκτές ως έχουν\.
+  - Οι συνηθισμένες επιλογές του μεταγλωττιστή Harbour γίνονται επίσης δεκτές ως έχουν\.  
 \(μπορείτε να τις δείτε με την επιλογή \-harbourhelp\)
   - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - Το hbmk\.hbm σενάριο κατασκευής στον τρέχοντα κατάλογο δέχεται πάντοτε επεξεργασία, αν υπάρχει\.
   - Η χρήση πλάγιας εμπρός κάθετης παύλας συνιστάται στις τιμές των επιλογών ως διαχωριστής μονοπατιού, αλλά η πίσω πλάγια κάθετη παύλα είναι εξίσου αποδεκτή\.
-  - Φίλτρα επιτρέπονται σε κάθε γραμμή \.hbc καθώς και περισσότερες επιλογές\.
+  - Φίλτρα επιτρέπονται σε κάθε γραμμή \.hbc καθώς και περισσότερες επιλογές\.  
 Τα φίλτρα μπορούν να συνδυαστούν με χρήση τελεστών '&amp;' \(and\), '|' \(or\), να αναιρεθούν με τον τελεστή '\!' και να ομαδοποιηθούν με αγγύλες\. Π\.χ\.: \{win\}, \{gcc\}, \{linux|darwin\}, \{win&amp;\!pocc\}, \{\(win|linux\)&amp;\!watcom\}, \{unix&amp;mt&amp;gui\}, \-cflag=\{win\}\-DMYDEF, \-stop\{dos\}, \-stop\{\!allwin\}
   - Οι περισσότερες \.hbc γραμμές \(libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=\) και οι αντίστοιχες παράμετροι γραμμής\-εντολής αποδέχονται μεταβλητές macro\. Η libpaths= επίσης αποδέχεται %\{hb\_name\} που μεταφράζεται στο όνομα του υπο διερεύνηση \.hbc αρχείου
   - Επιλογές που δέχονται μεταβλητές macro υποστηρίζουν επίσης υποκατάσταση εντολών\. Περικλείστε την εντολή μεσα σε \`\`, και, αν η εντολή περιέχει κενό διάστημα, περικλείστε τη επίσης σε διπλά εισαγωγικά\. Η standard έξοδος τη εντολής θα χρησιμοποιηθεί ως τιμή\. Π\.χ\. "\-cflag=\`wx\-config \-\-cflags\`", ή ldflags=\{unix&amp;gcc\}"\`wx\-config \-\-libs\`"\.
@@ -704,41 +704,41 @@ $ hbmk2 \-hblib mylibsrc\.prg \-omylib \-inc
  - **minix** clang, gcc
  - **aix** gcc
  - **sunos** gcc, sunpro
-
-Αδεια:
-
-
-  This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2 of the License, or
-\(at your option\) any later version\.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\.  See the
-GNU General Public License for more details\.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit
-their web site at https://www\.gnu\.org/\)\.
-
-License extensions:
-  \- This source code must be kept and distributed as part
-    of the Harbour package and/or the placement of the tool sources
-    and files must reflect that it is part of Harbour Project\.
-  \- Copyright information must always be presented by
-    projects including this tool or help text\.
-  \- Modified versions of the tool must clearly state this
-    fact on the copyright screen\.
-  \- Source code modifications shall always be made available
-    along with binaries\.
-  \- Help text and documentation is licensed under
-    Creative Commons Attribution\-ShareAlike 4\.0 International:
-    https://creativecommons\.org/licenses/by\-sa/4\.0/
+  
+Αδεια:  
 
 
-Συγγραφέας:
+  This program is free software; you can redistribute it and/or modify  
+it under the terms of the GNU General Public License as published by  
+the Free Software Foundation; either version 2 of the License, or  
+\(at your option\) any later version\.  
+  
+This program is distributed in the hope that it will be useful,  
+but WITHOUT ANY WARRANTY; without even the implied warranty of  
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE\.  See the  
+GNU General Public License for more details\.  
+  
+You should have received a copy of the GNU General Public License  
+along with this program; if not, write to the Free Software  
+Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit  
+their web site at https://www\.gnu\.org/\)\.  
+  
+License extensions:  
+  \- This source code must be kept and distributed as part  
+    of the Harbour package and/or the placement of the tool sources  
+    and files must reflect that it is part of Harbour Project\.  
+  \- Copyright information must always be presented by  
+    projects including this tool or help text\.  
+  \- Modified versions of the tool must clearly state this  
+    fact on the copyright screen\.  
+  \- Source code modifications shall always be made available  
+    along with binaries\.  
+  \- Help text and documentation is licensed under  
+    Creative Commons Attribution\-ShareAlike 4\.0 International:  
+    https://creativecommons\.org/licenses/by\-sa/4\.0/  
+
+  
+Συγγραφέας:  
 
 
  - Viktor Szakáts \(vszakats\.net/harbour\) 
