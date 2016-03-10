@@ -17765,7 +17765,7 @@ STATIC FUNCTION ToMarkdown( cText, cStyle )
       "©"        => "&copy;", ;
       "(c)"      => "&copy;", ;
       "..."      => "&hellip;", ;
-      e"\n"      => "  " + Chr( 10 ), ;
+      e"\n"      => Chr( 10 ), ;
       "\"        => "\\", ;
       "`"        => "\`", ;
       "*"        => "\*", ;
