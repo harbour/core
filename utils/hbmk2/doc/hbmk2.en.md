@@ -1,18 +1,18 @@
-Harbour Make \(hbmk2\) 3\.4\.0dev \(e114a31\) \(2015\-05\-08 19:20\)  
-Copyright &copy; 1999\-2015, Viktor Szakáts  
-<https://github\.com/vszakats/harbour\-core/>  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(e114a31\) \(2015\-05\-08 19:20\)
+Copyright &copy; 1999\-2015, Viktor Szakáts
+<https://github\.com/vszakats/harbour\-core/>
 
-Syntax:  
-  
-  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.hbc|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
-  
-Description:  
+Syntax:
+
+  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.hbc|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;
+
+Description:
 
 
   hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
 Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
-  
-Options:  
+
+Options:
 
 
  - **\-o&lt;outname&gt;** output file name
