@@ -11,7 +11,7 @@ PROCEDURE Main()
    LOCAL signature
    LOCAL shared_secret
 
-   /* http://ed25519.cr.yp.to */
+   /* https://ed25519.cr.yp.to */
 
    HBTEST hb_ed25519_create_keypair( @public_key, @secret_key )                     IS NIL
    HBTEST ValType( public_key )                                                     IS "C"
