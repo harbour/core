@@ -188,7 +188,7 @@
 
 #xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name \<<var>> )
 
-/* disbaled by default to not generate ignored by compiler noice in .ppo files */
+/* disabled by default to not generate ignored by compiler noise in .ppo files */
 #if 0
 DECLARE HBClass ;
         New( cName AS String, OPTIONAL SuperParams ) AS CLASS HBClass ;
