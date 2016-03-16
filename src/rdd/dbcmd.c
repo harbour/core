@@ -799,10 +799,18 @@ HB_FUNC( DBSETFILTER )
    {
       PHB_ITEM pBlock, pText;
       DBFILTERINFO pFilterInfo;
+
       pBlock = hb_param( 1, HB_IT_BLOCK );
-      if( pBlock )
+      pText = hb_param( 2, HB_IT_STRING );
+      /* Cl*pper allows to set text filter without codeblock. In local
+         RDDs it effectively does nothing and only dbFilter() returns it
+         but RDDs with automatic filter optimization like CL53/DBFCDX /
+         COMIX/ClipMore or RDDs working with remote data base servers
+         may use only text version of filter and ignore or use with
+         lower priority the codeblock so Harbour has to work like
+         Cl*pper here. [druzus] */
+      if( pBlock || pText )
       {
-         pText = hb_param( 2, HB_IT_STRING );
          pFilterInfo.itmCobExpr = pBlock;
          if( pText )
             pFilterInfo.abFilterText = pText;

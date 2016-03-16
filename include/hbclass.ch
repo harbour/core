@@ -75,12 +75,12 @@
 /* So Each class _inherit_ of HBObject by default and */
 /*    Each type logical or numerical is initiated to .F. and 0 by default */
 
-/* #define HB_CLS_NOTOBJECT     */ /* Should be included in some compatibility include files as needed */
-/* #define HB_CLS_NOAUTOINIT    */ /* Idem */
-/* #define HB_CLS_NO_DECORATION */ /* disable adding <class>_ prefix to method function names */
-/* #define HB_CLS_NO_PARAMS_ERR */ /* disable parameters validation in method declaration and implementation */
-/* #define HB_CLS_NO_OO_ERR     */ /* disable all code validation */
-
+/* #define HB_CLS_NOTOBJECT       */ /* Should be included in some compatibility include files as needed */
+/* #define HB_CLS_NOAUTOINIT      */ /* Idem */
+/* #define HB_CLS_NO_DECORATION   */ /* disable adding <class>_ prefix to method function names */
+/* #define HB_CLS_NO_PARAMS_ERR   */ /* disable parameters validation in method declaration and implementation */
+/* #define HB_CLS_NO_OO_ERR       */ /* disable all code validation */
+/* #define HB_CLS_NO_DECLARATIONS */ /* disable value type declarations */
 
 #ifndef HB_CLS_FWO
 #ifndef HB_CLS_CSY
@@ -174,6 +174,8 @@
 
 #xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name \<<var>> )
 
+/* disabled by default to not generate ignored by compiler noise in .ppo files */
+#if 0
 DECLARE HBClass ;
         New( cName AS String, OPTIONAL SuperParams ) AS CLASS HBClass ;
         Create() AS Object ;
@@ -184,6 +186,7 @@ DECLARE HBClass ;
         AddMethod( cName AS String, @MethodName(), nScope AS Numeric ) ;
         AddInLine( cName AS String, bBlock AS CodeBlock, nScope AS Numeric ) ;
         AddVirtual( cName AS String )
+#endif
 
 /*
  * Class(y) like non virtual send operator but instead of using early
