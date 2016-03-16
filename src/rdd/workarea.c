@@ -402,7 +402,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             dbFieldInfo.uiType = HB_FT_LONG;
             dbFieldInfo.uiDec = uiDec;
             /* DBASE documentation defines maximum numeric field size as 20
-             * but Clipper alows to create longer fileds so I remove this
+             * but Clipper allows to create longer fileds so I remove this
              * limit, Druzus
              */
             /*
