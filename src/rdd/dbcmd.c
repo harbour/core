@@ -287,16 +287,6 @@ HB_FUNC( DBAPPEND )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
-HB_FUNC( DBCLEARFILTER )
-{
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-      SELF_CLEARFILTER( pArea );
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
-}
-
 HB_FUNC( DBCLOSEALL )
 {
    hb_rddCloseAll();
@@ -535,18 +525,14 @@ HB_FUNC( DBDELETE )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
-HB_FUNC( DBFILTER )
+HB_FUNC( DBRECALL )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
-   {
-      PHB_ITEM pFilter = hb_itemPutC( NULL, NULL );
-      SELF_FILTERTEXT( pArea, pFilter );
-      hb_itemReturnRelease( pFilter );
-   }
+      SELF_RECALL( pArea );
    else
-      hb_retc_null();
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
 HB_FUNC( DBGOBOTTOM )
@@ -674,16 +660,6 @@ HB_FUNC( __DBPACK )
       if( pBlock )
          hb_itemClear( pArea->valResult );
    }
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
-}
-
-HB_FUNC( DBRECALL )
-{
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-      SELF_RECALL( pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
@@ -818,7 +794,7 @@ HB_FUNC( DBSETFILTER )
          may use only text version of filter and ignore or use with
          lower priority the codeblock so Harbour has to work like
          Cl*pper here. [druzus] */
-      if( pBlock || pText )
+      if( pBlock || hb_itemGetCLen( pText ) > 0 )
       {
          pFilterInfo.itmCobExpr = pBlock;
          if( pText )
@@ -839,6 +815,41 @@ HB_FUNC( DBSETFILTER )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+}
+
+HB_FUNC( DBCLEARFILTER )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+      SELF_CLEARFILTER( pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+}
+
+HB_FUNC( DBFILTER )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+   {
+      PHB_ITEM pFilter = hb_itemPutC( NULL, NULL );
+      SELF_FILTERTEXT( pArea, pFilter );
+      hb_itemReturnRelease( pFilter );
+   }
+   else
+      hb_retc_null();
+}
+
+/* Harbour extension to retrieve CB */
+HB_FUNC( HB_DBGETFILTER )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+      hb_itemReturn( pArea->dbfi.itmCobExpr );
+   else
+      hb_ret();
 }
 
 HB_FUNC( DBSKIP )
