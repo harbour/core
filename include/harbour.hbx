@@ -383,6 +383,7 @@ DYNAMIC hb_dbCreateTemp
 DYNAMIC hb_dbDetach
 DYNAMIC hb_dbDrop
 DYNAMIC hb_dbExists
+DYNAMIC hb_dbGetFilter
 DYNAMIC hb_dbPack
 DYNAMIC hb_dbRename
 DYNAMIC hb_dbRequest

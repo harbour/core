@@ -366,9 +366,13 @@ STATIC PROCEDURE UpdateInfo( oDlg, cAlias )
    hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 40, iif( Deleted(), "Yes", "No " ), oDlg:cColor )
    hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 23, iif( Eof(), "Yes", "No " ), oDlg:cColor )
    hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 40, iif( Found(), "Yes", "No " ), oDlg:cColor )
-   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 23, hb_UPadR( dbFilter(), 30 ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 23, hb_UPadR( dbFilterInfo(), 30 ), oDlg:cColor )
    hb_DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 23, hb_UPadR( ordKey(), 30 ), oDlg:cColor )
 
    dbSelectArea( nOldArea )
 
    RETURN
+
+STATIC FUNCTION dbFilterInfo()
+   RETURN iif( Empty( dbFilter() ), ;
+               iif( Empty( hb_dbGetFilter() ), "", "{|| ... }" ), dbFilter() )
