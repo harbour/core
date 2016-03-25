@@ -122,9 +122,9 @@
 
 /* should we use <ClassName>_ prefix for real method names? */
 #ifdef HB_CLS_NO_DECORATION
-   #xtranslate __HB_CLS_MTHNAME <ClassName> <MethodName> => <MethodName>
+   #xtranslate __HB_CLS_MTHNAME <!ClassName!> <MethodName> => <MethodName>
 #else
-   #xtranslate __HB_CLS_MTHNAME <ClassName> <MethodName> => <ClassName>_<MethodName>
+   #xtranslate __HB_CLS_MTHNAME <!ClassName!> <MethodName> => <ClassName>_<MethodName>
 #endif
 
 /* parameters list passed throw - it's Harbour extension */
@@ -172,8 +172,6 @@
    #xtranslate __HB_CLS_WARN([<msg,...>]) => ;#warning [ <msg>] ; #line
 #endif
 
-#xtranslate __HB_CLS_VARERR(<var>) => __HB_CLS_ERR( Invalid instance variable name \<<var>> )
-
 /* disabled by default to not generate ignored by compiler noise in .ppo files */
 #if 0
 DECLARE HBClass ;
@@ -192,7 +190,7 @@ DECLARE HBClass ;
  * Class(y) like non virtual send operator but instead of using early
  * bindings it casts object to class in which current method were defined.
  */
-#translate @:<MessageName>([<MsgParams,...>]) => ;
+#translate @:<!MessageName!>([<MsgParams,...>]) => ;
                                 ::realclass:<MessageName>([ <MsgParams>])
 
 /* Indirect super casting translation */
@@ -212,9 +210,13 @@ DECLARE HBClass ;
 #xtranslate __HB_CLS_ASARGS( <FuncName>([<Args,...>]) )     => [ <Args>]
 #xtranslate __HB_CLS_ASARGSOPT( <FuncName> )                =>
 #xtranslate __HB_CLS_ASARGSOPT( <FuncName>([<Args,...>]) )  => [, <Args>]
-#xtranslate __HB_CLS_ISVAR( <var> )                         => __HB_CLS_VARERR(<var>)
-#xtranslate __HB_CLS_ISVAR( <!var!> )                       =>
-#xcommand __HB_CLS_CHECKVAR( <param1> [,<paramN>] )         => __HB_CLS_ISVAR( <param1> ) [;__HB_CLS_ISVAR( <paramN> )]
+
+/*
+#xtranslate __HB_CLS_VARERR(<var>)                    => __HB_CLS_ERR( Invalid instance variable name \<<var>> )
+#xtranslate __HB_CLS_ISVAR( <var> )                   => __HB_CLS_VARERR(<var>)
+#xtranslate __HB_CLS_ISVAR( <!var!> )                 =>
+#xcommand __HB_CLS_CHECKVAR( <param1> [,<paramN>] )   => __HB_CLS_ISVAR( <param1> ) [;__HB_CLS_ISVAR( <paramN> )]
+*/
 
 /* #xtranslate __HB_CLS_SCOPE( <export>, <protect>, <hidde> ) => ;
       iif( <export>, HB_OO_CLSTP_EXPORTED , ;
@@ -227,8 +229,8 @@ DECLARE HBClass ;
 #xtranslate __HB_CLS_SCOPE( .F., .F., .F. )  => nScope /* Default */
 
 
-#xcommand CLASS <ClassName> [METACLASS <metaClass>] ;
-             [ <frm: FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ] ;
+#xcommand CLASS <!ClassName!> [METACLASS <!metaClass!>] ;
+             [ <frm: FROM, INHERIT> <!SuperClass1!> [,<!SuperClassN!>] ] ;
              [ <modulfriend: MODULE FRIENDLY> ] ;
              [ <static: STATIC> ] [ FUNCTION <FuncName> ] => ;
    _HB_CLASS <ClassName> <FuncName> ;;
@@ -257,21 +259,21 @@ DECLARE HBClass ;
    #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_IMPLEMENTATION_
 
 
-#xcommand DECLARED METHOD <type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> => ;
+#xcommand DECLARED METHOD <type: FUNCTION, PROCEDURE> <MethodName> CLASS <!ClassName!> => ;
       static <type> __HB_CLS_MTHNAME <ClassName> <MethodName> ;;
       local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
-#xcommand __HB_CLS_DECLARE_METHOD <MethodName> <ClassName> => ;
+#xcommand __HB_CLS_DECLARE_METHOD <MethodName> <!ClassName!> => ;
    #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
          DECLARED METHOD \<type> <MethodName> CLASS <ClassName>
 
-#xcommand __HB_CLS_DECLARE_METHOD <!MethodName!> <ClassName> => ;
+#xcommand __HB_CLS_DECLARE_METHOD <!MethodName!> <!ClassName!> => ;
    #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
          DECLARED METHOD \<type> <MethodName> CLASS <ClassName> ;;
    #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName>(\[ \<xparams,...>] ) CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
          DECLARED METHOD \<type> <MethodName>(\[ \<xparams>] ) CLASS <ClassName>
 
-#xcommand METHOD <type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
+#xcommand METHOD <type: FUNCTION, PROCEDURE> <MethodName> CLASS <!ClassName!> _CLASS_IMPLEMENTATION_ => ;
    __HB_CLS_WARN( Method \<<MethodName>> not declared or declaration mismatch in class \<<ClassName>> ) ;;
    DECLARED METHOD <type> <MethodName> CLASS <ClassName>
 
@@ -286,28 +288,32 @@ DECLARE HBClass ;
 #xcommand ASSIGN <AssignName> [ AS <type> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] [_CLASS_DECLARATION_] => ;
    METHOD _<AssignName> [ AS <type> ] <export> <protect> <hidde> <persistent> <sync> _CLASS_DECLARATION_
 
-#xcommand METHOD <type: FUNCTION, PROCEDURE> <MethodName> [CLASS <ClassName>] => ;
+#xcommand METHOD <type: FUNCTION, PROCEDURE> <MethodName> [CLASS <!ClassName!>] => ;
    METHOD <type> <MethodName> CLASS __HB_CLS_OPT([<ClassName>,] _CLASS_NAME_) _CLASS_MODE_
-#xcommand METHOD <MethodName> CLASS <ClassName> => METHOD FUNCTION  <MethodName> CLASS <ClassName> _CLASS_MODE_
-#xcommand ACCESS <AccessName> CLASS <ClassName> => METHOD FUNCTION  <AccessName> CLASS <ClassName> _CLASS_MODE_
-#xcommand ASSIGN <AssignName> CLASS <ClassName> => METHOD FUNCTION _<AssignName> CLASS <ClassName> _CLASS_MODE_
+#xcommand METHOD <MethodName> CLASS <!ClassName!> => METHOD FUNCTION  <MethodName> CLASS <ClassName> _CLASS_MODE_
+#xcommand ACCESS <AccessName> CLASS <!ClassName!> => METHOD FUNCTION  <AccessName> CLASS <ClassName> _CLASS_MODE_
+#xcommand ASSIGN <AssignName> CLASS <!ClassName!> => METHOD FUNCTION _<AssignName> CLASS <ClassName> _CLASS_MODE_
 
 #xcommand METHOD <MethodName> _CLASS_IMPLEMENTATION_ => ;
    METHOD FUNCTION <MethodName> CLASS _CLASS_NAME_
 #xcommand METHOD <MethodName> => METHOD <MethodName> _CLASS_MODE_
 
 /* For backward compatibility */
-#xcommand PROCEDURE <MethodName> CLASS <ClassName> => METHOD PROCEDURE <MethodName> CLASS <ClassName> _CLASS_MODE_
+#xcommand PROCEDURE <MethodName> CLASS <!ClassName!> => METHOD PROCEDURE <MethodName> CLASS <ClassName> _CLASS_MODE_
 
 
 /* special method(s) */
 #xcommand CONSTRUCTOR <Name>        => METHOD <Name> CONSTRUCTOR
-#xcommand DESTRUCTOR <MethodName>   => ;
-   _HB_MEMBER __HB_CLS_ASFUNC(<MethodName>);;
+#xcommand DESTRUCTOR <!MethodName!>[<par: ()>] [_CLASS_DECLARATION_] => ;
+   _HB_MEMBER __HB_CLS_ASFUNC(<MethodName>)<-par->;;
    __HB_CLS_DECLARE_METHOD __HB_CLS_PARAMS(<MethodName>) _CLASS_NAME_ ;;
    oClass:SetDestructor( @__HB_CLS_ASID( __HB_CLS_MTHNAME _CLASS_NAME_ <MethodName> )() )
-#xcommand DESTRUCTOR FUNCTION <FuncName> => ;
-   oClass:SetDestructor( @__HB_CLS_ASID( <FuncName> )() )
+#xcommand DESTRUCTOR FUNCTION <!FuncName!>[<par: ()>] => ;
+   oClass:SetDestructor( @<FuncName>() )<-par->
+#xcommand DESTRUCTOR <!MethodName!>[<par: ()>] [CLASS <!ClassName!>] _CLASS_IMPLEMENTATION_ => ;
+   METHOD PROCEDURE <MethodName>[<par>] [CLASS <ClassName>] _CLASS_IMPLEMENTATION_
+#xcommand DESTRUCTOR <MethodName> [CLASS <!ClassName!>] => ;
+   DESTRUCTOR <MethodName> [CLASS <ClassName>] _CLASS_MODE_
 
 #xcommand ON ERROR <MethodName>     => ERROR HANDLER <MethodName>
 #xcommand ERROR HANDLER <MethodName> => ;
@@ -382,13 +388,13 @@ DECLARE HBClass ;
 #xcommand MESSAGE <MessageName> [ AS <type> ] TO <oObject> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<oObject>:<MessageName> <export> <protect> <hidde> <persistent> <sync>
 
-#xcommand MESSAGE <MessageName> [ AS <type> ] IN <SuperClass> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
+#xcommand MESSAGE <MessageName> [ AS <type> ] IN <!SuperClass!> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<SuperClass>:<MessageName> <export> <protect> <hidde> <persistent> <sync>
 
 #xcommand MESSAGE <MessageName> [ AS <type> ] IS <AltMsgName> TO <oObject> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<oObject>:__HB_CLS_ASID(<AltMsgName>)(__HB_CLS_ASARGS(<MessageName>)) <export> <protect> <hidde> <persistent> <sync>
 
-#xcommand MESSAGE <MessageName> [ AS <type> ] IS <SprMethodName> IN <SuperClass> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
+#xcommand MESSAGE <MessageName> [ AS <type> ] IS <SprMethodName> IN <!SuperClass!> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
    MESSAGE <MessageName> [ AS <type> ] INLINE Self:<SuperClass>:__HB_CLS_ASID(<SprMethodName>)(__HB_CLS_ASARGS(<MessageName>)) <export> <protect> <hidde> <persistent> <sync>
 
 #xcommand DELEGATE <MessageName> [ AS <type> ] TO <oObject> [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] =>;
@@ -436,7 +442,7 @@ DECLARE HBClass ;
 /* CLASSY SYNTAX */
 #ifdef HB_CLS_CSY
 
-   #xcommand CREATE CLASS <ClassName> [<*more*>] => CLASS <ClassName> <more>
+   #xcommand CREATE CLASS <!ClassName!> [<*more*>] => CLASS <ClassName> <more>
    #xcommand END CLASS [<*more*>]   => ENDCLASS <more>
    #xcommand CLASS VAR <*more*>     => CLASSVAR <more>
    #xcommand CLASS METHOD <*more*>  => CLASSMETHOD <more>
@@ -468,31 +474,26 @@ DECLARE HBClass ;
 
    /* These definitions are not Class(y) compatible - I'm leaving them as is now */
 
-   #xcommand VAR <DataNames,...> [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
-      __HB_CLS_CHECKVAR(<DataNames>);;
-      _HB_MEMBER {[ AS <type>] <DataNames> } ;;
-      oClass:AddMultiData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) + iif( <.sync.>, HB_OO_CLSTP_SYNC, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
+   #xcommand VAR <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
+      _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
+      oClass:AddMultiData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) + iif( <.sync.>, HB_OO_CLSTP_SYNC, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 
-   #xcommand VAR <DataName> [ AS <type> ] IN <SuperClass> => ;
-      __HB_CLS_CHECKVAR(<DataName>);;
+   #xcommand VAR <!DataName!> [ AS <type> ] IN <!SuperClass!> => ;
       _HB_MEMBER {[ AS <type>] <DataName> } ;;
       oClass:AddInline( <(DataName)>, {|Self| Self:<SuperClass>:<DataName> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
       oClass:AddInline( "_" + <(DataName)>, {|Self, param| Self:<SuperClass>:<DataName> := param }, HB_OO_CLSTP_EXPORTED )
 
-   #xcommand VAR <DataName> [ AS <type> ] IS <SprDataName> IN <SuperClass> => ;
-      __HB_CLS_CHECKVAR(<DataName>);;
+   #xcommand VAR <!DataName!> [ AS <type> ] IS <!SprDataName!> IN <!SuperClass!> => ;
       _HB_MEMBER {[ AS <type>] <DataName> } ;;
       oClass:AddInline( <(DataName)>, {|Self| Self:<SuperClass>:<SprDataName> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
       oClass:AddInline( "_" + <(DataName)>, {|Self, param| Self:<SuperClass>:<SprDataName> := param }, HB_OO_CLSTP_EXPORTED )
 
-   #xcommand VAR <DataName1> [ AS <type> ] IS <DataName2> => ;
-      __HB_CLS_CHECKVAR(<DataName1>);;
+   #xcommand VAR <!DataName1!> [ AS <type> ] IS <!DataName2!> => ;
       _HB_MEMBER {[ AS <type>] <DataName1> } ;;
       oClass:AddInline( <(DataName1)>, {|Self| Self:<DataName2> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
       oClass:AddInline( "_" + <(DataName1)>, {|Self, param| Self:<DataName2> := param }, HB_OO_CLSTP_EXPORTED )
 
-   #xcommand VAR <DataName1> [ AS <type> ] IS <DataName2> TO <oObject> => ;
-      __HB_CLS_CHECKVAR(<DataName1>);;
+   #xcommand VAR <!DataName1!> [ AS <type> ] IS <!DataName2!> TO <!oObject!> => ;
       _HB_MEMBER {[ AS <type>] <DataName1> } ;;
       oClass:AddInline( <(DataName1)>, {|Self| Self:<oObject>:<DataName2> }, HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_READONLY ) ;;
       oClass:AddInline( "_" + <(DataName1)>, {|Self, param| Self:<oObject>:<DataName2> := param }, HB_OO_CLSTP_EXPORTED )
@@ -502,16 +503,15 @@ DECLARE HBClass ;
 /* FWOBJECT SYNTAX */
 #ifdef HB_CLS_FWO
 
-   #xcommand DATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
-      __HB_CLS_CHECKVAR(<DataNames>);;
-      _HB_MEMBER {[ AS <type>] <DataNames> } ;;
-      oClass:AddMultiData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) + iif( <.sync.>, HB_OO_CLSTP_SYNC, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
+   #xcommand DATA <!DataName1!> [, <!DataNameN!>] [ AS <type> ] [ INIT <uValue> ] [ <export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
+      _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
+      oClass:AddMultiData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) + iif( <.sync.>, HB_OO_CLSTP_SYNC, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 
    /* Warning! For backward compatibility this CLASSDATA ignores the
       SHARED clause and always create shared class variables */
-   #xcommand CLASSDATA <DataNames,...> [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
-      _HB_MEMBER {[ AS <type>] <DataNames> } ;;
-      oClass:AddMultiClsData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( /* <.share.> */ .T., HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) + iif( <.sync.>, HB_OO_CLSTP_SYNC, 0 ), {<(DataNames)>}, __HB_CLS_NOINI )
+   #xcommand CLASSDATA <!DataName1!> [, <!DataNameN!>] [ AS <type> ] [ INIT <uValue> ] [<export: EXPORTED, VISIBLE>] [<protect: PROTECTED>] [<hidde: HIDDEN>] [<ro: READONLY, RO>] [<share: SHARED>] [<persistent: PERSISTENT, PROPERTY>] [<sync: SYNC>] => ;
+      _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
+      oClass:AddMultiClsData( <(type)>, <uValue>, __HB_CLS_SCOPE( <.export.>, <.protect.>, <.hidde.> ) + iif( <.ro.>, HB_OO_CLSTP_READONLY, 0 ) + iif( /* <.share.> */ .T., HB_OO_CLSTP_SHARED, 0 ) + iif( <.persistent.>, HB_OO_CLSTP_PERSIST, 0 ) + iif( <.sync.>, HB_OO_CLSTP_SYNC, 0 ), {<(DataName1)> [, <(DataNameN)>]}, __HB_CLS_NOINI )
 
 #endif /* HB_CLS_FWO */
 
