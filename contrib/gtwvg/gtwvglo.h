@@ -294,6 +294,10 @@ typedef enum
 #define TVIS_EXPANDPARTIAL  0x0080
 #endif
 
+#ifndef LWA_ALPHA
+#define LWA_ALPHA  0x00000002
+#endif
+
 typedef struct
 {
    DWORD     exStyle;
