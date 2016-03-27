@@ -41,9 +41,10 @@
       Bin2W() is the opposite of W2Bin()
    $EXAMPLES$
       // Show header length of a DBF
+      #include "fileio.ch"
       PROCEDURE Main()
          LOCAL hFile, cBuffer := Space( 2 )
-         IF ( hFile := hb_vfOpen( "test.dbf" ) ) != NIL
+         IF ( hFile := hb_vfOpen( "test.dbf", FO_READ ) ) != NIL
             hb_vfSeek( hFile, 8 )
             hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
             ? "Length of DBF header in bytes:", Bin2W( cBuffer )
@@ -98,9 +99,10 @@
       Bin2U() is the opposite of U2Bin()
    $EXAMPLES$
       // Show number of records in DBF
+      #include "fileio.ch"
       PROCEDURE Main()
          LOCAL hFile, cBuffer := Space( 4 )
-         IF ( hFile := hb_vfOpen( "test.dbf" ) ) != NIL
+         IF ( hFile := hb_vfOpen( "test.dbf", FO_READ ) ) != NIL
             hb_vfSeek( hFile, 4 )
             hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
             ? "Number of records in file:", Bin2U( cBuffer )

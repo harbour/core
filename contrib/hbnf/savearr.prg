@@ -77,7 +77,7 @@ FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
    LOCAL aArray
    LOCAL hFile
 
-   IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+   IF ( hFile := hb_vfOpen( cFileName, FO_READ ) ) != NIL
       aArray := _ftrestsub( hFile, @nErrorCode )
       hb_vfClose( hFile )
    ELSE

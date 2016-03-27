@@ -98,7 +98,7 @@ FUNCTION __i18n_potArrayLoad( cFile, /* @ */ cErrorMsg, /* @ */ cEOL )
    cEOL := hb_eol()
 
    __i18n_fileName( @cFile )
-   IF ( hFile := hb_vfOpen( cFile ) ) == NIL
+   IF ( hFile := hb_vfOpen( cFile, FO_READ ) ) == NIL
       cErrorMsg := hb_StrFormat( "cannot open file: %1$s", cFile )
       RETURN NIL
    ENDIF
@@ -288,7 +288,7 @@ STATIC FUNCTION __i18n_IsBOM_UTF8( cFileName )
    LOCAL hFile
    LOCAL cBuffer
 
-   IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+   IF ( hFile := hb_vfOpen( cFileName, FO_READ ) ) != NIL
       cBuffer := hb_vfReadLen( hFile, hb_BLen( _UTF8_BOM ) )
       hb_vfClose( hFile )
       IF cBuffer == _UTF8_BOM

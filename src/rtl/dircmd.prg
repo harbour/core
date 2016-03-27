@@ -47,6 +47,7 @@
 #pragma -gc0
 
 #include "directry.ch"
+#include "fileio.ch"
 
 #define _DIR_HEADER  1
 
@@ -102,7 +103,7 @@ STATIC PROCEDURE PutDBF( aDirEntry )
    LOCAL nRecCount := 0
    LOCAL dLastUpdate := hb_SToD()
 
-   IF ( hFile := hb_vfOpen( aDirEntry[ F_NAME ] ) ) != NIL
+   IF ( hFile := hb_vfOpen( aDirEntry[ F_NAME ], FO_READ ) ) != NIL
 
       buffer := hb_vfReadLen( hFile, 8 )
 

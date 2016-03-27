@@ -41,9 +41,10 @@
       Bin2I() is the opposite of I2Bin()
    $EXAMPLES$
       // Show DBF last update date
+      #include "fileio.ch"
       PROCEDURE Main()
          LOCAL hFile, cYear, cMonth, cDay
-         IF ( hFile := hb_vfOpen( "test.dbf" ) ) != NIL
+         IF ( hFile := hb_vfOpen( "test.dbf", FO_READ ) ) != NIL
             hb_vfSeek( hFile, 1 )
             cYear := cMonth := cDay := " "
             hb_vfRead( hFile, @cYear , hb_BLen( cYear ) )
@@ -101,9 +102,10 @@
       Bin2L() is the opposite of L2Bin()
    $EXAMPLES$
       // Show number of records in DBF
+      #include "fileio.ch"
       PROCEDURE Main()
          LOCAL hFile, cBuffer := Space( 4 )
-         IF ( hFile := hb_vfOpen( "test.dbf" ) ) != NIL
+         IF ( hFile := hb_vfOpen( "test.dbf", FO_READ ) ) != NIL
             hb_vfSeek( hFile, 4 )
             hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
             ? "Number of records in file:", Bin2L( cBuffer )

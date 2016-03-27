@@ -542,7 +542,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
          "Content-Type: " + cType + cCrLf + ;
          cCrLf
 
-      IF ( hFile := hb_vfOpen( cFile ) ) != NIL
+      IF ( hFile := hb_vfOpen( cFile, FO_READ ) ) != NIL
          cBuffer := Space( 65536 )
          DO WHILE ( nRead := hb_vfRead( hFile, @cBuffer, hb_Blen( cBuffer ) ) ) > 0
             cData += hb_BLeft( cBuffer, nRead )

@@ -348,12 +348,12 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
    // Open the label file
 #ifdef HB_CLP_STRICT
-   IF ( hFile := hb_vfOpen( cLblFile ) ) == NIL .AND. ;
+   IF ( hFile := hb_vfOpen( cLblFile, FO_READ ) ) == NIL .AND. ;
       Empty( hb_FNameDir( cLblFile ) )
 
       // Search through default path; attempt to open label file
       FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
-         IF ( hFile := hb_vfOpen( hb_DirSepAdd( cPath ) + cLblFile ) ) != NIL
+         IF ( hFile := hb_vfOpen( hb_DirSepAdd( cPath ) + cLblFile, FO_READ ) ) != NIL
             EXIT
          ENDIF
       NEXT

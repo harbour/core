@@ -195,7 +195,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
       nRetries := 0
       DO WHILE .T.
 
-         IF ( hFile := hb_vfOpen( cFileName ) ) == NIL
+         IF ( hFile := hb_vfOpen( cFileName, FO_READ ) ) == NIL
             oError := ErrorNew()
 
             oError:severity    := ES_ERROR

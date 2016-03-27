@@ -13,6 +13,8 @@
    Nanforum Toolkit
  */
 
+#include "fileio.ch"
+
 THREAD STATIC t_hFile
 
 FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
@@ -34,7 +36,7 @@ FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
          cExitKeys := {}
       ENDCASE
 
-      t_hFile := hb_vfOpen( cInFile )
+      t_hFile := hb_vfOpen( cInFile, FO_READ )
 
       IF ( rval := FError() ) == 0
          rval := _ft_DFInit( t_hFile, nTop, nLeft, nBottom, nRight, ;

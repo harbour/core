@@ -101,7 +101,7 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 
    SWITCH ::cMode := hb_defaultValue( cMode, "R" )
    CASE "R"
-      ::hFile := hb_vfOpen( cFileName )
+      ::hFile := hb_vfOpen( cFileName, FO_READ )
       EXIT
    CASE "W"
       ::hFile := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE )

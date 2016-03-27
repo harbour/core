@@ -384,7 +384,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+      IF ( hFile := hb_vfOpen( cFileName, FO_READ ) ) != NIL
 
          IF hb_vfReadLen( hFile, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
 

@@ -507,7 +507,7 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
    ::nWrite  := 0
    ::nStatus := 0
-   IF ( nFIn := hb_vfOpen( cFile ) ) == NIL
+   IF ( nFIn := hb_vfOpen( cFile, FO_READ ) ) == NIL
       RETURN .F.
    ENDIF
    nSize := hb_vfSize( nFIn )

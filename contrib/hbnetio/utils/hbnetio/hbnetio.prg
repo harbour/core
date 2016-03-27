@@ -29,6 +29,7 @@
          - sort out console UI from server side output
          - add support for subnet masks in allow/block lists, f.e. 172.16.0.0/12, and same for IPv6 */
 
+#include "fileio.ch"
 #include "inkey.ch"
 
 #include "hbhrb.ch"
@@ -809,7 +810,7 @@ STATIC FUNCTION FileSig( cFile )
    LOCAL cBuff, cExt
 
    cExt := ".prg"
-   IF ( hFile := hb_vfOpen( cFile ) ) != NIL
+   IF ( hFile := hb_vfOpen( cFile, FO_READ ) ) != NIL
       cBuff := hb_vfReadLen( hFile, hb_BLen( hb_hrbSignature() ) )
       hb_vfClose( hFile )
       IF cBuff == hb_hrbSignature()

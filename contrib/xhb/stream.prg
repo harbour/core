@@ -134,7 +134,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
 
    ::cFile := cFile
 
-   IF ( ::hFile := hb_vfOpen( cFile, nMode ) ) == NIL
+   IF ( ::hFile := hb_vfOpen( cFile, hb_defaultValue( nMode, FO_READ ) ) ) == NIL
       Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + hb_ntos( FError() ), hb_AParams() ) )
    ENDIF
 

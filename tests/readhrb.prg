@@ -6,6 +6,8 @@
  * readhrb <hrb file>
  */
 
+#include "fileio.ch"
+
 #define HRB_HEADER      ( hb_BChar( 0xC0 ) + "HRB" )
 
 #define HB_FS_PUBLIC    0x0001
@@ -51,7 +53,7 @@ PROCEDURE Main( cFrom )
 
    cFrom := hb_FNameExtSetDef( hb_defaultValue( cFrom, hb_FNameName( __FILE__ ) ), ".hrb" )
 
-   IF ( hFile := hb_vfOpen( cFrom ) ) == NIL
+   IF ( hFile := hb_vfOpen( cFrom, FO_READ ) ) == NIL
       ? "No such file:", cFrom
    ELSE
       IF hb_vfReadLen( hFile, 4 ) == HRB_HEADER

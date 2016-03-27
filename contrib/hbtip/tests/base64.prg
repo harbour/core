@@ -36,7 +36,7 @@ PROCEDURE Main( ... )
          EXIT
       OTHERWISE
          IF hb_vfExists( cData ) .AND. nFileInput == hb_GetStdIn()
-            IF ( hFileInput := hb_vfOpen( cData ) ) != NIL
+            IF ( hFileInput := hb_vfOpen( cData, FO_READ ) ) != NIL
                nFileInput := hb_vfHandle( hFileInput )
             ENDIF
          ELSEIF nFileOutput == hb_GetStdOut()

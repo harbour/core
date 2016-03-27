@@ -331,7 +331,7 @@ FUNCTION hb_ZipFile( ;
       nPos := 1
       FOR EACH cFileToZip IN aProcFile
 
-         IF ( hFile := hb_vfOpen( cFileToZip ) ) != NIL
+         IF ( hFile := hb_vfOpen( cFileToZip, FO_READ ) ) != NIL
 
             IF HB_ISEVALITEM( bUpdate )
                Eval( bUpdate, cFileToZip, nPos++ )

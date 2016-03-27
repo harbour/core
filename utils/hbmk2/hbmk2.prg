@@ -13297,7 +13297,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
 
    /* protection against recursive calls */
    IF hb_AScan( aPrevFiles, cFileName,,, .T. ) == 0
-      IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+      IF ( hFile := hb_vfOpen( cFileName, FO_READ ) ) != NIL
          cFileBody := Space( hb_vfSize( hFile ) )
          hb_vfSeek( hFile, 0, FS_SET )
          IF hb_vfRead( hFile, @cFileBody, hb_BLen( cFileBody ) ) != hb_BLen( cFileBody )
@@ -13859,7 +13859,7 @@ STATIC FUNCTION IsCOFFLib( cFileName )
    LOCAL hFile
    LOCAL cBuffer
 
-   IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+   IF ( hFile := hb_vfOpen( cFileName, FO_READ ) ) != NIL
       cBuffer := hb_vfReadLen( hFile, hb_BLen( _COFF_LIB_SIGNATURE ) )
       hb_vfClose( hFile )
       IF cBuffer == _COFF_LIB_SIGNATURE
@@ -13876,7 +13876,7 @@ STATIC FUNCTION IsOMFLib( cFileName )
    LOCAL hFile
    LOCAL cBuffer
 
-   IF ( hFile := hb_vfOpen( cFileName ) ) != NIL
+   IF ( hFile := hb_vfOpen( cFileName, FO_READ ) ) != NIL
       cBuffer := hb_vfReadLen( hFile, hb_BLen( _OMF_LIB_SIGNATURE ) )
       hb_vfClose( hFile )
       IF cBuffer == _OMF_LIB_SIGNATURE
@@ -15791,7 +15791,7 @@ STATIC FUNCTION __hbshell_FileSig( cFile )
 
    LOCAL hFile, cBuff
 
-   IF ( hFile := hb_vfOpen( cFile ) ) != NIL
+   IF ( hFile := hb_vfOpen( cFile, FO_READ ) ) != NIL
       cBuff := hb_vfReadLen( hFile, hb_BLen( hb_hrbSignature() ) )
       hb_vfClose( hFile )
       IF cBuff == hb_hrbSignature()
