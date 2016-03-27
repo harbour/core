@@ -40,18 +40,20 @@ STATIC FUNCTION s_NodeToHash( pNode )
             hHash[ mxmlGetElement( pNode ) ] := mxmlGetOpaque( pNode )
          ENDIF
 
-         IF hb_mxmlGetAttrsCount( pNode ) > 0
-            hHash[ mxmlGetElement( pNode ) + "@attr" ] := hb_mxmlGetAttrs( pNode )
-         ENDIF
-
-         IF Empty( mxmlGetText( pNode ) )
+         IF Empty( mxmlGetOpaque( pNode ) )
             IF ! Empty( hNext := mxmlWalkNext( pNode, pNode, MXML_DESCEND ) )
-               IF Empty( hHash[ mxmlGetElement( pNode ) ] )
-                  hHash[ mxmlGetElement( pNode ) ] := {}
-               ENDIF
-               IF ! Empty( hHashChild := s_NodeToHash( hNext ) )
+               hHashChild := s_NodeToHash( hNext  )
+               IF hHashChild != NIL .AND. ! Empty( hHashChild )
+                  IF Empty( hHash[ mxmlGetElement( pNode ) ] )
+                     hHash[ mxmlGetElement( pNode ) ] := {}
+                  ENDIF
+                  IF hb_mxmlGetAttrsCount( pNode ) > 0
+                     hHashChild[ mxmlGetElement( pNode ) + "@attr" ] := hb_mxmlGetAttrs( pNode )
+                  ENDIF
                   AAdd( hHash[ mxmlGetElement( pNode ) ], hHashChild )
                ENDIF
+            ELSEIF hb_mxmlGetAttrsCount( pNode ) > 0
+               hHash[ mxmlGetElement( pNode ) + "@attr" ] := hb_mxmlGetAttrs( pNode )
             ENDIF
          ENDIF
       ENDIF
