@@ -269,11 +269,6 @@ sed -e "s/_VCS_ID_/${_vcs_id}/g" \
     -e "s/_HB_VERSION_/${_hb_ver}/g" 'RELNOTES.txt' > "${HB_ABSROOT}RELNOTES.txt"
 touch -c "${HB_ABSROOT}RELNOTES.txt" -r "${HB_ABSROOT}README.md"
 
-# Create tag update JSON request
-# https://developer.github.com/v3/git/refs/#update-a-reference
-
-echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/git_tag_patch.json"
-
 # Register build information
 
 (
@@ -395,16 +390,6 @@ if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] ; then
          https://api.pushover.net/1/messages.json
       echo
       echo "! Push notification: Build ready."
-   )
-fi
-
-if [ "${_BRANCH#*master*}" != "${_BRANCH}" ] ; then
-   (
-      set +x
-      curl -sS \
-         -H "Authorization: token ${GITHUB_TOKEN}" \
-         -X PATCH "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v${HB_VF_DEF}" \
-         -d "@${_ROOT}/git_tag_patch.json"
    )
 fi
 
