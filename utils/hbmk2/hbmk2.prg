@@ -2560,7 +2560,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    /* Tweaks to compiler/platform environments */
 
-   IF hbmk[ _HBMK_cCOMP ] == "bcc" /* TODO: Add support for bcc64 */
+   IF HBMK_ISCOMP( "bcc|bcc64" )
       /* NOTE: Hack to tweak bcc setup to include one additional
                compiler lib dir to lib search path. */
       IF Empty( cPath_CompC )
@@ -5594,15 +5594,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cOpt_CompC := "-c -q -CP437"
          IF hbmk[ _HBMK_lOPTIM ]
             IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-               cOpt_CompC += " -d -O2 -OS -Ov -Oc"
+               cOpt_CompC += " -d -O2"
             ELSE
                cOpt_CompC += " -d -O2 -OS -Ov -Oc -Oi -6"
             ENDIF
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-            cLibBCC_CRTL := "cw64mt.lib"
+            cLibBCC_CRTL := "cw64mt" + cLibExt
          ELSE
-            cLibBCC_CRTL := "cw32mt.lib"
+            cLibBCC_CRTL := "cw32mt" + cLibExt
          ENDIF
          IF hbmk[ _HBMK_lWINUNI ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
@@ -5613,9 +5613,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                AAdd( hbmk[ _HBMK_aOPTC ], "-tWM" )
             ELSE
                IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-                  cLibBCC_CRTL := "cw64.lib"
+                  cLibBCC_CRTL := "cw64" + cLibExt
                ELSE
-                  cLibBCC_CRTL := "cw32.lib"
+                  cLibBCC_CRTL := "cw32" + cLibExt
                ENDIF
             ENDIF
          ELSE
@@ -5638,11 +5638,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          cBin_Dyn := cBin_Link
          IF hbmk[ _HBMK_cCOMP ] == "bcc64"
-            cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w64.obj", "c0x64.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.lib, {IM}, {LS}{SCRIPT}"
-            cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d64.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64.lib, {IM}, {LS}{SCRIPT}"
+            cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w64" + cObjExt, "c0x64" + cObjExt ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64" + cLibExt + ", {IM}, {LS}{SCRIPT}"
+            cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d64" + cObjExt                      + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import64" + cLibExt + ", {IM}, {LS}{SCRIPT}"
          ELSE
-            cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w32.obj", "c0x32.obj" ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
-            cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d32.obj"                + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32.lib, {IM}, {LS}{SCRIPT}"
+            cOpt_Link := "-Gn -Tpe -L{DL} {FL} " + iif( hbmk[ _HBMK_lGUI ], "c0w32" + cObjExt, "c0x32" + cObjExt ) + " {LO}, {OE}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32" + cLibExt + ", {IM}, {LS}{SCRIPT}"
+            cOpt_Dyn  := "-Gn -Tpd -L{DL} {FD} " +                          "c0d32" + cObjExt                      + " {LO}, {OD}, " + iif( hbmk[ _HBMK_lMAP ], "{OM}", "nul" ) + ", {LL} {LB} {LF} " + cLibBCC_CRTL + " import32" + cLibExt + ", {IM}, {LS}{SCRIPT}"
          ENDIF
          IF hbmk[ _HBMK_cCOMP ] == "bcc"
             /* TODO: Add support for bcc64/mkexp */
@@ -5694,6 +5694,11 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          l_aLIBSHAREDPOST := { "hbmainstd", "hbmainwin" }
 #endif
+         /* TODO: Confirm if this hack is indeed required for bcc64. [vszakats] */
+         IF hbmk[ _HBMK_cCOMP ] == "bcc64" .AND. ;
+            ( tmp := hb_AScan( l_aLIBSYSMISC, "uuid",,, .T. ) ) > 0
+            hb_ADel( l_aLIBSYSMISC, tmp, .T. )
+         ENDIF
          l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
 
       CASE ( hbmk[ _HBMK_cPLAT ] == "win" .AND. HBMK_ISCOMP( "msvc|msvc64|msvcia64|icc|iccia64|clang" ) ) .OR. ;
@@ -14191,6 +14196,7 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC )
             nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
             DO CASE
             CASE nVer == 700 ; nVer := 0307
+            CASE nVer == 730 ; nVer := 0307
             ENDCASE
          CASE ( tmp1 := hb_AtX( R_( "version [0-9]*\.[0-9]*\.[0-9]*" ), cStdOutErr ) ) != NIL
             tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )

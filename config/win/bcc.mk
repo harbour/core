@@ -147,6 +147,7 @@ endif
 DFLAGS += -q -Gn -C -aa -Tpd -Gi -x $(LIBPATHS)
 DY_OUT :=
 # NOTE: .lib extension not added to keep line short enough to work on Win9x/ME
+#       and to remain compatible with both bcc64 and bcc 32-bit.
 ifeq ($(HB_COMPILER),bcc64)
    DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw64mt import64
 else
