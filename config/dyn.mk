@@ -76,6 +76,7 @@ endif
 
 DYN_FILE :=
 IMP_FILE :=
+DEF_FILE := $(DEFNAME)
 
 ifneq ($(HB_BUILD_DYN),no)
 ifneq ($(DY_RULE),)

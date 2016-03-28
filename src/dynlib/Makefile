@@ -14,6 +14,7 @@ ifneq ($(DYNDIRLIST_BASE),)
       DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm/vmmt
    endif
    DYNNAME := $(HB_DYNLIB_BASE)
+   DEFNAME := $(TOP)$(ROOT)src/harbour.def
 
    include $(TOP)$(ROOT)config/dyn.mk
 
