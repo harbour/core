@@ -834,7 +834,7 @@ HB_FUNC( DBFILTER )
       hb_retc_null();
 }
 
-/* Harbour extension to retrieve CB */
+/* Harbour extension to retrieve filter codeblock */
 HB_FUNC( HB_DBGETFILTER )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
