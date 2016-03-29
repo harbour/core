@@ -549,8 +549,8 @@ HB_FUNC( HPDF_PAGE_GETCURRENTPOS )
 
    HPDF_Page_GetCurrentPos2( ( HPDF_Page ) hb_parptr( 1 ), &pt );
 
-   hb_arraySetND( info, 1, pt.x );
-   hb_arraySetND( info, 2, pt.y );
+   hb_arraySetND( info, 1, ( double ) pt.x );
+   hb_arraySetND( info, 2, ( double ) pt.y );
 
    hb_itemReturnRelease( info );
 }
@@ -563,8 +563,8 @@ HB_FUNC( HPDF_PAGE_GETCURRENTTEXTPOS )
 
    HPDF_Page_GetCurrentTextPos2( ( HPDF_Page ) hb_parptr( 1 ), &pt );
 
-   hb_arraySetND( info, 1, pt.x );
-   hb_arraySetND( info, 2, pt.y );
+   hb_arraySetND( info, 1, ( double ) pt.x );
+   hb_arraySetND( info, 2, ( double ) pt.y );
 
    hb_itemReturnRelease( info );
 }
@@ -589,12 +589,12 @@ HB_FUNC( HPDF_PAGE_GETTRANSMATRIX )
 
    matrix = HPDF_Page_GetTransMatrix( ( HPDF_Page ) hb_parptr( 1 ) );
 
-   hb_arraySetND( info, 1, matrix.a );
-   hb_arraySetND( info, 2, matrix.b );
-   hb_arraySetND( info, 3, matrix.c );
-   hb_arraySetND( info, 4, matrix.d );
-   hb_arraySetND( info, 5, matrix.x );
-   hb_arraySetND( info, 6, matrix.y );
+   hb_arraySetND( info, 1, ( double ) matrix.a );
+   hb_arraySetND( info, 2, ( double ) matrix.b );
+   hb_arraySetND( info, 3, ( double ) matrix.c );
+   hb_arraySetND( info, 4, ( double ) matrix.d );
+   hb_arraySetND( info, 5, ( double ) matrix.x );
+   hb_arraySetND( info, 6, ( double ) matrix.y );
 
    hb_itemReturnRelease( info );
 }
@@ -695,9 +695,9 @@ HB_FUNC( HPDF_PAGE_GETRGBFILL )
 
    rgb = HPDF_Page_GetRGBFill( ( HPDF_Page ) hb_parptr( 1 ) );
 
-   hb_arraySetND( info, 1, rgb.r );
-   hb_arraySetND( info, 2, rgb.g );
-   hb_arraySetND( info, 3, rgb.b );
+   hb_arraySetND( info, 1, ( double ) rgb.r );
+   hb_arraySetND( info, 2, ( double ) rgb.g );
+   hb_arraySetND( info, 3, ( double ) rgb.b );
 
    hb_itemReturnRelease( info );
 }
@@ -710,9 +710,9 @@ HB_FUNC( HPDF_PAGE_GETRGBSTROKE )
 
    rgb = HPDF_Page_GetRGBStroke( ( HPDF_Page ) hb_parptr( 1 ) );
 
-   hb_arraySetND( info, 1, rgb.r );
-   hb_arraySetND( info, 2, rgb.g );
-   hb_arraySetND( info, 3, rgb.b );
+   hb_arraySetND( info, 1, ( double ) rgb.r );
+   hb_arraySetND( info, 2, ( double ) rgb.g );
+   hb_arraySetND( info, 3, ( double ) rgb.b );
 
    hb_itemReturnRelease( info );
 }
@@ -725,10 +725,10 @@ HB_FUNC( HPDF_PAGE_GETCMYKFILL )
 
    cmyk = HPDF_Page_GetCMYKFill( ( HPDF_Page ) hb_parptr( 1 ) );
 
-   hb_arraySetND( info, 1, cmyk.c );
-   hb_arraySetND( info, 2, cmyk.m );
-   hb_arraySetND( info, 3, cmyk.y );
-   hb_arraySetND( info, 4, cmyk.k );
+   hb_arraySetND( info, 1, ( double ) cmyk.c );
+   hb_arraySetND( info, 2, ( double ) cmyk.m );
+   hb_arraySetND( info, 3, ( double ) cmyk.y );
+   hb_arraySetND( info, 4, ( double ) cmyk.k );
 
    hb_itemReturnRelease( info );
 }
@@ -741,10 +741,10 @@ HB_FUNC( HPDF_PAGE_GETCMYKSTROKE )
 
    cmyk = HPDF_Page_GetCMYKStroke( ( HPDF_Page ) hb_parptr( 1 ) );
 
-   hb_arraySetND( info, 1, cmyk.c );
-   hb_arraySetND( info, 2, cmyk.m );
-   hb_arraySetND( info, 3, cmyk.y );
-   hb_arraySetND( info, 4, cmyk.k );
+   hb_arraySetND( info, 1, ( double ) cmyk.c );
+   hb_arraySetND( info, 2, ( double ) cmyk.m );
+   hb_arraySetND( info, 3, ( double ) cmyk.y );
+   hb_arraySetND( info, 4, ( double ) cmyk.k );
 
    hb_itemReturnRelease( info );
 }
@@ -781,12 +781,12 @@ HB_FUNC( HPDF_PAGE_GETTEXTMATRIX )
 
    matrix = HPDF_Page_GetTextMatrix( ( HPDF_Page ) hb_parptr( 1 ) );
 
-   hb_arraySetND( info, 1, matrix.a );
-   hb_arraySetND( info, 2, matrix.b );
-   hb_arraySetND( info, 3, matrix.c );
-   hb_arraySetND( info, 4, matrix.d );
-   hb_arraySetND( info, 5, matrix.x );
-   hb_arraySetND( info, 6, matrix.y );
+   hb_arraySetND( info, 1, ( double ) matrix.a );
+   hb_arraySetND( info, 2, ( double ) matrix.b );
+   hb_arraySetND( info, 3, ( double ) matrix.c );
+   hb_arraySetND( info, 4, ( double ) matrix.d );
+   hb_arraySetND( info, 5, ( double ) matrix.x );
+   hb_arraySetND( info, 6, ( double ) matrix.y );
 
    hb_itemReturnRelease( info );
 }
@@ -1215,10 +1215,10 @@ HB_FUNC( HPDF_FONT_GETBBOX )
 
    rc = HPDF_Font_GetBBox( ( HPDF_Font ) hb_parptr( 1 ) );
 
-   hb_arraySetND( info, 1, rc.left   );
-   hb_arraySetND( info, 2, rc.top    );
-   hb_arraySetND( info, 3, rc.right  );
-   hb_arraySetND( info, 4, rc.bottom );
+   hb_arraySetND( info, 1, ( double ) rc.left );
+   hb_arraySetND( info, 2, ( double ) rc.top );
+   hb_arraySetND( info, 3, ( double ) rc.right );
+   hb_arraySetND( info, 4, ( double ) rc.bottom );
 
    hb_itemReturnRelease( info );
 }

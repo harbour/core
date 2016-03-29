@@ -118,8 +118,8 @@ HB_FUNC( HPDF_IMAGE_GETSIZE )
 
    pt = HPDF_Image_GetSize( ( HPDF_Image ) hb_parptr( 1 ) );
 
-   hb_arraySetND( info, 1, pt.x );
-   hb_arraySetND( info, 2, pt.y );
+   hb_arraySetND( info, 1, ( double ) pt.x );
+   hb_arraySetND( info, 2, ( double ) pt.y );
 
    hb_itemReturnRelease( info );
 }
