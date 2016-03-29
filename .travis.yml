@@ -1,7 +1,7 @@
 branches:
   only:
   - master
-  - test_travis
+  - test-travis
 language: c
 env:
   - HB_CI_THREADS=4
