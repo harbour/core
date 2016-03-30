@@ -84,7 +84,7 @@ HB_FUNC( HB_VAL )
       HB_MAXINT lValue;
       double dValue;
 
-      fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue , &iDec, &iWidth );
+      fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue, &iDec, &iWidth );
 
       if( HB_ISNUM( 2 ) )
          iLen = hb_parni( 2 );

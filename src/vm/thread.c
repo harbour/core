@@ -47,7 +47,7 @@
 /*
   Harbour level API:
 
-  hb_threadStart( [<nThreadAttrs> ,] <@sStart()> | <bStart> | <cStart> [, <params,...> ] ) -> <pThID>
+  hb_threadStart( [ <nThreadAttrs>, ] <@sStart()> | <bStart> | <cStart> [, <params,...> ] ) -> <pThID>
   hb_threadSelf() -> <pThID> | NIL
   hb_threadID( [ <pThID> ] ) -> <nThNo>
   hb_threadJoin( <pThID> [, @<xRetCode> ] ) -> <lOK>

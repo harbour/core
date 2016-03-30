@@ -83,14 +83,14 @@ static int hb_Inp9x( unsigned short int usPort )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_Inp9x(%hu)", usPort ) );
 
-   #if defined( __BORLANDC__ ) || defined( __DMC__ )
+   #if  defined( __DMC__ )
 
       _DX = usPort;
       __emit__(0xEC);         /* ASM  IN AL, DX */
       __emit__(0x32,0xE4);    /* ASM XOR AH, AH */
       usVal = _AX;
 
-   #elif defined( __XCC__ ) || defined( __POCC__ )
+   #elif defined( __XCC__ ) || defined( __POCC__ ) || defined( __BORLANDC__ )
 
       __asm {
                mov   dx, usPort
@@ -121,13 +121,13 @@ static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_Outp9x(%hu, %hu)", usPort, usVal ) );
 
-   #if defined( __BORLANDC__ ) || defined( __DMC__ )
+   #if defined( __DMC__ )
 
       _DX = usPort;
       _AL = usVal;
       __emit__(0xEE);        /* ASM OUT DX, AL */
 
-   #elif defined( __XCC__ ) || defined( __POCC__ )
+   #elif defined( __XCC__ ) || defined( __POCC__ ) || defined( __BORLANDC__ )
 
       __asm {
                mov   dx, usPort
