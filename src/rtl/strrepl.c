@@ -72,13 +72,74 @@ HB_FUNC( HB_STRREPLACE )
          const char * pszText = hb_itemGetCPtr( pText );
          const char * ptr;
          char * pszResult = NULL;
+         HB_SIZE * ptrOpt = NULL;
+         HB_BOOL fNext = HB_FALSE;
          HB_SIZE nDst, nSize, nPos, nAt, nSkip, nTmp;
 
          nDst = hb_itemSize( HB_IS_HASH( pSrc ) ? pSrc : pDst );
+         if( nText > 1024 )
+         {
+            ptrOpt = ( HB_SIZE * ) hb_xgrabz( 256 * sizeof( HB_SIZE ) );
+            for( nAt = 0; nAt < nSrc; ++nAt )
+            {
+               HB_UCHAR uc;
+
+               if( pszSrc )
+                  uc = ( HB_UCHAR ) pszSrc[ nAt ];
+               else
+               {
+                  if( HB_IS_HASH( pSrc ) )
+                     pDst = hb_hashGetKeyAt( pSrc, nAt + 1 );
+                  else
+                     pDst = hb_arrayGetItemPtr( pSrc, nAt + 1 );
+                  if( hb_itemGetCLen( pDst ) == 0 )
+                     continue;
+                  uc = ( HB_UCHAR ) hb_itemGetCPtr( pDst )[ 0 ];
+               }
+               if( ptrOpt[ uc ] == 0 )
+                  ptrOpt[ uc ] = nAt + 1;
+               else if( pszSrc == NULL )
+                  fNext = HB_TRUE;
+            }
+         }
+
          nSize = nPos = nSkip = 0;
          while( nPos < nText )
          {
-            if( pszSrc )
+            if( ptrOpt )
+            {
+               nAt = ptrOpt[ ( HB_UCHAR ) pszText[ nPos ] ];
+               if( nAt == 0 || pszSrc )
+                  nSkip = 1;
+               else
+               {
+                  for( ; nAt <= nSrc; ++nAt )
+                  {
+                     if( HB_IS_HASH( pSrc ) )
+                     {
+                        pDst = hb_hashGetKeyAt( pSrc, nAt );
+                        nSkip = hb_itemGetCLen( pDst );
+                        ptr = hb_itemGetCPtr( pDst );
+                     }
+                     else
+                     {
+                        nSkip = hb_arrayGetCLen( pSrc, nAt );
+                        ptr = hb_arrayGetCPtr( pSrc, nAt );
+                     }
+                     if( nSkip > 0 && nSkip <= nText - nPos &&
+                         memcmp( pszText + nPos, ptr, nSkip ) == 0 )
+                        break;
+                     if( !fNext )
+                        nAt = nSrc;
+                  }
+                  if( nAt > nSrc )
+                  {
+                     nAt = 0;
+                     nSkip = 1;
+                  }
+               }
+            }
+            else if( pszSrc )
             {
                ptr = ( const char * )
                      memchr( pszSrc, ( HB_UCHAR ) pszText[ nPos ], nSrc );
@@ -165,6 +226,8 @@ HB_FUNC( HB_STRREPLACE )
                }
             }
          }
+         if( ptrOpt )
+            hb_xfree( ptrOpt );
          hb_retclen_buffer( pszResult, nSize );
       }
       else
