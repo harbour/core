@@ -804,6 +804,12 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                   nAttr |= HB_FA_LINK;
                }
 #endif
+               if( info->entry->d_name[ 0 ] == '.' )
+               {
+                  if( info->entry->d_name[ 1 ] &&
+                      ( info->entry->d_name[ 1 ] != '.' || info->entry->d_name[ 2 ] ) )
+                     nAttr |= HB_FA_HIDDEN;
+               }
                hb_strncpy( ffind->szName, info->entry->d_name, sizeof( ffind->szName ) - 1 );
                ffind->size = sStat.st_size;
 

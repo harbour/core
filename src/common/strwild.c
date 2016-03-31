@@ -280,7 +280,7 @@ HB_BOOL hb_strMatchFile( const char * szString, const char * szPattern )
    #if defined( HB_NO_FNMATCH )
    return hb_strMatchWildExact( szString, szPattern );
    #else
-   return fnmatch( szPattern, szString, FNM_PERIOD | FNM_PATHNAME ) == 0;
+   return fnmatch( szPattern, szString, FNM_PATHNAME ) == 0;
    #endif
 #elif defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
    PHB_CODEPAGE cdp = hb_vmCDP();

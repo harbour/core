@@ -106,17 +106,7 @@ PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes, HB
 
    /* Get the passed attributes and convert them to Harbour Flags */
 
-   ulMask = HB_FA_ARCHIVE |
-            HB_FA_READONLY |
-            HB_FA_DEVICE |
-            HB_FA_TEMPORARY |
-            HB_FA_SPARSE |
-            HB_FA_REPARSE |
-            HB_FA_COMPRESSED |
-            HB_FA_OFFLINE |
-            HB_FA_NOTINDEXED |
-            HB_FA_ENCRYPTED |
-            HB_FA_VOLCOMP;
+   ulMask = HB_FA_ARCHIVE | HB_FA_READONLY;
 
    if( pszAttributes && *pszAttributes )
       ulMask |= hb_fsAttrEncode( pszAttributes );
