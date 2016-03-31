@@ -720,8 +720,8 @@ HB_FUNC( __DYNSISFUN ) /* returns .T. if a symbol has a function/procedure point
 }
 
 HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or procedure
-                                     called and consumed times { nTimes, nTime }
-                                     , given the dynamic symbol index */
+                                     called and consumed times { nTimes, nTime },
+                                     given the dynamic symbol index */
 {
    HB_STACK_TLS_PRELOAD
 #ifndef HB_NO_PROFILER

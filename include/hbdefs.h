@@ -707,7 +707,8 @@ typedef HB_U32 HB_FATTR;
 
 
 #ifndef PFLL
-#  if defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __MINGW32__ )
+#  if ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || defined( __MINGW32__ ) ) && \
+      ! defined( __clang__ )
 #     define PFLL    "I64"
 #  else
 #     define PFLL    "ll"

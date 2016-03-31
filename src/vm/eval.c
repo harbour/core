@@ -386,16 +386,16 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
  *    hb_ExecFromArray( <cFuncName> [, <aParams> ] )
  *    hb_ExecFromArray( @<funcName>() [, <aParams> ] )
  *    hb_ExecFromArray( <bCodeBlock> [, <aParams> ] )
- *    hb_ExecFromArray( <oObject> , <cMethodName> [, <aParams> ] )
- *    hb_ExecFromArray( <oObject> , @<msgName>() [, <aParams> ] )
+ *    hb_ExecFromArray( <oObject>, <cMethodName> [, <aParams> ] )
+ *    hb_ExecFromArray( <oObject>, @<msgName>() [, <aParams> ] )
  * or:
  *    hb_ExecFromArray( <aExecArray> )
  * where <aExecArray> is in one of the following format:
  *    { <cFuncName> [, <params,...>] }
  *    { @<funcName>() [, <params,...>] }
  *    { <bCodeBlock> [, <params,...>] }
- *    { <oObject> , <cMethodName> [, <params,...>] }
- *    { <oObject> , @<msgName>() [, <params,...>] }
+ *    { <oObject>, <cMethodName> [, <params,...>] }
+ *    { <oObject>, @<msgName>() [, <params,...>] }
  */
 HB_FUNC( HB_EXECFROMARRAY )
 {

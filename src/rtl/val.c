@@ -83,10 +83,10 @@ static void hb_val( HB_BOOL fExt )
          }
       }
 
-      if( ! fDbl )
-         hb_retnintlen( lValue, iWidth );
-      else
+      if( fDbl )
          hb_retndlen( dValue, iWidth, iDec );
+      else
+         hb_retnintlen( lValue, iWidth );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1098, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
