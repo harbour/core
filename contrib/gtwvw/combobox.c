@@ -244,7 +244,7 @@ static int hb_gt_wvw_GetFontDialogUnits( HWND hWnd, HFONT hFont )
 }
 
 /* wvw_cbCreate( [nWinNum], nTop, nLeft, nWidth, aText, bBlock, nListLines, ;
- *                          nReserved, nKbdType, aOffset, hControl )
+ *                          nReserved, nKbdType, aOffset, @hControl, nStyle )
  * create combobox (drop-down list, no editbox) for window nWinNum
  * nTop: row of top/left corner (in character unit)
  * nLeft: col of top/left corner (in character unit)
@@ -268,7 +268,7 @@ static int hb_gt_wvw_GetFontDialogUnits( HWND hWnd, HFONT hFont )
  *
  * nKbdType: WVW_CB_KBD_STANDARD (0): similar to standard windows convention
  *            ENTER/ESC: will kill focus from combobox
- *          WVW_CB_KBD_CLIPPER (1):
+ *           WVW_CB_KBD_CLIPPER (1):
  *            ENTER: drop (show) the list box
  *            UP/DOWN/TAB/SHIFTTAB/ESC: kill focus
  * default is WVW_CB_KBD_STANDARD (0)
@@ -355,7 +355,7 @@ HB_FUNC( WVW_CBCREATE )
          0,
          TEXT( "COMBOBOX" ),
          NULL,
-         WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | WS_VSCROLL,
+         WS_CHILD | WS_VISIBLE | CBS_DROPDOWNLIST | WS_VSCROLL | hb_parni( 12 ) /* nStyle */,
          iLeft,
          iTop,
          iRight - iLeft + 1,

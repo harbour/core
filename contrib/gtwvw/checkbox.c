@@ -113,7 +113,7 @@ HB_FUNC( WVW_CXCREATE )
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
                                         hb_parl( 11 ) /* bMap3Dcolors */,
-                                        BS_AUTOCHECKBOX, &hWnd ) );
+                                        BS_AUTOCHECKBOX | hb_parni( 13 ) /* nStyle */, &hWnd ) );
 
       hb_strfree( hCaption );
    }

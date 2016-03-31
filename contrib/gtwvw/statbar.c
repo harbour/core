@@ -119,7 +119,7 @@ HB_FUNC( WVW_SBDESTROY )
    }
 }
 
-/* wvw_sbAddPart( nWinNum, cMaxText, nWidth, nStyle, lResetParts, [cIcon , cToolTip] )
+/* wvw_sbAddPart( nWinNum, cMaxText, nWidth, nStyle, lResetParts, [cIcon], [cToolTip] )
  *  ps.
  *  lResetParts==.T. :: remove all previously created parts
  *  nStyle: 0 (default), 0x0200 (SBT_POPOUT), 0x0100 (SBT_NOBORDERS)

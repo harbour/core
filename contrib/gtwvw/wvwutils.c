@@ -102,7 +102,7 @@ HB_FUNC( WVW_GBCREATE )
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
                                         hb_parl( 11 ) /* bMap3Dcolors */,
-                                        BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE, &hWnd ) );
+                                        BS_TEXT | BS_GROUPBOX | WS_OVERLAPPED | hb_parni( 13 ) /* nStyle */, &hWnd ) );
 
       hb_strfree( hCaption );
    }
@@ -112,8 +112,7 @@ HB_FUNC( WVW_GBCREATE )
    hbwapi_stor_HANDLE( hWnd, 12 );
 }
 
-/* BS_TEXT | BS_GROUPBOX | WS_CHILD | WS_OVERLAPPED | WS_VISIBLE
-   BS_GROUPBOX | WS_GROUP | BS_TEXT | WS_OVERLAPPED */
+/* BS_TEXT | BS_GROUPBOX | WS_OVERLAPPED | WS_GROUP */
 
 HB_FUNC( WVW_RBCREATE )
 {
@@ -143,7 +142,7 @@ HB_FUNC( WVW_RBCREATE )
                                         iOffTop, iOffLeft, iOffBottom, iOffRight,
                                         HB_ISNUM( 10 ) ? hb_parnd( 10 ) : 1 /* dStretch */,
                                         hb_parl( 11 ) /* bMap3Dcolors */,
-                                        BS_AUTORADIOBUTTON /* | WS_GROUP */, &hWnd ) );
+                                        BS_AUTORADIOBUTTON | hb_parni( 13 ) /* nStyle */, &hWnd ) );
 
       hb_strfree( hCaption );
    }
