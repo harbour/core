@@ -73,6 +73,11 @@
   - <https://github.com/blog/1943-how-to-write-the-perfect-pull-request>
 - You can also participate in localization:<br />
   [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2-vszakats/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
+- If looking for known pending issues to work on, look for `TODO`
+  and `TOFIX` markers in the source code/ChangeLog or see this list
+  of issues that need further input/contribution:
+     * https://github.com/vszakats/harbour-core/issues?q=label%3A%22help+wanted%22
+     * https://github.com/harbour/core/issues?q=label%3A%22help+wanted%22
 
 > Personal/private e-mails will either be ignored or given a short
 > answer to move the inquiry to somewhere public.<br />
