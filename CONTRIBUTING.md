@@ -79,7 +79,7 @@
      * https://github.com/vszakats/harbour-core/issues?q=label%3A%22help+wanted%22
      * https://github.com/harbour/core/issues?q=label%3A%22help+wanted%22
 
-> Personal/private e-mails will either be ignored or given a short
+> Personal/private emails will either be ignored or given a short
 > answer to move the inquiry to somewhere public.<br />
 > Donators can count on my reciprocity even in private.
 
