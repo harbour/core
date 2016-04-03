@@ -551,7 +551,7 @@ Lorenzo Fiorini and others are helping me with it at the moment.
 
 # Examples
 
-In my personal web site () you can download an example of application,
+In my personal website () you can download an example of application,
 screen shots of converted applications and some sample of code, exploring
 a lot of interesting features. And of course, you can download this little
 documentation.

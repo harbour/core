@@ -2,7 +2,7 @@
 /*
  * Commit preparer and source checker/fixer
  *
- * Copyright 2012-2013 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2012-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * their website at https://www.gnu.org/).
  *
  */
 

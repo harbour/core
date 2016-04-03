@@ -6,7 +6,7 @@
  * just demostrating it is working
  *
  * With the filename, data will be stored to the file or
- * retrieved from the file and sent to Internet.
+ * retrieved from the file and sent to internet.
  *
  * Usage of URI.
  * HTTP[S] Protocol

@@ -95,7 +95,7 @@ GNU General Public License for more details\.
 You should have received a copy of the GNU General Public License  
 along with this program; if not, write to the Free Software  
 Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit  
-their web site at https://www\.gnu\.org/\)\.  
+their website at https://www\.gnu\.org/\)\.  
   
 License extensions:  
   \- This source code must be kept and distributed as part  

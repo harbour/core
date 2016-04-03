@@ -1,4 +1,4 @@
-/* Makes an Internet search and displays the links from the response HTML page */
+/* Makes an internet search and displays the links from the response HTML page */
 
 #require "hbssl"
 #require "hbtip"
