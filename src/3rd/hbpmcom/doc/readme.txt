@@ -3,14 +3,14 @@ readme
 
 
 
-			   COMLib, version 1.0
+                         COMLib, version 1.0
 
-		     RS-232 communication library
+                     RS-232 communication library
 
-			  started: May/1998
+                          started: May/1998
 
-	Program and Text Copyright, ( C ) 1998, Peter Marinov
-			 All Rights Reserved.
+        Program and Text Copyright, ( C ) 1998, Peter Marinov
+                         All Rights Reserved.
 
 
 
@@ -52,7 +52,7 @@ are some additional definitions for fine tuning the library:
 DISABLE_TIMING=1 -- will disable the library to use the system timer
    and this will disable all the xxxTimed() functions from operation as well.
 DISABLE_PREEMPTING=1 -- will turn off the ability to be preempted the
-   process of handling COM IRQs, useful in multy-thread	environment.
+   process of handling COM IRQs, useful in multy-thread environment.
 
 To build the help type 'makeinfo --no-split com.txi'. You can use
 the help by typing 'info -f com.inf'. To add com.inf in the main info
@@ -135,8 +135,7 @@ any ASCII text editor to view or print the documentation.
 --------------------
 
 Please don't expect that I will reply your djgpp news group postings as
-I'm checking news archives on a fairly irregular basis.	What I suggest
-is to be contacted directly through my e-mail address.
+I'm checking news archives on a fairly irregular basis. What I suggest
+is to be contacted directly through my email address.
 
 mail: mar22@usa.net
-

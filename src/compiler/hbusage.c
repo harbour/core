@@ -165,7 +165,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
    hb_compOutStd( HB_COMP_PARAM,
          "\n"
          "Credits:  The Harbour Team\n"
-         "          (replace space with @ in e-mail addresses)\n"
+         "          (replace space with @ in email addresses)\n"
          "\n"
          "Alejandro de Garate (alex_degarate hotmail com)\n"
          "Aleksander Czajczynski <hb fki.pl>\n"

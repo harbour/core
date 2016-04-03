@@ -1,5 +1,5 @@
 /*
- * Versatile logging system - Logger sending log message to e-mail
+ * Versatile logging system - Logger sending log message to email
  *
  * Copyright 2003 Giancarlo Niccolai [gian@niccolai.ws]
  *
@@ -114,7 +114,7 @@ METHOD Close( cName ) CLASS HB_LogEmail
 
    RETURN .T.
 
-/* Sends the real message in e-mail */
+/* Sends the real message in email */
 METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
    LOCAL skCon := hb_inetCreate()

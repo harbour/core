@@ -109,7 +109,7 @@ FUNCTION tip_MailAssemble( ;
       cBody += Chr( 13 ) + Chr( 10 )
    ENDIF
 
-   /* Convert input to the CP of the e-mail */
+   /* Convert input to the CP of the email */
    IF ! Empty( cCharsetCP )
       xTo := s_TransCP( xTo, cCharsetCP )
       xCC := s_TransCP( xCC, cCharsetCP )
@@ -175,7 +175,7 @@ FUNCTION tip_MailAssemble( ;
                cData += Chr( 13 ) + Chr( 10 )
             ENDIF
          ENDIF
-         // Some e-mail clients use Content-Type to check for filename
+         // Some email clients use Content-Type to check for filename
          cMimeType += "; name=" + '"' + hb_FNameNameExt( cFile ) + '"'
          IF ( nAttr := __tip_FAttrToUmask( nAttr ) ) != 0
             cMimeType += "; x-unix-mode=" + '"' + hb_NumToHex( nAttr, 4 ) + '"'

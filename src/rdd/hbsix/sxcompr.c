@@ -81,7 +81,7 @@
    Our algorithm has to make the same with the ring buffer to be compatible.
    UPDATE: Using smaller ring buffer without increasing the match pointer
    suggested me that it is possible that someone didn't understand it fully
-   and modified already existing algorithm. I spend a while on the Internet
+   and modified already existing algorithm. I spend a while on the internet
    looking for old LZSS implementations and I've found it. IMHO in 99%
    this code is used in SIX. This is lzss.c file written by Haruhiko Okumura
    with the following note in header:

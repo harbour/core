@@ -18,7 +18,7 @@ of the .LIB that I can post on website for download?    I would like
 people who visit my site to be aware of the xHarbour version and how to
 get it...
 
-If you need any kind of legal document besides this e-mail, feel free to
+If you need any kind of legal document besides this email, feel free to
 fax it to 610-409-8859 (USA #), and I'll be happy to sign it for you.
 However, as far as I am concerned,  you are free to use the library and to
 make it available to any xHarbour users...
