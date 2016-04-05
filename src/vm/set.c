@@ -198,27 +198,54 @@ static const char * is_devicename( const char * szFileName )
    {
 #if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS )
       const char * szDevices[] =
-            { "PRN", "CON", "LPT1", "LPT2", "LPT3",
+            { "NUL", "PRN", "CON",
+              "LPT1", "LPT2", "LPT3",
               "COM1", "COM2", "COM3", "COM4", "COM5",
               "COM6", "COM7", "COM8", "COM9" };
-      int iLen = ( int ) strlen( szFileName ), iFrom, iTo;
+      int iSkip = 0, iLen, iFrom, iTo;
 
+      if( ( szFileName[ 0 ] == '\\' || szFileName[ 0 ] == '/' ) &&
+          ( szFileName[ 1 ] == '\\' || szFileName[ 1 ] == '/' ) )
+      {
+         if( szFileName[ 2 ] == '.' &&
+             ( szFileName[ 3 ] == '\\' || szFileName[ 3 ] == '/' ) )
+         {
+            iSkip = 4;
+            if( hb_strnicmp( szFileName + 4, "PIPE", 4 ) == 0 &&
+                ( szFileName[ 8 ] == '\\' || szFileName[ 8 ] == '/' ) )
+               return szFileName;
+         }
+         if( szFileName[ 2 ] != '\\' && szFileName[ 2 ] != '/' )
+         {
+            for( iFrom = 2, iTo = 0; szFileName[ iFrom ]; ++iFrom )
+            {
+               if( szFileName[ iFrom ] == '\\' || szFileName[ iFrom ] == '/' )
+               {
+                  if( iTo++ )
+                     break;
+               }
+            }
+            if( iTo == 1 )
+               return szFileName;
+         }
+      }
+      iLen = ( int ) strlen( szFileName + iSkip );
       if( iLen >= 3 && iLen <= 4 )
       {
          if( iLen == 3 )
          {
             iFrom = 0;
-            iTo = 0;
+            iTo = 3;
          }
          else
          {
-            iFrom = 2;
+            iFrom = 3;
             iTo = HB_SIZEOFARRAY( szDevices );
          }
          for( ; iFrom < iTo; ++iFrom )
          {
-            if( hb_stricmp( szFileName, szDevices[ iFrom ] ) == 0 )
-               return szDevices[ iFrom ];
+            if( hb_stricmp( szFileName + iSkip, szDevices[ iFrom ] ) == 0 )
+               return iSkip ? szFileName : szDevices[ iFrom ];
          }
       }
 #elif defined( HB_OS_UNIX )

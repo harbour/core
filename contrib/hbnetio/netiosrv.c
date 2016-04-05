@@ -197,7 +197,7 @@ static int s_srvFileNew( PHB_CONSRV conn, PHB_FILE pFile )
          {
             conn->filesCount++;
             conn->fileTable[ conn->firstFree ] = pFile;
-            return conn->firstFree;
+            return conn->firstFree++;
          }
          conn->firstFree++;
       }
