@@ -192,7 +192,7 @@ static const char * is_devicename( const char * szFileName )
               "LPT1", "LPT2", "LPT3",
               "COM1", "COM2", "COM3", "COM4", "COM5",
               "COM6", "COM7", "COM8", "COM9" };
-      int iSkip = 0, iLen, iFrom, iTo;
+      int iSkip = 0, iLen;
 
       if( ( szFileName[ 0 ] == '\\' || szFileName[ 0 ] == '/' ) &&
           ( szFileName[ 1 ] == '\\' || szFileName[ 1 ] == '/' ) )
@@ -207,6 +207,7 @@ static const char * is_devicename( const char * szFileName )
          }
          if( szFileName[ 2 ] != '\\' && szFileName[ 2 ] != '/' )
          {
+            int iFrom, iTo;
             for( iFrom = 2, iTo = 0; szFileName[ iFrom ]; ++iFrom )
             {
                if( szFileName[ iFrom ] == '\\' || szFileName[ iFrom ] == '/' )
