@@ -590,13 +590,16 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
     * shares WA between threads so dbUseArea() should be covered
     * by external mutex to make lNewArea MT safe, [druzus]
     */
-   if( uiArea )
+   if( uiArea && uiArea < HB_RDD_MAX_AREA_NUM )
    {
       hb_rddSelectWorkAreaNumber( uiArea );
       hb_rddReleaseCurrentArea();
    }
-   else
-      hb_rddSelectFirstAvailable();
+   else if( hb_rddSelectFirstAvailable() != HB_SUCCESS )
+   {
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+      return HB_FAILURE;
+   }
 
    /* Clipper clears NETERR flag before parameter validation, [druzus]
     */

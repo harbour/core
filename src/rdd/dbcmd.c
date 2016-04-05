@@ -734,27 +734,25 @@ HB_FUNC( DBSELECTAREA )
    if( szAlias )
    {
       hb_rddSelectWorkAreaAlias( szAlias );
-      if( hb_rddGetCurrentWorkAreaNumber() == HB_RDD_MAX_AREA_NUM )
-         hb_rddSelectFirstAvailable();
    }
    else
    {
       int iNewArea = hb_parni( 1 );
 
       /*
-       * NOTE: lNewArea >= HB_RDD_MAX_AREA_NUM used intentionally
+       * NOTE: iNewArea >= HB_RDD_MAX_AREA_NUM used intentionally
        * In Clipper area 65535 is reserved for "M" alias [druzus]
        */
       if( iNewArea < 1 || iNewArea >= HB_RDD_MAX_AREA_NUM )
       {
-         hb_rddSelectFirstAvailable();
+         if( hb_rddSelectFirstAvailable() != HB_SUCCESS )
+            hb_rddSelectWorkAreaNumber( 0 );
       }
       else
       {
          hb_rddSelectWorkAreaNumber( iNewArea );
       }
    }
-
 }
 
 HB_FUNC( __DBSETFOUND )
