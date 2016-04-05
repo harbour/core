@@ -90,6 +90,12 @@
    #include <sys/types.h>
    #include <sys/wait.h>
    #include <sys/time.h>
+   #if defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 200112L
+      /* use poll() instead of select() to avoid FD_SETSIZE (1024 in Linux)
+         file handle limit */
+      #define HB_HAS_POLL
+      #include <poll.h>
+   #endif
 #endif
 #if ! defined( HB_OS_WIN )
 #  include <errno.h>
@@ -1115,15 +1121,51 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
 }
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
 {
+   int iResult;
+
+#if defined( HB_HAS_POLL )
+   HB_MAXUINT timer = nTimeOut <= 0 ? 0 : hb_dateMilliSeconds();
+   struct pollfd fds;
+
+   fds.fd = hPipeHandle;
+   fds.events = POLLIN;
+   fds.revents = 0;
+
+   for( ;; )
+   {
+      int tout = nTimeOut < 0 || nTimeOut > 1000 ? 1000 : ( int ) nTimeOut;
+      iResult = poll( &fds, 1, tout );
+      hb_fsSetIOError( iResult >= 0, 0 );
+      if( iResult > 0 && ( fds.revents & POLLIN ) == 0 )
+         iResult = 0;
+      if( ( ( iResult == 0 && ( nTimeOut < 0 || nTimeOut > 1000 ) ) ||
+            ( iResult == -1 && nTimeOut != 0 && hb_fsOsError() == ( HB_ERRCODE ) EINTR ) ) &&
+          hb_vmRequestQuery() == 0 )
+      {
+         if( nTimeOut < 0 )
+            continue;
+         else
+         {
+            HB_MAXUINT timecurr = hb_dateMilliSeconds();
+            if( timecurr > timer )
+            {
+               nTimeOut -= timecurr - timer;
+               if( nTimeOut > 0 )
+                  continue;
+            }
+         }
+      }
+      break;
+   }
+#else
    struct timeval tv;
    fd_set rfds;
-   int iResult;
-#if ! defined( HB_HAS_SELECT_TIMER )
+#  if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = nTimeOut <= 0 ? 0 : hb_dateMilliSeconds();
-#else
+#  else
    tv.tv_sec = ( long ) nTimeOut / 1000;
    tv.tv_usec = ( long ) ( nTimeOut % 1000 ) * 1000;
-#endif
+#  endif
 
    for( ;; )
    {
@@ -1132,13 +1174,13 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
          tv.tv_sec = 1;
          tv.tv_usec = 0;
       }
-#if ! defined( HB_HAS_SELECT_TIMER )
+#  if ! defined( HB_HAS_SELECT_TIMER )
       else
       {
          tv.tv_sec = ( long ) nTimeOut / 1000;
          tv.tv_usec = ( long ) ( nTimeOut % 1000 ) * 1000;
       }
-#endif
+#  endif
 
       FD_ZERO( &rfds );
       FD_SET( hPipeHandle, &rfds );
@@ -1150,7 +1192,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
           hb_fsOsError() != ( HB_ERRCODE ) EINTR ||
           hb_vmRequestQuery() != 0 )
          break;
-#if ! defined( HB_HAS_SELECT_TIMER )
+#  if ! defined( HB_HAS_SELECT_TIMER )
       else if( nTimeOut > 0 )
       {
          HB_MAXUINT timecurr = hb_dateMilliSeconds();
@@ -1161,8 +1203,10 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
             timer = timecurr;
          }
       }
-#endif
+#  endif
    }
+#endif /* HB_HAS_POLL */
+
    if( iResult > 0 )
       nToRead = nBufferSize;
 }
@@ -1313,15 +1357,51 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
 }
 #elif defined( HB_OS_UNIX ) && ! defined( HB_OS_SYMBIAN )
 {
+   int iResult;
+
+#if defined( HB_HAS_POLL )
+   HB_MAXUINT timer = nTimeOut <= 0 ? 0 : hb_dateMilliSeconds();
+   struct pollfd fds;
+
+   fds.fd = hPipeHandle;
+   fds.events = POLLOUT;
+   fds.revents = 0;
+
+   for( ;; )
+   {
+      int tout = nTimeOut < 0 || nTimeOut > 1000 ? 1000 : ( int ) nTimeOut;
+      iResult = poll( &fds, 1, tout );
+      hb_fsSetIOError( iResult >= 0, 0 );
+      if( iResult > 0 && ( fds.revents & POLLOUT ) == 0 )
+         iResult = 0;
+      if( ( ( iResult == 0 && ( nTimeOut < 0 || nTimeOut > 1000 ) ) ||
+            ( iResult == -1 && nTimeOut != 0 && hb_fsOsError() == ( HB_ERRCODE ) EINTR ) ) &&
+          hb_vmRequestQuery() == 0 )
+      {
+         if( nTimeOut < 0 )
+            continue;
+         else
+         {
+            HB_MAXUINT timecurr = hb_dateMilliSeconds();
+            if( timecurr > timer )
+            {
+               nTimeOut -= timecurr - timer;
+               if( nTimeOut > 0 )
+                  continue;
+            }
+         }
+      }
+      break;
+   }
+#else
    struct timeval tv;
    fd_set wfds;
-   int iResult;
-#if ! defined( HB_HAS_SELECT_TIMER )
+#  if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = nTimeOut <= 0 ? 0 : hb_dateMilliSeconds();
-#else
+#  else
    tv.tv_sec = ( long ) nTimeOut / 1000;
    tv.tv_usec = ( long ) ( nTimeOut % 1000 ) * 1000;
-#endif
+#  endif
 
    for( ;; )
    {
@@ -1330,13 +1410,13 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
          tv.tv_sec = 1;
          tv.tv_usec = 0;
       }
-#if ! defined( HB_HAS_SELECT_TIMER )
+#  if ! defined( HB_HAS_SELECT_TIMER )
       else
       {
          tv.tv_sec = ( long ) nTimeOut / 1000;
          tv.tv_usec = ( long ) ( nTimeOut % 1000 ) * 1000;
       }
-#endif
+#  endif
 
       FD_ZERO( &wfds );
       FD_SET( hPipeHandle, &wfds );
@@ -1348,7 +1428,7 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
           hb_fsOsError() != ( HB_ERRCODE ) EINTR ||
           hb_vmRequestQuery() != 0 )
          break;
-#if ! defined( HB_HAS_SELECT_TIMER )
+#  if ! defined( HB_HAS_SELECT_TIMER )
       else if( nTimeOut > 0 )
       {
          HB_MAXUINT timecurr = hb_dateMilliSeconds();
@@ -1359,8 +1439,10 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
             timer = timecurr;
          }
       }
-#endif
+#  endif
    }
+#endif /* HB_HAS_POLL */
+
    if( iResult > 0 )
    {
       int iFlags = -1;
