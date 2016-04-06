@@ -23,10 +23,10 @@ sudo: false
 addons:
   apt:
     sources:
-      - llvm-toolchain-precise-3.7
+      - llvm-toolchain-precise-3.8
       - ubuntu-toolchain-r-test
     packages:
-      - clang-3.7
+      - clang-3.8
       - gcc-5
       - g++-5
       - firebird2.5-dev
@@ -87,7 +87,7 @@ script:
           if [ "$CC" = "gcc" ] ; then
              export HB_CCSUFFIX=-5;
           else
-             export HB_CCSUFFIX=-3.7;
+             export HB_CCSUFFIX=-3.8;
           fi;
           export HB_USER_CFLAGS='-fstack-protector-strong';
        fi;

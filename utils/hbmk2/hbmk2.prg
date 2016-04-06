@@ -14196,7 +14196,7 @@ STATIC FUNCTION CompVersionDetect( hbmk, cPath_CompC )
             nVer := Val( StrZero( Val( tmp1[ 1 ] ), 2 ) + StrZero( Val( tmp1[ 2 ] ), 2 ) )
             DO CASE
             CASE nVer == 700 ; nVer := 0307
-            CASE nVer == 730 ; nVer := 0307
+            CASE nVer == 730 ; nVer := 0308
             ENDCASE
          CASE ( tmp1 := hb_AtX( R_( "version [0-9]*\.[0-9]*\.[0-9]*" ), cStdOutErr ) ) != NIL
             tmp1 := hb_ATokens( SubStr( tmp1, Len( "version " ) + 1 ), "." )
