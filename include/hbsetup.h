@@ -284,6 +284,7 @@
    Visual Studio 2012, version 11.0        1700
    Visual Studio 2013, version 12.0        1800
    Visual Studio 2015, version 14.0        1900
+   Visual Studio "15", version 15.0        2000
 */
 
 /* ***********************************************************************

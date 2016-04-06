@@ -11,6 +11,7 @@ branches:
   - msvc2012
   - msvc2013
   - msvc2015
+  - msvc15
 skip_tags: true
 image: Windows Server 2012 R2
 clone_depth: 8

@@ -975,6 +975,9 @@ ifeq ($(HB_COMPILER_VER),)
    else
    ifneq ($(filter $(HB_COMPILER),msvc msvc64 msvcia64 msvcarm),)
       _C_VER := $(shell "$(HB_COMP_PATH)" 2>&1)
+      ifneq ($(findstring Version 20.,$(_C_VER)),)
+         HB_COMPILER_VER := 2000
+      else
       ifneq ($(findstring Version 19.,$(_C_VER)),)
          HB_COMPILER_VER := 1900
       else
@@ -997,6 +1000,7 @@ ifeq ($(HB_COMPILER_VER),)
          HB_COMPILER_VER := 1300
       else
          HB_COMPILER_VER := 1200
+      endif
       endif
       endif
       endif
