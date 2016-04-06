@@ -1158,7 +1158,14 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       iResult = poll( &fds, 1, tout );
       hb_fsSetIOError( iResult >= 0, 0 );
       if( iResult > 0 && ( fds.revents & POLLIN ) == 0 )
+      {
+         if( ( fds.revents & ( POLLHUP | POLLNVAL | POLLERR ) ) != 0 )
+         {
+            iResult = -1;
+            break;
+         }
          iResult = 0;
+      }
       if( ( ( iResult == 0 && ( nTimeOut < 0 || nTimeOut > 1000 ) ) ||
             ( iResult == -1 && nTimeOut != 0 && hb_fsOsError() == ( HB_ERRCODE ) EINTR ) ) &&
           hb_vmRequestQuery() == 0 )
@@ -1394,7 +1401,14 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
       iResult = poll( &fds, 1, tout );
       hb_fsSetIOError( iResult >= 0, 0 );
       if( iResult > 0 && ( fds.revents & POLLOUT ) == 0 )
+      {
+         if( ( fds.revents & ( POLLHUP | POLLNVAL | POLLERR ) ) != 0 )
+         {
+            iResult = -1;
+            break;
+         }
          iResult = 0;
+      }
       if( ( ( iResult == 0 && ( nTimeOut < 0 || nTimeOut > 1000 ) ) ||
             ( iResult == -1 && nTimeOut != 0 && hb_fsOsError() == ( HB_ERRCODE ) EINTR ) ) &&
           hb_vmRequestQuery() == 0 )
