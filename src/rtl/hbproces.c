@@ -1492,19 +1492,19 @@ int hb_fsProcessRun( const char * pszFileName,
             if( hStdout != FS_ERROR )
             {
                fds[ nfds ].fd = hStdout;
-               fds[ nfds ].events |= POLLIN;
+               fds[ nfds ].events = POLLIN;
                fds[ nfds++ ].revents = 0;
             }
             if( hStderr != FS_ERROR )
             {
                fds[ nfds ].fd = hStderr;
-               fds[ nfds ].events |= POLLIN;
+               fds[ nfds ].events = POLLIN;
                fds[ nfds++ ].revents = 0;
             }
             if( hStdin != FS_ERROR )
             {
                fds[ nfds ].fd = hStdin;
-               fds[ nfds ].events |= POLLOUT;
+               fds[ nfds ].events = POLLOUT;
                fds[ nfds++ ].revents = 0;
             }
             if( nfds == 0 )
@@ -1517,10 +1517,41 @@ int hb_fsProcessRun( const char * pszFileName,
                continue;
             else if( iResultLocal <= 0 )
                break;
+
             nfds = 0;
-            fStdout = hStdout != FS_ERROR && ( fds[ nfds++ ].revents & POLLIN ) != 0;
-            fStderr = hStderr != FS_ERROR && ( fds[ nfds++ ].revents & POLLIN ) != 0;
-            fStdin = hStdin != FS_ERROR && ( fds[ nfds++ ].revents & POLLOUT ) != 0;
+            fStdout = fStderr = fStdin = HB_FALSE;
+            if( hStdout != FS_ERROR )
+            {
+               if( ( fds[ nfds ].revents & POLLIN ) != 0 )
+                  fStdout = HB_TRUE;
+               else if( ( fds[ nfds ].revents & ( POLLHUP | POLLNVAL | POLLERR ) ) != 0 )
+               {
+                  hb_fsClose( hStdout );
+                  hStdout = FS_ERROR;
+               }
+               nfds++;
+            }
+            if( hStderr != FS_ERROR )
+            {
+               if( ( fds[ nfds ].revents & POLLIN ) != 0 )
+                  fStderr = HB_TRUE;
+               else if( ( fds[ nfds ].revents & ( POLLHUP | POLLNVAL | POLLERR ) ) != 0 )
+               {
+                  hb_fsClose( hStderr );
+                  hStderr = FS_ERROR;
+               }
+               nfds++;
+            }
+            if( hStdin != FS_ERROR )
+            {
+               if( ( fds[ nfds ].revents & POLLOUT ) != 0 )
+                  fStdin = HB_TRUE;
+               else if( ( fds[ nfds ].revents & ( POLLHUP | POLLNVAL | POLLERR ) ) != 0 )
+               {
+                  hb_fsClose( hStdin );
+                  hStderr = FS_ERROR;
+               }
+            }
          }
 #else
          {

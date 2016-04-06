@@ -1506,6 +1506,19 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
       tout = timeout < 0 || timeout > 1000 ? 1000 : ( int ) timeout;
       iResult = poll( &fds, 1, tout );
       iError = iResult >= 0 ? 0 : HB_SOCK_GETERROR();
+      if( iResult > 0 && ( fds.revents & POLLIN ) == 0 )
+      {
+         if( fds.revents & POLLNVAL )
+         {
+            iError = EBADF;
+            iResult = -1;
+         }
+         else
+         {
+            timeout = 0;
+            iResult = fds.revents & ( POLLHUP | POLLERR ) ? 1 : 0;
+         }
+      }
       hb_socketSetOsError( iError );
       if( ( ( iResult == 0 && ( timeout < 0 || timeout > 1000 ) ) ||
             ( iResult == -1 && timeout != 0 && HB_SOCK_IS_EINTR( iError ) ) ) &&
@@ -1526,8 +1539,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
       }
       break;
    }
-   return iResult < 0 ? -1 :
-          ( iResult > 0 && ( fds.revents & POLLIN ) != 0 ? 1 : 0 );
+   return iResult;
 #else
    struct timeval tv, * ptv;
    fd_set rfds;
@@ -1600,6 +1612,24 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
       tout = timeout < 0 || timeout > 1000 ? 1000 : ( int ) timeout;
       iResult = poll( &fds, 1, tout );
       iError = iResult >= 0 ? 0 : HB_SOCK_GETERROR();
+      if( iResult > 0 && ( fds.revents & POLLOUT ) == 0 )
+      {
+         if( fds.revents & POLLNVAL )
+         {
+            iError = EBADF;
+            iResult = -1;
+         }
+         else if( fds.revents & ( POLLHUP | POLLERR ) )
+         {
+            iError = EPIPE;
+            iResult = -1;
+         }
+         else
+         {
+            timeout = 0;
+            iResult = 0;
+         }
+      }
       hb_socketSetOsError( iError );
       if( ( ( iResult == 0 && ( timeout < 0 || timeout > 1000 ) ) ||
             ( iResult == -1 && timeout != 0 && HB_SOCK_IS_EINTR( iError ) ) ) &&
@@ -1620,8 +1650,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
       }
       break;
    }
-   return iResult < 0 ? -1 :
-          ( iResult > 0 && ( fds.revents & POLLOUT ) != 0 ? 1 : 0 );
+   return iResult;
 #else
    struct timeval tv, * ptv;
    fd_set wfds;
@@ -1694,6 +1723,24 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
       tout = timeout < 0 || timeout > 1000 ? 1000 : ( int ) timeout;
       iResult = poll( &fds, 1, tout );
       iError = iResult >= 0 ? 0 : HB_SOCK_GETERROR();
+      if( iResult > 0 && ( fds.revents & POLLOUT ) == 0 )
+      {
+         if( fds.revents & POLLNVAL )
+         {
+            iError = EBADF;
+            iResult = -1;
+         }
+         else if( fds.revents & ( POLLHUP | POLLERR ) )
+         {
+            iError = EPIPE;
+            iResult = -1;
+         }
+         else
+         {
+            timeout = 0;
+            iResult = 0;
+         }
+      }
       hb_socketSetOsError( iError );
       if( ( ( iResult == 0 && ( timeout < 0 || timeout > 1000 ) ) ||
             ( iResult == -1 && timeout != 0 && HB_SOCK_IS_EINTR( iError ) ) ) &&
@@ -1714,7 +1761,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
       }
       break;
    }
-   if( iResult > 0 && ( fds.revents & POLLOUT ) != 0 )
+   if( iResult > 0 )
    {
       socklen_t len = sizeof( iError );
       if( getsockopt( sd, SOL_SOCKET, SO_ERROR, ( char * ) &iError, &len ) != 0 )
@@ -1726,8 +1773,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
          iResult = -1;
       hb_socketSetOsError( iError );
    }
-   return iResult < 0 ? -1 :
-          ( iResult > 0 && ( fds.revents & POLLOUT ) != 0 ? 1 : 0 );
+   return iResult;
 #else
    struct timeval tv, * ptv;
    fd_set wfds;
@@ -2969,7 +3015,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    pSet[ 2 ] = fSetEX;
    pEvents[ 0 ] = POLLIN;
    pEvents[ 1 ] = POLLOUT;
-   pEvents[ 2 ] = POLLERR | POLLHUP | POLLNVAL;
+   pEvents[ 2 ] = 0;
 
    for( i = 0; i < 3; i++ )
    {
@@ -2995,8 +3041,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
                pfds[ iPos ].fd = sd;
                pfds[ iPos ].revents = 0;
             }
-            if( i < 2 )
-               pfds[ iPos ].events |= pEvents[ i ];
+            pfds[ iPos ].events |= pEvents[ i ];
          }
       }
    }
@@ -3033,6 +3078,8 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
       }
       hb_vmLock();
 
+      pEvents[ 0 ] |= POLLHUP;
+      pEvents[ 2 ] |= POLLERR | POLLHUP | POLLNVAL;
       for( i = 0; i < 3; i++ )
       {
          if( pItemSets[ i ] && pSet[ i ] )
@@ -3047,7 +3094,8 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
                   if( sd != HB_NO_SOCKET )
                   {
                      iPos = s_socketPollCheck( sd, pfds, nfds );
-                     if( iPos >= 0 && ( pfds[ iPos ].revents & pEvents[ i ] ) != 0 )
+                     if( iPos >= 0 &&
+                         ( pfds[ iPos ].revents & pEvents[ i ] ) != 0 )
                      {
                         if( ++nPos != ul )
                            hb_itemCopy( hb_arrayGetItemPtr( pItemSets[ i ], nPos ),

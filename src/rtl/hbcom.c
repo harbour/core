@@ -549,7 +549,17 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
       iResult = poll( &fds, 1, tout );
       hb_comSetOsError( pCom, iResult == -1 );
       if( iResult > 0 && ( fds.revents & POLLIN ) == 0 )
+      {
+         if( ( fds.revents & ( POLLHUP | POLLNVAL | POLLERR ) ) != 0 )
+         {
+            if( fds.revents & POLLNVAL )
+               pCom->fd = -1;
+            hb_comSetComError( pCom, HB_COM_ERR_PIPE );
+            iResult = -1;
+            break;
+         }
          iResult = 0;
+      }
       if( ( ( iResult == 0 && ( timeout < 0 || timeout > 1000 ) ) ||
             ( iResult == -1 && timeout != 0 && HB_COM_IS_EINTR() ) ) &&
           hb_vmRequestQuery() == 0 )
@@ -643,7 +653,17 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
       iResult = poll( &fds, 1, tout );
       hb_comSetOsError( pCom, iResult == -1 );
       if( iResult > 0 && ( fds.revents & POLLOUT ) == 0 )
+      {
+         if( ( fds.revents & ( POLLHUP | POLLNVAL | POLLERR ) ) != 0 )
+         {
+            if( fds.revents & POLLNVAL )
+               pCom->fd = -1;
+            hb_comSetComError( pCom, HB_COM_ERR_PIPE );
+            iResult = -1;
+            break;
+         }
          iResult = 0;
+      }
       if( ( ( iResult == 0 && ( timeout < 0 || timeout > 1000 ) ) ||
             ( iResult == -1 && timeout != 0 && HB_COM_IS_EINTR() ) ) &&
           hb_vmRequestQuery() == 0 )
