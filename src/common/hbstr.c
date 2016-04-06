@@ -408,7 +408,7 @@ static double hb_numPow10( int nPrecision )
 
 double hb_numRound( double dNum, int iDec )
 {
-   static const double doBase = 10.0f;
+   static const double doBase = 10.0;
    double doComplete5, doComplete5i, dPow;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_numRound(%lf, %d)", dNum, iDec ) );
@@ -499,10 +499,10 @@ double hb_numRound( double dNum, int iDec )
          doComplete5 = -doComplete5;
    }
 #else
-   if( dNum < 0.0f )
-      doComplete5 -= 5.0f;
+   if( dNum < 0.0 )
+      doComplete5 -= 5.0;
    else
-      doComplete5 += 5.0f;
+      doComplete5 += 5.0;
 #endif
 
    doComplete5 /= doBase;

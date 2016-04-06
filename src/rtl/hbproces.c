@@ -1482,7 +1482,6 @@ int hb_fsProcessRun( const char * pszFileName,
       {
          HB_BOOL fStdout, fStderr, fStdin;
          HB_SIZE nLen;
-         int iResult;
 
 #if defined( HB_HAS_POLL )
          {
