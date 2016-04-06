@@ -569,7 +569,6 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
       }
       break;
    }
-   return iResult;
 #else
    struct timeval tv;
    fd_set rfds;
@@ -664,7 +663,6 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
       }
       break;
    }
-   return iResult;
 #else
    struct timeval tv;
    fd_set wfds;
