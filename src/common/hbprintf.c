@@ -1224,8 +1224,8 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
                      {
                         double d = va_arg_n( args, _x_double, param );
                         HB_NUMTYPE( value, d );
-                        argval.value.as_x_long_dbl =
-                           ( value & ( _HB_NUM_NAN | _HB_NUM_PINF | _HB_NUM_NINF ) ) == 0 ? d : 0;
+                        argval.value.as_x_long_dbl = ( _x_long_dbl )
+                           ( ( value & ( _HB_NUM_NAN | _HB_NUM_PINF | _HB_NUM_NINF ) ) == 0 ? d : 0 );
                      }
                      if( value & _HB_NUM_NAN )
                         size = put_str( buffer, bufsize, size,
