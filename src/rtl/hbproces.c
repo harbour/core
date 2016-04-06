@@ -1482,7 +1482,7 @@ int hb_fsProcessRun( const char * pszFileName,
       {
          HB_BOOL fStdout, fStderr, fStdin;
          HB_SIZE nLen;
-         int iResultLocal;
+         int iResult;
 
 #if defined( HB_HAS_POLL )
          {
@@ -1510,12 +1510,12 @@ int hb_fsProcessRun( const char * pszFileName,
             if( nfds == 0 )
                break;
 
-            iResultLocal = poll( fds, nfds, -1 );
-            hb_fsSetIOError( iResultLocal >= 0, 0 );
-            if( iResultLocal == -1 && hb_fsOsError() == ( HB_ERRCODE ) EINTR &&
+            iResult = poll( fds, nfds, -1 );
+            hb_fsSetIOError( iResult >= 0, 0 );
+            if( iResult == -1 && hb_fsOsError() == ( HB_ERRCODE ) EINTR &&
                 hb_vmRequestQuery() == 0 )
                continue;
-            else if( iResultLocal <= 0 )
+            else if( iResult <= 0 )
                break;
 
             nfds = 0;
@@ -1588,12 +1588,12 @@ int hb_fsProcessRun( const char * pszFileName,
             if( prfds == NULL && pwfds == NULL )
                break;
 
-            iResultLocal = select( fdMax + 1, prfds, pwfds, NULL, NULL );
-            hb_fsSetIOError( iResultLocal >= 0, 0 );
-            if( iResultLocal == -1 && hb_fsOsError() != ( HB_ERRCODE ) EINTR &&
+            iResult = select( fdMax + 1, prfds, pwfds, NULL, NULL );
+            hb_fsSetIOError( iResult >= 0, 0 );
+            if( iResult == -1 && hb_fsOsError() != ( HB_ERRCODE ) EINTR &&
                 hb_vmRequestQuery() == 0 )
                continue;
-            else if( iResultLocal <= 0 )
+            else if( iResult <= 0 )
                break;
             fStdout = hStdout != FS_ERROR && FD_ISSET( hStdout, &rfds );
             fStderr = hStderr != FS_ERROR && FD_ISSET( hStderr, &rfds );
