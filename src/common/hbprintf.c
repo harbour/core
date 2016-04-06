@@ -159,9 +159,11 @@
 #ifndef __NO_DOUBLE__
 #  ifdef __NO_LONGDOUBLE__
 #     define _x_long_dbl      double
+#     define _FL_FIX          0.0078125
 #     define _MODFD( x, p )   modf( x, p )
 #  else
 #     define _x_long_dbl      long double
+#     define _FL_FIX          0.0078125L
 #     if defined( HB_NO_MODFL ) || \
          defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( HB_OS_CYGWIN ) || \
          defined( HB_OS_BEOS ) || defined( HB_OS_SYMBIAN ) || \
@@ -562,7 +564,7 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
    do
    {
       ++nums;
-      _MODFD( value / 10 + 0.01, &value );
+      _MODFD( value / 10 + _FL_FIX, &value );
    }
    while( value >= 1 );
    width -= nums;
@@ -595,8 +597,8 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
    n = nums;
    do
    {
-      value = _MODFD( dInt / 10 + 0.01, &dInt ) * 10;
-      c = '0' + ( char ) ( value + 0.01 );
+      value = _MODFD( dInt / 10 + _FL_FIX, &dInt ) * 10;
+      c = '0' + ( char ) ( value + _FL_FIX );
       --n;
       if( size + n < bufsize )
          buffer[ size + n ] = c;
@@ -612,7 +614,7 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
       while( precision > 0 )
       {
          dFract = _MODFD( dFract * 10, &dInt );
-         c = '0' + ( char ) ( dInt + 0.01 );
+         c = '0' + ( char ) ( dInt + _FL_FIX );
          if( size < bufsize )
             buffer[ size ] = c;
          ++size;
