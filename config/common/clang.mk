@@ -31,6 +31,7 @@ ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Weverything
    CFLAGS += -Wno-padded -Wno-cast-align -Wno-float-equal -Wno-missing-prototypes
    CFLAGS += -Wno-disabled-macro-expansion -Wno-undef -Wno-unused-macros -Wno-variadic-macros -Wno-documentation
+   CFLAGS += -Wno-switch-enum
    ifeq ($(HB_PLATFORM),darwin)
       ifeq ($(filter $(HB_COMPILER_VER),0304 0305 0306),)
          CFLAGS += -Wno-reserved-id-macro
