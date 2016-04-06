@@ -377,7 +377,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
             dbFieldInfo.uiDec  = -pVar->sqlscale;
             pVar->sqldata      = ( char * ) hb_xgrab( sizeof( float ) );
 
-            pItem = hb_itemPutNDLen( NULL, *( float * ) pVar->sqldata, 20 - dbFieldInfo.uiDec, dbFieldInfo.uiDec );
+            pItem = hb_itemPutNDLen( NULL, 0.0, 20 - dbFieldInfo.uiDec, dbFieldInfo.uiDec );
             break;
 
          case SQL_DOUBLE:
@@ -386,7 +386,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
             dbFieldInfo.uiDec  = -pVar->sqlscale;
             pVar->sqldata      = ( char * ) hb_xgrab( sizeof( double ) );
 
-            pItem = hb_itemPutNDLen( NULL, *( float * ) pVar->sqldata, 20 - dbFieldInfo.uiDec, dbFieldInfo.uiDec );
+            pItem = hb_itemPutNDLen( NULL, 0.0, 20 - dbFieldInfo.uiDec, dbFieldInfo.uiDec );
             break;
 
          case SQL_TIMESTAMP:
