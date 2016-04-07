@@ -1133,7 +1133,8 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
 
    for( ;; )
    {
-      int tout = nTimeOut < 0 || nTimeOut > 1000 ? 1000 : ( int ) nTimeOut;
+      HB_BOOL fLast = nTimeOut >= 0 && nTimeOut <= 1000;
+      int tout = fLast ? ( int ) nTimeOut : 1000;
       iResult = poll( &fds, 1, tout );
       hb_fsSetIOError( iResult >= 0, 0 );
       if( iResult > 0 && ( fds.revents & POLLIN ) == 0 )
@@ -1145,9 +1146,12 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
          }
          iResult = 0;
       }
-      if( ( ( iResult == 0 && ( nTimeOut < 0 || nTimeOut > 1000 ) ) ||
-            ( iResult == -1 && nTimeOut != 0 && hb_fsOsError() == ( HB_ERRCODE ) EINTR ) ) &&
-          hb_vmRequestQuery() == 0 )
+      else if( iResult == -1 && hb_fsOsError() == ( HB_ERRCODE ) EINTR )
+      {
+         iResult = 0;
+         fLast = HB_FALSE;
+      }
+      if( iResult == 0 && ! fLast && hb_vmRequestQuery() == 0 )
       {
          if( nTimeOut < 0 )
             continue;
@@ -1164,7 +1168,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       }
       break;
    }
-#else
+#else /* ! HB_HAS_POLL */
    struct timeval tv;
    fd_set rfds;
 #  if ! defined( HB_HAS_SELECT_TIMER )
@@ -1212,10 +1216,12 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
       }
 #  endif
    }
-#endif /* HB_HAS_POLL */
+#endif /* ! HB_HAS_POLL */
 
    if( iResult > 0 )
       nToRead = nBufferSize;
+   else if( iResult < 0 )
+      nToRead = ( HB_SIZE ) FS_ERROR;
 }
 #else
 {
@@ -1376,7 +1382,9 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
 
    for( ;; )
    {
-      int tout = nTimeOut < 0 || nTimeOut > 1000 ? 1000 : ( int ) nTimeOut;
+      HB_BOOL fLast = nTimeOut >= 0 && nTimeOut <= 1000;
+      int tout = fLast ? ( int ) nTimeOut : 1000;
+
       iResult = poll( &fds, 1, tout );
       hb_fsSetIOError( iResult >= 0, 0 );
       if( iResult > 0 && ( fds.revents & POLLOUT ) == 0 )
@@ -1388,9 +1396,12 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
          }
          iResult = 0;
       }
-      if( ( ( iResult == 0 && ( nTimeOut < 0 || nTimeOut > 1000 ) ) ||
-            ( iResult == -1 && nTimeOut != 0 && hb_fsOsError() == ( HB_ERRCODE ) EINTR ) ) &&
-          hb_vmRequestQuery() == 0 )
+      else if( iResult == -1 && hb_fsOsError() == ( HB_ERRCODE ) EINTR )
+      {
+         iResult = 0;
+         fLast = HB_FALSE;
+      }
+      if( iResult == 0 && ! fLast && hb_vmRequestQuery() == 0 )
       {
          if( nTimeOut < 0 )
             continue;
@@ -1407,7 +1418,7 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
       }
       break;
    }
-#else
+#else /* ! HB_HAS_POLL */
    struct timeval tv;
    fd_set wfds;
 #  if ! defined( HB_HAS_SELECT_TIMER )
@@ -1455,7 +1466,7 @@ HB_SIZE hb_fsPipeWrite( HB_FHANDLE hPipeHandle, const void * buffer, HB_SIZE nSi
       }
 #  endif
    }
-#endif /* HB_HAS_POLL */
+#endif /* ! HB_HAS_POLL */
 
    if( iResult > 0 )
    {
