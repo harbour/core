@@ -1540,7 +1540,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
       break;
    }
    return iResult;
-#else
+#else /* ! HB_HAS_POLL */
    struct timeval tv, * ptv;
    fd_set rfds;
    int iResult, iError;
@@ -1591,7 +1591,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
 
    return iResult < 0 ? -1 :
           ( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, &rfds ) ? 1 : 0 );
-#endif /* HB_HAS_POLL */
+#endif /* ! HB_HAS_POLL */
 }
 
 static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
@@ -1649,7 +1649,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
       break;
    }
    return iResult;
-#else
+#else /* ! HB_HAS_POLL */
    struct timeval tv, * ptv;
    fd_set wfds;
    int iResult, iError;
@@ -1700,7 +1700,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
 
    return iResult < 0 ? -1 :
           ( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, &wfds ) ? 1 : 0 );
-#endif /* HB_HAS_POLL */
+#endif /* ! HB_HAS_POLL */
 }
 
 static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
@@ -1770,7 +1770,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
       hb_socketSetOsError( iError );
    }
    return iResult;
-#else
+#else /* ! HB_HAS_POLL */
    struct timeval tv, * ptv;
    fd_set wfds, * pefds;
 
@@ -1862,7 +1862,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 
    return iResult < 0 ? -1 :
           ( iResult > 0 && FD_ISSET( ( HB_SOCKET_T ) sd, &wfds ) ? 1 : 0 );
-#endif /* HB_HAS_POLL */
+#endif /* ! HB_HAS_POLL */
 }
 
 int hb_socketGetAddrFamily( const void * pSockAddr, unsigned len )
@@ -3107,7 +3107,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
       hb_xfree( pfds );
 
    return iResult;
-#else
+#else /* ! HB_HAS_POLL */
    HB_SOCKET maxsd, sd;
    int i, ret;
    HB_SIZE nLen, nPos, ul;
@@ -3198,7 +3198,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    }
 
    return ret;
-#endif /* HB_HAS_POLL */
+#endif /* ! HB_HAS_POLL */
 }
 
 

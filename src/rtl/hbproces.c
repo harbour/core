@@ -1552,7 +1552,7 @@ int hb_fsProcessRun( const char * pszFileName,
                }
             }
          }
-#else
+#else /* ! HB_HAS_POLL */
          {
             fd_set rfds, wfds, *prfds, *pwfds;
             HB_FHANDLE fdMax;
@@ -1598,7 +1598,7 @@ int hb_fsProcessRun( const char * pszFileName,
             fStderr = hStderr != FS_ERROR && FD_ISSET( hStderr, &rfds );
             fStdin = hStdin != FS_ERROR && FD_ISSET( hStdin, &wfds );
          }
-#endif /* HB_HAS_POLL */
+#endif /* ! HB_HAS_POLL */
 
          if( fStdout )
          {

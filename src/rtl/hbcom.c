@@ -579,7 +579,7 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
       }
       break;
    }
-#else
+#else /* ! HB_HAS_POLL */
    struct timeval tv;
    fd_set rfds;
 
@@ -630,7 +630,7 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
       }
 #  endif
    }
-#endif /* HB_HAS_POLL */
+#endif /* ! HB_HAS_POLL */
 
    return iResult;
 }
@@ -683,7 +683,7 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
       }
       break;
    }
-#else
+#else /* ! HB_HAS_POLL */
    struct timeval tv;
    fd_set wfds;
 
@@ -713,7 +713,7 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
 #  endif
 
       iResult = select( ( int ) ( pCom->fd + 1 ), NULL, &wfds, NULL, &tv );
-      if( iResult > 0 && FD_ISSET( pCom->fd, &wfds ) )
+      if( iResult > 0 && ! FD_ISSET( pCom->fd, &wfds ) )
          iResult = 0;
       hb_comSetOsError( pCom, iResult == -1 );
       if( iResult == 0 && timeout < 0 && hb_vmRequestQuery() == 0 )
@@ -735,7 +735,7 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
 #  endif
       break;
    }
-#endif /* HB_HAS_POLL */
+#endif /* ! HB_HAS_POLL */
 
    return iResult;
 }
