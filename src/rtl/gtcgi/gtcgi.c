@@ -70,7 +70,12 @@
 #include "hbapicdp.h"
 #include "hbdate.h"
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+#if ( defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) ) && \
+    ! defined( HB_GT_CGI_NO_WINUTF8 )
+   #define HB_GT_CGI_WINUTF8
+#endif
+
+#ifdef HB_GT_CGI_WINUTF8
    #include <windows.h>
 #endif
 
@@ -93,12 +98,12 @@ typedef struct _HB_GTCGI
 #endif
    char *         szCrLf;
    HB_SIZE        nCrLf;
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+#ifdef HB_GT_CGI_WINUTF8
    UINT           uiOldCP;
 #endif
 } HB_GTCGI, * PHB_GTCGI;
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+#ifdef HB_GT_CGI_WINUTF8
 static UINT s_uiOldCP;
 #endif
 
@@ -112,7 +117,14 @@ static void hb_gt_cgi_newLine( PHB_GTCGI pGTCGI )
    hb_gt_cgi_termOut( pGTCGI, pGTCGI->szCrLf, pGTCGI->nCrLf );
 }
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+#ifdef HB_GT_CGI_WINUTF8
+static HB_BOOL hb_gt_cgi_winutf8_enabled( void )
+{
+   return hb_iswinvista() &&
+      getenv( "HB_GT_CGI_NO_WINUTF8" ) == NULL &&
+      IsValidCodePage( CP_UTF8 ) &&
+}
+
 static BOOL WINAPI hb_gt_cgi_CtrlHandler( DWORD dwCtrlType )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_CtrlHandler(%lu)", ( HB_ULONG ) dwCtrlType ) );
@@ -124,7 +136,7 @@ static BOOL WINAPI hb_gt_cgi_CtrlHandler( DWORD dwCtrlType )
       case CTRL_BREAK_EVENT:
       case CTRL_LOGOFF_EVENT:
       case CTRL_SHUTDOWN_EVENT:
-         if( IsValidCodePage( CP_UTF8 ) && hb_iswinvista() )
+         if( hb_gt_cgi_winutf8_enabled() )
             SetConsoleOutputCP( s_uiOldCP );
          break;
    }
@@ -143,8 +155,8 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    pGTCGI->hStdout = hFilenoStdout;
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   if( IsValidCodePage( CP_UTF8 ) && hb_iswinvista() )
+#ifdef HB_GT_CGI_WINUTF8
+   if( hb_gt_cgi_winutf8_enabled() )
    {
       pGTCGI->uiOldCP = GetConsoleOutputCP();
       if( s_uiOldCP == 0 )
@@ -182,8 +194,8 @@ static void hb_gt_cgi_Exit( PHB_GT pGT )
       if( pGTCGI->iLastCol > 0 )
          hb_gt_cgi_newLine( pGTCGI );
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-      if( IsValidCodePage( CP_UTF8 ) && hb_iswinvista() )
+#ifdef HB_GT_CGI_WINUTF8
+      if( hb_gt_cgi_winutf8_enabled() )
       {
          SetConsoleOutputCP( pGTCGI->uiOldCP );
          SetConsoleCtrlHandler( hb_gt_cgi_CtrlHandler, FALSE );
