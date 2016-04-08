@@ -115,6 +115,8 @@
       /* use poll() instead of select() to avoid FD_SETSIZE (1024 in Linux)
          file handle limit */
       #define HB_HAS_POLL
+   #endif
+   #if defined( HB_HAS_POLL )
       #include <poll.h>
    #endif
 #endif

@@ -963,11 +963,8 @@ HB_FUNC( NETIO_SERVER )
                      errCode = NETIO_ERR_READ;
                   else
                   {
-                     char * szOldName = NULL;
                      const char * szFile = s_consrvFilePath( ( char * ) msg, conn, uiMsg == NETIO_LINKSYM );
-
-                     if( szFile )
-                        szOldName = hb_strdup( szFile );
+                     char * szOldName = szFile ? hb_strdup( szFile ) : NULL;
 
                      msg[ size2 ] = '\0';
                      if( ! s_srvRecvAll( conn, msg, size2 ) )
@@ -1098,7 +1095,7 @@ HB_FUNC( NETIO_SERVER )
                         errCode = NETIO_ERR_WRONG_FILE_PATH;
                      else
                      {
-                        nFlags &= ~ ( HB_FATTR ) ( FXO_COPYNAME );
+                        nFlags &= ~ ( HB_FATTR ) FXO_COPYNAME;
                         pFile = hb_fileExtOpen( szFile, szExt, nFlags, NULL, NULL );
                         if( ! pFile )
                            errCode = s_srvFsError();
@@ -1132,7 +1129,7 @@ HB_FUNC( NETIO_SERVER )
                   errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
-                  if( size >= ( long ) ( sizeof( buffer ) - NETIO_MSGLEN ) )
+                  if( size > ( long ) ( sizeof( buffer ) - NETIO_MSGLEN ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size + NETIO_MSGLEN );
                   if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
@@ -1213,7 +1210,7 @@ HB_FUNC( NETIO_SERVER )
                   errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
-                  if( size >= ( long ) ( sizeof( buffer ) - NETIO_MSGLEN ) )
+                  if( size > ( long ) ( sizeof( buffer ) - NETIO_MSGLEN ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size + NETIO_MSGLEN );
                   pFile = s_srvFileGet( conn, iFileNo );
                   if( pFile == NULL )
@@ -1253,7 +1250,7 @@ HB_FUNC( NETIO_SERVER )
                   errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
-                  if( size >= ( long ) sizeof( buffer ) )
+                  if( size > ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size );
                   if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;
@@ -1437,7 +1434,7 @@ HB_FUNC( NETIO_SERVER )
                   errCode = NETIO_ERR_WRONG_PARAM;
                else
                {
-                  if( size >= ( long ) sizeof( buffer ) )
+                  if( size > ( long ) sizeof( buffer ) )
                      ptr = msg = ( HB_BYTE * ) hb_xgrab( size );
                   if( ! s_srvRecvAll( conn, msg, size ) )
                      errCode = NETIO_ERR_READ;

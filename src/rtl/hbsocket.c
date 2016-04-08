@@ -1490,6 +1490,32 @@ static int hb_socketTransType( int type, int *err )
 }
 #endif
 
+static int hb_socketTransFlags( int flags )
+{
+   int iResult = 0;
+
+   if( flags )
+   {
+#ifdef MSG_OOB
+      if( flags & HB_SOCKET_MSG_OOB )
+         iResult |= MSG_OOB;
+#endif
+#ifdef MSG_PEEK
+      if( flags & HB_SOCKET_MSG_PEEK )
+         iResult |= MSG_PEEK;
+#endif
+#ifdef MSG_DONTROUTE
+      if( flags & HB_SOCKET_MSG_DONTROUTE )
+         iResult |= MSG_DONTROUTE;
+#endif
+#ifdef MSG_WAITALL
+      if( flags & HB_SOCKET_MSG_WAITALL )
+         iResult |= MSG_WAITALL;
+#endif
+   }
+   return iResult;
+}
+
 static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
 {
 #if defined( HB_HAS_POLL )
@@ -2525,6 +2551,7 @@ long hb_socketSend( HB_SOCKET sd, const void * data, long len, int flags, HB_MAX
    {
       int iError;
 
+      flags = hb_socketTransFlags( flags );
       /* in POSIX systems writing data to broken connection stream causes
        * that system generates SIGPIPE which has to be caught by application
        * otherwise the default action for SIGPIPE is application termination.
@@ -2567,6 +2594,7 @@ long hb_socketSendTo( HB_SOCKET sd, const void * data, long len, int flags,
    {
       int iError;
 
+      flags = hb_socketTransFlags( flags );
       /* see note above about SIGPIPE */
 #if defined( MSG_NOSIGNAL )
       flags |= MSG_NOSIGNAL;
@@ -2605,6 +2633,7 @@ long hb_socketRecv( HB_SOCKET sd, void * data, long len, int flags, HB_MAXINT ti
    {
       int iError;
 
+      flags = hb_socketTransFlags( flags );
       do
       {
          lReceived = recv( sd, ( char * ) data, len, flags );
@@ -2646,6 +2675,7 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
       socklen_t salen = sizeof( st );
       int iError;
 
+      flags = hb_socketTransFlags( flags );
       do
       {
          lReceived = recvfrom( sd, ( char * ) data, len, flags, &st.sa, &salen );
@@ -3004,7 +3034,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    pSet[ 2 ] = fSetEX;
    pEvents[ 0 ] = POLLIN;
    pEvents[ 1 ] = POLLOUT;
-   pEvents[ 2 ] = 0;
+   pEvents[ 2 ] = POLLPRI;
 
    for( i = 0; i < 3; i++ )
    {
@@ -3067,8 +3097,8 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
       }
       hb_vmLock();
 
-      pEvents[ 0 ] |= POLLHUP;
-      pEvents[ 2 ] |= POLLERR | POLLHUP | POLLNVAL;
+      pEvents[ 0 ] |= POLLHUP | POLLPRI;
+      pEvents[ 2 ] |= POLLHUP | POLLERR | POLLNVAL;
       for( i = 0; i < 3; i++ )
       {
          if( pItemSets[ i ] && pSet[ i ] )

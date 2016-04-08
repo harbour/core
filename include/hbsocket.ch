@@ -178,6 +178,12 @@
 #define HB_SOCKET_IPPROTO_SCTP            132   /* Stream Control Transmission Protocol */
 #define HB_SOCKET_IPPROTO_RAW             255   /* Raw IP packets */
 
+/* send/recv flags */
+#define HB_SOCKET_MSG_OOB                 0x01  /* process out-of-band data */
+#define HB_SOCKET_MSG_PEEK                0x02  /* peek at incoming messages */
+#define HB_SOCKET_MSG_DONTROUTE           0x04  /* don't use local routing */
+#define HB_SOCKET_MSG_WAITALL             0x08  /* wait for a full request or error */
+
 /* shutdown actions */
 #define HB_SOCKET_SHUT_RD                 0
 #define HB_SOCKET_SHUT_WR                 1
