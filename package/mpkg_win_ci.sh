@@ -114,7 +114,7 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    export PATH="${HB_DIR_MINGW_32}/bin:${_ori_path}"
    gcc -v 2> "${_build_info_32}"
    # shellcheck disable=SC2086
-   mingw32-make ${HB_MKFLAGS} HB_COMPILER=mingw HB_CPU=x86
+   mingw32-make ${HB_MKFLAGS} HB_COMPILER=mingw HB_CPU=x86 || exit 1
 
    export HB_WITH_CURL="${HB_DIR_CURL_64}include"
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_64}include"
@@ -122,7 +122,7 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
    export PATH="${HB_DIR_MINGW_64}/bin:${_ori_path}"
    gcc -v 2> "${_build_info_64}"
    # shellcheck disable=SC2086
-   mingw32-make ${HB_MKFLAGS} HB_COMPILER=mingw64 HB_CPU=x86_64
+   mingw32-make ${HB_MKFLAGS} HB_COMPILER=mingw64 HB_CPU=x86_64 || exit 1
 fi
 
 # msvc
