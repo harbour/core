@@ -1,7 +1,7 @@
 /*
  * Video subsystem for plain ANSI C stream IO
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -122,7 +122,7 @@ static HB_BOOL hb_gt_cgi_winutf8_enabled( void )
 {
    return hb_iswinvista() &&
       getenv( "HB_GT_CGI_NO_WINUTF8" ) == NULL &&
-      IsValidCodePage( CP_UTF8 ) &&
+      IsValidCodePage( CP_UTF8 );
 }
 
 static BOOL WINAPI hb_gt_cgi_CtrlHandler( DWORD dwCtrlType )
