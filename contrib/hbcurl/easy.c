@@ -901,14 +901,19 @@ HB_FUNC( CURL_EASY_SETOPT )
             case HB_CURLOPT_NOPROXY:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_NOPROXY, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
                break;
+#if LIBCURL_VERSION_NUM < 0x073100
             case HB_CURLOPT_SOCKS5_GSSAPI_SERVICE:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_SOCKS5_GSSAPI_SERVICE, hb_curl_StrHash( hb_curl, hb_parc( 3 ) ) );
                break;
+#endif
             case HB_CURLOPT_SOCKS5_GSSAPI_NEC:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_SOCKS5_GSSAPI_NEC, HB_CURL_OPT_BOOL( 3 ) );
                break;
 #endif
 #if LIBCURL_VERSION_NUM >= 0x072B00
+#if LIBCURL_VERSION_NUM >= 0x073100
+            case HB_CURLOPT_SOCKS5_GSSAPI_SERVICE:
+#endif
             case HB_CURLOPT_PROXY_SERVICE_NAME:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXY_SERVICE_NAME, hb_parc( 3 ) );
                break;
