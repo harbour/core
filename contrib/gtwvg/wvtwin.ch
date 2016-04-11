@@ -1240,6 +1240,7 @@
 #define PBM_DELTAPOS                              ( WIN_WM_USER + 3 )
 #define PBM_SETSTEP                               ( WIN_WM_USER + 4 )
 #define PBM_STEPIT                                ( WIN_WM_USER + 5 )
+#define PBM_SETMARQUEE                            ( WIN_WM_USER + 10 )
 #define PBM_SETRANGE32                            1030
 #define PBM_GETRANGE                              1031
 #define PBM_GETPOS                                1032
