@@ -41,6 +41,7 @@ DYNAMIC WvgMenu
 DYNAMIC WvgMenuBar
 DYNAMIC WvgMLE
 DYNAMIC WvgPartHandler
+DYNAMIC WvgProgressBar
 DYNAMIC WvgPushButton
 DYNAMIC WvgRadioButton
 DYNAMIC WvgScrollBar

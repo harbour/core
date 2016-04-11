@@ -52,7 +52,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS wvgProgressbar INHERIT WvgWindow
+CREATE CLASS WvgProgressBar INHERIT WvgWindow
 
    VAR    autosize         INIT .F.
    VAR    Border           INIT .F.
@@ -96,7 +96,7 @@ CREATE CLASS wvgProgressbar INHERIT WvgWindow
 
 ENDCLASS
 
-METHOD wvgProgressbar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD WvgProgressBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -108,7 +108,7 @@ METHOD wvgProgressbar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    https://msdn.microsoft.com/en-us/library/windows/desktop/bb760838.aspx
    When visual styles are enabled, color messages has no effect. */
 
-METHOD wvgProgressbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD WvgProgressBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::ClassName := "msctls_progress32"
    ::ObjType   := objTypeStatic
@@ -138,7 +138,7 @@ METHOD wvgProgressbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    RETURN Self
 
-METHOD wvgProgressbar:handleEvent( nMessage, aNM )
+METHOD WvgProgressBar:handleEvent( nMessage, aNM )
 
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
@@ -168,19 +168,19 @@ METHOD wvgProgressbar:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDLED
 
-METHOD PROCEDURE wvgProgressbar:destroy()
+METHOD PROCEDURE WvgProgressBar:destroy()
 
    ::wvgWindow:destroy()
 
    RETURN
 
-METHOD wvgProgressbar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+METHOD WvgProgressBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-METHOD PROCEDURE wvgProgressbar:setCaption( cCaption )
+METHOD PROCEDURE WvgProgressBar:setCaption( cCaption )
 
    IF HB_ISSTRING( cCaption )
       ::Caption := cCaption
@@ -191,7 +191,7 @@ METHOD PROCEDURE wvgProgressbar:setCaption( cCaption )
 
    RETURN
 
-METHOD wvgProgressbar:draw( xParam )
+METHOD WvgProgressBar:draw( xParam )
 
    IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_paint := xParam
@@ -199,7 +199,7 @@ METHOD wvgProgressbar:draw( xParam )
 
    RETURN Self
 
-METHOD wvgProgressbar:activate( xParam )
+METHOD WvgProgressBar:activate( xParam )
 
    IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_lbClick := xParam
@@ -207,7 +207,7 @@ METHOD wvgProgressbar:activate( xParam )
 
    RETURN Self
 
-METHOD wvgProgressbar:SetValue( nValue, nRangeMin, nRangeMax, nSpeed )
+METHOD WvgProgressBar:SetValue( nValue, nRangeMin, nRangeMax, nSpeed )
 
    IF HB_ISNUMERIC( nRangeMin ) .AND. HB_ISNUMERIC( nRangeMax ) .AND. ! ::lMarquee
       ::nRangeMin := nRangeMin
@@ -225,7 +225,7 @@ METHOD wvgProgressbar:SetValue( nValue, nRangeMin, nRangeMax, nSpeed )
 
    RETURN wapi_SendMessage( ::hWnd, PBM_GETPOS, 0, 0 )
 
-METHOD PROCEDURE wvgProgressbar:SetCOlorBarFG( nColor )
+METHOD PROCEDURE WvgProgressBar:SetCOlorBarFG( nColor )
 
    IF HB_ISNUMERIC( nColor )
       wapi_SendMessage( ::hWnd, PBM_SETBARCOLOR, 0, nColor )
@@ -233,7 +233,7 @@ METHOD PROCEDURE wvgProgressbar:SetCOlorBarFG( nColor )
 
    RETURN
 
-METHOD PROCEDURE wvgProgressbar:SetColorBarBG( nColor )
+METHOD PROCEDURE WvgProgressBar:SetColorBarBG( nColor )
 
    IF HB_ISNUMERIC( nColor )
       wapi_SendMessage( ::hWnd, PBM_SETBKCOLOR, 0, nColor )
