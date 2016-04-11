@@ -1248,6 +1248,8 @@
 
 #define PBS_SMOOTH                                1
 #define PBS_VERTICAL                              4
+#define PBS_MARQUEE                               8
+#define PBS_SMOOTHREVERSE                         16
 
 #define OUT_DEFAULT_PRECIS                        0
 #define OUT_STRING_PRECIS                         1
