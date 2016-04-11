@@ -294,7 +294,7 @@ METHOD Write( cData, nLen, bCommit ) CLASS TIPClientSMTP
       ::bInitialized := .T.
    ENDIF
 
-   RETURN ::nLastWrite := ::super:Write( cData, nLen, bCommit )
+   RETURN ::super:Write( cData, nLen, bCommit )
 
 METHOD ServerSuportSecure( /* @ */ lAuthPlain, /* @ */ lAuthLogin ) CLASS TIPClientSMTP
 
