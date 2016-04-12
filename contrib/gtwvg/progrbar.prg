@@ -60,9 +60,6 @@ CREATE CLASS WvgProgressBar INHERIT WvgWindow
    VAR    caption
    VAR    default          INIT .F.
    VAR    drawMode         INIT WVG_DRAW_NORMAL
-   VAR    lImageResize     INIT .F.
-   VAR    nImageAlignment  INIT 0
-   VAR    oImage
    VAR    preSelect        INIT .F.
    VAR    pointerFocus     INIT .F.
    VAR    Style            INIT 0
