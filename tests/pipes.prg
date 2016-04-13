@@ -28,7 +28,7 @@ procedure Main( xChild )
 #else
    n := 1000
    nWrLim := 10000
-//   nWrLim := 4096
+// nWrLim := 4096
 #endif
    cToSend := "ABCDEFGHIJKLMNOP"
    cSrvData := Replicate( Left( cToSend, 16 - Len( hb_eol() ) ) + hb_eol(), n )
@@ -55,7 +55,7 @@ procedure Main( xChild )
             ? "error during reading:", FError()
             exit
          else
-            cRead += Left( cBuffer, n )
+            cRead += hb_BLeft( cBuffer, n )
             nRead += n
             ? "bytes read:", n, ", total:", nRead, ", error:", FError()
          endif
@@ -64,7 +64,7 @@ procedure Main( xChild )
       ? "writing..."
       cToSend := cCliData
       nSent := 0
-      while Len( cToSend ) > 0
+      while hb_BLen( cToSend ) > 0
          if ( n := hb_PWrite( 1, cToSend, nWrLim, nTimeout ) ) == -1
             ? "error during writing:", FError()
             exit
@@ -72,7 +72,7 @@ procedure Main( xChild )
             nSent += n
             ? "bytes sent:", n, ", total:", nSent, ", error:", FError()
             if n > 0
-               cToSend := SubStr( cToSend, n + 1 )
+               cToSend := hb_BSubStr( cToSend, n + 1 )
             endif
             if nWrLim != NIL
                hb_idleSleep( 0.1 )
@@ -93,7 +93,7 @@ procedure Main( xChild )
          ? "writing..."
          cToSend := cSrvData
          nSent := 0
-         while Len( cToSend ) > 0
+         while hb_BLen( cToSend ) > 0
             if ( n := hb_PWrite( hStdIn, cToSend,, nTimeout ) ) == -1
                ? "error during writing:", FError()
                exit
@@ -101,7 +101,7 @@ procedure Main( xChild )
                nSent += n
                ? "bytes sent:", n, ", total:", nSent, ", error:", FError()
                if n > 0
-                  cToSend := SubStr( cToSend, n + 1 )
+                  cToSend := hb_BSubStr( cToSend, n + 1 )
                endif
             endif
          enddo
@@ -115,7 +115,7 @@ procedure Main( xChild )
                ? "error during reading:", FError()
                exit
             else
-               cRead += Left( cBuffer, n )
+               cRead += hb_BLeft( cBuffer, n )
                nRead += n
                ? "bytes read:", n, ", total:", nRead, ", error:", FError()
             endif
