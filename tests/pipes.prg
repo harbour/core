@@ -18,7 +18,7 @@ procedure Main( xChild )
    local cToSend, cBuffer, cProg
    local cSrvData, cCliData, cRead, cError
 
-   s_lChild := !Empty( xChild )
+   s_lChild := ! Empty( xChild )
 
    nTimeout := 1000
 
@@ -80,7 +80,7 @@ procedure Main( xChild )
          endif
       enddo
    else
-      cProg := hb_argv( 0 ) + " x"
+      cProg := hb_ProgName() + " x"
 
       ? Replicate( "=", 40 )
 
@@ -159,7 +159,7 @@ procedure Main( xChild )
 
       ? Replicate( "=", 40 )
 
-      cProg := hb_argv( 0 ) + " STDOUT"
+      cProg := hb_ProgName() + " STDOUT"
       ? "running child process only with stdout redirected:", cProg
       ? "result:", hb_processRun( cProg,, @cRead )
       ? "STDOUT =>"
