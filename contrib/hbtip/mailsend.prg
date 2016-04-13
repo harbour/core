@@ -262,9 +262,9 @@ FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    oInMail:oUrl:cUserid := tip_GetRawEmail( cFrom )
 
-   IF ( tmp := oInMail:Write( tip_MailAssemble( cFrom, xTo, xCC, cBody, ;
+   IF ( tmp := ( oInMail:Write( tip_MailAssemble( cFrom, xTo, xCC, cBody, ;
       cSubject, aFiles, nPriority, lRead, cReplyTo, cCharset, ;
-      cEncoding, lBodyHTML ) ) > 0 )
+      cEncoding, lBodyHTML ) ) > 0 ) )
 
       oInMail:Commit()
    ENDIF
