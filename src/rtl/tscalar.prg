@@ -45,7 +45,7 @@
  */
 
 /* Class(y) documentation is located at:
-   http://www.ousob.com/ng/classy/ng237.php */
+   https://harbour.github.io/ng/classy/menu.html */
 
 #include "hbclass.ch"
 
