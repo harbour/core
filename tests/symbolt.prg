@@ -1,6 +1,3 @@
-// Class(y) Class Symbol documentation is located at:
-// http://www.x-hacker.org/ng/classy/ngdebc.html
-
 PROCEDURE Main()
 
    LOCAL oSym := Symbol():New( "QOut" )

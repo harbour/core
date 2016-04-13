@@ -45,7 +45,7 @@
  */
 
 /* Class(y) documentation is located at:
-   http://www.x-hacker.org/ng/classy/ngdebc.html */
+   http://www.ousob.com/ng/classy/ng237.php */
 
 #include "hbclass.ch"
 

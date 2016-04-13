@@ -1692,7 +1692,7 @@ Supported shells per host platforms:
      * [hbrun documentation](contrib/hbrun/doc/hbrun.en.md)
      * [ChangeLog](ChangeLog.txt?raw=true)
      * Comparing [Harbour with xHarbour](doc/xhb-diff.txt?raw=true)
-     * CA-Cl*pper 5.3 [online documentation](http://x-hacker.org/ng/53guide/)
+     * CA-Cl*pper 5.3 [online documentation](https://www.itlnet.net/programming/program/Reference/c53g01c/menu.html)
      * Harbour [online documentation](https://vszakats.github.io/harbour-core/harbour.html)
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
