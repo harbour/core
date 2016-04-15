@@ -381,7 +381,9 @@ openssl dgst -sha256 "${_pkgname}"
 
 cd - || exit
 
-if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] ; then
+if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] && \
+   [ -n "${PUSHOVER_USER}" ] && \
+   [ -n "${PUSHOVER_TOKEN}" ] ; then
    (
       # https://pushover.net/api
       set +x
@@ -398,7 +400,8 @@ if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] ; then
    )
 fi
 
-if [ "${_BRANCH#*master*}" != "${_BRANCH}" ] ; then
+if [ "${_BRANCH#*master*}" != "${_BRANCH}" ] && \
+   [ -n "${GITHUB_TOKEN}" ] ; then
    (
       set +x
       curl -sS \
@@ -408,21 +411,19 @@ if [ "${_BRANCH#*master*}" != "${_BRANCH}" ] ; then
    )
 fi
 
-if [ -n "${VIRUSTOTAL_APIKEY}" ] ; then
-
-   # https://www.virustotal.com/en/documentation/public-api/#scanning-files
-   if [ "$(wc -c < "${_pkgname}")" -lt 32000000 ] ; then
-      (
-         set +x
-         out="$(curl -sS \
-            -X POST https://www.virustotal.com/vtapi/v2/file/scan \
-            --form-string "apikey=${VIRUSTOTAL_APIKEY}" \
-            --form "file=@${_pkgname}")"
-         echo "${out}"
-         echo "VirusTotal URL for '${_pkgname}':"
-         echo "${out}" | grep -o 'https://[a-zA-Z0-9./]*'
-      )
-   else
-      echo "! File too large for VirusTotal Public API. Upload skipped."
-   fi
+# https://www.virustotal.com/en/documentation/public-api/#scanning-files
+if [ "$(wc -c < "${_pkgname}")" -lt 32000000 ] && \
+   [ -n "${VIRUSTOTAL_APIKEY}" ] ; then
+   (
+      set +x
+      out="$(curl -sS \
+         -X POST https://www.virustotal.com/vtapi/v2/file/scan \
+         --form-string "apikey=${VIRUSTOTAL_APIKEY}" \
+         --form "file=@${_pkgname}")"
+      echo "${out}"
+      echo "VirusTotal URL for '${_pkgname}':"
+      echo "${out}" | grep -o 'https://[a-zA-Z0-9./]*'
+   )
+else
+   echo "! File too large for VirusTotal Public API. Upload skipped."
 fi
