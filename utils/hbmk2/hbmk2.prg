@@ -14890,7 +14890,7 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
 #if 0
 /* Test cases from:
    https://rosettacode.org/wiki/Levenshtein_distance
-   http://oldfashionedsoftware.com/2009/11/19/string-distance-and-refactoring-in-scala/ */
+   https://oldfashionedsoftware.com/2009/11/19/string-distance-and-refactoring-in-scala/ */
 
 STATIC PROCEDURE Levenshtein_Tests()
 
