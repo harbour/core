@@ -123,6 +123,8 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       EXIT
 
    CASE WVGSTATIC_TYPE_GROUPBOX
+      ::Style += WIN_WS_GROUP + BS_GROUPBOX + WIN_WS_EX_TRANSPARENT
+      ::className := "BUTTON"
       EXIT
    CASE WVGSTATIC_TYPE_ICON
       ::style += SS_ICON
@@ -269,7 +271,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
    ::caption := xCaption
 
    DO CASE
-   CASE ::type == WVGSTATIC_TYPE_TEXT
+   CASE ::type == WVGSTATIC_TYPE_TEXT .OR. ::type == WVGSTATIC_TYPE_GROUPBOX
       wapi_SendMessage( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
 
    CASE ::type == WVGSTATIC_TYPE_BITMAP
