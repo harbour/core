@@ -840,24 +840,19 @@ FUNCTION wvg_LoadIcon( ncIcon )
 
    RETURN wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON,,, WIN_LR_LOADFROMFILE )
 
-/* nSource: 0 ResourceIdByNumber
+/* https://msdn.microsoft.com/en-us/library/windows/desktop/ms648045.aspx
+   W2000 and Upper, wapi_LoadImage() can resize image
+
+   nSource: 0 ResourceIdByNumber
    nSource: 1 ResourceIdByName
    nSource: 2 ImageFromDiskFile */
 FUNCTION wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight )
 
-   SWITCH hb_defaultValue( nSource, 0 )
-   CASE 0
-   CASE 1
-      IF hb_defaultValue( nBmpOrIcon, WIN_IMAGE_BITMAP ) == WIN_IMAGE_ICON
-         RETURN wapi_LoadIcon( wapi_GetModuleHandle(), ncImage )
-      ELSE
-         RETURN wapi_LoadBitmap( wapi_GetModuleHandle(), ncImage )
-      ENDIF
-   CASE 2
-      RETURN wapi_LoadImage( , ncImage, nBmpOrIcon, nWidth, nHeight, WIN_LR_LOADFROMFILE )
-   ENDSWITCH
+   hb_defaultValue( @nBmpOrIcon, WIN_IMAGE_BITMAP )
 
-   RETURN NIL
+   RETURN iif( hb_defaultValue( nSource, 0 ) == 2, ;
+      wapi_LoadImage( , ncImage, nBmpOrIcon, nWidth, nHeight, WIN_LR_LOADFROMFILE + WIN_LR_DEFAULTSIZE ), ;
+      wapi_LoadImage( wapi_GetModuleHandle(), ncImage, nBmpOrIcon, nWidth, nHeight, WIN_LR_DEFAULTSIZE ) )
 
 FUNCTION wvg_TrackPopupMenu( hMenu, nFlags, x, y, hWnd )
 
