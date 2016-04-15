@@ -841,7 +841,7 @@ FUNCTION wvg_LoadIcon( ncIcon )
    RETURN wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON,,, WIN_LR_LOADFROMFILE )
 
 /* https://msdn.microsoft.com/en-us/library/windows/desktop/ms648045.aspx
-   W2000 and Upper, wapi_LoadImage() can resize image
+   Windows 2000 and upper, wapi_LoadImage() can resize image
 
    nSource: 0 ResourceIdByNumber
    nSource: 1 ResourceIdByName
