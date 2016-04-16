@@ -64,7 +64,7 @@ procedure Main( xChild )
       ? "writing..."
       cToSend := cCliData
       nSent := 0
-      while hb_BLen( cToSend ) > 0
+      while ! HB_ISNULL( cToSend )
          if ( n := hb_PWrite( 1, cToSend, nWrLim, nTimeout ) ) == -1
             ? "error during writing:", FError()
             exit
@@ -93,7 +93,7 @@ procedure Main( xChild )
          ? "writing..."
          cToSend := cSrvData
          nSent := 0
-         while hb_BLen( cToSend ) > 0
+         while ! HB_ISNULL( cToSend )
             if ( n := hb_PWrite( hStdIn, cToSend,, nTimeout ) ) == -1
                ? "error during writing:", FError()
                exit

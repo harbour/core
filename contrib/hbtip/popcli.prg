@@ -325,8 +325,8 @@ METHOD countMail() CLASS TIPClientPop
 
    IF ::isOpen
       ::reset()
-      cStat := ::stat()
-      IF hb_LeftEq( cStat, "+OK" )
+      cStat := ::Stat()
+      IF HB_ISSTRING( cStat ) .AND. hb_LeftEq( cStat, "+OK" )
          RETURN Val( SubStr( cStat, 4, hb_At( " ", cStat, 5 ) - 4 ) )
       ENDIF
    ENDIF
@@ -337,7 +337,8 @@ METHOD GetOk() CLASS TIPClientPOP
 
    ::cReply := ::inetRecvLine( ::SocketCon,, 128 )
 
-   RETURN ::inetErrorCode( ::SocketCon ) == 0 .AND. hb_LeftEq( ::cReply, "+" )
+   RETURN ::inetErrorCode( ::SocketCon ) == 0 .AND. ;
+      HB_ISSTRING( ::cReply ) .AND. hb_LeftEq( ::cReply, "+" )
 
 /* QUESTION: This method will return logical, NIL or string
              Is it really intended that way? [vszakats] */
