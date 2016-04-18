@@ -104,6 +104,7 @@ typedef struct _HB_CURL
    struct curl_slist *    pMAIL_RCPT;
    struct curl_slist *    pRESOLVE;
    struct curl_slist *    pPROXYHEADER;
+   struct curl_slist *    pCONNECT_TO;
 
    char *   ul_name;
    PHB_FILE ul_file;
@@ -506,6 +507,9 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
 #if LIBCURL_VERSION_NUM >= 0x072500
    curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYHEADER, NULL );
 #endif
+#if LIBCURL_VERSION_NUM >= 0x073100
+   curl_easy_setopt( hb_curl->curl, CURLOPT_CONNECT_TO, NULL );
+#endif
 
    hb_curl_form_free( &hb_curl->pHTTPPOST_First );
    hb_curl->pHTTPPOST_Last = NULL;
@@ -518,6 +522,7 @@ static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
    hb_curl_slist_free( &hb_curl->pMAIL_RCPT );
    hb_curl_slist_free( &hb_curl->pRESOLVE );
    hb_curl_slist_free( &hb_curl->pPROXYHEADER );
+   hb_curl_slist_free( &hb_curl->pCONNECT_TO );
 
    hb_curl_ul_free( hb_curl );
    hb_curl_dl_free( hb_curl );
@@ -1217,6 +1222,27 @@ HB_FUNC( CURL_EASY_SETOPT )
                      hb_curl->pPROXYHEADER = curl_slist_append( hb_curl->pPROXYHEADER, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_PROXYHEADER, hb_curl->pPROXYHEADER );
+               }
+               break;
+            }
+#endif
+#if LIBCURL_VERSION_NUM >= 0x073100
+            case HB_CURLOPT_CONNECT_TO:
+            {
+               PHB_ITEM pArray = hb_param( 3, HB_IT_ARRAY );
+
+               curl_easy_setopt( hb_curl->curl, CURLOPT_CONNECT_TO, NULL );
+               hb_curl_slist_free( &hb_curl->pCONNECT_TO );
+
+               if( pArray )
+               {
+                  HB_SIZE ulPos;
+                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+
+                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
+                     hb_curl->pCONNECT_TO = curl_slist_append( hb_curl->pCONNECT_TO, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+
+                  res = curl_easy_setopt( hb_curl->curl, CURLOPT_CONNECT_TO, hb_curl->pCONNECT_TO );
                }
                break;
             }

@@ -268,6 +268,7 @@
 #define HB_CURLOPT_SERVICE_NAME               221
 #define HB_CURLOPT_PIPEWAIT                   222
 #define HB_CURLOPT_DEFAULT_PROTOCOL           223
+#define HB_CURLOPT_CONNECT_TO                 224
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
 #define HB_CURLOPT_XFERINFOBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
