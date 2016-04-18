@@ -3221,7 +3221,11 @@ void QTConsole::keyPressEvent( QKeyEvent * evt )
          for( i = 0; i < iSize; ++i )
          {
             wc = qStr[ i ].unicode();
-            hb_gt_qtc_addKeyToInputQueue( pQTC, HB_INKEY_NEW_UNICODEF( wc, iFlags ) );
+            hb_gt_qtc_addKeyToInputQueue( pQTC,
+                                          wc < 127 &&
+                                          ( iFlags && ( HB_KF_CTRL | HB_KF_ALT ) ) ?
+                                          HB_INKEY_NEW_KEY( wc, iFlags ) :
+                                          HB_INKEY_NEW_UNICODEF( wc, iFlags ) );
          }
          return;
       }
