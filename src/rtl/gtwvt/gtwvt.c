@@ -2605,7 +2605,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
 #if defined( UNICODE )
                if( iKey >= 127 )
                   iKey = HB_INKEY_NEW_UNICODEF( iKey, iFlags );
-               else if( iFlags && ( HB_KF_CTRL | HB_KF_ALT ) )
+               else if( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) )
                   iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
                else
                   iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
@@ -2613,7 +2613,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                int u = HB_GTSELF_KEYTRANS( pWVT->pGT, iKey );
                if( u )
                   iKey = HB_INKEY_NEW_UNICODEF( u, iFlags );
-               else if( iKey < 127 && ( iFlags && ( HB_KF_CTRL | HB_KF_ALT ) ) )
+               else if( iKey < 127 && ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) )
                   iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
                else
                {
