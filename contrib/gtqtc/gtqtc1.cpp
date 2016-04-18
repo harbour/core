@@ -3223,7 +3223,7 @@ void QTConsole::keyPressEvent( QKeyEvent * evt )
             wc = qStr[ i ].unicode();
             hb_gt_qtc_addKeyToInputQueue( pQTC,
                                           wc < 127 &&
-                                          ( iFlags && ( HB_KF_CTRL | HB_KF_ALT ) ) ?
+                                          ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) ?
                                           HB_INKEY_NEW_KEY( wc, iFlags ) :
                                           HB_INKEY_NEW_UNICODEF( wc, iFlags ) );
          }
