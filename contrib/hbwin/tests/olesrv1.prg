@@ -98,8 +98,7 @@ PROCEDURE DllMain()
     * OLE methods and HVM memvars (public and private variables) are
     * OLE object instance variables so they are shared with all OLE
     * objects created by this interface. It works just like xHarbour.com
-    * OLE server described at
-    * http://xharbour.com/index.asp?page=add_on_oleserver&show_sub=7&show_i=1
+    * OLE server.
     */
 
    win_oleServerInit( CLS_ID, CLS_Name, {|| OleNetioSrv():new() }, .T. )

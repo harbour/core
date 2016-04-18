@@ -49,7 +49,7 @@ PROCEDURE Main()
    ? "Replacing a multifield string."
    cRegex   := "(?:\/(\w+)=)([\w.@]+)"
    cReplace := "<IT WORKS!>"
-   ? "String:", cString := "/C=IT/O=xHarbour/OU=xharbour.com/CN=GIUDICE_FRANCESCO_SAVERIO/email=info@example.com"
+   ? "String:", cString := "/C=IT/O=Example/OU=example.org/CN=GIUDICE_FRANCESCO_SAVERIO/email=info@example.org"
    ? "Result:", hb_regexReplace( cRegEx, cString, cReplace,,,, 2 )
    ?
    WAIT
