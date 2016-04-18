@@ -88,13 +88,12 @@ HB_FUNC( HB_STRREPLACE )
                   uc = ( HB_UCHAR ) pszSrc[ nAt ];
                else
                {
-                  if( HB_IS_HASH( pSrc ) )
-                     pDst = hb_hashGetKeyAt( pSrc, nAt + 1 );
-                  else
-                     pDst = hb_arrayGetItemPtr( pSrc, nAt + 1 );
-                  if( hb_itemGetCLen( pDst ) == 0 )
+                  PHB_ITEM pItem = HB_IS_HASH( pSrc ) ?
+                                   hb_hashGetKeyAt( pSrc, nAt + 1 ) :
+                                   hb_arrayGetItemPtr( pSrc, nAt + 1 );
+                  if( hb_itemGetCLen( pItem ) == 0 )
                      continue;
-                  uc = ( HB_UCHAR ) hb_itemGetCPtr( pDst )[ 0 ];
+                  uc = ( HB_UCHAR ) hb_itemGetCPtr( pItem )[ 0 ];
                }
                if( ptrOpt[ uc ] == 0 )
                   ptrOpt[ uc ] = nAt + 1;
