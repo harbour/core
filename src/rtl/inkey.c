@@ -266,10 +266,10 @@ HB_FUNC( HB_KEYNEW )
    int iKey = pText ? hb_cdpTextGetU16( hb_vmCDP(), hb_itemGetCPtr( pText ),
                                                     hb_itemGetCLen( pText ) ) : hb_parni( 1 );
 
-   if( ! pText || ( iMod & HB_KF_CTRL ) != 0 )
-      iKey = HB_INKEY_NEW_KEY( iKey, iMod );
-   else if( iKey >= 127 )
+   if( iKey >= 127 )
       iKey = HB_INKEY_NEW_UNICODEF( iKey, iMod );
+   else if( ( iMod & ( HB_KF_CTRL | HB_KF_ALT ) ) != 0 )
+      iKey = HB_INKEY_NEW_KEY( iKey, iMod );
    else
       iKey = HB_INKEY_NEW_CHARF( iKey, iMod );
 
