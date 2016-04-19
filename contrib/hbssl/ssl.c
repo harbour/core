@@ -72,6 +72,12 @@
 
 #include "hbssl.h"
 
+typedef struct _HB_SSL
+{
+   SSL * ssl;
+   PHB_ITEM pCallbackArg;
+} HB_SSL, * PHB_SSL;
+
 #if defined( HB_OS_WIN ) && \
     defined( HB_CPU_X86 ) && \
     OPENSSL_VERSION_NUMBER >= 0x00908000L
@@ -194,15 +200,29 @@ HB_FUNC_TRANSLATE( SSLEAY_VERSION, OPENSSL_VERSION )
 HB_FUNC_TRANSLATE( SSLEAY, OPENSSL_VERSION_NUM )
 #endif
 
-static HB_GARBAGE_FUNC( SSL_release )
+static HB_GARBAGE_FUNC( PHB_SSL_release )
 {
-   void ** ph = ( void ** ) Cargo;
+   PHB_SSL * ph = ( PHB_SSL * ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && *ph )
    {
+      PHB_SSL hb_ssl = *ph;
+
       /* Destroy the object */
-      SSL_free( ( SSL * ) *ph );
+      if( hb_ssl->ssl )
+      {
+         SSL_free( hb_ssl->ssl );
+         hb_ssl->ssl = NULL;
+      }
+
+      if( hb_ssl->pCallbackArg )
+      {
+         hb_itemRelease( hb_ssl->pCallbackArg );
+         hb_ssl->pCallbackArg = NULL;
+      }
+
+      hb_xfree( hb_ssl );
 
       /* set pointer to NULL just in case */
       *ph = NULL;
@@ -211,27 +231,36 @@ static HB_GARBAGE_FUNC( SSL_release )
 
 static const HB_GC_FUNCS s_gcSSL_funcs =
 {
-   SSL_release,
+   PHB_SSL_release,
    hb_gcDummyMark
 };
 
 HB_BOOL hb_SSL_is( int iParam )
 {
-   return hb_parptrGC( &s_gcSSL_funcs, iParam ) != NULL;
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcSSL_funcs, iParam );
+
+   return ph && *ph && ( ( PHB_SSL ) *ph )->ssl;
+}
+
+static PHB_SSL hb_SSL_par_raw( int iParam )
+{
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcSSL_funcs, iParam );
+
+   return ph ? ( PHB_SSL ) *ph : NULL;
 }
 
 SSL * hb_SSL_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcSSL_funcs, iParam );
 
-   return ph ? ( SSL * ) *ph : NULL;
+   return ph ? ( ( PHB_SSL ) *ph )->ssl : NULL;
 }
 
 SSL * hb_SSL_itemGet( PHB_ITEM pItem )
 {
    void ** ph = ( void ** ) hb_itemGetPtrGC( pItem, &s_gcSSL_funcs );
 
-   return ph ? ( SSL * ) *ph : NULL;
+   return ph ? ( ( PHB_SSL ) *ph )->ssl : NULL;
 }
 
 HB_FUNC( SSL_NEW )
@@ -242,11 +271,13 @@ HB_FUNC( SSL_NEW )
 
       if( ctx )
       {
-         void ** ph = ( void ** ) hb_gcAllocate( sizeof( SSL * ), &s_gcSSL_funcs );
+         PHB_SSL * ph = ( PHB_SSL * ) hb_gcAllocate( sizeof( PHB_SSL ), &s_gcSSL_funcs );
 
-         SSL * ssl = SSL_new( ctx );
+         PHB_SSL hb_ssl = ( PHB_SSL ) hb_xgrabz( sizeof( HB_SSL ) );
 
-         *ph = ssl;
+         hb_ssl->ssl = SSL_new( ctx );
+
+         *ph = hb_ssl;
 
          hb_retptrGC( ph );
       }
@@ -263,11 +294,13 @@ HB_FUNC( SSL_DUP )
 
       if( ssl_par )
       {
-         void ** ph = ( void ** ) hb_gcAllocate( sizeof( SSL * ), &s_gcSSL_funcs );
+         PHB_SSL * ph = ( PHB_SSL * ) hb_gcAllocate( sizeof( PHB_SSL ), &s_gcSSL_funcs );
 
-         SSL * ssl = SSL_dup( ssl_par );
+         PHB_SSL hb_ssl = ( PHB_SSL ) hb_xgrabz( sizeof( HB_SSL ) );
 
-         *ph = ssl;
+         hb_ssl->ssl = SSL_dup( ssl_par );
+
+         *ph = hb_ssl;
 
          hb_retptrGC( ph );
       }
@@ -1637,26 +1670,28 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
 {
    if( hb_SSL_is( 1 ) )
    {
-      SSL * ssl = hb_SSL_par( 1 );
+      PHB_SSL hb_ssl = hb_SSL_par_raw( 1 );
 
-      if( ssl )
+      if( hb_ssl )
       {
 #if OPENSSL_VERSION_NUMBER >= 0x00907000L
          PHB_ITEM pCallback = hb_param( 2, HB_IT_EVALITEM );
 
+         if( hb_ssl->pCallbackArg )
+         {
+            SSL_set_msg_callback_arg( hb_ssl->ssl, NULL );
+            hb_itemRelease( hb_ssl->pCallbackArg );
+            hb_ssl->pCallbackArg = NULL;
+         }
+
          if( pCallback )
          {
-            PHB_ITEM pPassCallback = hb_itemNew( pCallback );
-            SSL_set_msg_callback_arg( ssl, pPassCallback );
-            SSL_set_msg_callback( ssl, hb_ssl_msg_callback );
+            hb_ssl->pCallbackArg = hb_itemNew( pCallback );
+            SSL_set_msg_callback_arg( hb_ssl->ssl, hb_ssl->pCallbackArg );
+            SSL_set_msg_callback( hb_ssl->ssl, hb_ssl_msg_callback );
          }
          else
-         {
-            /* NOTE: WARNING: Direct access to OpenSSL internals. [vszakats] */
-            hb_itemRelease( ( PHB_ITEM ) ssl->msg_callback_arg );
-            SSL_set_msg_callback_arg( ssl, NULL );
-            SSL_set_msg_callback( ssl, NULL );
-         }
+            SSL_set_msg_callback( hb_ssl->ssl, NULL );
 #endif
       }
    }
