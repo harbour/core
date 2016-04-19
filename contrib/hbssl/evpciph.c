@@ -402,7 +402,7 @@ HB_FUNC( EVP_CIPHER_MODE )
 #if OPENSSL_VERSION_NUMBER < 0x00906040L
    /* fix for typo in macro definition in openssl/evp.h */
    #undef EVP_CIPHER_mode
-   #define EVP_CIPHER_mode(e)  ((e)->flags & EVP_CIPH_MODE)
+   #define EVP_CIPHER_mode( e )  ( ( e )->flags & EVP_CIPH_MODE )
 #endif
    hb_retni( cipher ? EVP_CIPHER_mode( cipher ) : 0 );
 }
@@ -1177,10 +1177,9 @@ HB_FUNC( EVP_OPENFINAL )
 
 #if 0
 
-#define EVP_CIPHER_CTX_get_app_data( e )     ( ( e )->app_data )
-#define EVP_CIPHER_CTX_set_app_data( e, d )  ( ( e )->app_data = ( char * ) ( d ) )
-
-int EVP_CIPHER_param_to_asn1( EVP_CIPHER_CTX * c, ASN1_TYPE * type );
-int EVP_CIPHER_asn1_to_param( EVP_CIPHER_CTX * c, ASN1_TYPE * type );
+void * EVP_CIPHER_CTX_get_app_data( const EVP_CIPHER_CTX * ctx );
+void EVP_CIPHER_CTX_set_app_data( EVP_CIPHER_CTX * ctx, void * data );
+int EVP_CIPHER_param_to_asn1( EVP_CIPHER_CTX * ctx, ASN1_TYPE * type );
+int EVP_CIPHER_asn1_to_param( EVP_CIPHER_CTX * ctx, ASN1_TYPE * type );
 
 #endif

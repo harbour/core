@@ -55,9 +55,9 @@
             Error E2451 openssl/applink.c 82: Undefined symbol '_lseek' in function OPENSSL_Applink
     */
    #include "io.h"
-   #define _setmode setmode
+   #define _setmode  setmode
    #undef _lseek
-   #define _lseek   lseek
+   #define _lseek    lseek
 #endif
 
 #include "hbapi.h"
@@ -1664,29 +1664,30 @@ HB_FUNC( SSL_SET_MSG_CALLBACK )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/*
+#if 0
 
-   void         SSL_set_psk_client_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *hint, char *identity, unsigned int max_identity_len, unsigned char *psk, unsigned int max_psk_len));
-   void         SSL_set_psk_server_callback(SSL *ssl, unsigned int (*callback)(SSL *ssl, const char *identity, unsigned char *psk, int max_psk_len));
+void         SSL_set_psk_client_callback( SSL * ssl, unsigned int ( * callback )( SSL * ssl, const char * hint, char * identity, unsigned int max_identity_len, unsigned char * psk, unsigned int max_psk_len ) );
+void         SSL_set_psk_server_callback( SSL * ssl, unsigned int ( * callback )( SSL * ssl, const char * identity, unsigned char * psk, int max_psk_len ) );
 
-   EVP_PKEY *   SSL_get_privatekey(SSL *ssl);
+EVP_PKEY *   SSL_get_privatekey( SSL * ssl );
 
-   STACK *      SSL_get_peer_cert_chain(const SSL *ssl);
-   int          SSL_use_RSAPrivateKey(SSL *ssl, RSA *rsa);
-   void         SSL_set_app_data(SSL *ssl, char *arg);
-   int          SSL_set_ex_data(SSL *ssl, int idx, char *arg);
-   char *       SSL_get_app_data(SSL *ssl);
-   char *       SSL_get_ex_data( ssl, int );
-   int          SSL_add_dir_cert_subjects_to_stack(STACK *stack, const char *dir);
-   int          SSL_add_file_cert_subjects_to_stack(STACK *stack, const char *file);
-   STACK *      SSL_dup_CA_list(STACK *sk);
-   SSL_CTX *    SSL_get_SSL_CTX(const SSL *ssl);
-   int          SSL_get_ex_data_X509_STORE_CTX_idx(void);
-   int          SSL_get_ex_new_index(long argl, char *argp, int (*new_func);(void), int (*dup_func)(void), void (*free_func)(void))
-   void (*SSL_get_info_callback(const SSL *ssl);)()
-   SSL_SESSION *SSL_get_session(const SSL *ssl);
-   int (*SSL_get_verify_callback(const SSL *ssl))(int,X509_STORE_CTX *)
-   void         SSL_set_client_CA_list(SSL *ssl, STACK *list);
-   void         SSL_set_info_callback(SSL *ssl, void (*cb);(void))
-   void         SSL_set_verify(SSL *ssl, int mode, int (*callback);(void))
- */
+STACK *      SSL_get_peer_cert_chain( const SSL * ssl );
+int          SSL_use_RSAPrivateKey( SSL * ssl, RSA * rsa );
+void         SSL_set_app_data( SSL * ssl, char * arg );
+int          SSL_set_ex_data( SSL * ssl, int idx, char * arg );
+char *       SSL_get_app_data( SSL * ssl );
+char *       SSL_get_ex_data( ssl, int );
+int          SSL_add_dir_cert_subjects_to_stack( STACK * stack, const char * dir );
+int          SSL_add_file_cert_subjects_to_stack( STACK * stack, const char * file );
+STACK *      SSL_dup_CA_list( STACK * sk );
+SSL_CTX *    SSL_get_SSL_CTX( const SSL * ssl );
+int          SSL_get_ex_data_X509_STORE_CTX_idx( void );
+int          SSL_get_ex_new_index( long argl, char * argp, int ( *new_func ); ( void ), int ( * dup_func )( void ), void ( * free_func )( void ) )
+void( *SSL_get_info_callback( const SSL * ssl ); )()
+SSL_SESSION * SSL_get_session( const SSL * ssl );
+int( *SSL_get_verify_callback( const SSL * ssl ) )( int, X509_STORE_CTX * )
+void         SSL_set_client_CA_list( SSL * ssl, STACK * list );
+void         SSL_set_info_callback( SSL * ssl, void ( *cb ); ( void ) )
+void         SSL_set_verify( SSL * ssl, int mode, int ( *callback ); ( void ) )
+
+#endif

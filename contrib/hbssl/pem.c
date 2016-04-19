@@ -147,22 +147,22 @@ HB_FUNC( PEM_READ_BIO_PKCS7         ) { hb_PEM_read_bio( ( PEM_READ_BIO * ) PEM_
 
 #if 0
 
-int        PEM_write_bio_RSAPrivateKey(      BIO * bp, RSA      * x, const EVP_CIPHER * enc, unsigned char * kstr, int klen, pem_password_cb * cb, void * u );
-int        PEM_write_bio_DSAPrivateKey(      BIO * bp, DSA      * x, const EVP_CIPHER * enc, unsigned char * kstr, int klen, pem_password_cb * cb, void * u );
-int        PEM_write_bio_PrivateKey(         BIO * bp, EVP_PKEY * x, const EVP_CIPHER * enc, unsigned char * kstr, int klen, pem_password_cb * cb, void * u );
-int        PEM_write_bio_PKCS8PrivateKey(    BIO * bp, EVP_PKEY * x, const EVP_CIPHER * enc, char * kstr, int klen, pem_password_cb * cb, void * u );
-int        PEM_write_bio_PKCS8PrivateKey_nid( BIO * bp, EVP_PKEY * x, int nid, char * kstr, int klen, pem_password_cb * cb, void * u );
-int        PEM_write_bio_PUBKEY(             BIO * bp, EVP_PKEY * x );
-int        PEM_write_bio_RSAPublicKey(       BIO * bp, RSA * x );
-int        PEM_write_bio_RSA_PUBKEY(         BIO * bp, RSA * x );
-int        PEM_write_bio_DSA_PUBKEY(         BIO * bp, DSA * x );
-int        PEM_write_bio_DSAparams(          BIO * bp, DSA * x );
-int        PEM_write_bio_DHparams(           BIO * bp, DH * x );
-int        PEM_write_bio_X509(               BIO * bp, X509 * x );
-int        PEM_write_bio_X509_AUX(           BIO * bp, X509 * x );
-int        PEM_write_bio_X509_REQ(           BIO * bp, X509_REQ * x );
-int        PEM_write_bio_X509_REQ_NEW(       BIO * bp, X509_REQ * x );
-int        PEM_write_bio_X509_CRL(           BIO * bp, X509_CRL * x );
-int        PEM_write_bio_PKCS7(              BIO * bp, PKCS7 * x );
+int PEM_write_bio_RSAPrivateKey(       BIO * bp, RSA      * x, const EVP_CIPHER * enc, unsigned char * kstr, int klen, pem_password_cb * cb, void * u );
+int PEM_write_bio_DSAPrivateKey(       BIO * bp, DSA      * x, const EVP_CIPHER * enc, unsigned char * kstr, int klen, pem_password_cb * cb, void * u );
+int PEM_write_bio_PrivateKey(          BIO * bp, EVP_PKEY * x, const EVP_CIPHER * enc, unsigned char * kstr, int klen, pem_password_cb * cb, void * u );
+int PEM_write_bio_PKCS8PrivateKey(     BIO * bp, EVP_PKEY * x, const EVP_CIPHER * enc, char * kstr, int klen, pem_password_cb * cb, void * u );
+int PEM_write_bio_PKCS8PrivateKey_nid( BIO * bp, EVP_PKEY * x, int nid, char * kstr, int klen, pem_password_cb * cb, void * u );
+int PEM_write_bio_PUBKEY(              BIO * bp, EVP_PKEY * x );
+int PEM_write_bio_RSAPublicKey(        BIO * bp, RSA * x );
+int PEM_write_bio_RSA_PUBKEY(          BIO * bp, RSA * x );
+int PEM_write_bio_DSA_PUBKEY(          BIO * bp, DSA * x );
+int PEM_write_bio_DSAparams(           BIO * bp, DSA * x );
+int PEM_write_bio_DHparams(            BIO * bp, DH * x );
+int PEM_write_bio_X509(                BIO * bp, X509 * x );
+int PEM_write_bio_X509_AUX(            BIO * bp, X509 * x );
+int PEM_write_bio_X509_REQ(            BIO * bp, X509_REQ * x );
+int PEM_write_bio_X509_REQ_NEW(        BIO * bp, X509_REQ * x );
+int PEM_write_bio_X509_CRL(            BIO * bp, X509_CRL * x );
+int PEM_write_bio_PKCS7(               BIO * bp, PKCS7 * x );
 
 #endif
