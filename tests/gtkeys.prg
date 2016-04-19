@@ -277,7 +277,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar, lRawKey )
 #ifdef _SET_EVENTMASK
    Set( _SET_EVENTMASK, INKEY_ALL )
 #endif
-   lRawKey := .f.
+   lRawKey := .F.
 #endif
 
    MDblClk( 250 )
