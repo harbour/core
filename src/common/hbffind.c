@@ -756,6 +756,8 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             dirname[ 1 ] = HB_OS_PATH_DELIM_CHR;
             dirname[ 2 ] = '\0';
          }
+         if( info->pattern[ 0 ] == '.' )
+            ffind->attrmask |= HB_FA_HIDDEN;
 
          /* tzset(); */
 
