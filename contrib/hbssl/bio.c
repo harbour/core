@@ -81,11 +81,11 @@ BIO * hb_BIO_par( int iParam )
    return ph ? ( BIO * ) *ph : NULL;
 }
 
-void * hb_BIO_is( int iParam )
+HB_BOOL hb_BIO_is( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcBIOFuncs, iParam );
 
-   return ph ? *ph : NULL;
+   return ph && *ph;
 }
 
 static void hb_BIO_ret( BIO * bio )
@@ -99,7 +99,7 @@ static void hb_BIO_ret( BIO * bio )
 
 /* */
 
-static int hb_BIO_METHOD_is( int iParam )
+static HB_BOOL hb_BIO_METHOD_is( int iParam )
 {
    return HB_ISCHAR( iParam );
 }

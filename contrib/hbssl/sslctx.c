@@ -76,9 +76,9 @@ static const HB_GC_FUNCS s_gcSSL_CTX_funcs =
    hb_gcDummyMark
 };
 
-void * hb_SSL_CTX_is( int iParam )
+HB_BOOL hb_SSL_CTX_is( int iParam )
 {
-   return hb_parptrGC( &s_gcSSL_CTX_funcs, iParam );
+   return hb_parptrGC( &s_gcSSL_CTX_funcs, iParam ) != NULL;
 }
 
 SSL_CTX * hb_SSL_CTX_par( int iParam )

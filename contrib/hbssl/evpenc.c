@@ -78,9 +78,9 @@ static const HB_GC_FUNCS s_gcEVP_ENCODE_CTX_funcs =
    hb_gcDummyMark
 };
 
-static void * hb_EVP_ENCODE_CTX_is( int iParam )
+static HB_BOOL hb_EVP_ENCODE_CTX_is( int iParam )
 {
-   return hb_parptrGC( &s_gcEVP_ENCODE_CTX_funcs, iParam );
+   return hb_parptrGC( &s_gcEVP_ENCODE_CTX_funcs, iParam ) != NULL;
 }
 
 static EVP_ENCODE_CTX * hb_EVP_ENCODE_CTX_par( int iParam )

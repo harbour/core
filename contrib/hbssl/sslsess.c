@@ -70,9 +70,9 @@ static const HB_GC_FUNCS s_gcSSL_SESSION_funcs =
    hb_gcDummyMark
 };
 
-void * hb_SSL_SESSION_is( int iParam )
+HB_BOOL hb_SSL_SESSION_is( int iParam )
 {
-   return hb_parptrGC( &s_gcSSL_SESSION_funcs, iParam );
+   return hb_parptrGC( &s_gcSSL_SESSION_funcs, iParam ) != NULL;
 }
 
 SSL_SESSION * hb_SSL_SESSION_par( int iParam )

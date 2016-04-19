@@ -215,9 +215,9 @@ static const HB_GC_FUNCS s_gcSSL_funcs =
    hb_gcDummyMark
 };
 
-void * hb_SSL_is( int iParam )
+HB_BOOL hb_SSL_is( int iParam )
 {
-   return hb_parptrGC( &s_gcSSL_funcs, iParam );
+   return hb_parptrGC( &s_gcSSL_funcs, iParam ) != NULL;
 }
 
 SSL * hb_SSL_par( int iParam )
