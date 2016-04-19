@@ -886,6 +886,11 @@ HB_FUNC( CURL_EASY_SETOPT )
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_TCP_NODELAY, HB_CURL_OPT_BOOL( 3 ) );
                break;
 #endif
+#if LIBCURL_VERSION_NUM >= 0x073100
+            case HB_CURLOPT_TCP_FASTOPEN:
+               res = curl_easy_setopt( hb_curl->curl, CURLOPT_TCP_FASTOPEN, HB_CURL_OPT_BOOL( 3 ) );
+               break;
+#endif
 #if LIBCURL_VERSION_NUM >= 0x071300
             case HB_CURLOPT_ADDRESS_SCOPE:
                res = curl_easy_setopt( hb_curl->curl, CURLOPT_ADDRESS_SCOPE, hb_parnl( 3 ) );
