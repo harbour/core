@@ -114,7 +114,7 @@ long hb_ssl_socketRead( PHB_SSLSTREAM pStream, HB_SOCKET sd,
    if( pStream->blocking ? timeout >= 0 : timeout < 0 )
    {
       if( hb_socketSetBlockingIO( sd, timeout < 0 ) >= 0 )
-         pStream->blocking = !pStream->blocking;
+         pStream->blocking = ! pStream->blocking;
    }
 
    if( len > 0 )
@@ -200,7 +200,7 @@ long hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET sd,
    if( pStream->blocking ? timeout >= 0 : timeout < 0 )
    {
       if( hb_socketSetBlockingIO( sd, timeout < 0 ) >= 0 )
-         pStream->blocking = !pStream->blocking;
+         pStream->blocking = ! pStream->blocking;
    }
 
    while( len > 0 )
@@ -279,7 +279,7 @@ PHB_SSLSTREAM hb_ssl_socketNew( HB_SOCKET sd, SSL * ssl, HB_BOOL fServer,
    pStream->pSSL = hb_itemNew( hb_param( 2, HB_IT_POINTER ) );
    pStream->blocking = timeout < 0;
    if( hb_socketSetBlockingIO( sd, pStream->blocking ) < 0 )
-      pStream->blocking = !pStream->blocking;
+      pStream->blocking = ! pStream->blocking;
 
    SSL_set_mode( ssl, HB_SSL_MODE_AUTO_RETRY );
    iResult = SSL_set_fd( ssl, sd );
