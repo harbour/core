@@ -1563,8 +1563,6 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             iChar += 'A' - 1;
             iKey = HB_INKEY_NEW_KEY( iChar, iFlags );
          }
-         else if( iKey < 127 && ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) )
-            iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
          else if( iChar != 0 )
          {
 #if defined( UNICODE )
@@ -1575,6 +1573,8 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
             if( u )
                iKey = HB_INKEY_NEW_UNICODEF( u, iFlags );
 #endif
+            else if( iChar < 127 && ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) )
+               iKey = HB_INKEY_NEW_KEY( iChar, iFlags );
             else
                iKey = HB_INKEY_NEW_CHARF( iChar, iFlags );
          }
