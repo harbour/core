@@ -120,7 +120,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
          continue;
       }
 
-      pFmtSave = pFmt;
+      pFmtSave = pFmt++;
 
       if( *pFmt == '%' )
       {
