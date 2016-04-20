@@ -130,7 +130,7 @@ STATIC FUNCTION ISO_TimeStamp()
    LOCAL nOffset := hb_UTCOffset()
 
    RETURN hb_StrFormat( "%1$s%2$s%3$02d%4$02d", ;
-      hb_TToC( hb_DateTime(), "yyyy-mm-dd", "HH:MM" ), ;
+      hb_TToC( hb_DateTime(), "yyyy-mm-dd", "hh:mm" ), ;
       iif( nOffset < 0, "-", "+" ), ;
       Int( Abs( nOffset ) / 3600 ), ;
       Int( Abs( nOffset ) % 3600 / 60 ) )
