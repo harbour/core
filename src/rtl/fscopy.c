@@ -59,7 +59,7 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
       PHB_FILE pDstFile;
       HB_ERRCODE errCode;
 
-      if( ( pDstFile = hb_fileExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
+      if( ( pDstFile = hb_fileExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_WRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
       {
          void * pbyBuffer = hb_xgrab( HB_FSCOPY_BUFFERSIZE );
 

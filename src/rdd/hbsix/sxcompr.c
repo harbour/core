@@ -620,7 +620,7 @@ HB_FUNC( SX_FCOMPRESS )
                                         FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
       if( pInput != NULL )
       {
-         PHB_FILE pOutput = hb_fileExtOpen( szDestin, NULL, FO_READWRITE |
+         PHB_FILE pOutput = hb_fileExtOpen( szDestin, NULL, FO_WRITE |
                                             FO_EXCLUSIVE | FXO_TRUNCATE |
                                             FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
          if( pOutput != NULL )
@@ -655,7 +655,7 @@ HB_FUNC( SX_FDECOMPRESS )
                                         FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
       if( pInput != NULL )
       {
-         PHB_FILE pOutput = hb_fileExtOpen( szDestin, NULL, FO_READWRITE |
+         PHB_FILE pOutput = hb_fileExtOpen( szDestin, NULL, FO_WRITE |
                                             FO_EXCLUSIVE | FXO_TRUNCATE |
                                             FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
          if( pOutput != NULL )

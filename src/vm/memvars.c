@@ -1455,7 +1455,7 @@ HB_FUNC( __MVSAVE )
       {
          fhnd = hb_fileExtOpen( pszFileName,
                                 hb_stackSetStruct()->HB_SET_DEFEXTENSIONS ? ".mem" : NULL,
-                                FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
+                                FXO_TRUNCATE | FO_WRITE | FO_EXCLUSIVE |
                                 FXO_DEFAULTS | FXO_SHARELOCK,
                                 NULL, pError );
          if( fhnd == NULL )

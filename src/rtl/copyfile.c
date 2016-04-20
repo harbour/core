@@ -96,7 +96,7 @@ static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest )
       do
       {
          pDest = hb_fileExtOpen( pszDest, NULL,
-                                 FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                 FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
                                  FXO_TRUNCATE | FXO_DEFAULTS | FXO_SHARELOCK,
                                  NULL, pError );
          if( pDest == NULL )

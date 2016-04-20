@@ -1078,7 +1078,7 @@ static HB_ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
    do
    {
       pArea->pFile = hb_fileExtOpen( szFileName, NULL,
-                                     FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
+                                     FO_WRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
                                      FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
                                      NULL, pError );
       if( ! pArea->pFile )

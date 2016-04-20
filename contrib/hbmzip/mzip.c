@@ -1250,7 +1250,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
    else
    {
       pFile = hb_fileExtOpen( szName, NULL,
-                              FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                              FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
                               FXO_TRUNCATE | FXO_SHARELOCK, NULL, NULL );
       if( pFile != NULL )
       {
