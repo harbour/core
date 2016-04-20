@@ -1597,7 +1597,7 @@ Supported shells per host platforms:
      * Valgrind (dynamic executable analysis tool) [linux, darwin-x86, free, open-source]
         * <http://valgrind.org/>
      * Uncrustify (source formatter) [multi-platform, free, open-source]
-        * <https://github.com/bengardner/uncrustify>
+        * <https://github.com/uncrustify/uncrustify>
      * UPX (executable compressor) [win, dos, \*nix, free, open-source]
         * <https://duckduckgo.com/?q=upx>
      * 7-Zip [multi-platform, free, open-source]
