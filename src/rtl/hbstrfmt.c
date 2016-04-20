@@ -122,9 +122,6 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
 
       pFmtSave = pFmt;
 
-      if( ++pFmt >= pFmtEnd )
-         continue;
-
       if( *pFmt == '%' )
       {
          bufadd( &buffer, pFmt++, 1 );
