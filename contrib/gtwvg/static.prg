@@ -62,8 +62,8 @@ CREATE CLASS WvgStatic INHERIT WvgWindow
    VAR    caption                               INIT ""
    VAR    clipParent                            INIT .T.
    VAR    clipSiblings                          INIT .F.
-   VAR    options                               INIT -1 /* WVGSTATIC_TEXT_LEFT */
-   VAR    TYPE                                  INIT -1 /* WVGSTATIC_TYPE_TEXT */
+   VAR    options                               INIT 0
+   VAR    TYPE                                  INIT 0
 
    VAR    hBitmap
 
