@@ -272,7 +272,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
 
    DO CASE
    CASE ::type == WVGSTATIC_TYPE_TEXT .OR. ::type == WVGSTATIC_TYPE_GROUPBOX
-      wapi_SendMessage( ::hWnd, WIN_WM_SETTEXT, 0, ::caption )
+      ::sendMessage( WIN_WM_SETTEXT, 0, ::caption )
 
    CASE ::type == WVGSTATIC_TYPE_BITMAP
       IF ::hBitmap != NIL
@@ -281,7 +281,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
 
       ::hBitmap := wvg_LoadImage( ::caption, iif( HB_ISNUMERIC( ::caption ), 1, 2 ) )
 
-      wapi_SendMessage( ::hWnd, STM_SETIMAGE, WIN_IMAGE_BITMAP, ::hBitmap )
+      ::sendMessage( STM_SETIMAGE, WIN_IMAGE_BITMAP, ::hBitmap )
 
    ENDCASE
 
