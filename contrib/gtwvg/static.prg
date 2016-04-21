@@ -108,18 +108,16 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    SWITCH ::type
    CASE WVGSTATIC_TYPE_TEXT
-      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_LEFT ) != 0
-         ::style += SS_LEFT /* + SS_LEFTNOWORDWRAP */
-      ENDIF
-      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_RIGHT ) != 0
-         ::style += SS_RIGHT
-      ENDIF
-      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_CENTER ) != 0
-         ::style += SS_CENTER
-      ENDIF
-      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_WORDBREAK ) != 0
+      DO CASE
+      CASE hb_bitAnd( ::options, WVGSTATIC_TEXT_WORDBREAK ) != 0
          ::style -= SS_LEFTNOWORDWRAP
-      ENDIF
+      CASE hb_bitAnd( ::options, WVGSTATIC_TEXT_CENTER ) != 0
+         ::style += SS_CENTER
+      CASE hb_bitAnd( ::options, WVGSTATIC_TEXT_RIGHT ) != 0
+         ::style += SS_RIGHT
+      OTHERWISE
+         ::style += SS_LEFT
+      ENDCASE
       EXIT
 
    CASE WVGSTATIC_TYPE_GROUPBOX
