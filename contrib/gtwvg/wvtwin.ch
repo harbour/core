@@ -513,7 +513,7 @@
 #define LBS_DISABLENOSCROLL                       4096
 #define LBS_NODATA                                8192
 #define LBS_NOSEL                                 16384
-#define LBS_STANDARD                              ( LBS_NOTIFY + LBS_SORT + WS_VSCROLL + WS_BORDER )
+#define LBS_STANDARD                              ( LBS_NOTIFY + LBS_SORT + WIN_WS_VSCROLL + WIN_WS_BORDER )
 
 /* Listbox Notification Codes */
 #define LBN_ERRSPACE                              -2

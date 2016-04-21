@@ -143,7 +143,7 @@ METHOD WvgProgressBar:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      wapi_SendMessage( ::hWnd, WIN_WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
       IF HB_ISEVALITEM( ::sl_resize )
          Eval( ::sl_resize,,, Self )
       ENDIF
@@ -183,7 +183,7 @@ METHOD PROCEDURE WvgProgressBar:setCaption( cCaption )
       ::Caption := cCaption
    ENDIF
    IF HB_ISSTRING( ::Caption )
-      wapi_SendMessage( ::hWnd, WIN_WM_SETTEXT, 0, ::Caption )
+      ::sendMessage( WIN_WM_SETTEXT, 0, ::Caption )
    ENDIF
 
    RETURN
@@ -209,23 +209,23 @@ METHOD WvgProgressBar:SetValue( nValue, nRangeMin, nRangeMax, nSpeed )
    IF HB_ISNUMERIC( nRangeMin ) .AND. HB_ISNUMERIC( nRangeMax ) .AND. ! ::lMarquee
       ::nRangeMin := nRangeMin
       ::nRangeMax := nRangeMax
-      wapi_SendMessage( ::hWnd, PBM_SETRANGE, 0, WIN_MAKELONG( ::nRangeMin, ::nRangeMax ) )
+      ::sendMessage( PBM_SETRANGE, 0, WIN_MAKELONG( ::nRangeMin, ::nRangeMax ) )
    ENDIF
    IF HB_ISNUMERIC( nValue ) .AND. ! ::lMarquee
-      wapi_SendMessage( ::hWnd, PBM_SETPOS, nValue, 0 )
+      ::sendMessage( PBM_SETPOS, nValue, 0 )
       ::nValue := nValue
    ENDIF
    IF HB_ISNUMERIC( nSpeed ) .AND. ::lMarquee
-      wapi_SendMessage( ::hWnd, PBM_SETMARQUEE, 1, nSpeed )
+      ::sendMessage( PBM_SETMARQUEE, 1, nSpeed )
       ::nSpeed := nSpeed
    ENDIF
 
-   RETURN wapi_SendMessage( ::hWnd, PBM_GETPOS, 0, 0 )
+   RETURN ::sendMessage( PBM_GETPOS, 0, 0 )
 
 METHOD PROCEDURE WvgProgressBar:SetCOlorBarFG( nColor )
 
    IF HB_ISNUMERIC( nColor )
-      wapi_SendMessage( ::hWnd, PBM_SETBARCOLOR, 0, nColor )
+      ::sendMessage( PBM_SETBARCOLOR, 0, nColor )
    ENDIF
 
    RETURN
@@ -233,7 +233,7 @@ METHOD PROCEDURE WvgProgressBar:SetCOlorBarFG( nColor )
 METHOD PROCEDURE WvgProgressBar:SetColorBarBG( nColor )
 
    IF HB_ISNUMERIC( nColor )
-      wapi_SendMessage( ::hWnd, PBM_SETBKCOLOR, 0, nColor )
+      ::sendMessage( PBM_SETBKCOLOR, 0, nColor )
    ENDIF
 
    RETURN

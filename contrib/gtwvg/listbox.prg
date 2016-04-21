@@ -79,12 +79,12 @@ CREATE CLASS WvgListBox INHERIT WvgWindow, WvgDataRef
    METHOD setItemsHeight( nPixel )              INLINE  ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
    METHOD setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex - 1, 0 )
 
-   METHOD addItem( cItem )                      INLINE  wapi_SendMessage( ::hWnd, LB_ADDSTRING, 0, cItem )
+   METHOD addItem( cItem )                      INLINE  ::sendMessage( LB_ADDSTRING, 0, cItem )
    METHOD clear()
    METHOD delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex - 1, 0 )
    METHOD getItem( nIndex )                     INLINE  wvg_lbGetText( ::hWnd, nIndex - 1 )
    METHOD getTabstops()                         VIRTUAL
-   METHOD insItem( nIndex, cItem )              INLINE  wapi_SendMessage( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
+   METHOD insItem( nIndex, cItem )              INLINE  ::sendMessage( LB_INSERTSTRING, nIndex - 1, cItem )
    METHOD setColumnWidth()                      VIRTUAL
    METHOD setItem( nIndex, cItem )              INLINE  ::delItem( nIndex ), ::insItem( nIndex, cItem )
    METHOD setTabstops()                         VIRTUAL
