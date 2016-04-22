@@ -2683,6 +2683,7 @@ hb_iswin8
 hb_iswin81
 hb_iswin9x
 hb_iswince
+hb_iswine
 hb_iswinnt
 hb_iswinsp
 hb_iswinver
