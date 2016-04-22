@@ -287,6 +287,7 @@ static HB_BOOL s_fWin2K3   = HB_FALSE;
 static HB_BOOL s_fWin2K    = HB_FALSE;
 static int     s_iWinNT    = 0;
 static int     s_iWin9x    = 0;
+static int     s_iWine     = 0;
 
 #if ! defined( HB_OS_WIN_CE )
 
@@ -373,6 +374,14 @@ static void s_hb_winVerInit( void )
    }
 #endif
 
+   {
+      /* NOTE: Unofficial Wine detection.
+               https://www.mail-archive.com/wine-devel@winehq.org/msg48659.html */
+      HMODULE hntdll = GetModuleHandle( TEXT( "ntdll.dll" ) );
+      if( hntdll && HB_WINAPI_GETPROCADDRESS( hntdll, "wine_get_version" ) )
+         s_iWine = 1;
+   }
+
    if( s_fWin2K )
       s_iWinNT = 5;
 #endif
@@ -392,6 +401,7 @@ static HB_BOOL s_fWin2K3   = HB_FALSE;
 static HB_BOOL s_fWin2K    = HB_FALSE;
 static int     s_iWinNT    = 0;
 static int     s_iWin9x    = 0;
+static int     s_iWine     = 0;
 
 static void s_hb_winVerInit( void )
 {
@@ -529,7 +539,6 @@ char * hb_verPlatform( void )
 
    {
       const char * pszName = "";
-      const char * pszWine = "";
 
       OSVERSIONINFO osvi;
 
@@ -558,14 +567,6 @@ char * hb_verPlatform( void )
             osvi.dwMinorVersion = 90;
             pszName = " ME";
             break;
-      }
-
-      {
-         /* NOTE: Unofficial Wine detection.
-                  https://www.mail-archive.com/wine-devel@winehq.org/msg48659.html */
-         HMODULE hntdll = GetModuleHandle( TEXT( "ntdll.dll" ) );
-         if( hntdll && HB_WINAPI_GETPROCADDRESS( hntdll, "wine_get_version" ) )
-            pszWine = " (Wine)";
       }
 #endif
 
@@ -658,7 +659,7 @@ char * hb_verPlatform( void )
 
       hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "Windows%s%s %lu.%lu",
                    pszName,
-                   pszWine,
+                   s_iWine ? " (Wine)" : "",
                    osvi.dwMajorVersion,
                    osvi.dwMinorVersion );
 
@@ -808,6 +809,17 @@ HB_BOOL hb_iswinsp( int iServicePackMajor, HB_BOOL fOrUpper )
    HB_SYMBOL_UNUSED( fOrUpper );
 #endif
    return HB_FALSE;
+}
+
+int hb_iswine( void )
+{
+#if defined( HB_OS_WIN ) || defined( HB_OS_DOS )
+   if( ! s_fWinVerInit )
+      s_hb_winVerInit();
+   return s_iWine;
+#else
+   return 0;
+#endif
 }
 
 HB_BOOL hb_iswin10( void )
