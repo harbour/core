@@ -120,7 +120,7 @@ static void hb_gt_cgi_newLine( PHB_GTCGI pGTCGI )
 #ifdef HB_GT_CGI_WINUTF8
 static HB_BOOL hb_gt_cgi_winutf8_enabled( void )
 {
-   return hb_iswinvista() &&
+   return ( hb_iswinvista() || hb_iswine() ) &&
       getenv( "HB_GT_CGI_NO_WINUTF8" ) == NULL &&
       IsValidCodePage( CP_UTF8 );
 }
