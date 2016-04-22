@@ -20,7 +20,6 @@ matrix:
     - os: osx
       compiler: i686-w64-mingw32-gcc
 sudo: false
-dist: trusty
 addons:
   apt:
     sources:
