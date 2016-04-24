@@ -31,7 +31,7 @@ addons:
       - g++-5
       - firebird2.5-dev
      #- liballegro4.2-dev
-      - libcairo2-dev
+     #- libcairo2-dev
       - libcups2-dev
       - libcurl4-openssl-dev
       - libfreeimage-dev
