@@ -115,7 +115,7 @@ PROCEDURE Main_MISC()
    HBTEST Set( _SET_MARGIN    , -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:25;N:-1 "
 
 #ifdef HB_COMPAT_C53
-   HBTEST Set( _SET_EVENTMASK  )       IS 128
+   HBTEST Set( _SET_EVENTMASK  )       IS 128  /* INKEY_KEYBOARD */
 #ifdef HB_CLP_STRICT
    HBTEST Set( _SET_VIDEOMODE  )       IS NIL
 #else
