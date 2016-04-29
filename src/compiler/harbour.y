@@ -273,7 +273,7 @@ extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error manageme
    We cannot use destructors for expressions. The internal bison logic cannot
    detect properly if the expression was used or not in our grammar definition
    so it's possible that destructors will never be executed or executed for
-   expressions which we freed ourself.
+   expressions which we freed ourselves.
 
 %destructor {
                HB_COMP_EXPR_FREE( $$ );

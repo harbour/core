@@ -81,7 +81,8 @@
 #  if defined( HB_OS_UNIX )
 #     include <sys/time.h>
 #     include <sys/types.h>
-#     if defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 200112L
+#     if ! defined( HB_HAS_POLL ) && ! defined( HB_NO_POLL ) && \
+         defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 200112L
          /* use poll() instead of select() to avoid FD_SETSIZE (1024 in Linux)
             file handle limit */
 #        define HB_HAS_POLL
