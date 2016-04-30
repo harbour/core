@@ -128,7 +128,8 @@
 #     define HB_HAS_ADDRINFO
 #     define HB_HAS_NAMEINFO
 #     define HB_HAS_GETHOSTBYADDR
-#     if defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 200112L
+#     if ! defined( HB_HAS_POLL ) && ! defined( HB_NO_POLL ) && \
+         defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 200112L
 #        define HB_HAS_POLL
 #     endif
 #  endif
@@ -3069,7 +3070,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
             {
                iPos = ( int ) nfds++;
                pfds[ iPos ].fd = sd;
-               pfds[ iPos ].revents = 0;
+               pfds[ iPos ].revents = pfds[ iPos ].events = 0;
             }
             pfds[ iPos ].events |= pEvents[ i ];
          }

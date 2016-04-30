@@ -518,10 +518,12 @@ DECLARE HBClass ;
 /* VO SYNTAX */
 #ifdef HB_CLS_VO
 
-#xtranslate  ( <!name!>{ [<p,...>] }        =>  ( <name>():New( <p> )
-#xtranslate  , <!name!>{ [<p,...>] }        =>  , <name>():New( <p> )
-#xtranslate  = <!name!>{ [<p,...>] }        =>  = <name>():New( <p> )
-#xtranslate := <!name!>{ [<p,...>] }        => := <name>():New( <p> )
+#ifdef HB_VO_CONSTRUCTOR
+   #xtranslate  ( <!name!>{ [<p,...>] }        =>  ( <name>():New( <p> )
+   #xtranslate  , <!name!>{ [<p,...>] }        =>  , <name>():New( <p> )
+   #xtranslate  = <!name!>{ [<p,...>] }        =>  = <name>():New( <p> )
+   #xtranslate := <!name!>{ [<p,...>] }        => := <name>():New( <p> )
+#endif /* HB_VO_CONSTRUCTOR */
 
 #xcommand EXPORT <!DataName1!> [, <!DataNameN!>] [ <tp: TYPE, AS> <type> ] [ <as: ASSIGN, INIT> <uValue> ] [<ro: READONLY, RO>] [<persistent: PERSISTENT, PROPERTY>] => ;
    _HB_MEMBER {[ AS <type>] <DataName1> [, <DataNameN>] } ;;
