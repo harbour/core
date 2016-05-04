@@ -14232,7 +14232,13 @@ STATIC FUNCTION NumberOfCPUs()
    LOCAL cCPU
 
    #if defined( __PLATFORM__WINDOWS )
+   #if 0
       cCPU := GetEnv( "NUMBER_OF_PROCESSORS" )
+   #else
+      /* Disabled after reports of slow and eventually
+         stalled builds on some systems (f.e. Windows 7) */
+      cCPU := "1"
+   #endif
    #elif defined( __PLATFORM__BSD )
       hb_processRun( "/sbin/sysctl -n hw.ncpu",, @cCPU )  /* in /usr/sbin/ on OS X */
    #elif defined( __PLATFORM__SUNOS )
