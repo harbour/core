@@ -3055,7 +3055,7 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    }
 
    if( ncnt > 0 )
-      pfds = ( struct pollfd * ) hb_xgrab( ncnt * sizeof( struct pollfd * ) );
+      pfds = ( struct pollfd * ) hb_xgrab( ncnt * sizeof( struct pollfd ) );
 
    for( i = 0; i < 3; i++ )
    {
