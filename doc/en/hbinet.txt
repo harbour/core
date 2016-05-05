@@ -1409,7 +1409,7 @@
       (Second form has no return value)
    $DESCRIPTION$
       Connects to a remote server described by cAddress, that can be specified
-      only in quad dot IPV4 notation (e.g. "127.0.0.1"), using the desired port.
+      only in quad dot IPv4 notation (e.g. "127.0.0.1"), using the desired port.
       This version of hb_inetConnect() does not use gethostbyname, and thus is thread
       safe and can be used in combination with hb_inetGetHosts() to have a finer
       timeout control while connecting to a server, and a finer error control.

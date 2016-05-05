@@ -40,7 +40,7 @@
 /* address of computer executing netiosrv,
  * change it if it's not the same machine
  */
-#define NETSERVER  "127.0.0.1"
+#define NETSERVER  "localhost"
 #define NETPORT    2941
 #define NETPASSWD  "topsecret"
 

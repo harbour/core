@@ -61,7 +61,7 @@ STATIC PROCEDURE Client()
    hb_inetTimeout( sock, 5000 )
 
    ? "CLIENT: connecting..."
-   IF Empty( hb_inetConnectIP( "127.0.0.1", N_PORT, sock ) )
+   IF Empty( hb_inetConnectIP( "localhost", N_PORT, sock ) )
       ? "CLIENT: cannot connect to server."
    ELSE
       ? "CLIENT: connected to the server."

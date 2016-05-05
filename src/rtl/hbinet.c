@@ -228,9 +228,7 @@ static const HB_GC_FUNCS s_gcInetFuncs =
    hb_inetSocketMark
 };
 
-/*****************************************************
- * Socket Initialization
- ***/
+/* Socket Initialization */
 
 static void hb_inetAutoInit( void )
 {
@@ -318,9 +316,7 @@ HB_FUNC( HB_INETCLEANUP )
    hb_socketCleanup();
 }
 
-/*****************************************************
- * Socket Creation and destruction
- ***/
+/* Socket Creation and destruction */
 
 HB_FUNC( HB_INETCREATE )
 {
@@ -370,9 +366,7 @@ HB_FUNC( HB_INETFD )
       hb_inetErrRT();
 }
 
-/************************************************
- * Socket data access & management
- ***/
+/* Socket data access & management */
 
 HB_FUNC( HB_INETSTATUS )
 {
@@ -651,9 +645,7 @@ HB_FUNC( HB_INETSETRCVBUFSIZE )
 
 
 
-/********************************************************************
- * TCP receive and send functions
- ***/
+/* TCP receive and send functions */
 
 static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size,
                         HB_BOOL readahead, HB_MAXINT timeout )
@@ -1098,9 +1090,7 @@ HB_FUNC( HB_INETSENDALL )
 }
 
 
-/*******************************************
- * Name resolution interface functions
- ***/
+/* Name resolution interface functions */
 
 HB_FUNC( HB_INETGETHOSTS )
 {
@@ -1141,9 +1131,8 @@ HB_FUNC( HB_INETGETALIAS )
 }
 
 
-/**********************************************
- * Interface information function
- ****/
+/* Interface information function */
+
 HB_FUNC( HB_INETIFINFO )
 {
    PHB_ITEM pInfo;
@@ -1157,9 +1146,7 @@ HB_FUNC( HB_INETIFINFO )
       hb_reta( 0 );
 }
 
-/**********************************************
- * Server Specific functions
- ****/
+/* Server Specific functions */
 
 static int s_inetBind( PHB_SOCKET_STRUCT socket, const void * pSockAddr, unsigned uiLen )
 {
@@ -1245,9 +1232,7 @@ HB_FUNC( HB_INETACCEPT )
    }
 }
 
-/**********************************************
- * Client specific (connection functions)
- ****/
+/* Client specific (connection functions) */
 
 static void hb_inetConnectInternal( HB_BOOL fResolve )
 {
@@ -1315,9 +1300,7 @@ HB_FUNC( HB_INETCONNECTIP )
    hb_inetConnectInternal( HB_FALSE );
 }
 
-/***********************************************************
- * Datagram functions
- ************************************************************/
+/* Datagram functions */
 
 HB_FUNC( HB_INETDGRAMBIND )
 {
@@ -1498,10 +1481,7 @@ HB_FUNC( HB_INETDGRAMRECV )
    }
 }
 
-
-/***********************************************************
- * Generic utility(?) functions
- ************************************************************/
+/* Generic utility(?) functions */
 
 HB_FUNC( HB_INETCRLF )
 {

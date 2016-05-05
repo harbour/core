@@ -51,9 +51,7 @@
  *
  */
 
-
 /* NOTE: User programs should never call this layer directly! */
-
 
 #include "hbgtcore.h"
 
@@ -116,8 +114,6 @@ static int hb_Inp9x( unsigned short int usPort )
    return usVal;
 }
 
-/* *********************************************************************** */
-
 static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_Outp9x(%hu, %hu)", usPort, usVal ) );
@@ -153,7 +149,6 @@ static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
    return usVal;
 }
 
-/* *********************************************************************** */
 /* dDurat is in seconds */
 static void hb_gt_w9xTone( double dFreq, double dDurat )
 {
@@ -212,7 +207,6 @@ static void hb_gt_w9xTone( double dFreq, double dDurat )
 
 #endif
 
-/* *********************************************************************** */
 /* dDurat is in seconds */
 static void hb_gt_wNtTone( double dFreq, double dDurat )
 {
@@ -227,7 +221,6 @@ static void hb_gt_wNtTone( double dFreq, double dDurat )
       hb_idleSleep( dDurat );
 }
 
-/* *********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
 void hb_gt_winapi_tone( double dFrequency, double dDuration )
 {

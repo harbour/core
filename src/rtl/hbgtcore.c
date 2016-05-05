@@ -3405,7 +3405,7 @@ static void hb_gt_def_WhoCares( PHB_GT pGT, void * pCargo )
    HB_SYMBOL_UNUSED( pCargo );
 }
 
-/* ************************************************************************* */
+/* - */
 
 #if defined( __GNUC__ ) && 0
 static const HB_GT_FUNCS s_gtCoreFunc =
@@ -3667,7 +3667,7 @@ static const HB_GT_FUNCS s_gtCoreFunc =
 };
 #endif
 
-/* ************************************************************************* */
+/* - */
 
 static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 

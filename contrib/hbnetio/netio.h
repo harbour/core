@@ -58,7 +58,7 @@
 #define NETIO_FILE_PREFIX_LEN  strlen( NETIO_FILE_PREFIX )
 
 /* default server address, port and timeout */
-#define NETIO_DEFAULT_SERVER   "127.0.0.1"
+#define NETIO_DEFAULT_SERVER   "localhost"
 #define NETIO_DEFAULT_PORT     2941
 #define NETIO_DEFAULT_TIMEOUT  -1
 

@@ -190,11 +190,8 @@ static HB_TSD_NEW( s_mathErrData, sizeof( HB_MATHERRDATA ),
 #define hb_mathErrData()  ( ( PHB_MATHERRDATA ) hb_stackGetTSD( &s_mathErrData ) )
 
 
-/*
- * ************************************************************
- * Harbour Math functions Part I:
+/* Harbour Math functions Part I:
  * handling math errors, C math lib redirection
- * ************************************************************
  */
 
 /* reset math error information */
@@ -388,11 +385,8 @@ HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc,
 }
 
 
-/*
- * ************************************************************
- * Harbour Math functions Part II:
+/* Harbour Math functions Part II:
  * handling math errors, Harbour default handling routine
- * ************************************************************
  */
 
 /* set error handling mode of hb_matherr() */
@@ -436,11 +430,8 @@ HB_FUNC( HB_MATHERMODE )        /* ([<nNewMode>]) -> <nOldMode> */
 }
 
 
-/*
- * ************************************************************
- * Harbour Math functions Part III:
+/* Harbour Math functions Part III:
  * (de)installing and (de)activating custom math error handlers
- * ************************************************************
  */
 
 /* install a harbour-like math error handler (that will be called by the matherr() function), return old handler */
@@ -466,12 +457,9 @@ HB_MATH_HANDLERPROC hb_mathGetHandler( void )
    return hb_mathErrData()->handler;
 }
 
-/*
- * ************************************************************
- * Harbour Math functions Part IV:
+/* Harbour Math functions Part IV:
  * example of hb_mathSet/GetHandler: add a new math handler that
  * calls a given codeblock for every math error
- * ************************************************************
  */
 
 static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
@@ -633,11 +621,8 @@ HB_FUNC( HB_MATHERBLOCK )       /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
    }
 }
 
-/*
- * ************************************************************
- * Harbour Math functions Part V:
+/* Harbour Math functions Part V:
  * Exp(), Log(), Sqrt()
- * ************************************************************
  */
 
 HB_FUNC( EXP )

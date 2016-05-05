@@ -7,9 +7,9 @@
 
 #require "hbnetio"
 
-/* net:127.0.0.1:2941:topsecret:data/_tst_ */
+/* net:localhost:2941:topsecret:data/_tst_ */
 
-#define DBSERVER  "127.0.0.1"
+#define DBSERVER  "localhost"
 #define DBPORT    2941
 #define DBPASSWD  "topsecret"
 #define DBDIR     "data"
