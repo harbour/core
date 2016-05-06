@@ -14719,8 +14719,8 @@ STATIC FUNCTION Apple_App_Template_Files( hbmk, cFile, cPROGNAME )
 STATIC FUNCTION Apple_App_Template_Info_plist()
 #pragma __cstream | RETURN %s
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
-<plist version="0.9">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
 <dict>
 \t<key>CFBundleInfoDictionaryVersion</key>
 \t<string>6.0</string>
@@ -14744,10 +14744,6 @@ STATIC FUNCTION Apple_App_Template_Info_plist()
 \t<string>%__APPVERSION__%, %__APPCOPYRIGHT__%</string>
 \t<key>NSHumanReadableCopyright</key>
 \t<string>%__APPCOPYRIGHT__%</string>
-\t<key>LSRequiresCarbon</key>
-\t<true/>
-\t<key>CSResourcesFileMapped</key>
-\t<true/>
 </dict>
 </plist>
 #pragma __endtext
