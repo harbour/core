@@ -1650,9 +1650,9 @@ Supported shells per host platforms:
      * Using gettext (.po files)
        * <http://docs.transifex.com/formats/gettext>
        * <http://heiner-eichmann.de/autotools/using_gettext.html>
-     * [GitHub Guides](https://guides.github.com)
+     * [GitHub Guides](https://guides.github.com/)
      * [GitHub Flavored Markdown](https://help.github.com/articles/github-flavored-markdown)
-     * [A Practical Git Introduction](http://mrchlblng.me/2014/09/practical-git-introduction/)
+     * [A Practical Git Introduction](http://marc.helbling.fr/2014/09/practical-git-introduction)
 
 * Community forums:
 
