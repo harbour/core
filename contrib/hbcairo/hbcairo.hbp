@@ -9,7 +9,7 @@
 -warn=low{darwin&clang}
 
 # Look for these components: cairo-dev_*_win*.zip, cairo_*_win*.zip, libpng_*_win*.zip
--depurlbase=cairo:http://www.gtk.org/download/
+-depurlbase=cairo:https://cairographics.org/download/
 -deppkgname=cairo:libcairo2-dev{deb}
 -deppkgname=cairo:cairo-devel{rpm}
 -deppkgname=cairo:cairo{pacman}
