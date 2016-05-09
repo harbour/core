@@ -318,7 +318,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 #if 0
       ::sendToolbarMessage( TB_SETPADDING, 10, 10 )
 #endif
-      ::sendToolbarMessage( TB_AUTOSIZE )
+      ::sendMessage( TB_AUTOSIZE, 0, 0 )
    ELSE
       wvg_AddToolBarButton( ::hWnd, , , oBtn:command, 3, .F. )
 

@@ -70,17 +70,16 @@ CREATE CLASS WvgComboBox INHERIT WvgWindow, WvgDataRef
    METHOD destroy()
    METHOD handleEvent( nMessage, aNM )
 
-   METHOD sendCBMessage( nMsg, wParam, lParam ) INLINE wvg_SendCBMessage( ::hWnd, nMsg, wParam, lParam )
    METHOD listBoxFocus( lFocus )
    METHOD listBoxSize()
    METHOD sleSize()
 
    METHOD addItem( cItem )
-   METHOD clear()                               INLINE ::sendCBMessage( CB_RESETCONTENT )
-   METHOD delItem( nIndex )                     INLINE ::sendCBMessage( CB_DELETESTRING, nIndex - 1 )
-   METHOD getItem( nIndex )                     INLINE ::sendCBMessage( CB_GETLBTEXT, nIndex - 1 )
-   METHOD insItem( nIndex, cItem )              INLINE ::sendCBMessage( CB_INSERTSTRING, nIndex - 1, cItem )
-   METHOD setItem( nIndex, cItem )              VIRTUAL
+   METHOD clear()                               INLINE ::sendMessage( CB_RESETCONTENT, 0, 0 )
+   METHOD delItem( nIndex )                     INLINE ::sendMessage( CB_DELETESTRING, nIndex - 1, 0 )
+   METHOD getItem( nIndex )                     INLINE wvg_SendCBMessage( ::hWnd, CB_GETLBTEXT, nIndex - 1 )
+   METHOD insItem( nIndex, cItem )              INLINE ::sendMessage( CB_INSERTSTRING, nIndex - 1, cItem )
+   METHOD setItem( nIndex, cItem )              INLINE ::sendMessage( CB_SETITEMDATA, nIndex - 1, cItem )
    METHOD setIcon( nItem, cIcon )
 
    VAR    oSLE
@@ -139,7 +138,7 @@ METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::setPosAndSize()
 
    /* Build SLE and ListBox Part - May not be available for all Windows Versions - How to handle then ? */
-   IF ! Empty( ::aInfo := ::sendCBMessage( CB_GETCOMBOBOXINFO ) )
+   IF ! Empty( ::aInfo := wvg_SendCBMessage( ::hWnd, CB_GETCOMBOBOXINFO ) )
       ::oSLE := WvgSLE():new()
       ::oSLE:oParent := Self
       ::oSLE:hWnd := ::aInfo[ 5 ]
@@ -248,17 +247,17 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
 METHOD WvgComboBox:addItem( cItem )
 
    IF HB_ISSTRING( cItem )
-      RETURN ::sendCBMessage( CB_ADDSTRING, cItem )
+      RETURN ::sendMessage( CB_ADDSTRING, 0, cItem )
    ENDIF
 
    RETURN -1
 
 METHOD WvgComboBox:listBoxFocus( lFocus )
 
-   LOCAL lOldFocus := ::sendCBMessage( CB_GETDROPPEDSTATE )
+   LOCAL lOldFocus := ::sendMessage( CB_GETDROPPEDSTATE, 0, 0 )
 
    IF HB_ISLOGICAL( lFocus )
-      ::sendCBMessage( CB_SHOWDROPDOWN, lFocus )
+      ::sendMessage( CB_SHOWDROPDOWN, lFocus, 0 )
    ENDIF
 
    RETURN lOldFocus
