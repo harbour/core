@@ -1117,9 +1117,8 @@ METHOD WvgWindow:findObjectByHandle( hWnd )
 
 METHOD WvgWindow:getPosAndSize( aPs, aSz )
 
-   LOCAL nX, nY, nW, nH, aXY
+   LOCAL nX, nY, nW, nH
    LOCAL aPos, aSize
-   LOCAL nFH, nFW
 
    __defaultNIL( @aPs, AClone( ::aPos  ) )
    __defaultNIL( @aSz, AClone( ::aSize ) )
@@ -1141,27 +1140,24 @@ METHOD WvgWindow:getPosAndSize( aPs, aSz )
          aSize[ 2 ] := Eval( aSize[ 2 ] )
       ENDIF
 
-      IF aPos[ 1 ] < 0 .AND. aPos[ 2 ] < 0 .AND. aSize[ 1 ] < 0 .AND. aSize[ 2 ] < 0
-         nX := Abs( aPos[ 2 ] )
-         IF nX < 1
-            nX := 0
+      IF aPos[ 1 ] < 0 .OR. aPos[ 2 ] < 0 .OR. aSize[ 1 ] < 0 .OR. aSize[ 2 ] < 0
+         nx := aPos[ 2 ]
+         IF nX < 0
+            nX := Int( Abs( aPos[ 2 ] ) * wvt_GetFontInfo()[ 7 ] )
          ENDIF
-         nY := Abs( aPos[ 1 ] )
-         IF nY < 1
-            nY := 0
+         nY := aPos[ 1 ]
+         IF nY < 0
+            nY := Int( Abs( aPos[ 1 ] ) * wvt_GetFontInfo()[ 6 ] )
          ENDIF
-         nW := Abs( aSize[ 2 ] )
-         IF nW < 1
-            nW := 0
+         nW := aSize[ 2 ]
+         IF nW < 0
+            nW := Int( Abs( aSize[ 2 ] ) * wvt_GetFontInfo()[ 7 ] )
          ENDIF
-         nH := Abs( aSize[ 1 ] )
-         IF nH < 1
-            nH := 0
+         nH := aSize[ 1 ]
+         IF nH < 0
+            nH := Int( Abs( aSize[ 1 ] ) * wvt_GetFontInfo()[ 6 ] )
          ENDIF
-         aXY  := wvt_GetXYFromRowCol( nY, nX )
-         nFH := wvt_GetFontInfo()[ 6 ]
-         nFW := wvt_GetFontInfo()[ 7 ]
-         RETURN { aXY[ 1 ], aXY[ 2 ], nW * nFW, nH * nFH }
+         RETURN { nX, nY, nW, nH }
       ENDIF
    ENDIF
 
