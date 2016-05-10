@@ -14262,6 +14262,7 @@ STATIC FUNCTION NumberOfCPUs()
 #define _VCS_BAZAAR         6
 #define _VCS_FOSSIL         7
 #define _VCS_MONOTONE       8
+#define _VCS_BITKEEPER      9
 
 STATIC FUNCTION VCSDetect( cDir )
 
@@ -14280,6 +14281,7 @@ STATIC FUNCTION VCSDetect( cDir )
    CASE hb_vfExists( cDir + "_FOSSIL_" )  ; RETURN _VCS_FOSSIL
    CASE hb_vfDirExists( cDir + "_MTN" )   ; RETURN _VCS_MONOTONE
    CASE hb_vfDirExists( cDir + "CVS" )    ; RETURN _VCS_CVS
+   CASE hb_vfDirExists( cDir + ".bk" )    ; RETURN _VCS_BITKEEPER
    CASE hb_vfDirExists( cDir + "_svn" )   ; RETURN _VCS_SVN /* NOTE: When SVN_ASP_DOT_NET_HACK envvar is set. [vszakats] */
    ENDCASE
 
@@ -14361,6 +14363,10 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
    CASE _VCS_MONOTONE
       cType := "monotone"
       cCommand := "mtn status"
+      EXIT
+   CASE _VCS_BITKEEPER
+      cType := "bitkeeper"
+      /* TODO: implement support */
       EXIT
    OTHERWISE
       /* No version control system detected, roll our own. */
@@ -14495,6 +14501,9 @@ STATIC FUNCTION VCSID( hbmk, cDir, cVCSHEAD, /* @ */ cType, /* @ */ hCustom )
                cResult := Left( cStdOut, tmp - 1 )
             ENDIF
          ENDIF
+         EXIT
+      CASE _VCS_BITKEEPER
+         /* TODO: implement support */
          EXIT
       ENDSWITCH
    ENDIF
