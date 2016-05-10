@@ -48,7 +48,7 @@
 
 #include "sha1.h"
 
-HB_FUNC( HB_SHA1 )
+HB_FUNC( HB_SHA1 )  /* Considered insecure. Use SHA256 or higher instead. */
 {
    sha1_byte digest[ SHA1_DIGEST_LENGTH ];
    HB_SHA_CTX ctx;

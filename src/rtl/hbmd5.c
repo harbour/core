@@ -353,7 +353,7 @@ HB_BOOL hb_md5file( const char * pszFileName, char * digest )
    return HB_FALSE;
 }
 
-HB_FUNC( HB_MD5 )
+HB_FUNC( HB_MD5 )  /* Considered insecure. Use SHA256 or higher instead. */
 {
    const char * pszStr = hb_parc( 1 );
 
@@ -377,7 +377,7 @@ HB_FUNC( HB_MD5 )
       hb_retc_null();  /* return empty string on wrong call */
 }
 
-HB_FUNC( HB_MD5FILE )
+HB_FUNC( HB_MD5FILE )  /* Considered insecure. Use SHA256 or higher instead. */
 {
    const char * pszFileName = hb_parc( 1 );
    char dststr[ 16 ];
