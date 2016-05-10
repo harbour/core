@@ -14278,6 +14278,7 @@ STATIC FUNCTION VCSDetect( cDir )
    CASE hb_vfExists( cDir + ".git" )      ; RETURN _VCS_GIT_SUB /* submodule */
    CASE hb_vfDirExists( cDir + ".hg" )    ; RETURN _VCS_MERCURIAL
    CASE hb_vfDirExists( cDir + ".bzr" )   ; RETURN _VCS_BAZAAR
+   CASE hb_vfExists( cDir + ".fslckout" ) ; RETURN _VCS_FOSSIL
    CASE hb_vfExists( cDir + "_FOSSIL_" )  ; RETURN _VCS_FOSSIL
    CASE hb_vfDirExists( cDir + "_MTN" )   ; RETURN _VCS_MONOTONE
    CASE hb_vfDirExists( cDir + "CVS" )    ; RETURN _VCS_CVS
