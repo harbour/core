@@ -14820,6 +14820,7 @@ STATIC PROCEDURE ShowFunctionProviders( hbmk, aFunction, lGenericFind )
       ELSEIF ! lGenericFind .AND. Len( cFunction ) <= 10  /* find functions with short names that have a long equivalent (Cl*pper heritage) */
          FOR EACH tmp1 IN hCore
             IF Len( tmp1:__enumKey() ) > 10 .AND. ;
+               Len( cFunction ) >= 4 .AND. ;
                hb_LeftEqI( tmp1:__enumKey(), cFunction ) .AND. ;
                "(hbcore)" $ tmp1  /* sloppy */
                AAdd( aInLongForm, hb_StrFormat( "%1$s() -> %2$s()", cFunction, tmp1:__enumKey() ) )
