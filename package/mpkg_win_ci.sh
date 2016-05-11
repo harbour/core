@@ -9,7 +9,7 @@
 
 cd "$(dirname "$0")/.." || exit
 
-_BRANCH="${APPVEYOR_REPO_BRANCH}${TRAVIS_BRANCH}${GIT_BRANCH}"
+_BRANCH="${APPVEYOR_REPO_BRANCH}${TRAVIS_BRANCH}${CI_BUILD_REF_NAME}${GIT_BRANCH}"
 _BRANC4="$(echo "${_BRANCH}" | cut -c -4)"
 _ROOT="$(realpath '.')"
 
