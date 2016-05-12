@@ -258,12 +258,12 @@ METHOD Create() CLASS win_Prn
          ::PageWidth        := wapi_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALWIDTH )
          ::PageHeight       := wapi_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALHEIGHT )
          ::LeftMargin       := wapi_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETX )
-         ::RightMargin      := ( ::PageWidth - ::LeftMargin ) + 1
+         ::RightMargin      := wapi_GetDeviceCaps( ::hPrinterDC, WIN_HORZRES )
          ::PixelsPerInchY   := wapi_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSY )
          ::PixelsPerInchX   := wapi_GetDeviceCaps( ::hPrinterDC, WIN_LOGPIXELSX )
          ::LineHeight       := Int( ::PixelsPerInchY / 6 )  // Default 6 lines per inch == # of pixels per line
          ::TopMargin        := wapi_GetDeviceCaps( ::hPrinterDC, WIN_PHYSICALOFFSETY )
-         ::BottomMargin     := ( ::PageHeight - ::TopMargin ) + 1
+         ::BottomMargin     := wapi_GetDeviceCaps( ::hPrinterDC, WIN_VERTRES )
 
          // Set .T. if can print bitmaps
          ::BitMapsOk := hb_bitAnd( wapi_GetDeviceCaps( ::hPrinterDC, WIN_RASTERCAPS ), WIN_RC_STRETCHDIB ) != 0
