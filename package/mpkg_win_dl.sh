@@ -14,8 +14,8 @@ set | grep '_VER='
 # Quit if any of the lines fail
 set -e
 
-alias curl='curl -fsS --connect-timeout 15'
-alias gpg='gpg --keyid-format LONG'
+alias curl='curl -fsS --connect-timeout 15 --retry 3'
+alias gpg='gpg --batch --keyid-format LONG'
 
 gpg --version | grep gpg
 
