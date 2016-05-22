@@ -1,6 +1,6 @@
 diff --strip-trailing-cr -urN expat.orig/xmlparse.c expat/xmlparse.c
---- expat.orig/xmlparse.c	2016-05-12 20:07:02.000000000 +0200
-+++ expat/xmlparse.c	2016-05-12 20:07:02.000000000 +0200
+--- expat.orig/xmlparse.c	2016-05-23 01:54:36.000000000 +0200
++++ expat/xmlparse.c	2016-05-23 01:54:36.000000000 +0200
 @@ -10,7 +10,9 @@
  
  #define XML_BUILDING_EXPAT 1
@@ -12,9 +12,111 @@ diff --strip-trailing-cr -urN expat.orig/xmlparse.c expat/xmlparse.c
  #include "winconfi.h"
  #elif defined(MACOS_CLASSIC)
  #include "macconfi.h"
+@@ -2426,11 +2428,11 @@
+           for (;;) {
+             int bufSize;
+             int convLen;
+-            XmlConvert(enc,
++            const enum XML_Convert_Result convert_res = XmlConvert(enc,
+                        &fromPtr, rawNameEnd,
+                        (ICHAR **)&toPtr, (ICHAR *)tag->bufEnd - 1);
+             convLen = (int)(toPtr - (XML_Char *)tag->buf);
+-            if (fromPtr == rawNameEnd) {
++            if ((convert_res == XML_CONVERT_COMPLETED) || (convert_res == XML_CONVERT_INPUT_INCOMPLETE)) {
+               tag->name.strLen = convLen;
+               break;
+             }
+@@ -2651,11 +2653,11 @@
+           if (MUST_CONVERT(enc, s)) {
+             for (;;) {
+               ICHAR *dataPtr = (ICHAR *)dataBuf;
+-              XmlConvert(enc, &s, next, &dataPtr, (ICHAR *)dataBufEnd);
++              const enum XML_Convert_Result convert_res = XmlConvert(enc, &s, next, &dataPtr, (ICHAR *)dataBufEnd);
+               *eventEndPP = s;
+               charDataHandler(handlerArg, dataBuf,
+                               (int)(dataPtr - (ICHAR *)dataBuf));
+-              if (s == next)
++              if ((convert_res == XML_CONVERT_COMPLETED) || (convert_res == XML_CONVERT_INPUT_INCOMPLETE))
+                 break;
+               *eventPP = s;
+             }
+@@ -3261,11 +3263,11 @@
+           if (MUST_CONVERT(enc, s)) {
+             for (;;) {
+               ICHAR *dataPtr = (ICHAR *)dataBuf;
+-              XmlConvert(enc, &s, next, &dataPtr, (ICHAR *)dataBufEnd);
++              const enum XML_Convert_Result convert_res = XmlConvert(enc, &s, next, &dataPtr, (ICHAR *)dataBufEnd);
+               *eventEndPP = next;
+               charDataHandler(handlerArg, dataBuf,
+                               (int)(dataPtr - (ICHAR *)dataBuf));
+-              if (s == next)
++              if ((convert_res == XML_CONVERT_COMPLETED) || (convert_res == XML_CONVERT_INPUT_INCOMPLETE))
+                 break;
+               *eventPP = s;
+             }
+@@ -5342,6 +5344,7 @@
+               const char *s, const char *end)
+ {
+   if (MUST_CONVERT(enc, s)) {
++    enum XML_Convert_Result convert_res;
+     const char **eventPP;
+     const char **eventEndPP;
+     if (enc == encoding) {
+@@ -5354,11 +5357,11 @@
+     }
+     do {
+       ICHAR *dataPtr = (ICHAR *)dataBuf;
+-      XmlConvert(enc, &s, end, &dataPtr, (ICHAR *)dataBufEnd);
++      convert_res = XmlConvert(enc, &s, end, &dataPtr, (ICHAR *)dataBufEnd);
+       *eventEndPP = s;
+       defaultHandler(handlerArg, dataBuf, (int)(dataPtr - (ICHAR *)dataBuf));
+       *eventPP = s;
+-    } while (s != end);
++    } while ((convert_res != XML_CONVERT_COMPLETED) && (convert_res != XML_CONVERT_INPUT_INCOMPLETE));
+   }
+   else
+     defaultHandler(handlerArg, (XML_Char *)s, (int)((XML_Char *)end - (XML_Char *)s));
+@@ -6163,8 +6166,8 @@
+   if (!pool->ptr && !poolGrow(pool))
+     return NULL;
+   for (;;) {
+-    XmlConvert(enc, &ptr, end, (ICHAR **)&(pool->ptr), (ICHAR *)pool->end);
+-    if (ptr == end)
++    const enum XML_Convert_Result convert_res = XmlConvert(enc, &ptr, end, (ICHAR **)&(pool->ptr), (ICHAR *)pool->end);
++    if ((convert_res == XML_CONVERT_COMPLETED) || (convert_res == XML_CONVERT_INPUT_INCOMPLETE))
+       break;
+     if (!poolGrow(pool))
+       return NULL;
+@@ -6248,8 +6251,13 @@
+     }
+   }
+   if (pool->blocks && pool->start == pool->blocks->s) {
+-    int blockSize = (int)(pool->end - pool->start)*2;
+-    BLOCK *temp = (BLOCK *)
++    BLOCK *temp;
++    int blockSize = (int)((unsigned)(pool->end - pool->start)*2U);
++
++    if (blockSize < 0)
++      return XML_FALSE;
++
++    temp = (BLOCK *)
+       pool->mem->realloc_fcn(pool->blocks,
+                              (offsetof(BLOCK, s)
+                               + blockSize * sizeof(XML_Char)));
+@@ -6264,6 +6272,10 @@
+   else {
+     BLOCK *tem;
+     int blockSize = (int)(pool->end - pool->start);
++
++    if (blockSize < 0)
++      return XML_FALSE;
++
+     if (blockSize < INIT_BLOCK_SIZE)
+       blockSize = INIT_BLOCK_SIZE;
+     else
 diff --strip-trailing-cr -urN expat.orig/xmlrole.c expat/xmlrole.c
---- expat.orig/xmlrole.c	2016-05-12 20:07:02.000000000 +0200
-+++ expat/xmlrole.c	2016-05-12 20:07:02.000000000 +0200
+--- expat.orig/xmlrole.c	2016-05-23 01:54:36.000000000 +0200
++++ expat/xmlrole.c	2016-05-23 01:54:36.000000000 +0200
 @@ -4,7 +4,9 @@
  
  #include <stddef.h>
@@ -27,8 +129,8 @@ diff --strip-trailing-cr -urN expat.orig/xmlrole.c expat/xmlrole.c
  #elif defined(MACOS_CLASSIC)
  #include "macconfi.h"
 diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
---- expat.orig/xmltok.c	2016-05-12 20:07:02.000000000 +0200
-+++ expat/xmltok.c	2016-05-12 20:07:02.000000000 +0200
+--- expat.orig/xmltok.c	2016-05-23 01:54:36.000000000 +0200
++++ expat/xmltok.c	2016-05-23 01:54:36.000000000 +0200
 @@ -4,7 +4,9 @@
  
  #include <stddef.h>
@@ -58,7 +160,141 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  static int FASTCALL checkCharRefNumber(int);
  
  #include "xmltok_i.h"
-@@ -467,7 +480,7 @@
+@@ -318,39 +331,55 @@
+   UTF8_cval4 = 0xf0
+ };
+ 
+-static void PTRCALL
++static enum XML_Convert_Result PTRCALL
+ utf8_toUtf8(const ENCODING *enc,
+             const char **fromP, const char *fromLim,
+             char **toP, const char *toLim)
+ {
++  enum XML_Convert_Result res = XML_CONVERT_COMPLETED;
+   char *to;
+   const char *from;
+   if (fromLim - *fromP > toLim - *toP) {
+     /* Avoid copying partial characters. */
++    res = XML_CONVERT_OUTPUT_EXHAUSTED;
+     for (fromLim = *fromP + (toLim - *toP); fromLim > *fromP; fromLim--)
+       if (((unsigned char)fromLim[-1] & 0xc0) != 0x80)
+         break;
+   }
+-  for (to = *toP, from = *fromP; from != fromLim; from++, to++)
++  for (to = *toP, from = *fromP; (from < fromLim) && (to < toLim); from++, to++)
+     *to = *from;
+   *fromP = from;
+   *toP = to;
++
++  if ((to == toLim) && (from < fromLim))
++    return XML_CONVERT_OUTPUT_EXHAUSTED;
++  else
++    return res;
+ }
+ 
+-static void PTRCALL
++static enum XML_Convert_Result PTRCALL
+ utf8_toUtf16(const ENCODING *enc,
+              const char **fromP, const char *fromLim,
+              unsigned short **toP, const unsigned short *toLim)
+ {
++  enum XML_Convert_Result res = XML_CONVERT_COMPLETED;
+   unsigned short *to = *toP;
+   const char *from = *fromP;
+-  while (from != fromLim && to != toLim) {
++  while (from < fromLim && to < toLim) {
+     switch (((struct normal_encoding *)enc)->type[(unsigned char)*from]) {
+     case BT_LEAD2:
++      if (fromLim - from < 2) {
++        res = XML_CONVERT_INPUT_INCOMPLETE;
++        break;
++      }
+       *to++ = (unsigned short)(((from[0] & 0x1f) << 6) | (from[1] & 0x3f));
+       from += 2;
+       break;
+     case BT_LEAD3:
++      if (fromLim - from < 3) {
++        res = XML_CONVERT_INPUT_INCOMPLETE;
++        break;
++      }
+       *to++ = (unsigned short)(((from[0] & 0xf) << 12)
+                                | ((from[1] & 0x3f) << 6) | (from[2] & 0x3f));
+       from += 3;
+@@ -358,8 +387,14 @@
+     case BT_LEAD4:
+       {
+         unsigned long n;
+-        if (to + 1 == toLim)
++        if (toLim - to < 2) {
++          res = XML_CONVERT_OUTPUT_EXHAUSTED;
++          goto after;
++        }
++        if (fromLim - from < 4) {
++          res = XML_CONVERT_INPUT_INCOMPLETE;
+           goto after;
++        }
+         n = ((from[0] & 0x7) << 18) | ((from[1] & 0x3f) << 12)
+             | ((from[2] & 0x3f) << 6) | (from[3] & 0x3f);
+         n -= 0x10000;
+@@ -377,6 +412,7 @@
+ after:
+   *fromP = from;
+   *toP = to;
++  return res;
+ }
+ 
+ #ifdef XML_NS
+@@ -425,7 +461,7 @@
+   STANDARD_VTABLE(sb_) NORMAL_VTABLE(utf8_)
+ };
+ 
+-static void PTRCALL
++static enum XML_Convert_Result PTRCALL
+ latin1_toUtf8(const ENCODING *enc,
+               const char **fromP, const char *fromLim,
+               char **toP, const char *toLim)
+@@ -433,30 +469,35 @@
+   for (;;) {
+     unsigned char c;
+     if (*fromP == fromLim)
+-      break;
++      return XML_CONVERT_COMPLETED;
+     c = (unsigned char)**fromP;
+     if (c & 0x80) {
+       if (toLim - *toP < 2)
+-        break;
++        return XML_CONVERT_OUTPUT_EXHAUSTED;
+       *(*toP)++ = (char)((c >> 6) | UTF8_cval2);
+       *(*toP)++ = (char)((c & 0x3f) | 0x80);
+       (*fromP)++;
+     }
+     else {
+       if (*toP == toLim)
+-        break;
++        return XML_CONVERT_OUTPUT_EXHAUSTED;
+       *(*toP)++ = *(*fromP)++;
+     }
+   }
+ }
+ 
+-static void PTRCALL
++static enum XML_Convert_Result PTRCALL
+ latin1_toUtf16(const ENCODING *enc,
+                const char **fromP, const char *fromLim,
+                unsigned short **toP, const unsigned short *toLim)
+ {
+-  while (*fromP != fromLim && *toP != toLim)
++  while (*fromP < fromLim && *toP < toLim)
+     *(*toP)++ = (unsigned char)*(*fromP)++;
++
++  if ((*toP == toLim) && (*fromP < fromLim))
++    return XML_CONVERT_OUTPUT_EXHAUSTED;
++  else
++    return XML_CONVERT_COMPLETED;
+ }
+ 
+ #ifdef XML_NS
+@@ -467,7 +508,7 @@
  #include "asciitab.h"
  #include "latin1ta.h"
    },
@@ -67,7 +303,7 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #endif
-@@ -480,7 +493,7 @@
+@@ -480,16 +521,21 @@
  #undef BT_COLON
  #include "latin1ta.h"
    },
@@ -75,8 +311,24 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
 +  STANDARD_VTABLE(sb_) NULL_VTABLE()
  };
  
- static void PTRCALL
-@@ -500,7 +513,7 @@
+-static void PTRCALL
++static enum XML_Convert_Result PTRCALL
+ ascii_toUtf8(const ENCODING *enc,
+              const char **fromP, const char *fromLim,
+              char **toP, const char *toLim)
+ {
+-  while (*fromP != fromLim && *toP != toLim)
++  while (*fromP < fromLim && *toP < toLim)
+     *(*toP)++ = *(*fromP)++;
++
++  if ((*toP == toLim) && (*fromP < fromLim))
++    return XML_CONVERT_OUTPUT_EXHAUSTED;
++  else
++    return XML_CONVERT_COMPLETED;
+ }
+ 
+ #ifdef XML_NS
+@@ -500,7 +546,7 @@
  #include "asciitab.h"
  /* BT_NONXML == 0 */
    },
@@ -85,7 +337,7 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #endif
-@@ -513,7 +526,7 @@
+@@ -513,7 +559,7 @@
  #undef BT_COLON
  /* BT_NONXML == 0 */
    },
@@ -94,7 +346,101 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  static int PTRFASTCALL
-@@ -726,7 +739,7 @@
+@@ -536,13 +582,14 @@
+ }
+ 
+ #define DEFINE_UTF16_TO_UTF8(E) \
+-static void  PTRCALL \
++static enum XML_Convert_Result  PTRCALL \
+ E ## toUtf8(const ENCODING *enc, \
+             const char **fromP, const char *fromLim, \
+             char **toP, const char *toLim) \
+ { \
+-  const char *from; \
+-  for (from = *fromP; from != fromLim; from += 2) { \
++  const char *from = *fromP; \
++  fromLim = from + (((fromLim - from) >> 1) << 1);  /* shrink to even */ \
++  for (; from < fromLim; from += 2) { \
+     int plane; \
+     unsigned char lo2; \
+     unsigned char lo = GET_LO(from); \
+@@ -552,7 +599,7 @@
+       if (lo < 0x80) { \
+         if (*toP == toLim) { \
+           *fromP = from; \
+-          return; \
++          return XML_CONVERT_OUTPUT_EXHAUSTED; \
+         } \
+         *(*toP)++ = lo; \
+         break; \
+@@ -562,7 +609,7 @@
+     case 0x4: case 0x5: case 0x6: case 0x7: \
+       if (toLim -  *toP < 2) { \
+         *fromP = from; \
+-        return; \
++        return XML_CONVERT_OUTPUT_EXHAUSTED; \
+       } \
+       *(*toP)++ = ((lo >> 6) | (hi << 2) |  UTF8_cval2); \
+       *(*toP)++ = ((lo & 0x3f) | 0x80); \
+@@ -570,7 +617,7 @@
+     default: \
+       if (toLim -  *toP < 3)  { \
+         *fromP = from; \
+-        return; \
++        return XML_CONVERT_OUTPUT_EXHAUSTED; \
+       } \
+       /* 16 bits divided 4, 6, 6 amongst 3 bytes */ \
+       *(*toP)++ = ((hi >> 4) | UTF8_cval3); \
+@@ -580,7 +627,11 @@
+     case 0xD8: case 0xD9: case 0xDA: case 0xDB: \
+       if (toLim -  *toP < 4) { \
+         *fromP = from; \
+-        return; \
++        return XML_CONVERT_OUTPUT_EXHAUSTED; \
++      } \
++      if (fromLim - from < 4) { \
++        *fromP = from; \
++        return XML_CONVERT_INPUT_INCOMPLETE; \
+       } \
+       plane = (((hi & 0x3) << 2) | ((lo >> 6) & 0x3)) + 1; \
+       *(*toP)++ = ((plane >> 2) | UTF8_cval4); \
+@@ -596,20 +647,32 @@
+     } \
+   } \
+   *fromP = from; \
++  if (from < fromLim) \
++    return XML_CONVERT_INPUT_INCOMPLETE; \
++  else \
++    return XML_CONVERT_COMPLETED; \
+ }
+ 
+ #define DEFINE_UTF16_TO_UTF16(E) \
+-static void  PTRCALL \
++static enum XML_Convert_Result  PTRCALL \
+ E ## toUtf16(const ENCODING *enc, \
+              const char **fromP, const char *fromLim, \
+              unsigned short **toP, const unsigned short *toLim) \
+ { \
++  enum XML_Convert_Result res = XML_CONVERT_COMPLETED; \
++  fromLim = *fromP + (((fromLim - *fromP) >> 1) << 1);  /* shrink to even */ \
+   /* Avoid copying first half only of surrogate */ \
+   if (fromLim - *fromP > ((toLim - *toP) << 1) \
+-      && (GET_HI(fromLim - 2) & 0xF8) == 0xD8) \
++      && (GET_HI(fromLim - 2) & 0xF8) == 0xD8) { \
+     fromLim -= 2; \
+-  for (; *fromP != fromLim && *toP != toLim; *fromP += 2) \
++    res = XML_CONVERT_INPUT_INCOMPLETE; \
++  } \
++  for (; *fromP < fromLim && *toP < toLim; *fromP += 2) \
+     *(*toP)++ = (GET_HI(*fromP) << 8) | GET_LO(*fromP); \
++  if ((*toP == toLim) && (*fromP < fromLim)) \
++    return XML_CONVERT_OUTPUT_EXHAUSTED; \
++  else \
++    return res; \
+ }
+ 
+ #define SET2(ptr, ch) \
+@@ -726,7 +789,7 @@
  #include "asciitab.h"
  #include "latin1ta.h"
    },
@@ -103,7 +449,7 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #endif
-@@ -745,7 +758,7 @@
+@@ -745,7 +808,7 @@
  #undef BT_COLON
  #include "latin1ta.h"
    },
@@ -112,7 +458,7 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #if BYTEORDER != 4321
-@@ -758,7 +771,7 @@
+@@ -758,7 +821,7 @@
  #include "iasciita.h"
  #include "latin1ta.h"
    },
@@ -121,7 +467,7 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #endif
-@@ -771,7 +784,7 @@
+@@ -771,7 +834,7 @@
  #undef BT_COLON
  #include "latin1ta.h"
    },
@@ -130,7 +476,7 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #endif
-@@ -867,7 +880,7 @@
+@@ -867,7 +930,7 @@
  #include "asciitab.h"
  #include "latin1ta.h"
    },
@@ -139,7 +485,7 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #endif
-@@ -886,7 +899,7 @@
+@@ -886,7 +949,7 @@
  #undef BT_COLON
  #include "latin1ta.h"
    },
@@ -148,7 +494,7 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #if BYTEORDER != 1234
-@@ -899,7 +912,7 @@
+@@ -899,7 +962,7 @@
  #include "iasciita.h"
  #include "latin1ta.h"
    },
@@ -157,7 +503,7 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #endif
-@@ -912,7 +925,7 @@
+@@ -912,7 +975,7 @@
  #undef BT_COLON
  #include "latin1ta.h"
    },
@@ -166,3 +512,371 @@ diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
  };
  
  #endif
+@@ -1288,7 +1351,7 @@
+   return (c & ~0xFFFF) || checkCharRefNumber(c) < 0;
+ }
+ 
+-static void PTRCALL
++static enum XML_Convert_Result PTRCALL
+ unknown_toUtf8(const ENCODING *enc,
+                const char **fromP, const char *fromLim,
+                char **toP, const char *toLim)
+@@ -1299,21 +1362,21 @@
+     const char *utf8;
+     int n;
+     if (*fromP == fromLim)
+-      break;
++      return XML_CONVERT_COMPLETED;
+     utf8 = uenc->utf8[(unsigned char)**fromP];
+     n = *utf8++;
+     if (n == 0) {
+       int c = uenc->convert(uenc->userData, *fromP);
+       n = XmlUtf8Encode(c, buf);
+       if (n > toLim - *toP)
+-        break;
++        return XML_CONVERT_OUTPUT_EXHAUSTED;
+       utf8 = buf;
+       *fromP += (AS_NORMAL_ENCODING(enc)->type[(unsigned char)**fromP]
+                  - (BT_LEAD2 - 2));
+     }
+     else {
+       if (n > toLim - *toP)
+-        break;
++        return XML_CONVERT_OUTPUT_EXHAUSTED;
+       (*fromP)++;
+     }
+     do {
+@@ -1322,13 +1385,13 @@
+   }
+ }
+ 
+-static void PTRCALL
++static enum XML_Convert_Result PTRCALL
+ unknown_toUtf16(const ENCODING *enc,
+                 const char **fromP, const char *fromLim,
+                 unsigned short **toP, const unsigned short *toLim)
+ {
+   const struct unknown_encoding *uenc = AS_UNKNOWN_ENCODING(enc);
+-  while (*fromP != fromLim && *toP != toLim) {
++  while (*fromP < fromLim && *toP < toLim) {
+     unsigned short c = uenc->utf16[(unsigned char)**fromP];
+     if (c == 0) {
+       c = (unsigned short)
+@@ -1340,6 +1403,11 @@
+       (*fromP)++;
+     *(*toP)++ = c;
+   }
++
++  if ((*toP == toLim) && (*fromP < fromLim))
++    return XML_CONVERT_OUTPUT_EXHAUSTED;
++  else
++    return XML_CONVERT_COMPLETED;
+ }
+ 
+ ENCODING *
+@@ -1503,7 +1571,7 @@
+ {
+   const ENCODING **encPtr;
+ 
+-  if (ptr == end)
++  if (ptr >= end)
+     return XML_TOK_NONE;
+   encPtr = enc->encPtr;
+   if (ptr + 1 == end) {
+diff --strip-trailing-cr -urN expat.orig/xmltok.h expat/xmltok.h
+--- expat.orig/xmltok.h	2016-05-23 01:54:36.000000000 +0200
++++ expat/xmltok.h	2016-05-23 01:54:36.000000000 +0200
+@@ -130,6 +130,12 @@
+                                const char *,
+                                const char **);
+ 
++enum XML_Convert_Result {
++  XML_CONVERT_COMPLETED = 0,
++  XML_CONVERT_INPUT_INCOMPLETE = 1,
++  XML_CONVERT_OUTPUT_EXHAUSTED = 2  /* and therefore potentially input remaining as well */
++};
++
+ struct encoding {
+   SCANNER scanners[XML_N_STATES];
+   SCANNER literalScanners[XML_N_LITERAL_TYPES];
+@@ -158,12 +164,12 @@
+                             const char *ptr,
+                             const char *end,
+                             const char **badPtr);
+-  void (PTRCALL *utf8Convert)(const ENCODING *enc,
++  enum XML_Convert_Result (PTRCALL *utf8Convert)(const ENCODING *enc,
+                               const char **fromP,
+                               const char *fromLim,
+                               char **toP,
+                               const char *toLim);
+-  void (PTRCALL *utf16Convert)(const ENCODING *enc,
++  enum XML_Convert_Result (PTRCALL *utf16Convert)(const ENCODING *enc,
+                                const char **fromP,
+                                const char *fromLim,
+                                unsigned short **toP,
+diff --strip-trailing-cr -urN expat.orig/xmltok_i.c expat/xmltok_i.c
+--- expat.orig/xmltok_i.c	2016-05-23 01:54:36.000000000 +0200
++++ expat/xmltok_i.c	2016-05-23 01:54:36.000000000 +0200
+@@ -93,13 +93,13 @@
+ PREFIX(scanComment)(const ENCODING *enc, const char *ptr,
+                     const char *end, const char **nextTokPtr)
+ {
+-  if (ptr != end) {
++  if (ptr < end) {
+     if (!CHAR_MATCHES(enc, ptr, ASCII_MINUS)) {
+       *nextTokPtr = ptr;
+       return XML_TOK_INVALID;
+     }
+     ptr += MINBPC(enc);
+-    while (ptr != end) {
++    while (ptr < end) {
+       switch (BYTE_TYPE(enc, ptr)) {
+       INVALID_CASES(ptr, nextTokPtr)
+       case BT_MINUS:
+@@ -147,7 +147,7 @@
+     *nextTokPtr = ptr;
+     return XML_TOK_INVALID;
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     case BT_PERCNT:
+       if (ptr + MINBPC(enc) == end)
+@@ -233,7 +233,7 @@
+     *nextTokPtr = ptr;
+     return XML_TOK_INVALID;
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     CHECK_NAME_CASES(enc, ptr, end, nextTokPtr)
+     case BT_S: case BT_CR: case BT_LF:
+@@ -242,7 +242,7 @@
+         return XML_TOK_INVALID;
+       }
+       ptr += MINBPC(enc);
+-      while (ptr != end) {
++      while (ptr < end) {
+         switch (BYTE_TYPE(enc, ptr)) {
+         INVALID_CASES(ptr, nextTokPtr)
+         case BT_QUEST:
+@@ -305,7 +305,7 @@
+ PREFIX(cdataSectionTok)(const ENCODING *enc, const char *ptr,
+                         const char *end, const char **nextTokPtr)
+ {
+-  if (ptr == end)
++  if (ptr >= end)
+     return XML_TOK_NONE;
+   if (MINBPC(enc) > 1) {
+     size_t n = end - ptr;
+@@ -348,7 +348,7 @@
+     ptr += MINBPC(enc);
+     break;
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+ #define LEAD_CASE(n) \
+     case BT_LEAD ## n: \
+@@ -391,11 +391,11 @@
+     *nextTokPtr = ptr;
+     return XML_TOK_INVALID;
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     CHECK_NAME_CASES(enc, ptr, end, nextTokPtr)
+     case BT_S: case BT_CR: case BT_LF:
+-      for (ptr += MINBPC(enc); ptr != end; ptr += MINBPC(enc)) {
++      for (ptr += MINBPC(enc); ptr < end; ptr += MINBPC(enc)) {
+         switch (BYTE_TYPE(enc, ptr)) {
+         case BT_S: case BT_CR: case BT_LF:
+           break;
+@@ -432,7 +432,7 @@
+ PREFIX(scanHexCharRef)(const ENCODING *enc, const char *ptr,
+                        const char *end, const char **nextTokPtr)
+ {
+-  if (ptr != end) {
++  if (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     case BT_DIGIT:
+     case BT_HEX:
+@@ -441,7 +441,7 @@
+       *nextTokPtr = ptr;
+       return XML_TOK_INVALID;
+     }
+-    for (ptr += MINBPC(enc); ptr != end; ptr += MINBPC(enc)) {
++    for (ptr += MINBPC(enc); ptr < end; ptr += MINBPC(enc)) {
+       switch (BYTE_TYPE(enc, ptr)) {
+       case BT_DIGIT:
+       case BT_HEX:
+@@ -464,7 +464,7 @@
+ PREFIX(scanCharRef)(const ENCODING *enc, const char *ptr,
+                     const char *end, const char **nextTokPtr)
+ {
+-  if (ptr != end) {
++  if (ptr < end) {
+     if (CHAR_MATCHES(enc, ptr, ASCII_x))
+       return PREFIX(scanHexCharRef)(enc, ptr + MINBPC(enc), end, nextTokPtr);
+     switch (BYTE_TYPE(enc, ptr)) {
+@@ -474,7 +474,7 @@
+       *nextTokPtr = ptr;
+       return XML_TOK_INVALID;
+     }
+-    for (ptr += MINBPC(enc); ptr != end; ptr += MINBPC(enc)) {
++    for (ptr += MINBPC(enc); ptr < end; ptr += MINBPC(enc)) {
+       switch (BYTE_TYPE(enc, ptr)) {
+       case BT_DIGIT:
+         break;
+@@ -506,7 +506,7 @@
+     *nextTokPtr = ptr;
+     return XML_TOK_INVALID;
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     CHECK_NAME_CASES(enc, ptr, end, nextTokPtr)
+     case BT_SEMI:
+@@ -529,7 +529,7 @@
+ #ifdef XML_NS
+   int hadColon = 0;
+ #endif
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     CHECK_NAME_CASES(enc, ptr, end, nextTokPtr)
+ #ifdef XML_NS
+@@ -716,7 +716,7 @@
+   hadColon = 0;
+ #endif
+   /* we have a start-tag */
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     CHECK_NAME_CASES(enc, ptr, end, nextTokPtr)
+ #ifdef XML_NS
+@@ -740,7 +740,7 @@
+     case BT_S: case BT_CR: case BT_LF:
+       {
+         ptr += MINBPC(enc);
+-        while (ptr != end) {
++        while (ptr < end) {
+           switch (BYTE_TYPE(enc, ptr)) {
+           CHECK_NMSTRT_CASES(enc, ptr, end, nextTokPtr)
+           case BT_GT:
+@@ -785,7 +785,7 @@
+ PREFIX(contentTok)(const ENCODING *enc, const char *ptr, const char *end,
+                    const char **nextTokPtr)
+ {
+-  if (ptr == end)
++  if (ptr >= end)
+     return XML_TOK_NONE;
+   if (MINBPC(enc) > 1) {
+     size_t n = end - ptr;
+@@ -832,7 +832,7 @@
+     ptr += MINBPC(enc);
+     break;
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+ #define LEAD_CASE(n) \
+     case BT_LEAD ## n: \
+@@ -895,7 +895,7 @@
+     *nextTokPtr = ptr;
+     return XML_TOK_INVALID;
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     CHECK_NAME_CASES(enc, ptr, end, nextTokPtr)
+     case BT_SEMI:
+@@ -921,7 +921,7 @@
+     *nextTokPtr = ptr;
+     return XML_TOK_INVALID;
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     CHECK_NAME_CASES(enc, ptr, end, nextTokPtr)
+     case BT_CR: case BT_LF: case BT_S:
+@@ -941,7 +941,7 @@
+                 const char *ptr, const char *end,
+                 const char **nextTokPtr)
+ {
+-  while (ptr != end) {
++  while (ptr < end) {
+     int t = BYTE_TYPE(enc, ptr);
+     switch (t) {
+     INVALID_CASES(ptr, nextTokPtr)
+@@ -973,7 +973,7 @@
+                   const char **nextTokPtr)
+ {
+   int tok;
+-  if (ptr == end)
++  if (ptr >= end)
+     return XML_TOK_NONE;
+   if (MINBPC(enc) > 1) {
+     size_t n = end - ptr;
+@@ -1141,7 +1141,7 @@
+     *nextTokPtr = ptr;
+     return XML_TOK_INVALID;
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     CHECK_NAME_CASES(enc, ptr, end, nextTokPtr)
+     case BT_GT: case BT_RPAR: case BT_COMMA:
+@@ -1204,10 +1204,10 @@
+                           const char *end, const char **nextTokPtr)
+ {
+   const char *start;
+-  if (ptr == end)
++  if (ptr >= end)
+     return XML_TOK_NONE;
+   start = ptr;
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+ #define LEAD_CASE(n) \
+     case BT_LEAD ## n: ptr += n; break;
+@@ -1262,10 +1262,10 @@
+                        const char *end, const char **nextTokPtr)
+ {
+   const char *start;
+-  if (ptr == end)
++  if (ptr >= end)
+     return XML_TOK_NONE;
+   start = ptr;
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+ #define LEAD_CASE(n) \
+     case BT_LEAD ## n: ptr += n; break;
+@@ -1326,7 +1326,7 @@
+       end = ptr + n;
+     }
+   }
+-  while (ptr != end) {
++  while (ptr < end) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     INVALID_CASES(ptr, nextTokPtr)
+     case BT_LT:
+@@ -1373,7 +1373,7 @@
+ {
+   ptr += MINBPC(enc);
+   end -= MINBPC(enc);
+-  for (; ptr != end; ptr += MINBPC(enc)) {
++  for (; ptr < end; ptr += MINBPC(enc)) {
+     switch (BYTE_TYPE(enc, ptr)) {
+     case BT_DIGIT:
+     case BT_HEX:
+@@ -1760,7 +1760,7 @@
+     case BT_CR:
+       pos->lineNumber++;
+       ptr += MINBPC(enc);
+-      if (ptr != end && BYTE_TYPE(enc, ptr) == BT_LF)
++      if (ptr < end && BYTE_TYPE(enc, ptr) == BT_LF)
+         ptr += MINBPC(enc);
+       pos->columnNumber = (XML_Size)-1;
+       break;
