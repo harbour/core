@@ -24,8 +24,8 @@ gpg --version | grep gpg
 (
    set -x
 
-   curl -o pack.bin -L 'http://www.7-zip.org/a/7z1600-extra.7z'
-   openssl dgst -sha256 pack.bin | grep -q ecd9c156551c2ff7e42ae89a9ac279197bec75dd173e59e1687beb3375e25c41
+   curl -o pack.bin -L 'http://www.7-zip.org/a/7z1602-extra.7z'
+   openssl dgst -sha256 pack.bin | grep -q f6c412e8bc45e4a88e675976024c21ed7a23eeb7eb0af452aa7a9b9a97843aa2
    7z x -y -o7z pack.bin > /dev/null
 
    curl -o pack.bin 'http://7zsfx.info/files/7zsd_extra_160_2712.7z'
