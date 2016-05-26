@@ -1,4 +1,4 @@
-/* Requirement: Create certificate with ./mkcert.sh (rename to .bat and delete first line as needed) */
+/* Requirement: Create certificate with ./mkcert.sh (rename to .bat as needed) */
 
 #require "hbssl"
 #require "hbhttpd"
@@ -8,6 +8,9 @@ REQUEST __HBEXTERN__HBSSL__
 REQUEST DBFCDX
 
 MEMVAR server, get, post, cookie, session
+
+#define _FN_PKEY  "privatekey.pem"
+#define _FN_CERT  "certificate.pem"
 
 PROCEDURE Main()
 
@@ -31,6 +34,15 @@ PROCEDURE Main()
       RETURN
    ELSE
       hb_vfErase( ".uhttpd.stop" )
+   ENDIF
+
+   IF ! hb_vfExists( _FN_PKEY ) .OR. ;
+      ! hb_vfExists( _FN_CERT )
+
+      ? "Certificate and/or private key missing."
+      ? "Create them by running ./mkcert.sh"
+      ? "(rename to .bat if your platform doesn't support POSIX shell)"
+      RETURN
    ENDIF
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
@@ -105,8 +117,8 @@ PROCEDURE Main()
          "Trace"               => {| ... | QOut( ... ) }, ;
          "Port"                => nPort, ;
          "Idle"                => {| o | iif( hb_vfExists( ".uhttpd.stop" ), ( hb_vfErase( ".uhttpd.stop" ), o:Stop() ), NIL ) }, ;
-         "PrivateKeyFilename"  => "private.key", ;
-         "CertificateFilename" => "certificate.crt", ;
+         "PrivateKeyFilename"  => _FN_PKEY, ;
+         "CertificateFilename" => _FN_CERT, ;
          "SSL"                 => .T., ;
          "Mount"          => { ;
          "/hello"            => {|| UWrite( "Hello!" ) }, ;
