@@ -1486,6 +1486,9 @@ ifeq ($(HB_HOST_PKGM),)
       ifneq ($(wildcard /opt/local/bin/port),)
          HB_HOST_PKGM += macports
       endif
+      ifneq ($(wildcard /nix),)
+         HB_HOST_PKGM += nix
+      endif
       ifneq ($(wildcard /sw/bin/fink),)
          HB_HOST_PKGM += fink
       endif
@@ -1503,6 +1506,9 @@ ifeq ($(HB_HOST_PKGM),)
          HB_HOST_PKGM += rpm
       endif
       endif
+      endif
+      ifneq ($(wildcard /nix),)
+         HB_HOST_PKGM += nix
       endif
    else
    ifeq ($(HB_PLATFORM),bsd)

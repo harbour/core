@@ -1442,6 +1442,8 @@ STATIC FUNCTION DetectPackageManager()
          cPkgMgr := "homebrew"
       CASE hb_vfExists( "/opt/local/bin/port" )
          cPkgMgr := "macports"
+      CASE hb_vfDirExists( "/nix" )
+         cPkgMgr := "nix"
       CASE hb_vfExists( "/sw/bin/fink" )
          cPkgMgr := "fink"
       OTHERWISE
@@ -1458,6 +1460,7 @@ STATIC FUNCTION DetectPackageManager()
       OTHERWISE
          cPkgMgr := "rpm"
       ENDCASE
+      /* QUESTION: What to do with 'nix' here? */
    #elif defined( __PLATFORM__BSD )
       DO CASE
       CASE hb_vfDirExists( "/etc/pkg" )
@@ -18334,7 +18337,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "{<compiler>}"            , I_( "target C compiler. Where <compiler> can be any value accepted by -comp= option." ) }, ;
       { "{<cpu>}"                 , I_( "target CPU. Where <cpu> can be any of: x86, x86_64, ia64, arm, mips, sh" ) }, ;
       { "{<targettype>}"          , I_( "build target type. Where <targettype> is any of the values returned by macro variable ${hb_targettype}." ) }, ;
-      { "{<package-manager>}"     , I_( "package manager. Where <package-manager> can be any of: deb, rpm, portage, homebrew, rudix, macports, fink, pkg, cygwin" ) }, ;
+      { "{<package-manager>}"     , I_( "package manager. Where <package-manager> can be any of: deb, rpm, portage, homebrew, nix, macports, fink, pkg, cygwin" ) }, ;
       { "{mt}"                    , H_( "build target is multi-threaded (see -mt option)" ) }, ;
       { "{st}"                    , H_( "build target is single-threaded (see -st option)" ) }, ;
       { "{gui}"                   , I_( "GUI target (see -gui option)" ) }, ;
