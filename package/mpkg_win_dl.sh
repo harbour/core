@@ -63,7 +63,7 @@ gpg --version | grep gpg
 # Dependencies for Windows builds
 
 # Bintray public key
-gpg --keyserver hkps://pgp.mit.edu --recv-keys 379CE192D401AB61
+gpg --keyserver hkps://pgp.mit.edu --recv-keys 8756C4F765C9AC3CB6B85D62379CE192D401AB61
 
 # Builder public key
 curl 'https://bintray.com/user/downloadSubjectPublicKey?username=vszakats' | \
