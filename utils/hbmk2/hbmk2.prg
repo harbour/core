@@ -14540,13 +14540,6 @@ STATIC FUNCTION hbmk_CPU( hbmk )
       RETURN "x86"
    CASE HBMK_ISCOMP( "mingw64|msvc64|bcc64|pocc64" )
       RETURN "x86_64"
-   CASE HBMK_ISCOMP( "gcc|icc|clang|sunpro|diab|pcc|tcc" )
-      /* NOTE: Best effort to match the target CPU. This is not
-               necessarily correct, since these inherit the
-               default CPU architecture from OS default, by and
-               large, but target can be overridden using user
-               options. */
-      RETURN Lower( hb_Version( HB_VERSION_CPU ) )
    CASE HBMK_ISCOMP( "msvcia64|iccia64" )
       RETURN "ia64"
    CASE HBMK_ISCOMP( "mingwarm|msvcarm|poccarm" )
@@ -14557,7 +14550,12 @@ STATIC FUNCTION hbmk_CPU( hbmk )
       RETURN "sh"
    ENDCASE
 
-   RETURN ""
+   /* NOTE: Best effort to match the target CPU. This is not
+            necessarily correct, since these inherit the
+            default CPU architecture from OS/compiler default,
+            by and large, but target can be overridden using
+            user options. */
+   RETURN Lower( hb_Version( HB_VERSION_CPU ) )
 
 /* Return standard dynamic lib name suffix used by Harbour */
 STATIC FUNCTION hbmk_DYNSUFFIX( hbmk )
