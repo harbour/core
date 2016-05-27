@@ -42,7 +42,7 @@ STATIC FUNCTION s_NodeToHash( pNode )
 
          IF Empty( mxmlGetOpaque( pNode ) )
             IF ! Empty( hNext := mxmlWalkNext( pNode, pNode, MXML_DESCEND ) )
-               hHashChild := s_NodeToHash( hNext  )
+               hHashChild := s_NodeToHash( hNext )
                IF hHashChild != NIL .AND. ! Empty( hHashChild )
                   IF Empty( hHash[ mxmlGetElement( pNode ) ] )
                      hHash[ mxmlGetElement( pNode ) ] := {}
@@ -53,8 +53,13 @@ STATIC FUNCTION s_NodeToHash( pNode )
                   AAdd( hHash[ mxmlGetElement( pNode ) ], hHashChild )
                ENDIF
             ELSEIF hb_mxmlGetAttrsCount( pNode ) > 0
-               hHash[ mxmlGetElement( pNode ) + "@attr" ] := hb_mxmlGetAttrs( pNode )
+               IF Empty( hHash[ mxmlGetElement( pNode ) ] )
+                  hHash[ mxmlGetElement( pNode ) ] := {}
+               ENDIF
+               AAdd( hHash[ mxmlGetElement( pNode ) ], hb_mxmlGetAttrs( pNode ) )
             ENDIF
+         ELSEIF hb_mxmlGetAttrsCount( pNode ) > 0
+            hHash[ mxmlGetElement( pNode ) + "@attr" ] := hb_mxmlGetAttrs( pNode )
          ENDIF
       ENDIF
 
