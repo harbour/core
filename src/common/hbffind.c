@@ -192,7 +192,7 @@
 
 /* --- */
 
-HB_FATTR hb_fsAttrFromRaw( HB_FATTR raw_attr )
+HB_EXPORT HB_FATTR hb_fsAttrFromRaw( HB_FATTR raw_attr )
 {
    HB_FATTR nAttr;
 
@@ -276,7 +276,7 @@ HB_FATTR hb_fsAttrFromRaw( HB_FATTR raw_attr )
    return nAttr;
 }
 
-HB_FATTR hb_fsAttrToRaw( HB_FATTR nAttr )
+HB_EXPORT HB_FATTR hb_fsAttrToRaw( HB_FATTR nAttr )
 {
    HB_FATTR raw_attr;
 
@@ -349,7 +349,7 @@ HB_FATTR hb_fsAttrToRaw( HB_FATTR nAttr )
 /* Converts a CA-Cl*pper compatible file attribute string
    to the internal reprensentation. */
 
-HB_FATTR hb_fsAttrEncode( const char * szAttr )
+HB_EXPORT HB_FATTR hb_fsAttrEncode( const char * szAttr )
 {
    const char * pos = szAttr;
    char ch;
@@ -381,7 +381,7 @@ HB_FATTR hb_fsAttrEncode( const char * szAttr )
 
 /* NOTE: szAttr buffer must be at least 16 chars long */
 
-char * hb_fsAttrDecode( HB_FATTR nAttr, char * szAttr )
+HB_EXPORT char * hb_fsAttrDecode( HB_FATTR nAttr, char * szAttr )
 {
    char * ptr = szAttr;
 
@@ -910,7 +910,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    return bFound;
 }
 
-PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
+HB_EXPORT PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
 {
    PHB_FFIND ffind = ( PHB_FFIND ) hb_xgrabz( sizeof( HB_FFIND ) );
 
@@ -942,7 +942,7 @@ PHB_FFIND hb_fsFindFirst( const char * pszFileMask, HB_FATTR attrmask )
 /* Finds next matching file, and applies a filter which makes
    searching CA-Cl*pper/MS-DOS compatible. */
 
-HB_BOOL hb_fsFindNext( PHB_FFIND ffind )
+HB_EXPORT HB_BOOL hb_fsFindNext( PHB_FFIND ffind )
 {
    while( hb_fsFindNextLow( ffind ) )
    {
@@ -960,7 +960,7 @@ HB_BOOL hb_fsFindNext( PHB_FFIND ffind )
    return HB_FALSE;
 }
 
-void hb_fsFindClose( PHB_FFIND ffind )
+HB_EXPORT void hb_fsFindClose( PHB_FFIND ffind )
 {
    if( ffind )
    {
