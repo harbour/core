@@ -330,8 +330,8 @@ cd "${HB_RT}" || exit
 _pkgdate=
 if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] ; then
    case "$(uname)" in
-      *BSD|Darwin) _pkgdate="$(stat -f '_%Sm' -t '%Y%m%d_%H%M' "${HB_ABSROOT}README.md")";;
-      *)           _pkgdate="$(stat -c '%y' "${HB_ABSROOT}README.md" | awk '{print "_" strftime("%Y%m%d_%H%M", $1)}')";;
+      *BSD|Darwin) _pkgdate="$(stat -f '-%Sm' -t '%Y%m%d-%H%M' "${HB_ABSROOT}README.md")";;
+      *)           _pkgdate="$(stat -c '%Y' "${HB_ABSROOT}README.md" | awk '{print "-" strftime("%Y%m%d-%H%M", $1)}')";;
    esac
 fi
 
