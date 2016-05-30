@@ -41,7 +41,7 @@ build_script:
   - sh -c ./package/mpkg_win_ci.sh
 
 artifacts:
-  - path: harbour-daily-win.7z*
+  - path: harbour-daily-win*.7z*
     name: pkg-win
 
 deploy:
