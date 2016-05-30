@@ -130,11 +130,30 @@ static TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )
 #define LOAD_LIBRARY_SEARCH_SYSTEM32  0x00000800
 #endif
 
+/* LOAD_LIBRARY_SEARCH_SYSTEM32 is supported on Windows 8 or above,
+   and on Windows Vista/7/Server 2008/Server 2008 R2
+   _with_ this patch installed:
+      https://support.microsoft.com/en-us/kb/2533623 */
+static HB_BOOL hbwapi_has_search_system32()
+{
+   if( hb_iswin8() )
+      return HB_TRUE;
+   else
+   {
+      HMODULE hKernel32 = GetModuleHandle( TEXT( "kernel32.dll" ) );
+
+      if( hKernel32 )
+         return HB_WINAPI_GETPROCADDRESS( hKernel32, "AddDllDirectory" ) ) != NULL;  /* Detect KB2533623 */
+   }
+
+   return HB_FALSE;
+}
+
 HMODULE hbwapi_LoadLibrarySystem( LPCTSTR pFileName )
 {
    TCHAR * pLibPath = hbwapi_FileNameAtSystemDir( pFileName );
 
-   HMODULE h = LoadLibraryEx( pLibPath, NULL, hb_iswin8() ? LOAD_LIBRARY_SEARCH_SYSTEM32 : LOAD_WITH_ALTERED_SEARCH_PATH );
+   HMODULE h = LoadLibraryEx( pLibPath, NULL, hbwapi_has_search_system32() ? LOAD_LIBRARY_SEARCH_SYSTEM32 : LOAD_WITH_ALTERED_SEARCH_PATH );
 
    hb_xfree( pLibPath );
 
