@@ -143,7 +143,7 @@ static HB_BOOL hbwapi_has_search_system32()
       HMODULE hKernel32 = GetModuleHandle( TEXT( "kernel32.dll" ) );
 
       if( hKernel32 )
-         return HB_WINAPI_GETPROCADDRESS( hKernel32, "AddDllDirectory" ) ) != NULL;  /* Detect KB2533623 */
+         return HB_WINAPI_GETPROCADDRESS( hKernel32, "AddDllDirectory" ) != NULL;  /* Detect KB2533623 */
    }
 
    return HB_FALSE;
