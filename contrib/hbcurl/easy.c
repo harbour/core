@@ -2288,6 +2288,12 @@ HB_FUNC( CURL_EASY_GETINFO )
 #endif
             type = HB_CURL_INFO_TYPE_LONG;
             break;
+         case HB_CURLINFO_HTTP_VERSION:
+#if LIBCURL_VERSION_NUM >= 0x073200
+            res = HB_CURL_EASY_GETINFO( hb_curl, CURLINFO_HTTP_VERSION, &ret_long );
+#endif
+            type = HB_CURL_INFO_TYPE_LONG;
+            break;
       }
 
       switch( type )

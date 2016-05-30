@@ -496,6 +496,7 @@
 #define HB_CURLINFO_LOCAL_IP                  41
 #define HB_CURLINFO_LOCAL_PORT                42
 #define HB_CURLINFO_ACTIVESOCKET              43
+#define HB_CURLINFO_HTTP_VERSION              44
 
 /* curl result codes. */
 
