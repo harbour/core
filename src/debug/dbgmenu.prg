@@ -110,7 +110,7 @@ FUNCTION __dbgBuildMenu( oDebugger )  // Builds the debugger pulldown menu
       MENU
          MENUITEM " ~Watchpoint..."         ACTION oDebugger:WatchPointAdd()
          MENUITEM " ~Tracepoint..."         ACTION oDebugger:TracePointAdd()
-         MENUITEM " ~Breakpoint   F9 "      ACTION oDebugger:ToggleBreakPoint()
+         MENUITEM " ~Breakpoint   F9 "      ACTION oDebugger:BreakPointToggle()
          MENUITEM " ~Delete..."             ACTION oDebugger:WatchPointDel()
       ENDMENU
 
