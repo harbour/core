@@ -1,6 +1,6 @@
 diff --strip-trailing-cr -urN png.orig/png.h png/png.h
---- png.orig/png.h	2016-05-27 16:59:00.000000000 +0200
-+++ png/png.h	2016-05-27 16:59:00.000000000 +0200
+--- png.orig/png.h	2016-06-11 13:42:26.000000000 +0200
++++ png/png.h	2016-06-11 13:42:26.000000000 +0200
 @@ -363,7 +363,7 @@
      /* If pnglibconf.h is missing, you can
       * copy scripts/pnglibconf.h.prebuilt to pnglibconf.h
@@ -11,8 +11,8 @@ diff --strip-trailing-cr -urN png.orig/png.h png/png.h
  
  #ifndef PNG_VERSION_INFO_ONLY
 diff --strip-trailing-cr -urN png.orig/pnglconf.h png/pnglconf.h
---- png.orig/pnglconf.h	2016-05-27 16:59:00.000000000 +0200
-+++ png/pnglconf.h	2016-05-27 16:59:00.000000000 +0200
+--- png.orig/pnglconf.h	2016-06-11 13:42:26.000000000 +0200
++++ png/pnglconf.h	2016-06-11 13:42:26.000000000 +0200
 @@ -26,8 +26,8 @@
  #define PNG_BUILD_GRAYSCALE_PALETTE_SUPPORTED
  #define PNG_CHECK_FOR_INVALID_INDEX_SUPPORTED
@@ -52,8 +52,8 @@ diff --strip-trailing-cr -urN png.orig/pnglconf.h png/pnglconf.h
  #define PNG_GAMMA_THRESHOLD_FIXED 5000
  #define PNG_IDAT_READ_SIZE PNG_ZBUF_SIZE
 diff --strip-trailing-cr -urN png.orig/pngpriv.h png/pngpriv.h
---- png.orig/pngpriv.h	2016-05-27 16:59:00.000000000 +0200
-+++ png/pngpriv.h	2016-05-27 16:59:00.000000000 +0200
+--- png.orig/pngpriv.h	2016-06-11 13:42:26.000000000 +0200
++++ png/pngpriv.h	2016-06-11 13:42:26.000000000 +0200
 @@ -67,7 +67,7 @@
   * before png.h is included, but load the configuration now if it is available.
   */
