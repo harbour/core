@@ -884,7 +884,7 @@ Portability
 - added support for shared libraries (.sl) in HPUX builds
 - added large file support (64-bit) in HPUX builds
 - disabled in default BSD* builds DOS/Windows DENY_* flags emulation
-  implemented by BSD locks - tests on FreeBSD 6.2 and MacOSX shows
+  implemented by BSD locks - tests on FreeBSD 6.2 and OS X shows
   that it badly interacts with POSIX locks and it's possible to create
   deadlock.
 

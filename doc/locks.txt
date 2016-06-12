@@ -10,7 +10,7 @@ They can be emulated by fcntl() or flock() locks. Harbour uses flock()
 in systems where it does not create conflicts with fcntl() locks used
 to synchronize file access by different processes in shared mode.
 Currently it's enabled by default only in Linux (tests with *BSD systems
-and MacOSX showed that it interacts with fcntl locks causing deadlocks).
+and OS X showed that it interacts with fcntl locks causing deadlocks).
 On other POSIX systems Harbour uses fcntl() read and write locks at
 address 0x7fffffff (size 1) to simulate shared and exclusive mode.
 
