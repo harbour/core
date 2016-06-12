@@ -11,7 +11,7 @@ PROCEDURE Main()
    LOCAL aItems := { ;
       RadioButto( 3, 3, "&Windows" ), ;
       RadioButto( 4, 3, "&Linux" ), ;
-      RadioButto( 5, 3, "&OS X" ) }
+      RadioButto( 5, 3, "&Mac" ) }
 
    CLS
 

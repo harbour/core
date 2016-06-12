@@ -1621,7 +1621,7 @@ General
 -------
 - Updated build process for Debian Linux distribution (.deb) packages.
   Now hb* scripts and shared libs are created by standard make install
-- Added support for Solaris (SunOS) and Darwin (Mac OS X).
+- Added support for Solaris (SunOS) and Darwin (OS X).
 - Added support for Hewlett Packard Unix (HP_UX) and ALPHA DEC.
 - Many adds and fix in compilation scripts on all platforms.
 - Fixed some error messages
