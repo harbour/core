@@ -7936,7 +7936,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                ENDIF
 
                IF hbmk[ _HBMK_nExitCode ] == _EXIT_OK .AND. hbmk[ _HBMK_lGUI ] .AND. hbmk[ _HBMK_cPLAT ] == "darwin"
-                  /* Build app bundle for OS X GUI apps. (experimental) */
+                  /* Build app bundle for macOS GUI apps. (experimental) */
                   tmp := hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] )
                   IF ! Empty( tmp )
                      tmp += hb_ps()
@@ -14243,7 +14243,7 @@ STATIC FUNCTION NumberOfCPUs()
       cCPU := "1"
    #endif
    #elif defined( __PLATFORM__BSD )
-      hb_processRun( "/sbin/sysctl -n hw.ncpu",, @cCPU )  /* in /usr/sbin/ on OS X */
+      hb_processRun( "/sbin/sysctl -n hw.ncpu",, @cCPU )  /* in /usr/sbin/ on macOS */
    #elif defined( __PLATFORM__SUNOS )
       hb_processRun( "psrinfo -p",, @cCPU )
    #elif defined( __PLATFORM__UNIX )

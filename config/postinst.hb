@@ -274,7 +274,7 @@ PROCEDURE Main( ... )
             ELSEIF Empty( query_stdout( "tar --version" ) )
                cBin_Tar := ""
             ELSEIF "bsdtar" $ query_stdout( "tar --version" )
-               /* tar is mapped to bsdtar starting OS X 10.6 */
+               /* tar is mapped to bsdtar starting macOS 10.6 */
                lGNU_Tar := .F.
             ENDIF
 

@@ -207,7 +207,7 @@ extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* re
          ! defined( __WATCOMC__ ) && ! defined( HB_USE_BSDLOCKS )
        /* default usage of BSD locks in *BSD systems for emulating
         * MS-DOS/Windows DENY_* flags has been disabled because tests
-        * on FreeBSD 6.2 and OS X shows that this implementation
+        * on FreeBSD 6.2 and macOS shows that this implementation
         * can create self deadlock when used simultaneously with
         * POSIX locks - thanks to Phil and Lorenzo for locating the
         * problem and tests [druzus]

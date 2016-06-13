@@ -2569,7 +2569,7 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parnt ) : QWidget( parnt )
 
    /* Qt::WA_InputMethodEnabled disables support for
     * national characters in few European countries
-    * (f.e. Polish characters with ALT in OS X)
+    * (f.e. Polish characters with ALT in macOS)
     * If some Asian users needs it then we will have
     * to enable it optionally [druzus]
     */
@@ -2944,7 +2944,7 @@ void QTConsole::paintEvent( QPaintEvent * evt )
       if( rSel.intersects( rEvt ) )
       {
 #if defined( HB_OS_DARWIN )
-         /* RasterOp operations are not supported in OS X */
+         /* RasterOp operations are not supported in macOS */
          rEvt &= rSel;
          image->invertPixels();
          painter.drawImage( rEvt, *image, rEvt.translated( -pQTC->marginLeft, -pQTC->marginTop ) );
@@ -2964,7 +2964,7 @@ void QTConsole::paintEvent( QPaintEvent * evt )
       if( rEvt.intersects( rCrs ) )
       {
 #if defined( HB_OS_DARWIN )
-         /* RasterOp operations are not supported in OS X,
+         /* RasterOp operations are not supported in macOS,
           * use foreground cell color like hardware VGA cursor
           */
          HB_BYTE   bAttr;
