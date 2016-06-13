@@ -5,7 +5,7 @@
 
 # Generate RSA keypair with encrypted private key
 # Requires: OpenSSL 1.x or upper
-#           (install with `brew install openssl` on macOS)
+#           (install with `brew install openssl` on Mac)
 
 case "$(uname)" in
    *Darwin*) alias openssl=/usr/local/opt/openssl/bin/openssl;;

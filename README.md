@@ -98,7 +98,7 @@ Download source archive from any of these URLs and unpack:
 
 * <https://github.com/vszakats/harbour-core/releases/download/v3.4.0dev/harbour-daily-win.7z.exe>
 
-#### macOS (using Homebrew :beer:)
+#### Mac (using Homebrew :beer:)
 
     brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb --HEAD
 
@@ -217,7 +217,7 @@ To test it, type:
 
 You should see `Hello, world!` on screen.
 
-## on Darwin (macOS) hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
+## on Darwin (Mac) hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
 Platform specific prerequisite:
    Xcode or Command Line Tools for Xcode installed
@@ -437,7 +437,7 @@ See contrib-specific dependencies and build notes in the projects'
 >    * don't put directory names inside double quotes
 >    * use absolute paths
 
-## Darwin (macOS)
+## Darwin (Mac)
 
 1. Install [Homebrew :beer:](http://brew.sh/)
 2. Install packages:
@@ -1155,7 +1155,7 @@ export HB_BUILD_3RDEXT=no
 make
 ```
 
-## on Darwin (macOS) hosts
+## on Darwin (Mac) hosts
 
 ```sh
 # To create "Universal" binaries, compatible with pre-Lion 32-bit Intel systems
@@ -1269,7 +1269,7 @@ Press `<Alt+D>` in the app.
 ## You can override target platform auto-detection with these `HB_PLATFORM` values:
 
 * linux    - Linux
-* darwin   - macOS
+* darwin   - macOS / iOS / tvOS
 * bsd      - FreeBSD / OpenBSD / NetBSD / DragonFly BSD / *BSD
 * beos     - BeOS / Haiku
 * hpux     - HP-UX
