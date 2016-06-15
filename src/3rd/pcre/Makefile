@@ -70,7 +70,7 @@ else
 endif
 
 # ORIGIN http://pcre.org/
-# URL    https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.bz2
+# URL    https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.bz2
 # DIFF   pcre.dif
 #
 # MAP    LICENCE                           LICENSE.txt
