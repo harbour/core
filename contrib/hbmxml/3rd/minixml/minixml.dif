@@ -1,6 +1,6 @@
-diff -urN minixml.orig/config.h minixml/config.h
---- minixml.orig/config.h	2015-07-15 20:50:02.974706000 +0200
-+++ minixml/config.h	2015-07-15 20:50:02.974706000 +0200
+diff --strip-trailing-cr -urN minixml.orig/config.h minixml/config.h
+--- minixml.orig/config.h	2016-06-16 00:05:18.000000000 +0200
++++ minixml/config.h	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -125,9 +125,9 @@ diff -urN minixml.orig/config.h minixml/config.h
  /*
   * End of "$Id: config.h.in 451 2014-01-04 21:50:06Z msweet $".
   */
-diff -urN minixml.orig/mxml.h minixml/mxml.h
---- minixml.orig/mxml.h	2015-07-15 20:50:03.005903800 +0200
-+++ minixml/mxml.h	2015-07-15 20:50:03.005903800 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml.h minixml/mxml.h
+--- minixml.orig/mxml.h	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml.h	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -165,9 +165,9 @@ diff -urN minixml.orig/mxml.h minixml/mxml.h
  
  /*
   * Constants...
-diff -urN minixml.orig/mxml_att.c minixml/mxml_att.c
---- minixml.orig/mxml_att.c	2015-07-15 20:50:02.974706000 +0200
-+++ minixml/mxml_att.c	2015-07-15 20:50:02.974706000 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_att.c minixml/mxml_att.c
+--- minixml.orig/mxml_att.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_att.c	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -185,9 +185,9 @@ diff -urN minixml.orig/mxml_att.c minixml/mxml_att.c
  #include "mxml.h"
  
  
-diff -urN minixml.orig/mxml_ent.c minixml/mxml_ent.c
---- minixml.orig/mxml_ent.c	2015-07-15 20:50:02.974706000 +0200
-+++ minixml/mxml_ent.c	2015-07-15 20:50:02.974706000 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_ent.c minixml/mxml_ent.c
+--- minixml.orig/mxml_ent.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_ent.c	2016-06-16 00:05:18.000000000 +0200
 @@ -8,7 +8,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -197,9 +197,9 @@ diff -urN minixml.orig/mxml_ent.c minixml/mxml_ent.c
   * which should have been included with this file.  If this file is
   * missing or damaged, see the license at:
   *
-diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
---- minixml.orig/mxml_fil.c	2015-07-15 20:50:02.990304900 +0200
-+++ minixml/mxml_fil.c	2015-07-15 20:50:02.990304900 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
+--- minixml.orig/mxml_fil.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_fil.c	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -270,53 +270,46 @@ diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
      if (errno != EAGAIN)
  #endif /* EINTR */
        return (-1);
-@@ -2759,6 +2776,10 @@
+@@ -2770,6 +2787,10 @@
  
- 	  if (global->wrap > 0 && (col + width) > global->wrap)
- 	  {
+ 	    if (global->wrap > 0 && (col + width) > global->wrap)
+ 	    {
 +#ifdef _EOL_CRLF
 +	    if ((*putc_cb)('\r', p) < 0)
 +	      return (-1);
 +#endif
- 	    if ((*putc_cb)('\n', p) < 0)
- 	      return (-1);
+ 	      if ((*putc_cb)('\n', p) < 0)
+ 		return (-1);
  
-@@ -2869,6 +2890,10 @@
- 	{
- 	  if (global->wrap > 0 && col > global->wrap)
+@@ -2878,6 +2899,10 @@
  	  {
+ 	    if (global->wrap > 0 && col > global->wrap)
+ 	    {
 +#ifdef _EOL_CRLF
 +	    if ((*putc_cb)('\r', p) < 0)
 +	      return (-1);
 +#endif
- 	    if ((*putc_cb)('\n', p) < 0)
- 	      return (-1);
+ 	      if ((*putc_cb)('\n', p) < 0)
+ 		return (-1);
  
-@@ -2899,6 +2924,10 @@
- 	{
- 	  if (global->wrap > 0 && col > global->wrap)
+@@ -2901,6 +2926,14 @@
  	  {
+ 	    if (global->wrap > 0 && col > global->wrap)
+ 	    {
 +#ifdef _EOL_CRLF
 +	    if ((*putc_cb)('\r', p) < 0)
 +	      return (-1);
 +#endif
- 	    if ((*putc_cb)('\n', p) < 0)
- 	      return (-1);
- 
-@@ -2922,6 +2951,10 @@
- 	{
- 	  if (global->wrap > 0 && col > global->wrap)
- 	  {
 +#ifdef _EOL_CRLF
 +	    if ((*putc_cb)('\r', p) < 0)
 +	      return (-1);
 +#endif
- 	    if ((*putc_cb)('\n', p) < 0)
- 	      return (-1);
+ 	      if ((*putc_cb)('\n', p) < 0)
+ 		return (-1);
  
-diff -urN minixml.orig/mxml_get.c minixml/mxml_get.c
---- minixml.orig/mxml_get.c	2015-07-15 20:50:02.990304900 +0200
-+++ minixml/mxml_get.c	2015-07-15 20:50:02.990304900 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_get.c minixml/mxml_get.c
+--- minixml.orig/mxml_get.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_get.c	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -334,9 +327,9 @@ diff -urN minixml.orig/mxml_get.c minixml/mxml_get.c
  #include "mxml.h"
  
  
-diff -urN minixml.orig/mxml_ind.c minixml/mxml_ind.c
---- minixml.orig/mxml_ind.c	2015-07-15 20:50:02.990304900 +0200
-+++ minixml/mxml_ind.c	2015-07-15 20:50:02.990304900 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_ind.c minixml/mxml_ind.c
+--- minixml.orig/mxml_ind.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_ind.c	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -354,9 +347,9 @@ diff -urN minixml.orig/mxml_ind.c minixml/mxml_ind.c
  #include "mxml.h"
  
  
-diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
---- minixml.orig/mxml_nod.c	2015-07-15 20:50:02.990304900 +0200
-+++ minixml/mxml_nod.c	2015-07-15 20:50:02.990304900 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
+--- minixml.orig/mxml_nod.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_nod.c	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -374,22 +367,34 @@ diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
  #include "mxml.h"
  
  
-@@ -202,7 +201,11 @@
-   */
- 
-   while (node->child)
--    mxmlDelete(node->child);
-+  {
-+    mxml_node_t *child = node->child;
-+    mxmlRemove(child);
-+    mxmlRelease(child);
-+  }
- 
-  /*
-   * Now delete any node data...
-diff -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
---- minixml.orig/mxml_pri.c	2015-07-15 20:50:02.990304900 +0200
-+++ minixml/mxml_pri.c	2015-07-15 20:50:02.990304900 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_nod.c.rej minixml/mxml_nod.c.rej
+--- minixml.orig/mxml_nod.c.rej	1970-01-01 01:00:00.000000000 +0100
++++ minixml/mxml_nod.c.rej	2016-06-16 00:05:18.000000000 +0200
+@@ -0,0 +1,21 @@
++***************
++*** 202,208 ****
++    */
++  
++    while (node->child)
++-     mxmlDelete(node->child);
++  
++   /*
++    * Now delete any node data...
++--- 201,211 ----
++    */
++  
++    while (node->child)
+++   {
+++     mxml_node_t *child = node->child;
+++     mxmlRemove(child);
+++     mxmlRelease(child);
+++   }
++  
++   /*
++    * Now delete any node data...
+diff --strip-trailing-cr -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
+--- minixml.orig/mxml_pri.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_pri.c	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -399,9 +404,9 @@ diff -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
   * which should have been included with this file.  If this file is
   * missing or damaged, see the license at:
   *
-diff -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
---- minixml.orig/mxml_pri.h	2015-07-15 20:50:02.990304900 +0200
-+++ minixml/mxml_pri.h	2015-07-15 20:50:03.005903800 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
+--- minixml.orig/mxml_pri.h	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_pri.h	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -419,9 +424,9 @@ diff -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
  #include "mxml.h"
  
  
-diff -urN minixml.orig/mxml_sea.c minixml/mxml_sea.c
---- minixml.orig/mxml_sea.c	2015-07-15 20:50:03.005903800 +0200
-+++ minixml/mxml_sea.c	2015-07-15 20:50:03.005903800 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_sea.c minixml/mxml_sea.c
+--- minixml.orig/mxml_sea.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_sea.c	2016-06-16 00:05:18.000000000 +0200
 @@ -8,7 +8,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -439,9 +444,9 @@ diff -urN minixml.orig/mxml_sea.c minixml/mxml_sea.c
  #include "mxml.h"
  
  
-diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
---- minixml.orig/mxml_set.c	2015-07-15 20:50:03.005903800 +0200
-+++ minixml/mxml_set.c	2015-07-15 20:50:03.005903800 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_set.c minixml/mxml_set.c
+--- minixml.orig/mxml_set.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_set.c	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -600,9 +605,9 @@ diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
    if (!node || node->type != MXML_TEXT || !format)
      return (-1);
  
-diff -urN minixml.orig/mxml_str.c minixml/mxml_str.c
---- minixml.orig/mxml_str.c	2015-07-15 20:50:03.005903800 +0200
-+++ minixml/mxml_str.c	2015-07-15 20:50:03.005903800 +0200
+diff --strip-trailing-cr -urN minixml.orig/mxml_str.c minixml/mxml_str.c
+--- minixml.orig/mxml_str.c	2016-06-16 00:05:18.000000000 +0200
++++ minixml/mxml_str.c	2016-06-16 00:05:18.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
