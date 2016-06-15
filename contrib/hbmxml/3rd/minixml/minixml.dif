@@ -367,31 +367,6 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
  #include "mxml.h"
  
  
-diff --strip-trailing-cr -urN minixml.orig/mxml_nod.c.rej minixml/mxml_nod.c.rej
---- minixml.orig/mxml_nod.c.rej	1970-01-01 01:00:00.000000000 +0100
-+++ minixml/mxml_nod.c.rej	2016-06-16 00:05:18.000000000 +0200
-@@ -0,0 +1,21 @@
-+***************
-+*** 202,208 ****
-+    */
-+  
-+    while (node->child)
-+-     mxmlDelete(node->child);
-+  
-+   /*
-+    * Now delete any node data...
-+--- 201,211 ----
-+    */
-+  
-+    while (node->child)
-++   {
-++     mxml_node_t *child = node->child;
-++     mxmlRemove(child);
-++     mxmlRelease(child);
-++   }
-+  
-+   /*
-+    * Now delete any node data...
 diff --strip-trailing-cr -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
 --- minixml.orig/mxml_pri.c	2016-06-16 00:05:18.000000000 +0200
 +++ minixml/mxml_pri.c	2016-06-16 00:05:18.000000000 +0200
