@@ -85,21 +85,13 @@ void hb_verBuildInfo( void )
       hb_xfree( pszPCode );
    }
 
-   hb_conOutErr( "ChangeLog last entry: ", 0 );
-   hb_conOutErr( hb_verChangeLogLastEntry(), 0 );
+   hb_conOutErr( "Commit info: ", 0 );
+   hb_conOutErr( hb_verCommitInfo(), 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 
-   hb_conOutErr( "ChangeLog ID: ", 0 );
-   hb_conOutErr( hb_verChangeLogID(), 0 );
+   hb_conOutErr( "Commit ID: ", 0 );
+   hb_conOutErr( hb_verCommitID(), 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
-
-   {
-      char * pszBuildDate = hb_verBuildDate();
-      hb_conOutErr( "Built on: ", 0 );
-      hb_conOutErr( pszBuildDate, 0 );
-      hb_conOutErr( hb_conNewLine(), 0 );
-      hb_xfree( pszBuildDate );
-   }
 
    {
       const char * pszFlags = hb_verFlagsPRG();
@@ -132,7 +124,7 @@ void hb_verBuildInfo( void )
    }
 
    hb_conOutErr( "Build options: ", 0 );
-   if( hb_xquery( HB_MEM_USEDMAX ) != 0 )
+   if( hb_xquery( HB_MEM_BLOCKS ) != 0 )
       hb_conOutErr( "(memory tracking) ", 0 );
 #if defined( HB_TR_INFO ) && ( HB_TR_LEVEL == HB_TR_INFO || HB_TR_LEVEL == HB_TR_DEBUG )
    hb_conOutErr( "(tracing) ", 0 );
@@ -143,11 +135,11 @@ void hb_verBuildInfo( void )
 #if defined( __cplusplus )
    hb_conOutErr( "(C++ mode) ", 0 );
 #endif
-#if defined( HB_COMPAT_C53 )
-   hb_conOutErr( "(Clipper 5.3b) ", 0 );
+#if ! defined( HB_COMPAT_C53 )
+   hb_conOutErr( "(no Clipper 5.3b) ", 0 );
 #endif
-#if defined( HB_CLP_UNDOC )
-   hb_conOutErr( "(Clipper 5.x undoc) ", 0 );
+#if ! defined( HB_CLP_UNDOC )
+   hb_conOutErr( "(no Clipper 5.x undoc) ", 0 );
 #endif
 #if defined( HB_CLP_STRICT )
    hb_conOutErr( "(Clipper 5.x strict) ", 0 );

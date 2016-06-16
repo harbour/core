@@ -1,5 +1,5 @@
 /*
- * Windows OS version information
+ * Windows OS - safe LAN networking
  *
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  *
@@ -44,14 +44,11 @@
  *
  */
 
-/*
- * Operating system functions for Windows
- *
- * Program to check and set Windows Registry settings
- * for safe networking - all versions of Windows to XP SP2
+/* Function to check and set Windows Registry settings
+ * for safe networking - for all versions of Windows.
  *
  * Also includes check for buggy VREDIR.VXD under Win95
- * and if the correct patch file is found - run it.
+ * and if the correct patch file is found.
  */
 
 #include "directry.ch"
@@ -67,9 +64,8 @@ FUNCTION win_osNetRegOk( lSetIt, lDoVista )
    LOCAL cKeyWks
 
    hb_default( @lSetIt, .F. )
-   hb_default( @lDoVista, .T. )
 
-   IF ! lDoVista .AND. hb_osIsWinVista()
+   IF ! hb_defaultValue( lDoVista, .T. ) .AND. hb_osIsWinVista()
       /* do nothing */
    ELSEIF hb_osIsWin9x()
       bRetVal := win_regQuery( WIN_HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
@@ -117,17 +113,24 @@ FUNCTION win_osNetVRedirOk( /* @ */ nResult )
 
    LOCAL aFiles
 
+   LOCAL nSize
+   LOCAL cTime
+
    nResult := 0
 
-   IF hb_osIsWin9x()
-      aFiles := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" )  /* Check for faulty files. */
-      IF ! Empty( aFiles )
-         IF aFiles[ 1 ][ F_SIZE ] == 156749 .AND. aFiles[ 1 ][ F_TIME ] == "11:11:10"
-            nResult := 1111
-         ELSEIF aFiles[ 1 ][ F_SIZE ] == 140343 .AND. aFiles[ 1 ][ F_TIME ] == "09:50:00"
-            nResult := 950
-         ENDIF
-      ENDIF
+   /* Check for faulty files */
+   IF hb_osIsWin9x() .AND. ;
+      Len( aFiles := hb_vfDirectory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" ) ) >= 1
+
+      nSize := aFiles[ 1 ][ F_SIZE ]
+      cTime := aFiles[ 1 ][ F_TIME ]
+
+      DO CASE
+      CASE nSize == 156749 .AND. cTime == "11:11:10"
+         nResult := 1111
+      CASE nSize == 140343 .AND. cTime == "09:50:00"
+         nResult := 950
+      ENDCASE
    ENDIF
 
-   RETURN Empty( nResult )
+   RETURN nResult == 0

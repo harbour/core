@@ -1,5 +1,5 @@
 /*
- *
+ * Regex functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -106,8 +106,8 @@ PHB_REGEX hb_regexCompile( const char * szRegEx, HB_SIZE nLen, int iFlags )
 
    HB_SYMBOL_UNUSED( nLen );
 
-   pRegEx = ( PHB_REGEX ) hb_gcAllocate( sizeof( HB_REGEX ), &s_gcRegexFuncs );
-   memset( pRegEx, 0, sizeof( HB_REGEX ) );
+   pRegEx = ( PHB_REGEX ) hb_gcAllocate( sizeof( *pRegEx ), &s_gcRegexFuncs );
+   memset( pRegEx, 0, sizeof( *pRegEx ) );
    pRegEx->fFree = HB_TRUE;
    pRegEx->iFlags = iFlags;
 
@@ -164,11 +164,21 @@ void hb_regexFree( PHB_REGEX pRegEx )
 
 HB_BOOL hb_regexMatch( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen, HB_BOOL fFull )
 {
+#if defined( HB_HAS_PCRE2 )
+   HB_REGMATCH * aMatches = pcre2_match_data_create( 1, NULL );
+#else
    HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( 1 ) ];
+#endif
    HB_BOOL fMatch;
 
    fMatch = ( s_reg_exec )( pRegEx, szString, nLen, 1, aMatches ) > 0;
-   return fMatch && ( ! fFull ||
+   fMatch = fMatch && ( ! fFull ||
             ( HB_REGMATCH_SO( aMatches, 0 ) == 0 &&
-              HB_REGMATCH_EO( aMatches, 0 ) == ( int ) nLen ) );
+              ( int ) HB_REGMATCH_EO( aMatches, 0 ) == ( int ) nLen ) );
+
+#if defined( HB_HAS_PCRE2 )
+   pcre2_match_data_free( aMatches );
+#endif
+
+   return fMatch;
 }

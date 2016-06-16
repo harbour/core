@@ -1,11 +1,5 @@
 /*
- * CT3 Number and bit manipulation functions:
- *      NumAndX()
- *      NumOrX()
- *      NumXorX()
- *      NumNotX()
- *      NumRolX()
- *      NumMirrX()
+ * Number and bit manipulation functions: Num*X()
  *
  * Copyright 2001 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
  *
@@ -63,7 +57,6 @@ static void sizeofbits( HB_USHORT * pusBytes, HB_LONG * plPattern, HB_LONG * plT
 HB_ULONG hb_hextonum( const char * cHex )
 {
    HB_ULONG ulNum = 0;
-   char     c;
    int      iDigit;
 
    while( *cHex && *cHex == ' ' )
@@ -71,6 +64,8 @@ HB_ULONG hb_hextonum( const char * cHex )
 
    while( *cHex )
    {
+      char c;
+
       ulNum <<= 4;
 
       c     = *cHex;
@@ -164,20 +159,20 @@ HB_FUNC( NUMNOTX )
 
 HB_FUNC( NUMROLX )
 {
-   HB_LONG   lNum1, lNumBak, lPattern, lTestRol;
-   HB_USHORT usBytes, usFor, usNum2;
-
    if( HB_ISNUM( 2 ) || HB_ISCHAR( 2 ) )
    {
+      HB_LONG   lNum1, lNumBak, lPattern, lTestRol;
+      HB_USHORT usBytes, usFor, usNum2;
+
       lNum1  = __getparam( 2 );               /* Number to do ROL */
-      usNum2 = ( HB_USHORT ) __getparam( 3 ); /* Iterations       */
+      usNum2 = ( HB_USHORT ) __getparam( 3 ); /* Iterations */
 
       sizeofbits( &usBytes, &lPattern, &lTestRol );
 
-      usNum2 = usNum2 % usBytes;          /* Set usNum2 < usBytes  */
+      usNum2 = usNum2 % usBytes;          /* Set usNum2 < usBytes */
 
       lNumBak = lNum1 & lPattern;         /* lNumBak contain the section
-                                             to doesn't ROL               */
+                                             to doesn't ROL */
 
       for( usFor = 1; usFor <= usNum2; usFor++ )
       {
@@ -200,11 +195,11 @@ HB_FUNC( NUMROLX )
 
 HB_FUNC( NUMMIRRX )
 {
-   HB_LONG   lNum1, lPattern, lTestMSB, lNumBak, lMirror = 0;
-   HB_USHORT usBytes, usFor;
-
    if( HB_ISNUM( 2 ) || HB_ISCHAR( 2 ) )
    {
+      HB_LONG   lNum1, lPattern, lTestMSB, lNumBak, lMirror = 0;
+      HB_USHORT usBytes, usFor;
+
       lNum1 = __getparam( 2 );
 
       sizeofbits( &usBytes, &lPattern, &lTestMSB );
@@ -216,7 +211,7 @@ HB_FUNC( NUMMIRRX )
          if( lNum1 & 1 )
          {
             lMirror = lMirror << 1;    /* if the LSB of lNum1 == 1 then */
-            lMirror = lMirror | 1;     /* set the LSB of lMirror = 1    */
+            lMirror = lMirror | 1;     /* set the LSB of lMirror = 1 */
          }
          else
             lMirror = lMirror << 1;
@@ -250,7 +245,6 @@ static HB_LONG __numor( HB_LONG lNum1, HB_LONG lNum2 )
    return lNum1 | lNum2;
 }
 
-
 static HB_LONG __numxor( HB_LONG lNum1, HB_LONG lNum2 )
 {
    return lNum1 ^ lNum2;
@@ -264,14 +258,13 @@ static HB_LONG __numnot( HB_LONG lNum1, HB_LONG lNum2 )
 
 static HB_LONG __numfun( int iPCount, HB_LONG ( * operation )( HB_LONG wNum1, HB_LONG wNum2 ), HB_BOOL * pbOk )
 {
-   HB_LONG   lNumOp = 0;
-   HB_LONG   lNum1, lNum2;
-   HB_LONG   lPattern, lTestMSB;
-   HB_USHORT usBytes;
-   int       iFor;
-
    if( HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
    {
+      HB_LONG   lNumOp = 0;
+      HB_LONG   lNum1, lNum2;
+      HB_LONG   lPattern, lTestMSB;
+      HB_USHORT usBytes;
+
       sizeofbits( &usBytes, &lPattern, &lTestMSB );
 
       if( HB_ISNUM( 2 ) || HB_ISCHAR( 2 ) )
@@ -283,6 +276,8 @@ static HB_LONG __numfun( int iPCount, HB_LONG ( * operation )( HB_LONG wNum1, HB
             lNumOp = ( *operation )( lNum1, 0 );
 
          else
+         {
+            int iFor;
             for( iFor = 3; iFor <= iPCount; iFor++ )
             {
                if( HB_ISNUM( iFor ) || HB_ISCHAR( iFor ) )
@@ -304,10 +299,10 @@ static HB_LONG __numfun( int iPCount, HB_LONG ( * operation )( HB_LONG wNum1, HB
                /* Copy result to first parameter if multi operation */
                lNum1 = lNumOp;
             }
+         }
       }
       else
       {
-
          /*  If error in parameter then return -1 */
          *pbOk = HB_FALSE;
          return -1;

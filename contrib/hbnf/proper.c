@@ -1,30 +1,21 @@
-/*
- * Author....: Robert DiFalco and Glenn Scott
- * CIS ID....: 71610,1705
- *
- * This is an original work by Glenn Scott and Robert DiFalco
- * and is placed in the public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.4   01 Jan 1995 03:01:00   TED
- * Ted Means made a couple of minor mods to eliminate some (mostly
- * benign) compiler warnings.
- *
- *    Rev 1.3   28 Sep 1992 00:54:58   GLENN
- * Don Caton fixed the function to conform to extend system rules.
- *
- *    Rev 1.2   15 Aug 1991 23:08:22   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:53:50   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:02:56   GLENN
- * Nanforum Toolkit
- *
- *
+/* This is an original work by Glenn Scott and Robert DiFalco
+   and is placed in the public domain.
+
+      Rev 1.4   01 Jan 1995 03:01:00   TED
+   Ted Means made a couple of minor mods to eliminate some (mostly
+   benign) compiler warnings.
+
+      Rev 1.3   28 Sep 1992 00:54:58   GLENN
+   Don Caton fixed the function to conform to extend system rules.
+
+      Rev 1.2   15 Aug 1991 23:08:22   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:53:50   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:02:56   GLENN
+   Nanforum Toolkit
  */
 
 #include "hbapi.h"
@@ -64,7 +55,7 @@ HB_FUNC( FT_PROPER )
 
    hb_storc( NULL, 1 );
 
-   for( i = 0; i < iLen; i++ )
+   for( i = 0; i < iLen; ++i )
    {
       if( _ftIsAlpha( cStr[ i ] ) )
       {
@@ -84,7 +75,7 @@ HB_FUNC( FT_PROPER )
    /* Find "Mc" */
    if( cDst )
    {
-      for( i = 0; i < iLen - 2; i++ )
+      for( i = 0; i < iLen - 2; ++i )
       {
          if( cStr[ i ] == 'M' && cStr[ i + 1 ] == 'c' )
             cDst[ i + 2 ] = _ftToUpper( cDst[ i + 2 ] );

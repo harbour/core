@@ -1,5 +1,5 @@
 /*
- * code used to register GT driver
+ * Code used to register GT driver
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -15,6 +15,7 @@ C_SOURCES := \
    jccoefct.c \
    jccolor.c \
    jcdctmgr.c \
+   jchuff.c \
    jcinit.c \
    jcmainct.c \
    jcmarker.c \
@@ -92,7 +93,7 @@ ifeq ($(filter $(HB_COMPILER),<>),)
 
       include $(TOP)$(ROOT)config/lib.mk
    else
-      HB_SKIP_REASON := unused
+      HB_SKIP_REASON := local copy unused
       include $(TOP)$(ROOT)config/none.mk
    endif
 else
@@ -100,12 +101,10 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.ijg.org/
-# VER    9a
-# URL    http://www.ijg.org/files/jpegsrc.v9a.tar.gz
+# URL    http://infai.org/jpeg/files?get=jpegsrc.v9b.tar.gz
 # DIFF   jpeg.dif
 #
-# MAP    README
+# MAP    README     README.txt
 # MAP    cderror.h
 # MAP    cdjpeg.h
 # MAP    jaricom.c

@@ -56,8 +56,6 @@ PROCEDURE Main()
 
    LOCAL ni, cStr
 
-   ctinit()
-
    ? "Begin test of CharShl()"
    ?
 
@@ -77,7 +75,5 @@ PROCEDURE Main()
 
    ? "End test of CharShl()"
    ?
-
-   ctexit()
 
    RETURN

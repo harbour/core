@@ -1,7 +1,6 @@
 hbcups provides access to the CUPS printing library.
 
-Function Reference
-=====================================
+Function Reference:
 
 cupsGetDefault() --> cPrinterName
     Returns the CUPS name of the default printer on the default server,

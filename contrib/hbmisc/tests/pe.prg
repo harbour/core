@@ -3,19 +3,21 @@
 PROCEDURE Main( cFile )
 
    LOCAL cText
-   LOCAL lEdit := .T.
+   LOCAL lEdit
 
-   IF cFile == NIL
-      cText := Example_Text()
-   ELSE
-      IF hb_FileMatch( cFile, __FILE__ )
-         lEdit := .F.
-      ENDIF
+   IF HB_ISSTRING( cFile )
+      lEdit := ! hb_FileMatch( cFile, __FILE__ )
       cText := MemoRead( cFile )
+   ELSE
+      lEdit := .T.
+      cText := Example_Text()
    ENDIF
 
-   cText := MyMemoEdit( cText, 0, 0, MaxRow(), MaxCol(), lEdit )
-   hb_MemoWrit( hb_FNameExtSet( __FILE__, ".out" ), cText )
+   /* TOFIX: this can only handle CRLF EOLs */
+   cText := StrTran( StrTran( cText, Chr( 13 ) ), Chr( 10 ), Chr( 13 ) + Chr( 10 ) )
+
+   hb_MemoWrit( hb_FNameExtSet( __FILE__, ".out" ), ;
+      MyMemoEdit( cText, 0, 0, MaxRow(), MaxCol(), lEdit ) )
 
    RETURN
 
@@ -24,11 +26,9 @@ STATIC FUNCTION MyMemoEdit( cText, nTop, nLeft, nBottom, nRight, lEdit )
    LOCAL oED
 
    /* NOTE: In current design of editor it doesn't reallocate the memory
-      buffer used to hold the text
-   */
+      buffer used to hold the text */
 
-   oED := EditorNew( nTop, nLeft, nBottom, nRight, 254, , , , Len( cText ) * 2, 168 )
-   IF oED != NIL
+   IF ( oED := EditorNew( nTop, nLeft, nBottom, nRight, 254, , , , Len( cText ) * 2, 168 ) ) != NIL
       EditorSetText( oED, cText )
       EditorEdit( oED, lEdit, .T. )
       cText := EditorGetText( oED )
@@ -45,8 +45,8 @@ STATIC FUNCTION Example_Text()
 STATIC FUNCTION Example_Text_Raw()
 #pragma __cstream | RETURN %s
 
- ~2THE HARBOUR PROJECT LICENSE~1
-~3 ===========================
+ ~2THE HARBOUR LICENSE~1
+~3 ===================
 
  This program is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ STATIC FUNCTION Example_Text_Raw()
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- their web site at https://www.gnu.org/).
+ their website at https://www.gnu.org/).
 
 ~5This file have to be separated with CR/LF characters~1
 #pragma __endtext

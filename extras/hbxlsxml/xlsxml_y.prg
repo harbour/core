@@ -1,48 +1,46 @@
 /*
- *
  * Copyright 2011 Fausto Di Creddo Trautwein, ftwein@yahoo.com.br
  *
- * Thanks TO Robert F Greer, PHP original version
- * http://sourceforge.net/projects/excelwriterxml/
+ * Thanks to Robert F Greer, PHP original version
  *
- * This program is free software; you can redistribute it AND/OR modify
- * it under the terms of the GNU General PUBLIC License as published by
- * the Free Software Foundation; either version 2, OR( at your option )
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
- * This program is distributed IN the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General PUBLIC License FOR more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General PUBLIC License
- * along WITH this software; see the file COPYING.txt.  IF NOT, write TO
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA( OR visit the web site https://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
- * As a special exception, the Harbour Project gives permission FOR
- * additional uses of the text contained IN its release of Harbour.
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
  *
- * The exception is that, IF you link the Harbour libraries WITH other
- * files TO produce an executable, this does NOT by itself cause the
- * resulting executable TO be covered by the GNU General PUBLIC License.
- * Your use of that executable is IN no way restricted on account of
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
  *
- * This exception does NOT however invalidate any other reasons why
- * the executable file might be covered by the GNU General PUBLIC License.
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
  *
- * This exception applies only TO the code released by the Harbour
- * Project under the name Harbour.  IF you copy code FROM other
- * Harbour Project OR Free Software Foundation releases into a copy of
- * Harbour, as the General PUBLIC License permits, the exception does
- * NOT apply TO the code that you add IN this way.  TO avoid misleading
- * anyone as TO the status of such modified files, you must delete
- * this exception notice FROM them.
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
  *
- * IF you write modifications of your own FOR Harbour, it is your choice
- * whether TO permit this exception TO apply TO your modifications.
- * IF you DO NOT wish that, delete this exception notice.
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
@@ -50,46 +48,46 @@
 
 CREATE CLASS ExcelWriterXML_Style
 
-   VAR    id
-   VAR    name
-   VAR    useAlignment                            INIT .F.
-   VAR    useFont                                 INIT .F.
-   VAR    useBorder                               INIT .F.
-   VAR    useInterior                             INIT .F.
+   VAR id
+   VAR name
+   VAR useAlignment         INIT .F.
+   VAR useFont              INIT .F.
+   VAR useBorder            INIT .F.
+   VAR useInterior          INIT .F.
 
-   VAR    valign
-   VAR    halign
-   VAR    rotate
-   VAR    shrinktofit                             INIT 0
-   VAR    verticaltext                            INIT 0
-   VAR    wraptext                                INIT 0
+   VAR valign
+   VAR halign
+   VAR rotate
+   VAR shrinktofit          INIT 0
+   VAR verticaltext         INIT 0
+   VAR wraptext             INIT 0
 
-   VAR    fontColor                               INIT "Automatic"
-   VAR    fontName
-   VAR    fontFamily
-   VAR    fontSize
-   VAR    bold
-   VAR    italic
-   VAR    underline
-   VAR    strikethrough
-   VAR    shadow
-   VAR    outline
+   VAR fontColor            INIT "Automatic"
+   VAR fontName
+   VAR fontFamily
+   VAR fontSize
+   VAR bold
+   VAR italic
+   VAR underline
+   VAR strikethrough
+   VAR shadow
+   VAR outline
 
-   VAR    borderTop                               INIT { => }
-   VAR    borderBottom                            INIT { => }
-   VAR    borderLeft                              INIT { => }
-   VAR    borderRight                             INIT { => }
-   VAR    borderDL                                INIT { => }
-   VAR    borderDR                                INIT { => }
+   VAR borderTop            INIT { => }
+   VAR borderBottom         INIT { => }
+   VAR borderLeft           INIT { => }
+   VAR borderRight          INIT { => }
+   VAR borderDL             INIT { => }
+   VAR borderDR             INIT { => }
 
-   VAR    interiorColor
-   VAR    interiorPattern
-   VAR    interiorPatternColor
+   VAR interiorColor
+   VAR interiorPattern
+   VAR interiorPatternColor
 
-   VAR    numberFormat
+   VAR numberFormat
 
-   VAR    formatErrors                            INIT { => }
-   VAR    namedColorsIE                           INIT { => }
+   VAR formatErrors         INIT { => }
+   VAR namedColorsIE        INIT { => }
 
    METHOD new( id )
    METHOD getID()
@@ -126,9 +124,150 @@ ENDCLASS
 METHOD ExcelWriterXML_Style:New( id )
 
    ::id := id
-   ::namedColorsIE := getColorIE()
 
-   RETURN SELF
+   ::namedColorsIE := { ;
+      "aliceblue"            => "#F0F8FF", ;
+      "antiquewhite"         => "#FAEBD7", ;
+      "aqua"                 => "#00FFFF", ;
+      "aquamarine"           => "#7FFFD4", ;
+      "azure"                => "#F0FFFF", ;
+      "beige"                => "#F5F5DC", ;
+      "bisque"               => "#FFE4C4", ;
+      "black"                => "#000000", ;
+      "blanchedalmond"       => "#FFEBCD", ;
+      "blue"                 => "#0000FF", ;
+      "blueviolet"           => "#8A2BE2", ;
+      "brown"                => "#A52A2A", ;
+      "burlywood"            => "#DEB887", ;
+      "cadetblue"            => "#5F9EA0", ;
+      "chartreuse"           => "#7FFF00", ;
+      "chocolate"            => "#D2691E", ;
+      "coral"                => "#FF7F50", ;
+      "cornflowerblue"       => "#6495ED", ;
+      "cornsilk"             => "#FFF8DC", ;
+      "crimson"              => "#DC143C", ;
+      "cyan"                 => "#00FFFF", ;
+      "darkblue"             => "#00008B", ;
+      "darkcyan"             => "#008B8B", ;
+      "darkgoldenrod"        => "#B8860B", ;
+      "darkgray"             => "#A9A9A9", ;
+      "darkgreen"            => "#006400", ;
+      "darkkhaki"            => "#BDB76B", ;
+      "darkmagenta"          => "#8B008B", ;
+      "darkolivegreen"       => "#556B2F", ;
+      "darkorange"           => "#FF8C00", ;
+      "darkorchid"           => "#9932CC", ;
+      "darkred"              => "#8B0000", ;
+      "darksalmon"           => "#E9967A", ;
+      "darkseagreen"         => "#8FBC8F", ;
+      "darkslateblue"        => "#483D8B", ;
+      "darkslategray"        => "#2F4F4F", ;
+      "darkturquoise"        => "#00CED1", ;
+      "darkviolet"           => "#9400D3", ;
+      "deeppink"             => "#FF1493", ;
+      "deepskyblue"          => "#00BFFF", ;
+      "dimgray"              => "#696969", ;
+      "dodgerblue"           => "#1E90FF", ;
+      "firebrick"            => "#B22222", ;
+      "floralwhite"          => "#FFFAF0", ;
+      "forestgreen"          => "#228B22", ;
+      "fuchsia"              => "#FF00FF", ;
+      "gainsboro"            => "#DCDCDC", ;
+      "ghostwhite"           => "#F8F8FF", ;
+      "gold"                 => "#FFD700", ;
+      "goldenrod"            => "#DAA520", ;
+      "gray"                 => "#808080", ;
+      "green"                => "#008000", ;
+      "greenyellow"          => "#ADFF2F", ;
+      "honeydew"             => "#F0FFF0", ;
+      "hotpink"              => "#FF69B4", ;
+      "indianred"            => "#CD5C5C", ;
+      "indigo"               => "#4B0082", ;
+      "ivory"                => "#FFFFF0", ;
+      "khaki"                => "#F0E68C", ;
+      "lavender"             => "#E6E6FA", ;
+      "lavenderblush"        => "#FFF0F5", ;
+      "lawngreen"            => "#7CFC00", ;
+      "lemonchiffon"         => "#FFFACD", ;
+      "lightblue"            => "#ADD8E6", ;
+      "lightcoral"           => "#F08080", ;
+      "lightcyan"            => "#E0FFFF", ;
+      "lightgoldenrodyellow" => "#FAFAD2", ;
+      "lightgreen"           => "#90EE90", ;
+      "lightgrey"            => "#D3D3D3", ;
+      "lightpink"            => "#FFB6C1", ;
+      "lightsalmon"          => "#FFA07A", ;
+      "lightseagreen"        => "#20B2AA", ;
+      "lightskyblue"         => "#87CEFA", ;
+      "lightslategray"       => "#778899", ;
+      "lightsteelblue"       => "#B0C4DE", ;
+      "lightyellow"          => "#FFFFE0", ;
+      "lime"                 => "#00FF00", ;
+      "limegreen"            => "#32CD32", ;
+      "linen"                => "#FAF0E6", ;
+      "magenta"              => "#FF00FF", ;
+      "maroon"               => "#800000", ;
+      "mediumaquamarine"     => "#66CDAA", ;
+      "mediumblue"           => "#0000CD", ;
+      "mediumorchid"         => "#BA55D3", ;
+      "mediumpurple"         => "#9370DB", ;
+      "mediumseagreen"       => "#3CB371", ;
+      "mediumslateblue"      => "#7B68EE", ;
+      "mediumspringgreen"    => "#00FA9A", ;
+      "mediumturquoise"      => "#48D1CC", ;
+      "mediumvioletred"      => "#C71585", ;
+      "midnightblue"         => "#191970", ;
+      "mintcream"            => "#F5FFFA", ;
+      "mistyrose"            => "#FFE4E1", ;
+      "moccasin"             => "#FFE4B5", ;
+      "navajowhite"          => "#FFDEAD", ;
+      "navy"                 => "#000080", ;
+      "oldlace"              => "#FDF5E6", ;
+      "olive"                => "#808000", ;
+      "olivedrab"            => "#6B8E23", ;
+      "orange"               => "#FFA500", ;
+      "orangered"            => "#FF4500", ;
+      "orchid"               => "#DA70D6", ;
+      "palegoldenrod"        => "#EEE8AA", ;
+      "palegreen"            => "#98FB98", ;
+      "paleturquoise"        => "#AFEEEE", ;
+      "palevioletred"        => "#DB7093", ;
+      "papayawhip"           => "#FFEFD5", ;
+      "peachpuff"            => "#FFDAB9", ;
+      "peru"                 => "#CD853F", ;
+      "pink"                 => "#FFC0CB", ;
+      "plum"                 => "#DDA0DD", ;
+      "powderblue"           => "#B0E0E6", ;
+      "purple"               => "#800080", ;
+      "red"                  => "#FF0000", ;
+      "rosybrown"            => "#BC8F8F", ;
+      "royalblue"            => "#4169E1", ;
+      "saddlebrown"          => "#8B4513", ;
+      "salmon"               => "#FA8072", ;
+      "sandybrown"           => "#F4A460", ;
+      "seagreen"             => "#2E8B57", ;
+      "seashell"             => "#FFF5EE", ;
+      "sienna"               => "#A0522D", ;
+      "silver"               => "#C0C0C0", ;
+      "skyblue"              => "#87CEEB", ;
+      "slateblue"            => "#6A5ACD", ;
+      "slategray"            => "#708090", ;
+      "snow"                 => "#FFFAFA", ;
+      "springgreen"          => "#00FF7F", ;
+      "steelblue"            => "#4682B4", ;
+      "tan"                  => "#D2B48C", ;
+      "teal"                 => "#008080", ;
+      "thistle"              => "#D8BFD8", ;
+      "tomato"               => "#FF6347", ;
+      "turquoise"            => "#40E0D0", ;
+      "violet"               => "#EE82EE", ;
+      "wheat"                => "#F5DEB3", ;
+      "white"                => "#FFFFFF", ;
+      "whitesmoke"           => "#F5F5F5", ;
+      "yellow"               => "#FFFF00", ;
+      "yellowgreen"          => "#9ACD32" }
+
+   RETURN Self
 
 METHOD ExcelWriterXML_Style:getID()
 
@@ -231,20 +370,20 @@ METHOD ExcelWriterXML_Style:getStyleXML()
          "Right"         => ::borderRight,  ;
          "DiagonalLeft"  => ::borderDL,     ;
          "DiagonalRight" => ::borderDR      }
-      auxdata := NIL
+
       FOR EACH auxdata IN positions
          position := auxdata:Key
          pData    := auxdata:Value
          IF Empty( pData )
             LOOP
          ENDIF
-         bLinestyle := iif( hb_HPos( pData, "LineStyle" ) > 0, ;
+         bLinestyle := iif( "LineStyle" $ pData, ;
             'ss:LineStyle="' + pData[ "LineStyle" ] + '"', ;
             "" )
-         bColor := iif( hb_HPos( pData, "Color" ) > 0, ;
+         bColor := iif( "Color" $ pData, ;
             'ss:Color="' + pData[ "Color" ] + '"', ;
             "" )
-         bWeight := iif( hb_HPos( pData, "Weight" ) > 0, ;
+         bWeight := iif( "Weight" $ pData, ;
             'ss:Weight="' + hb_ntos( pData[ "Weight" ] ) + '"', ;
             "" )
          borders += '<Border ss:Position="' + AllTrim( position + '" ' + bLinestyle + " " + bColor + " " + bWeight ) + "/>" + hb_eol()
@@ -292,37 +431,35 @@ METHOD ExcelWriterXML_Style:getStyleXML()
 
 METHOD ExcelWriterXML_Style:checkColor( color )
 
-   IF Left( color, 1 ) == "#"
+   IF hb_LeftEq( color, "#" )
       RETURN COLOR
-   ELSEIF hb_HPos( ::namedColorsIE, Lower( color ) ) > 0
+   ELSEIF Lower( color ) $ ::namedColorsIE
       color := ::namedColorsIE[ Lower( color ) ]
       RETURN COLOR
-   ELSE
-      RETURN ""
    ENDIF
 
-   RETURN NIL
+   RETURN ""
 
-METHOD ExcelWriterXML_Style:setName( name )
+METHOD PROCEDURE ExcelWriterXML_Style:setName( name )
 
    ::name := name
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:alignVertical( valign )
+METHOD PROCEDURE ExcelWriterXML_Style:alignVertical( valign )
 
    IF !( valign == "Automatic" ) .AND. ;
       !( valign == "Top"       ) .AND. ;
       !( valign == "Bottom"    ) .AND. ;
       !( valign == "Center"    )
-      RETURN NIL
+      RETURN
    ENDIF
    ::valign := valign
    ::useAlignment := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:alignHorizontal( halign )
+METHOD PROCEDURE ExcelWriterXML_Style:alignHorizontal( halign )
 
    IF !( halign == "Automatic" ) .AND. ;
       !( halign == "Left"      ) .AND. ;
@@ -333,43 +470,42 @@ METHOD ExcelWriterXML_Style:alignHorizontal( halign )
    ::halign := halign
    ::useAlignment := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:alignRotate( rotate )
+METHOD PROCEDURE ExcelWriterXML_Style:alignRotate( rotate )
 
-   IF ! HB_ISNUMERIC( rotate )
-      RETURN NIL
+   IF HB_ISNUMERIC( rotate )
+      IF Abs( rotate ) > 90
+         rotate %= 90
+      ENDIF
+      ::rotate := hb_ntos( rotate )
+      ::useAlignment := .T.
    ENDIF
-   IF Abs( rotate ) > 90
-      rotate := rotate % 90
-   ENDIF
-   ::rotate := hb_ntos( rotate )
-   ::useAlignment := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:alignShrinktofit()
+METHOD PROCEDURE ExcelWriterXML_Style:alignShrinktofit()
 
    ::shrinktofit  := 1
    ::useAlignment := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:alignVerticaltext()
+METHOD PROCEDURE ExcelWriterXML_Style:alignVerticaltext()
 
    ::verticaltext := 1
    ::useAlignment := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:alignWraptext()
+METHOD PROCEDURE ExcelWriterXML_Style:alignWraptext()
 
    ::wraptext     := 1
    ::useAlignment := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontSize( fontSize )
+METHOD PROCEDURE ExcelWriterXML_Style:setFontSize( fontSize )
 
    hb_default( @fontSize, 10 )
 
@@ -379,29 +515,27 @@ METHOD ExcelWriterXML_Style:setFontSize( fontSize )
    ::fontSize := fontSize
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontColor( fontColor )
+METHOD PROCEDURE ExcelWriterXML_Style:setFontColor( fontColor )
 
    fontColor := ::checkColor( fontColor )
-   IF !( Left( fontColor, 1 ) == "#" )
+   IF ! hb_LeftEq( fontColor, "#" )
       fontColor := "Automatic"
    ENDIF
    ::fontColor := fontColor
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontName( fontName )
+METHOD PROCEDURE ExcelWriterXML_Style:setFontName( fontName )
 
-   hb_default( @fontname, "Arial" )
-
-   ::fontName := fontName
+   ::fontName := hb_defaultValue( fontname, "Arial" )
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontFamily( fontFamily )
+METHOD PROCEDURE ExcelWriterXML_Style:setFontFamily( fontFamily )
 
    hb_default( @fontFamily, "Swiss" )
 
@@ -411,35 +545,35 @@ METHOD ExcelWriterXML_Style:setFontFamily( fontFamily )
       !( fontFamily == "Roman"      ) .AND. ;
       !( fontFamily == "Script"     ) .AND. ;
       !( fontFamily == "Swiss"      )
-      RETURN NIL
+      RETURN
    ENDIF
    ::fontFamily := fontFamily
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontBold()
+METHOD PROCEDURE ExcelWriterXML_Style:setFontBold()
 
    ::bold := 1
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontItalic()
+METHOD PROCEDURE ExcelWriterXML_Style:setFontItalic()
 
    ::italic := 1
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontStrikethrough()
+METHOD PROCEDURE ExcelWriterXML_Style:setFontStrikethrough()
 
    ::strikethrough := 1
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontUnderline( uStyle )
+METHOD PROCEDURE ExcelWriterXML_Style:setFontUnderline( uStyle )
 
    hb_default( @uStyle, "Single" )
 
@@ -448,29 +582,29 @@ METHOD ExcelWriterXML_Style:setFontUnderline( uStyle )
       !( uStyle == "Double"           ) .AND. ;
       !( uStyle == "SingleAccounting" ) .AND. ;
       !( uStyle == "DoubleAccounting" )
-      RETURN NIL
+      RETURN
    ENDIF
 
    ::underline := uStyle
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontShadow()
+METHOD PROCEDURE ExcelWriterXML_Style:setFontShadow()
 
    ::shadow := 1
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setFontOutline()
+METHOD PROCEDURE ExcelWriterXML_Style:setFontOutline()
 
    ::outline := 1
    ::useFont := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:border( position, weight, color, linestyle )
+METHOD PROCEDURE ExcelWriterXML_Style:border( position, weight, color, linestyle )
 
    LOCAL tmp
 
@@ -495,7 +629,7 @@ METHOD ExcelWriterXML_Style:border( position, weight, color, linestyle )
    ENDIF
 
    color := ::checkColor( color )
-   IF !( Left( color, 1 ) == "#" )
+   IF ! hb_LeftEq( color, "#" )
       color := "Automatic"
    ENDIF
 
@@ -537,15 +671,15 @@ METHOD ExcelWriterXML_Style:border( position, weight, color, linestyle )
 
    ::useBorder := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:bgColor( color, pattern, patternColor )
+METHOD PROCEDURE ExcelWriterXML_Style:bgColor( color, pattern, patternColor )
 
    hb_default( @color, "Yellow" )
    hb_default( @pattern, "Solid" )
 
    color := ::checkColor( color )
-   IF !( Left( color, 1 ) == "#" )
+   IF ! hb_LeftEq( color, "#" )
       color := "Yellow"
    ENDIF
    ::interiorColor := color
@@ -554,9 +688,9 @@ METHOD ExcelWriterXML_Style:bgColor( color, pattern, patternColor )
    ENDIF
    ::useInterior := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:bgPattern( pattern, color )
+METHOD PROCEDURE ExcelWriterXML_Style:bgPattern( pattern, color )
 
    hb_default( @pattern, "None" )
 
@@ -584,195 +718,48 @@ METHOD ExcelWriterXML_Style:bgPattern( pattern, color )
    ENDIF
 
    ::interiorPattern := pattern
-   IF color != NIL
+   IF HB_ISSTRING( color )
       ::bgPatternColor( color )
    ENDIF
    ::useInterior := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:bgPatternColor( color )
+METHOD PROCEDURE ExcelWriterXML_Style:bgPatternColor( color )
 
    hb_default( @color, "Yellow" )
 
    IF !( color == "Automatic" )
       color := ::checkColor( color )
-      IF !( Left( color, 1 ) == "#" )
+      IF ! hb_LeftEq( color, "#" )
          color := "Automatic"
       ENDIF
    ENDIF
    ::interiorPatternColor := color
    ::useInterior := .T.
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setNumberFormat( formatString )
+METHOD PROCEDURE ExcelWriterXML_Style:setNumberFormat( formatString )
 
    ::numberFormat := formatString
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setNumberFormatDate()
+METHOD PROCEDURE ExcelWriterXML_Style:setNumberFormatDate()
 
    ::setNumberFormat( "mm/dd/yy" )
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setNumberFormatTime()
+METHOD PROCEDURE ExcelWriterXML_Style:setNumberFormatTime()
 
    ::setNumberFormat( "hh:mm:ss" )
 
-   RETURN NIL
+   RETURN
 
-METHOD ExcelWriterXML_Style:setNumberFormatDatetime()
+METHOD PROCEDURE ExcelWriterXML_Style:setNumberFormatDatetime()
 
    ::setNumberFormat( "mm/dd/yy\ hh:mm:ss" )
 
-   RETURN NIL
-
-STATIC FUNCTION getColorIE()
-
-   LOCAL hcolor := { => }
-
-   hcolor[ "aliceblue"            ] := "#F0F8FF"
-   hcolor[ "antiquewhite"         ] := "#FAEBD7"
-   hcolor[ "aqua"                 ] := "#00FFFF"
-   hcolor[ "aquamarine"           ] := "#7FFFD4"
-   hcolor[ "azure"                ] := "#F0FFFF"
-   hcolor[ "beige"                ] := "#F5F5DC"
-   hcolor[ "bisque"               ] := "#FFE4C4"
-   hcolor[ "black"                ] := "#000000"
-   hcolor[ "blanchedalmond"       ] := "#FFEBCD"
-   hcolor[ "blue"                 ] := "#0000FF"
-   hcolor[ "blueviolet"           ] := "#8A2BE2"
-   hcolor[ "brown"                ] := "#A52A2A"
-   hcolor[ "burlywood"            ] := "#DEB887"
-   hcolor[ "cadetblue"            ] := "#5F9EA0"
-   hcolor[ "chartreuse"           ] := "#7FFF00"
-   hcolor[ "chocolate"            ] := "#D2691E"
-   hcolor[ "coral"                ] := "#FF7F50"
-   hcolor[ "cornflowerblue"       ] := "#6495ED"
-   hcolor[ "cornsilk"             ] := "#FFF8DC"
-   hcolor[ "crimson"              ] := "#DC143C"
-   hcolor[ "cyan"                 ] := "#00FFFF"
-   hcolor[ "darkblue"             ] := "#00008B"
-   hcolor[ "darkcyan"             ] := "#008B8B"
-   hcolor[ "darkgoldenrod"        ] := "#B8860B"
-   hcolor[ "darkgray"             ] := "#A9A9A9"
-   hcolor[ "darkgreen"            ] := "#006400"
-   hcolor[ "darkkhaki"            ] := "#BDB76B"
-   hcolor[ "darkmagenta"          ] := "#8B008B"
-   hcolor[ "darkolivegreen"       ] := "#556B2F"
-   hcolor[ "darkorange"           ] := "#FF8C00"
-   hcolor[ "darkorchid"           ] := "#9932CC"
-   hcolor[ "darkred"              ] := "#8B0000"
-   hcolor[ "darksalmon"           ] := "#E9967A"
-   hcolor[ "darkseagreen"         ] := "#8FBC8F"
-   hcolor[ "darkslateblue"        ] := "#483D8B"
-   hcolor[ "darkslategray"        ] := "#2F4F4F"
-   hcolor[ "darkturquoise"        ] := "#00CED1"
-   hcolor[ "darkviolet"           ] := "#9400D3"
-   hcolor[ "deeppink"             ] := "#FF1493"
-   hcolor[ "deepskyblue"          ] := "#00BFFF"
-   hcolor[ "dimgray"              ] := "#696969"
-   hcolor[ "dodgerblue"           ] := "#1E90FF"
-   hcolor[ "firebrick"            ] := "#B22222"
-   hcolor[ "floralwhite"          ] := "#FFFAF0"
-   hcolor[ "forestgreen"          ] := "#228B22"
-   hcolor[ "fuchsia"              ] := "#FF00FF"
-   hcolor[ "gainsboro"            ] := "#DCDCDC"
-   hcolor[ "ghostwhite"           ] := "#F8F8FF"
-   hcolor[ "gold"                 ] := "#FFD700"
-   hcolor[ "goldenrod"            ] := "#DAA520"
-   hcolor[ "gray"                 ] := "#808080"
-   hcolor[ "green"                ] := "#008000"
-   hcolor[ "greenyellow"          ] := "#ADFF2F"
-   hcolor[ "honeydew"             ] := "#F0FFF0"
-   hcolor[ "hotpink"              ] := "#FF69B4"
-   hcolor[ "indianred"            ] := "#CD5C5C"
-   hcolor[ "indigo"               ] := "#4B0082"
-   hcolor[ "ivory"                ] := "#FFFFF0"
-   hcolor[ "khaki"                ] := "#F0E68C"
-   hcolor[ "lavender"             ] := "#E6E6FA"
-   hcolor[ "lavenderblush"        ] := "#FFF0F5"
-   hcolor[ "lawngreen"            ] := "#7CFC00"
-   hcolor[ "lemonchiffon"         ] := "#FFFACD"
-   hcolor[ "lightblue"            ] := "#ADD8E6"
-   hcolor[ "lightcoral"           ] := "#F08080"
-   hcolor[ "lightcyan"            ] := "#E0FFFF"
-   hcolor[ "lightgoldenrodyellow" ] := "#FAFAD2"
-   hcolor[ "lightgreen"           ] := "#90EE90"
-   hcolor[ "lightgrey"            ] := "#D3D3D3"
-   hcolor[ "lightpink"            ] := "#FFB6C1"
-   hcolor[ "lightsalmon"          ] := "#FFA07A"
-   hcolor[ "lightseagreen"        ] := "#20B2AA"
-   hcolor[ "lightskyblue"         ] := "#87CEFA"
-   hcolor[ "lightslategray"       ] := "#778899"
-   hcolor[ "lightsteelblue"       ] := "#B0C4DE"
-   hcolor[ "lightyellow"          ] := "#FFFFE0"
-   hcolor[ "lime"                 ] := "#00FF00"
-   hcolor[ "limegreen"            ] := "#32CD32"
-   hcolor[ "linen"                ] := "#FAF0E6"
-   hcolor[ "magenta"              ] := "#FF00FF"
-   hcolor[ "maroon"               ] := "#800000"
-   hcolor[ "mediumaquamarine"     ] := "#66CDAA"
-   hcolor[ "mediumblue"           ] := "#0000CD"
-   hcolor[ "mediumorchid"         ] := "#BA55D3"
-   hcolor[ "mediumpurple"         ] := "#9370DB"
-   hcolor[ "mediumseagreen"       ] := "#3CB371"
-   hcolor[ "mediumslateblue"      ] := "#7B68EE"
-   hcolor[ "mediumspringgreen"    ] := "#00FA9A"
-   hcolor[ "mediumturquoise"      ] := "#48D1CC"
-   hcolor[ "mediumvioletred"      ] := "#C71585"
-   hcolor[ "midnightblue"         ] := "#191970"
-   hcolor[ "mintcream"            ] := "#F5FFFA"
-   hcolor[ "mistyrose"            ] := "#FFE4E1"
-   hcolor[ "moccasin"             ] := "#FFE4B5"
-   hcolor[ "navajowhite"          ] := "#FFDEAD"
-   hcolor[ "navy"                 ] := "#000080"
-   hcolor[ "oldlace"              ] := "#FDF5E6"
-   hcolor[ "olive"                ] := "#808000"
-   hcolor[ "olivedrab"            ] := "#6B8E23"
-   hcolor[ "orange"               ] := "#FFA500"
-   hcolor[ "orangered"            ] := "#FF4500"
-   hcolor[ "orchid"               ] := "#DA70D6"
-   hcolor[ "palegoldenrod"        ] := "#EEE8AA"
-   hcolor[ "palegreen"            ] := "#98FB98"
-   hcolor[ "paleturquoise"        ] := "#AFEEEE"
-   hcolor[ "palevioletred"        ] := "#DB7093"
-   hcolor[ "papayawhip"           ] := "#FFEFD5"
-   hcolor[ "peachpuff"            ] := "#FFDAB9"
-   hcolor[ "peru"                 ] := "#CD853F"
-   hcolor[ "pink"                 ] := "#FFC0CB"
-   hcolor[ "plum"                 ] := "#DDA0DD"
-   hcolor[ "powderblue"           ] := "#B0E0E6"
-   hcolor[ "purple"               ] := "#800080"
-   hcolor[ "red"                  ] := "#FF0000"
-   hcolor[ "rosybrown"            ] := "#BC8F8F"
-   hcolor[ "royalblue"            ] := "#4169E1"
-   hcolor[ "saddlebrown"          ] := "#8B4513"
-   hcolor[ "salmon"               ] := "#FA8072"
-   hcolor[ "sandybrown"           ] := "#F4A460"
-   hcolor[ "seagreen"             ] := "#2E8B57"
-   hcolor[ "seashell"             ] := "#FFF5EE"
-   hcolor[ "sienna"               ] := "#A0522D"
-   hcolor[ "silver"               ] := "#C0C0C0"
-   hcolor[ "skyblue"              ] := "#87CEEB"
-   hcolor[ "slateblue"            ] := "#6A5ACD"
-   hcolor[ "slategray"            ] := "#708090"
-   hcolor[ "snow"                 ] := "#FFFAFA"
-   hcolor[ "springgreen"          ] := "#00FF7F"
-   hcolor[ "steelblue"            ] := "#4682B4"
-   hcolor[ "tan"                  ] := "#D2B48C"
-   hcolor[ "teal"                 ] := "#008080"
-   hcolor[ "thistle"              ] := "#D8BFD8"
-   hcolor[ "tomato"               ] := "#FF6347"
-   hcolor[ "turquoise"            ] := "#40E0D0"
-   hcolor[ "violet"               ] := "#EE82EE"
-   hcolor[ "wheat"                ] := "#F5DEB3"
-   hcolor[ "white"                ] := "#FFFFFF"
-   hcolor[ "whitesmoke"           ] := "#F5F5F5"
-   hcolor[ "yellow"               ] := "#FFFF00"
-   hcolor[ "yellowgreen"          ] := "#9ACD32"
-
-   RETURN hcolor
+   RETURN

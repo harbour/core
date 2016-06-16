@@ -72,7 +72,6 @@
 
 */
 
-#require "hbnf"
 #require "hbwin"
 #require "hbgd"
 
@@ -81,15 +80,16 @@
 
 #define FIXED_THREADS         // This force application to use fixed number of running threads and no service threads
 
+#include "directry.ch"
 #include "fileio.ch"
 #include "inkey.ch"
 #include "error.ch"
+#include "setcurs.ch"
 #include "hbmemory.ch"
 #include "hbgtinfo.ch"
+#include "hbsocket.ch"
 
 REQUEST __HB_EXTERN__
-
-#include "hbsocket.ch"
 
 #if defined( HBMK_HAS_HBGD )
 // adding GD support
@@ -112,8 +112,7 @@ REQUEST gdImageChar
 #endif
 
 #define APP_NAME      "uhttpd"
-#define APP_VER_NUM   "0.4.4"
-#define APP_VERSION   APP_VER_NUM + APP_GD_SUPPORT + APP_DT_SUPPORT
+#define APP_VERSION   hb_Version() + APP_GD_SUPPORT + APP_DT_SUPPORT
 
 // default values - they can changes using line command switch or ini file
 
@@ -146,7 +145,7 @@ STATIC s_lQuitRequest := .F.
 STATIC s_hmtxQueue, s_hmtxServiceThreads, s_hmtxRunningThreads, s_hmtxLog, s_hmtxConsole, s_hmtxBusy
 STATIC s_hmtxHRB
 
-STATIC s_hfileLogAccess, s_hfileLogError, s_cApplicationRoot, s_cDocumentRoot, s_lIndexes, s_lConsole, s_nPort
+STATIC s_hFileLogAccess, s_hFileLogError, s_cApplicationRoot, s_cDocumentRoot, s_lIndexes, s_lConsole, s_nPort
 STATIC s_cSessionPath
 STATIC s_nThreads, s_nStartThreads, s_nMaxThreads
 STATIC s_nServiceThreads, s_nStartServiceThreads, s_nMaxServiceThreads
@@ -166,8 +165,8 @@ STATIC s_hActions := { ;
    "server-status"   => @Handler_ServerStatus() }
 
 STATIC s_hHandlers := { ;
-   "hrb"            => "hrb-script", ;
-   "exe"            => "cgi-script", ;
+   ".hrb"           => "hrb-script", ;
+   ".exe"           => "cgi-script", ;
    "/serverstatus"  => "server-status" }
 
 // STATIC s_lAcceptPathInfo   := .T.
@@ -181,21 +180,14 @@ THREAD STATIC t_cResult, t_nStatusCode, /*t_aHeader,*/ t_cErrorMsg, t_oSession
 
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, _HTTP_RESPONSE, m_cPost
 
-ANNOUNCE ERRORSYS
-
-
-// ----------------------------------------
-//
-//               M A I N
-//
-// ----------------------------------------
+// ---
 
 PROCEDURE Main( ... )
 
    LOCAL nPort, hListen, hSocket, aRemote, cI, xVal
    LOCAL aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
-   LOCAL i, cPar, lStop
-   LOCAL cGT, cApplicationRoot, cDocumentRoot, lIndexes, cConfig
+   LOCAL i, lStop
+   LOCAL cApplicationRoot, cDocumentRoot, lIndexes, cConfig
    LOCAL lConsole, lScriptAliasMixedCase, aDirectoryIndex
    LOCAL nProgress := 0
    LOCAL hDefault, cLogAccess, cLogError, cSessionPath
@@ -216,94 +208,99 @@ PROCEDURE Main( ... )
       RETURN
    ENDIF
 
-   // ----------------------- Initializations ---------------------------------
+   // Initializations
 
    SysSettings()
 
    ErrorBlock( {| oError | uhttpd_DefError( oError ) } )
 
-   // ----------------------- Parameters defaults -----------------------------
+   // Parameters defaults
 
    // defaults not changeble via ini file
    lStop                := .F.
    cConfig              := hb_DirBase() + APP_NAME + ".ini"
-   lConsole             := .T.
    nStartServiceThreads := START_SERVICE_THREADS
 
    // Check GT version - if I have started app with //GT:NUL then I have to disable
    // console and application will start in hidden way.
-   cGT := hb_gtVersion()
-   IF cGT == "NUL"
-      lConsole := .F.
-   ENDIF
+   lConsole := !( hb_gtVersion() == "NUL" )
 
+#if 0
    // TOCHECK: now not force case insensitive
-   // hb_HCaseMatch( s_hScriptAliases, .F. )
+   hb_HCaseMatch( s_hScriptAliases, .F. )
+#endif
 
-   // ----------------- Line command parameters checking ----------------------
+   // Line command parameters checking
 
-   i := 1
-   DO WHILE i <= PCount()
+   FOR i := 1 TO PCount()
 
-      cPar := hb_PValue( i++ )
+      SWITCH hb_PValue( i++ )
+      CASE "--port"             ; CASE "-p"
+         cCmdPort := hb_PValue( i++ )
+         EXIT
 
-      DO CASE
-      CASE cPar == "--port"             .OR. cPar == "-p"
-         cCmdPort    := hb_PValue( i++ )
-
-      CASE cPar == "--approot"          .OR. cPar == "-a"
+      CASE "--approot"          ; CASE "-a"
          cCmdApplicationRoot := hb_PValue( i++ )
+         EXIT
 
-      CASE cPar == "--docroot"          .OR. cPar == "-d"
+      CASE "--docroot"          ; CASE "-d"
          cCmdDocumentRoot := hb_PValue( i++ )
+         EXIT
 
-      CASE cPar == "--indexes"          .OR. cPar == "-i"
+      CASE "--indexes"          ; CASE "-i"
          lCmdIndexes := .T.
+         EXIT
 
-      CASE cPar == "--stop"             .OR. cPar == "-s"
-         lStop    := .T.
+      CASE "--stop"             ; CASE "-s"
+         lStop := .T.
+         EXIT
 
-      CASE cPar == "--config"           .OR. cPar == "-c"
-         cConfig     := hb_PValue( i++ )
+      CASE "--config"           ; CASE "-c"
+         cConfig := hb_PValue( i++ )
+         EXIT
 
-      CASE cPar == "--start-threads"    .OR. cPar == "-ts"
+      CASE "--start-threads"    ; CASE "-ts"
          nCmdStartThreads := Val( hb_PValue( i++ ) )
+         EXIT
 
-      CASE cPar == "--max-threads"      .OR. cPar == "-tm"
+      CASE "--max-threads"      ; CASE "-tm"
          nCmdMaxThreads := Val( hb_PValue( i++ ) )
+         EXIT
 
-      CASE cPar == "--console-rows"     .OR. cPar == "-cr"
+      CASE "--console-rows"     ; CASE "-cr"
          nCmdConsoleRows := Val( hb_PValue( i++ ) )
+         EXIT
 
-      CASE cPar == "--console-cols"     .OR. cPar == "-cc"
+      CASE "--console-cols"     ; CASE "-cc"
          nCmdConsoleCols := Val( hb_PValue( i++ ) )
+         EXIT
 
-      CASE cPar == "--help"             .OR. Lower( cPar ) == "-h" .OR. cPar == "-?"
+      CASE "--help"             ; CASE "-h" ; CASE "-H" ; CASE "-?"
          Help()
          RETURN
 
       OTHERWISE
          Help()
          RETURN
-      ENDCASE
-   ENDDO
+      ENDSWITCH
+   NEXT
 
-   // -------------------- checking STOP request -------------------------------
+   // checking STOP request
 
    IF lStop
       hb_MemoWrit( FILE_STOP, "" )
       RETURN
    ELSE
-      FErase( FILE_STOP )
+      hb_vfErase( FILE_STOP )
    ENDIF
 
-   // ----------------- Parse ini file ----------------------------------------
+   // Parse ini file
 
-   // hb_ToOutDebug( "cConfig = %s\n\r", cConfig )
+   // hb_ToOutDebug( "cConfig: %s\n\r", cConfig )
 
    hDefault := ParseIni( cConfig )
 
-   // ------------------- Parameters changeable from ini file ----------------
+   // Parameters changeable from ini file
 
    // All key values MUST be in uppercase
    nPort                 := hDefault[ "MAIN" ][ "PORT" ]
@@ -338,46 +335,48 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
-   // hb_ToOutDebug( "cLogAccess = %s, cLogError = %s\n\r", cLogAccess, cLogError )
-   // hb_ToOutDebug( "hDefault = %s\n\r", hb_ValToExp( hDefault ) )
-   // hb_ToOutDebug( "s_hScriptAliases = %s\n\r", hb_ValToExp( s_hScriptAliases ) )
-   // hb_ToOutDebug( "s_hAliases = %s\n\r", hb_ValToExp( s_hAliases ) )
+#if 0
+   hb_ToOutDebug( "cLogAccess: %s, cLogError: %s\n\r", cLogAccess, cLogError )
+   hb_ToOutDebug( "hDefault: %s\n\r", hb_ValToExp( hDefault ) )
+   hb_ToOutDebug( "s_hScriptAliases: %s\n\r", hb_ValToExp( s_hScriptAliases ) )
+   hb_ToOutDebug( "s_hAliases: %s\n\r", hb_ValToExp( s_hAliases ) )
+#endif
 
-   // ------------------- Parameters forced from command line ----------------
+   // Parameters forced from command-line
 
-   IF cCmdPort != NIL
+   IF HB_ISSTRING( cCmdPort )
       nPort := Val( cCmdPort )
    ENDIF
 
-   IF cCmdApplicationRoot != NIL
+   IF HB_ISSTRING( cCmdApplicationRoot )
       cApplicationRoot := cCmdApplicationRoot
    ENDIF
 
-   IF cCmdDocumentRoot != NIL
+   IF HB_ISSTRING( cCmdDocumentRoot )
       cDocumentRoot := cCmdDocumentRoot
    ENDIF
 
-   IF lCmdIndexes != NIL
+   IF HB_ISLOGICAL( lCmdIndexes )
       lIndexes := lCmdIndexes
    ENDIF
 
-   IF nCmdStartThreads != NIL
+   IF HB_ISNUMERIC( nCmdStartThreads )
       nStartThreads := nCmdStartThreads
    ENDIF
 
-   IF nCmdMaxThreads != NIL
+   IF HB_ISNUMERIC( nCmdMaxThreads )
       nMaxThreads := nCmdMaxThreads
    ENDIF
 
-   IF nCmdConsoleRows != NIL
+   IF HB_ISNUMERIC( nCmdConsoleRows )
       nConsoleRows := nCmdConsoleRows
    ENDIF
 
-   IF nCmdConsoleCols != NIL
+   IF HB_ISNUMERIC( nCmdConsoleCols )
       nConsoleCols := nCmdConsoleCols
    ENDIF
 
-   // -------------------- adjusting MACROS values ----------------------------
+   // adjusting MACROS values
 
    // cApplicationRoot can be only ExePath() or a correct full path
    cDocumentRoot         := StrTran( cDocumentRoot, "$(APP_DIR)", cApplicationRoot )
@@ -385,7 +384,7 @@ PROCEDURE Main( ... )
    cLogAccess            := StrTran( cLogAccess, "$(APP_DIR)", cApplicationRoot )
    cLogError             := StrTran( cLogError, "$(APP_DIR)", cApplicationRoot )
 
-   // -------------------- checking starting values ----------------------------
+   // checking starting values
 
    IF nPort <= 0 .OR. nPort > 65535
       ? "Invalid port number:", nPort
@@ -395,16 +394,12 @@ PROCEDURE Main( ... )
    ENDIF
 
    IF HB_ISSTRING( cApplicationRoot )
-      IF Empty( cApplicationRoot )
+      IF HB_ISNULL( cApplicationRoot )
          cApplicationRoot := "." + hb_ps()
       ENDIF
       cI := cApplicationRoot
-      IF hb_DirExists( cI )
-         IF Right( cI, 1 ) == "/" .AND. Len( cI ) > 2 .AND. !( SubStr( cI, Len( cI ) - 2, 1 ) == ":" )
-            s_cApplicationRoot := Left( cI, Len( cI ) - 1 )
-         ELSE
-            s_cApplicationRoot := cI
-         ENDIF
+      IF hb_vfDirExists( cI )
+         s_cApplicationRoot := hb_DirSepDel( cI )
       ELSE
          ? "Invalid application root:", cI
          WAIT
@@ -419,18 +414,13 @@ PROCEDURE Main( ... )
    ENDIF
 
 #ifdef DEBUG_ACTIVE
-   hb_ToOutDebug( "s_cDocumentRoot = %s, cDocumentRoot = %s\n\r", s_cDocumentRoot, cDocumentRoot )
+   hb_ToOutDebug( "s_cDocumentRoot: %s, cDocumentRoot: %s\n\r", s_cDocumentRoot, cDocumentRoot )
 #endif
 
    IF HB_ISSTRING( cDocumentRoot )
-      // cI := StrTran( SubStr( cDocumentRoot, 2 ), "\", "/" )
-      cI := cDocumentRoot
-      IF hb_DirExists( cI )
-         IF Right( cI, 1 ) == "/" .AND. Len( cI ) > 2 .AND. !( SubStr( cI, Len( cI ) - 2, 1 ) == ":" )
-            s_cDocumentRoot := Left( cI, Len( cI ) - 1 )
-         ELSE
-            s_cDocumentRoot := cI
-         ENDIF
+      cI := hb_DirSepToOS( cDocumentRoot )
+      IF hb_vfDirExists( cI )
+         s_cDocumentRoot := hb_DirSepDel( cI )
       ELSE
          ? "Invalid document root:", cI
          WAIT
@@ -445,18 +435,19 @@ PROCEDURE Main( ... )
    ENDIF
 
 #ifdef DEBUG_ACTIVE
-   hb_ToOutDebug( "s_cDocumentRoot = %s, cDocumentRoot = %s\n\r", s_cDocumentRoot, cDocumentRoot )
+   hb_ToOutDebug( "s_cDocumentRoot: %s, cDocumentRoot: %s\n\r", s_cDocumentRoot, cDocumentRoot )
 #endif
 
    IF nMaxThreads <= 0
       nMaxThreads := MAX_RUNNING_THREADS
    ENDIF
 
-   IF nStartThreads < 0
+   DO CASE
+   CASE nStartThreads < 0
       nStartThreads := 0
-   ELSEIF nStartThreads > nMaxThreads
+   CASE nStartThreads > nMaxThreads
       nStartThreads := nMaxThreads
-   ENDIF
+   ENDCASE
 
    IF nConsoleRows < 1 // .OR. nConsoleRows > MaxRow() + 1
       nConsoleRows := MaxRow()
@@ -466,7 +457,7 @@ PROCEDURE Main( ... )
       nConsoleCols := MaxCol()
    ENDIF
 
-   // -------------------- assign STATIC values --------------------------------
+   // assign STATIC values
 
    s_lIndexes               := lIndexes
    s_lConsole               := lConsole
@@ -486,34 +477,36 @@ PROCEDURE Main( ... )
    s_cSessionPath           := cSessionPath
    s_aDirectoryIndex        := aDirectoryIndex
 
-   // --------------------- Open log files -------------------------------------
+   // Open log files
 
-   IF ( s_hfileLogAccess := FOpen( cLogAccess, FO_CREAT + FO_WRITE ) ) == F_ERROR
-      ? "Can't open access log file"
+   hb_DirBuild( hb_FNameDir( cLogAccess ) )
+
+   IF ( s_hFileLogAccess := hb_vfOpen( cLogAccess, FO_CREAT + FO_WRITE ) ) == NIL
+      ? "Could not open access log file"
       WAIT
       ErrorLevel( 1 )
       RETURN
    ENDIF
-   FSeek( s_hfileLogAccess, 0, FS_END )
+   hb_vfSeek( s_hFileLogAccess, 0, FS_END )
 
-   IF ( s_hfileLogError := FOpen( cLogError, FO_CREAT + FO_WRITE ) ) == F_ERROR
-      ? "Can't open error log file"
+   IF ( s_hFileLogError := hb_vfOpen( cLogError, FO_CREAT + FO_WRITE ) ) == NIL
+      ? "Could not open error log file"
       WAIT
       ErrorLevel( 1 )
       RETURN
    ENDIF
-   FSeek( s_hfileLogError, 0, FS_END )
+   hb_vfSeek( s_hFileLogError, 0, FS_END )
 
-   // --------------------- MAIN PART ------------------------------------------
+   // MAIN PART
 
    IF s_lConsole
-      SET CURSOR OFF
+      SetCursor( SC_NONE )
       SetMode( nConsoleRows, nConsoleCols )
-      // hb_ToOutDebug( "nConsoleRows = %s, nConsoleCols = %s", nConsoleRows, nConsoleCols )
-      // hb_ToOutDebug( "nCmdConsoleRows = %s, nCmdConsoleCols = %s", nCmdConsoleRows, nCmdConsoleCols )
+      // hb_ToOutDebug( "nConsoleRows: %s, nConsoleCols: %s", nConsoleRows, nConsoleCols )
+      // hb_ToOutDebug( "nCmdConsoleRows: %s, nCmdConsoleCols: %s", nCmdConsoleRows, nCmdConsoleCols )
    ENDIF
 
-   // --------------------- define mutexes -------------------------------------
+   // define mutexes
 
    s_hmtxQueue          := hb_mutexCreate()
    s_hmtxLog            := hb_mutexCreate()
@@ -525,9 +518,7 @@ PROCEDURE Main( ... )
 
    WriteToConsole( "--- Starting " + APP_NAME + " ---" )
 
-   // --------------------------------------------------------------------------
    // SOCKET CREATION
-   // --------------------------------------------------------------------------
 
    hListen := hb_socketOpen()
    IF ! hb_socketBind( hListen, { HB_SOCKET_AF_INET, "0.0.0.0", nPort } )
@@ -535,33 +526,29 @@ PROCEDURE Main( ... )
    ELSEIF ! hb_socketListen( hListen )
       ? "listen() error", hb_socketGetError()
    ELSE
-      // --------------------------------------------------------------------------------- //
       // Starting Accept connection thread
-      // --------------------------------------------------------------------------------- //
 
       WriteToConsole( "Starting AcceptConnection Thread" )
       aThreads := {}
       AAdd( aThreads, hb_threadStart( @AcceptConnections() ) )
 #ifdef DEBUG_ACTIVE
-      hb_ToOutDebug( "Len( aThreads ) = %i\n\r", Len( aThreads ) )
+      hb_ToOutDebug( "Len( aThreads ): %i\n\r", Len( aThreads ) )
 #endif
 
-      // --------------------------------------------------------------------------------- //
       // main loop
-      // --------------------------------------------------------------------------------- //
 
       WriteToConsole( "Starting main loop" )
 
       IF s_lConsole
-         hb_DispOutAt( 1, 5, APP_NAME + " - web server - v. " + APP_VERSION )
-         hb_DispOutAt( 4, 5, "Server listening (Port: " + hb_ntos( nPort ) + ") : ..." )
+         hb_DispOutAt( 1, 5, hb_StrFormat( "%1$s - web server - %2$s", APP_NAME, APP_VERSION ) )
+         hb_DispOutAt( 4, 5, hb_StrFormat( "Server listening (Port: %1$d): ...", nPort ) )
          hb_DispOutAt( 10, 9, "Waiting." )
       ENDIF
 
       DO WHILE .T.
 
 #ifdef __PLATFORM__WINDOWS
-         // windows resource releasing - 1 millisecond wait
+         // Windows resource releasing - 1 millisecond wait
          IF win_SysRefresh( 1 ) != 0
             EXIT
          ENDIF
@@ -606,8 +593,8 @@ PROCEDURE Main( ... )
          IF Empty( hSocket := hb_socketAccept( hListen, @aRemote, 50 ) )
             IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
                // Checking if I have to quit
-               IF hb_FileExists( FILE_STOP )
-                  FErase( FILE_STOP )
+               IF hb_vfExists( FILE_STOP )
+                  hb_vfErase( FILE_STOP )
                   EXIT
                ENDIF
             ELSE
@@ -637,16 +624,14 @@ PROCEDURE Main( ... )
    hb_socketClose( hListen )
 
    // Close log files
-   FClose( s_hfileLogAccess )
-   FClose( s_hfileLogError )
+   hb_vfClose( s_hFileLogAccess )
+   hb_vfClose( s_hFileLogError )
 
-   SET CURSOR ON
+   SetCursor( SC_NORMAL )
 
    RETURN
 
-// --------------------------------------------------------------------------------- //
-// THREAD FUNCTIONS
-// --------------------------------------------------------------------------------- //
+// --- THREAD FUNCTIONS ---
 
 STATIC FUNCTION AcceptConnections()
 
@@ -721,7 +706,7 @@ STATIC FUNCTION AcceptConnections()
          AEval( s_aServiceThreads, {| h | hb_threadJoin( h ) } )
 #endif
          IF hb_mutexLock( s_hmtxBusy )
-            // hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
+            // hb_ToOutDebug( "Len( s_aRunningThreads ): %i\n\r", Len( s_aRunningThreads ) )
             ASize( s_aRunningThreads, 0 )
 #ifndef FIXED_THREADS
             ASize( s_aServiceThreads, 0 )
@@ -735,12 +720,12 @@ STATIC FUNCTION AcceptConnections()
 #ifndef FIXED_THREADS
       // Load current state
       IF hb_mutexLock( s_hmtxBusy )
-         nConnections       := s_nConnections
-         nThreads           := s_nThreads
-         nMaxThreads        := s_nMaxThreads
+         nConnections        := s_nConnections
+         nThreads            := s_nThreads
+         nMaxThreads         := s_nMaxThreads
          nServiceConnections := s_nServiceConnections
-         nServiceThreads    := s_nServiceThreads
-         nMaxServiceThreads := s_nMaxServiceThreads
+         nServiceThreads     := s_nServiceThreads
+         nMaxServiceThreads  := s_nMaxServiceThreads
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF
 
@@ -786,7 +771,7 @@ STATIC FUNCTION AcceptConnections()
          lCanNotify := .T.
       ENDIF
       // Otherwise I send connection to running thread queue
-      // hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
+      // hb_ToOutDebug( "Len( s_aRunningThreads ): %i\n\r", Len( s_aRunningThreads ) )
       IF lCanNotify
 #endif // FIXED_THREADS
          hb_mutexNotify( s_hmtxRunningThreads, hSocket )
@@ -800,9 +785,8 @@ STATIC FUNCTION AcceptConnections()
 
    RETURN 0
 
-// --------------------------------------------------------------------------------- //
-// CONNECTIONS
-// --------------------------------------------------------------------------------- //
+// --- CONNECTIONS ---
+
 STATIC FUNCTION ProcessConnection()
 
    LOCAL hSocket, nLen, cRequest, cSend
@@ -819,10 +803,10 @@ STATIC FUNCTION ProcessConnection()
    PRIVATE _HTTP_RESPONSE
    PRIVATE m_cPost
 
-   nThreadId    := hb_threadID()
+   nThreadId := hb_threadID()
 
 #ifdef DEBUG_ACTIVE
-   hb_ToOutDebug( "nThreadId = %s\r\n", nThreadId )
+   hb_ToOutDebug( "nThreadId: %s\r\n", nThreadId )
 #endif
 
    ErrorBlock( {| oError | uhttpd_DefError( oError ) } )
@@ -911,18 +895,20 @@ STATIC FUNCTION ProcessConnection()
 
             // hb_ToOutDebug( "cRequest -- BEGIN --\n\r%s\n\rcRequest -- END --\n\r", cRequest )
 
-            _SERVER := HB_HASHI(); _GET := HB_HASHI(); _POST := HB_HASHI(); _COOKIE := HB_HASHI()
-            _SESSION := HB_HASHI(); _REQUEST := HB_HASHI(); _HTTP_REQUEST := HB_HASHI(); _HTTP_RESPONSE := HB_HASHI()
+            _SERVER := hb_HashI(); _GET := hb_HashI(); _POST := hb_HashI(); _COOKIE := hb_HashI()
+            _SESSION := hb_HashI(); _REQUEST := hb_HashI(); _HTTP_REQUEST := hb_HashI(); _HTTP_RESPONSE := hb_HashI()
             m_cPost := NIL
             t_cResult     := ""
-            // t_aHeader     := {}
+#if 0
+            t_aHeader     := {}
+#endif
             t_nStatusCode := 200
             t_cErrorMsg   := ""
 
             defineServer( hSocket )
 
             IF ParseRequest( cRequest )
-               // hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s,\n\r _HTTP_RESPONSE = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ), hb_ValToExp( _HTTP_RESPONSE ) )
+               // hb_ToOutDebug( "_SERVER: %s,\n\r _GET: %s,\n\r _POST: %s,\n\r _REQUEST: %s,\n\r _HTTP_REQUEST: %s,\n\r _HTTP_RESPONSE: %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ), hb_ValToExp( _HTTP_RESPONSE ) )
                cSend := uproc_default()
             ELSE
                // uhttpd_SetStatusCode( 400 )
@@ -930,7 +916,7 @@ STATIC FUNCTION ProcessConnection()
             ENDIF
 
 #ifdef DEBUG_ACTIVE
-            hb_ToOutDebug( "cSend = %s\n\r", cSend )
+            hb_ToOutDebug( "cSend: %s\n\r", cSend )
 #endif
 
             sendReply( hSocket, cSend )
@@ -945,7 +931,7 @@ STATIC FUNCTION ProcessConnection()
       END SEQUENCE
 
       nParseTime := hb_MilliSeconds() - nMsecs
-      WriteToConsole( "Page served in : " + Str( nParseTime / 1000, 7, 4 ) + " seconds" )
+      WriteToConsole( "Page served in: " + Str( nParseTime / 1000, 7, 4 ) + " seconds" )
 
       hb_socketShutdown( hSocket )
       hb_socketClose( hSocket )
@@ -966,7 +952,7 @@ STATIC FUNCTION ProcessConnection()
    // an external quit request. In this case application is quitting and I cannot resize array
    // here to avoid race condition
    IF ! lQuitRequest .AND. hb_mutexLock( s_hmtxBusy )
-      // hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
+      // hb_ToOutDebug( "Len( s_aRunningThreads ): %i\n\r", Len( s_aRunningThreads ) )
       IF ( nPos := AScan( s_aRunningThreads, hb_threadSelf() ) > 0 )
          hb_ADel( s_aRunningThreads, nPos, .T. )
          s_nThreads := Len( s_aRunningThreads )
@@ -1060,18 +1046,20 @@ STATIC FUNCTION ServiceConnection()
 
             // hb_ToOutDebug( "cRequest -- INIZIO --\n\r%s\n\rcRequest -- FINE --\n\r", cRequest )
 
-            _SERVER := HB_HASHI(); _GET := HB_HASHI(); _POST := HB_HASHI(); _COOKIE := HB_HASHI()
-            _SESSION := HB_HASHI(); _REQUEST := HB_HASHI(); _HTTP_REQUEST := HB_HASHI(); _HTTP_RESPONSE := HB_HASHI()
+            _SERVER := hb_HashI(); _GET := hb_HashI(); _POST := hb_HashI(); _COOKIE := hb_HashI()
+            _SESSION := hb_HashI(); _REQUEST := hb_HashI(); _HTTP_REQUEST := hb_HashI(); _HTTP_RESPONSE := hb_HashI()
             m_cPost := NIL
             t_cResult     := ""
-            // t_aHeader     := {}
+#if 0
+            t_aHeader     := {}
+#endif
             t_nStatusCode := 200
             t_cErrorMsg   := ""
 
             defineServer( hSocket )
 
             IF ParseRequest( cRequest )
-               // hb_ToOutDebug( "_SERVER = %s,\n\r _GET = %s,\n\r _POST = %s,\n\r _REQUEST = %s,\n\r _HTTP_REQUEST = %s,\n\r _HTTP_RESPONSE = %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ), hb_ValToExp( _HTTP_RESPONSE ) )
+               // hb_ToOutDebug( "_SERVER: %s,\n\r _GET: %s,\n\r _POST: %s,\n\r _REQUEST: %s,\n\r _HTTP_REQUEST: %s,\n\r _HTTP_RESPONSE: %s\n\r", hb_ValToExp( _SERVER ), hb_ValToExp( _GET ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ), hb_ValToExp( _HTTP_REQUEST ), hb_ValToExp( _HTTP_RESPONSE ) )
                define_Env( _SERVER )
             ENDIF
             // Error page served
@@ -1090,7 +1078,7 @@ STATIC FUNCTION ServiceConnection()
       END SEQUENCE
 
       nParseTime := hb_MilliSeconds() - nMsecs
-      WriteToConsole( "Page served in : " + Str( nParseTime / 1000, 7, 4 ) + " seconds" )
+      WriteToConsole( "Page served in: " + Str( nParseTime / 1000, 7, 4 ) + " seconds" )
 
       hb_socketShutdown( hSocket )
       hb_socketClose( hSocket )
@@ -1130,17 +1118,17 @@ STATIC FUNCTION ParseRequest( cRequest )
    aRequest := uhttpd_split( CR_LF, cRequest )
 
 #ifdef DEBUG_ACTIVE
-   hb_ToOutDebug( "aRequest = %s\n\r", hb_ValToExp( aRequest ) )
+   hb_ToOutDebug( "aRequest: %s\n\r", hb_ValToExp( aRequest ) )
 #endif
 
    WriteToConsole( aRequest[ 1 ] )
    aLine := uhttpd_split( " ", aRequest[ 1 ] )
    IF Len( aLine ) != 3 .OR. ;
-      ( !( Left( aLine[ 1 ], 3 ) == "GET" ) .AND. ;
-        !( Left( aLine[ 1 ], 4 ) == "POST" ) ) .OR. ; // Sorry, we support GET and POST only
-        !( Left( aLine[ 3 ], 5 ) == "HTTP/" )
+      ( ! hb_LeftEq( aLine[ 1 ], "GET" ) .AND. ;
+        ! hb_LeftEq( aLine[ 1 ], "POST" ) ) .OR. ; // Sorry, we support GET and POST only
+        ! hb_LeftEq( aLine[ 3 ], "HTTP/" )
       // Set status code
-      t_nStatusCode := 501 // Not Implemented
+      t_nStatusCode := 501  // Not Implemented
       RETURN .F.
    ENDIF
 
@@ -1196,7 +1184,7 @@ STATIC FUNCTION ParseRequest( cRequest )
 
    // Load _HTTP_REQUEST
    FOR EACH cReq IN aRequest
-      IF cReq:__enumIndex() == 1 // GET request
+      IF cReq:__enumIsFirst()  // GET request
          _HTTP_REQUEST[ "HTTP Request" ] := cReq
       ELSEIF Empty( cReq )
          EXIT
@@ -1207,7 +1195,7 @@ STATIC FUNCTION ParseRequest( cRequest )
    NEXT
 
    // check if Host field is provided
-   IF hb_HPos( _HTTP_REQUEST, "Host" ) == 0
+   IF !( "Host" $ _HTTP_REQUEST )
 
       // Try to determine Host name
       IF ! Empty( hUrl[ "HOST" ] )
@@ -1218,10 +1206,9 @@ STATIC FUNCTION ParseRequest( cRequest )
          t_nStatusCode := 400 // Bad Request
          RETURN .F.
       ENDIF
-
    ENDIF
 
-   // hb_ToOutDebug( "_HTTP_REQUEST: aRequest = %s, _HTTP_REQUEST = %s\n\r", hb_ValToExp( aRequest ), hb_ValToExp( _HTTP_REQUEST ) )
+   // hb_ToOutDebug( "_HTTP_REQUEST: aRequest: %s, _HTTP_REQUEST: %s\n\r", hb_ValToExp( aRequest ), hb_ValToExp( _HTTP_REQUEST ) )
 
    // GET
    cFields := _SERVER[ "QUERY_STRING" ]
@@ -1231,7 +1218,7 @@ STATIC FUNCTION ParseRequest( cRequest )
       hb_HMerge( _REQUEST, hVars )
    ENDIF
 
-   // hb_ToOutDebug( "GET: cFields = %s, hVars = %s, _GET = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _GET ), hb_ValToExp( _REQUEST ) )
+   // hb_ToOutDebug( "GET: cFields: %s, hVars: %s, _GET: %s, _REQUEST: %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _GET ), hb_ValToExp( _REQUEST ) )
 
    // POST
    IF "POST" $ Upper( _SERVER[ "REQUEST_METHOD" ] )
@@ -1244,7 +1231,7 @@ STATIC FUNCTION ParseRequest( cRequest )
       m_cPost := cFields  // TOFIX: Who needs this ?
    ENDIF
 
-   // hb_ToOutDebug( "POST: cFields = %s, hVars = %s, _POST = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ) )
+   // hb_ToOutDebug( "POST: cFields: %s, hVars: %s, _POST: %s, _REQUEST: %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ) )
 
    // COOKIES
    cFields := _SERVER[ "HTTP_COOKIE" ]
@@ -1253,7 +1240,7 @@ STATIC FUNCTION ParseRequest( cRequest )
       hb_HMerge( _COOKIE, hVars )
       hb_HMerge( _REQUEST, hVars )
    ENDIF
-   // hb_ToOutDebug( "COOKIE: cFields = %s, hVars = %s, _COOKIE = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _COOKIE ), hb_ValToExp( _REQUEST ) )
+   // hb_ToOutDebug( "COOKIE: cFields: %s, hVars: %s, _COOKIE: %s, _REQUEST: %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _COOKIE ), hb_ValToExp( _REQUEST ) )
 
 
    // define _HTTP_RESPONSE
@@ -1270,13 +1257,13 @@ STATIC FUNCTION ParseRequest( cRequest )
    _SERVER[ "SCRIPT_URI"        ] := "http://" + _HTTP_REQUEST[ "HOST" ] + _SERVER[ "SCRIPT_NAME" ]
 
 #ifdef DEBUG_ACTIVE
-   hb_ToOutDebug( "_SERVER = %s\n\r", hb_ValToExp( _SERVER ) )
-   hb_ToOutDebug( "_GET = %s\n\r", hb_ValToExp( _GET ) )
-   hb_ToOutDebug( "_POST = %s\n\r", hb_ValToExp( _POST ) )
-   hb_ToOutDebug( "_COOKIE = %s\n\r", hb_ValToExp( _COOKIE ) )
-   hb_ToOutDebug( "_SESSION = %s\n\r", hb_ValToExp( _SESSION ) )
-   hb_ToOutDebug( "_HTTP_REQUEST = %s\n\r", hb_ValToExp( _HTTP_REQUEST ) )
-   hb_ToOutDebug( "_HTTP_RESPONSE = %s\n\r", hb_ValToExp( _HTTP_RESPONSE ) )
+   hb_ToOutDebug( "_SERVER: %s\n\r", hb_ValToExp( _SERVER ) )
+   hb_ToOutDebug( "_GET: %s\n\r", hb_ValToExp( _GET ) )
+   hb_ToOutDebug( "_POST: %s\n\r", hb_ValToExp( _POST ) )
+   hb_ToOutDebug( "_COOKIE: %s\n\r", hb_ValToExp( _COOKIE ) )
+   hb_ToOutDebug( "_SESSION: %s\n\r", hb_ValToExp( _SESSION ) )
+   hb_ToOutDebug( "_HTTP_REQUEST: %s\n\r", hb_ValToExp( _HTTP_REQUEST ) )
+   hb_ToOutDebug( "_HTTP_RESPONSE: %s\n\r", hb_ValToExp( _HTTP_RESPONSE ) )
 #endif
 
    // After defined all SERVER vars we can define a session
@@ -1291,9 +1278,10 @@ STATIC FUNCTION MakeResponse()
 
    LOCAL cRet, cReturnCode, v
 
-   // uhttpd_SetHeader( "X-Powered-By", Version() )
-
-   // uhttpd_SetHeader( "Connection", "close" )
+#if 0
+   uhttpd_SetHeader( "X-Powered-By", Version() )
+   uhttpd_SetHeader( "Connection", "close" )
+#endif
 
    IF uhttpd_GetHeader( "Location" ) != NIL
       t_nStatusCode := 301
@@ -1338,7 +1326,7 @@ STATIC FUNCTION MakeResponse()
       t_cResult := "<html><body><h1>" + cReturnCode + "</h1></body></html>"
    ENDSWITCH
 
-   // hb_ToOutDebug( "_SESSION = %s\n\r", hb_ValToExp( _SESSION ) )
+   // hb_ToOutDebug( "_SESSION: %s\n\r", hb_ValToExp( _SESSION ) )
 
    // Close session - Autodestructor will NOT close it, because t_oSession is destroyed only at end of Thread
 
@@ -1354,11 +1342,13 @@ STATIC FUNCTION MakeResponse()
       cRet += v:__enumKey() + ": " + v + CR_LF
    NEXT
 
-   // AEval( t_aHeader, {| x | cRet += x[1] + ": " + x[2] + CR_LF } )
+#if 0
+   AEval( t_aHeader, {| x | cRet += x[ 1 ] + ": " + x[ 2 ] + CR_LF } )
+#endif
    cRet += CR_LF
    cRet += t_cResult
 
-   // hb_ToOutDebug( "_HTTP_RESPONSE = %s\n\rcRet = %s\n\r", hb_ValToExp( _HTTP_RESPONSE ), cRet )
+   // hb_ToOutDebug( "_HTTP_RESPONSE: %s\n\rcRet: %s\n\r", hb_ValToExp( _HTTP_RESPONSE ), cRet )
 
    RETURN cRet
 
@@ -1425,51 +1415,46 @@ STATIC FUNCTION DecodeStatusCode()
 
 STATIC PROCEDURE WriteToLog( cRequest )
 
-   LOCAL cTime, cDate
-   LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
    LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-   LOCAL cAccess, cError, nDoW, dDate, nDay, nMonth, nYear, nSize, cBias
-   LOCAL cErrorMsg
+   LOCAL cAccess, cError, tDate, nSize
    LOCAL cReferer
 
    IF hb_mutexLock( s_hmtxLog )
 
-      // hb_ToOutDebug( "tip_TimeStamp() = %s \n\r", tip_TimeStamp() )
+      // hb_ToOutDebug( "tip_TimeStamp(): %s \n\r", tip_TimeStamp() )
 
-      cTime    := Time()
-      dDate    := Date()
-      cDate    := DToS( dDate )
+      tDate    := hb_DateTime()
       nSize    := Len( t_cResult )
       cReferer := _SERVER[ "HTTP_REFERER" ]
-      cBias    := uhttpd_UTCOffset()
 
-      cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + Right( cDate, 2 ) + "/" + ;
-         aMonths[ Val( SubStr( cDate, 5, 2 ) ) ] + ;
-         "/" + Left( cDate, 4 ) + ":" + cTime + " " + cBias + '] "' + ;
+      cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + ;
+         StrZero( Day( tDate ), 2 ) + "/" + ;
+         aMonths[ Month( tDate ) ] + "/" + ;
+         StrZero( Year( tDate ), 4 ) + ":" + ;
+         hb_TToC( tDate, "", "hh:mm:ss" ) + " " + ;
+         uhttpd_UTCOffset() + '] "' + ;
          Left( cRequest, At( CR_LF, cRequest ) - 1 ) + '" ' + ;
          hb_ntos( t_nStatusCode ) + " " + iif( nSize == 0, "-", hb_ntos( nSize ) ) + ;
          ' "' + iif( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER[ "HTTP_USER_AGENT" ] + ;
          '"' + hb_eol()
 
-      // hb_ToOutDebug( "AccessLog = %s \n\r", cAccess )
+      // hb_ToOutDebug( "AccessLog: %s \n\r", cAccess )
 
-      FWrite( s_hfileLogAccess, cAccess )
+      hb_vfWrite( s_hFileLogAccess, cAccess )
 
-      IF !( t_nStatusCode == 200 ) // ok
+      IF t_nStatusCode != 200  // ok
 
-         nDoW   := DoW( dDate )
-         nDay   := Day( dDate )
-         nMonth := Month( dDate )
-         nYear  := Year( dDate )
-         cErrorMsg := t_cErrorMsg
+         cError := "[" + ;
+            { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + " " + ;
+            aMonths[ Month( tDate ) ] + " " + ;
+            StrZero( Day( tDate ), 2 ) + " " + ;
+            hb_TToC( tDate, "", "hh:mm:ss" ) + " " + ;
+            StrZero( Year( tDate ), 4 ) + "] [error] [client " + _SERVER[ "REMOTE_ADDR" ] + "] " + ;
+            t_cErrorMsg + hb_eol()
 
-         cError := "[" + Left( aDays[ nDoW ], 3 ) + " " + aMonths[ nMonth ] + " " + StrZero( nDay, 2 ) + " " + ;
-            PadL( LTrim( cTime ), 8, "0" ) + " " + StrZero( nYear, 4 ) + "] [error] [client " + _SERVER[ "REMOTE_ADDR" ] + "] " + ;
-            cErrorMsg + hb_eol()
+         // hb_ToOutDebug( "ErrorLog: %s \n\r", cError )
 
-         // hb_ToOutDebug( "ErrorLog = %s \n\r", cError )
-
-         FWrite( s_hfileLogError, cError )
+         hb_vfWrite( s_hFileLogError, cError )
       ENDIF
 
       hb_mutexUnlock( s_hmtxLog )
@@ -1477,7 +1462,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
    RETURN
 
-STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
+STATIC FUNCTION CGIExec( cProc, /* @ */ cOutPut )
 
    LOCAL hIn, hOut
    LOCAL cData, nLen, cSend, v
@@ -1489,28 +1474,27 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
 
    // LOCAL cError
 
-
    IF HB_ISSTRING( cProc )
 
       // hb_ToOutDebug( "Launching process: %s\n\r", cProc )
       // No hIn, hErr == hOut
 
       // save current directory
-      cCurPath := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
+      cCurPath := hb_cwd()
 
       // hb_ToOutDebug( "cCurPath: %s\n\r", cCurPath )
 
       // Change dir to document root
-      DirChange( s_cDocumentRoot )
+      hb_cwd( s_cDocumentRoot )
 
-      // hb_ToOutDebug( "New Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+      // hb_ToOutDebug( "New Path: %s\n\r", hb_cwd() )
 
-      hProc := hb_processOpen( cProc, @hIn, @hOut, @hOut, .T. ) // .T. = Detached Process (Hide Window)
+      hProc := hb_processOpen( cProc, @hIn, @hOut, @hOut, .T. ) // .T.: Detached Process (Hide Window)
 
-      // return to original folder
-      DirChange( cCurPath )
+      // return to original directory
+      hb_cwd( cCurPath )
 
-      // hb_ToOutDebug( "New 2 Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+      // hb_ToOutDebug( "New 2 Path: %s\n\r", hb_cwd() )
 
       IF hProc != F_ERROR
          // hb_ToOutDebug( "Process handler: %s\n\r", hProc )
@@ -1521,7 +1505,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          // Sending POST variables to CGI via STD_IN
          cSend := ""
          FOR EACH v IN _POST
-            cSend += v:__enumKey() + "=" + LTrim( hb_CStr( v ) ) + iif( v:__enumIndex() < Len( _POST ), "&", "" )
+            cSend += v:__enumKey() + "=" + LTrim( hb_CStr( v ) ) + iif( v:__enumIsLast(), "", "&" )
          NEXT
          FWrite( hIn, cSend )
          // hb_ToOutDebug( "Sending: %s\n\r", cSend )
@@ -1547,19 +1531,19 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          cOutPut += cError
          #endif
 
-         // hb_ToOutDebug( "Received: cOutPut = %s\n\r", cOutPut )
+         // hb_ToOutDebug( "Received: cOutPut: %s\n\r", cOutPut )
 
          // ? "Waiting for process termination"
          // Return value
          nErrorLevel := hb_processValue( hProc )
 
-         // hb_ToOutDebug( "CGIExec HB_ProcessValue nErrorLevel = %s\n\r", nErrorLevel )
+         // hb_ToOutDebug( "CGIExec HB_ProcessValue nErrorLevel: %s\n\r", nErrorLevel )
 
          // Notify to CGIKill to terminate
          hb_mutexNotify( hmtxCGIKill, { hProc, .F. } )
          hb_threadJoin( pThread, @nKillExit )
 
-         // hb_ToOutDebug( "CGIExec quitting CGI, nErrorLevel = %s\n\r", nKillExit )
+         // hb_ToOutDebug( "CGIExec quitting CGI, nErrorLevel: %s\n\r", nKillExit )
          IF nKillExit != 0
             // retrieving last command from
             nErrorLevel := nKillExit
@@ -1572,11 +1556,8 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          // hb_ToOutDebug( "CGIExec closed handles\n\r" )
 
       ENDIF
-
    ELSE
-
-      nErrorLevel := -1 // Error: cProc is not a valid string
-
+      nErrorLevel := -1  // Error: cProc is not a valid string
    ENDIF
 
    hmtxCGIKill := NIL
@@ -1591,7 +1572,7 @@ STATIC FUNCTION CGIKill( hProc, hmtxCGIKill )
    LOCAL aValue, hRecProc
    LOCAL hCurProc := hProc
 
-   // hb_ToOutDebug( "CGIKill() Started. nStartTime = %s\n\r", nStartTime )
+   // hb_ToOutDebug( "CGIKill() Started. nStartTime: %s\n\r", nStartTime )
 
    // Kill process after MAX_PROCESS_EXEC_TIME
    DO WHILE .T.
@@ -1610,7 +1591,7 @@ STATIC FUNCTION CGIKill( hProc, hmtxCGIKill )
          ENDIF
       ENDIF
 
-      // hb_ToOutDebug( "CGIKill() lWait = %s, time := %s\n\r", lWait, hb_MilliSeconds() - nStartTime )
+      // hb_ToOutDebug( "CGIKill() lWait: %s, time := %s\n\r", lWait, hb_MilliSeconds() - nStartTime )
 
       IF HB_ISLOGICAL( lWait )
          IF lWait
@@ -1622,7 +1603,7 @@ STATIC FUNCTION CGIKill( hProc, hmtxCGIKill )
 
       IF ( hb_MilliSeconds() - nStartTime ) > CGI_MAX_EXEC_TIME * 1000
 
-         // hb_ToOutDebug( "CGIKill() Killing Process hCurProc = %s\n\r", hCurProc )
+         // hb_ToOutDebug( "CGIKill() Killing Process hCurProc: %s\n\r", hCurProc )
 
          // Killing process if still exists
          IF hCurProc != NIL
@@ -1657,9 +1638,12 @@ PROCEDURE uhttpd_SetStatusCode( nStatusCode )
 
 PROCEDURE uhttpd_SetHeader( cType, cValue )
 
-   // LOCAL nI
-   // // Needed from SetCookie()
-   // __defaultNIL( @lReplace, .T. )
+#if 0
+   LOCAL nI
+
+   // Needed from SetCookie()
+   hb_default( @lReplace, .T. )
+#endif
 
    _HTTP_RESPONSE[ cType ] := cValue
 
@@ -1679,10 +1663,8 @@ FUNCTION uhttpd_GetHeader( cType )
 
 PROCEDURE uhttpd_DelHeader( cType )
 
-   LOCAL nPos := hb_HPos( _HTTP_RESPONSE, cType )
-
-   IF nPos > 0
-      hb_HDelAt( _HTTP_RESPONSE, nPos )
+   IF cType $ _HTTP_RESPONSE
+      hb_HDel( _HTTP_RESPONSE, cType )
    ENDIF
 
    RETURN
@@ -1705,33 +1687,29 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
    cRequest := ""
    DO WHILE .T.
       cBuf := Space( 4096 )
-      nLen := hb_socketRecv( hSocket, @cBuf )
-      IF nLen <= 0
+      IF ( nLen := hb_socketRecv( hSocket, @cBuf ) ) <= 0
          EXIT
       ENDIF
-      cRequest += Left( cBuf, nLen )
-      IF CR_LF + CR_LF $ cRequest
+      cRequest += hb_BLeft( cBuf, nLen )
+      IF CR_LF + CR_LF $ cRequest  /* TOFIX: will fail if CRLF pair is on the buffer boundary */
          EXIT
       ENDIF
    ENDDO
 
    /* receive CONTENT-LENGTH data */
    IF nLen > 0
-      nPos := hb_AtI( CR_LF + "CONTENT-LENGTH:", cRequest )
-      IF nPos > 0
-         nPos := Val( SubStr( cRequest, nPos + 17, 10 ) )
-         IF nPos > 0
+      IF ( nPos := hb_BAt( CR_LF + "CONTENT-LENGTH:", hb_asciiUpper( cRequest ) ) ) > 0
+         IF ( nPos := Val( hb_BSubStr( cRequest, nPos + 17, 10 ) ) ) > 0
             /* we have to decrease number of bytes to read by already read
              * data after CR_LF + CR_LF
              */
-            nPos -= Len( cRequest ) - At( CR_LF + CR_LF, cRequest ) - 3
-            WHILE nPos > 0
+            nPos -= hb_BLen( cRequest ) - hb_BAt( CR_LF + CR_LF, cRequest ) - 3
+            DO WHILE nPos > 0
                cBuf := Space( nPos )
-               nLen := hb_socketRecv( hSocket, @cBuf, nPos )
-               IF nLen <= 0
+               IF ( nLen := hb_socketRecv( hSocket, @cBuf, nPos ) ) <= 0
                   EXIT
                ENDIF
-               cRequest += Left( cBuf, nPos )
+               cRequest += hb_BLeft( cBuf, nPos )
                nPos -= nLen
             ENDDO
          ENDIF
@@ -1739,7 +1717,7 @@ STATIC FUNCTION readRequest( hSocket, /* @ */ cRequest )
    ENDIF
 
 #ifdef DEBUG_ACTIVE
-   hb_ToOutDebug( "readRequest(): nLen = %i, cRequest = %s \n\r", nLen, cRequest )
+   hb_ToOutDebug( "readRequest(): nLen: %i, cRequest: %s \n\r", nLen, cRequest )
 #endif
 
    RETURN nLen
@@ -1749,13 +1727,13 @@ STATIC FUNCTION sendReply( hSocket, cSend )
    LOCAL nError := 0
    LOCAL nLen
 
-   DO WHILE Len( cSend ) > 0
+   DO WHILE ! HB_ISNULL( cSend )
       IF ( nLen := hb_socketSend( hSocket, cSend ) ) == -1
          ? "send() error:", hb_socketGetError()
-         WriteToConsole( hb_StrFormat( "ServiceConnection() - send() error: %s, cSend = %s, hSocket = %s", hb_socketGetError(), cSend, hSocket ) )
+         WriteToConsole( hb_StrFormat( "ServiceConnection() - send() error: %s, cSend: %s, hSocket: %s", hb_socketGetError(), cSend, hSocket ) )
          EXIT
       ELSEIF nLen > 0
-         cSend := SubStr( cSend, nLen + 1 )
+         cSend := hb_BSubStr( cSend, nLen + 1 )
       ENDIF
    ENDDO
 
@@ -1813,7 +1791,7 @@ FUNCTION uhttpd_split( cSeparator, cString, nMax )
    LOCAL aRet := {}, nI
    LOCAL nIter := 0
 
-   __defaultNIL( @nMax, 0 )
+   hb_default( @nMax, 0 )
 
    DO WHILE ( nI := At( cSeparator, cString ) ) > 0
       AAdd( aRet, Left( cString, nI - 1 ) )
@@ -1828,17 +1806,17 @@ FUNCTION uhttpd_split( cSeparator, cString, nMax )
 
 FUNCTION uhttpd_join( cSeparator, aData )
 
-   LOCAL cRet := "", nI
+   LOCAL cRet := "", xData
 
-   FOR nI := 1 TO Len( aData )
-      IF nI > 1
+   FOR EACH xData IN aData
+      IF ! xData:__enumIsFirst()
          cRet += cSeparator
       ENDIF
-      SWITCH ValType( aData[ nI ] )
+      SWITCH ValType( xData )
       CASE "C"
-      CASE "M" ; cRet += aData[ nI ]; EXIT
-      CASE "N" ; cRet += hb_ntos( aData[ nI ] ); EXIT
-      CASE "D" ; cRet += iif( ! Empty( aData[ nI ] ), DToC( aData[ nI ] ), "" ); EXIT
+      CASE "M" ; cRet += xData; EXIT
+      CASE "N" ; cRet += hb_ntos( xData ); EXIT
+      CASE "D" ; cRet += iif( Empty( xData ), "", DToC( xData ) ); EXIT
       ENDSWITCH
    NEXT
 
@@ -1846,39 +1824,34 @@ FUNCTION uhttpd_join( cSeparator, aData )
 
 STATIC FUNCTION uproc_default()
 
-   LOCAL cScript
-   LOCAL cFileName, nI
+   LOCAL cScript := _SERVER[ "SCRIPT_NAME" ]  // Starting from Script Name request
+
+   LOCAL cFileName
    LOCAL cExt, cHandler, xAction, nPos
    LOCAL cBaseFile
    LOCAL cPathInfo, lFound, cFile
 
-   // Starting from Script Name request
-   cScript := _SERVER[ "SCRIPT_NAME" ]
-
-   // cFileName := StrTran(cRoot + _SERVER["SCRIPT_NAME"], "//", "/")
-   cFileName := NIL
+#if 0
+   cFileName := StrTran( cRoot + _SERVER[ "SCRIPT_NAME" ], "//", "/" )
+#endif
    cPathInfo := ""
 
    DO WHILE .T.
 
 #ifdef DEBUG_ACTIVE
-      // hb_ToOutDebug( "cFileName = %s, cScript = %s\n\r", cFileName, cScript )
+      hb_ToOutDebug( "cFileName: %s, cScript: %s\n\r", cFileName, cScript )
 #endif
 
       IF cFileName == NIL
-
          // Special script names
-         IF Upper( cScript ) == "/SERVERSTATUS"
+         IF Lower( cScript ) == "/serverstatus"
             cFileName := "/serverstatus"
-            cExt      := "/serverstatus" // special extension
+            cExt      := "/serverstatus"  // special extension
          ENDIF
-
       ENDIF
 
       IF cFileName == NIL
-
          cFileName := FileUnAlias( cScript )
-
       ENDIF
 
       // if filename is still NIL I set it
@@ -1887,7 +1860,7 @@ STATIC FUNCTION uproc_default()
       ENDIF
 
 #ifdef DEBUG_ACTIVE
-      // hb_ToOutDebug( "cFileName = %s, uhttpd_OSFileName( cFileName ) = %s,\n\r", cFileName, uhttpd_OSFileName( cFileName ) )
+      hb_ToOutDebug( "cFileName: %s, uhttpd_OSFileName( cFileName ): %s,\n\r", cFileName, uhttpd_OSFileName( cFileName ) )
 #endif
 
       // Security
@@ -1897,39 +1870,33 @@ STATIC FUNCTION uproc_default()
          RETURN MakeResponse()
       ENDIF
 
-      // hb_ToOutDebug( "cFileName = %s, uhttpd_OSFileName( cFileName ) = %s,\n\r s_hScriptAliases = %s\n\r", cFileName, uhttpd_OSFileName( cFileName ), hb_ValToExp( s_hScriptAliases ) )
+      // hb_ToOutDebug( "cFileName: %s, uhttpd_OSFileName( cFileName ): %s,\n\r s_hScriptAliases: %s\n\r", cFileName, uhttpd_OSFileName( cFileName ), hb_ValToExp( s_hScriptAliases ) )
 
       // checking extension
       IF cExt == NIL
 
          // checking if file exists
-         IF hb_FileExists( uhttpd_OSFileName( cFileName ) )
+         IF hb_vfExists( uhttpd_OSFileName( cFileName ) )
 
-            // extract extension
-            IF ( nI := RAt( ".", cFileName ) ) > 0
-               cExt := Lower( SubStr( cFileName, nI + 1 ) )
-            ENDIF
+            cExt := hb_FNameExt( cFileName )
 
             // is it a directory ?
-         ELSEIF hb_DirExists( uhttpd_OSFileName( cFileName ) )
+         ELSEIF hb_vfDirExists( uhttpd_OSFileName( cFileName ) )
 
-            // if it exists as folder and it is missing trailing slash I add it and redirect to it
+            // if it exists as directory and it is missing trailing slash I add it and redirect to it
             IF !( Right( cFileName, 1 ) == "/" )
                uhttpd_SetHeader( "Location", "http://" + _SERVER[ "HTTP_HOST" ] + _SERVER[ "SCRIPT_NAME" ] + "/" )
                RETURN MakeResponse()
             ENDIF
 
             // Search for directory index file, i.e.: index.html
-            IF AScan( s_aDirectoryIndex, ;
-                  {| x | iif( hb_FileExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
+            IF AScan( s_aDirectoryIndex, {| x | iif( hb_vfExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
 
                // I have to check filename again (behaviour changes on extension file name)
                // resetting extension
                cExt := NIL
                LOOP
-
             ENDIF
-
          ELSE
 
             // Check for PATH_INFO: I will search if there is a physical file removing parts from right
@@ -1937,7 +1904,7 @@ STATIC FUNCTION uproc_default()
             lFound := .F.
             DO WHILE ! Empty( cBaseFile )
 
-               // hb_ToOutDebug( "cBaseFile = %s, cPathInfo = %s\n\r", cBaseFile, cPathInfo )
+               // hb_ToOutDebug( "cBaseFile: %s, cPathInfo: %s\n\r", cBaseFile, cPathInfo )
 
                IF ( nPos := RAt( "/", cBaseFile ) ) > 0
                   cPathInfo := SubStr( cBaseFile, nPos ) + cPathInfo
@@ -1946,21 +1913,21 @@ STATIC FUNCTION uproc_default()
                   EXIT
                ENDIF
 
-               IF hb_FileExists( uhttpd_OSFileName( _SERVER[ "DOCUMENT_ROOT" ] + cBaseFile ) )
+               IF hb_vfExists( uhttpd_OSFileName( _SERVER[ "DOCUMENT_ROOT" ] + cBaseFile ) )
                   cFileName := uhttpd_OSFileName( _SERVER[ "DOCUMENT_ROOT" ] + cBaseFile )
                   lFound := .T.
                   EXIT
                ENDIF
 
                cFile := FileUnAlias( cBaseFile )
-               IF cFile != NIL .AND. hb_FileExists( uhttpd_OSFileName( cFile ) )
+               IF cFile != NIL .AND. hb_vfExists( uhttpd_OSFileName( cFile ) )
                   cFileName := uhttpd_OSFileName( cFile )
                   lFound := .T.
                   EXIT
                ENDIF
             ENDDO
 
-            // hb_ToOutDebug( "Uscita: cBaseFile = %s, cPathInfo = %s\n\r", cBaseFile, cPathInfo )
+            // hb_ToOutDebug( "Output: cBaseFile: %s, cPathInfo: %s\n\r", cBaseFile, cPathInfo )
 
             // Found a script file name
             IF lFound .AND. ! Empty( cPathInfo )
@@ -1970,33 +1937,31 @@ STATIC FUNCTION uproc_default()
                // Restart
                LOOP
             ENDIF
-
          ENDIF
-
       ENDIF
 
       // Ok, now I have to see what action I have to take
 
-      // hb_ToOutDebug( "cExt = %s\n\r", cExt )
+      // hb_ToOutDebug( "cExt: %s\n\r", cExt )
 
       // Begin to search Handlers
       IF cExt != NIL
          cHandler := uhttpd_HGetValue( s_hHandlers, cExt )
       ENDIF
 
-      // hb_ToOutDebug( "cHandler = %s\n\r", cHandler )
+      // hb_ToOutDebug( "cHandler: %s\n\r", cHandler )
 
       IF cHandler != NIL
          xAction := uhttpd_HGetValue( s_hActions, cHandler )
       ENDIF
 
-      // hb_ToOutDebug( "xAction = %s\n\r", xAction )
+      // hb_ToOutDebug( "xAction: %s\n\r", xAction )
 
       IF xAction == NIL
          xAction := @Handler_Default()
       ENDIF
 
-      // hb_ToOutDebug( "xAction = %s\n\r", xAction )
+      // hb_ToOutDebug( "xAction: %s\n\r", xAction )
 
       // Setting CGI vars
       define_Env( _SERVER )
@@ -2019,7 +1984,7 @@ STATIC PROCEDURE Define_Env( hmServer )
 
    RETURN
 
-// ------------------------------- DEFAULT PAGES -----------------------------------
+// --- DEFAULT PAGES ---
 
 #if 0
 STATIC PROCEDURE ShowServerStatus()
@@ -2027,80 +1992,78 @@ STATIC PROCEDURE ShowServerStatus()
    LOCAL cThreads
 
    uhttpd_SetHeader( "Content-Type", "text/html" )
-   uhttpd_Write( '<html><head>' )
+   uhttpd_Write( "<html><head>" )
    uhttpd_Write( '<META HTTP-EQUIV="Refresh" CONTENT="' + hb_ntos( PAGE_STATUS_REFRESH ) + ';URL=/ServerStatus">' )
    uhttpd_Write( '<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">' )
-   uhttpd_Write( '<title>Server Status</title><body><h1>Server Status</h1><pre>' )
-   // uhttpd_Write( '<table border="0">')
+   uhttpd_Write( "<title>Server Status</title><body><h1>Server Status</h1><pre>" )
+   // uhttpd_Write( '<table border="0">' )
 
-   uhttpd_Write( 'SERVER: ' + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] )
-   uhttpd_Write( '<br />' )
+   uhttpd_Write( "SERVER: " + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] )
+   uhttpd_Write( "<br />" )
    IF hb_mutexLock( s_hmtxBusy )
-      uhttpd_Write( '<br />Thread: ' + Str( s_nThreads ) )
-      uhttpd_Write( '<br />Connections: ' + Str( s_nConnections ) )
-      uhttpd_Write( '<br />Max Connections: ' + Str( s_nMaxConnections ) )
-      uhttpd_Write( '<br />Total Connections: ' + Str( s_nTotConnections ) )
+      uhttpd_Write( "<br />Thread: " + hb_ntos( s_nThreads ) )
+      uhttpd_Write( "<br />Connections: " + hb_ntos( s_nConnections ) )
+      uhttpd_Write( "<br />Max Connections: " + hb_ntos( s_nMaxConnections ) )
+      uhttpd_Write( "<br />Total Connections: " + hb_ntos( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
-      uhttpd_Write( '<br />Running Threads: ' + cThreads )
+      cThreads := "{ " + iif( Empty( cThreads ), "<empty>", hb_StrShrink( cThreads ) ) + " }"
+      uhttpd_Write( "<br />Running Threads: " + cThreads )
 
 #ifndef FIXED_THREADS
-      uhttpd_Write( '<br />Service Thread: ' + Str( s_nServiceThreads ) )
-      uhttpd_Write( '<br />Service Connections: ' + Str( s_nServiceConnections ) )
-      uhttpd_Write( '<br />Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
-      uhttpd_Write( '<br />Total Service Connections: ' + Str( s_nTotServiceConnections ) )
+      uhttpd_Write( "<br />Service Thread: " + hb_ntos( s_nServiceThreads ) )
+      uhttpd_Write( "<br />Service Connections: " + hb_ntos( s_nServiceConnections ) )
+      uhttpd_Write( "<br />Max Service Connections: " + hb_ntos( s_nMaxServiceConnections ) )
+      uhttpd_Write( "<br />Total Service Connections: " + hb_ntos( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
-      uhttpd_Write( '<br />Service Threads: ' + cThreads )
-#endif // FIXED_THREADS
+      cThreads := "{ " + iif( Empty( cThreads ), "<empty>", hb_StrShrink( cThreads ) ) + " }"
+      uhttpd_Write( "<br />Service Threads: " + cThreads )
+#endif
 
       hb_mutexUnlock( s_hmtxBusy )
    ENDIF
-   uhttpd_Write( '<br />Time: ' + Time() )
+   uhttpd_Write( "<br />Time: " + Time() )
 
-   // uhttpd_Write( '</table>')
+   // uhttpd_Write( "</table>" )
    uhttpd_Write( "<hr></pre></body></html>" )
 
    RETURN
 #endif
 
-STATIC PROCEDURE ShowFolder( cDir )
+STATIC PROCEDURE ShowDirectory( cDir )
 
    LOCAL aDir, aF
-   LOCAL cParentDir, nPos
+   LOCAL cParentDir
 
    uhttpd_SetHeader( "Content-Type", "text/html" )
 
-   aDir := Directory( uhttpd_OSFileName( cDir ), "D" )
-   IF hb_HHasKey( _GET, "s" )
-      IF _GET[ "s" ] == "s"
-         ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-            iif( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
-      ELSEIF _GET[ "s" ] == "m"
-         ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-            iif( Y[ 5 ] == "D", .F., DToS( X[ 3 ] ) + X[ 4 ] < DToS( Y[ 3 ] ) + Y[ 4 ] ) ) } )
-      ELSE
-         ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-            iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
-      ENDIF
+   aDir := hb_vfDirectory( uhttpd_OSFileName( cDir ), "D" )
+   IF "s" $ _GET
+      DO CASE
+      CASE _GET[ "s" ] == "s"
+         ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+            iif( Y[ F_ATTR ] == "D", .F., X[ F_SIZE ] < Y[ F_SIZE ] ) ) } )
+      CASE _GET[ "s" ] == "m"
+         ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+            iif( Y[ F_ATTR ] == "D", .F., X[ F_DATE ] < Y[ F_DATE ] ) ) } )
+      OTHERWISE
+         ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+            iif( Y[ F_ATTR ] == "D", .F., X[ F_NAME ] < Y[ F_NAME ] ) ) } )
+      ENDCASE
    ELSE
-      ASort( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-         iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
+      ASort( aDir,,, {| X, Y | iif( X[ F_ATTR ] == "D", iif( Y[ F_ATTR ] == "D", X[ F_NAME ] < Y[ F_NAME ], .T. ), ;
+         iif( Y[ F_ATTR ] == "D", .F., X[ F_NAME ] < Y[ F_NAME ] ) ) } )
    ENDIF
 
-   uhttpd_Write( '<html><body><h1>Index of ' + _SERVER[ "SCRIPT_NAME" ] + '</h1><pre>      ' )
+   uhttpd_Write( "<html><body><h1>Index of " + _SERVER[ "SCRIPT_NAME" ] + "</h1><pre>      " )
    uhttpd_Write( '<a href="?s=n">Name</a>                                                  ' )
    uhttpd_Write( '<a href="?s=m">Modified</a>             ' )
-   uhttpd_Write( '<a href="?s=s">Size</a>' + CR_LF + '<hr>' )
+   uhttpd_Write( '<a href="?s=s">Size</a>' + CR_LF + "<hr>" )
 
    // Adding Upper Directory
-   nPos := RAt( "/", SubStr( cDir, 1, Len( cDir ) - 1 ) )
-   cParentDir := SubStr( cDir, 1, nPos )
+   cParentDir := Left( cDir, RAt( "/", hb_StrShrink( cDir ) ) )
    cParentDir := SubStr( cParentDir, Len( _SERVER[ "DOCUMENT_ROOT" ] ) + 1 )
-
-   // hb_ToOutDebug( "cDir = %s, nPos = %i, cParentDir = %s\n\r", cDir, nPos, cParentDir )
 
    IF ! Empty( cParentDir )
       // Add parent directory
@@ -2108,44 +2071,36 @@ STATIC PROCEDURE ShowFolder( cDir )
    ENDIF
 
    FOR EACH aF IN aDir
-      IF aF[ 1 ] == "<parent>"
+      IF aF[ F_NAME ] == "<parent>"
          uhttpd_Write( '[DIR] <a href="' + cParentDir + '">..</a>' + ;
             CR_LF )
-      ELSEIF Left( aF[ 1 ], 1 ) == "."
-      ELSEIF "D" $ aF[ 5 ]
-         uhttpd_Write( '[DIR] <a href="' + aF[ 1 ] + '/">' + aF[ 1 ] + '</a>' + Space( 50 - Len( aF[ 1 ] ) ) + ;
-            DToC( aF[ 3 ] ) + ' ' + aF[ 4 ] + CR_LF )
+      ELSEIF hb_LeftEq( aF[ F_NAME ], "." )
+      ELSEIF "D" $ aF[ F_ATTR ]
+         uhttpd_Write( '[DIR] <a href="' + aF[ F_NAME ] + '/">' + aF[ F_NAME ] + "</a>" + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
+            hb_TToC( aF[ F_DATE ] ) + CR_LF )
       ELSE
-         uhttpd_Write( '      <a href="' + aF[ 1 ] + '">' + aF[ 1 ] + '</a>' + Space( 50 - Len( aF[ 1 ] ) ) + ;
-            DToC( aF[ 3 ] ) + ' ' + aF[ 4 ] + Str( aF[ 2 ], 12 ) + CR_LF )
+         uhttpd_Write( '      <a href="' + aF[ F_NAME ] + '">' + aF[ F_NAME ] + "</a>" + Space( 50 - Len( aF[ F_NAME ] ) ) + ;
+            hb_TToC( aF[ F_DATE ] ) + "  " + hb_ntos( aF[ F_SIZE ] ) + CR_LF )
       ENDIF
    NEXT
    uhttpd_Write( "<hr></pre></body></html>" )
 
    RETURN
 
-// ------------------------------- Utility functions --------------------------------
+// --- Utility functions ---
 
 // from Przemek's example, useful to use encrypted HRB module files
 #if 0
 STATIC FUNCTION HRB_LoadFromFileEncrypted( cFile, cKey )
-
-   LOCAL cHrbBody
-
-   cHrbBody := hb_MemoRead( cFile )
-   cHrbBody := sx_Decrypt( cHrbBody, cKey )
-   cHrbBody := hb_ZUncompress( cHrbBody )
-
-   RETURN cHrbBody
+   RETURN hb_ZUncompress( sx_Decrypt( hb_MemoRead( cFile ), cKey ) )
 
 // Reverse function to save is:
 PROCEDURE HRB_SaveToFileEncrypted( cHrbBody, cKey, cEncFileName )
-   LOCAL cFile
-   IF ! Empty( cHrbBody )
-      cHrbBody := hb_ZCompress( cHrbBody )
-      cHrbBody := sx_Encrypt( cHrbBody, cKey )
-      hb_MemoWrit( cEncFileName, cHrbBody )
+
+   IF ! HB_ISNULL( cHrbBody )
+      hb_MemoWrit( cEncFileName, sx_Encrypt( hb_ZCompress( cHrbBody ), cKey ) )
    ENDIF
+
    RETURN
 #endif
 
@@ -2154,21 +2109,10 @@ STATIC FUNCTION HRB_LoadFromFile( cFile )
 
 STATIC PROCEDURE Help()
 
-#if 0
-   LOCAL cPrg := hb_argv( 0 )
-   LOCAL nPos := RAt( "\", cPrg )
-
-   __OutDebug( hb_argv( 0 ) )
-
-   IF nPos > 0
-      cPrg := SubStr( cPrg, nPos + 1 )
-   ENDIF
-#endif
-
    ?
-   ? "(C) 2009 Francesco Saverio Giudice <info@fsgiudice.com>"
+   ? "Copyright (c) 2009, Francesco Saverio Giudice <info@fsgiudice.com>"
    ?
-   ? APP_NAME + " - web server - v. " + APP_VERSION
+   ? APP_NAME, "- web server -", APP_VERSION
    ? "Based on original work of Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>"
    ?
    ? "Parameters: (all optionals)"
@@ -2192,50 +2136,34 @@ STATIC PROCEDURE Help()
 
 STATIC PROCEDURE SysSettings()
 
-   SET SCOREBOARD OFF
-   SET CENTURY     ON
-   SET DATE      ANSI
-   SET BELL       OFF
-   SET DELETED     ON
-   SET CONFIRM     ON
-   SET ESCAPE      ON
-   SET WRAP        ON
-   // rddSetDefault( "DBFCDX" )
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+   Set( _SET_SCOREBOARD, .F. )
+   Set( _SET_BELL, .F. )
+   Set( _SET_DELETED, .T. )
+   Set( _SET_CONFIRM, .T. )
+   Set( _SET_ESCAPE, .T. )
+   Set( _SET_WRAP, .T. )
+#if 0
+   rddSetDefault( "DBFCDX" )
+#endif
 
    RETURN
 
-STATIC PROCEDURE Progress( /*@*/ nProgress )
+STATIC PROCEDURE Progress( /* @ */ nProgress )
 
-   LOCAL cString := "["
-
-   DO CASE
-   CASE nProgress == 0
-      cString += "-"
-   CASE nProgress == 1
-      cString += "\"
-   CASE nProgress == 2
-      cString += "|"
-   CASE nProgress == 3
-      cString += "/"
-   ENDCASE
-
-   cString += "]"
-
-   nProgress++
+   hb_DispOutAt( 10,  5, "[" + SubStr( "-\|/", ++nProgress, 1 ) + "]" )
+   hb_DispOutAt(  0, 60, "Time: " + Time() )
 
    IF nProgress == 4
       nProgress := 0
    ENDIF
-
-   // using hb_DispOutAt() to avoid MT screen updates problem
-   hb_DispOutAt( 10,  5, cString )
-   hb_DispOutAt(  0, 60, "Time: " + Time() )
 
    RETURN
 
 // Show messages in console
 #define CONSOLE_FIRSTROW   12
 #define CONSOLE_LASTROW    MaxRow()
+
 STATIC PROCEDURE WriteToConsole( ... )
 
    LOCAL cMsg
@@ -2251,9 +2179,7 @@ STATIC PROCEDURE WriteToConsole( ... )
 #ifdef DEBUG_ACTIVE
             hb_ToOutDebug( ">>> %s\n\r", cMsg )
 #endif
-
          NEXT
-
       ENDIF
       hb_mutexUnlock( s_hmtxConsole )
    ENDIF
@@ -2262,15 +2188,14 @@ STATIC PROCEDURE WriteToConsole( ... )
 
 STATIC FUNCTION ParseIni( cConfig )
 
-   LOCAL hIni := hb_iniRead( cConfig, .T. ) // .T. = load all keys in MixedCase, redundant as it is default, but to remember
+   LOCAL hIni := hb_iniRead( cConfig, .T. ) // .T. to load all keys in MixedCase, redundant as it is default, but to remember
    LOCAL cSection, hSect, cKey, xVal, cVal, nPos
-   LOCAL hDefault
 
-   // hb_ToOutDebug( "cConfig = %s,\n\rhIni = %s\n\r", cConfig, hb_ValToExp( hIni ) )
+   // hb_ToOutDebug( "cConfig: %s,\n\rhIni: %s\n\r", cConfig, hb_ValToExp( hIni ) )
 
    // Define here what attributes we can have in ini config file and their defaults
    // Please add all keys in uppercase. hDefaults is Case Insensitive
-   hDefault := { ;
+   LOCAL hDefault := { ;
       "MAIN"           => { "PORT"                 => LISTEN_PORT               , ;
                             "APPLICATION_ROOT"     => hb_DirBase()              , ;
                             "DOCUMENT_ROOT"        => hb_DirBase() + "home"     , ;
@@ -2290,7 +2215,7 @@ STATIC FUNCTION ParseIni( cConfig )
 
    hb_HCaseMatch( hDefault, .F. )
 
-   // hb_ToOutDebug( "hDefault = %s\n\r", hb_ValToExp( hDefault ) )
+   // hb_ToOutDebug( "hDefault: %s\n\r", hb_ValToExp( hDefault ) )
 
    // Now read changes from ini file and modify only admited keys
    IF ! Empty( hIni )
@@ -2298,103 +2223,103 @@ STATIC FUNCTION ParseIni( cConfig )
 
          cSection := Upper( cSection )
 
-         // hb_ToOutDebug( "cSection = %s\n\r", cSection )
+         // hb_ToOutDebug( "cSection: %s\n\r", cSection )
 
          IF cSection $ hDefault
 
             hSect := hIni[ cSection ]
 
-            // hb_ToOutDebug( "hSect = %s\n\r", hb_ValToExp( hSect ) )
+            // hb_ToOutDebug( "hSect: %s\n\r", hb_ValToExp( hSect ) )
 
             IF HB_ISHASH( hSect )
                FOR EACH cKey IN hSect:Keys
 
                   // Please, below check values MUST be uppercase
 
-                  // hb_ToOutDebug( "cKey = %s\n\r", cKey )
+                  // hb_ToOutDebug( "cKey: %s\n\r", cKey )
 
-                  IF cSection == "SCRIPTALIASES"
-                     xVal := hSect[ cKey ]
-                     IF xVal != NIL
+                  DO CASE
+                  CASE cSection == "SCRIPTALIASES"
+                     IF ( xVal := hSect[ cKey ] ) != NIL
                         hDefault[ cSection ][ cKey ] := xVal
                      ENDIF
 
-                  ELSEIF cSection == "ALIASES"
-                     xVal := hSect[ cKey ]
-                     IF xVal != NIL
+                  CASE cSection == "ALIASES"
+                     IF ( xVal := hSect[ cKey ] ) != NIL
                         hDefault[ cSection ][ cKey ] := xVal
                      ENDIF
 
-                  ELSEIF ( cKey := Upper( cKey ) ) $ hDefault[ cSection ]  // force cKey to be uppercase
+                  CASE ( cKey := Upper( cKey ) ) $ hDefault[ cSection ]  // force cKey to be uppercase
 
                      IF ( nPos := hb_HScan( hSect, {| k | Upper( k ) == cKey } ) ) > 0
                         cVal := hb_HValueAt( hSect, nPos )
 
-                        // hb_ToOutDebug( "cVal = %s\n\r", cVal )
+                        // hb_ToOutDebug( "cVal: %s\n\r", cVal )
 
-                        DO CASE
-                        CASE cSection == "MAIN"
+                        SWITCH cSection
+                        CASE "MAIN"
 
-                           DO CASE
-                           CASE cKey == "PORT"
-                              xVal := Val( cVal )
-                           CASE cKey == "CONSOLE-ROWS"
-                              xVal := Val( cVal )
-                           CASE cKey == "CONSOLE-COLS"
-                              xVal := Val( cVal )
-                           CASE cKey == "APPLICATION_ROOT"
+                           SWITCH cKey
+                           CASE "PORT"  /* fall-through */
+                           CASE "CONSOLE-ROWS"  /* fall-through */
+                           CASE "CONSOLE-COLS"
+                              xVal := Val( cVal ) ; EXIT
+                           CASE "APPLICATION_ROOT"
                               IF ! Empty( cVal )
                                  // Change APP_DIR macro with current exe path
                                  xVal := cVal
                               ENDIF
-                           CASE cKey == "DOCUMENT_ROOT"
+                              EXIT
+                           CASE "DOCUMENT_ROOT"
                               IF ! Empty( cVal )
                                  // After will change APP_DIR macro with application dir
                                  // xVal := StrTran( cVal, "$(APP_DIR)", hb_DirBase() )
                                  xVal := cVal
                               ENDIF
-                           CASE cKey == "SCRIPTALIASMIXEDCASE"
-                              xVal := cVal
-                           CASE cKey == "SESSIONPATH"
+                              EXIT
+                           CASE "SCRIPTALIASMIXEDCASE"
+                              xVal := cVal ; EXIT
+                           CASE "SESSIONPATH"
                               IF ! Empty( cVal )
                                  // Change APP_DIR macro with current exe path
                                  // xVal := StrTran( cVal, "$(APP_DIR)", hb_DirBase() )
                                  xVal := cVal
                               ENDIF
-                           CASE cKey == "DIRECTORYINDEX"
+                              EXIT
+                           CASE "DIRECTORYINDEX"
                               IF ! Empty( cVal )
                                  xVal := uhttpd_split( " ", AllTrim( cVal ) )
                               ENDIF
-                           ENDCASE
+                              EXIT
+                           ENDSWITCH
+                           EXIT
 
-                        CASE cSection == "LOGFILES"
+                        CASE "LOGFILES"
 
-                           DO CASE
-                           CASE cKey == "ACCESS"
-                              xVal := cVal
-                           CASE cKey == "ERROR"
-                              xVal := cVal
-                           ENDCASE
+                           SWITCH cKey
+                           CASE "ACCESS"  /* fall-through */
+                           CASE "ERROR"
+                              xVal := cVal ; EXIT
+                           ENDSWITCH
+                           EXIT
 
-                        CASE cSection == "THREADS"
+                        CASE "THREADS"
 
-                           DO CASE
-                           CASE cKey == "MAX_WAIT"
-                              xVal := Val( cVal )
-                           CASE cKey == "START_NUM"
-                              xVal := Val( cVal )
-                           CASE cKey == "MAX_NUM"
-                              xVal := Val( cVal )
-                           ENDCASE
+                           SWITCH cKey
+                           CASE "MAX_WAIT"  /* fall-through */
+                           CASE "START_NUM"  /* fall-through */
+                           CASE "MAX_NUM"
+                              xVal := Val( cVal ) ; EXIT
+                           ENDSWITCH
+                           EXIT
 
-                        ENDCASE
+                        ENDSWITCH
 
                         IF xVal != NIL
                            hDefault[ cSection ][ cKey ] := xVal
                         ENDIF
                      ENDIF
-
-                  ENDIF
+                  ENDCASE
                NEXT
             ENDIF
          ENDIF
@@ -2408,29 +2333,24 @@ STATIC FUNCTION FileUnAlias( cScript )
    LOCAL cFileName, x
 
    // Checking if the request contains a Script Alias
-   IF hb_HHasKey( s_hScriptAliases, cScript )
+   IF cScript $ s_hScriptAliases
       // in this case I have to substitute the alias with the real file name
       cFileName := s_hScriptAliases[ cScript ]
-
-      // substitute macros
-      cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
-      cFileName := StrTran( cFileName, "$(APP_DIR)", s_cApplicationRoot )
-   ENDIF
-
-   IF cFileName == NIL
-
+   ELSE
       // Checking if the request contains an alias
       FOR EACH x IN s_hAliases
-         IF x:__enumKey() == Left( cScript, Len( x:__enumKey() ) )
+         IF hb_LeftEq( cScript, x:__enumKey() )
             cFileName := x + SubStr( cScript, Len( x:__enumKey() ) + 1 )
-
-            // substitute macros
-            cFileName := StrTran( cFileName, "$(DOCROOT_DIR)", _SERVER[ "DOCUMENT_ROOT" ] )
-            cFileName := StrTran( cFileName, "$(APP_DIR)", s_cApplicationRoot )
             EXIT
          ENDIF
       NEXT
+   ENDIF
 
+   IF cFileName != NIL
+      // substitute macros
+      cFileName := hb_StrReplace( cFileName, { ;
+         "$(DOCROOT_DIR)" => _SERVER[ "DOCUMENT_ROOT" ], ;
+         "$(APP_DIR)"     => s_cApplicationRoot } )
    ENDIF
 
    RETURN cFileName
@@ -2439,14 +2359,12 @@ STATIC FUNCTION uhttpd_DefError( oError )
 
    LOCAL cMessage
    LOCAL cCallstack
-   LOCAL cDOSError
+   LOCAL cOSError
 
    LOCAL aOptions
    LOCAL nChoice
 
    LOCAL n
-   LOCAL cDateTime, cString
-   LOCAL cNewLine := hb_eol()
 
    // By default, division by zero results in zero
    IF oError:genCode == EG_ZERODIV .AND. ;
@@ -2454,7 +2372,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
       RETURN 0
    ENDIF
 
-   // By default, retry on RDD lock error failure */
+   // By default, retry on RDD lock error failure
    IF oError:genCode == EG_LOCK .AND. ;
       oError:canRetry
       // oError:tries++
@@ -2478,10 +2396,10 @@ STATIC FUNCTION uhttpd_DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
-      cDOSError := "(OS Error " + hb_ntos( oError:osCode ) + ")"
+      cOSError := "(OS Error " + hb_ntos( oError:osCode ) + ")"
    ENDIF
 
-   // ;
+   //
 
    cCallstack := ""
    n := 1
@@ -2509,50 +2427,40 @@ STATIC FUNCTION uhttpd_DefError( oError )
    hb_ToOutDebug( "ERROR: %s\n\r", cMessage + " " + cCallstack )
 #endif
 
-   nChoice := 0
-   DO WHILE nChoice == 0
-
-      IF cDOSError == NIL
-         nChoice := Alert( cMessage + ";" + cCallstack, aOptions )
-      ELSE
-         nChoice := Alert( cMessage + " " + cDOSError + ";" + cCallstack, aOptions )
-      ENDIF
-
+   DO WHILE ( nChoice := Alert( cMessage + ;
+      iif( cOSError == NIL, "", " " + cOSError ) + ";" + cCallstack, aOptions ) ) == 0
    ENDDO
 
-   IF ! Empty( nChoice )
-      DO CASE
-      CASE aOptions[ nChoice ] == "Break"
+   IF ! Empty( nChoice )  /* Alert() may return NIL */
+      SWITCH aOptions[ nChoice ]
+      CASE "Break"
          Break( oError )
-      CASE aOptions[ nChoice ] == "Retry"
+      CASE "Retry"
          RETURN .T.
-      CASE aOptions[ nChoice ] == "Default"
+      CASE "Default"
          RETURN .F.
-      ENDCASE
+      ENDSWITCH
    ENDIF
 
    // "Quit" selected
 
-   IF cDOSError != NIL
-      cMessage += " " + cDOSError
+   IF cOSError != NIL
+      cMessage += " " + cOSError
    ENDIF
 
-   OutErr( cNewLine )
+   OutErr( hb_eol() )
    OutErr( cMessage )
-   OutErr( cNewLine )
+   OutErr( hb_eol() )
    OutErr( cCallstack )
 
    // Write to errorlog
-   cDateTime := hb_TToC( hb_DateTime() )
-   cString   := ;
-      Replicate( "*", 70 ) + cNewLine + ;
-      cDateTime            + cNewLine + ;
-      Replicate( "*", 70 ) + cNewLine + ;
-      cMessage             + cNewLine + ;
-      cCallstack           + cNewLine + ;
-      Replicate( "*", 70 ) + cNewLine
-
-   uhttpd_WriteToLogFile( cString, hb_DirBase() + "error.log" )
+   uhttpd_WriteToLogFile( ;
+      Replicate( "*", 70 ) + hb_eol() + ;
+      hb_TToC( hb_DateTime() ) + hb_eol() + ;
+      Replicate( "*", 70 ) + hb_eol() + ;
+      cMessage + hb_eol() + ;
+      cCallstack + hb_eol() + ;
+      Replicate( "*", 70 ) + hb_eol(), hb_DirBase() + "error.log" )
 
    ErrorLevel( 1 )
    QUIT
@@ -2585,7 +2493,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
    // add either filename or operation
    DO CASE
-   CASE ! Empty( oError:filename )
+   CASE ! HB_ISNULL( oError:filename )
       cMessage += ": " + oError:filename
    CASE ! Empty( oError:operation )
       cMessage += ": " + oError:operation
@@ -2593,50 +2501,34 @@ STATIC FUNCTION ErrorMessage( oError )
 
    RETURN cMessage
 
-// ----------------------------------------------------------------------------------
-// HANDLERS
-// ----------------------------------------------------------------------------------
+// --- HANDLERS ---
 
 // This handler handle static files
 STATIC FUNCTION Handler_Default( cFileName )
 
-   LOCAL cMime
-   LOCAL cExt, nI
-   LOCAL hMimeTypes := LoadMimeTypes()
-
    // If file exists
-   IF hb_FileExists( uhttpd_OSFileName( cFileName ) )
-      IF ( nI := RAt( ".", cFileName ) ) > 0
-         cExt  := Lower( SubStr( cFileName, nI + 1 ) )
-         cMime := uhttpd_HGetValue( hMimeTypes, cExt )
-      ENDIF
-      IF cMime == NIL
-         // Unknown file type
-         cMime := "application/octet-stream"
-      ENDIF
+   DO CASE
+   CASE hb_vfExists( uhttpd_OSFileName( cFileName ) )
 
-      uhttpd_SetHeader( "Content-Type", cMime )
+      uhttpd_SetHeader( "Content-Type", tip_FileNameMimeType( cFileName, "application/octet-stream" ) )
       uhttpd_Write( hb_MemoRead( uhttpd_OSFileName( cFileName ) ) )
 
       // Directory content request
-   ELSEIF hb_DirExists( uhttpd_OSFileName( cFileName ) )
+   CASE hb_vfDirExists( uhttpd_OSFileName( cFileName ) )
 
-      // If I'm here it's means that I have no page, so, if it is defined, I will display content folder
-      IF ! s_lIndexes
+      // If I'm here it's means that I have no page, so, if it is defined, I will display content directory
+      IF s_lIndexes
+         // display directory content
+         ShowDirectory( cFileName )
+      ELSE
          uhttpd_SetStatusCode( 403 )
          t_cErrorMsg := "Display file list not allowed"
-      ELSE
-         // ----------------------- display folder content -------------------------------------
-         ShowFolder( cFileName )
       ENDIF
-
-   ELSE
-
+   OTHERWISE
       // We cannot handle request
       uhttpd_SetStatusCode( 404 )
       t_cErrorMsg := "File does not exist: " + cFileName
-
-   ENDIF
+   ENDCASE
 
    RETURN MakeResponse()
 
@@ -2646,40 +2538,40 @@ STATIC FUNCTION Handler_ServerStatus()
    LOCAL cThreads
 
    uhttpd_SetHeader( "Content-Type", "text/html" )
-   uhttpd_Write( '<html><head>' )
+   uhttpd_Write( "<html><head>" )
    uhttpd_Write( '<META HTTP-EQUIV="Refresh" CONTENT="' + hb_ntos( PAGE_STATUS_REFRESH ) + ';URL=/ServerStatus">' )
    uhttpd_Write( '<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">' )
-   uhttpd_Write( '<title>Server Status</title><body><h1>Server Status</h1><pre>' )
-   // uhttpd_Write( '<table border="0">')
+   uhttpd_Write( "<title>Server Status</title><body><h1>Server Status</h1><pre>" )
+   // uhttpd_Write( '<table border="0">' )
 
-   uhttpd_Write( 'SERVER: ' + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] )
-   uhttpd_Write( '<br />' )
+   uhttpd_Write( "SERVER: " + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] )
+   uhttpd_Write( "<br />" )
    IF hb_mutexLock( s_hmtxBusy )
-      uhttpd_Write( '<br />Thread: ' + Str( s_nThreads ) )
-      uhttpd_Write( '<br />Connections: ' + Str( s_nConnections ) )
-      uhttpd_Write( '<br />Max Connections: ' + Str( s_nMaxConnections ) )
-      uhttpd_Write( '<br />Total Connections: ' + Str( s_nTotConnections ) )
+      uhttpd_Write( "<br />Thread: " + hb_ntos( s_nThreads ) )
+      uhttpd_Write( "<br />Connections: " + hb_ntos( s_nConnections ) )
+      uhttpd_Write( "<br />Max Connections: " + hb_ntos( s_nMaxConnections ) )
+      uhttpd_Write( "<br />Total Connections: " + hb_ntos( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
-      uhttpd_Write( '<br />Running Threads: ' + cThreads )
+      cThreads := "{ " + iif( Empty( cThreads ), "<empty>", hb_StrShrink( cThreads ) ) + " }"
+      uhttpd_Write( "<br />Running Threads: " + cThreads )
 
 #ifndef FIXED_THREADS
-      uhttpd_Write( '<br />Service Thread: ' + Str( s_nServiceThreads ) )
-      uhttpd_Write( '<br />Service Connections: ' + Str( s_nServiceConnections ) )
-      uhttpd_Write( '<br />Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
-      uhttpd_Write( '<br />Total Service Connections: ' + Str( s_nTotServiceConnections ) )
+      uhttpd_Write( "<br />Service Thread: " + hb_ntos( s_nServiceThreads ) )
+      uhttpd_Write( "<br />Service Connections: " + hb_ntos( s_nServiceConnections ) )
+      uhttpd_Write( "<br />Max Service Connections: " + hb_ntos( s_nMaxServiceConnections ) )
+      uhttpd_Write( "<br />Total Service Connections: " + hb_ntos( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
-      uhttpd_Write( '<br />Service Threads: ' + cThreads )
+      cThreads := "{ " + iif( Empty( cThreads ), "<empty>", hb_StrShrink( cThreads ) ) + " }"
+      uhttpd_Write( "<br />Service Threads: " + cThreads )
 #endif // FIXED_THREADS
 
       hb_mutexUnlock( s_hmtxBusy )
    ENDIF
-   uhttpd_Write( '<br />Time: ' + Time() )
+   uhttpd_Write( "<br />Time: " + Time() )
 
-   // uhttpd_Write( '</table>')
+   // uhttpd_Write( "</table>" )
    uhttpd_Write( "<hr></pre></body></html>" )
 
    RETURN MakeResponse()
@@ -2690,7 +2582,7 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
    LOCAL cHRBBody, pHRB, oError
    LOCAL cCurPath
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       // Lock HRB to avoid MT race conditions
       IF ! HRB_ACTIVATE_CACHE
          cHRBBody := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
@@ -2699,33 +2591,32 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
          BEGIN SEQUENCE
             IF HRB_ACTIVATE_CACHE
                // caching modules
-               IF ! hb_HHasKey( s_hHRBModules, cFileName )
+               IF !( cFileName $ s_hHRBModules )
                   s_hHRBModules[ cFileName ] := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
                ENDIF
                cHRBBody := s_hHRBModules[ cFileName ]
             ENDIF
             WriteToConsole( "Executing: " + cFileName )
-            IF ! Empty( pHRB := hb_hrbLoad( cHRBBody ) )
-
+            IF Empty( pHRB := hb_hrbLoad( cHRBBody ) )
+               uhttpd_SetStatusCode( 404 )
+               t_cErrorMsg := "File does not exist: " + cFileName
+            ELSE
                // save current directory
-               cCurPath := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
+               cCurPath := hb_cwd()
                // Change dir to document root
-               DirChange( s_cDocumentRoot )
+               hb_cwd( s_cDocumentRoot )
 
                xResult := hb_hrbDo( pHRB )
 
 #ifdef DEBUG_ACTIVE
-               hb_ToOutDebug( "Handler_HrbScript(): cFileName = %s,\n\rcCurPath = %s,\n\rs_cDocumentRoot = %s,\n\rpHRB = %s,\n\rxResult = %s\n\r", ;
+               hb_ToOutDebug( "Handler_HrbScript(): cFileName: %s,\n\rcCurPath: %s,\n\rs_cDocumentRoot: %s,\n\rpHRB: %s,\n\rxResult: %s\n\r", ;
                   cFileName, cCurPath, s_cDocumentRoot, pHRB, xResult )
 #endif
 
-               // return to original folder
-               DirChange( cCurPath )
+               // return to original directory
+               hb_cwd( cCurPath )
 
                hb_hrbUnload( pHRB )
-            ELSE
-               uhttpd_SetStatusCode( 404 )
-               t_cErrorMsg := "File does not exist: " + cFileName
             ENDIF
          ALWAYS
             hb_mutexUnlock( s_hmtxHRB )
@@ -2768,86 +2659,33 @@ STATIC FUNCTION Handler_CgiScript( cFileName )
    WriteToConsole( "Executing: " + cFileName )
 
    IF CGIExec( uhttpd_OSFileName( cFileName ), @xResult ) == 0
-
       // uhttpd_SetHeader( "Content-Type", cI )
       // uhttpd_Write( xResult )
       RETURN "HTTP/1.1 200 OK " + CR_LF + xResult
-
    ELSE
-
       uhttpd_SetHeader( "Content-Type", "text/html" )
-      IF ! Empty( xResult )
-         uhttpd_Write( xResult )
-      ELSE
+      IF Empty( xResult )
          uhttpd_Write( "CGI Error" )
+      ELSE
+         uhttpd_Write( xResult )
       ENDIF
-
    ENDIF
 
    RETURN MakeResponse()
-
-STATIC FUNCTION LoadMimeTypes()
-
-   // TODO: load mime types from file
-
-   RETURN { ;
-      "css"  => "text/css", ;
-      "htm"  => "text/html", ;
-      "html" => "text/html", ;
-      "txt"  => "text/plain", ;
-      "text" => "text/plain", ;
-      "asc"  => "text/plain", ;
-      "c"    => "text/plain", ;
-      "h"    => "text/plain", ;
-      "cpp"  => "text/plain", ;
-      "hpp"  => "text/plain", ;
-      "log"  => "text/plain", ;
-      "rtf"  => "text/rtf", ;
-      "xml"  => "text/xml", ;
-      "xsl"  => "text/xsl", ;
-      "bmp"  => "image/bmp", ;
-      "gif"  => "image/gif", ;
-      "jpg"  => "image/jpeg", ;
-      "jpe"  => "image/jpeg", ;
-      "jpeg" => "image/jpeg", ;
-      "png"  => "image/png", ;
-      "tif"  => "image/tiff", ;
-      "tiff" => "image/tiff", ;
-      "djv"  => "image/vnd.djvu", ;
-      "djvu" => "image/vnd.djvu", ;
-      "ico"  => "image/x-icon", ;
-      "xls"  => "application/excel", ;
-      "doc"  => "application/msword", ;
-      "pdf"  => "application/pdf", ;
-      "ps"   => "application/postscript", ;
-      "eps"  => "application/postscript", ;
-      "ppt"  => "application/powerpoint", ;
-      "bz2"  => "application/x-bzip2", ;
-      "gz"   => "application/x-gzip", ;
-      "tgz"  => "application/x-gtar", ;
-      "js"   => "application/x-javascript", ;
-      "tar"  => "application/x-tar", ;
-      "tex"  => "application/x-tex", ;
-      "zip"  => "application/zip", ;
-      "midi" => "audio/midi", ;
-      "mp3"  => "audio/mpeg", ;
-      "wav"  => "audio/x-wav", ;
-      "qt"   => "video/quicktime", ;
-      "mov"  => "video/quicktime", ;
-      "avi"  => "video/x-msvideo" }
 
 STATIC FUNCTION GT_notifier( nEvent, xParams )
 
    LOCAL nReturn := 0
 
-   DO CASE
-   CASE nEvent == HB_K_CLOSE
+   SWITCH nEvent
+   CASE HB_K_CLOSE
       IF hb_mutexLock( s_hmtxBusy )
          s_lQuitRequest := .T.
          nReturn := 1
          hb_mutexUnlock( s_hmtxBusy )
       ENDIF
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    HB_SYMBOL_UNUSED( xParams )
 
@@ -2858,10 +2696,10 @@ STATIC FUNCTION UHTTPD_UTCOFFSET()
    LOCAL nOffset := hb_UTCOffset()
 
    RETURN iif( nOffset < 0, "-", "+" ) + ;
-      StrZero( nOffset / 3600, 2, 0 ) + ;
-      StrZero( ( nOffset % 3600 ) / 60, 2, 0 )
+      StrZero( Int( Abs( nOffset ) / 3600 ), 2 ) + ;
+      StrZero( Int( Abs( nOffset ) % 3600 / 60 ), 2 )
 
-STATIC FUNCTION HB_HASHI()
+STATIC FUNCTION hb_HashI()
 
    LOCAL h := { => }
 

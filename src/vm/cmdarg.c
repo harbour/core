@@ -1,5 +1,5 @@
 /*
- * Command line and environment argument management
+ * Command-line and environment argument management
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
@@ -63,7 +63,7 @@
    #include <os2.h>
 #endif
 
-/* Command line argument management */
+/* Command-line argument management */
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
@@ -91,12 +91,11 @@ static HB_BOOL s_WinMainParam  = HB_FALSE;
 
 void hb_winmainArgVBuild( void )
 {
-   LPCTSTR lpCmdLine, lpSrc;
+   LPCTSTR lpCmdLine;
    LPTSTR * lpArgV;
    LPTSTR lpDst, lpArg, lpModuleName;
    HB_SIZE nSize, nModuleName;
    int iArgC;
-   HB_BOOL fQuoted;
 
    /* NOTE: MAX_PATH used intentionally instead of HB_MAX_PATH */
    lpModuleName = ( LPTSTR ) HB_WINARG_ALLOC( ( MAX_PATH + 1 ) * sizeof( TCHAR ) );
@@ -112,6 +111,9 @@ void hb_winmainArgVBuild( void )
 
    while( lpCmdLine && ! lpArgV && iArgC != 0 )
    {
+      HB_BOOL fQuoted;
+      LPCTSTR lpSrc;
+
       if( nSize != 0 )
       {
          lpArgV = ( LPTSTR * ) HB_WINARG_ALLOC( iArgC * sizeof( LPTSTR ) +
@@ -343,7 +345,7 @@ void hb_cmdargUpdate( void )
 #if ! defined( HB_OS_WIN )
    if( s_argc > 0 )
    {
-#  if defined( HB_OS_OS2 )
+   #if defined( HB_OS_OS2 )
       {
          PPIB ppib = NULL;
          APIRET ulrc;
@@ -358,7 +360,7 @@ void hb_cmdargUpdate( void )
                s_argv[ 0 ] = s_szAppName;
          }
       }
-#  else
+   #else
       /* NOTE: try to create absolute path from s_argv[ 0 ] if necessary */
       {
          PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
@@ -402,11 +404,11 @@ void hb_cmdargUpdate( void )
          }
          if( pFName->szPath )
          {
-#     if defined( HB_OS_HAS_DRIVE_LETTER )
+      #if defined( HB_OS_HAS_DRIVE_LETTER )
             if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR && ! pFName->szDrive )
-#     else
+      #else
             if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR )
-#     endif
+      #endif
             {
                if( pFName->szPath[ 0 ] == '.' &&
                    pFName->szPath[ 1 ] == HB_OS_PATH_DELIM_CHR )
@@ -428,7 +430,7 @@ void hb_cmdargUpdate( void )
          }
          hb_xfree( pFName );
       }
-#  endif
+   #endif
    }
 #endif
 }
@@ -462,7 +464,7 @@ HB_BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, piLen ) );
 
    /* NOTE: Not checking for '--' here, as it would filter out
-            valid command line options used by applications. [vszakats] */
+            valid command-line options used by applications. [vszakats] */
 
    if( hb_strnicmp( szArg, "--hb:", 5 ) == 0 ||
        hb_strnicmp( szArg, "//hb:", 5 ) == 0 )
@@ -494,7 +496,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargGet(%s, %d)", pszName, ( int ) bRetValue ) );
 
-   /* Check the command line first */
+   /* Check the command-line first */
 
    for( i = 1; i < s_argc; i++ )
    {
@@ -535,7 +537,11 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
       if( pszEnvVar )
          hb_xfree( pszEnvVar );
 
+#ifdef HB_CLP_STRICT
       pszEnvVar = hb_getenv( "CLIPPER" );
+#else
+      pszEnvVar = NULL;
+#endif
    }
 
    if( pszEnvVar && pszEnvVar[ 0 ] != '\0' )
@@ -683,7 +689,7 @@ HB_FUNC( HB_ARGSTRING )
    hb_retc_null();
 }
 
-/* Returns the number of command line arguments passed to the application, this
+/* Returns the number of command-line arguments passed to the application, this
    also includes the internal arguments. */
 
 HB_FUNC( HB_ARGC )
@@ -691,9 +697,9 @@ HB_FUNC( HB_ARGC )
    hb_retni( s_argc - 1 );
 }
 
-/* Returns a command line argument passed to the application. Calling it with
+/* Returns a command-line argument passed to the application. Calling it with
    the parameter zero or no parameter, it will return the name of the executable,
-   as written in the command line. */
+   as written in the command-line. */
 
 HB_FUNC( HB_ARGV )
 {
@@ -815,7 +821,7 @@ HB_FUNC( HB_CMDLINE )
       hb_retc_null();
 }
 
-/* Check for command line internal arguments */
+/* Check for command-line internal arguments */
 void hb_cmdargProcess( void )
 {
    int iHandles;
@@ -872,42 +878,60 @@ void hb_cmdargProcess( void )
    }
 }
 
+/* Source repository ID string */
+const char * hb_verCommitID( void )
+{
+   return HB_VER_COMMIT_ID;
+}
+
 /* Source repository revision number */
-int hb_verRevision( void )
+int hb_verCommitRev( void )
 {
-   return HB_VER_REVID;
+   return HB_VER_COMMIT_REV;
 }
 
-/* ChangeLog ID string */
-const char * hb_verChangeLogID( void )
+/* Last commit string */
+const char * hb_verCommitInfo( void )
 {
-   return HB_VER_CHLID;
-}
-
-/* ChangeLog last entry string */
-const char * hb_verChangeLogLastEntry( void )
-{
-   return HB_VER_LENTRY;
+   return HB_VER_COMMIT_INFO;
 }
 
 #if defined( HB_LEGACY_LEVEL4 )
 
 /* Source repository revision number */
+int hb_verRevision( void )
+{
+   return HB_VER_COMMIT_REV;
+}
+
+/* Source repository revision number */
 int hb_verSvnID( void )
 {
-   return HB_VER_REVID;
+   return HB_VER_COMMIT_REV;
+}
+
+/* ChangeLog ID string */
+const char * hb_verChangeLogID( void )
+{
+   return HB_VER_COMMIT_ID;
 }
 
 /* ChangeLog ID string */
 const char * hb_verSvnChangeLogID( void )
 {
-   return HB_VER_CHLID;
+   return HB_VER_COMMIT_ID;
+}
+
+/* ChangeLog last entry string */
+const char * hb_verChangeLogLastEntry( void )
+{
+   return HB_VER_COMMIT_INFO;
 }
 
 /* ChangeLog last entry string */
 const char * hb_verSvnLastEntry( void )
 {
-   return HB_VER_LENTRY;
+   return HB_VER_COMMIT_INFO;
 }
 
 #endif

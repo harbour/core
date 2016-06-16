@@ -55,7 +55,7 @@
 
    Online generator:
      http://www.bcmaker.com/demos/pdf417.php
-     http://www.terryburton.co.uk/barcodewriter/generator/
+     https://www.terryburton.co.uk/barcodewriter/generator/
 
    Online decoder:
      http://www.datasymbol.com/barcode-recognition-sdk/barcode-reader/online-barcode-decoder.html
@@ -537,7 +537,7 @@ static int _pdf417_ec_size( int iLevel )
 
 static int _pdf417_default_ec_level( int iDataSize )
 {
-   /* http://www.idautomation.com/pdf417faq.html */
+   /* https://www.idautomation.com/barcode-faq/2d/pdf417/ */
    if( iDataSize <= 40 )
       return 2;
    if( iDataSize <= 160 )
@@ -549,7 +549,7 @@ static int _pdf417_default_ec_level( int iDataSize )
 
 static int _pdf417_width( int iColCount, int iFlags )
 {
-   return 17 + ( iColCount + 2 ) * 17 + 18 - ( iFlags & HB_ZEBRA_FLAG_PDF417_TRUNCATED ? 34 : 0 );
+   return 17 + ( iColCount + 2 ) * 17 + 18 - ( ( iFlags & HB_ZEBRA_FLAG_PDF417_TRUNCATED ) ? 34 : 0 );
 }
 
 static int _pdf417_left_codeword( int iRow, int iRowCount, int iColCount, int iLevel )
@@ -1019,8 +1019,7 @@ static int _pdf417_encode_numeric( const char * szCode, int iLen, int * pCW, int
       digits in an effective way. I use more simple way and encode digits in groups
       not longer that 18 digits. 64bit integer arithmetics do this job */
 
-   HB_LONGLONG  ill;
-   int  i, j, k;
+   int i, j;
 
    HB_TRACE( HB_TR_DEBUG, ( "encode numeric len=%d", iLen ) );
    if( iLen == 0 )
@@ -1029,7 +1028,8 @@ static int _pdf417_encode_numeric( const char * szCode, int iLen, int * pCW, int
    i = 0;
    while( i < iLen )
    {
-      k = iLen - i;
+      HB_LONGLONG ill;
+      int k = iLen - i;
       if( k > 18 )
          k = 18;
 
@@ -1196,7 +1196,7 @@ static void _pdf417_reed_solomon( int * pCW, int iLen, int iLevel )
 {
    int * pEC;
    const unsigned short * coef;
-   int i, j, iM, iECLen;
+   int i, j, iECLen;
 
    iECLen = _pdf417_ec_size( iLevel );
 
@@ -1238,7 +1238,7 @@ static void _pdf417_reed_solomon( int * pCW, int iLen, int iLevel )
 
    for( i = 0; i < iLen; i++ )
    {
-      iM = ( pCW[ i ] + pEC[ iECLen - 1 ] ) % 929;
+      int iM = ( pCW[ i ] + pEC[ iECLen - 1 ] ) % 929;
       for( j = iECLen - 1; j >= 0; j-- )
       {
          if( j )

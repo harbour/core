@@ -1,5 +1,5 @@
 /*
- * XPP compatible _dbExport() function
+ * Xbase++ compatible _dbExport() function
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *
@@ -46,16 +46,20 @@
 
 FUNCTION _dbExport( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver, cDelimiter )
 
-   DO CASE
-   CASE cXPP_Driver == "SDFDBE"
+   SWITCH hb_defaultValue( cXPP_Driver, "" )
+   CASE "SDFDBE"
       RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF" )
-/*    Alternate CA-Cl*pper compatible call:
-      RETURN __dbSDF( .T., cFile, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
-   CASE cXPP_Driver == "DELDBE"
+#if 0
+      /* Alternate CA-Cl*pper compatible call: */
+      RETURN __dbSDF( .T., cFile, aFields, bFor, bWhile, nNext, nRecord, lRest )
+#endif
+   CASE "DELDBE"
       RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , , cDelimiter )
-/*    Alternate CA-Cl*pper compatible call:
-      RETURN __dbDelim( .T., cFile, cDelimiter, aFields, bFor, bWhile, nNext, nRecord, lRest ) */
-   ENDCASE
+#if 0
+      /* Alternate CA-Cl*pper compatible call: */
+      RETURN __dbDelim( .T., cFile, cDelimiter, aFields, bFor, bWhile, nNext, nRecord, lRest )
+#endif
+   ENDSWITCH
 
    RETURN __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver )
 
@@ -64,7 +68,7 @@ FUNCTION xpp_dbUseArea( lNewArea, cDriver, cName, xcAlias, lShared, lReadonly )
    LOCAL nOldArea
    LOCAL nArea
 
-   IF HB_ISLOGICAL( lNewArea ) .AND. lNewArea
+   IF hb_defaultValue( lNewArea, .F. )
 
       hb_default( @xcAlias, "" )
 

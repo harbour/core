@@ -27,6 +27,6 @@
       value of the desired type).
    $EXAMPLES$
       nNumericValue := ft_XToY( cInputValue, "N" )
-      IF ft_XToY( nInputValue, "L" )
+      lLogicalValue := ft_XToY( nInputValue, "L" )
    $END$
  */

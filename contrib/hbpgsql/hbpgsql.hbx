@@ -25,6 +25,7 @@ DYNAMIC hb_PQCopyFromWA
 DYNAMIC lo_export
 DYNAMIC lo_import
 DYNAMIC lo_unlink
+DYNAMIC pg_encoding_to_char
 DYNAMIC PQbinaryTuples
 DYNAMIC PQcancel
 DYNAMIC PQclientEncoding
@@ -71,7 +72,9 @@ DYNAMIC PQputCopyData
 DYNAMIC PQputCopyEnd
 DYNAMIC PQrequestCancel
 DYNAMIC PQreset
+DYNAMIC PQresStatus
 DYNAMIC PQresult2array
+DYNAMIC PQresultErrorField
 DYNAMIC PQresultErrorMessage
 DYNAMIC PQresultStatus
 DYNAMIC PQsendQuery

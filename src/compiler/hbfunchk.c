@@ -107,11 +107,9 @@ static const HB_FUNCINFO s_stdFunc[] =
    { "YEAR"      , 1,  1 }
 };
 
-#define HB_STD_FUNCOUNT  ( sizeof( s_stdFunc ) / sizeof( HB_FUNCINFO ) )
-
 HB_BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
 {
-   unsigned int uiFirst = 0, uiLast = HB_STD_FUNCOUNT - 1, uiMiddle;
+   unsigned int uiFirst = 0, uiLast = HB_SIZEOFARRAY( s_stdFunc ) - 1, uiMiddle;
    int iLen = ( int ) strlen( szFuncCall ), iCmp;
 
    /* Respect 4 or more letters shortcuts

@@ -17,7 +17,7 @@
    $RETURNS$
       An adjusted date dependent upon mode and work week start day.
    $DESCRIPTION$
-      Called by other FT_ACCT.. functions. The algorithm is:
+      Called by other ft_Acct*() functions. The algorithm is:
 
       Beginning of period mode:
 

@@ -50,12 +50,11 @@ PROCEDURE Main()
 
    LOCAL db := sqlite3_open_v2( "new.s3db", SQLITE_OPEN_READWRITE + SQLITE_OPEN_EXCLUSIVE )
 
-   IF ! Empty( db )
-      IF sqlite3_exec( db, "VACUUM" ) == SQLITE_OK
-         ? "PACK - Done"
+   IF ! Empty( db ) .AND. ;
+      sqlite3_exec( db, "VACUUM" ) == SQLITE_OK
 
-         sqlite3_sleep( 3000 )
-      ENDIF
+      ? "PACK - Done"
+      sqlite3_sleep( 3000 )
    ENDIF
 
    RETURN

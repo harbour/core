@@ -1,7 +1,7 @@
 /*
  * Telepathy emulation library
  *
- * Copyright 2000, 2001 Dan Levitt <dan@boba-fett.net>
+ * Copyright 2000-2001 Dan Levitt <dan@boba-fett.net>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,19 +44,15 @@
  *
  */
 
-/*
-   This is based upon a library originally made by Dan Levitt <dan@boba-fett.net>
+/* This is based upon a library originally made by Dan Levitt <dan@boba-fett.net>
    The original files have been committed as v1.0. So you can always retrieve them
-   (see VCS docs on how to)
-*/
+   (see VCS docs on how to) */
 
-/*
-   instructions - hook up a loopback device to "com1" of your computer
+/* instructions - hook up a loopback device to "com1" of your computer
    run this program.  It should echo Hi there bob.
    If it gives you a file i/o error, try running as root.
    also make sure that other programs (minicom?) can successfully talk to your
-   com port.
-*/
+   com port. */
 
 #require "hbtpathy"
 
@@ -66,7 +62,7 @@ PROCEDURE Main()
    tp_send( 1, "Hi there Bob", 1 )    // One second timeout
    tp_inkey( .5 )
    ? tp_recv( 1 )
-   ?
    tp_close( 1 )
+   ? "end"
 
    RETURN

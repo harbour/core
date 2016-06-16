@@ -1,8 +1,4 @@
-/*
- *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
- *
- */
+/* Copyright 2009 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbwin"
 
@@ -15,8 +11,8 @@ PROCEDURE Main()
    Dump( win_printerList( .T., .F. ) )
    Dump( win_printerList( .T., .T. ) )
 
-   ? "WIN_PRINTERGETDEFAULT:", ">" + win_printerGetDefault() + "<"
-   ? "WIN_PRINTERSTATUS:", win_printerStatus()
+   ? "win_printerGetDefault():", ">" + win_printerGetDefault() + "<"
+   ? "win_printerStatus():", hb_ntos( win_printerStatus() )
 
    RETURN
 
@@ -24,18 +20,20 @@ STATIC PROCEDURE Dump( a )
 
    LOCAL b, c
 
-   ? "=================="
+   ? "==="
    FOR EACH b IN a
       ?
       IF HB_ISARRAY( b )
          FOR EACH c IN b
             ?? c:__enumIndex(), c
             IF c:__enumIndex() == 2
-               ?? ">>" + win_printerPortToName( c ) + "<<",  "|>>" + win_printerPortToName( c, .T. ) + "<<|"
+               ?? "", ;
+                  ">>" + win_printerPortToName( c ) + "<<", ;
+                  "|>>" + win_printerPortToName( c, .T. ) + "<<|"
             ENDIF
             ?
          NEXT
-         ? "-----"
+         ? "---"
       ELSE
          ? b, win_printerExists( b ), win_printerStatus( b )
       ENDIF

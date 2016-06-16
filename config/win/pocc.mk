@@ -7,10 +7,10 @@ LIB_EXT := .lib
 HB_DYN_COPT := -DHB_DYNLIB
 
 CC := pocc.exe
-CC_IN := -c
+CC_IN :=
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -Ze -Go -MT
 
@@ -29,6 +29,19 @@ endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -Zi
+endif
+
+ifeq ($(filter $(HB_COMPILER_VER),0450),)
+   LDFLAGS += -nxcompat
+   DFLAGS += -nxcompat
+endif
+ifeq ($(filter $(HB_COMPILER_VER),0450 0500 0600 0650 0700),)
+   LDFLAGS += -dynamicbase -fixed:no
+   DFLAGS += -dynamicbase
+   ifeq ($(HB_COMPILER),pocc64)
+      LDFLAGS += -highentropyva
+      DFLAGS += -highentropyva
+   endif
 endif
 
 RC := porc.exe

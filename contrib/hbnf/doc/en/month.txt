@@ -34,13 +34,13 @@
       to January 1 and Sunday by calling ft_DateCnfg() with no
       parameters.
    $EXAMPLES$
-      // get info about month containing 9/15/90
+      // get info about month containing 1990-09-15
       aDateInfo := ft_Month( hb_SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  199009       (9th month)
       ? aDateInfo[ 2 ]   //  1990-09-01   beginning of month 9
       ? aDateInfo[ 3 ]   //  1990-09-30   end of week month 9
 
-      // get info about month 5 in year containing 9/15/90
+      // get info about month 5 in year containing 1990-09-15
       aDateInfo := ft_Month( hb_SToD( "19900915" ), 5 )
       ? aDateInfo[ 1 ]   //  199005
       ? aDateInfo[ 2 ]   //  1990-05-01   beginning of month 5

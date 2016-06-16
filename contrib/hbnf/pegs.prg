@@ -1,43 +1,32 @@
-/*
- * Author....: Greg Lief
- * CIS ID....: 72460,1760
- *
- * This function is an original work by Mr. Grump and is placed in the
- * public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.3   28 Sep 1991 03:09:44   GLENN
- * Allowed "No peg at that location" messagee to exceed the boundary of the
- * box at the bottom of the matrix.  Just shortened the message to "No
- * piece there, per Greg's instructions.
- *
- *    Rev 1.2   15 Aug 1991 23:04:18   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:52:38   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:02:00   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Greg Lief (Mr. Grump) and is placed in the
+   public domain.
+
+      Rev 1.3   28 Sep 1991 03:09:44   GLENN
+   Allowed "No peg at that location" messagee to exceed the boundary of the
+   box at the bottom of the matrix.  Just shortened the message to "No
+   piece there, per Greg's instructions.
+
+      Rev 1.2   15 Aug 1991 23:04:18   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:52:38   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:02:00   GLENN
+   Nanforum Toolkit
  */
 
+#include "box.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#translate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => hb_DispBox( <top>, <left>, <bottom>, <right>, hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ) )
+// here's the board array -- structure of which is:
+// board_[ xx, 1 ] - subarray containing box coordinates for this peg
+// board_[ xx, 2 ] - subarray containing all adjacent locations
+// board_[ xx, 3 ] - subarray containing all target locations
+// board_[ xx, 4 ] - is the location occupied or not? .T. -> Yes, .F. -> No
 
-/*
-   here's the board array -- structure of which is:
-   board_[ xx, 1 ] - subarray containing box coordinates for this peg
-   board_[ xx, 2 ] - subarray containing all adjacent locations
-   board_[ xx, 3 ] - subarray containing all target locations
-   board_[ xx, 4 ] - is the location occupied or not? .T. -> Yes, .F. -> No
-*/
-
-FUNCTION ft_Pegs()
+PROCEDURE ft_Pegs()
 
    LOCAL XX, MOVE, MPOS, POSSIBLE_, BUFFER, TOPROW, OLDSCORE, MOVE2
    LOCAL SCANBLOCK, OLDCOLOR := SetColor( "w/n" )
@@ -79,15 +68,12 @@ FUNCTION ft_Pegs()
       { { 18, 37, 20, 42 }, { 29 }, { 24 }, .T. }, ;
       { { 18, 45, 20, 50 }, { 30, 32 }, { 25, 31 }, .T. } }
 
-   /*
-      the following code block is used in conjunction with AScan()
-      to validate entry when there is more than one possible move
-   */
-
+   // the following code block is used in conjunction with AScan()
+   // to validate entry when there is more than one possible move
    scanblock := {| a | a[ 2 ] == move2 }
    hb_Scroll()
    SetColor( "w/r" )
-   hb_DispBox( 22, 31, 24, 48, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
+   hb_DispBox( 22, 31, 24, 48, HB_B_SINGLE_UNI + " " )
    hb_DispOutAt( 23, 33, "Your move:" )
    AEval( board_, {| a, x | HB_SYMBOL_UNUSED( a ), drawbox( board_, x ) } )
    DO WHILE LastKey() != K_ESC .AND. moremoves( board_ )
@@ -100,10 +86,7 @@ FUNCTION ft_Pegs()
       READ
 
       IF move > 0
-         DO CASE
-         CASE ! board_[ move ][ 4 ]
-            err_msg( "No piece there!" )
-         OTHERWISE
+         IF board_[ move ][ 4 ]
             possible_ := {}
             FOR xx := 1 TO Len( board_[ move ][ 2 ] )
                IF board_[ board_[ move ][ 2, xx ] ][ 4 ] .AND. ;
@@ -111,23 +94,25 @@ FUNCTION ft_Pegs()
                   AAdd( possible_, { board_[ move ][ 2, xx ], board_[ move ][ 3, xx ] } )
                ENDIF
             NEXT
-            // only one available move -- do it
-            DO CASE
-            CASE Len( possible_ ) == 1
+            SWITCH Len( possible_ )
+            CASE 0
+               err_msg( "Illegal move!" )
+               EXIT
+            CASE 1
+               // only one available move -- do it
                // clear out original position and the position you jumped over
                board_[ move ][ 4 ] := board_[ possible_[ 1, 1 ] ][ 4 ] := .F.
                board_[ possible_[ 1, 2 ] ][ 4 ] := .T.
                drawbox( board_, move )
                drawbox( board_, possible_[ 1, 1 ] )
                drawbox( board_, possible_[ 1, 2 ] )
-            CASE Len( possible_ ) == 0
-               err_msg( "Illegal move!" )
+               EXIT
             OTHERWISE
                move2 := possible_[ 1, 2 ]
                toprow := 21 - Len( possible_ )
                SetColor( "+w/b" )
                buffer := SaveScreen( toprow, 55, 22, 74 )
-               DOUBLEBOX( toprow, 55, 22, 74 )
+               hb_DispBox( toprow, 55, 22, 74, HB_B_DOUBLE_UNI + " " )
                hb_DispOutAt( toprow, 58, "Possible Moves" )
                SetPos( toprow, 65 )
                AEval( possible_, {| a | hb_DispOutAt( Row() + 1, 65, Transform( a[ 2 ], "##" ) ) } )
@@ -147,18 +132,19 @@ FUNCTION ft_Pegs()
                drawbox( board_, move )
                drawbox( board_, possible_[ mpos, 1 ] )
                drawbox( board_, move2 )
-
-            ENDCASE
-         ENDCASE
+            ENDSWITCH
+         ELSE
+            err_msg( "No piece there!" )
+         ENDIF
          move := 1
       ENDIF
    ENDDO
    SetColor( oldcolor )
    RestScreen( 0, 0, MaxRow(), MaxCol(), oldscrn )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION DrawBox( board_, nelement )
+STATIC PROCEDURE DrawBox( board_, nelement )
 
    SetColor( iif( board_[ nelement ][ 4 ], "+w/rb", "w/n" ) )
 
@@ -166,26 +152,26 @@ STATIC FUNCTION DrawBox( board_, nelement )
       board_[ nelement ][ 1, 1 ], ;
       board_[ nelement ][ 1, 2 ], ;
       board_[ nelement ][ 1, 3 ], ;
-      board_[ nelement ][ 1, 4 ], hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
+      board_[ nelement ][ 1, 4 ], HB_B_SINGLE_UNI + " " )
 
    hb_DispOutAt( ;
       board_[ nelement ][ 1, 1 ] + 1, ;
       board_[ nelement ][ 1, 2 ] + 2, hb_ntos( nelement ) )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION err_msg( msg )
+STATIC PROCEDURE err_msg( msg )
 
    LOCAL buffer := SaveScreen( 23, 33, 23, 47 )
 
    SetCursor( SC_NONE )
    SetColor( "+w/r" )
    hb_DispOutAt( 23, 33, msg )
-   Inkey( 2 )
+   hb_idleSleep( 2 )
    SetCursor( SC_NORMAL )
    RestScreen( 23, 33, 23, 47, buffer )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION moremoves( board_ )
 
@@ -193,9 +179,9 @@ STATIC FUNCTION moremoves( board_ )
 
    FOR xx := 1 TO 33
       FOR yy := 1 TO Len( board_[ xx ][ 2 ] )
-         IF board_[ xx ][ 4 ] .AND.  ;                     // if current location is filled
-            board_[ board_[ xx ][ 2, yy ] ][ 4 ] .AND. ;   // adjacent must be filled
-            ! board_[ board_[ xx ][ 3, yy ] ][ 4 ]         // target must be empty
+         IF board_[ xx ][ 4 ] .AND.  ;                    // if current location is filled
+            board_[ board_[ xx ][ 2, yy ] ][ 4 ] .AND. ;  // adjacent must be filled
+            ! board_[ board_[ xx ][ 3, yy ] ][ 4 ]        // target must be empty
             canmove := .T.
             EXIT
          ENDIF
@@ -208,7 +194,7 @@ STATIC FUNCTION moremoves( board_ )
    IF ! canmove
       SetColor( "+w/b" )
       buffer := SaveScreen( 18, 55, 21, 74 )
-      DOUBLEBOX( 18, 55, 21, 74 )
+      hb_DispBox( 18, 55, 21, 74, HB_B_DOUBLE_UNI + " " )
       hb_DispOutAt( 19, 58, "No more moves!" )
       hb_DispOutAt( 20, 58, hb_ntos( piecesleft ) + " pieces left" )
       Inkey( 0 )

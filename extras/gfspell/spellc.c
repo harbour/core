@@ -8,7 +8,6 @@ static const char * s_cSearch = "INEDTIERESTEON";
 static const char * s_cRepl   = "[\\]^_`a";
 
 /**
- *   Function: XForm()
  *    Purpose: Internal function to translate words to dictionary
  *  Arguments: cWord    - upper case word to format
  *    Returns: cXformed - translated word
@@ -23,11 +22,10 @@ HB_FUNC( XFORM )
    const char * cWord    = hb_parc( 1 ) + 2;
    HB_ISIZ      iWordLen = hb_parclen( 1 ) - 2;
    HB_ISIZ      x;
-   HB_UINT      iKey;
 
    while( --iWordLen >= 1 && iRetLen < 128 )
    {
-      iKey = *( ( HB_UINT * ) cWord );
+      HB_UINT iKey = *( ( HB_UINT * ) cWord );
       for( x = 0; x < 14; x += 2 )
       {
          if( *( ( HB_UINT * ) ( s_cSearch + x ) ) == iKey )
@@ -72,7 +70,6 @@ HB_FUNC( XFORM )
 }
 
 /**
- *   Function: XUnForm()
  *    Purpose: Internal function to translate words from dictionary
  *  Arguments: cWord    - formatted word
  *    Returns: cXformed - unformatted word
@@ -84,13 +81,14 @@ HB_FUNC( XUNFORM )
    char cRet[ 128 ];
    char *       cPtr    = cRet;
    HB_ISIZ      iRetLen = 0;
-   char         c;
    const char * cWord    = hb_parc( 1 );
    HB_ISIZ      iWordLen = hb_parclen( 1 );
-   HB_ISIZ      x;
 
    while( iWordLen > 0 && iRetLen < 128 )
    {
+      HB_ISIZ x;
+      char    c;
+
       iWordLen--;
       iRetLen++;
       c = *cWord++;
@@ -127,7 +125,6 @@ HB_FUNC( XUNFORM )
 }
 
 /**
- *   Function: Sp_Rate()
  *     Syntax: cRating := Sp_Rate( cFound, cWord )
  *    Purpose: Returns a letter code indicating how similar the two
  *             words are.  This is primarily used to sort the list
@@ -185,20 +182,19 @@ HB_FUNC( SP_RATE )
  * Author: Clayton Neff
  * Copyright (c) 1992 by CoN Computer Consultants
  *
- * Revision: 1.0 Last Revised: 8/23/1992 at 16:47
+ * Revision: 1.0 Last Revised: 1992-08-23 at 16:47
  * Description: Original Creation.
  *---------------------------- ALL RIGHTS RESERVED ----------------------------*/
 
-/*
-   This function replaces the ft_Metaph() that Joe Booth used in his
-   spelling checker article in the Aquarium.*/
+/* This function replaces the ft_Metaph() that Joe Booth used in his
+   spelling checker article in the Aquarium. */
 
 HB_FUNC( C_METAFONE )
 {
-   char *  sReturn;            /* Pointer to the return string.   */
-   char *  sMeta;              /* Pointer to the passed string.   */
-   HB_SIZE iRetLen;            /* Length of the return string.    */
-   HB_SIZE iStrLen;            /* Length of the passed string.    */
+   char *  sReturn;            /* Pointer to the return string. */
+   char *  sMeta;              /* Pointer to the passed string. */
+   HB_SIZE iRetLen;            /* Length of the return string. */
+   HB_SIZE iStrLen;            /* Length of the passed string. */
    HB_SIZE iRetPtr;            /* Pointer into the return string. */
    HB_SIZE iStrPtr;            /* Pointer into the passed string. */
 
@@ -210,7 +206,7 @@ HB_FUNC( C_METAFONE )
       iStrLen    = 0;
       iRetLen    = 4;
    }
-   /* If no return lenght was passed, default to 4. */
+   /* If no return length was passed, default to 4. */
    else if( hb_pcount() == 1 )
    {
       hb_itemGetWriteCL( hb_param( 1, HB_IT_STRING ), &sMeta, &iStrLen );
@@ -754,7 +750,7 @@ HB_FUNC( C_METAFONE )
       }
    }
 
-   /* Return the prepared string.  Return only the lenght that we know
+   /* Return the prepared string.  Return only the length that we know
       is good so we don't return any uninitialized part of memory. */
    hb_retclen( sReturn, iRetPtr );
 
@@ -772,11 +768,10 @@ HB_FUNC( C_METAFONE )
  */
 HB_FUNC( BIT )
 {
-   HB_UCHAR mask;
-   char *   ptr;
-   HB_SIZE  loc;
-   HB_SIZE  offset = hb_parns( 2 ) - 1;
-   HB_SIZE  res    = 0;
+   char *  ptr;
+   HB_SIZE loc;
+   HB_SIZE offset = hb_parns( 2 ) - 1;
+   HB_SIZE res    = 0;
 
    loc = offset / 8;
    if( loc < hb_parclen( 1 ) )
@@ -789,7 +784,7 @@ HB_FUNC( BIT )
 
       if( hb_pcount() > 2 )
       {
-         mask = ( HB_UCHAR ) 0x80 >> loc;
+         HB_UCHAR mask = ( HB_UCHAR ) 0x80 >> loc;
          if( hb_parl( 3 ) )
             *ptr = ( HB_UCHAR ) *ptr | mask;
          else
@@ -806,7 +801,7 @@ static HB_BOOL WordSep( HB_UCHAR c )
           ( c != 39 && ( c > ' ' && c < '0' ) ) ||
           ( c > '9' && c < 'A' ) ||
           ( c > 'Z' && c < 'a' ) ||
-          ( c > 'z' && c < 128 ); /* Support international characters, too. */
+          ( c > 'z' && c < 128 );  /* Support international characters, too. */
 }
 
 /**
@@ -825,22 +820,13 @@ static HB_BOOL WordSep( HB_UCHAR c )
  */
 HB_FUNC( SP_LINE )
 {
-   int          nArgs      = hb_pcount();
-   HB_BOOL      bLineBreak = HB_FALSE;
-   HB_ISIZ      nCount     = 0;
-   HB_ISIZ      nWrap      = 0;
-   HB_SIZE      nOffset    = 0;
-   const char * cIn;
-   const char * p;
-   HB_BYTE      cTest;
-   HB_ISIZ      nLineLen;
-   HB_SIZE      nStop;
+   HB_SIZE nOffset = 0;
 
-   if( nArgs > 0 && HB_ISCHAR( 1 ) )
+   if( HB_ISCHAR( 1 ) )
    {
-      cIn   = hb_parc( 1 );
-      nStop = hb_parclen( 1 );
-      if( nArgs > 1 && HB_ISNUM( 2 ) )
+      HB_SIZE nStop = hb_parclen( 1 );
+
+      if( HB_ISNUM( 2 ) )
       {
          nOffset = hb_parns( 2 );
          if( nOffset > 0 )
@@ -849,8 +835,15 @@ HB_FUNC( SP_LINE )
 
       if( nOffset < nStop )                           /* In string somewhere */
       {
+         HB_BOOL      bLineBreak = HB_FALSE;
+         HB_ISIZ      nCount     = 0;
+         HB_ISIZ      nWrap      = 0;
+         const char * cIn        = hb_parc( 1 );
+         HB_ISIZ      nLineLen;
+         const char * p;
+
          /* Default line len to 75 */
-         nLineLen = nArgs > 2 && HB_ISNUM( 3 ) ? hb_parns( 3 ) - 1 : 75;
+         nLineLen = HB_ISNUM( 3 ) ? hb_parns( 3 ) - 1 : 75;
          p        = &cIn[ nOffset ];                  /* Starting pointer */
 
          if( nOffset + nLineLen > nStop )             /* Past end of string? */
@@ -858,7 +851,7 @@ HB_FUNC( SP_LINE )
 
          while( ! bLineBreak && nCount++ < nLineLen )
          {
-            cTest = *p++;
+            HB_BYTE cTest = *p++;
             if( cTest == 13 || cTest == 141 )         /* Hard or soft return? */
                bLineBreak = HB_TRUE;
             else if( WordSep( cTest ) )               /* Wrappable character? */

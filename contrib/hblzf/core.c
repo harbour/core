@@ -52,7 +52,7 @@
 #include "lzfP.h"
 
 #if ! AVOID_ERRNO
-#  include <errno.h>
+   #include <errno.h>
 #endif
 
 #include "hblzf.ch"
@@ -224,7 +224,7 @@ HB_FUNC( HB_LZF_DECOMPRESS )
             }
          }
          else
-            hb_storni( ( buffer_size ) ? HB_LZF_BUF_ERROR : HB_LZF_MEM_ERROR, 3 );
+            hb_storni( buffer_size ? HB_LZF_BUF_ERROR : HB_LZF_MEM_ERROR, 3 );
       }
       else
       {

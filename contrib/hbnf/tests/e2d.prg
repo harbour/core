@@ -1,7 +1,7 @@
 #require "hbnf"
 
-PROCEDURE Main( sNumE )
+PROCEDURE Main( cNumE )
 
-   ? ft_E2D( sNumE )
+   ? ft_E2D( hb_defaultValue( cNumE, "1.4E3" ) )
 
    RETURN

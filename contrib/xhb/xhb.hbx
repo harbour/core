@@ -25,13 +25,13 @@ DYNAMIC ALenAlloc
 DYNAMIC AMerge
 DYNAMIC ANSIToWide
 DYNAMIC Any2Str
-DYNAMIC ARemove
 DYNAMIC ASizeAlloc
 DYNAMIC ASplice
 DYNAMIC AtI
 DYNAMIC AtSkipStrings
 DYNAMIC BackButton
 DYNAMIC BackFormButton
+DYNAMIC CallDll
 DYNAMIC CgiParseVar
 DYNAMIC CreateObject
 DYNAMIC CreateOleObject
@@ -40,6 +40,8 @@ DYNAMIC CStrToVal
 DYNAMIC CToT
 DYNAMIC CurDirX
 DYNAMIC DateTime
+DYNAMIC DaysInMonth
+DYNAMIC DaysToMonth
 DYNAMIC Dbf2Text
 DYNAMIC dbImport
 DYNAMIC dbMerge
@@ -68,7 +70,6 @@ DYNAMIC GetThreadId
 DYNAMIC GetVolInfo
 DYNAMIC GfxPrimitive
 DYNAMIC GfxText
-DYNAMIC Greek2Html
 DYNAMIC gtGetClipboard
 DYNAMIC gtGetClipboardSize
 DYNAMIC gtPasteClipboard
@@ -142,6 +143,7 @@ DYNAMIC hb_GetLen8
 DYNAMIC hb_HashAddMember
 DYNAMIC hb_HashId
 DYNAMIC hb_InitStandardLog
+DYNAMIC HB_ISNIL
 DYNAMIC hb_IsRegexString
 DYNAMIC hb_IsService
 DYNAMIC hb_Is_CStructure
@@ -162,6 +164,8 @@ DYNAMIC hb_MutexTimeOutLock
 DYNAMIC hb_MutexTryLock
 DYNAMIC hb_OpenProcess
 DYNAMIC hb_OpenStandardLog
+DYNAMIC hb_osNewLine
+DYNAMIC hb_osPathSeparator
 DYNAMIC hb_OutDebug
 DYNAMIC hb_OutDebugName
 DYNAMIC hb_Pointer2String
@@ -173,8 +177,6 @@ DYNAMIC hb_ReadIni
 DYNAMIC hb_ReadLine
 DYNAMIC hb_regexReplace
 DYNAMIC hb_ResetWith
-DYNAMIC hb_ServiceGenerateFault
-DYNAMIC hb_ServiceGenerateFPE
 DYNAMIC hb_ServiceLoop
 DYNAMIC hb_SetCodepage
 DYNAMIC hb_SetIniComment
@@ -285,7 +287,6 @@ DYNAMIC inetSetPeriodCallback
 DYNAMIC inetSetTimeLimit
 DYNAMIC inetSetTimeout
 DYNAMIC inetStatus
-DYNAMIC InitGreek
 DYNAMIC IsAlNum
 DYNAMIC IsAscii
 DYNAMIC IsCntrl
@@ -293,6 +294,7 @@ DYNAMIC IsDir
 DYNAMIC IsDirectory
 DYNAMIC IsGraph
 DYNAMIC IsLocked
+DYNAMIC IsOleObjectRegistered
 DYNAMIC IsPointer
 DYNAMIC IsPrint
 DYNAMIC IsPunct
@@ -334,11 +336,13 @@ DYNAMIC Occurs
 DYNAMIC Ole2txtError
 DYNAMIC OleDefaultArg
 DYNAMIC OleError
+DYNAMIC os_IsWin10
 DYNAMIC os_IsWin2000
 DYNAMIC os_IsWin2000_Or_Later
 DYNAMIC os_IsWin2003
 DYNAMIC os_IsWin7
 DYNAMIC os_IsWin8
+DYNAMIC os_IsWin81
 DYNAMIC os_IsWin95
 DYNAMIC os_IsWin98
 DYNAMIC os_IsWin9x
@@ -424,6 +428,7 @@ DYNAMIC ValToNumber
 DYNAMIC ValToObject
 DYNAMIC ValToPrg
 DYNAMIC ValToPrgExp
+DYNAMIC ValToTimestamp
 DYNAMIC ValToType
 DYNAMIC WaitForThreads
 DYNAMIC WideToANSI
@@ -474,6 +479,7 @@ DYNAMIC xhb_SetTraceStack
 DYNAMIC xhb_TMemoEditor
 DYNAMIC xhb_Trim
 DYNAMIC xhb__Keyboard
+DYNAMIC xhb__Run
 DYNAMIC XIsPrinter
 DYNAMIC _Array
 DYNAMIC _Block
@@ -483,12 +489,12 @@ DYNAMIC _Numeric
 DYNAMIC __ActiveStructure
 DYNAMIC __CStr_CopyTo
 DYNAMIC __ErrorBlock
-DYNAMIC __init_LONGLONGs
 DYNAMIC __MinimalErrorHandler
 DYNAMIC __mvSymbolInfo
 DYNAMIC __olePDisp
 DYNAMIC __OutDebug
 DYNAMIC __SendRawMsg
+DYNAMIC __xhb_p2n
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__XHB__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

@@ -1,8 +1,4 @@
-/*
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #include "simpleio.ch"
 
@@ -10,16 +6,16 @@ PROCEDURE Main()
 
    hb_MemoWrit( "_hb_h.tmp", ">h.tmp<" )
 
-   ? hb_FLink()
+   ? hb_vfLink()
    ? FError()
 
-   ? hb_FLinkRead()
+   ? hb_vfLinkRead()
    ? FError()
 
-   ? hb_FLinkRead( "_hb_h.tmp" )
+   ? hb_vfLinkRead( "_hb_h.tmp" )
    ? FError()
 
-   ? hb_FLink( "_hb_h.tmp", "_hb_hlnk.tmp" )
+   ? hb_vfLink( "_hb_h.tmp", "_hb_hlnk.tmp" )
    ? FError()
 
    hb_MemoWrit( "_hb_s.tmp", ">s.tmp<" )
@@ -27,21 +23,21 @@ PROCEDURE Main()
    /* Requires special rights on Windows platform,
       by default Administrators are allowed. */
 
-   ? hb_FLinkSym()
+   ? hb_vfLinkSym()
    ? FError()
 
-   ? hb_FLinkSym( "_hb_s.tmp", "_hb_slnk.tmp" )
+   ? hb_vfLinkSym( "_hb_s.tmp", "_hb_slnk.tmp" )
    ? FError()
 
-   ? hb_FLinkRead( "_hb_slnk.tmp" )
+   ? hb_vfLinkRead( "_hb_slnk.tmp" )
    ? FError()
 
-   hb_DirCreate( "_hb_d" )
+   hb_vfDirMake( "_hb_d" )
 
-   ? hb_FLinkSym( "_hb_d", "_hb_dlnk" )
+   ? hb_vfLinkSym( "_hb_d", "_hb_dlnk" )
    ? FError()
 
-   ? hb_FLinkRead( "_hb_dlnk" )
+   ? hb_vfLinkRead( "_hb_dlnk" )
    ? FError()
 
    RETURN

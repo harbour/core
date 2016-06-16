@@ -4,15 +4,12 @@ PROCEDURE Main()
 
    LOCAL nLoaded := ft_IsShare()
 
-   DO CASE
-   CASE nLoaded == 0
-      ? "Share not loaded, but ok to load"
-   CASE nLoaded == 1
-      ? "Share not loaded, but NOT ok to load!"
-   CASE nLoaded == 255
-      ? "Share is loaded!"
-   ENDCASE
+   SWITCH nLoaded
+   CASE 0   ; ? "Share not loaded, but ok to load" ; EXIT
+   CASE 1   ; ? "Share not loaded, but NOT ok to load!" ; EXIT
+   CASE 255 ; ? "Share is loaded!" ; EXIT
+   ENDSWITCH
 
-   ? "Retcode: " + Str( nLoaded )
+   ? "Retcode:", hb_ntos( nLoaded )
 
    RETURN

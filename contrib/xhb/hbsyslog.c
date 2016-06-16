@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
+ * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
@@ -49,31 +49,26 @@
 
 #include "hblogdef.ch"
 
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 
-#  include "windows.h"
+   #include "windows.h"
 
-static HANDLE s_RegHandle;
+static HANDLE s_RegHandle = NULL;
 
 #elif defined( HB_OS_UNIX ) && \
    ! defined( __WATCOMC__ ) && \
    ! defined( HB_OS_VXWORKS ) && \
    ! defined( HB_OS_SYMBIAN )
 
-#  include <syslog.h>
+   #include <syslog.h>
 
 #endif
 
 HB_FUNC( HB_SYSLOGOPEN )
 {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 
-#  if ( WINVER >= 0x0400 ) && \
-   ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
-
-   /* Ok, we compiled under NT, but we must not use this function
-      when RUNNING on a win98. */
-   if( hb_iswinnt() )
+   if( s_RegHandle == NULL )
    {
       void * hSourceName;
       s_RegHandle = RegisterEventSource( NULL, HB_PARSTRDEF( 1, &hSourceName, NULL ) );
@@ -82,12 +77,11 @@ HB_FUNC( HB_SYSLOGOPEN )
    }
    else
       hb_retl( HB_FALSE );
-#  else
-   s_RegHandle = NULL;
-   hb_retl( HB_FALSE );
-#  endif
 
-#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) && ! defined( HB_OS_VXWORKS )
+#elif defined( HB_OS_UNIX ) && \
+   ! defined( __WATCOMC__ ) && \
+   ! defined( HB_OS_VXWORKS )
+
    openlog( hb_parcx( 1 ), LOG_NDELAY | LOG_NOWAIT | LOG_PID, LOG_USER );
    hb_retl( HB_TRUE );
 #else
@@ -97,23 +91,20 @@ HB_FUNC( HB_SYSLOGOPEN )
 
 HB_FUNC( HB_SYSLOGCLOSE )
 {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 
-#  if ( WINVER >= 0x0400 ) && \
-   ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
-
-   if( hb_iswinnt() )
+   if( s_RegHandle )
    {
       DeregisterEventSource( s_RegHandle );
       hb_retl( HB_TRUE );
    }
    else
       hb_retl( HB_FALSE );
-#  else
-   hb_retl( HB_FALSE );
-#  endif
 
-#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) && ! defined( HB_OS_VXWORKS )
+#elif defined( HB_OS_UNIX ) && \
+   ! defined( __WATCOMC__ ) && \
+   ! defined( HB_OS_VXWORKS )
+
    closelog();
    hb_retl( HB_TRUE );
 #else
@@ -123,11 +114,9 @@ HB_FUNC( HB_SYSLOGCLOSE )
 
 HB_FUNC( HB_SYSLOGMESSAGE )
 {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 
-#  if ( WINVER >= 0x0400 ) && \
-   ! ( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) )
-   if( hb_iswinnt() )
+   if( s_RegHandle )
    {
       WORD    logval;
       void *  hMsg;
@@ -135,10 +124,10 @@ HB_FUNC( HB_SYSLOGMESSAGE )
       switch( hb_parni( 2 ) )
       {
          case HB_LOG_CRITICAL: logval = EVENTLOG_ERROR_TYPE; break;
-         case HB_LOG_ERROR: logval    = EVENTLOG_ERROR_TYPE; break;
-         case HB_LOG_WARN: logval     = EVENTLOG_WARNING_TYPE; break;
-         case HB_LOG_INFO: logval     = EVENTLOG_INFORMATION_TYPE; break;
-         default: logval = EVENTLOG_AUDIT_SUCCESS;
+         case HB_LOG_ERROR:    logval = EVENTLOG_ERROR_TYPE; break;
+         case HB_LOG_WARN:     logval = EVENTLOG_WARNING_TYPE; break;
+         case HB_LOG_INFO:     logval = EVENTLOG_INFORMATION_TYPE; break;
+         default:              logval = EVENTLOG_AUDIT_SUCCESS;
       }
       hb_retl( ReportEvent( s_RegHandle,             /* event log handle */
                             logval,                  /* event type */
@@ -155,9 +144,6 @@ HB_FUNC( HB_SYSLOGMESSAGE )
    }
    else
       hb_retl( HB_FALSE );
-#  else
-   hb_retl( HB_FALSE );
-#  endif
 
 #elif defined( HB_OS_UNIX ) && \
    ! defined( __WATCOMC__ ) && \

@@ -44,13 +44,13 @@
  *
  */
 
-#include "hbwin.h"
+#include "hbwapi.h"
 
 #if defined( HB_OS_WIN_CE ) && \
    ! defined( __MINGW32__ ) && \
    ! ( ! defined( __cplusplus ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
-#  include <sms.h>
-#  define __HB_COMPONENT_SUPPORTED__
+   #include <sms.h>
+   #define __HB_COMPONENT_SUPPORTED__
 #endif
 
 HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
@@ -60,7 +60,7 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
    HRESULT hr = SmsOpen( SMS_MSGTYPE_TEXT, SMS_MODE_SEND, &smshHandle, NULL ); /* try to open an SMS Handle */
 
    /* Set default return value */
-   hb_retnl( -1 );
+   hb_retnint( -1 );
 
    if( hr == ERROR_SUCCESS )
    {
@@ -83,7 +83,7 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
          /* Create the destination address */
          memset( &smsaDestination, 0, sizeof( smsaDestination ) );
          smsaDestination.smsatAddressType = ( *sztPhoneNumber == _T( '+' ) ) ? SMSAT_INTERNATIONAL : SMSAT_NATIONAL;
-         memcpy( smsaDestination.ptsAddress, sztPhoneNumber, HB_SIZEOFARRAY( smsaDestination.ptsAddress ) );
+         memcpy( smsaDestination.ptsAddress, sztPhoneNumber, sizeof( smsaDestination.ptsAddress ) );
 
          /* Set up provider specific data */
          tpsd.dwMessageOptions = PS_MESSAGE_OPTION_NONE;
@@ -91,16 +91,16 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
          tpsd.psReplaceOption  = PSRO_NONE;
 
          /* Send the message, indicating success or failure */
-         hb_retnl( SmsSendMessage( smshHandle,
-                                   NULL,
-                                   &smsaDestination,
-                                   NULL,
-                                   ( PBYTE ) sztMessage,
-                                   nMessageLen * sizeof( TCHAR ),
-                                   ( PBYTE ) &tpsd, 12,
-                                   SMSDE_OPTIMAL,
-                                   SMS_OPTION_DELIVERY_NONE,
-                                   &smsmidMessageID ) );
+         hb_retnint( SmsSendMessage( smshHandle,
+                                     NULL,
+                                     &smsaDestination,
+                                     NULL,
+                                     ( PBYTE ) sztMessage,
+                                     nMessageLen * sizeof( TCHAR ),
+                                     ( PBYTE ) &tpsd, 12,
+                                     SMSDE_OPTIMAL,
+                                     SMS_OPTION_DELIVERY_NONE,
+                                     &smsmidMessageID ) );
       }
 
       hb_strfree( hMessage );
@@ -109,6 +109,6 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
       SmsClose( smshHandle );
    }
 #else
-   hb_retnl( -1 );
+   hb_retnint( -1 );
 #endif
 }

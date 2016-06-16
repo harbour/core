@@ -53,19 +53,15 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharAnd()"
    ?
 
    ? "Simple tests:"
 
-   ? '  CharAnd( "012345678", hb_BChar( 254 ) ) == "002244668" ? --> "' + CharAnd( "012345678", hb_BChar( 254 ) ) + '"'
-   ? '  CharAnd( "012345678", hb_BChar( 254 ) + hb_BChar( 252 ) ) == "002044648" ? --> "' + CharAnd( "012345678", hb_BChar( 254 ) + hb_BChar( 252 ) ) + '"'
+   ? '  CharAnd( "012345678", hb_BChar( 254 ) ) == "002244668" ? -->', '"' + CharAnd( "012345678", hb_BChar( 254 ) ) + '"'
+   ? '  CharAnd( "012345678", hb_BChar( 254 ) + hb_BChar( 252 ) ) == "002044648" ? -->', '"' + CharAnd( "012345678", hb_BChar( 254 ) + hb_BChar( 252 ) ) + '"'
 
    ? "End test of CharAnd()"
    ?
-
-   ctexit()
 
    RETURN

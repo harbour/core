@@ -2,6 +2,7 @@
  * GET system module (default)
  *
  * Copyright 1999-2001 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2001 Luiz Rafael Culik (Support for CA-Cl*pper 5.3 Getsystem)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,15 +45,7 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2001 Luiz Rafael Culik
- *    Support for CA-Cl*pper 5.3 Getsystem
- *
- * See COPYING.txt for licensing terms.
- *
- */
+#pragma -gc0
 
 #ifdef HB_COMPAT_C53
 

@@ -99,7 +99,7 @@ static int s_zlibCompress2( char ** pDstPtr, HB_SIZE * pnDst,
    z_stream stream;
    int iResult;
 
-   memset( &stream, 0, sizeof( z_stream ) );
+   memset( &stream, 0, sizeof( stream ) );
    stream.zalloc    = s_zlib_alloc;
    stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;
@@ -155,7 +155,7 @@ static HB_SIZE s_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
    z_stream stream;
    HB_SIZE nDest = 0;
 
-   memset( &stream, 0, sizeof( z_stream ) );
+   memset( &stream, 0, sizeof( stream ) );
    stream.zalloc    = s_zlib_alloc;
    stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;
@@ -190,7 +190,7 @@ static int s_zlibUncompress( char * pDst, HB_SIZE * pnDst,
    z_stream stream;
    int iResult;
 
-   memset( &stream, 0, sizeof( z_stream ) );
+   memset( &stream, 0, sizeof( stream ) );
    stream.zalloc    = s_zlib_alloc;
    stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;

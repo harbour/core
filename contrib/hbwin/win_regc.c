@@ -1,4 +1,5 @@
 /*
+ * Registry handling functions (low-level)
  *
  * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
@@ -44,31 +45,8 @@
  *
  */
 
-#include "hbwin.h"
+#include "hbwapi.h"
 #include "hbapiitm.h"
-
-static HKEY hb_regkeyconv( HB_PTRUINT nKey )
-{
-   switch( nKey )
-   {
-      case 1:
-         return ( HKEY ) HKEY_CLASSES_ROOT;
-      /* NOTE: In xhb, zero value means HKEY_LOCAL_MACHINE. */
-      case 0:
-      case 2:
-         return ( HKEY ) HKEY_CURRENT_USER;
-#if ! defined( HB_OS_WIN_CE )
-      case 3:
-         return ( HKEY ) HKEY_CURRENT_CONFIG;
-#endif
-      case 4:
-         return ( HKEY ) HKEY_LOCAL_MACHINE;
-      case 5:
-         return ( HKEY ) HKEY_USERS;
-   }
-
-   return ( HKEY ) nKey;
-}
 
 HB_FUNC( WIN_REGCREATEKEYEX )
 {
@@ -76,18 +54,28 @@ HB_FUNC( WIN_REGCREATEKEYEX )
    HKEY hkResult = NULL;
    DWORD dwDisposition = 0;
 
-   hb_retl( RegCreateKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                            HB_PARSTRDEF( 2, &hKey, NULL ),
-                            0,
-                            NULL,
-                            hb_parnl( 5 ) /* dwOptions */,
-                            hb_parnl( 6 ) /* samDesired */,
-                            NULL /* lpSecurityAttributes */,
-                            &hkResult,
-                            &dwDisposition ) == ERROR_SUCCESS );
+   HB_BOOL bSuccess = RegCreateKeyEx( hbwapi_get_HKEY( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+                                      HB_PARSTRDEF( 2, &hKey, NULL ),
+                                      0,
+                                      NULL,
+                                      ( DWORD ) hb_parnl( 5 ) /* dwOptions */,
+                                      ( REGSAM ) hb_parnl( 6 ) /* samDesired */,
+                                      NULL /* lpSecurityAttributes */,
+                                      &hkResult,
+                                      &dwDisposition ) == ERROR_SUCCESS;
 
-   hb_storptr( hkResult, 8 );
-   hb_stornl( dwDisposition, 9 );
+   hb_retl( bSuccess );
+
+   if( bSuccess )
+   {
+      hb_storptr( hkResult, 8 );
+      hb_stornint( dwDisposition, 9 );
+   }
+   else
+   {
+      hb_storptr( NULL, 8 );
+      hb_stornint( 0, 9 );
+   }
 
    hb_strfree( hKey );
 }
@@ -97,13 +85,15 @@ HB_FUNC( WIN_REGOPENKEYEX )
    void * hKey;
    HKEY hkResult = NULL;
 
-   hb_retl( RegOpenKeyEx( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
-                          HB_PARSTRDEF( 2, &hKey, NULL ),
-                          0 /* dwOptions */,
-                          hb_parnl( 4 ) /* samDesired */,
-                          &hkResult ) == ERROR_SUCCESS );
+   HB_BOOL bSuccess = RegOpenKeyEx( hbwapi_get_HKEY( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+                                    HB_PARSTRDEF( 2, &hKey, NULL ),
+                                    0 /* dwOptions */,
+                                    ( REGSAM ) hb_parnl( 4 ) /* samDesired */,
+                                    &hkResult ) == ERROR_SUCCESS;
 
-   hb_storptr( hkResult, 5 );
+   hb_retl( bSuccess );
+
+   hb_storptr( bSuccess ? hkResult : NULL, 5 );
 
    hb_strfree( hKey );
 }
@@ -114,6 +104,7 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
    LPCTSTR lpKey = HB_PARSTRDEF( 2, &hKey, NULL );
    DWORD dwType = 0;
    DWORD dwSize = 0;
+   HB_BOOL bSuccess = HB_FALSE;
 
    if( RegQueryValueEx( ( HKEY ) hb_parptr( 1 ),
                         lpKey,
@@ -140,9 +131,9 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
                dwSize /= sizeof( TCHAR );
 
                HB_STORSTRLEN( ( LPTSTR ) lpValue, dwSize, 5 );
+
+               bSuccess = HB_TRUE;
             }
-            else
-               hb_stor( 5 );
 
             hb_xfree( lpValue );
          }
@@ -159,22 +150,31 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
             {
                if( ! hb_storclen_buffer( ( char * ) lpValue, dwSize, 5 ) )
                   hb_xfree( lpValue );
+
+               bSuccess = HB_TRUE;
             }
             else
-            {
-               hb_stor( 5 );
                hb_xfree( lpValue );
-            }
          }
       }
       else
+      {
          hb_storc( NULL, 5 );
+         bSuccess = HB_TRUE;
+      }
+   }
+
+   if( bSuccess )
+   {
+      hb_stornint( dwType, 4 );
+      hb_retnint( dwSize );
    }
    else
+   {
       hb_stor( 5 );
-
-   hb_stornl( dwType, 4 );
-   hb_retnl( dwSize );
+      hb_stornint( 0, 4 );
+      hb_retnint( 0 );
+   }
 
    hb_strfree( hKey );
 }
@@ -243,7 +243,7 @@ HB_FUNC( WIN_REGDELETEKEY )
 {
    void * hKey;
 
-   hb_retl( RegDeleteKey( hb_regkeyconv( ( HB_PTRUINT ) hb_parnint( 1 ) ),
+   hb_retl( RegDeleteKey( hbwapi_get_HKEY( ( HB_PTRUINT ) hb_parnint( 1 ) ),
                           ( LPCTSTR ) HB_PARSTRDEF( 2, &hKey, NULL ) ) == ERROR_SUCCESS );
 
    hb_strfree( hKey );

@@ -45,6 +45,7 @@
  */
 
 FUNCTION ReadVar( cVarName )
+
    THREAD STATIC t_cVarName := ""
 
    LOCAL cOldVarName

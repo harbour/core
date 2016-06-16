@@ -1,7 +1,7 @@
 /*
  * Oracle (via OCILIB) Database Driver
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
  * Originally based on ODBC driver by:
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  *
@@ -55,40 +55,25 @@
 
 #include "hbrddsql.h"
 
-#include <ocilib.h>
+#include "ocilib.h"
 
-#if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_WIDE )
-   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define M_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define M_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define M_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
-   #define M_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define M_HB_CHAR  HB_WCHAR
-#else
-   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
-   #define M_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
-   #define M_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
-   #define M_HB_ITEMPUTSTR( itm, str )              hb_itemPutStr( itm, hb_setGetOSCP(), str )
-   #define M_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
-   #define M_HB_CHAR  char
-#endif
+#define HB_OCILIB_VERS( ma, mi, mu )  ( OCILIB_MAJOR_VERSION > ma || ( OCILIB_MAJOR_VERSION == ma && ( OCILIB_MINOR_VERSION > mi || ( OCILIB_MINOR_VERSION == mi && OCILIB_REVISION_VERSION >= mu ) ) ) )
 
-#if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_WIDE ) || defined( OCI_CHARSET_MIXED )
-   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define D_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define D_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define D_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
-   #define D_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define D_HB_CHAR  HB_WCHAR
-#else
-   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
-   #define D_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
-   #define D_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
-   #define D_HB_ITEMPUTSTR( itm, str )              hb_itemPutStr( itm, hb_setGetOSCP(), str )
-   #define D_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
-   #define D_HB_CHAR  char
-#endif
-
+#define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  ( s_fOCI_CharsetMetaDataUni ? \
+                                                 ( const mtext * ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen ) : \
+                                                 ( const mtext * ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen ) )
+#define M_HB_ITEMGETSTR( itm, phstr, plen )      ( s_fOCI_CharsetMetaDataUni ? \
+                                                 ( const mtext * ) hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen ) : \
+                                                 ( const mtext * ) hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen ) )
+#define M_HB_ITEMPUTSTR( itm, str )              ( s_fOCI_CharsetMetaDataUni ? \
+                                                 hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, ( HB_WCHAR * ) str ) : \
+                                                 hb_itemPutStr( itm, hb_setGetOSCP(), ( char * ) str ) )
+#define D_HB_ITEMPUTSTR( itm, str )              ( s_fOCI_CharsetUserDataUni ? \
+                                                 hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, ( HB_WCHAR * ) str ) : \
+                                                 hb_itemPutStr( itm, hb_setGetOSCP(), ( char * ) str ) )
+#define D_HB_ITEMPUTSTRLEN( itm, str, len )      ( s_fOCI_CharsetUserDataUni ? \
+                                                 hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, ( HB_WCHAR * ) str, len ) : \
+                                                 hb_itemPutStrLen( itm, hb_setGetOSCP(), ( char * ) str, len ) )
 
 typedef struct
 {
@@ -100,14 +85,12 @@ typedef struct
    OCI_Statement * pStmt;
 } SDDDATA;
 
-
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea );
 static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
-
 
 static SDDNODE s_ocidd =
 {
@@ -123,27 +106,42 @@ static SDDNODE s_ocidd =
    ( SDDFUNC_GETVARLEN ) NULL
 };
 
+static HB_BOOL s_fOCI_CharsetMetaDataUni = HB_FALSE;
+static HB_BOOL s_fOCI_CharsetUserDataUni = HB_FALSE;
+static HB_BOOL s_fInit = HB_FALSE;
 
 static void hb_ocidd_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   if( ! OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT | OCI_ENV_THREADED ) )
-      hb_errInternal( 8000, NULL, NULL, NULL );
-   else if( ! hb_sddRegister( &s_ocidd ) )
+   s_fInit = OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT | OCI_ENV_THREADED );
+
+   if( ! hb_sddRegister( &s_ocidd ) )
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
+
+   s_fOCI_CharsetMetaDataUni = ( OCI_GetCharsetMetaData() == OCI_CHAR_WIDE );
+   s_fOCI_CharsetUserDataUni = ( OCI_GetCharsetUserData() == OCI_CHAR_WIDE );
 }
 
 static void hb_ocidd_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
+#if 0
+   /* Causes crash most of the time (win7/64-bit/mingw/ocilib 3.12.1).
+      Update if anything is found about the root cause. */
    OCI_Cleanup();
+#endif
 }
 
 HB_FUNC( HB_SDDOCI_REGISTER )
 {
    hb_ocidd_init( NULL );
+}
+
+HB_FUNC( HB_SDDOCI_ISINITIALIZED )
+{
+   hb_retl( s_fInit );
 }
 
 /* force SQLBASE linking */
@@ -170,8 +168,7 @@ HB_CALL_ON_STARTUP_END( _hb_ocidd_init_ )
    #include "hbiniseg.h"
 #endif
 
-
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_OCIDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    PHB_ITEM  pError;
@@ -183,7 +180,6 @@ static HB_USHORT hb_errRT_OCIDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, c
 
    return uiAction;
 }
-
 
 static char * ocilibGetError( HB_ERRCODE * pErrCode )
 {
@@ -202,7 +198,7 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    }
    else
    {
-      szRet      = hb_strdup( "Unable to get error message" );
+      szRet      = hb_strdup( "Could not get the error message" );
       iNativeErr = 9999;
    }
 
@@ -212,9 +208,7 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    return szRet;
 }
 
-
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    OCI_Connection * cn;
@@ -223,9 +217,9 @@ static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    void * hUser;
    void * hPass;
 
-   cn = OCI_ConnectionCreate( ( mtext * ) M_HB_ARRAYGETSTR( pItem, 2, &hConn, NULL ),
-                              ( mtext * ) M_HB_ARRAYGETSTR( pItem, 3, &hUser, NULL ),
-                              ( mtext * ) M_HB_ARRAYGETSTR( pItem, 4, &hPass, NULL ), OCI_SESSION_DEFAULT );
+   cn = OCI_ConnectionCreate( M_HB_ARRAYGETSTR( pItem, 2, &hConn, NULL ),
+                              M_HB_ARRAYGETSTR( pItem, 3, &hUser, NULL ),
+                              M_HB_ARRAYGETSTR( pItem, 4, &hPass, NULL ), OCI_SESSION_DEFAULT );
 
    hb_strfree( hConn );
    hb_strfree( hUser );
@@ -240,7 +234,6 @@ static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    return HB_FAILURE;
 }
 
-
 static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection )
 {
    HB_ERRCODE errCode;
@@ -249,7 +242,6 @@ static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection )
    hb_xfree( pConnection->pSDDConn );
    return errCode;
 }
-
 
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
@@ -284,7 +276,6 @@ static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    OCI_StatementFree( st );
    return HB_FAILURE;
 }
-
 
 static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 {
@@ -511,7 +502,6 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    return HB_SUCCESS;
 }
 
-
 static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
@@ -526,7 +516,6 @@ static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea )
    }
    return HB_SUCCESS;
 }
-
 
 static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
@@ -566,7 +555,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   const dtext * val;
                   if( ( val = OCI_GetString( rs, ui ) ) != NULL )
-                     pItem = D_HB_ITEMPUTSTRLEN( pItem, val, ( HB_SIZE ) dtslen( val ) );  /* TODO: Pad it to pField->uiLen size with spaces? */
+                     pItem = D_HB_ITEMPUTSTR( pItem, val );  /* TODO: Pad it to pField->uiLen size with spaces? */
                }
                break;
 
@@ -590,7 +579,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   unsigned int uiSize = OCI_LongGetSize( val );
                   if( OCI_LongGetType( val ) == OCI_CLONG )
-                     pItem = D_HB_ITEMPUTSTRLEN( pItem, ( D_HB_CHAR * ) OCI_LongGetBuffer( val ), uiSize );
+                     pItem = D_HB_ITEMPUTSTRLEN( pItem, OCI_LongGetBuffer( val ), uiSize );
                   else
                      pItem = hb_itemPutCL( pItem, ( const char * ) OCI_LongGetBuffer( val ), uiSize );
                }

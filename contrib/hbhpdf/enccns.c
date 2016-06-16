@@ -1,7 +1,6 @@
 /*
  * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
  *
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option )
@@ -45,8 +44,7 @@
 
 #include "hbhpdf.h"
 
-/* HPDF_UseCNSEncodings( hDoc ) -> hStatus
- */
+/* HPDF_UseCNSEncodings( hDoc ) -> hStatus */
 HB_FUNC( HPDF_USECNSENCODINGS )
 {
    hb_retnl( ( long ) HPDF_UseCNSEncodings( hb_HPDF_Doc_par( 1 ) ) );

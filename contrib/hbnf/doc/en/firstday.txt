@@ -18,8 +18,7 @@
       passed, or the first day of the current month if no argument is
       supplied.
    $EXAMPLES$
-      dDate := hb_SToD( "19900915" )
-      ? ft_FDay( dDate )             // 1990-09-01
+      ? ft_FDay( 0d19900915 )        // 1990-09-01
       ? ft_FDay()                    // 1991-03-01  (current month)
    $SEEALSO$
       ft_LDay()

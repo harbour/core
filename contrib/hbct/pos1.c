@@ -1,9 +1,7 @@
 /*
  * PosAlpha(), PosLower(), PosRange() and PosUpper() CT3 string functions
  *
- * PosUpper() Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *
- * PosAlpha(), PosLower(), PosRange()
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (PosUpper())
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
  *
@@ -96,7 +94,7 @@ static void do_pos1( int iSwitch )
       pcString = ( const unsigned char * ) hb_parc( iParamShift + 1 );
       sStrLen = hb_parclen( iParamShift + 1 );
 
-      iMode = hb_parldef( iParamShift + 2, 0 );
+      iMode = hb_parl( iParamShift + 2 );
       sIgnore = hb_parnsdef( iParamShift + 3, 0 );
 
       for( puc = pcString + sIgnore; puc < pcString + sStrLen; puc++ )
@@ -114,7 +112,7 @@ static void do_pos1( int iSwitch )
                break;
 
             case DO_POS1_POSRANGE:
-               iDoRet = ( ( ucChar1 <= *puc ) && ( ucChar2 >= *puc ) );
+               iDoRet = ( ucChar1 <= *puc && ucChar2 >= *puc );
                break;
 
             case DO_POS1_POSUPPER:
@@ -134,10 +132,11 @@ static void do_pos1( int iSwitch )
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
-      HB_ERRCODE iError = 0;
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
+         HB_ERRCODE iError = 0;
+
          switch( iSwitch )
          {
             case DO_POS1_POSALPHA:

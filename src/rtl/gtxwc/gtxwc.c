@@ -1,7 +1,8 @@
 /*
- * XWindow Console
- * Copyright 2003 - Giancarlo Niccolai <antispam /at/ niccolai.ws>
- * Copyright 2004/2006 - Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
+ * X11 (X Window System) console
+ *
+ * Copyright 2003 Giancarlo Niccolai <antispam /at/ niccolai.ws>
+ * Copyright 2004-2006 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -466,7 +467,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
 
    int cellx = wnd->fontWidth;
    int celly = wnd->fontHeight;
-   int i, y, x, yy, xx, skip, start, mod;
+   int i, y, x, yy, xx;
 
    if( usCh >= HB_BOXCH_RC_MIN && usCh <= HB_BOXCH_RC_MAX )
       switch( usCh )
@@ -1324,6 +1325,9 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
          case HB_BOXCH_FILLER1:
          case HB_BOXCH_FILLER2:
          case HB_BOXCH_FILLER3:
+         {
+            int skip, start, mod;
+
             if( usCh == HB_BOXCH_FILLER1 )
             {
                skip = 4;
@@ -1361,7 +1365,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
             }
             type = size == 0 ? CH_NONE : CH_PTS;
             break;
-
+         }
          case HB_BOXCH_ARROW_R:
             i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
             pts[ 0 ].x = ( ( cellx - i ) >> 1 );
@@ -2842,7 +2846,7 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
          ikey = HB_KX_F12;
          break;
 
-      /* Keys with special meanings to clipper */
+      /* Keys with special meanings to Cl*pper */
       case XK_Pause:
          ikey = HB_KX_PAUSE;
          break;
@@ -3263,7 +3267,6 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
          if( evt->xselection.property != None )
          {
             XTextProperty text;
-            unsigned long nItem;
 
             if( XGetTextProperty( wnd->dpy, wnd->window, &text,
                                   evt->xselection.property ) != 0 )
@@ -3307,9 +3310,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
                else if( evt->xselection.target == s_atomTargets && text.format == 32 )
                {
                   Atom aValue;
-
+                  unsigned long nItem;
 #ifdef XWC_DEBUG
-                  printf( "text.nitems=%ld, text.format=%d\n", text.nitems, text.format ); fflush( stdout );
+                  printf( "text.nitems=%lu, text.format=%d\n", text.nitems, text.format ); fflush( stdout );
 #endif
                   for( nItem = 0; nItem < text.nitems; ++nItem )
                   {
@@ -3322,9 +3325,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
                         aNextRequest = s_atomText;
 #ifdef XWC_DEBUG
                      if( aValue )
-                        printf( "%ld, %8lx (%s)\n", nItem, aValue, XGetAtomName( wnd->dpy, aValue ) );
+                        printf( "%lu, %8lx (%s)\n", nItem, aValue, XGetAtomName( wnd->dpy, aValue ) );
                      else
-                        printf( "%ld, %8lx (NULL)\n", nItem, aValue );
+                        printf( "%lu, %8lx (NULL)\n", nItem, aValue );
                      fflush( stdout );
 #endif
                   }
@@ -3558,7 +3561,7 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor * pColor )
        * with ideas from David Tong's "noflash" library ;-)
        */
       int     i, iClosestColor;
-      double  dDiff, dDistance, dClosestColorDist = 0;
+      double  dDiff, dDistance;
       XColor *colorTable;
       HB_BYTE *checkTable;
 
@@ -3573,12 +3576,14 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor * pColor )
 
       do
       {
+         double dClosestColorDist;
+
          iClosestColor = -1;
          /*
           * Look for the color that best approximates the desired one
           * and has not been checked so far and try to allocate it.
           * If allocation fails, it must mean that the color was read-write
-          * (so we can't use it, since its owner might change it) or else
+          * (so we cannot use it, since its owner might change it) or else
           * it was already freed. Repeat until something succeeds or
           * we test all colors in given maximum of approximation.
           *
@@ -3704,11 +3709,11 @@ static HB_U32 hb_gt_xwc_HashCurrChar( HB_BYTE attr, HB_BYTE color, HB_USHORT chr
 
 static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, int colStop, int rowStop )
 {
-   HB_USHORT irow, icol, startCol = 0, len, basex, basey, nsize;
+   HB_USHORT irow, startCol = 0, basex, basey, nsize;
    HB_BYTE oldColor = 0, color, attr;
    HB_USHORT usCh16, usChBuf[ XWC_MAX_COLS ];
    HB_U32 u32Curr = 0xFFFFFFFF;
-   int i, iColor, scridx;
+   int i, iColor;
    XWC_CharTrans * chTrans;
 
 #ifdef XWC_DEBUG
@@ -3726,6 +3731,9 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
 
    for( irow = rowStart; irow <= rowStop; irow++ )
    {
+      HB_USHORT icol, len;
+      int scridx;
+
       icol = colStart;
       scridx = icol + irow * wnd->cols;
       len = 0;
@@ -3952,11 +3960,11 @@ static void hb_gt_xwc_InvalidateFull( PXWND_DEF wnd )
 static void hb_gt_xwc_InvalidatePart( PXWND_DEF wnd,
                                       int left, int top, int right, int bottom )
 {
-   int row, col, scridx;
+   int row, col;
 
    for( row = top; row <= bottom; row++ )
    {
-      scridx = row * wnd->cols + left;
+      int scridx = row * wnd->cols + left;
       for( col = left; col <= right; col++, scridx++ )
          wnd->pCurrScr[ scridx ] = 0xFFFFFFFF;
    }
@@ -4592,10 +4600,10 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
       {
          /* TODO: a standard Harbour error should be generated here when
                   it can run without console!
-         hb_errRT_TERM( EG_CREATE, 10001, NULL, "Can't connect to X server", 0, 0 );
+         hb_errRT_TERM( EG_CREATE, 10001, NULL, "Could not connect to X server", 0, 0 );
          */
          s_fNoXServer = HB_TRUE;
-         hb_errInternal( 10001, "Can't connect to X server.", NULL, NULL );
+         hb_errInternal( 10001, "Could not connect to X server.", NULL, NULL );
       }
       return HB_FALSE;
    }
@@ -4766,11 +4774,11 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 
             /* TODO: a standard Harbour error should be generated here when
                      it can run without console!
-            hb_errRT_TERM( EG_CREATE, 10001, NULL, "Can't load 'fixed' font", 0, 0 );
+            hb_errRT_TERM( EG_CREATE, 10001, NULL, "Cannot load 'fixed' font", 0, 0 );
             return;
             */
             s_fNoXServer = HB_TRUE;
-            hb_errInternal( 10001, "Can't load 'fixed' font", NULL, NULL );
+            hb_errInternal( 10001, "Cannot load 'fixed' font", NULL, NULL );
          }
       }
    }
@@ -5057,7 +5065,11 @@ static const char * hb_gt_xwc_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: XWindow GUI console (XWC)";
+#ifdef X_HAVE_UTF8_STRING
+   return "Terminal: X11 (XWC) (UTF-8)";
+#else
+   return "Terminal: X11 (XWC)";
+#endif
 }
 
 /* *********************************************************************** */
@@ -5730,7 +5742,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( wnd->window && pInfo->pNewVal &&
              ( ( HB_IS_ARRAY( pInfo->pNewVal ) &&
                  hb_arrayLen( pInfo->pNewVal ) == ( HB_SIZE )
-                 ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ? 4 : 3 ) ) ||
+                 ( ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ) ? 4 : 3 ) ) ||
                HB_IS_STRING( pInfo->pNewVal ) ) )
          {
             XImage * xImage = NULL;

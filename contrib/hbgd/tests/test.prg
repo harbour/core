@@ -1,10 +1,12 @@
 #require "hbgd"
 
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 
    LOCAL im, im2, col, i
+
+   hb_vfDirMake( IMAGES_OUT )
 
    im := gdImageCreateTrueColor( 100, 100 )
    col := gdImageColorAllocate( im, 255, 255, 255 )

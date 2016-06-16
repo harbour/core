@@ -1,6 +1,4 @@
-/*
- *    Pritpal Bedi <bedipritpal@hotmail.com>
- */
+/* Pritpal Bedi <bedipritpal@hotmail.com> */
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
@@ -35,18 +33,18 @@
 THREAD STATIC t_keys_ := {, , , , , , , , , , , , , , , , , , , }
 THREAD STATIC t_pic_ := {, , , , , , , , , , , , , , , , , , , }
 
-FUNCTION WvtSetKeys( lSet )
+PROCEDURE WvtSetKeys( lSet )
 
    IF lSet
       t_keys_[  2 ] := SetKey( K_F2, {|| WvtNextGets()         } )
       t_keys_[  3 ] := SetKey( K_F3, {|| WvtWindowExpand( 1 )  } )
       t_keys_[  4 ] := SetKey( K_F4, {|| WvtWindowExpand( -1 ) } )
       t_keys_[  5 ] := SetKey( K_F5, {|| WvtMyBrowse()         } )
-      t_keys_[  6 ] := SetKey( K_F6, {|| Wvt_Minimize()        } )
+      t_keys_[  6 ] := SetKey( K_F6, {|| wvt_Minimize()        } )
       t_keys_[  7 ] := SetKey( K_F7, {|| WvtPartialScreen()    } )
       t_keys_[  8 ] := SetKey( K_F8, {|| WvtLines()            } )
-      t_keys_[  9 ] := SetKey( K_F9, {|| Wvt_ChooseFont()      } )
-      t_keys_[ 10 ] := SetKey( K_F10, {|| Wvt_ChooseColor()     } )
+      t_keys_[  9 ] := SetKey( K_F9, {|| wvt_ChooseFont()      } )
+      t_keys_[ 10 ] := SetKey( K_F10, {|| wvt_ChooseColor()     } )
    ELSE
       SetKey( K_F2,  t_keys_[ 2 ] )
       SetKey( K_F3,  t_keys_[ 3 ] )
@@ -59,12 +57,12 @@ FUNCTION WvtSetKeys( lSet )
       SetKey( K_F10, t_keys_[ 10 ] )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-// Wvt_Paint() must be a FUNCTION in your application
-// as it is called when Window gets WM_PAINT message.
+// wvt_Paint() must be a FUNCTION in your application
+// as it is called when Window gets WIN_WM_PAINT message.
 
-FUNCTION Wvt_Paint()
+FUNCTION wvt_Paint()  /* must be a public function */
 
    LOCAL aBlocks := WvtSetBlocks()
 
@@ -74,13 +72,13 @@ FUNCTION Wvt_Paint()
 
    RETURN 0
 
-// Wvt_SetFocus() must be a FUNCTION in your application
-// needs to process messages sent through WM_SETFOCUS message
+// wvt_SetFocus() must be a FUNCTION in your application
+// needs to process messages sent through WIN_WM_SETFOCUS message
 // received by the window.
 
 #if 0
 
-FUNCTION Wvt_SetFocus()
+PROCEDURE wvt_SetFocus()  /* must be a public function */
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -89,17 +87,17 @@ FUNCTION Wvt_SetFocus()
 
    DevPos( nRow, nCol )
 
-   RETURN NIL
+   RETURN
 
 #endif
 
-// Wvt_KillFocus() must be a FUNCTION in your application
-// needs to process messages sent through WM_KILLFOCUS message
+// wvt_KillFocus() must be a FUNCTION in your application
+// needs to process messages sent through WIN_WM_KILLFOCUS message
 // received by the window.
 
 #if 0
 
-FUNCTION Wvt_KillFocus()
+PROCEDURE wvt_KillFocus()  /* must be a public function */
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
@@ -108,62 +106,66 @@ FUNCTION Wvt_KillFocus()
 
    DevPos( nRow, nCol )
 
-   RETURN NIL
+   RETURN
 
 #endif
 
-// Wvt_Mouse() must be present if you want to catch and fire
+// wvt_Mouse() must be present if you want to catch and fire
 // mouse call back outside of the Inkey() loop.
 
-FUNCTION Wvt_Mouse( nKey, nRow, nCol )
-
-   LOCAL nLen, aObjects := WvtSetObjects()
-   LOCAL nObj
+PROCEDURE wvt_Mouse( nKey, nRow, nCol )  /* must be a public function */
 
    STATIC s_nLastObj := 0
    STATIC s_nLastKey := 0
 
-   IF ( nLen := Len( aObjects ) ) == 0
-      RETURN NIL
+   LOCAL aObjects := WvtSetObjects()
+   LOCAL nObj, oObj
+
+   IF Len( aObjects ) == 0
+      RETURN
    ENDIF
 
    IF ! SetMouseCheck()
-      RETURN NIL
+      RETURN
    ENDIF
 
    IF nKey == -1000001
-      FOR nObj := 1 TO nLen
-         DO CASE
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_DISP
-            Eval( aObjects[ nObj, WVT_OBJ_ONDISP ] )
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_MOUSEOVER
-            Eval( aObjects[ nObj, WVT_OBJ_ONMOUSEOVER ] )
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_BUTTONDOWN
-            Eval( aObjects[ nObj, WVT_OBJ_ONBUTTONDOWN ] )
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_BUTTONUP
-            Eval( aObjects[ nObj, WVT_OBJ_ONDISP ] )
-         CASE aObjects[ nObj, WVT_OBJ_STATE ] == OBJ_STATE_HIDE
-
-         ENDCASE
+      FOR EACH oObj IN aObjects
+         SWITCH oObj[ WVT_OBJ_STATE ]
+         CASE OBJ_STATE_DISP
+            Eval( oObj[ WVT_OBJ_ONDISP ] )
+            EXIT
+         CASE OBJ_STATE_MOUSEOVER
+            Eval( oObj[ WVT_OBJ_ONMOUSEOVER ] )
+            EXIT
+         CASE OBJ_STATE_BUTTONDOWN
+            Eval( oObj[ WVT_OBJ_ONBUTTONDOWN ] )
+            EXIT
+         CASE OBJ_STATE_BUTTONUP
+            Eval( oObj[ WVT_OBJ_ONDISP ] )
+            EXIT
+         CASE OBJ_STATE_HIDE
+            EXIT
+         ENDSWITCH
       NEXT
-      RETURN NIL
+      RETURN
    ENDIF
 
-   nObj := AScan( aObjects, {| e_ | e_[ WVT_OBJ_ROW   ] <= nRow .AND. ;
+   nObj := AScan( aObjects, {| e_ | e_[ WVT_OBJ_ROW ] <= nRow .AND. ;
       e_[ WVT_OBJ_ROWTO ] >= nRow .AND. ;
       e_[ WVT_OBJ_COL   ] <= nCol .AND. ;
-      e_[ WVT_OBJ_COLTO ] >= nCol     } )
+      e_[ WVT_OBJ_COLTO ] >= nCol } )
    IF nObj == 0
       IF s_nLastObj > 0
          aObjects[ s_nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_DISP
          Eval( aObjects[ s_nLastObj, WVT_OBJ_ONDISP ] )
          s_nLastObj := 0
       ENDIF
-      RETURN NIL
+      RETURN
    ENDIF
 
    IF s_nLastObj == nObj .AND. s_nLastKey == nKey
-      RETURN NIL
+      RETURN
    ENDIF
 
    s_nLastObj := nObj
@@ -192,17 +194,15 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 
    ENDCASE
 
-   RETURN NIL
+   RETURN
 
-//  WvtSetBlocks() is a get/set FUNCTION to be used by Wvt_Paint()
+//  WvtSetBlocks() is a get/set FUNCTION to be used by wvt_Paint()
 
 FUNCTION WvtSetBlocks( a_ )
 
-   LOCAL o
-
    THREAD STATIC t := {}
 
-   o := AClone( t )
+   LOCAL o := AClone( t )
 
    IF a_ != NIL
       t := AClone( a_ )
@@ -210,15 +210,13 @@ FUNCTION WvtSetBlocks( a_ )
 
    RETURN o
 
-// WvtSetObjects() is a get/set FUNCTION to be used by Wvt_Mouse()
+// WvtSetObjects() is a get/set FUNCTION to be used by wvt_Mouse()
 
 FUNCTION WvtSetObjects( aObject )
 
-   LOCAL oObjects
-
    THREAD STATIC t_aObjects := {}
 
-   oObjects := AClone( t_aObjects )
+   LOCAL oObjects := AClone( t_aObjects )
 
    IF aObject != NIL
       IF Empty( aObject )
@@ -240,10 +238,10 @@ FUNCTION WvtSetObjects( aObject )
 
 FUNCTION SetMouseCheck( lYes )
 
-   LOCAL lOYes
    STATIC s_lSYes := .T.
 
-   lOYes := s_lSYes
+   LOCAL lOYes := s_lSYes
+
    IF lYes != NIL
       s_lSYes := lYes
    ENDIF
@@ -256,20 +254,16 @@ FUNCTION WvtWindowExpand( nUnits )
 
    s_nUnits += nUnits
 
-   Wvt_SetFont( "Courier New", s_nUnits )
+   wvt_SetFont( "Courier New", s_nUnits )
 
    RETURN .T.
 
 FUNCTION VouChoice( aChoices )
 
-   LOCAL scr, clr, nChoice
+   LOCAL scr := SaveScreen( 7, 48, 13, 55 )
+   LOCAL clr := SetColor( "N/W*,GR+/B*,,,GR+/B" )
 
-   hb_default( @aChoices, { "One", "Two", "Three", "Four", "Five", "Six", "Seven" } )
-
-   scr := SaveScreen( 7, 48, 13, 55 )
-   clr := SetColor( "N/W*,GR+/B*,,,GR+/B" )
-
-   nChoice := AChoice( 7, 48, 13, 55, aChoices )
+   LOCAL nChoice := AChoice( 7, 48, 13, 55, hb_defaultValue( aChoices, { "One", "Two", "Three", "Four", "Five", "Six", "Seven" } ) )
 
    SetColor( clr )
    RestScreen( 7, 48, 13, 55, scr )
@@ -284,22 +278,20 @@ FUNCTION Hb_Clear()
 
 FUNCTION MyMenuProcedure( nID )
 
-   DO CASE
-   CASE nID == 101
+   SWITCH nID
+   CASE 101
       Alert( "Procedure 101" )
-   CASE nID == 102
+      EXIT
+   CASE 102
       Alert( "Procedure 102" )
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN .T.
 
-FUNCTION BuildWvgToolBar( oDA, nActiveX )
+FUNCTION BuildWvgToolBar( oDA )
 
-   LOCAL oTBar
-
-   hb_default( @nActiveX, 0 )
-
-   oTBar := WvgToolBar():new( oDA, , { 0, 0 }, { oDA:currentSize()[ 1 ], 30 }, , .T. )
+   LOCAL oTBar := WvgToolBar():new( oDA, , { 0, 0 }, { oDA:currentSize()[ 1 ], 30 }, , .T. )
 
    oTBar:style        := WVGTOOLBAR_STYLE_FLAT
    oTBar:borderStyle  := WVGFRAME_RECT
@@ -327,10 +319,10 @@ FUNCTION BuildWvgToolBar( oDA, nActiveX )
 
 FUNCTION SetGT( nIndex, pGT )
 
-   LOCAL oldGT
    STATIC s_pGT_ := { NIL, NIL, NIL }
 
-   oldGT := s_pGT_[ nIndex ]
+   LOCAL oldGT := s_pGT_[ nIndex ]
+
    IF PCount() == 2
       s_pGT_[ nIndex ] := pGT
    ENDIF
@@ -339,100 +331,98 @@ FUNCTION SetGT( nIndex, pGT )
 
 FUNCTION SetFonts( hFont )
 
-   LOCAL oldFont
-
    THREAD STATIC t_ahFonts := {}
-   oldFont := t_ahFonts
+
    IF ! Empty( hFont )
       AAdd( t_ahFonts, hFont )
    ENDIF
 
-   RETURN oldFont
+   RETURN t_ahFonts
 
 FUNCTION SetIcons( hIcon )
 
-   LOCAL oldIcon
-
    THREAD STATIC t_ahIcons := {}
-   oldIcon := t_ahIcons
+
    IF ! Empty( hIcon )
       AAdd( t_ahIcons, hIcon )
    ENDIF
 
-   RETURN oldIcon
+   RETURN t_ahIcons
 
 FUNCTION Popups( nID, lDestroy )
 
-   LOCAL hPop, hPop1
-   LOCAL nPrompt := MF_ENABLED + MF_STRING
-
    THREAD STATIC t_hPop_ := { , , , , , , , , }
 
+   LOCAL hPop, hPop1
+   LOCAL nPrompt := WIN_MF_ENABLED + WIN_MF_STRING
+
    IF nID == NIL
-      Wvt_SetPopupMenu()
+      wvt_SetPopupMenu()
       RETURN NIL
    ENDIF
 
    IF lDestroy != NIL
-      Wvt_DestroyMenu( t_hPop_[ nID ] )
+      wapi_DestroyMenu( t_hPop_[ nID ] )
       RETURN NIL
    ENDIF
 
    hPop := t_hPop_[ nID ]
 
-   DO CASE
-   CASE nID == 1   //  Data Entry Module
+   SWITCH nID
+   CASE 1   //  Data Entry Module
 
       IF hPop == NIL
-         hPop := Wvt_CreatePopupMenu()
-         Wvt_AppendMenu( hPop, nPrompt, K_F2, "Second Get Screen" )
-         Wvt_AppendMenu( hPop, nPrompt, K_F3, "Expand Window"     )
-         Wvt_AppendMenu( hPop, nPrompt, K_F4, "Shrink Window"     )
-         Wvt_AppendMenu( hPop, nPrompt, K_F5, "Browse"            )
-         Wvt_AppendMenu( hPop, nPrompt, K_F6, "Minimize"          )
-         Wvt_AppendMenu( hPop, nPrompt, K_F7, "Partial Screen"    )
-         Wvt_AppendMenu( hPop, nPrompt, K_F8, "Lines"             )
-         Wvt_AppendMenu( hPop, nPrompt, K_F9, "Choose Font"       )
-         Wvt_AppendMenu( hPop, nPrompt, K_F10, "Choose Color"      )
+         hPop := wapi_CreatePopupMenu()
+         wapi_AppendMenu( hPop, nPrompt, K_F2, "Second Get Screen" )
+         wapi_AppendMenu( hPop, nPrompt, K_F3, "Expand Window"     )
+         wapi_AppendMenu( hPop, nPrompt, K_F4, "Shrink Window"     )
+         wapi_AppendMenu( hPop, nPrompt, K_F5, "Browse"            )
+         wapi_AppendMenu( hPop, nPrompt, K_F6, "Minimize"          )
+         wapi_AppendMenu( hPop, nPrompt, K_F7, "Partial Screen"    )
+         wapi_AppendMenu( hPop, nPrompt, K_F8, "Lines"             )
+         wapi_AppendMenu( hPop, nPrompt, K_F9, "Choose Font"       )
+         wapi_AppendMenu( hPop, nPrompt, K_F10, "Choose Color"      )
 
-         Wvt_AppendMenu( hPop, MF_SEPARATOR )
+         wapi_AppendMenu( hPop, WIN_MF_SEPARATOR )
 
-         Wvt_AppendMenu( hPop, nPrompt, K_F5, "Browse"  )
+         wapi_AppendMenu( hPop, nPrompt, K_F5, "Browse"  )
 
       ENDIF
+      EXIT
 
-   CASE nID == 2   //  Browser
+   CASE 2   //  Browser
 
       IF hPop == NIL
-         hPop := Wvt_CreatePopupMenu()
-         Wvt_AppendMenu( hPop, nPrompt, K_DOWN     , "Down"      )
-         Wvt_AppendMenu( hPop, nPrompt, K_UP       , "Up"        )
-         Wvt_AppendMenu( hPop, nPrompt, K_PGDN     , "Page Down" )
-         Wvt_AppendMenu( hPop, nPrompt, K_PGUP     , "Page Up"   )
-         Wvt_AppendMenu( hPop, nPrompt, K_CTRL_PGUP, "Top"       )
-         Wvt_AppendMenu( hPop, nPrompt, K_CTRL_PGDN, "Bottom"    )
+         hPop := wapi_CreatePopupMenu()
+         wapi_AppendMenu( hPop, nPrompt, K_DOWN     , "Down"      )
+         wapi_AppendMenu( hPop, nPrompt, K_UP       , "Up"        )
+         wapi_AppendMenu( hPop, nPrompt, K_PGDN     , "Page Down" )
+         wapi_AppendMenu( hPop, nPrompt, K_PGUP     , "Page Up"   )
+         wapi_AppendMenu( hPop, nPrompt, K_CTRL_PGUP, "Top"       )
+         wapi_AppendMenu( hPop, nPrompt, K_CTRL_PGDN, "Bottom"    )
 
-         Wvt_AppendMenu( hPop, MF_SEPARATOR )
+         wapi_AppendMenu( hPop, WIN_MF_SEPARATOR )
 
-         hPop1 := Wvt_CreatePopupMenu()
-         Wvt_AppendMenu( hPop1, nPrompt, K_RIGHT   , "Right"     )
-         Wvt_AppendMenu( hPop1, nPrompt, K_LEFT    , "Left"      )
-         Wvt_AppendMenu( hPop1, nPrompt, K_END     , "End"       )
-         Wvt_AppendMenu( hPop1, nPrompt, K_HOME    , "Home"      )
+         hPop1 := wapi_CreatePopupMenu()
+         wapi_AppendMenu( hPop1, nPrompt, K_RIGHT   , "Right"     )
+         wapi_AppendMenu( hPop1, nPrompt, K_LEFT    , "Left"      )
+         wapi_AppendMenu( hPop1, nPrompt, K_END     , "End"       )
+         wapi_AppendMenu( hPop1, nPrompt, K_HOME    , "Home"      )
 
-         Wvt_AppendMenu( hPop, MF_ENABLED + MF_POPUP, hPop1, "Column Movement" )
+         wapi_AppendMenu( hPop, WIN_MF_ENABLED + WIN_MF_POPUP, hPop1, "Column Movement" )
 
       ENDIF
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    t_hPop_[ nID ] := hPop
 
-   RETURN Wvt_SetPopupMenu( t_hPop_[ nID ] )
+   RETURN wvt_SetPopupMenu( t_hPop_[ nID ] )
 
 FUNCTION DispStatusMsg( cMsg )
 
-   Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, RGB( 198, 198, 198 ), "Arial", 18, , 900 )
+   wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, WIN_RGB( 198, 198, 198 ), "Arial", 18, , 900 )
 
    RETURN .T.
 
@@ -447,31 +437,30 @@ FUNCTION ClearStatusMsg()
 
    RETURN .T.
 
-FUNCTION WvtPictures( nSlot, cFilePic )
+PROCEDURE WvtPictures( nSlot, cFilePic )
 
-   IF nSlot != NIL .AND. nSlot <= 20 .AND. hb_FileExists( cFilePic )
+   IF HB_ISNUMERIC( nSlot ) .AND. nSlot <= 20 .AND. hb_vfExists( cFilePic )
       IF !( t_pic_[ nSlot ] == cFilePic )
-         IF Wvt_LoadPicture( cFilePic, nSlot )
+         IF wvt_LoadPicture( cFilePic, nSlot )
             t_pic_[ nSlot ] := cFilePic
          ENDIF
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
+PROCEDURE WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
    IF t_pic_[ nSlot ] != NIL
-      Wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
+      wvt_DrawPicture( nTop, nLeft, nBottom, nRight, nSlot, aOffSet )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION GetResource( cName )
-
    RETURN hb_DirBase() + cName
 
-FUNCTION uiDebug( ... )
+PROCEDURE uiDebug( ... )
 
    LOCAL aP := hb_AParams()
    LOCAL s := ""
@@ -480,9 +469,9 @@ FUNCTION uiDebug( ... )
 
    wapi_OutputDebugString( s )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION MyError( oError )
+PROCEDURE MyError( oError )
 
    ? oError:description
    ? oError:operation
@@ -491,7 +480,7 @@ FUNCTION MyError( oError )
    ? ProcName( 2 ), ProcLine( 2 )
    ? ProcName( 3 ), ProcLine( 3 )
    ? ProcName( 4 ), ProcLine( 4 )
-   DO WHILE Inkey() != K_ESC
+   DO WHILE hb_keyStd( Inkey( 0 ) ) != K_ESC
    ENDDO
 
-   RETURN NIL
+   RETURN

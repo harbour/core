@@ -49,7 +49,7 @@
  *    ; A line starting with a ';' is a comment
  *    # Also, a '#' marks a comment up to the end of the line
  *    [NewSection]
- *    Variable = Value
+ *    Variable=Value
  *    OtherVariable: Value
  *
  * You can pass a list of "potential" .ini files in a ';' separated path;
@@ -96,7 +96,6 @@ FUNCTION hb_iniNew( lAutoMain )
    RETURN hIni
 
 FUNCTION hb_iniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
-
    RETURN hb_iniReadStr( iif( HB_ISSTRING( cFileSpec ), hb_iniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
 
 FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
@@ -113,8 +112,11 @@ FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
       hIni[ "MAIN" ] := { => }
    ENDIF
 
-   RETURN hb_iniStringLow( hIni, hb_defaultValue( cData, "" ), lKeyCaseSens, ;
-                           hb_defaultValue( cSplitters, "=" ), lAutoMain )
+   RETURN hb_iniStringLow( hIni, ;
+      hb_defaultValue( cData, "" ), ;
+      lKeyCaseSens, ;
+      hb_defaultValue( cSplitters, "=" ), ;
+      lAutoMain )
 
 STATIC FUNCTION hb_iniFileLow( cFileSpec )
 
@@ -127,25 +129,25 @@ STATIC FUNCTION hb_iniFileLow( cFileSpec )
       aFiles := { cFileSpec }
    ENDIF
 
-   hFile := F_ERROR
+   hFile := NIL
    FOR EACH cFile IN aFiles
-      IF ! Empty( cFile ) .AND. hb_FileExists( cFile )
-         IF ( hFile := FOpen( cFile ) ) != F_ERROR
+      IF ! HB_ISNULL( cFile ) .AND. hb_vfExists( cFile )
+         IF ( hFile := hb_vfOpen( cFile, FO_READ ) ) != NIL
             EXIT
          ENDIF
       ENDIF
    NEXT
 
-   IF hFile == F_ERROR
+   IF hFile == NIL
       RETURN ""
    ENDIF
 
    /* we'll read the whole file, then we'll break it in lines. */
-   cData := Space( FSeek( hFile, 0, FS_END ) )
-   FSeek( hFile, 0, FS_SET )
-   nLen := FRead( hFile, @cData, hb_BLen( cData ) )
+   cData := Space( hb_vfSize( hFile ) )
+   hb_vfSeek( hFile, 0, FS_SET )
+   nLen := hb_vfRead( hFile, @cData, hb_BLen( cData ) )
    cData := hb_BLeft( cData, nLen )
-   FClose( hFile )
+   hb_vfClose( hFile )
 
    RETURN cData
 
@@ -193,14 +195,14 @@ STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
       IF ! Empty( aKeyVal := hb_regex( reInclude, cLine ) )
          /* ignore void includes */
          aKeyVal[ 2 ] := AllTrim( aKeyVal[ 2 ] )
-         IF Len( aKeyVal[ 2 ] ) == 0
+         IF HB_ISNULL( aKeyVal[ 2 ] )
             LOOP
          ENDIF
          hb_iniStringLow( hIni, hb_iniFileLow( aKeyVal[ 2 ] ), lKeyCaseSens, cSplitters, lAutoMain )
       /* Is it a NEW section? */
       ELSEIF ! Empty( aKeyVal := hb_regex( reSection, cLine ) )
          cLine := AllTrim( aKeyVal[ 2 ] )
-         IF Len( cLine ) != 0
+         IF ! HB_ISNULL( cLine )
             hCurrentSection := { => }
             IF ! lKeyCaseSens
                cLine := Upper( cLine )
@@ -235,29 +237,28 @@ FUNCTION hb_iniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
       RETURN .F.
    ENDIF
 
-   IF HB_ISSTRING( xFileName )
-      hFile := FCreate( xFileName )
+   DO CASE
+   CASE HB_ISSTRING( xFileName )
+      IF ( hFile := hb_vfOpen( xFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) == NIL
+         RETURN .F.
+      ENDIF
       lClose := .T.
-   ELSEIF HB_ISNUMERIC( xFileName )
+   CASE HB_ISPOINTER( xFileName )
       hFile := xFileName
       lClose := .F.
-   ELSE
+   OTHERWISE
       RETURN .F.
-   ENDIF
+   ENDCASE
 
-   IF hFile == F_ERROR
-      RETURN .F.
-   ENDIF
-
-   IF FWrite( hFile, cBuffer ) != hb_BLen( cBuffer )
+   IF hb_vfWrite( hFile, cBuffer ) != hb_BLen( cBuffer )
       IF lClose
-         FClose( hFile )
+         hb_vfClose( hFile )
       ENDIF
       RETURN .F.
    ENDIF
 
    IF lClose
-      FClose( hFile )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN .T.

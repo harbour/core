@@ -1,5 +1,5 @@
 /*
- * simple image counter
+ * Simple image counter
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
  *
@@ -46,11 +46,11 @@
 
 #if defined( HBMK_HAS_HBGD )
 
-MEMVAR _SERVER // defined in uHTTPD
-MEMVAR _REQUEST // defined in uHTTPD
+MEMVAR _SERVER   // defined in uHTTPD
+MEMVAR _REQUEST  // defined in uHTTPD
 
-#define IMAGES_IN  ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "contrib" + hb_ps() + "hbgd" + hb_ps() + "tests" + hb_ps() + "digits" + hb_ps()
-#define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + hb_ps() + "counter" + hb_ps() )
+#define IMAGES_IN   hb_DirSepToOS( "../../../contrib/hbgd/tests/digits/" )
+#define IMAGES_OUT  ( _SERVER[ "DOCUMENT_ROOT" ] + hb_ps() + "counter" + hb_ps() )
 
 #define DISPLAY_NUM  10
 
@@ -58,17 +58,17 @@ FUNCTION HRBMAIN()
 
    LOCAL cHtml
 
-   IF hb_HHasKey( _REQUEST, "w" )
+   IF "w" $ _REQUEST
 
       cHtml := CreateCounter( hb_ntos( Val( _REQUEST[ "w" ] ) ) )
-      IF ! Empty( cHtml )
-         uhttpd_SetHeader( "Content-Type", "image/gif" )
-         uhttpd_SetHeader( "Pragma", "no-cache" )
-         uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + hb_ntos( hb_RandomInt( 100 ) ) + ".gif" )
-         uhttpd_Write( cHtml )
-      ELSE
+      IF Empty( cHtml )
          uhttpd_SetHeader( "Content-Type", "text/html" )
          uhttpd_Write( "<h1>Error: No image created</h1>" )
+      ELSE
+         uhttpd_SetHeader( "Content-Type", "image/gif" )
+         uhttpd_SetHeader( "Pragma", "no-cache" )
+         uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + hb_ntos( hb_randInt( 100 ) ) + ".gif" )
+         uhttpd_Write( cHtml )
       ENDIF
    ELSE
       uhttpd_SetHeader( "Content-Type", "text/html" )
@@ -88,34 +88,24 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    LOCAL aNumberImages := {}
    LOCAL n, nValue
 
-   // A value if not passed
-   hb_default( @cValue, Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
-   hb_default( @cBaseImage, "57chevy.gif" )
+   cBaseImage := IMAGES_IN + hb_defaultValue( cBaseImage, "57chevy.gif" )
 
-   IF ! hb_FileExists( IMAGES_IN + cBaseImage )
+   IF ! hb_vfExists( cBaseImage )
       RETURN NIL
    ENDIF
 
-   nValue := Val( cValue )
+   // A value if not passed
+   nValue := Val( hb_defaultValue( cValue, Str( hb_randInt( 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) ) )
 
-   // Fix num lenght
+   // Fix num length
    IF nValue > 10 ^ DISPLAY_NUM
       nValue := 10 ^ DISPLAY_NUM
    ENDIF
 
    cValue := StrZero( nValue, DISPLAY_NUM )
 
-#if 0
-   ? "Value = ", cValue
-
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
-#endif
-
    /* Load a digits image in memory from file */
-   oIDigits := GDImage():LoadFromGif( IMAGES_IN + cBaseImage )
+   oIDigits := GDImage():LoadFromGif( cBaseImage )
 
    /* Get single number images */
 
@@ -137,7 +127,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    nNumWidth := nWidth / nDigits
 
 #if 0
-   ? "nNumWidth, nWidth, nHeight, nDigits = ", nNumWidth, nWidth, nHeight, nDigits
+   ? "nNumWidth, nWidth, nHeight, nDigits =", nNumWidth, nWidth, nHeight, nDigits
 #endif
 
    /* extracts single digits */
@@ -151,7 +141,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    /* Create counter image in memory */
    oI := GDImage():New( nNumWidth * DISPLAY_NUM, nHeight )  // the counter
 #if 0
-   ? "Image dimensions: ", oI:Width(), oI:Height()
+   ? "Image dimensions:", oI:Width(), oI:Height()
 
    /* Allocate background */
    white := oI:SetColor( 255, 255, 255 )
@@ -181,10 +171,10 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
 #if 0
    /* Write Final Counter Image */
-   oI:SaveGif( IMAGES_OUT + "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif" )
+   oI:SaveGif( IMAGES_OUT + "counter" + StrZero( hb_randInt( 99 ), 2 ) + ".gif" )
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
+   ? "Look at", IMAGES_OUT, "directory for output images"
    ?
 #endif
 

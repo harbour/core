@@ -61,26 +61,27 @@ FUNCTION __dbSkipper( nRecs )
    LOCAL nSkipped := 0
 
    IF LastRec() != 0
-      IF nRecs == 0
+      DO CASE
+      CASE nRecs == 0
          dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
+      CASE nRecs > 0 .AND. RecNo() != LastRec() + 1
          DO WHILE nSkipped < nRecs
-            dbSkip( 1 )
+            dbSkip()
             IF Eof()
                dbSkip( -1 )
                EXIT
             ENDIF
-            nSkipped++
+            ++nSkipped
          ENDDO
-      ELSEIF nRecs < 0
+      CASE nRecs < 0
          DO WHILE nSkipped > nRecs
             dbSkip( -1 )
             IF Bof()
                EXIT
             ENDIF
-            nSkipped--
+            --nSkipped
          ENDDO
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN nSkipped

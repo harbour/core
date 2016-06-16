@@ -3,11 +3,9 @@
 
 PROCEDURE Main()
 
-   LOCAL hCairo, hSurface
+   LOCAL hSurface := cairo_pdf_surface_create( hb_FNameExtSet( __FILE__, ".pdf" ), 567, 794 )  // A4
+   LOCAL hCairo := cairo_create( hSurface )
 
-   hSurface := cairo_pdf_surface_create( hb_FNameExtSet( __FILE__, ".pdf" ), 567, 794 )  // A4
-
-   hCairo := cairo_create( hSurface )
    cairo_set_source_rgb( hCairo, 1.0, 1.0, 1.0 )
    cairo_paint( hCairo )
    cairo_select_font_face( hCairo, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL )
@@ -38,15 +36,14 @@ PROCEDURE Main()
    DrawBarcode( hCairo, 440,   1, "CODE128",    "Wikipedia" )
    DrawBarcode( hCairo, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
    DrawBarcode( hCairo, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)" )
-   DrawBarcode( hCairo, 580,   1, "QRCODE",     "http://harbour-project.org/" )
+   DrawBarcode( hCairo, 580,   1, "QRCODE",     "https://en.wikipedia.org/wiki/QR_Code" )
    cairo_destroy( hCairo )
    cairo_surface_write_to_png( hSurface, hb_FNameExtSet( __FILE__, ".png" ) )
    cairo_surface_destroy( hSurface )
 
    RETURN
 
-
-PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
+STATIC PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
 
    LOCAL hZebra, nLineHeight, cTxt
 
@@ -66,9 +63,10 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
    CASE "DATAMATRIX" ; hZebra := hb_zebra_create_datamatrix( cCode, nFlags ); nLineHeight := nLineWidth ; EXIT
    CASE "QRCODE"     ; hZebra := hb_zebra_create_qrcode( cCode, nFlags ); nLineHeight := nLineWidth ; EXIT
    ENDSWITCH
+
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
-         IF Empty( nLineHeight )
+         IF nLineHeight == NIL
             nLineHeight := 16
          ENDIF
          cairo_move_to( hCairo, 40, nY + 13 )

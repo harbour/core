@@ -62,8 +62,8 @@ FUNCTION hb_BuildInfo( n )
    v[ _HB_VER_PLATFORM           ] := OS()
    v[ _HB_VER_BUILD_DATE         ] := Left( hb_Version( HB_VERSION_BUILD_DATE_STR ), 11 )
    v[ _HB_VER_BUILD_TIME         ] := hb_Version( HB_VERSION_BUILD_TIME )
-   v[ _HB_VER_LENTRY             ] := hb_Version( HB_VERSION_CHANGELOG_LAST )
-   v[ _HB_VER_CHLCVS             ] := hb_Version( HB_VERSION_CHANGELOG_ID )
+   v[ _HB_VER_LENTRY             ] := hb_Version( HB_VERSION_COMMIT_INFO )
+   v[ _HB_VER_CHLCVS             ] := hb_Version( HB_VERSION_ID )
    v[ _HB_VER_C_USR              ] := hb_Version( HB_VERSION_FLAG_C )
    v[ _HB_VER_L_USR              ] := hb_Version( HB_VERSION_FLAG_LINKER )
    v[ _HB_VER_PRG_USR            ] := hb_Version( HB_VERSION_FLAG_PRG )
@@ -83,19 +83,11 @@ FUNCTION hb_BuildInfo( n )
 #else
    v[ _HB_COMPAT_C53             ] := .F.
 #endif
-   v[ _HB_COMPAT_XPP             ] := .T. /* Converted to library in Harbour. */
-   v[ _HB_COMPAT_VO              ] := .T. /* Converted to library in Harbour. */
-#ifdef HB_COMPAT_FLAGSHIP
-   v[ _HB_COMPAT_FLAGSHIP        ] := .T.
-#else
-   v[ _HB_COMPAT_FLAGSHIP        ] := .F.
-#endif
-#ifdef HB_COMPAT_FOXPRO
-   v[ _HB_COMPAT_FOXPRO          ] := .T.
-#else
-   v[ _HB_COMPAT_FOXPRO          ] := .F.
-#endif
-   v[ _HB_COMPAT_DBASE           ] := .T. /* Converted to library in Harbour. */
+   v[ _HB_COMPAT_XPP             ] := hb_IsFunction( "__HBEXTERN__HBXPP__" )
+   v[ _HB_COMPAT_VO              ] := hb_IsFunction( "__HBEXTERN__HBVO__" )  /* Library doesn't exist yet */
+   v[ _HB_COMPAT_FLAGSHIP        ] := hb_IsFunction( "__HBEXTERN__HBFSHIP__" )
+   v[ _HB_COMPAT_FOXPRO          ] := hb_IsFunction( "__HBEXTERN__HBFOXPRO__" )
+   v[ _HB_COMPAT_DBASE           ] := hb_IsFunction( "__HBEXTERN__HBDBASE__" )  /* Library doesn't exist yet */
    v[ _HB_HARBOUR_OBJ_GENERATION ] := .F. /* Always off in Harbour */
    v[ _HB_HARBOUR_STRICT_ANSI_C  ] := .F. /* Fake value, unlikely it's turned on */
    v[ _HB_CPLUSPLUS              ] := hb_Version( HB_VERSION_COMPILER_CPP )

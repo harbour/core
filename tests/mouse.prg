@@ -1,20 +1,20 @@
-/*
- * Copyright 2000 Alejandro de Garate <alex_degarate hotmail com>
- *
- * Test mouse for Harbour
- */
+/* Copyright 2000 Alejandro de Garate <alex_degarate hotmail com> */
+
+/* Test mouse for Harbour */
 
 #include "inkey.ch"
+#include "setcurs.ch"
 
 PROCEDURE Main()
 
-   LOCAL nR := 5, nC := 38
+   LOCAL nR := 5
+   LOCAL nC := 38
 
-   SET CURSOR OFF
+   SetCursor( SC_NONE )
    CLS
    IF ! MPresent()
-      ? " No mouse present !"
-      QUIT
+      ? "No mouse present !"
+      RETURN
    ENDIF
 
    @ 0, 0 TO MaxRow(), MaxCol() DOUBLE
@@ -41,7 +41,6 @@ PROCEDURE Main()
 
    SetPos( MaxRow(), 0 )
 
-   SET CURSOR ON
    ?
 
    RETURN
@@ -54,16 +53,9 @@ STATIC FUNCTION MUPDATE()
    RETURN 0
 
 STATIC FUNCTION MINRECT( nTop, nLeft, nBott, nRight )
-
-   LOCAL lInside := .F.
-
-   IF MRow() >= nTop .AND. MRow() <= nBott
-      IF MCol() >= nLeft .AND. MCol() <= nRight
-         lInside := .T.
-      ENDIF
-   ENDIF
-
-   RETURN lInside
+   RETURN ;
+      MRow() >= nTop .AND. MRow() <= nBott .AND. ;
+      MCol() >= nLeft .AND. MCol() <= nRight
 
 // First test: Check the boundaries of the main window
 
@@ -71,7 +63,7 @@ STATIC PROCEDURE TEST1()
 
    LOCAL nKey
 
-   @ MaxRow() - 3, 25 SAY "Move the cursor until the UPPER side "
+   @ MaxRow() - 3, 25 SAY PadR( "Move the cursor until the UPPER side", 40 )
    MUPDATE()
 
    DO WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
@@ -84,7 +76,7 @@ STATIC PROCEDURE TEST1()
       ENDIF
    ENDDO
 
-   @ MaxRow() - 3, 25 SAY "Move the cursor until the BOTTOM side  "
+   @ MaxRow() - 3, 25 SAY PadR( "Move the cursor until the BOTTOM side", 40 )
 
    DO WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
       MUPDATE()
@@ -96,7 +88,7 @@ STATIC PROCEDURE TEST1()
       ENDIF
    ENDDO
 
-   @ MaxRow() - 3, 25 SAY "Move the cursor until the LEFT side  "
+   @ MaxRow() - 3, 25 SAY PadR( "Move the cursor until the LEFT side", 40 )
 
    DO WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
       MUPDATE()
@@ -108,7 +100,7 @@ STATIC PROCEDURE TEST1()
       ENDIF
    ENDDO
 
-   @ MaxRow() - 3, 25 SAY "Move the cursor until the RIGHT side "
+   @ MaxRow() - 3, 25 SAY PadR( "Move the cursor until the RIGHT side", 40 )
 
    DO WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
       MUPDATE()
@@ -120,7 +112,7 @@ STATIC PROCEDURE TEST1()
       ENDIF
    ENDDO
 
-   @ MaxRow() - 3, 20 SAY Space( 50 )
+   @ MaxRow() - 3, 25 SAY Space( 40 )
    @ 11, 22 SAY "Pass"
 
    RETURN
@@ -129,7 +121,7 @@ STATIC PROCEDURE TEST1()
 
 STATIC PROCEDURE TEST2( nR, nC )
 
-   LOCAL cSkip := "", nKey, nPress := 0
+   LOCAL nKey, nPress := 0
 
    @ nR +  0, nC SAY "+---------|---------+"
    @ nR +  1, nC SAY "| +===+ +===+ +===+ |"
@@ -146,21 +138,12 @@ STATIC PROCEDURE TEST2( nR, nC )
 
    Set( _SET_EVENTMASK, INKEY_ALL )
 
-   IF ! Empty( cSkip )
-      IF Upper( cSkip ) == "BREAK"
-         SetCancel( .T. )
-      ELSE
-         SetCancel( .F. )
-      ENDIF
-   ENDIF
-
    MUPDATE()
 
-   WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
+   DO WHILE ( nKey := Inkey( 0, INKEY_ALL ) ) != K_TAB
 
       DO CASE
-      CASE nKey == K_MOUSEMOVE
-         // mouse has been moved
+      CASE nKey == K_MOUSEMOVE    // mouse has been moved
          IF MINRECT( 19, 40, 22, 60 )
             MHide()
          ELSE
@@ -169,49 +152,43 @@ STATIC PROCEDURE TEST2( nR, nC )
          CHECKEXIT()
          MUPDATE()
 
-      CASE nKey == K_LBUTTONDOWN
-         // Left mouse button was pushed
+      CASE nKey == K_LBUTTONDOWN  // Left mouse button was pushed
          @ nR + 2, nC + 3 SAY "XXX"
          @ nR + 3, nC + 3 SAY "XXX"
          @ nR + 6, nC + 3 SAY "Down"
-         nPress ++
+         nPress++
 
-      CASE nKey == K_LBUTTONUP
-         // Left mouse button was released
+      CASE nKey == K_LBUTTONUP    // Left mouse button was released
          @ nR + 2, nC + 3 SAY "   "
          @ nR + 3, nC + 3 SAY "   "
          @ nR + 6, nC + 3 SAY "Up  "
 
-      CASE nKey == K_MBUTTONDOWN
-         // Middle mouse button was pushed
+      CASE nKey == K_MBUTTONDOWN  // Middle mouse button was pushed
          @ nR + 2, nC + 10 SAY "XXX"
          @ nR + 3, nC + 10 SAY "XXX"
          @ nR + 6, nC + 10 SAY "Down"
-         nPress ++
+         nPress++
 
-      CASE nKey == K_MBUTTONUP
-         // Middle mouse button was released
+      CASE nKey == K_MBUTTONUP    // Middle mouse button was released
+         @ nR + 2, nC + 10 SAY "   "
+         @ nR + 3, nC + 10 SAY "   "
          @ nR + 6, nC + 10 SAY "Up  "
 
-      CASE nKey == K_RBUTTONDOWN
-         // Right mouse button was pushed
+      CASE nKey == K_RBUTTONDOWN  // Right mouse button was pushed
          @ nR + 2, nC + 15 SAY "XXX"
          @ nR + 3, nC + 15 SAY "XXX"
          @ nR + 6, nC + 15 SAY "Down"
-         nPress ++
+         nPress++
 
-      CASE nKey == K_RBUTTONUP
-         // Right mouse button was released
+      CASE nKey == K_RBUTTONUP    // Right mouse button was released
          @ nR + 2, nC + 15 SAY "   "
          @ nR + 3, nC + 15 SAY "   "
          @ nR + 6, nC + 15 SAY "Up  "
 
-      CASE nKey == K_LDBLCLK
-         // "The left mouse button was double-clicked."
+      CASE nKey == K_LDBLCLK      // "The left mouse button was double-clicked."
          @ 13, 22 SAY "Pass"
 
-      CASE nKey == K_RDBLCLK
-         // "The right mouse button was double-clicked."
+      CASE nKey == K_RDBLCLK      // "The right mouse button was double-clicked."
          @ 14, 22 SAY "Pass"
 
       OTHERWISE
@@ -227,13 +204,12 @@ STATIC PROCEDURE TEST2( nR, nC )
       IF nPress > 6
          EXIT
       ENDIF
-
    ENDDO
 
    @ MaxRow() - 3, 20 SAY Space( 50 )
    @ 12, 22 SAY "Pass"
 
-   SET CURSOR ON
+   SetCursor( SC_NORMAL )
 
    @ 20, 1 SAY "MOUSE TEST FINISH!"
    ?
@@ -245,7 +221,7 @@ STATIC PROCEDURE CHECKEXIT()
    IF ! MINRECT( MaxRow() - 2, MaxCol() - 11, MaxRow(), MaxCol() )
       RETURN
    ENDIF
-   SET CURSOR ON
+   SetCursor( SC_NORMAL )
    CLS
    ? "MOUSE TEST FINISH!"
    ?

@@ -1,6 +1,6 @@
 #require "hbgd"
 
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 
@@ -22,6 +22,8 @@ PROCEDURE Main()
    LOCAL ccode13    := "P48WBQ7BX3M73X8V3WRT7F9JW"
    LOCAL ccode8     := "P48WBQ7BX3M73X8V3WRT7F9JW"
    LOCAL ccode128   := "P48WBQ7BX3M73X8V3WRT7F9JW"
+
+   hb_vfDirMake( IMAGES_OUT )
 
    /* here is the list of arguments
    1- Barcode Type 13,8  and 128

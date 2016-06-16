@@ -55,58 +55,53 @@ FUNCTION gdImageEllipse( im, cx, cy, w, h, color )
 
 FUNCTION gdImageFTWidth( fontname, ptsize, angle )
 
-   LOCAL nWidth := 0
-   LOCAL cErr
    LOCAL aRect := Array( 8 )
 
-   hb_default( @fontname, "Arial" )
-   hb_default( @ptsize, 8 )
-   hb_default( @angle, 0 )
+   IF gdImageStringFTEx( , @aRect, 0, ;
+      hb_defaultValue( fontname, "Arial" ), ;
+      hb_defaultValue( ptsize, 8 ), ;
+      hb_defaultValue( angle, 0 ), 0, 0, "M" ) == ""
 
-   cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
-
-   IF cErr == ""
-      nWidth := aRect[ 3 ] - aRect[ 1 ]
+      RETURN aRect[ 3 ] - aRect[ 1 ]
    ENDIF
 
-   RETURN nWidth
+   RETURN 0
 
 FUNCTION gdImageFTHeight( fontname, ptsize, angle )
 
-   LOCAL nWidth := 0
-   LOCAL cErr
    LOCAL aRect := Array( 8 )
 
-   hb_default( @fontname, "Arial" )
-   hb_default( @ptsize, 8 )
-   hb_default( @angle, 0 )
+   IF gdImageStringFTEx( , @aRect, 0, ;
+      hb_defaultValue( fontname, "Arial" ), ;
+      hb_defaultValue( ptsize, 8 ), ;
+      hb_defaultValue( angle, 0 ), 0, 0, "M" ) == ""
 
-   cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
-   IF cErr == ""
-      nWidth := aRect[ 2 ] - aRect[ 8 ]
+      RETURN aRect[ 2 ] - aRect[ 8 ]
    ENDIF
 
-   RETURN nWidth
+   RETURN 0
 
 FUNCTION gdImageFTSize( string, fontname, ptsize, angle )
 
-   LOCAL nWidth  := 0
-   LOCAL nHeight := 0
+   LOCAL nWidth
+   LOCAL nHeight
    LOCAL nX, nY
-   LOCAL cErr
    LOCAL aRect := Array( 8 )
 
-   hb_default( @fontname, "Arial" )
-   hb_default( @ptsize, 8 )
-   hb_default( @angle, 0 )
+   IF gdImageStringFTEx( , @aRect, 0, ;
+      hb_defaultValue( fontname, "Arial" ), ;
+      hb_defaultValue( ptsize, 8 ), ;
+      hb_defaultValue( angle, 0 ), 0, 0, string ) == ""
 
-   cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, string )
-
-   IF cErr == ""
       nWidth  := aRect[ 3 ] - aRect[ 1 ]
       nHeight := aRect[ 2 ] - aRect[ 8 ]
       nX      := aRect[ 1 ]
       nY      := aRect[ 2 ]
+   ELSE
+      nWidth  := 0
+      nHeight := 0
+      nX      := 0
+      nY      := 0
    ENDIF
 
    RETURN { nWidth, nHeight, nX, nY }
@@ -117,8 +112,7 @@ FUNCTION gdImageStringFT( im, fg, fontname, ptsize, angle, x, y, string, ;
    LOCAL cErr
    LOCAL aRect := Array( 8 )
 
-   cErr := gdImageStringFTEx( , @aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
-   IF cErr == ""
+   IF ( cErr := gdImageStringFTEx( , @aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution ) ) == ""
       cErr := gdImageStringFTEx( im, aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
    ENDIF
 
@@ -131,7 +125,7 @@ FUNCTION gdImageFromFile( cFile )
    LOCAL hFile := { => }
    LOCAL oImage
 
-   IF hb_FileExists( cFile )
+   IF hb_vfExists( cFile )
       hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
 
       SWITCH Lower( cExt )
@@ -173,31 +167,26 @@ FUNCTION gdImageFromFile( cFile )
 
 FUNCTION gdImageToString( oImage )
 
-   LOCAL cString
-
    IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) ) .AND. oImage:cType != NIL
+
       SWITCH oImage:cType
       CASE "jpeg"
-         cString := oImage:ToStringJpeg()
-         EXIT
+         RETURN oImage:ToStringJpeg()
       CASE "gif"
-         cString := oImage:ToStringGif()
-         EXIT
+         RETURN oImage:ToStringGif()
       CASE "png"
-         cString := oImage:ToStringPng()
-         EXIT
+         RETURN oImage:ToStringPng()
       ENDSWITCH
    ENDIF
 
-   RETURN cString
+   RETURN NIL
 
 PROCEDURE gdImageToFile( oImage, cFile )
 
    LOCAL cString, cExt
 
-   hb_default( @cFile, "image" )
-
    IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) ) .AND. oImage:cType != NIL
+
       SWITCH oImage:cType
       CASE "jpeg"
          cString := oImage:ToStringJpeg()
@@ -211,11 +200,10 @@ PROCEDURE gdImageToFile( oImage, cFile )
          cString := oImage:ToStringPng()
          cExt := ".png"
          EXIT
-      OTHERWISE
-         cExt := ""
       ENDSWITCH
+
       IF cString != NIL
-         hb_MemoWrit( cFile + cExt, cString )
+         hb_MemoWrit( hb_defaultValue( cFile, "image" ) + cExt, cString )
       ENDIF
    ENDIF
 
@@ -223,22 +211,19 @@ PROCEDURE gdImageToFile( oImage, cFile )
 
 PROCEDURE gdImageToHandle( oImage, nHandle )
 
-   hb_default( @nHandle, 1 )
+   IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) ) .AND. oImage:cType != NIL
 
-   IF HB_ISOBJECT( oImage ) .AND. ( oImage:className() == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
-      IF oImage:cType != NIL
-         SWITCH oImage:cType
-         CASE "jpeg"
-            oImage:OutputJpeg( nHandle )
-            EXIT
-         CASE "gif"
-            oImage:OutputGif( nHandle )
-            EXIT
-         CASE "png"
-            oImage:OutputPng( nHandle )
-            EXIT
-         ENDSWITCH
-      ENDIF
+      SWITCH oImage:cType
+      CASE "jpeg"
+         oImage:OutputJpeg( nHandle )
+         RETURN
+      CASE "gif"
+         oImage:OutputGif( nHandle )
+         RETURN
+      CASE "png"
+         oImage:OutputPng( nHandle )
+         RETURN
+      ENDSWITCH
    ENDIF
 
    RETURN

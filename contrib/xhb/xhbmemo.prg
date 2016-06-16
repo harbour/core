@@ -48,34 +48,30 @@
 #include "memoedit.ch"
 #include "inkey.ch"
 
-//
 // A specialized HBEditor which can simulate MemoEdit() behaviour
-//
-CREATE CLASS xhb_TMemoEditor FROM XHBEditor
 
-   VAR    xUserFunction   // User Function called to change default MemoEdit() behaviour
+CREATE CLASS xhb_TMemoEditor INHERIT XHBEditor
 
-   VAR    aEditKeys
-   VAR    aAsciiKeys
-   VAR    aConfigurableKeys
-   VAR    aMouseKeys
-   VAR    aExtKeys                                 // Extended keys. For HB_EXT_INKEY use only.
+   VAR xUserFunction   // User Function called to change default MemoEdit() behaviour
+
+   VAR aEditKeys
+   VAR aConfigurableKeys
+   VAR aMouseKeys
+   VAR aExtKeys
 
    METHOD MemoInit( xUDF )                         // This method is called after ::New() returns to perform ME_INIT actions
-   METHOD Edit()                                   // Calls ::Super:Edit(nKey) but is needed to handle configurable keys
+   METHOD Edit()                                   // Calls ::Super:Edit( nKey ) but is needed to handle configurable keys
    METHOD KeyboardHook( nKey )                     // Gets called every time there is a key not handled directly by HBEditor
 
-   METHOD ExistUdf() INLINE HB_ISSTRING( ::xUserFunction )
-   METHOD HandleUdf( nKey, nUdfReturn, lEdited )   // Handles requests returned to MemoEdit() by udf
-   METHOD CallUdf( nMode )                         // Call user function. ( old xDo )
+   METHOD ExistUdf() INLINE HB_ISSTRING( ::xUserFunction ) .OR. HB_ISEVALITEM( ::xUserFunction )
+   METHOD HandleUdf( nKey, nUdfReturn, lEdited )   // Handles requests returned to MemoEdit() by UDF
+   METHOD CallUdf( nMode )                         // Call user function. (old xDo)
 
 ENDCLASS
 
 METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
 
    LOCAL nUdfReturn
-
-   __defaultNIL( @xUDF, NIL )
 
    ::aEditKeys := { ;
       K_DOWN, ;
@@ -100,59 +96,63 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
       K_TAB, ;
       K_SH_TAB }
 
-   ::aAsciiKeys := Array( 255 - 31 ) // asc codes greater than space.
-   AEval( ::aAsciiKeys, {| c, i | iif( Empty( c ), ::aAsciiKeys[ i ] := i + 31, ) } )
-
    // Save/Init object internal representation of user function
-   //
+
    ::xUserFunction := xUDF
 
+   // NOTE: K_ALT_W is not compatible with Cl*pper exit memo and save key,
+   //       it's used as an alternative for K_CTRL_W with GT's without
+   //       extended keycode support
 
-   // NOTE: K_ALT_W is not compatible with clipper exit memo and save key,
-   //       but I cannot discriminate K_CTRL_W and K_CTRL_END from harbour
-   //       code.
-   //
-
-#ifdef HB_EXT_INKEY
-   /* CTRL_V in not same as K_INS, this works as paste selected text to clipboard. */
-   ::aConfigurableKeys := { K_CTRL_N, K_CTRL_Y, K_CTRL_T, K_CTRL_B, K_CTRL_W, K_CTRL_RET }
-   ::aExtKeys := { K_ALT_W, K_CTRL_A, K_CTRL_C, K_CTRL_V, K_SH_INS, K_CTRL_X, K_SH_DOWN, K_SH_UP, K_SH_DEL, K_SH_RIGHT, K_SH_LEFT, K_SH_END, K_SH_HOME }
-#else
-   /* CTRL_V is same as K_INS, so it has special treatment in memoedit. */
-   ::aConfigurableKeys := { K_CTRL_N, K_CTRL_Y, K_CTRL_T, K_CTRL_B, K_CTRL_W }
-   ::aExtKeys := {}
-#endif
-
+   /* CTRL_V in not same as K_INS when extended keycodes are available, this works as paste selected text to clipboard. */
+   /* CTRL_V is same as K_INS when extended keycodes are not available, so it has special treatment in memoedit. */
+   ::aConfigurableKeys := { ;
+      K_CTRL_N, ;
+      K_CTRL_Y, ;
+      K_CTRL_T, ;
+      K_CTRL_B, ;
+      K_CTRL_W, ;
+      K_CTRL_RETURN }
+   ::aExtKeys := { ;
+      hb_keyNew( "W", HB_KF_ALT  ), ;
+      hb_keyNew( "A", HB_KF_CTRL ), ;
+      hb_keyNew( "B", HB_KF_CTRL ), ;
+      hb_keyNew( "C", HB_KF_CTRL ), ;
+      hb_keyNew( "V", HB_KF_CTRL ), ;
+      hb_keyNew( "X", HB_KF_CTRL ), ;
+      hb_keyNew( HB_KX_INS   , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_DOWN  , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_UP    , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_DEL   , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_RIGHT , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_LEFT  , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_END   , HB_KF_SHIFT ), ;
+      hb_keyNew( HB_KX_HOME  , HB_KF_SHIFT ) }
 
    ::aMouseKeys := { K_LBUTTONUP, K_MWFORWARD, K_MWBACKWARD }
-
 
    IF ::ExistUdf()
       /* Keep calling user function until it returns 0
          2004-08-05 - <maurilio.longo@libero.it>
-                      Clipper 5.2 MemoEdit() treats a NIL as ME_DEFAULT
-      */
+                      Cl*pper 5.2 MemoEdit() treats a NIL as ME_DEFAULT */
       DO WHILE AScan( { ME_DEFAULT, NIL }, nUdfReturn := ::CallUdf( ME_INIT ) ) == 0
 
          // At this time there is no input from user of MemoEdit() only handling
-         // of values returned by ::xUserFunction, so I pass these value on both
+         // of values returned by ::xUserFunction, so I pass this value on both
          // parameters of ::HandleUdf()
-         //
+
          ::HandleUdf( nUdfReturn, nUdfReturn, .F. )
-
       ENDDO
-
    ENDIF
 
    RETURN Self
 
 METHOD Edit() CLASS xhb_TMemoEditor
 
-   LOCAL nKey, nUdfReturn, nNextKey
+   LOCAL nKey, nKeyStd, nUdfReturn, nNextKey
 
    // If I have an user function I need to trap configurable keys and ask to
    // user function if handle them the standard way or not
-   //
 
    IF NextKey() == 0 .AND. ::ExistUdf()
       ::CallUdf( ME_IDLE )
@@ -163,112 +163,100 @@ METHOD Edit() CLASS xhb_TMemoEditor
    DO WHILE ! ::lExitEdit
 
       IF nNextKey == 0
-         nKey := Inkey( 0 )
+         nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) )
       ELSE
          nKey := nNextKey
          nNextKey := 0
       ENDIF
+      nKeyStd := hb_keyStd( nKey )
 
-      IF nNextKey == 0 .AND. ( ::bKeyBlock := SetKey( nKey ) ) != NIL
+      IF nNextKey == 0 .AND. ;
+         ( ( ::bKeyBlock := SetKey( nKey ) ) != NIL .OR. ;
+           ( ::bKeyBlock := SetKey( nKeyStd ) ) != NIL )
 
          Eval( ::bKeyBlock, ::ProcName, ::ProcLine, ReadVar() )
 
          /* 2006-09-15 - E.F. - After SetKey() is executed, if exist nextkey,
-          *                     I need trap this nextkey to memoedit process
-          *                     <nKey> first and the <nNextKey> on the next loop.
-          */
-         nNextKey := NextKey()
+                                I need trap this nextkey to memoedit process
+                                <nKey> first and the <nNextKey> on the next loop. */
+         nNextKey := hb_keyNext( hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) )
 
          IF nNextKey != 0
             Inkey()
          ENDIF
-
       ENDIF
 
       /* 2005-10-24 - <maurilio.longo@libero.it>
-                      Taken from clipper norton guide:
+         Taken from Cl*pper Norton Guide:
 
-                        The user function: <cUserFunction>, a user-defined function
-                        specified as an argument, handles key exceptions and reconfigures
-                        special keys.  The user function is called at various times by
-                        MemoEdit(), most often in response to keys it does not recognize.
-                        Keys that instigate a key exception are all available control keys,
-                        function keys, and Alt keys.  Since these keys are not processed by
-                        MemoEdit(), they can be reconfigured.  Some of these keys have a
-                        default action assigned to them.  In the user function, you perform
-                        various actions, depending on the current MemoEdit() mode, then
-                        RETURN a value telling MemoEdit() what to do next.
+         The user function: <cUserFunction>, a user-defined function
+         specified as an argument, handles key exceptions and reconfigures
+         special keys.  The user function is called at various times by
+         MemoEdit(), most often in response to keys it does not recognize.
+         Keys that instigate a key exception are all available control keys,
+         function keys, and Alt keys.  Since these keys are not processed by
+         MemoEdit(), they can be reconfigured.  Some of these keys have a
+         default action assigned to them.  In the user function, you perform
+         various actions, depending on the current MemoEdit() mode, then
+         RETURN a value telling MemoEdit() what to do next.
 
-                        When the user function argument is specified, MemoEdit() defines two
-                        classes of keys: nonconfigurable and key exceptions.  When a
-                        nonconfigurable key is pressed, MemoEdit() executes it, otherwise a
-                        key exception is generated and the user function is called.  When
-                        there are no keys left in the keyboard buffer for MemoEdit() to
-                        process, the user function is called once again.
-      */
+         When the user function argument is specified, MemoEdit() defines two
+         classes of keys: nonconfigurable and key exceptions.  When a
+         nonconfigurable key is pressed, MemoEdit() executes it, otherwise a
+         key exception is generated and the user function is called.  When
+         there are no keys left in the keyboard buffer for MemoEdit() to
+         process, the user function is called once again. */
 
       IF ::bKeyBlock == NIL
 
-         IF ( AScan( ::aEditKeys, nKey ) > 0 .OR. ;
-              AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
-              AScan( ::aConfigurableKeys, nKey ) > 0 .OR. ;
+         IF ( ! HB_ISNULL( hb_keyChar( nKey ) ) .OR. ;
+              AScan( ::aEditKeys, nKeyStd ) > 0 .OR. ;
+              AScan( ::aConfigurableKeys, nKeyStd ) > 0 .OR. ;
               AScan( ::aExtKeys, nKey ) > 0 .OR. ;
-              ( nKey == K_INS .AND. ! ::ExistUdf() ) .OR. ;
-              ( nKey == K_ESC .AND. ! ::ExistUdf() ) )
+              ( nKeyStd == K_INS .AND. ! ::ExistUdf() ) .OR. ;
+              ( nKeyStd == K_ESC .AND. ! ::ExistUdf() ) )
 
             ::Super:Edit( nKey )
 
-         ELSEIF AScan( ::aConfigurableKeys, nKey ) == 0 .AND. ;
+         ELSEIF AScan( ::aConfigurableKeys, nKeyStd ) == 0 .AND. ;
                 AScan( ::aExtKeys, nKey ) == 0 .AND. ;
-                ( nKey > 255 .OR. nKey < 0 ) .OR. ;
-                ( nKey == K_INS .AND. ::lEditAllow .AND. ::ExistUdf() ) .OR. ;
-                ( nKey == K_ESC .AND. ::ExistUdf() )
+                ( nKeyStd > 255 .OR. nKeyStd < 0 ) .OR. ;
+                ( nKeyStd == K_INS .AND. ::lEditAllow .AND. ::ExistUdf() ) .OR. ;
+                ( nKeyStd == K_ESC .AND. ::ExistUdf() )
 
             ::KeyboardHook( nKey )
-
          ENDIF
-
       ENDIF
 
       IF ::ExistUdf()
 
-         IF AScan( ::aEditKeys, nKey ) > 0 .OR. ;
-            AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
-            AScan( ::aConfigurableKeys, nKey ) > 0 .OR. ;
+         IF ! HB_ISNULL( hb_keyChar( nKey ) ) .OR. ;
+            AScan( ::aEditKeys, nKeyStd ) > 0 .OR. ;
+            AScan( ::aConfigurableKeys, nKeyStd ) > 0 .OR. ;
             AScan( ::aExtKeys, nKey ) > 0 .OR. ;
-            nKey == K_F1
+            nKeyStd == K_F1
 
             IF NextKey() == 0 .AND. ;
-               AScan( ::aConfigurableKeys, nKey ) == 0 .AND. nKey != K_F1
+               AScan( ::aConfigurableKeys, nKeyStd ) == 0 .AND. nKeyStd != K_F1
 
                nUdfReturn := ::CallUdf( ME_IDLE )
-
             ELSE
-
-               IF AScan( ::aConfigurableKeys, nKey ) == 0
+               IF AScan( ::aConfigurableKeys, nKeyStd ) == 0
                   nUdfReturn := ::CallUdf( iif( ::lChanged, ME_UNKEYX, ME_UNKEY ) )
                ELSE
                   nUdfReturn := ::CallUdf( ME_UNKEY )
                ENDIF
-
-
             ENDIF
 
             ::HandleUdf( nKey, nUdfReturn, ::bKeyBlock == NIL )
-
          ENDIF
-
       ENDIF
-
    ENDDO
 
    RETURN Self
 
-
-//
 // I come here if I have an unknown key and it is not a configurable key
 // if there is an user function I leave to it its handling
-//
 METHOD KeyboardHook( nKey ) CLASS xhb_TMemoEditor
 
    LOCAL nUdfReturn
@@ -280,98 +268,93 @@ METHOD KeyboardHook( nKey ) CLASS xhb_TMemoEditor
 
    RETURN Self
 
-
 METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
+
+   LOCAL nKeyStd
 
    /* 2004-08-05 - <maurilio.longo@libero.it>
                    A little trick to be able to handle a nUdfReturn with value of NIL
-                   like it had a value of ME_DEFAULT
-   */
+                   like it had a value of ME_DEFAULT */
 
-   __defaultNIL( @nUdfReturn, ME_DEFAULT )
-   __defaultNIL( @lEdited, .F. )
+   hb_default( @nKey, 0 )
+   hb_default( @nUdfReturn, ME_DEFAULT )
+   hb_default( @lEdited, .F. )
 
    // I won't reach this point during ME_INIT since ME_DEFAULT ends
    // initialization phase of MemoEdit()
-   //
-   SWITCH nUdfReturn
 
-   CASE ME_DEFAULT   // (0)
+   SWITCH nUdfReturn
+   CASE ME_DEFAULT
 
       // HBEditor is not able to handle keys with a value higher than 256 or lower than 1
-      //
-      IF ! lEdited .AND. ;
-         ( AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
-           AScan( { K_ALT_W, K_CTRL_W }, nKey ) > 0 .OR. ;
-           AScan( ::aExtKeys, nKey ) > 0 .OR. ;
-           nKey == K_ESC .OR. ;
-           nKey == K_INS .OR. ;
-           AScan( ::aMouseKeys, nKey ) > 0 )
 
-         ::Super:Edit( nKey )
+      IF ! lEdited
+         nKeyStd := hb_keyStd( nKey )
+         IF ! HB_ISNULL( hb_keyChar( nKey ) ) .OR. ;
+            AScan( { K_ALT_W, K_CTRL_W }, nKeyStd ) > 0 .OR. ;
+            AScan( ::aExtKeys, nKey ) > 0 .OR. ;
+            nKeyStd == K_ESC .OR. ;
+            nKeyStd == K_INS .OR. ;
+            AScan( ::aMouseKeys, nKeyStd ) > 0
 
+            ::Super:Edit( nKey )
+         ENDIF
       ENDIF
       EXIT
 
-   CASE ME_IGNORE    // (32)
+   CASE ME_IGNORE
 
       // Ignore unknown key, only check insert state.
       ::DisplayInsert( ::lInsert() )
       EXIT
 
-   CASE ME_DATA      // (33)
+   CASE ME_DATA
 
-      IF ! lEdited .AND. ;
-         ( AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
-           AScan( ::aExtKeys, nKey ) > 0 .OR. ;
-           nKey == K_ESC .OR. ;
-           nKey == K_INS )
+      IF ! lEdited
+         nKeyStd := hb_keyStd( nKey )
+         IF ! HB_ISNULL( hb_keyChar( nKey ) ) .OR. ;
+            AScan( ::aExtKeys, nKey ) > 0 .OR. ;
+            nKeyStd == K_ESC .OR. ;
+            nKeyStd == K_INS
 
-         ::Super:Edit( nKey )
-
+            ::Super:Edit( nKey )
+         ENDIF
       ENDIF
       EXIT
 
-   CASE ME_TOGGLEWRAP   // (34)
+   CASE ME_TOGGLEWRAP
       ::lWordWrap := ! ::lWordWrap
       EXIT
 
-   CASE ME_TOGGLESCROLL  // (35)
+   CASE ME_TOGGLESCROLL
       ::lVerticalScroll := ! ::lVerticalScroll
       EXIT
 
-   CASE ME_WORDRIGHT    // (100)
+   CASE ME_WORDRIGHT
       ::WordRight()
       EXIT
 
-   CASE ME_BOTTOMRIGHT  // (101)
+   CASE ME_BOTTOMRIGHT
       ::Bottom()
       ::End()
       EXIT
 
-   CASE ME_PASTE        // (110)
+   CASE ME_PASTE
       // see inkey.ch
       EXIT
 
-   OTHERWISE            // ME_UNKEY (1 TO 31)
+   OTHERWISE            // ME_UNKEY
 
-      /* 2006-08-02 - E.F. - (NG) Process requested action corresponding to
-       *                     key value.
-       */
-      nKey := nUdfReturn
+      IF ! lEdited
+         /* 2006-08-02 - E.F. - (NG) Process requested action corresponding to key value. */
+         nKeyStd := hb_keyStd( nUdfReturn )
+         IF ( nKeyStd >= 1 .AND. nKeyStd <= 31 ) .OR. ;
+            AScan( ::aExtKeys, nKey ) > 0
 
-#ifdef HB_EXT_INKEY
-      IF ! lEdited .AND. ( ( nKey >= 1 .AND. nKey <= 31 ) .OR.;
-         ( nKey >= 513 .AND. nKey <= 538 ) .OR. AScan( ::aExtKeys, nKey ) > 0 )
-         ::Super:Edit( nKey )
+            ::Super:Edit( nKey )
+         ENDIF
       ENDIF
       EXIT
-#else
-      IF ! lEdited .AND. nKey >= 1 .AND. nKey <= 31
-         ::Super:Edit( nKey )
-      ENDIF
-      EXIT
-#endif
 
    ENDSWITCH
 
@@ -384,19 +367,15 @@ METHOD CallUdf( nMode ) CLASS xhb_TMemoEditor
    LOCAL xResult
 
    IF ::ExistUdf()
-      // Latest parameter, <Self>, is an xHarbour extension, maybe
-      // should be guarded as such with some ifdef
+      // Latest parameter, <Self>, is an xHarbour extension
       xResult := Do( ::xUserFunction, nMode, ::nRow, ::nCol - 1, Self )
 
       ::SetPos( nCurRow, nCurCol )
-
    ENDIF
 
    RETURN xResult
 
-//                  Prg Level Call of MemoEdit()
-// -------------------------------------------------------------------//
-
+// Prg Level Call of MemoEdit()
 FUNCTION xhb_MemoEdit( ;
       cString, ;
       nTop, nLeft, ;
@@ -418,62 +397,57 @@ FUNCTION xhb_MemoEdit( ;
    __defaultNIL( @nBottom, MaxRow() )
    __defaultNIL( @nRight, MaxCol() )
    __defaultNIL( @lEditMode, .T. )
-   __defaultNIL( @nLineLength, NIL )
-   /* 2005-10-24 - <maurilio.longo@libero.it>
-                   NG says 4, but clipper 5.2e inserts 3 spaces when pressing K_TAB
-   */
-   __defaultNIL( @nTabSize, 3 )
+   __defaultNIL( @nTabSize, 4 )
    __defaultNIL( @nTextBuffRow, 1 )
    __defaultNIL( @nTextBuffColumn, 0 )
    __defaultNIL( @nWindowRow, 0 )
    __defaultNIL( @nWindowColumn, nTextBuffColumn )
 
    // 2006-07-22 - E.F. Check argument types.
-   //
-   IF ! HB_ISNIL( cString ) .AND. ! HB_ISSTRING( cString ) .AND. ! HB_ISMEMO( cString )
-      Throw( ErrorNew( "BASE", 0, 1127, "<cString> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nTop ) .AND. ! HB_ISNUMERIC( nTop )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTop> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nLeft ) .AND. ! HB_ISNUMERIC( nLeft )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nLeft> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nRight ) .AND. ! HB_ISNUMERIC( nRight )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nRight> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nBottom ) .AND. ! HB_ISNUMERIC( nBottom )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nBottom> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( lEditMode ) .AND. ! HB_ISLOGICAL( lEditMode )
-      Throw( ErrorNew( "BASE", 0, 1127, "<lEditMode> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( xUDF ) .AND. ! HB_ISSTRING( xUDF ) .AND. ! HB_ISLOGICAL( xUDF )
-      Throw( ErrorNew( "BASE", 0, 1127, "<cUserFunction> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nLineLength ) .AND. ! HB_ISNUMERIC( nLineLength )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nLineLength> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nTabSize ) .AND. ! HB_ISNUMERIC( nTabSize )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTabSize> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nTextBuffRow ) .AND. ! HB_ISNUMERIC( nTextBuffRow )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffRow> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nTextBuffColumn ) .AND. ! HB_ISNUMERIC( nTextBuffColumn )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffColumn> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nWindowRow ) .AND. ! HB_ISNUMERIC( nWindowRow )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nWindowRow> Argument type error", ProcName() ) )
-   ENDIF
-   IF ! HB_ISNIL( nWindowColumn ) .AND. ! HB_ISNUMERIC( nWindowColumn )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nWindowColumn> Argument type error", ProcName() ) )
-   ENDIF
 
+   IF ! HB_ISSTRING( cString )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<cString> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISNUMERIC( nTop )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTop> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISNUMERIC( nLeft )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nLeft> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISNUMERIC( nRight )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nRight> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISNUMERIC( nBottom )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nBottom> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISLOGICAL( lEditMode )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<lEditMode> Argument type error", ProcName() ) )
+   ENDIF
+   IF xUDF != NIL .AND. ! HB_ISSTRING( xUDF ) .AND. ! HB_ISLOGICAL( xUDF )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<cUserFunction> Argument type error", ProcName() ) )
+   ENDIF
+   IF nLineLength != NIL .AND. ! HB_ISNUMERIC( nLineLength )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nLineLength> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISNUMERIC( nTabSize )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTabSize> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISNUMERIC( nTextBuffRow )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTextBuffRow> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISNUMERIC( nTextBuffColumn )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTextBuffColumn> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISNUMERIC( nWindowRow )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nWindowRow> Argument type error", ProcName() ) )
+   ENDIF
+   IF ! HB_ISNUMERIC( nWindowColumn )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nWindowColumn> Argument type error", ProcName() ) )
+   ENDIF
 
    // 2006-07-22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTop,nLeft,nRight,nBottom> Argument error", ProcName() ) )
+      Throw( xhb_ErrorNew( "BASE", 0, 1127, "<nTop,nLeft,nRight,nBottom> Argument error", ProcName() ) )
    ENDIF
 
    IF HB_ISSTRING( xUDF ) .AND. Empty( xUDF )
@@ -481,8 +455,7 @@ FUNCTION xhb_MemoEdit( ;
    ENDIF
 
    /* 2005-10-24 - <maurilio.longo@libero.it>
-                   Clipper MemoEdit() converts Tabs into spaces
-   */
+                   Cl*pper MemoEdit() converts tabs into spaces */
    oEd := xhb_TMemoEditor():New( StrTran( cString, Chr( 9 ), Space( nTabSize ) ), ;
       nTop, nLeft, nBottom, nRight, ;
       lEditMode, ;
@@ -499,21 +472,18 @@ FUNCTION xhb_MemoEdit( ;
    oEd:MemoInit( xUDF )
    oEd:RefreshWindow()
 
-   // 2006-08-06 - E.F. Clipper's  <cUserFunction> in .T. or. F. is samething.
-   //
-   IF ! HB_ISLOGICAL( xUDF ) // .OR. cUserFunction
-
+   // 2006-08-06 - E.F. Cl*pper's <cUserFunction> in .T. or. F. means the same.
+   IF HB_ISLOGICAL( xUDF )
+      /* 2006-07-24 - E.F. - If xUDF is in .F. or .T. cause diplay memo content and exit,
+                             so we have to repos the cursor at bottom of memoedit
+                             screen after that. */
+      SetPos( Min( nBottom, MaxRow() ), 0 )
+   ELSE
       oEd:Edit()
 
       IF oEd:lSaved
-         cString := oEd:GetText( .T. )  // Clipper inserts Soft CR
+         cString := oEd:GetText( .T. )  // Cl*pper inserts Soft CR
       ENDIF
-
-   ELSE
-      // 2006-07-24 - E.F. - If xUDF is in .F. or .T. cause diplay memo content and exit,
-      //                     so we have to repos the cursor at bottom of memoedit
-      //                     screen after that.
-      SetPos( Min( nBottom, MaxRow() ), 0 )
    ENDIF
 
    RETURN cString

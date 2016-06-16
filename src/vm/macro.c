@@ -93,7 +93,7 @@ static int s_macroFlags = HB_SM_DEFAULT;
 
 #define HB_SM_ISUSERCP()         ( HB_CDP_ISCHARUNI( hb_vmCDP() ) ? HB_COMPFLAG_USERCP : 0 )
 
-/* ************************************************************************* */
+/* - */
 
 /* Compile passed string into a pcode buffer
  *
@@ -1238,7 +1238,7 @@ HB_FUNC( HB_SETMACRO )
       hb_ret();    /* return NIL */
 }
 
-/* ************************************************************************* */
+/* - */
 
 /* returns the order + 1 of a variable if defined or zero */
 int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL )
@@ -1788,7 +1788,7 @@ void hb_macroGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
    pFunc->nPCodePos += nSize;
 }
 
-/* ************************************************************************* */
+/* - */
 
 void hb_macroError( int iError, HB_COMP_DECL )
 {
@@ -1796,9 +1796,7 @@ void hb_macroError( int iError, HB_COMP_DECL )
    HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* clear CONT bit */
 }
 
-/*
- * Start a new pcode buffer for a codeblock
- */
+/* Start a new pcode buffer for a codeblock */
 void hb_macroCodeBlockStart( HB_COMP_DECL )
 {
    PHB_PCODE_INFO pCB;

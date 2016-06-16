@@ -1,43 +1,51 @@
 /*
- * demonstration/test code for using memvars in threads
+ * Demonstration/test code for using memvars in threads
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  */
 
-#define N_THREADS 5
-#define N_COUNT   1000000
-#define N_INIT    100
+#define N_THREADS  5
+#define N_COUNT    1000000
+#define N_INIT     100
 
 memvar m_var
 
-proc main()
+procedure Main()
+
    local aThreads := {}, i, nSum
 
    ? Version()
    private m_var := N_INIT * 25
-   ? "Starting threads: "
+   ? "Starting threads:", ""
    for i :=1 to N_THREADS
-      aadd( aThreads, hb_threadStart( @thFunc() ) )
+      AAdd( aThreads, hb_threadStart( @thFunc() ) )
       ?? "<" + hb_ntos( i ) + ">"
    next
    ? "Waiting for threads..."
    nSum := 0
-   aEval( aThreads, {| x | hb_threadJoin( x, @i ), nSum += i } )
+   AEval( aThreads, {| x | hb_threadJoin( x, @i ), nSum += i } )
    ? "Threads joined"
    ? "Sum of results:", nSum
    ? "     should be:", N_THREADS * ( N_INIT + N_COUNT ), ;
-     iif( nSum == N_THREADS * ( N_INIT + N_COUNT ), "OK", "ERROR" )
-return
+      iif( nSum == N_THREADS * ( N_INIT + N_COUNT ), "OK", "ERROR" )
 
-static func thFunc()
+   return
+
+static function thFunc()
+
    private m_var := N_INIT - 10
-return do()
 
-static func do()
+   return Do()
+
+static function Do()
+
    local i
+
    private m_var := m_var + 10
+
    for i := 1 to N_COUNT
       ++m_var
    next
-return m_var
+
+   return m_var

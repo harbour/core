@@ -1,9 +1,8 @@
-/*
- * Strips VCS id headers from source files
- *
- * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
- *
- */
+#!/usr/bin/env hbmk2
+
+/* Copyright 2013 Viktor Szakats (vszakats.net/harbour) */
+
+/* Strips VCS id headers from source files */
 
 #pragma -w3
 #pragma -km+
@@ -52,27 +51,29 @@ PROCEDURE Main()
       "' $" + "Id" + "$" + hb_eol() + ;
       "'" + hb_eol()
 
-   FOR EACH aFile IN Directory( hb_osFileMask() )
+   LOCAL hReplace := { ;
+      cHdr1 =>, ;
+      cHdr2 =>, ;
+      cHdr3 =>, ;
+      cHdr4 =>, ;
+      cHdr5 =>, ;
+      cHdr6 =>, ;
+      cHdr7 => }
+
+   FOR EACH aFile IN hb_vfDirectory( hb_osFileMask() )
 
       cExt := hb_FNameExt( aFile[ F_NAME ] )
 
       IF Empty( cExt ) .OR. ;
          "|" + cExt + "|" $ "|.c|.h|.hb|.prg|.hbm|.hbp|.hbc|.ini|.bat|.sh|.vbs|.def|.api|.ch|.txt|.mk|"
 
-         tmp := MemoRead( aFile[ F_NAME ] )
-         tmp := StrTran( tmp, cHdr1 )
-         tmp := StrTran( tmp, cHdr2 )
-         tmp := StrTran( tmp, cHdr3 )
-         tmp := StrTran( tmp, cHdr4 )
-         tmp := StrTran( tmp, cHdr5 )
-         tmp := StrTran( tmp, cHdr6 )
-         tmp := StrTran( tmp, cHdr7 )
+         tmp := hb_StrReplace( MemoRead( aFile[ F_NAME ] ), hReplace )
 
          IF ! "|" + cExt + "|" $ "|.hbm|.hbp|.hbc|.txt|"
-            IF Left( tmp, Len( hb_eol() ) + 2 ) == hb_eol() + "//" .OR. ;
-               Left( tmp, Len( hb_eol() ) + 2 ) == hb_eol() + "/*" .OR. ;
-               Left( tmp, Len( hb_eol() ) + 1 ) == hb_eol() + ";" .OR. ;
-               Left( tmp, Len( hb_eol() ) + 1 ) == hb_eol() + "#"
+            IF hb_LeftEq( tmp, hb_eol() + "//" ) .OR. ;
+               hb_LeftEq( tmp, hb_eol() + "/*" ) .OR. ;
+               hb_LeftEq( tmp, hb_eol() + ";" ) .OR. ;
+               hb_LeftEq( tmp, hb_eol() + "#" )
                tmp := SubStr( tmp, Len( hb_eol() ) + 1 )
             ENDIF
          ENDIF

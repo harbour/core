@@ -5,7 +5,5 @@
 
 -w3 -es2
 
--hbx=
-
 sqlbase.c
 sqlmix.c

@@ -2,7 +2,7 @@
 
 #include "hbclass.ch"
 
-#translate AS NEW <ClassName> => AS CLASS <ClassName> := <ClassName>():New()
+#xtranslate AS NEW <ClassName> => AS CLASS <ClassName> := <ClassName>():New()
 
 DECLARE nMyFun() AS NUMERIC
 
@@ -23,7 +23,7 @@ CREATE CLASS MyClass
    METHOD New() Constructor
    VAR While AS STRING
    VAR cVar  AS STRING
-END CLASS
+ENDCLASS
 
 INIT PROCEDURE Main()
 
@@ -63,7 +63,7 @@ INIT PROCEDURE Main()
 
 METHOD New() CLASS MyClass
 
-   ::While := 2 // TODO: Should produce RT Error.
+   ::While := 2  // TODO: Should produce RTE
 
    RETURN Self
 

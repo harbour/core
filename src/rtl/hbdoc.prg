@@ -79,17 +79,17 @@ FUNCTION __hbdoc_DirLastModified( cDir )
 
       cDir := hb_DirSepAdd( cDir )
 
-      IF hb_DirExists( cDir + _HBDOC_SRC_SUBDIR )
+      IF hb_vfDirExists( cDir + _HBDOC_SRC_SUBDIR )
 
-         FOR EACH aFile IN Directory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
+         FOR EACH aFile IN hb_vfDirectory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ aFile[ F_ATTR ] .AND. ;
                !( aFile[ F_NAME ] == "." ) .AND. ;
                !( aFile[ F_NAME ] == ".." )
 
                cDocDir := cDir + _HBDOC_SRC_SUBDIR + hb_ps() + aFile[ F_NAME ]
 
-               FOR EACH aDocFile IN Directory( cDocDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
-                  IF hb_FGetDateTime( cDocDir + hb_ps() + aDocFile[ F_NAME ], @tDoc ) .AND. ;
+               FOR EACH aDocFile IN hb_vfDirectory( cDocDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
+                  IF hb_vfTimeGet( cDocDir + hb_ps() + aDocFile[ F_NAME ], @tDoc ) .AND. ;
                      tLast < tDoc
                      tLast := tDoc
                   ENDIF
@@ -112,7 +112,7 @@ FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
 
       cDir := hb_DirSepAdd( cDir )
 
-      IF hb_DirExists( cDir + _HBDOC_SRC_SUBDIR )
+      IF hb_vfDirExists( cDir + _HBDOC_SRC_SUBDIR )
 
          aEntry := {}
          hMeta := { => }
@@ -122,7 +122,7 @@ FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
          ENDIF
 
          nCount := 0
-         FOR EACH aFile IN Directory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
+         FOR EACH aFile IN hb_vfDirectory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ aFile[ F_ATTR ] .AND. ;
                !( aFile[ F_NAME ] == "." ) .AND. ;
                !( aFile[ F_NAME ] == ".." )
@@ -146,7 +146,7 @@ STATIC PROCEDURE __hbdoc__read_langdir( aEntry, cDir, hMeta, aErrMsg )
    LOCAL nCount
 
    nCount := 0
-   FOR EACH aFile IN Directory( cDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
+   FOR EACH aFile IN hb_vfDirectory( cDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
       hMeta[ "_LANG" ] := aFile[ F_NAME ]
       __hbdoc__read_file( aEntry, cDir + hb_ps() + aFile[ F_NAME ], hMeta, aErrMsg )
       ++nCount
@@ -182,7 +182,7 @@ STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
 
    hMeta[ "_DOCSOURCE" ] := cFileName
 
-   __hbdoc__read_stream( aEntry, MemoRead( cFileName ), cFileName, hMeta, aErrMsg )
+   __hbdoc__read_stream( aEntry, hb_UTF8ToStr( MemoRead( cFileName ) ), cFileName, hMeta, aErrMsg )
 
    RETURN
 
@@ -195,13 +195,10 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
    LOCAL nLine
    LOCAL nStartCol
 
-   cFile := StrTran( cFile, Chr( 13 ) )
-   cFile := StrTran( cFile, Chr( 9 ), " " )
-
    nLine := 0
-   FOR EACH cLine IN hb_ATokens( cFile, Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 9 ), " " ), .T. )
 
-      cLine := SubStr( cLine, 4 )
+      cLine := hb_USubStr( cLine, 4 )
       ++nLine
 
       SWITCH AllTrim( cLine )
@@ -229,10 +226,12 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
       OTHERWISE
          IF hEntry == NIL
             /* Ignore line outside entry. Don't warn, this is normal. */
-         ELSEIF Left( LTrim( cLine ), 1 ) == "$" .AND. Right( RTrim( cLine ), 1 ) == "$"
+         ELSEIF hb_ULeft( LTrim( cLine ), 1 ) == "$" .AND. hb_URight( RTrim( cLine ), 1 ) == "$"
             cLine := AllTrim( cLine )
-            cSection := SubStr( cLine, 2, Len( cLine ) - 2 )
-            IF cSection $ hEntry
+            cSection := hb_USubStr( cLine, 2, hb_ULen( cLine ) - 2 )
+            IF Empty( cSection )
+               _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: Empty section name", cFileName, nLine ) )
+            ELSEIF cSection $ hEntry
                _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: Duplicate sections inside the same entry", cFileName, nLine ) )
             ELSE
                hEntry[ cSection ] := ""
@@ -242,11 +241,11 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
                /* some "heuristics" to detect in which column the real content starts,
                   we assume the first line of content is correct, and use this with all
                   consecutive lines. [vszakats] */
-               nStartCol := Len( cLine ) - Len( LTrim( cLine ) ) + 1
+               nStartCol := hb_ULen( cLine ) - hb_ULen( LTrim( cLine ) ) + 1
             ELSE
                hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
             ENDIF
-            hEntry[ cSection ] += SubStr( cLine, nStartCol )
+            hEntry[ cSection ] += hb_USubStr( cLine, nStartCol )
          ELSEIF ! Empty( cLine )
             _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: Content outside section", cFileName, nLine ) )
          ENDIF
@@ -274,8 +273,8 @@ FUNCTION __hbdoc_ToSource( aEntry )
          FOR EACH item IN hEntry
             IF HB_ISSTRING( item ) .AND. ! hb_LeftEq( item:__enumKey(), "_" )
                cSource += "   $" + item:__enumKey() + "$" + hb_eol()
-               FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
-                  cLineOut := iif( Len( cLine ) == 0, "", Space( 4 ) + cLine )
+               FOR EACH cLine IN hb_ATokens( item, .T. )
+                  cLineOut := iif( HB_ISNULL( cLine ), "", Space( 4 ) + cLine )
                   cSource += iif( Empty( cLineOut ), "", "  " + cLineOut ) + hb_eol()
                NEXT
             ENDIF
@@ -295,12 +294,9 @@ FUNCTION __hbdoc_FilterOut( cFile )
    LOCAL nToSkip := 0
    LOCAL nEmpty := 0
 
-   cFile := StrTran( cFile, Chr( 13 ) )
-   cFile := StrTran( cFile, Chr( 9 ), " " )
+   FOR EACH cLine IN hb_ATokens( StrTran( cFile, Chr( 9 ), " " ), .T. )
 
-   FOR EACH cLine IN hb_ATokens( cFile, Chr( 10 ) )
-
-      SWITCH AllTrim( SubStr( cLine, 4 ) )
+      SWITCH AllTrim( hb_USubStr( cLine, 4 ) )
       CASE "$DOC$"
          lEntry := .T.
          EXIT
@@ -356,7 +352,7 @@ FUNCTION __hbdoc_FilterOut( cFile )
 
 FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
 
-   LOCAL fhnd
+   LOCAL hFile
 
    IF HB_ISSTRING( cFileName ) .AND. ;
       HB_ISARRAY( aEntry )
@@ -365,10 +361,10 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      IF ( fhnd := hb_FCreate( cFileName,, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) != F_ERROR
-         FWrite( fhnd, _HBDOC_SIGNATURE )
-         FWrite( fhnd, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
-         FClose( fhnd )
+      IF ( hFile := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) != NIL
+         hb_vfWrite( hFile, _HBDOC_SIGNATURE )
+         hb_vfWrite( hFile, hb_Serialize( aEntry, HB_SERIALIZE_COMPRESS ) )
+         hb_vfClose( hFile )
          RETURN .T.
       ENDIF
    ENDIF
@@ -377,7 +373,7 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
 
 FUNCTION __hbdoc_LoadHBD( cFileName )
 
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL aEntry := NIL
 
    LOCAL cBuffer
@@ -388,14 +384,14 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
          cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
-      IF ( fhnd := FOpen( cFileName ) ) != F_ERROR
+      IF ( hFile := hb_vfOpen( cFileName, FO_READ ) ) != NIL
 
-         IF hb_FReadLen( fhnd, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
+         IF hb_vfReadLen( hFile, _HBDOC_SIG_LEN ) == _HBDOC_SIGNATURE
 
-            cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBDOC_SIG_LEN )
-            FSeek( fhnd, _HBDOC_SIG_LEN, FS_SET )
-            FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
-            FClose( fhnd )
+            cBuffer := Space( hb_vfSize( hFile ) - _HBDOC_SIG_LEN )
+            hb_vfSeek( hFile, _HBDOC_SIG_LEN, FS_SET )
+            hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
+            hb_vfClose( hFile )
 
             aEntry := hb_Deserialize( cBuffer )
             cBuffer := NIL
@@ -404,7 +400,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
                aEntry := NIL
             ENDIF
          ELSE
-            FClose( fhnd )
+            hb_vfClose( hFile )
          ENDIF
       ENDIF
    ENDIF

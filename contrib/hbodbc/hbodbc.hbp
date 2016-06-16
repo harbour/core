@@ -8,6 +8,11 @@
 
 -stop{dos|os2|rsxnt}
 
+-deppkgname=odbc:unixodbc-devel{rpm}
+-deppkgname=odbc:unixODBC-devel{rpm}
+-deppkgname=odbc:unixodbc-dev{deb}
+-deppkgname=odbc:unixodbc{pacman&!win}
+-deppkgname=odbc:unixodbc{homebrew}
 -depkeyhead=odbc:sql.h
 -depcontrol=odbc:no{!allwin&HB_BUILD_3RDEXT='no'}
 -depcontrol=odbc:${HB_WITH_ODBC}{!allwin}
@@ -15,9 +20,9 @@
 -depincpath=odbc:/usr/include
 -depincpath=odbc:/usr/local/include
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 odbc.c
 
+browse.prg
 todbc.prg
-browodbc.prg

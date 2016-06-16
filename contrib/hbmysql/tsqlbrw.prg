@@ -65,22 +65,20 @@
    ASSIGN Block( x ) METHOD Block( x )
    or
    ASSIGN Block( x ) INLINE ::MyVal := x
+ */
 
-*/
+CREATE CLASS TBColumnSQL INHERIT TBColumn
 
+   VAR oBrw                 // pointer to Browser containing this column, needed to be able to
+                            // retreive field values from Browse instance variable oCurRow
+// VAR Picture              // From CA-Cl*pper 5.3
+   VAR nFieldNum            // This column maps field num from query
 
-CREATE CLASS TBColumnSQL FROM TBColumn
+   MESSAGE Block METHOD Block()          // When evaluating code block to get data from source this method
+                                         // gets called. I need this since inside TBColumn Block I cannot
+                                         // reference Column or Browser instance variables
 
-   VAR   oBrw                 // pointer to Browser containing this column, needed to be able to
-                              // retreive field values from Browse instance variable oCurRow
-// VAR   Picture              // From clipper 5.3
-   VAR   nFieldNum            // This column maps field num from query
-
-   MESSAGE  Block METHOD Block()          // When evaluating code block to get data from source this method
-                                          // gets called. I need this since inside TBColumn Block I cannot
-                                          // reference Column or Browser instance variables
-
-   METHOD   New( cHeading, bBlock, oBrw )   // Saves inside column a copy of container browser
+   METHOD  New( cHeading, bBlock, oBrw )   // Saves inside column a copy of container browser
 
 ENDCLASS
 
@@ -96,55 +94,57 @@ METHOD New( cHeading, bBlock, oBrw ) CLASS TBColumnSQL
 METHOD Block() CLASS TBColumnSQL
 
    LOCAL xValue := ::oBrw:oCurRow:FieldGet( ::nFieldNum )
-   LOCAL xType := ::oBrw:oCurRow:FieldType( ::nFieldNum )
 
-   DO CASE
-   CASE xType == "N"
+   SWITCH ::oBrw:oCurRow:FieldType( ::nFieldNum )
+   CASE "N"
       xValue := "'" + Str( xValue, ::oBrw:oCurRow:FieldLen( ::nFieldNum ), ::oBrw:oCurRow:FieldDec( ::nFieldNum ) ) + "'"
+      EXIT
 
-   CASE xType == "D"
+   CASE "D"
       xValue :=  "'" + DToC( xValue ) + "'"
+      EXIT
 
-   CASE xType == "L"
+   CASE "L"
       xValue := iif( xValue, ".T.", ".F." )
+      EXIT
 
-   CASE xType == "C"
+   CASE "C"
       // That is: if there is a double quote inside text substitute it with a string
       // which gets converted back to a double quote by macro operator. If not it would
       // give an error because of unbalanced double quotes.
       xValue := '"' + StrTran( xValue, '"', e"\" + '\"' + \"" ) + '"'
+      EXIT
 
-   CASE xType == "M"
+   CASE "M"
       xValue := "' <MEMO> '"
+      EXIT
 
    OTHERWISE
       xValue := "'" + xValue + "'"
-   ENDCASE
+   ENDSWITCH
 
    RETURN hb_macroBlock( xValue )
 
-/* -------------------------------------------------------- */
+/* --- */
 
-/*
-   This class is more or less like a TBrowseDB() object in that it receives an oQuery/oTable
-   object and gives back a browseable view of it
-*/
-CREATE CLASS TBrowseSQL FROM TBrowse
+/* This class is more or less like a TBrowseDB() object in that it receives an oQuery/oTable
+   object and gives back a browseable view of it */
+CREATE CLASS TBrowseSQL INHERIT TBrowse
 
-   VAR      oCurRow                       // Active row inside table / sql query
-   VAR      oQuery                        // Query / table object which we are browsing
+   VAR oCurRow                       // Active row inside table / sql query
+   VAR oQuery                        // Query / table object which we are browsing
 
-   METHOD   New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable )
+   METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable )
 
-   METHOD   EditField()                   // Editing of hilighted field, after editing does an update of
-                                          // corresponding row inside table
+   METHOD EditField()                   // Editing of hilighted field, after editing does an update of
+                                        // corresponding row inside table
 
-   METHOD   BrowseTable( lCanEdit, aExitKeys ) // Handles standard moving inside table and if lCanEdit == .T.
-                                               // allows editing of field. It is the stock ApplyKey() moved inside a table
-                                               // if lCanEdit K_DEL deletes current row
-                                               // When a key is pressed which is present inside aExitKeys it leaves editing loop
+   METHOD BrowseTable( lCanEdit, aExitKeys ) // Handles standard moving inside table and if lCanEdit == .T.
+                                             // allows editing of field. It is the stock ApplyKey() moved inside a table
+                                             // if lCanEdit K_DEL deletes current row
+                                             // When a key is pressed which is present inside aExitKeys it leaves editing loop
 
-   METHOD   KeyboardHook( nKey )               // Where do all unknown keys go?
+   METHOD KeyboardHook( nKey )               // Where do all unknown keys go?
 
 ENDCLASS
 
@@ -174,23 +174,26 @@ METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable ) CLASS TBrows
       // No bBlock now since New() would use it to find column length, but column is not ready yet at this point
       oCol := TBColumnSQL():New( ::oCurRow:FieldName( i ),, Self )
 
-      IF !( ::oCurRow:FieldType( i ) == "M" )
-         oCol:Width := Max( ::oCurRow:FieldLen( i ), Len( oCol:Heading ) )
-      ELSE
+      IF ::oCurRow:FieldType( i ) == "M"
          oCol:Width := 10
+      ELSE
+         oCol:Width := Max( ::oCurRow:FieldLen( i ), Len( oCol:Heading ) )
       ENDIF
 
       // which field does this column display
       oCol:nFieldNum := i
 
       // Add a picture
-      DO CASE
-      CASE ::oCurRow:FieldType( i ) == "N"
+      SWITCH ::oCurRow:FieldType( i )
+      CASE "N"
          oCol:picture := Replicate( "9", oCol:Width )
+         EXIT
 
-      CASE ::oCurRow:FieldType( i ) $ "CM"
-         oCol:picture := Replicate( "!", oCol:Width )
-      ENDCASE
+      CASE "M"
+      CASE "C"
+         oCol:picture := Replicate( "X", oCol:Width )
+         EXIT
+      ENDSWITCH
 
       ::AddColumn( oCol )
    NEXT
@@ -204,28 +207,21 @@ STATIC FUNCTION Skipper( nSkip, oQuery )
    DO CASE
    CASE nSkip == 0 .OR. oQuery:LastRec() == 0
       oQuery:Skip( 0 )
-
    CASE nSkip > 0
       DO WHILE i < nSkip           // Skip Foward
-
          IF oQuery:recno() == oQuery:lastrec()
             EXIT
          ENDIF
          oQuery:Skip( 1 )
          i++
-
       ENDDO
-
    CASE nSkip < 0
       DO WHILE i > nSkip           // Skip backward
-
          IF oQuery:recno() == 1
             EXIT
          ENDIF
-
          oQuery:Skip( -1 )
          i--
-
       ENDDO
    ENDCASE
 
@@ -253,9 +249,6 @@ METHOD EditField() CLASS TBrowseSQL
       hb_Scroll( 10, 10, 22, 69, 0 )
       hb_DispBox( 10, 10, 22, 69 )
 
-      /* use fieldspec for title */
-      // @ 10, ( ( 76 - Len( ::oCurRow:FieldName( oCol:nFieldNum ) ) / 2 ) SAY "  " + ( ::oCurRow:FieldName( oCol:nFieldNum ) ) + "  "
-
       /* edit the memo field */
       cMemo := MemoEdit( ::oCurRow:FieldGet( oCol:nFieldNum ), 11, 11, 21, 68, .T. )
 
@@ -274,10 +267,10 @@ METHOD EditField() CLASS TBrowseSQL
       // Create a corresponding GET
       // NOTE: I need to use ::oCurRow:FieldPut(...) when changing values since message redirection doesn't work at present
       //       time for write access to instance variables but only for reading them
-      aGetList := { GetNew( Row(), Col(),;
-                            {| xValue | iif( xValue == NIL, Eval( oCol:Block ), ::oCurRow:FieldPut( oCol:nFieldNum, xValue ) ) },;
-                            oCol:heading,;
-                            oCol:picture,;
+      aGetList := { GetNew( Row(), Col(), ;
+                            {| xValue | iif( xValue == NIL, Eval( oCol:Block ), ::oCurRow:FieldPut( oCol:nFieldNum, xValue ) ) }, ;
+                            oCol:heading, ;
+                            oCol:picture, ;
                             ::colorSpec ) }
 
       // Set initial cursor shape
@@ -289,8 +282,7 @@ METHOD EditField() CLASS TBrowseSQL
       IF ! ::oQuery:Update( ::oCurRow )
          Alert( Left( ::oQuery:Error(), 60 ) )
       ENDIF
-
-   endif
+   ENDIF
 
    IF ! ::oQuery:Refresh()
       Alert( ::oQuery:Error() )
@@ -300,12 +292,12 @@ METHOD EditField() CLASS TBrowseSQL
 
    // Check exit key from get
    nKey := LastKey()
-   IF nKey == K_UP   .OR. nKey == K_DOWN .OR. ;
-      nKey == K_PGUP .OR. nKey == K_PGDN
+   IF nKey == K_UP .OR. ;
+      nKey == K_DOWN .OR. ;
+      nKey == K_PGUP .OR. ;
+      nKey == K_PGDN
 
-      // Ugh
-      hb_keyIns( nKey )
-
+      hb_keyIns( nKey )  // Ugh
    ENDIF
 
    RETURN Self
@@ -313,16 +305,12 @@ METHOD EditField() CLASS TBrowseSQL
 
 METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
 
-   LOCAL nKey
-   LOCAL lKeepGoing := .T.
+   LOCAL nKey, nKeyStd
 
-   IF ! HB_ISNUMERIC( nKey )
-      nKey := NIL
-   ENDIF
    hb_default( @lCanEdit, .F. )
    hb_default( @aExitKeys, { K_ESC } )
 
-   DO WHILE lKeepGoing
+   DO WHILE .T.
 
       DO WHILE .T.
          nKey := Inkey()
@@ -335,59 +323,33 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
          nKey := Inkey( 0 )
       ENDIF
 
-      IF AScan( aExitKeys, nKey ) > 0
-         lKeepGoing := .F.
-         LOOP
-      ENDIF
+      nKeyStd := hb_keyStd( nKey )
 
       DO CASE
-      CASE nKey == K_DOWN
-         ::down()
+      CASE AScan( aExitKeys, nKey ) > 0 .OR. ;
+           AScan( aExitKeys, nKeyStd ) > 0
 
-      CASE nKey == K_PGDN
-         ::pageDown()
+           EXIT
 
-      CASE nKey == K_CTRL_PGDN
-         ::goBottom()
+      CASE nKeyStd == K_DOWN       ; ::down()
+      CASE nKeyStd == K_PGDN       ; ::pageDown()
+      CASE nKeyStd == K_CTRL_PGDN  ; ::goBottom()
+      CASE nKeyStd == K_UP         ; ::up()
+      CASE nKeyStd == K_PGUP       ; ::pageUp()
+      CASE nKeyStd == K_CTRL_PGUP  ; ::goTop()
+      CASE nKeyStd == K_RIGHT      ; ::right()
+      CASE nKeyStd == K_LEFT       ; ::left()
+      CASE nKeyStd == K_HOME       ; ::home()
+      CASE nKeyStd == K_END        ; ::end()
+      CASE nKeyStd == K_CTRL_LEFT  ; ::panLeft()
+      CASE nKeyStd == K_CTRL_RIGHT ; ::panRight()
+      CASE nKeyStd == K_CTRL_HOME  ; ::panHome()
+      CASE nKeyStd == K_CTRL_END   ; ::panEnd()
 
-      CASE nKey == K_UP
-         ::up()
-
-      CASE nKey == K_PGUP
-         ::pageUp()
-
-      CASE nKey == K_CTRL_PGUP
-         ::goTop()
-
-      CASE nKey == K_RIGHT
-         ::right()
-
-      CASE nKey == K_LEFT
-         ::left()
-
-      CASE nKey == K_HOME
-         ::home()
-
-      CASE nKey == K_END
-         ::end()
-
-      CASE nKey == K_CTRL_LEFT
-         ::panLeft()
-
-      CASE nKey == K_CTRL_RIGHT
-         ::panRight()
-
-      CASE nKey == K_CTRL_HOME
-         ::panHome()
-
-      CASE nKey == K_CTRL_END
-         ::panEnd()
-
-      CASE nKey == K_ENTER .AND. lCanEdit
+      CASE nKeyStd == K_ENTER .AND. lCanEdit
          ::EditField()
-
 #if 0
-      CASE nKey == K_DEL
+      CASE nKeyStd == K_DEL
          IF lCanEdit
             IF ! ::oQuery:Delete( ::oCurRow )
                Alert( "not deleted " + ::oQuery:Error() )
@@ -400,7 +362,6 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
             ::refreshAll():forceStable()
          ENDIF
 #endif
-
       OTHERWISE
          ::KeyboardHook( nKey )
       ENDCASE

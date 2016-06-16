@@ -358,7 +358,7 @@ int hb_comFindPort( const char * pszDevName, HB_BOOL fCreate )
          else if( hb_comPortCmp( pCom->name, pszDevName ) )
             break;
       }
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
       if( iPort == 0 && fCreate && access( pszDevName, F_OK ) == 0 )
 #else
       if( iPort == 0 && fCreate )
@@ -1430,7 +1430,7 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
          tio.c_cc[ VMIN ]  = 0;  /* minimum number of characters for read */
 #else
          /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
-            Ubuntu) in which select() unconditionally accepts stdin for
+            *buntu) in which select() unconditionally accepts stdin for
             reading if c_cc[ VMIN ] = 0 [druzus] */
          tio.c_cc[ VMIN ] = 1;
 #endif

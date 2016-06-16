@@ -8,15 +8,17 @@
 
 #xcommand ? [<cmd,...>]   => msg( <cmd> )
 request HB_GT_CGI_DEFAULT
+
 static s_lChild := .F.
 
-proc main( xChild )
+procedure Main( xChild )
+
    local hProcess, hStdIn, hStdOut
    local n, nTimeout, nWrLim, nSent, nRead
    local cToSend, cBuffer, cProg
    local cSrvData, cCliData, cRead, cError
 
-   s_lChild := !Empty( xChild )
+   s_lChild := ! Empty( xChild )
 
    nTimeout := 1000
 
@@ -26,35 +28,34 @@ proc main( xChild )
 #else
    n := 1000
    nWrLim := 10000
-//   nWrLim := 4096
+// nWrLim := 4096
 #endif
    cToSend := "ABCDEFGHIJKLMNOP"
-   cSrvData := repl( left( cToSend, 16 - len( hb_eol() ) ) + hb_eol(), n )
-   cCliData := lower( cSrvData  )
-   cBuffer := space( 10000000 )
+   cSrvData := Replicate( Left( cToSend, 16 - Len( hb_eol() ) ) + hb_eol(), n )
+   cCliData := Lower( cSrvData  )
+   cBuffer := Space( 10000000 )
 
    if s_lChild
       ? "process started"
       if xChild == "STDOUT"
          ? "this is OUTPUT only test"
-         outStd( "Child is happy to send this data :-)" + hb_eol() )
-         outStd( "Bye Bye" + hb_eol() )
-         errorLevel( 123 )
+         OutStd( "Child is happy to send this data :-)" + hb_eol() )
+         OutStd( "Bye Bye" + hb_eol() )
+         ErrorLevel( 123 )
          return
       endif
       ? "waiting..."
-      hb_idleSleep( 2.0 )
+      hb_idleSleep( 2 )
 
       ? "reading..."
       cRead := ""
       nRead := 0
       while .t.
-         n := hb_PRead( 0, @cBuffer,, nTimeout )
-         if n == -1
+         if ( n := hb_PRead( 0, @cBuffer,, nTimeout ) ) == -1
             ? "error during reading:", FError()
             exit
          else
-            cRead += left( cBuffer, n )
+            cRead += hb_BLeft( cBuffer, n )
             nRead += n
             ? "bytes read:", n, ", total:", nRead, ", error:", FError()
          endif
@@ -63,16 +64,15 @@ proc main( xChild )
       ? "writing..."
       cToSend := cCliData
       nSent := 0
-      while len( cToSend ) > 0
-         n := hb_PWrite( 1, cToSend, nWrLim, nTimeout )
-         if n == -1
+      while ! HB_ISNULL( cToSend )
+         if ( n := hb_PWrite( 1, cToSend, nWrLim, nTimeout ) ) == -1
             ? "error during writing:", FError()
             exit
          else
             nSent += n
             ? "bytes sent:", n, ", total:", nSent, ", error:", FError()
             if n > 0
-               cToSend := substr( cToSend, n + 1 )
+               cToSend := hb_BSubStr( cToSend, n + 1 )
             endif
             if nWrLim != NIL
                hb_idleSleep( 0.1 )
@@ -80,30 +80,28 @@ proc main( xChild )
          endif
       enddo
    else
-      cProg := hb_argv( 0 ) + " x"
+      cProg := hb_ProgName() + " x"
 
-      ? repl( "=", 40 )
+      ? Replicate( "=", 40 )
 
       ? "process started"
       ? "opening child process:", cProg
-      hProcess = hb_processOpen( cProg, @hStdIn, @hStdOut )
-      if hProcess == -1
+      if ( hProcess := hb_processOpen( cProg, @hStdIn, @hStdOut ) ) == -1
          ? "Cannot create child process..."
       else
          ? "child started, PID =", hProcess, ", stdin =", hStdIn, ", stdout =", hStdOut
          ? "writing..."
          cToSend := cSrvData
          nSent := 0
-         while len( cToSend ) > 0
-            n := hb_PWrite( hStdIn, cToSend,, nTimeout )
-            if n == -1
+         while ! HB_ISNULL( cToSend )
+            if ( n := hb_PWrite( hStdIn, cToSend,, nTimeout ) ) == -1
                ? "error during writing:", FError()
                exit
             else
                nSent += n
                ? "bytes sent:", n, ", total:", nSent, ", error:", FError()
                if n > 0
-                  cToSend := substr( cToSend, n + 1 )
+                  cToSend := hb_BSubStr( cToSend, n + 1 )
                endif
             endif
          enddo
@@ -113,12 +111,11 @@ proc main( xChild )
          cRead := ""
          nRead := 0
          while .t.
-            n := hb_PRead( hStdOut, @cBuffer,, nTimeout )
-            if n == -1
+            if ( n := hb_PRead( hStdOut, @cBuffer,, nTimeout ) ) == -1
                ? "error during reading:", FError()
                exit
             else
-               cRead += left( cBuffer, n )
+               cRead += hb_BLeft( cBuffer, n )
                nRead += n
                ? "bytes read:", n, ", total:", nRead, ", error:", FError()
             endif
@@ -128,13 +125,13 @@ proc main( xChild )
          ? "process result:", hb_processValue( hProcess )
       endif
 
-      ? repl( "=", 40 )
+      ? Replicate( "=", 40 )
 
       ? "running child process:", cProg
       ? "result:", hb_processRun( cProg, cSrvData, @cRead )
       ? "READ DONE =>", iif( cRead == cCliData, "OK", "ERR" )
 
-      ? repl( "=", 40 )
+      ? Replicate( "=", 40 )
 
       ? "running child process with error redirection:", cProg
       n := hb_processRun( cProg, cSrvData, @cRead, @cError )
@@ -142,7 +139,7 @@ proc main( xChild )
       ? "result:", n
       ? "READ DONE =>", iif( cRead == cCliData, "OK", "ERR" )
 
-      ? repl( "=", 40 )
+      ? Replicate( "=", 40 )
 
       ? "running child process with mixed redirection:", cProg
       n := hb_processRun( cProg, cSrvData, @cRead, @cRead )
@@ -160,15 +157,15 @@ proc main( xChild )
       ? "result:", n
       ? "READ DONE =>", iif( cRead == cCliData, "OK", "ERR" )
 
-      ? repl( "=", 40 )
+      ? Replicate( "=", 40 )
 
-      cProg := hb_argv( 0 ) + " STDOUT"
+      cProg := hb_ProgName() + " STDOUT"
       ? "running child process only with stdout redirected:", cProg
       ? "result:", hb_processRun( cProg,, @cRead )
       ? "STDOUT =>"
       ? cRead
 
-      ? repl( "=", 40 )
+      ? Replicate( "=", 40 )
 
       ? "running child process with stdout and stderr redirected:", cProg
       ? "result:", hb_processRun( cProg,, @cRead, @cError )
@@ -177,17 +174,20 @@ proc main( xChild )
       ? "STDERR =>"
       ? cError
 
-      ? repl( "=", 40 )
+      ? Replicate( "=", 40 )
    endif
-return
 
-static proc msg( ... )
+   return
+
+static procedure msg( ... )
+
    local param, cPar, cMsg
 
-   cMsg := hb_tsToStr( hb_dateTime() ) + " " + iif( s_lChild, "CHILD: ", "PARENT:" )
+   cMsg := hb_TSToStr( hb_DateTime() ) + " " + iif( s_lChild, "CHILD: ", "PARENT:" )
    for each param in { ... }
       cPar := hb_CStr( param )
-      cMsg += iif( cPar = ",", "", " " ) + LTrim( cPar )
+      cMsg += iif( hb_LeftEq( cPar, "," ), "", " " ) + LTrim( cPar )
    next
    OutErr( cMsg + hb_eol() )
-return
+
+   return

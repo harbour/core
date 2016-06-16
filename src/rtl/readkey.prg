@@ -48,15 +48,15 @@
 
 FUNCTION ReadKey()
 
-   LOCAL nKey := LastKey()
+   LOCAL nKey
 
-   SWITCH nKey
-   CASE K_UP        ; nKey :=  4 ; EXIT /* NOTE: NG says 5 incorrectly */
-   CASE K_DOWN      ; nKey :=  5 ; EXIT /* NOTE: NG says 2 incorrectly */
+   SWITCH nKey := LastKey()
+   CASE K_UP        ; nKey :=  4 ; EXIT  /* NOTE: NG says 5 incorrectly */
+   CASE K_DOWN      ; nKey :=  5 ; EXIT  /* NOTE: NG says 2 incorrectly */
    CASE K_PGUP      ; nKey :=  6 ; EXIT
    CASE K_PGDN      ; nKey :=  7 ; EXIT
-   CASE K_CTRL_PGUP ; nKey := 34 ; EXIT /* NOTE: NG says 31 incorrectly */
-   CASE K_CTRL_PGDN ; nKey := 35 ; EXIT /* NOTE: NG says 30 incorrectly */
+   CASE K_CTRL_PGUP ; nKey := 34 ; EXIT  /* NOTE: NG says 31 incorrectly */
+   CASE K_CTRL_PGDN ; nKey := 35 ; EXIT  /* NOTE: NG says 30 incorrectly */
    CASE K_ESC       ; nKey := 12 ; EXIT
    CASE K_CTRL_W    ; nKey := 14 ; EXIT
    CASE K_ENTER     ; nKey := 15 ; EXIT

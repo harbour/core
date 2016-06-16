@@ -1,41 +1,26 @@
-/*
- * Author....: James J. Orlowski, M.D.
- * CIS ID....: 72707,601
- *
- * This is an original work by James Orlowski and is placed in the
- * public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.2   15 Aug 1991 23:05:56   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   12 Jun 1991 00:42:38   GLENN
- * A referee suggested changing the documentation such that the return value
- * is shown as "xElement" rather than "cElement" because the function
- * can return different types.
- *
- *    Rev 1.0   07 Jun 1991 23:03:24   GLENN
- * Initial revision.
- *
- *
+/* This is an original work by James J. Orlowski, M.D. and is placed in the
+   public domain.
+
+      Rev 1.2   15 Aug 1991 23:05:56   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   12 Jun 1991 00:42:38   GLENN
+   A referee suggested changing the documentation such that the return value
+   is shown as "xElement" rather than "cElement" because the function
+   can return different types.
+
+      Rev 1.0   07 Jun 1991 23:03:24   GLENN
+   Initial revision.
  */
 
-/*
+/* The tbmethods section is a short cut from Spence's book instead
+   of using the longer DO CASE method.
 
-    Some notes:
+   Jim Gale showed me the basic array browser and Robert DiFalco
+   showed me the improved skipblock in public messages on Nanforum.
 
-       The tbmethods section is a short cut from Spence's book instead
-       of using the longer DO CASE method.
-
-       Jim Gale showed me the basic array browser and Robert DiFalco
-       showed me the improved skipblock in public messages on Nanforum.
-
-       I added the functionality of the "Edit Get" code block
-       (ie bGetFunc), TestGet() demo, and the add/delete rows.
-
-*/
+   I added the functionality of the "Edit Get" code block
+   (ie bGetFunc), TestGet() demo, and the add/delete rows. */
 
 #include "box.ch"
 #include "inkey.ch"
@@ -47,19 +32,17 @@
 // ANYTYPE[]   ar        - Array to browse
 // NUMERIC     nElem     - Element In Array
 // CHARACTER[] aHeadings - Array of Headings for each column
-// BLOCK[]     aBlocks   - Array containing code block for each column.
+// BLOCK[]     aBlocks   - Array containing code block for each column
 // CODE BLOCK  bGetFunc  - Code Block For Special Get Processing
 //  NOTE: When evaluated a code block is passed the array element to
-//          be edited
+//        be edited
 
-FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
-      ar, nElem, aHeadings, aBlocks, bGetFunc )
+FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ar, nElem, aHeadings, aBlocks, bGetFunc )
 
    LOCAL exit_requested, nKey, meth_no
    LOCAL cSaveWin, i, b, column
-   LOCAL nDim, cType, cVal
-   LOCAL tb_methods := ;
-      { ;
+   LOCAL dim, cType, cVal
+   LOCAL tb_methods := { ;
       { K_DOWN,       {| b | b:down() } }, ;
       { K_UP,         {| b | b:up() } }, ;
       { K_PGDN,       {| b | b:pagedown() } }, ;
@@ -73,8 +56,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
       { K_CTRL_LEFT,  {| b | b:panleft() } }, ;
       { K_CTRL_RIGHT, {| b | b:panright() } }, ;
       { K_CTRL_HOME,  {| b | b:panhome() } }, ;
-      { K_CTRL_END,   {| b | b:panend() } } ;
-      }
+      { K_CTRL_END,   {| b | b:panend() } } }
 
    cSaveWin := SaveScreen( nTop, nLeft, nBot, nRight )
    hb_DispBox( nTop, nLeft, nBot, nRight, HB_B_SINGLE_UNI )
@@ -88,9 +70,8 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
    b:gobottomblock := {|| nElem := Len( ar[ 1 ] ) }
 
    // skipblock originally coded by Robert DiFalco
-   b:SkipBlock     := {| nSkip, nStart | nStart := nElem, ;
-      nElem := Max( 1, Min( Len( ar[ 1 ] ), nElem + nSkip ) ), ;
-      nElem - nStart }
+   b:SkipBlock := {| nSkip, nStart | nStart := nElem, ;
+      nElem := Max( 1, Min( Len( ar[ 1 ] ), nElem + nSkip ) ), nElem - nStart }
 
    FOR i := 1 TO Len( aBlocks )
       column := TBColumnNew( aHeadings[ i ], aBlocks[ i ] )
@@ -107,52 +88,48 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
          nKey := Inkey( 0 )
       ENDIF
 
-      meth_no := AScan( tb_methods, {| elem | nKey == elem[ KEY_ELEM ] } )
-      IF meth_no != 0
-         Eval( tb_methods[ meth_no, BLK_ELEM ], b )
+      nKey := hb_keyStd( nKey )
+
+      IF ( meth_no := AScan( tb_methods, {| elem | nKey == elem[ KEY_ELEM ] } ) ) > 0
+         Eval( tb_methods[ meth_no ][ BLK_ELEM ], b )
       ELSE
          DO CASE
          CASE nKey == K_F7
-            FOR nDim := 1 TO Len( ar )
-               hb_ADel( ar[ nDim ], nElem, .T. )
+            FOR EACH dim IN ar
+               hb_ADel( dim, nElem, .T. )
             NEXT
             b:refreshAll()
 
          CASE nKey == K_F8
-            FOR nDim := 1 TO Len( ar )
-               // check valtype of current element before AIns()
-               cType := ValType( ar[ nDim, nElem ] )
-               cVal  := ar[ nDim, nElem ]
-               hb_AIns( ar[ nDim ], nElem,, .T. )
-               IF cType == "C"
-                  ar[ nDim, nElem ] := Space( Len( cVal ) )
-               ELSEIF cType == "N"
-                  ar[ nDim, nElem ] := 0
-               ELSEIF cType == "L"
-                  ar[ nDim, nElem ] := .F.
-               ELSEIF cType == "D"
-                  ar[ nDim, nElem ] := hb_SToD()
-               ENDIF
+            FOR EACH dim IN ar
+               // check type of current element before hb_AIns()
+               cType := ValType( dim[ nElem ] )
+               cVal  := dim[ nElem ]
+               hb_AIns( dim, nElem,, .T. )
+               DO CASE
+               CASE cType == "C" ; dim[ nElem ] := Space( Len( cVal ) )
+               CASE cType == "N" ; dim[ nElem ] := 0
+               CASE cType == "L" ; dim[ nElem ] := .F.
+               CASE cType == "D" ; dim[ nElem ] := hb_SToD()
+               ENDCASE
             NEXT
             b:refreshAll()
 
          CASE nKey == K_ESC
             exit_requested := .T.
 
-            // Other exception handling ...
-         CASE HB_ISBLOCK( bGetFunc )
+         CASE HB_ISEVALITEM( bGetFunc )  // Other exception handling
             IF nKey != K_ENTER
-               // want last key to be part of GET edit so KEYBOARD it
-               hb_keyPut( LastKey() )
+               hb_keyPut( LastKey() )  // want last key to be part of GET edit so KEYBOARD it
             ENDIF
             Eval( bGetFunc, b, ar, b:colPos, nElem )
             // after get move to next field
             hb_keyPut( iif( b:colPos < b:colCount, K_RIGHT, { K_HOME, K_DOWN } ) )
 
+         CASE nKey == K_ENTER
             // Placing K_ENTER here below Edit Block (i.e. bGetFunc)
             // defaults K_ENTER to Edit when bGetFunc Is Present
             // BUT if no bGetFunc, then K_ENTER selects element to return
-         CASE nKey == K_ENTER
             exit_requested := .T.
 
          ENDCASE
@@ -160,4 +137,4 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
    ENDDO
    RestScreen( nTop, nLeft, nBot, nRight, cSaveWin )
 
-   RETURN ar[ b:colPos, nElem ]
+   RETURN ar[ b:colPos ][ nElem ]

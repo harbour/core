@@ -1,5 +1,5 @@
 /*
- * CT3 Miscellaneous functions: - Complement(), Nul()
+ * CT3 Miscellaneous functions: Complement(), Nul()
  *
  * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  *
@@ -55,12 +55,13 @@ HB_FUNC( COMPLEMENT )
    {
       if( HB_IS_STRING( pItem ) )
       {
-         HB_SIZE nLen = hb_itemGetCLen( pItem ), ulPos;
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
 
          if( nLen > 0 )
          {
             const char * szSrc = hb_itemGetCPtr( pItem );
             char * szBuffer = ( char * ) hb_xgrab( nLen + 1 );
+            HB_SIZE ulPos;
 
             for( ulPos = 0; ulPos < nLen; ulPos++ )
                szBuffer[ ulPos ] = ~szSrc[ ulPos ];

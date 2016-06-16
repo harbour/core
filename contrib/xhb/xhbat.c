@@ -53,12 +53,12 @@
 
 static HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   char cLastChar = ' ';
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_AtSkipStrings(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen ) );
 
    if( nSubLen > 0 && nLen >= nSubLen )
    {
+      char cLastChar = ' ';
+
       HB_SIZE nPos    = 0;
       HB_SIZE nSubPos = 0;
 
@@ -182,7 +182,6 @@ HB_FUNC( ATI )
       HB_ISIZ  nLen   = hb_itemGetCLen( pText );
       HB_ISIZ  nStart = pStart ? hb_itemGetNS( pStart ) : 1;
       HB_ISIZ  nEnd   = pEnd ? hb_itemGetNS( pEnd ) : nLen;
-      HB_SIZE  nPos;
 
       if( nStart < 0 )
       {
@@ -203,8 +202,8 @@ HB_FUNC( ATI )
          hb_retns( 0 );
       else
       {
-         nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                           hb_itemGetCPtr( pText ) + nStart, nEnd - nStart );
+         HB_SIZE nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                                   hb_itemGetCPtr( pText ) + nStart, nEnd - nStart );
          hb_retns( nPos ? nPos + nStart : 0 );
       }
    }

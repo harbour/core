@@ -1,14 +1,11 @@
-/*******
+/* by Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
  *
- *  by Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
+ * Decoding AMF3 to Harbour items
  *
- *  Decoding AMF3 to Harbour items
- *
- *  Contains portions from
- *  Dave Thompson's MIT licensed
- *  AmFast C library for Python
- *
- ********/
+ * Contains portions from
+ * Dave Thompson's MIT licensed
+ * AmFast C library for Python
+ */
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -295,12 +292,12 @@ static HB_BOOL amf3_deserialize_string( amfContext * context, PHB_ITEM pItem )
 /* Add the dynamic attributes of an encoded obj to a dict. */
 static HB_BOOL amf3_decode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
 {
-   PHB_ITEM pKey;
-   PHB_ITEM pValue;
-   HB_BOOL  result;
-
    for( ;; )
    {
+      PHB_ITEM pKey;
+      PHB_ITEM pValue;
+      HB_BOOL  result;
+
       pKey = hb_itemNew( NULL );
       if( ! amf3_deserialize_string( context, pKey ) )
       {
@@ -424,7 +421,7 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
 
    array_len = ( int ) ( header >> 1 );
    /* Original python comment was:
-      Can't use array_len to create a list of known
+      Cannot use array_len to create a list of known
       length, see ticket #46
       I think that this is not a problem for Harbour */
 
@@ -728,8 +725,7 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
 
    /* Decode static attr names */
    static_attr_len = ( int ) ( header >> 4 );
-   pAttrs = hb_itemNew( NULL );
-   hb_arrayNew( pAttrs, static_attr_len );
+   pAttrs = hb_itemArrayNew( static_attr_len );
 
    for( i = 0; i < static_attr_len; i++ )
    {
@@ -804,9 +800,7 @@ static HB_BOOL amf3_deserialize_class_def( amfContext * context, PHB_ITEM pClass
 static HB_BOOL amf3_decode_obj_attrs( amfContext * context, PHB_ITEM pHash, PHB_ITEM pClass )
 {
    PHB_ITEM pArray;
-   PHB_ITEM pKey;
    PHB_ITEM pValue;
-   HB_BOOL  result;
    HB_SIZE  static_attr_len;
    HB_SIZE  i;
 
@@ -823,6 +817,9 @@ static HB_BOOL amf3_decode_obj_attrs( amfContext * context, PHB_ITEM pHash, PHB_
 
    for( i = 0; i < static_attr_len; i++ )
    {
+      PHB_ITEM pKey;
+      HB_BOOL  result;
+
       pValue = hb_itemNew( NULL );
       if( ! amf3_getItem( context, pValue ) )
       {
@@ -1220,7 +1217,7 @@ HB_FUNC( AMF3_DECODE )
    PHB_ITEM pItem = hb_stackReturnItem();
 
 #if defined( _DEBUG )
-   PHB_ITEM pDebugBlock = hb_param( 2, HB_IT_BLOCK );
+   PHB_ITEM pDebugBlock = hb_param( 2, HB_IT_EVALITEM );
 #endif
    PHB_ITEM pFuncSym = hb_param( 2, HB_IT_SYMBOL );
 
@@ -1231,8 +1228,7 @@ HB_FUNC( AMF3_DECODE )
    if( ! szBuffer )
       return;
 
-   context = ( amfContext * ) hb_xgrab( sizeof( amfContext ) );
-   memset( context, 0, sizeof( amfContext ) );
+   context = ( amfContext * ) hb_xgrabz( sizeof( amfContext ) );
 
    context->cBuf          = szBuffer;
    context->position      = 0;

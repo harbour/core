@@ -51,10 +51,10 @@
      http://www.gs1.org/docs/barcodes/GS1_DataMatrix_Introduction_and_technical_overview.pdf
      http://www.aipsys.com/dmintro.htm
 
-   Open source projects, that implements DataMatrix:
-     http://www.datenfreihafen.org/projects/iec16022.html
+   Open source projects, that implement DataMatrix:
+     https://www.datenfreihafen.org/projects/iec16022.html
      http://www.libdmtx.org/
-     http://www.codeproject.com/Articles/66495/DataMatrixNet-ported-to-Compact-Framework.aspx
+     https://www.codeproject.com/Articles/66495/DataMatrixNet-ported-to-Compact-Framework.aspx
 
    Online encoder:
      http://www.bcgen.com/datamatrix-barcode-creator.html
@@ -154,14 +154,14 @@ static int _datamatrix_encode( const char * szCode, int iLen, unsigned char * pC
 static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned char * pEC, int iECLen, int * pPoly, int * pExp, int * pLog, int iMod )
 {
    int i, j;
-   unsigned char iM;
 
    for( i = 0; i < iECLen; i++ )
       pEC[ i ] = 0;
 
    for( i = 0; i < iDataLen; i++ )
    {
-      iM = pData[ i ] ^ pEC[ iECLen - 1 ];
+      unsigned char iM = pData[ i ] ^ pEC[ iECLen - 1 ];
+
       for( j = iECLen - 1; j > 0; j-- )
       {
          if( iM && pPoly[ j ] )
@@ -422,6 +422,7 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
 
    if( iDataCount > 3116 )
    {
+      hb_xfree( pCW );
       pZebra->iError = HB_ZEBRA_ERROR_TOOLARGE;
       return pZebra;
    }

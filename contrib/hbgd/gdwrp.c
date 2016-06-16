@@ -48,15 +48,17 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
+#include "hbapigt.h"
+#include "hbapistr.h"
 
 /* NOTE: Do some initialization required by the GD headers. */
 #if defined( HB_OS_WIN )
-#  if ! defined( WIN32 )
-#     define WIN32
-#endif
-#  if ! defined( BGDWIN32 )
-#     define BGDWIN32
-#  endif
+   #if ! defined( WIN32 )
+      #define WIN32
+   #endif
+   #if ! defined( BGDWIN32 )
+      #define BGDWIN32
+   #endif
 #endif
 
 #include "gd.h"
@@ -74,16 +76,13 @@
 #define IMAGE_WBMP  4
 #define IMAGE_GD    5
 
-/* Internal functions */
-
-/*
- * internal function for handling pointers
+/* Internal function for handling pointers
  *
  * Code of Przemyslaw Czerpak for gdImagePtr
  * adapted also to gdFontPtr
  */
 
-/* gdImage ----------------------- */
+/* gdImage */
 
 /* gdImage destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdImage_Destructor )
@@ -146,7 +145,7 @@ static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 }
 #endif
 
-/* gdFont ----------------------- */
+/* gdFont */
 
 /* gdFont destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdFont_Destructor )
@@ -212,58 +211,50 @@ static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 }
 #endif
 
-static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
+static void * LoadImageFromFileObject( PHB_FILE fhandle, int sz )
 {
    void * iptr = hb_xgrab( sz );
 
-   hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) sz );
+   hb_fileRead( fhandle, iptr, ( HB_SIZE ) sz, -1 );
 
    return iptr;
 }
 
 static void * LoadImageFromFile( const char * szFile, int * sz )
 {
-   void *     iptr;
-   HB_FHANDLE fhandle;
+   HB_SIZE nSize;
+   char * iptr = ( char * ) hb_fileLoad( szFile, INT_MAX - 1, &nSize );
 
-   if( ( fhandle = hb_fsOpen( szFile, FO_READ ) ) != FS_ERROR )
-   {
-      /* get lenght */
-      *sz = ( int ) hb_fsSeek( fhandle, 0, FS_END );
-      /* rewind */
-      hb_fsSeek( fhandle, 0, FS_SET );
+   *sz = iptr ? ( int ) nSize : 0;
 
-      /* Read file */
-      iptr = hb_xgrab( *sz );
-      hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) *sz );
+   return ( void * ) iptr;
+}
 
-      hb_fsClose( fhandle );
-   }
-   else
-   {
-      /* File error */
-      iptr = NULL;
-      *sz  = 0;
-   }
-
-   return iptr;
+static void SaveImageToFileObject( PHB_FILE fhandle, const void * iptr, int sz )
+{
+   hb_fileWrite( fhandle, iptr, ( HB_SIZE ) sz, -1 );
 }
 
 static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
 {
-   hb_fsWriteLarge( fhandle, iptr, ( HB_SIZE ) sz );
+   PHB_FILE file = hb_fileFromHandle( fhandle );
+
+   SaveImageToFileObject( file, iptr, sz );
+
+   hb_fileDetach( file );
 }
 
 static void SaveImageToFile( const char * szFile, const void * iptr, int sz )
 {
-   HB_FHANDLE fhandle;
+   PHB_FILE fhandle = hb_fileExtOpen( szFile, NULL,
+                                      FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                      FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                      NULL, NULL );
 
-   if( ( fhandle = hb_fsCreate( szFile, FC_NORMAL ) ) != FS_ERROR )
+   if( fhandle )
    {
-      /* Write Image */
-      SaveImageToHandle( fhandle, iptr, sz );
-
-      hb_fsClose( fhandle );
+      hb_fileWrite( fhandle, iptr, ( HB_SIZE ) sz, -1 );
+      hb_fileClose( fhandle );
    }
 }
 
@@ -285,14 +276,27 @@ static void GDImageCreateFrom( int nType )
       /* Retrieve image pointer + size */
       iptr = hb_parGdImage( 1 );
    }
-   else if( HB_ISNUM( 1 ) &&
+   else if( hb_fileParamGet( 1 ) &&
             HB_ISNUM( 2 ) )
    {
       /* Retrieve image size */
       sz = hb_parni( 2 );
 
-      /* retrieve image from handle */
-      iptr = LoadImageFromHandle( hb_numToHandle( hb_parnintdef( 1, 0 /* std input */ ) ), sz );
+      /* Retrieve image */
+      iptr = LoadImageFromFileObject( hb_fileParamGet( 1 ), sz );
+   }
+   else if( HB_ISNUM( 1 ) &&
+            HB_ISNUM( 2 ) )
+   {
+      PHB_FILE file = hb_fileFromHandle( hb_numToHandle( hb_parnintdef( 1, HB_STDIN_HANDLE ) ) );
+
+      /* Retrieve image size */
+      sz = hb_parni( 2 );
+
+      /* Retrieve image */
+      iptr = LoadImageFromFileObject( file, sz );
+
+      hb_fileDetach( file );
    }
    else
    {
@@ -324,10 +328,10 @@ static void GDImageCreateFrom( int nType )
 
       /* Return image pointer */
       hb_retGdImage( im );
-
-      /* Free memory */
-      hb_xfree( iptr );
    }
+
+   if( iptr )
+      hb_xfree( iptr );
 }
 
 static void GDImageSaveTo( int nType )
@@ -343,12 +347,12 @@ static void GDImageSaveTo( int nType )
       /* Get file name or an output handler or NIL it I want a return string */
       if( ! ( HB_ISNIL( 2 ) ||
               HB_ISCHAR( 2 ) ||
+              hb_fileParamGet( 2 ) ||
               HB_ISNUM( 2 ) ) )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
-                               "Second argument must be NIL or numeric or a string.",
-                               HB_ERR_FUNCNAME, 2,
-                               hb_paramError( 2 ) );
+                               "Second argument must be NIL, a file handle or a string.",
+                               HB_ERR_FUNCNAME, 1, hb_paramError( 2 ) );
          return;
       }
 
@@ -359,8 +363,7 @@ static void GDImageSaveTo( int nType )
       {
          hb_errRT_BASE_SubstR( EG_ARG, 0,
                                "Third argument must be NIL or numeric.",
-                               HB_ERR_FUNCNAME, 1,
-                               hb_paramError( 3 ) );
+                               HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
          return;
       }
 
@@ -372,8 +375,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                                   "Compression level must be -1 (default) or a value between 0 and 95.",
-                                  HB_ERR_FUNCNAME, 1,
-                                  hb_paramError( 3 ) );
+                                  HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
             return;
          }
       }
@@ -385,8 +387,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                                   "Compression level must be -1 (default) or a value between 0 and 9.",
-                                  HB_ERR_FUNCNAME, 1,
-                                  hb_paramError( 3 ) );
+                                  HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
             return;
          }
       }
@@ -396,8 +397,7 @@ static void GDImageSaveTo( int nType )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 0,
                                   "Foreground color nedeed",
-                                  HB_ERR_FUNCNAME, 1,
-                                  hb_paramError( 3 ) );
+                                  HB_ERR_FUNCNAME, 1, hb_paramError( 3 ) );
             return;
          }
          fg = hb_parni( 3 );
@@ -432,20 +432,21 @@ static void GDImageSaveTo( int nType )
          SaveImageToFile( hb_parc( 2 ), iptr, sz );
 
       /* Write to file handle */
+      else if( hb_fileParamGet( 2 ) )
+         SaveImageToFileObject( hb_fileParamGet( 2 ), iptr, sz );
       else if( HB_ISNUM( 2 ) )
       {
          /* Write to std output or to a passed file */
          HB_FHANDLE fhandle = hb_numToHandle( hb_parnint( 2 ) );
 
          if( fhandle == FS_ERROR || fhandle == 0 )
-            fhandle = 1;  /* std output */
+            fhandle = HB_STDOUT_HANDLE;
 
          /* Write Image */
          SaveImageToHandle( fhandle, iptr, sz );
       }
-      /* Return image as string) */
+      /* Return image as string */
       else
-         /* Return as string */
          hb_retclen( ( const char * ) iptr, ( HB_SIZE ) sz );
 
       /* Free memory */
@@ -455,7 +456,7 @@ static void GDImageSaveTo( int nType )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* ************************* WRAPPED FUNCTIONS ****************************** */
+/* WRAPPER FUNCTIONS */
 
 HB_FUNC( HB_GD_VERSION )
 {
@@ -1470,7 +1471,6 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       double       angle    = hb_parnd( 6 ); /* angle value in radians */
       int          x        = hb_parni( 7 );
       int          y        = hb_parni( 8 );
-      const char * string   = hb_parc( 9 );
 
       gdFTStringExtra extra;
       int flags = 0; /* Extended flags */
@@ -1483,6 +1483,8 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       int    aRect[ 8 ];
       int    i;
       char * err;
+
+      void * hText;
 
       /* Retrieve rectangle array */
       for( i = 0; i < 8; i++ )
@@ -1512,16 +1514,19 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       if( flags != 0 )
       {
          extra.flags       = flags;
-         extra.linespacing = ( flags & gdFTEX_LINESPACE  ? linespacing : 1.05 );
-         extra.charmap     = ( flags & gdFTEX_CHARMAP    ? charmap : gdFTEX_Unicode );
-         extra.hdpi        = ( flags & gdFTEX_RESOLUTION ? resolution : 96 );
-         extra.vdpi        = ( flags & gdFTEX_RESOLUTION ? resolution : 96 );
+         extra.linespacing = ( flags & gdFTEX_LINESPACE  ) ? linespacing : 1.05;
+         extra.charmap     = ( flags & gdFTEX_CHARMAP    ) ? charmap : gdFTEX_Unicode;
+         extra.hdpi        = ( flags & gdFTEX_RESOLUTION ) ? resolution : 96;
+         extra.vdpi        = ( flags & gdFTEX_RESOLUTION ) ? resolution : 96;
       }
 
       /* Write string */
       err = gdImageStringFTEx( im, &aRect[ 0 ], fgcolor, ( char * ) HB_UNCONST( fontname ),
-                               ptsize, angle, x, y, ( char * ) HB_UNCONST( string ),
-                               ( flags != 0 ? &extra : NULL ) );
+                               ptsize, angle, x, y, ( char * ) HB_UNCONST( hb_parstr_utf8( 9, &hText, NULL ) ),
+                               flags != 0 ? &extra : NULL );
+
+      hb_strfree( hText );
+
       if( ! err )
       {
          /* Save in array the correct text rectangle dimensions */
@@ -1560,15 +1565,19 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
       double       fillPortion = hb_parnd( 6 );
       const char * fontname    = hb_parc( 7 );
       double       points      = hb_parnd( 8 );
-      const char * top         = hb_parcx( 9 );
-      const char * bottom      = hb_parcx( 10 );
-      int          fgcolor     = hb_parni( 11 ); /* foreground color */
+      int          fgcolor     = hb_parni( 11 );  /* foreground color */
+
+      void * hTop    = NULL;
+      void * hBottom = NULL;
 
       /* Write string */
       hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion,
                                       ( char * ) HB_UNCONST( fontname ), points,
-                                      ( char * ) HB_UNCONST( top ),
-                                      ( char * ) HB_UNCONST( bottom ), fgcolor ) );
+                                      ( char * ) HB_UNCONST( HB_ISCHAR( 9 ) ? hb_parstr_utf8( 9, &hTop, NULL ) : "" ),
+                                      ( char * ) HB_UNCONST( HB_ISCHAR( 10 ) ? hb_parstr_utf8( 10, &hBottom, NULL ) : "" ), fgcolor ) );
+
+      hb_strfree( hTop );
+      hb_strfree( hBottom );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2092,17 +2101,16 @@ HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlac
 
 static void AddImageToFile( const char * szFile, const void * iptr, int sz )
 {
-   HB_FHANDLE fhandle;
+   PHB_FILE fhandle = hb_fileExtOpen( szFile, NULL,
+                                      FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                      FXO_APPEND | FXO_SHARELOCK,
+                                      NULL, NULL );
 
-   if( ( fhandle = hb_fsOpen( szFile, FO_READWRITE ) ) != FS_ERROR )
+   if( fhandle )
    {
-      /* move to end of file */
-      hb_fsSeek( fhandle, 0, FS_END );
-
-      /* Write Image */
-      SaveImageToHandle( fhandle, iptr, sz );
-
-      hb_fsClose( fhandle );
+      hb_fileSeek( fhandle, 0, FS_END );
+      hb_fileWrite( fhandle, iptr, ( HB_SIZE ) sz, -1 );
+      hb_fileClose( fhandle );
    }
 }
 
@@ -2114,7 +2122,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
 {
 #if HB_GD_VERS( 2, 0, 33 )
    if( hb_isGdImage( 1 ) &&
-       ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
+       ( HB_ISCHAR( 2 ) || hb_fileParamGet( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
@@ -2129,8 +2137,10 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
       /* Check if parameter is a file name or a handle */
       if( HB_ISCHAR( 2 ) )
          SaveImageToFile( hb_parc( 2 ), iptr, size );
+      else if( hb_fileParamGet( 2 ) )
+         SaveImageToFileObject( hb_fileParamGet( 2 ), iptr, size );
       else
-         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, 1 /* std output */ ) ), iptr, size );
+         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, HB_STDOUT_HANDLE ) ), iptr, size );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2143,7 +2153,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 {
 #if HB_GD_VERS( 2, 0, 33 )
    if( hb_isGdImage( 1 ) &&
-       ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
+       ( HB_ISCHAR( 2 ) || hb_fileParamGet( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
@@ -2166,8 +2176,10 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       /* Check if parameter is a file name or a handle */
       if( HB_ISCHAR( 2 ) )
          AddImageToFile( hb_parc( 2 ), iptr, size );
+      else if( hb_fileParamGet( 2 ) )
+         SaveImageToFileObject( hb_fileParamGet( 2 ), iptr, size );
       else
-         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, 1 /* std output */ ) ), iptr, size );
+         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, HB_STDOUT_HANDLE ) ), iptr, size );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2179,7 +2191,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 HB_FUNC( GDIMAGEGIFANIMEND )
 {
 #if HB_GD_VERS( 2, 0, 33 )
-   if( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
+   if( HB_ISCHAR( 1 ) || hb_fileParamGet( 1 ) || HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
    {
       int    size;
       void * iptr = gdImageGifAnimEndPtr( &size );
@@ -2187,8 +2199,10 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       /* Check if 1st parameter is a file name or a handle */
       if( HB_ISCHAR( 1 ) )
          AddImageToFile( hb_parc( 1 ), iptr, size );
+      else if( hb_fileParamGet( 1 ) )
+         SaveImageToFileObject( hb_fileParamGet( 1 ), iptr, size );
       else
-         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 1, 1 /* std output */ ) ), iptr, size );
+         SaveImageToHandle( hb_numToHandle( hb_parnintdef( 1, HB_STDOUT_HANDLE ) ), iptr, size );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

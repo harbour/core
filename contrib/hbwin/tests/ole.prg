@@ -1,23 +1,24 @@
 /*
- * hbole library demo/test code
+ * OLE demo/test code
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  *    Exm_CDO(), Exm_OOOpen(), Exm_CreateShortcut()
- *
  */
 
 #require "hbwin"
 
+#include "hbver.ch"
+
 PROCEDURE Main()
 
-   LOCAL nOption
+   LOCAL cOption
 
    CLS
 
    DO WHILE .T.
-      ? ""
+      ?
       ? "Select OLE test:"
       ? "1) MS Excel"
       ? "2) MS Word"
@@ -33,43 +34,30 @@ PROCEDURE Main()
       ? "c) PocketSOAP client"
       ? "d) Internet Explorer with callback"
       ? "e) Create shortcut"
-      ? "0) Quit"
-      ? "> "
+      ? "f) HTTPS download"
+      ? "q) Quit"
+      ? ">", ""
 
-      nOption := Inkey( 0 )
-      ?? hb_keyChar( nOption )
+      ?? cOption := Lower( hb_keyChar( Inkey( 0 ) ) )
 
-      IF     nOption == hb_keyCode( "1" )
-         Exm_MSExcel()
-      ELSEIF nOption == hb_keyCode( "2" )
-         Exm_MSWord()
-      ELSEIF nOption == hb_keyCode( "3" )
-         Exm_MSOutlook()
-      ELSEIF nOption == hb_keyCode( "4" )
-         Exm_MSOutlook2()
-      ELSEIF nOption == hb_keyCode( "5" )
-         Exm_IExplorer()
-      ELSEIF nOption == hb_keyCode( "6" )
-         Exm_OOCalc()
-      ELSEIF nOption == hb_keyCode( "7" )
-         Exm_OOWriter()
-      ELSEIF nOption == hb_keyCode( "8" )
-         Exm_OOOpen()
-      ELSEIF nOption == hb_keyCode( "9" )
-         Exm_CDO()
-      ELSEIF nOption == hb_keyCode( "a" )
-         Exm_ADODB()
-      ELSEIF nOption == hb_keyCode( "b" )
-         Exm_SOAP()
-      ELSEIF nOption == hb_keyCode( "c" )
-         Exm_PocketSOAP()
-      ELSEIF nOption == hb_keyCode( "d" )
-         Exm_IExplorer2()
-      ELSEIF nOption == hb_keyCode( "e" )
-         Exm_CreateShortcut()
-      ELSEIF nOption == hb_keyCode( "0" )
-         EXIT
-      ENDIF
+      DO CASE
+      CASE cOption == "1" ; Exm_MSExcel()
+      CASE cOption == "2" ; Exm_MSWord()
+      CASE cOption == "3" ; Exm_MSOutlook()
+      CASE cOption == "4" ; Exm_MSOutlook2()
+      CASE cOption == "5" ; Exm_IExplorer()
+      CASE cOption == "6" ; Exm_OOCalc()
+      CASE cOption == "7" ; Exm_OOWriter()
+      CASE cOption == "8" ; Exm_OOOpen()
+      CASE cOption == "9" ; Exm_CDO()
+      CASE cOption == "a" ; Exm_ADODB()
+      CASE cOption == "b" ; Exm_SOAP()
+      CASE cOption == "c" ; Exm_PocketSOAP()
+      CASE cOption == "d" ; Exm_IExplorer2()
+      CASE cOption == "e" ; Exm_CreateShortcut()
+      CASE cOption == "f" ; Exm_DownloadHTTPS()
+      CASE cOption == "q" ; RETURN
+      ENDCASE
    ENDDO
 
    RETURN
@@ -204,7 +192,7 @@ STATIC PROCEDURE Exm_MSOutlook2()
 
       FOR i := 1 TO 10
          oMail:Recipients:Add( "Contact" + hb_ntos( i ) + ;
-            "<contact" + hb_ntos( i ) + "@server.com>" )
+            "<contact" + hb_ntos( i ) + "@example.com>" )
       NEXT
 
       oLista := oOL:CreateItem( 7 /* olDistributionListItem */ )
@@ -225,9 +213,9 @@ STATIC PROCEDURE Exm_IExplorer()
 
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:Visible := .T.
-      oIE:Navigate( "http://harbour-project.org" )
+      oIE:Navigate( hb_Version( HB_VERSION_URL_BASE ) )
    ELSE
-      ? "Error. IExplorer not available.", win_oleErrorText()
+      ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -239,12 +227,12 @@ STATIC PROCEDURE Exm_IExplorer2()
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:__hSink := __axRegisterHandler( oIE:__hObj, {| ... | QOut( ... ) } )
       oIE:Visible := .T.
-      oIE:Navigate( "http://harbour-project.org" )
-      WHILE oIE:ReadyState != 4
+      oIE:Navigate( hb_Version( HB_VERSION_URL_BASE ) )
+      DO WHILE oIE:ReadyState != 4
          hb_idleSleep( 0 )
       ENDDO
    ELSE
-      ? "Error. IExplorer not available.", win_oleErrorText()
+      ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -348,18 +336,14 @@ STATIC PROCEDURE Exm_OOOpen()
    LOCAL oOO_PropVal01
    LOCAL oOO_Doc
 
-   LOCAL cDir
-
    IF ( oOO_ServiceManager := win_oleCreateObject( "com.sun.star.ServiceManager" ) ) != NIL
-
-      hb_FNameSplit( hb_argv( 0 ), @cDir )
 
       oOO_Desktop := oOO_ServiceManager:createInstance( "com.sun.star.frame.Desktop" )
       oOO_PropVal01 := oOO_ServiceManager:Bridge_GetStruct( "com.sun.star.beans.PropertyValue" )
-      oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( cDir, "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } )
+      oOO_Doc := oOO_Desktop:loadComponentFromURL( OO_ConvertToURL( hb_FNameMerge( hb_DirBase(), "sample.odt" ) ), "_blank", 0, { oOO_PropVal01 } )
 
-      ? "Press any key to close OpenOffice"
-      Inkey( 0 )
+      ? "About to close OpenOffice"
+      WAIT
 
       oOO_Doc:Close( .T. )
       oOO_Doc := NIL
@@ -375,13 +359,14 @@ STATIC PROCEDURE Exm_OOOpen()
 
 STATIC FUNCTION OO_ConvertToURL( cString )
 
-   // ; Handle UNC paths
-   IF !( Left( cString, 2 ) == "\\" )
+   cString := StrTran( cString, "\", "/" )
+
+   // Handle UNC paths
+   IF ! hb_LeftEq( cString, "//" )
       cString := StrTran( cString, ":", "|" )
       cString := "///" + cString
    ENDIF
 
-   cString := StrTran( cString, "\", "/" )
    cString := StrTran( cString, " ", "%20" )
 
    RETURN "file:" + cString
@@ -395,20 +380,20 @@ STATIC PROCEDURE Exm_CDO()
 
       oCDOConf := win_oleCreateObject( "CDO.Configuration" )
 
-      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/sendusing" ):Value := 2 // ; cdoSendUsingPort
-      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "localhost"
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/sendusing" ):Value := 2 // cdoSendUsingPort
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "smtp.example.com"
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserverport" ):Value := 25
       oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout" ):Value := 120
       oCDOConf:Fields:Update()
 
       oCDOMsg:Configuration := oCDOConf
-      oCDOMsg:BodyPart:Charset := "iso-8859-2" // "iso-8859-1" "utf-8"
-      oCDOMsg:To := "test@localhost"
-      oCDOMsg:From := "sender@localhost"
+      oCDOMsg:BodyPart:Charset := "utf-8" // "iso-8859-1" "iso-8859-2"
+      oCDOMsg:To := "to@example.com"
+      oCDOMsg:From := "from@example.com"
       oCDOMsg:Subject := "Test message"
       oCDOMsg:TextBody := "Test message body"
 
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          oCDOMsg:Send()
       RECOVER
          ? "Error: CDO send error.", win_oleErrorText()
@@ -458,9 +443,9 @@ STATIC PROCEDURE Exm_SOAP()
 
    LOCAL oSoapClient
 
-   IF ! Empty( oSoapClient := win_oleCreateObject( "MSSOAP.SoapClient30" ) )
+   IF ( oSoapClient := win_oleCreateObject( "MSSOAP.SoapClient30" ) ) != NIL
 
-      oSoapClient:msSoapInit( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL" )
+      oSoapClient:msSoapInit( "https://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL" )
 
       ? oSoapClient:InvertStringCase( "lower UPPER" )
    ELSE
@@ -474,12 +459,12 @@ STATIC PROCEDURE Exm_PocketSOAP()
    LOCAL oHttp := win_oleCreateObject( "PocketSOAP.HTTPTransport.2" )
    LOCAL oEnvelope := win_oleCreateObject( "PocketSOAP.Envelope.2" )
 
-   IF ! Empty( oHttp ) .OR. ! Empty( oEnvelope )
+   IF oHttp != NIL .AND. oEnvelope != NIL
 
       oEnvelope:EncodingStyle := ""
       oEnvelope:SetMethod( "InvertStringCase", "http://www.dataaccess.com/webservicesserver/" )
       oEnvelope:Parameters:Create( "sAString", "lower UPPER" )
-      oHttp:Send( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL", oEnvelope:Serialize() )
+      oHttp:Send( "https://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL", oEnvelope:Serialize() )
       oEnvelope:Parse( oHttp )
 
       ? oEnvelope:Parameters:Item( 0 ):Value
@@ -497,10 +482,26 @@ STATIC PROCEDURE Exm_CreateShortcut()
       oSC := oShell:CreateShortcut( hb_DirBase() + hb_ps() + "testole.lnk" )
       oSC:TargetPath := hb_ProgName()
       oSC:WorkingDirectory := hb_DirBase()
-      oSC:IconLocation := hb_ProgName() + ",0"
+      oSC:IconLocation := '"' + hb_ProgName() + '"' + ",0"
       oSC:Save()
    ELSE
       ? "Error: Shell not available. [" + win_oleErrorText() + "]"
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE Exm_DownloadHTTPS()
+
+   LOCAL oHTTP
+
+   IF ( oHTTP := win_oleCreateObject( "WinHttp.WinHttpRequest.5.1" ) ) != NIL
+      oHTTP:Open( "GET", "https://example.com/index.html", .F. )
+      oHTTP:Send()
+      IF oHTTP:Status() == 200
+         ? "Downloaded", hb_ntos( hb_BLen( oHTTP:responseBody ) ), "byte(s)"
+      ENDIF
+   ELSE
+      ? "Error: WinHttp 5.1 not available. [" + win_oleErrorText() + "]"
    ENDIF
 
    RETURN

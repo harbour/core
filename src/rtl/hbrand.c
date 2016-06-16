@@ -48,19 +48,25 @@
 
 #include "arc4.h"
 
-HB_FUNC( HB_RAND32 ) /* returns an integer between 0 and 0xFFFFFFFF (inclusive) */
-{
-   hb_retnint( hb_arc4random() );
-}
-
 void hb_random_block( void * data, HB_SIZE len )
 {
    hb_arc4random_buf( data, len );
 }
 
+/* Returns a double value between 0 and 1 */
+double hb_random_num_secure( void )
+{
+   return ( double ) hb_arc4random() / HB_U32_MAX;
+}
+
+HB_FUNC( HB_RAND32 ) /* returns an integer between 0 and 0xFFFFFFFF (inclusive) */
+{
+   hb_retnint( hb_arc4random() );
+}
+
 HB_FUNC( HB_RANDSTR )
 {
-   HB_SIZE len = hb_parns( 1 );
+   HB_ISIZ len = hb_parns( 1 );
 
    if( len > 0 )
    {

@@ -52,7 +52,7 @@
  * This source file contains a modified version of MXML (Mini XML)
  * library, developed by Giancarlo Niccolai. MXML is released under
  * LGPL license; this modified version (called HBXML) is released under
- * GPL with HARBOUR exception. HBXML license does not extends into
+ * GPL with Harbour exception. HBXML license does not extends into
  * MXML; HBXML and any modification to HBXML is to be considered as
  * a part of Harbour or xHarbour projects, as it is modified to
  * be specifically working in the context of the compiler's RTL.
@@ -69,7 +69,7 @@
    #define MXML_LINE_TERMINATOR       '\r'
    #define MXML_SOFT_LINE_TERMINATOR  '\n'
 #else
-/*Notice, this works for unix AND windows */
+/* Notice, this works for both UNIX and Windows */
    #define MXML_LINE_TERMINATOR       '\n'
    #define MXML_SOFT_LINE_TERMINATOR  '\r'
 #endif
@@ -137,10 +137,7 @@ struct tag_mxml_output;
 typedef void ( *MXML_REFIL_FUNC )( struct tag_mxml_refil * ref );
 typedef void ( *MXML_OUTPUT_FUNC )( struct tag_mxml_output * out, const char * data, HB_ISIZ len );
 
-/*************************************************
-   Structures holding the XML data
- **************************************************/
-
+/* --- Structures holding the XML data --- */
 
 /* Refiller */
 
@@ -156,7 +153,7 @@ typedef struct tag_mxml_refil
    HB_ISIZ         buflen;  /* valid characters in the current buffer */
    HB_ISIZ         bufpos;  /* current position */
 
-   /* lenght of the stream for implementing progress indicators */
+   /* length of the stream for implementing progress indicators */
    HB_ISIZ streampos;
    HB_ISIZ streamlen;
 
@@ -169,8 +166,8 @@ typedef struct tag_mxml_refil
    /* data available for callback functions */
    union
    {
-      HB_FHANDLE hFile;
-      void *     vPtr;
+      PHB_FILE hFile;
+      void *   vPtr;
    } u;
 
 } MXML_REFIL;
@@ -192,8 +189,8 @@ typedef struct tag_mxml_output
    /* data available for callback functions */
    union
    {
-      HB_FHANDLE hFile;
-      void *     vPtr;
+      PHB_FILE hFile;
+      void *   vPtr;
    } u;
 
 } MXML_OUTPUT;

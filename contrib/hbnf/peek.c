@@ -1,26 +1,16 @@
-/*
- * Author....: Ted Means
- * CIS ID....: 73067,3332
- *
- * This function is an original work by Ted Means and is placed in the
- * public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.3   07 Feb 1994 20:11:50   GLENN
- * Ted re-wrote to make it CPMI compliant.
- *
- *    Rev 1.2   15 Aug 1991 23:08:18   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:53:46   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:02:52   GLENN
- * Nanforum Toolkit
- *
- *
+/* This is an original work by Ted Means and is placed in the public domain.
+
+      Rev 1.3   07 Feb 1994 20:11:50   GLENN
+   Ted re-wrote to make it CPMI compliant.
+
+      Rev 1.2   15 Aug 1991 23:08:18   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:53:46   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:02:52   GLENN
+   Nanforum Toolkit
  */
 
 #include "hbapi.h"
@@ -59,12 +49,8 @@
 HB_FUNC( FT_PEEK )
 {
 #if defined( HB_OS_DOS )
-   {
-      HB_U16 nSeg = ( HB_U16 ) hb_parni( 1 );
-      HB_U16 nOff = ( HB_U16 ) hb_parni( 2 );
-
-      hb_retni( HB_PEEK_BYTE( nSeg, nOff ) );
-   }
+   hb_retni( HB_PEEK_BYTE( ( HB_U16 ) hb_parni( 1 ),
+                           ( HB_U16 ) hb_parni( 2 ) ) );
 #else
    hb_retni( -1 );
 #endif
@@ -73,14 +59,10 @@ HB_FUNC( FT_PEEK )
 HB_FUNC( FT_POKE )
 {
 #if defined( HB_OS_DOS )
-   {
-      HB_U16 nSeg = ( HB_U16 ) hb_parni( 1 );
-      HB_U16 nOff = ( HB_U16 ) hb_parni( 2 );
+   HB_POKE_BYTE( ( HB_U16 ) hb_parni( 1 ),
+                 ( HB_U16 ) hb_parni( 2 ), ( HB_U8 ) hb_parni( 3 ) );
 
-      HB_POKE_BYTE( nSeg, nOff, ( HB_U8 ) hb_parni( 3 ) );
-
-      hb_retl( HB_TRUE );
-   }
+   hb_retl( HB_TRUE );
 #else
    hb_retl( HB_FALSE );
 #endif
@@ -98,8 +80,7 @@ HB_FUNC( FT_INP )
 HB_FUNC( FT_OUTP )
 {
 #if defined( HB_OS_DOS )
-   outportb( ( HB_U8 ) hb_parni( 1 ),
-             ( HB_U8 ) hb_parni( 2 ) );
+   outportb( ( HB_U8 ) hb_parni( 1 ), ( HB_U8 ) hb_parni( 2 ) );
 
    hb_retl( HB_TRUE );
 #else

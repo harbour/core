@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
  *    Documentation
  *
@@ -41,13 +39,13 @@
 
         New()                 Create a new instance of the class
    $EXAMPLES$
-      FUNCTION TestObject()
+      PROCEDURE TestObject()
          LOCAL oObject
 
          oObject := HBClass():New( "TMyClass" )
          oObject:End()
 
-         RETURN NIL
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$

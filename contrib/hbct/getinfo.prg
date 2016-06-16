@@ -1,11 +1,8 @@
 /*
  * CT3 GET/READ Functions
  *
- * SaveGets(), RestGets()
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *
- * CountGets(), CurrentGet(), GetFldRow(), GetFldCol(), GetFldVar()
- * Copyright 2004 Philip Chee <philip@aleytys.pc.my>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (SaveGets(), RestGets())
+ * Copyright 2004 Philip Chee <philip@aleytys.pc.my> (CountGets(), CurrentGet(), GetFldRow(), GetFldCol(), GetFldVar())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,18 +56,13 @@ FUNCTION SaveGets()
    RETURN aGetList
 
 FUNCTION RestGets( aGetList )
-
    RETURN ( GetList := aGetList ) != NIL
 
 FUNCTION CountGets()
-
    RETURN Len( GetList )
 
 FUNCTION CurrentGet()
-
-   LOCAL oActive := GetActive()
-
-   RETURN AScan( GetList, {| oGet | oGet == oActive } )
+   RETURN hb_AScan( GetList, GetActive(),,, .T. )
 
 FUNCTION GetFldRow( nField )
 

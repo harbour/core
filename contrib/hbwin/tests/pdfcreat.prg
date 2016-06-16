@@ -4,11 +4,8 @@
  *
  * You should install PDFCreator to be able to run this test
  *
- * Download site:
- * http://sourceforge.net/projects/pdfcreator/
- *
  * COM interface docs:
- * http://www.pdfforge.org/content/com-interface
+ * https://www.pdfforge.org/pdfcreator/manual/com-interface
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
  *
@@ -18,14 +15,12 @@
 
 PROCEDURE Main()
 
-   LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0
+   LOCAL oPC, nTime, cDefaultPrinter, oPrinter, nEvent := 0
 
    IF Empty( oPC := win_oleCreateObject( "PDFCreator.clsPDFCreator" ) )
-      ? "Unable to create PDFCreator COM object"
+      ? "Could not create PDFCreator COM object"
       RETURN
    ENDIF
-
-   cFilename := hb_ProgName()
 
    /* Setup event notification */
    oPC:__hSink := __axRegisterHandler( oPC:__hObj, {| X | nEvent := X } )
@@ -33,7 +28,7 @@ PROCEDURE Main()
    oPC:cStart( "/NoProcessingAtStartup" )
    oPC:_cOption( "UseAutosave", 1 )
    oPC:_cOption( "UseAutosaveDirectory", 1 )
-   oPC:_cOption( "AutosaveDirectory", Left( cFileName, RAt( hb_ps(), cFilename ) - 1 ) )
+   oPC:_cOption( "AutosaveDirectory", hb_DirSepDel( hb_DirBase() ) )
    oPC:_cOption( "AutosaveFilename", "pdfcreat.pdf" )
    oPC:_cOption( "AutosaveFormat", 0 )
 
@@ -67,15 +62,19 @@ PROCEDURE Main()
       oPC:cOption( "UseAutosave" )
    ENDDO
 
-   IF nEvent == 0
+   SWITCH nEvent
+   CASE 0
       ? "Print timeout"
-   ELSEIF nEvent == 1
+      EXIT
+   CASE 1
       ? "Printed successfully"
-   ELSEIF nEvent == 2
+      EXIT
+   CASE 2
       ? "Error:", oPC:cError():Description
-   ELSE
+      EXIT
+   OTHERWISE
       ? "Unknown event"
-   ENDIF
+   ENDSWITCH
 
    oPC:cDefaultPrinter := cDefaultPrinter
    oPC:cClose()

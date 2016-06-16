@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: __AtPrompt(), @...PROMPT, __MenuTo(), MENU TO
  *
@@ -79,8 +77,9 @@
       IF nChoice == 0
          ? "You did not choose an item"
       ELSE
-         ? "You chose element " + hb_ntos( nChoice )
-         ?? " which has a value of " + aItems[ nChoice ]
+         ? ;
+            "You chose element", hb_ntos( nChoice ), ;
+            "which has a value of", aItems[ nChoice ]
       ENDIF
    $FILES$
       Library is core

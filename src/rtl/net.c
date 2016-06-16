@@ -2,6 +2,7 @@
  * NetName() function
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net> (Support for DJGPP/GCC/OS2 for NetName())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *    Support for DJGPP/GCC/OS2 for netname
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -121,13 +112,13 @@ char * hb_netname( void )
 
 #elif defined( HB_OS_DOS )
 
-#  if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
+   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
       char szValue[ MAXGETHOSTNAME + 1 ];
       szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
       gethostname( szValue, MAXGETHOSTNAME );
       if( szValue[ 0 ] )
          return hb_osStrDecode( szValue );
-#  else
+   #else
       union REGS regs;
       struct SREGS sregs;
       char szValue[ 16 ];
@@ -141,7 +132,7 @@ char * hb_netname( void )
 
       if( regs.h.ch != 0 && szValue[ 0 ] )
          return hb_osStrDecode( szValue );
-#  endif
+   #endif
 
 #elif ( defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) ) || \
       ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )

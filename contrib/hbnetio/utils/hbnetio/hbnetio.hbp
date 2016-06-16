@@ -1,4 +1,4 @@
-{HB_MT='no'}-stop
+{__HB_MT='no'}-stop
 
 hbnetio.hbc
 -mt
@@ -11,8 +11,16 @@ hbnetio.prg
 _console.prg
 netiomgm.hb
 
+../../../../package/harbour.rc
+
 _winsvc.prg{win}
 -main=WinMain{win}
 hbwin.hbc{win}
 
-#-prgflag=-DHB_EXTERN
+_daemon.prg{linux}
+-main=DaemonMain{linux}
+hbunix.hbc{linux}
+
+# uncomment to build a slim hbnetio executable
+# without RPC support for all Harbour core functions
+#-prgflag=-DHB_NO_EXTERN

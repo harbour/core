@@ -5,7 +5,7 @@
 
 -w3 -es2
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.prg
 widgets.prg
@@ -13,3 +13,4 @@ log.prg
 
 -env:HB_DYNBIND_OPENSSL=yes
 hbssl.hbc
+hbtip.hbc

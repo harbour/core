@@ -384,7 +384,7 @@ static PHB_ITEM hb_u64ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVA
          break;
 
       case HB_DYN_CTYPE_FLOAT:
-         hb_itemPutND( pItem, value.t.nFL );
+         hb_itemPutND( pItem, ( double ) value.t.nFL );
          break;
 
       case HB_DYN_CTYPE_DOUBLE:
@@ -767,7 +767,7 @@ static PHB_ITEM hb_u32ret( PHB_ITEM pItem, int iRetType, int iEncoding, HB_DYNVA
          break;
 
       case HB_DYN_CTYPE_FLOAT:
-         hb_itemPutND( pItem, value.t.nFL );
+         hb_itemPutND( pItem, ( double ) value.t.nFL );
          break;
 
       case HB_DYN_CTYPE_DOUBLE:

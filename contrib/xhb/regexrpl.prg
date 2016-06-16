@@ -43,36 +43,20 @@
  *
  */
 
-#define MATCH_STRING 1
-#define MATCH_START  2
-#define MATCH_END    3
+#define MATCH_STRING  1
+#define MATCH_START   2
+#define MATCH_END     3
 
 FUNCTION hb_regexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch )
 
-   LOCAL aMatches, aMatch
-   LOCAL cReturn
-   LOCAL nOffSet := 0
-   LOCAL cSearch, nStart, nLenSearch, nLenReplace
+   LOCAL cReturn := cString, nOffSet := 0, aMatch, nLenSearch
 
-   aMatches := hb_regexAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
-   cReturn := cString
-
-   IF ! Empty( aMatches )
-      FOR EACH aMatch IN aMatches
-         IF HB_ISARRAY( aMatch ) .AND. Len( aMatch ) >= 1 .AND. ;
-            HB_ISARRAY( aMatch[ 1 ] )
-            aMatch := aMatch[ 1 ]
-            IF Len( aMatch ) == 3 // if regex matches I must have an array of 3 elements
-               cSearch := aMatch[ MATCH_STRING ]
-               nStart  := aMatch[ MATCH_START ]
-               nLenSearch  := Len( cSearch )
-               nLenReplace := Len( cReplace )
-               cReturn := Stuff( cReturn, nStart - nOffSet, nLenSearch, cReplace )
-               nOffSet += nLenSearch - nLenReplace
-            ENDIF
-         ENDIF
-      NEXT
-
-   ENDIF
+   FOR EACH aMatch IN hb_regexAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
+      IF HB_ISARRAY( aMatch ) .AND. Len( aMatch ) == 3  // if regex matches I must have an array of 3 elements
+         nLenSearch := Len( aMatch[ MATCH_STRING ] )
+         cReturn := Stuff( cReturn, aMatch[ MATCH_START ] - nOffSet, nLenSearch, cReplace )
+         nOffSet += nLenSearch - Len( cReplace )
+      ENDIF
+   NEXT
 
    RETURN cReturn

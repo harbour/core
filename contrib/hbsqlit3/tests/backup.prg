@@ -62,38 +62,33 @@
 
 PROCEDURE Main()
 
-   LOCAL cFileSource := ":memory:", cFileDest := "backup.db", cSQLTEXT
-   LOCAL pDbSource, pDbDest, pBackup, cb, nDbFlags
+   LOCAL cFileDest := "backup.db", cSQLTEXT
+   LOCAL pDbSource, pDbDest, pBackup, cb
 
    IF sqlite3_libversion_number() < 3006011
       ErrorLevel( 1 )
       RETURN
    ENDIF
 
-   IF Empty( pDbSource := PrepareDB( cFileSource ) )
+   IF Empty( pDbSource := PrepareDB( ":memory:" ) )
       ErrorLevel( 1 )
       RETURN
    ENDIF
 
-   nDbFlags := SQLITE_OPEN_CREATE + SQLITE_OPEN_READWRITE + ;
-      SQLITE_OPEN_EXCLUSIVE
-   pDbDest := sqlite3_open_v2( cFileDest, nDbFlags )
-
-   IF Empty( pDbDest )
-      ? "Can't open database : ", cFileDest
+   IF Empty( pDbDest := sqlite3_open_v2( cFileDest, SQLITE_OPEN_CREATE + SQLITE_OPEN_READWRITE + SQLITE_OPEN_EXCLUSIVE ) )
+      ? "Could not open database:", cFileDest
       ErrorLevel( 1 )
       RETURN
    ENDIF
 
    sqlite3_trace( pDbDest, .T., "backup.log" )
 
-   pBackup := sqlite3_backup_init( pDbDest, "main", pDbSource, "main" )
-   IF Empty( pBackup )
-      ? "Can't initialize backup"
+   IF Empty( pBackup := sqlite3_backup_init( pDbDest, "main", pDbSource, "main" ) )
+      ? "Could not initialize backup"
       ErrorLevel( 1 )
       RETURN
    ELSE
-      ? "Start backup.."
+      ? "Start backup..."
    ENDIF
 
    IF sqlite3_backup_step( pBackup, -1 ) == SQLITE_DONE
@@ -104,45 +99,33 @@ PROCEDURE Main()
 
    pDbSource := NIL /* close :memory: database */
 
-   /* Little test for sqlite3_exec with callback  */
+   /* Little test for sqlite3_exec with callback */
    ?
    ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
-   cb := @CallBack() // "CallBack"
+   cb := @CallBack()  // "CallBack"
    ? cErrorMsg( sqlite3_exec( pDbDest, cSQLTEXT, cb ) )
 
-   pDbDest := NIL // close database
+   pDbDest := NIL  // close database
 
    sqlite3_sleep( 3000 )
 
    RETURN
 
-/**
-*/
-
-FUNCTION CallBack( nColCount, aValue, aColName )
+STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      ? PadR( aColName[ nI ], 5 ), " == ", aValue[ nI ]
+      ? PadR( aColName[ nI ], 5 ), "==", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
 
    RETURN 0
 
-/**
-*/
-
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
-
-   hb_default( @lShortMsg, .T. )
-
-   RETURN iif( lShortMsg, hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
-
-/**
-*/
+   RETURN iif( hb_defaultValue( lShortMsg, .T. ), hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
 STATIC FUNCTION PrepareDB( cFile )
 
@@ -156,10 +139,8 @@ STATIC FUNCTION PrepareDB( cFile )
       "Ivet" => 28 ;
       }, enum
 
-   pDb := sqlite3_open( cFile, .T. )
-   IF Empty( pDb )
-      ? "Can't open/create database : ", cFile
-
+   IF Empty( pDb := sqlite3_open( cFile, .T. ) )
+      ? "Could not open/create database:", cFile
       RETURN NIL
    ENDIF
 
@@ -167,18 +148,15 @@ STATIC FUNCTION PrepareDB( cFile )
 
    cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )"
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
-      ? "Can't create table : person"
-      pDb := NIL // close database
-
+      ? "Could not create table:", "person"
+      pDb := NIL  // close database
       RETURN NIL
    ENDIF
 
    cSQLTEXT := "INSERT INTO person( name, age ) VALUES( :name, :age )"
-   pStmt := sqlite3_prepare( pDb, cSQLTEXT )
-   IF Empty( pStmt )
-      ? "Can't prepare statement : ", cSQLTEXT
+   IF Empty( pStmt := sqlite3_prepare( pDb, cSQLTEXT ) )
+      ? "Could not prepare statement:", cSQLTEXT
       pDb := NIL
-
       RETURN NIL
    ENDIF
 

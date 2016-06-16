@@ -5,6 +5,8 @@
  *
  */
 
+#pragma -gc0
+
 /* NOTE: Recursive use is supported. */
 
 #include "color.ch"
@@ -35,12 +37,12 @@ FUNCTION __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
    ENDDO
 
    // add to the static array
-   AAdd( t_aLevel[ t_nPointer ], ;
-         { nRow, ;      // _ITM_ROW
-           nCol, ;      // _ITM_COL
-           cPrompt, ;   // _ITM_PROMPT
-           cMsg, ;      // _ITM_MSG
-           cColor } )   // _ITM_COLOR
+   AAdd( t_aLevel[ t_nPointer ], { ;
+      nRow, ;      // _ITM_ROW
+      nCol, ;      // _ITM_COL
+      cPrompt, ;   // _ITM_PROMPT
+      cMsg, ;      // _ITM_MSG
+      cColor } )   // _ITM_COLOR
 
    // put this prompt on the screen right now
    DispOutAt( nRow, nCol, cPrompt, cColor )
@@ -49,7 +51,7 @@ FUNCTION __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
 
 FUNCTION __MenuTo( bBlock, cVariable )
 
-   LOCAL nKey
+   LOCAL nKey, nKeyStd
    LOCAL cKey
    LOCAL y
    LOCAL q
@@ -129,7 +131,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
          IF nMsgRow > 0
 
             IF ! Empty( xMsg )
-               DispOutAt( nMsgRow, nMsgCol, Space( Len( xMsg ) ) )
+               DispOutAt( nMsgRow, nMsgCol, Space( hb_ULen( xMsg ) ) )
             ENDIF
 
             xMsg := t_aLevel[ nPointer - 1 ][ n ][ _ITM_MSG ]
@@ -142,7 +144,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             hb_default( @xMsg, "" )
 
             IF lMsgCenter
-               nMsgCol := Int( ( MaxCol() - Len( xMsg ) ) / 2 )
+               nMsgCol := Int( ( MaxCol() - hb_ULen( xMsg ) ) / 2 )
             ENDIF
 
             DispOutAt( nMsgRow, nMsgCol, xMsg )
@@ -179,31 +181,33 @@ FUNCTION __MenuTo( bBlock, cVariable )
             EXIT
          ENDIF
 
-         nKey := 0
+         nKey := nKeyStd := 0
          DO WHILE nKey == 0
 
             // wait for a keystroke
-            nKey := Inkey( 0 )
+            nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
-            IF ( bAction := SetKey( nKey ) ) != NIL
+            IF ( bAction := SetKey( nKey ) ) != NIL .OR. ;
+               ( bAction := SetKey( nKeyStd ) ) != NIL
 
                Eval( bBlock, n )
                Eval( bAction, ProcName( 1 ), ProcLine( 1 ), hb_asciiUpper( cVariable ) )
                n := Eval( bBlock )
 
-               IF n < 1
+               DO CASE
+               CASE n < 1
                   n := 1
-               ELSEIF n > nArrLen
+               CASE n > nArrLen
                   n := nArrLen
-               ENDIF
+               ENDCASE
 
-               nKey := 0
+               nKey := nKeyStd := 0
 
             ENDIF
          ENDDO
 
          // check for keystrokes
-         SWITCH nKey
+         SWITCH nKeyStd
 #ifdef HB_COMPAT_C53
          CASE K_MOUSEMOVE
             EXIT
@@ -215,7 +219,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             ENDIF
             /* QUESTION: Clipper does this, but shouldn't we only
                          exit when HitTest() was successful? */
-            IF nKey == K_LDBLCLK
+            IF nKeyStd == K_LDBLCLK
                lExit := .T.
             ENDIF
             EXIT
@@ -248,7 +252,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
             EXIT
          OTHERWISE
             // did user hit a hot key?
-            IF Len( cKey := Upper( hb_keyChar( nKey ) ) ) > 0
+            IF ! HB_ISNULL( cKey := Upper( hb_keyChar( nKeyStd ) ) )
                FOR y := 1 TO nArrLen
                   IF hb_LeftEqI( LTrim( t_aLevel[ nPointer - 1 ][ y ][ _ITM_PROMPT ] ), cKey )
                      n := y
@@ -305,7 +309,7 @@ STATIC FUNCTION HitTest( aMenu, nMRow, nMCol )
    FOR EACH aMenuItem IN aMenu
       IF nMRow == aMenuItem[ _ITM_ROW ] .AND. ;
          nMCol >= aMenuItem[ _ITM_COL ] .AND. ;
-         nMCol < aMenuItem[ _ITM_COL ] + Len( aMenuItem[ _ITM_PROMPT ] )
+         nMCol < aMenuItem[ _ITM_COL ] + hb_ULen( aMenuItem[ _ITM_PROMPT ] )
 
          RETURN aMenuItem:__enumIndex()
       ENDIF

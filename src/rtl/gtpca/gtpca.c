@@ -189,9 +189,9 @@ static void hb_gt_pca_termOut( const char * szStr, int iLen )
 {
    if( s_iOutBufSize )
    {
-      int i;
       while( iLen > 0 )
       {
+         int i;
          if( s_iOutBufSize == s_iOutBufIndex )
             hb_gt_pca_termFlush();
          i = s_iOutBufSize - s_iOutBufIndex;
@@ -365,8 +365,8 @@ static void hb_gt_pca_AnsiSetAttributes( int iAttr )
 
       bg    = s_AnsiColors[ ( iAttr >> 4 ) & 0x07 ];
       fg    = s_AnsiColors[ iAttr & 0x07 ];
-      bold  = iAttr & 0x08 ? 1 : 0;
-      blink = iAttr & 0x80 ? 1 : 0;
+      bold  = ( iAttr & 0x08 ) ? 1 : 0;
+      blink = ( iAttr & 0x80 ) ? 1 : 0;
 
       if( s_iCurrentSGR == -1 )
       {
@@ -510,7 +510,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       s_curr_TIO.c_cc[ VMIN ] = 0;
 #else
       /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
-         Ubuntu) in which select() unconditionally accepts stdin for
+         *buntu) in which select() unconditionally accepts stdin for
          reading if c_cc[ VMIN ] = 0 [druzus] */
       s_curr_TIO.c_cc[ VMIN ] = 1;
 #endif
@@ -743,7 +743,7 @@ static const char * hb_gt_pca_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: PC ANSI";
+   return "Terminal: ANSI (PCA)";
 }
 
 static HB_BOOL hb_gt_pca_Suspend( PHB_GT pGT )

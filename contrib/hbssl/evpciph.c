@@ -1,7 +1,7 @@
 /*
  * OpenSSL API (EVP CIPHER) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,10 +64,14 @@ static HB_GARBAGE_FUNC( EVP_CIPHER_CTX_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( ph && *ph )
    {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      EVP_CIPHER_CTX_free( ( EVP_CIPHER_CTX * ) *ph );
+#else
       /* Cleanup the object */
       EVP_CIPHER_CTX_cleanup( ( EVP_CIPHER_CTX * ) *ph );
       /* Destroy the object */
       hb_xfree( *ph );
+#endif
 
       /* set pointer to NULL just in case */
       *ph = NULL;
@@ -80,9 +84,9 @@ static const HB_GC_FUNCS s_gcEVP_CIPHER_CTX_funcs =
    hb_gcDummyMark
 };
 
-static void * hb_EVP_CIPHER_CTX_is( int iParam )
+static HB_BOOL hb_EVP_CIPHER_CTX_is( int iParam )
 {
-   return hb_parptrGC( &s_gcEVP_CIPHER_CTX_funcs, iParam );
+   return hb_parptrGC( &s_gcEVP_CIPHER_CTX_funcs, iParam ) != NULL;
 }
 
 static EVP_CIPHER_CTX * hb_EVP_CIPHER_CTX_par( int iParam )
@@ -92,7 +96,7 @@ static EVP_CIPHER_CTX * hb_EVP_CIPHER_CTX_par( int iParam )
    return ph ? ( EVP_CIPHER_CTX * ) *ph : NULL;
 }
 
-int hb_EVP_CIPHER_is( int iParam )
+HB_BOOL hb_EVP_CIPHER_is( int iParam )
 {
    return HB_ISCHAR( iParam ) || HB_ISNUM( iParam );
 }
@@ -139,13 +143,6 @@ const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam )
       case HB_EVP_CIPHER_RC4:                  p = EVP_rc4();                 break;
       case HB_EVP_CIPHER_RC4_40:               p = EVP_rc4_40();              break;
 #endif
-#ifndef OPENSSL_NO_IDEA
-      case HB_EVP_CIPHER_IDEA_ECB:             p = EVP_idea_ecb();            break;
-      case HB_EVP_CIPHER_IDEA_CFB64:           p = EVP_idea_cfb64();          break;
-      case HB_EVP_CIPHER_IDEA_CFB:             p = EVP_idea_cfb();            break;
-      case HB_EVP_CIPHER_IDEA_OFB:             p = EVP_idea_ofb();            break;
-      case HB_EVP_CIPHER_IDEA_CBC:             p = EVP_idea_cbc();            break;
-#endif
 #ifndef OPENSSL_NO_RC2
       case HB_EVP_CIPHER_RC2_ECB:              p = EVP_rc2_ecb();             break;
       case HB_EVP_CIPHER_RC2_CBC:              p = EVP_rc2_cbc();             break;
@@ -165,24 +162,6 @@ const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam )
 #endif
       case HB_EVP_CIPHER_BF_CFB:               p = EVP_bf_cfb();              break;
       case HB_EVP_CIPHER_BF_OFB:               p = EVP_bf_ofb();              break;
-#endif
-#ifndef OPENSSL_NO_CAST
-      case HB_EVP_CIPHER_CAST5_ECB:            p = EVP_cast5_ecb();           break;
-      case HB_EVP_CIPHER_CAST5_CBC:            p = EVP_cast5_cbc();           break;
-#if OPENSSL_VERSION_NUMBER >= 0x00907050L
-      case HB_EVP_CIPHER_CAST5_CFB64:          p = EVP_cast5_cfb64();         break;
-#endif
-      case HB_EVP_CIPHER_CAST5_CFB:            p = EVP_cast5_cfb();           break;
-      case HB_EVP_CIPHER_CAST5_OFB:            p = EVP_cast5_ofb();           break;
-#endif
-#ifndef OPENSSL_NO_RC5
-      case HB_EVP_CIPHER_RC5_32_12_16_CBC:     p = EVP_rc5_32_12_16_cbc();    break;
-      case HB_EVP_CIPHER_RC5_32_12_16_ECB:     p = EVP_rc5_32_12_16_ecb();    break;
-      case HB_EVP_CIPHER_RC5_32_12_16_CFB:     p = EVP_rc5_32_12_16_cfb();    break;
-      case HB_EVP_CIPHER_RC5_32_12_16_OFB:     p = EVP_rc5_32_12_16_ofb();    break;
-#if OPENSSL_VERSION_NUMBER >= 0x00907050L
-      case HB_EVP_CIPHER_RC5_32_12_16_CFB64:   p = EVP_rc5_32_12_16_cfb64();  break;
-#endif
 #endif
 #ifndef OPENSSL_NO_AES
 #if OPENSSL_VERSION_NUMBER >= 0x10001000L
@@ -245,13 +224,6 @@ const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam )
       case HB_EVP_CIPHER_CAMELLIA_256_CFB:     p = EVP_camellia_256_cfb();    break;
       case HB_EVP_CIPHER_CAMELLIA_256_OFB:     p = EVP_camellia_256_ofb();    break;
 #endif
-#ifndef OPENSSL_NO_SEED
-      case HB_EVP_CIPHER_SEED_ECB:             p = EVP_seed_ecb();            break;
-      case HB_EVP_CIPHER_SEED_CBC:             p = EVP_seed_cbc();            break;
-      case HB_EVP_CIPHER_SEED_CFB128:          p = EVP_seed_cfb128();         break;
-      case HB_EVP_CIPHER_SEED_CFB:             p = EVP_seed_cfb();            break;
-      case HB_EVP_CIPHER_SEED_OFB:             p = EVP_seed_ofb();            break;
-#endif
       default:                                 p = NULL;
    }
 
@@ -295,13 +267,6 @@ static int hb_EVP_CIPHER_ptr_to_id( const EVP_CIPHER * p )
    else if( p == EVP_rc4()                 ) n = HB_EVP_CIPHER_RC4;
    else if( p == EVP_rc4_40()              ) n = HB_EVP_CIPHER_RC4_40;
 #endif
-#ifndef OPENSSL_NO_IDEA
-   else if( p == EVP_idea_ecb()            ) n = HB_EVP_CIPHER_IDEA_ECB;
-   else if( p == EVP_idea_cfb64()          ) n = HB_EVP_CIPHER_IDEA_CFB64;
-   else if( p == EVP_idea_cfb()            ) n = HB_EVP_CIPHER_IDEA_CFB;
-   else if( p == EVP_idea_ofb()            ) n = HB_EVP_CIPHER_IDEA_OFB;
-   else if( p == EVP_idea_cbc()            ) n = HB_EVP_CIPHER_IDEA_CBC;
-#endif
 #ifndef OPENSSL_NO_RC2
    else if( p == EVP_rc2_ecb()             ) n = HB_EVP_CIPHER_RC2_ECB;
    else if( p == EVP_rc2_cbc()             ) n = HB_EVP_CIPHER_RC2_CBC;
@@ -321,24 +286,6 @@ static int hb_EVP_CIPHER_ptr_to_id( const EVP_CIPHER * p )
 #endif
    else if( p == EVP_bf_cfb()              ) n = HB_EVP_CIPHER_BF_CFB;
    else if( p == EVP_bf_ofb()              ) n = HB_EVP_CIPHER_BF_OFB;
-#endif
-#ifndef OPENSSL_NO_CAST
-   else if( p == EVP_cast5_ecb()           ) n = HB_EVP_CIPHER_CAST5_ECB;
-   else if( p == EVP_cast5_cbc()           ) n = HB_EVP_CIPHER_CAST5_CBC;
-#if OPENSSL_VERSION_NUMBER >= 0x00907050L
-   else if( p == EVP_cast5_cfb64()         ) n = HB_EVP_CIPHER_CAST5_CFB64;
-#endif
-   else if( p == EVP_cast5_cfb()           ) n = HB_EVP_CIPHER_CAST5_CFB;
-   else if( p == EVP_cast5_ofb()           ) n = HB_EVP_CIPHER_CAST5_OFB;
-#endif
-#ifndef OPENSSL_NO_RC5
-   else if( p == EVP_rc5_32_12_16_cbc()    ) n = HB_EVP_CIPHER_RC5_32_12_16_CBC;
-   else if( p == EVP_rc5_32_12_16_ecb()    ) n = HB_EVP_CIPHER_RC5_32_12_16_ECB;
-#if OPENSSL_VERSION_NUMBER >= 0x00907050L
-   else if( p == EVP_rc5_32_12_16_cfb64()  ) n = HB_EVP_CIPHER_RC5_32_12_16_CFB64;
-#endif
-   else if( p == EVP_rc5_32_12_16_cfb()    ) n = HB_EVP_CIPHER_RC5_32_12_16_CFB;
-   else if( p == EVP_rc5_32_12_16_ofb()    ) n = HB_EVP_CIPHER_RC5_32_12_16_OFB;
 #endif
 #ifndef OPENSSL_NO_AES
    else if( p == EVP_aes_128_ecb()         ) n = HB_EVP_CIPHER_AES_128_ECB;
@@ -392,13 +339,6 @@ static int hb_EVP_CIPHER_ptr_to_id( const EVP_CIPHER * p )
    else if( p == EVP_camellia_256_cfb()    ) n = HB_EVP_CIPHER_CAMELLIA_256_CFB;
    else if( p == EVP_camellia_256_ofb()    ) n = HB_EVP_CIPHER_CAMELLIA_256_OFB;
 #endif
-#ifndef OPENSSL_NO_SEED
-   else if( p == EVP_seed_ecb()            ) n = HB_EVP_CIPHER_SEED_ECB;
-   else if( p == EVP_seed_cbc()            ) n = HB_EVP_CIPHER_SEED_CBC;
-   else if( p == EVP_seed_cfb128()         ) n = HB_EVP_CIPHER_SEED_CFB128;
-   else if( p == EVP_seed_cfb()            ) n = HB_EVP_CIPHER_SEED_CFB;
-   else if( p == EVP_seed_ofb()            ) n = HB_EVP_CIPHER_SEED_OFB;
-#endif
    else                                      n = HB_EVP_CIPHER_UNSUPPORTED;
 
    return n;
@@ -441,28 +381,28 @@ HB_FUNC( EVP_CIPHER_KEY_LENGTH )
    hb_retni( cipher ? EVP_CIPHER_key_length( cipher ) : 0 );
 }
 
-HB_FUNC( EVP_CIPHER_KEY_IV_LENGTH )
+HB_FUNC( EVP_CIPHER_IV_LENGTH )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
 
    hb_retni( cipher ? EVP_CIPHER_iv_length( cipher ) : 0 );
 }
 
-HB_FUNC( EVP_CIPHER_KEY_FLAGS )
+HB_FUNC( EVP_CIPHER_FLAGS )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
 
    hb_retnint( cipher ? EVP_CIPHER_flags( cipher ) : 0 );
 }
 
-HB_FUNC( EVP_CIPHER_KEY_MODE )
+HB_FUNC( EVP_CIPHER_MODE )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
 
 #if OPENSSL_VERSION_NUMBER < 0x00906040L
    /* fix for typo in macro definition in openssl/evp.h */
    #undef EVP_CIPHER_mode
-   #define EVP_CIPHER_mode(e)  ((e)->flags & EVP_CIPH_MODE)
+   #define EVP_CIPHER_mode( e )  ( ( e )->flags & EVP_CIPH_MODE )
 #endif
    hb_retni( cipher ? EVP_CIPHER_mode( cipher ) : 0 );
 }
@@ -474,44 +414,49 @@ HB_FUNC( EVP_CIPHER_TYPE )
    hb_retni( cipher ? EVP_CIPHER_type( cipher ) : 0 );
 }
 
-HB_FUNC( HB_EVP_CIPHER_CTX_CREATE )
+HB_FUNC( EVP_CIPHER_CTX_NEW )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_CIPHER_CTX * ), &s_gcEVP_CIPHER_CTX_funcs );
+   EVP_CIPHER_CTX * ctx;
 
-   EVP_CIPHER_CTX * ctx = ( EVP_CIPHER_CTX * ) hb_xgrab( sizeof( EVP_CIPHER_CTX ) );
-
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+   ctx = EVP_CIPHER_CTX_new();
+#else
+   ctx = ( EVP_CIPHER_CTX * ) hb_xgrab( sizeof( EVP_CIPHER_CTX ) );
    EVP_CIPHER_CTX_init( ctx );
+#endif
 
    *ph = ctx;
 
    hb_retptrGC( ph );
 }
 
-HB_FUNC( EVP_CIPHER_CTX_INIT )
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( HB_EVP_CIPHER_CTX_CREATE, EVP_CIPHER_CTX_NEW )
+#endif
+
+HB_FUNC( EVP_CIPHER_CTX_RESET )
 {
    if( hb_EVP_CIPHER_CTX_is( 1 ) )
    {
       EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
 
       if( ctx )
-         EVP_CIPHER_CTX_init( ctx );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( EVP_CIPHER_CTX_CLEANUP )
-{
-   if( hb_EVP_CIPHER_CTX_is( 1 ) )
-   {
-      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
-
-      if( ctx )
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
+         hb_retni( EVP_CIPHER_CTX_reset( ctx ) );
+#else
          hb_retni( EVP_CIPHER_CTX_cleanup( ctx ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( EVP_CIPHER_CTX_INIT, EVP_CIPHER_CTX_RESET )
+HB_FUNC_TRANSLATE( EVP_CIPHER_CTX_CLEANUP, EVP_CIPHER_CTX_RESET )
+#endif
 
 HB_FUNC( EVP_CIPHER_CTX_SET_PADDING )
 {
@@ -567,7 +512,7 @@ HB_FUNC( EVP_CIPHER_CTX_CTRL )
       if( ctx )
          /* NOTE: 4th param doesn't have a 'const' qualifier. This is a setter
                   function, so even if we do a copy, what sort of allocation
-                  routines to use? Probably an omission from OpenSSLs part. [vszakats] */
+                  routine to use? [vszakats] */
          hb_retni( EVP_CIPHER_CTX_ctrl( ctx, hb_parni( 2 ), hb_parni( 3 ), ( void * ) hb_parc( 4 ) ) );
    }
    else
@@ -1232,10 +1177,9 @@ HB_FUNC( EVP_OPENFINAL )
 
 #if 0
 
-#define EVP_CIPHER_CTX_get_app_data( e )     ( ( e )->app_data )
-#define EVP_CIPHER_CTX_set_app_data( e, d )  ( ( e )->app_data = ( char * ) ( d ) )
-
-int EVP_CIPHER_param_to_asn1( EVP_CIPHER_CTX * c, ASN1_TYPE * type );
-int EVP_CIPHER_asn1_to_param( EVP_CIPHER_CTX * c, ASN1_TYPE * type );
+void * EVP_CIPHER_CTX_get_app_data( const EVP_CIPHER_CTX * ctx );
+void EVP_CIPHER_CTX_set_app_data( EVP_CIPHER_CTX * ctx, void * data );
+int EVP_CIPHER_param_to_asn1( EVP_CIPHER_CTX * ctx, ASN1_TYPE * type );
+int EVP_CIPHER_asn1_to_param( EVP_CIPHER_CTX * ctx, ASN1_TYPE * type );
 
 #endif

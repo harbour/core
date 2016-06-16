@@ -1,16 +1,15 @@
 /*
- * demonstration/test code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server.
+ * Demonstration/test code for alternative RDD IO API which uses own
+ * very simple TCP/IP file server.
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
  */
 
 #require "hbnetio"
 
-/* net:127.0.0.1:2941:topsecret:data/_tst_ */
+/* net:localhost:2941:topsecret:data/_tst_ */
 
-#define DBSERVER  "127.0.0.1"
+#define DBSERVER  "localhost"
 #define DBPORT    2941
 #define DBPASSWD  "topsecret"
 #define DBDIR     "data"
@@ -28,14 +27,14 @@ PROCEDURE Main()
 
    LOCAL pSockSrv, lExists
 
-   SET EXCLUSIVE OFF
+   Set( _SET_EXCLUSIVE, .F. )
    rddSetDefault( "DBFCDX" )
 
    pSockSrv := netio_MTServer( DBPORT,,, /* RPC */ .T., DBPASSWD )
    IF Empty( pSockSrv )
       ? "Cannot start NETIO server !!!"
       WAIT "Press any key to exit..."
-      QUIT
+      RETURN
    ENDIF
 
    ? "NETIO server activated."
@@ -47,7 +46,7 @@ PROCEDURE Main()
    ?
 
    lExists := netio_FuncExec( "HB_DirExists", "./data" )
-   ? "Directory './data'", iif( ! lExists, "not exists", "exists" )
+   ? "Directory './data'", iif( lExists, "exists", "not exists" )
    IF ! lExists
       ? "Creating directory './data' ->", ;
          iif( netio_FuncExec( "hb_DirCreate", "./data" ) == -1, "error", "OK" )
@@ -75,7 +74,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE createdb( cName )
+PROCEDURE createdb( cName )  /* must be a public function */
 
    LOCAL n
 
@@ -87,7 +86,7 @@ PROCEDURE createdb( cName )
    ? "create neterr:", NetErr(), hb_osError()
    USE ( cName )
    ? "use neterr:", NetErr(), hb_osError()
-   WHILE LastRec() < 100
+   DO WHILE LastRec() < 100
       dbAppend()
       n := RecNo() - 1
       field->F1 := Chr( n % 26 + Asc( "A" ) ) + " " + Time()
@@ -103,7 +102,7 @@ PROCEDURE createdb( cName )
 
    RETURN
 
-PROCEDURE testdb( cName )
+PROCEDURE testdb( cName )  /* must be a public function */
 
    LOCAL i, j
 
@@ -119,10 +118,10 @@ PROCEDURE testdb( cName )
    NEXT
    ordSetFocus( 1 )
    dbGoTop()
-   WHILE ! Eof()
+   DO WHILE ! Eof()
       IF ! field->F1 == field->F2
          ? "error at record:", RecNo()
-         ? "  ! '" + field->F1 + "' == '" + field->F2 + "'"
+         ? "  !", "'" + field->F1 + "'", "==", "'" + field->F2 + "'"
       ENDIF
       dbSkip()
    ENDDO

@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 #include "button.ch"
@@ -119,7 +121,7 @@ METHOD delItem( nPos ) CLASS TopBarMenu
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
 
-      nLen := Len( ::aItems[ nPos ]:caption )
+      nLen := hb_ULen( ::aItems[ nPos ]:caption )
 
       hb_ADel( ::aItems, nPos, .T. )
       ::nItemCount--
@@ -158,7 +160,7 @@ METHOD display() CLASS TopBarMenu
    FOR EACH item IN ::aItems
 
       cCaption := " " + RTrim( item:caption ) + " "
-      nCaptionLen := Len( cCaption )
+      nCaptionLen := hb_ULen( cCaption )
 
       IF nCaptionLen == 0
          LOOP
@@ -179,11 +181,11 @@ METHOD display() CLASS TopBarMenu
          oPopUp:right := NIL
       ENDIF
 
-      IF ( nPos := At( "&", cCaption ) ) > 0
-         IF nPos == Len( cCaption )
+      IF ( nPos := hb_UAt( "&", cCaption ) ) > 0
+         IF nPos == hb_ULen( cCaption )
             nPos := 0
          ELSE
-            cCaption := Stuff( cCaption, nPos, 1, "" )
+            cCaption := hb_UStuff( cCaption, nPos, 1, "" )
             nCaptionLen--
          ENDIF
       ENDIF
@@ -193,7 +195,7 @@ METHOD display() CLASS TopBarMenu
             iif( item:enabled, cColor1, hb_ColorIndex( ::cColorSpec, 4 ) ) ) )
 
       IF item:enabled .AND. nPos > 0
-         hb_DispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
+         hb_DispOutAt( nRow, nLeft + nPos - 1, hb_USubStr( cCaption, nPos, 1 ), ;
             iif( item:__enumIndex() == nCurrent, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 2 ) ) )
       ENDIF
 
@@ -269,21 +271,31 @@ METHOD getPrev() CLASS TopBarMenu
 
 METHOD getAccel( nKey ) CLASS TopBarMenu
 
-   LOCAL nIndex := AScan( { ;
-      K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F, ;
-      K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L, ;
-      K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R, ;
-      K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X, ;
-      K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4, ;
-      K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
-
+   LOCAL nIndex
    LOCAL cKey
    LOCAL item
 
-   IF nIndex > 0
-      cKey := "&" + SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 )
+   DO CASE
+   CASE hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. ! HB_ISNULL( hb_keyChar( nKey ) )
+
+      cKey := hb_keyChar( nKey )
+
+   CASE ( nIndex := AScan( { ;
+        K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F, ;
+        K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L, ;
+        K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R, ;
+        K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X, ;
+        K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4, ;
+        K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, hb_keyStd( nKey ) ) ) > 0
+
+      cKey := hb_BSubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 )
+
+   ENDCASE
+
+   IF cKey != NIL
+      cKey := "&" + cKey
       FOR EACH item IN ::aItems
-         IF hb_AtI( cKey, item:caption ) > 0
+         IF hb_AtI( cKey, item:caption ) > 0  /* TOFIX: use hb_UAtI() */
             RETURN item:__enumIndex()
          ENDIF
       NEXT
@@ -294,16 +306,18 @@ METHOD getAccel( nKey ) CLASS TopBarMenu
 METHOD getShortCt( nKey ) CLASS TopBarMenu
 
    LOCAL item
+   LOCAL nKeyStd := hb_keyStd( nKey )
 
    FOR EACH item IN ::aItems
-      IF item:shortcut == nKey
+      IF item:shortcut == nKey .OR. ;
+         item:shortcut == nKeyStd
          RETURN item:__enumIndex()
       ENDIF
    NEXT
 
    RETURN 0
 
-/* NOTE: In my tests I can't get other values than HTNOWHERE or a value
+/* NOTE: In my tests I cannot get other values than HTNOWHERE or a value
          greather than 0 (selected item), althought the NG's says that
          it returns other HT* values [jlalin]
 
@@ -321,7 +335,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS TopBarMenu
 
          nColumn := item:__col
 
-         IF nMCol >= nColumn .AND. nMCol <= nColumn + Len( item:caption )
+         IF nMCol >= nColumn .AND. nMCol <= nColumn + hb_ULen( item:caption )
             RETURN item:__enumIndex()
          ENDIF
       NEXT
@@ -414,7 +428,7 @@ METHOD row( nRow ) CLASS TopBarMenu
 
    RETURN ::nRow
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD New( nRow, nLeft, nRight ) CLASS TopBarMenu
 
@@ -445,7 +459,7 @@ METHOD New( nRow, nLeft, nRight ) CLASS TopBarMenu
 
    RETURN Self
 
-/* -------------------------------------------- */
+/* --- */
 
 FUNCTION TopBar( nRow, nLeft, nRight )
    RETURN HBTopBarMenu():New( nRow, nLeft, nRight )

@@ -50,7 +50,6 @@
 /* The maximum number of palette entries in palette-based images.
    In the wonderful new world of gd 2.0, you can of course have
    many more colors when using truecolor mode. */
-
 #define gdMaxColors                   256
 
 #define gdAlphaMax                    127
@@ -65,7 +64,6 @@
 #define gdDashSize                    4
 
 /* Special colors. */
-
 #define gdStyled                      -2
 #define gdBrushed                     -3
 #define gdStyledBrushed               -4
@@ -101,12 +99,12 @@
 #define GD2_FMT_COMPRESSED            2
 
 #define GD_CMP_IMAGE                  1   /* Actual image IS different */
-#define GD_CMP_NUM_COLORS             2   /* Number of Colours in pallette differ */
-#define GD_CMP_COLOR                  4   /* Image colours differ */
+#define GD_CMP_NUM_COLORS             2   /* Number of colors in pallette differ */
+#define GD_CMP_COLOR                  4   /* Image colors differ */
 #define GD_CMP_SIZE_X                 8   /* Image width differs */
 #define GD_CMP_SIZE_Y                 16  /* Image heights differ */
-#define GD_CMP_TRANSPARENT            32  /* Transparent colour */
-#define GD_CMP_BACKGROUND             64  /* Background colour */
+#define GD_CMP_TRANSPARENT            32  /* Transparent color */
+#define GD_CMP_BACKGROUND             64  /* Background color */
 #define GD_CMP_INTERLACE              128 /* Interlaced setting */
 #define GD_CMP_TRUECOLOR              256 /* Truecolor vs palette differs */
 

@@ -1,14 +1,25 @@
+ifneq ($(HB_COMPILER),clang)
+   ifeq ($(HB_COMPILER_VER),)
+      $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let auto-detection detect it, or set HB_COMPILER_VER manually according to your C compiler version (f.e. 1600 for 16.00.x).)
+   endif
+endif
+
 OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
 HB_DYN_COPT := -DHB_DYNLIB
 
+ifeq ($(HB_COMPILER),clang)
+CC := clang-cl.exe
+HB_BUILD_MODE := c
+else
 CC := cl.exe
-CC_IN := -c
+endif
+CC_IN :=
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -nologo
 
@@ -16,6 +27,23 @@ CFLAGS += -nologo
 ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400),)
    LDFLAGS += -nxcompat -dynamicbase -fixed:no
    DFLAGS += -nxcompat -dynamicbase
+endif
+# MSVS 2012 and upper
+ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500 1600),)
+   ifneq ($(filter $(HB_COMPILER),msvc64 msvcia64),)
+      LDFLAGS += -highentropyva
+      DFLAGS += -highentropyva
+   endif
+   # some 3rd party code (libjpeg) won't compile with it
+   #CFLAGS += -sdl
+endif
+# enable this only for users of MSVS 2013 and upper
+ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500 1600 1700),)
+   ifneq ($(HB_COMPILER),clang)
+      ifeq ($(_HB_MSVC_ANALYZE),yes)
+         CFLAGS += -analyze
+      endif
+   endif
 endif
 
 ifeq ($(HB_BUILD_MODE),c)
@@ -60,12 +88,6 @@ endif
 RC := rc.exe
 RC_OUT := -fo$(subst x,x, )
 RCFLAGS += -I. -I$(HB_HOST_INC)
-# Windows SDK 7.0 also supports it, but we cannot detect it.
-# # NOTE: Compiler version is not enough to detect supported
-# #       parameters when Platform SDK rc.exe is used.
-# ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500),)
-#    RCFLAGS += -nologo
-# endif
 
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,
 # #       as it creates bad code according to MS docs [vszakats].
@@ -73,7 +95,12 @@ RCFLAGS += -I. -I$(HB_HOST_INC)
 #    CFLAGS += -GA
 # endif
 
+# lld.exe crashes
+# ifeq ($(HB_COMPILER),clang)
+# LD := lld.exe -flavor link
+# else
 LD := link.exe
+# endif
 LD_OUT := -out:
 
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(3RDLIB_DIR),-libpath:$(dir))

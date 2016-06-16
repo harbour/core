@@ -1,0 +1,58 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__RDDUSER__
+#define __HBEXTERN_CH__RDDUSER__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__RDDUSER__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__RDDUSER__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__RDDUSER__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC ARRAYRDD
+DYNAMIC ARRAYRDD_GETFUNCTABLE
+DYNAMIC DBTCDX
+DYNAMIC DBTCDX_GETFUNCTABLE
+DYNAMIC FPTCDX
+DYNAMIC FPTCDX_GETFUNCTABLE
+DYNAMIC hb_LogRddActive
+DYNAMIC hb_LogRddLogFilename
+DYNAMIC hb_LogRddMsgLogBlock
+DYNAMIC hb_LogRddTag
+DYNAMIC hb_LogRddUserLogBlock
+DYNAMIC hb_LogRddValueToText
+DYNAMIC hb_SetArrayRdd
+DYNAMIC HSCDX
+DYNAMIC HSCDX_GETFUNCTABLE
+DYNAMIC hsx_Close
+DYNAMIC hsx_Create
+DYNAMIC hsx_File
+DYNAMIC hsx_Get
+DYNAMIC hsx_Handle
+DYNAMIC hsx_Open
+DYNAMIC LOGRDD
+DYNAMIC LOGRDD_GETFUNCTABLE
+DYNAMIC RLCDX
+DYNAMIC RLCDX_GETFUNCTABLE
+DYNAMIC SMTCDX
+DYNAMIC SMTCDX_GETFUNCTABLE
+DYNAMIC VFPCDX
+DYNAMIC VFPCDX_GETFUNCTABLE
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__RDDUSER__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

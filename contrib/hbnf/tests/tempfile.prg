@@ -1,20 +1,14 @@
 #require "hbnf"
 
-#include "fileio.ch"
-
 PROCEDURE Main( cPath, cHide )
 
-   LOCAL cFile, nHandle
+   LOCAL cFile := ft_TempFil( cPath, hb_defaultValue( cHide, "N" ) == "Y" )
 
-   cFile := ft_TempFil( cPath, cHide == "Y" )
-
-   IF ! Empty( cFile )
-      ? cFile
-      nHandle := FOpen( cFile, FO_WRITE )
-      FWrite( nHandle, "This is a test!" )
-      FClose( nHandle )
-   ELSE
+   IF HB_ISNULL( cFile )
       ? "An error occurred"
+   ELSE
+      ? cFile
+      hb_MemoWrit( cFile, "This is a test!" )
    ENDIF
 
    RETURN

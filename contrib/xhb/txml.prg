@@ -81,28 +81,17 @@ CREATE CLASS TXMLNode
    METHOD Path()
 
    METHOD ToString( nStyle )        INLINE hbxml_node_to_string( Self, nStyle )
-   METHOD Write( fHandle, nStyle )  INLINE hbxml_node_write( Self, fHandle, nStyle )
+   METHOD Write( hFile, nStyle )    INLINE hbxml_node_write( Self, hFile, nStyle )
 
    // Useful for debugging purposes
-   METHOD ToArray()                 INLINE;
-      { ::nType, ::cName, ::aAttributes, ::cData }
+   METHOD ToArray()                 INLINE { ::nType, ::cName, ::aAttributes, ::cData }
 
 ENDCLASS
 
 METHOD New( nType, cName, aAttributes, cData ) CLASS TXmlNode
 
-   IF nType == NIL
-      ::nType := HBXML_TYPE_TAG
-   ELSE
-      ::nType := nType
-   ENDIF
-
-   IF aAttributes == NIL
-      ::aAttributes := { => }
-   ELSE
-      ::aAttributes := aAttributes
-   ENDIF
-
+   ::nType := hb_defaultValue( nType, HBXML_TYPE_TAG )
+   ::aAttributes := hb_defaultValue( aAttributes, { => } )
    ::cName := cName
    ::cData := cData
 
@@ -155,18 +144,16 @@ METHOD Path() CLASS TXmlNode
 
    RETURN NIL
 
-/********************************************
-   Iterator class
-*********************************************/
+/* Iterator class */
 
 CREATE CLASS TXmlIterator
 
    METHOD New( oNodeTop )           CONSTRUCTOR
    METHOD Next()
-   METHOD Rewind()                  INLINE   ::oNode := ::oTop
+   METHOD Rewind()                  INLINE ::oNode := ::oTop
    METHOD Find( cName, cAttribute, cValue, cData )
 
-   METHOD GetNode()                 INLINE   ::oNode
+   METHOD GetNode()                 INLINE ::oNode
    METHOD SetContext()
    METHOD Clone()
 
@@ -196,9 +183,8 @@ METHOD New( oNodeTop ) CLASS TXmlIterator
 
 METHOD Clone() CLASS TXmlIterator
 
-   LOCAL oRet
+   LOCAL oRet := TXMLIterator():New( ::oNodeTop )
 
-   oRet := TXMLIterator():New( ::oNodeTop )
    oRet:cName := ::cName
    oRet:cAttribute := ::cAttribute
    oRet:cValue := ::cValue
@@ -234,9 +220,9 @@ METHOD Find( cName, cAttribute, cValue, cData ) CLASS TXmlIterator
 
 METHOD Next() CLASS TXmlIterator
 
-   LOCAL oFound := ::oNode:NextInTree()
+   LOCAL oFound := ::oNode
 
-   DO WHILE oFound != NIL
+   DO WHILE ( oFound := oFound:NextInTree() ) != NIL
       IF oFound:Depth() <= ::nTopLevel
          RETURN NIL
       ENDIF
@@ -245,8 +231,6 @@ METHOD Next() CLASS TXmlIterator
          ::oNode := oFound
          RETURN oFound
       ENDIF
-
-      oFound := oFound:NextInTree()
    ENDDO
 
    RETURN NIL
@@ -258,11 +242,9 @@ METHOD MatchCriteria( oNode ) CLASS TXmlIterator
    RETURN .T.
 
 
-/********************************************
-   Iterator scan class
-*********************************************/
+/* Iterator scan class */
 
-CREATE CLASS TXmlIteratorScan FROM TXmlIterator
+CREATE CLASS TXmlIteratorScan INHERIT TXmlIterator
 
    METHOD New( oNodeTop ) CONSTRUCTOR
    PROTECTED:
@@ -287,7 +269,7 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
    ENDIF
 
    IF ::cValue != NIL .AND. ;
-         hb_HScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), ::cValue == cValue } ) == 0
+      hb_HScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), ::cValue == cValue } ) == 0
       RETURN .F.
    ENDIF
 
@@ -297,11 +279,9 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
 
    RETURN .T.
 
-/********************************************
-   Iterator regex class
-*********************************************/
+/* Iterator regex class */
 
-CREATE CLASS TXmlIteratorRegex FROM TXmlIterator
+CREATE CLASS TXmlIteratorRegex INHERIT TXmlIterator
 
    METHOD New( oNodeTop ) CONSTRUCTOR
    PROTECTED:
@@ -318,31 +298,29 @@ METHOD New( oNodeTop ) CLASS TXmlIteratorRegex
 METHOD MatchCriteria( oFound ) CLASS TXmlIteratorRegex
 
    IF ::cName != NIL .AND. ;
-         ( oFound:cName == NIL .OR. ! hb_regexLike( ::cName, oFound:cName, .T. ) )
+      ( oFound:cName == NIL .OR. ! hb_regexLike( ::cName, oFound:cName, .T. ) )
       RETURN .F.
    ENDIF
 
    IF ::cAttribute != NIL .AND. ;
-         hb_HScan( oFound:aAttributes, {| cKey | hb_regexLike( ::cAttribute, cKey, .T. ) } ) == 0
+      hb_HScan( oFound:aAttributes, {| cKey | hb_regexLike( ::cAttribute, cKey, .T. ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cValue != NIL .AND. ;
-         hb_HScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), hb_regexLike( ::cValue, cValue, .T. ) } ) == 0
+      hb_HScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), hb_regexLike( ::cValue, cValue, .T. ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cData != NIL .AND. ;
-         ( oFound:cData == NIL .OR. ! hb_regexHas( ::cData, oFound:cData, .F. ) )
+      ( oFound:cData == NIL .OR. ! hb_regexHas( ::cData, oFound:cData, .F. ) )
       RETURN .F.
    ENDIF
 
    RETURN .T.
 
 
-/********************************************
-   Document Class
-*********************************************/
+/* Document Class */
 
 CREATE CLASS TXMLDocument
 
@@ -356,7 +334,7 @@ CREATE CLASS TXMLDocument
    METHOD New( xElem, nStyle )        CONSTRUCTOR
    METHOD Read( xData, nStyle )       INLINE hbxml_dataread( Self, xData, nStyle )
    METHOD ToString( nStyle )          INLINE ::oRoot:ToString( nStyle )
-   METHOD Write( fHandle, nStyle )
+   METHOD Write( hFile, nStyle )
 
    METHOD FindFirst( cName, cAttrib, cValue, cData )
    METHOD FindFirstRegex( cName, cAttrib, cValue, cData )
@@ -389,7 +367,7 @@ METHOD New( xElem, nStyle ) CLASS TXMLDocument
       CASE "N"
       CASE "C"
          ::oRoot := TXMLNode():New( HBXML_TYPE_DOCUMENT )
-         IF hb_FileExists( xElem )
+         IF hb_vfExists( xElem )
             ::Read( hb_MemoRead( xElem ), nStyle )
          ELSE
             ::Read( xElem, nStyle )
@@ -404,27 +382,22 @@ METHOD New( xElem, nStyle ) CLASS TXMLDocument
 
    RETURN Self
 
-METHOD Write( fHandle, nStyle ) CLASS TXMLDocument
+METHOD Write( hFile, nStyle ) CLASS TXMLDocument
 
    LOCAL nResult := HBXML_STATUS_ERROR
 
-   IF HB_ISSTRING( fHandle )  // It's a filename!
-      fHandle := FCreate( fHandle )
-      IF fHandle != F_ERROR
+   IF HB_ISSTRING( hFile )  // It's a filename
+      IF ( hFile := hb_vfOpen( hFile, FO_CREAT + FO_TRUNC + FO_WRITE ) ) != NIL
          IF Empty( ::oRoot:oChild ) .OR. !( ::oRoot:oChild:cName == "xml" )
-            IF Empty( ::cHeader )
-               FWrite( fHandle, '<?xml version="1.0"?>' + hb_eol() )
-            ELSE
-               FWrite( fHandle, ::cHeader + hb_eol() )
-            ENDIF
+            hb_vfWrite( hFile, hb_defaultValue( ::cHeader, '<?xml version="1.0"?>' ) + hb_eol() )
          ENDIF
-         nResult := ::oRoot:Write( fHandle, nStyle )
-         FClose( fHandle )
+         nResult := ::oRoot:Write( hFile, nStyle )
+         hb_vfClose( hFile )
       ENDIF
       RETURN nResult
    ENDIF
 
-   RETURN ::oRoot:Write( fHandle, nStyle )
+   RETURN ::oRoot:Write( hFile, nStyle )
 
 METHOD FindFirst( cName, cAttrib, cValue, cData ) CLASS TXMLDocument
 
@@ -440,9 +413,8 @@ METHOD FindFirstRegex( cName, cAttrib, cValue, cData ) CLASS TXMLDocument
 
 METHOD GetContext() CLASS TXMLDocument
 
-   LOCAL oDoc
+   LOCAL oDoc := TXMLDocument():New()
 
-   oDoc := TXMLDocument():New()
    oDoc:oRoot := ::oIterator:GetNode()
 
    RETURN oDoc

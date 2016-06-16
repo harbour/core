@@ -1,5 +1,5 @@
 /*
- * debugger C API
+ * Debugger C API
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -1,6 +1,5 @@
 /*
  * CT3 video functions:
- *
  * SayDown(), SaySpread(), SayMoveIn(), ScreenStr(), StrScreen()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
@@ -57,9 +56,7 @@ HB_FUNC( SAYDOWN )
    if( nLen )
    {
       int iRow, iCol, iMaxRow, iMaxCol;
-      long lDelay;
-
-      lDelay = hb_parnldef( 2, 4 );
+      long lDelay = hb_parnldef( 2, 4 );
 
       hb_gtGetPos( &iRow, &iCol );
       if( HB_ISNUM( 3 ) )
@@ -113,7 +110,6 @@ HB_FUNC( SAYSPREAD )
 
    if( nLen )
    {
-      HB_SIZE nPos, ul;
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
@@ -130,6 +126,7 @@ HB_FUNC( SAYSPREAD )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
+         HB_SIZE nPos;
          int iColor = hb_gtGetCurrColor();
 
          nPos = nLen >> 1;
@@ -143,6 +140,7 @@ HB_FUNC( SAYSPREAD )
          hb_gtBeginWrite();
          do
          {
+            HB_SIZE ul;
             for( ul = 0; ul < nLen && iCol + ( int ) ul <= iMaxCol; ++ul )
                hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, pwText[ nPos + ul ] );
             nLen += 2;
@@ -171,8 +169,7 @@ HB_FUNC( SAYMOVEIN )
 
    if( nLen )
    {
-      HB_SIZE nChars, ul;
-      int iRow, iCol, iMaxRow, iMaxCol, iNewCol;
+      int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
       HB_BOOL fBack;
 
@@ -189,7 +186,9 @@ HB_FUNC( SAYMOVEIN )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
+         HB_SIZE nChars;
          int iColor = hb_gtGetCurrColor();
+         int iNewCol;
 
          iNewCol = iCol + ( int ) nLen;
          if( fBack )
@@ -201,6 +200,8 @@ HB_FUNC( SAYMOVEIN )
          hb_gtBeginWrite();
          do
          {
+            HB_SIZE ul;
+
             if( fBack )
             {
                if( iCol <= iMaxCol )
@@ -236,20 +237,16 @@ HB_FUNC( SAYMOVEIN )
    hb_retc_null();
 }
 
-HB_FUNC( CLEARSLOW )
+HB_FUNC( CLEARSLOW )  /* TODO: Unicode support */
 {
    int iMaxRow = hb_gtMaxRow();
    int iMaxCol = hb_gtMaxCol();
-   int iTop, iLeft, iBottom, iRight;
+   long lDelay = hb_parnl( 1 );
+   int iTop    = hb_parni( 2 );
+   int iLeft   = hb_parni( 3 );
+   int iBottom = hb_parnidef( 4, iMaxRow );
+   int iRight  = hb_parnidef( 5, iMaxCol );
    HB_UCHAR ucChar;
-   long lDelay;
-
-   lDelay  = hb_parnl( 1 );
-
-   iTop    = hb_parni( 2 );
-   iLeft   = hb_parni( 3 );
-   iBottom = hb_parnidef( 4, iMaxRow );
-   iRight  = hb_parnidef( 5, iMaxCol );
 
    if( HB_ISNUM( 6 ) )
       ucChar = ( HB_UCHAR ) hb_parni( 6 );
@@ -319,13 +316,15 @@ HB_FUNC( CLEARSLOW )
       }
       hb_gtEndWrite();
    }
+
+   hb_retc_null();
 }
 
-HB_FUNC( SCREENSTR )
+HB_FUNC( SCREENSTR )  /* TODO: Unicode support */
 {
-   int iRow, iCol, iMaxRow, iMaxCol, iC;
-   char * pBuffer, * szText;
-   HB_SIZE nSize, ulCount = HB_SIZE_MAX;
+   int iRow, iCol, iMaxRow, iMaxCol;
+   char * pBuffer;
+   HB_SIZE ulCount = HB_SIZE_MAX;
 
    hb_gtGetPos( &iRow, &iCol );
    if( HB_ISNUM( 1 ) )
@@ -339,7 +338,8 @@ HB_FUNC( SCREENSTR )
 
    if( iRow >= 0 && iRow <= iMaxRow && iCol >= 0 && iCol <= iMaxCol && ulCount )
    {
-      nSize = ( HB_SIZE ) ( iMaxRow - iRow + 1 ) * ( iMaxCol - iCol + 1 );
+      char * szText;
+      HB_SIZE nSize = ( HB_SIZE ) ( iMaxRow - iRow + 1 ) * ( iMaxCol - iCol + 1 );
       if( nSize > ulCount )
          nSize = ulCount;
       ulCount = nSize;
@@ -347,7 +347,7 @@ HB_FUNC( SCREENSTR )
       szText = pBuffer = ( char * ) hb_xgrab( nSize + 1 );
       do
       {
-         iC = iCol;
+         int iC = iCol;
          do
          {
             int iColor;
@@ -367,7 +367,7 @@ HB_FUNC( SCREENSTR )
       hb_retc_null();
 }
 
-HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
+HB_FUNC( STRSCREEN )  /* TODO: Unicode support */
 {
    HB_SIZE nLen = hb_parclen( 1 );
 
@@ -377,7 +377,7 @@ HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
    if( nLen )
    {
       const char * szText = hb_parc( 1 );
-      int iRow, iCol, iMaxRow, iMaxCol, iC;
+      int iRow, iCol, iMaxRow, iMaxCol;
 
       hb_gtGetPos( &iRow, &iCol );
       if( HB_ISNUM( 2 ) )
@@ -392,7 +392,7 @@ HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
          hb_gtBeginWrite();
          do
          {
-            iC = iCol;
+            int iC = iCol;
             do
             {
                HB_USHORT usChar = ( HB_UCHAR ) *szText++;
@@ -410,10 +410,7 @@ HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
    hb_retc_null();
 }
 
-/*
- * __hbct_DspTime() is helper functions for ShowTime()
- */
-HB_FUNC( __HBCT_DSPTIME )
+HB_FUNC( __HBCT_DSPTIME )  /* Helper function for ShowTime() */
 {
    int iRow, iCol;
    int iColor, iLen;

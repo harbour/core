@@ -12,11 +12,15 @@ PRG_SOURCES := \
    rt_mt.prg \
    rt_str.prg \
    rt_stra.prg \
+   rt_tran2.prg \
    rt_trans.prg \
    rt_class.prg \
 
 C_SOURCES := \
    rt_miscc.c \
+
+RC_SOURCES := \
+   $(TOP)$(ROOT)package/harbour.rc
 
 PRG_MAIN := hbtest.prg
 
@@ -29,3 +33,7 @@ ifneq ($(filter $(HB_PLATFORM),win wce os2),)
 endif
 
 include $(TOP)$(ROOT)config/bin.mk
+
+ifneq ($(filter $(HB_COMPILER),mingw mingw64 gcc clang),)
+   HB_LDFLAGS += -fno-lto
+endif

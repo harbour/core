@@ -383,7 +383,7 @@ PROCEDURE Main_HVM()
 
    /* =, == */
 
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    HBTEST "123" = "123  "                 IS .T.
    HBTEST " 123" = "123"                  IS .F.
    HBTEST "123" = "12345"                 IS .F.
@@ -394,7 +394,7 @@ PROCEDURE Main_HVM()
    HBTEST "Z" == "A"                      IS .F.
    HBTEST "A" == "A "                     IS .F.
    HBTEST "AA" == "A"                     IS .F.
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
    HBTEST "123" = "123  "                 IS .F.
    HBTEST " 123" = "123"                  IS .F.
    HBTEST "123" = "12345"                 IS .F.
@@ -426,7 +426,7 @@ PROCEDURE Main_HVM()
 
    /* != */
 
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    HBTEST "123" != "123  "                IS .F.
    HBTEST " 123" != "123"                 IS .T.
    HBTEST "123" != "12345"                IS .T.
@@ -437,7 +437,7 @@ PROCEDURE Main_HVM()
    HBTEST "Z" != "A"                      IS .T.
    HBTEST "A" != "A "                     IS .F.
    HBTEST "AA" != "A"                     IS .T.
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
    HBTEST "123" != "123  "                IS .T.
    HBTEST " 123" != "123"                 IS .T.
    HBTEST "123" != "12345"                IS .T.

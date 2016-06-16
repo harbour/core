@@ -47,25 +47,31 @@
 #require "hbformat"
 
 #include "directry.ch"
+#include "hbver.ch"
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
+#define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x ) )
+
 PROCEDURE Main( ... )
 
-   LOCAL oRef, aParams, cFileName, cInitDir, i, cParam, lRecursive := .F.
+   LOCAL oRef, aParams, cFileName, cInitDir, cParam, lRecursive := .F.
 
-   // AltD( 2 ); AltD()
+#if 0
+   AltD( 2 )
+   AltD()
+#endif
    aParams := hb_AParams()
 
-   IF Empty( aParams ) .OR. ( Left( cFileName := ATail( aParams ), 1 ) $ "@/-" )
+   IF Empty( aParams ) .OR. Left( cFileName := ATail( aParams ), 1 ) $ "@-"
       About()
       RETURN
    ENDIF
 
    FOR EACH cParam IN aParams
-      IF Left( cParam, 1 ) $ "-/"
-         IF SubStr( cParam, 2 ) == "r"
+      IF hb_LeftEq( cParam, "-" )
+         IF SubStr( cParam, Len( "-" ) + 1 ) == "r"
             lRecursive := .T.
             cParam := "#"
             EXIT
@@ -75,24 +81,24 @@ PROCEDURE Main( ... )
 
    oRef := HBFormatCode():New( aParams, hb_FNameMerge( hb_DirBase(), "hbformat.ini" ) )
    IF oRef:nErr > 0
-      OutStd( "Initialization error", hb_ntos( oRef:nErr ), iif( oRef:nLineErr == 0, "in parameter", "on line " + hb_ntos( oRef:nLineErr ) ), ":", oRef:cLineErr, hb_eol() )
-      RETURN
+      OutStd( hb_StrFormat( iif( oRef:nLineErr == 0, ;
+         I_( "Initialization error %1$d in parameter: %2$s" ), ;
+         I_( "Initialization error %1$d on line %3$d: %2$s" ) ), oRef:nErr, oRef:cLineErr, oRef:nLineErr ) + hb_eol() )
    ENDIF
 
    oRef:bCallBack := {| a, i | FCallBack( a, i ) }
 
-   IF "*" $ cFileName
-      IF ( i := RAt( ".", cFileName ) ) == 0 .OR. SubStr( cFileName, i + 1, 1 ) < "A"
-         OutErr( "Wrong mask" + hb_eol() )
+   IF "*" $ cFileName .OR. ;
+      "?" $ cFileName
+
+      IF SubStr( hb_FNameExt( cFileName ), 2, 1 ) < "a"
+         OutErr( I_( "Wrong mask" ) + hb_eol() )
       ELSE
-         cInitDir := ;
-            iif( ( i := RAt( "\", cFileName ) ) == 0, ;
-            iif( ( i := RAt( "/", cFileName ) ) == 0, ;
-            "." + hb_ps(), ;
-            Left( cFileName, i ) ), ;
-            Left( cFileName, i ) )
-         cFileName := iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) )
-         DirEval( cInitDir, cFileName, lRecursive, {| name | Reformat( oRef, name ) } )
+         cInitDir := hb_FNameDir( cFileName )
+         IF HB_ISNULL( cInitDir )
+            cInitDir := "." + hb_ps()
+         ENDIF
+         DirEval( cInitDir, hb_FNameNameExt( cFileName ), lRecursive, {| name | Reformat( oRef, name ) } )
       ENDIF
    ELSE
       Reformat( oRef, cFileName )
@@ -113,16 +119,16 @@ STATIC PROCEDURE Reformat( oRef, cFileName )
    LOCAL aFile
 
    IF ! Empty( aFile := oRef:File2Array( cFileName ) )
-      OutStd( "Reformatting " + cFileName + " (" + hb_ntos( Len( aFile ) ) + " lines)" + hb_eol() )
+      OutStd( hb_StrFormat( I_( "Reformatting %1$s (%2$d lines)" ), cFileName, Len( aFile ) ) + hb_eol() )
       OutStd( "<" )
       IF oRef:Reformat( aFile )
          oRef:Array2File( cFileName, aFile )
          OutStd( ">" + hb_eol() )
       ELSE
-         OutErr( "Error", oRef:nErr, "on line", oRef:nLineErr, ":", oRef:cLineErr, hb_eol() )
+         OutErr( hb_StrFormat( I_( "Error %1$d on line %2$d: %3$s" ), oRef:nErr, oRef:nLineErr, oRef:cLineErr ) + hb_eol() )
       ENDIF
    ELSE
-      OutErr( cFileName + " isn't found ..." + hb_eol() )
+      OutErr( hb_StrFormat( I_( "'%1$s' is not found..." ), cFileName ) + hb_eol() )
    ENDIF
 
    RETURN
@@ -134,7 +140,7 @@ STATIC PROCEDURE DirEval( cInitDir, cMask, lRecur, bCode )
    cInitDir := hb_DirSepAdd( cInitDir )
    cMask := iif( cMask == NIL, hb_osFileMask(), cMask )
 
-   FOR EACH file IN Directory( cInitDir + cMask, "HSD" )
+   FOR EACH file IN hb_vfDirectory( cInitDir + cMask, "HSD" )
       IF "D" $ file[ F_ATTR ]
          IF !( "." == file[ F_NAME ] ) .AND. ;
             !( ".." == file[ F_NAME ] ) .AND. lRecur
@@ -154,12 +160,20 @@ STATIC PROCEDURE About()
    OutStd( ;
       "Harbour Source Formatter " + HBRawVersion() + hb_eol() + ;
       "Copyright (c) 2009-2016, Alexander S.Kresin" + hb_eol() + ;
-      "http://harbour-project.org/" + hb_eol() + ;
-      hb_eol() + ;
-      "Syntax:  hbformat [options] [@config] <file[s]>" + hb_eol() + ;
+      hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
+      hb_eol() )
+
+   OutStd( ;
+      I_( "Syntax:  hbformat [options] [@config] <file[s]>" ) + hb_eol() + ;
       hb_eol() )
 
    RETURN
 
 STATIC FUNCTION HBRawVersion()
-   RETURN StrTran( Version(), "Harbour " )
+   RETURN hb_StrFormat( "%d.%d.%d%s (%s) (%s)", ;
+      hb_Version( HB_VERSION_MAJOR ), ;
+      hb_Version( HB_VERSION_MINOR ), ;
+      hb_Version( HB_VERSION_RELEASE ), ;
+      hb_Version( HB_VERSION_STATUS ), ;
+      hb_Version( HB_VERSION_ID ), ;
+      "20" + Transform( hb_Version( HB_VERSION_REVISION ), "99-99-99 99:99" ) )

@@ -1,5 +1,5 @@
 /*
- *
+ * Regex header
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -51,18 +51,21 @@
 
 #if defined( _HB_REGEX_INTERNAL_ )
 
-#if defined( HB_HAS_PCRE )
-#  include <pcre.h>
-#  undef HB_POSIX_REGEX
+#if defined( HB_HAS_PCRE2 )
+   #include <pcre2.h>
+   #undef HB_POSIX_REGEX
+#elif defined( HB_HAS_PCRE )
+   #include <pcre.h>
+   #undef HB_POSIX_REGEX
 #elif defined( HB_OS_UNIX )
-#  include <sys/types.h>
-#  include <regex.h>
-#  define HB_POSIX_REGEX
+   #include <sys/types.h>
+   #include <regex.h>
+   #define HB_POSIX_REGEX
 #elif defined( __BORLANDC__ )
-#  include <pcreposi.h>
-#  define HB_POSIX_REGEX
+   #include <pcreposi.h>
+   #define HB_POSIX_REGEX
 #else
-#  error pcre component required, but not available
+   #error pcre component required, but not available
 #endif
 
 typedef struct
@@ -70,7 +73,10 @@ typedef struct
    HB_BOOL     fFree;
    int         iFlags;
    int         iEFlags;
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   pcre2_code       * re_pcre;
+   pcre2_match_data * re_match_data;
+#elif defined( HB_HAS_PCRE )
    pcre        * re_pcre;
 #elif defined( HB_POSIX_REGEX )
    regex_t     reg;
@@ -78,21 +84,30 @@ typedef struct
 } HB_REGEX;
 typedef HB_REGEX * PHB_REGEX;
 
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   #define HB_REGMATCH              pcre2_match_data
+   #define HB_REGMATCH_SIZE( n )    ( n )
+   #define HB_REGMATCH_SO( p, n )   pcre2_get_ovector_pointer( p )[ ( n ) * 2 ]
+   #define HB_REGMATCH_EO( p, n )   pcre2_get_ovector_pointer( p )[ ( n ) * 2 + 1 ]
+   #define HB_REGMATCH_UNSET        PCRE2_UNSET
+#elif defined( HB_HAS_PCRE )
    #define HB_REGMATCH              int
    #define HB_REGMATCH_SIZE( n )    ( ( n ) * 3 )
    #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]
    #define HB_REGMATCH_EO( p, n )   ( p )[ ( n ) * 2 + 1 ]
+   #define HB_REGMATCH_UNSET        ( -1 )
 #elif defined( HB_POSIX_REGEX )
    #define HB_REGMATCH              regmatch_t
    #define HB_REGMATCH_SIZE( n )    ( n )
    #define HB_REGMATCH_SO( p, n )   ( p )[ n ].rm_so
    #define HB_REGMATCH_EO( p, n )   ( p )[ n ].rm_eo
+   #define HB_REGMATCH_UNSET        ( -1 )
 #else
    #define HB_REGMATCH              int
    #define HB_REGMATCH_SIZE( n )    ( ( n ) * 2 )
    #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]
    #define HB_REGMATCH_EO( p, n )   ( p )[ ( n ) * 2 + 1 ]
+   #define HB_REGMATCH_UNSET        ( -1 )
 #endif
 
 typedef void ( * HB_REG_FREE )( PHB_REGEX );
@@ -103,10 +118,10 @@ extern void hb_regexInit( HB_REG_FREE pFree, HB_REG_COMP pComp, HB_REG_EXEC pExe
 extern HB_BOOL hb_regexIs( PHB_ITEM pItem );
 
 #ifndef REG_EXTENDED
-#  define REG_EXTENDED  0x00
+#define REG_EXTENDED  0x00
 #endif
 #ifndef REG_NOSUB
-#  define REG_NOSUB     0x00
+#define REG_NOSUB     0x00
 #endif
 
 #else
@@ -124,7 +139,7 @@ typedef void * PHB_REGEX;
 #define HBREG_DOTALL    0x40
 
 #ifndef REGEX_MAX_GROUPS
-#  define REGEX_MAX_GROUPS 16
+#define REGEX_MAX_GROUPS 16
 #endif
 
 HB_EXTERN_BEGIN

@@ -323,9 +323,8 @@ static void hb_gt_alleg_ScreenUpdate( PHB_GT pGT )
 
 static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, HB_BOOL lClearInit )
 {
-   int       iRet  = 1, iWidth, iHeight; /* Don't remove iRet, ixFP and iyFP initializers! */
-   short     ixFP  = 0, iyFP = 0;
-   HB_BOOL   lMode = HB_FALSE, lPrev = s_fInit;
+   int     iWidth, iHeight;
+   HB_BOOL lMode = HB_FALSE, lPrev = s_fInit;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_InitializeScreen(%p,%d,%d,%d)", pGT, iRows, iCols, ( int ) lClearInit ) );
 
@@ -351,6 +350,12 @@ static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, H
 
    if( iRows > 11 && iCols > 23 && iRows < 129 && iCols < 257 )
    {
+      /* Don't remove iRet, ixFP and iyFP initializers! */
+      int   iRet = 1;
+      short ixFP = 0, iyFP = 0;
+
+      HB_SYMBOL_UNUSED( iRet );  /* to suppress a reinit warning */
+
 #if defined( AL_GFX_XWINDOWS )
       HB_TRACE( HB_TR_DEBUG, ( "trying X DGA2 mode" ) );
       iRet = al_set_gfx_mode( AL_GFX_XDGA2, iWidth, iHeight, 0, 0 );
@@ -383,7 +388,7 @@ static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, H
       /* Try a windowed mode first */
       if( iRet != 0 )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "trying autodetect windowed mode" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "trying to auto-detect windowed mode" ) );
          iRet = al_set_gfx_mode( AL_GFX_AUTODETECT_WINDOWED, iWidth, iHeight, 0, 0 );
       }
 #ifdef ALLEGRO_WINDOWS
@@ -401,7 +406,7 @@ static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, H
 #endif
       if( iRet != 0 )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "trying autodetect console mode" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "trying to auto-detect console mode" ) );
          iRet = al_set_gfx_mode( AL_GFX_AUTODETECT, iWidth, iHeight, 0, 0 );
       }
       if( iRet != 0 )
@@ -577,7 +582,7 @@ static const char * hb_gt_alleg_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Portable Allegro GUI console";
+   return "Terminal: Portable Allegro GUI";
 }
 
 static HB_BOOL hb_gt_alleg_SetMode( PHB_GT pGT, int iRows, int iCols )
@@ -592,7 +597,7 @@ static HB_BOOL hb_gt_alleg_SetMode( PHB_GT pGT, int iRows, int iCols )
 static int hb_gt_alleg_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int nKey = 0;
-   int i, iMseCol, iMseRow;
+   int iMseCol, iMseRow;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_ReadKey(%p,%d)", pGT, iEventMask ) );
 
@@ -657,6 +662,7 @@ static int hb_gt_alleg_ReadKey( PHB_GT pGT, int iEventMask )
 
       if( ( ( nKey & 255 ) == 2 || ( nKey & 255 ) == 3 ) && ( nKey >> 8 ) > 31 )   /* K_CTRL_ + navigation key */
       {
+         int i;
          for( i = 0; i < GT_CTRL_TABLE_SIZE; i++ )
          {
             if( ( nKey >> 8 ) == s_CtrlTable[ i ].al_key )
@@ -695,6 +701,7 @@ static int hb_gt_alleg_ReadKey( PHB_GT pGT, int iEventMask )
       }
       else if( nKey != 0 )
       {
+         int i;
          for( i = 0; i < GT_KEY_TABLE_SIZE; i++ )
          {
             if( ( nKey >> 8 ) == s_KeyTable[ i ].al_key )
@@ -893,7 +900,7 @@ static HB_BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    return HB_TRUE;
 }
 
-/* ********** Graphics API ********** */
+/* --- Graphics API --- */
 
 #define hb_gfx_cord( t, l, b, r, tmp )    \
                do { \
@@ -1067,7 +1074,7 @@ static void hb_gt_alleg_gfx_Text( PHB_GT pGT, int iTop, int iLeft, const char * 
       hb_gt_alleg_ScreenUpdate( pGT );
 }
 
-/* ******** Graphics API end ******** */
+/* --- Graphics API end --- */
 
 static void hb_gt_alleg_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
@@ -1140,8 +1147,7 @@ static void hb_gt_alleg_Refresh( PHB_GT pGT )
    }
 }
 
-
-/* ******************************************************************* */
+/* --- */
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
@@ -1170,14 +1176,13 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
    return HB_TRUE;
 }
 
-/* ******************************************************************* */
+/* --- */
 
 #include "hbgtreg.h"
 
-/* ******************************************************************* */
+/* --- */
 
-/*
- * this is necessary if you want to link with .so Allegro libs
+/* This is necessary if you want to link with .so Allegro libs
  * or when link statically and your linker will force to link main()
  * from Allegro library not the Harbour one
  */

@@ -1,5 +1,5 @@
 /*
- * HBBLAT sample blat pure command interface
+ * hbblat sample blat pure command interface
  *
  * Copyright 2007-2009 Francesco Saverio Giudice <info@fsgiudice.com>
  *
@@ -45,20 +45,19 @@
  */
 
 #require "hbblat"
+#require "hbwin"
 
 PROCEDURE Main()
 
    LOCAL cCmd := win_GetCommandLineParam()
-   LOCAL nRet
 
-   ? "Simple BLAT Command interface"
-   ? "Paramenters: ", cCmd
+   ? "Simple blat command interface"
+   ? "Parameters:", cCmd
    IF Empty( cCmd )
       ? "Try with -? option"
    ELSE
       ? "Sending parameters to blat"
-      nRet := hb_blatSend( cCmd )
-      ? nRet
+      ? hb_blatSend( cCmd )
    ENDIF
 
    RETURN

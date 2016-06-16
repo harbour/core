@@ -2,6 +2,9 @@
  * The Date conversion module
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_dateEncStr(), hb_dateDecStr(), hb_dateStrPut(), hb_dateStrGet())
+ * Copyright 1999 Jose Lalin <dezac@corevia.com> (hb_dateDOW())
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (time/timestamp functions)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,25 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_dateEncStr()
- *    hb_dateDecStr()
- *    hb_dateStrPut()
- *    hb_dateStrGet()
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_dateDOW()
- *
- * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    time/timestamp functions
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -916,9 +900,17 @@ long hb_timeUTCOffset( void ) /* in seconds */
          return 0;
 #endif
 
+      /* silence warning caused by disabling 'retval' check above */
+#if defined( _MSC_VER ) && _MSC_VER >= 1800
+#pragma warning(push)
+#pragma warning(disable:6102)
+#endif
       return -( tzInfo.Bias +
             ( retval == TIME_ZONE_ID_DAYLIGHT ? tzInfo.DaylightBias :
                       /*TIME_ZONE_ID_STANDARD*/ tzInfo.StandardBias ) ) * 60;
+#if defined( _MSC_VER ) && _MSC_VER >= 1800
+#pragma warning(pop)
+#endif
    }
 #else
    {
@@ -950,16 +942,16 @@ long hb_timeStampUTCOffset( int iYear, int iMonth, int iDay,
    {
       typedef BOOL ( WINAPI * P_TZSPECIFICLOCALTIMETOSYSTEMTIME )( LPTIME_ZONE_INFORMATION, LPSYSTEMTIME, LPSYSTEMTIME );
 
-      static HB_BOOL s_fInit = HB_TRUE;
-      static P_TZSPECIFICLOCALTIMETOSYSTEMTIME s_pTzSpecificLocalTimeToSystemTime = NULL;
+      static P_TZSPECIFICLOCALTIMETOSYSTEMTIME s_pTzSpecificLocalTimeToSystemTime = ( P_TZSPECIFICLOCALTIMETOSYSTEMTIME ) -1;
 
-      if( s_fInit )
+      if( s_pTzSpecificLocalTimeToSystemTime == ( P_TZSPECIFICLOCALTIMETOSYSTEMTIME ) -1 )
       {
          HMODULE hModule = GetModuleHandle( TEXT( "kernel32" ) );
          if( hModule )
             s_pTzSpecificLocalTimeToSystemTime = ( P_TZSPECIFICLOCALTIMETOSYSTEMTIME )
                HB_WINAPI_GETPROCADDRESS( hModule, "TzSpecificLocalTimeToSystemTime" );
-         s_fInit = HB_FALSE;
+         else
+            s_pTzSpecificLocalTimeToSystemTime = NULL;
       }
 
       if( s_pTzSpecificLocalTimeToSystemTime )

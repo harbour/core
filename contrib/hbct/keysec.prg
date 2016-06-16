@@ -1,7 +1,7 @@
 /*
- * CT3 Miscellaneous functions: - KeySec()
+ * CT3 Miscellaneous functions: KeySec()
  *
- * Copyright 2005 Pavel Tsarenko - <tpe2@mail.ru>
+ * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -64,7 +64,7 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
       ENDIF
       nTime *= 1000
 
-      hb_default( @nCounter, 1 )
+      nCounter := Int( hb_defaultValue( nCounter, 1 ) )
       hb_default( @lMode, .F. )
 
       nSeconds := hb_MilliSeconds()
@@ -79,7 +79,7 @@ STATIC PROCEDURE doKeySec( nKey, nTime, lMode, nCounter, nSeconds )
 
    LOCAL nSec := hb_MilliSeconds()
 
-   IF lMode .AND. ! Empty( NextKey() )
+   IF lMode .AND. NextKey() != 0
       nSeconds := nSec
    ELSEIF nCounter != 0 .AND. nSec - nSeconds >= nTime
       hb_keyPut( nKey )

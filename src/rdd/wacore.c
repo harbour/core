@@ -508,11 +508,7 @@ HB_ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 }
 
 
-/* =========================================================== */
-
-/*
- * Moving work ares between threads
- */
+/* Moving workareas between threads */
 
 static HB_CRITICAL_NEW( s_waMtx );
 static HB_COND_NEW( s_waCond );

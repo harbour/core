@@ -44,11 +44,13 @@
  *
  */
 
+#pragma -gc0
+
 #include "inkey.ch"
 
 FUNCTION __Wait( xPrompt )
 
-   LOCAL nKey
+   LOCAL nKey, nKeyStd
    LOCAL cKey
    LOCAL bBlock
 
@@ -57,21 +59,20 @@ FUNCTION __Wait( xPrompt )
 
    DO WHILE .T.
 
-      nKey := Inkey( 0 )
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
-      IF ( bBlock := SetKey( nKey ) ) != NIL
+      IF ( bBlock := SetKey( nKey ) ) != NIL .OR. ;
+         ( bBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bBlock, ProcName( 1 ), ProcLine( 1 ), "" )
       ELSE
-         cKey := hb_keyChar( nKey )
-         IF Len( cKey ) > 0
-            QQOut( cKey )
-         ELSE
+         IF HB_ISNULL( cKey := hb_keyChar( nKeyStd ) )
             cKey := Chr( 0 )
+         ELSE
+            QQOut( cKey )
          ENDIF
 
          EXIT
       ENDIF
-
    ENDDO
 
    RETURN cKey

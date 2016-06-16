@@ -3,7 +3,7 @@
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
- * the body of TONE function from Windows taken from GTWIN created by
+ * the body of Tone() function from Windows taken from GTWIN created by
  * the following authors:
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * Copyright 1999-2006 Paul Tucker <ptucker@sympatico.ca>
@@ -51,9 +51,7 @@
  *
  */
 
-
 /* NOTE: User programs should never call this layer directly! */
-
 
 #include "hbgtcore.h"
 
@@ -90,7 +88,7 @@ static int hb_Inp9x( unsigned short int usPort )
       __emit__(0x32,0xE4);    /* ASM XOR AH, AH */
       usVal = _AX;
 
-   #elif defined( __XCC__ ) || defined( __POCC__ ) || defined( __BORLANDC__ )
+   #elif defined( __BORLANDC__ ) || defined( __POCC__ ) || defined( __XCC__ )
 
       __asm {
                mov   dx, usPort
@@ -100,6 +98,7 @@ static int hb_Inp9x( unsigned short int usPort )
             }
 
    #elif defined( __MINGW32__ )
+
       __asm__ __volatile__ ("inb %w1,%b0":"=a" (usVal):"Nd" (usPort));
 
    #elif defined( __WATCOMC__ )
@@ -115,8 +114,6 @@ static int hb_Inp9x( unsigned short int usPort )
    return usVal;
 }
 
-/* *********************************************************************** */
-
 static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_Outp9x(%hu, %hu)", usPort, usVal ) );
@@ -127,7 +124,7 @@ static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
       _AL = usVal;
       __emit__(0xEE);        /* ASM OUT DX, AL */
 
-   #elif defined( __XCC__ ) || defined( __POCC__ ) || defined( __BORLANDC__ )
+   #elif defined( __BORLANDC__ ) || defined( __POCC__ ) || defined( __XCC__ )
 
       __asm {
                mov   dx, usPort
@@ -152,7 +149,6 @@ static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
    return usVal;
 }
 
-/* *********************************************************************** */
 /* dDurat is in seconds */
 static void hb_gt_w9xTone( double dFreq, double dDurat )
 {
@@ -211,7 +207,6 @@ static void hb_gt_w9xTone( double dFreq, double dDurat )
 
 #endif
 
-/* *********************************************************************** */
 /* dDurat is in seconds */
 static void hb_gt_wNtTone( double dFreq, double dDurat )
 {
@@ -226,7 +221,6 @@ static void hb_gt_wNtTone( double dFreq, double dDurat )
       hb_idleSleep( dDurat );
 }
 
-/* *********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
 void hb_gt_winapi_tone( double dFrequency, double dDuration )
 {

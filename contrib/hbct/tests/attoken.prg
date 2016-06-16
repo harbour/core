@@ -56,31 +56,27 @@ PROCEDURE Main()
    LOCAL cStr := "...This...is...a...test!"
    LOCAL ni, npos
 
-   ctinit()
-
    ? "Begin test of AtToken()"
    ?
 
    ? "  Simple tests:"
-   ? '    AtToken( "Hello, World!" ) == 8 ? ------------> ' + Str( AtToken( "Hello, World!" ) )
-   ? '    AtToken( "Hello, World!",, 2 ) == 8 ? --------> ' + Str( AtToken( "Hello, World!",, 2 ) )
-   ? '    AtToken( "Hello, World!",, 2, 1 ) == 7 ? -----> ' + Str( AtToken( "Hello, World!",, 2, 1 ) )
-   ? '    AtToken( "Hello, World!", " ", 2, 1 ) == 8 ? -> ' + Str( AtToken( "Hello, World!", " ", 2, 1 ) )
+   ? '    AtToken( "Hello, World!" ) == 8 ? ------------>', AtToken( "Hello, World!" )
+   ? '    AtToken( "Hello, World!",, 2 ) == 8 ? -------->', AtToken( "Hello, World!",, 2 )
+   ? '    AtToken( "Hello, World!",, 2, 1 ) == 7 ? ----->', AtToken( "Hello, World!",, 2, 1 )
+   ? '    AtToken( "Hello, World!", " ", 2, 1 ) == 8 ? ->', AtToken( "Hello, World!", " ", 2, 1 )
    ?
 
    ? '  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:'
-   ? "    Value of cStr is: " + '"' + cStr + '"'
+   ? "    Value of cStr is:", '"' + cStr + '"'
    ?
    FOR ni := 1 TO NumToken( cStr, ".!", 1 )
       ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".!", ni, 1 ) + '")'
-      ? "          starts at pos " + Str( npos := AtToken( cStr, ".!", ni, 1 ), 3 ) + ;
-         " and is " + iif( SubStr( cStr, npos, 1 ) $ ".!", "", "not " ) + "an empty token."
+      ? "          starts at pos", Str( npos := AtToken( cStr, ".!", ni, 1 ), 2 ), ;
+         "and is " + iif( SubStr( cStr, npos, 1 ) $ ".!", "", "not " ) + "an empty token."
    NEXT
 
    ?
    ? "End test of AtToken()"
    ?
-
-   ctexit()
 
    RETURN

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * their website at https://www.gnu.org/).
  *
  */
 
@@ -167,7 +167,6 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
    PHB_HINLINE pInline;
    FILE *      yyc; /* file handle for C output */
    HB_BOOL     fHasHbInline = HB_FALSE;
-   int         iFuncSuffix;
 
    hb_fsFNameMerge( szFileName, pFileName );
    if( ! pFileName->szExtension )
@@ -210,6 +209,8 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
    if( pFunc )
    {
+      int iFuncSuffix;
+
       hb_compDumpFindCFunc( HB_COMP_PARAM );
 
       pInline = HB_COMP_PARAM->inlines.pFirst;
@@ -426,7 +427,10 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
          pInline = pInline->pNext;
       }
       if( ! fHasHbInline )
+      {
          fprintf( yyc, "\n/* Empty source file */\n" );
+         fprintf( yyc, "\nstatic void * dummy = &dummy;\n" );
+      }
    }
 
    fclose( yyc );

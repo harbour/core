@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "directry.ch"
 
 FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
@@ -69,7 +71,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    hb_FNameSplit( cFileMask, @cDir, @cName, @cExt )
 
-   IF Empty( cDir )
+   IF HB_ISNULL( cDir )
       cFileMask := hb_FNameMerge( __DefPath(), cName, cExt )
    ENDIF
 
@@ -93,7 +95,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    //
 
-   aDir := Directory( cFileMask, iif( HB_ISARRAY( aAttr ), "HSD", ) )
+   aDir := hb_vfDirectory( cFileMask, iif( HB_ISARRAY( aAttr ), "HSD", ) )
    nDirLen := Len( aDir )
 
    FOR nDirPos := 1 TO nDirLen
@@ -115,7 +117,6 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
       IF nAttrLen != NIL .AND. nAttrLen >= nDirPos
          aAttr[ nDirPos ] := aFileInfo[ F_ATTR ]
       ENDIF
-
    NEXT
 
    RETURN nDirLen

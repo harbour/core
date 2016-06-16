@@ -1,7 +1,5 @@
 /*
- * CT3 GET function:
- *
- * GetSecret()
+ * CT3 GET function: GetSecret()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -47,8 +45,8 @@
  */
 
 #include "getexit.ch"
-#include "setcurs.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
 
@@ -60,7 +58,6 @@ FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
 
    hb_default( @nRow, nCursorRow )
    hb_default( @nCol, nCursorCol )
-   hb_default( @lSay, .F. )
 
    SetPos( nRow, nCol )
    IF xPrompt != NIL
@@ -76,7 +73,7 @@ FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
    ATail( GetList ):block := {| xNew | _VALUE( @_cGetSecret, lHide, xNew ) }
    READ
 
-   IF lSay
+   IF hb_defaultValue( lSay, .F. )
       SetPos( nRow, nCol )
       DevOut( _HIDE( _cGetSecret ) )
    ENDIF
@@ -93,7 +90,7 @@ STATIC FUNCTION _HIDE( cVar )
 
    RETURN PadR( Replicate( "*", Len( RTrim( cVar ) ) ), Len( cVar ) )
 
-STATIC FUNCTION _VALUE( cVar, lHide, xNew )
+STATIC FUNCTION _VALUE( /* @ */ cVar, lHide, xNew )
 
    IF lHide
       RETURN _HIDE( cVar )
@@ -103,9 +100,9 @@ STATIC FUNCTION _VALUE( cVar, lHide, xNew )
 
    RETURN cVar
 
-STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
+STATIC PROCEDURE _SECRET( /* @ */ _cGetSecret, /* @ */ lHide, oGet, oGetList )
 
-   LOCAL nKey, nLen, bKeyBlock
+   LOCAL nKey, nKeyStd, nLen, bKeyBlock
    LOCAL cKey
 
    IF oGetList == NIL
@@ -124,9 +121,11 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
 
          DO WHILE oGet:exitState == GE_NOEXIT
             SetCursor( iif( ReadStats( 17 /* SNSVCURSOR */ ) == SC_NONE, SC_NORMAL, ReadStats( 17 /* SNSVCURSOR */ ) ) )
-            nKey := Inkey( 0 )
+            nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
             SetCursor( SC_NONE )
-            IF ( bKeyBlock := SetKey( nKey ) ) != NIL
+            DO CASE
+            CASE ( bKeyBlock := SetKey( nKey ) ) != NIL .OR. ;
+                 ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
                lHide := .F.
                Eval( bKeyBlock, ;
                   ReadStats( 10 /* SCREADPROCNAME */ ), ;
@@ -134,23 +133,23 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
                   oGetList:ReadVar() )
                lHide := .T.
                LOOP
-            ELSEIF nKey == K_BS
+            CASE nKeyStd == K_BS
                IF oGet:pos > 1
-                  _cGetSecret := Padr( Left( _cGetSecret, oGet:pos - 2 ) + ;
-                                       Substr( _cGetSecret, oGet:pos ), nLen )
+                  _cGetSecret := PadR( Left( _cGetSecret, oGet:pos - 2 ) + ;
+                     SubStr( _cGetSecret, oGet:pos ), nLen )
                ENDIF
-            ELSEIF nKey == K_DEL
-               _cGetSecret := Padr( Left( _cGetSecret, oGet:pos - 1 ) + ;
-                                    Substr( _cGetSecret, oGet:pos + 1 ), nLen )
-            ELSEIF ! ( cKey := hb_keyChar( nKey ) ) == ""
+            CASE nKeyStd == K_DEL
+               _cGetSecret := PadR( Left( _cGetSecret, oGet:pos - 1 ) + ;
+                  SubStr( _cGetSecret, oGet:pos + 1 ), nLen )
+            CASE ! ( cKey := hb_keyChar( nKeyStd ) ) == ""
                IF Set( _SET_INSERT )
                   _cGetSecret := Stuff( Left( _cGetSecret, nLen - 1 ), ;
-                                        oGet:pos, 0, cKey )
+                     oGet:pos, 0, cKey )
                ELSE
                   _cGetSecret := Stuff( _cGetSecret, oGet:pos, 1, cKey )
                ENDIF
                nKey := hb_keyCode( "*" )
-            ENDIF
+            ENDCASE
             GetApplyKey( oGet, nKey )
          ENDDO
 

@@ -1,30 +1,30 @@
 /*
- * demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server with RPC support
- *    All files which names starts 'net:' are redirected to this API.
- *    This is server code giving the following .prg functions:
- *       netio_Listen( [<nPort>], [<cAddress>], [<cRootDir>], [<lRPC>] )
- *                                              -> <pListenSocket> | NIL
- *       netio_Accept( <pListenSocket>, [<nTimeOut>],
- *                     [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
- *                                              -> <pConnectionSocket> | NIL
- *       netio_Compress( <pConnectionSocket>,
- *                       [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
- *                                              -> NIL
- *       netio_Server( <pConnectionSocket> ) -> NIL
- *       netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
- *                                              -> NIL
- *       netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
- *       netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
- *                                              -> <lPrev>
- *       netio_RPCFilter( <pConnectionSocket>,
- *                        <sFuncSym> | <hValue> | NIL ) -> NIL
+ * Demonstration code for alternative RDD IO API which uses own
+ * very simple TCP/IP file server with RPC support
+ * All files which names starts 'net:' are redirected to this API.
+ * This is server code giving the following .prg functions:
+ *    netio_Listen( [<nPort>], [<cAddress>], [<cRootDir>], [<lRPC>] )
+ *                                           -> <pListenSocket> | NIL
+ *    netio_Accept( <pListenSocket>, [<nTimeOut>],
+ *                  [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
+ *                                           -> <pConnectionSocket> | NIL
+ *    netio_Compress( <pConnectionSocket>,
+ *                    [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
+ *                                           -> NIL
+ *    netio_Server( <pConnectionSocket> ) -> NIL
+ *    netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] )
+ *                                           -> NIL
+ *    netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
+ *    netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] )
+ *                                           -> <lPrev>
+ *    netio_RPCFilter( <pConnectionSocket>,
+ *                     <sFuncSym> | <hValue> | NIL ) -> NIL
  *
- *       netio_SrvStatus( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
- *       netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> )
- *             -> <lSent>
- *       netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> )
- *             -> <lSent>
+ *    netio_SrvStatus( <pConnectionSocket> [, <nStreamID>] ) -> <nStatus>
+ *    netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> )
+ *          -> <lSent>
+ *    netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> )
+ *          -> <lSent>
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -129,7 +129,7 @@ HB_LISTENSD, * PHB_LISTENSD;
 
 static HB_BOOL s_isDirSep( char c )
 {
-   /* intentionally used explicit values instead of harbour macros
+   /* intentionally used explicit values instead of Harbour macros
     * because client can use different OS
     */
    return c == '/' || c == '\\';
@@ -329,8 +329,7 @@ static void s_consrvRet( PHB_CONSRV conn )
 
 static PHB_CONSRV s_consrvNew( PHB_SOCKEX sock, const char * szRootPath, HB_BOOL rpc )
 {
-   PHB_CONSRV conn = ( PHB_CONSRV ) memset( hb_xgrab( sizeof( HB_CONSRV ) ),
-                                            0, sizeof( HB_CONSRV ) );
+   PHB_CONSRV conn = ( PHB_CONSRV ) hb_xgrabz( sizeof( HB_CONSRV ) );
 
    conn->sock = sock;
    conn->rpc = rpc;
@@ -376,16 +375,15 @@ static HB_BOOL s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
 static HB_BOOL s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
-   long lSent = 0, l;
-   HB_MAXUINT end_timer;
+   long lSent = 0;
 
    if( ! conn->mutex || hb_threadMutexLock( conn->mutex ) )
    {
-      end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
+      HB_MAXUINT end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
 
       while( lSent < len && ! conn->stop )
       {
-         l = hb_sockexWrite( conn->sock, ptr + lSent, len - lSent, 1000 );
+         long l = hb_sockexWrite( conn->sock, ptr + lSent, len - lSent, 1000 );
          if( l > 0 )
          {
             lSent += l;
@@ -455,8 +453,7 @@ static void s_listenRet( HB_SOCKET sd, const char * szRootPath, HB_BOOL rpc )
       PHB_LISTENSD lsd, * lsd_ptr;
       int iLen;
 
-      lsd = ( PHB_LISTENSD ) memset( hb_xgrab( sizeof( HB_LISTENSD ) ),
-                                            0, sizeof( HB_LISTENSD ) );
+      lsd = ( PHB_LISTENSD ) hb_xgrabz( sizeof( HB_LISTENSD ) );
       lsd->sd = sd;
       lsd->rpc = rpc;
       if( szRootPath )
@@ -541,7 +538,7 @@ HB_FUNC( NETIO_RPCFILTER )
 HB_FUNC( NETIO_SERVERSTOP )
 {
    PHB_LISTENSD lsd = s_listenParam( 1, HB_FALSE );
-   HB_BOOL fStop = hb_parldef( 2, 1 );
+   HB_BOOL fStop = hb_parldef( 2, HB_TRUE );
 
    if( lsd )
       lsd->stop = fStop;
@@ -1471,7 +1468,6 @@ HB_FUNC( NETIO_SERVER )
                               HB_SIZE nSize = size - size2;
                               HB_USHORT uiPCount = 0;
                               HB_BOOL fSend = HB_FALSE;
-                              int iStreamType;
 
                               iStreamID = 0;
                               data += size2;
@@ -1495,6 +1491,8 @@ HB_FUNC( NETIO_SERVER )
                               }
                               if( uiMsg == NETIO_FUNCCTRL )
                               {
+                                 int iStreamType;
+
                                  iStreamID = HB_GET_LE_INT32( &msgbuf[ 8 ] );
                                  iStreamType = HB_GET_LE_INT32( &msgbuf[ 12 ] );
                                  hb_vmPush( hb_param( 1, HB_IT_ANY ) );

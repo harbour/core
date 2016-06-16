@@ -47,6 +47,14 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+static void memzero_safe( void * v, HB_SIZE n )
+{
+   volatile HB_BYTE * p = ( volatile HB_BYTE * ) v;
+
+   while( n-- )
+      *p++ = 0;
+}
+
 HB_FUNC( HB_STRCLEAR )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
@@ -64,7 +72,7 @@ HB_FUNC( HB_STRCLEAR )
       pszPtr = hb_itemGetCPtr( pItem );
       if( hb_itemGetWriteCL( pItem, &pBuffer, &nSize ) )
       {
-         memset( pBuffer, '\0', nSize + 1 );
+         memzero_safe( pBuffer, nSize + 1 );
          hb_retl( pszPtr == pBuffer );
       }
       else

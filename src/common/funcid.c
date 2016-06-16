@@ -1,5 +1,5 @@
 /*
- * get function identifier
+ * Get function identifier
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

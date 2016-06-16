@@ -1,6 +1,6 @@
 /*
- * IsFunction( <cName> ) -> <lExists>
  * FlagShip compatible function
+ *    IsFunction( <cName> ) -> <lExists>
  * Determines if a standard or user defined function/procedure
  * is available (linked to the application and registered in VM)
  *

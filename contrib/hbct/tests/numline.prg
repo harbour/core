@@ -1,8 +1,4 @@
-/*
- *
- * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
- *
- */
+/* Copyright 2011 Viktor Szakats (vszakats.net/harbour) */
 
 #ifdef __HARBOUR__
 #require "hbct"

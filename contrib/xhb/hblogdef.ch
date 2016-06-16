@@ -1,6 +1,6 @@
 /*
  * Header file with definition for logging levels
- * ( Need a separate file for inclusion in PRG and C files )
+ * (Need a separate file for inclusion in PRG and C files)
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *

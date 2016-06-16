@@ -1,5 +1,5 @@
 /*
- * CT3 Printer functions:
+ * CT3 Printer functions
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (PrintReady())
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru> (PrintSend())
@@ -50,10 +50,7 @@
 #include "hbapifs.h"
 
 #if defined( HB_OS_DOS )
-#  include <dos.h>
-#  if defined( __DJGPP__ )
-#     include <dpmi.h>
-#  endif
+   #include <dos.h>
 #endif
 
 HB_FUNC( PRINTSTAT )
@@ -92,16 +89,16 @@ HB_FUNC( PRINTREADY )
 
 HB_FUNC( PRINTSEND )
 {
-#ifdef __DJGPP__
-   __dpmi_regs r;
+#if defined( HB_OS_DOS )
+   union REGS regs;
 
-   r.x.dx = hb_parni( 2 ) - 1;
+   regs.HB_XREGS.dx = hb_parni( 2 ) - 1;
 
    if( HB_ISNUM( 1 ) )
    {
-      r.h.al = hb_parni( 1 );
-      __dpmi_int( 0x17, &r );
-      if( r.h.ah & 1 )
+      regs.h.al = hb_parni( 1 );
+      HB_DOS_INT86( 0x17, &regs, &regs );
+      if( regs.h.ah & 1 )
          hb_retni( 1 );
       else
          hb_retni( 0 );
@@ -111,13 +108,13 @@ HB_FUNC( PRINTSEND )
       const char * string = hb_parcx( 1 );
       int i, len = hb_parclen( 1 );
 
-      r.h.ah = 0;
-      for( i = 0; i < len && !( r.h.ah & 1 ); i++ )
+      regs.h.ah = 0;
+      for( i = 0; i < len && !( regs.h.ah & 1 ); i++ )
       {
-         r.h.al = string[ i ];
-         __dpmi_int( 0x17, &r );
+         regs.h.al = string[ i ];
+         HB_DOS_INT86( 0x17, &regs, &regs );
       }
-      if( r.h.ah & 1 )
+      if( regs.h.ah & 1 )
          hb_retni( len - ( i - 1 ) );
       else
          hb_retni( 0 );
@@ -147,11 +144,14 @@ HB_FUNC( PRINTSEND )
 
    if( nLen )
    {
-      HB_FHANDLE hFile = hb_fsOpen( szPort, FO_WRITE );
-      if( hFile != FS_ERROR )
+      PHB_FILE hFile = hb_fileExtOpen( szPort, NULL,
+                                       FO_WRITE | FO_SHARED | FO_PRIVATE |
+                                       FXO_APPEND | FXO_NOSEEKPOS,
+                                       NULL, NULL );
+      if( hFile )
       {
-         nRet = hb_fsWriteLarge( hFile, szStr, nLen );
-         hb_fsClose( hFile );
+         nRet = hb_fileResult( hb_fileWrite( hFile, szStr, nLen, -1 ) );
+         hb_fileClose( hFile );
       }
    }
    hb_retns( nRet );

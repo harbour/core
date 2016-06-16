@@ -46,6 +46,18 @@
 
 #include "hbwapi.h"
 
+HB_SIZE hbwapi_tstrlen( const TCHAR * pText )
+{
+   HB_SIZE nLen = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrlen(%p)", pText ) );
+
+   while( pText[ nLen ] != TEXT( '\0' ) )
+      ++nLen;
+
+   return nLen;
+}
+
 /* NOTE: Based on hb_strdup() */
 TCHAR * hbwapi_tstrdup( const TCHAR * pszText )
 {
@@ -83,18 +95,6 @@ TCHAR * hbwapi_tstrncat( TCHAR * pDest, const TCHAR * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-HB_SIZE hbwapi_tstrlen( const TCHAR * pText )
-{
-   HB_SIZE nLen = 0;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hbwapi_tstrlen(%p)", pText ) );
-
-   while( pText[ nLen ] != TEXT( '\0' ) )
-      ++nLen;
-
-   return nLen;
-}
-
 static TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )
 {
 #if defined( HB_OS_WIN_CE )
@@ -130,14 +130,77 @@ static TCHAR * hbwapi_FileNameAtSystemDir( const TCHAR * pFileName )
 #define LOAD_LIBRARY_SEARCH_SYSTEM32  0x00000800
 #endif
 
+/* LOAD_LIBRARY_SEARCH_SYSTEM32 is supported on Windows 8 or above,
+   and on Windows Vista/7/Server 2008/Server 2008 R2
+   _with_ this patch installed:
+      https://support.microsoft.com/en-us/kb/2533623 */
+static HB_BOOL hbwapi_has_search_system32()
+{
+   if( hb_iswin8() )
+      return HB_TRUE;
+   else
+   {
+      HMODULE hKernel32 = GetModuleHandle( TEXT( "kernel32.dll" ) );
+
+      if( hKernel32 )
+         return HB_WINAPI_GETPROCADDRESS( hKernel32, "AddDllDirectory" ) != NULL;  /* Detect KB2533623 */
+   }
+
+   return HB_FALSE;
+}
+
 HMODULE hbwapi_LoadLibrarySystem( LPCTSTR pFileName )
 {
    TCHAR * pLibPath = hbwapi_FileNameAtSystemDir( pFileName );
 
-   /* TODO: Replace flag with LOAD_LIBRARY_SEARCH_SYSTEM32 in the future [vszakats] */
-   HMODULE h = LoadLibraryEx( pLibPath, NULL, LOAD_WITH_ALTERED_SEARCH_PATH );
+   HMODULE h = LoadLibraryEx( pLibPath, NULL, hbwapi_has_search_system32() ? LOAD_LIBRARY_SEARCH_SYSTEM32 : LOAD_WITH_ALTERED_SEARCH_PATH );
 
    hb_xfree( pLibPath );
 
    return h;
+}
+
+/* Version of the above that is exposed as a public API */
+HMODULE hbwapi_LoadLibrarySystemVM( const char * szFileName )
+{
+   LPTSTR lpFree;
+
+   HMODULE h = hbwapi_LoadLibrarySystem( HB_FSNAMECONV( szFileName, &lpFree ) );
+
+   if( lpFree )
+      hb_xfree( lpFree );
+
+   return h;
+}
+
+HINSTANCE hbwapi_Instance( void )
+{
+   HINSTANCE hInstance;
+
+   hb_winmainArgGet( &hInstance, NULL, NULL );
+
+   return hInstance;
+}
+
+HKEY hbwapi_get_HKEY( HB_PTRUINT nKey )
+{
+   switch( nKey )
+   {
+      case 1:
+         return ( HKEY ) HKEY_CLASSES_ROOT;
+      /* NOTE: In xhb, zero value means HKEY_LOCAL_MACHINE. */
+      case 0:
+      case 2:
+         return ( HKEY ) HKEY_CURRENT_USER;
+#if ! defined( HB_OS_WIN_CE )
+      case 3:
+         return ( HKEY ) HKEY_CURRENT_CONFIG;
+#endif
+      case 4:
+         return ( HKEY ) HKEY_LOCAL_MACHINE;
+      case 5:
+         return ( HKEY ) HKEY_USERS;
+   }
+
+   return ( HKEY ) nKey;
 }

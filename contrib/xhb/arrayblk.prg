@@ -1,5 +1,5 @@
 /*
- * HB_ArrayBlk function
+ * hb_ArrayBlock() function
  *
  * Copyright 2003 Walter Negro <anegro@overnet.com.ar>
  *
@@ -44,7 +44,5 @@
  *
  */
 
-
 FUNCTION hb_ArrayBlock( aArray, nIndex )
-
    RETURN {| x | iif( PCount() == 0, aArray[ nIndex ], aArray[ nIndex ] := x ) }

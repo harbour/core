@@ -1,8 +1,4 @@
-/*
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbzebra"
 #require "hbwin"
@@ -17,8 +13,7 @@ PROCEDURE Main()
       "dmPaperSize"   => WIN_DMPAPER_A4, ;
       "dmOrientation" => WIN_DMORIENT_PORTRAIT } )
 
-   hDC := wapi_CreateDC( NIL, "Microsoft XPS Document Writer", NIL, pDEVMODE )
-   IF ! Empty( hDC )
+   IF ! Empty( hDC := wapi_CreateDC( , "Microsoft XPS Document Writer",, pDEVMODE ) )
 
       wapi_SetMapMode( hDC, WIN_MM_TEXT )
 
@@ -70,7 +65,7 @@ PROCEDURE Main()
             DrawBarcode( hDC, 440,   1, "CODE128",    "Wikipedia" )
             DrawBarcode( hDC, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
             DrawBarcode( hDC, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)" )
-            DrawBarcode( hDC, 580,   1, "QRCODE",     "http://harbour-project.org/" )
+            DrawBarcode( hDC, 580,   1, "QRCODE",     "https://en.wikipedia.org/wiki/QR_Code" )
 
             wapi_EndPage( hDC )
          ENDIF
@@ -82,7 +77,7 @@ PROCEDURE Main()
 
 #define _SCALE_ 7.2
 
-PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
+STATIC PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
 
    LOCAL hZebra, nLineHeight, cTxt
 
@@ -108,10 +103,10 @@ PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
 
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
-         IF Empty( nLineHeight )
+         IF nLineHeight == NIL
             nLineHeight := 16
          ENDIF
-         wapi_TextOut( hDC,  40 * _SCALE_, nY, cType )
+         wapi_TextOut( hDC, 40 * _SCALE_, nY, cType )
          IF Len( cTxt := hb_zebra_getcode( hZebra ) ) < 20
             wapi_TextOut( hDC, 150 * _SCALE_, nY, cTxt )
          ENDIF

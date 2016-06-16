@@ -212,6 +212,7 @@ typedef struct _HB_CODEPAGE
 #define HB_CPID_USASCII    "us-ascii"
 #define HB_CPID_646YU      "iso646-yu"
 #define HB_CPID_646YUC     "iso646-yuc"
+#define HB_CPID_CWI2       "cwi-2"
 
 #define HB_UNITB_437       &hb_uniTbl_437
 #define HB_UNITB_737       &hb_uniTbl_737
@@ -279,6 +280,7 @@ typedef struct _HB_CODEPAGE
 #define HB_UNITB_USASCII   &hb_uniTbl_USASCII
 #define HB_UNITB_646YU     &hb_uniTbl_646YU
 #define HB_UNITB_646YUC    &hb_uniTbl_646YUC
+#define HB_UNITB_CWI2      &hb_uniTbl_CWI2
 #define HB_UNITB_UNDEF     NULL /* ((PHB_UNITABLE) (-1)) */
 
 extern HB_UNITABLE hb_uniTbl_437;
@@ -347,6 +349,7 @@ extern HB_UNITABLE hb_uniTbl_NEXTSTEP;
 extern HB_UNITABLE hb_uniTbl_USASCII;
 extern HB_UNITABLE hb_uniTbl_646YU;
 extern HB_UNITABLE hb_uniTbl_646YUC;
+extern HB_UNITABLE hb_uniTbl_CWI2;
 
 extern HB_EXPORT PHB_CODEPAGE hb_vmCDP( void );
 extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );

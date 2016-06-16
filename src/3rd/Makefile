@@ -5,6 +5,7 @@ DIRS := \
    png \
    jpeg \
    pcre \
+   pcre2 \
    tiff \
    zlib \
 

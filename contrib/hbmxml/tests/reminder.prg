@@ -1,3 +1,5 @@
+/* Copyright (c) 2011 Petr Chornyj */
+
 #require "hbmxml"
 
 STATIC s_mxml_error := .F.
@@ -6,34 +8,33 @@ STATIC s_mxml_error_msg := ""
 PROCEDURE Main()
 
    LOCAL xml
+   LOCAL cFileName
 
    mxmlSetErrorCallback( @my_mxmlError() )
 
-   IF hb_FileExists( "rem.xml" )
-      xml := simplexml_load_file( "rem.xml" )
-   ELSE
-      RETURN
+   IF hb_vfExists( cFileName := hb_DirBase() + "rem.xml" )
+      xml := simplexml_load_file( cFileName )
+
+      IF ! s_mxml_error
+         ? asXML( xml )
+      ENDIF
+
+      mxmlDelete( xml )
    ENDIF
 
-   IF ! s_mxml_error
-      OutStd( asXML( xml ), hb_eol() )
-   ENDIF
-
-   mxmlDelete( xml )
-
-   IF hb_FileExists( "rem_err.xml" )
-      xml := simplexml_load_file( "rem_err.xml" )
+   IF hb_vfExists( cFileName := hb_DirBase() + "rem_err.xml" )
+      xml := simplexml_load_file( cFileName )
 
       IF s_mxml_error
-         OutErr( "hbmxml:", s_mxml_error_msg, hb_eol() )
+         ? "hbmxml:", s_mxml_error_msg
       ELSE
-         OutStd( asXML( xml ), hb_eol() )
+         ? asXML( xml )
       ENDIF
    ENDIF
 
    RETURN
 
-PROCEDURE my_mxmlError( cErrorMsg )
+STATIC PROCEDURE my_mxmlError( cErrorMsg )
 
    s_mxml_error_msg := cErrorMsg
    s_mxml_error := .T.
@@ -41,7 +42,6 @@ PROCEDURE my_mxmlError( cErrorMsg )
    RETURN
 
 STATIC FUNCTION simplexml_load_file( file )
-
    RETURN mxmlLoadString( NIL, hb_MemoRead( file ), @type_cb() )
 
 STATIC FUNCTION asXML( xml )
@@ -50,7 +50,7 @@ STATIC FUNCTION asXML( xml )
    LOCAL wt := 3
    LOCAL node, subnode
 
-   node := mxmlFindElement( xml, xml, "note", NIL, NIL, MXML_DESCEND )
+   node := mxmlFindElement( xml, xml, "note", , , MXML_DESCEND )
    IF Empty( node )
       RETURN ""
    ENDIF
@@ -69,12 +69,12 @@ STATIC FUNCTION asXML( xml )
 
    RETURN cText
 
-FUNCTION type_cb( node )
+STATIC FUNCTION type_cb( node )
 
    LOCAL nResult
    LOCAL cType
 
-   /* You can lookup attributes and/or use the element name, hierarchy, etc... */
+   /* You can lookup attributes and/or use the element name, hierarchy, etc. */
 
    IF Empty( cType := mxmlElementGetAttr( node, "type" ) )
       cType := mxmlGetElement( node )
@@ -85,17 +85,10 @@ FUNCTION type_cb( node )
    CASE "to"
    CASE "from"
    CASE "heading"
-      nResult := MXML_TEXT
-      EXIT
-
+      RETURN MXML_TEXT
    CASE "body"
    CASE "opaque"
-      nResult := MXML_OPAQUE
-      EXIT
-
-   OTHERWISE
-      nResult := MXML_IGNORE
-      EXIT
+      RETURN MXML_OPAQUE
    ENDSWITCH
 
-   RETURN nResult
+   RETURN MXML_IGNORE

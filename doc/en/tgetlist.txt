@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: ReadVar()
  *
@@ -34,6 +32,7 @@
       variable when executing a VALID or WHEN clause, or during SET KEY
       execution and you are inside a READ or MENU TO.
    $EXAMPLES$
+      #include "inkey.ch"
       // display a menu, press F1 to view the MENU TO variable name
       CLS
       @ 1, 10 PROMPT "blood sucking insect that infect beds   "
@@ -41,11 +40,12 @@
       @ 3, 10 PROMPT "defect; snag; (source of) malfunctioning"
       @ 4, 10 PROMPT "small hidden microphone                 "
       @ 6, 10 SAY "(Press F1 for a hint)"
-      SET KEY 28 TO ShowVar
+      SetKey( K_F1, {|| ShowVar() } )
       MENU TO What_Is_Bug
 
-      PROCEDURE ShowVar
+      STATIC PROCEDURE ShowVar()
          Alert( ReadVar() )     // WHAT_IS_BUG in red Alert() box
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
@@ -59,6 +59,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      @...GET, @...PROMPT, MENU TO, READ, SET KEY, __AtPrompt(), __MenuTo()
+      @...GET, @...PROMPT, MENU TO, READ, SetKey(), __AtPrompt(), __MenuTo()
    $END$
  */

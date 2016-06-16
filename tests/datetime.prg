@@ -1,12 +1,10 @@
-/*
- *
- * Copyright 2010 Carlos Bacco
- *
- */
+/* Copyright 2010 Carlos Bacco */
 
 #include "simpleio.ch"
 
 PROCEDURE Main()
+
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    ? hb_DateTime( 1974 )
 

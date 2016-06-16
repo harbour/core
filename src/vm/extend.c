@@ -2,6 +2,8 @@
  * The Extend API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2009 Viktor Szakats (vszakats.net/harbour) (hb_stor(), hb_retn*len(), hb_retdl(), hb_parn*def())
+ * Copyright 2000 Jose Lalin <dezac@corevia.com> (hb_retd())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,26 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_stor()
- *    hb_retnlen()
- *    hb_retnilen()
- *    hb_retnllen()
- *    hb_retndlen()
- *    hb_retdl()
- *    hb_parnidef() (based on idea by Mindaugas Kavaliauskas)
- *    hb_parnldef()
- *
- * Copyright 2000 Jose Lalin <dezac@corevia.com>
- *    hb_retd()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -619,7 +601,11 @@ HB_ISIZ hb_parns( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
+#if defined( __GNUC__ )
+         return ( HB_ISIZ ) ( HB_SIZE ) pItem->item.asDouble.value;
+#else
          return ( HB_ISIZ ) pItem->item.asDouble.value;
+#endif
    }
 
    return 0;
@@ -643,7 +629,11 @@ HB_ISIZ hb_parnsdef( int iParam, HB_ISIZ nDefValue )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
+#if defined( __GNUC__ )
+         return ( HB_ISIZ ) ( HB_SIZE ) pItem->item.asDouble.value;
+#else
          return ( HB_ISIZ ) pItem->item.asDouble.value;
+#endif
    }
 
    return nDefValue;

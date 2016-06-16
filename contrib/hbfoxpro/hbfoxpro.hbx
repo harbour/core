@@ -25,7 +25,6 @@ DYNAMIC AElement
 DYNAMIC Between
 DYNAMIC Filter
 DYNAMIC fox_At
-DYNAMIC fox___DynCall
 DYNAMIC FSize
 DYNAMIC Id
 DYNAMIC InList
@@ -43,6 +42,7 @@ DYNAMIC SRows
 DYNAMIC Sys
 DYNAMIC VarRead
 DYNAMIC __fox_Array
+DYNAMIC __fox_DynCall
 DYNAMIC __fox_Seek
 DYNAMIC __fox_Used
 

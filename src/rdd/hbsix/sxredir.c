@@ -1,8 +1,8 @@
 /*
  * SIX compatible function:
- *          sx_FindRec()
- *          sx_ClearOrder()
- *          sx_SetTrig()
+ *       sx_FindRec()
+ *       sx_ClearOrder()
+ *       sx_SetTrig()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

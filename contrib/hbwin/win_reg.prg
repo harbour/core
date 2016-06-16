@@ -64,35 +64,25 @@ PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntr
    cKey := ""
    cEntry := ""
 
-   tmp := At( "\", cRegPath )
-   IF tmp > 0
+   IF ( tmp := At( "\", cRegPath ) ) > 0
       cHKEY := Left( cRegPath, tmp - 1 )
       cRegPath := SubStr( cRegPath, tmp + 1 )
 
-      tmp := RAt( "\", cRegPath )
-      IF tmp > 0
+      IF ( tmp := RAt( "\", cRegPath ) ) > 0
          cKey := Left( cRegPath, tmp - 1 )
          cEntry := SubStr( cRegPath, tmp + 1 )
       ELSE
          cEntry := cRegPath
       ENDIF
 
-      /* Len( <literal> ) is optimized to a number by Harbour at compile time. */
       DO CASE
-      CASE Left( cHKEY, Len( "HKCU"                  ) ) == "HKCU"                  ; nHKEY := WIN_HKEY_CURRENT_USER
-      CASE Left( cHKEY, Len( "HKLM"                  ) ) == "HKLM"                  ; nHKEY := WIN_HKEY_LOCAL_MACHINE
-      CASE Left( cHKEY, Len( "HKCR"                  ) ) == "HKCR"                  ; nHKEY := WIN_HKEY_CLASSES_ROOT
-      CASE Left( cHKEY, Len( "HKU"                   ) ) == "HKU"                   ; nHKEY := WIN_HKEY_USERS
-      CASE Left( cHKEY, Len( "HKPD"                  ) ) == "HKPD"                  ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
-      CASE Left( cHKEY, Len( "HKCC"                  ) ) == "HKCC"                  ; nHKEY := WIN_HKEY_CURRENT_CONFIG
-      CASE Left( cHKEY, Len( "HKDD"                  ) ) == "HKDD"                  ; nHKEY := WIN_HKEY_DYN_DATA
-      CASE Left( cHKEY, Len( "HKEY_CURRENT_USER"     ) ) == "HKEY_CURRENT_USER"     ; nHKEY := WIN_HKEY_CURRENT_USER
-      CASE Left( cHKEY, Len( "HKEY_LOCAL_MACHINE"    ) ) == "HKEY_LOCAL_MACHINE"    ; nHKEY := WIN_HKEY_LOCAL_MACHINE
-      CASE Left( cHKEY, Len( "HKEY_CLASSES_ROOT"     ) ) == "HKEY_CLASSES_ROOT"     ; nHKEY := WIN_HKEY_CLASSES_ROOT
-      CASE Left( cHKEY, Len( "HKEY_USERS"            ) ) == "HKEY_USERS"            ; nHKEY := WIN_HKEY_USERS
-      CASE Left( cHKEY, Len( "HKEY_PERFORMANCE_DATA" ) ) == "HKEY_PERFORMANCE_DATA" ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
-      CASE Left( cHKEY, Len( "HKEY_CURRENT_CONFIG"   ) ) == "HKEY_CURRENT_CONFIG"   ; nHKEY := WIN_HKEY_CURRENT_CONFIG
-      CASE Left( cHKEY, Len( "HKEY_DYN_DATA"         ) ) == "HKEY_DYN_DATA"         ; nHKEY := WIN_HKEY_DYN_DATA
+      CASE hb_LeftEq( cHKEY, "HKCU" ) .OR. hb_LeftEq( cHKEY, "HKEY_CURRENT_USER"     ) ; nHKEY := WIN_HKEY_CURRENT_USER
+      CASE hb_LeftEq( cHKEY, "HKLM" ) .OR. hb_LeftEq( cHKEY, "HKEY_LOCAL_MACHINE"    ) ; nHKEY := WIN_HKEY_LOCAL_MACHINE
+      CASE hb_LeftEq( cHKEY, "HKCR" ) .OR. hb_LeftEq( cHKEY, "HKEY_CLASSES_ROOT"     ) ; nHKEY := WIN_HKEY_CLASSES_ROOT
+      CASE hb_LeftEq( cHKEY, "HKU"  ) .OR. hb_LeftEq( cHKEY, "HKEY_USERS"            ) ; nHKEY := WIN_HKEY_USERS
+      CASE hb_LeftEq( cHKEY, "HKPD" ) .OR. hb_LeftEq( cHKEY, "HKEY_PERFORMANCE_DATA" ) ; nHKEY := WIN_HKEY_PERFORMANCE_DATA
+      CASE hb_LeftEq( cHKEY, "HKCC" ) .OR. hb_LeftEq( cHKEY, "HKEY_CURRENT_CONFIG"   ) ; nHKEY := WIN_HKEY_CURRENT_CONFIG
+      CASE hb_LeftEq( cHKEY, "HKDD" ) .OR. hb_LeftEq( cHKEY, "HKEY_DYN_DATA"         ) ; nHKEY := WIN_HKEY_DYN_DATA
       ENDCASE
    ENDIF
 
@@ -122,17 +112,13 @@ FUNCTION win_regDelete( cRegPath, nRegSam )
 
    win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
 
-   IF Empty( cEntry )
+   IF HB_ISNULL( cEntry )
       lRetVal := win_regDeleteKey( nHKEY, cKey )
+   ELSEIF win_regOpenKeyEx( nHKEY, cKey, 0, hb_bitOr( KEY_SET_VALUE, hb_defaultValue( nRegSam, 0 ) ), @pKeyHandle )
+      lRetVal := win_regDeleteValue( pKeyHandle, cEntry )
+      win_regCloseKey( pKeyHandle )
    ELSE
-      hb_default( @nRegSam, 0 )
-
-      IF win_regOpenKeyEx( nHKEY, cKey, 0, hb_bitOr( KEY_SET_VALUE, nRegSam ), @pKeyHandle )
-         lRetVal := win_regDeleteValue( pKeyHandle, cEntry )
-         win_regCloseKey( pKeyHandle )
-      ELSE
-         lRetVal := .F.
-      ENDIF
+      lRetVal := .F.
    ENDIF
 
    RETURN lRetVal
@@ -144,18 +130,19 @@ FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt, nRegSam )
    LOCAL cValType := ValType( xValue )
    LOCAL lRetVal
 
-   hb_default( @lSetIt, .F. )
-
-   IF cValType == "L"
+   SWITCH cValType
+   CASE "L"
       xValue := iif( xValue, 1, 0 )
       cValType := ValType( xValue )
-   ELSEIF cValType == "D"
+      EXIT
+   CASE "D"
       xValue := DToS( xValue )
       cValType := ValType( xValue )
-   ENDIF
+      EXIT
+   ENDSWITCH
 
    lRetVal := ( xKey != NIL .AND. xValue != NIL .AND. cValType == ValType( xKey ) .AND. xValue == xKey )
-   IF ! lRetVal .AND. lSetIt
+   IF ! lRetVal .AND. hb_defaultValue( lSetIt, .F. )
       lRetVal := win_regSet( nHKEY, cKeyName, cEntryName, xValue,, nRegSam )
    ENDIF
 
@@ -165,7 +152,7 @@ STATIC FUNCTION Bin2U( c )
 
    LOCAL l := Bin2L( c )
 
-   RETURN iif( l < 0, l + 4294967296, l )
+   RETURN iif( l < 0, l + ( 2 ^ 32 ), l )
 
 FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
 
@@ -173,31 +160,30 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
    LOCAL pKeyHandle
    LOCAL nValueType
 
-   hb_default( @nRegSam, 0 )
-
-   IF win_regOpenKeyEx( nHKEY, cKeyName, 0, hb_bitOr( KEY_QUERY_VALUE, nRegSam ), @pKeyHandle )
+   IF win_regOpenKeyEx( nHKEY, cKeyName, 0, hb_bitOr( KEY_QUERY_VALUE, hb_defaultValue( nRegSam, 0 ) ), @pKeyHandle )
 
       /* retrieve the length of the value */
 
       win_regQueryValueEx( pKeyHandle, cEntryName, 0, @nValueType, @xRetVal )
 
       IF HB_ISSTRING( xRetVal )
-         DO CASE
-         CASE nValueType == WIN_REG_DWORD .OR. ;
-              nValueType == WIN_REG_DWORD_LITTLE_ENDIAN
+         SWITCH nValueType
+         CASE WIN_REG_DWORD_LITTLE_ENDIAN  /* == WIN_REG_DWORD */
             xRetVal := Bin2U( xRetVal )
-         CASE nValueType == WIN_REG_DWORD_BIG_ENDIAN
+            EXIT
+         CASE WIN_REG_DWORD_BIG_ENDIAN
             xRetVal := Bin2U( hb_BRight( xRetVal, 2 ) + hb_BLeft( xRetVal, 2 ) )
-         CASE nValueType == WIN_REG_QWORD .OR. ;
-              nValueType == WIN_REG_QWORD_LITTLE_ENDIAN
+            EXIT
+         CASE WIN_REG_QWORD_LITTLE_ENDIAN  /* == WIN_REG_QWORD */
             xRetVal := hb_bitShift( Bin2U( hb_BSubStr( xRetVal, 5, 4 ) ), 32 ) +;
                                     Bin2U( hb_BSubStr( xRetVal, 1, 4 ) )
+            EXIT
          OTHERWISE
             /* Strip ending zero byte */
             IF hb_BRight( xRetVal, 1 ) == hb_BChar( 0 )
                xRetVal := hb_BLeft( xRetVal, hb_BLen( xRetVal ) - 1 )
             ENDIF
-         ENDCASE
+         ENDSWITCH
       ELSE
          xRetVal := xDefault
       ENDIF
@@ -211,23 +197,21 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
 
 FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
 
-   LOCAL cName
+   LOCAL xName
    LOCAL lRetVal := .F.
    LOCAL pKeyHandle
 
-   hb_default( @nRegSam, 0 )
-
-   IF win_regCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, hb_bitOr( KEY_SET_VALUE, nRegSam ), 0, @pKeyHandle )
+   IF win_regCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, hb_bitOr( KEY_SET_VALUE, hb_defaultValue( nRegSam, 0 ) ), 0, @pKeyHandle )
 
       /* no support for Arrays, Codeblock ... */
       SWITCH ValType( xValue )
       CASE "L"
          nValueType := WIN_REG_DWORD
-         cName := iif( xValue, 1, 0 )
+         xName := iif( xValue, 1, 0 )
          EXIT
       CASE "D"
          nValueType := WIN_REG_SZ
-         cName := DToS( xValue )
+         xName := DToS( xValue )
          EXIT
       CASE "N"
          IF ! HB_ISNUMERIC( nValueType ) .OR. ;
@@ -238,7 +222,7 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
                nValueType == WIN_REG_QWORD_LITTLE_ENDIAN )
             nValueType := WIN_REG_DWORD
          ENDIF
-         cName := xValue
+         xName := xValue
          EXIT
       CASE "C"
       CASE "M"
@@ -248,12 +232,12 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
                nValueType == WIN_REG_MULTI_SZ )
             nValueType := WIN_REG_SZ
          ENDIF
-         cName := xValue
+         xName := xValue
          EXIT
       ENDSWITCH
 
-      IF cName != NIL
-         lRetVal := win_regSetValueEx( pKeyHandle, cEntryName, 0, nValueType, cName )
+      IF xName != NIL
+         lRetVal := win_regSetValueEx( pKeyHandle, cEntryName, 0, nValueType, xName )
       ENDIF
 
       win_regCloseKey( pKeyHandle )

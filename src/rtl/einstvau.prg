@@ -1,6 +1,6 @@
 /*
  * Undocumented CA-Cl*pper function used to validate
- *    instance variable type in assign messages.
+ * instance variable type in assign messages.
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

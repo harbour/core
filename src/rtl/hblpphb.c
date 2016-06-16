@@ -44,10 +44,7 @@
  *
  */
 
-
-/*
-
-   Idea and protocol
+/* Idea and protocol
    =================
    Very often it is required to accept the whole data message from
    TCP connection. Because of stream nature of TCP, this requires
@@ -117,7 +114,6 @@
    ELSE
       // error
    ENDIF
-
  */
 
 #include "hbapiitm.h"

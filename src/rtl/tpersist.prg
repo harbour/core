@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 REQUEST Array
@@ -71,14 +73,14 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
    LOCAL aObjects := { Self }
    LOCAL bError
 
-   IF Empty( cObjectText )
+   IF HB_ISNULL( cObjectText )
       RETURN .F.
    ENDIF
 
    bError := iif( hb_defaultValue( lIgnoreErrors, .F. ), ;
-                  {| e | Break( e ) }, ErrorBlock() )
+                  __BreakBlock(), ErrorBlock() )
 
-   FOR EACH cLine IN hb_ATokens( StrTran( cObjectText, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( cObjectText, .T. )
 
       cLine := AllTrim( cLine )
 
@@ -120,7 +122,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
             ENDSWITCH
          ENDIF
 
-         IF !Empty( cProp )
+         IF ! Empty( cProp )
             ATail( aObjects ):&cProp := uValue
          ENDIF
 
@@ -154,8 +156,8 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
    ENDIF
 
    cObject := iif( nIndent > 0, hb_eol(), "" ) + Space( nIndent ) + ;
-              "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
-              ::ClassName() + hb_eol()
+      "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
+      ::ClassName() + hb_eol()
 
    FOR EACH cProp IN __clsGetProperties( ::ClassH )
 
@@ -189,22 +191,18 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
                cObject += hb_eol()
             ENDIF
             cObject += Space( nIndent + _INDENT ) + "::" + ;
-                       cProp + " := " + hb_ValToExp( uValue ) + ;
-                       hb_eol()
+               cProp + " := " + hb_ValToExp( uValue ) + ;
+               hb_eol()
          ENDSWITCH
-
       ENDIF
-
    NEXT
 
-   cObject += hb_eol() + Space( nIndent ) + "ENDOBJECT" + hb_eol()
-
-   RETURN cObject
+   RETURN cObject + hb_eol() + Space( nIndent ) + "ENDOBJECT" + hb_eol()
 
 STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
    LOCAL cArray := hb_eol() + Space( nIndent ) + "ARRAY ::" + cName + ;
-                   " LEN " + hb_ntos( Len( aArray ) ) + hb_eol()
+      " LEN " + hb_ntos( Len( aArray ) ) + hb_eol()
    LOCAL uValue
 
    FOR EACH uValue IN aArray
@@ -212,14 +210,14 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
       SWITCH ValType( uValue )
       CASE "A"
          cArray += ArrayToText( uValue, cName + ;
-                                "[ " + hb_ntos( uValue:__enumIndex() ) + " ]", ;
-                                 nIndent + _INDENT ) + hb_eol()
+            "[ " + hb_ntos( uValue:__enumIndex() ) + " ]", ;
+            nIndent + _INDENT ) + hb_eol()
          EXIT
 
       CASE "O"
          IF __objDerivedFrom( uValue, "HBPersistent" )
             cArray += uValue:SaveToText( cName + ;
-                     "[ " + hb_ntos( uValue:__enumIndex() ) + " ]", nIndent )
+               "[ " + hb_ntos( uValue:__enumIndex() ) + " ]", nIndent )
          ENDIF
          EXIT
 
@@ -233,11 +231,9 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
             cArray += hb_eol()
          ENDIF
          cArray += Space( nIndent + _INDENT ) + "::" + cName + ;
-                   "[ " + hb_ntos( uValue:__enumIndex() ) + " ] := " + ;
-                   hb_ValToExp( uValue ) + hb_eol()
+            "[ " + hb_ntos( uValue:__enumIndex() ) + " ]" + " := " + ;
+            hb_ValToExp( uValue ) + hb_eol()
       ENDSWITCH
    NEXT
 
-   cArray += hb_eol() + Space( nIndent ) + "ENDARRAY" + hb_eol()
-
-   RETURN cArray
+   RETURN cArray + hb_eol() + Space( nIndent ) + "ENDARRAY" + hb_eol()

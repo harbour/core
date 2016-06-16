@@ -14,7 +14,7 @@
    $DESCRIPTION$
       Translates numeric input to a text string.
 
-      FT_NTOW is intended to be used with integers only.  Since I don't
+      ft_NToW() is intended to be used with integers only.  Since I don't
       know what your application will be, I can't assume the type of
       fraction you want returned (ninety nine cents, 99/100, .99, etc).
       If you want the fraction in words, just pass it as an integer.

@@ -1,5 +1,5 @@
 /*
- * socket C API
+ * Socket C API
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -1570,7 +1570,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
 #else /* ! HB_HAS_POLL */
    struct timeval tv, * ptv;
    fd_set rfds;
-   int iResult, iError;
+   int iResult;
 
 #  if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
@@ -1587,6 +1587,8 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
 
    for( ;; )
    {
+      int iError;
+
       FD_ZERO( &rfds );
       FD_SET( ( HB_SOCKET_T ) sd, &rfds );
 
@@ -1679,7 +1681,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
 #else /* ! HB_HAS_POLL */
    struct timeval tv, * ptv;
    fd_set wfds;
-   int iResult, iError;
+   int iResult;
 
 #if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
@@ -1696,6 +1698,8 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
 
    for( ;; )
    {
+      int iError;
+
       FD_ZERO( &wfds );
       FD_SET( ( HB_SOCKET_T ) sd, &wfds );
 
@@ -1799,7 +1803,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
    return iResult;
 #else /* ! HB_HAS_POLL */
    struct timeval tv, * ptv;
-   fd_set wfds, * pefds;
+   fd_set wfds;
 
 #if defined( HB_OS_WIN )
    fd_set efds;
@@ -1821,6 +1825,8 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 
    for( ;; )
    {
+      fd_set * pefds;
+
       FD_ZERO( &wfds );
       FD_SET( ( HB_SOCKET_T ) sd, &wfds );
 #if defined( HB_OS_WIN )
@@ -2056,6 +2062,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
             {
                int iTODO;
                szAddr = NULL;
+               HB_SYMBOL_UNUSED( sa );
             }
 #  endif
             if( szAddr )
@@ -2440,7 +2447,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    HB_SOCKET newsd = HB_NO_SOCKET;
    HB_SOCKADDR_STORAGE st;
    socklen_t len = sizeof( st );
-   int ret, err;
+   int ret;
 
    hb_vmUnlock();
    if( pSockAddr && puiLen )
@@ -2451,6 +2458,8 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    ret = hb_socketSelectRD( sd, timeout );
    if( ret > 0 )
    {
+      int err;
+
       /* it's necessary to set non blocking IO to be sure that application
        * will not be frozen inside accept(). It may happen if some asynchronous
        * network error appear after above Select() or when other thread
@@ -2487,7 +2496,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
 
 int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_MAXINT timeout )
 {
-   int ret, blk, err, rawerr;
+   int ret, blk, err;
 
    hb_vmUnlock();
 
@@ -2518,6 +2527,7 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_M
 
    if( blk > 0 )
    {
+      int rawerr;
       err = hb_socketGetOsError();
       rawerr = err ? 0 : hb_socketGetError();
 
@@ -2917,9 +2927,10 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
    {
 #if defined( HB_HAS_INET_PTON )
       struct ipv6_mreq mreq;
-      int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr ), ret;
+      int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr );
       if( err > 0 )
       {
+         int ret;
          mreq.ipv6mr_interface = 0;
 #if ! defined( IPV6_JOIN_GROUP ) && defined( IPV6_ADD_MEMBERSHIP )
 #  define IPV6_JOIN_GROUP  IPV6_ADD_MEMBERSHIP
@@ -3428,7 +3439,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 
    if( iResult == 0 )
    {
-      int iCount = 0, i;
+      int iCount = 0;
       ai = res;
       while( ai )
       {
@@ -3445,6 +3456,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
             char * szResult = hb_socketAddrGetName( res->ai_addr, ( unsigned ) res->ai_addrlen );
             if( szResult )
             {
+               int i;
                for( i = 1; i <= iCount; ++i )
                {
                   if( strcmp( hb_arrayGetCPtr( pItem, i ), szResult ) == 0 )

@@ -51,7 +51,7 @@
 
 HB_FUNC( HB_DYNCALL )
 {
-   PHB_ITEM pParam = hb_param( 1, HB_IT_POINTER | HB_IT_ARRAY );
+   PHB_ITEM pParam = hb_param( 1, HB_IT_ARRAY );
    int * piArgFlags = NULL;
    int iFuncFlags = HB_DYN_CALLCONV_CDECL;
 

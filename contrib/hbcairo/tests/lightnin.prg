@@ -2,13 +2,12 @@
 
 PROCEDURE Main()
 
-   LOCAL hSurface, hCairo, nI
+   LOCAL hSurface := cairo_pdf_surface_create( "lightning.pdf", 566.9, 793.7 )  // 200x280 mm in pt
+   LOCAL hCairo := cairo_create( hSurface )
 
-   hSurface := cairo_pdf_surface_create( "lightning.pdf", 566.9, 793.7 )  // 200x280 mm in pt
-   hCairo := cairo_create( hSurface )
+   LOCAL nI
 
-   // 20 pages
-   FOR nI := 1 TO 20
+   FOR nI := 1 TO 20  // 20 pages
       cairo_set_source_rgb( hCairo, 0, 0, 0 )
       cairo_paint( hCairo )
       cairo_set_source_rgb( hCairo, 1, 0.7, 1 )
@@ -20,24 +19,21 @@ PROCEDURE Main()
 
    RETURN
 
-
-PROCEDURE DrawLightning( hCairo, nX, nY, nLen, nW, nInit )
+STATIC PROCEDURE DrawLightning( hCairo, nX, nY, nLen, nW, nInit )
 
    LOCAL nI, nK, nW0, nX2
 
    cairo_move_to( hCairo, nX, nY )
    nW0 := nW
-   IF nInit == NIL
-      nInit := 0
-   ENDIF
+   hb_default( @nInit, 0 )
    nK := 0
    FOR nI := 1 TO nLen
       // AR(1) process
-      nInit := nInit * 0.9 + ( hb_Random() - 0.5 )
+      nInit := nInit * 0.9 + ( hb_randNum() - 0.5 )
       // ARIMA(1, 1, 0) process
       nK += nInit
       // ARIMA(1, 1, 0) + white noise
-      nX2 := nX + nK + hb_Random()
+      nX2 := nX + nK + hb_randNum()
       cairo_line_to( hCairo, nX2, nI + nY )
       nW -= 0.003
       IF nW < nW0 - 0.1

@@ -56,10 +56,10 @@
 #define THICKNESS_I250   0
 #define THICKNESS_I251   0
 
-CREATE CLASS GDBar FROM GDImage
+CREATE CLASS GDBar INHERIT GDImage
 
-   // class attributes
-   VAR positionX      AS NUMERIC INIT  4
+   // Class attributes
+   VAR positionX      AS NUMERIC INIT 4
    VAR positionY      AS NUMERIC
    VAR maxHeight      AS NUMERIC INIT 25
    VAR maxHDefa       AS NUMERIC INIT 25
@@ -81,7 +81,7 @@ CREATE CLASS GDBar FROM GDImage
    VAR KeysModeB      AS CHARACTER
    VAR KeysModeC      AS ARRAY
 
-   // image attributes
+   // Image attributes
    VAR res            AS NUMERIC
    VAR textfont       AS NUMERIC
    VAR TEXT           AS CHARACTER
@@ -93,8 +93,7 @@ CREATE CLASS GDBar FROM GDImage
    VAR lDrawValue     AS LOGICAL INIT .T.
 
    // Methods
-
-   METHOD CreateBar( sx, sy, filename, cColor )
+   METHOD CreateBar( sx, sy, filename, aColor )
    METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue )
    METHOD Allocate()
    METHOD DrawError( ptext )
@@ -110,107 +109,88 @@ CREATE CLASS GDBar FROM GDImage
 
 ENDCLASS
 
-METHOD CreateBar( sx, sy, filename, cColor ) CLASS GDBar
+METHOD CreateBar( sx, sy, filename, aColor ) CLASS GDBar
 
    ::Create( sx, sy )
 
-   hb_default( @cColor, { 255, 255, 255 } )
-
-   ::SetColor( cColor[ 1 ], cColor[ 2 ], cColor[ 3 ] )
+   ::SetColor( hb_ArrayToParams( hb_defaultValue( aColor, { 255, 255, 255 } ) ) )
 
    ::error     := 0
    ::positionY := 0
    ::imWidth   := sx
 
-   IF ! Empty( filename )
+   IF HB_ISSTRING( filename ) .AND. ! HB_ISNULL( filename )
       ::filename := filename
    ENDIF
 
-   ::FillColor := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
-   ::BackColor := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
+   ::FillColor := ::SetColor( hb_ArrayToParams( ::color_f ) )
+   ::BackColor := ::SetColor( hb_ArrayToParams( ::color_b ) )
 
    ::Setfont( "Arial" )
 
-   // configures Fontes
-   IF     ::textfont == 1 ; ::SetFontSmall()
-   ELSEIF ::textfont == 2 ; ::SetFontLarge()
-   ELSEIF ::textfont == 3 ; ::SetFontMediumBold()
-   ELSEIF ::textfont == 4 ; ::SetFontGiant()
-   ELSEIF ::textfont == 5 ; ::SetFontTiny()
+   // configure font
+   IF ::textfont != NIL
+      SWITCH ::textfont
+      CASE 1; ::SetFontSmall(); EXIT
+      CASE 2; ::SetFontLarge(); EXIT
+      CASE 3; ::SetFontMediumBold(); EXIT
+      CASE 4; ::SetFontGiant(); EXIT
+      CASE 5; ::SetFontTiny(); EXIT
+      ENDSWITCH
    ENDIF
 
    ::SetFontPitch( ::textfont )
 
-   // always restores
-   ::maxHeight := ::maxHDefa
+   ::maxHeight := ::maxHDefa  // always restores
 
    RETURN Self
 
-METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue ) CLASS GDBar
+METHOD PROCEDURE Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue ) CLASS GDBar
 
-   hb_default( @lBook      , .F. )
-   hb_default( @lDrawValue , .T. )
-   hb_default( @nMaxHeight , 25 )
-   hb_default( @nTextFont  , 2 )
-   hb_default( @nRes       , 2 )
-   hb_default( @aBackColor , { 255, 255, 255 } )
-   hb_default( @aFillColor , { 0, 0, 0 } )
+   ::book       := hb_defaultValue( lBook, .F. )
+   ::maxHeight  := hb_defaultValue( nMaxHeight, 25 )
+   ::res        := hb_defaultValue( nRes, 2 )
+   ::textfont   := hb_defaultValue( nTextFont, 2 )
+   ::lDrawValue := hb_defaultValue( lDrawValue, .T. )
 
-   ::book       := lBook
-   ::maxHeight  := nMaxHeight
-   ::res        := nRes
-   ::textfont   := nTextFont
-   ::lDrawValue := lDrawValue
+   ::color_b    := AClone( hb_defaultValue( aBackColor, { 255, 255, 255 } ) )
+   ::color_f    := AClone( hb_defaultValue( aFillColor, { 0, 0, 0 } ) )
 
-   ::color_b    := AClone( aBackColor )
-   ::color_f    := AClone( aFillColor )
+   RETURN
 
-   RETURN NIL
-
-METHOD SetText( ptext ) CLASS GDBar
+METHOD PROCEDURE SetText( ptext ) CLASS GDBar
 
    ::text := ptext
 
-   RETURN NIL
+   RETURN
 
-METHOD ResetColor() CLASS GDBar
+METHOD PROCEDURE ResetColor() CLASS GDBar
 
-   ::FillColor := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
-   ::BackColor := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
+   ::FillColor := ::SetColor( hb_ArrayToParams( ::color_f ) )
+   ::BackColor := ::SetColor( hb_ArrayToParams( ::color_b ) )
 
-   RETURN NIL
+   RETURN
 
 METHOD Allocate() CLASS GDBar
+   RETURN ::SetColor( hb_ArrayToParams( ::color_b ) )
 
-   LOCAL R := ::color_b[ 1 ]
-   LOCAL G := ::color_b[ 2 ]
-   LOCAL B := ::color_b[ 3 ]
+METHOD PROCEDURE DrawSingleBar( pcode ) CLASS GDBar
 
-   RETURN ::SetColor( R, G, B )
-
-METHOD DrawSingleBar( pcode ) CLASS GDBar
-
-   LOCAL i
-   LOCAL j
+   LOCAL i, j
 
    FOR j := 1 TO Len( pcode )
-
       FOR i := 1 TO ::res
          ::Line( ::positionX + i, ::positionY, ::positionX + i, ::positionY + ::maxHeight, ;
             iif( SubStr( pcode, j, 1 ) $ "0", ::BackColor, ::FillColor  ) )
       NEXT
-
       ::NextX()
    NEXT
 
-   RETURN NIL
+   RETURN
 
-METHOD DrawSingleI25( pcode ) CLASS GDBar
+METHOD PROCEDURE DrawSingleI25( pcode ) CLASS GDBar
 
    LOCAL j
-
-   LOCAL widthSlimBar  := 1
-   LOCAL widthFatBar   := 3
 
    LOCAL imgBar
    LOCAL imgWid
@@ -222,7 +202,7 @@ METHOD DrawSingleI25( pcode ) CLASS GDBar
    FOR j := 1 TO Len( pcode )
 
       imgBar := iif( j % 2 == 0, ::FillColor, ::BackColor )
-      imgWid := iif( SubStr( pcode, j, 1 ) == "0", widthSlimBar, widthFatBar )
+      imgWid := iif( SubStr( pcode, j, 1 ) == "0", 1 /* Slim Bar */, 3 /* widthFatBar */ )
 
       end_y := ::maxHeight
 
@@ -232,9 +212,9 @@ METHOD DrawSingleI25( pcode ) CLASS GDBar
       NEXT
    NEXT
 
-   RETURN NIL
+   RETURN
 
-METHOD DrawError( ptext ) CLASS GDBar
+METHOD PROCEDURE DrawError( ptext ) CLASS GDBar
 
    ::Say( 5, ::error * 15, ptext, ::FillColor )
 
@@ -243,38 +223,27 @@ METHOD DrawError( ptext ) CLASS GDBar
    ::lastX := Max( ::GetFontWidth() * Len( ptext ), ::lastX )
    ::lastY := ::error * 15
 
-   RETURN NIL
+   RETURN
 
-METHOD nextX( lI25 ) CLASS GDBar
+METHOD PROCEDURE nextX( lI25 ) CLASS GDBar
 
-   hb_default( @li25, .F. )
+   ::positionX += iif( hb_defaultValue( li25, .F. ), 1, ::res )
 
-   IF li25
-      ::positionX++
-   ELSE
-      ::positionX += ::res
-   ENDIF
-
-   RETURN NIL
+   RETURN
 
 METHOD DrawText( lIsI25 ) CLASS GDBar
 
    LOCAL xPosition
 
-   hb_default( @lIsI25, .F. )
-
-   IF lIsI25
-      If ::textfont != 0
+   IF ! Empty( ::textfont )
+      IF hb_defaultValue( lIsI25, .F. )
          xPosition := 10 * ::GetFontWidth()
          ::say( xPosition, ::maxHeight, "*" + ::text + "*", ::FillColor )
-         ::lastY := ::maxHeight + ::GetFontHeight()
-      ENDIF
-   ELSE
-      If ::textfont != 0
+      ELSE
          xPosition := ( ::positionX / 2 ) - ( Len( ::text ) / 2 ) * ::GetFontWidth()
          ::say( xPosition, ::maxHeight, ::text, ::FillColor )
-         ::lastY := ::maxHeight + ::GetFontHeight()
       ENDIF
+      ::lastY := ::maxHeight + ::GetFontHeight()
    ENDIF
 
    RETURN .T.
@@ -295,40 +264,44 @@ METHOD CheckCode() CLASS GDBar
 
 METHOD CheckValInArray( cChar ) CLASS GDBar
 
-   LOCAL nPos := AScan( ::keys, {| x | SubStr( x, 1, 1 ) == cChar } )
+   LOCAL nPos := AScan( ::keys, {| x | hb_LeftEq( x, cChar ) } )
 
    RETURN iif( nPos > 0, nPos, NIL )
 
 METHOD Finish( image_style, quality, nFG ) CLASS GDBar
 
    hb_default( @image_style, IMG_FORMAT_PNG )
-   hb_default( @quality    , 95 )
-   hb_default( @nFG        , { 255, 255, 255 } )
 
-   IF Empty( ::filename ) .OR. ::filename == NIL
-
-      // Output std handle == 1
-
-      // ::filename := ::text
-      IF image_style == IMG_FORMAT_PNG
+   IF ::filename == NIL
+      SWITCH image_style
+      CASE IMG_FORMAT_PNG
          ::OutputPng()
-      ELSEIF image_style == IMG_FORMAT_JPEG
-         ::OutputJpeg( , quality )
-      ELSEIF image_style == IMG_FORMAT_WBMP
-         ::OutputWBmp( , nFG )
-      ELSEIF image_style == IMG_FORMAT_GIF
+         EXIT
+      CASE IMG_FORMAT_JPEG
+         ::OutputJpeg( , hb_defaultValue( quality, 95 ) )
+         EXIT
+      CASE IMG_FORMAT_WBMP
+         ::OutputWBmp( , hb_defaultValue( nFG, { 255, 255, 255 } ) )
+         EXIT
+      CASE IMG_FORMAT_GIF
          ::OutputGif()
-      ENDIF
+         EXIT
+      ENDSWITCH
    ELSE
-      IF image_style == IMG_FORMAT_PNG
-         ::SavePng(  ::filename )
-      ELSEIF image_style == IMG_FORMAT_JPEG
-         ::Savejpeg( ::filename, quality )
-      ELSEIF image_style == IMG_FORMAT_WBMP
-         ::SaveWBmp( ::filename, nFG )
-      ELSEIF image_style == IMG_FORMAT_GIF
+      SWITCH image_style
+      CASE IMG_FORMAT_PNG
+         ::SavePng( ::filename )
+         EXIT
+      CASE IMG_FORMAT_JPEG
+         ::Savejpeg( ::filename, hb_defaultValue( quality, 95 ) )
+         EXIT
+      CASE IMG_FORMAT_WBMP
+         ::SaveWBmp( ::filename, hb_defaultValue( nFG, { 255, 255, 255 } ) )
+         EXIT
+      CASE IMG_FORMAT_GIF
          ::SaveGif( ::filename )
-      ENDIF
+         EXIT
+      ENDSWITCH
    ENDIF
 
    RETURN .T.

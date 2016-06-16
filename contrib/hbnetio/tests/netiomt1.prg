@@ -1,16 +1,14 @@
 /*
- * demonstration/test code for NETIOSRV remote management
+ * Demonstration/test code for NETIOSRV remote management
  *
  * Copyright 2010-2011 Viktor Szakats (vszakats.net/harbour)
- *
  */
 
 #require "hbnetio"
 
-#define NETSERVER  "127.0.0.1"
+#define NETSERVER  "localhost"
 #define NETPORT    2940
 #define NETPASSWD  "toptopsecret"
-
 
 PROCEDURE Main()
 

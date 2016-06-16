@@ -95,7 +95,7 @@
    } while( 0 )
 #define HB_SLN_BUILD_CHAR( slch, ch, clr, attr )  \
    do { \
-      SLsmg_Char_Type * outTab = ( attr ) & HB_GT_ATTR_BOX ? \
+      SLsmg_Char_Type * outTab = ( ( attr ) & HB_GT_ATTR_BOX ) ? \
                                  s_outboxTab : s_outputTab; \
       ( slch ).color = outTab[ ( HB_BYTE ) ( ch ) ].color | \
                        s_colorTab[ ( HB_BYTE ) ( clr ) ]; \
@@ -144,7 +144,7 @@
    } while( 0 )
 #define HB_SLN_BUILD_CHAR( slch, ch, clr, attr )  \
    do { \
-      ( slch ) = ( ( attr ) & HB_GT_ATTR_BOX ? \
+      ( slch ) = ( ( ( attr ) & HB_GT_ATTR_BOX ) ? \
                    s_outboxTab : s_outputTab )[ ( HB_BYTE ) ( ch ) ] | \
                  s_colorTab[ ( HB_BYTE ) ( clr ) ]; \
    } while( 0 )

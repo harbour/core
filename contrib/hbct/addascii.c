@@ -82,16 +82,15 @@ HB_FUNC( ADDASCII )
       hb_xmemcpy( pcResult, pcSource, sLen );
 
       lValue = hb_parnl( 2 );
-      iCarryOver = hb_parldef( 4, 0 );
+      iCarryOver = hb_parl( 4 );
 
       if( iCarryOver )
       {
          HB_SIZE sCurrent;
-         HB_LONG lResult;
 
          for( sCurrent = sPos; sCurrent > 0 && lValue != 0; sCurrent-- )
          {
-            lResult = ( HB_LONG ) pcSource[ sCurrent - 1 ] + ( lValue % 256 );
+            HB_LONG lResult = ( HB_LONG ) pcSource[ sCurrent - 1 ] + ( lValue % 256 );
 
             lValue /= 256;
             if( lResult > 255 )

@@ -68,7 +68,6 @@ static void do_remove( int iSwitch )
       const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
       const char * pcRet;
-      const char * pc;
       HB_SIZE sRetLen;
       char cSearch;
 
@@ -84,7 +83,7 @@ static void do_remove( int iSwitch )
 
       if( iSwitch != DO_REMOVE_REMRIGHT )
       {
-         while( ( *pcRet == cSearch ) && ( pcRet < pcString + sStrLen ) )
+         while( *pcRet == cSearch && pcRet < ( pcString + sStrLen ) )
          {
             pcRet++;
             sRetLen--;
@@ -93,8 +92,9 @@ static void do_remove( int iSwitch )
 
       if( iSwitch != DO_REMOVE_REMLEFT )
       {
-         pc = pcString + sStrLen - 1;
-         while( ( *pc == cSearch ) && ( pc >= pcRet ) )
+         const char * pc = pcString + sStrLen - 1;
+
+         while( *pc == cSearch && pc >= pcRet )
          {
             pc--;
             sRetLen--;

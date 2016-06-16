@@ -52,7 +52,7 @@
 
 /*
    The application/json Media Type for JavaScript Object Notation (JSON)
-   http://www.ietf.org/rfc/rfc4627.txt
+   https://www.ietf.org/rfc/rfc4627.txt
 
       C level functions:
         char * hb_jsonEncode( PHB_ITEM pValue, HB_SIZE * pnLen, HB_BOOL fHuman );
@@ -72,8 +72,9 @@
               purposes. Returns 0 on error.
 
       Harbour level functions:
-        hb_jsonDecode( cJSON, @xValue ) --> nLengthDecoded
         hb_jsonEncode( xValue [, lHuman = .F. ] ) --> cJSON
+        hb_jsonDecode( cJSON ) --> xValue
+        hb_jsonDecode( cJSON, @xValue ) --> nLengthDecoded
 
       Note:
         - JSON encode functions are safe for recursive arrays and hashes.
@@ -174,7 +175,7 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
 
    if( HB_IS_STRING( pValue ) )
    {
-      HB_SIZE nPos, nPos2, nLen = hb_itemGetCLen( pValue );
+      HB_SIZE nPos, nLen = hb_itemGetCLen( pValue );
       const char * szString = hb_itemGetCPtr( pValue );
       char buf[ 8 ];
 
@@ -229,7 +230,7 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
          while( nPos < nLen )
          {
             unsigned char uch = szString[ nPos ];
-            nPos2 = nPos;
+            HB_SIZE nPos2 = nPos;
             while( uch >= ' ' && uch != '\\' && uch != '\"' )
                uch = szString[ ++nPos2 ];
             if( nPos2 > nPos )
@@ -774,10 +775,8 @@ HB_FUNC( HB_JSONENCODE )
    if( pItem )
    {
       HB_SIZE nLen;
-      char * szRet;
-
-      szRet = hb_jsonEncodeCP( pItem, &nLen, hb_parl( 2 ),
-                               _hb_jsonCdpPar( 3, HB_FALSE ) );
+      char * szRet = hb_jsonEncodeCP( pItem, &nLen, hb_parl( 2 ),
+                                      _hb_jsonCdpPar( 3, HB_FALSE ) );
       hb_retclen_buffer( szRet, nLen );
    }
 }

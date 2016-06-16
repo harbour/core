@@ -3,6 +3,7 @@
 
 # build generated files
 /include/hbverbld.h
+/include/_repover.txt
 bin/*/
 lib/*/
 obj

@@ -2,17 +2,8 @@
  * Alert(), hb_Alert() functions
  *
  * Released to Public Domain by Vladimir Kazimirchik <v_kazimirchik@yahoo.com>
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    Changes for higher Clipper compatibility, console mode, extensions
- *    __NoNoAlert()
- *
- * See COPYING.txt for licensing terms.
+ *    Changes for higher Clipper compatibility, console mode, extensions, __NoNoAlert()
  *
  */
 
@@ -65,8 +56,8 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
    ELSE
       cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
       cColorHigh := hb_StrReplace( ;
-         iif( ( nPos := At( "/", cColorNorm ) ) > 0, ;
-            SubStr( cColorNorm, nPos + 1 ) + "/" + Left( cColorNorm, nPos - 1 ), ;
+         iif( ( nPos := hb_BAt( "/", cColorNorm ) ) > 0, ;
+            hb_BSubStr( cColorNorm, nPos + 1 ) + "/" + hb_BLeft( cColorNorm, nPos - 1 ), ;
             "N/" + cColorNorm ), "+*" )
    ENDIF
 
@@ -77,13 +68,14 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
       ENDIF
    NEXT
 
-   IF Len( aOptionsOK ) == 0
+   DO CASE
+   CASE Len( aOptionsOK ) == 0
       aOptionsOK := { "Ok" }
 #ifdef HB_CLP_STRICT
-   ELSEIF Len( aOptionsOK ) > 4 /* NOTE: Clipper allows only four options [vszakats] */
+   CASE Len( aOptionsOK ) > 4  /* NOTE: Clipper allows only four options [vszakats] */
       ASize( aOptionsOK, 4 )
 #endif
-   ENDIF
+   ENDCASE
 
    RETURN hb_gtAlert( cMessage, aOptionsOK, cColorNorm, cColorHigh )
 
@@ -114,16 +106,17 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
       RETURN NIL
    ENDIF
 
-   IF HB_ISARRAY( xMessage )
+   DO CASE
+   CASE HB_ISARRAY( xMessage )
       cMessage := ""
       FOR EACH cString IN xMessage
          cMessage += iif( cString:__enumIsFirst(), "", Chr( 10 ) ) + hb_CStr( cString )
       NEXT
-   ELSEIF HB_ISSTRING( xMessage )
+   CASE HB_ISSTRING( xMessage )
       cMessage := StrTran( xMessage, ";", Chr( 10 ) )
-   ELSE
+   OTHERWISE
       cMessage := hb_CStr( xMessage )
-   ENDIF
+   ENDCASE
 
    IF ! HB_ISSTRING( cColorNorm ) .OR. Empty( cColorNorm )
       cColorNorm := "W+/R"  // first pair color (Box line and Text)
@@ -131,25 +124,26 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    ELSE
       cColorNorm := hb_ColorIndex( cColorNorm, CLR_STANDARD )
       cColorHigh := hb_StrReplace( ;
-         iif( ( nPos := At( "/", cColorNorm ) ) > 0, ;
-            SubStr( cColorNorm, nPos + 1 ) + "/" + Left( cColorNorm, nPos - 1 ), ;
+         iif( ( nPos := hb_BAt( "/", cColorNorm ) ) > 0, ;
+            hb_BSubStr( cColorNorm, nPos + 1 ) + "/" + hb_BLeft( cColorNorm, nPos - 1 ), ;
             "N/" + cColorNorm ), "+*" )
    ENDIF
 
    aOptionsOK := {}
    FOR EACH cString IN hb_defaultValue( aOptions, {} )
-      IF HB_ISSTRING( cString ) .AND. ! Empty( cString )
+      IF HB_ISSTRING( cString ) .AND. ! HB_ISNULL( cString )
          AAdd( aOptionsOK, cString )
       ENDIF
    NEXT
 
-   IF Len( aOptionsOK ) == 0
+   DO CASE
+   CASE Len( aOptionsOK ) == 0
       aOptionsOK := { "Ok" }
 #ifdef HB_CLP_STRICT
-   ELSEIF Len( aOptionsOK ) > 4 /* NOTE: Clipper allows only four options [vszakats] */
+   CASE Len( aOptionsOK ) > 4  /* NOTE: Clipper allows only four options [vszakats] */
       ASize( aOptionsOK, 4 )
 #endif
-   ENDIF
+   ENDCASE
 
    RETURN hb_gtAlert( cMessage, aOptionsOK, cColorNorm, cColorHigh, nDelay )
 

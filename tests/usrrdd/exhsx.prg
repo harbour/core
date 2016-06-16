@@ -5,7 +5,9 @@ PROCEDURE Main()
    FIELD FIRST, LAST, STREET, CITY
    LOCAL n, hs
 
-   dbCreate( "_tst", { ;
+   rddSetDefault( "HSCDX" )
+
+   dbCreate( "_tst.dbf", { ;
       { "FIRST",       "C", 20,  0 }, ;
       { "LAST",        "C", 20,  0 }, ;
       { "STREET",      "C", 30,  0 }, ;
@@ -17,9 +19,9 @@ PROCEDURE Main()
       { "AGE",         "N",  2,  0 }, ;
       { "SALARY",      "N",  6,  0 }, ;
       { "NOTES",       "C", 70,  0 } } )
-   USE _tst
-   HSX_CREATE( "_tst", "FIRST+LAST+STREET+CITY", 2, 0, .T., 3 )
-   APPEND FROM test
+   USE _tst.dbf
+   HSX_CREATE( "_tst.hsx", "FIRST+LAST+STREET+CITY", 2, 0, .T., 3 )
+   APPEND FROM ( hb_DirSepToOS( "..\test.dbf" ) )
 
    /* Look for all records which have 'SHERMAN' string inside */
    hs := HSX_HANDLE( "_tst" )

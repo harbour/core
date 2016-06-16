@@ -47,10 +47,6 @@ Martin Vogel <vogel@inttec.de>
 
 + CSetArgErr() set behaviour on argument errors
 
-+ ctinit()     library init function
-
-+ ctexit()     library exit function
-
 + DaysInMonth() Returns the number of days in month
 
 + DaysToMonth() Total number of days from first of Jan to beginning of nMonth.

@@ -28,6 +28,7 @@ C_HEADERS := \
    hbassert.h \
    hbatomic.h \
    hbbfish.h \
+   hbcrypto.h \
    hbfloat.h \
    hbcdpreg.h \
    hbchksum.h \

@@ -4,5 +4,7 @@ incpaths=.
 
 headers=${hb_name}.ch
 
+libpaths=/usr/local/lib{darwin}
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 libs=3rd/minixml/mxml.hbc

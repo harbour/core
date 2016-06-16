@@ -22,15 +22,15 @@
       the DOS Set Time service (Interrupt 33, service 45).
 
    $EXAMPLES$
-      // The following program takes a time string from the command line and sets
+      // The following program takes a time string from the command-line and sets
       // the DOS system time:
 
       PROCEDURE Main( cTime )
 
          cTime := iif( cTime == NIL, Time(), cTime )
-         ? "Setting time to: " + cTime  + "... "
+         ? "Setting time to:", cTime + "... "
          ft_SetTime( cTime )
-         ? "Time is now: " + Time()
+         ? "Time is now:", Time()
 
          RETURN
    $END$

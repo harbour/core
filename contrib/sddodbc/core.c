@@ -55,32 +55,32 @@
 
 /* Required by headers on Windows */
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 /* Required for WIN32_LEAN_AND_MEAN mode */
-#  if ! defined( WIN32 )
-#     define WIN32
-#  endif
+   #if ! defined( WIN32 )
+      #define WIN32
+   #endif
 #endif
 
 #include <sql.h>
 #include <sqlext.h>
 
 #if ! defined( HB_OS_WIN )
-#  if ! defined( SQLLEN ) && ! defined( SQLTCHAR ) && \
-      ! defined( UODBCINT64 ) && ! defined( SIZEOF_LONG_INT )
-typedef unsigned char SQLTCHAR;
-typedef long          SQLLEN;
-typedef unsigned long SQLULEN;
-#     ifndef SQL_WCHAR
-#        define SQL_WCHAR        (-8)
-#     endif
-#     ifndef SQL_WVARCHAR
-#        define SQL_WVARCHAR     (-9)
-#     endif
-#     ifndef SQL_WLONGVARCHAR
-#        define SQL_WLONGVARCHAR (-10)
-#     endif
-#  endif
+   #if ! defined( SQLLEN ) && ! defined( SQLTCHAR ) && \
+       ! defined( UODBCINT64 ) && ! defined( SIZEOF_LONG_INT )
+      typedef unsigned char SQLTCHAR;
+      typedef long          SQLLEN;
+      typedef unsigned long SQLULEN;
+      #ifndef SQL_WCHAR
+         #define SQL_WCHAR         ( -8 )
+      #endif
+      #ifndef SQL_WVARCHAR
+         #define SQL_WVARCHAR      ( -9 )
+      #endif
+      #ifndef SQL_WLONGVARCHAR
+         #define SQL_WLONGVARCHAR  ( -10 )
+      #endif
+   #endif
 #endif
 
 #if defined( UNICODE )
@@ -177,7 +177,7 @@ HB_CALL_ON_STARTUP_END( _hb_odbcdd_init_ )
 #endif
 
 
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_ODBCDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
@@ -208,7 +208,7 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
       hb_itemRelease( pRet );
    }
    else
-      szRet = hb_strdup( "HY000 Unable to get error message" );
+      szRet = hb_strdup( "HY000 Could not get the error message" );
 
    if( pErrCode )
       *pErrCode = ( HB_ERRCODE ) iNativeErr;
@@ -216,8 +216,7 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
 }
 
 
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    SQLHENV    hEnv     = NULL;

@@ -1,5 +1,5 @@
 /*
- * allocate/free new compiler context
+ * Allocate/free new compiler context
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -200,11 +200,13 @@ void hb_compOutStd( HB_COMP_DECL, const char * szMessage )
       if( HB_COMP_PARAM->outStdFunc )
          HB_COMP_PARAM->outStdFunc( HB_COMP_PARAM, szMessage );
       else
+      {
 #if defined( HB_OS_DOS )
          fprintf( stderr, "%s", szMessage ); fflush( stderr );
 #else
          fprintf( stdout, "%s", szMessage ); fflush( stdout );
 #endif
+      }
    }
 }
 
@@ -215,11 +217,13 @@ void hb_compOutErr( HB_COMP_DECL, const char * szMessage )
       if( HB_COMP_PARAM->outErrFunc )
          HB_COMP_PARAM->outErrFunc( HB_COMP_PARAM, szMessage );
       else
+      {
 #if defined( HB_OS_DOS )
          fprintf( stdout, "%s", szMessage ); fflush( stdout );
 #else
          fprintf( stderr, "%s", szMessage ); fflush( stderr );
 #endif
+      }
    }
 }
 static const HB_COMP_FUNCS s_comp_funcs =
@@ -265,7 +269,7 @@ PHB_COMP hb_comp_new( void )
       pComp->fAutoMemvarAssume = HB_FALSE;   /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
       pComp->fForceMemvars     = HB_FALSE;   /* holds if memvars are assumed when accesing undeclared variable (-v)*/
       pComp->fDebugInfo        = HB_FALSE;   /* holds if generate debugger required info */
-      pComp->fHideSource       = HB_FALSE;   /* do not stor .prg file names in PCODE */
+      pComp->fHideSource       = ! pComp->fDebugInfo;  /* do not store .prg file names in PCODE */
       pComp->fNoStartUp        = HB_FALSE;   /* C code generation embed HB_FS_FIRST or not */
       pComp->fCredits          = HB_FALSE;   /* print credits */
       pComp->fBuildInfo        = HB_FALSE;   /* print build info */

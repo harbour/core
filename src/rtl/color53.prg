@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #ifdef HB_COMPAT_C53
 
 FUNCTION GetClrPair( cColor, nColor )
@@ -54,7 +56,7 @@ FUNCTION GetClrPair( cColor, nColor )
       RETURN ""
    ENDIF
 
-   RETURN SubStr( cColor, nPos, GetPairLen( cColor, nColor ) )
+   RETURN hb_BSubStr( cColor, nPos, GetPairLen( cColor, nColor ) )
 
 FUNCTION SetClrPair( cColor, nColor, cNewColor )
 
@@ -64,7 +66,7 @@ FUNCTION SetClrPair( cColor, nColor, cNewColor )
       RETURN ""
    ENDIF
 
-   RETURN Stuff( cColor, nPos, GetPairLen( cColor, nColor ), cNewColor )
+   RETURN Stuff( cColor, nPos, GetPairLen( cColor, nColor ), cNewColor )  /* TOFIX: use hb_BStuff() */
 
 FUNCTION GetPairPos( cColor, nColor )
 
@@ -73,7 +75,7 @@ FUNCTION GetPairPos( cColor, nColor )
    LOCAL n
 
    FOR n := 2 TO nColor
-      IF ( nSep := At( ",", SubStr( cColor, nPos ) ) ) == 0
+      IF ( nSep := hb_BAt( ",", hb_BSubStr( cColor, nPos ) ) ) == 0
          RETURN 0
       ENDIF
       nPos += nSep
@@ -90,28 +92,28 @@ FUNCTION GetPairLen( cColor, nColor )
       RETURN 0
    ENDIF
 
-   RETURN iif( ( nLen := At( ",", SubStr( cColor, nPos ) ) ) == 0, ;
-               Len( cColor ) - nPos + 1, nLen - 1 )
+   RETURN iif( ( nLen := hb_BAt( ",", hb_BSubStr( cColor, nPos ) ) ) == 0, ;
+      hb_BLen( cColor ) - nPos + 1, nLen - 1 )
 
 FUNCTION GetClrFore( cColor )
 
    LOCAL nPos
 
-   IF ( nPos := At( "/", cColor ) ) == 0
+   IF ( nPos := hb_BAt( "/", cColor ) ) == 0
       RETURN ""
    ENDIF
 
-   RETURN Left( cColor, nPos - 1 )
+   RETURN hb_BLeft( cColor, nPos - 1 )
 
 FUNCTION GetClrBack( cColor )
 
    LOCAL nPos
 
-   IF ( nPos := At( "/", cColor ) ) == 0
+   IF ( nPos := hb_BAt( "/", cColor ) ) == 0
       RETURN ""
    ENDIF
 
-   RETURN SubStr( cColor, nPos + 1 )
+   RETURN hb_BSubStr( cColor, nPos + 1 )
 
 FUNCTION RadGrDefCo( cColor )
    RETURN iif( IsDefColor(), ;

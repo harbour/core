@@ -2,6 +2,17 @@
  * The Terminal API
  *
  * Copyright 1999 Bil Simser <bsimser@home.com>
+ * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
+ *    hb_gtInit(), hb_gtExit()
+ *    hb_gtDispBegin(), hb_gtDispEnd()
+ *    hb_gtPreExt(), hb_gtPostExt()
+ *    hb_gtGetColorStr(), hb_gtSetColorStr(), hb_gtSetMode()
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ *    hb_gtDrawShadow()
+ * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
+ *    The body of these functions which were usable in new GT API
+ *    have been moved to hbgtcore.c to hb_gt_def_*() functions
+ *    some of my modificaations.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,32 +52,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
- *    hb_gtInit()
- *    hb_gtExit()
- *    hb_gtDispBegin()
- *    hb_gtDispEnd()
- *    hb_gtPreExt()
- *    hb_gtPostExt()
- *    hb_gtGetColorStr()
- *    hb_gtSetColorStr()
- *    hb_gtSetMode()
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_gtDrawShadow()
- *
- * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- *    The body of these functions which were usable in new GT API
- *    have been moved to hbgtcore.c to hb_gt_def_*() functions
- *    some of my modificaations.
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

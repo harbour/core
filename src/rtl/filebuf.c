@@ -1,6 +1,6 @@
 /*
- * functions to access files with shared handles and locks
- *    (buffers in the future)
+ * Functions to access files with shared handles and locks
+ * (buffers in the future)
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -355,7 +355,7 @@ static HB_BOOL s_fileExists( PHB_FILE_FUNCS pFuncs, const char * pszFileName, ch
 {
    HB_SYMBOL_UNUSED( pFuncs );
 
-   return hb_spFileExists( pszFileName, pRetPath );
+   return pRetPath ? hb_spFileExists( pszFileName, pRetPath ) : hb_fsFileExists( pszFileName );
 }
 
 static HB_BOOL s_fileDelete( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
@@ -478,7 +478,6 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 #endif
    HB_BOOL fResult, fShared;
    int iMode;
-   HB_FHANDLE hFile;
    char * pszFile;
 
    HB_SYMBOL_UNUSED( pFuncs );
@@ -558,7 +557,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
    if( fResult && pFile == NULL )
 #endif /* HB_OS_UNIX */
    {
-      hFile = hb_fsExtOpen( pszFile, NULL,
+      HB_FHANDLE hFile = hb_fsExtOpen( pszFile, NULL,
                             nExFlags & ~ ( HB_FATTR ) ( FXO_DEFAULTS | FXO_COPYNAME ),
                             NULL, NULL );
       if( hFile != FS_ERROR )
@@ -1156,7 +1155,7 @@ HB_BOOL hb_fileExists( const char * pszFileName, char * pRetPath )
    if( i >= 0 )
       return s_pFileTypes[ i ]->Exists( s_pFileTypes[ i ], pszFileName, pRetPath );
 
-   return hb_spFileExists( pszFileName, pRetPath );
+   return pRetPath ? hb_spFileExists( pszFileName, pRetPath ) : hb_fsFileExists( pszFileName );
 }
 
 HB_BOOL hb_fileDelete( const char * pszFileName )
@@ -1444,8 +1443,10 @@ HB_FHANDLE hb_fileHandle( PHB_FILE pFile )
 
 /* internal FILE structures only */
 
-PHB_FILE hb_fileCreateTemp( const char * pszDir, const char * pszPrefix,
-                            HB_FATTR ulAttr, char * pszName )
+PHB_FILE hb_fileCreateTemp( const char * pszDir,
+                            const char * pszPrefix,
+                            HB_FATTR ulAttr,
+                            char * pszName )
 {
    PHB_FILE pFile = NULL;
    HB_FHANDLE hFile;

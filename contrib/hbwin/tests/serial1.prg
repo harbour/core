@@ -48,30 +48,32 @@
 
 PROCEDURE Main( cPortName )
 
-   LOCAL oWinPort := win_com():Init( cPortName, WIN_CBR_9600, WIN_NOPARITY, 8, WIN_ONESTOPBIT )
    LOCAL cString := "ATE0" + Chr( 13 ) + "ATI3" + Chr( 13 )
    LOCAL nResult
 
-   IF ! oWinPort:Open()
-      ? "Open() failed"
-   ELSE
+   LOCAL oWinPort := win_com():Init( hb_defaultValue( cPortName, "COM1" ), ;
+      WIN_CBR_9600, WIN_NOPARITY, 8, WIN_ONESTOPBIT )
+
+   IF oWinPort:Open()
       ? "Open() succeeded"
       ?
       IF oWinPort:SetDTR( .T. )
          ? "SetDTR( .T. ) succeeded"
       ELSE
-         ? "SetDTR( .T. ) failed :", oWinPort:ErrorText()
+         ? "SetDTR( .T. ) failed:", oWinPort:ErrorText()
       ENDIF
-      IF ( nResult := oWinPort:Write( cString ) ) == Len( cString )
+      IF ( nResult := oWinPort:Write( cString ) ) == hb_BLen( cString )
          ? "Write() succeeded"
       ELSE
-         ? "Write() failed, returned ", nResult, " expected ", Len( cString )
+         ? "Write() failed, returned:", nResult, "expected:", hb_ntos( hb_BLen( cString ) )
       ENDIF
       ? "Scan something... we'll not read it but purge it, press enter"
       Inkey( 0 )
-      ? "Read() ", oWinPort:Read( @cString, 32 ), Len( cString ), cString
+      ? "Read()", oWinPort:Read( @cString, 32 ), hb_ntos( hb_BLen( cString ) ), cString
       ? oWinPort:ErrorText()
       ? "Close", oWinPort:Close()
+   ELSE
+      ? "Open() failed"
    ENDIF
 
    RETURN

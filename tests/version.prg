@@ -1,6 +1,4 @@
-/* Testing the Version() function */
-
-/* Donated to the public domain by David G. Holm <dholm@jsd-llc.com>. */
+/* Donated to the public domain by David G. Holm <dholm@jsd-llc.com> */
 
 #ifndef __HARBOUR__
 #include "clipper.ch"
@@ -8,8 +6,8 @@
 
 PROCEDURE Main()
 
-   ? '"' + Version() + '"'
-   ? '"' + hb_Compiler() + '"'
-   ? '"' + OS() + '"'
+   ? Version()
+   ? hb_Compiler()
+   ? OS()
 
    RETURN

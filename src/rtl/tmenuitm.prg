@@ -44,11 +44,13 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 #include "button.ch"
 
-#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
+#define IS_IN( str, list )  ( "|" + ( str ) + "|" $ "|" + ( list ) + "|" )
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
@@ -163,7 +165,7 @@ METHOD shortcut( nShortcut ) CLASS MenuItem
 METHOD style( cStyle ) CLASS MenuItem
 
    IF cStyle != NIL
-      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 2 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| hb_ULen( cStyle ) == 2 } )
    ENDIF
 
    RETURN ::cStyle

@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Parts Compatible functions
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,10 @@
  *
  */
 
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                  Xbase++ Parts Compatible functions
-//
-//                Pritpal Bedi  <bedipritpal@hotmail.com>
-//                              03Dec2011
-//
+/*                                EkOnkar
+ *                          ( The LORD is ONE )
+ */
+
 #include "hbclass.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
@@ -60,11 +56,11 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-THREAD STATIC t_oCrt := NIL
+THREAD STATIC t_oCrt
 
 EXIT PROCEDURE KillGTChildren()
 
-   IF HB_ISOBJECT( t_oCrt ) .AND. __objGetClsName( t_oCrt ) == "WVGCRT" .AND. t_oCrt:isGT
+   IF HB_ISOBJECT( t_oCrt ) .AND. t_oCrt:ClassName() == "WVGCRT" .AND. t_oCrt:isGT
       t_oCrt:destroy()
       t_oCrt := NIL
    ENDIF
@@ -78,8 +74,7 @@ FUNCTION WvgSetAppWindow( oCrt )
    IF Empty( oCrt )
       IF Empty( t_oCrt )
          t_oCrt := WvgCrt():new()
-         t_oCrt:hWnd := Wvt_GetWindowHandle()
-         t_oCrt:pWnd := win_N2P( t_oCrt:hWnd )
+         t_oCrt:hWnd := t_oCrt:pWnd := hb_gtInfo( HB_GTI_WINHANDLE )
          hb_gtInfo( HB_GTI_NOTIFIERBLOCKGUI, {| nEvent, ... | t_oCrt:notifier( nEvent, ... ) } )
          t_oCrt:isGT := .T.
          RETURN t_oCrt

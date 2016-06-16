@@ -7,11 +7,16 @@
 
 -stop{win|wce|dos}
 
+-depurlbase=cups:https://cups.org/
+-deppkgname=cups:libcups2-dev{deb}
+-deppkgname=cups:libcups2-devel{rpm}
+-deppkgname=cups:libcups{pacman}
 -depkeyhead=cups:cups/cups.h
+-depcontrol=cups:force{darwin}
 -depcontrol=cups:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=cups:${HB_WITH_CUPS}
 -depincpath=cups:/usr/include
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c

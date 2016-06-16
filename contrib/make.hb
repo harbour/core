@@ -1,8 +1,8 @@
-#!/usr/bin/hbrun --hb:gtcgi
+#!/usr/bin/env hbmk2
 /*
  * Package build orchestrator script
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2014 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * their website at https://www.gnu.org/).
  *
  */
 
@@ -46,6 +46,8 @@ STATIC s_cRoot
 STATIC s_cBinDir
 STATIC s_cReBase
 
+#define AScanL( aArray, cString )  hb_AScanI( aArray, cString,,, .T. )
+
 PROCEDURE Main( ... )
 
    LOCAL hProjectList
@@ -55,7 +57,7 @@ PROCEDURE Main( ... )
 
    s_cBase := ""
    s_cReBase := ""
-   IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+   IF HB_ISNULL( GetEnv( "HB_HOST_BIN_DIR" ) )
       s_cHome := StrTran( hb_DirBase(), hb_ps(), "/" )
       s_cRoot := s_cHome + "../"
    ELSE
@@ -75,7 +77,7 @@ PROCEDURE Main( ... )
 
    hProjectList := { => }
 
-   LoadProjectListFromFile( hProjectList, s_cHome + "hbplist.txt" )
+   LoadProjectListAutomatic( hProjectList, s_cHome )
    LoadProjectListFromString( hProjectList, GetEnv( "HB_BUILD_ADDONS" ) )
 
    aParams := hb_AParams()
@@ -85,7 +87,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    /* Build */
-   IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+   IF HB_ISNULL( GetEnv( "HB_HOST_BIN_DIR" ) )
       Standalone( aParams, hProjectList )
    ELSE
       GNUMake( aParams, hProjectList )
@@ -103,7 +105,7 @@ PROCEDURE Main( ... )
    #4 install        install        _ACT_INC_INST          -inc -instpath=
    #5 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -rebuildall -instpath=
  */
-PROCEDURE Standalone( aParams, hProjectList )
+STATIC PROCEDURE Standalone( aParams, hProjectList )
 
    LOCAL hProjectReqList
 
@@ -111,7 +113,6 @@ PROCEDURE Standalone( aParams, hProjectList )
 
    LOCAL nAction
    LOCAL tmp
-   LOCAL tmp1
 
    LOCAL lCustom
    LOCAL cCustomDir
@@ -153,17 +154,17 @@ PROCEDURE Standalone( aParams, hProjectList )
 
          /* If anything else is passed than options or GNU Make keywords,
             consider it a custom project build, f.e. in tests */
-         IF !( Left( tmp, 1 ) == "-" )
+         IF ! hb_LeftEq( tmp, "-" )
             lCustom := .T.
          ENDIF
       ENDIF
    NEXT
 
-   /* Assemble list of primary targets (registered projects in current directory) */
+   /* Assemble list of primary targets (registered projects in or under current directory) */
 
    hProjectReqList := { => }
 
-   IF hb_DirExists( AllTrim( cOptionsUser ) )
+   IF hb_vfDirExists( AllTrim( cOptionsUser ) )
       cCustomDir := hb_cwd( AllTrim( cOptionsUser ) )
       cOptionsUser := ""
       lCustom := .F.
@@ -174,10 +175,9 @@ PROCEDURE Standalone( aParams, hProjectList )
    IF ! lCustom
       /* Find out which projects are in current dir, these will be our primary targets */
       FOR EACH tmp IN hProjectList
-         tmp1 := hb_ps() + hb_FNameDir( hb_DirSepToOS( tmp:__enumKey() ) )
-         IF tmp1 == Right( hb_cwd(), Len( tmp1 ) ) /* Not ultimate solution */
+         IF hb_LeftEq( hb_DirSepToOS( tmp:__enumKey() ) + hb_ps(), hb_FNameNameExt( hb_DirSepDel( hb_cwd() ) ) )  /* Not ultimate solution */
             hProjectReqList[ tmp:__enumKey() ] := tmp:__enumKey()
-            s_cReBase := SubStr( tmp1, 2 )
+            s_cReBase := hb_FNameDir( hb_DirSepToOS( tmp:__enumKey() ) )
          ENDIF
       NEXT
       IF Empty( hProjectReqList )
@@ -196,7 +196,7 @@ PROCEDURE Standalone( aParams, hProjectList )
 
    build_projects( nAction, hProjectList, hProjectReqList, cOptionsUser, .T. )
 
-   IF ! Empty( cCustomDir )
+   IF HB_ISSTRING( cCustomDir ) .AND. ! HB_ISNULL( cCustomDir )
       hb_cwd( cCustomDir )
    ENDIF
 
@@ -216,7 +216,7 @@ PROCEDURE Standalone( aParams, hProjectList )
    #6 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
                      clean      install clean    _ACT_INC_CLEAN         -inc -clean
  */
-PROCEDURE GNUMake( aParams, hProjectList )
+STATIC PROCEDURE GNUMake( aParams, hProjectList )
 
    LOCAL cProject
    LOCAL hProjectReqList
@@ -233,14 +233,14 @@ PROCEDURE GNUMake( aParams, hProjectList )
 
    IF Empty( GetEnv( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnv( "HB_COMPILER" ) ) .OR. ;
-      Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
+      HB_ISNULL( GetEnv( "HB_HOST_BIN_DIR" ) )
       ErrorLevel( 9 )
       RETURN
    ENDIF
 
    /* Determine the mode of operation */
 
-   aGNUMakeParams := hb_ATokens( Lower( GetEnv( "HB_MAKECMDGOALS" ) ) )
+   aGNUMakeParams := hb_ATokens( GetEnv( "HB_MAKECMDGOALS" ) )
 
    DO CASE
    CASE AScanL( aParams, "clean" ) > 0
@@ -280,10 +280,8 @@ PROCEDURE GNUMake( aParams, hProjectList )
 
    /* Assemble list of projects to be built */
 
-   cFilter := GetEnv( "HB_BUILD_CONTRIBS" )
-
-   IF ! Empty( cFilter )
-      OutStd( "! HB_BUILD_CONTRIBS: " + cFilter + hb_eol() )
+   IF ! Empty( cFilter := GetEnv( "HB_BUILD_CONTRIBS" ) )
+      OutStd( hb_StrFormat( "! HB_BUILD_CONTRIBS: %1$s", cFilter ) + hb_eol() )
    ENDIF
 
    IF cFilter == "no"
@@ -338,8 +336,9 @@ PROCEDURE GNUMake( aParams, hProjectList )
    hb_SetEnv( "_HB_INSTALL_MAN", GetEnv( "HB_INSTALL_MAN" ) )
    hb_SetEnv( "_HB_INSTALL_ETC", GetEnv( "HB_INSTALL_ETC" ) )
    hb_SetEnv( "_HB_INSTALL_CONTRIB", GetEnv( "HB_INSTALL_CONTRIB" ) )
+   hb_SetEnv( "_HB_COMPILER_VER", GetEnv( "HB_COMPILER_VER" ) )
 
-   /* Override hbmk2 autodetection. WARNING: Must be in sync with global.mk logic */
+   /* Override hbmk2 auto-detection. WARNING: Must be in sync with global.mk logic */
    hb_SetEnv( "HB_INSTALL_PREFIX", s_cRoot )
    hb_SetEnv( "HB_INSTALL_BIN", s_cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
    hb_SetEnv( "HB_INSTALL_LIB", s_cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
@@ -415,23 +414,26 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    /* Convert action to hbmk2 options */
 
    cOptions := " -inc"
-   IF nAction == _ACT_INC_CLEAN
+   SWITCH nAction
+   CASE _ACT_INC_CLEAN
       cOptions += " -clean"
-   ELSEIF nAction == _ACT_INC_REBUILD .OR. ;
-          nAction == _ACT_INC_REBUILD_INST
+      EXIT
+   CASE _ACT_INC_REBUILD
+   CASE _ACT_INC_REBUILD_INST
       cOptions += " -rebuildall"
-   ENDIF
+      EXIT
+   ENDSWITCH
 
    cMakeFlags := GetEnv( "MAKEFLAGS" )
    IF " -j " $ " " + cMakeFlags + " "
       /* GNU Make uses job server to limit number of concurrent operations
-       * We cannot read it from MAKEFLAGS so I set it to arbitrary value: 8
-       */
+         We cannot read it from MAKEFLAGS so I set it to arbitrary value: 8 */
       cOptions += " -jobs=8"
    ENDIF
 
-   lInstall := nAction == _ACT_INC_INST .OR. ;
-               nAction == _ACT_INC_REBUILD_INST
+   lInstall := ;
+      nAction == _ACT_INC_INST .OR. ;
+      nAction == _ACT_INC_REBUILD_INST
 
    hb_SetEnv( iif( lStdAlone, "_HB_BUILD_INSTALL_STDALONE", "_HB_BUILD_INSTALL" ), iif( lInstall, "yes", NIL ) )
 
@@ -444,20 +446,13 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          lPrimary := cProject $ hProjectReqList
          lContainer := "lFromContainer" $ hProjectList[ cProject ]
 
-         IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ) + ;
-               iif( ( lPrimary .OR. lContainer ) .AND. ;
-               hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn" .AND. ;
-               GetEnv( "HB_REBUILD_EXTERN" ) == "yes", " -hbx=" + hb_FNameExtSet( cProjectPath, ".hbx" ), "" ), NIL ) ) == 0
+         IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ), NIL ) ) == 0
 
             /* Build dynamic lib */
             IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
                /* Is this a platform where import libs are used? */
                IF "|" + hProjectList[ cProject ][ "cPlatform" ] + "|" $ "|win|dos|os2|"
-                  IF Empty( hProjectList[ cProject ][ "cDynSuffix" ] )
-                     cDynSuffix := "_dll"
-                  ELSE
-                     cDynSuffix := hProjectList[ cProject ][ "cDynSuffix" ]
-                  ENDIF
+                  cDynSuffix := "_dll"
                ELSE
                   cDynSuffix := hb_libExt()
                ENDIF
@@ -488,20 +483,20 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
 
    LOCAL cStdOut
-   LOCAL cDir
-   LOCAL cName
-   LOCAL tmp
+   LOCAL tmp, tmp1
    LOCAL hInfo
 
    LOCAL nErrorLevel
+
+   cProjectPath := hb_DirSepToOS( cProjectPath )
 
    hProject[ "cType" ] := ""
    hProject[ "aDept" ] := {}
    hProject[ "lChecked" ] := NIL
 
-   IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo", NIL,, @cStdOut ) ) == 0
+   IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo",,, @cStdOut ) ) == 0
 
-      IF hb_jsonDecode( cStdOut, @hInfo ) == 0
+      IF ! HB_ISHASH( hInfo := hb_jsonDecode( cStdOut ) )
          OutStd( "! Warning: Received invalid result from 'hbmk2 --hbinfo'" + hb_eol() )
       ENDIF
 
@@ -510,21 +505,24 @@ STATIC PROCEDURE call_hbmk2_hbinfo( cProjectPath, hProject )
       hProject[ "cDynSuffix" ] := hbmk2_hbinfo_getitem( hInfo, "dynsuffix" )
       hProject[ "cPlatform" ] := hbmk2_hbinfo_getitem( hInfo, "platform" )
 
-      FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( hInfo, "hbctree" ), Chr( 10 ) )
+      FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( hInfo, "hbctree" ), .T. )
          IF ! Empty( tmp )
-            hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
 #ifdef __PLATFORM__DOS
             /* Ignore long filenames on MS-DOS hosts */
-            IF Len( cName ) > 8
+            IF Len( hb_FNameName( LTrim( tmp ) ) ) > 8
                LOOP
             ENDIF
 #endif
+            tmp1 := hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" )
+            tmp1 := hb_PathNormalize( hb_PathRelativize( ;
+               hb_PathNormalize( hb_PathJoin( hb_DirSepToOS( hb_cwd() ), hb_DirSepToOS( hb_DirBase() ) ) ), ;
+               hb_PathNormalize( hb_PathJoin( hb_DirSepToOS( hb_cwd() ), tmp1 ) ) ) )
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ), ;
-               "cFileName_HBP" => StrTran( hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" ) ) ), "\", "/" ) } )
+               "cFileName_HBP" => StrTran( tmp1, "\", "/" ) } )
          ENDIF
       NEXT
    ELSE
-      OutStd( hb_StrFormat( "! Warning: 'hbmk2 --hbinfo' failed with exit code %1$d", nErrorLevel ) + hb_eol() )
+      OutStd( hb_StrFormat( "! Warning: 'hbmk2 %1$s --hbinfo' failed with exit code %2$d", cProjectPath, nErrorLevel ) + hb_eol() )
    ENDIF
 
    RETURN
@@ -538,6 +536,8 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    LOCAL cOptionsLibDyn := ""
    LOCAL cCommand
 
+   cProjectPath := hb_DirSepToOS( cProjectPath )
+
    /* Making sure that user settings do not interfere with the std build process. */
    hb_SetEnv( "HBMK_OPTIONS" )
    hb_SetEnv( "HARBOUR" )
@@ -546,26 +546,26 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    hb_SetEnv( "CLIPPERCMD" )
 
    IF cDynSuffix != NIL
-      hb_SetEnv( "_HB_DYNSUFF", cDynSuffix ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
+      hb_SetEnv( "_HB_DYNSUFF", cDynSuffix )  /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
 
       cOptionsPre += " -hbdyn"
 
-      IF hb_FileExists( hb_FNameExtSet( cProjectPath, ".hbc" ) )
+      IF hb_vfExists( hb_FNameExtSet( cProjectPath, ".hbc" ) )
          cOptionsLibDyn += " " + hb_FNameExtSet( cProjectPath, ".hbc" )
       ENDIF
    ELSE
       hb_SetEnv( "_HB_DYNSUFF" )
    ENDIF
 
-   hb_SetEnv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( hb_DirSepToOS( cProjectPath ) ) )
+   hb_SetEnv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( cProjectPath ) )
 
    cCommand := s_cBinDir + "hbmk2" + ;
-      " -quiet -width=0 -autohbm-" + ;
+      " -lang=en -quiet -width=0 -autohbm-" + ;
       " @" + StrTran( s_cHome + "hbpre", "\", "/" ) + ;
       cOptionsPre + ;
       " " + StrTran( cProjectPath, "\", "/" ) + ;
       " @" + StrTran( s_cHome, "\", "/" ) + "hbpost" + ;
-      cOptionsLibDyn
+      StrTran( cOptionsLibDyn, "\", "/" )
 
    IF PCount() >= 4
       nErrorLevel := hb_processRun( cCommand,, @cStdOut, @cStdErr )
@@ -590,10 +590,9 @@ STATIC FUNCTION mk_hbd( cDir )
    LOCAL aErrMsg
    LOCAL aEntry
 
-   IF ! Empty( cDocDir := GetEnv( "HB_INSTALL_DOC" ) ) .AND. ! cDocDir == "no"
+   IF ! HB_ISNULL( cDocDir := GetEnv( "HB_INSTALL_DOC" ) ) .AND. ! cDocDir == "no"
 
-      cName := DirGetName( cDir )
-      IF Empty( cName )
+      IF Empty( cName := DirGetName( cDir ) )
          cName := "harbour"
       ENDIF
 
@@ -607,7 +606,8 @@ STATIC FUNCTION mk_hbd( cDir )
       IF ! Empty( aEntry )
          cName := hb_DirSepToOS( cDocDir ) + hb_ps() + cName + ".hbd"
          IF __hbdoc_SaveHBD( cName, aEntry )
-            OutStd( "! Compiled documentation: " + cName + " <= " + cDir + hb_eol() )
+            mk_hb_vfTimeSet( cName )
+            OutStd( hb_StrFormat( "! Compiled documentation: %1$s <= %2$s", cName, cDir ) + hb_eol() )
             RETURN .T.
          ELSE
             OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )
@@ -617,18 +617,11 @@ STATIC FUNCTION mk_hbd( cDir )
 
    RETURN .F.
 
-STATIC FUNCTION AScanL( aArray, cString )
-   RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
-
 STATIC FUNCTION DirGetName( cDir )
 
-   LOCAL cName
+   LOCAL cName := hb_FNameName( hb_DirSepDel( cDir ) )
 
-   cDir := hb_DirSepDel( cDir )
-
-   hb_FNameSplit( cDir,, @cName )
-
-   IF Empty( cName ) .OR. cName == "." .OR. cName == ".."
+   IF HB_ISNULL( cName ) .OR. cName == "." .OR. cName == ".."
       RETURN ""
    ENDIF
 
@@ -643,7 +636,7 @@ STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )
 
    AddDeptPair( aPairList, "", cParent )
 
-   hNode := { "child" => {}, "name" => cParent, "parent" => NIL }
+   hNode := { "child" => {}, "name" => cParent, "parent" => }
    nLevel := 0
    FOR EACH hFlatTreeElement IN aFlatTree
       /* Min() protects against jumping more than one level down in one step */
@@ -699,7 +692,7 @@ STATIC FUNCTION TopoSort( aEdgeList )
       FOR EACH tmp IN aEdgeList
          IF tmp[ 1 ] == n
             m := tmp[ 2 ]
-            tmp[ 1 ] := tmp[ 2 ] := NIL /* set to invalid value. TOOPT: Delete this member from list */
+            tmp[ 1 ] := tmp[ 2 ] := NIL  /* set to invalid value. TOOPT: Delete this member from list */
             IF AScan( aEdgeList, {| tmp | tmp[ 2 ] == m } ) == 0
                hTopNodes[ m ] := NIL
             ENDIF
@@ -715,55 +708,72 @@ STATIC FUNCTION TopoSort( aEdgeList )
 
    RETURN aList
 
-FUNCTION AddProject( hProjectList, cFileName )
+STATIC FUNCTION AddProject( hProjectList, cFileName )
 
    LOCAL cDir
    LOCAL cName
    LOCAL cExt
 
-   IF ! Empty( cFileName )
+   IF ! HB_ISNULL( cFileName )
 
       cFileName := hb_DirSepToOS( AllTrim( cFileName ) )
 
       hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
 
-      IF Empty( cName )
+      DO CASE
+      CASE HB_ISNULL( cName )
          cName := DirGetName( cDir )
-      ELSEIF Empty( cDir )
+      CASE HB_ISNULL( cDir )
          cDir := cName
-      ENDIF
+      ENDCASE
       IF Empty( cExt )
          cExt := ".hbp"
       ENDIF
 
       cFileName := hb_FNameMerge( cDir, cName, cExt )
 
-      IF hb_FileExists( s_cBase + s_cHome + cFileName )
+      IF hb_vfExists( hb_DirSepToOS( s_cBase + s_cHome + cFileName ) )
          cFileName := StrTran( cFileName, "\", "/" )
          IF ! cFileName $ hProjectList
             hProjectList[ cFileName ] := { => }
             RETURN .T.
          ENDIF
+      ELSE
+         OutStd( hb_StrFormat( "! Warning: Project not found, cannot be added: %1$s", hb_DirSepToOS( s_cBase + s_cHome + cFileName ) ) + hb_eol() )
       ENDIF
-
    ENDIF
 
    RETURN .F.
 
-PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
+/* Build all contribs that have a .hbp file matching the
+   name of its contrib subdir. Also support contribs
+   with multiple subprojects if it has a 'makesub.txt'
+   text file with a list of those subprojects. */
+STATIC PROCEDURE LoadProjectListAutomatic( hProjectList, cDir )
 
-   LOCAL cItem
+   LOCAL aFile
+   LOCAL tmp
 
-   FOR EACH cItem IN hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
-      IF "#" $ cItem
-         cItem := Left( cItem, At( "#", cItem ) - 1 )
+   cDir := hb_DirSepAdd( hb_DirSepToOS( cDir ) )
+
+   FOR EACH aFile IN hb_vfDirectory( cDir, "D" )
+      IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." )
+         IF hb_vfExists( cDir + ( tmp := aFile[ F_NAME ] + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbp" ) ) )
+            AddProject( hProjectList, tmp )
+         ENDIF
+         IF hb_vfExists( tmp := ( cDir + aFile[ F_NAME ] + hb_ps() + "makesub.txt" ) )
+            FOR EACH tmp IN hb_ATokens( hb_MemoRead( tmp ), .T. )
+               IF ! HB_ISNULL( tmp )
+                  AddProject( hProjectList, aFile[ F_NAME ] + hb_ps() + hb_DirSepToOS( tmp ) )
+               ENDIF
+            NEXT
+         ENDIF
       ENDIF
-      AddProject( hProjectList, cItem )
    NEXT
 
    RETURN
 
-PROCEDURE LoadProjectListFromString( hProjectList, cString )
+STATIC PROCEDURE LoadProjectListFromString( hProjectList, cString )
 
    LOCAL cItem
 
@@ -772,3 +782,26 @@ PROCEDURE LoadProjectListFromString( hProjectList, cString )
    NEXT
 
    RETURN
+
+STATIC FUNCTION mk_hb_vfTimeSet( cFileName )
+
+   STATIC s_tVCS
+
+   LOCAL cStdOut, cStdErr
+
+   IF s_tVCS == NIL
+      IF hb_processRun( "git log -1 --format=format:%ci",, @cStdOut, @cStdErr ) != 0
+         cStdOut := hb_ATokens( hb_MemoRead( s_cRoot + "include" + hb_ps() + "_repover.txt" ), .T. )
+         cStdOut := iif( Len( cStdOut ) >= 2, cStdOut[ 2 ], "" )
+      ENDIF
+
+      s_tVCS := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
+
+      IF ! Empty( s_tVCS )
+         s_tVCS -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
+                       ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
+                         Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
+      ENDIF
+   ENDIF
+
+   RETURN Empty( s_tVCS ) .OR. hb_vfTimeSet( cFileName, s_tVCS )

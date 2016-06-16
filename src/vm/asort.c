@@ -2,7 +2,7 @@
  * ASort() function
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *                     Jose Lalin <dezac@corevia.com>
+ * Copyright 1999-2001 Jose Lalin <dezac@corevia.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@
 
 /* NOTE: Based on PD code found in
          SORTING AND SEARCHING ALGORITHMS: A COOKBOOK, BY THOMAS NIEMANN
-         http://members.xoom.com/_XMCM/thomasn/s_man.htm */
+         https://www.cs.auckland.ac.nz/~jmor159/PLDS210/niemann/s_man.htm */
 
 #include "hbvmint.h"
 #include "hbapiitm.h"
@@ -181,10 +181,10 @@ static HB_ISIZ hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, HB_ISIZ lb,
 
 static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, HB_ISIZ lb, HB_ISIZ ub, PHB_ITEM pBlock )
 {
-   HB_ISIZ m;
-
    while( lb < ub )
    {
+      HB_ISIZ m;
+
       if( ( HB_SIZE ) ub >= pBaseArray->nLen )
       {
          ub = pBaseArray->nLen - 1;
@@ -329,7 +329,6 @@ HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pnStart, HB_SIZE * pnCount, PHB
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       HB_SIZE nLen = pBaseArray->nLen;
       HB_SIZE nStart;
-      HB_SIZE nCount;
 
       if( pnStart && *pnStart >= 1 )
          nStart = *pnStart;
@@ -338,6 +337,8 @@ HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pnStart, HB_SIZE * pnCount, PHB
 
       if( nStart <= nLen )
       {
+         HB_SIZE nCount;
+
          if( pnCount && *pnCount >= 1 && ( *pnCount <= nLen - nStart ) )
             nCount = *pnCount;
          else

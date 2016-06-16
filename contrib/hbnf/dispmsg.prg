@@ -1,30 +1,21 @@
-/*
- * Author....: Paul Ferrara, ColumbuSoft
- * CIS ID....: 76702,556
- *
- * This function is an original work by Paul Ferrara and is placed in the
- * public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 2.0   12 Aug 1994 23:05:14   PAUL
- * Added ablilty to highlight individual characters and cleaned up code
- *
- *    Rev 1.2   15 Aug 1991 23:05:14   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:51:36   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:01:12   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Paul Ferrara (ColumbuSoft) and is placed
+   in the public domain.
+
+      Rev 2.0   12 Aug 1994 23:05:14   PAUL
+   Added ablilty to highlight individual characters and cleaned up code
+
+      Rev 1.2   15 Aug 1991 23:05:14   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:51:36   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:01:12   GLENN
+   Nanforum Toolkit
  */
 
+#include "box.ch"
 #include "setcurs.ch"
-
-// beginning of demo program
 
 FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
@@ -37,32 +28,27 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    LOCAL cOldColor
    LOCAL i
    LOCAL j
-   LOCAL nOption
-   LOCAL x
-   LOCAL y
+   LOCAL nKey
    LOCAL aPos := {}
    LOCAL nLeft
    LOCAL aLeft
 
-   FOR i := 1 TO Len( aInfo[ 1 ] )
+   FOR EACH i IN aInfo[ 1 ]
+
       AAdd( aPos, {} )
-   NEXT
 
-   FOR i := 1 TO Len( aInfo[ 1 ] )
-
-      DO WHILE At( "[", aInfo[ 1, i ] ) > 0
-         x := At( "[", aInfo[ 1, i ] )
-         y := At( "]", aInfo[ 1, i ] ) - 2
-         AAdd( aPos[ i ], { x, y } )
-         aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "[", "", 1, 1 )
-         aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "]", "", 1, 1 )
+      DO WHILE "[" $ i
+         AAdd( aPos[ i:__enumIndex() ], { ;
+            At( "[", i ), ;
+            At( "]", i ) - 2 } )
+         i := StrTran( i, "[",, 1, 1 )
+         i := StrTran( i, "]",, 1, 1 )
       ENDDO
-
    NEXT
 
    AEval( aInfo[ 1 ], {| x | nWidest := Max( nWidest, Len( x ) ) } )
 
-   /* calculate location of data */
+   // calculate location of data
    IF nBoxLeft == NIL
       nLeft := Round( ( MaxCol() - nWidest ) / 2, 0 )
    ELSE
@@ -75,7 +61,7 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    ENDIF
 #endif
 
-   /* calculate location of box */
+   // calculate location of box
    IF nBoxLeft == NIL
       nBoxLeft := nLeft - 2
    ENDIF
@@ -90,72 +76,70 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    // consistent with DispBox()
 
    IF cnBoxString == NIL .OR. cnBoxString == 2
-      cnBoxString := hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
+      cnBoxString := HB_B_DOUBLE_UNI + " "
    ELSEIF cnBoxString == 1
-      cnBoxString := hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
+      cnBoxString := HB_B_SINGLE_UNI + " "
    ENDIF
 
    __defaultNIL( @lShadow, .T. )
 
    cOldScreen := SaveScreen( nBoxTop, nBoxLeft, nBoxBottom + 1, nBoxRight + 2 )
-
    cOldCursor := SetCursor( SC_NONE )
-
    // draw box
-   cOldColor := SetColor( aInfo[ 2, Len( aInfo[ 2 ] ) ] )
+   cOldColor := SetColor( aInfo[ 2 ][ Len( aInfo[ 2 ] ) ] )
 
    hb_DispBox( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight, cnBoxString, ;
-      aInfo[ 2, Len( aInfo[ 2 ] ) ] )
+      aInfo[ 2 ][ Len( aInfo[ 2 ] ) ] )
    IF lShadow
       hb_Shadow( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight )
    ENDIF
 
-   /* fill array with left positions for each row */
+   // fill array with left positions for each row
    aLeft := Array( Len( aInfo[ 1 ] ) )
    FOR i := 1 TO Len( aInfo[ 1 ] )
-      IF Len( aInfo[ 1, i ] ) == nWidest
+      IF Len( aInfo[ 1 ][ i ] ) == nWidest
          aLeft[ i ] := nLeft
       ELSE
-         aLeft[ i ] := nLeft + Round( ( nWidest - Len( aInfo[ 1, i ] ) ) / 2, 0 )
+         aLeft[ i ] := nLeft + Round( ( nWidest - Len( aInfo[ 1 ][ i ] ) ) / 2, 0 )
       ENDIF
    NEXT
 
-   /* fill array of colors */
+   // fill array of colors
    FOR i := 2 TO Len( aInfo[ 2 ] )
-      IF aInfo[ 2, i ] == NIL
-         aInfo[ 2, i ] := aInfo[ 2, i - 1 ]
+      IF aInfo[ 2 ][ i ] == NIL
+         aInfo[ 2 ][ i ] := aInfo[ 2 ][ i - 1 ]
       ENDIF
    NEXT
 
-   /* display messages */
+   // display messages
    FOR i := 1 TO Len( aInfo[ 1 ] )
-      hb_DispOutAt( nBoxTop + i, aLeft[ i ], aInfo[ 1, i ], aInfo[ 2, i ] )
+      hb_DispOutAt( nBoxTop + i, aLeft[ i ], aInfo[ 1 ][ i ], aInfo[ 2 ][ i ] )
    NEXT
 
-   /* highlight characters */
+   // highlight characters
    FOR i := 1 TO Len( aPos )
       FOR j := 1 TO Len( aPos[ i ] )
-
          ft_SetAttr( nBoxTop + i, ;
-            aPos[ i, j, 1 ] + aLeft[ i ] - 1, ;
+            aPos[ i ][ j ][ 1 ] + aLeft[ i ] - 1, ;
             nBoxTop + i, ;
-            aPos[ i, j, 2 ] + aLeft[ i ] - 1, ;
-            ft_Color2N( aInfo[ 2, Len( aInfo[ 2 ] ) ] ) )
+            aPos[ i ][ j ][ 2 ] + aLeft[ i ] - 1, ;
+            ft_Color2N( aInfo[ 2 ][ Len( aInfo[ 2 ] ) ] ) )
       NEXT
    NEXT
 
    IF cKey != NIL
       IF Len( cKey ) == 1
-         nOption := ft_SInkey( 0 )
-         IF Upper( Chr( nOption ) ) == cKey
+         IF Upper( hb_keyChar( ft_SInkey( 0 ) ) ) == Upper( cKey )
             xRtnVal := .T.
          ENDIF
       ELSE
-         nOption := 0
-         DO WHILE hb_BAt( Upper( Chr( nOption ) ), Upper( cKey ) ) == 0
-            nOption := ft_SInkey( 0 )
+         DO WHILE .T.
+            nKey := ft_SInkey( 0 )
+            IF iif( Empty( hb_keyChar( nKey ) ), hb_BChar( nKey ), Upper( hb_keyChar( nKey ) ) ) $ Upper( cKey )
+               EXIT
+            ENDIF
          ENDDO
-         xRtnVal := nOption
+         xRtnVal := nKey
       ENDIF
       RestScreen( nBoxTop, nBoxLeft, nBoxBottom + 1, nBoxRight + 2, cOldScreen )
    ENDIF

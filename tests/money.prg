@@ -1,8 +1,6 @@
-//
 // Sample class Money with overloading of arythmetical operations
 //
 // Written by Pavel Tsarenko <tpe2 at mail.ru>
-//
 
 #include "error.ch"
 #include "hbclass.ch"
@@ -13,7 +11,7 @@ PROCEDURE Main()
    LOCAL m2 := Money():new( 7.8 )
    LOCAL m3 := m1 - m2
 
-   ? "(12.2 - 7.8) == 4.4", ( 12.2 - 7.8 ) == 4.4
+   ? "( 12.2 - 7.8 ) == 4.4", ( 12.2 - 7.8 ) == 4.4
    ? m1:value
    ? m2:value
    ? ( m1 - m2 ) == 4.4
@@ -30,7 +28,7 @@ PROCEDURE Main()
 
    RETURN
 
-CREATE CLASS Money
+CREATE CLASS Money STATIC
 
    VAR nValue AS INTEGER INIT 0
    VAR nDec AS INTEGER INIT 2
@@ -66,17 +64,13 @@ ENDCLASS
 
 METHOD new( nValue, nDec ) CLASS Money
 
-   hb_default( @nDec, 2 )
-   hb_default( @nValue, 0 )
-
-   ::nDec := nDec
-   ::nMul := Int( 10 ^ nDec )
-   ::Set( nValue )
+   ::nDec := hb_defaultValue( nDec, 2 )
+   ::nMul := Int( 10 ^ ::nDec )
+   ::Set( hb_defaultValue( nValue, 0 ) )
 
    RETURN Self
 
 METHOD value( ) CLASS Money
-
    RETURN ::nValue / ::nMul
 
 METHOD getMoney( oMoney ) CLASS Money
@@ -95,18 +89,18 @@ METHOD normalize( xArg ) CLASS Money
 
    LOCAL nValue
 
-   IF IsMoney( xArg )
+   DO CASE
+   CASE IsMoney( xArg )
       nValue := ::getMoney( xArg )
-   ELSEIF HB_ISNUMERIC( xArg )
+   CASE HB_ISNUMERIC( xArg )
       nValue := Int( xArg * ::nMul )
-   ELSE
+   OTHERWISE
       nValue := Eval( ErrorBlock(), GenError( xArg ) )
-   ENDIF
+   ENDCASE
 
    RETURN nValue
 
 METHOD Equal( xArg ) CLASS Money
-
    RETURN ::nValue == ::normalize( xArg )
 
 METHOD Plus( xArg ) CLASS Money
@@ -129,13 +123,14 @@ METHOD Multiple( xArg ) CLASS Money
 
    LOCAL oResult := Money():new( ::nDec )
 
-   IF IsMoney( xArg )
+   DO CASE
+   CASE IsMoney( xArg )
       oResult:nValue := Int( ::nValue * xArg:nValue / xArg:nMul )
-   ELSEIF HB_ISNUMERIC( xArg )
+   CASE HB_ISNUMERIC( xArg )
       oResult:nValue := Int( ::nValue * xArg )
-   ELSE
+   OTHERWISE
       Eval( ErrorBlock(), GenError( xArg ) )
-   ENDIF
+   ENDCASE
 
    RETURN oResult
 
@@ -143,34 +138,30 @@ METHOD Divide( xArg ) CLASS Money
 
    LOCAL oResult := Money():new( ::nDec )
 
-   IF IsMoney( xArg )
+   DO CASE
+   CASE IsMoney( xArg )
       oResult:nValue := Int( ::nValue / xArg:nValue * xArg:nMul )
-   ELSEIF HB_ISNUMERIC( xArg )
+   CASE HB_ISNUMERIC( xArg )
       oResult:nValue := Int( ::nValue / xArg )
-   ELSE
+   OTHERWISE
       Eval( ErrorBlock(), GenError( xArg ) )
-   ENDIF
+   ENDCASE
 
    RETURN oResult
 
 METHOD Str( nLen, nDec ) CLASS Money
 
-   LOCAL cStr
    LOCAL nValue := ::value()
 
-   IF nLen == NIL
-      cStr := Str( nValue )
-   ELSEIF nDec == NIL
-      cStr := Str( nValue, nLen )
-   ELSE
-      cStr := Str( nValue, nLen, nDec )
-   ENDIF
+   DO CASE
+   CASE nLen == NIL ; RETURN Str( nValue )
+   CASE nDec == NIL ; RETURN Str( nValue, nLen )
+   ENDCASE
 
-   RETURN cStr
+   RETURN Str( nValue, nLen, nDec )
 
 STATIC FUNCTION IsMoney( xArg )
-
-   RETURN HB_ISOBJECT( xArg ) .AND. xArg:className() = "MONEY"
+   RETURN HB_ISOBJECT( xArg ) .AND. xArg:className() == "MONEY"
 
 STATIC FUNCTION GenError( xArg )
 

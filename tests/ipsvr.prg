@@ -2,10 +2,10 @@
 
 #include "hbsocket.ch"
 
-#define ADDRESS                     "0.0.0.0"
-#define PORT                        10000
-#define EOT                         hb_BChar( 4 )
-#define TIMEOUT                     3000    // 3 seconds
+#define ADDRESS         "0.0.0.0"
+#define PORT            10000
+#define EOT             hb_BChar( 4 )
+#define TIMEOUT         3000    // 3 seconds
 
 PROCEDURE Main()
 
@@ -19,26 +19,26 @@ PROCEDURE Main()
 
    ? "create listening socket"
    IF Empty( hListen := hb_socketOpen() )
-      ? "socket create error " + hb_ntos( hb_socketGetError() )
+      ? "socket create error", hb_ntos( hb_socketGetError() )
    ENDIF
    IF ! hb_socketBind( hListen, { HB_SOCKET_AF_INET, ADDRESS, PORT } )
-      ? "bind error " + hb_ntos( hb_socketGetError() )
+      ? "bind error", hb_ntos( hb_socketGetError() )
    ENDIF
    IF ! hb_socketListen( hListen )
-      ? "listen error " + hb_ntos( hb_socketGetError() )
+      ? "listen error", hb_ntos( hb_socketGetError() )
    ENDIF
    DO WHILE .T.
       IF Empty( hSocket := hb_socketAccept( hListen, , TIMEOUT ) )
          IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
             ? "loop"
          ELSE
-            ? "accept error " + hb_ntos( hb_socketGetError() )
+            ? "accept error", hb_ntos( hb_socketGetError() )
          ENDIF
       ELSE
          ? "accept socket request"
          hb_threadDetach( hb_threadStart( @process(), hSocket ) )
       ENDIF
-      IF Inkey() == K_ESC
+      IF hb_keyStd( Inkey() ) == K_ESC
          ? "quitting - esc pressed"
          EXIT
       ENDIF
@@ -51,7 +51,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE process( hSocket )
+STATIC PROCEDURE process( hSocket )
 
    LOCAL cRequest
    LOCAL nLen
@@ -64,25 +64,24 @@ PROCEDURE process( hSocket )
          cBuf := Space( 4096 )
          IF ( nLen := hb_socketRecv( hSocket, @cBuf,,, 10000 ) ) > 0  /* Timeout */
             cRequest += hb_BLeft( cBuf, nLen )
-         ELSE
-            IF nLen == -1 .AND. hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
-               nLen := 0
-            ENDIF
+         ELSEIF nLen == -1 .AND. hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
+            nLen := 0
          ENDIF
       ENDDO
 
-      IF nLen == -1
+      DO CASE
+      CASE nLen == -1
          ? "recv() error:", hb_socketGetError()
-      ELSEIF nLen == 0
+      CASE nLen == 0
          ? "connection closed"
          EXIT
-      ELSE
+      OTHERWISE
          ? cRequest
          IF "quit" $ cRequest
             ? "exit"
             EXIT
          ENDIF
-      ENDIF
+      ENDCASE
    ENDDO
 
    ? "close socket"

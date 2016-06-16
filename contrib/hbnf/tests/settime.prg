@@ -2,9 +2,10 @@
 
 PROCEDURE Main( cTime )
 
-   cTime := iif( cTime == NIL, Time(), cTime )
-   ? "Setting time to: " + cTime  + "... "
+   hb_default( @cTime, Time() )
+
+   ? "Setting time to:", cTime
    ft_SetTime( cTime )
-   ? "Time is now: " + Time()
+   ? "Time is now:", Time()
 
    RETURN

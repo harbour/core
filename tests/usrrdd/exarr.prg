@@ -50,18 +50,16 @@ REQUEST ARRAYRDD
 
 PROCEDURE Main()
 
-   LOCAL aStruct
-
-   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   SET DELETED OFF
-   CLS
-
-   ? "Create a new dbf in memory using dbCreate() command"
-   aStruct := { ;
+   LOCAL aStruct := { ;
       { "NAME"     , "C", 40, 0 }, ;
       { "ADDRESS"  , "C", 40, 0 }, ;
       { "BIRTHDAY" , "D",  8, 0 }, ;
       { "AGE"      , "N",  3, 0 } }
+
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+   CLS
+
+   ? "Create a new dbf in memory using dbCreate() command"
 
 #ifndef USE_DBCREATE_EXTENSIONS
    ? "Create it"
@@ -104,7 +102,7 @@ PROCEDURE Main()
    field->birthday := hb_SToD( "19400101" )
    field->age      := 66
 
-   WHILE ! Eof()
+   DO WHILE ! Eof()
       ? RecNo(), '"' + FIELD->NAME + '"'
       IF RecNo() == 20
          Inkey( 0 )
@@ -118,7 +116,7 @@ PROCEDURE Main()
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
       "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    WAIT
-   WHILE ! Bof()
+   DO WHILE ! Bof()
       ? RecNo(), '[' + FIELD->NAME + ']'
       IF RecNo() == LastRec() - 20
          Inkey( 0 )

@@ -95,6 +95,7 @@ static HB_ERRCODE pgsqlDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE pgsqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea );
+static HB_ERRCODE pgsqlGoto( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
 
 
@@ -106,7 +107,7 @@ static SDDNODE s_pgsqldd = {
    ( SDDFUNC_EXECUTE ) pgsqlExecute,
    ( SDDFUNC_OPEN ) pgsqlOpen,
    ( SDDFUNC_CLOSE ) pgsqlClose,
-   ( SDDFUNC_GOTO ) NULL,
+   ( SDDFUNC_GOTO ) pgsqlGoto,
    ( SDDFUNC_GETVALUE ) pgsqlGetValue,
    ( SDDFUNC_GETVARLEN ) NULL
 };
@@ -149,7 +150,7 @@ HB_CALL_ON_STARTUP_END( _hb_sddpostgre_init_ )
 #endif
 
 
-/* ===================================================================================== */
+/* --- */
 static HB_USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
@@ -162,8 +163,7 @@ static HB_USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSub
 }
 
 
-/* ============= SDD METHODS ============================================================= */
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE pgsqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    PGconn *       pConn;
@@ -387,7 +387,9 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             bError = HB_TRUE;
             break;
       }
-      /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", dbFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
+#if 0
+      HB_TRACE( HB_TR_ALWAYS, ( "field:%s type=%d size=%d format=%d mod=%d err=%d", dbFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ), PQfmod( pResult, uiCount ), bError ) );
+#endif
 
       if( ! bError )
       {
@@ -438,9 +440,10 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
 
-/*       if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
+#if 0
+         if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
             dbFieldInfo.uiType = HB_IT_LONG;
- */
+#endif
 
          if( ! bError )
             bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
@@ -490,13 +493,31 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 }
 
 
+static HB_ERRCODE pgsqlGoto( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
+{
+   if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
+   {
+      pArea->pRecord      = pArea->pRow[ 0 ];
+      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
+      pArea->fPositioned  = HB_FALSE;
+   }
+   else
+   {
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
+      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
+      pArea->fPositioned  = HB_TRUE;
+   }
+
+   return HB_SUCCESS;
+}
+
+
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
    LPFIELD   pField;
    char *    pValue;
    HB_BOOL   bError;
-   PHB_ITEM  pError;
    HB_SIZE   ulLen;
 
    bError = HB_FALSE;
@@ -504,13 +525,18 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    pField = pArea->area.lpFields + uiIndex;
 
    if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
+   {
+      hb_itemClear( pItem );
       /* TOFIX: it breaks defined field type */
       return HB_SUCCESS;
+   }
 
    pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
    ulLen  = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
 
-/*   printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, ulLen ); */
+#if 0
+   HB_TRACE( HB_TR_ALWAYS, ( "fieldget recno=%d index=%d value=%s len=%d", dbFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), pArea->ulRecNo, uiIndex, pValue, ulLen ) );
+#endif
 
    switch( pField->uiType )
    {
@@ -567,7 +593,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
    if( bError )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );

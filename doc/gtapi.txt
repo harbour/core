@@ -171,12 +171,15 @@ For example, compile this code:
     /*** t.prg ***/
     REQUEST HB_GT_WIN
     REQUEST HB_GT_WVT
+
     PROCEDURE Main()
+
        ? hb_gtVersion(), hb_gtVersion( 1 )
        Tone( 200, 3 )
        Tone( 300, 3 )
        Tone( 500, 3 )
        Inkey( 0 )
+
        RETURN
 
 and link it as Windows GUI application. Then simply execute:

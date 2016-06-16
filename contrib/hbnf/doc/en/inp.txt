@@ -21,7 +21,7 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      byte := ft_inp( 100 )   // read a byte from port 100 (064h)
+      ? ft_inp( 100 )   // read a byte from port 100 (064h)
    $SEEALSO$
       ft_outp()
    $END$

@@ -14,13 +14,12 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE Two( n )
+STATIC PROCEDURE Two( n )
 
    DO CASE
    CASE n == 1
       ? "n == 1"
       RETURN
-
    CASE n == 2
       ? "n == 2"
       RETURN

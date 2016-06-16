@@ -6,7 +6,7 @@
    $ONELINER$
       Test diskette drive status
    $SYNTAX$
-      ft_FlopTst( <nDrive> ) -> nStatus
+      ft_FlopTst( <cDirectory|nDrive> ) -> nStatus
    $ARGUMENTS$
       <nDrive> is the diskette drive number, 0 = A:, 1 = B:
    $RETURNS$
@@ -29,13 +29,8 @@
       No testing has been performed on systems with more than 2 floppy
       drives.  If the third drive is "C" and the fourth "D" then there
       should be no problems.
-
-      This function does not currently check subst'd drives.  So if you
-      have SUBST E: A:\ then ft_FlopTst( Asc( "E" ) - Asc( "A" ) ) == 4
-      Any suggestions to fix this limitation are appreciated.
-
    $EXAMPLES$
-      iStatus := ft_FlopTst( 0 )
+      iStatus := ft_FlopTst( "A:" )
       DO CASE
       CASE iStatus == 1
          ? "The door to drive A is open."

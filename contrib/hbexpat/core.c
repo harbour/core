@@ -44,16 +44,13 @@
  *
  */
 
-/*
-   Author James Clark:
+/* Author James Clark:
       http://www.jclark.com/xml/
    Using Expat:
-      http://www.xml.com/pub/a/1999/09/expat/index.html
-      http://www.xml.com/lpt/a/47
+      http://www.xml.com/pub/a/1999/09/expat/
  */
 
-/*
-   TODO:
+/* TODO:
       XML_SetExternalEntityRefHandler()
       XML_SetExternalEntityRefHandlerArg()
       XML_ExternalEntityParserCreate()
@@ -112,7 +109,7 @@ typedef struct _HB_EXPAT
       { \
          PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 ); \
          \
-         hb_expat_setvar( hb_expat, _VAR_b##_name_, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) ); \
+         hb_expat_setvar( hb_expat, _VAR_b##_name_, hb_param( 2, HB_IT_EVALITEM ) ); \
          \
          XML_Set##_name_/* do not delete this */ ( hb_expat->parser, hb_expat->pVar[ _VAR_b##_name_ ] ? hb_expat_##_name_ : NULL ); \
          \
@@ -122,12 +119,11 @@ typedef struct _HB_EXPAT
          hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); \
    }
 
-/* Global initialization/deinitialization */
-/* -------------------------------------- */
+/* --- Global initialization/deinitialization --- */
 
 static void * XMLCALL hb_expat_xgrab( size_t size )
 {
-   return hb_xgrab( size );
+   return size > 0 ? hb_xgrab( size ) : NULL;
 }
 
 static void XMLCALL hb_expat_xfree( void * p )
@@ -138,11 +134,10 @@ static void XMLCALL hb_expat_xfree( void * p )
 
 static void * XMLCALL hb_expat_xrealloc( void * p, size_t size )
 {
-   return hb_xrealloc( p, size );
+   return size > 0 ? ( p ? hb_xrealloc( p, size ) : hb_xgrab( size ) ) : NULL;
 }
 
-/* Callbacks */
-/* --------- */
+/* --- Callbacks --- */
 
 /* Common */
 
@@ -643,8 +638,7 @@ static int XMLCALL hb_expat_NotStandaloneHandler( void * userdata )
    return iResult;
 }
 
-/* Constructor/Destructor */
-/* ---------------------- */
+/* --- Constructor/Destructor --- */
 
 static void PHB_EXPAT_free( PHB_EXPAT hb_expat, HB_BOOL bFree )
 {
@@ -674,10 +668,8 @@ static HB_GARBAGE_FUNC( PHB_EXPAT_release )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( hb_expat_ptr && *hb_expat_ptr )
    {
-      PHB_EXPAT hb_expat = *hb_expat_ptr;
-
       /* Destroy the object */
-      PHB_EXPAT_free( hb_expat, HB_TRUE );
+      PHB_EXPAT_free( *hb_expat_ptr, HB_TRUE );
       *hb_expat_ptr = NULL;
    }
 }
@@ -733,8 +725,7 @@ static void hb_expat_setvar( PHB_EXPAT hb_expat, int iHandler, PHB_ITEM pBlock )
    }
 }
 
-/* Harbour interface */
-/* ----------------- */
+/* --- Harbour interface --- */
 
 HB_FUNC( XML_PARSERCREATE )
 {
@@ -759,9 +750,8 @@ HB_FUNC( XML_PARSERCREATE )
 
    if( parser )
    {
-      PHB_EXPAT hb_expat = ( PHB_EXPAT ) hb_xgrab( sizeof( HB_EXPAT ) );
+      PHB_EXPAT hb_expat = ( PHB_EXPAT ) hb_xgrabz( sizeof( HB_EXPAT ) );
 
-      memset( hb_expat, 0, sizeof( HB_EXPAT ) );
       hb_expat->parser = parser;
 
       XML_SetUserData( hb_expat->parser, hb_expat );
@@ -847,8 +837,8 @@ HB_FUNC( XML_SETELEMENTHANDLER )
    {
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_expat_setvar( hb_expat, _VAR_bStartElementHandler, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
-      hb_expat_setvar( hb_expat, _VAR_bEndElementHandler, hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      hb_expat_setvar( hb_expat, _VAR_bStartElementHandler, hb_param( 2, HB_IT_EVALITEM ) );
+      hb_expat_setvar( hb_expat, _VAR_bEndElementHandler, hb_param( 3, HB_IT_EVALITEM ) );
 
       XML_SetElementHandler( hb_expat->parser,
                              hb_expat->pVar[ _VAR_bStartElementHandler ] ? hb_expat_StartElementHandler : NULL,
@@ -866,8 +856,8 @@ HB_FUNC( XML_SETCDATASECTIONHANDLER )
    {
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_expat_setvar( hb_expat, _VAR_bStartCdataSectionHandler, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
-      hb_expat_setvar( hb_expat, _VAR_bEndCdataSectionHandler, hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      hb_expat_setvar( hb_expat, _VAR_bStartCdataSectionHandler, hb_param( 2, HB_IT_EVALITEM ) );
+      hb_expat_setvar( hb_expat, _VAR_bEndCdataSectionHandler, hb_param( 3, HB_IT_EVALITEM ) );
 
       XML_SetCdataSectionHandler( hb_expat->parser,
                                   hb_expat->pVar[ _VAR_bStartCdataSectionHandler ] ? hb_expat_StartCdataSectionHandler : NULL,
@@ -885,8 +875,8 @@ HB_FUNC( XML_SETNAMESPACEDECLHANDLER )
    {
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_expat_setvar( hb_expat, _VAR_bStartNamespaceDeclHandler, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
-      hb_expat_setvar( hb_expat, _VAR_bEndNamespaceDeclHandler, hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      hb_expat_setvar( hb_expat, _VAR_bStartNamespaceDeclHandler, hb_param( 2, HB_IT_EVALITEM ) );
+      hb_expat_setvar( hb_expat, _VAR_bEndNamespaceDeclHandler, hb_param( 3, HB_IT_EVALITEM ) );
 
       XML_SetNamespaceDeclHandler( hb_expat->parser,
                                    hb_expat->pVar[ _VAR_bStartNamespaceDeclHandler ] ? hb_expat_StartNamespaceDeclHandler : NULL,
@@ -904,7 +894,7 @@ HB_FUNC( XML_SETUNKNOWNENCODINGHANDLER )
    {
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_expat_setvar( hb_expat, _VAR_bUnknownEncodingHandler, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+      hb_expat_setvar( hb_expat, _VAR_bUnknownEncodingHandler, hb_param( 2, HB_IT_EVALITEM ) );
       hb_expat_setvar( hb_expat, _VAR_xEncodingHandlerData, hb_param( 3, HB_IT_ANY ) );
 
       XML_SetUnknownEncodingHandler( hb_expat->parser,
@@ -916,8 +906,6 @@ HB_FUNC( XML_SETUNKNOWNENCODINGHANDLER )
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-/* ; */
 
 HB_FUNC( XML_PARSE )
 {

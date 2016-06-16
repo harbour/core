@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * their website at https://www.gnu.org/).
  *
  */
 
@@ -30,9 +30,11 @@
          - add support for subnet masks in allow/block lists, f.e. 172.16.0.0/12, and same for IPv6 */
 
 #include "fileio.ch"
+#include "inkey.ch"
 
 #include "hbhrb.ch"
 #include "hbsocket.ch"
+#include "hbver.ch"
 
 #include "hbnetio.ch"
 
@@ -44,8 +46,8 @@
 
 #define _RPC_FILTER "HBNETIOSRV_RPCMAIN"
 
-/* enable this if you need all core functions in RPC support */
-#ifdef HB_EXTERN
+/* enable this if you don't need all core functions in RPC support */
+#if ! defined( HB_NO_EXTERN )
 REQUEST __HB_EXTERN__
 #endif
 
@@ -100,7 +102,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
    ENDIF
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   Set( _SET_TIMEFORMAT, "HH:MM:SS.FFF" )
+   Set( _SET_TIMEFORMAT, "hh:mm:ss.fff" )
 
    HB_Logo()
 
@@ -137,30 +139,28 @@ PROCEDURE netiosrv_Main( lUI, ... )
       DO CASE
       CASE Lower( cParam ) == "-a"
          /* Ignore */
-      CASE Lower( Left( cParam, 5 ) ) == "-noui"
+      CASE hb_LeftEqI( cParam, "-noui" )
          lUI := .F.
-      CASE Lower( Left( cParam, 6 ) ) == "-port="
-         netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 7 ) )
-      CASE Lower( Left( cParam, 7 ) ) == "-iface="
-         netiosrv[ _NETIOSRV_cIFAddr ] := SubStr( cParam, 8 )
-      CASE Lower( Left( cParam, 9 ) ) == "-rootdir="
-         netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, 10 )
-      CASE Lower( Left( cParam, 6 ) ) == "-pass="
-         cPassword := SubStr( cParam, 7 )
+      CASE hb_LeftEqI( cParam, "-port=" )
+         netiosrv[ _NETIOSRV_nPort ] := Val( SubStr( cParam, Len( "-port=" ) + 1 ) )
+      CASE hb_LeftEqI( cParam, "-iface=" )
+         netiosrv[ _NETIOSRV_cIFAddr ] := SubStr( cParam, Len( "-iface=" ) + 1 )
+      CASE hb_LeftEqI( cParam, "-rootdir=" )
+         netiosrv[ _NETIOSRV_cRootDir ] := SubStr( cParam, Len( "-rootdir=" ) + 1 )
+      CASE hb_LeftEqI( cParam, "-pass=" )
+         cPassword := SubStr( cParam, Len( "-pass=" ) + 1 )
          hb_StrClear( @cParam )
-      CASE Lower( Left( cParam, 11 ) ) == "-adminport="
-         netiomgm[ _NETIOSRV_nPort ] := Val( SubStr( cParam, 12 ) )
-      CASE Lower( Left( cParam, 12 ) ) == "-adminiface="
-         netiomgm[ _NETIOSRV_cIFAddr ] := SubStr( cParam, 13 )
-      CASE Lower( Left( cParam, 11 ) ) == "-adminpass="
-         cPasswordManagement := SubStr( cParam, 12 )
+      CASE hb_LeftEqI( cParam, "-adminport=" )
+         netiomgm[ _NETIOSRV_nPort ] := Val( SubStr( cParam, Len( "-adminport=" ) + 1 ) )
+      CASE hb_LeftEqI( cParam, "-adminiface=" )
+         netiomgm[ _NETIOSRV_cIFAddr ] := SubStr( cParam, Len( "-adminiface=" ) + 1 )
+      CASE hb_LeftEqI( cParam, "-adminpass=" )
+         cPasswordManagement := SubStr( cParam, Len( "-adminpass=" ) + 1 )
          hb_StrClear( @cParam )
-      CASE Lower( Left( cParam, 5 ) ) == "-rpc="
-         netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
+      CASE hb_LeftEqI( cParam, "-rpc=" )
+         netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, Len( "-rpc=" ) + 1 )
 
-         hb_FNameSplit( netiosrv[ _NETIOSRV_cRPCFFileName ], NIL, NIL, @cExt )
-
-         cExt := Lower( cExt )
+         cExt := Lower( hb_FNameExt( netiosrv[ _NETIOSRV_cRPCFFileName ] ) )
 
          SWITCH cExt
          CASE ".prg"
@@ -174,7 +174,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
          SWITCH cExt
          CASE ".prg"
          CASE ".hb"
-            cFile := hb_compileBuf( hb_argv( 0 ), "-n2", "-w", "-es2", "-q0", ;
+            cFile := hb_compileBuf( hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
             IF cFile != NIL
                netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
@@ -201,7 +201,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
          HB_Usage()
          RETURN
       OTHERWISE
-         netiosrv_LogEvent( hb_StrFormat( "Warning: Unknown command line parameter ignored: %1$s", cParam ) )
+         netiosrv_LogEvent( hb_StrFormat( "Warning: Unrecognized command-line parameter ignored: %1$s", cParam ) )
       ENDCASE
    NEXT
 
@@ -221,7 +221,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       NIL, ;
       {| pConnectionSocket | netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, .F. ) } )
 
-   netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( cPassword )
+   netiosrv[ _NETIOSRV_lEncryption ] := ( cPassword != NIL .AND. ! HB_ISNULL( cPassword ) )
    cPassword := NIL
 
    IF Empty( netiosrv[ _NETIOSRV_pListenSocket ] )
@@ -229,7 +229,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
    ELSE
       netiosrv_LogEvent( "Ready to accept connections." )
 
-      IF ! Empty( cPasswordManagement )
+      IF cPasswordManagement != NIL .AND. ! HB_ISNULL( cPasswordManagement )
 
          netiomgm[ _NETIOSRV_pListenSocket ] := netio_MTServer( ;
             netiomgm[ _NETIOSRV_nPort ], ;
@@ -284,7 +284,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       ENDIF
 
       /* Command prompt */
-      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .and. inkey() != 27
+      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .AND. hb_keyStd( Inkey() ) != K_ESC
          hb_idleSleep( 5 )
       ENDDO
 
@@ -526,14 +526,7 @@ STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister
       RETURN iif( cIndex $ netiomgm[ _NETIOSRV_hNotifStream ], netiomgm[ _NETIOSRV_hNotifStream ][ cIndex ][ _CLI_xCargo ], NIL )
 #endif
    CASE 4
-      IF ! HB_ISLOGICAL( lRegister ) .OR. ! lRegister
-         hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
-         IF cIndex $ netiomgm[ _NETIOSRV_hNotifStream ]
-            hb_HDel( netiomgm[ _NETIOSRV_hNotifStream ], cIndex )
-         ENDIF
-         hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
-         RETURN -1
-      ELSE
+      IF hb_defaultValue( lRegister, .F. )
          cli := Array( _CLI_MAX_ )
          cli[ _CLI_pConnSock ]   := pConnSock
          cli[ _CLI_nStreamID ]   := nStreamID
@@ -543,6 +536,13 @@ STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister
          netiomgm[ _NETIOSRV_hNotifStream ][ cIndex ] := cli
          hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
          RETURN nStreamID
+      ELSE
+         hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
+         IF cIndex $ netiomgm[ _NETIOSRV_hNotifStream ]
+            hb_HDel( netiomgm[ _NETIOSRV_hNotifStream ], cIndex )
+         ENDIF
+         hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
+         RETURN -1
       ENDIF
    ENDSWITCH
 
@@ -807,16 +807,13 @@ STATIC FUNCTION AddrToIPPort( aAddr )
 STATIC FUNCTION FileSig( cFile )
 
    LOCAL hFile
-   LOCAL cBuff, cSig, cExt
+   LOCAL cBuff, cExt
 
    cExt := ".prg"
-   hFile := FOpen( cFile, FO_READ )
-   IF hFile != F_ERROR
-      cSig := hb_hrbSignature()
-      cBuff := Space( hb_BLen( cSig ) )
-      FRead( hFile, @cBuff, hb_BLen( cBuff ) )
-      FClose( hFile )
-      IF cBuff == cSig
+   IF ( hFile := hb_vfOpen( cFile, FO_READ ) ) != NIL
+      cBuff := hb_vfReadLen( hFile, hb_BLen( hb_hrbSignature() ) )
+      hb_vfClose( hFile )
+      IF cBuff == hb_hrbSignature()
          cExt := ".hrb"
       ENDIF
    ENDIF
@@ -832,12 +829,21 @@ STATIC PROCEDURE ShowConfig( netiosrv, netiomgm )
 STATIC PROCEDURE HB_Logo()
 
    OutStd( ;
-      "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() + ;
+      "Harbour NETIO Server " + HBRawVersion() + hb_eol() + ;
       "Copyright (c) 2009-2016, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
-      "http://harbour-project.org/" + hb_eol() + ;
+      hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
       hb_eol() )
 
    RETURN
+
+STATIC FUNCTION HBRawVersion()
+   RETURN hb_StrFormat( "%d.%d.%d%s (%s) (%s)", ;
+      hb_Version( HB_VERSION_MAJOR ), ;
+      hb_Version( HB_VERSION_MINOR ), ;
+      hb_Version( HB_VERSION_RELEASE ), ;
+      hb_Version( HB_VERSION_STATUS ), ;
+      hb_Version( HB_VERSION_ID ), ;
+      "20" + Transform( hb_Version( HB_VERSION_REVISION ), "99-99-99 99:99" ) )
 
 STATIC PROCEDURE HB_Usage()
 
@@ -866,10 +872,16 @@ STATIC PROCEDURE HB_Usage()
    OutStd(                                                                                                               hb_eol() )
    OutStd(               "  -noui                 don't open interactive console"                                      , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
-   #if ! defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   #if ! defined( __HBSCRIPT__HBSHELL )
+   #if defined( __PLATFORM__WINDOWS )
    OutStd(               "  -i                    install as service (requires admin rights)"                          , hb_eol() )
    OutStd(               "  -u                    uninstall service (requires admin rights)"                           , hb_eol() )
    OutStd(                                                                                                               hb_eol() )
+   #elif defined( __PLATFORM__LINUX )
+   OutStd(               "  -d                    run as a daemon"                                                     , hb_eol() )
+   OutStd(               "  -[e]{u|g}id:<val>     set gid/uid/egid/euid to <val> when run as daemon"                   , hb_eol() )
+   OutStd(               "                        where <val> can be a number or a name"                               , hb_eol() )
+   #endif
    #endif
    OutStd(               "  --version             display version header only"                                         , hb_eol() )
    OutStd(               "  -?|-h|-help|--help    this help"                                                           , hb_eol() )

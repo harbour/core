@@ -66,7 +66,7 @@ METHOD hideInput( lHideInput ) CLASS hb_Get
 METHOD style( cStyle ) CLASS hb_Get
 
    IF cStyle != NIL
-      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 1 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| hb_ULen( cStyle ) == 1 } )
    ENDIF
 
    RETURN ::cStyle

@@ -1,86 +1,40 @@
-/*
- * ft_SetTime()
- *
- * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
- *
+/* Rewritten in 2012 by Viktor Szakats (vszakats.net/harbour) and kept in the
+   public domain.
+   This is an original work by Glenn Scott and is placed in the public domain.
+
+      Rev 1.3   15 Aug 1991 23:06:08   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.2   14 Jun 1991 19:53:00   GLENN
+   Minor edit to file header
+
+      Rev 1.1   12 Jun 1991 02:34:58   GLENN
+   Documentation mods: change documented return value form "n" to "l" in
+   accordance with the new return value from ft_int86().
+
+      Rev 1.0   01 Apr 1991 01:02:16   GLENN
+   Nanforum Toolkit
  */
 
-/*
- * Author....: Glenn Scott
- * CIS ID....: 71620,1521
- *
- * This is an original work by Glenn Scott and is placed in the
- * public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.3   15 Aug 1991 23:06:08   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.2   14 Jun 1991 19:53:00   GLENN
- * Minor edit to file header
- *
- *    Rev 1.1   12 Jun 1991 02:34:58   GLENN
- * Documentation mods: change documented return value form "n" to "l" in
- * accordance with the new return value from ft_int86().
- *
- *    Rev 1.0   01 Apr 1991 01:02:16   GLENN
- * Nanforum Toolkit
- *
- */
+/* stime() exists only in SVr4, SVID, X/OPEN and Linux */
+#ifndef _SVID_SOURCE
+#define _SVID_SOURCE
+#endif
 
 #include "hbapi.h"
 #include "hbdate.h"
 
-#if defined( HB_OS_DOS )
-#  include <dos.h>
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#elif defined( HB_OS_DOS )
+   #include <dos.h>
 #endif
+#include <time.h>
 
 HB_FUNC( FT_SETTIME )
 {
-#if defined( HB_OS_DOS )
-   int        iHour, iMinute, iSeconds;
-   union REGS regs;
+   HB_BOOL fResult;
+   int     iHour = 0, iMinute = 0, iSeconds = 0, iMillisec = 0;
 
    if( HB_ISCHAR( 1 ) )
    {
@@ -96,19 +50,45 @@ HB_FUNC( FT_SETTIME )
    }
    else
    {
-      int iYear, iMonth, iDay, iMillisec;
+      int iYear, iMonth, iDay;
       hb_timeStampGetLocal( &iYear, &iMonth, &iDay,
                             &iHour, &iMinute, &iSeconds, &iMillisec );
    }
 
-   regs.h.ah = 45;
-   regs.h.ch = iHour;
-   regs.h.cl = iMinute;
-   regs.h.dh = iSeconds;
-   HB_DOS_INT86( 0x21, &regs, &regs );
+#if defined( HB_OS_WIN )
+   {
+      SYSTEMTIME st;
+      GetLocalTime( &st );
+      st.wHour         = ( WORD ) iHour;
+      st.wMinute       = ( WORD ) iMinute;
+      st.wSecond       = ( WORD ) iSeconds;
+      st.wMilliseconds = ( WORD ) iMillisec * 10;
+      fResult = SetLocalTime( &st );
+   }
+#elif defined( HB_OS_LINUX ) && ! defined( HB_OS_ANDROID ) && ! defined( __WATCOMC__ )
+   {
+      /* stime() exists only in SVr4, SVID, X/OPEN and Linux */
+      HB_ULONG lNewTime;
+      time_t   tm;
 
-   hb_retl( HB_TRUE );
+      lNewTime = iHour * 3600 + iMinute * 60 + iSeconds;
+      tm       = time( NULL );
+      tm      += lNewTime - ( tm % 86400 );
+      fResult  = stime( &tm ) == 0;
+   }
+#elif defined( HB_OS_DOS )
+   {
+      union REGS regs;
+      regs.h.ah = 45;
+      regs.h.ch = iHour;
+      regs.h.cl = iMinute;
+      regs.h.dh = iSeconds;
+      HB_DOS_INT86( 0x21, &regs, &regs );
+      fResult = regs.h.al == 0;
+   }
 #else
-   hb_retl( HB_FALSE );
+   fResult = HB_FALSE;
 #endif
+
+   hb_retl( fResult );
 }

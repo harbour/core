@@ -1,7 +1,6 @@
 /*
  * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
  *
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option )
@@ -45,8 +44,7 @@
 
 #include "hbhpdf.h"
 
-/* HPDF_LoadTypeIFontFromFile( hDoc, cAFMFileName, cPFA_PFBFileName ) -> cFontName
- */
+/* HPDF_LoadTypeIFontFromFile( hDoc, cAFMFileName, cPFA_PFBFileName ) -> cFontName */
 HB_FUNC( HPDF_LOADTYPE1FONTFROMFILE )
 {
    char *       pszFree1;
@@ -63,8 +61,7 @@ HB_FUNC( HPDF_LOADTYPE1FONTFROMFILE )
       hb_xfree( pszFree2 );
 }
 
-/* HPDF_LoadTTFontFromFile( hDoc, cTTFontFileName, lEmbed ) -> cFontName
- */
+/* HPDF_LoadTTFontFromFile( hDoc, cTTFontFileName, lEmbed ) -> cFontName */
 HB_FUNC( HPDF_LOADTTFONTFROMFILE )
 {
    char *       pszFree;
@@ -76,8 +73,7 @@ HB_FUNC( HPDF_LOADTTFONTFROMFILE )
       hb_xfree( pszFree );
 }
 
-/* HPDF_LoadTTFontFromFile2( hDoc, cTTFontFileName, nIndexInFile, lEmbed ) -> cFontName
- */
+/* HPDF_LoadTTFontFromFile2( hDoc, cTTFontFileName, nIndexInFile, lEmbed ) -> cFontName */
 HB_FUNC( HPDF_LOADTTFONTFROMFILE2 )
 {
    char *       pszFree;

@@ -1,12 +1,12 @@
 // see also hrb.prg
 
-FUNCTION Msg()
+FUNCTION Msg()  /* must be a public function */
 
    ? "Function called from .hrb"
 
    RETURN .T.
 
-FUNCTION Msg2()
+FUNCTION Msg2()  /* must be a public function */
    RETURN Msg()
 
 INIT PROCEDURE MsgInit()

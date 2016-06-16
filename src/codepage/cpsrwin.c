@@ -1,8 +1,7 @@
 /*
  * National Collation Support Module (SRWIN)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * SERBIAN collating sequence done by Srdjan Dragojlovic <digikv@yahoo.com>
+ * Copyright 2002 Srdjan Dragojlovic <digikv@yahoo.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

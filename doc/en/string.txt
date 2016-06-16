@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    Documentation for: Descend()
  *
@@ -37,8 +35,8 @@
       in <cString> is an alphabetic character. If not, the function will
       return a logical false (.F.).
    $EXAMPLES$
-      ? 'IsAlpha( "hello" ) = ', IsAlpha( "hello" )
-      ? 'IsAlpha( "12345" ) = ', IsAlpha( "12345" )
+      ? IsAlpha( "hello" )
+      ? IsAlpha( "12345" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -226,8 +224,7 @@
       the first string <cSearch>. If the substring is not contained within
       the second expression, the function will return 0.
    $EXAMPLES$
-      ? 'At( "cde", "abcdefgfedcba" ) = ' + ;
-         Str( At( "cde", "abcdefgfedcba" ) )    // 3
+      ? At( "cde", "abcdefgfedcba" )    // 3
    $STATUS$
       R
    $COMPLIANCE$
@@ -271,10 +268,8 @@
       the second expression, the function will return 0. The third and fourth
       parameters lets you indicate a starting and end offset to search in.
    $EXAMPLES$
-      ? 'hb_At( "cde", "abcdefgfedcba" ) = ' + ;
-         Str( hb_At( "cde", "abcdefgfedcba" ) )       // 3
-      ? 'hb_At( "cde", "abcdefgfedcba" ) = ' + ;
-         Str( hb_At( "cde", "abcdefgfedcba", 4 ) )    // 0
+      ? hb_At( "cde", "abcdefgfedcba" )       // 3
+      ? hb_At( "cde", "abcdefgfedcba", 4 )    // 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -316,10 +311,8 @@
       If the function is unable to find any occurrence of <cSearch> in
       <cString>, the return value is 0.
    $EXAMPLES$
-      ? 'RAt( "cde", "abcdefgfcdeedcba" ) = ' + ;
-         hb_ntos( RAt( "cde", "abcdefgfcdeedcba" ) )     // 9
-      ? 'RAt( "cdr", "abcdefgfedcba" ) = ' + ;
-         hb_ntos( RAt( "cdr", "abcdefgfedcba" ) )        // 0
+      ? hb_ntos( RAt( "cde", "abcdefgfcdeedcba" ) )     // 9
+      ? hb_ntos( RAt( "cdr", "abcdefgfedcba" ) )        // 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -365,25 +358,21 @@
       If 3rd and 4th parameters is not specified, then hb_RAt() is equal
       to RAt().
    $EXAMPLES$
-      LOCAL cString
-      LOCAL cSearch
-      LOCAL i, y, r, nLen
+      LOCAL cString := "acdefcdeedcb"
+      LOCAL cSearch := "cde"
+      LOCAL i, y, r
+      LOCAL nLen := Len( cString )
 
-      ? 'hb_RAt( "cde", "abcdefgfedcba" ) = ', ;
-         hb_RAt( "cde", "abcdefgfedcba" ) // -> 3
-
-      cString := "acdefcdeedcb"
-      cSearch := "cde"
-      nLen := Len( cString )
       FOR y := 1 TO nLen
          FOR i := 1 TO nLen
-            r := hb_RAt( cSearch, cString, y, i )
-            IF r != 0
-            ? 'hb_RAt( "' + cSearch + '", "' + cString + '", ' + hb_ntos( y ) + ', ' + hb_ntos( i ) + ' ) = ' + ;
-               hb_ntos( r )
+            IF ( r := hb_RAt( cSearch, cString, y, i ) ) > 0
+               ? 'hb_RAt( "' + cSearch + '", "' + cString + '",', hb_ntos( y ) + ",", hb_ntos( i ), ") =", ;
+                  hb_ntos( r )
             ENDIF
          NEXT
       NEXT
+
+      ? hb_RAt( cSearch, "abcdefgfedcba" )  // -> 3
    $STATUS$
       R
    $COMPLIANCE$
@@ -459,7 +448,7 @@
       This functions returns the rightmost <nLen> characters of <cString>.
       It is equivalent to the following expressions:
 
-      SubStr( <cString>,  - <nLen> )
+      SubStr( <cString>, -<nLen> )
 
       SubStr( <cString>, Len( <cString> ) - <nLen> + 1, <nLen> )
    $EXAMPLES$
@@ -510,9 +499,9 @@
       characters from <nStart> to the end of the string is less than <nLen>
       the rest are ignored.
    $EXAMPLES$
-      ? SubStr( "Hello Harbour" ,  7, 4 )      // Harb
-      ? SubStr( "Hello Harbour" , -3, 3 )      // our
-      ? SubStr( "Hello Harbour" ,  7    )      // Harbour
+      ? SubStr( "Hello Harbour",  7, 4 )      // Harb
+      ? SubStr( "Hello Harbour", -3, 3 )      // our
+      ? SubStr( "Hello Harbour",  7    )      // Harbour
    $STATUS$
       R
    $COMPLIANCE$
@@ -587,8 +576,8 @@
       *  If <nLength> is specified but <nDecimals> is omitted (no
          decimal places), the return value is rounded to an integer.
    $EXAMPLES$
-      ? Str( 10, 6, 2 ) // " 10.00"
-      ? Str( -10, 8, 2 ) // "  -10.00"
+      ? Str( 10, 6, 2 )  // " 10.00"
+      ? Str( -10, 8, 2 )  // "  -10.00"
    $STATUS$
       R
    $COMPLIANCE$
@@ -665,8 +654,8 @@
 
       The StrZero() function was part of the CA-Cl*pper samples.
    $EXAMPLES$
-      ? StrZero( 10, 6, 2 ) // "010.00"
-      ? StrZero( -10, 8, 2 ) // "-0010.00"
+      ? StrZero( 10, 6, 2 )  // "010.00"
+      ? StrZero( -10, 8, 2 )  // "-0010.00"
    $STATUS$
       R
    $COMPLIANCE$
@@ -791,6 +780,7 @@
          ? Empty( 0 )               // .T.
          ? Empty( .F. )             // .T.
          ? Empty( "" )              // .T.
+         ? Empty( "  " )            // .T.
          ? Empty( 1 )               // .F.
          ? Empty( .T. )             // .F.
          ? Empty( "smile" )         // .F.
@@ -977,7 +967,7 @@
       any character expression passed as <cCharacter>.
    $EXAMPLES$
       ? Asc( "A" )
-      ? Asc( "¹" )
+      ? Asc( "ą" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -1323,7 +1313,10 @@
       This function is useful to declare the length of a character memory
       variable.
    $EXAMPLES$
+      #include "dbstruct.ch"
+
       PROCEDURE Main()
+
          LOCAL cBigString
          LOCAL cFirst
          LOCAL cString := Space( 20 )  // Create an character memory variable
@@ -1332,32 +1325,35 @@
          cBigString := Space( 100000 ) // create a memory variable with 100000
                                        // blank spaces
          ? Len( cBigString )
-         USE tests NEW
+         USE test NEW
          cFirst := MakeEmpty( 1 )
          ? Len( cFirst )
+
          RETURN
 
       FUNCTION MakeEmpty( xField )
+
          LOCAL nRecord
          LOCAL xRetValue
 
          IF ! Empty( Alias() )
             nRecord := RecNo()
             dbGoto( 0 )
-            IF ValType( xField ) == "C"
-               xField := AScan( dbStruct(), {| aFields | aFields[ 1 ] == Upper( xfield ) } )
+            IF HB_ISSTRING( xField )
+               xField := AScan( dbStruct(), {| aFields | aFields[ DBS_NAME ] == Upper( xField ) } )
             ELSE
-               DEFAULT xField TO 0
+               hb_default( @xField, 0 )
                IF xField < 1 .OR. xField > FCount()
-                  xfield := 0
+                  xField := 0
                ENDIF
             ENDIF
-            IF !( xfield == 0 )
-               xRetvalue := FieldGet( xfield )
+            IF xField != 0
+               xRetValue := FieldGet( xField )
             ENDIF
-            dbGoto( nrecord )
+            dbGoto( nRecord )
          ENDIF
-         RETURN xRetvalue
+
+         RETURN xRetValue
    $STATUS$
       R
    $COMPLIANCE$
@@ -1541,8 +1537,8 @@
       ? "working with String"
       ? "Current String is", cString
       ? "All uppercased", Transform( cString, "@!" )
-      ? "Date is", ddate
-      ? "Date is ", Transform( ddate, "@D" )
+      ? "Date is", dDate
+      ? "Date is", Transform( dDate, "@D" )
       ? Transform( nNumber, "@L 99999999" )  //  "009923.34"
       ? Transform( 0      , "@L 9999"     )  //  "0000"
    $STATUS$

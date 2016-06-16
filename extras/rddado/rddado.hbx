@@ -1,9 +1,12 @@
 /* --------------------------------------------------------------------
- * NOTE: You can add manual override which functions to include or
- *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ * NOTE: Following comments are control commands for the generator.
+ *       Do not edit them unless you know what you are doing.
  *          Syntax: // HB_FUNC_INCLUDE <func>
  *                  // HB_FUNC_EXCLUDE <func>
  */
+
+// HB_FUNC_EXCLUDE ADORDD
+// HB_FUNC_EXCLUDE ADORDD_GETFUNCTABLE
 
 /* --------------------------------------------------------------------
  * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
@@ -21,8 +24,8 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC ADORDD
-DYNAMIC ADORDD_GETFUNCTABLE
+DYNAMIC ADO
+DYNAMIC ADO_GETFUNCTABLE
 DYNAMIC hb_adoRddGetCatalog
 DYNAMIC hb_adoRddGetConnection
 DYNAMIC hb_adoRddGetRecordSet

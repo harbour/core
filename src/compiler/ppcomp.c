@@ -138,7 +138,10 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
          case 'b':
          case 'B':
             if( fSet )
+            {
                HB_COMP_PARAM->fDebugInfo = iValue != 0;
+               HB_COMP_PARAM->fHideSource = ! HB_COMP_PARAM->fDebugInfo;
+            }
             else
                iValue = HB_COMP_PARAM->fDebugInfo ? 1 : 0;
             break;
@@ -303,9 +306,9 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             else
             {
                if( iValue )
-                  iValue = HB_COMP_PARAM->supported & iFlag ? 0 : 1;
+                  iValue = ( HB_COMP_PARAM->supported & iFlag ) ? 0 : 1;
                else
-                  iValue = HB_COMP_PARAM->supported & iFlag ? 1 : 0;
+                  iValue = ( HB_COMP_PARAM->supported & iFlag ) ? 1 : 0;
             }
          }
       }
@@ -415,7 +418,7 @@ void hb_compInitPP( HB_COMP_DECL, PHB_PP_OPEN_FUNC pOpenFunc )
 
       hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP, ! HB_COMP_PARAM->fNoArchDefs );
 
-      /* Add /D and /undef: command line or envvar defines */
+      /* Add /D and /undef: command-line or envvar defines */
       hb_compChkSetDefines( HB_COMP_PARAM );
 
       /* add extended definitions files (-u+<file>) */

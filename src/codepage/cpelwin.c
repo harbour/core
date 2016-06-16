@@ -1,8 +1,7 @@
 /*
  * National Collation Support Module (ELWIN)
  *
- * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
- * v1.0 2004 Panayotis (Pete) Dionysopoulos <pete_westg@yahoo.gr>
+ * Copyright 2004 Panayotis (Pete) Dionisopoulos <pete_westg@yahoo.gr>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

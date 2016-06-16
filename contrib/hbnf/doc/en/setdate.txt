@@ -24,15 +24,15 @@
       the DOS Set Date service (Interrupt 33, service 43).
 
    $EXAMPLES$
-      // The following program takes a date from the command line and sets
+      // The following program takes a date from the command-line and sets
       // the DOS system date:
 
       PROCEDURE Main( cDate )
 
-         cDate := iif( cDate == NIL, DToS( Date() ), cDate )
-         ? "Setting date to: " + cDate  + "... "
+         hb_default( @cDate, DToS( Date() ) )
+         ? "Setting date to:", cDate + "... "
          ft_SetDate( hb_SToD( cDate ) )
-         ? "Today is now: " + DToC( Date() )
+         ? "Today is now:", Date()
 
          RETURN
    $END$

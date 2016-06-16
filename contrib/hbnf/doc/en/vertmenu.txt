@@ -34,10 +34,10 @@
       main program.  See the test code for a succinct demonstration.
    $EXAMPLES$
       LOCAL mainmenu := { ;
-            { "Data Entry",  "Enter data",    {|| ft_Menu2( datamenu )  } }, ;
-            { "Reports",     "Hard copy",     {|| ft_Menu2( repmenu )   } }, ;
-            { "Maintenance", "Reindex files", {|| ft_Menu2( maintmenu ) } }, ;
-            { "Quit", "See ya later" } }
+         { "Data Entry",  "Enter data",    {|| ft_Menu2( datamenu )  } }, ;
+         { "Reports",     "Hard copy",     {|| ft_Menu2( repmenu )   } }, ;
+         { "Maintenance", "Reindex files", {|| ft_Menu2( maintmenu ) } }, ;
+         { "Quit", "See ya later" } }
       ft_Menu2( mainmenu )
    $END$
  */

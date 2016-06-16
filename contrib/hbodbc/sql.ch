@@ -105,12 +105,6 @@
 #define SQL_DATA_AT_EXEC                -2
 #define SQL_NTS                         -3
 
-/* SQLFreeStmt() defines */
-#define SQL_CLOSE                       0
-#define SQL_DROP                        1
-#define SQL_UNBIND                      2
-#define SQL_RESET_PARAMS                3
-
 /* SQLColAttribute() defines */
 #define SQL_COLUMN_COUNT                0
 #define SQL_COLUMN_NAME                 1

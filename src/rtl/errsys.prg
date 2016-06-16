@@ -92,7 +92,11 @@ STATIC FUNCTION DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
+#ifdef HB_CLP_STRICT
       cOSError := hb_StrFormat( "(DOS Error %1$d)", oError:osCode )
+#else
+      cOSError := hb_StrFormat( "(OS Error %1$d)", oError:osCode )
+#endif
    ENDIF
 
    // Build buttons
@@ -115,7 +119,7 @@ STATIC FUNCTION DefError( oError )
       iif( cOSError == NIL, "", ";" + cOSError ), aOptions ) ) == 0
    ENDDO
 
-   IF ! Empty( nChoice )
+   IF ! Empty( nChoice )  /* Alert() may return NIL */
       SWITCH aOptions[ nChoice ]
       CASE "Break"
          Break( oError )
@@ -137,12 +141,10 @@ STATIC FUNCTION DefError( oError )
 
    n := 1
    DO WHILE ! Empty( ProcName( ++n ) )
-
       OutErr( hb_eol() )
       OutErr( hb_StrFormat( "Called from %1$s(%2$d)  ", ;
-              ProcName( n ), ;
-              ProcLine( n ) ) )
-
+         ProcName( n ), ;
+         ProcLine( n ) ) )
    ENDDO
 
    ErrorLevel( 1 )
@@ -176,7 +178,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
    // add either filename or operation
    DO CASE
-   CASE ! Empty( oError:filename )
+   CASE ! HB_ISNULL( oError:filename )
       cMessage += ": " + oError:filename
    CASE ! Empty( oError:operation )
       cMessage += ": " + oError:operation

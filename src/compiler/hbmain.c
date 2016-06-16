@@ -2,11 +2,12 @@
  * Compiler main file
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
+ * Copyright 2000 RonPinkas <Ron@Profit-Master.com> (hb_compPrepareJumps(), hb_compOptimizeJumps(), hb_compOptimizeFrames(), hb_compDeclaredParameterAdd(), hb_compClassAdd(), hb_compClassFind(), hb_compMethodAdd(), hb_compMethodFind(), hb_compDeclaredAdd())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,30 +15,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
- *
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 RonPinkas <Ron@Profit-Master.com>
- *    hb_compPrepareJumps()
- *    hb_compOptimizeJumps()
- *    hb_compOptimizeFrames()
- *    hb_compDeclaredParameterAdd()
- *    hb_compClassAdd()
- *    hb_compClassFind()
- *    hb_compMethodAdd()
- *    hb_compMethodFind()
- *    hb_compDeclaredAdd()
- *
- * See COPYING.txt for licensing terms.
+ * along with this software; see the file COPYING.txt.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  */
 
-/*
- * Avoid tracing in preprocessor/compiler.
- */
+/* Avoid tracing in preprocessor/compiler. */
 #if ! defined( HB_TRACE_UTILS )
    #if defined( HB_TRACE_LEVEL )
       #undef HB_TRACE_LEVEL
@@ -63,7 +47,6 @@ int hb_compMainExt( int argc, const char * const argv[],
    int iStatus = EXIT_SUCCESS, iFileCount = 0;
    int iFileCase, iDirCase, iDirSep;
    HB_BOOL fTrimFN;
-   int i;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_compMain()" ) );
 
@@ -88,7 +71,7 @@ int hb_compMainExt( int argc, const char * const argv[],
    /* First check the environment variables */
    hb_compChkEnvironment( HB_COMP_PARAM );
 
-   /* Then check command line arguments
+   /* Then check command-line arguments
       This will override duplicated environment settings */
    hb_compChkCommandLine( HB_COMP_PARAM, argc, argv );
 
@@ -137,7 +120,8 @@ int hb_compMainExt( int argc, const char * const argv[],
    }
    else
    {
-      /* Process all files passed via the command line. */
+      int i;
+      /* Process all files passed via the command-line. */
       for( i = 1; i < argc && ! HB_COMP_PARAM->fExit; i++ )
       {
          HB_TRACE( HB_TR_DEBUG, ( "main LOOP(%i,%s)", i, argv[ i ] ) );
@@ -269,9 +253,8 @@ static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
    return iStatus;
 }
 
-/* ------------------------------------------------------------------------- */
-/*                           ACTIONS                                         */
-/* ------------------------------------------------------------------------- */
+
+/* --- ACTIONS --- */
 
 
 static PHB_HSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, HB_USHORT * pwPos, HB_BOOL bFunction )
@@ -916,7 +899,7 @@ void hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_B
       if( szText[ n++ ] == '&' )
       {
          char szSymName[ HB_SYMBOL_NAME_LEN + 1 ];
-         int iSize = 0, iScope;
+         int iSize = 0;
 
          /* Check if macro operator is used inside a string
           * Macro operator is ignored if it is the last char or
@@ -942,6 +925,8 @@ void hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_B
 
          if( iSize )
          {
+            int iScope;
+
             szSymName[ iSize ] = '\0';
 
             /* NOTE: All variables are assumed memvars in macro compiler -
@@ -2557,7 +2542,7 @@ static void hb_compGenVariablePCode( HB_COMP_DECL, HB_BYTE bPCode, const char * 
     * is popped (a value is asssigned to a variable).
     */
    if( HB_SUPPORT_HARBOUR )
-      bGenCode = HB_COMP_PARAM->fForceMemvars;    /* harbour compatibility */
+      bGenCode = HB_COMP_PARAM->fForceMemvars;    /* Harbour compatibility */
    else
       bGenCode = ( HB_COMP_PARAM->fForceMemvars || bPCode == HB_P_POPVARIABLE );
 
@@ -3141,8 +3126,6 @@ void hb_compGenPushString( const char * szText, HB_SIZE nStrLen, HB_COMP_DECL )
 
 void hb_compNOOPfill( PHB_HFUNC pFunc, HB_SIZE nFrom, HB_ISIZ nCount, HB_BOOL fPop, HB_BOOL fCheck )
 {
-   HB_SIZE n;
-
    while( nCount-- )
    {
       if( fPop )
@@ -3152,6 +3135,8 @@ void hb_compNOOPfill( PHB_HFUNC pFunc, HB_SIZE nFrom, HB_ISIZ nCount, HB_BOOL fP
       }
       else if( fCheck && pFunc->pCode[ nFrom ] == HB_P_NOOP && pFunc->nNOOPs )
       {
+         HB_SIZE n;
+
          for( n = 0; n < pFunc->nNOOPs; ++n )
          {
             if( pFunc->pNOOPs[ n ] == nFrom )
@@ -3175,7 +3160,6 @@ static void hb_compRemovePCODE( HB_COMP_DECL, HB_SIZE nPos, HB_SIZE nCount,
                                 HB_BOOL fCanMove )
 {
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
-   HB_SIZE n;
 
    if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) || ! fCanMove )
    {
@@ -3188,6 +3172,8 @@ static void hb_compRemovePCODE( HB_COMP_DECL, HB_SIZE nPos, HB_SIZE nCount,
    }
    else
    {
+      HB_SIZE n;
+
       memmove( pFunc->pCode + nPos, pFunc->pCode + nPos + nCount,
                pFunc->nPCodePos - nPos - nCount );
       pFunc->nPCodePos -= nCount;
@@ -3435,7 +3421,7 @@ static void hb_compStaticDefThreadSet( HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->pInitFunc )
    {
-      HB_USHORT uiCount = 0, uiVar = 0;
+      HB_USHORT uiCount = 0;
       PHB_HFUNC pFunc;
       PHB_HVAR pVar;
 
@@ -3451,10 +3437,12 @@ static void hb_compStaticDefThreadSet( HB_COMP_DECL )
          }
          pFunc = pFunc->pNext;
       }
+
       if( uiCount )
       {
          HB_SIZE nSize = ( ( HB_SIZE ) uiCount << 1 ) + 3;
          HB_BYTE * pBuffer = ( HB_BYTE * ) hb_xgrab( nSize ), *ptr;
+         HB_USHORT uiVar = 0;
          pBuffer[ 0 ] = HB_P_THREADSTATICS;
          pBuffer[ 1 ] = HB_LOBYTE( uiCount );
          pBuffer[ 2 ] = HB_HIBYTE( uiCount );
@@ -3548,8 +3536,6 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
    HB_SIZE nSize;
    HB_USHORT wLocals = 0;  /* number of referenced local variables */
    HB_USHORT wLocalsCnt, wLocalsLen;
-   HB_USHORT wPos;
-   int iLocalPos;
    PHB_HVAR pVar;
 
    pCodeblock = HB_COMP_PARAM->functions.pLast;
@@ -3648,7 +3634,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
       pVar = pCodeblock->pDetached;
       while( wLocals-- )
       {
-         wPos = hb_compVariableGetPos( pFunc->pLocals, pVar->szName );
+         HB_USHORT wPos = hb_compVariableGetPos( pFunc->pLocals, pVar->szName );
          hb_compGenPCode2( HB_LOBYTE( wPos ), HB_HIBYTE( wPos ), HB_COMP_PARAM );
          pVar = pVar->pNext;
       }
@@ -3656,6 +3642,8 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 
    if( HB_COMP_PARAM->fDebugInfo )
    {
+      int iLocalPos;
+
       hb_compGenModuleName( HB_COMP_PARAM, pFuncName );
 
       /* generate the name of referenced local variables */
@@ -4180,7 +4168,6 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
           ( pModule || szBuffer ) )
    {
       char szFileName[ HB_PATH_MAX ];     /* filename to parse */
-      char szPpoName[ HB_PATH_MAX ];
       HB_BOOL fSkip = HB_FALSE;
 
       /* Clear and reinitialize preprocessor state */
@@ -4231,6 +4218,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
       if( ! fSkip )
       {
+         char szPpoName[ HB_PATH_MAX ];
+
          if( HB_COMP_PARAM->fPPT )
          {
             hb_compPpoFile( HB_COMP_PARAM, szFileName, ".ppt", szPpoName );

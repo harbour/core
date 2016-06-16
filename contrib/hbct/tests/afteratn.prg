@@ -55,31 +55,29 @@ PROCEDURE Main()
 
    LOCAL cStr := "...This...is...a...test!"
 
-   ctinit()
-
    ? "Begin test of AfterAtNum()"
    ?
-   ? "  Value of cStr is: " + '"' + cStr + '"'
+   ? "  Value of cStr is:", '"' + cStr + '"'
    ?
 
    ? "  Simple tests:"
    ? '  AfterAtNum( "..", cStr )       should be "test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr ) + '"'
    ? '  AfterAtNum( "..", cStr, 2 )    should be ".is...a...test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr, 2 ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr, 2 ) + '"'
    ? '  AfterAtNum( "..", cStr, 2, 2 ) should be ".a...test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
    ?
 
    ? "  Multi-Pass tests"
    ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
    ? '  AfterAtNum( "..", cStr )       should be "test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr ) + '"'
    ? '  AfterAtNum( "..", cStr, 2 )    should be "This...is...a...test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr, 2 ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr, 2 ) + '"'
    ? '  AfterAtNum( "..", cStr, 2, 2 ) should be "is...a...test!",'
-   ? '                                    and is "' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                    and is', '"' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
    ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
@@ -88,16 +86,14 @@ PROCEDURE Main()
    ? '  Setting SetAtLike( CT_SETATLIKE_WILDCARD, "." )'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
    ? '  AfterAtNum( "..", cStr )        should be "",'
-   ? '                                     and is "' + AfterAtNum( "..", cStr ) + '"'
+   ? '                                     and is', '"' + AfterAtNum( "..", cStr ) + '"'
    ? '  AfterAtNum( "..", cStr, 2, 2 )  should be "s...is...a...test!",'
-   ? '                                     and is "' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                     and is', '"' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
    ? '  AfterAtNum( "..", cStr, 2, 10 ) should be ".a...test!",'
-   ? '                                     and is "' + AfterAtNum( "..", cStr, 2, 10 ) + '"'
+   ? '                                     and is', '"' + AfterAtNum( "..", cStr, 2, 10 ) + '"'
    ?
 
    ? "End test of AfterAtNum()"
    ?
-
-   ctexit()
 
    RETURN

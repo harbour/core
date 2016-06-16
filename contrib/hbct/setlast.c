@@ -1,5 +1,5 @@
 /*
- * CT3 Set Status functions: - SetLastKey()
+ * CT3 Set Status functions: SetLastKey()
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *

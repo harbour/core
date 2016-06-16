@@ -116,9 +116,8 @@ HB_FUNC( DISKSPACE )
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 
 #else
-   /* NOTE: Borland doesn't seem to deal with the un-named
-            struct that is part of ULARGE_INTEGER
-            [pt] */
+   /* NOTE: For compilers that don't seem to deal with the
+            unnamed struct that is part of ULARGE_INTEGER [pt] */
 #  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).u.LowPart + \
                                     ( double ) (v).u.HighPart * \
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
@@ -156,16 +155,16 @@ HB_FUNC( DISKSPACE )
             typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
                                                PULARGE_INTEGER, PULARGE_INTEGER );
 
-            static P_GDFSE s_pGetDiskFreeSpaceEx = NULL;
-            static HB_BOOL s_fInit = HB_FALSE;
+            static P_GDFSE s_pGetDiskFreeSpaceEx = ( P_GDFSE ) -1;
 
-            if( ! s_fInit )
+            if( s_pGetDiskFreeSpaceEx == ( P_GDFSE ) -1 )
             {
                HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
                if( hModule )
                   s_pGetDiskFreeSpaceEx = ( P_GDFSE )
                      HB_WINAPI_GETPROCADDRESST( hModule, "GetDiskFreeSpaceEx" );
-               s_fInit = HB_TRUE;
+               else
+                  s_pGetDiskFreeSpaceEx = NULL;
             }
 
             if( s_pGetDiskFreeSpaceEx )

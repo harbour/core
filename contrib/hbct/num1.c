@@ -1,15 +1,12 @@
 /*
- *
- *   CT3 Numeric functions - PART 1
- *     - Celsius()
- *     - Fahrenheit()
- *     - Infinity()
+ * CT3 Numeric functions - PART 1
+ *   - Celsius()
+ *   - Fahrenheit()
+ *   - Infinity()
  *
  * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
- *
- * Documentation and changes concerning error handling Copyright 2001
- *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
- *
+ * Copyright 2001 IntTec GmbH, Freiburg, Germany
+ *        Author: Martin Vogel <vogel@inttec.de> (Documentation and changes concerning error handling)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

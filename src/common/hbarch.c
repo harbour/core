@@ -68,7 +68,6 @@
 void hb_put_ieee754( HB_BYTE * ptr, double d )
 {
    int iExp, iSig;
-   double df;
 
 #if defined( HB_LONG_LONG_OFF )
    HB_U32 l1, l2;
@@ -82,7 +81,7 @@ void hb_put_ieee754( HB_BYTE * ptr, double d )
    }
    else
    {
-      df = frexp( iSig ? -d : d, &iExp );
+      double df = frexp( iSig ? -d : d, &iExp );
       l1 = ( HB_U32 ) ldexp( df, HB_MANTISSA_BITS + 1 );
       l2 = ( HB_U32 ) ldexp( df, HB_MANTISSA_BITS + 1 - 32 ) &
                          ( ( ( HB_U32 ) 1 << ( HB_MANTISSA_BITS - 32 ) ) - 1 );
@@ -104,7 +103,7 @@ void hb_put_ieee754( HB_BYTE * ptr, double d )
    }
    else
    {
-      df = frexp( iSig ? -d : d, &iExp );
+      double df = frexp( iSig ? -d : d, &iExp );
       ll = ( HB_U64 ) ldexp( df, HB_MANTISSA_BITS + 1 ) & HB_MANTISSA_MASK;
       ll |= ( HB_U64 ) ( ( iExp + HB_EXPONENT_ADD - 1 ) & HB_EXPONENT_MASK ) <<
                        HB_MANTISSA_BITS;
@@ -158,7 +157,6 @@ double hb_get_ieee754( const HB_BYTE * ptr )
 void hb_put_ord_ieee754( HB_BYTE * ptr, double d )
 {
    int iExp, iSig;
-   double df;
    HB_U32 l1, l2;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_put_ord_ieee754(%p, %f)", ptr, d ) );
@@ -170,7 +168,7 @@ void hb_put_ord_ieee754( HB_BYTE * ptr, double d )
    }
    else
    {
-      df = frexp( iSig ? -d : d, &iExp );
+      double df = frexp( iSig ? -d : d, &iExp );
       l1 = ( HB_U32 ) ldexp( df, HB_MANTISSA_BITS + 1 );
       l2 = ( HB_U32 ) ldexp( df, HB_MANTISSA_BITS + 1 - 32 ) &
                          ( ( ( HB_U32 ) 1 << ( HB_MANTISSA_BITS - 32 ) ) - 1 );

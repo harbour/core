@@ -380,6 +380,25 @@ HB_FUNC( PQERRORMESSAGE )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( PQRESULTERRORFIELD )
+{
+#if PG_VERSION_NUM >= 70400
+   PGresult * res = hb_PGresult_par( 1 );
+
+   if( res )
+      hb_retc( PQresultErrorField( res, hb_parni( 2 ) ) );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retc_null();
+#endif
+}
+
+HB_FUNC( PQRESSTATUS )
+{
+   hb_retc( PQresStatus( ( ExecStatusType ) hb_parnl( 1 ) ) );
+}
+
 HB_FUNC( PQSTATUS )
 {
    PGconn * conn = hb_PGconn_par( 1 );
@@ -613,6 +632,10 @@ HB_FUNC( PQMETADATA )  /* not a direct wrapper */
 
                case CASHOID:
                   hb_strncpy( buf, "money", sizeof( buf ) - 1 );
+                  break;
+
+               case NAMEOID:
+                  hb_strncpy( buf, "name", sizeof( buf ) - 1 );
                   break;
 
                default:
@@ -958,7 +981,7 @@ HB_FUNC( PQISNONBLOCKING )
 HB_FUNC( PQTRACECREATE )  /* not a direct wrapper */
 {
 #ifdef NODLL
-   hb_FILE_ret( fopen( hb_parcx( 1 ), "w+b" ) );
+   hb_FILE_ret( hb_fopen( hb_parcx( 1 ), "w+b" ) );
 #else
    hb_retptr( NULL );
 #endif
@@ -1166,6 +1189,11 @@ HB_FUNC( PQPUTCOPYEND )
 #else
    hb_retc_null();
 #endif
+}
+
+HB_FUNC( PG_ENCODING_TO_CHAR )
+{
+   hb_retc( pg_encoding_to_char( hb_parni( 1 ) ) );
 }
 
 #if 0

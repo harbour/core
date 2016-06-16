@@ -1,7 +1,7 @@
 /*
  * libcurl 'easy' API - Harbour header.
  *
- * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2015 Viktor Szakats (vszakats.net/harbour)
  * originally based on:
  * Copyright 2005 Luiz Rafael Culik Guimaraes <luiz at xharbour.com.br>
  *
@@ -53,7 +53,6 @@
 
 /* curl_easy_setopt() parameters.
    NOTE: The actual values may be different from the libcurl equivalent. */
-
 #define HB_CURLOPT_FILE                       1
 #define HB_CURLOPT_URL                        2
 #define HB_CURLOPT_PORT                       3
@@ -253,8 +252,26 @@
 #define HB_CURLOPT_TCP_KEEPIDLE               205
 #define HB_CURLOPT_TCP_KEEPINTVL              206
 #define HB_CURLOPT_MAIL_AUTH                  207
+#define HB_CURLOPT_XOAUTH2_BEARER             208
+#define HB_CURLOPT_LOGIN_OPTIONS              209
+#define HB_CURLOPT_EXPECT_100_TIMEOUT_MS      210
+#define HB_CURLOPT_SSL_ENABLE_ALPN            211
+#define HB_CURLOPT_SSL_ENABLE_NPN             212
+#define HB_CURLOPT_HEADEROPT                  213
+#define HB_CURLOPT_PROXYHEADER                214
+#define HB_CURLOPT_PINNEDPUBLICKEY            215
+#define HB_CURLOPT_UNIX_SOCKET_PATH           216
+#define HB_CURLOPT_SSL_VERIFYSTATUS           217
+#define HB_CURLOPT_SSL_FALSESTART             218
+#define HB_CURLOPT_PATH_AS_IS                 219
+#define HB_CURLOPT_PROXY_SERVICE_NAME         220
+#define HB_CURLOPT_SERVICE_NAME               221
+#define HB_CURLOPT_PIPEWAIT                   222
+#define HB_CURLOPT_DEFAULT_PROTOCOL           223
+#define HB_CURLOPT_CONNECT_TO                 224
+#define HB_CURLOPT_TCP_FASTOPEN               225
 #define HB_CURLOPT_DOWNLOAD                   1001  /* Harbour special ones */
-#define HB_CURLOPT_PROGRESSBLOCK              1002
+#define HB_CURLOPT_XFERINFOBLOCK              1002
 #define HB_CURLOPT_UL_FILE_SETUP              1003
 #define HB_CURLOPT_UL_FILE_CLOSE              1004
 #define HB_CURLOPT_DL_FILE_SETUP              1005
@@ -263,14 +280,18 @@
 #define HB_CURLOPT_DL_BUFF_SETUP              1008
 #define HB_CURLOPT_DL_BUFF_GET                1009
 #define HB_CURLOPT_UL_NULL_SETUP              1010
-#define HB_CURLOPT_UL_FHANDLE_SETUP           1011
-#define HB_CURLOPT_DL_FHANDLE_SETUP           1012
+#define HB_CURLOPT_HTTPPOST_CONTENT           1013
+#define HB_CURLOPT_HTTPPOST_FORM              1014
+#define HB_CURLOPT_DEBUGBLOCK                 1015
 /* Compatibility ones. Please don't use these. */
+#define HB_CURLOPT_UL_FHANDLE_SETUP           HB_CURLOPT_UL_FILE_SETUP
 #define HB_CURLOPT_SETUPLOADFILE              HB_CURLOPT_UL_FILE_SETUP
 #define HB_CURLOPT_CLOSEUPLOADFILE            HB_CURLOPT_UL_FILE_CLOSE
+#define HB_CURLOPT_DL_FHANDLE_SETUP           HB_CURLOPT_DL_FILE_SETUP
 #define HB_CURLOPT_SETDOWNLOADFILE            HB_CURLOPT_DL_FILE_SETUP
 #define HB_CURLOPT_CLOSEDOWNLOADFILE          HB_CURLOPT_DL_FILE_CLOSE
-#define HB_CURLOPT_SETPROGRESS                HB_CURLOPT_PROGRESSBLOCK
+#define HB_CURLOPT_SETPROGRESS                HB_CURLOPT_XFERINFOBLOCK
+#define HB_CURLOPT_PROGRESSBLOCK              HB_CURLOPT_XFERINFOBLOCK
 
 /* HB_CURLOPT_PROXYTYPE option */
 #define HB_CURLPROXY_HTTP                     0  /* added in 7.10 */
@@ -287,23 +308,30 @@
 
 /* HB_CURLOPT_SSL_OPTIONS values */
 #define HB_CURLSSLOPT_ALLOW_BEAST             hb_bitShift( 1, 0 )
+#define HB_CURLSSLOPT_NO_REVOKE               hb_bitShift( 1, 1 )
 
 /* HB_CURLOPT_HTTPAUTH option */
 #define HB_CURLAUTH_NONE                      0                    /* nothing */
-#define HB_CURLAUTH_BASIC                     1                    /* Basic (default) */
-#define HB_CURLAUTH_DIGEST                    2                    /* Digest */
-#define HB_CURLAUTH_GSSNEGOTIATE              4                    /* GSS-Negotiate */
-#define HB_CURLAUTH_NTLM                      8                    /* NTLM */
+#define HB_CURLAUTH_BASIC                     hb_bitShift( 1, 0 )  /* Basic (default) */
+#define HB_CURLAUTH_DIGEST                    hb_bitShift( 1, 1 )  /* Digest */
+#define HB_CURLAUTH_NEGOTIATE                 hb_bitShift( 1, 2 )  /* Negotiate */
+#define HB_CURLAUTH_NTLM                      hb_bitShift( 1, 3 )  /* NTLM */
 #define HB_CURLAUTH_DIGEST_IE                 hb_bitShift( 1, 4 )  /* Digest with IE flavour */
 #define HB_CURLAUTH_NTLM_WB                   hb_bitShift( 1, 5 )  /* NTLM delegating to winbind helper */
 #define HB_CURLAUTH_ONLY                      hb_bitShift( 1, 31 ) /* used together with a single other type to force no auth or just that single type */
 #define HB_CURLAUTH_ANY                       hb_bitNot( 0 )       /* all types set */
 #define HB_CURLAUTH_ANYSAFE                   hb_bitNot( hb_bitOr( HB_CURLAUTH_BASIC, HB_CURLAUTH_DIGEST_IE ) )
 
+#define HB_CURLAUTH_GSSNEGOTIATE              HB_CURLAUTH_NEGOTIATE
+
 /* HB_CURLOPT_HTTP_VERSION option */
-#define HB_CURL_HTTP_VERSION_NONE             0  /* setting this means we don't care, and that we'd like the library to choose the best possible for us! */
-#define HB_CURL_HTTP_VERSION_1_0              1  /* please use HTTP 1.0 in the request */
-#define HB_CURL_HTTP_VERSION_1_1              2  /* please use HTTP 1.1 in the request */
+#define HB_CURL_HTTP_VERSION_NONE               0  /* setting this means we don't care, and that we'd like the library to choose the best possible for us! */
+#define HB_CURL_HTTP_VERSION_1_0                1  /* please use HTTP 1.0 in the request */
+#define HB_CURL_HTTP_VERSION_1_1                2  /* please use HTTP 1.1 in the request */
+#define HB_CURL_HTTP_VERSION_2_0                3  /* please use HTTP 2.0 in the request */
+#define HB_CURL_HTTP_VERSION_2                  HB_CURL_HTTP_VERSION_2_0
+#define HB_CURL_HTTP_VERSION_2TLS               4
+#define HB_CURL_HTTP_VERSION_2_PRIOR_KNOWLEDGE  5
 
 /* HB_CURLOPT_USE_SSL option */
 #define HB_CURLUSESSL_NONE                    0  /* do not attempt to use SSL */
@@ -358,13 +386,20 @@
 #define HB_CURL_IPRESOLVE_V4                  1  /* resolve to ipv4 addresses */
 #define HB_CURL_IPRESOLVE_V6                  2  /* resolve to ipv6 addresses */
 
+/* HB_CURLOPT_HEADEROPT */
+#define HB CURLHEADER_UNIFIED                 0
+#define HB_CURLHEADER_SEPARATE                1
+
 /* HB_CURLOPT_SSLVERSION option */
 #define HB_CURL_SSLVERSION_DEFAULT            0
 #define HB_CURL_SSLVERSION_TLSv1              1
 #define HB_CURL_SSLVERSION_SSLv2              2
 #define HB_CURL_SSLVERSION_SSLv3              3
+#define HB_CURL_SSLVERSION_TLSv1_0            4
+#define HB_CURL_SSLVERSION_TLSv1_1            5
+#define HB_CURL_SSLVERSION_TLSv1_2            6
 
-/*  HB_CURLOPT_SSH_AUTH_TYPES option */
+/* HB_CURLOPT_SSH_AUTH_TYPES option */
 #define HB_CURL_CURLSSH_AUTH_ANY              hb_bitNot( 0 )      /* all types supported by the server */
 #define HB_CURL_CURLSSH_AUTH_NONE             0                   /* none allowed, silly but complete */
 #define HB_CURL_CURLSSH_AUTH_PUBLICKEY        1                   /* public/private key files */
@@ -418,7 +453,6 @@
 
 /* curl_easy_getinfo() parameters.
    NOTE: The actual values may be different from the libcurl equivalent. */
-
 #define HB_CURLINFO_EFFECTIVE_URL             1
 #define HB_CURLINFO_RESPONSE_CODE             2
 #define HB_CURLINFO_HTTP_CONNECTCODE          3
@@ -448,7 +482,7 @@
 #define HB_CURLINFO_OS_ERRNO                  27
 #define HB_CURLINFO_NUM_CONNECTS              28
 #define HB_CURLINFO_COOKIELIST                29
-#define HB_CURLINFO_LASTSOCKET                30
+#define HB_CURLINFO_LASTSOCKET                30  /* deprecated */
 #define HB_CURLINFO_FTP_ENTRY_PATH            31
 #define HB_CURLINFO_PRIMARY_IP                32
 #define HB_CURLINFO_APPCONNECT_TIME           33
@@ -461,6 +495,8 @@
 #define HB_CURLINFO_PRIMARY_PORT              40
 #define HB_CURLINFO_LOCAL_IP                  41
 #define HB_CURLINFO_LOCAL_PORT                42
+#define HB_CURLINFO_ACTIVESOCKET              43
+#define HB_CURLINFO_HTTP_VERSION              44
 
 /* curl result codes. */
 
@@ -481,7 +517,7 @@
 #define HB_CURLE_FTP_WEIRD_PASV_REPLY         13 /* */
 #define HB_CURLE_FTP_WEIRD_227_FORMAT         14 /* */
 #define HB_CURLE_FTP_CANT_GET_HOST            15 /* */
-#define HB_CURLE_OBSOLETE16                   16 /* NOT USED */
+#define HB_CURLE_HTTP2                        16 /* */
 #define HB_CURLE_FTP_COULDNT_SET_TYPE         17 /* */
 #define HB_CURLE_PARTIAL_FILE                 18 /* */
 #define HB_CURLE_FTP_COULDNT_RETR_FILE        19 /* */
@@ -555,5 +591,38 @@
 #define HB_CURLE_RTSP_SESSION_ERROR           86 /* mismatch of RTSP Session Identifiers */
 #define HB_CURLE_FTP_BAD_FILE_LIST            87 /* unable to parse FTP file list */
 #define HB_CURLE_CHUNK_FAILED                 88 /* chunk callback reported error */
+#define HB_CURLE_NO_CONNECTION_AVAILABLE      89 /* No connection available, the session will be queued */
+#define HB_CURLE_SSL_PINNEDPUBKEYNOTMATCH     90 /* specified pinned public key did not match */
+
+#define HB_CURLE_OBSOLETE16                   HB_CURLE_HTTP2
+
+/* curl_version_info() returned array positions. */
+#define HB_CURLVERINFO_VERSION                1
+#define HB_CURLVERINFO_VERSION_NUM            2
+#define HB_CURLVERINFO_HOST                   3
+#define HB_CURLVERINFO_FEATURES               4
+#define HB_CURLVERINFO_SSLVERSION             5
+#define HB_CURLVERINFO_SSLVERSION_NUM         6
+#define HB_CURLVERINFO_LIBZ_VERSION           7
+#define HB_CURLVERINFO_PROTOCOLS              8  /* Array */
+#define HB_CURLVERINFO_ARES                   9
+#define HB_CURLVERINFO_ARES_NUM               10
+#define HB_CURLVERINFO_LIBIDN                 11
+#define HB_CURLVERINFO_ICONV_VER_NUM          12
+#define HB_CURLVERINFO_LIBSSH_VERSION         13
+#define HB_CURLVERINFO_LEN                    13
+
+/* HB_CURLOPT_HTTPPOST_FORM type */
+#define HB_CURLOPT_HTTPPOST_FORM_CONTENT      1
+#define HB_CURLOPT_HTTPPOST_FORM_FILE         2
+
+/* HB_CURLOPT_DEBUGBLOCK callback modes */
+#define HB_CURLINFO_TEXT                      0
+#define HB_CURLINFO_HEADER_IN                 1
+#define HB_CURLINFO_HEADER_OUT                2
+#define HB_CURLINFO_DATA_IN                   3
+#define HB_CURLINFO_DATA_OUT                  4
+#define HB_CURLINFO_SSL_DATA_IN               5
+#define HB_CURLINFO_SSL_DATA_OUT              6
 
 #endif /* HBCURL_CH_ */

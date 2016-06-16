@@ -1,4 +1,5 @@
 /*
+ * Harbour Project source code:
  * National Collation Support Module (FR850C)
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

@@ -1,6 +1,5 @@
 /*
- * CT3 string functions:
- *       Like()
+ * CT3 string functions: Like()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

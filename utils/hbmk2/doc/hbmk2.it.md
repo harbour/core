@@ -1,16 +1,16 @@
-Harbour Make \(hbmk2\) 3\.2\.0dev \(r2013\-04\-03 03:33\)  
-Copyright \(c\) 1999\-2013, Viktor Szakáts  
-<http://harbour\-project\.org/>  
+Harbour Make \(hbmk2\) 3\.4\.0dev \(9dea61d\) \(2016\-03\-09 22:28\)  
+Copyright &copy; 1999\-2016, Viktor Szakáts  
+<https://github\.com/vszakats/harbour\-core/>  
 Traduzione \(it\): \(inserisci qui il tuo nome\)  
 
 Sintassi:  
   
-  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
+  hbmk2 \[options\] \[&lt;script\[s\]&gt;\] &lt;src\[s\]\[\.prg|\.hbc|\.c|\.obj|\.o|\.rc|\.res|\.def|\.po|\.pot|\.hbl|@\.clp|\.d|\.ch\]&gt;  
   
 Descrizione:  
 
 
-  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will autodetect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
+  hbmk2 is an integrated and portable build tool, making it possible to create various types of executable binaries \(executable, dynamic library, static library, Harbour portable binary\) out of multiple types of source files \(C, C\+\+, Objective\-C, Harbour, gettext translations, Windows resources\)\. 'Integrated' means that a single hbmk2 project file can control all or most aspects of the build process\. 'Portable' means that a single hbmk2 project file can control the build on all supported OS platforms and across all supported C compilers\. It also aims to cover the majority of build tasks via short and simple project files \(options\)\. hbmk2 supports pure \-non\-Harbour\- C/C\+\+/Objective\-C projects as well\. In order to achieve above goals, hbmk2 will auto\-detect Harbour, C compiler and other required tools, then configure and call them appropriately\. hbmk2 allows to extend the types of supported source files via plugins\.  
 Besides building executables, hbmk2 is able to run Harbour scripts \(both source and precompiled\) directly, and it also features an interactive shell prompt\.
   
 Opzioni:  
@@ -27,10 +27,11 @@ Opzioni:
  - **\-hblib** creare la libreria statica
  - **\-hbdyn** create dynamic library \(without linked Harbour VM\)
  - **\-hbdynvm** create dynamic library \(with linked Harbour VM\)
+ - **\-strip\[\-\]** strip \(or don't\) debugging \(and other extra\) information from target binary\. They are included by default by certain C compilers, f\.e\.: gcc\*, clang, mingw\*, djgpp\.
 
 
  - **\-mt|\-st** link with multi/single\-thread Harbour VM
- - **\-gui|\-std** creare l'eseguibile GUI/console
+ - **\-gui|\-std|\-cli** create GUI/console/command\-line executable
  - **\-main=&lt;mainfunc&gt;** override the name of starting function/procedure
  - **\-request=&lt;func&gt;** forza la funzione/procedura da essere linkata
  - **\-fullstatic** linkare con una libreria statica
@@ -40,17 +41,18 @@ Opzioni:
  - **\-debug\[\-\]** add/exclude C compiler debug info\. For Harbour level debug, use Harbour option \-b as usual
  - **\-optim\[\-\]** toggle C compiler optimizations \(default: on\)
  - **\-cpp\[\-\]** forza il modo C\+\+/C
- - **\-cpp=&lt;value&gt;** select C\+\+ mode\. Allowed values are: def, yes, no
+ - **\-cpp=&lt;value&gt;** seleziona la modalità C\+\+\. Sono ammessi i valori: def, yes, no
+ - **\-c=&lt;value&gt;** select C standard\. Allowed values are: iso90, iso99, iso11, gnu90, gnu99, gnu11
+ - **\-cpp=&lt;value&gt;** select C\+\+ mode or standard\. Allowed values are: def, yes, no, iso98, iso11, iso14, gnu98, gnu11, gnu14
  - **\-map\[\-\]** creare \(o no\) un file mappa
- - **\-implib\[\-\]** crea \(o non\) una libreria d'importazione \(in modalità \-hbdyn/\-hbexe\)\. Al nome verrà aggiunto un suffisso\.
+ - **\-implib\[\-\]** create \(or not\) an import library \(in \-hbdyn/\-hbexe mode\)\. The name will have a suffix added\.
  - **\-implib=&lt;output&gt;** crea la libreria di importazione \(in modalità \-hbdyn/\-hbexe\) di nome &lt;output&gt; \(default: identica all'output\)
  - **\-ln=&lt;link&gt;** create symbolic link pointing to &lt;output&gt; \(&lt;link&gt; is considered relative to &lt;output&gt;\)
- - **\-strip\[\-\]** strip \(no strip\) binaries
  - **\-trace\[\-\]** mostra comandi eseguiti
  - **\-beep\[\-\]** attiva \(o disattiva\) un beep singolo in caso di successo in uscita, doppio beep in caso di errore
  - **\-ignore\[\-\]** ignore errors when running compiler tools \(default: off\)
  - **\-hbcppmm\[\-\]** override standard C\+\+ memory management functions with Harbour ones
- - **\-winuni\[\-\]** Scegliere tra modo compilazione UNICODE \(WIDE\) e ANSI \(predefinito: ANSI\) \(Solo Windows\. Per WinCE esso è sempre fissato a UNICODE\)
+ - **\-winuni\[\-\]** select between UNICODE \(WIDE\) and ANSI Windows API usage for C/C\+\+ input files \(default: ANSI\) \(Windows only\. For WinCE it is always set to UNICODE\)
  - **\-nohblib\[\-\]** non usare librerie statiche principali di Harbour durante il linking
  - **\-nodefgt\[\-\]** do not link default GTs \(effective in \-static mode\)
  - **\-nolibgrouping\[\-\]** disable library grouping on gcc based compilers
@@ -58,22 +60,26 @@ Opzioni:
  - **\-traceonly** mostrare i comandi da essere eseguiti, ma non vengono eseguiti
  - **\-warn=&lt;level&gt;** set C compiler warning level  
 &lt;level&gt; can be: max, yes, low, no, def \(default: yes\)
- - **\-safe\[\-\]** enable safety options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
+ - **\-harden\[\-\]** enable hardening options in C compiler/linker \(default: enabled on Windows, disabled on other systems\)
+ - **\-vcsts\[\-\]** set timestamp of output file\(s\) to the last repository commit \(Supported with: Git\)
  - **\-compr=&lt;level&gt;** compress executable/dynamic lib \(needs UPX tool\)  
-&lt;level&gt; can be: yes, no, min, max
+&lt;level&gt; can be: yes, no, min, high, max
  - **\-run\[\-\]** eseguire/non eseguire l'eseguibile prodotto
- - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
- - **\-tshead=&lt;file&gt;** generate \.ch header file with timestamp information\. Generated header will define preprocessor constants \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build
+ - **\-vcshead=&lt;file&gt;** generate \.ch header file with local repository information\. Git, SVN, Mercurial, Bazaar, Fossil, CVS and Monotone are currently supported\. Generated header will define preprocessor constant \_HBMK\_VCS\_TYPE\_ with the name of detected VCS and \_HBMK\_VCS\_ID\_ with the unique ID of local repository\. VCS specific information is added as \_HBMK\_VCS\_&lt;TYPE&gt;\_\*\_ constants, where supported\. If no VCS system is detected, a sequential number will be rolled automatically on each build\.
+ - **\-bldhead=&lt;file&gt;** generate \.ch header file with build information, like build sequence number and timestamp\. Generated header will define preprocessor constants \_HBMK\_BUILD\_ID\_ and \_HBMK\_BUILD\_ID\_NUM\_ with sequence number \(incremented on each build\), \_HBMK\_BUILD\_DATE\_, \_HBMK\_BUILD\_TIME\_, \_HBMK\_BUILD\_TIMESTAMP\_ with the date/time of build and \_HBMK\_BUILD\_RANDSTR\_32\_ with a random string of 32 bytes in hexadecimal format
+ - **\-haltrev\[\-\]** do not increase revision numbers in \-bldhead= \(\_HBMK\_BUILD\_ID\_\) and \-vcshead= \(\_HBMK\_VCS\_ID\_\) options \(default: do increase\)
  - **\-icon=&lt;file&gt;** set &lt;file&gt; as application icon\. &lt;file&gt; should be a supported format on the target platform \(not supported by some platforms/compilers\)\. On Windows, it is implemented by generating and linking a resource file\.
  - **\-manifest=&lt;file&gt;** embed manifest &lt;file&gt; in executable/dynamic lib \(Windows only\)
- - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both autodetected\.
+ - **\-sign=&lt;key&gt;** sign executable with &lt;key&gt; \(Windows and Darwin only\)\. On Windows signtool\.exe is used \(part of MS Windows SDK\) or posign\.exe \(part of Pelles C 7\), in that order, both auto\-detected\.
  - **\-signpw=&lt;pw&gt;** Usare &lt;pw&gt; come password quando si accede all'eseguibile \(Solo Windows e Darwin\)
+ - **\-signts=&lt;\[std:\]url&gt;** use &lt;url&gt; as trusted timestamp server\. Optional &lt;std&gt; might specify the standard as 'rfc3161' or 'authenticode' \(without quotes\)\. The default is 'rfc3161'\. Empty value resets it to the default: http://timestamp\.globalsign\.com/scripts/timstamp\.dll
  - **\-instfile=&lt;g:file&gt;** add &lt;file&gt; in to the list of files to be copied to path specified by \-instpath option\. &lt;g&gt; is an optional copy group \(case sensitive\), it must be at least two characters long\. In case you do not specify &lt;file&gt;, the list of files in that group will be emptied\.
  - **\-instpath=&lt;g:path&gt;** copy target file\(s\) to &lt;path&gt;\. if &lt;path&gt; is a directory, it should end with path separator, in this case files specified by \-instfile option will also be copied\. can be specified multiple times\. &lt;g&gt; is an optional copy group, it must be at least two characters long\. Build target will be automatically copied to default \(empty\) copy group\. There exist following built\-in &lt;g&gt; groups: 'depimplib' for import libraries and 'depimplibsrc' for import library source \(\.dll\) files, both belonging to dependencies\.
  - **\-instforce\[\-\]** copy target file\(s\) to install path even if already up to date
  - **\-depimplib\[\-\]** abilita \(o disabilita\) la generazione della libreria d'importazione per i sorgenti della libreria d'importazione specificata nelle opzioni \-deimpslib= \(default: si\)
  - **\-stop\[=&lt;text&gt;\]** stop senza alcuna azione e visualizzazione di &lt;text&gt; se specificato
  - **\-echo=&lt;text&gt;** visualizzazione del testo sullo schermo
+ - **\-skip** skip processing the rest of the project file \(filters not supported\)
  - **\-pause** force waiting for a key on exit in case of failure \(with alternate GTs only\)
  - **\-exitstr** mostra gli errori all'uscita come testo leggibile
  - **\-info** abilitare i messaggi di informazione
@@ -97,7 +103,7 @@ Opzioni:
  - **\-dflag\+=&lt;f&gt;** passa una singola opzione direttamente al linker \(libreria dinamica\) dopo la lista di libreria\. Usare con cautela\.
  - **\-3rd=&lt;f&gt;** options/flags reserved for 3rd party tools, always ignored by hbmk2 itself
  - **\-env:&lt;e&gt;\[&lt;o&gt;\[&lt;v&gt;\]\]** alter local environment\. &lt;e&gt; is the name of the environment variable to alter\. &lt;o&gt; can be '=' to set/override, '\-' to delete, '\+' to append to the end of existing value, '\#' to insert to the beginning of existing value\. &lt;v&gt; is the value to set/append/insert\.
- - **\-jobs=&lt;n&gt;** start n compilation threads \(multiprocess platforms only\)
+ - **\-jobs=&lt;n&gt;** start n compilation threads \(multiprocess platforms only\) \(default: number of processors available or 1 if not detectable/applicable; on this system: 2\)
  - **\-head=&lt;m&gt;** control source header parsing \(in incremental build mode\)  
 &lt;m&gt; can be: native \(uses compiler to extract dependencies\), full \(default, uses simple text parser on the whole file\), dep, off
  - **\-rebuild** ricompilazione \(in modo incrementale\)
@@ -114,14 +120,16 @@ Opzioni:
  - **\-lng=&lt;languages&gt;** list of languages to be replaced in %\{hb\_lng\} macros in \.pot/\.po filenames and output \.hbl/\.po filenames\. Comma separated list:  
 \-lng=en,hu\-HU,de
  - **\-po=&lt;output&gt;** create/update \.po file from source\. Merge it with previous \.po file of the same name
- - **\-minipo\[\-\]** do \(not\) add Harbour version number and source file reference to \.po \(default: add them\)
+ - **\-minipo\[\-\]** do \(not\) add source file reference to \.po \(default: add them\)
  - **\-rebuildpo** recreate \.po file, thus removing all obsolete entries in it
 
 
- - **\-hbx=\[&lt;\.ch&gt;\]** Creare l'intestazione Harbour \(in formato\. HBX\), con tutti i simboli esterni\. Il parametro vuoto lo disattiva\.
+ - **\-hbx=&lt;n\[\.hbx&gt;\]&gt;** create Harbour header \(in \.hbx format\) with all external symbols\. Empty parameter will disable it\. Default extension is \.hbx\. If set, &lt;n&gt; will be automatically added to the list of Harbour input files and built into the project\. Therefore, the name part of &lt;n&gt; must not be the same as any other input file present in the project\.
+ - **\-hbx\[\-\]** update \(or don't\) \.hbx file specified in \-hbx= option \(default: update\)
  - **\-autohbc=&lt;\.ch:\.hbc&gt;** &lt;\.ch&gt; is a header file name\. &lt;\.hbc&gt; is a \.hbc filename to be automatically included in case the header is found in any of the compiled sources\. \(EXPERIMENTAL\)
 
 
+ - **\-depurlbase=&lt;d:u&gt;** &lt;d&gt; is the name of the dependency\. &lt;u&gt; is the URL of the project\. Can be specified multiple times\.
  - **\-deppkgname=&lt;d:n&gt;** &lt;d&gt; è il nome della dipendenza\. &lt;n&gt; nome del pacchetto della dipendenza\. Può essere specificato più volte\.
  - **\-depkeyhead=&lt;d:h&gt;** &lt;d&gt; is the name of the dependency\. &lt;h&gt; is the key header \(\.h\) of the package dependency\. Multiple alternative headers can be specified\.
  - **\-depoptional=&lt;d:f&gt;** &lt;d&gt; è il nome della dipendenza\. &lt;f&gt; può essere 'yes' o 'no', specifica se la dipendenza è opzionale\. Default: no
@@ -129,7 +137,7 @@ Opzioni:
  - **\-depincroot=&lt;d:r&gt;** &lt;d&gt; p il nome della dipendenza\. Fissare &lt;r&gt; a cartella principale per i percorsi specificati nelle opzioni \-depincpath\.
  - **\-depincpath=&lt;d:i&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;i&gt; to the header detection path list\.
  - **\-depincpathlocal=&lt;d:i&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;i&gt; to the header detection path list, where &lt;i&gt; is pointing to a directory local to the project and containing an embedded \(aka\. 'locally hosted'\) dependency\.
- - **\-depimplibs=&lt;d:dll&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;dll&gt; to the import library source list\.
+ - **\-depimplibs=&lt;d:dll\[:lib\]&gt;** &lt;d&gt; is the name of the dependency\. Add &lt;dll&gt; to the import library source list\. Optionally override the name of the generated implib to become &lt;lib&gt;\.
  - **\-depimplibd=&lt;d:lib&gt;** &lt;d&gt; is the name of the dependency\. Set generated import library name to &lt;lib&gt;
  - **\-depfinish=&lt;d&gt;** &lt;d&gt; is the name of the dependency\. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly\. Optional, if omitted, detection will take place after processing all options\.
 
@@ -138,7 +146,7 @@ Opzioni:
  - **\-pi=&lt;filename&gt;** specificare il file di input ai plugin
  - **\-pflag=&lt;f&gt;** pass single flag to plugins
   
-Opzioni riportate di seguito sono disponibili da riga di comando:  
+Le opzioni riportate di seguito sono disponibili da riga di comando:  
 
 
  - **\-target=&lt;script&gt;** specify a new build target\. &lt;script&gt; can be \.prg \(or no extension\) or \.hbp file\. Note that \.hbp files are automatically considered as separate build targets\.
@@ -155,19 +163,24 @@ create link/copy hbmk2 to hbcc for the same effect
  - **\-hb10** abilita la compatibilità Harbour 1\.0\.x
  - **\-hb20** abilita la compatibilità Harbour 2\.0\.x
  - **\-hb30** abilita la compatibilità Harbour 3\.0\.x
+ - **\-hb32** enable Harbour 3\.2\.0dev compatibility mode
  - **\-xhb** abilita modo xhb
  - **\-hbc** abilita modo C puro
- - \-rtlink 
- - \-blinker 
- - **\-exospace** emulate Clipper compatible linker behavior  
+ - **\-blinker** emulate Cl\*pper compatible linker behavior  
 create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
+ - **\-exospace** see above
+ - **\-rtlink** see above
 
 
  - **\-hbreg\[=global\]** register Harbour Script \(\.hb\) with hbmk2 \(Windows only\)
  - **\-hbunreg\[=global\]** elimina la registrazione dello Script Harbour \(\.hb\) da hbmk2 \(solo Windows\)
 
 
- - **\-find &lt;text&gt;** elenca tutte le funzioni conosciute di Harbour che contengono &lt;text&gt; nel loro nome, insieme con il loro pacchetto \(ignora maiuscole e minuscole, accetta più valori, può contenere caratteri jolly\)
+ - **\-find &lt;text&gt;** list all known Harbour functions that contain &lt;text&gt; in their name, along with their package \(case insensitive, accepts multiple values, can contain wildcard characters\)
+ - **\-doc &lt;text&gt;** show documentation for function\[s\]/command\[s\] in &lt;text&gt;
+ - **\-docjson &lt;text&gt;** output documentation in JSON format for function\[s\]/command\[s\] in &lt;text&gt;
+ - **\-fixcase &lt;file\[s\]&gt;** fix casing of Harbour function names to their 'official' format\. Core functions and functions belonging to all active contribs/addons with an \.hbx file will be processed\.
+ - **\-sanitize &lt;file\[s\]&gt;** convert filenames to lowercase, EOLs to platform native and remove EOF character, if present\.
 
 
  - **\-hbmake=&lt;file&gt;** Converte il progetto hbmake &lt;file&gt; in file \.hbp
@@ -184,16 +197,16 @@ create link/copy hbmk2 to rtlink/blinker/exospace for the same effect
 
  - **\-plat=&lt;platform&gt;** override default target platform \(default: automatic\)
  - **\-cpu=&lt;cpu&gt;** ignora la CPU predefinita di destinazione \(predefinito: automatico\) \(SPERIMENTALE\)
- - **\-comp=&lt;compiler&gt;** sovrascrive la C compiler autodetection  
+ - **\-comp=&lt;compiler&gt;** override C compiler auto\-detection  
 Special value:  
-\- bld: use original build settings \(default on \*nix\)
+ \- bld: use original build settings \(default on \*nix\)
  - **\-build=&lt;name&gt;** specificare un nome di compilazione
  - **\-lang=&lt;lang&gt;** ignora la lingua predefinita\. &lt;lang&gt; è un codice ISO di lingua\.
  - **\-width=&lt;n&gt;** imposta la larghezza dell'output a &lt;n&gt; caratteri \(0=illimitato\)
  - **\-shl** show sub\-project level in output lines
- - **\-viewhelp** Help esteso nel visualizzatore di testo
- - **\-longhelp** aiuto esteso
- - **\-longhelpmd** Help esteso in formato [Markdown](http://daringfireball.net/projects/markdown/)
+ - **\-viewhelp** full help in text viewer
+ - **\-fullhelp** full help
+ - **\-fullhelpmd** full help in [Markdown](https://daringfireball.net/projects/markdown/) format
  - **\-harbourhelp** Harbour compiler help \(all Harbour compiler options are accepted as is by hbmk2\)
  - **\-credits** Riconoscimenti del compilatore Harbour
  - **\-build** Informazioni del compilatore Harbour
@@ -217,13 +230,14 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
  - **hbrun\*|\*hbrun** mode script runner / interactive shell
  - **hbrund|hbrun\*d** mode script runner / interactive shell in debug mode
  - **harbour** modo \-hbraw \(emulazione del compilatore Harbour \- raw \-\)
- - **clipper** modalità \-hbcmp \(emulazione compilatore Clipper\)
- - **rtlink** modalità \-rtlink \(emulazione linker di Clipper\)
- - **exospace** modalità \-rtlink \(emulazione linker di Clipper\)
- - **blinker** modalità \-rtlink \(emulazione linker di Clipper\)
+ - **clipper** mode \-hbcmp \(emulate Cl\*pper compiler\)
+ - **rtlink** mode \-rtlink \(emulate Cl\*pper linker\)
+ - **exospace** mode \-rtlink \(emulate Cl\*pper linker\)
+ - **blinker** mode \-rtlink \(emulate Cl\*pper linker\)
  - **\*10** opzione \-hb10
  - **\*20** opzione \-hb20
  - **\*30** opzione \-hb30
+ - **\*32** opzione \-hb32
  - **x\*** opzione \-xhb
  - **hbcmp\*|\*hbcmp** modalità \-hbcmp \(emula il compilatore Harbour producendo un oggetto binario\)
  - **hbcc\*|\*hbcc** modo \-hbcc \(emulazione compilatore Clipper\)
@@ -235,22 +249,22 @@ You can sym\-link/copy/rename hbmk2 to the following names to alter default mode
 Files:  
 
 
- - **\*\.hbp** project file\. Can contain any number of command\-line options, which are expected to create an output\. Lines beginning with '\#' character are ignored, otherwise newline is optional and options are space separated, just like on the command\-line\. You must enclose option containing space in double quotes\. Each \.hbp file reference will be executed as a sub\-project\.
+ - **\*\.hbp** file di progetto\. Può contenere un numero qualsiasi di opzioni della linea di comando, che sono attesi nella creazione dell'output\. Le linee che iniziano con il carattere '\#' sono ignorate, il carattere di fine linea è opzionale e le opzioni sono separate da spazi, esattamente come per la linea di comando\. Occorre chiudere tra doppie virgolette le opzioni che contengono spazi\. Ciascun riferimento a file \.hbp sarà eseguito come sub\-progetto\.
  - **\*\.hbm** insieme di opzioni\. Può essere utilizzata per raccoglierle in un file ed includerle nei files di progetto\. Esso usa lo stesso formato \.hbp\.
  - **\*\.hbc** collection of options that accompany components \(aka 'libs', aka packages\)\. Use different syntax than command\-line and \.hbp/\.hbm files\. Lines beginning with '\#' character are ignored, each directive must be placed in separate line\.
  - **\*\.ch** se passato direttamente come file sorgente, esso sarà utilizzato come intestazione standard addizionale
- - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: %APPDATA%\\\.harbour, &lt;cartella hbmk2&gt;
+ - **hbmk\.hbc** standard \.hbc file that gets automatically processed, if present\. Possible location\(s\) \(in order of precedence\) \[\*\]: $HOME/\.harbour, /etc/harbour, &lt;cartella hbmk2&gt;/\.\./etc/harbour, &lt;cartella hbmk2&gt;/\.\./etc, &lt;cartella hbmk2&gt;
  - **hbmk\.hbm** optional \.hbm file residing in current working directory, which gets automatically processed before other options
- - **$hb\_pkg\_dynlib\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
- - **$hb\_pkg\_install\.hbm** special \.hbm file embedded inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_dynlib\.hbm** special \.hbm file built\-in inside hbmk2\. It manages the details of creating a dynamic library \(in the style of Harbour contribs\)\.
+ - **$hb\_pkg\_install\.hbm** special \.hbm file built\-in inside hbmk2\. It manages the details of installing build targets and related package files to standard locations \(in the style of Harbour contribs\)\.
 
 
  - **\*\.hb** Script di Harbour
  - **\*\.hrb** Harbour binario portabile \(conosciuto anche come script Harbour precompilato\)
- - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;cartella hbmk2&gt;
- - **shell plugins** plugins \.hb e \.hrb per la shell interattiva di Harbour\. Possono essere situati in \[\*\]: %APPDATA%\\\.harbour\\
- - **\.hb\_history** memorizza la cronologia dei comandi per la shell interattiva di Harbour\. E' possibile disattivare la cronologia creando la prima linea 'no' \(senza virgolette e ritorno a capo\)\. E' contenuta in \[\*\]: %APPDATA%\\\.harbour\\
- - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
+ - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \./, $HOME/\.harbour, /etc/harbour, &lt;cartella hbmk2&gt;/\.\./etc/harbour, &lt;cartella hbmk2&gt;/\.\./etc, &lt;cartella hbmk2&gt;
+ - **shell plugins** plugins \.hb e \.hrb per la shell interattiva di Harbour\. Possono essere situati in \[\*\]: $HOME/\.harbour/
+ - **\.hb\_history** memorizza la cronologia dei comandi per la shell interattiva di Harbour\. E' possibile disattivare la cronologia creando la prima linea 'no' \(senza virgolette e ritorno a capo\)\. E' contenuta in \[\*\]: $HOME/\.harbour/
+ - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: $HOME/\.harbour/
   
 Variabili macro:  
 
@@ -274,12 +288,13 @@ Variabili macro:
  - **$\{hb\_dynprefix\}** prefisso della libreria dinamica
  - **$\{hb\_dynsuffix\}** suffisso della libreria dinamica
  - **$\{hb\_dynext\}** estensione della libreria dinamica
- - **$\{hb\_ver\}** Harbour version in hexadecimal triple byte format\. F\.e\.: 030200
- - **$\{hb\_verstr\}** Versione di Harbour in un formato leggibile dall'uomo &lt;maggiore&gt;\.&lt;minore&gt;\.&lt;rilascio&gt;\.&lt;stato&gt;\. Per esempio: 3\.2\.0dev
+ - **$\{hb\_ver\}** Harbour version in hexadecimal triple byte format\. F\.e\.: 030400
+ - **$\{hb\_verstr\}** Versione di Harbour in un formato leggibile dall'uomo &lt;maggiore&gt;\.&lt;minore&gt;\.&lt;rilascio&gt;\.&lt;stato&gt;\. Per esempio: 3\.4\.0dev
  - **$\{hb\_major\}** numero primario di versione Harbour
  - **$\{hb\_minor\}** numero secondario di versione Harbour
  - **$\{hb\_release\}** numero di versione di rilascio di Harbour
  - **$\{hb\_status\}** Stato della versione di Harbour
+ - **$\{hb\_ver\_id\}** Harbour version ID
  - **$\{hb\_revision\}** Revisione di Harbour
  - **$\{hb\_host\_plat\}** Motore Harbour
  - **$\{hb\_host\_plat\_unix\}** ritorna '1' se la piattaforma host Harbour è \*nix compatibile
@@ -303,12 +318,13 @@ Filtri \(è possibile combinarli e/o negarli\):
  - **\{&lt;compiler&gt;\}** compilatore C di destinazione\. Dove &lt;compiler&gt; può essere qualunque valore accettato dall'opzione \-comp=\.
  - **\{&lt;cpu&gt;\}** CPU di destinazione\. Dove &lt;cpu&gt; può essere una tra i seguenti: x86, x86\_64, ia64, arm, mips, sh
  - **\{&lt;targettype&gt;\}** build target type\. Where &lt;targettype&gt; is any of the values returned by macro variable $\{hb\_targettype\}\.
+ - **\{&lt;package\-manager&gt;\}** package manager\. Where &lt;package\-manager&gt; can be any of: deb, rpm, portage, homebrew, rudix, macports, fink, pkg, cygwin
  - **\{mt\}** build target is multi\-threaded \(see \-mt option\)
  - **\{st\}** build target is single\-threaded \(see \-st option\)
  - **\{gui\}** destinazione GUI \(vedi l'opzone \-gui\)
  - **\{std\}** console target \(see \-console option\)
  - **\{debug\}** è abilitato il debug a livello C \(vedi l'opzione \-debug\)
- - **\{nodebug\}** C level debugging is disabled \(see \-debug\- option\)
+ - **\{nodebug\}** il debug a livello C è disabilitato \(consulta l'opzione \-debug\-\)
  - **\{shared\}** shared build \(see \-shared and related options\)
  - **\{static\}** static build \(see \-static and related options\)
  - **\{lngcpp\}** modalità C\+\+ forzata \(vedere l'opzione \-cpp\)
@@ -318,7 +334,7 @@ Filtri \(è possibile combinarli e/o negarli\):
  - **\{unix\}** La piattaforma di destinazione è compatibile \*nix \(bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix\)
  - **\{allwin\}** la piattaforma di destinazione è compatibile con Windows \(win, wce\)
  - **\{allgcc\}** target C compiler belongs to gcc family \(gcc, mingw, mingw64, mingwarm, djgpp, gccomf, clang, open64, pcc\)
- - **\{allmingw\}** target C compiler is mingw\* \(mingw, mingw64, mingwarm\)
+ - **\{allmingw\}** il compilatore C di destinazione è mingw\* \(mingw, mingw64, mingwarm\)
  - **\{allmsvc\}** il compilatore C di destinazione è msvc\* \(msvc, msvc64, msvcia64, msvcarm\)
  - **\{allbcc\}** il compilatore C di destinazione è bcc\* \(bcc, bcc64\)
  - **\{allpocc\}** il compilatore dell'eseguibile C è pocc\* \(pocc, pocc64, poccarm\)
@@ -326,6 +342,7 @@ Filtri \(è possibile combinarli e/o negarli\):
  - **\{hb10\}** modalità di comaptibilità Harbour 1\.0\.x \(vedi l'opzione \-hb10\)
  - **\{hb20\}** modalità di comaptibilità Harbour 2\.0\.x \(vedi l'opzione \-hb20\)
  - **\{hb30\}** modalità di comaptibilità Harbour 3\.0\.x \(vedi l'opzione \-hb30\)
+ - **\{hb32\}** Harbour 3\.2\.0dev compatibility mode \(see \-hb32 option\)
  - **\{xhb\}** modalità xhb \(vedi l'opzione \-xhb\)
  - **\{hb\_ispath='&lt;file|dir&gt;'\}** il filtro sarà soddisfatto se il esiste il nome &lt;file&gt; o &lt;dir&gt; sul disco\.
  - **\{MACRO\}** verrà soddisfatto il filtro se $\{MACRO\} è valorizzato e diverso da '0' or 'no' \(ignora maiuscole e minuscole\)
@@ -334,20 +351,20 @@ Filtri \(è possibile combinarli e/o negarli\):
  - **\{MACRO&lt;'&lt;value&gt;'\}** il filtro passerà se il valore $\{MACRO\} è più piccolo di &lt;value&gt; \(ignora maiuscole e minuscole\)\.
 
 
-Costanti predefinite nei sorgenti:
+Predefined constants in sources \(do not define them manually\):
 
 
  - **\_\_HBSCRIPT\_\_HBMK\_PLUGIN** quando uno scripr \.hb viene compilato come plugin hbmk2
  - **\_\_HBEXTREQ\_\_** dove un file sorgente \.hbx è presente in un progetto \(disponibile nei sorgenti Harbour\)
  - **HBMK\_HAS\_&lt;hbcname&gt;** when &lt;hbcname&gt;\.hbc package is linked to the build target\. The value is the version= value from the \.hbc file, converted to a decimal number, which is '1', if not specified\. \(available in Harbour sources\)
- - **HBMK\_HAS\_&lt;depname&gt;** dove la dipendenza &lt;depname&gt; è stata rilevata \(disponibile nei sorgenti C\)
+ - **HBMK\_HAS\_&lt;depname&gt;** quando la dipendenza &lt;depname&gt; è stata rilevata \(disponibile nei sorgenti C\)
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** quando un file sorgente Harbour è eseguito come uno script di shell
- - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, ecc\.\.\.
+ - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.
 
 
-Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\):
+Predefined constants in build files \(they are available after '\-depfinish=&lt;depname&gt;' / 'depfinish=&lt;depname&gt;'\) \(do not define them manually\):
 
 
  - **HBMK\_HAS\_&lt;depname&gt;** quando la dipendenza &lt;depname&gt; è stata rilevata
@@ -358,11 +375,11 @@ Variabili d'ambiente:
 
 
  - **HBMK\_OPTIONS** accepts any options as if they were passed in the beginning of the command\-line
- - **HB\_PLATFORM** accetta gli stessi valori come l'opzione \-plat=
- - **HB\_COMPILER** accetta gli stessi valori come l'opzione \-comp=
- - **HB\_CPU** accetta gli stessi valori come l'opzione \-cpu=
- - **HB\_BUILD\_NAME** accetta gli stessi valori come l'opzione \-build=
- - **HB\_LANG** accetta gli stessi valori come l'opzione \-lang=
+ - **HB\_PLATFORM** accetta gli stessi valori dell'opzione \-plat=
+ - **HB\_COMPILER** accetta gli stessi valori dell'opzione \-comp=
+ - **HB\_CPU** accetta gli stessi valori dell'opzione \-cpu=
+ - **HB\_BUILD\_NAME** accetta gli stessi valori dell'opzione \-build=
+ - **HB\_LANG** accetta gli stessi valori dell'opzione \-lang=
  - **HB\_USER\_LIBS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione \-l
  - **HB\_USER\_LIBPATHS** accetta gli stessi valori \(separati da uno spazio\) come l'opzione \-L
  - **HB\_USER\_PRGFLAGS** opzioni da passare al compilatore Harbour \(prima delle opzioni nella riga di comando\)
@@ -371,7 +388,6 @@ Variabili d'ambiente:
  - **HB\_USER\_LDFLAGS** opzioni da passare al linker \(eseguibile\) \(prima delle opzioni da linea di comando\)
  - **HB\_USER\_DFLAGS** opzioni da passare al linker \(libreria dinamica\) \(prima delle opzioni da linea di comando\)
  - **HB\_USER\_AFLAGS** opzioni da passare al linker \(libreria statica\) \(prima delle opzioni da linea di comando\)
- - **HB\_COMPILER\_VER** override C compiler version autodetection \(gcc and msvc compiler families only\)\. Format: &lt;15&gt;&lt;00&gt;\[\.&lt;00&gt;\] = &lt;major&gt;&lt;minor&gt;\[\.&lt;revision&gt;\]
  - **HB\_CCPATH** ignora la cartella del compilatore C \(solamente per la famiglia dei compilatori gcc\)
  - **HB\_CCPREFIX** ignora il prefisso del compilatore C \(solamente per la famiglia dei compilatori gcc\)
  - **HB\_CCSUFFIX** ignora il suffisso del compilatore C \(solamente per la famiglia dei compilatori gcc\)
@@ -425,7 +441,7 @@ direttive \.hbc \(dovrebbero essere scritte in righe separate\):
  - **strip=&lt;bool&gt;** opzione 'yes' = \-strip, 'no' = \-strip\-
  - **run=&lt;bool&gt;** opzione 'yes' = \-run, 'no' = \-run\-
  - **inc=&lt;bool&gt;** opzione 'yes' = \-inc, 'no' = \-inc\-
- - **safe=&lt;bool&gt;** opzione 'yes' = \-safe, 'no' = \-safe\-
+ - **harden=&lt;bool&gt;** opzione 'yes' = \-harden, 'no' = \-harden\-
  - **cpp=** come l'opzione \-cpp=
  - **warn=** come l'opzione \-warn=
  - **compr=** come l'opzione \-compr=
@@ -434,6 +450,7 @@ direttive \.hbc \(dovrebbero essere scritte in righe separate\):
  - **gt=&lt;name&gt;** come l'opzione \-gt&lt;name&gt;
  - **gtdef=&lt;name&gt;** setta il GT di default da utilizzare
  - **env=** come l'opzione \-env:
+ - **depurlbase=** come l'opzione \-depurlbase=
  - **deppkgname=** come l'opzione \-deppkgname=
  - **depkeyhead=** come l'opzione \-depkeyhead=
  - **depoptional=** come l'opzione \-depoptional=
@@ -444,6 +461,7 @@ direttive \.hbc \(dovrebbero essere scritte in righe separate\):
  - **depimplibs=** come l'opzione \-depimplibs=
  - **depimplibd=** come l'opzione \-depimplibd=
  - **depfinish=** come l'opzione \-depfinish=
+ - **signts=** come l'opzione \-signts=
  - **name=** Nome del pacchetto
  - **description=** descrizione del pacchetto
  - **version=&lt;x\.y\.z&gt;** numero di versione del pacchetto, dove x, y, z &gt;=0 &lt;=255\. Il valore predefinito è 0\.0\.1, se non specificato\.
@@ -457,7 +475,7 @@ Plugin API:
 
 
  - **hbmk\_Register\_Input\_File\_Extension\( hbmk, &lt;cExt&gt; \) \-&gt; NIL**  
-Register input file extension to be passed to plugin \(by default all unknown file extensions are passed to Harbour compiler\)\.
+Register input file extension to be passed to plugin \(by default all unrecognized file extensions are passed to Harbour compiler\)\.
  - **hbmk\_AddInput\_PRG\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
 Aggiunge al progetto un file Harbour di input
  - **hbmk\_AddInput\_C\( hbmk, &lt;cFileName&gt; \) \-&gt; NIL**  
@@ -470,13 +488,17 @@ Aggiunge al progetto un file di risorsa di input
 Aggiunge al progetto un file binario oggetto\.
  - **hbmk\_AddInput\_INSTFILE\( hbmk, &lt;cFileName&gt;, \[&lt;cGroup&gt;\] \) \-&gt; NIL**  
 Add a file to be installed, with an optional \-instpath= group name\.
+ - **hbmk\_AddOption\_PRG\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a Harbour compiler option\.
+ - **hbmk\_AddOption\_C\( hbmk, &lt;cOption&gt; \) \-&gt; NIL**  
+Add a C compiler option\.
  - **hbmk\_OutStd\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Invio del testo su stdout\.
  - **hbmk\_OutErr\( hbmk, &lt;cText&gt; \) \-&gt; NIL**  
 Invio del testo su stderr
- - **hbmk\_OutStdRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
+ - **hbmk\_OutStdRaw\( hbmk, &hellip; \) \-&gt; NIL**  
 Invia testo a stdout senza alcuna formattazione\.
- - **hbmk\_OutErrRaw\( hbmk, \.\.\. \) \-&gt; NIL**  
+ - **hbmk\_OutErrRaw\( hbmk, &hellip; \) \-&gt; NIL**  
 Invia testo a stderr senza alcuna formattazione\.
  - **hbmk\_Macro\( hbmk, &lt;cMacro&gt; \) \-&gt; &lt;cResult&gt;**  
 Esegue la macro espressione hbmk2\.
@@ -485,7 +507,7 @@ Escape/quote filename for using it as external command parameter\.
  - **hbmk\_PathSepToTarget\( hbmk, &lt;cFileName&gt; \) \-&gt; &lt;cFileName&gt;**  
 Convert filename to the format required for the target platform/C compiler\.
  - **hbmk\_PathSepToForward\( &lt;cPath&gt; \) \-&gt; &lt;cPath&gt;**  
-Convertire il nome del file con lo "slash" come separatore di cartella
+Converte il nome del file usando la barra dritta come separatore di percorso
  - **hbmk\_PathFromWorkdirToCWD\( hbmk \) \-&gt; &lt;cRelativePath&gt;**  
 Ritorna il percorso relativo di \-workdir= valore dalla cartella di lavoro corrente\.
  - **hbmk\_FindInPath\( &lt;cFileName&gt;, \[&lt;xPath&gt;\], \[&lt;aExtDef&gt;\] \) \-&gt; &lt;cFNFound&gt; | NIL**  
@@ -510,7 +532,7 @@ Plugin variables:
  - **"vars"** hash of plugin custom variables\. Writable, local to each plugin
  - **"cPLAT"** valore \-plat
  - **"cCOMP"** valore \-comp
- - **"nCOMPVer"** vedere variabile d'ambiente HB\_COMPILER\_VER
+ - **"nCOMPVer"** detected compiler version in &lt;MMmm&gt; format
  - **"cCPU"** valore \-cpu
  - **"cBUILD"** valore \-build=
  - **"cOUTPUTNAME"** valore \-o
@@ -540,9 +562,9 @@ Shell API disponibile negli Harbour scripts:
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
-Cambia GT\. Default \[\*\]: 'gtwin'
+Cambia GT\. Default \[\*\]: 'gttrm'
  - **hbshell\_Clipper\(\) \-&gt; NIL**  
-Abilita la modialità di compatibilità Clipper \(non\-Unicode\)
+Enable Cl\*pper compatibility \(non\-Unicode\) mode\.
  - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Carica l'intestazione Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
@@ -559,6 +581,8 @@ Lista dei pacchetti caricati
 hb\_DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 hb\_ProgName\(\) not mapped to script\.
+ - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**  
+Name of the script executing\.
 
 
 Esempi per partire con hbmk2:
@@ -614,11 +638,11 @@ Codice di uscita \("errorlevels"\):
 
 
  - **0** Nessun errore
- - **1** piattaforma sconosciuta
- - **2** compilatore sconosciuto
+ - **1** unrecognized platform
+ - **2** unrecognized compiler
  - **3** Individuazione fallita di Harbour
  - **5** failed stub creation
- - **6** fallimento nella compilazione \(Harbour, compilatore C, compilatore delle Risorse\)
+ - **6** failed in compilation phase
  - **7** failed in final assembly \(linker or library manager\)
  - **8** non sopportato
  - **9** Impossibile creare la cartella di lavoro
@@ -640,7 +664,7 @@ Note:
   - Multiple \-l, \-L, \-i and &lt;script&gt; parameters are accepted\.
   - Regular Harbour compiler options are also accepted as is\.  
 \(see them with \-harbourhelp option\)
-  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/\.harbour, /etc/harbour, &lt;base&gt;/etc/harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
+  - hbmk\.hbc option file in hbmk2 directory is always processed if it exists\. On \*nix platforms ~/harbour, /etc/\.harbour, &lt;base&gt;/etc/\.harbour, &lt;base&gt;/etc are checked \(in that order\) before the hbmk2 directory\.
   - se esistente, lo script make hbmk\.hbm nella cartella corrente è sempre processato
   - E' consigliato l''utilizzo delle normali barre nei valori opzionali, come separatore per le cartelle, ma le barre rovesciate sono egualmente accettate\.
   - Filters are accepted in each \.hbc line and most options\.  
@@ -651,12 +675,12 @@ Filters can be combined using '&amp;' \(and\), '|' \(or\) operators, negated by 
   - Libraries and object files built with/for CA\-Cl\*pper will not work with any supported platform/compiler\.
   - Comportamenti predefiniti e caratteristiche potrebbero essere differenti in altre piattaforme/compilatori\.
   - Per eseguire hbmk2 non sono richiesti né GNU Make, o qualsiasi altro strumento make specifico per il compilatore C, né MSYS \(in Windows\)\.
-  - \. \(il punto\) passato come primo parametro entrerà nella shell interattiva di Harbour\.
+  - '\.' \(dot\) passed as first parameter will enter the interactive Harbour shell\.
 
 
-  - \.hb, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
-  - Puoi usare i tasti &lt;Alt\+V&gt; nella shell interativa di Harbour per incollare il testo dalla clipboard\.
-  - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
+  - \.hb, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be auto\-detected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. SET EXACT is set to ON\. Set\( \_SET\_EOL \) is set to OFF\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gttrm' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
+  - You can use key &lt;Ctrl\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
+  - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'darwin' host platform\.
 
 
 Supported &lt;compiler&gt; values for each supported &lt;platform&gt; value:
@@ -696,7 +720,7 @@ GNU General Public License for more details\.
 You should have received a copy of the GNU General Public License  
 along with this program; if not, write to the Free Software  
 Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit  
-their web site at http://www\.gnu\.org/\)\.  
+their website at https://www\.gnu\.org/\)\.  
   
 License extensions:  
   \- This source code must be kept and distributed as part  
@@ -709,8 +733,8 @@ License extensions:
   \- Source code modifications shall always be made available  
     along with binaries\.  
   \- Help text and documentation is licensed under  
-    Creative Commons Attribution\-ShareAlike 3\.0:  
-    http://creativecommons\.org/licenses/by\-sa/3\.0/  
+    Creative Commons Attribution\-ShareAlike 4\.0 International:  
+    https://creativecommons\.org/licenses/by\-sa/4\.0/  
 
   
 Autore:  

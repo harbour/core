@@ -1,5 +1,5 @@
 /*
- * library with all function binding available for .prg code
+ * Library with all function binding available for .prg code
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

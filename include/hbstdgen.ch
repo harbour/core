@@ -1,5 +1,5 @@
 /*
- *
+ * Built-in PP rules
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

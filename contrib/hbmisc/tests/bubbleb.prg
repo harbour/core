@@ -1,36 +1,26 @@
-/*
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbmisc"
+#require "hbtest"
 
 PROCEDURE Main()
 
-   ? BubbleBabbleEncode_prg( "" )
-   ? BubbleBabbleEncode( "" )
-   ? "xexax"
-
-   ? BubbleBabbleEncode_prg( "1234567890" )
-   ? BubbleBabbleEncode( "1234567890" )
-   ? "xesef-disof-gytuf-katof-movif-baxux"
-
-   ? BubbleBabbleEncode_prg( "Pineapple" )
-   ? BubbleBabbleEncode( "Pineapple" )
-   ? "xigak-nyryk-humil-bosek-sonax"
-
-   ? BubbleBabbleEncode_prg( "hello" )
-   ? BubbleBabbleEncode( "hello" )
-
-   ? BubbleBabbleEncode_prg( "vszakats" )
-   ? BubbleBabbleEncode( "vszakats" )
+   HBTEST BubbleBabbleEncode_prg( "" )           IS "xexax"
+   HBTEST BubbleBabbleEncode( "" )               IS "xexax"
+   HBTEST BubbleBabbleEncode_prg( "1234567890" ) IS "xesef-disof-gytuf-katof-movif-baxux"
+   HBTEST BubbleBabbleEncode( "1234567890" )     IS "xesef-disof-gytuf-katof-movif-baxux"
+   HBTEST BubbleBabbleEncode_prg( "Pineapple" )  IS "xigak-nyryk-humil-bosek-sonax"
+   HBTEST BubbleBabbleEncode( "Pineapple" )      IS "xigak-nyryk-humil-bosek-sonax"
+   HBTEST BubbleBabbleEncode_prg( "hello" )      IS "xipak-herek-serix"
+   HBTEST BubbleBabbleEncode( "hello" )          IS "xipak-herek-serix"
+   HBTEST BubbleBabbleEncode_prg( "vszakats" )   IS "xitil-fyvok-capek-citol-fixix"
+   HBTEST BubbleBabbleEncode( "vszakats" )       IS "xitil-fyvok-capek-citol-fixix"
 
    RETURN
 
 /* Harbour implementation */
 
-FUNCTION BubbleBabbleEncode_Prg( cString )
+STATIC FUNCTION BubbleBabbleEncode_prg( cString )
 
    LOCAL vo := "aeiouy"
    LOCAL co := "bcdfghklmnprstvzx"
@@ -45,7 +35,7 @@ FUNCTION BubbleBabbleEncode_Prg( cString )
    i := 1
    DO WHILE .T.
 
-      IF i > Len( cString )
+      IF i > hb_BLen( cString )
          cResult += ;
             SubStr( vo, nSeed % 6 + 1, 1 ) + ;
             SubStr( co, 16 + 1, 1 ) + ;
@@ -53,18 +43,18 @@ FUNCTION BubbleBabbleEncode_Prg( cString )
          EXIT
       ENDIF
 
-      byte1 := Asc( SubStr( cString, i, 1 ) )
+      byte1 := hb_BPeek( cString, i )
 
       cResult += ;
          SubStr( vo, ( ( hb_bitAnd( hb_bitShift( byte1, -6 ), 3 ) + nSeed ) % 6 ) + 1, 1 ) + ;
          SubStr( co, hb_bitAnd( hb_bitShift( byte1, -2 ), 15 ) + 1, 1 ) + ;
          SubStr( vo, ( ( hb_bitAnd( byte1, 3 ) + ( nSeed / 6 ) ) % 6 ) + 1, 1 )
 
-      IF i + 1 > Len( cString )
+      IF i + 1 > hb_BLen( cString )
          EXIT
       ENDIF
 
-      byte2 := Asc( SubStr( cString, i + 1, 1 ) )
+      byte2 := hb_BPeek( cString, i + 1 )
 
       cResult += ;
          SubStr( co, hb_bitAnd( hb_bitShift( byte2, -4 ), 15 ) + 1, 1 ) + ;

@@ -30,7 +30,7 @@
       aRetVal[ 3, 1 ]  Integer Minutes   aRetVal[ 3, 2 ] Total Minutes (nn.nnnn)
       aRetVal[ 4, 1 ]  Integer Seconds   aRetVal[ 4, 2 ] Total Seconds (nn)
    $EXAMPLES$
-      ft_Elapsed( hb_SToD( "19901128" ), hb_SToD( "19901130" ), "08:00:00", "12:10:30" )
+      ft_Elapsed( 0d19901128, 0d19901130, "08:00:00", "12:10:30" )
 
       // will return:
       ? aRetVal[ 1, 1 ] // ->  2 ( Days )        aRetVal[ 1, 2 ] ->    2.1740  Days

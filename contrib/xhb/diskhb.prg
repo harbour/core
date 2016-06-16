@@ -48,6 +48,6 @@
 
 FUNCTION GetVolInfo( cDir )
 
-   LOCAL aFiles := Directory( cDir, "V" )
+   LOCAL aFiles
 
-   RETURN iif( Len( aFiles ) >= 1, aFiles[ 1 ][ F_NAME ], "" )
+   RETURN iif( Len( aFiles := hb_vfDirectory( cDir, "V" ) ) >= 1, aFiles[ 1 ][ F_NAME ], "" )

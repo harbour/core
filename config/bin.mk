@@ -45,8 +45,8 @@ ifeq ($(BUILD_SHARED),yes)
    endif
    endif
 
-   HB_LIBS_ST_RDD := $(HB_LIBS_TPL) $(HB_DYNLIB_BASE)
-   HB_LIBS_MT_RDD := $(HB_LIBS_TPL) $(HB_DYNLIB_BASE)
+   HB_LIBS_ST_RDD := $(HB_LIBS_TPL) $(HB_IMPLIB_BASE)
+   HB_LIBS_MT_RDD := $(HB_LIBS_TPL) $(HB_IMPLIB_BASE)
    HB_LIBS_ST_NORDD := $(HB_LIBS_ST_RDD)
    HB_LIBS_MT_NORDD := $(HB_LIBS_ST_RDD)
 
@@ -69,8 +69,12 @@ else
       hbpp \
       hbcommon
 
+   ifneq ($(HB_HAS_PCRE2_LOCAL),)
+      HB_LIBS_TPL += hbpcre2
+   else
    ifneq ($(HB_HAS_PCRE_LOCAL),)
       HB_LIBS_TPL += hbpcre
+   endif
    endif
    ifneq ($(HB_HAS_ZLIB_LOCAL),)
       HB_LIBS_TPL += hbzlib

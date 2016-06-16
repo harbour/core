@@ -1,5 +1,5 @@
 /*
- * low level functions to create, wait and terminate processes
+ * Low level functions to create, wait and terminate processes
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * based on xHarbour code by
@@ -1676,6 +1676,8 @@ int hb_fsProcessRun( const char * pszFileName,
       int iTODO;
 
       HB_SYMBOL_UNUSED( nStdInLen );
+      HB_SYMBOL_UNUSED( nOutSize );
+      HB_SYMBOL_UNUSED( nErrSize );
 
 #endif
    }

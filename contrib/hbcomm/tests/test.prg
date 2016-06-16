@@ -1,9 +1,5 @@
-/*
- *
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
- *    (fixed, adapted to CLI, translated, formatted)
+/* Copyright 2009 Viktor Szakats (vszakats.net/harbour) (fixed, adapted to CLI, translated, formatted)
  * Copyright 2006 Marcelo Torres <lichitorres@yahoo.com.ar>
- *
  */
 
 #require "hbcomm"
@@ -13,22 +9,21 @@ STATIC s_lConnected := .F.
 
 PROCEDURE Main()
 
-   LOCAL nOption
+   LOCAL cOption
 
    DO WHILE .T.
-      ? ""
+      ?
       ? "Select test:"
       ? "O) Open"
       ? "C) Close"
       ? "S) Send"
       ? "R) Receive"
       ? "Q) Quit"
-      ? "> "
+      ? ">", ""
 
-      nOption := Inkey( 0 )
-      ?? Chr( nOption )
+      ?? cOption := hb_keyChar( Inkey( 0 ) )
 
-      SWITCH Upper( Chr( nOption ) )
+      SWITCH Upper( cOption )
       CASE "O" ; FConnect() ; EXIT
       CASE "C" ; FDisconnect() ; EXIT
       CASE "S" ; FSend() ; EXIT
@@ -48,8 +43,7 @@ STATIC PROCEDURE FConnect()
    LOCAL nStopbit   := 1
    LOCAL nBuff      := 8000
 
-   s_nHandle := INIT_PORT( cCom, nBaudeRate, nDatabits, nParity, nStopbit, nBuff )
-   IF s_nHandle > 0
+   IF ( s_nHandle := INIT_PORT( cCom, nBaudeRate, nDatabits, nParity, nStopbit, nBuff ) ) > 0
       ? "Connecting..."
       s_lConnected := .T.
       OUTBUFCLR( s_nHandle )
@@ -73,7 +67,7 @@ STATIC PROCEDURE FSend()
 
    ACCEPT "Enter string to send: " TO cToSend
 
-   IF s_lConnected .AND. ! Empty( cToSend ) .AND. ISWORKING( s_nHandle )
+   IF s_lConnected .AND. ! HB_ISNULL( cToSend ) .AND. ISWORKING( s_nHandle )
       OUTCHR( s_nHandle, cToSend )
    ELSE
       ? "Cannot send data"
@@ -86,12 +80,10 @@ STATIC PROCEDURE FReceive()
    LOCAL cReceive
    LOCAL nSize
 
-   nSize := INBUFSIZE( s_nHandle )
-
-   IF nSize > 0
+   IF ( nSize := INBUFSIZE( s_nHandle ) ) > 0
       cReceive := Space( nSize )
       INCHR( s_nHandle, nSize, @cReceive )
-      ? ">>", Left( cReceive, nSize )
+      ? ">>", hb_BLeft( cReceive, nSize )
    ENDIF
 
    RETURN

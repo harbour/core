@@ -2,15 +2,15 @@ PROCEDURE Main()
 
    LOCAL o := HBObject():New()
 
-   ? "o:Data1 => ", o:Data1
-   ? "o:ClassData1 => ", o:ClassData1
-   ? "o:Data2 => ", o:Data2
-   ? "o:ClassData2 => ", o:ClassData2
+   ? "o:Data1 =>", o:Data1
+   ? "o:ClassData1 =>", o:ClassData1
+   ? "o:Data2 =>", o:Data2
+   ? "o:ClassData2 =>", o:ClassData2
    o:Test()
 
    RETURN
 
-FUNCTION TBaseObject()
+FUNCTION TBaseObject()  /* must be a public function */
 
    STATIC s_oClass
 
@@ -63,7 +63,7 @@ STATIC FUNCTION Method2Base()
 
    RETURN self
 
-FUNCTION HBObject()
+FUNCTION HBObject()  /* must be a public function */
 
    STATIC s_oClass
 

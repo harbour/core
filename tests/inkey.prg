@@ -1,15 +1,12 @@
-/* Testing Harbour keyboard input. */
-
 /* Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
+   Modularization and display improvements by Alejandro de Garate <alex_degarate hotmail com>
 
-   Modularization and display improvements by
-   Alejandro de Garate <alex_degarate hotmail com>
-*/
+   Testing Harbour keyboard input. */
 
 #include "inkey.ch"
 
 #ifndef __HARBOUR__
-#define hb_ntos( n ) LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main( cSkip, cExt )
@@ -19,23 +16,22 @@ PROCEDURE Main( cSkip, cExt )
    IF Empty( cSkip )
 
       TEST1()
-      NextTest()
+      WAIT
 
       TEST2()
-      NextTest()
-
+      WAIT
 
       TEST3()
-      NextTest()
+      WAIT
 
       TEST4()
-      NextTest()
+      WAIT
 
       TEST5()
-      NextTest()
+      WAIT
 
       TEST6()
-      NextTest()
+      WAIT
    ENDIF
 
    TEST7( cSkip, cExt )
@@ -43,21 +39,14 @@ PROCEDURE Main( cSkip, cExt )
 
    RETURN
 
-PROCEDURE Results()
+STATIC PROCEDURE Results()
 
    ? "Wait 2 seconds or press most any key to see the results of this test."
    Inkey( 2 )
 
    RETURN
 
-PROCEDURE NextTest()
-
-   ? "Press any key to continue on to the next test."
-   Inkey( 0 )
-
-   RETURN
-
-FUNCTION TEST( cText )
+STATIC FUNCTION TEST( cText )
 
    LOCAL cResult := ""
 
@@ -73,7 +62,7 @@ FUNCTION TEST( cText )
 
    RETURN "'" + cResult + "'"
 
-PROCEDURE TEST1
+STATIC PROCEDURE TEST1()
 
    CLS
    ?
@@ -93,7 +82,7 @@ PROCEDURE TEST1
 
    RETURN
 
-PROCEDURE TEST2
+STATIC PROCEDURE TEST2()
 
    CLS
    ?
@@ -112,7 +101,7 @@ PROCEDURE TEST2
 
    RETURN
 
-PROCEDURE TEST3
+STATIC PROCEDURE TEST3()
 
    CLS
    ?
@@ -130,7 +119,7 @@ PROCEDURE TEST3
 
    RETURN
 
-PROCEDURE TEST4
+STATIC PROCEDURE TEST4()
 
    CLS
    ?
@@ -149,7 +138,7 @@ PROCEDURE TEST4
 
    RETURN
 
-PROCEDURE TEST5
+STATIC PROCEDURE TEST5()
 
    LOCAL cText
 
@@ -171,37 +160,37 @@ PROCEDURE TEST5
    ? TEST( cText )
    ?
 
-   ? "SET TYPEAHEAD TO 25"
-   SET TYPEAHEAD TO 25
+   ? "Set( _SET_TYPEAHEAD, 25 )"
+   Set( _SET_TYPEAHEAD, 25 )
    ? TEST( cText )
    ?
 
-   ? "SET TYPEAHEAD TO 16"
-   SET TYPEAHEAD TO 16
+   ? "Set( _SET_TYPEAHEAD, 16 )"
+   Set( _SET_TYPEAHEAD, 16 )
    ? TEST( cText )
    ?
 
-   ? "SET TYPEAHEAD TO 0"
-   SET TYPEAHEAD TO 0
+   ? "Set( _SET_TYPEAHEAD, 0 )"
+   Set( _SET_TYPEAHEAD, 0 )
    ? TEST( cText )
 
    RETURN
 
-PROCEDURE TEST6
+STATIC PROCEDURE TEST6()
 
    CLS
    ? "For the sixth test"
    ? "The typeahead is now being set to a value greater than the maximum,"
    ? "which is 4096 and is the value that will both be used and reported."
-   ? "SET TYPEAHEAD TO 5000"
+   ? "Set( _SET_TYPEAHEAD, 5000 )"
    ?
-   SET TYPEAHEAD TO 5000
+   Set( _SET_TYPEAHEAD, 5000 )
    ? Set( _SET_TYPEAHEAD )
    ?
 
    RETURN
 
-PROCEDURE TEST7( cSkip, cExt )
+STATIC PROCEDURE TEST7( cSkip, cExt )
 
    LOCAL nKey, nMask
 
@@ -212,12 +201,11 @@ PROCEDURE TEST7( cSkip, cExt )
    ? "buttons as well as double-clicking the mouse buttons."
    ?
    ? "Press any key."
+
    nMask := HB_INKEY_ALL
 
-   IF ! Empty( cExt )
-      IF "E" $ Upper( cExt )
-         nMask += HB_INKEY_EXT
-      ENDIF
+   IF HB_ISSTRING( cExt ) .AND. "E" $ cExt
+      nMask += HB_INKEY_EXT
    ENDIF
 
    Set( _SET_EVENTMASK, nMask )
@@ -233,7 +221,6 @@ PROCEDURE TEST7( cSkip, cExt )
          Tone( 660, 6 )
       ENDIF
    ENDIF
-
 
    DO WHILE ( nKey := Inkey( 0, nMask ) ) != K_TAB
       DO CASE
@@ -253,9 +240,9 @@ PROCEDURE TEST7( cSkip, cExt )
          ? "The right mouse button was double-clicked."
       OTHERWISE
 #ifdef __HARBOUR__
-         ? "A keyboard key was pressed: ", nKey, hb_keyChar( nKey )
+         ? "A keyboard key was pressed:", nKey, hb_keyChar( nKey )
 #else
-         ? "A keyboard key was pressed: ", nKey, ;
+         ? "A keyboard key was pressed:", nKey, ;
             iif( nKey >= 32 .AND. nKey <= 255, Chr( nKey ), "" )
 #endif
       ENDCASE

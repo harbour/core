@@ -1,0 +1,36 @@
+## Harbour _HB_VERSION_ (_VCS_ID_)
+
+Source archives and Windows binaries
+are available for download:
+
+  <https://github.com/vszakats/harbour-core/releases>
+
+## Release Notes
+
+Package content:
+
+* Harbour tools, static/shared libraries, sample sources
+* x86 hosted executables
+
+Usage:
+
+1. Install/unpack to any directory.
+2. Launch a Command Prompt.
+3. Add Harbour to `PATH`: `set PATH=<path-to-harbour>\bin;%PATH%`
+4. Download MinGW C compiler by typing: `hbrun getmingw.hb`
+5. Build test x86 executable: `hbmk2 <path-to-harbour>/tests/hello.prg`
+6. Build test x64 executable: `hbmk2 <path-to-harbour>/tests/hello.prg -cpu=x64`
+   (requires package that contains x64 libraries)
+7. Further hints in section **Build Your Own Harbour App**
+   of `README.md`.
+
+## Tool/Library Dependencies
+
+See `BUILD.txt`
+
+## Changes since previous (3.0.0) release
+
+[TODO]
+
+---
+Viktor Szakats

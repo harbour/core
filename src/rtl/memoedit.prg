@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 #include "inkey.ch"
@@ -92,17 +94,18 @@ METHOD MemoInit( xUserFunction ) CLASS HBMemoEditor
    IF ::UserFunctionIsValid()
 
       DO WHILE .T.
-         SWITCH nUdfReturn := ::xDo( ME_INIT )
+         nUdfReturn := ::xDo( ME_INIT )
+         DO CASE
          // Tested with CL52 that only these 3 actions are processed and
          // then ME_INIT call repeated
-         CASE K_INS
-         CASE ME_TOGGLEWRAP
-         CASE ME_TOGGLESCROLL
+         CASE hb_keyStd( nUdfReturn ) == K_INS
+         CASE nUdfReturn == ME_TOGGLEWRAP
+         CASE nUdfReturn == ME_TOGGLESCROLL
             // At this time there is no input from user of MemoEdit() only handling
             // of values returned by ::xUserFunction, so I pass NIL as the key code.
             ::HandleUserKey( , nUdfReturn )
             LOOP
-         ENDSWITCH
+         ENDCASE
          EXIT
       ENDDO
    ENDIF
@@ -133,13 +136,16 @@ METHOD Edit() CLASS HBMemoEditor
          ENDIF
          nKeyStd := hb_keyStd( nKey )
 
-         IF ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
+         IF ( bKeyBlock := SetKey( nKey ) ) != NIL .OR. ;
+            ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
             Eval( bKeyBlock )
             LOOP
          ENDIF
 
          // Is it a configurable key?
-         IF nKeyStd $ hConfigurableKeys
+         // K_ALT_W is a Harbour extension, it is Ctrl+W in Cl*pper
+         IF nKeyStd $ hConfigurableKeys .OR. ;
+            ( hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" )
             ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
          ELSE
             ::super:Edit( nKey )
@@ -157,7 +163,7 @@ METHOD Edit() CLASS HBMemoEditor
 // if there is an user function I leave to it its handling
 METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
 
-   LOCAL nYesNoKey
+   LOCAL nKeyStd
    LOCAL cBackScr
    LOCAL nRow
    LOCAL nCol
@@ -178,12 +184,12 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
          hb_DispOutAt( 0, MaxCol() - 19, "Abort Edit? (Y/N)" )
          SetPos( 0, MaxCol() - 2 )
 
-         nYesNoKey := Inkey( 0 )
+         nKeyStd := Inkey( 0 )
 
          RestScreen( 0, MaxCol() - 19, 0, MaxCol(), cBackScr )
          SetPos( nRow, nCol )
 
-         IF Upper( hb_keyChar( nYesNoKey ) ) == "Y"
+         IF Upper( hb_keyChar( nKeyStd ) ) == "Y"
             hb_keySetLast( K_ESC )  /* Cl*pper compatibility */
             ::lSaved := .F.
             ::lExitEdit := .T.
@@ -205,6 +211,8 @@ METHOD IdleHook() CLASS HBMemoEditor
    RETURN Self
 
 METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
+
+   LOCAL nKeyStd
 
    SWITCH nUdfReturn
    CASE ME_DEFAULT
@@ -264,8 +272,10 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
 
    OTHERWISE
 
-      // TOFIX: Not CA-Cl*pper compatible, see teditor.prg
-      IF ( nUdfReturn >= 1 .AND. nUdfReturn <= 31 ) .OR. nUdfReturn == K_ALT_W
+      nKeyStd := hb_keyStd( nUdfReturn )
+      IF ( nKeyStd >= 1 .AND. nKeyStd <= 31 ) .OR. ;
+         nKeyStd == K_ALT_W .OR. ;
+         ( hb_bitAnd( hb_keyMod( nUdfReturn ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nUdfReturn ) ) ) == "W" )
          ::super:Edit( nUdfReturn )
       ELSE
          RETURN .F.
@@ -290,7 +300,7 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 
 METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 
-   IF nKey == K_CTRL_W
+   IF hb_keyStd( nKey ) == K_CTRL_W
       ::lSaved := .T.
       ::lExitEdit := .T.
       RETURN .F.
@@ -310,7 +320,7 @@ METHOD InsertState( lInsState ) CLASS HBMemoEditor
 
    RETURN Self
 
-/* ------------------------------------------ */
+/* --- */
 
 FUNCTION MemoEdit( ;
    cString, ;

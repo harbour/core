@@ -282,7 +282,7 @@ typedef struct
    PHB_ITEM itmOrder;     /* Name or Number of the Order */
    PHB_ITEM itmCobExpr;   /* Code block containing the KEY expression */
    PHB_ITEM itmResult;    /* Operation result */
-   PHB_ITEM itmNewVal;    /* New Setting   */
+   PHB_ITEM itmNewVal;    /* New Setting */
    HB_BOOL  fAllTags;     /* Open all tags */
 } DBORDERINFO;
 
@@ -790,7 +790,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 #define RDDFUNCSCOUNT   ( sizeof( RDDFUNCS ) / sizeof( DBENTRYP_V ) )
 
-/* RDD Node structure              */
+/* RDD Node structure */
 typedef struct _RDDNODE
 {
    char szName[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ]; /* Name of RDD */

@@ -1,0 +1,4750 @@
+/* Copyright 2008 Manoel N. Angeiras N. (angeiras gmail@com) */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw__MakeDlgTemplate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw__MakeDlgTemplate( Dlg, aItens1, aItens2, aItens3, aItens4, aItens5,
+      aItens6, aItens7, aItens8, aItens9, aItens10 )
+   $ARGUMENTS$
+      <aDlg> <aItens1> <aItens2> <aItens3> <aItens4> <aItens5> <aItens6> <aItens7>
+      <aItens8> <aItens9> <aItens10>
+   $DESCRIPTION$
+      Creates a window dialog template.
+   $RETURNS$
+      String with new template dialog.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_AddRows()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_AddRows( nWinNum, nRows )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nRows> Number of lines to
+      add or reduce (if nRows < 0).
+   $DESCRIPTION$
+      Adds or reduces lines from window. The new lines will be colored from column
+      zero color, from prior line. There's no checking to determine if the window is
+      bigger than desktop area (except if in maincoord mode, because we need these
+      boundaries to MaxRow() function).
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_AppendMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_AppendMenu( hMenu, nFlags, nMenuItemId, cCaption )
+   $ARGUMENTS$
+      <hMenu> Identifies the menu to be changed. <nFlags> Specifies flags to control
+      the appearance and behavior of the new menu item. This parameter can be a
+      combination of values (all flags can be viewed in winuser.ch file).
+      <nMenuItemId> Specifies either the identifier of the new menu item or, if the
+      uFlags parameter is set to MF_POPUP, the handle to the drop-down menu or
+      submenu. <cCaption> Specifies the string content of the new menu item or full
+      path to a bitmap to the new menu item.
+   $DESCRIPTION$
+      Adds a new menu item. Through this function we can specifies the content,
+      appearance and behavior of each menu item.
+   $RETURNS$
+      If successful, a value greater than zero. Otherwise zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbAddString()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbAddString( nHandleDialog, nIDComboBox, cItem )
+   $ARGUMENTS$
+      <nHandleDialog> Dialog handle of window. <nIdComboBox> ID of Combobox. <cItem>
+      Item to be included in Combobox.
+   $DESCRIPTION$
+      Adds an item into Combobox.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbCreate( nWinNum, nTop, nLeft, nWidth, aText, bBlock,
+      nListLines, nReserved, nKbdType, aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop>, <nLeft>
+      Coordinates of combobox. <nWidth> Width of combobox. <aText> Array with all
+      combobox elements. Default is empty. <bBlock> Code block, executed for the
+      following events: CBN_SELCHANGE: CBN_SETFOCUS: CBN_KILLFOCUS: User change
+      selection (not executed when made by program itself) When focus go to
+      combobox When focus lost from combobox
+
+      This code block will be evaluated with the following arguments: nWinNum nCBId
+      nType nIndex Actual windows number Combobox ID Event type (only the three
+      types above are supported) Index on selected item (start from 0)
+
+      <nListLines> Number of lines to list items (default is 3). will be
+      automatically truncated if this parameter is greater than Len(aText).
+      <nReserved> Reserved for future use. <nKbdType> Specifies the behavior of
+      combobox. Can be one of the following values: 0: 1: Similar to standard
+      windows convention (i.e., ENTER/ESC will kill focus from combobox) Similar to
+      CA-Cl*pper (i.e., ENTER shows all combobox's items, UP/DOWN/TAB/SHIFTAB/ESC
+      will kill focus from combobox)
+
+      Default is 0.
+
+      <aOffset> Array with four elements containing offsets to corner pixels
+      {x1,y1,x2,y2}, to adjust dimension of combobox. Default is {-2,-2,+2,+2}. The
+      third element (y2) is actually ignored. Height of combobox is always 1 char
+      height.
+   $DESCRIPTION$
+      Create a combobox in current window.
+   $RETURNS$
+      Handle of combobox, if successful. Zero if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbDestroy( nWinNum, nCBId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCBId> ID of Combobox.
+   $DESCRIPTION$
+      Delete a combobox in the current window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbEnable()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbEnable( nWinNum, nCBId, lEnable )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCBId> ID of Combobox.
+      <lEnable> Enable (.T.) or disable (.F.) combobox button in current window.
+      Default is .T.
+   $DESCRIPTION$
+      Enable/Disable access of combobox in current window.
+   $RETURNS$
+      Return old configuration of combobox (.T. enable, .F. disable). If failed,
+      return .F..
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbFindString()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbFindString( nWinNum, nCBId, cString )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCBId> ID of combobox.
+      <cString> String to find.
+   $DESCRIPTION$
+      Find index of string in combobox in current window. This function is case
+      insensitive.
+   $RETURNS$
+      Index of string, or ­1 if failed (or can't find).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbGetCurText()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbGetCurText( nWinNum, nCBId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCBId> ID of combobox.
+   $DESCRIPTION$
+      Get current selected string in combobox in current window.
+   $RETURNS$
+      String, if successful, or "" if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbGetIndex()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbGetIndex( nWinNum, nCBId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCBId> ID of combobox.
+   $DESCRIPTION$
+      Get current selection in combobox (start from zero).
+   $RETURNS$
+      Current position in combobox or ­1 if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbIsDropped()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbIsDropped( nWinNum, nCBId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCBId> ID of combobox.
+   $DESCRIPTION$
+      Get current dropped state of combobox in current window.
+   $RETURNS$
+      Return .T. if listbox is being shown, otherwise .F.. Also return .F. if
+      combobox ID is not valid.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbIsFocused()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbIsFocused( nWinNum, nCBId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCBId> ID of combobox.
+   $DESCRIPTION$
+      Get information if focus is on combobox in current window.
+   $RETURNS$
+      .T. if is focused, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbSetCodeblock()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbSetCodeblock( nWinNum, nCBId, bBlock )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCBId> ID of combobox.
+      <bBlock> New code block to assign to combobox.
+   $DESCRIPTION$
+      Assign a new code block to combobox on current window.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbSetCurSel()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbSetCurSel( nHandleDialog, nIDCombobox, nIndex )
+   $ARGUMENTS$
+      <nHandleDialog> Handle of window dialog. <nIDCombobox> ID of combobox.
+      <nIndex> Index of item (start from zero). If ­1, remove current selection
+      and clean edit control of combobox.
+   $DESCRIPTION$
+      Select na item of combobox list.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbSetFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbSetFont( nWinNum, cFontFace, nHeight, nWidth, nWeight,
+      nQuality, lItalic, lUnderline, lStrikeout )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <cFontName> Name of the
+      font. <nHeight> Height of the font's character. <nWidth> Specifies average
+      width of character in the font. <nWeight> Specifies the weight of the font in
+      the range 0 through 1000 (see About Fonts section). <nQuality> Specifies the
+      output quality. <lItalic> Specifies an italic font if set to TRUE.
+      <lUnderline> Specifies an underlined font if set to TRUE. <lStrikeout>
+      Specifies a strikeout font if set to TRUE.
+   $DESCRIPTION$
+      This will initialize font for all comboboxes on current window (including ones
+      created later on).
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbSetIndex()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbSetIndex( nWinNum, nCBId, nIndex )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCBId> ID of combobox.
+      <nIndex> Item index on combobox (start from 0).
+   $DESCRIPTION$
+      Set current selection on combobox.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CenterWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CenterWindow( nWinNum, lCenter, lPaint )
+
+      See function wvw_SetWindowCentre().
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ChooseColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ChooseColor( nRGBInit, aRGB16, nFlags )
+   $ARGUMENTS$
+      <nRGBInit> Initial color. <aRGB16> Array of 16 elements, with color index.
+      Default is an array with color set of button. <nFlags> A set of bit flags that
+      you can use to initialize the color common dialog box. When the dialog box
+      returns, it sets these flags to indicate the user's input. Default is a
+      combination of CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN.
+   $DESCRIPTION$
+      Open a color selection dialog.
+   $RETURNS$
+      Contains the RGB color value of the color selected by the user, if the user
+      clicks OK button of the dialog box.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ChooseFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout )
+   $ARGUMENTS$
+      <cFontName> Name of the font. <nHeight> Height of the font's character.
+      <nWidth> Specifies average width of character in the font. <nWeight> Specifies
+      the weight of the font in the range 0 through 1000 (see About Fonts section)
+      <nQuality> Specifies the output quality. <lItalic> Specifies an italic font
+      if set to TRUE. <lUnderline> Specifies an underlined font if set to TRUE.
+      <lStrikeout> Specifies a strikeout font if set to TRUE.
+   $DESCRIPTION$
+      Creates a common font dialog box that enables the user to choose attributes
+      for alogical font.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ClientToScreen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ClientToScreen( nWinNum, nRow, nCol )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nRow>, <nCol> Row/Column
+      in current windows to be converted.
+   $DESCRIPTION$
+      Converts row/column in current screen to coordinates x,y relative to screen.
+   $RETURNS$
+      Array with two positions with coordinates x,y.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreateDialogDynamic()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreateDialogDynamic(cDlgTemplate|nResource, lHandle,
+      cDlgProc|bDlgProc|nDlgProc, nFlag)
+   $ARGUMENTS$
+      <cDlgTemplate|nResource> <lHandle> <cDlgProc|bDlgProc|nDlgProc> <nFlag>
+   $DESCRIPTION$
+      Creates a dialog window dynamically.
+   $RETURNS$
+      Handle of dialog window or zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreateDialogModal()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreateDialogModal( cDialog|nResource|cDlgTemplate, NIL,
+      bDlgProc|cDlgProc, nFlag, nHandle )
+   $ARGUMENTS$
+      <cDialog|nResource|cDlgTemplate> <bDlgProc|cDlgProc> <nFlag> <nHandle>
+   $DESCRIPTION$
+      Creates a modal dialog window.
+   $RETURNS$
+      Handle of dialog window or zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreateFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreateFont(cFontFace, nHeight, nWidth, nWeight, lItalic,
+      lUnderline, lStrikeout, nCharset, nQuality, nEscapement )
+   $ARGUMENTS$
+      <cFontFace> Name of the font. <nHeight> Height of the font's character.
+      <nWidth> Specifies average width of character in the font. <nWeight> Specifies
+      the weight of the font in the range 0 through 1000 (see About Fonts section)
+      <lItalic> Specifies an italic font if set to TRUE. <lUnderline> Specifies
+      an underlined font if set to TRUE. <lStrikeOut> Specifies a strikeout font if
+      set to TRUE. <nCharSet> Identify the character set. <nQuality> Specifies the
+      output quality <nEscapement> Specifies the angle, in tenths of degrees,
+      between the escapement vector and the x-axis of the device.
+   $DESCRIPTION$
+      creates a logical font that has the characteristics specified in the
+      parameters. The font can subsequently be selected as the current font for any
+      device context.
+   $RETURNS$
+      If successful, the return value is a handle to a logical font. If failed,
+      return zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreateMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreateMenu()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Creates a menu. Initially, the menu is empty, but can be filled with items
+      through function wvw_AppendMenu().
+   $RETURNS$
+      Handle of new created menu. If failed, returns NULL.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreatePopupMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreatePopupMenu()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Creates a drop-down menu, submenu or shortcut menu. The menu is initialy
+      empty, but you can insert or append menu items by using the wvw_AppendMenu()
+      function.
+   $RETURNS$
+      Handle of new popup menu. If failed, return NULL.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxCreate( nWinNum, nTop, nLeft, nBottom, nRight, cText,
+      cImage/nImage, bBlock, aOffset, nStretchBitmap, lMap3DColors )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft> Row/column
+      of top/left corner. <nBottom, nRight> Row/column of bottom/right corner.
+      <cText> Text of checkbox. Default is empty. <cImage/nImage> If numeric,
+      represent an resource ID from a .RC file. If string, represent a bitmap file
+      name (must be supplied with a full path). <bBlock> Code block to exectue on
+      every BN_CLICK event. This code block will be evaluated with these parameters:
+      current window and checkbox id. If this parameter is omitted, the checkbox
+      will not be created. <aOffSet> Array of four elements {x1,y1,x2,y2} with
+      offsets to corner pixels to adjust dimension of checkbox. Default is
+      {-2,-2,+2,+2}. <nStretchBitmap> A number between 0 and 1 (inclusive) as a
+      factor to stretch the bitmap. Example: 1.0 0.5 0 Bitmap covers the whole
+      button Bitmap covers 50% of button Bitmap is not stretch
+
+      Default is 1. <lMap3Dcolors> If image will have transparent effect (.T.) or
+      not (.F.). This will work on 256 colored bitmaps only.
+   $DESCRIPTION$
+      Creates a checkbox.
+   $RETURNS$
+      Returns checkbox handle, if successful. If failed, return zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxDestroy( nWinNum, nCXId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCXId> ID of checkbox.
+   $DESCRIPTION$
+      Delete a checkbox on current window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxEnable()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxEnable( nWinNum, nCXId, lToggle )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCXId> ID of checkbox.
+      <lToggle> If .T., Enable, otherwisie disable. Default is .T.
+   $DESCRIPTION$
+      Enable/disable a checkbox on current window.
+   $RETURNS$
+      Return previous state of the checkbox, if <lToggle> informed. Otherwise,
+      returns current state of the checkbox (.T. = enable, .F. = disable).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxGetCheck()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxGetCheck( nWinNum, nCXId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCXId> ID of checkbox.
+   $DESCRIPTION$
+      Return current state of checkbox.
+   $RETURNS$
+      Returns one of the following values: 0 1 2 Not selected Selected
+      Indeterminate
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxSetCheck()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxSetCheck( nWinNum, nCXId, nCheckState )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCXId> ID of checkbox.
+      <nCheckState> 0 1 2 Not selected Selected Indeterminate
+   $DESCRIPTION$
+      Assign check-state of checkbox.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxSetCodeblock()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxSetCodeblock( nWinNum, nCXId, bBlock )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCXId> ID of checkbox.
+      <bBlock> Code block
+   $DESCRIPTION$
+      Assign a new code block to checkbox on current window.
+   $RETURNS$
+      .T. if successful, .F. if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxSetFocus()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxSetFocus( nWinNum, nCXId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCXId> ID of checkbox.
+   $DESCRIPTION$
+      Set the focus to checkbox.
+   $RETURNS$
+      .T. if successful, .F. if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DeleteMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DeleteMenu( hMenu, nPosition, nFlag )
+   $ARGUMENTS$
+      <hMenu> Identifies the menu to be changed. <nPosition> Specifies a menu item
+      to be changed. <nFlag> Specifies how <nPosition> will be interpreted. This
+      parameter can be one of two values: MF_BYCOMMAND MF_BYPOSITION Indicates that
+      <nPosition> gives the identifier of the menu item. The MF_BYCOMMAND flag is
+      the default flag if neither the MF_BYCOMMAND nor MF_BYPOSITION flag is
+      specified. Indicates that <nPosition> gives the zero-based relative position
+      of the menu item.
+   $DESCRIPTION$
+      This function deletes an item from the specified menu. If the menu item opens
+      a menu or submenu, this function destroys the handle to the menu or submenu
+      and frees the memory used by the menu or submenu.
+   $RETURNS$
+      If the function succeeds, the return value is nonzero. If the function fails,
+      the return value is zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DestroyMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DestroyMenu( hMenu )
+   $ARGUMENTS$
+      <hMenu> Identifies the menu to be destroyed.
+   $DESCRIPTION$
+      This function deletes an item from the specified menu. If the menu item opens
+      a menu or submenu, this function destroys the handle to the menu or submenu
+      and frees the memory used by the menu or submenu.
+   $RETURNS$
+      If the function succeeds, the return value is nonzero. If the function fails,
+      the return value is zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DlgSetIcon()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DlgSetIcon( nHandleDialog, ncIcon )
+   $ARGUMENTS$
+      <nHandleDialog> Handle of dialog window. <ncIcon> If numeric, identifies a
+      RESOURCE in a RC file. If string, identifies an icon file name.
+   $DESCRIPTION$
+      Defines an icon on a dialog window.
+   $RETURNS$
+      If successful, icon handle. Otherwise, NIL.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawBoxGet()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawBoxGet( nWinNum, nRow, nCol, nWidth, aOffset )
+   $DESCRIPTION$
+      Draws a box to an input get. Unlike GTWVT, GTWVW draw white lines on outer
+      right and outer bottom. Besides, scope is the same as DRAWBOXRECESSED, ie.,
+      two pixel out of char boundary.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawBoxGroup()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawBoxGroup( nWinNum, nTop, nLeft, nBottom, nRight, aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a box. <aOffset> Array of four elements with
+      top/left and bottom/right corner coordinates to align the box with row/column.
+   $DESCRIPTION$
+      Draws a box.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawBoxRaised()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawBoxRaised( nNumWin, nTop, nLeft, nBottom, nRight, lTight/aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a box. <lTight/aOffset> If <lTight>, box is draw
+      inside the character region and top and left lines are lower two pixel down to
+      make room for above/left object. If <aOffset>, an array of four elements is
+      defined with coordinates top, left, bottom right to align box with row/column.
+   $DESCRIPTION$
+      Draws a raised box.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawBoxRecessed()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawBoxRecessed( nWinNum, nTop, nLeft, nBottom, nRight, lTight/aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a box. <lTight/aOffset> If <lTight>, box is drawn
+      inside the character region and top and left lines are lower two pixel down to
+      make room for above/left object. If <aOffset>, an array of four elements is
+      defined with coordinates top, left, bottom right to align box with row/column.
+   $DESCRIPTION$
+      Draws a recessed box.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawButton( nWinNum, nTop, nLEft, nBottom, nRight, cText,
+      cImage/nImage, nFormat, nTextColor, nBkClor, nImageAt )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nButtom,
+      nRight> Coordinates to draws a button. <cText> Text of button. <cImage/nImage>
+      If string, specifies a bitmap filename (full path is required). If numeric,
+      specifies the position of image in application image cache. <nFormat>
+      Specifies shape of button: 0 1 2 Raised (default) Recessed Outline
+
+      <nTextColor> Index to button's color. <nBkColor> Index of button's background
+      color. <nImageAt> Ignored.
+   $DESCRIPTION$
+      Draws a button.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawColorRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawColorRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      nRGBColor )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a rectangle. <aOffPixels> Array of four elements
+      with top/left and bottom/right coordinates to align the rectangle with
+      row/column. <nRGBColor> Color to fill the rectangle.
+   $DESCRIPTION$
+      Draws a color rectangle. wvw_FillRectangle(). This function is for
+      compatibility with GWTWVT, similar to
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawEllipse()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawEllipse( nWinNum, nTop, nLeft, nBottom, nRight, aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw an ellipse. <aOffset> Array of four elements with
+      top/left and bottom/right coordinates to align the ellipse with row/column.
+   $DESCRIPTION$
+      Draws an ellipse.
+   $RETURNS$
+      Returns a nonzero value, if successful, otherwise zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawFocusRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawFocusRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffSet )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a rectangle. <aOffset> Array of four elements with
+      top/left and bottom/right coordinates to align the rectangle with row/column.
+   $DESCRIPTION$
+      Draws a rectangle in a style to represent focus.
+   $RETURNS$
+      Returns a nonzero value, if successful, otherwise zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawGridHorz()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawGridHorz( nWinNum, nTop, nLeft, nBottom, nRight, nRows )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw horizontal grid. <nRows> Number of lines to
+      horizontal grid.
+   $DESCRIPTION$
+      Draws a horizontal grid.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawGridVert()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawGridVert( nWinNum, nTop, nBottom, aCols, nCols, aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nBottom>
+      Initial/final line to draw vertical grid. <aCols> Array with sizes of columns
+      to be draw. <nCols> Number of columns to be draw. <aOffset> Array of four
+      row/column. elements with top/left, bottom/right offset to align vertical grid
+      to
+   $DESCRIPTION$
+      Draws a vertical grid.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawImage()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawImage( nWinNum, nTop, nLeft, nBottom, nRight,
+      cImage/nPictureSlot, lTight/aOffset, lTransparent )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+      <nTop, nLeft, nBottom, nRight> Coordinates to draw an image. If <nBottom> is NIL,
+      so image's height will be proportional to image's width. If <nRight> is NIL,
+      so image's width will be proportional to image's height. If both <nbottom> and
+      <nRight> are NIL, so original size of image will be used.
+      <cImage/nPictureSlot> If string, an image will be read from <cImage> (full
+      path). If numeric, will an index in an image list (previously loaded by
+      application). WARNING: this function will always cache the image. Do not use
+      it to draw large number of images, because image handle is never closed.
+      <lTight/aOffset> Specifies how image will be adjusted (in pixels) to
+      row/column coordinates. <lTransparent> If .T., specifies a transparent image,
+      otherwise .F. If .T., transparency color will be the top left corner pixel.
+   $DESCRIPTION$
+      Draws an image.
+   $RETURNS$
+      .T. if successful (draws an image), .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLabel()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLabel( nWinNum, nRow, nCol, cLabel, nAlign, nEscapement,
+      nTextColor, nBkColor, cFontFace, nHeight, nWidth, nWeight,
+      nQuality, nCharSet, lItalic, lUnderline, lStrikeOut )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nRow, nCol> Row/column to
+      draw a label. <cLabel> String to be draw. <nAlign> String alignment. Default
+      is TA_LEFT (another definitions: see file wingdi.ch). <nEscapement>
+      Specifies angle. <nTextColor> Color index of label. <nBkColor> Color index of
+      background of label. <cFontFace> Name of the font. <nHeight> Height of the
+      font's character. <nWidth> Specifies average width of character in the font.
+      <nWeight> Specifies the weight of the font in the range 0 through 1000 (see
+      About Fonts section). <nQuality> Specifies the output quality.
+
+      <nCharSet> Specifies set of characters to be used. <lItalic> Specifies an
+      italic font if set to TRUE. <lUnderline> Specifies an underline font if set to
+      TRUE. <lStrikeOut> Specifies a strikeout font if set to TRUE.
+   $DESCRIPTION$
+      Draws a label.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLabelEx()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLabelEx( nWinNum, nRow, nCol, cLabel, nAlign, cTextColor, nBkColor,
+      nSlotFont )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nRow, nCol> Row/column to
+      draw a label. <cLabel> String to be draw. <nAlign> Text alignment. Default is
+      TA_LEFT (see wingdi.ch to another definitions). <cTextColor> Index color of
+      the font. <nBkColor> Index color of label background. <nSlotFont> Index of
+      application cache fonts. If image cache is empty (or index does not exist),
+      function will be not executed.
+   $DESCRIPTION$
+      Draws a label.
+   $RETURNS$
+      .T. if successful (draws a label), .F. otherwise (returns .F. if
+      <nSlotFont> invalid).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLabelObj()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLabelObj( nWinNum, nTop, nLeft, nBottom, nRight, cLabel,
+      nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont, aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a label. <cLabel> String to be draw. <nAlignHorz>
+      Horizontal align of the label. Default is zero. <nAlignVert> Vertical align.
+      Default is zero. <nTextColor> Index color of the label. <nBkColor> Index
+      backgroud color of the label. <hFont> Specifies which font will be used to
+      draw a label. <aOffSet> String of four elements to align label with
+      coordinates <nTop, nLeft, nBottom, nRight>.
+   $DESCRIPTION$
+      Draws a label.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLine()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLine( nWinNum, nTop, nLeft, nBottom, nRight, nOrient,
+      nFormat, nAlign, nStyle, nThick, nColor, aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a line. <nOrient> Line orientation: 0 1
+      Horizontal Vertical
+
+      <nFormat> Line format: 0 1 2 Raised Recessed Plain
+
+      <nAlign> Line alignment: 0 1 2 3 4 Center Top Bottom Left Right
+
+      <nStyle> Specifies pen style. See wingdi.ch (PS_SOLID, PS_DOT, etc.).
+      <nThick> Specifies the width of the pen, in logical units. If zero, the pen is
+      a single pixel wide, regardless of the current transformation. Default is zero
+      (width of one pixel). <nColor> Specifies a color reference for the pen color (
+      a 32 bit value from RGB color). <aOffset> Array of four row/column. elements
+      with top/left, bottom/right of coordinates to align line with
+   $DESCRIPTION$
+      Draws a line.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLineEx()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLineEx( nWinNum, nTop, nLeft, nBottom, nRight, nOrient, nFormat,
+      nAlign, nSlotPen )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a line. <nOrient> Line orientation: 0 1
+      Horizontal Vertical
+
+      <nFormat> Line format: 0 1 2 Raised Recessed Plain
+
+      <nAlign> Line alignment: 0 1 2 3 4 Center Top Bottom Left Right
+
+      <nSlotPen> Index on pen's cache.
+   $DESCRIPTION$
+      Draws a line (using an index of pen's cache).
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawMenuBar()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawMenuBar()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      This function repaint the menu bar of the current window. If the menu bar
+      changes after Windows has created the window, this function must be called to
+      repaint the changed menu bar.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawOutline()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawOutline( nWinNum, nTop, nLeft, nBottom, nRight, nThick, nShape,
+      nRGBColor )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a box. <nThick> Style of pen. See wingdi.ch file
+      for definitions (PS_SOLID, PS_DOT, etc.). <nShape> Ignored. <nRGBColor>
+      Specifies color reference for pen (a 32 bit RGB color value).
+   $DESCRIPTION$
+      Draws a outline arguments. box in <nTop, nLeft, nBottom, nRight> coordinates,
+      with style and color
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawOutlineEx()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawOutlineEx( nWinNum, nTop, nLeft, nBottom, nRight, nSlotPen )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a box. <nSlotPen> Index on pen's cache.
+   $DESCRIPTION$
+      Draws an outlined box (using an index of pen's cache).
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawPicture()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawPicture( nWinNum, nTop, nLeft, nBottom, nRight, nSlot, lTight/aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw an image. <nSlot> index on image's cache.
+      <lTight/aOffset> Array with four row/column. elements with top/left,
+      bottom/right coordinates to align image with
+   $DESCRIPTION$
+      Draws an image, saving in a cache if images.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawProgressBar()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawProgressBar( nWinNum, nTop, nLeft, nBottom, nRight,
+      aOffPixels, nPercent, nBackColor, nBarColor, cImage, lVertical,
+      nDirection )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+      <nTop, nLeft, nBottom, nRight> Coordinates to draw a progress bar. <aOffPixels>
+      Array with four elemets with top/left, bottom/right coordinates to align
+      progress bar with row/column. <nPercent> Maximum range value. <nBackColor>
+      Background color. <nBarColor> Progress bar color. <cImage> An image to show
+      when progress bar is running. <lVertical> Specifies if progress bar is
+      vertical (.T.) or horizontal (.F.). <nDirection> 0 Specifies a left to
+      right progress bar (default) 1 Specifies a right to left progress bar
+   $DESCRIPTION$
+      Draws a progress bar.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawRectangle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawRectangle( nWinNum, nTop, nLeft, nBottom, nRight, aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a rectangle. <aOffset> Array with four elements
+      with top/left, bottom/right coordinates to align rectangle with row/column.
+   $DESCRIPTION$
+      Draws a rectangle.
+   $RETURNS$
+      If successful returns a non-zero value, otherwise zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawRoundRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawRoundRect(nWinNum, nTop, nLeft, nBottom, nRight, aOffset,
+      nRoundHeight, nRoundWidth)
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a rectangle. <aOffset> Array with four elements
+      with top/left, bottom/right coordinates to align rectangle with row/column.
+      <nRoundHeight> Width of ellipse to round rectangle's corner. <nRoundWidth>
+      Height of ellipse to round rectangle's corner.
+   $DESCRIPTION$
+      Draws a rectangle with rounded corners.
+   $RETURNS$
+      If successful returns a non-zero value, otherwise zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawScrollButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawScrollButton( nWinNum, nTop, nLeft, nBotton, nRight, aOffPixels,
+      nTLBR, lDepressed )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a scrollbutton. <aOffPixels> Array with four
+      elements with top/left, bottom/right coordinates to align scrollbutton with
+      row/column. <nTLBR> Specifies scrollbutton direction: 1 2 3 4 Up arrow button
+      Left arrow button Bottom arrow button Right arrow button
+
+      <lDepressed> If .F., specifies raised button, .T. recessed button.
+   $DESCRIPTION$
+      Draws a scrollbutton. With functions wvw_xb*(), this function becomes
+      obsolete.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawScrollThumbHorz()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawScrollThumbHorz( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      nThumbPos )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw scrollbar movement button. <aOffPixels> Array of
+      four elements with top/left, bottom/right coordinates to align scrollbar
+      movement button with row/column. <nThumbPos> Initial column position.
+   $DESCRIPTION$
+      Draws a horizontal obsolete. scrollbar button. With functions wvw_xb*(),
+      this function becomes
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawScrollThumbVert()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawScrollThumbVert( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      nThumbPos )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw scrollbar movement button. <aOffPixels> Array of
+      four elements with top/left, bottom/right coordinates to align scrollbar
+      movement button with row/column. <nThumbPos> Initital line position.
+   $DESCRIPTION$
+      Draws a vertical obsolete. scrollbar button. With functions wvw_xb*(), this
+      function becomes
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawShadedRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawShadedRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels, nHorVert, aRGBb, aRGBe )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw a rectangle. <aOffPixels> Array of four elements
+      with top/left, bottom/right coordinates to align rectangle with row/column.
+      <nHorVert> Specifies draws method and how to interpret rectangle fill array (
+      <aRGBb> and <aRGBe>). Default is GRADIENT_FILL_RECT_H (see wingdi.ch file
+      for all definitions). <aRGBb> Array of four color position (Red, Gree, Blue,
+      Alpha), with initial rectangle position. <aRGBe> Array of four color position
+      (Red, Gree, Blue, Alpha), with final rectangle position.
+   $DESCRIPTION$
+      Draws a rectangle in specified coordinates, with gradient filling colors,
+      varying from <aRGBb> to <aRGBe>.
+   $RETURNS$
+      .T. if successful, otherwise .F.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawStatusBar()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawStatusBar( nWinNum, nPanels, aPos )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPanels> Number of parts
+      in a status bar. <aPos> Array with row/column positions to divide status bar.
+   $DESCRIPTION$
+      Draws a status bar. Only for compatibility with GTWVT. wvw_sb*() functions
+      are recommended instead.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawTextBox()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawTextBox( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      cText, nAlignHorz, nAlignVert, nTextColor, nBackColor, nBackMode,
+      hFont )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw text. <aOffPixels> Array of four row/column.
+      <cText> Text to be draw. <nAlignHorz> Specifies text alignment inside
+      coordinates: 0 1 2 Left (default) Right Centralized elements with top/left,
+      bottom/right coordinates to align text with
+
+      <nAlignVert> Ignored. <nTextColor> Color of text. <nBackColor> Background
+      color. <nBackMode> Background mode how color is used. Default is OPAQUE (see
+      wingdi.ch for all definitions). <hFont> Font of the text.
+   $DESCRIPTION$
+      Draws a text in a rectangle.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawToolButtonState()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawToolButtonState( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      nState )
+   $ARGUMENTS$
+      <nWinNum> Windwow number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw toolbutton. <aOffPixels> Array of four elements
+      with top/left, bottom/right coordinates to align toolbutton with row/column.
+      <nState> Button state: 0 1 2 Flat Raised Recessed
+   $DESCRIPTION$
+      Draws a toolbutton.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_EnableMaximize()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_EnableMaximize( nWinNum, lEnable )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <lEnable> If .T., enable
+      maximize button, .F. disable.
+   $DESCRIPTION$
+      Read/Set maximize button. In order to enable MAXIMIZE button, app should have
+      WVW_SIZE() callback function.
+   $RETURNS$
+      Old maximize box state, before applying the new style.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_EnableMenuItem()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_EnableMenuItem( hMenu, nPosition, nFlag )
+   $ARGUMENTS$
+      <hMenu> ID of menu. <nPosition> Specifies position of item to be
+      enabled/disabled (see <nFlag> argument). <nFlag> For Harbour, in practice,
+      we should define only two values: MF_DISABLE MF_ENABLE Specifies item to be
+      disabled. Specifies item to be enabled.
+   $DESCRIPTION$
+      Enable/Disable menu item.
+   $RETURNS$
+      Returns old configuration of menu item. If menu item is invalid, returns zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_EnableShortcuts()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_EnableShortcuts( nWinNum, lEnable )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <lEnable> If .T., enable
+      shortcut keys. .F. disable shortcut keys.
+   $DESCRIPTION$
+      Specifies if shortcut keys are enabled/disabled to acess menu item or system
+      menu.
+   $RETURNS$
+      Returns old configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_FillRectangle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight,
+      nRGBColor/hBrush, lTight, lUseBrush )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to fill a rectangle. <nRGBColor/hBrush> Rectangle filling
+      color (a 32 bits value with RGB color). <lTight> Filling patern will be
+      adjusted in all coordinates area. <lUseBrush> If .T., <nRGBColor/hBrush>
+      argument is interpreted as a handle to a pen model. Otherwise, is used as a
+      RGB color.
+   $DESCRIPTION$
+      Fills a rectangle using a color or a pen model.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetClipboard()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetClipboard()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Retrieves data from the clipboard.
+   $RETURNS$
+      Data from the clipboard.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetCursorPos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetCursorPos()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Retrieves mouse coordinates.
+   $RETURNS$
+      Array of two elements, respectively, X coordinate and Y coordinate.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetFontInfo()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetFontInfo()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Retrieves current font data.
+   $RETURNS$
+      Array of seven elements: 1 2 3 4 5 6 7 ­ ­ ­ ­ ­ ­ ­ cFontFace cFontHeight
+      nFontWidth nFontWeight cFontQuality PTEXTSIZE->x PTEXESIZE->y Name Height
+      Width Weight Quality Font's width in pixels Font's size in pixels
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetLastMenuEvent()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetLastMenuEvent()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Reads the last item selected (always on current window).
+   $RETURNS$
+      Last selected item or zero, if no item is selected previously.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetMenu()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Gets the handle of current window.
+   $RETURNS$
+      Menu handle.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetPaintRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetPaintRect( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Gets coordinates of screen with pending paint.
+   $RETURNS$
+      Returns array of paint pending rect {top, left, bottom, right}. Warning:
+      unlike WVT, top maybe > bottom or left maybe > right. in these cases, no paint
+      request is pending (in WVT these is reflected in {0,0,0,0}).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetPalette()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetPalette()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Get color palette.
+   $RETURNS$
+      Array of 16 elements, each element represent a color.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetRGBColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetRGBColor( nColor )
+   $ARGUMENTS$
+      <nColor> Color index (as defined in CA-Cl*pper).
+   $DESCRIPTION$
+      Reads an index RGB color value for <nColor> argument.
+   $RETURNS$
+      Returns a RGB color value.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetRowColFromXY()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetRowColFromXY( nWinNum, nX, nY )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nX> X coordinate in
+      pixels. <nY> Y coordinate in pixels.
+   $DESCRIPTION$
+      Convert X,Y coordinates (in pixels) to row and column.
+   $RETURNS$
+      Array of two elements: row and column.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetScreenHeight()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetScreenHeight()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Reads screen height, in pixels.
+   $RETURNS$
+      Screen height, in pixels.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetScreenWidth()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetScreenWidth()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Reads screen width, in pixels.
+   $RETURNS$
+      Screen width, in pixels.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetTitle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetTitle()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Reads current window title.
+   $RETURNS$
+      Window current title.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetToolTipBkColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetToolTipBkColor()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Gets background color of tooltip.
+   $RETURNS$
+      Index RGB background color of tooltip.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetToolTipTextColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetToolTipTextColor()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Gets text color of tooltip.
+   $RETURNS$
+      Index RGB text color of tooltip.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetToolTipWidth()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetToolTipWidth()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Gets width of tooltip.
+   $RETURNS$
+      Tooltip width.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetWindowHandle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetWindowHandle()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Gets handle of current window.
+   $RETURNS$
+      Window handle.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetXYFromRowCol()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetXYFromRowCol( nWinNum, nRow, nCol )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nRow> Line number. <nCol>
+      Column number.
+   $DESCRIPTION$
+      Convert row and column to X,Y coordinates (in pixels).
+   $RETURNS$
+      Array of two elements: X coordinate and Y coordinate.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_InvalidateRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_InvalidateRect()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Invalidate current window, forcing a new painting.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_IsLButtonPressed()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_IsLButtonPressed()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Verify if left mouse button is pressed.
+   $RETURNS$
+      .T. button pressed. .F. button released.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_KillTimer()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_KillTimer( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Cancels timer event on current window.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_lbAddString()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_lbAddString( nHandleDialog, nIDListBox, cItem )
+   $ARGUMENTS$
+      <nHandleDialog> Handle of dialog window. <nIDListBox> ID of listbox. <cItem>
+      Item to add in listbox.
+   $DESCRIPTION$
+      Adds an item in listbox.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_lbSetCurSel()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_lbSetCurSel( nHandleDialog, nIDListBox, nItem )
+   $ARGUMENTS$
+      <nHandleDialog> Handle of dialog window. <nIDListBox> ID of listbox. <nItem>
+      Item index (start from zero).
+   $DESCRIPTION$
+      Selects an item in listbox.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_lCloseWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_lCloseWindow()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Closes the last/topmost window
+   $RETURNS$
+      .T. if successful.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_LoadFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_LoadFont( nSlotFont, cFontName, nHeight, nWidth, nWeight,
+      lItalic, lUnderline, lStrikeout, nCharSet, nQuality, nEscapement )
+   $ARGUMENTS$
+      <nSlotFont> Index of font cache. <cFontName> Name of the font. <nHeight>
+      Height of the font's character. <nWidth> Specifies average width of character
+      in the font. <nWeight> Specifies the weight of the font in the range 0 through
+      1000 (see About Fonts section). <lItalic> Specifies an italic font if set to
+      TRUE. <lUnderline> Specifies an underlined font if set to TRUE. <lStrikeout>
+      Specifies a strikeout font if set to TRUE. <nCharSet> Identify the character
+      set. For example, ANSI_CHARSET, DEFAULT_CHARSET, OEM_CHARSET, etc. (all
+      models can be viewed in file wingdi.ch). <nQuality> Specifies the output
+      quality. <nEscapement> Angle of escapement of the font.
+   $DESCRIPTION$
+      Load all information about the specified font, writing it in font cache.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_LoadPen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor )
+   $ARGUMENTS$
+      <nSlot> Index of cache of pen, defined by the user. <nStyle> Style of the pen.
+      <nWidth> Specifies the width of the pen, in logical units. If nWidth is zero,
+      the pen is a single pixel wide, regardless of the current transformation.
+      <nRGBColor> Specifies a color reference for the pen color.
+   $DESCRIPTION$
+      Load definition of the pen (style, width and color) to a cache of pen.
+   $RETURNS$
+      Returns .T. if read and write of definition is OK, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_LoadPicture()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_LoadPicture( nSlot, cFilePicture )
+   $ARGUMENTS$
+      <nSlot> Position of the cache where the image will be loaded. If there is any
+      image in this position, will be replaced. <cFilePicture> Image to be loaded in
+      the cache.
+   $DESCRIPTION$
+      Load an image in cache of images. Please, read an observation about cache of
+      images, in the introducion.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_Maximize()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_Maximize( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Maximize current window (argument <nWinNum> is ignored). If application
+      define a callback function WVW_Size() the window will be maximized, otherwise,
+      only restores window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_MaxMaxCol()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_MaxMaxCol( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Returns maximum <nWinNum>. possible MaxCol() in current screen setting for
+      font used by window
+   $RETURNS$
+      Maximum number of columns.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_MaxMaxRow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_MaxMaxRow( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Returns maximum <nWinNum>. possible MaxRow() in current screen setting for
+      font used by window
+   $RETURNS$
+      Maximum number of rows.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_MessageBox()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_MessageBox( nWinNum, cMessage, cTitle, nOption )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <cMessage> Message to be
+      displayed. <cTitle> Dialog box title. <nOption> Specifies a set of buttons
+      that determine the contents and behavior of the dialog box. Default is MB_OK (
+      OK button, without icons). You can see all definitions in file winuser.ch.
+   $DESCRIPTION$
+      Creates, displays, and operates a message box. The message box contains an
+      applicationdefined message and title, plus any combination of predefined icons
+      and push buttons.
+   $RETURNS$
+      Number of selected option (IDOK to OK button, IDCANCEL to Cancel button, etc.)
+      You can see all definitions in file winuser.ch
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_Minimize()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_Minimize()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Minimizes current window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nColOfs()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nColOfs( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Returns column offset of window <nWinNum> (0 == MAIN), relative to Main
+      Window.
+   $RETURNS$
+      Number of offset columns.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nNumWindows()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nNumWindows()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Returns number of windows opened (including main window).
+   $RETURNS$
+      Number of opened windows.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_NoClose()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_NoClose( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Disable close button in windows <nWinNum>.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nOpenWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nOpenWindow( cWinName, row1, col1, row2, col2, nStyle, nParentWin,
+      nExStyle )
+   $ARGUMENTS$
+      <cWinName > Title of window. If omitted, the name of executable will be used.
+      <row1, col1, row2, col2 > Specifies initial row/column and final row/column of
+      the window coordinates are relative to main window, not to current window.
+      This coordinates are used to: 1) Put window in initial position. 2) Determine
+      size of the window (new MaxRow() and MaxCol()). 3) Save in RowOfs and ColOfs
+      to MainCoord mode. <nStyle > Style of the window. All definitions are in file
+      winuser.ch. Default is WS_CAPTION|WS_SYSMENU|WS_CLIPCHILDREN. If you will use
+      controls such as PUSHBUTTON, you MUST include WS_CLIPCHILDREN. <nParentWin> Is
+      the mother of the new window. Default is current window (in Standard mode)
+      and the last window (in MainCoord mode). If you want the new window to not
+      have parent, pass -1 as argument. <nExStyle> Extended style to window (for
+      example: WS_EX_TOOLTIPWINDOW). Default is NIL. Note: this parameter does
+      not exist in original GTWVW to be opened. This
+   $DESCRIPTION$
+      Opens a window in specified coordinates. Depending of parameter in function
+      wvw_NoStartupSubWindow() the window will be displayed or remains invisible (
+      until we call function wvw_ShowWindow()).
+   $RETURNS$
+      Number of window, if successful, zero if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_NoStartupSubWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_NoStartupSubWindow( lOn )
+   $ARGUMENTS$
+      <lOn> .T. when open window, will be displayed (default). .F. when open
+      window, remains invisible.
+   $DESCRIPTION$
+      Informs to the system that the window, when created, will be displayed or
+      remains invisible until we call funtion wvw_ShowWindow().
+   $RETURNS$
+      Returns new configuration (if argument <lOn> is passed) or actual
+      configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nRowOfs()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nRowOfs( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Returns row offset of window <nWinNum> (0==MAIN), relative to Main Window.
+   $RETURNS$
+      Number of offset rows.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nSetCurWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nSetCurWindow( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Assigns <nWinNum> as the new current window. Makes sense only if in
+      StandardMode.
+   $RETURNS$
+      Returns old current window.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_NumBMCache()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_NumBMCache()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Reads number of user-bitmap cache.
+   $RETURNS$
+      Returns current number of user-bitmap cache.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_PasteFromClipboard()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_PasteFromClipboard()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Paste text from Clipboard.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbCreate( nWinNum, nTop, nLeft, nBottom, nRight, cText,
+      cImage/nImage, bBlock, aOffset, nStretchBitmap, lMap3DColors )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to create the button. <cText> Text of the button. Default
+      is "". <cImage/nImage> If specified as numeric, identify ID from Resource in a
+      .RC file. If specified as string, must have a full path to an image file.
+      <bBlock> Code block to be executed whenever a BN_CLICK event occurred (press
+      and release the button). Always pass as a parameter: <nWinNum> and ID of
+      button. <aOffset> Array of four row/column. elements with top/left,
+      bottom/right coordinates to align button with
+
+      <nStretchBitmap> Number between 0 and 1 (inclusive) as a stretch factor:
+      1.0 0.5 0 The bitmap will cover all button. The bitmap will cover only 50% of
+      the button. The bitmap will not be stretched.
+
+      Default is 1. <lMap3DColors> Specified if an image will be transparent (.T.)
+      or not (.F.). This will work on 256 colored bitmaps only.
+   $DESCRIPTION$
+      Creates a pushbutton in current window.
+   $RETURNS$
+      Returns the handle of the new pushbutton, if successful (or zero if failed).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbDestroy( nWinNum, nPBId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPBId> ID of the
+      pushbutton.
+   $DESCRIPTION$
+      Deletes a pushbutton of current window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbEnable()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbEnable( nWinNum, nPBId, lToggle )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPBId> ID of the
+      pushbutton. <lToggle> .T. Enable pushbutton (default). .F. Disable
+      pushbutton.
+   $DESCRIPTION$
+      Enable/disable the pushbutton in current window.
+   $RETURNS$
+      Returns prior status of pushbutton, if <lToggle> is passed. Otherwise, returns
+      actual status of pushbutton (.T. is enabled, .F. disabled).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbSetCodeblock()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbSetCodeblock( nWinNum, nPBId, bBlock )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPBId> ID of the
+      pushbutton. <bBlock> Code block.
+   $DESCRIPTION$
+      Assign a new code block to a pushbutton in current window.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbSetFocus()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbSetFocus( nWinNum, nPBId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPBId> ID of the
+      pushbutton.
+   $DESCRIPTION$
+      Set focus to pushbutton to current window.
+   $RETURNS$
+      .T. if successful, .F. if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbSetFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbSetFont( nWinNum, cFontFace, nHeight, nWidth, nWeight,
+      nQuality, lItalic, lUnderline, lStrikeout )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <cFontName> Name of the
+      font. <nHeight> Height of the font's character. <nWidth> Specifies average
+      width of character in the font. <nWeight> Specifies the weight of the font in
+      the range 0 through 1000 (see About Fonts section). <nQuality> Specifies the
+      output quality. <lItalic> Specifies an italic font if set to TRUE.
+      <lUnderline> Specifies an underlined font if set to TRUE. <lStrikeout>
+      Specifies a strikeout font if set to TRUE.
+   $DESCRIPTION$
+      This funtction will initialize font for ALL pushbuttons in window <nWinNum>,
+      including ones created later on.
+   $RETURNS$
+      .T. if successful, .F. if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbSetStyle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbSetStyle( nWinNum, nPBId, nStyle )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPBId> ID of pushbutton.
+      <nStyle> Define style of pushbutton. You can see all possibilities
+      BS_PUSHBUTTON, BS_DEFPUSHBUTTON, etc.). Typical usage: BS_DEFPUSHBUTTON
+      BS_PUSHBUTTON in file winuser.ch (
+
+      1: Turn the button into default button (thick border) 0: Turn the button
+      into regular pushbutton
+   $DESCRIPTION$
+      Assign new style to button in current window.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pgCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pgCreate( nWinNum, nTop, nLeft, nBottom, nRight, aOffset,
+      nBackColor, nBarColor, lSmooth, lVertical )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to create a progress bar. <aOffset> Array of four elements
+      with top/left, bottom/right coordinates to align progress bar with row/column.
+      <nBackColor> Background color. <nBarColor> Progress bar color. <lSmooth> .T.
+      draw progress bar as a continuum bar .F. draw progress bar with tiny distinct
+      rectangles (default) <lVertical> .T. draw as vertical progress bar .F. draw
+      as horizontal progress bar (default)
+   $DESCRIPTION$
+      Create progress bar for current window. Progress bar range is initially set as
+      0 to 100, start from 0.
+   $RETURNS$
+      Progress bar handle, if successful. Zero if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pgDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pgDestroy( nWinNum, nPGId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPGId> ID of progress
+      bar.
+   $DESCRIPTION$
+      Delete a progress bar for current window
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pgGetPos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pgGetPos( nWinNum, nPGId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPGId> ID of progress
+      bar.
+   $DESCRIPTION$
+      Get progress bar current position.
+   $RETURNS$
+      Returns 0 if operation failed, otherwise return progress bar position.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pgSetPos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pgSetPos( nWinNum, nPGId, nPos )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPGId> ID of progress
+      bar. <nPos> A number in range of current range.
+   $DESCRIPTION$
+      Update progress bar position within current range.
+   $RETURNS$
+      Returns .T. if operation considered successfull, otherwise .F.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ProcessMessages()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ProcessMessages( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. NOTE: Despite the
+      parameter, the following will actually process messages for all windows
+   $DESCRIPTION$
+      Process messages for all windows.
+   $RETURNS$
+      None (actually, returns number 1, with no use).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_Restore()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_Restore( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Restores the window (<nWinNum> is ignored). Restoring window from its
+      maximized state might need handling in callback function WVW_SIZE(), because
+      this function assumes no change in MaxRow()/MaxCol().
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_RestScreen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_RestScreen( nWinNum, nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Screen coordinates to display data saved by function wvw_SaveScreen().
+      <aScr> Array with three elements (height, width and handle of bitmap).
+      <lDoNotDestroyBMP> If .T., after restore screen, delete the bitmap used to
+      save screen. If .F., the bitmap will not be erased. (default)
+   $DESCRIPTION$
+      Restores screen, saved by function wvw_SaveScreen().
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SaveScreen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Screen coordinates to save screen (always from current window,
+      because argument <nWinNum> is ignored).
+   $DESCRIPTION$
+      Save a region of screen, writing in a bitmap file.
+   $RETURNS$
+      Array of three elements, with height, width and handle of the bitmap.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbAddPart()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbAddPart( nWinNum, cMaxText, nWidth, nStyle, lResetParts, cIcon, cTooltip )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <cMaxText> If present, the
+      width of status bar will be the width of this text. <nWidth> Width of status
+      bar part. Ignored, if <cMaxText> is passed. <nStyle> Style of status bar: 0
+      0x100 0x200 Recessed (default) No borders Raised
+
+      <lResetParts> If .T., remove all previously created parts. If .F., a new
+      status bar part will be created and added to previous parts. <cIcon/cTooltip>
+      Ignored.
+   $DESCRIPTION$
+      Adds a new division in a status <cMaxText/nWidth> and <nStyle>. bar, with
+      width and style specified in arguments
+   $RETURNS$
+      Returns number of parts, if successful. Zero if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbCreate( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Create status bar for current window, with one part.
+   $RETURNS$
+      Handle to status bar of current window. Zero if failed, eg. if there is
+      already a status bar for this window.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbDestroy( nWinNum )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window.
+   $DESCRIPTION$
+      Destroy status bar, forcing the window to be draw again.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbGetParts()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbGetParts()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Get number of parts in status bar of current window.
+   $RETURNS$
+      Number of parts in status bar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbGetText()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbGetText( nWinNum, nPart )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPart> Number of part in
+      status bar.
+   $DESCRIPTION$
+      Get text of status bar's part <nPart>.
+   $RETURNS$
+      Text from <nPart> in status bar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbRefresh()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbRefresh()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Reinitialize statusBar's parts, eg. after window resize.
+   $RETURNS$
+      Number of parts in status bar, if successful. Zero, otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbSetText()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbSetText( nWinNum, nPart, cText )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nPart> Number of part in
+      status bar. <cText> Text to be configured.
+   $DESCRIPTION$
+      Set text of status bar's part <nPart> .
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetAltF4Close()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetAltF4Close( lOn )
+   $ARGUMENTS$
+      <lOn> .T. if application can be finished using ALT F4 key. .F. if application
+      can not be finished usgin ALT F4 key.
+   $DESCRIPTION$
+      Identify if the application can be finished using ALT F4 key.
+   $RETURNS$
+      Old configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetAsNormal()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetAsNormal()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Returns window into normal state (opposing to function wvw_SetOnTop()).
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetBrush()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetBrush( nStyle, nColor, nHatch )
+   $ARGUMENTS$
+      <nStyle> Identify pen style. All definitions can be viewed in file wingdi.ch (
+      BS_SOLID, BS_NULL, etc.). <nColor> Index color to pen draw. <nHatch> Define
+      the filling pattern of pen. All definitions can be viewed in file wingdi.ch (
+      HS_VERTICAL, HS_HORIZONTAL, etc.).
+   $DESCRIPTION$
+      Define style, color and pattern of pen filling.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetClipboard()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetClipboard( cText )
+   $ARGUMENTS$
+      <cText> Text to be inserted in the clipboard.
+   $DESCRIPTION$
+      Sets text to the clipboard.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetCodepage()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetCodepage( nWinNum, nCodePage )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCodePage> Sets the code
+      page.
+   $DESCRIPTION$
+      Define code page for current window.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefCentreWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefCentreWindow( lCentre )
+   $ARGUMENTS$
+      <lCentre> If .T., config all newly opened windows, to be centralized
+      horizontally and vertically.
+   $DESCRIPTION$
+      Read or set the parameter for centralization of windows.
+   $RETURNS$
+      If <lCentre> is configuration. passed, returns old configuration value,
+      otherwise returns actual
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefHCentreWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefHCentreWindow( lCentre )
+   $ARGUMENTS$
+      <lCentre> If .T., config all newly opened windows, to be centralized
+      horizontally.
+   $DESCRIPTION$
+      Read or set the parameter for centralization of windows.
+   $RETURNS$
+      If <lCentre> is configuration. passed, returns old configuration value,
+      otherwise returns actual
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefLineSpacing()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefLineSpacing( nLineSpacing )
+   $ARGUMENTS$
+      <nLineSpacing> Number of line spacing. Must be even, positive number <= 40,
+      otherwise it will be ignored.
+   $DESCRIPTION$
+      Sets line spacing for all windows.
+   $RETURNS$
+      Old configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefLSpaceColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefLSpaceColor( nColorIndex )
+   $ARGUMENTS$
+      <nColorIndex> Index color to line spacing. Must be between 0 and 15, or ­1
+      meaning line spacing has no color.
+   $DESCRIPTION$
+      Change color to line spacing.
+   $RETURNS$
+      Prior configuration, if <nColorIndex> is passed, otherwise actual
+      configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefVCentreWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefVCentreWindow( lCentre )
+   $ARGUMENTS$
+      <lCentre> If .T., config all newly opened windows, to be centralized
+      vertically.
+   $DESCRIPTION$
+      Read or set the parameter for centralization of windows.
+   $RETURNS$
+      If <lCentre> is configuration. passed, returns old configuration value,
+      otherwise returns actual
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetFont( cFontFace, nFontHeight, nFontWidth, nFontWeight, nFontQuality )
+   $ARGUMENTS$
+      <cFontName> Name of the font. (e.g., MS Sans Serif). <nFontHeight> Height of
+      the font's character. <nFontWidth> Specifies average width of character in the
+      font. <nFontWeight> Specifies the weight of the font in the range 0 through
+      1000 (see About Fonts section). <nFontQuality> Specifies the output quality.
+      All arguments are optional. This function uses the values assigned in windows
+      creation.
+   $DESCRIPTION$
+      Modify the font or the arguments related to the font (height, width, quality,
+      etc.).
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetIcon()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetIcon( nWinNum, nIcon, cIcon )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nIcon> Identify an icon
+      in a resource file. <cIcon> Icon's file name.
+   $DESCRIPTION$
+      Set the icon for current window (argument <nWinNum> is ignored).
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetLastMenuEvent()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetLastMenuEvent( nWinNum, nMenuEvent )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nMenuEvent> Menu's item.
+   $DESCRIPTION$
+      Set the last selected item of the menu (returned from wvw_GetLastMenuEvent())
+   $RETURNS$
+      Last valid configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetLineSpacing()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetLineSpacing( nWinNum, nLineSpacing )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nLineSpacing> If passed,
+      change line spacing in current window, otherwise read actual configuration.
+   $DESCRIPTION$
+      Read/set line spacing for current window. If window size will become too high,
+      line spacing is restored. To change default line spacing for next window open,
+      use wvw_SetDefLineSpacing().
+   $RETURNS$
+      Returns old configuration, if <nLineSpacing> is passed, or actual
+      configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetLSpaceColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetLSpaceColor( nWinNum, nColorIndex )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nColorIndex> Color index
+      to line spacing. Must be between 0 and 15, or ­1, meaning has no color.
+   $DESCRIPTION$
+      Change color to line spacing for current window. To change default line space
+      color for next window open, use wvw_SetDefLineSpacing().
+   $RETURNS$
+      Returns old configuration, if <nColorIndex> is passed, otherwise actual
+      configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMainCoord()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMainCoord( lMainCoord )
+   $ARGUMENTS$
+      <lMainCoord> If passed, change the display mode of windows. Otherwise, read
+      actual configuration.
+   $DESCRIPTION$
+      Change the MainCoord). way of windows are displayed or read actual
+      configuration (Standard or
+   $RETURNS$
+      Actual configuration mode or old configuration, if <lMainCoord> is passed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMaxBMCache()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMaxBMCache( nMaxCache )
+   $ARGUMENTS$
+      <nMaxCache> Limit of cache bitmaps. Default is 20, minimum is 1.
+   $DESCRIPTION$
+      To minimize bitmap loading operation, wvw_drawimage caches bitmap once it
+      reads from disk. Ie., subsequent wvw_drawimage will use the bitmap from the
+      memory. When the maximum number of cache is used, the least recently opened
+      bitmap will be discarded from the cache. There is no way to discard a specific
+      bitmap from the cache. If you want to control bitmap caching manually, use
+      wvw_LoadPicture() instead.
+   $RETURNS$
+      Returns old setting of maximum user-bitmap cache.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMenu( nWinWin, hMenu )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <hMenu> Contains menu
+      information.
+   $DESCRIPTION$
+      Adds a menu, pointed by <hMenu>, in current window. (argument <nWinNum> is
+      ignored).
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMenuKeyEvent()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMenuKeyEvent( nWinNum, nKeyEvent )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nKeyEvent> Number of
+      event defined by the user to command menu of the window.
+   $DESCRIPTION$
+      Defines a numeric event from menu, in current window.
+   $RETURNS$
+      Last valid configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMouseMove()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMouseMove( nWinNum, lMouseMove )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <lMouseMove> .T. recognize
+      mouse in application .F. do not recognize mouse in application If not passed,
+      returns actual configuration.
+   $DESCRIPTION$
+      Enable/disable mouse recognition by the application.
+   $RETURNS$
+      If passed <lMouseMove>, returns .T. to successful operation or .F. otherwise.
+      If omitted, returns last valid configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMousePos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMousePos( nWinNum, nRow, nCol )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nRow, nCol> Row/Column to
+      position mouse cursor.
+   $DESCRIPTION$
+      Position mouse cursor.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetOnTop()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetOnTop()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      The window will be always visible, even if the focus is in another window.
+      This function change properties of the window, thus it will be on top of any
+      other opened window.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPaintRefresh()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPaintRefresh( nPaintRefresh )
+   $ARGUMENTS$
+      <nPaintRefresh> Interval in milliseconds to call WVW_PAINT(). Must be >= 50,
+      or == 0, causing repaint to execute immediately.
+   $DESCRIPTION$
+      Determine interval to calling WVW_PAINT() function, responsible to repaint
+      screen.
+   $RETURNS$
+      Old setting value.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPalette()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPalette( aRGBValues )
+   $ARGUMENTS$
+      <aRGBValues> Array of 16 elements with RGB values.
+   $DESCRIPTION$
+      Config color palette.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPen( nPenStyle, nWidth, nColor )
+   $ARGUMENTS$
+      <nPenStyle> Defines pen style. All definition are in file wingdi.ch (
+      PS_SOLID, PS_DOT, etc.). <nWidth> Specifies width of the pen. <nColor> Index
+      color of pen.
+   $DESCRIPTION$
+      Define style, width and color of pen.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPointer()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPointer( nWinNum, nIcon )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nIcon> Model of icon to
+      be read. May be a string which identify a resource in a RC file or may be a
+      predefined window model (default is IDC_ARROW). All definition are in
+      winuser.ch file.
+   $DESCRIPTION$
+      Change mouse cursor.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPopupMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPopupMenu( nWinNum, hPopUp )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <hPopUp> Include all
+      information of a popup menu.
+   $DESCRIPTION$
+      Config the popup menu for current window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetTimer()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetTimer( nWinNum, nInterval )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nInterval> Interval, in
+      milliseconds.
+   $DESCRIPTION$
+      Set timer event for every <nInterval> milliseconds (it can be usefull to
+      update clock on status bar). Effective only if WVW_TIMER() function exists
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetTitle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetTitle( nWinNum, cTitle )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <cTitle> Title of window.
+   $DESCRIPTION$
+      Define title of current window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTip()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTip( nWinNum, nTop, nLeft, nBottom, nRight, cToolText )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to show tooltip. <cToolText> Tooltip text.
+   $DESCRIPTION$
+      Defines a tooltip.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipActive()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipActive( nWinNum, lToggle )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <lToggle> .T. enable
+      tooltip. .F. disable tooltip. If not passed, returns actual configuration.
+   $DESCRIPTION$
+      Enable/disable tooltip.
+   $RETURNS$
+      Old configuration (if passed <lToggle>) or actual configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipBkColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipBkColor( nWinNum, nColor )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nColor> Color index of
+      tooltip.
+   $DESCRIPTION$
+      Get/set a background color of tooltip.
+   $RETURNS$
+      If not passed <nColor>, returns actual background color of tooltip, otherwise,
+      sets the new color.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipMargin()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipMargin( nWinNum, nTop, nLeft, nBottom, nRight )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nTop, nLeft, nBottom,
+      nRight> Coordinates to draw tooltip.
+   $DESCRIPTION$
+      Define the borders of tooltip. The border is the distance (in pixels)
+      between window's border and text inside toolip.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipText()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipText( nWinNum, cText )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <cText> Text of tooltip.
+   $DESCRIPTION$
+      Define text to tooltip.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipTextColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipTextColor( nWinNum, nColor )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nColor> Color index to
+      text in tooltip.
+   $DESCRIPTION$
+      Define or get the color of text in tooltip.
+   $RETURNS$
+      If not passed <nColor>, returns actual color of text, othewise, sets the new
+      color.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipTitle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipTitle( nWinNum, nIcon, cTitle )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nIcon> Identify if it
+      will be displayed an icon with text in tooltip. Is allowed one of the
+      following values: 0 1 2 3 no icon (default) information warning Error
+
+      any other value greater than 3, the gtwvw convert to 0.
+   $DESCRIPTION$
+      None.
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipWidth()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipWidth( nWinNum, nWidth )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nWidth> Width of tooltip
+      area.
+   $DESCRIPTION$
+      Change or get the width of tooltip area.
+   $RETURNS$
+      If not passed <nWidth>, returns actual width of tooltip area, otherwise, sets
+      the new width of tooltip area.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetVertCaret()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetVertCaret( lOn )
+   $ARGUMENTS$
+      <lOn> .T. turn caret into vertical caret .F. turn caret into horizontal caret
+   $DESCRIPTION$
+      Change caret of text.
+   $RETURNS$
+      If passed <lOn>, returns old configuration. If not passed, returns actual
+      configuration.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetWindowCentre()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetWindowCentre( nWinNum, lCentre, lPaintIt )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <lCentre> .T. centralize
+      window .F. not centralize window <lPaintIt> .T. Repaint all windows immediate.
+      .F. Just update configuration.
+   $DESCRIPTION$
+      Update parameter to centralization of all opened windows (and newly opened).
+      If passed <lPaintIt> and <lCentre>, all windows are repainted and cetralized.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetWindowPos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetWindowPos( nWinNum, nXPosition, nYPosition )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nXPosition> Horizontal
+      position in pixels. <nYPosition> Vertical posititon in pixels.
+   $DESCRIPTION$
+      Change position of current window, based in <nXPosition> and <nYPosition>
+      coordinates.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetWinStyle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetWinStyle( nWinNum, nStyle )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nStyle> New windows
+      style. If the windows has any control (PUSHBUTTON, SCROLLBAR, etc.), must be
+      added WS_CLIPCHILDREN style.
+   $DESCRIPTION$
+      Read or set style for window <nWinNum>. If windows is minimized or hidden, and
+      if passed <nStyle>, the window will be showed.
+   $RETURNS$
+      Returns old style of the window.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ShowWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ShowWindow( nWinNum, nMode )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nMode> Points out how
+      window will be showed. Default is SW_SHOWNORMAL (another definitions in file
+      winuser.ch).
+   $DESCRIPTION$
+      Set the mode of showing window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbAddButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbAddButton( nWinNum, nCommand, xBitmap, cLabel, nBitmapType, lMap3DColors )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCommand> ID of action to
+      be executed when user press button. <xBitmap> ID of bitmap resource in .RC
+      file (in this case, the image can not have more than 256 colors) or full
+      path to a file name. <cLabel> Text of button. If passed <lDisplayText> (in
+      function wvw_tbCreate()) to .T., the text will be showed below image,
+      otherwise will be used as a tooltip. <nBitmapType> Bitmap type. Can be: 0 1 2
+      3 Custom Standard windows bitmaps (COPY, PAST, FIND, OPEN, etc.) System view
+      bitmaps System history bitmaps
+
+      <lMap3DColors> If the image will be transparent (meaningful for custom bitmap
+      only).
+   $DESCRIPTION$
+      Adds one button on the right of existing buttons, in a toolbar.
+   $RETURNS$
+      Always .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbButtonCount()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbButtonCount()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Count the number of buttons in a toolbar.
+   $RETURNS$
+      Number of buttons.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbCmd2Index()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbCmd2Index( nWinNum, nCmd )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nCmd> ID of command to
+      search (zero based).
+   $DESCRIPTION$
+      Read the number of button whose command ID is <nCmd>.
+   $RETURNS$
+      Number of button or ­1, if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbCreate( nWinNum, lDisplayText, nStyle, nSystemBitmap, nImageWidth,
+      nImageHeight )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <lDIsplayText> .T. Text of
+      button will be showed with the image .F. Text will be showed as a tooltip (
+      default) <nStyle> Style of toolbar. Default is TBSTYLE_FLAT |
+      TBSTYLE_TOOLTIPS (another definitions are in file COMMCTRL.H).
+      <nSystemBitmap> Points out if will be used Windows system bitmaps. Can be: 0
+      1 2 Do not use Windows system bitmaps Use Windows system bitmaps (small) Use
+      Windows system bitmaps (large)
+
+      <nImageWidth, nImageHeight> Length and width of image (meaningful only if
+      <nSystemBitmap> is zero).
+   $DESCRIPTION$
+      Creates a toolbar on top of current window (with no button).
+   $RETURNS$
+      Handle of toolbar, if successful. Zero if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbDelButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbDelButton( nWinNum, nButton )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nButton> Number of button
+      do delete. The separator button count as a button, and can be deleted. This
+      list is zero based.
+   $DESCRIPTION$
+      Delete a button in a toolbar.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbDestroy()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Delete a toolbar from current window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbEnableButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbEnableButton( nWinNum. nButton, lToggle )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nButton> Number of button
+      in a toolbar (zero based list). <lToggle> .T. Enable the button .F. Disable
+      the button
+   $DESCRIPTION$
+      Enable/disable a button in a toolbar.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbIndex2Cmd()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbIndex2Cmd( nWinNum, nButton )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nButton> Number of button
+      in a toolbar (zero based list).
+   $DESCRIPTION$
+      Returns the ID assigned to the button.
+   $RETURNS$
+      Number of command ID, if successful, -1 if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_TrackPopupMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_TrackPopupMenu( nWinNum, nHandle )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nHandle> Popup menu
+      handle.
+   $DESCRIPTION$
+      Shows a menu in the cursor position.
+   $RETURNS$
+      ID of selected option or zero if user cancels or an error occurs.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_UnreachedBr()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_UnreachedBr( nWinNum, nBottomPixels, nRightPixels )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nBottomPixels> Passed by
+      reference, to keep the number of lines (in pixels). <nRightPixels> Passed by
+      reference, to keep the number of columns (in pixels).
+   $DESCRIPTION$
+      Read the number of pixels out of reach to lines and columns when window
+      <nWinNum> is maximized.
+   $RETURNS$
+      Number of rows/columns in pixels.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_UpdateWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_UpdateWindow()
+   $ARGUMENTS$
+      None.
+   $DESCRIPTION$
+      Update the window, repaint it.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbCreate( nWinNum, nStyle, nTop, nLeft, nLength, bBlock, aOffset )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nStyle> 0 Horizontal 1
+      Vertical <nTop, nLeft> Intital row/column of scrollbar (in characters).
+      <nLength> Length of scrollbar (in characters). <bBlock> Code block to
+      execute on every VM_VSCROLL/VM_HSCROLL. This code block will be evaluated with
+      these parameters: nWinNum nXBid nXBmsg window number scrollbar ID scrollbar
+      message. Can be divided in two categories:
+
+      The "must be handled" messages: SB_LINEUP/SB_LINELEFT
+      SB_LINEDOWN/SB_LINERIGHT SB_PAGEUP/SB_PAGELEFT SB_PAGEDOWN/SB_PAGERIGHT 0: 1:
+      2: 3: up/left button clicked down/right button clicked upper/left shaft
+      clicked lower/right shaft clicked
+
+      The "may not be handled" messages: SB_TUMBPOSITION SB_THUMBTRACK SB_ENDSCROLL
+      nXBPos 4: scroll thumb is released at position nXBpos 5: scroll thumb is being
+      dragged at position nXBpos 8: end of scroll
+
+      scrollthumb position (only if message = SB_THUMBPOSITION or SB_THUMBTRACK)
+
+      <aOffset> Array with four elements with top/left, bottom/right coordinates, in
+      pixels, to adjust the dimensions of scrollbar.
+   $DESCRIPTION$
+      Creates a scollbar in current window.
+   $RETURNS$
+      Scrollbar handle, if successful. Zero if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbDestroy( nWinNum, nXBId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nXBId> ID of scrollbar.
+   $DESCRIPTION$
+      Delete the scrollbar in current window.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbEnable()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbEnable( nWinNum, nXBId, nFlags )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nXBId> ID of scrollbar.
+      <nFlags> The following values are allowed: 0 1 2 3 enable both arrows disable
+      left/up arrow disable right/down arrow disable both arrow
+   $DESCRIPTION$
+      Enable/disable scrollbar in current window.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbInfo()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbInfo( nWinNum, nXBId )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nXBId> ID of scrollbar.
+   $DESCRIPTION$
+      Get information about scrollbar.
+   $RETURNS$
+      Array with five elements (if successful): nMin nMax nPageSize nPos
+      nTrackPos Minimum positions to scrolling Maximum positions to scrolling Page
+      size Position of scrolling button Exact position of the scrolling button, when
+      the user beginning a drag-and-drop operation.
+
+      If failed, returns an empty array.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbShow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbShow( nWinNum, nXBId, lShow )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nXBId> ID of scrollbar.
+      <lShow> .T. show scrollbar (default) .F. hide scrollbar
+   $DESCRIPTION$
+      Show/hide scrollbar in current window.
+   $RETURNS$
+      .T. if successful, .F. otherwise.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbUpdate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbUpdate( nWinNum, nXBId, nPos, nPageSize, nMin, nMax )
+   $ARGUMENTS$
+      <nWinNum> Window number. Default is current window. <nXBId> ID of scrollbar.
+      <nPos> Specifies the position of scrolling button. <nPageSize> Page size. This
+      value is used by scrollbar to determine the proporcional size to page jump.
+      <nMin> Minimum value to scrolling. <nMax> Maximum value to scrolling.
+   $DESCRIPTION$
+      Update and redisplay a scollbar data. The parameters <nPos>, <nPageSize>,
+      <nMin> and <nMax> are optional, however, both <nMin> and <nMax> must be
+      supplied, or not at all.
+   $RETURNS$
+      Returns current position of scroll thumb, if successful. ­1 if failed.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_XReposWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_XReposWindow( lAnchored )
+   $ARGUMENTS$
+      <lAnchored> If .T., all subwindows are positioned according to their
+      respective coordinate If .F., all subwindows are positioned according to
+      whatever their "CenterWindow" setting
+   $DESCRIPTION$
+      Reposition all windows to their initial position.
+   $RETURNS$
+      None.
+   $PLATFORMS$
+      Windows
+   $END$
+ */

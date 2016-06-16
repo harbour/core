@@ -1,18 +1,19 @@
-/* Test Seconds() */
+/* Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
+   Test Seconds() */
 
-/* Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com> */
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
 
 PROCEDURE Main( cParam )
 
-   LOCAL n, limit := 10
+   LOCAL nLimit := Val( hb_defaultValue( cParam, "10" ) )
+   LOCAL n
 
    CLS
 
-   IF ! Empty( cParam )
-      limit := Val( cParam )
-   ENDIF
    ? Seconds()
-   FOR n := 1 TO limit
+   FOR n := 1 TO nLimit
       IF Empty( cParam )
          ? "Pause:"
          Inkey( 0 )

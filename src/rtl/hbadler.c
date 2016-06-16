@@ -2,7 +2,6 @@
  * adler32 checksum function
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
  * Algorithm taken from adler32.c Copyright (C) 1995-2002 Mark Adler
  *
  * This program is free software; you can redistribute it and/or modify

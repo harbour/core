@@ -16,7 +16,7 @@ PROCEDURE Main()
       Eval( Program[ body ] )
    ENDDO
    ? stop := Second()
-   ? "==============="
+   ? "---"
    ? stop - start
 
    RETURN

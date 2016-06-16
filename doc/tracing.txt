@@ -12,7 +12,7 @@ the C code:
 
   HB_TRACE( level, ( "printf-style parameters", arg1, arg2 ) );
 
-The level specified for the HB_TRACE call affects harbour in two ways:
+The level specified for the HB_TRACE call affects Harbour in two ways:
 compilation time and run time.
 
 
@@ -130,7 +130,7 @@ HB_TR_OUTPUT to the name of a file where you would like the tracing
 output to be directed. If there is any problem opening the file for
 writing, the output reverts to stderr.
 
-When it happens an error and the controller of errors of harbour cannot
+When it happens an error and the controller of errors of Harbour cannot
 intercept it (eg: GPF), it can happen that part of information of tracing
 it is not written. This problem is avoided setting the environment
 variable HB_TR_FLUSH to 1 (one). This makes that every time that one

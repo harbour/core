@@ -145,7 +145,7 @@ METHOD AddItem( oMenuItem ) CLASS HBDbMenu
       IF Len( oLastMenu:aItems ) > 0
          oLastMenuItem := ATail( oLastMenu:aItems )
          oMenuItem:nCol := oLastMenuItem:nCol + ;
-            Len( StrTran( oLastMenuItem:cPrompt, "~" ) )
+            hb_ULen( StrTran( oLastMenuItem:cPrompt, "~" ) )
       ELSE
          oMenuItem:nCol := 0
       ENDIF
@@ -164,7 +164,7 @@ METHOD PROCEDURE Build() CLASS HBDbMenu
       FOR EACH oMenuItem IN ::aItems
          oMenuItem:nRow := 0
          oMenuItem:nCol := nPos
-         nPos += Len( StrTran( oMenuItem:cPrompt, "~" ) )
+         nPos += hb_ULen( StrTran( oMenuItem:cPrompt, "~" ) )
       NEXT
    ELSE
       oMenuItem := ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems )
@@ -174,13 +174,13 @@ METHOD PROCEDURE Build() CLASS HBDbMenu
       FOR EACH oMenuItem IN ::aItems
          oMenuItem:nRow := ::nTop + oMenuItem:__enumIndex()
          oMenuItem:nCol := ::nLeft + 1
-         nPos := Max( nPos, ::nLeft + Len( StrTran( oMenuItem:cPrompt, "~" ) ) + 1 )
+         nPos := Max( nPos, ::nLeft + hb_ULen( StrTran( oMenuItem:cPrompt, "~" ) ) + 1 )
       NEXT
       ::nRight  := nPos + 1
       ::nBottom := ::nTop + Len( ::aItems ) + 1
       FOR EACH oMenuItem IN ::aItems
          IF ! hb_LeftEq( oMenuItem:cPrompt, "-" )
-            oMenuItem:cPrompt := " " + PadR( oMenuItem:cPrompt, ::nRight - ::nLeft - 1 )
+            oMenuItem:cPrompt := " " + hb_UPadR( oMenuItem:cPrompt, ::nRight - ::nLeft - 1 )
          ENDIF
       NEXT
       ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems ):bAction := ATail( ::aMenus )
@@ -254,8 +254,8 @@ METHOD GetHotKeyPos( cKey ) CLASS HBDbMenu
    LOCAL oMenuItem
 
    FOR EACH oMenuItem IN ::aItems
-      IF Upper( SubStr( oMenuItem:cPrompt, ;
-         At( "~", oMenuItem:cPrompt ) + 1, 1 ) ) == cKey
+      IF Upper( hb_USubStr( oMenuItem:cPrompt, ;
+         hb_UAt( "~", oMenuItem:cPrompt ) + 1, 1 ) ) == cKey
          RETURN oMenuItem:__enumIndex()
       ENDIF
    NEXT
@@ -268,7 +268,7 @@ METHOD GetItemOrdByCoors( nRow, nCol ) CLASS HBDbMenu
 
    FOR EACH oMenuItem IN ::aItems
       IF oMenuItem:nRow == nRow .AND. nCol >= oMenuItem:nCol .AND. ;
-         nCol <= oMenuItem:nCol + Len( oMenuItem:cPrompt ) - 2
+         nCol <= oMenuItem:nCol + hb_ULen( oMenuItem:cPrompt ) - 2
          RETURN oMenuItem:__enumIndex()
       ENDIF
    NEXT
@@ -504,4 +504,4 @@ FUNCTION __dbgAltToKey( nKey )
       K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4, ;
       K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
 
-   RETURN iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 ), "" )
+   RETURN iif( nIndex > 0, hb_BSubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 ), "" )

@@ -47,8 +47,7 @@
 #include "harupdf.ch"
 
 /* NOTE: Error descriptions here:
-            https://github.com/libharu/libharu/wiki/Error-handling
-            http://libharu.sourceforge.net/error_handling.html
+         https://github.com/libharu/libharu/wiki/Error-handling
  */
 
 FUNCTION hb_HPDF_GetErrorString( nStatus )
@@ -58,6 +57,7 @@ FUNCTION hb_HPDF_GetErrorString( nStatus )
    ENDIF
 
    SWITCH nStatus
+   CASE HB_HPDF_BADPARAM                    ; RETURN "HB_HPDF_BADPARAM"
    CASE HPDF_OK                             ; RETURN "HPDF_OK"
    CASE HPDF_ARRAY_COUNT_ERR                ; RETURN "HPDF_ARRAY_COUNT_ERR"
    CASE HPDF_ARRAY_ITEM_NOT_FOUND           ; RETURN "HPDF_ARRAY_ITEM_NOT_FOUND"

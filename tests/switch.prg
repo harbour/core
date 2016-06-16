@@ -15,14 +15,14 @@ PROCEDURE Main()
 #endif
 
    ?
-   ? "1111111111111111111111111111111"
+   ? "---"
    SWITCH a
    CASE 1
       ? "FOUND: 1"
    ENDSWITCH
 
    ?
-   ? "2222222222222222222222222222222"
+   ? "---"
    SWITCH a
    CASE 1
       ? "FOUND: 1"
@@ -32,7 +32,7 @@ PROCEDURE Main()
    ENDSWITCH
 
    ?
-   ? "3333333333333333333333333333333"
+   ? "---"
    SWITCH a
    CASE 1
       ? "FOUND: 1"
@@ -44,7 +44,7 @@ PROCEDURE Main()
 
 #ifndef __XHARBOUR__
    ?
-   ? "44444444444444444444444444444444444"
+   ? "---"
    SWITCH a
    OTHERWISE
       ? "OTHERWISE"
@@ -52,7 +52,7 @@ PROCEDURE Main()
 #endif
 
    ?
-   ? "55555555555555555555555555555555555"
+   ? "---"
    a := "EE"
 #ifndef __XHARBOUR__
    SWITCH a
@@ -92,7 +92,7 @@ PROCEDURE Main()
 #endif
 
    ?
-   ? "666666666666666666666666666666666666666666"
+   ? "---"
    a := "2"
    SWITCH a
    CASE 1
@@ -114,6 +114,6 @@ PROCEDURE Main()
       ? a
    ENDSWITCH
 
-   ? "========================================="
+   ? "---"
 
    RETURN

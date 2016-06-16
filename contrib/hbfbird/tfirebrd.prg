@@ -42,70 +42,65 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- * See COPYING.txt for licensing terms.
- *
  */
 
 #include "hbclass.ch"
 
-#define SQL_TEXT                        452
-#define SQL_VARYING                     448
-#define SQL_SHORT                       500
-#define SQL_LONG                        496
-#define SQL_FLOAT                       482
-#define SQL_DOUBLE                      480
-#define SQL_D_FLOAT                     530
-#define SQL_TIMESTAMP                   510
-#define SQL_BLOB                        520
-#define SQL_ARRAY                       540
-#define SQL_QUAD                        550
-#define SQL_TYPE_TIME                   560
-#define SQL_TYPE_DATE                   570
-#define SQL_INT64                       580
-#define SQL_DATE                        SQL_TIMESTAMP
+#define SQL_TEXT            452
+#define SQL_VARYING         448
+#define SQL_SHORT           500
+#define SQL_LONG            496
+#define SQL_FLOAT           482
+#define SQL_DOUBLE          480
+#define SQL_D_FLOAT         530
+#define SQL_TIMESTAMP       510
+#define SQL_BLOB            520
+#define SQL_ARRAY           540
+#define SQL_QUAD            550
+#define SQL_TYPE_TIME       560
+#define SQL_TYPE_DATE       570
+#define SQL_INT64           580
 
 CREATE CLASS TFbServer
 
-   VAR      db
-   VAR      trans
-   VAR      StartedTrans
-   VAR      nError
-   VAR      lError
-   VAR      dialect
+   VAR db
+   VAR trans
+   VAR StartedTrans
+   VAR nError
+   VAR lError
+   VAR dialect
 
-   METHOD   New( cServer, cUser, cPassword, nDialect )
-   METHOD   Destroy()  INLINE FBClose( ::db )
-   METHOD   Close()    INLINE FBClose( ::db )
+   METHOD New( cServer, cUser, cPassword, nDialect )
+   METHOD Destroy()  INLINE FBClose( ::db )
+   METHOD Close()    INLINE FBClose( ::db )
 
-   METHOD   TableExists( cTable )
-   METHOD   ListTables()
-   METHOD   TableStruct( cTable )
+   METHOD TableExists( cTable )
+   METHOD ListTables()
+   METHOD TableStruct( cTable )
 
-   METHOD   StartTransaction()
-   METHOD   Commit()
-   METHOD   Rollback()
+   METHOD StartTransaction()
+   METHOD Commit()
+   METHOD Rollback()
 
-   METHOD   Execute( cQuery )
-   METHOD   Query( cQuery )
+   METHOD Execute( cQuery )
+   METHOD Query( cQuery )
 
-   METHOD   Update( oRow, cWhere )
-   METHOD   Delete( oRow, cWhere )
-   METHOD   Append( oRow )
+   METHOD Update( oRow, cWhere )
+   METHOD Delete( oRow, cWhere )
+   METHOD Append( oRow )
 
-   METHOD   NetErr()   INLINE ::lError
-   METHOD   Error()    INLINE FBError( ::nError )
-   METHOD   ErrorNo()  INLINE ::nError
+   METHOD NetErr()   INLINE ::lError
+   METHOD Error()    INLINE FBError( ::nError )
+   METHOD ErrorNo()  INLINE ::nError
 
 ENDCLASS
 
 METHOD New( cServer, cUser, cPassword, nDialect ) CLASS TFbServer
 
-   hb_default( @nDialect, 1 )
-
    ::lError := .F.
    ::nError := 0
    ::StartedTrans := .F.
-   ::Dialect := nDialect
+   ::Dialect := hb_defaultValue( nDialect, 1 )
 
    ::db := FBConnect( cServer, cUser, cPassword )
 
@@ -202,13 +197,14 @@ METHOD Query( cQuery ) CLASS TFbServer
 
 METHOD TableExists( cTable ) CLASS TFbServer
 
-   LOCAL cQuery
    LOCAL result := .F.
-   LOCAL qry
 
-   cQuery := 'select rdb$relation_name from rdb$relations where rdb$relation_name = "' + Upper( cTable ) + '"'
+   LOCAL cQuery := ;
+      "select rdb$relation_name" + ;
+      "  from rdb$relations" + ;
+      " where rdb$relation_name = " + '"' + Upper( cTable ) + '"'
 
-   qry := FBQuery( ::db, cQuery, ::dialect )
+   LOCAL qry := FBQuery( ::db, cQuery, ::dialect )
 
    IF HB_ISARRAY( qry )
       result := ( FBFetch( qry ) == 0 )
@@ -221,20 +217,19 @@ METHOD TableExists( cTable ) CLASS TFbServer
 METHOD ListTables() CLASS TFbServer
 
    LOCAL result := {}
-   LOCAL cQuery
-   LOCAL qry
 
-   cQuery := 'select rdb$relation_name '
-   cQuery += '  from rdb$relations '
-   cQuery += ' where rdb$relation_name not like "RDB$%" '
-   cQuery += '   and rdb$view_blr is null '
-   cQuery += ' order by 1 '
+   LOCAL cQuery := ;
+      "select rdb$relation_name" + ;
+      "  from rdb$relations" + ;
+      ' where rdb$relation_name not like "RDB$%"' + ;
+      "   and rdb$view_blr is null" + ;
+      " order by 1"
 
-   qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
+   LOCAL qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
 
    IF HB_ISARRAY( qry )
       DO WHILE FBFetch( qry ) == 0
-         AAdd( result, FBGetData( qry, 1 ) )
+         AAdd( result, hb_defaultValue( FBGetData( qry, 1 ), "" ) )
       ENDDO
 
       FBFree( qry )
@@ -245,35 +240,35 @@ METHOD ListTables() CLASS TFbServer
 METHOD TableStruct( cTable ) CLASS TFbServer
 
    LOCAL result := {}
-   LOCAL cQuery, cType, nSize, cDomain, cField, nType, nDec
-   LOCAL qry
+   LOCAL cType, nSize, cDomain, cField, nType, nDec
 
-   cQuery := 'select '
-   cQuery += '  a.rdb$field_name,'
-   cQuery += '  b.rdb$field_type,'
-   cQuery += '  b.rdb$field_length,'
-   cQuery += '  b.rdb$field_scale * -1,'
-   cQuery += '  a.rdb$field_source '
-   cQuery += 'from '
-   cQuery += '  rdb$relation_fields a, rdb$fields b '
-   cQuery += 'where '
-   cQuery += '  a.rdb$field_source = b.rdb$field_name '
-   cQuery += '  and a.rdb$relation_name = "' + Upper( ctable ) + '" '
-   cQuery += 'order by '
-   cQuery += '  a.rdb$field_position '
+   LOCAL cQuery := ;
+      "select" + ;
+      "   a.rdb$field_name," + ;
+      "   b.rdb$field_type," + ;
+      "   b.rdb$field_length," + ;
+      "   b.rdb$field_scale * -1," + ;
+      "   a.rdb$field_source" + ;
+      " from" + ;
+      "   rdb$relation_fields a, rdb$fields b" + ;
+      " where" + ;
+      "   a.rdb$field_source = b.rdb$field_name" + ;
+      "   and a.rdb$relation_name = " + '"' + Upper( cTable ) + '"' + ;
+      " order by" + ;
+      "   a.rdb$field_position"
 
-   qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
+   LOCAL qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
 
    IF HB_ISARRAY( qry )
       DO WHILE FBFetch( qry ) == 0
-         cField  := FBGetData( qry, 1 )
-         nType   := Val( FBGetData( qry, 2 ) )
-         nSize   := Val( FBGetData( qry, 3 ) )
-         nDec    := Val( FBGetData( qry, 4 ) )
-         cDomain := FBGetData( qry, 5 )
+         cField  := hb_defaultValue( FBGetData( qry, 1 ), "" )
+         nType   := Val( hb_defaultValue( FBGetData( qry, 2 ), "" ) )
+         nSize   := Val( hb_defaultValue( FBGetData( qry, 3 ), "" ) )
+         nDec    := Val( hb_defaultValue( FBGetData( qry, 4 ), "" ) )
+         cDomain := hb_defaultValue( FBGetData( qry, 5 ), "" )
 
          SWITCH nType
-         CASE 7 // SMALLINT
+         CASE 7  // SMALLINT
             IF "BOOL" $ cDomain
                cType := "L"
                nSize := 1
@@ -282,56 +277,55 @@ METHOD TableStruct( cTable ) CLASS TFbServer
                cType := "N"
                nSize := 5
             ENDIF
-
             EXIT
 
-         CASE 8 // INTEGER
+         CASE 8  // INTEGER
          CASE 9
             cType := "N"
             nSize := 9
             EXIT
 
-         CASE 10 // FLOAT
+         CASE 10  // FLOAT
          CASE 11
             cType := "N"
             nSize := 15
             EXIT
 
-         CASE 12 // DATE
+         CASE 12  // DATE
             cType := "D"
             nSize := 8
             EXIT
 
-         CASE 13 // TIME
+         CASE 13  // TIME
             cType := "C"
             nSize := 10
             EXIT
 
-         CASE 14 // CHAR
+         CASE 14  // CHAR
             cType := "C"
             EXIT
 
-         CASE 16 // INT64
+         CASE 16  // INT64
             cType := "N"
             nSize := 9
             EXIT
 
-         CASE 27 // DOUBLE
+         CASE 27  // DOUBLE
             cType := "N"
             nSize := 15
             EXIT
 
-         CASE 35 // TIMESTAMP
+         CASE 35  // TIMESTAMP
             cType := "D"
             nSize := 8
             EXIT
 
-         CASE 37 // VARCHAR
+         CASE 37  // VARCHAR
          CASE 40
             cType := "C"
             EXIT
 
-         CASE 261 // BLOB
+         CASE 261  // BLOB
             cType := "M"
             nSize := 10
             EXIT
@@ -353,33 +347,31 @@ METHOD TableStruct( cTable ) CLASS TFbServer
 METHOD Delete( oRow, cWhere ) CLASS TFbServer
 
    LOCAL result := .F.
-   LOCAL aKeys, i, nField, xField, cQuery, aTables
+   LOCAL aKeys, i, nField, xField
 
-   aTables := oRow:GetTables()
+   LOCAL aTables := oRow:GetTables()
 
    IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
       // Cannot delete joined tables
 
-      IF cWhere == NIL
+      IF ! HB_ISSTRING( cWhere )
          aKeys := oRow:GetKeyField()
 
          cWhere := ""
-         FOR i := 1 TO Len( aKeys )
-            nField := oRow:FieldPos( aKeys[ i ] )
+         FOR EACH i IN aKeys
+            nField := oRow:FieldPos( i )
             xField := oRow:FieldGet( nField )
 
-            cWhere += aKeys[ i ] + "=" + DataToSql( xField )
+            cWhere += i + "=" + DataToSql( xField )
 
-            IF i != Len( aKeys )
+            IF ! i:__enumIsLast()
                cWhere += ","
             ENDIF
          NEXT
       ENDIF
 
-      IF !( cWhere == "" )
-         cQuery := 'DELETE FROM ' + aTables[ 1 ] + ' WHERE ' + cWhere
-
-         result := ::Execute( cQuery )
+      IF ! Empty( cWhere )
+         result := ::Execute( "DELETE FROM " + aTables[ 1 ] + " WHERE " + cWhere )
       ENDIF
    ENDIF
 
@@ -388,14 +380,14 @@ METHOD Delete( oRow, cWhere ) CLASS TFbServer
 METHOD Append( oRow ) CLASS TFbServer
 
    LOCAL result := .F.
-   LOCAL cQuery, i, aTables
+   LOCAL cQuery, i
 
-   aTables := oRow:GetTables()
+   LOCAL aTables := oRow:GetTables()
 
    IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
       // Can insert only one table, not in joined tables
 
-      cQuery := 'INSERT INTO ' + aTables[ 1 ] + '('
+      cQuery := "INSERT INTO " + aTables[ 1 ] + "("
       FOR i := 1 TO oRow:FCount()
          IF oRow:Changed( i )
             // Send only changed field
@@ -403,7 +395,7 @@ METHOD Append( oRow ) CLASS TFbServer
          ENDIF
       NEXT
 
-      cQuery := Left( cQuery, Len( cQuery ) - 1 ) +  ") VALUES ("
+      cQuery := hb_StrShrink( cQuery ) + ") VALUES ("
 
       FOR i := 1 TO oRow:FCount()
          IF oRow:Changed( i )
@@ -411,7 +403,7 @@ METHOD Append( oRow ) CLASS TFbServer
          ENDIF
       NEXT
 
-      cQuery := Left( cQuery, Len( cQuery ) - 1  ) + ")"
+      cQuery := hb_StrShrink( cQuery ) + ")"
 
       result := ::Execute( cQuery )
    ENDIF
@@ -421,24 +413,24 @@ METHOD Append( oRow ) CLASS TFbServer
 METHOD Update( oRow, cWhere ) CLASS TFbServer
 
    LOCAL result := .F.
-   LOCAL aKeys, cQuery, i, nField, xField, aTables
+   LOCAL aKeys, cQuery, i, nField, xField
 
-   aTables := oRow:GetTables()
+   LOCAL aTables := oRow:GetTables()
 
    IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
-      // Can't insert joined tables
+      // Cannot insert joined tables
 
-      IF cWhere == NIL
+      IF ! HB_ISSTRING( cWhere )
          aKeys := oRow:GetKeyField()
 
          cWhere := ""
-         FOR i := 1 TO Len( aKeys )
-            nField := oRow:FieldPos( aKeys[ i ] )
+         FOR EACH i IN aKeys
+            nField := oRow:FieldPos( i )
             xField := oRow:FieldGet( nField )
 
-            cWhere += aKeys[ i ] + "=" + DataToSql( xField )
+            cWhere += i + "=" + DataToSql( xField )
 
-            IF i != Len( aKeys )
+            IF ! i:__enumIsLast()
                cWhere += ", "
             ENDIF
          NEXT
@@ -451,10 +443,8 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
          ENDIF
       NEXT
 
-      IF !( cWhere == "" )
-         cQuery := Left( cQuery, Len( cQuery ) - 1 ) + " WHERE " + cWhere
-
-         result := ::Execute( cQuery )
+      IF ! Empty( cWhere )
+         result := ::Execute( hb_StrShrink( cQuery ) + " WHERE " + cWhere )
       ENDIF
    ENDIF
 
@@ -462,50 +452,50 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
 
 CREATE CLASS TFbQuery
 
-   VAR      nError
-   VAR      lError
-   VAR      Dialect
-   VAR      lBof
-   VAR      lEof
-   VAR      nRecno
-   VAR      qry
-   VAR      aStruct
-   VAR      numcols
-   VAR      closed
-   VAR      db
-   VAR      query
-   VAR      aKeys
-   VAR      aTables
+   VAR nError
+   VAR lError
+   VAR Dialect
+   VAR lBof
+   VAR lEof
+   VAR nRecno
+   VAR qry
+   VAR aStruct
+   VAR numcols
+   VAR closed
+   VAR db
+   VAR query
+   VAR aKeys
+   VAR aTables
 
-   METHOD   New( nDB, cQuery, nDialect )
-   METHOD   Destroy()
-   METHOD   Close()            INLINE ::Destroy()
+   METHOD New( nDB, cQuery, nDialect )
+   METHOD Destroy()
+   METHOD Close()            INLINE ::Destroy()
 
-   METHOD   Refresh()
-   METHOD   Fetch()
-   METHOD   Skip()             INLINE ::Fetch()
+   METHOD Refresh()
+   METHOD Fetch()
+   METHOD Skip()             INLINE ::Fetch()
 
-   METHOD   Bof()              INLINE ::lBof
-   METHOD   Eof()              INLINE ::lEof
-   METHOD   RecNo()            INLINE ::nRecno
+   METHOD Bof()              INLINE ::lBof
+   METHOD Eof()              INLINE ::lEof
+   METHOD RecNo()            INLINE ::nRecno
 
-   METHOD   NetErr()           INLINE ::lError
-   METHOD   Error()            INLINE FBError( ::nError )
-   METHOD   ErrorNo()          INLINE ::nError
+   METHOD NetErr()           INLINE ::lError
+   METHOD Error()            INLINE FBError( ::nError )
+   METHOD ErrorNo()          INLINE ::nError
 
-   METHOD   FCount()           INLINE ::numcols
-   METHOD   Struct()
-   METHOD   FieldName( nField )
-   METHOD   FieldPos( cField )
-   METHOD   FieldLen( nField )
-   METHOD   FieldDec( nField )
-   METHOD   FieldType( nField )
+   METHOD FCount()           INLINE ::numcols
+   METHOD Struct()
+   METHOD FieldName( nField )
+   METHOD FieldPos( cField )
+   METHOD FieldLen( nField )
+   METHOD FieldDec( nField )
+   METHOD FieldType( nField )
 
-   METHOD   FieldGet( nField )
-   METHOD   GetRow()
-   METHOD   GetBlankRow()
-   METHOD   Blank()            INLINE ::GetBlankRow()
-   METHOD   GetKeyField()
+   METHOD FieldGet( nField )
+   METHOD GetRow()
+   METHOD GetBlankRow()
+   METHOD Blank()            INLINE ::GetBlankRow()
+   METHOD GetKeyField()
 
 ENDCLASS
 
@@ -545,7 +535,6 @@ METHOD Refresh() CLASS TFbQuery
    IF HB_ISARRAY( qry )
       ::numcols := qry[ 4 ]
 
-      /* TOFIX: This is faulty code. ::aStruct will become zero length, out of sync with ::numcols. */
       ::aStruct := StructConvert( qry[ 6 ], ::db, ::dialect )
 
       ::lError := .F.
@@ -553,9 +542,9 @@ METHOD Refresh() CLASS TFbQuery
       ::qry := qry
 
       /* Tables in query */
-      FOR i := 1 TO Len( ::aStruct )
-         IF hb_AScan( aTable, ::aStruct[ i ][ 5 ], , , .T. ) == 0
-            AAdd( aTable, ::aStruct[ i ][ 5 ] )
+      FOR EACH i IN ::aStruct
+         IF hb_AScan( aTable, i[ 5 ], , , .T. ) == 0
+            AAdd( aTable, i[ 5 ] )
          ENDIF
       NEXT
 
@@ -587,19 +576,17 @@ METHOD Fetch() CLASS TFbQuery
    LOCAL result := .F.
    LOCAL fetch_stat
 
-   IF ! ::lError .AND. ! ::lEof
+   IF ! ::lError .AND. ! ::lEof .AND. ! ::Closed
 
-      IF ! ::Closed
-         fetch_stat := FBFetch( ::qry )
+      fetch_stat := FBFetch( ::qry )
 
-         ::nRecno++
+      ::nRecno++
 
-         IF fetch_stat == 0
-            ::lBof := .F.
-            result := .T.
-         ELSE
-            ::lEof := .T.
-         ENDIF
+      IF fetch_stat == 0
+         ::lBof := .F.
+         result := .T.
+      ELSE
+         ::lEof := .T.
       ENDIF
    ENDIF
 
@@ -611,8 +598,8 @@ METHOD Struct() CLASS TFbQuery
    LOCAL i
 
    IF ! ::lError
-      FOR i := 1 TO Len( ::aStruct )
-         AAdd( result, { ::aStruct[ i ][ 1 ], ::aStruct[ i ][ 2 ], ::aStruct[ i ][ 3 ], ::aStruct[ i ][ 4 ] } )
+      FOR EACH i IN ::aStruct
+         AAdd( result, { i[ 1 ], i[ 2 ], i[ 3 ], i[ 4 ] } )  // DBS_NAME, DBS_TYPE, DBS_LEN, DBS_DEC
       NEXT
    ENDIF
 
@@ -620,109 +607,92 @@ METHOD Struct() CLASS TFbQuery
 
 METHOD FieldPos( cField ) CLASS TFbQuery
 
-   LOCAL result := 0
-
    IF ! ::lError
-      result := AScan( ::aStruct, {| x | x[ 1 ] == RTrim( Upper( cField ) ) } )
+      cField := RTrim( Upper( cField ) )
+      RETURN AScan( ::aStruct, {| x | x[ 1 ] == cField } )
    ENDIF
 
-   RETURN result
+   RETURN 0
 
 METHOD FieldName( nField ) CLASS TFbQuery
 
-   LOCAL result
-
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ 1 ]
+      RETURN ::aStruct[ nField ][ 1 ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldType( nField ) CLASS TFbQuery
 
-   LOCAL result
-
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ 2 ]
+      RETURN ::aStruct[ nField ][ 2 ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldLen( nField ) CLASS TFbQuery
 
-   LOCAL result
-
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ 3 ]
+      RETURN ::aStruct[ nField ][ 3 ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldDec( nField ) CLASS TFbQuery
 
-   LOCAL result
-
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ 4 ]
+      RETURN ::aStruct[ nField ][ 4 ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldGet( nField ) CLASS TFbQuery
 
-   LOCAL result, aBlob, i, cType
+   LOCAL result, aBlob, i
 
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct ) .AND. ! ::closed
 
       /* TODO: Convert to right data type */
 
       result := FBGetData( ::qry, nField )
-      cType := ::aStruct[ nField ][ 2 ]
 
-      IF cType == "M"
-         /* Blob */
-
-         IF result != NIL
+      SWITCH ::aStruct[ nField ][ 2 ]
+      CASE "M"  /* Blob */
+         IF HB_ISPOINTER( result )
             aBlob := FBGetBlob( ::db, result )
-
             result := ""
-            FOR i := 1 TO Len( aBlob )
-               result += aBlob[ i ]
-            NEXT
-
-            // result := FBGetBlob( ::db, result )
+            IF HB_ISARRAY( aBlob )
+               FOR EACH i IN aBlob
+                  result += i
+               NEXT
+            ENDIF
+#if 0
+            result := FBGetBlob( ::db, result )
+#endif
          ELSE
             result := ""
          ENDIF
+         EXIT
 
-      ELSEIF cType == "N"
-         IF result != NIL
-            result := Val( result )
-         ELSE
-            result := 0
-         ENDIF
+      CASE "N"
+         result := iif( HB_ISSTRING( result ), Val( result ), 0 )
+         EXIT
 
-      ELSEIF cType == "D"
-         IF result != NIL
-            result := hb_SToD( Left( result, 4 ) + SubStr( result, 5, 2 ) + SubStr( result, 7, 2 ) )
-         ELSE
-            result := hb_SToD()
-         ENDIF
+      CASE "D"
+         result := hb_SToD( result )
+         EXIT
 
-      ELSEIF cType == "L"
-         IF result != NIL
-            result := ( Val( result ) == 1 )
-         ELSE
-            result := .F.
-         ENDIF
-      ENDIF
+      CASE "L"
+         result := ( HB_ISSTRING( result ) .AND. Val( result ) == 1 )
+         EXIT
+
+      ENDSWITCH
    ENDIF
 
    RETURN result
 
 METHOD Getrow() CLASS TFbQuery
 
-   LOCAL result
    LOCAL aRow
    LOCAL i
 
@@ -734,14 +704,13 @@ METHOD Getrow() CLASS TFbQuery
          aRow[ i ] := ::FieldGet( i )
       NEXT
 
-      result := TFBRow():New( aRow, ::aStruct, ::db, ::dialect, ::aTables )
+      RETURN TFBRow():New( aRow, ::aStruct, ::db, ::dialect, ::aTables )
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD GetBlankRow() CLASS TFbQuery
 
-   LOCAL result
    LOCAL aRow
    LOCAL i
 
@@ -767,10 +736,10 @@ METHOD GetBlankRow() CLASS TFbQuery
          ENDSWITCH
       NEXT
 
-      result := TFBRow():New( aRow, ::aStruct, ::db, ::dialect, ::aTables )
+      RETURN TFBRow():New( aRow, ::aStruct, ::db, ::dialect, ::aTables )
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD GetKeyField() CLASS TFbQuery
 
@@ -782,30 +751,30 @@ METHOD GetKeyField() CLASS TFbQuery
 
 CREATE CLASS TFbRow
 
-   VAR      aRow
-   VAR      aStruct
-   VAR      aChanged
-   VAR      aKeys
-   VAR      db
-   VAR      dialect
-   VAR      aTables
+   VAR aRow
+   VAR aStruct
+   VAR aChanged
+   VAR aKeys
+   VAR db
+   VAR dialect
+   VAR aTables
 
-   METHOD   New( row, struct, nDB, nDialect, aTable )
-   METHOD   Changed( nField )
-   METHOD   GetTables()        INLINE ::aTables
-   METHOD   FCount()           INLINE Len( ::aRow )
-   METHOD   FieldGet( nField )
-   METHOD   FieldPut( nField, Value )
-   METHOD   FieldName( nField )
-   METHOD   FieldPos( cField )
-   METHOD   FieldLen( nField )
-   METHOD   FieldDec( nField )
-   METHOD   FieldType( nField )
-   METHOD   GetKeyField()
+   METHOD New( row, struct, nDB, nDialect, aTable )
+   METHOD Changed( nField )
+   METHOD GetTables()        INLINE ::aTables
+   METHOD FCount()           INLINE Len( ::aRow )
+   METHOD FieldGet( nField )
+   METHOD FieldPut( nField, Value )
+   METHOD FieldName( nField )
+   METHOD FieldPos( cField )
+   METHOD FieldLen( nField )
+   METHOD FieldDec( nField )
+   METHOD FieldType( nField )
+   METHOD GetKeyField()
 
 ENDCLASS
 
-METHOD new( row, struct, nDb, nDialect, aTable ) CLASS TFbRow
+METHOD New( row, struct, nDb, nDialect, aTable ) CLASS TFbRow
 
    ::aRow := row
    ::aStruct := struct
@@ -818,77 +787,66 @@ METHOD new( row, struct, nDb, nDialect, aTable ) CLASS TFbRow
 
 METHOD Changed( nField ) CLASS TFbRow
 
-   LOCAL result
-
    IF nField >= 1 .AND. nField <= Len( ::aRow )
-      result := ( ::aChanged[ nField ] != NIL )
+      RETURN ::aChanged[ nField ] != NIL
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldGet( nField ) CLASS TFbRow
 
-   LOCAL result
-
    IF nField >= 1 .AND. nField <= Len( ::aRow )
-      result := ::aRow[ nField ]
+      RETURN ::aRow[ nField ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldPut( nField, Value ) CLASS TFbRow
 
-   LOCAL result
-
    IF nField >= 1 .AND. nField <= Len( ::aRow )
       ::aChanged[ nField ] := .T.
-      result := ::aRow[ nField ] := Value
+      RETURN ::aRow[ nField ] := Value
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldName( nField ) CLASS TFbRow
 
-   LOCAL result
-
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ 1 ]
+      RETURN ::aStruct[ nField ][ 1 ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldPos( cField ) CLASS TFbRow
-   RETURN AScan( ::aStruct, {| x | x[ 1 ] == RTrim( Upper( cField ) ) } )
+
+   cField := RTrim( Upper( cField ) )
+
+   RETURN AScan( ::aStruct, {| x | x[ 1 ] == cField } )
 
 METHOD FieldType( nField ) CLASS TFbRow
 
-   LOCAL result
-
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ 2 ]
+      RETURN ::aStruct[ nField ][ 2 ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldLen( nField ) CLASS TFbRow
 
-   LOCAL result
-
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ 3 ]
+      RETURN ::aStruct[ nField ][ 3 ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD FieldDec( nField ) CLASS TFbRow
 
-   LOCAL result
-
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
-      result := ::aStruct[ nField ][ 4 ]
+      RETURN ::aStruct[ nField ][ 4 ]
    ENDIF
 
-   RETURN result
+   RETURN NIL
 
 METHOD GetKeyField() CLASS TFbRow
 
@@ -909,24 +867,25 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
    IF Len( aTables ) == 1
       cTable := aTables[ 1 ]
 
-      cQuery := ' select                                      '
-      cQuery += '   a.rdb$field_name                          '
-      cQuery += ' from                                        '
-      cQuery += '   rdb$index_segments a,                     '
-      cQuery += '   rdb$relation_constraints b                '
-      cQuery += ' where                                       '
-      cQuery += '   a.rdb$index_name = b.rdb$index_name and   '
-      cQuery += '   b.rdb$constraint_type = "PRIMARY KEY" and '
-      cQuery += '   b.rdb$relation_name = ' + DataToSql( cTable )
-      cQuery += ' order by                                    '
-      cQuery += '   b.rdb$relation_name,                      '
-      cQuery += '   a.rdb$field_position                      '
+      cQuery := ;
+         "select" + ;
+         "   a.rdb$field_name" + ;
+         " from" + ;
+         "   rdb$index_segments a," + ;
+         "   rdb$relation_constraints b" + ;
+         " where" + ;
+         "   a.rdb$index_name = b.rdb$index_name and" + ;
+         '   b.rdb$constraint_type = "PRIMARY KEY" and' + ;
+         "   b.rdb$relation_name = " + DataToSql( cTable ) + ;
+         " order by" + ;
+         "   b.rdb$relation_name," + ;
+         "   a.rdb$field_position"
 
       qry := FBQuery( db, RemoveSpaces( cQuery ), dialect )
 
       IF HB_ISARRAY( qry )
          DO WHILE FBFetch( qry ) == 0
-            AAdd( aKeys, RTrim( FBGetData( qry, 1 ) ) )
+            AAdd( aKeys, RTrim( hb_defaultValue( FBGetData( qry, 1 ), "" ) ) )
          ENDDO
 
          FBFree( qry )
@@ -938,21 +897,18 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
 STATIC FUNCTION DataToSql( xField )
 
    SWITCH ValType( xField )
-   CASE "C"
-      RETURN '"' + StrTran( xField, '"', ' ' ) + '"'
-   CASE "D"
-      RETURN '"' + StrZero( Month( xField ), 2 ) + "/" + StrZero( Day( xField ), 2 ) + "/" + StrZero( Year( xField ), 4 ) + '"'
-   CASE "N"
-      RETURN Str( xField )
-   CASE "L"
-      RETURN iif( xField, "1", "0" )
+   CASE "C" ; RETURN '"' + StrTran( xField, '"', " " ) + '"'
+   CASE "D" ; RETURN '"' + hb_DToC( xField, "mm/dd/yyyy" ) + '"'
+   CASE "N" ; RETURN hb_ntos( xField )
+   CASE "L" ; RETURN iif( xField, "1", "0" )
    ENDSWITCH
 
-   RETURN NIL
+   RETURN ""
 
 STATIC FUNCTION StructConvert( aStru, db, dialect )
 
    LOCAL aNew := {}
+
    LOCAL cField
    LOCAL nType
    LOCAL cType
@@ -966,122 +922,117 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
    LOCAL aDomains := {}
    LOCAL nVal
 
-   LOCAL xTables := ""
-   LOCAL xFields := ""
+   LOCAL cTables := ""
+   LOCAL cFields := ""
 
    /* create table list and field list */
+   FOR EACH i IN aStru
+      cTables += DataToSql( i[ 5 ] )
+      cFields += DataToSql( i[ 1 ] )
 
-   FOR i := 1 TO Len( aStru )
-      xtables += DataToSql( aStru[ i ][ 5 ] )
-      xfields += DataToSql( aStru[ i ][ 1 ] )
-
-      IF i != Len( aStru )
-         xtables += ","
-         xfields += ","
+      IF ! i:__enumIsLast()
+         cTables += ","
+         cFields += ","
       ENDIF
    NEXT
 
    /* Look for domains */
-   cQuery := 'select rdb$relation_name, rdb$field_name, rdb$field_source '
-   cQuery += '  from rdb$relation_fields '
-   cQuery += ' where rdb$field_name not like "RDB$%" '
-   cQuery += '   and rdb$relation_name in (' + xtables + ')'
-   cQuery += '   and rdb$field_name in (' + xfields + ')'
+   cQuery := ;
+      "select rdb$relation_name, rdb$field_name, rdb$field_source" + ;
+      "  from rdb$relation_fields" + ;
+      ' where rdb$field_name not like "RDB$%"' + ;
+      "   and rdb$relation_name in (" + cTables + ")" + ;
+      "   and rdb$field_name in (" + cFields + ")"
 
-   qry := FBQuery( db, RemoveSpaces( cQuery ), dialect )
-
-   IF HB_ISARRAY( qry )
+   IF HB_ISARRAY( qry := FBQuery( db, RemoveSpaces( cQuery ), dialect ) )
 
       DO WHILE FBFetch( qry ) == 0
          AAdd( aDomains, { ;
-            iif( FBGetData( qry, 1 ) == NIL, "", FBGetData( qry, 1 ) ), ;
-            iif( FBGetData( qry, 2 ) == NIL, "", FBGetData( qry, 2 ) ), ;
-            iif( FBGetData( qry, 3 ) == NIL, "", FBGetData( qry, 3 ) ) } )
+            hb_defaultValue( FBGetData( qry, 1 ), "" ), ;
+            hb_defaultValue( FBGetData( qry, 2 ), "" ), ;
+            hb_defaultValue( FBGetData( qry, 3 ), "" ) } )
       ENDDO
 
       FBFree( qry )
-
-      FOR i := 1 TO Len( aStru )
-         cField := RTrim( aStru[ i ][ 7 ] )
-         nType := aStru[ i ][ 2 ]
-         nSize := aStru[ i ][ 3 ]
-         nDec := aStru[ i ][ 4 ] * -1
-         cTable := RTrim( aStru[ i ][ 5 ] )
-
-         nVal := AScan( aDomains, {| x | RTrim( x[ 1 ] ) == cTable .AND. RTrim( x[ 2 ] ) == cField } )
-
-         IF nVal != 0
-            cDomain := aDomains[ nVal, 3 ]
-         ELSE
-            cDomain := ""
-         ENDIF
-
-         SWITCH nType
-         CASE SQL_TEXT
-            cType := "C"
-            EXIT
-         CASE SQL_VARYING
-            cType := "C"
-            EXIT
-         CASE SQL_SHORT
-            /* Firebird doesn't have boolean field, so if you define domain with BOOL then i will consider logical, ex:
-               create domain boolean_field as smallint default 0 not null check (value in (0,1)) */
-
-            IF "BOOL" $ cDomain
-               cType := "L"
-               nSize := 1
-               nDec := 0
-            ELSE
-               cType := "N"
-               nSize := 5
-            ENDIF
-            EXIT
-         CASE SQL_LONG
-            cType := "N"
-            nSize := 9
-            EXIT
-         CASE SQL_INT64
-            cType := "N"
-            nSize := 9
-            EXIT
-         CASE SQL_FLOAT
-            cType := "N"
-            nSize := 15
-            EXIT
-         CASE SQL_DOUBLE
-            cType := "N"
-            nSize := 15
-            EXIT
-         CASE SQL_TIMESTAMP
-            cType := "T"
-            nSize := 8
-            EXIT
-         CASE SQL_TYPE_DATE
-            cType := "D"
-            nSize := 8
-            EXIT
-         CASE SQL_TYPE_TIME
-            cType := "C"
-            nSize := 8
-            EXIT
-         CASE SQL_BLOB
-            cType := "M"
-            nSize := 10
-            EXIT
-         OTHERWISE
-            cType := "C"
-            nDec := 0
-         ENDSWITCH
-
-         AAdd( aNew, { cField, cType, nSize, nDec, cTable, cDomain } )
-      NEXT
    ENDIF
+
+   FOR EACH i IN aStru
+
+      cField := RTrim( i[ 7 ] )
+      nType  := i[ 2 ]
+      nSize  := i[ 3 ]
+      nDec   := i[ 4 ] * -1
+      cTable := RTrim( i[ 5 ] )
+
+      nVal := AScan( aDomains, {| x | RTrim( x[ 1 ] ) == cTable .AND. RTrim( x[ 2 ] ) == cField } )
+
+      cDomain := iif( nVal > 0, aDomains[ nVal ][ 3 ], "" )
+
+      SWITCH nType
+      CASE SQL_TEXT
+         cType := "C"
+         EXIT
+      CASE SQL_VARYING
+         cType := "C"
+         EXIT
+      CASE SQL_SHORT
+         /* Firebird doesn't have boolean field, so if you define domain with BOOL then i will consider logical, ex:
+            create domain boolean_field as smallint default 0 not null check (value in (0,1)) */
+
+         IF "BOOL" $ cDomain
+            cType := "L"
+            nSize := 1
+            nDec := 0
+         ELSE
+            cType := "N"
+            nSize := 5
+         ENDIF
+         EXIT
+      CASE SQL_LONG
+         cType := "N"
+         nSize := 9
+         EXIT
+      CASE SQL_INT64
+         cType := "N"
+         nSize := 9
+         EXIT
+      CASE SQL_FLOAT
+         cType := "N"
+         nSize := 15
+         EXIT
+      CASE SQL_DOUBLE
+         cType := "N"
+         nSize := 15
+         EXIT
+      CASE SQL_TIMESTAMP
+         cType := "T"
+         nSize := 8
+         EXIT
+      CASE SQL_TYPE_DATE
+         cType := "D"
+         nSize := 8
+         EXIT
+      CASE SQL_TYPE_TIME
+         cType := "C"
+         nSize := 8
+         EXIT
+      CASE SQL_BLOB
+         cType := "M"
+         nSize := 10
+         EXIT
+      OTHERWISE
+         cType := "C"
+         nDec := 0
+      ENDSWITCH
+
+      AAdd( aNew, { cField, cType, nSize, nDec, cTable, cDomain } )
+   NEXT
 
    RETURN aNew
 
 STATIC FUNCTION RemoveSpaces( cQuery )
 
-   DO WHILE At( "  ", cQuery ) != 0
+   DO WHILE "  " $ cQuery
       cQuery := StrTran( cQuery, "  ", " " )
    ENDDO
 

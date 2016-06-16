@@ -52,57 +52,38 @@ STATIC s_hbcomm_mutex := hb_mutexCreate()
 FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
 
    LOCAL nPort
-   LOCAL cOldPortName
    LOCAL cParity
 
    hb_mutexLock( s_hbcomm_mutex )
 
-   /* TOFIX: We should get that number from core to avoid
-             getting mixed up with com port access outside this
-             compatibility interface. [vszakats] */
-   nPort := Len( s_hPort ) + 1
+   IF HB_ISSTRING( cPort ) .AND. ;
+      ( nPort := hb_comFindPort( cPort, .T. ) ) != 0 .AND. ;
+      hb_comOpen( nPort )
 
-   IF HB_ISSTRING( cPort )
-      cOldPortName := hb_comGetDevice( nPort )
-      hb_comSetDevice( nPort, cPort )
-   ENDIF
-
-   hb_comClose( nPort )
-
-   IF hb_comOpen( nPort )
-
-      hb_default( @nBaud, 9600 )
+      HB_SYMBOL_UNUSED( nBufferSize )
 
       cParity := "N"
       IF HB_ISNUMERIC( nParity )
          SWITCH nParity
-         CASE 0 ; cParity := "N" ; EXIT
          CASE 1 ; cParity := "O" ; EXIT
          CASE 2 ; cParity := "M" ; EXIT
          CASE 3 ; cParity := "E" ; EXIT
          ENDSWITCH
       ENDIF
 
-      hb_default( @nStop, 1 )
-
-      HB_SYMBOL_UNUSED( nBufferSize )
-
-      IF hb_comInit( nPort, nBaud, cParity, nData, nStop )
-         s_hPort[ nPort ] := cOldPortName
-         hb_mutexUnlock( s_hbcomm_mutex )
-         RETURN nPort
+      IF hb_comInit( nPort, hb_defaultValue( nBaud, 9600 ), cParity, nData, hb_defaultValue( nStop, 1 ) )
+         s_hPort[ nPort ] := NIL
       ELSE
          hb_comClose( nPort )
+         nPort := 0
       ENDIF
-   ENDIF
-
-   IF cOldPortName != NIL
-      hb_comSetDevice( nPort, cOldPortName )
+   ELSE
+      nPort := 0
    ENDIF
 
    hb_mutexUnlock( s_hbcomm_mutex )
 
-   RETURN 0
+   RETURN nPort
 
 /* Purge output buffer */
 FUNCTION OUTBUFCLR( nPort )
@@ -119,7 +100,9 @@ FUNCTION ISWORKING( nPort )
 /* Fetch <nCount> chars into <cData> */
 FUNCTION INCHR( nPort, nCount, /* @ */ cData )
 
-   cData := iif( HB_ISNUMERIC( nCount ), Space( nCount ), "" )
+   hb_default( @nCount, 0 )
+
+   cData := Replicate( hb_BChar( 0 ), nCount )
 
    RETURN hb_comRecv( nPort, @cData, nCount )
 
@@ -128,12 +111,10 @@ FUNCTION OUTCHR( nPort, cData )
 
    LOCAL nLen
 
-   DO WHILE hb_BLen( cData ) > 0
+   DO WHILE ! HB_ISNULL( cData )
 
       /* I expect at least some data to be sent in a second */
-      nLen := hb_comSend( nPort, cData,, 1000 )
-
-      IF nLen <= 0
+      IF ( nLen := hb_comSend( nPort, cData,, 1000 ) ) <= 0
          RETURN .F.
       ENDIF
 
@@ -153,19 +134,15 @@ FUNCTION OUTBUFSIZE( nPort )
 /* Close port and clear handle */
 FUNCTION UNINT_PORT( nPort )
 
-   LOCAL lRetVal := .F.
+   LOCAL lRetVal
 
    hb_mutexLock( s_hbcomm_mutex )
 
-   IF nPort $ s_hPort
-      IF hb_comClose( nPort )
-         /* Restore com port name */
-         IF s_hPort[ nPort ] != NIL
-            hb_comSetDevice( nPort, s_hPort[ nPort ] )
-         ENDIF
-         hb_HDel( s_hPort, nPort )
-         lRetVal := .T.
-      ENDIF
+   IF nPort $ s_hPort .AND. hb_comClose( nPort )
+      hb_HDel( s_hPort, nPort )
+      lRetVal := .T.
+   ELSE
+      lRetVal := .F.
    ENDIF
 
    hb_mutexUnlock( s_hbcomm_mutex )

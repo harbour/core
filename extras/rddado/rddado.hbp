@@ -7,10 +7,10 @@
 
 -stop{!win}
 
-adordd.prg
+-hbx=${hb_name}
 
--hbx=${hb_name}.hbx
-${hb_name}.hbx
+ado.prg
+
 {hbdyn}-env:_HB_DYNSUFF=_dll
 {hbdyn}hbwin.hbc
 $hb_pkg_dynlib.hbm

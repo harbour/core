@@ -1,44 +1,46 @@
 /* Test creation of a .dbf file bigger than 2GB */
 
+procedure Main()
 
-function main()
+   local aStruct := { ;
+      { "FIELD1", "C", 256, 0 }, ;
+      { "FIELD2", "C", 256, 0 }, ;
+      { "FIELD3", "C", 256, 0 }, ;
+      { "FIELD4", "C", 256, 0 } }
 
-   local aStruct := { { "FIELD1", "C", 256, 0 },;
-                      { "FIELD2", "C", 256, 0 },;
-                      { "FIELD3", "C", 256, 0 },;
-                      { "FIELD4", "C", 256, 0 } }
    local nRec
    local i
-   local cFileName := "testdbf"
+   local cFileName := hb_FNameName( __FILE__ )
    local nTotalRecs := 5000000
 
-   REQUEST DBFCDX
-   RddSetDefault( "DBFCDX" )
+   request DBFCDX
+   rddSetDefault( "DBFCDX" )
 
-   dbCreate( cFileName, aStruct )
-   dbUseArea( .T.,, cFileName, "long", .F. )
-   OrdCreate( cFileName + IndexExt(),, "Left( field->FIELD1, 30 )" )
+   dbCreate( cFileName + ".dbf", aStruct )
+   dbUseArea( .T.,, cFileName + ".dbf", "long", .F. )
+   ordCreate( cFileName + IndexExt(),, "Left( FIELD->FIELD1, 30 )" )
 
    for nRec := 1 to nTotalRecs
       long->( dbAppend() )
-      long->FIELD1 := PadL( nRec, 30, Space( 1 ) )
+      long->FIELD1 := PadL( nRec, 30 )
    next
-
-   ? "File size is : " + Transform( hb_fSize( cFileName + ".dbf" ), "@ZE ###,###,###,###" )
-   ? "Index size is: " + Transform( hb_fSize( cFileName + IndexExt() ), "@ZE ###,###,###,###" )
 
    ? "Testing index..."
    for nRec := 1 to nTotalRecs / 10
-      if ! long->( dbSeek( PadL( nRec, 30, Space( 1 ) ) ) )
-         ? "Seek on value " + LTrim( Str( nRec ) ) + " failed!!"
+      if ! long->( dbSeek( PadL( nRec, 30 ) ) )
+         ? "Seek on value", hb_ntos( nRec ), "failed!!"
       endif
    next
    ? "Index test ended"
+
+   long->( dbCloseArea() )
+
+   ? "File size is :", Transform( hb_vfSize( cFileName + ".dbf" ), "@ZE ###,###,###,###" )
+   ? "Index size is:", Transform( hb_vfSize( cFileName + IndexExt() ), "@ZE ###,###,###,###" )
+
    ? "Press any key..."
    Inkey( 0 )
 
-   long->( dbCloseArea() )
-   fErase( cFileName + ".dbf" )
-   fErase( cFileName + IndexExt() )
+   hb_dbDrop( cFileName + ".dbf" )
 
-return 0
+   return

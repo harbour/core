@@ -177,7 +177,7 @@ static void curs_wrkaround( void );
 
 static int getClipKey( int nKey )
 {
-   int nRet = 0, nFlag, n;
+   int nRet = 0;
 
    if( IS_CLIPKEY( nKey ) )
       nRet = GET_CLIPKEY( nKey );
@@ -185,9 +185,9 @@ static int getClipKey( int nKey )
       nRet = nKey;
    else
    {
-      n = GET_KEYMASK( nKey );
+      int nFlag = 0;
+      int n = GET_KEYMASK( nKey );
       nKey = CLR_KEYMASK( nKey );
-      nFlag = 0;
       if( n & KEY_SHIFTMASK )
          nFlag |= HB_KF_SHIFT;
       if( n & KEY_CTRLMASK )
@@ -446,10 +446,10 @@ static void del_efds( InOutBase * ioBase, int fd )
 
 static void del_all_efds( InOutBase * ioBase )
 {
-   int i;
-
    if( ioBase->event_fds != NULL )
    {
+      int i;
+
       for( i = 0; i < ioBase->efds_no; i++ )
          hb_xfree( ioBase->event_fds[ i ] );
 
@@ -1177,7 +1177,7 @@ static void disp_cursor( InOutBase * ioBase )
    if( ioBase->cursor != ioBase->lcursor )
    {
       int lcurs = -1;
-      char escseq[ 64 ], * cv = NULL;
+      char * cv = NULL;
 
       switch( ioBase->cursor )
       {
@@ -1211,6 +1211,7 @@ static void disp_cursor( InOutBase * ioBase )
       {
          if( ioBase->terminal_type == TERM_LINUX )
          {
+            char escseq[ 64 ];
             hb_snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%dc",
                          ioBase->cursor == SC_NONE ? 'l' : 'h', lcurs );
             write_ttyseq( ioBase, escseq );
@@ -1274,16 +1275,17 @@ static void gt_ttyrestore( InOutBase * ioBase )
 static HB_BOOL gt_outstr( InOutBase * ioBase, int fd, const char * str,
                           int len )
 {
-   unsigned char * buf, c;
-   int i;
    HB_BOOL success;
 
    if( ioBase->out_transtbl != NULL )
    {
+      unsigned char * buf;
+      int i;
+
       buf = ( unsigned char * ) hb_xgrab( len );
       for( i = 0; i < len; ++i )
       {
-         c = str[ i ];
+         unsigned char c = str[ i ];
          if( c != 9 && c != 10 && c != 13 && ioBase->out_transtbl[ c ] )
             buf[ i ] = ioBase->out_transtbl[ c ];
          else
@@ -1574,10 +1576,9 @@ static void init_keys( InOutBase * ioBase )
 
 static void gt_tone( InOutBase * ioBase, double dFrequency, double dDuration )
 {
-   char escseq[ 64 ];
-
    if( ioBase->terminal_type == TERM_LINUX && ioBase->beep != NULL )
    {
+      char escseq[ 64 ];
       hb_snprintf( escseq, sizeof( escseq ), "\033[10;%d]\033[11;%d]%s",
                    ( int ) dFrequency,
                    ( int ) ( dDuration * 1000.0 / 18.2 ), ioBase->beep );
@@ -1596,7 +1597,6 @@ static void set_sig_keys( InOutBase * ioBase, int key_int, int key_brk,
 {
    if( isatty( ioBase->base_infd ) )
    {
-
       /* set SIGINT character, default ^C */
       if( key_int >= 0 && key_int <= 255 )
          ioBase->curr_TIO.c_cc[ VINTR ] = key_int;
@@ -1685,11 +1685,12 @@ static int gt_resize( InOutBase * ioBase )
 
 static int gt_setsize( InOutBase * ioBase, int rows, int cols )
 {
-   int ret = -1, r, c;
-   char escseq[ 64 ];
+   int ret = -1;
 
    if( ioBase->terminal_type == TERM_XTERM )
    {
+      int r, c;
+      char escseq[ 64 ];
       hb_snprintf( escseq, sizeof( escseq ), "\033[8;%d;%dt", rows, cols );
       write_ttyseq( ioBase, escseq );
       /* dirty hack - wait for SIGWINCH */
@@ -1722,10 +1723,10 @@ static int gt_setsize( InOutBase * ioBase, int rows, int cols )
 
 static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
 {
-   int i;
-
    if( cdpTerm && cdpHost && cdpTerm != cdpHost )
    {
+      int i;
+
       if( ioBase->in_transtbl == NULL )
          ioBase->in_transtbl = ( unsigned char * ) hb_xgrab( 256 );
 
@@ -1742,13 +1743,12 @@ static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE 
 static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, int transBox )
 {
    int i, aSet;
-   chtype ch;
 
    aSet = ( cdpHost && cdpTerm );
 
    for( i = 0; i < 256; i++ )
    {
-      ch = ioBase->charmap[ i ] & 0xffff;
+      chtype ch = ioBase->charmap[ i ] & 0xffff;
       switch( ( ioBase->charmap[ i ] >> 16 ) & 0xff )
       {
          case 1:
@@ -1813,7 +1813,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
 {
    InOutBase * ioBase;
    int bg, fg;
-   unsigned int i, n;
+   unsigned int i;
    char buf[ 256 ], * ptr, * crsterm = NULL;
 
    ioBase = ( InOutBase * ) hb_xgrabz( sizeof( InOutBase ) );
@@ -1877,7 +1877,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
       memset( ioBase->curr_TIO.c_cc, 0, NCCS );
 
       /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
-         Ubuntu) in which select() unconditionally accepts stdin for
+         *buntu) in which select() unconditionally accepts stdin for
          reading if c_cc[ VMIN ] = 0 [druzus] */
       ioBase->curr_TIO.c_cc[ VMIN ] = 1;
    }
@@ -1973,6 +1973,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
 #endif
       for( i = 0; i < 256; i++ )
       {
+         unsigned int n;
          bg = ( i >> 4 ) & 0x07; /* extract background color bits 4-6 */
          fg = ( i & 0x07 );      /* extract forground color bits 0-2 */
          n = bg * 8 + fg;
@@ -2182,7 +2183,7 @@ static int set_active_ioBase( int iNO_ioBase )
 
 static int add_new_ioBase( InOutBase * ioBase )
 {
-   int i, n, add = 0;
+   int i, add = 0;
 
    for( i = 0; i < s_iSize_ioBaseTab && ! add; ++i )
       if( ! s_ioBaseTab[ i ] )
@@ -2193,6 +2194,8 @@ static int add_new_ioBase( InOutBase * ioBase )
 
    if( ! add )
    {
+      int n;
+
       if( s_ioBaseTab == NULL )
          s_ioBaseTab = ( InOutBase ** ) hb_xgrab(
                         ( s_iSize_ioBaseTab += 10 ) * sizeof( InOutBase * ) );
@@ -2212,14 +2215,14 @@ static int add_new_ioBase( InOutBase * ioBase )
 
 static int del_ioBase( int iNO_ioBase )
 {
-   int i;
-
    if( iNO_ioBase >= 0 && iNO_ioBase < s_iSize_ioBaseTab )
    {
       destroy_ioBase( s_ioBaseTab[ iNO_ioBase ] );
       s_ioBaseTab[ iNO_ioBase ] = NULL;
       if( s_iActive_ioBase == iNO_ioBase )
       {
+         int i;
+
          s_iActive_ioBase = -1;
          s_ioBase = NULL;
          for( i = 0; i < s_iSize_ioBaseTab && ! s_ioBase; ++i )
@@ -2233,10 +2236,10 @@ static int del_ioBase( int iNO_ioBase )
 
 static void del_all_ioBase( void )
 {
-   int i;
-
    if( s_ioBaseTab )
    {
+      int i;
+
       for( i = 0; i < s_iSize_ioBaseTab; ++i )
          if( s_ioBaseTab[ i ] )
             destroy_ioBase( s_ioBaseTab[ i ] );
@@ -2346,12 +2349,12 @@ void HB_GT_FUNC( gt_CatchSignal( int iSig ) )
 
 static void hb_gt_crs_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   InOutBase * ioBase;
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    if( ! s_ioBase )
    {
+      InOutBase * ioBase;
+
       s_iStdIn  = hFilenoStdin;
       s_iStdOut = hFilenoStdout;
       s_iStdErr = hFilenoStderr;
@@ -2456,7 +2459,7 @@ static const char * hb_gt_crs_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: nCurses";
+   return "Terminal: nCurses (CRS)";
 }
 
 /* *********************************************************************** */
@@ -2769,8 +2772,8 @@ static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          if( ! HB_GTSELF_GETSCRUC( pGT, iRow, iCol++, &iColor, &bAttr, &uc, HB_FALSE ) )
             break;
          ch = ( s_ioBase->attr_map[ iColor ] & s_ioBase->attr_mask ) |
-              ( bAttr & HB_GT_ATTR_BOX ? s_ioBase->box_chmap[ uc ] :
-                                         s_ioBase->std_chmap[ uc ] );
+              ( ( bAttr & HB_GT_ATTR_BOX ) ? s_ioBase->box_chmap[ uc ] :
+                                             s_ioBase->std_chmap[ uc ] );
          waddch( s_ioBase->hb_stdscr, ch );
       }
    }

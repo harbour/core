@@ -1,7 +1,7 @@
 /*
  * Regression tests for the runtime library
  *
- * Copyright 1999-2013 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,19 +44,71 @@
  *
  */
 
+#pragma -gc3
+
 #include "error.ch"
 
 #define TEST_RESULT_COL1_WIDTH  1
 #define TEST_RESULT_COL2_WIDTH  11
-#define TEST_RESULT_COL3_WIDTH  44
-#define TEST_RESULT_COL4_WIDTH  85
+#define TEST_RESULT_COL3_WIDTH  40
 
 THREAD STATIC t_hParams := { => }
 
+STATIC s_lBanner
+STATIC s_nStartTime
+STATIC s_nCount
+STATIC s_nPass
+STATIC s_nFail
+
+INIT PROCEDURE __hbtest_Init()
+
+   s_lBanner := .F.
+   s_nStartTime := hb_milliSeconds()
+   s_nCount := 0
+   s_nPass := 0
+   s_nFail := 0
+
+   RETURN
+
+STATIC PROCEDURE hbtest_Banner()
+
+   Eval( hb_HGetDef( t_hParams, "output", {| ... | OutStd( ... ) } ), ;
+      Replicate( "-", 75 ) + hb_eol() + ;
+      "    Version:", Version() + hb_eol() + ;
+      "   Compiler:", hb_Compiler() + hb_eol() + ;
+      "         OS:", OS() + hb_eol() + ;
+      " Date, Time:", hb_TToC( hb_DateTime(), "yyyy-mm-dd", "hh:mm:ss" ) + hb_eol() + ;
+      Replicate( "=", 75 ) + hb_eol() + ;
+      Space( TEST_RESULT_COL1_WIDTH ), ;
+      hb_UPadR( "Location", TEST_RESULT_COL2_WIDTH ), ;
+      hb_UPadR( "Test", TEST_RESULT_COL3_WIDTH ), "->", ;
+      "Result" + hb_eol() + ;
+      Replicate( "-", 75 ) + hb_eol() )
+
+   RETURN
+
+EXIT PROCEDURE __hbtest_Exit()
+
+   IF s_lBanner
+      IF s_nPass + s_nFail > 0
+         Eval( hb_HGetDef( t_hParams, "output", {| ... | OutStd( ... ) } ), ;
+            Replicate( "=", 75 ) + hb_eol() + ;
+            "Test calls passed:", Str( s_nPass ), "(", Str( Round( s_nPass / ( s_nPass + s_nFail ) * 100, 2 ), 6, 2 ), "% )" + hb_eol() + ;
+            "Test calls failed:", Str( s_nFail ), "(", Str( Round( s_nFail / ( s_nPass + s_nFail ) * 100, 2 ), 6, 2 ), "% )" + hb_eol() + ;
+            "                   ----------" + hb_eol() + ;
+            "            Total:", Str( s_nPass + s_nFail ), ;
+            "( Time elapsed:", hb_ntos( hb_milliSeconds() - s_nStartTime ), "ms )" + hb_eol() )
+      ENDIF
+
+      ErrorLevel( iif( s_nFail == 0, 0, 1 ) )
+   ENDIF
+
+   RETURN
+
 PROCEDURE hbtest_Setup( cName, xValue )
 
-   IF HB_ISSTRING( cName ) .AND. ! Empty( cName )
-      IF PCount() > 1
+   IF HB_ISSTRING( cName ) .AND. ! HB_ISNULL( cName )
+      IF PCount() >= 2
          t_hParams[ cName ] := xValue
       ELSEIF cName $ t_hParams
          hb_HDel( t_hParams, cName )
@@ -77,6 +129,8 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
 
    LOCAL cLangOld
 
+   s_nCount++
+
    IF HB_ISSTRING( cBlock )
       lPPError := .F.
    ELSE
@@ -84,9 +138,14 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
       lPPError := .T.
    ENDIF
 
-   cLangOld := hb_langSelect( "en" ) /* to always have RTEs in one language */
+   cLangOld := hb_langSelect( "en" )  /* to always have RTEs in one language */
 
-   BEGIN SEQUENCE WITH ErrorBlock( {| oError | Break( oError ) } )
+   IF ! s_lBanner
+      s_lBanner := .T.
+      hbtest_Banner()
+   ENDIF
+
+   BEGIN SEQUENCE WITH __BreakBlock()
       xResult := Eval( bBlock )
       lRTE := .F.
    RECOVER USING oError
@@ -97,40 +156,37 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
    hb_langSelect( cLangOld )
 
    IF lRTE
-      lFailed := !( XToStr( xResult, .F. ) == XToStr( xResultExpected, .F. ) )
+      lFailed := !( XToStr( xResult ) == XToStr( xResultExpected ) )
+   ELSEIF ValType( xResult ) == ValType( xResultExpected )
+      lFailed := !( xResult == xResultExpected )
+   ELSEIF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
+      lFailed := !( XToStr( xResult ) == xResultExpected )
    ELSE
-      IF !( ValType( xResult ) == ValType( xResultExpected ) )
-         IF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
-            lFailed := !( XToStr( xResult, .F. ) == xResultExpected )
-         ELSE
-            lFailed := .T.
-         ENDIF
-      ELSE
-         lFailed := !( xResult == xResultExpected )
-      ENDIF
+      lFailed := .T.
    ENDIF
 
    IF lFailed .OR. lPPError .OR. hb_HGetDef( t_hParams, "showall", .T. )
-      bOut := hb_HGetDef( t_hParams, "output", {| cMsg | OutStd( cMsg ) } )
+      bOut := hb_HGetDef( t_hParams, "output", {| ... | OutStd( ... ) } )
       IF lFailed
          Eval( bOut, ;
-            PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " + ;
-            PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
-            RTrim( cBlock ) + ;
-            hb_eol() + ;
-            Space( 5 ) + "  Result: " + XToStr( xResult, .F. ) + ;
-            hb_eol() + ;
-            Space( 5 ) + "Expected: " + XToStr( xResultExpected, .F. ) + ;
-            hb_eol() )
+            hb_UPadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ), ;
+            hb_UPadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ), ;
+            RTrim( cBlock ) + hb_eol() + ;
+            Space( 5 ) + "  Result:", XToStr( xResult ) + hb_eol() + ;
+            Space( 5 ) + "Expected:", XToStr( xResultExpected ) + hb_eol() )
       ELSE
          Eval( bOut, ;
-            PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " + ;
-            PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " + ;
-            PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " + ;
-            PadR( XToStr( xResult, .F. ), TEST_RESULT_COL4_WIDTH ) + " | " + ;
-            XToStr( xResultExpected, .F. ) + ;
-            hb_eol() )
+            hb_UPadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ), ;
+            hb_UPadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ), ;
+            hb_UPadR( cBlock, TEST_RESULT_COL3_WIDTH ), "->", ;
+            XToStr( xResult ) + hb_eol() )
       ENDIF
+   ENDIF
+
+   IF lFailed
+      s_nFail++
+   ELSE
+      s_nPass++
    ENDIF
 
    RETURN
@@ -138,7 +194,6 @@ PROCEDURE hbtest_Call( cBlock, bBlock, xResultExpected )
 STATIC FUNCTION ErrorMessage( oError )
 
    LOCAL cMessage := ""
-   LOCAL tmp
 
    IF HB_ISNUMERIC( oError:severity )
       SWITCH oError:severity
@@ -163,7 +218,7 @@ STATIC FUNCTION ErrorMessage( oError )
    IF ! Empty( oError:operation )
       cMessage += "(" + oError:operation + ") "
    ENDIF
-   IF ! Empty( oError:filename )
+   IF ! HB_ISNULL( oError:filename )
       cMessage += "<" + oError:filename + "> "
    ENDIF
    IF HB_ISNUMERIC( oError:osCode )
@@ -171,17 +226,6 @@ STATIC FUNCTION ErrorMessage( oError )
    ENDIF
    IF HB_ISNUMERIC( oError:tries )
       cMessage += "#:" + hb_ntos( oError:tries ) + " "
-   ENDIF
-
-   IF HB_ISARRAY( oError:Args )
-      cMessage += "A:" + hb_ntos( Len( oError:Args ) ) + ":"
-      FOR tmp := 1 TO Len( oError:Args )
-         cMessage += ValType( oError:Args[ tmp ] ) + ":" + XToStr( oError:Args[ tmp ], .T. )
-         IF tmp < Len( oError:Args )
-            cMessage += ";"
-         ENDIF
-      NEXT
-      cMessage += " "
    ENDIF
 
    IF oError:canDefault .OR. ;
@@ -200,25 +244,17 @@ STATIC FUNCTION ErrorMessage( oError )
       ENDIF
    ENDIF
 
-   RETURN cMessage
+   RETURN RTrim( cMessage )
 
-STATIC FUNCTION XToStr( xValue, lInString )
+STATIC FUNCTION XToStr( xValue )
 
    SWITCH ValType( xValue )
    CASE "N" ; RETURN hb_ntos( xValue )
-   CASE "D" ; RETURN iif( lInString, "0d" + iif( Empty( xValue ), "00000000", DToS( xValue ) ), 'hb_SToD( "' + DToS( xValue ) + '" )' )
-   CASE "U" ; RETURN "NIL"
    CASE "C"
-   CASE "M"
-      xValue := __StrToExp( xValue )
-      RETURN iif( lInString, xValue, '"' + xValue + '"' )
+   CASE "M" ; RETURN '"' + __StrToExp( xValue ) + '"'
    CASE "A"
    CASE "H"
-   CASE "O"
-      IF ! lInString
-         RETURN hb_ValToExp( xValue, .T. )
-      ENDIF
-      EXIT
+   CASE "O" ; RETURN hb_ValToExp( xValue, .T. )
    ENDSWITCH
 
    RETURN hb_CStr( xValue )
@@ -226,26 +262,14 @@ STATIC FUNCTION XToStr( xValue, lInString )
 STATIC FUNCTION __StrToExp( cStr )
 
    LOCAL cResult := ""
-
-   LOCAL nLen, nPos
    LOCAL cByte
 
-   nLen := hb_BLen( cStr )
-   FOR nPos := 1 TO nLen
-      cByte := hb_BSubStr( cStr, nPos, 1 )
-      IF ! __ByteIsDisplayable( cByte ) .OR. cByte == '"'
-         cResult += "\" + __ByteEscape( hb_BCode( cByte ) )
-      ELSE
-         cResult += cByte
-      ENDIF
+   FOR EACH cByte IN cStr  /* FOR EACH on byte stream */
+      cResult += iif( hb_BCode( cByte ) < 32 .OR. hb_BCode( cByte ) >= 127 .OR. cByte == '"', ;
+         "\" + __ByteEscape( hb_BCode( cByte ) ), cByte )
    NEXT
 
    RETURN cResult
-
-STATIC FUNCTION __ByteIsDisplayable( cByte )
-   RETURN ;
-      hb_BCode( cByte ) >= 32 .AND. ;
-      hb_BCode( cByte ) < 128
 
 STATIC FUNCTION __ByteEscape( nByte )
 
@@ -254,12 +278,74 @@ STATIC FUNCTION __ByteEscape( nByte )
 
    IF nByte == 0
       RETURN "0"
-   ELSE
-      cResult := ""
-      FOR nExp := 2 TO 0 STEP -1
-         cResult += SubStr( "01234567", Int( nByte / ( 8 ^ nExp ) ) + 1, 1 )
-         nByte %= 8 ^ nExp
-      NEXT
    ENDIF
 
+   cResult := ""
+   FOR nExp := 2 TO 0 STEP -1
+      cResult += hb_BSubStr( "01234567", Int( nByte / ( 8 ^ nExp ) ) + 1, 1 )
+      nByte %= 8 ^ nExp
+   NEXT
+
    RETURN cResult
+
+FUNCTION hbtest_Object()
+
+   LOCAL o := ErrorNew()
+
+   o:description := "Harbour"
+
+   RETURN o
+
+/* TODO: add 'M' */
+
+FUNCTION hbtest_AllValues()
+   RETURN { ;
+      NIL, ;
+      "HELLO", ;
+      "Hello", ;
+      "", ;
+      "   ", ;
+      "A" + hb_BChar( 0 ) + "B", ;
+      hb_BChar( 13 ) + hb_BChar( 10 ) + hb_BChar( 141 ) + hb_BChar( 10 ) + hb_BChar( 9 ), ;
+      "utf8-űŰőŐ©", ;
+      0, ;
+      0.0, ;
+      10, ;
+      65, ;
+      100000, ;
+      10.567, ;  /* Use different number of decimals than the default */
+      -10, ;
+      -100000, ;
+      -10.567, ;  /* Use different number of decimals than the default */
+      1234567654321, ;
+      hb_SToD( "19840325" ), ;
+      hb_SToD(), ;
+      hb_SToT( "19850325123456789" ), ;
+      hb_SToT(), ;
+      .F., ;
+      .T., ;
+      @hbtest_AllValues(), ;
+      {|| NIL }, ;
+      {|| "(string)" }, ;
+      hbtest_Object(), ;
+      { => }, ;
+      { "a" => "b" }, ;
+      {}, ;
+      { 9898 }, ;
+      __hbtest_Pointer( .T. ), ;
+      __hbtest_Pointer( .F. ) }
+
+FUNCTION hbtest_AllTypes()
+   RETURN { ;
+      NIL, ;
+      "a", ;
+      10, ;
+      hb_SToD( "19840325" ), ;
+      hb_SToT( "19850325123456789" ), ;
+      .T., ;
+      @hbtest_AllTypes(), ;
+      {|| NIL }, ;
+      hbtest_Object(), ;
+      { "a" => "b" }, ;
+      { 100 }, ;
+      __hbtest_Pointer() }

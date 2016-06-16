@@ -81,7 +81,7 @@ CREATE CLASS ScrollBar FUNCTION HBScrollBar
    METHOD update()
    METHOD hitTest( nMRow, nMCol )
 
-   METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -115,10 +115,10 @@ METHOD display() CLASS ScrollBar
 
    IF ::CalcThumbPos()
 
-      cStyle    := ::cStyle
-      nOffset   := ::nOffset
-      nStart    := ::nStart
-      nEnd      := ::nEnd - 1
+      cStyle  := ::cStyle
+      nOffset := ::nOffset
+      nStart  := ::nStart
+      nEnd    := ::nEnd - 1
 
       DispBegin()
 
@@ -127,22 +127,21 @@ METHOD display() CLASS ScrollBar
       IF ::nOrient == SCROLL_VERTICAL
 
          FOR nPos := nStart + 1 TO nEnd
-            hb_DispOutAt( nPos, nOffset, SubStr( cStyle, 2, 1 ), cColor )
+            hb_DispOutAt( nPos, nOffset, hb_USubStr( cStyle, 2, 1 ), cColor )
          NEXT
 
          cColor := hb_ColorIndex( ::cColorSpec, 1 )
-         hb_DispOutAt( nStart, nOffset, SubStr( cStyle, 1, 1 ), cColor )
-         hb_DispOutAt( nStart + ::nThumbPos, nOffset, SubStr( cStyle, 3, 1 ), cColor )
-         hb_DispOutAt( nEnd + 1, nOffset, SubStr( cStyle, 4, 1 ), cColor )
+         hb_DispOutAt( nStart, nOffset, hb_USubStr( cStyle, 1, 1 ), cColor )
+         hb_DispOutAt( nStart + ::nThumbPos, nOffset, hb_USubStr( cStyle, 3, 1 ), cColor )
+         hb_DispOutAt( nEnd + 1, nOffset, hb_USubStr( cStyle, 4, 1 ), cColor )
       ELSE
 
-         hb_DispOutAt( nOffset, nStart + 1, Replicate( SubStr( cStyle, 2, 1 ), nEnd - nStart ), cColor )
+         hb_DispOutAt( nOffset, nStart + 1, Replicate( hb_USubStr( cStyle, 2, 1 ), nEnd - nStart ), cColor )
 
          cColor := hb_ColorIndex( ::cColorSpec, 1 )
-         hb_DispOutAt( nOffset, nStart, SubStr( cStyle, 1, 1 ), cColor )
-         hb_DispOutAt( nOffset, nStart + ::nThumbPos, SubStr( cStyle, 3, 1 ), cColor )
-         hb_DispOutAt( nOffset, nEnd + 1, SubStr( cStyle, 4, 1 ), cColor )
-
+         hb_DispOutAt( nOffset, nStart, hb_USubStr( cStyle, 1, 1 ), cColor )
+         hb_DispOutAt( nOffset, nStart + ::nThumbPos, hb_USubStr( cStyle, 3, 1 ), cColor )
+         hb_DispOutAt( nOffset, nEnd + 1, hb_USubStr( cStyle, 4, 1 ), cColor )
       ENDIF
 
       DispEnd()
@@ -165,11 +164,11 @@ METHOD update() CLASS ScrollBar
       DispBegin()
 
       IF ::nOrient == SCROLL_VERTICAL
-         hb_DispOutAt( ::nStart + nOldThumbPos, ::nOffSet, SubStr( ::cStyle, 2,  1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
-         hb_DispOutAt( ::nStart + ::nThumbPos, ::nOffset, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
+         hb_DispOutAt( ::nStart + nOldThumbPos, ::nOffSet, hb_USubStr( ::cStyle, 2,  1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
+         hb_DispOutAt( ::nStart + ::nThumbPos, ::nOffset, hb_USubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
       ELSE
-         hb_DispOutAt( ::nOffset, ::nStart + nOldThumbPos, SubStr( ::cStyle, 2, 1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
-         hb_DispOutAt( ::nOffset, ::nStart + ::nThumbPos, SubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
+         hb_DispOutAt( ::nOffset, ::nStart + nOldThumbPos, hb_USubStr( ::cStyle, 2, 1 ), hb_ColorIndex( ::cColorSpec, 0 ) )
+         hb_DispOutAt( ::nOffset, ::nStart + ::nThumbPos, hb_USubStr( ::cStyle, 3, 1 ), hb_ColorIndex( ::cColorSpec, 1 ) )
       ENDIF
 
       DispEnd()
@@ -216,9 +215,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS ScrollBar
          CASE nMRow == ::nThumbPos + ::nStart
             RETURN HTSCROLLTHUMBDRAG
          ENDCASE
-
       ENDIF
-
    ELSE
 
       DO CASE
@@ -236,7 +233,6 @@ METHOD hitTest( nMRow, nMCol ) CLASS ScrollBar
       CASE nMCol == ::nThumbPos + ::nStart
          RETURN HTSCROLLTHUMBDRAG
       ENDCASE
-
    ENDIF
 
    RETURN HTNOWHERE
@@ -331,7 +327,7 @@ METHOD start( nStart ) CLASS ScrollBar
 METHOD style( cStyle ) CLASS ScrollBar
 
    IF HB_ISSTRING( cStyle ) .AND. ;
-      Len( cStyle ) == 4
+      hb_ULen( cStyle ) == 4
 
       ::cStyle := cStyle
    ENDIF
@@ -342,15 +338,16 @@ METHOD thumbPos( nThumbPos ) CLASS ScrollBar
 
    IF HB_ISNUMERIC( nThumbPos )
 
-      IF nThumbPos < 1
+      DO CASE
+      CASE nThumbPos < 1
          ::nThumbPos := 1
-      ELSEIF nThumbPos >= ::nBarLength
+      CASE nThumbPos >= ::nBarLength
          ::nThumbPos := ::nBarLength
-      ELSEIF nThumbPos >= ::nBarLength - 1
+      CASE nThumbPos >= ::nBarLength - 1
          ::nThumbPos := nThumbPos
-      ELSE
+      OTHERWISE
          ::nThumbPos := nThumbPos
-      ENDIF
+      ENDCASE
 
       ::lOverride := ( nThumbPos != 0 )
    ENDIF
@@ -385,10 +382,10 @@ METHOD CalcThumbPos() CLASS ScrollBar
 
 /* New definitions for better coding. These are screen codepage dependent,
    but can be changed with the setStyle method. */
-#define SB_UPARROW      Chr( 24 ) /* LOW-ASCII "↑" */
-#define SB_DNARROW      Chr( 25 ) /* LOW-ASCII "↓" */
-#define SB_RIGHTARROW   Chr( 27 ) /* LOW-ASCII "→" */
-#define SB_LEFTARROW    Chr( 26 ) /* LOW-ASCII "←" */
+#define SB_UPARROW      Chr( 24 )  /* LOW-ASCII "↑" */
+#define SB_DNARROW      Chr( 25 )  /* LOW-ASCII "↓" */
+#define SB_RIGHTARROW   Chr( 27 )  /* LOW-ASCII "→" */
+#define SB_LEFTARROW    Chr( 26 )  /* LOW-ASCII "←" */
 
 #define SB_THUMB        hb_UTF8ToStr( "░" )
 #define SB_TRACK        hb_UTF8ToStr( "▓" )
@@ -415,13 +412,16 @@ METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) CLASS ScrollBar
    ::start      := nStart
    ::nBarLength := nEnd - nStart - 1
 
-   IF nOrient == SCROLL_VERTICAL
+   SWITCH nOrient
+   CASE SCROLL_VERTICAL
       ::cStyle := SB_UPARROW + SB_THUMB + SB_TRACK + SB_DNARROW
       ::aBitmaps := { "arrow_u.bmu", "arrow_d.bmu", "arrow_e.bmu" }
-   ELSEIF nOrient == SCROLL_HORIZONTAL
+      EXIT
+   CASE SCROLL_HORIZONTAL
       ::cStyle := SB_LEFTARROW + SB_THUMB + SB_TRACK + SB_RIGHTARROW
       ::aBitmaps := { "arrow_l.bmu", "arrow_r.bmu", "arrow_e.bmu" }
-   ENDIF
+      EXIT
+   ENDSWITCH
 
    cColor := SetColor()
    ::cColorSpec := ;

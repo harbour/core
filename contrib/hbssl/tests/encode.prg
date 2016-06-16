@@ -1,6 +1,4 @@
-/*
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
- */
+/* Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbssl"
 
@@ -8,35 +6,35 @@ PROCEDURE Main()
 
    LOCAL ctx
    LOCAL result
-   LOCAL encrypted
-   LOCAL decrypted
+   LOCAL encoded
+   LOCAL decoded
 
    SSL_init()
 
    OpenSSL_add_all_ciphers()
 
-   ctx := hb_EVP_ENCODE_ctx_create()
+   ctx := EVP_ENCODE_CTX_new()
 
    EVP_EncodeInit( ctx )
 
-   encrypted := ""
+   encoded := ""
    result := ""
    EVP_EncodeUpdate( ctx, @result, "sample text" )
-   encrypted += result
+   encoded += result
    EVP_EncodeFinal( ctx, @result )
-   encrypted += result
-   ? "ENCRYTPTED", ">" + encrypted + "<"
+   encoded += result
+   ? "ENCODED", ">" + hb_StrToHex( encoded ) + "<"
 
-   ctx := hb_EVP_ENCODE_ctx_create()
+   ctx := EVP_ENCODE_CTX_new()
 
    EVP_DecodeInit( ctx )
 
-   decrypted := ""
+   decoded := ""
    result := ""
-   EVP_DecodeUpdate( ctx, @result, encrypted )
-   decrypted += result
+   EVP_DecodeUpdate( ctx, @result, encoded )
+   decoded += result
    EVP_DecodeFinal( ctx, @result )
-   decrypted += result
-   ? "DECRYTPTED", ">" + decrypted + "<"
+   decoded += result
+   ? "DECODED", ">" + decoded + "<"
 
    RETURN

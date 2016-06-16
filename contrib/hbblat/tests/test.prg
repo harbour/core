@@ -1,5 +1,5 @@
 /*
- * HBBLAT sample test file
+ * hbblat sample test file
  *
  * Copyright 2007-2009 Francesco Saverio Giudice <info@fsgiudice.com>
  *
@@ -46,39 +46,35 @@
 
 #require "hbblat"
 
-#define ADDRESS_FROM   "yourname@domain.com"         // put here your address from
-#define ADDRESS_TO     "hbblat_test@fsgiudice.com"   // this mail can be used for tests
-//#define ADDRESS_CC     "another@domain.com"
-
-#define SERVER_SMTP    "your.stmpserver.com"         // put your smtp server here
-
 PROCEDURE Main()
 
-// LOCAL cCmd
-   LOCAL nRet
    LOCAL oBlat := HBBlat():New()
 
+   ? "hbblat test"
    ?
-   ? "HBBlat test"
 
-   oBlat:cFrom                   := ADDRESS_FROM
-   oBlat:cTo                     := ADDRESS_TO
-// oBlat:cUserAUTH               := "myaccount@mydomain.org"
-// oBlat:cPasswordAUTH           := "mypassword"
-// oBlat:cHostname               := "mail.anydomain.com"
-// oBlat:cCC                     := ADDRESS_CC
-// oBlat:cCCFile                 := "f_cc.txt"
-// oBlat:cBCC                    := "info@fsgiudice.com"
-// oBlat:cBCCFile                := "f_bcc.txt"
-// oBlat:cBodyFile               := "c.bin"
+   oBlat:cFrom                   := "from@example.com"
+   oBlat:cTo                     := "to@example.com"
+#if 0
+   oBlat:cUserAUTH               := "myaccount@example.com"
+   oBlat:cPasswordAUTH           := "mypassword"
+   oBlat:cHostname               := "mail.example.com"
+   oBlat:cCC                     := "cc@example.com"
+   oBlat:cCCFile                 := "f_cc.txt"
+   oBlat:cBCC                    := "bcc@example.com"
+   oBlat:cBCCFile                := "f_bcc.txt"
+   oBlat:cBodyFile               := "c.bin"
+#endif
    oBlat:cBody                   := e"Body part\n\rEnd Body"
-   oBlat:cServerSMTP             := SERVER_SMTP
+   oBlat:cServerSMTP             := "smtp.example.com"
    oBlat:cSubject                := "Test from Blat"
-// oBlat:lSuppressSubject        := .T.
-// oBlat:cSubjectFile            := "f_subjct.txt"
-// oBlat:lToUndiscloseRecipients := .T.
+#if 0
+   oBlat:lSuppressSubject        := .T.
+   oBlat:cSubjectFile            := "f_subjct.txt"
+   oBlat:lToUndiscloseRecipients := .T.
+#endif
    oBlat:cPostScriptumFile       := "f_ps.txt"
-   oBlat:lRequestDisposition     := .T.          // does not work ???
+   oBlat:lRequestDisposition     := .T.     // does not work?
    oBlat:lRequestReturnReceipt   := .T.
 
    oBlat:cAttachTextFiles        := "f_subjct.txt"
@@ -89,25 +85,24 @@ PROCEDURE Main()
    oBlat:lLogTimestamp           := .T.
    oBlat:lDebug                  := .T.
    oBlat:lLogOverwrite           := .T.
+#if 0
+   oBlat:lSuperDebug             := .T.     // This display internal checking
+#endif
 
-// oBlat:lSuperDebug             := .T.     // This display internal checking
+#if 0
+   ? "Checking options..."
+   oBlat:Check()
+#endif
 
-   ? "Checking options ..."
-// oBlat:Check()
+   ? "Command .........:", oBlat:GetCommand()  // Not necessary - this show complete command-line sent to blat
    ?
-   ? "Command .........: ", oBlat:GetCommand()  // Not necessary - this show complete command line sent to blat
-
-   ? "Sending mail ..."
-   ? "Return Value ....: ", nRet := oBlat:Send()
-
-   ? "Error String ....: ", oBlat:ErrorString()
-
-   // Blat error
-   ? "Blat Error ......: ", oBlat:BlatError()
-   ? "Blat Error String: ", oBlat:BlatErrorString()
-
+   ? "Sending mail..."
    ?
-   ? iif( nRet == 0, "mail sent correctly!", "mail NOT sent" )
+   ? "Return Value ....:", oBlat:Send()
+   ? "Error String ....:", oBlat:ErrorString()
+   ? "Blat Error ......:", oBlat:BlatError()
+   ? "Blat Error String:", oBlat:BlatErrorString()
    ?
+   ? iif( oBlat:BlatError() == 0, "mail sent correctly", "mail NOT sent!" )
 
    RETURN

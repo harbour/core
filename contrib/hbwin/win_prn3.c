@@ -47,7 +47,7 @@
 #include "hbwapi.h"
 
 #if ! defined( HB_OS_WIN_CE )
-#  include <winspool.h>
+   #include <winspool.h>
 #endif
 
 static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
@@ -107,7 +107,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 
       /* Tell all open programs that this change occurred.
          Allow each program 1 second to handle this message. */
-      SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0L, ( LPARAM ) ( LPCTSTR ) TEXT( "windows" ), SMTO_NORMAL, 1000, NULL );
+      SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0, ( LPARAM ) ( LPCTSTR ) TEXT( "windows" ), SMTO_NORMAL, 1000, NULL );
    }
    /* If Windows NT, use the SetDefaultPrinter API for Windows 2000,
       or WriteProfileString for version 4.0 and earlier. */
@@ -204,7 +204,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 
       /* Tell all open programs that this change occurred.
          Allow each app 1 second to handle this message. */
-      SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0L, 0L, SMTO_NORMAL, 1000, NULL );
+      SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0, 0, SMTO_NORMAL, 1000, NULL );
    }
 
    /* Clean up. */

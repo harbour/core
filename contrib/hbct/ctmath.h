@@ -55,11 +55,7 @@
 
 HB_EXTERN_BEGIN
 
-/* initialization */
-extern int ct_math_init( void );
-extern int ct_math_exit( void );
-
-/* set & get precision */
+/* set and get precision */
 extern void ct_setprecision( int iPrecision );
 extern int ct_getprecision( void );
 

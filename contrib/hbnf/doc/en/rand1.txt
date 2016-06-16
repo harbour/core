@@ -21,8 +21,8 @@
       If you need a random number between 0 and <nMax> inclusive,
       then you should Round() the result.
    $EXAMPLES$
-      nResult := Int( ft_Rand1( 100 ) ) + 1    // 1 <= nResult <= 100
-      nResult := Round( ft_Rand1( 100 ), 0 )   // 0 <= nResult <= 100
-      nResult := ft_Rand1( 1 )                 // 0 <= nResult < 1
+      ? Int( ft_Rand1( 100 ) ) + 1    // 1 <= nResult <= 100
+      ? Round( ft_Rand1( 100 ), 0 )   // 0 <= nResult <= 100
+      ? ft_Rand1( 1 )                 // 0 <= nResult < 1
    $END$
  */

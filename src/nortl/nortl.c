@@ -1,5 +1,5 @@
 /*
- *
+ * Standalone RTL stubs
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -53,9 +53,7 @@
 #include "hbcomp.h"
 #include "hbmemory.ch"
 
-/* ------------------------------------------------------------------------- */
-/* FM statistic module */
-/* ------------------------------------------------------------------------- */
+/* --- FM statistic module --- */
 
 /* remove this 'undef' when number of memory leaks will be reduced to
    reasonable size */
@@ -68,7 +66,7 @@
 #define HB_MEMSTR_BLOCK_MAX   256
 
 #ifndef HB_MEMFILER
-#  define HB_MEMFILER         0xff
+#define HB_MEMFILER         0xff
 #endif
 
 typedef struct _HB_MEMINFO
@@ -80,10 +78,10 @@ typedef struct _HB_MEMINFO
 } HB_MEMINFO, * PHB_MEMINFO;
 
 #ifdef HB_ALLOC_ALIGNMENT
-#  define HB_MEMINFO_SIZE  ( ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) - \
-                             ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) % HB_ALLOC_ALIGNMENT )
+   #define HB_MEMINFO_SIZE  ( ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) - \
+                              ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) % HB_ALLOC_ALIGNMENT )
 #else
-#  define HB_MEMINFO_SIZE  sizeof( HB_MEMINFO )
+   #define HB_MEMINFO_SIZE  sizeof( HB_MEMINFO )
 #endif
 
 static PHB_MEMINFO s_pMemBlocks         = NULL;
@@ -510,7 +508,6 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
-      HB_SIZE nLen;
 
       if( pszFree )
       {
@@ -534,6 +531,8 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       /* strip trailing and leading spaces */
       if( s_fFnTrim )
       {
+         HB_SIZE nLen;
+
          if( pFileName->szName )
          {
             nLen = strlen( pFileName->szName );
@@ -604,7 +603,6 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
-      HB_SIZE nLen;
 
       szFileName = pszBuffer = hb_strncpy( ( char * ) hb_xgrab( HB_PATH_MAX ),
                                            szFileName, HB_PATH_MAX - 1 );
@@ -625,6 +623,8 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
       /* strip trailing and leading spaces */
       if( s_fFnTrim )
       {
+         HB_SIZE nLen;
+
          if( pFileName->szName )
          {
             nLen = strlen( pFileName->szName );

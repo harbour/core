@@ -1,12 +1,12 @@
 /*
  * This code implements BlowFish algorithm designed by Bruce Schneier.
- *    The description of BlowFish algorithm can be found at:
- *       http://www.schneier.com/paper-blowfish-fse.html
- *    This code uses for initial s-boxes and p-array values PI hex digits
- *    taken from tables public at:
- *       http://www.schneier.com/blowfish.html
- *    which can be downloaded from:
- *       http://www.schneier.com/code/constants.txt
+ * The description of BlowFish algorithm can be found at:
+ *    https://www.schneier.com/paper-blowfish-fse.html
+ * This code uses for initial s-boxes and p-array values PI hex digits
+ * taken from tables public at:
+ *    https://www.schneier.com/blowfish.html
+ * which can be downloaded from:
+ *    https://www.schneier.com/code/constants.txt
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

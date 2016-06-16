@@ -1,6 +1,6 @@
 /*
  * HiPer-SEEK / CFTS compatible library
- *    Cfts*() functions
+ * Cfts*() functions
  *
  * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *

@@ -5,6 +5,8 @@
 
 -w1 -es2
 
+-hbx=${hb_name}
+
 hbsuper.prg
 
 between.c
@@ -213,7 +215,5 @@ s_woyear.prg
 s_writef.prg
 s_xbxx.prg
 
--hbx=${hb_name}.hbx
-${hb_name}.hbx
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

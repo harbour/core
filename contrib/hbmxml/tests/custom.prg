@@ -1,32 +1,36 @@
+/* Copyright (c) 2011 Petr Chornyj */
+
 #require "hbmxml"
 
 #xtranslate _ENCODE( <xData> ) => ( hb_base64Encode( hb_Serialize( mxmlGetCustom( <xData> ) ) ) )
 
 PROCEDURE Main()
 
+   LOCAL cFileName := hb_FNameExtSet( __FILE__, ".xml" )
+
    LOCAL tree, node
    LOCAL xData
+
+   Set( _SET_OSCODEPAGE, hb_cdpOS() )
 
    mxmlSetErrorCallback( @my_mxmlError() )
    mxmlSetCustomHandlers( @load_c(), @save_c() )
 
-   IF ! hb_FileExists( "cust.xml" )
-      create_cust()
-   ENDIF
+   create_cust( cFileName )
 
-   tree := mxmlLoadFile( tree, "cust.xml", @type_cb() )
+   tree := mxmlLoadFile( tree, cFileName, @type_cb() )
 
-   node := mxmlFindElement( tree, tree, "hash", NIL, NIL, MXML_DESCEND )
+   node := mxmlFindElement( tree, tree, "hash", , , MXML_DESCEND )
    IF Empty( node )
-      OutErr( "Unable to find <hash> element in XML tree!" )
+      ? "Cannot find <hash> element in XML tree!"
       mxmlDelete( tree )
 
       ErrorLevel( -1 )
       RETURN
    ENDIF
 
-   IF !( hb_MD5( _ENCODE( node ) ) == mxmlElementGetAttr( node, "checksum" ) )
-      OutErr( "Custom data of element <hash> is corrupted!" )
+   IF !( HB_SHA256( _ENCODE( node ) ) == mxmlElementGetAttr( node, "checksum" ) )
+      ? "Custom data of element <hash> is corrupted!"
       mxmlDelete( tree )
 
       ErrorLevel( -1 )
@@ -34,8 +38,8 @@ PROCEDURE Main()
    ENDIF
 
    xData := mxmlGetCustom( node )
-   IF HB_ISHASH( xData ) .AND. hb_HHasKey( xData, "Today" )
-      OutStd( xData[ "Today" ], hb_eol() )
+   IF HB_ISHASH( xData ) .AND. "Today" $ xData
+      ? xData[ "Today" ]
    ENDIF
 
    mxmlSetErrorCallback( NIL )
@@ -45,7 +49,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC PROCEDURE create_cust()
+STATIC PROCEDURE create_cust( cFileName )
 
    LOCAL tree, group, element, node
    LOCAL hData := { => }
@@ -59,29 +63,28 @@ STATIC PROCEDURE create_cust()
    node    := mxmlNewCustom( element, hData )
 
    mxmlElementSetAttr( element, "type", "custom" )
-   mxmlElementSetAttr( element, "checksum", hb_MD5( _ENCODE( node ) ) )
+   mxmlElementSetAttr( element, "checksum", hb_SHA256( _ENCODE( node ) ) )
 
-   mxmlSaveFile( tree, "cust.xml", @whitespace_cb() )
-
-   RETURN
-
-PROCEDURE my_mxmlError( cErrorMsg )
-
-   OutErr( cErrorMsg, hb_eol() )
+   mxmlSaveFile( tree, cFileName, @whitespace_cb() )
 
    RETURN
 
-FUNCTION load_c( node, cString )
+STATIC PROCEDURE my_mxmlError( cErrorMsg )
+
+   ? cErrorMsg
+
+   RETURN
+
+STATIC FUNCTION load_c( node, cString )
 
    mxmlSetCustom( node, hb_Deserialize( hb_base64Decode( cString ) ) )
 
    RETURN 0  /* 0 on success or non-zero on error */
 
-FUNCTION save_c( node )
-
+STATIC FUNCTION save_c( node )
    RETURN _ENCODE( node ) /* string on success or NIL on error */
 
-FUNCTION whitespace_cb( node, where )
+STATIC FUNCTION whitespace_cb( node, where )
 
    LOCAL parent        /* Parent node */
    LOCAL nLevel := -1  /* Indentation level */
@@ -89,7 +92,7 @@ FUNCTION whitespace_cb( node, where )
 
    name := mxmlGetElement( node )
 
-   IF Left( name, 4 ) == "?xml"
+   IF hb_LeftEq( name, "?xml" )
       IF where == MXML_WS_AFTER_OPEN
          RETURN hb_eol()
       ELSE
@@ -123,11 +126,10 @@ FUNCTION whitespace_cb( node, where )
       RETURN hb_eol()
    ENDIF
 
-   RETURN NIL /* Return NIL for no added whitespace... */
+   RETURN NIL  /* Return NIL for no added whitespace... */
 
-FUNCTION type_cb( node )
+STATIC FUNCTION type_cb( node )
 
-   LOCAL nResult
    LOCAL cType
 
    IF Empty( cType := mxmlElementGetAttr( node, "type" ) )
@@ -137,12 +139,7 @@ FUNCTION type_cb( node )
    SWITCH Lower( cType )
    CASE "custom"               /* don't forget */
    CASE "hash"
-      nResult := MXML_CUSTOM
-      EXIT
-
-   OTHERWISE
-      nResult := MXML_TEXT
-      EXIT
+      RETURN MXML_CUSTOM
    ENDSWITCH
 
-   RETURN nResult
+   RETURN MXML_TEXT

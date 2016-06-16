@@ -1,7 +1,7 @@
 #require "hbziparc"
 
-PROCEDURE Main( cZip, ... )
+PROCEDURE Main( cZip )
 
-   ? hb_UnzipFile( cZip, NIL, .F., NIL, NIL, hb_AParams(), {| x, y | QOut( Str( x / y * 100, 3 ) + "%" ) } )
+   ? hb_UnzipFile( cZip,, .F.,,, hb_AParams(), {| x, y | QOut( Str( x / y * 100, 3 ) + "%" ) } )
 
    RETURN

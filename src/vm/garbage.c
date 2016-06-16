@@ -386,7 +386,7 @@ void hb_gcGripDrop( PHB_ITEM pItem )
 }
 
 /* Lock a memory pointer so it will not be released if stored
-   outside of harbour variables
+   outside of Harbour variables
  */
 void * hb_gcLock( void * pBlock )
 {
@@ -409,7 +409,7 @@ void * hb_gcLock( void * pBlock )
 }
 
 /* Unlock a memory pointer so it can be released if there is no
-   references inside of harbour variables
+   references inside of Harbour variables
  */
 void * hb_gcUnlock( void * pBlock )
 {
@@ -724,7 +724,7 @@ void hb_gcReleaseAll( void )
 {
    if( s_pCurrBlock )
    {
-      PHB_GARBAGE pAlloc, pDelete;
+      PHB_GARBAGE pAlloc;
 
       s_bCollecting = HB_TRUE;
 
@@ -742,6 +742,7 @@ void hb_gcReleaseAll( void )
 
       do
       {
+         PHB_GARBAGE pDelete;
          HB_TRACE( HB_TR_INFO, ( "Release %p", s_pCurrBlock ) );
          pDelete = s_pCurrBlock;
          hb_gcUnlink( &s_pCurrBlock, pDelete );

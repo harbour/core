@@ -1,48 +1,46 @@
 /*
- *
  * Copyright 2011 Fausto Di Creddo Trautwein, ftwein@yahoo.com.br
  *
- * Thanks TO Robert F Greer, PHP original version
- * http://sourceforge.net/projects/excelwriterxml/
+ * Thanks to Robert F Greer, PHP original version
  *
- * This program is free software; you can redistribute it AND/OR modify
- * it under the terms of the GNU General PUBLIC License as published by
- * the Free Software Foundation; either version 2, OR( at your option )
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
- * This program is distributed IN the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General PUBLIC License FOR more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General PUBLIC License
- * along WITH this software; see the file COPYING.txt.  IF NOT, write TO
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA( OR visit the web site https://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
- * As a special exception, the Harbour Project gives permission FOR
- * additional uses of the text contained IN its release of Harbour.
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
  *
- * The exception is that, IF you link the Harbour libraries WITH other
- * files TO produce an executable, this does NOT by itself cause the
- * resulting executable TO be covered by the GNU General PUBLIC License.
- * Your use of that executable is IN no way restricted on account of
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
  *
- * This exception does NOT however invalidate any other reasons why
- * the executable file might be covered by the GNU General PUBLIC License.
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
  *
- * This exception applies only TO the code released by the Harbour
- * Project under the name Harbour.  IF you copy code FROM other
- * Harbour Project OR Free Software Foundation releases into a copy of
- * Harbour, as the General PUBLIC License permits, the exception does
- * NOT apply TO the code that you add IN this way.  TO avoid misleading
- * anyone as TO the status of such modified files, you must delete
- * this exception notice FROM them.
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
  *
- * IF you write modifications of your own FOR Harbour, it is your choice
- * whether TO permit this exception TO apply TO your modifications.
- * IF you DO NOT wish that, delete this exception notice.
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
@@ -50,29 +48,23 @@
 
 PROCEDURE Main()
 
-   LOCAL xml, format1, format2, format3, format4
+   LOCAL format1, format2, format3, format4
    LOCAL sheet1, sheet2, sheet4
 
-   xml := ExcelWriterXML():new( "my file.xml" )
+   LOCAL xml := ExcelWriterXML():new()
 
-   /**
-    * Add some general properties to the document
-    */
+   /* Add some general properties to the document */
    xml:docTitle( "My Demo Doc" )
    xml:docAuthor( "Robert F Greer" )
-   xml:docCompany( "Greers.Org" )
+   xml:docCompany( "Greers Org" )
    xml:docManager( "Wife" )
 
-   /**
-    * Choose to show any formatting/input errors on a seperate sheet
-    */
+   /* Choose to show any formatting/input errors on a seperate sheet */
 #if 0
    xml:showErrorSheet( .T. )
 #endif
 
-   /**
-    * Show the style options
-    */
+   /* Show the style options */
    format1 := xml:addStyle( "left_rotate60_big" )
    format1:alignRotate( 60 )
    format1:alignHorizontal( "Left" )
@@ -86,15 +78,11 @@ PROCEDURE Main()
    format3:alignWraptext()
    format3:alignVertical( "Top" )
 
-   /**
-    * Create a new sheet with the XML document
-    */
+   /* Create a new sheet with the XML document */
    sheet1 := xml:addSheet( "Alignment" )
-   /**
-    * Add three new cells of type String with difference alignment values.
-    * Notice that the style of the each cell can be explicity named or the style
-    * reference can be passed.
-    */
+   /* Add three new cells of type String with difference alignment values.
+      Notice that the style of the each cell can be explicity named or the style
+      reference can be passed. */
    sheet1:writeString( 1, 1, "left_rotate45", format1 )
    sheet1:writeString( 1, 2, "vertical left", "verticaltext_left" )
    sheet1:writeString( 1, 3, "this text has been wrapped and is aligned at the top", "wraptext_top" )
@@ -103,12 +91,10 @@ PROCEDURE Main()
 #endif
 
    sheet2 := xml:addSheet( "Formulas" )
-   /**
-    * Wrote three numbers.
-    * Rows 4 and 5 show the formulas in R1C1 notation using the writeFormula()
-    * function.
-    * Also see how comments are added.
-    */
+   /* Wrote three numbers.
+      Rows 4 and 5 show the formulas in R1C1 notation using the writeFormula()
+      function.
+      Also see how comments are added. */
    sheet2:columnWidth( 1, 100 )
    sheet2:writeString( 1, 1, "Number" )
    sheet2:writeNumber( 1, 2, 50 )
@@ -145,9 +131,7 @@ PROCEDURE Main()
    // Merge (2,1) with 4 columns to the right and 2 rows down
    sheet4:cellMerge( 2, 1, 4, 2 )
 
-   /**
-    * Send the headers, then output the data
-    */
+   /* Send the headers, then output the data */
 #if 0
    xml:sendHeaders()
 #endif

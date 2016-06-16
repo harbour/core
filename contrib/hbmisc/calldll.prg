@@ -57,21 +57,28 @@ PROCEDURE UnloadAllDll()
 
    RETURN
 
-FUNCTION CallDll32( cFunction, cLibrary, ... )
+FUNCTION CallDll( cFunction, cLibrary, ... )
    RETURN hb_DynaCall1( cFunction, cLibrary, NIL, ... )
+
+#if defined( HB_LEGACY_LEVEL4 )
+
+/* Compatibility */
+FUNCTION CallDll32( ... )
+   RETURN CallDll( ... )
+
+#endif
 
 #if define( __PLATFORM__WINDOWS )
    /* Use Windows system .dll calling convention on Windows systems,
       like in original lib. Original .lib was a Windows-only solution.
       [vszakats] */
-#  define _DEF_CALLCONV_ HB_DYN_CALLCONV_STDCALL
+   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_STDCALL
 #else
-#  define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
+   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
 #endif
 
 FUNCTION hb_DynaCall1( cFunction, cLibrary, nCount, ... )
 
-   LOCAL aParams
    LOCAL hHandle
 
    IF HB_ISSTRING( cFunction ) .AND. ;
@@ -88,8 +95,7 @@ FUNCTION hb_DynaCall1( cFunction, cLibrary, nCount, ... )
       hb_mutexUnlock( s_mutex )
 
       IF HB_ISNUMERIC( nCount ) .AND. nCount >= 0 .AND. nCount < PCount() - 3
-         aParams := ASize( hb_AParams(), nCount )
-         RETURN hb_DynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, hb_ArrayToParams( aParams ) )
+         RETURN hb_DynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, hb_ArrayToParams( ASize( hb_AParams(), nCount ) ) )
       ELSE
          RETURN hb_DynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, ... )
       ENDIF

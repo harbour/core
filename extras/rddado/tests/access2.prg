@@ -2,9 +2,9 @@
 
 #require "rddado"
 
-#include "adordd.ch"
+#include "rddado.ch"
 
-REQUEST ADORDD
+REQUEST ADO
 
 PROCEDURE Main()
 
@@ -14,29 +14,29 @@ PROCEDURE Main()
       { "FIRST",   "C", 10, 0 }, ;
       { "LAST",    "C", 10, 0 }, ;
       { "AGE",     "N",  8, 0 }, ;
-      { "MYDATE",  "D",  8, 0 } }, "ADORDD" )
+      { "MYDATE",  "D",  8, 0 } }, "ADO" )
 
-   USE test2.mdb VIA "ADORDD" TABLE "table1"
+   USE test2.mdb VIA "ADO" TABLE "table1"
 
-   APPEND BLANK
-   test2->First   := "Homer"
-   test2->Last    := "Simpson"
-   test2->Age     := 45
-   test2->MyDate  := Date()
+   dbAppend()
+   test2->FIRST  := "Homer"
+   test2->LAST   := "Simpson"
+   test2->AGE    := 45
+   test2->MYDATE := Date()
 
-   APPEND BLANK
-   test2->First   := "Lara"
-   test2->Last    := "Croft"
-   test2->Age     := 32
-   test2->MyDate  := Date() + 2
+   dbAppend()
+   test2->FIRST  := "Lara"
+   test2->LAST   := "Croft"
+   test2->AGE    := 32
+   test2->MYDATE := Date() + 2
 
-   GO TOP
+   dbGoTop()
    Browse()
 
-   GO TOP
+   dbGoTop()
    CLS
-   LOCATE FOR ( 'First = "Lara"' )
+   LOCATE FOR ( 'FIRST = "Lara"' )
    ? "Found:", Found()
-   USE
+   dbCloseArea()
 
    RETURN

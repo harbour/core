@@ -29,4 +29,4 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE RDDSYS() ; RETURN
+PROCEDURE RDDSYS() ; RETURN  /* must be a public function */

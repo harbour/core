@@ -4,8 +4,6 @@
 
 PROCEDURE Main()
 
-   LOCAL cColor := SetColor( "W+/B" )
-
 #ifdef _SET_EVENTMASK
    Set( _SET_EVENTMASK, INKEY_ALL )
    MSetCursor( .T. )
@@ -13,12 +11,13 @@ PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
+   SetColor( "W+/B" )
    CLS
 
-   USE test
+   USE test.dbf READONLY
    Browse()
 
-   SetColor( cColor )
+   SetColor( "" )
    CLS
 
    RETURN

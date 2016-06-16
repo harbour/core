@@ -92,7 +92,7 @@ DYNAMIC AdsGetMemoDataType
 DYNAMIC AdsGetNumActiveLinks
 DYNAMIC AdsGetNumIndexes
 DYNAMIC AdsGetNumOpenTables
-DYNAMIC ADSGETRECORDCOUNT
+DYNAMIC AdsGetRecordCount
 DYNAMIC AdsGetRelKeyPos
 DYNAMIC AdsGetServerName
 DYNAMIC AdsGetServerTime
@@ -160,7 +160,7 @@ DYNAMIC AdsSetServerType
 DYNAMIC AdsShowError
 DYNAMIC AdsStmtSetTableLockType
 DYNAMIC AdsStmtSetTablePassword
-DYNAMIC ADSSTMTSETTABLEREADONLY
+DYNAMIC AdsStmtSetTableReadOnly
 DYNAMIC AdsTestLogin
 DYNAMIC AdsTestRecLocks
 DYNAMIC AdsUnlockRecord

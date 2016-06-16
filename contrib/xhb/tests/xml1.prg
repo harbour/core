@@ -4,64 +4,59 @@
 
 PROCEDURE Main()
 
-   LOCAL cFile := hb_DirBase() + "test.xml"
-   LOCAL cString
    LOCAL cNote, cDiscount
    LOCAL oDoc, oBook, oIterator, oCurrent
 
-   cString := MemoRead( cFile )
+   LOCAL cString := MemoRead( hb_DirBase() + "test.xml" )
 
-   IF Empty( cString )
-      WAIT "xml file unavailable"
+   IF HB_ISNULL( cString )
+      ? "xml file unavailable"
       RETURN
    ENDIF
 
    oDoc := TXMLDocument():New( cString, HBXML_STYLE_NOESCAPE )
    IF oDoc:nError != HBXML_ERROR_NONE
-      WAIT "xml file parsing error " + hb_ntos( oDoc:nError )
+      ? "xml file parsing error", hb_ntos( oDoc:nError )
       RETURN
    ENDIF
 
-   oBook := oDoc:findfirst( "book" )
-   IF oBook == NIL
-      WAIT "no books found"
+   IF ( oBook := oDoc:findfirst( "book" ) ) == NIL
+      ? "no books found"
       RETURN
    ENDIF
 
    DO WHILE .T.
 
       IF "id" $ oBook:aAttributes
-         ? "book ID : " + oBook:aAttributes[ "id" ]
+         ? "book ID:", oBook:aAttributes[ "id" ]
       ELSE
          ? "no attribute book ID"
       ENDIF
 
-      cNote := ""
-      cDiscount := ""
+      cNote := cDiscount := ""
       oIterator := TXMLIterator():New( oBook )
 
       DO WHILE .T.
-         oCurrent := oIterator:Next()
-         IF oCurrent == NIL
+         IF ( oCurrent := oIterator:Next() ) == NIL
             ? "end branch"
-            WAIT "values : " + cNote + " " + cDiscount
+            ? "values:", cNote, cDiscount
+            Inkey( 0 )
             EXIT
          ELSE
-            ? "current tag : " + oCurrent:cName
-            IF oCurrent:cName == "note"
+            ? "current tag:", oCurrent:cName
+            DO CASE
+            CASE oCurrent:cName == "note"
                cNote := oCurrent:cData
-            ELSEIF oCurrent:cName == "discount"
+            CASE oCurrent:cName == "discount"
                cDiscount := oCurrent:cData
-            ENDIF
+            ENDCASE
          ENDIF
       ENDDO
 
-      oBook := oDoc:findnext()
-      IF oBook == NIL
-         WAIT "no more books found"
+      IF ( oBook := oDoc:findnext() ) == NIL
+         ? "no more books found"
          EXIT
       ENDIF
-
    ENDDO
 
    RETURN

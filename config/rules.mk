@@ -16,10 +16,18 @@ else
    OBJ_DYN_POSTFIX := _dyn
 endif
 
+# Double space
+_SPCD :=
+_SPCD +=
+_SPCD +=
+# Single space
+_SPCS :=
+_SPCS +=
+
 # How to run Harbour
 HB := $(HB_HOST_BIN_DIR)/harbour$(HB_HOST_BIN_EXT)
 HB_FLAGS := -n1 -q0 -w3 -es2 -kmo -i- $(HB_PRGFLAGS)
-HB_RULE = $(HB) $? $(HB_INC_DEPEND) -i$(HB_HOST_INC) $(HB_FLAGS) $(HB_USER_PRGFLAGS)
+HB_RULE = $(HB)$(subst $(_SPCD),$(_SPCS),$(subst $(_SPCD),$(_SPCS), $(HB_INC_DEPEND) -i$(HB_HOST_INC) $(HB_FLAGS) $(HB_USER_PRGFLAGS) ))$?
 
 # Use default rules if platform/compiler specific rule is not defined
 
@@ -27,14 +35,14 @@ CC_FLAGS := $(HB_INC_DEPEND) $(CFLAGS) $(HB_CFLAGS)
 
 # The rule to compile a C source file.
 ifeq ($(CC_RULE),)
-   CC_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $<)
+   CC_RULE = $(CC)$(subst $(_SPCD),$(_SPCS),$(subst $(_SPCD),$(_SPCS), $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(HB_CFLAGS_STA) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<)))
    ifneq ($(HB_BUILD_DYN),no)
       ifneq ($(HB_DYN_COPT),)
          ifneq ($(LIBNAME),)
             ifneq ($(filter $(LIBNAME),$(HB_DYN_LIBS)),)
                define cc_comp_all
-                  $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $<)
-                  $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.c=$(OBJ_DYN_POSTFIX)$(OBJ_EXT)) $(HB_DYN_COPT) $(HB_CFLAGS_DYN) $(CC_IN) $<)
+                  $(CC)$(subst $(_SPCD),$(_SPCS),$(subst $(_SPCD),$(_SPCS), $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(HB_CFLAGS_STA) $(CC_OUT)$(<F:.c=$(OBJ_EXT)) $(CC_IN) $<)))
+                  $(CC)$(subst $(_SPCD),$(_SPCS),$(subst $(_SPCD),$(_SPCS), $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(HB_CFLAGS_DYN) $(HB_DYN_COPT) $(CC_OUT)$(<F:.c=$(OBJ_DYN_POSTFIX)$(OBJ_EXT)) $(CC_IN) $<)))
                endef
                CC_RULE = $(cc_comp_all)
             endif
@@ -44,10 +52,10 @@ ifeq ($(CC_RULE),)
 endif
 
 ifeq ($(S_RULE),)
-   S_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.s=$(OBJ_EXT)) $(HB_CFLAGS_STA) $(CC_IN) $<)
+   S_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(HB_CFLAGS_STA) $(CC_OUT)$(<F:.s=$(OBJ_EXT)) $(CC_IN) $<)
 endif
 ifeq ($(SX_RULE),)
-   SX_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.sx=$(OBJ_EXT)) $(HB_CFLAGS_STA) -x assembler-with-cpp $(CC_IN) $<)
+   SX_RULE = $(CC) $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS) $(HB_USER_CFLAGS) $(HB_CFLAGS_STA) -x assembler-with-cpp $(CC_OUT)$(<F:.sx=$(OBJ_EXT)) $(CC_IN) $<)
 endif
 
 # The rule to compile a C++ source file.
@@ -64,10 +72,16 @@ ifeq ($(OBJC_RULE),)
    OBJC_RULE = $(OBJC) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.m=$(OBJ_EXT)) $(CC_IN) $<
 endif
 
+# The rule to compile an Swift source file.
+ifeq ($(SWIFT_RULE),)
+   SWIFT := swift
+   SWIFT_RULE = $(SWIFT) $(CC_FLAGS) $(HB_USER_CFLAGS) $(CC_OUT)$(<F:.swift=$(OBJ_EXT)) $(CC_IN) $<
+endif
+
 # The rule to compile resources.
 ifneq ($(RC),)
    ifeq ($(RC_RULE),)
-      RC_RULE = $(RC) $(RCFLAGS) $(HB_RCFLAGS) $(HB_USER_RESFLAGS) $(RC_OUT)$(<F:.rc=$(RES_EXT)) $<
+      RC_RULE = $(RC)$(subst $(_SPCD),$(_SPCS),$(subst $(_SPCD),$(_SPCS), $(RCFLAGS) $(HB_RCFLAGS) $(HB_USER_RESFLAGS) $(RC_OUT)$(<F:.rc=$(RES_EXT)) $<))
    endif
 endif
 

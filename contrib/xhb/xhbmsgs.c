@@ -57,7 +57,7 @@ HB_FUNC( XHB_HASHERROR )
 
    if( iPCount == 1 )
    {
-      if( szMessage[ 0 ] == '_' ) /* ASSIGN */
+      if( szMessage[ 0 ] == '_' )  /* ASSIGN */
       {
          PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), szMessage + 1 );
          PHB_ITEM pDest  = hb_hashGetItemPtr( hb_stackSelfItem(), pIndex, HB_HASH_AUTOADD_ASSIGN );
@@ -71,7 +71,7 @@ HB_FUNC( XHB_HASHERROR )
          }
       }
    }
-   else if( iPCount == 0 ) /* ACCESS */
+   else if( iPCount == 0 )  /* ACCESS */
    {
       PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), szMessage );
       PHB_ITEM pValue = hb_hashGetItemPtr( hb_stackSelfItem(), pIndex, HB_HASH_AUTOADD_ACCESS );
@@ -96,7 +96,7 @@ HB_FUNC( XHB_INCLUDE )
 
    if( HB_IS_ARRAY( pSelf ) )
    {
-      hb_retl( hb_arrayScan( pSelf, pKey, NULL, NULL, HB_TRUE ) != 0 );
+      hb_retl( hb_arrayScanCase( pSelf, pKey, NULL, NULL, HB_TRUE, HB_TRUE ) != 0 );
    }
    else if( HB_IS_HASH( pSelf ) && ( HB_IS_HASHKEY( pKey ) || hb_hashLen( pKey ) == 1 ) )
    {
@@ -309,77 +309,80 @@ HB_FUNC( XHB_INDEX )
    PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pIndex = hb_param( 1, HB_IT_ANY );
 
-   if( hb_pcount() == 2 ) /* ASSIGN */
+   if( pIndex )
    {
-      PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
-      if( HB_IS_NUMERIC( pIndex ) )
+      if( hb_pcount() == 2 ) /* ASSIGN */
       {
-         HB_SIZE nIndex = hb_itemGetNS( pIndex );
-         if( HB_IS_ARRAY( pSelf ) )
+         PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
+         if( HB_IS_NUMERIC( pIndex ) )
          {
-            HB_SIZE nLen = hb_arrayLen( pSelf );
-            if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
-               hb_itemMoveRef( hb_arrayGetItemPtr( pSelf, nIndex ), pValue );
-            else
-               hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
-         }
-         else if( HB_IS_STRING( pSelf ) )
-         {
-            HB_SIZE nLen = hb_itemGetCLen( pSelf );
-            if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
+            HB_SIZE nIndex = hb_itemGetNS( pIndex );
+            if( HB_IS_ARRAY( pSelf ) )
             {
-               char cValue = HB_IS_STRING( pValue ) ? hb_itemGetCPtr( pValue )[ 0 ] :
-                             ( char ) hb_itemGetNI( pValue );
-               if( nLen == 1 )
-                  hb_itemPutCL( pSelf, &cValue, 1 );
+               HB_SIZE nLen = hb_arrayLen( pSelf );
+               if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
+                  hb_itemMoveRef( hb_arrayGetItemPtr( pSelf, nIndex ), pValue );
                else
+                  hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
+            }
+            else if( HB_IS_STRING( pSelf ) )
+            {
+               HB_SIZE nLen = hb_itemGetCLen( pSelf );
+               if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
                {
-                  char * pszText;
-                  if( hb_itemGetWriteCL( pSelf, &pszText, &nLen ) &&
-                      nIndex > 0 && nIndex <= nLen )
-                     pszText[ nIndex - 1 ] = cValue;
+                  char cValue = HB_IS_STRING( pValue ) ? hb_itemGetCPtr( pValue )[ 0 ] :
+                                ( char ) hb_itemGetNI( pValue );
+                  if( nLen == 1 )
+                     hb_itemPutCL( pSelf, &cValue, 1 );
+                  else
+                  {
+                     char * pszText;
+                     if( hb_itemGetWriteCL( pSelf, &pszText, &nLen ) &&
+                         nIndex > 0 && nIndex <= nLen )
+                        pszText[ nIndex - 1 ] = cValue;
+                  }
                }
+               else
+                  hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
             }
             else
-               hb_errRT_BASE( EG_BOUND, 1133, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
+               hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
          }
          else
             hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
-      }
-      else
-         hb_errRT_BASE( EG_ARG, 1069, NULL, hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
 
-      hb_itemReturn( pSelf );
-   }
-   else /* ACCESS */
-   {
-      if( HB_IS_NUMERIC( pIndex ) )
+         hb_itemReturn( pSelf );
+      }
+      else /* ACCESS */
       {
-         HB_SIZE nIndex = hb_itemGetNS( pIndex );
-         if( HB_IS_ARRAY( pSelf ) )
+         if( HB_IS_NUMERIC( pIndex ) )
          {
-            HB_SIZE nLen = hb_arrayLen( pSelf );
-            if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
-               hb_itemReturn( hb_arrayGetItemPtr( pSelf, nIndex ) );
+            HB_SIZE nIndex = hb_itemGetNS( pIndex );
+            if( HB_IS_ARRAY( pSelf ) )
+            {
+               HB_SIZE nLen = hb_arrayLen( pSelf );
+               if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
+                  hb_itemReturn( hb_arrayGetItemPtr( pSelf, nIndex ) );
+               else
+                  hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );
+            }
+            else if( HB_IS_STRING( pSelf ) )
+            {
+               HB_SIZE nLen = hb_itemGetCLen( pSelf );
+               if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
+                  hb_retclen( hb_itemGetCPtr( pSelf ) + nIndex - 1, 1 );
+               else
+                  hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );
+            }
             else
-               hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );
-         }
-         else if( HB_IS_STRING( pSelf ) )
-         {
-            HB_SIZE nLen = hb_itemGetCLen( pSelf );
-            if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
-               hb_retclen( hb_itemGetCPtr( pSelf ) + nIndex - 1, 1 );
-            else
-               hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );
+               hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );
          }
          else
-            hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );
-      }
-      else
-      {
-         PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );
-         if( pResult )
-            hb_itemReturnRelease( pResult );
+         {
+            PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );
+            if( pResult )
+               hb_itemReturnRelease( pResult );
+         }
       }
    }
 }
@@ -394,7 +397,7 @@ HB_FUNC( XHB_PLUS )
       HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
       int      iDec;
       double   dValue = hb_itemGetNDDec( pSelf, &iDec );
-      hb_retnlen( dValue + uc, 0, iDec  );
+      hb_retnlen( dValue + uc, 0, iDec );
    }
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
             pValue && HB_IS_NUMERIC( pValue ) )
@@ -427,7 +430,7 @@ HB_FUNC( XHB_MINUS )
       HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
       int      iDec;
       double   dValue = hb_itemGetNDDec( pSelf, &iDec );
-      hb_retnlen( dValue - uc, 0, iDec  );
+      hb_retnlen( dValue - uc, 0, iDec );
    }
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
             pValue && HB_IS_NUMERIC( pValue ) )

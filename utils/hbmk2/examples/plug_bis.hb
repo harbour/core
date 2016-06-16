@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * their website at https://www.gnu.org/).
  *
  */
 
@@ -40,6 +40,7 @@ FUNCTION hbmk_plugin_bison( hbmk )
    LOCAL cCommand
    LOCAL nError
    LOCAL lBuildIt
+   LOCAL tmp
 
    SWITCH hbmk[ "cSTATE" ]
    CASE "init"
@@ -54,8 +55,10 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
       hbmk[ "vars" ][ "aBIS_Src" ] := {}
       FOR EACH cSrc IN hbmk[ "params" ]
-         IF Left( cSrc, Len( "-bisonflag=" ) ) == "-bisonflag="
-            /* TODO: process bison flags */
+         IF hb_LeftEq( cSrc, "-bisonflag=" )
+            IF ! Empty( tmp := SubStr( cSrc, Len( "-bisonflag=" ) + 1 ) )
+               AAdd( hbmk[ "vars" ][ "aBIS_Opt" ], tmp )
+            ENDIF
          ELSE
             SWITCH Lower( hb_FNameExt( cSrc ) )
             CASE ".y"
@@ -104,8 +107,8 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
                IF hbmk[ "lINC" ] .AND. ! hbmk[ "lREBUILD" ]
                   lBuildIt := ;
-                     ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
-                     ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                     ! hb_vfTimeGet( cDst, @tDst ) .OR. ;
+                     ! hb_vfTimeGet( cSrc, @tSrc ) .OR. ;
                      tSrc > tDst
                ELSE
                   lBuildIt := .T.
@@ -115,6 +118,7 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
                   cCommand := hbmk[ "vars" ][ "cBIS_BIN" ] + ;
                      " -d -p hb_comp" + ;
+                     " " + hbmk_ArrayToList( hbmk[ "vars" ][ "aBIS_Opt" ] ) + ;
                      " -o " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cDst ) ) + ;
                      " " + hbmk_FNameEscape( hbmk, hbmk_PathSepToTarget( hbmk, cSrc ) )
 
@@ -146,8 +150,8 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
       IF ! hbmk[ "lINC" ] .OR. hbmk[ "lCLEAN" ]
          AEval( hbmk[ "vars" ][ "aBIS_Dst" ], {| tmp | ;
-            FErase( tmp ), ;
-            FErase( hb_FNameExtSet( tmp, ".h" ) ) } )
+            hb_vfErase( tmp ), ;
+            hb_vfErase( hb_FNameExtSet( tmp, ".h" ) ) } )
       ENDIF
 
       EXIT
@@ -166,11 +170,10 @@ STATIC FUNCTION tool_detect( hbmk, cName )
       cName += hbmk[ "cCCEXT" ]
 
       IF Empty( GetEnv( "HB_BISONPATH" ) ) .OR. ;
-         ! hb_FileExists( cBIN := hb_DirSepAdd( GetEnv( "HB_BISONPATH" ) ) + cName )
+         ! hb_vfExists( cBIN := hb_DirSepAdd( GetEnv( "HB_BISONPATH" ) ) + cName )
 
-         cBIN := hbmk_FindInPath( cName, GetEnv( "PATH" ) )
-         IF Empty( cBIN )
-            hbmk_OutErr( hbmk, hb_StrFormat( "%1$s not set, could not autodetect '%2$s' executable", hbmk_ArrayToList( aEnvList, ", " ), cName ) )
+         IF Empty( cBIN := hbmk_FindInPath( cName, GetEnv( "PATH" ) ) )
+            hbmk_OutErr( hbmk, hb_StrFormat( "%1$s not set, could not auto-detect '%2$s' executable", hbmk_ArrayToList( aEnvList, ", " ), cName ) )
             RETURN NIL
          ENDIF
       ENDIF

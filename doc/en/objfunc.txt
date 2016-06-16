@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: __objHasData(), __objHasMethod(), __objGetMsgList(),
  *                       __objGetMethodList(), __objGetValueList(),
@@ -147,14 +145,14 @@
       aData      := __objGetMsgList( oB, .T. )
       aClassData := __objGetMsgList( oB, .T., HB_MSGLISTCLASS )
       aMethod    := __objGetMsgList( oB, .F. )
-      FOR i := 1 TO Len( aData )
-         ? "VAR name:", aData[ i ]
+      FOR EACH x IN aData
+         ? "VAR name:", x
       NEXT
-      FOR i := 1 TO Len( aClassData )
-         ? "CLASS VAR name:", aClassData[ i ]
+      FOR EACH x IN aClassData
+         ? "CLASS VAR name:", x
       NEXT
-      FOR i := 1 TO Len( aMethod )
-         ? "METHOD name:", aMethod[ i ]
+      FOR EACH x IN aMethod
+         ? "METHOD name:", x
       NEXT
    $STATUS$
       R
@@ -194,9 +192,8 @@
    $EXAMPLES$
       // show information about TBrowse class
       oB := TBrowseNew( 0, 0, 24, 79 )
-      aMethod := __objGetMethodList( oB )
-      FOR i := 1 TO Len( aMethod )
-         ? "METHOD name:", aMethod[ i ]
+      FOR EACH s IN __objGetMethodList( oB )
+         ? "METHOD name:", s
       NEXT
    $STATUS$
       R
@@ -240,10 +237,10 @@
    $EXAMPLES$
       // show information about TBrowse class
       oB := TBrowseNew( 0, 0, 24, 79 )
-      aData := __objGetValueList( oB )
-      FOR i := 1 TO Len( aData )
-         ? "VAR name:", aData[ i, HB_OO_DATA_SYMBOL ], ;
-            "   value=", aData[ i, HB_OO_DATA_VALUE  ]
+      FOR EACH i IN __objGetValueList( oB )
+         ? ;
+           "VAR name:", i[ HB_OO_DATA_SYMBOL ], ;
+           "   value=", i[ HB_OO_DATA_VALUE ]
       NEXT
    $STATUS$
       R
@@ -773,7 +770,7 @@
          METHOD New() INLINE Self
       ENDCLASS
 
-      CREATE CLASS THappy FROM TMood
+      CREATE CLASS THappy INHERIT TMood
          METHOD Smile() INLINE QOut( "*smile*" )
       ENDCLASS
 

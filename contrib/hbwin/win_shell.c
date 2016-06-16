@@ -46,38 +46,38 @@
  */
 
 #undef _WIN32_IE
-#define _WIN32_IE  0x0500 /* request Windows 2000 features for NOTIFYICONDATA */
+#define _WIN32_IE  0x0500  /* request Windows 2000 features for NOTIFYICONDATA */
 
 #include "hbwapi.h"
 #include "hbapiitm.h"
 
 #if defined( __BORLANDC__ )
-#  if ! defined( NONAMELESSUNION )
-#     define NONAMELESSUNION
-#  endif
-#  if defined( DUMMYUNIONNAME )
-#     undef DUMMYUNIONNAME
-#  endif
-#  if defined( DUMMYUNIONNAME2 )
-#     undef DUMMYUNIONNAME2
-#  endif
-#  if defined( DUMMYUNIONNAME3 )
-#     undef DUMMYUNIONNAME3
-#  endif
-#  if defined( DUMMYUNIONNAME4 )
-#     undef DUMMYUNIONNAME4
-#  endif
-#  if defined( DUMMYUNIONNAME5 )
-#     undef DUMMYUNIONNAME5
-#  endif
+   #if ! defined( NONAMELESSUNION )
+      #define NONAMELESSUNION
+   #endif
+   #if defined( DUMMYUNIONNAME )
+      #undef DUMMYUNIONNAME
+   #endif
+   #if defined( DUMMYUNIONNAME2 )
+      #undef DUMMYUNIONNAME2
+   #endif
+   #if defined( DUMMYUNIONNAME3 )
+      #undef DUMMYUNIONNAME3
+   #endif
+   #if defined( DUMMYUNIONNAME4 )
+      #undef DUMMYUNIONNAME4
+   #endif
+   #if defined( DUMMYUNIONNAME5 )
+      #undef DUMMYUNIONNAME5
+   #endif
 #endif
 
 #include <shellapi.h>
 
 #if defined( NONAMELESSUNION )
-#  define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
+   #define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
 #else
-#  define HB_WIN_V_UNION( x, z )  ( ( x ).z )
+   #define HB_WIN_V_UNION( x, z )  ( ( x ).z )
 #endif
 
 /* win_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
@@ -107,7 +107,7 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
    {
       if( HB_ITEMCOPYSTR( hb_param( 7, HB_IT_ANY ), tnid.szInfo, HB_SIZEOFARRAY( tnid.szInfo ) ) > 0 )
          tnid.uFlags |= NIF_INFO;
-      HB_WIN_V_UNION( tnid, uTimeout ) = ( UINT ) hb_parni( 8 );
+      HB_WIN_V_UNION( tnid, uTimeout ) = hbwapi_par_UINT( 8 );
       if( HB_ITEMCOPYSTR( hb_param( 9, HB_IT_ANY ), tnid.szInfoTitle, HB_SIZEOFARRAY( tnid.szInfoTitle ) ) > 0 )
          tnid.uFlags |= NIF_INFO;
       tnid.dwInfoFlags = ( DWORD ) hb_parnl( 10 );
@@ -122,15 +122,15 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 }
 
 /* Details:
-      http://msdn.microsoft.com/en-us/library/bb762164(VS.85).aspx
-      http://msdn.microsoft.com/en-us/library/bb759795(v=VS.85).aspx
+      https://msdn.microsoft.com/en-us/library/bb762164.aspx
+      https://msdn.microsoft.com/en-us/library/bb759795.aspx
  */
 
 #if ! defined( HB_OS_WIN_CE )
 
 #if defined( __MINGW32__ )
-#  include <_mingw.h>
-#  if ! defined( __MINGW64_VERSION_MAJOR )
+   #include <_mingw.h>
+   #if ! defined( __MINGW64_VERSION_MAJOR )
 
 typedef struct _SHNAMEMAPPING
 {
@@ -140,7 +140,7 @@ typedef struct _SHNAMEMAPPING
    int    cchNewPath;
 } SHNAMEMAPPING, * LPSHNAMEMAPPING;
 
-#endif   /* End MinGW-w64 detection */
+   #endif   /* End MinGW-w64 detection */
 #endif   /* End MinGW detection */
 
 typedef struct
@@ -151,15 +151,18 @@ typedef struct
 
 static LPTSTR s_StringList( int iParam )
 {
-   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING ), pArrItem;
+   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING );
    LPTSTR lpStr = NULL;
 
    if( pItem )
    {
-      HB_SIZE nLen, nSize, nTotal, n, n1;
+      HB_SIZE nLen;
 
       if( HB_IS_ARRAY( pItem ) )
       {
+         HB_SIZE nSize, n, n1;
+         PHB_ITEM pArrItem;
+
          nSize = hb_arrayLen( pItem );
          for( n = nLen = 0; n < nSize; ++n )
          {
@@ -173,7 +176,7 @@ static LPTSTR s_StringList( int iParam )
          }
          if( nLen )
          {
-            nTotal = nLen + 1;
+            HB_SIZE nTotal = nLen + 1;
             lpStr = ( LPTSTR ) hb_xgrab( nTotal * sizeof( TCHAR ) );
             for( n = nLen = 0; n < nSize; ++n )
             {
@@ -186,7 +189,7 @@ static LPTSTR s_StringList( int iParam )
                      nLen += n1 + 1;
                }
             }
-            lpStr[ nLen ] = 0;
+            lpStr[ nLen ] = TEXT( '\0' );
          }
       }
       else
@@ -194,9 +197,9 @@ static LPTSTR s_StringList( int iParam )
          nLen = HB_ITEMCOPYSTR( pItem, NULL, 0 );
          if( nLen )
          {
-            lpStr = ( LPTSTR ) hb_xgrab( ( nLen + 1 ) * sizeof( TCHAR ) );
+            lpStr = ( LPTSTR ) hb_xgrab( ( nLen + 2 ) * sizeof( TCHAR ) );
             HB_ITEMCOPYSTR( pItem, lpStr, nLen );
-            lpStr[ nLen ] = 0;
+            lpStr[ nLen ] = lpStr[ nLen + 1 ] = TEXT( '\0' );
          }
       }
    }
@@ -220,8 +223,9 @@ HB_FUNC( WIN_SHFILEOPERATION )
 
    void * hProgressTitle;
 
+   memset( &fop, 0, sizeof( fop ) );
    fop.hwnd                  = hbwapi_par_raw_HWND( 1 );
-   fop.wFunc                 = ( UINT ) hb_parni( 2 );
+   fop.wFunc                 = hbwapi_par_UINT( 2 );
    fop.pFrom                 = ( LPCTSTR ) s_StringList( 3 );
    fop.pTo                   = ( LPCTSTR ) s_StringList( 4 );
    fop.fFlags                = ( FILEOP_FLAGS ) hb_parnl( 5 );

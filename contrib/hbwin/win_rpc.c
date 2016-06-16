@@ -50,7 +50,7 @@
 #include "hbwin.ch"
 
 #if ! defined( HB_OS_WIN_CE )
-#  include <rpc.h>
+   #include <rpc.h>
 #endif
 
 HB_FUNC( WIN_UUIDCREATESTRING )
@@ -62,18 +62,24 @@ HB_FUNC( WIN_UUIDCREATESTRING )
    typedef RPC_STATUS ( RPC_ENTRY * _HB_UUIDTOSTRING )( UUID *, unsigned char ** );
    typedef RPC_STATUS ( RPC_ENTRY * _HB_RPCSTRINGFREE )( unsigned char ** );
 
+   static HB_BOOL s_fInit = HB_TRUE;
+
    static _HB_UUIDCREATE    s_pUuidCreate    = NULL;
    static _HB_UUIDTOSTRING  s_pUuidToString  = NULL;
    static _HB_RPCSTRINGFREE s_pRpcStringFree = NULL;
 
-   if( ! s_pUuidCreate )
+   if( s_fInit )
    {
       HMODULE hRpcrt4 = GetModuleHandle( TEXT( "rpcrt4.dll" ) );
 
-      s_pUuidCreate = ( _HB_UUIDCREATE ) HB_WINAPI_GETPROCADDRESS( hRpcrt4, "UuidCreate" );
+      if( hRpcrt4 )
+      {
+         s_pUuidCreate = ( _HB_UUIDCREATE ) HB_WINAPI_GETPROCADDRESS( hRpcrt4, "UuidCreate" );
+         s_pUuidToString = ( _HB_UUIDTOSTRING ) HB_WINAPI_GETPROCADDRESST( hRpcrt4, "UuidToString" );
+         s_pRpcStringFree = ( _HB_RPCSTRINGFREE ) HB_WINAPI_GETPROCADDRESST( hRpcrt4, "RpcStringFree" );
+      }
 
-      s_pUuidToString = ( _HB_UUIDTOSTRING ) HB_WINAPI_GETPROCADDRESST( hRpcrt4, "UuidToString" );
-      s_pRpcStringFree = ( _HB_RPCSTRINGFREE ) HB_WINAPI_GETPROCADDRESST( hRpcrt4, "RpcStringFree" );
+      s_fInit = HB_FALSE;
    }
 
    if( s_pUuidCreate &&
@@ -83,7 +89,7 @@ HB_FUNC( WIN_UUIDCREATESTRING )
       TCHAR * tszUuid = NULL;
       UUID    uuid;
 
-      memset( &uuid, 0, sizeof( UUID ) );
+      memset( &uuid, 0, sizeof( uuid ) );
 
       lRPCStatus = s_pUuidCreate( &uuid );
 

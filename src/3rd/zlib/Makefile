@@ -17,10 +17,6 @@ C_SOURCES := \
    compress.c \
    crc32.c \
    deflate.c \
-   gzclose.c \
-   gzlib.c \
-   gzread.c \
-   gzwrite.c \
    infback.c \
    inffast.c \
    inflate.c \
@@ -28,6 +24,15 @@ C_SOURCES := \
    trees.c \
    uncompr.c \
    zutil.c \
+
+ifeq ($(filter $(HB_COMPILER),msvcarm),)
+C_SOURCES += \
+   gzclose.c \
+   gzlib.c \
+   gzread.c \
+   gzwrite.c \
+
+endif
 
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    # To suppress new warnings in version 1.2.5
@@ -41,6 +46,9 @@ ifneq ($(HB_HAS_ZLIB_LOCAL),)
    ifneq ($(filter $(HB_PLATFORM),wce),)
       HB_CFLAGS += -D_WINCE
    endif
+   ifneq ($(filter $(HB_COMPILER),msvcarm),)
+      HB_CFLAGS += -DZ_SOLO
+   endif
    ifeq ($(filter $(HB_PLATFORM),win wce),)
       HB_CFLAGS += -DHAVE_UNISTD_H
    else
@@ -50,16 +58,14 @@ ifneq ($(HB_HAS_ZLIB_LOCAL),)
    endif
    include $(TOP)$(ROOT)config/lib.mk
 else
-   HB_SKIP_REASON := unused
+   HB_SKIP_REASON := local copy unused
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://zlib.net/
-# VER    1.2.8
-# URL    http://downloads.sourceforge.net/libpng/zlib128.zip
+# URL    https://github.com/madler/zlib/archive/v1.2.8.zip
 # DIFF   zlib.dif
 #
-# MAP    README
+# MAP    README     README.txt
 # MAP    adler32.c
 # MAP    compress.c
 # MAP    crc32.c

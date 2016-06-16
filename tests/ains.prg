@@ -16,52 +16,52 @@ PROCEDURE Main()
    AIns( aFirst, 3 )
    aFirst[ 3 ] := "3"
    ?? "Testing AIns() ... "
-   aDump( aFirst )
+   ADump( aFirst )
 
    aSecond := { 1, 2, 4 }
    ASize( aSecond, 4 )
    ?? "Testing ASize() ... "
-   aDump( aSecond )
+   ADump( aSecond )
 
    aSecond := { 1, 2, 4 }
    ASize( aSecond, 4 )
    AIns( aSecond, 3 )
    aSecond[ 3 ] := "3"
    ?? "Testing ASize() + AIns() ... "
-   aDump( aSecond )
+   ADump( aSecond )
 
    aSecond := { 1, 2, 3, 3, 4, 5 }
    ADel( aSecond, 3 )
    ?? "Testing ADel() ... "
-   aDump( aSecond )
+   ADump( aSecond )
 
    aSecond := { 1, 2, 3, 3, 4, 5 }
    ADel( aSecond, 3 )
    ASize( aSecond, Len( aSecond ) - 1 )
    ?? "Testing ASize() + ADel() ... "
-   aDump( aSecond )
+   ADump( aSecond )
 
    AFill( aSecond, "!" )
    ?? "Testing AFill() ... "
-   aDump( aSecond )
+   ADump( aSecond )
 
    aMore := { 1, 2, 3, 4, 5, 6 }
    AFill( aMore, "X", 3 )
    ?? "Testing AFill() with start ... "
-   aDump( aMore )
+   ADump( aMore )
 
    aMore := { 1, 2, 3, 4, 5, 6 }
    AFill( aMore, "X", 3, 2 )
    ?? "Testing AFill() with start and count ... "
-   aDump( aMore )
+   ADump( aMore )
 
    aMore := { { 1, 2 }, { 3, 4 } }
    ADel( aMore, 1 )
-   aDump( aMore )
+   ADump( aMore )
 
    RETURN
 
-PROCEDURE aDump( aShow )
+STATIC PROCEDURE ADump( aShow )
 
    LOCAL n
 
@@ -77,7 +77,7 @@ PROCEDURE aDump( aShow )
       IF HB_ISARRAY( aShow[ n ] ) /* Iterate array */
          ?
          ?? "["
-         aDump( aShow[ n ] )
+         ADump( aShow[ n ] )
          ?? "]"
       ELSE
          ?? iif( HB_ISNUMERIC( aShow[ n ] ), hb_ntos( aShow[ n ] ), aShow[ n ] )

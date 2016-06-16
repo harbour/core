@@ -2,6 +2,7 @@
  * HTMLLIB Frame Class
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,19 +45,10 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbclass.ch"
 #include "cgi.ch"
 
+#include "fileio.ch"
 
 CREATE CLASS THtmlFrameSet
 
@@ -67,58 +59,48 @@ CREATE CLASS THtmlFrameSet
    VAR TITLE INIT "FrameSet01"
 
    METHOD New( cFName, cTitle )
-
    METHOD StartSet( aRows, aCols, onLoad, onUnload )
-
    METHOD EndSet()
-
    METHOD End()
-
    METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       marginwidth, marginheight, cTarget, cScrolling )
 
 ENDCLASS
 
-
 METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
 
    LOCAL cStr
 
-   __defaultNIL( @cTitle, "" )
-
    ::FName := cFName
-   ::Title := cTitle
+   ::Title := hb_defaultValue( cTitle, "" )
 
    IF HB_ISSTRING( ::FName )
       cStr := ""
       ::nH := FCreate( ::FName )
    ELSE
-      cStr := "Content-Type: text/html" + CRLF() + CRLF()
-      ::nH := STD_OUT
+      cStr := "Content-Type: text/html" + hb_eol() + hb_eol()
+      ::nH := hb_GetStdOut()
    ENDIF
 
-   cStr += "<html>" + CRLF() + ;
-      " <head>" + CRLF() + ;
-      "  <title>" + ::Title + "</title>" + CRLF() + ;
-      " </head>" + CRLF()
-
-   ::cStr += cStr
+   ::cStr += cStr + ;
+      "<html>" + hb_eol() + ;
+      " <head>" + hb_eol() + ;
+      "  <title>" + ::Title + "</title>" + hb_eol() + ;
+      " </head>" + hb_eol()
 
    RETURN Self
 
 METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
-   LOCAL cStr
+   LOCAL cStr := hb_eol() + " <frameset "
    LOCAL cItem
-
-   cStr := CRLF() + " <frameset "
 
    IF HB_ISARRAY( aRows ) .AND. ! Empty( aRows )
 
-      cStr += ' rows="'
+      cStr += " rows=" + '"'
 
       FOR EACH cItem in aRows
-         IF cItem:__enumIndex() > 1
+         IF ! cItem:__enumIsFirst()
             cStr += ","
          ENDIF
          cStr += cItem
@@ -129,10 +111,10 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
    IF HB_ISARRAY( aCols ) .AND. ! Empty( aCols )
 
-      cStr += ' cols="'
+      cStr += " cols=" + '"'
 
       FOR EACH cItem IN aCols
-         IF cItem:__enumIndex() > 1
+         IF ! cItem:__enumIsFirst()
             cStr += ","
          ENDIF
          cStr += cItem
@@ -142,84 +124,76 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
    ENDIF
 
    IF HB_ISSTRING( onLoad )
-      cStr += Space( 7 ) + ' onLoad="' + onLoad + '"'
+      cStr += Space( 7 ) + " onLoad=" + '"' + onLoad + '"'
    ENDIF
 
    IF HB_ISSTRING( onUnLoad )
-      cStr += Space( 5 ) + ' onUnLoad="' + onUnLoad + '"'
+      cStr += Space( 5 ) + " onUnLoad=" + '"' + onUnLoad + '"'
    ENDIF
 
-   cStr += " >" + CRLF()
-
-   ::cStr += cStr
+   ::cStr += cStr + " >" + hb_eol()
 
    RETURN Self
-
 
 METHOD Endset() CLASS THtmlFrameSet
 
-   ::cStr += " </frameset>" + CRLF()
+   ::cStr += " </frameset>" + hb_eol()
 
    RETURN Self
-
 
 METHOD End() CLASS THtmlFrameSet
 
-   ::cStr += "</html>" + CRLF()
+   ::cStr += "</html>" + hb_eol()
 
-   FWrite( ::nH, ::cStr )
+   IF ::nH != F_ERROR
+      FWrite( ::nH, ::cStr )
 
-   IF ::FName != NIL
-      FClose( ::nH )
+      IF HB_ISSTRING( ::FName )
+         FClose( ::nH )
+      ENDIF
    ENDIF
 
    RETURN Self
-
 
 METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       marginwidth, marginheight, cTarget, cScrolling ) CLASS THtmlFrameSet
 
    LOCAL cStr
 
-   __defaultNIL( @lBorder, .T. )
-   __defaultNIL( @lResize, .T. )
-   __defaultNIL( @lScrolling, .F. )
-   __defaultNIL( @cScrolling, "AUTO" )
    __defaultNIL( @cTarget, "_self" )
 
    cStr := "  <frame "
 
    IF HB_ISSTRING( cName )
-      cStr += ' name="' + cName + '"'
+      cStr += " name=" + '"' + cName + '"'
    ENDIF
 
    IF HB_ISSTRING( cUrl )
-      cStr += ' src="' + cURL + '"'
+      cStr += " src=" + '"' + cURL + '"'
    ENDIF
 
    IF HB_ISSTRING( cTarget )
-      cStr += ' target="' + cTarget + '"'
+      cStr += " target=" + '"' + cTarget + '"'
    ENDIF
 
-   IF ! lBorder
-      cStr += ' frameborder="0"'
+   IF hb_defaultValue( lBorder, .T. )
+      cStr += " frameborder=1"
    ELSE
-      cStr += ' frameborder="1"'
+      cStr += " frameborder=0"
    ENDIF
 
-   IF ! lResize
+   IF ! hb_defaultValue( lResize, .T. )
       cStr += " noresize"
    ENDIF
 
-   IF HB_ISSTRING( cScrolling )
-      cStr += ' scrolling="' + cScrolling + '"'
-   ELSE
-      IF lScrolling != NIL
-         cStr += ' scrolling=' + iif( lScrolling, '"yes"', '"no"' )
-      ELSE
-         cStr += ' scrolling="auto"'
-      ENDIF
-   ENDIF
+   DO CASE
+   CASE HB_ISSTRING( cScrolling )
+      cStr += " scrolling=" + '"' + cScrolling + '"'
+   CASE HB_ISLOGICAL( lScrolling )
+      cStr += " scrolling=" + '"' + iif( lScrolling, "yes", "no" ) + '"'
+   OTHERWISE
+      cStr += " scrolling=" + '"' + "auto" + '"'
+   ENDCASE
 
    IF HB_ISNUMERIC( marginwidth )
       cStr += " marginwidth= " + hb_ntos( marginwidth )
@@ -229,8 +203,6 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       cStr += " marginheight= " + hb_ntos( marginheight )
    ENDIF
 
-   cStr += ">" + CRLF()
-
-   ::cStr += cStr
+   ::cStr += cStr + ">" + hb_eol()
 
    RETURN Self

@@ -8,7 +8,7 @@ FILE HEADER TEMPLATE
 /*
  * {one-liner description about the purpose of this source file}
  *
- * Copyright 2000 {list of individual authors and e-mail addresses}
+ * Copyright 2010 {list of individual authors and e-mail addresses}
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +21,7 @@ FILE HEADER TEMPLATE
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
+ * along with this software; see the file LICENSE.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
@@ -48,19 +48,6 @@ FILE HEADER TEMPLATE
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-FILE HEADER TEMPLATE (OPTIONAL ADDITION FOR PARTIAL COPYRIGHTS)
-===============================================================
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 {name} <{e-mail address}>
- *    {function or subsystem name}
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

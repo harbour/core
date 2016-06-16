@@ -175,7 +175,7 @@ static void hb_sln_Init_KeyTranslations( void )
       phases : from '1' to '9' and from 'A' to 'K' */
    for( i = 1; i <= 2; i++ )
    {
-      for( ch = ( i == 1 ? '1' : 'A' ); ch <= ( i == 1 ? '9' : 'K' ); ch++ )
+      for( ch = ( ( i == 1 ) ? '1' : 'A' ); ch <= ( ( i == 1 ) ? '9' : 'K' ); ch++ )
       {
          keyname[ 1 ] = ch;
          keyseq = SLtt_tgetstr( keyname );

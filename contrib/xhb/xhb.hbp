@@ -12,7 +12,7 @@
 -instfile=contrib:xhb.h
 
 # For hbserv.c, maybe more
--c=gnu90
+#-c=gnu90
 
 hbct.hbc
 hbtip.hbc
@@ -20,7 +20,7 @@ hbfship.hbc
 hbxpp.hbc
 hbwin.hbc{allwin}
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 bkgtsks.c
 cstructc.c
@@ -59,6 +59,7 @@ xhbkey.c
 xhbmsgs.c
 xhbmtc.c
 xhbmvinf.c
+xhbnetn.c
 xhbolec.c
 xhbprn.c
 xhbproc.c
@@ -97,6 +98,7 @@ xcstr.prg
 xdbmodst.prg
 xhbcomp.prg
 xhbdepr.prg
+xhbdll.prg
 xhberr.prg
 xhbfunp.prg
 xhbinkey.prg

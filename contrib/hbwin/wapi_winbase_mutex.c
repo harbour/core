@@ -67,7 +67,7 @@ static void hbwapi_mutex_ret( HANDLE hMutex )
 {
    if( hMutex )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HANDLE * ), &s_gc_hbwapi_mutex_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HANDLE ), &s_gc_hbwapi_mutex_funcs );
 
       *ph = hMutex;
       hb_retptrGC( ph );
@@ -100,7 +100,7 @@ HB_FUNC( WAPI_OPENMUTEX )
 {
 #if ! defined( HB_OS_WIN_CE )
    void * hName;
-   HANDLE hMutex = OpenMutex( hb_parnl( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
+   HANDLE hMutex = OpenMutex( ( DWORD ) hb_parnl( 1 ), hb_parl( 2 ), HB_PARSTR( 3, &hName, NULL ) );
 
    hbwapi_SetLastError( GetLastError() );
    hbwapi_mutex_ret( hMutex );

@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: ReadKey()
  *
@@ -178,8 +176,8 @@
       be inserted.
    $EXAMPLES$
       // Stuff an Alt+PgDn key into the keyboard buffer
-      hb_keyPut( K_ALT_PGDN ) ; ? Inkey() // ==> 417
-      hb_keyPut( K_F11 ) ; ? Inkey() // ==> -40
+      hb_keyPut( K_ALT_PGDN ); ? Inkey() // ==> 417
+      hb_keyPut( K_F11 ); ? Inkey() // ==> -40
    $STATUS$
       R
    $COMPLIANCE$

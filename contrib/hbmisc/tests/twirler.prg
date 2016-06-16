@@ -1,8 +1,10 @@
-/* Test program for new hbmisc twirler class
-   Donated to the public domain on 2001-03-15 by David G. Holm <dholm@jsd-llc.com>
- */
+/* Donated to the public domain on 2001-03-15 by David G. Holm <dholm@jsd-llc.com> */
+
+/* Test program for new hbmisc twirler class */
 
 #require "hbmisc"
+
+#include "setcurs.ch"
 
 PROCEDURE Main()
 
@@ -16,7 +18,7 @@ PROCEDURE Main()
    LOCAL twirl7 := Twirler():new( 4, 15, "Seven: ", ".oOo", 0.2 )
 
    CLS
-   SET CURSOR OFF
+   SetCursor( SC_NONE )
    @ 1, 1 SAY "Twirler test program - press any key to stop"
    twirl1:show()
    twirl2:show()
@@ -26,7 +28,7 @@ PROCEDURE Main()
    twirl6:show()
    twirl7:show()
    start_time := Seconds()
-   WHILE Inkey() == 0
+   DO WHILE hb_keyStd( Inkey() ) == 0
       counter++
       twirl1:twirl()
       twirl2:twirl()
@@ -50,6 +52,6 @@ PROCEDURE Main()
    twirl1:hide()
    @ 2, 5 SAY counter
    @ 3, 5 SAY stop_time - start_time
-   SET CURSOR ON
+   SetCursor( SC_NORMAL )
 
    RETURN

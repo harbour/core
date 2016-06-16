@@ -2,7 +2,7 @@
  * xhb compatibility functions
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (optimization and fixes)
- * Copyright 2012 Viktor Szakats (vszakats.net/harbour) (rework)
+ * Copyright 2012 Viktor Szakats (vszakats.net/harbour) (rework, xhb__Run())
  * Copyright 2004 Eduardo Fernandes <modalsist@yahoo.com.br> (original)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,23 +46,29 @@
  *
  */
 
-/* Return the number of times s1 occurs in s2 */
-FUNCTION Occurs( s1, s2 )
+/* Return the number of times <cSub> occurs in <cStr> */
+FUNCTION Occurs( cSub, cStr )
 
-   LOCAL nCount := 0
-   LOCAL nPos := 0
+   LOCAL nCount := 0, nPos
 
-   IF HB_ISSTRING( s1 ) .AND. HB_ISSTRING( s2 )
+   IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
+      nPos := 0
 #if defined( HB_CLP_STRICT )
-      DO WHILE ( nPos := hb_At( s1, s2, nPos + 1 ) ) != 0
-         nCount++
+      DO WHILE ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) > 0
+         ++nCount
       ENDDO
 #else
-      DO WHILE ( nPos := hb_At( s1, s2, nPos ) ) != 0
-         nCount++
-         nPos += Len( s1 )
+      DO WHILE ( nPos := hb_At( cSub, cStr, nPos ) ) > 0
+         ++nCount
+         nPos += Len( cSub )
       ENDDO
 #endif
    ENDIF
 
    RETURN nCount
+
+PROCEDURE xhb__Run( cCmd, /* @ */ nErrorLevel )
+
+   nErrorLevel := hb_run( cCmd )
+
+   RETURN

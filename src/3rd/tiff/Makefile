@@ -80,7 +80,7 @@ ifeq ($(filter $(HB_COMPILER),<>),)
 
       include $(TOP)$(ROOT)config/lib.mk
    else
-      HB_SKIP_REASON := unused
+      HB_SKIP_REASON := local copy unused
       include $(TOP)$(ROOT)config/none.mk
    endif
 else
@@ -88,12 +88,16 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.remotesensing.org/libtiff/
-# VER    4.0.3
-# URL    http://download.osgeo.org/libtiff/tiff-4.0.3.zip
+# For interim versions:
+# cvs -z3 -d:pserver:cvsanon@cvs.maptools.org:/cvs/maptools/cvsroot co -P libtiff
+# URL    file://path/libtiff.zip
+# VER    4.0.4devel-2014-06-07
+
+# ORIGIN http://remotesensing.org/libtiff/
+# URL    http://download.osgeo.org/libtiff/tiff-4.0.6.zip
 # DIFF   tiff.dif
 #
-# MAP    COPYRIGHT                LICENSE
+# MAP    COPYRIGHT                LICENSE.txt
 # MAP    libtiff/tif_aux.c        auxtif.c
 # MAP    libtiff/tif_close.c      close.c
 # MAP    libtiff/tif_codec.c      codec.c

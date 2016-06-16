@@ -1,5 +1,5 @@
 /*
- * internal function header for CT3 string functions
+ * Internal function header for CT3 string functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -50,9 +50,6 @@
 #define _CTSTR_H  1
 
 HB_EXTERN_BEGIN
-
-extern int ct_str_init( void );
-extern int ct_str_exit( void );
 
 extern const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
                                          const char * pcMatch, HB_SIZE sMatchLen,

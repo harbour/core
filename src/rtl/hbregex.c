@@ -1,7 +1,8 @@
 /*
- *
+ * Regex functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2015 Viktor Szakats (vszakats.net/harbour) (PCRE2 support)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,14 +51,26 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbinit.h"
+#if defined( HB_HAS_PCRE2 )
+#include "hbvm.h"
+#endif
 
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE ) || defined( HB_HAS_PCRE2 )
    static int s_iUTF8Enabled;
+#endif
+
+#if defined( HB_HAS_PCRE2 )
+   static pcre2_general_context * s_re_ctxg;
+   static pcre2_compile_context * s_re_ctxc;
+   static pcre2_match_context *   s_re_ctxm;
 #endif
 
 static void hb_regfree( PHB_REGEX pRegEx )
 {
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   pcre2_match_data_free( pRegEx->re_match_data );
+   pcre2_code_free( pRegEx->re_pcre );
+#elif defined( HB_HAS_PCRE )
    ( pcre_free )( pRegEx->re_pcre );
 #elif defined( HB_POSIX_REGEX )
    regfree( &pRegEx->reg );
@@ -68,7 +81,27 @@ static void hb_regfree( PHB_REGEX pRegEx )
 
 static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
 {
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   int iError = 0;
+   PCRE2_SIZE iErrOffset = 0;
+   int iCFlags = ( ( pRegEx->iFlags & HBREG_ICASE   ) ? PCRE2_CASELESS  : 0 ) |
+                 ( ( pRegEx->iFlags & HBREG_NEWLINE ) ? PCRE2_MULTILINE : 0 ) |
+                 ( ( pRegEx->iFlags & HBREG_DOTALL  ) ? PCRE2_DOTALL    : 0 );
+
+   pRegEx->iEFlags = ( ( pRegEx->iFlags & HBREG_NOTBOL ) ? PCRE2_NOTBOL : 0 ) |
+                     ( ( pRegEx->iFlags & HBREG_NOTEOL ) ? PCRE2_NOTEOL : 0 );
+
+   /* use UTF8 in pcre when available and HVM CP is also UTF8. */
+   if( s_iUTF8Enabled && hb_cdpIsUTF8( NULL ) )
+      iCFlags |= PCRE2_UTF;
+
+   pRegEx->re_pcre = pcre2_compile( ( PCRE2_SPTR ) szRegEx,
+                                    strlen( szRegEx ),
+                                    ( PCRE2_SIZE ) iCFlags,
+                                    &iError,
+                                    &iErrOffset, s_re_ctxc );
+   return pRegEx->re_pcre ? 0 : -1;
+#elif defined( HB_HAS_PCRE )
    const unsigned char * pCharTable = NULL;
    const char * szError = NULL;
    int iErrOffset = 0;
@@ -104,17 +137,33 @@ static int hb_regcomp( PHB_REGEX pRegEx, const char * szRegEx )
 static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen,
                        int iMatches, HB_REGMATCH * aMatches )
 {
-#if defined( HB_HAS_PCRE )
-   int iResult, i;
-
-   iResult = pcre_exec( pRegEx->re_pcre, NULL /* pcre_extra */,
-                        szString, ( int ) nLen, 0 /* startoffset */,
-                        pRegEx->iEFlags, aMatches, HB_REGMATCH_SIZE( iMatches ) );
+#if defined( HB_HAS_PCRE2 )
+   PCRE2_SIZE iResult = pcre2_match( pRegEx->re_pcre,
+                                     ( PCRE2_SPTR ) szString,
+                                     ( PCRE2_SIZE ) nLen,
+                                     ( PCRE2_SIZE ) 0 /* startoffset */,
+                                     ( uint32_t ) pRegEx->iEFlags,
+                                     aMatches, s_re_ctxm );
    if( iResult == 0 )
    {
+      PCRE2_SIZE i;
+      for( i = 0; i < ( PCRE2_SIZE ) iMatches; i++ )
+      {
+         if( HB_REGMATCH_EO( aMatches, i ) != HB_REGMATCH_UNSET )
+            iResult = i + 1;
+      }
+   }
+   return ( int ) iResult;
+#elif defined( HB_HAS_PCRE )
+   int iResult = pcre_exec( pRegEx->re_pcre, NULL /* pcre_extra */,
+                            szString, ( int ) nLen, 0 /* startoffset */,
+                            pRegEx->iEFlags, aMatches, HB_REGMATCH_SIZE( iMatches ) );
+   if( iResult == 0 )
+   {
+      int i;
       for( i = 0; i < iMatches; i++ )
       {
-         if( HB_REGMATCH_EO( aMatches, i ) != -1 )
+         if( HB_REGMATCH_EO( aMatches, i ) != HB_REGMATCH_UNSET )
             iResult = i + 1;
       }
    }
@@ -129,13 +178,13 @@ static int hb_regexec( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen,
       szString = szBuffer;
    }
    for( i = 0; i < iMatches; i++ )
-      HB_REGMATCH_EO( aMatches, i ) = -1;
+      HB_REGMATCH_EO( aMatches, i ) = HB_REGMATCH_UNSET;
    iResult = regexec( &pRegEx->reg, szString, iMatches, aMatches, pRegEx->iEFlags );
    if( iResult == 0 )
    {
       for( i = 0; i < iMatches; i++ )
       {
-         if( HB_REGMATCH_EO( aMatches, i ) != -1 )
+         if( HB_REGMATCH_EO( aMatches, i ) != HB_REGMATCH_UNSET )
             iResult = i + 1;
       }
    }
@@ -166,7 +215,7 @@ HB_FUNC( HB_REGEXCOMP )
       int iFlags = HBREG_EXTENDED;
       PHB_REGEX pRegEx;
 
-      if( ! hb_parldef( 2, 1 ) )
+      if( ! hb_parldef( 2, HB_TRUE ) )
          iFlags |= HBREG_ICASE;
       if( hb_parl( 3 ) )
          iFlags |= HBREG_NEWLINE;
@@ -192,7 +241,7 @@ HB_FUNC( HB_ATX )
    if( pString )
    {
       PHB_REGEX pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
-                                      ! hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 );
+                                      ! hb_parldef( 3, HB_TRUE ) ? HBREG_ICASE : 0 );
 
       if( pRegEx )
       {
@@ -203,7 +252,11 @@ HB_FUNC( HB_ATX )
          if( nLen && nStart <= nLen && nStart <= nEnd )
          {
             const char * pszString = hb_itemGetCPtr( pString );
+#if defined( HB_HAS_PCRE2 )
+            HB_REGMATCH * aMatches = pRegEx->re_match_data = pcre2_match_data_create( 1, NULL );
+#else
             HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( 1 ) ];
+#endif
 
             if( nEnd < nLen )
                nLen = nEnd;
@@ -242,9 +295,13 @@ HB_FUNC( HB_ATX )
 
 static HB_BOOL hb_regex( int iRequest )
 {
+#if defined( HB_HAS_PCRE2 )
+   HB_REGMATCH * aMatches;
+#else
    HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( REGEX_MAX_GROUPS ) ];
-   PHB_ITEM pRetArray, pMatch, pString;
-   int i, iMatches, iMaxMatch;
+#endif
+   PHB_ITEM pRetArray, pString;
+   int iMatches, iMaxMatch;
    HB_BOOL fResult = HB_FALSE;
    PHB_REGEX pRegEx;
    const char * pszString;
@@ -257,10 +314,14 @@ static HB_BOOL hb_regex( int iRequest )
       return HB_FALSE;
    }
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
-                         ( ! hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 ) |
+                         ( ! hb_parldef( 3, HB_TRUE ) ? HBREG_ICASE : 0 ) |
                          ( hb_parl( 4 ) ? HBREG_NEWLINE : 0 ) );
    if( ! pRegEx )
       return HB_FALSE;
+
+#if defined( HB_HAS_PCRE2 )
+   aMatches = pRegEx->re_match_data = pcre2_match_data_create( REGEX_MAX_GROUPS, NULL );
+#endif
 
    pszString = hb_itemGetCPtr( pString );
    nLen      = hb_itemGetCLen( pString );
@@ -269,13 +330,16 @@ static HB_BOOL hb_regex( int iRequest )
    iMatches = hb_regexec( pRegEx, pszString, nLen, iMaxMatch, aMatches );
    if( iMatches > 0 )
    {
+      PHB_ITEM pMatch;
+      int i;
+
       switch( iRequest )
       {
          case 0:
             pRetArray = hb_itemArrayNew( iMatches );
             for( i = 0; i < iMatches; i++ )
             {
-               if( HB_REGMATCH_EO( aMatches, i ) > -1 )
+               if( HB_REGMATCH_EO( aMatches, i ) != HB_REGMATCH_UNSET )
                   hb_arraySetCL( pRetArray, i + 1,
                                  pszString + HB_REGMATCH_SO( aMatches, i ),
                                  HB_REGMATCH_EO( aMatches, i ) -
@@ -292,7 +356,7 @@ static HB_BOOL hb_regex( int iRequest )
                       ( HB_SIZE ) HB_REGMATCH_EO( aMatches, 0 ) == nLen;
             break;
 
-         case 2: /* MATCH ( HAS ) */
+         case 2: /* HAS */
             fResult = HB_TRUE;
             break;
 
@@ -335,7 +399,7 @@ static HB_BOOL hb_regex( int iRequest )
                    iEO = HB_REGMATCH_EO( aMatches, i );
                pMatch = hb_arrayGetItemPtr( pRetArray, i + 1 );
                hb_arrayNew( pMatch, 3 );
-               if( iEO != -1 )
+               if( iEO != ( int ) HB_REGMATCH_UNSET )
                {
                   /* matched string */
                   hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );
@@ -360,7 +424,7 @@ static HB_BOOL hb_regex( int iRequest )
             PHB_ITEM pAtxArray;
             int      iMax       = hb_parni( 5 );   /* max nuber of matches I want, 0 = unlimited */
             int      iGetMatch  = hb_parni( 6 );   /* Gets if want only one single match or a sub-match */
-            HB_BOOL  fOnlyMatch = hb_parldef( 7, 1 ); /* if HB_TRUE returns only matches and sub-matches, not positions */
+            HB_BOOL  fOnlyMatch = hb_parldef( 7, HB_TRUE ); /* if HB_TRUE returns only matches and sub-matches, not positions */
             HB_SIZE  nOffset    = 0;
             int      iCount     = 0;
             int      iSO, iEO;
@@ -382,7 +446,7 @@ static HB_BOOL hb_regex( int iRequest )
                      if( ! fOnlyMatch )
                      {
                         hb_arrayNew( pMatch, 3 );
-                        if( iEO != -1 )
+                        if( iEO != ( int ) HB_REGMATCH_UNSET )
                         {
                            /* matched string */
                            hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );
@@ -400,7 +464,7 @@ static HB_BOOL hb_regex( int iRequest )
                      }
                      else
                      {
-                        if( iEO != -1 )
+                        if( iEO != ( int ) HB_REGMATCH_UNSET )
                            /* matched string */
                            hb_itemPutCL( pMatch, pszString + iSO, iEO - iSO );
                         else
@@ -419,7 +483,7 @@ static HB_BOOL hb_regex( int iRequest )
                   if( ! fOnlyMatch )
                   {
                      hb_arrayNew( pMatch, 3 );
-                     if( iEO != -1 )
+                     if( iEO != ( int ) HB_REGMATCH_UNSET )
                      {
                         /* matched string */
                         hb_arraySetCL( pMatch, 1, pszString + iSO, iEO - iSO );
@@ -437,7 +501,7 @@ static HB_BOOL hb_regex( int iRequest )
                   }
                   else
                   {
-                     if( iEO != -1 )
+                     if( iEO != ( int ) HB_REGMATCH_UNSET )
                         /* matched string */
                         hb_itemPutCL( pMatch, pszString + iSO, iEO - iSO );
                      else
@@ -448,7 +512,7 @@ static HB_BOOL hb_regex( int iRequest )
                }
 
                iEO = HB_REGMATCH_EO( aMatches, 0 );
-               if( iEO == -1 )
+               if( iEO == ( int ) HB_REGMATCH_UNSET )
                   break;
                nLen -= iEO;
                pszString += iEO;
@@ -541,19 +605,53 @@ HB_FUNC( HB_REGEXALL )
       hb_reta( 0 );
 }
 
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+static void * hb_pcre2_grab( PCRE2_SIZE size, void * data )
+{
+   HB_SYMBOL_UNUSED( data );
+   return size > 0 ? hb_xgrab( size ) : NULL;
+}
+static void hb_pcre2_free( void * ptr, void * data )
+{
+   HB_SYMBOL_UNUSED( data );
+   if( ptr )
+      hb_xfree( ptr );
+}
+static void hb_pcre2_exit( void * cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   pcre2_match_context_free( s_re_ctxm );
+   pcre2_compile_context_free( s_re_ctxc );
+   pcre2_general_context_free( s_re_ctxg );
+}
+#elif defined( HB_HAS_PCRE )
 static void * hb_pcre_grab( size_t size )
 {
-   return hb_xgrab( size );
+   return size > 0 ? hb_xgrab( size ) : NULL;
 }
 static void hb_pcre_free( void * ptr )
 {
-   hb_xfree( ptr );
+   if( ptr )
+      hb_xfree( ptr );
 }
 #endif
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_regex_init_ )
-#if defined( HB_HAS_PCRE )
+#if defined( HB_HAS_PCRE2 )
+   /* detect UTF-8 support.
+    * In BCC builds this code also forces linking newer PCRE versions
+    * then the one included in BCC RTL.
+    */
+   if( pcre2_config( PCRE2_CONFIG_UNICODE, &s_iUTF8Enabled ) != 0 )
+      s_iUTF8Enabled = 0;
+
+   s_re_ctxg = pcre2_general_context_create( hb_pcre2_grab, hb_pcre2_free, NULL );
+   s_re_ctxc = pcre2_compile_context_create( s_re_ctxg );
+   s_re_ctxm = pcre2_match_context_create( s_re_ctxg );
+
+   hb_vmAtExit( hb_pcre2_exit, NULL );
+#elif defined( HB_HAS_PCRE )
    /* detect UTF-8 support.
     * In BCC builds this code also forces linking newer PCRE versions
     * then the one included in BCC RTL.

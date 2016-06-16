@@ -16,14 +16,14 @@ CREATE CLASS One
 
 ENDCLASS
 
-CREATE CLASS Two FROM One
+CREATE CLASS Two INHERIT One
 
    METHOD Test() INLINE ::super:Test()
    METHOD CheckIt() INLINE ::super:CheckIt()
 
 ENDCLASS
 
-CREATE CLASS Three FROM Two
+CREATE CLASS Three INHERIT Two
 
    METHOD Test() INLINE QOut( "Three" )
 

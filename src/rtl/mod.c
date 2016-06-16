@@ -86,8 +86,8 @@ HB_FUNC( MOD )
           * representation: integer or double, size and number of
           * decimal places, it can be seen in code like:
           *    PROCEDURE Main()
-          *       SET FIXED ON
-          *       ? Transform( Mod( 12345, 0 ),"" )
+          *       Set( _SET_FIXED, .T. )
+          *       ? Transform( Mod( 12345, 0 ), "" )
           *       RETURN
           *
           * [druzus]
@@ -105,6 +105,7 @@ HB_FUNC( MOD )
 
 /*
    FUNCTION Mod( cl_num, cl_base )
+
       LOCAL cl_result := cl_num % cl_base
 
       RETURN iif( cl_base = 0, cl_num, iif( cl_result * cl_base < 0, cl_result + cl_base, cl_result ) )

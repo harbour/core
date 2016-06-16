@@ -5,6 +5,10 @@
 
 -w3 -es2
 
+-depurlbase=libusb:https://libusb.org/
+-deppkgname=libusb:libusb-devel{rpm}
+-deppkgname=libusb:libusb-dev{deb}
+-deppkgname=libusb:libusb{homebrew}
 -depkeyhead=libusb:libusb.h
 -depcontrol=libusb:${HB_WITH_LIBUSB}
 -depincpath=libusb:/usr/include
@@ -13,10 +17,10 @@
 -depimplibs=libusb:../../MS64/dll/libusb-1.0.dll{win&x86_64}
 -depimplibd=libusb:libusb-1
 
+-hbx=${hb_name}
+
 core.c
 
--hbx=${hb_name}.hbx
-${hb_name}.hbx
 {hbdyn}${hb_name}.hbc
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

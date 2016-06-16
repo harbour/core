@@ -1,0 +1,37 @@
+-stop{hbdyn}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-warn=low
+-cpp=no
+-pic
+
+fe.c
+ge.c
+keypair.c
+key_exch.c
+sc.c
+sign.c
+verify.c
+
+# URL    https://github.com/orlp/ed25519/archive/1b1b447d015c3c6ccdc259b358988821fad4d9f2.zip
+# DIFF   ed25519.dif
+#
+# MAP    license.txt         LICENSE.txt
+# MAP    src/fe.c            fe.c
+# MAP    src/ge.c            ge.c
+# MAP    src/key_exchange.c  key_exch.c
+# MAP    src/keypair.c       keypair.c
+# MAP    src/sc.c            sc.c
+# MAP    src/sign.c          sign.c
+# MAP    src/verify.c        verify.c
+# MAP    src/ed25519.h       ed25519.h
+# MAP    src/fe.h            fe.h
+# MAP    src/fixedint.h      fixedint.h
+# MAP    src/ge.h            ge.h
+# MAP    src/precomp_data.h  precompd.h
+# MAP    src/sc.h            sc.h
+# MAP    src/sha512.h        sha512.h

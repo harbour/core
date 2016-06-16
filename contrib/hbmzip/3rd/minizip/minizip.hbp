@@ -5,14 +5,14 @@
 
 -o${hb_targetname}
 
--hbx=
-
 -warn=low
 -cpp=no
 -pic
 
+{wce}-cflag=-DNO_MSCVER_FILE64_FUNC
+
 # for f*64() functions
--c=gnu90
+#-c=gnu90
 
 ioapi.c
 zip.c
@@ -26,12 +26,10 @@ unzip.c
 -depincpath=zlib:/boot/develop/headers/3rdparty
 -depincpathlocal=zlib:../../../../src/3rd/zlib
 
-# ORIGIN http://zlib.net/
-# VER    1.2.8
-# URL    https://downloads.sourceforge.net/libpng/zlib128.zip
+# URL    https://github.com/madler/zlib/archive/v1.2.8.zip
 # DIFF   minizip.dif
 #
-# MAP    README
+# MAP    README                  README.txt
 # MAP    contrib/minizip/crypt.h crypt.h
 # MAP    contrib/minizip/ioapi.c ioapi.c
 # MAP    contrib/minizip/ioapi.h ioapi.h

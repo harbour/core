@@ -2646,5 +2646,3 @@ Table of Contents
 59 COMPortOpen, COMReadChar, COMIsFIFOAvailable, COMIsFIFOEnabled
 60 COMPortOpen, COMReadBuffer, COMRXBufferUsed, COMStat-type
 Concept Index
-
-

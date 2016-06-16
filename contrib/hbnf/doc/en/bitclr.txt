@@ -33,8 +33,7 @@
 
       // This code would clear bit 5 in the byte represented by letter "A":
 
-      ft_BitClr( "A", 5 )       // result: "A", since
-                                // bit 5 already clear
+      ? ft_BitClr( "A", 5 )     // result: "A", since bit 5 already clear
    $SEEALSO$
       ft_BitSet() ft_IsBit()
    $END$

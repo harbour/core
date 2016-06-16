@@ -1,6 +1,6 @@
 /*
- * demonstration/test code for using QUIT commands and ALWAYS statements
- *    execution. Main thread uses QUIT before child one.
+ * Demonstration/test code for using QUIT commands and ALWAYS statements
+ * execution. Main thread uses QUIT before child one.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -13,13 +13,15 @@
    #command always           => finally
 #endif
 
-proc main()
+procedure Main()
+
    local thID, i
+
    ? Version()
    ? "Main start"
    thID := hb_threadStart( @thFunc(), "A", "B", "C" )
    ? "Thread ID:", thID
-   ? "==================="
+   ? Replicate( "=", 20 )
    ?
    begin sequence
       for i := 1 to 10
@@ -30,19 +32,22 @@ proc main()
             quit
          endif
       next
-      ? "==================="
+      ? Replicate( "=", 20 )
    always
       ? "Main ALWAYS section"
       ?
    endsequence
    ? "End of main"
-return
 
-proc thFunc( ... )
+   return
+
+static procedure thFunc( ... )
+
    local i
+
    ? "Thread begin"
    ? "Parameters:"
-   aeval( hb_aParams(), {| x | qqout( "", x ) } )
+   AEval( hb_AParams(), {| x | QQOut( "", x ) } )
    ?
    begin sequence
       for i := 1 to 10
@@ -55,7 +60,11 @@ proc thFunc( ... )
    endsequence
    ? "Thread end"
    ?
-return
 
-exit proc p
-? "I'm EXIT procedure"
+   return
+
+exit procedure p()
+
+   ? "I'm EXIT procedure"
+
+   return

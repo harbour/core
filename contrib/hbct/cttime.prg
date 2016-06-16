@@ -73,19 +73,13 @@ FUNCTION TimeToSec( cTime )
       ENDIF
    ENDIF
 
-   RETURN Round( nSec, 2 ) /* round FL val to be sure that you can compare it */
+   RETURN Round( nSec, 2 )  /* round FL val to be sure that you can compare it */
 
 FUNCTION SecToTime( nSec, lHundredth )
 
-   LOCAL i, h, n
-
-   n := iif( ! HB_ISNUMERIC( nSec ), Seconds(), nSec )
-
-   IF HB_ISLOGICAL( lHundredth ) .AND. lHundredth
-      h := StrZero( ( nSec * 100 ) % 100, 2 )
-   ELSE
-      h := ""
-   ENDIF
+   LOCAL i
+   LOCAL n := iif( HB_ISNUMERIC( nSec ), nSec, Seconds() )
+   LOCAL h := iif( hb_defaultValue( lHundredth, .F. ), StrZero( ( n * 100 ) % 100, 2 ), "" )
 
    n := Int( n % 86400 )
 
@@ -98,6 +92,6 @@ FUNCTION SecToTime( nSec, lHundredth )
 
 FUNCTION Millisec( nDelay )
 
-   hb_idleSleep( nDelay / 1000 )
+   hb_idleSleep( hb_defaultValue( nDelay, 0 ) / 1000 )
 
    RETURN ""

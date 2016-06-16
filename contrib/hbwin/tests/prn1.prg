@@ -3,7 +3,7 @@
 PROCEDURE Main( cPar1 )
 
    LOCAL nPrn := 1
-   LOCAL cBMPFile := Space( 40 )
+   LOCAL cBMPFile := Space( 256 )
    LOCAL GetList := {}
 
    LOCAL aPrn := win_printerList()
@@ -14,12 +14,11 @@ PROCEDURE Main( cPar1 )
       DO WHILE nPrn != 0
          CLS
          @ 0, 0 SAY "win_Prn() Class test program. Choose a printer to test"
-         @ 1, 0 SAY "Bitmap file name:" GET cBMPFile PICT "@K"
+         @ 1, 0 SAY "Bitmap file name:" GET cBMPFile PICTURE "@KS40"
          READ
          @ 2, 0 TO MaxRow(), MaxCol()
-         nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn )
-         IF nPrn != 0
-            PrnTest( aPrn[ nPrn ], cBMPFile, iif( HB_ISSTRING( cPar1 ) .AND. Lower( cPar1 ) == "ask", .T., NIL ) )
+         IF ( nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn ) ) != 0
+            PrnTest( aPrn[ nPrn ], cBMPFile, iif( HB_ISSTRING( cPar1 ) .AND. Lower( cPar1 ) == "ask", .T., ) )
          ENDIF
       ENDDO
    ENDIF
@@ -42,22 +41,20 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
       oPrinter:AskProperties := lAsk
    ENDIF
 
-   IF ! oPrinter:Create()
-      Alert( "Cannot Create Printer" )
-   ELSE
-      IF ! oPrinter:startDoc( "win_Prn(Doc name in Printer Properties)" )
-         Alert( "StartDoc() failed" )
-      ELSE
+   IF oPrinter:Create()
+      IF oPrinter:startDoc( "win_Prn(Doc name in Printer Properties)" )
          oPrinter:SetPen( WIN_PS_SOLID, 1, HB_WIN_RGB_RED )
          oPrinter:Bold( WIN_FW_EXTRABOLD )
-         oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() = " + hb_ntos( oPrinter:MaxRow() ) + "   MaxCol() = " + hb_ntos( oPrinter:MaxCol() ) )
+         oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() == " + hb_ntos( oPrinter:MaxRow() ) + "   MaxCol() == " + hb_ntos( oPrinter:MaxCol() ) )
          oPrinter:Bold( WIN_FW_DONTCARE )
          oPrinter:NewLine()
          oPrinter:TextOut( "   Partial list of available fonts that are available for OEM_" )
          oPrinter:NewLine()
          oPrinter:UnderLine( .T. )
          oPrinter:Italic( .T. )
-//       oPrinter:SetFont( "Courier New", 7, { 3, -50 } )  // Compressed print
+#if 0
+         oPrinter:SetFont( "Courier New", 7, { 3, -50 } )  // Compressed print
+#endif
          nColFixed   := 40 * oPrinter:CharWidth
          nColTTF     := 48 * oPrinter:CharWidth
          nColCharSet := 60 * oPrinter:CharWidth
@@ -71,19 +68,19 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:NewLine()
          oPrinter:Italic( .F. )
          oPrinter:UnderLine( .F. )
-         aFonts := oPrinter:GetFonts()
          oPrinter:NewLine()
+         aFonts := oPrinter:GetFonts()
          FOR x := 1 TO Len( aFonts ) STEP 2
-            oPrinter:CharSet( aFonts[ x, 4 ] )
-            IF oPrinter:SetFont( aFonts[ x, 1 ] )       // Could use "IF oPrinter:SetFontOk" after call to oPrinter:SetFont()
-               IF oPrinter:FontName == aFonts[ x, 1 ]  // Make sure Windows didn't pick a different font
-                  oPrinter:TextOut( aFonts[ x, 1 ] )
+            oPrinter:CharSet( aFonts[ x ][ HB_WINFONT_CHARSET ] )
+            IF oPrinter:SetFont( aFonts[ x ][ HB_WINFONT_NAME ] )      // Could use "IF oPrinter:SetFontOk" after call to oPrinter:SetFont()
+               IF oPrinter:FontName == aFonts[ x ][ HB_WINFONT_NAME ]  // Make sure Windows didn't pick a different font
+                  oPrinter:TextOut( aFonts[ x ][ HB_WINFONT_NAME ] )
                   oPrinter:SetPos( nColFixed )
-                  oPrinter:TextOut( iif( aFonts[ x, 2 ], "Yes", "No" ) )
+                  oPrinter:TextOut( iif( aFonts[ x ][ HB_WINFONT_FIXED ], "Yes", "No" ) )
                   oPrinter:SetPos( nColTTF )
-                  oPrinter:TextOut( iif( aFonts[ x, 3 ], "Yes", "No" ) )
+                  oPrinter:TextOut( iif( aFonts[ x ][ HB_WINFONT_TRUETYPE ], "Yes", "No" ) )
                   oPrinter:SetPos( nColCharSet )
-                  oPrinter:TextOut( hb_ntos( aFonts[ x, 4 ] ) )
+                  oPrinter:TextOut( hb_ntos( aFonts[ x ][ HB_WINFONT_CHARSET ] ) )
                   oPrinter:SetPos( oPrinter:LeftMargin, oPrinter:PosY + ( oPrinter:CharHeight * 2 ) )
                   IF oPrinter:PRow() > oPrinter:MaxRow() - 16  // Could use "oPrinter:NewPage()" to start a new page
                      EXIT
@@ -95,6 +92,12 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:SetFont( "Lucida Console", 8, { 3, -50 } )  // Alternative Compressed print
          oPrinter:CharSet( 0 )  // Reset default charset
          oPrinter:Bold( WIN_FW_EXTRABOLD )
+         oPrinter:NewLine()
+         oPrinter:TextOutAt( ,, "WordPadded1   " )
+         oPrinter:TextOutAt( ,, "WordPadded2   " )
+         oPrinter:TextOutAt( ,, "Word3" )
+         oPrinter:TextOutAt( ,, " " )
+         oPrinter:TextOutAt( ,, "Word4" )
          oPrinter:NewLine()
          oPrinter:TextOut( "This is on line" + hb_ntos( oPrinter:PRow() ) + ", Printed bold, " )
          oPrinter:TextOut( " finishing at Column: " )
@@ -118,12 +121,15 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          // To print a barcode;
          // Replace "BCod39HN" with your own bar code font or any other font
          //   oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ), oPrinter:MM_TO_POSY( 60 ), "1234567890", "BCod39HN", 24, 0 )
-         //
          PrintBitmap( oPrinter, cBMPFile )
 
          oPrinter:EndDoc()
+      ELSE
+         Alert( "StartDoc() failed" )
       ENDIF
       oPrinter:Destroy()
+   ELSE
+      Alert( "Cannot Create Printer" )
    ENDIF
 
    RETURN
@@ -133,7 +139,7 @@ STATIC PROCEDURE PrintBitmap( oPrn, cBitFile )
    LOCAL oBMP
 
    IF ! Empty( cBitFile )
-      IF hb_FileExists( cBitFile )
+      IF hb_vfExists( cBitFile )
          oBMP := win_BMP():New()
          IF oBmp:loadFile( cBitFile )
 
@@ -146,7 +152,7 @@ STATIC PROCEDURE PrintBitmap( oPrn, cBitFile )
          ENDIF
          oBMP:Destroy()
       ELSE
-         Alert( hb_StrFormat( "%1$s not found ", cBitFile ) )
+         Alert( hb_StrFormat( "%1$s not found", cBitFile ) )
       ENDIF
    ENDIF
 

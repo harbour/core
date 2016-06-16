@@ -1,11 +1,9 @@
 /*
- * demonstration/test code for TBrowse class
+ * Demonstration/test code for TBrowse() class
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  */
-
-/* UTF-8 */
 
 #include "inkey.ch"
 #include "button.ch"
@@ -13,26 +11,26 @@
 #include "box.ch"
 
 #ifdef __HARBOUR__
-   #define _DRAW_1 hb_UTF8ToStr( "├" )
-   #define _DRAW_2 hb_UTF8ToStr( "┤" )
-   #define _DRAW_3 hb_UTF8ToStrBox( "┐ ┌─" )
-   #define _DRAW_4 hb_UTF8ToStrBox( "┘ └─" )
-   #define _DRAW_5 hb_UTF8ToStrBox( "│ │" )
-   #define _DRAW_6 hb_UTF8ToStrBox( "┐ ┌─┤HIDE├─" )
-   #define _DRAW_7 hb_UTF8ToStrBox( "╖ ╓─┤HIDE├─" )
-   #define _DRAW_8 hb_UTF8ToStrBox( "╜ ╙─" )
-   #define _DRAW_9 hb_UTF8ToStrBox( "║ ║" )
+   #define _DRAW_1  hb_UTF8ToStr( "├" )
+   #define _DRAW_2  hb_UTF8ToStr( "┤" )
+   #define _DRAW_3  hb_UTF8ToStrBox( "┐ ┌─" )
+   #define _DRAW_4  hb_UTF8ToStrBox( "┘ └─" )
+   #define _DRAW_5  hb_UTF8ToStrBox( "│ │" )
+   #define _DRAW_6  hb_UTF8ToStrBox( "┐ ┌─┤HIDE├─" )
+   #define _DRAW_7  hb_UTF8ToStrBox( "╖ ╓─┤HIDE├─" )
+   #define _DRAW_8  hb_UTF8ToStrBox( "╜ ╙─" )
+   #define _DRAW_9  hb_UTF8ToStrBox( "║ ║" )
 #else
-   #define _DRAW_1 Chr( 195 )
-   #define _DRAW_2 Chr( 180 )
-   #define _DRAW_3 Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 )
-   #define _DRAW_4 Chr( 217 ) + " " + Chr( 192 ) + Chr( 196 )
-   #define _DRAW_5 Chr( 179 ) + " " + Chr( 179 )
-   #define _DRAW_6 Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
-   #define _DRAW_7 Chr( 183 ) + " " + Chr( 214 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
-   #define _DRAW_8 Chr( 189 ) + " " + Chr( 211 ) + Chr( 196 )
-   #define _DRAW_9 Chr( 186 ) + " " + Chr( 186 )
-   #define hb_keyCode( n ) Asc( n )
+   #include "clipper.ch"
+   #define _DRAW_1  Chr( 195 )
+   #define _DRAW_2  Chr( 180 )
+   #define _DRAW_3  Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 )
+   #define _DRAW_4  Chr( 217 ) + " " + Chr( 192 ) + Chr( 196 )
+   #define _DRAW_5  Chr( 179 ) + " " + Chr( 179 )
+   #define _DRAW_6  Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
+   #define _DRAW_7  Chr( 183 ) + " " + Chr( 214 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
+   #define _DRAW_8  Chr( 189 ) + " " + Chr( 211 ) + Chr( 196 )
+   #define _DRAW_9  Chr( 186 ) + " " + Chr( 186 )
 #endif
 
 PROCEDURE Main()
@@ -44,7 +42,7 @@ PROCEDURE Main()
    LOCAL nTop, nLeft, nBottom, nRight
    LOCAL cColor
    LOCAL oBrw, oCol1, oCol2, oCol3, oCol4
-   LOCAL nKey, nCol
+   LOCAL nKey, nKeyStd, nCol
 
    nTop    := 2
    nLeft   := 10
@@ -60,18 +58,17 @@ PROCEDURE Main()
    MSetCursor( .T. )
 #endif
 
-
    CLS
 #ifdef HB_B_DOUBLE_SINGLE_UNI
-   DispBox( nTop, nLeft, nBottom, nRight, HB_B_DOUBLE_SINGLE_UNI, cColor )
+   hb_DispBox( nTop, nLeft, nBottom, nRight, HB_B_DOUBLE_SINGLE_UNI, cColor )
 #else
-   DispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE, cColor )
+   hb_DispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE, cColor )
 #endif
    oBrw := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
-   DispOutAt( nTop + 3,    nLeft,  _DRAW_1, cColor )
-   DispOutAt( nTop + 3,    nRight, _DRAW_2, cColor )
-   DispOutAt( nBottom - 2, nLeft,  _DRAW_1, cColor )
-   DispOutAt( nBottom - 2, nRight, _DRAW_2, cColor )
+   hb_DispOutAt( nTop + 3,    nLeft,  _DRAW_1, cColor )
+   hb_DispOutAt( nTop + 3,    nRight, _DRAW_2, cColor )
+   hb_DispOutAt( nBottom - 2, nLeft,  _DRAW_1, cColor )
+   hb_DispOutAt( nBottom - 2, nRight, _DRAW_2, cColor )
 
    oBrw:colorSpec := cColor
    oBrw:headSep := _DRAW_3
@@ -115,19 +112,20 @@ PROCEDURE Main()
    // start at bottom
    oBrw:goBottom()
 
-   WHILE .T.
-      WHILE ! oBrw:stabilize() .AND. NextKey() == 0
+   DO WHILE .T.
+      DO WHILE ! oBrw:stabilize() .AND. NextKey() == 0
       ENDDO
-      nKey := Inkey( 0 )
-      IF nKey == K_ESC
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
+      DO CASE
+      CASE nKeyStd == K_ESC
          EXIT
-      ELSEIF nKey == K_INS
+      CASE nKeyStd == K_INS
          oBrw:colorRect( { oBrw:rowPos, 1, oBrw:rowPos, 4 }, { 7, 6 } )
-      ELSEIF nKey == K_DEL
+      CASE nKeyStd == K_DEL
          oBrw:refreshCurrent()
-      ELSEIF nKey >= hb_keyCode( "0" ) .AND. nKey <= hb_keyCode( "3" )
-         oBrw:freeze := nKey - hb_keyCode( "0" )
-      ELSEIF nKey == K_LBUTTONDOWN .AND. ;
+      CASE nKeyStd >= hb_keyCode( "0" ) .AND. nKeyStd <= hb_keyCode( "3" )
+         oBrw:freeze := nKeyStd - hb_keyCode( "0" )
+      CASE nKeyStd == K_LBUTTONDOWN .AND. ;
             oBrw:HitTest( MRow(), MCol() ) == HTHEADSEP .AND. ;
             ( ( nCol := oBrw:mColPos ) == 2 .OR. nCol == 3 )
          IF nCol == 2
@@ -136,25 +134,25 @@ PROCEDURE Main()
             oCol3:width := 0
          ENDIF
          oBrw:configure()
-      ELSEIF nKey == K_LBUTTONDOWN .AND. ;
+      CASE nKeyStd == K_LBUTTONDOWN .AND. ;
             oBrw:HitTest( MRow(), MCol() ) == HTHEADING .AND. ;
             oBrw:mColPos == 4
          oCol2:width := 10
          oCol3:width := 7
          oBrw:configure()
-      ELSE
+      OTHERWISE
          oBrw:applyKey( nKey )
-      ENDIF
+      ENDCASE
    ENDDO
 
    RETURN
 
 #ifndef __HARBOUR__
 
-PROCEDURE hb_idleSleep( n )
+STATIC PROCEDURE hb_idleSleep( n )
 
    n += Seconds()
-   WHILE Seconds() < n
+   DO WHILE Seconds() < n
    ENDDO
 
    RETURN

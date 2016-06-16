@@ -1,22 +1,29 @@
-/* Testing Harbour If inline */
+/* Testing Harbour iif() inline */
 
 PROCEDURE Main()
+
    LOCAL n := 1
 
-   QOut( "Testing Harbour If inline" )
+   ? "Testing Harbour If inline"
 
-   if( n == 1, QOut( 1 ), QOut( 2 ) )
+   if( n == 1, OutCR( 1 ), OutCR( 2 ) )
 
-   iif( n != NIL, QOut( "not NIL" ), )
+   iif( n != NIL, OutCR( "not NIL" ), )
 
-   QOut( "Now changing n to 2" )
+   ? "Now changing n to 2"
 
    n := 2
 
-   if( n == 1, QOut( 1 ), QOut( 2 ) )
+   if( n == 1, OutCR( 1 ), OutCR( 2 ) )
 
-   iif( n != NIL, QOut( "not NIL" ), )
+   iif( n != NIL, OutCR( "not NIL" ), )
 
-   QOut( "ok!" )
+   ? "ok!"
+
+   RETURN
+
+STATIC PROCEDURE OutCR( x )
+
+   ? x
 
    RETURN

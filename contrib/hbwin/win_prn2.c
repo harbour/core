@@ -45,7 +45,6 @@
  *
  */
 
-#include "hbwin.h"
 #include "hbwapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
@@ -170,7 +169,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
    if( ! bResult && hb_iswin9x() )
    {
       /* This option should never be required but is included because of this article
-            http://support.microsoft.com/kb/246772/en-us
+            https://support.microsoft.com/kb/246772/en-us
 
          This option will not enumerate any network printers.
 
@@ -394,8 +393,7 @@ HB_FUNC( WIN_PRINTFILERAW )
                   HB_SIZE nRead;
 
                   nResult = 1;
-                  while( ( nRead = hb_fileRead( pFile, pbyBuffer, HB_PRINT_BUFFER_SIZE, -1 ) ) > 0 &&
-                         nRead != ( HB_SIZE ) FS_ERROR )
+                  while( ( nRead = hb_fileResult( hb_fileRead( pFile, pbyBuffer, HB_PRINT_BUFFER_SIZE, -1 ) ) ) > 0 )
                   {
                      HB_SIZE nWritten = 0;
 
@@ -534,7 +532,7 @@ HB_FUNC( WIN_PRINTERLIST )
 #if ! defined( HB_OS_WIN_CE )
    HB_BOOL bPrinterNamesOnly = ! hb_parl( 1 );
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );
-   DWORD dwNeeded = 0, dwReturned = 0, i;
+   DWORD dwNeeded = 0, dwReturned = 0;
 
    EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, NULL, 0, &dwNeeded, &dwReturned );
    if( dwNeeded )
@@ -545,6 +543,7 @@ HB_FUNC( WIN_PRINTERLIST )
       if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
       {
          PHB_ITEM pTempItem = hb_itemNew( NULL );
+         DWORD i;
 
          for( i = 0; i < dwReturned; ++i, ++pPrinterEnum )
          {

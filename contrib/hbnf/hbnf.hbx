@@ -87,12 +87,14 @@ DYNAMIC ft_FDelete
 DYNAMIC ft_FEof
 DYNAMIC ft_FError
 DYNAMIC ft_FGoBot
+DYNAMIC ft_FGoBottom
 DYNAMIC ft_FGoto
 DYNAMIC ft_FGoTop
 DYNAMIC ft_Fill
 DYNAMIC ft_FindITh
 DYNAMIC ft_FInsert
 DYNAMIC ft_FLastRe
+DYNAMIC ft_FLastRec
 DYNAMIC ft_FlopTst
 DYNAMIC ft_FOffset
 DYNAMIC ft_FReadLn
@@ -111,7 +113,6 @@ DYNAMIC ft_Hex2Dec
 DYNAMIC ft_IAmIdle
 DYNAMIC ft_Idle
 DYNAMIC ft_inp
-DYNAMIC ft_int86
 DYNAMIC ft_InvClr
 DYNAMIC ft_IsBit
 DYNAMIC ft_IsBitOn
@@ -210,8 +211,8 @@ DYNAMIC ft_SetKeys
 DYNAMIC ft_SetMode
 DYNAMIC ft_SetRate
 DYNAMIC ft_SetTime
-DYNAMIC ft_SetVcur
-DYNAMIC ft_SetVpg
+DYNAMIC ft_SetVCur
+DYNAMIC ft_SetVPg
 DYNAMIC ft_Shadow
 DYNAMIC ft_Shift
 DYNAMIC ft_SInkey
@@ -233,8 +234,6 @@ DYNAMIC ft_Year
 DYNAMIC _ft_DFClos
 DYNAMIC _ft_DFInit
 DYNAMIC _ft_MSetSensitive
-DYNAMIC _ft_NWKStat
-DYNAMIC _ft_TempFil
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBNF__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

@@ -1,6 +1,4 @@
-/*
- * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- */
+/* Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl> */
 
 HBNETIO is implementation of alternative RDD IO API for Harbour with
 additional RPC support. It contains either client and server code.

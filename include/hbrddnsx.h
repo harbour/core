@@ -320,20 +320,20 @@ typedef NSXLEAFPAGE * LPNSXLEAFPAGE;
    variable member sizes */
 typedef struct _NSXBRANCHKEY
 {
-   HB_UCHAR Page[4];          /* page offset wih higher keys values */
-   HB_UCHAR RecNo[n];         /* where n is RecNoLen */
-   HB_UCHAR KeyData[l];       /* key value where l is KeySize */
+   HB_UCHAR Page[ 4 ];        /* page offset wih higher keys values */
+   HB_UCHAR RecNo[ n ];       /* where n is RecNoLen */
+   HB_UCHAR KeyData[ l ];     /* key value where l is KeySize */
 } NSXBRANCHKEY;
 typedef NSXBRANCHKEY * LPNSXBRANCHKEY;
 
 typedef struct _NSXLEAFKEY
 {
-   HB_UCHAR RecNo[n];         /* where n is RecNoLen */
-   HB_UCHAR Size[1];          /* key data size with this byte and n RecNo HB_BYTEs
+   HB_UCHAR RecNo[ n ];       /* where n is RecNoLen */
+   HB_UCHAR Size[ 1 ];        /* key data size with this byte and n RecNo HB_BYTEs
                                * if Size == n + 1 then key is fully duplicated
                                */
-   HB_UCHAR DupCount[1];      /* number of bytes from previous key */
-   HB_UCHAR KeyData[m];       /* rest of key value with RLE compression:
+   HB_UCHAR DupCount[ 1 ];    /* number of bytes from previous key */
+   HB_UCHAR KeyData[ m ];     /* rest of key value with RLE compression:
                                *    FF xx yy => Replicate(yy, xx)
                                *    FF 01    => FF
                                * m = Size - n - 2

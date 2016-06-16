@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbwin.h"
+#include "hbwapi.h"
 #include "hbapiitm.h"
 
 #if defined( HB_HAS_PNG ) && defined( HB_HAS_ZLIB )
@@ -224,7 +224,7 @@ static int hb_png_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int * 
    info_ptr = png_create_info_struct( png_ptr );
    if( ! info_ptr )
    {
-      png_destroy_read_struct( &png_ptr, ( png_infopp ) NULL, ( png_infopp ) NULL );
+      png_destroy_read_struct( &png_ptr, NULL, NULL );
       return _PNG_RET_ERR_INIT2;
    }
 
@@ -261,7 +261,7 @@ static int hb_png_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int * 
    else
       iResult = _PNG_RET_ERR_READ;
 
-   png_destroy_read_struct( &png_ptr, &info_ptr, ( png_infopp ) NULL );
+   png_destroy_read_struct( &png_ptr, &info_ptr, NULL );
 
    return iResult;
 }

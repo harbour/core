@@ -18,7 +18,7 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE ref1( x )
+STATIC PROCEDURE ref1( x )
 
    x++
    ? " In ref1 before ref2 =", x
@@ -27,7 +27,7 @@ PROCEDURE ref1( x )
 
    RETURN
 
-PROCEDURE ref2( x )
+STATIC PROCEDURE ref2( x )
 
    x++
    ? "  In ref2 before ref3 =", x
@@ -36,7 +36,7 @@ PROCEDURE ref2( x )
 
    RETURN
 
-PROCEDURE ref3( x )
+STATIC PROCEDURE ref3( x )
 
    STATIC s_a
 
@@ -48,7 +48,7 @@ PROCEDURE ref3( x )
 
    RETURN
 
-PROCEDURE ref4( a )
+STATIC PROCEDURE ref4( a )
 
    a[ 1 ]++
    ? "    In ref4 =", a[ 1 ]

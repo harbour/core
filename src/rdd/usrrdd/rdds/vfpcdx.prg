@@ -44,9 +44,9 @@
  *
  */
 
-#include "rddsys.ch"
 #include "dbinfo.ch"
 #include "hbusrrdd.ch"
+#include "rddsys.ch"
 
 /* Force linking DBFCDX from which our RDD inherits */
 REQUEST DBFCDX
@@ -54,10 +54,8 @@ REQUEST DBFFPT
 
 ANNOUNCE VFPCDX
 
+/* We are inheriting from DBFCDX */
 FUNCTION VFPCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
-
-   /* We are inheriting from DBFCDX */
-
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, "DBFCDX", {}, pSuperRddID )
 
 INIT PROCEDURE VFPCDX_INIT()

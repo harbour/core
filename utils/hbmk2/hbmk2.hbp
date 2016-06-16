@@ -1,3 +1,5 @@
+# Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+
 -q0 -w3 -es2 -kmo -l -u
 
 {HB_HAS_GPM}-prgflag=-DHB_HAS_GPM
@@ -5,7 +7,7 @@
 
 -cflag=-Zm200{wce&allmsvc}
 
-{!HB_MT='no'}-mt
+{!__HB_MT='no'}-mt
 
 hbmk2.prg
 
@@ -15,22 +17,27 @@ hbmk2.prg
 -main=__hbmk_public_entry
 -DHBMK_USE_CUSTMAIN
 
--DHBMK_WITH_ALL_EMBEDDED_HEADERS
+-DHBMK_WITH_BUILTIN_HEADERS_ALL
 
 -lhbdossrl{dos}
 
 # not using these together with .rc input, because some compilers (mingw)
 # do not support multiple .rc inputs
-#-icon={allwin}../../package/harb_win.ico
-#-icon={os2}../../package/harb_os2.ico
-hbmk2.rc
+#-icon={allwin}../../package/harbour.ico
+hbmk2.rc{!HBMK_GENERIC}
 
 # localization
 po/hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl
 -lng=el,es,es_419,fr,gl,hu,it,pt_BR
 
+# localization update
+{HBMK_PO_UPDATE}-po=po/hbmk2.en.po
+{HBMK_PO_UPDATE}-rebuildpo
+
+-DHBMK_SHARED{shared}
+
 # localization (for automatization with config/lang.hb)
 -3rd=_langhb_docext=.md
 -3rd=_langhb_docoption=-lang={LNG}
--3rd=_langhb_docoption=-longhelpmd
+-3rd=_langhb_docoption=-fullhelpmd

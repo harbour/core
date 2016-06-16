@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * their website at https://www.gnu.org/).
  *
  */
 
@@ -58,8 +58,8 @@ const char * const hb_comp_szErrors[] =
    "Jump offset too long",
    "Can't create output file '%s'",
    "Can't create preprocessed output file '%s'",
-   "Bad command line option '%s'",
-   "Bad command line parameter '%s'",
+   "Bad command-line option '%s'",
+   "Bad command-line parameter '%s'",
    "Invalid filename '%s'",
    "Mayhem in CASE handler",
    "Operation not supported for data type '%s'",
@@ -105,7 +105,7 @@ const char * const hb_comp_szErrors[] =
 
 /* Table with parse warnings */
 /* NOTE: The first character stores the warning's level that triggers this
- * warning. The warning's level is set by -w<n> command line option.
+ * warning. The warning's level is set by -w<n> command-line option.
  */
 const char * const hb_comp_szWarnings[] =
 {

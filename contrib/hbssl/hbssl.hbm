@@ -8,6 +8,13 @@
 
 -w3 -es2
 
+-depurlbase=openssl:https://www.openssl.org/
+-depurlbase=openssl:https://www.openssl.org/community/binaries.html
+-deppkgname=openssl:libssl-dev{deb}
+-deppkgname=openssl:openssl-devel{rpm}
+-deppkgname=openssl:openssl{pacman}
+-deppkgname=openssl:openssl{homebrew}
+-deppkgname=openssl:libressl{homebrew}
 -depkeyhead=openssl:openssl/ssl.h
 -depcontrol=openssl:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=openssl:${HB_WITH_OPENSSL}
@@ -20,25 +27,13 @@
 -depincpath=openssl:/usr/pkg/include
 -depfinish=openssl
 
-{darwin}-cflag=-DOPENSSL_NO_SHA256
-{darwin}-cflag=-DOPENSSL_NO_SHA512
-{darwin}-cflag=-DOPENSSL_NO_CAMELLIA
-{darwin}-cflag=-DOPENSSL_NO_DGRAM
-{darwin}-cflag=-DHB_OPENSSL_OLD_OSX_
-
-# Patent expires in 2010/2011
--cflag=-DOPENSSL_NO_IDEA
-
-# to suppress Apple's deprecation warnings that apply to
-# the complete OpenSSL API, starting with OS X Lion 10.7
--cflag={allgcc&darwin}-Wno-deprecated
+# for openssl/applink.c
+-cflag={lngcpp&allgcc}-fpermissive
 
 # For _fileno() in openssl/applink.c
--c=gnu90
+#-c=gnu90
 
-hbssl.hbx
-
-ssl_hbcon.prg
+ssl_hbco.prg
 
 ssl_hb.c
 ssl_inet.c

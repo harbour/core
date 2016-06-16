@@ -1,21 +1,22 @@
 /*
+ * Routines to manage Wvt*Classes Gui Painting
  *
  * Copyright 2004 Pritpal Bedi <bedipritpal@hotmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
+ * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -33,7 +34,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -43,83 +44,77 @@
  *
  */
 
-/*
- *            Routines to manage Wvt*Classes Gui Painting
- */
-
 #include "wvtwin.ch"
+
+#include "hbgtinfo.ch"
 
 THREAD STATIC t_paint_ := { { "", {} } }
 
-/*
- *        This function must have to be defined in your appls
- */
+/* This function must have to be defined in your applications */
 #if 0
 
-FUNCTION Wvt_Paint()
+PROCEDURE wvt_Paint()
 
-   /* Call this function from this funtion */
-   WvtPaintObjects()
+   WvtPaintObjects()  /* Call this function from this function */
 
-   RETURN NIL
+   RETURN
 
 #endif
 
 FUNCTION WvtPaintObjects()
 
-   LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
+   LOCAL blk, lExe, nLeft, nRight, b, tlbr_
 
-   aBlocks := WvtSetPaint()
+   LOCAL aBlocks := WvtSetPaint()
 
-   IF ( nBlocks := Len( aBlocks ) ) > 0
-      tlbr_ := Wvt_GetPaintRect()
+   IF Len( aBlocks ) > 0
+      tlbr_ := wvt_GetPaintRect()
 
-      FOR i := 1 TO nBlocks
+      FOR EACH blk IN aBlocks
          lExe := .T.
 
-         IF aBlocks[ i, 3 ] != NIL .AND. ! Empty( aBlocks[ i, 3 ] )
-            /*  Check parameters against tlbr_ depending upon the
-             *  type of object and attributes contained in aAttr
-             */
+         IF blk[ 3 ] != NIL .AND. ! Empty( blk[ 3 ] )
+            /* Check parameters against tlbr_ depending upon the
+               type of object and attributes contained in aAttr */
             DO CASE
-            CASE aBlocks[ i, 3, 1 ] == WVT_BLOCK_GRID_V
-               b := aBlocks[ i, 3, 6 ]
+            CASE blk[ 3, 1 ] == WVT_BLOCK_GRID_V
+               b := blk[ 3, 6 ]
                IF Len( b:aColumnsSep ) == 0
                   lExe := .F.
                ELSE
                   nLeft  := b:aColumnsSep[ 1 ]
-                  nRight := b:aColumnsSep[ Len( b:aColumnsSep ) ]
-                  IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   < bottom */
-                     tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm > top    */
-                     tlbr_[ 2 ] <= nRight + 1       .AND. ; /* left  < right  */
-                     tlbr_[ 4 ] >= nLeft  - 2             ) /* right > left   */
+                  nRight := ATail( b:aColumnsSep )
+                  IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top    < bottom */
+                     tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ;    /* bottom > top    */
+                     tlbr_[ 2 ] <= nRight + 1 .AND. ;     /* left   < right  */
+                     tlbr_[ 4 ] >= nLeft  - 2 )           /* right  > left   */
                      lExe := .F.
                   ENDIF
                ENDIF
 
-            CASE aBlocks[ i, 3, 1 ] == WVT_BLOCK_GETS
-               IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   < bott  */
-                  tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm > top   */
-                  tlbr_[ 2 ] <= aBlocks[ i, 3, 5 ] .AND. ; /* left  < righ  */
-                  tlbr_[ 4 ] >= aBlocks[ i, 3, 3 ]       ) /* right > left  */
+            CASE blk[ 3, 1 ] == WVT_BLOCK_GETS
+               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top    < bottom */
+                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ;    /* bottom > top    */
+                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ;    /* left   < right  */
+                  tlbr_[ 4 ] >= blk[ 3, 3 ] )          /* right  > left   */
                   lExe := .F.
                ENDIF
 
             OTHERWISE
-               /* If refreshing rectangle's top is less than objects' bottom    */
-               /* and left is less than objects' right                          */
-               /*                                                               */
-               IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   <= bottom  */
-                  tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm >= top     */
-                  tlbr_[ 2 ] <= aBlocks[ i, 3, 5 ] .AND. ; /* left  < right    */
-                  tlbr_[ 4 ] >= aBlocks[ i, 3, 3 ]       ) /* right > left     */
+               /* If refreshing rectangle's top is less than objects' bottom
+                * and left is less than objects' right
+                */
+               IF !( tlbr_[ 1 ] <= blk[ 3, 4 ] .AND. ; /* top    <= bottom */
+                  tlbr_[ 3 ] >= blk[ 3, 2 ] .AND. ;    /* bottom >= top    */
+                  tlbr_[ 2 ] <= blk[ 3, 5 ] .AND. ;    /* left   <  right  */
+                  tlbr_[ 4 ] >= blk[ 3, 3 ] )          /* right  >  left   */
                   lExe := .F.
                ENDIF
             ENDCASE
          ENDIF
 
          IF lExe
-            Eval( aBlocks[ i, 2 ] )
+            Eval( blk[ 2 ] )
          ENDIF
       NEXT
    ENDIF
@@ -128,27 +123,27 @@ FUNCTION WvtPaintObjects()
 
 FUNCTION WvtSetPaint( a_ )
 
-   LOCAL o
-
    THREAD STATIC t
 
-   IF t == nil
+   LOCAL o
+
+   IF t == NIL
       t := {}
    ENDIF
 
    o := t
 
-   IF a_ != nil
+   IF a_ != NIL
       t := a_
    ENDIF
 
    RETURN o
 
-FUNCTION Wvg_SetPaint( cID, nAction, xData, aAttr )
+FUNCTION wvg_SetPaint( cID, nAction, xData, aAttr )
 
    LOCAL n, n1, oldData
 
-   IF xData != nil
+   IF xData != NIL
       IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
          IF ( n1 := AScan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
             oldData := t_paint_[ n, 2, n1, 2 ]
@@ -159,14 +154,13 @@ FUNCTION Wvg_SetPaint( cID, nAction, xData, aAttr )
          ENDIF
       ELSE
          AAdd( t_paint_, { cID, {} } )
-         n := Len( t_paint_ )
-         AAdd( t_paint_[ n, 2 ], { nAction, xData, aAttr } )
+         AAdd( ATail( t_paint_ )[ 2 ], { nAction, xData, aAttr } )
       ENDIF
    ENDIF
 
    RETURN oldData
 
-FUNCTION Wvg_GetPaint( cID )
+FUNCTION wvg_GetPaint( cID )
 
    LOCAL n
 
@@ -176,7 +170,7 @@ FUNCTION Wvg_GetPaint( cID )
 
    RETURN {}
 
-FUNCTION Wvg_DelPaint( cID, nAction )
+FUNCTION wvg_DelPaint( cID, nAction )
 
    LOCAL xData, n1, n
 
@@ -189,28 +183,24 @@ FUNCTION Wvg_DelPaint( cID, nAction )
 
    RETURN xData
 
-FUNCTION Wvg_PurgePaint( cID, lDummy )
+FUNCTION wvg_PurgePaint( cID, lDummy )
 
    LOCAL n, aPaint
-
-   __defaultNIL( @lDummy, .F. )
 
    IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       aPaint := t_paint_[ n ]
       hb_ADel( t_paint_, n, .T. )
    ENDIF
 
-   IF lDummy
+   IF hb_defaultValue( lDummy, .F. )
       WvtSetPaint( {} )
    ENDIF
 
    RETURN aPaint
 
-FUNCTION Wvg_InsertPaint( cID, aPaint, lSet )
+PROCEDURE wvg_InsertPaint( cID, aPaint, lSet )
 
    LOCAL n
-
-   __defaultNIL( @lSet, .F. )
 
    IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       t_paint_[ n ] := aPaint
@@ -218,23 +208,21 @@ FUNCTION Wvg_InsertPaint( cID, aPaint, lSet )
       AAdd( t_paint_, aPaint )
    ENDIF
 
-   IF lSet
+   IF hb_defaultValue( lSet, .F. )
       WvtSetPaint( aPaint )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-/*
- *               RunTime Dialog Generation Routines
- *
- *                      Courtesy What32.lib
+/* RunTime Dialog Generation Routines
+ * Courtesy hbwhat library
  */
 /* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
-FUNCTION Wvt_SetDlgCoMode( nMode )
-
-   LOCAL nOldMode
+FUNCTION wvt_SetDlgCoMode( nMode )
 
    STATIC sMode := 0
+
+   LOCAL nOldMode
 
    nOldMode := sMode
    IF HB_ISNUMERIC( nMode ) .AND. nMode <= 1 .AND. nMode >= 0
@@ -243,35 +231,33 @@ FUNCTION Wvt_SetDlgCoMode( nMode )
 
    RETURN nOldMode
 
-FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle, ;
+FUNCTION wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle, ;
       cFaceName, nPointSize, nWeight, lItalic, nHelpId, nExStyle )
 
    LOCAL aDlg := { {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} }
    LOCAL aXY, nX, nY, nW, nH, nXM, nYM
    LOCAL nBaseUnits, nBaseUnitsX, nBaseUnitsY
-   LOCAL aFont
-   LOCAL nMode := Wvt_SetDlgCoMode()
-
-   aFont := Wvt_GetFontInfo()
+   LOCAL aFont := wvt_GetFontInfo()
+   LOCAL nMode := wvt_SetDlgCoMode()
 
    IF nMode == 0
-      __defaultNIL( @aOffSet, {} )
+      hb_default( @aOffSet, {} )
       ASize( aOffSet, 4 )
-      __defaultNIL( @aOffSet[ 1 ], 0 )
-      __defaultNIL( @aOffSet[ 2 ], 0 )
-      __defaultNIL( @aOffSet[ 3 ], 0 )
-      __defaultNIL( @aOffSet[ 4 ], 0 )
+      hb_default( @aOffSet[ 1 ], 0 )
+      hb_default( @aOffSet[ 2 ], 0 )
+      hb_default( @aOffSet[ 3 ], 0 )
+      hb_default( @aOffSet[ 4 ], 0 )
 
-      nBaseUnits  := Wvg_GetDialogBaseUnits()
-      nBaseUnitsX := Wvg_LOWORD( nBaseUnits )
-      nBaseUnitsY := Wvg_HIWORD( nBaseUnits )
+      nBaseUnits  := wapi_GetDialogBaseUnits()
+      nBaseUnitsX := wapi_LOWORD( nBaseUnits )
+      nBaseUnitsY := wapi_HIWORD( nBaseUnits )
 
       nW := aFont[ 7 ] * nCols + aOffSet[ 4 ]
       nH := aFont[ 6 ] * nRows + aOffSet[ 3 ]
 
       /* Position it exactly where user has requested */
 
-      aXY := Wvt_ClientToScreen( nTop, nLeft )
+      aXY := wvt_ClientToScreen( nTop, nLeft )
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
       nY  := aXY[ 2 ] + aOffSet[ 1 ]
 
@@ -283,205 +269,189 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       nXM :=  5.25
       nYM := 10.25
 
-      nX  := ( nX * nXM / nBaseUnitsX )
-      nY  := ( nY * nYM / nBaseUnitsY )
-      nW  := ( nW * nXM / nBaseUnitsX )
-      nH  := ( nH * nYM / nBaseUnitsY )
+      nX := nX * nXM / nBaseUnitsX
+      nY := nY * nYM / nBaseUnitsY
+      nW := nW * nXM / nBaseUnitsX
+      nH := nH * nYM / nBaseUnitsY
    ELSE
-      nX  := nLeft
-      nY  := nTop
-      nW  := nCols
-      nH  := nRows
+      nX := nLeft
+      nY := nTop
+      nW := nCols
+      nH := nRows
    ENDIF
 
-   IF ! HB_ISNUMERIC( nStyle )
-      nStyle := ;
-         WS_CAPTION + WS_SYSMENU + WS_GROUP      + ;
-         WS_TABSTOP + DS_SETFONT + WS_THICKFRAME + ;
-         WS_VISIBLE + WS_POPUP   + DS_3DLOOK
-   ENDIF
+   hb_default( @nStyle, WIN_WS_CAPTION + WIN_WS_SYSMENU + WIN_WS_GROUP + WIN_WS_TABSTOP + DS_SETFONT + WIN_WS_THICKFRAME + WIN_WS_VISIBLE + WIN_WS_POPUP + DS_3DLOOK )
 
-   AAdd( aDlg[ 1 ], iif( Empty( nHelpId  ), 0, nHelpId  ) )
-   AAdd( aDlg[ 1 ], iif( Empty( nExStyle ), 0, nExStyle ) )
-   AAdd( aDlg[ 1 ], nStyle  )
-   AAdd( aDlg[ 1 ], 0       )
-   AAdd( aDlg[ 1 ], nX      )
-   AAdd( aDlg[ 1 ], nY      )
-   AAdd( aDlg[ 1 ], nW      )
-   AAdd( aDlg[ 1 ], nH      )
-   AAdd( aDlg[ 1 ], 0       )
-   AAdd( aDlg[ 1 ], 0       )
-   AAdd( aDlg[ 1 ], iif( HB_ISSTRING( cTitle ), cTitle, "" ) )
+   AAdd( aDlg[ 1 ], hb_defaultValue( nHelpId, 0 ) )
+   AAdd( aDlg[ 1 ], hb_defaultValue( nExStyle, 0 ) )
+   AAdd( aDlg[ 1 ], nStyle )
+   AAdd( aDlg[ 1 ], 0 )
+   AAdd( aDlg[ 1 ], nX )
+   AAdd( aDlg[ 1 ], nY )
+   AAdd( aDlg[ 1 ], nW )
+   AAdd( aDlg[ 1 ], nH )
+   AAdd( aDlg[ 1 ], 0 )
+   AAdd( aDlg[ 1 ], 0 )
+   AAdd( aDlg[ 1 ], hb_defaultValue( cTitle, "" ) )
 
-   IF hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
-      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nPointSize ), nPointSize, 8               ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nWeight    ), nWeight, 400             ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISLOGICAL( lItalic    ), lItalic, .F.             ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISSTRING(  cFaceName  ), cFaceName, "MS Sans Serif" ) )
+   IF hb_bitAnd( nStyle, DS_SETFONT ) != 0
+      AAdd( aDlg[ 1 ], hb_defaultValue( nPointSize, 8 ) )
+      AAdd( aDlg[ 1 ], hb_defaultValue( nWeight, 400 ) )
+      AAdd( aDlg[ 1 ], hb_defaultValue( lItalic, .F. ) )
+      AAdd( aDlg[ 1 ], hb_defaultValue( cFaceName, "MS Sans Serif" ) )
    ENDIF
 
    RETURN aDlg
 
-FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
+FUNCTION wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
       cnId, cnDlgClass, nStyle, cText, nHelpId, nExStyle )
 
    LOCAL aXY, nX, nY, nW, nH, nXM, nYM
    LOCAL nBaseUnits, nBaseUnitsX, nBaseUnitsY
    LOCAL nBottom, nRight
-   LOCAL nMode := Wvt_SetDlgCoMode()
+   LOCAL nMode := wvt_SetDlgCoMode()
 
    IF nMode == 0
       nBottom := nTop  + nRows - 1
       nRight  := nLeft + nCols - 1
 
-      __defaultNIL( @aOffSet, {} )
+      hb_default( @aOffSet, {} )
 
       ASize( aOffSet, 4 )
 
-      __defaultNIL( @aOffSet[ 1 ], 0 )
-      __defaultNIL( @aOffSet[ 2 ], 0 )
-      __defaultNIL( @aOffSet[ 3 ], 0 )
-      __defaultNIL( @aOffSet[ 4 ], 0 )
+      hb_default( @aOffSet[ 1 ], 0 )
+      hb_default( @aOffSet[ 2 ], 0 )
+      hb_default( @aOffSet[ 3 ], 0 )
+      hb_default( @aOffSet[ 4 ], 0 )
 
-      nBaseUnits  := Wvg_GetDialogBaseUnits()
-      nBaseUnitsX := Wvg_LOWORD( nBaseUnits )
-      nBaseUnitsY := Wvg_HIWORD( nBaseUnits )
+      nBaseUnits  := wapi_GetDialogBaseUnits()
+      nBaseUnitsX := wapi_LOWORD( nBaseUnits )
+      nBaseUnitsY := wapi_HIWORD( nBaseUnits )
 
-      aXY := Wvt_GetXYFromRowCol( nTop, nLeft )
+      aXY := wvt_GetXYFromRowCol( nTop, nLeft )
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
       nY  := aXY[ 2 ] + aOffSet[ 1 ]
 
-      aXY := Wvt_GetXYFromRowCol( nBottom + 1, nRight + 1 )
+      aXY := wvt_GetXYFromRowCol( nBottom + 1, nRight + 1 )
       nW  := aXY[ 1 ] + aOffSet[ 4 ] - nX
       nH  := aXY[ 2 ] + aOffSet[ 3 ] - nY
 
       nXM :=  5.25
       nYM := 10.25
 
-      nX  := ( nX * nXM / nBaseUnitsX )
-      nY  := ( nY * nYM / nBaseUnitsY )
-      nW  := ( nW * nXM / nBaseUnitsX )
-      nH  := ( nH * nYM / nBaseUnitsY )
+      nX := nX * nXM / nBaseUnitsX
+      nY := nY * nYM / nBaseUnitsY
+      nW := nW * nXM / nBaseUnitsX
+      nH := nH * nYM / nBaseUnitsY
    ELSE
-      nX  := nLeft
-      nY  := nTop
-      nW  := nCols
-      nH  := nRows
+      nX := nLeft
+      nY := nTop
+      nW := nCols
+      nH := nRows
    ENDIF
 
    aDlg[ 1, 4 ]++      /* item count */
 
-   AAdd( aDlg[  2 ], iif( HB_ISNUMERIC( nHelpId  ), nHelpId, 0                     ) )
-   AAdd( aDlg[  3 ], iif( HB_ISNUMERIC( nExStyle ), nExStyle, 0                     ) )
-   AAdd( aDlg[  4 ], iif( HB_ISNUMERIC( nStyle   ), nStyle, WS_CHILD + WS_VISIBLE ) )
-   AAdd( aDlg[  5 ], nX         )
-   AAdd( aDlg[  6 ], nY         )
-   AAdd( aDlg[  7 ], nW         )
-   AAdd( aDlg[  8 ], nH         )
-   AAdd( aDlg[  9 ], cnId       )
+   AAdd( aDlg[  2 ], hb_defaultValue( nHelpId, 0 ) )
+   AAdd( aDlg[  3 ], hb_defaultValue( nExStyle, 0 ) )
+   AAdd( aDlg[  4 ], hb_defaultValue( nStyle, WIN_WS_CHILD + WIN_WS_VISIBLE ) )
+   AAdd( aDlg[  5 ], nX )
+   AAdd( aDlg[  6 ], nY )
+   AAdd( aDlg[  7 ], nW )
+   AAdd( aDlg[  8 ], nH )
+   AAdd( aDlg[  9 ], cnId )
    AAdd( aDlg[ 10 ], cnDlgClass )
-   AAdd( aDlg[ 11 ], iif( HB_ISSTRING( cText ), cText, iif( HB_ISNUMERIC( cText ), cText, "" ) ) )
+   AAdd( aDlg[ 11 ], iif( HB_ISSTRING( cText ) .OR. HB_ISNUMERIC( cText ), cText, "" ) )
    AAdd( aDlg[ 12 ], 0 )
 
    RETURN aDlg
 
-FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
+FUNCTION wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
 
-   LOCAL hDlg, cType, xTemplate, nDlgMode
+   LOCAL hDlg, xTemplate, nDlgMode
 
    IF HB_ISSTRING( cbDlgProc )
       cbDlgProc := Upper( cbDlgProc )
    ENDIF
 
-   cType    := ValType( acnDlg )
-   nDlgMode := iif( cType == "C", 0, iif( cType == "N", 1, 2 ) )
+   nDlgMode := iif( HB_ISSTRING( acnDlg ), 0, iif( HB_ISNUMERIC( acnDlg ), 1, 2 ) )
 
-   IF cType == "A"
-      xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ], acnDlg[  2 ], acnDlg[  3 ], acnDlg[  4 ], ;
-         acnDlg[ 5 ], acnDlg[  6 ], acnDlg[  7 ], acnDlg[  8 ], ;
-         acnDlg[ 9 ], acnDlg[ 10 ], acnDlg[ 11 ], acnDlg[ 12 ] )
+   IF HB_ISARRAY( acnDlg )
+      xTemplate := __wapi_DLGTEMPLATE_Raw_New( hb_ArrayToParams( acnDlg ) )
    ELSE
       xTemplate := acnDlg
    ENDIF
 
-   hDlg := Wvt_CreateDialogDynamic( xTemplate, lOnTop, cbDlgProc, nDlgMode )
+   hDlg := wvt_CreateDialogDynamic( xTemplate, lOnTop, cbDlgProc, nDlgMode )
 
-   IF hDlg != 0
-      IF ncIcon != nil
-         Wvt_DlgSetIcon( hDlg, ncIcon )
-
+   IF ! Empty( hDlg )
+      IF ncIcon != NIL
+         wvt_DlgSetIcon( hDlg, ncIcon )
       ENDIF
 
       IF HB_ISNUMERIC( nTimerTicks )
-         Wvg_SetTimer( hDlg, 1001, nTimerTicks )
-
+         wvg_SetTimer( hDlg, 1001, nTimerTicks )
       ENDIF
 
-      IF hMenu != nil
-         Wvg_SetMenu( hDlg, hMenu )
-
+      IF hMenu != NIL
+         wvg_SetMenu( hDlg, hMenu )
       ENDIF
-
    ENDIF
 
    RETURN hDlg
 
-FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
+FUNCTION wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 
-   LOCAL nResult, cType, xTemplate, nDlgMode
+   LOCAL nResult, xTemplate, nDlgMode
 
    IF HB_ISSTRING( cbDlgProc )
       cbDlgProc := Upper( cbDlgProc )
    ENDIF
 
-   cType    := ValType( acnDlg )
-   nDlgMode := iif( cType == "C", 0, iif( cType == "N", 1, 2 ) )
+   nDlgMode := iif( HB_ISSTRING( acnDlg ), 0, iif( HB_ISNUMERIC( acnDlg ), 1, 2 ) )
 
-   IF cType == "A"
-      xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ], acnDlg[  2 ], acnDlg[  3 ], acnDlg[  4 ], ;
-         acnDlg[ 5 ], acnDlg[  6 ], acnDlg[  7 ], acnDlg[  8 ], ;
-         acnDlg[ 9 ], acnDlg[ 10 ], acnDlg[ 11 ], acnDlg[ 12 ] )
+   IF HB_ISARRAY( acnDlg )
+      xTemplate := __wapi_DLGTEMPLATE_Raw_New( hb_ArrayToParams( acnDlg ) )
    ELSE
       xTemplate := acnDlg
    ENDIF
 
-   nResult := Wvt_CreateDialogModal( xTemplate, .F., cbDlgProc, nDlgMode, hWndParent )
+   nResult := wvt_CreateDialogModal( xTemplate, .F., cbDlgProc, nDlgMode, hWndParent )
 
-   Wvg_SetFocus( hWndParent )
+   wapi_SetFocus( hWndParent )
 
    RETURN nResult
 
-/*
-Wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
+/* wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
 
 hWnd:     Handle to parent window
-cPath:    (optional) if OFN_ALLOWMULTISELECT the path is stored
+cPath:    (optional) if WIN_OFN_ALLOWMULTISELECT the path is stored
 cTitle:   Window Title
-aFilter:  Array of Files Types i.e. { {"Data Bases","*.dbf"},{"Clipper","*.prg"} }
-nFlags:   OFN_* values default to OFN_EXPLORER
+aFilter:  Array of Files Types i.e. { { "Databases", "*.dbf" }, { "Harbour", "*.prg" } }
+nFlags:   WIN_OFN_* values default to WIN_OFN_EXPLORER
 cInitDir: Initial directory
 cDefExt:  Default Extension i.e. "DBF"
 nIndex:   Index position of types
 cDefName: DEFAULT file name
 
-Returns:  If OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
+Returns:  If WIN_OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
 */
-FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
+FUNCTION wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
 
    LOCAL cRet, aTmp, xRet, i
 
    HB_SYMBOL_UNUSED( hWnd )
 
-   __defaultNIL( @cPath, "" )
-   __defaultNIL( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
+   hb_default( @cPath, "" )
+   hb_default( @nFlags, WIN_OFN_EXPLORER + WIN_OFN_NOCHANGEDIR )
 
-/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
-   cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
+   cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /* nBufferSize */, cDefName )
 
-   IF Wvg_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
+   IF hb_bitAnd( nFlags, WIN_OFN_ALLOWMULTISELECT ) != 0
       xRet := {}
       IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]
@@ -495,35 +465,34 @@ FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
 
    RETURN xRet
 
-/*
-Wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt, @nFilterIndex )
+/* wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt, @nFilterIndex )
 
 hWnd:     Handle to parent window
 cDefName: (optional) Default FileName
 cTitle:   Window Title
-aFilter:  Array of Files Types i.e. { {"Data Bases","*.dbf"},{"Clipper","*.prg"} }
-nFlags:   OFN_* values default to OFN_EXPLORER
+aFilter:  Array of Files Types i.e. { { "Databases", "*.dbf" }, { "Harbour", "*.prg" } }
+nFlags:   WIN_OFN_* values default to WIN_OFN_EXPLORER
 cInitDir: Initial directory
 cDefExt:  Default Extension i.e. "DBF"
 nIndex:   Index position of types
 
 Returns:  FileName.
 */
-FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
+FUNCTION wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
 
    LOCAL cRet, aTmp, xRet, i, cPath
 
    HB_SYMBOL_UNUSED( hWnd )
 
-   __defaultNIL( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
+   hb_default( @nFlags, WIN_OFN_EXPLORER + WIN_OFN_NOCHANGEDIR )
 
-/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
    cRet := win_GetSaveFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
 
-   IF Wvg_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
+   IF hb_bitAnd( nFlags, WIN_OFN_ALLOWMULTISELECT ) != 0
       xRet := {}
       IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]
@@ -537,91 +506,81 @@ FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
    RETURN xRet
 
-/*
- *                      C Functions to PRG Ports
- */
+/* C functions to PRG Ports */
 
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 
-FUNCTION Wvt_SetTitle( cTitle )
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION wvt_SetTitle( cTitle )
    RETURN hb_gtInfo( HB_GTI_WINTITLE, cTitle )
 
-FUNCTION Wvt_GetTitle()
-
+FUNCTION wvt_GetTitle()
    RETURN hb_gtInfo( HB_GTI_WINTITLE )
 
-FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
+#endif
 
-   IF HB_ISNUMERIC( ncIconRes )
-      hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
+PROCEDURE wvt_SetIcon( ncIconRes, cIconName )
 
-   ELSEIF HB_ISSTRING( cIconName )
-      hb_gtInfo( HB_GTI_ICONRES, cIconName )
+   DO CASE
+   CASE HB_ISNUMERIC( ncIconRes ) ; hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
+   CASE HB_ISSTRING( cIconName )  ; hb_gtInfo( HB_GTI_ICONRES, cIconName )
+   CASE HB_ISSTRING( ncIconRes )  ; hb_gtInfo( HB_GTI_ICONFILE, ncIconRes )
+   ENDCASE
 
-   ELSEIF HB_ISSTRING( ncIconRes )
-      hb_gtInfo( HB_GTI_ICONFILE, ncIconRes )
+   RETURN
 
-   ENDIF
+FUNCTION wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
+   RETURN hb_gtInfo( HB_GTI_SETFONT, { ;
+      hb_defaultValue( cFontName, hb_gtInfo( HB_GTI_FONTNAME ) ), ;
+      hb_defaultValue( nSize, hb_gtInfo( HB_GTI_FONTSIZE ) ), ;
+      hb_defaultValue( nWidth, hb_gtInfo( HB_GTI_FONTWIDTH ) ), ;
+      hb_defaultValue( nWeight, hb_gtInfo( HB_GTI_FONTWEIGHT ) ), ;
+      hb_defaultValue( nQuality, hb_gtInfo( HB_GTI_FONTQUALITY ) ) } )
 
-   RETURN NIL
+#ifdef HB_LEGACY_LEVEL4
 
-FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
-
-   __defaultNIL( @cFontName, hb_gtInfo( HB_GTI_FONTNAME    ) )
-   __defaultNIL( @nWidth, hb_gtInfo( HB_GTI_FONTWIDTH   ) )
-   __defaultNIL( @nWeight, hb_gtInfo( HB_GTI_FONTWEIGHT  ) )
-   __defaultNIL( @nQuality, hb_gtInfo( HB_GTI_FONTQUALITY ) )
-   __defaultNIL( @nSize, hb_gtInfo( HB_GTI_FONTSIZE    ) )
-
-   RETURN hb_gtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
-
-FUNCTION Wvt_SetCodepage( nCodePage )
-
+FUNCTION wvt_SetCodepage( nCodePage )
    RETURN hb_gtInfo( HB_GTI_CODEPAGE, nCodePage )
 
-FUNCTION Wvt_GetPalette()
-
+FUNCTION wvt_GetPalette()
    RETURN hb_gtInfo( HB_GTI_PALETTE )
 
-FUNCTION Wvt_SetPalette( aRGB )
-
+FUNCTION wvt_SetPalette( aRGB )
    RETURN hb_gtInfo( HB_GTI_PALETTE, aRGB )
 
-FUNCTION Wvt_GetRGBColor( nIndex )
-
+FUNCTION wvt_GetRGBColor( nIndex )
    RETURN hb_gtInfo( HB_GTI_PALETTE, nIndex )
 
-#define BLACK                                     RGB( 0x0 ,0x0 ,0x0  )
-#define BLUE                                      RGB( 0x0 ,0x0 ,0x85 )
-#define GREEN                                     RGB( 0x0 ,0x85,0x0  )
-#define CYAN                                      RGB( 0x0 ,0x85,0x85 )
-#define RED                                       RGB( 0x85,0x0 ,0x0  )
-#define MAGENTA                                   RGB( 0x85,0x0 ,0x85 )
-#define BROWN                                     RGB( 0x85,0x85,0x0  )
-#define LIGHT_GRAY                                RGB( 0xC6,0xC6,0xC6 )
-#define GRAY                                      RGB( 0x60,0x60,0x60 )
-#define BRIGHT_BLUE                               RGB( 0x00,0x00,0xFF )
-#define BRIGHT_GREEN                              RGB( 0x60,0xFF,0x60 )
-#define BRIGHT_CYAN                               RGB( 0x60,0xFF,0xFF )
-#define BRIGHT_RED                                RGB( 0xF8,0x00,0x26 )
-#define BRIGHT_MAGENTA                            RGB( 0xFF,0x60,0xFF )
-#define YELLOW                                    RGB( 0xFF,0xFF,0x00 )
-#define WHITE                                     RGB( 0xFF,0xFF,0xFF )
+#endif
 
-FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
+#define BLACK               WIN_RGB( 0x00, 0x00, 0x00 )
+#define BLUE                WIN_RGB( 0x00, 0x00, 0x85 )
+#define GREEN               WIN_RGB( 0x00, 0x85, 0x00 )
+#define CYAN                WIN_RGB( 0x00, 0x85, 0x85 )
+#define RED                 WIN_RGB( 0x85, 0x00, 0x00 )
+#define MAGENTA             WIN_RGB( 0x85, 0x00, 0x85 )
+#define BROWN               WIN_RGB( 0x85, 0x85, 0x00 )
+#define LIGHT_GRAY          WIN_RGB( 0xC6, 0xC6, 0xC6 )
+#define GRAY                WIN_RGB( 0x60, 0x60, 0x60 )
+#define BRIGHT_BLUE         WIN_RGB( 0x00, 0x00, 0xFF )
+#define BRIGHT_GREEN        WIN_RGB( 0x60, 0xFF, 0x60 )
+#define BRIGHT_CYAN         WIN_RGB( 0x60, 0xFF, 0xFF )
+#define BRIGHT_RED          WIN_RGB( 0xF8, 0x00, 0x26 )
+#define BRIGHT_MAGENTA      WIN_RGB( 0xFF, 0x60, 0xFF )
+#define YELLOW              WIN_RGB( 0xFF, 0xFF, 0x00 )
+#define WHITE               WIN_RGB( 0xFF, 0xFF, 0xFF )
+
+FUNCTION wvt_GetRGBColorByString( cColor, nForeBack )
 
    LOCAL s, n, lEnh
    LOCAL nIndex := 0
-   LOCAL a_ := { "N", "B", "G", "BG", "R", "RB", "GR", "W" }
-
-   nForeBack := iif( HB_ISNUMERIC( nForeBack ), nForeBack, 0 )
 
    IF HB_ISSTRING( cColor )
       IF ( n := At( "/", cColor ) ) > 0
-         IF nForeBack == 0
-            s := SubStr( cColor, 1, n - 1 )
+         IF hb_defaultValue( nForeBack, 0 ) == 0
+            s := Left( cColor, n - 1 )
          ELSE
             s := SubStr( cColor, n + 1 )
          ENDIF
@@ -629,13 +588,11 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
          s := cColor
       ENDIF
       s := Upper( s )
-      lEnh := ( "*" $ s ) .OR. ( "+" $ s )
+      lEnh := "*" $ s .OR. "+" $ s
       IF lEnh
-         s := StrTran( s, "*" )
-         s := StrTran( s, "+" )
+         s := hb_StrReplace( s, "*+" )
       ENDIF
-      nIndex := AScan( a_, {| e | e == s } )
-      IF nIndex > 0
+      IF ( nIndex := hb_AScan( { "N", "B", "G", "BG", "R", "RB", "GR", "W" }, s,,, .T. ) ) > 0
          IF lEnh
             nIndex += 8
          ENDIF
@@ -645,113 +602,309 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
 
    RETURN hb_gtInfo( HB_GTI_PALETTE, nIndex )
 
-FUNCTION Wvt_SetAltF4Close( lSetClose )
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION wvt_SetAltF4Close( lSetClose )
    RETURN hb_gtInfo( HB_GTI_CLOSABLE, lSetClose )
 
-FUNCTION Wvt_GetScreenWidth()
-
+FUNCTION wvt_GetScreenWidth()
    RETURN hb_gtInfo( HB_GTI_DESKTOPWIDTH )
 
-FUNCTION Wvt_GetScreenHeight()
-
+FUNCTION wvt_GetScreenHeight()
    RETURN hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
 
-FUNCTION Wvt_GetWindowHandle()
+#endif
 
-   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
+#ifdef HB_LEGACY_LEVEL5
 
-FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
+FUNCTION wvt_GetWindowHandle()
+   RETURN hb_gtInfo( HB_GTI_WINHANDLE )
 
-   __defaultNIL( @lCenter, .T. )
-   __defaultNIL( @lRePaint, .F. )
+#endif
 
-   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
+FUNCTION wvt_CenterWindow( lCenter, lRePaint )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { hb_defaultValue( lCenter, .T. ), hb_defaultValue( lRePaint, .F. ) } )
 
-FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
+FUNCTION wvt_WindowCentre( lCenter, lRePaint )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { hb_defaultValue( lCenter, .T. ), hb_defaultValue( lRePaint, .F. ) } )
 
-   __defaultNIL( @lCenter, .T. )
-   __defaultNIL( @lRePaint, .F. )
-
-   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
-
-FUNCTION Wvt_ProcessMessages()
+FUNCTION wvt_ProcessMessages()
 
    hb_gtInfo( HB_GTI_SPEC, HB_GTS_PROCESSMESSAGES )
 
    RETURN .T.
 
-FUNCTION Wvt_Keyboard( nKey )
+PROCEDURE wvt_Keyboard( nKey )
 
    hb_gtInfo( HB_GTI_SPEC, HB_GTS_KEYBOARD, nKey )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION Wvt_GetClipboard()
+#ifdef HB_LEGACY_LEVEL4
 
+FUNCTION wvt_GetClipboard()
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA )
 
-FUNCTION Wvt_SetClipboard( cText )
-
+FUNCTION wvt_SetClipboard( cText )
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA, cText )
 
-FUNCTION Wvt_PasteFromClipboard()
+#endif
 
-   LOCAL cText, nLen, i
+PROCEDURE wvt_PasteFromClipboard()
 
-   cText := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
-   IF ( nLen := Len( cText ) ) > 0
-      FOR i := 1 TO nLen
-         Wvt_Keyboard( Asc( SubStr( cText, i, 1 ) ) )
-      NEXT
-   ENDIF
+   LOCAL cText := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
+   LOCAL nLen := Len( cText )
+   LOCAL i
 
-   RETURN NIL
+   FOR i := 1 TO nLen
+      wvt_Keyboard( hb_keyCode( SubStr( cText, i, 1 ) ) )
+   NEXT
 
-FUNCTION Wvt_ResetWindow()
+   RETURN
 
+FUNCTION wvt_ResetWindow()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
 
-FUNCTION Wvt_SetTimer( nTimerID, nMiliSeconds )
+PROCEDURE wvt_SetTimer( nTimerID, nMiliSeconds )
 
-   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
+   LOCAL hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
 
-FUNCTION Wvt_KillTimer( nTimerID )
+   IF ! Empty( hWnd )
+      wapi_SetTimer( hWnd, nTimerID, nMiliSeconds )
+   ENDIF
 
-   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
+   RETURN
 
-FUNCTION Wvt_SetOnTop()
+PROCEDURE wvt_KillTimer( nTimerID )
 
+   LOCAL hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
+
+   IF ! Empty( hWnd )
+      wapi_KillTimer( hWnd, nTimerID )
+   ENDIF
+
+   RETURN
+
+FUNCTION wvt_SetOnTop()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
 
-FUNCTION Wvt_SetAsNormal()
-
+FUNCTION wvt_SetAsNormal()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETASNORMAL )
 
-FUNCTION Wvt_Minimize()
-
+FUNCTION wvt_Minimize()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MINIMIZED )
 
-FUNCTION Wvt_Maximize()
-
+FUNCTION wvt_Maximize()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
 
-FUNCTION Wvt_Hide()
-
+FUNCTION wvt_Hide()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_HIDDEN )
 
-FUNCTION Wvt_Show()
-
+FUNCTION wvt_Show()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_NORMAL )
 
-FUNCTION Wvt_SetWindowPos( nX, nY )
-
+FUNCTION wvt_SetWindowPos( nX, nY )
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETPOSITION, { nX, nY } )
 
-FUNCTION Wvt_ShowWindow( nState )
-
+FUNCTION wvt_ShowWindow( nState )
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, nState )
 
-FUNCTION Wvt_Update()
-
+FUNCTION wvt_Update()
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
+
+FUNCTION wvt_GetCursorPos()
+
+   LOCAL xy
+
+   wapi_GetCursorPos( @xy )
+
+   RETURN xy
+
+FUNCTION wvg_GetWindowRect( hWnd )
+
+   LOCAL rc
+
+   wapi_GetWindowRect( hWnd, @rc )
+
+   RETURN rc
+
+FUNCTION wvg_GetClientRect( hWnd )
+
+   LOCAL rc
+
+   wapi_GetClientRect( hWnd, @rc )
+
+   RETURN rc
+
+FUNCTION wvg_SetTimer( ... )
+   RETURN ! Empty( wapi_SetTimer( ... ) )
+
+FUNCTION wvg_InvalidateRect( w, r, e )
+   RETURN wapi_InvalidateRect( w, r, hb_defaultValue( e, .T. ) )
+
+FUNCTION wvg_GetMessageText( w, p1, p2 )
+
+   LOCAL cText := Replicate( hb_BChar( 0 ), 64000 )
+
+   wapi_SendMessage( w, p1, p2, @cText )
+
+   RETURN Left( cText, At( Chr( 0 ), cText + Chr( 0 ) ) - 1 )
+
+FUNCTION wvt_IsLButtonPressed()
+   RETURN hb_bitAnd( wapi_GetKeyState( WIN_VK_LBUTTON ), 0x8000 ) != 0
+
+FUNCTION wvg_FindWindow( cTitle )
+   RETURN wapi_FindWindow( , cTitle )
+
+#if 0
+FUNCTION wvg_CreateBrush( ... )  /* TOFIX: causes problems due to the GC collected pointer is returns */
+   RETURN wapi_CreateBrushIndirect( { ... } )
+#endif
+
+FUNCTION wvg_SetDCBrushColor( hDC, nRGB )
+   RETURN wapi_SetDCBrushColor( hDC, nRGB )
+
+FUNCTION wvg_SetDCPenColor( hDC, nRGB )
+   RETURN wapi_SetDCPenColor( hDC, nRGB )
+
+FUNCTION wvg_SetWindowPosToBack( hWnd )
+   RETURN wapi_SetWindowPos( hWnd, WIN_HWND_BOTTOM,,,,, ;
+      hb_bitOr( WIN_SWP_NOSIZE, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) )
+
+FUNCTION wvg_SetWindowPosToTop( hWnd )
+   RETURN wapi_SetWindowPos( hWnd, WIN_HWND_TOP,,,,, ;
+      hb_bitOr( WIN_SWP_NOSIZE, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) )
+
+FUNCTION wvg_SetWindowSize( hWnd, w, h, lPaint )
+   RETURN wapi_SetWindowPos( hWnd,, 0, 0, w, h, ;
+      iif( hb_defaultValue( lPaint, .F. ),, ;
+      hb_bitOr( WIN_SWP_NOREDRAW, WIN_SWP_NOZORDER, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) ) )
+
+FUNCTION wvg_SetWindowPosition( hWnd, x, y, lPaint )
+   RETURN wapi_SetWindowPos( hWnd,, x, y, 0, 0, ;
+      iif( hb_defaultValue( lPaint, .F. ),, ;
+      hb_bitOr( WIN_SWP_NOREDRAW, WIN_SWP_NOZORDER, WIN_SWP_NOMOVE, WIN_SWP_NOACTIVATE ) ) )
+
+FUNCTION wvg_SetWindowPosAndSize( hWnd, x, y, w, h, lPaint )
+   RETURN wapi_SetWindowPos( hWnd,, x, y, w, h, ;
+      iif( hb_defaultValue( lPaint, .F. ),, ;
+      hb_bitOr( WIN_SWP_NOREDRAW, WIN_SWP_NOZORDER, WIN_SWP_NOACTIVATE, WIN_SWP_FRAMECHANGED ) ) )
+
+PROCEDURE wvg_ForceWindowToTop( hWnd )
+
+   wapi_SetWindowPos( hWnd, WIN_HWND_TOPMOST,,,,, hb_bitOr( WIN_SWP_NOMOVE, WIN_SWP_NOSIZE ) )
+   wapi_SetWindowPos( hWnd, WIN_HWND_NOTOPMOST,,,,, hb_bitOr( WIN_SWP_NOMOVE, WIN_SWP_NOSIZE ) )
+
+   RETURN
+
+FUNCTION wvg_SetWndProc( hWnd, pWndProc )
+   RETURN wapi_SetWindowLongPtr( hWnd, WIN_GWLP_WNDPROC, pWndProc )
+
+STATIC FUNCTION wvg_hWnd()
+   RETURN hb_gtInfo( HB_GTI_WINHANDLE )
+
+/* wvt_MessageBox( cMessage, cTitle, nIcon, hWnd ) */
+FUNCTION wvt_MessageBox( ... )
+
+   LOCAL hWnd := wvg_hWnd()
+
+   IF Empty( hWnd )
+      RETURN 0
+   ENDIF
+
+   RETURN wapi_MessageBox( hWnd, ... )
+
+/* wvt_DlgSetIcon( hDlg, ncIcon ) */
+FUNCTION wvt_DlgSetIcon( hDlg, ncIcon )
+
+   LOCAL hIcon
+
+   IF HB_ISNUMERIC( ncIcon )
+      hIcon := wapi_LoadIcon( wapi_GetModuleHandle(), ncIcon )
+   ELSEIF Empty( hIcon := wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON,,, WIN_LR_LOADFROMFILE ) )
+      hIcon := wapi_LoadImage( wapi_GetModuleHandle(), ncIcon, WIN_IMAGE_ICON )
+   ENDIF
+
+   IF ! Empty( hIcon )
+      wapi_SendMessage( hDlg, WIN_WM_SETICON, WIN_ICON_SMALL, hIcon )  /* Titlebar icon */
+      wapi_SendMessage( hDlg, WIN_WM_SETICON, WIN_ICON_BIG  , hIcon )  /* Tasklist icon */
+   ENDIF
+
+   RETURN hIcon
+
+FUNCTION wvg_LoadIcon( ncIcon )
+
+   IF HB_ISNUMERIC( ncIcon )
+      RETURN wapi_LoadIcon( wapi_GetModuleHandle(), ncIcon )
+   ENDIF
+
+   RETURN wapi_LoadImage( , ncIcon, WIN_IMAGE_ICON,,, WIN_LR_LOADFROMFILE )
+
+/* https://msdn.microsoft.com/en-us/library/windows/desktop/ms648045.aspx
+   Windows 2000 and upper, wapi_LoadImage() can resize image
+
+   nSource: 0 ResourceIdByNumber
+   nSource: 1 ResourceIdByName
+   nSource: 2 ImageFromDiskFile */
+FUNCTION wvg_LoadImage( ncImage, nSource, nBmpOrIcon, nWidth, nHeight )
+
+   hb_defaultValue( @nBmpOrIcon, WIN_IMAGE_BITMAP )
+
+   RETURN iif( hb_defaultValue( nSource, 0 ) == 2, ;
+      wapi_LoadImage( , ncImage, nBmpOrIcon, nWidth, nHeight, WIN_LR_LOADFROMFILE + WIN_LR_DEFAULTSIZE ), ;
+      wapi_LoadImage( wapi_GetModuleHandle(), ncImage, nBmpOrIcon, nWidth, nHeight, WIN_LR_DEFAULTSIZE ) )
+
+FUNCTION wvg_TrackPopupMenu( hMenu, nFlags, x, y, hWnd )
+
+   LOCAL xy
+
+   IF ! HB_ISNUMERIC( x ) .OR. ! HB_ISNUMERIC( y )
+      xy := { => }
+      wapi_GetCursorPos( @xy )
+      x := xy[ "x" ]
+      y := xy[ "y" ]
+   ENDIF
+
+   RETURN wapi_TrackPopupMenu( hMenu, ;
+      hb_defaultValue( nFlags, hb_bitOr( WIN_TPM_CENTERALIGN, WIN_TPM_RETURNCMD ) ), ;
+      x, y, 0, ;
+      hb_defaultValue( hWnd, wapi_GetActiveWindow() ) )
+
+FUNCTION wvt_TrackPopupMenu( hMenu )
+
+   LOCAL hWnd := wvg_hWnd()
+   LOCAL xy
+
+   IF Empty( hWnd )
+      RETURN 0
+   ENDIF
+
+   xy := { => }
+   wapi_GetCursorPos( @xy )
+
+   RETURN wapi_TrackPopupMenu( hMenu, ;
+      hb_bitOr( WIN_TPM_CENTERALIGN, WIN_TPM_RETURNCMD ), ;
+      xy[ "x" ], xy[ "y" ], 0, hWnd )
+
+FUNCTION wvt_GetMenu()
+
+   LOCAL hWnd := wvg_hWnd()
+
+   RETURN iif( Empty( hWnd ),, wapi_GetMenu( hWnd ) )
+
+FUNCTION wvg_ChooseColor( nColor, aColor, nFlags, hWnd )
+   RETURN win_ChooseColor( hWnd,, nColor, ;
+      hb_defaultValue( aColor, AFill( Array( 16 ), wapi_GetSysColor( WIN_COLOR_BTNFACE ) ) ), ;
+      hb_defaultValue( nFlags, hb_bitOr( WIN_CC_ANYCOLOR, WIN_CC_RGBINIT, WIN_CC_FULLOPEN ) ) )
+
+FUNCTION wvt_ChooseColor( nColor, aColor, nFlags )
+
+   LOCAL hWnd := wvg_hWnd()
+
+   IF Empty( hWnd )
+      RETURN -1
+   ENDIF
+
+   RETURN win_ChooseColor( hWnd,, nColor, ;
+      hb_defaultValue( aColor, AFill( Array( 16 ), wapi_GetSysColor( WIN_COLOR_BTNFACE ) ) ), ;
+      hb_defaultValue( nFlags, hb_bitOr( WIN_CC_ANYCOLOR, WIN_CC_RGBINIT, WIN_CC_FULLOPEN ) ) )

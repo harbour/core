@@ -58,10 +58,9 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
 {
    char buffer[ 8192 ];
    char file[ HB_PATH_MAX ];
-   const char * szFile, * szInfo;
+   const char * szFile;
    HB_BOOL fStack, fLang;
    HB_USHORT uiLine;
-   int iLevel;
    FILE * hLog;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_errInternal(%d, %s, %s, %s)", errCode, szText, szPar1, szPar2 ) );
@@ -82,6 +81,8 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
    hLog = hb_fopen( szFile, "a+" );
    if( hLog )
    {
+      const char * szInfo;
+
       char szTime[ 9 ];
       int  iYear, iMonth, iDay;
 
@@ -120,7 +121,7 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
 
    if( fStack && hb_stackTotalItems() )
    {
-      iLevel = 0;
+      int iLevel = 0;
       while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
       {
          char msg[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];

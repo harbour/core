@@ -1,5 +1,11 @@
 #require "hbnf"
 
+/* Pass "mono" or "MONO" as a command-line parameter to force mono mode.
+   Pass "nosnow" or "NOSNOW" as a command-line parameter on a CGA.
+   Pass "vga" or "VGA" as a command-line parameter for 50-line mode.
+ */
+
+#include "box.ch"
 #include "setcurs.ch"
 
 PROCEDURE Main( cCmdLine )
@@ -15,21 +21,23 @@ PROCEDURE Main( cCmdLine )
 
    // options on menu bar
    LOCAL aColors
-   LOCAL aBar     := { " ENTER/EDIT ", " REPORTS ", " DISPLAY ", " MAINTENANCE ", " QUIT " }
+   LOCAL aBar := { " ÉNTER/EDIT ", " REPORTS ", " DISPLAY ", " MAINTENANCE ", " QUIT " }
    LOCAL aOptions[ Len( aBar ) ]
 
    LOCAL nMaxRow
+   LOCAL nOldRow, nOldCol
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), aOptions[ i ] := { {}, {}, {} } } )
 
-   cCmdLine := iif( cCmdLine == NIL, "", cCmdLine )
+   hb_default( @cCmdLine, "" )
 
    lColor := iif( "MONO" $ Upper( cCmdLine ), .F., IsColor() )
 
    // Border, Box, Bar, Current, Unselected
-   aColors := iif( lColor, { "W+/G", "N/G", "N/G", "N/W", "N+/G" }, ;
+   aColors := iif( lColor, { ;
+        "W+/G", "N/G", "N/G", "N/W", "N+/G" }, ;
       { "W+/N", "W+/N", "W/N", "N/W", "W/N" } )
 
    ft_Fill( aOptions[ 1 ], "A. Execute A Dummy Procedure"        , {|| fubar() }, .T. )
@@ -55,6 +63,7 @@ PROCEDURE Main( cCmdLine )
    ft_Fill( aOptions[ 2 ], "K. Print Transaction Totals"         , {|| .T. }, .T. )
    ft_Fill( aOptions[ 2 ], "L. Print Transaction Codes File"     , {|| .T. }, .T. )
    ft_Fill( aOptions[ 2 ], "M. Print No-Activity List"           , {|| .T. }, .T. )
+   ft_Fill( aOptions[ 2 ], "Á. Testing Unicode"                  , {|| .T. }, .T. )
 
    ft_Fill( aOptions[ 3 ], "A. Transaction Totals Display"       , {|| .T. }, .T. )
    ft_Fill( aOptions[ 3 ], "B. Display Invoice Totals"           , {|| .T. }, .T. )
@@ -69,7 +78,7 @@ PROCEDURE Main( cCmdLine )
    ft_Fill( aOptions[ 5 ], "B. Exit Application"                 , {|| .F. }, .T. )
 
    // main routine starts here
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
 
    cNormN := iif( lColor, "N/G" , "W/N"  )
    cWindN := iif( lColor, "W/B" , "W/N"  )
@@ -83,6 +92,8 @@ PROCEDURE Main( cCmdLine )
    CLS
    NoSnow( "NOSNOW" $ Upper( cCmdLine ) )
    IF "VGA" $ Upper( cCmdLine )
+      nOldRow := MaxRow() + 1
+      nOldCol := MaxCol() + 1
       SetMode( 50, 80 )
    ENDIF
    nMaxRow := MaxRow()
@@ -90,21 +101,21 @@ PROCEDURE Main( cCmdLine )
    SetColor( cWindN + "*" )
    CLS
    SetColor( cNormN )
-   @ nMaxRow, 0
-   @ nMaxRow, 0 SAY hb_UTF8ToStr( " FT_MENU1 1.0 │ " )
-   @ nMaxRow, 16 SAY "WRITTEN BY PAUL FERRARA [76702,556] FOR NANFORUM.LIB"
-   @ nMaxRow, 69 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
+   @ nMaxRow,  0
+   @ nMaxRow,  0 SAY hb_UTF8ToStr( " ft_menu1 1.0 │" )
+   @ nMaxRow, 16 SAY "WRITTEN BY PAUL FERRARA [76702,556]"
+   @ nMaxRow, MaxCol() - 12 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
 
    SetColor( cErrH )
-   @ nMaxRow - 11, 23, nMaxRow - 3, 56 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
-   @ nMaxRow - 9, 23 SAY hb_UTF8ToStr( "├────────────────────────────────┤" )
+   @ nMaxRow - 11, 23, nMaxRow - 3, 56 BOX HB_B_SINGLE_UNI + " "
+   @ nMaxRow -  9, 23 SAY hb_UTF8ToStr( "├────────────────────────────────┤" )
    SetColor( cErrN )
    @ nMaxRow - 10, 33 SAY "Navigation Keys"
-   @ nMaxRow - 8, 25 SAY "LeftArrow   RightArrow   Alt-E"
-   @ nMaxRow - 7, 25 SAY "Home        End          Alt-R"
-   @ nMaxRow - 6, 25 SAY "Tab         Shift-Tab    Alt-D"
-   @ nMaxRow - 5, 25 SAY "PgUp        PgDn         Alt-M"
-   @ nMaxRow - 4, 25 SAY "Enter       ESCape       Alt-Q"
+   @ nMaxRow -  8, 25 SAY "LeftArrow   RightArrow   Alt-E"
+   @ nMaxRow -  7, 25 SAY "Home        End          Alt-R"
+   @ nMaxRow -  6, 25 SAY "Tab         Shift-Tab    Alt-D"
+   @ nMaxRow -  5, 25 SAY "PgUp        PgDn         Alt-M"
+   @ nMaxRow -  4, 25 SAY "Enter       ESCape       Alt-Q"
    SetColor( cNormN )
 
    ft_Menu1( aBar, aOptions, aColors )
@@ -113,20 +124,19 @@ PROCEDURE Main( cCmdLine )
    SetCursor( SC_NORMAL )
    SetBlink( .T. )
    IF "VGA" $ Upper( cCmdLine )
-      SetMode( 25, 80 )
+      SetMode( nOldRow, nOldCol )
    ENDIF
    RESTORE SCREEN FROM sDosScrn
    SetPos( nDosRow, nDosCol )
 
    RETURN
 
-FUNCTION fubar()
+STATIC FUNCTION fubar()
 
    LOCAL OldColor := SetColor( "W/N" )
 
    CLS
-   QOut( "Press Any Key" )
-   Inkey( 0 )
+   WAIT
    SetColor( OldColor )
 
    RETURN .T.

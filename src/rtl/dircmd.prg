@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "directry.ch"
 #include "fileio.ch"
 
@@ -55,7 +57,11 @@ PROCEDURE __Dir( cFileMask )
    LOCAL cName
    LOCAL cExt
 
-   IF Empty( cFileMask )
+   IF Set( _SET_TRIMFILENAME )
+      cFileMask := AllTrim( cFileMask )
+   ENDIF
+
+   IF HB_ISNULL( cFileMask )
 
       /* NOTE: Although Cl*pper has this string in the national language
                module, it will not use it from there.
@@ -68,17 +74,15 @@ PROCEDURE __Dir( cFileMask )
       QOut( __natMsg( _DIR_HEADER ) )
 #endif
 
-      AEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ), ;
+      AEval( hb_vfDirectory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ), ;
              {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
-
-      hb_FNameSplit( iif( Set( _SET_TRIMFILENAME ), AllTrim( cFileMask ), cFileMask ), ;
-                     @cPath, @cName, @cExt )
-      IF Empty( cPath )
+      hb_FNameSplit( cFileMask, @cPath, @cName, @cExt )
+      IF HB_ISNULL( cPath )
          cPath := Set( _SET_DEFAULT )
       ENDIF
 
-      AEval( Directory( hb_FNameMerge( cPath, cName, cExt ) ), ;
+      AEval( hb_vfDirectory( hb_FNameMerge( cPath, cName, cExt ) ), ;
              {| aDirEntry | PutNormal( aDirEntry ) } )
    ENDIF
 
@@ -94,14 +98,14 @@ PROCEDURE __Dir( cFileMask )
 
 STATIC PROCEDURE PutDBF( aDirEntry )
 
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL buffer
    LOCAL nRecCount := 0
    LOCAL dLastUpdate := hb_SToD()
 
-   IF ( fhnd := FOpen( aDirEntry[ F_NAME ] ) ) != F_ERROR
+   IF ( hFile := hb_vfOpen( aDirEntry[ F_NAME ], FO_READ ) ) != NIL
 
-      buffer := hb_FReadLen( fhnd, 8 )
+      buffer := hb_vfReadLen( hFile, 8 )
 
       IF hb_BLen( buffer ) == 8 .AND. hb_BAt( hb_BLeft( buffer, 1 ), _DBF_HEAD_MARK ) > 0
          nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
@@ -110,13 +114,12 @@ STATIC PROCEDURE PutDBF( aDirEntry )
                                  hb_BPeek( buffer, 4 ) )
       ENDIF
 
-      FClose( fhnd )
-
+      hb_vfClose( hFile )
    ENDIF
 
    QOut( ;
-      PadR( aDirEntry[ F_NAME ], 15 ) + ;
-      Str( nRecCount, 12 ) + "    " + ;
+      hb_UPadR( aDirEntry[ F_NAME ], 15 ) + ;
+      Str( nRecCount, 12 ), "  ", ;
       DToC( dLastUpdate ) + ;
       Str( aDirEntry[ F_SIZE ], 12 ) )
 
@@ -132,8 +135,8 @@ STATIC PROCEDURE PutNormal( aDirEntry )
       filenames which do not stick to 8.3 MS-DOS convention */
 
    QOut( ;
-      PadR( cName, 8 ), ;
-      PadR( SubStr( cExt, 2 ), 3 ), ;
+      hb_UPadR( cName, 8 ), ;
+      hb_UPadR( hb_USubStr( cExt, 2 ), 3 ), ;
       Str( aDirEntry[ F_SIZE ], 8 ), "", ;
       aDirEntry[ F_DATE ] )
 

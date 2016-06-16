@@ -44,16 +44,26 @@
  *
  */
 
+/* #define HB_GS_UTF8_SUPPORT */  /* requires Ghostscript 9.10 or upper */
+
 #include "hbapi.h"
+#if defined( HB_GS_UTF8_SUPPORT )
+   #include "hbapistr.h"
+#endif
 
 #if defined( HB_OS_WIN ) && ! defined( _Windows )
-#  define _Windows
-#  include <windows.h>
-#  define GSDLLEXPORT  __declspec( dllimport )
+   #define _Windows
+   #include <windows.h>
+   #define GSDLLEXPORT  __declspec( dllimport )
 #endif
 
 #include "ierrors.h"
 #include "iapi.h"
+
+/* Workaround to build with pre-9.18 versions */
+#if defined( e_Quit )
+   #define gs_error_Quit  e_Quit
+#endif
 
 HB_FUNC( HB_GS )
 {
@@ -64,31 +74,54 @@ HB_FUNC( HB_GS )
    {
       void *  minst;
       int     pos;
-      int     code, code1;
       int     gsargc = ( int ) hb_arrayLen( pParam ) + 1;
       char ** gsargv = ( char ** ) hb_xgrab( gsargc * sizeof( const char * ) );
+      #if defined( HB_GS_UTF8_SUPPORT )
+      void ** gsargf = ( void ** ) hb_xgrab( gsargc * sizeof( void * ) );
+      #endif
 
-      gsargv[ 0 ] = ( char * ) "hbgs"; /* actual value doesn't matter */
+      gsargv[ 0 ] = ( char * ) "hbgs";  /* actual value doesn't matter */
 
       for( pos = 1; pos < gsargc; ++pos )
       {
-         const char * pszParam = hb_arrayGetCPtr( pParam, pos );
+         const char * pszParam;
+         #if defined( HB_GS_UTF8_SUPPORT )
+         gsargf[ pos ] = NULL;
+         pszParam = hb_arrayGetStrUTF8( pParam, pos, &gsargf[ pos ], NULL );
+         #else
+         pszParam = hb_arrayGetCPtr( pParam, pos );
+         #endif
          gsargv[ pos ] = ( char * ) HB_UNCONST( pszParam ? pszParam : "" );
       }
 
-      code = gsapi_new_instance( &minst, NULL );
-      if( code >= 0 )
+      if( gsapi_new_instance( &minst, NULL ) >= 0 )
       {
+         int code, code1;
+
+         #if defined( HB_GS_UTF8_SUPPORT )
+         gsapi_set_arg_encoding( minst, GS_ARG_ENCODING_UTF8 );
+         #endif
+
          code  = gsapi_init_with_args( minst, gsargc, gsargv );
          code1 = gsapi_exit( minst );
 
-         if( code == 0 || code == e_Quit )
+         if( code == 0 || code == gs_error_Quit )
             code = code1;
 
          gsapi_delete_instance( minst );
 
-         bResult = ( code == 0 || code == e_Quit );
+         bResult = ( code == 0 || code == gs_error_Quit );
       }
+
+      #if defined( HB_GS_UTF8_SUPPORT )
+      for( pos = 1; pos < gsargc; ++pos )
+         hb_strfree( gsargf[ pos ] );
+      #endif
+
+      hb_xfree( gsargv );
+      #if defined( HB_GS_UTF8_SUPPORT )
+      hb_xfree( gsargf );
+      #endif
    }
 
    hb_retl( bResult );

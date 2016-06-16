@@ -1,5 +1,5 @@
 /*
- * Harbour i18n .pot/.hbl file manger
+ * Harbour i18n .pot/.hbl file manager
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -48,13 +48,11 @@
 #include "hbver.ch"
 #include "directry.ch"
 
-#define _HB_I18N_MERGE  1
-#define _HB_I18N_GENHBL 2
-#define _HB_I18N_TRANS  3
+#define _HB_I18N_MERGE   1
+#define _HB_I18N_GENHBL  2
+#define _HB_I18N_TRANS   3
 
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
-
-#define I_( x )                 hb_UTF8ToStr( hb_i18n_gettext( x ) )
+#define I_( x )          hb_UTF8ToStr( hb_i18n_gettext( x ) )
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -62,13 +60,12 @@ REQUEST HB_GT_CGI_DEFAULT
 PROCEDURE Main( ... )
 
    LOCAL aParams, aFiles
-   LOCAL cFileOut, cFileIn, cExt
+   LOCAL cFileOut, cFileIn
    LOCAL lError, lEmpty, lQuiet
    LOCAL nMode, n
    LOCAL cParam
 
-   aParams := hb_AParams()
-   IF Empty( aParams )
+   IF Empty( aParams := hb_AParams() )
       Syntax()
    ENDIF
 
@@ -76,41 +73,42 @@ PROCEDURE Main( ... )
    aFiles := {}
    nMode := 0
    FOR n := 1 TO Len( aParams )
-      IF LEFTEQUAL( aParams[ n ], "-" )
+      IF hb_LeftEq( aParams[ n ], "-" )
          cParam := SubStr( aParams[ n ], 2 )
-         IF cParam == "m"
+         DO CASE
+         CASE cParam == "m"
             IF nMode != 0
                lError := .T.
             ELSE
                nMode := _HB_I18N_MERGE
             ENDIF
-         ELSEIF cParam == "g"
+         CASE cParam == "g"
             IF nMode != 0
                lError := .T.
             ELSE
                nMode := _HB_I18N_GENHBL
             ENDIF
-         ELSEIF cParam == "a"
+         CASE cParam == "a"
             IF nMode != 0
                lError := .T.
             ELSE
                nMode := _HB_I18N_TRANS
             ENDIF
-         ELSEIF LEFTEQUAL( cParam, "o" )
-            IF ! Empty( cParam := SubStr( cParam, 2 ) )
+         CASE hb_LeftEq( cParam, "o" )
+            IF ! HB_ISNULL( cParam := SubStr( cParam, 2 ) )
                cFileOut := cParam
-            ELSEIF n < Len( aParams ) .AND. ! LEFTEQUAL( aParams[ n + 1 ], "-" )
+            ELSEIF n < Len( aParams ) .AND. ! hb_LeftEq( aParams[ n + 1 ], "-" )
                cFileOut := aParams[ ++n ]
             ELSE
                lError := .T.
             ENDIF
-         ELSEIF cParam == "e"
+         CASE cParam == "e"
             lEmpty := .T.
-         ELSEIF cParam == "q"
+         CASE cParam == "q"
             lQuiet := .T.
-         ELSE
+         OTHERWISE
             lError := .T.
-         ENDIF
+         ENDCASE
       ELSE
          AAdd( aFiles, aParams[ n ] )
       ENDIF
@@ -123,8 +121,7 @@ PROCEDURE Main( ... )
 
    IF nMode == _HB_I18N_TRANS
       FOR n := 1 TO Len( aFiles )
-         hb_FNameSplit( aFiles[ n ],,, @cExt )
-         IF ! Lower( cExt ) == ".hbl"
+         IF ! Lower( hb_FNameExt( aFiles[ n ] ) ) == ".hbl"
             cFileIn := aFiles[ n ]
             hb_ADel( aFiles, n, .T. )
             EXIT
@@ -141,30 +138,35 @@ PROCEDURE Main( ... )
       Logo()
    ENDIF
 
-   IF nMode == _HB_I18N_MERGE
+   SWITCH nMode
+   CASE _HB_I18N_MERGE
       Merge( aFiles, cFileOut )
-   ELSEIF nMode == _HB_I18N_GENHBL
+      EXIT
+   CASE _HB_I18N_GENHBL
       GenHBL( aFiles, cFileOut, lEmpty )
-   ELSEIF nMode == _HB_I18N_TRANS
+      EXIT
+   CASE _HB_I18N_TRANS
       AutoTrans( cFileIn, aFiles, cFileOut )
-   ENDIF
+      EXIT
+   ENDSWITCH
 
    RETURN
 
 STATIC FUNCTION HBRawVersion()
-   RETURN hb_StrFormat( "%d.%d.%d%s (r%d)", ;
+   RETURN hb_StrFormat( "%d.%d.%d%s (%s) (%s)", ;
       hb_Version( HB_VERSION_MAJOR ), ;
       hb_Version( HB_VERSION_MINOR ), ;
       hb_Version( HB_VERSION_RELEASE ), ;
       hb_Version( HB_VERSION_STATUS ), ;
-      hb_Version( HB_VERSION_REVISION ) )
+      hb_Version( HB_VERSION_ID ), ;
+      "20" + Transform( hb_Version( HB_VERSION_REVISION ), "99-99-99 99:99" ) )
 
 STATIC PROCEDURE Logo()
 
    OutStd( ;
       "Harbour i18n .pot/.hbl file manager " + HBRawVersion() + hb_eol() + ;
       "Copyright (c) 2009-2016, Przemyslaw Czerpak" + hb_eol() + ;
-      "http://harbour-project.org/" + hb_eol() + ;
+      hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
       hb_eol() )
 
    RETURN
@@ -204,17 +206,15 @@ STATIC PROCEDURE ErrorMsg( cErrorMsg )
 
 STATIC FUNCTION ExpandWildCards( aFiles )
 
-/* do not expand wild cards in environments where SHELL already does it.
- * In *nixes it's possible that file name will contains "*" or "?".
- */
+/* Do not expand wild cards in environments where SHELL already does it.
+   In *nixes it's possible that file name will contains "*" or "?". */
 
 #ifndef __PLATFORM__UNIX
 
    LOCAL cFile, cRealFile
    LOCAL aRealFiles
-   LOCAL lWild
+   LOCAL lWild := .F.
 
-   lWild := .F.
    FOR EACH cFile IN aFiles
       IF "*" $ cFile .OR. "?" $ cFile
          lWild := .T.
@@ -225,7 +225,7 @@ STATIC FUNCTION ExpandWildCards( aFiles )
       aRealFiles := {}
       FOR EACH cFile IN aFiles
          IF "*" $ cFile .OR. "?" $ cFile
-            FOR EACH cRealFile IN Directory( cFile )
+            FOR EACH cRealFile IN hb_vfDirectory( cFile )
                AAdd( aRealFiles, cRealFile[ F_NAME ] )
             NEXT
          ELSE
@@ -245,13 +245,11 @@ STATIC FUNCTION LoadFiles( aFiles )
    LOCAL cErrorMsg
    LOCAL n
 
-   aTrans := __i18n_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
-   IF aTrans == NIL
+   IF ( aTrans := __i18n_potArrayLoad( aFiles[ 1 ], @cErrorMsg ) ) == NIL
       ErrorMsg( cErrorMsg )
    ENDIF
    FOR n := 2 TO Len( aFiles )
-      aTrans2 := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
-      IF aTrans2 == NIL
+      IF ( aTrans2 := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg ) ) == NIL
          ErrorMsg( cErrorMsg )
       ENDIF
       __i18n_potArrayJoin( aTrans, aTrans2, @hIndex )
@@ -261,17 +259,15 @@ STATIC FUNCTION LoadFiles( aFiles )
 
 STATIC FUNCTION LoadFilesAsHash( aFiles )
 
-   LOCAL cTrans, cExt, cErrorMsg
+   LOCAL cTrans, cErrorMsg
    LOCAL hTrans
    LOCAL aTrans
-   LOCAL n
+   LOCAL cFile
 
-   FOR n := 1 TO Len( aFiles )
-      hb_FNameSplit( aFiles[ n ],,, @cExt )
-      IF Lower( cExt ) == ".hbl"
-         cTrans := hb_MemoRead( aFiles[ n ] )
-         IF ! hb_i18n_Check( cTrans )
-            ErrorMsg( hb_StrFormat( I_( "Wrong file format: %1$s" ), aFiles[ n ] ) )
+   FOR EACH cFile IN aFiles
+      IF Lower( hb_FNameExt( cFile ) ) == ".hbl"
+         IF ! hb_i18n_Check( cTrans := hb_MemoRead( cFile ) )
+            ErrorMsg( hb_StrFormat( I_( "Wrong file format: %1$s" ), cFile ) )
          ENDIF
          IF hTrans == NIL
             hTrans := __i18n_hashTable( hb_i18n_RestoreTable( cTrans ) )
@@ -279,8 +275,7 @@ STATIC FUNCTION LoadFilesAsHash( aFiles )
             __i18n_hashJoin( hTrans, __i18n_hashTable( hb_i18n_RestoreTable( cTrans ) ) )
          ENDIF
       ELSE
-         aTrans := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
-         IF aTrans == NIL
+         IF ( aTrans := __i18n_potArrayLoad( cFile, @cErrorMsg ) ) == NIL
             ErrorMsg( cErrorMsg )
          ENDIF
          hTrans := __i18n_potArrayToHash( aTrans,, hTrans )
@@ -293,7 +288,7 @@ STATIC PROCEDURE Merge( aFiles, cFileOut )
 
    LOCAL cErrorMsg
 
-   IF Empty( cFileOut )
+   IF ! HB_ISSTRING( cFileOut ) .OR. HB_ISNULL( cFileOut )
       cFileOut := hb_FNameExtSet( aFiles[ 1 ], ".po" )
    ELSE
       cFileOut := hb_FNameExtSetDef( cFileOut, ".po" )
@@ -307,19 +302,15 @@ STATIC PROCEDURE Merge( aFiles, cFileOut )
 
 STATIC PROCEDURE GenHBL( aFiles, cFileOut, lEmpty )
 
-   LOCAL cHBLBody
-   LOCAL pI18N
-
-   IF Empty( cFileOut )
+   IF ! HB_ISSTRING( cFileOut ) .OR. HB_ISNULL( cFileOut )
       cFileOut := hb_FNameExtSet( aFiles[ 1 ], ".hbl" )
    ELSE
       cFileOut := hb_FNameExtSetDef( cFileOut, ".hbl" )
    ENDIF
 
-   pI18N := __i18n_hashTable( __i18n_potArrayToHash( LoadFiles( aFiles ), ;
-      lEmpty ) )
-   cHBLBody := hb_i18n_SaveTable( pI18N )
-   IF ! hb_MemoWrit( cFileOut, cHBLBody )
+   IF ! hb_MemoWrit( cFileOut, hb_i18n_SaveTable( ;
+      __i18n_hashTable( __i18n_potArrayToHash( LoadFiles( aFiles ), lEmpty ) ) ) )
+
       ErrorMsg( hb_StrFormat( I_( "cannot create file: %1$s" ), cFileOut ) )
    ENDIF
 
@@ -329,7 +320,7 @@ STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
 
    LOCAL cErrorMsg
 
-   IF Empty( cFileOut )
+   IF ! HB_ISSTRING( cFileOut ) .OR. HB_ISNULL( cFileOut )
       cFileOut := hb_FNameExtSet( cFileIn, ".po" )
    ELSE
       cFileOut := hb_FNameExtSetDef( cFileOut, ".po" )

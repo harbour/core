@@ -1,15 +1,19 @@
 #require "hbfbird"
 
+/* NOTE: If firebird server is not installed, you can run
+         it as a standalone application using:
+            fbserver -a
+ */
+
 PROCEDURE Main()
 
    LOCAL cServer := "localhost:"
-   LOCAL cDatabase
+   LOCAL cDatabase := hb_FNameExtSet( hb_ProgName(), ".fdb" )
    LOCAL cUser := "SYSDBA"
    LOCAL cPass := "masterkey"
    LOCAL nPageSize := 1024
-   LOCAL cCharSet := "ASCII"
+   LOCAL cCharSet := "UTF8"
    LOCAL nDialect := 1
-   LOCAL cName
 
    LOCAL trans, qry
 
@@ -19,28 +23,20 @@ PROCEDURE Main()
    LOCAL fetch_stat
    LOCAL tmp
 
-   hb_FNameSplit( hb_argv( 0 ), NIL, @cName, NIL )
-   cDatabase := hb_DirTemp() + cName + ".fdb"
-
-   IF hb_FileExists( cDatabase )
-      FErase( cDatabase )
-   ENDIF
+   hb_vfErase( cDatabase )
 
    ? tmp := FBCreateDB( cServer + cDatabase, cUser, cPass, nPageSize, cCharSet, nDialect ), FBError( tmp )
 
-
    /* Connect rdbms */
-   db := FBConnect( cServer + cDatabase, cUser, cPass )
-   IF HB_ISNUMERIC( db )
+   IF HB_ISNUMERIC( db := FBConnect( cServer + cDatabase, cUser, cPass ) )
       ? "Error:", db, FBError( db )
-      QUIT
+      RETURN
    ENDIF
 
    ? "Testing invalid request"
    ? tmp := FBExecute( db, "sldjfs;ldjs;djf", nDialect ), FBError( tmp )
 
-   trans := FBStartTransaction( db )
-   IF HB_ISNUMERIC( trans )
+   IF HB_ISNUMERIC( trans := FBStartTransaction( db ) )
       ? "Error:", trans, FBError( trans )
    ELSE
       ? tmp := FBQuery( db, "create table teste (code smallint)", nDialect, trans ), FBError( tmp )
@@ -48,8 +44,7 @@ PROCEDURE Main()
    ENDIF
 
    ? "==="
-   trans := FBStartTransaction( db )
-   IF HB_ISNUMERIC( trans )
+   IF HB_ISNUMERIC( trans := FBStartTransaction( db ) )
       ? "Error:", trans, FBError( trans )
    ELSE
       ? tmp := FBQuery( db, "CREATE TABLE customer( customer VARCHAR(20) )", nDialect, trans ), FBError( tmp )
@@ -57,28 +52,25 @@ PROCEDURE Main()
    ENDIF
    ? "==="
 
-   trans := FBStartTransaction( db )
-   IF HB_ISNUMERIC( trans )
+   IF HB_ISNUMERIC( trans := FBStartTransaction( db ) )
       ? "Error:", trans, FBError( trans )
    ELSE
-      ? "Status Execute: ", tmp := FBExecute( db, 'insert into customer(customer) values ("test 1")', nDialect, trans ), FBError( tmp )
-      ? "Status Rollback: ", tmp := FBRollback( trans ), FBError( tmp )
+      ? "Status Execute:", tmp := FBExecute( db, 'insert into customer(customer) values ("test 1")', nDialect, trans ), FBError( tmp )
+      ? "Status Rollback:", tmp := FBRollback( trans ), FBError( tmp )
    ENDIF
 
-   trans := FBStartTransaction( db )
-   IF HB_ISNUMERIC( trans )
+   IF HB_ISNUMERIC( trans := FBStartTransaction( db ) )
       ? "Error:", trans, FBError( trans )
    ELSE
-      ? "Status Execute: ", tmp := FBExecute( db, 'insert into customer(customer) values ("test 2")', nDialect, trans ), FBError( tmp )
-      ? "Status Commit: ", tmp := FBCommit( trans ), FBError( tmp )
+      ? "Status Execute:", tmp := FBExecute( db, 'insert into customer(customer) values ("test 2")', nDialect, trans ), FBError( tmp )
+      ? "Status Commit:", tmp := FBCommit( trans ), FBError( tmp )
    ENDIF
 
-   ? "Status Execute: ", tmp := FBExecute( db, 'insert into customer(customer) values ("test 3")', nDialect ), FBError( tmp )
+   ? "Status Execute:", tmp := FBExecute( db, 'insert into customer(customer) values ("test 3")', nDialect ), FBError( tmp )
 
-   // FIX WINDOWS GPF BELOW
+   // TOFIX: Windows GPF below
 
-   qry := FBQuery( db, "SELECT * FROM customer", nDialect )
-   IF HB_ISNUMERIC( qry )
+   IF HB_ISNUMERIC( qry := FBQuery( db, "SELECT * FROM customer", nDialect ) )
       ? "Error:", qry, FBError( qry )
    ELSE
       num_cols := qry[ 4 ]
@@ -86,8 +78,8 @@ PROCEDURE Main()
 
       FOR x := 1 TO num_cols
          ? x, "> "
-         FOR y := 1 TO Len( columns[ x ] )
-            ?? columns[ x, y ], " "
+         FOR EACH y IN columns[ x ]
+            ?? y, ""
          NEXT
       NEXT
 
@@ -102,10 +94,10 @@ PROCEDURE Main()
 
       ? "Fetch code:", fetch_stat
 
-      ? "Status Free Query: ", FBFree( qry )
+      ? "Status Free Query:", FBFree( qry )
    ENDIF
 
    /* Close connection with rdbms */
-   ? "Status Close Database: ", tmp := FBClose( db ), FBError( tmp )
+   ? "Status Close Database:", tmp := FBClose( db ), FBError( tmp )
 
    RETURN

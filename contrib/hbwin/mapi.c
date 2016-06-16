@@ -48,28 +48,28 @@
 #include "hbapi.h" /* for HB_OS_* detection */
 
 #if defined( UNICODE )
-#  define HB_UNICODE_ORI
+   #define HB_UNICODE_ORI
 #endif
 
 #if ! defined( HB_OS_WIN_CE )
-#  if defined( UNICODE )
-#     undef UNICODE
-#  endif
+   #if defined( UNICODE )
+      #undef UNICODE
+   #endif
 #endif
 
 #include "hbwapi.h"
 #if defined( HB_OS_WIN_CE )
-#  include "hbwince.h"
+   #include "hbwince.h"
 #endif
 
 #include <mapi.h>
 
 #if ! defined( MAPI_RECEIPT_REQUESTED )
-#  if defined( MAPI_RECIPIENT_REQUESTED )
-#     define MAPI_RECEIPT_REQUESTED  MAPI_RECIPIENT_REQUESTED
-#  else
-#     define MAPI_RECEIPT_REQUESTED  0x00000002L
-#  endif
+   #if defined( MAPI_RECIPIENT_REQUESTED )
+      #define MAPI_RECEIPT_REQUESTED  MAPI_RECIPIENT_REQUESTED
+   #else
+      #define MAPI_RECEIPT_REQUESTED  0x00000002L
+   #endif
 #endif
 
 #if defined( __WATCOMC__ ) || defined( __CYGWIN__ )
@@ -81,7 +81,7 @@ HB_FUNC( WIN_MAPISENDMAIL )
    HINSTANCE hMapiDll;
 
    /* Set default return value */
-   hb_retnl( -1 );
+   hb_retnint( -1 );
 
    if( ( hMapiDll = hbwapi_LoadLibrarySystem(
 #if defined( HB_UNICODE_ORI ) || defined( UNICODE )
@@ -121,16 +121,10 @@ HB_FUNC( WIN_MAPISENDMAIL )
          note.lpszDateReceived = ( LPSTR ) HB_PARSTRDEF( 4, &hString[ iString++ ], NULL );
 
          if( nRecpCount )
-         {
-            note.lpRecips = ( MapiRecipDesc * ) hb_xgrab( nRecpCount * sizeof( MapiRecipDesc ) );
-            memset( note.lpRecips, 0, nRecpCount * sizeof( MapiRecipDesc ) );
-         }
+            note.lpRecips = ( MapiRecipDesc * ) hb_xgrabz( nRecpCount * sizeof( MapiRecipDesc ) );
 
          if( nFileCount )
-         {
-            note.lpFiles = ( MapiFileDesc * ) hb_xgrab( nFileCount * sizeof( MapiFileDesc ) );
-            memset( note.lpFiles, 0, nFileCount * sizeof( MapiFileDesc ) );
-         }
+            note.lpFiles = ( MapiFileDesc * ) hb_xgrabz( nFileCount * sizeof( MapiFileDesc ) );
 
          if( hb_parl( 6 ) )
             note.flFlags |= MAPI_RECEIPT_REQUESTED;

@@ -44,6 +44,7 @@ C_SOURCES := \
    cphrwin.c \
    cphu852.c \
    cphu852c.c \
+   cphucwi.c \
    cphuiso.c \
    cphuwin.c \
    cpis850.c \
@@ -156,6 +157,7 @@ C_SOURCES := \
    uc875.c \
    ucascii.c \
    ucatari.c \
+   uccwi2.c \
    ucmacce.c \
    ucmaccyr.c \
    ucmacgrk.c \

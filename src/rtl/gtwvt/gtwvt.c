@@ -1,5 +1,5 @@
 /*
- * Video subsystem for Windows using GUI windows instead of Console
+ * Video subsystem for Windows using GDI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
  * based on
@@ -13,13 +13,16 @@
  * Copyright 2006 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *    Adopted to new GT API
  *
- * The following parts are Copyright of the individual authors.
- *
- *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
  *
- * See COPYING.txt for licensing terms.
+ * Copyright 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
+ *         Standard xplatform GT Info system,
+ *         Graphical object system and event system.
+ *         hb_gtInfo() And GTO_* implementation.
+ *
+ * Copyright 2004 Mauricio Abre <maurifull@datafull.com>
+ *         Cross-GT, multi-platform Graphics API
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,18 +62,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * Individual authors:
- * (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
- *         Standard xplatform GT Info system,
- *         Graphical object system and event system.
- *         hb_gtInfo() And GTO_* implementation.
- *
- * (C) 2004 Mauricio Abre <maurifull@datafull.com>
- *         Cross-GT, multiplatform Graphics API
  *
  */
 
@@ -384,6 +375,7 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->ResizeMode        = HB_GTI_RESIZEMODE_FONT;
    pWVT->bResizing         = HB_FALSE;
    pWVT->bAlreadySizing    = HB_FALSE;
+   pWVT->bQuickEdit        = HB_FALSE;
 
    pWVT->bComposited       = HB_FALSE;
 
@@ -487,7 +479,7 @@ static HBITMAP hb_gt_wvt_DefineBoxChar( PHB_GTWVT pWVT, HB_USHORT usCh )
    HBITMAP hBitMap = NULL;
    int cellx = pWVT->PTEXTSIZE.x;
    int celly = pWVT->PTEXTSIZE.y;
-   int i, y, x, yy, xx, skip, start, mod;
+   int i, y, x, yy, xx;
    POINT pts[ 3 ];
    RECT rc;
 
@@ -935,6 +927,9 @@ static HBITMAP hb_gt_wvt_DefineBoxChar( PHB_GTWVT pWVT, HB_USHORT usCh )
          case HB_BOXCH_FILLER1:
          case HB_BOXCH_FILLER2:
          case HB_BOXCH_FILLER3:
+         {
+            int skip, start, mod;
+
             hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
 
             if( usCh == HB_BOXCH_FILLER1 )
@@ -961,7 +956,7 @@ static HBITMAP hb_gt_wvt_DefineBoxChar( PHB_GTWVT pWVT, HB_USHORT usCh )
             if( usCh == HB_BOXCH_FILLER3 )
                hb_bm_invertrect( 0, 0, cellx, celly );
             break;
-
+         }
          case HB_BOXCH_ARROW_R:
             hBitMap = hb_gt_wvt_bitmap_char( pWVT, cellx, celly );
 
@@ -1706,10 +1701,6 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
    int borderHeight;
    int left;
    int top;
-   int i = 0;
-   int j = 0;
-   int iCalcWidth = 0;
-   int iCalcHeight = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_FitSize()" ) );
 
@@ -1737,6 +1728,11 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
       int   fontHeight;
       int   fontWidth;
       int   n;
+
+      int i = 0;
+      int j = 0;
+      int iCalcWidth = 0;
+      int iCalcHeight = 0;
 
       fontHeight = maxHeight / pWVT->ROWS;
       fontWidth  = maxWidth  / pWVT->COLS;
@@ -2051,8 +2047,8 @@ static HB_BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
       pWVT->COLS = iCols;
       return HB_TRUE;
    }
-
-   return HB_FALSE;
+   else
+      return HB_FALSE;
 }
 
 static HB_BOOL hb_gt_wvt_InitWindow( PHB_GTWVT pWVT, int iRow, int iCol, HFONT hFont )
@@ -2123,7 +2119,8 @@ static HB_BOOL hb_gt_wvt_SetMousePos( PHB_GTWVT pWVT, int iRow, int iCol )
       pWVT->MousePos.x = iCol;
       return HB_TRUE;
    }
-   return HB_FALSE;
+   else
+      return HB_FALSE;
 }
 
 static int hb_gt_wvt_GetKeyFlags( void )
@@ -2193,7 +2190,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          break;
 
       case WM_LBUTTONDOWN:
-         if( pWVT->bBeginMarked )
+         if( pWVT->bBeginMarked || pWVT->bQuickEdit )
          {
             pWVT->bBeingMarked = HB_TRUE;
 
@@ -2219,12 +2216,25 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
          break;
 
       case WM_RBUTTONUP:
+         if( pWVT->bQuickEdit )
+         {
+            HB_GT_INFO gtInfo;
+
+            memset( &gtInfo, 0, sizeof( gtInfo ) );
+
+            hb_gtInfo( HB_GTI_CLIPBOARDPASTE, &gtInfo );
+
+            hb_gt_wvt_Composited( pWVT, HB_FALSE );
+
+            return;
+         }
+
          keyCode = K_RBUTTONUP;
          break;
 
       case WM_LBUTTONUP:
 
-         if( pWVT->bBeingMarked )
+         if( pWVT->bBeingMarked || pWVT->bQuickEdit )
          {
             pWVT->bBeginMarked = HB_FALSE;
             pWVT->bBeingMarked = HB_FALSE;
@@ -2265,7 +2275,7 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 #if defined( UNICODE )
                      usChar = hb_cdpGetU16Ctrl( usChar );
 #else
-                     usChar = hb_cdpGetUC( bAttr & HB_GT_ATTR_BOX ? cdpBox : cdpHost, usChar, '?' );
+                     usChar = hb_cdpGetUC( ( bAttr & HB_GT_ATTR_BOX ) ? cdpBox : cdpHost, usChar, '?' );
 #endif
                      sBuffer[ n++ ] = ( TCHAR ) usChar;
                   }
@@ -2672,7 +2682,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
    PAINTSTRUCT ps;
    HDC         hdc;
    RECT        rcRect;
-   int         iRow, iCol, startCol, len;
+   int         iRow;
    int         iColor, iOldColor = 0;
    HB_BYTE     bAttr;
    HB_BOOL     fFixMetric = ( pWVT->fontAttribute & HB_GTI_FONTA_FIXMETRIC ) != 0;
@@ -2751,6 +2761,8 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
 
    for( iRow = rcRect.top; iRow <= rcRect.bottom; ++iRow )
    {
+      int iCol, startCol, len;
+
       iCol = startCol = rcRect.left;
       len = 0;
 
@@ -3187,7 +3199,7 @@ static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT )
 
 static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HANDLE    hInstance;
+   HINSTANCE hInstance;
    int       iCmdShow;
    PHB_GTWVT pWVT;
 
@@ -3195,11 +3207,11 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
    {
-      hInstance = GetModuleHandle( NULL );
+      hInstance = ( HINSTANCE ) GetModuleHandle( NULL );
       iCmdShow = 1;
    }
 
-   pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
+   pWVT = hb_gt_wvt_New( pGT, hInstance, iCmdShow );
    if( pWVT )
    {
       HB_GTLOCAL( pGT ) = ( void * ) pWVT;
@@ -3291,7 +3303,7 @@ static const char * hb_gt_wvt_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Windows GUI console (WVT)";
+   return "Terminal: Windows native GDI (WVT)";
 }
 
 /* ********************************************************************** */
@@ -3834,7 +3846,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pWVT->hIconToFree = hIconToFree;
             pWVT->hIcon = hIcon;
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRUINT ) pWVT->hIcon );
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, ( void * ) ( HB_PTRUINT ) pWVT->hIcon );
          break;
       }
       case HB_GTI_VIEWPORTWIDTH:
@@ -4129,6 +4141,16 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutPtr( pInfo->pResult, pWVT->hWnd );
          break;
 
+      case HB_GTI_QUICKEDIT:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, pWVT->bQuickEdit );
+         if( pInfo->pNewVal )
+         {
+            HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
+            if( bNewValue != pWVT->bQuickEdit )
+               pWVT->bQuickEdit = bNewValue;
+         }
+         break;
+
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
@@ -4169,9 +4191,6 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, int iBottom, int iRight, int iColor )
 {
    PHB_GTWVT pWVT;
-   HDC       hdc;
-   HPEN      hPen, hOldPen;
-   HBRUSH    hBrush, hOldBrush;
    RECT      r;
    int       iRet = 0;
 
@@ -4181,6 +4200,10 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
    if( pWVT->hWnd )
    {
+      HDC    hdc;
+      HPEN   hPen, hOldPen;
+      HBRUSH hBrush, hOldBrush;
+
       if( pWVT->bComposited )
          hb_gt_wvt_Composited( pWVT, HB_FALSE );
 

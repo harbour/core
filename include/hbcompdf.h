@@ -1,5 +1,5 @@
 /*
- * definitions shared by compiler and macro compiler
+ * Definitions shared by compiler and macro compiler
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -360,7 +360,7 @@ typedef struct HB_EXPR_
       struct
       {
          struct HB_EXPR_ * pMacro;  /* macro variable */
-         const char * szName;       /* variable name  */
+         const char * szName;       /* variable name */
       } asRTVar;                 /* PUBLIC or PRIVATE variable declaration */
       struct
       {
@@ -532,7 +532,7 @@ typedef struct _HB_HFUNC
    HB_USHORT         wWithObjectCnt;
 } HB_HFUNC, * PHB_HFUNC;
 
-/* structure to hold PP #define variables passed as command line parameters */
+/* structure to hold PP #define variables passed as command-line parameters */
 typedef struct _HB_PPDEFINE
 {
    char * szName;                         /* name of PP #define variable */

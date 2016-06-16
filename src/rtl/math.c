@@ -61,7 +61,7 @@ _LIB_VERSION_TYPE _LIB_VERSION = _XOPEN_;
 #endif
 
 #if defined( HB_MATH_ERRNO )
-#   include <errno.h>
+   #include <errno.h>
 #endif
 
 typedef struct
@@ -190,11 +190,8 @@ static HB_TSD_NEW( s_mathErrData, sizeof( HB_MATHERRDATA ),
 #define hb_mathErrData()  ( ( PHB_MATHERRDATA ) hb_stackGetTSD( &s_mathErrData ) )
 
 
-/*
- * ************************************************************
- * Harbour Math functions Part I:
+/* Harbour Math functions Part I:
  * handling math errors, C math lib redirection
- * ************************************************************
  */
 
 /* reset math error information */
@@ -310,9 +307,9 @@ HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc,
          return HB_FALSE;
       case EDOM:
       case ERANGE:
-#   if defined( EOVERFLOW )
+   #if defined( EOVERFLOW )
       case EOVERFLOW:
-#   endif
+   #endif
          errCode = errno;
          break;
 
@@ -338,12 +335,12 @@ HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc,
          phb_exc->type = HB_MATH_ERR_SING;
          phb_exc->error = "Calculation results in singularity";
          break;
-#   if defined( EOVERFLOW )
+   #if defined( EOVERFLOW )
       case EOVERFLOW:
          phb_exc->type = HB_MATH_ERR_OVERFLOW;
          phb_exc->error = "Calculation result too large to represent";
          break;
-#   endif
+   #endif
       default:
          phb_exc->type = HB_MATH_ERR_UNKNOWN;
          phb_exc->error = "Unknown math error";
@@ -372,27 +369,24 @@ HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc,
    HB_SYMBOL_UNUSED( arg2 );
    HB_SYMBOL_UNUSED( szFunc );
 
-#  if defined( HB_MATH_HANDLER )
+   #if defined( HB_MATH_HANDLER )
 
    memcpy( phb_exc, &hb_mathErrData()->exception, sizeof( HB_MATH_EXCEPTION ) );
    return phb_exc->type != HB_MATH_ERR_NONE;
 
-#  else
+   #else
 
    HB_SYMBOL_UNUSED( phb_exc );
    return HB_FALSE;
 
-#  endif
+   #endif
 
 #endif
 }
 
 
-/*
- * ************************************************************
- * Harbour Math functions Part II:
+/* Harbour Math functions Part II:
  * handling math errors, Harbour default handling routine
- * ************************************************************
  */
 
 /* set error handling mode of hb_matherr() */
@@ -436,11 +430,8 @@ HB_FUNC( HB_MATHERMODE )        /* ([<nNewMode>]) -> <nOldMode> */
 }
 
 
-/*
- * ************************************************************
- * Harbour Math functions Part III:
+/* Harbour Math functions Part III:
  * (de)installing and (de)activating custom math error handlers
- * ************************************************************
  */
 
 /* install a harbour-like math error handler (that will be called by the matherr() function), return old handler */
@@ -466,12 +457,9 @@ HB_MATH_HANDLERPROC hb_mathGetHandler( void )
    return hb_mathErrData()->handler;
 }
 
-/*
- * ************************************************************
- * Harbour Math functions Part IV:
+/* Harbour Math functions Part IV:
  * example of hb_mathSet/GetHandler: add a new math handler that
  * calls a given codeblock for every math error
- * ************************************************************
  */
 
 static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
@@ -485,9 +473,17 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
    {
       PHB_ITEM pArray, pRet;
       PHB_ITEM pType, pFuncname, pError, pArg1, pArg2, pRetval, pHandled;
+      const char * funcname = pexc->funcname;
+
+      if( funcname == HB_ERR_FUNCNAME )
+      {
+         PHB_SYMB pSym = hb_itemGetSymbol( hb_stackBaseItem() );
+         if( pSym )
+            funcname = pSym->szName;
+      }
 
       pType = hb_itemPutNI( NULL, pexc->type );
-      pFuncname = hb_itemPutC( NULL, pexc->funcname );
+      pFuncname = hb_itemPutC( NULL, funcname );
       pError = hb_itemPutC( NULL, pexc->error );
       pArg1 = hb_itemPutND( NULL, pexc->arg1 );
       pArg2 = hb_itemPutND( NULL, pexc->arg2 );
@@ -625,11 +621,8 @@ HB_FUNC( HB_MATHERBLOCK )       /* ([<nNewErrorBlock>]) -> <nOldErrorBlock> */
    }
 }
 
-/*
- * ************************************************************
- * Harbour Math functions Part V:
+/* Harbour Math functions Part V:
  * Exp(), Log(), Sqrt()
- * ************************************************************
  */
 
 HB_FUNC( EXP )
@@ -641,7 +634,7 @@ HB_FUNC( EXP )
 
       hb_mathResetError( &hb_exc );
       dResult = exp( dArg );
-      if( hb_mathGetError( &hb_exc, "EXP", dArg, 0.0, dResult ) )
+      if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
       {
          if( hb_exc.handled )
             hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -666,15 +659,16 @@ HB_FUNC( LOG )
    if( HB_ISNUM( 1 ) )
    {
       HB_MATH_EXCEPTION hb_exc;
-      double dResult, dArg = hb_parnd( 1 );
+      double dArg = hb_parnd( 1 );
 
       if( dArg <= 0 )
          hb_retndlen( -HUGE_VAL, -1, -1 );  /* return -infinity */
       else
       {
+         double dResult;
          hb_mathResetError( &hb_exc );
          dResult = log( dArg );
-         if( hb_mathGetError( &hb_exc, "LOG", dArg, 0.0, dResult ) )
+         if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
          {
             if( hb_exc.handled )
                hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
@@ -707,15 +701,16 @@ HB_FUNC( SQRT )
    if( HB_ISNUM( 1 ) )
    {
       HB_MATH_EXCEPTION hb_exc;
-      double dResult, dArg = hb_parnd( 1 );
+      double dArg = hb_parnd( 1 );
 
       if( dArg <= 0 )
          hb_retnd( 0.0 );
       else
       {
+         double dResult;
          hb_mathResetError( &hb_exc );
          dResult = sqrt( dArg );
-         if( hb_mathGetError( &hb_exc, "SQRT", dArg, 0.0, dResult ) )
+         if( hb_mathGetError( &hb_exc, HB_ERR_FUNCNAME, dArg, 0.0, dResult ) )
          {
             if( hb_exc.handled )
                hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );

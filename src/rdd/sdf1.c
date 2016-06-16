@@ -512,7 +512,6 @@ static HB_ERRCODE hb_sdfGetValue( SDFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
  */
 static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
-   char szBuffer[ 256 ];
    HB_ERRCODE errCode;
    LPFIELD pField;
    HB_SIZE nSize;
@@ -532,6 +531,8 @@ static HB_ERRCODE hb_sdfPutValue( SDFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
    pField = pArea->area.lpFields + uiIndex;
    if( pField->uiType != HB_FT_MEMO && pField->uiType != HB_FT_NONE )
    {
+      char szBuffer[ 256 ];
+
       if( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) )
       {
          if( pField->uiType == HB_FT_STRING )
@@ -1077,7 +1078,7 @@ static HB_ERRCODE hb_sdfCreate( SDFAREAP pArea, LPDBOPENINFO pCreateInfo )
    do
    {
       pArea->pFile = hb_fileExtOpen( szFileName, NULL,
-                                     FO_READWRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
+                                     FO_WRITE | FO_EXCLUSIVE | FXO_TRUNCATE |
                                      FXO_DEFAULTS | FXO_SHARELOCK | FXO_COPYNAME,
                                      NULL, pError );
       if( ! pArea->pFile )

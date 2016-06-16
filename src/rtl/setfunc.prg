@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "inkey.ch"
 
 PROCEDURE __SetFunction( nFunctionKey, xKeySeq )
@@ -60,10 +62,6 @@ PROCEDURE __SetFunction( nFunctionKey, xKeySeq )
    OTHERWISE               ; nFunctionKey := -nFunctionKey + 1
    ENDCASE
 
-   IF HB_ISSTRING( xKeySeq )
-      SetKey( nFunctionKey, {|| __Keyboard(), hb_keyPut( xKeySeq ) } )
-   ELSE
-      SetKey( nFunctionKey, NIL )
-   ENDIF
+   SetKey( nFunctionKey, iif( HB_ISSTRING( xKeySeq ), {|| __Keyboard(), hb_keyPut( xKeySeq ) }, NIL ) )
 
    RETURN

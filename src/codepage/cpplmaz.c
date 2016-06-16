@@ -1,8 +1,7 @@
 /*
  * National Collation Support Module (PLMAZ)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * Polish collating sequence (PLMAZ) Mazovia done by Jacek Kubica <kubica@wssk.wroc.pl>
+ * Copyright 2002 Jacek Kubica <kubica@wssk.wroc.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

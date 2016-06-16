@@ -1,7 +1,6 @@
 /*
- * demonstration/test code for OLE server which works like
- *    xHarbour.com OLE servers described at
- *    http://xharbour.com/index.asp?page=add_on_oleserver&show_sub=7&show_i=1
+ * Demonstration/test code for OLE server which works like
+ * xHarbour.com OLE servers.
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -24,7 +23,7 @@ PROCEDURE DllMain()
    RETURN
 
 
-FUNCTION MyMethod( ... )
+FUNCTION MyMethod( ... )  /* must be a public function */
    RETURN "Hello from MyOleServer [" + hb_ValToExp( { ... } ) + "]"
 
 

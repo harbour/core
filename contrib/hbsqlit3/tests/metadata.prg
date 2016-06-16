@@ -50,38 +50,27 @@
 
 PROCEDURE Main()
 
-   LOCAL lCreateIfNotExist := .F.
-   LOCAL db := sqlite3_open( "new.s3db", lCreateIfNotExist )
+   LOCAL db := sqlite3_open( "new.s3db", .F. /* lCreateIfNotExist */ )
 
-   IF ! Empty( db )
-      test( db )
-   ENDIF
+   IF ! Empty( db ) .AND. ;
+      sqlite3_exec( db, "SELECT * FROM t1" ) == SQLITE_OK
 
-   RETURN
-
-/*
-
-*/
-
-PROCEDURE test( db )
-
-   IF sqlite3_exec( db, "SELECT * FROM t1" ) == SQLITE_OK
       ? "TABLE t1"
 
 #ifdef SQLITE_ENABLE_COLUMN_METADATA
-      ? "Column name :                id"
-      ? "Declared data type:         ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 1 ]
-      ? "Collation sequence name:    ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 2 ]
-      ? "NOT NULL constraint exists: ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 3 ]
-      ? "Column is part of PK:       ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 4 ]
-      ? "Column is auto-increment:   ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 5 ]
+      ? "Column name:                id"
+      ? "Declared data type:        ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 1 ]
+      ? "Collation sequence name:   ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 2 ]
+      ? "NOT NULL constraint exists:", sqlite3_table_column_metadata( db,, "t1", "id" )[ 3 ]
+      ? "Column is part of PK:      ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 4 ]
+      ? "Column is auto-increment:  ", sqlite3_table_column_metadata( db,, "t1", "id" )[ 5 ]
 
-      ? "Column name :                name"
-      ? "Declared data type:         ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 1 ]
-      ? "Collation sequence name:    ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 2 ]
-      ? "NOT NULL constraint exists: ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 3 ]
-      ? "Column is part of PK:       ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 4 ]
-      ? "Column is auto-increment:   ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 5 ]
+      ? "Column name:                name"
+      ? "Declared data type:        ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 1 ]
+      ? "Collation sequence name:   ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 2 ]
+      ? "NOT NULL constraint exists:", sqlite3_table_column_metadata( db,, "t1", "name" )[ 3 ]
+      ? "Column is part of PK:      ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 4 ]
+      ? "Column is auto-increment:  ", sqlite3_table_column_metadata( db,, "t1", "name" )[ 5 ]
 #endif
 
       sqlite3_sleep( 3000 )

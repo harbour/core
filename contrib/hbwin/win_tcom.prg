@@ -100,7 +100,7 @@ ENDCLASS
 METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS win_Com
 
    ::cPortName := Upper( cPortName )
-   IF Left( ::cPortName, 3 ) == "COM"
+   IF hb_LeftEq( ::cPortName, "COM" )
       ::nPort := Val( SubStr( ::cPortName, 4 ) ) - 1
       IF win_comOpen( ::nPort, nBaudRate, nParity, nByteSize, nStopBits ) != -1
          ::lOpen := .T.
@@ -138,10 +138,10 @@ METHOD RecvTo( cDelim, nMaxlen ) CLASS win_Com
             EXIT
          ELSE
             cRecv += cString
-            IF cDelim != NIL .AND. cString == cDelim
+            IF HB_ISSTRING( cDelim ) .AND. cString == cDelim
                EXIT
             ENDIF
-            IF Len( cRecv ) == nMaxlen
+            IF hb_BLen( cRecv ) == nMaxlen
                EXIT
             ENDIF
          ENDIF
@@ -186,7 +186,7 @@ METHOD PurgeTX() CLASS win_Com
    RETURN win_comPurge( ::nPort, .F., .T. )
 
 METHOD Close( nDrain ) CLASS win_Com
-   RETURN win_comClose( ::nPort, iif( Empty( nDrain ), 0, nDrain ) )
+   RETURN win_comClose( ::nPort, hb_defaultValue( nDrain, 0 ) )
 
 METHOD DebugDCB( nDebug ) CLASS win_Com
    RETURN win_comDebugDCB( ::nPort, nDebug )
@@ -224,7 +224,7 @@ METHOD ErrorText() CLASS win_Com
 
    /* WinPortError clears the error - don't call it twice */
    cMsg := Space( 256 )
-   wapi_FormatMessage( NIL, NIL, nError := win_comError( ::nPort ), NIL, @cMsg )
+   wapi_FormatMessage( ,, nError := win_comError( ::nPort ),, @cMsg )
 
    RETURN cString + "error (" + hb_ntos( nError ) + ") : " + cMsg
 

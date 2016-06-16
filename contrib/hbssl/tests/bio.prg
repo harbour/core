@@ -1,23 +1,24 @@
-/*
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
- */
+/* Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbssl"
 
 PROCEDURE Main()
 
    LOCAL bio
+   LOCAL buffer
 
    SSL_init()
 
-   ? bio := BIO_new_fd( 1, HB_BIO_NOCLOSE )
-   ? "BIO_WRITE", BIO_write( bio, "Hello world!" + hb_eol() )
-   ? "BIO_FLUSH", BIO_flush( bio )
-   ? "BIO_FREE", BIO_free( bio )
+   ? "hbssl dynamic:", ! hb_SSL_STATIC()
+   ? "hbssl Applink support:", hb_SSL_APPLINK()
 
-   ? bio := BIO_new_file( "bio_test.txt", "a+" )
-   ? "BIO_WRITE", BIO_write( bio, "Hello world!" + hb_eol() )
-   ? "BIO_FLUSH", BIO_flush( bio )
-   ? "BIO_FREE", BIO_free( bio )
+   ? bio := BIO_new_mem_buf( "This is a test string" )
+   ? "BIO_read()", BIO_read( bio, @buffer, 10 )
+   ? ">" + buffer + "<"
+   ? "BIO_flush()", BIO_flush( bio )
+
+   ? bio := BIO_new_fd( hb_GetStdOut(), HB_BIO_NOCLOSE )
+   ? "BIO_write()", BIO_write( bio, "Hello world!" + hb_eol() )
+   ? "BIO_flush()", BIO_flush( bio )
 
    RETURN

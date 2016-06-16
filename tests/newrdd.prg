@@ -4,6 +4,8 @@
 
 REQUEST _DBF
 
+#include "dbstruct.ch"
+
 PROCEDURE Main()
 
    LOCAL nI, aArray
@@ -12,19 +14,18 @@ PROCEDURE Main()
 
    rddSetDefault( "DBF" )
 
-   SET EXCLUSIVE OFF
+   Set( _SET_EXCLUSIVE, .F. )
    CLS
 
-   dbUseArea( .T., "DBF", "test", "TESTDBF", .T., .F. )
-   ? "RecCount:", TESTDBF->( RecCount() )
+   dbUseArea( .T., "DBF", "test.dbf", "TESTDBF", .T., .F. )
+   ? "LastRec:", TESTDBF->( LastRec() )
    ? "Used:", TESTDBF->( Used() )
    ? "Select:", TESTDBF->( Select() )
    ? "RecSize:", TESTDBF->( RecSize() )
    ? "RecNo:", TESTDBF->( RecNo() )
    ? "NetErr:", TESTDBF->( NetErr() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    aArray := rddList( 0 )
@@ -43,11 +44,14 @@ PROCEDURE Main()
    aArray := TESTDBF->( dbStruct() )
    ? "dbStruct:"
    FOR nI := 1 TO Len( aArray )
-      ? PadR( aArray[ nI ][ 1 ], 10 ), aArray[ nI ][ 2 ], aArray[ nI ][ 3 ], aArray[ nI ][ 4 ]
+      ? ;
+         PadR( aArray[ nI ][ DBS_NAME ], 10 ), ;
+         aArray[ nI ][ DBS_TYPE ], ;
+         aArray[ nI ][ DBS_LEN ], ;
+         aArray[ nI ][ DBS_DEC ]
    NEXT
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "dbGoTop():"
@@ -129,8 +133,7 @@ PROCEDURE Main()
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "dbGoto( 490 ):"
@@ -143,76 +146,71 @@ PROCEDURE Main()
       ? "FieldGet( " + hb_ntos( nI ) + " ):", TESTDBF->( FieldGet( nI ) )
    NEXT
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
-   ? "WHILE ! TESTDBF->( Eof() )"
+   ? "DO WHILE ! TESTDBF->( Eof() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
-   ? ""
-   WHILE ! TESTDBF->( Eof() )
+   ?
+   DO WHILE ! TESTDBF->( Eof() )
       ? TESTDBF->FIRST, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
    ENDDO
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "SET FILTER TO TESTDBF->AGE == 21"
    ? "? TESTDBF->( dbFilter() )"
    ? "TESTDBF->( dbGoTop() )"
-   ? "WHILE ! TESTDBF->( Eof() )"
+   ? "DO WHILE ! TESTDBF->( Eof() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
    ? "SET FILTER TO"
-   ? ""
+   ?
    SET FILTER TO TESTDBF->AGE == 21
    ? TESTDBF->( dbFilter() )
    TESTDBF->( dbGoTop() )
-   WHILE ! TESTDBF->( Eof() )
+   DO WHILE ! TESTDBF->( Eof() )
       ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
    ENDDO
    SET FILTER TO
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "TESTDBF->( Found() )"
    ? "LOCATE FOR TESTDBF->AGE == 23"
-   ? "WHILE TESTDBF->( Found() )"
+   ? "DO WHILE TESTDBF->( Found() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )"
    ? "   CONTINUE"
    ? "ENDDO"
    TESTDBF->( Found() )
    LOCATE FOR TESTDBF->AGE == 23
-   WHILE TESTDBF->( Found() )
+   DO WHILE TESTDBF->( Found() )
       ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )
       CONTINUE
    ENDDO
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? "TESTDBF->( dbEval( {|| QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;"
    ? "                   {|| TESTDBF->AGE == 23 } ) )"
-   ? ""
+   ?
    ? "dbCommit()"
    TESTDBF->( dbEval( {|| QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;
       {|| TESTDBF->AGE == 23 } ) )
    TESTDBF->( dbCommit() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
-   ? 'dbCreate( "newrdd", { ;'
+   ? 'dbCreate( "newrdd.dbf", { ;'
    ? '   { "First_Name", "C", 20, 0 }, ;'
    ? '   { "Age",        "N",  3, 0 }, ;'
    ? '   { "Date",       "D",  8, 0 }, ;'
@@ -220,7 +218,7 @@ PROCEDURE Main()
    ? '   { "Memo",       "M", 10, 0 }, ;'
    ? '   { "Student",    "L",  1, 0 } },, .T., "newrdd" )'
    ? 'SET CENTURY ON'
-   dbCreate( "newrdd", { ;
+   dbCreate( "newrdd.dbf", { ;
       { "First_Name", "C", 20, 0 }, ;
       { "Age",        "N",  3, 0 }, ;
       { "Date",       "D",  8, 0 }, ;
@@ -230,27 +228,27 @@ PROCEDURE Main()
    SET CENTURY ON
    ? "lUpdate:", NEWRDD->( LUpdate() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
-   ? 'Select( "TESTDBF" )'
+   ? 'dbSelectArea( "TESTDBF" )'
    ? "SET FILTER TO TESTDBF->SALARY > 120000"
    ? "TESTDBF->( dbGoTop() )"
-   ? "WHILE ! TESTDBF->( Eof() )"
+   ? "DO WHILE ! TESTDBF->( Eof() )"
    ? "   NEWRDD->( dbAppend() )"
    ? "   NEWRDD->FIRST_NAME := TESTDBF->FIRST"
    ? "   NEWRDD->AGE := TESTDBF->AGE"
    ? "   NEWRDD->DATE := TESTDBF->HIREDATE"
    ? "   NEWRDD->RATE := Val( Right( hb_ntos( Seconds() ), 5 ) )"
-   ? "   NEWRDD->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;"
-   ? "                   TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;"
-   ? "                   TESTDBF->STREET"
+   ? "   NEWRDD->MEMO := ;"
+   ? "      TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;"
+   ? "      TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;"
+   ? "      TESTDBF->STREET"
    ? "   NEWRDD->STUDENT := TESTDBF->MARRIED"
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
    ? "SET FILTER TO"
-   ? "? NEWRDD->( RecCount() )"
+   ? "? NEWRDD->( LastRec() )"
    ? "NEWRDD->( dbGoTop() )"
    ? "NEWRDD->( dbRLock( 1 ) )"
    ? "NEWRDD->( dbDelete() )"
@@ -260,23 +258,24 @@ PROCEDURE Main()
    ? "NEWRDD->( dbDelete() )"
    ? "? NEWRDD->( Deleted() )"
    ? "NEWRDD->( dbRLock( 3 ) )"
-   Select( "TESTDBF" )
+   dbSelectArea( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 120000
    TESTDBF->( dbGoTop() )
-   WHILE ! TESTDBF->( Eof() )
+   DO WHILE ! TESTDBF->( Eof() )
       NEWRDD->( dbAppend() )
       NEWRDD->FIRST_NAME := TESTDBF->FIRST
       NEWRDD->AGE := TESTDBF->AGE
       NEWRDD->DATE := TESTDBF->HIREDATE
       NEWRDD->RATE := Val( Right( hb_ntos( Seconds() ), 5 ) )
-      NEWRDD->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
+      NEWRDD->MEMO := ;
+         TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
          TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
          TESTDBF->STREET
       NEWRDD->STUDENT := TESTDBF->MARRIED
       TESTDBF->( dbSkip() )
    ENDDO
    SET FILTER TO
-   ? NEWRDD->( RecCount() )
+   ? NEWRDD->( LastRec() )
    NEWRDD->( dbGoTop() )
    NEWRDD->( dbRLock( 1 ) )
    NEWRDD->( dbDelete() )
@@ -287,8 +286,7 @@ PROCEDURE Main()
    ? NEWRDD->( Deleted() )
    NEWRDD->( dbRLock( 3 ) )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    aArray := NEWRDD->( dbRLockList() )
@@ -296,52 +294,48 @@ PROCEDURE Main()
    ? "FOR nI := 1 TO Len( aArray )"
    ? "   ? aArray[ nI ]"
    ? "NEXT"
-   ? "dbRLockList(): "
+   ? "dbRLockList():"
    FOR nI := 1 TO Len( aArray )
       ? aArray[ nI ]
    NEXT
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? 'NEWRDD->( dbCloseArea() )'
-   ? 'dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )'
+   ? 'dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )'
    ? 'nI := 1'
    ? 'NEWRDD->( __dbPack( {|| QOut( nI ), nI++ } ) )'
-   ? '? "RecCount:", NEWRDD->( RecCount() )'
-   ? ""
+   ? '? "LastRec:", NEWRDD->( LastRec() )'
+   ?
    NEWRDD->( dbCloseArea() )
-   dbUseArea( .T., "DBFCDX", "newrdd", "NEWRDD", .F., .F. )
+   dbUseArea( .T., "DBFCDX", "newrdd.dbf", "NEWRDD", .F., .F. )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    nI := 1
    NEWRDD->( __dbPack( {|| QOut( nI ), nI++ } ) )
-   ? "RecCount:", NEWRDD->( RecCount() )
+   ? "LastRec:", NEWRDD->( LastRec() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
-   ? '? "RecCount:", NEWRDD->( RecCount() )'
+   ? '? "LastRec:", NEWRDD->( LastRec() )'
    ? 'NEWRDD->( __dbZap() )'
-   ? '? "RecCount:", NEWRDD->( RecCount() )'
-   ? ""
-   ? "RecCount:", NEWRDD->( RecCount() )
+   ? '? "LastRec:", NEWRDD->( LastRec() )'
+   ?
+   ? "LastRec:", NEWRDD->( LastRec() )
    NEWRDD->( __dbZap() )
-   ? "RecCount:", NEWRDD->( RecCount() )
+   ? "LastRec:", NEWRDD->( LastRec() )
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    ? 'NEWRDD->( dbCloseArea() )'
    ? 'SORT ON FIRST /DC, AGE /D TO NEWRDD'
-   ? 'dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )'
-   ? '? "RecCount:", NEWRDD->( RecCount() )'
+   ? 'dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )'
+   ? '? "LastRec:", NEWRDD->( LastRec() )'
    ? 'FOR nI := 1 TO 8'
    ? '   ? NEWRDD->FIRST, NEWRDD->AGE'
    ? '   NEWRDD->( dbSkip() )'
@@ -354,16 +348,15 @@ PROCEDURE Main()
    ? '   NEWRDD->( dbSkip() )'
    ? 'NEXT'
 
-   ? "Press any key to continue..."
-   Inkey( 0 )
+   WAIT
    CLS
 
    NEWRDD->( dbCloseArea() )
-   Select( "TESTDBF" )
+   dbSelectArea( "TESTDBF" )
    SORT ON FIRST /DC, AGE /D TO newrdd
 
-   dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )
-   ? "RecCount:", NEWRDD->( RecCount() )
+   dbUseArea( .T., "DBF", "newrdd.dbf", "NEWRDD", .F., .F. )
+   ? "LastRec:", NEWRDD->( LastRec() )
    FOR nI := 1 TO 8
       ? NEWRDD->FIRST, NEWRDD->AGE
       NEWRDD->( dbSkip() )
@@ -378,6 +371,6 @@ PROCEDURE Main()
 
    dbCloseAll()
 
-   hb_dbDrop( "newrdd",, "DBFCDX" )
+   hb_dbDrop( "newrdd.dbf",, "DBFCDX" )
 
    RETURN

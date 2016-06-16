@@ -61,77 +61,75 @@
  * compilers like OpenWatcom but not for all, f.e. it will not help
  * BCC when used with -P (C++ mode) switch.
  */
-/*
+#if 0
 #if defined( __cplusplus ) && ! defined( CINTERFACE )
    #define CINTERFACE 1
 #endif
-*/
+#endif
 
 /* This code uses named union so this declaration is necessary for
  * compilers where nameless unions are default
  */
 #if defined( __BORLANDC__ ) || \
    ( defined( __WATCOMC__ ) && ! defined( __cplusplus ) )
-#     if ! defined( NONAMELESSUNION )
-#        define NONAMELESSUNION
-#     endif
+   #if ! defined( NONAMELESSUNION )
+      #define NONAMELESSUNION
+   #endif
 #endif
 
 #include <windows.h>
 #include <ole2.h>
 #include <ocidl.h>
 
-/* MinGW is lacking a number of variant accessors
- */
+/* MinGW is lacking a number of variant accessors */
 #if defined( __MINGW32__ )
-#  if ! defined( V_I1REF )
-#     define V_I1REF( x )    V_UNION( x, pcVal )
-#  endif
-#  if ! defined( V_UI2REF )
-#     define V_UI2REF( x )   V_UNION( x, puiVal )
-#  endif
-#  if ! defined( V_INT )
-#     define V_INT( x )      V_UNION( x, intVal )
-#  endif
-#  if ! defined( V_INTREF )
-#     define V_INTREF( x )   V_UNION( x, pintVal )
-#  endif
-#  if ! defined( V_UINT )
-#     define V_UINT( x )     V_UNION( x, uintVal )
-#  endif
-#  if ! defined( V_UINTREF )
-#     define V_UINTREF( x )  V_UNION( x, puintVal )
-#  endif
+   #if ! defined( V_I1REF )
+      #define V_I1REF( x )    V_UNION( x, pcVal )
+   #endif
+   #if ! defined( V_UI2REF )
+      #define V_UI2REF( x )   V_UNION( x, puiVal )
+   #endif
+   #if ! defined( V_INT )
+      #define V_INT( x )      V_UNION( x, intVal )
+   #endif
+   #if ! defined( V_INTREF )
+      #define V_INTREF( x )   V_UNION( x, pintVal )
+   #endif
+   #if ! defined( V_UINT )
+      #define V_UINT( x )     V_UNION( x, uintVal )
+   #endif
+   #if ! defined( V_UINTREF )
+      #define V_UINTREF( x )  V_UNION( x, puintVal )
+   #endif
 #endif
 
 #if defined( NONAMELESSUNION )
-#  define HB_WIN_U1( x, y )  ( x )->n1.y
-#  define HB_WIN_U2( x, y )  ( x )->n1.n2.y
-#  define HB_WIN_U3( x, y )  ( x )->n1.n2.n3.y
+   #define HB_WIN_U1( x, y )  ( x )->n1.y
+   #define HB_WIN_U2( x, y )  ( x )->n1.n2.y
+   #define HB_WIN_U3( x, y )  ( x )->n1.n2.n3.y
 #else
-#  define HB_WIN_U1( x, y )  ( x )->y
-#  define HB_WIN_U2( x, y )  ( x )->y
-#  define HB_WIN_U3( x, y )  ( x )->y
+   #define HB_WIN_U1( x, y )  ( x )->y
+   #define HB_WIN_U2( x, y )  ( x )->y
+   #define HB_WIN_U3( x, y )  ( x )->y
 #endif
 
-/* macros used to hide type of interface: C or C++
- */
+/* macros used to hide type of interface: C or C++ */
 #if defined( __cplusplus ) && ! defined( CINTERFACE ) && \
    ( defined( __BORLANDC__ ) || \
      defined( __DMC__ ) || \
      defined( _MSC_VER ) || \
      defined( __MINGW32__ ) || \
      ( defined( __WATCOMC__ ) && ( __WATCOMC__ >= 1270 ) ) )
-#  define HB_ID_REF( id )     ( id )
-#  define HB_VTBL( pSelf )    ( pSelf )
-#  define HB_THIS( pSelf )
-#  define HB_THIS_( pSelf )
+   #define HB_ID_REF( id )     ( id )
+   #define HB_VTBL( pSelf )    ( pSelf )
+   #define HB_THIS( pSelf )
+   #define HB_THIS_( pSelf )
 #else
-#  define HB_OLE_C_API        1
-#  define HB_ID_REF( id )     ( &id )
-#  define HB_VTBL( pSelf )    ( pSelf )->lpVtbl
-#  define HB_THIS( pSelf )    ( pSelf )
-#  define HB_THIS_( pSelf )   ( pSelf ),
+   #define HB_OLE_C_API        1
+   #define HB_ID_REF( id )     ( &id )
+   #define HB_VTBL( pSelf )    ( pSelf )->lpVtbl
+   #define HB_THIS( pSelf )    ( pSelf )
+   #define HB_THIS_( pSelf )   ( pSelf ),
 #endif
 
 HB_EXTERN_BEGIN
@@ -161,7 +159,7 @@ extern HB_EXPORT HB_BOOL     hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, 
                                               HB_OLEOBJ_FUNC pObjFunc, HB_USHORT uiClass );
 extern HB_EXPORT void        hb_oleItemSetDestructor( PHB_ITEM pItem, HB_OLE_DESTRUCTOR_FUNC pFunc, void * cargo );
 
-/* activex control */
+/* ActiveX control */
 extern HB_EXPORT HB_BOOL     hb_oleAxInit( void );
 extern HB_EXPORT PHB_ITEM    hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
 

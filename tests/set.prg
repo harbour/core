@@ -1,11 +1,10 @@
-// Testing SET
+// Testing Set()
 
 REQUEST DBFNTX
 
 PROCEDURE Main()
 
-   // for Clipper, this drags in the terminal driver
-   @ Row(), Col() SAY ""
+   DevOut( "" )  // for Clipper, this drags in the terminal driver
 
    TestLine( "_SET_EXACT",        1 )
    TestLine( "_SET_FIXED",        2 )
@@ -67,10 +66,10 @@ PROCEDURE Main()
 #endif
 
 #ifdef _SET_LANGUAGE
-   TestLine( "_SET_LANGUAGE",    100 )
-   TestLine( "_SET_IDLEREPEAT",  101 )
-   TestLine( "_SET_FILECASE",    102 )
-   TestLine( "_SET_DIRCASE",     103 )
+   TestLine( "_SET_LANGUAGE",     100 )
+   TestLine( "_SET_IDLEREPEAT",   101 )
+   TestLine( "_SET_FILECASE",     102 )
+   TestLine( "_SET_DIRCASE",      103 )
    TestLine( "_SET_DIRSEPARATOR", 104 )
    Set( _SET_DIRSEPARATOR, "/" )
    TestLine( "_SET_DIRSEPARATOR", 104 )
@@ -78,11 +77,11 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE testline( c, n )
+STATIC PROCEDURE testline( c, n )
 
    ? ;
-      Str( n, 3 ),;
-      PadR( c, 20 ),;
+      Str( n, 3 ), ;
+      PadR( c, 20 ), ;
       Set( n )
 
    RETURN

@@ -4,7 +4,6 @@ include $(TOP)$(ROOT)config/global.mk
 
 LIBNAME := png
 
-HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
 C_SOURCES := \
@@ -43,6 +42,7 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc tcc),)
          HB_CFLAGS += $(foreach d,$(HB_HAS_ZLIB),-I$(d))
          HB_CFLAGS_DYN := -DPNG_BUILD_DLL
 
+         # requirement for wce and for win/msvc with -sdl option
          HB_CFLAGS += -DPNG_NO_STDIO
 
          ifneq ($(filter $(HB_COMPILER),pocc pocc64 poccarm),)
@@ -55,7 +55,7 @@ ifeq ($(filter $(HB_COMPILER),poccarm xcc tcc),)
          include $(TOP)$(ROOT)config/none.mk
       endif
    else
-      HB_SKIP_REASON := unused
+      HB_SKIP_REASON := local copy unused
       include $(TOP)$(ROOT)config/none.mk
    endif
 else
@@ -64,14 +64,13 @@ else
 endif
 
 # ORIGIN http://libpng.org/pub/png/libpng.html
-# VER    1.6.8
-# URL    http://downloads.sourceforge.net/libpng/libpng-1.6.8.tar.gz
+# URL    https://github.com/glennrp/libpng/archive/v1.6.23.tar.gz
 # DIFF   png.dif
 #
-# MAP    LICENSE
+# MAP    LICENSE                        LICENSE.txt
 # MAP    png.c
 # MAP    pngconf.h
-# MAP    scripts/pnglibconf.h.prebuilt           pnglconf.h
+# MAP    scripts/pnglibconf.h.prebuilt  pnglconf.h
 # MAP    pngerror.c
 # MAP    pngget.c
 # MAP    png.h
@@ -89,5 +88,5 @@ endif
 # MAP    pngwtran.c
 # MAP    pngwutil.c
 # MAP    pnginfo.h
-# MAP    pngstruct.h                             pngstru.h
+# MAP    pngstruct.h                    pngstru.h
 # MAP    pngdebug.h

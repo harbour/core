@@ -2,9 +2,9 @@ REQUEST RLCDX
 
 PROCEDURE Main()
 
-   dbCreate( "_tst", { { "F1", "C", 10, 0 } }, "RLCDX" )
-   USE _tst VIA "RLCDX" SHARED
-   ? "Table: ", Alias(), " open VIA: ", rddName()
+   dbCreate( "_tst.dbf", { { "F1", "C", 10, 0 } }, "RLCDX" )
+   USE _tst.dbf VIA "RLCDX" SHARED
+   ? "Table:", Alias(), " open VIA:", rddName()
    ? "APPEND"
    dbAppend()
    ? "Current record locks:"
@@ -41,6 +41,6 @@ PROCEDURE Main()
    ? "Current record locks:"
    AEval( dbRLockList(), {| nRecNo | QQOut( nRecNo ) } )
 
-   CLOSE
+   dbCloseArea()
 
    RETURN

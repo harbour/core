@@ -56,8 +56,6 @@ PROCEDURE Main()
 
    LOCAL ni, cStr
 
-   ctinit()
-
    ? "Begin test of CharNot()"
    ?
 
@@ -66,7 +64,7 @@ PROCEDURE Main()
    ? '  CharNot( hb_BChar(  85 ) + hb_BChar( 128 ) + hb_BChar( 170 ) + hb_BChar(   1 ) ) =='
    ? '           hb_BChar( 170 ) + hb_BChar( 127 ) + hb_BChar(  85 ) + hb_BChar( 254 ) ? -->'
 
-   ? '          '
+   ? '           '
    cStr := CharNot( hb_BChar( 85 ) + hb_BChar( 128 ) + hb_BChar( 170 ) + hb_BChar( 1 ) )
    FOR ni := 1 TO Len( cStr )
       ?? "hb_BChar( " + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + " )"
@@ -77,12 +75,10 @@ PROCEDURE Main()
    ?
 
    ? '  CharNot( CharNot( "This is a test!" ) ) == "This is a test!" ?'
-   ? '  --> "' + CharNot( CharNot( "This is a test!" ) ) + '"'
+   ? '  -->', '"' + CharNot( CharNot( "This is a test!" ) ) + '"'
    ?
 
    ? "End test of CharNot()"
    ?
-
-   ctexit()
 
    RETURN

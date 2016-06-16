@@ -81,7 +81,7 @@ double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
    if( uiType > HB_DISK_TOTAL )
       uiType = HB_DISK_AVAIL;
 
-   if( ! pszPath )
+   if( ! pszPath || pszPath[ 0 ] == '\0' )
    {
       szPathBuf[ 0 ] = HB_OS_PATH_DELIM_CHR;
       szPathBuf[ 1 ] = '\0';
@@ -104,16 +104,16 @@ double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
                   Win95 first edition. It was introduced in Win95B (aka OSR2) [vszakats] */
          typedef BOOL ( WINAPI * P_GDFSE )( LPCTSTR, PULARGE_INTEGER,
                                             PULARGE_INTEGER, PULARGE_INTEGER );
-         static P_GDFSE s_pGetDiskFreeSpaceEx = NULL;
-         static HB_BOOL s_fInit = HB_FALSE;
+         static P_GDFSE s_pGetDiskFreeSpaceEx = ( P_GDFSE ) -1;
 
-         if( ! s_fInit )
+         if( s_pGetDiskFreeSpaceEx == ( P_GDFSE ) -1 )
          {
             HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
             if( hModule )
                s_pGetDiskFreeSpaceEx = ( P_GDFSE )
                   HB_WINAPI_GETPROCADDRESST( hModule, "GetDiskFreeSpaceEx" );
-            s_fInit = HB_TRUE;
+            else
+               s_pGetDiskFreeSpaceEx = NULL;
          }
 
          if( ! s_pGetDiskFreeSpaceEx )
@@ -161,17 +161,16 @@ double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
 #if defined( _MSC_VER ) || defined( __LCC__ ) || \
     ( defined( __GNUC__ ) && ! defined( __RSXNT__ ) )
 
-#  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).LowPart + \
-                                    ( double ) (v).HighPart * \
-                                    ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
+   #define HB_GET_LARGE_UINT( v )  ( ( double ) (v).LowPart + \
+                                     ( double ) (v).HighPart * \
+                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 
 #else
-   /* NOTE: Borland doesn't seem to deal with the un-named
-            struct that is part of ULARGE_INTEGER
-            [pt] */
-#  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).u.LowPart + \
-                                    ( double ) (v).u.HighPart * \
-                                    ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
+   /* NOTE: For compilers that don't seem to deal with the
+            unnamed struct that is part of ULARGE_INTEGER [pt] */
+   #define HB_GET_LARGE_UINT( v )  ( ( double ) (v).u.LowPart + \
+                                     ( double ) (v).u.HighPart * \
+                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 #endif
 
             ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
@@ -221,8 +220,7 @@ double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
    {
       HB_USHORT uiDrive;
 
-      uiDrive = pszPath == NULL || pszPath[ 0 ] == 0 ||
-                pszPath[ 1 ] != HB_OS_DRIVE_DELIM_CHR ? 0 :
+      uiDrive = pszPath[ 1 ] != HB_OS_DRIVE_DELIM_CHR ? 0 :
                 ( pszPath[ 0 ] >= 'A' && pszPath[ 0 ] <= 'Z' ?
                   pszPath[ 0 ] - 'A' + 1 :
                 ( pszPath[ 0 ] >= 'a' && pszPath[ 0 ] <= 'z' ?

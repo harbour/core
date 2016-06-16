@@ -1,5 +1,5 @@
 /*
- * Windows applications entry point
+ * Windows application entry point
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  *

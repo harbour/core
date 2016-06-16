@@ -1,7 +1,7 @@
 /*
  * Windows API functions (shellapi.h - shell32.dll)
  *
- * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2014 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,7 +61,7 @@ HB_FUNC( WAPI_SHELLEXECUTE )
    void * hParameters;
    void * hDirectory;
 
-   hb_retnint( ( HB_PTRUINT ) ShellExecute( ( HWND ) hb_parptr( 1 ),
+   hb_retnint( ( HB_PTRUINT ) ShellExecute( hbwapi_par_raw_HWND( 1 ),
                                             HB_PARSTR( 2, &hOperation, NULL ), /* edit, explore, open, print, play?, properties? */
                                             HB_PARSTRDEF( 3, &hFile, NULL ),
                                             HB_PARSTR( 4, &hParameters, NULL ),
@@ -92,5 +92,5 @@ HB_FUNC( WAPI_ISUSERANADMIN )
       FreeLibrary( hLib );
    }
 
-   hb_retl( bResult );
+   hbwapi_ret_L( bResult );
 }

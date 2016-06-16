@@ -1,88 +1,74 @@
-/*
- * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
- *
- * GD API anim gif test file - from GD official documantation, adapted to porting
- *
+/* Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
+ * GD API anim gif test file - from GD official documentation, adapted to porting
  * This test shows how handle either file handle than file name
  */
 
 #require "hbgd"
 
-#define IMAGES_IN  "imgs_in" + hb_ps()
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#include "fileio.ch"
+
+#define IMAGES_IN   "imgs_in" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 
-   LOCAL im, im2, im3
+   LOCAL im1, im2, im3
    LOCAL black, trans
+
    LOCAL hFile
+   LOCAL nFile
+   LOCAL cFile := IMAGES_OUT + "anim2.gif"
 
-#if 0
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
-#endif
+   hb_vfDirMake( IMAGES_OUT )
 
-   /* Create the image */
-   im := gdImageCreate( 100, 100 )
+   hFile := hb_vfOpen( IMAGES_OUT + "anim0.gif", FO_CREAT + FO_TRUNC + FO_WRITE )
+   nFile := FCreate( IMAGES_OUT + "anim1.gif" )           /* Open output file in binary mode */
 
-   /* Allocate background */
-   // white := gdImageColorAllocate(im, 255, 255, 255)
+   im1 := gdImageCreate( 100, 100 )                       /* Create the image */
 
-   /* Allocate drawing color */
-   black := gdImageColorAllocate( im, 0, 0, 0 )
+   black := gdImageColorAllocate( im1, 0, 0, 0 )          /* Allocate drawing color */
+   trans := gdImageColorAllocate( im1, 1, 1, 1 )          /* Allocate transparent color for animation compression */
 
-   /* Allocate transparent color for animation compression */
-   trans := gdImageColorAllocate( im, 1, 1, 1 )
+   gdImageRectangle( im1, 0, 0, 10, 10, black )           /* Draw rectangle */
 
-   /* Draw rectangle */
-   gdImageRectangle( im, 0, 0, 10, 10, black )
+   gdImageGifAnimBegin( im1, hFile, 1, 3 )                /* Write GIF header. Use global color map. Loop a few times */
+   gdImageGifAnimBegin( im1, nFile, 1, 3 )
+   gdImageGifAnimBegin( im1, cFile, 1, 3 )
 
-   /* Open output file in binary mode */
-   hFile := FCreate( IMAGES_OUT + "anim1.gif" )
-   /* Write GIF header.  Use global color map.  Loop a few times */
-   gdImageGifAnimBegin( im, hFile, 1, 3 )
-   gdImageGifAnimBegin( im, IMAGES_OUT + "anim2.gif", 1, 3 )
-   /* Write the first frame.  No local color map.  Delay = 1s */
-   gdImageGifAnimAdd( im, hFile, 0, 0, 0, 100, 1, NIL )
-   gdImageGifAnimAdd( im, IMAGES_OUT + "anim2.gif", 0, 0, 0, 100, 1, NIL )
-   /* construct the second frame */
-   im2 := gdImageCreate( 100, 100 )
-   /* Allocate background to make it white */
-   gdImageColorAllocate( im2, 255, 255, 255 )
-   /* Make sure the palette is identical */
-   gdImagePaletteCopy ( im2, im )
-   /* Draw something */
-   gdImageRectangle( im2, 0, 0, 15, 15, black )
-   /* Allow animation compression with transparent pixels */
-   gdImageColorTransparent ( im2, trans )
-   /* Add the second frame */
-   gdImageGifAnimAdd( im2, hFile, 0, 0, 0, 100, 1, im )
-   gdImageGifAnimAdd( im2, IMAGES_OUT + "anim2.gif", 0, 0, 0, 100, 1, im )
-   /* construct the second frame */
-   im3 := gdImageCreate( 100, 100 )
-   /* Allocate background to make it white */
-   gdImageColorAllocate( im3, 255, 255, 255 )
-   /* Make sure the palette is identical */
-   gdImagePaletteCopy ( im3, im )
-   /* Draw something */
-   gdImageRectangle( im3, 0, 0, 15, 20, black )
-   /* Allow animation compression with transparent pixels */
-   gdImageColorTransparent ( im3, trans )
-   /* Add the third frame, compressing against the second one */
-   gdImageGifAnimAdd( im3, hFile, 0, 0, 0, 100, 1, im2 )
-   gdImageGifAnimAdd( im3, IMAGES_OUT + "anim2.gif", 0, 0, 0, 100, 1, im2 )
-   /* Write the end marker */
-   /* gdImageGifAnimEnd(out); is the same as the following: */
-   // putc (";", out);
-   gdImageGifAnimEnd( hFile )
-   gdImageGifAnimEnd( IMAGES_OUT + "anim2.gif" )
-   /* Close file */
-   FClose( hFile )
+   gdImageGifAnimAdd( im1, hFile, 0, 0, 0, 100, 1, NIL )  /* Write the first frame.  No local color map.  Delay == 1s */
+   gdImageGifAnimAdd( im1, nFile, 0, 0, 0, 100, 1, NIL )
+   gdImageGifAnimAdd( im1, cFile, 0, 0, 0, 100, 1, NIL )
 
-   ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   im2 := gdImageCreate( 100, 100 )                       /* construct the second frame */
+
+   gdImageColorAllocate( im2, 255, 255, 255 )             /* Allocate background to make it white */
+   gdImagePaletteCopy( im2, im1 )                         /* Make sure the palette is identical */
+   gdImageRectangle( im2, 0, 0, 15, 15, black )           /* Draw something */
+   gdImageColorTransparent ( im2, trans )                 /* Allow animation compression with transparent pixels */
+
+   gdImageGifAnimAdd( im2, hFile, 0, 0, 0, 100, 1, im1 )  /* Add the second frame */
+   gdImageGifAnimAdd( im2, nFile, 0, 0, 0, 100, 1, im1 )
+   gdImageGifAnimAdd( im2, cFile, 0, 0, 0, 100, 1, im1 )
+
+
+   im3 := gdImageCreate( 100, 100 )                       /* construct the second frame */
+
+   gdImageColorAllocate( im3, 255, 255, 255 )             /* Allocate background to make it white */
+   gdImagePaletteCopy( im3, im1 )                         /* Make sure the palette is identical */
+   gdImageRectangle( im3, 0, 0, 15, 20, black )           /* Draw something */
+   gdImageColorTransparent ( im3, trans )                 /* Allow animation compression with transparent pixels */
+
+   gdImageGifAnimAdd( im3, hFile, 0, 0, 0, 100, 1, im2 )  /* Add the third frame, compressing against the second one */
+   gdImageGifAnimAdd( im3, nFile, 0, 0, 0, 100, 1, im2 )
+   gdImageGifAnimAdd( im3, cFile, 0, 0, 0, 100, 1, im2 )
+
+   gdImageGifAnimEnd( hFile )                             /* Write the end marker. Is the same as the following: putc( ";", out ); */
+   gdImageGifAnimEnd( nFile )
+   gdImageGifAnimEnd( cFile )
+
+   hb_vfClose( hFile )
+   FClose( nFile )
+
+   ? "Look at", IMAGES_OUT, "directory for output images"
 
    RETURN

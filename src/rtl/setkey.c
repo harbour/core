@@ -1,7 +1,7 @@
 /*
  * SetKey() and related functions
  *
- * Copyright 1999 April White <april@users.sourceforge.net>
+ * Copyright 1999 April White <bright.tigra gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

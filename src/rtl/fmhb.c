@@ -1,5 +1,5 @@
 /*
- * Memory() function.
+ * Memory() function
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *

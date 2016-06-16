@@ -1,0 +1,60 @@
+version: 3.4.{build}
+branches:
+  only:
+  - master
+  - test-appveyor
+  - test-msysmingw
+  - lto
+  - lto-msysmingw
+  - msvc2008
+  - msvc2010
+  - msvc2012
+  - msvc2013
+  - msvc2015
+  - msvc15
+skip_tags: true
+image: Windows Server 2012 R2
+clone_depth: 8
+clone_folder: C:\w\
+build:
+  verbosity: detailed
+
+environment:
+  GITHUB_TOKEN:
+    secure: EAvrbP8pR3X0XMvu+PtEpAsTS5hh7jWZl5T+6sLOuCUqmyTLxNY8P2JPYMidRbpf
+  VIRUSTOTAL_APIKEY:
+    secure: TdJYONfrpH45DuyKxraVqgHYy25IQ/F8TKHzYf+u5zz1aiM2yR0YTMaGxyj2EMReEearSI9kD9D2ZykybSVEbRyEaotZlceUb2lPDKELl3M=
+  PUSHOVER_USER:
+    secure: zKEcvmxcPuch0HUR9NuvXSXrMJL13qbQ0Ixh65VQUi0=
+  PUSHOVER_TOKEN:
+    secure: DjWTkh5sUw6dUQkHv3KhTvi2llF9GN17z60h9kRGYX4=
+
+#init:
+#  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+build_script:
+  - set PATH=C:\msys64\usr\bin;%PATH%
+  - pacman --noconfirm --noprogressbar --sync -yu -u
+  - pacman --noconfirm --noprogressbar --sync -yu -u
+  - pacman --noconfirm --noprogressbar --sync p7zip mc
+  - sh -c ./package/mpkg_win_ci.sh
+
+artifacts:
+  - path: harbour-daily-win*.7z*
+    name: pkg-win
+
+deploy:
+  - provider: GitHub
+    auth_token: $(github_token)
+    tag: v3.4.0dev
+    release: 'Harbour 3.4.0dev daily'
+    description: 'Snapshot build generated after each commit.'
+    artifact: pkg-win
+    draft: false
+    prerelease: true
+    force_update: true
+    on:
+      branch: master
+      appveyor_repo_tag: false

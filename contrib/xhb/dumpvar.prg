@@ -46,13 +46,7 @@
 
 #include "hbclass.ch"
 
-/*
- * (C) 2003 - Francesco Saverio Giudice
- *
- * Send to hb_OutDebug() more parameters
- *
-*/
-
+/* Send to hb_OutDebug() more parameters */
 PROCEDURE __OutDebug( ... )
 
    LOCAL xVal
@@ -63,40 +57,30 @@ PROCEDURE __OutDebug( ... )
 
    RETURN
 
-/*
- * (C) 2003 - Francesco Saverio Giudice
- *
- * return a string containing a dump of a variable
+/* Return a string containing a dump of a variable
  *
  * 2006-09-24
  * - Added recursion limit
  * - Added front function with limited parameters and removed support for TAssociative Array
-*/
-
+ */
 FUNCTION hb_DumpVar( xVar, lRecursive, nMaxRecursionLevel )
-
-   LOCAL nRecursionLevel := 1
-   LOCAL nIndent         := 0
 
    // TraceLog( "HB_DumpVariable: xVar, lAssocAsObj, lRecursive", xVar, lAssocAsObj, lRecursive )
 
-   __defaultNIL( @nMaxRecursionLevel, 0 )
-
-   RETURN __HB_DumpVar( xVar, , lRecursive, nIndent, nRecursionLevel, nMaxRecursionLevel )
+   RETURN __HB_DumpVar( xVar,, lRecursive, 0, 1, hb_defaultValue( nMaxRecursionLevel, 0 ) )
 
 STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursionLevel, nMaxRecursionLevel )
 
    LOCAL cString := "", cKey
    LOCAL nEolLen
 
-   __defaultNIL( @lAssocAsObj, .F. )
-   __defaultNIL( @lRecursive, .F. )
+   hb_default( @lAssocAsObj, .F. )
+   hb_default( @lRecursive, .F. )
 
    // TraceLog( "Recursion: xVar, nRecursionLevel, nMaxRecursionLevel", xVar, nRecursionLevel, nMaxRecursionLevel )
 
    // return if there is limit in recursion
-   IF nMaxRecursionLevel > 0 .AND. ;
-         nRecursionLevel > nMaxRecursionLevel
+   IF nMaxRecursionLevel > 0 .AND. nRecursionLevel > nMaxRecursionLevel
       RETURN AsString( xVar )
    ENDIF
 
@@ -112,12 +96,12 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
             FOR EACH cKey IN xVar:Keys
                cString += Space( nIndent ) + " '" + cKey + "' => " + asString( xVar:SendKey( cKey ) ) + ", " + hb_eol()
                IF lRecursive .AND. ValType( xVar:SendKey( cKey ) ) $ "AOH"
-                  cString := SubStr( cString, 1, Len( cString ) - 2 - nEolLen ) + hb_eol()
+                  cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
                   cString += __HB_DumpVar( xVar:SendKey( cKey ), , lRecursive, nIndent + 3, nRecursionLevel + 1, nMaxRecursionLevel )
-                  cString := SubStr( cString, 1, Len( cString ) - nEolLen ) + ", " + hb_eol()
+                  cString := hb_StrShrink( cString, nEolLen ) + ", " + hb_eol()
                ENDIF
             NEXT
-            cString := SubStr( cString, 1, Len( cString ) - 2 - nEolLen ) + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
             cString += Space( nIndent ) + "}" + hb_eol()
          ENDIF
       ELSE
@@ -171,14 +155,14 @@ STATIC FUNCTION DShowProperties( oVar, nScope, lRecursive, nIndent, nRecursionLe
    LOCAL aMethods, aMth
    LOCAL cString := ""
 
-   __defaultNIL( @nIndent, 0 )
+   hb_default( @nIndent, 0 )
 
    IF HB_ISOBJECT( oVar )
 #if 0
       lOldScope := __SetClassScope( .F. )
 #endif
       aMethods  := __objGetMsgFullList( oVar, .F., HB_MSGLISTALL, nScope )
-      aProps    := __objGetValueFullList( oVar, NIL, nScope )
+      aProps    := __objGetValueFullList( oVar, , nScope )
 #if 0
       __SetClassScope( lOldScope )
 #endif
@@ -203,7 +187,7 @@ STATIC FUNCTION DShowProperties( oVar, nScope, lRecursive, nIndent, nRecursionLe
          cString += Space( nIndent ) + " |     " + hb_eol()
       ENDIF
    ENDIF
-   IF Empty( cString )
+   IF HB_ISNULL( cString )
       cString := Space( nIndent ) + " | " + hb_eol()
    ENDIF
 
@@ -214,7 +198,7 @@ STATIC FUNCTION DShowArray( aVar, lRecursive, nIndent, nRecursionLevel, nMaxRecu
    LOCAL xVal, nChar, nEolLen
    LOCAL cString := ""
 
-   __defaultNIL( @nIndent, 0 )
+   hb_default( @nIndent, 0 )
 
    // TraceLog( "DShowArray: aVar, lRecursive", aVar, lRecursive )
 
@@ -224,15 +208,15 @@ STATIC FUNCTION DShowArray( aVar, lRecursive, nIndent, nRecursionLevel, nMaxRecu
       // i.e. if Len( aVar ) == 99, then nChar := 2
       cString += Space( nIndent ) + "{" + hb_eol()
       FOR EACH xVal IN aVar
-         cString += Space( nIndent ) + " [" + LTrim( StrZero( xVal:__EnumIndex(), nChar ) ) + "] => " + AsString( xVal ) + ", " + hb_eol()
+         cString += Space( nIndent ) + " [" + LTrim( StrZero( xVal:__enumIndex(), nChar ) ) + "] => " + AsString( xVal ) + ", " + hb_eol()
          IF lRecursive .AND. ValType( xVal ) $ "AOH"
-            cString := SubStr( cString, 1, Len( cString ) - 2 - nEolLen ) + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
             cString += __HB_DumpVar( xVal, , lRecursive, nIndent + 3, nRecursionLevel + 1, nMaxRecursionLevel )
-            cString := SubStr( cString, 1, Len( cString ) - nEolLen ) + ", " + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen ) + ", " + hb_eol()
          ENDIF
       NEXT
       IF Len( aVar ) > 0
-         cString := SubStr( cString, 1, Len( cString ) - 2 - nEolLen ) + hb_eol()
+         cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
       ENDIF
       cString += Space( nIndent ) + "}" + hb_eol()
    ENDIF
@@ -245,7 +229,7 @@ STATIC FUNCTION DShowHash( hVar, lRecursive, nIndent, nRecursionLevel, nMaxRecur
    LOCAL nEolLen
    LOCAL cString := ""
 
-   __defaultNIL( @nIndent, 0 )
+   hb_default( @nIndent, 0 )
 
    // TraceLog( "DShowHash: hVar, ValType( hVar ), lRecursive", hVar, ValType( hVar ), ValToPrg( hVar ), lRecursive )
 
@@ -255,13 +239,13 @@ STATIC FUNCTION DShowHash( hVar, lRecursive, nIndent, nRecursionLevel, nMaxRecur
       FOR EACH xVal IN hVar
          cString += Space( nIndent ) + " [" + LTrim( AsString( xVal:__enumKey() ) ) + "] => " + AsString( xVal ) + ", " + hb_eol()
          IF lRecursive .AND. ValType( xVal ) $ "AOH"
-            cString := SubStr( cString, 1, Len( cString ) - 2 - nEolLen ) + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
             cString += __HB_DumpVar( xVal, , lRecursive, nIndent + 3, nRecursionLevel + 1, nMaxRecursionLevel )
-            cString := SubStr( cString, 1, Len( cString ) - nEolLen ) + ", " + hb_eol()
+            cString := hb_StrShrink( cString, nEolLen ) + ", " + hb_eol()
          ENDIF
       NEXT
       IF Len( hVar ) > 0
-         cString := SubStr( cString, 1, Len( cString ) - 2 - nEolLen ) + hb_eol()
+         cString := hb_StrShrink( cString, nEolLen + 2 ) + hb_eol()
       ENDIF
       cString += Space( nIndent ) + "}" + hb_eol()
    ENDIF
@@ -272,90 +256,69 @@ STATIC FUNCTION DecodeScope( nScope AS NUMERIC )
 
    LOCAL cString := ""
 
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_EXPORTED  ) # 0  //   1
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_EXPORTED  ) != 0
       cString += "Ex,"
    ENDIF
 #ifdef __XHARBOUR__
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_PUBLISHED ) # 0  //   2
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_PUBLISHED ) != 0
       cString += "Pu,"
    ENDIF
 #endif
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_PROTECTED ) # 0  //   4
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_PROTECTED ) != 0
       cString += "Pr,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_HIDDEN    ) # 0  //   8
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_HIDDEN    ) != 0
       cString += "Hi,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_CTOR      ) # 0  //  16
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_CTOR      ) != 0
       cString += "Ct,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_READONLY  ) # 0  //  32
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_READONLY  ) != 0
       cString += "Ro,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_SHARED    ) # 0  //  64
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_SHARED    ) != 0
       cString += "Sh,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_CLASS     ) # 0  // 128
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_CLASS     ) != 0
       cString += "Cl,"
    ENDIF
-   IF hb_bitAnd( nScope, HB_OO_CLSTP_SUPER     ) # 0  // 256
+   IF hb_bitAnd( nScope, HB_OO_CLSTP_SUPER     ) != 0
       cString += "Su,"
    ENDIF
 
    IF Right( cString, 1 ) == ","
-      cString := SubStr( cString, 1, Len( cString ) - 1 )
+      cString := hb_StrShrink( cString )
    ENDIF
 
    RETURN PadR( cString, 18 )
 
 STATIC FUNCTION DecodeType( nType AS NUMERIC )
 
-   LOCAL cString := ""
+   SWITCH nType
+   CASE HB_OO_MSG_METHOD        ; RETURN "Method"
+   CASE HB_OO_MSG_DATA          ; RETURN "Data"
+   CASE HB_OO_MSG_CLASSDATA     ; RETURN "Clsdata"
+   CASE HB_OO_MSG_INLINE        ; RETURN "Inline"
+   CASE HB_OO_MSG_VIRTUAL       ; RETURN "Virtual"
+   CASE HB_OO_MSG_SUPER         ; RETURN "Super"
+   CASE HB_OO_MSG_ONERROR       ; RETURN "OnError"
+   CASE HB_OO_MSG_DESTRUCTOR    ; RETURN "Destructor"
+   CASE HB_OO_PROPERTY          ; RETURN "Property"
+   CASE HB_OO_MSG_PROPERTY      ; RETURN "MsgPrp"
+   CASE HB_OO_MSG_CLASSPROPERTY ; RETURN "ClsPrp"
+   CASE HB_OO_MSG_REALCLASS     ; RETURN "RealCls"
+   CASE HB_OO_MSG_DELEGATE      ; RETURN "Delegate"
+   CASE HB_OO_MSG_PERFORM       ; RETURN "Perform"
+   ENDSWITCH
 
-   DO CASE
-   CASE nType == HB_OO_MSG_METHOD      // 0
-      cString += "Method"
-   CASE nType == HB_OO_MSG_DATA        // 1
-      cString += "Data"
-   CASE nType == HB_OO_MSG_CLASSDATA   // 2
-      cString += "Clsdata"
-   CASE nType == HB_OO_MSG_INLINE      // 3
-      cString += "Inline"
-   CASE nType == HB_OO_MSG_VIRTUAL     // 4
-      cString += "Virtual"
-   CASE nType == HB_OO_MSG_SUPER       // 5
-      cString += "Super"
-   CASE nType == HB_OO_MSG_ONERROR     // 6
-      cString += "OnError"
-   CASE nType == HB_OO_MSG_DESTRUCTOR  // 7
-      cString += "Destructor"
-   CASE nType == HB_OO_PROPERTY        // 8
-      cString += "Property"
-   CASE nType == HB_OO_MSG_PROPERTY    // 9
-      cString += "MsgPrp"
-   CASE nType == HB_OO_MSG_CLASSPROPERTY  // 10
-      cString += "ClsPrp"
-   CASE nType == HB_OO_MSG_REALCLASS
-      cString += "RealCls"
-   CASE nType == HB_OO_MSG_DELEGATE
-      cString += "Delegate"
-   CASE nType == HB_OO_MSG_PERFORM
-      cString += "Perform"
-   ENDCASE
-
-   RETURN PadR( cString, 7 )
+   RETURN Space( 7 )
 
 STATIC FUNCTION asString( x )
    RETURN iif( HB_ISSTRING( x ), '"' + x + '"', hb_CStr( x ) )
 
 #include "error.ch"
 
-/*
- * (C) 2003 - Francesco Saverio Giudice
- *
- * return all informations about classes, included type and scope
-*/
-
+/* return all informations about classes, included type and scope */
 STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
 
    LOCAL aMessages
@@ -363,7 +326,7 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
    LOCAL nFirstProperty, aMsg
 
    IF ! HB_ISOBJECT( oObject )
-      __errRT_BASE( EG_ARG, 3101, NIL, ProcName() )
+      __errRT_BASE( EG_ARG, 3101, , ProcName() )
    ENDIF
 
    hb_default( @lData, .T. )
@@ -374,44 +337,35 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
    aMessages := ASort( oObject:ClassSel( nRange, nScope, .T. ), , , {| x, y | x[ HB_OO_DATA_SYMBOL ] < y[ HB_OO_DATA_SYMBOL ] } )
    aReturn   := {}
 
-   nFirstProperty := AScan( aMessages, {| aElement | Left( aElement[ HB_OO_DATA_SYMBOL ], 1 ) == "_" } )
+   nFirstProperty := AScan( aMessages, {| aElement | hb_LeftEq( aElement[ HB_OO_DATA_SYMBOL ], "_" ) } )
 
    FOR EACH aMsg IN aMessages
 
-      IF Left( aMsg[ HB_OO_DATA_SYMBOL ], 1 ) == "_"
-         LOOP
-      ENDIF
-
-      IF ( AScan( aMessages, {| aElement | aElement[ HB_OO_DATA_SYMBOL ] == "_" + aMsg[ HB_OO_DATA_SYMBOL ] }, nFirstProperty ) != 0 ) == lData
-         IF nNoScope == 0 .OR. hb_bitAnd( aMsg[ HB_OO_DATA_SCOPE ], nNoScope ) == 0
-            AAdd( aReturn, aMsg )
+      IF ! hb_LeftEq( aMsg[ HB_OO_DATA_SYMBOL ], "_" )
+         IF ( AScan( aMessages, {| aElement | aElement[ HB_OO_DATA_SYMBOL ] == "_" + aMsg[ HB_OO_DATA_SYMBOL ] }, nFirstProperty ) > 0 ) == lData
+            IF nNoScope == 0 .OR. hb_bitAnd( aMsg[ HB_OO_DATA_SCOPE ], nNoScope ) == 0
+               AAdd( aReturn, aMsg )
+            ENDIF
          ENDIF
       ENDIF
    NEXT
 
    RETURN aReturn
 
-/*
- * (C) 2003 - Francesco Saverio Giudice
- *
- * return all values from classes, included type and scope
-*/
-
+/* return all values from classes, included type and scope */
 STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
 
-   LOCAL aVars
    LOCAL aReturn
    LOCAL aVar
 
    IF ! HB_ISOBJECT( oObject )
-      __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
+      __errRT_BASE( EG_ARG, 3101, , ProcName( 0 ) )
    ENDIF
 
    hb_default( @aExcept, {} )
 
-   aVars   := __objGetMsgFullList( oObject, .T., HB_MSGLISTALL, nScope, nNoScope )
    aReturn := {}
-   FOR EACH aVar IN aVars
+   FOR EACH aVar IN __objGetMsgFullList( oObject, .T., HB_MSGLISTALL, nScope, nNoScope )
       IF hb_AScan( aExcept, aVar[ HB_OO_DATA_SYMBOL ], , , .T. ) == 0
          // TraceLog( "__objGetValueFullList():  aVar[HB_OO_DATA_SYMBOL]",  aVar[ HB_OO_DATA_SYMBOL ] )
          AAdd( aReturn, { aVar[ HB_OO_DATA_SYMBOL ], __SendRawMsg( oObject, aVar[ HB_OO_DATA_SYMBOL ] ), aVar[ HB_OO_DATA_TYPE ], aVar[ HB_OO_DATA_SCOPE ] } )

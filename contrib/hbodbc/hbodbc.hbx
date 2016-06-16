@@ -21,9 +21,8 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC BrowseODBC
+DYNAMIC hb_odbcBrowse
 DYNAMIC hb_odbcNumSetLen
-DYNAMIC hb_odbcSToD
 DYNAMIC hb_odbcVer
 DYNAMIC SQLAllocConnect
 DYNAMIC SQLAllocEnv
@@ -39,9 +38,6 @@ DYNAMIC SQLExecDirect
 DYNAMIC SQLExecute
 DYNAMIC SQLFetch
 DYNAMIC SQLFetchScroll
-DYNAMIC SQLFreeConnect
-DYNAMIC SQLFreeEnv
-DYNAMIC SQLFreeStmt
 DYNAMIC SQLGetConnectAttr
 DYNAMIC SQLGetData
 DYNAMIC SQLGetDiagRec

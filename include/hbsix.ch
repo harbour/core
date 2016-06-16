@@ -49,9 +49,7 @@
 
 #include "hbsxdef.ch"
 
-/*
- * obsolete SIx Driver functions
- */
+/* obsolete SIx Driver functions */
 #xtranslate Sx_IndexFilter( [<nOrder>] )           => ordFor( [<nOrder>] )
 #xtranslate Sx_TagName([<nOrder>])                 => iif( Used(), ordName( [<nOrder>] ), "" )
 #xtranslate Sx_SetTagOrder( [<xOrder>] [,<cBag>] ) => sx_SetTag( [<xOrder>] [,<cBag>] )
@@ -67,9 +65,7 @@
 #xtranslate Sx_DirtyArea( [<param>] )           => sx_TurboArea( [<param>] )
 
 
-/*
- * USE command with support for TRIGGER and PASSWORD clauses
- */
+/* USE command with support for TRIGGER and PASSWORD clauses */
 #command USE <(db)> [VIA <rdd>] [ALIAS <a>] [<nw: NEW>] ;
             [<ex: EXCLUSIVE>] [<sh: SHARED>] [<ro: READONLY>] ;
             [CODEPAGE <cp>] [INDEX <(index1)> [, <(indexN)>]] ;
@@ -82,9 +78,7 @@
          [; dbSetIndex( <(indexN)> )]
 
 
-/*
- * SORT command with USECURRENT clause
- */
+/* SORT command with USECURRENT clause */
 #command SORT [TO <(f)>] [ON <fields,...>] ;
               [FOR <for>] [WHILE <while>] [NEXT <next>] ;
               [RECORD <rec>] [<rest:REST>] [ALL] [VIA <rdd>] ;
@@ -94,15 +88,11 @@
                    <{for}>, <{while}>, <next>, <rec>, <.rest.>, <rdd>,, <cp> )
 
 
-/*
- * Seek using wildcards
- */
+/* Seek using wildcards */
 #xcommand WILDSEEK <str>      => sx_WildSeek( <str> )
 #xcommand WILDSEEKNEXT <str>  => sx_WildSeek( <str>, .T. )
 
-/*
- * order management commands
- */
+/* order management commands */
 #command CLEAR ORDER <order>                    => sx_ClearOrder( <order> )
 #command SET TAGORDER TO <order>                => ordSetFocus( <order> )
 #command SET TAGORDER TO                        => ordSetFocus( 0 )
@@ -119,9 +109,7 @@
 #command DELETE TAG ALL [OF <(bag)>]            => sx_KillTag( .T., <(bag)> )
 
 
-/*
- * order scope commands
- */
+/* order scope commands */
 #command CLEAR SCOPE                            => sx_ClrScope()
 #xcommand SET SCOPETOP TO <value>               => sx_SetScope( 0, <value> )
 #xcommand SET SCOPETOP TO                       => sx_ClrScope( 0 )
@@ -131,23 +119,17 @@
 #command SET SCOPE TO <value>                   => sx_SetScope( 0, <value> ) ;
                                                  ; sx_SetScope( 1, <value> )
 
-/*
- * TURBO(DIRTY) READ commands
- */
+/* TURBO(DIRTY) READ commands */
 #command SET TURBOREAD ON                       => sx_SetTurbo( .T. )
 #command SET TURBOREAD OFF                      => sx_SetTurbo( .F. )
 
 
-/*
- * MEMO commands
- */
+/* MEMO commands */
 #command MEMOPACK [BLOCK <size>] [OPTION <opt> [STEP <step>]] => ;
             sx_MemoPack( <size>, <{opt}>, <step> )
 #command SET MEMOBLOCK TO <value>               => sx_SetMemoBlock( <value> )
 
-/*
- * indexing
- */
+/* indexing */
 #command SUBINDEX ON <key> TO <(file)> ;
                [OPTION <eval> [STEP <every>]] ;
                [<filter: FILTERON>] ;

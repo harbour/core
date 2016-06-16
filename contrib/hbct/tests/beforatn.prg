@@ -55,31 +55,29 @@ PROCEDURE Main()
 
    LOCAL cStr := "...This...is...a...test!"
 
-   ctinit()
-
    ? "Begin test of BeforAtNum()"
    ?
-   ? "  Value of cStr is: " + '"' + cStr + '"'
+   ? "  Value of cStr is:", '"' + cStr + '"'
    ?
 
    ? "  Simple tests:"
    ? '  BeforAtNum( "..", cStr )       should be "...This...is...a.",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr ) + '"'
    ? '  BeforAtNum( "..", cStr, 2 )    should be "...This",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr, 2 ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr, 2 ) + '"'
    ? '  BeforAtNum( "..", cStr, 2, 2 ) should be "...This...is",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
    ?
 
    ? "  Multi-Pass tests"
    ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
    ? '  BeforAtNum( "..", cStr )       should be "...This...is...a.",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr ) + '"'
    ? '  BeforAtNum( "..", cStr, 2 )    should be ".",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr, 2 ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr, 2 ) + '"'
    ? '  BeforAtNum( "..", cStr, 2, 2 ) should be "...This.",'
-   ? '                                    and is "' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                    and is', '"' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
    ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
@@ -88,16 +86,14 @@ PROCEDURE Main()
    ? '  Setting SetAtLike( CT_SETATLIKE_WILDCARD, "." )'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
    ? '  BeforAtNum( "..", cStr )        should be "...This...is...a...tes",'
-   ? '                                     and is "' + BeforAtNum( "..", cStr ) + '"'
+   ? '                                     and is', '"' + BeforAtNum( "..", cStr ) + '"'
    ? '  BeforAtNum( "..", cStr, 2, 2 )  should be "...T",'
-   ? '                                     and is "' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
+   ? '                                     and is', '"' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
    ? '  BeforAtNum( "..", cStr, 2, 10 ) should be "...This...is",'
-   ? '                                     and is "' + BeforAtNum( "..", cStr, 2, 10 ) + '"'
+   ? '                                     and is', '"' + BeforAtNum( "..", cStr, 2, 10 ) + '"'
    ?
 
    ? "End test of BeforAtNum()"
    ?
-
-   ctexit()
 
    RETURN

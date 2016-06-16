@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "dbstruct.ch"
 
 FUNCTION __dbCopyStruct( cFileName, aFieldList )
@@ -57,6 +59,8 @@ FUNCTION __dbCopyXStruct( cFileName )
    LOCAL oError
    LOCAL lError := .F.
 
+   LOCAL aField, lExtended
+
    IF Empty( aStruct := dbStruct() )
       RETURN .F.
    ENDIF
@@ -65,16 +69,24 @@ FUNCTION __dbCopyXStruct( cFileName )
 
    BEGIN SEQUENCE
 
+      lExtended := .F.
+      FOR EACH aField IN aStruct
+         IF Len( aField[ DBS_TYPE ] ) > 1
+            lExtended := .T.
+            EXIT
+         ENDIF
+      NEXT
+
       dbSelectArea( 0 )
-      __dbCreate( cFileName, , , .F. )
+      __dbCreate( cFileName, , , .F., , , , lExtended )
 
       AEval( aStruct, {| aField | ;
-         iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255,;
-            ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), ),;
-         dbAppend(),;
-         FIELD->FIELD_NAME := aField[ DBS_NAME ],;
-         FIELD->FIELD_TYPE := aField[ DBS_TYPE ],;
-         FIELD->FIELD_LEN := aField[ DBS_LEN ],;
+         iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255, ;
+            ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), ), ;
+         dbAppend(), ;
+         FIELD->FIELD_NAME := aField[ DBS_NAME ], ;
+         FIELD->FIELD_TYPE := aField[ DBS_TYPE ], ;
+         FIELD->FIELD_LEN := aField[ DBS_LEN ], ;
          FIELD->FIELD_DEC := aField[ DBS_DEC ] } )
 
    /* NOTE: CA-Cl*pper has a bug, where only a plain RECOVER statement is
@@ -94,10 +106,11 @@ FUNCTION __dbCopyXStruct( cFileName )
 
    RETURN .T.
 
-/* NOTE: Compared to CA-Cl*pper, Harbour has two extra parameters
-         (cCodePage, nConnection). */
+/* NOTE: Compared to CA-Cl*pper, Harbour:
+         - has three extra parameters: <cCodePage>, <nConnection>, <lExtended>
+         - non-string, non-empty <cFileFrom> values do not cause an RTE */
 
-FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection )
+FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection, lExtended )
 
    LOCAL nOldArea := Select()
    LOCAL aStruct := {}
@@ -116,21 +129,21 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 
    BEGIN SEQUENCE
 
-      IF Empty( cFileFrom )
+      IF ! HB_ISSTRING( cFileFrom ) .OR. HB_ISNULL( cFileFrom )
 
          dbCreate( cFileName, { ;
             { "FIELD_NAME", "C", 10, 0 }, ;
-            { "FIELD_TYPE", "C",  1, 0 }, ;
-            { "FIELD_LEN" , "N",  3, 0 }, ;
+            { "FIELD_TYPE", "C",  iif( hb_defaultValue( lExtended, .F. ), 6, 1 ), 0 }, ;
+            { "FIELD_LEN" , "N",  5, 0 }, ;
             { "FIELD_DEC" , "N",  3, 0 } }, ;
             cRDD, .F., cAlias, , cCodePage, nConnection )
       ELSE
          dbUseArea( lNew, , cFileFrom, "" )
 
          dbEval( {|| AAdd( aStruct, { ;
-            FIELD->FIELD_NAME ,;
-            FIELD->FIELD_TYPE ,;
-            FIELD->FIELD_LEN ,;
+            FIELD->FIELD_NAME, ;
+            FIELD->FIELD_TYPE, ;
+            FIELD->FIELD_LEN, ;
             FIELD->FIELD_DEC } ) } )
          dbCloseArea()
 
@@ -141,9 +154,9 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
          /* Type detection is more in sync with dbCreate() logic in Harbour, as lowercase "C"
             and padded/continued strings ("C ", "C...") are also accepted. */
 
-         AEval( aStruct, {| aField | iif( hb_LeftEqI( aField[ DBS_TYPE ], "C" ) .AND. aField[ DBS_DEC ] != 0,;
-                                     ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256,;
-                                       aField[ DBS_DEC ] := 0 ), NIL ) } )
+         AEval( aStruct, {| aField | iif( hb_LeftEqI( aField[ DBS_TYPE ], "C" ) .AND. aField[ DBS_DEC ] != 0, ;
+            ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256, ;
+              aField[ DBS_DEC ] := 0 ), NIL ) } )
 
          dbCreate( cFileName, aStruct, cRDD, lNew, cAlias, , cCodePage, nConnection )
 
@@ -174,8 +187,8 @@ FUNCTION __dbStructFilter( aStruct, aFieldList )
    bFindName := {| aField | aField[ DBS_NAME ] == cName }
 
    AEval( aFieldList, {| cFieldName, nIndex | ;
-         cName := RTrim( Upper( cFieldName ) ),;
-         nIndex := AScan( aStruct, bFindName ),;
-         iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex ] ) ) } )
+      cName := RTrim( Upper( cFieldName ) ), ;
+      nIndex := AScan( aStruct, bFindName ), ;
+      iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex ] ) ) } )
 
    RETURN aStructFiltered

@@ -1,6 +1,6 @@
 /*
  * SIX compatible function:
- *          sx_FNameParser()
+ *       sx_FNameParser()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

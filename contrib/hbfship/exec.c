@@ -1,7 +1,7 @@
 /*
- * ExecName( [ <lFullPath> ] ) -> <cName>
- *    ExecPIDNum() -> <nPID>
  * FlagShip compatible functions
+ *    ExecName( [ <lFullPath> ] ) -> <cName>
+ *    ExecPIDNum() -> <nPID>
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *
@@ -50,12 +50,12 @@
 #include "hbapifs.h"
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-#  include <sys/types.h>
-#  include <unistd.h>
+   #include <sys/types.h>
+   #include <unistd.h>
 #elif defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 #elif defined( HB_OS_OS2 ) || defined( HB_OS_DOS )
-#  include <process.h>
+   #include <process.h>
 #endif
 
 HB_FUNC( EXECNAME )

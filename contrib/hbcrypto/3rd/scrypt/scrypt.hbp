@@ -1,0 +1,23 @@
+-stop{hbdyn}
+
+-hblib
+-inc
+
+-o${hb_targetname}
+
+-warn=low
+-cpp=no
+-pic
+
+c_scrypt.c
+sha256.c
+
+# ORIGIN https://www.tarsnap.com/scrypt/
+# URL    https://www.tarsnap.com/scrypt/scrypt-1.1.6.tgz
+# DIFF   scrypt.dif
+#
+# MAP    config.h.in                     config.h
+# MAP    lib/crypto/crypto_scrypt-ref.c  c_scrypt.c
+# MAP    lib/crypto/crypto_scrypt.h      c_scrypt.h
+# MAP    lib/crypto/sha256.c             sha256.c
+# MAP    lib/README                      README.txt

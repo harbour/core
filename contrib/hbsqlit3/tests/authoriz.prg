@@ -74,47 +74,40 @@
 
 PROCEDURE Main()
 
-   LOCAL cFile := ":memory:"
    LOCAL cSQLTEXT
    LOCAL pDb, cb
 
    CLS
 
-   IF Empty( pDb := PrepareDB( cFile ) )
+   IF Empty( pDb := PrepareDB( ":memory:" ) )
       ErrorLevel( 1 )
       RETURN
    ENDIF
-   // Authorizer1
-   sqlite3_set_authorizer( pDb, @Authorizer() /*"Authorizer"*/ )
+   sqlite3_set_authorizer( pDb, @Authorizer() )
 
    ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
-   cb := @CallBack() // "CallBack"
+   cb := @CallBack()
    ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    sqlite3_sleep( 3000 )
-   // Authorizer2
-   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer2() /*"Authorizer2"*/ ) )
+   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer2() ) )
 
    ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
    ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    sqlite3_sleep( 3000 )
-   // Authorizer3
-   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer3() /*"Authorizer3"*/ ) )
+   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer3() ) )
 
    ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
    ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ), .F. )
 
    sqlite3_sleep( 3000 )
 
-   pDb := NIL // close database
+   pDb := NIL  // close database
 
    RETURN
 
-/**
-*/
-
-FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
+STATIC FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    LOCAL oldColor := SetColor( "R/N" )
 
@@ -124,10 +117,7 @@ FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName 
 
    RETURN SQLITE_OK
 
-/**
-*/
-
-FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
+STATIC FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    LOCAL oldColor := SetColor( "R/N" )
 
@@ -137,10 +127,7 @@ FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName
 
    RETURN iif( cName2 == "pasw", SQLITE_IGNORE, SQLITE_OK )
 
-/**
-*/
-
-FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
+STATIC FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    HB_SYMBOL_UNUSED( cName1 )
    HB_SYMBOL_UNUSED( cName2 )
@@ -149,33 +136,21 @@ FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName
 
    RETURN iif( nAction == SQLITE_SELECT, SQLITE_DENY, SQLITE_OK )
 
-/**
-*/
-
-FUNCTION CallBack( nColCount, aValue, aColName )
+STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      ? PadR( aColName[ nI ], 5 ), " == ", aValue[ nI ]
+      ? PadR( aColName[ nI ], 5 ), "==", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
 
    RETURN 0
 
-/**
-*/
-
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
-
-   hb_default( @lShortMsg, .T. )
-
-   RETURN iif( lShortMsg, hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
-
-/**
-*/
+   RETURN iif( hb_defaultValue( lShortMsg, .T. ), hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
 STATIC FUNCTION PrepareDB( cFile )
 
@@ -189,27 +164,23 @@ STATIC FUNCTION PrepareDB( cFile )
       "Ivet" => 28 ;
       }, enum
 
-   pDb := sqlite3_open( cFile, .T. )
-   IF Empty( pDb )
-      ? "Can't open/create database : ", cFile
-
+   IF Empty( pDb := sqlite3_open( cFile, .T. ) )
+      ? "Could not open/create database:", cFile
       RETURN NIL
    ENDIF
 
-   cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER, pasw TEXT(32) )"
+   cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER, pasw TEXT(64) )"
    IF sqlite3_exec( pDb, cSQLTEXT ) != SQLITE_OK
-      ? "Can't create table : person"
-      pDb := NIL // close database
-
+      ? "Could not create table:", "person"
+      pDb := NIL  // close database
       RETURN NIL
    ENDIF
 
    cSQLTEXT := "INSERT INTO person( name, age, pasw ) VALUES( :name, :age, :pasw )"
-   pStmt := sqlite3_prepare( pDb, cSQLTEXT )
-   IF Empty( pStmt )
-      ? "Can't prepare statement : ", cSQLTEXT
-      pDb := NIL
 
+   IF Empty( pStmt := sqlite3_prepare( pDb, cSQLTEXT ) )
+      ? "Could not prepare statement:", cSQLTEXT
+      pDb := NIL
       RETURN NIL
    ENDIF
 
@@ -217,7 +188,7 @@ STATIC FUNCTION PrepareDB( cFile )
       sqlite3_reset( pStmt )
       sqlite3_bind_text( pStmt, 1, enum:__enumKey() )
       sqlite3_bind_int( pStmt, 2, enum:__enumValue() )
-      sqlite3_bind_text( pStmt, 3, hb_MD5( enum:__enumKey() ) )
+      sqlite3_bind_text( pStmt, 3, hb_SHA256( enum:__enumKey() ) )  /* not secure, just an example */
       sqlite3_step( pStmt )
    NEXT
 

@@ -1,9 +1,10 @@
 /*
- * demonstration/test client code for OLE server using hash array with
- *    strict item order (associative hash array) to define OLE objects
- *    with fixed message numbers (DISPIDs)
+ * Demonstration/test client code for OLE server using hash array with
+ * strict item order (associative hash array) to define OLE objects
+ * with fixed message numbers (DISPIDs)
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *
  */
 
 #require "hbwin"
@@ -12,9 +13,11 @@ PROCEDURE Main()
 
    LOCAL oObject
 
-   oObject := win_oleCreateObject( "MyOleTimeServer" )
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   IF ! Empty( oObject )
+   IF Empty( oObject := win_oleCreateObject( "MyOleTimeServer" ) )
+      ? "Can not access 'MyOleTimeServer' OLE server."
+   ELSE
       ? "DATE:", oObject:Date()
       ? "TIME:", oObject:Time()
       ? "DATTIME:", oObject:datetime()
@@ -23,8 +26,6 @@ PROCEDURE Main()
       oObject:value := "hello"
       ? "VALUE:", oObject:value
       ? "GETDATA:", oObject:getdata()
-   ELSE
-      ? "Can not access 'MyOleTimeServer' OLE server."
    ENDIF
 
    WAIT

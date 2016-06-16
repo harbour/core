@@ -85,7 +85,7 @@ End          In Code window, scrolls hard right.
              of line.
              In other windows, does nothing.
 
-Esc          In Command window, clears command line.
+Esc          In Command window, clears command-line.
              In other windows, does nothing.
 --   Other
 TAB         Next window

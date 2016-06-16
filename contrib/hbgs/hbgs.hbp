@@ -7,16 +7,26 @@
 
 -stop{dos|wce}
 
+-plugin=hbmk2.hb
+
+-depurlbase=gs:http://ghostscript.com/
+-deppkgname=gs:ghostscript-devel{rpm}
+-deppkgname=gs:libgs-dev{deb}
+-deppkgname=gs:ghostscript{pacman}
+-deppkgname=gs:ghostscript{homebrew}
 -depkeyhead=gs:iapi.h
 -depcontrol=gs:${HB_WITH_GS}
 -depincpath=gs:/usr/include
 -depincpath=gs:/usr/include/ghostscript
--depincpath=gs:/opt/local/include/ghostscript
+-depincpath=gs:/usr/local/include/ghostscript
+-depincpath=gs:/usr/local/opt/ghostscript/include
 -depimplibs=gs:${HB_WITH_GS_BIN}/gsdll32.dll{win&x86}
 -depimplibs=gs:${HB_WITH_GS_BIN}/gsdll64.dll{win&x86_64}
 -depimplibs=gs:${HB_WITH_GS_BIN}/gsdll2.dll{os2}
 -depimplibd=gs:gs
 
-${hb_name}.hbx
+"-echo=Hint: Point HB_WITH_GS_BIN envvar to the Ghostscript .dll directory{(win|os2)&!HB_WITH_GS_BIN}"
+
+-hbx=${hb_name}
 
 core.c

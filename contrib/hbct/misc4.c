@@ -51,6 +51,11 @@ HB_FUNC( ISAT )
    hb_retl( HB_TRUE );
 }
 
+HB_FUNC( ISMATH )
+{
+   hb_retl( HB_TRUE );
+}
+
 HB_FUNC( TOOLVER )
 {
    hb_retc_const( "5.20 - 3.0b" );

@@ -6,7 +6,7 @@ MEMVAR p_initStatics
 
 PROCEDURE Main()
 
-   STATIC s_static_var := "MAIN()"
+   STATIC s_static_var := "Main()"
 
    ? "Hello from:", s_static_var
    s_static_var_accessed_in_INIT_function++
@@ -17,48 +17,48 @@ PROCEDURE Main()
 
    RETURN
 
-INIT FUNCTION SecondOne()
+INIT PROCEDURE SecondOne()
 
-   STATIC s_static_var := "SECOND()"
-
-   ? "Hello from:", s_static_var
-   s_static_var_accessed_in_INIT_function++
-   ? "global static=", s_static_var_accessed_in_INIT_function
-
-   RETURN NIL
-
-INIT FUNCTION Third()
-
-   STATIC s_static_var := "THIRD()"
+   STATIC s_static_var := "SecondOne()"
 
    ? "Hello from:", s_static_var
    s_static_var_accessed_in_INIT_function++
    ? "global static=", s_static_var_accessed_in_INIT_function
 
-   RETURN NIL
+   RETURN
 
-EXIT FUNCTION Fifth()
+INIT PROCEDURE Third()
 
-   STATIC s_static_var := "FIFTH()"
+   STATIC s_static_var := "Third()"
+
+   ? "Hello from:", s_static_var
+   s_static_var_accessed_in_INIT_function++
+   ? "global static=", s_static_var_accessed_in_INIT_function
+
+   RETURN
+
+EXIT PROCEDURE Fifth()
+
+   STATIC s_static_var := "Fifth()"
 
    ? "Hello from:", s_static_var
    s_static_var_accessed_in_INIT_function--
    ? "global static=", s_static_var_accessed_in_INIT_function
 
-   RETURN NIL
+   RETURN
 
-EXIT FUNCTION Sixth()
+EXIT PROCEDURE Sixth()
 
-   STATIC s_static_var := "SIXTH()"
+   STATIC s_static_var := "Sixth()"
 
    ? "Hello from:", s_static_var
    s_static_var_accessed_in_INIT_function--
    ? "global static=", s_static_var_accessed_in_INIT_function
 
-   RETURN NIL
+   RETURN
 
 INIT PROCEDURE initStatics()
 
-   PUBLIC p_initStatics := "P_INITSTATICS"
+   PUBLIC p_initStatics := "p_initStatics"
 
    RETURN

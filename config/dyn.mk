@@ -60,8 +60,12 @@ HB_DYN_LIBS := \
    $(_HB_VM) \
    hbmaindllh
 
+ifneq ($(HB_HAS_PCRE2_LOCAL),)
+   HB_DYN_LIBS += hbpcre2
+else
 ifneq ($(HB_HAS_PCRE_LOCAL),)
    HB_DYN_LIBS += hbpcre
+endif
 endif
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    HB_DYN_LIBS += hbzlib
@@ -90,7 +94,7 @@ DYN_FILE_NVR := $(DYN_DIR)/$(DYN_NAME_NVR)
 DYN_FILE_CPT := $(DYN_DIR)/$(DYN_NAME_CPT)
 
 ifneq ($(IMP_DIR),)
-   IMP_NAME := $(LIB_PREF)$(DYNNAME)$(HB_DYNLIB_POST)$(LIB_EXT)$(HB_DYNLIB_PEXT)
+   IMP_NAME := $(LIB_PREF)$(IMPNAME)$(HB_DYNLIB_POST)$(LIB_EXT)$(HB_DYNLIB_PEXT)
    IMP_FILE := $(IMP_DIR)/$(IMP_NAME)
 endif
 

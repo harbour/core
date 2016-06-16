@@ -1,6 +1,4 @@
-/*
- * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
- *
+/* Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * FreeImage API test file
  */
 
@@ -9,8 +7,8 @@
 #include "fileio.ch"
 #include "simpleio.ch"
 
-#define IMAGES_IN  ""
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_IN   ""
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 
@@ -24,7 +22,7 @@ PROCEDURE Main()
 #endif
    LOCAL bkcolor
    LOCAL bmpinfo
-   LOCAL nH, nLen, cStr
+   LOCAL cStr
 
 #if 0
    ? "Press Alt-D + Enter to activate debug"
@@ -32,15 +30,11 @@ PROCEDURE Main()
    Inkey( 0 )
 #endif
    AltD()
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      hb_DirCreate( IMAGES_OUT )
-   ENDIF
+
+   hb_vfDirMake( IMAGES_OUT )
 
    ? "Initialise"
    fi_Initialise()
-
-   //
 
    ? "Version          :", fi_GetVersion()
    ? "Copyright        :", fi_GetCopyrightMessage()
@@ -151,14 +145,13 @@ PROCEDURE Main()
    ? bmpinfoheader:SayMembers( " ", .T., .T. )
 
    bmpinfo:Pointer( fi_GetInfo( im ) )
-   bmpinfo := NIL // To fix warning
-   ? "Info           :", hb_ValToExp( bmpinfo )
+   ? "Info             :", hb_ValToExp( bmpinfo )
    ? bmpinfo:SayMembers( " ", .T., .T. )
-   ? "-----------------------------------------------------"
+   ? Replicate( "-", 60 )
 
    ? ValType( bmpinfo:Devalue() )
    hb_traceLog( "bmpinfoheader", hb_ValToExp( bmpinfoheader ), ;
-      infoheader:SayMembers(, .T. ), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_DumpVar( bmpinfoheader:Array() ), hb_DumpVar( bmpinfoheader:acMembers ) )
+      infoheader:SayMembers( , .T. ), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_DumpVar( bmpinfoheader:Array() ), hb_DumpVar( bmpinfoheader:acMembers ) )
 
    hb_traceLog( "line 179" )
    iccprofile:Pointer( fi_GetICCProfile( im ) )
@@ -168,20 +161,9 @@ PROCEDURE Main()
    ? iccprofile:SayMembers( " ", .T., .T. )
 
    bmpinfoheader:Reset()
-   appo := NIL
-   bmpinfoheader := NIL
-   hb_gcAll( .T. )
 #endif
 
-   //
-
-   IF ( nH := FOpen( IMAGES_IN + "sample1.jpg" ) ) != F_ERROR
-      nLen := FSeek( nH, 0, FS_END )
-      FSeek( nH, 0, FS_SET )
-      cStr := Space( nLen )
-      FRead( nH, @cStr, nLen )
-      FClose( nH )
-
+   IF ! HB_ISNULL( cStr := hb_MemoRead( IMAGES_IN + "sample1.jpg" ) )
       ? "Load JPEG from memory"
       im := fi_LoadFromMemory( FIF_JPEG, cStr, JPEG_DEFAULT )
 
@@ -190,22 +172,19 @@ PROCEDURE Main()
       ? "Save PNG ?       :", fi_Save( FIF_PNG, im, IMAGES_OUT + "sample2.png", PNG_DEFAULT  )
    ENDIF
 
-   //
-
    ? "DeInitialise"
    fi_DeInitialise()
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "directory for output images"
 
    RETURN
 
 STATIC PROCEDURE fi_Error( cFormat, cMessage )
 
-   ? "ERROR!.."
-   ? "Format : ", cFormat
-   ? "Message: ", cMessage
+   ? "ERROR!..."
+   ? "Format :", cFormat
+   ? "Message:", cMessage
    ?
 
    RETURN

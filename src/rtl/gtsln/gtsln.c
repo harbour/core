@@ -130,10 +130,12 @@ static void sigwinch_handler( int iSig )
 
 static void hb_sln_colorTrans( void )
 {
-   int i, clr, fg, bg;
+   int i;
 
    for( i = 0; i < 256; i++ )
    {
+      int clr, fg, bg;
+
       fg = ( i & 0x0F );
       /*
        * bit 7 is a blinking attribute - not used when console is not in
@@ -212,7 +214,7 @@ static void hb_sln_setSingleBox( void )
 
 static void hb_sln_setACSCtrans( void )
 {
-   unsigned char * p, ch;
+   unsigned char * p;
    SLsmg_Char_Type chBoard[ 3 ], chArrow[ 4 ];
 
    memset( &chArrow, 0, sizeof( chArrow ) );
@@ -236,7 +238,7 @@ static void hb_sln_setACSCtrans( void )
       memset( &SLch, 0, sizeof( SLsmg_Char_Type ) );
       for( i = 0; i < len; i += 2 )
       {
-         ch = *p++;
+         unsigned char ch = *p++;
          HB_SLN_BUILD_RAWCHAR( SLch, *p++, 0 );
          HB_SLN_SET_ACSC( SLch );
          switch( ch )
@@ -404,7 +406,7 @@ static void hb_sln_setKeyTrans( PHB_GT pGT )
    p = getenv( hb_NationCharsEnvName );
    if( p )
    {
-      int len = strlen( p ) >> 1, ch;
+      int len = strlen( p ) >> 1;
 
       /* no more than 128 National chars are allowed */
       if( len > 128 )
@@ -416,7 +418,7 @@ static void hb_sln_setKeyTrans( PHB_GT pGT )
       len <<= 1;
       for( i = 0; i < len; i += 2 )
       {
-         ch = ( unsigned char ) p[ i + 1 ];
+         int ch = ( unsigned char ) p[ i + 1 ];
          hb_sln_convKDeadKeys[ i + 1 ] = ( unsigned char ) p[ i ];
          hb_sln_convKDeadKeys[ i + 2 ] = ch;
          hb_sln_inputTab[ ( unsigned char ) p[ i ] ] = ch;
@@ -634,9 +636,9 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
             SLtt_Blink_Mode = 1;
             SLtt_Use_Blink_For_ACS = 0;
 #else
-#  ifdef HB_SLN_UNICODE
+   #ifdef HB_SLN_UNICODE
             hb_sln_Is_Unicode = SLsmg_Is_Unicode;
-#  endif
+   #endif
             if( hb_sln_Is_Unicode )
             {
                SLtt_Blink_Mode = 1;
@@ -819,7 +821,7 @@ static const char * hb_gt_sln_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Slang";
+   return "Terminal: Slang (SLN)";
 }
 
 /* *********************************************************************** */

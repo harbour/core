@@ -1,7 +1,6 @@
 /*
- * Functions:
- * SetFCreate(), CSetSafety(), StrFile(), FileStr(), ScreenFile()
- * ScreenFile(), FileScreen()
+ * StrFile(), FileStr(), ScreenFile(), FileScreen()
+ * SetFCreate(), CSetSafety()
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  *
@@ -49,22 +48,42 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
+#include "hbstack.h"
 
 #include "ctstrfil.h"
 
-static HB_FATTR s_nFileAttr = HB_FA_NORMAL;
-static HB_BOOL  s_bSafety   = HB_FALSE;
+typedef struct
+{
+   HB_FATTR nFileAttr;
+   HB_BOOL  bSafety;
+} CT_STRFIL;
+
+static void s_strfil_init( void * cargo )
+{
+   CT_STRFIL * strfil = ( CT_STRFIL * ) cargo;
+
+   strfil->nFileAttr = HB_FA_NORMAL;
+   strfil->bSafety   = HB_FALSE;
+}
+
+static HB_TSD_NEW( s_strfil, sizeof( CT_STRFIL ), s_strfil_init, NULL );
 
 void ct_setfcreate( HB_FATTR nFileAttr )
 {
+   CT_STRFIL * strfil = ( CT_STRFIL * ) hb_stackGetTSD( &s_strfil );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setfcreate(%u)", nFileAttr ) );
-   s_nFileAttr = nFileAttr;
+
+   strfil->nFileAttr = nFileAttr;
 }
 
 HB_FATTR ct_getfcreate( void )
 {
+   CT_STRFIL * strfil = ( CT_STRFIL * ) hb_stackGetTSD( &s_strfil );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getfcreate()" ) );
-   return s_nFileAttr;
+
+   return strfil->nFileAttr;
 }
 
 HB_FUNC( SETFCREATE )
@@ -77,14 +96,20 @@ HB_FUNC( SETFCREATE )
 
 void ct_setsafety( HB_BOOL bSafety )
 {
+   CT_STRFIL * strfil = ( CT_STRFIL * ) hb_stackGetTSD( &s_strfil );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setsafety(%i)", bSafety ) );
-   s_bSafety = bSafety;
+
+   strfil->bSafety = bSafety;
 }
 
 HB_BOOL ct_getsafety( void )
 {
+   CT_STRFIL * strfil = ( CT_STRFIL * ) hb_stackGetTSD( &s_strfil );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getsafety()" ) );
-   return s_bSafety;
+
+   return strfil->bSafety;
 }
 
 HB_FUNC( CSETSAFETY )
@@ -96,35 +121,33 @@ HB_FUNC( CSETSAFETY )
 }
 
 static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE nLen,
-                           HB_BOOL bOverwrite, HB_FOFFSET nOffset, HB_BOOL bTrunc )
+                           HB_BOOL bAppend, HB_FOFFSET nOffset, HB_BOOL bTrunc )
 {
-   HB_FHANDLE hFile;
-   HB_BOOL bOpen = HB_FALSE;
-   HB_BOOL bFile = hb_fsFile( pFileName );
    HB_SIZE nWrite = 0;
+   HB_BOOL bFile = hb_fileExists( pFileName, NULL );
 
-   if( bFile && bOverwrite )
-   {
-      hFile = hb_fsOpen( pFileName, FO_READWRITE );
-      bOpen = HB_TRUE;
-   }
-   else if( ! bFile || ! ct_getsafety() )
-      hFile = hb_fsCreate( pFileName, ct_getfcreate() );
-   else
-      hFile = FS_ERROR;
+   PHB_FILE hFile = hb_fileExtOpen( pFileName, NULL,
+                                    FO_WRITE | FO_PRIVATE |
+                                    FXO_SHARELOCK |
+                                    ( bAppend ? FXO_APPEND : FXO_TRUNCATE ) |
+                                    ( ct_getsafety() ? FXO_UNIQUE : 0 ),
+                                    NULL, NULL );
 
-   if( hFile != FS_ERROR )
+   if( hFile )
    {
+      if( ! bFile )
+         hb_fileAttrSet( pFileName, ct_getfcreate() );
+
       if( nOffset )
-         hb_fsSeekLarge( hFile, nOffset, FS_SET );
-      else if( bOpen )
-         hb_fsSeek( hFile, 0, FS_END );
+         hb_fileSeek( hFile, nOffset, FS_SET );
+      else
+         hb_fileSeek( hFile, 0, FS_END );
 
-      nWrite = hb_fsWriteLarge( hFile, pcStr, nLen );
-      if( ( nWrite == nLen ) && bOpen && bTrunc )
-         hb_fsWrite( hFile, NULL, 0 );
+      nWrite = hb_fileResult( hb_fileWrite( hFile, pcStr, nLen, -1 ) );
+      if( nWrite == nLen && bTrunc )
+         hb_fileWrite( hFile, NULL, 0, -1 );
 
-      hb_fsClose( hFile );
+      hb_fileClose( hFile );
    }
    return nWrite;
 }
@@ -145,12 +168,15 @@ HB_FUNC( FILESTR )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      HB_FHANDLE hFile = hb_fsOpen( hb_parc( 1 ), FO_READ );
+      PHB_FILE hFile;
 
-      if( hFile != FS_ERROR )
+      if( ( hFile = hb_fileExtOpen( hb_parc( 1 ), NULL,
+                                    FO_READ | FO_SHARED | FO_PRIVATE |
+                                    FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                    NULL, NULL ) ) != NULL )
       {
-         HB_FOFFSET nFileSize = hb_fsSeekLarge( hFile, 0, FS_END );
-         HB_FOFFSET nPos = hb_fsSeekLarge( hFile, ( HB_FOFFSET ) hb_parnint( 3 ), FS_SET );
+         HB_FOFFSET nFileSize = hb_fileSize( hFile );
+         HB_FOFFSET nPos = hb_fileSeek( hFile, ( HB_FOFFSET ) hb_parnint( 3 ), FS_SET );
          HB_ISIZ nLength;
          char * pcResult, * pCtrlZ;
          HB_BOOL bCtrlZ = hb_parl( 4 );
@@ -166,7 +192,7 @@ HB_FUNC( FILESTR )
 
          pcResult = ( char * ) hb_xgrab( nLength + 1 );
          if( nLength > 0 )
-            nLength = hb_fsReadLarge( hFile, pcResult, ( HB_SIZE ) nLength );
+            nLength = hb_fileResult( hb_fileRead( hFile, pcResult, ( HB_SIZE ) nLength, -1 ) );
 
          if( bCtrlZ )
          {
@@ -175,7 +201,7 @@ HB_FUNC( FILESTR )
                nLength = pCtrlZ - pcResult;
          }
 
-         hb_fsClose( hFile );
+         hb_fileClose( hFile );
          hb_retclen_buffer( pcResult, nLength );
       }
       else
@@ -210,26 +236,29 @@ HB_FUNC( FILESCREEN )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      HB_FHANDLE hFile = hb_fsOpen( hb_parc( 1 ), FO_READ );
+      PHB_FILE hFile;
 
-      if( hFile != FS_ERROR )
+      if( ( hFile = hb_fileExtOpen( hb_parc( 1 ), NULL,
+                                    FO_READ | FO_SHARED | FO_PRIVATE |
+                                    FXO_SHARELOCK | FXO_NOSEEKPOS,
+                                    NULL, NULL ) ) != NULL )
       {
          char * pBuffer;
          HB_SIZE nSize;
          HB_SIZE nLength;
 
          if( HB_ISNUM( 2 ) )
-            hb_fsSeekLarge( hFile, ( HB_FOFFSET ) hb_parnint( 2 ), FS_SET );
+            hb_fileSeek( hFile, ( HB_FOFFSET ) hb_parnint( 2 ), FS_SET );
 
          hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &nSize );
          pBuffer = ( char * ) hb_xgrab( nSize );
 
-         nLength = hb_fsReadLarge( hFile, pBuffer, nSize );
+         nLength = hb_fileResult( hb_fileRead( hFile, pBuffer, nSize, -1 ) );
          hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pBuffer );
 
          hb_xfree( pBuffer );
 
-         hb_fsClose( hFile );
+         hb_fileClose( hFile );
          hb_retns( nLength );
       }
       else

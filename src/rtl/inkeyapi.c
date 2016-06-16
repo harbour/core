@@ -2,6 +2,7 @@
  * Inkey GT API
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2002 Walter Negro <anegro@overnet.com.ar> (hb_inkeySetLast())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
- *    hb_inkeySetLast()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -362,13 +353,13 @@ static int s_inkeyTransChar( int iKey, int iFlags, const HB_KEY_VALUE * pKeyVal 
                return KP_ALT_ENTER;
             break;
          case '+':
-            return iFlags & HB_KF_ALT ? KP_ALT_PLUS : KP_CTRL_PLUS;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_PLUS : KP_CTRL_PLUS;
          case '-':
-            return iFlags & HB_KF_ALT ? KP_ALT_MINUS : KP_CTRL_MINUS;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_MINUS : KP_CTRL_MINUS;
          case '*':
-            return iFlags & HB_KF_ALT ? KP_ALT_ASTERISK : KP_CTRL_ASTERISK;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_ASTERISK : KP_CTRL_ASTERISK;
          case '/':
-            return iFlags & HB_KF_ALT ? KP_ALT_SLASH : KP_CTRL_SLASH;
+            return ( iFlags & HB_KF_ALT ) ? KP_ALT_SLASH : KP_CTRL_SLASH;
          case '.':
          case ',':
             if( iFlags & HB_KF_CTRL )

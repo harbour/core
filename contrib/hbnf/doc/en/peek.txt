@@ -21,6 +21,6 @@
       address as a numeric value.  If you need this value as a character,
       use the hb_BChar() function to convert it.
    $EXAMPLES$
-      LOCAL nVMode := ft_Peek( 0, 0x449 )  // Get the current video mode (MS-DOS)
+      ? ft_Peek( 0, 0x449 )  // Get the current video mode (MS-DOS)
    $END$
  */

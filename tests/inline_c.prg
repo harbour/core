@@ -17,5 +17,5 @@ HB_FUNC( C_FUNC )
 
 #pragma enddump
 
-FUNCTION EndDumpTest()
+STATIC FUNCTION EndDumpTest()
    RETURN "End Dump Test"

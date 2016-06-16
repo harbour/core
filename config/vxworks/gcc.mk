@@ -13,14 +13,14 @@ LIB_EXT := .a
 HB_DYN_COPT := -DHB_DYNLIB -fpic
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
 CFLAGS += -mrtp
 LDFLAGS += -mrtp
 DFLAGS += -mrtp
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 CFLAGS += -I$(WIND_BASE)/target/usr/h
 CFLAGS += -I$(WIND_BASE)/target/usr/h/wrn/coreip
 CFLAGS += -fno-strict-aliasing
@@ -59,7 +59,7 @@ endif
 LDFLAGS += $(LDLIBPATHS)
 
 AR := $(HB_CCPREFIX)ar$(HB_CCSUFFIX)
-AR_RULE = ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
+AR_RULE = ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(^F) $(ARSTRIP) ) || ( $(RM) $(LIB_DIR)/$@ && $(FALSE) )
 
 DY := $(CC)
 DFLAGS += -shared $(DLIBPATHS)

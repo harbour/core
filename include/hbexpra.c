@@ -246,7 +246,6 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
          /* Reserved Clipper function used to handle GET variables
           */
          PHB_EXPR pArg, pNext;
-         HB_USHORT uiCount;
 
          /* pArg has to be reduced to eliminate possible problems with
           * cloned expressions in SETGET block
@@ -268,6 +267,8 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
 
          if( pArg->ExprType == HB_ET_ARRAYAT )
          {
+            HB_USHORT uiCount;
+
             /* replace:
                _GET_( a[1], "a[1]", , , )
                into:
@@ -297,7 +298,7 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
             /* create a set only codeblock */
             if( pVar->ExprType == HB_ET_MACRO )
             {
-               /* &var[1] */
+               /* &var[ 1 ] */
                HB_COMP_EXPR_FREE( pVar );
                pVar = hb_compExprNewNil( HB_COMP_PARAM );
             }
@@ -569,13 +570,11 @@ static const char * s_szStaticFun[] = {
    "__BREAKBLOCK"
 };
 
-#define STATIC_FUNCTIONS  ( sizeof( s_szStaticFun ) / sizeof( char * ) )
-
 static HB_BOOL hb_compStaticFunction( const char * szName )
 {
    unsigned int ui;
 
-   for( ui = 0; ui < STATIC_FUNCTIONS; ++ui )
+   for( ui = 0; ui < HB_SIZEOFARRAY( s_szStaticFun ); ++ui )
    {
       if( strcmp( szName, s_szStaticFun[ ui ] ) == 0 )
          return HB_TRUE;

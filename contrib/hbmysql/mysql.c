@@ -3,6 +3,7 @@
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (GC support)
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
+ * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net> (DATATOSQL(), FILETOSQLBINARY())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,16 +46,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *    DATATOSQL(), FILETOSQLBINARY()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
@@ -68,7 +59,7 @@
 #include "mysql.h"
 
 /* NOTE: OS/2 EMX port of MySQL needs libmysqlclient.a from 3.21.33b build which has st and mt
-         versions of client library. I'm using ST version since harbour is single threaded.
+         versions of client library. I'm using ST version since Harbour is single threaded.
          You need also .h files from same distribution. */
 
 /* GC object handlers */
@@ -166,14 +157,28 @@ HB_FUNC( MYSQL_REAL_CONNECT ) /* MYSQL * mysql_real_connect( MYSQL *, char * hos
    const char * szHost = hb_parc( 1 );
    const char * szUser = hb_parc( 2 );
    const char * szPass = hb_parc( 3 );
+   unsigned int port   = ( unsigned int ) hb_parnidef( 4, MYSQL_PORT );
+   unsigned int flags  = ( unsigned int ) hb_parni( 5 );
 
 #if MYSQL_VERSION_ID > 32200
-   MYSQL *      mysql;
-   unsigned int port  = ( unsigned int ) hb_parnidef( 4, MYSQL_PORT );
-   unsigned int flags = ( unsigned int ) hb_parnidef( 5, 0 );
+   MYSQL * mysql;
 
-   if( ( mysql = mysql_init( ( MYSQL * ) NULL ) ) != NULL )
+   if( ( mysql = mysql_init( NULL ) ) != NULL )
    {
+      PHB_ITEM pSSL = hb_param( 6, HB_IT_HASH );
+
+      if( pSSL )
+      {
+         flags |= CLIENT_SSL;
+
+         mysql_ssl_set( mysql,
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "key" ) ),
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "cert" ) ),
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "ca" ) ),
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "capath" ) ),
+                        hb_itemGetCPtr( hb_hashGetCItemPtr( pSSL, "cipher" ) ) );
+      }
+
       /* from 3.22.x of MySQL there is a new parameter in mysql_real_connect() call, that is char * db
          which is not used here */
       if( mysql_real_connect( mysql, szHost, szUser, szPass, 0, port, NULL, flags ) )
@@ -187,7 +192,7 @@ HB_FUNC( MYSQL_REAL_CONNECT ) /* MYSQL * mysql_real_connect( MYSQL *, char * hos
    else
       hb_retptr( NULL );
 #else
-   hb_MYSQL_ret( mysql_real_connect( NULL, szHost, szUser, szPass, 0, NULL, 0 ) );
+   hb_MYSQL_ret( mysql_real_connect( NULL, szHost, szUser, szPass, port, NULL, flags ) );
 #endif
 }
 
@@ -212,6 +217,16 @@ HB_FUNC( MYSQL_GET_SERVER_VERSION ) /* long mysql_get_server_version( MYSQL * ) 
       hb_retnl( lVer );
 #endif
    }
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( MYSQL_GET_SSL_CIPHER )
+{
+   MYSQL * mysql = hb_MYSQL_par( 1 );
+
+   if( mysql )
+      hb_retc( mysql_get_ssl_cipher( mysql ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -288,6 +303,26 @@ HB_FUNC( MYSQL_USE_RESULT ) /* MYSQL_RES * mysql_use_result( MYSQL * ) */
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( MYSQL_NEXT_RESULT ) /* bool mysql_next_result( MYSQL * mysql ) */
+{
+   MYSQL * mysql = hb_MYSQL_par( 1 );
+
+   if( mysql )
+      hb_retl( mysql_next_result( mysql ) != 0 );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( MYSQL_MORE_RESULTS ) /* bool mysql_more_results( MYSQL * mysql ) */
+{
+   MYSQL * mysql = hb_MYSQL_par( 1 );
+
+   if( mysql )
+      hb_retl( mysql_more_results( mysql ) != 0 );
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( MYSQL_FETCH_ROW ) /* MYSQL_ROW * mysql_fetch_row( MYSQL_RES * ) */
 {
    MYSQL_RES * mresult = hb_MYSQL_RES_par( 1 );
@@ -325,7 +360,7 @@ HB_FUNC( MYSQL_NUM_ROWS ) /* my_ulongulong mysql_num_rows( MYSQL_RES * ) */
    MYSQL_RES * mresult = hb_MYSQL_RES_par( 1 );
 
    if( mresult )
-      hb_retnint( mysql_num_rows( ( mresult ) ) );
+      hb_retnint( mysql_num_rows( mresult ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -373,7 +408,7 @@ HB_FUNC( MYSQL_NUM_FIELDS ) /* unsigned int mysql_num_fields( MYSQL_RES * ) */
    MYSQL_RES * mresult = hb_MYSQL_RES_par( 1 );
 
    if( mresult )
-      hb_retnl( mysql_num_fields( ( mresult ) ) );
+      hb_retnl( mysql_num_fields( mresult ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -385,7 +420,7 @@ HB_FUNC( MYSQL_FIELD_COUNT ) /* unsigned int mysql_field_count( MYSQL * ) */
    if( mysql )
    {
 #if MYSQL_VERSION_ID > 32200
-      hb_retnl( mysql_field_count( ( mysql ) ) );
+      hb_retnl( mysql_field_count( mysql ) );
 #else
       hb_retnl( 0 );
 #endif
@@ -549,35 +584,15 @@ HB_FUNC( MYSQL_ESCAPE_STRING )
    hb_retclen_buffer( ( char * ) buffer, nSize );
 }
 
-static char * filetoBuff( const char * fname, unsigned long * size )
-{
-   char *     buffer = NULL;
-   HB_FHANDLE handle = hb_fsOpen( fname, FO_READWRITE );
-
-   if( handle != FS_ERROR )
-   {
-      *size = hb_fsSeek( handle, 0, FS_END );
-      hb_fsSeek( handle, 0, FS_SET );
-      buffer = ( char * ) hb_xgrab( *size + 1 );
-      *size  = ( unsigned long ) hb_fsReadLarge( handle, buffer, *size );
-      buffer[ *size ] = '\0';
-      hb_fsClose( handle );
-   }
-   else
-      *size = 0;
-
-   return buffer;
-}
-
 HB_FUNC( MYSQL_ESCAPE_STRING_FROM_FILE )
 {
-   unsigned long nSize;
-   char *        from = filetoBuff( hb_parc( 1 ), &nSize );
+   HB_SIZE nSize;
+   char * from = ( char * ) hb_fileLoad( hb_parcx( 1 ), ( ULONG_MAX / 2 ) - 1, &nSize );
 
    if( from )
    {
       char * buffer = ( char * ) hb_xgrab( nSize * 2 + 1 );
-      nSize = mysql_escape_string( buffer, from, nSize );
+      nSize = mysql_escape_string( buffer, from, ( unsigned long ) nSize );
       hb_retclen_buffer( buffer, nSize );
       hb_xfree( from );
    }

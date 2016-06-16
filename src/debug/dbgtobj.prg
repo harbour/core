@@ -88,7 +88,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
    aMethods := {}
    FOR EACH cMsg IN aMessages
       IF hb_LeftEq( cMsg, "_" ) .AND. ;
-         hb_AScan( aMessages, cMsgAcc := SubStr( cMsg, 2 ),,, .T. ) > 0
+         hb_AScan( aMessages, cMsgAcc := SubStr( cMsg, Len( "_" ) + 1 ),,, .T. ) > 0
          xValue := __dbgObjGetValue( oObject, cMsgAcc )
          AAdd( ::pItems, { cMsgAcc, xValue, .T. } )
       ELSEIF hb_AScan( aMessages, "_" + cMsg,,, .T. ) == 0
@@ -186,7 +186,7 @@ METHOD PROCEDURE doGet( oBrowse ) CLASS HBDbObject
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1, ;
                   oBrowse:getColumn( oBrowse:colPos ):Width, @cValue, ;
                   __dbgExprValidBlock(), __dbgColors()[ 2 ], 256 )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          __dbgObjSetValue( ::TheObj, aItemRef[ OMSG_NAME ], &cValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )
@@ -273,7 +273,7 @@ STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
       xResult := __dbgSendMsg( nProcLevel, oObject, cVar )
       lCanAcc := .T.
    RECOVER
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          /* Try to access variables using class code level */
          xResult := __dbgSendMsg( 0, oObject, cVar )
          lCanAcc := .T.
@@ -293,7 +293,7 @@ STATIC FUNCTION __dbgObjSetValue( oObject, cVar, xValue )
    BEGIN SEQUENCE WITH {|| Break() }
       __dbgSendMsg( nProcLevel, oObject, "_" + cVar, xValue )
    RECOVER
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          /* Try to access variables using class code level */
          __dbgSendMsg( 0, oObject, "_" + cVar, xValue )
       RECOVER USING oErr

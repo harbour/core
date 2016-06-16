@@ -1,5 +1,5 @@
 /*
- * simple ajax responder
+ * Simple ajax responder
  *
  * Copyright 2009 Francesco Saverio Giudice <info / at / fsgiudice.com>
  *
@@ -49,12 +49,9 @@ MEMVAR _REQUEST
 FUNCTION HRBMAIN()
 
    LOCAL cW
-   LOCAL cHtml := ""
 
-   IF hb_HHasKey( _REQUEST, "w" )
-      IF ! Empty( cW := _REQUEST[ "w" ] )
-         cHtml += "This is a reply from testajax : " + cW
-      ENDIF
+   IF hb_HGetRef( _REQUEST, "w", @cW )
+      RETURN "This is a reply from testajax: " + cW
    ENDIF
 
-   RETURN cHtml
+   RETURN ""

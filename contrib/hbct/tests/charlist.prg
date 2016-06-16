@@ -51,18 +51,14 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharList()"
    ?
 
    ? "Simple tests:"
-   ? '  CharList( "Hello World !" ) == "Helo Wrd!" ? -> "' + CharList( "Hello World !" ) + '"'
-   ? '  CharList( NIL ) == "" ? -> "' + CharList( NIL ) + '"'
+   ? '  CharList( "Hello World !" ) == "Helo Wrd!" ? -->', '"' + CharList( "Hello World !" ) + '"'
+   ? '  CharList( NIL ) == "" ? -->', '"' + CharList( NIL ) + '"'
 
    ? "End test of CharList()"
    ?
-
-   ctexit()
 
    RETURN

@@ -1,6 +1,5 @@
 /*
- *
- * CT3 video functions
+ * CT3 video functions:
  * CharPix(), VGAPalette(), VideoType(), SetFont()
  *
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
@@ -44,20 +43,37 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- *
- * See COPYING.txt for licensing terms.
- *
  */
 
 #include "hbapi.h"
 #include "hbapigt.h"
 
 #if defined( HB_OS_DOS )
+   #include <dos.h>
+   #include <conio.h>
    #if defined( __DJGPP__ )
       #include <dpmi.h>
       #include <go32.h>
       #include <pc.h>
       #include <sys/farptr.h>
+   #endif
+
+   #if ! defined( MK_FP )
+      #define MK_FP( seg, off ) \
+   ( ( void FAR * ) ( ( ( unsigned long ) ( seg ) << 4 ) | ( unsigned ) ( off ) ) )
+   #endif
+
+   #if defined( __WATCOMC__ )
+      #define outportb  outp
+      #define inportb   inp
+   #endif
+
+   #if defined( __WATCOMC__ ) && defined( __386__ )
+      #define HB_PEEK_WORD( s, o )     ( *( ( HB_U16 * ) ( ( ( s ) << 4 ) | ( o ) ) ) )
+   #elif defined( __DJGPP__ )
+      #define HB_PEEK_WORD( s, o )     _farpeekw( ( s ), ( o ) )
+   #else
+      #define HB_PEEK_WORD( s, o )     ( *( ( HB_U16 FAR * ) MK_FP( ( s ), ( o ) ) ) )
    #endif
 #endif
 
@@ -65,8 +81,8 @@
 
 HB_FUNC( CHARPIX )
 {
-#if defined( __DJGPP__ )
-   hb_retni( _farpeekw( _dos_ds, 0x485 ) );
+#if defined( HB_OS_DOS )
+   hb_retni( HB_PEEK_WORD( 0x0040, 0x0085 ) );
 #else
    hb_retni( 0 );
 #endif
@@ -104,30 +120,36 @@ HB_FUNC( VGAPALETTE )
    green = ( char ) hb_parni( 3 );
    blue = ( char ) hb_parni( 4 );
 
-#if defined( __DJGPP__ )
+#if defined( HB_OS_DOS )
    {
-      __dpmi_regs r;
+      union REGS regs;
+#if defined( __DJGPP__ )
       int iflag;
+#endif
 
       /* Get palette register for this attribute to BH using BIOS -
        * I couldn't manage to get it through ports */
-      r.x.ax = 0x1007;
-      r.h.bl = attr;
-      __dpmi_int( 0x10, &r );
+      regs.HB_XREGS.ax = 0x1007;
+      regs.h.bl = attr;
+      HB_DOS_INT86( 0x10, &regs, &regs );
 
+#if defined( __DJGPP__ )
       iflag = __dpmi_get_and_disable_virtual_interrupt_state();
+#endif
 
       /* Wait for vertical retrace (for old VGA cards) */
       while( inportb( 0x3DA ) & 8 ) ;
       while( !( inportb( 0x3DA ) & 8 ) ) ;
 
-      outportb( 0x3C8, r.h.bh );
+      outportb( 0x3C8, regs.h.bh );
       outportb( 0x3C9, red );
       outportb( 0x3C9, green );
       outportb( 0x3C9, blue );
 
+#if defined( __DJGPP__ )
       if( iflag )
          __dpmi_get_and_enable_virtual_interrupt_state();
+#endif
    }
    hb_retl( HB_TRUE );
 #else
@@ -142,13 +164,13 @@ HB_FUNC( VGAPALETTE )
 
 HB_FUNC( VIDEOTYPE )
 {
-#if defined( __DJGPP__ )
-   __dpmi_regs r;
+#if defined( HB_OS_DOS )
+   union REGS regs;
+   regs.h.ah = 0x12;  /* Alternate Select */
+   regs.h.bl = 0x10;  /* Get EGA info */
+   HB_DOS_INT86( 0x10, &regs, &regs );
 
-   r.h.ah = 0x12;               /* Alternate Select */
-   r.h.bl = 0x10;               /* Get EGA info */
-   __dpmi_int( 0x10, &r );
-   if( r.h.bl == 0x10 )
+   if( regs.h.bl == 0x10 )
    {
       /* CGA/HGC/MDA */
       hb_retni( VCARD_MONOCHROME );
@@ -156,9 +178,9 @@ HB_FUNC( VIDEOTYPE )
    else
    {
       /* EGA/VGA */
-      r.x.ax = 0x1A00;
-      __dpmi_int( 0x10, &r );
-      if( r.h.al == 0x1A )
+      regs.HB_XREGS.ax = 0x1A00;
+      HB_DOS_INT86( 0x10, &regs, &regs );
+      if( regs.h.al == 0x1A )
          hb_retni( VCARD_VGA );
       else
          hb_retni( VCARD_EGA );

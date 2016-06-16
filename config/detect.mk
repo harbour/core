@@ -1,12 +1,12 @@
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (vszakats.net/harbour)
-# See COPYING.txt for licensing terms.
-#
-# This make file will detect optional 3rd party components
-# used in Harbour core code.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# config/conf.mk if present, is able to override HB_HAS_* values.
+# This makefile will detect optional 3rd party components
+# used in Harbour core code.
+
+# config.mk if present is root, is able to override HB_HAS_* values.
 
 ifeq ($(DETECT_MK_),)
 export DETECT_MK_ := yes
@@ -49,18 +49,34 @@ _DET_INC_HEAD := /zlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 
-# Detect pcre
+# Detect pcre2
 
-_DET_DSP_NAME := pcre
-_DET_VAR_INC_ := HB_INC_PCRE
-_DET_VAR_HAS_ := HB_HAS_PCRE
+_DET_DSP_NAME := pcre2
+_DET_VAR_INC_ := HB_INC_PCRE2
+_DET_VAR_HAS_ := HB_HAS_PCRE2
 _DET_FLT_PLAT :=
-_DET_FLT_COMP :=
+_DET_FLT_COMP := !bcc
 _DET_INC_DEFP := /usr/include /usr/local/include /usr/pkg/include /opt/csw/include
-_DET_INC_LOCL := src/3rd/pcre
-_DET_INC_HEAD := /pcre.h
+_DET_INC_LOCL := src/3rd/pcre2
+_DET_INC_HEAD := /pcre2.h
 
 include $(TOP)$(ROOT)config/detfun.mk
+
+ifeq ($(HB_HAS_PCRE2),)
+
+   # Detect pcre
+
+   _DET_DSP_NAME := pcre
+   _DET_VAR_INC_ := HB_INC_PCRE
+   _DET_VAR_HAS_ := HB_HAS_PCRE
+   _DET_FLT_PLAT :=
+   _DET_FLT_COMP :=
+   _DET_INC_DEFP := /usr/include /usr/local/include /usr/pkg/include /opt/csw/include
+   _DET_INC_LOCL := src/3rd/pcre
+   _DET_INC_HEAD := /pcre.h
+
+   include $(TOP)$(ROOT)config/detfun.mk
+endif
 
 # Detect GPM mouse
 
@@ -74,9 +90,9 @@ _DET_INC_HEAD := /gpm.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 
-# Detect slang
+# Detect s-lang
 
-_DET_DSP_NAME := slang
+_DET_DSP_NAME := s-lang
 _DET_VAR_INC_ := HB_INC_SLANG
 _DET_VAR_HAS_ := HB_HAS_SLANG
 _DET_FLT_PLAT :=
@@ -99,8 +115,12 @@ _DET_VAR_INC_ := HB_INC_CURSES
 _DET_VAR_HAS_ := HB_HAS_CURSES
 _DET_FLT_PLAT := !os2
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/include/ncurses /usr/local/include /sw/include /opt/local/include /boot/develop/headers/3rdparty
+_DET_INC_DEFP := /usr/local/opt/ncurses/include /usr/include /usr/include/ncurses /usr/local/include /sw/include /opt/local/include /boot/develop/headers/3rdparty
+ifeq ($(HB_PLATFORM),win)
+_DET_INC_HEAD := /ncursesw/curses.h
+else
 _DET_INC_HEAD := /curses.h
+endif
 
 ifeq ($(HB_COMPILER),djgpp)
    _DET_INC_DEFP += $(foreach d, $(subst $(PTHSEP), ,$(PATH)), $(d)/../include)
@@ -115,7 +135,7 @@ _DET_VAR_INC_ := HB_INC_X11
 _DET_VAR_HAS_ := HB_HAS_X11
 _DET_FLT_PLAT :=
 _DET_FLT_COMP :=
-_DET_INC_DEFP := /usr/include /usr/local/include /usr/X11R6/include /usr/pkg/include /usr/pkg/X11R6/include
+_DET_INC_DEFP := /usr/include /usr/local/include /usr/X11R6/include /usr/pkg/include /usr/pkg/X11R6/include /opt/X11/include
 _DET_INC_HEAD := /X11/Xlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk

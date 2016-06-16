@@ -1,13 +1,13 @@
-/*
- * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
- *
+/* Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * GD API test file
  */
 
 #require "hbgd"
 
-#define IMAGES_IN  "imgs_in" + hb_ps()
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_IN   "imgs_in" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
+
+REQUEST HB_CODEPAGE_UTF8EX
 
 PROCEDURE Main()
 
@@ -15,12 +15,9 @@ PROCEDURE Main()
    LOCAL black, blue, red, green, cyan
    LOCAL color, font
 
-#if 0
-   // Check output directory
-   IF ! hb_DirExists( IMAGES_OUT )
-      DirMake( IMAGES_OUT )
-   ENDIF
-#endif
+   hb_cdpSelect( "UTF8EX" )
+
+   hb_vfDirMake( IMAGES_OUT )
 
    ? gdVersion()
 
@@ -71,18 +68,18 @@ PROCEDURE Main()
    gdImageStringUp( im, font, 70, 15, "P", black )
    gdImageCharUp( im, font, 70, 30, "W", black )
 
-   gdImageStringFT( im, blue, "arial", 20, 30, 20, 90, "Test" )
+   gdImageStringFT( im, blue, "arial", 20, 30, 20, 90, "Test-ő" )
 
-   ? gdImageStringFTCircle( im, 120, 120, 50, 25, 0.8, "arial", 24, "Up", /*"Down"*/, red )
+   ? gdImageStringFTCircle( im, 120, 120, 50, 25, 0.8, "arial", 24, "Up-ő", /*"Down"*/, red )
 
    /* Set Clip Rectangle */
    gdImageSetClip( im, 25, 25, 75, 75 )
 
    /* Query functions */
    color := gdImageGetPixel( im, gdImageSX( im ) / 2, gdImageSY( im ) / 2 )
-   ? "Pixel Color is: ", color
-   ? "RGB Values: ", gdImageRed( im, color ), gdImageGreen( im, color ), gdImageBlue( im, color )
-   ? "Alpha Value: ",  gdImageAlpha( im, color )
+   ? "Pixel Color is:", color
+   ? "RGB Values:", gdImageRed( im, color ), gdImageGreen( im, color ), gdImageBlue( im, color )
+   ? "Alpha Value:",  gdImageAlpha( im, color )
 
    /* Write Images on files */
    gdImagePng( im, IMAGES_OUT + "rect.png" )
@@ -91,7 +88,6 @@ PROCEDURE Main()
    gdImageJpeg( im2, IMAGES_OUT + "conv_tst.jpg" )
 
    ?
-   ? "Look at " + IMAGES_OUT + " folder for output images"
-   ?
+   ? "Look at", IMAGES_OUT, "directory for output images"
 
    RETURN

@@ -156,13 +156,14 @@ HB_FUNC( XMOBLOCK )
  */
 HB_FUNC( XMOCHECK )
 {
-   HB_SIZE nLen  = hb_parclen( 1 ), nSize;
+   HB_SIZE nLen = hb_parclen( 1 );
    int iResult = -1;
 
    if( nLen >= 132 )
    {
       const char * szBlock = hb_parc( 1 );
       HB_BOOL fCRC = hb_parl( 2 );
+      HB_SIZE nSize;
 
       if( *szBlock == 0x01 )
          nSize = 128;
@@ -194,7 +195,7 @@ HB_FUNC( ZEROINSERT )
       const char * szText;
       HB_SIZE nLen, nBits, n;
       unsigned int uiVal;
-      int i, j;
+      int i;
 
       szText = hb_itemGetCPtr( pString );
       nLen = hb_itemGetCLen( pString );
@@ -219,6 +220,7 @@ HB_FUNC( ZEROINSERT )
          HB_SIZE nDest = nLen + ( ( nBits + 7 ) >> 3 );
          char * pszDest = ( char * ) hb_xgrab( nDest + 1 );
          unsigned char c = 0;
+         int j;
 
          nBits = n = 0;
          i = 1;

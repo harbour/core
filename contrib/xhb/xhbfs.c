@@ -1,5 +1,5 @@
 /*
- * xhb compatibility wrappers.
+ * xHarbour compatibility wrappers
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *
