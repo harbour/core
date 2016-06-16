@@ -177,10 +177,6 @@ mxmlAdd(mxml_node_t *parent,		/* I - Parent node */
 void
 mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
 {
-  mxml_node_t	*current,		/* Current node */
-		*next;			/* Next node */
-
-
 #ifdef DEBUG
   fprintf(stderr, "mxmlDelete(node=%p)\n", node);
 #endif /* DEBUG */
@@ -202,43 +198,11 @@ mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
   * Delete children...
   */
 
-  for (current = node->child; current; current = next)
+  while (node->child)
   {
-   /*
-    * Get the next node...
-    */
-
-    if ((next = current->child) != NULL)
-    {
-     /*
-      * Free parent nodes after child nodes have been freed...
-      */
-
-      current->child = NULL;
-      continue;
-    }
-
-    if ((next = current->next) == NULL)
-    {
-      mxml_node_t *temp = current->parent;
-					/* Pointer to parent node */
-
-      if (temp == node)
-      {
-       /*
-        * Got back to the top node...
-        */
-
-        next = NULL;
-      }
-      else if ((next = temp->next) == NULL)
-      {
-	if ((next = temp->parent) == node)
-	  next = NULL;
-      }
-    }
-
-    mxml_free(current);
+    mxml_node_t *child = node->child;
+    mxmlRemove(child);
+    mxmlRelease(child);
   }
 
  /*

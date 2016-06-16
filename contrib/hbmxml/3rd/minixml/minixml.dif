@@ -1,6 +1,6 @@
 diff --strip-trailing-cr -urN minixml.orig/config.h minixml/config.h
---- minixml.orig/config.h	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/config.h	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/config.h	2016-06-16 22:11:52.000000000 +0200
++++ minixml/config.h	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -126,8 +126,8 @@ diff --strip-trailing-cr -urN minixml.orig/config.h minixml/config.h
   * End of "$Id: config.h.in 451 2014-01-04 21:50:06Z msweet $".
   */
 diff --strip-trailing-cr -urN minixml.orig/mxml.h minixml/mxml.h
---- minixml.orig/mxml.h	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml.h	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml.h	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml.h	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -166,8 +166,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml.h minixml/mxml.h
  /*
   * Constants...
 diff --strip-trailing-cr -urN minixml.orig/mxml_att.c minixml/mxml_att.c
---- minixml.orig/mxml_att.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_att.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_att.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_att.c	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -186,8 +186,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_att.c minixml/mxml_att.c
  
  
 diff --strip-trailing-cr -urN minixml.orig/mxml_ent.c minixml/mxml_ent.c
---- minixml.orig/mxml_ent.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_ent.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_ent.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_ent.c	2016-06-16 22:11:52.000000000 +0200
 @@ -8,7 +8,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -198,8 +198,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_ent.c minixml/mxml_ent.c
   * missing or damaged, see the license at:
   *
 diff --strip-trailing-cr -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
---- minixml.orig/mxml_fil.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_fil.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_fil.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_fil.c	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -308,8 +308,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
  		return (-1);
  
 diff --strip-trailing-cr -urN minixml.orig/mxml_get.c minixml/mxml_get.c
---- minixml.orig/mxml_get.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_get.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_get.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_get.c	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -328,8 +328,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_get.c minixml/mxml_get.c
  
  
 diff --strip-trailing-cr -urN minixml.orig/mxml_ind.c minixml/mxml_ind.c
---- minixml.orig/mxml_ind.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_ind.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_ind.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_ind.c	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -348,8 +348,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_ind.c minixml/mxml_ind.c
  
  
 diff --strip-trailing-cr -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
---- minixml.orig/mxml_nod.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_nod.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_nod.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_nod.c	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -367,9 +367,68 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
  #include "mxml.h"
  
  
+@@ -178,10 +177,6 @@
+ void
+ mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
+ {
+-  mxml_node_t	*current,		/* Current node */
+-		*next;			/* Next node */
+-
+-
+ #ifdef DEBUG
+   fprintf(stderr, "mxmlDelete(node=%p)\n", node);
+ #endif /* DEBUG */
+@@ -203,43 +198,11 @@
+   * Delete children...
+   */
+ 
+-  for (current = node->child; current; current = next)
++  while (node->child)
+   {
+-   /*
+-    * Get the next node...
+-    */
+-
+-    if ((next = current->child) != NULL)
+-    {
+-     /*
+-      * Free parent nodes after child nodes have been freed...
+-      */
+-
+-      current->child = NULL;
+-      continue;
+-    }
+-
+-    if ((next = current->next) == NULL)
+-    {
+-      mxml_node_t *temp = current->parent;
+-					/* Pointer to parent node */
+-
+-      if (temp == node)
+-      {
+-       /*
+-        * Got back to the top node...
+-        */
+-
+-        next = NULL;
+-      }
+-      else if ((next = temp->next) == NULL)
+-      {
+-	if ((next = temp->parent) == node)
+-	  next = NULL;
+-      }
+-    }
+-
+-    mxml_free(current);
++    mxml_node_t *child = node->child;
++    mxmlRemove(child);
++    mxmlRelease(child);
+   }
+ 
+  /*
 diff --strip-trailing-cr -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
---- minixml.orig/mxml_pri.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_pri.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_pri.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_pri.c	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -380,8 +439,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
   * missing or damaged, see the license at:
   *
 diff --strip-trailing-cr -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
---- minixml.orig/mxml_pri.h	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_pri.h	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_pri.h	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_pri.h	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -400,8 +459,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
  
  
 diff --strip-trailing-cr -urN minixml.orig/mxml_sea.c minixml/mxml_sea.c
---- minixml.orig/mxml_sea.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_sea.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_sea.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_sea.c	2016-06-16 22:11:52.000000000 +0200
 @@ -8,7 +8,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -420,8 +479,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_sea.c minixml/mxml_sea.c
  
  
 diff --strip-trailing-cr -urN minixml.orig/mxml_set.c minixml/mxml_set.c
---- minixml.orig/mxml_set.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_set.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_set.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_set.c	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
@@ -581,8 +640,8 @@ diff --strip-trailing-cr -urN minixml.orig/mxml_set.c minixml/mxml_set.c
      return (-1);
  
 diff --strip-trailing-cr -urN minixml.orig/mxml_str.c minixml/mxml_str.c
---- minixml.orig/mxml_str.c	2016-06-16 00:05:18.000000000 +0200
-+++ minixml/mxml_str.c	2016-06-16 00:05:18.000000000 +0200
+--- minixml.orig/mxml_str.c	2016-06-16 22:11:52.000000000 +0200
++++ minixml/mxml_str.c	2016-06-16 22:11:52.000000000 +0200
 @@ -7,7 +7,7 @@
   *
   * These coded instructions, statements, and computer programs are the
