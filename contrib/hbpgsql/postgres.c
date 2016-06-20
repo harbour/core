@@ -438,7 +438,7 @@ HB_FUNC( PQEXECPARAMS )
       for( i = 0; i < n; ++i )
          paramvalues[ i ] = hb_arrayGetCPtr( aParam, i + 1 );
 
-      hb_PGresult_ret( PQexecParams( conn, hb_parcx( 2 ), n, NULL, paramvalues, NULL, NULL, 1 ) );
+      hb_PGresult_ret( PQexecParams( conn, hb_parcx( 2 ), n, NULL, paramvalues, NULL, NULL, hb_parnidef( 4, 1 ) ) );
 
       hb_xfree( ( void * ) paramvalues );
    }

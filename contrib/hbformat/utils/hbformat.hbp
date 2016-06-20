@@ -6,7 +6,7 @@ hbformat.hbc
 
 hbformat.prg
 
-../../../package/harbour.rc
+../../../package/harbour.hbc
 
 # Always build in shared mode for these platforms because the
 # tool is included in std distro and we want to minimize its size.

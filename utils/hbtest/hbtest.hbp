@@ -16,4 +16,4 @@ rt_trans.prg
 rt_class.prg
 rt_miscc.c
 
-../../package/harbour.rc
+../../package/harbour.hbc

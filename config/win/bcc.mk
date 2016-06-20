@@ -83,7 +83,7 @@ endif
 
 RC := brcc32.exe
 RC_OUT := -fo
-RCFLAGS += -I. -I$(HB_HOST_INC)
+RCFLAGS += -I. -I$(HB_HOST_INC) -c65001
 
 ifeq ($(HB_COMPILER),bcc64)
    LD := ilink64.exe

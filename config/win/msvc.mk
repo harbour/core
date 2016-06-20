@@ -87,7 +87,7 @@ endif
 
 RC := rc.exe
 RC_OUT := -fo$(subst x,x, )
-RCFLAGS += -I. -I$(HB_HOST_INC)
+RCFLAGS += -I. -I$(HB_HOST_INC) -c65001
 
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,
 # #       as it creates bad code according to MS docs [vszakats].

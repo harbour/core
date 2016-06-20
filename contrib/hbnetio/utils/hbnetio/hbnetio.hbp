@@ -11,7 +11,7 @@ hbnetio.prg
 _console.prg
 netiomgm.hb
 
-../../../../package/harbour.rc
+../../../../package/harbour.hbc
 
 _winsvc.prg{win}
 -main=WinMain{win}

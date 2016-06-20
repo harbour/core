@@ -4,6 +4,11 @@
 
 #include "hbver.h"
 
+#if defined( _HB_INCLUDE_ICON ) && \
+    ! defined( __BORLANDC__ ) && ! defined( UNDER_CE )
+1 ICON DISCARDABLE "../package/harbour.ico"
+#endif
+
 #define HB_MACRO2STRING( macro )   HB_MACRO2STRING_( macro )
 #define HB_MACRO2STRING_( macro )  #macro
 
@@ -28,23 +33,20 @@ FILETYPE       VFT_APP
 BEGIN
    BLOCK "StringFileInfo"
    BEGIN
-      /* LANGUAGE: US English ENCODING: Windows-1250 (0x04E2) */
-      BLOCK "040904B0"
+      BLOCK "040904B0"  /* LANGUAGE: US English (0x0409), ENCODING: Unicode (1200/0x04B0) */
       BEGIN
          VALUE "Comments",         "See LICENSE.txt for licensing terms." "\0"
          VALUE "CompanyName",      HB_NAME "\0"
          VALUE "FileDescription",  HB_NAME "\0"
          VALUE "FileVersion",      HB_VER_FILE_STR HB_VER_STATUS "\0"
-         VALUE "LegalCopyright",   "Copyright \xA9 1999-2016 (see application banner)" "\0"
+         VALUE "LegalCopyright",   "Copyright © 1999-2016 (see application banner)" "\0"
          VALUE "ProductName",      HB_NAME "\0"
          VALUE "ProductVersion",   HB_VER_PROD_STR HB_VER_STATUS "\0"
       END
    END
-
    BLOCK "VarFileInfo"
    BEGIN
-      /* LANGUAGE: US English ENCODING: UNICODE (0x4B0) */
-      VALUE "Translation", 0x409, 0x4B0
+      VALUE "Translation", 0x0409, 0x04B0  /* LANGUAGE: US English (0x0409), ENCODING: Unicode (1200/0x04B0) */
    END
 END
 
