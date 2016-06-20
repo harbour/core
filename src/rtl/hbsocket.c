@@ -183,6 +183,7 @@
 #  endif
 #  define HB_IS_INET_NTOA_MT_SAFE
 #  define HB_HAS_GETHOSTBYADDR
+#  define hb_socketSetResolveError( err ) hb_socketSetOsError( err )
 #elif defined( HB_OS_OS2 )
 #  if defined( __WATCOMC__ )
 #     define HB_HAS_INET_PTON
@@ -207,6 +208,10 @@
 #  define HB_HAS_GETHOSTBYADDR
 #  define HB_HAS_INET6_ADDR_CONST
 /* #  define HB_HAS_INET6 */
+#endif
+
+#if defined( HB_HAS_NAMEINFO ) && ! defined( HB_HAS_ADDRINFO )
+#  undef HB_HAS_NAMEINFO
 #endif
 
 
@@ -812,14 +817,17 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 
 #if defined( HB_OS_WIN )
 #  define HB_SOCK_GETERROR()              WSAGetLastError()
+#  define HB_SOCK_GETHERROR()             WSAGetLastError()
 #  define HB_SOCK_IS_EINTR( err )         ( (err) == WSAEINTR )
 #  define HB_SOCK_IS_EINPROGRES( err )    ( (err) == WSAEWOULDBLOCK )
 #elif defined( HB_OS_OS2 ) && defined( __WATCOMC__ )
 #  define HB_SOCK_GETERROR()              sock_errno()
+#  define HB_SOCK_GETHERROR()             h_errno
 #  define HB_SOCK_IS_EINTR( err )         ( (err) == EINTR )
 #  define HB_SOCK_IS_EINPROGRES( err )    ( (err) == EINPROGRESS )
 #else
 #  define HB_SOCK_GETERROR()              errno
+#  define HB_SOCK_GETHERROR()             h_errno
 #  define HB_SOCK_IS_EINTR( err )         ( (err) == EINTR )
 #  define HB_SOCK_IS_EINPROGRES( err )    ( (err) == EINPROGRESS )
 #endif
@@ -1088,6 +1096,9 @@ static void hb_socketSetOsError( int err )
       case WSA_E_CANCELLED:
          uiErr = HB_SOCKET_ERR_CANCELLED;
          break;
+      case WSA_NOT_ENOUGH_MEMORY:
+         uiErr = HB_SOCKET_ERR_NOMEM;
+         break;
       default:
          uiErr = HB_SOCKET_ERR_OTHER;
          break;
@@ -1323,7 +1334,93 @@ static void hb_socketSetOsError( int err )
          break;
 #  endif
 #endif
-/*
+      default:
+         uiErr = HB_SOCKET_ERR_OTHER;
+         break;
+   }
+#endif
+
+   pError->uiSocketError = uiErr;
+   pError->iSocketOsError = err;
+}
+
+#if ! defined( HB_OS_WIN )
+static void hb_socketSetResolveError( int err )
+{
+   PHB_IOERRORS pError = hb_stackIOErrors();
+   HB_ERRCODE uiErr;
+
+   switch( err )
+   {
+      case 0:
+         uiErr = 0;
+         break;
+
+#if defined( HB_HAS_ADDRINFO ) || defined( HB_HAS_NAMEINFO )
+
+      /* getaddrinfo() / getnameinfo() */
+#if defined( EAI_AGAIN )
+      case EAI_AGAIN:
+         uiErr = HB_SOCKET_ERR_TRYAGAIN;
+         break;
+#endif
+#if defined( EAI_BADFLAGS )
+      case EAI_BADFLAGS:
+         uiErr = HB_SOCKET_ERR_INVAL;
+         break;
+#endif
+#if defined( EAI_FAIL )
+      case EAI_FAIL:
+         uiErr = HB_SOCKET_ERR_NORECOVERY;
+         break;
+#endif
+#if defined( EAI_ADDRFAMILY )
+      case EAI_ADDRFAMILY:
+#endif
+#if defined( EAI_FAMILY )
+      case EAI_FAMILY:
+         uiErr = HB_SOCKET_ERR_AFNOSUPPORT;
+         break;
+#endif
+#if defined( EAI_MEMORY )
+      case EAI_MEMORY:
+         uiErr = HB_SOCKET_ERR_NOMEM;
+         break;
+#endif
+#if defined( EAI_NODATA )
+      case EAI_NODATA:
+         uiErr = HB_SOCKET_ERR_NODATA;
+         break;
+#endif
+#if defined( EAI_NONAME )
+      case EAI_NONAME:
+         uiErr = HB_SOCKET_ERR_HOSTNOTFOUND;
+         break;
+#endif
+#if defined( EAI_OVERFLOW )
+      case EAI_OVERFLOW:
+         uiErr = HB_SOCKET_ERR_NAMETOOLONG;
+         break;
+#endif
+#if defined( EAI_SERVICE )
+      case EAI_SERVICE:
+         uiErr = HB_SOCKET_ERR_TYPENOTFOUND;
+         break;
+#endif
+#if defined( EAI_SOCKTYPE )
+      case EAI_SOCKTYPE:
+         uiErr = HB_SOCKET_ERR_NOSUPPORT;
+         break;
+#endif
+#if defined( EAI_SYSTEM )
+      case EAI_SYSTEM:
+         uiErr = HB_SOCKET_ERR_SYSCALLFAILURE;
+         break;
+#endif
+
+#else /* ! HB_HAS_ADDRINFO && ! HB_HAS_NAMEINFO */
+
+      /* gethostbyname() / gethostbyaddr() */
 #if defined( TRY_AGAIN )
       case TRY_AGAIN:
          uiErr = HB_SOCKET_ERR_TRYAGAIN;
@@ -1350,16 +1447,17 @@ static void hb_socketSetOsError( int err )
          uiErr = HB_SOCKET_ERR_NODATA;
          break;
 #endif
-*/
+
+#endif /* ! HB_HAS_ADDRINFO && ! HB_HAS_NAMEINFO */
       default:
-         uiErr = HB_SOCKET_ERR_OTHER;
+         uiErr = HB_SOCKET_ERR_WRONGADDR;
          break;
    }
-#endif
 
    pError->uiSocketError = uiErr;
    pError->iSocketOsError = err;
 }
+#endif
 
 #if defined( HB_SOCKET_TRANSLATE_DOMAIN )
 static int hb_socketTransDomain( int domain, int *err )
@@ -3278,11 +3376,14 @@ HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const ch
    {
 #if defined( HB_HAS_ADDRINFO )
       struct addrinfo hints, * res = NULL;
+      int iError;
 
       hb_vmUnlock();
       memset( &hints, 0, sizeof( hints ) );
       hints.ai_family = AF_INET;
-      if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
+      iError = getaddrinfo( szAddr, NULL, &hints, &res );
+      hb_socketSetResolveError( iError );
+      if( iError == 0 )
       {
          if( ( int ) res->ai_addrlen >= ( int ) sizeof( struct sockaddr_in ) &&
              hb_socketGetAddrFamily( res->ai_addr, ( unsigned ) res->ai_addrlen ) == AF_INET )
@@ -3298,6 +3399,7 @@ HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const ch
 
       hb_vmUnlock();
       he = gethostbyname( szAddr );
+      hb_socketSetResolveError( he == NULL ? HB_SOCK_GETHERROR() : 0 );
       if( he && he->h_addr_list[ 0 ] )
       {
          sa.sin_addr.s_addr = ( ( struct in_addr * ) he->h_addr_list[ 0 ] )->s_addr;
@@ -3327,6 +3429,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
 {
    char * szResult = NULL;
    HB_BOOL fTrans = HB_FALSE;
+   int iError = 0;
 
    if( ! szAddr || ! *szAddr )
       return NULL;
@@ -3356,6 +3459,8 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
             sin.s_addr = ( ( struct in_addr * ) he->h_addr_list[ 0 ] )->s_addr;
             fTrans = HB_TRUE;
          }
+         else
+            iError = HB_SOCK_GETHERROR();
          hb_vmLock();
       }
 #endif
@@ -3408,7 +3513,8 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
 #  endif
       memset( &hints, 0, sizeof( hints ) );
       hints.ai_family = af;
-      if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
+      iError = getaddrinfo( szAddr, NULL, &hints, &res );
+      if( iError == 0 )
       {
          szResult = hb_socketAddrGetName( res->ai_addr, ( unsigned ) res->ai_addrlen );
          freeaddrinfo( res );
@@ -3416,6 +3522,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
       hb_vmLock();
 #endif
    }
+   hb_socketSetResolveError( iError );
 
    return szResult;
 }
@@ -3435,6 +3542,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
    memset( &hints, 0, sizeof( hints ) );
    hints.ai_family = af;
    iResult = getaddrinfo( szAddr, NULL, &hints, &res );
+   hb_socketSetResolveError( iResult );
    hb_vmLock();
 
    if( iResult == 0 )
@@ -3479,7 +3587,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
       }
       freeaddrinfo( res );
    }
-#else
+#else /* ! HB_HAS_ADDRINFO */
 
    if( af == HB_SOCKET_AF_INET )
    {
@@ -3512,6 +3620,8 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 #endif
       if( he == NULL )
          he = gethostbyname( szAddr );
+
+      hb_socketSetResolveError( he == NULL ? HB_SOCK_GETHERROR() : 0 );
 
       hb_vmLock();
 
@@ -3577,20 +3687,24 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
 
       hb_vmUnlock();
       iResult = getnameinfo( ( const struct sockaddr * ) pSockAddr, len, szHost, NI_MAXHOST, NULL, 0, 0 );
+      hb_socketSetResolveError( iResult );
       hb_vmLock();
       if( iResult == 0 )
          szResult = hb_strdup( szHost );
-#elif defined( HB_HAS_ADDRINFO ) && ! defined( HB_HAS_GETHOSTBYADDR )
+#elif defined( HB_HAS_ADDRINFO )
       char * szAddr = hb_socketAddrGetName( pSockAddr, len );
       if( szAddr )
       {
          struct addrinfo hints, * res = NULL;
+         int iError;
 
          hb_vmUnlock();
          memset( &hints, 0, sizeof( hints ) );
          hints.ai_family = af;
          hints.ai_flags = AI_CANONNAME;
-         if( getaddrinfo( szAddr, NULL, &hints, &res ) == 0 )
+         iError = getaddrinfo( szAddr, NULL, &hints, &res );
+         hb_socketSetResolveError( iError );
+         if( iError == 0 )
          {
             if( res->ai_canonname )
                szResult = hb_strdup( res->ai_canonname );
@@ -3598,7 +3712,7 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
          }
          hb_vmLock();
       }
-#else
+#else /* ! HB_HAS_ADDRINFO */
       struct hostent * he = NULL;
 
       if( af == AF_INET )
@@ -3607,6 +3721,7 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
          const struct sockaddr_in * sa = ( const struct sockaddr_in * ) pSockAddr;
          hb_vmUnlock();
          he = gethostbyaddr( ( const char * ) &sa->sin_addr, sizeof( sa->sin_addr ), af );
+         hb_socketSetResolveError( he == NULL ? HB_SOCK_GETHERROR() : 0 );
          hb_vmLock();
 #else
          char * szAddr = hb_socketAddrGetName( pSockAddr, len );
@@ -3614,6 +3729,7 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
          {
             hb_vmUnlock();
             he = gethostbyname( szAddr );
+            hb_socketSetResolveError( he == NULL ? HB_SOCK_GETHERROR() : 0 );
             hb_vmLock();
          }
 #endif
@@ -3624,12 +3740,13 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
          const struct sockaddr_in6 * sa = ( const struct sockaddr_in6 * ) pSockAddr;
          hb_vmUnlock();
          he = gethostbyaddr( ( const char * ) &sa->sin6_addr, sizeof( sa->sin6_addr ), af );
+         hb_socketSetResolveError( he == NULL ? HB_SOCK_GETHERROR() : 0 );
          hb_vmLock();
       }
 #endif
       if( he && he->h_name )
          szResult = hb_strdup( he->h_name );
-#endif
+#endif /* ! HB_HAS_ADDRINFO */
    }
    return szResult;
 }

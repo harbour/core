@@ -1,5 +1,5 @@
 /*
- * Czech and Slovak Kamenicky <-> Unicode conversion table
+ * Czech and Slovak Kamenicky (CP895) <-> Unicode conversion table
  *
  * Copyright 2006 Vojtech Obrdlik <vobrdlik@centrum.cz>
  * adapted from David Kozub - https://linux.fjfi.cvut.cz/%7Ezub/cp895/

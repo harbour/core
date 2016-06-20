@@ -2039,7 +2039,7 @@ PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE nSize )
    {
       HB_SIZE nAlloc = nSize + 1 +
                 ( pItem->item.asString.allocated <= nSize ? nSize : 0 );
-      pItem->item.asString.value = ( char* )
+      pItem->item.asString.value = ( char * )
                      hb_xRefResize( pItem->item.asString.value,
                                     pItem->item.asString.length,
                                     nAlloc, &pItem->item.asString.allocated );

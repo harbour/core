@@ -996,6 +996,7 @@ extern HB_EXPORT double    hb_strVal( const char * szText, HB_SIZE nLen ); /* re
 extern HB_EXPORT HB_MAXINT hb_strValInt( const char * szText, int * iOverflow );
 extern HB_EXPORT char *    hb_strRemEscSeq( char * szText, HB_SIZE * nLen ); /* remove C ESC sequences and converts them to Clipper chars */
 extern HB_EXPORT char *    hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT nNumber );
+extern HB_EXPORT char *    hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec );
 extern HB_EXPORT double    hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
 extern HB_EXPORT double    hb_numInt( double dNum ); /* take the integer part of the number */
 extern HB_EXPORT void      hb_random_seed( HB_I32 seed );

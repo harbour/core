@@ -2,6 +2,7 @@
  * hb_ntos() function
  *
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2016 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,4 +72,38 @@ HB_FUNC( HB_NTOS )
    }
 
    hb_retc_null();
+}
+
+HB_FUNC( HB_NTOC )
+{
+   PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNumber )
+   {
+      char szBuffer[ HB_MAX_DOUBLE_LENGTH ];
+
+      if( ! HB_IS_DOUBLE( pNumber ) )
+      {
+         HB_MAXINT nNumber = hb_itemGetNInt( pNumber );
+         int iPos = sizeof( szBuffer );
+         HB_BOOL fNeg = nNumber < 0;
+
+         if( fNeg )
+            nNumber = -nNumber;
+         szBuffer[ --iPos ] = '\0';
+         do
+         {
+            szBuffer[ --iPos ] = '0' + ( char ) ( nNumber % 10 );
+            nNumber /= 10;
+         }
+         while( nNumber != 0 );
+
+         hb_retc( szBuffer + iPos );
+      }
+      else
+         hb_retc( hb_dblToStr( szBuffer, sizeof( szBuffer ),
+                               hb_itemGetND( pNumber ), hb_parnidef( 2, 20 ) ) );
+   }
+   else
+      hb_retc_null();
 }

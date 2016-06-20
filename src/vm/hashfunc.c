@@ -515,6 +515,26 @@ HB_FUNC( HB_HSCAN )
             ++nStart;
          }
       }
+      else if( HB_IS_NUMINT( pValue ) )
+      {
+         HB_MAXINT nValue = hb_itemGetNInt( pValue );
+         while( nCount-- )
+         {
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
+            if( pItem )
+            {
+               if( HB_IS_NUMERIC( pItem ) && hb_itemGetNInt( pItem ) == nValue &&
+                   hb_itemGetND( pItem ) == ( double ) nValue )
+               {
+                  fFound = HB_TRUE;
+                  break;
+               }
+            }
+            else
+               break;
+            ++nStart;
+         }
+      }
       else if( HB_IS_NUMERIC( pValue ) )
       {
          double dValue = hb_itemGetND( pValue );
