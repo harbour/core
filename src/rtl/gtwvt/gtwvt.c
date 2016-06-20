@@ -140,6 +140,8 @@ static HB_CRITICAL_NEW( s_wvtMtx );
 #endif
 #endif
 
+#define HB_KF_ALTGR             0x10
+
 static PHB_GTWVT s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int       s_wvtCount = 0;
 
@@ -2133,8 +2135,21 @@ static int hb_gt_wvt_GetKeyFlags( void )
       iFlags |= HB_KF_SHIFT;
    if( GetKeyState( VK_CONTROL ) & 0x8000 )
       iFlags |= HB_KF_CTRL;
-   if( GetKeyState( VK_MENU ) & 0x8000 )
+   if( GetKeyState( VK_RMENU ) & 0x8000 )
       iFlags |= HB_KF_ALT;
+   if( GetKeyState( VK_LMENU ) & 0x8000 )
+      iFlags |= HB_KF_ALTGR;
+
+   return iFlags;
+}
+
+static int hb_gt_wvt_UpdateKeyFlags( int iFlags )
+{
+   if( iFlags & HB_KF_ALTGR )
+   {
+      iFlags |= HB_KF_ALT;
+      iFlags &= ~HB_KF_ALTGR;
+   }
 
    return iFlags;
 }
@@ -2384,7 +2399,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
    if( keyCode != 0 )
       hb_gt_wvt_AddCharToInputQueue( pWVT,
-                     HB_INKEY_NEW_MKEY( keyCode, hb_gt_wvt_GetKeyFlags() ) );
+                  HB_INKEY_NEW_MKEY( keyCode,
+                        hb_gt_wvt_UpdateKeyFlags( hb_gt_wvt_GetKeyFlags() ) ) );
 }
 
 static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
@@ -2524,7 +2540,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                   pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
                   iKey = ( int ) wParam - VK_NUMPAD0 + '0';
                }
-               else if( iFlags == HB_KF_ALT )
+               else if( iFlags == HB_KF_ALT || iFlags == HB_KF_ALTGR )
                   iFlags = 0; /* for ALT + <ASCII_VALUE_FROM_KEYPAD> */
                iFlags |= HB_KF_KEYPAD;
                break;
@@ -2575,7 +2591,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
             iKey = iKeyPad;
             if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
             {
-               if( iFlags == HB_KF_ALT )
+               if( iFlags == HB_KF_ALT || iFlags == HB_KF_ALTGR )
                   iFlags = iKey = 0; /* for ALT + <ASCII_VALUE_FROM_KEYPAD> */
                else
                   iFlags |= HB_KF_KEYPAD;
@@ -2583,13 +2599,16 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
          }
          pWVT->keyFlags = iFlags;
          if( iKey != 0 )
-            iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+            iKey = HB_INKEY_NEW_KEY( iKey, hb_gt_wvt_UpdateKeyFlags( iFlags ) );
          break;
 
       case WM_CHAR:
-         if( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_ALT ) != 0 )
+         if( ( iFlags & HB_KF_CTRL ) != 0 ? ( iFlags & HB_KF_ALT ) != 0 :
+                                          ( ( iFlags & HB_KF_ALTGR ) != 0 ) )
             /* workaround for AltGR and German keyboard */
-            iFlags &= ~( HB_KF_CTRL | HB_KF_ALT );
+            iFlags &= ~( HB_KF_CTRL | HB_KF_ALT | HB_KF_ALTGR );
+         else
+            iFlags = hb_gt_wvt_UpdateKeyFlags( iFlags );
       case WM_SYSCHAR:
          if( ! pWVT->IgnoreWM_SYSCHAR )
          {

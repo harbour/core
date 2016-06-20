@@ -709,6 +709,7 @@ DYNAMIC hb_mutexSubscribeNow
 DYNAMIC hb_mutexUnlock
 DYNAMIC hb_mvRestore
 DYNAMIC hb_mvSave
+DYNAMIC hb_ntoc
 DYNAMIC hb_NToColor
 DYNAMIC hb_ntos
 DYNAMIC hb_NToT

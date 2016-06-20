@@ -1075,6 +1075,20 @@ HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
                }
                while( --nCount > 0 );
             }
+            else if( HB_IS_NUMINT( pValue ) )
+            {
+               HB_MAXINT nValue = hb_itemGetNInt( pValue );
+
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + nStart++;
+
+                  if( HB_IS_NUMERIC( pItem ) && hb_itemGetNInt( pItem ) == nValue &&
+                      hb_itemGetND( pItem ) == ( double ) nValue )
+                     return nStart;
+               }
+               while( --nCount > 0 );
+            }
             else if( HB_IS_NUMERIC( pValue ) )
             {
                double dValue = hb_itemGetND( pValue );
@@ -1238,6 +1252,20 @@ HB_SIZE hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB
                   /* NOTE: The order of the pItem and pValue parameters passed to
                            hb_itemStrCmp() is significant, please don't change it. [vszakats] */
                   if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, fExact ) == 0 )
+                     return nStart + 1;
+               }
+               while( --nCount && nStart-- );
+            }
+            else if( HB_IS_NUMINT( pValue ) )
+            {
+               HB_MAXINT nValue = hb_itemGetNInt( pValue );
+
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + nStart;
+
+                  if( HB_IS_NUMERIC( pItem ) && hb_itemGetNInt( pItem ) == nValue &&
+                      hb_itemGetND( pItem ) == ( double ) nValue )
                      return nStart + 1;
                }
                while( --nCount && nStart-- );

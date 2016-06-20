@@ -819,6 +819,124 @@ char * hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT lNumber )
    return &szBuf[ iPos ];
 }
 
+/* if you want to be sure that size of buffer is enough to hold each
+   double number with '\0' terminating character then it should have
+   at least HB_MAX_DOUBLE_LENGTH bytes. If buffer is not large enough
+   then NULL is returned */
+char * hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec )
+{
+   double dInt, dFract, dDig, doBase = 10.0;
+   int iLen, iPos, iPrec;
+   char * szResult;
+   HB_BOOL fFirst;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dblToStr(%p, %" HB_PFS "u, %f, %d)", szBuf, nSize, dNumber, iMaxDec ) );
+
+   iLen = ( int ) ( nSize - 1 );
+   if( iLen <= 0 )
+      return NULL;
+#ifdef HB_NUM_PRECISION
+   iPrec = HB_NUM_PRECISION;
+#else
+   iPrec = 16;
+#endif
+   szResult = szBuf;
+   if( dNumber < 0 )
+   {
+      if( --iLen == 0 )
+         return NULL;
+      *szBuf++ = '-';
+      dFract = modf( -dNumber, &dInt );
+   }
+   else
+      dFract = modf( dNumber, &dInt );
+
+   iPos = iLen;
+   do
+   {
+      dDig = modf( dInt / doBase + 0.01, &dInt ) * doBase;
+      szBuf[ --iPos ] = '0' + ( char ) ( dDig + 0.01 );
+      if( iPos == 0 )
+      {
+         if( dInt >= 1 )
+            return NULL;
+         break;
+      }
+   }
+   while( dInt >= 1 );
+   if( iPos > 0 )
+      memmove( szBuf, szBuf + iPos, HB_MIN( iLen - iPos, iPrec ) );
+   iPos = iLen - iPos;
+
+   fFirst = iPos > 1 || szBuf[ 0 ] != '0';
+   if( fFirst )
+   {
+      if( iPos >= iPrec )
+      {
+         while( iPrec < iPos )
+            szBuf[ iPrec++ ] = '0';
+         iPrec = 0;
+      }
+      else
+         iPrec -= iPos;
+   }
+
+   while( dInt >= 1 )
+   {
+      if( iPos >= iLen )
+         return NULL;
+      dDig = modf( dInt / doBase + 0.01, &dInt ) * doBase;
+      szBuf[ iPos++ ] = iPrec-- > 0 ? '0' + ( char ) ( dDig + 0.01 ) : '0';
+   }
+
+   if( iPrec > 0 && iLen - iPos > 1 && iMaxDec != 0 && dFract > 0 )
+   {
+      int iDec = iPos;
+
+      szBuf[ iPos ] = '.';
+      while( ++iPos < iLen && iPrec > 0 && iMaxDec-- != 0 )
+      {
+         dFract = modf( dFract * doBase, &dDig );
+         szBuf[ iPos ] = '0' + ( char ) ( dDig + 0.01 );
+         if( szBuf[ iPos ] != '0' )
+            fFirst = HB_TRUE;
+         if( fFirst )
+            --iPrec;
+      }
+      if( dFract > ( iPrec > 0 ? 0.5 - hb_numPow10( -iPrec ) : 0.2 ) )
+      {
+         iPrec = iPos;
+         for( ;; )
+         {
+            if( --iPrec < 0 )
+            {
+               memmove( szBuf + 1, szBuf, iPos );
+               *szBuf = '1';
+               if( iPos < iLen )
+                  ++iPos;
+               ++iDec;
+               break;
+            }
+            if( iPrec == iDec )
+               --iPrec;
+            if( szBuf[ iPrec ] != '9' )
+            {
+               ++szBuf[ iPrec ];
+               break;
+            }
+            szBuf[ iPrec ] = '0';
+         }
+      }
+      while( iPos > iDec && szBuf[ iPos - 1 ] == '0' )
+         --iPos;
+      if( szBuf[ iPos - 1 ] == '.' )
+         --iPos;
+   }
+
+   szBuf[ iPos ] = '\0';
+   return iPos == 1 && *szResult == '-' && *szBuf == '0' ? szBuf : szResult;
+}
+
 /*
  * This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncpy, this routine will always append
