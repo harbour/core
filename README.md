@@ -1,6 +1,6 @@
 # Welcome to Harbour
 [![License](https://img.shields.io/badge/license-GPLv2%20%2B%20Library%20Exception-blue.svg)](LICENSE.txt)
-[![Tag](https://img.shields.io/github/tag/vszakats/harbour-core.svg)](https://github.com/vszakats/harbour-core/tree/v3.4.0dev)
+[![Tag](https://img.shields.io/github/tag/vszakats/harbour-core.svg)](https://github.com/vszakats/harbour-core/tree/v3.4.0dev)<br />
 [![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core)
 [![Build status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master)
 [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208)
