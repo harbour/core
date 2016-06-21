@@ -265,7 +265,7 @@ FUNCTION hb_iniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
 FUNCTION hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
-   LOCAL cNewLine := Set( _SET_EOL )
+   LOCAL cEOL := Set( _SET_EOL )
    LOCAL cSection
    LOCAL cBuffer := ""
 
@@ -274,7 +274,7 @@ FUNCTION hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
    ENDIF
 
    IF HB_ISSTRING( cCommentBegin ) .AND. ! Empty( cCommentBegin )
-      cBuffer += cCommentBegin + cNewLine
+      cBuffer += cCommentBegin + cEOL
    ENDIF
 
    hb_default( @lAutoMain, .T. )
@@ -288,11 +288,11 @@ FUNCTION hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
    IF lAutoMain
       /* When automain is on, write the main section */
       hb_HEval( hIni[ "MAIN" ], {| cKey, xVal | ;
-         cBuffer += hb_CStr( cKey ) + "=" + hb_CStr( xVal ) + cNewLine } )
+         cBuffer += hb_CStr( cKey ) + "=" + hb_CStr( xVal ) + cEOL } )
    ELSE
       /* When automain is off, just write all the toplevel variables. */
       hb_HEval( hIni, {| cKey, xVal | iif( HB_ISHASH( xVal ), /* nothing */, ;
-         cBuffer += hb_CStr( cKey ) + "=" + hb_CStr( xVal ) + cNewLine ) } )
+         cBuffer += hb_CStr( cKey ) + "=" + hb_CStr( xVal ) + cEOL ) } )
    ENDIF
 
    FOR EACH cSection IN hIni
@@ -310,15 +310,15 @@ FUNCTION hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
          ENDIF
       ENDIF
 
-      cBuffer += cNewLine + "[" + hb_CStr( cSection:__enumKey ) + "]" + cNewLine
+      cBuffer += cEOL + "[" + hb_CStr( cSection:__enumKey ) + "]" + cEOL
 
       hb_HEval( cSection, ;
          {| cKey, xVal | cBuffer += hb_CStr( cKey ) + "=" + ;
-         hb_CStr( xVal ) + cNewLine } )
+         hb_CStr( xVal ) + cEOL } )
    NEXT
 
    IF HB_ISSTRING( cCommentEnd ) .AND. ! Empty( cCommentEnd )
-      cBuffer += cCommentEnd + cNewLine
+      cBuffer += cCommentEnd + cEOL
    ENDIF
 
    RETURN iif( Empty( cBuffer ), NIL, cBuffer )
