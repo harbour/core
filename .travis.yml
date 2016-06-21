@@ -88,8 +88,8 @@ script:
        if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
           if [ "$CC" = "gcc" ] ; then
              export HB_CCSUFFIX=-5;
-#         else
-#            export HB_CCSUFFIX=-3.8;
+          else
+             export HB_CCSUFFIX=;
           fi;
           export HB_USER_CFLAGS='-fstack-protector-strong';
        fi;
