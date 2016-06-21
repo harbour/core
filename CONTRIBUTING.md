@@ -59,7 +59,7 @@
         $ <harbour-dir>/bin/hbformat <source{.prg|.hb|.ch}>
 
 - Text editor setting for Harbour files
-  - Encoding is either [7-bit ASCII](https://en.wikipedia.org/wiki/ASCII) or [UTF-8](http://utf8everywhere.org/), without [BOM](https://en.wikipedia.org/wiki/Byte_order_mark)
+  - Encoding is either 7-bit ASCII or [UTF-8](http://utf8everywhere.org/), without [BOM](https://en.wikipedia.org/wiki/Byte_order_mark)
   - Use spaces, never tabs
   - Remove trailing spaces from lines
   - Keep one (not zero or multiple) newline at the end of file
@@ -72,7 +72,7 @@
   - <https://guides.github.com/overviews/os-contributing/>
   - <https://github.com/blog/1943-how-to-write-the-perfect-pull-request>
 - You can also participate in localization:<br />
-  [![Localization Status](https://www.transifex.com/projects/p/harbour/resource/hbmk2-vszakats/chart/image_png)](https://www.transifex.com/projects/p/harbour/)
+  [![Localization Status](https://chart.googleapis.com/chart?chxt=y%2Cr&chd=e%3A....8J4T4T4To8UeP.AAAAAAAAAA&chco=84CCFF%2CBFE4FF%2CF4F6FB&chbh=9&chs=350x196&cht=bhs&chxl=0%3A%7CSerbian+%28Latin%29%7CLithuanian%7CChinese+%28China%29+%28GB2312%29%7CIndonesian%7CRussian%7CHungarian%7CFrench%7CItalian%7CSpanish+%28Latin+America%29%7CSpanish%7CGalician%7CGreek%7CPortuguese+%28Brazil%29%7CEnglish%7C1%3A%7C0%25%7C0%25%7C0%25%7C0%25%7C0%25%7C25%25%7C32%25%7C64%25%7C88%25%7C88%25%7C88%25%7C94%25%7C100%25%7C100%25%7C)](https://www.transifex.com/projects/p/harbour/)
 - If looking for known pending issues to work on, look for `TODO`
   and `TOFIX` markers in the source code/ChangeLog or see this list
   of issues that need further input/contribution:
