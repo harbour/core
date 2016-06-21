@@ -74,6 +74,8 @@
 #command NEXT <v> [TO <x>] [STEP <s>]  => next
 
 #command DO <proc>.prg [WITH <p,...>]  => do <proc> [ WITH <p>]
+/* Harbour extension */
+#command DO <proc>.hb [WITH <p,...>]  => do <proc> [ WITH <p>]
 #command CALL <proc>() [WITH <p,...>]  => call <proc> [ WITH <p>]
 #command STORE <v> TO <v1> [,<vN>]     => <v1> := [ <vN> :=] <v>
 
