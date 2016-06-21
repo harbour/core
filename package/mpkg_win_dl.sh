@@ -5,6 +5,15 @@
 # See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
+alias curl='curl -fsS --connect-timeout 15 --retry 3'
+alias gpg='gpg --batch --keyid-format LONG'
+
+gpg_recv_keys() {
+   if ! gpg --keyserver hkps://pgp.mit.edu --recv-keys "$@" ; then
+      gpg --keyserver hkps://sks-keyservers.net --recv-keys "$@"
+   fi
+}
+
 # - Requires '[PACKAGE]_VER' and '[PACKAGE]_HASH_[32|64]' envvars
 
 _BRANCH="${APPVEYOR_REPO_BRANCH}${TRAVIS_BRANCH}${CI_BUILD_REF_NAME}${GIT_BRANCH}"
@@ -13,9 +22,6 @@ set | grep '_VER='
 
 # Quit if any of the lines fail
 set -e
-
-alias curl='curl -fsS --connect-timeout 15 --retry 3'
-alias gpg='gpg --batch --keyid-format LONG'
 
 gpg --version | grep gpg
 
@@ -63,7 +69,7 @@ gpg --version | grep gpg
 # Dependencies for Windows builds
 
 # Bintray public key
-gpg --keyserver hkps://pgp.mit.edu --recv-keys 8756C4F765C9AC3CB6B85D62379CE192D401AB61
+gpg_recv_keys 8756C4F765C9AC3CB6B85D62379CE192D401AB61
 
 # Builder public key
 curl 'https://bintray.com/user/downloadSubjectPublicKey?username=vszakats' | \
