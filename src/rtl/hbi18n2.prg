@@ -371,7 +371,7 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, /* @ */ cErrorMsg, lVersionNo, lSou
 
    hb_default( @lVersionNo, .T. )
    hb_default( @lSourceRef, .T. )
-   hb_default( @cEol, hb_eol() )
+   hb_default( @cEol, Set( _SET_EOL ) )
 
    lRet := .F.
    cFlg := "#, c-format" + cEol
@@ -595,7 +595,7 @@ FUNCTION hb_i18n_SavePOT( cFile, pI18N, /* @ */ cErrorMsg )
       cErrorMsg := "wrong translation set item"
       lRet := .F.
    ELSE
-      cEol := hb_eol()
+      cEol := Set( _SET_EOL )
       cFlg := "#, c-format" + cEol
       cPOT := ;
          "#" + cEol + ;

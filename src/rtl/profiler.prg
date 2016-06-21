@@ -534,7 +534,7 @@ ENDCLASS
 METHOD writeLines( aLines ) CLASS HBProfileReportToFile
 
    IF ::hFile != NIL
-      AEval( aLines, {| c | hb_vfWrite( ::hFile, c + hb_eol() ) } )
+      AEval( aLines, {| c | hb_vfWrite( ::hFile, c + Set( _SET_EOL ) ) } )
    ENDIF
 
    RETURN Self
@@ -601,7 +601,7 @@ METHOD generate( bFilter ) CLASS HBProfileReportToString
 
    LOCAL cReport := ""
 
-   AEval( ::super:generate( bFilter ), {| c | cReport += c + hb_eol() } )
+   AEval( ::super:generate( bFilter ), {| c | cReport += c + Set( _SET_EOL ) } )
 
    RETURN cReport
 

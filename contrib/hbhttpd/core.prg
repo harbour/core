@@ -970,31 +970,32 @@ STATIC FUNCTION UErrorHandler( oErr, oServer )
 
 STATIC FUNCTION GetErrorDesc( oErr )
 
+   LOCAL cEOL := Set( _SET_EOL )
+
    LOCAL nI, cI, aPar, nJ, xI
-
-   LOCAL cRet := "ERRORLOG " + Replicate( "=", 60 ) + hb_eol() + ;
+   LOCAL cRet := "ERRORLOG " + Replicate( "=", 60 ) + cEOL + ;
       "Error: " + oErr:subsystem + "/" + ErrDescCode( oErr:genCode ) + "(" + hb_ntos( oErr:genCode ) + ") " + ;
-      hb_ntos( oErr:subcode ) + hb_eol()
+      hb_ntos( oErr:subcode ) + cEOL
 
-   IF ! HB_ISNULL( oErr:filename );  cRet += "File: " + oErr:filename + hb_eol()
+   IF ! HB_ISNULL( oErr:filename );  cRet += "File: " + oErr:filename + cEOL
    ENDIF
-   IF ! Empty( oErr:description );   cRet += "Description: " + oErr:description + hb_eol()
+   IF ! Empty( oErr:description );   cRet += "Description: " + oErr:description + cEOL
    ENDIF
-   IF ! Empty( oErr:operation );     cRet += "Operation: " + oErr:operation + hb_eol()
+   IF ! Empty( oErr:operation );     cRet += "Operation: " + oErr:operation + cEOL
    ENDIF
-   IF ! Empty( oErr:osCode );        cRet += "OS error: " + hb_ntos( oErr:osCode ) + hb_eol()
+   IF ! Empty( oErr:osCode );        cRet += "OS error: " + hb_ntos( oErr:osCode ) + cEOL
    ENDIF
    IF HB_ISARRAY( oErr:args )
-      cRet += "Arguments:" + hb_eol()
-      AEval( oErr:args, {| X, Y | cRet += Str( Y, 5 ) + ": " + hb_CStr( X ) + hb_eol() } )
+      cRet += "Arguments:" + cEOL
+      AEval( oErr:args, {| X, Y | cRet += Str( Y, 5 ) + ": " + hb_CStr( X ) + cEOL } )
    ENDIF
-   cRet += hb_eol()
+   cRet += cEOL
 
-   cRet += "Stack:" + hb_eol()
+   cRet += "Stack:" + cEOL
    nI := 2
 #if 0
    DO WHILE ! Empty( ProcName( ++nI ) )
-      cRet += "    " + ProcName( nI ) + "(" + hb_ntos( ProcLine( nI ) ) + ")" + hb_eol()
+      cRet += "    " + ProcName( nI ) + "(" + hb_ntos( ProcLine( nI ) ) + ")" + cEOL
    ENDDO
 #else
    DO WHILE ! Empty( ProcName( ++nI ) )
@@ -1014,54 +1015,54 @@ STATIC FUNCTION GetErrorDesc( oErr )
          cI += ", " + cvt2str( xI )
       ENDDO
       xI := NIL
-      cRet += cI + hb_eol()
+      cRet += cI + cEOL
    ENDDO
 #endif
-   cRet += hb_eol()
+   cRet += cEOL
 
-   cRet += "Executable:  " + hb_ProgName() + hb_eol()
-   cRet += "Versions:" + hb_eol()
-   cRet += "  OS: " + OS() + hb_eol()
-   cRet += "  Harbour: " + Version() + ", " + hb_Version( HB_VERSION_BUILD_DATE_STR ) + hb_eol()
-   cRet += hb_eol()
+   cRet += "Executable:  " + hb_ProgName() + cEOL
+   cRet += "Versions:" + cEOL
+   cRet += "  OS: " + OS() + cEOL
+   cRet += "  Harbour: " + Version() + ", " + hb_Version( HB_VERSION_BUILD_DATE_STR ) + cEOL
+   cRet += cEOL
 
    IF oErr:genCode != EG_MEM
-      cRet += "Database areas:" + hb_eol()
-      cRet += "    Current: " + hb_ntos( Select() ) + "  " + Alias() + hb_eol()
+      cRet += "Database areas:" + cEOL
+      cRet += "    Current: " + hb_ntos( Select() ) + "  " + Alias() + cEOL
 
       BEGIN SEQUENCE WITH __BreakBlock()
          IF Used()
             cRet += ;
-               "    Filter: " + dbFilter() + hb_eol() + ;
-               "    Relation: " + dbRelation() + hb_eol() + ;
-               "    Index expression: " + ordKey( ordSetFocus() ) + hb_eol() + ;
-               hb_eol()
+               "    Filter: " + dbFilter() + cEOL + ;
+               "    Relation: " + dbRelation() + cEOL + ;
+               "    Index expression: " + ordKey( ordSetFocus() ) + cEOL + ;
+               cEOL
             BEGIN SEQUENCE WITH __BreakBlock()
                FOR nI := 1 TO FCount()
-                  cRet += Str( nI, 6 ) + " " + PadR( FieldName( nI ), 14 ) + ": " + hb_ValToExp( FieldGet( nI ) ) + hb_eol()
+                  cRet += Str( nI, 6 ) + " " + PadR( FieldName( nI ), 14 ) + ": " + hb_ValToExp( FieldGet( nI ) ) + cEOL
                NEXT
             RECOVER
-               cRet += "!!! Error reading database fields !!!" + hb_eol()
+               cRet += "!!! Error reading database fields !!!" + cEOL
             END SEQUENCE
-            cRet += hb_eol()
+            cRet += cEOL
          ENDIF
       RECOVER
-         cRet += "!!! Error accessing current workarea !!!" + hb_eol()
+         cRet += "!!! Error accessing current workarea !!!" + cEOL
       END SEQUENCE
 
       hb_WAEval( {||
          BEGIN SEQUENCE WITH __BreakBlock()
             cRet += Str( Select(), 6 ) + " " + rddName() + " " + PadR( Alias(), 15 ) + " " + ;
                Str( RecNo() ) + "/" + Str( LastRec() ) + ;
-               iif( Empty( ordSetFocus() ), "", " Index " + ordSetFocus() + "(" + hb_ntos( ordNumber() ) + ")" ) + hb_eol()
+               iif( Empty( ordSetFocus() ), "", " Index " + ordSetFocus() + "(" + hb_ntos( ordNumber() ) + ")" ) + cEOL
             dbCloseArea()
          RECOVER
-            cRet += "!!! Error accessing workarea number: " + hb_ntos( Select() ) + "!!!" + hb_eol()
+            cRet += "!!! Error accessing workarea number: " + hb_ntos( Select() ) + "!!!" + cEOL
          END SEQUENCE
          RETURN NIL
          } )
 
-      cRet += hb_eol()
+      cRet += cEOL
    ENDIF
 
    RETURN cRet

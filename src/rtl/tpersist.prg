@@ -145,6 +145,8 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
    LOCAL cType
    LOCAL lSpacer := .T.
 
+   LOCAL cEOL := Set( _SET_EOL )
+
    IF ! HB_ISSTRING( cObjectName )
       cObjectName := "o" + ::ClassName()
    ENDIF
@@ -155,9 +157,9 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
       nIndent := 0
    ENDIF
 
-   cObject := iif( nIndent > 0, hb_eol(), "" ) + Space( nIndent ) + ;
+   cObject := iif( nIndent > 0, cEOL, "" ) + Space( nIndent ) + ;
       "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
-      ::ClassName() + hb_eol()
+      ::ClassName() + cEOL
 
    FOR EACH cProp IN __clsGetProperties( ::ClassH )
 
@@ -188,21 +190,23 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
          OTHERWISE
             IF lSpacer
                lSpacer := .F.
-               cObject += hb_eol()
+               cObject += cEOL
             ENDIF
             cObject += Space( nIndent + _INDENT ) + "::" + ;
                cProp + " := " + hb_ValToExp( uValue ) + ;
-               hb_eol()
+               cEOL
          ENDSWITCH
       ENDIF
    NEXT
 
-   RETURN cObject + hb_eol() + Space( nIndent ) + "ENDOBJECT" + hb_eol()
+   RETURN cObject + cEOL + Space( nIndent ) + "ENDOBJECT" + cEOL
 
 STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
-   LOCAL cArray := hb_eol() + Space( nIndent ) + "ARRAY ::" + cName + ;
-      " LEN " + hb_ntos( Len( aArray ) ) + hb_eol()
+   LOCAL cEOL := Set( _SET_EOL )
+
+   LOCAL cArray := cEOL + Space( nIndent ) + "ARRAY ::" + cName + ;
+      " LEN " + hb_ntos( Len( aArray ) ) + cEOL
    LOCAL uValue
 
    FOR EACH uValue IN aArray
@@ -211,7 +215,7 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
       CASE "A"
          cArray += ArrayToText( uValue, cName + ;
             "[ " + hb_ntos( uValue:__enumIndex() ) + " ]", ;
-            nIndent + _INDENT ) + hb_eol()
+            nIndent + _INDENT ) + cEOL
          EXIT
 
       CASE "O"
@@ -228,12 +232,12 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
       OTHERWISE
          IF uValue:__enumIsFirst()
-            cArray += hb_eol()
+            cArray += cEOL
          ENDIF
          cArray += Space( nIndent + _INDENT ) + "::" + cName + ;
             "[ " + hb_ntos( uValue:__enumIndex() ) + " ]" + " := " + ;
-            hb_ValToExp( uValue ) + hb_eol()
+            hb_ValToExp( uValue ) + cEOL
       ENDSWITCH
    NEXT
 
-   RETURN cArray + hb_eol() + Space( nIndent ) + "ENDARRAY" + hb_eol()
+   RETURN cArray + cEOL + Space( nIndent ) + "ENDARRAY" + cEOL

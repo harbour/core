@@ -443,7 +443,7 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
             ENDIF
             // Log to file only if cLog is a valid string
             IF HB_ISSTRING( cLog )
-               hb_vfWrite( hFile, cLog + hb_eol() )
+               hb_vfWrite( hFile, cLog + Set( _SET_EOL ) )
             ENDIF
          ENDIF
       ELSE
