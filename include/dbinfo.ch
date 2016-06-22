@@ -345,7 +345,7 @@
 #define DB_DBF_STD              1
 #define DB_DBF_VFP              2
 
-/* MEMO TYPES: RDDI_MEMOTYPE, DBI_MEMOTYPE,  */
+/* MEMO TYPES: RDDI_MEMOTYPE, DBI_MEMOTYPE */
 #define DB_MEMO_NONE            0
 #define DB_MEMO_DBT             1
 #define DB_MEMO_FPT             2
