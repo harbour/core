@@ -3117,7 +3117,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
       if( ! pFileName->szExtension && hb_setGetDefExtension() )
       {
-         pItem = hb_itemPutC( pItem, NULL );
+         pItem = hb_itemPutNil( pItem );
          if( SELF_INFO( &pArea->area, DBI_TABLEEXT, pItem ) != HB_SUCCESS )
          {
             hb_itemRelease( pItem );
@@ -3141,7 +3141,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
 
    if( pArea->bLockType == 0 )
    {
-      pItem = hb_itemPutNI( pItem, 0 );
+      pItem = hb_itemPutNil( pItem );
       if( SELF_INFO( &pArea->area, DBI_LOCKSCHEME, pItem ) != HB_SUCCESS )
       {
          hb_itemRelease( pItem );
@@ -3162,7 +3162,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
    else if( pArea->bMemoType == 0 )
    {
       /* get memo type */
-      pItem = hb_itemPutNI( pItem, 0 );
+      pItem = hb_itemPutNil( pItem );
       if( SELF_INFO( &pArea->area, DBI_MEMOTYPE, pItem ) != HB_SUCCESS )
       {
          hb_itemRelease( pItem );
@@ -4096,9 +4096,10 @@ static HB_ERRCODE hb_dbfNewArea( DBFAREAP pArea )
    pArea->uiSetHeader = DB_SETHEADER_APPENDSYNC;
 
    {
-      PHB_ITEM pItem = hb_itemPutNI( NULL, 0 );
+      PHB_ITEM pItem = hb_itemNew( NULL );
       if( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_TABLETYPE, 0, pItem ) == HB_SUCCESS )
          pArea->bTableType = ( HB_BYTE ) hb_itemGetNI( pItem );
+      hb_itemClear( pItem );
       if( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_SETHEADER, 0, pItem ) == HB_SUCCESS )
          pArea->uiSetHeader = ( HB_BYTE ) hb_itemGetNI( pItem );
       hb_itemRelease( pItem );
@@ -4139,6 +4140,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    if( ! pArea->fTrigger )
    {
+      hb_itemClear( pItem );
       if( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_TRIGGER,
                         pOpenInfo->ulConnection, pItem ) == HB_SUCCESS )
       {
@@ -6338,7 +6340,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
    if( ! pFileName->szExtension && ( ! fTable || hb_setGetDefExtension() ) )
    {
       /* Add default extension if missing */
-      pFileExt = hb_itemPutC( NULL, NULL );
+      pFileExt = hb_itemPutNil( pFileExt );
       if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == HB_SUCCESS )
          pFileName->szExtension = hb_itemGetCPtr( pFileExt );
    }
@@ -6359,7 +6361,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
           * the path set by hb_FileExists()
           */
          pFileName = hb_fsFNameSplit( szFileName );
-         pFileExt = hb_itemPutC( pFileExt, NULL );
+         pFileExt = hb_itemPutNil( pFileExt );
          if( SELF_RDDINFO( pRDD, RDDI_MEMOEXT, ulConnect, pFileExt ) == HB_SUCCESS )
          {
             szExt = hb_itemGetCPtr( pFileExt );
@@ -6374,7 +6376,7 @@ static HB_ERRCODE hb_dbfDrop( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pIte
           * and try to delete production index also if it exists
           * in the same directory as table file
           */
-         pFileExt = hb_itemPutC( pFileExt, NULL );
+         hb_itemClear( pFileExt );
          if( SELF_RDDINFO( pRDD, RDDI_ORDSTRUCTEXT, ulConnect, pFileExt ) == HB_SUCCESS )
          {
             szExt = hb_itemGetCPtr( pFileExt );
@@ -6418,7 +6420,7 @@ static HB_ERRCODE hb_dbfExists( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
 
    if( ! pFileName->szExtension && ( ! fTable || hb_setGetDefExtension() ) )
    {
-      pFileExt = hb_itemPutC( NULL, NULL );
+      pFileExt = hb_itemPutNil( pFileExt );
       if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == HB_SUCCESS )
          pFileName->szExtension = hb_itemGetCPtr( pFileExt );
    }
@@ -6457,7 +6459,7 @@ static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
    if( ! pFileName->szExtension && ( ! fTable || hb_setGetDefExtension() ) )
    {
       /* Add default extension if missing */
-      pFileExt = hb_itemPutC( pFileExt, NULL );
+      pFileExt = hb_itemPutNil( pFileExt );
       if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == HB_SUCCESS )
          pFileName->szExtension = hb_itemGetCPtr( pFileExt );
    }
@@ -6477,7 +6479,7 @@ static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
       if( ! pFileNameNew->szExtension && ( ! fTable || hb_setGetDefExtension() ) )
       {
          /* Add default extension if missing */
-         pFileExt = hb_itemPutC( pFileExt, NULL );
+         pFileExt = hb_itemPutNil( pFileExt );
          if( SELF_RDDINFO( pRDD, fTable ? RDDI_TABLEEXT : RDDI_ORDBAGEXT, ulConnect, pFileExt ) == HB_SUCCESS )
             pFileNameNew->szExtension = hb_itemGetCPtr( pFileExt );
       }
@@ -6493,7 +6495,7 @@ static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
           * supported and if yes then try to rename memo file if it exists
           * in the same directory as table file
           */
-         pFileExt = hb_itemPutC( pFileExt, NULL );
+         pFileExt = hb_itemPutNil( pFileExt );
          if( SELF_RDDINFO( pRDD, RDDI_MEMOEXT, ulConnect, pFileExt ) == HB_SUCCESS )
          {
             szExt = hb_itemGetCPtr( pFileExt );
@@ -6510,7 +6512,7 @@ static HB_ERRCODE hb_dbfRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pI
           * and try to rename production index also if it exists
           * in the same directory as table file
           */
-         pFileExt = hb_itemPutC( pFileExt, NULL );
+         hb_itemClear( pFileExt );
          if( SELF_RDDINFO( pRDD, RDDI_ORDSTRUCTEXT, ulConnect, pFileExt ) == HB_SUCCESS )
          {
             szExt = hb_itemGetCPtr( pFileExt );
