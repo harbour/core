@@ -97,9 +97,10 @@ PROCEDURE Main()
    ENDIF
 
    IF Empty( aPkg )
-      OutStd( "! Error: This script has to be run from a Harbour binary installation." + hb_eol() )
-      OutStd( "         Download from:" + hb_eol() )
-      OutStd( "            https://github.com/vszakats/harbour-core/releases/tag/v_HB_VF_DEF_" + hb_eol() )
+      OutStd( ;
+         "! Error: This script has to be run from a Harbour binary installation." + hb_eol() + ;
+         "         Download from:" + hb_eol() + ;
+         "            https://github.com/vszakats/harbour-core/releases/tag/v_HB_VF_DEF_" + hb_eol() )
       Inkey( 0 )
       ErrorLevel( 1 )
    ENDIF
