@@ -219,7 +219,7 @@ fi
    cp -f -p --parents $(find 'src/3rd' -name '*.h') "${HB_ABSROOT}"
 )
 
-# TODO: This whole section should only be relevant
+# NOTE: This whole section should only be relevant
 #       if the distro is MinGW based. Much of it is
 #       useful only if MinGW _is_ actually bundled
 #       with the package, which is probably something
@@ -272,7 +272,7 @@ touch -c "${HB_ABSROOT}RELNOTES.txt" -r "${HB_ABSROOT}README.md"
 # Create tag update JSON request
 # https://developer.github.com/v3/git/refs/#update-a-reference
 
-echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/git_tag_patch.json"
+echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/git_tag_commit.json"
 
 # Register build information
 
@@ -415,7 +415,7 @@ if [ "${_BRANCH#*master*}" != "${_BRANCH}" ] && \
       curl -sS \
          -H "Authorization: token ${GITHUB_TOKEN}" \
          -X PATCH "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v${HB_VF_DEF}" \
-         -d "@${_ROOT}/git_tag_patch.json"
+         -d "@${_ROOT}/git_tag_commit.json"
    )
 fi
 
