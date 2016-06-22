@@ -1649,11 +1649,14 @@ static HB_ERRCODE hb_delimRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG u
       case RDDI_SETHEADER:
       {
          LPDELIMDATA pData = DELIMNODE_DATA( pRDD );
-         int iMode = hb_itemGetNI( pItem );
-
-         hb_itemPutNI( pItem, pData->uiSetHeader );
-         if( iMode == 0 || iMode == 1 )
-            pData->uiSetHeader = ( HB_USHORT ) iMode;
+         HB_USHORT uiSetHeader = pData->uiSetHeader;
+         if( HB_IS_NUMERIC( pItem ) )
+         {
+            int iMode = hb_itemGetNI( pItem );
+            if( iMode == 0 || iMode == 1 )
+               pData->uiSetHeader = ( HB_USHORT ) iMode;
+         }
+         hb_itemPutNI( pItem, uiSetHeader );
          break;
       }
       default:

@@ -3780,10 +3780,15 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
       }
       case DBI_SETHEADER:
       {
-         int iMode = hb_itemGetNI( pItem );
-         hb_itemPutNI( pItem, pArea->uiSetHeader );
-         if( ( iMode & ~0xFF ) == 0 )
-            pArea->uiSetHeader = iMode;
+         HB_UINT uiSetHeader = pArea->uiSetHeader;
+
+         if( HB_IS_NUMERIC( pItem ) )
+         {
+            int iMode = hb_itemGetNI( pItem );
+            if( ( iMode & ~0xFF ) == 0 )
+               pArea->uiSetHeader = iMode;
+         }
+         hb_itemPutNI( pItem, uiSetHeader );
          break;
       }
       case DBI_ROLLBACK:
@@ -6536,6 +6541,7 @@ static void hb_dbfInitTSD( void * Cargo )
    ( ( LPDBFDATA ) Cargo )->bTableType = DB_DBF_STD;
    ( ( LPDBFDATA ) Cargo )->bCryptType = DB_CRYPT_NONE;
    ( ( LPDBFDATA ) Cargo )->uiDirtyRead = HB_IDXREAD_CLEANMASK;
+   ( ( LPDBFDATA ) Cargo )->uiSetHeader = DB_SETHEADER_APPENDSYNC;
 }
 
 static void hb_dbfDestroyTSD( void * Cargo )
@@ -6654,11 +6660,15 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
       }
       case RDDI_SETHEADER:
       {
-         int iMode = hb_itemGetNI( pItem );
+         HB_USHORT uiSetHeader = pData->uiSetHeader;
 
-         hb_itemPutNI( pItem, pData->uiSetHeader );
-         if( ( iMode & ~0xFF ) == 0 )
-            pData->uiSetHeader = ( HB_USHORT ) iMode;
+         if( HB_IS_NUMERIC( pItem ) )
+         {
+            int iMode = hb_itemGetNI( pItem );
+            if( ( iMode & ~0xFF ) == 0 )
+               pData->uiSetHeader = ( HB_USHORT ) iMode;
+         }
+         hb_itemPutNI( pItem, uiSetHeader );
          break;
       }
       case RDDI_DIRTYREAD:
