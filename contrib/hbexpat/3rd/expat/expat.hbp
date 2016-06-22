@@ -19,8 +19,7 @@ xmltok.c
 {bcc}-cflag=-w-8066
 
 # ORIGIN http://expat.sourceforge.net/
-# URL    https://fossies.org/linux/www/expat-2.1.1.tar.gz
-# DIFF   expat.dif
+# URL    https://fossies.org/linux/www/expat-2.2.0.tar.bz2
 #
 # MAP    COPYING              LICENSE.txt
 # MAP    lib/xmlparse.c       xmlparse.c
