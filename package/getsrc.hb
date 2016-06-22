@@ -6,7 +6,7 @@
 
 PROCEDURE Main()
 
-   LOCAL cURL := StrTran( hb_Version( HB_VERSION_URL_SOURCE ), "commit", "archive" ) + ".zip"
+   LOCAL cURL := StrTran( hb_Version( HB_VERSION_URL_SOURCE ), "/commit/", "/archive/" ) + ".zip"
    LOCAL cDirBase := hb_FNameDir( hbshell_ScriptName() )
    LOCAL cOldDir := hb_cwd( cDirBase )
    LOCAL cFileName
