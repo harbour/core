@@ -110,7 +110,7 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
 
    export HB_WITH_CURL="${HB_DIR_CURL_32}include"
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_32}include"
- # export HB_WITH_QT='C:\Qt\5.5\mingw492_32\include'
+ # export HB_WITH_QT='C:\Qt\5.7\mingw530_32\include'
    export PATH="${HB_DIR_MINGW_32}/bin:${_ori_path}"
    gcc -v 2> "${_build_info_32}"
    # shellcheck disable=SC2086
@@ -149,7 +149,7 @@ if [ "${_BRANC4}" = 'msvc' ] ; then
 
    export _VCVARSALL="%ProgramFiles(x86)%\Microsoft Visual Studio ${_VCVARSALL}\VC\vcvarsall.bat"
 
-   [ "${_BRANCH}" = 'msvc2013' ] && HB_WITH_QT='C:\Qt\5.5\msvc2013\include'
+   [ "${_BRANCH}" = 'msvc2013' ] && HB_WITH_QT='C:\Qt\5.7\msvc2013\include'
 
    if [ -n "${_VCVARSALL}" ] ; then
       cat << EOF > _make.bat
@@ -164,7 +164,7 @@ EOF
    [ "${_BRANCH}" = 'msvc2008' ] && _VCVARSALL=
    [ "${_BRANCH}" = 'msvc2010' ] && _VCVARSALL=
 
-   [ "${_BRANCH}" = 'msvc2013' ] && HB_WITH_QT='C:\Qt\5.5\msvc2013_64\include'
+   [ "${_BRANCH}" = 'msvc2013' ] && HB_WITH_QT='C:\Qt\5.7\msvc2013_64\include'
 
    if [ -n "${_VCVARSALL}" ] ; then
       cat << EOF > _make.bat
