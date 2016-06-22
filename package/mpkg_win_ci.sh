@@ -110,7 +110,7 @@ if [ "${_BRANC4}" != 'msvc' ] ; then
 
    export HB_WITH_CURL="${HB_DIR_CURL_32}include"
    export HB_WITH_OPENSSL="${HB_DIR_OPENSSL_32}include"
- # export HB_WITH_QT='C:\Qt\5.7\mingw530_32\include'
+ # export HB_WITH_QT='C:\Qt\5.7\mingw53_32\include'
    export PATH="${HB_DIR_MINGW_32}/bin:${_ori_path}"
    gcc -v 2> "${_build_info_32}"
    # shellcheck disable=SC2086
