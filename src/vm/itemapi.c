@@ -209,6 +209,18 @@ PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, HB_SIZE nIndex, PHB_ITEM pItem )
    return pArray;
 }
 
+PHB_ITEM hb_itemPutNil( PHB_ITEM pItem )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNil(%p)", pItem ) );
+
+   if( pItem )
+      hb_itemSetNil( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   return pItem;
+}
+
 PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 {
    HB_SIZE nLen, nAlloc;
