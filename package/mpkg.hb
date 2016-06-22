@@ -92,7 +92,6 @@ PROCEDURE Main( cMode )
             OutStd( "! mpkg.hb: Timestamping repository files..." + hb_eol() )
 
             FOR EACH tmp IN { ;
-               "bin/*.bat", ;
                "bin/*.hb", ;
                "doc/*.txt", ;
                "addons/*.txt", ;
