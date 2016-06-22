@@ -341,17 +341,17 @@
 #define FILEPUT_COMPRESS        BLOB_IMPORT_COMPRESS
 #define FILEPUT_ENCRYPT         BLOB_IMPORT_ENCRYPT
 
-/* DBF TYPES */
+/* DBF TYPES: RDDI_TABLETYPE, DBI_TABLETYPE */
 #define DB_DBF_STD              1
 #define DB_DBF_VFP              2
 
-/* MEMO TYPES */
+/* MEMO TYPES: RDDI_MEMOTYPE, DBI_MEMOTYPE,  */
 #define DB_MEMO_NONE            0
 #define DB_MEMO_DBT             1
 #define DB_MEMO_FPT             2
 #define DB_MEMO_SMT             3
 
-/* MEMO EXTENDED TYPES */
+/* MEMO EXTENDED TYPES: RDDI_MEMOVERSION, DBI_MEMOVERSION */
 #define DB_MEMOVER_STD          1
 #define DB_MEMOVER_SIX          2
 #define DB_MEMOVER_FLEX         3
@@ -361,7 +361,7 @@
 #define DB_CRYPT_NONE           0
 #define DB_CRYPT_SIX            1
 
-/* LOCK SCHEMES */
+/* LOCK SCHEMES: RDDI_LOCKSCHEME, DBI_LOCKSCHEME */
 #define DB_DBFLOCK_DEFAULT      0
 #define DB_DBFLOCK_CLIPPER      1   /* default Cl*pper locking scheme */
 #define DB_DBFLOCK_COMIX        2   /* COMIX and CL53 DBFCDX hyper locking scheme */
@@ -383,7 +383,7 @@
 #define DB_SETHEADER_WRITE    2  /* update in GOCOLD method */
 #define DB_SETHEADER_APPEND   0  /* record append sets update header flag (always enabled) */
 #define DB_SETHEADER_REPLACE  4  /* record modification sets update header flag */
-#define DB_SETHEADER_YYEAR    16 /* store year() % 100 instead of year - 1900 */
+#define DB_SETHEADER_YYEAR    16 /* store year() % 100 instead of year - 1900, FoxPro compatibility */
 
 /* update in CLOSE after append only */
 #define DB_SETHEADER_MINIMAL     DB_SETHEADER_CLOSE
