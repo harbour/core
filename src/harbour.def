@@ -2770,6 +2770,7 @@ hb_itemPutNLLLen
 hb_itemPutNLLen
 hb_itemPutNLen
 hb_itemPutNS
+hb_itemPutNil
 hb_itemPutNumType
 hb_itemPutPtr
 hb_itemPutPtrGC
