@@ -4,7 +4,9 @@
 
 #include <stddef.h>
 
-#ifdef WIN32
+#ifdef HARBOUR_CONF
+#include "_hbconf.h"
+#elif defined(WIN32)
 #include "winconfi.h"
 #elif defined(MACOS_CLASSIC)
 #include "macconfi.h"

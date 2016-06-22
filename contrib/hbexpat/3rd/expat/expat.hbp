@@ -20,6 +20,7 @@ xmltok.c
 
 # ORIGIN http://expat.sourceforge.net/
 # URL    https://fossies.org/linux/www/expat-2.2.0.tar.bz2
+# DIFF   expat.dif
 #
 # MAP    COPYING              LICENSE.txt
 # MAP    lib/xmlparse.c       xmlparse.c
