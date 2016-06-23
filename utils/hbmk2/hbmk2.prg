@@ -297,7 +297,7 @@ EXTERNAL hbmk_KEYW
 
 /* This default value supports both RFC3161 and MS Authenticode. */
 /* Review condition at [BOOKMARK:1] if you change this value. */
-#define _HBMK_SIGN_TIMEURL_DEF  "http://timestamp.globalsign.com/scripts/timstamp.dll"
+#define _HBMK_SIGN_TIMEURL_DEF  "http://timestamp.digicert.com"
 
 #define _HBMK_HBEXTREQ          "__HBEXTREQ__"
 #define _HBMK_WITH_TPL          "HBMK_WITH_%1$s"
