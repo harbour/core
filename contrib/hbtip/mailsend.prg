@@ -76,7 +76,8 @@ FUNCTION hb_SendMail( ... )
    cSMTPPass   -> Optional.
    cCharset    -> Optional.
    cEncoding   -> Optional.
-   cClientHost -> Optional. Domain name of the SMTP client in the format smtp.example.com OR client IP surrounded by brackets as in [200.100.100.5]
+   cClientHost -> Optional. Domain name of the SMTP client in the format smtp.example.net OR
+                            client IP surrounded by brackets as [127.0.0.1] for IPv4 or as [ipv6:address] (f.e. '[ipv6:::1]') for IPv6
                             Note: This parameter is optional for backwards compatibility, but should be provided to comply with RFC 2812.
  */
 FUNCTION tip_MailSend( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
