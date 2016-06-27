@@ -1644,7 +1644,7 @@ Supported shells per host platforms:
 
      * [Netiquette Guidelines](https://tools.ietf.org/html/rfc1855)
      * [Setting Up Git](https://help.github.com/articles/set-up-git)
-     * [Git Book](https://git-scm.com/book) [free]
+     * [Pro Git](https://git-scm.com/book) [free book]
      * [GitHub Training Kit & Multi-language Cheat Sheet](https://training.github.com/kit/)
      * Using gettext (.po files)
        * <http://docs.transifex.com/formats/gettext>

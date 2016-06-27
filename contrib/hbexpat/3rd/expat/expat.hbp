@@ -13,6 +13,7 @@ xmlrole.c
 xmltok.c
 
 -cflag=-DHARBOUR_CONF
+{win}-cflag=-DWIN32
 {hblib}-cflag=-DXML_STATIC
 {bcc}-cflag=-w-8057
 {bcc}-cflag=-w-8008
