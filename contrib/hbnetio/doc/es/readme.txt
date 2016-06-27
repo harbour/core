@@ -41,11 +41,11 @@ Funciones del lado del cliente:
       En las operaciones de IO RDD y llamadas RPC es posible especificar
       la dirección del servidor como parte del nombre del archivo
       o procedimiento / función, es decir,
-         USE net:192.168.0.2:2942:path/to/file
-         netio_ProcExec( "192.168.0.2:2942:procname" )
+         USE net:example.org:2942:path/to/file
+         netio_ProcExec( "example.org:2942:procname" )
       o el uso de rutas UNC:
-         USE net://192.168.0.2:2942/path/to/file
-         netio_ProcExec( "//192.168.0.2:2942/procname" )
+         USE net://example.org:2942/path/to/file
+         netio_ProcExec( "//example.org:2942/procname" )
       También es posible especificar la contrasena. La cadena de
       conexión está en formato:
          <server>[:<port>[:<passwd>]]:<filepath|funcname>

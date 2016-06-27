@@ -8,7 +8,7 @@
 
 Harbour is the free software implementation of a multi-platform,
 multi-threading, object-oriented, scriptable programming language,
-backward compatible with xBase languages. Harbour consists of
+backwards compatible with xBase languages. Harbour consists of
 a compiler and runtime libraries with multiple UI and database
 backends, its own make system and a large collection of libraries
 and interfaces to popular APIs.

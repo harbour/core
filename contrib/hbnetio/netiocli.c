@@ -753,11 +753,11 @@ static const char * s_fileDecode( const char * pszFileName,
    {
       /* decode server address and port if given as part of file name
        * in format like:
-       *          "192.168.0.1:2941:path/to/file"
+       *          "example.org:2941:path/to/file"
        * or:
-       *          "192.168.0.1:2941:passwd:path/to/file"
+       *          "example.org:2941:passwd:path/to/file"
        * or:
-       *          "//192.168.0.1:2941/path/to/file"
+       *          "//example.org:2941/path/to/file"
        */
       const char * psz, * pth = NULL;
 

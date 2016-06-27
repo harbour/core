@@ -76,7 +76,7 @@
       probably want to start by reading dirstruc.txt because this is your map to
       the Harbour source directories.
 
-      Harbour is a superset of Clipper and is backward compatible with nearly
+      Harbour is a superset of Clipper and is backwards compatible with nearly
       100% of all Clipper 5.2x or 5.3 code. Most Clipper S'87 code will also
       compile and run fine, but may require some modifications to run well.
    $PLATFORMS$
