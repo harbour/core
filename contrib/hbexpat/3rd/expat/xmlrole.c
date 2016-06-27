@@ -4,7 +4,7 @@
 
 #include <stddef.h>
 
-#ifdef HARBOUR_CONF
+#if defined(HARBOUR_CONF)
 #include "_hbconf.h"
 #elif defined(WIN32)
 #include "winconfi.h"

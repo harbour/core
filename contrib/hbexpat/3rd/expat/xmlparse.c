@@ -17,7 +17,7 @@
 
 #define XML_BUILDING_EXPAT 1
 
-#ifdef HARBOUR_CONF
+#if defined(HARBOUR_CONF)
 #include "_hbconf.h"
 #elif defined(WIN32)
 #include "winconfi.h"
