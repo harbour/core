@@ -42,16 +42,13 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- * See COPYING.txt for licensing terms.
- *
  */
 
 #include <time.h>
 
-/* NOTE: Ugly hack to avoid this error when compiled with BCC 5.8.2 and above:
-         Error E2238 C:\...\Firebird-2.1.1\include\ibase.h 82: Multiple declaration for 'intptr_t' */
-#if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 )
-/* Prevent inclusion of <stdint.h> from hbdefs.h */
+#if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 )
+   /* Ugly hack to prevent inclusion of <stdint.h> from hbdefs.h to avoid
+      Error E2238 <...>\Firebird-2.1.1\include\ibase.h 82: Multiple declaration for 'intptr_t' */
    #define __STDINT_H
 #endif
 
@@ -475,7 +472,7 @@ HB_FUNC( FBFETCH )
       hb_retnl( isc_dsql_fetch( status,
                                 &stmt,
                                 dialect,
-                                sqlda ) == 100L ? -1 : isc_sqlcode( status ) );
+                                sqlda ) == 100 ? -1 : isc_sqlcode( status ) );
    }
    else
       hb_retnl( 0 );
@@ -523,7 +520,6 @@ HB_FUNC( FBGETDATA )
       XSQLVAR *        var;
       XSQLDA *         sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
       ISC_STATUS_ARRAY status;
-      ISC_QUAD *       blob_id;
 
       int pos = hb_parni( 2 ) - 1;
 
@@ -590,10 +586,11 @@ HB_FUNC( FBGETDATA )
                break;
 
             case SQL_BLOB:
-               blob_id = ( ISC_QUAD * ) var->sqldata;
+            {
+               ISC_QUAD * blob_id = ( ISC_QUAD * ) var->sqldata;
                hb_retptr( ( void * ) blob_id );
                break;
-
+            }
             case SQL_SHORT:
             case SQL_LONG:
             case SQL_INT64:

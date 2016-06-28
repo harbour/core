@@ -1,6 +1,6 @@
 hbssl.hbm
 
--hbx=
+hbssl.hbx
 
 -stop{!allwin|hbdyn}
 

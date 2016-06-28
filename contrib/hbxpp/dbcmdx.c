@@ -1,5 +1,5 @@
 /*
- * Base RDD module (XPP functions)
+ * Base RDD module (Xbase++ functions)
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>

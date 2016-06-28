@@ -1,6 +1,6 @@
 /*
  * Wrapper functions for minizip library
- *    Some higher level zip archive functions
+ * Some higher level zip archive functions
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas.at.dbtopas.lt>
  * Copyright 2011-2013 Viktor Szakats (vszakats.net/harbour) (codepage/unicode)
@@ -47,7 +47,7 @@
  */
 
 #if ! defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE  1
+   #define _LARGEFILE64_SOURCE  1
 #endif
 
 #include "hbapi.h"
@@ -58,7 +58,7 @@
 #include "hbset.h"
 
 #if ! defined( HB_OS_UNIX )
-#  undef _LARGEFILE64_SOURCE
+   #undef _LARGEFILE64_SOURCE
 #endif
 
 #include "zip.h"
@@ -104,10 +104,10 @@
    #endif
 #endif
 
-#define _ZIP_FLAG_UNICODE  ( 1 << 11 ) /* Language encoding flag (EFS) */
+#define _ZIP_FLAG_UNICODE  ( 1 << 11 )  /* Language encoding flag (EFS) */
 
 #if defined( HB_OS_UNIX )
-   #define _VER_PLATFORM   0x03 /* it's necessary for file attributes in unzip */
+   #define _VER_PLATFORM   0x03  /* it's necessary for file attributes in unzip */
 #else
    #define _VER_PLATFORM   0x00
 #endif
@@ -542,8 +542,6 @@ HB_FUNC( HB_UNZIPFILEINFO )
       char szFileName[ HB_PATH_MAX * 3 ];
       unz_file_info ufi;
       int  iResult;
-      char buf[ 16 ];
-      long lJulian, lMillisec;
 
       iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szFileName, sizeof( szFileName ) - 1,
                                        NULL, 0, NULL, 0 );
@@ -552,6 +550,8 @@ HB_FUNC( HB_UNZIPFILEINFO )
       if( iResult == UNZ_OK )
       {
          HB_BOOL fUnicode = ( ufi.flag & _ZIP_FLAG_UNICODE ) != 0;
+
+         long lJulian, lMillisec;
 
          szFileName[ sizeof( szFileName ) - 1 ] = '\0';
 
@@ -568,6 +568,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stortdt( lJulian, lMillisec, 3 );
          if( HB_ISBYREF( 4 ) )
          {
+            char buf[ 16 ];
             hb_snprintf( buf, sizeof( buf ), "%02d:%02d:%02d",
                          ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
                          ufi.tmu_date.tm_sec );
@@ -682,16 +683,17 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( PHB_FILE pFile, HB_U32 * pulCRC, HB_
    if( pFile != NULL )
    {
       unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-      HB_SIZE         nRead, u;
+      HB_SIZE         nRead;
 
       do
       {
-         nRead = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 );
-         if( nRead > 0 && nRead != ( HB_SIZE ) FS_ERROR )
+         nRead = hb_fileResult( hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) );
+         if( nRead > 0 )
          {
             ulCRC = crc32( ulCRC, pString, ( uInt ) nRead );
             if( fText )
             {
+               HB_SIZE u;
                for( u = 0; u < nRead; ++u )
                {
                   if( pString[ u ] < 0x20 ?
@@ -839,13 +841,13 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
       struct tm   st;
       time_t      ftime;
       char *      pszFree;
-#  if defined( HB_USE_LARGEFILE64 )
+   #if defined( HB_USE_LARGEFILE64 )
       struct stat64 statbuf;
       if( stat64( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
-#  else
+   #else
       struct stat statbuf;
       if( stat( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
-#  endif
+   #endif
       {
          if( S_ISDIR( statbuf.st_mode ) )
          {
@@ -869,11 +871,11 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
                       ( ( statbuf.st_mode & S_IRUSR ) ? 0x01000000 : 0 );
 
          ftime = statbuf.st_mtime;
-#  if defined( HB_HAS_LOCALTIME_R )
+   #if defined( HB_HAS_LOCALTIME_R )
          localtime_r( &ftime, &st );
-#  else
+   #else
          st = *localtime( &ftime );
-#  endif
+   #endif
 
          zfi.tmz_date.tm_sec  = st.tm_sec;
          zfi.tmz_date.tm_min  = st.tm_min;
@@ -1033,8 +1035,7 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
          {
             char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
 
-            while( ( nLen = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) > 0 &&
-                   nLen != ( HB_SIZE ) FS_ERROR )
+            while( ( nLen = hb_fileResult( hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) ) > 0 )
                zipWriteInFileInZip( hZip, pString, ( unsigned ) nLen );
 
             hb_xfree( pString );
@@ -1140,8 +1141,7 @@ static int hb_zipStoreFileHandle( zipFile hZip, PHB_FILE pFile, int iParamZipNam
    {
       char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
       hb_fileSeek( pFile, 0, FS_SET );
-      while( ( nLen = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) > 0 &&
-             nLen != ( HB_SIZE ) FS_ERROR )
+      while( ( nLen = hb_fileResult( hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) ) > 0 )
          zipWriteInFileInZip( hZip, pString, ( unsigned ) nLen );
       hb_xfree( pString );
 
@@ -1190,7 +1190,6 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
    char          szNameRaw[ HB_PATH_MAX * 3 ];
    char *        szName;
    HB_SIZE       nPos, nLen;
-   char          cSep, * pString;
    unz_file_info ufi;
    int           iResult;
    PHB_FILE      pFile;
@@ -1225,13 +1224,13 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
 
    nLen = strlen( szName );
 
-   /* Test shows that files in subfolders can be stored to zip file without
-      explicitly adding folder. So, let's create a required path */
+   /* Test shows that files in subdirectories can be stored to zip file without
+      explicitly adding directory. So, let's create a required path */
 
    nPos = 1;
    while( nPos < nLen )
    {
-      cSep = szName[ nPos ];
+      char cSep = szName[ nPos ];
 
       /* allow both path separators, ignore terminating path separator */
       if( ( cSep == '\\' || cSep == '/' ) && nPos < nLen - 1 )
@@ -1251,11 +1250,11 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
    else
    {
       pFile = hb_fileExtOpen( szName, NULL,
-                              FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                              FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
                               FXO_TRUNCATE | FXO_SHARELOCK, NULL, NULL );
       if( pFile != NULL )
       {
-         pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+         char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
 
          while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
             if( hb_fileWrite( pFile, pString, ( HB_SIZE ) iResult, -1 ) != ( HB_SIZE ) iResult )
@@ -1342,8 +1341,8 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
 
          fs3.fdateCreation = fs3.fdateLastAccess = fs3.fdateLastWrite = fdate;
          fs3.ftimeCreation = fs3.ftimeLastAccess = fs3.ftimeLastWrite = ftime;
-         ulrc = DosSetPathInfo( ( PCSZ ) szNameOS, FIL_STANDARD,
-                                &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
+         ( void ) DosSetPathInfo( ( PCSZ ) szNameOS, FIL_STANDARD,
+                                  &fs3, sizeof( fs3 ), DSPI_WRTTHRU );
       }
 
       if( pszFree )

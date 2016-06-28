@@ -156,7 +156,7 @@ HB_EXTERN_END
       ! defined( HB_OS_DARWIN_5 )
 #     define HB_HAS_LOCALTIME_R
 #  elif defined( __WATCOMC__ )
-#     if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__ == 1
+#     if defined( __STDC_WANT_LIB_EXT1__ ) && __STDC_WANT_LIB_EXT1__ == 1
 #        define HB_HAS_LOCALTIME_R
 #        define localtime_r   localtime_s
 #        define gmtime_r      gmtime_s

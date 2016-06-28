@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbp3State Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbp3State Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               07Dec2008
  */
 
 #include "hbclass.ch"
@@ -66,7 +60,7 @@
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-CREATE CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS Wvg3State INHERIT WvgWindow, WvgDataRef
 
    VAR    autosize                              INIT .F.
    VAR    caption                               INIT ""
@@ -91,7 +85,7 @@ METHOD Wvg3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_AUTO3STATE
+   ::style       := WIN_WS_CHILD + BS_AUTO3STATE
    ::className   := "BUTTON"
    ::objType     := objType3State
 
@@ -121,49 +115,47 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
+   ::editBuffer := wvg_Button_GetCheck( ::hWnd )
 
    RETURN Self
 
 METHOD Wvg3State:handleEvent( nMessage, aNM )
 
-   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", ::ClassName(), nMessage )
 
    DO CASE
-
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
-         ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
+         ::editBuffer := wvg_Button_GetCheck( ::hWnd )
 
-         IF HB_ISBLOCK( ::sl_lbClick )
-            Eval( ::sl_lbClick, ::editBuffer, NIL, self )
-            RETURN 0
-
+         IF HB_ISEVALITEM( ::sl_lbClick )
+            Eval( ::sl_lbClick, ::editBuffer, , self )
+            RETURN EVENT_HANDLED
          ENDIF
       ENDIF
 
-   CASE nMessage ==  HB_GTE_CTLCOLOR
+   CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wapi_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
-         RETURN ::hBrushBG
+      IF Empty( ::hBrushBG )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         wapi_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         RETURN ::hBrushBG
       ENDIF
 
    ENDCASE
 
-   RETURN 1
+   RETURN EVENT_UNHANDLED
 
-METHOD Wvg3State:destroy()
+METHOD PROCEDURE Wvg3State:destroy()
 
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", ::ClassName() )
 
    ::WvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD Wvg3State:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -175,7 +167,7 @@ METHOD Wvg3State:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      ::sendMessage( WIN_WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

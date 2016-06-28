@@ -1,39 +1,40 @@
 /*
- * demonstration/test code for using mutexes to send/receive
- *    messages between threads to synchronize divided jobs between
- *    threads.
+ * Demonstration/test code for using mutexes to send/receive
+ * messages between threads to synchronize divided jobs between
+ * threads.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  */
 
-#define N_THREADS 5
-#define N_JOBS    10000
+#define N_THREADS  5
+#define N_JOBS     10000
 
 static s_aCounters
 static s_mtxJobs
 static s_mtxResults
 
-proc main()
+procedure Main()
+
    local aThreads, aResults, i, nDigit, nSum, nExpected
 
    ? Version()
    ? "Main start"
 
-   s_aCounters := array( N_THREADS )
-   aFill( s_aCounters, 0 )
+   s_aCounters := Array( N_THREADS )
+   AFill( s_aCounters, 0 )
    aThreads := {}
    aResults := {}
    s_mtxJobs := hb_mutexCreate()
    s_mtxResults := hb_mutexCreate()
 
-   ? "Starting threads: "
+   ? "Starting threads:", ""
    for i := 1 to N_THREADS
-      aadd( aThreads, hb_threadStart( @thFunc() ) )
+      AAdd( aThreads, hb_threadStart( @thFunc() ) )
       ?? "<" + hb_ntos( i ) + ">"
    next
 
-   ? "Sending jobs... "
+   ? "Sending jobs...", ""
    nDigit := 10
    for i := 1 to N_JOBS
       hb_mutexNotify( s_mtxJobs, nDigit )
@@ -47,15 +48,17 @@ proc main()
       ?? "<" + hb_ntos( i ) + ">"
    next
 
-   ? "Collecting results... "
+   ? "Collecting results...", ""
    for i := 1 to N_JOBS
       hb_mutexSubscribe( s_mtxResults,, @nDigit )
-      //?? "<" + hb_ntos( i ) + ">"
-      aadd( aResults, nDigit )
+#if 0
+      ?? "<" + hb_ntos( i ) + ">"
+#endif
+      AAdd( aResults, nDigit )
    next
 
    ? "Waiting for threads..."
-   aEval( aThreads, {| x | hb_threadJoin( x ) } )
+   AEval( aThreads, {| x | hb_threadJoin( x ) } )
    ? "Threads joined"
 
    nSum := 0
@@ -63,20 +66,23 @@ proc main()
       nSum += nDigit
    next
 
-   nSum := round( nSum, 2 )
-   nExpected := round( ( 10 + 10 + N_JOBS - 1 ) / 2 / 3 * N_JOBS, 2 )
+   nSum := Round( nSum, 2 )
+   nExpected := Round( ( 10 + 10 + N_JOBS - 1 ) / 2 / 3 * N_JOBS, 2 )
 
-   if round( nSum - nExpected, 2 ) == 0
+   if Round( nSum - nExpected, 2 ) == 0
       ? "OK, final sum:", hb_ntos( nSum )
    else
       ? "ERROR, final sum:", hb_ntos( nSum ), ;
         "expected:", hb_ntos( nExpected )
    endif
    ? "End of main"
-return
 
-proc thFunc()
+   return
+
+static procedure thFunc()
+
    local xJob, xResult
+
    while .T.
       hb_mutexSubscribe( s_mtxJobs,, @xJob )
       if xJob == NIL
@@ -85,4 +91,5 @@ proc thFunc()
       xResult := xJob / 3
       hb_mutexNotify( s_mtxResults, xResult )
    enddo
-return
+
+   return

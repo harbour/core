@@ -2,6 +2,7 @@
  * Harbour Portable Object (.hrb) file runner
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
+ * Copyright 2002 Alexander Kresin <alex@belacy.belgorod.su> (hb_hrbLoad(), hb_hrbDo(), hb_hrbUnload(), hb_hrbGetFunSym())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,19 +45,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2002 Alexander Kresin <alex@belacy.belgorod.su>
- *    hb_hrbLoad()
- *    hb_hrbDo()
- *    hb_hrbUnload()
- *    hb_hrbGetFunSym()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbvmint.h"
 #include "hbapi.h"
 #include "hbstack.h"
@@ -71,20 +59,20 @@
 
 typedef struct
 {
-   char *        szName;                        /* Name of the function     */
-   HB_PCODEFUNC  pcodeFunc;                     /* Dynamic function info    */
-   HB_BYTE *     pCode;                         /* P-code                   */
+   char *        szName;                        /* Name of the function */
+   HB_PCODEFUNC  pcodeFunc;                     /* Dynamic function info */
+   HB_BYTE *     pCode;                         /* P-code */
 } HB_DYNF, * PHB_DYNF;
 
 typedef struct
 {
-   HB_ULONG    ulSymbols;                       /* Number of symbols        */
-   HB_ULONG    ulFuncs;                         /* Number of functions      */
+   HB_ULONG    ulSymbols;                       /* Number of symbols */
+   HB_ULONG    ulFuncs;                         /* Number of functions */
    HB_BOOL     fInit;                           /* should be INIT functions executed */
    HB_BOOL     fExit;                           /* should be EXIT functions executed */
-   HB_LONG     lSymStart;                       /* Startup Symbol           */
-   PHB_SYMB    pSymRead;                        /* Symbols read             */
-   PHB_DYNF    pDynFunc;                        /* Functions read           */
+   HB_LONG     lSymStart;                       /* Startup Symbol */
+   PHB_SYMB    pSymRead;                        /* Symbols read */
+   PHB_DYNF    pDynFunc;                        /* Functions read */
    PHB_SYMBOLS pModuleSymbols;
 } HRB_BODY, * PHRB_BODY;
 
@@ -92,10 +80,10 @@ static const char s_szHead[ 4 ] = { '\xC0', 'H', 'R', 'B' };
 
 
 #define SYM_NOLINK     0            /* symbol does not have to be linked */
-#define SYM_FUNC       1            /* function defined in this module   */
-#define SYM_EXTERN     2            /* function defined in other module  */
-#define SYM_DEFERRED   3            /* lately bound function             */
-#define SYM_NOT_FOUND  0xFFFFFFFFUL /* Symbol not found.                 */
+#define SYM_FUNC       1            /* function defined in this module */
+#define SYM_EXTERN     2            /* function defined in other module */
+#define SYM_DEFERRED   3            /* lately bound function */
+#define SYM_NOT_FOUND  0xFFFFFFFFUL /* Symbol not found. */
 
 static HB_SIZE hb_hrbCheckSig( const char * szBody, HB_SIZE nBodySize )
 {
@@ -210,15 +198,14 @@ static void hb_hrbInit( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
    {
       if( hb_vmRequestReenter() )
       {
-         HB_ULONG ul;
          HB_BOOL fRepeat, fClipInit = HB_TRUE;
-         int i;
 
          pHrbBody->fInit = HB_FALSE;
          pHrbBody->fExit = HB_TRUE;
 
          do
          {
+            HB_ULONG ul;
             fRepeat = HB_FALSE;
             ul = pHrbBody->ulSymbols;
             while( ul-- )
@@ -229,6 +216,7 @@ static void hb_hrbInit( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
                   if( strcmp( pHrbBody->pSymRead[ ul ].szName, "CLIPINIT$" ) ?
                       ! fClipInit : fClipInit )
                   {
+                     int i;
                      hb_vmPushSymbol( pHrbBody->pSymRead + ul );
                      hb_vmPushNil();
                      for( i = 0; i < iPCount; i++ )
@@ -280,25 +268,21 @@ static void hb_hrbExit( PHRB_BODY pHrbBody )
 
 static void hb_hrbUnLoad( PHRB_BODY pHrbBody )
 {
-   HB_ULONG ul;
-
    hb_hrbExit( pHrbBody );
 
    if( pHrbBody->pModuleSymbols )
-   {
       hb_vmFreeSymbols( pHrbBody->pModuleSymbols );
-   }
 
    if( pHrbBody->pDynFunc )
    {
+      HB_ULONG ul;
+
       for( ul = 0; ul < pHrbBody->ulFuncs; ul++ )
       {
-         PHB_DYNS pDyn;
-
          if( pHrbBody->pDynFunc[ ul ].szName &&
              pHrbBody->pDynFunc[ ul ].pcodeFunc.pCode )
          {
-            pDyn = hb_dynsymFind( pHrbBody->pDynFunc[ ul ].szName );
+            PHB_DYNS pDyn = hb_dynsymFind( pHrbBody->pDynFunc[ ul ].szName );
             if( pDyn && pDyn->pSymbol->value.pCodeFunc ==
                         &pHrbBody->pDynFunc[ ul ].pcodeFunc )
             {
@@ -317,8 +301,6 @@ static void hb_hrbUnLoad( PHRB_BODY pHrbBody )
    hb_xfree( pHrbBody );
 }
 
-
-
 static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHORT usMode, const char * szFileName )
 {
    PHRB_BODY pHrbBody = NULL;
@@ -326,14 +308,14 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
    if( szHrbBody )
    {
       HB_SIZE nBodyOffset = 0;
-      HB_SIZE nSize;                              /* Size of function */
+      HB_SIZE nSize;               /* Size of function */
       HB_SIZE nPos;
       HB_ULONG ul;
       char * buffer, ch;
       HB_USHORT usBind = ( usMode & HB_HRB_BIND_MODEMASK );
 
-      PHB_SYMB pSymRead;                           /* Symbols read     */
-      PHB_DYNF pDynFunc;                           /* Functions read   */
+      PHB_SYMB pSymRead;           /* Symbols read */
+      PHB_DYNF pDynFunc;           /* Functions read */
       PHB_DYNS pDynSym;
 
       int iVersion = hb_hrbReadHead( szHrbBody, nBodySize, &nBodyOffset );
@@ -619,13 +601,14 @@ static PHRB_BODY hb_hrbLoadFromFile( const char * szHrb, HB_USHORT usMode )
 static void hb_hrbDo( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
 {
    PHB_ITEM pRetVal = NULL;
-   int i;
 
    hb_hrbInit( pHrbBody, iPCount, pParams );
 
    /* May not have a startup symbol, if first symbol was an INIT Symbol (was executed already). */
    if( pHrbBody->lSymStart >= 0 && hb_vmRequestQuery() == 0 )
    {
+      int i;
+
       hb_vmPushSymbol( &pHrbBody->pSymRead[ pHrbBody->lSymStart ] );
       hb_vmPushNil();
 
@@ -711,11 +694,12 @@ HB_FUNC( HB_HRBRUN )
 
       if( pHrbBody )
       {
-         int iPCount = hb_pcount() - nParam, i;
+         int iPCount = hb_pcount() - nParam;
          PHB_ITEM * pParams = NULL;
 
          if( iPCount > 0 )
          {
+            int i;
             pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
             for( i = 0; i < iPCount; i++ )
                pParams[ i ] = hb_stackItemFromBase( i + 1 + nParam );
@@ -763,12 +747,11 @@ HB_FUNC( HB_HRBLOAD )
       {
          int iPCount = hb_pcount() - nParam;
          PHB_ITEM * pParams = NULL;
-         int i;
 
          if( iPCount > 0 )
          {
+            int i;
             pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
-
             for( i = 0; i < iPCount; i++ )
                pParams[ i ] = hb_stackItemFromBase( i + 1 + nParam );
          }
@@ -792,12 +775,11 @@ HB_FUNC( HB_HRBDO )
    {
       int iPCount = hb_pcount() - 1;
       PHB_ITEM * pParams = NULL;
-      int i;
 
       if( iPCount > 0 )
       {
+         int i;
          pParams = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) * iPCount );
-
          for( i = 0; i < iPCount; i++ )
             pParams[ i ] = hb_stackItemFromBase( i + 2 );
       }

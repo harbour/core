@@ -2,6 +2,13 @@
  * The Console API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour) (hb_conNewLine(), DispOutAt(), hb_StrEOL())
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
+ *    DevPos(), __Eject(),
+ *    hb_conOut(), hb_conOutErr(), OutErr(),
+ *    hb_conOutStd(), OutStd(), PCol(), PRow(),
+ *    SetPRC(), and hb_conInit()
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,24 +51,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
- *    DevPos(), __Eject(),
- *    hb_conOut(), hb_conOutErr(), OutErr(),
- *    hb_conOutStd(), OutStd(), PCol(), PRow(),
- *    SetPRC(), and hb_conInit()
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_conNewLine()
- *    DispOutAt()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbapicdp.h"
 #include "hbapiitm.h"
@@ -86,17 +75,21 @@
 
 /* length of buffer for CR/LF characters */
 #if ! defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
-#  define CRLF_BUFFER_LEN  4
+   #define CRLF_BUFFER_LEN  4
 #else
-#  define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
+   #define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
 #endif
 
+static const char s_szCR[] = { HB_CHAR_CR, 0 };
+static const char s_szLF[] = { HB_CHAR_LF, 0 };
+static const char s_szCRLF[] = { HB_CHAR_CR, HB_CHAR_LF, 0 };
+
 #if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )
-   static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_LF, 0 };
-   static const int  s_iCrLfLen = 1;
+   static const char * s_szEOL = s_szLF;
+   static const int s_iEOLLen = 1;
 #else
-   static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_CR, HB_CHAR_LF, 0 };
-   static const int  s_iCrLfLen = 2;
+   static const char * s_szEOL = s_szCRLF;
+   static const int s_iEOLLen = 2;
 #endif
 
 static HB_FHANDLE s_hFilenoStdin  = ( HB_FHANDLE ) HB_STDIN_HANDLE;
@@ -139,7 +132,7 @@ void hb_conInit( void )
 
       if( iStderr == 0 || iStderr == 1 )  /* //STDERR with no parameter or 0 */
          s_hFilenoStderr = s_hFilenoStdout;
-      /* disabled in default builds. It's not multiplatform and very
+      /* disabled in default builds. It's not multi-platform and very
        * dangerous because it can redirect error messages to data files
        * [druzus]
        */
@@ -193,12 +186,12 @@ const char * hb_conNewLine( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_conNewLine()" ) );
 
-   return s_szCrLf;
+   return s_szEOL;
 }
 
 HB_FUNC( HB_EOL )
 {
-   hb_retc_const( s_szCrLf );
+   hb_retc_const( s_szEOL );
 }
 
 #if defined( HB_LEGACY_LEVEL4 )
@@ -206,10 +199,51 @@ HB_FUNC( HB_EOL )
 /* Deprecated */
 HB_FUNC( HB_OSNEWLINE )
 {
-   hb_retc_const( s_szCrLf );
+   hb_retc_const( s_szEOL );
 }
 
 #endif
+
+HB_FUNC( HB_STREOL )
+{
+   HB_SIZE nLen = hb_parclen( 1 );
+
+   HB_SIZE nCR = 0;
+   HB_SIZE nLF = 0;
+
+   const char * szEOL = s_szEOL;
+
+   if( nLen > 0 )
+   {
+      const char * szText = hb_parc( 1 );
+
+      do
+      {
+         switch( *szText++ )
+         {
+         case HB_CHAR_CR:
+            ++nCR;
+            break;
+         case HB_CHAR_LF:
+            ++nLF;
+            break;
+         }
+      }
+      while( --nLen );
+
+      if( nLF )
+      {
+         if( nCR == 0 )
+            szEOL = s_szLF;
+         else if( nCR == nLF )
+            szEOL = s_szCRLF;
+      }
+      else if( nCR )
+         szEOL = s_szCR;
+   }
+
+   hb_retc_const( szEOL );
+}
 
 /* Output an item to STDOUT */
 void hb_conOutStd( const char * szStr, HB_SIZE nLen )
@@ -360,11 +394,10 @@ HB_FUNC( QOUT )
 {
    PHB_FILE pFile;
 
-   hb_conOutAlt( s_szCrLf, s_iCrLfLen );
+   hb_conOutAlt( s_szEOL, s_iEOLLen );
 
    if( ( pFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != NULL )
    {
-      char buf[ 256 ];
       PHB_PRNPOS pPrnPos = hb_prnPos();
 
       pPrnPos->row++;
@@ -372,6 +405,8 @@ HB_FUNC( QOUT )
 
       if( pPrnPos->col )
       {
+         char buf[ 256 ];
+
          if( pPrnPos->col > ( int ) sizeof( buf ) )
          {
             char * pBuf = ( char * ) hb_xgrab( pPrnPos->col );
@@ -445,19 +480,19 @@ static void hb_conDevPos( int iRow, int iCol )
             }
             else
             {
-               memcpy( &buf[ iPtr ], s_szCrLf, s_iCrLfLen );
-               iPtr += s_iCrLfLen;
+               memcpy( &buf[ iPtr ], s_szEOL, s_iEOLLen );
+               iPtr += s_iEOLLen;
             }
 
             while( pPrnPos->row < iPRow )
             {
-               if( iPtr + s_iCrLfLen > ( int ) sizeof( buf ) )
+               if( iPtr + s_iEOLLen > ( int ) sizeof( buf ) )
                {
                   hb_fileWrite( pFile, buf, ( HB_USHORT ) iPtr, -1 );
                   iPtr = 0;
                }
-               memcpy( &buf[ iPtr ], s_szCrLf, s_iCrLfLen );
-               iPtr += s_iCrLfLen;
+               memcpy( &buf[ iPtr ], s_szEOL, s_iEOLLen );
+               iPtr += s_iEOLLen;
                ++pPrnPos->row;
             }
             pPrnPos->col = 0;

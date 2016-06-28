@@ -7,7 +7,7 @@
 PROCEDURE Main()
 
    LOCAL B := "this will never print"
-   LOCAL a := {| b, c | OutStd( "I am a codeblock" + b + c ) }
+   LOCAL a := {| b, c | Out( "I am a codeblock" + b + c ) }
    LOCAL d
    LOCAL de
    LOCAL ar := { 1, 2 }
@@ -16,68 +16,68 @@ PROCEDURE Main()
 
    HB_SYMBOL_UNUSED( b )
 
-   OutStd( "this should print first" )
-   OutStd( hb_eol() )
+   ?? "this should print first"
+   ?
 
    Eval( a, " with parameters", " ... and it works!" )
-   OutStd( hb_eol() )
+   ?
 
    d := "with access to local variables"
 
-   a := {| b, c | OutStd( "I am a second codeblock " + d + b + ;
-      iif( c == NIL, " empty second parameter ", c ) ), OutStd( hb_eol() ), "WITH return value" }
+   a := {| b, c | Out( "I am a second codeblock " + d + b + ;
+      iif( c == NIL, " empty second parameter ", c ) ), Out( hb_eol() ), "WITH return value" }
    Eval( a, ", codeblock parameters" )
-   OutStd( hb_eol() )
+   ?
 
    Eval( a, ", codeblock parameters ", "and with second parameter" )
-   OutStd( hb_eol() )
+   ?
 
-   OutStd( MyEval( a ) )
-   OutStd( hb_eol() )
+   ?? MyEval( a )
+   ?
 
    OtherTest( a )
-   OutStd( hb_eol() )
+   ?
 
    AnotherTest( a, "==> Another " )
-   OutStd( hb_eol() )
+   ?
 
    a := {| c | iif( c == NIL, {| a | "First " + a }, {| a | "Second " + a } ) }
    a := Eval( a )
-   OutStd( hb_eol() )
-   OutStd( Eval( a, "codeblock created in a codeblock" ) )
-   OutStd( hb_eol() )
+   ?
+   ?? Eval( a, "codeblock created in a codeblock" )
+   ?
 
-   OutStd( ar[ 1 ] )
-   OutStd( hb_eol() )
+   ?? ar[ 1 ]
+   ?
    a := {|| ar[ 1 ]++ }
    Eval( a )
-   OutStd( ar[ 1 ] )
-   OutStd( hb_eol() )
+   ?? ar[ 1 ]
+   ?
 
    yy := 5
-   x  := {| xx | OutStd( hb_ntos( xx ) ), OutStd( "+" ), OutStd( hb_ntos( yy ) ), OutStd( "=" ), xx + yy }
-   OutStd( Eval( x, 1 ) )       // this is OK
-   OutStd( hb_eol() )
-   OutStd( Eval( x, 1, 2 ) )    // this should ignore unnecesary parameters
+   x  := {| xx | Out( hb_ntos( xx ) ), Out( "+" ), Out( hb_ntos( yy ) ), Out( "=" ), xx + yy }
+   ?? Eval( x, 1 )       // this is OK
+   ?
+   ?? Eval( x, 1, 2 )    // this should ignore unnecesary parameters
 
-   QOut( Eval( RetBlock(), 5 ) )
+   ? Eval( RetBlock(), 5 )
 
-   //   BugToFix()
-   OutStd( hb_eol() )
+   // BugToFix()
+   ?
 
-   OutStd( "Trying to use detached variable ..." )
-   OutStd( hb_eol() )
+   ?? "Trying to use detached variable..."
+   ?
    x1 := 5
    x2 := 6
    de := DetachLocal( x1, x2 )
-   OutStd( Eval( de ) )
+   ?? Eval( de )
+   ?
    // changing the value of variables
-   OutStd( hb_eol() )
    x1 := 10
    x2 := 11
-   QOut( Eval( de ) )
+   ? Eval( de )
    de := DetachLocal( x1, x2 )
-   QOut( Eval( de ) )
+   ? Eval( de )
 
    RETURN
 
@@ -99,10 +99,10 @@ STATIC PROCEDURE OtherTest( cblock )
 
 STATIC PROCEDURE AnotherTest( cb, a )
 
-   OutStd( Eval( cb, a ) )
-   OutStd( hb_eol() )
-   OutStd( Eval( cb, a, "again and again" ) )
-   OutStd( hb_eol() )
+   ?? Eval( cb, a )
+   ?
+   ?? Eval( cb, a, "again and again" )
+   ?
 
    RETURN
 
@@ -110,7 +110,7 @@ STATIC FUNCTION DetachLocal( x, y )
 
    // NOTE! this should work
    LOCAL z := x + y
-   LOCAL cb := {|| QOut( "z=x+y=" ), QOut( z ), QOut( "x*x=" ), QOut( x * x ), QOut( "x*x+z=" ), x * x + z }
+   LOCAL cb := {|| OutCR( "z=x+y=" ), OutCR( z ), OutCR( "x*x=" ), OutCR( x * x ), OutCR( "x*x+z=" ), x * x + z }
 
    RETURN cb
 
@@ -125,3 +125,15 @@ STATIC PROCEDURE BugToFix()
 
 STATIC FUNCTION RetBlock()
    RETURN {| x | x * x }
+
+STATIC PROCEDURE OutCR( x )
+
+   ? x
+
+   RETURN
+
+STATIC PROCEDURE Out( x )
+
+   ?? x
+
+   RETURN

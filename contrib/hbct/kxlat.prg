@@ -53,7 +53,7 @@
 
 /* Trick to make it work in the STATIC initializer.
    It's safe because it's only used with ASCII chars. */
-#define hb_keyCode( x ) Asc( x )
+#define hb_keyCode( x )  Asc( x )
 
 STATIC s_hTrs := { => }
 STATIC s_hMutex := hb_mutexCreate()
@@ -372,11 +372,9 @@ FUNCTION SetKXTab( cTrs )
 
 FUNCTION GetKXTab()
 
-   LOCAL cTrs := ""
-   LOCAL hTrs := hbct_GetKXTab()
-   LOCAL hKey
+   LOCAL cTrs := "", hKey
 
-   FOR EACH hKey IN hTrs
+   FOR EACH hKey IN hbct_GetKXTab()
       cTrs += __hbct_key_n_to_c( hKey:__enumKey() ) + __hbct_key_n_to_c( hKey:__enumValue() )
    NEXT
 
@@ -397,29 +395,27 @@ FUNCTION hbct_SetKXLat( nOrgKeyValue, nNewKeyValue )
          ENDIF
          hb_mutexUnlock( s_hMutex )
       ENDIF
-   ELSE
-      IF HB_ISNUMERIC( nOrgKeyValue ) .AND. nOrgKeyValue != 0
-         IF hb_mutexLock( s_hMutex )
-            IF PCount() == 1
-               IF nOrgKeyValue $ s_hTrs
-                  lAccepted := .T.
-                  hb_HDel( s_hTrs, nOrgKeyValue )
-                  IF Empty( s_hTrs )
-                     hb_gtInfo( HB_GTI_INKEYFILTER, NIL )
-                  ENDIF
-               ENDIF
-            ELSEIF HB_ISNUMERIC( nNewKeyValue )
-               /* refuse overwriting custom HB_GTI_INKEYFILTER */
-               IF hb_gtInfo( HB_GTI_INKEYFILTER ) == NIL .OR. ! Empty( s_hTrs )
-                  lAccepted := .T.
-                  IF Empty( s_hTrs )
-                     hb_gtInfo( HB_GTI_INKEYFILTER, {| nKey | __hbct_kxlat( nKey ) } )
-                  ENDIF
-                  s_hTrs[ nOrgKeyValue ] := nNewKeyValue
+   ELSEIF HB_ISNUMERIC( nOrgKeyValue ) .AND. nOrgKeyValue != 0
+      IF hb_mutexLock( s_hMutex )
+         IF PCount() == 1
+            IF nOrgKeyValue $ s_hTrs
+               lAccepted := .T.
+               hb_HDel( s_hTrs, nOrgKeyValue )
+               IF Empty( s_hTrs )
+                  hb_gtInfo( HB_GTI_INKEYFILTER, NIL )
                ENDIF
             ENDIF
-            hb_mutexUnlock( s_hMutex )
+         ELSEIF HB_ISNUMERIC( nNewKeyValue )
+            /* refuse overwriting custom HB_GTI_INKEYFILTER */
+            IF hb_gtInfo( HB_GTI_INKEYFILTER ) == NIL .OR. ! Empty( s_hTrs )
+               lAccepted := .T.
+               IF Empty( s_hTrs )
+                  hb_gtInfo( HB_GTI_INKEYFILTER, {| nKey | __hbct_kxlat( nKey ) } )
+               ENDIF
+               s_hTrs[ nOrgKeyValue ] := nNewKeyValue
+            ENDIF
          ENDIF
+         hb_mutexUnlock( s_hMutex )
       ENDIF
    ENDIF
 

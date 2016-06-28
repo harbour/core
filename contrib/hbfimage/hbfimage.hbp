@@ -7,17 +7,25 @@
 
 -stop{dos|os2}
 
+hbwin.hbc{allwin}
+
+-depurlbase=freeimage:https://duckduckgo.com/?q=freeimage+library
+-deppkgname=freeimage:libfreeimage-dev{deb}
+-deppkgname=freeimage:freeimage-devel{rpm}
+-deppkgname=freeimage:freeimage{pacman}
+-deppkgname=freeimage:freeimage{homebrew}
 -depkeyhead=freeimage:FreeImage.h
 -depcontrol=freeimage:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=freeimage:${HB_WITH_FREEIMAGE}
 -depincpath=freeimage:/usr/include
 -depincpath=freeimage:/usr/local/include
--depincpath=freeimage:/opt/local/include
--depimplibs=freeimage:../Dist/FreeImage.dll
+-depincpath=freeimage:/usr/local/opt/freeimage/include
+-depimplibs=freeimage:FreeImage.dll
 
 # For FreeImage headers
--c=gnu90
+#-c=gnu90
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
-fi_wrp.c
+core.c
+win.c{allwin}

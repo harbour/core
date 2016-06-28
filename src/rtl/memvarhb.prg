@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbmemvar.ch"
 #include "error.ch"
 #include "fileio.ch"
@@ -71,7 +73,7 @@
    hb_BChar( 0x01 ) + ;
    hb_BChar( 0x00 ) )
 
-FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
+PROCEDURE hb_mvSave( cFileName, cMask, lIncludeMask )
 
    LOCAL nCount
    LOCAL xValue
@@ -80,7 +82,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
    LOCAL lMatch
 
    LOCAL aVars
-   LOCAL fhnd
+   LOCAL hFile
    LOCAL tmp
 
    LOCAL oError
@@ -116,7 +118,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
 
       nRetries := 0
       DO WHILE .T.
-         IF ( fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) == F_ERROR
+         IF ( hFile := hb_vfOpen( cFileName, FO_CREAT + FO_TRUNC + FO_WRITE + FO_EXCLUSIVE ) ) == NIL
             oError := ErrorNew()
 
             oError:severity    := ES_ERROR
@@ -136,10 +138,10 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
          EXIT
       ENDDO
 
-      IF fhnd != F_ERROR
-         FWrite( fhnd, _HBMEM_SIGNATURE )
-         FWrite( fhnd, hb_Serialize( aVars ) )
-         FClose( fhnd )
+      IF hFile != NIL
+         hb_vfWrite( hFile, _HBMEM_SIGNATURE )
+         hb_vfWrite( hFile, hb_Serialize( aVars ) )
+         hb_vfClose( hFile )
       ENDIF
    ELSE
       oError := ErrorNew()
@@ -156,7 +158,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
       Eval( ErrorBlock(), oError )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
@@ -168,7 +170,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
    LOCAL cBuffer
    LOCAL xValue
 
-   LOCAL fhnd
+   LOCAL hFile
 
    LOCAL oError
    LOCAL nRetries
@@ -193,7 +195,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
       nRetries := 0
       DO WHILE .T.
 
-         IF ( fhnd := FOpen( cFileName ) ) == F_ERROR
+         IF ( hFile := hb_vfOpen( cFileName, FO_READ ) ) == NIL
             oError := ErrorNew()
 
             oError:severity    := ES_ERROR
@@ -213,18 +215,18 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
          EXIT
       ENDDO
 
-      IF fhnd == F_ERROR
+      IF hFile == NIL
          RETURN .F.
       ENDIF
 
       xValue := NIL
 
-      IF hb_FReadLen( fhnd, _HBMEM_SIG_LEN ) == _HBMEM_SIGNATURE
+      IF hb_vfReadLen( hFile, _HBMEM_SIG_LEN ) == _HBMEM_SIGNATURE
 
-         cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBMEM_SIG_LEN )
-         FSeek( fhnd, _HBMEM_SIG_LEN, FS_SET )
-         FRead( fhnd, @cBuffer, Len( cBuffer ) )
-         FClose( fhnd )
+         cBuffer := Space( hb_vfSize( hFile ) - _HBMEM_SIG_LEN )
+         hb_vfSeek( hFile, _HBMEM_SIG_LEN, FS_SET )
+         hb_vfRead( hFile, @cBuffer, hb_BLen( cBuffer ) )
+         hb_vfClose( hFile )
 
          aVars := hb_Deserialize( cBuffer )
          cBuffer := NIL
@@ -248,7 +250,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
             __mvSetBase()
          ENDIF
       ELSE
-         FClose( fhnd )
+         hb_vfClose( hFile )
       ENDIF
 
       RETURN xValue

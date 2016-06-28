@@ -94,7 +94,7 @@ HB_FUNC( WIN_REPORTEVENT )
       if( ReportEvent( hEventLog,
                        ( WORD ) hb_parni( 3 ) /* wType */,
                        ( WORD ) hb_parni( 4 ) /* wCategory */,
-                       ( DWORD ) hb_parnint( 5 ) /* dwEventID */,
+                       ( DWORD ) hb_parnl( 5 ) /* dwEventID */,
                        NULL /* lpUserSid */,
                        wNumStrings,
                        ( DWORD ) hb_parclen( 7 ),

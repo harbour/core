@@ -5,21 +5,23 @@
 
 -w3 -es2
 
-${hb_name}.hbx
+# For stime()
+#-c=gnu90{linux}
+
+-hbx=${hb_name}
 
 alt.c
 caplock.c
 chdir.c
-cint86.c
 color2n.c
 ctrl.c
 descendn.c
 dispc.c
-dosver.c
 ftattr.c
 fttext.c
 isprint.c
 getenvrn.c
+hex2dec.c
 iamidle.c
 idle.c
 isshare.c
@@ -28,6 +30,8 @@ mkdir.c
 mouse.c
 n2color.c
 numlock.c
+nwlstat.c
+nwsem.c
 origin.c
 page.c
 peek.c
@@ -35,6 +39,7 @@ proper.c
 prtscr.c
 putkey.c
 rmdir.c
+scancode.c
 setdate.c
 setkeys.c
 setlastk.c
@@ -42,7 +47,6 @@ settime.c
 shadow.c
 shift.c
 stod.c
-support.c
 video1.c
 vidmode.c
 
@@ -85,6 +89,7 @@ default.prg
 dfile.prg
 diskfunc.prg
 dispmsg.prg
+dosver.prg
 e2d.prg
 easter.prg
 elapmil.prg
@@ -94,7 +99,6 @@ findith.prg
 firstday.prg
 floptst.prg
 gcd.prg
-hex2dec.prg
 invclr.prg
 isbit.prg
 isbiton.prg
@@ -111,8 +115,6 @@ mouse1.prg
 netpv.prg
 nooccur.prg
 ntow.prg
-nwlstat.prg
-nwsem.prg
 nwuid.prg
 ontick.prg
 pchr.prg
@@ -124,11 +126,9 @@ prtesc.prg
 pvid.prg
 qtr.prg
 rand1.prg
-restsets.prg
 round.prg
 savearr.prg
 savesets.prg
-scancode.prg
 scregion.prg
 sinkey.prg
 sleep.prg

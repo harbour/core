@@ -51,22 +51,18 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of RangeRepl()"
    ?
 
-   ? '  RangeRepl( "0", "9", "year2002.dbf", "?" ) == "year????.dbf" ? --> "' + ;
+   ? '  RangeRepl( "0", "9", "year2002.dbf", "?" ) == "year????.dbf" ? -->', '"' + ;
         RangeRepl( "0", "9", "year2002.dbf", "?" ) + '"'
-   ? '  RangeRepl( "9", "0", "year2002.dbf", "?" ) == "????2??2????" ? --> "' + ;
+   ? '  RangeRepl( "9", "0", "year2002.dbf", "?" ) == "????2??2????" ? -->', '"' + ;
         RangeRepl( "9", "0", "year2002.dbf", "?" ) + '"'
-   ? '  RangeRepl( "0", "9", "yearcurr.dbf", "?" ) == "yearcurr.dbf" ? --> "' + ;
+   ? '  RangeRepl( "0", "9", "yearcurr.dbf", "?" ) == "yearcurr.dbf" ? -->', '"' + ;
         RangeRepl( "0", "9", "yearcurr.dbf", "?" ) + '"'
 
    ?
    ? "End test of RangeRepl()"
    ?
-
-   ctexit()
 
    RETURN

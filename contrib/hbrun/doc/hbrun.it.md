@@ -1,7 +1,7 @@
-Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-04\-03 03:33\)  
-Copyright \(c\) 2007\-2013, Viktor Szakáts  
-Copyright \(c\) 2003\-2007, Przemysław Czerpak  
-<http://harbour\-project\.org/>  
+Harbour Shell / Script Runner 3\.4\.0dev \(9dea61d\) \(2016\-03\-09 22:28\)  
+Copyright &copy; 2007\-2016, Viktor Szakáts  
+Copyright &copy; 2003\-2007, Przemysław Czerpak  
+<https://github\.com/vszakats/harbour\-core/>  
 Traduzione \(it\): \(inserisci qui il tuo nome\)  
 
 Sintassi:  
@@ -13,33 +13,33 @@ Descrizione:
 
   hbrun is able to run Harbour scripts \(both source and precompiled\), and it also features an interactive shell prompt\.
   
-Opzioni riportate di seguito sono disponibili da riga di comando:  
+Le opzioni riportate di seguito sono disponibili da riga di comando:  
 
 
- - **\-\-hb:debug** abilita lo script debugging
+ - **\-\-hb:debug** abilita il debug dello script
 
 
  - **\-help** questo aiuto
- - **\-viewhelp** Help esteso nel visualizzatore di testo
- - **\-longhelp** aiuto esteso
- - **\-longhelpmd** Help esteso in formato [Markdown](http://daringfireball.net/projects/markdown/)
+ - **\-viewhelp** full help in text viewer
+ - **\-fullhelp** full help
+ - **\-fullhelpmd** full help in [Markdown](https://daringfireball.net/projects/markdown/) format
   
 Files:  
 
 
  - **\*\.hb** Script di Harbour
  - **\*\.hrb** Harbour binario portabile \(conosciuto anche come script Harbour precompilato\)
- - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \.\\, %APPDATA%\\\.harbour, &lt;cartella hbrun&gt;
- - **shell plugins** plugins \.hb e \.hrb per la shell interattiva di Harbour\. Possono essere situati in \[\*\]: %APPDATA%\\\.harbour\\
- - **\.hb\_history** memorizza la cronologia dei comandi per la shell interattiva di Harbour\. E' possibile disattivare la cronologia creando la prima linea 'no' \(senza virgolette e ritorno a capo\)\. E' contenuta in \[\*\]: %APPDATA%\\\.harbour\\
- - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: %APPDATA%\\\.harbour\\
+ - **hbstart\.hb** startup Harbour script for interactive Harbour shell\. It gets executed automatically on shell startup, if present\. Possible locations \(in order of precedence\) \[\*\]: \./, $HOME/\.harbour, /etc/harbour, &lt;cartella hbrun&gt;/\.\./etc/harbour, &lt;cartella hbrun&gt;/\.\./etc, &lt;cartella hbrun&gt;
+ - **shell plugins** plugins \.hb e \.hrb per la shell interattiva di Harbour\. Possono essere situati in \[\*\]: $HOME/\.harbour/
+ - **\.hb\_history** memorizza la cronologia dei comandi per la shell interattiva di Harbour\. E' possibile disattivare la cronologia creando la prima linea 'no' \(senza virgolette e ritorno a capo\)\. E' contenuta in \[\*\]: $HOME/\.harbour/
+ - **hb\_extension** list of extensions to load in interactive Harbour shell\. One extension per line, part of line beyond a '\#' character is ignored\. Alternate filename on MS\-DOS: hb\_ext\.ini\. Resides in \[\*\]: $HOME/\.harbour/
 
 
-Costanti predefinite nei sorgenti:
+Predefined constants in sources \(do not define them manually\):
 
 
  - **\_\_HBSCRIPT\_\_HBSHELL** quando un file sorgente Harbour è eseguito come uno script di shell
- - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, ecc\.\.\.
+ - **&lt;standard Harbour&gt;** \_\_PLATFORM\_\_\*, \_\_ARCH\*BIT\_\_, \_\_\*\_ENDIAN\_\_, etc\.
   
 Variabili d'ambiente:  
 
@@ -50,9 +50,9 @@ Shell API disponibile negli Harbour scripts:
 
 
  - **hbshell\_gtSelect\( \[&lt;cGT&gt;\] \) \-&gt; NIL**  
-Cambia GT\. Default \[\*\]: 'gtwin'
+Cambia GT\. Default \[\*\]: 'gttrm'
  - **hbshell\_Clipper\(\) \-&gt; NIL**  
-Abilita la modialità di compatibilità Clipper \(non\-Unicode\)
+Enable Cl\*pper compatibility \(non\-Unicode\) mode\.
  - **hbshell\_include\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
 Carica l'intestazione Harbour\.
  - **hbshell\_uninclude\( &lt;cHeader&gt; \) \-&gt; &lt;lSuccess&gt;**  
@@ -69,13 +69,15 @@ Lista dei pacchetti caricati
 hb\_DirBase\(\) not mapped to script\.
  - **hbshell\_ProgName\(\) \-&gt; &lt;cPath&gt;**  
 hb\_ProgName\(\) not mapped to script\.
+ - **hbshell\_ScriptName\(\) \-&gt; &lt;cPath&gt;**  
+Name of the script executing\.
   
 Note:  
 
 
-  - \.hb, \.prg, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be autodetected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included\. The default date format is the ISO standard: yyyy\-mm\-dd\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gtwin' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
-  - Puoi usare i tasti &lt;Alt\+V&gt; nella shell interativa di Harbour per incollare il testo dalla clipboard\.
-  - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'win' host platform\.
+  - \.hb, \.prg, \.hrb or \.dbf file passed as first parameter will be run as Harbour script\. If the filename contains no path components, it will be searched in current working directory and in PATH\. If not extension is given, \.hb and \.hrb extensions are searched, in that order\. \.dbf file will be opened automatically in shared mode and interactive Harbour shell launched\. Non\-standard extensions will be auto\-detected for source and precompiled script types\. Note, for Harbour scripts, the codepage is set to UTF\-8 by default\. The default core header 'hb\.ch' is automatically \#included at the interactive shell prompt\. The default date format is the ISO standard: yyyy\-mm\-dd\. SET EXACT is set to ON\. Set\( \_SET\_EOL \) is set to OFF\. The default GT is 'gtcgi', unless full\-screen CUI calls are detected, when 'gttrm' \[\*\] is automatically selected \(except for INIT PROCEDUREs\)\.
+  - You can use key &lt;Ctrl\+V&gt; in interactive Harbour shell to paste text from the clipboard\.
+  - Values marked with \[\*\] may be host platform and/or configuration dependent\. This help was generated on 'darwin' host platform\.
   
 Licenza:  
 
@@ -93,7 +95,7 @@ GNU General Public License for more details\.
 You should have received a copy of the GNU General Public License  
 along with this program; if not, write to the Free Software  
 Foundation, Inc\., 675 Mass Ave, Cambridge, MA 02139, USA \(or visit  
-their web site at http://www\.gnu\.org/\)\.  
+their website at https://www\.gnu\.org/\)\.  
   
 License extensions:  
   \- This source code must be kept and distributed as part  
@@ -106,8 +108,8 @@ License extensions:
   \- Source code modifications shall always be made available  
     along with binaries\.  
   \- Help text and documentation is licensed under  
-    Creative Commons Attribution\-ShareAlike 3\.0:  
-    http://creativecommons\.org/licenses/by\-sa/3\.0/  
+    Creative Commons Attribution\-ShareAlike 4\.0 International:  
+    https://creativecommons\.org/licenses/by\-sa/4\.0/  
 
   
 Autore:  

@@ -54,13 +54,14 @@
 
 HB_FUNC( HB_HASH )
 {
-   int iPCount = hb_pcount(), iParam;
+   int iPCount = hb_pcount();
 
    if( iPCount & 1 )
       hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), HB_ERR_ARGS_BASEPARAMS );
    else
    {
       PHB_ITEM pHash = hb_hashNew( NULL );
+      int iParam;
       for( iParam = 1; iParam <= iPCount; iParam += 2 )
       {
          PHB_ITEM pKey = hb_param( iParam, HB_IT_HASHKEY );

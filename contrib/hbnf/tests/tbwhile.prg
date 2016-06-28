@@ -1,11 +1,9 @@
-/*
- *   THIS DEMO SHOWS tbnames.dbf CONSISTING OF LAST, FIRST, ADDR, CITY,
- *   STATE, ZIP WITH ACTIVE INDEX ON LAST + FIRST.  IT SHOWS LAST NAME,
- *   FIRST NAME, CITY ONLY FOR THOSE LAST NAMES THAT BEGIN WITH LETTER
- *   THAT YOU INPUT FOR THE CKEY GET.
- *
- *   tbnames.dbf/.ntx ARE AUTOMATICALLY CREATED BY THIS TEST PROGRAM
- */
+/* This demo shows tbnames.dbf consisting of LAST, FIRST, ADDR, CITY,
+   STATE, ZIP with active index on LAST + FIRST.  It shows last name,
+   first name, city only for those last names that begin with letter
+   that you input for the cKey GET.
+
+   tbnames.dbf/.ntx are automatically created by this test program */
 
 #require "hbnf"
 
@@ -23,48 +21,52 @@ PROCEDURE Main()
       make_dbf()
    ENDIF
 
-   USE tbnames
+   USE tbnames.dbf
 
-   IF ! hb_dbExists( "tbnames.ntx" )
-      INDEX ON last + first TO tbnames
+   IF ! hb_dbExists( "tbnames.dbf", "tbnames.ntx" )
+      INDEX ON FIELD->LAST + FIELD->FIRST TO tbnames.ntx
    ENDIF
 
-   SET INDEX TO tbnames
+   SET INDEX TO tbnames.ntx
 
    // Pass Heading as character and Field as Block including Alias
    // To eliminate the need to use FieldWBlock() function in ft_BrwsWhl()
 
-   AAdd( aFields, { "Last Name" , {|| tbnames->Last }  } )
-   AAdd( aFields, { "First Name", {|| tbnames->First } } )
-   AAdd( aFields, { "City"      , {|| tbnames->City }  } )
+   AAdd( aFields, { "Last Name" , {|| tbnames->LAST }  } )
+   AAdd( aFields, { "First Name", {|| tbnames->FIRST } } )
+   AAdd( aFields, { "City"      , {|| tbnames->CITY }  } )
 
    cOldColor := SetColor( "N/BG" )
    CLS
    @ 5, 10 SAY "Enter First Letter Of Last Name:" GET cKey PICTURE "!"
    READ
 
-   // tbnames->Last = cKey is the Conditional Block passed to this function
+   // hb_LeftEq( tbnames->LAST, cKey ) is the Conditional Block passed to this function
    // you can make it as complicated as you want, but you would then
    // have to modify TBWhileSet() to find first and last records
    // matching your key.
-   nRecSel := ft_BrwsWhl( aFields, {|| tbnames->Last = cKey }, cKey, nFreeze, ;
+   nRecSel := ft_BrwsWhl( aFields, {|| hb_LeftEq( tbnames->LAST, cKey ) }, cKey, nFreeze, ;
       lSaveScrn, cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 )
    // Note you can use Compound Condition
-   // such as cLast =: "Pierce            " and cFirst =: "Hawkeye  "
+   // such as cLast := "Pierce            " and cFirst := "Hawkeye  "
    // by changing above block to:
-   //    {|| tbnames->Last = cLast .AND. tbnames->First = cFirst }
+   //    {|| hb_LeftEq( tbnames->LAST, cLast ) .AND. hb_LeftEq( tbnames->FIRST, cFirst ) }
    // and setting cKey := cLast + cFirst
 
    ?
    IF nRecSel == 0
       ? "Sorry, NO Records Were Selected"
    ELSE
-      ? "You Selected " + ;
-         tbnames->Last + " " + ;
-         tbnames->First + " " + ;
-         tbnames->City
+      ? "You Selected", ;
+         tbnames->LAST, ;
+         tbnames->FIRST, ;
+         tbnames->CITY
    ENDIF
    ?
+
+   dbCloseArea()
+   hb_dbDrop( "tbnames.dbf" )
+   hb_dbDrop( "tbnames.dbf", "tbnames.ntx" )
 
    WAIT
    SetColor( cOldColor )
@@ -72,7 +74,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION make_dbf()
+STATIC PROCEDURE make_dbf()
 
    LOCAL x, aData := { ;
       { "SHAEFER", "KATHRYN", "415 WEST CITRUS ROAD #150", "LOS ANGELES", "CA", "90030" }, ;
@@ -90,18 +92,21 @@ STATIC FUNCTION make_dbf()
       { "OLEANDAR", "JILL", "425 FLORAL PARK DRIVE", "FLORAL PARK", "NY", "10093"       }, ;
       { "SUGARMAN", "CANDY", "1541 SWEETHEART ROAD", "HERSHEY", "PA", "10132"           } }
 
-   dbCreate( "tbnames", { ;
-      { "LAST ", "C", 18, 0, }, ;
+   dbCreate( "tbnames.dbf", { ;
+      { "LAST" , "C", 18, 0, }, ;
       { "FIRST", "C",  9, 0, }, ;
-      { "ADDR ", "C", 28, 0, }, ;
-      { "CITY ", "C", 21, 0, }, ;
+      { "ADDR" , "C", 28, 0, }, ;
+      { "CITY" , "C", 21, 0, }, ;
       { "STATE", "C",  2, 0, }, ;
-      { "ZIP  ", "C",  9, 0, } } )
-   USE tbnames
-   FOR x := 1 TO Len( aData )
-      APPEND BLANK
-      AEval( aData[ x ], {| e, n | FieldPut( n, e ) } )
-   NEXT
-   USE
+      { "ZIP"  , "C",  9, 0, } } )
 
-   RETURN NIL
+   USE tbnames.dbf
+
+   FOR EACH x IN aData
+      dbAppend()
+      AEval( x, {| e, n | FieldPut( n, e ) } )
+   NEXT
+
+   dbCloseArea()
+
+   RETURN

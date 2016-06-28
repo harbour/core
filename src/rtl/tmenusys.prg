@@ -44,13 +44,15 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 #include "getexit.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#define IS_IN( str, list )  ( "|" + str + "|" $ "|" + list + "|" )
+#define IS_IN( str, list )  ( "|" + ( str ) + "|" $ "|" + ( list ) + "|" )
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
@@ -98,18 +100,14 @@ CREATE CLASS HBMenuSys
 
 ENDCLASS
 
-/***
-*
-*  Standard Menu System Modal handling for Menu Items
-*
-***/
+/* Standard Menu System Modal handling for Menu Items */
 METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLASS HBMenuSys
 
    LOCAL oTopMenu := ::oMenu
 
    LOCAL nReturn := 0
 
-   LOCAL nKey
+   LOCAL nKey, nKeyStd
    LOCAL nNewItem
    LOCAL lLeftDown
    LOCAL oNewMenu
@@ -140,7 +138,6 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
       hb_Scroll( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
 
       ::cMsgSaveS := SaveScreen( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
-
    ENDIF
 
    oTopMenu:select( nSelection )
@@ -155,26 +152,22 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
       DO WHILE nSelection <= 0
 
-         nKey := Inkey( 0, hb_bitOr( INKEY_KEYBOARD, INKEY_LDOWN ) )
+         nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( hb_bitOr( INKEY_KEYBOARD, INKEY_LDOWN ), HB_INKEY_EXT ) ) )
 
-         IF nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
+         IF nKeyStd == K_LBUTTONDOWN .OR. nKeyStd == K_LDBLCLK
             nSelection := oTopMenu:hitTest( MRow(), MCol() )
 
          ELSEIF ( nSelection := oTopMenu:getAccel( nKey ) ) != 0
 
          ELSEIF IsShortcut( oTopMenu, nKey, @nReturn )
             RETURN nReturn
-
          ELSE
             nSelection := 1
-
          ENDIF
-
       ENDDO
 
       oTopMenu:select( nSelection )
       oTopMenu:display()
-
    ENDIF
 
    IF ! oTopMenu:getItem( nSelection ):enabled
@@ -191,15 +184,16 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
    DO WHILE .T.
 
-      nKey := Inkey( 0 )
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
-      IF ( bKeyBlock := SetKey( nKey ) ) != NIL
+      IF ( bKeyBlock := SetKey( nKey ) ) != NIL .OR. ;
+         ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock, ProcName( 1 ), ProcLine( 1 ), "" )
          LOOP
       ENDIF
 
       DO CASE
-      CASE nKey == K_MOUSEMOVE
+      CASE nKeyStd == K_MOUSEMOVE
 
          IF lLeftDown
 
@@ -226,12 +220,10 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
                   ::PushMenu()
                   ::ShowMsg( .T. )
                ENDIF
-
             ENDIF
-
          ENDIF
 
-      CASE nKey == K_DOWN
+      CASE nKeyStd == K_DOWN
 
          IF ::oMenu:ClassName() == "TOPBARMENU"
             IF ::PushMenu()
@@ -247,7 +239,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ::ShowMsg( .T. )
          ENDIF
 
-      CASE nKey == K_UP
+      CASE nKeyStd == K_UP
 
          IF !( ::oMenu:ClassName() == "TOPBARMENU" )
             nTemp := ::oMenu:getPrev()
@@ -257,14 +249,14 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ::oMenu:select( nTemp )
             ::oMenu:display()
             ::ShowMsg( .T. )
-
          ENDIF
 
-      CASE nKey == K_LEFT
+      CASE nKeyStd == K_LEFT
 
          IF ( lSubMenu := ( ::nMenuLevel > 1 ) )
             ::PopMenu()
          ENDIF
+
          IF ::oMenu:ClassName() == "TOPBARMENU"
             nTemp := ::oMenu:getPrev()
             IF nTemp == 0
@@ -278,7 +270,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          ENDIF
          ::ShowMsg( .T. )
 
-      CASE nKey == K_RIGHT
+      CASE nKeyStd == K_RIGHT
 
          IF ( lSubMenu := ( ::nMenuLevel > 1 ) )
             ::PopMenu()
@@ -297,7 +289,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          ENDIF
          ::ShowMsg( .T. )
 
-      CASE nKey == K_ENTER
+      CASE nKeyStd == K_ENTER
 
          IF ::PushMenu()
             ::ShowMsg( .T. )
@@ -309,23 +301,21 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ENDIF
          ENDIF
 
-      CASE nKey == K_ESC // go to previous menu
+      CASE nKeyStd == K_ESC  // go to previous menu
 
          IF ::PopMenu()
             ::oMenu:display()
             ::ShowMsg( .T. )
          ELSE
-
             IF IS_IN( ::oMenu:ClassName(), "POPUPMENU|HB_POPUPMENU" )
                ::oMenu:close()
             ENDIF
 
-            nReturn := -1 // Bail out if at the top menu item
+            nReturn := -1  // Bail out if at the top menu item
             EXIT
-
          ENDIF
 
-      CASE nKey == K_LBUTTONDOWN
+      CASE nKeyStd == K_LBUTTONDOWN
 
          IF ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem )
 
@@ -369,7 +359,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
          lLeftDown := .T.
 
-      CASE nKey == K_LBUTTONUP
+      CASE nKeyStd == K_LBUTTONUP
 
          lLeftDown := .F.
 
@@ -399,7 +389,6 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
                ENDIF
             ENDIF
             ::ShowMsg( .T. )
-
          ENDIF
 
       CASE IsShortcut( oTopMenu, nKey, @nReturn )
@@ -438,7 +427,6 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          ENDIF
 
       ENDCASE
-
    ENDDO
 
    IF ::lMsgFlag
@@ -452,12 +440,8 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
    RETURN nReturn
 
-/***
-*
-*  Increment ::nMenuLevel and optionally select first item.
-*  If selected MenuItem IsPopUp, assign ::oMenu.
-*
-***/
+/* Increment ::nMenuLevel and optionally select first item.
+   If selected MenuItem IsPopUp, assign ::oMenu. */
 METHOD PushMenu() CLASS HBMenuSys
 
    LOCAL oNewMenu := ::oMenu:getItem( ::oMenu:current )
@@ -473,16 +457,11 @@ METHOD PushMenu() CLASS HBMenuSys
       ENDIF
 
       RETURN .T.
-
    ENDIF
 
    RETURN .F.
 
-/***
-*
-*  Close SubMenuItem and Return to the upper MenuItem level.
-*
-***/
+/* Close SubMenuItem and Return to the upper MenuItem level. */
 METHOD PopMenu() CLASS HBMenuSys
 
    IF ::nMenuLevel > 1
@@ -494,11 +473,7 @@ METHOD PopMenu() CLASS HBMenuSys
 
    RETURN .F.
 
-/***
-*
-*  Close PopUp Child MenuItem and Return to the upper MenuItem level.
-*
-***/
+/* Close PopUp Child MenuItem and Return to the upper MenuItem level. */
 METHOD PopChild( nNewLevel ) CLASS HBMenuSys
 
    LOCAL oOldMenuItem
@@ -511,16 +486,11 @@ METHOD PopChild( nNewLevel ) CLASS HBMenuSys
          ::nMenuLevel := nNewLevel
          RETURN .T.
       ENDIF
-
    ENDIF
 
    RETURN .F.
 
-/***
-*
-*  Close all Menus below Top Menu and Return to upper MenuItem level.
-*
-***/
+/* Close all Menus below Top Menu and Return to upper MenuItem level. */
 METHOD PopAll() CLASS HBMenuSys
 
    IF ::aMenuList[ 2 ] != NIL
@@ -532,11 +502,7 @@ METHOD PopAll() CLASS HBMenuSys
 
    RETURN .T.
 
-/***
-*
-*  Eval() the Data block if selected MenuItem is ! IsPopUp.
-*
-***/
+/* Eval() the Data block if selected MenuItem is ! IsPopUp. */
 METHOD Execute() CLASS HBMenuSys
 
    LOCAL oNewMenu := ::oMenu:getItem( ::oMenu:current )
@@ -573,17 +539,12 @@ METHOD Execute() CLASS HBMenuSys
       ENDIF
 
       RETURN oNewMenu:Id
-
    ENDIF
 
    RETURN 0
 
-/***
-*
-*  Test to find the Mouse location.
-*  Note: Formal parameters received here were passed by reference.
-*
-***/
+/* Test to find the Mouse location.
+   NOTE: Formal parameters received here were passed by reference. */
 METHOD MHitTest( oNewMenu, nNewLevel, nNewItem ) CLASS HBMenuSys
 
    FOR nNewLevel := ::nMenuLevel TO 1 STEP -1
@@ -591,25 +552,21 @@ METHOD MHitTest( oNewMenu, nNewLevel, nNewItem ) CLASS HBMenuSys
       oNewMenu := ::aMenuList[ nNewLevel ]
       nNewItem := oNewMenu:hitTest( MRow(), MCol() )
 
-      IF nNewItem < 0
-         RETURN .F. // Test for the mouse on Menu separator or border
-      ELSEIF nNewItem > 0 .AND. oNewMenu:getItem( nNewItem ):enabled
-         RETURN .T. // Test for the mouse on an enabled item in the menu
-      ENDIF
-
+      DO CASE
+      CASE nNewItem < 0
+         RETURN .F.  // Test for the mouse on Menu separator or border
+      CASE nNewItem > 0 .AND. oNewMenu:getItem( nNewItem ):enabled
+         RETURN .T.  // Test for the mouse on an enabled item in the menu
+      ENDCASE
    NEXT
 
    RETURN .F.
 
-/***
-*
-*  Erase and Show Messages.
-*  Erase Message then ::ShowMsg() if lMode is .T.
-*  Only erases Menu Message if lMode is .F.
-*  SaveScreen()/RestScreen() is used for the
-*  Message area in both text or graphics mode.
-*
-***/
+/* Erase and Show Messages.
+   Erase Message then ::ShowMsg() if lMode is .T.
+   Only erases Menu Message if lMode is .F.
+   SaveScreen()/RestScreen() is used for the
+   Message area in both text or graphics mode. */
 METHOD ShowMsg( lMode ) CLASS HBMenuSys
 
    LOCAL nCurrent
@@ -628,12 +585,11 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
          ( nCurrent := ::oMenu:current ) != 0 .AND. ;
          ! Empty( cMsg := ::oMenu:getItem( nCurrent ):message )
 
-         hb_DispOutAt( ::nMsgRow, ::nMsgLeft, PadC( cMsg, ::nMsgRight - ::nMsgLeft + 1 ), ::cMsgColor )
+         hb_DispOutAt( ::nMsgRow, ::nMsgLeft, hb_UPadC( cMsg, ::nMsgRight - ::nMsgLeft + 1 ), ::cMsgColor )
       ENDIF
 
       ::cOldMessage := cMsg
       ::lOldMsgFlag := ::lMsgFlag
-
    ENDIF
 
    RETURN .T.
@@ -644,7 +600,7 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
 METHOD GetMsgArray() CLASS HBMenuSys
    RETURN {, ::nMsgRow, ::nMsgLeft, ::nMsgRight, ::cMsgColor, , , , , }
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD New( oMenu ) CLASS HBMenuSys
 

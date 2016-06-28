@@ -48,14 +48,13 @@
 
 #include "inkey.ch"
 
-PROCEDURE Main( ... )
+PROCEDURE Main()
 
-   LOCAL cTok
    LOCAL cHostName := "localhost"
    LOCAL cUser := "root"
-   LOCAL cPassWord := ""
-   LOCAL cDataBase, cTable, cFile
-   LOCAL aDbfStruct, i
+   LOCAL cPassword := ""
+   LOCAL cDatabase, cTable, cFile
+   LOCAL i
    LOCAL lCreateTable := .F.
    LOCAL oServer, oTable, oRecord
 
@@ -65,58 +64,39 @@ PROCEDURE Main( ... )
    // now DBF (I mean the one able to handle .dbt-s :-))
    rddSetDefault( "DBF" )
 
-   IF PCount() < 6
-      help()
-      QUIT
-   ENDIF
-
-   i := 1
    // Scan parameters and setup workings
-   DO WHILE i <= PCount()
-
-      cTok := hb_PValue( i++ )
-
-      DO CASE
-      CASE cTok == "-h"
-         cHostName := hb_PValue( i++ )
-
-      CASE cTok == "-d"
-         cDataBase := hb_PValue( i++ )
-
-      CASE cTok == "-t"
-         cTable := hb_PValue( i++ )
-
-      CASE cTok == "-f"
-         cFile := hb_PValue( i++ )
-
-      CASE cTok == "-u"
-         cUser := hb_PValue( i++ )
-
-      CASE cTok == "-p"
-         cPassWord := hb_PValue( i++ )
-
-      CASE cTok == "-c"
-         lCreateTable := .T.
-
+   FOR i := 1 TO PCount()
+      SWITCH hb_PValue( i )
+      CASE "-h" ; cHostName := hb_PValue( ++i ) ; EXIT
+      CASE "-d" ; cDatabase := hb_PValue( ++i ) ; EXIT
+      CASE "-t" ; cTable := AllTrim( hb_PValue( ++i ) ) ; EXIT
+      CASE "-f" ; cFile := hb_PValue( ++i ) ; EXIT
+      CASE "-u" ; cUser := hb_PValue( ++i ) ; EXIT
+      CASE "-p" ; cPassword := hb_PValue( ++i ) ; EXIT
+      CASE "-c" ; lCreateTable := .T. ; EXIT
       OTHERWISE
          help()
-         QUIT
-      ENDCASE
-   ENDDO
+         RETURN
+      ENDSWITCH
+   NEXT
 
-   dbUseArea( .T.,, cFile, "dbffile",, .T. )
-   aDbfStruct := dbffile->( dbStruct() )
-
-   oServer := TMySQLServer():New( cHostName, cUser, cPassWord )
-   IF oServer:NetErr()
-      ? oServer:Error()
-      QUIT
+   IF Empty( cTable ) .OR. HB_ISNULL( cFile ) .OR. Empty( cDatabase )
+      help()
+      RETURN
    ENDIF
 
-   oServer:SelectDB( cDataBase )
+   USE ( cFile ) SHARED READONLY
+
+   oServer := TMySQLServer():New( cHostName, cUser, cPassword )
    IF oServer:NetErr()
       ? oServer:Error()
-      QUIT
+      RETURN
+   ENDIF
+
+   oServer:SelectDB( cDatabase )
+   IF oServer:NetErr()
+      ? oServer:Error()
+      RETURN
    ENDIF
 
    IF lCreateTable
@@ -124,61 +104,62 @@ PROCEDURE Main( ... )
          oServer:DeleteTable( cTable )
          IF oServer:NetErr()
             ? oServer:Error()
-            QUIT
+            RETURN
          ENDIF
       ENDIF
-      oServer:CreateTable( cTable, aDbfStruct )
+      oServer:CreateTable( cTable, dbStruct() )
       IF oServer:NetErr()
          ? oServer:Error()
-         QUIT
+         RETURN
       ENDIF
    ENDIF
 
    // Initialize MySQL table
    oTable := oServer:Query( "SELECT * FROM " + cTable + " LIMIT 1" )
    IF oTable:NetErr()
-      Alert( oTable:Error() )
-      QUIT
+      ? oTable:Error()
+      RETURN
    ENDIF
 
-   DO WHILE ! dbffile->( Eof() ) .AND. Inkey() != K_ESC
+   DO WHILE ! Eof() .AND. hb_keyStd( Inkey() ) != K_ESC
 
       oRecord := oTable:GetBlankRow()
 
-      FOR i := 1 TO dbffile->( FCount() )
-         oRecord:FieldPut( i, dbffile->( FieldGet( i ) ) )
+      FOR i := 1 TO FCount()
+         oRecord:FieldPut( i, FieldGet( i ) )
       NEXT
 
       oTable:Append( oRecord )
       IF oTable:NetErr()
-         Alert( oTable:Error() )
+         ? oTable:Error()
       ENDIF
 
-      dbffile->( dbSkip() )
+      dbSkip()
 
-      DevPos( Row(), 1 )
-      IF ( dbffile->( RecNo() ) % 100 ) == 0
-         DevOut( "imported recs: " + hb_ntos( dbffile->( RecNo() ) ) )
+      IF RecNo() % 100 == 0
+         DevPos( Row(), 1 )
+         DevOut( "imported recs:", hb_ntos( RecNo() ) )
       ENDIF
    ENDDO
 
-   dbffile->( dbCloseArea() )
+   dbCloseArea()
+
    oTable:Destroy()
    oServer:Destroy()
 
    RETURN
 
-PROCEDURE Help()
+STATIC PROCEDURE Help()
 
-   ? "dbf2MySQL - dbf file to MySQL table conversion utility"
+   ? "dbf2mysq - dbf file to MySQL table conversion utility"
    ? "-h hostname (default: localhost)"
    ? "-u user (default: root)"
    ? "-p password (default no password)"
-   ? "-d name of database to use"
-   ? "-t name of table to add records to"
+   ? "-d name of database to use (required)"
+   ? "-t name of table to add records to (required)"
    ? "-c delete existing table and create a new one"
-   ? "-f name of .dbf file to import"
+   ? "-f name of .dbf file to import (required)"
    ? "all parameters but -h -u -p -c are mandatory"
-   ? ""
+   ?
 
    RETURN

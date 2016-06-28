@@ -1,11 +1,10 @@
-/*
- * ScrollBar class test
- *
- * Example donated by Diego Pego,
- * modified by Alejandro de Garate
- */
+/* Example donated by Diego Pego, modified by Alejandro de Garate */
 
-/* UTF-8 */
+/* ScrollBar class test */
+
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
 
 #include "directry.ch"
 #include "achoice.ch"
@@ -19,12 +18,6 @@
 #endif
 
 PROCEDURE Main()
-
-   InitScrlBar()
-
-   RETURN
-
-FUNCTION InitScrlBar()
 
    LOCAL tmpFileList, i
 
@@ -41,8 +34,8 @@ FUNCTION InitScrlBar()
    @  4, 28 SAY "            Directory            " COLOR "W+/B"
    @  5, 28, 15, 60 BOX B_THIN + " " COLOR "W/W*"
 
-   // get the current folder files to display on the aChoice menu
-   tmpFileList := Directory()
+   /* get files of the current directory to display them on the AChoice() menu */
+   tmpFileList := hb_vfDirectory()
 
    FOR i := 1 TO Len( tmpFileList )
       AAdd( aFileList, tmpFileList[ i ][ F_NAME ] )
@@ -53,23 +46,23 @@ FUNCTION InitScrlBar()
    filesScroll:total := Len( aFileList )
 
    filesScroll:colorSpec := "W+/W, W+/W"
-   SET COLOR TO "N/W*, W+/B,,,W/N"
+   SetColor( "N/W*, W+/B,,,W/N" )
 
    filesScroll:display()
 
    i := AChoice( 6, 29, 14, 59, aFileList, , {| modo | updateFilesScroll( modo, aFileList, filesScroll ) } )
 
    @ MaxRow() - 1, 0 SAY iif( i < 1, "", aFileList[ i ] ) COLOR "N/W*"
-   SET COLOR TO
+   SetColor( "" )
    @ MaxRow(), 0
 
-   RETURN 0
+   RETURN
 
-// function used to update scrollbar
+/* function used to update scrollbar */
 
-STATIC FUNCTION updateFilesScroll( modo, aFileList, filesScroll )
+STATIC FUNCTION updateFilesScroll( nMode, aFileList, filesScroll )
 
-   LOCAL newPos, valRet := AC_CONT   // Default to continue
+   LOCAL newPos, valRet := AC_CONT   /* Default to continue */
    LOCAL nLastKey := LastKey()
 
    newPos := filesScroll:current
@@ -80,18 +73,18 @@ STATIC FUNCTION updateFilesScroll( modo, aFileList, filesScroll )
    CASE nLastKey == K_CTRL_PGDN
       newPos := filesScroll:total
    CASE nLastKey == K_CTRL_HOME
-      newPos := newPos - ( filesScroll:barLength + 1 )
+      newPos -= filesScroll:barLength + 1
    CASE nLastKey == K_CTRL_END
-      newPos := newPos + ( filesScroll:barLength + 1 )
+      newPos += filesScroll:barLength + 1
    CASE nLastKey == K_PGUP
-      newPos := newPos - ( filesScroll:barLength + 1 )
+      newPos -= filesScroll:barLength + 1
    CASE nLastKey == K_PGDN
-      newPos := newPos + ( filesScroll:barLength + 1 )
+      newPos += filesScroll:barLength + 1
    CASE nLastKey == K_UP
       newPos--
    CASE nLastKey == K_DOWN
       newPos++
-   CASE modo == AC_EXCEPT
+   CASE nMode == AC_EXCEPT
       DO CASE
       CASE nLastKey == K_ENTER
          valRet := AC_SELECT
@@ -102,11 +95,12 @@ STATIC FUNCTION updateFilesScroll( modo, aFileList, filesScroll )
       ENDCASE
    ENDCASE
 
-   IF newPos < 1
+   DO CASE
+   CASE newPos < 1
       newPos := 1
-   ELSEIF newPos >= filesScroll:total
+   CASE newPos >= filesScroll:total
       newPos := filesScroll:total
-   ENDIF
+   ENDCASE
 
    filesScroll:current := newPos
    filesScroll:update()

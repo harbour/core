@@ -65,7 +65,7 @@
 
 #include "ace.h"
 
-/* Autodetect ACE version. */
+/* Auto-detect ACE version. */
 #if   defined( ADS_ROOT_DD_ALIAS )
    #define _ADS_LIB_VERSION  1110 /* or upper */
 #elif defined( ADS_GET_FORMAT_WEB )
@@ -86,9 +86,11 @@
    #define _ADS_LIB_VERSION  710
 #elif defined( ADS_FTS_INDEX_ORDER )
    #define _ADS_LIB_VERSION  700
-#elif defined( ADS_COMPRESS_ALWAYS )
+#elif defined( ADS_TABLE_PERM_READ )
    #define _ADS_LIB_VERSION  620
-#elif defined( ADS_READ_ALL_COLUMNS )
+#elif defined( ADS_COMPRESS_ALWAYS )
+   #define _ADS_LIB_VERSION  612
+#elif defined( ADS_READ_ALL_COLUMNS )  /* tested with 6.11 */
    #define _ADS_LIB_VERSION  610
 #elif defined( ADS_USER_DEFINED )
    #define _ADS_LIB_VERSION  600
@@ -112,23 +114,18 @@ HB_EXTERN_BEGIN
 UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8 * pucFileName );
 #endif
 
-/*
- *  ADS WORKAREA
- *  --------
- *  The Workarea Structure of Advantage Database Server RDD
- *
- */
+/* ADS WORKAREA
+   The Workarea Structure of Advantage Database Server RDD */
 
 typedef struct _ADSAREA_
 {
    AREA area;
 
-   /*
-    *  ADS's additions to the workarea structure
+   /* ADS's additions to the workarea structure
     *
-    *  Warning: The above section MUST match WORKAREA exactly!  Any
-    *  additions to the structure MUST be added below, as in this
-    *  example.
+    * Warning: The above section MUST match WORKAREA exactly!  Any
+    * additions to the structure MUST be added below, as in this
+    * example.
     */
 
    LPDBRELINFO lpdbPendingRel;    /* Pointer to parent rel struct */
@@ -167,9 +164,9 @@ typedef ADSAREA * ADSAREAP;
 #define HB_RDD_ADS_VERSION_STRING  "ADS RDD 1.4"
 
 #if defined( HB_OS_WIN )
-#  define ADS_USE_OEM_TRANSLATION
+   #define ADS_USE_OEM_TRANSLATION
 #else
-#  undef ADS_USE_OEM_TRANSLATION
+   #undef ADS_USE_OEM_TRANSLATION
 #endif
 
 #define HB_ADS_PARCONNECTION( n )     ( ( ADSHANDLE ) hb_parnintdef( n, hb_ads_getConnection() ) )
@@ -212,9 +209,9 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
                                          UNSIGNED32 * pulLen );
 
 #else
-#  define hb_adsOemToAnsi( s, l )  ( ( char * ) HB_UNCONST( s ) )
-#  define hb_adsAnsiToOem( s, l )  ( ( char * ) HB_UNCONST( s ) )
-#  define hb_adsOemAnsiFree( s )
+   #define hb_adsOemToAnsi( s, l )  ( ( char * ) HB_UNCONST( s ) )
+   #define hb_adsAnsiToOem( s, l )  ( ( char * ) HB_UNCONST( s ) )
+   #define hb_adsOemAnsiFree( s )
 #endif
 
 HB_EXTERN_END

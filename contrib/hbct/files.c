@@ -1,16 +1,12 @@
 /*
- * CT3 files functions
+ * CT3 files functions: SetFAttr()
  *
- * SetFattr()
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *
- * SetFDaTi(), FileSMax(), FileDelete()
+ *    SetFDaTi(), FileSMax(), FileDelete()
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- *
- * FileSeek(), FileSize(), FileAttr(), FileTime(), FileDate()
- * FileMove(), FileSMax(),
- * DeleteFile(), RenameFile()
- *
+ *    FileSeek(), FileSize(), FileAttr(), FileTime(), FileDate()
+ *    FileMove(), FileSMax(),
+ *    DeleteFile(), RenameFile()
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -64,17 +60,17 @@
 #include "ctdisk.ch"
 
 #if defined( __DJGPP__ )
-#  include <dpmi.h>
-#  include <go32.h>
-#  include <sys/farptr.h>
-#  include <sys/param.h>
+   #include <dpmi.h>
+   #include <go32.h>
+   #include <sys/farptr.h>
+   #include <sys/param.h>
 #endif
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-#  include <sys/types.h>
-#  include <utime.h>
-#  include <unistd.h>
-#  include <time.h>
+   #include <sys/types.h>
+   #include <utime.h>
+   #include <unistd.h>
+   #include <time.h>
 #endif
 
 typedef struct
@@ -187,7 +183,7 @@ HB_FUNC( SETFATTR )
 {
    int iResult;
 
-   if( hb_fsSetAttr( hb_parcx( 1 ), hb_parnldef( 2, HB_FA_ARCHIVE ) ) )
+   if( hb_fileAttrSet( hb_parcx( 1 ), hb_parnldef( 2, HB_FA_ARCHIVE ) ) )
       iResult = 0;
    else
       iResult = -1;
@@ -202,13 +198,17 @@ HB_FUNC( SETFDATI )
 
    if( szFile && *szFile )
    {
-      PHB_ITEM pDate, pTime;
       long lJulian, lMillisec;
 
       if( HB_ISTIMESTAMP( 1 ) )
-         hb_partdt( &lJulian, &lMillisec, 1 );
+      {
+         if( ! hb_partdt( &lJulian, &lMillisec, 1 ) )
+            lJulian = lMillisec = 0;  /* to silence Coverity analyzer */
+      }
       else
       {
+         PHB_ITEM pDate, pTime;
+
          pDate = hb_param( 2, HB_IT_DATE );
          if( pDate )
             pTime = hb_param( 3, HB_IT_STRING );
@@ -227,7 +227,7 @@ HB_FUNC( SETFDATI )
          else
             lMillisec = -1;
       }
-      fResult = hb_fsSetFileTime( szFile, lJulian, lMillisec );
+      fResult = hb_fileTimeSet( szFile, lJulian, lMillisec );
    }
 
    hb_retl( fResult );
@@ -282,15 +282,15 @@ HB_FUNC( FILEDELETE )
 
 HB_FUNC( FILEMOVE )
 {
-   hb_retnint( hb_fsRename( hb_parcx( 1 ),
-                            hb_parcx( 2 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
+   hb_retnint( hb_fileRename( hb_parcx( 1 ),
+                              hb_parcx( 2 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
 }
 
 HB_FUNC_TRANSLATE( RENAMEFILE, FILEMOVE )
 
 HB_FUNC( DELETEFILE )
 {
-   hb_retnint( hb_fsDelete( hb_parcx( 1 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
+   hb_retnint( hb_fileDelete( hb_parcx( 1 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
 }
 
 HB_FUNC( FILESMAX )

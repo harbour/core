@@ -6,6 +6,6 @@ INIT PROCEDURE Init()
 
 PROCEDURE Main()
 
-   ? "Should NEVER see this message!!!"
+   ? "Should NEVER see this message!"
 
    RETURN

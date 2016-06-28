@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 #include "button.ch"
@@ -75,7 +77,7 @@ CREATE CLASS PushButton FUNCTION HBPushButton
    METHOD display()
    METHOD hitTest( nMRow, nMCol )
    METHOD killFocus()
-   METHOD select( nPos )
+   METHOD select( nKey )
    METHOD setFocus()
 
    METHOD bitmap( cBitmap ) SETGET
@@ -123,24 +125,24 @@ METHOD setFocus() CLASS PushButton
 
    RETURN Self
 
-METHOD select( nPos ) CLASS PushButton
+METHOD select( nKey ) CLASS PushButton
 
-   LOCAL nCurPos := nPos
+   LOCAL nKeyGot
 
    IF ::lHasFocus
       ::lbuffer := .T.
       ::display()
 
-      IF HB_ISNUMERIC( nPos )
+      IF HB_ISNUMERIC( nKey )
 
-         IF nPos == 32
-
+         IF hb_keyChar( nKey ) == " "
             Inkey( 0.4 )
-            DO WHILE nCurPos == 32
-               nCurPos := Inkey( 0.1 )
+            DO WHILE hb_keyChar( nKey ) == " "
+               nKey := Inkey( 0.1 )
             ENDDO
          ELSE
-            DO WHILE nPos == Inkey( 0 )
+            DO WHILE nKey == hb_keyStd( nKeyGot := Inkey( 0 ) ) .OR. ;
+                     nKey == nKeyGot
             ENDDO
          ENDIF
       ENDIF
@@ -172,15 +174,15 @@ METHOD killFocus() CLASS PushButton
 METHOD hitTest( nMRow, nMCol ) CLASS PushButton
 
    LOCAL nCurrentPos := 1
-   LOCAL nLen := Len( ::cCaption )
+   LOCAL nLen := hb_ULen( ::cCaption )
    LOCAL nStyleLen
    LOCAL nAccelPos
 
-   IF ( nAccelPos := At( "&", ::cCaption ) ) > 0 .AND. nAccelPos < nLen
+   IF ( nAccelPos := hb_UAt( "&", ::cCaption ) ) > 0 .AND. nAccelPos < nLen
       nLen--
    ENDIF
 
-   IF ( nStyleLen := Len( ::cStyle ) ) == 2
+   IF ( nStyleLen := hb_ULen( ::cStyle ) ) == 2
       nLen += 2
    ELSEIF nStyleLen == 8
       nCurrentPos := 3
@@ -207,31 +209,32 @@ METHOD display() CLASS PushButton
 
    DispBegin()
 
-   IF ::lBuffer
+   DO CASE
+   CASE ::lBuffer
       cColor := hb_ColorIndex( ::cColorSpec, 2 )
-   ELSEIF ::lHasFocus
+   CASE ::lHasFocus
       cColor := hb_ColorIndex( ::cColorSpec, 1 )
-   ELSE
+   OTHERWISE
       cColor := hb_ColorIndex( ::cColorSpec, 0 )
-   ENDIF
+   ENDCASE
 
-   IF ( nPos := At( "&", cCaption ) ) == 0
-   ELSEIF nPos == Len( cCaption )
+   IF ( nPos := hb_UAt( "&", cCaption ) ) == 0
+   ELSEIF nPos == hb_ULen( cCaption )
       nPos := 0
    ELSE
-      cCaption := Stuff( cCaption, nPos, 1, "" )
+      cCaption := hb_UStuff( cCaption, nPos, 1, "" )
    ENDIF
 
    IF ! Empty( cStyle )
 
       nCol++
 
-      IF Len( cStyle ) == 2
-         hb_DispOutAt( ::nRow, ::nCol, SubStr( cStyle, 1, 1 ), cColor )
-         hb_DispOutAt( ::nRow, ::nCol + Len( cCaption ) + 1, SubStr( cStyle, 2, 1 ), cColor )
+      IF hb_ULen( cStyle ) == 2
+         hb_DispOutAt( ::nRow, ::nCol, hb_USubStr( cStyle, 1, 1 ), cColor )
+         hb_DispOutAt( ::nRow, ::nCol + hb_ULen( cCaption ) + 1, hb_USubStr( cStyle, 2, 1 ), cColor )
       ELSE
          nRow++
-         hb_DispBox( ::nRow, ::nCol, ::nRow + 2, ::nCol + Len( cCaption ) + 1, cStyle, cColor )
+         hb_DispBox( ::nRow, ::nCol, ::nRow + 2, ::nCol + hb_ULen( cCaption ) + 1, cStyle, cColor )
       ENDIF
    ENDIF
 
@@ -240,9 +243,8 @@ METHOD display() CLASS PushButton
       hb_DispOutAt( nRow, nCol, cCaption, cColor )
 
       IF nPos != 0
-         hb_DispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
+         hb_DispOutAt( nRow, nCol + nPos - 1, hb_USubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
-
    ENDIF
 
    DispEnd()
@@ -326,7 +328,7 @@ METHOD typeOut() CLASS PushButton
 METHOD style( cStyle ) CLASS PushButton
 
    IF cStyle != NIL
-      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 2 .OR. Len( cStyle ) == 8 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| HB_ISNULL( cStyle ) .OR. hb_ULen( cStyle ) == 2 .OR. hb_ULen( cStyle ) == 8 } )
    ENDIF
 
    RETURN ::cStyle
@@ -362,7 +364,7 @@ METHOD New( nRow, nCol, cCaption ) CLASS PushButton
 FUNCTION PushButton( nRow, nCol, cCaption )
    RETURN HBPushButton():New( nRow, nCol, cCaption )
 
-FUNCTION _PUSHBUTT_( cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, nSizeX, nSizeY, nCapXOff, nCapYOff, cBitmap, nBmpXOff, nBmpYOff )
+FUNCTION _PushButt_( cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, nSizeX, nSizeY, nCapXOff, nCapYOff, cBitmap, nBmpXOff, nBmpYOff )
 
    LOCAL o := HBPushButton():New( Row(), Col(), cCaption )
 

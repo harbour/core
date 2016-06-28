@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 /* NOTE: CA-Cl*pper 5.x uses DevPos(), DevOut() to display messages
          on screen. Harbour uses Disp*() functions only. [vszakats] */
 
@@ -98,7 +100,7 @@ CREATE CLASS HBLabelForm
    VAR aBandToPrint AS ARRAY
    VAR cBlank       AS STRING  INIT ""
    VAR lOneMoreBand AS LOGICAL INIT .T.
-   VAR nCurrentCol  AS NUMERIC // The current column in the band
+   VAR nCurrentCol  AS NUMERIC  // The current column in the band
 
    METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
                bWhile, nNext, nRecord, lRest, lSample )
@@ -109,7 +111,7 @@ CREATE CLASS HBLabelForm
 
 ENDCLASS
 
-METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+METHOD PROCEDURE New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lSample ) CLASS HBLabelForm
 
    LOCAL lPrintOn := .F.               // PRINTER status
@@ -148,7 +150,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    lConsoleOn := Set( _SET_CONSOLE )
    Set( _SET_CONSOLE, ! lNoConsole .AND. lConsoleOn )
 
-   IF ! Empty( cAltFile )         // To file
+   IF HB_ISSTRING( cAltFile ) .AND. ! HB_ISNULL( cAltFile )     // To file
       lExtraState := Set( _SET_EXTRA, .T. )
       cExtraFile  := Set( _SET_EXTRAFILE, cAltFile )
    ENDIF
@@ -199,7 +201,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    Set( _SET_PRINTER, lPrintOn ) // Set the printer back to prior state
    Set( _SET_CONSOLE, lConsoleOn )  // Set the console back to prior state
 
-   IF ! Empty( cAltFile )           // Set extrafile back
+   IF HB_ISSTRING( cAltFile ) .AND. ! HB_ISNULL( cAltFile )       // Set extrafile back
       Set( _SET_EXTRAFILE, cExtraFile )
       Set( _SET_EXTRA, lExtraState )
    ENDIF
@@ -210,7 +212,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
    Set( _SET_MARGIN, OldMargin )
 
-   RETURN Self
+   RETURN
 
 METHOD ExecuteLabel() CLASS HBLabelForm
 
@@ -224,7 +226,7 @@ METHOD ExecuteLabel() CLASS HBLabelForm
       IF aField != NIL
 
          cBuffer := ;
-            PadR( Eval( aField[ LF_EXP ] ), ::aLabelData[ LBL_WIDTH ] ) + ;
+            hb_UPadR( Eval( aField[ LF_EXP ] ), ::aLabelData[ LBL_WIDTH ] ) + ;
             Space( ::aLabelData[ LBL_SPACES ] )
 
          IF aField[ LF_BLANK ]
@@ -323,12 +325,14 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
    LOCAL i                                // Counters
    LOCAL cBuff      := Space( BUFFSIZE )  // File buffer
-   LOCAL nHandle                          // File handle
+   LOCAL hFile                            // File handle
    LOCAL nOffset    := FILEOFFSET         // Offset into file
    LOCAL cFieldText                       // Text expression container
    LOCAL err                              // error object
 
+#ifdef HB_CLP_STRICT
    LOCAL cPath             // iteration variable
+#endif
 
    // Create and initialize default label array
    LOCAL aLabel[ LBL_COUNT ]
@@ -343,19 +347,30 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    aLabel[ LBL_FIELDS ]  := {}             // Array of label fields
 
    // Open the label file
-   IF ( nHandle := FOpen( cLblFile ) ) == F_ERROR .AND. ;
+#ifdef HB_CLP_STRICT
+   IF ( hFile := hb_vfOpen( cLblFile, FO_READ ) ) == NIL .AND. ;
       Empty( hb_FNameDir( cLblFile ) )
 
       // Search through default path; attempt to open label file
       FOR EACH cPath IN hb_ATokens( StrTran( Set( _SET_DEFAULT ), ",", ";" ), ";" )
-         IF ( nHandle := FOpen( hb_DirSepAdd( cPath ) + cLblFile ) ) != F_ERROR
+         IF ( hFile := hb_vfOpen( hb_DirSepAdd( cPath ) + cLblFile, FO_READ ) ) != NIL
             EXIT
          ENDIF
       NEXT
    ENDIF
+#else
+   /* The Cl*pper 5.x documentation says that _SET_PATH is also
+      searched here - just like it is for .frm files -, but the
+      implementation is missing this logic. It is safe to assume
+      that the documented behavior is the intended one to maintain
+      dBase compatibility. This is fixed in Harbour, unless strict
+      compatibility is selected.
+      [vszakats] */
+   hFile := hb_vfOpen( cLblFile, HB_FO_DEFAULTS )
+#endif
 
    // File error
-   IF nHandle == F_ERROR
+   IF hFile == NIL
       err := ErrorNew()
       err:severity := ES_ERROR
       err:genCode := EG_OPEN
@@ -364,7 +379,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
       err:filename := cLblFile
       Eval( ErrorBlock(), err )
    ELSE
-      IF FRead( nHandle, @cBuff, BUFFSIZE ) > 0 .AND. FError() == 0
+      IF hb_vfRead( hFile, @cBuff, BUFFSIZE ) > 0 .AND. FError() == 0
          // Load label dimension into aLabel
          aLabel[ LBL_REMARK  ] := hb_BSubStr( cBuff, REMARKOFFSET, REMARKSIZE )
          aLabel[ LBL_HEIGHT  ] := Bin2W( hb_BSubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
@@ -391,16 +406,18 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
          NEXT
       ENDIF
 
-      FClose( nHandle )  // Close file
+      hb_vfClose( hFile )  // Close file
    ENDIF
 
    RETURN aLabel
 
-FUNCTION __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+PROCEDURE __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lSample )
 
-   RETURN HBLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
+   HBLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lSample )
+
+   RETURN
 
 STATIC PROCEDURE PrintIt( cString )
 

@@ -1,5 +1,5 @@
 /*
- * XPP compatible _TypeFile() function
+ * Xbase++ compatible _TypeFile() function
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *

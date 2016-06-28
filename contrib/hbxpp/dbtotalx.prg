@@ -1,5 +1,5 @@
 /*
- * XPP compatible dbTotal() function
+ * Xbase++ compatible dbTotal() function
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *

@@ -1,9 +1,10 @@
 /*
- * demonstration/test client code for OLE server returning to client
- *    HVM objects as OLE object. It's also test for parameters
- *    passed by reference.
+ * Demonstration/test client code for OLE server returning to client
+ * HVM objects as OLE object. It's also test for parameters
+ * passed by reference.
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *
  */
 
 #require "hbwin"
@@ -13,9 +14,11 @@ PROCEDURE Main()
    LOCAL oObject, oTime, oInfo
    LOCAL p1, p2, p3, p4, p5, p6, p7
 
-   oObject := win_oleCreateObject( "MyOleObjServer" )
+   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   IF ! Empty( oObject )
+   IF Empty( oObject := win_oleCreateObject( "MyOleObjServer" ) )
+      ? "Can not access 'MyOleObjServer' OLE server."
+   ELSE
       oTime := oObject:timer()
       ? "TIMER:"
       ? "      date:", oTime:date
@@ -36,8 +39,6 @@ PROCEDURE Main()
       ? "        p5:", p5:className() // hb_ValToExp( p5 )
       ? "        p6:", hb_ValToExp( p6 )
       ? "        p7:", hb_ValToExp( p7 )
-   ELSE
-      ? "Can not access 'MyOleObjServer' OLE server."
    ENDIF
 
    WAIT

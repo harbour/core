@@ -1,8 +1,8 @@
 /*
- * IsDbExcl() -> <lExclusive>
+ * FlagShip compatible functions
+ *    IsDbExcl() -> <lExclusive>
  *    IsDbFLock() -> <lFLocked>
  *    IsDbRLock( [ <xRec> ] ) -> <lLocked>
- * FlagShip compatible functions
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *

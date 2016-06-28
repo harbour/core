@@ -47,10 +47,5 @@
 /* Keep this function in a separate source file to make
    it possible to override from user projects. */
 
-FUNCTION tp_idle( lNewval )
-
-   IF lNewval != NIL .AND. lNewval
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
+FUNCTION tp_idle( lNewVal )
+   RETURN hb_defaultValue( lNewVal, .F. )

@@ -2,6 +2,8 @@
 #include "clipper.ch"
 #endif
 
+/* Testing warnings. Do not add HB_SYMBOL_UNUSED() or remove unused variables. */
+
 MEMVAR i
 
 PROCEDURE Main( Param1 )
@@ -15,23 +17,19 @@ PROCEDURE Main( Param1 )
 
    ? j
 
-   HB_SYMBOL_UNUSED( Param1 )
-   HB_SYMBOL_UNUSED( k )
-   HB_SYMBOL_UNUSED( i )
-
    RETURN
 
-FUNCTION Sub( j )
+STATIC PROCEDURE Sub( j )
 
    m->i := 1
    j := 3
 
-   RETURN NIL
+   RETURN
 
-FUNCTION arrvar()
+STATIC PROCEDURE arrvar()
 
 // LOCAL i := { 1 }
 
    i[ 1 ] := 2
 
-   RETURN NIL
+   RETURN

@@ -1,11 +1,8 @@
-/**
+/* Harbour Test of a HTML-Generator class.
  *
- *  Harbour Test of a HTML-Generator class.
- *
- *              Tips: - Use ShowResults to make dynamic html (to test dynamic
- *                      results, put the exe file on CGI-BIN dir or equivalent);
- *                    - Use SaveToFile to make static html page
- *
+ * Tips: - Use ShowResults to make dynamic html (to test dynamic
+ *         results, put the exe file on CGI-BIN dir or equivalent);
+ *       - Use SaveToFile to make static html page
  */
 
 #include "hbclass.ch"
@@ -17,29 +14,29 @@ PROCEDURE Main()
    oHTML:SetTitle( "Harbour Power Demonstration" )
    oHTML:AddHead( "Harbour" )
    oHTML:AddPara( "<b>Harbour</b> is xBase at its best. Have a taste today!", "left" )
-   oHTML:AddPara( "<b>L i n k s</b>", "center" )
-   oHTML:AddLink( "http://harbour-project.org", "Meet the Harbour power!" )
+   oHTML:AddPara( "<b>Links</b>", "center" )
+   oHTML:AddLink( "https://example.org", "Meet the Harbour power!" )
    oHTML:Generate()
 
+#if 0
    // Uncomment the following if you don't have a Web Server to test
    // this sample
-
-   // oHTML:SaveToFile( "test.htm" )
+   oHTML:SaveToFile( "test.htm" )
+#endif
 
    // If the above is uncommented, you may comment this line:
-
    oHTML:ShowResult()
 
    RETURN
 
-CREATE CLASS THTML
+CREATE CLASS THTML STATIC
 
-   VAR cTitle                             // Page Title
-   VAR cBody                              // HTML Body Handler
-   VAR cBGColor                           // Background Color
-   VAR cLinkColor                         // Link Color
-   VAR cvLinkColor                        // Visited Link Color
-   VAR cContent                           // Page Content Handler
+   VAR cTitle      INIT "Untitled"        // Page Title
+   VAR cBody       INIT ""                // HTML Body Handler
+   VAR cBGColor    INIT "#FFFFFF"         // Background Color
+   VAR cLinkColor  INIT "#0000FF"         // Link Color
+   VAR cvLinkColor INIT "#FF0000"         // Visited Link Color
+   VAR cContent    INIT ""                // Page Content Handler
 
    METHOD New()                           // New Method
    METHOD SetTitle( cTitle )              // Set Page Title
@@ -50,17 +47,9 @@ CREATE CLASS THTML
    METHOD ShowResult()                    // Saves Content to File
    METHOD SaveToFile( cFile )             // Show Result
 
-END CLASS
+ENDCLASS
 
 METHOD New() CLASS THTML
-
-   ::cTitle      := "Untitled"
-   ::cBGColor    := "#FFFFFF"
-   ::cLinkColor  := "#0000FF"
-   ::cvLinkColor := "#FF0000"
-   ::cContent    := ""
-   ::cBody       := ""
-
    RETURN Self
 
 METHOD SetTitle( cTitle ) CLASS THTML
@@ -83,14 +72,12 @@ METHOD AddHead( cDescr ) CLASS THTML
 
    ::cBody += "<h1>" + cDescr + "</h1>"
 
-   RETURN NIL
+   RETURN Self
 
 METHOD AddPara( cPara, cAlign ) CLASS THTML
 
-   hb_default( @cAlign, "Left" )
-
    ::cBody += ;
-      "<p align='" + cAlign + "'>" + hb_eol() + ;
+      "<p align='" + hb_defaultValue( cAlign, "Left" ) + "'>" + hb_eol() + ;
       cPara + hb_eol() + ;
       "</p>"
 
@@ -119,9 +106,6 @@ METHOD ShowResult() CLASS THTML
 
 METHOD SaveToFile( cFile ) CLASS THTML
 
-   LOCAL hFile := FCreate( cFile )
-
-   FWrite( hFile, ::cContent )
-   FClose( hFile )
+   hb_MemoWrit( cFile, ::cContent )
 
    RETURN Self

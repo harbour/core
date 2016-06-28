@@ -99,7 +99,7 @@ HB_FUNC( TABEXPAND )
       else
          cTab = 0x09;
 
-      iIgnore141 = hb_parldef( 6, 0 );
+      iIgnore141 = hb_parl( 6 );
 
       /* estimate maximum return length by assuming that EVERY tab char
          can be replaced by at most <nTabWidth> characters */
@@ -247,7 +247,7 @@ HB_FUNC( TABPACK )
       else
          cTab = 0x09;
 
-      iIgnore141 = hb_parldef( 6, 0 );
+      iIgnore141 = hb_parl( 6 );
 
       if( sStrLen == 0 )
       {

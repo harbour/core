@@ -102,6 +102,7 @@ C_SOURCES += \
    hashfunc.c \
    initexit.c \
    initsymb.c \
+   legacy.c \
    memvclip.c \
    pbyref.c \
    pcount.c \

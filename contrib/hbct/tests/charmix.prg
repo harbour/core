@@ -51,22 +51,18 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharMix()"
    ?
 
    ? "Simple tests:"
-   ? '  CharMix( "ABC", "123" )  == "A1B2C3"     ? --> "' + CharMix( "ABC", "123" )  + '"'
-   ? '  CharMix( "ABCDE", "12" ) == "A1B2C1D2E1" ? --> "' + CharMix( "ABCDE", "12" ) + '"'
-   ? '  CharMix( "AB", "12345" ) == "A1B2"       ? --> "' + CharMix( "AB", "12345" ) + '"'
-   ? '  CharMix( "HELLO", " " )  == "H E L L O " ? --> "' + CharMix( "HELLO", " " )  + '"'
-   ? '  CharMix( "HELLO", "" )   == "HELLO"      ? --> "' + CharMix( "HELLO", "" )   + '"'
+   ? '  CharMix( "ABC", "123" )  == "A1B2C3"     ? -->', '"' + CharMix( "ABC", "123" )  + '"'
+   ? '  CharMix( "ABCDE", "12" ) == "A1B2C1D2E1" ? -->', '"' + CharMix( "ABCDE", "12" ) + '"'
+   ? '  CharMix( "AB", "12345" ) == "A1B2"       ? -->', '"' + CharMix( "AB", "12345" ) + '"'
+   ? '  CharMix( "HELLO", " " )  == "H E L L O " ? -->', '"' + CharMix( "HELLO", " " )  + '"'
+   ? '  CharMix( "HELLO", "" )   == "HELLO"      ? -->', '"' + CharMix( "HELLO", "" )   + '"'
    ?
 
    ? "End test of CharMix()"
    ?
-
-   ctexit()
 
    RETURN

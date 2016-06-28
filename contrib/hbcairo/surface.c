@@ -44,9 +44,7 @@
  *
  */
 
-
 #include "hbcairo.h"
-
 
 HB_FUNC( CAIRO_SURFACE_STATUS )
 {

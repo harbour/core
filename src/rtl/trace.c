@@ -114,11 +114,11 @@ HB_FUNC( HB_TRACELEVEL )
 
 HB_FUNC( HB_TRACELOGLEVEL )
 {
-   int iOldLevel = s_traceLogLevel, iLevel;
+   int iOldLevel = s_traceLogLevel;
 
    if( HB_ISNUM( 1 ) )
    {
-      iLevel = hb_parni( 1 );
+      int iLevel = hb_parni( 1 );
       if( iLevel >= HB_TR_ALWAYS && iLevel < HB_TR_LAST )
          s_traceLogLevel = iLevel;
    }
@@ -167,6 +167,7 @@ HB_FUNC( HB_TRACESTRING )
 
       hb_trace_message( message, sizeof( message ) - 1, 1, iPCount );
 
-      HB_TRACE( HB_TR_ALWAYS, ( "%s", message ) );
+      hb_traceset( HB_TR_ALWAYS, "", 0, NULL );
+      hb_tr_trace( "%s", message );
    }
 }

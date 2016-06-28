@@ -22,7 +22,7 @@
       ft_Default( "C" )       // Switch to drive C
 
       IF !( ft_Default( "E" ) == "E" )
-         QOut( "Drive E does not exist!" )
+         ? "Drive E does not exist!"
       ENDIF
    $END$
  */

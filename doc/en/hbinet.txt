@@ -1,47 +1,8 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright (date unknown) Giancarlo Niccolai <gian@niccolai.ws>
  *    Documentation for: Harbour INET API
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * See COPYING.txt for licensing terms.
  *
  */
 
@@ -165,7 +126,7 @@
    $SYNTAX$
       hb_inetClose( <socket> ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       Returns 0 on success or -1 on error; on error, the error code is set;
       (actually, on success the socket error code is set to 1 -- socket closed )
@@ -210,7 +171,7 @@
    $SYNTAX$
       hb_inetFD( <socket> [, <lNoSocket> ] ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <lNoSocket>
    $RETURNS$
@@ -246,7 +207,7 @@
    $SYNTAX$
       hb_inetstatus( <socket> ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       Returns 1 (one) if the socket exists, -1 if it does not
    $DESCRIPTION$
@@ -280,7 +241,7 @@
    $SYNTAX$
       hb_inetErrorCode( <socket> ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       Last error code
    $DESCRIPTION$
@@ -318,7 +279,7 @@
    $SYNTAX$
       hb_inetErrorDesc( <socket> ) -> cResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       System-dependant error string
    $DESCRIPTION$
@@ -354,7 +315,7 @@
    $SYNTAX$
       hb_inetClearError( <socket> )
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $DESCRIPTION$
 
    $EXAMPLES$
@@ -386,7 +347,7 @@
    $SYNTAX$
       hb_inetCount( <socket> ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       Last socket operation character count
    $DESCRIPTION$
@@ -421,12 +382,12 @@
    $SYNTAX$
       hb_inetAddress( <socket> ) -> cResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       Server address
    $DESCRIPTION$
       Returns a string representing the remote server address in quad dot notation,
-      e.g. "192.168.1.1", or the local server address if the socket is server
+      e.g. "127.0.0.1", or the local server address if the socket is server
       side.
 
       TODO: have a version that returns a vector of 4 numbers.
@@ -459,7 +420,7 @@
    $SYNTAX$
       hb_inetPort( <socket> ) -> cResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       Port name the socket is bound to.
    $DESCRIPTION$
@@ -494,7 +455,7 @@
    $SYNTAX$
       hb_inetTimeout( <socket> [, <nTimeout> ] ) -> nPreviousTimeout
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <nTimeout> is the new socket timeout value
    $RETURNS$
@@ -530,7 +491,7 @@
    $SYNTAX$
       hb_inetClearTimeout( <socket> )
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $DESCRIPTION$
       Clears the default timeout of the given socket. Default timeout is used in all
       blocking operations.
@@ -563,7 +524,7 @@
    $SYNTAX$
       hb_inetTimeLimit( <socket> [, <nTimeLimit> ) -> NIL
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <nTimeLimit>
    $RETURNS$
@@ -599,7 +560,7 @@
    $SYNTAX$
       hb_inetClearTimeLimit( <socket> )
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $DESCRIPTION$
       Clears the default time limit of the given socket.
    $EXAMPLES$
@@ -631,7 +592,7 @@
    $SYNTAX$
       hb_inetPeriodCallback( <socket> [, <xCallback> ] ) -> xPreviousCallback
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       xCallback a new periodic callback
    $RETURNS$
@@ -670,7 +631,7 @@
    $SYNTAX$
       hb_inetClearPeriodCallback( <socket> )
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $DESCRIPTION$
 
    $EXAMPLES$
@@ -702,7 +663,7 @@
    $SYNTAX$
       hb_inetGetSndBufSize( <socket> ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       Returns the socket send buffer size or -1 if the socket is closed or an error occurs
    $DESCRIPTION$
@@ -736,7 +697,7 @@
    $SYNTAX$
       hb_inetGetRcvBufSize( <socket> ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       Returns the socket receive buffer size or -1 if the socket is closed or an error occurs
    $DESCRIPTION$
@@ -770,7 +731,7 @@
    $SYNTAX$
       hb_inetSetSndBufSize( <socket>, <nSize> ) -> nSize
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       nSize
    $RETURNS$
@@ -806,7 +767,7 @@
    $SYNTAX$
       hb_inetSetRcvBufSize( <socket>, nSize ) -> nSize
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       nSize
    $RETURNS$
@@ -842,7 +803,7 @@
    $SYNTAX$
       hb_inetRecv( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <cResult> is the target buffer and must be passed by reference
 
@@ -894,7 +855,7 @@
    $SYNTAX$
       hb_inetRecvAll( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <cResult> is the target buffer and must be passed by reference
 
@@ -936,7 +897,7 @@
    $SYNTAX$
       hb_inetRecvLine( <socket> [, @<nBytesRead>, [, <nMaxLength> [, <nBufSize> ]]] ) -> cResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <nBytesRead> must be passed by reference
 
@@ -1000,7 +961,7 @@
    $SYNTAX$
       hb_inetRecvEndblock( <socket> [, <cBlock >[, @<nBytesRead> [, <nMaxLength> [, <nBufSize> ]]]] ) -> cResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <cBlock>
 
@@ -1045,7 +1006,7 @@
    $SYNTAX$
       hb_inetDataReady( <socket>, [ <nMillisec> ] ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <nMillisec>
    $RETURNS$
@@ -1097,7 +1058,7 @@
    $SYNTAX$
       hb_inetSend( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <cBuffer>
 
@@ -1148,7 +1109,7 @@
    $SYNTAX$
       hb_inetSendAll( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <cBuffer>
 
@@ -1193,11 +1154,11 @@
    $DESCRIPTION$
       Returns an array containing all the IP addresses associated with a given
       host name. The IP addressess returned by this funtion are strings in
-      quad dot notations, eg "192.168.1.1", and can be directly used into
+      quad dot notations, eg "127.0.0.1", and can be directly used into
       hb_inetConnectIP().
 
       cName can be any string: valid DNS names (eg.
-      "www.myserver.com"), locally available names (e.g. "localhost" or
+      "example.org"), locally available names (e.g. "localhost" or
       windows Network Neighborhood names), or even IP addresses in quad
       dot notation.
 
@@ -1335,7 +1296,7 @@
    $ARGUMENTS$
       An INET socket
    $RETURNS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $DESCRIPTION$
       Waits until a connection is available on a socket created with hb_inetServer(),
       returns a socket that can be used to communicate with the incoming client.
@@ -1385,8 +1346,8 @@
       (Second form has no return value)
    $DESCRIPTION$
       Connects to a remote server described by cAddress, that can be in
-      quad dot notation (e.g. "192.168.1.1") or in DNS name (e.g.
-      "www.xharbour.org"), using the desired port.
+      quad dot notation (e.g. "127.0.0.1") or in DNS name (e.g.
+      "example.org"), using the desired port.
 
       hb_inetConnect() uses "gethostbyname" C system call to
       find the network address of the specified server; this means that
@@ -1448,7 +1409,7 @@
       (Second form has no return value)
    $DESCRIPTION$
       Connects to a remote server described by cAddress, that can be specified
-      only in quad dot IPV4 notation (e.g. "127.0.0.1"), using the desired port.
+      only in quad dot IPv4 notation (e.g. "127.0.0.1"), using the desired port.
       This version of hb_inetConnect() does not use gethostbyname, and thus is thread
       safe and can be used in combination with hb_inetGetHosts() to have a finer
       timeout control while connecting to a server, and a finer error control.
@@ -1581,7 +1542,7 @@
    $SYNTAX$
       hb_inetDGramSend( <socket>, <cAddress>, <nPort>, <cBuffer> [, <nSize> ] ) -> nBytesSent
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <cAddress>
 
@@ -1642,7 +1603,7 @@
    $SYNTAX$
       hb_inetDGramRecv( <socket>, @<cBuffer> [, <nSize> ] ) -> nBytesRead
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
 
       <cBuffer> is the target buffer and must be passed by reference
 
@@ -1720,7 +1681,7 @@
    $SYNTAX$
       hb_inetIsSocket( <socket> ) -> lResult
    $ARGUMENTS$
-      <socket> a socket previously created  / opened
+      <socket> a socket previously created / opened
    $RETURNS$
       Returns whether the passed parameter is a socket
    $DESCRIPTION$

@@ -1,5 +1,5 @@
 /*
- * dead (unaccessible) PCODE eliminator
+ * Dead (unaccessible) PCODE eliminator
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  *

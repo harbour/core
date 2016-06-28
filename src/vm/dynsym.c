@@ -65,20 +65,20 @@ HB_SYM_HOLDER, * PHB_SYM_HOLDER;
 
 #if defined( HB_MT_VM )
 
-#  include "hbthread.h"
+   #include "hbthread.h"
 
    static HB_CRITICAL_NEW( s_dynsMtx );
-#  define HB_DYNSYM_LOCK()      hb_threadEnterCriticalSection( &s_dynsMtx )
-#  define HB_DYNSYM_UNLOCK()    hb_threadLeaveCriticalSection( &s_dynsMtx )
+   #define HB_DYNSYM_LOCK()      hb_threadEnterCriticalSection( &s_dynsMtx )
+   #define HB_DYNSYM_UNLOCK()    hb_threadLeaveCriticalSection( &s_dynsMtx )
 
-#  define hb_dynsymHandles( p )     hb_stackGetDynHandle( p )
+   #define hb_dynsymHandles( p )     hb_stackGetDynHandle( p )
 
 #else
 
-#  define HB_DYNSYM_LOCK()      do {} while( 0 )
-#  define HB_DYNSYM_UNLOCK()    do {} while( 0 )
+   #define HB_DYNSYM_LOCK()      do {} while( 0 )
+   #define HB_DYNSYM_UNLOCK()    do {} while( 0 )
 
-#  define hb_dynsymHandles( p )     ( p )
+   #define hb_dynsymHandles( p )     ( p )
 
 #endif /* HB_MT_VM */
 
@@ -671,13 +671,12 @@ HB_FUNC( __DYNSGETNAME ) /* Get name of symbol: cSymbol = __dynsymGetName( dsInd
 HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
    HB_STACK_TLS_PRELOAD
-   PHB_DYNS pDynSym;
    HB_UINT uiPos = 0;
    const char * szName = hb_parc( 1 );
 
    if( szName )
    {
-      pDynSym = hb_dynsymFindName( szName );
+      PHB_DYNS pDynSym = hb_dynsymFindName( szName );
       if( pDynSym )
       {
          HB_DYNSYM_LOCK();

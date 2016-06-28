@@ -1,5 +1,3 @@
-ChangeLog.txt ident
-
 # Default
 *         text=auto
 
@@ -24,12 +22,9 @@ ChangeLog.txt ident
 *.in      text
 *.ini     text
 *.js      text
-*.log     text
 *.m       text
 *.md      text
-*.mft     text
 *.mk      text
-*.nsi     text
 *.pem     text
 *.po      text
 *.prg     text
@@ -37,12 +32,13 @@ ChangeLog.txt ident
 *.rc      text
 *.sfc     text
 *.spec    text
-*.sx      text
+*.svg     text
 *.tpl     text
 *.txt     text
 *.ucf     text
 *.vbs     text
 *.xml     text
+*.xpm     text
 *.xsl     text
 *.y       text
 *.yml     text
@@ -55,7 +51,6 @@ ChangeLog.txt ident
 
 # Binary files
 *.a       binary
-*.afm     binary
 *.bmp     binary
 *.dat     binary
 *.dbf     binary
@@ -71,15 +66,17 @@ ChangeLog.txt ident
 *.ng      binary
 *.odt     binary
 *.pdf     binary
-*.pfb     binary
 *.png     binary
 *.sq3     binary
+*.ttf     binary
 *.tif     binary
 
 # TOTEST:
 #*.c       text diff=cpp
 #*.h       text diff=cpp
-#*.htm     text diff=html
 #*.html    text diff=html
 #*.m       text diff=objc
 #*.rb      text diff=ruby
+
+## msdosfs
+## casematters

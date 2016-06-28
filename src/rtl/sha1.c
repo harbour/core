@@ -8,7 +8,7 @@
  * NO COPYRIGHT - THIS IS 100% IN THE PUBLIC DOMAIN
  *
  * The original unmodified version is available at:
- *    ftp://ftp.funet.fi/pub/crypt/hash/sha/sha1.c
+ *    http://www.nic.funet.fi/pub/crypt/hash/sha/sha1.c
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -38,7 +38,7 @@ static sha1_quadbyte rol( sha1_quadbyte value, int bits )
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
 /* blk0() and blk() perform the initial expand. */
-/* I got the idea of expanding during the round function from SSLeay */
+/* I got the idea of expanding during the round function from OpenSSL */
 
 #ifdef HB_LITTLE_ENDIAN
 #define blk0(i) (block->l[i] = (rol(block->l[i],24)&(sha1_quadbyte)0xFF00FF00) \
@@ -107,7 +107,7 @@ static void SHA1_Transform(sha1_quadbyte state[5], sha1_byte buffer[64]) {
 
 
 /* SHA1_Init - Initialize new context */
-void hb_SHA1_Init(SHA_CTX* context) {
+void hb_SHA1_Init(HB_SHA_CTX* context) {
     /* SHA1 initialization constants */
     context->state[0] = 0x67452301;
     context->state[1] = 0xEFCDAB89;
@@ -118,12 +118,12 @@ void hb_SHA1_Init(SHA_CTX* context) {
 }
 
 /* Run your data through this. */
-void hb_SHA1_Update(SHA_CTX *context, const void *datav, unsigned int len) {
+void hb_SHA1_Update(HB_SHA_CTX *context, const void *datav, HB_SIZE len) {
     const sha1_byte * data = ( const sha1_byte * ) datav;
-    unsigned int    i, j;
+    HB_SIZE    i, j;
 
     j = (context->count[0] >> 3) & 63;
-    if ((context->count[0] += len << 3) < (len << 3)) context->count[1]++;
+    if ((context->count[0] += (sha1_quadbyte) len << 3) < ((sha1_quadbyte) len << 3)) context->count[1]++;
     context->count[1] += (len >> 29);
     if ((j + len) > 63) {
         memcpy(&context->buffer[j], data, (i = 64-j));
@@ -141,7 +141,7 @@ void hb_SHA1_Update(SHA_CTX *context, const void *datav, unsigned int len) {
 
 
 /* Add padding and return the message digest. */
-void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX *context) {
+void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], HB_SHA_CTX *context) {
     sha1_quadbyte   i;
     sha1_byte   finalcount[8];
 

@@ -46,61 +46,54 @@
 
 #include "hbclass.ch"
 
-#define TABLE_NAME_PATH ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf"
+#define TABLE_NAME_PATH  hb_DirSepToOS( "../../../tests/test.dbf" )
 #define SIMULATE_SLOW_REPLY
 
-MEMVAR _REQUEST // defined in uHTTPD
+MEMVAR _REQUEST  // defined in uHTTPD
 
 FUNCTION HRBMAIN()
 
-   LOCAL cXml, cPage, cCount, nCount
+   LOCAL cXml, nCount
    LOCAL oTM
-   LOCAL hGets := _REQUEST
 
-   hb_default( @hGets, { => } )
+   LOCAL hGets := hb_defaultValue( _REQUEST, { => } )
 
-   IF hb_HHasKey( hGets, "page" )
-
-      cPage := hGets[ "page" ]
+   DO CASE
+   CASE "page" $ hGets
 
       oTM := TableManager():New()
       IF oTM:Open()
          oTM:Read()
-         cXml := oTM:getXmlData( Val( cPage ) )
+         cXml := oTM:getXmlData( Val( hGets[ "page" ] ) )
          oTM:Close()
       ENDIF
 
-   ELSEIF hb_HHasKey( hGets, "count" )
+   CASE "count" $ hGets
 
-      cCount := hGets[ "count" ]
-
-      IF cCount == "true"
-         oTM  := TableManager():New()
+      IF hGets[ "count" ] == "true"
+         oTM := TableManager():New()
          IF oTM:Open()
             nCount := oTM:getLastRec()
             cXml := oTM:getXmlCount( nCount )
             oTM:Close()
          ENDIF
       ENDIF
-   ENDIF
+   ENDCASE
 
-   IF ! Empty( cXml )
+   IF Empty( cXml )
+      uhttpd_SetHeader( "Content-Type", "text/xml" )
+      uhttpd_Write( '<?xml version="1.0" encoding="UTF-8"?>' )
+      uhttpd_Write( "<pages><page>No Data</page></pages>" )
+   ELSE
       uhttpd_SetHeader( "Content-Type", "text/xml" )
       // cache control
       uhttpd_SetHeader( "Cache-Control", "no-cache, must-revalidate" )
       uhttpd_SetHeader( "Expires", "Mon, 26 Jul 1997 05:00:00 GMT" )
       uhttpd_Write( cXml )
-   ELSE
-      uhttpd_SetHeader( "Content-Type", "text/xml" )
-      uhttpd_Write( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
-      uhttpd_Write( "<pages><page>No Data</page></pages>" )
    ENDIF
 
-   RETURN .T. // I Handle HTML Output
+   RETURN .T.  // I Handle HTML Output
 
-/*
-  TableManager
-*/
 
 CREATE CLASS TableManager
 
@@ -113,7 +106,7 @@ CREATE CLASS TableManager
 
    METHOD New()
    METHOD Open()
-   METHOD Close()          INLINE iif( ::lOpened, ( table->( dbCloseArea() ), ::lOpened := .F. ), )
+   METHOD Close()          INLINE iif( ::lOpened, table->( dbCloseArea(), ::lOpened := .F. ), )
    METHOD Read()
    METHOD getLastRec()     INLINE table->( LastRec() )
    METHOD getXmlData( page )
@@ -123,22 +116,20 @@ CREATE CLASS TableManager
 ENDCLASS
 
 METHOD New() CLASS TableManager
-
    RETURN Self
 
 METHOD Open() CLASS TableManager
 
    LOCAL cDBF := ::cTable
 
-   // hb_ToOutDebug( "CurPath = %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
-
-   // hb_ToOutDebug( "before: cDBF = %s, Used() = %s\n", cDBF, Used() )
+   // hb_ToOutDebug( "CurPath: %s", hb_cwd() )
+   // hb_ToOutDebug( "before: cDBF: %s, Used(): %s\n", cDBF, Used() )
 
    IF ! ::lOpened
 
-      CLOSE ALL
+      dbCloseAll()
       USE ( cDBF ) ALIAS table SHARED NEW
-      // hb_ToOutDebug( "after: cDBF = %s, Used() = %s\n", cDBF, Used() )
+      // hb_ToOutDebug( "after: cDBF: %s, Used(): %s\n", cDBF, Used() )
       ::lOpened := Used()
 
    ENDIF
@@ -146,8 +137,6 @@ METHOD Open() CLASS TableManager
    RETURN ::lOpened
 
 METHOD Read() CLASS TableManager
-
-   LOCAL hMap, lOk := .F.
 
 #ifdef SIMULATE_SLOW_REPLY
    // force slow connection to simulate long reply
@@ -160,22 +149,21 @@ METHOD Read() CLASS TableManager
       // n := 0
       DO WHILE table->( ! Eof() ) // .AND. ++n < 50
 
-         hMap := { => }
-         hMap[ "recno"   ] := StrZero( table->( RecNo() ), 4 )
-         hMap[ "name"    ] := RTrim( table->first ) + " " + RTrim( table->last )
-         hMap[ "address" ] := RTrim( table->street )
-         hMap[ "city"    ] := RTrim( table->city )
-         hMap[ "state"   ] := table->state
-         hMap[ "zip"     ] := table->zip
-         AAdd( ::aData, hMap )
+         AAdd( ::aData, { ;
+            "recno"   => StrZero( table->( RecNo() ), 4 ), ;
+            "name"    => RTrim( table->first ) + " " + RTrim( table->last ), ;
+            "address" => RTrim( table->street ), ;
+            "city"    => RTrim( table->city ), ;
+            "state"   => table->state, ;
+            "zip"     => table->zip } )
+
          table->( dbSkip() )
       ENDDO
 
-      lOk := .T.
-
+      RETURN .T.
    ENDIF
 
-   RETURN lOK
+   RETURN .F.
 
 /**
  * Builds a <code>String</code> of XML representing the aData for the
@@ -214,8 +202,7 @@ METHOD getXmlData( page ) CLASS TableManager
    LOCAL startIndex, stopIndex
    LOCAL xml, i, map, key, cString
 
-   /*
-    * For simplicity, we are creating XML as a String. In a production
+   /* For simplicity, we are creating XML as a string. In a production
     * system, you should create an XML document (org.w3c.dom.Document) to
     * ensure compliance with the DOM Level 2 Core Specification.
     */
@@ -232,7 +219,7 @@ METHOD getXmlData( page ) CLASS TableManager
 
    xml := BasicXML():New()
 
-   xml:append( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
+   xml:append( '<?xml version="1.0" encoding="UTF-8"?>' )
 
    // Add the opening <table> tag
    xml:append( "<table>" )
@@ -258,17 +245,16 @@ METHOD getXmlData( page ) CLASS TableManager
       // e.g., <address>123 four street</address>
       FOR EACH KEY IN map:Keys
 
-         cString := '<cell key="' + key + '">'
-         cString += ::xmlEncode( hb_CStr( map[ key ] ) )
-         cString += "</cell>"
+         cString := ;
+            "<cell key=" + '"' + key + '"' + ">" + ;
+            ::xmlEncode( hb_CStr( map[ key ] ) ) + ;
+            "</cell>"
 
          xml:append( cString )
-
       NEXT
 
       // Add the closing </row> tag
       xml:append( "</row>" )
-
    NEXT
 
    // Add the closing </table> tag
@@ -282,12 +268,12 @@ METHOD getXmlCount( nCount ) CLASS TableManager
    LOCAL nPages := nCount / ::ROWS_PER_PAGE
 
    IF Int( nPages ) < nPages
-      nPages ++
+      nPages++
    ENDIF
 
    xml := BasicXML():New()
 
-   xml:append( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
+   xml:append( '<?xml version="1.0" encoding="UTF-8"?>' )
 
    xml:append( "<pages>" )
    FOR n := 1 TO nPages
@@ -310,8 +296,8 @@ METHOD xmlEncode( input ) CLASS TableManager
 
    LOCAL out, i, c
 
-   IF input == NIL
-      RETURN INPUT
+   IF ! HB_ISSTRING( input )
+      RETURN input
    ENDIF
 
    // Go through the input string and replace the following
@@ -354,13 +340,12 @@ METHOD xmlEncode( input ) CLASS TableManager
          out += c
          EXIT
       OTHERWISE
-         // All non-ascii
-         IF Asc( c ) <= 0x1F .OR. Asc( c ) >= 0x80
+         // All non-ASCII
+         IF Asc( c ) < 32 .OR. Asc( c ) >= 128
             out += "&#x" + hb_NumToHex( Asc( c ) ) + ";"
          ELSE
             out += c
          ENDIF
-         EXIT
       ENDSWITCH
    NEXT
 
@@ -377,7 +362,6 @@ CREATE CLASS BasicXML
 ENDCLASS
 
 METHOD New() CLASS BasicXML
-
    RETURN Self
 
 METHOD ToString() CLASS BasicXML

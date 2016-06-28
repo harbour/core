@@ -5,8 +5,6 @@
 
 -o${hb_targetname}
 
--hbx=
-
 -warn=low
 -cpp=no
 -pic
@@ -18,14 +16,13 @@
 lzf_c.c
 lzf_d.c
 
-# ORIGIN http://liblzf.plan9.de
-# VER    3.6
+# ORIGIN http://oldhome.schmorp.de/marc/liblzf.html
 # URL    http://dist.schmorp.de/liblzf/liblzf-3.6.tar.gz
 # DIFF   liblzf.dif
 #
-# MAP    LICENSE
-# MAP    Changes
-# MAP    README
+# MAP    Changes Changes.txt
+# MAP    LICENSE LICENSE.txt
+# MAP    README  README.txt
 # MAP    crc32.h
 # MAP    lzf.h
 # MAP    lzf_c.c

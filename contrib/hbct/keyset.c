@@ -1,10 +1,8 @@
 /*
- * CT3 Printer functions: - KSetIns()
- *                          - KSetCaps()
- *                          - KSetNum()
- *                          - KSetScroll()
+ * CT3 Printer functions:
+ *   KSetIns(), KSetCaps(), KSetNum(), KSetScroll()
  *
- * Copyright 2001 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
+ * Copyright 2001 Walter Negro - FOEESITRA <waltern@foeesitra.org.ar>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +50,7 @@
 
 static void SetGet( int iFlag )
 {
-   int iState = 0, iNewState;
+   int iState = 0;
    HB_GT_INFO gtInfo;
 
    memset( &gtInfo, 0, sizeof( gtInfo ) );
@@ -67,8 +65,8 @@ static void SetGet( int iFlag )
 
    if( HB_ISLOG( 1 ) )
    {
-      iNewState = hb_parl( 1 ) ? ( iState | iFlag ) : ( iState & ~iFlag );
-      gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iNewState );
+      gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal,
+         hb_parl( 1 ) ? ( iState | iFlag ) : ( iState & ~iFlag ) );
       hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    }
 

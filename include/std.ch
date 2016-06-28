@@ -1,5 +1,5 @@
 /*
- *
+ * Standard PP rules
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -74,6 +74,8 @@
 #command NEXT <v> [TO <x>] [STEP <s>]  => next
 
 #command DO <proc>.prg [WITH <p,...>]  => do <proc> [ WITH <p>]
+/* Harbour extension */
+#command DO <proc>.hb [WITH <p,...>]  => do <proc> [ WITH <p>]
 #command CALL <proc>() [WITH <p,...>]  => call <proc> [ WITH <p>]
 #command STORE <v> TO <v1> [,<vN>]     => <v1> := [ <vN> :=] <v>
 
@@ -621,7 +623,7 @@
                   [BMPOFF X <bX> Y <bY>] => ;
          SetPos( <row>, <col> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail( GetList ):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>,;
+         ATail( GetList ):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>, ;
                <{sb}>, <stl>, <sX>, <sY>, <cX>, <cY>, <bmap>, <bX>, <bY> ) ;;
          ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
@@ -635,7 +637,7 @@
          SetPos( <top>, <left> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
          ATail( GetList ):Control := _RadioGrp_( ATail( Getlist ):row, ;
-               ATail( Getlist ):col, <bottom>, <right>, <v>, <buttons>, <cap>,;
+               ATail( Getlist ):col, <bottom>, <right>, <v>, <buttons>, <cap>, ;
                <msg>, <clr>, <{fb}>, <stl> ) ;;
          ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;

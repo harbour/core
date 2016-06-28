@@ -35,10 +35,13 @@ DYNAMIC mysql_field_seek
 DYNAMIC mysql_get_host_info
 DYNAMIC mysql_get_server_info
 DYNAMIC mysql_get_server_version
+DYNAMIC mysql_get_ssl_cipher
 DYNAMIC mysql_insert_id
 DYNAMIC mysql_list_dbs
 DYNAMIC mysql_list_fields
 DYNAMIC mysql_list_tables
+DYNAMIC mysql_more_results
+DYNAMIC mysql_next_result
 DYNAMIC mysql_num_fields
 DYNAMIC mysql_num_rows
 DYNAMIC mysql_ping

@@ -1,0 +1,29 @@
+description=ICU wrapper/puller
+
+depurlbase=icu:https:/ssl.icu-project.org/
+deppkgname=icu:libicu-dev{deb}
+deppkgname=icu:libicu-devel{rpm}
+deppkgname=icu:icu4c{homebrew}
+depcontrol=icu:no{HB_BUILD_3RDEXT='no'}
+depcontrol=icu:${HB_WITH_ICU}
+depkeyhead=icu:unicode/utypes.h
+depoptional=icu:yes
+depincpath=icu:/usr/include
+depincpath=icu:/usr/local/opt/icu4c/include
+depfinish=icu
+
+incpaths=.
+
+headers=hbicu.ch
+
+{HBMK_HAS_ICU&HB_STATIC_ICU}cflags=-DU_STATIC_IMPLEMENTATION
+
+{HBMK_HAS_ICU}libs=${hb_name}
+
+{HBMK_HAS_ICU&(allwin&x86_64)}libpaths=${HB_WITH_ICU}/../lib64
+{HBMK_HAS_ICU&(allwin|os2)}libpaths=${HB_WITH_ICU}/../lib
+{HBMK_HAS_ICU&!HB_STATIC_ICU&allwin}libs=icuuc icuin icudt
+{HBMK_HAS_ICU& HB_STATIC_ICU&allwin}libs=sicuuc sicuin sicudt
+{HBMK_HAS_ICU&HB_STATIC_ICU&allgcc&!(bsd|darwin)}libs=supc++
+{HBMK_HAS_ICU&HB_STATIC_ICU&allgcc&(bsd|darwin)}libs=stdc++
+{HBMK_HAS_ICU&unix}libs=icucore

@@ -6,21 +6,25 @@
 
 -w3 -es2
 
--stop{pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm}
+-stop{pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm|(win&clang)}
 
+-depurlbase=allegro:https://github.com/liballeg/allegro5
+-deppkgname=allegro:allegro-devel{rpm}
+-deppkgname=allegro:liballegro4.2-dev{deb}
+-deppkgname=allegro:allegro4{pacman}
+-deppkgname=allegro:allegro{homebrew}
 -depkeyhead=allegro:allegro.h
 -depcontrol=allegro:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=allegro:${HB_WITH_ALLEGRO}
 -depincpath=allegro:/usr/include
+-depincpath=allegro:/usr/local/include
 -depincpath=allegro:/opt/local/include
 -depimplibs=allegro:../bin/alleg42.dll
 
 -iflag={bcc}-a
 
 # For allegro headers
--c=gnu90
-
-${hb_name}.hbx
+#-c=gnu90
 
 gtallegd.c
 ssf.c

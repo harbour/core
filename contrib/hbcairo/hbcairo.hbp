@@ -5,18 +5,27 @@
 
 -w3 -es2
 
+# Tone down warnings due to problems with cairo headers when using clang 7.00
+-warn=low{darwin&clang}
+
+# Look for these components: cairo-dev_*_win*.zip, cairo_*_win*.zip, libpng_*_win*.zip
+-depurlbase=cairo:https://cairographics.org/download/
+-deppkgname=cairo:libcairo2-dev{deb}
+-deppkgname=cairo:cairo-devel{rpm}
+-deppkgname=cairo:cairo{pacman}
+-deppkgname=cairo:cairo{homebrew}
 -depkeyhead=cairo:cairo.h
 -depcontrol=cairo:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=cairo:${HB_WITH_CAIRO}
 -depincpath=cairo:/usr/include/cairo
 -depincpath=cairo:/usr/local/include/cairo
--depincpath=cairo:/opt/local/include/cairo
+-depincpath=cairo:/usr/local/opt/cairo/include/cairo
 -depimplibs=cairo:../../bin/libcairo-2.dll
 -depimplibd=cairo:cairo
 
 -iflag={bcc}-a
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 context.c
 core.c

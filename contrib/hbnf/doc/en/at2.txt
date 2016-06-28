@@ -27,11 +27,9 @@
       cSearch := "t"
       cTarget := "This is the day that the Lord has made."
 
-      ft_At2( cSearch, cTarget )            // Returns ( 9 )
-
-      ft_At2( cSearch, cTarget, 2 )         // Returns ( 17 )
-
-      ft_At2( cSearch, cTarget, 2, .F. )    // Returns ( 9 )
+      ? ft_At2( cSearch, cTarget )            // Returns 9
+      ? ft_At2( cSearch, cTarget, 2 )         // Returns 17
+      ? ft_At2( cSearch, cTarget, 2, .F. )    // Returns 9
    $SEEALSO$
       ft_FindITh(), ft_RAt2()
    $END$
@@ -66,11 +64,9 @@
       cSearch := "t"
       cTarget := "This is the day that the Lord has made."
 
-      ft_RAt2( cSearch, cTarget )           // Returns ( 22 )
-
-      ft_RAt2( cSearch, cTarget, 2 )        // Returns ( 20 )
-
-      ft_RAt2( cSearch, cTarget, 2, .F. )   // Returns ( 22 )
+      ? ft_RAt2( cSearch, cTarget )           // Returns 22
+      ? ft_RAt2( cSearch, cTarget, 2 )        // Returns 20
+      ? ft_RAt2( cSearch, cTarget, 2, .F. )   // Returns 22
    $SEEALSO$
       ft_FindITh(), ft_At2()
    $END$

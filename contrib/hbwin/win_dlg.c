@@ -1,11 +1,8 @@
 /*
  * Windows dialogs
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *    win_PrintDlgDC()
- *
- * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    win_GetOpenFileName(), win_GetSaveFileName()
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (win_PrintDlgDC())
+ * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (win_GetOpenFileName(), win_GetSaveFileName())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,15 +45,14 @@
  *
  */
 
-#include "hbwin.h"
 #include "hbwapi.h"
 
 #if defined( __XCC__ )
-#  include <ole2.h>
+   #include <ole2.h>
 #endif
 #include <commdlg.h>
 
-/* win_PrintDlgDC( [@<cDevice>], [<nFromPage>], [<nToPage>], [<nCopies>] )
+/* win_PrintDlgDC( [@<cDevice>], [<nFromPage>], [<nToPage>], [<nCopies>], [nFlags] )
  *                -> <hDC>
  */
 HB_FUNC( WIN_PRINTDLGDC )
@@ -68,7 +64,7 @@ HB_FUNC( WIN_PRINTDLGDC )
 #if ! defined( HB_OS_WIN_CE )
    pd.lStructSize = sizeof( pd );
    pd.hwndOwner = GetActiveWindow();
-   pd.Flags = PD_RETURNDC | PD_USEDEVMODECOPIESANDCOLLATE;
+   pd.Flags = ( DWORD ) hb_parnl( 5 ) | PD_RETURNDC | PD_USEDEVMODECOPIESANDCOLLATE;
    pd.nFromPage = ( WORD ) hb_parnidef( 2, 1 );
    pd.nToPage = ( WORD ) hb_parnidef( 3, 1 );
    pd.nCopies = ( WORD ) hb_parnidef( 4, 1 );
@@ -80,7 +76,10 @@ HB_FUNC( WIN_PRINTDLGDC )
       if( pd.hDevNames )
       {
          LPDEVNAMES lpdn = ( LPDEVNAMES ) GlobalLock( pd.hDevNames );
-         HB_STORSTR( ( LPCTSTR ) lpdn + lpdn->wDeviceOffset, 1 );
+         if( lpdn )
+            HB_STORSTR( ( LPCTSTR ) lpdn + lpdn->wDeviceOffset, 1 );
+         else
+            hb_storc( NULL, 1 );
          GlobalUnlock( pd.hDevNames );
          GlobalFree( pd.hDevNames );
       }
@@ -105,16 +104,19 @@ HB_FUNC( WIN_PRINTDLGDC )
 
 static LPTSTR s_dialogPairs( int iParam, DWORD * pdwIndex )
 {
-   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING ), pArrItem;
+   PHB_ITEM pItem = hb_param( iParam, HB_IT_ARRAY | HB_IT_STRING );
    LPTSTR lpStr = NULL;
    DWORD dwMaxIndex = 0;
 
    if( pItem )
    {
-      HB_SIZE nLen, nSize, nTotal, n, n1, n2;
+      HB_SIZE nLen, n, n1;
 
       if( HB_IS_ARRAY( pItem ) )
       {
+         HB_SIZE nSize, n2;
+         PHB_ITEM pArrItem;
+
          nSize = hb_arrayLen( pItem );
          for( n = nLen = 0; n < nSize; ++n )
          {
@@ -135,7 +137,7 @@ static LPTSTR s_dialogPairs( int iParam, DWORD * pdwIndex )
          }
          if( nLen )
          {
-            nTotal = nLen + 1;
+            HB_SIZE nTotal = nLen + 1;
             lpStr = ( LPTSTR ) hb_xgrab( nTotal * sizeof( TCHAR ) );
             for( n = nLen = 0; n < nSize; ++n )
             {
@@ -246,9 +248,7 @@ static void s_GetFileName( HB_BOOL fSave )
    ofn.nMaxFile         = hbwapi_par_DWORD( 7 );
    if( ofn.nMaxFile < 0x400 )
       ofn.nMaxFile = ofn.nMaxFile == 0 ? 0x10000 : 0x400;
-   ofn.lpstrFile        = ( LPTSTR )
-                          memset( hb_xgrab( ofn.nMaxFile * sizeof( TCHAR ) ),
-                                  0, ofn.nMaxFile * sizeof( TCHAR ) );
+   ofn.lpstrFile        = ( LPTSTR ) hb_xgrabz( ofn.nMaxFile * sizeof( TCHAR ) );
 
    ofn.lpstrInitialDir  = HB_PARSTR( 3, &hInitDir, NULL );
    ofn.lpstrTitle       = HB_PARSTR( 2, &hTitle, NULL );
@@ -286,7 +286,7 @@ static void s_GetFileName( HB_BOOL fSave )
    hb_strfree( hDefExt );
 }
 
-/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  *
@@ -296,7 +296,7 @@ HB_FUNC( WIN_GETOPENFILENAME )
    s_GetFileName( HB_FALSE );
 }
 
-/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  *

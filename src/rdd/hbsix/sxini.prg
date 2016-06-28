@@ -1,7 +1,7 @@
 /*
  * SIX compatible functions:
- *          _sx_IniInit()
- *          sx_IniHeader()
+ *       _sx_IniInit()
+ *       sx_IniHeader()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

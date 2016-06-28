@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 #include "button.ch"
@@ -85,7 +87,7 @@ CREATE CLASS RadioButtn FUNCTION HBRadioButton
    METHOD sBlock( bSBlock ) SETGET
    METHOD style( cStyle ) SETGET
 
-   METHOD New( nRow, nCol, cCaption, cData ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( nRow, nCol, cCaption, cData )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -156,23 +158,23 @@ METHOD display() CLASS RadioButtn
    DispBegin()
 
    cColor := iif( ::lBuffer, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 1 ) )
-   hb_DispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ) + ;
-      iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ) + ;
-      Right( cStyle, 1 ), cColor )
+   hb_DispOutAt( ::nRow, ::nCol, hb_ULeft( cStyle, 1 ) + ;
+      iif( ::lBuffer, hb_USubStr( cStyle, 2, 1 ), hb_USubStr( cStyle, 3, 1 ) ) + ;
+      hb_URight( cStyle, 1 ), cColor )
 
    IF ! Empty( cOldCaption := ::cCaption )
 
-      IF ( nPos := At( "&", cOldCaption ) ) == 0
-      ELSEIF nPos == Len( cOldCaption )
+      IF ( nPos := hb_UAt( "&", cOldCaption ) ) == 0
+      ELSEIF nPos == hb_ULen( cOldCaption )
          nPos := 0
       ELSE
-         cOldCaption := Stuff( cOldCaption, nPos, 1, "" )
+         cOldCaption := hb_UStuff( cOldCaption, nPos, 1, "" )
       ENDIF
 
       hb_DispOutAt( ::nCapRow, ::nCapCol, cOldCaption, hb_ColorIndex( ::cColorSpec, 4 ) )
 
       IF nPos != 0
-         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cOldCaption, nPos, 1 ), iif( ::lHasfocus, hb_ColorIndex( ::cColorSpec, 6 ), hb_ColorIndex( ::cColorSpec, 5 ) ) )
+         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, hb_USubStr( cOldCaption, nPos, 1 ), iif( ::lHasfocus, hb_ColorIndex( ::cColorSpec, 6 ), hb_ColorIndex( ::cColorSpec, 5 ) ) )
       ENDIF
    ENDIF
 
@@ -184,15 +186,16 @@ METHOD isAccel( xKey ) CLASS RadioButtn
 
    LOCAL cKey
 
-   IF HB_ISSTRING( xKey )
+   DO CASE
+   CASE HB_ISSTRING( xKey )
       cKey := xKey
-   ELSEIF HB_ISNUMERIC( xKey )
+   CASE HB_ISNUMERIC( xKey )
       cKey := hb_keyChar( xKey )
-   ELSE
+   OTHERWISE
       RETURN .F.
-   ENDIF
+   ENDCASE
 
-   RETURN Len( cKey ) > 0 .AND. hb_AtI( "&" + cKey, ::cCaption ) > 0
+   RETURN ! HB_ISNULL( cKey ) .AND. hb_AtI( "&" + cKey, ::cCaption ) > 0  /* TOFIX: Use hb_UAtI() */
 
 METHOD hitTest( nMRow, nMCol ) CLASS RadioButtn
 
@@ -205,9 +208,9 @@ METHOD hitTest( nMRow, nMCol ) CLASS RadioButtn
       RETURN HTCLIENT
    ENDIF
 
-   nLen := Len( ::cCaption )
+   nLen := hb_ULen( ::cCaption )
 
-   IF ( nPos := At( "&", ::cCaption ) ) == 0 .AND. nPos < nLen
+   IF ( nPos := hb_UAt( "&", ::cCaption ) ) == 0 .AND. nPos < nLen
       nLen--
    ENDIF
 
@@ -309,7 +312,7 @@ METHOD sBlock( bSBlock ) CLASS RadioButtn
 METHOD style( cStyle ) CLASS RadioButtn
 
    IF cStyle != NIL
-      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 4 } )
+      ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| HB_ISNULL( cStyle ) .OR. hb_ULen( cStyle ) == 4 } )
    ENDIF
 
    RETURN ::cStyle
@@ -328,7 +331,7 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RadioButtn
    ::cCaption := hb_defaultValue( cCaption, "" )
    ::nCol     := nCol
    ::nRow     := nRow
-   ::cData    := cData /* NOTE: Every type is allowed here to be fully compatible */
+   ::cData    := cData  /* NOTE: Every type is allowed here to be fully compatible */
 
    IF IsDefColor()
       ::cColorSpec := "W/N,W+/N,W+/N,N/W,W/N,W/N,W+/N"

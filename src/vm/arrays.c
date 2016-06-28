@@ -2,6 +2,8 @@
  * The Array API (C level)
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_arrayIsObject(), hb_arrayCopyC(), hb_arrayGetC())
+ * Copyright 2001 Ron Pinkas <ron@profit-master.com> (hb_arrayClone(), hb_arrayFromStack(), hb_arrayFromParams())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,23 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_arrayIsObject()
- *    hb_arrayCopyC()
- *    hb_arrayGetC()
- *
- * Copyright 2001 Ron Pinkas <ron@profit-master.com>
- *    hb_arrayClone()
- *    hb_arrayFromStack()
- *    hb_arrayFromParams()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -161,7 +146,6 @@ HB_BOOL hb_arrayNew( PHB_ITEM pItem, HB_SIZE nLen ) /* creates a new array */
 {
    PHB_BASEARRAY pBaseArray;
    PHB_ITEM pItems;
-   HB_SIZE nPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_arrayNew(%p, %" HB_PFS "u)", pItem, nLen ) );
 
@@ -175,6 +159,7 @@ HB_BOOL hb_arrayNew( PHB_ITEM pItem, HB_SIZE nLen ) /* creates a new array */
     */
    if( nLen > 0 )
    {
+      HB_SIZE nPos;
       pItems = ( PHB_ITEM ) hb_xgrab( sizeof( HB_ITEM ) * nLen );
       for( nPos = 0; nPos < nLen; ++nPos )
          ( pItems + nPos )->type = HB_IT_NIL;
@@ -990,7 +975,6 @@ HB_BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       HB_SIZE nLen = pBaseArray->nLen;
       HB_SIZE nStart;
-      HB_SIZE nCount;
 
       if( pnStart && *pnStart )
          nStart = *pnStart - 1;
@@ -999,7 +983,7 @@ HB_BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
 
       if( nStart < nLen )
       {
-         nCount = nLen - nStart;
+         HB_SIZE nCount = nLen - nStart;
          if( pnCount && *pnCount < nCount )
             nCount = *pnCount;
 
@@ -1019,16 +1003,15 @@ HB_BOOL hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
       return HB_FALSE;
 }
 
-HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact )
+HB_SIZE hb_arrayScanCase( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SIZE * pnCount, HB_BOOL fExact, HB_BOOL fMatchCase )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_arrayScan(%p, %p, %p, %p, %d)", pArray, pValue, pnStart, pnCount, ( int ) fExact ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_arrayScanCase(%p, %p, %p, %p, %d, %d)", pArray, pValue, pnStart, pnCount, ( int ) fExact, ( int ) fMatchCase ) );
 
    if( HB_IS_ARRAY( pArray ) )
    {
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       HB_SIZE nLen = pBaseArray->nLen;
       HB_SIZE nStart;
-      HB_SIZE nCount;
 
       if( pnStart && *pnStart )
          nStart = *pnStart - 1;
@@ -1037,7 +1020,7 @@ HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
 
       if( nStart < nLen )
       {
-         nCount = nLen - nStart;
+         HB_SIZE nCount = nLen - nStart;
          if( pnCount && *pnCount < nCount )
             nCount = *pnCount;
 
@@ -1064,13 +1047,17 @@ HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
             }
             else if( HB_IS_STRING( pValue ) )
             {
+               int ( * phb_itemStrCmp )( PHB_ITEM, PHB_ITEM, HB_BOOL ) =
+                  fMatchCase ? hb_itemStrCmp : hb_itemStrICmp;
+
                do
                {
                   PHB_ITEM pItem = pBaseArray->pItems + nStart++;
 
                   /* NOTE: The order of the pItem and pValue parameters passed to
-                           hb_itemStrCmp() is significant, please don't change it. [vszakats] */
-                  if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, fExact ) == 0 )
+                           hb_itemStrCmp()/hb_itemStrICmp() is significant,
+                           please don't change it. [vszakats] */
+                  if( HB_IS_STRING( pItem ) && phb_itemStrCmp( pItem, pValue, fExact ) == 0 )
                      return nStart;
                }
                while( --nCount > 0 );
@@ -1206,7 +1193,6 @@ HB_SIZE hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       HB_SIZE nLen = pBaseArray->nLen;
       HB_SIZE nStart;
-      HB_SIZE nCount;
 
       if( pnStart && *pnStart )
          nStart = *pnStart - 1;
@@ -1215,7 +1201,7 @@ HB_SIZE hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB
 
       if( nStart < nLen )
       {
-         nCount = nStart + 1;
+         HB_SIZE nCount = nStart + 1;
          if( pnCount && *pnCount < nCount )
             nCount = *pnCount;
 
@@ -1387,7 +1373,6 @@ HB_BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, HB_SIZE * pnStart, HB_SI
       PHB_BASEARRAY pBaseArray = pArray->item.asArray.value;
       HB_SIZE nLen = pBaseArray->nLen;
       HB_SIZE nStart;
-      HB_SIZE nCount;
 
       if( pnStart && *pnStart )
          nStart = *pnStart - 1;
@@ -1396,7 +1381,7 @@ HB_BOOL hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, HB_SIZE * pnStart, HB_SI
 
       if( nStart < nLen )
       {
-         nCount = nLen - nStart;
+         HB_SIZE nCount = nLen - nStart;
          if( pnCount && *pnCount < nCount )
             nCount = *pnCount;
 
@@ -1439,7 +1424,6 @@ HB_BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, HB_SIZE * pnStart,
       HB_SIZE nSrcLen = pSrcBaseArray->nLen;
       HB_SIZE nDstLen = pDstBaseArray->nLen;
       HB_SIZE nStart;
-      HB_SIZE nCount;
       HB_SIZE nTarget;
 
       if( pnStart && ( *pnStart >= 1 ) )
@@ -1458,6 +1442,7 @@ HB_BOOL hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, HB_SIZE * pnStart,
       if( nSrcLen > 0 )
 #endif
       {
+         HB_SIZE nCount;
 #ifndef HB_COMPAT_C53 /* From CA-Cl*pper 5.3a */
          if( nStart > nSrcLen )
             nStart = nSrcLen;

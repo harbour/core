@@ -82,9 +82,9 @@ static const HB_GC_FUNCS s_gcX509_funcs =
    hb_gcDummyMark
 };
 
-void * hb_X509_is( int iParam )
+HB_BOOL hb_X509_is( int iParam )
 {
-   return hb_parptrGC( &s_gcX509_funcs, iParam );
+   return hb_parptrGC( &s_gcX509_funcs, iParam ) != NULL;
 }
 
 X509 * hb_X509_par( int iParam )

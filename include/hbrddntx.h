@@ -92,32 +92,32 @@ HB_EXTERN_BEGIN
 
 typedef struct _NTXHEADER     /* Header of NTX file */
 {
-   HB_BYTE  type[2];
-   HB_BYTE  version[2];
-   HB_BYTE  root[4];
-   HB_BYTE  next_page[4];
-   HB_BYTE  item_size[2];
-   HB_BYTE  key_size[2];
-   HB_BYTE  key_dec[2];
-   HB_BYTE  max_item[2];
-   HB_BYTE  half_page[2];
+   HB_BYTE  type[ 2 ];
+   HB_BYTE  version[ 2 ];
+   HB_BYTE  root[ 4 ];
+   HB_BYTE  next_page[ 4 ];
+   HB_BYTE  item_size[ 2 ];
+   HB_BYTE  key_size[ 2 ];
+   HB_BYTE  key_dec[ 2 ];
+   HB_BYTE  max_item[ 2 ];
+   HB_BYTE  half_page[ 2 ];
    HB_BYTE  key_expr[ NTX_MAX_EXP ];
-   HB_BYTE  unique[1];
-   HB_BYTE  unknown1[1];
-   HB_BYTE  descend[1];
-   HB_BYTE  unknown2[1];
+   HB_BYTE  unique[ 1 ];
+   HB_BYTE  unknown1[ 1 ];
+   HB_BYTE  descend[ 1 ];
+   HB_BYTE  unknown2[ 1 ];
    HB_BYTE  for_expr[ NTX_MAX_EXP ];
    HB_BYTE  tag_name[ NTX_MAX_TAGNAME + 2 ];
-   HB_BYTE  custom[1];
+   HB_BYTE  custom[ 1 ];
    HB_BYTE  unused[ NTX_HDR_UNUSED ];
 } NTXHEADER;
 typedef NTXHEADER * LPNTXHEADER;
 
 typedef struct
 {
-   HB_BYTE  type[2];
-   HB_BYTE  version[2];
-   HB_BYTE  root[4];
+   HB_BYTE  type[ 2 ];
+   HB_BYTE  version[ 2 ];
+   HB_BYTE  root[ 4 ];
 } NTXHEADERUPDT;
 
 typedef struct _CTXTAGITEM    /* TAG item in compound NTX (CTX) header */

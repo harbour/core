@@ -1,5 +1,5 @@
 /*
- * initialization and switch functions for CT3 math functions
+ * Initialization and switch functions for CT3 math functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -48,36 +48,34 @@
 #include "ct.h"
 #include "ctmath.h"
 
-/* ---------------- */
-/*  initialization  */
-/* ---------------- */
-int ct_math_init( void )
+#include "hbstack.h"
+
+/* --- math precision --- */
+static void s_iPrecision_init( void * cargo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "ct_math_init()" ) );
-   return 1;
+   int * piPrecision = ( int * ) cargo;
+
+   *piPrecision = 16;
 }
 
-int ct_math_exit( void )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "ct_math_exit()" ) );
-   return 1;
-}
-
-/* ---------------- */
-/*  math precision  */
-/* ---------------- */
-static int s_iPrecision = 16; /* TODO: make this thread safe */
+static HB_TSD_NEW( s_iPrecision, sizeof( int ), s_iPrecision_init, NULL );
 
 void ct_setprecision( int iPrecision )
 {
+   int * piPrecision = ( int * ) hb_stackGetTSD( &s_iPrecision );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setprecision (%i)", iPrecision ) );
-   s_iPrecision = iPrecision;
+
+   *piPrecision = iPrecision;
 }
 
 int ct_getprecision( void )
 {
+   int * piPrecision = ( int * ) hb_stackGetTSD( &s_iPrecision );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getprecision()" ) );
-   return s_iPrecision;
+
+   return *piPrecision;
 }
 
 HB_FUNC( SETPREC )

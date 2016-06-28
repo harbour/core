@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation
  *
@@ -62,7 +60,7 @@
       PROCEDURE Main()
          USE test NEW
          LABEL FORM test.lbl
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R

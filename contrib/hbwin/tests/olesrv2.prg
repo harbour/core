@@ -1,9 +1,10 @@
 /*
- * demonstration/test code for OLE server using hash array with
- *    strict item order (associative hash array) to define OLE objects
- *    with fixed message numbers (DISPIDs)
+ * Demonstration/test code for OLE server using hash array with
+ * strict item order (associative hash array) to define OLE objects
+ * with fixed message numbers (DISPIDs)
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ *
  */
 
 #define CLS_Name  "MyOleTimeServer"
@@ -11,9 +12,8 @@
 
 PROCEDURE DllMain()
 
-   LOCAL hAction
+   LOCAL hAction := { => }
 
-   hAction := { => }
    hb_HCaseMatch( hAction, .F. )
    hAction[ "DATE" ]     := @Date()          // DISPID=1
    hAction[ "TIME" ]     := @Time()          // DISPID=2

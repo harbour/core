@@ -1,5 +1,5 @@
 /*
- * example/test code for object destructors
+ * Example/test code for object destructors
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -11,22 +11,20 @@ MEMVAR P
 
 PROCEDURE Main()
 
-   LOCAL bError
+   LOCAL bError := ErrorBlock( {| oErr | myErrorHandler( oErr ) } )
 
    PUBLIC P := NIL
 
-   bError := ErrorBlock( {| oErr | myErrorHandler( oErr ) } )
-
-   ? "First simple tests when object is not destroyed by GC"
-   ? "====================================================="
+   ? "First simple tests when object is not destroyed by GC", "---"
+   ?
    SIMPLETEST( 0 )
    SIMPLETEST( 1 )
    SIMPLETEST( 2 )
    SIMPLETEST( 3 )
 
    ?
-   ? "Now object will be destroyed by GC"
-   ? "=================================="
+   ? "Now object will be destroyed by GC", "---"
+   ?
    GCFREETEST( 0 )
    GCFREETEST( 1 )
    GCFREETEST( 2 )
@@ -44,7 +42,7 @@ STATIC PROCEDURE SIMPLETEST( type )
    LOCAL o
 
    ?
-   ? "=> o := myClass():new( " + hb_ntos( type ) + " )"
+   ? "=> o := myClass():new(", hb_ntos( type ), ")"
    o := myClass():new( type )
    ? "=> o:className() ->", o:className()
    ? "=> o := NIL"
@@ -59,7 +57,7 @@ STATIC PROCEDURE GCFREETEST( type )
    LOCAL o, a
 
    ?
-   ? "=> o := myClass():new( " + hb_ntos( type ) + " )"
+   ? "=> o := myClass():new(", hb_ntos( type ), ")"
    o := myClass():new( type )
    ? "=> o:className() ->", o:className()
    ? "=> create corss reference: a := { o, NIL }; a[ 2 ] := a; a := NIL"
@@ -75,52 +73,55 @@ STATIC PROCEDURE GCFREETEST( type )
 
    RETURN
 
-STATIC FUNCTION myErrorHandler( oErr )
+STATIC PROCEDURE myErrorHandler( oErr )
 
-   ? "Error ->", hb_ntos( oErr:gencode ), ;
-      oErr:description + ":", oErr:operation
+   ? "Error ->", hb_ntos( oErr:gencode ), oErr:description + ":", oErr:operation
    BREAK oErr
 
-   RETURN NIL
+   RETURN
 
 CREATE CLASS myClass
 
-   VAR         TYPE
+   VAR         type
    VAR         var1
 
    CLASS VAR   var2
 
-   METHOD      INIT
-   DESTRUCTOR  dtor
+   METHOD      init()
+   DESTRUCTOR  dtor()
 
-END CLASS
+ENDCLASS
 
-METHOD INIT( type ) CLASS myClass
+METHOD init( type ) CLASS myClass
 
-   ? "Hi, I'm INIT method of class:", self:classname()
+   ? "Hi, I'm INIT method of class:", ::classname()
    ::type := type
 
    RETURN self
 
-PROCEDURE DTOR CLASS myClass
+PROCEDURE dtor() CLASS myClass
 
-   ? "   Hi, I'm desturctor of class: ", self:classname()
+   ? "   Hi, I'm desturctor of class:", ::classname()
 
-   IF ::type == 1
+   SWITCH ::type
+   CASE 1
       ? "   I'm storing reference to self in instance variable."
       ? "   Bad practice but safe in Harbour because it will be destroyed."
       ::var1 := self
-   ELSEIF ::Type == 2
+      EXIT
+   CASE 2
       ? "   I'm storing reference to self in class variable."
       ? "   It's programmer bug which should cause RT error."
       ::var2 := self
-   ELSEIF ::Type == 3
+      EXIT
+   CASE 3
       ? "   I'm storing reference to self in public variable."
       ? "   It's programmer bug which should cause RT error."
       P := self
-   ELSE
+      EXIT
+   OTHERWISE
       ? "   I do not store any references to self."
       ? "   It's a safe destructor."
-   ENDIF
+   ENDSWITCH
 
    RETURN

@@ -4,7 +4,7 @@
 #include "inkey.ch"
 
 #ifndef __HARBOUR__
-#define hb_ntos( n ) LTrim( Str( n ) )
+#include "clipper.ch"
 #endif
 
 PROCEDURE Main()
@@ -139,8 +139,6 @@ PROCEDURE Main()
 
    SetColor( "GB+/B,GR+/R,,,W/N" )
 
-   SET CURSOR ON
-
    ASize( aPermits, Len( aPrompts ) )
 
    FOR x := 1 TO Len( aPrompts )
@@ -173,7 +171,7 @@ PROCEDURE Main()
 
 //
 
-FUNCTION cUserFunction( nMode, nCurElement, nRowPos )
+FUNCTION cUserFunction( nMode, nCurElement, nRowPos )  /* must be a public function */
 
    LOCAL nRetVal := AC_CONT                // Default, Continue
    LOCAL nKey    := LastKey()

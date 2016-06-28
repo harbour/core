@@ -1,19 +1,17 @@
 #require "hbziparc"
 
-PROCEDURE Main( cZip, ... )
+PROCEDURE Main( cZip )
 
-   LOCAL a, b, c
+   LOCAL d, f
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   ? hb_ZipFile( cZip, hb_AParams() )
+   ? hb_ZipFile( cZip, hb_AParams(),,,,, .T. )
 
-   a := hb_GetFilesInZip( cZip, .T. )
-
-   FOR EACH b IN a
+   FOR EACH f IN hb_GetFilesInZip( cZip, .T. )
       ?
-      FOR EACH c IN b
-         ?? c, ""
+      FOR EACH d IN f
+         ?? d, ""
       NEXT
    NEXT
 

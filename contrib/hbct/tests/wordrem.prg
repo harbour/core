@@ -51,19 +51,15 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of WordRem()"
    ?
 
    ? "Simple tests:"
-   ? '  WordRem( "abcd", "0ab1cd" ) == "0ab1" ? ----> "' + WordRem( "abcd", "0ab1cd" ) + '"'
-   ? '  WordRem( "abcd", "ab0cd1" ) == "0cd1" ? ----> "' + WordRem( "abcd", "ab0cd1" ) + '"'
+   ? '  WordRem( "abcd", "0ab1cd" ) == "0ab1" ? -->', '"' + WordRem( "abcd", "0ab1cd" ) + '"'
+   ? '  WordRem( "abcd", "ab0cd1" ) == "0cd1" ? -->', '"' + WordRem( "abcd", "ab0cd1" ) + '"'
    ?
 
    ? "End test of WordRem()"
    ?
-
-   ctexit()
 
    RETURN

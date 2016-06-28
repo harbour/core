@@ -2,10 +2,9 @@
 
 PROCEDURE Main()
 
-   LOCAL dDate, i
+   LOCAL dDate := hb_SToD( "19990525" ), i
 
    Set( _SET_DATEFORMAT, "dd/mm/yyyy" )
-   dDate := hb_SToD( "19990525" )
 
    ? dDate, DoW( dDate )
 

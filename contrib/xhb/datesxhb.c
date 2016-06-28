@@ -3,6 +3,7 @@
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2004 Giancarlo Niccolai <gc -at- niccolai -dot- ws>
+ * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru> (DaysInMonth(), DaysToMonth())
  * Copyright 2007 Walter Negro <anegro@overnet.com.ar>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -83,9 +84,7 @@ HB_FUNC( TIMEOFDAY )
    char szResult[ 9 ];
 
    if( hb_pcount() == 0 )
-   {
       hb_dateTimeStr( szResult );
-   }
    else
    {
       int iSeconds = hb_parni( 1 );
@@ -93,6 +92,7 @@ HB_FUNC( TIMEOFDAY )
       hb_snprintf( szResult, sizeof( szResult ), "%02d:%02d:%02d",
                    iSeconds / 3600, ( iSeconds % 3600 ) / 60, iSeconds % 60 );
    }
+
    hb_retclen( szResult, 8 );
 }
 
@@ -110,5 +110,34 @@ HB_FUNC( TTOD )
    if( HB_ISDATE( 1 ) )
       hb_retdl( hb_pardl( 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+static int s_daysinmonth( int iMonth, HB_BOOL bLeap )
+{
+   if( iMonth == 2 )
+      return bLeap ? 29 : 28;
+   else if( iMonth == 4 || iMonth == 6 || iMonth == 9 || iMonth == 11 )
+      return 30;
+   else
+      return 31;
+}
+
+static int s_daystomonth( int iMonth, HB_BOOL bLeap )
+{
+   static const int sc_iMonths[] = {
+      0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
+
+   return ( iMonth < 1 || iMonth > 12 ) ? 0 : sc_iMonths[ iMonth - 1 ] +
+          ( ( bLeap && iMonth > 2 ) ? 1 : 0 );
+}
+
+HB_FUNC( DAYSTOMONTH )
+{
+   hb_retni( s_daystomonth( hb_parni( 1 ), hb_parl( 2 ) ) );
+}
+
+HB_FUNC( DAYSINMONTH )
+{
+   hb_retni( s_daysinmonth( hb_parni( 1 ), hb_parl( 2 ) ) );
 }

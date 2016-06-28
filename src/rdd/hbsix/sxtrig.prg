@@ -1,6 +1,6 @@
 /*
  * SIX compatible functions:
- *          sx_DefTrigger()
+ *       sx_DefTrigger()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -44,6 +44,8 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
+/* In separate source file to make it easy to override by user code */
 
 #include "hbsxdef.ch"
 

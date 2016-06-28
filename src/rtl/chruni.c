@@ -138,6 +138,19 @@ HB_FUNC( HB_BLEN )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* hb_BEmpty( <cText> ) -> <lEmpty>
+ * return string length in bytes
+ */
+HB_FUNC( HB_BEMPTY )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+
+   if( pText )
+      hb_retl( hb_itemGetCLen( pText ) == 0 );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /* hb_UPeek( <cText>, <n> ) -> <nCode>
  * return unicode value of <n>-th character in given string
  */
@@ -465,7 +478,7 @@ HB_FUNC( HB_UAT )
       const char * pszText = hb_itemGetCPtr( pText );
       HB_SIZE nTextLength = hb_itemGetCLen( pText );
       HB_SIZE nStart = hb_parns( 3 );
-      HB_SIZE nFrom, nTo, nPos = 0;
+      HB_SIZE nFrom, nPos = 0;
 
       if( nStart <= 1 )
          nStart = nFrom = 0;
@@ -474,6 +487,8 @@ HB_FUNC( HB_UAT )
 
       if( nFrom < nTextLength )
       {
+         HB_SIZE nTo;
+
          pszText += nFrom;
          nTextLength -= nFrom;
          if( HB_ISNUM( 4 ) )
@@ -518,7 +533,7 @@ HB_FUNC( HB_BAT )
       const char * pszText = hb_itemGetCPtr( pText );
       HB_SIZE nTextLength = hb_itemGetCLen( pText );
       HB_SIZE nStart = hb_parns( 3 );
-      HB_SIZE nFrom, nTo, nPos = 0;
+      HB_SIZE nFrom, nPos = 0;
 
       if( nStart <= 1 )
          nStart = nFrom = 0;
@@ -527,6 +542,8 @@ HB_FUNC( HB_BAT )
 
       if( nFrom < nTextLength )
       {
+         HB_SIZE nTo;
+
          pszText += nFrom;
          nTextLength -= nFrom;
          if( HB_ISNUM( 4 ) )
@@ -703,5 +720,3 @@ HB_FUNC( HB_USTUFF )
    else
       hb_retc_null();
 }
-
-/* TODO: PadR(), PadC(), PadL() */

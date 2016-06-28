@@ -8,12 +8,12 @@
 #include <string.h>
 #include "extend.api"
 
-#if defined(__HARBOUR__)
+#if defined( __HARBOUR__ )
    #include "hbapi.h"
    #include "hbundoc.api"
    #define CLIPFUN( funcname )              HB_FUNC( funcname )
    #define CLIPFUNL( funcname, funcshort )  HB_FUNC( funcname )
-#elif defined(__CLIPPER__)
+#elif defined( __CLIPPER__ )
    #define CLIPFUN( funcname )              CLIPPER funcname ( void )
    #define CLIPFUNL( funcname, funcshort )  CLIPPER funcshort ( void )
 #endif

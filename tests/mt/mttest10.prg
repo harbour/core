@@ -1,6 +1,6 @@
 /*
- * demonstration/test code for using independent console window in
- *    different thread. It needs GT driver which supports such functionality.
+ * Demonstration/test code for using independent console window in
+ * different thread. It needs GT driver which supports such functionality.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -9,14 +9,17 @@
 #include "inkey.ch"
 
 #ifdef __PLATFORM__WINDOWS
-   REQUEST HB_GT_WVT_DEFAULT
-   #define THREAD_GT hb_gtVersion()
+   #if ! defined( __HBSCRIPT__HBSHELL )
+      request HB_GT_WVT_DEFAULT
+   #endif
+   #define THREAD_GT  hb_gtVersion()
 #else
-   REQUEST HB_GT_STD_DEFAULT
-   #define THREAD_GT "XWC"
+   request HB_GT_STD_DEFAULT
+   #define THREAD_GT  "XWC"
 #endif
 
-proc main( cGT )
+procedure Main( cGT )
+
    local i, aThreads
 
    if ! hb_mtvm()
@@ -24,11 +27,11 @@ proc main( cGT )
       quit
    endif
 
-   if empty( cGT )
+   if Empty( cGT )
       cGT := THREAD_GT
    endif
 
-   if  cGT == "QTC" .and. ! cGT == hb_gtVersion()
+   if cGT == "QTC" .and. ! cGT == hb_gtVersion()
       /* QTC have to be initialized in main thread */
       hb_gtReload( cGT )
    endif
@@ -36,27 +39,31 @@ proc main( cGT )
    ? "Starting threads..."
    aThreads := {}
    for i := 1 to 3
-      aadd( aThreads, hb_threadStart( @thFunc(), cGT ) )
-      ? i, "=>", atail( aThreads )
+      AAdd( aThreads, hb_threadStart( @thFunc(), cGT ) )
+      ? i, "=>", ATail( aThreads )
    next
 
    ? "Waiting for threads"
-   while inkey() != K_ESC
-      if hb_threadWait( aThreads, 0.1, .T. ) == len( aThreads )
+   while hb_keyStd( Inkey() ) != K_ESC
+      if hb_threadWait( aThreads, 0.1, .T. ) == Len( aThreads )
          wait
          exit
       endif
       ?? "."
    enddo
-return
 
-proc thFunc( cGT )
-   /* allocate own GT driver */
-   hb_gtReload( cGT )
-   if ! dbExists( "test" ) .and. dbExists( "../test" )
-      use ../test shared
+   return
+
+static procedure thFunc( cGT )
+
+   hb_gtReload( cGT )  /* allocate own GT driver */
+
+   if ! dbExists( "test.dbf" ) .and. dbExists( hb_DirSepToOS( "../test.dbf" ) )
+      use ( hb_DirSepToOS( "../test.dbf" ) ) shared
    else
-      use test shared
+      use test.dbf shared
    endif
-   browse()
-return
+
+   Browse()
+
+   return

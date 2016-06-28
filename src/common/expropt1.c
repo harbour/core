@@ -742,7 +742,7 @@ PHB_EXPR hb_compExprNewMethodCall( PHB_EXPR pObject, PHB_EXPR pArgList )
    return pObject;
 }
 
-/* Create a new IIF() expression
+/* Create a new iif() expression
  * pExpr is a list of three expressions
  */
 PHB_EXPR hb_compExprNewIIF( PHB_EXPR pExpr )
@@ -1356,10 +1356,11 @@ HB_BOOL hb_compExprIsArrayToParams( PHB_EXPR pExpr )
 
 HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, PHB_EXPR pExpr )
 {
-   HB_SIZE nLen = 0, nItems = 0;
+   HB_SIZE nLen = 0;
 
    if( pExpr )
    {
+      HB_SIZE nItems = 0;
       PHB_EXPR pElem;
 
       pElem = pExpr->value.asList.pExprList;
@@ -1471,11 +1472,9 @@ PHB_EXPR hb_compExprCBVarAdd( PHB_EXPR pCB, const char * szVarName, HB_BYTE bTyp
  */
 void hb_compExprCBVarDel( PHB_CBVAR pVars )
 {
-   PHB_CBVAR pDel;
-
    while( pVars )
    {
-      pDel  = pVars;
+      PHB_CBVAR pDel = pVars;
       pVars = pVars->pNext;
       hb_xfree( pDel );
    }
@@ -1483,7 +1482,7 @@ void hb_compExprCBVarDel( PHB_CBVAR pVars )
 
 /* Creates a set/get codeblock for passed expression used in __GET
  *
- * {| ~1 | IIF( ~1 == NIL, <pExpr>, <pExpr> := ~1 ) }
+ * {| ~1 | iif( ~1 == NIL, <pExpr>, <pExpr> := ~1 ) }
  *
  * NOTE: "~1" is not a valid variable name so there will be no collisions
  */

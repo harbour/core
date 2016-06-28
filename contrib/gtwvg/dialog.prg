@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Compatible xbpDialog Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *                  Xbase++ Compatible xbpDialog Class
- *
- *                 Pritpal Bedi <bedipritpal@hotmail.com>
- *                             17Nov2008
  */
 
 #include "hbclass.ch"
@@ -62,12 +56,12 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgDialog FROM WvgWindow
+CREATE CLASS WvgDialog INHERIT WvgWindow
 
    VAR    oMenu
    VAR    aRect
    VAR    drawingArea
-   VAR    tasklist                              INIT  .T.
+   VAR    tasklist                              INIT .T.
 
    METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -80,8 +74,8 @@ CREATE CLASS WvgDialog FROM WvgWindow
    METHOD showModal()                           INLINE NIL
    METHOD setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
-   METHOD calcClientRect()                      INLINE ::aRect := Wvg_GetClientRect( ::hWnd ), { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
-   METHOD calcFrameRect()                       INLINE ::aRect := Wvg_GetWindowRect( ::hWnd ), { ::aRect[ 1 ], ::aRect[ 2 ], ::aRect[ 3 ] - ::aRect[ 1 ], ::aRect[ 4 ] - ::aRect[ 2 ] }
+   METHOD calcClientRect()                      INLINE ::aRect := wvg_GetClientRect( ::hWnd ), { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
+   METHOD calcFrameRect()                       INLINE ::aRect := wvg_GetWindowRect( ::hWnd ), { ::aRect[ 1 ], ::aRect[ 2 ], ::aRect[ 3 ] - ::aRect[ 1 ], ::aRect[ 4 ] - ::aRect[ 2 ] }
 
 ENDCLASS
 
@@ -94,7 +88,7 @@ METHOD WvgDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::mouseMode   := 0
    ::objType     := objTypeDialog
 
-   ::style       := WS_THICKFRAME + WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_MINIMIZEBOX + WS_MAXIMIZEBOX
+   ::style       := WIN_WS_THICKFRAME + WIN_WS_OVERLAPPED + WIN_WS_CAPTION + WIN_WS_SYSMENU + WIN_WS_MINIMIZEBOX + WIN_WS_MAXIMIZEBOX
 
    RETURN Self
 
@@ -104,7 +98,7 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   if ::lModal
+   IF ::lModal
       ::pGT  := hb_gtCreate( "WGU" )
       ::pGTp := hb_gtSelect( ::pGT )
    ELSE
@@ -115,13 +109,13 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
       ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F., .F., HB_WNDTYPE_DIALOG } )
 
-   if ::visible
-      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
+   IF ::visible
+      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, WIN_SW_NORMAL )
    ELSE
-      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_HIDE   )
+      hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, WIN_SW_HIDE )
    ENDIF
 
-   ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
+   ::hWnd := hb_gtInfo( HB_GTI_WINHANDLE )
 
    hb_gtInfo( HB_GTI_RESIZABLE, ::resizable )
    hb_gtInfo( HB_GTI_CLOSABLE, ::closable  )
@@ -137,19 +131,19 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ENDIF
    ENDIF
 
-   if ::lModal
+   IF ::lModal
       hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
    ENDIF
 
-   if ::visible
+   IF ::visible
       ::lHasInputFocus := .T.
    ENDIF
 
-   oW := WvgDrawingArea():new( Self ):create( , , { 0, 0 }, Self:currentSize(), , .F. )
-   IF ! Empty( oW:hWnd )
-      ::drawingArea := oW
-   ELSE
+   oW := WvgDrawingArea():new( Self ):create( , , { 0, 0 }, ::currentSize(), , .F. )
+   IF Empty( oW:hWnd )
       ::drawingArea := Self
+   ELSE
+      ::drawingArea := oW
    ENDIF
 
    hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {| nEvent, ... | ::notifier( nEvent, ... ) } )
@@ -168,12 +162,10 @@ METHOD WvgDialog:destroy()
       ::oMenu:destroy()
    ENDIF
 
-   IF Len( ::aChildren ) > 0
-      AEval( ::aChildren, {| o | o:destroy() } )
-   ENDIF
+   AEval( ::aChildren, {| o | o:destroy() } )
 
    IF ! Empty( ::hBrushBG )
-      Wvg_DeleteObject( ::hBrushBG )
+      wvg_DeleteObject( ::hBrushBG )
    ENDIF
 
    ::pGT  := NIL
@@ -183,31 +175,22 @@ METHOD WvgDialog:destroy()
 
 METHOD WvgDialog:setFrameState( nState )
 
-   LOCAL lSuccess := .F.
+   IF HB_ISNUMERIC( nState )
+      SWITCH nState
+      CASE WVGDLG_FRAMESTAT_MINIMIZED ; RETURN ::sendMessage( WIN_WM_SYSCOMMAND, WIN_SC_MINIMIZE, 0 ) != 0
+      CASE WVGDLG_FRAMESTAT_MAXIMIZED ; RETURN ::sendMessage( WIN_WM_SYSCOMMAND, WIN_SC_MAXIMIZE, 0 ) != 0
+      CASE WVGDLG_FRAMESTAT_NORMALIZED ; RETURN ::sendMessage( WIN_WM_SYSCOMMAND, WIN_SC_RESTORE, 0 ) != 0
+      ENDSWITCH
+   ENDIF
 
-   DO CASE
-
-   CASE nState == WVGDLG_FRAMESTAT_MINIMIZED
-      RETURN ::sendMessage( WM_SYSCOMMAND, SC_MINIMIZE, 0 ) != 0
-
-   CASE nState == WVGDLG_FRAMESTAT_MAXIMIZED
-      RETURN ::sendMessage( WM_SYSCOMMAND, SC_MAXIMIZE, 0 ) != 0
-
-   CASE nState == WVGDLG_FRAMESTAT_NORMALIZED
-      RETURN ::sendMessage( WM_SYSCOMMAND, SC_RESTORE, 0 ) != 0
-
-   ENDCASE
-
-   RETURN lSuccess
+   RETURN .F.
 
 METHOD WvgDialog:getFrameState()
 
-   IF Wvg_IsIconic( ::hWnd )
-      RETURN WVGDLG_FRAMESTAT_MINIMIZED
-   ENDIF
-   IF Wvg_IsZoomed( ::hWnd )
-      RETURN WVGDLG_FRAMESTAT_MAXIMIZED
-   ENDIF
+   DO CASE
+   CASE wapi_IsIconic( ::hWnd ) ; RETURN WVGDLG_FRAMESTAT_MINIMIZED
+   CASE wapi_IsZoomed( ::hWnd ) ; RETURN WVGDLG_FRAMESTAT_MAXIMIZED
+   ENDCASE
 
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
 

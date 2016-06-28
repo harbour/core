@@ -44,23 +44,20 @@
  *
  */
 
-
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbdate.h"
 #include "hblpp.h"
 
-
 PHB_LPP hb_lppCreate( HB_SOCKET sd )
 {
    PHB_LPP pSocket;
 
-   pSocket = ( PHB_LPP ) hb_xgrabz( sizeof( HB_LPP ) );
-   pSocket->sd = sd;
+   pSocket         = ( PHB_LPP ) hb_xgrabz( sizeof( HB_LPP ) );
+   pSocket->sd     = sd;
    pSocket->nLimit = 1024;
    return pSocket;
 }
-
 
 void hb_lppDestroy( PHB_LPP pSocket )
 {
@@ -73,23 +70,20 @@ void hb_lppDestroy( PHB_LPP pSocket )
    hb_xfree( pSocket );
 }
 
-
 void hb_lppSetLimit( PHB_LPP pSocket, HB_SIZE nLimit )
 {
    pSocket->nLimit = nLimit;
 }
-
 
 int hb_lppError( PHB_LPP pSocket )
 {
    return pSocket->iError;
 }
 
-
 HB_BOOL hb_lppSend( PHB_LPP pSocket, const void * data, HB_SIZE len, HB_MAXINT timeout )
 {
-   HB_MAXINT  nTime = 0;
-   long       lSend;
+   HB_MAXINT nTime = 0;
+   long      lSend;
 
    if( ! pSocket->pSendBuffer )
    {
@@ -121,7 +115,7 @@ HB_BOOL hb_lppSend( PHB_LPP pSocket, const void * data, HB_SIZE len, HB_MAXINT t
       {
          hb_xfree( pSocket->pSendBuffer );
          pSocket->pSendBuffer = NULL;
-         pSocket->iError = 0;
+         pSocket->iError      = 0;
          return HB_TRUE;
       }
       if( timeout == 0 ||
@@ -133,16 +127,15 @@ HB_BOOL hb_lppSend( PHB_LPP pSocket, const void * data, HB_SIZE len, HB_MAXINT t
    }
 }
 
-
 HB_BOOL hb_lppRecv( PHB_LPP pSocket, void ** data, HB_SIZE * len, HB_MAXINT timeout )
 {
-   HB_MAXINT  nTime = 0;
-   long       lRecv;
+   HB_MAXINT nTime = 0;
+   long      lRecv;
 
    if( ! pSocket->pRecvBuffer )
    {
-      pSocket->pRecvBuffer = ( char * ) hb_xgrab( 4 );
-      pSocket->nRecvLen = 0;
+      pSocket->pRecvBuffer  = ( char * ) hb_xgrab( 4 );
+      pSocket->nRecvLen     = 0;
       pSocket->fRecvHasSize = HB_FALSE;
    }
 
@@ -185,7 +178,7 @@ HB_BOOL hb_lppRecv( PHB_LPP pSocket, void ** data, HB_SIZE * len, HB_MAXINT time
             return HB_FALSE;
          }
 
-         pSocket->nRecvLen = 0;
+         pSocket->nRecvLen     = 0;
          pSocket->fRecvHasSize = HB_TRUE;
          if( pSocket->nRecvSize != 4 )
             pSocket->pRecvBuffer = ( char * ) hb_xrealloc( pSocket->pRecvBuffer, pSocket->nRecvSize );
@@ -212,10 +205,10 @@ HB_BOOL hb_lppRecv( PHB_LPP pSocket, void ** data, HB_SIZE * len, HB_MAXINT time
       pSocket->nRecvLen += lRecv;
       if( pSocket->nRecvSize == pSocket->nRecvLen )
       {
-         * data = pSocket->pRecvBuffer;
-         * len = pSocket->nRecvLen;
+         *data = pSocket->pRecvBuffer;
+         *len  = pSocket->nRecvLen;
          pSocket->pRecvBuffer = NULL;
-         pSocket->iError = 0;
+         pSocket->iError      = 0;
          return HB_TRUE;
       }
       if( timeout == 0 ||
@@ -227,12 +220,10 @@ HB_BOOL hb_lppRecv( PHB_LPP pSocket, void ** data, HB_SIZE * len, HB_MAXINT time
    }
 }
 
-
 HB_SIZE hb_lppSendLen( PHB_LPP pSocket )
 {
    return pSocket->nSendLen - pSocket->nSendPos;
 }
-
 
 HB_SIZE hb_lppRecvLen( PHB_LPP pSocket )
 {

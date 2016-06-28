@@ -1,5 +1,5 @@
 /*
- * demonstration/test code for changing font in X-Window GTs
+ * Demonstration/test code for changing font in X-Window GTs
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -7,19 +7,16 @@
 
 #include "hbgtinfo.ch"
 
-#if ! defined( __HBSCRIPT__HBSHELL )
-   #if defined( __PLATFORM__UNIX )
-      REQUEST HB_GT_XWC_DEFAULT
-   #endif
+#if ! defined( __HBSCRIPT__HBSHELL ) .and. defined( __PLATFORM__UNIX )
+   request HB_GT_XWC_DEFAULT
 #endif
 
-proc main()
+procedure main()
+
    local cChars, i, j, n
 
-#if defined( __HBSCRIPT__HBSHELL )
-   #if defined( __PLATFORM__UNIX )
-      hbshell_gtSelect( "GTXWC" )
-   #endif
+#if defined( __HBSCRIPT__HBSHELL ) .and. defined( __PLATFORM__UNIX )
+   hbshell_gtSelect( "GTXWC" )
 #endif
 
    cChars := ""
@@ -43,13 +40,15 @@ proc main()
                   hb_gtInfo( HB_GTI_FONTSEL ) + ";" + cChars, ;
                   { "FINE", "CHANGE" } )
    enddo
-   ? "current font:"
-   ? hb_gtInfo( HB_GTI_FONTSEL )
-   OutStd( hb_gtInfo( HB_GTI_FONTSEL ) )
+   ? "current font:", hb_gtInfo( HB_GTI_FONTSEL )
    wait
-return
 
-function xfontsel()
+   return
+
+static function xfontsel()
+
    local cStdOut
+
    hb_processRun( "xfontsel -print",, @cStdOut )
-return cStdOut
+
+   return cStdOut

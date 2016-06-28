@@ -17,10 +17,10 @@ ifeq ($(HB_COMPILER),bcc64)
 else
    CC := bcc32.exe
 endif
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -q -tWM -CP437
 
@@ -67,7 +67,7 @@ endif
 # Hack to autoconfig bcc, and not require properly set .cfg files in its bin dir.
 # It only works if we know compiler location.
 ifneq ($(HB_COMP_PATH_PUB),)
-   HB_CFLAGS += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include")
+   HB_CFLAGS += +nul $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include")
    RCFLAGS   += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include")
    ifneq ($(wildcard $(HB_COMP_PATH_PUB)../Include/windows/crtl),)
       HB_CFLAGS += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include/windows/crtl")
@@ -77,13 +77,13 @@ ifneq ($(HB_COMP_PATH_PUB),)
       HB_CFLAGS += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include/windows/sdk")
       RCFLAGS   += $(subst /,$(BACKSLASH),-I"$(HB_COMP_PATH_PUB)../Include/windows/sdk")
    endif
-   LDFLAGS   += $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
-   DFLAGS    += $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   LDFLAGS += +nul $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
+   DFLAGS  += +nul $(subst /,$(BACKSLASH),-L"$(HB_COMP_PATH_PUB)../Lib" -L"$(HB_COMP_PATH_PUB)../Lib/PSDK")
 endif
 
 RC := brcc32.exe
 RC_OUT := -fo
-RCFLAGS += -I. -I$(HB_HOST_INC)
+RCFLAGS += -I. -I$(HB_HOST_INC) -c65001
 
 ifeq ($(HB_COMPILER),bcc64)
    LD := ilink64.exe
@@ -147,6 +147,7 @@ endif
 DFLAGS += -q -Gn -C -aa -Tpd -Gi -x $(LIBPATHS)
 DY_OUT :=
 # NOTE: .lib extension not added to keep line short enough to work on Win9x/ME
+#       and to remain compatible with both bcc64 and bcc 32-bit.
 ifeq ($(HB_COMPILER),bcc64)
    DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw64mt import64
 else

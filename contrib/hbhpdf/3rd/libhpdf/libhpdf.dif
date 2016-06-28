@@ -40,6 +40,34 @@ diff -urN libhpdf.orig/hpdfimac.c libhpdf/hpdfimac.c
  
  /* NB: the uint32 casts are to silence certain ANSI-C compilers */
  #define TIFFhowmany(x, y) ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y)))
+diff -urN libhpdf.orig/hpdfimap.c libhpdf/hpdfimap.c
+--- libhpdf.orig/hpdfimap.c	2014-10-07 02:42:51.810388800 +0200
++++ libhpdf/hpdfimap.c	2014-10-07 02:42:51.810388800 +0200
+@@ -280,8 +280,8 @@
+ 		case PNG_COLOR_TYPE_RGB_ALPHA:
+ 			row_len = 3 * width * sizeof(png_byte);
+ 			for (j = 0; j < height; j++) {
++				row = row_ptr[j];
+ 				for (i = 0; i < width; i++) {
+-					row = row_ptr[j];
+ 					memmove(row + (3 * i), row + (4*i), 3);
+ 					smask_data[width * j + i] = row[4 * i + 3];
+ 				}
+@@ -295,8 +295,8 @@
+ 		case PNG_COLOR_TYPE_GRAY_ALPHA:
+ 			row_len = width * sizeof(png_byte);
+ 			for (j = 0; j < height; j++) {
++				row = row_ptr[j];
+ 				for (i = 0; i < width; i++) {
+-					row = row_ptr[j];
+ 					row[i] = row[2 * i];
+ 					smask_data[width * j + i] = row[2 * i + 1];
+ 				}
+@@ -706,4 +706,3 @@
+ 
+ 
+ #endif /* LIBHPDF_HAVE_NOPNGLIB */
+-
 diff -urN libhpdf.orig/hpdfpago.c libhpdf/hpdfpago.c
 --- libhpdf.orig/hpdfpago.c	2015-09-09 21:22:05.724098623 +0200
 +++ libhpdf/hpdfpago.c	2015-09-09 21:22:05.724098623 +0200

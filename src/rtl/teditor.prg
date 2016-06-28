@@ -46,6 +46,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "hbclass.ch"
 
 #include "button.ch"
@@ -475,7 +477,8 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
       nKeyStd := hb_keyStd( nKey )
 
       DO CASE
-      CASE ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
+      CASE ( bKeyBlock := SetKey( nKey ) ) != NIL .OR. ;
+           ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock )
 
       CASE ! HB_ISNULL( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
@@ -563,18 +566,12 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
       CASE ::MoveCursor( nKey )
          // if it's a movement key ::MoveCursor() handles it
 
-      CASE nKeyStd == K_CTRL_B .OR. nKeyStd == K_ALT_B
-         /* TOFIX: K_ALT_B is not Cl*pper compatible, added as workaround
-                   for missing in some GTs extended keycodes which are
-                   necessary to resolve K_CTRL_B and K_CTRL_RIGHT keycode
-                   conflict */
+      CASE ( hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "B" ) .OR. ;
+           nKeyStd == K_ALT_B  /* K_ALT_B is not Cl*pper compatible */
          ::ReformParagraph()
 
-      CASE nKeyStd == K_CTRL_W .OR. nKeyStd == K_ALT_W
-         /* TOFIX: K_ALT_W is not Cl*pper compatible, added as workaround
-                   for missing in some GTs extended keycodes which are
-                   necessary to resolve K_CTRL_W and K_CTRL_END keycode
-                   conflict */
+      CASE ( hb_bitAnd( hb_keyMod( nKey ), HB_KF_CTRL ) != 0 .AND. Upper( hb_keyChar( hb_keyVal( nKey ) ) ) == "W" ) .OR. ;
+           nKeyStd == K_ALT_W  /* K_ALT_W is not Cl*pper compatible */
          ::lSaved := .T.
          ::lExitEdit := .T.
 
@@ -607,9 +604,10 @@ METHOD BrowseText( nPassedKey ) CLASS HBEditor
       ELSE
          nKey := nPassedKey
       ENDIF
-
       nKeyStd := hb_keyStd( nKey )
-      IF ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
+
+      IF ( bKeyBlock := SetKey( nKey ) ) != NIL .OR. ;
+         ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock )
       ELSEIF nKeyStd == K_ESC
          ::lExitEdit := .T.

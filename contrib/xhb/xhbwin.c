@@ -55,6 +55,11 @@
 #include "hbwinuni.h"
 #include <windows.h>
 
+#if 0
+HB_FUNC_TRANSLATE( HB_ANSITOOEM, WIN_ANSITOOEM )
+HB_FUNC_TRANSLATE( HB_OEMTOANSI, WIN_OEMTOANSI )
+#endif
+
 /* Original version may have returned NIL in some error situations. */
 HB_FUNC_TRANSLATE( ANSITOWIDE, WIN_ANSITOWIDE )
 /* Original version may have returned NIL in some error situations. */
@@ -75,6 +80,10 @@ HB_FUNC( MESSAGEBOX )
 
 #else
 
+#if 0
+HB_FUNC( HB_ANSITOOEM ) {}
+HB_FUNC( HB_OEMTOANSI ) {}
+#endif
 HB_FUNC( ANSITOWIDE ) {}
 HB_FUNC( WIDETOANSI ) {}
 HB_FUNC( MESSAGEBOX ) {}

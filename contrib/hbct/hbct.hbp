@@ -6,7 +6,7 @@
 -w3 -es2
 
 # For stime()
--c=gnu90{linux}
+#-c=gnu90{linux}
 
 -instfile=contrib:ct.h
 -instfile=contrib:ctmath.h
@@ -15,7 +15,7 @@
 -instfile=contrib:ctstrfil.h
 -instfile=contrib:ctwin.h
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 addascii.c
 asciisum.c
@@ -50,7 +50,6 @@ ctmath.c
 ctmath2.c
 ctnet.c
 ctpad.c
-ctset.c
 ctstr.c
 ctstrfil.c
 ctwfunc.c
@@ -59,6 +58,7 @@ cursor.c
 datetime.c
 dattime2.c
 dattime3.c
+dbfflddc.c
 dbftools.c
 disk.c
 envparam.c
@@ -104,7 +104,6 @@ video.c
 wordrepl.c
 wordtoch.c
 
-ct.prg
 ctdummy.prg
 ctmisc.prg
 ctrand.prg

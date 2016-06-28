@@ -8,12 +8,12 @@ PROCEDURE Main( cVidMode )
    LOCAL nColOri := Col()
    LOCAL aEnvOri := ft_SaveSets()
    LOCAL cScrOri := SaveScreen( 0, 0, MaxRow(), MaxCol() )
-   LOCAL lColour
+   LOCAL lColor
    LOCAL aClrs
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   __defaultNIL( @cVidMode, "" )
+   hb_default( @cVidMode, "" )
 
    NoSnow( ( "NOSNOW" $ Upper( cVidMode ) ) )
    IF "VGA" $ Upper( cVidMode )
@@ -22,13 +22,13 @@ PROCEDURE Main( cVidMode )
    IF "EGA" $ Upper( cVidMode )
       SetMode( 43, 80 )
    ENDIF
-   lColour := iif( "MONO" $ Upper( cVidMode ), .F., IsColor() )
+   lColor := iif( "MONO" $ Upper( cVidMode ), .F., IsColor() )
 
-   SET SCOREBOARD OFF
+   Set( _SET_SCOREBOARD, .F. )
    SetCursor( SC_NONE )
    SetBlink( .F. )
 
-   // .... a typical application might have the following different settings
+   // A typical application might have the following different settings
    //     normally these would be stored in a .dbf/.dbv
    aClrs := { ;
       { "Desktop",        "N/BG",                          "D", hb_UTF8ToStrBox( "░" ) }, ;
@@ -42,11 +42,11 @@ PROCEDURE Main( cVidMode )
       { "Database Query", "N/BG, N/GR*,,,N+/BG",           "B" }, ;
       { "Pick List",      "N/GR*,W+/B,,, BG/GR*",          "A" } }
 
-   aClrs := ft_ClrSel( aClrs, lColour )
+   aClrs := ft_ClrSel( aClrs, lColor )
 
    HB_SYMBOL_UNUSED( aClrs )
 
-   // .... restore the original environment
+   // Restore the original environment
    ft_RestSets( aEnvOri )
    RestScreen( 0, 0, MaxRow(), MaxCol(), cScrOri )
    SetPos( nRowOri, nColOri )

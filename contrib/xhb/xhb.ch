@@ -58,6 +58,7 @@
 
    #xtranslate __Keyboard( [<x,...>] )           => xhb__Keyboard( <x> )
    #xtranslate __CopyFile( [<x,...>] )           => xhb_CopyFile( <x> )
+   #xtranslate __Run( [<x,...>] )                => xhb__Run( <x> )
 
    #xuntranslate AIns(                           =>
    #xuntranslate ADel(                           =>

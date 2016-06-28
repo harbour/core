@@ -1,20 +1,17 @@
 ROOT := ../
 
 ifneq ($(HB_BUILD_PARTS),lib)
-
-DIRS := \
-   hbmk2 \
-
 ifneq ($(HB_BUILD_PARTS),compiler)
 
    DIRS := \
+      hbmk2 \
+      hbspeed \
       hbtest \
       hbmk2 \
       hbi18n \
       $(__HB_UTIL_ADDONS)
 
 endif
-
 endif
 
 ifneq ($(DIRS),)

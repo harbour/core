@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #include "dbinfo.ch"
 
 /* NOTE: The fifth parameters (cOrderName) is undocumented. */

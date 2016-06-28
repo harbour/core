@@ -1,10 +1,8 @@
-/*
- * Debug function tests
- *
- * Written by Eddie Runia <eddie@runia.com>
- *
- * Placed in the public domain
- */
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* Debug function tests */
+
+#include "hbclass.ch"
 
 PROCEDURE Main()
 
@@ -18,18 +16,18 @@ PROCEDURE Main()
    ?
 
    ? "-OBJECT additions-"
-   ? "What is in oForm ? "
+   ? "What is in oForm ?"
    ? hb_ValToExp( oForm:Transfer() )
 
-   ? "Does transfer exists ? ", __objHasMsg(    oForm, "Transfer" )
-   ? "Is   transfer DATA   ? ", __objHasData(   oForm, "Transfer" )
-   ? "Is   transfer METHOD ? ", __objHasMethod( oForm, "Transfer" )
-   ? "Does nLeft    exists ? ", __objHasMsg(    oForm, "nLeft"    )
-   ? "Is   nLeft    DATA   ? ", __objHasData(   oForm, "nLeft"    )
-   ? "Is   nLeft    METHOD ? ", __objHasMethod( oForm, "nLeft"    )
-   ? "Does unknown  exists ? ", __objHasMsg(    oForm, "Unknown"  )
-   ? "Is   unknown  DATA   ? ", __objHasData(   oForm, "Unknown"  )
-   ? "Is   unknown  METHOD ? ", __objHasMethod( oForm, "Unknown"  )
+   ? "Does transfer exists ?", __objHasMsg(    oForm, "Transfer" )
+   ? "Is   transfer DATA   ?", __objHasData(   oForm, "Transfer" )
+   ? "Is   transfer METHOD ?", __objHasMethod( oForm, "Transfer" )
+   ? "Does nLeft    exists ?", __objHasMsg(    oForm, "nLeft"    )
+   ? "Is   nLeft    DATA   ?", __objHasData(   oForm, "nLeft"    )
+   ? "Is   nLeft    METHOD ?", __objHasMethod( oForm, "nLeft"    )
+   ? "Does unknown  exists ?", __objHasMsg(    oForm, "Unknown"  )
+   ? "Is   unknown  DATA   ?", __objHasData(   oForm, "Unknown"  )
+   ? "Is   unknown  METHOD ?", __objHasMethod( oForm, "Unknown"  )
 
    ? "Set nLeft to 50 and nRight to 100"
    oForm:Transfer( { "nLeft", 50 }, { "nRight", 100 } )
@@ -56,7 +54,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION FuncSecond( nParam, cParam, uParam )
+STATIC PROCEDURE FuncSecond( nParam, cParam, uParam )
 
    LOCAL cWhat   := "Something"
    LOCAL nNumber := 2
@@ -94,38 +92,25 @@ STATIC FUNCTION FuncSecond( nParam, cParam, uParam )
 
    Inkey( 0 )
 
-   RETURN NIL
+   RETURN
 
-/* TForm() -> <oTForm> */
+CREATE CLASS TForm STATIC
 
-STATIC FUNCTION TForm()
+   VAR cName
+   VAR nTop
+   VAR nLeft
+   VAR nBottom
+   VAR nRight
 
-   STATIC s_oClass
+   METHOD aExcept() VIRTUAL
 
-   IF s_oClass == NIL
-      s_oClass := HBClass():New( "TFORM" )    // starts a new class definition
+   METHOD New()
+   METHOD Show()
+   METHOD Transfer( ... )
 
-      s_oClass:AddData( "cName" )           // define this class objects datas
-      s_oClass:AddData( "nTop" )
-      s_oClass:AddData( "nLeft" )
-      s_oClass:AddData( "nBottom" )
-      s_oClass:AddData( "nRight" )
+ENDCLASS
 
-      s_oClass:AddVirtual( "aExcept" )      // Export exceptions
-
-      s_oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      s_oClass:AddMethod( "Show", @Show() )
-      s_oClass:AddMethod( "Transfer", @Transfer() )
-
-      s_oClass:Create()                     // builds this class
-   ENDIF
-
-   RETURN s_oClass:Instance()                  // builds an object of this class
-
-
-STATIC FUNCTION New()
-
-   LOCAL Self := QSelf()
+METHOD New() CLASS TForm
 
    ::nTop    := 10
    ::nLeft   := 10
@@ -134,15 +119,12 @@ STATIC FUNCTION New()
 
    RETURN Self
 
-STATIC FUNCTION Show()
-
-   LOCAL Self := QSelf()
+PROCEDURE Show() CLASS TForm
 
    ? "lets show a form from here :-)"
 
-   RETURN NIL
+   RETURN
 
-//
 // <xRet> TForm:Transfer( [<xArg,..>] )
 //
 // Generic object import and export function
@@ -151,7 +133,7 @@ STATIC FUNCTION Show()
 //
 // Maximum number of arguments passed is limited to 10 !
 //
-// An argument can be one of the following :
+// An argument can be one of the following:
 //
 // { <cSymbol>, <xValue> }              Set DATA <cSymbol> to <xValue>
 // { { <cSym1>, <xVal1> }, { <cSym2>, <xVal2> }, ... }
@@ -164,16 +146,16 @@ STATIC FUNCTION Show()
 //                                      one class to another
 //
 // If <xArg> is not present, the current object will be returned as an array
-// for description see __objSetValueList / __objGetValueList.
+// for description see __objSetValueList() / __objGetValueList().
 //
 // The method aExcept() is called to determine the DATA which should not
-// be returned. Eg. hWnd ( do not copy this DATA from external source )
+// be returned. Eg. hWnd (do not copy this DATA from external source)
 //
-// Say we want to copy oSource into oTarget we say :
+// Say we want to copy oSource into oTarget we say:
 //
 // oTarget:Transfer( oSource )
 //
-// If we do not want 'cName' duplicated we have to use __objGetValueList :
+// If we do not want 'cName' duplicated we have to use __objGetValueList():
 //
 // aNewExcept := AClone( oSource:aExcept() )
 // AAdd( aNewExcept, "cName" )  /* Add cName to exception list               */
@@ -181,41 +163,38 @@ STATIC FUNCTION Show()
 //                              /* Get DATA from oSource with new exceptions */
 //                              /* Transfer DATA to oTarget                  */
 //
-// To set two DATA of oTarget :
+// To set two DATA of oTarget:
 //
 // oTarget:Transfer( { "nLeft", 10 }, { "nRight", 5 } )
 //
-// or :
+// or:
 //
 // aCollect := {}
 // AAdd( aCollect, { "nLeft" , 10 } )
 // AAdd( aCollect, { "nRight", 5  } )
 // oTarget:Transfer( aCollect )
 //
-// Copy oSource to a memo field :
+// Copy oSource to a memo field:
 //
 // DbObject->Memo := oSource:Transfer()
 //
-// (Re)create oTarget from the memo field :
+// (Re)create oTarget from the memo field:
 //
 // oTarget := TTarget():New()
 // oTarget:Transfer( DbObject->Memo )
-//
 
-STATIC FUNCTION Transfer( ... )
+METHOD Transfer( ... ) CLASS TForm
 
-   LOCAL self   := QSelf()
-   LOCAL aParam := __dbgVMParLList()
-   LOCAL nLen   := PCount()
    LOCAL xRet
    LOCAL xData
 
-   IF nLen == 0
+   IF PCount() == 0
       xRet := __objGetValueList( self, ::aExcept() )
    ELSE
-      FOR EACH xData IN aParam
+      FOR EACH xData IN __dbgVMParLList()
 
-         IF HB_ISARRAY( xData )
+         DO CASE
+         CASE HB_ISARRAY( xData )
 
             IF HB_ISARRAY( xData[ 1 ] )         // 2D array passed
                xRet := __objSetValueList( self, xData )
@@ -223,12 +202,11 @@ STATIC FUNCTION Transfer( ... )
                xRet := __objSetValueList( self, { xData } )
             ENDIF
 
-         ELSEIF HB_ISOBJECT( xData )            // Object passed
+         CASE HB_ISOBJECT( xData )              // Object passed
             xRet := ::Transfer( xData:Transfer() )
-         ELSEIF !( ValType( xData ) == "U" )
-            ? "TRANSFER: Incorrect argument(", xData:__enumIndex(), ") ", xData
-         ENDIF
-
+         CASE !( ValType( xData ) == "U" )
+            ? "TRANSFER: Incorrect argument(", xData:__enumIndex(), ")", xData
+         ENDCASE
       NEXT
    ENDIF
 

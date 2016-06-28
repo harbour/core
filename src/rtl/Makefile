@@ -20,6 +20,7 @@ C_SOURCES := \
    binnum.c \
    box.c \
    cdpapi.c \
+   cdpapich.c \
    cdpapihb.c \
    cdpbox.c \
    cdpdetc.c \
@@ -309,17 +310,28 @@ DIRS := \
 
 ifneq ($(HB_HAS_ZLIB),)
 
+   ifneq ($(HB_HAS_PCRE2),)
+      HB_CFLAGS += -DHB_HAS_PCRE2 $(foreach d,$(HB_HAS_PCRE2),-I$(d))
+      ifneq ($(HB_HAS_PCRE2_LOCAL),)
+         HB_CFLAGS += -DPCRE2_STATIC
+      endif
+      HB_CFLAGS += -DPCRE2_CODE_UNIT_WIDTH=8
+   else
    ifneq ($(HB_HAS_PCRE),)
       HB_CFLAGS += -DHB_HAS_PCRE $(foreach d,$(HB_HAS_PCRE),-I$(d))
       ifneq ($(HB_HAS_PCRE_LOCAL),)
          HB_CFLAGS += -DPCRE_STATIC
       endif
    endif
+   endif
    ifneq ($(HB_HAS_ZLIB),)
       HB_CFLAGS += -DHB_HAS_ZLIB $(foreach d,$(HB_HAS_ZLIB),-I$(d))
    endif
    ifneq ($(HB_HAS_WATT),)
       HB_CFLAGS += -DHB_HAS_WATT $(foreach d,$(HB_HAS_WATT),-I$(d))
+   endif
+   ifneq ($(HB_HAS_GPM),)
+      HB_CFLAGS += -DHB_HAS_GPM
    endif
 
    include $(TOP)$(ROOT)config/lib.mk

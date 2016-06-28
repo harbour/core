@@ -7,6 +7,8 @@
 
 #-stop{!android}
 
+-depurlbase=jni:https://developer.android.com/sdk/
+-deppkgname=jni:android-sdk{homebrew}
 -depkeyhead=jni:jni.h
 -depcontrol=jni:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=jni:${JAVA_HOME}/include
@@ -16,11 +18,11 @@
 
 -cflag=-I"${HBMK_DIR_JNI}/win32"{win}
 
+-hbx=${hb_name}
+
 hvminit.c
 msginfo.c
 
--hbx=${hb_name}.hbx
-${hb_name}.hbx
 {hbdyn}${hb_name}.hbc
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * their website at https://www.gnu.org/).
  *
  */
 
@@ -26,25 +26,14 @@
 
 PROCEDURE WinMain( ... )
 
-   LOCAL cMode := hb_PValue( 1 )
-
-   LOCAL cMsg, nError
-
-   IF cMode == NIL
-      cMode := ""
-   ENDIF
-
-   SWITCH Lower( cMode )
+   SWITCH Lower( hb_defaultValue( hb_PValue( 1 ), "" ) )
    CASE "-i"
    CASE "-install"
 
       IF win_serviceInstall( _SERVICE_NAME, "Harbour NetIO Service", '"' + hb_ProgName() + '"' + " -service", WIN_SERVICE_AUTO_START )
          OutStd( "Service has been successfully installed" + hb_eol() )
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         OutStd( hb_StrFormat( "Error installing service: %1$d %2$s", nError, cMsg ) + hb_eol() )
+         OutStd( hb_StrFormat( "Error installing service: %1$d %2$s", wapi_GetLastError(), win_ErrorDesc() ) + hb_eol() )
       ENDIF
       EXIT
 
@@ -54,10 +43,7 @@ PROCEDURE WinMain( ... )
       IF win_serviceDelete( _SERVICE_NAME )
          OutStd( "Service has been deleted" + hb_eol() )
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         OutStd( hb_StrFormat( "Error uninstalling service: %1$d %2$s", nError, cMsg ) + hb_eol() )
+         OutStd( hb_StrFormat( "Error uninstalling service: %1$d %2$s", wapi_GetLastError(), win_ErrorDesc() ) + hb_eol() )
       ENDIF
       EXIT
 
@@ -73,20 +59,20 @@ PROCEDURE WinMain( ... )
 
    OTHERWISE
 
-      netiosrv_Main( .T., ... ) /* Interactive */
+      netiosrv_Main( .T., ... )  /* Interactive */
       EXIT
 
    ENDSWITCH
 
    RETURN
 
-PROCEDURE hbnetio_WinServiceEntry( ... )
+STATIC PROCEDURE hbnetio_WinServiceEntry( ... )
 
 #if 0
    LOCAL bSignal := {|| win_serviceGetStatus() != WIN_SERVICE_RUNNING }
 #endif
 
-   netiosrv_Main( .F., ... ) /* Non-interactive */
+   netiosrv_Main( .F., ... )  /* Non-interactive */
 
    win_serviceSetExitCode( 0 )
    win_serviceStop()

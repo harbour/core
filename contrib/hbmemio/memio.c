@@ -1,6 +1,6 @@
 /*
  * Memory file system
- *   I/O driver for Memory file system
+ * I/O driver for Memory file system
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  *
@@ -58,11 +58,7 @@
 
 #include "directry.ch"
 
-/******************************************************
- *
- *  Memory file system
- *
- *******************************************************/
+/* -- Memory file system --- */
 
 /* change this define for public hb_memfs*() API */
 #ifdef HB_MEMFS_PUBLIC_API
@@ -161,8 +157,7 @@ static void memfsInit( void )
    s_fs.ulInodeAlloc = HB_MEMFS_INITSIZE;
    s_fs.pInodes = ( PHB_MEMFS_INODE * ) hb_xgrab( sizeof( PHB_MEMFS_INODE ) * s_fs.ulInodeAlloc );
    s_fs.ulFileAlloc = HB_MEMFS_INITSIZE;
-   s_fs.pFiles = ( PHB_MEMFS_FILE * ) hb_xgrab( sizeof( PHB_MEMFS_FILE ) * s_fs.ulFileAlloc );
-   memset( s_fs.pFiles, 0, sizeof( PHB_MEMFS_FILE ) * s_fs.ulFileAlloc );
+   s_fs.pFiles = ( PHB_MEMFS_FILE * ) hb_xgrabz( sizeof( PHB_MEMFS_FILE ) * s_fs.ulFileAlloc );
    s_fs.ulFileLast = 0;
    hb_vmAtQuit( memfsExit, NULL );
 }
@@ -171,13 +166,15 @@ static void memfsInit( void )
 /* Note: returns 1 based index! */
 static HB_ULONG memfsInodeFind( const char * szName, HB_ULONG * pulPos )
 {
-   HB_ULONG ulLeft, ulRight, ulMiddle;
-   int i;
+   HB_ULONG ulLeft, ulRight;
 
    ulLeft = 0;
    ulRight = s_fs.ulInodeCount;
    while( ulLeft < ulRight )
    {
+      HB_ULONG ulMiddle;
+      int i;
+
       ulMiddle = ( ulLeft + ulRight ) >> 1;
       i = strcmp( szName, s_fs.pInodes[ ulMiddle ]->szName );
       if( i == 0 )
@@ -200,8 +197,7 @@ static PHB_MEMFS_INODE memfsInodeAlloc( const char * szName )
 
    pInode->llSize = 0;
    pInode->llAlloc = HB_MEMFS_INITSIZE;
-   pInode->pData = ( char * ) hb_xgrab( ( HB_ULONG ) pInode->llAlloc );
-   memset( pInode->pData, 0, ( HB_SIZE ) pInode->llAlloc );
+   pInode->pData = ( char * ) hb_xgrabz( ( HB_SIZE ) pInode->llAlloc );
    pInode->szName = hb_strdup( szName );
 
    pInode->uiCount = 1;
@@ -217,6 +213,7 @@ static PHB_MEMFS_INODE memfsInodeAlloc( const char * szName )
 
    if( memfsInodeFind( szName, &ulInode ) )
    {
+      hb_xfree( pInode );
       hb_errInternal( 9999, "memfsInodeAlloc: Inode already exists", NULL, NULL );
       return NULL;
    }
@@ -255,7 +252,9 @@ static PHB_MEMFS_FILE memfsHandleToFile( HB_FHANDLE hFile )
 {
    if( hFile == FS_ERROR || ( HB_ULONG ) hFile == 0 || ( HB_ULONG ) hFile > s_fs.ulFileAlloc || s_fs.pFiles[ ( HB_ULONG ) hFile - 1 ] == NULL )
    {
-      /* hb_errInternal( 9999, "memfsHandleToFile: Invalid file handle", NULL, NULL ); */
+#if 0
+      hb_errInternal( 9999, "memfsHandleToFile: Invalid file handle", NULL, NULL );
+#endif
       return NULL;
    }
    else
@@ -288,7 +287,7 @@ static HB_FHANDLE memfsHandleAlloc( PHB_MEMFS_FILE pFile )
       }
    }
 
-   s_fs.pFiles = ( PHB_MEMFS_FILE * ) hb_xrealloc( s_fs.pFiles, ( s_fs.ulFileAlloc << 1 ) * sizeof( PHB_MEMFS_FILE ) );
+   s_fs.pFiles = ( PHB_MEMFS_FILE * ) hb_xrealloc( s_fs.pFiles, ( ( HB_SIZE ) s_fs.ulFileAlloc << 1 ) * sizeof( PHB_MEMFS_FILE ) );
    memset( s_fs.pFiles + s_fs.ulFileAlloc, 0, s_fs.ulFileAlloc * sizeof( PHB_MEMFS_FILE ) );
    ul = s_fs.ulFileAlloc;
    s_fs.ulFileAlloc <<= 1;
@@ -298,7 +297,7 @@ static HB_FHANDLE memfsHandleAlloc( PHB_MEMFS_FILE pFile )
 }
 
 
-/* ======== Public Memory FS functions ======== */
+/* --- Public Memory FS functions --- */
 
 HB_MEMFS_EXPORT HB_ERRCODE hb_memfsError( void )
 {
@@ -416,7 +415,7 @@ HB_MEMFS_EXPORT PHB_ITEM hb_memfsDirectory( const char * pszDirSpec, const char 
       hb_arrayNew    ( pSubarray, F_LEN );
       hb_arraySetCPtr( pSubarray, F_NAME, pDirEn[ ul ].szName );
       hb_arraySetNInt( pSubarray, F_SIZE, pDirEn[ ul ].llSize );
-      hb_arraySetDL  ( pSubarray, F_DATE, 0 );
+      hb_arraySetTDT ( pSubarray, F_DATE, 0, 0 );
       hb_arraySetC   ( pSubarray, F_TIME, "00:00:00" );
       hb_arraySetC   ( pSubarray, F_ATTR, "" );
    }
@@ -443,7 +442,7 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
       Compatibility mode == DenyNone.
     */
    uiFlags = ( uiFlags & ( FO_CREAT | FO_TRUNC | FO_EXCL ) ) |
-             ( uiFlags & FO_READWRITE ? FOX_READWRITE : ( uiFlags & FO_WRITE ? FOX_WRITE : FOX_READ ) ) |
+             ( ( uiFlags & FO_READWRITE ) ? FOX_READWRITE : ( ( uiFlags & FO_WRITE ) ? FOX_WRITE : FOX_READ ) ) |
              ( ( uiFlags & 0xf0 ) == FO_EXCLUSIVE ? FOX_EXCLUSIVE :
                ( ( uiFlags & 0xf0 ) == FO_DENYWRITE ? FOX_DENYWRITE :
                  ( ( uiFlags & 0xf0 ) == FO_DENYREAD ? FOX_DENYREAD : FOX_DENYNONE ) ) );
@@ -651,7 +650,6 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
 {
    PHB_MEMFS_FILE  pFile;
    PHB_MEMFS_INODE pInode;
-   HB_FOFFSET      llNewAlloc;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
       return HB_FALSE;  /* invalid handle */
@@ -668,7 +666,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
    /* Reallocate if neccesary */
    if( pInode->llAlloc < llOffset )
    {
-      llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
+      HB_FOFFSET llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
 
       if( llNewAlloc < llOffset )
          llNewAlloc = llOffset;
@@ -768,11 +766,7 @@ HB_MEMFS_EXPORT int hb_memfsLockTest( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_F
    return 0;
 }
 
-/******************************************************
- *
- *  I/O Driver for Memory file system
- *
- *******************************************************/
+/* --- I/O Driver for Memory file system --- */
 
 #define FILE_PREFIX      "MEM:"
 #define FILE_PREFIX_LEN  strlen( FILE_PREFIX )
@@ -950,7 +944,6 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
    HB_FHANDLE hFile;
    char       szNameNew[ HB_PATH_MAX ];
    HB_USHORT  uiFlags;
-   HB_SIZE    nLen;
 
    HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pPaths );
@@ -960,7 +953,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
 
    if( szDefExt )
    {
-      nLen = strlen( szNameNew );
+      HB_SIZE nLen = strlen( szNameNew );
       do
       {
          if( nLen == 0 || strchr( HB_OS_PATH_DELIM_CHR_LIST, szNameNew[ nLen - 1 ] ) )

@@ -107,7 +107,7 @@ typedef struct _ADSXAREA_
 {
    ADSAREA adsarea;
 
-   /* ================ Additional fields for ADSX RDD =================== */
+   /* Additional fields for ADSX RDD */
 
    PMIXTAG pTagList;
    PMIXTAG pTagCurrent;
@@ -125,21 +125,18 @@ static HB_USHORT s_uiRddIdADSADTX = ( HB_USHORT ) -1;
 static RDDFUNCS  adsxSuper;
 
 
-/***********************************************************************
- *  Misc functions
- ************************************************************************/
+/* Misc functions */
 
 static HB_ERRCODE hb_mixErrorRT( ADSXAREAP pArea,
                                  HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
                                  const char * filename, HB_ERRCODE errOsCode,
                                  HB_USHORT uiFlags )
 {
-   PHB_ITEM pError;
    HB_ERRCODE iRet = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, errGenCode );
       hb_errPutSubCode( pError, errSubCode );
       hb_errPutOsCode( pError, errOsCode );
@@ -173,9 +170,7 @@ static HB_ERRCODE hb_adsUpdateAreaFlags( ADSXAREAP pArea )
 }
 
 
-/************************************************************************
- *  Memory Index
- *************************************************************************/
+/* Memory Index */
 
 static PMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_USHORT uiLen )
 {
@@ -558,7 +553,6 @@ static void mixTagDestroy( PMIXTAG pTag )
 
 static PMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
 {
-   char    szTag[ MIX_MAXTAGNAMELEN + 1 ];
    PMIXTAG pTag;
 
    if( HB_IS_NUMBER( pOrder ) )
@@ -575,6 +569,8 @@ static PMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
    }
    else
    {
+      char szTag[ MIX_MAXTAGNAMELEN + 1 ];
+
       hb_strncpyUpperTrim( szTag, hb_itemGetCPtr( pOrder ), MIX_MAXTAGNAMELEN );
       pTag = pArea->pTagList;
       while( pTag && hb_stricmp( szTag, pTag->szName ) )
@@ -706,9 +702,7 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
 }
 
 
-/************************************************************************
- *  ADSX RDD METHODS
- *************************************************************************/
+/* ADSX RDD METHODS */
 
 static HB_ERRCODE adsxGoBottom( ADSXAREAP pArea )
 {
@@ -934,12 +928,10 @@ static HB_ERRCODE adsxPutValue( ADSXAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
 
 static HB_ERRCODE adsxClose( ADSXAREAP pArea )
 {
-   PMIXTAG pTag;
-
    pArea->pTagCurrent = NULL;
    while( pArea->pTagList )
    {
-      pTag = pArea->pTagList;
+      PMIXTAG pTag = pArea->pTagList;
       pArea->pTagList = pArea->pTagList->pNext;
       mixTagDestroy( pTag );
    }
@@ -1123,9 +1115,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    }
 
    if( bKeyADS && bForADS && bWhileADS )
-   {
       return SUPER_ORDCREATE( &pArea->adsarea.area, pOrderInfo );
-   }
 
    if( pArea->adsarea.area.lpdbOrdCondInfo &&
        ( ( bForADS && pArea->adsarea.area.lpdbOrdCondInfo->abFor ) ||
@@ -1390,9 +1380,12 @@ static HB_ERRCODE adsxOrderDestroy( ADSXAREAP pArea, LPDBORDERINFO pOrderInfo )
       else
       {
          pTag2 = pArea->pTagList;
-         while( pTag2->pNext != pTag )
-            pTag2 = pTag2->pNext;
-         pTag2->pNext = pTag->pNext;
+         if( pTag2 )
+         {
+            while( pTag2->pNext != pTag )
+               pTag2 = pTag2->pNext;
+            pTag2->pNext = pTag->pNext;
+         }
       }
 
       if( pTag == pArea->pTagCurrent )

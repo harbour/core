@@ -1,6 +1,4 @@
-/*
- * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- */
+/* Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl> */
 
 HBNETIO is implementation of alternative RDD IO API for Harbour with
 additional RPC support. It contains either client and server code.
@@ -34,11 +32,11 @@ Client side functions:
       It possible to open many different connections and keep them open.
       In RDD IO operations and RPC calls it's possible to specify server
       address as part of file or procedure/function name, i.e.
-         USE net:192.168.0.2:2942:path/to/file
-         netio_ProcExec( "192.168.0.2:2942:procname" )
+         USE net:example.org:2942:path/to/file
+         netio_ProcExec( "example.org:2942:procname" )
       or using UNC paths:
-         USE net://192.168.0.2:2942/path/to/file
-         netio_ProcExec( "//192.168.0.2:2942/procname" )
+         USE net://example.org:2942/path/to/file
+         netio_ProcExec( "//example.org:2942/procname" )
       It's also possible to specify the password. The connection string
       is in format:
          <server>[:<port>[:<passwd>]]:<filepath|funcname>

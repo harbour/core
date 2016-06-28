@@ -1,5 +1,4 @@
 /*
- * Author....: Dave Pearson
  * BBS.......: The Dark Knight Returns
  * Date......: 1993-03-31
  *
@@ -10,7 +9,6 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  *
  * Modification history:
- * ---------------------
  *
  * 2001-08-19 Modifications for Harbour by Brian Hays, also placed in
  * the public domain.

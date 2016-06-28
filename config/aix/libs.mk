@@ -1,6 +1,6 @@
 # When compiling and linking with -pthread, the library search path should
 # include -L/usr/lib/threads at the beginning of the path.
-# http://www.ibm.com/developerworks/aix/library/au-gnu.html
+# https://www.ibm.com/developerworks/aix/library/au-gnu.html
 # (libc is there)
 ifeq ($(HB_LINKING_VMMT),yes)
    SYSLIBPATHS := /usr/lib/threads
@@ -22,10 +22,16 @@ ifneq ($(HB_LINKING_RTL),)
       SYSLIBS += X11
       SYSLIBPATHS += /usr/X11R6/lib
    endif
+   ifneq ($(HB_HAS_PCRE2),)
+      ifeq ($(HB_HAS_PCRE2_LOCAL),)
+         SYSLIBS += pcre2
+      endif
+   else
    ifneq ($(HB_HAS_PCRE),)
       ifeq ($(HB_HAS_PCRE_LOCAL),)
          SYSLIBS += pcre
       endif
+   endif
    endif
    ifeq ($(HB_HAS_ZLIB_LOCAL),)
       SYSLIBS += z

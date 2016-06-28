@@ -57,5 +57,5 @@
 #undef _HB_STACK_MACROS_
 
 #if ! defined( _HB_API_INTERNAL_ )
-#  define _HB_API_INTERNAL_
+   #define _HB_API_INTERNAL_
 #endif

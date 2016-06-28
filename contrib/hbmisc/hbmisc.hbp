@@ -5,7 +5,9 @@
 
 -w3 -es2
 
-${hb_name}.hbx
+-hbx=${hb_name}
+
+hbnf.hbc
 
 bbabble.c
 dates.c
@@ -22,8 +24,10 @@ fcomma.prg
 fileread.prg
 hbedit.prg
 nconvert.prg
-numtxthu.prg
+ntp.prg
+numtxtde.prg
 numtxten.prg
+numtxthu.prg
 numtxtru.prg
 stringp.prg
 twirler.prg

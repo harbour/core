@@ -77,9 +77,9 @@ HB_ZNETSTREAM;
 #define HB_ZNET_READAHEAD     0x40
 
 #if MAX_MEM_LEVEL >= 8
-#  define HB_ZNET_MEM_LEVEL   8
+   #define HB_ZNET_MEM_LEVEL   8
 #else
-#  define HB_ZNET_MEM_LEVEL   MAX_MEM_LEVEL
+   #define HB_ZNET_MEM_LEVEL   MAX_MEM_LEVEL
 #endif
 
 /* return status of last compression/decompression operation */

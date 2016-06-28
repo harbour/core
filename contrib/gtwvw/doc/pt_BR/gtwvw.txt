@@ -1,0 +1,4866 @@
+/* Copyright 2008 Manoel N. Angeiras N. (angeiras gmail@com) */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw__MakeDlgTemplate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw__MakeDlgTemplate( Dlg, aItens1, aItens2, aItens3, aItens4, aItens5, aItens6,
+      aItens7, aItens8, aItens9, aItens10 )
+   $ARGUMENTS$
+      aDlg aItens1 aItens2 aItens3 aItens4 aItens5 aItens6 aItens7 aItens8 aItens9
+      aItens10
+   $DESCRIPTION$
+      Cria um modelo de janela de diálogo (template).
+   $RETURNS$
+      String com o novo template de diálogo criado e o seu tamanho.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_AddRows()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_AddRows( nWinNum, nRows )
+   $ARGUMENTS$
+      nWinNum Número da janela. O Default é a janela corrente. nRows Número de
+      linhas para adicionar ou diminuir (se nRows < 0).
+   $DESCRIPTION$
+      Adiciona ou diminui nRows linhas da janela nWinNum. As novas linhas
+      adicionadas serao coloridas com a cor da coluna 0 da linha anterior. Nao
+      haverá checagem para determinar se a janela se tornou maior que a área de
+      desktop (exceto se no modo MainCoord, porque precisamos desses limites para a
+      funçao MaxRow()).
+   $RETURNS$
+      .T. se a operação foi bem-sucedida.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_AppendMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_AppendMenu( hMenu, nFlags, nMenuItemId, cCaption )
+   $ARGUMENTS$
+      hMenu identifica o menu que será incluido o item. nFlags Especifica os flags
+      para controlar a aparencia e o comportamento do item que está sendo incluido.
+      Esse parâmetro pode ser uma combinaçao de diversos valores (as definiçoes dos
+      flags válidos estao no arquivo winuser.ch) hMenuItemId Especifica cada um dos
+      identificadores do novo item do menu ou, se o parâmetro nFlags estiver setado
+      para MF_POPUP, o handle do submenu. cCaption Especifica ou a string que será
+      apresentada no menu/submenu ou o caminho para o bitmap que será apresentado no
+      menu/submenu.
+   $DESCRIPTION$
+      Essa funçao, adiciona um novo item de menu para o menu hMenu. Através dessa
+      funçao podemos também especificar o conteúdo, aparencia e o comportamento de
+      cada item do menu.
+   $RETURNS$
+      Se a função for bem-sucedida, retorna um valor diferente de zero, caso
+      contrário retorna zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbAddString()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbAddString( nHandleDialog, nIDComboBox, cItem )
+   $ARGUMENTS$
+      nHandleDialog Handle da janela de diálogo. nIDComboBox Identificador do
+      combobox. cItem Item que deve ser incluído no combobox.
+   $DESCRIPTION$
+      Adiciona um item em um combobox.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbCreate( nWinNum, nTop, nLeft, nWidth, aText, bBlock, nListLines,
+      nReserved, nKbdType, aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft Coordenadas
+      para o combobox. nWidth Tamanho do combobox. aText Matriz com os elementos do
+      combobox. O default é { "empty" }. bBlock Bloco de código que será executado
+      para os seguintes eventos: CBN_SELCHANGE: CBN_SETFOCUS: CBN_KILLFOCUS:
+      Usuário mudou a seleção (não é executado quando a mudança é feita pelo
+      programa) Quando o foco vai para o combobox Quando o foco sai do combobox
+
+      Esse bloco de código será avaliado com os seguintes parâmetros: nWinNum nCBId
+      nType nIndex nListLines Número de itens que serão apresentados no combobox (o
+      default é 3). O número será automaticamente ajustado se esse parâmetro for
+      maior que a matriz aText. nReserved Reservado para uso futuro (esse parâmetro
+      atualmente é ignorado). nKbdType Especifica o comportamento do combobox. Pode
+      ser um dos seguintes valores: 0: 1: Similar as convenções dos programas para
+      o windows (isto é, ENTER/ESC faz com que o combobox perca o foco) Similar ao
+      Cl*pper (ENTER mostra os itens do combobox, UP/DOWN/TAB/SHIFTTAB/ESC faz o
+      combobox perder o foco) Número da janela atual Identificador do combobox Tipo
+      do evento (apenas os três informados acima são suportados) Índice do item
+      selecionado (comecando em 0)
+
+      O default é 0. aOffset Matriz com quatro elementos com coordenadas dos cantos
+      superior, direito de offset para alinhamento do combobox com as
+      linhas/colunas. esquerdo, inferior e
+   $DESCRIPTION$
+      Cria um combobox para a janela atual.
+   $RETURNS$
+      O handle do combobox, se a operação for bem-sucedida, 0 se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbDestroy( nWinNum, nCBId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCBId Identificador do
+      combobox.
+   $DESCRIPTION$
+      Exclui um combobox da janela atual.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbEnable()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbEnable( nWinNum, nCBId, lEnable )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCBId Identificador do
+      combobox. lEnable Habilita (.T.) ou desabilita (.F.) o acesso ao combobox.
+   $DESCRIPTION$
+      Habilita/Desabilita o acesso ao combobox nCBId da janela atual.
+   $RETURNS$
+      Retorna o estado anterior do combobox (.T. habilitado, .F. desabilitado). Se
+      a função falhar, também retorna .F..
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbFindString()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbFindString( nWinNum, nCBId, cString )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCBId Identificador do
+      combobox. cString String para procurar.
+   $DESCRIPTION$
+      Procura a string cString no combobox nCBId da janela atual.
+   $RETURNS$
+      Índice do item que contém a string, ou ­1 se falhar (ou não encontrar).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbGetCurText()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbGetCurText( nWinNum, nCBId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janel atual. nCBId Identificador do
+      combobox.
+   $DESCRIPTION$
+      Obtém a string da posiçao atual do combobox.
+   $RETURNS$
+      Retorna a string, se a operação for bem-sucedida, ou "" se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbGetIndex()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbGetIndex( nWinNum, nCBId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCBId Identificador do
+      combobox.
+   $DESCRIPTION$
+      Obtém a seleçao atual em um combobox (comecando em 0).
+   $RETURNS$
+      Retorna a posição atual em um combobox ou -1 se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbIsDropped()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbIsDropped( nWinNum, nCBId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCBId Identificador do
+      combobox.
+   $DESCRIPTION$
+      Obtém o estado atual de um combobox.
+   $RETURNS$
+      .T. se os itens estão sendo mostrados, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbIsFocused()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbIsFocused( nWinNum, nCBId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCBId Identificador do
+      combobox.
+   $DESCRIPTION$
+      Obtém a informaçao se o foco está atualmente no combobox nCBId da janela
+      atual.
+   $RETURNS$
+      .T. se o foco está no combobox, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbSetCodeblock()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbSetCodeblock( nWinNum, nCBId, bBlock )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCBId Identificador do
+      combobox. bBlock Novo bloco de código que será atribuido ao combobox.
+   $DESCRIPTION$
+      Atribui um novo bloco de código para o combobox nCBId da janela atual.
+   $RETURNS$
+      .T. se a operação foi bem-sucedida, .F. se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbSetCurSel()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbSetCurSel( nHandleDialog, nIDCombobox, nIndex )
+   $ARGUMENTS$
+      nHandleDialog Handle da janela de diálogo. nIDCombobox Identificador do
+      combobox. nIndex Índice do item, iniciando em 0. Se for ­1, remove a seleçao
+      corrente e limpa o controle edit associado ao combobox.
+   $DESCRIPTION$
+      Seleciona um item na lista de um combobox.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbSetFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbSetFont( nWinNum, cFontFace, nHeight, nWidth, nWeight, nQuality,
+      lItalic, lUnderline, lStrikeout )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. cFontName Nome da Fonte.
+      nHeight Largura da fonte. nWidth Altura da fonte. nWeight "Peso" da fonte.
+      nQuality Qualidade da fonte. lItalic Indica se a fonte está em itálico (.T.)
+      ou nao (default). lUnderline Indica se a fonte está sobrescrita (.T.) ou
+      nao (default). lStrikeout Indica se a fonte está strikeout (.T.) ou nao (
+      default).
+   $DESCRIPTION$
+      Inicializa a fonte para todos os combobox da janela atual (e para todos os
+      que serao criados posteriormente).
+   $RETURNS$
+      .T. se a operação for bem-sucedida, .F. se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cbSetIndex()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cbSetIndex( nWinNum, nCBId, nIndex )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCBId Identificador do
+      combobox. nIndex Índice do item no combobox (comecando em 0).
+   $DESCRIPTION$
+      Configura a seleçao atual em um combobox.
+   $RETURNS$
+      .T. se a operação foi bem-sucedida, .F. se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CenterWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CenterWindow( nWinNum, lCenter, lPaint ) Verifique a função
+      wvw_SetWindowCentre().
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ChooseColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ChooseColor( nRGBInit, aRGB16, nFlags )
+   $ARGUMENTS$
+      nRGBInit Cor inicial. aRGB16 Matriz com 16 elementos, contendo os índices das
+      cores. O default é uma matriz com o conjunto de cores de um botao. nFlags
+      Flags que indicam a posiçao inicial no diálogo de seleçao de cores. O default
+      é a combinaçao das opçoes CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN.
+   $DESCRIPTION$
+      Abre um diálogo de seleçao de cores.
+   $RETURNS$
+      Um valor RGB indicando a seleção de cor do usuário, ou zero se o usuário
+      cancelar o diálogo.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ChooseFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout )
+   $ARGUMENTS$
+      cFontName Nome da fonte. nHeight Largura da fonte. nWidth Altura da fonte.
+      nWeight "Peso" da fonte. nQuality Qualidade da fonte. lItalic Indica se a
+      fonte está em itálico (.T.) ou nao (default). lUnderline Indica se a fonte
+      está sobrescrita (.T.) ou nao (default). lStrikeout Indica se a fonte está
+      strikeout (.T.) ou nao (default).
+   $DESCRIPTION$
+      Abre um diálogo de seleçao de fonte.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ClientToScreen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ClientToScreen( nWinNum, nRow, nCol )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a jenala atual. nRow Linha da janela
+      atual. nCol Coluna da janela atual.
+   $DESCRIPTION$
+      Converte linha e coluna para as coordenadas x,y relativas ao vídeo.
+   $RETURNS$
+      Matriz com duas posições contendo as coordenadas x,y.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreateDialogDynamic()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreateDialogDynamic( cDlgTemplate|nResource, lHandle,
+      cDlgProc|bDlgProc|nDlgProc, nFlag )
+   $ARGUMENTS$
+      cDlgTemplate|nResource lHandle cDlgProc|bDlgProc|nDlgProc nFlag
+   $DESCRIPTION$
+      Cria uma janela de diálogo dinâmicamente.
+   $RETURNS$
+      Handle da janela de diálogo ou 0.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreateDialogModal()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreateDialogModal( cDialog|nResource|cDlgTemplate, NIL,
+      bDlgProc|cDlgProc, nFlag, nHandle )
+   $ARGUMENTS$
+      cDialog|nResource|cDlgTemplate bDlgProc|cDlgProc nFlag nHandle
+   $DESCRIPTION$
+      Cria uma janela de diálogo modal.
+   $RETURNS$
+      Handle da janela de diálogo ou 0.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreateFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreateFont(cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
+      lStrikeout, nCharset, nQuality, nEscapement )
+   $ARGUMENTS$
+      cFontFace Uma string que especifica o nome da fonte. nHeight A largura da
+      fonte. nWidth O tamanho da fonte. nWeight "Peso" da fonte. lItalic Identifica
+      que a fonte será itálica. lUnderline Identifica uma fonte sublinhada.
+      lStrikeOut Identifica uma fonte strikeout. nCharSet Especifica o cojnunto de
+      caracteres a ser usado. nQuality Identifica a qualidade de saída da fonte.
+      nEscapement Especifica o ângulo.
+   $DESCRIPTION$
+      Cria uma fonte lógica com as características informadas nos parâmetros. Essa
+      fonte pode ser selecionada como a fonte corrente para todos os dispositivos
+      usados pela aplicaçao.
+   $RETURNS$
+      Handle da fonte se a operação de criação for bem-sucedidada, 0 (zero) caso
+      contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreateMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreateMenu()
+   $ARGUMENTS$
+      nenhum
+   $DESCRIPTION$
+      Cria um menu. Inicialmente o menu está vazio, mas pode ser preenchido por
+      itens através da funçao wvw_AppendMenu().
+   $RETURNS$
+      Retorna o handle do novo menu criado. Se falhar, retorna NULL.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_CreatePopupMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_CreatePopupMenu()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Cria um menu drop-down, submenu ou menu de atalho. O menu está inicialmente
+      vazio, mas pode ser preenchido através da funçao wvw_AppendMenu().
+   $RETURNS$
+      Retorna o handle do novo menu popup criado. Se falhar, retorna NULL.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxCreate( nWinNum, nTop, nLeft, nBottom, nRight, cText, cImage/nImage,
+      bBlock, aOffset, nStretchBitmap, lMap3DColors )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para criação do checkbox. cText Texto do checkbox.
+      cImage/nImage Se o parâmetro for numérico, indica um ID de um RESOURCE em um
+      arquivo .RC. Se o parâmetro for uma string, indica um arquivo de imagem (deve
+      ser informado o caminho completo). bBlock Bloco de código que será executado
+      sempre que um evento BN_CLICK for executado. Sempre serão passados os
+      parâmetros de nWinNum e o identificador do checkbox para a função. Esse
+      parâmetro tem que ser informado, caso contrário o checkbox não é criado.
+      aOffSet Matriz com quatro elementos com coordenadas dos cantos superior,
+      direito de offset para alinhamento do checkbox com as linhas/colunas.
+      nStretchBitmap Um número entre 0 e 1 (inclusive) como um fator para
+      "esticar" o bitmap. Por exemplo: 1.0 0.5 0 O bitmap vai cobrir por inteiro o
+      botão O bitmap vai cobrir 50% do botão O bitmap não vai ser "esticado"
+      esquerdo, inferior e
+
+      O default é 1. lMap3DColors Se a imagem terá efeito de transparencia (.T.)
+      ou nao (.F.). Atençao para o fato que existe a limitaçao de bitmaps com, no
+      máximo, 256 cores.
+   $DESCRIPTION$
+      Cria um checkbox.
+   $RETURNS$
+      Se a operação for bem-sucedida, retorna o handle do checkbox. Se falhar,
+      retorna 0.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxDestroy( nWinNum, nCXId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCXId Identificador do
+      checkbox.
+   $DESCRIPTION$
+      Exclui um checbox da janela atual.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxEnable()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxEnable( nWinNum, nCXId, lToggle )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCXId Identificador do
+      checkbox. lToggle Habilita/Desabilita um checkbox.
+   $DESCRIPTION$
+      Permite habilitar/desabilitar um checkbox nCXId na janela atual.
+   $RETURNS$
+      Retorna o estado anterior do checkbox, se o parâmetro lToggle for informado,
+      caso contrário, retorna o estado atual do checkbox (.T. indica habilitado,
+      .F. desabilitado).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxGetCheck()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxGetCheck( nWinNum, nCXId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCXId Identificador do
+      checkbox
+   $DESCRIPTION$
+      Obtém o estado atual de um checkbox.
+   $RETURNS$
+      Pode retornar os seguintes valores: 0 1 2 Não selecionado Selecionado
+      Indeterminado
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxSetCheck()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxSetCheck( nWinNum, nCXId, nCheckState )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCXId Identificador do
+      checkbox. nCheckState 0 1 2 Não selecionado Selecionado Indeterminado
+   $DESCRIPTION$
+      Muda o estado de um checkbox.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxSetCodeblock()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxSetCodeblock( nWinNum, nCXId, bBlock )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCXId Identificador do
+      checkbox. bBlock Bloco de código.
+   $DESCRIPTION$
+      Atribui um novo bloco de código bBlock ao checkbox nCXId na janela atual.
+   $RETURNS$
+      .T. se a operação for bem-sucedida, .F. se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_cxSetFocus()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_cxSetFocus( nWinNum, nCXId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCXId Identificador do
+      checkbox.
+   $DESCRIPTION$
+      Configura o foco para o checkbox nCXId.
+   $RETURNS$
+      .T. se a operação foi bem-sucedida, .F. se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DeleteMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DeleteMenu( hMenu, nPosition, nFlag )
+   $ARGUMENTS$
+      hMenu Identifica o menu que será alterado. nPosition Especifica o item do menu
+      que será deleteado, como determinado pelo parâmetro nFlag. nFlag Especifica
+      como o parâmetro nPosition será interpretado. Esse parâmetro deve ser apenas
+      um desses dois valores: MF_BYCOMMAND MF_BYPOSITION Indica que nPosition dá a
+      identificação do item do menu (default) Indica que nPosition dá a posição
+      numérica (começando por zero) do item do menu.
+   $DESCRIPTION$
+      Essa funçao deleta um item do menu especificado. Se o item do menu for a
+      identificaçao de um submenu, todo o submenu será apagado.
+   $RETURNS$
+      Se a função for bem-sucedida, retorna um valor diferente de zero, caso
+      contrário retorna zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DestroyMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DestroyMenu( hMenu )
+   $ARGUMENTS$
+      hMenu Identifica o menu que será destruído.
+   $DESCRIPTION$
+      Essa funçao destroi o menu especificado por hMenu
+   $RETURNS$
+      Se a função for bem-sucedida, retorna um valor diferente de zero, caso
+      contrário retorna zero.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DlgSetIcon()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DlgSetIcon( nHandleDialog, ncIcon )
+   $ARGUMENTS$
+      nHandleDialog Handle da janela de diálogo. ncIcon Se o parâmetro for passado
+      como numérico, identifica o RESOURCE em um arquivo RC. Se o parâmetro for
+      passado como string, identifica o nome do arquivo que contém o ícone.
+   $DESCRIPTION$
+      Define o ícone em uma janela de diálogo.
+   $RETURNS$
+      Se a operação for bem-sucedida, o handle do ícone, caso contrário NIL.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawBoxGet()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawBoxGet( nWinNum, nRow, nCol, nWidth, aOffset )
+   $DESCRIPTION$
+      Desenha um quadro para a entrada de dados. Essa funçao desenha linhas brancas
+      na parte externa do lado direito e da parte de baixo (diferentemente da GTWVT)
+   $RETURNS$
+      .T. inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawBoxGroup()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawBoxGroup( nWinNum, nTop, nLeft, nBottom, nRight, aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do quadro. aOffset Matriz com quatro
+      elementos com coordenadas dos cantos superior, direito de offset para
+      alinhamento do quadro com as linhas/colunas.
+   $DESCRIPTION$
+      Desenha um quadro.
+   $RETURNS$
+      .T. esquerdo, inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawBoxRaised()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawBoxRaised( nNumWin, nTop, nLeft, nBottom, nRight, lTight/aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas que serao usadas para desenhar o quadro. lTight/aOffset Se
+      o parametro lTight for usado, o quadro é desenhado dentro da regiao dos
+      caracteres e as linhas da parte superior (topo e esquerdo) serao dois pixels
+      abaixo para ajudar no espaçamento dos caracteres (esse tipo de objeto GUI
+      geralmente é sobrescrito por caracteres). Se o parâmetro aOffset for usado,
+      uma matriz deve ser definida com quatro elementos com coordenadas dos cantos
+      superior, esquerdo, inferior e direito de offset para alinhamento do quadro
+      com as linhas/colunas.
+   $DESCRIPTION$
+      Desenha um quadro em relevo nas coordenadas especificadas.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawBoxRaised()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawBoxRaised( nNumWin, nTop, nLeft, nBottom, nRight, lTight/aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas que serao usadas para desenhar o quadro. lTight/aOffset Se
+      o parametro lTight for usado, o quadro é desenhado dentro da regiao dos
+      caracteres e as linhas da parte superior (topo e esquerdo) serao dois pixels
+      abaixo para ajudar no espaçamento dos caracteres (esse tipo de objeto GUI
+      geralmente é sobrescrito por caracteres). Se o parâmetro aOffset for usado,
+      uma matriz deve ser definida com quatro elementos com coordenadas dos cantos
+      superior, esquerdo, inferior e direito de offset para alinhamento do quadro
+      com as linhas/colunas.
+   $DESCRIPTION$
+      Desenha um quadro em relevo nas coordenadas especificadas.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawBoxRecessed()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawBoxRecessed( nWinNum, nTop, nLeft, nBottom, nRight, lTight/aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas que serao usadas para desenhar o quadro. lTight/aOffset Se
+      o parametro lTight for usado, o quadro é desenhado dentro da regiao dos
+      caracteres e as linhas da parte superior (topo e esquerdo) serao dois pixels
+      abaixo para ajudar no espaçamento dos caracteres (esse tipo de objeto GUI
+      geralmente é sobrescrito por caracteres). Se o parâmetro aOffset for usado,
+      uma matriz deve ser definida com quatro elementos com coordenadas dos cantos
+      superior, esquerdo, inferior e direito de offset para alinhamento do quadro
+      com as linhas/colunas.
+   $DESCRIPTION$
+      Desenha um quadro em baixo relevo nas coordenadas especificadas.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawButton( nWinNum, nTop, nLEft, nBottom, nRight, cText, cImage/nImage,
+      nFormat, nTextColor, nBkClor, nImageAt )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nButtom,
+      nRight Coordenadas para desenho do botão. cText Texto para o botão.
+      cImage/nImage Se o parâmetro for uma string, indica o caminho + nome do
+      arquivo contendo uma imagem para ser lido. Se o parâmetro for um número,
+      indica a posição da imagem no cache de imagens do aplicativo. nFormat Indica o
+      formato do botão. Pode ser: 0 1 2 Raised (default) Recessed Outline
+
+      nTextColor Índice da cor do texto do botao nBkColor Índica dor cor de fundo do
+      botao nImageAt Parâmetro ignorado.
+   $DESCRIPTION$
+      Desenha um botao.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawColorRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawColorRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      nRGBColor )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do retângulo. aOffPixels Matriz com quatro
+      elementos com coordenadas dos cantos superior, esquerdo, direito de offset
+      para alinhamento do retângulo com as linhas/colunas. nRGBColor Cor para
+      preenchimento do retângulo.
+   $DESCRIPTION$
+      Desenha um retângulo colorido. Essa funçao é compatível com a
+      wvw_FillRectangle(), mantida apenas para compatibilidade com a GTWVT.
+   $RETURNS$
+      nenhum. inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawEllipse()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawEllipse( nWinNum, nTop, nLeft, nBottom, nRight, aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho da elipse. aOffset Matriz com quatro elementos
+      com coordenadas dos cantos superior, direito de offset para alinhamento da
+      elipse com as linhas/colunas.
+   $DESCRIPTION$
+      Desenha uma elipse.
+   $RETURNS$
+      Se bem-sucedido, retorna um valor não-zero, caso contrário retorna zero.
+      esquerdo, inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawFocusRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawFocusRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffSet )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do retângulo. aOffset Matriz com quatro
+      elementos com coordenadas dos cantos superior, esquerdo, direito de offset
+      para alinhamento do retângulo com as linhas/colunas.
+   $DESCRIPTION$
+      Desenha um retângulo no estilo usado para indicar que ele está com o foco.
+   $RETURNS$
+      Se bem-sucedido, retorna um valor não-zero, caso contrário retorna zero.
+      inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawGridHorz()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawGridHorz( nWinNum, nTop, nLeft, nBottom, nRight, nRows )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas que será desenhada a grade horizontal. nRows Número de
+      linhas para a grade horizontal que será desenhada.
+   $DESCRIPTION$
+      Desenha uma grade horizontal.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawGridVert()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawGridVert( nWinNum, nTop, nBottom, aCols, nCols, aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nBottom Linha
+      inicial e final para desenho da grade vertical. aCols Matriz que determina as
+      colunas que serao desenhadas. nCols Número de colunas que serao desenhadas.
+      aOffset Matriz com quatro elementos com coordenadas dos cantos superior,
+      esquerdo, direito de offset para alinhamento da grade vertical com as
+      linhas/colunas.
+   $DESCRIPTION$
+      Desenha uma grade vertical.
+   $RETURNS$
+      .T. inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawImage()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawImage( nWinNum, nTop, nLeft, nBottom, nRight, cImage/nPictureSlot,
+      lTight/aOffset, lTransparent )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual.
+      nTop, nLeft, nBottom, nRight Coordenadas para desenho da imagem. Se a coordenada
+      nBottom é NIL, então a altura da imagem será proporcional a largura da imagem.
+      Se a coordenada nRight é NIL, então a largura da imagem será proporcional a
+      altura da imagem. Se ambas as coordenadas nBottom e nRight são NIL, então o
+      tamanho original da imagem será usado. cImage/nPictureSlot Se o parâmetro for
+      passado como string, uma imagem será lida no caminho especificado por cImage.
+      Se o parâmetro for numérico, será um índice para a lista de imagens já
+      carregada pelo aplicativo. Aqui vale um comentário: toda imagem lida é
+      colocada em um cache. Portanto é interessante não usar essa função para
+      desenhar um grande número de imagens. lTight/aOffset Indica como a imagem será
+      ajustada em pixels para as coordenadas de linha/coluna. lTransparent Se .T.,
+      indica que a image é transparente, .F. caso contrário.
+
+      Se for passado como .T., a cor para transparencia usada será do pixel do canto
+      superior esquerdo.
+   $DESCRIPTION$
+      Desenha uma imagem.
+   $RETURNS$
+      .T. se conseguiu desenhar a imagem corretamente, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLabel()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLabel( nWinNum, nRow, nCol, cLabel, nAlign, nEscapement, nTextColor,
+      nBkColor, cFontFace, nHeight, nWidth, nWeight, nQuality, nCharSet, lItalic ,
+      lUnderline, lStrikeOut )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nRow, nCol Linha/Coluna
+      para desenho do label. cLabel String que será desenhada. nAlign Alinhamento
+      wingdi.ch). nEscapement Especifica o ângulo. nTextColor Índice da cor do
+      label. nBkColor Índice da cor de fundo do label. cFontFace Nome da fonte.
+      nHeight Largura da fonte. nWidth Altura da fonte. nWeight "Peso" da fonte.
+      nQuality Identifica a qualidade de saída da fonte. nCharSet Especifica o
+      cojnunto de caracteres a ser usado. lItalic da string. O default é TA_LEFT (as
+      outras definições estão no arquivo
+
+      Identifica que a fonte será itálica. lUnderline Identifica uma fonte
+      sublinhada. lStrikeOut Identifica uma fonte strikeout.
+   $DESCRIPTION$
+      Desenha um label.
+   $RETURNS$
+      .T. se conseguiu desenhar, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLabelEx()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLabelEx( nWinNum, nRow, nCol, cLabel, nAlign, cTextColor, nBkColor,
+      nSlotFont )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nRow, nCol Linha/Coluna
+      para desenho do label. cLabel String que será desenhada. nAlign Alinhamento do
+      texto no label. O default é TA_LEFT (as outras definiçoes estao no arquivo
+      wingdi.ch). cTextColor Índice da cor para o texto. nBkColor Índice da cor de
+      fundo do label. nSlotFont Índice do cache de fontes da aplicaçao. Se nao
+      existir uma fonte associada ao índice passado, a funçao nao será executada.
+   $DESCRIPTION$
+      Desenha um label.
+   $RETURNS$
+      .T. se conseguiu desenhar a label, parâmetro nSlotFont for inválido). .F.
+      caso contrário (retornará falso também se o
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLabelObj()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLabelObj( nWinNum, nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz,
+      nAlignVert, nTextColor, nBkColor, hFont, aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenhar o label. cLabel String que será desenhada.
+      nAlignHorz Alinhamento horizontal do label. O default é 0. nAlignVert
+      Alinhamento vertical do label. O default é 0. nTextColor Indice da cor do
+      label. nBkColor Índice da cor do fundo do label. hFont Fonte que será
+      desenhada o label. aOffSet Matriz com quatro elementos de alinhamento do label
+      com as coordenadas nTop, nLeft, nBottom, nRight.
+   $DESCRIPTION$
+      Desenha um label.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLine()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLine( nWinNum, nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign,
+      nStyle, nThick, nColor, aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho da linha. nOrient Orientação da linha: 0 1
+      para linha horizontal para linha vertical.
+
+      nFormat Formato da linha. Pode ser: 0 1 2 Raised Recessed Plain
+
+      nAlign Alinhamento da linha: 0 1 2 3 4 Center Top Bottom Left Right
+
+      nStyle Estilo do traço. As definiçoes estao no arquivo wingdi.ch (PS_SOLID,
+      PS_DOT, etc.). nThick Largura do traço. O default é 0, que indica a largura
+      de um único pixel. nColor Cor da linha (valor com 32 bits de uma cor RGB).
+      aOffset Matriz com quatro elementos com coordenadas dos cantos superior,
+      direito de offset para alinhamento da linha com as linhas/colunas.
+   $DESCRIPTION$
+      Desenha uma linha.
+   $RETURNS$
+      esquerdo, inferior e
+
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawLineEx()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawLineEx( nWinNum, nTop, nLeft, nBottom, nRight, nOrient, nFormat,
+      nAlign, nSlotPen )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho da linha. nOrient Orientação da linha: 0 1
+      para linha horizontal para linha vertical.
+
+      nFormat Formato da linha. Pode ser: 0 1 2 Raised Recessed Plain
+
+      nAlign Alinhamento da linha: 0 1 2 3 4 Center Top Bottom Left Right
+
+      nSlotPen Índice do cache de traços.
+   $DESCRIPTION$
+      Desenha uma linha.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawMenuBar()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawMenuBar()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Redesenha o menu da janela atual.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawOutline()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawOutline( nWinNum, nTop, nLeft, nBottom, nRight, nThick, nShape,
+      nRGBColor )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do quadro. nThick Formato do traço. As
+      definiçoes estao no arquivo wingdi.ch (PS_SOLID, PS_DOT, etc.). nShape
+      Parâmetro ignorado. nRGBColor Especifica a referencia de cor para o traço (
+      valor com 32 bits de uma cor RGB).
+   $DESCRIPTION$
+      Desenha um quadro nas coordenadas nTop, nLeft, nBottom, nRight, com os parâmetros
+      de estilo e cor especificados em nThick e nRGBColor.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawOutlineEx()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawOutlineEx( nWinNum, nTop, nLeft, nBottom, nRight, nSlotPen )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do quadro. nSlotPen Índice do cache de traços.
+   $DESCRIPTION$
+      Desenha um quadro no formato outline.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawPicture()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawPicture( nWinNum, nTop, nLeft, nBottom, nRight, nSlot, lTight/aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho da imagem. nSlot Índice do cache de imagens.
+      lTight/aOffset Matriz com quatro elementos com coordenadas dos cantos
+      superior, direito de offset para alinhamento da imagem com as linhas/colunas.
+   $DESCRIPTION$
+      Desenha uma imagem, gravando-a no cache de imagens.
+   $RETURNS$
+      Nenhum. esquerdo, inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawProgressBar()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawProgressBar( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      nPercent, nBackColor, nBarColor, cImage, lVertical, nDirection )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual.
+      nTop, nLeft, nBottom, nRight Coordenadas para desenho da barra de progresso.
+      aOffPixels Matriz com quatro elementos com coordenadas dos cantos superior,
+      esquerdo, direito de offset para alinhamento da barra de progresso com as
+      linhas/colunas. nPercent Valor que identifica o preenchimento total da barra
+      de progresso. nBackColor Cor de fundo. nBarColor Cor da barra de progresso.
+      cImage Imagem que será apresentada quando a barra estiver em progresso.
+      lVertical .T. indica que a barra será vertial, .F. que será horizontal.
+      nDirection Pode ter dois valores: 0 1 Indica uma progressão da esquerda para
+      direita Indica uma progressão da direita para esquerda inferior e
+   $DESCRIPTION$
+      Desenha uma barra de progresso.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawRectangle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawRectangle( nWinNum, nTop, nLeft, nBottom, nRight, aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do retângulo aOffset Matriz com quatro
+      elementos com coordenadas dos cantos superior, esquerdo, direito de offset
+      para alinhamento do retângulo com as linhas/colunas.
+   $DESCRIPTION$
+      Desenha um retângulo.
+   $RETURNS$
+      Se bem-sucedido, retorna um valor não-zero, caso contrário retorna zero.
+      inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawRoundRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawRoundRect(nWinNum, nTop, nLeft, nBottom, nRight, aOffset,
+      nRoundHeight, nRoundWidth)
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do retângulo. aOffset Matriz com quatro
+      elementos com coordenadas dos cantos superior, esquerdo, direito de offset
+      para alinhamento do retângulo com as linhas/colunas. nRoundHeight Largura da
+      elipse desenhada para arredondar os cantos do retângulo. nRoundWidth Altura da
+      elipse desenhada para arredondar os cantos do retângulo.
+   $DESCRIPTION$
+      Desenha um retângulo com os cantos arredondados. O retângulo é desenhado com o
+      estilo, cor do traço atual e pintando com o pincel atual.
+   $RETURNS$
+      Se bem-sucedido, retorna um valor não-zero, caso contrário retorna zero.
+      inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawScrollButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawScrollButton( nWinNum, nTop, nLeft, nBotton, nRight, aOffPixels,
+      nTLBR, lDepressed )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do scrollbutton. aOffPixels Matriz com quatro
+      elementos com coordenadas dos cantos superior, esquerdo, direito de offset
+      para alinhamento do scrollbutton com as linhas/colunas. nTLBR Indica o sentido
+      do botão de direção dao scrollbutton. Os seguintes valores são permitidos:
+      inferior e
+
+      1
+
+      botão com seta para cima:
+
+      2
+
+      botão com seta para esquerda:
+
+      3
+
+      botão com seta para baixo:
+
+      4
+
+      botão com seta para direita:
+
+      lDepressed Se .F., botao tem o desenho do tipo raised, caso contrário o modelo
+      será recessed.
+   $DESCRIPTION$
+      Desenha um scrollbutton. Com as funçoes wvw_xb*(), essa funçao nao se tornou
+      mais necessária.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawScrollThumbHorz()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawScrollThumbHorz( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      nThumbPos )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do botao de movimentaçao do scrollbar.
+      aOffPixels Matriz com quatro elementos com coordenadas dos cantos superior,
+      esquerdo, inferior e direito de offset para alinhamento do botao de
+      movimentaçao do scrollbar com as linhas/colunas. nThumbPos Coluna para
+      posicionamento inicial.
+   $DESCRIPTION$
+      Desenha uma barra de rolagem para um scrollbar horizontal. Com as funçoes
+      wvw_xb*(), essa funçao nao se tornou mais necessária.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawScrollThumbVert()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawScrollThumbVert( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      nThumbPos )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do botao de movimentaçao do scrollbar.
+      aOffPixels Matriz com quatro elementos com coordenadas dos cantos superior,
+      esquerdo, inferior e direito de offset para alinhamento do botao de
+      movimentaçao do scrollbar com as linhas/colunas. nThumbPos Linha para
+      posicionamento inicial.
+   $DESCRIPTION$
+      Desenha uma barra de rolagem para um scrollbar vertical. Com as funçoes
+      wvw_xb*(), essa funçao nao se tornou mais necessária.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawShadedRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawShadedRect( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels, nHorVert, aRGBb, aRGBe )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenhar o retângulo. aOffPixels Matriz com quatro
+      elementos com coordenadas dos cantos superior, esquerdo, direito de offset
+      para alinhamento do retângulo com as linhas/colunas. nHorVert Especifica o
+      modo de desenho e como interpretar a matriz de preenchimento do retângulo ­
+      aRGBb e aRGBe. O default é GRADIENT_FILL_RECT_H (as outras definçoes
+      possíveis estao em wingdi.ch). aRGBb Matriz com quatro posiçoes de cores (
+      Red, Green, Blue, Alpha) da coordenada inicial do retângulo. aRGBe Matriz com
+      quatro posiçoes de cores (Red, Green, Blue, Alpha) da coordenada final do
+      retângulo.
+   $DESCRIPTION$
+      Desenha um retângulo nas coordenadas indicadas nos parâmetros, com
+      preenchimento de cores de forma gradiente, variando da cor de aRGBb a aRGBe.
+   $RETURNS$
+      .T. se conseguiu desenhar, .F. caso contrário. inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawStatusBar()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawStatusBar( nWinNum, nPanels, aPos )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPanels Número de
+      divisoes da barra de status. aPos Matriz contendo as posiçoes de linha/coluna
+      para as divisoes da barra de status.
+   $DESCRIPTION$
+      Desenha uma barra de status. Mantida apenas para compatibilidade com a GTWVT.
+      Recomenda-se usar as funçoes wvw_sb*().
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawTextBox()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawTextBox( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels, cText,
+      nAlignHorz, nAlignVert, nTextColor, nBackColor, nBackMode, hFont )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do texto. aOffPixels Matriz com quatro
+      elementos com coordenadas dos cantos superior, direito de offset para
+      alinhamento do texto com as linhas/colunas. cText String com o texto que será
+      desenhado. nAlignHorz Especifica o alinhamento do texto dentro das coordenadas
+      informadas. Pode ser: 0 1 2 Alinhamento a esquerda Alinhamento a direita
+      Alinhamento centralizado esquerdo, inferior e
+
+      O default é alinhamento a esquerda. nAlignVert Parâmetro ignorado nTextColor
+      Cor do texto. nBackColor Cor de fundo. nBackMode O modo como a cor de fundo
+      será usada. O default é OPAQUE (outras definiçoes no arquivo wingdi.ch)
+      hFont Fonte usada para o texto.
+   $DESCRIPTION$
+      Desenha um texto formatado no retângulo especificado pelas coordenadas dos
+      parâmetros.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_DrawToolButtonState()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_DrawToolButtonState( nWinNum, nTop, nLeft, nBottom, nRight, aOffPixels,
+      nState )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para desenho do toolbutton. aOffPixels Matriz com quatro
+      elementos com coordenadas dos cantos superior, esquerdo, direito de offset
+      para alinhamento do toolbutton com as linhas/colunas. nState Estado do botão.
+      Pode ser um desses valores: 0 1 2 Estilo do botão flat. Estilo do botão
+      raised. Estilo do botão recessed. inferior e
+   $DESCRIPTION$
+      Desenha um toolbutton.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_EnableMaximize()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_EnableMaximize( nWinNum, lEnable )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente. lEnable Se .T.,
+      habilita o botao de maximixar. Se .F. desabilita.
+   $DESCRIPTION$
+      Le/Setar o botao de maximixar. Para poder habilitar o botao, a aplicaçao tem
+      que ter a funçao callback WVW_SIZE() definida.
+   $RETURNS$
+      Retorna o estado anterior do botão de maximixar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_EnableMenuItem()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_EnableMenuItem( hMenu, nPosition, nFlag )
+   $ARGUMENTS$
+      hMenu Identifica o menu. nPosition Especifica o item do menu que será
+      habilitado ou desabilitado, conforme o parâmetro nFlag. nFlag Na prática, para
+      o Harbour, deveremos definir os seguintes valores: MF_DISABLE MF_ENABLE
+   $DESCRIPTION$
+      Habilita ou desabilita itens do menu.
+   $RETURNS$
+      Retorna a configuração anterior do item do menu. Se o item do menu não
+      existir, retorna 0. Indica que o item do menu está desabilitado, não podendo
+      ser selecionado. Indica que o item do menu está habilitado, portanto, pode ser
+      selecionado.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_EnableShortcuts()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_EnableShortcuts( nWinNum, lEnable )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. lEnable .T. habilita
+      teclas de atalho. .F. desabilita teclas de atalho.
+   $DESCRIPTION$
+      Determina se as teclas de atalho estao habilitadas/desabilitadas para acesso
+      aos itens do menu e do menu de sistema.
+   $RETURNS$
+      Configuração anterior.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_FillRectangle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBColor|hBrush, lTight, lUseBrush )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para preenchimento do retângulo. nRGBColor/hBrush Cor para
+      preenchimento do retângulo (valor com 32 bits de uma cor RGB). lTight O
+      preenchimento será ajustado para toda a área das coordenadas informadas.
+      lUseBrush Se .T., o parâmetro nRGBColor/hBrush é interpretado como handle para
+      um modelo de pincel, caso contrário é usado como cor RGB.
+   $DESCRIPTION$
+      Preenche um retângulo usando ou uma cor ou um modelo de pincel.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetClipboard()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetClipboard()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Obtém o texto da área de transferencia.
+   $RETURNS$
+      Texto da área de transferência.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetCursorPos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetCursorPos()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Obtém as coordenadas do cursor do mouse.
+   $RETURNS$
+      Uma matriz com dois elementos, contendo a coordenada X e a coordenada Y,
+      respectivamente.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetFontInfo()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetFontInfo()
+   $ARGUMENTS$
+      nenhum
+   $DESCRIPTION$
+      Obtém dados da fonte corrente.
+   $RETURNS$
+      Matriz com sete elementos, na seguinte ordem: 1 2 3 4 5 6 7 ­ ­ ­ ­ ­ ­ ­
+      cFontFace cFontHeight nFontWidth nFontWieght cFontQuality PTEXTSIZE->x
+      PTEXESIZE->y Nome da fonte (por ex. Arial). Altura da fonte. Largura da
+      fonte. "Peso" da fonte. Qualidade da fonte. Largura da fonte em pixels.
+      Tamanho da fonte em pixels.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetLastMenuEvent()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetLastMenuEvent()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Le o último item do menu selecionado. Trabalha sempre na janela atual.
+   $RETURNS$
+      Último item selecionado, ou 0 caso não tenha sido selecionado nenhuma opção
+      anteriormente.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetMenu()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Obtém o handle do menu da janela atual.
+   $RETURNS$
+      Handle do menu.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetPaintRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetPaintRect( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. DECRIÇAO Obtém as
+      coordenadas da tela com pendencia para redesenhar.
+   $RETURNS$
+      Matriz com quatro respectivamente. elementos, contendo a linha/coluna inicial
+      e a linha/coluna final,
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetPalette()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetPalette()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Obtém a paleta de cores.
+   $RETURNS$
+      Matriz com 16 elementos, cada elemento representando uma cor.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetRGBColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetRGBColor( nColor )
+   $ARGUMENTS$
+      nColor Índice da cor (como definido no Cl*pper).
+   $DESCRIPTION$
+      Le o valor RGB do índice da cor passado no parâmetro nColor.
+   $RETURNS$
+      Retorna o valor RGB da cor.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetRowColFromXY()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetRowColFromXY( nWinNum, nX, nY )
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Le a largura da tela, em pixels.
+   $RETURNS$
+      A largura da tela, em pixels.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetScreenWidth()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetScreenWidth()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Le o tamanho da tela, em pixels.
+   $RETURNS$
+      Tamanho da tela, em pixels.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetTitle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetTitle()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Le o título da janela atual.
+   $RETURNS$
+      O título da janela atual.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetToolTipBkColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetToolTipBkColor()
+   $ARGUMENTS$
+      Nenhum.
+   $DESCRIPTION$
+      Obtém a cor de fundo da tooltip.
+   $RETURNS$
+      Índice de cor RGB com a cor de fundo da tooltip.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetToolTipTextColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetToolTipTextColor()
+   $ARGUMENTS$
+      Nenhum.
+   $DESCRIPTION$
+      Obtém a cor do texto da tooltip.
+   $RETURNS$
+      Índice de cor RGB com a cor do texto da tooltip.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetToolTipWidth()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetToolTipWidth()
+   $ARGUMENTS$
+      Nenhum.
+   $DESCRIPTION$
+      Obtém o tamanho do tooltip.
+   $RETURNS$
+      Número com o tamanho do toolip.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetWindowHandle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetWindowHandle()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Obtém o handle da janela atual.
+   $RETURNS$
+      Handle da janela.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_GetXYFromRowCol()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_GetXYFromRowCol( nWinNum, nRow, nCol )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nRow Número da linha.
+      nCol Número da coluna.
+   $DESCRIPTION$
+      Converte linha e coluna em coordenadas X,Y (em pixels).
+   $RETURNS$
+      Matriz com dois elementos, contendo a coordenada X e a coordenada Y,
+      respectivamente.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_InvalidateRect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_InvalidateRect()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Invalida a janela atual, forçando o seu redesenho.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_IsLButtonPressed()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_IsLButtonPressed()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Verifica se o botao esquerdo do mouse está pressionado.
+   $RETURNS$
+      .T. se o botão estiver pressionado. .F. se o botão não estiver pressionado.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_KillTimer()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_KillTimer( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual.
+   $DESCRIPTION$
+      Cancela o evento timer para a janela atual.
+   $RETURNS$
+      .T. se conseguiu cancelar o evento timer, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_lbAddString()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_lbAddString( nHandleDialog, nIDListBox, cItem )
+   $ARGUMENTS$
+      nHandleDialog Handle da janela de diálogo. nIDListBox Identificador do Listbox
+      cItem Item para ser incluido no listbox.
+   $DESCRIPTION$
+      Adiciona um item em um listbox.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_lbSetCurSel()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_lbSetCurSel( nHandleDialog, nIDListBox, nItem )
+   $ARGUMENTS$
+      nHandleDialog Handle da janela de diálogo. nIDListBox Identificador do
+      listbox. nItem Índice do item, iniciando por 0.
+   $DESCRIPTION$
+      Seleciona um item em um listbox.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_lCloseWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_lCloseWindow()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Fecha a janela superior (que está no topo, a última que foi criada).
+   $RETURNS$
+      .T. se conseguiu fechar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_LoadFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_LoadFont( nSlotFont, cFontName, nHeight, nWidth, nWeight, lItalic,
+      lUnderline, lStrikeout, nCharSet, nQuality, nEscapement )
+   $ARGUMENTS$
+      nSlotFont Índice do cache de fontes. cFontName Nome da Fonte. nHeight Largura
+      da fonte. nWidth Altura da fonte. nWeight "Peso" da fonte. lItalic Indica se a
+      fonte está em itálico (.T.) ou nao (default). lUnderline Indica se a fonte
+      está sobrescrita (.T.) ou nao (default). lStrikeout Indica se a fonte está
+      strikeout (.T.) ou nao (default). nCharSet Especifica o conjunto de
+      caracteres a ser usado nQuality Qualidade da fonte. nEscapement Especifica o
+      ângulo.
+   $DESCRIPTION$
+      Carrega as informaçoes da fonte especificada através dos seus parâmetros,
+      gravando no cache de fontes.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_LoadPen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor )
+   $ARGUMENTS$
+      nSlot Índice do cache de traços definidos pelo usuário. nStyle Estilo do
+      traço. nWidth Altura do traço. Se especificar 0, o traço terá apenas um pixel
+      de extensao. nRGBColor A cor de referencia para o traço.
+   $DESCRIPTION$
+      Carrega as definiçoes do traço (estilo, tamanho e cor) para o cache de
+      traços.
+   $RETURNS$
+      .T. se conseguiu ler e gravar as definições do traço, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_LoadPicture()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_LoadPicture( nSlot, cFilePicture )
+   $ARGUMENTS$
+      nSlot Posiçao no cache onde a imagemserá informada, será substituída.
+      cFilePicture Imagem a ser carregada no cache.
+   $DESCRIPTION$
+      Carrega uma imagem no cache de imagens. Leia a observaçao sobre o cache de
+      imagens, na introduçao desse documento.
+   $RETURNS$
+      .T. se conseguiu ler a imagem, .F. caso contrário. carregada. Se já existir
+      alguma imagem na posição
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_Maximize()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_Maximize( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual.
+   $DESCRIPTION$
+      Maximiza a janela atual (parâmetro nWinNum é ignorado). Se a aplicaçao
+      definir a funçao callback WVW_Size() a janela será maximizada, caso contrário
+      ela apenas será restaurada.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_MaxMaxCol()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_MaxMaxCol( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente.
+   $DESCRIPTION$
+      Retorna o máximo MaxCol() possível na configuraçao de tela corrente, para a
+      fonte usada na janela nWinNum
+   $RETURNS$
+      Número máximo de colunas.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_MaxMaxRow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_MaxMaxRow( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente.
+   $DESCRIPTION$
+      Retorna o máximo MaxRow() possível na configuraçao de tela corrente, para a
+      fonte usada na janela nWinNum.
+   $RETURNS$
+      Número máximo de linhas.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_MessageBox()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_MessageBox( nWinNum, cMessage, cTitle, nOption )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. cMessage Mensagem que
+      será exibida. cTitle Título da janela de mensagem. nOption Indica quais os
+      botoes serao usados na janela. O default é MB_OK (botao OK sem ícones). As
+      outras definiçoes estao no arquivo winuser.ch.
+   $DESCRIPTION$
+      Exibe uma janela de mensagem. A janela de mensagem pode ter um ícone e um ou
+      mais botoes com opçoes para o usuário escolher.
+   $RETURNS$
+      O número da opção escolhida (IDOK para o botão OK, IDCANCEL para o botão
+      cancelar, etc.). As definições para o retorno estão no arquivo winuser.ch.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_Minimize()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_Minimize()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Minimiza a janela atual.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nColOfs()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nColOfs( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente.
+   $DESCRIPTION$
+      Determinar o número de colunas de offset da janela nWinNum, relativo a janela
+      principal.
+   $RETURNS$
+      Numero de colunas de offset.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nNumWindows()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nNumWindows()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Retorna o numero total de janelas que estao abertas (incluindo a janela
+      principal).
+   $RETURNS$
+      Numero de janelas abertas.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_NoClose()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_NoClose( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente.
+   $DESCRIPTION$
+      Desabilita o botao de `X' da janela nWinNum.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nOpenWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nOpenWindow( cWinName, row1, col1, row2, col2, nStyle, nParentWin,
+      nExStyle )
+   $ARGUMENTS$
+      cWinName É o título da janela. Se for omitido, será usado o nome do arquivo
+      executável. row1, col1, row2, col2 Linha inicial, coluna inicial, linha final
+      e coluna final da janela que será aberta. Essas coordenadas sao relativas a
+      janela principal e nao a janela atual. Essas coordenadas sao usadas ainda para:
+      1) colocar a janela em seu posicionamento inicial. 2) determinar o tamanho
+      da janela (novo MaxRow() e MaxCol()). 3) salvar em RowOfs e ColOfs para o
+      modo de MainCoord. nStyle É o estilo da janela (por ex. WS_OVERLAPPEDWINDOW,
+      etc). As definiçoes estao em winuser.ch. O default é
+      WS_CAPTION|WS_SYSMENU|WS_CLIPCHILDREN. Se for usar na janela controles como
+      PUSHBUTTON, voce deve incluir o estilo WS_CLIPCHILDREN. nParentWin É a janela
+      mae da nova janela que está sendo aberta. O default é a janela atual (no modo
+      Standard) e a última janela (no modo MainCoord). Se quiser que a nova
+      janela nao tenha mae, informe ­1. nExStyle Estilo extendido para janela (por
+      exemplo WS_EX_TOOLTIPWINDOW). Default é NIL.
+   $DESCRIPTION$
+      Abre uma janela nas coordenadas especificadas. Dependendo do parâmetro da
+      funçao wvw_NoStartupSubWindow() a janela será apresentada ou permanecerá
+      invisível (até que seja chamada a funçao wvw_ShowWindow()).
+   $RETURNS$
+      O numero da janela se for bem sucedido ou 0 se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_NoStartupSubWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_NoStartupSubWindow( lOn )
+   $ARGUMENTS$
+      lOn .T. quando a janela for aberta, será apresentada (default). .F. quando a
+      janela for aberta, permanecerá invisível. Se nao for informado parametro,
+      retorna configuraçao atual.
+   $DESCRIPTION$
+      Informa ao sistema que a janela, quando criada, será aberta (lOn = .T.) ou
+      permanecerá invisível (lOn = .F.) até que se chame a funçao
+      wvw_ShowWindow().
+   $RETURNS$
+      Retorna a nova configuração configuração atual. para abertura de janelas (se
+      lOn for informado) ou a
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nRowOfs()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nRowOfs( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente.
+   $DESCRIPTION$
+      Determinar o número de linhas de offset da janela nWinNum, relativo a janela
+      principal.
+   $RETURNS$
+      Numero de linhas de offset.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_nSetCurWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_nSetCurWindow( nWinNum )
+   $ARGUMENTS$
+      nWinNum A nova janela que receberá o foco (se tornará a janela ativa).
+   $DESCRIPTION$
+      Tornar a nWinNum StandadMode.
+   $RETURNS$
+      A antiga janela corrente. janela corrente (em foco, ativa). Tem lógica
+      apenas para o modo
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_NumBMCache()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_NumBMCache()
+   $ARGUMENTS$
+      Nenhum.
+   $DESCRIPTION$
+      Obtém o número máximo do cache de bitmaps.
+   $RETURNS$
+      Configuração atual do número máximo do cache de bitmaps.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_PasteFromClipboard()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_PasteFromClipboard()
+   $ARGUMENTS$
+      nenhum
+   $DESCRIPTION$
+      Cola o texto que está na área de transferencia.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbCreate( nWinNum, nTop, nLeft, nBottom, nRight, cText, cImage/nImage,
+      bBlock, aOffset, nStretchBitmap, lMap3DColors )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para criação do botão. cText Texto para o botão. O default
+      é "". cImage/nImage Se informado como numérico indica o ID do RESOURCE em um
+      arquivo .RC. Se informado como string, deve conter o caminho completo do
+      arquivo de imagem. bBlock Bloco de código que será executado sempre quando for
+      gerado um evento BN_CLICK (ou seja, pressionar e liberar o botão). Sempre
+      será passado os parâmetros: nWinNum e o identificador do botão. aOffset
+      Matriz com quatro elementos com coordenadas dos cantos superior, direito de
+      offset para alinhamento do botão com as linhas/colunas. nStretchBitmap Um
+      número entre 0 e 1 (inclusive) como um fator para "esticar" o bitmap. Por
+      exemplo: 1.0 0.5 0 O bitmap vai cobrir por inteiro o botão O bitmap vai
+      cobrir 50% do botão O bitmap não vai ser "esticado" esquerdo, inferior e
+
+      O default é 1. lMap3DColors Se a imagem terá efeito de transparencia (.T.)
+      ou nao (.F.). Atençao para o fato que existe a limitaçao de bitmaps com, no
+      máximo, 256 cores.
+   $DESCRIPTION$
+      Cria um pushbutton na janela atual.
+   $RETURNS$
+      Retorna o handle do novo pushbutton, se a operação for bem-sucedida, ou 0 se
+      falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbDestroy( nWinNum, nPBId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPBId Identificador do
+      pushbutton.
+   $DESCRIPTION$
+      Exclui um pushbutton da janela atual.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbEnable()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbEnable( nWinNum, nPBId, lToggle )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPBId Identificador do
+      pushbutton. lToggle .T. Habilita pushbutton (default) .F. Desabilita
+      pushbutton
+   $DESCRIPTION$
+      Habilita/Desabilita pushbutton na janela atual.
+   $RETURNS$
+      Retorna o estado anterior do pushbutton, se o parâmetro lToggle for informado,
+      caso contrário, retorna o estado atual do pushbutton (.T. indica habilitado,
+      .F. desabilitado).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbSetCodeblock()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbSetCodeblock( nWinNum, nPBId, bBlock )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPBId Identificador do
+      pushbutton. bBlock Bloco de código.
+   $DESCRIPTION$
+      Atribui um novo bloco de código bBlock para o pushbutton nPBId na janela
+      atual.
+   $RETURNS$
+      .T. se a operação foi bem-sucedida, .F. se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbSetFocus()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbSetFocus( nWinNum, nPBId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPBId Identificador do
+      pushbutton.
+   $DESCRIPTION$
+      Configura o foco para o pushbutton da janela atual.
+   $RETURNS$
+      .T. se conseguiu configurar o foco corretamente, .F. se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbSetFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbSetFont( nWinNum, cFontFace, nHeight, nWidth, nWeight, nQuality,
+      lItalic, lUnderline, lStrikeout )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. cFontName Nome da Fonte.
+      nHeight Largura da fonte. nWidth Altura da fonte. nWeight "Peso" da fonte.
+      nQuality Qualidade da fonte. lItalic Indica se a fonte está em itálico (.T.)
+      ou nao (default). lUnderline Indica se a fonte está sobrescrita (.T.) ou
+      nao (default). lStrikeout Indica se a fonte está strikeout (.T.) ou nao (
+      default).
+   $DESCRIPTION$
+      Inicializa a fonte para os pushbuttons (existentes e os que ainda serao
+      criados).
+   $RETURNS$
+      .T. se a operação for bem-sucedida, .F. se falhou.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pbSetStyle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pbSetStyle( nWinNum, nPBId, nStyle )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPBId Identificador do
+      pushbutton. nStyle Define o estilo do pushbutton. As possíveis definiçoes
+      estao no arquivo winuser.ch (BS_PUSHBUTTON, BS_DEFPUSHBUTTON, etc.). O uso
+      mais comum é através dos seguintes valores: BS_DEFPUSHBUTTON BS_PUSHBUTTON
+   $DESCRIPTION$
+      Atribui um novo estilo ao pushbutton da janela atual.
+   $RETURNS$
+      .T. 1: Indica que o pushbutton é o botão default (aparece selecionado através
+      de uma borda pontilhada). 0: Indica um pushbutton padrão.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pgCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pgCreate( nWinNum, nTop, nLeft, nBottom, nRight, aOffset, nBackColor,
+      nBarColor, lSmooth, lVertical )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para a criaçao da progress bar. aOffset Matriz com quatro
+      elementos com coordenadas dos cantos superior, esquerdo, direito de offset
+      para alinhamento da progress bar com as linhas/colunas. nBackColor Cor de
+      fundo. nBarColor Cor da progress bar. lSmooth .T. Desenha a progress bar como
+      uma barra contínua .F. Desenha a progress bar com pequenos retângulos
+      distintos lVertical .T. Desenha a progress bar vertical .F. Desenha a progress
+      bar horizontal
+   $DESCRIPTION$
+      Desenha uma progress bar para a janela atual. A faixa da progress bar é
+      inicialmente de 0 a 100, comecando com 0.
+   $RETURNS$
+      O handle da progress bar, se a operação for bem-sucedida, ou 0 se falhar.
+      inferior e
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pgDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pgDestroy( nWinNum, nPGId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPGId Identificador da
+      progress bar.
+   $DESCRIPTION$
+      Exclui uma progress bar da janela atual.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pgGetPos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pgGetPos( nWinNum, nPGId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPGId Identificador da
+      progress bar.
+   $DESCRIPTION$
+      Obtém a posiçao atual em uma progress bar.
+   $RETURNS$
+      Posição na progress bar ou 0 se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_pgSetPos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_pgSetPos( nWinNum, nPGId, nPos )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPGId Identificador da
+      progress bar. nPos Número da posiçao na progress bar (dentro da faixa do
+      mínimo-máximo).
+   $DESCRIPTION$
+      Atualiza a progress bar para a posiçao indicada pelo parâmetro nPos.
+   $RETURNS$
+      .T. se a operação for bem-sucedida, .F. se falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ProcessMessages()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ProcessMessages()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Processa as mensagens de todas as janelas.
+   $RETURNS$
+      nenhum (na verdade retorna o número 1, mas sem nenhum utilidade).
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_Restore()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_Restore( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual.
+   $DESCRIPTION$
+      Restaura a janela atual (o parâmetro nWinNum é ignorado). A restauraçao da
+      janela do modo maximizado pode precisar ser manipulada pela funçao callback
+      WVW_Size(), porque a funçao wvw_Restore() assume que nao acontecerá mudança em
+      MaxRow()/MaxCol().
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_RestScreen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_RestScreen( nWinNum, nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a jenala atual. nTop, nLeft, nBottom,
+      nRight Coordenadas da tela wvw_SaveScreen(). aScr Matriz com tres elementos
+      contendo a altura, largura e handle do bitmap, respectivamente.
+      lDoNotDestroyBMP .T. se após a restauraçao da tela, apagar o bitmap que contém
+      a imagem da tela salva, .F. caso contrário.
+   $DESCRIPTION$
+      Restaura a tela salva previamente através da funçao wvw_SaveScreen().
+   $RETURNS$
+      .T. se conseguiu restaurar a tela com sucesso, .F. caso contrário. onde serão
+      apresentados os dados salvos através da função
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SaveScreen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a jenal atual. nTop, nLeft, nBottom,
+      nRight Coordenadas da regiao da tela que sera salva (sempre da janela atual,
+      pois o parâmetro nWinNum é ignorado).
+   $DESCRIPTION$
+      Salva uma regiao da tela, gravando em um bitmap.
+   $RETURNS$
+      Matriz com três elementos, contendo o tamanho, largura e o handle do bitmap.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbAddPart()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbAddPart( nWinNum, cMaxText, nWidth, nStyle, lResetParts, cIcon, cTooltip )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. cMaxText Se definido
+      esse parâmetro, o tamanho da parte da status bar será o tamanho do texto.
+      nWidth Tamanho da parte da status bar, em pixels. Se o parâmetro cMaxText for
+      informado, nWidth será ignorado. nStyle Estilo da status bar. Os valores
+      permitidos sao: 0 0x100 0x200 lResetParts Se .T., indica que todas as partes
+      anteriores serao removidas, .F. indica que uma nova parte criada será
+      adicionada as anteriores. cIcon/cTooltip Parâmetros ignorados.
+   $DESCRIPTION$
+      Adiciona uma divisao em uma status bar, com tamanho e estilo especifidados nos
+      parâmetros cMaxText/nWidth e nStyle.
+   $RETURNS$
+      Retorna o número de partes atuais na status bar, se a operação for
+      bem-sucedida, ou 0 caso contrário. Recessed (default) Sem bordas Raised
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbCreate( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual.
+   $DESCRIPTION$
+      Cria um status bar para a janela corrente, com uma parte.
+   $RETURNS$
+      Retorna um handle para a status bar, se a operação for bem-sucedida, ou 0 se
+      falhar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbDestroy( nWinNum )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual.
+   $DESCRIPTION$
+      Destrói um status bar, forçando a janela a ser redesenhada.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbGetParts()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbGetParts()
+   $ARGUMENTS$
+      Nenhum.
+   $DESCRIPTION$
+      Le o número de partes de uma status bar.
+   $RETURNS$
+      Número de partes de uma status bar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbGetText()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbGetText( nWinNum, nPart )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPart Número da parte da
+      status bar.
+   $DESCRIPTION$
+      Le o texto da status bar contido na parte nPart.
+   $RETURNS$
+      String da parte nPart da status bar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbRefresh()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbRefresh()
+   $ARGUMENTS$
+      Nenhum.
+   $DESCRIPTION$
+      Reinicializa todas as partes da status bar, redesenhado-as.
+   $RETURNS$
+      Número de partes da status bar, se a operação for bem-sucedida, ou 0 caso
+      contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_sbSetText()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_sbSetText( nWinNum, nPart, cText )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nPart Número da parte
+      que o texto será configurado. cText Texto que será configurado para a parte
+      nPart da status bar.
+   $DESCRIPTION$
+      Configura um texto cText para a parte nPart de uma status bar.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetAltF4Close()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetAltF4Close( lOn )
+   $ARGUMENTS$
+      lOn .T. aplicação pode ser encerrada através de ALT + F4 .F. aplicação não
+      pode ser encerrada através de ALT + F4
+   $DESCRIPTION$
+      Identifica se a aplicaçao pode ser encerrada através da combinaçao de tecla
+      ALT + F4.
+   $RETURNS$
+      Configuração anterior.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetAsNormal()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetAsNormal()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Retorna a janela ao estado normal (oposto da funçao wvw_SetOnTop()).
+   $RETURNS$
+      .T. se conseguiu alterar a configuração, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetBrush()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetBrush( nStyle, nColor, nHatch )
+   $ARGUMENTS$
+      nStyle Identifica o estilo do pincel. As definiçoes podem ser encontradas no
+      arquivo wingdi.ch (BS_SOLID, BS_NULL, etc.). nColor Índice da cor para
+      desenho do pincel. nHatch Define o padrao de preenchimento do pincel. As
+      definiçoes estao no arquivo wingdi.ch (HS_VERTICAL, HS_HORIZONTAL, etc.).
+   $DESCRIPTION$
+      Define o estilo, cor e padrao de preenchimento do pincel.
+   $RETURNS$
+      .T. se conseguiu definir corretamente, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetClipboard()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetClipboard( cText )
+   $ARGUMENTS$
+      cText Texto que será inserido na área de transferencia.
+   $DESCRIPTION$
+      Configura texto para a área de transferencia.
+   $RETURNS$
+      .T. se conseguir configurar, caso contrário retorna .F..
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetCodepage()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetCodepage( nWinNum, nCodePage )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCodePage Código de
+      página.
+   $DESCRIPTION$
+      Define a página de código da janela atual.
+   $RETURNS$
+      .T. se conseguiu definir a nova página de código, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefCentreWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefCentreWindow( lCentre )
+   $ARGUMENTS$
+      lCentre Se informado .T., configura para que todas as janelas centralizadas
+      horizontalmente e verticalmente. Se nao informado, retorna o valor da
+      configuraçao atual.
+   $DESCRIPTION$
+      Le ou atualiza o parâmetro de centralizaçao horizontal/vertical das janelas.
+   $RETURNS$
+      Se lCentre informado, retorna o valor anterior da configuração, caso contrário
+      retorna a configuração atual. posteriormente abertas, sejam
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefHCentreWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefHCentreWindow( lCentre )
+   $ARGUMENTS$
+      lCentre Se informado .T., configura para que todas as janelas centralizadas
+      horizontalmente. Se nao informado, retorna o valor da configuraçao atual.
+   $DESCRIPTION$
+      Le ou atualiza o parâmetro de centralizaçao horizontal das janelas.
+   $RETURNS$
+      Se lCentre informado, retorna o valor anterior da configuração, caso contrário
+      retorna a configuração atual. posteriormente abertas, sejam
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefLineSpacing()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefLineSpacing( nLineSpacing )
+   $ARGUMENTS$
+      nLineSpacing Número do espaçamento entre linhas. Deve ser menor ou igal a 40,
+      caso contrário será ignorado. Se nao informado le a configuraçao atual.
+   $DESCRIPTION$
+      Seta o espaçamento entre linhas de todas as janelas.
+   $RETURNS$
+      A configuração anterior.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefLSpaceColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefLSpaceColor( nColorIndex )
+   $ARGUMENTS$
+      nColorIndex O índice da cor para o espaçamento entre linhas. Deverá ser entre
+      0 e 15 (os índices sao os mesmos do Cl*pper) ou ­1, indicando que nao tem
+      cor.
+   $DESCRIPTION$
+      Altera a cor para o espaçamento entre linhas.
+   $RETURNS$
+      A configuação antiga, se nColorIndex for informado, caso contrário a
+      configuração atual.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetDefVCentreWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetDefVCentreWindow( lCentre )
+   $ARGUMENTS$
+      lCentre Se informado .T., configura para que todas as janelas centralizadas
+      verticalmente. Se nao informado, retorna o valor da configuraçao atual.
+   $DESCRIPTION$
+      Le ou atualiza o parâmetro de centralizaçao vertical das janelas.
+   $RETURNS$
+      Se lCentre informado, retorna o valor anterior da configuração, caso contrário
+      retorna a configuração atual. posteriormente abertas, sejam
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetFont()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetFont( cFontFace, nFontHeight, nFontWidth, nFontWeight, nFontQuality )
+   $ARGUMENTS$
+      cFontName Nome da fonte (por exemplo, MS Sans Serif). nFontHeight Altura da
+      fonte. nFontWidth Largura da fonte. nFontWeight "Peso" da fonte. nFontQuality
+      Qualidade da fonte. Todos os parâmetros sao opicionais. A funçao usa os
+      valores que sao atribuidos na criaçao da janela.
+   $DESCRIPTION$
+      Modifica a fonte ou os parâmtros ligados a fonte (altura, largura, qualidade,
+      etc.)
+   $RETURNS$
+      .T. se conseguiu alterar a fonte ou seus parêmetros, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetIcon()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetIcon( nWinNum, nIcon, cIcon )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nIcon Identifica o ícone
+      no arquivo de recursos. cIcon O nome do arquivo de ícone.
+   $DESCRIPTION$
+      Configurar o ícone da janela atual (o parâmetro nWinNum é ignorado).
+   $RETURNS$
+      .T. se conseguiu ler o ícone, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetLastMenuEvent()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetLastMenuEvent( nWinNum, nMenuEvent )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nMenuEvent Item do menu.
+   $DESCRIPTION$
+      Configura o último item selecionado do menu (retorno da funçao
+      wvw_GetLastMenuEvent()).
+   $RETURNS$
+      Última configuração válida.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetLineSpacing()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetLineSpacing( nWinNum, nLineSpacing )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente. nLineSpacing Se
+      infomado, altera o espaçamento entre linhas da janela nWinNum, caso contrário
+      le a configuraçao atual do parâmetro.
+   $DESCRIPTION$
+      Le/Configura o espaçamento da janela. Se o tamanho da janela ficar muito
+      grande, o valor anterior será restaurado. Essa funçao atualiza apenas a janela
+      corrente. Para configurar globalmente, utilize wvw_SetDefLineSpacing().
+   $RETURNS$
+      A configuração anterior, se nLineSpacing for informado, ou a configuração
+      atual.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetLSpaceColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetLSpaceColor( nWinNum, nColorIndex )
+   $ARGUMENTS$
+      nWinNum Número da janela atual. O default é a janela corrente. nColorIndex O
+      índice da cor para o espaçamento entre linhas. Deverá ser entre 0 e 15 (os
+      índices sao os mesmos do Cl*pper) ou ­1, indicando que nao tem cor.
+   $DESCRIPTION$
+      Altera a cor para o espaçamento entre linhasda janela nWinNum. Se configuraçao
+      de todas as janelas, use a funçao wvw_SetDefLSpaceColor()
+   $RETURNS$
+      A configuação antiga, se nColorIndex for informado, caso contrário a
+      configuração atual. desejar alterar a
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMainCoord()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMainCoord( lMainCoord )
+   $ARGUMENTS$
+      lMainCoord Se informado, muda o modo de exibiçao das janelas. Caso contrário,
+      le o modo que está configurado.
+   $DESCRIPTION$
+      Retorna ou o modo que está configurado o sistema (Standard ou MainCoord) ou,
+      se o parâmetro lMainCoord for informado, troca a forma de coniguraçao do modo
+      de exibiçao das janelas.
+   $RETURNS$
+      O modo antigo da configuração, se lMainCoord informado, ou o modo atual.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMaxBMCache()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMaxBMCache( nMaxCache )
+   $ARGUMENTS$
+      nMaxCache Número máximo de bitmaps no cache. O default é 20 e o mínimo é 1.
+   $DESCRIPTION$
+      Para minimizar a operaçao de carregar um bitmap, a funçao wvw_DrawImage() faz
+      um cache de bitmaps quando ele é lido do disco. Dessa forma, quando usamos
+      wvw_DrawImage() outras vezes, o bitmap já estará na memória. Quando o cache de
+      bitmaps chegar ao seu limite, sempre o último bitmap lido e carregado será
+      descartado em favor do novo. Nao há nenhuma forma de descartar um bitmap
+      específico do cache. Se achar conveniente, pode controlar o cache de bitmaps
+      manualmente, através da funçao wvw_LoadPicture().
+   $RETURNS$
+      Se o parâmetro nMaxChace não for informado, retorna a configuração atual do
+      número máximo de bitmaps do cache, caso contrário, configura esse número.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMenu( nWinWin, hMenu )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. hMenu Contém as
+      informaçoes do menu.
+   $DESCRIPTION$
+      Adiciona um menu, apontado por hMenu, a janela atual (o parâmetro nWinNum é
+      ignorado e a funçao procura a janela atual). A janela entao é redesenhada
+      para ajustar seu tamanho.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMenuKeyEvent()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMenuKeyEvent( nWinNum, nKeyEvent )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nKeyEvent Número do
+      evento definido pelo usuário para o comando do menu do windows.
+   $DESCRIPTION$
+      Define um evento numérico do menu, para a janela atual.
+   $RETURNS$
+      Última configuração válida.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMouseMove()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMouseMove( nWinNum, lMouseMove )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. lMouseMove .T. reconhece
+      o uso do mouse na aplicaçao. .F. nao reconhece o uso do mouse na aplicaçao. Se
+      o parâmetro for omitido, retorna a configuraçao atual.
+   $DESCRIPTION$
+      Habilita/Desabilita o reconhecimento do mouse na aplicaçao.
+   $RETURNS$
+      Se informado lMouseMove, retorna .T. ou .F., se conseguiu ou não configurar,
+      caso contrário retorna a última configuração válida.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetMousePos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetMousePos( nWinNum, nRow, nCol )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nRow, nCol Linha/Coluna
+      para posicionamento do cursor do mouse.
+   $DESCRIPTION$
+      Posiciona o mouse na posiçao indicada por nRow/nCol.
+   $RETURNS$
+      .T. se conseguiu reposicionar o mouse, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetOnTop()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetOnTop()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Deixa a janela sempre visível, mesmo que o foco esteja em outra janela. Esta
+      funçao altera as propriedades da janela, de modo que ela sempre estará acima
+      de qualquer outra janela aberta.
+   $RETURNS$
+      .T. se conseguiu alterar o posicionamento da janela, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPaintRefresh()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPaintRefresh( nPaintRefresh )
+   $ARGUMENTS$
+      nPaintRefresh Intervalo em milisegundos para chamar WVW_PAINT(). Deve ser
+      maior ou igual a 50 ou igual a 0, causando a execuçao imediata da repintura.
+   $DESCRIPTION$
+      Determina o intervalo para a chamada da funçao WVW_PAINT(), responsável pelo
+      redesenho da tela.
+   $RETURNS$
+      Valor antigo para nPaintRefresh.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPalette()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPalette( aRGBValues )
+   $ARGUMENTS$
+      aRGBValues Matriz com 16 elementos com valores RGB.
+   $DESCRIPTION$
+      Configura a paleta de cores.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPen()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPen( nPenStyle, nWidth, nColor )
+   $ARGUMENTS$
+      nPenStyle Define o estilo do traço. As definiçoes estao no arquivo wingdi.ch
+      (PS_SOLID, PS_DOT, etc.). nWidth Especifica a largura do traço. nColor Indice
+      da cor do traço.
+   $DESCRIPTION$
+      Define o estilo, largura e cor do traço.
+   $RETURNS$
+      .T. se conseguiu definir corretamente, caso contrário, .F.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPointer()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPointer( nWinNum, nIcon )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nIcon Modelo do cursor a
+      ser lido. Pode ser uma string que identifica um RESOUCE em um arquivo RC ou
+      pode ser um modelo predefinido do windows (o default é IDC_ARROW). Outras
+      definiçoes estao no arquivo winuser.ch)
+   $DESCRIPTION$
+      Altera o cursor do mouse.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetPopupMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetPopupMenu( nWinNum, hPopUp )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente. hPopUp Contém as
+      informaçoes do menu popup.
+   $DESCRIPTION$
+      Configura o menu popup da janela atual (o parametro nWinNum é ignorado, e a
+      funçao procura a janela atual).
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetTimer()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetTimer( nWinNum, nInterval )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nInterval Intervalor em
+      milisegundos.
+   $DESCRIPTION$
+      Configura o evento timer para o intervalo de tempo nInterval (útil para
+      atualizaçao de um relógio em uma status bar, por exemplo). Na prática essa
+      funçao só irá funcionar se a funçao WVW_TIMER() for definida no aplicativo.
+   $RETURNS$
+      .T. se conseguiu configurar o timer, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetTitle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetTitle( nWinNum, cTitle )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. cTitle Título da janela.
+   $DESCRIPTION$
+      Define o título da janela atual (o parâmetro nWinNum é ignorado).
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTip()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTip( nWinNum, nTop, nLeft, nBottom, nRight, cToolText )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para apresentaçao da tooltip. cToolText Texto para tooltip.
+   $DESCRIPTION$
+      Define um tooltip.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipActive()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipActive( nWinNum, lToggle )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. lToggle Se for
+      informado, habilita (.T.) ou desabilita (.F.) a exibiçao de tooltips. Se
+      nao for informado, retorna o estado atual (se exibe ou nao tooltips).
+   $DESCRIPTION$
+      Ativa/Desativa apresentaçao de tooltips.
+   $RETURNS$
+      Configuração antiga (se for informado o parâmetro lToggle) ou configuração
+      atual.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipBkColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipBkColor( nWinNum, nColor )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nColor Índice da cor
+      para o tooltip.
+   $DESCRIPTION$
+      Obtém ou altera a cor de fundo da tooltip.
+   $RETURNS$
+      Se o parâmetro nColor não for informado, retorna a cor de fundo atual da
+      tooltip, caso contrário, seta a nova cor de fundo.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipMargin()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipMargin( nWinNum, nTop, nLeft, nBottom, nRight )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nTop, nLeft, nBottom,
+      nRight Coordenadas para a tooltip.
+   $DESCRIPTION$
+      Define as margens da tooltip. A margem é a distância (em pixels) entre as
+      bordas da janela da tooltip e o texto contido dentro da tooltip.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipText()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipText( nWinNum, cText )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. cText Texto para da
+      tooltip.
+   $DESCRIPTION$
+      Define um texto para a tooltip.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipTextColor()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipTextColor( nWinNum, nColor )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nColor Índice da cor
+      para o texto da tooltip.
+   $DESCRIPTION$
+      Define ou obtém a cor do texto da tooltip.
+   $RETURNS$
+      Se o parâmetro nColor não for informado, retorna a cor atual do texto, caso
+      contrário, seta a nova cor do texto para tooltip.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipTitle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipTitle( nWinNum, nIcon, cTitle )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nIcon Identifica se deve
+      ser apresentado um ícone em conjunto com o texto da tooltip. É permitido um
+      dos valores abaixo: 0 1 2 3 nenhum ícone (default) Informação Aviso Erro
+
+      Qualquer valor informado acima de 3, o sistema converterá para 0.
+   $DESCRIPTION$
+      Nenhum.
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetToolTipWidth()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetToolTipWidth( nWinNum, nWidth )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nWidth Tamanho para a
+      área de tooltip.
+   $DESCRIPTION$
+      Modifica ou obtém o tamanho da área de tooltip.
+   $RETURNS$
+      Se o parâmetro nWidth não for passado, retorna o tamanho atual da área de
+      tooltip, caso contrário, seta o tamanho da área de tooltip e retorna esse
+      valor.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetVertCaret()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetVertCaret( lOn )
+   $ARGUMENTS$
+      lOn Se .T., muda a posiçao do cursor de texto para vertical. Se .F., muda a
+      posiçao do cursor de texto para posiçao horizontal. Se nao informado, le a
+      configuraçao atual.
+   $DESCRIPTION$
+      Mudar a posiçao do cursor de texto.
+   $RETURNS$
+      Se o parâmetro lOn for informado, retorna a configuração antiga, antes da
+      mudança. Se não, retorna o valor atual da configuração.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetWindowCentre()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetWindowCentre( nWinNum, lCentre, lPaintIt )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. lCentre .T. centraliza a
+      janela. .F. nao centraliza a janela. lPaintIt .T. Redesenha de imediato as
+      janelas. .F. Apenas atualiza a configuraçao.
+   $DESCRIPTION$
+      Atualiza o parâmetro para centralizaçao de todas as janelas abertas ou que
+      serao abertas. Se o parâmetro lPaintIt for .T. e lCentre também, todas as
+      janelas sao redesenhadas e centralizadas.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetWindowPos()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetWindowPos( nWinNum, nXPosition, nYPosition )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nXPosition Posiçao
+      horizontal em pixels. nYPosition Posiçao vertical em pixels.
+   $DESCRIPTION$
+      Muda a posiçao da janela atual, baseado nas coordenadas de nXPosition e
+      nYPosition.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_SetWinStyle()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_SetWinStyle( nWinNum, nStyle )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente. nStyle Novo estilo da
+      janela. Se a janela tiver controle (PUSHBUTTON, SCROLLBAR, ETC.), deve ser
+      adicionado o estilo WS_CLIPCHILDREN.
+   $DESCRIPTION$
+      Le ou seta o estilo da janela nWinNum. Se a janela estiver escondida ou
+      minimizada, e se o parâmetro nStyle for informado, ela será apresentada.
+   $RETURNS$
+      Retorna o estilo antigo da janela.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_ShowWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_ShowWindow( nWinNum, nMode )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nMode Indica o modo como
+      a janela será apresentada. definiçoes estao no arquivo winuser.ch).
+   $DESCRIPTION$
+      Configura o estado de apresentaçao da janela.
+   $RETURNS$
+      nenhum. O default é SW_SHOWNORMAL (as outras
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbAddButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbAddButton( nWinNum, nCommand, xBitmap, cLabel, nBitmapType, lMap3DColors )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCommand Identificador
+      da ação que será executada quando o usuário pressionar o botão. xBitmap
+      Identificação do RESOURCE do bitmap em um arquivo RC (nesse caso a imagem não
+      pode ter mais que 256 cores) ou caminho completo do arquivo da imagem. cLabel
+      Texto do botão. Se o parâmetro lDisplayText da função wvw_tbCreate() estiver
+      configurado para .T., o texto será apresentado logo abaixo da imagem, caso
+      contrário será usado como tooltip. nBitmapType Tipo do bitmap. Pode ter os
+      seguintes valores: 0 1 2 3 Custom Bitmaps standard do windows (COPIAR,
+      COLAR, PROCURAR, ABRIR, etc.) Bitmaps "view" do windows (são aqueles que
+      mudam a visualização, como por exemplo, exibir detalhes, ordenar por nome,
+      etc.) Bitmap do Windows Explorer
+
+      lMap3DColors Se a imagem terá efeito de transparencia (só tem sentido se o
+      parâmetro nBitmapType for 0).
+   $DESCRIPTION$
+      Adiciona um botao em uma toolbar a direita dos botoes já existentes.
+   $RETURNS$
+      .T.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbButtonCount()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbButtonCount()
+   $ARGUMENTS$
+      Nenhum.
+   $DESCRIPTION$
+      Obtém o número de botoes em uma toolbar.
+   $RETURNS$
+      Número de botões em uma toolbar.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbCmd2Index()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbCmd2Index( nWinNum, nCmd )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nCmd Identificador do
+      comando a pesquisar.
+   $DESCRIPTION$
+      Obtém o número do botao que está associado o comando nCmd.
+   $RETURNS$
+      Número do botão da toolbar que está associado ao comando nCmd, ou ­1 se não
+      conseguiu encontrar nenhuma associação.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbCreate( nWinNum, lDisplayText, nStyle, nSystemBitmap, nImageWidth,
+      nImageHeight )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. lDIsplayText Se .T., o
+      texto do botão da toolbar será mostrado juntamente com a imagem. Se .F., o
+      texto só aparecerá como tooltip (default). nStyle Estilo da toolbar. O
+      default é TBSTYLE_FLAT | TBSTYLE_TOOLTIPS (outras definições podem ser
+      encontradas no arquivo COMMCTRL.H). nSystemBitmap Indica se serão usados
+      bitmaps do windows, e seus tamanhos. Os valores permitidos são: 0 1 2 Não
+      usar bitmaps do sistema Usar bitmaps do sistema de tamanho pequeno usar
+      bitmaps do sistema de tamanho grande
+
+      nImageWidth, nImageHeight Comprimento e largura da imagem (só tem efeito se o
+      parâmetro nSystemBitmap for 0).
+   $DESCRIPTION$
+      Cria uma toolbar no topo da janela atual (inicialmente sem nenhum botao).
+   $RETURNS$
+      Handle da toolbar, se operação for bem-sucedida, ou 0 caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbDelButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbDelButton( nWinNum, nButton )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nButton Número do botao
+      para excluir. O botao separador também conta como um botao e pode ser
+      excluido. ATENÇAO: A lista de botoes começa em zero, ou seja, nButton = 0
+      significa o botao mais a esquerda em uma toolbar.
+   $DESCRIPTION$
+      Exclui um botao.
+   $RETURNS$
+      .T. se conseguiu adicionar botão, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbDestroy()
+   $ARGUMENTS$
+      Nenhum.
+   $DESCRIPTION$
+      Exclui uma toolbar da janela atual.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbEnableButton()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbEnableButton( nWinNum. nButton, lToggle )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nButton Número do botão
+      na toolbar (a lista começa em zero). lToggle .T. .F. Habilita um botão
+      Desabilita um botão
+   $DESCRIPTION$
+      Habilita/Desabilita um botao em uma toolbar.
+   $RETURNS$
+      .T. se conseguiu habilitar/desabilitar botão, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_tbIndex2Cmd()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_tbIndex2Cmd( nWinNum, nButton )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nButton Número do botao
+      da toolbar (começando com zero).
+   $DESCRIPTION$
+      Retorna o identificador de comando associado ao botao.
+   $RETURNS$
+      Número do identificador de comando, se operação for bem-sucedida, ou ­1 caso
+      contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_TrackPopupMenu()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_TrackPopupMenu( nWinNum, nHandle )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nHandle Handle do menu
+      popup.
+   $DESCRIPTION$
+      Mostra um menu na posiçao do cursor.
+   $RETURNS$
+      Identificador da opção selecionada ou 0 caso o usuário cancele ou retorne um
+      erro.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_UnreachedBr()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_UnreachedBr( nWinNum, nBottomPixels, nRightPixels )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela corrente. nBottomPixels Deve
+      ser passado por referencia, para guardar o número de linhas, em pixels.
+      nRightPixels Deve ser passado por referencia, para guardar o número de
+      colunas, em pixels.
+   $DESCRIPTION$
+      Ler o número de pixels que ficaram fora do alcance para linhas e colunas
+      quando a janela nWinNum está maximizada.
+   $RETURNS$
+      O número de linhas/colunas em pixels.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_UpdateWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_UpdateWindow()
+   $ARGUMENTS$
+      nenhum.
+   $DESCRIPTION$
+      Atualiza a janela, redesenhando a tela.
+   $RETURNS$
+      nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbCreate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbCreate( nWinNum, nStyle, nTop, nLeft, nLength, bBlock, aOffset )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nStyle 0 1 Horizontal
+      Vertical
+
+      nTop, nLeft Linha/Coluna do ponto inicial da scrollbar (em caracteres)
+      nLength Comprimento da ScrollBar(em caracteres) bBlock Bloco de código que
+      será executado a cada evento VM_VSCROLL/VM_HSCROLL. Esse bloco de código será
+      executado através dos seguintes parâmetros: nWinNum nXBid nXBmsg Número da
+      janela Identificador da scrollbar Mensagem da scrollbar. Pode ser dividia em
+      duas categorias:
+
+      As mensagem que precisam ser tratadas: SB_LINEUP/SB_LINELEFT
+      SB_LINEDOWN/SB_LINERIGHT SB_PAGEUP/SB_PAGELEFT SB_PAGEDOWN/SB_PAGERIGHT 0: 1:
+      2: 3: botão para cima/para a esquerda pressionado botão para baixa/para a
+      direita pressionado página para cima/para esquerda página para baixo/para
+      direita
+
+      As mensagens de tratamento opcionais: SB_TUMBPOSITION SB_THUMBTRACK
+      SB_ENDSCROLL nXBPos aOffset Matriz com quatro elementos contendo das
+      coordenadas dos cantos, em pixels, para ajustar as dimensões da scrollbar. 4:
+      O botão da scrollbar foi solto na posição nXBPos 5: O botão da scrollbar
+      comecou a ser arrastado na posição nXBPos 8: Indica o fim da rolagem da
+      scrollbar
+
+      Posição do botão da scrollbar (apenas se mensagem for SB_THUMBPOSITION ou
+      SB_THUMBTRACK
+   $DESCRIPTION$
+      Cria uma scrollbar para a janela atual.
+   $RETURNS$
+      O handle da scrollbar, se a operação for bem-sucedida, caso contrário retorna
+      0.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbDestroy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbDestroy( nWinNum, nXBId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nXBId Identificador da
+      scrollbar.
+   $DESCRIPTION$
+      Exclui a scrollbar nXBId da janela atual.
+   $RETURNS$
+      Nenhum.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbEnable()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbEnable( nWinNum, nXBId, nFlags )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nXBId Identificador da
+      scrollbar. nFlags Os seguintes valores são permitidos: 0 1 2 3 Habilita as
+      duas setas Desabilita a seta para cima/esquerda Desabilita a seta para
+      baixo/direita Desabilita as duas setas
+   $DESCRIPTION$
+      Habilita/Desabilita uma scrollbar na janela atual.
+   $RETURNS$
+      .T. se a operação foi realizada com sucesso, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbInfo()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbInfo( nWinNum, nXBId )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nXBId Identificador da
+      scrollbar.
+   $DESCRIPTION$
+      Obtém informaçoes de uma scrollbar.
+   $RETURNS$
+      Matriz com cinco elementos, contendo as seguintes informações: nMin nMax
+      nPageSize nPos nTrackPos Valor mínimo de posições para movimentação Valor
+      máximo de posições para movimentação Tamanho da página Posicionamento do botão
+      de movimentação Posição exata do botão de movimentação quando o usuário
+      comecou uma operação de arrastar-e-soltar.
+
+      Essa matriz só retornará com esses valores caso a operação seja bem-sucedida.
+      Se a operação solicitada for inválida, a função retornará uma matriz vazia.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbShow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbShow( nWinNum, nXBId, lShow )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nXBId Identificador da
+      scrollbar. lShow .T. apresenta a scrollbar (default) .F. esconde a scrollbar
+   $DESCRIPTION$
+      Apresenta ou esconde uma scrollbar na janela atual.
+   $RETURNS$
+      .T. se a operação foi realizada com sucesso, .F. caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_xbUpdate()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_xbUpdate( nWinNum, nXBId, nPos, nPageSize, nMin, nMax )
+   $ARGUMENTS$
+      nWinNum Número da janela. O default é a janela atual. nXBId Identificador da
+      scrollbar. nPos Especifica a posiçao do botao de movimentaçao da scrollbar.
+      nPageSize Tamanho da página. Esse valor é usado pela scrollbar para determinar
+      o tamanho proporcional para o salto de página do botao de movimentaçao. nMin
+      Valor mínimo de posiçoes para movimentaçao. nMax Valor máximo de posiçoes para
+      movimentaçao.
+   $DESCRIPTION$
+      Atualiza e reapresenta os dados de uma scrollbar. Os parâmetros nPos,
+      nPageSize, nMin, nMax sao opcionais, entretanto, os parâmetros nMin e nMax ou
+      devem ser informados os dois, ou nenhum deverá ser informado.
+   $RETURNS$
+      A posição atual do botão de movimentação da scrollbar, se a operação for
+      bem-sucedida, ou ­1 caso contrário.
+   $PLATFORMS$
+      Windows
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      wvw_XReposWindow()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      GTWVW
+   $SYNTAX$
+      wvw_XReposWindow( lAnchored )
+   $ARGUMENTS$
+      lAnchored Se .T. (default), todas as janelas sao posicionadas de acordo com
+      a sua respectiva coordenada (row1, col1). Se .F., todas as janelas sao
+      posicionadas de acrodo com parâmetro CenterWindow da funçao
+      wvw_CenterWindow().
+   $DESCRIPTION$
+      Reposiciona todas as janelas para as centralizada se nao estiver maximizada.
+   $RETURNS$
+      nenhum. suas posições iniciais. A janela principal será
+   $PLATFORMS$
+      Windows
+   $END$
+ */

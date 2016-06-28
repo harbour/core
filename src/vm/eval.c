@@ -2,6 +2,7 @@
  * The Eval API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_itemDo()/hb_itemDoC() (based on HB_DO() by Ryszard Glab))
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,17 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_itemDo() ( based on HB_DO() by Ryszard Glab )
- *    hb_itemDoC() ( based on HB_DO() by Ryszard Glab )
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -115,7 +105,6 @@ PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
    {
       PHB_ITEM pItem = pEvalInfo->pItems[ 0 ];
       PHB_SYMB pSymbol = NULL;
-      HB_USHORT uiParam = 0;
 
       if( HB_IS_STRING( pItem ) )
       {
@@ -139,6 +128,8 @@ PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
 
       if( pSymbol )
       {
+         HB_USHORT uiParam = 0;
+
          hb_vmPushSymbol( pSymbol );
          if( pItem )
             hb_vmPush( pItem );
@@ -343,13 +334,15 @@ void hb_evalBlock( PHB_ITEM pCodeBlock, ... )
 
 HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
 {
-   HB_MAXINT nStart = hb_parnint( 1 ), nEnd;
-   PHB_ITEM pEndBlock = hb_param( 2, HB_IT_BLOCK );
    PHB_ITEM pCodeBlock = hb_param( 3, HB_IT_BLOCK );
-   HB_MAXINT nStep = ( hb_pcount() > 3 ) ? hb_parnint( 4 ) : 1;
 
    if( pCodeBlock )
    {
+      HB_MAXINT nStart = hb_parnint( 1 ), nEnd;
+      HB_MAXINT nStep = ( hb_pcount() > 3 ) ? hb_parnint( 4 ) : 1;
+
+      PHB_ITEM pEndBlock = hb_param( 2, HB_IT_BLOCK );
+
       if( pEndBlock )
       {
          hb_evalBlock0( pEndBlock );
@@ -504,11 +497,9 @@ HB_FUNC( HB_EXECFROMARRAY )
 
 HB_BOOL hb_execFromArray( PHB_ITEM pParam )
 {
-   PHB_SYMB pExecSym = NULL;
    PHB_ITEM pArray = NULL;
    PHB_ITEM pSelf = NULL;
    HB_ULONG ulParamOffset = 0;
-   int iPCount = 0;
 
    if( pParam && HB_IS_ARRAY( pParam ) && ! HB_IS_OBJECT( pParam ) )
    {
@@ -526,6 +517,8 @@ HB_BOOL hb_execFromArray( PHB_ITEM pParam )
 
    if( pParam )
    {
+      PHB_SYMB pExecSym = NULL;
+
       if( HB_IS_SYMBOL( pParam ) )
          pExecSym = hb_itemGetSymbol( pParam );
       else if( HB_IS_STRING( pParam ) )
@@ -538,6 +531,8 @@ HB_BOOL hb_execFromArray( PHB_ITEM pParam )
 
       if( pExecSym )
       {
+         int iPCount = 0;
+
          hb_vmPushSymbol( pExecSym );
          if( pSelf )
             hb_vmPush( pSelf );

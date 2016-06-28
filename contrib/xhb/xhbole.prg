@@ -76,8 +76,6 @@ FUNCTION OleDefaultArg()
 #define EG_OLEEXCEPTION 1001
 #define DISPID_VALUE    0
 
-STATIC s_bBreak := {| oError | Break( oError ) }
-
 STATIC FUNCTION s_oleOpError( cOperator, ... )
 
    STATIC sc_hErrCode := { ;
@@ -92,9 +90,9 @@ STATIC FUNCTION s_oleOpError( cOperator, ... )
       "++" => 1086, ;
       "--" => 1087, ;
       "^"  => 1088 }
-   LOCAL oErr
 
-   oErr := ErrorNew()
+   LOCAL oErr := ErrorNew()
+
    oErr:Args          := { ... }
    oErr:CanDefault    := .F.
    oErr:CanRetry      := .F.
@@ -110,9 +108,8 @@ STATIC FUNCTION s_oleOpError( cOperator, ... )
 
 STATIC FUNCTION s_oleError( nGenCode, cDescript )
 
-   LOCAL oErr
+   LOCAL oErr := ErrorNew()
 
-   oErr := ErrorNew()
    oErr:Args          := hb_AParams( 1 )
    oErr:CanDefault    := .F.
    oErr:CanRetry      := .F.
@@ -132,7 +129,7 @@ STATIC FUNCTION s_oleError( nGenCode, cDescript )
    RETURN oErr
 
 
-CREATE CLASS TOleAuto FROM win_oleAuto
+CREATE CLASS TOleAuto INHERIT win_oleAuto
 
    VAR cClassName
 
@@ -192,12 +189,9 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOleAuto
    ELSE
       ::hObj := xOle
       IF ::__hObj == NIL
-         RETURN Throw( s_oleError( 0, "Invalid argument to contructor!" ) )
-      ELSEIF HB_ISSTRING( cClass )
-         ::cClassName := cClass
-      ELSE
-         ::cClassName := hb_ntos( win_P2N( ::__hObj ) )
+         RETURN Throw( s_oleError( 0, "Invalid argument to constructor!" ) )
       ENDIF
+      ::cClassName := iif( HB_ISSTRING( cClass ), cClass, hb_ntos( __xhb_p2n( ::__hObj ) ) )
    ENDIF
 
    RETURN Self
@@ -226,7 +220,7 @@ METHOD _OleValue( xValue ) CLASS TOleAuto
 #xcommand OLE OPERATOR <op> METHOD <!mth!> [WITH <!arg!>] IS <exp> => ;
    METHOD <mth>( <arg> ) CLASS TOleAuto                     ;;
    LOCAL xRet                                               ;;
-   BEGIN SEQUENCE WITH s_bBreak                             ;;
+   BEGIN SEQUENCE WITH __BreakBlock()                       ;;
       xRet := ( <exp> )                                     ;;
    RECOVER                                                  ;;
       RETURN Throw( s_oleOpError( <op>, Self [, <arg>] ) )  ;;

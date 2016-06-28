@@ -11,12 +11,12 @@ LIB_PREF := lib
 LIB_EXT := .a
 
 CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 # NOTE: The ending space after -o is important, please preserve it.
 #       Now solved with '$(subst x,x, )' expression.
 CC_OUT := -o$(subst x,x, )
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 # -no-cpp-precomp prevents from using buggy precompiled headers
 # CFLAGS += -no-cpp-precomp
@@ -33,6 +33,8 @@ else
    endif
 endif
 
+#CFLAGS += -D_FORTIFY_SOURCE=2
+
 ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O3
 endif
@@ -40,10 +42,6 @@ endif
 ifeq ($(HB_BUILD_DEBUG),yes)
    CFLAGS += -g
 endif
-
-# It's to avoid warning message generated when 'long double' is used
-# remove it if you have newer compiler version
-#CFLAGS += -Wno-long-double
 
 LD := $(CC)
 LD_OUT := -o$(subst x,x, )

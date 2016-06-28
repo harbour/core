@@ -3,7 +3,7 @@
 PROCEDURE Main()
 
    LOCAL nPrn := 1
-   LOCAL cFileName := Space( 40 )
+   LOCAL cFileName := Space( 256 )
    LOCAL GetList := {}
 
    LOCAL aPrn := win_printerList()
@@ -16,7 +16,7 @@ PROCEDURE Main()
       DO WHILE nPrn != 0
          CLS
          @ 0, 0 SAY "win_PrintFileRaw() test program. Choose a printer to test"
-         @ 1, 0 SAY "File name:" GET cFileName PICT "@!K"
+         @ 1, 0 SAY "File name:" GET cFileName PICTURE "@KS40"
          READ
          @ 2, 0 TO MaxRow(), MaxCol()
          nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn )
@@ -32,7 +32,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cFileName )
 
    LOCAL lDelete
 
-   IF Empty( cFileName )
+   IF HB_ISNULL( cFileName )
       hb_MemoWrit( cFileName := hb_FNameExtSet( __FILE__, ".prn" ), "Hello World!" + Chr( 12 ) )
       lDelete := .T.
    ELSE
@@ -42,7 +42,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cFileName )
    Alert( "win_PrintFileRaw() returned: " + hb_ntos( win_PrintFileRaw( cPrinter, cFileName, "testing raw printing" ) ) )
 
    IF lDelete
-      FErase( cFileName )
+      hb_vfErase( cFileName )
    ENDIF
 
    RETURN

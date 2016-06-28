@@ -48,6 +48,8 @@
 
 ANNOUNCE SYSINIT
 
+#ifdef HB_CLP_STRICT
+
 /* NOTE: For complete compatibility */
 PROCEDURE CLIPPER520()
    RETURN
@@ -57,6 +59,8 @@ PROCEDURE CLIPPER520()
 /* NOTE: For complete compatibility */
 PROCEDURE CLIPPER530()
    RETURN
+
+#endif
 
 #endif
 
@@ -78,6 +82,6 @@ PROCEDURE __HBVMInit()
 
 PROCEDURE __SetHelpK()
 
-   SET KEY K_F1 TO __XHELP
+   SetKey( K_F1, {| p, l, v | __XHelp( p, l, v ) } )
 
    RETURN

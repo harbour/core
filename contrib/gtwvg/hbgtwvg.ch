@@ -72,8 +72,9 @@
 #define HB_GTE_CREATED                    19
 #define HB_GTE_CLOSED                     20
 
-#define HB_GTI_EXTENDED                   100
+#define HB_GTI_EXTENDED                   1000
 
+#define HB_GTI_SPEC                       ( HB_GTI_EXTENDED +  0 )
 #define HB_GTI_SETFONT                    ( HB_GTI_EXTENDED +  1 )
 #define HB_GTI_PRESPARAMS                 ( HB_GTI_EXTENDED +  2 )
 #define HB_GTI_ENABLE                     ( HB_GTI_EXTENDED +  3 )
@@ -103,8 +104,6 @@
 
 #define HB_WNDTYPE_CRT                    0
 #define HB_WNDTYPE_DIALOG                 1
-
-#define HB_GTI_SPEC                       1000
 
 /* Window Specifications | HB_GTI_SPEC */
 #define HB_GTS_WINDOWHANDLE               1

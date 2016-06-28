@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ WvgDialog's Helper Class
  *
  * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                   Xbase++ WvgDialog's Helper Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               15Feb2009
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgDrawingArea  INHERIT  WvgWindow
+CREATE CLASS WvgDrawingArea INHERIT WvgWindow
 
    VAR    caption                               INIT ""
    VAR    clipParent                            INIT .T.
@@ -79,7 +73,7 @@ METHOD WvgDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD
+   ::style       := WIN_WS_CHILD
    ::exStyle     := 0
    ::className   := "DrawingArea"
    ::objType     := objTypeDA
@@ -95,7 +89,7 @@ METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::oParent:addChild( Self )
 
-   Wvg_RegisterClass_ByName( ::className() )
+   wvg_RegisterClass_ByName( ::className() )
 
    ::createControl()
 
@@ -108,28 +102,28 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
-      IF HB_ISBLOCK( ::sl_resize )
-         Eval( ::sl_resize, NIL, NIL, self )
+      IF HB_ISEVALITEM( ::sl_resize )
+         Eval( ::sl_resize, , , self )
       ENDIF
       AEval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
-      RETURN EVENT_HANDELLED
+      RETURN EVENT_HANDLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wapi_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
-         Wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
-         RETURN EVENT_HANDELLED
+      IF ! Empty( ::hBrushBG )
+         wapi_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         wapi_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
+         RETURN EVENT_HANDLED
       ENDIF
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
-METHOD destroy() CLASS WvgDrawingArea
+METHOD PROCEDURE WvgDrawingArea:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN

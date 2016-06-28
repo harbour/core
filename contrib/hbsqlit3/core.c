@@ -42,8 +42,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- * See COPYING.txt for licensing terms.
- *
  */
 
 #include "sqlite3.h"
@@ -417,7 +415,6 @@ static void func( sqlite3_context * ctx, int argc, sqlite3_value ** argv )
    if( pCallback && hb_vmRequestReenter() )
    {
       PHB_ITEM pResult;
-      int      i;
 
       hb_vmPushEvalSym();
       hb_vmPush( pCallback );
@@ -425,6 +422,8 @@ static void func( sqlite3_context * ctx, int argc, sqlite3_value ** argv )
 
       if( argc > 0 )
       {
+         int i;
+
          for( i = 0; i < argc; i++ )
          {
             switch( sqlite3_value_type( argv[ i ] ) )
@@ -656,7 +655,7 @@ HB_FUNC( SQLITE3_LAST_INSERT_ROWID )
 }
 
 /**
-   Name Of The Folder Holding Temporary Files
+   Name Of The Directory Holding Temporary Files
 
    sqlite3_temp_directory( cDirName ) -> lResult
  */
@@ -680,11 +679,11 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
                bResult = HB_TRUE;
             else
                HB_TRACE( HB_TR_DEBUG,
-                         ( "sqlite_temp_directory(): Can't create directory %s", pszDirName ) );
+                         ( "sqlite_temp_directory(): Could not create directory %s", pszDirName ) );
          }
          else
             HB_TRACE( HB_TR_DEBUG,
-                      ( "sqlite_temp_directory(): Directory doesn't exist %s", pszDirName ) );
+                      ( "sqlite_temp_directory(): Directory does not exist %s", pszDirName ) );
       }
 
       if( bResult )
@@ -730,7 +729,7 @@ HB_FUNC( SQLITE3_OPEN )
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ( "sqlite3_open(): Database doesn't exist %s", pszdbName ) );
+      HB_TRACE( HB_TR_DEBUG, ( "sqlite3_open(): Database does not exist %s", pszdbName ) );
 
       hb_retptr( NULL );
    }
@@ -1443,11 +1442,12 @@ HB_FUNC( SQLITE3_GET_TABLE )
                                              NULL ), &pResult, &iRow, &iCol,
                              &pszErrMsg ) == SQLITE_OK )
       {
-         int i, j, k = 0;
+         int i, k = 0;
 
          for( i = 0; i < iRow + 1; i++ )
          {
             PHB_ITEM pArray = hb_itemArrayNew( iCol );
+            int j;
 
             for( j = 1; j <= iCol; j++, k++ )
                hb_arraySetStrUTF8( pArray, j, ( const char * ) pResult[ k ] );
@@ -1795,7 +1795,7 @@ HB_FUNC( SQLITE3_PROFILE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
       sqlite3_profile( pHbSqlite3->db, hb_parl( 2 ) ? SQL3ProfileLog : NULL,
-                       HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parcx( 3 ) ) : NULL );
+                       HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parc( 3 ) ) : NULL );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -1806,7 +1806,7 @@ HB_FUNC( SQLITE3_TRACE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
       sqlite3_trace( pHbSqlite3->db, hb_parl( 2 ) ? SQL3TraceLog : NULL,
-                     HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parcx( 3 ) ) : NULL );
+                     HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parc( 3 ) ) : NULL );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -1817,38 +1817,31 @@ HB_FUNC( SQLITE3_TRACE )
 
 HB_FUNC( SQLITE3_FILE_TO_BUFF )
 {
-   HB_FHANDLE handle = hb_fsOpen( hb_parcx( 1 ), FO_READ );
+   HB_SIZE nSize;
+   char * pBuffer = ( char * ) hb_fileLoad( hb_parcx( 1 ), 0, &nSize );
 
-   if( handle != FS_ERROR )
-   {
-      char *  buffer;
-      HB_SIZE nSize;
-
-      nSize = hb_fsSeek( handle, 0, FS_END );
-      hb_fsSeek( handle, 0, FS_SET );
-      buffer = ( char * ) hb_xgrab( nSize + 1 );
-      nSize  = hb_fsReadLarge( handle, buffer, nSize );
-      buffer[ nSize ] = '\0';
-      hb_fsClose( handle );
-
-      hb_retclen_buffer( buffer, nSize );
-   }
+   if( pBuffer )
+      hb_retclen_buffer( pBuffer, nSize );
    else
       hb_retc_null();
 }
 
 HB_FUNC( SQLITE3_BUFF_TO_FILE )
 {
-   HB_FHANDLE handle = hb_fsCreate( hb_parcx( 1 ), FC_NORMAL );
-   HB_SIZE    nSize  = hb_parcsiz( 2 ) - 1;
-
-   if( handle != FS_ERROR && nSize > 0 )
+   if( HB_ISCHAR( 1 ) )
    {
-      hb_retni( hb_fsWriteLarge( handle, hb_parcx( 2 ), nSize ) == nSize ? 0 : -1 );
-      hb_fsClose( handle );
+      PHB_FILE handle = hb_fileExtOpen( hb_parc( 1 ), NULL, FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE | FXO_TRUNCATE | FXO_SHARELOCK | FXO_NOSEEKPOS, NULL, NULL );
+
+      if( handle )
+      {
+         HB_SIZE nSize = hb_parclen( 2 );
+         hb_retns( hb_fileWrite( handle, hb_parcx( 2 ), nSize, -1 ) == nSize ? 0 : -1 );
+         hb_fileClose( handle );
+         return;
+      }
    }
-   else
-      hb_retni( 1 );
+
+   hb_retns( -1 );
 }
 
 /**
@@ -2035,15 +2028,13 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
 {
 #if SQLITE_VERSION_NUMBER >= 3006011
    HB_SQLITE3 * pHbSqlite3Dest   = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
-   HB_SQLITE3 * pHbSqlite3Source = ( HB_SQLITE3 * ) hb_sqlite3_param( 3, HB_SQLITE3_DB,
-                                                                      HB_TRUE );
-   sqlite3_backup * pBackup;
+   HB_SQLITE3 * pHbSqlite3Source = ( HB_SQLITE3 * ) hb_sqlite3_param( 3, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3Dest && pHbSqlite3Dest->db && pHbSqlite3Source && pHbSqlite3Source->db &&
        HB_ISCHAR( 2 ) && HB_ISCHAR( 4 ) )
    {
-      pBackup = sqlite3_backup_init( pHbSqlite3Dest->db, hb_parcx(
-                                        2 ), pHbSqlite3Source->db, hb_parcx( 4 ) );
+      sqlite3_backup * pBackup = sqlite3_backup_init( pHbSqlite3Dest->db,
+         hb_parc( 2 ), pHbSqlite3Source->db, hb_parc( 4 ) );
 
       if( pBackup )
          hb_retptr( pBackup );  /* TOFIX: Create GC collected pointer */
@@ -2169,20 +2160,41 @@ HB_FUNC( SQLITE3_THREADSAFE )
 HB_FUNC( SQLITE3_STATUS )
 {
 #if SQLITE_VERSION_NUMBER >= 3006000
-   int iCurrent, iHighwater;
-
    if( hb_pcount() > 3 && ( HB_ISNUM( 2 ) && HB_ISBYREF( 2 ) ) && ( HB_ISNUM( 3 ) && HB_ISBYREF( 3 ) ) )
    {
+      int iCurrent, iHighwater;
+
       hb_retni( sqlite3_status( hb_parni( 1 ), &iCurrent, &iHighwater, ( int ) hb_parl( 4 ) ) );
 
       hb_storni( iCurrent, 2 );
       hb_storni( iHighwater, 3 );
+
+      return;
    }
-   else
-      hb_retni( -1 );
-#else
-   hb_retni( -1 );
 #endif
+   hb_storni( 0, 3 );
+   hb_storni( 0, 4 );
+   hb_retni( -1 );
+}
+
+HB_FUNC( SQLITE3_STATUS64 )
+{
+#if SQLITE_VERSION_NUMBER >= 3080900 && ! defined( HB_LONG_LONG_OFF )
+   if( hb_pcount() > 3 && ( HB_ISNUM( 2 ) && HB_ISBYREF( 2 ) ) && ( HB_ISNUM( 3 ) && HB_ISBYREF( 3 ) ) )
+   {
+      sqlite3_int64 iCurrent, iHighwater;
+
+      hb_retni( sqlite3_status( hb_parni( 1 ), &iCurrent, &iHighwater, ( int ) hb_parl( 4 ) ) );
+
+      hb_stornint( iCurrent, 2 );
+      hb_stornint( iHighwater, 3 );
+
+      return;
+   }
+#endif
+   hb_stornint( 0, 2 );
+   hb_stornint( 0, 3 );
+   hb_retni( -1 );
 }
 
 /**
@@ -2194,23 +2206,25 @@ HB_FUNC( SQLITE3_STATUS )
 HB_FUNC( SQLITE3_DB_STATUS )
 {
 #if SQLITE_VERSION_NUMBER >= 3006001
-   int iCurrent, iHighwater;
    HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db && ( hb_pcount() > 4 ) &&
        ( HB_ISNUM( 3 ) && HB_ISBYREF( 3 ) ) && ( HB_ISNUM( 4 ) && HB_ISBYREF( 4 ) ) )
    {
+      int iCurrent, iHighwater;
+
       hb_retni( sqlite3_db_status( pHbSqlite3->db, hb_parni( 2 ), &iCurrent, &iHighwater,
                                    ( int ) hb_parl( 5 ) ) );
 
       hb_storni( iCurrent, 3 );
       hb_storni( iHighwater, 4 );
+
+      return;
    }
-   else
-      hb_retni( -1 );
-#else
-   hb_retni( -1 );
 #endif
+   hb_storni( 0, 3 );
+   hb_storni( 0, 4 );
+   hb_retni( -1 );
 }
 
 /**

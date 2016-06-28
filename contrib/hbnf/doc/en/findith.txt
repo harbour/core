@@ -16,7 +16,7 @@
       <nWhichOccurrence> is the number of the occurrence to find.
 
       <lIgnoreCase> is a logical indicating if the search is to be case
-         sensitive.  The default is no case sensitivity (.F.).
+         sensitive.  The default is no case sensitivity (.T.).
    $RETURNS$
       The position in the string cCheckIn of the ith occurrence of cCheckFor.
    $DESCRIPTION$
@@ -27,7 +27,7 @@
       // the 10th Occurrence of "the", case
       // insensitive
 
-      nNextPosition := ft_FindITh( "the", cMemoString, 10 )
+      ? ft_FindITh( "the", cMemoString, 10 )
    $SEEALSO$
       ft_At2()
    $END$

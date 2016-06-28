@@ -1,18 +1,12 @@
-//
-// Compile Hello
-//
-// This program compiles hello.prg
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
-//
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* This program compiles hello.prg */
 
 PROCEDURE Main()
 
    ? "About to compile hello.prg"
    ?
-   hb_run( ".." + hb_ps() + "bin" + hb_ps() + "harbour hello.prg -gh" )
+   hb_run( hb_DirSepToOS( "../bin/harbour" ) + " hello.prg -gh" )
    ? "Finished compiling"
 
    RETURN

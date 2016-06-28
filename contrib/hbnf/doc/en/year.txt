@@ -30,7 +30,7 @@
       The beginning of year date may be reset to January 1 by calling
       ft_DateCnfg() with no parameters.
    $EXAMPLES$
-      // Get info about year containing 9/15/90, assuming default
+      // Get info about year containing 1990-09-15, assuming default
       // beginning of year is January 1st.
       aDateInfo := ft_Year( hb_SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  1990

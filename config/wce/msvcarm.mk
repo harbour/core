@@ -10,10 +10,10 @@ ifeq ($(HB_COMPILER),msvcarm)
       CC := clarm.exe
    endif
 endif
-CC_IN := -c
+CC_IN :=
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -nologo
 
@@ -91,7 +91,7 @@ SYSLIBS += corelibc
 LIBPATHS := $(foreach dir,$(LIB_DIR),-libpath:$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-LDFLAGS += -nologo -subsystem:windowsce -nodefaultlib:oldnames.lib -nodefaultlib:kernel32.lib
+LDFLAGS += -nologo -subsystem:windowsce -nodefaultlib:oldnames.lib
 ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310),)
    LDFLAGS += -manifest:no
 endif

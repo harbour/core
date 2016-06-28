@@ -8,5 +8,8 @@ libpaths=lib/${hb_plat}/${hb_comp}
 
 libs=${hb_name}
 
+# NOTE: Extend as needed with other Harbour lib dependencies
+libs=hbct
+
 # NOTE: Adapt and uncomment, if the library has a 3rd party lib dependency
 # libs=lib3rd

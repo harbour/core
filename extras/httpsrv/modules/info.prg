@@ -48,45 +48,26 @@ MEMVAR _SERVER, _REQUEST, _GET, _POST, _COOKIE, _SESSION, _HTTP_REQUEST, _HTTP_R
 
 FUNCTION HRBMAIN()
 
-   LOCAL cHtml
-
-   cHtml := ShowServerInfo()
-
-   RETURN cHtml
-
-STATIC FUNCTION ShowServerInfo()
-
-   LOCAL cHtml := ""
-
-// LOCAL oCookie
-
-   cHtml += "<big>Server Info</big>"
-// cHtml += "<br /><br />If it is first time you see this page reload it to see cookies<br /><br />"
-   cHtml += '<br /><br />Return to <a href="/">Main Page</a><br /><br />'
-
-   cHtml += DisplayVars( _Server       , "SERVER Vars" )
-   cHtml += "<br />"
-   cHtml += DisplayVars( _HTTP_REQUEST , "HTTP Request Headers" )
-   cHtml += "<br />"
-   cHtml += DisplayVars( _HTTP_RESPONSE, "HTTP Response Headers" )
-   cHtml += "<br />"
-   cHtml += DisplayVars( _Get          , "GET Vars" )
-   cHtml += "<br />"
-   cHtml += DisplayVars( _Post         , "POST Vars" )
-   cHtml += "<br />"
-   cHtml += DisplayVars( _Cookie       , "COOKIE Vars" )
-   cHtml += "<br />"
-// cHtml += DisplayVars( _Files        , "FILE Vars" )
-// cHtml += "<br />"
-   cHtml += DisplayVars( _Request      , "REQUEST Vars" )
-   cHtml += "<br />"
-   cHtml += DisplayVars( _Session      , "SESSION Vars" )
-   cHtml += "<br />"
+   LOCAL cHtml := ;
+      "<big>Server Info</big>" + ;
+/*    "<br /><br />If it is first time you see this page reload it to see cookies<br /><br />" */ + ;
+      '<br /><br />Return to <a href="/">Main Page</a><br /><br />' + ;
+      DisplayVars( _Server       , "SERVER Vars" ) + "<br />" + ;
+      DisplayVars( _HTTP_REQUEST , "HTTP Request Headers" ) + "<br />" + ;
+      DisplayVars( _HTTP_RESPONSE, "HTTP Response Headers" ) + "<br />" + ;
+      DisplayVars( _Get          , "GET Vars" ) + "<br />" + ;
+      DisplayVars( _Post         , "POST Vars" ) + "<br />" + ;
+      DisplayVars( _Cookie       , "COOKIE Vars" ) + "<br />" + ;
+/*    DisplayVars( _Files        , "FILE Vars" ) + "<br />" */ + ;
+      DisplayVars( _Request      , "REQUEST Vars" ) + "<br />" + ;
+      DisplayVars( _Session      , "SESSION Vars" ) + "<br />"
 
    // Set a simple cookie
-// oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
-// oCookie:SetCookie( "samplecookie", "test" )
-// oCookie:SetCookie( "samplecookie2", "test2" )
+#if 0
+   LOCAL oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
+   oCookie:SetCookie( "samplecookie", "test" )
+   oCookie:SetCookie( "samplecookie2", "test2" )
+#endif
 
    _SESSION[ "Session_Var1" ] := "Test1"
    _SESSION[ "Session_Var2" ] := "Test2"
@@ -94,19 +75,15 @@ STATIC FUNCTION ShowServerInfo()
    RETURN cHtml
 
 STATIC FUNCTION DisplayVars( hHash, cTitle )
-
-   LOCAL cHtml := ""
-
-   cHtml += "<table width='90%' align='center' border='1'>"
-   cHtml += "<th colspan=2>" + hb_CStr( cTitle ) + "</th>"
-   cHtml += "<tr>"
-   cHtml += "<th width='20%'>KEY</th>"
-   cHtml += "<th width='80%'>VALUE</th>"
-   cHtml += "</tr>"
-   cHtml += DisplayHash( hHash )
-   cHtml += "</table>"
-
-   RETURN cHtml
+   RETURN ;
+      "<table width='90%' align='center' border='1'>" + ;
+      "<th colspan=2>" + hb_CStr( cTitle ) + "</th>" + ;
+      "<tr>" + ;
+      "<th width='20%'>KEY</th>" + ;
+      "<th width='80%'>VALUE</th>" + ;
+      "</tr>" + ;
+      DisplayHash( hHash ) + ;
+      "</table>"
 
 STATIC FUNCTION DisplayHash( hHash )
 
@@ -116,19 +93,22 @@ STATIC FUNCTION DisplayHash( hHash )
    FOR EACH cKey IN hHash:Keys
       cHtml += "<tr>"
       IF HB_ISHASH( hHash[ cKey ] )
-         cHtml += "<td>" + hb_CStr( cKey ) + "</td>"
-         cHtml += "<td>-------</td>"
+         cHtml += ;
+            "<td>" + hb_CStr( cKey ) + "</td>" + ;
+            "<td>-------</td>"
          FOR EACH cSubKey IN hHash[ cKey ]:Keys
             xValue := hHash[ cKey ][ cSubKey ]
-            cHtml += "<tr>"
-            cHtml += "<td>" + hb_CStr( cSubKey ) + "</td>"
-            cHtml += "<td>" + iif( Empty( xValue ), "<i>no value</i>", hb_CStr( xValue ) ) + "</td>"
-            cHtml += "</tr>"
+            cHtml += ;
+               "<tr>" + ;
+               "<td>" + hb_CStr( cSubKey ) + "</td>" + ;
+               "<td>" + iif( Empty( xValue ), "<i>no value</i>", hb_CStr( xValue ) ) + "</td>" + ;
+               "</tr>"
          NEXT
       ELSE
          xValue := hHash[ cKey ]
-         cHtml += "<td>" + hb_CStr( cKey ) + "</td>"
-         cHtml += "<td>" + iif( Empty( xValue ), "<i>no value</i>", hb_CStr( xValue ) ) + "</td>"
+         cHtml += ;
+            "<td>" + hb_CStr( cKey ) + "</td>" + ;
+            "<td>" + iif( Empty( xValue ), "<i>no value</i>", hb_CStr( xValue ) ) + "</td>"
       ENDIF
       cHtml += "</tr>"
    NEXT

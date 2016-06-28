@@ -97,7 +97,7 @@ static HB_BOOL hb_memowrit( HB_BOOL bHandleEOF )
    if( pszFileName && pString )
    {
       PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL,
-                                       FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                       FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
                                        FXO_TRUNCATE | FXO_SHARELOCK,
                                        NULL, NULL );
 

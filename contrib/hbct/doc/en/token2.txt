@@ -231,7 +231,7 @@
       The TokenExit() function releases the memory associated with the
       global token environment. One should use it for every TokenInit()
       using the global TE. Additionally, TokenExit() is implicitly called
-      from ctexit() to free the memory at library shutdown.
+      when the thread or application ends.
    $EXAMPLES$
       TokenInit( cString ) // initialize a TE
       DO WHILE ! TokenEnd()

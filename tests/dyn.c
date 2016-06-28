@@ -1,13 +1,10 @@
-/*
- * Dynamic library call test.
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
+
+/* Dynamic library call test. */
 
 /* Build with:
-      hbmk2 -hbdyn dyn.c -otest_x86
-      hbmk2 -hbdyn dyn.c -otest_x64
+      hbmk2 -hbdyn dyn.c -otest_32
+      hbmk2 -hbdyn dyn.c -otest_64
  */
 
 #include "hbapi.h"

@@ -46,24 +46,24 @@
 
 #ifndef HB_ASSERT_CH_
 #define HB_ASSERT_CH_
-#define _ASSERT_DEFINED /* NOTE: For complete CA-Cl*pper compatibility */
+#define _ASSERT_DEFINED  /* NOTE: For complete CA-Cl*pper compatibility */
 
 #ifdef NDEBUG
 
 /* When NDEBUG is defined, ignore all ASSERT() calls */
-#command ASSERT( <exp> [, <msg>] )      =>
+#command ASSERT( <exp> [, <msg>] )  =>
 
 #else
 
-#command ASSERT( <exp> [, <msg>] )      =>                              ;
-         IF !( <exp> )                                                  ;
-       ;    OutStd(                                                     ;
-                    hb_eol() + ProcName( 0 ) +                          ;
-                    "(" + hb_ntos( ProcLine() ) + ")" +                 ;
-                    "  Assertion failed: " +                            ;
-                    iif( <.msg.>, <msg>, <"exp"> )                      ;
-                  )                                                     ;
-       ;    QUIT                                                        ;
+#command ASSERT( <exp> [, <msg>] )  =>                  ;
+         IF !( <exp> )                                  ;
+       ;    OutStd(                                     ;
+                    hb_eol() + ProcName( 0 ) +          ;
+                    "(" + hb_ntos( ProcLine() ) + ")" + ;
+                    "  Assertion failed: " +            ;
+                    iif( <.msg.>, <msg>, <"exp"> )      ;
+                  )                                     ;
+       ;    QUIT                                        ;
        ; END
 
 #endif /* NDEBUG */

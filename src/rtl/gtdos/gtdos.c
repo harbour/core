@@ -2,6 +2,26 @@
  * Video subsystem for DOS compilers
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ *    hb_gt_CtrlBrkHandler()
+ *    hb_gt_CtrlBrkRestore()
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_gt_ReadKey()
+ * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
+ *    vmode12x40()
+ *    vmode25x40()
+ *    vmode28x40()
+ *    vmode50x40()
+ *    vmode12x80()
+ *    vmode25x80()
+ *    vmode28x80()
+ *    vmode43x80()
+ *    vmode50x80()
+ *    hb_gt_SetMode()
+ *    hb_gt_GetDisplay()
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ * Copyright 1999 Luiz Rafael Culik <Culik@sl.conex.net>
+ *    Harbour Mouse Subsystem for DOS
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,40 +64,7 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_gt_CtrlBrkHandler()
- *    hb_gt_CtrlBrkRestore()
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_ReadKey()
- *
- * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
- *    vmode12x40()
- *    vmode25x40()
- *    vmode28x40()
- *    vmode50x40()
- *    vmode12x80()
- *    vmode25x80()
- *    vmode28x80()
- *    vmode43x80()
- *    vmode50x80()
- *    hb_gt_SetMode()
- *    hb_gt_GetDisplay()
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *                Luiz Rafael Culik <Culik@sl.conex.net>
- *    Harbour Mouse Subsystem for DOS
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
-/*
- * This module is based on VIDMGR by Andrew Clarke and modified for Harbour.
- */
+/* This module is based on VIDMGR by Andrew Clarke and modified for Harbour. */
 
 /* NOTE: User programs should never call this layer directly! */
 
@@ -96,8 +83,7 @@
 #include <conio.h>
 
 
-/*
- * use mouse driver save/restore state functions,
+/* Use mouse driver save/restore state functions,
  * add other compilers for which calling real mode
  * interrupts with memory pointer is implemented.
  */
@@ -333,6 +319,7 @@ static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
          gettext( iCol + 1, iRow + 1, iCol + 1, iRow + 1, &ch_attr );
          bChar = ch_attr & 0xFF;
          bAttr = ch_attr >> 8;
+         HB_SYMBOL_UNUSED( pScreenPtr );
 #elif defined( __DJGPP__ )
          int iChar, iAttr;
          ScreenGetChar( &iChar, &iAttr, iCol, iRow );
@@ -992,6 +979,8 @@ static void hb_gt_dos_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    sound( ( unsigned ) dFrequency );
 #elif defined( __DJGPP__ )
    sound( ( int ) dFrequency );
+#else
+   HB_SYMBOL_UNUSED( dFrequency );
 #endif
 
    /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
@@ -1013,7 +1002,7 @@ static const char * hb_gt_dos_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: DOS console";
+   return "Terminal: MS-DOS native";
 }
 
 /* some definitions */
@@ -1312,6 +1301,7 @@ static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          short ch_attr = ( ( short ) iColor << 8 ) | uc;
          puttext( iCol + iLen + 1, iRow + 1, iCol + iLen + 1, iRow + 1, &ch_attr );
+         HB_SYMBOL_UNUSED( pScreenPtr );
       }
 #elif defined( __DJGPP__ )
       ScreenPutChar( uc, iColor, iCol + iLen, iRow );

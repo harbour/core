@@ -152,7 +152,7 @@ METHOD PROCEDURE ShowCaption() CLASS HBDbWindow
 
    IF ! Empty( ::cCaption )
       hb_DispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
-         ( ( Len( ::cCaption ) + 2 ) / 2 ), ;
+         ( ( hb_ULen( ::cCaption ) + 2 ) / 2 ), ;
          " " + ::cCaption + " ", ::cColor )
    ENDIF
 

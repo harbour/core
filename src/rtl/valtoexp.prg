@@ -46,13 +46,13 @@
 
 FUNCTION hb_CStr( xVal )
 
-   LOCAL v := ValType( xVal )
+   LOCAL v
 
-   SWITCH v
+   SWITCH v := ValType( xVal )
    CASE "C"
    CASE "M" ; RETURN xVal
    CASE "N" ; RETURN Str( xVal )
-   CASE "D" ; RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
+   CASE "D" ; RETURN "0d" + iif( Empty( xVal ), "0", DToS( xVal ) )
    CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
    CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
    CASE "S" ; RETURN "@" + xVal:name + "()"
@@ -70,25 +70,25 @@ FUNCTION hb_CStr( xVal )
    RETURN "???:" + v
 
 FUNCTION hb_ValToExp( xVal, lRaw )
-
    RETURN s_valToExp( xVal, hb_defaultValue( lRaw, .F. ) )
 
 STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
 
    LOCAL cVal, cKey, cClass
    LOCAL tmp
-   LOCAL v := ValType( xVal )
+   LOCAL v
 
-   SWITCH v
+   SWITCH v := ValType( xVal )
    CASE "C"
    CASE "M" ; RETURN hb_StrToExp( xVal )
    CASE "N" ; RETURN hb_ntos( xVal )
-   CASE "D" ; RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
+   CASE "D" ; RETURN "0d" + iif( Empty( xVal ), "0", DToS( xVal ) )
    CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
    CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
    CASE "S" ; RETURN "@" + xVal:name + "()"
    CASE "O"
       cClass := xVal:className()
+      /* Fall through */
    CASE "A"
    CASE "H"
       tmp := __vmItemID( xVal )

@@ -97,6 +97,8 @@ HB_FUNC( AMFSTDIO_READ )
 
    if( nLen >= MAXLEN )
    {
+      hb_xfree( pszStrIn );
+      hb_xfree( pszLenPrefix );
       hb_ret();
       return;
    }

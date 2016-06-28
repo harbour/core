@@ -48,15 +48,17 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
+/* TODO: use Harbour FS API */
+
 #include "hbgtcore.h"
 #include "hbapifs.h"
 
-#if defined( HB_OS_UNIX ) || defined( HB_OS_DOS )
+#if defined( HB_OS_UNIX ) || defined( HB_OS_DOS ) || 1
 
 #define MAX_CHAR_VAL  0xff
 #define HB_CHRMAP( a, c )  ( ( ( a ) << 16 ) | ( c ) )
 
-const char * hb_gt_szCharMapFileDefault = "/etc/harbour/hb-charmap.def";
+static const char * s_szCharMapFileDefault = "/etc/harbour/hb-charmap.def";
 
 static void chrmap_init( int * piTransTbl )
 {
@@ -192,7 +194,7 @@ static int get_val( char ** buf )
 
 static int parse_line( char * buf, int * from, int * to, char * op, int * val, int * mod )
 {
-   char *s, *s2;
+   char *s;
    int ret = 0, ina = 0;
 
    s = buf;
@@ -223,6 +225,7 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
 
    if( *s == '@' )
    {
+      char *s2;
       ++s;
       s2 = buf;
       while( *s != '\0' && *s != ' ' )
@@ -412,28 +415,28 @@ int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
 
    if( pszTerm != NULL && *pszTerm != '\0' )
    {
-      char szFile[ HB_PATH_MAX ];
       char * pszFile = hb_getenv( "HB_CHARMAP" );
 
       if( pszFile != NULL && *pszFile != '\0' )
          nRet = hb_gt_chrmapread( pszFile, pszTerm, piTransTbl );
       if( nRet == -1 )
       {
+         char szFile[ HB_PATH_MAX ];
          if( pszFile )
             hb_xfree( pszFile );
          pszFile = hb_getenv( "HB_ROOT" );
          if( pszFile != NULL && sizeof( szFile ) >
-                        strlen( pszFile ) + strlen( hb_gt_szCharMapFileDefault ) )
+                        strlen( pszFile ) + strlen( s_szCharMapFileDefault ) )
          {
             hb_strncpy( szFile, pszFile, sizeof( szFile ) - 1 );
-            hb_strncat( szFile, hb_gt_szCharMapFileDefault, sizeof( szFile ) - 1 );
+            hb_strncat( szFile, s_szCharMapFileDefault, sizeof( szFile ) - 1 );
             nRet = hb_gt_chrmapread( szFile, pszTerm, piTransTbl );
          }
       }
       if( pszFile )
          hb_xfree( pszFile );
       if( nRet == -1 )
-         nRet = hb_gt_chrmapread( hb_gt_szCharMapFileDefault, pszTerm, piTransTbl );
+         nRet = hb_gt_chrmapread( s_szCharMapFileDefault, pszTerm, piTransTbl );
    }
 
    if( pszFree )

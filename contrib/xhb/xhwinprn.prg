@@ -1,11 +1,11 @@
 /*
  * xHarbour compatible WIN32PRN class which inherits from WIN_PRN class
- *    hiding some differences between Harbour and xHarbour
+ * hiding some differences between Harbour and xHarbour
  *
- * original WIN32PRN/WIN_PRN class author:
- *    Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  * this wrapper:
  *    Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * original WIN32PRN/WIN_PRN class author:
+ *    Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
-*/
+ */
 
 #ifndef __PLATFORM__WINDOWS
 
@@ -58,13 +58,11 @@ FUNCTION Win32Bmp()
 #else
 
 #include "hbclass.ch"
+#include "hbwin.ch"
 
-#define TA_LEFT               0
-#define TA_BOTTOM             8
-#define FORM_CUSTOM           256
+CREATE CLASS Win32Prn INHERIT win_Prn
 
-CREATE CLASS Win32Prn FROM win_Prn
-
+   METHOD New( cPrinter )
    METHOD Create()
    METHOD StartPage()
 
@@ -74,21 +72,27 @@ CREATE CLASS Win32Prn FROM win_Prn
       nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
       lUpdatePosX, nColor, nAlignHori, nAlignVert )
 
-   VAR SetTextHori      INIT TA_LEFT      // Default horizontal alignment SetTextAlign() (TEXTOUT)
-   VAR SetTextVert      INIT TA_BOTTOM    // Default vertical alignment for SetTextAlign() (TEXTOUT)
+   VAR SetTextHori      INIT WIN_TA_LEFT      // Default horizontal alignment SetTextAlign() (TextOut())
+   VAR SetTextVert      INIT WIN_TA_BOTTOM    // Default vertical alignment for SetTextAlign() (TextOut())
 
-   /* not implemented */
 #if 0
+   /* not implemented */
    METHOD TextOutW( wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
    METHOD TextOutWAt( nPosX, nPosY, wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
 #endif
 
 ENDCLASS
 
+METHOD New( cPrinter ) CLASS WIN32PRN
+
+   ::PrinterName := iif( ! HB_ISSTRING( cPrinter ) .OR. Empty( cPrinter ), win_printerGetDefault(), cPrinter )
+
+   RETURN Self
+
 METHOD Create() CLASS WIN32PRN
 
    IF ::PaperLength > 0 .AND. ::PaperWidth > 0
-      ::FormType := FORM_CUSTOM
+      ::FormType := WIN_DMPAPER_USER
    ENDIF
 
    RETURN ::win_Prn:Create()
@@ -96,7 +100,7 @@ METHOD Create() CLASS WIN32PRN
 METHOD StartPage() CLASS WIN32PRN
 
    IF ::PaperLength > 0 .AND. ::PaperWidth > 0
-      ::FormType := FORM_CUSTOM
+      ::FormType := WIN_DMPAPER_USER
    ENDIF
 
    RETURN ::win_Prn:StartPage()
@@ -129,7 +133,7 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
       lUpdatePosX, nColor, ;
       hb_bitOr( nAlignHori, nAlignVert ) )
 
-CREATE CLASS Win32Bmp FROM win_BMP
+CREATE CLASS Win32Bmp INHERIT win_BMP
 ENDCLASS
 
 #endif /* __PLATFORM__WINDOWS */

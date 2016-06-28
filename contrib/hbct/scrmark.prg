@@ -1,9 +1,7 @@
 /*
  * CT3 video functions (screen-like functions):
  *
- * ScreenMark()
- * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
- *
+ * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru> (ScreenMark())
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *   modified for better CT3 compatibility and GT drivers which do not use
  *   VGA compatible video buffer
@@ -56,9 +54,6 @@ FUNCTION ScreenMark( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
    LOCAL nAt, nLen, nLast, nRow, nCol, nEnd, nCols
    LOCAL cScreen
 
-   hb_default( @lUpperLower, .F. )
-   hb_default( @lAll, .F. )
-
    IF ! HB_ISSTRING( cForward ) .OR. cForward == ""
       cForward := NIL
    ENDIF
@@ -71,10 +66,12 @@ FUNCTION ScreenMark( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
    nLen := Len( cSearch )
    nLast := Len( cScreen ) - nLen + 1
 
-   IF ! lUpperLower
+   IF ! hb_defaultValue( lUpperLower, .F. )
       cSearch := Upper( cSearch )
       cScreen := Upper( cScreen )
    ENDIF
+
+   hb_default( @lAll, .F. )
 
    DO WHILE ( nAt := AtNum( cSearch, cScreen, nCount ) ) != 0
 

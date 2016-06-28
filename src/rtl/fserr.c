@@ -1,5 +1,5 @@
 /*
- *
+ * Error code translations
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *
@@ -50,9 +50,9 @@
 #include "hb_io.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 #else
-#  include <errno.h>
+   #include <errno.h>
 #endif
 
 /* Try to translate C errno into DOS error code */

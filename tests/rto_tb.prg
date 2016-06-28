@@ -1,7 +1,8 @@
 /*
- * Regression tests for classes TBrowse/TBColumn
+ * Regression tests for classes TBrowse()/TBColumn()
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (eInstVar() - from RTL)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,24 +45,14 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    eInstVar() (from RTL)
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* NOTE: This source can be compiled with both Harbour and CA-Cl*pper. */
 
 #include "error.ch"
 #include "fileio.ch"
 
 #ifndef __HARBOUR__
-   #define hb_eol()     ( Chr( 13 ) + Chr( 10 ) )
-   #define hb_ntos( n ) LTrim( Str( n ) )
+   #define hb_eol()      ( Chr( 13 ) + Chr( 10 ) )
+   #define hb_ntos( n )  LTrim( Str( n ) )
 #endif
 
 #ifdef __XHARBOUR__
@@ -71,11 +62,11 @@
    #endif
 #endif
 
-#translate TEST_L_TBR( <x> ) => TEST_C_TBR( o, #<x>, {|| <x> } )
-#translate TEST_L_TBC( <x> ) => TEST_C_TBC( o, #<x>, {|| <x> } )
+#xtranslate TEST_L_TBR( <x> ) => TEST_C_TBR( o, #<x>, {|| <x> } )
+#xtranslate TEST_L_TBC( <x> ) => TEST_C_TBC( o, #<x>, {|| <x> } )
 
 STATIC s_cTest := ""
-STATIC s_xVar := NIL
+STATIC s_xVar
 STATIC s_fhnd
 STATIC s_lCallBackStack
 STATIC s_lRTEDetails
@@ -105,7 +96,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   // ;
+   //
 
    cCommandLine := cArg01 + " " + cArg02 + " " + cArg03 + " " + cArg04
 
@@ -119,19 +110,19 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    s_lRTEDetails := .T.
 // s_lIgnoreErrOp := .T.
 
-   // ;
+   //
 
    #ifdef __HARBOUR__
-      s_fhnd := FCreate( "tb_hb.txt", FC_NORMAL )
+      s_fhnd := FCreate( "tb_hb.txt" )
    #else
-      s_fhnd := FCreate( "tb_cl5.txt", FC_NORMAL )
+      s_fhnd := FCreate( "tb_cl5.txt" )
    #endif
 
    IF s_fhnd == F_ERROR
       RETURN
    ENDIF
 
-   // ;
+   //
 
    o := TBColumnNew( "test00", {|| "test00" } )
    TEST_L_TBC( OBJ_CREATE() )
@@ -149,7 +140,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_L_TBC( o:defColor := { "1", "2", "3", "4", "5" } )
    TEST_L_TBC( o:defColor := { "1", 2, "3" } )
 
-   // ;
+   //
 
    s_lCheckResult := .T.
 
@@ -185,7 +176,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    s_lCheckResult := .F.
 
-   // ;
+   //
 
    TBRAssign( NIL )
    TBRAssign( -1 )
@@ -206,7 +197,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TBRAssign( {} )
    TBRAssign( { "" } )
 
-   // ;
+   //
 
    TBCAssign( NIL )
    TBCAssign( -1 )
@@ -227,11 +218,11 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TBCAssign( {} )
    TBCAssign( { "" } )
 
-   // ;
+   //
 
    s_cTest := ""
 
-   // ;
+   //
 
    s_lCatchErr := .F.
 
@@ -242,7 +233,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_L_TBR( o:Left() )
    TEST_L_TBR( o:Right() )
 
-   // ;
+   //
 
 #ifdef HB_COMPAT_C53
 
@@ -276,18 +267,19 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
 #endif
 
-   // ;
+   //
 
    FClose( s_fhnd )
 
    RETURN
 
-PROCEDURE TBRAssign( xVar )
+STATIC PROCEDURE TBRAssign( xVar )
+
    LOCAL o
 
    s_xVar := xVar
 
-   s_cTest := "TBrowse (empty) assigning: " + XToStr( xVar )
+   s_cTest := "TBrowse() (empty) assigning: " + XToStr( xVar )
 
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:AutoLite      := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:Cargo         := xVar )
@@ -306,7 +298,7 @@ PROCEDURE TBRAssign( xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nBottom       := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nLeft         := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nRight        := xVar )
-   // ; This is needed for CA-Cl*pper 5.x otherwise an unmaskable (bug?) RTE would be thrown. [vszakats]
+   // This is needed for CA-Cl*pper 5.x otherwise an unmaskable (bug?) RTE would be thrown. [vszakats]
    IF ValType( xVar ) == "N" .AND. xVar < o:nBottom
       o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nTop          := xVar )
    ENDIF
@@ -322,7 +314,8 @@ PROCEDURE TBRAssign( xVar )
 
    RETURN
 
-PROCEDURE TBCAssign( xVar )
+STATIC PROCEDURE TBCAssign( xVar )
+
    LOCAL o
 
    s_xVar := xVar
@@ -347,12 +340,13 @@ PROCEDURE TBCAssign( xVar )
 
    RETURN
 
-PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
+STATIC PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
+
    LOCAL xResult
    LOCAL bOldError
    LOCAL oError
 
-   SetPos( 0, 0 ) // ; To check where the cursor was moved after evaluating the block.
+   SetPos( 0, 0 ) // To check where the cursor was moved after evaluating the block.
 
    IF s_lCatchErr
       bOldError := ErrorBlock( {| oError | Break( oError ) } )
@@ -372,12 +366,13 @@ PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
 
    RETURN
 
-PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
+STATIC PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
+
    LOCAL xResult
    LOCAL bOldError
    LOCAL oError
 
-   SetPos( 0, 0 ) // ; To check where the cursor was moved after evaluating the block.
+   SetPos( 0, 0 ) // To check where the cursor was moved after evaluating the block.
 
    IF s_lCatchErr
       bOldError := ErrorBlock( {| oError | Break( oError ) } )
@@ -401,7 +396,8 @@ PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
 
    RETURN
 
-PROCEDURE LogMe( data, desc )
+STATIC PROCEDURE LogMe( data, desc )
+
    LOCAL nLevel
    LOCAL cStack
 
@@ -430,7 +426,8 @@ PROCEDURE LogMe( data, desc )
 
    RETURN
 
-PROCEDURE LogTBRVars( o, desc, xResult )
+STATIC PROCEDURE LogTBRVars( o, desc, xResult )
+
    LOCAL nLevel
    LOCAL cStack
 
@@ -451,7 +448,7 @@ PROCEDURE LogTBRVars( o, desc, xResult )
    desc := s_cTest + " " + XToStr( desc )
 
    FWrite( s_fhnd, cStack + "  " + desc + hb_eol() )
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
    FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar          ) + hb_eol() )
    FWrite( s_fhnd, "   xResult       " + XToStr( xResult         ) + hb_eol() )
    FWrite( s_fhnd, "   Row()         " + XToStr( Row()           ) + hb_eol() )
@@ -522,11 +519,12 @@ PROCEDURE LogTBRVars( o, desc, xResult )
          FWrite( s_fhnd, "      Col:          " + XToStr( col             ) + hb_eol() )
       ENDIF
    NEXT
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
 
    RETURN
 
-PROCEDURE LogTBCVars( o, desc, xResult )
+STATIC PROCEDURE LogTBCVars( o, desc, xResult )
+
    LOCAL nLevel
    LOCAL cStack
 
@@ -546,7 +544,7 @@ PROCEDURE LogTBCVars( o, desc, xResult )
    desc := s_cTest + " " + XToStr( desc )
 
    FWrite( s_fhnd, cStack + "  " + desc + hb_eol() )
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
    FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar        ) + hb_eol() )
    FWrite( s_fhnd, "   xResult       " + XToStr( xResult       ) + hb_eol() )
    IF ValType( o ) == "O"
@@ -581,11 +579,12 @@ PROCEDURE LogTBCVars( o, desc, xResult )
    ELSE
       FWrite( s_fhnd, "   o             " + XToStr( o ) + hb_eol() )
    ENDIF
-   FWrite( s_fhnd, "---------------------" + hb_eol() )
+   FWrite( s_fhnd, Replicate( "-", 20 ) + hb_eol() )
 
    RETURN
 
-FUNCTION XToStr( xValue )
+STATIC FUNCTION XToStr( xValue )
+
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -604,14 +603,15 @@ FUNCTION XToStr( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...} -> ' + XToStr( Eval( xValue ) )
-   CASE cType == "A" ; RETURN '{ ' + ArrayToList( xValue ) + ' }'
+   CASE cType == "B" ; RETURN "{||...} -> " + XToStr( Eval( xValue ) )
+   CASE cType == "A" ; RETURN "{ " + ArrayToList( xValue ) + " }"
    CASE cType == "M" ; RETURN 'M:"' + xValue + '"'
    ENDCASE
 
    RETURN ""
 
-FUNCTION ArrayToList( a )
+STATIC FUNCTION ArrayToList( a )
+
    LOCAL tmp
    LOCAL cString := ""
 
@@ -624,7 +624,8 @@ FUNCTION ArrayToList( a )
 
    RETURN cString
 
-FUNCTION XToStrE( xValue )
+STATIC FUNCTION XToStrE( xValue )
+
    LOCAL cType := ValType( xValue )
 
    DO CASE
@@ -643,14 +644,15 @@ FUNCTION XToStrE( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...} -> ' + XToStrE( Eval( xValue ) )
-   CASE cType == "A" ; RETURN '{ ' + ArrayToEList( xValue ) + ' }'
-   CASE cType == "M" ; RETURN 'M:' + xValue
+   CASE cType == "B" ; RETURN "{||...} -> " + XToStrE( Eval( xValue ) )
+   CASE cType == "A" ; RETURN "{ " + ArrayToEList( xValue ) + " }"
+   CASE cType == "M" ; RETURN "M:" + xValue
    ENDCASE
 
    RETURN ""
 
-FUNCTION XToStrX( xValue )
+STATIC FUNCTION XToStrX( xValue )
+
    LOCAL cType := ValType( xValue )
 
    LOCAL tmp
@@ -672,10 +674,10 @@ FUNCTION XToStrX( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...} -> ' + XToStrX( Eval( xValue ) )
+   CASE cType == "B" ; RETURN "{||...} -> " + XToStrX( Eval( xValue ) )
    CASE cType == "A"
 
-      cRetVal := '{ '
+      cRetVal := "{ "
 
       FOR tmp := 1 TO Len( xValue )
          cRetVal += XToStrX( xValue[ tmp ] )
@@ -684,14 +686,15 @@ FUNCTION XToStrX( xValue )
          ENDIF
       NEXT
 
-      RETURN cRetVal + ' }'
+      RETURN cRetVal + " }"
 
-   CASE cType == "M" ; RETURN 'M:' + xValue
+   CASE cType == "M" ; RETURN "M:" + xValue
    ENDCASE
 
    RETURN ""
 
-FUNCTION ArrayToEList( a )
+STATIC FUNCTION ArrayToEList( a )
+
    LOCAL tmp
    LOCAL cString := ""
 
@@ -705,6 +708,7 @@ FUNCTION ArrayToEList( a )
    RETURN cString
 
 STATIC FUNCTION ErrorMessage( oError )
+
    LOCAL cMessage
    LOCAL tmp
 
@@ -770,12 +774,12 @@ STATIC FUNCTION ErrorMessage( oError )
    RETURN cMessage
 
 #ifdef __XPP__
-FUNCTION hb_SToD( cDate )
+STATIC FUNCTION hb_SToD( cDate )
    RETURN SToD( cDate )
 #endif
 
 #ifdef __XHARBOUR__
-FUNCTION hb_SToD( cDate )
+STATIC FUNCTION hb_SToD( cDate )
    RETURN SToD( cDate )
 #endif
 
@@ -783,11 +787,11 @@ FUNCTION hb_SToD( cDate )
 #ifndef __HARBOUR__
 #ifndef __XPP__
 
-FUNCTION hb_SToD( s )
+STATIC FUNCTION hb_SToD( s )
 
-   LOCAL cDf := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt
+   LOCAL cDf := Set( _SET_DATEFORMAT, "yyyy-mm-dd" ), dt
 
-   dt := CToD( Stuff( Stuff( s, 7, 0, "/" ), 5, 0, "/" ) )
+   dt := CToD( Stuff( Stuff( s, 7, 0, "-" ), 5, 0, "-" ) )
    Set( _SET_DATEFORMAT, cDf )
 
    RETURN dt
@@ -796,15 +800,15 @@ FUNCTION hb_SToD( s )
 #endif
 #endif
 
-PROCEDURE OBJ_CREATE()
+STATIC PROCEDURE OBJ_CREATE()
 
-   // ; Dummy
+   // Dummy
 
    RETURN
 
 /* We use this to wash out a small incompatibility in Harbour's built-in __eInstVar53(). */
 
-FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
+FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )  /* must be a public function */
 
    LOCAL oError
 

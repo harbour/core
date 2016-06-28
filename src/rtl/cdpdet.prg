@@ -57,7 +57,7 @@ FUNCTION hb_cdpTerm()
    cLang := hb_UserLang()
 #elif defined( __PLATFORM__UNIX )
    LOCAL tmp
-   cCP := __UnixParseLangCP( iif( Empty( tmp := GetEnv( "LANG" ) ), ;
+   cCP := __UnixParseLangCP( iif( HB_ISNULL( tmp := GetEnv( "LANG" ) ), ;
                                   GetEnv( "LC_CTYPE" ), tmp ), @cLang )
 #elif defined( __PLATFORM__DOS )
    /* TODO */
@@ -79,7 +79,7 @@ FUNCTION hb_cdpOS()
    cLang := hb_UserLang()
 #elif defined( __PLATFORM__UNIX )
    LOCAL tmp
-   cCP := __UnixParseLangCP( iif( Empty( tmp := GetEnv( "LANG" ) ), ;
+   cCP := __UnixParseLangCP( iif( HB_ISNULL( tmp := GetEnv( "LANG" ) ), ;
                                   GetEnv( "LC_CTYPE" ), tmp ), @cLang )
 #elif defined( __PLATFORM__DOS )
    /* TODO */

@@ -1,5 +1,5 @@
 /*
- * generate table with jump labels
+ * Generate table with jump labels
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  *

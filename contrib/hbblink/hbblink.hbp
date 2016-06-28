@@ -5,6 +5,6 @@
 
 -w3 -es2
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 blinker.prg

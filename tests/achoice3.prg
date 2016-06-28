@@ -33,19 +33,15 @@ PROCEDURE Main()
 
    CLS
    @ 7, 25 TO 8 + Len( m_aItems ), 57
-   nResult := AChoice( 8, 26, 8 + Len( m_aItems ), 55, m_aItems,, "HotChoice" )
-   IF nResult > 0
+   IF ( nResult := AChoice( 8, 26, 8 + Len( m_aItems ), 56, m_aItems,, "HotChoice" ) ) > 0
       Alert( m_aItems[ nResult ] + " selected" )
    ENDIF
 
    RETURN
 
-FUNCTION HotChoice( nStatus, nCurrent, window_pos )
+FUNCTION HotChoice( nStatus )  /* must be a public function */
 
    LOCAL nKey, cKey
-
-   HB_SYMBOL_UNUSED( nCurrent )
-   HB_SYMBOL_UNUSED( window_pos )
 
    DO CASE
    CASE nStatus == AC_EXCEPT

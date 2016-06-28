@@ -20,27 +20,21 @@ PROCEDURE Main( cInFile )
 
    CLS
 
-   hb_default( @cInFile, __FILE__ )
+   cInFile := PadR( hb_defaultValue( cInFile, __FILE__ ), 128 )
 
-   cInFile := PadR( cInFile, 128 )
-
-   @ 0,  0 SAY "ENTER FILENAME: "   GET cInFile   PICTURE "@S30"
-   @ 1,  0 SAY "    FOREGROUND: "   GET nNColor   PICTURE "999"
-   @ 2,  0 SAY "     HIGHLIGHT: "   GET nHColor   PICTURE "999"
-   @ 3,  0 SAY "     EXIT KEYS: "   GET cEXitKeys
-   @ 4,  0 SAY "   BUFFER SIZE: "   GET nBUffSize PICTURE "9999"
-   @ 1, 40 SAY "COLUMN INCREMENT: " GET nCOlSkip  PICTURE "999"
-   @ 2, 40 SAY "   MAX LINE SIZE: " GET nRMargin  PICTURE "999"
-   @ 3, 40 SAY "     BROWSE MODE? " GET lBRowse   PICTURE "Y"
+   @ 0,  0 SAY "Enter filename:"   GET cInFile   PICTURE "@S30"
+   @ 1,  0 SAY "    Foreground:"   GET nNColor   PICTURE "999"
+   @ 2,  0 SAY "     Highlight:"   GET nHColor   PICTURE "999"
+   @ 3,  0 SAY "     Exit keys:"   GET cEXitKeys
+   @ 4,  0 SAY "   Buffer size:"   GET nBUffSize PICTURE "9999"
+   @ 1, 40 SAY "Column increment:" GET nCOlSkip  PICTURE "999"
+   @ 2, 40 SAY "   Max line size:" GET nRMargin  PICTURE "999"
+   @ 3, 40 SAY "     Browse mode?" GET lBRowse   PICTURE "Y"
 
    READ
 
-   /*
-    * REMEMBER A WINDOW WILL BE ONE SIZE LESS AND GREATER THAN THE PASSED COORD.'S
-    *
-    * THE 9TH PARAMETER CONTAINS THE KEYS THAT THE ROUTINE WILL TERMINATE ON
-    *
-    */
+   /* Remember a window will be one size less and greater than the passed coordinates.
+      The 9th parameter contains the keys that the routine will terminate on. */
 
    aExitKeys := {}
    FOR EACH tmp IN cExitKeys
@@ -59,6 +53,6 @@ PROCEDURE Main( cInFile )
 
    ft_DFClose()
 
-   @ 20, 0 SAY "Key pressed was: " + "[" + hb_keyChar( nKey ) + "] (" + hb_ntos( nKey ) + ")"
+   @ MaxRow() - 4, 0 SAY "Key pressed was: " + "[" + hb_keyChar( nKey ) + "] (" + hb_ntos( nKey ) + ")"
 
    RETURN

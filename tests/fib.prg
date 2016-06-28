@@ -9,19 +9,10 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION FibR( n )
+STATIC FUNCTION FibR( n )
+   RETURN iif( n < 2, n, FibR( n - 2 ) + FibR( n - 1 ) )
 
-   LOCAL nFib
-
-   IF n < 2
-      nFib := n
-   ELSE
-      nFib := FibR( n - 2 ) + FibR( n - 1 )
-   ENDIF
-
-   RETURN nFib
-
-FUNCTION FibI( n )
+STATIC FUNCTION FibI( n )
 
    LOCAL nFibMin1  := 1
    LOCAL nFibMinN1 := 0

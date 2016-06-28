@@ -48,9 +48,7 @@
 #ifndef HB_TRACE_CH_
 #define HB_TRACE_CH_
 
-/*
- * Tracing levels.
- */
+/* Tracing levels. */
 #define HB_TR_ALWAYS     0
 #define HB_TR_FATAL      1
 #define HB_TR_ERROR      2
@@ -64,16 +62,12 @@
 #define HB_TR_ALWAYS     HB_TR_LAST
 #endif
 
-/*
- * Default tracing level.
- */
+/* Default tracing level. */
 #define HB_TR_DEFAULT   HB_TR_WARNING
 
-/*
- * If we compiled without specifying a -DHB_TR_LEVEL, use the value
+/* If we compiled without specifying a -DHB_TR_LEVEL, use the value
  * for HB_TR_DEFAULT.
  */
-
 #ifdef HB_TR_LEVEL_ALWAYS
 #define HB_TR_LEVEL     HB_TR_ALWAYS
 #endif
@@ -99,7 +93,7 @@
 
 #xtranslate HB_TRACE_STEALTH( <l>, <x,...> ) => HB_TRACE( <l>, <x> )
 #xtranslate HB_TRACE( <l>, ( <x,...> ) )     => HB_TRACE( <l>, <x> )
-#xtranslate HB_TRACE( <l>, <x,...> )     => ;
+#xtranslate HB_TRACE( <l>, <x,...> )         => ;
             iif( HB_TR_LEVEL >= <l>, hb_traceLogAt( <l>, <x> ), )
 
 #endif /* HB_TRACE_CH_ */

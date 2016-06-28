@@ -1,6 +1,6 @@
 description=GTWVG (an extension of GTWVT, win-only)
 
-skip={!win}
+skip={!allwin}
 
 incpaths=.
 

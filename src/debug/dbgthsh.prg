@@ -150,7 +150,7 @@ METHOD PROCEDURE doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1, ;
                   oBrowse:getColumn( 2 ):Width, @cValue, ;
                   __dbgExprValidBlock(), __dbgColors()[ 2 ], 256 )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          hb_HValueAt( pItem, nSet, &cValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )

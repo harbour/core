@@ -1,77 +1,58 @@
-/*
- * Author....: Gary Baren
- * CIS ID....: 75470,1027
- *
- * This is an original work by Gary Baren and is hereby placed in the
- * public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.1   15 Aug 1991 23:05:54   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   09 Jun 1991 00:26:56   GLENN
- * Initial revision.
- *
+/* This is an original work by Gary Baren and is placed in the public domain.
+
+      Rev 1.1   15 Aug 1991 23:05:54   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   09 Jun 1991 00:26:56   GLENN
+   Initial revision.
  */
-
-STATIC sc_ones  := { ;
-      "",     " One",   " Two",   " Three", " Four", " Five", ;
-      " Six", " Seven", " Eight", " Nine" ;
-      }
-
-STATIC sc_teens := { ;
-      " Ten",      " Eleven",    " Twelve", ;
-      " Thirteen", " Fourteen",  " Fifteen", ;
-      " Sixteen",  " Seventeen", " Eighteen", ;
-      " Nineteen" ;
-      }
-
-STATIC sc_tens  :=  { ;
-      "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
-      " Sixty", " Seventy", " Eighty", " Ninety"  }
-
-STATIC sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
 
 FUNCTION ft_NToW( nAmount )
 
-   LOCAL nTemp, sResult := " ", nQualNo
-   LOCAL nDiv := 10 ^ ( Int( sol10( nAmount ) / 3 ) * 3 )
+   STATIC sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
+
+   LOCAL nTemp, cResult
+   LOCAL nDiv := 10 ^ ( Int( sol10( nAmount := Max( 0, nAmount ) ) / 3 ) * 3 )
 
    nTemp   := Int( nAmount % nDiv )
    nAmount := Int( nAmount / nDiv )
-   nQualNo := Int( sol10( nDiv ) / 3 ) + 1
-   sResult += grp_to_words( nAmount, sc_qualifiers[ nQualNo ] )
+   cResult := grp_to_words( nAmount ) + ;
+      sc_qualifiers[ Int( sol10( nDiv ) / 3 ) + 1 ]
 
-   IF nTemp > ( nDiv /= 1000 ) .AND. ( nDiv > 1 )
-      sResult += ft_NToW( nTemp, nDiv )
+   IF nTemp > ( nDiv /= 1000 ) .AND. nDiv > 1
+      cResult += " " + ft_NToW( nTemp )
    ELSE
-      sResult += grp_to_words( nTemp, "" )
+      cResult += grp_to_words( nTemp )
    ENDIF
 
-   RETURN LTrim( sResult )
+   RETURN LTrim( cResult )
 
-STATIC FUNCTION grp_to_words( nGrp, sQual )
+STATIC FUNCTION grp_to_words( nGrp )
 
-   LOCAL sResult := "", nTemp
+   STATIC sc_ones := { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine" }
+   STATIC sc_teens := { " Ten", " Eleven", " Twelve", ;
+      " Thirteen", " Fourteen", " Fifteen", " Sixteen", " Seventeen", " Eighteen", " Nineteen" }
+   STATIC sc_tens :=  { "", "", ;
+      " Twenty", " Thirty", " Forty", " Fifty", " Sixty", " Seventy", " Eighty", " Ninety" }
+
+   LOCAL cResult, nTemp
 
    nTemp   := Int( nGrp % 100 )
    nGrp    := Int( nGrp / 100 )
-   sResult += sc_ones[ nGrp + 1 ] + iif( nGrp > 0, " Hundred", "" )
+   cResult := iif( nGrp > 0, " " + sc_ones[ nGrp ] + " Hundred", "" )
 
    DO CASE
    CASE nTemp > 19
-      sResult += sc_tens[ Int( nTemp / 10 ) + 1 ]
-      sResult += sc_ones[ Int( nTemp % 10 ) + 1 ]
+      cResult += ;
+         sc_tens[ Int( nTemp / 10 ) + 1 ] + ;
+         iif( ( nTemp := Int( nTemp % 10 ) ) > 0, "-" + sc_ones[ nTemp ], "" )
    CASE nTemp < 20 .AND. nTemp > 9
-      sResult += sc_teens[ Int( nTemp % 10 ) + 1 ]
+      cResult += sc_teens[ Int( nTemp % 10 ) + 1 ]
    CASE nTemp < 10 .AND. nTemp > 0
-      sResult += sc_ones[ Int( nTemp ) + 1 ]
+      cResult += " " + sc_ones[ nTemp ]
    ENDCASE
 
-   RETURN sResult + sQual
+   RETURN cResult
 
 STATIC FUNCTION sol10( nNumber )
-
    RETURN Len( hb_ntos( Int( nNumber ) ) ) - 1

@@ -44,10 +44,8 @@
  *
  */
 
-
 #include "hbcairo.h"
 #include "cairo-ps.h"
-
 
 HB_FUNC( CAIRO_PS_SURFACE_CREATE )
 {
@@ -57,7 +55,6 @@ HB_FUNC( CAIRO_PS_SURFACE_CREATE )
    hb_retptr( NULL );
 #endif
 }
-
 
 HB_FUNC( CAIRO_PS_SURFACE_SET_SIZE )
 {
@@ -71,7 +68,6 @@ HB_FUNC( CAIRO_PS_SURFACE_SET_SIZE )
 #endif
 }
 
-
 HB_FUNC( CAIRO_PS_SURFACE_SET_EPS )
 {
 #ifdef CAIRO_HAS_PS_SURFACE
@@ -83,7 +79,6 @@ HB_FUNC( CAIRO_PS_SURFACE_SET_EPS )
    hb_cairo_surface_param( 1 );
 #endif
 }
-
 
 HB_FUNC( CAIRO_PS_SURFACE_GET_EPS )
 {

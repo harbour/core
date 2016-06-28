@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpPushButton Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                 Xbase++ xbpPushButton Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               05Dec2008
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgCheckBox INHERIT WvgWindow, WvgDataRef
 
    VAR    autosize                              INIT .F.
    VAR    caption                               INIT ""
@@ -76,8 +70,8 @@ CREATE CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
    METHOD handleEvent( nMessage, aNM )
 
 #if 0
-   METHOD editBuffer()                          INLINE ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-   METHOD getData()                             INLINE ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+   METHOD editBuffer()                          INLINE ( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+   METHOD getData()                             INLINE ( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
    METHOD setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, iif( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
 #endif
    METHOD setCaption( xCaption )
@@ -91,7 +85,7 @@ METHOD WvgCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + BS_PUSHBUTTON + BS_AUTOCHECKBOX + BS_NOTIFY
+   ::style       := WIN_WS_CHILD + BS_PUSHBUTTON + BS_AUTOCHECKBOX + BS_NOTIFY
    ::className   := "BUTTON"
    ::objType     := objTypeCheckBox
 
@@ -118,7 +112,7 @@ METHOD WvgCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::selection
       ::sendMessage( BM_SETCHECK, BST_CHECKED, 0 )
    ENDIF
-   ::editBuffer := ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+   ::editBuffer := ( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
 
    RETURN Self
 
@@ -130,16 +124,16 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
-         ::editBuffer := ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-         IF HB_ISBLOCK( ::sl_lbClick )
+         ::editBuffer := ( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+         IF HB_ISEVALITEM( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            Eval( ::sl_lbClick, ::editBuffer, NIL, Self )
+            Eval( ::sl_lbClick, ::editBuffer, , Self )
             IF ::pointerFocus
                ::setFocus()
             ENDIF
@@ -148,24 +142,24 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wapi_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
-         RETURN ::hBrushBG
+      IF Empty( ::hBrushBG )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ELSE
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         wapi_SetBkMode( aNM[ 1 ], WIN_TRANSPARENT )
+         RETURN ::hBrushBG
       ENDIF
 
 #if 0  /* This should never be reached as parent is processing the events */
    CASE nMessage == HB_GTE_ANY
       IF ::isParentCrt()
-         IF aNM[ 1 ] == WM_LBUTTONUP
-            IF HB_ISBLOCK( ::sl_lbClick )
+         IF aNM[ 1 ] == WIN_WM_LBUTTONUP
+            IF HB_ISEVALITEM( ::sl_lbClick )
                ::oParent:setFocus()
-               ::sendMessage( BM_SETCHECK, iif( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED, BST_UNCHECKED, BST_CHECKED ), 0 )
-               ::editBuffer := ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-               Eval( ::sl_lbClick, NIL, NIL, Self )
+               ::sendMessage( BM_SETCHECK, iif( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED, BST_UNCHECKED, BST_CHECKED ), 0 )
+               ::editBuffer := ( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+               Eval( ::sl_lbClick, , , Self )
             ENDIF
          ENDIF
       ENDIF
@@ -173,13 +167,13 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
    ENDCASE
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
-METHOD WvgCheckBox:destroy()
+METHOD PROCEDURE WvgCheckBox:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgCheckBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -191,7 +185,7 @@ METHOD WvgCheckBox:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      ::sendMessage( WIN_WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

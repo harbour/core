@@ -1,7 +1,8 @@
 /*
  * Version related functions
  *
- * Copyright 1999-2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (timestamp conversion)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,6 +47,7 @@
 
 #include "hbapi.h"
 #include "hbvm.h"
+#include "hbdate.h"
 
 #include "hbver.ch"
 
@@ -63,44 +65,46 @@ HB_FUNC( HB_VERSION )
 {
    switch( hb_parni( 1 ) )
    {
+      case HB_VERSION_URL_BASE:       hb_retc_const( "https://github.com/vszakats/harbour-core/" ); break;
+      case HB_VERSION_URL_SOURCE:
+      {
+         char * pszVersion = hb_xstrcpy( NULL,
+            "https://github.com/vszakats/harbour-core/",
+            strlen( hb_verCommitID() ) ? "commit/" : NULL, hb_verCommitID(), NULL );
+
+         hb_retclen_buffer( pszVersion, strlen( pszVersion ) );
+         break;
+      }
       case HB_VERSION_HARBOUR:        hb_retc_buffer( hb_verHarbour() ); break;
       case HB_VERSION_COMPILER:       hb_retc_buffer( hb_verCompiler() ); break;
       case HB_VERSION_MAJOR:          hb_retni( HB_VER_MAJOR ); break;
       case HB_VERSION_MINOR:          hb_retni( HB_VER_MINOR ); break;
       case HB_VERSION_RELEASE:        hb_retni( HB_VER_RELEASE ); break;
       case HB_VERSION_STATUS:         hb_retc_const( HB_VER_STATUS ); break;
-      case HB_VERSION_REVISION:       hb_retni( hb_verRevision() ); break;
-      case HB_VERSION_CHANGELOG_LAST: hb_retc_const( hb_verChangeLogLastEntry() ); break;
-      case HB_VERSION_CHANGELOG_ID:   hb_retc_const( hb_verChangeLogID() ); break;
+      case HB_VERSION_REVISION:       hb_retni( hb_verCommitRev() ); break;
+      case HB_VERSION_COMMIT_INFO:    hb_retc_const( hb_verCommitInfo() ); break;
+      case HB_VERSION_ID:             hb_retc_const( hb_verCommitID() ); break;
       case HB_VERSION_PCODE_VER:      hb_retni( HB_PCODE_VER ); break;
       case HB_VERSION_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
       case HB_VERSION_BUILD_PLAT:     hb_retc_const( hb_verHB_PLAT() ); break;
       case HB_VERSION_BUILD_COMP:     hb_retc_const( hb_verHB_COMP() ); break;
-      case HB_VERSION_BUILD_DATE_STR: hb_retc_buffer( hb_verBuildDate() ); break;
+      case HB_VERSION_BUILD_DATE_STR: hb_retc_const( hb_verCommitInfo() ); break;
       case HB_VERSION_BUILD_DATE:
       {
-         char * pszBuildDate = hb_verBuildDate();
+         const char * pszBuildDate = hb_verCommitInfo();
 
-         if( strlen( pszBuildDate ) >= 11 )
+         if( strlen( pszBuildDate ) >= 10 )
          {
-            static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
             char szDate[ 9 ];
-            int  iMonth;
 
-            szDate[ 4 ] = szDate[ 5 ] = '0';
-
-            for( iMonth = 11; iMonth >= 0; iMonth-- )
-            {
-               if( memcmp( pszBuildDate, s_months[ iMonth ], 3 ) == 0 )
-               {
-                  hb_snprintf( szDate + 4, 3, "%02d", iMonth + 1 );
-                  break;
-               }
-            }
-
-            memcpy( szDate, pszBuildDate + 7, 4 );
-            szDate[ 6 ] = pszBuildDate[ 4 ] == ' ' ? '0' : pszBuildDate[ 4 ];
-            szDate[ 7 ] = pszBuildDate[ 5 ];
+            szDate[ 0 ] = pszBuildDate[ 0 ];
+            szDate[ 1 ] = pszBuildDate[ 1 ];
+            szDate[ 2 ] = pszBuildDate[ 2 ];
+            szDate[ 3 ] = pszBuildDate[ 3 ];
+            szDate[ 4 ] = pszBuildDate[ 5 ];
+            szDate[ 5 ] = pszBuildDate[ 6 ];
+            szDate[ 6 ] = pszBuildDate[ 8 ];
+            szDate[ 7 ] = pszBuildDate[ 9 ];
             szDate[ 8 ] = '\0';
 
             hb_retds( szDate );
@@ -108,23 +112,90 @@ HB_FUNC( HB_VERSION )
          else
             hb_retds( NULL );
 
-         hb_xfree( pszBuildDate );
          break;
       }
       case HB_VERSION_BUILD_TIME:
       {
-         char * pszBuildDate = hb_verBuildDate();
-         hb_retc( strlen( pszBuildDate ) >= 20 ? pszBuildDate + 12 : NULL );
+         const char * pszBuildDate = hb_verCommitInfo();
+         if( strlen( pszBuildDate ) >= 19 )
+            hb_retclen( pszBuildDate + 11, 8 );
+         else
+            hb_retc_null();
+         break;
+      }
+      case HB_VERSION_BUILD_TIMESTAMP_UTC:
+      {
+         char * pszBuildDate = hb_strdup( hb_verCommitInfo() );
+
+         if( strlen( pszBuildDate ) >= 19 )
+         {
+            long lJulian = 0, lMilliSec = 0;
+            int iUTC = 0;
+
+            if( strlen( pszBuildDate ) >= 25 &&
+                ( pszBuildDate[ 20 ] == '+' || pszBuildDate[ 20 ] == '-' ) &&
+                HB_ISDIGIT( pszBuildDate[ 21 ] ) && HB_ISDIGIT( pszBuildDate[ 22 ] ) &&
+                HB_ISDIGIT( pszBuildDate[ 23 ] ) && HB_ISDIGIT( pszBuildDate[ 24 ] ) )
+            {
+               iUTC = ( ( int ) ( pszBuildDate[ 21 ] - '0' ) * 10 +
+                        ( int ) ( pszBuildDate[ 22 ] - '0' ) ) * 60 +
+                        ( int ) ( pszBuildDate[ 23 ] - '0' ) * 10 +
+                        ( int ) ( pszBuildDate[ 24 ] - '0' );
+               if( pszBuildDate[ 20 ] == '-' )
+                  iUTC *= -1;
+            }
+            pszBuildDate[ 19 ] = '\0';
+            hb_timeStampStrGetDT( pszBuildDate, &lJulian, &lMilliSec );
+            if( iUTC != 0 )
+               hb_timeStampUnpackDT( hb_timeStampPackDT( lJulian, lMilliSec ) -
+                                     ( double ) iUTC / ( 24 * 60 ),
+                                     &lJulian, &lMilliSec );
+            hb_rettdt( lJulian, lMilliSec );
+         }
+         else
+            hb_rettdt( 0, 0 );
+
          hb_xfree( pszBuildDate );
+
          break;
       }
       case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;
       case HB_VERSION_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
       case HB_VERSION_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
+      case HB_VERSION_OPTIONS:
+      {
+         char pszOptions[ 64 ];
+
+         pszOptions[ 0 ] = '\0';
+
+         #if defined( HB_HAS_PCRE2 )
+            hb_strncat( pszOptions, " pcre2", sizeof( pszOptions ) - 1 );
+         #elif defined( HB_HAS_PCRE )
+            hb_strncat( pszOptions, " pcre1", sizeof( pszOptions ) - 1 );
+         #elif defined( HB_POSIX_REGEX )
+            hb_strncat( pszOptions, " posix_regex", sizeof( pszOptions ) - 1 );
+         #endif
+         #if defined( HB_HAS_ZLIB )
+            hb_strncat( pszOptions, " zlib", sizeof( pszOptions ) - 1 );
+         #endif
+         #if defined( HB_HAS_GPM )
+            hb_strncat( pszOptions, " gpm", sizeof( pszOptions ) - 1 );
+         #endif
+         #if defined( HB_HAS_WATT )
+            hb_strncat( pszOptions, " watt", sizeof( pszOptions ) - 1 );
+         #endif
+
+         hb_retc( pszOptions + ( pszOptions[ 0 ] == ' ' ? 1 : 0 ) );
+
+         break;
+      }
       case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
       case HB_VERSION_MT:             hb_retl( hb_vmIsMt() ); break;
 
-      case HB_VERSION_SHARED:
+      case HB_VERSION_SHARED:  /* TOFIX: This only works when platforms has separate
+                                         compilation pass for harbour dynlib build -
+                                         it is 32-bit Windows. */
+
       #if defined( HB_DYNLIB )
          hb_retl( HB_TRUE );
       #else
@@ -227,7 +298,7 @@ HB_FUNC( HB_PCODEVER )
 
 HB_FUNC( HB_BUILDDATE )
 {
-   hb_retc_buffer( hb_verBuildDate() );
+   hb_retc_const( hb_verCommitInfo() );
 }
 
 #endif

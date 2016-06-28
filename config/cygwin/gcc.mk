@@ -1,3 +1,7 @@
+ifeq ($(HB_COMPILER_VER),)
+   $(info ! Warning: HB_COMPILER_VER variable empty. Either stop manually setting HB_COMPILER to let auto-detection detect it, or set HB_COMPILER_VER manually according to your C compiler version (f.e. 0304 for 3.4.x).)
+endif
+
 ifeq ($(HB_BUILD_MODE),cpp)
    HB_CMP := g++
 else
@@ -9,10 +13,10 @@ LIB_PREF := lib
 LIB_EXT := .a
 
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
@@ -25,7 +29,10 @@ endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
    CFLAGS += -O3
-   CFLAGS += -fomit-frame-pointer -march=i586 -mtune=pentiumpro
+   # It's the default in 4.6 and up
+   ifneq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405),)
+      CFLAGS += -fomit-frame-pointer
+   endif
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
@@ -69,7 +76,7 @@ endef
 define create_library
    $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
    $(foreach file,$^,$(library_object))
-   ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
+   ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
 endef
 
 AR_RULE = $(create_library)

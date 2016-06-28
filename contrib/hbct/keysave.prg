@@ -1,7 +1,6 @@
 /*
- * CT3 SETKEY Functions
+ * CT3 SETKEY Functions: SaveSetKey(), RestSetKey()
  *
- * SaveSetKey(), RestSetKey()
  * Copyright 2004 Philip Chee <philip@aleytys.pc.my>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,7 +45,6 @@
  */
 
 FUNCTION SaveSetKey()
-
    RETURN hb_SetKeySave()
 
 FUNCTION RestSetKey( aSavedTraps )

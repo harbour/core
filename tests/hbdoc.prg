@@ -2,7 +2,6 @@
  * HBDOC reader test
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
  */
 
 #include "directry.ch"
@@ -22,26 +21,26 @@ PROCEDURE Main( cRoot )
    LOCAL aErrMsg
    LOCAL tmp
 
-   IF ! HB_ISSTRING( cRoot )
+   IF HB_ISSTRING( cRoot )
+      cDir := hb_DirSepAdd( cDir )
+   ELSE
       /* Detect Harbour root */
       cRoot := "." + hb_ps()
-      DO WHILE hb_DirExists( cRoot + ".." )
-         IF hb_FileExists( cRoot + "README.md" ) .AND. ;
-            hb_FileExists( cRoot + "COPYING.txt" ) .AND. ;
-            hb_DirExists( cRoot + "config" )
+      DO WHILE hb_vfDirExists( cRoot + ".." )
+         IF hb_vfExists( cRoot + "README.md" ) .AND. ;
+            hb_vfExists( cRoot + "LICENSE.txt" ) .AND. ;
+            hb_vfExists( cRoot + "config" )
             EXIT
          ENDIF
          cRoot += ".." + hb_ps()
       ENDDO
-   ELSE
-      cDir := hb_DirSepAdd( cDir )
    ENDIF
 
-   ? "Root: " + cRoot
+   ? "Root:", cRoot
 
    aDir := { cRoot }
 
-   FOR EACH aFile IN Directory( cRoot + "contrib" + hb_ps() + hb_osFileMask(), "D" )
+   FOR EACH aFile IN hb_vfDirectory( cRoot + "contrib" + hb_ps() + hb_osFileMask(), "D" )
       IF "D" $ aFile[ F_ATTR ] .AND. ;
          !( aFile[ F_NAME ] == "." ) .AND. ;
          !( aFile[ F_NAME ] == ".." )
@@ -82,11 +81,7 @@ PROCEDURE Main( cRoot )
 
 STATIC FUNCTION DirGetName( cDir )
 
-   LOCAL cName
-
-   cDir := hb_DirSepDel( cDir )
-
-   hb_FNameSplit( cDir,, @cName )
+   LOCAL cName := hb_FNameName( hb_DirSepDel( cDir ) )
 
    IF Empty( cName ) .OR. cName == "." .OR. cName == ".."
       RETURN ""

@@ -1481,7 +1481,6 @@ HB_FUNC( HB_THREADWAIT )
 #if defined( HB_MT_VM )
 #  define HB_THREAD_WAIT_ALLOC  16
    HB_STACK_TLS_PRELOAD
-   HB_BOOL fAll;
    HB_ULONG ulMilliSec = HB_THREAD_INFINITE_WAIT;
    PHB_THREADSTATE * pThreads, pAlloc[ HB_THREAD_WAIT_ALLOC ];
    int iThreads = -1;
@@ -1518,6 +1517,8 @@ HB_FUNC( HB_THREADWAIT )
 
    if( iThreads > 0 )
    {
+      HB_BOOL fAll;
+
       if( HB_ISNUM( 2 ) )
       {
          double dTimeOut = hb_parnd( 2 );

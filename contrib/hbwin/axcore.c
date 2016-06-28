@@ -129,7 +129,6 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
 {
    IUnknown *  pUnk  = NULL;
    IDispatch * pDisp = NULL;
-   HRESULT     lOleError;
 
    if( pItem )
       hb_itemClear( pItem );
@@ -141,7 +140,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
    }
    else
    {
-      lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
+      HRESULT lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
 
       if( lOleError == S_OK )
       {
@@ -165,7 +164,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
 
 HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
 {
-   HWND hWnd = ( HWND ) hb_parptr( 1 );
+   HWND hWnd = hbwapi_par_raw_HWND( 1 );
 
    if( ! hWnd )
       hb_errRT_OLE( EG_ARG, 1012, 0, NULL, HB_ERR_FUNCNAME );
@@ -175,7 +174,7 @@ HB_FUNC( __AXGETCONTROL ) /* ( hWnd ) --> pDisp */
 
 HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
 {
-   HWND       hWnd = ( HWND ) hb_parptr( 1 );
+   HWND       hWnd = hbwapi_par_raw_HWND( 1 );
    IUnknown * pUnk = NULL;
    HRESULT    lOleError;
 
@@ -195,17 +194,17 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
       lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( IID_IOleObject ), ( void ** ) ( void * ) &lpOleObject );
       if( lOleError == S_OK )
       {
-         IOleClientSite * lpOleClientSite;
+         IOleClientSite * lpOleClientSite = NULL;
 
          lOleError = HB_VTBL( lpOleObject )->GetClientSite( HB_THIS_( lpOleObject ) & lpOleClientSite );
          if( lOleError == S_OK )
          {
             MSG Msg;
-            RECT rct;
+            RECT rc;
 
             memset( &Msg, 0, sizeof( Msg ) );
-            GetClientRect( hWnd, &rct );
-            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rct );
+            GetClientRect( hWnd, &rc );
+            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rc );
          }
          HB_VTBL( lpOleObject )->Release( HB_THIS( lpOleObject ) );
       }
@@ -213,11 +212,11 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
 
    hb_oleSetError( lOleError );
 
-   hb_retnl( lOleError );
+   hb_retnint( lOleError );
 }
 
 
-/* ======================== Event handler support ======================== */
+/* --- Event handler support --- */
 
 
 #if ! defined( HB_OLE_C_API )
@@ -398,7 +397,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
    TYPEATTR *  pTypeAttr;
    HREFTYPE    hRefType;
    HRESULT     hr;
-   int         iFlags, i, j;
+   int         iFlags, i;
 
    if( ! szEvent )
    {
@@ -428,9 +427,13 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
       {
          HB_TRACE( HB_TR_DEBUG, ( "_get_default_sink IProvideClassInfo OK" ) );
 
+         iTI = NULL;
+
          hr = HB_VTBL( iPCI )->GetClassInfo( HB_THIS_( iPCI ) & iTI );
          if( hr == S_OK )
          {
+            pTypeAttr = NULL;
+
             hr = HB_VTBL( iTI )->GetTypeAttr( HB_THIS_( iTI ) & pTypeAttr );
             if( hr == S_OK )
             {
@@ -472,7 +475,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
    hr = HB_VTBL( iDisp )->GetTypeInfo( HB_THIS_( iDisp ) 0, LOCALE_SYSTEM_DEFAULT, &iTI );
    if( hr == S_OK )
    {
-      ITypeLib * iTL;
+      ITypeLib * iTL = NULL;
       TYPEATTR * pTypeAttr2;
 
       hr = HB_VTBL( iTI )->GetContainingTypeLib( HB_THIS_( iTI ) & iTL, NULL );
@@ -491,6 +494,8 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                {
                   if( pTypeAttr->typekind == TKIND_COCLASS )
                   {
+                     int j;
+
                      for( j = 0; j < pTypeAttr->cImplTypes; j++ )
                      {
                         if( szEvent )
@@ -604,7 +609,7 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
 
    if( pDisp )
    {
-      PHB_ITEM pItemBlock = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL | HB_IT_HASH );
+      PHB_ITEM pItemBlock = hb_param( 2, HB_IT_EVALITEM | HB_IT_HASH );
 
       if( pItemBlock )
       {
@@ -653,7 +658,8 @@ HB_FUNC( __AXREGISTERHANDLER )  /* ( pDisp, bHandler [, cIID] ) --> pSink */
                   pSink->pItemHandler = hb_itemNew( pItemBlock );
                   pSink->rriid = rriid;
                   pSink->uiClass = 0;
-                  lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie );
+                  if( ( lOleError = HB_VTBL( pCP )->Advise( HB_THIS_( pCP ) ( IUnknown* ) pSink, &dwCookie ) ) != S_OK )
+                     dwCookie = 0;
                   pSink->pConnectionPoint = pCP;
                   pSink->dwCookie = dwCookie;
 

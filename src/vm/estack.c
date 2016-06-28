@@ -59,7 +59,7 @@
 #include "hbapirdd.h"
 #include "hbdate.h"
 
-/* ------------------------------- */
+/* --- */
 
 #if ! defined( STACK_INITHB_ITEMS )
    #define STACK_INITHB_ITEMS    200
@@ -69,7 +69,7 @@
 #endif
 
 
-/* ------------------------------- */
+/* --- */
 
 #if defined( HB_MT_VM )
 
@@ -144,17 +144,17 @@
 
 #endif /* HB_MT_VM */
 
-/* ------------------------------- */
+/* --- */
 
 static char s_szDirBuffer[ HB_PATH_MAX ];
 static HB_IOERRORS s_IOErrors;
 static HB_TRACEINFO s_traceInfo;
 
-/* ------------------------------- */
+/* --- */
 
 static HB_SYMB s_initSymbol = { "hb_stackInit", { HB_FS_STATIC }, { NULL }, NULL };
 
-/* ------------------------------- */
+/* --- */
 
 static void hb_stack_init( PHB_STACK pStack )
 {

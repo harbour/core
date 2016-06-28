@@ -1,42 +1,31 @@
-/*
- * Author....: Ted Means
- * CIS ID....: 73067,3332
- *
- * This is an original work by Ted Means and is placed in the
- * public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.5   16 Oct 1992 00:20:28   GLENN
- * Cleaned up documentation header.
- *
- *    Rev 1.4   16 Oct 1992 00:08:44   GLENN
- * Just making sure we had Ted's latest revision.
- *
- *    Rev 1.3   13 Oct 1992 20:45:46   GLENN
- * Complete rewrite by Ted Means, dumping assembler version for a
- * Clipper version.
- *
- *    Rev 1.2   15 Aug 1991 23:03:54   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:52:16   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:01:42   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work by Ted Means and is placed in the public domain.
+
+      Rev 1.5   16 Oct 1992 00:20:28   GLENN
+   Cleaned up documentation header.
+
+      Rev 1.4   16 Oct 1992 00:08:44   GLENN
+   Just making sure we had Ted's latest revision.
+
+      Rev 1.3   13 Oct 1992 20:45:46   GLENN
+   Complete rewrite by Ted Means, dumping assembler version for a
+   Clipper version.
+
+      Rev 1.2   15 Aug 1991 23:03:54   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:52:16   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:01:42   GLENN
+   Nanforum Toolkit
  */
 
 #include "setcurs.ch"
 #include "inkey.ch"
 
-#xtranslate isOkay( <exp> )                      => ( <exp> \> 0 .AND. <exp> \<= nCount )
-#xtranslate isBetween( <val>, <lower>, <upper> ) => ( <val> \>= <lower> .AND. <val> \<= <upper> )
+#xtranslate isOkay( <exp> ) => ( <exp> \>= 1 .AND. <exp> \<= nCount )
 
 // These arrays hold information about each menu item
-
 THREAD STATIC t_aRow          := { {} }
 THREAD STATIC t_aCol          := { {} }
 THREAD STATIC t_aPrompt       := { {} }
@@ -57,21 +46,17 @@ THREAD STATIC t_aRight        := { {} }
 THREAD STATIC t_aExecute      := { {} }
 THREAD STATIC t_nLevel        := 1
 
-FUNCTION ft_Prompt( nRow, nCol, cPrompt, cColor, ;
+PROCEDURE ft_Prompt( nRow, nCol, cPrompt, cColor, ;
       nMsgRow, nMsgCol, cMessage, cMsgColor, ;
       nTrigger, cTriggerColor, nHome, nEnd, ;
       nUp, nDown, nLeft, nRight, bExecute )
 
    // If the prompt color setting is not specified, use default
-
    __defaultNIL( @cColor, SetColor() )
 
    // If no message is supplied, set message values to NIL
-
    IF cMessage == NIL
-
       nMsgRow := nMsgCol := cMsgColor := NIL
-
    ELSE
       // If message row not supplied, use the default
       __defaultNIL( @nMsgRow, Set( _SET_MESSAGE ) )
@@ -120,7 +105,7 @@ FUNCTION ft_Prompt( nRow, nCol, cPrompt, cColor, ;
    hb_DispOutAt( nRow, nCol - 1 + nTrigger, SubStr( cPrompt, nTrigger, 1 ), cTriggerColor )
    DispEnd()
 
-   RETURN NIL
+   RETURN
 
 FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
 
@@ -128,16 +113,13 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
    LOCAL nActive
    LOCAL nCount  := Len( t_aRow[ nMenu ] )
    LOCAL lChoice := .F.
-   LOCAL nCursor := Set( _SET_CURSOR, SC_NONE )
-   LOCAL nKey, bKey, nScan, lWrap, cScreen, nPrev
+   LOCAL nCursor := SetCursor( SC_NONE )
+   LOCAL nKey, nKeyStd, bKey, nScan, lWrap, cScreen, nPrev
 
-   IF ! HB_ISLOGICAL( lCold )
-      lCold := .F.
-   ENDIF
+   hb_default( @lCold, .F. )
 
    // Validate the incoming parameters and assign some reasonable defaults
    // to prevent a crash later.
-
    __defaultNIL( @cReadVar, "" )
 
    cReadVar := Upper( cReadVar )
@@ -149,7 +131,6 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
    // Eval the incoming getset block to initialize nActive, which indicates
    // the menu prompt which is to be active when the menu is first displayed.
    // If nActive is outside the appropriate limits, a value of 1 is assigned.
-
    nActive := Eval( bGetSet )
 
    IF nActive < 1 .OR. nActive > nCount
@@ -178,17 +159,14 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
    AAdd(      t_aExecute, {} )
 
    // Loop until Enter or Esc is pressed
-
    DO WHILE ! lChoice
 
       // Evaluate the getset block to update the target memory variable
       // in case it needs to be examined by a hotkey procedure.
-
       Eval( bGetSet, nActive )
 
       // Get the current setting of SET WRAP so that the desired menu behavior
       // can be implemented.
-
       lWrap := Set( _SET_WRAP )
 
       // If a message is to be displayed, save the current screen contents
@@ -203,7 +181,6 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
 
          hb_DispOutAt( t_aMsgRow[ nMenu, nActive ], t_aMsgCol[ nMenu, nActive ], ;
             t_aMessage[ nMenu, nActive ], t_aMsgColor[ nMenu, nActive ]  )
-
       ELSE
          cScreen := NIL
       ENDIF
@@ -221,106 +198,87 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
 
       DispEnd()
 
-      // Wait for a keystroke
-      nKey := Inkey( 0 )
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
 
       // If the key was an alphabetic char, convert to uppercase
-      IF isBetween( nKey, 97, 122 )
-         nKey -= 32
+      IF IsLower( hb_keyChar( nKeyStd ) )
+         nKeyStd := hb_keyCode( Upper( hb_keyChar( nKeyStd ) ) )
       ENDIF
 
       // Set nPrev to the currently active menu item
       nPrev := nActive
 
       DO CASE
-
-         // Check for a hotkey, and evaluate the associated block if present.
-
-      CASE ( bKey := SetKey( nKey ) ) != NIL
+      CASE ( bKey := SetKey( nKey ) ) != NIL .OR. ;
+           ( bKey := SetKey( nKeyStd ) ) != NIL
+         // Check for a hotkey, and evaluate the associated block if present
          Eval( bKey, ProcName( 1 ), ProcLine( 1 ), cReadVar )
 
+      CASE nKeyStd == K_ENTER
          // If Enter was pressed, either exit the menu or evaluate the
          // associated code block.
-
-      CASE nKey == K_ENTER
          IF t_aExecute[ nMenu, nActive ] != NIL
             Eval( t_aExecute[ nMenu, nActive ] )
          ELSE
             lChoice := .T.
          ENDIF
 
-         // If ESC was pressed, set the selected item to zero and exit.
-
-      CASE nKey == K_ESC
+      CASE nKeyStd == K_ESC
+         // If ESC was pressed, set the selected item to zero and exit
          lChoice := .T.
          nActive := 0
 
-         // If Home was pressed, go to the designated menu item.
-
-      CASE nKey == K_HOME
+      CASE nKeyStd == K_HOME
+         // If Home was pressed, go to the designated menu item
          nActive := iif( t_aHome[ nMenu, nActive ] == NIL, 1, t_aHome[ nMenu, nActive ] )
 
-         // If End was pressed, go to the designated menu item.
-
-      CASE nKey == K_END
+      CASE nKeyStd == K_END
+         // If End was pressed, go to the designated menu item
          nActive := iif( t_aEnd[ nMenu, nActive ] == NIL, nCount, t_aEnd[ nMenu, nActive ] )
 
-         // If Up Arrow was pressed, go to the designated menu item.
-
-      CASE nKey == K_UP
+      CASE nKeyStd == K_UP
+         // If Up Arrow was pressed, go to the designated menu item
          IF t_aUp[ nMenu, nActive ] == NIL
             IF --nActive < 1
                nActive := iif( lWrap, nCount, 1 )
             ENDIF
-         ELSE
-            IF isOkay( t_aUp[ nMenu, nActive ] )
-               nActive := t_aUp[ nMenu, nActive ]
-            ENDIF
+         ELSEIF isOkay( t_aUp[ nMenu, nActive ] )
+            nActive := t_aUp[ nMenu, nActive ]
          ENDIF
 
-         // If Down Arrow was pressed, go to the designated menu item.
-
-      CASE nKey == K_DOWN
+      CASE nKeyStd == K_DOWN
+         // If Down Arrow was pressed, go to the designated menu item
          IF t_aDown[ nMenu, nActive ] == NIL
-            if ++nActive > nCount
+            IF ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
             ENDIF
-         ELSE
-            IF isOkay( t_aDown[ nMenu, nActive ] )
-               nActive := t_aDown[ nMenu, nActive ]
-            ENDIF
+         ELSEIF isOkay( t_aDown[ nMenu, nActive ] )
+            nActive := t_aDown[ nMenu, nActive ]
          ENDIF
 
-         // If Left Arrow was pressed, go to the designated menu item.
-
-      CASE nKey == K_LEFT
+      CASE nKeyStd == K_LEFT
+         // If Left Arrow was pressed, go to the designated menu item
          IF t_aLeft[ nMenu, nActive ] == NIL
             IF --nActive < 1
                nActive := iif( lWrap, nCount, 1 )
             ENDIF
-         ELSE
-            IF isOkay( t_aLeft[ nMenu, nActive ] )
-               nActive := t_aLeft[ nMenu, nActive ]
-            ENDIF
+         ELSEIF isOkay( t_aLeft[ nMenu, nActive ] )
+            nActive := t_aLeft[ nMenu, nActive ]
          ENDIF
 
-         // If Right Arrow was pressed, go to the designated menu item.
-
-      CASE nKey == K_RIGHT
+      CASE nKeyStd == K_RIGHT
+         // If Right Arrow was pressed, go to the designated menu item
          IF t_aRight[ nMenu, nActive ] == NIL
-            if ++nActive > nCount
+            IF ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
             ENDIF
-         ELSE
-            IF isOkay( t_aRight[ nMenu, nActive ] )
-               nActive := t_aRight[ nMenu, nActive ]
-            ENDIF
+         ELSEIF isOkay( t_aRight[ nMenu, nActive ] )
+            nActive := t_aRight[ nMenu, nActive ]
          ENDIF
 
-         // If a trigger letter was pressed, handle it based on the COLD
-         // parameter.
-
-      CASE ( nScan := AScan( t_aTriggerInkey[ nMenu ], nKey ) ) > 0
+      CASE ( nScan := AScan( t_aTriggerInkey[ nMenu ], nKey ) ) > 0 .OR. ;
+           ( nScan := AScan( t_aTriggerInkey[ nMenu ], nKeyStd ) ) > 0
+         // If a trigger letter was pressed, handle it based on the COLD parameter
          nActive := nScan
          IF ! lCold
             hb_keyPut( K_ENTER )
@@ -328,7 +286,6 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
       ENDCASE
 
       // Erase the highlight bar in preparation for the next iteration
-
       IF ! lChoice
          DispBegin()
          hb_DispOutAt( t_aRow[ nMenu, nPrev ], t_aCol[ nMenu, nPrev ], ;
@@ -389,7 +346,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
    t_aRight[ t_nLevel ] := {}
    t_aExecute[ t_nLevel ] := {}
 
-   Set( _SET_CURSOR, nCursor )
+   SetCursor( nCursor )
 
    Eval( bGetSet, nActive )
 

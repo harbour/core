@@ -1,21 +1,103 @@
+branches:
+  only:
+  - master
+  - test-travis
 language: c
-compiler: gcc
-script: make
+env:
+  - HB_CI_THREADS=4
+os:
+  - linux
+  - osx
+osx_image: xcode7.3
+compiler:
+  - clang
+  - gcc
+  - i686-w64-mingw32-gcc
+matrix:
+  exclude:
+    - os: osx
+      compiler: gcc
+    - os: osx
+      compiler: i686-w64-mingw32-gcc
+sudo: false
+addons:
+  apt:
+    sources:
+#     - llvm-toolchain-precise-3.8
+      - ubuntu-toolchain-r-test
+    packages:
+#     - clang-3.8
+      - gcc-5
+      - g++-5
+      - firebird2.5-dev
+     #- liballegro4.2-dev
+     #- libcairo2-dev
+      - libcups2-dev
+      - libcurl4-openssl-dev
+      - libfreeimage-dev
+      - libgd2-xpm-dev
+      - libgpm-dev
+     #- libgs-dev
+      - libicu-dev
+      - libmagic-dev
+      - libmysqlclient-dev
+      - libncurses5-dev
+      - libpq-dev
+     #- libslang2-dev
+      - unixodbc-dev
+      - binutils-mingw-w64
+      - gcc-mingw-w64
+      - wine
+      - p7zip-full
 before_install:
- - sudo apt-get install -qq libncurses-dev
- - sudo apt-get install -qq libslang2-dev
- - sudo apt-get install -qq libgpm-dev
- - sudo apt-get install -qq liballegro4.2-dev
- - sudo apt-get install -qq libcairo2-dev
- - sudo apt-get install -qq libcups2-dev
- - sudo apt-get install -qq libcurl4-openssl-dev
- - sudo apt-get install -qq firebird2.1-dev
- - sudo apt-get install -qq libfreeimage-dev
- - sudo apt-get install -qq libgd2-xpm-dev
- - sudo apt-get install -qq libgs-dev
- - sudo apt-get install -qq libmagic-dev
- - sudo apt-get install -qq libmysqlclient15-dev
- - sudo apt-get install -qq unixodbc-dev
- - sudo apt-get install -qq libpq-dev
+  - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then
+       brew update > /dev/null;
+       brew install cairo;
+       brew install curl;
+       brew install freeimage;
+       brew install gd;
+       brew install ghostscript;
+       brew install icu4c;
+       brew install libmagic;
+       brew install mariadb;
+       brew install openssl;
+       brew install qt5;
+       brew install s-lang;
+       brew install unixodbc;
+       brew install p7zip;
+    fi
+script:
+  - if [ "$CC" = "i686-w64-mingw32-gcc" ] ; then
+       export HB_COMPILER=clang && make -j $HB_CI_THREADS HB_BUILD_DYN=no HB_BUILD_CONTRIBS=no;
+       export __HB_HARBOUR_DLL_UNICOWS=no;
+       export HB_BUILD_3RDEXT=no;
+       export HB_PLATFORM=win;
+       export HB_CCPREFIX=i686-w64-mingw32-;
+       ls -lA /usr/bin/${HB_CCPREFIX}*;
+       "${HB_CCPREFIX}gcc" -v;
+       export HB_COMPILER=mingw && make -j $HB_CI_THREADS;
+       wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/hbmk2.exe --version;
+       wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
+       export HB_CCPREFIX=x86_64-w64-mingw32-;
+       ls -lA /usr/bin/${HB_CCPREFIX}*;
+       "${HB_CCPREFIX}gcc" -v;
+       export HB_COMPILER=mingw64 && make -j $HB_CI_THREADS;
+       wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/hbmk2.exe --version;
+       wine ./bin/${HB_PLATFORM}/${HB_COMPILER}/harbour.exe -build;
+    else
+       if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
+          if [ "$CC" = "gcc" ] ; then
+             export HB_CCSUFFIX=-5;
+             export HB_USER_CFLAGS='-fstack-protector-strong';
+          else
+             export HB_CCSUFFIX=;
+          fi;
+       fi;
+       export HB_USER_CFLAGS="${HB_USER_CFLAGS} -D_FORTIFY_SOURCE=2";
+       ls -lA /usr/bin/$CC*;
+       export HB_COMPILER=$CC && make -j $HB_CI_THREADS;
+    fi;
 notifications:
- email: false
+  email: false
+git:
+  submodules: false

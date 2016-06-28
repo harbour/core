@@ -53,7 +53,7 @@
              #undef _TSTRUCT_                    ;;
           #endif                                 ;;
           #define _TSTRUCT_ <hStruct>            ;;
-          <hStruct> := hb_Hash()                 ;;
+          <hStruct> := { => }                    ;;
           hb_HCaseMatch( <hStruct>, .F. )
 
 #xcommand MEMBER <cName, ...>                                           ;

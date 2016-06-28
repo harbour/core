@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: Tone()
  *
@@ -46,17 +44,17 @@
    $SUBCATEGORY$
       Environment
    $ONELINER$
-      Returns the HARBOUR Version or the Harbour/Compiler Version.
+      Returns the version of Harbour compiler
    $SYNTAX$
       Version() --> <cReturn>
    $ARGUMENTS$
       None
    $RETURNS$
-      <cReturn>   String containing the Harbour Version
+      <cReturn>   String containing the Harbour version
    $DESCRIPTION$
-      This function returns the current Harbour Version.
+      This function returns the current Harbour version.
    $EXAMPLES$
-      ? Version() // "Harbour Terminal: Standard stream console"
+      ? Version()
    $STATUS$
       S
    $COMPLIANCE$

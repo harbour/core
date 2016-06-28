@@ -54,21 +54,14 @@ HB_EXTERN_BEGIN
 
 #if defined( __WATCOMC__ )
    #define HB_MATH_HANDLER
-   #if ( __WATCOMC__ > 1000 ) /* && defined( __cplusplus ) */
+   #if __WATCOMC__ > 1000  /* && defined( __cplusplus ) */
       #define exception _exception
    #endif
 #elif defined( __BORLANDC__ )
-   #if ( __BORLANDC__ == 1328 ) && defined( __cplusplus )
-      /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
-               the redefinition of matherr, because nor "_exception" neither
-               "exception" will work. [vszakats] */
-   #else
-      #define HB_MATH_HANDLER
-      #define matherr _matherr
-      /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
-      #if ( __BORLANDC__ >= 1360 )
-         #define exception _exception
-      #endif
+   #define HB_MATH_HANDLER
+   #define matherr _matherr
+   #if __BORLANDC__ >= 0x0550  /* && defined( __cplusplus ) */
+      #define exception _exception
    #endif
 #elif defined( __MINGW32CE__ )
    #define HB_MATH_HANDLER
@@ -93,21 +86,21 @@ HB_EXTERN_BEGIN
 
 typedef struct _HB_MATH_EXCEPTION
 {
-   int            type;
-   const char *   funcname;
-   const char *   error;
-   double         arg1;
-   double         arg2;
-   double         retval;
-   int            retvalwidth;
-   int            retvaldec;
-   int            handled;
+   int          type;
+   const char * funcname;
+   const char * error;
+   double       arg1;
+   double       arg2;
+   double       retval;
+   int          retvalwidth;
+   int          retvaldec;
+   int          handled;
 } HB_MATH_EXCEPTION;
 
 typedef int ( * HB_MATH_HANDLERPROC )( HB_MATH_EXCEPTION * err );
 
 extern HB_EXPORT void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc );
-extern HB_EXPORT HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc, double arg1, double arg2, double dResult );
+extern HB_EXPORT HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc, double arg1, double arg2, double dResult );
 
 extern HB_EXPORT int hb_mathSetErrMode( int imode );
 extern HB_EXPORT int hb_mathGetErrMode( void );

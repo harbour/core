@@ -1,6 +1,7 @@
 /*
  * ACCEPT command related functions
  *
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (__AcceptStr())
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -44,16 +45,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    __AcceptStr()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapigt.h"
@@ -62,7 +53,7 @@
 
 HB_FUNC_EXTERN( QOUT );
 
-#define ACCEPT_BUFFER_LEN  256 /* length of input buffer for ACCEPT command */
+#define ACCEPT_BUFFER_LEN  256  /* length of input buffer for ACCEPT command */
 
 #ifdef HB_CLP_UNDOC
 

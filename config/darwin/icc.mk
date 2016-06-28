@@ -9,10 +9,10 @@ LIB_PREF := lib
 LIB_EXT := .a
 
 CC := $(HB_CCACHE) $(HB_CMP)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -D_GNU_SOURCE
 

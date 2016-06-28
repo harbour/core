@@ -1,7 +1,6 @@
 /*
  * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
  *
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option )
@@ -45,10 +44,7 @@
 
 #include "hbhpdf.h"
 
-/*
-   HPDF_STATUS
-   HPDF_PDFA_SetPDFAConformance (HPDF_Doc pdf,HPDF_PDFAType pdfatype)
- */
+/* HPDF_STATUS HPDF_PDFA_SetPDFAConformance (HPDF_Doc pdf,HPDF_PDFAType pdfatype) */
 HB_FUNC( HPDF_PDFA_SETPDFACONFORMANCE )
 {
 /* TOFIX: These functions are not exported from libharu. Until we find
@@ -57,6 +53,6 @@ HB_FUNC( HPDF_PDFA_SETPDFACONFORMANCE )
 #if HB_HPDF_VERS( 2, 2, 0 ) && ! defined( HB_DYNLIB )
    hb_retnl( HPDF_PDFA_SetPDFAConformance( hb_HPDF_Doc_par( 1 ), ( HPDF_PDFAType ) hb_parni( 2 ) ) );
 #else
-   hb_retnl( -1 );
+   hb_retnl( HB_HPDF_NOTSUPPORTED );
 #endif
 }

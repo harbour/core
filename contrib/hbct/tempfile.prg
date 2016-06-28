@@ -44,27 +44,23 @@
  *
  */
 
-#include "fileio.ch"
-
 FUNCTION TempFile( cDir, cExt, nAttr )
 
    LOCAL cName
-   LOCAL fhnd
+   LOCAL hFile
 
    IF HB_ISSTRING( cDir )
       cDir := hb_DirSepAdd( cDir )
    ENDIF
 
-   IF HB_ISSTRING( cExt ) .AND. !( Left( cExt, 1 ) == "." )
+   IF HB_ISSTRING( cExt ) .AND. ! hb_LeftEq( cExt, "." )
       cExt := "." + cExt
    ENDIF
 
-   hb_default( @nAttr, SetFCreate() )
+   IF ( hFile := hb_vfTempFile( @cName, cDir,, cExt, ;
+      hb_defaultValue( nAttr, SetFCreate() ) ) ) != NIL
 
-   fhnd := hb_FTempCreateEx( @cName, cDir,, cExt, nAttr )
-
-   IF fhnd != F_ERROR
-      FClose( fhnd )
+      hb_vfClose( hFile )
       RETURN cName
    ENDIF
 

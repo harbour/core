@@ -1,5 +1,5 @@
 /*
- * hb_FSize() function
+ * hb_fsFSize() function
  *
  * Copyright 2000-2001 Jose Lalin <dezac@corevia.com>
  * Copyright 2000-2001 Viktor Szakats (vszakats.net/harbour)
@@ -46,7 +46,7 @@
  */
 
 #if ! defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE  1
+   #define _LARGEFILE64_SOURCE  1
 #endif
 
 #include "hbapi.h"
@@ -54,14 +54,14 @@
 #include "hbvm.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
-#  include "hbwinuni.h"
-#  if defined( HB_OS_WIN_CE )
-#     include "hbwince.h"
-#  endif
+   #include <windows.h>
+   #include "hbwinuni.h"
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
 #else
-#  include <sys/types.h>
-#  include <sys/stat.h>
+   #include <sys/types.h>
+   #include <sys/stat.h>
 #endif
 
 #if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
@@ -105,7 +105,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
 
          lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
          memset( &attrex, 0, sizeof( attrex ) );
-         fResult = GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) &&
+         fResult = s_pGetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) &&
                    ( attrex.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY ) == 0;
          hb_fsSetIOError( fResult, 0 );
          if( lpFree )
@@ -170,6 +170,7 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
          return nPos;
       }
    }
+
    return 0;
 }
 
@@ -177,5 +178,5 @@ HB_FUNC( HB_FSIZE )
 {
    const char * pszFile = hb_parc( 1 );
 
-   hb_retnint( pszFile ? hb_fsFSize( pszFile, hb_parldef( 2, 1 ) ) : 0 );
+   hb_retnint( pszFile ? hb_fsFSize( pszFile, hb_parldef( 2, HB_TRUE ) ) : 0 );
 }

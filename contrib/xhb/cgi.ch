@@ -2,6 +2,7 @@
  * common includes for cgi lib
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,22 +45,9 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #xtranslate Default( <p>, <v> )  => <p> := iif( <p> == NIL, <v>, <p> )
-#xtranslate HTMLSpace( <n> )     => Replicate( "&nbsp;", <n> )  //"&#32;"
+#xtranslate HTMLSpace( <n> )     => Replicate( "&nbsp;", <n> )  // "&#32;"
 #xtranslate CRLF()               => Chr( 13 ) + Chr( 10 )
-
-#define STD_IN       0
-#define STD_OUT      1
 
 #define _WHITE_BLUE_STYLE   "<!-- "+;
                                 " A:visited {text-decoration:none;color:blue;background:none;} "+;

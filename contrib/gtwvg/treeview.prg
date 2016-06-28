@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpTreeView compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbpTreeView compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               26Nov2008
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgTreeView INHERIT WvgWindow, WvgDataRef
 
    VAR    alwaysShowSelection                   INIT .F.
    VAR    hasButtons                            INIT .F.
@@ -100,11 +94,11 @@ CREATE CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
    VAR    textItemSelected                      INIT ""
 
    METHOD getSelectionInfo( nlParam )
-   METHOD setColorFG( nRGB )                    INLINE Wvg_TreeView_SetTextColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ) )
-   METHOD setColorBG( nRGB )                    INLINE Wvg_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
-   METHOD setColorLines( nRGB )                 INLINE Wvg_TreeView_SetLineColor( ::hWnd, nRGB )
-   METHOD showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
-      iif( HB_ISNIL( lExpanded ), .F., lExpanded ), nLevels )
+   METHOD setColorFG( nRGB )                    INLINE wapi_TreeView_SetTextColor( ::hWnd, iif( HB_ISSTRING( nRGB ), wvt_GetRGBColorByString( nRGB, 0 ), nRGB ) )
+   METHOD setColorBG( nRGB )                    INLINE wapi_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
+   METHOD setColorLines( nRGB )                 INLINE wapi_TreeView_SetLineColor( ::hWnd, nRGB )
+   METHOD showExpanded( lExpanded, nLevels )    INLINE wvg_TreeView_ShowExpanded( ::hWnd, ;
+      iif( lExpanded == NIL, .F., lExpanded ), nLevels )
 
 ENDCLASS
 
@@ -112,8 +106,8 @@ METHOD WvgTreeView:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::style       := WS_CHILD + WS_TABSTOP + WS_CLIPSIBLINGS
-   ::exStyle     := WS_EX_CLIENTEDGE // WS_EX_STATICEDGE /*+ TVS_EX_FADEINOUTEXPANDOS */
+   ::style       := WIN_WS_CHILD + WIN_WS_TABSTOP + WIN_WS_CLIPSIBLINGS
+   ::exStyle     := WIN_WS_EX_CLIENTEDGE // WIN_WS_EX_STATICEDGE /* + TVS_EX_FADEINOUTEXPANDOS */
 
    ::className   := "SysTreeView32"
    ::objType     := objTypeTreeView
@@ -139,7 +133,7 @@ METHOD WvgTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::createControl()
 
 #if 0
-   ::SetWindowProcCallback()  /* Let parent control the events because all notifications are posted via WM_NOTIFY */
+   ::SetWindowProcCallback()  /* Let parent control the events because all notifications are posted via WIN_WM_NOTIFY */
 #endif
 
    ::oRootItem       := WvgTreeViewItem():New()
@@ -163,17 +157,17 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      ::sendMessage( WM_SIZE, 0, 0 )
+      ::sendMessage( WIN_WM_SIZE, 0, 0 )
 
    CASE HB_GTE_COMMAND
-      IF HB_ISBLOCK( ::sl_lbClick )
+      IF HB_ISEVALITEM( ::sl_lbClick )
          Eval( ::sl_lbClick, NIL, NIL, self )
-         RETURN EVENT_HANDELLED
+         RETURN EVENT_HANDLED
       ENDIF
       EXIT
 
    CASE HB_GTE_NOTIFY
-      aHdr := Wvg_GetNMTreeViewInfo( aNM[ 2 ] )
+      aHdr := wvg_GetNMTreeViewInfo( aNM[ 2 ] )
 
       DO CASE
       CASE aHdr[ NMH_code ] == NM_DBLCLK .OR. aHdr[ NMH_code ] == NM_RETURN
@@ -181,7 +175,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             Eval( ::sl_itemSelected, ::oItemSelected, { 0, 0, 0, 0 }, Self )
          ENDIF
          IF ::isParentCrt()
@@ -198,7 +192,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
-         IF HB_ISBLOCK( ::sl_itemMarked )
+         IF HB_ISEVALITEM( ::sl_itemMarked )
             Eval( ::sl_itemMarked, ::oItemSelected, { 0, 0, 0, 0 }, Self )
          ENDIF
          IF ::isParentCrt()
@@ -218,10 +212,10 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 
 #if 0  /* It must never reach here */
    CASE HB_GTE_ANY
-      IF aNM[ 1 ] == WM_LBUTTONDOWN
-         aHdr := Wvg_GetNMTreeViewInfo( aNM[ 3 ] )
+      IF aNM[ 1 ] == WIN_WM_LBUTTONDOWN
+         aHdr := wvg_GetNMTreeViewInfo( aNM[ 3 ] )
          ::getSelectionInfo( aNM[ 2 ] )
-         IF HB_ISBLOCK( ::sl_lbClick )
+         IF HB_ISEVALITEM( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -230,11 +224,11 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
                ::setFocus()
             ENDIF
          ENDIF
-         RETURN EVENT_HANDELLED
+         RETURN EVENT_HANDLED
 
-      ELSEIF aNM[ 1 ] == WM_LBUTTONDBLCLK .OR. ( aNM[ 1 ] == WM_KEYDOWN .AND. aNM[ 2 ] == K_ENTER )
+      ELSEIF aNM[ 1 ] == WIN_WM_LBUTTONDBLCLK .OR. ( aNM[ 1 ] == WIN_WM_KEYDOWN .AND. aNM[ 2 ] == K_ENTER )
          ::editBuffer := ::oItemSelected
-         IF HB_ISBLOCK( ::sl_itemSelected )
+         IF HB_ISEVALITEM( ::sl_itemSelected )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -250,13 +244,13 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 #endif
    ENDSWITCH
 
-   RETURN EVENT_UNHANDELLED
+   RETURN EVENT_UNHANDLED
 
-METHOD WvgTreeView:destroy()
+METHOD PROCEDURE WvgTreeView:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgTreeView:getSelectionInfo( nlParam )
 
@@ -265,7 +259,7 @@ METHOD WvgTreeView:getSelectionInfo( nlParam )
    LOCAL cText   := Space( 20 )
    LOCAL n
 
-   Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
+   wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
 
    ::hParentSelected    := hParentOfSelected
    ::hItemSelected      := hItemSelected
@@ -292,7 +286,7 @@ METHOD WvgTreeView:itemFromPos( aPos )
 
 METHOD WvgTreeView:itemCollapsed( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_paint := xParam
    ENDIF
 
@@ -300,7 +294,7 @@ METHOD WvgTreeView:itemCollapsed( xParam )
 
 METHOD WvgTreeView:itemExpanded( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_itemExpanded := xParam
    ENDIF
 
@@ -308,7 +302,7 @@ METHOD WvgTreeView:itemExpanded( xParam )
 
 METHOD WvgTreeView:itemMarked( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_itemMarked := xParam
    ENDIF
 
@@ -318,7 +312,7 @@ METHOD WvgTreeView:itemMarked( xParam )
 
 METHOD WvgTreeView:itemSelected( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
+   IF HB_ISEVALITEM( xParam ) .OR. xParam == NIL
       ::sl_itemSelected := xParam
    ENDIF
 
@@ -329,7 +323,7 @@ METHOD WvgTreeView:itemSelected( xParam )
 CREATE CLASS WvgTreeViewItem
 
    VAR    caption                               INIT ""
-   VAR    dllName                               INIT NIL
+   VAR    dllName
    VAR    expandedImage                         INIT -1
    VAR    image                                 INIT -1
    VAR    markedImage                           INIT -1
@@ -347,8 +341,7 @@ CREATE CLASS WvgTreeViewItem
    METHOD configure()
    METHOD destroy()
 
-   METHOD Expand( lExpand )                      INLINE Wvg_TreeView_Expand( ::hTree, ::hItem, ;
-      iif( HB_ISLOGICAL( lExpand ), lExpand, .T. ) )
+   METHOD Expand( lExpand ) INLINE wvg_TreeView_Expand( ::hTree, ::hItem, hb_defaultValue( lExpand, .T. ) )
    METHOD isExpanded()
    METHOD setCaption( cCaption )
    METHOD setExpandedImage( nResIdoBitmap )
@@ -363,81 +356,68 @@ CREATE CLASS WvgTreeViewItem
 
 ENDCLASS
 
-METHOD new() CLASS WvgTreeViewItem
-
+METHOD WvgTreeViewItem:new()
    RETURN Self
 
-METHOD create() CLASS WvgTreeViewItem
-
+METHOD WvgTreeViewItem:create()
    RETURN Self
 
-METHOD configure() CLASS WvgTreeViewItem
-
+METHOD WvgTreeViewItem:configure()
    RETURN Self
 
-METHOD destroy() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:destroy()
+   RETURN
 
-   RETURN NIL
+METHOD PROCEDURE WvgTreeViewItem:isExpanded()
+   RETURN
 
-METHOD isExpanded() CLASS WvgTreeViewItem
-
-   RETURN NIL
-
-METHOD setCaption( cCaption ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setCaption( cCaption )
 
    HB_SYMBOL_UNUSED( cCaption )
 
-   RETURN NIL
+   RETURN
 
-METHOD setExpandedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
-
-   HB_SYMBOL_UNUSED( nResIdoBitmap )
-
-   RETURN NIL
-
-METHOD setImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setExpandedImage( nResIdoBitmap )
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
 
-   RETURN NIL
+   RETURN
 
-METHOD setMarkedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setImage( nResIdoBitmap )
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
 
-   RETURN NIL
+   RETURN
 
-METHOD addItem( cCaption ) CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:setMarkedImage( nResIdoBitmap )
 
-   LOCAL oItem, hParent
+   HB_SYMBOL_UNUSED( nResIdoBitmap )
 
-   oItem := WvgTreeViewItem():New()
+   RETURN
+
+METHOD WvgTreeViewItem:addItem( cCaption )
+
+   LOCAL oItem := WvgTreeViewItem():New()
 
    oItem:hTree   := ::hTree
    oItem:oParent := self
    oItem:caption := cCaption
    oItem:oWnd    := ::oWnd
 
-   hParent := iif( HB_ISOBJECT( oItem:oParent ), oItem:oParent:hItem, NIL )
-
-   oItem:hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:caption )
+   oItem:hItem := wvg_TreeView_AddItem( oItem:hTree, iif( HB_ISOBJECT( oItem:oParent ), oItem:oParent:hItem, ), oItem:caption )
 
    AAdd( oItem:oWnd:aItems, oItem )
 
    RETURN oItem
 
-METHOD delItem() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:delItem()
+   RETURN
 
-   RETURN NIL
+METHOD PROCEDURE WvgTreeViewItem:getChildItems()
+   RETURN
 
-METHOD getChildItems() CLASS WvgTreeViewItem
+METHOD PROCEDURE WvgTreeViewItem:getParentItem()
+   RETURN
 
-   RETURN NIL
-
-METHOD getParentItem() CLASS WvgTreeViewItem
-
-   RETURN NIL
-
-METHOD insItem() CLASS WvgTreeViewItem
-
-   RETURN NIL
+METHOD PROCEDURE WvgTreeViewItem:insItem()
+   RETURN

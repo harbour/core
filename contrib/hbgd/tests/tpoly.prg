@@ -1,35 +1,34 @@
-/*
- * Koch Flake -- for testing gdImage*Polygon()
- */
+/* Koch Flake -- for testing gdImage*Polygon() */
 
 #require "hbgd"
 
-#command TurnRight( <x> ) => s_nAngle += Pi() / 3 * <x>
-#command TurnLeft( <x> )  => s_nAngle -= Pi() / 3 * <x>
+#xcommand TurnRight( <x> ) => s_nAngle += Pi() / 3 * <x>
+#xcommand TurnLeft( <x> )  => s_nAngle -= Pi() / 3 * <x>
 
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 STATIC s_aCoords
 STATIC s_nAngle, s_nCoordX, s_nCoordY
 
 PROCEDURE Main()
 
+   hb_vfDirMake( IMAGES_OUT )
+
    DrawFlake( .T. )
    DrawFlake( .F. )
 
    RETURN
 
-PROCEDURE DrawFlake( lOpenPoly )
+STATIC PROCEDURE DrawFlake( lOpenPoly )
 
-   LOCAL nOrder, nSide, nSides, nSideLen
+   LOCAL nSide
    LOCAL gdImage, gdColor
-   LOCAL cImageName
 
-   nSides := 3
-   nSideLen := 1500
-   nOrder := 7
+   LOCAL nSides := 3
+   LOCAL nSideLen := 1500
+   LOCAL nOrder := 7
 
-   cImageName := iif( lOpenPoly, "flakeo.png", "flake.png" )
+   LOCAL cImageName := iif( lOpenPoly, "flakeo.png", "flake.png" )
 
    gdImage := gdImageCreate( 1900, 2100 )
    gdImageColorAllocate( gdImage, 0, 0, 0 )
@@ -45,9 +44,9 @@ PROCEDURE DrawFlake( lOpenPoly )
       s_nAngle += Pi() * 2 / nSides
    NEXT
 
-   ? hb_StrFormat( "Drawing %d vertices", Len( s_aCoords ) )
+   ? hb_StrFormat( "Drawing %1$d vertices", Len( s_aCoords ) )
 
-   /** In green */
+   /* In green */
    gdColor := gdImageColorAllocate( gdImage, 0, 255, 0 )
 
    IF lOpenPoly
@@ -67,9 +66,9 @@ PROCEDURE DrawFlake( lOpenPoly )
       s_nAngle += Pi() * 2 / nSides
    NEXT
 
-   ? hb_StrFormat( "Drawing %d vertices", Len( s_aCoords ) )
+   ? hb_StrFormat( "Drawing %1$d vertices", Len( s_aCoords ) )
 
-   /** In yellow */
+   /* In yellow */
    gdColor := gdImageColorAllocate( gdImage, 255, 255, 0 )
 
    IF lOpenPoly
@@ -82,7 +81,7 @@ PROCEDURE DrawFlake( lOpenPoly )
 
    RETURN
 
-PROCEDURE KochFlake( nOrder, nSideLen, lLeftFirst )
+STATIC PROCEDURE KochFlake( nOrder, nSideLen, lLeftFirst )
 
    IF nOrder == 0
       AAdd( s_aCoords, { ;
@@ -90,28 +89,28 @@ PROCEDURE KochFlake( nOrder, nSideLen, lLeftFirst )
          s_nCoordY += Sin( s_nAngle ) * nSideLen;
          } )
    ELSE
-      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen / 3, lLeftFirst )
 
       IF lLeftFirst
          TurnLeft( 1 )
       ELSE
          TurnRight( 1 )
       ENDIF
-      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen / 3, lLeftFirst )
 
       IF lLeftFirst
          TurnRight( 2 )
       ELSE
          TurnLeft( 2 )
       ENDIF
-      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen / 3, lLeftFirst )
 
       IF lLeftFirst
          TurnLeft( 1 )
       ELSE
          TurnRight( 1 )
       ENDIF
-      KochFlake( nOrder - 1, nSideLen  / 3, lLeftFirst )
+      KochFlake( nOrder - 1, nSideLen / 3, lLeftFirst )
    ENDIF
 
    RETURN

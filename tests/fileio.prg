@@ -1,29 +1,39 @@
-// Testing Harbour file io features
+// Testing Harbour file I/O features
+
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
 
 PROCEDURE Main()
 
    LOCAL h
-   LOCAL cstr := " "
-   LOCAL ntmp := 1
+   LOCAL cStr
+   LOCAL tmp
 
-   h := FCreate( "test.txt" )
-   ? "create handle", h
-
+   ? "create handle", h := FCreate( "test.txt" )
    FWrite( h, "This test worked if you can see this" )
+   FClose( h )
+
+   /* using FRead() */
+
+   ? "open handle", h := FOpen( "test.txt" )
+   ?
+   /* try to read what is there */
+   cStr := Space( 1 )
+   DO WHILE ( tmp := FRead( h, @cStr, hb_BLen( cStr ) ) ) != 0
+      ?? cStr
+   ENDDO
 
    FClose( h )
 
-   h := FOpen( "test.txt" )
-   ? "open handle", h
+   /* using FReadStr() */
+
+   ? "open handle", h := FOpen( "test.txt" )
    ?
    /* try to read what is there */
-   DO WHILE ntmp != 0
-      ntmp := FRead( h, @cstr, 1 )
-      IF ntmp > 0
-         ?? cstr
-      ENDIF
+   DO WHILE hb_BCode( cStr := FReadStr( h, 1 ) ) != 0
+      ?? cStr
    ENDDO
-   ?
 
    FClose( h )
 

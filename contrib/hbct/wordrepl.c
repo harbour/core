@@ -64,7 +64,7 @@ HB_FUNC( WORDREPL )
       const char * pcString = hb_parc( 2 );
       HB_SIZE sStrLen = hb_parclen( 2 );
       const char * pcReplace = hb_parc( 3 );
-      int iMode = hb_parldef( 4, 0 );
+      int iMode = hb_parl( 4 );
       char * pcRet;
       HB_SIZE sIndex;
 

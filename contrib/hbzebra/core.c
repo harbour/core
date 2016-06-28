@@ -50,14 +50,11 @@
 #include "hbstack.h"
 
 
-/* ================ Bit buffer ================ */
+/* --- Bit buffer --- */
 
 PHB_BITBUFFER hb_bitbuffer_create( void )
 {
-   PHB_BITBUFFER pBitBuffer = ( PHB_BITBUFFER ) hb_xgrab( sizeof( HB_BITBUFFER ) );
-
-   hb_xmemset( pBitBuffer, 0, sizeof( HB_BITBUFFER ) );
-   return pBitBuffer;
+   return ( PHB_BITBUFFER ) hb_xgrabz( sizeof( HB_BITBUFFER ) );
 }
 
 
@@ -164,7 +161,7 @@ void hb_bitbuffer_cat_int_rev( PHB_BITBUFFER pBitBuffer, int iValue, int iLen )
 }
 
 
-/* ================ GC pointer ================ */
+/* --- GC pointer --- */
 
 static HB_GARBAGE_FUNC( hb_zebra_destructor )
 {
@@ -229,14 +226,11 @@ void hb_zebra_ret( PHB_ZEBRA pZebra )
 }
 
 
-/* ================ Zebra ================ */
+/* --- Zebra --- */
 
 PHB_ZEBRA hb_zebra_create( void )
 {
-   PHB_ZEBRA pZebra = ( PHB_ZEBRA ) hb_xgrab( sizeof( HB_ZEBRA ) );
-
-   hb_xmemset( pZebra, 0, sizeof( HB_ZEBRA ) );
-   return pZebra;
+   return ( PHB_ZEBRA ) hb_xgrabz( sizeof( HB_ZEBRA ) );
 }
 
 

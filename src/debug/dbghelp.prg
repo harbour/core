@@ -245,9 +245,9 @@ STATIC FUNCTION GetTopics()
    LOCAL aTopics := {}
    LOCAL cLine
 
-   FOR EACH cLine IN hb_ATokens( help_en(), Chr( 10 ) )
+   FOR EACH cLine IN hb_ATokens( help_en(), .T. )
       IF hb_LeftEq( cLine, "--" )
-         AAdd( aTopics, { PadR( SubStr( cLine, Len( "--" ) + 1 ), 12 ), {} } )
+         AAdd( aTopics, { hb_UPadR( hb_USubStr( cLine, Len( "--" ) + 1 ), 12 ), {} } )
       ELSEIF ! Empty( aTopics ) .AND. ;
          ( ! Empty( cLine ) .OR. ! cLine:__enumIsLast() )  /* skip last EOL */
          AAdd( ATail( aTopics )[ 2 ], cLine )

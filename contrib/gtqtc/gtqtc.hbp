@@ -5,12 +5,25 @@
 
 -w3 -es2
 
+# Tone down warnings for both QT4 and QT5
+-warn=low{darwin&clang}
+
 -stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc}
 
 -pic
 
--plugin=hbmk2_qtmoc.hb
+# NOTE: You can override auto-detection of QT 'moc' tool by using HB_QTPATH and
+#       optionally HB_QTPOSTFIX envvars. This may only be necessary on some *nix
+#       systems. F.e.:
+#
+#       HB_QTPATH=/opt/qt5/bin/
+#       HB_QTPOSTFIX=
 
+-plugin=hbmk2_qtgt.hb
+
+-deppkgname=qt5:libqt5-dev{deb}
+-deppkgname=qt5:qt5-devel{rpm}
+-deppkgname=qt5:qt5{homebrew}
 -depcontrol=qt5:${HB_WITH_QT}
 -depkeyhead=qt5:QtCore/QJsonObject
 -depoptional=qt5:yes
@@ -18,6 +31,9 @@
 -depincpath=qt5:/usr/local/include/qt5{bsd}
 -depfinish=qt5
 
+{!HBMK_HAS_QT5}-depurlbase=qt:https://www.qt.io/developers/
+{!HBMK_HAS_QT5}-depurlbase=qt:https://download.qt.io/official_releases/qt/
+{!HBMK_HAS_QT5&darwin}-deppkgname=qt:qt4
 {!HBMK_HAS_QT5&!darwin&!android}-deppkgname=qt:QtCore
 {!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h
 {!HBMK_HAS_QT5}-depcontrol=qt:${HB_WITH_QT}
@@ -31,7 +47,7 @@
 {!HBMK_HAS_QT5&darwin}-depincpath=qt:/Library/Frameworks
 {!HBMK_HAS_QT5&darwin}-depincpath=qt:/usr/local/include
 
+-hbx=${hb_name}
+
 gtqtc1.cpp
 gtqtc.h
-
-${hb_name}.hbx

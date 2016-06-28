@@ -1,5 +1,5 @@
 /*
- * MySQL Database Driver
+ * MariaDB/MySQL Database Driver
  *
  * Copyright 2007 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  *
@@ -138,7 +138,7 @@ HB_CALL_ON_STARTUP_END( _hb_mysqldd_init_ )
 #endif
 
 
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
@@ -150,8 +150,7 @@ static HB_USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
    return uiAction;
 }
 
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE mysqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    MYSQL *  pMySql;
@@ -329,17 +328,15 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
             dbFieldInfo.uiLen  = 4;
             break;
 
-/*
+#if 0
          case MYSQL_TYPE_NULL:
          case MYSQL_TYPE_YEAR:
          case MYSQL_TYPE_NEWDATE:
-         case MYSQL_TYPE_ENUM:
          case MYSQL_TYPE_SET:
          case MYSQL_TYPE_VARCHAR:
          case MYSQL_TYPE_BIT:
          case MYSQL_TYPE_GEOMETRY:
- */
-
+#endif
          default:
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) pMyField->type;
@@ -397,9 +394,10 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
          hb_itemRelease( pItem );
 
-/*       if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
+#if 0
+         if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
             dbFieldInfo.uiType = HB_IT_LONG;
- */
+#endif
 
          if( ! bError )
             bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
@@ -490,7 +488,6 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    char *    pValue;
    char      szBuffer[ 64 ];
    HB_BOOL   bError;
-   PHB_ITEM  pError;
    HB_SIZE   ulLen;
 
    bError = HB_FALSE;
@@ -620,7 +617,7 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
    if( bError )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );

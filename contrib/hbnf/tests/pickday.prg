@@ -3,6 +3,6 @@
 PROCEDURE Main()
 
    CLS
-   ? "You selected " + ft_PickDay()
+   ? "You selected", ft_PickDay()
 
    RETURN

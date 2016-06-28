@@ -13,42 +13,41 @@ PROCEDURE Main()
       { "LOGICAL",   "L",  1, 0 } }
 
    CLS
-   dbUseArea( .T., "DBFCDX", "test", "TESTDBF", .T., .F. )
-   dbCreate( "testcdx", aStruct, "DBFCDX", .T., "TESTCDX" )
+   dbUseArea( .T., "DBFCDX", "test.dbf", "TESTDBF", .T., .F. )
+   dbCreate( "testcdx.dbf", aStruct, "DBFCDX", .T., "TESTCDX" )
 
-   ? "RddName:", rddName()
-   ? "Press any key to continue..."
-   Inkey( 0 )
-   Select( "TESTDBF" )
+   ? "rddName():", rddName()
+   WAIT
+   dbSelectArea( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 140000
    TESTDBF->( dbGoTop() )
-   WHILE ! TESTDBF->( Eof() )
+   DO WHILE ! TESTDBF->( Eof() )
       TESTCDX->( dbAppend() )
       TESTCDX->CHARACTER := TESTDBF->FIRST
       TESTCDX->NUMERIC := TESTDBF->SALARY
-      TESTCDX->MEMO := TESTDBF->FIRST + hb_eol() + ;
-                       TESTDBF->LAST + hb_eol() + ;
-                       TESTDBF->STREET
+      TESTCDX->MEMO := ;
+         TESTDBF->FIRST + hb_eol() + ;
+         TESTDBF->LAST + hb_eol() + ;
+         TESTDBF->STREET
       TESTDBF->( dbSkip() )
    ENDDO
 
-   ? TESTCDX->( RecCount() )
+   ? TESTCDX->( LastRec() )
    TESTCDX->( dbGoTop() )
    ? TESTCDX->( Eof() )
-   WHILE ! TESTCDX->( Eof() )
+   DO WHILE ! TESTCDX->( Eof() )
       ? TESTCDX->( RecNo() ), TESTCDX->NUMERIC
       ? TESTCDX->MEMO
       TESTCDX->( dbSkip() )
-      ? "Press any key to continue..."
-      Inkey( 0 )
+      WAIT
    ENDDO
 
    hb_dbDrop( "testcdx.cdx" )
 
-   Select( "TESTCDX" )
+   dbSelectArea( "TESTCDX" )
    ordCreate( "testcdx", "Character", "FIELD->CHARACTER", {|| FIELD->CHARACTER }, .F. )
 
    dbCloseAll()
-   hb_dbDrop( "testcdx",, "DBFCDX" )
+   hb_dbDrop( "testcdx.dbf",, "DBFCDX" )
 
    RETURN

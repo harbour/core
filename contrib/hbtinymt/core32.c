@@ -113,40 +113,40 @@ HB_FUNC( TINYMT32_GENERATE_FLOAT )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
-   hb_retnd( tinymt32_generate_float( &tinymtData->tinymt ) );
+   hb_retnd( ( double ) tinymt32_generate_float( &tinymtData->tinymt ) );
 }
 
 HB_FUNC( TINYMT32_GENERATE_FLOAT01 )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
-   hb_retnd( tinymt32_generate_float01( &tinymtData->tinymt ) );
+   hb_retnd( ( double ) tinymt32_generate_float01( &tinymtData->tinymt ) );
 }
 
 HB_FUNC( TINYMT32_GENERATE_FLOAT12 )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
-   hb_retnd( tinymt32_generate_float12( &tinymtData->tinymt ) );
+   hb_retnd( ( double ) tinymt32_generate_float12( &tinymtData->tinymt ) );
 }
 
 HB_FUNC( TINYMT32_GENERATE_FLOATOC )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
-   hb_retnd( tinymt32_generate_floatOC( &tinymtData->tinymt ) );
+   hb_retnd( ( double ) tinymt32_generate_floatOC( &tinymtData->tinymt ) );
 }
 
 HB_FUNC( TINYMT32_GENERATE_FLOATOO )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
-   hb_retnd( tinymt32_generate_floatOO( &tinymtData->tinymt ) );
+   hb_retnd( ( double ) tinymt32_generate_floatOO( &tinymtData->tinymt ) );
 }
 
 HB_FUNC( TINYMT32_GENERATE_32DOUBLE )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
-   hb_retnd( tinymt32_generate_32double( &tinymtData->tinymt ) );
+   hb_retnd( ( double ) tinymt32_generate_32double( &tinymtData->tinymt ) );
 }

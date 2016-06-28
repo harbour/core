@@ -2,6 +2,7 @@
  * GetEnv(), GetE() functions
  *
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (GetE())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,24 +45,14 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    GetE()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 
 /* NOTE: Convert the envvar name to uppercase. This is required for
          MS-DOS and OS/2 systems. [vszakats] */
 #if defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
-#  include "hbapicdp.h"
-#  define _HB_GETENV_REQUIRES_UPPERCASE
+   #include "hbapicdp.h"
+   #define _HB_GETENV_REQUIRES_UPPERCASE
 #endif
 
 HB_FUNC( GETENV )

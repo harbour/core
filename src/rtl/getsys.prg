@@ -2,6 +2,7 @@
  * GET system module (default)
  *
  * Copyright 1999-2001 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2001 Luiz Rafael Culik (Support for CA-Cl*pper 5.3 Getsystem)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,17 +45,9 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2001 Luiz Rafael Culik
- *    Support for CA-Cl*pper 5.3 Getsystem
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #ifdef HB_COMPAT_C53
+
+#include "inkey.ch"
 
 #define SLUPDATED       1
 #define SOACTIVEGET     8
@@ -319,16 +312,16 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
 
    IF Set( _SET_SCOREBOARD )
 
-      cMessage := Left( __natMsg( _GET_RANGE_FROM ) + LTrim( Transform( xLow, "" ) ) + ;
+      cMessage := hb_ULeft( __natMsg( _GET_RANGE_FROM ) + LTrim( Transform( xLow, "" ) ) + ;
          __natMsg( _GET_RANGE_TO ) + LTrim( Transform( xHigh, "" ) ), MaxCol() )
 
-      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), cMessage )
+      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - hb_ULen( cMessage ) ), cMessage )
 
-      DO WHILE ( nKey := Inkey( 0 ) ) == 0
+      DO WHILE ( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) ) == 0
       ENDDO
       hb_keyIns( nKey )
 
-      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), Space( Len( cMessage ) ) )
+      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - hb_ULen( cMessage ) ), Space( hb_ULen( cMessage ) ) )
 
    ENDIF
 

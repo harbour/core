@@ -45,8 +45,7 @@
  */
 
 FUNCTION Random( lMode )
-
-   RETURN iif( HB_ISLOGICAL( lMode ) .AND. lMode, ;
+   RETURN iif( hb_defaultValue( lMode, .F. ), ;
       hb_RandomInt( -32768, 32767 ), hb_RandomInt( 0, 65535 ) )
 
 FUNCTION Rand( nStart )

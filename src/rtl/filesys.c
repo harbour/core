@@ -2,6 +2,18 @@
  * The FileSys API (C level)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
+ *    hb_fsSetError(), hb_fsSetDevMode(), hb_fsReadLarge(), hb_fsWriteLarge()
+ *    hb_fsCurDirBuff(), hb_fsBaseDirBuff()
+ *    fs_win_get_drive(), fs_win_set_drive()
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    hb_fsChDrv(), hb_fsCurDrv(), hb_fsIsDrv(), hb_fsIsDevice()
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>, David G. Holm <dholm@jsd-llc.com>
+ *    hb_fsEof()
+ * Copyright 2001 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>, <tecnico.sireinsa@ctv.es>
+ *    Added platform check for any compiler to use the Windows
+ *    API calls to allow openning an unlimited number of files
+ *    simultaneously.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,39 +53,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
- *    hb_fsSetError()
- *    hb_fsSetDevMode()
- *    hb_fsReadLarge()
- *    hb_fsWriteLarge()
- *    hb_fsCurDirBuff()
- *    hb_fsBaseDirBuff()
- *    fs_win_get_drive()
- *    fs_win_set_drive()
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_fsChDrv()
- *    hb_fsCurDrv()
- *    hb_fsIsDrv()
- *    hb_fsIsDevice()
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *            and David G. Holm <dholm@jsd-llc.com>
- *    hb_fsEof()
- *
- * Copyright 2001 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>
- *                                   <tecnico.sireinsa@ctv.es>
- *    Added platform check for any compiler to use the Windows
- *    API calls to allow openning an unlimited number of files
- *    simultaneously.
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -1759,7 +1738,7 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
 
          memset( &attrex, 0, sizeof( attrex ) );
 
-         if( GetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) )
+         if( s_pGetFileAttributesEx( lpFileName, GetFileExInfoStandard, &attrex ) )
          {
             FILETIME local_ft;
             SYSTEMTIME st;
@@ -1980,9 +1959,19 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
 
 #if defined( HB_OS_WIN )
    {
-      HB_FHANDLE hFile = hb_fsOpen( pszFileName, FO_READWRITE | FO_SHARED );
+      LPCTSTR lpFileName;
+      LPTSTR lpFree;
+      HANDLE hFile;
 
-      fResult = hFile != FS_ERROR;
+      lpFileName = HB_FSNAMECONV( pszFileName, &lpFree );
+
+      hb_vmUnlock();
+      hFile = CreateFile( lpFileName, GENERIC_WRITE, FILE_SHARE_WRITE | FILE_SHARE_READ,
+                          NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL );
+      fResult = hFile != ( HANDLE ) INVALID_HANDLE_VALUE;
+      hb_fsSetIOError( fResult, 0 );
+      hb_vmLock();
+
       if( fResult )
       {
          FILETIME local_ft;
@@ -2011,14 +2000,17 @@ HB_BOOL hb_fsSetFileTime( const char * pszFileName, long lJulian, long lMillisec
          {
             FILETIME ft;
             LocalFileTimeToFileTime( &local_ft, &ft );
-            fResult = SetFileTime( DosToWinHandle( hFile ), NULL, &ft, &ft ) != 0;
+            fResult = SetFileTime( hFile, NULL, &ft, &ft ) != 0;
          }
          else
             fResult = HB_FALSE;
 
          hb_fsSetIOError( fResult, 0 );
-         hb_fsClose( hFile );
+         CloseHandle( hFile );
       }
+
+      if( lpFree )
+         hb_xfree( lpFree );
    }
 #elif defined( HB_OS_OS2 )
    {
@@ -4438,7 +4430,7 @@ HB_BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
    return fResult;
 }
 
-/* convert file name for hb_fsExtOpen
+/* convert file name for hb_fsExtOpen()
  * caller must free the returned buffer
  */
 char * hb_fsExtName( const char * pszFileName, const char * pDefExt,

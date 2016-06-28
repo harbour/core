@@ -1,5 +1,5 @@
 /*
- * example of Harbour codepage using UTF-16 little endian encoding
+ * Example of Harbour codepage using UTF-16 little endian encoding
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

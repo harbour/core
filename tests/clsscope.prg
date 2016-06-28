@@ -1,12 +1,12 @@
 /*
- * demonstration/test code for class method scoping
+ * Demonstration/test code for class method scoping
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  */
 
-#command  ? => OUTSTD(hb_eol())
-#xtranslate QOUT(<x,...>) => OUTSTD(hb_eol(),<x>)
+#command ? => OutStd( hb_eol() )
+#xtranslate QOut( <x,...> ) => OutStd( hb_eol(), <x> )
 
 #include "hbclass.ch"
 
@@ -51,22 +51,22 @@
 
 #xcommand MAKE_TESTBLOCK(<fn>,<o>,<v>)                                     ;
         =>  begin sequence                                                 ;;
-               <fn>({| self | qout("      hVar:= ", ::hVar:=<v>)},<o>)     ;;
+               <fn>({| self | QOut("      hVar:= ", ::hVar:=<v>)},<o>)     ;;
             end sequence                                                   ;;
             begin sequence                                                 ;;
-               <fn>({| self | qout("      hrVar:=", ::hrVar:=<v>)},<o>)    ;;
+               <fn>({| self | QOut("      hrVar:=", ::hrVar:=<v>)},<o>)    ;;
             end sequence                                                   ;;
             begin sequence                                                 ;;
-               <fn>({| self | qout("      pVar:= ", ::pVar:=<v>)},<o>)     ;;
+               <fn>({| self | QOut("      pVar:= ", ::pVar:=<v>)},<o>)     ;;
             end sequence                                                   ;;
             begin sequence                                                 ;;
-               <fn>({| self | qout("      prVar:=", ::prVar:=<v>)},<o>)    ;;
+               <fn>({| self | QOut("      prVar:=", ::prVar:=<v>)},<o>)    ;;
             end sequence                                                   ;;
             begin sequence                                                 ;;
-               <fn>({| self | qout("      eVar:= ", ::eVar:=<v>)},<o>)     ;;
+               <fn>({| self | QOut("      eVar:= ", ::eVar:=<v>)},<o>)     ;;
             end sequence                                                   ;;
             begin sequence                                                 ;;
-               <fn>({| self | qout("      erVar:=", ::erVar:=<v>)},<o>)    ;;
+               <fn>({| self | QOut("      erVar:=", ::erVar:=<v>)},<o>)    ;;
             end sequence
 
 
@@ -154,221 +154,221 @@
             end sequence
 
 
+procedure main()
 
-proc main()
-LOCAL cbErr, self, o
+   local cbErr, self, o
 
-? DATE(), TIME(), VERSION(), OS()
-?
+   ? OS(), Version(), Date(), Time()
+   ?
 
-o:=clsX():new()
-self:=cls2():new()
-cbErr := errorBlock( {| oErr | errHandler( oErr ) } )
+   o := clsX():new()
+   self := cls2():new()
+   cbErr := ErrorBlock( {| oErr | errHandler( oErr ) } )
 
-/***************************************************************/
-? "Class Access:"
-self:TEST1()
-?
-? "Parent Class Access:"
-self:TEST0()
-?
-? "Subclass Access:"
-self:TEST2()
-?
-? "Subclass Super Access:"
-self:TEST3()
-?
-? "Foreign Class Access:"
-o:TESTX(self)
-?
-? "Extern Access:"
-MAKE_TEST(self,"extr")
-?
+   /* --- */
+   ? "Class Access:"
+   self:TEST1()
+   ?
+   ? "Parent Class Access:"
+   self:TEST0()
+   ?
+   ? "Subclass Access:"
+   self:TEST2()
+   ?
+   ? "Subclass Super Access:"
+   self:TEST3()
+   ?
+   ? "Foreign Class Access:"
+   o:TESTX( self )
+   ?
+   ? "Extern Access:"
+   MAKE_TEST( self, "extr" )
+   ?
 
-/***************************************************************/
-?
-? "Inline Class Access:"
-MAKE_TESTINLINE1(self,b1)
-?
-? "Inline Parent Class Access:"
-MAKE_TESTINLINE0(self,b0)
-?
-? "Inline Subclass Access:"
-MAKE_TESTINLINE2(self,b2)
-?
+   /* --- */
+   ?
+   ? "Inline Class Access:"
+   MAKE_TESTINLINE1( self, b1 )
+   ?
+   ? "Inline Parent Class Access:"
+   MAKE_TESTINLINE0( self, b0 )
+   ?
+   ? "Inline Subclass Access:"
+   MAKE_TESTINLINE2( self, b2 )
+   ?
 
-/***************************************************************/
-?
-? "Access from class method by"
-? "eval() with block created in class method:"
-self:CBINT1()
-?
-? "Access from subclass method by"
-? "eval() with block created in subclass method:"
-self:CBINT2()
-?
-? "Access from parent class method by"
-? "eval() with block created in parent class method:"
-self:CBINT0()
-?
-? "Access from foreign class method by"
-? "eval() with block created in foreign class method:"
-o:CBINTX(self)
+   /* --- */
+   ?
+   ? "Access from class method by"
+   ? "Eval() with block created in class method:"
+   self:CBINT1()
+   ?
+   ? "Access from subclass method by"
+   ? "Eval() with block created in subclass method:"
+   self:CBINT2()
+   ?
+   ? "Access from parent class method by"
+   ? "Eval() with block created in parent class method:"
+   self:CBINT0()
+   ?
+   ? "Access from foreign class method by"
+   ? "Eval() with block created in foreign class method:"
+   o:CBINTX( self )
 
-/***************************************************************/
-?
-? "Access from function executed from class method by"
-? "eval() block created in class method:"
-self:CBEVL1()
-?
-? "Access from function executed from subclass method by"
-? "eval() with block created in subclass method:"
-self:CBEVL2()
-?
-? "Access from function executed from parent class method by"
-? "eval() with block created in parent class method:"
-self:CBEVL0()
+   /* --- */
+   ?
+   ? "Access from function executed from class method by"
+   ? "Eval() block created in class method:"
+   self:CBEVL1()
+   ?
+   ? "Access from function executed from subclass method by"
+   ? "Eval() with block created in subclass method:"
+   self:CBEVL2()
+   ?
+   ? "Access from function executed from parent class method by"
+   ? "Eval() with block created in parent class method:"
+   self:CBEVL0()
 
-/***************************************************************/
-?
-? "Access from foreign object method executed from class method by"
-? "eval() block created in class method:"
-self:CBFEVL1(o)
-?
-? "Access from foreign object method executed from subclass method by"
-? "eval() with block created in subclass method:"
-self:CBFEVL2(o)
-?
-? "Access from foreign object method executed from parent class method by"
-? "eval() with block created in parent class method:"
-self:CBFEVL0(o)
+   /* --- */
+   ?
+   ? "Access from foreign object method executed from class method by"
+   ? "Eval() block created in class method:"
+   self:CBFEVL1( o )
+   ?
+   ? "Access from foreign object method executed from subclass method by"
+   ? "Eval() with block created in subclass method:"
+   self:CBFEVL2( o )
+   ?
+   ? "Access from foreign object method executed from parent class method by"
+   ? "Eval() with block created in parent class method:"
+   self:CBFEVL0( o )
 
-/***************************************************************/
-?
-? "External block executed from class method"
-MAKE_TESTBLOCK(self:cbeval1,self,::classname()+":"+procname())
-?
-? "External block executed from subclass method"
-MAKE_TESTBLOCK(self:cbeval2,self,::classname()+":"+procname())
-?
-? "External block executed from parent class method"
-MAKE_TESTBLOCK(self:cbeval0,self,::classname()+":"+procname())
-?
-? "External block access"
-MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
+   /* --- */
+   ?
+   ? "External block executed from class method"
+   MAKE_TESTBLOCK( self:cbeval1, self, ::classname() + ":" + ProcName() )
+   ?
+   ? "External block executed from subclass method"
+   MAKE_TESTBLOCK( self:cbeval2, self, ::classname() + ":" + ProcName() )
+   ?
+   ? "External block executed from parent class method"
+   MAKE_TESTBLOCK( self:cbeval0, self, ::classname() + ":" + ProcName() )
+   ?
+   ? "External block access"
+   MAKE_TESTBLOCK( eval, self, ::classname() + ":" + ProcName() )
 
-/***************************************************************/
-?
-? "External block executed from function called from class method"
-MAKE_TESTBLOCK(self:cbeval1,self,::classname()+":"+procname())
-?
-? "External block executed from function called from subclass method"
-MAKE_TESTBLOCK(self:cbeval2,self,::classname()+":"+procname())
-?
-? "External block executed from function called from parent class method"
-MAKE_TESTBLOCK(self:cbeval0,self,::classname()+":"+procname())
-?
-/***************************************************************/
+   /* --- */
+   ?
+   ? "External block executed from function called from class method"
+   MAKE_TESTBLOCK( self:cbeval1, self, ::classname() + ":" + ProcName() )
+   ?
+   ? "External block executed from function called from subclass method"
+   MAKE_TESTBLOCK( self:cbeval2, self, ::classname() + ":" + ProcName() )
+   ?
+   ? "External block executed from function called from parent class method"
+   MAKE_TESTBLOCK( self:cbeval0, self, ::classname() + ":" + ProcName() )
+   ?
+   /* --- */
 
-errorBlock(cbErr)
-RETURN
-
-
-FUNC errHandler( oErr )
-? "[ Error:", ltrim(str(oErr:gencode)), "/", ltrim(str(oErr:subcode)), ;
-              oErr:description, oErr:operation, "]"
-break( oErr )
-RETURN NIL
+   ErrorBlock( cbErr )
+   return
 
 
-PROC EXTEVAL( cb, o )
-EXTEVAL1( cb, o )
-RETURN
-
-PROC EXTEVAL1( cb, o )
-EXTEVAL2( cb, o )
-RETURN
-
-PROC EXTEVAL2( cb, o )
-EXTEVAL3( cb, o )
-RETURN
-
-PROC EXTEVAL3( cb, o )
-EVAL( cb, o )
-RETURN
+static procedure errHandler( oErr )
+   ? "[ Error:", hb_ntos( oErr:gencode ), "/", hb_ntos( oErr:subcode ), ;
+                 oErr:description, oErr:operation, "]"
+   Break( oErr )
+   return
 
 
+static procedure EXTEVAL( cb, o )
+   EXTEVAL1( cb, o )
+   return
+
+static procedure EXTEVAL1( cb, o )
+   EXTEVAL2( cb, o )
+   return
+
+static procedure EXTEVAL2( cb, o )
+   EXTEVAL3( cb, o )
+   return
+
+static procedure EXTEVAL3( cb, o )
+   Eval( cb, o )
+   return
 
 
 
-CREATE CLASS CLSX
-EXPORTED:
-   METHOD   TESTX
-   METHOD   CBINTX
-   METHOD   CBEVALX
-   METHOD   CBXEVALX
-ENDCLASS
-
-METHOD TESTX( o )
-MAKE_TEST( o, "clsx" )
-RETURN self
-
-METHOD CBINTX( o )
-MAKE_TESTBLOCK(eval,o,::classname()+":"+procname())
-RETURN self
-
-METHOD CBEVALX( cb, o )
-EVAL( cb, o )
-RETURN self
-
-METHOD CBXEVALX( cb, o )
-EXTEVAL( cb, o )
-RETURN self
 
 
-CREATE CLASS CLS0
-EXPORTED:
-   METHOD   TEST0
-   METHOD   CBINT0
-   METHOD   CBEVL0
-   METHOD   CBFEVL0
-   METHOD   CBEVAL0
-   METHOD   CBXEVAL0
-   MESSAGE  b0hVar   INLINE ::hVar  := ::classname()+":"+procname()
-   MESSAGE  b0hrVar  INLINE ::hrVar := ::classname()+":"+procname()
-   MESSAGE  b0pVar   INLINE ::pVar  := ::classname()+":"+procname()
-   MESSAGE  b0prVar  INLINE ::prVar := ::classname()+":"+procname()
-   MESSAGE  b0eVar   INLINE ::eVar  := ::classname()+":"+procname()
-   MESSAGE  b0erVar  INLINE ::erVar := ::classname()+":"+procname()
-ENDCLASS
+create class CLSX
+exported:
+   method   TESTX
+   method   CBINTX
+   method   CBEVALX
+   method   CBXEVALX
+endclass
 
-METHOD TEST0
-MAKE_TEST(self,"cls0")
-RETURN self
+method TESTX( o )
+   MAKE_TEST( o, "clsx" )
+   return self
 
-METHOD CBINT0
-MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
-RETURN self
+method CBINTX( o )
+   MAKE_TESTBLOCK( eval, o, ::classname() + ":" + ProcName() )
+   return self
 
-METHOD CBEVL0()
-MAKE_TESTBLOCK(exteval,self,::classname()+":"+procname())
-RETURN self
+method CBEVALX( cb, o )
+   Eval( cb, o )
+   return self
 
-METHOD CBFEVL0(o)
-MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+procname())
-RETURN self
-
-METHOD CBEVAL0( cb, o )
-EVAL( cb, o )
-RETURN self
-
-METHOD CBXEVAL0( cb, o )
-EXTEVAL( cb, o )
-RETURN self
+method CBXEVALX( cb, o )
+   EXTEVAL( cb, o )
+   return self
 
 
+create class CLS0
+exported:
+   method   TEST0
+   method   CBINT0
+   method   CBEVL0
+   method   CBFEVL0
+   method   CBEVAL0
+   method   CBXEVAL0
+   message  b0hVar   inline ::hVar  := ::classname() + ":" + ProcName()
+   message  b0hrVar  inline ::hrVar := ::classname() + ":" + ProcName()
+   message  b0pVar   inline ::pVar  := ::classname() + ":" + ProcName()
+   message  b0prVar  inline ::prVar := ::classname() + ":" + ProcName()
+   message  b0eVar   inline ::eVar  := ::classname() + ":" + ProcName()
+   message  b0erVar  inline ::erVar := ::classname() + ":" + ProcName()
+endclass
 
-CREATE CLASS CLS1 FROM CLS0
+method TEST0
+   MAKE_TEST( self, "cls0" )
+   return self
+
+method CBINT0
+   MAKE_TESTBLOCK( eval, self, ::classname() + ":" + ProcName() )
+   return self
+
+method CBEVL0()
+   MAKE_TESTBLOCK( exteval, self, ::classname() + ":" + ProcName() )
+   return self
+
+method CBFEVL0(o)
+   MAKE_TESTBLOCK( o:cbevalx, self, ::classname() + ":" + ProcName() )
+   return self
+
+method CBEVAL0( cb, o )
+   Eval( cb, o )
+   return self
+
+method CBXEVAL0( cb, o )
+   EXTEVAL( cb, o )
+   return self
+
+
+
+CREATE CLASS CLS1 INHERIT CLS0
 HIDDEN:
    VAR      hVar
    VAR      hrVar READONLY
@@ -379,106 +379,105 @@ EXPORTED:
    VAR      eVar
    VAR      erVar READONLY
 
-   METHOD   TEST1
-   METHOD   CBINT1
-   METHOD   CBEVL1
-   METHOD   CBFEVL1
-   METHOD   CBEVAL1
-   METHOD   CBXEVAL1
+   method   TEST1
+   method   CBINT1
+   method   CBEVL1
+   method   CBFEVL1
+   method   CBEVAL1
+   method   CBXEVAL1
 
-   MESSAGE  b1hVar   INLINE ::hVar  := ::classname()+":"+procname()
-   MESSAGE  b1hrVar  INLINE ::hrVar := ::classname()+":"+procname()
-   MESSAGE  b1pVar   INLINE ::pVar  := ::classname()+":"+procname()
-   MESSAGE  b1prVar  INLINE ::prVar := ::classname()+":"+procname()
-   MESSAGE  b1eVar   INLINE ::eVar  := ::classname()+":"+procname()
-   MESSAGE  b1erVar  INLINE ::erVar := ::classname()+":"+procname()
+   MESSAGE  b1hVar   INLINE ::hVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b1hrVar  INLINE ::hrVar := ::classname() + ":" + ProcName()
+   MESSAGE  b1pVar   INLINE ::pVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b1prVar  INLINE ::prVar := ::classname() + ":" + ProcName()
+   MESSAGE  b1eVar   INLINE ::eVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b1erVar  INLINE ::erVar := ::classname() + ":" + ProcName()
 ENDCLASS
 
 
-METHOD TEST1
-MAKE_TEST(self,"cls1")
-RETURN self
+method TEST1
+   MAKE_TEST( self, "cls1" )
+   return self
 
-METHOD CBINT1
-MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
-RETURN self
+method CBINT1
+   MAKE_TESTBLOCK( eval, self, ::classname() + ":" + ProcName() )
+   return self
 
-METHOD CBEVL1()
-MAKE_TESTBLOCK(exteval,self,::classname()+":"+procname())
-RETURN self
+method CBEVL1()
+   MAKE_TESTBLOCK( exteval, self, ::classname() + ":" + ProcName() )
+   return self
 
-METHOD CBFEVL1(o)
-MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+procname())
-RETURN self
+method CBFEVL1(o)
+   MAKE_TESTBLOCK( o:cbevalx, self, ::classname() + ":" + ProcName() )
+   return self
 
-METHOD CBEVAL1( cb, o )
-EVAL( cb, o )
-RETURN self
+method CBEVAL1( cb, o )
+   Eval( cb, o )
+   return self
 
-METHOD CBXEVAL1( cb, o )
-EXTEVAL( cb, o )
-RETURN self
+method CBXEVAL1( cb, o )
+   EXTEVAL( cb, o )
+   return self
 
 
 
-CREATE CLASS CLS2 FROM CLS1
+CREATE CLASS CLS2 INHERIT CLS1
 EXPORTED:
-   METHOD   TEST2
-   METHOD   TEST3
-   METHOD   CBINT2
-   METHOD   CBEVL2
-   METHOD   CBFEVL2
-   METHOD   CBEVAL2
-   METHOD   CBXEVAL2
+   method   TEST2
+   method   TEST3
+   method   CBINT2
+   method   CBEVL2
+   method   CBFEVL2
+   method   CBEVAL2
+   method   CBXEVAL2
 
-   MESSAGE  b2hVar   INLINE ::hVar  := ::classname()+":"+procname()
-   MESSAGE  b2hrVar  INLINE ::hrVar := ::classname()+":"+procname()
-   MESSAGE  b2pVar   INLINE ::pVar  := ::classname()+":"+procname()
-   MESSAGE  b2prVar  INLINE ::prVar := ::classname()+":"+procname()
-   MESSAGE  b2eVar   INLINE ::eVar  := ::classname()+":"+procname()
-   MESSAGE  b2erVar  INLINE ::erVar := ::classname()+":"+procname()
+   MESSAGE  b2hVar   INLINE ::hVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b2hrVar  INLINE ::hrVar := ::classname() + ":" + ProcName()
+   MESSAGE  b2pVar   INLINE ::pVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b2prVar  INLINE ::prVar := ::classname() + ":" + ProcName()
+   MESSAGE  b2eVar   INLINE ::eVar  := ::classname() + ":" + ProcName()
+   MESSAGE  b2erVar  INLINE ::erVar := ::classname() + ":" + ProcName()
 ENDCLASS
 
-METHOD TEST2
-MAKE_TEST(self,"cls2")
-RETURN self
+method TEST2
+   MAKE_TEST( self, "cls2" )
+   return self
 
-METHOD TEST3
-LOCAL oSuper := self:super
-MAKE_TEST(oSuper,"supr")
-RETURN self
+method TEST3
+   LOCAL oSuper := self:super
+   MAKE_TEST( oSuper, "supr" )
+   return self
 
-METHOD CBINT2
-MAKE_TESTBLOCK(eval,self,::classname()+":"+procname())
-RETURN self
+method CBINT2
+   MAKE_TESTBLOCK( eval, self, ::classname() + ":" + ProcName() )
+   return self
 
-METHOD CBEVL2()
-MAKE_TESTBLOCK(exteval,self,::classname()+":"+procname())
-RETURN self
+method CBEVL2()
+   MAKE_TESTBLOCK( exteval, self, ::classname() + ":" + ProcName() )
+   return self
 
-METHOD CBFEVL2(o)
-MAKE_TESTBLOCK(o:cbevalx,self,::classname()+":"+procname())
-RETURN self
+method CBFEVL2(o)
+   MAKE_TESTBLOCK( o:cbevalx, self, ::classname() + ":" + ProcName() )
+   return self
 
-METHOD CBEVAL2( cb, o )
-EVAL( cb, o )
-RETURN self
+method CBEVAL2( cb, o )
+   Eval( cb, o )
+   return self
 
-METHOD CBXEVAL2( cb, o )
-EXTEVAL( cb, o )
-RETURN self
+method CBXEVAL2( cb, o )
+   EXTEVAL( cb, o )
+   return self
 
 
 
 
 /*
-
-*************************************************************************
+  -------------------------------------------------------------------------
   Below are results Harbour when compiled with -DHB_CLASSY_BLOCK_SCOPE
   They are exactly the same as from Class(y).
   Tested with:
    2006-09-16 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-=========================================================================
+  -------------------------------------------------------------------------
 
  2006-09-16 23:17:33 Harbour Alpha build 46.2 Intl. (Flex) Linux 2.6.15 i686
 
@@ -593,7 +592,7 @@ RETURN self
 
 
  Access from class method by
- eval() with block created in class method:
+ Eval() with block created in class method:
        hVar:=  CLS2:(b)CBINT1
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBINT1
@@ -602,7 +601,7 @@ RETURN self
        erVar:= CLS2:(b)CBINT1
 
  Access from subclass method by
- eval() with block created in subclass method:
+ Eval() with block created in subclass method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBINT2
@@ -611,7 +610,7 @@ RETURN self
        erVar:= CLS2:(b)CBINT2
 
  Access from parent class method by
- eval() with block created in parent class method:
+ Eval() with block created in parent class method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBINT0
@@ -620,7 +619,7 @@ RETURN self
        erVar:= CLS2:(b)CBINT0
 
  Access from foreign class method by
- eval() with block created in foreign class method:
+ Eval() with block created in foreign class method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
  [ Error: 13 / 42 Scope violation (protected) CLS2:_PVAR ]
@@ -629,7 +628,7 @@ RETURN self
  [ Error: 13 / 42 Scope violation (protected) CLS2:_ERVAR ]
 
  Access from function executed from class method by
- eval() block created in class method:
+ Eval() block created in class method:
        hVar:=  CLS2:(b)CBEVL1
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBEVL1
@@ -638,7 +637,7 @@ RETURN self
        erVar:= CLS2:(b)CBEVL1
 
  Access from function executed from subclass method by
- eval() with block created in subclass method:
+ Eval() with block created in subclass method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBEVL2
@@ -647,7 +646,7 @@ RETURN self
        erVar:= CLS2:(b)CBEVL2
 
  Access from function executed from parent class method by
- eval() with block created in parent class method:
+ Eval() with block created in parent class method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBEVL0
@@ -656,7 +655,7 @@ RETURN self
        erVar:= CLS2:(b)CBEVL0
 
  Access from foreign object method executed from class method by
- eval() block created in class method:
+ Eval() block created in class method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
  [ Error: 13 / 42 Scope violation (protected) CLS2:_PVAR ]
@@ -665,7 +664,7 @@ RETURN self
  [ Error: 13 / 42 Scope violation (protected) CLS2:_ERVAR ]
 
  Access from foreign object method executed from subclass method by
- eval() with block created in subclass method:
+ Eval() with block created in subclass method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
  [ Error: 13 / 42 Scope violation (protected) CLS2:_PVAR ]
@@ -674,7 +673,7 @@ RETURN self
  [ Error: 13 / 42 Scope violation (protected) CLS2:_ERVAR ]
 
  Access from foreign object method executed from parent class method by
- eval() with block created in parent class method:
+ Eval() with block created in parent class method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
  [ Error: 13 / 42 Scope violation (protected) CLS2:_PVAR ]
@@ -739,11 +738,11 @@ RETURN self
        erVar:= CLS2:(b)MAIN
 
 
-*************************************************************************
+  -------------------------------------------------------------------------
   And now Harbour results when compiled with -DHB_REAL_BLOCK_SCOPE.
   Tested with:
    2006-09-16 23:20 UTC+0200 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
-=========================================================================
+  -------------------------------------------------------------------------
 
  2006-09-16 23:18:59 Harbour Alpha build 46.2 Intl. (Flex) Linux 2.6.15 i686
 
@@ -858,7 +857,7 @@ RETURN self
 
 
  Access from class method by
- eval() with block created in class method:
+ Eval() with block created in class method:
        hVar:=  CLS2:(b)CBINT1
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBINT1
@@ -867,7 +866,7 @@ RETURN self
        erVar:= CLS2:(b)CBINT1
 
  Access from subclass method by
- eval() with block created in subclass method:
+ Eval() with block created in subclass method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBINT2
@@ -876,7 +875,7 @@ RETURN self
        erVar:= CLS2:(b)CBINT2
 
  Access from parent class method by
- eval() with block created in parent class method:
+ Eval() with block created in parent class method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBINT0
@@ -885,7 +884,7 @@ RETURN self
        erVar:= CLS2:(b)CBINT0
 
  Access from foreign class method by
- eval() with block created in foreign class method:
+ Eval() with block created in foreign class method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
  [ Error: 13 / 42 Scope violation (protected) CLS2:_PVAR ]
@@ -894,7 +893,7 @@ RETURN self
  [ Error: 13 / 42 Scope violation (protected) CLS2:_ERVAR ]
 
  Access from function executed from class method by
- eval() block created in class method:
+ Eval() block created in class method:
        hVar:=  CLS2:(b)CBEVL1
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBEVL1
@@ -903,7 +902,7 @@ RETURN self
        erVar:= CLS2:(b)CBEVL1
 
  Access from function executed from subclass method by
- eval() with block created in subclass method:
+ Eval() with block created in subclass method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBEVL2
@@ -912,7 +911,7 @@ RETURN self
        erVar:= CLS2:(b)CBEVL2
 
  Access from function executed from parent class method by
- eval() with block created in parent class method:
+ Eval() with block created in parent class method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBEVL0
@@ -921,7 +920,7 @@ RETURN self
        erVar:= CLS2:(b)CBEVL0
 
  Access from foreign object method executed from class method by
- eval() block created in class method:
+ Eval() block created in class method:
        hVar:=  CLS2:(b)CBFEVL1
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBFEVL1
@@ -930,7 +929,7 @@ RETURN self
        erVar:= CLS2:(b)CBFEVL1
 
  Access from foreign object method executed from subclass method by
- eval() with block created in subclass method:
+ Eval() with block created in subclass method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBFEVL2
@@ -939,7 +938,7 @@ RETURN self
        erVar:= CLS2:(b)CBFEVL2
 
  Access from foreign object method executed from parent class method by
- eval() with block created in parent class method:
+ Eval() with block created in parent class method:
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HVAR ]
  [ Error: 13 / 41 Scope violation (hidden) CLS2:_HRVAR ]
        pVar:=  CLS2:(b)CBFEVL0

@@ -14,7 +14,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
+ * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
@@ -93,7 +93,7 @@ static int hb_inkeyKeyXHB( int iKey )
           HB_INKEY_ISCHAR( iKey ) ||
           HB_INKEY_ISUNICODE( iKey ) )
       {
-         if( ( iFlags & (  HB_KF_CTRL | HB_KF_ALT ) ) == HB_KF_CTRL )
+         if( ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) == HB_KF_CTRL )
          {
             if( iValue >= 'A' && iValue <= 'Z' )
                return 512 + ( iValue - 'A' ) + 1;

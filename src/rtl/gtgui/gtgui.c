@@ -1,6 +1,6 @@
 /*
  * Mini GT for GUI programs.
- *    Now it supports only low level TONE and CLIPBOARD code for Windows
+ * Now it supports only low level TONE and CLIPBOARD code for Windows
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -98,7 +98,6 @@ static int hb_gt_gui_optionId( const char * pszOption )
    if( pszOption )
    {
       HB_SIZE nSize;
-      int i;
 
       while( HB_ISSPACE( *pszOption ) )
          pszOption++;
@@ -108,6 +107,7 @@ static int hb_gt_gui_optionId( const char * pszOption )
 
       if( nSize >= 2 && nSize <= 9 )
       {
+         int i;
          for( i = 0; i < ( int ) _HB_BUTTON_COUNT; ++i )
          {
             if( nSize == s_buttons[ i ].len &&
@@ -248,7 +248,7 @@ static const char * hb_gt_gui_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Windows dummy console for GUI programs";
+   return "Terminal: Windows stub for pure GUI apps (GUI)";
 }
 
 /* *********************************************************************** */

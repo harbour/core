@@ -169,8 +169,7 @@ HB_FUNC( XDL_INIT_MMFILE )
    {
       HB_MMF * phb_mmf;
 
-      phb_mmf = ( HB_MMF * ) hb_xgrab( sizeof( HB_MMF ) );
-      hb_xmemset( phb_mmf, 0, sizeof( HB_MMF ) );
+      phb_mmf = ( HB_MMF * ) hb_xgrabz( sizeof( HB_MMF ) );
       phb_mmf->mmf = mmf;
       hb_mmf_ret( phb_mmf, HB_MMF_SIGN );
    }
@@ -178,9 +177,9 @@ HB_FUNC( XDL_INIT_MMFILE )
       hb_xfree( mmf );
 }
 
-/*
-   HB_FUNC( XDL_FREE_MMFILE )
-   {
+#if 0
+HB_FUNC( XDL_FREE_MMFILE )
+{
    HB_MMF * phb_mmf = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
 
    if( phb_mmf && phb_mmf->mmf )
@@ -190,8 +189,8 @@ HB_FUNC( XDL_INIT_MMFILE )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
- */
+}
+#endif
 
 /* int xdl_mmfile_iscompact(mmfile_t *mmf) */
 
@@ -228,7 +227,6 @@ HB_FUNC( XDL_READ_MMFILE )
       PHB_ITEM pData = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
       char *   data;
       HB_SIZE  size;
-      long     lResult;
 
       if( pData )
       {
@@ -245,7 +243,8 @@ HB_FUNC( XDL_READ_MMFILE )
 
       if( data && size )
       {
-         lResult = xdl_read_mmfile( phb_mmf->mmf, data, ( long ) size );
+         long lResult = xdl_read_mmfile( phb_mmf->mmf, data, ( long ) size );
+
          if( lResult == -1 )
          {
             hb_retc_null();
@@ -334,40 +333,44 @@ HB_FUNC( XDL_MMFILE_CMP )
 
 HB_FUNC( XDL_MMFILE_COMPACT )
 {
-   HB_MMF *   phb_mmfo = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
-   mmfile_t * mmfc     = ( mmfile_t * ) hb_xgrab( sizeof( mmfile_t ) );
+   HB_MMF * phb_mmfo = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
 
-   if( xdl_mmfile_compact( phb_mmfo->mmf, mmfc, hb_parnldef( 1, XDLT_STD_BLKSIZE ),
-                           ( unsigned long ) hb_parnl( 3 ) ) == 0 )
+   if( phb_mmfo )
    {
-      HB_MMF * phb_mmf;
+      mmfile_t * mmfc = ( mmfile_t * ) hb_xgrab( sizeof( mmfile_t ) );
 
-      phb_mmf = ( HB_MMF * ) hb_xgrab( sizeof( HB_MMF ) );
-      hb_xmemset( phb_mmf, 0, sizeof( HB_MMF ) );
-      phb_mmf->mmf = mmfc;
-      hb_mmf_ret( phb_mmf, HB_MMF_SIGN );
+      if( xdl_mmfile_compact( phb_mmfo->mmf, mmfc, hb_parnldef( 1, XDLT_STD_BLKSIZE ),
+                              ( unsigned long ) hb_parnl( 3 ) ) == 0 )
+      {
+         HB_MMF * phb_mmf;
 
-      hb_stornl( 0, 4 );
+         phb_mmf = ( HB_MMF * ) hb_xgrabz( sizeof( HB_MMF ) );
+         phb_mmf->mmf = mmfc;
+         hb_mmf_ret( phb_mmf, HB_MMF_SIGN );
+
+         hb_stornl( 0, 4 );
+      }
+      else
+      {
+         hb_xfree( mmfc );
+         hb_stornl( -1, 4 );
+      }
    }
    else
-   {
-      hb_xfree( mmfc );
-      hb_stornl( -1, 4 );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* callbacks */
 
-#define hb_ptrToHandle( p )   ( ( HB_FHANDLE ) ( HB_PTRUINT ) ( p ) )
-#define hb_parHandlePtr( n )  ( ( void * ) ( HB_PTRUINT ) hb_numToHandle( hb_parnint( n ) ) )
+#define hb_parHandlePtr( n )  hb_fileFromHandle( hb_numToHandle( hb_parnint( n ) ) )
 
-static int xdlt_outf( void * priv, mmbuffer_t * mb, int nbuf )
+static int xdlt_outfile( void * priv, mmbuffer_t * mb, int nbuf )
 {
    int i;
 
    for( i = 0; i < nbuf; i++ )
    {
-      hb_fsWriteLarge( hb_ptrToHandle( priv ), mb[ i ].ptr, ( HB_SIZE ) mb[ i ].size );
+      hb_fileWrite( ( PHB_FILE ) priv, mb[ i ].ptr, ( HB_SIZE ) mb[ i ].size, -1 );
 
       if( hb_fsError() != 0 )
          return -1;
@@ -420,13 +423,22 @@ HB_FUNC( XDL_DIFF )
       if( HB_ISNUM( 5 ) )
       {
          ecb.priv = hb_parHandlePtr( 5 );
-         ecb.outf = xdlt_outf;
+         ecb.outf = xdlt_outfile;
+
+         hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
+
+         hb_fileDetach( ecb.priv );
+      }
+      else if( hb_fileParamGet( 5 ) )
+      {
+         ecb.priv = hb_fileParamGet( 5 );
+         ecb.outf = xdlt_outfile;
 
          hb_retni( xdl_diff( phb_mmf1->mmf, phb_mmf2->mmf, &xpp, &xecfg, &ecb ) );
       }
-      else if( HB_ISBLOCK( 5 ) || HB_ISSYMBOL( 5 ) )
+      else if( HB_ISEVALITEM( 5 ) )
       {
-         PHB_ITEM pCallback = hb_param( 5, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 5, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -449,19 +461,42 @@ HB_FUNC( XDL_PATCH )
 
    if( phb_mmf1 && phb_mmf1->mmf && phb_mmf2 && phb_mmf2->mmf )
    {
-      if( HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
+      if( ( HB_ISNUM( 4 ) || hb_fileParamGet( 4 ) ) &&
+          ( HB_ISNUM( 5 ) || hb_fileParamGet( 5 ) ) )
       {
-         int        mode = hb_parnidef( 3, XDL_PATCH_NORMAL );
+         int mode = hb_parnidef( 3, XDL_PATCH_NORMAL );
+
          xdemitcb_t ecb;
          xdemitcb_t rjecb;
 
-         ecb.priv = hb_parHandlePtr( 4 );
-         ecb.outf = xdlt_outf;
+         HB_BOOL lDetach_ecb = HB_FALSE;
+         HB_BOOL lDetach_rjecb = HB_FALSE;
 
-         rjecb.priv = hb_parHandlePtr( 5 );
-         rjecb.outf = xdlt_outf;
+         ecb.outf = xdlt_outfile;
+         rjecb.outf = xdlt_outfile;
+
+         if( HB_ISNUM( 4 ) )
+         {
+            ecb.priv = hb_parHandlePtr( 4 );
+            lDetach_ecb = HB_TRUE;
+         }
+         else
+            ecb.priv = hb_fileParamGet( 4 );
+
+         if( HB_ISNUM( 5 ) )
+         {
+            rjecb.priv = hb_parHandlePtr( 5 );
+            lDetach_rjecb = HB_TRUE;
+         }
+         else
+            rjecb.priv = hb_fileParamGet( 5 );
 
          hb_retni( xdl_patch( phb_mmf1->mmf, phb_mmf2->mmf, mode, &ecb, &rjecb ) );
+
+         if( lDetach_ecb )
+            hb_fileDetach( ecb.priv );
+         if( lDetach_rjecb )
+            hb_fileDetach( rjecb.priv );
       }
       else
          hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -492,13 +527,22 @@ HB_FUNC( XDL_BDIFF )
       if( HB_ISNUM( 4 ) )
       {
          ecb.priv = hb_parHandlePtr( 4 );
-         ecb.outf = xdlt_outf;
+         ecb.outf = xdlt_outfile;
+
+         hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
+
+         hb_fileDetach( ecb.priv );
+      }
+      else if( hb_fileParamGet( 4 ) )
+      {
+         ecb.priv = hb_fileParamGet( 4 );
+         ecb.outf = xdlt_outfile;
 
          hb_retni( xdl_bdiff( phb_mmf1->mmf, phb_mmf2->mmf, &bdp, &ecb ) );
       }
-      else if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
+      else if( HB_ISEVALITEM( 4 ) )
       {
-         PHB_ITEM pCallback = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 4, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -530,13 +574,22 @@ HB_FUNC( XDL_RABDIFF )
       if( HB_ISNUM( 3 ) )
       {
          ecb.priv = hb_parHandlePtr( 3 );
-         ecb.outf = xdlt_outf;
+         ecb.outf = xdlt_outfile;
+
+         hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
+
+         hb_fileDetach( ecb.priv );
+      }
+      else if( hb_fileParam( 3 ) )
+      {
+         ecb.priv = hb_fileParam( 3 );
+         ecb.outf = xdlt_outfile;
 
          hb_retni( xdl_rabdiff( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
-      else if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+      else if( HB_ISEVALITEM( 3 ) )
       {
-         PHB_ITEM pCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 3, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -564,13 +617,22 @@ HB_FUNC( XDL_BPATCH )
       if( HB_ISNUM( 3 ) )
       {
          ecb.priv = hb_parHandlePtr( 3 );
-         ecb.outf = xdlt_outf;
+         ecb.outf = xdlt_outfile;
+
+         hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
+
+         hb_fileDetach( ecb.priv );
+      }
+      else if( hb_fileParam( 3 ) )
+      {
+         ecb.priv = hb_fileParam( 3 );
+         ecb.outf = xdlt_outfile;
 
          hb_retni( xdl_bpatch( phb_mmf1->mmf, phb_mmf2->mmf, &ecb ) );
       }
-      else if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
+      else if( HB_ISEVALITEM( 3 ) )
       {
-         PHB_ITEM pCallback = hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL );
+         PHB_ITEM pCallback = hb_param( 3, HB_IT_EVALITEM );
 
          ecb.priv = ( void * ) pCallback;
          ecb.outf = xdlt_outb;
@@ -600,21 +662,22 @@ static void * wf_malloc( void * priv, unsigned int size )
 {
    HB_SYMBOL_UNUSED( priv );
 
-   return hb_xgrab( size );
+   return size > 0 ? hb_xgrab( size ) : NULL;
 }
 
 static void wf_free( void * priv, void * ptr )
 {
    HB_SYMBOL_UNUSED( priv );
 
-   hb_xfree( ptr );
+   if( ptr )
+      hb_xfree( ptr );
 }
 
 static void * wf_realloc( void * priv, void * ptr, unsigned int size )
 {
    HB_SYMBOL_UNUSED( priv );
 
-   return hb_xrealloc( ptr, size );
+   return size > 0 ? ( ptr ? hb_xrealloc( ptr, size ) : hb_xgrab( size ) ) : NULL;
 }
 
 static void xdiff_init( void )

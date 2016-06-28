@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
  *    db*() documentation
  *    ord*() documentation
@@ -54,8 +52,8 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL aNames, aTypes, aLens, aDecs, nCount, nFields, i
-         USE Test
+         LOCAL nCount
+         USE test
 
          nCount := FCount()
          ? "Number of fields:", nCount
@@ -72,12 +70,11 @@
          aDecs   := Array( nCount )
          nFields := AFields( aNames, aTypes, aLens, aDecs )
 
-         ? "Number of items :", nFields
+         ? "Number of items:", nFields
          FOR i := 1 TO nFields
-            ?  i, PadR( aNames[ i ], 12 ), aTypes[ i ]
-            ?? aLens[ i ], aDecs[ i ]
+            ? i, PadR( aNames[ i ], 12 ), aTypes[ i ], aLens[ i ], aDecs[ i ]
          NEXT
-         ?
+
          RETURN
    $STATUS$
       R
@@ -158,11 +155,11 @@
          USE test NEW
          ? "Is Bof()", Bof()
          dbGoTop()
-         WHILE ! Bof()
+         DO WHILE ! Bof()
             dbSkip( -1 )
          ENDDO
          ? "Is Bof()", Bof()
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -198,9 +195,9 @@
       In a network environment, any file that is about to be ZAPped must
       be used exclusively.
    $EXAMPLES$
-      USE tests NEW INDEX tests
+      USE test NEW INDEX test
       ZAP
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -238,7 +235,7 @@
          dbDelete()
          ? "Is Record Deleted", Test->( Deleted() )
          dbRecall()
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -278,11 +275,11 @@
          dbGoTop()
          ? "Is Eof()", Eof()
          dbGoBottom()
-         WHILE ! Eof()
+         DO WHILE ! Eof()
             dbSkip()
          ENDDO
          ? "Is Eof()", Eof()
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -316,9 +313,9 @@
       return 0.
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
-         ? "This database have", tests->( FCount() ), "Fields"
-         USE
+         USE test NEW
+         ? "This database has", test->( FCount() ), "fields"
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -357,7 +354,7 @@
       PROCEDURE Main()
          USE test NEW
          ? test->( FieldGet( 1 ) )
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -395,11 +392,11 @@
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL x
-         USE tests NEW
-         FOR x := 1 TO tests->( FCount() )
-            ? "Field Name", FieldName( x )
+         USE test NEW
+         FOR x := 1 TO test->( FCount() )
+            ? "Field Name:", FieldName( x )
          NEXT
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -438,7 +435,7 @@
       PROCEDURE Main()
          USE test NEW
          ? test->( FieldPos( "ID" ) )
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -477,9 +474,9 @@
       assigned to the specified field. If the operation is not successful,
       the function will return a NIL data type
    $EXAMPLES$
-      USE tests NEW
+      USE test NEW
       FieldPut( 1, "Mr. Jones" )
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -513,11 +510,11 @@
       database. This function will also unlock all records locks placed
       by the same network station.
    $EXAMPLES$
-      USE tests NEW
+      USE test NEW
       IF FLock()
-         SUM tests->Ammount
+         SUM test->Ammount
       ENDIF
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -553,12 +550,12 @@
       areas by using an alias.
    $EXAMPLES$
       nId := 100
-      USE tests NEW INDEX tests
+      USE test NEW INDEX test
       SEEK nId
       IF Found()
-         ? tests->Name
+         ? test->Name
       ENDIF
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -593,7 +590,7 @@
       functions, this functions is capable of implementing a backup and
       restore routine.
    $EXAMPLES$
-      USE tests NEW
+      USE test NEW
       ? Header()
    $STATUS$
       R
@@ -628,7 +625,7 @@
       in use in the selected or designated work area, this function will
       return a 0 value as well.
    $EXAMPLES$
-      USE tests NEW
+      USE test NEW
       ? LastRec(), RecCount()
    $STATUS$
       R
@@ -666,9 +663,9 @@
       only work for those database files in USE.
    $EXAMPLES$
       PROCEDURE Main()
-         USE tests NEW
+         USE test NEW
          ? LUpdate()
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R
@@ -702,11 +699,11 @@
       <lError> A value based on the success of a network operation or
       function.
    $DESCRIPTION$
-      This function return a logical true (.T.) is a USE, APPEND BLANK, or
+      This function return a logical true (.T.) is a USE, dbAppend(), or
       a USE...EXCLUSIVE command is issue and fails in a network environment.
       In the case of USE and USE...EXCLUSIVE commands, a NetErr() value
       of .T. would be returned if another node of the network has the
-      exclusive use of a file. And the case of the APPEND BLANK command,
+      exclusive use of a file. And the case of the dbAppend() command,
       NetErr() will return a logical true (.T.) if the file or record
       is locked by another node or the value of LastRec() has been advanced
       The value of NetErr() may be changed via the value of <lNewError>.
@@ -723,7 +720,7 @@
             ? test->First
          ENDIF
       ENDIF
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -763,7 +760,7 @@
       USE harbour NEW
       ? RecCount()
       ? Test->( RecCount() )
-      CLOSE ALL
+      dbCloseAll()
    $STATUS$
       R
    $COMPLIANCE$
@@ -799,7 +796,7 @@
       If the database file is empty and if the RDD is the traditional .dbf
       file, the value of this function will be 1.
    $EXAMPLES$
-      USE tests NEW
+      USE test NEW
       dbGoTop()
       RecNo()            // Returns 1
       dbGoto( 50 )
@@ -838,7 +835,7 @@
       is in use in this work area, the return value from this function
       will be 0.
    $EXAMPLES$
-      USE tests NEW
+      USE test NEW
       dbGoTop()
       RecSize()            // Returns 1
       dbGoto( 50 )
@@ -897,7 +894,7 @@
             dbDelete()
          ENDIF
       ENDIF
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -931,7 +928,7 @@
       name <cAlias>. If no parameter is specified, the current work area will
       be the return value of the function.
    $EXAMPLES$
-      USE tests NEW
+      USE test NEW
       USE names NEW
       cOldArea := Select( "names" )
       SELECT test
@@ -971,14 +968,14 @@
       along with this function , it will default to the currently selected
       work area.
    $EXAMPLES$
-      USE tests NEW
+      USE test NEW
       USE names NEW
       ? Used()    // .T.
       ? TESTS->( Used() ) //.T.
-      CLOSE
-      ? Used()  // .F.
-      SELECT tests
-      ? Used() //.T.
+      dbCloseArea()
+      ? Used()    // .F.
+      SELECT test
+      ? Used()    // .T.
    $STATUS$
       R
    $COMPLIANCE$
@@ -1014,11 +1011,11 @@
       has completed its operation. On completion, the record pointer is placed
       on the first record in the database.
    $EXAMPLES$
-      USE tests NEW INDEX tests
+      USE test NEW INDEX test
       dbGoto( 10 )
       DELETE NEXT 10
       PACK
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$

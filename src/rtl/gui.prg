@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 #ifdef HB_COMPAT_C53
 
 #define LLG_VIDEO_TXT   3
@@ -68,11 +70,11 @@ FUNCTION _GetNumCol( cColor )
 
    LOCAL nPos
 
-   IF ( nPos := At( "/", cColor ) ) > 0
-      cColor := Left( cColor, nPos - 1 )
+   IF ( nPos := hb_BAt( "/", cColor ) ) > 0
+      cColor := hb_BLeft( cColor, nPos - 1 )
    ENDIF
-   IF ( nPos := At( ",", cColor ) ) > 0
-      cColor := Left( cColor, nPos - 1 )
+   IF ( nPos := hb_BAt( ",", cColor ) ) > 0
+      cColor := hb_BLeft( cColor, nPos - 1 )
    ENDIF
 
    RETURN hb_AScan( { "B", "G", "BG", "R", "RB", "GR", "W", "N+", "B+", "G+", "BG+", "R+", "RB+", "GR+", "W+" }, cColor,,, .T. )
@@ -88,14 +90,14 @@ FUNCTION __Caption( cCaption )
 
    LOCAL nPos
 
-   RETURN iif( ( nPos := At( "&", cCaption ) ) > 0, Stuff( cCaption, nPos, 1, "" ), cCaption )
+   RETURN iif( ( nPos := hb_UAt( "&", cCaption ) ) > 0, hb_UStuff( cCaption, nPos, 1, "" ), cCaption )
 
 FUNCTION __CapLength( cCaption )
 
-   LOCAL nCaptionLen := Len( cCaption )
+   LOCAL nCaptionLen := hb_ULen( cCaption )
    LOCAL nPos
 
-   RETURN iif( ( nPos := At( "&", cCaption ) ) > 0 .AND. nPos < nCaptionLen, nCaptionLen - 1, nCaptionLen )
+   RETURN iif( ( nPos := hb_UAt( "&", cCaption ) ) > 0 .AND. nPos < nCaptionLen, nCaptionLen - 1, nCaptionLen )
 
 FUNCTION __CapMetrics( o )
    RETURN __CapLength( o:caption ) + iif( o:isPopup(), 3, 2 )

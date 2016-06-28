@@ -1,45 +1,43 @@
-//
-// Object Array syntax test
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
-//
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* Object Array syntax test */
+
+#include "hbclass.ch"
 
 PROCEDURE Main()
 
    LOCAL o := TNumber():New()
 
-   ? "Direct reference : ", o:x
+   ? "Direct reference :", o:x
 
    o:x := "I am a data"
-   ? "Assign text      : ", o:x
+   ? "Assign text      :", o:x
 
    o:x := 4
-   ? "Assign 4         : ", o:x
+   ? "Assign 4         :", o:x
 
-   ? "Post increment   : ", o:x++
-   ? "After            : ", o:x
-   ? "Pre decrement    : ", --o:x
-   ? "After            : ", o:x
+   ? "Post increment   :", o:x++
+   ? "After            :", o:x
+   ? "Pre decrement    :", --o:x
+   ? "After            :", o:x
 
    o:x += 2
-   ? "Plus 2           : ", o:x
+   ? "Plus 2           :", o:x
 
    o:x -= 3
-   ? "Minus 3          : ", o:x
+   ? "Minus 3          :", o:x
 
    o:x *= 3
-   ? "Times 3          : ", o:x
+   ? "Times 3          :", o:x
 
    o:x /= 1.5
-   ? "Divide by 1.5    : ", o:x
+   ? "Divide by 1.5    :", o:x
 
    o:x %= 4
-   ? "Modulus 4        : ", o:x
+   ? "Modulus 4        :", o:x
 
    o:x ^= 3
-   ? "To the power 3   : ", o:x
+   ? "To the power 3   :", o:x
 
    ? "Global stack"
    ? hb_ValToExp( __dbgVMStkGList() )
@@ -48,23 +46,15 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION TNumber()                              // Very simple class
+CREATE CLASS TNumber STATIC         // Very simple class
 
-   STATIC oNumber
+   VAR x
 
-   IF oNumber == NIL
-      oNumber := HBClass():New( "TNumber" )
+   METHOD New()
 
-      oNumber:AddData( "x" )
-      oNumber:AddMethod( "New", @New() )
-      oNumber:Create()
-   ENDIF
+ENDCLASS
 
-   RETURN oNumber:Instance()
-
-STATIC FUNCTION New()
-
-   LOCAL self := QSelf()
+METHOD New() CLASS TNumber
 
    ::x := 1
 

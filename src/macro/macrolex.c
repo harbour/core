@@ -1,5 +1,5 @@
 /*
- * small and MT safe lexer for macro compiler
+ * Small and MT safe lexer for macro compiler
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

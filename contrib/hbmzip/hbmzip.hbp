@@ -6,8 +6,12 @@
 -w3 -es2
 
 # localtime_r, gmtime_r
--c=gnu90
+#-c=gnu90
 
+-depurlbase=minizip:http://zlib.net/
+-depurlbase=minizip:http://winimage.com/zLibDll/minizip.html
+-deppkgname=minizip:minizip{pacman}
+-deppkgname=minizip:minizip{homebrew}
 # component named libzip also has a header
 # named zip.h, so we look for unzip.h to detect minizip
 -depkeyhead=minizip:unzip.h
@@ -19,6 +23,7 @@
 -depfinish=minizip
 
 # This is a dependency of minizip
+-depurlbase=zlib:http://zlib.net/
 -depkeyhead=zlib:zlib.h
 -depcontrol=zlib:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=zlib:${HB_WITH_ZLIB}
@@ -27,7 +32,7 @@
 -depincpath=zlib:/boot/develop/headers/3rdparty
 -depincpathlocal=zlib:../../src/3rd/zlib
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 mzip.c
 mziperr.prg

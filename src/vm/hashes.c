@@ -45,7 +45,7 @@
  */
 
 #ifndef _HB_HASH_INTERNAL_
-#  define _HB_HASH_INTERNAL_
+#define _HB_HASH_INTERNAL_
 #endif
 
 #include "hbvmopt.h"
@@ -240,7 +240,7 @@ static void hb_hashResort( PHB_BASEHASH pBaseHash )
 
 static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
 {
-   HB_SIZE nPos, nFrom;
+   HB_SIZE nFrom;
    int iFlags = pBaseHash->iFlags;
 
    if( pBaseHash->pnPos )
@@ -281,7 +281,7 @@ static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
 
       for( nFrom = 1; nFrom < pBaseHash->nLen; ++nFrom )
       {
-         nPos = nFrom;
+         HB_SIZE nPos = nFrom;
          while( nPos > 0 && hb_hashItemCmp( &pBaseHash->pPairs[ nPos - 1 ].key,
                                             &pBaseHash->pPairs[ nPos ].key,
                                             iFlags ) > 0 )
@@ -300,9 +300,8 @@ static void hb_hashSortDo( PHB_BASEHASH pBaseHash )
 
 static HB_BOOL hb_hashFind( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, HB_SIZE * pnPos )
 {
-   HB_SIZE nLeft, nRight, nMiddle;
+   HB_SIZE nLeft, nRight;
    int iFlags = pBaseHash->iFlags;
-   int i;
 
    if( iFlags & HB_HASH_RESORT )
       hb_hashSortDo( pBaseHash );
@@ -312,10 +311,10 @@ static HB_BOOL hb_hashFind( PHB_BASEHASH pBaseHash, PHB_ITEM pKey, HB_SIZE * pnP
 
    while( nLeft < nRight )
    {
-      nMiddle = ( nLeft + nRight ) >> 1;
-      i = hb_hashItemCmp( &pBaseHash->pPairs[ pBaseHash->pnPos ?
-                              pBaseHash->pnPos[ nMiddle ] : nMiddle ].key,
-                          pKey, iFlags );
+      HB_SIZE nMiddle = ( nLeft + nRight ) >> 1;
+      int i = hb_hashItemCmp( &pBaseHash->pPairs[ pBaseHash->pnPos ?
+                                  pBaseHash->pnPos[ nMiddle ] : nMiddle ].key,
+                              pKey, iFlags );
       if( i == 0 )
       {
          *pnPos = pBaseHash->pnPos ? pBaseHash->pnPos[ nMiddle ] : nMiddle;

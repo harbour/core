@@ -2,6 +2,7 @@
  * The Fixed Memory API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_xquery())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_xquery()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -289,12 +280,12 @@ static HB_BOOL s_fInitedFM = HB_FALSE;
 
 #ifdef HB_FM_STATISTICS
 
-#define HB_MEMINFO_SIGNATURE  0x19730403
+#define HB_MEMINFO_SIGNATURE  0xfeedbeef
 
 typedef struct _HB_MEMINFO
 {
    HB_U32    u32Signature;
-   HB_USHORT uiProcLine;
+   int       iProcLine;
    HB_USHORT uiReserved;
    HB_SIZE   nSize;
    char      szProcName[ HB_SYMBOL_NAME_LEN + 1 ];
@@ -323,7 +314,7 @@ typedef struct _HB_MEMINFO
 #define HB_FM_BLOCKSIZE( p )  ( s_fStatistic ? HB_FM_PTR( pMem )->nSize : 0 )
 
 /* NOTE: we cannot use here HB_TRACE because it will overwrite the
- * function name/line number of code which called hb_xalloc/hb_xgrab
+ * function name/line number of code which called hb_xalloc()/hb_xgrab()
  */
 #define HB_TRACE_FM  HB_TRACE_STEALTH
 
@@ -622,9 +613,9 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
          /* NOTE: PRG line number/procname is not very useful during hunting
           * for memory leaks - this is why we are using the previously stored
           * function/line info - this is a location of code that called
-          * hb_xalloc/hb_xgrab
+          * hb_xalloc()/hb_xgrab()
           */
-         pMem->uiProcLine = pTrace->line; /* C line number */
+         pMem->iProcLine = pTrace->line;  /* C line number */
          if( pTrace->file )
             hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
          else
@@ -633,7 +624,9 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
       }
       else
       {
-         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
+         HB_USHORT uiProcLine = 0;
+         hb_stackBaseProcInfo( pMem->szProcName, &uiProcLine );
+         pMem->iProcLine = uiProcLine;
       }
 
       HB_FM_LOCK();
@@ -713,9 +706,9 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
          /* NOTE: PRG line number/procname is not very useful during hunting
           * for memory leaks - this is why we are using the previously stored
           * function/line info - this is a location of code that called
-          * hb_xalloc/hb_xgrab
+          * hb_xalloc()/hb_xgrab()
           */
-         pMem->uiProcLine = pTrace->line; /* C line number */
+         pMem->iProcLine = pTrace->line;  /* C line number */
          if( pTrace->file )
             hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
          else
@@ -724,7 +717,9 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
       }
       else
       {
-         hb_stackBaseProcInfo( pMem->szProcName, &pMem->uiProcLine );
+         HB_USHORT uiProcLine = 0;
+         hb_stackBaseProcInfo( pMem->szProcName, &uiProcLine );
+         pMem->iProcLine = uiProcLine;
       }
 
       HB_FM_LOCK();
@@ -1083,16 +1078,16 @@ HB_SIZE hb_xsize( void * pMem ) /* returns the size of an allocated memory block
 /* NOTE: Debug function, it will always return NULL when HB_FM_STATISTICS is
          not defined, don't use it for final code */
 
-const char * hb_xinfo( void * pMem, HB_USHORT * puiLine )
+const char * hb_xinfo( void * pMem, int * piLine )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_xinfo(%p,%p)", pMem, puiLine ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xinfo(%p,%p)", pMem, piLine ) );
 
 #ifdef HB_FM_STATISTICS
    {
       PHB_MEMINFO pMemBlock = HB_FM_PTR( pMem );
 
-      if( puiLine )
-         * puiLine = pMemBlock->uiProcLine;
+      if( piLine )
+         *piLine = pMemBlock->iProcLine;
 
       return pMemBlock->szProcName;
    }
@@ -1100,8 +1095,8 @@ const char * hb_xinfo( void * pMem, HB_USHORT * puiLine )
 
    HB_SYMBOL_UNUSED( pMem );
 
-   if( puiLine )
-      * puiLine = 0;
+   if( piLine )
+      *piLine = 0;
 
    return NULL;
 #endif
@@ -1152,17 +1147,21 @@ static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE nSize )
 
    nPrintable = 0;
    for( nIndex = 0; nIndex < nSize; nIndex++ )
+   {
       if( ( cMem[ nIndex ] & 0x60 ) != 0 )
          nPrintable++;
+   }
 
    if( nPrintable * 100 / nSize > 70 ) /* more then 70% printable chars */
    {
       /* format as string of original chars */
       for( nIndex = 0; nIndex < nSize; nIndex++ )
+      {
          if( cMem[ nIndex ] >= ' ' )
             membuffer[ nIndex ] = cMem[ nIndex ];
          else
             membuffer[ nIndex ] = '.';
+      }
       membuffer[ nIndex ] = '\0';
    }
    else
@@ -1170,9 +1169,8 @@ static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE nSize )
       /* format as hex */
       for( nIndex = 0; nIndex < nSize; nIndex++ )
       {
-         int lownibble, hinibble;
-         hinibble = cMem[ nIndex ] >> 4;
-         lownibble = cMem[ nIndex ] & 0x0F;
+         HB_BYTE hinibble = cMem[ nIndex ] >> 4;
+         HB_BYTE lownibble = cMem[ nIndex ] & 0x0F;
          membuffer[ nIndex * 2 ]     = hinibble <= 9 ?
                                ( '0' + hinibble ) : ( 'A' + hinibble - 10 );
          membuffer[ nIndex * 2 + 1 ] = lownibble <= 9 ?
@@ -1241,7 +1239,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       for( ui = 1, pMemBlock = s_pFirstBlock; pMemBlock; pMemBlock = pMemBlock->pNextBlock, ++ui )
       {
          HB_TRACE( HB_TR_ERROR, ( "Block %i (size %" HB_PFS "u) %s(%i), \"%s\"", ui,
-            pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
+            pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->iProcLine,
             hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
                         HB_MIN( pMemBlock->nSize, HB_MAX_MEM2STR_BLOCK ) ) ) );
 
@@ -1249,7 +1247,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
          {
             fprintf( hLog, HB_I_( "Block %i %p (size %" HB_PFS "u) %s(%i), \"%s\"\n" ), ui,
                      ( char * ) HB_MEM_PTR( pMemBlock ),
-                     pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
+                     pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->iProcLine,
                      hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
                                  HB_MIN( pMemBlock->nSize, HB_MAX_MEM2STR_BLOCK ) ) );
          }
@@ -1303,7 +1301,15 @@ HB_SIZE hb_xquery( int iMode )
    switch( iMode )
    {
       case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailPhys / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1324,7 +1330,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_BLOCK:      /*               (Largest String [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailPhys / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1345,7 +1359,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_RUN:        /*               (RUN Memory [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailPhys / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1366,7 +1388,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_VM:         /* UNDOCUMENTED! (Virtual Memory [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailVirtual / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1395,7 +1425,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_FM:         /* UNDOCUMENTED! (Fixed Memory/Heap [KB]) (?) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullTotalPhys / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1431,7 +1469,15 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_SWAP:       /* UNDOCUMENTED! (Free Swap Memory [KB]) */
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_OS_WIN_XP )
+         {
+            MEMORYSTATUSEX memorystatus;
+            memset( &memorystatus, 0, sizeof( memorystatus ) );
+            memorystatus.dwLength = sizeof( memorystatus );
+            GlobalMemoryStatusEx( &memorystatus );
+            nResult = ( HB_SIZE ) ( memorystatus.ullAvailPageFile / 1024 );
+         }
+#elif defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
             GlobalMemoryStatus( &memorystatus );
@@ -1507,7 +1553,7 @@ HB_SIZE hb_xquery( int iMode )
          nResult = hb_stackTopOffset();
          break;
       }
-      case HB_MEM_STATISTICS: /* Harbour extension (Is FM statistic is enabled?) */
+      case HB_MEM_STATISTICS: /* Harbour extension (Is FM statistic enabled?) */
 #ifdef HB_FM_STATISTICS
          nResult = s_fStatistic;
 #else
@@ -1516,15 +1562,20 @@ HB_SIZE hb_xquery( int iMode )
          break;
 
       case HB_MEM_CANLIMIT:   /* Harbour extension (Is used memory limit supported?) */
+         if( hb_vmInternalsEnabled() )
+         {
 #if defined( HB_FM_DLMT_ALLOC )
-         nResult = 1;
+            nResult = 1;
 #elif defined( HB_FM_DL_ALLOC )
-         nResult = 1;
+            nResult = 1;
 #elif defined( HB_FM_STATISTICS )
-         nResult = s_fStatistic;
+            nResult = s_fStatistic;
 #else
-         nResult = 0;
+            nResult = 0;
 #endif
+         }
+         else
+            nResult = 0;
          break;
 
       default:
@@ -1547,35 +1598,41 @@ HB_FUNC( __FM_ALLOCLIMIT )
 {
    HB_STACK_TLS_PRELOAD;
    hb_xclean();
+
+   if( hb_vmInternalsEnabled() )
+   {
 #if defined( HB_FM_DLMT_ALLOC )
-   hb_retns( mspace_footprint_limit( hb_mspace() ) );
-   if( HB_ISNUM( 1 ) )
-   {
-      HB_ISIZ nLimit = hb_parns( 1 );
+      hb_retns( mspace_footprint_limit( hb_mspace() ) );
+      if( HB_ISNUM( 1 ) )
+      {
+         HB_ISIZ nLimit = hb_parns( 1 );
 
-      if( nLimit <= 0 )
-         nLimit = -1;
-      mspace_set_footprint_limit( hb_mspace(), nLimit );
-   }
+         if( nLimit <= 0 )
+            nLimit = -1;
+         mspace_set_footprint_limit( hb_mspace(), nLimit );
+      }
 #elif defined( HB_FM_DL_ALLOC )
-   hb_retns( dlmalloc_footprint_limit() );
-   if( HB_ISNUM( 1 ) )
-   {
-      HB_ISIZ nLimit = hb_parns( 1 );
+      hb_retns( dlmalloc_footprint_limit() );
+      if( HB_ISNUM( 1 ) )
+      {
+         HB_ISIZ nLimit = hb_parns( 1 );
 
-      if( nLimit <= 0 )
-         nLimit = -1;
-      dlmalloc_set_footprint_limit( ( size_t ) nLimit );
-   }
+         if( nLimit <= 0 )
+            nLimit = -1;
+         dlmalloc_set_footprint_limit( ( size_t ) nLimit );
+      }
 #elif defined( HB_FM_STATISTICS )
-   hb_retns( s_nMemoryLimConsumed ? s_nMemoryLimConsumed : -1 );
-   if( HB_ISNUM( 1 ) )
-   {
-      HB_ISIZ nLimit = hb_parns( 1 );
+      hb_retns( s_nMemoryLimConsumed ? s_nMemoryLimConsumed : -1 );
+      if( HB_ISNUM( 1 ) )
+      {
+         HB_ISIZ nLimit = hb_parns( 1 );
 
-      s_nMemoryLimConsumed = HB_MAX( nLimit, 0 );
-   }
+         s_nMemoryLimConsumed = HB_MAX( nLimit, 0 );
+      }
 #else
-   hb_retni( 0 );
+      hb_retni( 0 );
 #endif
+   }
+   else
+      hb_retni( 0 );
 }

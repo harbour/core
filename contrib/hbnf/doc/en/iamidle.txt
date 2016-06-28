@@ -17,7 +17,7 @@
       idle states.  This function allows you "announce" to the operating
       system that your application is idle.
 
-      Note that if you use this function in conjunction with FT_OnIdle(),
+      Note that if you use this function in conjunction with ft_OnIdle(),
       you can cause Clipper to automatically release the CPU whenever
       Clipper itself detects an idle state.
    $EXAMPLES$
@@ -27,10 +27,10 @@
 
       // Here's another way to do it:
 
-      FT_OnIdle( {|| ft_IAmIdle() } )
+      ft_OnIdle( {|| ft_IAmIdle() } )
 
       Inkey( 0 )              // Automatically reports idleness until key is pressed!
    $SEEALSO$
-      FT_OnIdle()
+      ft_OnIdle()
    $END$
  */

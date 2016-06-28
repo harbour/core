@@ -1,6 +1,4 @@
-/*
- * Copyright 2015 Przemyslaw Czerpak (druzus/at/poczta.onet.pl)
- */
+/* Copyright 2015 Przemyslaw Czerpak (druzus/at/poczta.onet.pl) */
 
 #require "hbssl"
 
@@ -14,12 +12,15 @@ STATIC s_lStop := .F.
 STATIC s_lDelaySrv := .F.
 STATIC s_lDelayCli := .F.
 
-REQUEST HB_MT
+#if ! defined( __HBSCRIPT__HBSHELL )
+REQUEST HB_MT  /* Require this to be built with '-mt' option */
+#endif
 
 PROCEDURE Main( delay )
+
    LOCAL thrd
 
-   IF ! Empty( delay )
+   IF HB_ISSTRING( delay )
       s_lDelayCli := "C" $ Upper( delay )
       s_lDelaySrv := "S" $ Upper( delay )
    ENDIF
@@ -29,8 +30,7 @@ PROCEDURE Main( delay )
    RAND_seed( Time() + hb_TSToStr( hb_DateTime() ) + hb_DirBase() + NetName() )
 
    /* start server thread */
-   thrd := hb_threadStart( @Server() )
-   IF Empty( thrd )
+   IF Empty( thrd := hb_threadStart( @Server() ) )
       ? "Cannot start thread."
       RETURN
    ENDIF
@@ -50,8 +50,8 @@ PROCEDURE Main( delay )
 
    RETURN
 
+STATIC PROCEDURE Client()
 
-STATIC FUNCTION Client()
    LOCAL sock, ssl_ctx, ssl, nResult, nErr, cLine
 
    ssl_ctx := SSL_CTX_new()
@@ -61,7 +61,7 @@ STATIC FUNCTION Client()
    hb_inetTimeout( sock, 5000 )
 
    ? "CLIENT: connecting..."
-   IF Empty( hb_inetConnectIP( "127.0.0.1", N_PORT, sock ) )
+   IF Empty( hb_inetConnectIP( "localhost", N_PORT, sock ) )
       ? "CLIENT: cannot connect to server."
    ELSE
       ? "CLIENT: connected to the server."
@@ -80,20 +80,21 @@ STATIC FUNCTION Client()
                        ERR_error_string( nErr ) )
       IF nResult == 1
          ? "CLIENT: connected with", SSL_get_cipher( ssl ), "encryption."
-         DispCertInfo( ssl, "CLIENT: " )
+         DispCertInfo( ssl, "CLIENT:" )
 
          hb_inetSendAll( sock, hb_TSToStr( hb_DateTime() ) + EOL )
-         DO WHILE ! Empty( cLine := hb_inetRecvLine( sock ) )
+         DO WHILE ! HB_ISNULL( cLine := hb_inetRecvLine( sock ) )
             ? "CLIENT: RECV:", hb_ValToExp( cLine )
          ENDDO
       ENDIF
    ENDIF
+
    hb_inetClose( sock )
 
-   RETURN NIL
+   RETURN
 
+STATIC PROCEDURE Server()
 
-STATIC FUNCTION Server()
    LOCAL sockSrv, sockConn, ssl_ctx, ssl, nResult, nErr, cLine
 
    ? "SERVER: create listen socket..."
@@ -144,20 +145,19 @@ STATIC FUNCTION Server()
       s_lReady := .F.
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-
-STATIC FUNCTION LoadCertificates( ssl_ctx, cCertFile, cKeyFile )
+STATIC PROCEDURE LoadCertificates( ssl_ctx, cCertFile, cKeyFile )
 
    /* Server using hb_inetSSL_ACCEPT() needs certificates,
       they can be generated using the following command:
-         openssl req -x509 -nodes -days 365 -newkey rsa:1024 \
-                 -out <cCertFile> -keyout <cKeyFile>
+         openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+                 -sha256 -out <cCertFile> -keyout <cKeyFile>
     */
-   IF ! hb_FileExists( cCertFile ) .AND. ! hb_FileExists( cKeyFile )
+   IF ! hb_vfExists( cCertFile ) .AND. ! hb_vfExists( cKeyFile )
       ? "SERVER: generating certificates..."
-      hb_run( "openssl req -x509 -nodes -days 365 -newkey rsa:1024 " + ;
-              "-out " + cCertFile + " -keyout " + cKeyFile )
+      hb_run( "openssl req -x509 -nodes -days 365 -newkey rsa:2048 " + ;
+              "-sha256 -out " + cCertFile + " -keyout " + cKeyFile )
    ENDIF
 
    /* set the local certificate from CertFile */
@@ -180,18 +180,18 @@ STATIC FUNCTION LoadCertificates( ssl_ctx, cCertFile, cKeyFile )
       QUIT
    ENDIF
 
-   RETURN NIL
+   RETURN
 
+STATIC PROCEDURE DispCertInfo( ssl, cWho )
 
-STATIC FUNCTION DispCertInfo( ssl, cWho )
    LOCAL cert
 
-   IF ! Empty( cert := SSL_get_peer_certificate( ssl ) )
-      ? cWho + "Server certificates:"
-      ? cWho + "Subject:", X509_name_oneline( X509_get_subject_name( cert ), 0, 0 )
-      ? cWho + "Issuer:", X509_name_oneline( X509_get_issuer_name( cert ), 0, 0 )
+   IF Empty( cert := SSL_get_peer_certificate( ssl ) )
+      ? cWho, "No certificates."
    ELSE
-      ? cWho + "No certificates."
+      ? cWho, "Server certificates:"
+      ? cWho, "Subject:", X509_name_oneline( X509_get_subject_name( cert ), 0, 0 )
+      ? cWho, "Issuer:", X509_name_oneline( X509_get_issuer_name( cert ), 0, 0 )
    ENDIF
 
-   RETURN NIL
+   RETURN

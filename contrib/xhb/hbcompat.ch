@@ -66,6 +66,7 @@
    #xtranslate MaxRow( .T. )                   => gtInfo( HB_GTI_SCREENHEIGHT )
    #xtranslate MaxCol( .T. )                   => gtInfo( HB_GTI_SCREENWIDTH )
    #xtranslate hb_keyNext( [<x>] )             => NextKey( <x> )
+   #xtranslate hb_Alert( [<x,...>] )           => Alert( <x> )
 
    #xtranslate hb_osNewLine()                  => hb_eol()
    #xtranslate hb_osPathSeparator()            => hb_ps()
@@ -93,6 +94,7 @@
    #xtranslate hb_idleSleep( [<x,...>] )       => SecondsSleep( <x> )
    #xtranslate hb_UserName()                   => NetName( 1 )
    #xtranslate hb_FSize( <x> )                 => FileSize( <x> )
+   #xtranslate hb_vfSize( <x> )                => FileSize( <x> )
    #xtranslate hb_WildMatch( [<x,...>] )       => WildMatch( <x> )
    #xtranslate hb_bitTest( [<x,...>] )         => hb_bitIsSet( <x> )
    #xtranslate hb_Deserialize( <x> )           => hb_DeserialNext( <x> )
@@ -166,7 +168,7 @@
 
    /* Hash item functions */
    #xtranslate hb_Hash( [<x,...>] )            => Hash( <x> )
-   #xtranslate hb_HHasKey( [<x,...>] )         => HHasKey( <x> )
+   #xtranslate hb_HHasKey( <x>, <y> )          => HHasKey( <x>, <y> )
    #xtranslate hb_HPos( [<x,...>] )            => HGetPos( <x> )
    #xtranslate hb_HGet( [<x,...>] )            => HGet( <x> )
    #xtranslate hb_HSet( [<x,...>] )            => HSet( <x> )
@@ -271,6 +273,7 @@
    #xtranslate MaxRow( .T. )                   => hb_gtInfo( HB_GTI_VIEWPORTHEIGHT )
    #xtranslate MaxCol( .T. )                   => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
    #xtranslate NextKey( [<x>] )                => hb_keyNext( <x> )
+   #xtranslate Alert( [<x,...>] )              => hb_Alert( <x> )
 
    #xtranslate Str( <x>, <n>, <d>, <l> )       => iif( <l>, LTrim( Str( <x>, <n>, <d> ) ), Str( <x>, <n>, <d> ) )
    #xtranslate Str( <x>, <n>,, <l> )           => iif( <l>, LTrim( Str( <x>, <n> ) ), Str( <x>, <n> ) )
@@ -279,8 +282,8 @@
    #xuntranslate NetName(                      =>
    #xuntranslate MemoWrit(                     =>
 
-   #xtranslate NetName( <n> )                  => iif( HB_ISNUMERIC( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
-   #xtranslate MemoWrit( <x>, <y>, <z> )       => iif( HB_ISLOGICAL( <z> ) .AND. ! <z>, hb_MemoWrit( <x>, <y> ), MemoWrit( <x>, <y> ) )
+   #xtranslate NetName( <n> )                  => iif( hb_defaultValue( <n>, 0 ) == 1, hb_UserName(), NetName() )
+   #xtranslate MemoWrit( <x>, <y>, <z> )       => iif( hb_defaultValue( <z>, T. ), MemoWrit( <x>, <y> ), hb_MemoWrit( <x>, <y> ) )
 
    #xuntranslate AIns(                         =>
    #xuntranslate ADel(                         =>
@@ -304,7 +307,7 @@
    #xtranslate hb_enumIndex( <!v!> ) => <v>:__enumIndex()
 
    /* TRY / CATCH / FINALLY / END */
-   #xcommand TRY  => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   #xcommand TRY => BEGIN SEQUENCE WITH __BreakBlock()
    #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
    #xcommand FINALLY => ALWAYS
 
@@ -314,19 +317,19 @@
 
    /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
    #translate ( <exp1> IN <exp2> )     => ( ( <exp1> ) $ ( <exp2> ) )
-   #translate ( <exp1> HAS <exp2> )    => ( hb_regexHas( ( <exp2> ), ( <exp1> ) ) )
-   #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( ( <exp2> ), ( <exp1> ) ) )
-   #translate ( <exp1> \<\< <exp2> )   => ( hb_bitShift( ( <exp1> ), ( <exp2> ) ) )
-   #translate ( <exp1> >> <exp2> )     => ( hb_bitShift( ( <exp1> ), -( <exp2> ) ) )
+   #translate ( <exp1> HAS <exp2> )    => hb_regexHas( <exp2>, <exp1> )
+   #translate ( <exp1> LIKE <exp2> )   => hb_regexLike( <exp2>, <exp1> )
+   #translate ( <exp1> \<\< <exp2> )   => hb_bitShift( <exp1>, <exp2> )
+   #translate ( <exp1> >> <exp2> )     => hb_bitShift( <exp1>, -( <exp2> ) )
    /* NOTE: These macros can break some valid Harbour/Clipper constructs,
             so they are disabled by default. Enable them with care, or
             even better to switch to use HB_BIT*() functions directly.
             They are optimized by Harbour compiler the same way (and even
             more) as these C-like operators, without any bad side-effects. */
    #if defined( XHB_BITOP )
-      #translate ( <exp1> | <exp2> )      => ( xhb_bitOr( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> & <exp2> )      => ( xhb_bitAnd( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> ^^ <exp2> )     => ( xhb_bitXor( ( <exp1> ), ( <exp2> ) ) )
+      #translate ( <exp1> | <exp2> )      => xhb_bitOr( <exp1>, <exp2> )
+      #translate ( <exp1> & <exp2> )      => xhb_bitAnd( <exp1>, <exp2> )
+      #translate ( <exp1> ^^ <exp2> )     => xhb_bitXor( <exp1>, <exp2> )
    #endif
 
    #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;

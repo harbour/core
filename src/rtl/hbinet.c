@@ -4,10 +4,8 @@
  * Copyright 2002 Giancarlo Niccolai [gian@niccolai.ws]
  *                Ron Pinkas [Ron@RonPinkas.com]
  *                Marcelo Lombardo [marcelo.lombardo@newage-software.com.br]
- *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    updated and ported to Harbour
- *
  * Copyright 2008 Miguel Angel marchuet <miguelangel@marchuet.net>
  *    added dinamic system buffer
  *
@@ -93,8 +91,8 @@ typedef struct
    do \
    { \
       HB_INET_INITIALIZE(); \
-      s = ( PHB_SOCKET_STRUCT ) hb_gcAllocate( sizeof( HB_SOCKET_STRUCT ), &s_gcInetFuncs ); \
-      memset( s, 0, sizeof( HB_SOCKET_STRUCT ) ); \
+      s = ( PHB_SOCKET_STRUCT ) hb_gcAllocate( sizeof( *s ), &s_gcInetFuncs ); \
+      memset( s, 0, sizeof( *s ) ); \
       s->sd         = HB_NO_SOCKET; \
       s->readahead  = HB_INET_BUFFER_LEN; \
       s->iTimeout   = -1; \
@@ -109,15 +107,15 @@ static HB_COUNTER s_initialize = 1;
 
 #if defined( HB_OS_LINUX )
 /* #define HB_INET_LINUX_INTERRUPT     SIGUSR1 + 90 */
-#  ifdef HB_INET_LINUX_INTERRUPT
-#     include <signal.h>
+   #ifdef HB_INET_LINUX_INTERRUPT
+      #include <signal.h>
 
 static void hb_inetLinuxSigusrHandle( int sig )
 {
    /* nothing to do */
    HB_SYMBOL_UNUSED( sig );
 }
-#  endif
+   #endif
 #endif
 
 static void hb_inetErrRT( void )
@@ -230,9 +228,7 @@ static const HB_GC_FUNCS s_gcInetFuncs =
    hb_inetSocketMark
 };
 
-/*****************************************************
- * Socket Initialization
- ***/
+/* Socket Initialization */
 
 static void hb_inetAutoInit( void )
 {
@@ -320,9 +316,7 @@ HB_FUNC( HB_INETCLEANUP )
    hb_socketCleanup();
 }
 
-/*****************************************************
- * Socket Creation and destruction
- ***/
+/* Socket Creation and destruction */
 
 HB_FUNC( HB_INETCREATE )
 {
@@ -372,9 +366,7 @@ HB_FUNC( HB_INETFD )
       hb_inetErrRT();
 }
 
-/************************************************
- * Socket data access & management
- ***/
+/* Socket data access & management */
 
 HB_FUNC( HB_INETSTATUS )
 {
@@ -653,9 +645,7 @@ HB_FUNC( HB_INETSETRCVBUFSIZE )
 
 
 
-/********************************************************************
- * TCP receive and send functions
- ***/
+/* TCP receive and send functions */
 
 static long s_inetRecv( PHB_SOCKET_STRUCT socket, char * buffer, long size,
                         HB_BOOL readahead, HB_MAXINT timeout )
@@ -1100,9 +1090,7 @@ HB_FUNC( HB_INETSENDALL )
 }
 
 
-/*******************************************
- * Name resolution interface functions
- ***/
+/* Name resolution interface functions */
 
 HB_FUNC( HB_INETGETHOSTS )
 {
@@ -1143,9 +1131,8 @@ HB_FUNC( HB_INETGETALIAS )
 }
 
 
-/**********************************************
- * Interface information function
- ****/
+/* Interface information function */
+
 HB_FUNC( HB_INETIFINFO )
 {
    PHB_ITEM pInfo;
@@ -1159,9 +1146,7 @@ HB_FUNC( HB_INETIFINFO )
       hb_reta( 0 );
 }
 
-/**********************************************
- * Server Specific functions
- ****/
+/* Server Specific functions */
 
 static int s_inetBind( PHB_SOCKET_STRUCT socket, const void * pSockAddr, unsigned uiLen )
 {
@@ -1247,22 +1232,21 @@ HB_FUNC( HB_INETACCEPT )
    }
 }
 
-/**********************************************
- * Client specific (connection functions)
- ****/
+/* Client specific (connection functions) */
 
 static void hb_inetConnectInternal( HB_BOOL fResolve )
 {
    const char * szHost = hb_parc( 1 );
    char * szAddr = NULL;
    PHB_SOCKET_STRUCT socket = HB_PARSOCKET( 3 );
-   PHB_ITEM pSocket = NULL;
    int iPort = hb_parni( 2 );
 
    if( szHost == NULL || iPort == 0 || ( socket == NULL && ! HB_ISNIL( 3 ) ) )
       hb_inetErrRT();
    else
    {
+      PHB_ITEM pSocket = NULL;
+
       if( ! socket )
          HB_SOCKET_INIT( socket, pSocket );
       else if( socket->sd != HB_NO_SOCKET )
@@ -1320,9 +1304,7 @@ HB_FUNC( HB_INETCONNECTIP )
    hb_inetConnectInternal( HB_FALSE );
 }
 
-/***********************************************************
- * Datagram functions
- ************************************************************/
+/* Datagram functions */
 
 HB_FUNC( HB_INETDGRAMBIND )
 {
@@ -1479,7 +1461,7 @@ HB_FUNC( HB_INETDGRAMRECV )
       {
          fRepeat = HB_FALSE;
          if( socket->remote )
-            hb_xfree( socket->remote );
+            hb_xfree( socket->remote );  /* TOFIX: double free */
          iMax = hb_socketRecvFrom( socket->sd, buffer, iLen, 0,
                                    &socket->remote, &socket->remotelen,
                                    socket->iTimeout );
@@ -1503,10 +1485,7 @@ HB_FUNC( HB_INETDGRAMRECV )
    }
 }
 
-
-/***********************************************************
- * Generic utility(?) functions
- ************************************************************/
+/* Generic utility(?) functions */
 
 HB_FUNC( HB_INETCRLF )
 {

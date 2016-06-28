@@ -1,7 +1,5 @@
 /*
- * CT3 GET function:
- *
- * GetInput()
+ * CT3 GET function: GetInput()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -54,7 +52,6 @@ FUNCTION GetInput( xVar, nRow, nCol, lSay, xPrompt )
 
    hb_default( @nRow, nCursorRow )
    hb_default( @nCol, nCursorCol )
-   hb_default( @lSay, .F. )
 
    SetPos( nRow, nCol )
    IF xPrompt != NIL
@@ -66,7 +63,7 @@ FUNCTION GetInput( xVar, nRow, nCol, lSay, xPrompt )
    @ nRow, nCol GET xVar
    READ
 
-   IF lSay
+   IF hb_defaultValue( lSay, .F. )
       SetPos( nRow, nCol )
       DevOut( xVar )
    ENDIF

@@ -1,10 +1,27 @@
+#!/usr/bin/env hbmk2
+
 /*
  * This Harbour script is part of the GNU Make-based build system.
  * WARNING: Running it separately is not supported.
  *
  * Copyright 2009-2010 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2003 Przemyslaw Czerpak (druzus/at/priv.onet.pl) (embedded autoinstall bash script)
- * See COPYING.txt for licensing terms.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+ * their website at https://www.gnu.org/).
+ *
  */
 
 #pragma -w3
@@ -13,6 +30,7 @@
 
 #include "directry.ch"
 #include "fileio.ch"
+#include "hbserial.ch"
 
 PROCEDURE Main( ... )
 
@@ -29,12 +47,17 @@ PROCEDURE Main( ... )
    LOCAL lGNU_Tar
    LOCAL cOwner
    LOCAL cGroup
-   LOCAL cSH_Script
    LOCAL nAttr
+   LOCAL cCmd
 
    LOCAL cDynVersionFull
    LOCAL cDynVersionComp
    LOCAL cDynVersionless
+
+   IF HB_ISSTRING( hb_PValue( 1 ) ) .AND. Lower( hb_PValue( 1 ) ) == "-rehbx"
+      mk_extern_core_manual( hb_PValue( 2 ), hb_PValue( 3 ) )
+      RETURN
+   ENDIF
 
    IF Empty( GetEnvC( "HB_PLATFORM" ) ) .OR. ;
       Empty( GetEnvC( "HB_COMPILER" ) ) .OR. ;
@@ -47,7 +70,27 @@ PROCEDURE Main( ... )
 
    /* Detect install build phase */
 
-   IF AScan( hb_AParams(), {| tmp | Lower( tmp ) == "install" } ) > 0
+   IF hb_AScanI( hb_AParams(), "install",,, .T. ) > 0
+
+      IF GetEnvC( "HB_BUILD_PKG" ) == "yes"
+
+         /* Display repository timestamp */
+         mk_hb_vfTimeSet()
+
+         /* Binaries built using the GNU Make system are not
+            timestamped after build, so we do it here. This
+            also works for all C compilers, not just recent gcc */
+         OutStd( "! Timestamping generated binaries..." + hb_eol() )
+
+         FOR EACH tmp IN { ;
+            GetEnvC( "HB_INSTALL_BIN" ), ;
+            GetEnvC( "HB_INSTALL_DYN" ), ;
+            GetEnvC( "HB_INSTALL_LIB" ) }
+            FOR EACH tmp1 IN hb_vfDirectory( tmp + hb_ps() + hb_osFileMask() )
+               mk_hb_vfTimeSet( tmp + hb_ps() + tmp1[ F_NAME ] )
+            NEXT
+         NEXT
+      ENDIF
 
       /* Installing some misc files */
       tmp := GetEnvC( "HB_INSTALL_DOC" )
@@ -60,12 +103,13 @@ PROCEDURE Main( ... )
             OutStd( "! Copying root documents..." + hb_eol() )
 
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
-               FOR EACH aFile IN Directory( "Change*" )
-                  mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
+               FOR EACH aFile IN hb_vfDirectory( "Change*" )
+                  mk_hb_vfCopyFile( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES.txt", "" ), .T.,, .T. )
                NEXT
 
-               mk_hb_FCopy( "COPYING.txt", tmp + hb_ps() )
-               mk_hb_FCopy( "README.md", tmp + hb_ps() )
+               mk_hb_vfCopyFile( "LICENSE.txt", tmp + hb_ps(), .T.,, .T. )
+               mk_hb_vfCopyFile( "CONTRIBUTING.md", tmp + hb_ps(), .T.,, .T. )
+               mk_hb_vfCopyFile( "README.md", tmp + hb_ps(), .T.,, .T. )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
@@ -80,10 +124,8 @@ PROCEDURE Main( ... )
          /* public Harbour scripts */
          FOR EACH tmp IN { ;
             "bin/3rdpatch.hb", ;
-            "bin/check.hb", ;
-            "bin/commit.hb", ;
-            "bin/harbour.ucf" }
-            mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps() )
+            "bin/commit.hb" }
+            mk_hb_vfCopyFile( tmp, GetEnvC( "HB_INSTALL_BIN" ) + hb_ps(),,, .T. )
          NEXT
       ENDIF
 
@@ -92,7 +134,7 @@ PROCEDURE Main( ... )
          OutStd( "! Copying *nix config files..." + hb_eol() )
 
          IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_ETC" ) ) )
-            mk_hb_FCopy( "src/rtl/gtcrs/hb-charmap.def", GetEnvC( "HB_INSTALL_ETC" ) + hb_ps(), .T. )
+            mk_hb_vfCopyFile( "src/rtl/gtcrs/hb-charmap.def", GetEnvC( "HB_INSTALL_ETC" ) + hb_ps(),, .T. )
          ELSE
             OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_ETC" ) ) + hb_eol() )
          ENDIF
@@ -102,13 +144,13 @@ PROCEDURE Main( ... )
 
             OutStd( "! Creating Linux ld config file..." + hb_eol() )
 
-            tmp := GetEnvC( "HB_INSTALL_ETC" ) + hb_ps() + ".." + hb_ps() + "ld.so.conf.d"
+            tmp := GetEnvC( "HB_INSTALL_ETC" ) + "/../ld.so.conf.d"
             IF hb_DirBuild( hb_DirSepToOS( tmp ) )
                tmp1 := GetEnvC( "HB_INSTALL_DYN" )
-               IF Left( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) ) == GetEnvC( "HB_INSTALL_PKG_ROOT" )
+               IF hb_LeftEq( tmp1, GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
                   tmp1 := SubStr( tmp1, Len( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + 1 )
                ENDIF
-               hb_MemoWrit( tmp + hb_ps() + "harbour.conf", tmp1 + hb_eol() )
+               mk_hb_MemoWrit( hb_DirSepToOS( tmp + "/harbour.conf" ), tmp1 + hb_eol() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
             ENDIF
@@ -119,11 +161,13 @@ PROCEDURE Main( ... )
 
          OutStd( "! Copying *nix man files..." + hb_eol() )
 
-         IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) ) + hb_ps() + "man1" )
+         IF hb_DirBuild( hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) + "/man1" ) )
             FOR EACH tmp IN { ;
                "src/main/harbour.1", ;
                "src/pp/hbpp.1" }
-               mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
+               mk_hb_vfCopyFile( ;
+                  hb_DirSepToOS( tmp ), ;
+                  hb_DirSepToOS( GetEnvC( "HB_INSTALL_MAN" ) + "/man1/" ),, .T. )
             NEXT
          ELSE
             OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", GetEnvC( "HB_INSTALL_MAN" ) ) + hb_eol() )
@@ -132,7 +176,7 @@ PROCEDURE Main( ... )
 
       IF !( GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos|cygwin" ) .AND. ;
          ! Empty( GetEnvC( "HB_INSTALL_DYN" ) ) .AND. ;
-         hb_FileExists( hb_DirSepToOS( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) )
+         hb_vfExists( hb_DirSepToOS( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) )
 
          OutStd( "! Creating dynamic lib symlinks..." + hb_eol() )
 
@@ -140,18 +184,18 @@ PROCEDURE Main( ... )
          cDynVersionComp := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POSC" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXC" )
          cDynVersionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" )                               + GetEnvC( "HB_DYNLIB_EXT" )
 
-         mk_hb_FLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionComp )
-         mk_hb_FLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
+         mk_hb_vfLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionComp )
+         mk_hb_vfLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
 
          DO CASE
-         CASE EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
-              EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib64/harbour" ) .OR. ;
-              EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
-              EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
+         CASE hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
+              hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib64/harbour" ) .OR. ;
+              hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
+              hb_RightEq( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
 
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionless )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionComp )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionFull )
+            mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionless )
+            mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionComp )
+            mk_hb_vfLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) + "/../" ) + cDynVersionFull )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
             /* TOFIX: Rewrite this in .prg:
@@ -168,16 +212,16 @@ PROCEDURE Main( ... )
 
       /* Creating language files */
 
-      IF ! Empty( GetEnvC( "HB_INSTALL_BIN" ) ) .AND. ;
+      IF ! Empty( GetEnvC( "HB_INSTALL_DOC" ) ) .AND. ;
          ! GetEnvC( "HB_BUILD_PARTS" ) == "lib"
 
-         OutStd( "! Making core translation (.hbl) files..." + hb_eol() )
+         OutStd( "! Creating core translation (.hbl) files..." + hb_eol() )
 
-         FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
+         FOR EACH tmp IN hb_vfDirectory( "utils" + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
-               FOR EACH aFile IN Directory( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/*.po" ) )
+               FOR EACH aFile IN hb_vfDirectory( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/*.po" ) )
                   mk_hbl( hb_DirSepToOS( "utils/" + tmp[ F_NAME ] + "/po/" + aFile[ F_NAME ] ), ;
-                     hb_DirSepToOS( GetEnvC( "HB_INSTALL_BIN" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
+                     hb_DirSepToOS( GetEnvC( "HB_INSTALL_DOC" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
                NEXT
             ENDIF
          NEXT
@@ -194,52 +238,34 @@ PROCEDURE Main( ... )
 
       /* Creating compressed archives of available contrib functions */
 
-      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_BIN" ) )
+      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_CONTRIB" ) )
 
          OutStd( "! Compiling list of contrib functions (.hbr)..." + hb_eol() )
 
          mk_hbr( tmp )
       ENDIF
 
-      /* Creating install packages */
+      /* Creating release packages */
 
       IF GetEnvC( "HB_BUILD_PKG" ) == "yes" .AND. ;
-         ! Empty( GetEnvC( "HB_TOP" ) )
+         ! Empty( GetEnvC( "HB_TOP" ) ) .AND. ;
+         !( GetEnvC( "_HB_BUILD_PKG_ARCHIVE" ) == "no" )
 
          IF GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos"
 
-            tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".zip"
+            OutStd( "! Creating Harbour release package..." + hb_eol() )
 
-            OutStd( "! Making Harbour .zip install package: '" + tmp + "'" + hb_eol() )
+            hb_vfErase( tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".7z" )
 
-            FErase( tmp )
-
-            /* NOTE: Believe it or not this is the official method to zip a different dir with subdirs
-                     without including the whole root path in filenames; you have to 'cd' into it.
-                     Even with zip 3.0. For this reason we need absolute path in HB_TOP. There is also
-                     no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
-                     first to avoid mixing in an existing .zip file. [vszakats] */
-
-            cOldDir := hb_cwd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
-
-            mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_ZIP" ) ) + "zip" + ;
-               " -q -9 -X -r -o" + ;
+            mk_hb_processRun( FNameEscape( hb_DirSepToOS( GetEnvC( "HB_DIR_7Z" ) ) + "7za" ) + ;
+               " a -bd -r -mx" + ;
+               " -xr!*.tds -xr!*.exp" + ;  /* for win/bcc */
                " " + FNameEscape( tmp ) + ;
-               " . -i " + FNameEscape( GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" ) + ;
-               " -x *.tds -x *.exp" )
+               " " + hb_DirSepAdd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) ) + GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" )
 
-            hb_cwd( cOldDir )
+            mk_hb_vfTimeSet( tmp )
 
-            IF GetEnvC( "HB_PLATFORM" ) $ "win|wce"
-
-               tmp := GetEnvC( "HB_TOP" ) + hb_ps() + GetEnvC( "HB_PKGNAME" ) + ".exe"
-
-               OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_eol() )
-
-               mk_hb_processRun( hb_DirSepToOS( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" + ;
-                  " -V2" + ;
-                  " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
-            ENDIF
+            OutStd( hb_StrFormat( "! Created Harbour release package: '%1$s' (%2$d bytes)", tmp, hb_vfSize( tmp ) ) + hb_eol() )
          ELSE
             cBin_Tar := "tar"
             lGNU_Tar := .T.
@@ -248,7 +274,7 @@ PROCEDURE Main( ... )
             ELSEIF Empty( query_stdout( "tar --version" ) )
                cBin_Tar := ""
             ELSEIF "bsdtar" $ query_stdout( "tar --version" )
-               /* tar is mapped to bsdtar starting OS X 10.6 */
+               /* tar is mapped to bsdtar starting macOS 10.6 */
                lGNU_Tar := .F.
             ENDIF
 
@@ -261,9 +287,9 @@ PROCEDURE Main( ... )
                cTar_NameExt := cTar_Name + iif( GetEnvC( "HB_PLATFORM" ) == "dos", ".tgz", ".bin.tar.gz" )
                cTar_Path := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_NameExt
 
-               OutStd( "! Making Harbour tar install package: '" + cTar_Path + "'" + hb_eol() )
+               OutStd( hb_StrFormat( "! Creating Harbour tar release package: '%1$s'", cTar_Path ) + hb_eol() )
 
-               FErase( cTar_Path )
+               hb_vfErase( cTar_Path )
 
                cOwner := "root"
                cGroup := iif( ;
@@ -280,39 +306,27 @@ PROCEDURE Main( ... )
                   iif( lGNU_Tar, " --owner=" + cOwner + " --group=" + cGroup, "" ) + ;
                   " ." )
 
+               mk_hb_vfTimeSet( cTar_Path )
+
                hb_cwd( cOldDir )
 
                IF !( GetEnvC( "HB_PLATFORM" ) == "dos" )
 
                   tmp := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
 
-                  OutStd( "! Making Harbour tar installer package: '" + tmp + "'" + hb_eol() )
+                  OutStd( hb_StrFormat( "! Creating Harbour tar installer release package: '%1$s'", tmp ) + hb_eol() )
 
-                  /* In the generated script always use tar because we can't be sure
+                  /* In the generated script always use tar because we cannot be sure
                      if cBin_Tar exists in the installation environment */
-                  cSH_Script := ;
-                     '#!/bin/sh' + Chr( 10 ) + ;
-                     'if [ "\$1" = "--extract" ]; then' + Chr( 10 ) + ;
-                     '   tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" > "' + cTar_NameExt + '"' + Chr( 10 ) + ;
-                     '   exit' + Chr( 10 ) + ;
-                     'fi' + Chr( 10 ) + ;
-                     'if [ \`id -u\` != 0 ]; then' + Chr( 10 ) + ;
-                     '   echo "This package has to be installed from root account."' + Chr( 10 ) + ;
-                     '   exit 1' + Chr( 10 ) + ;
-                     'fi' + Chr( 10 ) + ;
-                     'echo "Do you want to install Harbour (y/n)"' + Chr( 10 ) + ;
-                     'read ASK' + Chr( 10 ) + ;
-                     'if [ "\${ASK}" != "y" ] && [ "\${ASK}" != "Y" ]; then' + Chr( 10 ) + ;
-                     '   exit 1' + Chr( 10 ) + ;
-                     'fi' + Chr( 10 ) + ;
-                     '(tail -c ' + hb_ntos( hb_FSize( cTar_Path ) ) + ' "\$0" | gzip -cd | (cd /;tar xvpf -)) ' + iif( GetEnvC( "HB_PLATFORM" ) == "linux", "&& ldconfig", "" ) + Chr( 10 ) + ;
-                     'exit \$?' + Chr( 10 ) + ;
-                     'HB_INST_EOF' + Chr( 10 )
+                  mk_hb_MemoWrit( tmp, ;
+                     hb_StrFormat( sfx_tgz_sh(), ;
+                        hb_vfSize( cTar_Path ), ;
+                        cTar_NameExt, ;
+                        iif( GetEnvC( "HB_PLATFORM" ) == "linux", " && ldconfig", "" ) ) + ;
+                     hb_MemoRead( cTar_Path ) )
 
-                  hb_MemoWrit( tmp, cSH_Script + hb_MemoRead( cTar_Path ) )
-
-                  hb_FGetAttr( tmp, @nAttr )
-                  hb_FSetAttr( tmp, hb_bitOr( nAttr, HB_FA_XOTH ) )
+                  hb_vfAttrGet( tmp, @nAttr )
+                  hb_vfAttrSet( tmp, hb_bitOr( nAttr, HB_FA_XUSR, HB_FA_XGRP, HB_FA_XOTH ) )
                ENDIF
             ELSE
                OutStd( "! Error: Cannot find 'tar' tool" + hb_eol() )
@@ -323,38 +337,137 @@ PROCEDURE Main( ... )
       /* Executing user postinst configuration script */
 
       IF ! Empty( tmp := GetEnvC( "HB_INSTALL_SCRIPT" ) )
-
          mk_hb_processRun( tmp )
       ENDIF
-
    ELSE
       /* Regenerating extern headers */
 
       mk_extern_core()
    ENDIF
 
-   OutStd( "! postinst script finished" + ;
-      iif( nErrorLevel == 0, "", " with with errorlevel=" + hb_ntos( nErrorLevel ) ) + hb_eol() )
+   IF Empty( GetEnvC( "HB_HOST_BIN" ) ) .AND. ;
+      GetEnvC( "HB_HOST_PLAT" ) == GetEnvC( "HB_PLATFORM" )
+
+      IF nErrorLevel == 0
+         FOR EACH tmp IN hb_ATokens( GetEnvC( "HB_BUILD_POSTRUN" ),, .T. )
+            IF ! Empty( tmp )
+               IF Left( tmp, 1 ) + Right( tmp, 1 ) == '""' .OR. ;
+                  Left( tmp, 1 ) + Right( tmp, 1 ) == "''"
+                  tmp := SubStr( tmp, 2, Len( tmp ) - 2 )
+               ENDIF
+
+               cCmd := ""
+               FOR EACH tmp1 IN hb_ATokens( tmp,, .T. )
+                  IF tmp1:__enumIsFirst()
+                     cCmd += FNameEscape( hb_DirSepToOS( tmp1 ) )
+                  ELSE
+                     cCmd += " " + tmp1
+                  ENDIF
+               NEXT
+
+               OutStd( "! Running post command..." + hb_eol() )
+
+               cOldDir := hb_cwd( GetEnvC( "HB_HOST_BIN_DIR" ) )
+               mk_hb_processRun( cCmd )
+               hb_cwd( cOldDir )
+
+               OutStd( hb_eol() )
+            ENDIF
+         NEXT
+      ENDIF
+
+      OutStd( hb_StrFormat( "! Built: %1$s using C compiler: %2$s", Version(), hb_Compiler() ) + hb_eol() )
+   ENDIF
+
+   IF nErrorLevel == 0
+      OutStd( "! postinst script finished" + hb_eol() )
+   ELSE
+      OutStd( hb_StrFormat( "! postinst script finished with errorlevel=%1$d", nErrorLevel ) + hb_eol() )
+   ENDIF
 
    ErrorLevel( nErrorLevel )
 
    RETURN
+
+STATIC FUNCTION mk_hb_vfTimeSet( cFileName )
+
+   STATIC s_tVCS
+
+   LOCAL cStdOut, cStdErr
+
+   IF s_tVCS == NIL
+      IF hb_processRun( "git log -1 --format=format:%ci",, @cStdOut, @cStdErr ) != 0
+         cStdOut := hb_ATokens( hb_MemoRead( "include" + hb_ps() + "_repover.txt" ), .T. )
+         cStdOut := iif( Len( cStdOut ) >= 2, cStdOut[ 2 ], "" )
+      ENDIF
+
+      s_tVCS := hb_CToT( cStdOut, "yyyy-mm-dd", "hh:mm:ss" )
+
+      IF ! Empty( s_tVCS )
+         s_tVCS -= ( ( ( iif( SubStr( cStdOut, 21, 1 ) == "-", -1, 1 ) * 60 * ;
+                       ( Val( SubStr( cStdOut, 22, 2 ) ) * 60 + ;
+                         Val( SubStr( cStdOut, 24, 2 ) ) ) ) - hb_UTCOffset() ) / 86400 )
+      ENDIF
+
+      OutStd( hb_StrFormat( "! Repository timestamp (local): %1$s" + ;
+         iif( Empty( s_tVCS ), "(not available)", hb_TToC( s_tVCS, "yyyy-mm-dd", "hh:mm:ss" ) ) ) + hb_eol() )
+   ENDIF
+
+   RETURN ;
+      ! HB_ISSTRING( cFileName ) .OR. ;
+      !( GetEnvC( "HB_BUILD_PKG" ) == "yes" ) .OR. ;
+      Empty( s_tVCS ) .OR. ;
+      hb_vfTimeSet( cFileName, s_tVCS )
+
+STATIC FUNCTION mk_hb_MemoWrit( cFileName, cContent )
+
+   IF hb_MemoWrit( cFileName, cContent )
+      mk_hb_vfTimeSet( cFileName )
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
+
+STATIC FUNCTION sfx_tgz_sh()
+#pragma __cstream | RETURN %s
+#!/bin/sh
+if [ "$1" = '--extract' ]; then
+   tail -c %1$d "$0" > "%2$s"
+   exit
+fi
+if [ "$(id -u)" != 0 ]; then
+   echo 'This package has to be installed from root account.'
+   exit 1
+fi
+echo 'Do you want to install Harbour (y/n)'
+read ASK
+if [ "${ASK}" != 'y' ] && [ "${ASK}" != 'Y' ]; then
+   exit 1
+fi
+( tail -c %1$d "$0" | gzip -cd | ( cd /; tar xvpf - ) )%3$s
+exit $?
+HB_INST_EOF
+#pragma __endtext
 
 STATIC FUNCTION mk_hbl( cIn, cOut )
 
    LOCAL cErrorMsg
    LOCAL aTrans
 
-   aTrans := __i18n_potArrayLoad( cIn, @cErrorMsg )
-   IF aTrans != NIL
-      IF hb_MemoWrit( cOut, hb_i18n_SaveTable( __i18n_hashTable( __i18n_potArrayToHash( aTrans, .F. ) ) ) )
-         OutStd( "! Created " + cOut + " <= " + cIn + hb_eol() )
+   /* do not create .hbl for the base language */
+   IF SubStr( hb_FNameExt( hb_FNameName( cIn ) ), 2 ) == "en"
+      RETURN .T.
+   ENDIF
+
+   IF ( aTrans := __i18n_potArrayLoad( cIn, @cErrorMsg ) ) != NIL
+      IF mk_hb_MemoWrit( cOut, hb_i18n_SaveTable( __i18n_hashTable( __i18n_potArrayToHash( aTrans, .F. ) ) ) )
+         OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cOut, cIn ) + hb_eol() )
          RETURN .T.
       ELSE
-         OutErr( "! Error: Cannot create file: " + cOut + hb_eol() )
+         OutErr( hb_StrFormat( "! Error: Cannot create file: %1$s", cOut ) + hb_eol() )
       ENDIF
    ELSE
-      OutErr( "! Error: Loading translation: " + cIn + " (" + cErrorMsg + ")" + hb_eol() )
+      OutErr( hb_StrFormat( "! Error: Loading translation: %1$s (%2$s)", cIn, cErrorMsg ) + hb_eol() )
    ENDIF
 
    RETURN .F.
@@ -374,7 +487,8 @@ STATIC FUNCTION mk_hbd_core( cDirSource, cDirDest )
    IF ! Empty( aEntry )
       cName := hb_DirSepAdd( hb_DirSepToOS( cDirDest ) ) + cName + ".hbd"
       IF __hbdoc_SaveHBD( cName, aEntry )
-         OutStd( "! Created " + cName + " <= " + cDirSource + hb_eol() )
+         mk_hb_vfTimeSet( cName )
+         OutStd( hb_StrFormat( "! Created %1$s <= %2$s", cName, cDirSource ) + hb_eol() )
          RETURN .T.
       ELSE
          OutErr( hb_StrFormat( "! Error: Saving '%1$s'", cName ) + hb_eol() )
@@ -392,12 +506,21 @@ STATIC FUNCTION mk_hb_processRun( cCommand, ... )
 STATIC FUNCTION FNameEscape( cFileName )
    RETURN '"' + cFileName + '"'
 
-/* Like hb_FCopy(), but accepts dir as target and can set attributes */
-STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
+STATIC FUNCTION EOLConv( cFile )
+
+   cFile := StrTran( cFile, Chr( 13 ) + Chr( 10 ), Chr( 10 ) )
+
+   RETURN iif( GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos", ;
+      StrTran( cFile, Chr( 10 ), Chr( 13 ) + Chr( 10 ) ), ;
+      cFile )
+
+/* Like hb_vfCopyFile(), but accepts dir as target, can set attributes
+   and translates EOL to target platform */
+STATIC PROCEDURE mk_hb_vfCopyFile( cSrc, cDst, lEOL, l644, lTS )
 
    LOCAL cDir, cName, cExt
-
-   hb_default( @l644, .F. )
+   LOCAL cFile
+   LOCAL tDate
 
    cSrc := hb_DirSepToOS( cSrc )
    cDst := hb_DirSepToOS( cDst )
@@ -408,14 +531,20 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
    ENDIF
    cDst := hb_FNameMerge( cDir, cName, cExt )
 
-   IF hb_FCopy( cSrc, cDst ) == 0
-#if 0
-      OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
-#endif
-      IF l644
-         hb_FSetAttr( cDst, hb_bitOr( HB_FA_RUSR, HB_FA_WUSR, HB_FA_RGRP, HB_FA_ROTH ) )
+   IF ! HB_ISNULL( cFile := hb_MemoRead( cSrc ) ) .AND. ;
+      hb_MemoWrit( cDst, iif( hb_defaultValue( lEOL, .F. ), EOLConv( cFile ), cFile ) )
+
+      IF hb_defaultValue( lTS, .F. )
+         mk_hb_vfTimeSet( cDst )
+      ELSE
+         hb_vfTimeGet( cSrc, @tDate )
+         hb_vfTimeSet( cDst, tDate )
+      ENDIF
+      IF hb_defaultValue( l644, .F. )
+         hb_vfAttrSet( cDst, hb_bitOr( HB_FA_WUSR, HB_FA_RUSR, HB_FA_RGRP, HB_FA_ROTH ) )
       ENDIF
 #if 0
+      OutStd( hb_StrFormat( "! Copied: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
    ELSE
       OutStd( hb_StrFormat( "! Error: Copying %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
 #endif
@@ -423,21 +552,21 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
 
    RETURN
 
-/* Like hb_FLinkSym(), but with feedback */
-STATIC PROCEDURE mk_hb_FLinkSym( cDst, cSrc )
+/* Like hb_vfLinkSym(), but with feedback */
+STATIC PROCEDURE mk_hb_vfLinkSym( cDst, cSrc )
 
-   FErase( cSrc ) /* remove old links if any */
-   IF hb_FLinkSym( cDst, cSrc ) == 0
+   hb_vfErase( cSrc ) /* remove old links if any */
+   IF hb_vfLinkSym( cDst, cSrc ) != F_ERROR
       OutStd( hb_StrFormat( "! Symlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
    ELSE
       OutStd( hb_StrFormat( "! Error: Creating symlink %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
       IF FError() == 5 .AND. Empty( hb_FNameDir( cDst ) )
          cDst := hb_FnameMerge( hb_FNameDir( cSrc ), cDst )
-         IF hb_FLink( cDst, cSrc ) == 0
+         IF hb_vfLink( cDst, cSrc ) != F_ERROR
             OutStd( hb_StrFormat( "! Hardlink: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
          ELSE
             OutStd( hb_StrFormat( "! Error: Creating hardlink %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
-            IF hb_FCopy( cDst, cSrc ) == 0
+            IF hb_vfCopyFile( cDst, cSrc ) != F_ERROR
                OutStd( hb_StrFormat( "! Copyfile: %1$s <= %2$s", cDst, cSrc ) + hb_eol() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Copying file %1$s <= %2$s (%3$d)", cDst, cSrc, FError() ) + hb_eol() )
@@ -448,18 +577,15 @@ STATIC PROCEDURE mk_hb_FLinkSym( cDst, cSrc )
 
    RETURN
 
-STATIC FUNCTION EndsWith( cString, cEnd )
+STATIC FUNCTION hb_RightEq( cString, cEnd )
    RETURN Right( cString, Len( cEnd ) ) == cEnd
 
 STATIC FUNCTION query_stdout( cName )
 
-   LOCAL cStdOut
-   LOCAL cStdErr
-   LOCAL nRetVal
+   LOCAL cStdOut, cStdErr
 
-   nRetVal := hb_processRun( cName,, @cStdOut, @cStdErr )
-
-   RETURN iif( nRetVal == 0, AllTrim( StrTran( cStdOut, Chr( 10 ), " " ) ), "" )
+   RETURN iif( hb_processRun( cName,, @cStdOut, @cStdErr ) == 0, ;
+      AllTrim( StrTran( cStdOut, Chr( 10 ), " " ) ), "" )
 
 STATIC FUNCTION query_rpm( cName, cID )
 
@@ -483,11 +609,21 @@ STATIC FUNCTION unix_name()
    CASE ! Empty( tmp := query_rpm( "suse-release"        , "sus" ) ) ; RETURN tmp
    CASE ! Empty( tmp := query_rpm( "openSUSE-release"    , "sus" ) ) ; RETURN tmp
    /* TODO: Rewrite this in Harbour */
-   CASE hb_FileExists( "/etc/pld-release" )
-      RETURN "" /* cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/'` */
+   CASE hb_vfExists( "/etc/pld-release" )
+      RETURN "" /* cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/' */
    ENDCASE
 
    RETURN StrTran( Lower( query_stdout( "uname -s" ) ), " ", "_" )
+
+STATIC PROCEDURE mk_extern_core_manual( cDynLib, cHarbourHBX )
+
+   LOCAL aExtern
+
+   IF ( aExtern := __hb_extern_get_list( hb_DirSepToOS( cDynLib ) ) ) != NIL
+      __hb_extern_gen( aExtern, hb_DirSepToOS( hb_defaultValue( cHarbourHBX, "../include/harbour.hbx" ) ) )
+   ENDIF
+
+   RETURN
 
 STATIC FUNCTION mk_extern_core()
 
@@ -523,7 +659,7 @@ STATIC FUNCTION GetEnvC( cEnvVar )
 
    RETURN s_hEnvCache[ cEnvVar ] := GetEnv( cEnvVar )
 
-PROCEDURE mk_hbr( cDestDir )
+STATIC PROCEDURE mk_hbr( cDestDir )
 
    LOCAL hAll := { => }
 
@@ -531,16 +667,16 @@ PROCEDURE mk_hbr( cDestDir )
    LOCAL aFile
    LOCAL cFileName
 
-   FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
+   FOR EACH aFile IN hb_vfDirectory( cDir + hb_osFileMask(), "D" )
       IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
       ELSEIF "D" $ aFile[ F_ATTR ]
-         IF hb_FileExists( cFileName := cDir + aFile[ F_NAME ] + hb_ps() + aFile[ F_NAME ] + ".hbx" )
+         IF hb_vfExists( cFileName := cDir + aFile[ F_NAME ] + hb_ps() + aFile[ F_NAME ] + ".hbx" )
             LoadHBX( cFileName, hAll )
          ENDIF
       ENDIF
    NEXT
 
-   hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_ZCompress( hb_Serialize( hAll ) ) )
+   mk_hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_Serialize( hAll, HB_SERIALIZE_COMPRESS ) )
 
    RETURN
 
@@ -554,7 +690,7 @@ STATIC FUNCTION LoadHBX( cFileName, hAll )
    LOCAL aDynamic := {}
    LOCAL cFilter
 
-   IF ! Empty( cFile := hb_MemoRead( cFileName ) )
+   IF ! HB_ISNULL( cFile := hb_MemoRead( cFileName ) )
 
       FOR EACH cFilter IN { ;
          "^DYNAMIC ([a-zA-Z0-9_]*)$", ;
@@ -590,6 +726,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
    LOCAL pRegex
    LOCAL aResult
    LOCAL tmp
+   LOCAL hFile
 
    LOCAL cCommand
    LOCAL cRegex := "[\s]_?HB_FUN_([A-Z0-9_]*)[\s]"
@@ -615,14 +752,22 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
 
    IF ! Empty( cCommand ) .AND. ;
       ! Empty( cRegex )
-      IF hb_FileExists( cInputName )
+
+      IF hb_vfExists( cInputName )
+
          cCommand := StrTran( cCommand, "{I}", cInputName )
+
          IF "{T}" $ cCommand
-            FClose( hb_FTempCreateEx( @cTempFile,,, ".tmp" ) )
+            IF ( hFile := hb_vfTempFile( @cTempFile,,, ".tmp" ) ) != NIL
+               hb_vfClose( hFile )
+            ENDIF
             cCommand := StrTran( cCommand, "{T}", cTempFile )
+         ELSE
+            cTempFile := ""
          ENDIF
+
          IF hb_processRun( cCommand,, @cStdOut, @cStdErr ) == 0
-            IF ! Empty( cTempFile )
+            IF ! HB_ISNULL( cTempFile )
                cStdOut := MemoRead( cTempFile )
             ENDIF
             IF ! Empty( pRegex := hb_regexComp( cRegex, .T., .T. ) )
@@ -636,22 +781,32 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
                      hExtern[ tmp[ 2 ] ] := NIL
                   ENDIF
                NEXT
-               tmp := hb_cdpSelect( "EN" )
-               ASort( aExtern,,, {| tmp, tmp1 | tmp < tmp1 } )
+               tmp := hb_cdpSelect( "cp437" )
+               ASort( aExtern )
                hb_cdpSelect( tmp )
+
+               /* Filter out Cl*pper short names (not foolproof method,
+                  but works correctly for all practical cases). */
+               FOR tmp := Len( aExtern ) TO 2 STEP -1
+                  IF Len( aExtern[ tmp ] ) > 10 .AND. ;
+                     Len( aExtern[ tmp - 1 ] ) == 10 .AND. ;
+                     ! hb_LeftEqI( aExtern[ tmp - 1 ], "hb_" ) .AND. ;
+                     hb_LeftEqI( aExtern[ tmp ], aExtern[ tmp - 1 ] )
+                     hb_ADel( aExtern, --tmp, .T. )
+                  ENDIF
+               NEXT
             ENDIF
          ENDIF
-         IF ! Empty( cTempFile )
-            FErase( cTempFile )
+         IF ! HB_ISNULL( cTempFile )
+            hb_vfErase( cTempFile )
          ENDIF
       ENDIF
    ENDIF
 
    RETURN aExtern
 
-STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude, /* @ */ hDynamic )
+STATIC PROCEDURE __hb_extern_get_exception_list( cFile, /* @ */ aInclude, /* @ */ aExclude, /* @ */ hDynamic )
 
-   LOCAL cFile
    LOCAL pRegex
    LOCAL tmp
 
@@ -659,7 +814,7 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
    aExclude := {}
    hDynamic := { => }
 
-   IF ! Empty( cFile := MemoRead( cInputName ) )
+   IF ! HB_ISNULL( cFile )
       IF ! Empty( pRegex := hb_regexComp( "[\s]" + _HB_FUNC_INCLUDE_ + "[\s]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
             AAdd( aInclude, tmp[ 2 ] )
@@ -691,13 +846,16 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
 
    LOCAL cSelfName := _HB_SELF_PREFIX + Upper( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
 
-   LOCAL cLine := "/* " + Replicate( "-", 68 ) + hb_eol()
-   LOCAL cHelp := ;
-      " *          Syntax: // HB_FUNC_INCLUDE <func>" + hb_eol() + ;
-      " *                  // HB_FUNC_EXCLUDE <func>" + hb_eol() + ;
-      " */" + hb_eol()
+   LOCAL cFile := MemoRead( cOutputName )
+   LOCAL cEOL := hb_StrEOL( cFile )
 
-   __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
+   LOCAL cLine := "/* " + Replicate( "-", 68 ) + cEOL
+   LOCAL cHelp := ;
+      " *          Syntax: // HB_FUNC_INCLUDE <func>" + cEOL + ;
+      " *                  // HB_FUNC_EXCLUDE <func>" + cEOL + ;
+      " */" + cEOL
+
+   __hb_extern_get_exception_list( cFile, @aInclude, @aExclude, @hDynamic, @cEOL )
 
    cExtern := ""
 
@@ -706,49 +864,49 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
 
       cExtern += ;
          cLine + ;
-         " * NOTE: You can add manual override which functions to include or" + hb_eol() + ;
-         " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol() + ;
+         " * NOTE: You can add manual override which functions to include or" + cEOL + ;
+         " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + cEOL + ;
          cHelp
    ELSE
 
       cExtern += ;
          cLine + ;
-         " * NOTE: Following comments are control commands for the generator." + hb_eol() + ;
-         " *       Do not edit them unless you know what you are doing." + hb_eol() + ;
+         " * NOTE: Following comments are control commands for the generator." + cEOL + ;
+         " *       Do not edit them unless you know what you are doing." + cEOL + ;
          cHelp
 
       IF ! Empty( aInclude )
-         cExtern += hb_eol()
+         cExtern += cEOL
          FOR EACH tmp IN aInclude
-            cExtern += "// " + _HB_FUNC_INCLUDE_ + " " + tmp + hb_eol()
+            cExtern += "// " + _HB_FUNC_INCLUDE_ + " " + tmp + cEOL
          NEXT
       ENDIF
       IF ! Empty( aExclude )
-         cExtern += hb_eol()
+         cExtern += cEOL
          FOR EACH tmp IN aExclude
-            cExtern += "// " + _HB_FUNC_EXCLUDE_ + " " + tmp + hb_eol()
+            cExtern += "// " + _HB_FUNC_EXCLUDE_ + " " + tmp + cEOL
          NEXT
       ENDIF
    ENDIF
 
    cExtern += ;
-      hb_eol() + ;
+      cEOL + ;
       cLine + ;
-      " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol() + ;
-      " *          Regenerate with HB_REBUILD_EXTERN=yes build option." + hb_eol() + ;
-      " */" + hb_eol() + ;
-      hb_eol() + ;
-      "#ifndef " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
-      "#define " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol() + ;
-      hb_eol() + ;
-      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol() + ;
-      "   ANNOUNCE " + cSelfName + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol() + ;
-      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
-      "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol()
+      " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + cEOL + ;
+      " *          Regenerate with HB_REBUILD_EXTERN=yes build option." + cEOL + ;
+      " */" + cEOL + ;
+      cEOL + ;
+      "#ifndef " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + cEOL + ;
+      "#define " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + cEOL + ;
+      cEOL + ;
+      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + cEOL + ;
+      "   ANNOUNCE " + cSelfName + cEOL + ;
+      "#endif" + cEOL + ;
+      cEOL + ;
+      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + cEOL + ;
+      "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + cEOL + ;
+      "#endif" + cEOL + ;
+      cEOL
 
    IF Empty( aInclude )
       aExtern := aFuncList
@@ -764,16 +922,16 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
       IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp, .T. ) .AND. ;
          ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp, .T. ) .AND. ;
          AScan( aExclude, {| flt | hb_WildMatchI( flt, tmp, .T. ) } ) == 0
-         cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + hb_eol()
+         cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + cEOL
       ENDIF
    NEXT
 
    cExtern += ;
-      hb_eol() + ;
-      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol() + ;
-      "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol() + ;
-      "#endif" + hb_eol() + ;
-      hb_eol() + ;
-      "#endif" + hb_eol()
+      cEOL + ;
+      "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + cEOL + ;
+      "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + cEOL + ;
+      "#endif" + cEOL + ;
+      cEOL + ;
+      "#endif" + cEOL
 
    RETURN hb_MemoWrit( cOutputName, cExtern )

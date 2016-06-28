@@ -3,6 +3,7 @@
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (hb_F_Eof())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,16 +46,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
- *    hb_F_Eof()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapigt.h"
@@ -81,7 +72,7 @@ HB_FUNC( HB_POINTER2STRING )
    else if( HB_IS_LONG( pPointer ) && pLen )
       hb_retclen_const( ( char * ) hb_itemGetNL( pPointer ), hb_itemGetNS( pLen ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 2, hb_paramError( 1 ), hb_paramError( 2 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( HB_STRING2POINTER )
@@ -91,7 +82,7 @@ HB_FUNC( HB_STRING2POINTER )
    if( pString )
       hb_retptr( ( void * ) hb_itemGetCPtr( pString ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #endif
@@ -278,17 +269,6 @@ HB_FUNC( HB_EXEC )
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC_EXTERN( HB_USERNAME );
-HB_FUNC_EXTERN( NETNAME );
-
-HB_FUNC( XHB_NETNAME )
-{
-   if( hb_parni( 1 ) == 1 )
-      HB_FUNC_EXEC( HB_USERNAME );
-   else
-      HB_FUNC_EXEC( NETNAME );
-}
-
 HB_FUNC_EXTERN( HB_MEMOWRIT );
 HB_FUNC_EXTERN( MEMOWRIT );
 
@@ -300,7 +280,14 @@ HB_FUNC( XHB_MEMOWRIT )
       HB_FUNC_EXEC( MEMOWRIT );
 }
 
-#if ! defined( HB_LEGACY_LEVEL4 )
+#if 0
+
+/* length of buffer for CR/LF characters */
+#if ! defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
+   #define CRLF_BUFFER_LEN  4
+#else
+   #define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
+#endif
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )
    static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_LF, 0 };
@@ -335,6 +322,20 @@ HB_FUNC( HB_ISBYREF )
 }
 
 #endif
+
+#if ! defined( HB_LEGACY_LEVEL5 )
+
+HB_FUNC( HB_ISNIL )
+{
+   hb_retl( HB_ISNIL( 1 ) );
+}
+
+#endif
+
+HB_FUNC( __XHB_P2N )  /* NOTE: Unsafe: will reveal the numeric value of a pointer */
+{
+   hb_retnint( HB_ISNUM( 1 ) ? ( HB_PTRUINT ) hb_parnint( 1 ) : ( HB_PTRUINT ) hb_parptr( 1 ) );
+}
 
 HB_FUNC_TRANSLATE( METHODNAME     , HB_METHODNAME )
 HB_FUNC_TRANSLATE( LIBLOAD        , HB_LIBLOAD    )

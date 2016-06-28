@@ -3,4 +3,6 @@
 -nulrdd
 hbi18n.prg
 
+../../package/harbour.hbc
+
 {!(HB_BUILD_DYN='no')&(win|wce|os2)}-shared

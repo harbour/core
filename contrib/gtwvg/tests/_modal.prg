@@ -1,11 +1,14 @@
-/*
- *    Pritpal Bedi <bedipritpal@hotmail.com>
- */
+/* Pritpal Bedi <bedipritpal@hotmail.com> */
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "setcurs.ch"
 
-#xuntranslate Alert( =>
+FUNCTION Just_Alert( cMsg, aOpt )
+   RETURN Alert( cMsg, aOpt )
+
+FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
+   RETURN DialogAlert( cCaption, cMessage, aOptions, nInit,, nTime )
 
 FUNCTION MyAlert( cMsg, aOpt )
 
@@ -26,20 +29,6 @@ FUNCTION MyAlert( cMsg, aOpt )
    oCrt:destroy()
 
    RETURN nSel
-
-#xtranslate Alert( => MyAlert(
-
-FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
-
-   RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , , nTime )
-
-#xuntranslate Alert( =>
-
-FUNCTION Just_Alert( cMsg, aOpt )
-
-   RETURN Alert( cMsg, aOpt )
-
-#xtranslate Alert( => MyAlert(
 
 #define DLG_CLR_MOUSE              1
 #define DLG_CLR_CAPT               2
@@ -66,30 +55,26 @@ FUNCTION Just_Alert( cMsg, aOpt )
       [ <lHidden:HIDDEN>   ] ;
       [ <lCenter:CENTER>   ] ;
       [ AT <nRow>,<nCol>   ] ;
-      [ <lNoTitleBar:NOTITLEBAR> ] ;
       INTO <oCrt> ;
       => ;
       <oCrt > := CreateOCrt( <nTop>, <nLeft>, <nBottom>, <nRight>, <ttl>, <icon>, ;
       <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
-      <nRow>, <nCol>, <.lNoTitleBar.> )
+      <nRow>, <nCol> )
 
-FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
+STATIC FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, nTop, nTime )
 
    LOCAL nLinesRqd, nColRqd, nLeft, nBottom, nRight, oCrt
    LOCAL nColTxt, nColCap, nColBut, nBtnRow
-   LOCAL i, nTopReq, lGo, nKey, nMCol, nMRow, nTrg
+   LOCAL i, nTopReq, lGo, nKey, nKeyStd, nMCol, nMRow, nTrg
    LOCAL maxCol  := MaxCol()
    LOCAL maxRow  := MaxRow()
    LOCAL nBtnCol_
    LOCAL pal_    := { "w+/n", "w/r", "n/w", "n/bg", "r/bg", "N/W", "n/B", "w+/B" }
    LOCAL aTrg_, x_ := {}
 
-   hb_default( @cCaption  , "Your Attention Please!" )
-   hb_default( @aButtons_ , { "OK" } )
-   hb_default( @aText_    , {} )
-   hb_default( @aMessage_ , {} )
-   hb_default( @sel       , 1 )
-   hb_default( @nTime     , 10 )
+   hb_default( @cCaption, "Your Attention Please!" )
+   hb_default( @sel     , 1 )
+   hb_default( @nTime   , 10 )
 
    IF nTime == 0
       nTime := 10000   //  Seconds
@@ -99,18 +84,22 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       aText_ := { aText_ }
    ENDIF
 
+   hb_default( @aText_, {} )
+
    IF HB_ISSTRING( aButtons_ )
       aButtons_ := { aButtons_ }
    ENDIF
 
+   hb_default( @aButtons_, { "OK" } )
+
    nLinesRqd := Len( aText_ ) + iif( Len( aText_ ) == 0, 4, 5 )
    nTopReq   := Int( ( maxRow - nLinesRqd ) / 2 )
-   nTop      := iif( nTop == NIL, nTopReq, iif( nTop >  nTopReq, nTop, nTopReq ) )
+   nTop      := iif( HB_ISNUMERIC( nTop ), iif( nTop > nTopReq, nTop, nTopReq ), nTopReq )
    nBottom   := nTop + nLinesRqd - 1   // 1 for shadow
 
    // check for columns
    // place 2 spaces before and after the buttons
-   nColCap   := Len( cCaption ) + 7  // " - "+"  "+caption+"  "
+   nColCap   := Len( cCaption ) + 7  // " - " + "  " + cCaption + "  "
    nColTxt   := 0
    IF ! Empty( aText_ )
       AEval( aText_, {| e | nColTxt := Max( nColTxt, Len( e ) ) } )
@@ -128,10 +117,10 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    aTrg_ := Array( Len( aButtons_ ) )
    FOR i := 1 TO Len( aButtons_ )
-      aTrg_[ i ] := Upper( SubStr( aButtons_[ i ], 1, 1 ) )
+      aTrg_[ i ] := Left( aButtons_[ i ], 1 )
    NEXT
 
-   //                        Create a new Window
+   // Create a new Window
    B_CRT nTop, nLeft, nBottom - 1, nRight MODAL ICON "dia_excl.ico" TITLE "  " + cCaption INTO oCrt
 
    nTop    := -1
@@ -149,18 +138,18 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       NEXT
    ENDIF
 
-   SetCursor( 0 )
+   SetCursor( SC_NONE )
    SetColor( "N/W" )
    CLS
 
    DispBegin()
    SetColor( pal_[ DLG_CLR_TEXT ] )
 
-   Wvg_BoxRaised( nTop, nLeft, nBottom, nRight )
+   wvg_BoxRaised( nTop, nLeft, nBottom, nRight )
 
    SetColor( pal_[ DLG_CLR_TEXT ] )
    IF ! Empty( aText_ )
-      FOR  i := 1 TO Len( aText_ )
+      FOR i := 1 TO Len( aText_ )
          @ nTop + 1 + i, nLeft SAY PadC( aText_[ i ], nRight - nLeft + 1 )
       NEXT
    ENDIF
@@ -170,7 +159,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       SetColor( pal_[ DLG_CLR_BTN ] )
       @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[ i ] + "  "
       SetColor( pal_[ DLG_CLR_TRG ] )
-      @ nBtnRow, nBtnCol_[ i ] + 2 SAY SubStr( aButtons_[ i ], 1, 1 )
+      @ nBtnRow, nBtnCol_[ i ] + 2 SAY Left( aButtons_[ i ], 1 )
 
       AAdd( x_, { nBtnRow, nBtnCol_[ i ], nBtnRow, nBtnCol_[ i ] + Len( aButtons_[ i ] ) + 3 } )
    NEXT
@@ -179,19 +168,22 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    @ nBtnRow, nBtnCol_[ sel ] SAY "  " + aButtons_[ sel ] + "  "
 
    SetColor( pal_[ DLG_CLR_HISEL ] )
-   @ nBtnRow, nBtnCol_[ sel ] + 2 SAY SubStr( aButtons_[ sel ], 1, 1 )
+   @ nBtnRow, nBtnCol_[ sel ] + 2 SAY Left( aButtons_[ sel ], 1 )
 
-   AEval( x_, {| e_ | Wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
+   AEval( x_, {| e_ | wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
 
    DispEnd()
 
    lGo := .T.
    DO WHILE lGo
-      IF ( nKey := Inkey() ) == 0
+
+      nKeyStd := hb_keyStd( nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) )
+
+      IF nKey == 0
          LOOP
       ENDIF
 
-      IF nKey == K_ESC
+      IF nKeyStd == K_ESC
          sel := 0
          EXIT
       ENDIF
@@ -199,10 +191,10 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       nMCol := MCol()
 
       DO CASE
-      CASE nKey == K_RIGHT_DOWN
+      CASE nKeyStd == K_RIGHT_DOWN
          sel := 0
          lGo := .F.
-      CASE nKey == K_LEFT_DOWN
+      CASE nKeyStd == K_LEFT_DOWN
          IF nMRow == nTop
             IF nMCol >= nLeft .AND. nMCol <= nLeft + 3
                sel := 0
@@ -216,22 +208,22 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
                ENDIF
             NEXT
          ENDIF
-      CASE nKey == K_ESC
+      CASE nKeyStd == K_ESC
          sel := 0
          lGo := .F.
-      CASE nKey == K_ENTER
+      CASE nKeyStd == K_ENTER
          lGo := .F.
-      CASE nKey == K_LEFT  .OR. nKey == K_DOWN
-         sel--
-      CASE nKey == K_RIGHT .OR. nKey == K_UP
-         sel++
-      CASE ( nTrg := hb_AScan( aTrg_, Upper( hb_keyChar( nKey ) ), , , .T. ) ) > 0
+      CASE nKeyStd == K_LEFT .OR. nKeyStd == K_DOWN
+         --sel
+      CASE nKeyStd == K_RIGHT .OR. nKeyStd == K_UP
+         ++sel
+      CASE ( nTrg := hb_AScanI( aTrg_, hb_keyChar( nKey ), , , .T. ) ) > 0
          sel := nTrg
          lGo := .F.
-      OTHERWISE
-         IF SetKey( nKey ) != NIL
-            Eval( SetKey( nKey ) )
-         ENDIF
+      CASE SetKey( nKey ) != NIL
+         Eval( SetKey( nKey ) )
+      CASE SetKey( nKeyStd ) != NIL
+         Eval( SetKey( nKeyStd ) )
       ENDCASE
 
       IF sel > Len( aButtons_ )
@@ -245,13 +237,13 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
          SetColor( pal_[ DLG_CLR_BTN ] )
          @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[ i ] + "  "
          SetColor( pal_[ DLG_CLR_TRG ] )
-         @ nBtnRow, nBtnCol_[ i ] + 2 SAY SubStr( aButtons_[ i ], 1, 1 )
+         @ nBtnRow, nBtnCol_[ i ] + 2 SAY Left( aButtons_[ i ], 1 )
       NEXT
       IF sel > 0
          SetColor( pal_[ DLG_CLR_HILITE ] )
          @ nBtnRow, nBtnCol_[ sel ] SAY "  " + aButtons_[ sel ] + "  "
          SetColor( pal_[ DLG_CLR_HISEL ] )
-         @ nBtnRow, nBtnCol_[ sel ] + 2 SAY SubStr( aButtons_[ sel ], 1, 1 )
+         @ nBtnRow, nBtnCol_[ sel ] + 2 SAY Left( aButtons_[ sel ], 1 )
       ENDIF
 
       DispEnd()
@@ -261,56 +253,44 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    RETURN sel
 
-FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
-      lCenter, nRow, nCol, lNoTitleBar )
+STATIC FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
+      lCenter, nRow, nCol )
 
-   LOCAL oCrt, aPos
+   LOCAL aPos := iif( hb_defaultValue( lCenter, .F. ), { -1, -1 }, iif( HB_ISNUMERIC( nRow ), { nRow, nCol }, { nT, nL } ) )
 
-   hb_default( @cTitle      , "Info" )
-   hb_default( @xIcon       , "VW_DFT" )
-   hb_default( @lModal      , .T. )
-   hb_default( @lHidden     , .F. )
-   hb_default( @lCenter     , .F. )
-   hb_default( @lNoTitleBar , .F. )
+   LOCAL oCrt := WvgCrt():new( ,, aPos, { nB - nT, nR - nL },, ! hb_defaultValue( lHidden, .F. ) )
 
-   aPos := iif( lCenter, { -1, -1 }, iif( nRow == NIL, { nT, nL }, { nRow, nCol } ) )
-
-   oCrt := WvgCrt():new( ,, aPos, { nB - nT, nR - nL },, ! lHidden )
-   oCrt:lModal := lModal
+   oCrt:lModal := hb_defaultValue( lModal, .T. )
    IF lRowCols
       oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS
    ENDIF
    oCrt:create()
-   SetCursor( 0 )
+   SetCursor( SC_NONE )
 
    IF HB_ISNUMERIC( xIcon )
       hb_gtInfo( HB_GTI_ICONRES, xIcon )
    ELSE
-      IF ".ico" $ Lower( xIcon )
-         hb_gtInfo( HB_GTI_ICONFILE, xIcon )
-      ELSE
-         IF ".bmp" $ Lower( xIcon )
-            xIcon := "VW_DFT"
-         ENDIF
-         hb_gtInfo( HB_GTI_ICONRES, xIcon )
+      hb_default( @xIcon, "VW_DFT" )
+      IF ".bmp" $ Lower( xIcon )
+         xIcon := "VW_DFT"
       ENDIF
+      hb_gtInfo( HB_GTI_ICONRES, xIcon )
    ENDIF
 
-   hb_gtInfo( HB_GTI_WINTITLE, cTitle )
+   hb_gtInfo( HB_GTI_WINTITLE, hb_defaultValue( cTitle, "Info" ) )
 
    SetColor( "N/W" )
    CLS
 
    RETURN oCrt
 
-FUNCTION DoModalWindow()
+PROCEDURE DoModalWindow()
 
    LOCAL oCrt, nSel, pGT
    LOCAL aLastPaint := WvtSetBlocks( {} )
 
    /* This part can be clubbed in a separate prg for different dialogs
-    * OR can be loaded from a data dictionary.
-    */
+      OR can be loaded from a data dictionary. */
 
    oCrt := WvgCrt():New( , , { 4, 8 }, { 12, 49 }, , .T. )
 
@@ -329,15 +309,14 @@ FUNCTION DoModalWindow()
 
    pGT := SetGT( 3, hb_gtSelect() )
 
-   // Here goes the Clipper Code
+   // Here goes the Cl*pper Code
    SetColor( "N/W" )
    CLS
    DO WHILE .T.
       nSel := Just_Alert( "I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window", { "OK" } )
 
-      IF nSel == 0  .OR. nSel == 1
+      IF nSel == 0 .OR. nSel == 1
          EXIT
-
       ENDIF
    ENDDO
 
@@ -346,4 +325,4 @@ FUNCTION DoModalWindow()
 
    WvtSetBlocks( aLastPaint )
 
-   RETURN NIL
+   RETURN

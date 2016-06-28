@@ -1,5 +1,5 @@
 /*
- * XPP compatible thread functions
+ * Xbase++ compatible thread functions
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -47,48 +47,37 @@
 FUNCTION ThreadID()
    RETURN hb_threadID()
 
-
 FUNCTION ThreadObject( oThread )
+
    THREAD STATIC t_oThread
+
    IF PCount() > 0
       t_oThread := oThread
    ENDIF
-   RETURN t_oThread
 
+   RETURN t_oThread
 
 FUNCTION ThreadWait( aThreads, nTimeOut )
 
-   LOCAL xResult, nPos, apThIDs, th
+   LOCAL nPos, th
+   LOCAL apThIDs := {}
 
-   apThIDs := {}
    FOR EACH th IN aThreads
-      IF HB_ISOBJECT( th )
-         AAdd( apThIDs, th:threadSelf )
-      ELSE
-         AAdd( apThIDs, th )
-      ENDIF
+      AAdd( apThIDs, iif( HB_ISOBJECT( th ), th:threadSelf, th ) )
    NEXT
 
    nPos := hb_threadWait( apThIDs, iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
       nTimeOut / 100, ) )
-   IF nPos != 0
-      xResult := aThreads[ nPos ]
-   ENDIF
 
-   RETURN xResult
-
+   RETURN iif( nPos != 0, aThreads[ nPos ], NIL )
 
 FUNCTION ThreadWaitAll( aThreads, nTimeOut )
 
-   LOCAL apThIDs, th
+   LOCAL th
+   LOCAL apThIDs := {}
 
-   apThIDs := {}
    FOR EACH th IN aThreads
-      IF HB_ISOBJECT( th )
-         AAdd( apThIDs, th:threadSelf )
-      ELSE
-         AAdd( apThIDs, th )
-      ENDIF
+      AAdd( apThIDs, iif( HB_ISOBJECT( th ), th:threadSelf, th ) )
    NEXT
 
    RETURN hb_threadWait( apThIDs, iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;

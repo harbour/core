@@ -144,11 +144,12 @@ static HB_ERRCODE commonError( ADSAREAP pArea,
                                HB_ERRCODE errOsCode, const char * szFileName,
                                HB_USHORT uiFlags, PHB_ITEM * pErrorPtr )
 {
-   PHB_ITEM pError;
    HB_ERRCODE errCode = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
+      PHB_ITEM pError;
+
       if( pErrorPtr )
       {
          if( ! *pErrorPtr )
@@ -455,11 +456,11 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
          /* hack for timestamp values, we need sth better yo detect timestamp indexes */
          if( pArea->iFileType == ADS_ADT && pKeyBuf[ 0 ] == 0 && ( iKeyLen == 8 || iKeyLen == 4 ) )
          {
-            long lDate, lTime;
+            long lDate;
             lDate = HB_GET_BE_UINT32( pKeyBuf );
             if( iKeyLen == 8 )
             {
-               lTime = HB_GET_BE_UINT32( &pKeyBuf[ 4 ] );
+               long lTime = HB_GET_BE_UINT32( &pKeyBuf[ 4 ] );
                /* ADS stores milliseconds in raw ADT form increased by one */
                if( lTime )
                   --lTime;
@@ -876,15 +877,14 @@ static HB_ERRCODE adsGoTo( ADSAREAP pArea, HB_ULONG ulRecNo )
 
    HB_TRACE( HB_TR_DEBUG, ( "adsGoTo(%p, %lu)", pArea, ulRecNo ) );
 
-   /* -----------------2001-07-19 15:04-----------------
+   /* 2001-07-19 15:04, BH
       The following call is a necessary workaround for ace32.dll
       prior to 6.1.  There were bugs where
       AdsGotoRecord() can FAIL to move the record pointer
       after some sequences of setting/clearing relations.
-      A call to AdsGetRecordNum() before it clears the problem.  -BH
-      --------------------------------------------------*/
-   /*
-    * 2005-08-25 11:56:20 CEST, Druzus
+      A call to AdsGetRecordNum() before it clears the problem. */
+
+   /* 2005-08-25 11:56:20 CEST, Druzus
     * This trick force to resolving pending relations. It means
     * that this ADS clients does not reset pending relation in
     * AdsGotoRecord() and it is resolved later. Similar situation
@@ -899,10 +899,8 @@ static HB_ERRCODE adsGoTo( ADSAREAP pArea, HB_ULONG ulRecNo )
    /* force to reset ACE pending relations by resolving them */
    AdsGetRecordNum( pArea->hTable, ADS_IGNOREFILTERS, &u32RecNo );
 
-   /*
-    * always make GOTO - it's necessary to sync children inside ACE
-    * internals
-    */
+   /* always make GOTO - it's necessary to sync children inside ACE
+      internals */
    u32RetVal = AdsGotoRecord( pArea->hTable, ( UNSIGNED32 ) ulRecNo );
 
    if( u32RetVal == AE_INVALID_RECORD_NUMBER )
@@ -957,13 +955,11 @@ static HB_ERRCODE adsGoTo( ADSAREAP pArea, HB_ULONG ulRecNo )
 
 static HB_ERRCODE adsGoToId( ADSAREAP pArea, PHB_ITEM pItem )
 {
-   HB_ULONG ulRecNo;
-
    HB_TRACE( HB_TR_DEBUG, ( "adsGoToId(%p, %p)", pArea, pItem ) );
 
    if( HB_IS_NUMERIC( pItem ) )
    {
-      ulRecNo = hb_itemGetNL( pItem );
+      HB_ULONG ulRecNo = hb_itemGetNL( pItem );
       return SELF_GOTO( &pArea->area, ulRecNo );
    }
    else
@@ -1141,9 +1137,9 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
    if( pArea->area.lpdbRelations )
       SELF_SYNCCHILDREN( &pArea->area );
 
-   /* ----------------- BH ------------------
+   /* BH:
       If a filter is set that is not valid for ADS, we need to skip
-      off of any invalid records (IOW, filter at the Harbour level if ADS can't
+      off of any invalid records (IOW, filter at the Harbour level if ADS cannot
       because the filter has UDFs or PUBLICVAR references).
       To make sure the skipped-to record still matches the seeked key, we need to
       be able to construct a comparable key for the subsequent record.
@@ -1153,8 +1149,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
       So I'm saving off the first found record's key, and passing that to our
       adsIndexKeyCmp() to compare to the new record's key.
       We're relying on testing to verify that partial key searches and binary
-      raw keys all end up working right.
-      --------------------------------------------------*/
+      raw keys all end up working right. */
    if( pArea->area.dbfi.itmCobExpr && ! pArea->area.dbfi.fOptimized && ! pArea->area.fEof )
    {
       /* Remember FOUND flag for updating after SKIPFILTER() */
@@ -1260,24 +1255,21 @@ static HB_ERRCODE adsSkip( ADSAREAP pArea, HB_LONG lToSkip )
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( &pArea->area );
 
-/* ----------------- Brian Hays ------------------
+   /* Brian Hays:
 
-   In ADS, if you GO 0 (as opposed to skipping past lastrec),
-   it considers the record pointer "unpositioned".
-   If you then try to skip -1 you end up at Top with BOF True.
-   (If you skip past lastrec, then skip -1 it works right.)
-   To fix this we need to trap for a (negative lToSkip .AND. EOF)
-   and do a GoBottom--but only after letting ads try first and
-   testing for BOF.  We need to avoid our GoBottom hack as much as
-   possible because with a filter set it could be quite slow.
+      In ADS, if you GO 0 (as opposed to skipping past lastrec),
+      it considers the record pointer "unpositioned".
+      If you then try to skip -1 you end up at Top with BOF True.
+      (If you skip past lastrec, then skip -1 it works right.)
+      To fix this we need to trap for a (negative lToSkip .AND. EOF)
+      and do a GoBottom--but only after letting ads try first and
+      testing for BOF.  We need to avoid our GoBottom hack as much as
+      possible because with a filter set it could be quite slow.
 
-   In addition, if lToSkip > 1 we need to iterate calls to AdsSkip(1) and
-   test the filter each time since, even if the server has a filter set,
-   AdsSkip(5) may only test the filter after 5 raw skips (according to the
-   Extended Systems developers.)
-
-   --------------------------------------------------*/
-
+      In addition, if lToSkip > 1 we need to iterate calls to AdsSkip(1) and
+      test the filter each time since, even if the server has a filter set,
+      AdsSkip(5) may only test the filter after 5 raw skips (according to the
+      Extended Systems developers.) */
 
    if( lToSkip == 0 )
    {
@@ -1520,12 +1512,10 @@ static HB_ERRCODE adsAppend( ADSAREAP pArea, HB_BOOL fUnLockAll )
 
 static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 {
-   HB_USHORT uiItems, uiCount, uiLen, uiDec;
+   HB_USHORT uiItems, uiCount;
    HB_ERRCODE errCode = HB_SUCCESS;
    DBFIELDINFO dbFieldInfo;
-   PHB_ITEM pFieldDesc;
-   const char * szFieldType, * szType;
-   int iData, iNameLen;
+   const char * szType;
 
    HB_TRACE( HB_TR_DEBUG, ( "adsCreateFields(%p, %p)", pArea, pStruct ) );
 
@@ -1536,6 +1526,11 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
 
    for( uiCount = 0; uiCount < uiItems; uiCount++ )
    {
+      HB_USHORT uiLen, uiDec;
+      PHB_ITEM pFieldDesc;
+      const char * szFieldType;
+      int iData, iNameLen;
+
       dbFieldInfo.uiTypeExtended = 0;
       pFieldDesc = hb_arrayGetItemPtr( pStruct, uiCount + 1 );
       dbFieldInfo.atomName = hb_arrayGetCPtr( pFieldDesc, DBS_NAME );
@@ -2581,7 +2576,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
    if( ! uiIndex || uiIndex > pArea->area.uiFieldCount )
       return HB_FAILURE;
 
-   /* -----------------2003-10-30 15:54-----------------
+   /* 2003-10-30 15:54
 
       ADS has Implicit Record locking that can mask programming errors.
       Implicit locking can occur the first time a value is written to a
@@ -2596,9 +2591,8 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
       For performance reasons, Release code should leave this OFF.
          Although the call to AdsIsRecordLocked is documented as a client
          call, not a server request, and should be fast, it will be
-         called for EACH FIELD as it is assigned a value.
+         called for EACH FIELD as it is assigned a value. */
 
-      --------------------------------------------------*/
    /* resolve any pending relations */
    if( pArea->lpdbPendingRel )
       SELF_FORCEREL( &pArea->area );
@@ -2960,7 +2954,6 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    char szBuffer[ MAX_STR_LEN + 1 ];
    HB_USHORT uiCount;
    LPFIELD pField;
-   const char * cType;
    HB_BOOL fUnicode;
 
    HB_TRACE( HB_TR_DEBUG, ( "adsCreate(%p, %p)", pArea, pCreateInfo ) );
@@ -2997,6 +2990,8 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
    pField = pArea->area.lpFields;
    for( uiCount = 0; uiCount < pArea->area.uiFieldCount; uiCount++ )
    {
+      const char * cType;
+
       if( ( HB_ULONG ) pField->uiLen > pArea->maxFieldLen )
          pArea->maxFieldLen = pField->uiLen;
 
@@ -4036,7 +4031,7 @@ static HB_ERRCODE adsOrderListFocus( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
    {
       if( HB_IS_STRING( pOrderInfo->itmOrder ) )
       {
-         /* ADS can't handle a space-padded string--we have to trim it */
+         /* ADS cannot handle a space-padded string--we have to trim it */
          hb_strncpyUpperTrim( ( char * ) pucTagName,
                               hb_itemGetCPtr( pOrderInfo->itmOrder ),
                               sizeof( pucTagName ) - 1 );
@@ -4400,11 +4395,9 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO
       case DBOI_KEYVAL:
          if( ! pArea->area.fEof && hIndex )
          {
-            /* ----------------------------------
-               From ads docs: It is important to note that the key generated
+            /* From ads docs: It is important to note that the key generated
                by this function is built on the client, and the key may not
-               exist in the index.
-               -----------------------------------*/
+               exist in the index. */
             AdsExtractKey( hIndex, aucBuffer, &u16len );
             AdsGetKeyType( hIndex, &u16 );
 
@@ -4799,11 +4792,10 @@ static HB_ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "adsSetFilter(%p, %p)", pArea, pFilterInfo ) );
 
-   /* ----------------- NOTE: ------------------
+   /* NOTE:
       See if the server can evaluate the filter.
       If not, don't pass it to the server; let the super level
-      filter the records locally.
-      --------------------------------------------------*/
+      filter the records locally. */
 
    /* resolve any pending relations */
    if( pArea->lpdbPendingRel )
@@ -5552,7 +5544,6 @@ HB_FUNC( ADSCUSTOMIZEAOF )
    UNSIGNED32 u32NumRecs = 0;
    UNSIGNED32 u32RetVal = ( UNSIGNED32 ) ~AE_SUCCESS;   /* initialize to something other than success */
    UNSIGNED16 u16Option = ADS_AOF_ADD_RECORD;
-   UNSIGNED32 * pu32Records;
 
    pArea = hb_adsGetWorkAreaPointer();
    if( pArea )
@@ -5575,7 +5566,8 @@ HB_FUNC( ADSCUSTOMIZEAOF )
 
       if( u32NumRecs )
       {
-         pu32Records = ( UNSIGNED32 * ) hb_xgrab( u32NumRecs * sizeof( UNSIGNED32 ) );
+         UNSIGNED32 * pu32Records = ( UNSIGNED32 * ) hb_xgrab( u32NumRecs * sizeof( UNSIGNED32 ) );
+
          if( HB_ISARRAY( 1 ) )           /* convert array of recnos to C array */
          {
             for( ulRecord = 0; ulRecord < u32NumRecs; ulRecord++ )

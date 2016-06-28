@@ -77,6 +77,8 @@ void ct_charlist( int iMode )
       char acCharCnt[ UCHAR_MAX ];
       HB_SIZE sRetStrLen = 0;
 
+      memset( acCharCnt, 0, sizeof( acCharCnt ) );
+
       if( iMode == CT_CHARLIST_CHARLIST )
       {
          char acMark[ UCHAR_MAX ];
@@ -106,7 +108,6 @@ void ct_charlist( int iMode )
             if( acCharCnt[ sCnt ] == cScan )
                acCharCnt[ sRetStrLen++ ] = ( HB_UCHAR ) sCnt;
          }
-
       }
       hb_retclen( acCharCnt, sRetStrLen );
    }

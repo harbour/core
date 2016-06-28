@@ -1,5 +1,8 @@
-// ; Donated to the public domain by
-//   Viktor Szakats (vszakats.net/harbour)
+/* Donated to the public domain by Viktor Szakats (vszakats.net/harbour) */
+
+#ifndef __HARBOUR__
+#include "clipper.ch"
+#endif
 
 MEMVAR m_cLongerNameThen10Chars
 #ifdef __HARBOUR__
@@ -39,7 +42,7 @@ PROCEDURE Main()
    RESTORE FROM memfile ADDITIVE
 
    ? m_xStayHer
-   ? m_cLongerN /* Can't restore the part of the name beyond the tenth char */
+   ? m_cLongerN /* Cannot restore the part of the name beyond the tenth char */
    ? m_cString
    ? m_nDouble
    ? m_nDoubleH
@@ -52,7 +55,7 @@ PROCEDURE Main()
    RESTORE FROM memfile
 
 // ? m_xStayHer
-   ? m_cLongerN /* Can't restore the part of the name beyond the tenth char */
+   ? m_cLongerN /* Cannot restore the part of the name beyond the tenth char */
    ? m_cString
    ? m_nDouble
    ? m_nDoubleH
@@ -67,13 +70,8 @@ PROCEDURE Main()
    ? m_nDoubleH
    ? __mvScope( "m_nInt" )
 
-   FErase( "memempt.mem" )
-   FErase( "memfile.mem" )
-   FErase( "memsome.mem" )
+   hb_vfErase( "memempt.mem" )
+   hb_vfErase( "memfile.mem" )
+   hb_vfErase( "memsome.mem" )
 
    RETURN
-
-#ifndef __HARBOUR__
-FUNCTION __mvScope()
-   RETURN -1
-#endif

@@ -50,43 +50,46 @@
 
 FUNCTION Sys( nValue, xPar1 )
 
-   SWITCH nValue
-   CASE 0
-      RETURN Id()
-   CASE 1
-      RETURN hb_ntos( Date() - CToD( "" ) )
-   CASE 2
-      RETURN hb_ntos( Seconds() )
-   CASE 5
-      RETURN Set( _SET_DEFAULT )
-   CASE 6
-      RETURN Set( _SET_PRINTFILE )
-   CASE 10
-      RETURN DToC( CToD( "" ) + hb_defaultValue( xPar1, 0 ) )
-   CASE 11
-      RETURN hb_ntos( iif( HB_ISDATETIME( xPar1 ), xPar1, ;
-                           iif( HB_ISSTRING( xPar1 ), CToD( xPar1 ), ;
-                           Date() ) ) - CToD( "" ) )
-   CASE 100
-      RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
-   CASE 101
-      RETURN Set( _SET_DEVICE )
-   CASE 102
-      RETURN iif( Set( _SET_PRINTER ), "ON", "OFF" )
-   CASE 2002
-      RETURN SetCursor( hb_defaultValue( xPar1, SC_NONE ) )
-   CASE 2003
-      RETURN CurDir()
-   CASE 2011
-      RETURN iif( ! dbInfo( DBOI_SHARED ),     "Exclusive", ;
-             iif( dbInfo( DBI_ISFLOCK ),       "File locked", ;
-             iif( dbRecordInfo( DBRI_LOCKED ), "Record locked", ;
-                                               "Not locked" ) ) )
-   CASE 2020
-      RETURN hb_DiskSpace( Set( _SET_DEFAULT ) )
-   OTHERWISE
-      /* Throw RTE? */
-   ENDSWITCH
+   IF HB_ISNUMERIC( nValue )
+
+      SWITCH nValue
+      CASE 0
+         RETURN Id()
+      CASE 1
+         RETURN hb_ntos( Date() - CToD( "" ) )
+      CASE 2
+         RETURN hb_ntos( Seconds() )
+      CASE 5
+         RETURN Set( _SET_DEFAULT )
+      CASE 6
+         RETURN Set( _SET_PRINTFILE )
+      CASE 10
+         RETURN DToC( CToD( "" ) + hb_defaultValue( xPar1, 0 ) )
+      CASE 11
+         RETURN hb_ntos( iif( HB_ISDATETIME( xPar1 ), xPar1, ;
+                              iif( HB_ISSTRING( xPar1 ), CToD( xPar1 ), ;
+                              Date() ) ) - CToD( "" ) )
+      CASE 100
+         RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
+      CASE 101
+         RETURN Set( _SET_DEVICE )
+      CASE 102
+         RETURN iif( Set( _SET_PRINTER ), "ON", "OFF" )
+      CASE 2002
+         RETURN SetCursor( hb_defaultValue( xPar1, SC_NONE ) )
+      CASE 2003
+         RETURN CurDir()
+      CASE 2011
+         RETURN iif( ! dbInfo( DBOI_SHARED ),     "Exclusive", ;
+                iif( dbInfo( DBI_ISFLOCK ),       "File locked", ;
+                iif( dbRecordInfo( DBRI_LOCKED ), "Record locked", ;
+                                                  "Not locked" ) ) )
+      CASE 2020
+         RETURN hb_DiskSpace( Set( _SET_DEFAULT ) )
+      OTHERWISE
+         /* Throw RTE? */
+      ENDSWITCH
+   ENDIF
 
    RETURN NIL
 

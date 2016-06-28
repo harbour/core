@@ -8,6 +8,10 @@
 -w3 -es2
 
 # NOTE: Adapt and uncomment, if the library has a 3rd party lib dependency
+# -depurlbase=lib3rd:https://example.org/
+# -deppkgname=lib3rd:lib3rd-devel{rpm}
+# -deppkgname=lib3rd:lib3rd-dev{deb}
+# -deppkgname=lib3rd:lib3rd{homebrew}
 # -depkeyhead=lib3rd:lib3rd.h
 # -depcontrol=lib3rd:${HB_WITH_LIB3RD}
 # -depincpath=lib3rd:/usr/include
@@ -19,17 +23,18 @@
 # NOTE: Uncomment if you store headers in this alternate subdirectory
 # -iinclude
 
+-hbx=${hb_name}
+
 core.prg
 corec.c
 
--hbx=${hb_name}.hbx
-${hb_name}.hbx
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm
 
-# NOTE: Uncomment if you want to link against a dynamic Harbour contrib lib
-#       (hbct in this example)
-# {hbdyn&hb_dynsuffix}-env:_HB_DYNSUFF=${hb_dynsuffix}
-# {hbdyn&!hb_dynsuffix}-env:_HB_DYNSUFF=_dll
-# {hbdyn}-request=__HBEXTERN__HBCT__
-# {hbdyn}hbct.hbc
+# NOTE: Comment out this line if you don't want to link
+#       against _dynamic_ Harbour lib dependencies that follow
+#       the Harbour contrib conventions.
+{hbdyn}-env:_HB_DYNSUFF=_dll
+
+# Harbour lib dependencies
+hbct.hbc

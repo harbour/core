@@ -280,8 +280,8 @@ ReadTransparentPngData  (HPDF_Dict    image,
 		case PNG_COLOR_TYPE_RGB_ALPHA:
 			row_len = 3 * width * sizeof(png_byte);
 			for (j = 0; j < height; j++) {
+				row = row_ptr[j];
 				for (i = 0; i < width; i++) {
-					row = row_ptr[j];
 					memmove(row + (3 * i), row + (4*i), 3);
 					smask_data[width * j + i] = row[4 * i + 3];
 				}
@@ -295,8 +295,8 @@ ReadTransparentPngData  (HPDF_Dict    image,
 		case PNG_COLOR_TYPE_GRAY_ALPHA:
 			row_len = width * sizeof(png_byte);
 			for (j = 0; j < height; j++) {
+				row = row_ptr[j];
 				for (i = 0; i < width; i++) {
-					row = row_ptr[j];
 					row[i] = row[2 * i];
 					smask_data[width * j + i] = row[2 * i + 1];
 				}
@@ -706,4 +706,3 @@ PngAfterWrite  (HPDF_Dict obj)
 
 
 #endif /* LIBHPDF_HAVE_NOPNGLIB */
-

@@ -1,4 +1,4 @@
-// Typical welcome message
+// Welcome message
 
 PROCEDURE Main()
 

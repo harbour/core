@@ -1,24 +1,22 @@
-/*
- * Dynamic library call test.
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
+
+/* Dynamic library call test. */
 
 #include "simpleio.ch"
 
 #include "hbdyn.ch"
 
-#define _ISOK_( a, b ) iif( a == b, "OK", "WRONG" )
+#define _ISOK_( a, b )  iif( a == b, "OK", "WRONG" )
 
 PROCEDURE Main()
+
    LOCAL cFileName
    LOCAL a, b
 
 #if defined( __ARCH64BIT__ )
-   cFileName := "test_x64.dll"
+   cFileName := "test_64.dll"
 #else
-   cFileName := "test_x86.dll"
+   cFileName := "test_32.dll"
 #endif
 
    ? "-", cFileName
@@ -38,6 +36,5 @@ PROCEDURE Main()
    ? "=="
 
    a := "hello world!"       ; ? ">", a, hb_DynCall( { "TESTST", cFileName, hb_bitOr( HB_DYN_CTYPE_CHAR_PTR , HB_DYN_CALLCONV_CDECL, HB_DYN_ENC_RAW ), hb_bitOr( HB_DYN_CTYPE_CHAR_PTR, HB_DYN_ENC_RAW ) }, a )
-// a := "hello world!"       ; ? ">", a, hb_DynCallFoxPro( "DECLARE STRING TESTST IN " + cFileName + " STRING", a )
 
    RETURN

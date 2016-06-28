@@ -44,9 +44,9 @@
  *
  */
 
-#include "rddsys.ch"
-#include "hbusrrdd.ch"
 #include "dbinfo.ch"
+#include "hbusrrdd.ch"
+#include "rddsys.ch"
 
 /*
  * FPTCDX RDD
@@ -62,7 +62,6 @@ REQUEST DBFFPT
 ANNOUNCE FPTCDX
 
 FUNCTION FPTCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
-
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       "DBFCDX", {}, pSuperRddID ) /* We are inheriting from DBFCDX */
 

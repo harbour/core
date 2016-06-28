@@ -6,6 +6,7 @@ REQUEST HB_CODEPAGE_UTF8EX
 PROCEDURE Main()
 
    hb_cdpSelect( "UTF8EX" )
+   hb_SetTermCP( hb_cdpTerm() )
 
    HBTEST amf3_Encode( {}                                             ) IS e"\011\001\001"
    HBTEST amf3_Encode( "a"                                            ) IS e"\006\003a"

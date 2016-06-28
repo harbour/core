@@ -4,7 +4,7 @@
    $CATEGORY$
       Date/Time
    $ONELINER$
-      Set beginning of year/week for FT_ date functions
+      Set beginning of year/week for ft_*() date functions
    $SYNTAX$
       ft_DateCnfg( [ <cFYStart> ], [ <nDow> ] ) -> aDateInfo
    $ARGUMENTS$
@@ -22,11 +22,11 @@
    $RETURNS$
       A 2-element array containing the following information:
 
-         aDateInfo[1] - an ANSI date string indicating the beginning
+       aDateInfo[ 1 ] - an ANSI date string indicating the beginning
                         date of the year.  Only the month and day are
                         meaningful.
 
-         aDateInfo[2] - the number of the first day of the week
+       aDateInfo[ 2 ] - the number of the first day of the week
                         (1 = Sunday)
 
    $DESCRIPTION$
@@ -59,7 +59,7 @@
 
       // Examples of return values:
 
-      //                                          aArray[1]    aArray[2]
+      //                                         aArray[ 1 ]   aArray[ 2 ]
       //  System date format: American
 
       SET DATE TO AMERICAN

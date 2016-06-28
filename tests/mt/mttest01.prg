@@ -1,7 +1,7 @@
 /*
- * demonstration/test code for thread return complex values
- *    and detached locals created by thread and used after thread
- *    termination.
+ * Demonstration/test code for thread return complex values
+ * and detached locals created by thread and used after thread
+ * termination.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -13,17 +13,24 @@
 #endif
 
 static s_var
-proc main()
+
+procedure Main()
+
    local xResult
+
    ? Version()
    ? "join:", hb_threadJoin( hb_threadStart( @thFunc() ), @xResult )
    ? "result:", xResult
-   ? "static var type:", valtype( s_var )
-   ? eval( s_var )
-   ? eval( s_var )
-return
+   ? "static var type:", ValType( s_var )
+   ? Eval( s_var )
+   ? Eval( s_var )
 
-func thFunc()
+   return
+
+static function thFunc()
+
    local i := 12345.678
+
    s_var := {|| i++ }
-return replicate( "Hello World!!! ", 3 )
+
+   return Replicate( "Hello World!!! ", 3 )

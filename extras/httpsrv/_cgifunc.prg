@@ -47,26 +47,20 @@
 #include "error.ch"
 #include "fileio.ch"
 
-// #define HB_USE_HBTIP    // Use functions from HBTIP - TOIMPLEMENT
-
-#define CRLF ( Chr( 13 ) + Chr( 10 ) )
-#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
+#define CRLF           ( Chr( 13 ) + Chr( 10 ) )
+#define THROW( oErr )  ( Eval( ErrorBlock(), oErr ), Break( oErr ) )
 
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST
 
 FUNCTION uhttpd_GetVars( cFields, cSeparator )
 
    LOCAL hHashVars := { => }
-   LOCAL aField, cField, aFields
+   LOCAL aField, cField
    LOCAL cName, xValue
 
-   __defaultNIL( @cSeparator, "&" )
+   FOR EACH cField IN uhttpd_Split( hb_defaultValue( cSeparator, "&" ), cFields )
 
-   aFields := uhttpd_Split( cSeparator, cFields )
-
-   FOR EACH cField in aFields
-      aField := uhttpd_Split( "=", cField, 1 )
-      IF Len( aField ) == 1
+      IF Len( aField := uhttpd_Split( "=", cField, 1 ) ) == 1
          hHashVars[ aField[ 1 ] ] := NIL
          LOOP
       ELSEIF Len( aField ) != 2
@@ -74,16 +68,16 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
       ENDIF
 
       cName  := LTrim( aField[ 1 ] )
-      xValue := uhttpd_UrlDecode( aField[ 2 ] )
+      xValue := tip_URLDecode( aField[ 2 ] )
 
       // Is it an array entry?
-      IF SubStr( cName, Len( cName ) - 1 ) == "[]"
-         cName := SubStr( cName, 1, Len( cName ) - 2 )
+      IF Right( cName, 2 ) == "[]"
+         cName := hb_StrShrink( cName, 2 )
          hHashVars[ cName ] := { xValue }
       ELSE
          // now check if variable already exists. If yes and I have already another element
          // with same name, then I will change it to an array
-         IF hb_HPos( hHashVars, cName ) > 0
+         IF cName $ hHashVars
             IF ! HB_ISARRAY( hHashVars[ cName ] )
                // Transform it to array
                hHashVars[ cName ] := { hHashVars[ cName ] }
@@ -92,7 +86,6 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
          ELSE
             hHashVars[ cName ] := xValue
          ENDIF
-
       ENDIF
    NEXT
 
@@ -106,7 +99,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
   it works like parse_url() PHP function
 
   a URL string is something like this:
-  http://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
+  https://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
   Parameters:
   cUrl     -   Valid URL string
@@ -122,26 +115,22 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
                QUERY    - part after question mark ?
                FRAGMENT - part after hashmark #
 
-*/
+ */
 FUNCTION uhttpd_SplitUrl( cUrl )
 
-   LOCAL hUrl := { => }
+   LOCAL hUrl
    LOCAL nPos, cTemp, cUserNamePassword, cHostnamePort
    LOCAL cProto, cHost, cPort, nPort, cUser, cPass, cPath, cQuery, cFragment
    LOCAL cUri
-
-   // Prevents case matching
-   hb_HCaseMatch( hUrl, .F. )
 
    cTemp := cUrl
    cUri  := ""
 
    // Starting with
-   // http://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
+   // https://[username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Read protocol
-   nPos := At( "://", cTemp )
-   IF nPos > 0
+   IF ( nPos := At( "://", cTemp ) ) > 0
       cProto := Left( cTemp, nPos - 1 )
       // delete protocol from temp string
       cTemp := SubStr( cTemp, nPos + 3 )
@@ -149,20 +138,18 @@ FUNCTION uhttpd_SplitUrl( cUrl )
       cProto := ""
    ENDIF
 
-   cUri += cProto + iif( ! Empty( cProto ), "://", "" )
+   cUri += cProto + iif( Empty( cProto ), "", "://" )
 
    // Now we have:
    // [username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Read username and password
-   nPos := At( "@", cTemp )
-   IF nPos > 0
+   IF ( nPos := At( "@", cTemp ) ) > 0
       cUserNamePassword := Left( cTemp, nPos - 1 )
       // delete Username and Password from temp string
       cTemp := SubStr( cTemp, nPos + 1 )
       // Split username and password
-      nPos := At( ":", cUserNamePassword )
-      IF nPos > 0
+      IF ( nPos := At( ":", cUserNamePassword ) ) > 0
          cUser := Left( cUserNamePassword, nPos - 1 )
          cPass := SubStr( cUserNamePassword, nPos + 1 )
       ELSE
@@ -178,13 +165,11 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
 
    // Search for anchor using # char from right
-   nPos := RAt( "#", cTemp )
-   IF nPos > 0
+   IF ( nPos := RAt( "#", cTemp ) ) > 0
       cFragment := SubStr( cTemp, nPos + 1 )
 
       // delete anchor from temp string
-      cTemp := SubStr( cTemp, 1, nPos - 1 )
-
+      cTemp := Left( cTemp, nPos - 1 )
    ELSE
       cFragment := ""
    ENDIF
@@ -193,13 +178,11 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    // hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]]]
 
    // Search for Query part using ? char from right
-   nPos := RAt( "?", cTemp )
-   IF nPos > 0
+   IF ( nPos := RAt( "?", cTemp ) ) > 0
       cQuery := SubStr( cTemp, nPos + 1 )
 
       // delete query from temp string
-      cTemp := SubStr( cTemp, 1, nPos - 1 )
-
+      cTemp := Left( cTemp, nPos - 1 )
    ELSE
       cQuery := ""
    ENDIF
@@ -210,13 +193,11 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    cUri += cTemp
 
    // Search for Path part using / char from right
-   nPos := RAt( "/", cTemp )
-   IF nPos > 0
+   IF ( nPos := RAt( "/", cTemp ) ) > 0
       cPath := SubStr( cTemp, nPos )
 
       // delete path from temp string
-      cTemp := SubStr( cTemp, 1, nPos - 1 )
-
+      cTemp := Left( cTemp, nPos - 1 )
    ELSE
       cPath := "/"
    ENDIF
@@ -227,8 +208,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    cHostnamePort := cTemp
 
    // Searching port number
-   nPos := At( ":", cHostnamePort )
-   IF nPos > 0
+   IF ( nPos := At( ":", cHostnamePort ) ) > 0
       cHost := Left( cHostnamePort, nPos - 1 )
       cPort := SubStr( cHostnamePort, nPos + 1 )
       nPort := Val( cPort )
@@ -241,18 +221,19 @@ FUNCTION uhttpd_SplitUrl( cUrl )
    ENDIF
 
    // Assemble hash
-   hUrl[ "SCHEME" ]   := cProto
-   hUrl[ "HOST" ]     := cHost
-   hUrl[ "PORT" ]     := nPort
-   hUrl[ "USER" ]     := cUser
-   hUrl[ "PASS" ]     := cPass
-   hUrl[ "PATH" ]     := cPath
-   hUrl[ "QUERY" ]    := cQuery
-   hUrl[ "FRAGMENT" ] := cFragment
-   hUrl[ "URI" ]      := cURI
+   hUrl := { ;
+      "SCHEME"   => cProto, ;
+      "HOST"     => cHost, ;
+      "PORT"     => nPort, ;
+      "USER"     => cUser, ;
+      "PASS"     => cPass, ;
+      "PATH"     => cPath, ;
+      "QUERY"    => cQuery, ;
+      "FRAGMENT" => cFragment, ;
+      "URI"      => cURI }
 
-   // Prevents externals to add something else to this Hash
-   hb_HAutoAdd( hUrl, .F. )
+   hb_HCaseMatch( hUrl, .F. )  // Prevents case matching
+   hb_HAutoAdd( hUrl, .F. )  // Prevents externals to add something else to this Hash
 
    RETURN hUrl
 
@@ -274,7 +255,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
   Sample:
   SplitString( "this=is=a=line=with=equals", "=" ) -> { "this", "is", "a", "line", "with", "equals" }
 
-*/
+ */
 FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
 
    LOCAL nEOLPos
@@ -282,9 +263,9 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    LOCAL aLines  := {}, cLine
    LOCAL nHowMany := 0
 
-   __defaultNIL( @cDelim, ( Chr( 13 ) + Chr( 10 ) ) )
-   __defaultNIL( @lRemDelim, .T. )
-   __defaultNIL( @nCount, -1 )
+   hb_default( @cDelim, Chr( 13 ) + Chr( 10 ) )
+   hb_default( @lRemDelim, .T. )
+   hb_default( @nCount, -1 )
 
    // WriteToLogFile( "Splitstring: " + CStr( cString ) )
 
@@ -293,7 +274,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
       IF lRemDelim
          cLine := Left( cBuffer, nEOLPos - 1 )
       ELSE
-         cLine := Left( cBuffer, ( nEOLPos + Len( cDelim ) ) - 1 )
+         cLine := Left( cBuffer, nEOLPos - 1 + Len( cDelim ) )
       ENDIF
       // WriteToLogFile( "cBuffer, cDelim, nEOLPos, cLine: " + CStr( cBuffer ) + "," + CStr( cDelim ) + "," + CStr( nEOLPos ) + "," + CStr( cLine ) )
       AAdd( aLines, cLine )
@@ -306,236 +287,101 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    ENDDO
 
    // Check last line
-   IF Len( cBuffer ) > 0
+   IF ! HB_ISNULL( cBuffer )
       AAdd( aLines, cBuffer )
    ENDIF
 
    RETURN aLines
 
-/************************************************************
-* Encoding URL
-*/
-FUNCTION uhttpd_URLEncode( cString, lComplete )
-
-#ifdef HB_USE_HBTIP
-
-   __defaultNIL( @lComplete, .T. )
-
-   RETURN TIPENCODERURL_ENCODE( cString, lComplete )
-#else
-   LOCAL cRet := "", i, nVal, cChar
-
-   __defaultNIL( @lComplete, .T. )
-
-   FOR i := 1 TO Len( cString )
-      cChar := SubStr( cString, i, 1 )
-      DO CASE
-      CASE cChar == " "
-         cRet += "+"
-
-      CASE ( cChar >= "A" .AND. cChar <= "Z" ) .OR. ;
-           ( cChar >= "a" .AND. cChar <= "z" ) .OR. ;
-           ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-           cChar == "." .OR. cChar == "," .OR. cChar == "&" .OR. ;
-           cChar == "/" .OR. cChar == ";" .OR. cChar == "_"
-         cRet += cChar
-
-      CASE iif( ! lComplete, cChar == ":" .OR. cChar == "?" .OR. cChar == "=", .F. )
-         cRet += cChar
-
-      OTHERWISE
-         nVal := Asc( cChar )
-         cRet += "%" + hb_NumToHex( nVal )
-      ENDCASE
-   NEXT
-
-   RETURN cRet
-
-/************************************************************
-* Decoding URL
-*/
-FUNCTION uhttpd_URLDecode( cString )
-
-#ifdef HB_USE_HBTIP
-   RETURN TIPENCODERURL_DECODE( cString )
-#else
-   LOCAL cRet := "", i, cChar
-
-   FOR i := 1 TO Len( cString )
-      cChar := SubStr( cString, i, 1 )
-      DO CASE
-      CASE cChar == "+"
-         cRet += " "
-
-      CASE cChar == "%"
-         i++
-         cRet += Chr( hb_HexToNum( SubStr( cString, i, 2 ) ) )
-         i++
-
-      OTHERWISE
-         cRet += cChar
-
-      ENDCASE
-
-   NEXT
-
-   RETURN cRet
-#endif
-
 /*
- * DateToGMT( dDate, cTime, nDayToAdd ) --> cGMTDate
+ * uhttpd_DateToGMT( tDate, nDayToAdd, nSecsToAdd ) --> cGMTDate
  *
- * dDate     : default Date()
+ * tDate     : default hb_DateTime()
  * cTime     : default "00:00:00"
  * nDayToAdd : default 0 - may be a negative number
  *
  * cGMTDate  : The string return in form of "Sat, 31 Oct 2003 00:00:00 GMT"
  */
 
-FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
+FUNCTION uhttpd_DateToGMT( tDate, nDayToAdd, nSecsToAdd )
 
-   LOCAL aDays   := { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
-   LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
+   hb_default( @tDate, hb_DateTime() )
 
-   __defaultNIL( @dDate, Date() )
-   __defaultNIL( @cTime, Time() )
-   __defaultNIL( @nDayToAdd, 0 )
-   __defaultNIL( @nSecsToAdd, 0 )
-
-   // TraceLog( "DateToGMT - StartingValue", dDate, cTime, nDayToAdd, nSecsToAdd )
-
-   cTime := uhttpd_AddSecondsToTime( cTime, nSecsToAdd, @nDayToAdd )
-   dDate += nDayToAdd
+   tDate += hb_defaultValue( nDayToAdd, 0 )
+   tDate += hb_defaultValue( nSecsToAdd, 0 ) / 86400
 
    RETURN ;
-      aDays[ DoW( dDate ) ] + ", " + ;
-      StrZero( Day( dDate ), 2 ) + " " + ;
-      aMonths[ Month( dDate ) ] + " " + ;
-      StrZero( Year( dDate ), 4 ) + " " + ;
-      cTime + " GMT"
+      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
+      StrZero( Day( tDate ), 2 ) + " " + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + " " + ;
+      StrZero( Year( tDate ), 4 ) + " " + ;
+      hb_TToC( tDate, "", "hh:mm:ss" ) + " GMT"
 
-/*
- * AddSecondsToTime( cTime, nSecsToAdd, @nDaysAdded ) --> cNewTime
- *
- * cTime      : default "00:00:00"
- * nSecsToAdd : default 0 - may be a negative number
- * nDaysAdded : (out) return how many days add (or subtract) to actual date if numbers seconds is
- *                    more than 86400 seconds (1 day)
- *
- * cNewTime   : The new time string
- *
- * Rules: time is converted to seconds from midnight, then added of nSecsToAdd. Divided of 1 day and
- *        then reverted to Time string
- */
+FUNCTION uhttpd_OutputString( cString, hTranslate, lProtected )
 
-FUNCTION uhttpd_AddSecondsToTime( cTime, nSecsToAdd, nDaysAdded )
+   // TraceLog( "OutputString( cString, hTranslate, lProtected )", cString, hTranslate, lProtected )
 
-   LOCAL nOneDaySeconds := 86400  // 24 * 60 * 60
-   LOCAL cNewTime, nSecs
-
-   __defaultNIL( @cTime, Time() )
-   __defaultNIL( @nSecsToAdd, 0 )
-   // nDaysAdded can be already valued, so below i add to this value
-   __defaultNIL( @nDaysAdded, 0 )
-
-   IF nSecsToAdd != 0
-      nSecs      := Secs( cTime ) + nSecsToAdd
-      nDaysAdded += Int( nSecs / nOneDaySeconds )  // Attention! nDaysAdded can be already filled
-      nSecs      := nSecs - nDaysAdded
-      cNewTime   := TString( nSecs )
-   ELSE
-      cNewTime := cTime
-   ENDIF
-
-   RETURN cNewTime
-
-FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
-
-   LOCAL cHtml
-
-   __defaultNIL( @lProtected, .F. )
-   __defaultNIL( @aTranslate, { { '"', "&quot;" }, { " ", "&nbsp;" } } )
-
-   // TraceLog( "OutputString( cString, aTranslate, lProtected )", cString, aTranslate, lProtected )
-   IF lProtected
-      cHtml := uhttpd_HtmlSpecialChars( cString )
-   ELSE
-      cHtml := uhttpd_TranslateStrings( cString, aTranslate )
-   ENDIF
-   // TraceLog( "OutputString() = cHtml", cHtml )
-
-   RETURN cHtml
+   RETURN iif( hb_defaultValue( lProtected, .F. ), ;
+      uhttpd_HtmlSpecialChars( cString ), ;
+      uhttpd_TranslateStrings( cString, hb_defaultValue( hTranslate, { '"' => "&quot;", " " => "&nbsp;" } ) ) )
 
 FUNCTION uhttpd_HtmlSpecialChars( cString, cQuote_style )
+   RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, { ;
+      "&" => "&amp;", ;
+      "<" => "&lt;", ;
+      ">" => "&gt;" } )
 
-   LOCAL aTranslations := { ;
-      { "&", "&amp;" }, ;
-      { "<", "&lt;"  }, ;
-      { ">", "&gt;"  } }
+FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, hTranslations )
 
-   RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
+   SWITCH hb_defaultValue( cQuote_style, "ENT_COMPAT" )
+   CASE "ENT_COMPAT"
+      hTranslations[ '"' ] := "&quot;"
+      EXIT
+   CASE "ENT_QUOTES"
+      hTranslations[ '"' ] := "&quot;"
+      hTranslations[ "'" ] := "&#039;"
+      EXIT
+   CASE "ENT_NOQUOTES"
+      EXIT
+   ENDSWITCH
 
-FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
-
-   __defaultNIL( @cQuote_style, "ENT_COMPAT" )
-
-   DO CASE
-   CASE cQuote_style == "ENT_COMPAT"
-      AAdd( aTranslations, { '"', "&quot;" } )
-   CASE cQuote_style == "ENT_QUOTES"
-      AAdd( aTranslations, { '"', "&quot;" } )
-      AAdd( aTranslations, { "'", "&#039;" } )
-   CASE cQuote_style == "ENT_NOQUOTES"
-   ENDCASE
-
-   RETURN uhttpd_TranslateStrings( cString, aTranslations )
+   RETURN uhttpd_TranslateStrings( cString, hTranslations )
 
 FUNCTION uhttpd_CRLF2BR( cString )
+   RETURN hb_StrReplace( cString, { CRLF => "<br />" } )
 
-   LOCAL aTranslations := { ;
-      { CRLF, "<br />" } }
-
-   RETURN uhttpd_TranslateStrings( cString, aTranslations )
-
-FUNCTION uhttpd_TranslateStrings( cString, aTranslate )
-
-   LOCAL aTran
-
-   FOR EACH aTran IN aTranslate
-      IF aTran[ 1 ] $ cString
-         cString := StrTran( cString, aTran[ 1 ], aTran[ 2 ] )
-      ENDIF
-   NEXT
-
-   RETURN cString
+FUNCTION uhttpd_TranslateStrings( cString, hTranslate )
+   RETURN hb_StrReplace( cString, hTranslate )
 
 FUNCTION uhttpd_StrStr( cString, cSearch )
 
    LOCAL nPos := At( cSearch, cString )
-   LOCAL cVal := iif( nPos > 0, SubStr( cString, nPos ), NIL )
 
-   RETURN cVal
+   RETURN iif( nPos > 0, SubStr( cString, nPos ), NIL )
 
 FUNCTION uhttpd_StrIStr( cString, cSearch )
-   RETURN uhttpd_StrStr( Upper( cSearch ), Upper( cString ) )
+
+   LOCAL nPos := hb_AtI( cSearch, cString )
+
+   RETURN iif( nPos > 0, SubStr( cString, nPos ), NIL )
 
 FUNCTION uhttpd_HtmlEntities( cString, cQuote_style )
 
-  LOCAL aTranslations := {}
-  LOCAL i
+   LOCAL hTranslations := { => }
+   LOCAL i
 
-  // ATTENTION, these chars are visible only with OEM font
-  FOR i := 160 TO 255
-      AAdd( aTranslations, { hb_BChar( i ), "&#" + Str( i, 3 ) + ";" } )
-  NEXT
+   // ATTENTION, these chars are visible only with OEM font
+   FOR i := 160 TO 255
+      hTranslations[ hb_BChar( i ) ] := "&#" + StrZero( i, 3 ) + ";"
+   NEXT
 
-RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
+   RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, hTranslations )
 
 PROCEDURE uhttpd_Die( cError )
 
-   LOCAL oErr, lError
+   LOCAL oErr
 
-   IF cError != NIL // THEN OutStd( cError )
+   IF HB_ISSTRING( cError )
 #if 0
       __OutDebug( "cError: ", cError )
       IF ! oCGI:HeaderSent()
@@ -554,8 +400,7 @@ PROCEDURE uhttpd_Die( cError )
       oErr:canDefault  := .F.
       oErr:fileName    := ""
       oErr:osCode      := 0
-      lError := Eval( ErrorBlock(), oErr )
-      IF ! HB_ISLOGICAL( lError ) .OR. lError
+      IF hb_defaultValue( Eval( ErrorBlock(), oErr ), .T. )
          __errInHandler()
       ENDIF
       Break( oErr )
@@ -569,145 +414,75 @@ PROCEDURE uhttpd_Die( cError )
 FUNCTION uhttpd_HTMLSpace( n )
    RETURN Replicate( "&nbsp;", n )  // "&#32;"
 
-PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
+PROCEDURE uhttpd_WriteToLogFile( cString, cLog )
 
-   LOCAL nHandle, cSep
+   LOCAL hFile
 
-   cSep := hb_ps()
+#if 0
+   hb_default( @cLog, hb_DirBase() + "logfile.log" )
+#endif
+   hb_default( @cLog, hb_ps() + "tmp" + hb_ps() + "logfile.log" )
 
-   // __defaultNIL( @cLog, AppFullPath() + cSep + "logfile.log" )
-   __defaultNIL( @cLog, cSep + "tmp" + cSep + "logfile.log" )
-   __defaultNIL( @lCreate, .F. )
+   // cString := "PROCEDURE: " + ProcName( -2 ) + " " + cString
 
-   IF cLog != NIL
-
-      IF ! lCreate .AND. hb_FileExists( cLog )
-         nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED )
-      ELSE
-         nHandle := hb_FCreate( cLog, FC_NORMAL, FO_READWRITE + FO_SHARED )
-         // __OutDebug( "Create ", nHandle )
-      ENDIF
-
-      // cString := "PROCEDURE: " + ProcName( -2 ) + " " + cString
-
-      IF nHandle != F_ERROR
-         FSeek( nHandle, 0, FS_END )
-         FWrite( nHandle, cString )
-         FWrite( nHandle, CRLF )
-         FClose( nHandle )
-      ENDIF
+   IF ( hFile := hb_vfOpen( cLog, FO_CREAT + FO_WRITE + FO_SHARED ) ) != NIL
+      hb_vfSeek( hFile, 0, FS_END )
+      hb_vfWrite( hFile, cString + hb_eol() )
+      hb_vfClose( hFile )
    ENDIF
 
    RETURN
 
-/*********************************************************************************/
-
-FUNCTION uhttpd_SplitFileName( cFile )
-
-   LOCAL hFile
-   LOCAL cPath, cName, cExt, cDrive, cSep
-
-   hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
-   hFile := { ;
-      "FILE"     => cFile, ;
-      "DRIVE"    => cDrive, ;
-      "PATH"     => cPath, ;
-      "NAME"     => cName, ;
-      "EXT"      => cExt, ;
-      "FULLPATH" => NIL, ;
-      "FULLNAME" => cName + cExt, ;
-      "UNC"      => NIL }
-
-   cSep := hb_ps()
-
-   hFile:FULLPATH := iif( ! Empty( hFile:PATH ), iif( !( Right( hFile:PATH, Len( cSep ) ) == cSep ), hFile:PATH + cSep, hFile:PATH ), "" )
-   hFile:UNC      := hFile:FULLPATH + hFile:FULLNAME
-
-   RETURN hFile
+/* --- */
 
 FUNCTION uhttpd_AppFullPath()
-
-   LOCAL hExeFile     := uhttpd_SplitFileName( hb_argv( 0 ) )
-   LOCAL cPrgFullPath := hExeFile:FULLPATH
-   LOCAL cPath, cSep
-
-   cSep := hb_ps()
-
-   IF Right( cPrgFullPath, Len( cSep ) ) == cSep
-      cPath := SubStr( cPrgFullPath, 1, Len( cPrgFullPath ) - Len( cSep ) )
-   ELSE
-      cPath := cPrgFullPath
-   ENDIF
-
-   RETURN cPath
+   RETURN hb_DirBase()
 
 FUNCTION uhttpd_AppFullName()
-
-   LOCAL hExeFile     := uhttpd_SplitFileName( hb_argv( 0 ) )
-
-   RETURN hExeFile:FULLNAME
-
+   RETURN hb_FNameNameExt( hb_ProgName() )
 
 FUNCTION uhttpd_CStrToVal( cExp, cType )
 
    IF ! HB_ISSTRING( cExp )
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+      THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDIF
 
    SWITCH cType
+   CASE "M"
    CASE "C"
       RETURN cExp
-
    CASE "P"
       RETURN hb_HexToNum( cExp )
-
    CASE "D"
-      IF cExp[ 3 ] >= "0" .AND. cExp[ 3 ] <= "9" .AND. cExp[ 5 ] >= "0" .AND. cExp[ 5 ] <= "9"
+      IF SubStr( cExp, 3, 1 ) >= "0" .AND. ;
+         SubStr( cExp, 3, 1 ) <= "9" .AND. ;
+         SubStr( cExp, 5, 1 ) >= "0" .AND. ;
+         SubStr( cExp, 5, 1 ) <= "9"
          RETURN hb_SToD( cExp )
       ELSE
          RETURN CToD( cExp )
       ENDIF
-
    CASE "L"
-      RETURN iif( cExp[ 1 ] == "T" .OR. cExp[ 1 ] == "Y" .OR. cExp[ 2 ] == "T" .OR. cExp[ 2 ] == "Y", .T., .F. )
-
+      RETURN Left( cExp, 1 ) $ "TY" .OR. SubStr( cExp, 2, 1 ) $ "TY"
    CASE "N"
       RETURN Val( cExp )
-
-   CASE "M"
-      RETURN cExp
-
    CASE "U"
       RETURN NIL
-
-#if 0
-   CASE "A"
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-
-   CASE "B"
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-
-   CASE "O"
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-#endif
-
-   OTHERWISE
-      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDSWITCH
+
+   THROW( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
    RETURN NIL
 
 FUNCTION uhttpd_GetField( cVar, cType )
 
    LOCAL xVal
-   LOCAL nPos := hb_HPos( _Request, cVar )
 
-   IF nPos > 0 // cVar IN ::h_Request:Keys
-      xVal := hb_HValueAt( _Request, nPos ) // ::h_Request[ cVar ]
+   IF hb_HGetRef( _Request, cVar, @xVal )
       IF Empty( xVal )
          xVal := NIL
       ENDIF
-      IF cType != NIL .AND. cType $ "NLD"
+      IF HB_ISSTRING( cType ) .AND. cType $ "NLD"
          xVal := uhttpd_CStrToVal( xVal, cType )
       ENDIF
    ENDIF
@@ -723,13 +498,4 @@ FUNCTION uhttpd_SetField( cVar, cVal )
    RETURN xVal
 
 FUNCTION uhttpd_HGetValue( hHash, cKey )
-
-   LOCAL nPos
-   LOCAL xVal
-
-   IF hHash != NIL
-      xVal := iif( ( nPos := hb_HPos( hHash, cKey ) ) == 0, NIL, hb_HValueAt( hHash, nPos ) )
-   ENDIF
-   // RETURN iif( cKey $ hHash:Keys, hHash[ cKey ], NIL )
-
-   RETURN xVal
+   RETURN iif( HB_ISHASH( hHash ), hb_HGetDef( hHash, cKey ), NIL )

@@ -2,6 +2,8 @@
 #include "clipper.ch"
 #endif
 
+#include "directry.ch"
+
 PROCEDURE Main()
 
    LOCAL nI, aStruct := { ;
@@ -15,7 +17,7 @@ PROCEDURE Main()
 
    REQUEST DBFCDX
 
-   dbCreate( "testdbf", aStruct, "DBFCDX", .T., "MYALIAS" )
+   dbCreate( "testdbf.dbf", aStruct, "DBFCDX", .T., "MYALIAS" )
 
    ? "[" + MYALIAS->MEMO1 + "]"
    ? "[" + MYALIAS->MEMO2 + "]"
@@ -35,11 +37,10 @@ PROCEDURE Main()
    ? "[" + Str( MYALIAS->DOUBLE ) + "]"
    ? "[" + Str( MYALIAS->NUMERIC ) + "]"
 
-   ? ""
-   ? "Press any key..."
-   Inkey( 0 )
+   ?
+   WAIT
 
-   ? ""
+   ?
    ? "Append 50 records with memos..."
    FOR nI := 1 TO 50
       MYALIAS->( dbAppend() )
@@ -59,23 +60,25 @@ PROCEDURE Main()
    MYALIAS->( dbCommit() )
 
    ? "Records before ZAP:", MYALIAS->( LastRec() )
-   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ 2 ], ;
-      Directory( "testdbf.fpt" )[ 1 ][ 2 ]
+   ? "Size of files (data and memo):", ;
+      hb_vfDirectory( "testdbf.dbf" )[ 1 ][ F_SIZE ], ;
+      hb_vfDirectory( "testdbf.fpt" )[ 1 ][ F_SIZE ]
    MYALIAS->( __dbZap() )
    MYALIAS->( dbCommit() )
    ? "Records after ZAP:", MYALIAS->( LastRec() )
-   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ 2 ], ;
-      Directory( "testdbf.fpt" )[ 1 ][ 2 ]
+   ? "Size of files (data and memo):", ;
+      hb_vfDirectory( "testdbf.dbf" )[ 1 ][ F_SIZE ], ;
+      hb_vfDirectory( "testdbf.fpt" )[ 1 ][ F_SIZE ]
    ? "Value of fields MEMO1, MEMO2, DOUBLE and NUMERIC:"
    ? "[" + MYALIAS->MEMO1 + "]"
    ? "[" + MYALIAS->MEMO2 + "]"
    ? "[" + Str( MYALIAS->DOUBLE ) + "]"
    ? "[" + Str( MYALIAS->NUMERIC ) + "]"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
    dbCloseAll()
+   hb_dbDrop( "testdbf.dbf",, "DBFCDX" )
 
-   dbCreate( "testdbf", aStruct, , .T., "MYALIAS" )
+   dbCreate( "testdbf.dbf", aStruct, , .T., "MYALIAS" )
 
    FOR nI := 1 TO 10
       MYALIAS->( dbAppend() )
@@ -88,10 +91,9 @@ PROCEDURE Main()
    NEXT
    MYALIAS->( dbCommit() )
 
-   ? ""
+   ?
    ? "With SET DELETED OFF"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
 
    MYALIAS->( dbGoTop() )
    DO WHILE ! MYALIAS->( Eof() )
@@ -99,11 +101,10 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   SET DELETED ON
-   ? ""
+   Set( _SET_DELETED, .T. )
+   ?
    ? "With SET DELETED ON"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
 
    MYALIAS->( dbGoTop() )
    DO WHILE ! MYALIAS->( Eof() )
@@ -111,11 +112,10 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   ? ""
+   ?
    ? "With SET DELETED ON"
    ? "and  SET FILTER TO MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
 
    MYALIAS->( dbSetFilter( {|| MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
       "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
@@ -125,12 +125,11 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   SET DELETED OFF
-   ? ""
+   Set( _SET_DELETED, .F. )
+   ?
    ? "With SET DELETED OFF"
    ? "and  SET FILTER TO MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8"
-   ? "Press any key..."
-   Inkey( 0 )
+   WAIT
 
    MYALIAS->( dbSetFilter( {|| MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
       "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
@@ -140,43 +139,42 @@ PROCEDURE Main()
       MYALIAS->( dbSkip() )
    ENDDO
 
-   ? "dbFilter() => " + dbFilter()
-   ? ""
+   ? "dbFilter() =>", dbFilter()
+   ?
 
    ? "Testing __dbPack()"
    ? "Records before PACK:", MYALIAS->( LastRec() )
-   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ 2 ], ;
-      Directory( "testdbf.dbt" )[ 1 ][ 2 ]
+   ? "Size of files (data and memo):", ;
+      hb_vfDirectory( "testdbf.dbf" )[ 1 ][ F_SIZE ], ;
+      hb_vfDirectory( "testdbf.dbt" )[ 1 ][ F_SIZE ]
    SET FILTER TO
    MYALIAS->( __dbPack() )
    MYALIAS->( dbCommit() )
    ? "Records after PACK:", MYALIAS->( LastRec() )
-   ? "Size of files (data and memo):", Directory( "testdbf.dbf" )[ 1 ][ 2 ], ;
-      Directory( "testdbf.dbt" )[ 1 ][ 2 ]
-   ? "Press any key..."
-   Inkey( 0 )
+   ? "Size of files (data and memo):", ;
+      hb_vfDirectory( "testdbf.dbf" )[ 1 ][ F_SIZE ], ;
+      hb_vfDirectory( "testdbf.dbt" )[ 1 ][ F_SIZE ]
+   WAIT
    ? "Value of fields:"
    MYALIAS->( dbGoTop() )
    DO WHILE ! MYALIAS->( Eof() )
       ? MYALIAS->NUMERIC
       MYALIAS->( dbSkip() )
    ENDDO
-   ? ""
+   ?
 
    ? "Open test.dbf and LOCATE FOR TESTDBF->SALARY > 145000"
-   ? "Press any key..."
-   Inkey( 0 )
-   dbUseArea( , , "test", "TESTDBF" )
+   WAIT
+   dbUseArea( , , "test.dbf", "TESTDBF" )
    LOCATE for TESTDBF->SALARY > 145000
    DO WHILE TESTDBF->( Found() )
       ? TESTDBF->FIRST, TESTDBF->LAST, TESTDBF->SALARY
       CONTINUE
    ENDDO
-   ? ""
+   ?
    ? "LOCATE FOR TESTDBF->MARRIED .AND. TESTDBF->FIRST > 'S'"
-   ? "Press any key..."
-   Inkey( 0 )
-   dbUseArea( , , "test", "TESTDBF" )
+   WAIT
+   dbUseArea( , , "test.dbf", "TESTDBF" )
    LOCATE for TESTDBF->MARRIED .AND. TESTDBF->FIRST > 'S'
    DO WHILE TESTDBF->( Found() )
       ? TESTDBF->FIRST, TESTDBF->LAST, TESTDBF->MARRIED
@@ -184,6 +182,6 @@ PROCEDURE Main()
    ENDDO
 
    dbCloseAll()
-   hb_dbDrop( "testdbf",, "DBFCDX" )
+   hb_dbDrop( "testdbf.dbf" )
 
    RETURN

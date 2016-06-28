@@ -2,6 +2,7 @@
  * Harbour common string functions (accessed from standalone utilities and the RTL)
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_stricmp())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_stricmp()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -255,12 +246,14 @@ HB_SIZE hb_strlentrim( const char * pszText )
 
 int hb_stricmp( const char * s1, const char * s2 )
 {
-   int rc = 0, c1, c2;
+   int rc = 0, c1;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_stricmp(%s, %s)", s1, s2 ) );
 
    do
    {
+      int c2;
+
       c1 = HB_TOUPPER( ( unsigned char ) *s1 );
       c2 = HB_TOUPPER( ( unsigned char ) *s2 );
 
@@ -278,7 +271,7 @@ int hb_stricmp( const char * s1, const char * s2 )
    return rc;
 }
 
-/* warning: It is not case sensitive */
+/* Warning: It is not case sensitive */
 int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 {
    HB_SIZE nCount;
@@ -306,7 +299,7 @@ int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 /*
    AJ: 2004-02-23
    Concatenates multiple strings into a single result.
-   Eg. hb_xstrcat (buffer, "A", "B", NULL) stores "AB" in buffer.
+   Eg. hb_xstrcat( buffer, "A", "B", NULL ) stores "AB" in buffer.
  */
 char * hb_xstrcat( char * szDest, const char * szSrc, ... )
 {
@@ -937,8 +930,7 @@ char * hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec )
    return iPos == 1 && *szResult == '-' && *szBuf == '0' ? szBuf : szResult;
 }
 
-/*
- * This function copies szText to destination buffer.
+/* This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null and the nLen param is pDest size not pSource limit
  */
@@ -956,8 +948,7 @@ char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/*
- * This function copies szText to destination buffer.
+/* This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncat, this routine will always append
  *       a null and the nLen param is pDest size not pSource limit
  */
@@ -981,12 +972,10 @@ char * hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to lower case.
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to lower case. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen )
 {
@@ -1005,12 +994,10 @@ char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to upper case.
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to upper case. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
 {
@@ -1029,12 +1016,10 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to upper case AND Trims it
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to upper case AND Trims it */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 {
@@ -1063,9 +1048,9 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/*
- * This function copies trimed szText to destination buffer.
- * NOTE: Unlike the documentation for strncpy, this routine will always append
+/* This function copies trimed szText to destination buffer. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null
  */
 char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
@@ -1096,7 +1081,7 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
 {
    HB_SIZE ul = *pnLen, nStripped = 0;
-   char * ptr, * dst, ch;
+   char * ptr, * dst;
 
    ptr = dst = str;
    while( ul )
@@ -1109,7 +1094,7 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
 
    while( ul-- )
    {
-      ch = *ptr++;
+      char ch = *ptr++;
       if( ch == '\\' )
       {
          ++nStripped;

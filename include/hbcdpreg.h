@@ -1,5 +1,5 @@
 /*
- * code used to register new CP definition
+ * Code used to register new CP definition
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -44,11 +44,9 @@
  *
  */
 
-
 #include "hbcairo.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
-
 
 HB_FUNC( CAIRO_GET_MATRIX )
 {
@@ -70,7 +68,6 @@ HB_FUNC( CAIRO_GET_MATRIX )
    }
 }
 
-
 HB_FUNC( CAIRO_IDENTITY_MATRIX )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -79,7 +76,6 @@ HB_FUNC( CAIRO_IDENTITY_MATRIX )
       cairo_identity_matrix( pCairo );
 }
 
-
 HB_FUNC( CAIRO_ROTATE )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -87,7 +83,6 @@ HB_FUNC( CAIRO_ROTATE )
    if( pCairo )
       cairo_rotate( pCairo, hb_parnd( 2 ) );
 }
-
 
 HB_FUNC( CAIRO_SET_MATRIX )
 {
@@ -113,7 +108,6 @@ HB_FUNC( CAIRO_SET_MATRIX )
    }
 }
 
-
 HB_FUNC( CAIRO_SCALE )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -121,7 +115,6 @@ HB_FUNC( CAIRO_SCALE )
    if( pCairo )
       cairo_scale( pCairo, hb_parnd( 2 ), hb_parnd( 3 ) );
 }
-
 
 HB_FUNC( CAIRO_TRANSFORM )
 {
@@ -146,7 +139,6 @@ HB_FUNC( CAIRO_TRANSFORM )
          hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    }
 }
-
 
 HB_FUNC( CAIRO_TRANSLATE )
 {

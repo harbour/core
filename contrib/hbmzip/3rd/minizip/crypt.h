@@ -111,7 +111,9 @@ static int crypthead(const char* passwd,      /* password string */
      */
     if (++calls == 1)
     {
+#if !( defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) )
         srand((unsigned)(time(NULL) ^ ZCR_SEED2));
+#endif
     }
     init_keys(passwd, pkeys, pcrc_32_tab);
     for (n = 0; n < RAND_HEAD_LEN-2; n++)

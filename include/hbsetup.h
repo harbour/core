@@ -130,7 +130,7 @@
  */
 
 /* Partially based on:
-      http://predef.sourceforge.net/prearch.html
+      https://duckduckgo.com/?q=pre-defined+compiler+macros
       http://poshlib.hookatooka.com/poshlib/trac.cgi/browser/posh.h
       [vszakats]
  */
@@ -149,6 +149,7 @@
       defined( _M_AMD64 ) || \
       defined( _M_X64 ) || \
       defined( __MINGW64__ )
+   #define HB_CPU_X64  /* FUTURE */
    #define HB_CPU_X86_64
 
 #elif defined( __arm64__ )
@@ -282,6 +283,8 @@
    Visual Studio 2010, version 10.0        1600
    Visual Studio 2012, version 11.0        1700
    Visual Studio 2013, version 12.0        1800
+   Visual Studio 2015, version 14.0        1900
+   Visual Studio "15", version 15.0        2000
 */
 
 /* ***********************************************************************

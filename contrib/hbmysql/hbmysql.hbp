@@ -5,16 +5,30 @@
 
 -w3 -es2
 
+-depurlbase=mysql:https://downloads.mariadb.org/mariadb/
+-depurlbase=mysql:https://dev.mysql.com/downloads/
+-deppkgname=mysql:libmariadb-devel{rpm}
+-deppkgname=mysql:libmysqlclient-devel{rpm}
+-deppkgname=mysql:mysql-devel{rpm}
+-deppkgname=mysql:MySQL-devel{rpm}
+-deppkgname=mysql:libmariadb-client-lgpl-dev{deb}
+-deppkgname=mysql:libmysqlclient-dev{deb}
+-deppkgname=mysql:mariadb{pacman}
+-deppkgname=mysql:mariadb{homebrew}
+-deppkgname=mysql:mysql{homebrew}
 -depkeyhead=mysql:mysql.h
 -depcontrol=mysql:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=mysql:${HB_WITH_MYSQL}
 -depincpath=mysql:/usr/include/mysql
 -depincpath=mysql:/usr/local/include/mysql
--depincpath=mysql:/opt/local/include/mysql5/mysql
+-depincpath=mysql:/usr/local/opt/mariadb/include
+-depincpath=mysql:/usr/local/opt/mysql/include
 -depimplibs=mysql:../lib/opt/libmySQL.dll
 -depimplibs=mysql:../lib/libmySQL.dll
+-depimplibs=mysql:../../lib/libmysql.dll
+-depimplibs=mysql:../../lib/libmysql.def{x86_64}
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 mysql.c
 

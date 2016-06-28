@@ -2,6 +2,8 @@
  * Exception handlers
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt) (hb_winExceptionHandler() Windows exception info dump code.)
+ * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour) (hb_winExceptionHandler() Module listing code, x86_64/WinCE/ARM support, OS/2, MIPS32, MIPS64, SH, IA64 CPU dumps.)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,23 +46,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
- *    hb_winExceptionHandler() Windows exception info dump code.
- *
- * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour)
- *    hb_winExceptionHandler() Module listing code.
- *    hb_winExceptionHandler() x64 support.
- *    hb_winExceptionHandler() WinCE/ARM support.
- *    hb_winExceptionHandler() OS/2 CPU dump.
- *    hb_winExceptionHandler() MIPS32, MIPS64, SH, IA64 CPU dumps.
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapifs.h"
@@ -69,30 +54,29 @@
 #include "hbset.h"
 
 #if defined( HB_OS_UNIX )
-#  include <unistd.h>
-#  include <signal.h>
-#  if defined( SIGSTKSZ ) && \
-      ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
-        ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
-#     define HB_SIGNAL_EXCEPTION_HANDLER
-#  endif
+   #include <unistd.h>
+   #include <signal.h>
+   #if defined( SIGSTKSZ ) && \
+       ( ( defined( _BSD_SOURCE ) && _BSD_SOURCE ) || \
+         ( defined( _XOPEN_SOURCE ) && _XOPEN_SOURCE >= 500 ) )
+      #define HB_SIGNAL_EXCEPTION_HANDLER
+   #endif
 #elif defined( HB_OS_WIN )
-#  include <windows.h>
-#  if ! defined( __TINYC__ )
-#     include <tlhelp32.h>
-#  endif
-#  include "hbwinuni.h"
-#  if defined( HB_OS_WIN_CE )
-#     include "hbwince.h"
-#  endif
-   /* BCC and MinGW doesn't seem to #define this */
-#  ifndef TH32CS_SNAPMODULE32
-#     define TH32CS_SNAPMODULE32  0
-#  endif
+   #include <windows.h>
+   #if ! defined( __TINYC__ )
+      #include <tlhelp32.h>
+   #endif
+   #include "hbwinuni.h"
+   #if defined( HB_OS_WIN_CE )
+      #include "hbwince.h"
+   #endif
+   #ifndef TH32CS_SNAPMODULE32
+   #define TH32CS_SNAPMODULE32  0x00000010
+   #endif
 #elif defined( HB_OS_OS2 )
-#  define INCL_DOSEXCEPTIONS
-#  define INCL_ERRORS
-#  include <os2.h>
+   #define INCL_DOSEXCEPTIONS
+   #define INCL_ERRORS
+   #include <os2.h>
 #endif
 
 #if defined( HB_SIGNAL_EXCEPTION_HANDLER )
@@ -164,7 +148,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
 
       /* TODO: 64-bit stack trace.
                See: - StackWalk64()
-                    - http://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
+                    - https://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
    }
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
    {
@@ -594,7 +578,7 @@ void hb_vmSetExceptionHandler( void )
       s_regRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
       rc = DosSetExceptionHandler( &s_regRec );
       if( rc != NO_ERROR )
-         hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
+         hb_errInternal( HB_EI_ERRUNRECOV, "Could not setup exception handler (DosSetExceptionHandler())", NULL, NULL );
    }
 #elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
    {
@@ -628,7 +612,7 @@ void hb_vmUnsetExceptionHandler( void )
    {
       APIRET rc;                             /* Return code                   */
 
-      /* I don't do any check on return code since harbour is exiting in any case */
+      /* I don't do any check on return code since Harbour is exiting in any case */
       rc = DosUnsetExceptionHandler( &s_regRec );
       HB_SYMBOL_UNUSED( rc );
    }

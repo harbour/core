@@ -70,7 +70,6 @@ DYNAMIC gdImageCreatePalette
 DYNAMIC gdImageCreatePaletteFromTrueColor
 DYNAMIC gdImageCreateTrueColor
 DYNAMIC gdImageDashedLine
-DYNAMIC gdImageDestroy
 DYNAMIC gdImageEllipse
 DYNAMIC gdImageFill
 DYNAMIC gdImageFilledArc

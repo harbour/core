@@ -1,0 +1,11 @@
+description=GTWVW (a GTWVG alternative with multi-window support, win-only)
+
+skip={!allwin}
+
+incpaths=.
+
+gt=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
+libs=hbwin.hbc
+
+gui=yes

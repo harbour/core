@@ -48,7 +48,7 @@
 #define HB_COMMON_CH_
 
 #if defined( HB_LEGACY_LEVEL4 )
-#  include "hbhash.ch"
+   #include "hbhash.ch"
 #endif
 
 /* Friendly logical aliases */

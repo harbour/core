@@ -1,14 +1,14 @@
 /*
- * demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server with RPC support
- *    All files which names starts 'net:' are redirected to this API.
- *    This is code for simple MT server which is activated by:
- *       netio_MTServer( [<nPort>], [<cIfAddr>], [<cRootDir>], [<xRPC>],
- *                       [<cPasswd>], [<nCompressionLevel>], [<nStrategy>],
- *                       [<sSrvFunc>] )
- *                                              -> <pListenSocket> | NIL
- *    and can be stopped by:
- *       netio_ServerStop( <pListenSocket>, .T. )
+ * Demonstration code for alternative RDD IO API which uses own
+ * very simple TCP/IP file server with RPC support
+ * All files which names starts 'net:' are redirected to this API.
+ * This is code for simple MT server which is activated by:
+ *    netio_MTServer( [<nPort>], [<cIfAddr>], [<cRootDir>], [<xRPC>],
+ *                    [<cPasswd>], [<nCompressionLevel>], [<nStrategy>],
+ *                    [<sSrvFunc>] )
+ *                                           -> <pListenSocket> | NIL
+ * and can be stopped by:
+ *    netio_ServerStop( <pListenSocket>, .T. )
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -109,7 +109,7 @@ STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, sSrvFunc, ... )
 
    LOCAL pConnectionSocket
 
-   WHILE .T.
+   DO WHILE .T.
       pConnectionSocket := netio_Accept( pListenSocket,, ... )
       IF Empty( pConnectionSocket )
          EXIT

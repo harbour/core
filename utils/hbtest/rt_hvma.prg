@@ -305,14 +305,14 @@ PROCEDURE Main_HVMA()
    HBTEST .T. .AND. 1                     IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;N:1 F:S"
    HBTEST .T. .AND. 1.567                 IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;N:1.567 F:S"
    HBTEST .T. .AND. scString              IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;C:HELLO F:S"
-   HBTEST .T. .AND. hb_SToD( "" )         IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;D:0d00000000 F:S"
+   HBTEST .T. .AND. hb_SToD( "" )         IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;D:0d0 F:S"
    HBTEST .T. .AND. NIL                   IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;U:NIL F:S"
    HBTEST .T. .AND. {}                    IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;A:{.[0].} F:S"
    HBTEST .T. .AND. {|| NIL }             IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.T.;B:{||...} F:S"
    HBTEST .F. .AND. 1                     IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;N:1 F:S"
    HBTEST .F. .AND. 1.567                 IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;N:1.567 F:S"
    HBTEST .F. .AND. scString              IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;C:HELLO F:S"
-   HBTEST .F. .AND. hb_SToD( "" )         IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;D:0d00000000 F:S"
+   HBTEST .F. .AND. hb_SToD( "" )         IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;D:0d0 F:S"
    HBTEST .F. .AND. NIL                   IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;U:NIL F:S"
    HBTEST .F. .AND. {}                    IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;A:{.[0].} F:S"
    HBTEST .F. .AND. {|| NIL }             IS "E 1 BASE 1078 Argument error (.AND.) OS:0 #:0 A:2:L:.F.;B:{||...} F:S"
@@ -365,8 +365,13 @@ PROCEDURE Main_HVMA()
    HBTEST saArray[ 0 ]                    IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 "
    HBTEST saArray[ 0 ] := 1               IS "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 "
 #endif
+#ifdef HB_CLP_STRICT
    HBTEST saArray[ 1000 ]                 IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 "
    HBTEST saArray[ 1000 ] := 1            IS "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 "
+#else
+   HBTEST saArray[ 1000 ]                 IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 A:2:A:{.[1].};N:1000 "
+   HBTEST saArray[ 1000 ] := 1            IS "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 A:1:N:1000 "
+#endif
 #ifndef __HARBOUR__
    // this error is reported at compile time
    HBTEST saArray[ -1 ]                   IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 "
@@ -386,7 +391,7 @@ PROCEDURE Main_HVMA()
    HBTEST (NIL)->NOFIELD                  IS "E 1 BASE 1065 Argument error (&) OS:0 #:0 A:2:U:NIL;C:NOFIELD F:S"
    HBTEST (2)->NOFIELD                    IS "E 14 BASE 1003 Variable does not exist (NOFIELD) OS:0 #:1 F:R"
    HBTEST (2.5)->NOFIELD                  IS "E 14 BASE 1003 Variable does not exist (NOFIELD) OS:0 #:1 F:R"
-   HBTEST (hb_SToD( "" ))->NOFIELD        IS "E 1 BASE 1065 Argument error (&) OS:0 #:0 A:2:D:0d00000000;C:NOFIELD F:S"
+   HBTEST (hb_SToD( "" ))->NOFIELD        IS "E 1 BASE 1065 Argument error (&) OS:0 #:0 A:2:D:0d0;C:NOFIELD F:S"
    HBTEST (ErrorNew())->NOFIELD           IS "E 1 BASE 1065 Argument error (&) OS:0 #:0 A:2:O:ERROR Object;C:NOFIELD F:S"
 
 #ifndef __XPP__
@@ -538,8 +543,21 @@ PROCEDURE Main_HVMA()
    HBTEST RTSTR( 50000000000000 )                 IS " 15  50000000000000"
    HBTEST RTSTR( 500000000000000 )                IS " 16  500000000000000"
    HBTEST RTSTR( 00000000000005 )                 IS " 10          5"
+#ifdef __HARBOUR__
+   /* INCOMPATIBILITY:
+      https://github.com/harbour/core/issues/98#issuecomment-105807651 */
+   HBTEST RTSTR( 00000500000000000000 )           IS " 16  500000000000000"
+   HBTEST RTSTR( 0000500000000000000 )            IS " 16  500000000000000"
+   HBTEST RTSTR( 000500000000000000 )             IS " 16  500000000000000"
+   HBTEST RTSTR( 00500000000000000 )              IS " 16  500000000000000"
+   HBTEST RTSTR( 0500000000000000 )               IS " 16  500000000000000"
+#else
    HBTEST RTSTR( 00000500000000000000 )           IS " 21       500000000000000"
+   HBTEST RTSTR( 0000500000000000000 )            IS " 20      500000000000000"
+   HBTEST RTSTR( 000500000000000000 )             IS " 19     500000000000000"
+   HBTEST RTSTR( 00500000000000000 )              IS " 18    500000000000000"
    HBTEST RTSTR( 0500000000000000 )               IS " 17   500000000000000"
+#endif
    HBTEST RTSTR( 0500000000000000.5 )             IS " 18  500000000000000.5"
    HBTEST RTSTR( 5000000000000000 )               IS " 17  5000000000000000"
    HBTEST RTSTR( 50000000000000000 )              IS " 18  50000000000000000"
@@ -633,7 +651,7 @@ PROCEDURE Main_HVMA()
 
    RETURN
 
-FUNCTION RTSTR( nValue )
+STATIC FUNCTION RTSTR( nValue )
    RETURN Str( Len( Str( nValue ) ), 3 ) + " " + Str( nValue )
 
 /* Don't change the position of this #include. */

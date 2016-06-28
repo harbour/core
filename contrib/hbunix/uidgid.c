@@ -1,6 +1,7 @@
 /*
  * POSIX function wrappers to get/set user and group IDs
  *
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour) (posix_getpwnam(), posix_getgrnam())
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,6 +47,9 @@
 
 #include "hbposix.h"
 
+#include <grp.h>
+#include <pwd.h>
+
 HB_FUNC( POSIX_GETUID )
 {
    hb_ret_uid( getuid() );
@@ -85,7 +89,7 @@ HB_FUNC( POSIX_SETEUID )
 HB_FUNC( POSIX_SETGID )
 {
    if( HB_ISNUM( 1 ) )
-      hb_posix_result( setgid( hb_par_uid( 1 ) ) );
+      hb_posix_result( setgid( hb_par_gid( 1 ) ) );
    else
       hb_posix_param_error();
 }
@@ -93,7 +97,117 @@ HB_FUNC( POSIX_SETGID )
 HB_FUNC( POSIX_SETEGID )
 {
    if( HB_ISNUM( 1 ) )
-      hb_posix_result( setegid( hb_par_uid( 1 ) ) );
+      hb_posix_result( setegid( hb_par_gid( 1 ) ) );
+   else
+      hb_posix_param_error();
+}
+
+/* http://man7.org/linux/man-pages/man3/getgrnam.3.html */
+HB_FUNC( POSIX_GETGRNAM )
+{
+   if( HB_ISCHAR( 1 ) )
+   {
+#if ( defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 1 ) || \
+      defined( _XOPEN_SOURCE ) || defined( _BSD_SOURCE ) || \
+      defined( _SVID_SOURCE ) || defined( _POSIX_SOURCE )  /* adjust as needed */
+
+      struct group   grp;
+      struct group * result = NULL;
+      char *         buf;
+      size_t         bufsize;
+      int s;
+
+      bufsize = sysconf( _SC_GETGR_R_SIZE_MAX );
+      if( bufsize == ( size_t ) -1 )
+         bufsize = 16384;
+
+      buf = ( char * ) hb_xgrab( bufsize );
+
+      s = getgrnam_r( hb_parc( 1 ), &grp, buf, bufsize, &result );
+
+      hb_retnl( s == 0 && result != NULL ? grp.gr_gid : 0 );
+
+      hb_xfree( buf );
+#else
+      struct group * grp = getgrnam( hb_parc( 1 ) );
+
+      hb_retnl( grp ? grp->gr_gid : 0 );
+#endif
+   }
+   else
+      hb_posix_param_error();
+}
+
+/* http://man7.org/linux/man-pages/man3/getpwnam.3.html */
+HB_FUNC( POSIX_GETPWNAM )
+{
+   if( HB_ISCHAR( 1 ) )
+   {
+#if ( defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 1 ) || \
+      defined( _XOPEN_SOURCE ) || defined( _BSD_SOURCE ) || \
+      defined( _SVID_SOURCE ) || defined( _POSIX_SOURCE )  /* adjust as needed */
+
+      struct passwd   pwd;
+      struct passwd * result = NULL;
+      char *          buf;
+      size_t          bufsize;
+      int s;
+
+      bufsize = sysconf( _SC_GETPW_R_SIZE_MAX );
+      if( bufsize == ( size_t ) -1 )
+         bufsize = 16384;
+
+      buf = ( char * ) hb_xgrab( bufsize );
+
+      s = getpwnam_r( hb_parc( 1 ), &pwd, buf, bufsize, &result );
+
+      if( s == 0 && result != NULL )
+      {
+         hb_retnl( pwd.pw_uid );
+         hb_stornl( pwd.pw_gid, 2 );
+#if defined( HB_OS_ANDROID )
+         hb_storc( NULL, 3 );
+#else
+         hb_storc( pwd.pw_gecos, 3 );
+#endif
+         hb_storc( pwd.pw_dir, 4 );
+         hb_storc( pwd.pw_shell, 5 );
+      }
+      else
+      {
+         hb_retnl( 0 );
+         hb_stornl( 0, 2 );
+         hb_storc( NULL, 3 );
+         hb_storc( NULL, 4 );
+         hb_storc( NULL, 5 );
+      }
+
+      hb_xfree( buf );
+#else
+      struct passwd * pwd = getpwnam( hb_parc( 1 ) );
+
+      if( pwd )
+      {
+         hb_retnl( pwd->pw_uid );
+         hb_stornl( pwd->pw_gid, 2 );
+#if defined( HB_OS_ANDROID )
+         hb_storc( NULL, 3 );
+#else
+         hb_storc( pwd->pw_gecos, 3 );
+#endif
+         hb_storc( pwd->pw_dir, 4 );
+         hb_storc( pwd->pw_shell, 5 );
+      }
+      else
+      {
+         hb_retnl( 0 );
+         hb_stornl( 0, 2 );
+         hb_storc( NULL, 3 );
+         hb_storc( NULL, 4 );
+         hb_storc( NULL, 5 );
+      }
+#endif
+   }
    else
       hb_posix_param_error();
 }

@@ -83,7 +83,7 @@ extern void hb_compParserRun( HB_COMP_DECL );
 #define HB_VSCOMP_MEMVAR     ( HB_VSCOMP_PUBLIC | HB_VSCOMP_PRIVATE )
 #define HB_VSCOMP_TH_STATIC  ( HB_VSCOMP_STATIC | HB_VSCOMP_THREAD )
 
-/* return detailed information about a class of variable  */
+/* return detailed information about a class of variable */
 extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define HB_VS_UNDECLARED      0
 /* variables declared in a current codeblock/function/procedure */
@@ -343,25 +343,25 @@ extern const HB_BYTE hb_comp_pcode_len[];
 #define HB_IDENT_FREE         1
 #define HB_IDENT_COPY         2
 
-/* /GC command line setting types */
+/* /GC command-line setting types */
 #define HB_COMPGENC_COMPACT     0
 #define HB_COMPGENC_NORMAL      1
 #define HB_COMPGENC_VERBOSE     2
 #define HB_COMPGENC_REALCODE    3
 
-/* /ES command line setting types */
+/* /ES command-line setting types */
 #define HB_EXITLEVEL_DEFAULT    0
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
 
-/* /kx command line setting types - compatibility modes
+/* /kx command-line setting types - compatibility modes
  * (turn on a bit in HB_ULONG word)
 */
 #define HB_COMPFLAG_HARBOUR      HB_SM_HARBOUR     /* 1 -kh */
 #define HB_COMPFLAG_XBASE        HB_SM_XBASE       /* 2 -kx */
 #define HB_COMPFLAG_SHORTCUTS    HB_SM_SHORTCUTS   /* 8 -z enable sortcuts for logical operators */
 #define HB_COMPFLAG_ARRSTR       HB_SM_ARRSTR      /* 16 -ks strings as array of bytes */
-#define HB_COMPFLAG_EXTOPT       HB_SM_EXTOPT      /* 32 -ko clipper incompatible optimizations */
+#define HB_COMPFLAG_EXTOPT       HB_SM_EXTOPT      /* 32 -ko Cl*pper incompatible optimizations */
 #define HB_COMPFLAG_RT_MACRO     HB_SM_RT_MACRO    /* 64 -kr */
 #define HB_COMPFLAG_OPTJUMP      0x0100            /* -kj turn off jump optimalization */
 #define HB_COMPFLAG_HB_INLINE    0x0200            /* -ki hb_inLine(...) { ... } support */
@@ -380,18 +380,18 @@ extern const HB_BYTE hb_comp_pcode_len[];
 #define HB_SUPPORT_MACRODECL        ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_MACRODECL) )
 
 #if defined( HB_MACRO_SUPPORT )
-#  define HB_MACRO_GENFLAGS   HB_COMPFLAG_RT_MACRO
+   #define HB_MACRO_GENFLAGS   HB_COMPFLAG_RT_MACRO
 #elif ! defined( HB_COMMON_SUPPORT )
-#  define HB_MACRO_GENFLAGS   ( ( ( ( HB_BYTE ) HB_COMP_PARAM->supported ) & \
-                                  ( HB_COMPFLAG_HARBOUR | \
-                                    HB_COMPFLAG_XBASE | \
-                                    HB_COMPFLAG_SHORTCUTS | \
-                                    HB_COMPFLAG_ARRSTR | \
-                                    HB_COMPFLAG_EXTOPT | \
-                                    HB_COMPFLAG_RT_MACRO ) ) | \
-                                ( ( HB_COMP_PARAM->supported & \
-                                    HB_COMPFLAG_HARBOUR ) == 0 ? \
-                                  HB_COMPFLAG_SHORTCUTS : 0 ) )
+   #define HB_MACRO_GENFLAGS   ( ( ( ( HB_BYTE ) HB_COMP_PARAM->supported ) & \
+                                   ( HB_COMPFLAG_HARBOUR | \
+                                     HB_COMPFLAG_XBASE | \
+                                     HB_COMPFLAG_SHORTCUTS | \
+                                     HB_COMPFLAG_ARRSTR | \
+                                     HB_COMPFLAG_EXTOPT | \
+                                     HB_COMPFLAG_RT_MACRO ) ) | \
+                                 ( ( HB_COMP_PARAM->supported & \
+                                     HB_COMPFLAG_HARBOUR ) == 0 ? \
+                                   HB_COMPFLAG_SHORTCUTS : 0 ) )
 #endif
 
 HB_EXTERN_END

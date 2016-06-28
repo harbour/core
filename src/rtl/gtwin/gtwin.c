@@ -10,8 +10,6 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     (with 2004 work on Readkey)
  *
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
  *    hb_gt_win_CtrlHandler()
  *    hb_gt_win_SetCloseButton()
@@ -20,8 +18,6 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
  *    hb_gt_ReadKey()
- *
- * See COPYING.txt for licensing terms.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -782,7 +778,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       }
 #endif
       if( s_HInput == INVALID_HANDLE_VALUE )
-         hb_errInternal( 10001, "Can't allocate console", NULL, NULL );
+         hb_errInternal( 10001, "Could not allocate console", NULL, NULL );
    }
 
    /* Add Ctrl+Break handler [vszakats] */
@@ -798,7 +794,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                      0, 0 );
 
    if( s_HOutput == INVALID_HANDLE_VALUE )
-      hb_errInternal( 10001, "Can't allocate console (output)", NULL, NULL );
+      hb_errInternal( 10001, "Could not allocate console (output)", NULL, NULL );
 
    s_HInput = CreateFile( TEXT( "CONIN$" ),                 /* filename    */
                      GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
@@ -808,7 +804,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                      0, 0 );
 
    if( s_HInput == INVALID_HANDLE_VALUE )
-      hb_errInternal( 10001, "Can't allocate console (input)", NULL, NULL );
+      hb_errInternal( 10001, "Could not allocate console (input)", NULL, NULL );
 
    GetConsoleScreenBufferInfo( s_HOutput, &s_csbi );
 
@@ -985,7 +981,7 @@ static const char * hb_gt_win_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Windows native console";
+   return "Terminal: Windows native console";
 }
 
 /* *********************************************************************** */
@@ -1609,7 +1605,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
       {
          int iFlags = hb_gt_win_keyFlags( pInRec->Event.MouseEvent.dwControlKeyState );
 
-         /* mouse wheel events use screen based mouse possition */
+         /* mouse wheel events use screen based mouse position */
          if( pInRec->Event.MouseEvent.dwEventFlags == MOUSE_HWHEELED )
          {
             /* unsupported */

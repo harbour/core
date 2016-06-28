@@ -5,16 +5,21 @@
 
 -w3 -es2
 
+-depurlbase=expat:http://www.libexpat.org
+-deppkgname=expat:libexpat1-dev{deb}
+-deppkgname=expat:expat{pacman}
+-deppkgname=expat:expat{homebrew}
 -depkeyhead=expat:expat.h
 -depcontrol=expat:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=expat:${HB_WITH_EXPAT}
 -depincpath=expat:/usr/include
+-depincpath=expat:/usr/local/include
 -depincpathlocal=expat:3rd/expat
 -depfinish=expat
 
 -cflag=-DXML_STATIC
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 internal.c

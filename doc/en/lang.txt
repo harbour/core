@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: hb_langName(), hb_langSelect()
  *
@@ -137,13 +135,13 @@
          ? hb_langName( "<non-existent>" )
          hb_langSelect( "pt" )       // Default language is now Portuguese
          ? CDoW( Date() )            // Segunda-feira
-         ? "Current language is ", hb_langName()             // Portuguese
-         ? "Old language id selected is ", hb_langSelect()   // PT
+         ? "Current language is", hb_langName()              // Portuguese
+         ? "Old language id selected is", hb_langSelect()    // PT
          hb_langSelect( "ro" )       // Default language is now Romanian
          ? CMonth( Date() )          // Mai
-         ? "Old language id selected is ", hb_langSelect()   // RO
+         ? "Old language id selected is", hb_langSelect()    // RO
          hb_langSelect( "es" )       // Default language is now Spanish
-         ? "Current language is ", hb_langName()              // Spanish
+         ? "Current language is", hb_langName()              // Spanish
          ? CMonth( Date() )          // Mayo
          ? CDoW( Date() )            // Lunes
          RETURN
@@ -235,10 +233,10 @@
       PROCEDURE Main()
          hb_langSelect( "pt" )       // Default language is now Portuguese
          ? CDoW( Date() )            // Segunda-feira
-         ? "Old language id selected is ", hb_langSelect()   // PT
+         ? "Old language id selected is", hb_langSelect()    // PT
          hb_langSelect( "ro" )       // Default language is now Romanian
          ? CMonth( Date() )          // Mai
-         ? "Old language id selected is ", hb_langSelect()   // RO
+         ? "Old language id selected is", hb_langSelect()    // RO
          hb_langSelect( "es" )       // Default language is now Spanish
          ? CMonth( Date() )          // Mayo
          ? CDoW( Date() )            // Lunes
@@ -293,12 +291,11 @@
       German                ISO-8859-1     DEWIN
       Greek                 737            EL
       Greek                 Windows-1253   ELWIN
-      Hungarian (ntxhu852)  852            HU852
-      Hungarian (sixhu852)  852            HU852S
-      Hungarian (ntxhu852)  ISO-8859-2     HUISO
-      Hungarian (sixhu852)  ISO-8859-2     HUISOS
-      Hungarian (ntxhu852)  Windows-1250   HUWIN
-      Hungarian (sixhu852)  Windows-1250   HUWINS
+      Hungarian (ntxhu852)  852            HU852C
+      Hungarian (sixhu852)  852            HU852
+      Hungarian (sixhu852)  CWI-2          HUCWI
+      Hungarian             ISO-8859-2     HUISO
+      Hungarian             Windows-1250   HUWIN
       Italian               437            IT437
       Italian               850            IT850
       Italian               ISO-8859-1b    ITISB

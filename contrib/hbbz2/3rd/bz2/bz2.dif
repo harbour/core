@@ -1,6 +1,6 @@
-diff -urN bz2.orig\bzlib_pr.h bz2\bzlib_pr.h
---- bz2.orig\bzlib_pr.h	Mon Mar 11 20:32:51 2013
-+++ bz2\bzlib_pr.h	Mon Mar 11 20:32:51 2013
+diff -urN bz2.orig/bzlib_pr.h bz2/bzlib_pr.h
+--- bz2.orig/bzlib_pr.h	2014-02-03 13:07:56.677405200 +0100
++++ bz2/bzlib_pr.h	2014-02-03 13:07:56.677405200 +0100
 @@ -85,7 +85,13 @@
  
  #else

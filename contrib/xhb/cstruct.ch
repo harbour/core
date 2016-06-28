@@ -1,4 +1,5 @@
 /*
+ * CStruct header
  *
  * Copyright 2000 Ron Pinkas <ronpinkas@profit-master.com>
  *
@@ -60,13 +61,11 @@
       // <elem> instead of <!elem!> to allow ElemName[n] syntax.
       #xcommand MEMBER <elem> IS <type> => hb_Member( #<elem>, <type> )
 
-      /*
-         Will match:
+      /* Will match:
             MEMBER <elem> IS <!stru!>
          due to expansion of:
             #xtranslate IS <stru> [...] => := hb_CStructure( #<stru> ):Init( {} )
-         as established by C STRUCTURE <!stru!> #xcommand for the given structure.
-      */
+         as established by C STRUCTURE <!stru!> #xcommand for the given structure. */
       #xcommand MEMBER <elem> := hb_CStructure( <literalstru> ):Init( {} ) => ;
                hb_Member( #<elem>, hb_CStructureId( <literalstru>, .T. ) )
 
@@ -83,13 +82,11 @@
                #xtranslate IS <stru> \[ \<x: :=, INIT> { \<initlist,...> } ] => := hb_CStructure( #<stru> ):Init( {\<initlist>} ); ;
                #xtranslate IS <stru> FROM \<pointer> => := hb_CStructure( #<stru> ):Buffer( \<pointer> )
 
-      //----------------------------- C Syntax support ---------------------------------//
+      /* C Syntax support */
+
       /* NOTES:
-
-        1. #pragma pack(<x>) needs to be translated to pragma pack(<X>) without the <#>.
-
-        2. First line must end with <;> so the whole definition is a single PRG line!
-      */
+         1. #pragma pack(<x>) needs to be translated to pragma pack(<X>) without the <#>.
+         2. First line must end with <;> so the whole definition is a single PRG line! */
 
       #define __PACK 8
 

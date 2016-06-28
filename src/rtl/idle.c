@@ -2,6 +2,7 @@
  * The idle state collector
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_ReleaseCPU())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_ReleaseCPU()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -198,7 +189,7 @@ HB_FUNC( HB_IDLEADD )
 
       /* return a pointer as a handle to this idle task
        */
-      hb_retptr( ( void * ) hb_codeblockId( pBlock ) );    /* TODO: access to pointers from harbour code */
+      hb_retptr( ( void * ) hb_codeblockId( pBlock ) );    /* TODO: access to pointers from Harbour code */
    }
 }
 

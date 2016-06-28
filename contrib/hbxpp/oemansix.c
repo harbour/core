@@ -1,5 +1,5 @@
 /*
- * XPP compatible OEM <-> ANSI string conversion functions
+ * Xbase++ compatible OEM <-> ANSI string conversion functions
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *

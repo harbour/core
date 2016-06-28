@@ -1,9 +1,9 @@
 /*
- * "$Id: mxml-node.c 451 2014-01-04 21:50:06Z msweet $"
+ * "$Id: mxml-node.c 462 2016-06-11 20:51:49Z msweet $"
  *
  * Node support code for Mini-XML, a small XML-like file parsing library.
  *
- * Copyright 2003-2014 by Michael R Sweet.
+ * Copyright 2003-2016 by Michael R Sweet.
  *
  * These coded instructions, statements, and computer programs are the
  * property of Michael R Sweet and are protected by Federal copyright
@@ -18,7 +18,6 @@
  * Include necessary headers...
  */
 
-#include "config.h"
 #include "mxml.h"
 
 
@@ -26,6 +25,7 @@
  * Local functions...
  */
 
+static void		mxml_free(mxml_node_t *node);
 static mxml_node_t	*mxml_new(mxml_node_t *parent, mxml_type_t type);
 
 
@@ -177,9 +177,6 @@ mxmlAdd(mxml_node_t *parent,		/* I - Parent node */
 void
 mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
 {
-  int	i;				/* Looping var */
-
-
 #ifdef DEBUG
   fprintf(stderr, "mxmlDelete(node=%p)\n", node);
 #endif /* DEBUG */
@@ -209,56 +206,10 @@ mxmlDelete(mxml_node_t *node)		/* I - Node to delete */
   }
 
  /*
-  * Now delete any node data...
+  * Then free the memory used by this node...
   */
 
-  switch (node->type)
-  {
-    case MXML_ELEMENT :
-        if (node->value.element.name)
-	  free(node->value.element.name);
-
-	if (node->value.element.num_attrs)
-	{
-	  for (i = 0; i < node->value.element.num_attrs; i ++)
-	  {
-	    if (node->value.element.attrs[i].name)
-	      free(node->value.element.attrs[i].name);
-	    if (node->value.element.attrs[i].value)
-	      free(node->value.element.attrs[i].value);
-	  }
-
-          free(node->value.element.attrs);
-	}
-        break;
-    case MXML_INTEGER :
-       /* Nothing to do */
-        break;
-    case MXML_OPAQUE :
-        if (node->value.opaque)
-	  free(node->value.opaque);
-        break;
-    case MXML_REAL :
-       /* Nothing to do */
-        break;
-    case MXML_TEXT :
-        if (node->value.text.string)
-	  free(node->value.text.string);
-        break;
-    case MXML_CUSTOM :
-        if (node->value.custom.data &&
-	    node->value.custom.destroy)
-	  (*(node->value.custom.destroy))(node->value.custom.data);
-	break;
-    default :
-        break;
-  }
-
- /*
-  * Free this node...
-  */
-
-  free(node);
+  mxml_free(node);
 }
 
 
@@ -734,6 +685,68 @@ mxmlRetain(mxml_node_t *node)		/* I - Node */
 
 
 /*
+ * 'mxml_free()' - Free the memory used by a node.
+ *
+ * Note: Does not free child nodes, does not remove from parent.
+ */
+
+static void
+mxml_free(mxml_node_t *node)		/* I - Node */
+{
+  int	i;				/* Looping var */
+
+
+  switch (node->type)
+  {
+    case MXML_ELEMENT :
+        if (node->value.element.name)
+	  free(node->value.element.name);
+
+	if (node->value.element.num_attrs)
+	{
+	  for (i = 0; i < node->value.element.num_attrs; i ++)
+	  {
+	    if (node->value.element.attrs[i].name)
+	      free(node->value.element.attrs[i].name);
+	    if (node->value.element.attrs[i].value)
+	      free(node->value.element.attrs[i].value);
+	  }
+
+          free(node->value.element.attrs);
+	}
+        break;
+    case MXML_INTEGER :
+       /* Nothing to do */
+        break;
+    case MXML_OPAQUE :
+        if (node->value.opaque)
+	  free(node->value.opaque);
+        break;
+    case MXML_REAL :
+       /* Nothing to do */
+        break;
+    case MXML_TEXT :
+        if (node->value.text.string)
+	  free(node->value.text.string);
+        break;
+    case MXML_CUSTOM :
+        if (node->value.custom.data &&
+	    node->value.custom.destroy)
+	  (*(node->value.custom.destroy))(node->value.custom.data);
+	break;
+    default :
+        break;
+  }
+
+ /*
+  * Free this node...
+  */
+
+  free(node);
+}
+
+
+/*
  * 'mxml_new()' - Create a new node.
  */
 
@@ -788,5 +801,5 @@ mxml_new(mxml_node_t *parent,		/* I - Parent node */
 
 
 /*
- * End of "$Id: mxml-node.c 451 2014-01-04 21:50:06Z msweet $".
+ * End of "$Id: mxml-node.c 462 2016-06-11 20:51:49Z msweet $".
  */

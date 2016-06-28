@@ -60,25 +60,25 @@ HB_EXTERN_BEGIN
 #define FL_MASK       0x00FF   /* Mask for lock type */
 
 /* Extended file locking flags */
-#define FLX_EXCLUSIVE 0x0000   /* Exclusive lock  */
-#define FLX_SHARED    0x0100   /* Shared lock     */
-#define FLX_WAIT      0x0200   /* Wait for lock until success */
+#define FLX_EXCLUSIVE HB_FLX_EXCLUSIVE  /* Exclusive lock */
+#define FLX_SHARED    HB_FLX_SHARED     /* Shared lock */
+#define FLX_WAIT      HB_FLX_WAIT       /* Wait for lock until success */
 
 /* File inheritance flags */
-#define FO_INHERITED  0x0000   /* Spawned processes can inherit this file handle     */
+#define FO_INHERITED  0x0000   /* Spawned processes can inherit this file handle */
 #define FO_PRIVATE    0x0080   /* Spawned processes can not inherit this file handle */
 
 /* Extended file open mode flags */
 #define FXO_TRUNCATE  0x0100   /* Create (truncate if exists) */
-#define FXO_APPEND    0x0200   /* Create (append if exists)   */
+#define FXO_APPEND    0x0200   /* Create (append if exists) */
 #define FXO_UNIQUE    0x0400   /* Create unique file FO_EXCL ??? */
-#define FXO_FORCEEXT  0x0800   /* Force default extension     */
-#define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
-#define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
+#define FXO_FORCEEXT  0x0800   /* Force default extension */
+#define FXO_DEFAULTS  0x1000   /* Use SET command defaults */
+#define FXO_DEVICERAW 0x2000   /* Open devices in raw mode */
 /* Harbour extension */
 #define FXO_NOSEEKPOS FXO_DEVICERAW /* seek pos not needed in regular file */
-#define FXO_SHARELOCK 0x4000   /* emulate MS-DOS SH_DENY* mode in POSIX OS */
-#define FXO_COPYNAME  0x8000   /* copy final szPath into pszFileName */
+#define FXO_SHARELOCK 0x4000        /* emulate MS-DOS SH_DENY* mode in POSIX OS */
+#define FXO_COPYNAME  0x8000        /* copy final szPath into pszFileName */
 
 /* these definitions should be cleared,
  * now they only help to clean lower level code
@@ -96,7 +96,7 @@ HB_EXTERN_BEGIN
 #define HB_FA_RWXO            ( HB_FA_ROTH | HB_FA_WOTH | HB_FA_XOTH )
 
 #if defined( HB_OS_VXWORKS ) && ! defined( S_ISVTX )
-#  define S_ISVTX 0
+   #define S_ISVTX 0
 #endif
 
 /* macros to convert Harbour attributes to POSIX ones */
@@ -198,22 +198,22 @@ extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* re
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_USE_SHARELOCKS_OFF )
-#  define HB_USE_SHARELOCKS
-#  define HB_SHARELOCK_POS          0x7fffffffUL
-#  define HB_SHARELOCK_SIZE         0x1UL
-#  if defined( HB_USE_BSDLOCKS_OFF )
-#     undef HB_USE_BSDLOCKS
-#  elif defined( HB_OS_LINUX ) && \
-        ! defined( __WATCOMC__ ) && ! defined( HB_USE_BSDLOCKS )
-      /* default usage of BSD locks in *BSD systems for emulating
-       * MS-DOS/Windows DENY_* flags has been disabled because tests
-       * on FreeBSD 6.2 and OS X shows that this implementation
-       * can create self deadlock when used simultaneously with
-       * POSIX locks - thanks to Phil and Lorenzo for locating the
-       * problem and tests [druzus]
-       */
-#     define HB_USE_BSDLOCKS
-#  endif
+   #define HB_USE_SHARELOCKS
+   #define HB_SHARELOCK_POS          0x7fffffffUL
+   #define HB_SHARELOCK_SIZE         0x1UL
+   #if defined( HB_USE_BSDLOCKS_OFF )
+      #undef HB_USE_BSDLOCKS
+   #elif defined( HB_OS_LINUX ) && \
+         ! defined( __WATCOMC__ ) && ! defined( HB_USE_BSDLOCKS )
+       /* default usage of BSD locks in *BSD systems for emulating
+        * MS-DOS/Windows DENY_* flags has been disabled because tests
+        * on FreeBSD 6.2 and macOS shows that this implementation
+        * can create self deadlock when used simultaneously with
+        * POSIX locks - thanks to Phil and Lorenzo for locating the
+        * problem and tests [druzus]
+        */
+      #define HB_USE_BSDLOCKS
+   #endif
 #endif
 
 #define HB_MAX_DRIVE_LENGTH   10
@@ -327,7 +327,7 @@ extern HB_EXPORT HB_BOOL  hb_fsOS2QueryPathInfo( const char * pszPathName,
 
 #if defined( _HB_FILE_IMPLEMENTATION_ ) || defined( _HB_FILE_INTERNAL_ )
 
-#  define HB_FILE_TYPE_MAX    128
+   #define HB_FILE_TYPE_MAX    128
 
    struct _HB_FILE;
    typedef struct _HB_FILE * PHB_FILE;
@@ -442,6 +442,7 @@ extern HB_EXPORT HB_BYTE *    hb_fileLoadData( PHB_FILE pFile, HB_SIZE nMaxSize,
 
 /* interface to PRG level hb_vf*() file pointer items */
 extern HB_EXPORT PHB_FILE     hb_fileParam( int iParam );
+extern HB_EXPORT PHB_FILE     hb_fileParamGet( int iParam );
 extern HB_EXPORT PHB_FILE     hb_fileItemGet( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM     hb_fileItemPut( PHB_ITEM pItem, PHB_FILE pFile );
 extern HB_EXPORT void         hb_fileItemClear( PHB_ITEM pItem );

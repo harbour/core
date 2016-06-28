@@ -1,17 +1,16 @@
-/*
- *    Wvt*Classes Demonstration
+/* Wvt*Classes Demonstration
  *
- *    This protocol can be clubbed with pure console implementation
- *    AND can be called IN a separate thread as well as modal TO
- *    current window.
+ * This protocol can be clubbed with pure console implementation
+ * and can be called in a separate thread as well as modal to
+ * current window.
  *
- *    Pritpal Bedi <bedipritpal@hotmail.com>
+ * Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-FUNCTION DialogWvgClassesOne( nMode )
+PROCEDURE DialogWvgClassesOne( nMode )
 
    LOCAL bBlock
 
@@ -34,9 +33,9 @@ FUNCTION DialogWvgClassesOne( nMode )
       MyDialogOne()
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION MyDialogOne( oCrt )
+STATIC PROCEDURE MyDialogOne( oCrt )
 
    LOCAL aObjects := WvtSetBlocks( {} )
    LOCAL nWinRows, nWinCols, cWinTitle, cFont, nHeight
@@ -53,7 +52,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    WvtSetKeys( .F. )
    lChkMouse := SetMouseCheck( .F. )
 
-   hPopup := Wvt_SetPopupMenu()
+   hPopup := wvt_SetPopupMenu()
    Popups()
 
    cTxt := "GTWVG is capable of designing virtually any preceivable control "
@@ -73,7 +72,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    AAdd( aImg_, GetResource( "v_notes1.bmp" ) )
    AAdd( aImg_, GetResource( "v_selct1.bmp" ) )
    ? "."
-   Wvt_ShowWindow( 1 )
+   wvt_ShowWindow( 1 )
    nWinRows  := 55
    nWinCols  := 185
    cWinTitle := "WvtGui Dialog One"
@@ -82,7 +81,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    oDlg := WvtDialog():New( nWinRows, nWinCols, cWinTitle, cFont, nHeight )
    oDlg:nTooltipWidth     := 300
-   oDlg:nTooltipTextColor := RGB( 255, 0, 0 )
+   oDlg:nTooltipTextColor := WIN_RGB( 255, 0, 0 )
 
    oBar := WvtStatusBar():New( oDlg, 201 )
    oBar:SetPanels( { 50, 100 } )
@@ -103,10 +102,10 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oText:nAlignHorz        := 2
    oText:nAlignVert        := 2
    oText:nFontWeight       := 700
-   oText:nTextColor        := RGB( 100, 255,  12 )
-   oText:nBackColor        := RGB(   0,   0, 255 )
-   oText:nTextColorHoverOn := RGB( 255, 255,   0 )
-   oText:nBackColorHoverOn := RGB( 255, 100,  12 )
+   oText:nTextColor        := WIN_RGB( 100, 255,  12 )
+   oText:nBackColor        := WIN_RGB(   0,   0, 255 )
+   oText:nTextColorHoverOn := WIN_RGB( 255, 255,   0 )
+   oText:nBackColorHoverOn := WIN_RGB( 255, 100,  12 )
    oText:lItalic           := .T.
    oText:ToolTip           := "Software that GROWS with you"
    oText:bOnSelect         := {|| .T. }
@@ -141,7 +140,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    oBtn := WvtPushButton():New( oDlg, 124, 6, 129, 7, 137 )
    oBtn:cCaption  := "Print"
-   oBtn:bOnLeftUp := {|| Wvt_Keyboard( 379 ) }
+   oBtn:bOnLeftUp := {|| wvt_Keyboard( K_CTRL_PRTSCR ) }
    oBtn:Tooltip   := "Open Printing Dialog for the Browser in Focus"
    oDlg:AddObject( oBtn )
 
@@ -152,7 +151,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oDlg:AddObject( oBtn2 )
 
    oPBar2 := WvtProgressBar():New( oDlg, , 14, 129, 25, 137 )
-   oPBar2:nBarColor  := RGB( 240, 240, 0 )
+   oPBar2:nBarColor  := WIN_RGB( 240, 240, 0 )
    oPBar2:cBackColor := "W/N*"
    oPBar2:lVertical  := .T.
    oPBar2:nDirection := 0
@@ -160,7 +159,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oDlg:AddObject( oPBar2 )
 
    oPBar3 := WvtProgressBar():New( oDlg, , 26, 129, 36, 137 )
-   oPBar3:nBarColor  := RGB( 240, 240, 0 )
+   oPBar3:nBarColor  := WIN_RGB( 240, 240, 0 )
    oPBar3:cBackColor := "W/N*"
    oPBar3:lVertical  := .T.
    oPBar3:nDirection := 1
@@ -183,7 +182,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oGet:AddGets( 12, nGetCol, "GTWvt               ", "@! ", "W+/B*,N/W*" )
    oGet:AddGets( 14, nGetCol, Date() )
    oGet:AddGets( 16, nGetCol, 2122.57, "@Z 99999999.99", "w+/R,GR+/B" )
-   oGet:Tooltip   := "WvtGets():New() - ReadModal() like Clipper"
+   oGet:Tooltip   := "WvtGets():New() - ReadModal() like Cl*pper"
    oGet:cDesc     := "Normal Get Box"
    oGet:bOnCreate := bBlock
    oDlg:AddObject( oGet )
@@ -195,10 +194,10 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oBnr:nFontWeight       := 0
    oBnr:nDirection        := 0
    oBnr:nAlignVert        := 2
-   oBnr:nTextColor        := RGB( 253, 251, 170 )
-   oBnr:nBackColor        := RGB( 128, 227, 142 )
-   oBnr:nTextColorHoverOn := RGB( 255, 255,  0 )
-   oBnr:nBackColorHoverOn := RGB( 255, 100, 12 )
+   oBnr:nTextColor        := WIN_RGB( 253, 251, 170 )
+   oBnr:nBackColor        := WIN_RGB( 128, 227, 142 )
+   oBnr:nTextColorHoverOn := WIN_RGB( 255, 255,  0 )
+   oBnr:nBackColorHoverOn := WIN_RGB( 255, 100, 12 )
    oBnr:Tooltip           := "WvtBanner():New()"
    oDlg:AddObject( oBnr )
 
@@ -219,8 +218,8 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oTBx:lItalic     := .T.
    oTBx:lUnderline  := .T.
    oTBx:nAlignHorz  := 2
-   oTBx:nTextColor  := RGB( 255, 255, 255 )
-   oTBx:nTextColorHoverOn := RGB( 0, 0, 255 )
+   oTBx:nTextColor  := WIN_RGB( 255, 255, 255 )
+   oTBx:nTextColorHoverOn := WIN_RGB( 0, 0, 255 )
    oTBx:aPopup      := {}
    AAdd( oTBx:aPopup, { "Getsome", {|| .T. } } )
    AAdd( oTBx:aPopup, { "Getsome2", {|| .T. } } )
@@ -272,7 +271,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oGet1:AddGets( nGetRow + 16, nGetCol, aGets_[ 9 ], "@Z 99"    , "N/W*,N/GR*" )
    oGet1:AddGets( nGetRow + 18, nGetCol, aGets_[ 10], "@Z 999999", "N/W*,N/GR*" )
    oGet1:AddGets( nGetRow + 20, nGetCol, aGets_[ 11], "@S35"     , "N/W*,N/GR*" )
-   oGet1:cDesc     := "test.dbf Fields"
+   oGet1:cDesc     := "Table Fields"
    oGet1:Tooltip   := "Double Click to Activate ReadModal()"
    oGet1:bOnCreate := bBlock1
    oDlg:AddObject( oGet1 )
@@ -282,26 +281,18 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oMenu:Caption := "Other Dialogs"
    oMenu:AddItem( "Dialog Two", {|| DialogWvgClassesTwo() } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Exit",       {|| Wvt_Keyboard( K_ESC ) } )
+   oMenu:AddItem( "Exit",       {|| wvt_Keyboard( K_ESC ) } )
    g_oMenuBar:addItem( "", oMenu )
 
    oDlg:oMenu := g_oMenuBar
 
-   lOpen := .F.
-   cUseAlias := "TEST"
-   USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW Alias ( cUseAlias ) SHARED
-   IF ! NetErr()
-      lOpen := .T.
-      oWvtBrw := ConfigBrowser( { 1, 7, 9, 10, 8 }, cUseAlias, { 6, 67, 36, 120 }, "test.dbf - 1,7,9,10,8", oDlg, "N/W*,N/GR*", 1001 )
+   IF ( lOpen := hbtest_Table( cUseAlias := "TEST" ) )
+      oWvtBrw := ConfigBrowser( { 1, 7, 9, 10, 8 }, cUseAlias, { 6, 67, 36, 120 }, "test table - 1,7,9,10,8", oDlg, "N/W*,N/GR*", 1001 )
       oDlg:AddObject( oWvtBrw )
    ENDIF
 
-   lOpen1 := .F.
-   cUseAlias1 := "TEST1"
-   USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW Alias ( cUseAlias1 ) SHARED
-   IF ! NetErr()
-      lOpen1 := .T.
-      oWvtBrw1 := ConfigBrowser( { 1, 2, 3, 4, 5, 6 }, cUseAlias1, { 43, 4, 51, 120 }, "test.dbf - 1,2,3,4,5,6", oDlg, "N/BG*,N/W*", 1002 )
+   IF ( lOpen1 := hbtest_Table( cUseAlias1 := "TEST1" ) )
+      oWvtBrw1 := ConfigBrowser( { 1, 2, 3, 4, 5, 6 }, cUseAlias1, { 43, 4, 51, 120 }, "test table - 1,2,3,4,5,6", oDlg, "N/BG*,N/W*", 1002 )
       oDlg:AddObject( oWvtBrw1 )
    ENDIF
 
@@ -312,22 +303,20 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oDlg:Destroy()
 
    IF lOpen
-      Select( cUseAlias )
-      USE
+      ( cUseAlias )->( dbCloseArea() )
    ENDIF
    IF lOpen1
-      Select( cUseAlias1 )
-      USE
+      ( cUseAlias1 )->( dbCloseArea() )
    ENDIF
 
    WvtSetBlocks( aObjects )
    WvtSetKeys( .T. )
-   Wvt_SetPopupMenu( hPopup )
+   wvt_SetPopupMenu( hPopup )
    SetMouseCheck( lChkMouse )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION DialogWvgClassesTwo()
+PROCEDURE DialogWvgClassesTwo()
 
    LOCAL aObjects := WvtSetBlocks( {} )
    LOCAL oDlg     := WvtDialog():New( 30, 90, "My Dialog Two" )
@@ -339,26 +328,26 @@ FUNCTION DialogWvgClassesTwo()
    oMenu:Caption := "Miscellaneous"
    oMenu:AddItem( "Progressbar", {|| ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 ) } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Exit",        {|| Wvt_Keyboard( K_ESC ) } )
+   oMenu:AddItem( "Exit",        {|| wvt_Keyboard( K_ESC ) } )
    g_oMenuBar:addItem( "", oMenu )
 
    oDlg:oMenu := g_oMenuBar
 
    oPBar := WvtProgressBar():New( oDlg, , 3, 10, 5, 80 )
-   oPBar:nBarColor   := RGB( 0, 240, 240 )
+   oPBar:nBarColor   := WIN_RGB( 0, 240, 240 )
    oPBar:cBackColor  := "W/N*"
    oPBar:nDirection  := 1
    oPBar:cImage      := "vouch1.bmp"
    oDlg:AddObject( oPBar )
 
    oPBar1 := WvtProgressBar():New( oDlg, , 7, 10, 8, 80 )
-   oPBar1:nBarColor  := RGB( 11, 255, 196 )
+   oPBar1:nBarColor  := WIN_RGB( 11, 255, 196 )
    oPBar1:cBackColor := "W/N*"
    oPBar1:nDirection := 0
    oDlg:AddObject( oPBar1 )
 
    oPBar2 := WvtProgressBar():New( oDlg, , 11, 10, 28, 19 )
-   oPBar2:nBarColor  := RGB( 240, 240, 0 )
+   oPBar2:nBarColor  := WIN_RGB( 240, 240, 0 )
    oPBar2:cBackColor := "W/N*"
    oPBar2:lVertical  := .T.
    oPBar2:nDirection := 0
@@ -366,14 +355,14 @@ FUNCTION DialogWvgClassesTwo()
    oDlg:AddObject( oPBar2 )
 
    oPBar3 := WvtProgressBar():New( oDlg, , 11, 77, 28, 80 )
-   oPBar3:nBarColor  := RGB( 0, 0, 255 )
+   oPBar3:nBarColor  := WIN_RGB( 0, 0, 255 )
    oPBar3:cBackColor := "W/N*"
    oPBar3:lVertical  := .T.
    oPBar3:nDirection := 1
    oDlg:AddObject( oPBar3 )
 
    oPBar4 := WvtProgressBar():New( oDlg, , 22, 22, 28, 74 )
-   oPBar4:nBarColor  := RGB( 255, 255, 0 )
+   oPBar4:nBarColor  := WIN_RGB( 255, 255, 0 )
    oPBar4:cBackColor := "W/N*"
    oPBar4:lVertical  := .T.
    oPBar4:nDirection := 0
@@ -385,9 +374,9 @@ FUNCTION DialogWvgClassesTwo()
 
    WvtSetBlocks( aObjects )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
+STATIC PROCEDURE ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
 
    LOCAL i
 
@@ -402,7 +391,7 @@ STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
       oPBar2:Display( i, 100 )
       oPBar3:Display( i, 100 )
       oPBar4:Display( i, 100 )
-      Inkey( 0.3 )
+      hb_idleSleep( 0.3 )
    NEXT
    Inkey( 0 )
    oPBar:DeActivate()
@@ -411,9 +400,9 @@ STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
    oPBar3:DeActivate()
    oPBar4:DeActivate()
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
+STATIC PROCEDURE ExeProgressBar( oPBar, oPBar3 )
 
    LOCAL i
 
@@ -422,9 +411,9 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
    FOR i := 1 TO 100
       oPBar:Display( i, 100 )
       oPBar3:Display( i, 100 )
-      Inkey( 0.3 )
+      hb_idleSleep( 0.3 )
    NEXT
    oPBar:DeActivate()
    oPBar3:DeActivate()
 
-   RETURN NIL
+   RETURN

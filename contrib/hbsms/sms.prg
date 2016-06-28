@@ -47,27 +47,22 @@
 /* TODO: - Unicode support */
 /* TODO: - Receive support */
 
-/* NOTE: Source of information:
-         http://www.smssolutions.net/tutorials/gsm/sendsmsat/
-         http://www.smssolutions.net/tutorials/gsm/receivesmsat/
-         http://www.developershome.com/sms/sendSmsByAtCommands.asp
-         http://www.developershome.com/sms/readSmsByAtCommands.asp
-         http://www.dreamfabric.com/sms/
-         [vszakats] */
+/* Source of information:
+   http://www.smssolutions.net/tutorials/gsm/sendsmsat/
+   http://www.smssolutions.net/tutorials/gsm/receivesmsat/
+   http://www.developershome.com/sms/sendSmsByAtCommands.asp
+   http://www.developershome.com/sms/readSmsByAtCommands.asp
+   http://www.dreamfabric.com/sms/
+ */
 
 STATIC FUNCTION port_send( h, s )
    RETURN hb_comSend( h, s )
 
 STATIC FUNCTION port_rece( h, n, t )
 
-   LOCAL cString
+   LOCAL cString := Space( hb_defaultValue( n, 64 ) )
 
-   hb_default( @n, 64 )
-   hb_default( @t, 5 )
-
-   cString := Space( n )
-
-   hb_comRecv( h, @cString,, t )
+   hb_comRecv( h, @cString,, hb_defaultValue( t, 5 ) )
 
    RETURN cString
 
@@ -76,12 +71,12 @@ FUNCTION sms_Send( cPort, cPhoneNo, cText, lNotification, cPIN )
    LOCAL smsctx
    LOCAL nRetVal
 
-   IF ! Empty( smsctx := smsctx_New( cPort ) )
+   IF Empty( smsctx := smsctx_New( cPort ) )
+      nRetVal := -99
+   ELSE
       smsctx_PIN( smsctx, cPIN )
       nRetVal := smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
       smsctx_Close( smsctx )
-   ELSE
-      nRetVal := -99
    ENDIF
 
    RETURN nRetVal
@@ -91,165 +86,149 @@ FUNCTION sms_ReceiveAll( cPort, cPIN )
    LOCAL smsctx
    LOCAL aRetVal
 
-   IF ! Empty( smsctx := smsctx_New( cPort ) )
+   IF Empty( smsctx := smsctx_New( cPort ) )
+      aRetVal := NIL
+   ELSE
       smsctx_PIN( smsctx, cPIN )
       aRetVal := smsctx_Receive( smsctx )
       smsctx_Close( smsctx )
-   ELSE
-      aRetVal := NIL
    ENDIF
 
    RETURN aRetVal
 
-/* --------------------- */
+/* --- */
 
 #define _SMSCTX_xHnd          1
 #define _SMSCTX_cPIN          2
-#define _SMSCTX_cPrevName     3
-#define _SMSCTX_MAX_          3
+#define _SMSCTX_MAX_          2
 
 FUNCTION smsctx_New( xPort )
 
    LOCAL smsctx[ _SMSCTX_MAX_ ]
 
-   IF HB_ISNUMERIC( xPort )
+   DO CASE
+   CASE HB_ISNUMERIC( xPort )
       smsctx[ _SMSCTX_xHnd ] := xPort
-      smsctx[ _SMSCTX_cPrevName ] := NIL
-   ELSEIF HB_ISSTRING( xPort )
-      smsctx[ _SMSCTX_xHnd ] := 1
-      smsctx[ _SMSCTX_cPrevName ] := hb_comGetDevice( smsctx[ _SMSCTX_xHnd ] )
-      hb_comSetDevice( smsctx[ _SMSCTX_xHnd ], xPort )
-   ELSE
-      smsctx[ _SMSCTX_xHnd ] := NIL
-   ENDIF
-
-   IF smsctx[ _SMSCTX_xHnd ] != NIL
-      IF hb_comOpen( smsctx[ _SMSCTX_xHnd ] )
-         IF hb_comInit( smsctx[ _SMSCTX_xHnd ], 9600, "N", 8, 1 )
-            RETURN smsctx
-         ELSE
-            hb_comClose( smsctx[ _SMSCTX_xHnd ] )
-         ENDIF
+   CASE HB_ISSTRING( xPort )
+      IF ( smsctx[ _SMSCTX_xHnd ] := hb_comFindPort( xPort, .T. ) ) == 0
+         RETURN NIL
       ENDIF
+   OTHERWISE
+      RETURN NIL
+   ENDCASE
+
+   IF hb_comOpen( smsctx[ _SMSCTX_xHnd ] )
+      IF hb_comInit( smsctx[ _SMSCTX_xHnd ], 9600, "N", 8, 1 )
+         RETURN smsctx
+      ENDIF
+      hb_comClose( smsctx[ _SMSCTX_xHnd ] )
    ENDIF
 
    RETURN NIL
 
 FUNCTION smsctx_Close( smsctx )
-
-   IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
-      RETURN .F.
-   ENDIF
-
-   IF ! hb_comClose( smsctx[ _SMSCTX_xHnd ] )
-      RETURN .F.
-   ENDIF
-
-   /* Restore com port name */
-   IF smsctx[ _SMSCTX_cPrevName ] != NIL
-      hb_comSetDevice( smsctx[ _SMSCTX_xHnd ], smsctx[ _SMSCTX_cPrevName ] )
-   ENDIF
-
-   RETURN .T.
+   RETURN HB_ISARRAY( smsctx ) .AND. Len( smsctx ) == _SMSCTX_MAX_ .AND. ;
+      hb_comClose( smsctx[ _SMSCTX_xHnd ] )
 
 FUNCTION smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
 
    LOCAL tmp
 
-   IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
-      RETURN -1
-   ENDIF
+   IF HB_ISARRAY( smsctx ) .AND. Len( smsctx ) == _SMSCTX_MAX_
 
-   port_send( smsctx[ _SMSCTX_xHnd ], "ATE0V1Q0" + Chr( 13 ) )
-   IF IsOK( port_rece( smsctx[ _SMSCTX_xHnd ] ) )
-
-      port_send( smsctx[ _SMSCTX_xHnd ], "AT+CMGF=1" + Chr( 13 ) )
-      IF StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "OK"
-
-         IF ! Empty( smsctx[ _SMSCTX_cPIN ] )
-            port_send( smsctx[ _SMSCTX_xHnd ], 'AT+CPIN="' + smsctx[ _SMSCTX_cPIN ] + '"' + Chr( 13 ) )
-            IF !( StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "OK" )
-               RETURN -5
-            ENDIF
-         ENDIF
+      port_send( smsctx[ _SMSCTX_xHnd ], "ATE0V1Q0" + Chr( 13 ) )
+      IF IsOK( port_rece( smsctx[ _SMSCTX_xHnd ] ) )
 
          port_send( smsctx[ _SMSCTX_xHnd ], "AT+CMGF=1" + Chr( 13 ) )
          IF StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "OK"
 
-            IF HB_ISLOGICAL( lNotification )
-               port_send( smsctx[ _SMSCTX_xHnd ], "AT+CSMP?" + Chr( 13 ) )
-               tmp := GetLines( port_rece( smsctx[ _SMSCTX_xHnd ] ) )
-               IF Len( tmp ) < 2
-                  RETURN -6
-               ENDIF
-               IF !( ATail( tmp ) == "OK" )
-                  RETURN -7
-               ENDIF
-               IF !( Left( tmp[ 1 ], Len( "+CSMP: " ) ) == "+CSMP: " )
-                  RETURN -8
-               ENDIF
-               tmp := GetList( SubStr( tmp[ 1 ], Len( "+CSMP: " ) + 1 ) )
-               IF Len( tmp ) > 1
-                  IF lNotification
-                     tmp[ 1 ] := hb_ntos( hb_bitSet( Val( tmp[ 1 ] ), 5 ) )
-                  ELSE
-                     tmp[ 1 ] := hb_ntos( hb_bitReset( Val( tmp[ 1 ] ), 5 ) )
-                  ENDIF
-                  port_send( smsctx[ _SMSCTX_xHnd ], "AT+CSMP=" + MakeList( tmp ) + Chr( 13 ) )
-                  IF !( StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "OK" )
-                     RETURN -9
-                  ENDIF
+            IF ! Empty( smsctx[ _SMSCTX_cPIN ] )
+               port_send( smsctx[ _SMSCTX_xHnd ], 'AT+CPIN="' + smsctx[ _SMSCTX_cPIN ] + '"' + Chr( 13 ) )
+               IF !( StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "OK" )
+                  RETURN -5
                ENDIF
             ENDIF
 
-            port_send( smsctx[ _SMSCTX_xHnd ], 'AT+CMGS="' + cPhoneNo + '"' + Chr( 13 ) )
-            IF StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "> "
-               port_send( smsctx[ _SMSCTX_xHnd ], StrTran( cText, Chr( 13 ) ) + Chr( 26 ) )
-               tmp := StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) )
-               IF Left( tmp, Len( "+CMGS: " ) ) == "+CMGS: "
-                  RETURN 0
+            port_send( smsctx[ _SMSCTX_xHnd ], "AT+CMGF=1" + Chr( 13 ) )
+            IF StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "OK"
+
+               IF HB_ISLOGICAL( lNotification )
+                  port_send( smsctx[ _SMSCTX_xHnd ], "AT+CSMP?" + Chr( 13 ) )
+                  tmp := GetLines( port_rece( smsctx[ _SMSCTX_xHnd ] ) )
+                  IF Len( tmp ) < 2
+                     RETURN -6
+                  ENDIF
+                  IF !( ATail( tmp ) == "OK" )
+                     RETURN -7
+                  ENDIF
+                  IF ! hb_LeftEq( tmp[ 1 ], "+CSMP: " )
+                     RETURN -8
+                  ENDIF
+                  tmp := GetList( SubStr( tmp[ 1 ], Len( "+CSMP: " ) + 1 ) )
+                  IF Len( tmp ) > 1
+                     IF lNotification
+                        tmp[ 1 ] := hb_ntos( hb_bitSet( Val( tmp[ 1 ] ), 5 ) )
+                     ELSE
+                        tmp[ 1 ] := hb_ntos( hb_bitReset( Val( tmp[ 1 ] ), 5 ) )
+                     ENDIF
+                     port_send( smsctx[ _SMSCTX_xHnd ], "AT+CSMP=" + MakeList( tmp ) + Chr( 13 ) )
+                     IF !( StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "OK" )
+                        RETURN -9
+                     ENDIF
+                  ENDIF
+               ENDIF
+
+               port_send( smsctx[ _SMSCTX_xHnd ], 'AT+CMGS="' + cPhoneNo + '"' + Chr( 13 ) )
+               IF StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "> "
+                  port_send( smsctx[ _SMSCTX_xHnd ], StrTran( cText, Chr( 13 ) ) + Chr( 26 ) )
+                  tmp := StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) )
+                  IF hb_LeftEq( tmp, "+CMGS: " )
+                     RETURN 0
+                  ELSE
+                     RETURN -10
+                  ENDIF
                ELSE
-                  RETURN -10
+                  RETURN -11
                ENDIF
             ELSE
-               RETURN -11
+               RETURN -12
             ENDIF
          ELSE
-            RETURN -12
+            RETURN -4
          ENDIF
       ELSE
-         RETURN -4
+         RETURN -3
       ENDIF
-   ELSE
-      RETURN -3
    ENDIF
 
-   RETURN -2
+   RETURN -1
 
 FUNCTION smsctx_Receive( smsctx )
 
-   IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
-      RETURN NIL
+   IF HB_ISARRAY( smsctx ) .AND. Len( smsctx ) == _SMSCTX_MAX_
+
+      // ...
+
+      RETURN {}
    ENDIF
 
-   // ...
-
-   RETURN {}
+   RETURN NIL
 
 FUNCTION smsctx_PIN( smsctx, cPIN )
 
    LOCAL cOldValue
 
-   IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
-      RETURN NIL
+   IF HB_ISARRAY( smsctx ) .AND. Len( smsctx ) == _SMSCTX_MAX_
+
+      cOldValue := smsctx[ _SMSCTX_cPIN ]
+      IF cPIN == NIL .OR. ( HB_ISSTRING( cPIN ) .AND. Len( cPIN ) == 4 )
+         smsctx[ _SMSCTX_cPIN ] := cPIN
+      ENDIF
+
+      RETURN cOldValue
    ENDIF
 
-   cOldValue := smsctx[ _SMSCTX_cPIN ]
-   IF cPIN == NIL .OR. ( HB_ISSTRING( cPIN ) .AND. Len( cPIN ) == 4 )
-      smsctx[ _SMSCTX_cPIN ] := cPIN
-   ENDIF
-
-   RETURN cOldValue
+   RETURN NIL
 
 #if 0
 STATIC FUNCTION StripCR( cString )
@@ -270,14 +249,14 @@ STATIC FUNCTION GetLines( cString )
    LOCAL aLine := {}
    LOCAL tmp
 
-   IF Left( cString, 2 ) == Chr( 13 ) + Chr( 10 )
+   IF hb_LeftEq( cString, Chr( 13 ) + Chr( 10 ) )
       cString := SubStr( cString, Len( Chr( 13 ) + Chr( 10 ) ) + 1 )
    ENDIF
    IF Right( cString, 2 ) == Chr( 13 ) + Chr( 10 )
       cString := hb_StrShrink( cString, Len( Chr( 13 ) + Chr( 10 ) ) )
    ENDIF
 
-   FOR EACH tmp IN hb_ATokens( StrTran( cString, Chr( 13 ) ), Chr( 10 ) )
+   FOR EACH tmp IN hb_ATokens( cString, .T. )
       AAdd( aLine, tmp )
    NEXT
 

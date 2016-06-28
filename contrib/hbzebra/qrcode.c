@@ -48,21 +48,21 @@
      QR Code is ISO/IEC18004
 
      JIS-X-0510  QR Code standard in Japaneese language :)
-       http://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
+       https://osdn.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
 
-   http://en.wikipedia.org/wiki/QR_Code
-   http://www.denso-wave.com/qrcode/index-e.html
+   https://en.wikipedia.org/wiki/QR_Code
+   http://www.qrcode.com/en/
    http://www.itsc.org.sg/pdf/synthesis08/Three_QR_Code.pdf
    http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
    http://www.swetake.com/qr/index-e.html
-   http://www.codeproject.com/KB/cs/qrcode.aspx
-   http://sourceforge.jp/projects/reedsolomon
+   https://www.codeproject.com/Articles/20574/Open-Source-QRCode-Library
+   https://osdn.jp/projects/reedsolomon/
    http://twit88.com/home/
-   http://qrcode.sourceforge.jp/
-   http://zxing.org/w/decode.jspx                          Online decoder
+   https://qrcode.osdn.jp
+   https://zxing.org/w/decode.jspx                         Online decoder
    http://blog.qr4.nl/Online-QR-Code_Decoder.aspx          Online decoder (not all codes are decoded)
    http://www.thonky.com/qr-code-tutorial/                 Tutorial
-   http://code.google.com/p/zxing/                         Java library
+   https://github.com/zxing/zxing                          Java library
    http://goqr.me/                                         Online encode
    http://www.pclviewer.com/rs2/calculator.html            Reed-solomon ECC calculator
    http://raidenii.net/files/datasheets/misc/qr_code.pdf
@@ -270,48 +270,48 @@ static const unsigned char s_rev[ 256 ] =
 
 
 /* zero terminated align patterns positions */
-static unsigned char s_align01[] = { 0 };
-static unsigned char s_align02[] = { 6, 18, 0 };
-static unsigned char s_align03[] = { 6, 22, 0 };
-static unsigned char s_align04[] = { 6, 26, 0 };
-static unsigned char s_align05[] = { 6, 30, 0 };
-static unsigned char s_align06[] = { 6, 34, 0 };
-static unsigned char s_align07[] = { 6, 22, 38, 0 };
-static unsigned char s_align08[] = { 6, 24, 42, 0 };
-static unsigned char s_align09[] = { 6, 26, 46, 0 };
-static unsigned char s_align00[] = { 6, 28, 50, 0 };
-static unsigned char s_align11[] = { 6, 30, 54, 0 };
-static unsigned char s_align12[] = { 6, 32, 58, 0 };
-static unsigned char s_align13[] = { 6, 34, 62, 0 };
-static unsigned char s_align14[] = { 6, 26, 46, 66, 0 };
-static unsigned char s_align15[] = { 6, 26, 48, 70, 0 };
-static unsigned char s_align16[] = { 6, 26, 50, 74, 0 };
-static unsigned char s_align17[] = { 6, 30, 54, 78, 0 };
-static unsigned char s_align18[] = { 6, 30, 56, 82, 0 };
-static unsigned char s_align19[] = { 6, 30, 58, 86, 0 };
-static unsigned char s_align10[] = { 6, 34, 62, 90, 0 };
-static unsigned char s_align21[] = { 6, 28, 50, 72,  94, 0 };
-static unsigned char s_align22[] = { 6, 26, 50, 74,  98, 0 };
-static unsigned char s_align23[] = { 6, 30, 54, 78, 102, 0 };
-static unsigned char s_align24[] = { 6, 28, 54, 80, 106, 0 };
-static unsigned char s_align25[] = { 6, 32, 58, 84, 110, 0 };
-static unsigned char s_align26[] = { 6, 30, 58, 86, 114, 0 };
-static unsigned char s_align27[] = { 6, 34, 62, 90, 118, 0 };
-static unsigned char s_align28[] = { 6, 26, 50, 74,  98, 122, 0 };
-static unsigned char s_align29[] = { 6, 30, 54, 78, 102, 126, 0 };
-static unsigned char s_align20[] = { 6, 26, 52, 78, 104, 130, 0 };
-static unsigned char s_align31[] = { 6, 30, 56, 82, 108, 134, 0 };
-static unsigned char s_align32[] = { 6, 34, 60, 86, 112, 138, 0 };
-static unsigned char s_align33[] = { 6, 30, 58, 86, 114, 142, 0 };
-static unsigned char s_align34[] = { 6, 34, 62, 90, 118, 146, 0 };
-static unsigned char s_align35[] = { 6, 30, 54, 78, 102, 126, 150, 0 };
-static unsigned char s_align36[] = { 6, 24, 50, 76, 102, 128, 154, 0 };
-static unsigned char s_align37[] = { 6, 28, 54, 80, 106, 132, 158, 0 };
-static unsigned char s_align38[] = { 6, 32, 58, 84, 110, 136, 162, 0 };
-static unsigned char s_align39[] = { 6, 26, 54, 82, 110, 138, 166, 0 };
-static unsigned char s_align40[] = { 6, 30, 58, 86, 114, 142, 170, 0 };
+static const unsigned char s_align01[] = { 0 };
+static const unsigned char s_align02[] = { 6, 18, 0 };
+static const unsigned char s_align03[] = { 6, 22, 0 };
+static const unsigned char s_align04[] = { 6, 26, 0 };
+static const unsigned char s_align05[] = { 6, 30, 0 };
+static const unsigned char s_align06[] = { 6, 34, 0 };
+static const unsigned char s_align07[] = { 6, 22, 38, 0 };
+static const unsigned char s_align08[] = { 6, 24, 42, 0 };
+static const unsigned char s_align09[] = { 6, 26, 46, 0 };
+static const unsigned char s_align00[] = { 6, 28, 50, 0 };
+static const unsigned char s_align11[] = { 6, 30, 54, 0 };
+static const unsigned char s_align12[] = { 6, 32, 58, 0 };
+static const unsigned char s_align13[] = { 6, 34, 62, 0 };
+static const unsigned char s_align14[] = { 6, 26, 46, 66, 0 };
+static const unsigned char s_align15[] = { 6, 26, 48, 70, 0 };
+static const unsigned char s_align16[] = { 6, 26, 50, 74, 0 };
+static const unsigned char s_align17[] = { 6, 30, 54, 78, 0 };
+static const unsigned char s_align18[] = { 6, 30, 56, 82, 0 };
+static const unsigned char s_align19[] = { 6, 30, 58, 86, 0 };
+static const unsigned char s_align10[] = { 6, 34, 62, 90, 0 };
+static const unsigned char s_align21[] = { 6, 28, 50, 72,  94, 0 };
+static const unsigned char s_align22[] = { 6, 26, 50, 74,  98, 0 };
+static const unsigned char s_align23[] = { 6, 30, 54, 78, 102, 0 };
+static const unsigned char s_align24[] = { 6, 28, 54, 80, 106, 0 };
+static const unsigned char s_align25[] = { 6, 32, 58, 84, 110, 0 };
+static const unsigned char s_align26[] = { 6, 30, 58, 86, 114, 0 };
+static const unsigned char s_align27[] = { 6, 34, 62, 90, 118, 0 };
+static const unsigned char s_align28[] = { 6, 26, 50, 74,  98, 122, 0 };
+static const unsigned char s_align29[] = { 6, 30, 54, 78, 102, 126, 0 };
+static const unsigned char s_align20[] = { 6, 26, 52, 78, 104, 130, 0 };
+static const unsigned char s_align31[] = { 6, 30, 56, 82, 108, 134, 0 };
+static const unsigned char s_align32[] = { 6, 34, 60, 86, 112, 138, 0 };
+static const unsigned char s_align33[] = { 6, 30, 58, 86, 114, 142, 0 };
+static const unsigned char s_align34[] = { 6, 34, 62, 90, 118, 146, 0 };
+static const unsigned char s_align35[] = { 6, 30, 54, 78, 102, 126, 150, 0 };
+static const unsigned char s_align36[] = { 6, 24, 50, 76, 102, 128, 154, 0 };
+static const unsigned char s_align37[] = { 6, 28, 54, 80, 106, 132, 158, 0 };
+static const unsigned char s_align38[] = { 6, 32, 58, 84, 110, 136, 162, 0 };
+static const unsigned char s_align39[] = { 6, 26, 54, 82, 110, 138, 166, 0 };
+static const unsigned char s_align40[] = { 6, 30, 58, 86, 114, 142, 170, 0 };
 
-static unsigned char * s_align[ 40 ] = {
+static const unsigned char * s_align[ 40 ] = {
    s_align01,
    s_align02,
    s_align03,
@@ -358,13 +358,13 @@ static unsigned char * s_align[ 40 ] = {
 #ifdef DEBUG_CODE
 static int _qr_check_version_table( void )
 {
-   const QRVERSION * pQRVersion;
    int iV, iL;
    unsigned int uiSumD, uiSumE;
 
    for( iV = 1; iV <= 40; iV++ )
    {
-      pQRVersion = &s_version[ iV - 1 ];
+      const QRVERSION * pQRVersion = &s_version[ iV - 1 ];
+
       for( iL = 0; iL < 4; iL++ )
       {
          uiSumE = ( unsigned int ) ( pQRVersion->level[ iL ].block[ 0 ].uiCount ) * ( pQRVersion->level[ iL ].block[ 0 ].uiECC ) +
@@ -466,7 +466,7 @@ static int _qr_versionlength( int iVersion )
 static int _qr_fixed( int iVersion, int iRow, int iCol )
 {
    int iLength = _qr_versionlength( iVersion );
-   unsigned char * pi, * pj;
+   const unsigned char * pi;
 
    /* position detection markers and versino info */
    if( iRow < 9 && iCol < 9 )
@@ -484,7 +484,7 @@ static int _qr_fixed( int iVersion, int iRow, int iCol )
    pi = s_align[ iVersion - 1 ];
    for( ; *pi; pi++ )
    {
-      pj = s_align[ iVersion - 1 ];
+      const unsigned char * pj = s_align[ iVersion - 1 ];
       for( ; *pj; pj++ )
       {
          if( iRow - 2 <= ( int ) *pi && ( int ) *pi <= iRow + 2 &&
@@ -625,13 +625,12 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
    int i, iVersion, iMode;
    HB_ISIZ iLen, iDataLen, m;
    HB_SIZE n;
-   char ch;
 
    /* Select encoding mode */
    iMode = 1;  /* 1=Numeric, 2=Alphanumeric, 4=8-bit, 8=Kanji. Not modes: 0=termibator, 3=Structured append, 7=ECI, 5=FNC1(1), 9=FNC1(2)*/
    for( n = 0; n < nSize; n++ )
    {
-      ch = szCode[ n ];
+      char ch = szCode[ n ];
       if( '0' <= ch && ch <= '9' )
       {
       }
@@ -733,14 +732,14 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned char * pECC, int iECCLen, int * pPoly, int * pExp, int * pLog, int iMod )
 {
    int i, j;
-   unsigned char iM;
 
    for( i = 0; i < iECCLen; i++ )
       pECC[ i ] = 0;
 
    for( i = 0; i < iDataLen; i++ )
    {
-      iM = s_rev[ pData[ i ] ] ^ pECC[ iECCLen - 1 ];
+      unsigned char iM = s_rev[ pData[ i ] ] ^ pECC[ iECCLen - 1 ];
+
       for( j = iECCLen - 1; j > 0; j-- )
       {
          if( iM && pPoly[ j ] )
@@ -857,8 +856,8 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
 
 static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
 {
-   int i, j, no, up, right, iLength;
-   unsigned char * pi, * pj;
+   int i, j, iLength;
+   const unsigned char * pi;
 
    HB_SYMBOL_UNUSED( pCWBits );
 
@@ -901,7 +900,7 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
    pi = s_align[ iVersion - 1 ];
    for( ; *pi; pi++ )
    {
-      pj = s_align[ iVersion - 1 ];
+      const unsigned char * pj = s_align[ iVersion - 1 ];
       for( ; *pj; pj++ )
       {
          if( ( *pi > 10 && *pi < iLength - 10 ) ||
@@ -941,6 +940,8 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
    /* Draw data. Note: pCWBits == NULL is used only for debugging */
    if( pCWBits )
    {
+      int no, up, right;
+
       i = j = iLength - 1;
       right = 1;
       up = 1;
@@ -994,13 +995,13 @@ static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
 static int _qr_penalty( PHB_BITBUFFER pBits, int iVersion )
 {
    int i, j, k, iPenalty = 0, iLen = _qr_versionlength( iVersion );
-   HB_BOOL bBitLast, bBit;
+   HB_BOOL bBit;
 
    /* 1. Same color modules in row/column */
    for( i = 0; i < iLen; i++ )
    {
       /* Row */
-      bBitLast = hb_bitbuffer_get( pBits, i * iLen );
+      HB_BOOL bBitLast = hb_bitbuffer_get( pBits, i * iLen );
       k = 1;
       for( j = 1; j < iLen; j++ )
       {
@@ -1041,8 +1042,8 @@ static int _qr_penalty( PHB_BITBUFFER pBits, int iVersion )
    }
 
    /* 2. Block of same color modules */
-   /* Instead of looking for non-overlapped MxN block, we can search for 2x2 overlapping blocks, */
-   /* penalty value is the same for both of these methods                                        */
+   /* Instead of looking for non-overlapped MxN block, we can search for 2x2 overlapping blocks,
+      penalty value is the same for both of these methods */
    for( i = 0; i < iLen - 1; i++ )
    {
       for( j = 0; j < iLen - 1; j++ )
@@ -1142,10 +1143,12 @@ static void _qr_mask_pattern( PHB_BITBUFFER pBits, int iVersion, int iMask )
 
 static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
 {
-   int i, iPenaltyMin = 0, iMaskMin = 0, iPenalty;
+   int i, iPenaltyMin = 0, iMaskMin = 0;
 
    for( i = 0; i < 8; i++ )
    {
+      int iPenalty;
+
       _qr_mask_pattern( pBits, iVersion, i );
       iPenalty = _qr_penalty( pBits, iVersion );
 #ifdef DEBUG_CODE

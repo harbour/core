@@ -1,3 +1,5 @@
+# Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+
 # These are mandatory inside Harbour repository, they will always
 # override project options.
 
@@ -9,7 +11,18 @@
 -prgflag=-i-
 #-prgflag=-u+hbstrict.ch
 
--safe
+-harden
+{HB_BUILD_PKG='yes'}-vcsts
+
+# disable .hbx updates unless requested
+{!(HB_REBUILD_EXTERN='yes')}-hbx-
+
+#{win&allmsvc&HB_COMP_VER>'1600'}-cflag=-sdl
+{win&allmsvc&HB_COMP_VER>'1700'&_HB_MSVC_ANALYZE='yes'}-cflag=-analyze
+{win&allmingw&HB_COMP_VER>'0407'}-ldflag=-static-libgcc
+{win&allmingw&HB_COMP_VER>'0407'}-dflag=-static-libgcc
+#{win&allmingw&HB_COMP_VER>'0407'&lngcpp}-ldflag=-static-libstdc++
+#{win&allmingw&HB_COMP_VER>'0401'}-cflag=-Wstrict-overflow=4
 
 {allwin}-winuni
 {allwin&HB_LIB3RD}-lunicows
@@ -26,9 +39,7 @@
 
 # dynamic lib creation settings
 {hbdyn}-shared
-{hbdyn}-implib=../lib/${hb_plat}/${hb_comp}${hb_build}/
-{hbdyn&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}
-{hbdyn&!hb_dynsuffix}-implib=${hb_outputname}_dll
+{hbdyn}-implib=../lib/${hb_plat}/${hb_comp}${hb_build}/${hb_outputname}_dll
 {hbdyn&unix&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}
 {hbdyn&unix&!darwin&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}
 {hbdyn&unix&darwin}-ln=${hb_dynprefix}${hb_outputname}.${hb_major}.${hb_minor}${hb_dynext}
@@ -40,6 +51,8 @@
 "{hbdyn&darwin}-dflag=-current_version ${hb_major}.${hb_minor}.${hb_release}"
 "{hbdyn&linux}-dflag=-Wl,-soname,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
 "{hbdyn&sunos}-dflag=-Wl,-h,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
+"{hbdyn&win&allmingw}-dflag=-Wl,--major-image-version,${hb_major}"
+"{hbdyn&win&allmingw}-dflag=-Wl,--minor-image-version,${hb_minor}"
 
 # output name tweaks for dynamic libs
 # NOTE: We're altering previously set output name value here
@@ -64,6 +77,7 @@
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.hbc
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.hbx
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.ch
+-instfile=contrib:${_HB_CONTRIB_SUBDIR}*.md
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.txt
 -instfile=contrib_tests:${_HB_CONTRIB_SUBDIR}tests/*.*
 

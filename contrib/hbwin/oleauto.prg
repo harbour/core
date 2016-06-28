@@ -70,8 +70,7 @@ METHOD __enumStart( enum, lDescend ) CLASS win_oleAuto
 
    LOCAL hObjEnum
 
-   hObjEnum := __oleEnumCreate( ::__hObj, lDescend )
-   IF ! Empty( hObjEnum )
+   IF ! Empty( hObjEnum := __oleEnumCreate( ::__hObj, lDescend ) )
       IF ! Empty( ::__hObjEnum )
          /* small hack - clone the object array for nested FOR EACH calls */
          self := __objClone( self )
@@ -111,8 +110,7 @@ FUNCTION win_oleGetActiveObject( ... )
 
    LOCAL oOle, hOle
 
-   hOle := __oleGetActiveObject( ... )
-   IF ! Empty( hOle )
+   IF ! Empty( hOle := __oleGetActiveObject( ... ) )
       oOle := win_oleAuto()
       oOle:__hObj := hOle
    ENDIF
@@ -124,8 +122,7 @@ FUNCTION win_oleCreateObject( ... )
 
    LOCAL oOle, hOle
 
-   hOle := __oleCreateObject( ... )
-   IF ! Empty( hOle )
+   IF ! Empty( hOle := __oleCreateObject( ... ) )
       oOle := win_oleAuto()
       oOle:__hObj := hOle
    ENDIF

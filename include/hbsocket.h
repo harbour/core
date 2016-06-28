@@ -1,5 +1,5 @@
 /*
- * socket C API
+ * Socket C API
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -1,5 +1,5 @@
 /*
- * socket related constant values
+ * Socket related constant values
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

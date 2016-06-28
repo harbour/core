@@ -114,7 +114,7 @@ HB_FUNC( NETCANCEL )
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    void * hDevice;
 
-   DWORD dwResult = WNetCancelConnection( HB_PARSTRDEF( 1, &hDevice, NULL ), TRUE ); /* FALSE = fail if exist open files or print jobs. */
+   DWORD dwResult = WNetCancelConnection( HB_PARSTRDEF( 1, &hDevice, NULL ), TRUE );  /* FALSE = fail if exist open files or print jobs. */
 
    hb_strfree( hDevice );
    /* TRUE = force cancel connection even if exist
@@ -129,7 +129,7 @@ HB_FUNC( NETCANCEL )
 HB_FUNC( NETPRINTER )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   const char * cPrn = hb_setGetCPtr( HB_SET_PRINTFILE );   /* query default local printer port. */
+   const char * cPrn = hb_setGetCPtr( HB_SET_PRINTFILE );  /* query default local printer port. */
 
    if( ! cPrn || ! *cPrn || hb_stricmp( cPrn, "PRN" ) == 0 )
       cPrn = "LPT1";

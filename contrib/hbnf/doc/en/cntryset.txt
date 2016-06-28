@@ -18,12 +18,12 @@
       This function returns the state (ON/OFF, TRUE/FALSE) of the CENTURY
       and optionally sets it ON or OFF.
    $EXAMPLES$
-      lOldState := ft_SetCentury()       // Get current CENTURY Setting
+      ? ft_SetCentury()       // Get current CENTURY Setting
 
-      lOldState := ft_SetCentury( .T. )  // Get the current CENTURY Setting
-                                         // and turn it on (set it to TRUE)
+      ? ft_SetCentury( .T. )  // Get the current CENTURY Setting
+                              // and turn it on (set it to TRUE)
 
-      lOldState := ft_SetCentury( .F. )  // Get the current CENTURY Setting
-                                         // and turn it off (set it to FALSE)
+      ? ft_SetCentury( .F. )  // Get the current CENTURY Setting
+                              // and turn it off (set it to FALSE)
    $END$
  */

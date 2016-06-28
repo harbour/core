@@ -1,5 +1,5 @@
 /*
- * __DBTOTAL FUNCTION
+ * __dbTotal() function
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *
@@ -54,8 +54,8 @@
          - won't crash with "No exported method: EVAL" if xKey is not
            block and table is not indexed. */
 
-FUNCTION __dbTotal( cFile, xKey, aFields,;
-                    xFor, xWhile, nNext, nRec, lRest,;
+FUNCTION __dbTotal( cFile, xKey, aFields, ;
+                    xFor, xWhile, nNext, nRec, lRest, ;
                     cRDD, nConnection, cCodePage )
 
    LOCAL nOldArea
@@ -74,23 +74,25 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    LOCAL oError
    LOCAL lError := .F.
 
-   IF HB_ISEVALITEM( xWhile )
+   DO CASE
+   CASE HB_ISEVALITEM( xWhile )
       bWhileBlock := xWhile
       lRest := .T.
-   ELSEIF HB_ISSTRING( xWhile ) .AND. ! Empty( xWhile )
+   CASE HB_ISSTRING( xWhile ) .AND. ! Empty( xWhile )
       bWhileBlock := hb_macroBlock( xWhile )
       lRest := .T.
-   ELSE
+   OTHERWISE
       bWhileBlock := {|| .T. }
-   ENDIF
+   ENDCASE
 
-   IF HB_ISEVALITEM( xFor )
+   DO CASE
+   CASE HB_ISEVALITEM( xFor )
       bForBlock := xFor
-   ELSEIF HB_ISSTRING( xFor ) .AND. ! Empty( xFor )
+   CASE HB_ISSTRING( xFor ) .AND. ! Empty( xFor )
       bForBlock := hb_macroBlock( xFor )
-   ELSE
+   OTHERWISE
       bForBlock := {|| .T. }
-   ENDIF
+   ENDCASE
 
    __defaultNIL( @lRest, .F. )
 
@@ -109,7 +111,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    nOldArea := Select()
 
    aNewDbStruct := {}
-   AEval( dbStruct(), {| aField | iif( aField[ DBS_TYPE ] == "M", NIL, AAdd( aNewDbStruct, aField ) ) } )
+   AEval( dbStruct(), {| aField | iif( Left( aField[ DBS_TYPE ], 1 ) $ "MWPG", NIL, AAdd( aNewDbStruct, aField ) ) } )
    IF Empty( aNewDbStruct )
       RETURN .F.
    ENDIF

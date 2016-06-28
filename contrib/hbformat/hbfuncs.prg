@@ -52,17 +52,21 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
    LOCAL cName
    LOCAL lContribHBR := .F.
 
+   LOCAL hHash
+
    /* from built-in core .hbx file */
    HBXToFuncList( @cFunctions, __harbour_hbx() )
 
    /* from .hbr container files */
-   FOR EACH aFile IN Directory( hb_DirBase() + "*.hbr" )
+   FOR EACH aFile IN hb_vfDirectory( hb_DirBase() + "*.hbr" )
       IF hb_FileMatch( hb_FNameName( aFile[ F_NAME ] ), "contrib" )
          lContribHBR := .T.
       ENDIF
-      FOR EACH cName IN hb_Deserialize( hb_ZUncompress( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
-         cFunctions += "," + cName:__enumKey()
-      NEXT
+      IF HB_ISHASH( hHash := hb_Deserialize( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
+         FOR EACH cName IN hHash
+            cFunctions += "," + cName:__enumKey()
+         NEXT
+      ENDIF
    NEXT
 
    /* from standalone .hbx files in some known locations */
@@ -74,7 +78,9 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
    /* from specified list of .hbx files */
 
    FOR EACH cName IN hb_ATokens( cHBXList )
-      HBXToFuncList( @cFunctions, hb_MemoRead( hb_PathJoin( hb_DirBase(), cName ) ) )
+      IF ! Empty( cName )
+         HBXToFuncList( @cFunctions, hb_MemoRead( hb_PathJoin( hb_DirBase(), cName ) ) )
+      ENDIF
    NEXT
 
    RETURN
@@ -92,10 +98,11 @@ STATIC PROCEDURE WalkDir( cDir, /* @ */ cFunctions )
    RETURN
 
 STATIC PROCEDURE HBXToFuncList( /* @ */ cFunctions, cHBX )
+
    LOCAL cLine
 
-   FOR EACH cLine IN hb_ATokens( StrTran( cHBX, Chr( 13 ) ), Chr( 10 ) )
-      IF Left( cLine, Len( "DYNAMIC " ) ) == "DYNAMIC "
+   FOR EACH cLine IN hb_ATokens( cHBX, .T. )
+      IF hb_LeftEq( cLine, "DYNAMIC " )
          cFunctions += "," + SubStr( cLine, Len( "DYNAMIC " ) + 1 )
       ENDIF
    NEXT
@@ -103,5 +110,4 @@ STATIC PROCEDURE HBXToFuncList( /* @ */ cFunctions, cHBX )
    RETURN
 
 STATIC FUNCTION __harbour_hbx()
-
 #pragma __streaminclude "harbour.hbx" | RETURN %s

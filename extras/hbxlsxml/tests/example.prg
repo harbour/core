@@ -1,48 +1,46 @@
 /*
- *
  * Copyright 2011 Fausto Di Creddo Trautwein, ftwein@yahoo.com.br
  *
- * Thanks TO Robert F Greer, PHP original version
- * http://sourceforge.net/projects/excelwriterxml/
+ * Thanks to Robert F Greer, PHP original version
  *
- * This program is free software; you can redistribute it AND/OR modify
- * it under the terms of the GNU General PUBLIC License as published by
- * the Free Software Foundation; either version 2, OR( at your option )
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
- * This program is distributed IN the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General PUBLIC License FOR more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General PUBLIC License
- * along WITH this software; see the file COPYING.txt.  IF NOT, write TO
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA( OR visit the web site https://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
- * As a special exception, the Harbour Project gives permission FOR
- * additional uses of the text contained IN its release of Harbour.
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
  *
- * The exception is that, IF you link the Harbour libraries WITH other
- * files TO produce an executable, this does NOT by itself cause the
- * resulting executable TO be covered by the GNU General PUBLIC License.
- * Your use of that executable is IN no way restricted on account of
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
  * linking the Harbour library code into it.
  *
- * This exception does NOT however invalidate any other reasons why
- * the executable file might be covered by the GNU General PUBLIC License.
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
  *
- * This exception applies only TO the code released by the Harbour
- * Project under the name Harbour.  IF you copy code FROM other
- * Harbour Project OR Free Software Foundation releases into a copy of
- * Harbour, as the General PUBLIC License permits, the exception does
- * NOT apply TO the code that you add IN this way.  TO avoid misleading
- * anyone as TO the status of such modified files, you must delete
- * this exception notice FROM them.
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
  *
- * IF you write modifications of your own FOR Harbour, it is your choice
- * whether TO permit this exception TO apply TO your modifications.
- * IF you DO NOT wish that, delete this exception notice.
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
@@ -50,7 +48,7 @@
 
 PROCEDURE Main()
 
-   LOCAL oXml, oSheet, xarquivo := "example.xml"
+   LOCAL oXml, oSheet
    LOCAL i, xqtddoc, xttotnot, xtbascal, xtvlricm, xtbasipi, xtvlripi, aDoc, nLinha
    LOCAL xEmpresa
    LOCAL xDataImp
@@ -61,7 +59,7 @@ PROCEDURE Main()
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
-   oXml := ExcelWriterXML():New( xarquivo )
+   oXml := ExcelWriterXML():New()
    oXml:setOverwriteFile( .T. )
 
    oObj := oXml:addStyle( "textLeft" )
@@ -151,19 +149,19 @@ PROCEDURE Main()
    oSheet := oXml:addSheet( "Plan1" )
 
    oObj := oSheet
-   oObj:columnWidth(  1,  70 ) // N.Fiscal
-   oObj:columnWidth(  2,  20 ) // TM
-   oObj:columnWidth(  3,  70 ) // Data Movto
-   oObj:columnWidth(  4,  70 ) // Data Emis.
-   oObj:columnWidth(  5,  50 ) // CFOP
-   oObj:columnWidth(  6,  50 ) // Cod. Cliente/Fornecedor
-   oObj:columnWidth(  7, 300 ) // Nome Cliente/Fornecedor
-   oObj:columnWidth(  8,  20 ) // UF
-   oObj:columnWidth(  9,  80 ) // Vlr.Tot.
-   oObj:columnWidth( 10,  80 ) // Base Calc.
-   oObj:columnWidth( 11,  80 ) // Vlr ICMS
-   oObj:columnWidth( 12,  80 ) // Base IPI
-   oObj:columnWidth( 13,  80 ) // Valor IPI
+   oObj:columnWidth(  1,  70 )  // N.Fiscal
+   oObj:columnWidth(  2,  20 )  // TM
+   oObj:columnWidth(  3,  70 )  // Data Movto
+   oObj:columnWidth(  4,  70 )  // Data Emis.
+   oObj:columnWidth(  5,  50 )  // CFOP
+   oObj:columnWidth(  6,  50 )  // Cod. Cliente/Fornecedor
+   oObj:columnWidth(  7, 300 )  // Nome Cliente/Fornecedor
+   oObj:columnWidth(  8,  20 )  // UF
+   oObj:columnWidth(  9,  80 )  // Vlr.Tot.
+   oObj:columnWidth( 10,  80 )  // Base Calc.
+   oObj:columnWidth( 11,  80 )  // Vlr ICMS
+   oObj:columnWidth( 12,  80 )  // Base IPI
+   oObj:columnWidth( 13,  80 )  // Valor IPI
 
    xEmpresa := "EMPRESA DEMONSTRACAO LTDA"
    xDataImp := "2011-03-22"
@@ -201,8 +199,8 @@ PROCEDURE Main()
 
    aDoc := {}
    FOR i := 1 TO 40
-      AAdd( aDoc, ;
-         { StrZero( i, 8 ), ;
+      AAdd( aDoc, { ;
+         StrZero( i, 8 ), ;
          "VE", ;
          Date() - 49 - i, ;
          Date() - 50 - i, ;
@@ -221,26 +219,26 @@ PROCEDURE Main()
 
    FOR i := 1 TO 40
       oObj := oSheet
-      oObj:writeString( ++nLinha, 1, aDoc[ i, 1 ], "textLeft" )
-      oObj:writeString( nLinha, 2, aDoc[ i, 2 ], "textLeft" )
-      oObj:writeString( nLinha, 3, DToC( aDoc[ i, 3 ] ), "textLeft" )
-      oObj:writeString( nLinha, 4, DToC( aDoc[ i, 4 ] ), "textLeft" )
-      oObj:writeString( nLinha, 5, aDoc[ i, 5 ], "textLeft" )
-      oObj:writeString( nLinha, 6, aDoc[ i, 6 ], "textLeft" )
-      oObj:writeString( nLinha, 7, aDoc[ i, 7 ], "textLeft" )
-      oObj:writeString( nLinha, 8, aDoc[ i, 8 ], "textLeft" )
-      oObj:writeNumber( nLinha, 9, aDoc[ i, 9 ], "numberRight" )
-      oObj:writeNumber( nLinha, 10, aDoc[ i, 10 ], "numberRight" )
-      oObj:writeNumber( nLinha, 11, aDoc[ i, 11 ], "numberRight" )
-      oObj:writeNumber( nLinha, 12, aDoc[ i, 12 ], "numberRight" )
-      oObj:writeNumber( nLinha, 13, aDoc[ i, 13 ], "numberRight" )
+      oObj:writeString( ++nLinha, 1, aDoc[ i ][ 1 ], "textLeft" )
+      oObj:writeString( nLinha, 2, aDoc[ i ][ 2 ], "textLeft" )
+      oObj:writeString( nLinha, 3, DToC( aDoc[ i ][ 3 ] ), "textLeft" )
+      oObj:writeString( nLinha, 4, DToC( aDoc[ i ][ 4 ] ), "textLeft" )
+      oObj:writeString( nLinha, 5, aDoc[ i ][ 5 ], "textLeft" )
+      oObj:writeString( nLinha, 6, aDoc[ i ][ 6 ], "textLeft" )
+      oObj:writeString( nLinha, 7, aDoc[ i ][ 7 ], "textLeft" )
+      oObj:writeString( nLinha, 8, aDoc[ i ][ 8 ], "textLeft" )
+      oObj:writeNumber( nLinha, 9, aDoc[ i ][ 9 ], "numberRight" )
+      oObj:writeNumber( nLinha, 10, aDoc[ i ][ 10 ], "numberRight" )
+      oObj:writeNumber( nLinha, 11, aDoc[ i ][ 11 ], "numberRight" )
+      oObj:writeNumber( nLinha, 12, aDoc[ i ][ 12 ], "numberRight" )
+      oObj:writeNumber( nLinha, 13, aDoc[ i ][ 13 ], "numberRight" )
 
       xqtddoc++
-      xttotnot += aDoc[ i, 9 ]
-      xtbascal += aDoc[ i, 10 ]
-      xtvlricm += aDoc[ i, 11 ]
-      xtbasipi += aDoc[ i, 12 ]
-      xtvlripi += aDoc[ i, 13 ]
+      xttotnot += aDoc[ i ][ 9 ]
+      xtbascal += aDoc[ i ][ 10 ]
+      xtvlricm += aDoc[ i ][ 11 ]
+      xtbasipi += aDoc[ i ][ 12 ]
+      xtvlripi += aDoc[ i ][ 13 ]
    NEXT
 
    oObj := oSheet
@@ -261,6 +259,6 @@ PROCEDURE Main()
    oObj:writeNumber(   nLinha, 12, xtbasipi, "numberRightBold" )
    oObj:writeNumber(   nLinha, 13, xtvlripi, "numberRightBold" )
 
-   oXml:writeData( xarquivo )
+   oXml:writeData( "example.xml" )
 
    RETURN

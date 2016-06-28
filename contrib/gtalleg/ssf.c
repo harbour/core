@@ -1,15 +1,7 @@
 /*
- *
- * This file was conceived while I was developing an allegro based gt
- * (gtAlleg) for xHarbour, so it is brought under the same license terms.
- *
- */
-
-/*
  * Simple Scalable Font library, main C module.
  *
  * Copyright 2004 Mauricio Abre <maurifull@datafull.com>
- * www - http: (yet to be constructed...)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

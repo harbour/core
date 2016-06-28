@@ -1,5 +1,5 @@
 /*
- * CT3 string function:  Expand()
+ * CT3 string function: Expand()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -48,7 +48,7 @@
 
 HB_FUNC( EXPAND )
 {
-   HB_SIZE nLen = hb_parclen( 1 ), ulSize, ul;
+   HB_SIZE nLen = hb_parclen( 1 );
 
    if( nLen > 0 )
    {
@@ -59,6 +59,7 @@ HB_FUNC( EXPAND )
       {
          char * szDest, * szPtr, cRepl;
          int iRepl, i;
+         HB_SIZE ulSize, ul;
 
          iRepl = hb_parni( 2 );
          i = hb_pcount();

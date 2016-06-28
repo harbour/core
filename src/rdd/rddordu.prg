@@ -44,6 +44,8 @@
  *
  */
 
+#pragma -gc0
+
 /* NOTE: Undocumented Clipper function */
 
 #ifdef HB_CLP_UNDOC

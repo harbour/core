@@ -1,6 +1,7 @@
 /*
  * __XSaveScreen()/__XRestScreen() functions
  *
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (Rewritten in C)
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    Rewritten in C
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

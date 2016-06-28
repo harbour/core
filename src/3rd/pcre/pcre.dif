@@ -1,6 +1,6 @@
-diff -urN pcre.orig/pcrejitc.c pcre/pcrejitc.c
---- pcre.orig/pcrejitc.c	2014-02-03 09:05:44.496039042 +0100
-+++ pcre/pcrejitc.c	2014-02-03 09:05:44.496039042 +0100
+diff --strip-trailing-cr -urN pcre.orig/pcrejitc.c pcre/pcrejitc.c
+--- pcre.orig/pcrejitc.c	2016-06-15 23:50:04.000000000 +0200
++++ pcre/pcrejitc.c	2016-06-15 23:50:05.000000000 +0200
 @@ -59,7 +59,7 @@
  #define SLJIT_VERBOSE 0
  #define SLJIT_DEBUG 0
@@ -10,10 +10,10 @@ diff -urN pcre.orig/pcrejitc.c pcre/pcrejitc.c
  
  #if defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED
  #error Unsupported architecture
-diff -urN pcre.orig/sjconfi.h pcre/sjconfi.h
---- pcre.orig/sjconfi.h	2014-02-03 09:05:44.536039042 +0100
-+++ pcre/sjconfi.h	2014-02-03 09:05:44.536039042 +0100
-@@ -323,8 +323,12 @@
+diff --strip-trailing-cr -urN pcre.orig/sjconfi.h pcre/sjconfi.h
+--- pcre.orig/sjconfi.h	2016-06-15 23:50:05.000000000 +0200
++++ pcre/sjconfi.h	2016-06-15 23:50:05.000000000 +0200
+@@ -488,8 +488,12 @@
  
  #if defined(__GNUC__) && !defined(__APPLE__)
  

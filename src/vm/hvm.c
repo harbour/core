@@ -2,6 +2,8 @@
  * The Virtual Machine
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_vmPushLongConst(), hb_vmPushDoubleConst())
+ * Copyright 1999 Eddie Runia <eddie@runia.com> (__dbgVMVarSGet(), __dbgVMVarSList())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,21 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_vmPushLongConst()
- *    hb_vmPushDoubleConst()
- *
- * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    __dbgVMVarSGet()
- *    __dbgVMVarSList()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -461,7 +448,7 @@ void hb_vmLock( void ) {}
 void hb_vmUnlock( void ) {}
 HB_BOOL hb_vmSuspendThreads( HB_BOOL fWait ) { HB_SYMBOL_UNUSED( fWait ); return HB_TRUE; }
 void hb_vmResumeThreads( void ) {}
-/*
+#if 0
 HB_BOOL hb_vmThreadRegister( void * Cargo ) { HB_SYMBOL_UNUSED( Cargo ); return HB_FALSE; }
 void hb_vmThreadRelease( void * Cargo )
 {
@@ -471,7 +458,7 @@ void hb_vmThreadRelease( void * Cargo )
    if( pThItm )
       hb_itemRelease( pThItm );
 }
-*/
+#endif
 #else
 
 static HB_CRITICAL_NEW( s_vmMtx );
@@ -2574,11 +2561,11 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
                Here is the Test Ueed - Clipper produced NO R/T Error -
                indicating MEMVAR was created.
                  PROCEDURE Main()
-                    USE Test
+                    USE test.dbf
                     First := First
-                    CLOSE
+                    dbCloseArea()
                     ? First
-                 RETURN
+                    RETURN
              */
 #if 0
             /* Pops a value from the eval stack and uses it to set
@@ -4041,7 +4028,7 @@ static void hb_vmEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
-/*
+#if 0
    else if( HB_IS_HASH( pItem1 ) && HB_IS_HASH( pItem2 ) )
    {
       HB_BOOL fResult = pItem1->item.asHash.value == pItem2->item.asHash.value;
@@ -4050,7 +4037,7 @@ static void hb_vmEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
- */
+#endif
    else if( hb_objOperatorCall( HB_OO_OP_EQUAL, pItem1, pItem1, pItem2, NULL ) )
       hb_stackPop();
    else
@@ -4142,7 +4129,7 @@ static void hb_vmNotEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
-/*
+#if 0
    else if( HB_IS_HASH( pItem1 ) && HB_IS_HASH( pItem2 ) )
    {
       HB_BOOL fResult = pItem1->item.asHash.value != pItem2->item.asHash.value;
@@ -4151,7 +4138,7 @@ static void hb_vmNotEqual( void )
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
    }
- */
+#endif
    else if( hb_objOperatorCall( HB_OO_OP_NOTEQUAL, pItem1, pItem1, pItem2, NULL ) )
       hb_stackPop();
    else
@@ -4730,14 +4717,14 @@ static void hb_vmEnumStart( int nVars, int nDescend )
    HB_BOOL fStart = HB_TRUE;
    int i;
 
-/*
+#if 0
    pItem = hb_itemUnRef( hb_stackItemFromTop( -( ( int ) nVars << 1 ) ) );
    if( ( pItem->type & ( HB_IT_ARRAY | HB_IT_HASH | HB_IT_STRING ) ) == 0 )
    {
       hb_errRT_BASE( EG_ARG, 1068, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 1, pItem );
       return;
    }
- */
+#endif
 
    for( i = ( int ) nVars << 1; i > 0 && fStart; i -= 2 )
    {
@@ -4835,11 +4822,12 @@ static void hb_vmEnumStart( int nVars, int nDescend )
 static void hb_vmEnumNext( void )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pEnumRef, pEnum, pBase;
    int i;
 
    for( i = ( int ) hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
+      PHB_ITEM pEnumRef, pEnum, pBase;
+
       pEnumRef = hb_stackItemFromTop( -( i << 1 ) );
       pEnum = hb_itemUnRefOnce( pEnumRef );
       pBase = pEnum->item.asEnum.basePtr;
@@ -4915,11 +4903,12 @@ static void hb_vmEnumNext( void )
 static void hb_vmEnumPrev( void )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pEnumRef, pEnum, pBase;
    int i;
 
    for( i = hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
    {
+      PHB_ITEM pEnumRef, pEnum, pBase;
+
       pEnumRef = hb_stackItemFromTop( -( i << 1 ) );
       pEnum = hb_itemUnRefOnce( pEnumRef );
       pBase = pEnum->item.asEnum.basePtr;
@@ -5478,7 +5467,6 @@ static void hb_vmArrayGen( HB_SIZE nElements ) /* generates an nElements Array a
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pArray;
-   HB_SIZE  nPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmArrayGen(%" HB_PFS "u)", nElements ) );
 
@@ -5488,6 +5476,7 @@ static void hb_vmArrayGen( HB_SIZE nElements ) /* generates an nElements Array a
 
    if( nElements )
    {
+      HB_SIZE nPos;
       /* move items from HVM stack to created array */
       for( nPos = 0; nPos < nElements; nPos++ )
       {
@@ -5665,7 +5654,7 @@ static void hb_vmMacroPushIndex( void )
 static HB_LONG hb_vmArgsJoin( HB_LONG lLevel, HB_USHORT uiArgSets )
 {
    HB_STACK_TLS_PRELOAD
-   HB_LONG lArgs, lRestArgs, lOffset;
+   HB_LONG lArgs;
    PHB_ITEM pArgs = hb_stackItemFromTop( lLevel ) ;
 
    lArgs = hb_itemGetNL( pArgs );
@@ -5674,6 +5663,8 @@ static HB_LONG hb_vmArgsJoin( HB_LONG lLevel, HB_USHORT uiArgSets )
 
    if( --uiArgSets )
    {
+      HB_LONG lRestArgs, lOffset;
+
       lRestArgs = lArgs;
       lArgs += hb_vmArgsJoin( lLevel - lArgs - 1, uiArgSets );
       lOffset = lLevel - lRestArgs - uiArgSets;
@@ -5762,17 +5753,19 @@ static void hb_vmPushVParams( void )
 static void hb_vmPushAParams( void )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pArray, pCount;
+   PHB_ITEM pArray;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmPushAParams()" ) );
 
    pArray = hb_stackItemFromTop( -1 );
    if( HB_IS_ARRAY( pArray ) )
    {
-      HB_SIZE nLen = pArray->item.asArray.value->nLen, ul;
+      HB_SIZE nLen = pArray->item.asArray.value->nLen;
 
       if( nLen )
       {
+         PHB_ITEM pCount;
+         HB_SIZE ul;
          for( ul = 1; ul < nLen; ++ul )
             hb_vmPush( pArray->item.asArray.value->pItems + ul );
          pCount = hb_stackAllocItem();
@@ -7506,7 +7499,7 @@ static void hb_vmPopStatic( HB_USHORT uiStatic )
    hb_stackDec();
 }
 
-/* ----------------------------------------------- */
+/* ------------------------------- */
 /*
  * Functions to manage module symbols
  */
@@ -7566,10 +7559,10 @@ HB_BOOL hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols,
    {
       PHB_SYMBOLS pLastSymbols = s_pSymbols;
 
-/*
+#if 0
       if( pSym->scope.value & HB_FS_PCODEFUNC )
          * pSymbols = pSym->value.pCodeFunc->pSymbols;
-*/
+#endif
 
       while( pLastSymbols )
       {
@@ -8058,7 +8051,9 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
 
       hSymScope = pSymbol->scope.value;
       pNewSymbols->hScope |= hSymScope;
-      /* fPublic = ( hSymScope & ( HB_FS_PUBLIC | HB_FS_MESSAGE | HB_FS_MEMVAR ) ) != 0; */
+#if 0
+      fPublic = ( hSymScope & ( HB_FS_PUBLIC | HB_FS_MESSAGE | HB_FS_MEMVAR ) ) != 0;
+#endif
       fPublic = ( hSymScope & ( HB_FS_INITEXIT | HB_FS_STATIC | HB_FS_FRAME ) ) == 0;
       if( fStatics )
       {
@@ -8883,14 +8878,14 @@ void hb_vmRequestCancel( void )
       char buffer[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 + 10 ]; /* additional 10 bytes for line info (%hu) overhead */
       char file[ HB_PATH_MAX ];
       HB_USHORT uiLine;
-      int iLevel = 0, l;
+      int iLevel = 0;
 
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "Cancelled at: ", 0 );
 
       while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
       {
-         l = ( int ) strlen( buffer );
+         int l = ( int ) strlen( buffer );
          hb_snprintf( buffer + l, sizeof( buffer ) - l, " (%hu)%s%s", uiLine, *file ? HB_I_( " in " ) : "", file );
 
          hb_conOutErr( buffer, 0 );
@@ -10102,7 +10097,7 @@ HB_BOOL hb_xvmStaticAdd( HB_USHORT uiStatic )
 HB_BOOL hb_xvmMemvarAdd( PHB_SYMB pSymbol )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_ITEM pMemVar, pVal1, pVal2;
+   PHB_ITEM pVal1, pVal2;
 
    HB_TRACE( HB_TR_INFO, ( "hb_xvmMemvarAdd(%p)", pSymbol ) );
 
@@ -10110,7 +10105,7 @@ HB_BOOL hb_xvmMemvarAdd( PHB_SYMB pSymbol )
    pVal2 = hb_stackItemFromTop( -1 );
    if( HB_IS_STRING( pVal1 ) && HB_IS_STRING( pVal2 ) )
    {
-      pMemVar = hb_memvarGetItem( pSymbol );
+      PHB_ITEM pMemVar = hb_memvarGetItem( pSymbol );
       if( pMemVar )
       {
          hb_vmPlus( pMemVar, pVal1, pVal2 );

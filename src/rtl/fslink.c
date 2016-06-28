@@ -70,14 +70,16 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
       {
          typedef BOOL ( WINAPI * _HB_CREATEHARDLINK )( LPCTSTR, LPCTSTR, LPSECURITY_ATTRIBUTES );
 
-         static _HB_CREATEHARDLINK s_pCreateHardLink = NULL;
+         static _HB_CREATEHARDLINK s_pCreateHardLink = ( _HB_CREATEHARDLINK ) -1;
 
-         if( ! s_pCreateHardLink )
+         if( s_pCreateHardLink == ( _HB_CREATEHARDLINK ) -1 )
          {
             HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
             if( hModule )
                s_pCreateHardLink = ( _HB_CREATEHARDLINK )
                   HB_WINAPI_GETPROCADDRESST( hModule, "CreateHardLink" );
+            else
+               s_pCreateHardLink = NULL;
          }
 
          if( s_pCreateHardLink )
@@ -148,18 +150,20 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
       {
          typedef BOOL ( WINAPI * _HB_CREATESYMBOLICLINK )( LPCTSTR, LPCTSTR, DWORD );
 
-         static _HB_CREATESYMBOLICLINK s_pCreateSymbolicLink = NULL;
+         static _HB_CREATESYMBOLICLINK s_pCreateSymbolicLink = ( _HB_CREATESYMBOLICLINK ) -1;
 
          #ifndef SYMBOLIC_LINK_FLAG_DIRECTORY
          #define SYMBOLIC_LINK_FLAG_DIRECTORY 0x1
          #endif
 
-         if( ! s_pCreateSymbolicLink )
+         if( s_pCreateSymbolicLink == ( _HB_CREATESYMBOLICLINK ) -1 )
          {
             HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
             if( hModule )
                s_pCreateSymbolicLink = ( _HB_CREATESYMBOLICLINK )
                   HB_WINAPI_GETPROCADDRESST( hModule, "CreateSymbolicLink" );
+            else
+               s_pCreateSymbolicLink = NULL;
          }
 
          if( s_pCreateSymbolicLink )
@@ -237,7 +241,7 @@ char * hb_fsLinkRead( const char * pszFile )
       {
          typedef DWORD ( WINAPI * _HB_GETFINALPATHNAMEBYHANDLE )( HANDLE, LPTSTR, DWORD, DWORD );
 
-         static _HB_GETFINALPATHNAMEBYHANDLE s_pGetFinalPathNameByHandle = NULL;
+         static _HB_GETFINALPATHNAMEBYHANDLE s_pGetFinalPathNameByHandle = ( _HB_GETFINALPATHNAMEBYHANDLE ) -1;
 
          #ifndef VOLUME_NAME_DOS
          #define VOLUME_NAME_DOS       0x0
@@ -258,12 +262,14 @@ char * hb_fsLinkRead( const char * pszFile )
          #define FILE_NAME_OPENED      0x8
          #endif
 
-         if( ! s_pGetFinalPathNameByHandle )
+         if( s_pGetFinalPathNameByHandle == ( _HB_GETFINALPATHNAMEBYHANDLE ) -1 )
          {
             HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
             if( hModule )
                s_pGetFinalPathNameByHandle = ( _HB_GETFINALPATHNAMEBYHANDLE )
                   HB_WINAPI_GETPROCADDRESST( hModule, "GetFinalPathNameByHandle" );
+            else
+               s_pGetFinalPathNameByHandle = NULL;
          }
 
          if( s_pGetFinalPathNameByHandle )

@@ -3,20 +3,14 @@
 # Dave Pearson <davep@davep.org>
 # Harbour RPM spec file
 #
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------
 # HOWTO .rpm docs:
-#    http://fedoraproject.org/wiki/PackageMaintainers/CreatingPackageHowTo
-#    http://www.gurulabs.com/downloads/GURULABS-RPM-LAB/GURULABS-RPM-GUIDE-v1.0.PDF
+#    https://fedoraproject.org/wiki/PackageMaintainers/CreatingPackageHowTo
+#    https://gurulabs.com/downloads/GURULABS-RPM-LAB/GURULABS-RPM-GUIDE-v1.0.PDF
 # ---------------------------------------------------------------
-
-# TOFIX: Contrib packages with dependencies will be packaged
-#        into separate .rpms, but their headers will be packaged
-#        into the core Harbour package. This f.e. makes it impossible
-#        to detect a Harbour contrib package by checking the existence
-#        of the header. [vszakats]
 
 ######################################################################
 ## Definitions.
@@ -55,7 +49,7 @@
 
 %define name      harbour
 %define dname     Harbour
-%define version   3.2.0
+%define version   3.4.0
 %define releasen  0.1
 %define alphatag  dev
 %define hb_etcdir /etc/%{name}
@@ -70,7 +64,7 @@
 %define hb_sln    export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
 %define hb_x11    export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
 %define hb_ssl    export HB_WITH_OPENSSL=%{?_with_openssl:yes}%{!?_with_openssl:no}
-%define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
+%define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE2=%{?_with_localpcre2:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
 %define hb_proot  export HB_INSTALL_PKG_ROOT=${RPM_BUILD_ROOT}
 %define hb_bdir   export HB_INSTALL_BIN=${RPM_BUILD_ROOT}%{_bindir}
 %define hb_ldir   export HB_INSTALL_LIB=${RPM_BUILD_ROOT}%{_libdir}/%{name}
@@ -91,14 +85,14 @@
 Summary:        Free software Clipper compatible compiler
 Summary(pl):    Darmowy kompilator kompatybilny z językiem Clipper.
 Summary(pt_BR): Um compilador Clipper compativel Gratis
-Summary(ru):    ????????? ??????????, ??????????? ? ?????? Clipper.
+Summary(ru):    Свободный компилятор, совместимый с языком Clipper.
 Summary(hu):    Szabad szoftver Clipper kompatibilis fordító
 Name:           %{name}
 Version:        %{version}
 Release:        %{releasen}%{?alphatag:.%{alphatag}}%{?platform:.%{platform}}
 License:        GPL (plus exception)
 Group:          Development/Languages
-URL:            http://harbour-project.org/
+URL:            https://github.com/vszakats/harbour-core/
 Source:         %{name}-%{version}.src.tar.gz
 BuildRequires:  gcc binutils %{!?_without_curses: ncurses-devel} %{!?_without_gpm: gpm-devel}
 Requires:       gcc binutils sh-utils %{name}-lib = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -123,9 +117,9 @@ Esse pacote contem um compilador, um pré-processador, arquivos de cabeçalho
 uma maquina virtual e documentaçăo.
 
 %description -l ru
-%{dname} - ?????????????????? ??????????, ??????????? ? ?????? CA-Cl*pper.
-???? ????? ???????? ??????????, ????????????, ????? ??????????, ???????????
-?????? ? ????????????.
+%{dname} - многоплатформенный компилятор, совместимый с языком CA-Cl*pper.
+Этот пакет содержит компилятор, препроцессор, файлы заголовков, виртуальную
+машину и документацию.
 
 %description -l hu
 %{dname} egy több platformon is működő CA-Cl*pper kompatibilis
@@ -139,7 +133,7 @@ fordítóprogram. A csomag része a fordító maga, az előfordító, fejléc
 %package lib
 Summary:        Shared runtime libaries for %{dname} compiler
 Summary(pl):    Dzielone bilioteki dla kompilatora %{dname}
-Summary(ru):    ????????? ???????????? ?????????? ??? ??????????? %{dname}
+Summary(ru):    Совместно используемые библиотеки для компилятора %{dname}
 Summary(hu):    Megosztott könyvtárak a(z) %{dname} fordítóhoz
 Group:          Development/Languages
 Provides:       lib%{name}.so
@@ -160,9 +154,9 @@ Esse pacote %{dname} provem as bibliotecas compartilhadas para programas
 linkados dinamicamente.
 
 %description -l ru lib
-%{dname} - ??????????, ??????????? ? ?????? CA-Cl*pper.
-???? ????? ???????? ????????? ???????????? ?????????? %{dname},
-??????????? ??? ?????? ??????????? ?????????????? ????????.
+%{dname} - компилятор, совместимый с языком CA-Cl*pper.
+Этот пакет содержит совместно используемые библиотеки %{dname},
+необходимые для работы динамически скомпонованных программ.
 
 %description -l hu lib
 A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
@@ -177,7 +171,7 @@ programokhoz szükséges megosztott (dinamikus) futtatókönyvtárakat.
 Summary:        Contrib runtime libaries for %{dname} compiler
 Summary(pl):    Bilioteki z drzewa contrib dla kompilatora %{dname}
 Summary(pt_BR): Libs contrib para %{dname}
-Summary(ru):    ?????????? ?? ?????? contrib ??? ??????????? %{dname}
+Summary(ru):    Библиотеки из дерева contrib для компилятора %{dname}
 Summary(hu):    Kiegészítő könyvtárak a(z) %{dname} fordítóhoz
 Group:          Development/Languages
 Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -197,8 +191,8 @@ Esse pacote %{dname} provem as bibliotecas contrib para linkagem
 dos programas.
 
 %description -l ru contrib
-%{dname} - ??????????, ??????????? ? ?????? CA-Cl*pper.
-???? ????? ???????? ??????????? ?????????? %{dname} ?? ?????? contrib.
+%{dname} - компилятор, совместимый с языком CA-Cl*pper.
+Этот пакет содержит статические библиотеки %{dname} из дерева contrib.
 
 %description -l hu contrib
 A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
@@ -286,18 +280,18 @@ statikus szerkesztéshez.
 
 ## firebird library
 %{?_with_firebird:%package firebird}
-%{?_with_firebird:Summary:        FireBird library bindings for %{dname} compiler}
-%{?_with_firebird:Summary(pl):    Bilioteka FireBird dla kompilatora %{dname}}
+%{?_with_firebird:Summary:        Firebird library bindings for %{dname} compiler}
+%{?_with_firebird:Summary(pl):    Bilioteka Firebird dla kompilatora %{dname}}
 %{?_with_firebird:Group:          Development/Languages}
 %{?_with_firebird:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
 %{?_with_firebird:%description firebird}
 %{?_with_firebird:%{dname} is a Clipper compatible compiler.}
-%{?_with_firebird:This package provides %{dname} FireBird library for program linking.}
+%{?_with_firebird:This package provides %{dname} Firebird library for program linking.}
 
 %{?_with_firebird:%description -l pl firebird}
 %{?_with_firebird:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
-%{?_with_firebird:Ten pakiet udostępnia statyczn+ biliotekę FireBird dla kompilatora %{dname}.}
+%{?_with_firebird:Ten pakiet udostępnia statyczn+ biliotekę Firebird dla kompilatora %{dname}.}
 
 ## freeimage library
 #%{?_with_freeimage:%package freeimage}
@@ -331,18 +325,18 @@ statikus szerkesztéshez.
 
 ## mysql library
 %{?_with_mysql:%package mysql}
-%{?_with_mysql:Summary:        MYSQL library bindings for %{dname} compiler}
-%{?_with_mysql:Summary(pl):    Bilioteka MYSQL dla kompilatora %{dname}}
+%{?_with_mysql:Summary:        MariaDB/MYSQL library bindings for %{dname} compiler}
+%{?_with_mysql:Summary(pl):    Bilioteka MariaDB/MYSQL dla kompilatora %{dname}}
 %{?_with_mysql:Group:          Development/Languages}
 %{?_with_mysql:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
 %{?_with_mysql:%description mysql}
 %{?_with_mysql:%{dname} is a Clipper compatible compiler.}
-%{?_with_mysql:This package provides %{dname} MYSQL library for program linking.}
+%{?_with_mysql:This package provides %{dname} MariaDB/MYSQL library for program linking.}
 
 %{?_with_mysql:%description -l pl mysql}
 %{?_with_mysql:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
-%{?_with_mysql:Ten pakiet udostępnia statyczn+ biliotekę MYSQL dla kompilatora %{dname}.}
+%{?_with_mysql:Ten pakiet udostępnia statyczn+ biliotekę MariaDB/MYSQL dla kompilatora %{dname}.}
 
 ## odbc library
 %{?_with_odbc:%package odbc}
@@ -396,7 +390,7 @@ make %{?_smp_mflags}
 ## Install.
 ######################################################################
 
-# Install harbour itself.
+# Install Harbour itself.
 
 %install
 %{hb_env}
@@ -420,7 +414,9 @@ rm -f $HB_INSTALL_LIB/libjpeg.a \
       $HB_INSTALL_LIB/libsqlite3.a \
       $HB_INSTALL_LIB/libexpat.a \
       $HB_INSTALL_LIB/liblzf.a \
-      $HB_INSTALL_LIB/libminilzo.a
+      $HB_INSTALL_LIB/libminilzo.a \
+      $HB_INSTALL_LIB/libmxml.a \
+      $HB_INSTALL_LIB/libtiff.a
 
 ######################################################################
 ## Post install/uninstall scripts
@@ -452,6 +448,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/harbour
 %{_bindir}/hbpp
 %{_bindir}/hbtest
+%{_bindir}/hbspeed
 %{_bindir}/hbrun
 %{_bindir}/hbi18n
 %{_bindir}/hbmk2
@@ -487,6 +484,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbusrrdd.a
 %{_libdir}/%{name}/libhbuddall.a
 %{?_with_localzlib:%{_libdir}/%{name}/libhbzlib.a}
+%{?_with_localpcre2:%{_libdir}/%{name}/libhbpcre2.a}
 %{?_with_localpcre:%{_libdir}/%{name}/libhbpcre.a}
 
 %files lib
@@ -767,7 +765,7 @@ rm -rf $RPM_BUILD_ROOT
 
 * Thu Jan 17 2002 Dave Pearson <davep@davep.org>
 - Removed the use of the /etc/profile.d scripts for setting the
-  harbour environment variables. The settings are now placed
+  Harbour environment variables. The settings are now placed
   directly in gharbour and harbour-link. This means that this .spec
   file should be more useful on RPM using platforms other than RedHat.
 
@@ -800,8 +798,8 @@ rm -rf $RPM_BUILD_ROOT
 - Added README.RPM to the documentation directory.
 
 * Sat Jan 06 2001 Dave Pearson <davep@davep.org>
-- The gharbour script now passes the harbour include directory, using -I,
-  to harbour.
+- The gharbour script now passes the Harbour include directory, using -I,
+  to Harbour.
 
 * Thu Aug 24 2000 Dave Pearson <davep@davep.org>
 - Changed the files section so that hbrun doesn't get installed. It isn't
@@ -822,13 +820,13 @@ rm -rf $RPM_BUILD_ROOT
 - Added 'bash' and 'sh-utils' to the list of required packages.
 
 * Tue Aug 01 2000 Dave Pearson <davep@davep.org>
-- Added harbour environment scripts to /etc/profile.d.
+- Added Harbour environment scripts to /etc/profile.d.
 - Added generation of gharbour and harbour-link commands.
 
 * Mon Jul 31 2000 Dave Pearson <davep@davep.org>
 - Re-worked the layout of the spec file to make it cleaner and easier to
   read and maintain.
-- The latest harbour ChangeLog.txt is now installed into the RPM's doc
+- The latest Harbour ChangeLog.txt is now installed into the RPM's doc
   directory.
 - The content of the RPM's doc directory reflects the layout and content of
-  the harbour source's doc directory.
+  the Harbour source's doc directory.

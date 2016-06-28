@@ -158,16 +158,14 @@ PHB_EXPR hb_compExprReduceMod( PHB_EXPR pSelf, HB_COMP_DECL )
          default:
             if( HB_SUPPORT_HARBOUR )
             {
-               double dValue, dDivisor;
-
-               dDivisor = pRight->value.asNum.NumType == HB_ET_LONG ?
-                          ( double ) pRight->value.asNum.val.l :
-                          pRight->value.asNum.val.d;
+               double dDivisor = pRight->value.asNum.NumType == HB_ET_LONG ?
+                                 ( double ) pRight->value.asNum.val.l :
+                                 pRight->value.asNum.val.d;
                if( dDivisor )
                {
-                  dValue = pLeft->value.asNum.NumType == HB_ET_LONG ?
-                           ( double ) pLeft->value.asNum.val.l :
-                           pLeft->value.asNum.val.d;
+                  double dValue = pLeft->value.asNum.NumType == HB_ET_LONG ?
+                                  ( double ) pLeft->value.asNum.val.l :
+                                  pLeft->value.asNum.val.d;
                   pSelf->value.asNum.val.d = fmod( dValue, dDivisor );
                   pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                   pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
@@ -1981,11 +1979,12 @@ HB_BOOL hb_compExprReduceAT( PHB_EXPR pSelf, HB_COMP_DECL )
    PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
    PHB_EXPR pSub   = pParms->value.asList.pExprList;
    PHB_EXPR pText  = pSub->pNext;
-   PHB_EXPR pReduced;
 
    if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING &&
        ! HB_SUPPORT_USERCP )
    {
+      PHB_EXPR pReduced;
+
       /* NOTE: CA-Cl*pper has a bug in At( "", cText ) compile time
        *       optimization and always set 1 as result in such cses.
        *       This bug exist only in compiler and CA-Cl*pper macro

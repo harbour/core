@@ -55,11 +55,7 @@
 #include "hbapi.h"
 #include "hbrddsql.ch"
 
-/*
-   ====================================================================
-   SQLBASE
-   ====================================================================
- */
+/* SQLBASE */
 
 #define MAX_FIELD_NAME       64
 
@@ -74,9 +70,7 @@ typedef struct _SQLBASEAREA
 {
    AREA area;
 
-   /*
-    *  SQLBASE additions to the workarea structure
-    */
+   /* SQLBASE additions to the workarea structure */
 
    LPDBRELINFO lpdbPendingRel;
 
@@ -114,11 +108,7 @@ typedef struct _SQLDDCONNECTION
 } SQLDDCONNECTION;
 
 
-/*
-   ====================================================================
-   SQLMIX
-   ====================================================================
- */
+/* SQLMIX */
 
 #define MIX_MAXKEYLEN      1024
 #define MIX_MAXTAGNAMELEN  16
@@ -197,11 +187,7 @@ typedef struct _SQLMIXAREA
 } SQLMIXAREA, * SQLMIXAREAP;
 
 
-/*
-   ====================================================================
-   SQLDD
-   ====================================================================
- */
+/* SQLDD */
 
 typedef HB_ERRCODE ( *SDDFUNC_CONNECT )( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 typedef HB_ERRCODE ( *SDDFUNC_DISCONNECT )( SQLDDCONNECTION * pConnection );

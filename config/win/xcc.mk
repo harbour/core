@@ -7,10 +7,10 @@ LIB_EXT := .lib
 HB_DYN_COPT := -DHB_DYNLIB
 
 CC := xCC.exe
-CC_IN := -c
+CC_IN :=
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_HOST_INC) -I$(TOP). -I$(TOP)..
+CFLAGS += -I. -I$(HB_HOST_INC) -I$(TOP). -I$(TOP).. -c
 ifeq ($(HB_SHELL),sh)
    CFLAGS := $(subst /,\\,$(CFLAGS))
 else
@@ -37,7 +37,7 @@ endif
 
 RC := xRC.exe
 RC_OUT := -fo$(subst x,x, )
-RCFLAGS += -I. -I$(TOP) -I$(HB_HOST_INC)
+RCFLAGS += -I. -I$(TOP) -I$(HB_HOST_INC) -c65001
 
 LD := xLink.exe
 LD_OUT := -out:

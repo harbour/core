@@ -1,6 +1,6 @@
 /*
  * CT3 Date & Time functions:
- *       WaitPeriod(), TimeValid(), SetTime(), SetDate()
+ *   WaitPeriod(), TimeValid(), SetTime(), SetDate()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -45,9 +45,9 @@
  *
  */
 
-/* stime exists only in SVr4, SVID, X/OPEN and Linux */
+/* stime() exists only in SVr4, SVID, X/OPEN and Linux */
 #ifndef _SVID_SOURCE
-#  define _SVID_SOURCE
+#define _SVID_SOURCE
 #endif
 
 #include "hbapi.h"
@@ -55,7 +55,9 @@
 #include "hbstack.h"
 
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
+#elif defined( HB_OS_DOS )
+   #include <dos.h>
 #endif
 #include <time.h>
 
@@ -101,7 +103,7 @@ static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE nLen, int * piDecode 
    if( nLen == 2 || nLen == 5 || nLen == 8 || nLen == 11 )
    {
       static const int sc_iMax[] = { 23, 59, 59, 99 };
-      int     i, iVal;
+      int     i;
       HB_SIZE ul;
 
       fValid = HB_TRUE;
@@ -112,6 +114,7 @@ static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE nLen, int * piDecode 
       }
       for( ul = 0, i = 0; fValid && ul < nLen; ul += 3, ++i )
       {
+         int iVal;
          iVal   = 10 * ( szTime[ ul ] - '0' ) + ( szTime[ ul + 1 ] - '0' );
          fValid = iVal <= sc_iMax[ i ];
          if( piDecode )
@@ -144,7 +147,7 @@ HB_FUNC( SETTIME )
       st.wMilliseconds = ( WORD ) iTime[ 3 ] * 10;
       fResult = SetLocalTime( &st );
 #elif defined( HB_OS_LINUX ) && ! defined( HB_OS_ANDROID ) && ! defined( __WATCOMC__ )
-/* stime exists only in SVr4, SVID, X/OPEN and Linux */
+      /* stime() exists only in SVr4, SVID, X/OPEN and Linux */
       HB_ULONG lNewTime;
       time_t   tm;
 
@@ -152,6 +155,14 @@ HB_FUNC( SETTIME )
       tm       = time( NULL );
       tm      += lNewTime - ( tm % 86400 );
       fResult  = stime( &tm ) == 0;
+#elif defined( HB_OS_DOS )
+      union REGS regs;
+      regs.h.ah = 45;
+      regs.h.ch = iTime[ 0 ];
+      regs.h.cl = iTime[ 1 ];
+      regs.h.dh = iTime[ 2 ];
+      HB_DOS_INT86( 0x21, &regs, &regs );
+      fResult = regs.h.al == 0;
 #endif
    }
 
@@ -179,7 +190,7 @@ HB_FUNC( SETDATE )
          st.wDayOfWeek = ( WORD ) hb_dateJulianDOW( lDate );
          fResult       = SetLocalTime( &st );
 #elif defined( HB_OS_LINUX ) && ! defined( HB_OS_ANDROID ) && ! defined( __WATCOMC__ )
-/* stime exists only in SVr4, SVID, X/OPEN and Linux */
+         /* stime() exists only in SVr4, SVID, X/OPEN and Linux */
          long   lNewDate;
          time_t tm;
 
@@ -187,6 +198,14 @@ HB_FUNC( SETDATE )
          tm       = time( NULL );
          tm       = lNewDate * 86400 + ( tm % 86400 );
          fResult  = stime( &tm ) == 0;
+#elif defined( HB_OS_DOS )
+         union REGS regs;
+         regs.h.ah        = 43;
+         regs.HB_XREGS.cx = iYear;
+         regs.h.dh        = iMonth;
+         regs.h.dl        = iDay;
+         HB_DOS_INT86( 0x21, &regs, &regs );
+         fResult = regs.h.al == 0;
 #endif
       }
    }

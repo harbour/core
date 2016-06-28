@@ -4,47 +4,39 @@ Harbour directory structure
 Follow are the various directories that exist under the Harbour tree.
 
 
-<harbour>               - Main Harbour directory. Contain all the various
-|                         make file and Changelog (=changes history) files.
+<root>                  - Main Harbour directory. Contains all the various
+|                         make file and Changelog (=changes history) file.
 |
-+---bin                 - Executable and build scripts.
-|                         Should contain harbour and other executables. (*)
++---bin                 - Executable and helper scripts.
+|                         Should contain Harbour and other executables. (*)
 |
 +---config              - Configuration Files (.mk) for the GNU Make system.
 |   |
 |   +---<platform>      - Configuration files specific to <platform>.
 |
-+---extras              - Sample files and small applications.
-|   |
-|   +---dbu             - Make files (without source) for CA-Cl*pper DBU.
-|   |
-|   +---guestbk         - Harbour Guests Book.
-|   |
-|   +---hbdoc           - Documentation generation tool.
-|   |
-|   +---misc            - A few humble demonstration.
-|   |
-|   +---rddado          - ADORDD - RDD to automatically manage Microsoft ADO.
-|   |
-|   +---rl              - Make files (without source) for CA-Cl*pper RL.
-|   |
-|   +---httpsrv         - uHTTPD micro web server.
++---contrib             - Packages built as part of the default build process.
+|                         (see description of each package in their respective
+|                         .hbc file)
 |
 +---debian              - Packaging information for Debian GNU/Linux.
 |
-+---doc                 - Documentation and white-paper.
++---doc                 - Documentation and white-papers.
 |   |
 |   +---en              - English documentation.
+|
++---extras              - Examples, patches, libs and utils that didn't fit 'contrib'.
 |
 +---include             - Include files for both Harbour and C.
 |
 +---lib                 - Run-Time libraries binaries for each platform. (*)
+|   |
+|   +---3rd             - 3rd party binaries
 |
 +---src                 - All source files reside underneath.
 |   |
 |   +---codepage        - National codepage collection.
 |   |
-|   +---common          - Common function and Expression Optimizer.
+|   +---common          - Common function and expression optimizer.
 |   |
 |   +---compiler        - Harbour compiler module.
 |   |
@@ -53,11 +45,10 @@ Follow are the various directories that exist under the Harbour tree.
 |   +---hbextern        - Library with all function binding available for
 |   |                     .prg code
 |   |
-|   +---3rd/pcre        - Harbour implementation of the Perl Compatible
-|   |                     Regular Expressions (PCRE) library.
-|   |
-|   +---3rd/zlib        - Harbour implementation of the ZLIB data
-|   |                     compression library.
+|   +---3rd             - Locally hosted copies of 3rd party libraries
+|   |                     required by core code or deemed important enough
+|   |                     to be provided as part of core.
+|   |                     (plays a role primarily on non-*nix systems)
 |   |
 |   +---lang            - National language message support files.
 |   |
@@ -65,7 +56,7 @@ Follow are the various directories that exist under the Harbour tree.
 |   |
 |   +---main            - Harbour compiler main source.
 |   |
-|   +---pp              - Harbour Preprocessor.
+|   +---pp              - Harbour preprocessor.
 |   |
 |   +---rdd             - Replaceable Database Driver (RDD).
 |   |   |
@@ -77,7 +68,7 @@ Follow are the various directories that exist under the Harbour tree.
 |   |   |
 |   |   +---dbfntx      - DBFNTX RDD.
 |   |   |
-|   |   +---hbsix       - SIX compatible functions.
+|   |   +---hbsix       - SIx compatible functions.
 |   |   |
 |   |   +---hsx         - HiPer-SEEK / CFTS compatible library.
 |   |   |
@@ -96,11 +87,11 @@ Follow are the various directories that exist under the Harbour tree.
 |   |   |
 |   |   +---gtcrs       - GT subsystem based on ncurses.
 |   |   |
-|   |   +---gtdos       - GT subsystem for MS-DOS compilers.
+|   |   +---gtdos       - GT subsystem for MS-DOS platform.
 |   |   |
 |   |   +---gtgui       - Minimal GT for Windows GUI programs.
 |   |   |
-|   |   +---gtos2       - GT subsystem for OS/2 compilers.
+|   |   +---gtos2       - GT subsystem for OS/2 platform.
 |   |   |
 |   |   +---gtpca       - GT subsystem for ANSI terminals.
 |   |   |
@@ -124,9 +115,9 @@ Follow are the various directories that exist under the Harbour tree.
 |   +---vm              - Harbour Virtual Machine and internal Run-Time
 |       |                 library functions.
 |       |
-|       +---mainstd     - mainstd library for MinGW build.
+|       +---mainstd     - mainstd helper library.
 |       |
-|       +---mainwin     - mainwin library for MinGW build.
+|       +---mainwin     - mainwin helper library.
 |       |
 |       +---vmmt        - GNU Makefile for creating the multithreaded version
 |                         of the VM library.
@@ -151,6 +142,8 @@ Follow are the various directories that exist under the Harbour tree.
     +---hbmk2           - Harbour Make utility.
     |   |
     |   +---examples    - Usage examples.
+    |
+    +---hbspeed         - Harbour speed tests.
     |
     +---hbtest          - Regression tests for the Run-Time library.
 

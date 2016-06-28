@@ -150,15 +150,13 @@ FUNCTION hb_langSelect( cLangID, cCP )
       ENDIF
 
 #ifdef HB_LEGACY_LEVEL4
-      IF Empty( cLangIDBase )
+      IF cLangIDBase == NIL
 #endif
          /* Support standard ISO language IDs */
-         IF Empty( tmp := __LangStdToLangHb( cLangID ) )
-            /* Normal case */
-            cLangIDBase := cLangID
-         ELSE
-            cLangID := cLangIDBase := tmp
+         IF ( tmp := __LangStdToLangHb( cLangID ) ) != NIL
+            cLangID := tmp
          ENDIF
+         cLangIDBase := cLangID
 #ifdef HB_LEGACY_LEVEL4
       ELSE
          /* Legacy emulation */
@@ -175,8 +173,6 @@ FUNCTION hb_langSelect( cLangID, cCP )
    RETURN __hb_langSelect( cLangID )
 
 STATIC FUNCTION __LangStdToLangHb( cLangStd )
-
-   LOCAL cLangHb := ""
 
    IF HB_ISSTRING( cLangStd )
       SWITCH Lower( StrTran( cLangStd, "_", "-" ) )
@@ -205,32 +201,32 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "az"         ; EXIT
       CASE "be-by"      ; EXIT
 #endif
-      CASE "be"         ; cLangHb := "be" ; EXIT
+      CASE "be"         ; RETURN "be"
       CASE "bg-bg"
-      CASE "bg"         ; cLangHb := "bg" ; EXIT
+      CASE "bg"         ; RETURN "bg"
       CASE "ca-es"
-      CASE "ca"         ; cLangHb := "ca" ; EXIT
+      CASE "ca"         ; RETURN "ca"
 #if 0
       CASE "cy-gb"      ; EXIT
 #endif
       CASE "cs-cz"
-      CASE "cs"         ; cLangHb := "cs" ; EXIT
+      CASE "cs"         ; RETURN "cs"
 #if 0
       CASE "da-dk"      ; EXIT
       CASE "da"         ; EXIT
 #endif
-      CASE "de-at"      ; cLangHb := "de_at" ; EXIT
+      CASE "de-at"      ; RETURN "de_at"
       CASE "de-ch"
       CASE "de-de"
       CASE "de-li"
       CASE "de-lu"
-      CASE "de"         ; cLangHb := "de" ; EXIT
+      CASE "de"         ; RETURN "de"
 #if 0
       CASE "div-mv"     ; EXIT
       CASE "div"        ; EXIT
 #endif
       CASE "el-gr"
-      CASE "el"         ; cLangHb := "el" ; EXIT
+      CASE "el"         ; RETURN "el"
       CASE "en-au"
       CASE "en-bz"
       CASE "en-ca"
@@ -244,9 +240,9 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "en-us"
       CASE "en-za"
       CASE "en-zw"
-      CASE "en"         ; cLangHb := "en" ; EXIT
-      CASE "eo"         ; cLangHb := "eo" ; EXIT
-      CASE "es-419"     ; cLangHb := "es_419" ; EXIT
+      CASE "en"         ; RETURN "en"
+      CASE "eo"         ; RETURN "eo"
+      CASE "es-419"     ; RETURN "es_419"
       CASE "es-ar"
       CASE "es-bo"
       CASE "es-cl"
@@ -266,13 +262,13 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "es-sv"
       CASE "es-uy"
       CASE "es-ve"
-      CASE "es"         ; cLangHb := "es" ; EXIT
+      CASE "es"         ; RETURN "es"
 #if 0
       CASE "et-ee"      ; EXIT
       CASE "et"         ; EXIT
 #endif
       CASE "eu-es"
-      CASE "eu"         ; cLangHb := "eu" ; EXIT
+      CASE "eu"         ; RETURN "eu"
 #if 0
       CASE "fa-ir"      ; EXIT
       CASE "fa"         ; EXIT
@@ -287,34 +283,34 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "fr-fr"
       CASE "fr-lu"
       CASE "fr-mc"
-      CASE "fr"         ; cLangHb := "fr" ; EXIT
+      CASE "fr"         ; RETURN "fr"
       CASE "gl-es"
-      CASE "gl"         ; cLangHb := "gl" ; EXIT
+      CASE "gl"         ; RETURN "gl"
 #if 0
       CASE "gu-in"      ; EXIT
       CASE "gu"         ; EXIT
 #endif
       CASE "he-il"
-      CASE "he"         ; cLangHb := "he" ; EXIT
+      CASE "he"         ; RETURN "he"
 #if 0
       CASE "hi-in"      ; EXIT
       CASE "hi"         ; EXIT
 #endif
       CASE "hr-hr"
-      CASE "hr"         ; cLangHb := "hr" ; EXIT
+      CASE "hr"         ; RETURN "hr"
       CASE "hu-hu"
-      CASE "hu"         ; cLangHb := "hu" ; EXIT
+      CASE "hu"         ; RETURN "hu"
 #if 0
       CASE "hy-am"      ; EXIT
       CASE "hy"         ; EXIT
 #endif
       CASE "id-id"
-      CASE "id"         ; cLangHb := "id" ; EXIT
+      CASE "id"         ; RETURN "id"
       CASE "is-is"
-      CASE "is"         ; cLangHb := "is" ; EXIT
+      CASE "is"         ; RETURN "is"
       CASE "it-ch"
       CASE "it-it"
-      CASE "it"         ; cLangHb := "it" ; EXIT
+      CASE "it"         ; RETURN "it"
 #if 0
       CASE "ja-jp"      ; EXIT
       CASE "ja"         ; EXIT
@@ -326,7 +322,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "kn"         ; EXIT
 #endif
       CASE "ko-kr"
-      CASE "ko"         ; cLangHb := "ko" ; EXIT
+      CASE "ko"         ; RETURN "ko"
 #if 0
       CASE "kok-in"     ; EXIT
       CASE "kok"        ; EXIT
@@ -334,7 +330,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "ky"         ; EXIT
 #endif
       CASE "lt-lt"
-      CASE "lt"         ; cLangHb := "lt" ; EXIT
+      CASE "lt"         ; RETURN "lt"
 #if 0
       CASE "lv-lv"      ; EXIT
       CASE "lv"         ; EXIT
@@ -351,7 +347,7 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
 #endif
       CASE "nl-be"
       CASE "nl-nl"
-      CASE "nl"         ; cLangHb := "nl" ; EXIT
+      CASE "nl"         ; RETURN "nl"
 #if 0
       CASE "nn-no"      ; EXIT
       CASE "no"         ; EXIT
@@ -359,31 +355,31 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "pa"         ; EXIT
 #endif
       CASE "pl-pl"
-      CASE "pl"         ; cLangHb := "pl" ; EXIT
-      CASE "pt-br"      ; cLangHb := "pt_br" ; EXIT
+      CASE "pl"         ; RETURN "pl"
+      CASE "pt-br"      ; RETURN "pt_br"
       CASE "pt-pt"
-      CASE "pt"         ; cLangHb := "pt" ; EXIT
+      CASE "pt"         ; RETURN "pt"
       CASE "ro-ro"
-      CASE "ro"         ; cLangHb := "ro" ; EXIT
+      CASE "ro"         ; RETURN "ro"
       CASE "ru-ru"
-      CASE "ru"         ; cLangHb := "ru" ; EXIT
+      CASE "ru"         ; RETURN "ru"
 #if 0
       CASE "sa-in"      ; EXIT
       CASE "sa"         ; EXIT
 #endif
       CASE "sk-sk"
-      CASE "sk"         ; cLangHb := "sk" ; EXIT
+      CASE "sk"         ; RETURN "sk"
       CASE "sl-si"
-      CASE "sl"         ; cLangHb := "sl" ; EXIT
+      CASE "sl"         ; RETURN "sl"
 #if 0
       CASE "sq-al"      ; EXIT
       CASE "sq"         ; EXIT
 #endif
-      CASE "sr-sp-cyrl" ; cLangHb := "sr_cyr" ; EXIT
-      CASE "sr-sp-latn" ; cLangHb := "sr_lat" ; EXIT
+      CASE "sr-sp-cyrl" ; RETURN "sr_cyr"
+      CASE "sr-sp-latn" ; RETURN "sr_lat"
       CASE "sv-fi"
       CASE "sv-se"
-      CASE "sv"         ; cLangHb := "sv" ; EXIT
+      CASE "sv"         ; RETURN "sv"
 #if 0
       CASE "sw-ke"      ; EXIT
       CASE "sw"         ; EXIT
@@ -397,13 +393,13 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "th"         ; EXIT
 #endif
       CASE "tr-tr"
-      CASE "tr"         ; cLangHb := "tr" ; EXIT
+      CASE "tr"         ; RETURN "tr"
 #if 0
       CASE "tt-ru"      ; EXIT
       CASE "tt"         ; EXIT
 #endif
       CASE "uk-ua"
-      CASE "uk"         ; cLangHb := "uk" ; EXIT
+      CASE "uk"         ; RETURN "uk"
 #if 0
       CASE "ur-pk"      ; EXIT
       CASE "ur"         ; EXIT
@@ -413,15 +409,15 @@ STATIC FUNCTION __LangStdToLangHb( cLangStd )
       CASE "vi-vn"      ; EXIT
       CASE "vi"         ; EXIT
 #endif
-      CASE "zh-chs"     ; cLangHb := "zh_sim" ; EXIT
+      CASE "zh-chs"     ; RETURN "zh_sim"
       CASE "zh-cht"
       CASE "zh-cn"
       CASE "zh-hk"
       CASE "zh-mo"
       CASE "zh-sg"
       CASE "zh-tw"
-      CASE "zh"         ; cLangHb := "zh" ; EXIT
+      CASE "zh"         ; RETURN "zh"
       ENDSWITCH
    ENDIF
 
-   RETURN cLangHb
+   RETURN NIL

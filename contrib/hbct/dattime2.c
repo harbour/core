@@ -1,18 +1,15 @@
 /*
- * CT3 Date & Time functions, part II: - AddMonth()
- *                                       - CToDoW()
- *                                       - CToMonth()
- *                                       - DaysInMonth()
- *                                       - DaysToMonth()
- *                                       - DMY()
- *                                       - DoY()
- *                                       - IsLeap()
- *                                       - LastDayOM()
- *                                       - MDY()
- *                                       - NToCDoW()
- *                                       - NToCMonth()
- *                                       - Quarter()
- *                                       - Week()
+ * CT3 Date & Time functions, part II:
+ *   AddMonth()
+ *   DMY()
+ *   DoY()
+ *   IsLeap()
+ *   LastDayOM()
+ *   MDY()
+ *   NToCDoW()
+ *   NToCMonth()
+ *   Quarter()
+ *   Week()
  *
  * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru>
  *
@@ -108,7 +105,7 @@ HB_FUNC( CTODOW )
       PHB_CODEPAGE cdp = hb_vmCDP();
       const char * szParam = hb_parc( 1 );
 
-      for( iDow = 7; iDow > 0; iDow-- )
+      for( iDow = 1; iDow <= 7; ++iDow )
       {
          const char * szDow = hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDow - 1 );
          if( hb_cdpicmp( szDow, strlen( szDow ), szParam, nLen, cdp, HB_FALSE ) == 0 )
@@ -128,7 +125,7 @@ HB_FUNC( CTOMONTH )
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
       const char * szParam = hb_parc( 1 );
-      for( iMonth = 12; iMonth > 0; iMonth-- )
+      for( iMonth = 1; iMonth <= 12; ++iMonth )
       {
          const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
          if( hb_cdpicmp( szMonth, strlen( szMonth ), szParam, nLen, cdp, HB_FALSE ) == 0 )
@@ -265,7 +262,8 @@ HB_FUNC( ADDMONTH )
       if( HB_ISTIMESTAMP( 1 ) )
       {
          fTimeStamp = HB_TRUE;
-         hb_partdt( &lJulian, &lMillisec, 1 );
+         if( ! hb_partdt( &lJulian, &lMillisec, 1 ) )
+            lJulian = lMillisec = 0;  /* to silence Coverity analyzer */
          hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
       }
       else if( HB_ISDATE( 1 ) )
@@ -289,9 +287,7 @@ HB_FUNC( ADDMONTH )
 
    iDays = ct_daysinmonth( iMonth, ct_isleap( iYear ) );
    if( iDay > iDays )
-   {
       iDay = iDays;
-   }
 
    lJulian = hb_dateEncode( iYear, iMonth, iDay );
    if( fTimeStamp )
@@ -329,22 +325,6 @@ HB_FUNC( ISLEAP )
    hb_retl( ct_isleap( iYear ) );
 }
 
-HB_FUNC( DAYSTOMONTH )
-{
-   int iMonth = hb_parni( 1 );
-   HB_BOOL bLeap = hb_parl( 2 );
-
-   hb_retni( ct_daystomonth( iMonth, bLeap ) );
-}
-
-HB_FUNC( DAYSINMONTH )
-{
-   int iMonth = hb_parni( 1 );
-   HB_BOOL bLeap = hb_parl( 2 );
-
-   hb_retni( ct_daysinmonth( iMonth, bLeap ) );
-}
-
 HB_FUNC( QUARTER )
 {
    int iYear, iMonth, iDay;
@@ -374,7 +354,7 @@ HB_FUNC( LASTDAYOM )
       bLeap = ct_isleap( iYear );
    }
 
-   hb_retni( ( iMonth && ( iMonth <= 12 ) ? ct_daysinmonth( iMonth, bLeap ) : 0 ) );
+   hb_retni( iMonth && iMonth <= 12 ? ct_daysinmonth( iMonth, bLeap ) : 0 );
 }
 
 HB_FUNC( NTOCDOW )

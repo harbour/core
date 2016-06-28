@@ -1,10 +1,8 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    Documentation for: Set(), __SetCentury()
  *
- * Copyright 1999 April White <april@users.sourceforge.net>
+ * Copyright 1999 April White <bright.tigra gmail.com>
  *    Documentation for: SetKey(), hb_SetKeyGet(), hb_SetKeySave(),
  *                       hb_SetKeyCheck(), SET KEY
  *
@@ -359,7 +357,7 @@
                    Specifies a path of directories to search through to
                    locate a file that can't be located in the DEFAULT
                    directory. Defaults to no path (""). Directories must
-                   be separated by a semicolon (e.g., "C:\data;C:\more").
+                   be separated by a semicolon (e.g., "C:\hb\bin;C:\hb\tests").
 
               _SET_PRINTER     <lFlag> | <cOnOff>
 
@@ -871,7 +869,7 @@
       parameters with this command will default the operation to the
       current logged drive and directory.
    $EXAMPLES$
-      SET DEFAULT TO C:\temp
+      SET DEFAULT TO C:\hb\tests
    $STATUS$
       R
    $COMPLIANCE$
@@ -978,7 +976,7 @@
       search hierarchy is: 1 Current drive and directory, 2 The SET DEFAULT
       path; 3 The SET PATH path.
    $EXAMPLES$
-      SET PATH TO C:\harbour\test
+      SET PATH TO C:\hb\tests
    $STATUS$
       R
    $COMPLIANCE$
@@ -1054,7 +1052,7 @@
    $EXAMPLES$
       SET ALTERNATE TO test.txt
       SET ALTERNATE ON
-      ? 'Harbour'
+      ? "Harbour"
       ? "is"
       ? "Power"
       SET ALTERNATE TO
@@ -1210,12 +1208,12 @@
        Addition         Same as operand with the greatest number of decimal digits
        Subtraction      Same as operand with the greatest number of decimal digits
        Multiplication   Sum of operand decimal digits
-       Division         Determined by SET DECIMAL TO
-       Exponential      Determined by SET DECIMAL TO
-       Log()            Determined by SET DECIMAL TO
-       Exp()            Determined by SET DECIMAL TO
-       Sqrt()           Determined by SET DECIMAL TO
-       Val()            Determined by SET DECIMAL TO
+       Division         Determined by SET DECIMALS TO
+       Exponential      Determined by SET DECIMALS TO
+       Log()            Determined by SET DECIMALS TO
+       Exp()            Determined by SET DECIMALS TO
+       Sqrt()           Determined by SET DECIMALS TO
+       Val()            Determined by SET DECIMALS TO
       </table>
    $EXAMPLES$
       SET FIXED ON

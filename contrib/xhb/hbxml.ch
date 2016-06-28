@@ -1,6 +1,5 @@
 /*
  * HBXML - XML DOM oriented routines
- * Define wrappers for xHarbour PRG.
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *

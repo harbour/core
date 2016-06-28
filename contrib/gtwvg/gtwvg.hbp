@@ -6,12 +6,16 @@
 -w3 -es2
 -winuni
 
--stop{!win}
+-stop{!allwin}
 
 hbwin.hbc
 
+-prgflag=-D__NO_LEGACY__
+
 # Optimize build time and make sure we build even with this option
 -cflag=-DWIN32_LEAN_AND_MEAN
+
+-hbx=${hb_name}
 
 gtwvgd.c
 gtwgud.c
@@ -22,7 +26,7 @@ wvgutils.c
 wvgwin.c
 wvgwing.c
 
-${hb_name}.hbx
+legacy.c
 
 3state.prg
 activex.prg
@@ -41,6 +45,7 @@ menubar.prg
 mle.prg
 paint.prg
 parthdlr.prg
+progrbar.prg
 pushbut.prg
 radiobut.prg
 scrollbr.prg

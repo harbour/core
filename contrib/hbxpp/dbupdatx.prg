@@ -1,5 +1,5 @@
 /*
- * XPP compatible dbUpdate() function
+ * Xbase++ compatible dbUpdate() function
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *

@@ -14,6 +14,6 @@
    $DESCRIPTION$
       This function is ideal if you need the user to select a day.
    $EXAMPLES$
-      mday := ft_PickDay()
+      ? ft_PickDay()
    $END$
  */

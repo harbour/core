@@ -44,9 +44,7 @@
  *
  */
 
-
 #include "hbcairo.h"
-
 
 HB_FUNC( CAIRO_IMAGE_SURFACE_CREATE_FROM_PNG )
 {
@@ -56,7 +54,6 @@ HB_FUNC( CAIRO_IMAGE_SURFACE_CREATE_FROM_PNG )
    hb_retptr( NULL );
 #endif
 }
-
 
 HB_FUNC( CAIRO_SURFACE_WRITE_TO_PNG )
 {

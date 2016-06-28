@@ -1,10 +1,9 @@
 /*
- * demonstration/test code for NETIO-RPC OLE server
+ * Demonstration/test code for NETIO-RPC OLE server
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  */
-
 
 #define CLS_Name  "MyOleRPCServer"
 #define CLS_ID    "{23245C3F-4487-404B-985F-E33886698D23}"
@@ -13,7 +12,7 @@
 
 /* DllMain() is OLE server entry point
  * It's executed just after loading OLE inproc server
- * as server from other application and also by regsrv32.exe
+ * as server from other application and also by regsvr32.exe
  * during registration and unregistration procedure.
  * It should initialize OLE server ID and name.
  */
@@ -54,11 +53,12 @@ PROCEDURE DllMain()
     * Please remember that using hash array which was initialized to keep
     * original assign order before adding its items you can define strict
     * message numbers (DISPIDs), i.e.:
-    *    hAction := { "OPEN"  => @myole_open()  , ;   // DISPID=1
-    *                 "CLOSE" => @myole_close() , ;   // DISPID=2
-    *                 "SAVE"  => @myole_save()  , ;   // DISPID=3
-    *                 "LOAD"  => @myole_load()  , ;   // DISPID=4
-    *                 "PRINT" => @myole_print() }     // DISPID=5
+    *    hAction := { ;
+    *       "OPEN"  => @myole_open()  , ;   // DISPID=1
+    *       "CLOSE" => @myole_close() , ;   // DISPID=2
+    *       "SAVE"  => @myole_save()  , ;   // DISPID=3
+    *       "LOAD"  => @myole_load()  , ;   // DISPID=4
+    *       "PRINT" => @myole_print() }     // DISPID=5
     * (see example in olesrv2.prg)
     *
     * <oAction> is optional parameter with Harbour object which is used
@@ -98,8 +98,7 @@ PROCEDURE DllMain()
     * OLE methods and HVM memvars (public and private variables) are
     * OLE object instance variables so they are shared with all OLE
     * objects created by this interface. It works just like xHarbour.com
-    * OLE server described at
-    * http://xharbour.com/index.asp?page=add_on_oleserver&show_sub=7&show_i=1
+    * OLE server.
     */
 
    win_oleServerInit( CLS_ID, CLS_Name, {|| OleNetioSrv():new() }, .T. )
@@ -111,7 +110,7 @@ CREATE CLASS OleNetioSrv
 
    HIDDEN:
 
-   VAR    pConn
+   VAR pConn
 
    EXPORTED:
 
@@ -123,7 +122,7 @@ METHOD Eval( cMethodName, ... ) CLASS OleNetioSrv
 
    LOCAL xRetVal, oErr
 
-   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   BEGIN SEQUENCE WITH __BreakBlock()
       SWITCH cMethodName
       CASE "CONNECT"
          xRetVal := ! Empty( ::pConn := netio_GetConnection( ... ) )

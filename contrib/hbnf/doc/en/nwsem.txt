@@ -82,8 +82,8 @@
                                 @nHandle, @nOpenCnt )
 
       IF nRc != 0
-         ? "Error: " + Str( nRc )
-         QUIT
+         ? "Error:", nRc
+         RETURN
       ENDIF
    $SEEALSO$
       ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()
@@ -130,7 +130,7 @@
       nRc := ft_NWSemWait( nHandle )
       IF nRc == 254
          ? "All slots for this resource are currently in use"
-         QUIT
+         RETURN
       ENDIF
 
       ft_NWSemEx( nHandle, @nValue, @nOpenCnt )
@@ -174,7 +174,7 @@
       nRc := ft_NWSemWait( nHandle )
       IF nRc == 254
          ? "All slots for this resource are currently in use"
-         QUIT
+         RETURN
       ENDIF
    $SEEALSO$
       ft_NWSemOpen() ft_NWSemEx() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()
@@ -206,7 +206,7 @@
 
       For more information, see the description under ft_NWSemOpen().
    $EXAMPLES$
-      ? "Signal returns: " + Str( ft_NWSemSig( nHandle ) )
+      ? "Signal returns:", ft_NWSemSig( nHandle )
    $SEEALSO$
       ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemClose() ft_NWSemLock()
    $END$
@@ -234,7 +234,7 @@
       the open count for the semaphore.  If the open count hits zero,
       the semaphore is deleted by NetWare.
    $EXAMPLES$
-      ? "Close returns:  " + Str( ft_NWSemClose( nHandle ) )
+      ? "Close returns:", ft_NWSemClose( nHandle )
    $SEEALSO$
       ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemLock()
    $END$
@@ -248,7 +248,7 @@
    $ONELINER$
       Perform a semaphore "lock"
    $SYNTAX$
-      FT_NWSEMLOCK ( <cSemaphore>, <@nHandle> ) -> lRet
+      ft_NWSemLock( <cSemaphore>, <@nHandle> ) -> lRet
    $ARGUMENTS$
       <cSemaphore> is the name of a semaphore you want to "lock."
       <nHandle> is the semaphore's handle, if you get the lock.

@@ -49,7 +49,7 @@
 #ifndef _SETCURS_CH
 #define _SETCURS_CH
 
-#define SC_UNDEF        -1 /* NOTE: This is a Harbour extension. */
+#define SC_UNDEF        -1  /* NOTE: This is a Harbour extension. */
 #define SC_NONE         0
 #define SC_NORMAL       1
 #define SC_INSERT       2

@@ -1,5 +1,5 @@
 /*
- * dynamic reference to ZLIB functions
+ * Dynamic reference to ZLIB functions
  *
  * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

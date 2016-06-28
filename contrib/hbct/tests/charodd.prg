@@ -51,18 +51,14 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharOdd()"
    ?
 
    ? "Simple tests:"
-   ? '  CharOdd( "1A2B3C4D5E" ) == "12345" ? --> "' + CharOdd( "1A2B3C4D5E" ) + '"'
-   ? '  CharOdd( "1A2B3C4D5" )  == "12345" ? --> "' + CharOdd( "1A2B3C4D5" ) + '"'
+   ? '  CharOdd( "1A2B3C4D5E" ) == "12345" ? -->', '"' + CharOdd( "1A2B3C4D5E" ) + '"'
+   ? '  CharOdd( "1A2B3C4D5" )  == "12345" ? -->', '"' + CharOdd( "1A2B3C4D5" ) + '"'
 
    ? "End test of CharOdd()"
    ?
-
-   ctexit()
 
    RETURN

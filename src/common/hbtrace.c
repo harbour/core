@@ -1,5 +1,5 @@
 /*
- * Tracing functions.
+ * Tracing functions
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 1999 Gonzalo Diethelm <gonzalo.diethelm@iname.com>
@@ -66,11 +66,11 @@
 #endif
 
 #ifndef va_copy
-#  ifdef __va_copy
-#     define va_copy( dst, src )  __va_copy( dst, src )
-#  else
-#     define va_copy( dst, src )  ( ( dst ) = ( src ) )
-#  endif
+   #ifdef __va_copy
+      #define va_copy( dst, src )  __va_copy( dst, src )
+   #else
+      #define va_copy( dst, src )  ( ( dst ) = ( src ) )
+   #endif
 #endif
 
 static int s_enabled = 1;
@@ -281,7 +281,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
 
       va_end( vargs );
 
-#  if defined( HB_OS_WIN )
+   #if defined( HB_OS_WIN )
       {
          union
          {
@@ -304,7 +304,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
          #endif
          OutputDebugString( buf.lp );
       }
-#  else
+   #else
       {
          int slevel;
 
@@ -325,7 +325,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
          else
             syslog( slevel, "%s:%d: %s %s", file, line, pszLevel, message );
       }
-#  endif
+   #endif
 #endif
    }
 
@@ -386,7 +386,7 @@ void hb_tr_trace( const char * fmt, ... )
       pTrace->level = -1;
       /* NOTE: resetting file name/line number will cause that we will unable
        * to report the location of code that allocated unreleased memory blocks
-       * See hb_xalloc/hb_xgrab in src/vm/fm.c
+       * See hb_xalloc()/hb_xgrab() in src/vm/fm.c
        */
       if( hb_tr_level() < HB_TR_DEBUG )
       {

@@ -9,10 +9,10 @@ LIB_PREF := lib
 LIB_EXT := .a
 
 CC := $(HB_CCPATH)$(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
-CC_IN := -c
+CC_IN :=
 CC_OUT := -o
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 ifneq ($(HB_BUILD_WARN),no)
    CFLAGS += -W -Wall
@@ -27,7 +27,10 @@ ifneq ($(HB_BUILD_OPTIM),no)
    # Use -O2 instead of -O3 here.
    CFLAGS += -O2
    ifneq ($(HB_BUILD_DEBUG),yes)
-      CFLAGS += -fomit-frame-pointer
+      # It's the default in 4.6 and up
+      ifneq ($(filter $(HB_COMPILER_VER),0209 0304 0400 0401 0402 0403 0404 0405),)
+         CFLAGS += -fomit-frame-pointer
+      endif
    endif
 endif
 
@@ -65,7 +68,7 @@ endef
 define create_library
    $(if $(wildcard __lib__.tmp),@$(RM) __lib__.tmp,)
    $(foreach file,$^,$(library_object))
-   ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rcs $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
+   ( $(AR) rcs $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ @__lib__.tmp $(ARSTRIP) ) || ( $(RM) $(subst /,$(DIRSEP),$(LIB_DIR)/$@) && $(FALSE) )
 endef
 
 AR_RULE = $(create_library)

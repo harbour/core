@@ -5,11 +5,11 @@
  *
  * These coded instructions, statements, and computer programs are the
  * property of Michael R Sweet and are protected by Federal copyright
- * law.  Distribution and use rights are outlined in the file "COPYING.txt"
+ * law.  Distribution and use rights are outlined in the file "LICENSE.txt"
  * which should have been included with this file.  If this file is
  * missing or damaged, see the license at:
  *
- *     http://www.minixml.org/
+ *     https://www.msweet.org/projects.php?Z3
  *
  * Harbour port Copyright (c) 2011 Tamas TEVESZ <ice@extreme.hu>
  *
@@ -21,6 +21,8 @@
 
 REQUEST HB_GT_CGI_DEFAULT
 
+REQUEST HB_CODEPAGE_UTF8EX
+
 STATIC s_aTypes := { ;
    "MXML_ELEMENT", ;
    "MXML_INTEGER", ;
@@ -30,10 +32,7 @@ STATIC s_aTypes := { ;
 
 STATIC s_aSAXEventCounts := { 0, 0, 0, 0, 0, 0 }
 
-/*
- * 'main()' - Main entry for test program.
- */
-
+/* Main entry for test program. */
 PROCEDURE Main( cFileArg )
 
    LOCAL hTree                            /* XML tree */
@@ -42,48 +41,45 @@ PROCEDURE Main( cFileArg )
    LOCAL nNum, cStr
    LOCAL i
 
-   /*
-    * Check arguments...
-    */
+   hb_cdpSelect( "UTF8EX" )
+   hb_SetTermCP( hb_cdpTerm() )
+   Set( _SET_OSCODEPAGE, hb_cdpOS() )
+
+   /* Check arguments */
 
    IF Empty( cFileArg )
-      OutErr( hb_StrFormat( "Usage: %1$s filename.xml", hb_ProgName() ) + hb_eol() )
+      ? hb_StrFormat( "Usage: %1$s filename.xml", hb_ProgName() )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   /*
-    * Test the basic functionality...
-    */
+   /* Test the basic functionality */
 
-   hTree := mxmlNewElement( MXML_NO_PARENT, "element" )
-   IF Empty( hTree )
-      OutErr( "ERROR: No parent node in basic test!" + hb_eol() )
-      QUIT
+   IF Empty( hTree := mxmlNewElement( MXML_NO_PARENT, "element" ) )
+      ? "ERROR: No parent node in basic test!"
+      RETURN
    ENDIF
 
-   nNum := mxmlGetType( hTree )
-   IF nNum != MXML_ELEMENT
+   IF ( nNum := mxmlGetType( hTree ) ) != MXML_ELEMENT
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: Parent has type %s (%d), expected MXML_ELEMENT!", ;
-            "UNKNOWN", nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: Parent has type %1$s (%2$d), expected MXML_ELEMENT!", ;
+            "UNKNOWN", nNum )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: Parent has type %s (%d), expected MXML_ELEMENT!", ;
-            s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: Parent has type %1$s (%2$d), expected MXML_ELEMENT!", ;
+            s_aTypes[ nNum + 1 ], nNum )
       ENDIF
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   cStr := mxmlGetElement( hTree )
-   IF !( cStr == "element" )
-      OutErr( hb_StrFormat( "ERROR: Parent value is '%s', expected 'element'", cStr ) + hb_eol() )
+   IF !( ( cStr := mxmlGetElement( hTree ) ) == "element" )
+      ? hb_StrFormat( "ERROR: Parent value is '%1$s', expected 'element'", cStr )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlNewInteger( hTree, 123 )
@@ -98,481 +94,438 @@ PROCEDURE Main( cFileArg )
    mxmlLoadString( hTree, "<foo><bar><one><two>value<two>value2</two></two></one></bar></foo>", MXML_OPAQUE_CALLBACK )
 
    IF Empty( hNode := mxmlGetFirstChild( hTree ) )
-      OutErr( "ERROR: No first child in basic test!" + hb_eol() )
+      ? "ERROR: No first child in basic test!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   nNum := mxmlGetType( hNode )
-   IF nNum != MXML_INTEGER
+   IF ( nNum := mxmlGetType( hNode ) ) != MXML_INTEGER
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: First child has type %s (%d), expected MXML_TEXT!", ;
-            "UNKNOWN", nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: First child has type %1$s (%2$d), expected MXML_TEXT!", ;
+            "UNKNOWN", nNum )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: First child has type %s (%d), expected MXML_TEXT!", ;
-            s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: First child has type %1$s (%2$d), expected MXML_TEXT!", ;
+            s_aTypes[ nNum + 1 ], nNum )
       ENDIF
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   nNum := mxmlGetInteger( hNode )
-   IF nNum != 123
-      OutErr( hb_StrFormat( "ERROR: First child value is %d, expected 123!", nNum ) + hb_eol() )
+   IF ( nNum := mxmlGetInteger( hNode ) ) != 123
+      ? hb_StrFormat( "ERROR: First child value is %1$d, expected 123!", nNum )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   hNode := mxmlGetNextSibling( hNode )
-   IF Empty( hNode )
-      OutErr( "ERROR: No second child node in basic test!" + hb_eol() )
+   IF Empty( hNode := mxmlGetNextSibling( hNode ) )
+      ? "ERROR: No second child node in basic test!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   nNum := mxmlGetType( hNode )
-   IF nNum != MXML_OPAQUE
+   IF ( nNum := mxmlGetType( hNode ) ) != MXML_OPAQUE
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: Second child has type %s (%d), expected MXML_OPAQUE!", ;
-            "UNKNOWN", nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: Second child has type %1$s (%2$d), expected MXML_OPAQUE!", ;
+            "UNKNOWN", nNum )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: Second child has type %s (%d), expected MXML_OPAQUE!", ;
-            s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: Second child has type %1$s (%2$d), expected MXML_OPAQUE!", ;
+            s_aTypes[ nNum + 1 ], nNum )
       ENDIF
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   hNode := mxmlGetNextSibling( hNode )
-   IF Empty( hNode )
-      OutErr( "ERROR: No third child node in basic test!" + hb_eol() )
+   IF Empty( hNode := mxmlGetNextSibling( hNode ) )
+      ? "ERROR: No third child node in basic test!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   nNum := mxmlGetType( hNode )
-   IF nNum != MXML_REAL
+   IF ( nNum := mxmlGetType( hNode ) ) != MXML_REAL
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: Third child has type %s (%d), expected MXML_REAL!", ;
-            "UNKNOWN", nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: Third child has type %1$s (%2$d), expected MXML_REAL!", ;
+            "UNKNOWN", nNum )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: Third child has type %s (%d), expected MXML_REAL!", ;
-            s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: Third child has type %1$s (%2$d), expected MXML_REAL!", ;
+            s_aTypes[ nNum + 1 ], nNum )
       ENDIF
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   nNum := mxmlGetReal( hNode )
-   IF nNum != 123.4
-      OutErr( hb_StrFormat( "ERROR: Third child value is %f, expected 123.4!", nNum ) + hb_eol() )
+   IF ( nNum := mxmlGetReal( hNode ) ) != 123.4
+      ? hb_StrFormat( "ERROR: Third child value is %1$f, expected 123.4!", nNum )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   hNode := mxmlGetNextSibling( hNode )
-   IF Empty( hNode )
-      OutErr( "ERROR: No fourth child node in basic test!" + hb_eol() )
+   IF Empty( hNode := mxmlGetNextSibling( hNode ) )
+      ? "ERROR: No fourth child node in basic test!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   nNum := mxmlGetType( hNode )
-   IF nNum != MXML_TEXT
+   IF ( nNum := mxmlGetType( hNode ) ) != MXML_TEXT
       IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-         OutErr( hb_StrFormat( "ERROR: Fourth child has type %s (%d), expected MXML_TEXT!", ;
-            "UNKNOWN", nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: Fourth child has type %1$s (%2$d), expected MXML_TEXT!", ;
+            "UNKNOWN", nNum )
       ELSE
-         OutErr( hb_StrFormat( "ERROR: Fourth child has type %s (%d), expected MXML_TEXT!", ;
-            s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: Fourth child has type %1$s (%2$d), expected MXML_TEXT!", ;
+            s_aTypes[ nNum + 1 ], nNum )
       ENDIF
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    cStr := mxmlGetText( hNode, @nNum )
    IF nNum != 1 .OR. Empty( cStr ) .OR. !( cStr == "text" )
-      OutErr( hb_StrFormat( "ERROR: Fourth child value is %d, '%s', expected 1, 'text'!", ;
-         nNum, cStr ) + hb_eol() )
+      ? hb_StrFormat( "ERROR: Fourth child value is %1$d, '%2$s', expected 1, 'text'!", ;
+         nNum, cStr )
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    FOR i := 0 TO 3
       IF Empty( hNode := mxmlGetNextSibling( hNode ) )
-         OutErr( hb_StrFormat( "ERROR: No group #%d child node in basic test!", i ) + hb_eol() )
+         ? hb_StrFormat( "ERROR: No group #%1$d child node in basic test!", i )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF ( ( nNum := mxmlGetType( hNode ) ) != MXML_ELEMENT )
          IF nNum < MXML_ELEMENT .OR. nNum > MXML_TEXT
-            OutErr( hb_StrFormat( "ERROR: Group child #%d has type %s (%d), expected MXML_ELEMENT!", ;
-               i + 1, "UNKNOWN", nNum ) + hb_eol() )
+            ? hb_StrFormat( "ERROR: Group child #%1$d has type %2$s (%3$d), expected MXML_ELEMENT!", ;
+               i + 1, "UNKNOWN", nNum )
          ELSE
-            OutErr( hb_StrFormat( "ERROR: Group child #%d has type %s (%d), expected MXML_ELEMENT!", ;
-               s_aTypes[ nNum + 1 ], nNum ) + hb_eol() )
+            ? hb_StrFormat( "ERROR: Group child #%1$d has type %2$s (%3$d), expected MXML_ELEMENT!", ;
+               i + 1, s_aTypes[ nNum + 1 ], nNum )
          ENDIF
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
    NEXT
 
-   /*
-    * Test mxmlFindPath...
-    */
+   /* Test mxmlFindPath */
 
-   hNode := mxmlFindPath( hTree, "*/two" )
-   IF Empty( hNode )
-      OutErr( "ERROR: Unable to find value for '*/two'." + hb_eol() )
+   IF Empty( hNode := mxmlFindPath( hTree, "*/two" ) )
+      ? "ERROR: Cannot find value for '*/two'."
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ELSEIF mxmlGetType( hNode ) != MXML_OPAQUE .OR. !( mxmlGetOpaque( hNode ) == "value" )
-      OutErr( "ERROR: Bad value for '*/two'." + hb_eol() )
+      ? "ERROR: Bad value for '*/two'."
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   hNode := mxmlFindPath( hTree, "foo/*/two" )
-   IF Empty( hNode )
-      OutErr( "ERROR: Unable to find value for 'foo/*/two'." + hb_eol() )
+   IF Empty( hNode := mxmlFindPath( hTree, "foo/*/two" ) )
+      ? "ERROR: Cannot find value for 'foo/*/two'."
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ELSEIF mxmlGetType( hNode ) != MXML_OPAQUE .OR. !( mxmlGetOpaque( hNode ) == "value" )
-      OutErr( "ERROR: Bad value for 'foo/*/two'." + hb_eol() )
+      ? "ERROR: Bad value for 'foo/*/two'."
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   hNode := mxmlFindPath( hTree, "foo/bar/one/two" )
-   IF Empty( hNode )
-      OutErr( "ERROR: Unable to find value for 'foo/bar/one/two'." + hb_eol() )
+   IF Empty( hNode := mxmlFindPath( hTree, "foo/bar/one/two" ) )
+      ? "ERROR: Cannot find value for 'foo/bar/one/two'."
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ELSEIF mxmlGetType( hNode ) != MXML_OPAQUE .OR. !( mxmlGetOpaque( hNode ) == "value" )
-      OutErr( "ERROR: Bad value for 'foo/bar/one/two'." + hb_eol() )
+      ? "ERROR: Bad value for 'foo/bar/one/two'."
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   /*
-    * Test indices...
-    */
+   /* Test indices */
 
-   hInd := mxmlIndexNew( hTree )
-   IF Empty( hInd )
-      OutErr( "ERROR: Unable to create index of all nodes!" + hb_eol() )
+   IF Empty( hInd := mxmlIndexNew( hTree ) )
+      ? "ERROR: Could not create index of all nodes!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 10
-      OutErr( hb_StrFormat( "ERROR: Index of all nodes contains %d nodes; expected 10!", nNum ) + hb_eol() )
+      ? hb_StrFormat( "ERROR: Index of all nodes contains %1$d nodes; expected 10!", nNum )
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexReset( hInd )
    IF Empty( mxmlIndexFind( hInd, "group" ) )
-      OutErr( "ERROR: mxmlIndexFind for 'group' failed!" + hb_eol() )
+      ? "ERROR: mxmlIndexFind for 'group' failed!"
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexDelete( hInd )
 
-   hInd := mxmlIndexNew( hTree, "group" )
-   IF Empty( hInd )
-      OutErr( "ERROR: Unable to create index of groups!" + hb_eol() )
+   IF Empty( hInd := mxmlIndexNew( hTree, "group" ) )
+      ? "ERROR: Could not create index of groups!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 4
-      OutErr( hb_StrFormat( "ERROR: Index of groups contains %d nodes; expected 4!", nNum ) + hb_eol() )
+      ? hb_StrFormat( "ERROR: Index of groups contains %1$d nodes; expected 4!", nNum )
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexReset( hInd )
-
    IF Empty( mxmlIndexEnum( hInd ) )
-      OutErr( "ERROR: mxmlIndexEnum failed!" + hb_eol() )
+      ? "ERROR: mxmlIndexEnum failed!"
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexDelete( hInd )
 
-   hInd := mxmlIndexNew( hTree,, "type" )
-   IF Empty( hInd )
-      OutErr( "ERROR: Unable to create index of type attributes!" + hb_eol() )
+   IF Empty( hInd := mxmlIndexNew( hTree,, "type" ) )
+      ? "ERROR: Coult not create index of type attributes!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 3
-      OutErr( hb_StrFormat( "ERROR: Index of type attributes contains %d nodes; expected 3!", nNum ) + hb_eol() )
+      ? hb_StrFormat( "ERROR: Index of type attributes contains %1$d nodes; expected 3!", nNum )
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexReset( hInd )
    IF Empty( mxmlIndexFind( hInd,, "string" ) )
-      OutErr( "ERROR: mxmlIndexFind for 'string' failed!" + hb_eol() )
+      ? "ERROR: mxmlIndexFind for 'string' failed!"
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexDelete( hInd )
 
-   hInd := mxmlIndexNew( hTree, "group", "type" )
-   IF Empty( hInd )
-      OutErr( "ERROR: Unable to create index of elements and attributes!" + hb_eol() )
+   IF Empty( hInd := mxmlIndexNew( hTree, "group", "type" ) )
+      ? "ERROR: Could not create index of elements and attributes!"
 
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ( nNum := mxmlIndexGetCount( hInd ) ) != 3
-      OutErr( hb_StrFormat( "ERROR: Index of type attributes contains %d nodes; expected 3!", nNum ) + hb_eol() )
+      ? hb_StrFormat( "ERROR: Index of type attributes contains %1$d nodes; expected 3!", nNum )
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexReset( hInd )
    IF Empty( mxmlIndexFind( hInd, "group", "string" ) )
-      OutErr( "ERROR: mxmlIndexFind for 'string' failed!" + hb_eol() )
+      ? "ERROR: mxmlIndexFind for 'string' failed!"
 
       mxmlIndexDelete( hInd )
       mxmlDelete( hTree )
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    mxmlIndexDelete( hInd )
 
-   /*
-    * Check the mxmlDelete() works properly...
-    */
+   /* Check the mxmlDelete() works properly */
 
    FOR i := 0 TO 8
-      IF ! Empty( mxmlGetFirstChild( hTree ) )
-         mxmlDelete( mxmlGetFirstChild( hTree ) )
-      ELSE
-         OutErr( hb_StrFormat( "ERROR: Child pointer prematurely NULL on child #%d", i ) + hb_eol() )
+      IF Empty( mxmlGetFirstChild( hTree ) )
+         ? hb_StrFormat( "ERROR: Child pointer prematurely NULL on child #%1$d", i )
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
+      ELSE
+         mxmlDelete( mxmlGetFirstChild( hTree ) )
       ENDIF
    NEXT
 
    IF ! Empty( mxmlGetFirstChild( hTree ) )
-      OutErr( "ERROR: Child pointer not NULL after deleting all children!" + hb_eol() )
+      ? "ERROR: Child pointer not NULL after deleting all children!"
 
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF ! Empty( mxmlGetLastChild( hTree ) )
-      OutErr( "ERROR: Last child pointer not NULL after deleting all children!" + hb_eol() )
+      ? "ERROR: Last child pointer not NULL after deleting all children!"
 
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
-   /*
-    * Open the file...
-    */
+   /* Open the file */
 
-   IF Left( cFileArg, 1 ) == "<"
+   IF hb_LeftEq( cFileArg, "<" )
       hTree := mxmlLoadString( NIL, cFileArg, @type_cb() )
    ELSE
-
-      /*
-       * Read the file...
-       */
-
+      /* Read the file */
       hTree := mxmlLoadFile( NIL, cFileArg, @type_cb() )
    ENDIF
 
    IF Empty( hTree )
-      OutErr( "Unable to read XML file!" + hb_eol() )
+      ? "Could not read XML file!"
       ErrorLevel( 1 )
-      QUIT
+      RETURN
    ENDIF
 
    IF cFileArg == "test.xml"
 
-      /*
-       * Verify that mxmlFindElement() and indirectly mxmlWalkNext() work
-       * properly... XXX: this doesn't test for the mxmlWalkNext() _binding_
-       */
+      /* Verify that mxmlFindElement() and indirectly mxmlWalkNext() work
+         properly  XXX: this doesn't test for the mxmlWalkNext() _binding_ */
 
       IF Empty( hNode := mxmlFindElement( hTree, hTree, "choice",,, MXML_DESCEND ) )
-         OutErr( "Unable to find first <choice> element in XML tree!" + hb_eol() )
+         ? "Cannot find first <choice> element in XML tree!"
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF Empty( mxmlFindElement( hNode, hTree, "choice",,, MXML_NO_DESCEND ) )
-         OutErr( "Unable to find second <choice> element in XML tree!" + hb_eol() )
+         ? "Cannot find second <choice> element in XML tree!"
 
          mxmlDelete( hTree )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
    ENDIF
 
-   /*
-    * Print the XML tree...
-    */
+   /* Print the XML tree */
 
-   FErase( "out.xml" )
+   hb_vfErase( "out.xml" )
    mxmlSaveFile( hTree, "out.xml", @whitespace_cb() )
 
    /* XXX: */
-   /*
-    * Save the XML tree to a string and print it...
-    */
+   /* Save the XML tree to a string and print it */
 
    cStr := Space( 16384 )
    IF ( nNum := mxmlSaveString( hTree, @cStr, @whitespace_cb() ) ) > 0
-      OutStd( cStr + hb_eol() )
+      ? cStr
    ENDIF
 
-   /*
-    * Delete the tree...
-    */
+   /* Delete the tree */
 
    mxmlDelete( hTree )
 
-   /*
-    * Test SAX methods...
-    */
+   /* Test SAX methods */
 
-   IF Left( cFileArg, 1 ) == "<"
+   IF hb_LeftEq( cFileArg, "<" )
       mxmlSAXLoadString( NIL, cFileArg, @type_cb(), @sax_cb(), NIL )
    ELSE
-
-      /*
-       * Read the file...
-       */
-
+      /* Read the file */
       mxmlSAXLoadFile( NIL, cFileArg, @type_cb(), @sax_cb(), NIL )
    ENDIF
 
    IF cFileArg == "test.xml"
 
       IF s_aSAXEventCounts[ MXML_SAX_CDATA ] != 1
-         OutErr( hb_StrFormat( "MXML_SAX_CDATA seen %d times, expected 1 times!", ;
-            s_aSAXEventCounts[ MXML_SAX_CDATA ] ) + hb_eol() )
+         ? hb_StrFormat( "MXML_SAX_CDATA seen %1$d times, expected 1 times!", ;
+            s_aSAXEventCounts[ MXML_SAX_CDATA ] )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_COMMENT ] != 1
-         OutErr( hb_StrFormat( "MXML_SAX_COMMENT seen %d times, expected 1 times!", ;
-            s_aSAXEventCounts[ MXML_SAX_COMMENT ] ) + hb_eol() )
+         ? hb_StrFormat( "MXML_SAX_COMMENT seen %1$d times, expected 1 times!", ;
+            s_aSAXEventCounts[ MXML_SAX_COMMENT ] )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_DATA ] != 60
-         OutErr( hb_StrFormat( "MXML_SAX_DATA seen %d times, expected 60 times!", ;
-            s_aSAXEventCounts[ MXML_SAX_DATA ] ) + hb_eol() )
+         ? hb_StrFormat( "MXML_SAX_DATA seen %1$d times, expected 60 times!", ;
+            s_aSAXEventCounts[ MXML_SAX_DATA ] )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_DIRECTIVE ] != 1
-         OutErr( hb_StrFormat( "MXML_SAX_DIRECTIVE seen %d times, expected 1 times!", ;
-            s_aSAXEventCounts[ MXML_SAX_DIRECTIVE ] ) + hb_eol() )
+         ? hb_StrFormat( "MXML_SAX_DIRECTIVE seen %1$d times, expected 1 times!", ;
+            s_aSAXEventCounts[ MXML_SAX_DIRECTIVE ] )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_ELEMENT_CLOSE ] != 20
-         OutErr( hb_StrFormat( "MXML_SAX_ELEMENT_CLOSE seen %d times, expected 20 times!", ;
-            s_aSAXEventCounts[ MXML_SAX_ELEMENT_CLOSE ] ) + hb_eol() )
+         ? hb_StrFormat( "MXML_SAX_ELEMENT_CLOSE seen %1$d times, expected 20 times!", ;
+            s_aSAXEventCounts[ MXML_SAX_ELEMENT_CLOSE ] )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
       IF s_aSAXEventCounts[ MXML_SAX_ELEMENT_OPEN ] != 20
-         OutErr( hb_StrFormat( "MXML_SAX_ELEMENT_OPEN seen %d times, expected 20 times!", ;
-            s_aSAXEventCounts[ MXML_SAX_ELEMENT_OPEN ] ) + hb_eol() )
+         ? hb_StrFormat( "MXML_SAX_ELEMENT_OPEN seen %1$d times, expected 20 times!", ;
+            s_aSAXEventCounts[ MXML_SAX_ELEMENT_OPEN ] )
          ErrorLevel( 1 )
-         QUIT
+         RETURN
       ENDIF
 
    ENDIF
@@ -581,19 +534,15 @@ PROCEDURE Main( cFileArg )
 
    RETURN
 
-/*
- * 'sax_cb()' - Process nodes via SAX.
- */
+/* Process nodes via SAX. */
 
 /* I - Current node */
 /* I - SAX event */
 /* I - SAX user data */
 
-PROCEDURE sax_cb( hNode, hEvent, hData )
+STATIC PROCEDURE sax_cb( hNode, hEvent, hData )
 
-   /*
-    * This SAX callback just counts the different events.
-    */
+   /* This SAX callback just counts the different events. */
 
    HB_SYMBOL_UNUSED( hNode )
    HB_SYMBOL_UNUSED( hData )
@@ -602,52 +551,44 @@ PROCEDURE sax_cb( hNode, hEvent, hData )
 
    RETURN
 
-/*
- * 'type_cb()' - XML data type callback for mxmlLoadFile()...
- */
+/* XML data type callback for mxmlLoadFile() */
 
 /* O - Data type */
 /* I - Element node */
 
-FUNCTION type_cb( hNode )
+STATIC FUNCTION type_cb( hNode )
 
    LOCAL cType                            /* Type string */
 
-   /*
-    * You can lookup attributes and/or use the element name, hierarchy, etc...
-    */
+   /* You can lookup attributes and/or use the element name, hierarchy, etc. */
 
    IF Empty( cType := mxmlElementGetAttr( hNode, "type" ) )
       cType := mxmlGetElement( hNode )
    ENDIF
 
    SWITCH Lower( cType )
-   CASE "integer" ;  RETURN MXML_INTEGER
-   CASE "opaque"  ;  RETURN MXML_OPAQUE
-   CASE "real"    ;  RETURN MXML_REAL
+   CASE "integer" ; RETURN MXML_INTEGER
+   CASE "opaque"  ; RETURN MXML_OPAQUE
+   CASE "real"    ; RETURN MXML_REAL
    ENDSWITCH
 
    RETURN MXML_TEXT
 
-/*
- * 'whitespace_cb()' - Let the mxmlSaveFile() function know when to insert
- *                     newlines and tabs...
- */
+/* Let the mxmlSaveFile() function know when to insert
+   newlines and tabs */
 
 /* O - Whitespace string or NIL */
 /* I - Element node */
 /* I - Open or close tag? */
 
-FUNCTION whitespace_cb( hNode, nWhere )
+STATIC FUNCTION whitespace_cb( hNode, nWhere )
 
    LOCAL hParent                          /* Parent node */
    LOCAL nLevel                           /* Indentation level */
    LOCAL cName                            /* Name of element */
 
-   /*
-    * We can conditionally break to a new line before or after any element.
-    * These are just common HTML elements...
-    */
+   /* We can conditionally break to a new line before or after any element.
+      These are just common HTML elements */
 
    cName := Lower( mxmlGetElement( hNode ) )
 
@@ -656,32 +597,28 @@ FUNCTION whitespace_cb( hNode, nWhere )
       cName == "h1" .OR. cName == "h2" .OR. cName == "h3" .OR. ;
       cName == "h4" .OR. cName == "h5" .OR. cName == "h6"
 
-         /*
-          * Newlines before open and after close...
-          */
+      /* Newlines before open and after close */
 
-      IF nWhere == MXML_WS_BEFORE_OPEN .OR. nWhere == MXML_WS_AFTER_CLOSE
+      IF nWhere == MXML_WS_BEFORE_OPEN .OR. ;
+         nWhere == MXML_WS_AFTER_CLOSE
          RETURN hb_eol()
       ENDIF
    ELSEIF cName == "dl" .OR. cName == "ol" .OR. cName == "ul"
 
-      /*
-       * Put a newline before and after list elements...
-       */
+      /* Put a newline before and after list elements */
 
       RETURN hb_eol()
    ELSEIF cName == "dd" .OR. cName == "dd" .OR. cName == "li"
 
-      /*
-       * Put a tab before <li>s, <dd>s and <dt>s and a newline after them...
-       */
+      /* Put a tab before <li>s, <dd>s and <dt>s and a newline after them */
 
-      IF nWhere == MXML_WS_BEFORE_OPEN
+      DO CASE
+      CASE nWhere == MXML_WS_BEFORE_OPEN
          RETURN Space( 8 )
-      ELSEIF nWhere == MXML_WS_AFTER_CLOSE
+      CASE nWhere == MXML_WS_AFTER_CLOSE
          RETURN hb_eol()
-      ENDIF
-   ELSEIF Left( cName, 4 ) == "?xml"
+      ENDCASE
+   ELSEIF hb_LeftEq( cName, "?xml" )
       IF nWhere == MXML_WS_AFTER_OPEN
          RETURN hb_eol()
       ELSE
@@ -712,8 +649,4 @@ FUNCTION whitespace_cb( hNode, nWhere )
       RETURN hb_eol()
    ENDIF
 
-   /*
-    * Return NULL for no added whitespace...
-    */
-
-   RETURN NIL
+   RETURN NIL  /* Return NIL for no added whitespace */

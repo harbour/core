@@ -3,4 +3,4 @@
 /* Public API */
 
 FUNCTION hbtpl_MyPublicFunction()
-   RETURN "It works"
+   RETURN "It works" + ToolVer()

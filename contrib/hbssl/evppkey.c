@@ -73,9 +73,9 @@ static const HB_GC_FUNCS s_gcEVP_PKEY_funcs =
    hb_gcDummyMark
 };
 
-void * hb_EVP_PKEY_is( int iParam )
+HB_BOOL hb_EVP_PKEY_is( int iParam )
 {
-   return hb_parptrGC( &s_gcEVP_PKEY_funcs, iParam );
+   return hb_parptrGC( &s_gcEVP_PKEY_funcs, iParam ) != NULL;
 }
 
 EVP_PKEY * hb_EVP_PKEY_par( int iParam )

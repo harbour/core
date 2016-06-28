@@ -4,8 +4,6 @@
 
 PROCEDURE Main()
 
-   LOCAL cString := "ABC"
-
-   ? cString[ 2 ]   // ------>   'B'
+   ? "ABC"[ 2 ]  // --> "B"
 
    RETURN

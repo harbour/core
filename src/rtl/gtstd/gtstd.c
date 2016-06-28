@@ -242,7 +242,7 @@ static void hb_gt_std_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       pGTSTD->curr_TIO.c_cc[ VMIN ] = 0;
 #else
       /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
-         Ubuntu) in which select() unconditionally accepts stdin for
+         *buntu) in which select() unconditionally accepts stdin for
          reading if c_cc[ VMIN ] = 0 [druzus] */
       pGTSTD->curr_TIO.c_cc[ VMIN ] = 1;
 #endif
@@ -497,7 +497,7 @@ static const char * hb_gt_std_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: Standard stream console";
+   return "Terminal: Standard stream I/O";
 }
 
 static HB_BOOL hb_gt_std_Suspend( PHB_GT pGT )
@@ -707,10 +707,10 @@ static void hb_gt_std_Refresh( PHB_GT pGT )
    HB_GTSUPER_REFRESH( pGT );
    if( pGTSTD->fFullRedraw )
    {
-      int i;
-
       if( pGTSTD->iRow < iHeight - 1 )
       {
+         int i;
+
          for( i = pGTSTD->iRow + 1; i < iHeight; ++i )
             hb_gt_std_DispLine( pGT, i, 0, -1 );
       }

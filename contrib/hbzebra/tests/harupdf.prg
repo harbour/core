@@ -1,19 +1,13 @@
-/*
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbzebra"
 #require "hbhpdf"
 
 PROCEDURE Main()
 
-   LOCAL pdf
-   LOCAL page
+   LOCAL pdf := HPDF_New()
+   LOCAL page := HPDF_AddPage( pdf )
 
-   pdf := HPDF_New()
-   page := HPDF_AddPage( pdf )
    HPDF_Page_SetSize( page, HPDF_PAGE_SIZE_A4, HPDF_PAGE_PORTRAIT )
    HPDF_Page_SetFontAndSize( page, HPDF_GetFont( pdf, "Helvetica", NIL ), 12 )
 
@@ -41,14 +35,14 @@ PROCEDURE Main()
    DrawBarcode( page, 440,   1, "CODE128",    "Wikipedia" )
    DrawBarcode( page, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
    DrawBarcode( page, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)" )
-   DrawBarcode( page, 580,   1, "QRCODE",     "http://harbour-project.org/" )
+   DrawBarcode( page, 580,   1, "QRCODE",     "https://en.wikipedia.org/wiki/QR_Code" )
 
-   FErase( hb_FNameExtSet( __FILE__, ".pdf" ) )
+   hb_vfErase( hb_FNameExtSet( __FILE__, ".pdf" ) )
    ? HPDF_SaveToFile( pdf, hb_FNameExtSet( __FILE__, ".pdf" ) )
 
    RETURN
 
-PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
+STATIC PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
 
    LOCAL hZebra, nLineHeight, cTxt
 
@@ -73,11 +67,11 @@ PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
 
    IF hZebra != NIL
       IF hb_zebra_geterror( hZebra ) == 0
-         IF Empty( nLineHeight )
+         IF nLineHeight == NIL
             nLineHeight := 16
          ENDIF
          HPDF_Page_BeginText( page )
-         HPDF_Page_TextOut( page,  40, nY - 13, cType )
+         HPDF_Page_TextOut( page, 40, nY - 13, cType )
          cTxt := hb_zebra_getcode( hZebra )
          IF Len( cTxt ) < 20
             HPDF_Page_TextOut( page, 150, nY - 13, cTxt )

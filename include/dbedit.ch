@@ -48,15 +48,15 @@
 #define _DBEDIT_CH
 
 /* User function entry modes */
-#define DE_IDLE         0       /* Idle                                    */
-#define DE_HITTOP       1       /* Attempt to cursor past top of file      */
-#define DE_HITBOTTOM    2       /* Attempt to cursor past bottom of file   */
-#define DE_EMPTY        3       /* No records in work area                 */
-#define DE_EXCEPT       4       /* Key exception                           */
+#define DE_IDLE         0       /* Idle */
+#define DE_HITTOP       1       /* Attempt to cursor past top of file */
+#define DE_HITBOTTOM    2       /* Attempt to cursor past bottom of file */
+#define DE_EMPTY        3       /* No records in work area */
+#define DE_EXCEPT       4       /* Key exception */
 
 /* User function return codes */
-#define DE_ABORT        0       /* Abort dbEdit()                          */
-#define DE_CONT         1       /* Continue dbEdit()                       */
+#define DE_ABORT        0       /* Abort dbEdit() */
+#define DE_CONT         1       /* Continue dbEdit() */
 #define DE_REFRESH      2       /* Force reread/redisplay of all data rows */
 #ifdef HB_CLP_UNDOC
    #define DE_APPEND       3       /* Undocumented CA-Cl*pper append mode in DBEdit */

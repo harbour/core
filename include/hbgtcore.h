@@ -492,7 +492,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_WHOCARES(g,p)                 (g)->pFuncTable->WhoCares(g,p)
 
 #ifndef HB_GTSUPERTABLE
-#  define HB_GTSUPERTABLE(g)  HB_GTSUPER
+#define HB_GTSUPERTABLE(g)  HB_GTSUPER
 #endif
 
 #define HB_GTSUPER_LOCK(g)                       (HB_GTSUPERTABLE(g))->Lock(g)

@@ -2,9 +2,8 @@
 
 PROCEDURE Main()
 
-   LOCAL hSurface
+   LOCAL hSurface := cairo_pdf_surface_create( "fancytxt.pdf", 566.9, 793.7 )  // 200x280 mm in pt
 
-   hSurface := cairo_pdf_surface_create( "fancytxt.pdf", 566.9, 793.7 )  // 200x280 mm in pt
    draw( hSurface )
    cairo_surface_destroy( hSurface )
 
@@ -15,12 +14,11 @@ PROCEDURE Main()
 
    RETURN
 
+STATIC PROCEDURE draw( hSurface )
 
-PROCEDURE draw( hSurface )
+   LOCAL hPath
+   LOCAL hCairo := cairo_create( hSurface )
 
-   LOCAL hCairo, hPath
-
-   hCairo := cairo_create( hSurface )
    cairo_set_tolerance( hCairo, 0.01 )
 
    // Draw base line
@@ -59,18 +57,18 @@ PROCEDURE draw( hSurface )
 
    RETURN
 
+STATIC PROCEDURE map_path_onto( hCairo, hPath )
 
-PROCEDURE map_path_onto( hCairo, hPath )
+   LOCAL pt, aPoints
 
-   LOCAL hCurrentPath, aLengths, hIterator, nI, aPoints
+   LOCAL hCurrentPath := cairo_copy_path( hCairo )
+   LOCAL aLengths := path_lengths( hPath )
+   LOCAL hIterator := cairo_path_iterator_create( hCurrentPath )
 
-   hCurrentPath := cairo_copy_path( hCairo )
-   aLengths := path_lengths( hPath )
-   hIterator := cairo_path_iterator_create( hCurrentPath )
    DO WHILE cairo_path_iterator_next( hIterator ) != NIL
       IF Len( aPoints := cairo_path_iterator_get_points( hIterator ) ) > 0
-         FOR nI := 1 TO Len( aPoints )
-            transform_point( @aPoints[ nI, 1 ], @aPoints[ nI, 2 ], hPath, aLengths )
+         FOR EACH pt IN aPoints
+            transform_point( @pt[ 1 ], @pt[ 2 ], hPath, aLengths )
          NEXT
          cairo_path_iterator_set_points( hIterator, aPoints )
       ENDIF
@@ -80,15 +78,15 @@ PROCEDURE map_path_onto( hCairo, hPath )
 
    RETURN
 
-
 STATIC PROCEDURE transform_point( nX, nY, hPath, aLengths )
 
-   LOCAL hIterator, nI, nNX, nNY, nDX, nDY, nRatio, nType, aLast, aPoints, nK1, nK2
+   LOCAL nDX, nDY, nRatio, nType, aLast, aPoints, nK1, nK2
 
-   nNX := nX
-   nNY := nY
-   hIterator := cairo_path_iterator_create( hPath )
-   nI := 1
+   LOCAL nNX := nX
+   LOCAL nNY := nY
+   LOCAL hIterator := cairo_path_iterator_create( hPath )
+   LOCAL nI := 1
+
    DO WHILE ( nType := cairo_path_iterator_next( hIterator ) ) != NIL
       aPoints := cairo_path_iterator_get_points( hIterator )
       IF nNX <= aLengths[ nI ] .AND. nType != CAIRO_PATH_MOVE_TO
@@ -96,15 +94,21 @@ STATIC PROCEDURE transform_point( nX, nY, hPath, aLengths )
       ENDIF
       nNX -= aLengths[ nI ]
       nI++
-      IF nType == CAIRO_PATH_MOVE_TO .OR. nType == CAIRO_PATH_LINE_TO
+      SWITCH nType
+      CASE CAIRO_PATH_MOVE_TO
+      CASE CAIRO_PATH_LINE_TO
          aLast := aPoints[ 1 ]
-      ELSEIF nType == CAIRO_PATH_CURVE_TO
+         EXIT
+      CASE CAIRO_PATH_CURVE_TO
          aLast := aPoints[ 3 ]
-      ENDIF
+         EXIT
+      ENDSWITCH
    ENDDO
 
-   IF nType == CAIRO_PATH_MOVE_TO
-   ELSEIF nType == CAIRO_PATH_LINE_TO
+   SWITCH nType
+   CASE CAIRO_PATH_MOVE_TO
+      EXIT
+   CASE CAIRO_PATH_LINE_TO
       nRatio := nNX / aLengths[ nI ]
       nX := aLast[ 1 ] * ( 1 - nRatio ) + aPoints[ 1, 1 ] * nRatio
       nY := aLast[ 2 ] * ( 1 - nRatio ) + aPoints[ 1, 2 ] * nRatio
@@ -115,7 +119,8 @@ STATIC PROCEDURE transform_point( nX, nY, hPath, aLengths )
       nRatio := nNY / aLengths[ nI ]
       nX += -nDY * nRatio
       nY += nDX * nRatio
-   ELSEIF nType == CAIRO_PATH_CURVE_TO
+      EXIT
+   CASE CAIRO_PATH_CURVE_TO
       nX := aLast[ 1 ] * ( 1 - nRatio ) ^ 3 + 3 * aPoints[ 1, 1 ] * ( 1 - nRatio ) ^ 2 * nRatio + 3 * aPoints[ 2, 1 ] * ( 1 - nRatio ) * nRatio ^ 2 + aPoints[ 3, 1 ] * nRatio ^ 3
       nY := aLast[ 2 ] * ( 1 - nRatio ) ^ 3 + 3 * aPoints[ 1, 2 ] * ( 1 - nRatio ) ^ 2 * nRatio + 3 * aPoints[ 2, 2 ] * ( 1 - nRatio ) * nRatio ^ 2 + aPoints[ 3, 2 ] * nRatio ^ 3
 
@@ -128,59 +133,65 @@ STATIC PROCEDURE transform_point( nX, nY, hPath, aLengths )
       nRatio := nNY / Sqrt( nDX * nDX + nDY * nDY )
       nX += -nDY * nRatio
       nY += nDX * nRatio
-   ENDIF
+      EXIT
+   ENDSWITCH
    cairo_path_iterator_destroy( hIterator )
 
    RETURN
 
+STATIC FUNCTION path_lengths( hPath )
 
-STATIC FUNC path_lengths( hPath )
+   LOCAL nType, aLast, aPoints, nLen
+   LOCAL aRet := {}
+   LOCAL hIterator := cairo_path_iterator_create( hPath )
 
-   LOCAL hIterator, nType, aLast, aRet, aPoints, nLen
-
-   aRet := {}
-   hIterator := cairo_path_iterator_create( hPath )
    DO WHILE ( nType := cairo_path_iterator_next( hIterator ) ) != NIL
       aPoints := cairo_path_iterator_get_points( hIterator )
       nLen := 0
-      IF nType == CAIRO_PATH_MOVE_TO
+      SWITCH nType
+      CASE CAIRO_PATH_MOVE_TO
          aLast := aPoints[ 1 ]
-      ELSEIF nType == CAIRO_PATH_LINE_TO
+         EXIT
+      CASE CAIRO_PATH_LINE_TO
          nLen := distance( aLast[ 1 ], aLast[ 2 ], aPoints[ 1, 1 ], aPoints[ 1, 2 ] )
          aLast := aPoints[ 1 ]
-      ELSEIF nType == CAIRO_PATH_CURVE_TO
+         EXIT
+      CASE CAIRO_PATH_CURVE_TO
          nLen := curve_length( aLast[ 1 ], aLast[ 2 ], aPoints[ 1, 1 ], aPoints[ 1, 2 ], ;
             aPoints[ 2, 1 ], aPoints[ 2, 2 ], aPoints[ 3, 1 ], aPoints[ 3, 2 ] )
          aLast := aPoints[ 3 ]
-      ENDIF
+         EXIT
+      ENDSWITCH
       AAdd( aRet, nLen )
    ENDDO
    cairo_path_iterator_destroy( hIterator )
 
    RETURN aRet
 
-
-STATIC FUNC distance( nX1, nY1, nX2, nY2 )
+STATIC FUNCTION distance( nX1, nY1, nX2, nY2 )
    RETURN Sqrt( ( nX1 - nX2 ) ^ 2 + ( nY1 - nY2 ) ^ 2 )
 
+STATIC FUNCTION curve_length( nX1, nY1, nX2, nY2, nX3, nY3, nX4, nY4 )
 
-STATIC FUNC curve_length( nX1, nY1, nX2, nY2, nX3, nY3, nX4, nY4 )
+   LOCAL nLength := 0, hPath, hIterator, nType, aLast, aPoints
 
-   LOCAL nLength := 0, hSurface, hCairo, hPath, hIterator, nType, aLast, aPoints
+   LOCAL hSurface := cairo_image_surface_create( CAIRO_FORMAT_A8, 0, 0 )
+   LOCAL hCairo := cairo_create( hSurface )
 
-   hSurface := cairo_image_surface_create( CAIRO_FORMAT_A8, 0, 0 )
-   hCairo := cairo_create( hSurface )
    cairo_move_to( hCairo, nX1, nY1 )
    cairo_curve_to( hCairo, nX2, nY2, nX3, nY3, nX4, nY4 )
    hPath := cairo_copy_path_flat( hCairo )
    hIterator := cairo_path_iterator_create( hPath )
    DO WHILE ( nType := cairo_path_iterator_next( hIterator, @aPoints ) ) != NIL
-      IF nType == CAIRO_PATH_MOVE_TO
+      SWITCH nType
+      CASE CAIRO_PATH_MOVE_TO
          aLast := aPoints
-      ELSEIF nType == CAIRO_PATH_LINE_TO
+         EXIT
+      CASE CAIRO_PATH_LINE_TO
          nLength += distance( aLast[ 1 ], aLast[ 2 ], aPoints[ 1 ], aPoints[ 2 ] )
          aLast := aPoints
-      ENDIF
+         EXIT
+      ENDSWITCH
    ENDDO
    cairo_path_iterator_destroy( hIterator )
    cairo_path_destroy( hPath )

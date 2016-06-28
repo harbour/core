@@ -2,6 +2,7 @@
  * Misc Suport Functions for HTMLLIB
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,30 +45,14 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "html.ch"
+
+#include "dbstruct.ch"
 #include "hbclass.ch"
-
-THREAD STATIC t_aGreek := {}
-
-/****
-*
-*     BackButton()
-*
-*/
 
 PROCEDURE BackButton( cImage, oHtm )
 
-   __defaultNIL( @cImage, "back.gif" )
+   hb_default( @cImage, "back.gif" )
 
    IF oHtm == NIL
       oHtm := HtmlPageObject()
@@ -80,12 +65,6 @@ PROCEDURE BackButton( cImage, oHtm )
 
    RETURN
 
-/****
-*
-*     BackFormButton()
-*
-*/
-
 PROCEDURE BackFormButton( cImage, oForm )
 
    LOCAL oBut
@@ -94,47 +73,39 @@ PROCEDURE BackFormButton( cImage, oForm )
       oForm := HtmlFormObject()
    ENDIF
 
-   IF cImage == NIL
-      DEFINE BUTTON oBut ;
-         NAME "BackButton" ;
-         VALUE "go Back" ;
-         ONCLICK "history.back()" ;
-         IN oForm
-   ELSE
+   IF HB_ISSTRING( cImage )
       DEFINE IMAGE oBut ;
          NAME "BackButton" ;
          SOURCE( cImage ) ;
+         ONCLICK "history.back()" ;
+         IN oForm
+   ELSE
+      DEFINE BUTTON oBut ;
+         NAME "BackButton" ;
+         VALUE "go Back" ;
          ONCLICK "history.back()" ;
          IN oForm
    ENDIF
 
    RETURN
 
-/****
-*
-*     PutCounter()
-*
-*/
-
-FUNCTION PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
+PROCEDURE PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
 
    LOCAL i
-   LOCAL cStr    := ""
+   LOCAL cStr
 
    IF oHtm == NIL
       oHtm := HtmlPageObject()
    ENDIF
 
-   __defaultNIL( @nNumber, 0 )
-   __defaultNIL( @cDir, "/images/counters/" )
-   __defaultNIL( @nWidth, 50 )
-   __defaultNIL( @nDigits, Len( hb_ntos( nNumber ) ) )
-   __defaultNIL( @nBorder, 1 )
-   __defaultNIL( @BGCOLOR, "black" )
+   hb_default( @nNumber, 0 )
+   hb_default( @cDir, "/images/counters/" )
+   hb_default( @nWidth, 50 )
+   hb_default( @nDigits, Len( hb_ntos( nNumber ) ) )
+   hb_default( @nBorder, 1 )
+   hb_default( @BGCOLOR, "black" )
 
-   IF HB_ISNUMERIC( nNumber )
-      cStr := StrZero( nNumber, nDigits )
-   ENDIF
+   cStr := StrZero( nNumber, nDigits )
 
    oHtm:Write( "<center>" )
    DEFINE TABLE ;
@@ -158,37 +129,36 @@ FUNCTION PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
 
    oHtm:Write( "</center>" )
 
-   RETURN NIL
+   RETURN
 
 PROCEDURE HtmlBrowse( oHtm, cAction, lUseLinks )
 
    LOCAL i
-   LOCAL n      := 0
-   LOCAL aFlds  := dbStruct()
-   LOCAL cAlign
+   LOCAL n := 0
+   LOCAL aFlds := dbStruct()
 
-   __defaultNIL( @cAction, "confirm('RECORD: '+this.name+'\nPlace your action here !!!')" )
-   __defaultNIL( @lUseLinks, .F. )
+   hb_default( @cAction, "confirm('RECORD: '+this.name+'\nPlace your action here !!!')" )
+   hb_default( @lUseLinks, .F. )
 
 #if 0
    // browse caption...
    oHtm:defineTable( 1, 1, 98 )
    oHtm:newTableRow( "black" )
-   oHtm:newTableCell(,,, 3, "white" )
+   oHtm:newTableCell( ,,, 3, "white" )
    oHtm:Write( htmlSpace( 5 ) + "Browsing Table: <b>" + Alias() + "</b>" )
    oHtm:endTableCell()
    oHtm:endTableRow( "black" )
    oHtm:endTable()
 #endif
 
-   oHtm:defineTable( FCount(), 1, 98 )
+   oHtm:defineTable( Len( aFlds ), 1, 98 )
 
    oHtm:TableHead( " ? " )
-   FOR i := 1 TO FCount()
-      oHtm:TableHead( aFlds[ i, 1 ] )
+   FOR EACH i IN aFlds
+      oHtm:TableHead( i[ DBS_NAME ] )
    NEXT
 
-   WHILE ! Eof()
+   DO WHILE ! Eof()
 
       // each row has a different color...
       IF n == 0
@@ -215,14 +185,13 @@ PROCEDURE HtmlBrowse( oHtm, cAction, lUseLinks )
       oHtm:EndTableCell()
 
       // --> put the formatted fields data...
-      FOR i := 1 TO Len( aFlds )
-         cAlign := iif( aFlds[ i, 2 ] == "N", "RIGHT", "CENTER" )
-         oHtm:newTableCell( cAlign, , , , "black" )
-         oHtm:Write( Greek2Html( HtmlAny2Str( FieldGet( i ) ) ) )
+      FOR EACH i IN aFlds
+         oHtm:newTableCell( iif( Left( i[ DBS_TYPE ], 1 ) $ "NIYF8BZ24", "RIGHT", "CENTER" ), , , , "black" )
+         oHtm:WriteData( HtmlAny2Str( FieldGet( i:__enumIndex() ) ) )
          oHtm:EndTableCell()
       NEXT
       oHtm:endTableRow()
-      SKIP
+      dbSkip()
    ENDDO
 
    oHtm:endTable()
@@ -238,23 +207,21 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
    LOCAL n       := 0
    LOCAL oCurRow
 
-   LOCAL cAlign
-
-   __defaultNIL( @cAction, "confirm('RECORD: '+this.name+'\nPlace your action here !!!')" )
-   __defaultNIL( @lUseLinks, .F. )
+   hb_default( @cAction, "confirm('RECORD: '+this.name+'\nPlace your action here !!!')" )
+   hb_default( @lUseLinks, .F. )
 
 #if 0
    // browse caption...
    oHtm:defineTable( 1, 1, 98 )
    oHtm:newTableRow( "black" )
-   oHtm:newTableCell(,,, 3, "white" )
+   oHtm:newTableCell( ,,, 3, "white" )
    oHtm:Write( htmlSpace( 5 ) + "Browsing Table: <b>" + Alias() + "</b>" )
    oHtm:endTableCell()
    oHtm:endTableRow( "black" )
    oHtm:endTable()
 #endif
 
-   oquery := oServer:query( 'Select * from rafael' )
+   oquery := oServer:query( "select * from rafael" )
 
    oHtm:defineTable( oQuery:FCount(), 1, 98 )
    oCurRow := oQuery:getRow( 1 )
@@ -292,17 +259,16 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
       // --> put the formatted fields data...
 
       FOR i := 1 TO oquery:FCount()
-
-         cAlign := iif( oCurRow:FieldType( i ) == "N", "RIGHT", "CENTER" )
-         oHtm:newTableCell( cAlign, , , , "black" )
-         oHtm:Write( Greek2Html( HtmlAny2Str( oCurRow:FieldGet( i ) ) ) )
+         oHtm:newTableCell( iif( oCurRow:FieldType( i ) == "N", "RIGHT", "CENTER" ), , , , "black" )
+         oHtm:WriteDate( HtmlAny2Str( oCurRow:FieldGet( i ) ) )
          oHtm:EndTableCell()
       NEXT
+
       oHtm:endTableRow()
+
       IF ! oquery:Eof()
          oquery:skip()
       ENDIF
-
    NEXT
    oHtm:endTable()
 
@@ -339,93 +305,52 @@ CREATE CLASS JWindow
    VAR onUnLoad
 
    METHOD New( cVarName, cUrl, cName, x, y, w, h )
-
    METHOD setOnLoad( c ) INLINE ::onLoad := c
-
    METHOD setOnUnLoad( c ) INLINE ::onUnLoad := c
-
    METHOD Alert( c ) INLINE ::QOut( "Alert('" + c + "')" )
-
    METHOD confirm( c ) INLINE ::QOut( "confirm('" + c + "')" )
-
    METHOD SetSize( x, y, h, w )
-
    METHOD Write( c )
-
    METHOD lineBreak() INLINE ::QOut( "<br />" )
-
    METHOD Paragraph() INLINE ::QOut( "<p></p>" )
-
    METHOD Center( l ) INLINE ::QOut( iif( l, "<center>", "</center>" ) )
-
    METHOD bold( l ) INLINE ::QOut( iif( l, "<b>", "</b>" ) )
-
    METHOD Italic( l ) INLINE ::QOut( iif( l, "<i>", "</i>" ) )
-
    METHOD ULine( l ) INLINE ::QOut( iif( l, "<u>", "</u>" ) )
-
    METHOD Put()
-
    METHOD Begin()
-
    METHOD End()
-
    METHOD QOut( c )
-
    METHOD WriteLN( c ) INLINE ::QOut( c )
-
    METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
       Resizable, Menubar, personalBar, ;
       dependent, location, directories, ;
       Scrollbars, Status, TitleBar, Toolbar, copyHistory )
-
    METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
       cOnClick, cOnMsover, cOnMsout, ;
       cName, cAlt )
 
 ENDCLASS
 
-/****
-*
-*     Start a new window definition
-*
-*
-*
-*/
-
+/* Start a new window definition */
 METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS JWindow
-
-   __defaultNIL( @cVarName, "newWin" )
-   __defaultNIL( @cURL, " " )
-   __defaultNIL( @cName, cVarName )
-   __defaultNIL( @x, 100 )
-   __defaultNIL( @y, 100 )
-   __defaultNIL( @h, 300 )
-   __defaultNIL( @w, 300 )
 
    ::nH      := HtmlPageHandle()
    ::oHtm    := HtmlPageObject()
-   ::varName := cVarName
-   ::URL     := cUrl
-   ::Name    := cName
+   ::varName := hb_defaultValue( cVarName, "newWin" )
+   ::URL     := hb_defaultValue( cURL, " " )
+   ::Name    := hb_defaultValue( cName, ::varName )
 
-   ::ScreenX := x
-   ::ScreenY := y
-   ::height  := h
-   ::width   := w
+   ::ScreenX := hb_defaultValue( x, 100 )
+   ::ScreenY := hb_defaultValue( y, 100 )
+   ::height  := hb_defaultValue( h, 300 )
+   ::width   := hb_defaultValue( w, 300 )
 
    // objectViewer( self )
 
    RETURN Self
 
-/****
-*
-*     Set the properties of the window
-*
-*
-*
-*/
-
+/* Set the properties of the window */
 METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
       Resizable, Menubar, personalBar, ;
       dependent, location, directories, ;
@@ -433,81 +358,67 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
 
    LOCAL cStr := ""
 
-   __defaultNIL( @alwaysRaised, ::alwaysRaised )
-   __defaultNIL( @alwaysLowered, ::alwaysLowered )
-   __defaultNIL( @Resizable, ::Resizable )
-   __defaultNIL( @Menubar, ::Menubar )
-   __defaultNIL( @personalBar, ::personalBar )
-   __defaultNIL( @dependent, ::dependent )
-   __defaultNIL( @location, ::location )
-   __defaultNIL( @directories, ::directories )
-   __defaultNIL( @Scrollbars, ::Scrollbars )
-   __defaultNIL( @Status, ::Status )
-   __defaultNIL( @TitleBar, ::TitleBar )
-   __defaultNIL( @Toolbar, ::Toolbar )
-   __defaultNIL( @copyHistory, ::copyHistory )
-
-   IF alwaysRaised
+   IF hb_defaultValue( alwaysRaised, ::alwaysRaised )
       cStr += "alwaysraised=yes,"
    ELSE
       cStr += "alwaysraised=no,"
    ENDIF
-   IF alwaysLowered
+   IF hb_defaultValue( alwaysLowered, ::alwaysLowered )
       cStr += "alwayslowered=yes,"
    ELSE
       cStr += "alwayslowered=no,"
    ENDIF
-   IF Resizable
+   IF hb_defaultValue( Resizable, ::Resizable )
       cStr += "resizable=yes,"
    ELSE
       cStr += "resizable=no,"
    ENDIF
-   IF Menubar
+   IF hb_defaultValue( Menubar, ::Menubar )
       cStr += "menubar=yes,"
    ELSE
       cStr += "menubar=no,"
    ENDIF
-   IF personalBar
+   IF hb_defaultValue( personalBar, ::personalBar )
       cStr += "personalbar=yes,"
    ELSE
       cStr += "personalbar=no,"
    ENDIF
-   IF dependent
+   IF hb_defaultValue( dependent, ::dependent )
       cStr += "dependent=yes,"
    ELSE
       cStr += "dependent=no,"
    ENDIF
-   IF location
+   IF hb_defaultValue( location, ::location )
       cStr += "location=yes,"
    ELSE
       cStr += "location=no,"
    ENDIF
-   IF directories
+   IF hb_defaultValue( directories, ::directories )
       cStr += "directories=yes,"
    ELSE
       cStr += "directories=no,"
    ENDIF
-   IF Scrollbars
+   IF hb_defaultValue( Scrollbars, ::Scrollbars )
       cStr += "scrollbars=yes,"
    ELSE
       cStr += "scrollbars=no,"
    ENDIF
-   IF Status
+   IF hb_defaultValue( Status, ::Status )
       cStr += "status=yes,"
    ELSE
       cStr += "status=no,"
    ENDIF
-   IF TitleBar
+   IF hb_defaultValue( TitleBar, ::TitleBar )
       cStr += "titlebar=yes,"
    ELSE
       cStr += "titlebar=no,"
    ENDIF
-   IF Toolbar
+   IF hb_defaultValue( Toolbar, ::Toolbar )
       cStr += "toolbar=yes,"
    ELSE
       cStr += "toolbar=no,"
    ENDIF
-   IF copyHistory
+   IF hb_defaultValue( copyHistory, ::copyHistory )
       cStr += "copyHistory=yes,"
    ELSE
       cStr += "copyHistory=no,"
@@ -517,49 +428,30 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
 
    RETURN Self
 
-/****
-*
-*     set the size for the window
-*
-*
-*
-*/
-
+/* set the size for the window */
 METHOD SetSize( x, y, h, w ) CLASS JWindow
 
-   LOCAL cStr := ""
+   LOCAL cStr
 
-   __defaultNIL( @x, ::ScreenX )
-   __defaultNIL( @y, ::ScreenY )
-   __defaultNIL( @h, ::height )
-   __defaultNIL( @w, ::width )
+   ::ScreenX := hb_defaultValue( x, ::ScreenX )
+   ::ScreenY := hb_defaultValue( y, ::ScreenY )
+   ::height  := hb_defaultValue( h, ::height )
+   ::width   := hb_defaultValue( w, ::width )
 
-   ::ScreenX := x
-   ::ScreenY := y
-   ::height  := h
-   ::width   := w
-
-   cStr := "screenX=" + hb_ntos( ::screenX ) + ","
-
-   cStr += "screenY=" + hb_ntos( ::screenY ) + ","
-   cStr += "height=" + hb_ntos( ::height ) + ","
-   cStr += "width=" + hb_ntos( ::width )
+   cStr := ;
+      "screenX=" + hb_ntos( ::screenX ) + "," + ;
+      "screenY=" + hb_ntos( ::screenY ) + "," + ;
+      "height=" + hb_ntos( ::height ) + "," + ;
+      "width=" + hb_ntos( ::width )
 
    ::features += iif( Empty( ::Features ), cStr + ",", cStr )
 
    RETURN Self
 
-/****
-*
-*     Open the window from within the current document
-*
-*
-*
-*/
-
+/* Open the window from within the current document */
 METHOD Put() CLASS JWindow
 
-   LOCAL cStr := ""
+   LOCAL cStr
 
    IF ::nH == NIL
       ::nH := HtmlPageHandle()
@@ -575,7 +467,7 @@ METHOD Put() CLASS JWindow
 
    hb_default( @::name, "newWin" )
 
-   cStr += ::varName + " = window.open('" + ;
+   cStr := ::varName + " = window.open('" + ;
       ::URL + "', '" + ;
       ::varName + "', '" + ;
       ::features + "')"
@@ -584,286 +476,123 @@ METHOD Put() CLASS JWindow
 
    RETURN Self
 
-/****
-*
-*     Output stand alone Javascript code in the current document
-*
-*/
-
+/* Output stand alone Javascript code in the current document */
 METHOD Write( c ) CLASS JWindow
 
-   HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
+   HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + hb_eol() )
 
    RETURN Self
 
-/****
-*
-*     Output Javascript (or HTML) code in the current document and
-*     in the current script
-*
-*/
-
+/* Output Javascript (or HTML) code in the current document and
+   in the current script */
 METHOD QOut( c ) CLASS JWindow
 
-   FWrite( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
+   FWrite( ::nH, ::varName + ".document.write('" + c + "')" + hb_eol() )
 
    RETURN Self
 
-/****
-*
-*     Begin HTML output to the window from within the current document
-*     and the current script
-*
-*
-*/
-
+/* Begin HTML output to the window from within the current document
+   and the current script */
 METHOD Begin() CLASS JWindow
 
    LOCAL i
 
-   FWrite( ::nH, "<script language=JavaScript 1.2>" + CRLF() )
-   FWrite( ::nH, "<!--" + CRLF() )
+   FWrite( ::nH, "<script language=JavaScript 1.2>" + hb_eol() )
+   FWrite( ::nH, "<!--" + hb_eol() )
    ::QOut( "<html><head>" )
 
-   IF ::Title != NIL
+   IF HB_ISSTRING( ::Title )
       ::QOut( "<title>" + ::Title + "</title>" )
    ENDIF
 
-   IF ::aScriptSrc != NIL
-      FOR i := 1 TO Len( ::aScriptSrc )
-         ::QOut( ;
-            '<script language=JavaScript src="' + ::aScriptSrc[ i ] + '"></script>' )
+   IF HB_ISARRAY( ::aScriptSrc ) .OR. HB_ISHASH( ::aScriptSrc )
+      FOR EACH i IN ::aScriptSrc
+         ::QOut( "<script language=JavaScript src=" + '"' + i + '"' + "></script>" )
       NEXT
    ENDIF
 
-   IF ::aServerSrc != NIL
-      FOR i := 1 TO Len( ::aServerSrc )
-         ::QOut( ;
-            '<script language=JavaScript src="' + ::aServerSrc[ i ] + '" runat=SERVER></script>' )
+   IF HB_ISARRAY( ::aServerSrc ) .OR. HB_ISHASH( ::aServerSrc )
+      FOR EACH i IN ::aServerSrc
+         ::QOut( "<script language=JavaScript src=" + '"' + i + '"' + " runat=SERVER></script>" )
       NEXT
    ENDIF
 
-   IF ::Style != NIL
+   IF HB_ISSTRING( ::Style )
       ::QOut( "<style> " + ::Style + " </style>" )
    ENDIF
 
    ::QOut( "</head>" + "<body" )
 
-   IF ::onLoad != NIL
-      ::QOut( '   onLoad="' + ::onLoad + '"' )
+   IF HB_ISSTRING( ::onLoad )
+      ::QOut( "   onLoad=" + '"' + ::onLoad + '"' )
    ENDIF
 
-   IF ::onUnLoad != NIL
-      ::QOut( ' onUnload="' + ::onUnLoad + '"' )
+   IF HB_ISSTRING( ::onUnLoad )
+      ::QOut( " onUnload=" + '"' + ::onUnLoad + '"' )
    ENDIF
 
-   ::QOut( '>' )
+   ::QOut( ">" )
 
-   IF ::bgColor != NIL
-      ::QOut( '<body bgcolor="' + ::bgColor + '">' )
+   IF HB_ISSTRING( ::bgColor )
+      ::QOut( "<body bgcolor=" + '"' + ::bgColor + '"' + ">" )
    ENDIF
 
-   IF ::fontColor != NIL
-      ::QOut( '<body text="' + ::fontColor + '">' )
+   IF HB_ISSTRING( ::fontColor )
+      ::QOut( "<body text=" + '"' + ::fontColor + '"' + ">" )
    ENDIF
 
-   IF ::bgImage != NIL
-      ::QOut( '<body background="' + ::bgImage + '">' )
+   IF HB_ISSTRING( ::bgImage )
+      ::QOut( "<body background=" + '"' + ::bgImage + '"' + ">" )
    ENDIF
 
    FWrite( ::nH, "//-->" )
-   FWrite( ::nH, "</script>" + CRLF() )
+   FWrite( ::nH, "</script>" + hb_eol() )
 
    RETURN Self
 
-/****
-*
-*     End HTML output to the window
-*
-*
-*
-*/
-
+/* End HTML output to the window */
 METHOD End() CLASS JWindow
 
-   HtmlJSCmd( ::nH, ::varName + ".document.write('</body></html>')" + CRLF() )
+   HtmlJSCmd( ::nH, ::varName + ".document.write('</body></html>')" + hb_eol() )
 
    RETURN Self
 
-/****
-*
-*     Place an image link to the window
-*
-*
-*
-*/
-
+/* Place an image link to the window */
 METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
       cOnClick, cOnMsover, cOnMsout, ;
       cName, cAlt ) CLASS JWindow
 
    LOCAL cStr := ""
 
-   __defaultNIL( @cUrl, "" )
-
-   IF cName != NIL
-      cStr += ' name= "' + cName + '"' + CRLF()
+   IF HB_ISSTRING( cName )
+      cStr += " name=" + '"' + cName + '"' + hb_eol()
    ENDIF
-   IF cAlt != NIL
-      cStr += ' alt= "' + cAlt + '"' + CRLF()
+   IF HB_ISSTRING( cAlt )
+      cStr += " alt=" + '"' + cAlt + '"' + hb_eol()
    ENDIF
 
-   IF nBorder != NIL
-      cStr += " border= " + hb_ntos( nBorder ) + CRLF()
+   IF HB_ISNUMERIC( nBorder )
+      cStr += " border=" + hb_ntos( nBorder ) + hb_eol()
    ENDIF
 
-   IF nHeight != NIL
-      cStr += " height= " + hb_ntos( nHeight ) + "% " + CRLF()
+   IF HB_ISNUMERIC( nHeight )
+      cStr += " height=" + hb_ntos( nHeight ) + "%" + hb_eol()
    ENDIF
 
-   IF cOnClick != NIL
-      cStr += ' onClick="' + cOnClick + '"' + CRLF()
+   IF HB_ISSTRING( cOnClick )
+      cStr += " onClick=" + '"' + cOnClick + '"' + hb_eol()
    ENDIF
-   IF cOnMsOver != NIL
-      cStr += ' onMouseOver="' + cOnMsOver + '"' + CRLF()
+   IF HB_ISSTRING( cOnMsOver )
+      cStr += " onMouseOver=" + '"' + cOnMsOver + '"' + hb_eol()
    ENDIF
-   IF cOnMsOut != NIL
-      cStr += ' onMouseOut="' + cOnMsOut + '"' + CRLF()
+   IF HB_ISSTRING( cOnMsOut )
+      cStr += " onMouseOut=" + '"' + cOnMsOut + '"' + hb_eol()
    ENDIF
 
-   IF cURL != NIL
-      ::QOut( '<a href=' + cUrl + '><img src="' + cImage + '"' + ;
-         cStr + '></a>' )
+   IF HB_ISSTRING( cURL )
+      ::QOut( "<a href=" + cUrl + "><img src=" + '"' + cImage + '"' + cStr + "></a>" )
    ELSE
-      ::QOut( '<img src="' + cImage + '"' + ;
-         cStr + '></a>' )
+      ::QOut( "<img src=" + '"' + cImage + '"' + cStr + "></a>" )
    ENDIF
 
    RETURN Self
-
-/****
-*
-*     InitGreek()
-*
-*     Initializes the international languages support.
-*
-*     Uses GREEK_ALPHABET array as a match pattern. Replace with your
-*     own character set.
-*/
-
-FUNCTION InitGreek()
-
-   LOCAL aGreek := { ;
-      hb_BChar( 193 ), ;
-      hb_BChar( 194 ), ;
-      hb_BChar( 195 ), ;
-      hb_BChar( 196 ), ;
-      hb_BChar( 197 ), ;
-      hb_BChar( 198 ), ;
-      hb_BChar( 199 ), ;
-      hb_BChar( 200 ), ;
-      hb_BChar( 201 ), ;
-      hb_BChar( 202 ), ;
-      hb_BChar( 203 ), ;
-      hb_BChar( 204 ), ;
-      hb_BChar( 205 ), ;
-      hb_BChar( 206 ), ;
-      hb_BChar( 207 ), ;
-      hb_BChar( 208 ), ;
-      hb_BChar( 209 ), ;
-      hb_BChar( 211 ), ;
-      hb_BChar( 212 ), ;
-      hb_BChar( 213 ), ;
-      hb_BChar( 214 ), ;
-      hb_BChar( 215 ), ;
-      hb_BChar( 216 ), ;
-      hb_BChar( 217 ), ;
-      hb_BChar( 225 ), ;
-      hb_BChar( 226 ), ;
-      hb_BChar( 227 ), ;
-      hb_BChar( 228 ), ;
-      hb_BChar( 229 ), ;
-      hb_BChar( 230 ), ;
-      hb_BChar( 231 ), ;
-      hb_BChar( 232 ), ;
-      hb_BChar( 233 ), ;
-      hb_BChar( 234 ), ;
-      hb_BChar( 235 ), ;
-      hb_BChar( 236 ), ;
-      hb_BChar( 237 ), ;
-      hb_BChar( 238 ), ;
-      hb_BChar( 239 ), ;
-      hb_BChar( 240 ), ;
-      hb_BChar( 241 ), ;
-      hb_BChar( 243 ), ;
-      hb_BChar( 242 ), ;
-      hb_BChar( 244 ), ;
-      hb_BChar( 245 ), ;
-      hb_BChar( 246 ), ;
-      hb_BChar( 247 ), ;
-      hb_BChar( 248 ), ;
-      hb_BChar( 249 ), ;
-      hb_BChar( 220 ), ;
-      hb_BChar( 221 ), ;
-      hb_BChar( 222 ), ;
-      hb_BChar( 250 ), ;
-      hb_BChar( 223 ), ;
-      hb_BChar( 252 ), ;
-      hb_BChar( 253 ), ;
-      hb_BChar( 251 ), ;
-      hb_BChar( 254 ), ;
-      hb_BChar( 162 ), ;
-      hb_BChar( 184 ), ;
-      hb_BChar( 185 ), ;
-      hb_BChar( 186 ), ;
-      hb_BChar( 188 ), ;
-      hb_BChar( 190 ), ;
-      hb_BChar( 191 ), ;
-      hb_BChar( 218 ), ;
-      hb_BChar( 219 )  ;
-      }
-
-   LOCAL i
-   LOCAL n
-   LOCAL aArr := Array( 255 )
-
-   FOR i := 1 TO 255
-      aArr[ i ] := hb_BChar( i )
-   NEXT
-
-   n := 1
-   FOR i := 128 TO 175
-      aArr[ i ] := aGreek[ n ]
-      n++
-   NEXT
-
-   FOR i := 224 TO 240
-      aArr[ i ] := aGreek[ n ]
-      n++
-   NEXT
-   aArr[ 244 ] := aGreek[ n ]
-   n++
-   aArr[ 245 ] := aGreek[ n ]
-
-   RETURN aArr
-
-/****
-*
-*     Greek2Html()
-*
-*     Converts International characters to HTML
-*/
-
-FUNCTION Greek2Html( cText )
-
-   LOCAL i
-   LOCAL cStr := ""
-
-   IF Empty( t_aGreek )
-      t_aGreek := InitGreek()
-   ENDIF
-   FOR I := 1 TO Len( cText )
-      cStr += t_aGreek[ Asc( SubStr( cText, i, 1 ) ) ] /* TOFIX: for unicode */
-   NEXT
-
-   RETURN cStr

@@ -1,5 +1,5 @@
 /*
- * XPP compatible dbCopyStruct(), dbCopyExtStruct() functions
+ * Xbase++ compatible dbCopyStruct(), dbCopyExtStruct() functions
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *

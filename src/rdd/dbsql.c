@@ -1,5 +1,5 @@
 /*
- *
+ * __dbSQL()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2007 Lorenzo Fiorini <lorenzo.fiorini / at / gmail.com>
@@ -149,7 +149,9 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
                hb_addToFBuffer( pFileBuf, *szVal );
             else
             {
-               /* printf( "%d %c", *szVal, *szVal ); */
+#if 0
+               printf( "%d %c", *szVal, *szVal );
+#endif
             }
             szVal++;
          }
@@ -332,8 +334,10 @@ static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
    hb_destroyFBuffer( pFileBuf );
    hb_itemRelease( pTmp );
 
+#if 0
    /* Writing EOF */
-   /* hb_fileWrite( pFile, "\x1A", 1, -1 ); */
+   hb_fileWrite( pFile, "\x1A", 1, -1 );
+#endif
 
    return ulRecords;
 }

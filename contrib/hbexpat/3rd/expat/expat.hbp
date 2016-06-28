@@ -5,8 +5,6 @@
 
 -o${hb_targetname}
 
--hbx=
-
 -warn=low
 -pic
 
@@ -15,17 +13,17 @@ xmlrole.c
 xmltok.c
 
 -cflag=-DHARBOUR_CONF
+{win}-cflag=-DWIN32
 {hblib}-cflag=-DXML_STATIC
 {bcc}-cflag=-w-8057
 {bcc}-cflag=-w-8008
 {bcc}-cflag=-w-8066
 
 # ORIGIN http://expat.sourceforge.net/
-# VER    2.1.0
-# URL    http://sourceforge.net/projects/expat/files/expat/2.1.0/expat-2.1.0.tar.gz/download
+# URL    https://fossies.org/linux/www/expat-2.2.0.tar.bz2
 # DIFF   expat.dif
 #
-# MAP    COPYING
+# MAP    COPYING              LICENSE.txt
 # MAP    lib/xmlparse.c       xmlparse.c
 # MAP    lib/xmlrole.c        xmlrole.c
 # MAP    lib/xmltok.c         xmltok.c

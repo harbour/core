@@ -1,46 +1,37 @@
-/*
- * Author....: Gary Baren
- * CIS ID....: 75470,1027
- *
- * This is an original work by Gary Baren and is hereby placed in the
- * public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.2   15 Aug 1991 23:05:02   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:51:24   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   09 Jun 1991 00:27:06   GLENN
- * Initial revision.
- *
+/* This is an original work by Gary Baren and is placed in the public domain.
+
+      Rev 1.2   15 Aug 1991 23:05:02   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:51:24   GLENN
+   Minor edit to file header
+
+      Rev 1.0   09 Jun 1991 00:27:06   GLENN
+   Initial revision.
  */
 
-#define _LOG10( num )         ( Log( num ) / Log( 10 ) )
-#define DEFAULT_PRECISION     6
+#define _LOG10( num )   ( Log( num ) / Log( 10 ) )
 
 FUNCTION ft_D2E( nDec, nPrecision )
 
    LOCAL nExp
 
-   __defaultNIL( @nPrecision, DEFAULT_PRECISION )
+   __defaultNIL( @nPrecision, 6 )
 
-   IF nDec == 0
+   DO CASE
+   CASE nDec == 0
       nExp := 0
-   ELSEIF Abs( nDec ) < 1
+   CASE Abs( nDec ) < 1
       nExp := Int( _LOG10( nDec ) ) - 1
-   ELSE
-      nExp := Int( _LOG10( Abs( nDec ) + 0.00001 ) )   /* 0.00001 == kludge */
-   ENDIF           /* for imprecise logs */
+   OTHERWISE
+      nExp := Int( _LOG10( Abs( nDec ) + 0.00001 ) )  // 0.00001 == kludge for imprecise logs
+   ENDCASE
 
    nDec /= 10 ^ nExp
 
    IF Round( Abs( nDec ), nPrecision ) >= 10
       nDec /= 10
       nExp++
-   ENDIF // another kludge FOR stuff LIKE "999999999"
+   ENDIF  // another kludge for stuff like "999999999"
 
    RETURN LTrim( Str( nDec, nPrecision + 3, nPrecision ) ) + "E" + hb_ntos( nExp )

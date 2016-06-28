@@ -1,10 +1,10 @@
 /*
  * Alternative BMDBF* implementation which respects RDD inheritance
- *    scheme and gives similar functionality and PRG functions as modified
- *    by Miguel Angel Marchuet <miguelangel@marchuet.net> DBFCDX with
- *    directly hardcoded bitmap filters.
- *    This code is completely new implementation and does not contain
- *    any code created by Miguel.
+ * scheme and gives similar functionality and PRG functions as modified
+ * by Miguel Angel Marchuet <miguelangel@marchuet.net> DBFCDX with
+ * directly hardcoded bitmap filters.
+ * This code is completely new implementation and does not contain
+ * any code created by Miguel.
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -73,7 +73,7 @@ HB_FUNC( BM_DBSEEKWILD )
 
       if( szPattern )
       {
-         HB_BOOL fSoft, fBack, fCont, fAll, fFound, fUnlock;
+         HB_BOOL fSoft, fBack, fCont, fAll, fFound;
          DBORDERINFO OrderInfo;
          HB_ERRCODE errCode;
          PHB_ITEM pArray = NULL;
@@ -100,6 +100,7 @@ HB_FUNC( BM_DBSEEKWILD )
 
          if( iOrder != 0 )
          {
+            HB_BOOL fUnlock;
             OrderInfo.itmNewVal = OrderInfo.itmResult;
             hb_itemPutL( OrderInfo.itmNewVal, HB_TRUE );
             if( SELF_ORDINFO( pArea, DBOI_READLOCK, &OrderInfo ) == HB_SUCCESS )
@@ -110,8 +111,6 @@ HB_FUNC( BM_DBSEEKWILD )
 
             if( ! fCont )
             {
-               const char * szKey;
-
                if( fBack )
                   errCode = SELF_GOBOTTOM( pArea );
                else
@@ -121,10 +120,7 @@ HB_FUNC( BM_DBSEEKWILD )
                {
                   errCode = SELF_ORDINFO( pArea, DBOI_KEYVAL, &OrderInfo );
                   if( errCode == HB_SUCCESS )
-                  {
-                     szKey = hb_itemGetCPtr( OrderInfo.itmResult );
-                     fFound = hb_strMatchWild( szKey, szPattern );
-                  }
+                     fFound = hb_strMatchWild( hb_itemGetCPtr( OrderInfo.itmResult ), szPattern );
                }
             }
 
@@ -321,12 +317,13 @@ HB_FUNC( BM_DBGETFILTERARRAY )
 
       if( pBM && pArea->dbfi.fOptimized )
       {
-         HB_ULONG ul, ulItems = BM_ITEMSIZE( pBM->maxrec );
+         HB_ULONG ulItems = BM_ITEMSIZE( pBM->maxrec );
          HB_ULONG ulRecNo;
 
          if( SELF_RECNO( pArea, &ulRecNo ) == HB_SUCCESS )
          {
             PHB_ITEM pItem = hb_itemNew( NULL );
+            HB_ULONG ul;
 
             for( ul = 0; ul < ulItems; ul++ )
             {
@@ -525,9 +522,7 @@ static HB_ERRCODE hb_bmSkipFilter( AREAP pArea, HB_LONG lUpDown )
 
 static HB_ERRCODE hb_bmPutRec( AREAP pArea, const HB_BYTE * pBuffer )
 {
-   HB_ERRCODE errCode;
-
-   errCode = SUPER_PUTREC( pArea, pBuffer );
+   HB_ERRCODE errCode = SUPER_PUTREC( pArea, pBuffer );
 
    if( pBuffer == NULL && errCode == HB_SUCCESS && BM_GETFILTER( pArea ) )
       hb_bmEvalFilter( pArea, HB_TRUE );
@@ -564,9 +559,8 @@ static HB_ERRCODE hb_bmClearFilter( AREAP pArea )
 
 static HB_ERRCODE hb_bmSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
 {
-   HB_ERRCODE errCode;
+   HB_ERRCODE errCode = SUPER_SETFILTER( pArea, pFilterInfo );
 
-   errCode = SUPER_SETFILTER( pArea, pFilterInfo );
    if( errCode == HB_SUCCESS )
    {
       if( hb_setGetOptimize() )
@@ -581,10 +575,12 @@ static HB_ERRCODE hb_bmSetFilter( AREAP pArea, LPDBFILTERINFO pFilterInfo )
 
             if( hb_setGetForceOpt() )
             {
-               HB_ULONG ulRecNo, ulRec;
+               HB_ULONG ulRecNo;
 
                if( SELF_RECNO( pArea, &ulRecNo ) == HB_SUCCESS )
                {
+                  HB_ULONG ulRec;
+
                   for( ulRec = 1; ulRec <= pBM->maxrec; ulRec++ )
                   {
                      SELF_GOTO( pArea, ulRec );
@@ -802,8 +798,8 @@ HB_CALL_ON_STARTUP_BEGIN( _hb_bm_rdd_init_ )
 HB_CALL_ON_STARTUP_END( _hb_bm_rdd_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-#  pragma startup _hb_bm_InitSymbols_
-#  pragma startup _hb_bm_rdd_init_
+   #pragma startup _hb_bm_InitSymbols_
+   #pragma startup _hb_bm_rdd_init_
 #elif defined( HB_DATASEG_STARTUP )
    #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_bm_InitSymbols_ ) \
                               HB_DATASEG_FUNC( _hb_bm_rdd_init_ )

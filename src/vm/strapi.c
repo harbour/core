@@ -1,5 +1,5 @@
 /*
- * string API functions
+ * String API functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -7,14 +7,17 @@
 
 -stop{!unix}
 
--c=gnu90
+#-c=gnu90
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 chdir.c
+chown.c
 chroot.c
 daemon.c
 posix.c
 posixerr.c
 sleep.c
 uidgid.c
+
+linux.prg

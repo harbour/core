@@ -2,6 +2,7 @@
  * Additional date functions
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ * Copyright 1999 Jon Berg <jmberg@pnh10.med.navy.mil> (DateTime())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,16 +45,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 Jon Berg <jmberg@pnh10.med.navy.mil>
- *    DateTime()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include <time.h>
 
 #include "hbapi.h"
@@ -62,7 +53,7 @@
 #include "hbdate.h"
 
 static const int s_daysinmonth[ 12 ] =
-{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+   { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 static HB_BOOL hb_isleapyear( int iYear )
 {
@@ -89,7 +80,7 @@ static int hb_doy( int iYear, int iMonth, int iDay )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_doy(%d, %d, %d)", iYear, iMonth, iDay ) );
 
-   for( i = 1; i < iMonth; i++ )
+   for( i = 1; i < iMonth; ++i )
       iDoy += hb_daysinmonth( iYear, i );
 
    return iDoy + iDay;
@@ -115,10 +106,10 @@ static int hb_woy( int iYear, int iMonth, int iDay, HB_BOOL bISO )
 
 HB_FUNC( AMONTHS )
 {
-   PHB_ITEM pReturn = hb_itemArrayNew( 12 );    /* Create array */
+   PHB_ITEM pReturn = hb_itemArrayNew( 12 );  /* Create array */
    int      i;
 
-   for( i = 0; i < 12; i++ )
+   for( i = 0; i < 12; ++i )
       hb_arraySetC( pReturn, i + 1, hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + i ) );
 
    hb_itemReturnRelease( pReturn );
@@ -126,10 +117,10 @@ HB_FUNC( AMONTHS )
 
 HB_FUNC( ADAYS )
 {
-   PHB_ITEM pReturn = hb_itemArrayNew( 7 );    /* Create array */
+   PHB_ITEM pReturn = hb_itemArrayNew( 7 );  /* Create array */
    int      i;
 
-   for( i = 0; i < 7; i++ )
+   for( i = 0; i < 7; ++i )
       hb_arraySetC( pReturn, i + 1, hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + i ) );
 
    hb_itemReturnRelease( pReturn );
@@ -166,7 +157,6 @@ HB_FUNC( HBMISC_DAYSINMONTH )
 }
 
 /* Return the nWeek of the year (1 - 52, 0 - 52 if ISO) */
-
 HB_FUNC( WOY )
 {
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );

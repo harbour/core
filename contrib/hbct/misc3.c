@@ -1,5 +1,5 @@
 /*
- * CT3 Miscellaneous functions: - KbdStat()
+ * CT3 Miscellaneous functions: KbdStat()
  *
  * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  *

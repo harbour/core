@@ -338,19 +338,19 @@ static int hb_cdpStd_cmpi( PHB_CODEPAGE cdp,
                            const char * szSecond, HB_SIZE nLenSecond,
                            HB_BOOL fExact )
 {
-   int iRet = 0, iAcc = 0, n1, n2, u1, u2;
+   int iRet = 0, iAcc = 0;
    HB_SIZE ul, nLen;
 
    nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
    for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
    {
-      u1 = cdp->upper[ ( HB_UCHAR ) *szFirst ];
-      u2 = cdp->upper[ ( HB_UCHAR ) *szSecond ];
+      int u1 = cdp->upper[ ( HB_UCHAR ) *szFirst ];
+      int u2 = cdp->upper[ ( HB_UCHAR ) *szSecond ];
 
       if( u1 != u2 )
       {
-         n1 = ( HB_UCHAR ) cdp->sort[ u1 ];
-         n2 = ( HB_UCHAR ) cdp->sort[ u2 ];
+         int n1 = ( HB_UCHAR ) cdp->sort[ u1 ];
+         int n2 = ( HB_UCHAR ) cdp->sort[ u2 ];
          if( n1 != n2 )
          {
             iRet = ( n1 < n2 ) ? -1 : 1;
@@ -524,10 +524,11 @@ static HB_BOOL hb_cdpMulti_put( PHB_CODEPAGE cdp,
 
 static int hb_cdpMulti_len( PHB_CODEPAGE cdp, HB_WCHAR wc )
 {
-   int i, n = 1;
+   int n = 1;
 
    if( wc )
    {
+      int i;
       for( i = 0; i < cdp->nMulti; ++i )
       {
          if( wc == cdp->multi[ i ].wcUp ||
@@ -566,12 +567,14 @@ static int hb_cdpMulti_cmp( PHB_CODEPAGE cdp,
                             const char * szSecond, HB_SIZE nLenSecond,
                             HB_BOOL fExact )
 {
-   int iRet = 0, iAcc = 0, n, n1, n2;
+   int iRet = 0, iAcc = 0, n;
    HB_SIZE ul, nLen;
 
    nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
    for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
    {
+      int n1, n2;
+
       HB_UCHAR u1 = ( HB_UCHAR ) *szFirst;
       HB_UCHAR u2 = ( HB_UCHAR ) *szSecond;
 
@@ -666,12 +669,14 @@ static int hb_cdpMulti_cmpi( PHB_CODEPAGE cdp,
                              const char * szSecond, HB_SIZE nLenSecond,
                              HB_BOOL fExact )
 {
-   int iRet = 0, iAcc = 0, n, n1, n2, u1, u2;
+   int iRet = 0, iAcc = 0;
    HB_SIZE ul, nLen;
 
    nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
    for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
    {
+      int n, u1, u2, n1, n2;
+
       u1 = cdp->upper[ ( HB_UCHAR ) *szFirst ];
       u2 = cdp->upper[ ( HB_UCHAR ) *szSecond ];
 
@@ -1236,13 +1241,14 @@ HB_WCHAR hb_cdpUTF8StringPeek( const char * pSrc, HB_SIZE nLen, HB_SIZE nPos )
 char * hb_cdpUTF8StringSubstr( const char * pSrc, HB_SIZE nLen,
                                HB_SIZE nFrom, HB_SIZE nCount, HB_SIZE * pulDest )
 {
-   HB_SIZE ul, nCnt, nDst = 0;
+   HB_SIZE nDst = 0;
    HB_WCHAR wc;
    int n;
    char * pDst = NULL;
 
    if( nCount && nLen )
    {
+      HB_SIZE ul;
       n = 0;
       for( ul = 0; ul < nLen && nFrom; )
       {
@@ -1254,6 +1260,7 @@ char * hb_cdpUTF8StringSubstr( const char * pSrc, HB_SIZE nLen,
 
       if( ul < nLen )
       {
+         HB_SIZE nCnt;
          nFrom = ul;
          nCnt = nCount;
          n = 0;
@@ -1290,10 +1297,10 @@ HB_BOOL hb_cdpGetFromUTF8( PHB_CODEPAGE cdp, HB_UCHAR ch,
          {
             if( HB_CDPCHAR_LEN( cdp, *pwc ) == 1 )
             {
-               HB_SIZE nS = 0;
+               HB_SIZE nSize = 0;
                char c;
 
-               if( HB_CDPCHAR_PUT( cdp, &c, 1, &nS, *pwc ) )
+               if( HB_CDPCHAR_PUT( cdp, &c, 1, &nSize, *pwc ) )
                   *pwc = ( HB_UCHAR ) c;
             }
          }
@@ -1748,9 +1755,9 @@ HB_SIZE hb_cdpStrAsU16Len( PHB_CODEPAGE cdp,
 
 #undef HB_CDP_ENDIAN_SWAP
 #if defined( HB_BIG_ENDIAN )
-#  define HB_CDP_ENDIAN_SWAP  HB_CDP_ENDIAN_LITTLE
+   #define HB_CDP_ENDIAN_SWAP  HB_CDP_ENDIAN_LITTLE
 #elif defined( HB_LITTLE_ENDIAN )
-#  define HB_CDP_ENDIAN_SWAP  HB_CDP_ENDIAN_BIG
+   #define HB_CDP_ENDIAN_SWAP  HB_CDP_ENDIAN_BIG
 #endif
 
 HB_SIZE hb_cdpStrToU16( PHB_CODEPAGE cdp, int iEndian,
@@ -1904,12 +1911,12 @@ HB_SIZE hb_cdpU16ToStr( PHB_CODEPAGE cdp, int iEndian,
    HB_UCHAR * uniTrans;
    HB_WCHAR wcMax, wc;
    HB_SIZE ulS, ulD;
-   int i;
 
    if( HB_CDP_ISUTF8( cdp ) )
    {
       for( ulS = ulD = 0; ulS < nSrc; ++ulS )
       {
+         int i;
 #if defined( HB_CDP_ENDIAN_SWAP )
          wc = pSrc[ ulS ];
          if( iEndian == HB_CDP_ENDIAN_SWAP )

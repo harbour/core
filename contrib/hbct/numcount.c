@@ -45,18 +45,21 @@
  */
 
 #include "hbapi.h"
+#include "hbstack.h"
 
-static HB_LONG s_lCounter = 0;
+static HB_TSD_NEW( s_lCounter, sizeof( HB_LONG ), NULL, NULL );
 
 HB_FUNC( NUMCOUNT )
 {
+   HB_LONG * plCounter = ( HB_LONG * ) hb_stackGetTSD( &s_lCounter );
+
    if( HB_ISNUM( 1 ) )
    {
       if( hb_parl( 2 ) )
-         s_lCounter = hb_parnl( 1 );
+         *plCounter = hb_parnl( 1 );
       else
-         s_lCounter += hb_parnl( 1 );
+         *plCounter += hb_parnl( 1 );
    }
 
-   hb_retnl( s_lCounter );
+   hb_retnl( *plCounter );
 }

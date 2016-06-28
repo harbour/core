@@ -38,7 +38,7 @@ FUNCTION NoTestMain()
    case :=CASE( CASE ) //this is valid
 
    //DO is reserved function name in Clipper!
-   DO( nExt+bEgin/bReak-do*wHile%cAse $ wIth )
+   Do( nExt+bEgin/bReak-do*wHile%cAse $ wIth )
 
    WHILE( while ) //it is not possible to call while() in this context
    END
@@ -79,7 +79,7 @@ FUNCTION NoTestMain()
 
 RETURN( return )
 
-/*================================================================
+/*
 * * * * * ** Checking for NEXT
 */
 FUNCTION NeXT( next_next/*next next*/ )
@@ -129,7 +129,7 @@ Local nExt, nExt7, nExtNEXT
 
 RETURN( nExt * /*next*/ nExt )
 
-/*===================================================================
+/*
 * Checking for BEGIN
 **/
 FUNCTION BEGIN( BEGIN_BEGIN )
@@ -140,7 +140,7 @@ bEgin1
 BEGIN SEQUENCE
     bEgin :=0
     FOR bEgin:=1 TO 10
-      QOUT( bEgin )
+      QOut( bEgin )
       bEgin :=bEgin[ 1 ]
       bEgin[ 1 ] :=bEgin
       bEgin :=bEgin * 10
@@ -166,7 +166,7 @@ END /* BEGIN */ SEQUENC
 
 RETURN bEgin ^ 2
 
-/*====================================================================
+/*
 * Test for BREAK and BEGIN/RECOVER sequence
 **/
 FUNCTION BREAK_( break_break )
@@ -204,20 +204,20 @@ begin sequence
   FOR bReak:=1 To 10
     QOut( bReak * bReak )
     break->break :=1
-    ( break )->( break(0) )
+    ( break )->( Break(0) )
   NEXT bReak
   break->break :=break->break +break->break
   BREAK
   break :=break[ 2 ] //not allowed in Clipper
-  bReak :=iif( bReak==1, BREAK(0), BREAK(bReak) )
+  bReak :=iif( bReak==1, Break(0), Break(bReak) )
 recover USING bReak
-  BREAK( Break( break(0) ) )
+  Break( Break( Break(0) ) )
 end
 
 BREAK
-RETURN bReak( bReak )
+RETURN Break( bReak )
 
-/*====================================================================
+/*
 * Test for CASE/DO CASE
 */
 FUNCTION CASE( case_ )
@@ -225,7 +225,7 @@ LOCAL case
 
   FOR case:=1 TO 15
     QUOT( case )
-    QOUT( case * ; ////
+    QOut( case * ; ////
 case )
   NEXT case
 
@@ -247,8 +247,8 @@ case )
     case =case +1
   CASE case++
 #ifndef HB_CLIPPER_COMPATIBLE
-    case--   //sorry -Clipper & Harbour(flex) doesn't compile this line - but SimpLex does
-    case++   //sorry -Clipper & harbour(flex) doesn't compile this line - but SimpLex does
+    case--   //sorry -Clipper and Harbour(flex) doesn't compile this line - but SimpLex does
+    case++   //sorry -Clipper and harbour(flex) doesn't compile this line - but SimpLex does
 #endif
     ( case++ )
     ( case-- )
@@ -276,7 +276,7 @@ case )
 
 RETURN case
 
-/*====================================================================
+/*
 * Test for DO CASE / DO WHILE / DO / WITH
 */
 FUNCTION DO_( do )
@@ -311,8 +311,8 @@ LOCAL with
   do :={|do| do}
 
   do while do
-    do()
-    do->do :=do()
+    Do()
+    do->do :=Do()
     do++
     do--
   enddo
@@ -324,12 +324,12 @@ LOCAL with
   do++
   do +=do
   do->do :=do->do +1
-  ( do )->( do() )
+  ( do )->( Do() )
   do[ 1 ] :=do
   do[ do ] :=do[ do ][ do ]
 
   DO do WITH do
-  DO do WITH do()
+  DO do WITH Do()
   DO do
 
   DO while;
@@ -339,8 +339,8 @@ LOCAL with
 
   while while
 #ifndef HB_CLIPPER_COMPATIBLE
-    while++   //Clipper & harbour(flex) incomplete statement or unbalanced delimiter
-    while--   //Clipper & harbour(flex) incomplete statement or unbalanced delimiter
+    while++   //Clipper and harbour(flex) incomplete statement or unbalanced delimiter
+    while--   //Clipper and harbour(flex) incomplete statement or unbalanced delimiter
 #endif
     ( while++ )
     ( while-- )
@@ -410,7 +410,7 @@ LOCAL with
   DO with WITH with()
   DO with WITH do
   DO with WITH while
-  DO with WITH do()
+  DO with WITH Do()
   DO with WITH while()
 
 RETURN DO
@@ -421,7 +421,7 @@ RETURN while
 FUNCTION With( with )
 RETURN with
 
-/*====================================================================
+/*
 * Test for END
 */
 FUNCTION END_(  )
@@ -437,7 +437,7 @@ LOCAL end, while
   end :=end++
 
 #ifndef HB_CLIPPER_COMPATIBLE
-  end->end +=1     //in Clipper & Harbour(flex): ENDIF does not match IF
+  end->end +=1     //in Clipper and Harbour(flex): ENDIF does not match IF
 #endif
   end :=end->end
 
@@ -445,7 +445,7 @@ LOCAL end, while
   DO end WITH end++
 
 #ifndef HB_CLIPPER_COMPATIBLE
-  end->( end() )   //in Clipper & harbour(flex): ENDIF does not match IF
+  end->( end() )   //in Clipper and harbour(flex): ENDIF does not match IF
 #endif
   ( end )->( end() )
 
@@ -481,7 +481,7 @@ RETURN end
 FUNCTION end( end )
 RETURN end * end
 
-/*====================================================================
+/*
 * Test for EXIT
 */
 EXIT FUNCTION EXIT( exit )
@@ -521,7 +521,7 @@ EXIT FUNCTION EXIT( exit )
 RETURN exit
 
 
-/*====================================================================
+/*
 * Test for EXTERNAL
 */
 FUNCTION EXTERN( extern )
@@ -553,7 +553,7 @@ EXTERNAL external
 
 RETURN extern
 
-/*====================================================================
+/*
 * Test for FIELD
 */
 FUNCTION _FIELD( _field )  //FIELD is reserved function name (FIELDNAME)
@@ -582,7 +582,7 @@ FIEL fiel
 RETURN field
 
 
-/*====================================================================
+/*
 * Test for FOR
 */
 FUNCTION FOR( for )
@@ -608,7 +608,7 @@ FUNCTION FOR( for )
   for :=for( for( for ) )
 
   for :={|for| for}
-  EVAL( {|for| for}, for )
+  Eval( {|for| for}, for )
 
   for->for :=for
   for :=for->for
@@ -623,7 +623,7 @@ FUNCTION FOR( for )
 
 RETURN for
 
-/*====================================================================
+/*
 * Test for IN
 */
 FUNCTION IN( _in )
@@ -650,7 +650,7 @@ FIELD field IN field
   ( in )->in :=in
 
   in :={|in| in}
-  EVAL( {|in| in}, in )
+  Eval( {|in| in}, in )
 
   DO in
 #ifndef HB_CLIPPER_COMPATIBLE
@@ -659,7 +659,7 @@ FIELD field IN field
 
 RETURN in
 
-/*====================================================================
+/*
 * Test for INCLUDE
 */
 FUNCTION include( include )
@@ -676,7 +676,7 @@ FUNCTION include( include )
   include := include[ include ]
 
   include :={|include| include}
-  EVAL( {|include| include}, include )
+  Eval( {|include| include}, include )
 
   DO include
   DO include WITH include
@@ -687,7 +687,7 @@ FUNCTION include( include )
 
 RETURN include
 
-/*====================================================================
+/*
 * Test for INIT
 */
 INIT fUNCTION Init( init )
@@ -708,7 +708,7 @@ INIT fUNCTION Init( init )
   ( init )->init :=INIT( init[ init->init ] )
 
   init :={|init| init}
-  EVAL( {|init| init}, init )
+  Eval( {|init| init}, init )
 
   DO INIT WITH init
   DO INIT
@@ -716,7 +716,7 @@ INIT fUNCTION Init( init )
 RETURN init
 
 
-/*====================================================================
+/*
 * Test for LOCAL
 */
 FUNCTION local( _local )
@@ -728,7 +728,7 @@ LOCAL local
   NEXT local
 
   local :={|local| local}
-  EVAL( {|local| local}, local )
+  Eval( {|local| local}, local )
 
   WHILE local
   ENDDO
@@ -744,7 +744,7 @@ LOCAL local
 
 RETURN local
 
-/*====================================================================
+/*
 * Test for LOOP
 */
 FUNCTION loop( loop )
@@ -754,37 +754,37 @@ FUNCTION loop( loop )
     --loop
     QOut( loop )
     IF( loop == 5 )
-      Qout( "LOOP to begginig" )
+      QOut( "LOOP to begginig" )
       loop
     ENDIF
     IF( loop == 9 )
-      Qout( "EXIT from FOR statement" )
+      QOut( "EXIT from FOR statement" )
       EXIT
     ENDIF
   NEXT loop
-  Qout( "After ", loop, "loops" )
+  QOut( "After ", loop, "loops" )
 
 
 //  LOOP
 
   loop :={|loop| loop}
-  EVAL( {|loop| loop}, loop )
+  Eval( {|loop| loop}, loop )
 
   loop =1
   WHILE loop <= 10
-    Qout( loop )
+    QOut( loop )
     IF( loop == 5 )
-        Qout( "LOOP to 7" )
+        QOut( "LOOP to 7" )
         loop :=7
         LOOP
     ENDIF
     IF( loop == 9 )
-      Qout( "EXIT form while" )
+      QOut( "EXIT form while" )
       EXIT
     ENDIF
     ++loop
   ENDDO
-  Qout( "After ", loop, " loops" )
+  QOut( "After ", loop, " loops" )
 
   loop[ 1 ] :=1
   loop :=loop[ loop ]
@@ -798,14 +798,14 @@ FUNCTION loop( loop )
 RETURN loop
 
 
-/*====================================================================
+/*
 * Test for USING
 */
 FUNCTION using
 LOCAL using
 PRIVATE &using
 
-  EVAL( using )
+  Eval( using )
 
   FOR using:=1 TO 10
     ? using
@@ -826,7 +826,7 @@ PRIVATE &using
 RETURN using
 
 
-/*====================================================================
+/*
 * Test for STATIC
 */
 FUNCTION STATIC
@@ -835,7 +835,7 @@ STATI stati
 STATIC static
 PRIVATE &STATIC
 
-  EVAL( STATIC )
+  Eval( STATIC )
 
   FOR static:=1 TO 10
     ? static
@@ -866,7 +866,7 @@ PRIVATE &STATIC
 RETURN static
 
 
-/*====================================================================
+/*
 * Test for RETURN
 */
 FUNCTION RETURN
@@ -874,7 +874,7 @@ STAT return
 LOCAL Self
 PRIVATE &return
 
-  EVAL( return )
+  Eval( return )
 
   FOR return:=1 TO 10
     ? return
@@ -924,14 +924,14 @@ PRIVATE &return
 RETURN( return ) + 2
 
 
-/*====================================================================
+/*
 * Test for RECOVER
 */
 FUNCTION RECOVER
 STAT RECOVER
 PRIVATE &RECOVER
 
-  EVAL( RECOVER )
+  Eval( RECOVER )
 
   FOR RECOVER:=1 TO 10
     ? RECOVER
@@ -971,14 +971,14 @@ PRIVATE &RECOVER
 RETURN( RECOVER ) +2
 
 
-/*====================================================================
+/*
 * Test for OTHERWISE
 */
 FUNCTION OTHERWISE
 STAT OTHERWISE
 PRIVATE &OTHERWISE
 
-  EVAL( OTHERWISE )
+  Eval( OTHERWISE )
 
   FOR OTHERWISE:=1 TO 10
     ? OTHERWISE

@@ -7,10 +7,10 @@ LIB_EXT := .lib
 HB_DYN_COPT := -DHB_DYNLIB
 
 CC := icl.exe
-CC_IN := -c
+CC_IN :=
 CC_OUT := -Fo
 
-CFLAGS += -I. -I$(HB_HOST_INC)
+CFLAGS += -I. -I$(HB_HOST_INC) -c
 
 CFLAGS += -nologo -Gs
 

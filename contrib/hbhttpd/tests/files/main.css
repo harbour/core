@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 body, td {
 	font-size: 13px;
 	font-family: Arial, sans-serif;
@@ -11,17 +13,16 @@ table.ubr {
 
 table.ubr th {
 	padding: 0px 4px 0px 4px;
-	background-color: #C0C0C0;
+	background-color: #c0c0c0;
 }
 
 table.ubr tr {
-	background-color: #F0F0F0;
+	background-color: #f0f0f0;
 }
 
 table.ubr tr:hover {
-	background-color: #D0D0FF;
+	background-color: #d0d0ff;
 }
-
 
 tr.ubrr div {
 	overflow: hidden;
@@ -30,6 +31,6 @@ tr.ubrr div {
 }
 
 ulnk {
-	text-decoration:underline;
-	text-color:blue;
+	text-decoration: underline;
+	text-color: blue;
 }

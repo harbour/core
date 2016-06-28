@@ -1,5 +1,5 @@
 /*
- * MySQL DBMS test program
+ * MariaDB/MySQL DBMS test program
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  *
@@ -50,36 +50,35 @@
 
 PROCEDURE Main( cArg )
 
-   LOCAL oServer, oQuery2, oRow, aStru
+   LOCAL oServer, oQuery2, oRow
    LOCAL oQuery
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
    oServer := TMySQLServer():New( "localhost", "root", "" )
    IF oServer:NetErr()
-      Alert( oServer:Error() )
+      ? oServer:Error()
    ENDIF
 
    oServer:SelectDB( "ims" )
 #if 0
-   oQuery := oServer:Query( "SELECT * from maga limit 10" )
+   oQuery := oServer:Query( "SELECT * FROM maga LIMIT 10" )
    oRow := oQuery:GetRow()
 #endif
 
    dbUseArea( .T.,, cArg, "wn", .F. )
 
    IF ! oServer:DeleteTable( "test" )
-      Alert( oServer:Error() )
+      ? oServer:Error()
    ENDIF
 
-   aStru := dbStruct()
-   IF oServer:CreateTable( "test", aStru )
-      Alert( "test created successfully" )
+   IF oServer:CreateTable( "test", dbStruct() )
+      ? "test created successfully"
    ELSE
-      Alert( oServer:Error() )
+      ? oServer:Error()
    ENDIF
 
-   oQuery := oServer:Query( "SELECT C111, C116, C134 from maga limit 10" )
+   oQuery := oServer:Query( "SELECT C111, C116, C134 FROM maga LIMIT 10" )
 #if 0
    oRow := oQuery:GetRow()
 #endif
@@ -88,11 +87,11 @@ PROCEDURE Main( cArg )
 
    DO WHILE ! wn->( Eof() )
 
-      oQuery2 := oServer:Query( "SELECT * from test where CODF='" + wn->CODF + "' and CODP='" + wn->CODP + "'" )
+      oQuery2 := oServer:Query( "SELECT * FROM test WHERE CODF='" + wn->CODF + "' AND CODP='" + wn->CODP + "'" )
 
       IF oQuery2:LastRec() > 0
 
-         ? "found "
+         ? "found"
 
          oRow := oQuery2:GetRow()
 
@@ -101,10 +100,10 @@ PROCEDURE Main( cArg )
          oRow:FieldPut( oRow:FieldPos( "ACQDI" ), oRow:FieldGet( oRow:FieldPos( "ACQDI" ) ) + wn->ACQDI )
 
          IF ! oQuery2:Update( oRow )
-            Alert( oQuery2:Error() )
+            ? oQuery2:Error()
          ENDIF
       ELSE
-         ? wn->CODF + " " + wn->CODP
+         ? wn->CODF, wn->CODP
 
          oRow := oQuery:GetBlankRow()
 
@@ -116,7 +115,7 @@ PROCEDURE Main( cArg )
          oRow:FieldPut( oRow:FieldPos( "ACQDI" ), wn->ACQDI )
 
          IF ! oQuery:Append( oRow )
-            Alert( oQuery:Error() )
+            ? oQuery:Error()
          ENDIF
       ENDIF
 

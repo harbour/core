@@ -2,20 +2,9 @@
  * CT (Clipper Tools) Disk, File and Directory management.
  *
  * Copyright 2004-2005 Eduardo Fernandes <modalsist@yahoo.com.br>
- *
- * DirMake()     - Ready. Already exist a MakeDir() function in xHarbour RTL Lib,
- *                        but DirMake returns a more compatible error codes.
- * DirName()     - Ready.
- * DriveType()   - Ready.  corrected <ptucker@sympatico.ca>
- * Volume()      - Ready.
- * VolSerial()   - Ready.
- *
- * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- * NumDiskL()
- *
- * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru>
- * TrueName()
- *
+ *    DirMake(), DirName(), DriveType(), Volume(), VolSerial()
+ * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru> (NumDiskL())
+ * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru> (TrueName())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -66,15 +55,15 @@
 #include "hbwinuni.h"
 
 #if defined( HB_OS_DOS )
-#  include <dos.h>
+   #include <dos.h>
 #endif
 #if defined( HB_OS_WIN )
-#  include <windows.h>
+   #include <windows.h>
 #endif
 
 HB_FUNC( DIRMAKE )
 {
-   if( hb_fsMkDir( hb_parcx( 1 ) ) )
+   if( hb_fileDirMake( hb_parcx( 1 ) ) )
       hb_retni( 0 );
    else
       hb_retnint( -( HB_MAXINT ) hb_fsOsError() );

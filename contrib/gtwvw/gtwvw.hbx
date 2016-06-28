@@ -1,0 +1,358 @@
+/* --------------------------------------------------------------------
+ * NOTE: Following comments are control commands for the generator.
+ *       Do not edit them unless you know what you are doing.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+// HB_FUNC_EXCLUDE AddToolTipEx
+// HB_FUNC_EXCLUDE BringToTop1
+// HB_FUNC_EXCLUDE CreateFont
+// HB_FUNC_EXCLUDE CreateHatchBrush
+// HB_FUNC_EXCLUDE CreateImageList
+// HB_FUNC_EXCLUDE CreateSolidBrush
+// HB_FUNC_EXCLUDE DrawBitmap
+// HB_FUNC_EXCLUDE DrawIcon
+// HB_FUNC_EXCLUDE GetBitmapSize
+// HB_FUNC_EXCLUDE GetIconSize
+// HB_FUNC_EXCLUDE GetSysColor
+// HB_FUNC_EXCLUDE ImageList_Add
+// HB_FUNC_EXCLUDE ImageList_AddMasked
+// HB_FUNC_EXCLUDE InvalidateRect
+// HB_FUNC_EXCLUDE IsWindow
+// HB_FUNC_EXCLUDE LoadBitmap
+// HB_FUNC_EXCLUDE LoadBitmapEx
+// HB_FUNC_EXCLUDE LoadIcon
+// HB_FUNC_EXCLUDE LoadImage
+// HB_FUNC_EXCLUDE OpenBitmap
+// HB_FUNC_EXCLUDE OpenImage
+// HB_FUNC_EXCLUDE RedrawWindow
+// HB_FUNC_EXCLUDE RGB
+// HB_FUNC_EXCLUDE SelectFont
+// HB_FUNC_EXCLUDE SendMessage
+// HB_FUNC_EXCLUDE SetBitmapResourceId
+// HB_FUNC_EXCLUDE SetBkColor
+// HB_FUNC_EXCLUDE SetParent
+// HB_FUNC_EXCLUDE SetTextColor
+// HB_FUNC_EXCLUDE ToolBarAddButtons
+// HB_FUNC_EXCLUDE Window2Bitmap
+// HB_FUNC_EXCLUDE win_CheckDlgButton
+// HB_FUNC_EXCLUDE win_CheckRadioButton
+// HB_FUNC_EXCLUDE win_CreateBrush
+// HB_FUNC_EXCLUDE win_CreateFont
+// HB_FUNC_EXCLUDE win_DeleteObject
+// HB_FUNC_EXCLUDE win_DrawText
+// HB_FUNC_EXCLUDE win_GetClientRect
+// HB_FUNC_EXCLUDE win_GetDC
+// HB_FUNC_EXCLUDE win_GetDialogBaseUnits
+// HB_FUNC_EXCLUDE win_GetDlgItem
+// HB_FUNC_EXCLUDE win_GetDlgItemText
+// HB_FUNC_EXCLUDE win_GetStockObject
+// HB_FUNC_EXCLUDE win_GetSysColor
+// HB_FUNC_EXCLUDE win_InvalidateRect
+// HB_FUNC_EXCLUDE win_IsDlgButtonChecked
+// HB_FUNC_EXCLUDE win_LoadIcon
+// HB_FUNC_EXCLUDE win_LoadImage
+// HB_FUNC_EXCLUDE win_MessageBox
+// HB_FUNC_EXCLUDE win_MulDiv
+// HB_FUNC_EXCLUDE win_ReleaseDC
+// HB_FUNC_EXCLUDE win_SelectObject
+// HB_FUNC_EXCLUDE win_SendDlgItemMessage
+// HB_FUNC_EXCLUDE win_SendMessage
+// HB_FUNC_EXCLUDE win_SetBkColor
+// HB_FUNC_EXCLUDE win_SetDlgItemText
+// HB_FUNC_EXCLUDE win_SetFocus
+// HB_FUNC_EXCLUDE win_SetMenu
+// HB_FUNC_EXCLUDE win_SetTextColor
+// HB_FUNC_EXCLUDE win_SetTimer
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__GTWVW__
+#define __HBEXTERN_CH__GTWVW__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__GTWVW__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__GTWVW__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__GTWVW__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC HB_GT_WVW
+DYNAMIC wvw_AddRows
+DYNAMIC wvw_AddToolTipEx
+DYNAMIC wvw_AllowNonTopEvent
+DYNAMIC wvw_AppendMenu
+DYNAMIC wvw_BringToTop1
+DYNAMIC wvw_cbAddString
+DYNAMIC wvw_cbCreate
+DYNAMIC wvw_cbDestroy
+DYNAMIC wvw_cbEnable
+DYNAMIC wvw_cbFindString
+DYNAMIC wvw_cbGetCurText
+DYNAMIC wvw_cbGetIndex
+DYNAMIC wvw_cbIsDropped
+DYNAMIC wvw_cbIsFocused
+DYNAMIC wvw_cbSetCodeblock
+DYNAMIC wvw_cbSetCurSel
+DYNAMIC wvw_cbSetFocus
+DYNAMIC wvw_cbSetFont
+DYNAMIC wvw_cbSetIndex
+DYNAMIC wvw_cbVisible
+DYNAMIC wvw_CenterWindow
+DYNAMIC wvw_ChooseColor
+DYNAMIC wvw_ChooseFont
+DYNAMIC wvw_ClientToScreen
+DYNAMIC wvw_CreateDialogDynamic
+DYNAMIC wvw_CreateDialogModal
+DYNAMIC wvw_CreateFont
+DYNAMIC wvw_CreateHatchBrush
+DYNAMIC wvw_CreateImageList
+DYNAMIC wvw_CreateMenu
+DYNAMIC wvw_CreatePopupMenu
+DYNAMIC wvw_CreateSolidBrush
+DYNAMIC wvw_cxCreate
+DYNAMIC wvw_cxDestroy
+DYNAMIC wvw_cxEnable
+DYNAMIC wvw_cxGetCheck
+DYNAMIC wvw_cxSetCheck
+DYNAMIC wvw_cxSetCodeblock
+DYNAMIC wvw_cxSetFocus
+DYNAMIC wvw_cxSetFont
+DYNAMIC wvw_cxStatusFont
+DYNAMIC wvw_cxVisible
+DYNAMIC wvw_DeleteMenu
+DYNAMIC wvw_DeleteObject
+DYNAMIC wvw_DestroyMenu
+DYNAMIC wvw_DlgSetIcon
+DYNAMIC wvw_DrawBitmap
+DYNAMIC wvw_DrawBoxGet
+DYNAMIC wvw_DrawBoxGet_XP
+DYNAMIC wvw_DrawBoxGroup
+DYNAMIC wvw_DrawBoxGroupRaised
+DYNAMIC wvw_DrawBoxRaised
+DYNAMIC wvw_DrawBoxRecessed
+DYNAMIC wvw_DrawButton
+DYNAMIC wvw_DrawColorRect
+DYNAMIC wvw_DrawEllipse
+DYNAMIC wvw_DrawFocusRect
+DYNAMIC wvw_DrawGridHorz
+DYNAMIC wvw_DrawGridVert
+DYNAMIC wvw_DrawIcon
+DYNAMIC wvw_DrawImage
+DYNAMIC wvw_DrawImage_Resource
+DYNAMIC wvw_DrawLabel
+DYNAMIC wvw_DrawLabelEx
+DYNAMIC wvw_DrawLabelObj
+DYNAMIC wvw_DrawLine
+DYNAMIC wvw_DrawLineEx
+DYNAMIC wvw_DrawMenuBar
+DYNAMIC wvw_DrawOutline
+DYNAMIC wvw_DrawOutlineEx
+DYNAMIC wvw_DrawPicture
+DYNAMIC wvw_DrawProgressBar
+DYNAMIC wvw_DrawRectangle
+DYNAMIC wvw_DrawRoundRect
+DYNAMIC wvw_DrawScrollButton
+DYNAMIC wvw_DrawScrollThumbHorz
+DYNAMIC wvw_DrawScrollThumbVert
+DYNAMIC wvw_DrawShadedRect
+DYNAMIC wvw_DrawStatusBar
+DYNAMIC wvw_DrawTextBox
+DYNAMIC wvw_DrawToolButtonState
+DYNAMIC wvw_ebCreate
+DYNAMIC wvw_ebDestroy
+DYNAMIC wvw_ebEditable
+DYNAMIC wvw_ebEnable
+DYNAMIC wvw_ebGetSel
+DYNAMIC wvw_ebGetText
+DYNAMIC wvw_ebIsFocused
+DYNAMIC wvw_ebIsMultiline
+DYNAMIC wvw_ebSetCodeblock
+DYNAMIC wvw_ebSetFocus
+DYNAMIC wvw_ebSetFont
+DYNAMIC wvw_ebSetSel
+DYNAMIC wvw_ebSetText
+DYNAMIC wvw_EnableMaximize
+DYNAMIC wvw_EnableMenuItem
+DYNAMIC wvw_EnableShortcuts
+DYNAMIC wvw_EndMenu
+DYNAMIC wvw_FillRectangle
+DYNAMIC wvw_gbCreate
+DYNAMIC wvw_GetBitmapSize
+DYNAMIC wvw_GetClipboard
+DYNAMIC wvw_GetCtrlHandle
+DYNAMIC wvw_GetCursorPos
+DYNAMIC wvw_GetFontInfo
+DYNAMIC wvw_GetIconSize
+DYNAMIC wvw_GetKeyState
+DYNAMIC wvw_GetLastMenuEvent
+DYNAMIC wvw_GetMenu
+DYNAMIC wvw_GetPaintRect
+DYNAMIC wvw_GetPalette
+DYNAMIC wvw_GetRGBColor
+DYNAMIC wvw_GetRowColFromXY
+DYNAMIC wvw_GetScreenHeight
+DYNAMIC wvw_GetScreenWidth
+DYNAMIC wvw_GetSystemMenu
+DYNAMIC wvw_GetTitle
+DYNAMIC wvw_GetToolTipBkColor
+DYNAMIC wvw_GetToolTipTextColor
+DYNAMIC wvw_GetToolTipWidth
+DYNAMIC wvw_GetWindowHandle
+DYNAMIC wvw_GetXYFromRowCol
+DYNAMIC wvw_Get_hnd_Window
+DYNAMIC wvw_HIWORD
+DYNAMIC wvw_ImageList_Add
+DYNAMIC wvw_ImageList_AddMasked
+DYNAMIC wvw_InvalidateRect
+DYNAMIC wvw_IsLButtonPressed
+DYNAMIC wvw_IsWindow
+DYNAMIC wvw_Keyboard
+DYNAMIC wvw_KillTimer
+DYNAMIC wvw_lbAddString
+DYNAMIC wvw_lbSetCurSel
+DYNAMIC wvw_lCloseWindow
+DYNAMIC wvw_LoadBitmap
+DYNAMIC wvw_LoadBitmapEx
+DYNAMIC wvw_LoadFont
+DYNAMIC wvw_LoadIcon
+DYNAMIC wvw_LoadImage
+DYNAMIC wvw_LoadPen
+DYNAMIC wvw_LoadPicture
+DYNAMIC wvw_LOWORD
+DYNAMIC wvw_Maximize
+DYNAMIC wvw_MaxMaxCol
+DYNAMIC wvw_MaxMaxRow
+DYNAMIC wvw_MenuItem_SetBitmaps
+DYNAMIC wvw_MessageBox
+DYNAMIC wvw_Minimize
+DYNAMIC wvw_mouse_Col
+DYNAMIC wvw_mouse_Row
+DYNAMIC wvw_Move_Ready
+DYNAMIC wvw_nColOfs
+DYNAMIC wvw_nNumWindows
+DYNAMIC wvw_NoClose
+DYNAMIC wvw_nOpenWindow
+DYNAMIC wvw_NoStartupSubWindow
+DYNAMIC wvw_NoSysMenu
+DYNAMIC wvw_nRowOfs
+DYNAMIC wvw_nSetCurWindow
+DYNAMIC wvw_NumBMCache
+DYNAMIC wvw_OpenBitmap
+DYNAMIC wvw_OpenImage
+DYNAMIC wvw_PasteFromClipboard
+DYNAMIC wvw_pbCreate
+DYNAMIC wvw_pbDestroy
+DYNAMIC wvw_pbEnable
+DYNAMIC wvw_pbIsFocused
+DYNAMIC wvw_pbSetCodeblock
+DYNAMIC wvw_pbSetFocus
+DYNAMIC wvw_pbSetFont
+DYNAMIC wvw_pbSetStyle
+DYNAMIC wvw_pbVisible
+DYNAMIC wvw_pgCreate
+DYNAMIC wvw_pgDestroy
+DYNAMIC wvw_pgGetPos
+DYNAMIC wvw_pgSetPos
+DYNAMIC wvw_pgSetRange
+DYNAMIC wvw_ProcessMessages
+DYNAMIC wvw_rbCreate
+DYNAMIC wvw_Rectangle
+DYNAMIC wvw_RecurseCBlock
+DYNAMIC wvw_RedrawWindow
+DYNAMIC wvw_Restore
+DYNAMIC wvw_RestScreen
+DYNAMIC wvw_SaveScreen
+DYNAMIC wvw_sbAddPart
+DYNAMIC wvw_sbCreate
+DYNAMIC wvw_sbDestroy
+DYNAMIC wvw_sbGetParts
+DYNAMIC wvw_sbGetText
+DYNAMIC wvw_sbRefresh
+DYNAMIC wvw_sbSetFont
+DYNAMIC wvw_sbSetText
+DYNAMIC wvw_SelectFont
+DYNAMIC wvw_SetAltF4Close
+DYNAMIC wvw_SetAsNormal
+DYNAMIC wvw_SetBitmapResourceId
+DYNAMIC wvw_SetBkMode
+DYNAMIC wvw_SetBrush
+DYNAMIC wvw_SetClipboard
+DYNAMIC wvw_SetCodepage
+DYNAMIC wvw_SetControlText
+DYNAMIC wvw_SetDefCentreWindow
+DYNAMIC wvw_SetDefHCentreWindow
+DYNAMIC wvw_SetDefLineSpacing
+DYNAMIC wvw_SetDefLSpaceColor
+DYNAMIC wvw_SetDefVCentreWindow
+DYNAMIC wvw_SetFont
+DYNAMIC wvw_SetIcon
+DYNAMIC wvw_SetLastMenuEvent
+DYNAMIC wvw_SetLineSpacing
+DYNAMIC wvw_SetLSpaceColor
+DYNAMIC wvw_SetMainCoord
+DYNAMIC wvw_SetMaxBMCache
+DYNAMIC wvw_SetMenu
+DYNAMIC wvw_SetMenuKeyEvent
+DYNAMIC wvw_SetMouseMove
+DYNAMIC wvw_SetMousePos
+DYNAMIC wvw_SetOnTop
+DYNAMIC wvw_SetPaintRefresh
+DYNAMIC wvw_SetPalette
+DYNAMIC wvw_SetParent
+DYNAMIC wvw_SetPen
+DYNAMIC wvw_SetPointer
+DYNAMIC wvw_SetPopupMenu
+DYNAMIC wvw_SetTimer
+DYNAMIC wvw_SetTitle
+DYNAMIC wvw_SetToolTip
+DYNAMIC wvw_SetToolTipActive
+DYNAMIC wvw_SetToolTipBkColor
+DYNAMIC wvw_SetToolTipMargin
+DYNAMIC wvw_SetToolTipText
+DYNAMIC wvw_SetToolTipTextColor
+DYNAMIC wvw_SetToolTipTitle
+DYNAMIC wvw_SetToolTipWidth
+DYNAMIC wvw_SetVertCaret
+DYNAMIC wvw_SetWindowCentre
+DYNAMIC wvw_SetWindowPos
+DYNAMIC wvw_SetWinStyle
+DYNAMIC wvw_ShowWindow
+DYNAMIC wvw_Size_Ready
+DYNAMIC wvw_stCreate
+DYNAMIC wvw_stSetFont
+DYNAMIC wvw_stSetText
+DYNAMIC wvw_tbAddButton
+DYNAMIC wvw_tbButtonCount
+DYNAMIC wvw_tbCmd2Index
+DYNAMIC wvw_tbCreate
+DYNAMIC wvw_tbDelButton
+DYNAMIC wvw_tbDestroy
+DYNAMIC wvw_tbEnableButton
+DYNAMIC wvw_tbGetButtonRect
+DYNAMIC wvw_tbIndex2Cmd
+DYNAMIC wvw_ToolBarAddButtons
+DYNAMIC wvw_TrackPopupMenu
+DYNAMIC wvw_UnreachedBr
+DYNAMIC wvw_UpdateWindow
+DYNAMIC wvw_Window2Bitmap
+DYNAMIC wvw_xbCreate
+DYNAMIC wvw_xbDestroy
+DYNAMIC wvw_xbEnable
+DYNAMIC wvw_xbInfo
+DYNAMIC wvw_xbUpdate
+DYNAMIC wvw_xbVisible
+DYNAMIC wvw_XReposWindow
+DYNAMIC wvw_YesClose
+DYNAMIC wvw__MakeDlgTemplate
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__GTWVW__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

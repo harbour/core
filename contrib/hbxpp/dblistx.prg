@@ -1,5 +1,5 @@
 /*
- * XPP compatible dbList() function
+ * Xbase++ compatible dbList() function
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *
@@ -42,7 +42,7 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
-*/
+ */
 
 FUNCTION dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )
    RETURN __dbList( abEval, lOff, lAll, bFor, bWhile, nNext, nRecord, lRest, lToPrint, cToFileName )

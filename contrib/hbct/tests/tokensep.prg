@@ -56,32 +56,28 @@ PROCEDURE Main()
    LOCAL cStr := ".,.This.,.is.,.a.,.test!"
    LOCAL ni
 
-   ctinit()
-
    ? "Begin test of TokenSep()"
    ?
 
-   ? '  Tokenizing the string "' + cStr + '"'
+   ? '  Tokenizing the string', '"' + cStr + '"'
    ? '    with skip width == 1 and ".,!" as tokenizer list:'
    ?
    FOR ni := 1 TO NumToken( cStr, ".,!", 1 )
       ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".,!", ni, 1 ) + ;
-         '") is tokenized by "' + TokenSep( .F. ) + '" and "' + TokenSep( .T. ) + '"'
+         '") is tokenized by', '"' + TokenSep( .F. ) + '"', "and", '"' + TokenSep( .T. ) + '"'
    NEXT
 
    ?
-   ? '  Tokenizing the string "' + cStr + '"'
+   ? '  Tokenizing the string', '"' + cStr + '"'
    ? '    with skip width == 3 and ".,!" as tokenizer list:'
    ?
    FOR ni := 1 TO NumToken( cStr, ".,!", 3 )
       ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".,!", ni, 3 ) + ;
-         '") is tokenized by "' + TokenSep( .F. ) + '" and "' + TokenSep( .T. ) + '"'
+         '") is tokenized by', '"' + TokenSep( .F. ) + '"', "and", '"' + TokenSep( .T. ) + '"'
    NEXT
 
    ?
    ? "End test of TokenSep()"
    ?
-
-   ctexit()
 
    RETURN

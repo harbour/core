@@ -1,18 +1,14 @@
-//
-// DynObj
-//
-// Implementation of dynamic objects in Harbour
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
-//
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* Implementation of dynamic objects in Harbour */
+
+#include "hbclass.ch"
 
 PROCEDURE Main()
 
    LOCAL oForm := TForm():New()
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    /* Let's add an inline at run-time. Should already be possible */
@@ -22,7 +18,7 @@ PROCEDURE Main()
    __objAddInline( oForm, "CalcArea", ;
       {| self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "What is the Form area ?"
@@ -32,13 +28,13 @@ PROCEDURE Main()
 
    __objAddMethod( oForm, "Smile", @Smile() )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Smile please "
    oForm:Smile()
 
-   Pause()
+   WAIT
 
    ? "Data items before"
    ? hb_ValToExp( oForm )
@@ -52,7 +48,7 @@ PROCEDURE Main()
    ? "Data items after"
    ? hb_ValToExp( oForm )
 
-   Pause()
+   WAIT
 
    ? "Let's attach a bigger smile"
 
@@ -69,22 +65,22 @@ PROCEDURE Main()
    ? "What is the Form area ?"
    ? oForm:CalcArea()
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Delete CalcArea"
    __objDelInline( oForm, "CalcArea" )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
    ? "Delete Smile"
    __objDelMethod( oForm, "Smile" )
 
-   ? "What methods are in the class :"
+   ? "What methods are in the class:"
    ? hb_ValToExp( __objGetMethodList( oForm ) )
 
-   Pause()
+   WAIT
 
    ? "Data items before"
    ? hb_ValToExp( oForm )
@@ -96,34 +92,27 @@ PROCEDURE Main()
    ? "Data items after"
    ? hb_ValToExp( oForm )
 
-/* oForm:cHelp := "Please crash" */
+#if 0
+   oForm:cHelp := "Please crash"
+#endif
 
    RETURN
 
-FUNCTION TForm()
+CREATE CLASS TForm STATIC
 
-   STATIC s_oClass
+   VAR cText
 
-   IF s_oClass == NIL
-      s_oClass := HBClass():New( "TFORM" )    // starts a new class definition
+   VAR nTop
+   VAR nLeft
+   VAR nBottom
+   VAR nRight
 
-      s_oClass:AddData( "cText" )           // define this class objects datas
-      s_oClass:AddData( "nTop" )
-      s_oClass:AddData( "nLeft" )
-      s_oClass:AddData( "nBottom" )
-      s_oClass:AddData( "nRight" )
+   METHOD New()
+   METHOD Show() INLINE ::cText
 
-      s_oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      s_oClass:AddInline( "Show", {| self | ::cText } )
+ENDCLASS
 
-      s_oClass:Create()                     // builds this class
-   ENDIF
-
-   RETURN s_oClass:Instance()                  // builds an object of this class
-
-STATIC FUNCTION New()
-
-   LOCAL Self := QSelf()
+METHOD New() CLASS TForm
 
    ::nTop    := 10
    ::nLeft   := 10
@@ -134,26 +123,16 @@ STATIC FUNCTION New()
 
 STATIC FUNCTION Smile()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
-   IF ::CalcArea() == 300
-      ? ":-)"
-   ELSE
-      ? ":-("
-   ENDIF
+   ? iif( ::CalcArea() == 300, ":-)", ":-(" )
 
-   RETURN self
+   RETURN Self
 
 STATIC FUNCTION BigSmile()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ? ":-)))"
 
-   RETURN self
-
-FUNCTION Pause()
-
-   WAIT "Pause:"
-
-   RETURN NIL
+   RETURN Self

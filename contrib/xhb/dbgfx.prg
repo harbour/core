@@ -90,34 +90,20 @@ FUNCTION hb_EmptyLogFileOnOff( lOnOff )
 
 PROCEDURE hb_ToLogFile( cLogFile, ... )
 
-   LOCAL nHandle
+   LOCAL hFile
 
-   IF ! s_lToLogFile
-      RETURN
-   ENDIF
+   IF s_lToLogFile
 
-   __defaultNIL( @cLogFile, "logfile.log" )
+      hFile := hb_vfOpen( hb_defaultValue( cLogFile, "logfile.log" ), FO_CREAT + iif( s_lEmptyLogFile, FO_TRUNC, 0 ) + FO_WRITE + FO_SHARED )
 
-   IF cLogFile != NIL
-
-      IF ! s_lEmptyLogFile .AND. hb_FileExists( cLogFile )
-         nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
-      ELSE
-         nHandle := FCreate( cLogFile )
-         s_lEmptyLogFile := .F.
-         // After I have create it I have to close and open in shared way
-         IF FError() == 0 .AND. nHandle != F_ERROR
-            FClose( nHandle )
-            nHandle := FOpen( cLogFile, FO_READWRITE + FO_SHARED )
-         ENDIF
-      ENDIF
+      s_lEmptyLogFile := .F.
 
       // Writing
-      IF nHandle != F_ERROR
-         FSeek( nHandle, 0, FS_END )
-         FWrite( nHandle, sprintf( ... ) )
-         FWrite( nHandle, hb_eol() )
-         FClose( nHandle )
+      IF hFile != NIL
+         hb_vfSeek( hFile, 0, FS_END )
+         hb_vfWrite( hFile, sprintf( ... ) )
+         hb_vfWrite( hFile, hb_eol() )
+         hb_vfClose( hFile )
       ENDIF
    ENDIF
 

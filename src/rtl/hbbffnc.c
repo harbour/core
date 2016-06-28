@@ -85,12 +85,13 @@ HB_FUNC( HB_BLOWFISHENCRYPT )
 
    if( bf && pData )
    {
-      HB_SIZE nLen = hb_itemGetCLen( pData ), nSize;
+      HB_SIZE nLen = hb_itemGetCLen( pData );
 
       if( nLen )
       {
          char * pszData;
          HB_BOOL fRaw = hb_parl( 3 );
+         HB_SIZE nSize;
 
          /* In raw mode passed string is padded to 8 bytes with '\0'
           * otherwise ANSI X.923 padding is used
@@ -131,13 +132,14 @@ HB_FUNC( HB_BLOWFISHDECRYPT )
 
    if( bf && pData )
    {
-      HB_SIZE nSize = hb_itemGetCLen( pData ), nLen;
+      HB_SIZE nSize = hb_itemGetCLen( pData );
 
       if( nSize >= 8 && ( nSize & 0x07 ) == 0 )
       {
          const char * pszSource;
          char * pszData;
          HB_BOOL fRaw = hb_parl( 3 );
+         HB_SIZE nLen;
 
          pszData = ( char * ) hb_xgrab( nSize + ( fRaw ? 1 : 0 ) );
          pszSource = hb_itemGetCPtr( pData );
@@ -205,13 +207,14 @@ HB_FUNC( HB_BLOWFISHENCRYPT_CFB )
 
    if( bf && pData )
    {
-      HB_SIZE nLen = hb_itemGetCLen( pData ), n;
+      HB_SIZE nLen = hb_itemGetCLen( pData );
 
       if( nLen )
       {
          const char * pszSource = hb_itemGetCPtr( pData );
          char * pszData = ( char * ) hb_xgrab( nLen + 1 );
          HB_BYTE vect[ HB_BF_CIPHERBLOCK ];
+         HB_SIZE n;
 
          hb_bf_initvect( vect );
 
@@ -241,13 +244,14 @@ HB_FUNC( HB_BLOWFISHDECRYPT_CFB )
 
    if( bf && pData )
    {
-      HB_SIZE nLen = hb_itemGetCLen( pData ), n;
+      HB_SIZE nLen = hb_itemGetCLen( pData );
 
       if( nLen )
       {
          const char * pszSource = hb_itemGetCPtr( pData );
          char * pszData = ( char * ) hb_xgrab( nLen + 1 );
          HB_BYTE vect[ HB_BF_CIPHERBLOCK ];
+         HB_SIZE n;
 
          hb_bf_initvect( vect );
 

@@ -1,7 +1,7 @@
 /*
- * demonstration/test code for using more then one console window.
- *    It needs GT driver which supports such functionality, i.e.
- *    GTWVT in MS-Windows or GTXWC in XWindow.
+ * Demonstration/test code for using more then one console window.
+ * It needs GT driver which supports such functionality, i.e.
+ * GTWVT in MS-Windows or GTXWC in XWindow.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -11,15 +11,16 @@
 
 #ifdef __PLATFORM__WINDOWS
    #if ! defined( __HBSCRIPT__HBSHELL )
-      REQUEST HB_GT_WVT_DEFAULT
+      request HB_GT_WVT_DEFAULT
    #endif
-   #define THREAD_GT "WVT"
+   #define THREAD_GT  "WVT"
 #else
-   REQUEST HB_GT_STD_DEFAULT
-   #define THREAD_GT "XWC"
+   request HB_GT_STD_DEFAULT
+   #define THREAD_GT  "XWC"
 #endif
 
-proc main()
+procedure main()
+
    local pGT, pGT1, pGT2
 
 #if defined( __HBSCRIPT__HBSHELL )
@@ -66,4 +67,4 @@ proc main()
 
    wait "Press any key to exit"
 
-return
+   return

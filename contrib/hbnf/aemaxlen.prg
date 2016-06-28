@@ -1,25 +1,16 @@
-/*
- * Author....: Ralph Oliver,  TRANSCOM SYSTEMS
- * CIS ID....: 74030,703
- *
- * This is an original work by Ralph Oliver and is placed in the
- * public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.1   15 Aug 1991 23:05:38   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.0   07 Jun 1991 23:03:12   GLENN
- * Initial revision.
- *
- *
+/* This is an original work by Ralph Oliver (TRANSCOM SYSTEMS)
+   and is placed in the public domain.
+
+      Rev 1.1   15 Aug 1991 23:05:38   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.0   07 Jun 1991 23:03:12   GLENN
+   Initial revision.
  */
 
 FUNCTION ft_AEMaxLen( aArray, nDimension, nStart, nCount )
 
-   LOCAL i, nLast, nMaxlen := 0
+   LOCAL i, nLast, nLen, nMaxlen := 0
 
    __defaultNIL( @nDimension, 1 )
    __defaultNIL( @nStart, 1 )
@@ -29,22 +20,16 @@ FUNCTION ft_AEMaxLen( aArray, nDimension, nStart, nCount )
 
    FOR i := nStart TO nLast
 
-      SWITCH ValType( aArray[ i ] )
+      IF aArray[ i ] != NIL
 
-      CASE "C"
-         nMaxlen := Max( nMaxlen, Len( aArray[ i ] ) )
-         EXIT
+         SWITCH ValType( aArray[ i ] )
+         CASE "C"  ; nLen := Len( aArray[ i ] ) ; EXIT
+         CASE "A"  ; nLen := Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) ) ; EXIT
+         OTHERWISE ; nLen := Len( LTrim( Transform( aArray[ i ], "@X" ) ) )
+         ENDSWITCH
 
-      CASE "A"
-         nMaxlen := Max( nMaxlen, ;
-            Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) ) )
-         EXIT
-
-      OTHERWISE
-         nMaxlen := Max( nMaxlen, ;
-            Len( LTrim( Transform( aArray[ i ], "@X" ) ) ) )
-
-      ENDSWITCH
+         nMaxlen := Max( nMaxlen, nLen )
+      ENDIF
    NEXT
 
    RETURN nMaxlen

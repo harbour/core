@@ -1,7 +1,7 @@
 /*
  * Low-level Windows object handling functions
  *
- * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2015 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,6 +45,8 @@
  */
 
 #include "hbwapi.h"
+#include "hbapierr.h"
+#include "hbapiitm.h"
 
 static HB_GARBAGE_FUNC( s_gc_HDC_release )
 {
@@ -71,7 +73,7 @@ void hbwapi_ret_HDC( HDC p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC * ), &s_gc_HDC_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HDC ), &s_gc_HDC_funcs );
 
       *ph = p;
 
@@ -81,11 +83,16 @@ void hbwapi_ret_HDC( HDC p )
       hb_retptr( NULL );
 }
 
+HB_BOOL hbwapi_is_HDC( int iParam )
+{
+   return hb_parptrGC( &s_gc_HDC_funcs, iParam ) != NULL;
+}
+
 HDC hbwapi_par_HDC( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HDC_funcs, iParam );
 
-   return ph ? ( HDC ) *ph : ( HDC ) hb_parptr( iParam );
+   return ph ? ( HDC ) *ph : ( HDC ) __hbwapi_par_handle( iParam );
 }
 
 static HB_GARBAGE_FUNC( s_gc_HPEN_release )
@@ -113,7 +120,7 @@ void hbwapi_ret_HPEN( HPEN p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN * ), &s_gc_HPEN_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HPEN ), &s_gc_HPEN_funcs );
 
       *ph = p;
 
@@ -123,11 +130,16 @@ void hbwapi_ret_HPEN( HPEN p )
       hb_retptr( NULL );
 }
 
+HB_BOOL hbwapi_is_HPEN( int iParam )
+{
+   return hb_parptrGC( &s_gc_HPEN_funcs, iParam ) != NULL;
+}
+
 HPEN hbwapi_par_HPEN( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HPEN_funcs, iParam );
 
-   return ph ? ( HPEN ) *ph : NULL;
+   return ph ? ( HPEN ) *ph : ( HPEN ) __hbwapi_par_handle( iParam );
 }
 
 static HB_GARBAGE_FUNC( s_gc_HBRUSH_release )
@@ -155,7 +167,7 @@ void hbwapi_ret_HBRUSH( HBRUSH p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HBRUSH * ), &s_gc_HBRUSH_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HBRUSH ), &s_gc_HBRUSH_funcs );
 
       *ph = p;
 
@@ -165,11 +177,16 @@ void hbwapi_ret_HBRUSH( HBRUSH p )
       hb_retptr( NULL );
 }
 
+HB_BOOL hbwapi_is_HBRUSH( int iParam )
+{
+   return hb_parptrGC( &s_gc_HBRUSH_funcs, iParam ) != NULL;
+}
+
 HBRUSH hbwapi_par_HBRUSH( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HBRUSH_funcs, iParam );
 
-   return ph ? ( HBRUSH ) *ph : NULL;
+   return ph ? ( HBRUSH ) *ph : ( HBRUSH ) __hbwapi_par_handle( iParam );
 }
 
 static HB_GARBAGE_FUNC( s_gc_HFONT_release )
@@ -197,7 +214,7 @@ void hbwapi_ret_HFONT( HFONT p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HFONT * ), &s_gc_HFONT_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( HFONT ), &s_gc_HFONT_funcs );
 
       *ph = p;
 
@@ -207,11 +224,16 @@ void hbwapi_ret_HFONT( HFONT p )
       hb_retptr( NULL );
 }
 
+HB_BOOL hbwapi_is_HFONT( int iParam )
+{
+   return hb_parptrGC( &s_gc_HFONT_funcs, iParam ) != NULL;
+}
+
 HFONT hbwapi_par_HFONT( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_HFONT_funcs, iParam );
 
-   return ph ? ( HFONT ) *ph : NULL;
+   return ph ? ( HFONT ) *ph : ( HFONT ) __hbwapi_par_handle( iParam );
 }
 
 static HB_GARBAGE_FUNC( s_gc_PDEVMODE_release )
@@ -239,7 +261,7 @@ void hbwapi_ret_PDEVMODE( PDEVMODE p )
 {
    if( p )
    {
-      void ** ph = ( void ** ) hb_gcAllocate( sizeof( PDEVMODE * ), &s_gc_PDEVMODE_funcs );
+      void ** ph = ( void ** ) hb_gcAllocate( sizeof( PDEVMODE ), &s_gc_PDEVMODE_funcs );
 
       *ph = p;
 
@@ -249,9 +271,116 @@ void hbwapi_ret_PDEVMODE( PDEVMODE p )
       hb_retptr( NULL );
 }
 
+HB_BOOL hbwapi_is_PDEVMODE( int iParam )
+{
+   return hb_parptrGC( &s_gc_PDEVMODE_funcs, iParam ) != NULL;
+}
+
 PDEVMODE hbwapi_par_PDEVMODE( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gc_PDEVMODE_funcs, iParam );
 
    return ph ? ( PDEVMODE ) *ph : NULL;
+}
+
+HB_FUNC( __WAPI_TYPE )
+{
+   if(      hbwapi_is_HDC( 1 ) )      hb_retc_const( "HDC" );
+   else if( hbwapi_is_HPEN( 1 ) )     hb_retc_const( "HPEN" );
+   else if( hbwapi_is_HBRUSH( 1 ) )   hb_retc_const( "HBRUSH" );
+   else if( hbwapi_is_HFONT( 1 ) )    hb_retc_const( "HFONT" );
+   else if( hbwapi_is_PDEVMODE( 1 ) ) hb_retc_const( "PDEVMODE" );
+   else if( HB_ISPOINTER( 1 ) )       hb_retc_const( "HANDLE" );
+   else                               hb_retc_null();
+}
+
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
+static int s_iDbgUnsafeMode = 2;  /* 0 = disallow, 1 = trace, 2 = trace + RTE, other = allow */
+
+HB_FUNC( __WAPI_DBGUNSAFEHANDLES )
+{
+   hb_retni( s_iDbgUnsafeMode );
+
+   if( HB_ISNUM( 1 ) )
+      s_iDbgUnsafeMode = hb_parni( 1 );
+}
+
+/* The goal is to minimize numeric pointers circulating
+   on .prg level, so make them visible. */
+static HB_BOOL s_handle_trace( int n )
+{
+   if( hb_vmInternalsEnabled() )
+   {
+      switch( s_iDbgUnsafeMode )
+      {
+         case 0:
+            return HB_FALSE;
+         case 1:
+         case 2:
+         {
+            char procname[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 5 ];
+            char file[ HB_PATH_MAX ];
+            HB_USHORT line;
+
+            hb_procinfo( 0, procname, &line, file );
+
+            HB_TRACE( HB_TR_ALWAYS, ( "%s:%s:%i: __hbwapi_par*_handle(%d)", file, procname, line, n ) );
+
+            if( s_iDbgUnsafeMode == 2 )
+               hb_errRT_BASE( EG_ARG, 19000, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         }
+      }
+
+      return HB_TRUE;
+   }
+   else
+      return HB_FALSE;
+}
+#else
+HB_FUNC( __WAPI_DBGUNSAFEHANDLES ) { ; }
+#endif
+
+void * __hbwapi_par_handle( int n )
+{
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
+   if( HB_ISNUM( n ) )
+      return s_handle_trace( n ) ? ( void * ) ( HB_PTRUINT ) hb_parnint( n ) : NULL;
+   else
+#endif
+      return hb_parptr( n );
+}
+
+void * __hbwapi_parv_handle( int n, int i )
+{
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
+   if( HB_ISNUM( n ) )
+      return s_handle_trace( n ) ? ( void * ) ( HB_PTRUINT ) hb_parvnint( n, i ) : NULL;
+   else
+#endif
+      return hb_parvptr( n, i );
+}
+
+void * hbwapi_itemGet_HANDLE( PHB_ITEM pItem )
+{
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
+   if( pItem && HB_IS_NUMERIC( pItem ) )
+      return ( void * ) ( HB_PTRUINT ) hb_itemGetNInt( pItem );
+   else
+#endif
+      return hb_itemGetPtr( pItem );
+}
+
+/* pArray must not be NULL */
+void * hbwapi_arrayGet_HANDLE( PHB_ITEM pArray, HB_SIZE nIndex )
+{
+   return hbwapi_itemGet_HANDLE( hb_arrayGetItemPtr( pArray, nIndex ) );
+}
+
+HB_BOOL hbwapi_is_HANDLE( int iParam )
+{
+#if defined( __HBWIN_WITH_UNSAFE_HANDLES )
+   return hb_param( iParam, HB_IT_POINTER | HB_IT_NUMERIC ) != NULL;
+#else
+   return hb_param( iParam, HB_IT_POINTER ) != NULL;
+#endif
 }

@@ -1,11 +1,8 @@
 /*
  * Document generator base class
  *
- * Copyright 2009 April White <april users.sourceforge.net>
- *
- * Portions of this project are based on hbdoc
- *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
- *    <TODO: list gen... methods used>
+ * Copyright 2009 April White <bright.tigra gmail.com>
+ * Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br> (Portions of this project are based on hbdoc)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,63 +46,63 @@
  */
 
 #include "hbclass.ch"
-#include "hbdoc.ch"
 
-#define DOCUMENT_ 1
-#define INDEX_ 2
+#include "fileio.ch"
+
+#define DOCUMENT_  1
+#define INDEX_     2
 
 CREATE CLASS TPLGenerate
 
-   EXPORTED:
-   // ~ PROTECTED:
-   VAR nHandle AS NUMERIC
-   VAR cFolder AS STRING
+   METHOD NewIndex( cDir, cFilename, cTitle, cExtension )
+   METHOD NewDocument( cDir, cFilename, cTitle, cExtension )
+   METHOD AddEntry( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
+   METHOD AddReference( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
+   METHOD BeginSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth++
+   METHOD EndSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth--
+   METHOD Generate() INLINE NIL
+   METHOD IsIndex() INLINE ::nType == INDEX_
+
+   PROTECTED:
+
+   METHOD New( cDir, cFilename, cTitle, cExtension, nType ) HIDDEN
+
+   VAR nType AS INTEGER
+   VAR Depth AS INTEGER INIT 0
+
+   VAR hFile
+   VAR cDir AS STRING
    VAR cFilename AS STRING
    VAR cTitle AS STRING
    VAR cExtension AS STRING
 
-   METHOD NewIndex( cFolder, cFilename, cTitle, cExtension )
-   METHOD NewDocument( cFolder, cFilename, cTitle, cExtension )
-   METHOD AddEntry( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
-   METHOD AddReference( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
-   METHOD BeginSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth++
-   METHOD EndSection( cSection, cFilename ) INLINE  HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth--
-   METHOD Generate() INLINE NIL
-   METHOD IsIndex() INLINE ( ::nType == INDEX_ )
-
-   PROTECTED:
-   METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
-   VAR nType AS INTEGER
-   VAR Depth AS INTEGER INIT 0
-
 ENDCLASS
 
-METHOD NewIndex( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
+METHOD NewIndex( cDir, cFilename, cTitle, cExtension ) CLASS TPLGenerate
 
-   self:New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
-
-   RETURN self
-
-METHOD NewDocument( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
-
-   self:New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
+   ::New( cDir, cFilename, cTitle, cExtension, INDEX_ )
 
    RETURN self
 
-METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
+METHOD NewDocument( cDir, cFilename, cTitle, cExtension ) CLASS TPLGenerate
 
-   ::nHandle := 0
-   ::cFolder := cFolder
+   ::New( cDir, cFilename, cTitle, cExtension, DOCUMENT_ )
+
+   RETURN self
+
+METHOD New( cDir, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
+
+   ::cDir := cDir
    ::cFilename := cFilename
    ::cTitle := cTitle
    ::cExtension := cExtension
    ::nType := nType
 
-   IF ! hb_DirExists( ::cFolder )
-      OutStd( hb_eol() + "Creating folder '" + ::cFolder + "'" )
-      hb_DirCreate( ::cFolder )
+   IF ! hb_vfDirExists( ::cDir )
+      OutStd( hb_eol() + "Creating directory", "'" + ::cDir + "'" )
+      hb_vfDirMake( ::cDir )
    ENDIF
 
-   ::nHandle := FCreate( ::cFolder + hb_ps() + ::cFilename + ::cExtension )
+   ::hFile := hb_vfOpen( ::cDir + hb_ps() + ::cFilename + ::cExtension, FO_CREAT + FO_TRUNC + FO_WRITE )
 
    RETURN self

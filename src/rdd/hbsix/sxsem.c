@@ -1,8 +1,8 @@
 /*
  * SIX compatible functions:
- *          sx_MakeSem()
- *          sx_KillSem()
- *          sx_IsSem()
+ *       sx_MakeSem()
+ *       sx_KillSem()
+ *       sx_IsSem()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -137,7 +137,6 @@ static PHB_FILE hb_sxSemOpen( char * szFileName, HB_BOOL * pfNewFile )
 HB_FUNC( SX_MAKESEM )
 {
    char szFileName[ HB_PATH_MAX ];
-   HB_BYTE buffer[ 2 ];
    int iUsers = -1;
    HB_BOOL fError = HB_FALSE, fNewFile = HB_FALSE;
 
@@ -147,6 +146,8 @@ HB_FUNC( SX_MAKESEM )
 
       if( pFile != NULL )
       {
+         HB_BYTE buffer[ 2 ];
+
          if( fNewFile )
             iUsers = 1;
          else
@@ -174,7 +175,6 @@ HB_FUNC( SX_MAKESEM )
 HB_FUNC( SX_KILLSEM )
 {
    char szFileName[ HB_PATH_MAX ];
-   HB_BYTE buffer[ 2 ];
    int iUsers = -1;
 
    if( hb_sxSemName( szFileName ) )
@@ -183,6 +183,7 @@ HB_FUNC( SX_KILLSEM )
 
       if( pFile != NULL )
       {
+         HB_BYTE buffer[ 2 ];
          if( hb_fileReadAt( pFile, buffer, 2, 0 ) == 2 )
          {
             iUsers = HB_GET_LE_INT16( buffer ) - 1;

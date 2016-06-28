@@ -1,5 +1,5 @@
 /*
- * demonstration/test code for GT full screen color output
+ * Demonstration/test code for GT full screen color output
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -55,7 +55,7 @@
    #include <unistd.h>
 #endif
 
-#define BUFFER_SIZE  8192
+#define BUFFER_SIZE  65536
 
 static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest, PHB_ITEM pBlock )
 {
@@ -93,7 +93,7 @@ static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest, PHB_IT
       do
       {
          pDest = hb_fileExtOpen( pszDest, NULL,
-                                 FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                 FO_WRITE | FO_EXCLUSIVE | FO_PRIVATE |
                                  FXO_TRUNCATE | FXO_DEFAULTS | FXO_SHARELOCK,
                                  NULL, pError );
          if( pDest == NULL )

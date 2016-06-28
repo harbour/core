@@ -183,18 +183,31 @@ PHB_ITEM ct_error_subst( HB_USHORT uiSeverity, HB_ERRCODE errGenCode, HB_ERRCODE
 }
 
 /* argument error behaviour */
-static int s_iArgErrMode = CT_ARGERR_IGNORE;
+static void s_iArgErrMode_init( void * cargo )
+{
+   int * iArgErrMode = ( int * ) cargo;
+
+   *iArgErrMode = CT_ARGERR_IGNORE;
+}
+
+static HB_TSD_NEW( s_iArgErrMode, sizeof( int ), s_iArgErrMode_init, NULL );
 
 void ct_setargerrormode( int iMode )
 {
+   int * iArgErrMode = ( int * ) hb_stackGetTSD( &s_iArgErrMode );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setargerrormode(%i)", iMode ) );
-   s_iArgErrMode = iMode;
+
+   *iArgErrMode = iMode;
 }
 
 int ct_getargerrormode( void )
 {
+   int * iArgErrMode = ( int * ) hb_stackGetTSD( &s_iArgErrMode );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getargerrormode()" ) );
-   return s_iArgErrMode;
+
+   return *iArgErrMode;
 }
 
 HB_FUNC( CSETARGERR )
@@ -232,26 +245,24 @@ HB_FUNC( CSETARGERR )
    }
 }
 
-/* initialization */
-static int s_initialized = 0;   /* TODO: make this thread safe */
+#if defined( HB_LEGACY_LEVEL5 )
 
 HB_FUNC( CTCINIT )
 {
-   if( s_initialized == 0 )
-   {
-      int iSuccess;
-
-      iSuccess = ct_str_init();
-      iSuccess |= ct_math_init();
-      s_initialized = iSuccess;
-   }
-   hb_retl( s_initialized );
+   hb_retl( HB_TRUE );
 }
 
 HB_FUNC( CTCEXIT )
 {
-   ct_str_exit();
-   ct_math_exit();
-   s_initialized = 0;
-   hb_ret();
 }
+
+HB_FUNC( CTINIT )
+{
+   hb_retl( HB_TRUE );
+}
+
+HB_FUNC( CTEXIT )
+{
+}
+
+#endif

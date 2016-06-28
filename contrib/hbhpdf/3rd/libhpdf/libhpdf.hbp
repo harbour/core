@@ -8,8 +8,6 @@
 
 -o${hb_targetname}
 
--hbx=
-
 -warn=low
 -cpp=no
 -pic
@@ -18,7 +16,7 @@
 -depcontrol=png:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=png:${HB_WITH_PNG}
 -depincpath=png:/usr/include
--depincpath=png:/opt/local/include
+-depincpath=png:/usr/local/include
 -depincpathlocal=png:../../../../src/3rd/png
 
 -depkeyhead=zlib:zlib.h
@@ -92,12 +90,13 @@ hpdfu3d.c
 hpdfutil.c
 hpdfxref.c
 
-# ORIGIN http://libharu.org/
-# VER    2.3.0RC3
+# For master head, use: https://github.com/libharu/libharu/archive/master.zip
+
+# ORIGIN https://github.com/libharu/libharu
 # URL    https://github.com/libharu/libharu/archive/RELEASE_2_3_0RC3.zip
 # DIFF   libhpdf.dif
 #
-# MAP    README
+# MAP    README                         README.txt
 # MAP    src/hpdf_3dmeasure.c           hpdf3dme.c
 # MAP    src/hpdf_annotation.c          hpdfanno.c
 # MAP    src/hpdf_array.c               hpdfarra.c

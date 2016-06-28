@@ -2,6 +2,7 @@
  * Set functions
  *
  * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour) (hb_osEncode(), hb_osDecode())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,17 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_osEncode()
- *    hb_osDecode()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -202,7 +192,7 @@ static const char * is_devicename( const char * szFileName )
               "LPT1", "LPT2", "LPT3",
               "COM1", "COM2", "COM3", "COM4", "COM5",
               "COM6", "COM7", "COM8", "COM9" };
-      int iSkip = 0, iLen, iFrom, iTo;
+      int iSkip = 0, iLen;
 
       if( ( szFileName[ 0 ] == '\\' || szFileName[ 0 ] == '/' ) &&
           ( szFileName[ 1 ] == '\\' || szFileName[ 1 ] == '/' ) )
@@ -217,6 +207,7 @@ static const char * is_devicename( const char * szFileName )
          }
          if( szFileName[ 2 ] != '\\' && szFileName[ 2 ] != '/' )
          {
+            int iFrom, iTo;
             for( iFrom = 2, iTo = 0; szFileName[ iFrom ]; ++iFrom )
             {
                if( szFileName[ iFrom ] == '\\' || szFileName[ iFrom ] == '/' )
@@ -232,6 +223,8 @@ static const char * is_devicename( const char * szFileName )
       iLen = ( int ) strlen( szFileName + iSkip );
       if( iLen >= 3 && iLen <= 4 )
       {
+         int iFrom, iTo;
+
          if( iLen == 3 )
          {
             iFrom = 0;
@@ -434,7 +427,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
     */
    if( old_century_setting != new_century_setting )
    {
-      int count, digit, size, y_size, y_start, y_stop;
+      int count, size, y_size, y_start, y_stop;
       char * szDateFormat, * szNewFormat;
 
       /* Convert to upper case and determine where year is */
@@ -443,7 +436,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
       size = ( int ) strlen( szDateFormat );
       for( count = 0; count < size; count++ )
       {
-         digit = HB_TOUPPER( ( HB_UCHAR ) szDateFormat[ count ] );
+         int digit = HB_TOUPPER( ( HB_UCHAR ) szDateFormat[ count ] );
          if( digit == 'Y' )
          {
             if( y_start == -1 )
@@ -1103,6 +1096,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->hb_set_century = HB_FALSE;
    pSet->hb_set_prndevice = HB_FALSE;
    pSet->HB_SET_COLOR = ( char * ) hb_xgrab( HB_CLRSTR_LEN + 1 );
+   /* NOTE: color must be synced with the one in IsDefColor() function */
    hb_strncpy( pSet->HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", HB_CLRSTR_LEN );
    pSet->HB_SET_CONFIRM = HB_FALSE;
    pSet->HB_SET_CONSOLE = HB_TRUE;
@@ -1253,7 +1247,8 @@ PHB_SET_STRUCT hb_setClone( PHB_SET_STRUCT pSrc )
    if( pSet->HB_SET_HBOUTLOG )     pSet->HB_SET_HBOUTLOG     = hb_strdup( pSet->HB_SET_HBOUTLOG );
    if( pSet->HB_SET_HBOUTLOGINFO ) pSet->HB_SET_HBOUTLOGINFO = hb_strdup( pSet->HB_SET_HBOUTLOGINFO );
 
-   hb_fsAddSearchPath( pSet->HB_SET_PATH, &pSet->hb_set_path );
+   if( pSet->HB_SET_PATH )
+      hb_fsAddSearchPath( pSet->HB_SET_PATH, &pSet->hb_set_path );
 
    return pSet;
 }
@@ -1332,13 +1327,14 @@ int hb_setListenerRemove( int listener )
 HB_BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_SET_STRUCT pSet = hb_stackSetStruct();
    HB_BOOL fResult = HB_FALSE;
-   char * szValue;
-   int iValue;
 
    if( pItem )
    {
+      PHB_SET_STRUCT pSet = hb_stackSetStruct();
+      char * szValue;
+      int iValue;
+
       hb_setListenerNotify( set_specifier, HB_SET_LISTENER_BEFORE );
 
       switch( set_specifier )

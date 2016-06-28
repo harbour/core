@@ -59,7 +59,7 @@ HB_FUNC( CHR )
                can be divided by 256 but it's not zero, in this case it
                will return an empty string instead of a Chr( 0 ). [vszakats] */
 
-      /* Believe it or not, clipper does this! */
+      /* Believe it or not, Cl*pper does this! */
 #ifdef HB_CLP_STRICT
       char szChar[ 2 ];
       szChar[ 0 ] = hb_parnl( 1 ) % 256;

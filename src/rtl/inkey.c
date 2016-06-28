@@ -2,6 +2,8 @@
  * The Keyboard API
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 1999-2012 Viktor Szakats (vszakats.net/harbour) (hb_keyPut(), hb_keyNew())
+ * Copyright 2003-2012 Przemyslaw Czerpak <druzus@acn.waw.pl> (hb_keySetLast(), hb_keyChar(), hb_keyStd())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,19 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2012 Viktor Szakats (vszakats.net/harbour)
- *    hb_keyPut()
- *
- * Copyright 2003-2012 Przemyslaw Czerpak <druzus@acn.waw.pl>
- *    hb_keySetLast(), hb_keyChar(), hb_keyStd()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -268,4 +257,21 @@ HB_FUNC( HB_KEYMOD )
 HB_FUNC( HB_KEYVAL )
 {
    hb_retni( hb_inkeyKeyVal( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( HB_KEYNEW )
+{
+   PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
+   int iMod = hb_parni( 2 );
+   int iKey = pText ? hb_cdpTextGetU16( hb_vmCDP(), hb_itemGetCPtr( pText ),
+                                                    hb_itemGetCLen( pText ) ) : hb_parni( 1 );
+
+   if( iKey >= 127 )
+      iKey = HB_INKEY_NEW_UNICODEF( iKey, iMod );
+   else if( ( iMod & ( HB_KF_CTRL | HB_KF_ALT ) ) != 0 )
+      iKey = HB_INKEY_NEW_KEY( iKey, iMod );
+   else
+      iKey = HB_INKEY_NEW_CHARF( iKey, iMod );
+
+   hb_retni( iKey );
 }

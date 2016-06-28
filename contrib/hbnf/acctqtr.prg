@@ -1,25 +1,17 @@
-/*
- * Author....: Jo W. French dba Practical Computing
- * CIS ID....: 74731,1751
- *
- * The functions contained herein are the original work of Jo W. French
- * and are placed in the public domain.
- *
- * Modification history:
- * ---------------------
- *
- *    Rev 1.3   28 Sep 1992 00:26:30   GLENN
- * Jo French clean up.
- *
- *    Rev 1.2   15 Aug 1991 23:02:36   GLENN
- * Forest Belt proofread/edited/cleaned up doc
- *
- *    Rev 1.1   14 Jun 1991 19:50:44   GLENN
- * Minor edit to file header
- *
- *    Rev 1.0   01 Apr 1991 01:00:26   GLENN
- * Nanforum Toolkit
- *
+/* This is an original work of Jo W. French (dba Practical Computing)
+   and is placed in the public domain.
+
+      Rev 1.3   28 Sep 1992 00:26:30   GLENN
+   Jo French clean up.
+
+      Rev 1.2   15 Aug 1991 23:02:36   GLENN
+   Forest Belt proofread/edited/cleaned up doc
+
+      Rev 1.1   14 Jun 1991 19:50:44   GLENN
+   Minor edit to file header
+
+      Rev 1.0   01 Apr 1991 01:00:26   GLENN
+   Nanforum Toolkit
  */
 
 FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
@@ -27,11 +19,10 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
    LOCAL nYTemp, nQTemp, aRetVal
 
    IF HB_ISNUMERIC( dGivenDate )
-      nQtrNum    := dGivenDate
-      dGivenDate := Date()
-   ELSEIF ! HB_ISDATE( dGivenDate )
-      dGivenDate := Date()
+      nQtrNum := dGivenDate
    ENDIF
+
+   hb_default( @dGivenDate, Date() )
 
    aRetVal      := ft_Qtr( dGivenDate )
    nYTemp       := Val( SubStr( aRetVal[ 1 ], 1, 4 ) )
@@ -39,7 +30,8 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
    aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
    aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
-   IF dGivenDate < aRetVal[ 2 ]
+   DO CASE
+   CASE dGivenDate < aRetVal[ 2 ]
 
       dGivenDate := ft_MAdd( dGivenDate, - 1 )
       aRetVal    := ft_Qtr( dGivenDate )
@@ -51,7 +43,7 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
       aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
       aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
-   ELSEIF dGivenDate > aRetVal[ 3 ]
+   CASE dGivenDate > aRetVal[ 3 ]
 
       dGivenDate := ft_MAdd( dGivenDate, 1 )
       aRetVal    := ft_Qtr( dGivenDate )
@@ -63,7 +55,7 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
       aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
       aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
-   ENDIF
+   ENDCASE
 
    IF HB_ISNUMERIC( nQtrNum )
       IF nQtrNum < 1 .OR. nQtrNum > 4
@@ -76,6 +68,6 @@ FUNCTION ft_AcctQtr( dGivenDate, nQtrNum )
       aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
    ENDIF
 
-   aRetVal[ 1 ] := Str( nYTemp, 4 ) + StrZero( nQTemp, 2 )
+   aRetVal[ 1 ] := StrZero( nYTemp, 4 ) + StrZero( nQTemp, 2 )
 
    RETURN aRetVal

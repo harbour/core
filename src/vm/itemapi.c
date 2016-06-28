@@ -2,6 +2,15 @@
  * The Item API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
+ *    hb_itemPCount(), hb_itemParamPtr(), hb_itemReturnPtr()
+ *    hb_itemPutDL(), hb_itemPutNI(), hb_itemGetDL(), hb_itemGetNI(),
+ *    hb_itemGetCPtr(), hb_itemGetCLPtr(), hb_itemGetCLen(), hb_itemGetNLen()
+ *    hb_itemPutCConst(), hb_itemPutCLConst()
+ *    hb_itemPutNLen(), hb_itemPutNDLen(), hb_itemPutNILen(), hb_itemPutNLLen()
+ *    hb_itemPutD(), hb_itemSetCMemo()
+ * Copyright 1999 Eddie Runia <eddie@runia.com> (hb_itemStrCmp())
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_itemStr(), hb_itemString(), hb_itemValToStr())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,40 +50,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
- *    hb_itemPCount()
- *    hb_itemParamPtr()
- *    hb_itemReturnPtr()
- *    hb_itemPutDL()
- *    hb_itemPutNI()
- *    hb_itemGetDL()
- *    hb_itemGetNI()
- *    hb_itemGetCPtr()
- *    hb_itemGetCLPtr()
- *    hb_itemGetCLen()
- *    hb_itemGetNLen()
- *    hb_itemPutCConst()
- *    hb_itemPutCLConst()
- *    hb_itemPutNLen()
- *    hb_itemPutNDLen()
- *    hb_itemPutNILen()
- *    hb_itemPutNLLen()
- *    hb_itemPutD()
- *    hb_itemSetCMemo()
- *
- * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    hb_itemStrCmp()
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_itemStr(), hb_itemString(), and hb_itemValToStr().
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -710,7 +685,11 @@ HB_ISIZ hb_itemGetNS( PHB_ITEM pItem )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
 
       else if( HB_IS_DOUBLE( pItem ) )
+#if defined( __GNUC__ )
+         return ( HB_ISIZ ) ( HB_SIZE ) pItem->item.asDouble.value;
+#else
          return ( HB_ISIZ ) pItem->item.asDouble.value;
+#endif
    }
 
    return 0;
@@ -2887,7 +2866,10 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
       case HB_IT_POINTER:
       {
          int size = ( sizeof( void * ) << 1 ) + 3; /* n bytes for address + 0x + \0 */
-         HB_PTRUINT addr = ( HB_PTRUINT ) hb_itemGetPtr( pItem );
+
+         HB_PTRUINT addr = hb_vmInternalsEnabled() ?
+            ( HB_PTRUINT ) hb_itemGetPtr( pItem ) :
+            ( HB_PTRUINT ) ( hb_itemGetPtr( pItem ) ? -1 : 0 );
 
          *nLen = size - 1;
          *bFreeReq = HB_TRUE;

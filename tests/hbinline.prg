@@ -1,19 +1,20 @@
 /*
- * new Hb_inLine {} test
+ * hb_inline {} test
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  */
 
-proc main()
-local hb_inLine := " (var) "
+PROCEDURE Main()
 
-? hb_inLine { hb_retc("inLine"); } + hb_inLine(" parameter ") {
-     hb_retc( hb_parc( 1 ) );
-     } + "!" + hb_inLine + hb_inLine() { hb_retc( ":-)" ); } + ;
-  hb_inLine() + "{}"
+   LOCAL hb_inline := "(var)"
 
-return
+   ? hb_inline { hb_retc("inline"); }, hb_inline( "parameter" ) {
+        hb_retc( hb_parc( 1 ) );
+        } + "!", hb_inline, hb_inline() { hb_retc( ":-)" ); }, ;
+        hb_inline(), "{}"
 
-function hb_inLine()
-return " func() "
+   RETURN
+
+STATIC FUNCTION hb_inline()
+   RETURN "func()"

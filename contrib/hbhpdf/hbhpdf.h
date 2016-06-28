@@ -1,6 +1,7 @@
 /*
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
  * hbhpdf header
+ *
+ * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +54,9 @@
 #include "hpdf.h"
 
 #define HB_HPDF_VERS( ma, mi, mu )  ( HPDF_MAJOR_VERSION > ma || ( HPDF_MAJOR_VERSION == ma && ( HPDF_MINOR_VERSION > mi || ( HPDF_MINOR_VERSION == mi && HPDF_BUGFIX_VERSION >= mu ) ) ) )
+
+#define HB_HPDF_BADPARAM      -2
+#define HB_HPDF_NOTSUPPORTED  -1
 
 HB_EXTERN_BEGIN
 

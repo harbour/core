@@ -52,7 +52,7 @@
 
 #include <zlib.h>
 
-#if !defined( HB_NO_GZLIB ) && \
+#if ! defined( HB_NO_GZLIB ) && \
     defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240
    #define HB_NO_GZLIB
 #endif

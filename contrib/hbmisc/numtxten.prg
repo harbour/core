@@ -1,15 +1,19 @@
-// ; Author: "Michael Mozina" <et@snowcrest.net>
-// ; Donated to the Public Domain.
+// Author: "Michael Mozina" <et@snowcrest.net>
+// Donated to the Public Domain.
 
-// ; Decimals not supported
+// Decimals not supported
 
 FUNCTION NumToTxtEN( nValue )
 
-   LOCAL cRetVal := ""
+   LOCAL cRetVal
+
+   hb_default( @nValue, 0 )
 
    IF nValue == 0
       RETURN "zero"
    ENDIF
+
+   cRetVal := ""
 
    IF nValue < 0
       nValue := -nValue

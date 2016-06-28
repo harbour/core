@@ -48,10 +48,11 @@
 
 PROCEDURE Main()
 
-   LOCAL cSQLTEXT, cFile := ":memory:"
-   LOCAL pDb, cb := @CallBack()
+   LOCAL cSQLTEXT
+   LOCAL pDb
+   LOCAL cb := @CallBack()
 
-   IF Empty( pDb := PrepareDB( cFile ) )
+   IF Empty( pDb := PrepareDB( ":memory:" ) )
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -59,19 +60,19 @@ PROCEDURE Main()
    sqlite3_commit_hook( pDb, "HookCommitY" )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Andy'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    ? cSQLTEXT := "BEGIN EXCLUSIVE TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "DELETE FROM person WHERE name == 'Andy'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "END TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Andy'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    ? Replicate( "-", Len( cSQLTEXT ) )
 
@@ -81,19 +82,19 @@ PROCEDURE Main()
    sqlite3_rollback_hook( pDb, @HookRollback() )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Ivet'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    ? cSQLTEXT := "BEGIN EXCLUSIVE TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "DELETE FROM person WHERE name == 'Ivet'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "END TRANSACTION"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    ? cSQLTEXT := "SELECT * FROM person WHERE name == 'Ivet'"
-   ? "return value: ", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
+   ? "return value:", cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    pDb := NIL
 
@@ -101,26 +102,20 @@ PROCEDURE Main()
 
    RETURN
 
-/**
-*/
-
-FUNCTION CallBack( nColCount, aValue, aColName )
+STATIC FUNCTION CallBack( nColCount, aValue, aColName )
 
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      ? PadR( aColName[ nI ], 5 ), " == ", aValue[ nI ]
+      ? PadR( aColName[ nI ], 5 ), "==", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
 
    RETURN 0
 
-/**
-*/
-
-FUNCTION HookCommitY()
+STATIC FUNCTION HookCommitY()
 
    LOCAL oldColor := SetColor( "R+/N" )
 
@@ -130,7 +125,7 @@ FUNCTION HookCommitY()
 
    RETURN 0
 
-FUNCTION HookCommitN()
+STATIC FUNCTION HookCommitN()
 
    LOCAL oldColor := SetColor( "B+/N" )
 
@@ -140,7 +135,7 @@ FUNCTION HookCommitN()
 
    RETURN 1 // not 0
 
-FUNCTION HookRollback()
+STATIC FUNCTION HookRollback()
 
    LOCAL oldColor := SetColor( "R+/N" )
 
@@ -150,20 +145,12 @@ FUNCTION HookRollback()
 
    RETURN 1
 
-/**
-*/
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
-
-   hb_default( @lShortMsg, .T. )
-
-   RETURN iif( lShortMsg, hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
-
-/**
-*/
+   RETURN iif( hb_defaultValue( lShortMsg, .T. ), hb_sqlite3_errstr_short( nError ), sqlite3_errstr( nError ) )
 
 STATIC FUNCTION PrepareDB( cFile )
 
-   LOCAL cSQLTEXT, cMsg
+   LOCAL cSQLTEXT
    LOCAL pDb, pStmt
    LOCAL hPerson := { ;
       "Bob" => 52, ;
@@ -173,29 +160,22 @@ STATIC FUNCTION PrepareDB( cFile )
       "Ivet" => 28 ;
       }, enum
 
-   pDb := sqlite3_open( cFile, .T. )
-   IF Empty( pDb )
-      ? "Can't open/create database : ", cFile
-
+   IF Empty( pDb := sqlite3_open( cFile, .T. ) )
+      ? "Could not open/create database:", cFile
       RETURN NIL
    ENDIF
 
    ? cSQLTEXT := "CREATE TABLE person( name TEXT, age INTEGER )"
-   cMsg := cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
-
-   IF !( cMsg == "SQLITE_OK" )
-      ? "Can't create table : person"
+   IF !( cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) ) == "SQLITE_OK" )
+      ? "Could not create table:", "person"
       pDb := NIL // close database
-
       RETURN NIL
    ENDIF
 
    cSQLTEXT := "INSERT INTO person( name, age ) VALUES( :name, :age )"
-   pStmt := sqlite3_prepare( pDb, cSQLTEXT )
-   IF Empty( pStmt )
-      ? "Can't prepare statement : ", cSQLTEXT
+   IF Empty( pStmt := sqlite3_prepare( pDb, cSQLTEXT ) )
+      ? "Could not prepare statement:", cSQLTEXT
       pDb := NIL
-
       RETURN NIL
    ENDIF
 

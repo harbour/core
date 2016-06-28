@@ -53,19 +53,15 @@
 
 PROCEDURE Main()
 
-   ctinit()
-
    ? "Begin test of CharOr()"
    ?
 
    ? "Simple tests:"
 
-   ? '  CharOr( "012345678", hb_BChar( 1 ) ) == "113355779" ? --> "' + CharOr( "012345678", hb_BChar( 1 ) ) + '"'
-   ? '  CharOr( "012345678", hb_BChar( 1 ) + hb_BChar( 3 ) ) == "133357779" ? --> "' + CharOr( "012345678", hb_BChar( 1 ) + hb_BChar( 3 ) ) + '"'
+   ? '  CharOr( "012345678", hb_BChar( 1 ) ) == "113355779" ? -->', '"' + CharOr( "012345678", hb_BChar( 1 ) ) + '"'
+   ? '  CharOr( "012345678", hb_BChar( 1 ) + hb_BChar( 3 ) ) == "133357779" ? -->', '"' + CharOr( "012345678", hb_BChar( 1 ) + hb_BChar( 3 ) ) + '"'
 
    ? "End test of CharOr()"
    ?
-
-   ctexit()
 
    RETURN

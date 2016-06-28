@@ -6,24 +6,18 @@ PRG_SOURCES := \
    hbmk2.prg \
 
 RC_SOURCES := \
-   hbmk2.rc
+   $(TOP)$(ROOT)package/harbour.rc
 
 PRG_MAIN := hbmk2.prg
 
-ifeq ($(HB_MT),no)
+ifeq ($(__HB_MT),no)
    LIBS = $(HB_LIBS_ST_RDD)
 else
    LIBS = $(HB_LIBS_MT_RDD)
 endif
 
 HB_PRGFLAGS += -u -i$(TOP)
-
-ifneq ($(HB_HAS_GPM),)
-   HB_PRGFLAGS += -DHB_HAS_GPM
-endif
-ifneq ($(HB_HAS_WATT),)
-   HB_PRGFLAGS += -DHB_HAS_WATT
-endif
+HB_RCFLAGS += -D_HB_INCLUDE_ICON
 
 # Not possible to override default entry
 # function cleanly when using plain GNU Make
@@ -31,6 +25,11 @@ endif
 # is better than Main()
 HB_PRGFLAGS += -DHBMK_USE_APPMAIN
 
-HB_PRGFLAGS += -DHBMK_WITH_ALL_EMBEDDED_HEADERS
+HB_PRGFLAGS += -DHBMK_WITH_BUILTIN_HEADERS_ALL
 
 include $(TOP)$(ROOT)config/bin.mk
+
+ifneq ($(filter $(HB_COMPILER),mingw mingw64 gcc clang),)
+   HB_USER_CFLAGS := $(filter-out -flto,$(HB_USER_CFLAGS))
+   HB_LDFLAGS += -fno-lto
+endif

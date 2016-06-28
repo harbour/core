@@ -77,15 +77,15 @@
 
 #ifdef HB_COMPAT_C53
 
-#xtranslate ORDCOND( [FOR <for>]                                        ;
-                     [<all:ALL>] [WHILE <while>]                        ;
-                     [EVAL <eval>] [EVERY <every>]                      ;
-                     [RECORD <rec>] [NEXT <next>]                       ;
-                     [<rest:REST>] [<descend: DESCENDING>] )            ;
-      => ordCondSet( <"for">, <{for}>,                                  ;
-                     [<.all.>], <{while}>,                              ;
-                     <{eval}>, <every>,                                 ;
-                     RecNo(), <next>, <rec>,                            ;
+#xtranslate ORDCOND( [FOR <for>]                             ;
+                     [<all:ALL>] [WHILE <while>]             ;
+                     [EVAL <eval>] [EVERY <every>]           ;
+                     [RECORD <rec>] [NEXT <next>]            ;
+                     [<rest:REST>] [<descend: DESCENDING>] ) ;
+      => ordCondSet( <"for">, <{for}>,                       ;
+                     [<.all.>], <{while}>,                   ;
+                     <{eval}>, <every>,                      ;
+                     RecNo(), <next>, <rec>,                 ;
                      [<.rest.>], [<.descend.>] )
 
 #endif

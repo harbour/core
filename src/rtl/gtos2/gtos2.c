@@ -2,6 +2,30 @@
  * Video subsystem for OS/2 compilers
  *
  * Copyright 1999-2001 {list of individual authors and e-mail addresses}
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_gt_os2_ReadKey()
+ *
+ * Copyright 1999 Chen Kedem <niki@synel.co.il>
+ *    hb_gt_os2_mouse_Init()
+ *    hb_gt_os2_mouse_Exit()
+ *    hb_gt_os2_mouse_IsPresent()
+ *    hb_gt_os2_mouse_Show()
+ *    hb_gt_os2_mouse_Hide()
+ *    hb_gt_os2_mouse_SetPos()
+ *    hb_gt_os2_mouse_CountButton()
+ *    hb_gt_os2_Tone()
+ *    hb_gt_os2_IsColor()
+ *    hb_gt_os2_SetCursorSize()
+ *    hb_gt_os2_GetCharHeight()
+ *    hb_gt_os2_GetCursorStyle()
+ *    hb_gt_os2_SetCursorStyle()
+ *    hb_gt_os2_GetBlink()
+ *    hb_gt_os2_SetBlink()
+ *
+ * Copyright 2000-2001 Maurilio Longo <maurilio.longo@libero.it>
+ *    hb_gt_DispBegin() / hb_gt_DispEnd()
+ *    hb_gt_ScreenPtr() and hb_gt_xYYYY() functions and virtual screen support inside hb_gt_XXXX()s
+ *    16 bit KBD subsystem use inside hb_gt_os2_ReadKey()
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,41 +68,7 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_os2_ReadKey()
- *
- * Copyright 1999 Chen Kedem <niki@synel.co.il>
- *    hb_gt_os2_mouse_Init()
- *    hb_gt_os2_mouse_Exit()
- *    hb_gt_os2_mouse_IsPresent()
- *    hb_gt_os2_mouse_Show()
- *    hb_gt_os2_mouse_Hide()
- *    hb_gt_os2_mouse_SetPos()
- *    hb_gt_os2_mouse_CountButton()
- *    hb_gt_os2_Tone()
- *    hb_gt_os2_IsColor()
- *    hb_gt_os2_SetCursorSize()
- *    hb_gt_os2_GetCharHeight()
- *    hb_gt_os2_GetCursorStyle()
- *    hb_gt_os2_SetCursorStyle()
- *    hb_gt_os2_GetBlink()
- *    hb_gt_os2_SetBlink()
- *
- * Copyright 2000-2001 Maurilio Longo <maurilio.longo@libero.it>
- *    hb_gt_DispBegin() / hb_gt_DispEnd()
- *    hb_gt_ScreenPtr() and hb_gt_xYYYY() functions and virtual screen support inside hb_gt_XXXX()s
- *    16 bit KBD subsystem use inside hb_gt_os2_ReadKey()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
-/*
- * This module is partially based on VIDMGR by Andrew Clarke and modified for Harbour.
- */
+/* This module is partially based on VIDMGR by Andrew Clarke and modified for Harbour. */
 
 /* NOTE: User programs should never call this layer directly! */
 
@@ -131,7 +121,7 @@ static int s_iCursorStyle;
 static int    s_iLineBufSize = 0;
 static char * s_sLineBuf;
 
-/* Code page ID of active codepage at the time harbour program was start */
+/* Code page ID of active codepage at the time Harbour program was start */
 static HB_USHORT s_usOldCodePage;
 
 /* Instead of calling VioGetMode() every time I need MaxRow() or MaxCol() I
@@ -271,7 +261,7 @@ static void hb_gt_os2_mouse_Hide( PHB_GT pGT )
          con: calling function from another module, GT must be linked in
          con: VioGetMode is been called twice
        */
-      vi.cb = sizeof( VIOMODEINFO );
+      vi.cb = sizeof( vi );
       VioGetMode( &vi, 0 );
       rect.row  = 0;                            /* x-coordinate upper left */
       rect.col  = 0;                            /* y-coordinate upper left */
@@ -602,7 +592,7 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p,%p)", pGT, ( HB_PTRUINT ) hFilenoStdin, ( HB_PTRUINT ) hFilenoStdout, ( HB_PTRUINT ) hFilenoStderr ) );
 
-   s_vi.cb = sizeof( VIOMODEINFO );
+   s_vi.cb = sizeof( s_vi );
    VioGetMode( &s_vi, 0 );        /* fill structure with current video mode settings */
 
    /* Alloc tileable memory for calling a 16 subsystem */
@@ -691,7 +681,7 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_ReadKey(%p,%d)", pGT, iEventMask ) );
 
    /* zero out keyboard event record */
-   memset( s_key, 0, sizeof( KBDKEYINFO ) );
+   memset( s_key, 0, sizeof( *s_key ) );
 
 #if defined( __WATCOMC__ )
    if( s_fBreak )
@@ -766,7 +756,7 @@ static HB_BOOL hb_gt_os2_GetBlink( PHB_GT pGT )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
+   vi.cb   = sizeof( vi );              /* 6                          */
    vi.type = 2;                         /* get intensity/blink toggle */
    VioGetState( &vi, 0 );
 
@@ -781,7 +771,7 @@ static void hb_gt_os2_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   vi.cb   = sizeof( VIOINTENSITY );    /* 6                          */
+   vi.cb   = sizeof( vi );              /* 6                          */
    vi.type = 2;                         /* set intensity/blink toggle */
    vi.fs   = ( fBlink ? 0 : 1 );        /* 0 = blink, 1 = intens      */
    VioSetState( &vi, 0 );
@@ -821,7 +811,7 @@ static const char * hb_gt_os2_Version( PHB_GT pGT, int iType )
    if( iType == 0 )
       return HB_GT_DRVNAME( HB_GT_NAME );
 
-   return "Harbour Terminal: OS/2 console";
+   return "Terminal: OS/2 native console";
 }
 
 static HB_BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )
@@ -853,7 +843,7 @@ static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 
    if( iRows > 0 && iCols > 0 )
    {
-      s_vi.cb = sizeof( VIOMODEINFO );
+      s_vi.cb = sizeof( s_vi );
       VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
       s_vi.row = iRows;
       s_vi.col = iCols;
@@ -861,7 +851,7 @@ static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 
       if( ! fResult )
       {
-         s_vi.cb = sizeof( VIOMODEINFO );
+         s_vi.cb = sizeof( s_vi );
          VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
       }
 
@@ -892,7 +882,7 @@ static HB_BOOL hb_gt_os2_Resume( PHB_GT pGT )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Resume(%p)", pGT ) );
 
-   s_vi.cb = sizeof( VIOMODEINFO );
+   s_vi.cb = sizeof( s_vi );
    VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_os2_GetCursorStyle();

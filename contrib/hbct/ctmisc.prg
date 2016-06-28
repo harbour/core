@@ -45,15 +45,13 @@
  */
 
 #include "color.ch"
+#include "fileio.ch"
 #include "setcurs.ch"
 
 #include "hbmemory.ch"
 
 FUNCTION AlloFree( lMode )
-
-   hb_default( @lMode, .F. )
-
-   RETURN Memory( iif( lMode, HB_MEM_CHAR, HB_MEM_BLOCK ) )
+   RETURN Memory( iif( hb_defaultValue( lMode, .F. ), HB_MEM_CHAR, HB_MEM_BLOCK ) )
 
 FUNCTION Center( c, n, p, lMode )
 
@@ -62,42 +60,34 @@ FUNCTION Center( c, n, p, lMode )
    IF ! HB_ISNUMERIC( n )
       n := MaxCol() + 1 - Col() * 2
    ENDIF
-   IF ! HB_ISSTRING( c )
-      c := ""
-   ENDIF
 
    IF HB_ISLOGICAL( p )
       lMode := p
       p := NIL
    ELSE
-      IF ! HB_ISLOGICAL( lMode )
-         lMode := .F.
-      ENDIF
+      hb_default( @lMode, .F. )
    ENDIF
 
-   cRet := PadC( RTrim( c ), n, p )
+   cRet := PadC( RTrim( hb_defaultValue( c, "" ) ), n, p )
 
    RETURN iif( lMode, cRet, RTrim( cRet ) )
 
 FUNCTION CSetCurs( l )
 
-   IF ! HB_ISLOGICAL( l )
-      RETURN SetCursor() != SC_NONE
+   IF HB_ISLOGICAL( l )
+      RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
    ENDIF
 
-   RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
+   RETURN SetCursor() != SC_NONE
 
 FUNCTION CSetKey( n )
-
    RETURN SetKey( n )
 
-FUNCTION CSetCent( nCentury )
-
-   RETURN __SetCentury( nCentury )
+FUNCTION CSetCent( l )
+   RETURN __SetCentury( l )
 
 FUNCTION LToC( l )
-
-   RETURN iif( l, "T", "F" )
+   RETURN iif( hb_defaultValue( l, .F. ), "T", "F" )
 
 FUNCTION DosParam()
 
@@ -111,5 +101,52 @@ FUNCTION DosParam()
    RETURN cRet
 
 FUNCTION ExeName()
-
    RETURN hb_ProgName()
+
+FUNCTION IsCGA( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsEGA( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsHercules( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsMCGA( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsMono( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsPGA( lCard )
+   RETURN ! hb_defaultValue( lCard, .F. )
+
+FUNCTION IsVGA()
+   RETURN .T.
+
+FUNCTION CGA40( lMono )
+
+   HB_SYMBOL_UNUSED( lMono )
+
+   RETURN SetMode( MaxRow() + 1, 40 )
+
+FUNCTION CGA80( lMono )
+
+   HB_SYMBOL_UNUSED( lMono )
+
+   RETURN SetMode( MaxRow() + 1, 80 )
+
+FUNCTION EGA43()
+   RETURN SetMode( 43, MaxCol() + 1 )
+
+FUNCTION VGA28()
+   RETURN SetMode( 28, MaxCol() + 1 )
+
+FUNCTION VGA50()
+   RETURN SetMode( 50, MaxCol() + 1 )
+
+FUNCTION DiskTotal( cDrive )
+   RETURN hb_vfDirSpace( hb_defaultValue( cDrive, hb_CurDrive() ) + hb_osDriveSeparator(), HB_DISK_TOTAL )
+
+FUNCTION DiskFree( cDrive )
+   RETURN hb_vfDirSpace( hb_defaultValue( cDrive, hb_CurDrive() ) + hb_osDriveSeparator(), HB_DISK_FREE )

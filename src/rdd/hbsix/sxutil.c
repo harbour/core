@@ -1,9 +1,9 @@
 /*
  * SIX compatible function:
- *          sx_SlimFast()
- *          sx_WildMatch()
- *          sx_Version()
- *          sx_Error()
+ *       sx_SlimFast()
+ *       sx_WildMatch()
+ *       sx_Version()
+ *       sx_Error()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

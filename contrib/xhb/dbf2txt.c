@@ -81,7 +81,7 @@ static char * hb_strescape( const char * szInput, HB_ISIZ nLen, const char * cDe
 }
 
 /* Export field values to text file */
-static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cDelim, PHB_CODEPAGE cdp )
+static HB_BOOL hb_ExportVar( PHB_FILE handle, PHB_ITEM pValue, const char * cDelim, PHB_CODEPAGE cdp )
 {
    switch( hb_itemType( pValue ) )
    {
@@ -98,8 +98,7 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
 
          szString = hb_xstrcpy( NULL, cDelim, szStrEsc, cDelim, NULL );
 
-         /* FWrite( handle, szString ) */
-         hb_fsWriteLarge( handle, szString, strlen( szString ) );
+         hb_fileWrite( handle, szString, strlen( szString ), -1 );
 
          /* Orphaned, get rif off it */
          hb_xfree( szStrEsc );
@@ -112,13 +111,13 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
          char * szDate = ( char * ) hb_xgrab( 9 );
 
          hb_itemGetDS( pValue, szDate );
-         hb_fsWriteLarge( handle, szDate, strlen( szDate ) );
+         hb_fileWrite( handle, szDate, strlen( szDate ), -1 );
          hb_xfree( szDate );
          break;
       }
       /* an "L" field */
       case HB_IT_LOGICAL:
-         hb_fsWriteLarge( handle, ( hb_itemGetL( pValue ) ? "T" : "F" ), 1 );
+         hb_fileWrite( handle, ( hb_itemGetL( pValue ) ? "T" : "F" ), 1, -1 );
          break;
       /* an "N" field */
       case HB_IT_INTEGER:
@@ -132,7 +131,7 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
             HB_SIZE      nLen      = strlen( szResult );
             const char * szTrimmed = hb_strLTrim( szResult, &nLen );
 
-            hb_fsWriteLarge( handle, szTrimmed, strlen( szTrimmed ) );
+            hb_fileWrite( handle, szTrimmed, strlen( szTrimmed ), -1 );
             hb_xfree( szResult );
          }
          break;
@@ -147,126 +146,133 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
 
 HB_FUNC( DBF2TEXT )
 {
-   PHB_ITEM pWhile  = hb_param( 1, HB_IT_BLOCK );
-   PHB_ITEM pFor    = hb_param( 2, HB_IT_BLOCK );
-   PHB_ITEM pFields = hb_param( 3, HB_IT_ARRAY );
-
-   const char * cDelim = hb_parc( 4 );
-   HB_FHANDLE   handle = ( HB_FHANDLE ) hb_parnint( 5 );
-   const char * cSep   = hb_parc( 6 );
-   int          nCount = hb_parni( 7 );
-   PHB_CODEPAGE cdp    = hb_cdpFind( hb_parcx( 8 ) );
-
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
-   /* Export DBF content to text file */
-
-   HB_ISIZ   nSepLen;
-   HB_USHORT uiFields = 0;
-   HB_USHORT ui;
-   PHB_ITEM  pTmp;
-   HB_BOOL   bWriteSep = HB_FALSE;
-
-   HB_BOOL bEof = HB_TRUE;
-   HB_BOOL bBof = HB_TRUE;
-
-   HB_BOOL bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
-
-   if( ! pArea )
+   if( pArea )
    {
-      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
-      return;
-   }
+      PHB_FILE handle;
 
-   if( ! handle )
-   {
-      hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
-      return;
-   }
+      if( HB_ISNUM( 5 ) )
+         handle = hb_fileFromHandle( hb_numToHandle( hb_parnint( 5 ) ) );
+      else
+         handle = hb_fileParamGet( 5 );
 
-   if( cdp && cdp == hb_vmCDP() )
-      cdp = NULL;
-
-   pTmp = hb_itemNew( NULL );
-
-   if( ! cDelim )
-      cDelim = "\"";
-
-   if( cSep )
-      nSepLen = hb_parclen( 6 );
-   else
-   {
-      cSep    = ",";
-      nSepLen = 1;
-   }
-
-   SELF_FIELDCOUNT( pArea, &uiFields );
-
-   while( ( nCount == -1 || nCount > 0 ) &&
-          ( ! pWhile || hb_itemGetL( hb_vmEvalBlock( pWhile ) ) ) )
-   {
-      /* WHILE ! Bof() .AND. ! Eof() */
-      SELF_EOF( pArea, &bEof );
-      SELF_BOF( pArea, &bBof );
-
-      if( bEof || bBof )
-         break;
-
-      /* For condition is met */
-      /* if For is NULL, hb__Eval returns HB_TRUE */
-      if( ! pFor || hb_itemGetL( hb_vmEvalBlock( pFor ) ) )
+      if( handle )
       {
-         /* User does not request fields, copy all fields */
-         if( bNoFieldPassed )
-         {
-            for( ui = 1; ui <= uiFields; ui++ )
-            {
-               if( bWriteSep )
-                  hb_fsWriteLarge( handle, cSep, nSepLen );
+         PHB_ITEM pWhile  = hb_param( 1, HB_IT_EVALITEM );
+         PHB_ITEM pFor    = hb_param( 2, HB_IT_EVALITEM );
+         PHB_ITEM pFields = hb_param( 3, HB_IT_ARRAY );
 
-               SELF_GETVALUE( pArea, ui, pTmp );
-               bWriteSep = hb_ExportVar( handle, pTmp, cDelim, cdp );
-               hb_itemClear( pTmp );
-            }
-         }
-         /* Only requested fields are exported here */
+         const char * cDelim = hb_parc( 4 );
+         const char * cSep   = hb_parc( 6 );
+         int          nCount = hb_parni( 7 );
+         PHB_CODEPAGE cdp    = hb_cdpFind( hb_parcx( 8 ) );
+
+         /* Export DBF content to text file */
+
+         HB_ISIZ   nSepLen;
+         HB_USHORT uiFields = 0;
+         PHB_ITEM  pTmp;
+         HB_BOOL   bWriteSep = HB_FALSE;
+
+         HB_BOOL bEof = HB_TRUE;
+         HB_BOOL bBof = HB_TRUE;
+
+         HB_BOOL bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
+
+         if( cdp && cdp == hb_vmCDP() )
+            cdp = NULL;
+
+         pTmp = hb_itemNew( NULL );
+
+         if( ! cDelim )
+            cDelim = "\"";
+
+         if( cSep )
+            nSepLen = hb_parclen( 6 );
          else
          {
-            HB_USHORT uiFieldCopy = ( HB_USHORT ) hb_arrayLen( pFields );
-            HB_USHORT uiItter;
+            cSep    = ",";
+            nSepLen = 1;
+         }
 
-            for( uiItter = 1; uiItter <= uiFieldCopy; uiItter++ )
+         SELF_FIELDCOUNT( pArea, &uiFields );
+
+         while( ( nCount == -1 || nCount > 0 ) &&
+                ( ! pWhile || hb_itemGetL( hb_vmEvalBlock( pWhile ) ) ) )
+         {
+            /* WHILE ! Bof() .AND. ! Eof() */
+            SELF_EOF( pArea, &bEof );
+            SELF_BOF( pArea, &bBof );
+
+            if( bEof || bBof )
+               break;
+
+            /* For condition is met */
+            /* if For is NULL, hb__Eval returns HB_TRUE */
+            if( ! pFor || hb_itemGetL( hb_vmEvalBlock( pFor ) ) )
             {
-               const char * szFieldName = hb_arrayGetCPtr( pFields, uiItter );
-               if( szFieldName )
+               /* User does not request fields, copy all fields */
+               if( bNoFieldPassed )
                {
-                  int iPos = hb_rddFieldIndex( pArea, szFieldName );
-
-                  if( iPos )
+                  HB_USHORT ui;
+                  for( ui = 1; ui <= uiFields; ui++ )
                   {
                      if( bWriteSep )
-                        hb_fsWriteLarge( handle, cSep, nSepLen );
+                        hb_fileWrite( handle, cSep, nSepLen, -1 );
 
-                     SELF_GETVALUE( pArea, ( HB_USHORT ) iPos, pTmp );
+                     SELF_GETVALUE( pArea, ui, pTmp );
                      bWriteSep = hb_ExportVar( handle, pTmp, cDelim, cdp );
                      hb_itemClear( pTmp );
                   }
                }
+               /* Only requested fields are exported here */
+               else
+               {
+                  HB_USHORT uiFieldCopy = ( HB_USHORT ) hb_arrayLen( pFields );
+                  HB_USHORT uiItter;
+
+                  for( uiItter = 1; uiItter <= uiFieldCopy; uiItter++ )
+                  {
+                     const char * szFieldName = hb_arrayGetCPtr( pFields, uiItter );
+                     if( szFieldName )
+                     {
+                        int iPos = hb_rddFieldIndex( pArea, szFieldName );
+
+                        if( iPos )
+                        {
+                           if( bWriteSep )
+                              hb_fileWrite( handle, cSep, nSepLen, -1 );
+
+                           SELF_GETVALUE( pArea, ( HB_USHORT ) iPos, pTmp );
+                           bWriteSep = hb_ExportVar( handle, pTmp, cDelim, cdp );
+                           hb_itemClear( pTmp );
+                        }
+                     }
+                  }
+               }
+               hb_fileWrite( handle, "\r\n", 2, -1 );
+               bWriteSep = HB_FALSE;
             }
+
+            if( nCount != -1 )
+               nCount--;
+
+            /* dbSkip() */
+            SELF_SKIP( pArea, 1 );
          }
-         hb_fsWriteLarge( handle, "\r\n", 2 );
-         bWriteSep = HB_FALSE;
+
+         /* Writing EOF */
+         if( hb_setGetEOF() )
+            hb_fileWrite( handle, "\032", 1, -1 );
+         hb_itemRelease( pTmp );
+
+         if( HB_ISNUM( 5 ) )
+            hb_fileDetach( handle );
       }
-
-      if( nCount != -1 )
-         nCount--;
-
-      /* dbSkip() */
-      SELF_SKIP( pArea, 1 );
+      else
+         hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
    }
-
-   /* Writing EOF */
-   if( hb_setGetEOF() )
-      hb_fsWriteLarge( handle, "\032", 1 );
-   hb_itemRelease( pTmp );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }

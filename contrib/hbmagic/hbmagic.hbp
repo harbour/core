@@ -5,13 +5,17 @@
 
 -w3 -es2
 
+-deppkgname=libmagic:file-libs{rpm}
+-deppkgname=libmagic:libmagic-dev{deb}
+-deppkgname=libmagic:libmagic{homebrew}
 -depkeyhead=libmagic:magic.h
 -depcontrol=libmagic:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=libmagic:${HB_WITH_LIBMAGIC}
 -depincpath=libmagic:/usr/include
--depincpath=libmagic:/opt/local/include
+-depincpath=libmagic:/usr/local/include
+-depincpath=libmagic:/usr/local/opt/libmagic/include
 
-${hb_name}.hbx
+-hbx=${hb_name}
 
 core.c
 hbmagis.prg

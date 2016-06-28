@@ -1,7 +1,6 @@
 /*
  * hbmLZO (miniLZO functions wrapper).
- *    miniLZO -- mini subset of the LZO real-time data compression library
- *               http://www.oberhumer.com/opensource/lzo/
+ * miniLZO -- mini subset of the LZO real-time data compression library
  *
  * Copyright 2011 Petr Chornyj <myorg63@mail.ru>
  *

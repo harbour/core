@@ -16,7 +16,7 @@ PROCEDURE Main()
    NEXT
 
    OutErr( Len( short ), Len( long ), Len( very_long ) )
-   QOut  ( Len( short ), Len( long ), Len( very_long ) )
+   QOut(   Len( short ), Len( long ), Len( very_long ) )
 
    OutStd( hb_eol() )
    OutStd( Len( short ), Len( long ), Len( very_long ) )

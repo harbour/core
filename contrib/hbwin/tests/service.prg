@@ -1,7 +1,7 @@
 /*
  * Windows Service API test code
  *
- * Copyright 2010 Jose Luis Capel - <jlcapel at hotmail . com>
+ * Copyright 2010 Jose Luis Capel <jlcapel at hotmail . com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,25 +46,17 @@
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-#define _SERVICE_NAME "Harbour_Test_Service"
+#define _SERVICE_NAME  "Harbour_Test_Service"
 
 PROCEDURE Main( cMode )
 
-   LOCAL nError
-   LOCAL cMsg
-
-   hb_default( @cMode, "S" ) /* NOTE: Must be the default action */
-
-   SWITCH Upper( cMode )
+   SWITCH Upper( hb_defaultValue( cMode, "S" /* NOTE: Must be the default action */ ) )
    CASE "I"
 
       IF win_serviceInstall( _SERVICE_NAME, "Harbour Windows Test Service" )
          ? "Service has been successfully installed"
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         ? "Error installing service: " + hb_ntos( nError ) + " " + cMsg
+         ? "Error installing service:", hb_ntos( wapi_GetLastError() ), win_ErrorDesc()
       ENDIF
       EXIT
 
@@ -73,10 +65,7 @@ PROCEDURE Main( cMode )
       IF win_serviceDelete( _SERVICE_NAME )
          ? "Service has been deleted"
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         ? "Error deleting service: " + hb_ntos( nError ) + " " + cMsg
+         ? "Error deleting service:", hb_ntos( wapi_GetLastError() ), win_ErrorDesc()
       ENDIF
       EXIT
 
@@ -88,10 +77,7 @@ PROCEDURE Main( cMode )
       IF win_serviceStart( _SERVICE_NAME, @SrvMain() )
          ? "Service has started OK"
       ELSE
-         nError := wapi_GetLastError()
-         cMsg := Space( 128 )
-         wapi_FormatMessage( ,,,, @cMsg )
-         ? "Service has had some problems: " + hb_ntos( nError ) + " " + cMsg
+         ? "Service has had some problems:", hb_ntos( wapi_GetLastError() ), win_ErrorDesc()
       ENDIF
       EXIT
 
@@ -101,30 +87,28 @@ PROCEDURE Main( cMode )
 
 #include "fileio.ch"
 
-PROCEDURE SrvMain( cParam1, cParam2 )
+STATIC PROCEDURE SrvMain( cParam1, cParam2 )
 
    LOCAL n := 0
-   LOCAL fhnd := hb_FCreate( hb_FNameExtSet( hb_ProgName(), ".out" ), FC_NORMAL, FO_DENYNONE + FO_WRITE )
+   LOCAL hFile := hb_vfOpen( hb_FNameExtSet( hb_ProgName(), ".out" ), FO_CREAT + FO_TRUNC + FO_WRITE + FO_DENYNONE )
    LOCAL cParam
 
-   hb_default( @cParam1, "" )
-   hb_default( @cParam2, "" )
-
-   FWrite( fhnd, "Startup" + hb_eol() )
-   FWrite( fhnd, "|" + hb_CmdLine() + "|" + hb_eol() )
-   FWrite( fhnd, "|" + cParam1 + "|" + cParam2 + "|" + hb_eol() )
+   hb_vfWrite( hFile, ;
+      "Startup" + hb_eol() + ;
+      "|" + hb_CmdLine() + "|" + hb_eol() + ;
+      "|" + hb_defaultValue( cParam1, "" ) + "|" + hb_defaultValue( cParam2, "" ) + "|" + hb_eol() )
 
    FOR EACH cParam IN hb_AParams()
-      FWrite( fhnd, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_eol() )
+      hb_vfWrite( hFile, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_eol() )
    NEXT
 
    DO WHILE win_serviceGetStatus() == WIN_SERVICE_RUNNING
-      FWrite( fhnd, "Work in progress " + hb_ntos( ++n ) + hb_eol() )
+      hb_vfWrite( hFile, "Work in progress " + hb_ntos( ++n ) + hb_eol() )
       hb_idleSleep( 0.5 )
    ENDDO
 
-   FWrite( fhnd, "Exiting..." + hb_eol() )
-   FClose( fhnd )
+   hb_vfWrite( hFile, "Exiting..." + hb_eol() )
+   hb_vfClose( hFile )
 
    win_serviceSetExitCode( 0 )
    win_serviceStop()

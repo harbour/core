@@ -46,7 +46,7 @@
 
 #include "hbclass.ch"
 
-CREATE CLASS TIPEncoderBase64 FROM TIPEncoder
+CREATE CLASS TIPEncoderBase64 INHERIT TIPEncoder
 
    /* Set this to .T. to enable RFC 2068 (HTTP/1.1) exception to
       RFC 2045 (MIME) base64 format. This exception consists in

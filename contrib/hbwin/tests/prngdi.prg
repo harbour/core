@@ -1,9 +1,6 @@
-/*
- * GDI calls and passing structures.
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
+
+/* GDI calls and passing structures. */
 
 #require "hbwin"
 
@@ -18,10 +15,12 @@ PROCEDURE Main()
    LOCAL hRECT
    LOCAL aRECT
    LOCAL hOBJECT
+   LOCAL hTM
+   LOCAL hSIZE
 
    pDEVMODE := __wapi_DEVMODE_New( cPrinterName )
    __wapi_DEVMODE_Set( pDEVMODE, { "dmPaperSize" => WIN_DMPAPER_A3 } )
-   ? hDC := wapi_CreateDC( NIL, cPrinterName, NIL, pDEVMODE )
+   ? hDC := wapi_CreateDC( , cPrinterName, , pDEVMODE )
 
    ? wapi_StartDoc( hDC, { "lpszDocName" => "test job" } /* DOCINFO */ )
    ? wapi_StartPage( hDC )
@@ -56,6 +55,22 @@ PROCEDURE Main()
    hRECT[ "right" ] := 650
    hRECT[ "bottom" ] := 450
    ? wapi_DrawText( hDC, "4TEST", hRECT )
+
+   ? "out TEXTMETRIC"
+   hTM := { => }
+   ? wapi_GetTextMetrics( hDC, hTM )
+   ? hb_ValToExp( hTM )
+   hTM := NIL
+   ? wapi_GetTextMetrics( hDC, @hTM )
+   ? hb_ValToExp( hTM )
+
+   ? "out SIZE"
+   hSIZE := { => }
+   ? wapi_GetTextExtentPoint32( hDC, "Hello", hSIZE )
+   ? hb_ValToExp( hSIZE )
+   hSIZE := NIL
+   ? wapi_GetTextExtentPoint32( hDC, "Hello", @hSIZE )
+   ? hb_ValToExp( hSIZE )
 
    ? wapi_EndPage( hDC )
    ? wapi_EndDoc( hDC )

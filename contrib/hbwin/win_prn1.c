@@ -44,15 +44,11 @@
  *
  */
 
-#include "hbwin.h"
 #include "hbwapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
 
 #if defined( HB_OS_WIN_CE )
-   /* For Arc() */
-   #include "hbwince.h"
-
    #if defined( __POCC__ )
       #ifndef FONTENUMPROC
       #define FONTENUMPROC  FONTENUMPROCW
@@ -62,18 +58,17 @@
    #include <winspool.h>
 #endif
 
+#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_CREATEDC )
 {
    if( HB_ISCHAR( 1 ) )
    {
       void * hDevice;
 
-      HDC hDC = CreateDC( TEXT( "" ),
-                          HB_PARSTR( 1, &hDevice, NULL ),
-                          NULL,
-                          NULL );
-
-      hbwapi_ret_HDC( hDC );
+      hbwapi_ret_HDC( CreateDC( TEXT( "" ),
+                                HB_PARSTR( 1, &hDevice, NULL ),
+                                NULL,
+                                NULL ) );
 
       hb_strfree( hDevice );
    }
@@ -124,11 +119,10 @@ HB_FUNC( WIN_ABORTDOC )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
-   hb_retl( hDC && ( AbortDoc( hDC ) > 0 ) );
+   hb_retl( hDC && AbortDoc( hDC ) > 0 );
 }
 
-/* Compatibility dummy */
-HB_FUNC( WIN_DELETEDC )
+HB_FUNC( WIN_DELETEDC )  /* Compatibility dummy */
 {
    hb_retni( 0 );
 }
@@ -154,7 +148,7 @@ HB_FUNC( WIN_TEXTOUT )
 
    if( hDC && HB_ISCHAR( 4 ) )
    {
-      HB_SIZE nLen = hb_parnl( 5 );
+      HB_SIZE nLen = hb_parns( 5 );
 
       void * hData;
       HB_SIZE nDataLen;
@@ -169,7 +163,7 @@ HB_FUNC( WIN_TEXTOUT )
 
          int iRow = hb_parni( 2 );
          int iCol = hb_parni( 3 );
-         int iWidth = hb_parni( 6 ); /* defaults to 0 */
+         int iWidth = hb_parni( 6 );  /* defaults to 0 */
 
          if( HB_ISNUM( 7 ) )
             SetTextAlign( ( HDC ) hDC, TA_NOUPDATECP | hb_parni( 7 ) );
@@ -188,8 +182,8 @@ HB_FUNC( WIN_TEXTOUT )
          }
          else if( ExtTextOut( hDC, iRow, iCol, 0, NULL, lpData, ( UINT ) nLen, NULL ) )
          {
-            GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize ); /* Get the length of the text in device size */
-            lResult = ( long ) sSize.cx; /* return the width so we can update the current pen position (::PosY) */
+            GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );  /* Get the length of the text in device size */
+            lResult = ( long ) sSize.cx;  /* return the width so we can update the current pen position (::PosY) */
          }
       }
 
@@ -206,7 +200,7 @@ HB_FUNC( WIN_GETTEXTSIZE )
 
    if( hDC && HB_ISCHAR( 2 ) )
    {
-      HB_SIZE nLen = hb_parnl( 3 );
+      HB_SIZE nLen = hb_parns( 3 );
 
       void * hData;
       HB_SIZE nDataLen;
@@ -219,12 +213,12 @@ HB_FUNC( WIN_GETTEXTSIZE )
       {
          SIZE sSize;
 
-         GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );     /* Get the length of the text in device size */
+         GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );  /* Get the length of the text in device size */
 
-         if( ! hb_parldef( 4, 1 ) )
-            lResult = ( long ) sSize.cy;    /* return the height */
+         if( hb_parldef( 4, HB_TRUE ) )
+            lResult = ( long ) sSize.cx;  /* return the width */
          else
-            lResult = ( long ) sSize.cx;    /* return the width */
+            lResult = ( long ) sSize.cy;  /* return the height */
       }
 
       hb_strfree( hData );
@@ -232,6 +226,7 @@ HB_FUNC( WIN_GETTEXTSIZE )
 
    hb_retnl( lResult );
 }
+#endif
 
 HB_FUNC( WIN_GETCHARSIZE )
 {
@@ -252,11 +247,12 @@ HB_FUNC( WIN_GETCHARSIZE )
    hb_retnl( lResult );
 }
 
+#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_GETDEVICECAPS )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
 
-   hb_retni( hDC && HB_ISNUM( 2 ) ? ( long ) GetDeviceCaps( hDC, hb_parni( 2 ) ) : 0 );
+   hb_retni( hDC && HB_ISNUM( 2 ) ? GetDeviceCaps( hDC, hb_parni( 2 ) ) : 0 );
 }
 
 HB_FUNC( WIN_SETMAPMODE )
@@ -286,24 +282,21 @@ HB_FUNC( WIN_CREATEFONT )
       LPCTSTR pfFaceName;
       HB_SIZE nLen;
 
-      iWeight = iWeight > 0 ? iWeight : FW_NORMAL;
+      if( iWeight <= 0 )
+         iWeight = FW_NORMAL;
 
-      if( hb_parl( 10 ) ) /* Ugly hack to enable full control for caller */
+      if( hb_parl( 10 ) )  /* Ugly hack to enable full control for caller */
       {
          iHeight = hb_parni( 3 );
          iWidth = hb_parni( 5 );
       }
       else
       {
-         int iMul = hb_parni( 4 );
-         int iDiv = hb_parni( 5 );
-
          iHeight = -MulDiv( hb_parni( 3 ), GetDeviceCaps( hDC, LOGPIXELSY ), 72 );
+         iWidth = hb_parni( 5 );
 
-         if( iDiv )
-            iWidth = MulDiv( abs( iMul ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iDiv ) );
-         else
-            iWidth = 0;  /* Use the default font width */
+         if( iWidth )
+            iWidth = MulDiv( abs( hb_parni( 4 ) ), GetDeviceCaps( hDC, LOGPIXELSX ), abs( iWidth ) );
       }
 
       lf.lfHeight         = ( LONG ) iHeight;
@@ -314,7 +307,7 @@ HB_FUNC( WIN_CREATEFONT )
       lf.lfItalic         = ( BYTE ) hb_parl( 8 );
       lf.lfUnderline      = ( BYTE ) hb_parl( 7 );
       lf.lfStrikeOut      = ( BYTE ) 0;
-      lf.lfCharSet        = ( BYTE ) hb_parnl( 9 );
+      lf.lfCharSet        = ( BYTE ) hb_parnidef( 9, DEFAULT_CHARSET );
 #if defined( HB_OS_WIN_CE )
       lf.lfOutPrecision   = ( BYTE ) OUT_DEFAULT_PRECIS;
 #else
@@ -367,6 +360,7 @@ HB_FUNC( WIN_BITMAPSOK )
 
    hb_retl( hDC && ( GetDeviceCaps( hDC, RASTERCAPS ) & RC_STRETCHDIB ) );
 }
+#endif
 
 HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
 {
@@ -395,10 +389,15 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
                HB_BOOL fUserDialog;
                int iProp, iProp2;
 
-               fUserDialog = HB_ISBYREF( 3 ) || HB_ISBYREF( 4 ) ||
-                             HB_ISBYREF( 5 ) || HB_ISBYREF( 6 ) ||
-                             HB_ISBYREF( 7 ) || HB_ISBYREF( 8 ) ||
-                             HB_ISBYREF( 9 ) || HB_ISBYREF( 10 );
+               fUserDialog = HB_ISBYREF( 3 ) ||
+                             HB_ISBYREF( 4 ) ||
+                             HB_ISBYREF( 5 ) ||
+                             HB_ISBYREF( 6 ) ||
+                             HB_ISBYREF( 7 ) ||
+                             HB_ISBYREF( 8 ) ||
+                             HB_ISBYREF( 9 ) ||
+                             HB_ISBYREF( 10 ) ||
+                             HB_ISBYREF( 11 );
 
                if( ( iProp = hb_parni( 3 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
                {
@@ -416,6 +415,12 @@ HB_FUNC( WIN_SETDOCUMENTPROPERTIES )
                {
                   pDevMode->dmCopies = ( short ) iProp;
                   dmFields |= DM_COPIES;
+
+                  if( hb_parl( 11 ) )
+                  {
+                     pDevMode->dmCollate = DMCOLLATE_TRUE;
+                     dmFields |= DM_COLLATE;
+                  }
                }
 
                if( ( iProp = hb_parni( 6 ) ) != 0 )      /* [2007-02-22] don't change if 0 */
@@ -506,6 +511,7 @@ HB_FUNC( WIN_GETDOCUMENTPROPERTIES )
             hb_storni( pDevMode->dmPrintQuality, 7 );
             hb_storni( pDevMode->dmPaperLength, 8 );
             hb_storni( pDevMode->dmPaperWidth, 9 );
+            hb_storl( pDevMode->dmCollate == DMCOLLATE_TRUE, 10 );
             bResult = HB_TRUE;
          }
 
@@ -546,7 +552,7 @@ HB_FUNC( WIN_ENUMFONTS )
    if( fNullDC )
       hDC = GetDC( NULL );
 
-   EnumFonts( hDC, ( LPCTSTR ) NULL, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray );
+   EnumFonts( hDC, NULL, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray );
 
    if( fNullDC )
       ReleaseDC( NULL, hDC );
@@ -560,22 +566,22 @@ HB_FUNC( WIN_ENUMFONTFAMILIES )
 #if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
    HB_BOOL fNullDC = ( ! hDC );
-   LOGFONT Logfont;
+   LOGFONT lf;
 
-   memset( &Logfont, 0, sizeof( Logfont ) );
+   memset( &lf, 0, sizeof( lf ) );
 
-   Logfont.lfCharSet = ( BYTE ) hb_parnidef( 1, DEFAULT_CHARSET );
+   lf.lfCharSet = ( BYTE ) hb_parnidef( 1, DEFAULT_CHARSET );
    if( HB_ISCHAR( 2 ) )
    {
       void * hText;
-      HB_STRNCPY( Logfont.lfFaceName, HB_PARSTR( 2, &hText, NULL ), HB_SIZEOFARRAY( Logfont.lfFaceName ) - 1 );
+      HB_STRNCPY( lf.lfFaceName, HB_PARSTR( 2, &hText, NULL ), HB_SIZEOFARRAY( lf.lfFaceName ) - 1 );
       hb_strfree( hText );
    }
 
    if( fNullDC )
       hDC = GetDC( NULL );
 
-   EnumFontFamiliesEx( hDC, &Logfont, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray, 0 );
+   EnumFontFamiliesEx( hDC, &lf, ( FONTENUMPROC ) FontEnumCallBack, ( LPARAM ) pArray, 0 );
 
    if( fNullDC )
       ReleaseDC( NULL, hDC );
@@ -584,6 +590,7 @@ HB_FUNC( WIN_ENUMFONTFAMILIES )
    hb_itemReturnRelease( pArray );
 }
 
+#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_SETCOLOR )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
@@ -591,19 +598,20 @@ HB_FUNC( WIN_SETCOLOR )
    if( hDC )
    {
       if( HB_ISNUM( 2 ) )
-         hb_retnl( ( long ) SetTextColor( hDC, ( COLORREF ) hb_parnl( 2 ) ) );
+         hb_retnint( SetTextColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
       else
-         hb_retnl( ( long ) GetTextColor( hDC ) );
+         hb_retnint( GetTextColor( hDC ) );
 
       if( HB_ISNUM( 3 ) )
-         SetBkColor( hDC, ( COLORREF ) hb_parnl( 3 ) );
+         SetBkColor( hDC, hbwapi_par_COLORREF( 3 ) );
 
       if( HB_ISNUM( 4 ) )
          SetTextAlign( hDC, hb_parni( 4 ) );
    }
    else
-      hb_retnl( ( long ) CLR_INVALID );
+      hb_retnint( CLR_INVALID );
 }
+#endif
 
 HB_FUNC( WIN_SETPEN )
 {
@@ -617,9 +625,9 @@ HB_FUNC( WIN_SETPEN )
          hPen = hbwapi_par_HPEN( 2 );
       else
       {
-         hPen = CreatePen( hb_parni( 2 ),                /* pen style */
-                           hb_parni( 3 ),                /* pen width */
-                           ( COLORREF ) hb_parnl( 4 ) ); /* pen color */
+         hPen = CreatePen( hb_parni( 2 ),  /* pen style */
+                           hb_parni( 3 ),  /* pen width */
+                           hbwapi_par_COLORREF( 4 ) );  /* pen color */
 
          hbwapi_ret_HPEN( hPen );
       }
@@ -631,6 +639,7 @@ HB_FUNC( WIN_SETPEN )
       hb_retptr( NULL );
 }
 
+#ifdef HB_LEGACY_LEVEL5
 HB_FUNC( WIN_FILLRECT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
@@ -638,15 +647,15 @@ HB_FUNC( WIN_FILLRECT )
 
    if( hDC )
    {
-      HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnl( 6 ) );
-      RECT rct;
+      HBRUSH hBrush = CreateSolidBrush( hbwapi_par_COLORREF( 6 ) );
+      RECT rc;
 
-      rct.left   = hb_parnl( 2 );
-      rct.top    = hb_parnl( 3 );
-      rct.right  = hb_parnl( 4 );
-      rct.bottom = hb_parnl( 5 );
+      rc.left   = hb_parnl( 2 );
+      rc.top    = hb_parnl( 3 );
+      rc.right  = hb_parnl( 4 );
+      rc.bottom = hb_parnl( 5 );
 
-      if( FillRect( hDC, &rct, hBrush ) )
+      if( FillRect( hDC, &rc, hBrush ) )
          fResult = HB_TRUE;
 
       DeleteObject( hBrush );
@@ -682,6 +691,9 @@ HB_FUNC( WIN_RECTANGLE )
 
 HB_FUNC( WIN_ARC )
 {
+#if defined( HB_OS_WIN_CE )
+   hb_retl( HB_FALSE );
+#else
    HDC hDC = hbwapi_par_HDC( 1 );
 
    hb_retl( hDC ? Arc( hDC /* hDC */,
@@ -693,6 +705,7 @@ HB_FUNC( WIN_ARC )
                        0,
                        0,
                        0 ) : HB_FALSE );
+#endif
 }
 
 HB_FUNC( WIN_ELLIPSE )
@@ -720,3 +733,4 @@ HB_FUNC( WIN_SETBKMODE )
    }
    hb_retni( iMode );
 }
+#endif

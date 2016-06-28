@@ -47,14 +47,11 @@
 #include "hbapi.h"
 
 /* Extended Drivers */
-HB_FUNC( CGA40 )      { ; }
-HB_FUNC( CGA80 )      { ; }
 HB_FUNC( DSETNOLINE ) { ; }
 HB_FUNC( DSETQFILE )  { ; }
 HB_FUNC( DSETTYPE )   { ; }
 HB_FUNC( DSETWINDEB ) { ; }
 HB_FUNC( DSETWINDOW ) { ; }
-HB_FUNC( EGA43 )      { ; }
 HB_FUNC( FIRSTCOL )   { ; }
 HB_FUNC( FIRSTROW )   { ; }
 HB_FUNC( GETBOXGROW ) { ; }
@@ -70,9 +67,7 @@ HB_FUNC( INKEYTRAP )  { ; }
 HB_FUNC( INPUTMODE )  { ; }
 HB_FUNC( KEYREAD )    { ; }
 HB_FUNC( KEYSEND )    { ; }
-HB_FUNC( MAXCOL )     { ; }
 HB_FUNC( MAXPAGE )    { ; }
-HB_FUNC( MAXROW )     { ; }
 HB_FUNC( MONOCHROME ) { ; }
 HB_FUNC( PAGECOPY )   { ; }
 HB_FUNC( PRINTERROR ) { ; }
@@ -91,8 +86,6 @@ HB_FUNC( SETTAB )     { ; }
 HB_FUNC( TRAPANYKEY ) { ; }
 HB_FUNC( TRAPINPUT )  { ; }
 HB_FUNC( TRAPSHIFT )  { ; }
-HB_FUNC( VGA28 )      { ; }
-HB_FUNC( VGA50 )      { ; }
 /* Video Functions */
 HB_FUNC( EGAPALETTE ) { ; }
 HB_FUNC( FONTLOAD )   { ; }
@@ -102,13 +95,6 @@ HB_FUNC( FONTSELECT ) { ; }
 HB_FUNC( GETFONT )    { ; }
 HB_FUNC( GETSCRSTR )  { ; }
 HB_FUNC( GETVGAPAL )  { ; }
-HB_FUNC( ISCGA )      { ; }
-HB_FUNC( ISEGA )      { ; }
-HB_FUNC( ISHERCULES ) { ; }
-HB_FUNC( ISMCGA )     { ; }
-HB_FUNC( ISMONO )     { ; }
-HB_FUNC( ISPGA )      { ; }
-HB_FUNC( ISVGA )      { ; }
 HB_FUNC( MAXFONT )    { ; }
 HB_FUNC( MONISWITCH ) { ; }
 HB_FUNC( NUMCOL )     { ; }
@@ -124,13 +110,11 @@ HB_FUNC( DISKCHANGE ) { ; } /* Implemented in Harbour core as C5.3 function. */
 #endif
 HB_FUNC( DISKCHECK )  { ; }
 HB_FUNC( DISKFORMAT ) { ; }
-HB_FUNC( DISKFREE )   { ; }
 HB_FUNC( DISKNAME )   { ; }
 HB_FUNC( DISKREADY )  { ; }
 HB_FUNC( DISKREADYW ) { ; }
 HB_FUNC( DISKSPEED )  { ; }
 HB_FUNC( DISKSTAT )   { ; }
-HB_FUNC( DISKTOTAL )  { ; }
 HB_FUNC( DISKTYPE )   { ; }
 HB_FUNC( FILECHECK )  { ; }
 HB_FUNC( FILEVALID )  { ; }
@@ -189,7 +173,6 @@ HB_FUNC( ERRORORG )   { ; }
 HB_FUNC( FILESFREE )  { ; }
 HB_FUNC( GETCOUNTRY ) { ; }
 HB_FUNC( ISANSI )     { ; }
-HB_FUNC( ISMATH )     { ; }
 HB_FUNC( MEMSIZE )    { ; }
 HB_FUNC( NUMBUFFERS ) { ; }
 HB_FUNC( NUMFILES )   { ; }

@@ -21,6 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC ARemove
 DYNAMIC Bin2F
 DYNAMIC Bin2U
 DYNAMIC ConvToANSICP

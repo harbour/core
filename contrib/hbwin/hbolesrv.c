@@ -191,13 +191,13 @@ static HB_BOOL s_getKeyValue( LPCTSTR lpKey, LPTSTR lpBuffer, int iLen )
 #if ! defined( HB_OLE_C_API )
 typedef struct
 {
-   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IDispatch*, REFIID, void** );
-   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IDispatch* );
-   ULONG   ( STDMETHODCALLTYPE * Release ) ( IDispatch* );
-   HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IDispatch*, UINT* );
-   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IDispatch*, UINT, LCID, ITypeInfo** );
-   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IDispatch*, REFIID, LPOLESTR*, UINT, LCID, DISPID* );
-   HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IDispatch*, DISPID, REFIID, LCID, WORD, DISPPARAMS*, VARIANT*, EXCEPINFO*, UINT* );
+   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IDispatch *, REFIID, void ** );
+   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IDispatch * );
+   ULONG   ( STDMETHODCALLTYPE * Release ) ( IDispatch * );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IDispatch *, UINT * );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IDispatch *, UINT, LCID, ITypeInfo ** );
+   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IDispatch *, REFIID, LPOLESTR *, UINT, LCID, DISPID * );
+   HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IDispatch *, DISPID, REFIID, LCID, WORD, DISPPARAMS *, VARIANT *, EXCEPINFO *, UINT * );
 } IDispatchVtbl;
 #endif
 
@@ -507,11 +507,11 @@ static const IDispatchVtbl IHbOleServer_Vtbl = {
 #if ! defined( HB_OLE_C_API )
 typedef struct
 {
-   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IClassFactory*, REFIID, void** );
-   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IClassFactory* );
-   ULONG   ( STDMETHODCALLTYPE * Release ) ( IClassFactory* );
-   HRESULT ( STDMETHODCALLTYPE * CreateInstance ) ( IClassFactory*, IUnknown*, REFIID, void** );
-   HRESULT ( STDMETHODCALLTYPE * LockServer) ( IClassFactory*, BOOL );
+   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IClassFactory *, REFIID, void ** );
+   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IClassFactory * );
+   ULONG   ( STDMETHODCALLTYPE * Release ) ( IClassFactory * );
+   HRESULT ( STDMETHODCALLTYPE * CreateInstance ) ( IClassFactory *, IUnknown *, REFIID, void ** );
+   HRESULT ( STDMETHODCALLTYPE * LockServer) ( IClassFactory *, BOOL );
 } IClassFactoryVtbl;
 #endif
 
@@ -705,10 +705,10 @@ STDAPI DllUnregisterServer( void )
 }
 
 #ifndef SELFREG_E_CLASS
-#  ifndef SELFREG_E_FIRST
-#     define SELFREG_E_FIRST  MAKE_SCODE( SEVERITY_ERROR, FACILITY_ITF, 0x0200 )
-#  endif
-#  define SELFREG_E_CLASS     ( SELFREG_E_FIRST + 1 )
+   #ifndef SELFREG_E_FIRST
+      #define SELFREG_E_FIRST  MAKE_SCODE( SEVERITY_ERROR, FACILITY_ITF, 0x0200 )
+   #endif
+   #define SELFREG_E_CLASS     ( SELFREG_E_FIRST + 1 )
 #endif
 
 STDAPI DllRegisterServer( void )
@@ -719,11 +719,12 @@ STDAPI DllRegisterServer( void )
    LPCTSTR lpValName;
    HRESULT hr = S_OK;
    HKEY hKey;
-   long err;
    int i;
 
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_regTable ); ++i )
    {
+      long err;
+
       s_getKeyValue( s_regTable[ i ][ 0 ], lpKeyName, MAX_REGSTR_SIZE );
       if( s_regTable[ i ][ 1 ] )
       {
@@ -856,7 +857,7 @@ HB_FUNC( WIN_OLESERVERINIT )
                s_pMsgHash = NULL;
             }
 
-            pAction = hb_param( 3, HB_IT_HASH | HB_IT_BLOCK | HB_IT_SYMBOL );
+            pAction = hb_param( 3, HB_IT_HASH | HB_IT_EVALITEM );
             if( ! pAction && HB_ISOBJECT( 3 ) )
                pAction = hb_param( 3, HB_IT_OBJECT );
             if( pAction )

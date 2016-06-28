@@ -63,13 +63,7 @@ FUNCTION OL_IsNT()
    RETURN hb_osIsWinNT()
 
 FUNCTION OL_IsOS2()
-
-#if defined( __PLATFORM__OS2 )
-   RETURN .T.
-#else
-
-   RETURN .F. /* TODO: detect OS/2 in MS-DOS builds */
-#endif
+   RETURN "OS/2" $ OS()
 
 FUNCTION OL_IsOS2Win()
    RETURN hb_gtInfo( HB_GTI_ISFULLSCREEN )

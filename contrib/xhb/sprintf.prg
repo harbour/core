@@ -46,14 +46,12 @@
 
 FUNCTION sprintf( ... )
 
-   LOCAL aPar, cReturn, nPar, nPos, cTok
-   LOCAL nLen := 0, lUnsigned, l0 := .F., lSign := .F., nDec, xVal
-   LOCAL cString
+   LOCAL nLen := 0, lUnsigned, l0 := .F., lSign := .F., nDec, xVal, nPos, cTok
 
-   aPar    := hb_AParams()
-   cReturn := ""
-   cString := aPar[ 1 ]
-   nPar    := 2
+   LOCAL aPar    := hb_AParams()
+   LOCAL cReturn := ""
+   LOCAL cString := iif( Len( aPar ) >= 1, aPar[ 1 ], "" )
+   LOCAL nPar    := 2
 
    DO WHILE ! Empty( cString )
 
@@ -104,13 +102,13 @@ FUNCTION sprintf( ... )
             EXIT
 
          CASE "+"
-            cString := Left( cString, nPos - 1 ) + SubStr( cString, nPos + 1 )
+            cString := Stuff( cString, nPos, 1, "" )
             nPos    := At( "%", cString ) - 1
             lSign   := .T.
             EXIT
 
          CASE "0"
-            cString := Left( cString, nPos - 1 ) + SubStr( cString, nPos + 1 )
+            cString := Stuff( cString, nPos, 1, "" )
             nPos    := At( "%", cString ) - 1
             l0      := .T.
             EXIT
@@ -145,9 +143,9 @@ FUNCTION sprintf( ... )
             hb_default( @xVal, 0 )
             IF nLen != 0
                IF nLen - Int( nLen ) > 0.0
-                  nDec := Str( nLen )
+                  nDec := hb_ntos( nLen )
                   DO WHILE Right( nDec, 1 ) == "0"
-                     nDec := Left( nDec, Len( nDec ) - 1 )
+                     nDec := hb_StrShrink( nDec )
                   ENDDO
                   nDec := Val( SubStr( nDec, At( ".", nDec ) + 1 ) )
                ELSE
@@ -158,14 +156,14 @@ FUNCTION sprintf( ... )
                cTok := hb_ntos( iif( lUnsigned, Abs( xVal ), xVal ) )
             ENDIF
             IF l0
-               IF "-" $ cTok .AND. !( Left( cTok, 1 ) == "-" )
+               IF "-" $ cTok .AND. ! hb_LeftEq( cTok, "-" )
                   cTok := StrTran( cTok, "-", " " )
                   cTok := "-" + SubStr( cTok, 2 )
                ENDIF
                cTok := StrTran( cTok, " ", "0" )
                l0   := .F.
             ENDIF
-            IF lSign .AND. !( Left( cTok, 1 ) == "-" )
+            IF lSign .AND. ! hb_LeftEq( cTok, "-" )
                IF nLen == 0
                   cTok := "+" + cTok
                ELSE

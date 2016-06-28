@@ -1,0 +1,27 @@
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 3
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.sh]
+end_of_line = lf
+
+[*.bat]
+end_of_line = crlf
+
+[{**/3rd/**,*.dif}]
+trim_trailing_whitespace = no
+charset =
+
+[{*.hb*,Makefile}]
+trim_trailing_whitespace = yes
+
+[Makefile,debian/rules,*.mk,*.yyc,*.cs,*.dif,*.htm*,*.mft,*.plist,*.xml,*.xsd,*.xsl,*.java,*.js,*.svg,*.vbs,*.css]
+indent_size = tab

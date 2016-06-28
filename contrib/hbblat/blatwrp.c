@@ -47,17 +47,32 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 
-/* NOTE: We're not using the original blat headers, because they
-         contain C++ parts, which we don't need anyway. */
-
-HB_EXTERN_BEGIN
-extern int cSend( const char * szCmd );
-HB_EXTERN_END
+#if defined( HBMK_HAS_BLAT )
+   /* Blat 3.x or newer */
+   #include "hbwinuni.h"
+   #include "windows.h"
+   #include "blatdll.h"  /* Must follow windows.h */
+#else
+   /* NOTE: When building against Blat 2.x, we're not using the
+            original blat headers, because they contain C++ parts,
+            which we don't need anyway. */
+   HB_EXTERN_BEGIN
+   extern int cSend( const char * szCmd );
+   HB_EXTERN_END
+#endif
 
 HB_FUNC( HB_BLATSEND )
 {
    if( HB_ISCHAR( 1 ) )
+   {
+#if defined( HBMK_HAS_BLAT )
+      void * hCmdLine = NULL;
+      hb_retni( cSend( HB_PARSTR( 1, &hCmdLine, NULL ) ) );
+      hb_strfree( hCmdLine );
+#else
       hb_retni( cSend( hb_parc( 1 ) ) );
+#endif
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

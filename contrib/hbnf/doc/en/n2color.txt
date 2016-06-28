@@ -16,7 +16,7 @@
       This function is useful for converting a number to a Clipper color
       string.
    $EXAMPLES$
-      cColor := ft_Color2N( 239 )         // returns "*+w/gr"
+      ? ft_Color2N( 239 )         // returns "*+w/gr"
    $SEEALSO$
       ft_N2Color()
    $END$

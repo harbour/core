@@ -2,6 +2,8 @@
  * Memvar (PRIVATE/PUBLIC) runtime support
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ *   __mvSave(), __mvRestore() (Thanks to Dave Pearson and Jo French for the original Clipper function FReadMem() to read .mem files)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,18 +46,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    __mvSave()
- *    __mvRestore() (Thanks to Dave Pearson and Jo French for the original
- *                   Clipper function (FReadMem()) to read .mem files)
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbvmopt.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -69,10 +59,8 @@
 #include "hbstack.h"
 
 #if ! defined( HB_MT_VM )
-
-#  define hb_dynsymGetMemvar( p )     ( ( PHB_ITEM ) ( p )->pMemvar )
-#  define hb_dynsymSetMemvar( p, h )  do { ( p )->pMemvar = ( h ); } while( 0 )
-
+   #define hb_dynsymGetMemvar( p )     ( ( PHB_ITEM ) ( p )->pMemvar )
+   #define hb_dynsymSetMemvar( p, h )  do { ( p )->pMemvar = ( h ); } while( 0 )
 #endif
 
 #define TABLE_INITHB_VALUE    100
@@ -744,8 +732,6 @@ static void hb_memvarReleaseWithMask( const char * szMask, HB_BOOL bInclude )
 {
    HB_STACK_TLS_PRELOAD
    HB_SIZE nBase, nCount;
-   PHB_DYNS pDynVar;
-   PHB_ITEM pMemvar;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_memvarReleaseWithMask(%s, %d)", szMask, ( int ) bInclude ) );
 
@@ -753,6 +739,9 @@ static void hb_memvarReleaseWithMask( const char * szMask, HB_BOOL bInclude )
    nBase = hb_stackBaseItem()->item.asSymbol.stackstate->nPrivateBase;
    while( nCount-- > nBase )
    {
+      PHB_DYNS pDynVar;
+      PHB_ITEM pMemvar;
+
       pDynVar = hb_stackGetPrivateStack()->stack[ nCount ].pDynSym;
       /* reset current value to NIL - the overriden variables will be
        * visible after exit from current procedure
@@ -992,8 +981,7 @@ PHB_ITEM hb_memvarSaveInArray( int iScope, HB_BOOL fCopy )
 {
    HB_STACK_TLS_PRELOAD
    struct mv_memvarArray_info MVInfo;
-   PHB_ITEM pArray, pItem, pMemvar;
-   PHB_DYNS pDynSymbol;
+   PHB_ITEM pArray;
 
    pArray = NULL;
 
@@ -1017,9 +1005,9 @@ PHB_ITEM hb_memvarSaveInArray( int iScope, HB_BOOL fCopy )
       pArray = hb_itemArrayNew( MVInfo.nCount );
       do
       {
-         pItem = hb_arrayGetItemPtr( pArray, MVInfo.nCount );
-         pDynSymbol = MVInfo.pDyns[ --MVInfo.nCount ];
-         pMemvar = hb_dynsymGetMemvar( pDynSymbol ),
+         PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, MVInfo.nCount );
+         PHB_DYNS pDynSymbol = MVInfo.pDyns[ --MVInfo.nCount ];
+         PHB_ITEM pMemvar = hb_dynsymGetMemvar( pDynSymbol );
 
          hb_arrayNew( pItem, 2 );
          hb_arraySetSymbol( pItem, 1, pDynSymbol->pSymbol );
@@ -1061,7 +1049,7 @@ void hb_memvarRestoreFromArray( PHB_ITEM pArray )
    }
 }
 
-/* ************************************************************************** */
+/* - */
 
 static const char * hb_memvarGetMask( int iParam )
 {
@@ -1467,7 +1455,7 @@ HB_FUNC( __MVSAVE )
       {
          fhnd = hb_fileExtOpen( pszFileName,
                                 hb_stackSetStruct()->HB_SET_DEFEXTENSIONS ? ".mem" : NULL,
-                                FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
+                                FXO_TRUNCATE | FO_WRITE | FO_EXCLUSIVE |
                                 FXO_DEFAULTS | FXO_SHARELOCK,
                                 NULL, pError );
          if( fhnd == NULL )
@@ -1561,7 +1549,6 @@ HB_FUNC( __MVRESTORE )
          HB_BOOL bIncludeMask;
          HB_BYTE buffer[ HB_MEM_REC_LEN ];
          const char * pszMask;
-         char *szName;
          PHB_ITEM pItem = NULL;
 
 #ifdef HB_CLP_STRICT
@@ -1569,11 +1556,13 @@ HB_FUNC( __MVRESTORE )
          bIncludeMask = HB_TRUE;
 #else
          pszMask = hb_memvarGetMask( 3 );
-         bIncludeMask = hb_parldef( 4, 1 );
+         bIncludeMask = hb_parldef( 4, HB_TRUE );
 #endif
 
          while( hb_fileRead( fhnd, buffer, HB_MEM_REC_LEN, -1 ) == HB_MEM_REC_LEN )
          {
+            char * pszName;
+
             /* FoxPro does not add 128 to item type: 'N', 'C', 'D', 'L'
              * CA-Cl*pper respects it and read such files so we also should.
              */
@@ -1583,7 +1572,7 @@ HB_FUNC( __MVRESTORE )
 
             /* protect against corrupted files */
             buffer[ 10 ] = '\0';
-            szName = ( char * ) buffer;
+            pszName = ( char * ) buffer;
 
             switch( uiType )
             {
@@ -1599,7 +1588,7 @@ HB_FUNC( __MVRESTORE )
                   else
                   {
                      hb_xfree( pbyString );
-                     szName = NULL;
+                     pszName = NULL;
                   }
 
                   break;
@@ -1612,7 +1601,7 @@ HB_FUNC( __MVRESTORE )
                   if( hb_fileRead( fhnd, pbyNumber, HB_MEM_NUM_LEN, -1 ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutNLen( pItem, HB_GET_LE_DOUBLE( pbyNumber ), uiWidth - ( uiDec ? ( uiDec + 1 ) : 0 ), uiDec );
                   else
-                     szName = NULL;
+                     pszName = NULL;
 
                   break;
                }
@@ -1624,7 +1613,7 @@ HB_FUNC( __MVRESTORE )
                   if( hb_fileRead( fhnd, pbyNumber, HB_MEM_NUM_LEN, -1 ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutDL( pItem, ( long ) HB_GET_LE_DOUBLE( pbyNumber ) );
                   else
-                     szName = NULL;
+                     pszName = NULL;
 
                   break;
                }
@@ -1636,7 +1625,7 @@ HB_FUNC( __MVRESTORE )
                   if( hb_fileRead( fhnd, pbyNumber, HB_MEM_NUM_LEN, -1 ) == HB_MEM_NUM_LEN )
                      pItem = hb_itemPutTD( pItem, HB_GET_LE_DOUBLE( pbyNumber ) );
                   else
-                     szName = NULL;
+                     pszName = NULL;
 
                   break;
                }
@@ -1648,31 +1637,31 @@ HB_FUNC( __MVRESTORE )
                   if( hb_fileRead( fhnd, pbyLogical, 1, -1 ) == 1 )
                      pItem = hb_itemPutL( pItem, pbyLogical[ 0 ] != 0 );
                   else
-                     szName = NULL;
+                     pszName = NULL;
 
                   break;
                }
 
                default:
-                  szName = NULL;
+                  pszName = NULL;
             }
 
-            if( szName )
+            if( pszName )
             {
-               HB_BOOL bMatch = hb_strMatchCaseWildExact( szName, pszMask );
+               HB_BOOL bMatch = hb_strMatchCaseWildExact( pszName, pszMask );
 
                /* Process it if it matches the passed mask */
                if( bIncludeMask ? bMatch : ! bMatch )
                {
                   /* the first parameter is a string with not empty variable name */
-                  PHB_DYNS pDynVar = hb_memvarFindSymbol( szName, strlen( szName ) );
+                  PHB_DYNS pDynVar = hb_memvarFindSymbol( pszName, strlen( pszName ) );
 
                   if( pDynVar )
                      /* variable was declared somwhere - assign a new value */
                      hb_memvarSetValue( pDynVar->pSymbol, pItem );
                   else
                      /* attempt to assign a value to undeclared variable create the PRIVATE one */
-                     hb_memvarCreateFromDynSymbol( hb_dynsymGet( szName ), HB_VSCOMP_PRIVATE, pItem );
+                     hb_memvarCreateFromDynSymbol( hb_dynsymGet( pszName ), HB_VSCOMP_PRIVATE, pItem );
                }
             }
          }

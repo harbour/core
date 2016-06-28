@@ -45,17 +45,14 @@
  */
 
 /* WinCE MSDN documentation:
-      http://msdn.microsoft.com/en-us/library/aa923590.aspx
+      https://msdn.microsoft.com/en-us/library/aa923590.aspx
  */
 
 #include "hbwapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* For Arc() */
-#if defined( HB_OS_WIN_CE )
-   #include "hbwince.h"
-#else
+#if ! defined( HB_OS_WIN_CE )
    #include <winspool.h>
 #endif
 
@@ -63,6 +60,17 @@ static void s_hb_hashSetCItemNL( PHB_ITEM pHash, const char * pszKey, long v )
 {
    PHB_ITEM pKey = hb_itemPutC( NULL, pszKey );
    PHB_ITEM pValue = hb_itemPutNL( NULL, v );
+
+   hb_hashAdd( pHash, pKey, pValue );
+
+   hb_itemRelease( pValue );
+   hb_itemRelease( pKey );
+}
+
+static void s_hb_hashSetCItemC( PHB_ITEM pHash, const char * pszKey, const TCHAR * v, HB_SIZE l )
+{
+   PHB_ITEM pKey = hb_itemPutC( NULL, pszKey );
+   PHB_ITEM pValue = HB_ITEMPUTSTRLEN( NULL, v, l );
 
    hb_hashAdd( pHash, pKey, pValue );
 
@@ -96,19 +104,59 @@ POINT * hbwapi_par_POINT( POINT * p, int iParam, HB_BOOL bMandatory )
    return NULL;
 }
 
-void hbwapi_stor_POINT( POINT * p, int iParam )
+void hbwapi_stor_SIZE( const SIZE * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   if( pStru && HB_IS_HASH( pStru ) )
+   if( pStru )
    {
-      s_hb_hashSetCItemNL( pStru, "x", p->x );
-      s_hb_hashSetCItemNL( pStru, "y", p->y );
+      if( HB_IS_HASH( pStru ) )
+      {
+         s_hb_hashSetCItemNL( pStru, "cx", p->cx );
+         s_hb_hashSetCItemNL( pStru, "cy", p->cy );
+      }
+      else
+      {
+         if( ! HB_IS_ARRAY( pStru ) )
+         {
+            if( ! hb_itemParamStoreRelease( ( USHORT ) iParam, pStru = hb_itemArrayNew( 2 ) ) )
+               hb_itemRelease( pStru );
+            pStru = hb_param( iParam, HB_IT_ANY );
+         }
+         else if( hb_arrayLen( pStru ) < 2 )
+            hb_arraySize( pStru, 2 );
+
+         hb_arraySetNL( pStru, 1, p->cx );
+         hb_arraySetNL( pStru, 2, p->cy );
+      }
    }
-   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 2 )
+}
+
+void hbwapi_stor_POINT( const POINT * p, int iParam )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   if( pStru )
    {
-      hb_arraySetNL( pStru, 1, p->x );
-      hb_arraySetNL( pStru, 2, p->y );
+      if( HB_IS_HASH( pStru ) )
+      {
+         s_hb_hashSetCItemNL( pStru, "x", p->x );
+         s_hb_hashSetCItemNL( pStru, "y", p->y );
+      }
+      else
+      {
+         if( ! HB_IS_ARRAY( pStru ) )
+         {
+            if( ! hb_itemParamStoreRelease( ( USHORT ) iParam, pStru = hb_itemArrayNew( 2 ) ) )
+               hb_itemRelease( pStru );
+            pStru = hb_param( iParam, HB_IT_ANY );
+         }
+         else if( hb_arrayLen( pStru ) < 2 )
+            hb_arraySize( pStru, 2 );
+
+         hb_arraySetNL( pStru, 1, p->x );
+         hb_arraySetNL( pStru, 2, p->y );
+      }
    }
 }
 
@@ -116,7 +164,7 @@ RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   memset( p, 0, sizeof( RECT ) );
+   memset( p, 0, sizeof( *p ) );
 
    if( pStru && HB_IS_HASH( pStru ) )
    {
@@ -142,23 +190,35 @@ RECT * hbwapi_par_RECT( RECT * p, int iParam, HB_BOOL bMandatory )
    return NULL;
 }
 
-void hbwapi_stor_RECT( RECT * p, int iParam )
+void hbwapi_stor_RECT( const RECT * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
 
-   if( pStru && HB_IS_HASH( pStru ) )
+   if( pStru )
    {
-      s_hb_hashSetCItemNL( pStru, "left"  , p->left   );
-      s_hb_hashSetCItemNL( pStru, "top"   , p->top    );
-      s_hb_hashSetCItemNL( pStru, "right" , p->right  );
-      s_hb_hashSetCItemNL( pStru, "bottom", p->bottom );
-   }
-   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 4 )
-   {
-      hb_arraySetNL( pStru, 1, p->left   );
-      hb_arraySetNL( pStru, 2, p->top    );
-      hb_arraySetNL( pStru, 3, p->right  );
-      hb_arraySetNL( pStru, 4, p->bottom );
+      if( HB_IS_HASH( pStru ) )
+      {
+         s_hb_hashSetCItemNL( pStru, "left"  , p->left   );
+         s_hb_hashSetCItemNL( pStru, "top"   , p->top    );
+         s_hb_hashSetCItemNL( pStru, "right" , p->right  );
+         s_hb_hashSetCItemNL( pStru, "bottom", p->bottom );
+      }
+      else
+      {
+         if( ! HB_IS_ARRAY( pStru ) )
+         {
+            if( ! hb_itemParamStoreRelease( ( USHORT ) iParam, pStru = hb_itemArrayNew( 4 ) ) )
+               hb_itemRelease( pStru );
+            pStru = hb_param( iParam, HB_IT_ANY );
+         }
+         else if( hb_arrayLen( pStru ) < 4 )
+            hb_arraySize( pStru, 4 );
+
+         hb_arraySetNL( pStru, 1, p->left   );
+         hb_arraySetNL( pStru, 2, p->top    );
+         hb_arraySetNL( pStru, 3, p->right  );
+         hb_arraySetNL( pStru, 4, p->bottom );
+      }
    }
 }
 
@@ -170,7 +230,7 @@ LOGFONT * hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL bMandatory )
    LPCTSTR pfFaceName;
    HB_SIZE nLen;
 
-   memset( p, 0, sizeof( LOGFONT ) );
+   memset( p, 0, sizeof( *p ) );
 
    if( pStru && HB_IS_HASH( pStru ) )
    {
@@ -234,18 +294,88 @@ LOGFONT * hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL bMandatory )
    return NULL;
 }
 
-DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** ph )
+LOGBRUSH * hbwapi_par_LOGBRUSH( LOGBRUSH * p, int iParam )
 {
    PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   memset( p, 0, sizeof( *p ) );
+
+   if( pStru && HB_IS_HASH( pStru ) )
+   {
+      p->lbStyle = ( UINT ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "lbStyle" ) );
+      p->lbColor = ( COLORREF ) hb_itemGetNL( hb_hashGetCItemPtr( pStru, "lbColor" ) );
+      #if defined( HB_OS_WIN_CE )
+      p->lbHatch = 0;
+      #else
+      switch( p->lbStyle )
+      {
+         case BS_SOLID:
+         case BS_HOLLOW:
+         case BS_HATCHED:
+            p->lbHatch = ( ULONG_PTR ) hb_itemGetNInt( hb_hashGetCItemPtr( pStru, "lbHatch" ) );
+            break;
+         default:
+            p->lbHatch = ( ULONG_PTR ) hb_itemGetPtr( hb_hashGetCItemPtr( pStru, "lbHatch" ) );
+      }
+      #endif
+   }
+   else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 3 )
+   {
+      p->lbStyle = ( UINT ) hb_arrayGetNI( pStru, 1 );
+      p->lbColor = ( COLORREF ) hb_arrayGetNL( pStru, 2 );
+      #if defined( HB_OS_WIN_CE )
+      p->lbHatch = 0;
+      #else
+      switch( p->lbStyle )
+      {
+         case BS_SOLID:
+         case BS_HOLLOW:
+         case BS_HATCHED:
+            p->lbHatch = ( ULONG_PTR ) hb_arrayGetNInt( pStru, 3 );
+            break;
+         default:
+            p->lbHatch = ( ULONG_PTR ) hb_arrayGetPtr( pStru, 3 );
+      }
+      #endif
+   }
+#if 0
+   else
+   {
+      /* Just an experiment */
+      p->lbStyle = hbwapi_par_UINT( iParam );
+      p->lbColor = hbwapi_par_COLORREF( iParam + 1 );
+      #if defined( HB_OS_WIN_CE )
+      p->lbHatch = 0;
+      #else
+      switch( p->lbStyle )
+      {
+         case BS_SOLID:
+         case BS_HOLLOW:
+         case BS_HATCHED:
+            p->lbHatch = ( ULONG_PTR ) hb_parnint( iParam + 2 );
+            break;
+         default:
+            p->lbHatch = ( ULONG_PTR ) hbwapi_par_raw_HANDLE( iParam + 2 );
+      }
+      #endif
+   }
+#endif
+
+   return p;
+}
+
+DOCINFO * hbwapi_par_DOCINFO( DOCINFO * p, int iParam, HB_BOOL bMandatory, void *** ph )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_HASH );
    void ** h = ( void ** ) hb_xgrabz( 3 * sizeof( void * ) );
 
    *ph = h;
 
-   memset( p, 0, sizeof( DOCINFO ) );
+   memset( p, 0, sizeof( *p ) );
 
-   p->cbSize = sizeof( DOCINFO );
+   p->cbSize = sizeof( *p );
 
-   if( pStru && HB_IS_HASH( pStru ) )
+   if( pStru )
    {
       p->lpszDocName  = HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpszDocName"  ), &h[ 0 ], NULL );
       p->lpszOutput   = HB_ITEMGETSTR( hb_hashGetCItemPtr( pStru, "lpszOutput"   ), &h[ 1 ], NULL );
@@ -309,9 +439,9 @@ HB_FUNC( __WAPI_DEVMODE_SET )
 {
 #if ! defined( HB_OS_WIN_CE )
    PDEVMODE pDevMode = hbwapi_par_PDEVMODE( 1 );
-   PHB_ITEM pStru = hb_param( 2, HB_IT_ANY );
+   PHB_ITEM pStru = hb_param( 2, HB_IT_HASH );
 
-   if( pDevMode && pStru && HB_IS_HASH( pStru ) )
+   if( pDevMode && pStru )
    {
       pDevMode->dmOrientation   = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmOrientation"   ) );
       pDevMode->dmPaperSize     = ( short ) hb_itemGetNI( hb_hashGetCItemPtr( pStru, "dmPaperSize"     ) );
@@ -343,9 +473,9 @@ HB_FUNC( __WAPI_DEVMODE_GET )
 {
 #if ! defined( HB_OS_WIN_CE )
    PDEVMODE pDevMode = hbwapi_par_PDEVMODE( 1 );
-   PHB_ITEM pStru = hb_param( 2, HB_IT_ANY );
+   PHB_ITEM pStru = hb_param( 2, HB_IT_HASH );
 
-   if( pDevMode && pStru && HB_IS_HASH( pStru ) )
+   if( pDevMode && pStru )
    {
       s_hb_hashSetCItemNL( pStru, "dmOrientation"  , pDevMode->dmOrientation   );
       s_hb_hashSetCItemNL( pStru, "dmPaperSize"    , pDevMode->dmPaperSize     );
@@ -400,11 +530,14 @@ HB_FUNC( WAPI_STARTDOC )
    DOCINFO di;
 
    if( hDC && hbwapi_par_DOCINFO( &di, 2, HB_FALSE, &hDOCINFO ) )
+   {
       hb_retni( StartDoc( hDC, &di ) );
+
+      hbwapi_strfree_DOCINFO( hDOCINFO );
+      hb_xfree( hDOCINFO );
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-   hbwapi_strfree_DOCINFO( hDOCINFO );
 }
 
 HB_FUNC( WAPI_ENDDOC )
@@ -510,7 +643,7 @@ HB_FUNC( WAPI_SETTEXTALIGN )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retni( ( int ) SetTextAlign( hDC, ( UINT ) hb_parni( 2 ) ) );
+      hb_retni( ( int ) SetTextAlign( hDC, hbwapi_par_UINT( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -525,6 +658,21 @@ HB_FUNC( WAPI_GETTEXTALIGN )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( WAPI_GETTEXTEXTENTPOINT32 )
+{
+   SIZE size;
+
+   void * hData;
+   HB_SIZE nDataLen;
+   LPCTSTR lpData = HB_PARSTR( 2, &hData, &nDataLen );
+
+   hbwapi_ret_L( GetTextExtentPoint32( hbwapi_par_HDC( 1 ), lpData, ( int ) nDataLen, &size ) );
+
+   hbwapi_stor_SIZE( &size, 3 );
+
+   hb_strfree( hData );
+}
+
 HB_FUNC( WAPI_TEXTOUT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
@@ -536,29 +684,27 @@ HB_FUNC( WAPI_TEXTOUT )
       LPCTSTR lpData = HB_PARSTR( 4, &hData, &nDataLen );
 
 #if ! defined( HB_OS_WIN_CE )
-      hb_retl( TextOut( hDC,
-                        hb_parni( 2 ) /* iRow */,
-                        hb_parni( 3 ) /* iCol */,
-                        lpData,
-                        ( int ) nDataLen ) );
+      hbwapi_ret_L( TextOut( hDC,
+                             hb_parni( 2 ) /* iRow */,
+                             hb_parni( 3 ) /* iCol */,
+                             lpData,
+                             ( int ) nDataLen ) );
 #else
       /* Emulating TextOut() using ExtTextOut(). [vszakats] */
-      hb_retl( ExtTextOut( hDC,
-                           hb_parni( 2 ) /* iRow */,
-                           hb_parni( 3 ) /* iCol */,
-                           0,
-                           NULL,
-                           lpData,
-                           ( UINT ) nDataLen,
-                           NULL ) );
+      hbwapi_ret_L( ExtTextOut( hDC,
+                                hb_parni( 2 ) /* iRow */,
+                                hb_parni( 3 ) /* iCol */,
+                                0,
+                                NULL,
+                                lpData,
+                                ( UINT ) nDataLen,
+                                NULL ) );
 #endif
 
       hb_strfree( hData );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-   hb_retnl( HB_FALSE );
 }
 
 HB_FUNC( WAPI_EXTTEXTOUT )
@@ -570,7 +716,7 @@ HB_FUNC( WAPI_EXTTEXTOUT )
       void * hData;
       HB_SIZE nDataLen;
       LPCTSTR lpData = HB_PARSTR( 6, &hData, &nDataLen );
-      RECT rect;
+      RECT rc;
       PHB_ITEM pFontWidths = hb_param( 7, HB_IT_ARRAY );
       INT * lpFontWidths;
 
@@ -594,15 +740,14 @@ HB_FUNC( WAPI_EXTTEXTOUT )
       else
          lpFontWidths = NULL;
 
-
-      hb_retl( ExtTextOut( hDC,
-                           hb_parni( 2 ) /* iRow */,
-                           hb_parni( 3 ) /* iCol */,
-                           ( UINT ) hb_parni( 4 ) /* fuOptions */,
-                           hbwapi_par_RECT( &rect, 5, HB_FALSE ),
-                           lpData,
-                           ( UINT ) nDataLen,
-                           lpFontWidths ) );
+      hbwapi_ret_L( ExtTextOut( hDC,
+                                hb_parni( 2 ) /* iRow */,
+                                hb_parni( 3 ) /* iCol */,
+                                hbwapi_par_UINT( 4 ) /* fuOptions */,
+                                hbwapi_par_RECT( &rc, 5, HB_FALSE ),
+                                lpData,
+                                ( UINT ) nDataLen,
+                                lpFontWidths ) );
 
       if( lpFontWidths )
          hb_xfree( lpFontWidths );
@@ -618,7 +763,7 @@ HB_FUNC( WAPI_SETTEXTCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) SetTextColor( hDC, ( COLORREF ) hb_parnl( 2 ) ) );
+      hbwapi_ret_COLORREF( SetTextColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -628,7 +773,7 @@ HB_FUNC( WAPI_GETTEXTCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) GetTextColor( hDC ) );
+      hbwapi_ret_COLORREF( GetTextColor( hDC ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -654,7 +799,7 @@ HB_FUNC( WAPI_SETBKCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) SetBkColor( hDC, ( COLORREF ) hb_parnl( 2 ) ) );
+      hbwapi_ret_COLORREF( SetBkColor( hDC, hbwapi_par_COLORREF( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -664,7 +809,7 @@ HB_FUNC( WAPI_GETBKCOLOR )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retnl( ( long ) GetBkColor( hDC ) );
+      hbwapi_ret_COLORREF( GetBkColor( hDC ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -673,12 +818,12 @@ HB_FUNC( WAPI_CREATEPEN )
 {
    hbwapi_ret_HPEN( CreatePen( hb_parni( 1 ) /* fnPenStyle */,
                                hb_parni( 2 ) /* nWidth */,
-                               ( COLORREF ) hb_parnl( 3 ) /* crColor */ ) );
+                               hbwapi_par_COLORREF( 3 ) /* crColor */ ) );
 }
 
 HB_FUNC( WAPI_CREATESOLIDBRUSH )
 {
-   HBRUSH h = CreateSolidBrush( ( COLORREF ) hb_parnl( 1 ) /* crColor */ );
+   HBRUSH h = CreateSolidBrush( hbwapi_par_COLORREF( 1 ) /* crColor */ );
 
 #if defined( HB_OS_WIN_CE )
    hbwapi_SetLastError( GetLastError() );
@@ -690,9 +835,20 @@ HB_FUNC( WAPI_CREATEHATCHBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
    hbwapi_ret_HBRUSH( CreateHatchBrush( hb_parni( 1 ) /* fnStyle */,
-                                        ( COLORREF ) hb_parnl( 2 ) /* crColor */ ) );
+                                        hbwapi_par_COLORREF( 2 ) /* crColor */ ) );
 #else
    hb_retptr( NULL );
+#endif
+}
+
+HB_FUNC( WAPI_CREATEBRUSHINDIRECT )
+{
+   LOGBRUSH lb;
+   hbwapi_par_LOGBRUSH( &lb, 1 );
+#if ! defined( HB_OS_WIN_CE )
+   hbwapi_ret_HBRUSH( CreateBrushIndirect( &lb ) );
+#else
+   hbwapi_ret_HBRUSH( CreateSolidBrush( lb.lbColor ) );
 #endif
 }
 
@@ -724,10 +880,10 @@ HB_FUNC( WAPI_CREATEFONT )
 
 HB_FUNC( WAPI_CREATEFONTINDIRECT )
 {
-   LOGFONT p;
+   LOGFONT lf;
 
-   if( hbwapi_par_LOGFONT( &p, 1, HB_TRUE ) )
-      hbwapi_ret_HFONT( CreateFontIndirect( &p ) );
+   if( hbwapi_par_LOGFONT( &lf, 1, HB_TRUE ) )
+      hbwapi_ret_HFONT( CreateFontIndirect( &lf ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -735,22 +891,28 @@ HB_FUNC( WAPI_CREATEFONTINDIRECT )
 HB_FUNC( WAPI_SELECTOBJECT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
-   HB_BOOL bRegion = HB_FALSE;
    HGDIOBJ h;
+#if _TODO_REGION
+   HB_BOOL bRegion = HB_FALSE;
+#endif
 
-   if(      ( h = hbwapi_par_HPEN( 2 ) ) != NULL ) {}
-   else if( ( h = hbwapi_par_HBRUSH( 2 ) ) != NULL ) {}
-   else if( ( h = hbwapi_par_HFONT( 2 ) ) != NULL ) {}
+   if(      hbwapi_is_HPEN( 2 ) )   h = hbwapi_par_HPEN( 2 );
+   else if( hbwapi_is_HBRUSH( 2 ) ) h = hbwapi_par_HBRUSH( 2 );
+   else if( hbwapi_is_HFONT( 2 ) )  h = hbwapi_par_HFONT( 2 );
+#if _TODO_REGION
    /* TODO: Add BITMAP, REGION */
+#endif
    else
-      h = NULL;
+      h = hbwapi_par_raw_HGDIOBJ( 2 );
 
    if( hDC && h )
    {
+#if _TODO_REGION
       /* TODO: Solve reference counting to 'h' handle. Also for returned one. */
       if( bRegion )
          hb_retnint( ( HB_PTRUINT ) SelectObject( hDC, h ) );
       else
+#endif
          hb_retl( SelectObject( hDC, h ) != NULL );  /* NOTE: We don't return a raw pointer. */
    }
    else
@@ -763,16 +925,16 @@ HB_FUNC( WAPI_MOVETOEX )
 
    if( hDC )
    {
-      POINT p;
+      POINT xy;
 
-      if( hbwapi_par_POINT( &p, 4, HB_FALSE ) )
+      if( hbwapi_par_POINT( &xy, 4, HB_FALSE ) )
       {
-         hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, &p ) );
+         hbwapi_ret_L( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, &xy ) );
 
-         hbwapi_stor_POINT( &p, 4 );
+         hbwapi_stor_POINT( &xy, 4 );
       }
       else
-         hb_retl( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, NULL ) );
+         hbwapi_ret_L( MoveToEx( hDC, hb_parni( 2 ) /* X */, hb_parni( 3 ) /* Y */, NULL ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -783,7 +945,7 @@ HB_FUNC( WAPI_LINETO )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retl( LineTo( hDC, hb_parni( 2 ) /* XEnd */, hb_parni( 3 ) /* YEnd */ ) );
+      hbwapi_ret_L( LineTo( hDC, hb_parni( 2 ) /* XEnd */, hb_parni( 3 ) /* YEnd */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -791,11 +953,11 @@ HB_FUNC( WAPI_LINETO )
 HB_FUNC( WAPI_FILLRECT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
-   RECT rect;
+   RECT rc;
    HBRUSH hBrush = hbwapi_par_HBRUSH( 3 );
 
-   if( hDC && hbwapi_par_RECT( &rect, 2, HB_TRUE ) && hBrush )
-      hb_retni( FillRect( hDC, &rect, hBrush ) );
+   if( hDC && hbwapi_par_RECT( &rc, 2, HB_TRUE ) && hBrush )
+      hb_retni( FillRect( hDC, &rc, hBrush ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -805,13 +967,13 @@ HB_FUNC( WAPI_ROUNDRECT )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retl( RoundRect( hDC,
-                          hb_parni( 2 ) /* x1 */,
-                          hb_parni( 3 ) /* y1 */,
-                          hb_parni( 4 ) /* x2 */,
-                          hb_parni( 5 ) /* y2 */,
-                          hb_parni( 6 ) /* iWidth */,
-                          hb_parni( 7 ) /* iHeight */ ) );
+      hbwapi_ret_L( RoundRect( hDC,
+                               hb_parni( 2 ) /* x1 */,
+                               hb_parni( 3 ) /* y1 */,
+                               hb_parni( 4 ) /* x2 */,
+                               hb_parni( 5 ) /* y2 */,
+                               hb_parni( 6 ) /* iWidth */,
+                               hb_parni( 7 ) /* iHeight */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -821,11 +983,11 @@ HB_FUNC( WAPI_RECTANGLE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retl( Rectangle( hDC,
-                          hb_parni( 2 ) /* x1 */,
-                          hb_parni( 3 ) /* y1 */,
-                          hb_parni( 4 ) /* x2 */,
-                          hb_parni( 5 ) /* y2 */ ) );
+      hbwapi_ret_L( Rectangle( hDC,
+                               hb_parni( 2 ) /* x1 */,
+                               hb_parni( 3 ) /* y1 */,
+                               hb_parni( 4 ) /* x2 */,
+                               hb_parni( 5 ) /* y2 */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -835,15 +997,19 @@ HB_FUNC( WAPI_ARC )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retl( Arc( hDC,
-                    hb_parni( 2 ) /* nLeftRect */,
-                    hb_parni( 3 ) /* nTopRect */,
-                    hb_parni( 4 ) /* nRightRect */,
-                    hb_parni( 5 ) /* nBottomRect */,
-                    hb_parni( 6 ) /* nXStartArc */,
-                    hb_parni( 7 ) /* nYStartArc */,
-                    hb_parni( 8 ) /* nXEndArc */,
-                    hb_parni( 9 ) /* nYEndArc */ ) );
+#if defined( HB_OS_WIN_CE )
+      hb_retl( HB_FALSE );
+#else
+      hbwapi_ret_L( Arc( hDC,
+                         hb_parni( 2 ) /* nLeftRect */,
+                         hb_parni( 3 ) /* nTopRect */,
+                         hb_parni( 4 ) /* nRightRect */,
+                         hb_parni( 5 ) /* nBottomRect */,
+                         hb_parni( 6 ) /* nXStartArc */,
+                         hb_parni( 7 ) /* nYStartArc */,
+                         hb_parni( 8 ) /* nXEndArc */,
+                         hb_parni( 9 ) /* nYEndArc */ ) );
+#endif
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -853,11 +1019,159 @@ HB_FUNC( WAPI_ELLIPSE )
    HDC hDC = hbwapi_par_HDC( 1 );
 
    if( hDC )
-      hb_retl( Ellipse( hDC,
-                        hb_parni( 2 ) /* nLeftRect */,
-                        hb_parni( 3 ) /* nTopRect */,
-                        hb_parni( 4 ) /* nRightRect */,
-                        hb_parni( 5 ) /* nBottomRect */ ) );
+      hbwapi_ret_L( Ellipse( hDC,
+                             hb_parni( 2 ) /* nLeftRect */,
+                             hb_parni( 3 ) /* nTopRect */,
+                             hb_parni( 4 ) /* nRightRect */,
+                             hb_parni( 5 ) /* nBottomRect */ ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( WAPI_SETDCBRUSHCOLOR )
+{
+   COLORREF result = 0;
+
+#if ! defined( HB_OS_WIN_CE )
+   {
+      typedef COLORREF ( WINAPI * _HB_SETDCBRUSHCOLOR )( HDC, COLORREF );
+
+      static _HB_SETDCBRUSHCOLOR s_pSetDCBrushColor = ( _HB_SETDCBRUSHCOLOR ) -1;
+
+      if( s_pSetDCBrushColor == ( _HB_SETDCBRUSHCOLOR ) -1 )
+      {
+         HMODULE hModule = GetModuleHandle( TEXT( "gdi32.dll" ) );
+         if( hModule )
+            s_pSetDCBrushColor = ( _HB_SETDCBRUSHCOLOR ) HB_WINAPI_GETPROCADDRESST( hModule,
+               "SetDCBrushColor" );
+         else
+            s_pSetDCBrushColor = NULL;
+      }
+
+      if( s_pSetDCBrushColor )
+         result = s_pSetDCBrushColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) );
+   }
+#endif
+
+   hbwapi_ret_COLORREF( result );
+}
+
+HB_FUNC( WAPI_SETDCPENCOLOR )
+{
+   COLORREF result = 0;
+
+#if ! defined( HB_OS_WIN_CE )
+   {
+      typedef COLORREF ( WINAPI * _HB_SETDCPENCOLOR )( HDC, COLORREF );
+
+      static _HB_SETDCPENCOLOR s_pSetDCPenColor = ( _HB_SETDCPENCOLOR ) -1;
+
+      if( s_pSetDCPenColor == ( _HB_SETDCPENCOLOR ) -1 )
+      {
+         HMODULE hModule = GetModuleHandle( TEXT( "gdi32.dll" ) );
+         if( hModule )
+            s_pSetDCPenColor = ( _HB_SETDCPENCOLOR ) HB_WINAPI_GETPROCADDRESST( hModule,
+               "SetDCPenColor" );
+         else
+            s_pSetDCPenColor = NULL;
+      }
+
+      if( s_pSetDCPenColor )
+         result = s_pSetDCPenColor( hbwapi_par_raw_HDC( 1 ), hbwapi_par_COLORREF( 2 ) );
+   }
+#endif
+
+   hbwapi_ret_COLORREF( result );
+}
+
+HB_FUNC( WAPI_SETARCDIRECTION )
+{
+#if ! defined( HB_OS_WIN_CE )
+   hb_retni( SetArcDirection( hbwapi_par_raw_HDC( 1 ), hb_parni( 2 ) ) );
+#else
+   hb_retni( 0 );
+#endif
+}
+
+HB_FUNC( WAPI_GETSTOCKOBJECT )
+{
+   hbwapi_ret_raw_HGDIOBJ( GetStockObject( hbwapi_par_INT( 1 ) ) );
+}
+
+static void hbwapi_stor_TEXTMETRIC( const TEXTMETRIC * p, int iParam )
+{
+   PHB_ITEM pStru = hb_param( iParam, HB_IT_ANY );
+
+   if( pStru )
+   {
+      if( HB_IS_HASH( pStru ) )
+      {
+         s_hb_hashSetCItemNL( pStru, "tmHeight"           , p->tmHeight           );
+         s_hb_hashSetCItemNL( pStru, "tmAscent"           , p->tmAscent           );
+         s_hb_hashSetCItemNL( pStru, "tmDescent"          , p->tmDescent          );
+         s_hb_hashSetCItemNL( pStru, "tmInternalLeading"  , p->tmInternalLeading  );
+         s_hb_hashSetCItemNL( pStru, "tmExternalLeading"  , p->tmExternalLeading  );
+         s_hb_hashSetCItemNL( pStru, "tmAveCharWidth"     , p->tmAveCharWidth     );
+         s_hb_hashSetCItemNL( pStru, "tmMaxCharWidth"     , p->tmMaxCharWidth     );
+         s_hb_hashSetCItemNL( pStru, "tmWeight"           , p->tmWeight           );
+         s_hb_hashSetCItemNL( pStru, "tmOverhang"         , p->tmOverhang         );
+         s_hb_hashSetCItemNL( pStru, "tmDigitizedAspectX" , p->tmDigitizedAspectX );
+         s_hb_hashSetCItemNL( pStru, "tmDigitizedAspectY" , p->tmDigitizedAspectY );
+         s_hb_hashSetCItemC(  pStru, "tmFirstChar"        , &p->tmFirstChar   , 1 );
+         s_hb_hashSetCItemC(  pStru, "tmLastChar"         , &p->tmLastChar    , 1 );
+         s_hb_hashSetCItemC(  pStru, "tmDefaultChar"      , &p->tmDefaultChar , 1 );
+         s_hb_hashSetCItemC(  pStru, "tmBreakChar"        , &p->tmBreakChar   , 1 );
+         s_hb_hashSetCItemNL( pStru, "tmItalic"           , p->tmItalic           );
+         s_hb_hashSetCItemNL( pStru, "tmUnderlined"       , p->tmUnderlined       );
+         s_hb_hashSetCItemNL( pStru, "tmStruckOut"        , p->tmStruckOut        );
+         s_hb_hashSetCItemNL( pStru, "tmPitchAndFamily"   , p->tmPitchAndFamily   );
+         s_hb_hashSetCItemNL( pStru, "tmCharSet"          , p->tmCharSet          );
+      }
+      else
+      {
+         if( ! HB_IS_ARRAY( pStru ) )
+         {
+            if( ! hb_itemParamStoreRelease( ( USHORT ) iParam, pStru = hb_itemArrayNew( 20 ) ) )
+               hb_itemRelease( pStru );
+            pStru = hb_param( iParam, HB_IT_ANY );
+         }
+         else if( hb_arrayLen( pStru ) < 20 )
+            hb_arraySize( pStru, 20 );
+
+         hb_arraySetNL( pStru,  1 , p->tmHeight           );
+         hb_arraySetNL( pStru,  2 , p->tmAscent           );
+         hb_arraySetNL( pStru,  3 , p->tmDescent          );
+         hb_arraySetNL( pStru,  4 , p->tmInternalLeading  );
+         hb_arraySetNL( pStru,  5 , p->tmExternalLeading  );
+         hb_arraySetNL( pStru,  6 , p->tmAveCharWidth     );
+         hb_arraySetNL( pStru,  7 , p->tmMaxCharWidth     );
+         hb_arraySetNL( pStru,  8 , p->tmWeight           );
+         hb_arraySetNL( pStru,  9 , p->tmOverhang         );
+         hb_arraySetNL( pStru, 10 , p->tmDigitizedAspectX );
+         hb_arraySetNL( pStru, 11 , p->tmDigitizedAspectY );
+         HB_ARRAYSETSTRLEN( pStru, 12 , &p->tmFirstChar   , 1 );
+         HB_ARRAYSETSTRLEN( pStru, 13 , &p->tmLastChar    , 1 );
+         HB_ARRAYSETSTRLEN( pStru, 14 , &p->tmDefaultChar , 1 );
+         HB_ARRAYSETSTRLEN( pStru, 15 , &p->tmBreakChar   , 1 );
+         hb_arraySetNL( pStru, 16 , p->tmItalic           );
+         hb_arraySetNL( pStru, 17 , p->tmUnderlined       );
+         hb_arraySetNL( pStru, 18 , p->tmStruckOut        );
+         hb_arraySetNL( pStru, 19 , p->tmPitchAndFamily   );
+         hb_arraySetNL( pStru, 20 , p->tmCharSet          );
+      }
+   }
+}
+
+HB_FUNC( WAPI_GETTEXTMETRICS )
+{
+   TEXTMETRIC tm;
+   BOOL bResult;
+
+   memset( &tm, 0, sizeof( tm ) );
+
+   bResult = GetTextMetrics( hbwapi_par_HDC( 1 ), &tm );
+   hbwapi_SetLastError( GetLastError() );
+
+   hbwapi_stor_TEXTMETRIC( &tm, 2 );
+   hbwapi_ret_L( bResult );
 }

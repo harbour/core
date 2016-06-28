@@ -1,6 +1,6 @@
 /*
- * demonstration/test code for using memvar variables sharing and
- *    copping
+ * Demonstration/test code for using memvar variables sharing and
+ * copping
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -11,7 +11,7 @@
 memvar pub1, pub2
 memvar prv1, prv2
 
-proc main()
+procedure Main()
 
    ? Version()
    ? "Main start"
@@ -34,7 +34,7 @@ proc main()
    initVars()
    ? "main thread:"
    testAllVars()
-   hb_threadJoin( hb_threadStart( HB_BITOR( HB_THREAD_INHERIT_PUBLIC, ;
+   hb_threadJoin( hb_threadStart( hb_bitOr( HB_THREAD_INHERIT_PUBLIC, ;
                                             HB_THREAD_MEMVARS_COPY ), ;
                                   @thFunc() ) )
    ? "main thread:"
@@ -46,7 +46,7 @@ proc main()
    initVars()
    ? "main thread:"
    testAllVars()
-   hb_threadJoin( hb_threadStart( HB_BITOR( HB_THREAD_INHERIT_PRIVATE, ;
+   hb_threadJoin( hb_threadStart( hb_bitOr( HB_THREAD_INHERIT_PRIVATE, ;
                                             HB_THREAD_MEMVARS_COPY ), ;
                                   @thFunc() ) )
    ? "main thread:"
@@ -58,7 +58,7 @@ proc main()
    initVars()
    ? "main thread:"
    testAllVars()
-   hb_threadJoin( hb_threadStart( HB_BITOR( HB_THREAD_INHERIT_MEMVARS, ;
+   hb_threadJoin( hb_threadStart( hb_bitOr( HB_THREAD_INHERIT_MEMVARS, ;
                                             HB_THREAD_MEMVARS_COPY ), ;
                                   @thFunc() ) )
    ? "main thread:"
@@ -95,30 +95,37 @@ proc main()
    testAllVars()
    wait
 
-return
+   return
 
-static proc initVars()
+static procedure initVars()
+
    pub1 := "main:public1"
    pub2 := "main:public2"
    prv1 := "main:private1"
    prv2 := "main:private2"
-return
 
-static proc testAllVars()
+   return
+
+static procedure testAllVars()
+
    test_var( "PUB1" )
    test_var( "PUB2" )
    test_var( "PRV1" )
    test_var( "PRV2" )
-return
 
-static proc test_var( cVarName )
-   ? "    " + cVarName + ":", type( cVarName )
-   if ! type( cVarName ) == "U"
+   return
+
+static procedure test_var( cVarName )
+
+   ? "    " + cVarName + ":", Type( cVarName )
+   if ! Type( cVarName ) == "U"
       ?? " ->", &cVarName
    endif
-return
 
-static proc thFunc()
+   return
+
+static procedure thFunc()
+
    ? "child thread:"
    testAllVars()
    ? "assign..."
@@ -128,4 +135,5 @@ static proc thFunc()
    prv2 := "thread:private2"
    ? "child thread:"
    testAllVars()
-return
+
+   return

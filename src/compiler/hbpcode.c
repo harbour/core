@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * their website at https://www.gnu.org/).
  *
  */
 
@@ -516,7 +516,6 @@ void hb_compPCodeEval( PHB_HFUNC pFunc, const PHB_PCODE_FUNC * pFunctions, void 
 {
    HB_SIZE nPos = 0;
    HB_SIZE nSkip;
-   HB_BYTE opcode;
 
    /* Make sure that table is correct */
    assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );
@@ -524,7 +523,7 @@ void hb_compPCodeEval( PHB_HFUNC pFunc, const PHB_PCODE_FUNC * pFunctions, void 
 
    while( nPos < pFunc->nPCodePos )
    {
-      opcode = pFunc->pCode[ nPos ];
+      HB_BYTE opcode = pFunc->pCode[ nPos ];
       if( opcode < HB_P_LAST_PCODE )
       {
          PHB_PCODE_FUNC pCall = pFunctions[ opcode ];

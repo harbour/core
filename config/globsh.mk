@@ -1,13 +1,11 @@
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (vszakats.net/harbour) (rework)
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# ---------------------------------------------------------------
 # See batch docs here:
 #    http://www.computerhope.com/batch.htm
 #    http://www.robvanderwoude.com/batchcommands.php
-# ---------------------------------------------------------------
 
 ifneq ($(HB_SHELL),sh)
 
@@ -42,47 +40,47 @@ TRUE := TRUE=true
 FALSE := false
 
 dirbase::
-	@[ -d "$(OBJ_DIR)" ] || $(MDP) $(OBJ_DIR)
-	@[ -z "$(LIB_FILE)" ] || [ -d "$(LIB_DIR)" ] || $(MDP) $(LIB_DIR)
-	@[ -z "$(BIN_FILE)" ] || [ -d "$(BIN_DIR)" ] || $(MDP) $(BIN_DIR)
-	@[ -z "$(DYN_FILE)" ] || [ -d "$(DYN_DIR)" ] || $(MDP) $(DYN_DIR)
-	@[ -z "$(IMP_FILE)" ] || [ -d "$(IMP_DIR)" ] || $(MDP) $(IMP_DIR)
+	@[ -d "$(OBJ_DIR)" ] || $(MDP) "$(OBJ_DIR)"
+	@[ -z "$(LIB_FILE)" ] || [ -d "$(LIB_DIR)" ] || $(MDP) "$(LIB_DIR)"
+	@[ -z "$(BIN_FILE)" ] || [ -d "$(BIN_DIR)" ] || $(MDP) "$(BIN_DIR)"
+	@[ -z "$(DYN_FILE)" ] || [ -d "$(DYN_DIR)" ] || $(MDP) "$(DYN_DIR)"
+	@[ -z "$(IMP_FILE)" ] || [ -d "$(IMP_DIR)" ] || $(MDP) "$(IMP_DIR)"
 
 clean::
 	-@$(RDP) $(PKG_DIR) $(OBJ_DIR) $(LIB_FILE) $(BIN_FILE) $(DYN_FILE) $(IMP_FILE); \
 	if [ -n "$(LIB_FILE)" ]; then \
-	   $(RM) $(basename $(LIB_FILE)).bak; \
-	   [ "`$(ECHO) $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) $(LIB_DIR); \
+	   $(RM) "$(basename $(LIB_FILE)).bak"; \
+	   [ "`$(ECHO) $(LIB_DIR)/*`" != "$(LIB_DIR)/*" ] || $(RDP) "$(LIB_DIR)"; \
 	fi ; \
 	if [ -n "$(BIN_FILE)" ]; then \
-	   $(RM) $(basename $(BIN_FILE)).tds; \
-	   $(RM) $(basename $(BIN_FILE)).pch; \
-	   $(RM) $(basename $(BIN_FILE)).pdb; \
-	   $(RM) $(basename $(BIN_FILE)).ilk; \
-	   [ "`$(ECHO) $(BIN_DIR)/*`" != "$(BIN_DIR)/*" ] || $(RDP) $(BIN_DIR); \
+	   $(RM) "$(basename $(BIN_FILE)).tds"; \
+	   $(RM) "$(basename $(BIN_FILE)).pch"; \
+	   $(RM) "$(basename $(BIN_FILE)).pdb"; \
+	   $(RM) "$(basename $(BIN_FILE)).ilk"; \
+	   [ "`$(ECHO) $(BIN_DIR)/*`" != "$(BIN_DIR)/*" ] || $(RDP) "$(BIN_DIR)"; \
 	fi ; \
 	if [ -n "$(DYN_FILE)" ]; then \
-	   $(RM) $(basename $(DYN_FILE)).tds; \
-	   $(RM) $(basename $(DYN_FILE)).pch; \
-	   $(RM) $(basename $(DYN_FILE)).pdb; \
-	   $(RM) $(basename $(DYN_FILE)).ilk; \
-	   $(RM) $(basename $(DYN_FILE)).def; \
-	   $(RM) $(basename $(DYN_FILE)).exp; \
-	   $(RM) $(DYN_FILE_NVR); \
-	   $(RM) $(DYN_FILE_CPT); \
-	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) $(DYN_DIR); \
+	   $(RM) "$(basename $(DYN_FILE)).tds"; \
+	   $(RM) "$(basename $(DYN_FILE)).pch"; \
+	   $(RM) "$(basename $(DYN_FILE)).pdb"; \
+	   $(RM) "$(basename $(DYN_FILE)).ilk"; \
+	   $(RM) "$(basename $(DYN_FILE)).def"; \
+	   $(RM) "$(basename $(DYN_FILE)).exp"; \
+	   $(RM) "$(DYN_FILE_NVR)"; \
+	   $(RM) "$(DYN_FILE_CPT)"; \
+	   [ "`$(ECHO) $(DYN_DIR)/*`" != "$(DYN_DIR)/*" ] || $(RDP) "$(DYN_DIR)"; \
 	fi ; \
 	if [ -n "$(IMP_FILE)" ]; then \
-	   $(RM) $(basename $(IMP_FILE)).exp; \
-	   [ "`$(ECHO) $(IMP_DIR)/*`" != "$(IMP_DIR)/*" ] || $(RDP) $(IMP_DIR); \
+	   $(RM) "$(basename $(IMP_FILE)).exp"; \
+	   [ "`$(ECHO) $(IMP_DIR)/*`" != "$(IMP_DIR)/*" ] || $(RDP) "$(IMP_DIR)"; \
 	fi
 
 endif
 
 ifeq ($(HB_SHELL),nt)
 
-# NOTE: According to http://support.microsoft.com/kb/830473
-#       The command line length limit for cmd.exe is 8191 chars
+# NOTE: According to https://support.microsoft.com/kb/830473
+#       The command-line length limit for cmd.exe is 8191 chars
 #       for Windows XP and upper and 2047 for Windows NT and 2000.
 #       This is true for commands which are recognized as shell
 #       commands (by using an internal list). For the rest
@@ -136,7 +134,7 @@ endif
 
 ifeq ($(HB_SHELL),os2)
 
-# NOTE: Maximum size of command line in OS/2 is limited to 1024
+# NOTE: Maximum size of command-line in OS/2 is limited to 1024
 #       characters.
 
 # NOTE: Comment on included OS/2 GNU tools:
@@ -186,7 +184,7 @@ endif
 
 ifeq ($(HB_SHELL),dos)
 
-# NOTE: MS-DOS command line length has a limit of 126 characters.
+# NOTE: MS-DOS command-line length has a limit of 126 characters.
 #       When using DJGPP GNU Make to invoke other DJGPP tools this limit
 #       is about 13KB, as they do special trick to overcome it.
 #       See these DJGPP FAQs:

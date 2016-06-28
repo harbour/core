@@ -3,7 +3,6 @@
  * Appends the contents of an SDF text file to a database.
  *
  * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
- *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    function __dbSDF() replaced by the new one which uses
  *    SDF RDD I've just created
@@ -49,9 +48,11 @@
  *
  */
 
+#pragma -gc0
+
 REQUEST SDF
 
 FUNCTION __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cCodePage )
-   RETURN iif( lExport,;
-      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF", , cCodePage ) ,;
+   RETURN iif( lExport, ;
+      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF", , cCodePage ), ;
       __dbApp( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF", , cCodePage ) )

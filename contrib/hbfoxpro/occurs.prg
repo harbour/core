@@ -45,18 +45,20 @@
  */
 
 FUNCTION Occurs( cSub, cStr )
-   LOCAL nCount := 0, nPos := 0
+
+   LOCAL nCount := 0, nPos
 
    IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
-      DO WHILE ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) != 0
+      nPos := 0
+      DO WHILE ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) > 0
          ++nCount
       ENDDO
    ENDIF
 
    RETURN nCount
 
-
 FUNCTION fox_At( cSub, cStr, nOccurrence )
+
    LOCAL nPos := 0
 
    IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
@@ -65,4 +67,4 @@ FUNCTION fox_At( cSub, cStr, nOccurrence )
       ENDDO
    ENDIF
 
-RETURN nPos
+   RETURN nPos

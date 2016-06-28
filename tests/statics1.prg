@@ -2,15 +2,15 @@
 //
 // Compile statics1.prg, statics2.prg and link both files
 
-STATIC uOne, uTwo
+STATIC uOne
+STATIC uTwo
 
 PROCEDURE Main()
 
-   ? "Statics overlapped!"
-   ? "==================="
+   ? "--- Statics overlapped! ---"
    ?
-   ? "INSIDE statics1.prg"
-   ? "   static uOne, uTwo"
+   ? "INSIDE", __FILE__
+   ? "   STATIC uOne, uTwo"
    ?
    ? "   uOne, uTwo =>", uOne, ",", uTwo
    uOne := 1
@@ -20,7 +20,7 @@ PROCEDURE Main()
    ? "   uOne, uTwo =>", uOne, ",", uTwo
    ?
    Test()
-   ? "INSIDE statics1.prg"
+   ? "INSIDE", __FILE__
    ? "   uOne, uTwo =>", uOne, ",", uTwo
    ?
 

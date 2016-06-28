@@ -1,6 +1,4 @@
-/*
- * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
- */
+/* Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt> */
 
 /*
  * This module demonstrates a simple UDP Discovery Server
@@ -40,7 +38,7 @@ FUNCTION hb_udpds_Find( nPort, cName )
             cBuffer := Space( 2000 )
             nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, nEnd - nTime )
             IF hb_BLeft( cBuffer, hb_BLen( cName ) + 2 ) == hb_BChar( 6 ) + cName + hb_BChar( 0 ) .AND. ;
-               AScan( aRet, {|x| x[ 1 ] == aAddr[ 2 ] } ) == 0
+               AScan( aRet, {| x | x[ 1 ] == aAddr[ 2 ] } ) == 0
                AAdd( aRet, { aAddr[ 2 ], hb_BSubStr( cBuffer, hb_BLen( cName ) + 3, nLen - hb_BLen( cName ) - 2 ) } )
             ENDIF
             nTime := hb_MilliSeconds()
@@ -59,34 +57,36 @@ STATIC FUNCTION s_sendBroadcastMessages( hSocket, nPort, cMessage )
    FOR EACH cAddr IN s_getBroadcastAddresses()
       IF hb_socketSendTo( hSocket, cMessage, , , ;
                           { HB_SOCKET_AF_INET, cAddr, nPort } ) == hb_BLen( cMessage )
-         lResult := .t.
+         lResult := .T.
       ENDIF
    NEXT
-RETURN lResult
+
+   RETURN lResult
 
 STATIC FUNCTION s_getBroadcastAddresses()
-   LOCAL aAddrs, aIF, cAddr, lLo
 
-   lLo := .F.
-   aAddrs := {}
+   LOCAL aIF, cAddr
+
+   LOCAL lLo := .F.
+   LOCAL aAddrs := {}
+
    FOR EACH aIF IN hb_socketGetIFaces()
-      cAddr := aIF[ HB_SOCKET_IFINFO_BROADCAST ]
-      IF Empty( cAddr )
-         IF !lLo .AND. aIF[ HB_SOCKET_IFINFO_ADDR ] == "127.0.0.1"
+      IF Empty( cAddr := aIF[ HB_SOCKET_IFINFO_BROADCAST ] )
+         IF ! lLo .AND. aIF[ HB_SOCKET_IFINFO_ADDR ] == "127.0.0.1"
             lLo := .T.
          ENDIF
-      ELSEIF HB_AScan( aAddrs, cAddr,,, .T. ) == 0
+      ELSEIF hb_AScan( aAddrs, cAddr,,, .T. ) == 0
          AAdd( aAddrs, cAddr )
       ENDIF
    NEXT
-   IF Empty( aAddrs )
+   IF Len( aAddrs ) == 0
       AAdd( aAddrs, "255.255.255.255" )
    ENDIF
    IF lLo
-      HB_AIns( aAddrs, 1, "127.0.0.1", .T. )
+      hb_AIns( aAddrs, 1, "127.0.0.1", .T. )
    ENDIF
 
-RETURN aAddrs
+   RETURN aAddrs
 
 /* Server */
 
@@ -115,11 +115,11 @@ STATIC PROCEDURE UDPDS( hSocket, cName, cVersion )
    LOCAL cBuffer, nLen, aAddr
 
    cName := hb_StrToUTF8( cName )
-   cVersion := iif( HB_ISSTRING( cVersion ), hb_StrToUTF8( cVersion ), "" )
+   cVersion := hb_StrToUTF8( hb_defaultValue( cVersion, "" ) )
 
    DO WHILE .T.
       cBuffer := Space( 2000 )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          nLen := hb_socketRecvFrom( hSocket, @cBuffer, , , @aAddr, 1000 )
       RECOVER
          nLen := NIL
@@ -138,7 +138,7 @@ STATIC PROCEDURE UDPDS( hSocket, cName, cVersion )
           *   Server response: ACK, ServerName, NUL, Version
           */
          IF hb_BLeft( cBuffer, nLen ) == hb_BChar( 5 ) + cName + hb_BChar( 0 )
-            BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+            BEGIN SEQUENCE WITH __BreakBlock()
                hb_socketSendTo( hSocket, hb_BChar( 6 ) + cName + hb_BChar( 0 ) + cVersion, , , aAddr )
             END SEQUENCE
          ENDIF

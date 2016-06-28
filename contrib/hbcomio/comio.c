@@ -62,8 +62,7 @@ typedef struct _HB_FILE
    HB_MAXINT             timeout;
    HB_BOOL               fRead;
    HB_BOOL               fWrite;
-}
-HB_FILE;
+} HB_FILE;
 
 static PHB_FILE s_fileNew( int port, HB_MAXINT timeout, HB_BOOL fRead, HB_BOOL fWrite );
 

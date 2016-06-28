@@ -1,25 +1,20 @@
 //NOTEST             // It is very frustrating if this one is auto-tested
 
-//
-// This program shells to OS
-//
-// Written by Eddie Runia <eddie@runia.com>
-//
-// Placed in the public domain
-//
+/* Written by Eddie Runia <eddie@runia.com>. Placed in the public domain. */
+
+/* This program shells to OS */
+
+#if defined( __PLATFORM__UNIX )
+   #define _SHELLENV_  "SHELL"
+#else
+   #define _SHELLENV_  "COMSPEC"
+#endif
 
 PROCEDURE Main()
 
-   LOCAL cShell
-
-#if defined( __PLATFORM__UNIX )
-   cShell := GetEnv( "SHELL" )
-#else
-   cShell := GetEnv( "COMSPEC" )
-#endif
-
-   ? "About to shell to OS.."
-   ! ( cShell )
+   ? "About to shell to OS..."
+   ?
+   ! ( GetEnv( _SHELLENV_ ) )
    ? "Hey, I am back !"
 
    RETURN

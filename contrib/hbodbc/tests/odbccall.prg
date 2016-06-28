@@ -2,23 +2,25 @@
 
 PROCEDURE Main()
 
-   LOCAL dsFunctions := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )
+   LOCAL oDS := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )
 
-   dsFunctions:SetSQL( "SELECT * FROM test" )
-   dsFunctions:Open()
-   ? dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:Skip()
-   ? dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:GoTo( 1 )
-   ? dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:Prior()
-   ? dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:First()
-   ? dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:Last()
-   ? dsFunctions:FieldByName( "First" ):Value
-   ? dsFunctions:Close()
+   oDS:SetSQL( "SELECT * FROM test" )
+   ? "Open()", oDS:Open()
 
-   dsFunctions:Destroy()
+   #translate Disp() => ? oDS:RecNo(), "/", oDS:LastRec(), iif( oDS:Bof(), "B", " " ) + iif( oDS:Eof(), "E", " " ), "|" + oDS:FieldByName( "First" ):Value + "|"
+
+   Disp() ; ? oDS:Skip()
+   Disp() ; ? oDS:GoTo( 1 )
+   Disp() ; ? oDS:Prior()
+   Disp() ; ? oDS:First()
+   Disp() ; ? oDS:Last()
+   Disp() ; ? oDS:Prior()
+   Disp() ; ? oDS:MoveBy( -2 )
+   Disp() ; ? oDS:Last()
+   Disp() ; ? oDS:Skip()
+   Disp()
+
+   ? "Close()", oDS:Close()
+   oDS:Destroy()
 
    RETURN

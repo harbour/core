@@ -141,7 +141,7 @@ HB_FUNC( ATREPL )
             nMatchCounter++;
 
             /* replace match ? */
-            if( ( iReplaceMode == 0 ) || ( nMatchCounter == nCounter ) )
+            if( iReplaceMode == 0 || nMatchCounter == nCounter )
             {
                if( nMatchStrLen < nReplaceLen )
                {

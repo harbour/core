@@ -1,6 +1,6 @@
 diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
 --- dbu53ori/dbu.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbu.prg	2013-03-02 02:00:36.000000000 +0100
++++ dbu53pat/dbu.prg	2016-02-06 15:54:58.000000000 +0100
 @@ -9,8 +9,10 @@
  *
  ***/
@@ -14,7 +14,28 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
  
  // Uncomment to update the obsolete declaration:
  #xtranslate DECLARE => PRIVATE
-@@ -71,6 +73,14 @@
+@@ -36,6 +38,11 @@
+    *  - file opening mode (for network support)
+    *     /E = exclusive use of files
+    *
++   *  - encryption:
++   *     /P<pw> = use password for table encryption
++   *              if <pw> is empty, read the password
++   *              from envvar DBU_PW
++   *
+    *  Parameters may be specified in any order
+    ***
+ 
+@@ -58,7 +65,7 @@
+    ENDIF
+ 
+    // Combine all the command line params together
+-   param1 := UPPER( param1 + "~" + param2 + "~" + param3 + "~" )
++   param1 := param1 + "~" + param2 + "~" + param3 + "~"
+ 
+    // Process the command line parameters where com_line will contain the
+    // view/file name to open and param2 will contain the color directive
+@@ -71,6 +78,14 @@
     SET SCOREBOARD OFF                            // who's keeping score, anyhow
     SET KEY 28 TO                                 // some folks need help
  
@@ -29,7 +50,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
     IF (ISCOLOR() .OR. "/C" $ UPPER(param2)) .AND. .NOT. "/M" $ UPPER(param2)
        // make it pretty
        color1 := "W+/B,N/W,B"                      // normal
-@@ -110,10 +120,10 @@
+@@ -110,10 +125,10 @@
     // system constants
     more_up   := CHR(24)                           // visual up arrow
     more_down := CHR(25)                           // visual down arrow
@@ -44,7 +65,49 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
  
     // global variables
     STORE .F. TO need_field,need_ntx,need_relat,need_filtr,box_open
-@@ -264,7 +274,7 @@
+@@ -135,7 +150,7 @@
+               "All Rights Reserved."
+ 
+    // search for help file
+-   IF FILE( "dbu.hlp" )
++   IF hb_FileExists( "dbu.hlp" )
+       helpfile := "dbu.hlp"
+ 
+    ELSE
+@@ -146,7 +161,7 @@
+    ***
+    *  Arrays declared in main module are considered public and
+    *  may be accessed or altered by any module in the system. The
+-   *  matrix defines 6 work areas with 7 indexes and 64 fields
++   *  matrix defines 6 work areas with 7 indexes and 256 fields
+    *  for each. 15 relations are also provided. All elements are
+    *  initialized to avoid a type mismatch.
+    ***
+@@ -171,15 +186,15 @@
+    DECLARE t_relate[15]                          // target of relation
+ 
+    // individual field names for active list
+-   DECLARE field_n1[64]
+-   DECLARE field_n2[64]
+-   DECLARE field_n3[64]
+-   DECLARE field_n4[64]
+-   DECLARE field_n5[64]
+-   DECLARE field_n6[64]
++   DECLARE field_n1[256]
++   DECLARE field_n2[256]
++   DECLARE field_n3[256]
++   DECLARE field_n4[256]
++   DECLARE field_n5[256]
++   DECLARE field_n6[256]
+ 
+-   // master field list..128 fields overall max
+-   DECLARE field_list[128]
++   // master field list..256 fields overall max
++   DECLARE field_list[256]
+ 
+    // first and last row of each screen section
+    DECLARE row_a[3]                              // first row of each screen section
+@@ -264,7 +279,7 @@
     @ 0,0 SAY " F1        F2        F3        F4        F5        F6        " +;
     "F7        F8       "
     show_keys()
@@ -53,7 +116,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
     error_msg(view_err)
  
     // when to bubble up
-@@ -360,14 +370,14 @@
+@@ -360,14 +375,14 @@
     help_title[22] := "REPLACE"
  
     // arrays for file names in default directory
@@ -72,34 +135,35 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
  
     // default to set view
     local_func := 0                                // local menu
-@@ -384,7 +394,7 @@
+@@ -384,21 +399,21 @@
  
        DO CASE
  
 -      CASE RAT(".", com_line) > RAT("\", com_line)
 +      CASE RAT(".", com_line) > RAT(hb_ps(), com_line)
      // file extension entered
-     IF !( FILE( com_line ) )
+-    IF !( FILE( com_line ) )
++    IF !( hb_FileExists( com_line ) ) .AND. !( hb_dbExists( com_line ) )
         // file must exist
-@@ -392,13 +402,13 @@
+        com_line := ""
  
      ENDIF
  
 -      CASE FILE(com_line + ".VEW")
-+      CASE FILE(com_line + ".vew")
++      CASE hb_FileExists(com_line + ".vew")
      // look for file name with .VEW extension
 -    com_line := com_line + ".VEW"
 +    com_line := com_line + ".vew"
  
 -      CASE FILE(com_line + ".DBF")
-+      CASE FILE(com_line + ".dbf")
++      CASE hb_dbExists(com_line + ".dbf")
      // look for file name with .DBF extension
 -    com_line := com_line + ".DBF"
 +    com_line := com_line + ".dbf"
  
        OTHERWISE
      // file not found..ignore command line
-@@ -409,7 +419,7 @@
+@@ -409,7 +424,7 @@
        IF .NOT. EMPTY(com_line)
      // command line file exists
  
@@ -108,7 +172,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
         // assume a valid .VEW file
         view_file := com_line
         set_from(.F.)                        // restore view
-@@ -678,8 +688,8 @@
+@@ -678,8 +693,8 @@
         @ 0,0 SAY " F1        F2        F3        F4        " +;
         "F5        F6        F7        F8       "
         show_keys()
@@ -119,7 +183,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
  
         // accept command entry
         run_com := enter_rc(M->com_line,24,7,127,"@KS73",M->color1)
-@@ -708,18 +718,18 @@
+@@ -708,18 +723,18 @@
      @ 3,0 CLEAR
  
      // rebuild directory arrays..must keep current
@@ -142,7 +206,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
      cur_area := 0                            // re-draw view screen
      sysfunc := 0                             // back to the main view screen
  
-@@ -796,12 +806,12 @@
+@@ -796,15 +811,15 @@
        nPos  := AT( ";", cPath )
  
        // Account for backslash in path
@@ -156,10 +220,14 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
 +            IIF( nPos == 0, LEN( cPath ), nPos - 1 ) ) + hb_ps() + "dbu.hlp"
        ENDIF
  
-       IF FILE( cFile )
+-      IF FILE( cFile )
++      IF hb_FileExists( cFile )
+          EXIT     // We found it, time to bail...
+       ENDIF
+ 
 diff -u dbu53ori/dbucopy.prg dbu53pat/dbucopy.prg
 --- dbu53ori/dbucopy.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbucopy.prg	2012-05-02 17:23:13.000000000 +0200
++++ dbu53pat/dbucopy.prg	2016-02-06 17:26:15.000000000 +0100
 @@ -62,8 +62,8 @@
  	filename = ""
  
@@ -189,14 +257,35 @@ diff -u dbu53ori/dbucopy.prg dbu53pat/dbucopy.prg
  							  " to...")
  
  
-@@ -208,7 +208,7 @@
+@@ -187,7 +187,7 @@
+ 	OTHERWISE
+ 		* ok to copy file
+ 
+-		IF FILE(M->filename)
++		IF hb_dbExists(M->filename)
+ 
+ 			IF rsvp("Target File " + IF(aseek(M->dbf, M->filename) > 0,;
+ 					"Is Open", "Exists") + "...Overwrite? (Y/N)") <> "Y"
+@@ -208,9 +208,9 @@
  
  		SELECT (M->cur_area)
  
 -		IF RAT(M->def_ext, M->filename) = LEN(M->filename) - 3
 +		IF RAT(Lower( M->def_ext ), Lower( M->filename )) = LEN(M->filename) - 3
  			* target has default extension..does it exists in current dir?
- 			add_name = .NOT. FILE(name(M->filename) + M->def_ext)
+-			add_name = .NOT. FILE(name(M->filename) + M->def_ext)
++			add_name = .NOT. hb_dbExists(name(M->filename) + M->def_ext)
+ 
+ 		ELSE
+ 			add_name = .F.
+@@ -268,7 +268,7 @@
+ 
+ 		ENDIF
+ 
+-		IF FILE(name(M->filename) + M->def_ext) .AND. M->add_name
++		IF hb_dbExists(name(M->filename) + M->def_ext) .AND. M->add_name
+ 			* add only .dbf files in the current directory
+ 			new_el = afull(&files) + 1
  
 @@ -301,7 +301,7 @@
  PARAMETERS sysparam
@@ -207,6 +296,15 @@ diff -u dbu53ori/dbucopy.prg dbu53pat/dbucopy.prg
  							  " from")
  
  
+@@ -341,7 +341,7 @@
+ 	CASE M->filename == M->cur_dbf
+ 		error_msg("File cannot be appended from itself")
+ 
+-	CASE .NOT. FILE(M->filename)
++	CASE .NOT. hb_dbExists(M->filename)
+ 		error_msg("Can't open " + M->filename)
+ 
+ 	CASE .NOT. EMPTY(M->for_cond) .AND. TYPE(M->for_cond) <> "L"
 @@ -433,7 +433,7 @@
  PARAMETERS sysparam
  
@@ -254,7 +352,7 @@ diff -u dbu53ori/dbucopy.prg dbu53pat/dbucopy.prg
  			ENDIF
 diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
 --- dbu53ori/dbuedit.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbuedit.prg	2012-05-02 17:23:18.000000000 +0200
++++ dbu53pat/dbuedit.prg	2013-11-20 21:56:24.000000000 +0100
 @@ -47,7 +47,7 @@
     nHelpSave := help_code
  
@@ -312,7 +410,15 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
  
     /* init rest of locals */
     cAlias := ""
-@@ -353,11 +353,11 @@
+@@ -208,6 +208,7 @@
+                DISPEND()
+                nRefreshTimer := SECONDS()
+             ENDIF
++            hb_idleState()
+          END
+ 
+       else
+@@ -353,11 +354,11 @@
              box_open := .t.
  
              /* save, clear, and frame window for memoedit */
@@ -327,7 +433,7 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
  
              /* use fieldspec for title */
              SetColor(color9)
-@@ -365,7 +365,7 @@
+@@ -365,7 +366,7 @@
  
              /* edit the memo field */
              SetColor(color8)
@@ -336,7 +442,7 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
  
              if Lastkey() == K_CTRL_END
                 /* ^W..new memo confirmed */
-@@ -397,7 +397,7 @@
+@@ -397,7 +398,7 @@
              end
  
              /* restore the window */
@@ -345,7 +451,7 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
              box_open := .F.
           else
              /* regular data entry */
-@@ -467,7 +467,7 @@
+@@ -467,7 +468,7 @@
     end
  
     /* restore the screen */
@@ -354,7 +460,7 @@ diff -u dbu53ori/dbuedit.prg dbu53pat/dbuedit.prg
     SetColor(nColorSave)
     SetCursor(nCType)
     curs_on := (nCType != 0)
-@@ -930,8 +930,8 @@
+@@ -930,8 +931,8 @@
                 "mGetVar")
  
     /* setup a scrolling GET if it's too long to fit on the screen */
@@ -406,8 +512,29 @@ diff -u dbu53ori/dbuindx.prg dbu53pat/dbuindx.prg
  
 diff -u dbu53ori/dbunet.prg dbu53pat/dbunet.prg
 --- dbu53ori/dbunet.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbunet.prg	2012-05-02 17:23:31.000000000 +0200
-@@ -333,7 +333,7 @@
++++ dbu53pat/dbunet.prg	2014-11-12 01:32:57.000000000 +0100
+@@ -10,6 +10,8 @@
+ */
+ 
+ #include "common.ch"
++#include "dbinfo.ch"
++
+ #define NET_WAIT  1
+ 
+ 
+@@ -110,6 +112,11 @@
+       ENDIF
+ 
+       IF !NETERR()                // If successful, let's get out of here
++
++         IF ! Empty( dbu_pw() )
++            dbInfo( DBI_PASSWORD, dbu_pw() )
++         ENDIF
++
+          lRet := .T.
+          EXIT
+       ENDIF
+@@ -333,7 +340,7 @@
     LOCAL nPos     // Used to locate position of search characters in string
  
     // Strip out the drive and path information, if any
@@ -416,10 +543,93 @@ diff -u dbu53ori/dbunet.prg dbu53pat/dbunet.prg
        cString := SUBSTR( cString, ++nPos )
     ENDIF
  
+@@ -343,3 +350,19 @@
+    ENDIF
+ 
+    RETURN ( cString )
++
++FUNCTION dbu_pw()
++
++   LOCAL tmp
++
++   FOR tmp := 1 TO hb_argc()
++      IF Lower( Left( hb_argv( tmp ), 2 ) ) == "-p"
++         tmp := SubStr( hb_argv( tmp ), 3 )
++         IF Empty( tmp )
++            tmp := GetEnv( "DBU_PW" )
++         ENDIF
++         RETURN tmp
++      ENDIF
++   NEXT
++
++   RETURN ""
 diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
 --- dbu53ori/dbustru.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbustru.prg	2012-05-02 17:23:38.000000000 +0200
-@@ -74,8 +74,8 @@
++++ dbu53pat/dbustru.prg	2015-09-20 21:04:00.000000000 +0200
+@@ -32,8 +32,8 @@
+ * local arrays..constant values
+ DECLARE ffield[4]
+ DECLARE field_col[4]
+-DECLARE data_type[5]
+-DECLARE l_usr[5]
++DECLARE data_type[23]
++DECLARE l_usr[23]
+ 
+ * field list for structure file
+ ffield[1] = "field_name"
+@@ -53,13 +53,49 @@
+ data_type[3] = "Date     "
+ data_type[4] = "Logical  "
+ data_type[5] = "Memo     "
++data_type[6] = "BLOB     "
++data_type[7] = "Image    "
++data_type[8] = "OLE      "
++data_type[9] = "VarLength"
++data_type[10] = "Any      "
++data_type[11] = "Float    "
++data_type[12] = "Double   "
++data_type[13] = "Double   "
++data_type[14] = "Double   "
++data_type[15] = "Currency "
++data_type[16] = "Integer  "
++data_type[17] = "Integer  "
++data_type[18] = "Integer  "
++data_type[19] = "Autoinc  "
++data_type[20] = "Modtime  "
++data_type[21] = "Rowver   "
++data_type[22] = "Timestamp"
++data_type[23] = "Time/stmp"
+ 
+ * last user definable ffield for each data type
+ l_usr[1] = 3			&& character - variable len
+ l_usr[2] = 4			&& numeric - variable len and dec
+-l_usr[3] = 2			&& date - fixed len - 8
++l_usr[3] = 3			&& date - fixed len - 3, 4 or 8
+ l_usr[4] = 2			&& logical - fixed len - 1
+-l_usr[5] = 2			&& memo - fixed len - 10
++l_usr[5] = 3			&& memo - fixed len - 10 or 4
++l_usr[6] = 3			&& "W" - fixed len - 10 or 4
++l_usr[7] = 3			&& "P" - fixed len - 10 or 4
++l_usr[8] = 3			&& "G" - fixed len - 10 or 4
++l_usr[9] = 3			&& "Q" - variable len
++l_usr[10] = 3			&& "V" len 4 or 6 or above dec 0
++l_usr[11] = 4			&& "F" like "N"
++l_usr[12] = 4			&& "8" len 8
++l_usr[13] = 4			&& "B" len 8
++l_usr[14] = 4			&& "Z" len 8
++l_usr[15] = 2			&& "Y" len 8, dec 4
++l_usr[16] = 4			&& "I" len 1-4 or 8, default 4
++l_usr[17] = 2			&& "2" len 2 dec 0
++l_usr[18] = 2			&& "4" len 4 dec 0
++l_usr[19] = 2			&& "+" len 4 dec 0
++l_usr[20] = 2			&& "=" len 8 dec 0
++l_usr[21] = 2			&& "^" len 8 dec 0
++l_usr[22] = 2			&& "@" len 8 dec 0
++l_usr[23] = 3			&& "T" len 4 or 8 dec 0
+ 
+ * initialize local variables
+ type_n = 1				&& index into data types
+@@ -74,8 +110,8 @@
  filename = ""			&& variable for "filebox" function
  
  * sigle row templates
@@ -430,7 +640,7 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  
  IF .NOT. EMPTY(M->cur_dbf)
  	* modify structure
-@@ -133,11 +133,11 @@
+@@ -133,11 +169,11 @@
  * establish window heading
  @ 9,field_col[1];
  SAY "Structure of " + pad(IF(EMPTY(stru_name), "<new file>",;
@@ -445,7 +655,183 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  
  DO WHILE .NOT. q_check()
  	* the big switch
-@@ -811,7 +811,7 @@
+@@ -194,7 +230,7 @@
+ 
+ 			IF n = 2
+ 				* field_type gets special treatment
+-				type_n = AT(field_type, "CNDLM")
++				type_n = AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")
+ 
+ 			ELSE
+ 				* turn on cursor for GET
+@@ -233,9 +269,9 @@
+ 
+ 					DO CASE
+ 
+-						CASE UPPER(CHR(keystroke)) $ "CNDLM"
++						CASE UPPER(CHR(keystroke)) $ "CNDLMWPGQVF8BZYI24+=^@T"
+ 							* set field type to one of C, N, D, L, or M
+-							type_n = AT(UPPER(CHR(keystroke)), "CNDLM")
++							type_n = AT(UPPER(CHR(keystroke)), "CNDLMWPGQVF8BZYI24+=^@T")
+ 							keystroke = 13
+ 
+ 						CASE keystroke = 32
+@@ -248,18 +284,32 @@
+ 
+ 					ENDCASE
+ 
+-					IF m_item <> SUBSTR("CNDLM", type_n, 1)
++					IF m_item <> SUBSTR("CNDLMWPGQVF8BZYI24+=^@T", type_n, 1)
+ 						* set new field_type from type_n
+-						REPLACE field_type WITH SUBSTR("CNDLM", type_n, 1)
++						REPLACE field_type WITH SUBSTR("CNDLMWPGQVF8BZYI24+=^@T", type_n, 1)
+ 
+ 						DO CASE
+ 							* set field_len and field_dec according to type
+ 
+-							CASE field_type = "C"
++							CASE LEFT(field_type, 1) = "C"
+ 								* character..any len will do, but not any dec
+ 								REPLACE field_dec WITH 0
+ 
+-							CASE field_type = "N"
++							CASE LEFT(field_type, 1) = "Q"
++								IF field_len > 255
++									REPLACE field_len WITH 255
++								ELSEIF field_len = 0
++									REPLACE field_len WITH 1
++								ENDIF
++								REPLACE field_dec WITH 0
++
++							CASE LEFT(field_type, 1) = "V"
++								IF field_len <> 4 .AND. field_len < 6
++									REPLACE field_len WITH 6
++								ENDIF
++								REPLACE field_dec WITH 0
++
++							CASE LEFT(field_type, 1) $ "NF"
+ 								* numeric
+ 
+ 								IF m_item = "C" .AND. (field_dec <> 0 .OR.;
+@@ -269,24 +319,62 @@
+ 
+ 								ENDIF
+ 
+-							CASE field_type = "D"
+-								* date..always 8
++							CASE LEFT(field_type, 1) = "I"
++								IF field_len = 0 .OR. (field_len > 4 .AND. field_len <> 8)
++									REPLACE field_len WITH 4
++								ENDIF
++
++							CASE LEFT(field_type, 1) = "Y"
++								REPLACE field_len WITH 8,field_dec WITH 4
++
++							CASE LEFT(field_type, 1) $ "8BZ"
++								IF field_len <> 8
++									REPLACE field_len WITH 8
++								ENDIF
++
++							CASE LEFT(field_type, 1) = "2"
++								REPLACE field_len WITH 2,field_dec WITH 0
++
++							CASE LEFT(field_type, 1) = "4"
++								REPLACE field_len WITH 4,field_dec WITH 0
++
++							CASE LEFT(field_type, 1) = "T"
++								IF field_len <> 4 .AND. field_len <> 8
++									REPLACE field_len WITH 8
++								ENDIF
++								REPLACE field_dec WITH 0
++
++							CASE LEFT(field_type, 1) = "@"
+ 								REPLACE field_len WITH 8,field_dec WITH 0
+ 
+-							CASE field_type = "L"
++							CASE LEFT(field_type, 1) = "D"
++								IF field_len <> 3 .AND. field_len <> 4 .AND. field_len <> 8
++									REPLACE field_len WITH 8
++								ENDIF
++								REPLACE field_dec WITH 0
++
++							CASE LEFT(field_type, 1) = "L"
+ 								* logical..always 1
+ 								REPLACE field_len WITH 1,field_dec WITH 0
+ 
+-							CASE field_type = "M"
+-								* memo..always 10
+-								REPLACE field_len WITH 10,field_dec WITH 0
++							CASE LEFT(field_type, 1) $ "MVWPG"
++								IF field_len <> 10 .AND. field_len <> 4
++									REPLACE field_len WITH 10
++								ENDIF
++								REPLACE field_dec WITH 0
++
++							CASE LEFT(field_type, 1) = "+"
++								REPLACE field_len WITH 4,field_dec WITH 0
++
++							CASE LEFT(field_type, 1) $ "=^"
++								REPLACE field_len WITH 8,field_dec WITH 0
+ 
+ 						ENDCASE
+ 
+ 						* display new field_len
+ 						@ cur_row,field_col[3] SAY STR(field_len,4)
+ 
+-						IF field_type = "N"
++						IF LEFT(field_type, 1) $ "NFYI8BZ"
+ 							* display new field_dec
+ 							@ cur_row,field_col[4] SAY field_dec
+ 
+@@ -300,7 +388,7 @@
+ 				CASE n = 3
+ 					* get is for field_len
+ 
+-					IF field_type = "C"
++					IF LEFT(field_type, 1) = "C"
+ 						* get Clipper extended field length into memvar
+ 						len_temp = (256 * field_dec) + field_len
+ 
+@@ -320,7 +408,7 @@
+ 					IF menu_key() = 0
+ 						* no menu request
+ 
+-						IF field_type = "C"
++						IF LEFT(field_type, 1) = "C"
+ 							* put Clipper extended field length into len/dec
+ 							REPLACE field_len WITH (len_temp % 256)
+ 							REPLACE field_dec WITH INT(len_temp / 256)
+@@ -488,7 +576,7 @@
+ 		CASE keystroke = 4
+ 			* right arrow
+ 
+-			IF n < l_usr[AT(field_type, "CNDLM")]
++			IF n < l_usr[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
+ 				n = n + 1
+ 
+ 			ENDIF
+@@ -658,7 +746,7 @@
+ 		CASE keystroke = 6 .OR. keystroke = 23
+ 			* end or ^end
+ 			keystroke = 0
+-			n = l_usr[AT(field_type, "CNDLM")]
++			n = l_usr[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
+ 
+ 		CASE keystroke = 1 .OR. keystroke = 29
+ 			* home or ^home
+@@ -790,9 +878,9 @@
+ 			* update field/record number on screen
+ 			@ 9,field_col[1] + 26 SAY "Field " + pad(LTRIM(STR(RECNO())), 5)
+ 
+-			IF n > l_usr[AT(field_type, "CNDLM")]
++			IF n > l_usr[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
+ 				* check for n out of range
+-				n = l_usr[AT(field_type, "CNDLM")]
++				n = l_usr[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
+ 
+ 			ENDIF
+ 
+@@ -811,7 +899,7 @@
  			is_insert = .F.
  			filename = stru_name
  
@@ -454,7 +840,7 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  					   "do_modstru", .T., 13) <> 0
  				* structure created or altered
  				stru_name = filename
-@@ -819,7 +819,7 @@
+@@ -819,7 +907,7 @@
  				* re-write name at top of window
  				@ 9,field_col[1] + 13;
  				SAY pad(IF(EMPTY(stru_name), "<new file>",;
@@ -463,14 +849,15 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  
  				IF aseek(dbf, filename) = 0
  					* bring new file into view
-@@ -904,16 +904,16 @@
+@@ -904,18 +992,18 @@
  PARAMETERS fill_row
  
  @ fill_row,field_col[1];
 -SAY field_name + " ³ " + data_type[AT(field_type, "CNDLM")] + " ³ "
-+SAY field_name + hb_UTF8ToStr( " â”‚ " ) + data_type[AT(field_type, "CNDLM")] + hb_UTF8ToStr( " â”‚ " )
++SAY field_name + hb_UTF8ToStr( " â”‚ " ) + data_type[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")] + hb_UTF8ToStr( " â”‚ " )
  
- IF field_type = "C"
+-IF field_type = "C"
++IF LEFT(field_type, 1) = "C"
  	* display Clipper extended field length
  	@ fill_row,field_col[3] SAY STR(((256 * field_dec) + field_len), 4) +;
 -								" ³    "
@@ -481,9 +868,44 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
 -	@ fill_row,field_col[3] SAY STR(field_len, 4) + " ³    "
 +	@ fill_row,field_col[3] SAY STR(field_len, 4) + hb_UTF8ToStr( " â”‚    " )
  
- 	IF field_type = "N"
+-	IF field_type = "N"
++	IF LEFT(field_type, 1) $ "NFYI8BZ"
  		* display decimals for numeric field
-@@ -1215,7 +1215,7 @@
+ 		@ fill_row,field_col[4] SAY field_dec
+ 
+@@ -940,11 +1028,11 @@
+ 
+ 	CASE n = 2
+ 		* display field_type as character string
+-		@ cur_row,field_col[2] SAY data_type[AT(field_type, "CNDLM")]
++		@ cur_row,field_col[2] SAY data_type[AT(LEFT(field_type, 1), "CNDLMWPGQVF8BZYI24+=^@T")]
+ 
+ 	CASE n = 3
+ 
+-		IF field_type = "C"
++		IF LEFT(field_type, 1) = "C"
+ 			* display Clipper extended field length
+ 			@ cur_row,field_col[n] SAY STR(((256 * field_dec) +;
+ 										   field_len),4)
+@@ -1079,7 +1167,7 @@
+ IF status = 0
+ 	* test for valid field_len
+ 
+-	IF field_type = "C"
++	IF LEFT(field_type, 1) = "C"
+ 		test_num = (256 * field_dec) + field_len
+ 
+ 		IF test_num <= 0 .OR. test_num > 1024
+@@ -1110,7 +1198,7 @@
+ 	ENDIF
+ ENDIF
+ 
+-IF field_type = "N" .AND. status = 0
++IF LEFT(field_type, 1) $ "NFYI8BZ" .AND. status = 0
+ 	* test for valid field_dec
+ 
+ 	IF field_dec > IF(field_len < 3, 0, IF(field_len > 17, 15, field_len - 2))
+@@ -1215,7 +1303,7 @@
  		USE
  
  		* remember if file existed in current directory before
@@ -492,7 +914,7 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  
  		IF FILE(filename)
  			* file exists..modify structure and save old data
-@@ -1235,12 +1235,12 @@
+@@ -1235,12 +1323,12 @@
  			ENDIF
  
  			* establish temp filespec and dbt specs in same directory
@@ -509,7 +931,7 @@ diff -u dbu53ori/dbustru.prg dbu53pat/dbustru.prg
  
  			IF FILE(dbt_spec)
  				* data file contains memo fields
-@@ -1320,8 +1320,8 @@
+@@ -1320,8 +1408,8 @@
           CREATE &filename FROM ddbbuuuu.ext ALIAS cAlias
  			USE
  
@@ -586,7 +1008,7 @@ diff -u dbu53ori/dbuutil.prg dbu53pat/dbuutil.prg
  
 diff -u dbu53ori/dbuview.prg dbu53pat/dbuview.prg
 --- dbu53ori/dbuview.prg	1996-05-20 05:31:00.000000000 +0200
-+++ dbu53pat/dbuview.prg	2012-05-02 17:23:53.000000000 +0200
++++ dbu53pat/dbuview.prg	2016-02-06 17:23:44.000000000 +0100
 @@ -906,15 +906,15 @@
  ENDIF
  
@@ -634,6 +1056,15 @@ diff -u dbu53ori/dbuview.prg dbu53pat/dbuview.prg
  						  "do_opendbf", .F., 8) <> 0
  
  	ENDIF
+@@ -1196,7 +1196,7 @@
+ 		error_msg("Data file not selected")
+ 		done = .F.
+ 
+-	CASE .NOT. FILE(M->filename)
++	CASE .NOT. hb_dbExists(M->filename)
+ 		error_msg("Can't open " + M->filename)
+ 		done = .F.
+ 
 @@ -1269,12 +1269,12 @@
  	KEYBOARD CHR(M->keystroke)
  
@@ -648,6 +1079,15 @@ diff -u dbu53ori/dbuview.prg dbu53pat/dbuview.prg
 +		IF .NOT. (RAT(".", M->filename) > RAT(hb_ps(), M->filename))
  			* extension not entered..provide default
  			filename = filename + INDEXEXT()
+ 
+@@ -1339,7 +1339,7 @@
+ 		error_msg("Index file not selected")
+ 		done = .F.
+ 
+-	CASE .NOT. FILE(M->filename)
++	CASE .NOT. hb_dbExists(M->filename)
+ 		error_msg("Can't open " + M->filename)
+ 		done = .F.
  
 @@ -2120,7 +2120,7 @@
  
