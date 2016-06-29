@@ -4013,7 +4013,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
 
       if( ! pArea->bMemoType )
       {
-         pItem = hb_itemPutNI( pItem, 0 );
+         pItem = hb_itemPutNil( pItem );
          if( SELF_INFO( &pArea->area, DBI_MEMOTYPE, pItem ) != HB_SUCCESS )
          {
             hb_itemRelease( pItem );
@@ -4043,7 +4043,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
             pArea->uiMemoVersion = DB_MEMOVER_SIX;
          else if( pArea->bMemoType == DB_MEMO_FPT )
          {
-            pItem = hb_itemPutNI( pItem, 0 );
+            pItem = hb_itemPutNil( pItem );
             if( SELF_INFO( &pArea->area, DBI_MEMOVERSION, pItem ) != HB_SUCCESS )
             {
                hb_itemRelease( pItem );
@@ -4056,7 +4056,7 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
       }
       if( ! pArea->ulMemoBlockSize )
       {
-         pItem = hb_itemPutNI( pItem, 0 );
+         pItem = hb_itemPutNil( pItem );
          if( SELF_INFO( &pArea->area, DBI_MEMOBLOCKSIZE, pItem ) != HB_SUCCESS )
          {
             hb_itemRelease( pItem );
@@ -4071,10 +4071,12 @@ static HB_ERRCODE hb_fptCreateMemFile( FPTAREAP pArea, LPDBOPENINFO pCreateInfo 
          pFileName = hb_fsFNameSplit( pCreateInfo->abName );
          if( ! pFileName->szExtension )
          {
-            pItem = hb_itemPutC( pItem, NULL );
-            SELF_INFO( &pArea->area, DBI_MEMOEXT, pItem );
-            pFileName->szExtension = hb_itemGetCPtr( pItem );
-            hb_fsFNameMerge( szFileName, pFileName );
+            pItem = hb_itemPutNil( pItem );
+            if( SELF_INFO( &pArea->area, DBI_MEMOEXT, pItem ) == HB_SUCCESS )
+            {
+               pFileName->szExtension = hb_itemGetCPtr( pItem );
+               hb_fsFNameMerge( szFileName, pFileName );
+            }
          }
          else
          {
@@ -4270,10 +4272,12 @@ static HB_ERRCODE hb_fptOpenMemFile( FPTAREAP pArea, LPDBOPENINFO pOpenInfo )
    pFileName = hb_fsFNameSplit( pOpenInfo->abName );
    if( ! pFileName->szExtension )
    {
-      PHB_ITEM pItem = hb_itemPutC( NULL, NULL );
-      SELF_INFO( &pArea->area, DBI_MEMOEXT, pItem );
-      pFileName->szExtension = hb_itemGetCPtr( pItem );
-      hb_fsFNameMerge( szFileName, pFileName );
+      PHB_ITEM pItem = hb_itemNew( NULL );
+      if( SELF_INFO( &pArea->area, DBI_MEMOEXT, pItem ) == HB_SUCCESS )
+      {
+         pFileName->szExtension = hb_itemGetCPtr( pItem );
+         hb_fsFNameMerge( szFileName, pFileName );
+      }
       hb_itemRelease( pItem );
    }
    else

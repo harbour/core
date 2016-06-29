@@ -312,7 +312,7 @@ HB_FUNC( DBINFO )
       pIndex = hb_param( 1, HB_IT_NUMERIC );
       if( pIndex )
       {
-         PHB_ITEM pInfo = hb_itemNew( hb_param( 2, HB_IT_ANY ) );
+         PHB_ITEM pInfo = hb_itemParam( 2 );
 
          SELF_INFO( pArea, ( HB_USHORT ) hb_itemGetNI( pIndex ), pInfo );
          hb_itemReturnRelease( pInfo );
@@ -391,7 +391,7 @@ HB_FUNC( DBRECORDINFO )
       pRecNo = hb_param( 2, HB_IT_ANY );
       if( pType )
       {
-         PHB_ITEM pInfo = hb_itemNew( hb_param( 3, HB_IT_ANY ) );
+         PHB_ITEM pInfo = hb_itemParam( 3 );
 
          SELF_RECINFO( pArea, pRecNo, ( HB_USHORT ) hb_itemGetNI( pType ), pInfo );
          hb_itemReturnRelease( pInfo );

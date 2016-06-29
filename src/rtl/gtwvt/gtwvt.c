@@ -2135,9 +2135,9 @@ static int hb_gt_wvt_GetKeyFlags( void )
       iFlags |= HB_KF_SHIFT;
    if( GetKeyState( VK_CONTROL ) & 0x8000 )
       iFlags |= HB_KF_CTRL;
-   if( GetKeyState( VK_RMENU ) & 0x8000 )
-      iFlags |= HB_KF_ALT;
    if( GetKeyState( VK_LMENU ) & 0x8000 )
+      iFlags |= HB_KF_ALT;
+   if( GetKeyState( VK_RMENU ) & 0x8000 )
       iFlags |= HB_KF_ALTGR;
 
    return iFlags;

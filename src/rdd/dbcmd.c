@@ -875,7 +875,8 @@ HB_FUNC( DBSTRUCT )
 HB_FUNC( DBTABLEEXT )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   PHB_ITEM pItem = hb_itemPutC( NULL, NULL );
+   PHB_ITEM pItem = hb_itemNew( NULL );
+   HB_ERRCODE errCode = HB_FAILURE;
 
    if( ! pArea )
    {
@@ -887,15 +888,16 @@ HB_FUNC( DBTABLEEXT )
          pArea = ( AREAP ) hb_rddNewAreaNode( pRddNode, uiRddID );
          if( pArea )
          {
-            SELF_INFO( pArea, DBI_TABLEEXT, pItem );
+            errCode = SELF_INFO( pArea, DBI_TABLEEXT, pItem );
             SELF_RELEASE( pArea );
          }
       }
    }
    else
-   {
-      SELF_INFO( pArea, DBI_TABLEEXT, pItem );
-   }
+      errCode = SELF_INFO( pArea, DBI_TABLEEXT, pItem );
+
+   if( errCode != HB_SUCCESS )
+      hb_itemPutC( pItem, NULL );
    hb_itemReturnRelease( pItem );
 }
 
@@ -2097,7 +2099,7 @@ HB_FUNC( HB_RDDINFO )
    LPRDDNODE  pRDDNode;
    HB_USHORT  uiRddID;
    HB_ULONG   ulConnection;
-   PHB_ITEM   pIndex, pParam;
+   PHB_ITEM   pIndex;
    const char * szDriver;
 
    szDriver = hb_parc( 3 );
@@ -2108,11 +2110,10 @@ HB_FUNC( HB_RDDINFO )
 
    pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
    pIndex = hb_param( 1, HB_IT_NUMERIC );
-   pParam = hb_param( 2, HB_IT_ANY );
 
    if( pRDDNode && pIndex )
    {
-      PHB_ITEM pInfo = hb_itemNew( pParam );
+      PHB_ITEM pInfo = hb_itemParam( 2 );
       SELF_RDDINFO( pRDDNode, ( HB_USHORT ) hb_itemGetNI( pIndex ), ulConnection, pInfo );
       hb_itemReturnRelease( pInfo );
    }

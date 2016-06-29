@@ -1914,7 +1914,7 @@ HB_FUNC( HS_FILTER )
       }
       if( iResult == HSX_SUCCESS )
       {
-         hb_itemPutNI( pItem, 0 );
+         hb_itemClear( pItem );
          if( SELF_INFO( pArea, DBI_RM_COUNT, pItem ) == HB_FAILURE )
             iResult = HSX_RDDFAILURE;
          else
