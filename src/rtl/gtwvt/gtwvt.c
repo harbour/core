@@ -2607,9 +2607,8 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                                           ( ( iFlags & HB_KF_ALTGR ) != 0 ) )
             /* workaround for AltGR and German keyboard */
             iFlags &= ~( HB_KF_CTRL | HB_KF_ALT | HB_KF_ALTGR );
-         else
-            iFlags = hb_gt_wvt_UpdateKeyFlags( iFlags );
       case WM_SYSCHAR:
+         iFlags = hb_gt_wvt_UpdateKeyFlags( iFlags );
          if( ! pWVT->IgnoreWM_SYSCHAR )
          {
             iKey = ( int ) wParam;
@@ -2621,6 +2620,126 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
             }
             else
             {
+               if( message == WM_SYSCHAR && ( iFlags & HB_KF_ALT ) != 0 )
+               {
+                  switch( HIWORD( lParam ) & 0xFF )
+                  {
+                     case  2:
+                        iKey = '1';
+                        break;
+                     case  3:
+                        iKey = '2';
+                        break;
+                     case  4:
+                        iKey = '3';
+                        break;
+                     case  5:
+                        iKey = '4';
+                        break;
+                     case  6:
+                        iKey = '5';
+                        break;
+                     case  7:
+                        iKey = '6';
+                        break;
+                     case  8:
+                        iKey = '7';
+                        break;
+                     case  9:
+                        iKey = '8';
+                        break;
+                     case 10:
+                        iKey = '9';
+                        break;
+                     case 11:
+                        iKey = '0';
+                        break;
+                     case 13:
+                        iKey = '=';
+                        break;
+                     case 14:
+                        iKey = HB_KX_BS;
+                        break;
+                     case 16:
+                        iKey = 'Q';
+                        break;
+                     case 17:
+                        iKey = 'W';
+                        break;
+                     case 18:
+                        iKey = 'E';
+                        break;
+                     case 19:
+                        iKey = 'R';
+                        break;
+                     case 20:
+                        iKey = 'T';
+                        break;
+                     case 21:
+                        iKey = 'Y';
+                        break;
+                     case 22:
+                        iKey = 'U';
+                        break;
+                     case 23:
+                        iKey = 'I';
+                        break;
+                     case 24:
+                        iKey = 'O';
+                        break;
+                     case 25:
+                        iKey = 'P';
+                        break;
+                     case 30:
+                        iKey = 'A';
+                        break;
+                     case 31:
+                        iKey = 'S';
+                        break;
+                     case 32:
+                        iKey = 'D';
+                        break;
+                     case 33:
+                        iKey = 'F';
+                        break;
+                     case 34:
+                        iKey = 'G';
+                        break;
+                     case 35:
+                        iKey = 'H';
+                        break;
+                     case 36:
+                        iKey = 'J';
+                        break;
+                     case 37:
+                        iKey = 'K';
+                        break;
+                     case 38:
+                        iKey = 'L';
+                        break;
+                     case 44:
+                        iKey = 'Z';
+                        break;
+                     case 45:
+                        iKey = 'X';
+                        break;
+                     case 46:
+                        iKey = 'C';
+                        break;
+                     case 47:
+                        iKey = 'V';
+                        break;
+                     case 48:
+                        iKey = 'B';
+                        break;
+                     case 49:
+                        iKey = 'N';
+                        break;
+                     case 50:
+                        iKey = 'M';
+                        break;
+                  }
+               }
 #if defined( UNICODE )
                if( iKey >= 127 )
                   iKey = HB_INKEY_NEW_UNICODEF( iKey, iFlags );
@@ -2629,16 +2748,18 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                else
                   iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
 #else
-               int u = HB_GTSELF_KEYTRANS( pWVT->pGT, iKey );
-               if( u )
-                  iKey = HB_INKEY_NEW_UNICODEF( u, iFlags );
-               else if( iKey < 127 && ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) )
-                  iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
-               else
                {
-                  if( pWVT->CodePage == OEM_CHARSET )
-                     iKey = hb_gt_wvt_key_ansi_to_oem( iKey );
-                  iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
+                  int u = HB_GTSELF_KEYTRANS( pWVT->pGT, iKey );
+                  if( u )
+                     iKey = HB_INKEY_NEW_UNICODEF( u, iFlags );
+                  else if( iKey < 127 && ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) )
+                     iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+                  else
+                  {
+                     if( pWVT->CodePage == OEM_CHARSET )
+                        iKey = hb_gt_wvt_key_ansi_to_oem( iKey );
+                     iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
+                  }
                }
 #endif
             }

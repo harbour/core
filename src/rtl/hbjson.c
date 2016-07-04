@@ -174,104 +174,69 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx,
 
    if( HB_IS_STRING( pValue ) )
    {
-      HB_SIZE nPos, nPos2, nLen = hb_itemGetCLen( pValue );
-      const char * szString = hb_itemGetCPtr( pValue );
+      HB_SIZE nPos, nPos2, nLen;
+      const char * szString;
+      void * hString = NULL;
       char buf[ 8 ];
-
-      _hb_jsonCtxAdd( pCtx, "\"", 1 );
 
       if( cdp )
       {
-         HB_WCHAR wc;
-
-         nPos = 0;
-         while( HB_CDPCHAR_GET( cdp, szString, nLen, &nPos, &wc ) )
-         {
-            if( wc >= ' ' && wc < 0x7F && wc != '\\' && wc != '\"' )
-            {
-               buf[ 0 ] = ( char ) wc;
-               _hb_jsonCtxAdd( pCtx, buf, 1 );
-               continue;
-            }
-            switch( wc )
-            {
-               case '\\':
-                  _hb_jsonCtxAdd( pCtx, "\\\\", 2 );
-                  break;
-               case '\"':
-                  _hb_jsonCtxAdd( pCtx, "\\\"", 2 );
-                  break;
-               case '\b':
-                  _hb_jsonCtxAdd( pCtx, "\\b", 2 );
-                  break;
-               case '\f':
-                  _hb_jsonCtxAdd( pCtx, "\\f", 2 );
-                  break;
-               case '\n':
-                  _hb_jsonCtxAdd( pCtx, "\\n", 2 );
-                  break;
-               case '\r':
-                  _hb_jsonCtxAdd( pCtx, "\\r", 2 );
-                  break;
-               case '\t':
-                  _hb_jsonCtxAdd( pCtx, "\\t", 2 );
-                  break;
-               default:
-                  hb_snprintf( buf, sizeof( buf ), "\\u%04X", wc );
-                  _hb_jsonCtxAdd( pCtx, buf, 6 );
-                  break;
-            }
-         }
+         szString = hb_itemGetStr( pValue, cdp, &hString, &nLen );
       }
       else
       {
-         nPos = 0;
-         while( nPos < nLen )
-         {
-            unsigned char uch = szString[ nPos ];
-            nPos2 = nPos;
-            while( uch >= ' ' && uch != '\\' && uch != '\"' )
-               uch = szString[ ++nPos2 ];
-            if( nPos2 > nPos )
-            {
-               _hb_jsonCtxAdd( pCtx, szString + nPos, nPos2 - nPos );
-               if( nPos2 >= nLen )
-                  break;
-               nPos = nPos2;
-            }
+         szString = hb_itemGetCPtr( pValue );
+         nLen = hb_itemGetCLen( pValue );
+      }
 
-            switch( uch )
-            {
-               case '\\':
-                  _hb_jsonCtxAdd( pCtx, "\\\\", 2 );
-                  break;
-               case '\"':
-                  _hb_jsonCtxAdd( pCtx, "\\\"", 2 );
-                  break;
-               case '\b':
-                  _hb_jsonCtxAdd( pCtx, "\\b", 2 );
-                  break;
-               case '\f':
-                  _hb_jsonCtxAdd( pCtx, "\\f", 2 );
-                  break;
-               case '\n':
-                  _hb_jsonCtxAdd( pCtx, "\\n", 2 );
-                  break;
-               case '\r':
-                  _hb_jsonCtxAdd( pCtx, "\\r", 2 );
-                  break;
-               case '\t':
-                  _hb_jsonCtxAdd( pCtx, "\\t", 2 );
-                  break;
-               default:
-                  hb_snprintf( buf, sizeof( buf ), "\\u00%02X", uch );
-                  _hb_jsonCtxAdd( pCtx, buf, 6 );
-                  break;
-            }
-            nPos++;
+      _hb_jsonCtxAdd( pCtx, "\"", 1 );
+      nPos = 0;
+      while( nPos < nLen )
+      {
+         unsigned char uch = szString[ nPos ];
+         nPos2 = nPos;
+         while( uch >= ' ' && uch != '\\' && uch != '\"' )
+            uch = szString[ ++nPos2 ];
+         if( nPos2 > nPos )
+         {
+            _hb_jsonCtxAdd( pCtx, szString + nPos, nPos2 - nPos );
+            if( nPos2 >= nLen )
+               break;
+            nPos = nPos2;
          }
+
+         switch( uch )
+         {
+            case '\\':
+               _hb_jsonCtxAdd( pCtx, "\\\\", 2 );
+               break;
+            case '\"':
+               _hb_jsonCtxAdd( pCtx, "\\\"", 2 );
+               break;
+            case '\b':
+               _hb_jsonCtxAdd( pCtx, "\\b", 2 );
+               break;
+            case '\f':
+               _hb_jsonCtxAdd( pCtx, "\\f", 2 );
+               break;
+            case '\n':
+               _hb_jsonCtxAdd( pCtx, "\\n", 2 );
+               break;
+            case '\r':
+               _hb_jsonCtxAdd( pCtx, "\\r", 2 );
+               break;
+            case '\t':
+               _hb_jsonCtxAdd( pCtx, "\\t", 2 );
+               break;
+            default:
+               hb_snprintf( buf, sizeof( buf ), "\\u00%02X", uch );
+               _hb_jsonCtxAdd( pCtx, buf, 6 );
+               break;
+         }
+         nPos++;
       }
       _hb_jsonCtxAdd( pCtx, "\"", 1 );
+      hb_strfree( hString );
    }
    else if( HB_IS_NUMINT( pValue ) )
    {
@@ -505,14 +470,8 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue, PHB_
                         return NULL;
                      }
                   }
-                  if( cdp )
-                     szHead += hb_cdpU16ToStr( cdp, HB_CDP_ENDIAN_NATIVE,
-                                               &wc, 1,
-                                               szHead, szDest + nAlloc - szHead );
-                  else if( wc <= 0xFF )
-                     *szHead++ = ( char ) wc;
-                  else
-                     *szHead++ = '?';
+                  szHead += hb_cdpU16ToStr( cdp ? cdp : hb_vmCDP(), HB_CDP_ENDIAN_NATIVE,
+                                            &wc, 1, szHead, szDest + nAlloc - szHead );
                   break;
                }
                default:
@@ -529,7 +488,10 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue, PHB_
             return NULL;
          }
       }
-      hb_itemPutCL( pValue, szDest, szHead - szDest );
+      if( cdp && hb_vmCDP() != cdp )
+         hb_itemPutStrLen( pValue, cdp, szDest, szHead - szDest );
+      else
+         hb_itemPutCL( pValue, szDest, szHead - szDest );
       hb_xfree( szDest );
       return szSource + 1;
    }
@@ -747,12 +709,12 @@ HB_SIZE hb_jsonDecodeCP( const char * szSource, PHB_ITEM pValue, PHB_CODEPAGE cd
 
 HB_SIZE hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
 {
-   return hb_jsonDecodeCP( szSource, pValue, hb_vmCDP() );
+   return hb_jsonDecodeCP( szSource, pValue, NULL );
 }
 
 /* Harbour level API functions */
 
-static PHB_CODEPAGE _hb_jsonCdpPar( int iParam, HB_BOOL lVmCp )
+static PHB_CODEPAGE _hb_jsonCdpPar( int iParam )
 {
    if( hb_pcount() >= iParam )
    {
@@ -761,9 +723,6 @@ static PHB_CODEPAGE _hb_jsonCdpPar( int iParam, HB_BOOL lVmCp )
       if( szCdp )
          return hb_cdpFindExt( szCdp );
    }
-   else if( lVmCp )
-      return hb_vmCDP();
-
    return NULL;
 }
 
@@ -776,8 +735,7 @@ HB_FUNC( HB_JSONENCODE )
       HB_SIZE nLen;
       char * szRet;
 
-      szRet = hb_jsonEncodeCP( pItem, &nLen, hb_parl( 2 ),
-                               _hb_jsonCdpPar( 3, HB_FALSE ) );
+      szRet = hb_jsonEncodeCP( pItem, &nLen, hb_parl( 2 ), _hb_jsonCdpPar( 3 ) );
       hb_retclen_buffer( szRet, nLen );
    }
 }
@@ -785,8 +743,7 @@ HB_FUNC( HB_JSONENCODE )
 HB_FUNC( HB_JSONDECODE )
 {
    PHB_ITEM pItem = hb_itemNew( NULL );
-   HB_SIZE nSize = hb_jsonDecodeCP( hb_parc( 1 ), pItem,
-                                    _hb_jsonCdpPar( 3, HB_TRUE ) );
+   HB_SIZE nSize = hb_jsonDecodeCP( hb_parc( 1 ), pItem, _hb_jsonCdpPar( 3 ) );
 
    if( HB_ISBYREF( 2 ) )
    {
