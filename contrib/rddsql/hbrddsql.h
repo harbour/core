@@ -53,7 +53,6 @@
 #include "hbapierr.h"
 #include "hbapilng.h"
 #include "hbapi.h"
-#include "hbrddsql.ch"
 
 /*
    ====================================================================

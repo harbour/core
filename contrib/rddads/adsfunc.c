@@ -199,7 +199,7 @@ void hb_ads_setConnection( ADSHANDLE hConnect )
    HB_ADS_CONN_DATA->hConnect = hConnect;
 }
 
-static void hb_ads_clrConnection( ADSHANDLE hConnect )
+void hb_ads_clrConnection( ADSHANDLE hConnect )
 {
    PHB_ADSDATA pAdsData = HB_ADS_CONN_DATA;
 

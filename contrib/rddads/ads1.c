@@ -57,6 +57,7 @@
 #include "hbapilng.h"
 #include "hbdate.h"
 #include "hbset.h"
+#include "hbstack.h"
 
 #include "rddsys.ch"
 #include "rddads.h"
@@ -73,6 +74,19 @@ static HB_USHORT s_uiRddIdADSVFP = ( HB_USHORT ) -1;
 #endif
 
 static RDDFUNCS adsSuper;
+
+#define ERROR_BUFFER_LEN   512
+
+typedef struct _RDDADSDATA
+{
+   UNSIGNED32 ulError;
+   UNSIGNED32 ulInsertID;
+   UNSIGNED32 ulAffectedRows;
+   UNSIGNED8  szError[ ERROR_BUFFER_LEN + 1 ];
+   char *     szQuery;
+} RDDADSDATA, * LPRDDADSDATA;
+
+#define RDDADSNODE_DATA( r )   ( ( LPRDDADSDATA ) hb_stackGetTSD( ( PHB_TSD ) ( r )->lpvCargo ) )
 
 
 /*
@@ -2949,6 +2963,11 @@ static HB_ERRCODE adsClose( ADSAREAP pArea )
 {
    HB_TRACE( HB_TR_DEBUG, ( "adsClose(%p)", pArea ) );
 
+   if( pArea->szQuery )
+   {
+      hb_xfree( pArea->szQuery );
+      pArea->szQuery = NULL;
+   }
    return hb_adsCloseCursor( pArea );
 }
 
@@ -3438,8 +3457,14 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       hTable = pArea->hTable;
       hStatement = pArea->hStatement;
    }
-   else if( szFile && hb_strnicmp( szFile, "SELECT ", 7 ) == 0 )
+   else if( szFile && ( ( hb_strnicmp( szFile, "SELECT ", 7 ) == 0 ) || 
+                        ( hb_strnicmp( szFile, "SQL:", 4 ) == 0 ) ) )
    {
+      if( hb_strnicmp( szFile, "SQL:", 4 ) == 0 ) 
+         szFile += 4;
+
+      pArea->szQuery = hb_strdup( szFile );
+
       u32RetVal = AdsCreateSQLStatement( hConnection, &hStatement );
       if( u32RetVal == AE_SUCCESS )
       {
@@ -3475,10 +3500,13 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
          return HB_FAILURE;
       }
    }
-   else
+   else /* if( hb_strnicmp( szFile, "TABLE:", 6 ) == 0 ) */
    {
       PHB_ITEM pError = NULL;
       HB_BOOL fRetry;
+
+      if( szFile && ( hb_strnicmp( szFile, "TABLE:", 6 ) == 0 ) )
+         szFile += 6;
 
       /* Use an  Advantage Data Dictionary
        * if fDictionary was set for this connection
@@ -3486,7 +3514,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       do
       {
          u32RetVal = AdsOpenTable( hConnection,
-                                   ( UNSIGNED8 * ) HB_UNCONST( pOpenInfo->abName ),
+                                   ( UNSIGNED8 * ) HB_UNCONST( szFile ),
                                    ( UNSIGNED8 * ) HB_UNCONST( pOpenInfo->atomAlias ),
                                    ( fDictionary ? ADS_DEFAULT : ( UNSIGNED16 ) pArea->iFileType ),
                                    ( UNSIGNED16 ) hb_ads_iCharType,
@@ -5185,7 +5213,28 @@ static HB_ERRCODE adsRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
    return HB_FAILURE;
 }
 
-#define  adsInit  NULL
+static void adsTSDRelease( void * cargo )
+{
+   LPRDDADSDATA pData = ( LPRDDADSDATA ) cargo;
+
+   if( pData->szQuery )
+      hb_xfree( pData->szQuery );
+}
+
+static HB_ERRCODE adsInit( LPRDDNODE pRDD )
+{
+   PHB_TSD pTSD;
+
+   pTSD = ( PHB_TSD ) hb_xgrab( sizeof( HB_TSD ) );
+   HB_TSD_INIT( pTSD, sizeof( RDDADSDATA ), NULL, adsTSDRelease );
+   pRDD->lpvCargo = ( void * ) pTSD;
+
+   if( ISSUPER_INIT( pRDD ) )
+      return SUPER_INIT( pRDD );
+   else
+      return HB_SUCCESS;
+}
+
 
 static HB_ERRCODE adsExit( LPRDDNODE pRDD )
 {
@@ -5210,9 +5259,17 @@ static HB_ERRCODE adsExit( LPRDDNODE pRDD )
       }
    }
 
-   /* free pRDD->lpvCargo if necessary */
+   if( pRDD->lpvCargo )
+   {
+      hb_stackReleaseTSD( ( PHB_TSD ) pRDD->lpvCargo );
+      hb_xfree( pRDD->lpvCargo );
+      pRDD->lpvCargo = NULL;
+   }
 
-   return HB_SUCCESS;
+   if( ISSUPER_EXIT( pRDD ) )
+      return SUPER_EXIT( pRDD );
+   else
+      return HB_SUCCESS;
 }
 
 
@@ -5234,6 +5291,71 @@ static HB_ERRCODE adsRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConn
          HB_ADS_PUTCONNECTION( pItem, hOldConnection );
          break;
       }
+
+      case RDDI_CONNECT:
+      {
+         ADSHANDLE hConnect = 0;
+         UNSIGNED32 u32RetVal;
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+
+         if( HB_IS_ARRAY( pItem ) )
+         {
+#if ADS_LIB_VERSION >= 600
+            u32RetVal = AdsConnect60( ( UNSIGNED8 * ) HB_UNCONST( hb_arrayGetCPtr( pItem, 1 ) ) /* pucServerPath */,
+                                      ( UNSIGNED16 ) hb_arrayGetNI( pItem, 2 ) /* usServerTypes */,
+                                      ( UNSIGNED8 * ) HB_UNCONST( hb_arrayGetCPtr( pItem, 3 ) ) /* pucUserName */,
+                                      ( UNSIGNED8 * ) HB_UNCONST( hb_arrayGetCPtr( pItem, 4 ) ) /* pucPassword */,
+                                      ( UNSIGNED32 ) hb_arrayGetNL( pItem, 5 ) /* ulOptions */,
+                                      &hConnect );
+
+#else
+            u32RetVal = AdsConnect( ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) ), &hConnect );
+#endif
+         }
+         else
+         {
+            u32RetVal = AdsConnect( ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) ), &hConnect );
+         }
+
+         if( u32RetVal == AE_SUCCESS )
+         {
+            hb_ads_setConnection( hConnect );   /* set new default */
+            pData->ulError = pData->ulInsertID = pData->ulAffectedRows = 0;
+            pData->szError[ 0 ] = '\0';
+            HB_ADS_PUTCONNECTION( pItem, hConnect );
+         }
+         else
+         {
+            UNSIGNED16 usLen = ERROR_BUFFER_LEN;
+
+            pData->ulError = u32RetVal;
+            AdsGetLastError( &u32RetVal, pData->szError, &usLen );
+            pData->szError[ usLen ] = '\0';
+            HB_ADS_PUTCONNECTION( pItem, 0 );
+         }
+         break;
+      }
+
+      case RDDI_DISCONNECT:
+      {
+         ADSHANDLE hConnect = HB_ADS_GETCONNECTION( pItem );
+
+         /* NOTE: Only allow disconnect of 0 if explicitly passed.
+                  The thread default connection handle might be 0 if caller
+                  accidentally disconnects twice. */
+    
+         if( ( hConnect != 0 || HB_IS_NUMERIC( pItem ) ) &&
+             AdsDisconnect( hConnect ) == AE_SUCCESS )
+         {
+            hb_ads_clrConnection( hConnect );
+            hb_itemPutL( pItem, HB_TRUE );
+         }
+         else
+            hb_itemPutL( pItem, HB_FALSE );
+
+         break;
+      }
+
       case RDDI_ISDBF:
          hb_itemPutL( pItem, adsGetFileType( pRDD->rddID ) != ADS_ADT );
          break;
@@ -5268,6 +5390,89 @@ static HB_ERRCODE adsRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConn
          {
             hb_ads_setIndexPageSize( iPageSize );
          }
+         break;
+      }
+
+      case RDDI_ERRORNO:
+      {
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         hb_itemPutNL( pItem, ( unsigned long ) pData->ulError );
+         break;
+      }
+
+      case RDDI_ERROR:
+      {
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         hb_itemPutC( pItem, ( char * ) pData->szError );
+         break;
+      }
+
+      case RDDI_INSERTID:
+      {
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         hb_itemPutNL( pItem, ( unsigned long ) pData->ulInsertID );
+         break;
+      }
+
+      case RDDI_AFFECTEDROWS:
+      {
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         hb_itemPutNL( pItem, ( unsigned long ) pData->ulAffectedRows );
+         break;
+      }
+
+      case RDDI_EXECUTE:
+      {
+
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         ADSHANDLE hConnect = ulConnect ? ( ADSHANDLE ) ulConnect : hb_ads_getConnection();
+         ADSHANDLE hStatement = 0;
+         UNSIGNED32 u32RetVal;
+
+         pData->ulError = pData->ulInsertID = pData->ulAffectedRows = 0;
+         pData->szError[ 0 ] = '\0';
+
+         u32RetVal = AdsCreateSQLStatement( hConnect, &hStatement );
+         if( u32RetVal == AE_SUCCESS )
+         {
+            ADSHANDLE hCursor = 0;
+
+            AdsStmtSetTableType( hStatement, adsGetFileType( pRDD->rddID ) );
+
+            u32RetVal = AdsExecuteSQLDirect( hStatement, ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), &hCursor );
+            if( u32RetVal == AE_SUCCESS ) 
+            {
+               if( AdsGetLastAutoinc( hStatement, &u32RetVal ) == AE_SUCCESS )
+                  pData->ulInsertID = u32RetVal;
+
+               if( AdsGetRecordCount( hStatement, ADS_IGNOREFILTERS, &u32RetVal ) == AE_SUCCESS )
+                  pData->ulAffectedRows = u32RetVal;
+
+               if( hCursor )
+                  AdsCloseTable( hCursor );
+
+               u32RetVal = AE_SUCCESS;
+            }
+            else
+            {
+               UNSIGNED16 usLen = ERROR_BUFFER_LEN;
+
+               pData->ulError = u32RetVal;
+               AdsGetLastError( &u32RetVal, pData->szError, &usLen );
+               pData->szError[ usLen ] = '\0';
+
+            }
+            AdsCloseSQLStatement( hStatement );
+         }
+         else
+         {
+            UNSIGNED16 usLen = ERROR_BUFFER_LEN;
+
+            pData->ulError = u32RetVal;
+            AdsGetLastError( &u32RetVal, pData->szError, &usLen );
+            pData->szError[ usLen ] = '\0';
+         }
+         hb_itemPutL( pItem, u32RetVal == AE_SUCCESS );
          break;
       }
 

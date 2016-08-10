@@ -120,6 +120,8 @@
 #define ADS_MGMT_WIN9X_SERVER             4
 #define ADS_MGMT_NETWARE5_OR_NEWER_SERVER 5
 #define ADS_MGMT_LINUX_SERVER             6
+#define ADS_MGMT_NT_SERVER_64_BIT         7
+#define ADS_MGMT_LINUX_SERVER_64_BIT      8
 
 /* ACE handle types */
 #define ADS_CONNECTION                    1

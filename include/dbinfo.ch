@@ -107,6 +107,16 @@
 #define RDDI_DECIMALS            46   /* Get/Set default number of decimal places for numeric fields if it's undefined */
 #define RDDI_SETHEADER           47   /* DBF header updating modes */
 
+/* SQL */
+#define RDDI_CONNECT             61   /* connect to database */
+#define RDDI_DISCONNECT          62   /* disconnect from database */
+#define RDDI_EXECUTE             63   /* execute SQL statement */
+#define RDDI_ERROR               64   /* error number */
+#define RDDI_ERRORNO             65   /* error description */
+#define RDDI_INSERTID            66   /* last auto insert ID */
+#define RDDI_AFFECTEDROWS        67   /* number of affected rows after UPDATE */
+#define RDDI_QUERY               68   /* last executed query */
+
 /*
    Constants for SELF_ORDINFO ()
 */
@@ -305,6 +315,8 @@
 #define DBI_RM_TEST             157  /* test if record is set in WA record map */
 #define DBI_RM_COUNT            158  /* number of records set in record map */
 #define DBI_RM_HANDLE           159  /* get/set record map filter handle */
+
+#define DBI_QUERY               170  /* if area represents result of a query, obtain expression of this query */
 
 /* BLOB support - definitions for internal use by blob.ch */
 #define DBI_BLOB_DIRECT_EXPORT  201
