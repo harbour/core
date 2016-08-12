@@ -1168,6 +1168,15 @@ HB_FUNC( PQPUTCOPYEND )
 #endif
 }
 
+HB_FUNC( PQLIBVERSION )
+{
+#if PG_VERSION_NUM >= 90100
+   hb_retni( PQlibVersion() );
+#else
+   hb_retni( 0 );
+#endif
+} 
+
 #if 0
 
  TODO: Implement Full Large Objects Support
