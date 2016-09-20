@@ -1551,7 +1551,7 @@ HB_BYTE * hb_fileLoadData( PHB_FILE pFile, HB_SIZE nMaxSize,
    HB_FOFFSET nFileSize = hb_fileSize( pFile );
 
    if( nFileSize == FS_ERROR ||
-       ( nFileSize == 0 && hb_fsError() == HB_FILE_ERR_UNSUPPORTED ) )
+       ( nFileSize == 0 && hb_fsError() != 0 ) )
    {
       for( nBufSize = 0;; )
       {

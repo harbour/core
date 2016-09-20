@@ -483,7 +483,6 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
               hPipeOut[ 2 ] = { FS_ERROR, FS_ERROR },
               hPipeErr[ 2 ] = { FS_ERROR, FS_ERROR };
    HB_FHANDLE hResult = FS_ERROR;
-   HB_ERRCODE errCode;
    HB_BOOL fError = HB_FALSE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFileName, phStdin, phStdout, phStderr, fDetach, pulPID ) );
@@ -932,25 +931,21 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
 #endif
    }
 
-   errCode = hb_fsError();
-
    if( hPipeIn[ 0 ] != FS_ERROR )
-      hb_fsClose( hPipeIn[ 0 ] );
+      hb_fsCloseRaw( hPipeIn[ 0 ] );
    if( hPipeIn[ 1 ] != FS_ERROR )
-      hb_fsClose( hPipeIn[ 1 ] );
+      hb_fsCloseRaw( hPipeIn[ 1 ] );
    if( hPipeOut[ 0 ] != FS_ERROR )
-      hb_fsClose( hPipeOut[ 0 ] );
+      hb_fsCloseRaw( hPipeOut[ 0 ] );
    if( hPipeOut[ 1 ] != FS_ERROR )
-      hb_fsClose( hPipeOut[ 1 ] );
+      hb_fsCloseRaw( hPipeOut[ 1 ] );
    if( phStdout != phStderr )
    {
       if( hPipeErr[ 0 ] != FS_ERROR )
-         hb_fsClose( hPipeErr[ 0 ] );
+         hb_fsCloseRaw( hPipeErr[ 0 ] );
       if( hPipeErr[ 1 ] != FS_ERROR )
-         hb_fsClose( hPipeErr[ 1 ] );
+         hb_fsCloseRaw( hPipeErr[ 1 ] );
    }
-
-   hb_fsSetError( errCode );
 
    return hResult;
 }

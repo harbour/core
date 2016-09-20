@@ -163,7 +163,7 @@
 #  endif
 #elif defined( HB_OS_WIN )
 #  if defined( __WATCOMC__ )
-#     if ( NTDDI_VERSION >= 0x06000000 )
+#     if ( NTDDI_VERSION >= 0x06000000 ) && ! defined( HB_WINSOCK_USE_OLDFUNC )
 #        define HB_HAS_INET_PTON
 #        define HB_HAS_INET_NTOP
 #     endif
@@ -174,11 +174,13 @@
 #  elif defined( __POCC__ ) && ! defined( __XCC__ )
 #     define HB_HAS_SOCKADDR_STORAGE
 #  elif defined( _MSC_VER )
-#     if _MSC_VER >= 1800
+#     if _MSC_VER >= 1800 && ! defined( HB_WINSOCK_USE_OLDFUNC )
 #        define HB_HAS_INET_PTON
 #        define HB_HAS_INET_NTOP
 #        define HB_HAS_ADDRINFO
 #        define HB_HAS_NAMEINFO
+#     else
+#        define _WINSOCK_DEPRECATED_NO_WARNINGS
 #     endif
 #  endif
 #  define HB_IS_INET_NTOA_MT_SAFE
@@ -823,6 +825,12 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
 #elif defined( HB_OS_OS2 ) && defined( __WATCOMC__ )
 #  define HB_SOCK_GETERROR()              sock_errno()
 #  define HB_SOCK_GETHERROR()             h_errno
+#  define HB_SOCK_IS_EINTR( err )         ( (err) == EINTR )
+#  define HB_SOCK_IS_EINPROGRES( err )    ( (err) == EINPROGRESS )
+#elif defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && ( __WATCOMC__ <= 1290 )
+   /* h_errno is still not supported by Linux OpenWatcom port :-( */
+#  define HB_SOCK_GETERROR()              errno
+#  define HB_SOCK_GETHERROR()             errno
 #  define HB_SOCK_IS_EINTR( err )         ( (err) == EINTR )
 #  define HB_SOCK_IS_EINPROGRES( err )    ( (err) == EINPROGRESS )
 #else

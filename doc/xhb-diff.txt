@@ -90,7 +90,7 @@ file system(s) and with different OS(s).
 ###    NEW LANGUAGE STATEMENTS    ###
 =====================================
 1. FOR EACH
-   Harbour support all xHarbour functionality and it offers also additional
+   Harbour supports all xHarbour functionality and it offers also additional
    features which are not available in xHarbour.
    a) it allows to iterate more then one variable
          FOR EACH a, b, c IN aVal, cVal, hVal
@@ -539,15 +539,15 @@ illustrated by the following example:
          eval( cb )
       return
 
-In the line which initialize cb code (*) we are using local variable n
+In the line which initializes cb code (*) we are using local variable n
 and field f. Both are declared below the line in which codeblock is
 initialized anyhow Clipper does not recognize it as undeclared variables
-and use their later declarations. If you compile above code using Clipper
+and uses their later declarations. If you compile above code using Clipper
 with -n -w -es2 switches, i.e.
    cl tst -n -w -es2
 then it's compiled without any compile time warnings or errors. Then
 during execution it shows 15 for the first QOUT() function call and
-generate runtime error
+generates runtime error
    Error BASE/1002  Alias does not exist: TABLE
 for the second QOUT() call. It means that it correctly recognized scope
 of both variables and also bound alias TABLE with field F though it was
@@ -625,7 +625,7 @@ Harbour and xHarbour correctly report compile time error for it.
 
 ###    FUNCTIONS WITH VARIABLE NUMBER OF PARAMETERS    ###
 ==========================================================
-Both compilers supports them though xHarbour is limited to all parameters
+Both compilers support them though xHarbour is limited to all parameters
 and does not support unnamed parameters. In Harbour you can declare some
 named parameters and then unnamed just like in many other languages, f.e.:
       func f( p1, p2, p3, ... )
@@ -839,7 +839,7 @@ declared symbols.
 
 ###    MACRO MESSAGES    ###
 ============================
-Both compilers Harbour and xHarbour supports macros as messages.
+Both compilers Harbour and xHarbour support macros as messages.
 Clipper does not. This example shows such macro messages usage:
 
       proc main()
@@ -1037,7 +1037,7 @@ can compile and execute this code:
          ? "a" $ { "qwe", "abc", "zxc", { "a" } } // result .F.
       return
 
-Warning! Xbase++ also support $ operator for arrays but it makes non
+Warning! Xbase++ also supports $ operator for arrays but it makes non
          exact comparison so ` "a" $ { "abc" } ' gives .T. in Xbase++
          and .F. in xHarbour or in Harbour when xHarbour compatibility
          library is used. Harbour users who need strict Xbase++ compatibility
@@ -1054,7 +1054,7 @@ Warning! Xbase++ also support $ operator for arrays but it makes non
 
 ###    NEW BIT OPERATORS    ###
 ===============================
-xHarbour support five new bit operators: &, |, ^^, <<, >>
+xHarbour supports five new bit operators: &, |, ^^, <<, >>
       <x> & <y>      - bit and
       <x> | <y>      - bit or
       <x> ^^ <y>     - bit xor
@@ -1191,7 +1191,7 @@ it and not create such code.
 
 ###    GLOBAL / GLOBAL EXTERNAL (GLOBAL_EXTERN)    ###
 ======================================================
-xHarbour support application wide static variables called GLOBALs.
+xHarbour supports application wide static variables called GLOBALs.
 To declare GLOBAL variable you have to put
       GLOBAL <varname> [ := <initValue> ]
 before the 1-st function in compiled .prg module and use -n compiler
@@ -1404,9 +1404,37 @@ corruptions.
 
 
 
+###    STRONG TYPED VARIABLES    ###
+====================================
+Harbour and xHarbour allow to declare type of variables using syntax similar
+to Visual Object which was adopted also by FlagShip and some other xBase
+compatible languages (i.e. FlagShip):
+   LOCAL var AS STRING
+Anyhow so far in both compilers it is only source code decoration and it's
+simply ignored during compilation. The syntax is similar but not the same.
+In VO:
+   LOCAL var1, var2 AS LOGICAL
+means that var1 and var2 are character variables and are initialized to .F.
+at runtime. In Harbour and xHarbour 'AS <type>' has to be repeated after
+each variable so in above code only var2 is strongly typed but not var1.
+To declare both variables as logical ones it should be changed to:
+   LOCAL var1 AS STRING, var2 AS STRING
+Such syntax is also not compatible with syntax of typed object variables
+(see TYPED OBJECT VARIABLES below) where
+   VAR v1, v2 AS LOGICAL
+declares both variables as logical ones.
+This can strongly confuse users so in the future adding fully functional
+support for strong typed variables probably it will be changed to syntax
+compatible with other xBase compatible languages.
+Now please remember that neither Harbour nor xHarbour make type validation
+during compilation and at runtime and typed variables are not implicitly
+initialized to empty value of given type.
+
+
+
 ###    OOP SCOPES    ###
 ========================
-Harbour and xHarbour supports scopes in class declaration.
+Harbour and xHarbour support scopes in class declaration.
 It's possible to declare exported, protected and hidden messages and then
 at runtime scopes are checked. Anyhow there are important differences in
 both implementation. In xHarbour for internal implementation .prg module
@@ -1623,7 +1651,7 @@ does not define all classes as "MODULE FRIENDLY".
 
 ###    OOP AND CLASS OBJECT/CLASS MESSAGES    ###
 =================================================
-Neither Harbour nor xHarbour supports class objects, class messages
+Neither Harbour nor xHarbour support class objects, class messages
 and class instance variables like Class(y) does.
 
 But both compilers support shared variables which can be shared with
@@ -1712,7 +1740,7 @@ work in the future.
 
 ###    TYPED OBJECT VARIABLES    ###
 ====================================
-Harbour support strong typed object variables, f.e.:
+Harbour supports strong typed object variables, f.e.:
       CREATE CLASS MyClass
          VAR   var1 AS INTVAR
          VAR   var2 AS NUMERIC
@@ -1720,8 +1748,12 @@ Harbour support strong typed object variables, f.e.:
          VAR   var3 AS CHARACTER
       ENDCLASS
 And validates assigned values at runtime just like in Class(y).
-xHarbour can compile above code but AS <type> is only source code
-decoration for this language.
+Variables declared as numeric, logical, date and timestamp without
+explicit initialization value (INIT clause) are initialized to empty
+value of given type. This functionality can be disabled defining
+HB_CLS_NOAUTOINIT macro before including hbclass.ch.
+xHarbour can compile above code but AS <type> is only used to
+initialize numeric and logical values to 0 and .f.
 
 
 
@@ -2014,7 +2046,7 @@ GTWVT or GTXWC for each hb_gtCreate() call creates new console window so
 application can create many different windows and switch between them.
 It's very nice feature for MT mode because current GT driver in Harbour
 is thread attribute so each thread in Harbour can allocate it's own
-independent console window if platform support GT driver with such
+independent console window if platform supports GT driver with such
 possibility (graphical GTs like GTWVT, GTXWC, GTWVG).
 Some GTs like GTWIN, GTOS2 or GTDOS have to share the same resources
 (OS console windows, video screen buffer) so their parallel usage is
@@ -2137,7 +2169,7 @@ is write access to the same item with complex variable. This part
 have to be synced by user and automatic synchronization here will
 strongly reduce scalability.
 
-Harbour also support Xbase++ compatible MT API with SYNC and CLASS SYNC
+Harbour also supports Xbase++ compatible MT API with SYNC and CLASS SYNC
 methods, SIGNAL and THREAD classes, work area zones and thread functions.
 It allows to easy port Xbase++ code to Harbour. The main difference
 between Harbour and Xbase++ is write protection to complex items.

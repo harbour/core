@@ -416,7 +416,7 @@ HB_EXTERN_BEGIN
 #  endif
 
    /* Spin locks */
-#  if ! defined( HB_SPINLOCK_T ) || 1 /* <= force using OSSpinLock */
+#  if ! defined( HB_SPINLOCK_T )
 #     undef HB_SPINLOCK_T
 #     undef HB_SPINLOCK_INIT
 #     undef HB_SPINLOCK_TRY

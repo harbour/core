@@ -121,6 +121,7 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT HB_BOOL    hb_fsChDir       ( const char * pszDirName ); /* change working directory */
 extern HB_EXPORT HB_ERRCODE hb_fsChDrv       ( int iDrive ); /* change working drive */
 extern HB_EXPORT void       hb_fsClose       ( HB_FHANDLE hFileHandle ); /* close a file */
+extern HB_EXPORT void       hb_fsCloseRaw    ( HB_FHANDLE hFileHandle ); /* close a file without setting hb_fsError() */
 extern HB_EXPORT void       hb_fsCommit      ( HB_FHANDLE hFileHandle ); /* commit updates of a file */
 extern HB_EXPORT HB_FHANDLE hb_fsCreate      ( const char * pszFileName, HB_FATTR ulAttr ); /* create a file */
 extern HB_EXPORT HB_FHANDLE hb_fsCreateEx    ( const char * pszFileName, HB_FATTR ulAttr, HB_USHORT uiFlags ); /* create a file, with specific open mode */
