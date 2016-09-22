@@ -47,19 +47,19 @@
 
 #include "gtqtc.h"
 
-static  int             s_GtId;
-static  HB_GT_FUNCS     SuperTable;
-#define HB_GTSUPER      (&SuperTable)
-#define HB_GTID_PTR     (&s_GtId)
+static  int                   s_GtId;
+static  HB_GT_FUNCS           SuperTable;
+#define HB_GTSUPER            ( &SuperTable )
+#define HB_GTID_PTR           ( &s_GtId )
 
-#define HB_GTQTC_GET(p) ( ( PHB_GTQTC ) HB_GTLOCAL( p ) )
+#define HB_GTQTC_GET( p )     ( static_cast< PHB_GTQTC >( HB_GTLOCAL( p ) ) )
 
 
 #if defined( HB_OS_UNIX )
-#  if !defined( HB_QT_NEEDLOCKS )
+#  if ! defined( HB_QT_NEEDLOCKS )
 #     define HB_QT_NEEDLOCKS
 #  endif
-#  if !defined( HB_XLIB_NEEDLOCKS )
+#  if ! defined( HB_XLIB_NEEDLOCKS )
 /* #     define HB_XLIB_NEEDLOCKS */
 #  endif
 #endif
@@ -94,7 +94,7 @@ static void hb_gt_qtc_itemGetQString( PHB_ITEM pItem, QString * pqStr )
 
    if( ( wStr = hb_itemGetStrU16( pItem, HB_CDP_ENDIAN_NATIVE, &hStr, &nSize ) ) != NULL )
    {
-      * pqStr = QString::fromUtf16( ( const ushort * ) wStr, nSize );
+      * pqStr = QString::fromUtf16( static_cast< const ushort * >( wStr ), nSize );
       hb_strfree( hStr );
    }
 }
@@ -102,7 +102,7 @@ static void hb_gt_qtc_itemGetQString( PHB_ITEM pItem, QString * pqStr )
 static PHB_ITEM hb_gt_qtc_itemPutQString( PHB_ITEM pItem, const QString * pqStr )
 {
    return hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_NATIVE,
-                               ( const HB_WCHAR * ) pqStr->constData(),
+                               static_cast< const HB_WCHAR * >( pqStr->utf16() ),
                                pqStr->size() );
 }
 
@@ -1326,7 +1326,7 @@ static PHB_GTQTC hb_gt_qtc_new( PHB_GT pGT )
 {
    PHB_GTQTC pQTC;
 
-   pQTC = ( PHB_GTQTC ) hb_xgrabz( sizeof( HB_GTQTC ) );
+   pQTC = static_cast< PHB_GTQTC >( hb_xgrabz( sizeof( HB_GTQTC ) ) );
    pQTC->pGT = pGT;
 
    pQTC->colors[  0 ] = BLACK;
@@ -1349,7 +1349,7 @@ static PHB_GTQTC hb_gt_qtc_new( PHB_GT pGT )
    pQTC->iRows         = QTC_DEFAULT_ROWS;
    pQTC->iCols         = QTC_DEFAULT_COLS;
 
-   pQTC->textLine      = ( QChar * ) hb_xgrab( pQTC->iCols * sizeof( QChar ) );
+   pQTC->textLine      = static_cast< QChar * >( hb_xgrab( pQTC->iCols * sizeof( QChar ) ) );
 
    pQTC->iNewPosX      = -1;
    pQTC->iNewPosY      = -1;
@@ -1541,8 +1541,8 @@ static HB_BOOL hb_gt_qtc_setWindowSize( PHB_GTQTC pQTC, int iRows, int iCols )
    if( HB_GTSELF_RESIZE( pQTC->pGT, iRows, iCols ) )
    {
       if( pQTC->iCols != iCols )
-         pQTC->textLine = ( QChar * ) hb_xrealloc( pQTC->textLine,
-                                                   iCols * sizeof( QChar ) );
+         pQTC->textLine = static_cast< QChar * >( hb_xrealloc( pQTC->textLine,
+                                                               iCols * sizeof( QChar ) ) );
 
       if( pQTC->qWnd && ( iRows != pQTC->iRows || iCols != pQTC->iCols ) )
          hb_gt_qtc_addKeyToInputQueue( pQTC, HB_K_RESIZE );
@@ -1660,7 +1660,7 @@ static void hb_gt_qtc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    }
 
    pQTC = hb_gt_qtc_new( pGT );
-   HB_GTLOCAL( pGT ) = ( void * ) pQTC;
+   HB_GTLOCAL( pGT ) = static_cast< void * >( pQTC );
 
    if( ! pQTC->qEventLoop )
       pQTC->qEventLoop = new QEventLoop();
@@ -1944,14 +1944,14 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pQTC->cellY * pQTC->iRows );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
-            HB_GTSELF_SETMODE( pGT, ( HB_USHORT ) ( iVal / pQTC->cellY ), pQTC->iCols );
+            HB_GTSELF_SETMODE( pGT, static_cast< HB_USHORT >( iVal / pQTC->cellY ), pQTC->iCols );
          break;
 
       case HB_GTI_SCREENWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pQTC->cellX * pQTC->iCols );
          iVal = hb_itemGetNI( pInfo->pNewVal );
          if( iVal > 0 )
-            HB_GTSELF_SETMODE( pGT, pQTC->iRows, ( HB_USHORT ) ( iVal / pQTC->cellX ) );
+            HB_GTSELF_SETMODE( pGT, pQTC->iRows, static_cast< HB_USHORT >( iVal / pQTC->cellX ) );
          break;
 
       case HB_GTI_DESKTOPWIDTH:
@@ -2283,7 +2283,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                hb_gt_qtc_itemGetQString( pInfo->pNewVal, &qStr );
                qImg = QImage( qStr );
             }
-            else if( hb_arrayLen( pInfo->pNewVal ) == ( HB_SIZE )
+            else if( hb_arrayLen( pInfo->pNewVal ) == static_cast< HB_SIZE >
                      ( hb_arrayGetType( pInfo->pNewVal, 4 ) & HB_IT_NUMERIC ? 4 : 3 ) &&
                      ( hb_arrayGetType( pInfo->pNewVal, 1 ) & ( HB_IT_POINTER | HB_IT_STRING ) ) &&
                      ( hb_arrayGetType( pInfo->pNewVal, 2 ) & HB_IT_NUMERIC ) &&
@@ -2323,14 +2323,14 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      while( data == NULL && iPad >= 8 )
                      {
                         iPitch = ( iWidth * iDepth + iPad - 1 ) / iPad;
-                        if( nSize == ( HB_SIZE ) ( iHeight * iPitch ) )
-                           data = ( const uchar * ) hb_arrayGetCPtr( pInfo->pNewVal, 1 );
+                        if( nSize == static_cast< HB_SIZE >( iHeight * iPitch ) )
+                           data = reinterpret_cast< const uchar * >( hb_arrayGetCPtr( pInfo->pNewVal, 1 ) );
                         else
                            iPad >>= 1;
                      }
                   }
                   else
-                     data = ( const uchar * ) hb_arrayGetPtr( pInfo->pNewVal, 1 );
+                     data = reinterpret_cast< const uchar * >( hb_arrayGetPtr( pInfo->pNewVal, 1 ) );
                }
                if( data != NULL )
                {
@@ -2798,7 +2798,7 @@ void QTConsole::copySelection( void )
 
          if( ! HB_GTSELF_GETSCRCHAR( pQTC->pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
-         qStr += ( QChar ) usChar;
+         qStr += QChar( usChar );
       }
       if( rc.height() > 1 )
          qStr += qStrEol;

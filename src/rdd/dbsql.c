@@ -132,6 +132,7 @@ static HB_BOOL hb_exportBufSqlVar( PHB_FILEBUF pFileBuf, PHB_ITEM pValue,
    switch( hb_itemType( pValue ) )
    {
       case HB_IT_STRING:
+      case HB_IT_MEMO:
       {
          HB_SIZE nLen = hb_itemGetCLen( pValue );
          HB_SIZE nCnt = 0;

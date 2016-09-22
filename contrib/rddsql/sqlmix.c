@@ -1565,7 +1565,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
    switch( hb_itemType( pResult ) )
    {
       case HB_IT_STRING:
-      case HB_IT_STRING | HB_IT_MEMO:
+      case HB_IT_MEMO:
          bType = 'C';
          uiLen = ( HB_USHORT ) hb_itemGetCLen( pResult );
          if( uiLen > MIX_MAXKEYLEN )
@@ -1650,7 +1650,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
          SELF_GOTO( &pArea->sqlarea.area, ulRecNo );
          return HB_FAILURE;
       }
-      if( hb_itemType( pArea->sqlarea.area.valResult ) != HB_IT_LOGICAL )
+      if( ( hb_itemType( pArea->sqlarea.area.valResult ) & HB_IT_LOGICAL ) == 0 )
       {
          hb_itemRelease( pArea->sqlarea.area.valResult );
          pArea->sqlarea.area.valResult = 0;
@@ -1750,7 +1750,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, HB_USHORT uiIndex, LPDBORD
                   pArea->sqlarea.area.valResult = NULL;
                   if( SELF_EVALBLOCK( &pArea->sqlarea.area, pForItem ) == HB_SUCCESS )
                   {
-                     if( hb_itemType( pArea->sqlarea.area.valResult ) == HB_IT_LOGICAL )
+                     if( hb_itemType( pArea->sqlarea.area.valResult ) & HB_IT_LOGICAL )
                      {
                         pTag->szForExpr = hb_strdup( pForExpr );
                         pTag->pForItem  = pForItem;

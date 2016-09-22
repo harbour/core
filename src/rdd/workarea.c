@@ -1875,25 +1875,25 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
 
       case RDDI_STRICTREAD:
          fResult = hb_setGetStrictRead();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_STRICTREAD, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_OPTIMIZE:
          fResult = hb_setGetOptimize();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_OPTIMIZE, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_FORCEOPT:
          fResult = hb_setGetForceOpt();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_FORCEOPT, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_AUTOOPEN:
          fResult = hb_setGetAutOpen();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_AUTOPEN, pItem );
          hb_itemPutL( pItem, fResult );
          break;
@@ -1905,7 +1905,7 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
          break;
       case RDDI_AUTOSHARE:
          fResult = hb_setGetAutoShare();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_AUTOSHARE, pItem );
          hb_itemPutL( pItem, fResult );
          break;

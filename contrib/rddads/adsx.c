@@ -1223,7 +1223,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    switch( hb_itemType( pResult ) )
    {
       case HB_IT_STRING:
-      case HB_IT_STRING | HB_IT_MEMO:
+      case HB_IT_MEMO:
          bType = 'C';
          uiLen = ( HB_USHORT ) hb_itemGetCLen( pResult );
          if( uiLen > MIX_MAXKEYLEN )

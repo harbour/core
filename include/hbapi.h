@@ -66,37 +66,37 @@ HB_EXTERN_BEGIN
 
 
 /* items types and type checking macros */
-#define HB_IT_NIL       ( ( HB_TYPE ) 0x00000 )
-#define HB_IT_POINTER   ( ( HB_TYPE ) 0x00001 )
-#define HB_IT_INTEGER   ( ( HB_TYPE ) 0x00002 )
-#define HB_IT_HASH      ( ( HB_TYPE ) 0x00004 )
-#define HB_IT_LONG      ( ( HB_TYPE ) 0x00008 )
-#define HB_IT_DOUBLE    ( ( HB_TYPE ) 0x00010 )
-#define HB_IT_DATE      ( ( HB_TYPE ) 0x00020 )
-#define HB_IT_TIMESTAMP ( ( HB_TYPE ) 0x00040 )
-#define HB_IT_LOGICAL   ( ( HB_TYPE ) 0x00080 )
-#define HB_IT_SYMBOL    ( ( HB_TYPE ) 0x00100 )
-#define HB_IT_ALIAS     ( ( HB_TYPE ) 0x00200 )
-#define HB_IT_STRING    ( ( HB_TYPE ) 0x00400 )
-#define HB_IT_MEMOFLAG  ( ( HB_TYPE ) 0x00800 )
+#define HB_IT_NIL       0x00000
+#define HB_IT_POINTER   0x00001
+#define HB_IT_INTEGER   0x00002
+#define HB_IT_HASH      0x00004
+#define HB_IT_LONG      0x00008
+#define HB_IT_DOUBLE    0x00010
+#define HB_IT_DATE      0x00020
+#define HB_IT_TIMESTAMP 0x00040
+#define HB_IT_LOGICAL   0x00080
+#define HB_IT_SYMBOL    0x00100
+#define HB_IT_ALIAS     0x00200
+#define HB_IT_STRING    0x00400
+#define HB_IT_MEMOFLAG  0x00800
 #define HB_IT_MEMO      ( HB_IT_MEMOFLAG | HB_IT_STRING )
-#define HB_IT_BLOCK     ( ( HB_TYPE ) 0x01000 )
-#define HB_IT_BYREF     ( ( HB_TYPE ) 0x02000 )
-#define HB_IT_MEMVAR    ( ( HB_TYPE ) 0x04000 )
-#define HB_IT_ARRAY     ( ( HB_TYPE ) 0x08000 )
-#define HB_IT_ENUM      ( ( HB_TYPE ) 0x10000 )
-#define HB_IT_EXTREF    ( ( HB_TYPE ) 0x20000 )
-#define HB_IT_DEFAULT   ( ( HB_TYPE ) 0x40000 )
-#define HB_IT_RECOVER   ( ( HB_TYPE ) 0x80000 )
+#define HB_IT_BLOCK     0x01000
+#define HB_IT_BYREF     0x02000
+#define HB_IT_MEMVAR    0x04000
+#define HB_IT_ARRAY     0x08000
+#define HB_IT_ENUM      0x10000
+#define HB_IT_EXTREF    0x20000
+#define HB_IT_DEFAULT   0x40000
+#define HB_IT_RECOVER   0x80000
 #define HB_IT_OBJECT    HB_IT_ARRAY
-#define HB_IT_NUMERIC   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE ) )
-#define HB_IT_NUMINT    ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG ) )
-#define HB_IT_DATETIME  ( ( HB_TYPE ) ( HB_IT_DATE | HB_IT_TIMESTAMP ) )
-#define HB_IT_ANY       ( ( HB_TYPE ) 0xFFFFFFFF )
-#define HB_IT_COMPLEX   ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | /* HB_IT_MEMVAR | HB_IT_ENUM | HB_IT_EXTREF |*/ HB_IT_BYREF | HB_IT_STRING ) )
-#define HB_IT_GCITEM    ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | HB_IT_BYREF ) )
-#define HB_IT_EVALITEM  ( ( HB_TYPE ) ( HB_IT_BLOCK | HB_IT_SYMBOL ) )
-#define HB_IT_HASHKEY   ( ( HB_TYPE ) ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE | HB_IT_DATE | HB_IT_TIMESTAMP | HB_IT_STRING | HB_IT_POINTER ) )
+#define HB_IT_NUMERIC   ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE )
+#define HB_IT_NUMINT    ( HB_IT_INTEGER | HB_IT_LONG )
+#define HB_IT_DATETIME  ( HB_IT_DATE | HB_IT_TIMESTAMP )
+#define HB_IT_ANY       0xFFFFFFFF
+#define HB_IT_COMPLEX   ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | /* HB_IT_MEMVAR | HB_IT_ENUM | HB_IT_EXTREF |*/ HB_IT_BYREF | HB_IT_STRING )
+#define HB_IT_GCITEM    ( HB_IT_BLOCK | HB_IT_ARRAY | HB_IT_HASH | HB_IT_POINTER | HB_IT_BYREF )
+#define HB_IT_EVALITEM  ( HB_IT_BLOCK | HB_IT_SYMBOL )
+#define HB_IT_HASHKEY   ( HB_IT_INTEGER | HB_IT_LONG | HB_IT_DOUBLE | HB_IT_DATE | HB_IT_TIMESTAMP | HB_IT_STRING | HB_IT_POINTER )
 
 #if 0
 

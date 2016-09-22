@@ -156,7 +156,11 @@ struct _HB_SYMB;
 #  undef _HB_STACK_MACROS_
 
 /* This is ugly trick but works without speed overhead */
-#  define HB_ITEM_TYPERAW( p )   ( * ( HB_TYPE * ) ( p ) )
+#if defined( __cplusplus )
+#     define HB_ITEM_TYPERAW( p )   ( * static_cast< HB_TYPE * >( p ) )
+#else
+#     define HB_ITEM_TYPERAW( p )   ( * ( HB_TYPE * ) ( p ) )
+#endif
 /* if you do not like it then use this definition */
 /* #  define HB_ITEM_TYPERAW( p )   ( hb_itemType( p ) ) */
 
@@ -228,19 +232,19 @@ typedef struct _HB_FUNC_LIST
 } HB_FUNC_LIST, * PHB_FUNC_LIST;
 
 /* Harbour Functions scope ( HB_SYMBOLSCOPE ) */
-#define HB_FS_PUBLIC    ( ( HB_SYMBOLSCOPE ) 0x0001 )
-#define HB_FS_STATIC    ( ( HB_SYMBOLSCOPE ) 0x0002 )
-#define HB_FS_FIRST     ( ( HB_SYMBOLSCOPE ) 0x0004 )
-#define HB_FS_INIT      ( ( HB_SYMBOLSCOPE ) 0x0008 )
-#define HB_FS_EXIT      ( ( HB_SYMBOLSCOPE ) 0x0010 )
-#define HB_FS_MESSAGE   ( ( HB_SYMBOLSCOPE ) 0x0020 )
-#define HB_FS_MEMVAR    ( ( HB_SYMBOLSCOPE ) 0x0080 )
-#define HB_FS_PCODEFUNC ( ( HB_SYMBOLSCOPE ) 0x0100 )
-#define HB_FS_LOCAL     ( ( HB_SYMBOLSCOPE ) 0x0200 )
-#define HB_FS_DYNCODE   ( ( HB_SYMBOLSCOPE ) 0x0400 )
-#define HB_FS_DEFERRED  ( ( HB_SYMBOLSCOPE ) 0x0800 )
-#define HB_FS_FRAME     ( ( HB_SYMBOLSCOPE ) 0x1000 )
-#define HB_FS_USED      ( ( HB_SYMBOLSCOPE ) 0x2000 )
+#define HB_FS_PUBLIC    0x0001
+#define HB_FS_STATIC    0x0002
+#define HB_FS_FIRST     0x0004
+#define HB_FS_INIT      0x0008
+#define HB_FS_EXIT      0x0010
+#define HB_FS_MESSAGE   0x0020
+#define HB_FS_MEMVAR    0x0080
+#define HB_FS_PCODEFUNC 0x0100
+#define HB_FS_LOCAL     0x0200
+#define HB_FS_DYNCODE   0x0400
+#define HB_FS_DEFERRED  0x0800
+#define HB_FS_FRAME     0x1000
+#define HB_FS_USED      0x2000
 
 #define HB_FS_INITEXIT ( HB_FS_INIT | HB_FS_EXIT )
 
