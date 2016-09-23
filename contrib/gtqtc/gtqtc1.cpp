@@ -94,16 +94,26 @@ static void hb_gt_qtc_itemGetQString( PHB_ITEM pItem, QString * pqStr )
 
    if( ( wStr = hb_itemGetStrU16( pItem, HB_CDP_ENDIAN_NATIVE, &hStr, &nSize ) ) != NULL )
    {
+#if defined( HB_OS_WIN )
+      * pqStr = QString::fromWCharArray( wStr, nSize );
+#else
       * pqStr = QString::fromUtf16( static_cast< const ushort * >( wStr ), nSize );
+#endif
       hb_strfree( hStr );
    }
 }
 
 static PHB_ITEM hb_gt_qtc_itemPutQString( PHB_ITEM pItem, const QString * pqStr )
 {
+#if defined( HB_OS_WIN )
+   return hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_NATIVE,
+                               reinterpret_cast< const HB_WCHAR * >( pqStr->utf16() ),
+                               pqStr->size() );
+#else
    return hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_NATIVE,
                                static_cast< const HB_WCHAR * >( pqStr->utf16() ),
                                pqStr->size() );
+#endif
 }
 
 /* *********************************************************************** */
