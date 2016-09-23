@@ -97,7 +97,7 @@ static void hb_gt_qtc_itemGetQString( PHB_ITEM pItem, QString * pqStr )
 #if defined( HB_OS_WIN )
       * pqStr = QString::fromWCharArray( wStr, nSize );
 #else
-      * pqStr = QString::fromUtf16( static_cast< const ushort * >( wStr ), nSize );
+      * pqStr = QString::fromUtf16( wStr, nSize );
 #endif
       hb_strfree( hStr );
    }
@@ -111,8 +111,7 @@ static PHB_ITEM hb_gt_qtc_itemPutQString( PHB_ITEM pItem, const QString * pqStr 
                                pqStr->size() );
 #else
    return hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_NATIVE,
-                               static_cast< const HB_WCHAR * >( pqStr->utf16() ),
-                               pqStr->size() );
+                               pqStr->utf16(), pqStr->size() );
 #endif
 }
 
