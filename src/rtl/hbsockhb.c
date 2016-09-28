@@ -580,8 +580,11 @@ PHB_SOCKEX hb_sockexNew( HB_SOCKET sd, const char * pszFilter, PHB_ITEM pParams 
                                pFilters[ i ]->Next( pSock, pParams );
          if( pSockNew == NULL )
          {
-            hb_sockexClose( pSock, HB_FALSE );
-            pSock = NULL;
+            if( pSock )
+            {
+               hb_sockexClose( pSock, HB_FALSE );
+               pSock = NULL;
+            }
             break;
          }
          pSock = pSockNew;

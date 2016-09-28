@@ -843,10 +843,18 @@ char * hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec )
    szResult = szBuf;
    if( dNumber < 0 )
    {
-      if( --iLen == 0 )
-         return NULL;
-      *szBuf++ = '-';
       dFract = modf( -dNumber, &dInt );
+      if( --iLen == 0 )
+      {
+         if( dInt < 1 && dFract < 0.5 )
+         {
+            szBuf[ 0 ] = '0';
+            szBuf[ 1 ] = '\0';
+            return szBuf;
+         }
+         return NULL;
+      }
+      *szBuf++ = '-';
    }
    else
       dFract = modf( dNumber, &dInt );
@@ -854,18 +862,14 @@ char * hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec )
    iPos = iLen;
    do
    {
+      if( iPos == 0 )
+         return NULL;
       dDig = modf( dInt / doBase + 0.01, &dInt ) * doBase;
       szBuf[ --iPos ] = '0' + ( char ) ( dDig + 0.01 );
-      if( iPos == 0 )
-      {
-         if( dInt >= 1 )
-            return NULL;
-         break;
-      }
    }
    while( dInt >= 1 );
    if( iPos > 0 )
-      memmove( szBuf, szBuf + iPos, HB_MIN( iLen - iPos, iPrec ) );
+      memmove( szBuf, szBuf + iPos, HB_MIN( iLen - iPos, iPrec + 1 ) );
    iPos = iLen - iPos;
 
    fFirst = iPos > 1 || szBuf[ 0 ] != '0';
@@ -873,20 +877,34 @@ char * hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec )
    {
       if( iPos >= iPrec )
       {
-         while( iPrec < iPos )
-            szBuf[ iPrec++ ] = '0';
+         fFirst = iPos == iPrec ? dFract >= 0.5 : szBuf[ iPrec ] >= '5';
+         if( iPrec < iPos )
+            memset( szBuf + iPrec , '0', iPos - iPrec );
+         if( fFirst )
+         {
+            for( ;; )
+            {
+               if( --iPrec < 0 )
+               {
+                  if( iPos == iLen )
+                     return NULL;
+                  memmove( szBuf + 1, szBuf, iPos );
+                  *szBuf = '1';
+                  ++iPos;
+                  break;
+               }
+               if( szBuf[ iPrec ] != '9' )
+               {
+                  ++szBuf[ iPrec ];
+                  break;
+               }
+               szBuf[ iPrec ] = '0';
+            }
+         }
          iPrec = 0;
       }
       else
          iPrec -= iPos;
-   }
-
-   while( dInt >= 1 )
-   {
-      if( iPos >= iLen )
-         return NULL;
-      dDig = modf( dInt / doBase + 0.01, &dInt ) * doBase;
-      szBuf[ iPos++ ] = iPrec-- > 0 ? '0' + ( char ) ( dDig + 0.01 ) : '0';
    }
 
    if( iPrec > 0 && iLen - iPos > 1 && iMaxDec != 0 && dFract > 0 )

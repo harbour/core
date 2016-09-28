@@ -88,6 +88,13 @@ SSL_CTX * hb_SSL_CTX_par( int iParam )
    return ph ? ( SSL_CTX * ) *ph : NULL;
 }
 
+SSL_CTX * hb_SSL_CTX_itemGet( PHB_ITEM pItem )
+{
+   void ** ph = ( void ** ) hb_itemGetPtrGC( pItem, &s_gcSSL_CTX_funcs );
+
+   return ph ? ( SSL_CTX * ) *ph : NULL;
+}
+
 const SSL_METHOD * hb_ssl_method_id_to_ptr( int n )
 {
    const SSL_METHOD * p;

@@ -97,12 +97,14 @@ HB_FUNC( HB_NTOC )
             nNumber /= 10;
          }
          while( nNumber != 0 );
+         if( fNeg )
+            szBuffer[ --iPos ] = '-';
 
          hb_retc( szBuffer + iPos );
       }
       else
          hb_retc( hb_dblToStr( szBuffer, sizeof( szBuffer ),
-                               hb_itemGetND( pNumber ), hb_parnidef( 2, 20 ) ) );
+                               hb_itemGetND( pNumber ), hb_parnidef( 2, -1 ) ) );
    }
    else
       hb_retc_null();

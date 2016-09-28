@@ -576,7 +576,10 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
             {
                timeout -= timecurr - timer;
                if( timeout > 0 )
+               {
+                  timer = timecurr;
                   continue;
+               }
             }
          }
       }
@@ -680,7 +683,10 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
             {
                timeout -= timecurr - timer;
                if( timeout > 0 )
+               {
+                  timer = timecurr;
                   continue;
+               }
             }
          }
       }

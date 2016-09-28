@@ -170,9 +170,9 @@ struct _HB_SSLSTREAM;
 typedef struct _HB_SSLSTREAM * PHB_SSLSTREAM;
 
 extern PHB_SOCKEX         hb_sockexNewSSL( HB_SOCKET sd, SSL * ssl, HB_BOOL fServer,
-                                           HB_MAXINT timeout );
+                                           HB_MAXINT timeout, PHB_ITEM pSSL );
 extern PHB_SSLSTREAM      hb_ssl_socketNew( HB_SOCKET sd, SSL * ssl, HB_BOOL fServer,
-                                            HB_MAXINT timeout, int * piResult );
+                                            HB_MAXINT timeout, PHB_ITEM pSSL, int * piResult );
 extern void               hb_ssl_socketClose( PHB_SSLSTREAM pStream );
 extern const char *       hb_ssl_socketErrorStr( int iError );
 extern long               hb_ssl_socketRead( PHB_SSLSTREAM pStream, HB_SOCKET sd,
@@ -188,6 +188,7 @@ extern BIO *              hb_BIO_par( int iParam );
 
 extern void *             hb_SSL_CTX_is( int iParam );
 extern SSL_CTX *          hb_SSL_CTX_par( int iParam );
+extern SSL_CTX *          hb_SSL_CTX_itemGet( PHB_ITEM pItem );
 
 extern void *             hb_SSL_is( int iParam );
 extern SSL *              hb_SSL_par( int iParam );
