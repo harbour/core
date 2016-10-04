@@ -58,21 +58,40 @@
 static SERVICE_STATUS        s_ServiceStatus;
 static SERVICE_STATUS_HANDLE s_hStatus;
 static PHB_ITEM              s_pHarbourEntryFunc = NULL;
+static PHB_ITEM              s_pHarbourControlFunc = NULL;
 static TCHAR                 s_lpServiceName[ 256 ];
 
 /* Control handler function */
 static VOID WINAPI hbwin_SvcControlHandler( DWORD fdwControl )
 {
+   if( s_pHarbourControlFunc )
+   {
+      if( hb_vmRequestReenterExt() )
+      {
+         hb_vmPushEvalSym();
+         hb_vmPush( s_pHarbourControlFunc );
+         hb_vmPushNumInt( ( HB_MAXINT ) fdwControl );
+         hb_vmSend( 1 );
+         hb_vmRequestRestore();
+      }
+      else
+         HB_TRACE( HB_TR_DEBUG, ( "HVM stack not available" ) );
+      return;
+   }
+
    switch( fdwControl )
    {
       case SERVICE_CONTROL_STOP:
          s_ServiceStatus.dwWin32ExitCode = 0;
          s_ServiceStatus.dwCurrentState  = SERVICE_STOPPED;
-         return;
+         break;
 
       case SERVICE_CONTROL_SHUTDOWN:
          s_ServiceStatus.dwWin32ExitCode = 0;
          s_ServiceStatus.dwCurrentState  = SERVICE_STOPPED;
+         break;
+
+      default:
          return;
    }
 
@@ -100,9 +119,12 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
             DWORD i;
             int iArgCount = 0;
 
-            /* We report the running status to SCM. */
-            s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
-            SetServiceStatus( s_hStatus, &s_ServiceStatus );
+            if( ! s_pHarbourControlFunc )
+            {
+               /* We report the running status to SCM. */
+               s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
+               SetServiceStatus( s_hStatus, &s_ServiceStatus );
+            }
 
             hb_vmPushEvalSym();
             hb_vmPush( s_pHarbourEntryFunc );
@@ -206,6 +228,17 @@ HB_FUNC( WIN_SERVICESTART )
 
    if( pEntryFunc )
       s_pHarbourEntryFunc = hb_itemNew( pEntryFunc );
+
+   if( s_pHarbourControlFunc )
+   {
+      hb_itemRelease( s_pHarbourControlFunc );
+      s_pHarbourControlFunc = NULL;
+   }
+
+   pEntryFunc = hb_param( 3, HB_IT_EVALITEM );
+
+   if( pEntryFunc )
+      s_pHarbourControlFunc = hb_itemNew( pEntryFunc );
 
    lpServiceTable[ 0 ].lpServiceName = s_lpServiceName;
    lpServiceTable[ 0 ].lpServiceProc = ( LPSERVICE_MAIN_FUNCTION ) hbwin_SvcMainFunction;
