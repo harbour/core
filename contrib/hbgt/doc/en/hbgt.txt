@@ -686,8 +686,8 @@
    $EXAMPLES$
       // Print the setting of the flags in a flag string called ``cDave''
 
-      FOR nFlag := 1 to ( hb_BLen( cDave ) * 8 )
-         ? "Flag number ", nFlag, " == ", gt_IsFlag( cDave, nFlag )
+      FOR nFlag := 1 TO hb_BLen( cDave ) * 8
+         ? "Flag number", nFlag, "==", gt_IsFlag( cDave, nFlag )
       NEXT
    $SEEALSO$
       gt_NewFlag() gt_SetFlag() gt_ClrFlag()
