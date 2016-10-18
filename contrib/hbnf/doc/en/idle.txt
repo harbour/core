@@ -26,14 +26,11 @@
       this fact makes you uncomfortable then don't use this function, you
       miserable jello-spined lump of human debris.
    $EXAMPLES$
-      DO WHILE Whatever      // Some batch process
-
+      DO WHILE Whatever       // Some batch process
          Something()          // Create 'n' discard a bunch of stuff
-
          ft_Idle()            // Take out the garbage
-
       ENDDO
    $SEEALSO$
-      FT_OnIdle()
+      ft_OnIdle()
    $END$
  */

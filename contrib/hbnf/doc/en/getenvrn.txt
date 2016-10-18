@@ -52,11 +52,9 @@
       MemoWrit( "environ.txt", cEnvBlock )
 
       // Get the environment in Array form:
-
       aEnvArray := Array( ft_GetE() )
       ft_GetE( aEnvArray )
-      ? aEnvArray[ 1 ]       // "COMSPEC=C:\command.com"
-      ? aEnvArray[ 2 ]       // "PATH=C:\;C:\util;C:\harbour"
-      ... etc ...
+      ? aEnvArray[ 1 ]
+      ? aEnvArray[ 2 ]
    $END$
  */

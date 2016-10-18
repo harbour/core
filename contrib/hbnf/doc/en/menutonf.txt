@@ -181,8 +181,7 @@
       #include "ftmenuto.ch"
 
       // Simple command
-
-         MENU TO MEMVAR
+      MENU TO memvar
    $INCLUDE$
       ftmenuto.ch
    $SEEALSO$

@@ -45,18 +45,18 @@
         c. Amount (100's, 5 decimals, 16th, etc.)
    $EXAMPLES$
       // round normal to 2 decimal places
-      nDollars := ft_Round( nDollars )
+      ? ft_Round( nDollars )
 
       // round normal to 6 decimal places
-      nIntRate := ft_Round( nIntRate, 6 )
+      ? ft_Round( nIntRate, 6 )
 
       // round to nearest thousands
-      nPrice   := ft_Round( nPrice, 3, NEAREST_WHOLE_NUMBER )
+      ? ft_Round( nPrice, 3, NEAREST_WHOLE_NUMBER )
 
       // round Up to nearest third
-      nAmount  := ft_Round( nAmount, 3, NEAREST_FRACTION, ROUND_UP )
+      ? ft_Round( nAmount, 3, NEAREST_FRACTION, ROUND_UP )
 
       // round down to 3 decimals Within .005
-      nAvg     := ft_Round( nAvg, 3, , ROUND_DOWN, .005 )
+      ? ft_Round( nAvg, 3, , ROUND_DOWN, .005 )
    $END$
  */

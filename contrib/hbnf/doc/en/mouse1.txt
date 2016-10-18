@@ -98,7 +98,7 @@
       This is a mouse meta function that checks for the presence
       of a double click.
    $EXAMPLES$
-      IF FT_MISREGION( 10, 10, 11, 20 ) .AND. ;
+      IF ft_MIsRegion( 10, 10, 11, 20 ) .AND. ;
          ft_MDblClk( 0, 1,, ft_MGetX(), ft_MGetY() ) // double click, right button
                                                      // at current location with
                                                      // default interval
@@ -127,10 +127,10 @@
    $DESCRIPTION$
       This function tells the mouse driver to hide the cursor if it is in
       the given region. The driver hides the cursor by decrementing the cursor
-      flag. A call to FT_MSHOWCRS is required to turn the cursor back on.
-      Calling FT_MSHOWCRS also disables this function.
+      flag. A call to ft_MShowCrs() is required to turn the cursor back on.
+      Calling ft_MShowCrs() also disables this function.
 
-      See FT_MSHOWCRS for a discussion of the cursor display flag.
+      See ft_MShowCrs() for a discussion of the cursor display flag.
    $EXAMPLES$
       ft_MCOnOff( 10, 10, 11, 20 )
    $SEEALSO$
@@ -213,7 +213,7 @@
       movement values are documented to be the number of mickeys per 8
       pixels and the double speed value as the number mickeys per second
       required to double the speed. Each of these values should range from 1
-      to 32K but the driver forces a maximum of 100. Also the documentation
+      to 32000 but the driver forces a maximum of 100. Also the documentation
       states that resetting the mouse will reset these values. This is not
       the case.
 
@@ -314,7 +314,7 @@
       NIL
    $DESCRIPTION$
       This function sets the display page for the mouse cursor. The valid
-      values of nPage is dependent upon the display mode. See ft_SetVpg()
+      values of nPage is dependent upon the display mode. See ft_SetVPg()
       for changing the current video page
    $EXAMPLES$
       ft_MSetPage( 1 )  // Sets the mouse cursor to page 1
@@ -339,7 +339,7 @@
            displayed
    $DESCRIPTION$
       This function gets the display page for the mouse cursor. The valid
-      values of nPage is dependent upon the display mode. See ft_SetVpg()
+      values of nPage is dependent upon the display mode. See ft_SetVPg()
       for changing the current video page
    $EXAMPLES$
       nPage := ft_MGetPage( )  // Gets the mouse cursor display page
@@ -782,8 +782,8 @@
       the actual hardware cursor. This routine allows one choose between them.
       The software cursor is the default and its effect on the character it
       covers is determined by the screen mask and the cursor mask. Both of
-      these masks are 16 bit values (which in Clipper are passed as standard
-      numerical values). The 16 bit masks are arranged in a manner identical
+      these masks are 16-bit values (which in Clipper are passed as standard
+      numerical values). The 16-bit masks are arranged in a manner identical
       to the way information is stored for each character cell on the screen.
       The low order 8 bits represent the actual character displayed while the
       high order bits represent the display atributes such as blinking,

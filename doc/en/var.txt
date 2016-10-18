@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  *    Documentation for: __mvPublic(), __mvPrivate(), __mvXRelease(),
  *                       __mvRelease(), __mvScope(), __mvClear(),
@@ -40,7 +38,7 @@
    $RETURNS$
       Nothing
    $DESCRIPTION$
-      This function can be called either by the harbour compiler or by user.
+      This function can be called either by the Harbour compiler or by user.
       The compiler always passes the item of IT_SYMBOL type that stores the
       name of variable.
       If a variable with the same name exists already then the new
@@ -80,7 +78,7 @@
    $RETURNS$
       Nothing
    $DESCRIPTION$
-      This function can be called either by the harbour compiler or by user.
+      This function can be called either by the Harbour compiler or by user.
       The compiler always passes the item of IT_SYMBOL type that stores the
       name of variable.
       If a variable with the same name exists already then the value of old
@@ -130,22 +128,22 @@
       procedure
    $EXAMPLES$
       PROCEDURE Main()
-         PRIVATE mPrivate
 
-         mPrivate := "PRIVATE from Main()"
-         ? mPrivate     //PRIVATE from Main()
+         PRIVATE mPrivate := "PRIVATE from Main()"
+
+         ? mPrivate     // PRIVATE from Main()
          Test()
-         ? mPrivate     //PRIVATE from Main()
+         ? mPrivate     // PRIVATE from Main()
 
          RETURN
 
       PROCEDURE Main()
-         PRIVATE mPrivate
 
-         mPrivate := "PRIVATE from Main()"
-         ? mPrivate           //PRIVATE from Main()
+         PRIVATE mPrivate := "PRIVATE from Main()"
+
+         ? mPrivate           // PRIVATE from Main()
          RELEASE mPrivate
-         ? mPrivate           //NIL
+         ? mPrivate           // NIL
          mPrivate := "Again in Main()"
 
          RETURN
@@ -228,6 +226,7 @@
       function/procedure
    $EXAMPLES$
       PROCEDURE Main()
+
          PUBLIC mPublic
          PRIVATE mPrivateGlobal
 
@@ -237,6 +236,7 @@
          RETURN
 
       PROCEDURE CallProc()
+
          PRIVATE mPrivateLocal
 
          ? __mvScope( "mPublic" )            // HB_MV_PUBLIC
@@ -379,7 +379,9 @@
          RETURN
 
       PROCEDURE CountMemvars()
+
          LOCAL i, nCnt, xVal, cName
+
          PUBLIC ccPublic := "ccPublic"
          PRIVATE ccPrivate := "ccPrivate"
 
@@ -562,6 +564,7 @@
       as a value of the codeblock evaluation.
    $EXAMPLES$
       PROCEDURE Main()
+
          LOCAL cbSetGet
          PUBLIC xPublic
 
@@ -613,13 +616,13 @@
       Note that FieldBlock() works on the current work area, if you need
       a specific work area code block use FieldWBlock() instead.
    $EXAMPLES$
-      // open a file named Test that have a field named "name"
-      LOCAL bField
-      bFiled := FieldBlock( "name" )
-      USE Test
-      ? "Original value of field 'name' :", Eval( bField )
+      // open a file named test.dbf that have a field named "name"
+      LOCAL bFiled := FieldBlock( "name" )
+
+      USE test
+      ? "Original value of field 'name':", Eval( bField )
       Eval( bField, "Mr X new name" )
-      ? "New value for the field 'name' :", Eval( bField )
+      ? "New value for the field 'name':", Eval( bField )
    $STATUS$
       R
    $COMPLIANCE$
@@ -667,9 +670,8 @@
       with the name <cFieldName> in work area number <nWorkArea>, the code
       block return NIL.
    $EXAMPLES$
-      LOCAL bField
       // this block work on the field "name" that exist on work area 2
-      bFiled := FieldBlock( "name", 2 )
+      LOCAL bFiled := FieldBlock( "name", 2 )
       // open a file named One in work area 1
       // that have a field named "name"
       SELECT 1
@@ -679,10 +681,10 @@
       SELECT 2
       USE two
       SELECT 1
-      ? "Original names: ", One->name, Two->name
-      ? "Name value for file Two :", Eval( bField )
+      ? "Original names:", One->name, Two->name
+      ? "Name value for file Two:", Eval( bField )
       Eval( bField, "Two has new name" )
-      ? "and now: ", One->name, Two->name
+      ? "and now:", One->name, Two->name
    $STATUS$
       R
    $COMPLIANCE$
@@ -889,11 +891,14 @@
       passed by reference.
    $EXAMPLES$
       PROCEDURE Main()
+
          LOCAL cVar := "Test local"
+
          MEMVAR m_nVar
          PRIVATE m_nVar := 0
 
          Test( @cVar, @m_nVar, cVar, m_nVar )
+
          RETURN
 
       STATIC PROCEDURE Test( Arg1, Arg2, Arg3, Arg4 )

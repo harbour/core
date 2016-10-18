@@ -26,7 +26,7 @@
       array can be restored from the disc file using
       ft_RestArr().
 
-      [10/1/92 Librarian note:
+      [1992-10-01 Librarian note:
 
       This function does not appear to work with multi-dimensional
       arrays.  If you'd care to modify it to support this feature,
@@ -74,7 +74,7 @@
       ft_RestArr() restores an array which was saved to
       a disc file using ft_SaveArr().
 
-      [10/1/92 Librarian note:
+      [1992-10-01 Librarian note:
 
       This function does not appear to work with multi-dimensional
       arrays.  If you'd care to modify it to support this feature,

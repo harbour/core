@@ -1,12 +1,12 @@
 /* $DOC$
    $NAME$
-      ft_SetVcur()
+      ft_SetVCur()
    $CATEGORY$
       Video
    $ONELINER$
       Set the cursor position on a specified video page
    $SYNTAX$
-      ft_SetVcur( [ <nPage> ], [ <nRow> ], [ <nCol> ] ) -> NIL
+      ft_SetVCur( [ <nPage> ], [ <nRow> ], [ <nCol> ] ) -> NIL
    $ARGUMENTS$
       <nPage> is the video page (defaults to current page, determined
               by ft_GetVPg()
@@ -17,7 +17,7 @@
    $RETURNS$
       NIL
    $DESCRIPTION$
-      ft_SetVcur() sets the cursor position on a specific video page.
+      ft_SetVCur() sets the cursor position on a specific video page.
       It uses ft_int86() to invoke interrupt 10h, function 2.
 
       For more information on graphics programming, cursors, and video
@@ -27,7 +27,7 @@
    $EXAMPLES$
       // Set the position to row 5, column 10 on video page 1:
 
-      ft_SetVcur( 1, 5, 10 )
+      ft_SetVCur( 1, 5, 10 )
    $END$
  */
 
@@ -66,6 +66,6 @@
 
    $EXAMPLES$
       aCurInfo := getVCur( 1 )    // Get info on cursor pos in page 1
-      ? "Row: " + Str( aCurInfo[ 3 ] ) + "  Col: " + Str( aCurInfo[ 4 ] )
+      ? "Row:", aCurInfo[ 3 ], " Col:", aCurInfo[ 4 ]
    $END$
  */

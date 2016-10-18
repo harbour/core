@@ -16,7 +16,8 @@
       attribute set.  The default is .F.
    $RETURNS$
       <cFileSpec> should be your path, including the name of the newly
-      created unique file.  Use this with FOpen(), etc.
+      created unique file.  You are safe to create a new file with
+      this filename.
 
       If a DOS error occurred when trying to create the file, a
       null string will be returned.
@@ -25,21 +26,17 @@
       This function uses DOS Interrupt 21, service 5Ah (Create temporary
       file) to create a unique filename in a directory you specify.
       There will be no extension.  After the file is created, you may
-      then FOpen() it and do any i/o you need (see the test driver
-      in the source code).
+      do any I/O you need (see the test driver in the source code).
 
       This function requires ft_int86().
    $EXAMPLES$
       // Create a unique file in the root of the current drive:
-
-      myFile := ft_TempFil()
+      ? ft_TempFil()
 
       // Create a unique file in the current directory and hide it:
+      ? ft_TempFil( ".", .T. )
 
-      myFile := ft_TempFil( "." + hb_ps(), .T. )
-
-      // Create a unique file on another drive, but do not hide it:
-
-      myFile := ft_TempFil( "E:\nanfor\src\" )
+      // Create a unique file on another directory, but do not hide it:
+      ? ft_TempFil( "mytempdir" )
    $END$
  */

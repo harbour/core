@@ -14,15 +14,14 @@
    $RETURNS$
       cCompressed  - Compressed string, 50% the size of nSize
    $DESCRIPTION$
-      The FT_SQZN function allows a numeric value to be compressed when
+      The ft_Sqzn() function allows a numeric value to be compressed when
       stored in the database.  The compression is 50% the storage space
-      of the original number.  The companion function, FT_UNSQZN returns
+      of the original number.  The companion function, ft_Unsqzn() returns
       the original number from the compressed string.
 
    $EXAMPLES$
-      REPLACE ;
-         TRANS->cust_id WITH ft_Sqzn( mcust_id, 8 ), ;
-         TRANS->amount  WITH ft_Sqzn( mamount, 12, 2 )
+      TRANS->cust_id := ft_Sqzn( mcust_id, 8 )
+      TRANS->amount  := ft_Sqzn( mamount, 12, 2 )
    $SEEALSO$
       ft_Unsqzn()
    $INCLUDE$
@@ -48,7 +47,7 @@
    $RETURNS$
       nValue       - Uncompressed numeric value
    $DESCRIPTION$
-      The FT_UNSQZN function returns the numeric value from the compressed
+      The ft_Unsqzn() function returns the numeric value from the compressed
       string.  The compression is 50% the storage space of the original
       number.  The original number must have been compressed using the
       ft_Sqzn() function.
@@ -57,8 +56,8 @@
       requirements for numeric fields in a database file.
 
    $EXAMPLES$
-      mcust_id := ft_Unsqzn( TRANS->cust_id, 8 )
-      mamount  := ft_Unsqzn( TRANS->amount, 12, 2 )
+      ? ft_Unsqzn( field->cust_id, 8 )
+      ? ft_Unsqzn( field->amount, 12, 2 )
    $SEEALSO$
       ft_Sqzn()
    $INCLUDE$

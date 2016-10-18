@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: CDoW(), CMonth(), Date(), CToD(), Day(), Days()
  *    DoW(), DToS(), DToC(), ElapTime(), Month(), Seconds(), Secs(), Time(), Year()
@@ -109,7 +107,7 @@
       This function returns the current system date.
    $EXAMPLES$
       ? Date()
-      ? "Today is ", Day( Date() ), " of ", CMonth( Date() ), " of ", Year( Date() )
+      ? "Today is", hb_ntos( Day( Date() ) ), "of", CMonth( Date() ), "of", StrZero( Year( Date() ), 4 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -255,6 +253,7 @@
    $DESCRIPTION$
       This function returns the number representing the day of the week
       for the date expressed as <dDate>.
+      Returned value range is from 1 (Sunday) to 7 (Saturday).
    $EXAMPLES$
       ? DoW( Date() )
       ? DoW( Date() - 6584 )

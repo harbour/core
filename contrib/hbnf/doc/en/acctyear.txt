@@ -33,7 +33,7 @@
       'quarter' will contain 14 weeks and the year will contain 53
       weeks.
    $EXAMPLES$
-      // get info about accounting year containing 9/15/90
+      // get info about accounting year containing 1990-09-15
       aDateInfo := ft_AcctYear( hb_SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  1990
       ? aDateInfo[ 2 ]   //  1989-12-31    beginning of year

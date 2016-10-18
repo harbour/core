@@ -17,8 +17,8 @@
       Return the absolute difference between two times in hh:mm:ss format
       in character hours, minutes and seconds (hh:mm:ss).
    $EXAMPLES$
-      ft_ElTime( "22:40:12", "23:55:17" ) // 01:15:05
-      ft_ElTime( "23:55:17", "22:40:12" ) // 01:15:05
+      ? ft_ElTime( "22:40:12", "23:55:17" ) // 01:15:05
+      ? ft_ElTime( "23:55:17", "22:40:12" ) // 01:15:05
    $SEEALSO$
       ft_ElapMin() ft_Mil2Min() ft_Min2Mil()
    $END$

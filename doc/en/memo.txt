@@ -1,6 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    MemoTran() documentation
  *    HardCR() documentation
@@ -137,7 +135,7 @@
       cString := MemoRead( cFile )
       cCopyright := "Melina"
 
-      IF At( "Melina", cString ) == 0            // check for copyright
+      IF ! cCopyright $ cString                  // check for copyright
          MemoWrit( cFile, cCopyright + cString ) // if not, add it!
       ENDIF
    $STATUS$
@@ -207,7 +205,7 @@
       cString := hb_MemoRead( cFile )
       cCopyright := "Melina"
 
-      IF At( "Melina", cString ) == 0               // check for copyright
+      IF ! cCopyright $ cString                     // check for copyright
          hb_MemoWrit( cFile, cCopyright + cString ) // if not, add it!
       ENDIF
    $STATUS$
@@ -252,10 +250,6 @@
       If you not specified a path, MemoWrit() writes <cFileName> to the
       current directory. If <cFileName> exists, it is overwritten.
 
-      There is a third parameter (optional), <lWriteEof>, (not found in
-      CA-Cl*pper) which let to programmer change the default behavior of
-      - always - to write the EOF character, Chr( 26 ) as in CA-Cl*pper.
-
       MemoWrit() function is used together with MemoRead() and MemoEdit()
       to save to disk text from several sources that was edited, searched,
       replaced, displayed, etc.
@@ -268,7 +262,7 @@
       cFile   := "account.prg"
       cString := MemoRead( cFile )
 
-      IF At( "Melina", cString ) == 0            // check for copyright
+      IF ! cCopyright $ cString                  // check for copyright
          MemoWrit( cFile, cCopyright + cString ) // if not, add it!
       ENDIF
    $STATUS$
@@ -296,7 +290,7 @@
    $ONELINER$
       Write a memo field or character string to a text file on disk
    $SYNTAX$
-      hb_MemoWrit( <cFileName>, <cString>, [<lWriteEof>] ) --> lSuccess
+      hb_MemoWrit( <cFileName>, <cString> ) --> lSuccess
    $ARGUMENTS$
       <cFileName> is the filename to be written to disk.
                   It must include the file extension. If file to be read
@@ -304,10 +298,6 @@
 
       <cString>   Is the memo field or character string, to be write to
                   <cFile>.
-
-      <lWriteEof> Is a logic variable that settle if the "end of file"
-                  character - Chr( 26 ) - is written to disk.
-                  This parameter is optional. By default is true (.T.)
    $RETURNS$
       Function returns true (.T.) if the writing operation was successful;
       otherwise, it returns false (.F.).
@@ -316,15 +306,6 @@
       text file on disk (floppy, HD, CD-ROM, etc.)
       If you not specified a path, hb_MemoWrit() writes <cFileName> to the
       current directory. If <cFileName> exists, it is overwritten.
-
-      There is a third parameter (optional), <lWriteEof>, (not found in
-      CA-Cl*pper) which let to programmer change the default behavior of
-      - always - to write the EOF character, Chr( 26 ) as in CA-Cl*pper.
-
-      If there is no third parameter, nothing change, EOF is written as
-      in CA-Cl*pper, the same occurs when <lWriteEof> is set to .T.
-      But, if <lWriteEof> is set to .F., EOF char is Not written to the
-      end of the file.
 
       hb_MemoWrit() function is used together with hb_MemoRead() and
       MemoEdit() to save to disk text from several sources that was edited,
@@ -342,7 +323,7 @@
       cString := hb_MemoRead( cFile )
       cCopyright := "Melina"
 
-      IF At( "Melina", cString ) == 0               // check for copyright
+      IF ! cCopyright $ cString                     // check for copyright
          hb_MemoWrit( cFile, cCopyright + cString ) // if not, add it!
       ENDIF
    $STATUS$

@@ -14,16 +14,16 @@
       into the various CPU registers.  The correspondence between
       registers and array elements is as follows:
 
-               aElement[1]  ==  AX register
-               aElement[2]  ==  BX register
-               aElement[3]  ==  CX register
-               aElement[4]  ==  DX register
-               aElement[5]  ==  SI register
-               aElement[6]  ==  DI register
-               aElement[7]  ==  BP register
-               aElement[8]  ==  DS register
-               aElement[9]  ==  ES register
-               aElement[10] ==  Flags register
+               aElement[ 1 ]  ==  AX register
+               aElement[ 2 ]  ==  BX register
+               aElement[ 3 ]  ==  CX register
+               aElement[ 4 ]  ==  DX register
+               aElement[ 5 ]  ==  SI register
+               aElement[ 6 ]  ==  DI register
+               aElement[ 7 ]  ==  BP register
+               aElement[ 8 ]  ==  DS register
+               aElement[ 9 ]  ==  ES register
+               aElement[ 10 ] ==  Flags register
    $RETURNS$
       .T. if all parameters valid and the function was able
           to execute the desired interrupt.
@@ -107,7 +107,7 @@
       // Pay attention here, this is crucial.  Note how to set up the string
       // so it appears in DS:DX.
 
-      aRegs[ DS ] := "C:\misc\myfile.xxx"
+      aRegs[ DS ] := "my_file.ext"
       aRegs[ DX ] := REG_DS
       ft_int86( 33, aRegs )        // Make the call to the DOS interrupt
 
@@ -130,7 +130,6 @@
       ft_int86( 33, aRegs )
 
       ? aRegs[ DS ]       // Display the directory name
-
 
 
       // For the sake of completeness, here's an example that doesn't use a
