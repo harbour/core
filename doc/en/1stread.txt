@@ -1,6 +1,4 @@
 /*
- * Hash table type and functions
- *
  * Copyright 2009 April White <bright.tigra gmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
