@@ -1,10 +1,8 @@
 /*
  * Document generator include file
  *
- * Copyright 2009 April White <april users.sourceforge.net>
- *
- * Portions of this project are based on hbdoc
- *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
+ * Copyright 2009 April White <bright.tigra gmail.com>
+ * Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br> (Portions of this project are based on hbdoc)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,16 +48,10 @@
 #ifndef HBDOC_CH_
 #define HBDOC_CH_
 
-MEMVAR p_aCategories
-MEMVAR p_aCompliance
-MEMVAR p_aPlatforms
-MEMVAR p_aStatus
-MEMVAR p_aConversionList
-
 // Template definitions
 #define TPL_START            1
 #define TPL_END              2
-#define TPL_REQUIRED         4 // intentially has a 'required' and 'optional' flag
+#define TPL_REQUIRED         4  // intentionally has a 'required' and 'optional' flag
 #define TPL_OPTIONAL         8
 #define TPL_PREFORMATTED     16
 #define TPL_CONSTRAINTLIST   32
