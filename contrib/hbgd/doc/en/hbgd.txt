@@ -121,13 +121,13 @@
 
 /* $DOC$
    $NAME$
-      gdImageFromJpeg()
+      gdImageCreateFromJpeg()
    $CATEGORY$
       HBGD
    $ONELINER$
       Load a JPEG image file.
    $SYNTAX$
-      gdImageFromJpeg( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
+      gdImageCreateFromJpeg( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
    $ARGUMENTS$
       <cFile>        - Image file name
       <nHandle>      - File handle
@@ -136,19 +136,19 @@
    $RETURNS$
       <pImage>       - Image pointer
    $DESCRIPTION$
-      gdImageFromJpeg() creates a JPEG image from a file or a handle or another image in memory.
+      gdImageCreateFromJpeg() creates a JPEG image from a file or a handle or another image in memory.
 
       You can use one of 3 syntax:
 
-      pImage := gdImageFromJpeg( "myimage.jpg" )
+      pImage := gdImageCreateFromJpeg( "myimage.jpg" )
 
       or
 
-      pImage := gdImageFromJpeg( nFileHandle, nSize )
+      pImage := gdImageCreateFromJpeg( nFileHandle, nSize )
 
       or
 
-      pImage := gdImageFromJpeg( pMemoryImagePtr, nSize )
+      pImage := gdImageCreateFromJpeg( pMemoryImagePtr, nSize )
 
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the jpeg image.
@@ -157,7 +157,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL pImage := gdImageFromJpeg( "myimage.jpg" )
+         LOCAL pImage := gdImageCreateFromJpeg( "myimage.jpg" )
 
          // Use image here
 
@@ -169,19 +169,19 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromGif(), gdImageFromPng(), gdImageFromGD(), gdImageFromWBmp()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageCreateFromGif(), gdImageCreateFromPng(), gdImageCreateFromGD(), gdImageCreateFromWBmp()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      gdImageFromGif()
+      gdImageCreateFromGif()
    $CATEGORY$
       HBGD
    $ONELINER$
       Load a Gif image file.
    $SYNTAX$
-      gdImageFromGif( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
+      gdImageCreateFromGif( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
    $ARGUMENTS$
       <cFile>        - Image file name
       <nHandle>      - File handle
@@ -190,19 +190,19 @@
    $RETURNS$
       <pImage>       - Image pointer
    $DESCRIPTION$
-      gdImageFromGif() creates a GIF image from a file or a handle or another image in memory.
+      gdImageCreateFromGif() creates a GIF image from a file or a handle or another image in memory.
 
       You can use one of 3 syntax:
 
-      pImage := gdImageFromGif( "myimage.gif" )
+      pImage := gdImageCreateFromGif( "myimage.gif" )
 
       or
 
-      pImage := gdImageFromGif( nFileHandle, nSize )
+      pImage := gdImageCreateFromGif( nFileHandle, nSize )
 
       or
 
-      pImage := gdImageFromGif( pMemoryImagePtr, nSize )
+      pImage := gdImageCreateFromGif( pMemoryImagePtr, nSize )
 
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the gif image.
@@ -211,7 +211,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL pImage := gdImageFromGif( "myimage.gif" )
+         LOCAL pImage := gdImageCreateFromGif( "myimage.gif" )
 
          // Use image here
 
@@ -223,19 +223,19 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromJpeg(), gdImageFromPng(), gdImageFromGD(), gdImageFromWBmp()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageCreateFromJpeg(), gdImageCreateFromPng(), gdImageCreateFromGD(), gdImageCreateFromWBmp()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      gdImageFromPng()
+      gdImageCreateFromPng()
    $CATEGORY$
       HBGD
    $ONELINER$
       Load a PNG image file.
    $SYNTAX$
-      gdImageFromPng( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
+      gdImageCreateFromPng( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
    $ARGUMENTS$
       <cFile>        - Image file name
       <nHandle>      - File handle
@@ -244,19 +244,19 @@
    $RETURNS$
       <pImage>       - Image pointer
    $DESCRIPTION$
-      gdImageFromPng() creates a PNG image from a file or a handle or another image in memory.
+      gdImageCreateFromPng() creates a PNG image from a file or a handle or another image in memory.
 
       You can use one of 3 syntax:
 
-      pImage := gdImageFromPng( "myimage.png" )
+      pImage := gdImageCreateFromPng( "myimage.png" )
 
       or
 
-      pImage := gdImageFromPng( nFileHandle, nSize )
+      pImage := gdImageCreateFromPng( nFileHandle, nSize )
 
       or
 
-      pImage := gdImageFromPng( pMemoryImagePtr, nSize )
+      pImage := gdImageCreateFromPng( pMemoryImagePtr, nSize )
 
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the png image.
@@ -265,7 +265,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL pImage := gdImageFromPng( "myimage.png" )
+         LOCAL pImage := gdImageCreateFromPng( "myimage.png" )
 
          // Use image here
 
@@ -277,19 +277,19 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromJpeg(), gdImageFromGif(), gdImageFromGD(), gdImageFromWBmp()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageCreateFromJpeg(), gdImageCreateFromGif(), gdImageCreateFromGD(), gdImageCreateFromWBmp()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      gdImageFromGD()
+      gdImageCreateFromGD()
    $CATEGORY$
       HBGD
    $ONELINER$
       Load a GD image file.
    $SYNTAX$
-      gdImageFromGD( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
+      gdImageCreateFromGD( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
    $ARGUMENTS$
       <cFile>        - Image file name
       <nHandle>      - File handle
@@ -298,19 +298,19 @@
    $RETURNS$
       <pImage>       - Image pointer
    $DESCRIPTION$
-      gdImageFromGD() creates a GD image from a file or a handle or another image in memory.
+      gdImageCreateFromGD() creates a GD image from a file or a handle or another image in memory.
 
       You can use one of 3 syntax:
 
-      pImage := gdImageFromGD( "myimage.gd" )
+      pImage := gdImageCreateFromGD( "myimage.gd" )
 
       or
 
-      pImage := gdImageFromGD( nFileHandle, nSize )
+      pImage := gdImageCreateFromGD( nFileHandle, nSize )
 
       or
 
-      pImage := gdImageFromGD( pMemoryImagePtr, nSize )
+      pImage := gdImageCreateFromGD( pMemoryImagePtr, nSize )
 
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the GD image.
@@ -319,7 +319,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL pImage := gdImageFromGD( "myimage.gd" )
+         LOCAL pImage := gdImageCreateFromGD( "myimage.gd" )
 
          // Use image here
 
@@ -331,19 +331,19 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromJpeg(), gdImageFromGif(), gdImageFromPng(), gdImageFromWBmp()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageCreateFromJpeg(), gdImageCreateFromGif(), gdImageCreateFromPng(), gdImageCreateFromWBmp()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      gdImageFromWBmp()
+      gdImageCreateFromWBmp()
    $CATEGORY$
       HBGD
    $ONELINER$
       Load a WBmp image file.
    $SYNTAX$
-      gdImageFromWBmp( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
+      gdImageCreateFromWBmp( <cFile> | <nHandle> | <pPointer> [, <nSize> ] ) --> <pImage>
    $ARGUMENTS$
       <cFile>        - Image file name
       <nHandle>      - File handle
@@ -352,19 +352,19 @@
    $RETURNS$
       <pImage>       - Image pointer
    $DESCRIPTION$
-      gdImageFromWBmp() creates a WBmp image from a file or a handle or another image in memory.
+      gdImageCreateFromWBmp() creates a WBmp image from a file or a handle or another image in memory.
 
       You can use one of 3 syntax:
 
-      pImage := gdImageFromWBmp( "myimage.wbmp" )
+      pImage := gdImageCreateFromWBmp( "myimage.wbmp" )
 
       or
 
-      pImage := gdImageFromWBmp( nFileHandle, nSize )
+      pImage := gdImageCreateFromWBmp( nFileHandle, nSize )
 
       or
 
-      pImage := gdImageFromWBmp( pMemoryImagePtr, nSize )
+      pImage := gdImageCreateFromWBmp( pMemoryImagePtr, nSize )
 
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the WBmp image.
@@ -373,7 +373,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL pImage := gdImageFromWBmp( "myimage.wbmp" )
+         LOCAL pImage := gdImageCreateFromWBmp( "myimage.wbmp" )
 
          // Use image here
 
@@ -385,7 +385,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromJpeg(), gdImageFromGif(), gdImageFromPng(), gdImageFromGD()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageCreateFromJpeg(), gdImageCreateFromGif(), gdImageCreateFromPng(), gdImageCreateFromGD()
    $END$
  */
 
@@ -419,7 +419,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL pImage := gdImageFromGif( "myimage.gif" )
+         LOCAL pImage := gdImageCreateFromGif( "myimage.gif" )
 
          // Image conversion
          gdImageJpeg( pImage, "myimage.jpg" )
@@ -432,7 +432,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageFromGif()
+      gdImageCreateFromGif()
    $END$
  */
 
@@ -464,7 +464,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL pImage := gdImageFromJpeg( "myimage.jpg" )
+         LOCAL pImage := gdImageCreateFromJpeg( "myimage.jpg" )
 
          // Image conversion
          gdImageGif( pImage, "myimage.gif" )
@@ -477,7 +477,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageFromJpeg()
+      gdImageCreateFromJpeg()
    $END$
  */
 
@@ -511,7 +511,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL pImage := gdImageFromGif( "myimage.gif" )
+         LOCAL pImage := gdImageCreateFromGif( "myimage.gif" )
 
          // Image conversion
          gdImagePng( pImage, "myimage.png" )
@@ -524,7 +524,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageFromGif()
+      gdImageCreateFromGif()
    $END$
  */
 
@@ -556,7 +556,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL pImage := gdImageFromGif( "myimage.gif" )
+         LOCAL pImage := gdImageCreateFromGif( "myimage.gif" )
 
          // Image conversion
          gdImageGD( pImage, "myimage.gd" )
@@ -569,7 +569,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageFromGif()
+      gdImageCreateFromGif()
    $END$
  */
 
@@ -1439,19 +1439,19 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine(), gdAntiAliased, gdSetAntiAliasedDontBlend()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine(), gdAntiAliased, gdImageSetAntiAliasedDontBlend()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      gdSetAntiAliasedDontBlend()
+      gdImageSetAntiAliasedDontBlend()
    $CATEGORY$
       HBGD
    $ONELINER$
       indicate the special color that the foreground should stand out more clearly against.
    $SYNTAX$
-      gdSetAntiAliasedDontBlend( <pImage>, <nColor> ) --> NIL
+      gdImageSetAntiAliasedDontBlend( <pImage>, <nColor> ) --> NIL
    $ARGUMENTS$
       <pImage>       - Image pointer
       <nColor>       - Color index of filling color
@@ -1501,7 +1501,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine(), gdAntiAliased, gdSetAntiAlias()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine(), gdAntiAliased, gdImageSetAntiAlias()
    $END$
  */
 

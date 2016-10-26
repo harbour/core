@@ -98,13 +98,13 @@
 
 /* $DOC$
    $NAME$
-      DaysInMonth()
+      hbmisc_DaysInMonth()
    $CATEGORY$
       Date
    $ONELINER$
       Gets the days in a month.
    $SYNTAX$
-      DaysInMonth( <dDate> ) --> nDays
+      hbmisc_DaysInMonth( <dDate> ) --> nDays
    $ARGUMENTS$
       <dDate>   A valid date.
    $RETURNS$
@@ -112,8 +112,8 @@
    $DESCRIPTION$
       This function returns the number of days of the given date month.
    $EXAMPLES$
-      ? DaysInMonth( hb_SToD( "20000101" ) )  // -> 31
-      ? DaysInMonth( hb_SToD( "20000201" ) )  // -> 29
+      ? hbmisc_DaysInMonth( hb_SToD( "20000101" ) )  // -> 31
+      ? hbmisc_DaysInMonth( hb_SToD( "20000201" ) )  // -> 29
    $STATUS$
       R
    $COMPLIANCE$

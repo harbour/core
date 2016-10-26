@@ -26,7 +26,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharOdd()  CharMix()
+      CharOdd(), CharMix()
    $END$
  */
 
@@ -58,6 +58,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharEven()  CharMix()
+      CharEven(), CharMix()
    $END$
  */

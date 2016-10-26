@@ -57,6 +57,6 @@
 
       @ 20, 0 SAY "Key that terminated ft_DispFile() was: " + "[" + cKey + "]"
    $SEEALSO$
-      ft_DFSetup() ft_DFClose()
+      ft_DFSetup(), ft_DFClose()
    $END$
  */

@@ -147,7 +147,7 @@
    $STATUS$
       R
    $COMPLIANCE$
-      C(menu)
+      C
    $FILES$
       Library is core
    $SEEALSO$
@@ -210,7 +210,7 @@
    $STATUS$
       R
    $COMPLIANCE$
-      C(menu)
+      C
    $SEEALSO$
       AChoice(), MENU TO, SET MESSAGE, SET INTENSITY, SET WRAP, __MenuTo()
    $END$

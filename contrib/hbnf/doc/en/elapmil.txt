@@ -20,6 +20,6 @@
       ? ft_ElapMin( "1718", "2040" )  //  202
       ? ft_ElapMin( "2040", "1718" )  // -202
    $SEEALSO$
-      ft_ElTime() ft_Mil2Min() ft_Min2Mil()
+      ft_ElTime(), ft_Mil2Min(), ft_Min2Mil()
    $END$
  */

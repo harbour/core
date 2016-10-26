@@ -46,7 +46,7 @@
       // close file
       ft_FUse()
    $SEEALSO$
-      ft_FUse() ft_FSelect()
+      ft_FUse(), ft_FSelect()
    $END$
  */
 
@@ -129,7 +129,7 @@
 
       ? ft_FRecNo()            // 1
    $SEEALSO$
-      ft_FSelect() ft_FUse() ft_FRecNo() ft_FGoBot()
+      ft_FSelect(), ft_FUse(), ft_FRecNo(), ft_FGoBot()
    $END$
  */
 
@@ -195,7 +195,7 @@
 
       ? ft_FRecNo()            // 1
    $SEEALSO$
-      ft_FSelect() ft_FUse() ft_FGoTop() ft_FGoBot()
+      ft_FSelect(), ft_FUse(), ft_FGoTop(), ft_FGoBot()
    $END$
  */
 
@@ -227,7 +227,7 @@
 
       ? ft_FReadLn()
    $SEEALSO$
-      ft_FSelect() ft_FUse() ft_FGoTop() ft_FRecNo() ft_FReadLn()
+      ft_FSelect(), ft_FUse(), ft_FGoTop(), ft_FRecNo(), ft_FReadLn()
    $END$
  */
 
@@ -268,7 +268,7 @@
          ft_FSkip()
       ENDDO
    $SEEALSO$
-      ft_FRecNo() ft_FGoTop()
+      ft_FRecNo(), ft_FGoTop()
    $END$
  */
 
@@ -309,7 +309,7 @@
          ft_FSkip()
       ENDDO
    $SEEALSO$
-      ft_FUse() ft_FWriteLn() ft_FRecNo() ft_FGoTop()
+      ft_FUse(), ft_FWriteLn(), ft_FRecNo(), ft_FGoTop()
    $END$
  */
 
@@ -342,7 +342,7 @@
 
       ft_FDelete( 4 )
    $SEEALSO$
-      ft_FAppend() ft_FRecNo() ft_FInsert()
+      ft_FAppend(), ft_FRecNo(), ft_FInsert()
    $END$
  */
 
@@ -380,7 +380,7 @@
 
       ft_FInsert( 5 )
    $SEEALSO$
-      ft_FAppend() ft_FRecNo() ft_FDelete() ft_FLastRe()
+      ft_FAppend(), ft_FRecNo(), ft_FDelete(), ft_FLastRe()
    $END$
  */
 
@@ -428,7 +428,7 @@
 
       ? ft_FRecNo()           // displays 6
    $SEEALSO$
-      ft_FRecNo() ft_FDelete() ft_FInsert() ft_FLastRe()
+      ft_FRecNo(), ft_FDelete(), ft_FInsert(), ft_FLastRe()
    $END$
  */
 
@@ -478,7 +478,7 @@
 
       ft_FWriteLn( "FILES=30", ft_FEof() )
    $SEEALSO$
-      ft_FReadLn() ft_FRecNo() ft_FInsert() ft_FDelete()
+      ft_FReadLn(), ft_FRecNo(), ft_FInsert(), ft_FDelete()
    $END$
  */
 
@@ -506,7 +506,7 @@
 
       ? ft_FLastRe()
    $SEEALSO$
-      ft_FUse() ft_FRecNo()
+      ft_FUse(), ft_FRecNo()
    $END$
  */
 
@@ -537,7 +537,7 @@
 
       ? ft_FEof()        // .T.
    $SEEALSO$
-      ft_FUse() ft_FSkip()
+      ft_FUse(), ft_FSkip()
    $END$
  */
 
@@ -570,7 +570,7 @@
 
       ? ft_FBof()        // .T.
    $SEEALSO$
-      ft_FSkip() ft_FEof() ft_FGoTop()
+      ft_FSkip(), ft_FEof(), ft_FGoTop()
    $END$
  */
 
@@ -613,6 +613,6 @@
 
       ? ft_FReadLn()
    $SEEALSO$
-      ft_FRecNo() ft_FGoTop() ft_FReadLn()
+      ft_FRecNo(), ft_FGoTop(), ft_FReadLn()
    $END$
  */

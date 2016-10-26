@@ -390,7 +390,7 @@
 
       <lOpenNew>  3-way toggle to Open the file in New or Current workarea:
 
-                       <table>
+                  <table-noheader>
                        NIL     The file is not opened.
                        True    It is opened in a New area.
                        False   It is opened in the current area.

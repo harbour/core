@@ -1204,7 +1204,7 @@
       When SET DECIMALS OFF is used, the following rules apply to the number
       of decimal placed displayed.
 
-      <table>
+      <table-noheader>
        Addition         Same as operand with the greatest number of decimal digits
        Subtraction      Same as operand with the greatest number of decimal digits
        Multiplication   Sum of operand decimal digits

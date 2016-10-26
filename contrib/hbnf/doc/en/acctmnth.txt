@@ -48,6 +48,6 @@
       ? aDateInfo[ 2 ]   //  1990-04-29   beginning of month 5
       ? aDateInfo[ 3 ]   //  1990-06-02   end of month 5
    $SEEALSO$
-      ft_DateCnfg() ft_AcctWeek() ft_AcctQtr() ft_AcctYear()
+      ft_DateCnfg(), ft_AcctWeek(), ft_AcctQtr(), ft_AcctYear()
    $END$
  */

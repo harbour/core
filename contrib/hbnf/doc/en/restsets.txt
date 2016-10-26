@@ -19,6 +19,6 @@
    $EXAMPLES$
       ft_RestSets( aOldSets )
    $SEEALSO$
-      ft_SaveSets() ft_SetCentury()
+      ft_SaveSets(), ft_SetCentury()
    $END$
  */

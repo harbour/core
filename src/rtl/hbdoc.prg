@@ -145,9 +145,10 @@ STATIC PROCEDURE __hbdoc__read_langdir( aEntry, cDir, hMeta, aErrMsg )
    LOCAL aFile
    LOCAL nCount
 
+   hMeta[ "_LANG" ] := hb_FNameName( hb_DirSepDel( cDir ) )
+
    nCount := 0
    FOR EACH aFile IN Directory( cDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
-      hMeta[ "_LANG" ] := aFile[ F_NAME ]
       __hbdoc__read_file( aEntry, cDir + hb_ps() + aFile[ F_NAME ], hMeta, aErrMsg )
       ++nCount
    NEXT
@@ -244,7 +245,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
                   consecutive lines. [vszakats] */
                nStartCol := Len( cLine ) - Len( LTrim( cLine ) ) + 1
             ELSE
-               hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
+               hEntry[ cSection ] += Chr( 10 )
             ENDIF
             hEntry[ cSection ] += SubStr( cLine, nStartCol )
          ELSEIF ! Empty( cLine )

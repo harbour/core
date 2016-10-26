@@ -30,7 +30,7 @@
 
       Thus, these functions allow to pass the string by reference [@] to
       the function so that it may not be necessary to return the transformed
-      string. By calling CSETREF (.T.), the above mentioned functions return
+      string. By calling CSetRef( .T. ), the above mentioned functions return
       the value .F. instead of the transformed string if the string is
       passed by reference to the function.
       The switch is turned off (.F.) by default.
@@ -46,14 +46,14 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      AddAscii()   Blank()       CharAdd()
-      CharAnd()    CharMirr()    CharNot()
-      CharOr()     CharRelRep()  CharRepl()
-      CharSort()   CharSwap()    CharXor()
-      Crypt()      JustLeft()    JustRight()
-      PosChar()    PosRepl()     RangeRepl()
-      ReplAll()    ReplLeft()    ReplRight()
-      TokenLower() TokenUpper()  WordRepl()
+      AddAscii(),   Blank(),       CharAdd(),
+      CharAnd(),    CharMirr(),    CharNot(),
+      CharOr(),     CharRelRep(),  CharRepl(),
+      CharSort(),   CharSwap(),    CharXor(),
+      Crypt(),      JustLeft(),    JustRight(),
+      PosChar(),    PosRepl(),     RangeRepl(),
+      ReplAll(),    ReplLeft(),    ReplRight(),
+      TokenLower(), TokenUpper(),  WordRepl(),
       WordSwap()
    $END$
  */
@@ -74,7 +74,7 @@
       lOldSwitch      old (if lNewSwitch is a logical value) or
                       current state of the switch
    $DESCRIPTION$
-      CSETATMUPA determines how the following CT3 string functions
+      CSetAtMupa() determines how the following CT3 string functions
 
       AtNum()       AfterAtNum()  BeforAtNum()
       AtRepl()      NumAt()       AtAdjust()
@@ -94,9 +94,9 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      AtNum()       AfterAtNum()  BeforAtNum()
-      AtRepl()      NumAt()       AtAdjust()
-      WordToChar()  WordRepl()
+      AtNum(),      AfterAtNum(),  BeforAtNum(),
+      AtRepl(),     NumAt(),       AtAdjust(),
+      WordToChar(), WordRepl()
    $END$
  */
 
@@ -108,7 +108,7 @@
    $ONELINER$
       Determine scan behaviour in some string functions
    $SYNTAX$
-      SETATLIKE ([<nMode>] [, <[@]cWildcard>]) --> nOldMode
+      SetAtLike( [<nMode>] [, <[@]cWildcard>] ) --> nOldMode
    $ARGUMENTS$
       [<nMode>]   CT_SETATLIKE_EXACT    -> characters are compared exactly
                   CT_SETATLIKE_WILDCARD -> characters are compared using
@@ -128,10 +128,10 @@
       base:
 
       AtAdjust()    AtNum()    AfterAtNum()
-      BEFOREAtNum() AtRepl()   NumAt()
+      BeforAtNum()  AtRepl()   NumAt()
       StrDiff()
 
-      With the SETATLIKE function, one can determine when characters are
+      With the SetAtLike() function, one can determine when characters are
       considered to match within these functions. If CT_SETATLIKE_WILDCARD
       is set (e.g. "?"), then "?" matches every other character.
 

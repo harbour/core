@@ -52,6 +52,6 @@
       ? aDateInfo[ 2 ]   //  1991-04-01   beginning of quarter 2
       ? aDateInfo[ 3 ]   //  1991-06-30   end of quarter 2
    $SEEALSO$
-      ft_DateCnfg() ft_Week() ft_Month() ft_Year()
+      ft_DateCnfg(), ft_Week(), ft_Month(), ft_Year()
    $END$
  */

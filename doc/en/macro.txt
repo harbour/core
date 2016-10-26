@@ -7,8 +7,6 @@
       Document
    $SUBCATEGORY$
       Compiler
-   $ONELINER$
-      Macro compiler
    $DESCRIPTION$
       <b>Invoking the macro compiler:  </b> </par>
       ==============================   </par>

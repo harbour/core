@@ -39,6 +39,10 @@
 
       __Dir() is a compatibility function, it is superseded by Directory()
       which return all the information in a multidimensional array.
+
+      If long file names are available Harbour will use/display the first
+      15 characters else Harbour will use/display a 8.3 file name consistent
+      with CA-Cl*pper.
    $EXAMPLES$
       __Dir()      // information for all DBF files in current directory
 
@@ -55,7 +59,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(LFN)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -94,6 +98,10 @@
 
       __Dir() is a compatibility function, it is superseded by Directory()
       which returns all the information in a multidimensional array.
+
+      If long file names are available Harbour will use/display the first
+      15 characters else Harbour will use/display a 8.3 file name consistent
+      with CA-Cl*pper.
    $EXAMPLES$
       DIR          // information for all DBF files in current directory
 
@@ -110,7 +118,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(LFN)
+      All
    $SEEALSO$
       ADir(), Directory(), SET DEFAULT, __Dir()*
    $END$

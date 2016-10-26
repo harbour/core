@@ -35,6 +35,6 @@
 
       ? ft_BitClr( "A", 5 )     // result: "A", since bit 5 already clear
    $SEEALSO$
-      ft_BitSet() ft_IsBit()
+      ft_BitSet(), ft_IsBit()
    $END$
  */

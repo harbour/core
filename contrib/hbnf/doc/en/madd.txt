@@ -40,6 +40,6 @@
       ? ft_MAdd( dDate, 3 )        // 1991-07-30
       ? ft_MAdd( dDate, 3, .T. )   // 1991-07-31  <- forced EOM
    $SEEALSO$
-      ft_DayOfYr() ft_DayToBoW()
+      ft_DayOfYr(), ft_DayToBoW()
    $END$
  */

@@ -86,7 +86,7 @@
          RETURN
       ENDIF
    $SEEALSO$
-      ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()
+      ft_NWSemEx(), ft_NWSemWait(), ft_NWSemSig(), ft_NWSemClose(), ft_NWSemLock()
    $END$
  */
 
@@ -139,7 +139,7 @@
          "] stations, value is [" + ;
          hb_ntos( nValue ) + "]"
    $SEEALSO$
-      ft_NWSemOpen() ft_NWSemWait() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()
+      ft_NWSemOpen(), ft_NWSemWait(), ft_NWSemSig(), ft_NWSemClose(), ft_NWSemLock()
    $END$
  */
 
@@ -177,7 +177,7 @@
          RETURN
       ENDIF
    $SEEALSO$
-      ft_NWSemOpen() ft_NWSemEx() ft_NWSemSig() ft_NWSemClose() ft_NWSemLock()
+      ft_NWSemOpen(), ft_NWSemEx(), ft_NWSemSig(), ft_NWSemClose(), ft_NWSemLock()
    $END$
  */
 
@@ -208,7 +208,7 @@
    $EXAMPLES$
       ? "Signal returns:", ft_NWSemSig( nHandle )
    $SEEALSO$
-      ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemClose() ft_NWSemLock()
+      ft_NWSemOpen(), ft_NWSemEx(), ft_NWSemWait(), ft_NWSemClose(), ft_NWSemLock()
    $END$
  */
 
@@ -236,7 +236,7 @@
    $EXAMPLES$
       ? "Close returns:", ft_NWSemClose( nHandle )
    $SEEALSO$
-      ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemLock()
+      ft_NWSemOpen(), ft_NWSemEx(), ft_NWSemWait(), ft_NWSemSig(), ft_NWSemLock()
    $END$
  */
 
@@ -299,7 +299,7 @@
       // Processing, then:
       ft_NWSemUnlock( nHandle )
    $SEEALSO$
-      ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemUnlock()
+      ft_NWSemOpen(), ft_NWSemEx(), ft_NWSemWait(), ft_NWSemSig(), ft_NWSemUnlock()
    $END$
  */
 
@@ -338,6 +338,6 @@
       // Processing, then:
       ft_NWSemUnlock( nHandle )
    $SEEALSO$
-      ft_NWSemOpen() ft_NWSemEx() ft_NWSemWait() ft_NWSemSig() ft_NWSemLock()
+      ft_NWSemOpen(), ft_NWSemEx(), ft_NWSemWait(), ft_NWSemSig(), ft_NWSemLock()
    $END$
  */

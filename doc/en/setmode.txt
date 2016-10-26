@@ -33,7 +33,7 @@
       that produce the video mode change.
       The followings are availables for GTDOS:
 
-      <table>
+      <table-noheader>
          12 rows x 40 columns   12 rows x 80 columns
          25 rows x 40 columns   25 rows x 80 columns
          28 rows x 40 columns   28 rows x 80 columns
@@ -43,7 +43,7 @@
 
       The follow modes are available to Windows
 
-      <table>
+      <table-noheader>
          25 rows x 40 columns   25 rows x 80 columns
          50 rows x 40 columns   43 rows x 80 columns
          50 rows x 80 columns
@@ -71,7 +71,7 @@
    $COMPLIANCE$
       Some of these modes are not availables in CA-Cl*pper
    $PLATFORMS$
-      DOS, Win
+      All
    $SEEALSO$
       MaxCol(), MaxRow()
    $END$

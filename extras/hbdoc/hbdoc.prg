@@ -60,7 +60,7 @@
 
    TODO: - look for embedded 'fixed'
 
-   done - recognize and accept </par>; see macro.txt output esp. hb_setmacro
+   done - recognize and accept </par>; see macro.txt output esp. hb_SetMacro()
    done - list 'compliance' and 'platforms' within help
    done - list 'category' and 'subcategory' types on help screen
    done - load into memory (class and) method template
@@ -70,10 +70,8 @@
 */
 
 #include "directry.ch"
-#include "fileio.ch"
+#include "hbclass.ch"
 #include "hbver.ch"
-
-#include "hbdoc.ch"
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -86,19 +84,41 @@ REQUEST HB_CODEPAGE_UTF8EX
 #define YesOrNo( b )    iif( b, "yes", "no" )
 #define IsDefault( b )  iif( b, "; default", "" )
 
+#define TPL_START            1
+#define TPL_END              2
+#define TPL_REQUIRED         4  // intentionally has a 'required' and 'optional' flag
+#define TPL_OPTIONAL         8
+#define TPL_PREFORMATTED     16
+#define TPL_CONSTRAINTLIST   32
+#define TPL_TEMPLATE         64
+#define TPL_OUTPUT           128
+
 STATIC sc_aExclusions := { "class_tp.txt", "hdr_tpl.txt" }
+STATIC sc_hFields
+STATIC sc_hTemplates
 STATIC sc_hConstraint
 STATIC s_hSwitches
+STATIC s_hComponent := { => }
+STATIC s_generators
 
 PROCEDURE Main( ... )
 
    LOCAL aArgs := hb_AParams()
-   LOCAL idx, idx2, item, item4
-   LOCAL arg
+   LOCAL idx, item, item4
+   LOCAL arg, tmp
    LOCAL cArgName
    LOCAL cFormat
    LOCAL oDocument, oIndex
    LOCAL aContent
+
+   LOCAL generatorClass
+
+   s_generators := { ;
+      "all"   =>, ;
+      "html"  => @GenerateHTML(), ;
+      "ascii" => @GenerateAscii(), ;
+      "text"  => @GenerateText(), ;
+      "xml"   => @GenerateXML() }
 
    /* Setup input CP of the translation */
    hb_cdpSelect( "UTF8EX" )
@@ -109,34 +129,26 @@ PROCEDURE Main( ... )
 
    init_Templates()
 
+   /* configuration settings, values, etc */ ;
    s_hSwitches := { ;
-      /* configuration settings, values, etc */ ;
       "basedir"             => BASE_DIR, ;
+      "lang"                => "en", ;
       "doc"                 => .T., ;
       "source"              => .F., ;
       "contribs"            => .T., ;
       "format"              => {}, ;
-      "output"              => "category", ;
+      "output"              => "single", ;
       "include-doc-source"  => .F., ;
-      "include-doc-version" => .F., ;
       "immediate-errors"    => .F., ;
       /* internal settings, values, etc */ ;
       "DELIMITER"           => "$", ;
-      "format-list"         => { "text", "ascii", "html", "html2", "xml", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
-      "hbextern.ch"         => {}, ;
+      "hHBX"                => {}, ;
       "in hbextern"         => {}, ;
-      "not in hbextern"     => {}, ;
-      "<eol>"               => NIL }
+      "not in hbextern"     => {} }
 
-   /* remove formats that have not been implemented yet */
-   FOR EACH item IN s_hSwitches[ "format-list" ] DESCEND
-      IF item == "all"
-      ELSEIF ! hb_IsFunction( "Generate" + item )
-         hb_ADel( item:__enumBase(), item:__enumIndex(), .T. )
-      ENDIF
-   NEXT
-
-   IF Len( aArgs ) == 0 .OR. aArgs[ 1 ] == "-?" .OR. aArgs[ 1 ] == "/?" .OR. aArgs[ 1 ] == "--help"
+   IF Empty( aArgs ) .OR. ;
+      aArgs[ 1 ] == "-h" .OR. ;
+      aArgs[ 1 ] == "--help"
       ShowHelp( , aArgs )
       RETURN
    ENDIF
@@ -153,24 +165,23 @@ PROCEDURE Main( ... )
 
          DO CASE
          CASE cArgName == "-source" ; s_hSwitches[ "basedir" ] := hb_DirSepAdd( arg )
+         CASE cArgName == "-lang" ; s_hSwitches[ "lang" ] := Lower( arg )
          CASE cArgName == "-format"
-            IF arg == "" .OR. hb_AScan( s_hSwitches[ "format-list" ], arg, , , .T. ) == 0
+            IF arg == "" .OR. ! arg $ s_generators
                ShowHelp( "Unrecognized format option '" + arg + "'" )
                RETURN
             ELSEIF arg == "all"
-               s_hSwitches[ "format" ] := s_hSwitches[ "format-list" ]
+               s_hSwitches[ "format" ] := hb_HKeys( s_generators )
             ELSE
                AAdd( s_hSwitches[ "format" ], arg )
             ENDIF
-         CASE cArgName == "-output-single" ;          s_hSwitches[ "output" ] := "single"
-         CASE cArgName == "-output-category" ;        s_hSwitches[ "output" ] := "category"
-         CASE cArgName == "-output-entry" ;           s_hSwitches[ "output" ] := "entry"
+         CASE hb_LeftEq( cArgName, "-output-" )
+            s_hSwitches[ "output" ] := SubStr( cArgName, Len( "-output-" ) + 1 )
          CASE cArgName == "-include-doc-source" ;     s_hSwitches[ "include-doc-source" ] := .T.
-         CASE cArgName == "-include-doc-version" ;    s_hSwitches[ "include-doc-version" ] := .T.
          OTHERWISE
-            IF hb_AScan( s_hSwitches[ "format-list" ], SubStr( cArgName, 2 ), , , .T. ) > 0
+            IF SubStr( cArgName, 2 ) $ s_generators
                IF SubStr( cArgName, 2 ) == "all"
-                  s_hSwitches[ "format" ] := s_hSwitches[ "format-list" ]
+                  s_hSwitches[ "format" ] := hb_HKeys( s_generators )
                ELSE
                   AAdd( s_hSwitches[ "format" ], SubStr( cArgName, 2 ) )
                ENDIF
@@ -182,89 +193,92 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
-   /* load hbextern.ch */
-   FileEval( s_hSwitches[ "basedir" ] + "include" + hb_ps() + "hbextern.ch", ;
-      {| c | iif( hb_LeftEq( c, "EXTERNAL " ), ;
-                  AAdd( s_hSwitches[ "hbextern.ch" ], SubStr( c, Len( "EXTERNAL " ) + 1 ) ), ;
-                  ) } )
-   ASort( s_hSwitches[ "hbextern.ch" ] )
+   s_hSwitches[ "hHBX" ] := { => }
+   hb_HCaseMatch( s_hSwitches[ "hHBX" ], .F. )
+   aContent := ProcessDirs( s_hSwitches[ "hHBX" ] )
 
-   aContent := {}
-   AEval( ;
-      {;
-         s_hSwitches[ "basedir" ] + "doc" + hb_ps() + "en", ;
-         iif( s_hSwitches[ "source" ], s_hSwitches[ "basedir" ] + "src", NIL ), ;
-         iif( s_hSwitches[ "contribs" ], s_hSwitches[ "basedir" ] + "contrib", NIL ), ;
-      }, ;
-      {| c | iif( Empty( c ),, ProcessDir( c, @aContent ) ) } )
+#if 0
+   hb_MemoWrit( "hbx.json", hb_jsonEncode( s_hSwitches[ "hHBX" ], .T. ) )
+   hb_MemoWrit( "cats.json", hb_jsonencode( sc_hConstraint[ "categories" ], .T. ) )
+#endif
 
    OutStd( hb_ntos( Len( aContent ) ), "items found" + hb_eol() )
    OutStd( hb_eol() )
 
-   ASort( aContent, , , {| oL, oR | ;
-      hb_ntos( oL:CategoryIndex( oL:Category ) ) + " " + hb_ntos( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + Chr( 1 ) + oL:Name + " " ;
+   ASort( aContent,,, {| oL, oR | ;
+         PadR( SortWeight( oL:fld[ "CATEGORY" ] ), 20 ) + ;
+         PadR( SortWeight( oL:fld[ "SUBCATEGORY" ] ), 20 ) + ;
+         PadR( oL:fld[ "NAME" ], 50 ) ;
       <= ;
-      hb_ntos( oR:CategoryIndex( oR:Category ) ) + " " + hb_ntos( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + Chr( 1 ) + oR:Name + " " ;
+         PadR( SortWeight( oR:fld[ "CATEGORY" ] ), 20 ) + ;
+         PadR( SortWeight( oR:fld[ "SUBCATEGORY" ] ), 20 ) + ;
+         PadR( oR:fld[ "NAME" ], 50 ) ;
       } )
 
-   /* TODO: what is this for?  it is sorting the category sub-arrays and removing empty (?) sub-arrays, but why? */
-   FOR EACH item IN sc_hConstraint[ "categories" ]
-      IF ! Empty( item )
-         IF Len( item ) == 4  /* category, list of subcategory, list of entries, handle */
-            FOR idx2 := Len( item[ 3 ] ) TO 1 STEP -1
-               IF HB_ISARRAY( item[ 3 ][ idx2 ] )
-                  ASort( item[ 3 ][ idx2 ], , , ;
-                     {| oL, oR | ;
-                        hb_ntos( oL:CategoryIndex( oL:Category ) ) + " " + hb_ntos( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + " " + oL:Name ;
-                        <= ;
-                        hb_ntos( oR:CategoryIndex( oR:Category ) ) + " " + hb_ntos( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + " " + oR:Name ;
-                        } )
-               ELSE
-                  hb_ADel( item[ 2 ], idx2, .T. )
-                  hb_ADel( item[ 3 ], idx2, .T. )
-               ENDIF
-            NEXT
-         ELSE
-            OutStd( "Index", item:__enumIndex(), "is not length 4 but rather", Len( item ), hb_eol() )
-         ENDIF
-      ENDIF
-   NEXT
-
-   IF Len( s_hSwitches[ "format" ] ) == 0
-      s_hSwitches[ "format" ] := { "text" }
-   ENDIF
-
    FOR EACH cFormat IN s_hSwitches[ "format" ]
-      IF !( cFormat == "all" )
+
+      IF HB_ISEVALITEM( generatorClass := hb_HGetDef( s_generators, Lower( cFormat ) ) )
+
          OutStd( "Output as", cFormat + hb_eol() )
 
          DO CASE
          CASE s_hSwitches[ "output" ] == "single"
 
-            oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, "harbour", "Harbour Reference Guide" )
+            oDocument := Eval( generatorClass ):NewDocument( cFormat, "harbour", "Harbour Reference Guide", s_hSwitches[ "lang" ] )
 
             FOR EACH item IN aContent
-               IF Right( item:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
+               IF item:_type == "harbour"
                   oDocument:AddEntry( item )
-                  EXIT
                ENDIF
             NEXT
 
-            FOR EACH item IN aContent
-               IF !( Right( item:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt" )
-                  oDocument:AddEntry( item )
+            FOR EACH tmp IN ASort( hb_HKeys( s_hComponent ) )
+               IF !( tmp == "harbour" )
+                  FOR EACH item IN aContent
+                     IF item:_type == tmp .AND. ;
+                        oDocument:AddEntry( item )
+                     ENDIF
+                  NEXT
                ENDIF
             NEXT
 
             oDocument:Generate()
             oDocument := NIL
 
-         CASE s_hSwitches[ "output" ] == "category"
+         CASE s_hSwitches[ "output" ] == "component"
 
-            oIndex := &( "Generate" + cFormat + "()" ):NewIndex( cFormat, "harbour", "Harbour Reference Guide" )
+            oDocument := Eval( generatorClass ):NewDocument( cFormat, "harbour", "Harbour Reference Guide", s_hSwitches[ "lang" ] )
 
             FOR EACH item IN aContent
-               IF Right( item:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
+               IF item:_type == "harbour"
+                  oDocument:AddEntry( item )
+               ENDIF
+            NEXT
+
+            oDocument:Generate()
+
+            FOR EACH tmp IN ASort( hb_HKeys( s_hComponent ) )
+               IF !( tmp == "harbour" )
+                  oDocument := Eval( generatorClass ):NewDocument( cFormat, tmp, hb_StrFormat( "Harbour Reference Guide — %1$s", tmp ), s_hSwitches[ "lang" ] )
+
+                  FOR EACH item IN aContent
+                     IF item:_type == tmp .AND. ;
+                        oDocument:AddEntry( item )
+                     ENDIF
+                  NEXT
+
+                  oDocument:Generate()
+               ENDIF
+            NEXT
+
+            oDocument := NIL
+
+         CASE s_hSwitches[ "output" ] == "category"
+
+            oIndex := Eval( generatorClass ):NewIndex( cFormat, "harbour", "Harbour Reference Guide" )
+
+            FOR EACH item IN aContent
+               IF Right( item:_sourcefile, Len( "1stread.txt" ) ) == "1stread.txt"
                   IF oIndex != NIL
                      oIndex:AddEntry( item )
                   ENDIF
@@ -273,68 +287,61 @@ PROCEDURE Main( ... )
             NEXT
 
             FOR EACH item IN sc_hConstraint[ "categories" ]
-               IF ! Empty( item )
-                  item[ 4 ] := Filename( item[ 1 ] )
-#if 0
-                  oIndex:BeginSection( item[ 1 ], item[ 4 ] )
-                  oIndex:EndSection( item[ 1 ], item[ 4 ] )
-#endif
-               ENDIF
+               item[ 3 ] := Filename( item:__enumKey() )
             NEXT
 
             FOR EACH item IN sc_hConstraint[ "categories" ]
-               IF ! Empty( item )
-                  oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, item[ 4 ], "Harbour Reference Guide - " + item[ 1 ] )
 
-                  IF oIndex != NIL
-                     oIndex:BeginSection( item[ 1 ], oDocument:cFilename )
-                  ENDIF
-                  oDocument:BeginSection( item[ 1 ], oDocument:cFilename )
+               oDocument := Eval( generatorClass ):NewDocument( cFormat, item[ 3 ], hb_StrFormat( "Harbour Reference Guide — %1$s", item:__enumKey() ), s_hSwitches[ "lang" ] )
 
-                  FOR idx := 1 TO Len( item[ 3 ] )
-                     IF ! Empty( item[ 3 ][ idx ] )
-                        ASort( item[ 3 ][ idx ], , , {| oL, oR | oL:Name <= oR:Name } )
-                        IF Len( item[ 2 ][ idx ] ) > 1 .OR. Len( item[ 2 ][ idx ] ) > 0
-                           IF oIndex != NIL
-                              oIndex:BeginSection( item[ 2 ][ idx ], oDocument:cFilename )
-                           ENDIF
-                           oDocument:BeginSection( item[ 2 ][ idx ], oDocument:cFilename )
+               IF oIndex != NIL
+                  oIndex:BeginSection( item:__enumKey(), oDocument:cFilename )
+               ENDIF
+               oDocument:BeginSection( item:__enumKey(), oDocument:cFilename )
+
+               FOR idx := 1 TO Len( item[ 2 ] )
+                  IF ! Empty( item[ 2 ][ idx ] )
+                     ASort( item[ 2 ][ idx ], , , {| oL, oR | oL:fld[ "NAME" ] <= oR:fld[ "NAME" ] } )
+                     IF Len( item[ 1 ][ idx ] ) > 0
+                        IF oIndex != NIL
+                           oIndex:BeginSection( item[ 1 ][ idx ], oDocument:cFilename )
                         ENDIF
-                        FOR EACH item4 IN item[ 3 ][ idx ]
-                           IF ! Empty( item4 )
-                              IF !( Right( item4:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt" )
-                                 IF oIndex != NIL
-                                    oIndex:AddReference( item4 )
-                                 ENDIF
-                                 oDocument:AddEntry( item4 )
-                                 IF oIndex != NIL
-                                    oDocument:AddReference( "Index", oIndex:cFilename )
-                                    /* this kind of works; the reference is outputed but it is not what I meant */
-                                    oDocument:AddReference( item[ 1 ], oIndex:cFilename, item[ 4 ] )
-                                 ENDIF
+                        oDocument:BeginSection( item[ 1 ][ idx ], oDocument:cFilename )
+                     ENDIF
+                     FOR EACH item4 IN item[ 2 ][ idx ]
+                        IF ! Empty( item4 )
+                           IF !( Right( item4:_sourcefile, Len( "1stread.txt" ) ) == "1stread.txt" )
+                              IF oIndex != NIL
+                                 oIndex:AddReference( item4 )
+                              ENDIF
+                              oDocument:AddEntry( item4 )
+                              IF oIndex != NIL
+                                 oDocument:AddReference( "Index", oIndex:cFilename )
+                                 /* this kind of works; the reference is outputed but it is not what I meant */
+                                 oDocument:AddReference( item:__enumKey(), oIndex:cFilename, item[ 3 ] )
                               ENDIF
                            ENDIF
-                        NEXT
-                        IF Len( item[ 2 ][ idx ] ) > 1 .OR. Len( item[ 2 ][ idx ] ) > 0
-                           IF oIndex != NIL
-                              oIndex:EndSection( item[ 2 ][ idx ], oDocument:cFilename )
-                           ENDIF
-                           oDocument:EndSection( item[ 2 ][ idx ], oDocument:cFilename )
                         ENDIF
+                     NEXT
+                     IF Len( item[ 1 ][ idx ] ) > 0
+                        IF oIndex != NIL
+                           oIndex:EndSection( item[ 1 ][ idx ], oDocument:cFilename )
+                        ENDIF
+                        oDocument:EndSection( item[ 1 ][ idx ], oDocument:cFilename )
                      ENDIF
-                  NEXT
-                  IF oIndex != NIL
-                     oIndex:EndSection( item[ 1 ], oDocument:cFilename )
                   ENDIF
-                  oDocument:EndSection( item[ 1 ], oDocument:cFilename )
-                  oDocument:Generate()
+               NEXT
+               IF oIndex != NIL
+                  oIndex:EndSection( item:__enumKey(), oDocument:cFilename )
                ENDIF
+               oDocument:EndSection( item:__enumKey(), oDocument:cFilename )
+               oDocument:Generate()
             NEXT
 
          CASE s_hSwitches[ "output" ] == "entry"
 
             FOR EACH item IN aContent
-               oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, item:filename, "Harbour Reference Guide" )
+               oDocument := Eval( generatorClass ):NewDocument( cFormat, item:_filename, "Harbour Reference Guide", s_hSwitches[ "lang" ] )
                IF oIndex != NIL
                   oIndex:AddEntry( item )
                ENDIF
@@ -358,104 +365,213 @@ PROCEDURE Main( ... )
 
    RETURN
 
-STATIC PROCEDURE ProcessDir( cDir, aContent )  /* this is a recursive procedure */
+STATIC FUNCTION SortWeight( cString )
 
+   SWITCH hb_defaultValue( cString, "" )
+   CASE "Document" ; RETURN Chr( 31 ) + "001" + cString  /* category */
+   CASE "Intro"    ; RETURN Chr( 31 ) + "001" + cString  /* subcategory */
+   CASE "License"  ; RETURN Chr( 31 ) + "002" + cString  /* subcategory */
+   CASE "Compiler" ; RETURN Chr( 31 ) + "003" + cString  /* subcategory */
+   ENDSWITCH
+
+   RETURN cString
+
+STATIC FUNCTION ProcessDirs( hAll )
+
+   LOCAL aContent := {}
+   LOCAL cDir
    LOCAL file
 
-#if 0
-   OutStd( ">>> " + cDir + hb_eol() )
-#endif
+   DirLoadHBX( s_hSwitches[ "basedir" ] + "include", hAll )
 
-   cDir += hb_ps()
+   ProcessDocDir( s_hSwitches[ "basedir" ], "harbour", @aContent )
 
-   FOR EACH file IN hb_vfDirectory( cDir + hb_osFileMask(), "D" )
-      IF file[ F_ATTR ] == "D"
-         IF !( file[ F_NAME ] == "." ) .AND. ;
-            !( file[ F_NAME ] == ".." )
+   IF s_hSwitches[ "contribs" ]
 
-            IF s_hSwitches[ "source" ] .OR. s_hSwitches[ "contribs" ]
-               /* .AND. hb_AScanI( s_aSkipDirs, file[ F_NAME ],,, .T. ) == 0 */
-               ProcessDir( cDir + file[ F_NAME ], @aContent )
+      cDir := s_hSwitches[ "basedir" ] + "contrib"
+
+      FOR EACH file IN hb_DirScan( cDir,, "D" )
+         IF file[ F_ATTR ] == "D" .AND. ;
+            !( hb_FNameName( hb_DirSepDel( file[ F_NAME ] ) ) == "." ) .AND. ;
+            !( hb_FNameName( hb_DirSepDel( file[ F_NAME ] ) ) == ".." )
+
+            DirLoadHBX( cDir + hb_ps() + file[ F_NAME ], hAll )
+
+            IF ! ProcessDocDir( cDir + hb_ps() + file[ F_NAME ], hb_FNameName( file[ F_NAME ] ), @aContent )
+               EXIT
             ENDIF
          ENDIF
-      ELSEIF hb_AScanI( sc_aExclusions, file[ F_NAME ],,, .T. ) == 0
-         IF Lower( hb_FNameExt( file[ F_NAME ] ) ) == ".txt" .AND. ;
-            ! ProcessFile( cDir + file[ F_NAME ], @aContent )
-            EXIT
-         ENDIF
-      ENDIF
-   NEXT
-
-   RETURN
-
-STATIC FUNCTION ProcessFile( cFile, aContent )
-
-   LOCAL aHandle := { NIL, 0 } /* file handle and position */
-   LOCAL cSectionName
-   LOCAL cVersion
-   LOCAL o
-   LOCAL nOldContentLen := Len( aContent )
-
-   IF ( aHandle[ 1 ] := hb_vfOpen( cFile, FO_READ ) ) == NIL
-      OutErr( "error: could not open", cFile + hb_eol() )
-      RETURN .F.
+      NEXT
    ENDIF
 
-   cVersion := ""
+   RETURN aContent
 
-   o := Entry():New( "Template", sc_hConstraint )
+STATIC FUNCTION ProcessDocDir( cDir, cComponent, aContent )
 
-   DO WHILE FReadSection( aHandle, @cSectionName, , o )
-      IF o:IsField( @cSectionName, TPL_START )
-         o := Entry():New( "Template", sc_hConstraint )
-         ProcessBlock( aHandle, @aContent, cFile, cSectionName, @cVersion, @o )
+   LOCAL aErrMsg := {}
+   LOCAL aEntry := __hbdoc_LoadDir( cDir, cComponent, aErrMsg )
+
+   LOCAL hEntry
+   LOCAL nOldContentLen, tmp
+
+   FOR EACH tmp IN aErrMsg
+      AddErrorCondition( cDir, tmp )
+   NEXT
+
+   IF ! Empty( aEntry )
+
+#if 1
+      hb_MemoWrit( "_" + aEntry[ 1 ][ "_COMPONENT" ] + ".json", hb_jsonEncode( aEntry, .t. ) )
+#endif
+
+      nOldContentLen := Len( aContent )
+
+      FOR EACH hEntry IN aEntry
+         IF Lower( hEntry[ "_LANG" ] ) == s_hSwitches[ "lang" ]
+            ProcessBlock( hEntry, aContent )
+         ENDIF
+      NEXT
+
+      IF Len( aContent ) > nOldContentLen
+         OutStd( ">", cDir, "(" + hb_ntos( Len( aContent ) - nOldContentLen ), "items)" + hb_eol() )
       ENDIF
-   ENDDO
-   hb_vfClose( aHandle[ 1 ] )
-
-   IF Len( aContent ) > nOldContentLen
-      OutStd( ">", cFile, "(" + hb_ntos( Len( aContent ) - nOldContentLen ), "items)" + hb_eol() )
    ENDIF
 
    RETURN .T.
 
-STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
+STATIC FUNCTION NewLineVoodoo( cSectionIn )
+
+   LOCAL cSection := ""
+   LOCAL lPreformatted := .F.
+   LOCAL lLastPreformatted := .F.
+   LOCAL nLastIndent := -1
+
+   LOCAL cLine
+
+   FOR EACH cLine IN hb_ATokens( cSectionIn, .T. )
+
+      IF Len( AllTrim( cLine ) ) == 0
+         IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() )
+            cSection += hb_eol()
+         ENDIF
+         nLastIndent := -1
+      ELSEIF hb_LeftEq( AllTrim( cLine ), "<table" ) .OR. AllTrim( cLine ) == "<fixed>" .OR. hb_LeftEq( AllTrim( cLine ), '```' )
+         IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() ) .OR. lPreformatted
+            cSection += hb_eol()
+         ENDIF
+         cSection += AllTrim( cLine )  // + hb_eol()
+         lLastPreformatted := lPreformatted
+         lPreformatted := .T.
+      ELSEIF AllTrim( cLine ) == "</table>" .OR. AllTrim( cLine ) == "</fixed>"
+         IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() ) .OR. lPreformatted
+            cSection += hb_eol()
+         ENDIF
+         cSection += AllTrim( cLine ) + hb_eol()
+         lPreformatted := lLastPreformatted
+      ELSEIF nLastIndent != ( Len( cLine ) - Len( LTrim( cLine ) ) ) .OR. lPreformatted .OR. Right( cLine, Len( "</par>" ) ) == "</par>"
+         IF Right( cLine, Len( "</par>" ) ) == "</par>"
+            cLine := hb_StrShrink( cLine, Len( "</par>" ) )
+         ENDIF
+         nLastIndent := Len( cLine ) - Len( LTrim( cLine ) )
+         IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() )
+            cSection += hb_eol()
+         ENDIF
+         cSection += iif( lPreformatted, cLine, AllTrim( cLine ) )
+      ELSE
+         cSection += " " + AllTrim( cLine )
+      ENDIF
+   NEXT
+
+   IF hb_LeftEq( cSection, hb_eol() )
+      cSection := SubStr( cSection, Len( hb_eol() ) + 1 )
+   ENDIF
+   IF Right( cSection, Len( hb_eol() ) ) == hb_eol()
+      cSection := hb_StrShrink( cSection, Len( hb_eol() ) )
+   ENDIF
+
+   RETURN cSection
+
+STATIC PROCEDURE ProcessBlock( hEntry, aContent )
+
+   LOCAL cFile := hEntry[ "_DOCSOURCE" ]
+   LOCAL cComponent := hEntry[ "_COMPONENT" ]
 
    LOCAL cSectionName
    LOCAL cSection
    LOCAL lAccepted := .T.
    LOCAL cSource
-   LOCAL idxCategory := -1
+   LOCAL idxCategory := NIL
    LOCAL idxSubCategory := -1
-   LOCAL cSourceFile
+   LOCAL item
 
-   cSourceFile := StrTran( ".." + hb_ps() + cFile /* SubStr( cFile, Len( s_hSwitches[ "basedir" ] + hb_ps() ) ) */, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
+   LOCAL cSourceFile := StrTran( ".." + hb_ps() + cFile, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
 
-   o:type_ := cType
-   o:sourcefile_ := cSourceFile
-   o:sourcefileversion_ := cVersion
-   o:Name := "?NAME?"
-   o:SetTemplate( "Function" )
+   LOCAL o
 
-   DO WHILE FReadSection( aHandle, @cSectionName, @cSection, @o )
+   /* Set template */
+   IF ! "TEMPLATE" $ hEntry
+      hEntry[ "TEMPLATE" ] := "Function"
+   ENDIF
+   IF ! hEntry[ "TEMPLATE" ] $ sc_hTemplates
+      hEntry[ "TEMPLATE" ] := "Function"
+      AddErrorCondition( cFile, "Unrecognized TEMPLATE '" + hEntry[ "TEMPLATE" ] + "'", .T. )
+      lAccepted := .F.
+   ENDIF
 
-      IF cSectionName == "TEMPLATE"
-         IF o:IsTemplate( cSection )
-            o:SetTemplate( cSection )
-         ELSE
-            AddErrorCondition( cFile, "Unrecognized TEMPLATE '" + cSection + "'" ) // + "' (line " + hb_ntos( aHandle[ 2 ] ) + ")" // exclude link number, it reports tonnes of entries
-            lAccepted := .F.
-            EXIT
-         ENDIF
+   o := Entry():New( hEntry[ "TEMPLATE" ] )
+   o:_type := cComponent
+   o:_sourcefile := cSourceFile
 
-      ELSEIF HB_ISNULL( cSectionName )
+   /* Merge category/subcategory into tag list */
+   o:_tags := { => }
+   FOR EACH item IN hb_ATokens( ;
+      hb_HGetDef( hEntry, "TAGS", "" ) + ;
+      ", " + hb_HGetDef( hEntry, "CATEGORY", "" ) + ;
+      ", " + hb_HGetDef( hEntry, "SUBCATEGORY", "" ), "," )
+
+      IF ! HB_ISNULL( item := AllTrim( item ) )
+         o:_tags[ item ] := NIL
+      ENDIF
+   NEXT
+   hEntry[ "TAGS" ] := ""
+   FOR EACH item IN hb_HKeys( o:_tags )
+      hEntry[ "TAGS" ] += item
+      IF ! item:__enumIsLast()
+         hEntry[ "TAGS" ] += ", "
+      ENDIF
+   NEXT
+
+   IF "CATEGORY" $ hEntry
+      IF hEntry[ "CATEGORY" ] $ sc_hConstraint[ "categories" ]
+         idxCategory := hEntry[ "CATEGORY" ]
+      ELSE
+         AddErrorCondition( cFile, "Unrecognized CATEGORY '" + hEntry[ "CATEGORY" ] + "' for template '" + o:fld[ "TEMPLATE" ] )
+      ENDIF
+   ENDIF
+
+   FOR EACH item IN hEntry
+
+      cSectionName := item:__enumKey()
+      cSection := StrTran( item, Chr( 13 ) + Chr( 10 ), hb_eol() )
+
+      IF !( cSectionName == "EXAMPLES" ) .AND. ;
+         !( cSectionName == "TESTS" )
+         cSection := NewLineVoodoo( cSection )  /* Decides which EOLs to keep and which to drop */
+      ENDIF
+
+      cSection := StrTran( cSection, hb_eol(), Chr( 10 ) )
+
+      IF hb_LeftEq( cSectionName, "_" ) .OR. ;
+         cSectionName == "TEMPLATE"
+
+         /* do nothing */
 
       ELSEIF o:IsField( cSectionName )
 
          DO CASE
          CASE o:IsField( cSectionName, TPL_START )
 
-            AddErrorCondition( cFile, "Encountered another section '" + cSection, aHandle[ 2 ] )
+            AddErrorCondition( cFile, "Encountered another section '" + cSection, .T. )
             lAccepted := .F.
             EXIT
 
@@ -463,36 +579,16 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
             EXIT
 
-         CASE ! Empty( o:&cSectionName )
+         CASE ! Empty( o:fld[ cSectionName ] )
 
-            AddErrorCondition( cFile, "Duplicate " + cSectionName, aHandle[ 2 ] )
+            AddErrorCondition( cFile, "Duplicate " + cSectionName, .T. )
             lAccepted := .F.
-
-         CASE cSectionName == "CATEGORY"
-
-            IF ( idxCategory := AScan( sc_hConstraint[ "categories" ], {| c | ! Empty( c ) .AND. iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) } ) ) == 0
-               AddErrorCondition( cFile, "Unrecognized CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
-#if 0
-               lAccepted := .F.
-#endif
-            ENDIF
 
          CASE cSectionName == "SUBCATEGORY" .AND. o:IsField( "SUBCATEGORY" )
 
-            IF idxCategory <= 0 .OR. o:Category == ""
-
-               AddErrorCondition( cFile, "SUBCATEGORY '" + cSection + "' defined before CATEGORY", aHandle[ 2 ] )
-#if 0
-               lAccepted := .F.
-#endif
-
-            ELSEIF ( idxSubCategory := AScan( sc_hConstraint[ "categories" ][ idxCategory ][ 2 ], {| c | c != NIL .AND. iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) } ) ) == 0
-
-               AddErrorCondition( cFile, "Unrecognized SUBCATEGORY '" + sc_hConstraint[ "categories" ][ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
-#if 0
-               lAccepted := .F.
-#endif
-
+            IF idxCategory != NIL .AND. ;
+               ( idxSubCategory := AScan( sc_hConstraint[ "categories" ][ idxCategory ][ 1 ], {| c | c != NIL .AND. iif( HB_ISSTRING( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) } ) ) == 0
+               AddErrorCondition( cFile, "Unrecognized SUBCATEGORY '" + idxCategory + "'-" + cSection )
             ENDIF
 
          CASE o:IsField( "RETURNS" ) .AND. cSectionName == "RETURNS" .AND. ( ;
@@ -501,10 +597,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                Lower( cSection ) == "none" .OR. ;
                Lower( cSection ) == "none." )
 
-            AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + cSection + ")", aHandle[ 2 ] - 1 )
-#if 0
-            lAccepted := .F.
-#endif
+            AddErrorCondition( cFile, "'" + o:fld[ "NAME" ] + "' is identified as template " + hEntry[ "TEMPLATE" ] + " but has no RETURNS value (" + cSection + ")" )
 
          CASE ! o:IsConstraint( cSectionName, cSection )
 
@@ -513,332 +606,121 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             cSource := hb_HKeyAt( hsTemplate, idx ) + " should be one of: "
 #endif
             AEval( sc_hConstraint[ cSectionName ], {| c, n | cSource += iif( n == 1, "", "," ) + c } )
-            AddErrorCondition( cFile, cSource, aHandle[ 2 ] - 1 )
-
-         OTHERWISE
+            AddErrorCondition( cFile, cSource )
 
          ENDCASE
 
          IF lAccepted
-            o:&cSectionName := Decode( cSectionName, , cSection )
+            o:fld[ cSectionName ] := ExpandAbbrevs( cSectionName, cSection )
          ENDIF
       ELSE
-         AddErrorCondition( cFile, "Using template '" + o:Template + "' encountered an unexpected section '" + cSectionName, aHandle[ 2 ] )
+         AddErrorCondition( cFile, "Using template '" + hEntry[ "TEMPLATE" ] + "' encountered an unexpected section '" + cSectionName + "'", .T. )
          lAccepted := .F.
-      ENDIF
-   ENDDO
-
-   IF lAccepted .AND. ! o:IsComplete( @cSource )
-      AddErrorCondition( cFile, "Missing sections: '" + cSource + "'", aHandle[ 2 ] )
-#if 0
-      lAccepted := .F.
-#endif
-   ENDIF
-
-   IF ! lAccepted
-   ELSEIF o:Template == "Function" .AND. ( ;
-         Empty( o:Returns ) .OR. ;
-         Lower( o:Returns ) == "nil" .OR. ;
-         Lower( o:Returns ) == "none" .OR. ;
-         Lower( o:Returns ) == "none." )
-
-      AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + o:Returns + ")", aHandle[ 2 ] )
-#if 0
-      lAccepted := .F.
-#endif
-
-   ELSE
-
-      IF !( ;
-         /* Lower( hsBlock[ "CATEGORY" ] ) == "document" .OR. */ ;
-         /* ! ( hsBlock[ "SUBCODE" ] == "" ) .OR. */ ;
-         .F. )
-
-         cSectionName := Parse( Upper( o:Name ), "(" )
-
-         IF hb_AScan( s_hSwitches[ "hbextern.ch" ], cSectionName, , , .T. ) > 0
-            AAdd( s_hSwitches[ "in hbextern" ], cSectionName )
-         ELSE
-            AAdd( s_hSwitches[ "not in hbextern" ], cSectionName + "; " + cFile )
-         ENDIF
-
-#if 0
-         OutStd( "    > " + cSectionName + hb_eol() )
-#endif
-      ENDIF
-
-      IF s_hSwitches[ "include-doc-source" ]
-         o:Files += hb_eol() + o:sourcefile_ + iif( s_hSwitches[ "include-doc-version" ], " (" + o:sourcefileversion_ + ")", "" )
-      ENDIF
-
-      o:filename := Filename( o:Name )
-
-      AAdd( aContent, o )
-
-      IF idxSubCategory == -1 .AND. ( ! o:IsField( "SUBCATEGORY" ) .OR. ! o:IsRequired( "SUBCATEGORY" ) ) // .AND. idxSubCategory == -1
-         idxSubCategory := o:SubcategoryIndex( o:Category, "" )
-      ENDIF
-
-      IF idxCategory > 0 .AND. idxSubCategory > 0
-         IF ! HB_ISARRAY( sc_hConstraint[ "categories" ][ idxCategory ][ 3 ][ idxSubCategory ] )
-            sc_hConstraint[ "categories" ][ idxCategory ][ 3 ][ idxSubCategory ] := {}
-         ENDIF
-         AAdd( sc_hConstraint[ "categories" ][ idxCategory ][ 3 ][ idxSubCategory ], o )
-      ENDIF
-   ENDIF
-
-   RETURN
-
-STATIC FUNCTION FReadSection( aHandle, /* @ */ cSectionName, /* @ */ cSection, /* @ */ o )
-
-   LOCAL nPosition
-   LOCAL cBuffer
-   LOCAL nLastIndent
-   LOCAL lPreformatted := .F.
-   LOCAL lLastPreformatted
-
-   cSectionName := cSection := ""
-
-   IF FReadLn( aHandle, @cSectionName )
-      cSectionName := LTrim( SubStr( cSectionName, 3 ) )
-      IF Left( cSectionName, 1 ) == s_hSwitches[ "DELIMITER" ] .AND. ;
-         Right( cSectionName, 1 ) == s_hSwitches[ "DELIMITER" ]
-
-         cSectionName := SubStr( cSectionName, 1 + Len( s_hSwitches[ "DELIMITER" ] ), Len( cSectionName ) - ( 2 * Len( s_hSwitches[ "DELIMITER" ] ) ) )
-         IF o:IsField( cSectionName )
-            lLastPreformatted := lPreformatted := o:IsPreformatted( cSectionName )
-            nLastIndent := -1
-            DO WHILE ( nPosition := hb_vfSeek( aHandle[ 1 ], 0, FS_RELATIVE ) ), FReadLn( aHandle, @cBuffer )
-               /* TOFIX: this assumes that every line starts with " *" */
-               cBuffer := RTrim( SubStr( cBuffer, 3 ) )
-               IF Left( LTrim( cBuffer ), 1 ) == s_hSwitches[ "DELIMITER" ] .AND. ;
-                  Right( cBuffer, 1 ) == s_hSwitches[ "DELIMITER" ]
-                  hb_vfSeek( aHandle[ 1 ], nPosition, FS_SET )
-                  aHandle[ 2 ]-- /* decrement the line number when rewinding the file */
-                  EXIT
-               ELSEIF Len( AllTrim( cBuffer ) ) == 0
-                  IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() )
-                     cSection += hb_eol()
-                  ENDIF
-                  nLastIndent := -1
-               ELSEIF AllTrim( cBuffer ) == "<table>"
-                  IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() ) .OR. lPreformatted
-                     cSection += hb_eol()
-                  ENDIF
-                  cSection += "<table>" // + hb_eol()
-                  lLastPreformatted := lPreformatted
-                  lPreformatted := .T.
-               ELSEIF AllTrim( cBuffer ) == "</table>"
-                  IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() ) .OR. lPreformatted
-                     cSection += hb_eol()
-                  ENDIF
-                  cSection += "</table>" + hb_eol()
-                  lPreformatted := lLastPreformatted
-               ELSEIF nLastIndent != ( Len( cBuffer ) - Len( LTrim( cBuffer ) ) ) .OR. lPreformatted .OR. Right( cBuffer, Len( "</par>" ) ) == "</par>"
-                  IF Right( cBuffer, Len( "</par>" ) ) == "</par>"
-                     cBuffer := hb_StrShrink( cBuffer, Len( "</par>" ) )
-                  ENDIF
-                  nLastIndent := ( Len( cBuffer ) - Len( LTrim( cBuffer ) ) )
-                  IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() )
-                     cSection += hb_eol()
-                  ENDIF
-                  cSection += iif( lPreformatted, cBuffer, AllTrim( cBuffer ) )
-               ELSE
-                  cSection += " " + AllTrim( cBuffer )
-               ENDIF
-            ENDDO
-         ENDIF
-      ENDIF
-   ELSE
-      RETURN .F.
-   ENDIF
-
-   DO WHILE hb_LeftEq( cSection, hb_eol() )
-      cSection := SubStr( cSection, Len( hb_eol() ) + 1 )
-   ENDDO
-
-   DO WHILE Right( cSection, Len( hb_eol() ) ) == hb_eol()
-      cSection := hb_StrShrink( cSection, Len( hb_eol() ) )
-   ENDDO
-
-   IF lPreformatted .AND. Lower( Right( cSection, Len( "</fixed>" ) ) ) == "</fixed>"
-      cSection := hb_StrShrink( cSection, Len( "</fixed>" ) )
-      DO WHILE Right( cSection, Len( hb_eol() ) ) == hb_eol()
-         cSection := hb_StrShrink( cSection, Len( hb_eol() ) )
-      ENDDO
-   ENDIF
-
-   RETURN .T.
-
-STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
-
-   LOCAL aHandle := { NIL, 0 }
-   LOCAL cBuffer
-   LOCAL lCloseFile := .F.
-
-   hb_default( @nMaxLine, 256 )
-
-   DO CASE
-   CASE HB_ISSTRING( acFile )
-      lCloseFile := .T.
-      IF ( aHandle[ 1 ] := hb_vfOpen( acFile, FO_READ ) ) == NIL
-         RETURN
-      ENDIF
-   OTHERWISE
-      aHandle := acFile
-   ENDCASE
-
-   DO WHILE FReadLn( aHandle, @cBuffer, nMaxLine )
-      IF ! hb_defaultValue( Eval( bBlock, cBuffer ), .T. )
-         EXIT
-      ENDIF
-   ENDDO
-
-   IF lCloseFile
-      hb_vfClose( aHandle[ 1 ] )
-   ENDIF
-
-   RETURN
-
-STATIC FUNCTION FReadLn( aHandle, /* @ */ cBuffer, nMaxLine )
-
-   STATIC s_aEOL := { Chr( 13 ) + Chr( 10 ), Chr( 10 ), Chr( 13 ) }
-
-   LOCAL cLine, nSavePos, nEol, nNumRead, nLenEol, cEOL
-
-   cBuffer := ""
-
-   nSavePos := hb_vfSeek( aHandle[ 1 ], 0, FS_RELATIVE )
-   cLine := Space( hb_defaultValue( nMaxLine, 256 ) )
-   nNumRead := hb_vfRead( aHandle[ 1 ], @cLine, hb_BLen( cLine ) )
-   cLine := hb_BLeft( cLine, nNumRead )
-
-   nEol := 0
-   FOR EACH cEOL IN s_aEOL
-      IF ( nEol := hb_BAt( cEOL, cLine ) ) > 0
-         nLenEol := hb_BLen( cEOL ) - 1
-         EXIT
       ENDIF
    NEXT
 
-   IF nEol == 0
-      cBuffer := cLine
-   ELSE
-      cBuffer := hb_BLeft( cLine, nEol - 1 )
-      hb_vfSeek( aHandle[ 1 ], nSavePos + hb_BLen( cBuffer ) + 1 + nLenEol, FS_SET )
+   /* Verify entry-wide constraints */
+   IF lAccepted
+
+      DO CASE
+      CASE ! o:IsComplete( @cSource )
+         AddErrorCondition( cFile, "Missing sections: '" + cSource + "'" )
+#if 0
+         lAccepted := .F.
+#endif
+      CASE hEntry[ "TEMPLATE" ] == "Function" .AND. ( ;
+         Empty( o:fld[ "RETURNS" ] ) .OR. ;
+         Lower( o:fld[ "RETURNS" ] ) == "nil" .OR. ;
+         Lower( o:fld[ "RETURNS" ] ) == "none" .OR. ;
+         Lower( o:fld[ "RETURNS" ] ) == "none." )
+
+         AddErrorCondition( cFile, "'" + o:fld[ "NAME" ] + "' is identified as template " + hEntry[ "TEMPLATE" ] + " but has no RETURNS value (" + o:fld[ "RETURNS" ] + ")" )
+#if 0
+         lAccepted := .F.
+#endif
+      ENDCASE
    ENDIF
 
-   aHandle[ 2 ]++
+   IF lAccepted
 
-   RETURN nNumRead > 0
+      IF !( Lower( hEntry[ "CATEGORY" ] ) == "document" )
+         cSectionName := Parse( o:fld[ "NAME" ], "(" )
+         IF ! cSectionName $ s_hSwitches[ "hHBX" ]
+            AddErrorCondition( cFile, "Not found in HBX: " + cSectionName + " " + cComponent )
+         ENDIF
+      ENDIF
 
-STATIC FUNCTION Decode( cType, hsBlock, cKey )
+      IF s_hSwitches[ "include-doc-source" ]
+         o:Files += hb_eol() + o:_sourcefile
+      ENDIF
 
-   LOCAL cCode
+      o:_filename := Filename( o:fld[ "NAME" ] )
+
+      AAdd( aContent, o )
+
+      IF ! cComponent $ s_hComponent
+         s_hComponent[ cComponent ] := NIL
+      ENDIF
+
+      IF idxCategory != NIL
+         IF idxSubCategory == -1 .AND. ( ! o:IsField( "SUBCATEGORY" ) .OR. ! o:IsRequired( "SUBCATEGORY" ) )
+            idxSubCategory := o:SubcategoryIndex( o:fld[ "CATEGORY" ], "" )
+         ENDIF
+         IF idxSubCategory > 0
+            AAdd( sc_hConstraint[ "categories" ][ idxCategory ][ 2 ][ idxSubCategory ], o )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION ExpandAbbrevs( cSectionName, cCode )
+
    LOCAL cResult
-   LOCAL idx
 
-   IF cKey != NIL .AND. HB_ISHASH( hsBlock ) .AND. cKey $ hsBlock
-      cCode := hsBlock[ cKey ]
-   ELSE
-      cCode := cKey
-   ENDIF
-
-   SWITCH cType
+   SWITCH cSectionName
    CASE "STATUS"
-      IF "," $ cCode .AND. hb_AScan( sc_hConstraint[ "status" ], Parse( cCode, "," ), , , .T. ) > 0
+      IF "," $ cCode .AND. Parse( cCode, "," ) $ sc_hConstraint[ "status" ]
          cResult := ""
          DO WHILE ! HB_ISNULL( cCode )
-            cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
+            cResult += hb_eol() + ExpandAbbrevs( cSectionName, Parse( @cCode, "," ) )
          ENDDO
          RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
       ENDIF
 
-      IF ( idx := AScan( sc_hConstraint[ "status" ], {| a | a[ 1 ] == cCode } ) ) > 0
-         RETURN sc_hConstraint[ "status" ][ idx ][ 2 ]
+      IF cCode $ sc_hConstraint[ "status" ]
+         RETURN sc_hConstraint[ "status" ][ cCode ]
       ELSEIF Len( cCode ) > 1
          RETURN cCode
       ELSEIF ! HB_ISNULL( cCode )
          RETURN "Unrecognized 'STATUS' code: '" + cCode + "'"
       ELSE
-         RETURN ATail( sc_hConstraint[ "status" ] )[ 2 ]
+         RETURN sc_hConstraint[ "status" ][ "N" ]
       ENDIF
 
    CASE "PLATFORMS"
-      IF "," $ cCode .AND. hb_AScan( sc_hConstraint[ "platforms" ], Parse( cCode, "," ), , , .T. ) > 0
-         cResult := ""
-         DO WHILE ! HB_ISNULL( cCode )
-            cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
-         ENDDO
-         RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
-      ENDIF
-
-      IF ( idx := AScan( sc_hConstraint[ "platforms" ], {| a | a[ 1 ] == cCode } ) ) > 0
-         RETURN sc_hConstraint[ "platforms" ][ idx ][ 2 ]
-      ELSE
-         RETURN cCode
-      ENDIF
+      cResult := ""
+      FOR EACH cCode IN hb_ATokens( cCode, "," )
+         IF ! HB_ISNULL( cCode := AllTrim( cCode ) )
+            cResult += hb_eol() + hb_HGetDef( sc_hConstraint[ "platforms" ], cCode, cCode )
+         ENDIF
+      NEXT
+      RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
 
    CASE "COMPLIANCE"
-      IF "," $ cCode .AND. hb_AScan( sc_hConstraint[ "compliance" ], Parse( cCode, "," ), , , .T. ) > 0
+      IF "," $ cCode .AND. Parse( cCode, "," ) $ sc_hConstraint[ "compliance" ]
          cResult := ""
          DO WHILE ! HB_ISNULL( cCode )
-            cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
+            cResult += hb_eol() + ExpandAbbrevs( cSectionName, Parse( @cCode, "," ) )
          ENDDO
          RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
       ENDIF
 
-      IF ( idx := AScan( sc_hConstraint[ "compliance" ], {| a | a[ 1 ] == cCode } ) ) > 0
-         RETURN sc_hConstraint[ "compliance" ][ idx ][ 2 ]
-      ELSE
-         RETURN cCode
-      ENDIF
-
-      SWITCH cCode
-      CASE "C" ;        RETURN "This is CA-Cl*pper v5.2 compliant"
-      CASE "C(array)" ; RETURN "This is CA-Cl*pper v5.2 compliant except that arrays in Harbour can have an unlimited number of elements"
-      CASE "C(menu)" ;  RETURN "This is CA-Cl*pper v5.2 compliant except that menus (internally arrays) in Harbour can have an unlimited number of elements"
-      CASE "C52U" ;     RETURN "This is an undocumented CA-Cl*pper v5.2 function and is only visible if source was compiled with the HB_CLP_UNDOC flag"
-      CASE "C52S" ;     RETURN "? verbage: This is an CA-Cl*pper v5.2 compliant and is only visible if source was compiled with the HB_CLP_STRICT flag"
-      CASE "C53" ;      RETURN "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag"
-      CASE "H" ;        RETURN "This is Harbour specific"
-      CASE "NA" ;       RETURN "Not applicable"
-      OTHERWISE ;       RETURN cCode
-      ENDSWITCH
-
-   CASE "NAME"
-      IF hsBlock == NIL
-         RETURN cCode
-      ELSEIF !( "RETURNS" $ hsBlock )
-         RETURN hsBlock[ "NAME" ]
-      ELSEIF Empty( hsBlock[ "RETURNS" ] ) .OR. ;
-         Upper( hsBlock[ "RETURNS" ] ) == "NIL" .OR. ;
-         Lower( hsBlock[ "RETURNS" ] ) == "none" .OR. ;
-         Lower( hsBlock[ "RETURNS" ] ) == "none."
-
-         hsBlock[ "RETURNS" ] := ""
-
-         DO CASE
-         CASE Lower( hsBlock[ "CATEGORY" ] ) == "document"
-            RETURN hsBlock[ "NAME" ]
-         CASE Lower( hsBlock[ "TEMPLATE" ] ) == "function" .OR. ;
-              Lower( hsBlock[ "TEMPLATE" ] ) == "procedure"
-            RETURN "Procedure " + hsBlock[ "NAME" ]
-         OTHERWISE
-            RETURN LTrim( hsBlock[ "SUBCATEGORY" ] + " " ) + hsBlock[ "CATEGORY" ] + " " + hsBlock[ "NAME" ]
-         ENDCASE
-      ELSE
-         DO CASE
-         CASE ! Empty( hsBlock[ "NAME" ] )
-            RETURN "Function " + hsBlock[ "NAME" ]
-         OTHERWISE
-            RETURN "Unrecognized 'CATEGORY': " + hsBlock[ "CATEGORY" ]
-         ENDCASE
-      ENDIF
+      RETURN hb_HGetDef( sc_hConstraint[ "compliance" ], cCode, cCode )
 
    ENDSWITCH
 
-   RETURN /* cType + "=" + */ cCode
+   RETURN cCode
 
 STATIC PROCEDURE ShowSubHelp( xLine, /* @ */ nMode, nIndent, n )
 
@@ -867,11 +749,12 @@ STATIC PROCEDURE ShowSubHelp( xLine, /* @ */ nMode, nIndent, n )
    RETURN
 
 STATIC FUNCTION HBRawVersion()
-   RETURN hb_StrFormat( "%d.%d.%d%s (%s)", ;
+   RETURN hb_StrFormat( "%d.%d.%d%s (%s) (%s)", ;
       hb_Version( HB_VERSION_MAJOR ), ;
       hb_Version( HB_VERSION_MINOR ), ;
       hb_Version( HB_VERSION_RELEASE ), ;
       hb_Version( HB_VERSION_STATUS ), ;
+      hb_Version( HB_VERSION_ID ), ;
       "20" + Transform( hb_Version( HB_VERSION_REVISION ), "99-99-99 99:99" ) )
 
 STATIC PROCEDURE ShowHelp( cExtraMessage, aArgs )
@@ -893,21 +776,20 @@ STATIC PROCEDURE ShowHelp( cExtraMessage, aArgs )
          "", ;
          "Options:", ;
          { ;
-            "-? or --help                    this screen", ;
-            "-? <option> or --help <option>  help on <option>, <option> is one of:", ;
+            "-h or --help                    this screen", ;
+            "-h <option> or --help <option>  help on <option>, <option> is one of:", ;
             2, ;
             { "Categories", "Templates", "Compliance", "Platforms" }, ;
             1, ;
             "-[format=]<type>                output type, default is text, or one of:", ;
             2, ;
-            s_hSwitches[ "format-list" ], ;
+            hb_HKeys( s_generators ), ;
             1, ;
             "-output-single                  output is one file" + IsDefault( s_hSwitches[ "output" ] == "single" ), ;
             "-output-category                output is one file per category" + IsDefault( s_hSwitches[ "output" ] == "category" ), ;
             "-output-entry                   output is one file per entry (function, command, etc)" + IsDefault( s_hSwitches[ "output" ] == "entry" ), ;
             "-source=<directory>             source directory, default is .." + hb_ps() + "..", ;
             "-include-doc-source             output is to indicate the document source file name", ;
-            "-include-doc-version            output is to indicate the document source file version" ;
          } }
 
    CASE aArgs[ 2 ] == "Categories"
@@ -968,15 +850,15 @@ STATIC FUNCTION Join( aVar, cDelimiter )
 
    RETURN cResult
 
-STATIC PROCEDURE AddErrorCondition( cFile, cMessage, nLine )
+STATIC PROCEDURE AddErrorCondition( cFile, cMessage, lFatal )
 
-   IF s_hSwitches[ "immediate-errors" ]
-      OutStd( cFile + ":" + hb_ntos( nLine ) + ":", cMessage + hb_eol() )
+   IF s_hSwitches[ "immediate-errors" ] .OR. hb_defaultValue( lFatal, .F. )
+      OutStd( cFile + ":", cMessage + hb_eol() )
    ENDIF
 
    RETURN
 
-FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
+FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw, lForceRaw )
 
    LOCAL cResult := ""
    LOCAL idx
@@ -985,6 +867,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
    LOCAL aText := hb_ATokens( cText, .T. )
 
    hb_default( @lRaw, .F. )
+   hb_default( @lForceRaw, .F. )
 
    IF nWidth == 0 .OR. lRaw
       idx := 99999
@@ -993,12 +876,12 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
       cResult := Join( aText, hb_eol() ) + hb_eol() + hb_eol()
    ELSE
       FOR EACH cLine IN aText
-         IF cLine == "<table>"
+         IF hb_LeftEq( cLine, "<table" ) .OR. cLine == "<fixed>"
             lRaw := .T.
-         ELSEIF cLine == "</table>"
+         ELSEIF cLine == "</table>" .OR. cLine == "</fixed>"
             cResult += hb_eol()
             lRaw := .F.
-         ELSEIF lRaw
+         ELSEIF lRaw .OR. lForceRaw
             cResult += Space( nLeftMargin ) + LTrim( cLine ) + hb_eol()
          ELSE
             DO WHILE Len( cLine ) > nWidth
@@ -1053,53 +936,148 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
 
    RETURN cResult
 
-STATIC FUNCTION Filename( cFile, cFormat, nLength )
+STATIC FUNCTION Filename( cFile )
 
-   STATIC s_aFiles := {}
+   STATIC s_hFiles := { => }
 
    LOCAL cResult := ""
-   LOCAL idx
-   LOCAL char
+   LOCAL idx, tmp
 
-#ifdef __PLATFORM__DOS
-   hb_default( @nLength, 8 )
-#else
-   hb_default( @nLength, 0 )
-#endif
+   cFile := Lower( cFile )
 
-   IF Lower( hb_defaultValue( cFormat, "alnum" ) ) == "alnum"
-      FOR idx := 1 TO Len( cFile )
-         char := SubStr( cFile, idx, 1 )
-         IF hb_asciiIsDigit( char ) .OR. hb_asciiIsAlpha( char ) .OR. char == "_"
-            cResult += Lower( char )
-            IF nLength > 0 .AND. Len( cResult ) == nLength
-               EXIT
-            ENDIF
-         ENDIF
-      NEXT
-   ELSE
-      cResult := cFile
-   ENDIF
+   FOR idx := 1 TO Len( cFile )
+      tmp := SubStr( cFile, idx, 1 )
+      IF hb_asciiIsDigit( tmp ) .OR. hb_asciiIsAlpha( tmp ) .OR. tmp == "_"
+         cResult += tmp
+      ENDIF
+   NEXT
 
-   IF hb_AScan( s_aFiles, cResult, , , .T. ) == 0
-      AAdd( s_aFiles, cResult )
-   ELSE
-#ifdef __PLATFORM__DOS
-      cResult := hb_StrShrink( cResult, 3 )
-#endif
+   IF cResult $ s_hFiles
       idx := 0
-      DO WHILE hb_AScan( s_aFiles, cResult + StrZero( ++idx, 3 ), , , .T. ) > 0
+      DO WHILE ( tmp := cResult + "_" + StrZero( ++idx, 3 ) ) $ s_hFiles
       ENDDO
-      cResult += StrZero( idx, 3 )
-      AAdd( s_aFiles, cResult )
+      cResult := tmp
    ENDIF
+
+   s_hFiles[ cResult ] := NIL
 
    RETURN cResult
 
+/* a class that will hold one entry */
+CREATE CLASS Entry
+
+   METHOD New( cTemplate )
+   METHOD IsField( cField, nType )
+   METHOD IsConstraint( cField, cSection )
+   METHOD IsComplete( cIncompleteFieldsList )
+   METHOD IsPreformatted( cField )
+   METHOD IsRequired( cField )
+   METHOD IsOptional( cField )
+   METHOD IsOutput( cField )
+   METHOD SubcategoryIndex( cCategory, cSubcategory )
+
+   VAR fld AS HASH
+
+   VAR _group AS ARRAY
+   VAR _filename AS STRING
+   VAR _type AS STRING
+   VAR _sourcefile AS STRING
+   VAR _tags AS HASH
+
+ENDCLASS
+
+METHOD New( cTemplate ) CLASS Entry
+
+   LOCAL item, key, idx
+
+   ::fld := { => }
+   hb_HCaseMatch( ::fld, .F. )
+   hb_HEval( sc_hFields, {| k | ::fld[ k ] := "" } )
+
+   ::_group := sc_hTemplates[ cTemplate ]
+
+   FOR EACH item IN sc_hFields
+      key := item:__enumKey()
+      idx := item:__enumIndex()
+      ::fld[ key ] := iif( key == "TEMPLATE", cTemplate, iif( ::_group[ idx ] == TPL_REQUIRED,, "" ) )
+   NEXT
+
+   RETURN self
+
+METHOD IsField( cField, nType ) CLASS Entry
+
+   LOCAL idx
+
+   IF ( idx := hb_HPos( sc_hFields, cField ) ) > 0
+      IF ::_group[ idx ] == 0
+      ELSEIF HB_ISNUMERIC( nType ) .AND. hb_bitAnd( ::_group[ idx ], nType ) != nType
+      ELSE
+         RETURN .T.
+      ENDIF
+   ENDIF
+
+   RETURN .F.
+
+METHOD IsConstraint( cField, cSection ) CLASS Entry
+
+   IF hb_bitAnd( ::_group[ hb_HPos( sc_hFields, cField ) ], hb_bitAnd( TPL_REQUIRED, TPL_OPTIONAL ) ) == 0
+      RETURN .T.
+   ELSEIF cField $ sc_hConstraint
+      RETURN ;
+         cSection $ sc_hConstraint[ cField ] .OR. ;
+         Parse( cSection, "," ) $ sc_hConstraint[ cField ]
+   ENDIF
+
+   RETURN .T.
+
+METHOD IsComplete( cIncompleteFieldsList ) CLASS Entry
+
+   LOCAL lResult := .T.
+   LOCAL idx, key
+
+   cIncompleteFieldsList := ""
+
+   FOR idx := 1 TO Len( sc_hFields )
+      key := hb_HKeyAt( sc_hFields, idx )
+      IF hb_bitAnd( ::_group[ idx ], TPL_REQUIRED ) != 0 .AND. Empty( ::fld[ key ] )
+         cIncompleteFieldsList += "," + key
+         lResult := .F.
+      ENDIF
+   NEXT
+
+   cIncompleteFieldsList := SubStr( cIncompleteFieldsList, 2 )
+
+   RETURN lResult
+
+METHOD IsPreformatted( cField ) CLASS Entry
+   LOCAL nGroup := hb_HPos( sc_hFields, cField )
+   RETURN nGroup > 0 .AND. hb_bitAnd( ::_group[ nGroup ], TPL_PREFORMATTED ) != 0
+
+METHOD IsRequired( cField ) CLASS Entry
+   RETURN hb_bitAnd( ::_group[ hb_HPos( sc_hFields, cField ) ], TPL_REQUIRED ) != 0
+
+METHOD IsOptional( cField ) CLASS Entry
+   RETURN hb_bitAnd( ::_group[ hb_HPos( sc_hFields, cField ) ], TPL_OPTIONAL ) != 0
+
+METHOD IsOutput( cField ) CLASS Entry
+   RETURN hb_bitAnd( ::_group[ hb_HPos( sc_hFields, cField ) ], TPL_OUTPUT ) != 0
+
+METHOD SubcategoryIndex( cCategory, cSubcategory ) CLASS Entry
+   RETURN iif( cCategory $ sc_hConstraint[ "categories" ], ;
+      hb_AScan( sc_hConstraint[ "categories" ][ cCategory ][ 1 ], cSubcategory, , , .T. ), ;
+      0 )
+
+FUNCTION FieldIDList()
+   RETURN hb_HKeys( sc_hFields )
+
+FUNCTION FieldCaption( cName )
+   RETURN sc_hFields[ cName ]
+
 STATIC PROCEDURE init_Templates()
 
-   LOCAL item
+   LOCAL item, tmp
    LOCAL aSubCategories := { ;
+      "", ;
       "Application", ;
       "Array", ;
       "Classes", ;
@@ -1133,116 +1111,144 @@ STATIC PROCEDURE init_Templates()
       "Variable management", ;
       "Virtual machine" }
 
-   LOCAL aCategories := { ;
-      { "Document", { "License", "Compiler", "" } }, ;
-      { "API", AClone( aSubCategories ) }, ;
-      { "C level API", AClone( aSubCategories ) }, ;
-      { "C level API compatability", AClone( aSubCategories ) }, ;
-      { "Class", { ;
-            "", ;
-            "Access", ;
-            "Assign", ;
-            "Constructor", ;
-            "Data", ;
-            "Definition", ;
-            "Destructor", ;
-            "Method", ;
-            "Var" } }, ;
-      { "Command", AClone( aSubCategories ) }, ;
-      /* { "Compile time errors", { {} } }, */ ;
-      { "Run time errors", { "" } } }
+   sc_hConstraint := { => }
+   hb_HCaseMatch( sc_hConstraint, .F. )
 
-   LOCAL aCompliance := { ;
-      { "",         "" }, ;
-      { "C",        "This is CA-Cl*pper v5.2 compliant" }, ;
-      { "C(array)", "This is CA-Cl*pper v5.2 compliant except that arrays in Harbour can have an unlimited number of elements" }, ;
-      { "C(menu)",  "This is CA-Cl*pper v5.2 compliant except that menus (internally arrays) in Harbour can have an unlimited number of elements" }, ;
-      { "C(arrayblock)",  "Codeblock calling frequency and order differs from  CA-Cl*pper, since Harbour uses a different (faster) sorting algorithm (quicksort)" }, ;
-      { "C52S",     "? verbage: This is an CA-Cl*pper v5.2 compliant and is only visible if source was compiled with the HB_C52_STRICT flag" }, ;
-      { "C52U",     "This is an undocumented CA-Cl*pper v5.2 function and is only visible if source was compiled with the HB_C52_UNDOC flag" }, ;
-      { "C53",      "This is CA-Cl*pper v5.3 compliant and is only visible if source was compiled with the HB_COMPAT_C53 flag" }, ;
-      { "H",        "This is Harbour specific" }, ;
-      { "NA",       "Not applicable" } }
+   sc_hConstraint[ "categories" ] := { ;
+      "Document"                  => { { "License", "Compiler", "" } }, ;
+      "API"                       => { AClone( aSubCategories ) }, ;
+      "C level API"               => { AClone( aSubCategories ) }, ;
+      "C level API compatability" => { AClone( aSubCategories ) }, ;
+      "Class"                     => { { ;
+          "", ;
+          "Access", ;
+          "Assign", ;
+          "Constructor", ;
+          "Data", ;
+          "Definition", ;
+          "Destructor", ;
+          "Method", ;
+          "Var" } }, ;
+      "Command"                   => { AClone( aSubCategories ) }, ;
+      /* "Compile time errors"    => { { "" } }, */ ;
+      "Run time errors"           => { { "" } } }
 
-   LOCAL aPlatforms := { ;
-      { "",          "" }, ;
-      { "All",       "This is available on all platforms" }, ;
-      { "All(GT)",   "This part of the GT API and supported only by some platforms." }, ;
-      { "All(LFN)",  "This is available on all platforms." + hb_eol() + ;
-                     "If long file names are available Harbour will use/display the first 15 characters " +;
-                     "else Harbour will use/display a 8.3 file name consistent with CA-Cl*pper" }, ;
-      { "Linux(GT)", "Under Linux the number of columns avaliable depends of the current Terminal screen size." }, ;
-      { "OS2(GT)",   "Under OS/2 the number of columns avaliable depends of the current Terminal screen size." }, ;
-      { "Win(GT)",   "Under Windows, the return value of MaxRow() function is only affected if called after an SetMode() function" }, ;
-      { "BSD",       "This is available on the BSD platform" }, ;
-      { "DARWIN",    "This is available on the Darwin platform" }, ;
-      { "DOS",       "This is available on the MS-DOS platform" }, ;
-      { "HPUX",      "This is available on the HPUX platform" }, ;
-      { "LINUX",     "This is available on the Linux platform" }, ;
-      { "OS2",       "This is available on the OS/2 platform" }, ;
-      { "SUNOS",     "This is available on the SunOS platform" }, ;
-      { "Unix",      "This is available on the Unix platform(s)" }, ;
-      { "Win",       "This is available on the Windows platform(s)" }, ;
-      { "WinCE",     "This is available on the Windows CE platform" } }
+   hb_HCaseMatch( sc_hConstraint[ "categories" ], .F. )
 
-   LOCAL aStatus := { ;
-      { "",  "" }, ;
-      { "R", "Ready" }, ;
-      { "S", "Started" }, ;
-      { "N", "Not started" } }
-
-   FOR EACH item IN aCategories
-      IF ! Empty( item )
-         AAdd( item, Array( Len( item[ 2 ] ) ) )  /* holder array of sub-category entries */
-         AAdd( item, "" )  /* holder for sub-category file name */
-      ENDIF
+   FOR EACH item IN sc_hConstraint[ "categories" ]
+      AAdd( item, Array( Len( item[ 1 ] ) ) )  /* holder array of sub-category entries */
+      FOR EACH tmp IN ATail( item )
+         tmp := {}
+      NEXT
+      AAdd( item, "" )  /* holder for sub-category file name */
    NEXT
 
-   sc_hConstraint := { ;
-      "categories" => aCategories, ;
-      "compliance" => aCompliance, ;
-      "platforms" => aPlatforms, ;
-      "status" => aStatus }
+   sc_hConstraint[ "compliance" ] := { ;
+      "C"       => "CA-Cl*pper v5.x compatible", ;
+      "C52S"    => "CA-Cl*pper v5.x compatible in builds with HB_CLP_STRICT option enabled", ;
+      "C52U"    => "Undocumented CA-Cl*pper v5.x function only available in builds with HB_CLP_UNDOC option enabled (default)", ;
+      "C53"     => "CA-Cl*pper v5.3 function only available in builds with HB_COMPAT_C53 option enabled (default)", ;
+      "H"       => "Harbour specific", ;
+      "NA"      => "Not applicable" }
 
-   hb_HCaseMatch( sc_hConstraint, .F. )
+   sc_hConstraint[ "platforms" ] := { ;
+      "All"     => "Available on all platforms", ;
+      "Unix"    => "Available on Unix platform(s)", ;
+      "Linux"   => "Available on Linux", ;
+      "Windows" => "Available on Windows", ;
+      "OS2"     => "Available on OS/2", ;
+      "DOS"     => "Available on MS-DOS" }
+
+   sc_hConstraint[ "status" ] := { ;
+      "R" => "Ready", ;
+      "S" => "Started", ;
+      "N" => "Not started" }
+
+   sc_hFields := { ;
+      "DOC"           => "Doc", ;
+      "TEMPLATE"      => "Template", ;
+      "NAME"          => "", ;
+      "ONELINER"      => "", ;
+      "CATEGORY"      => "Category", ;
+      "SUBCATEGORY"   => "Sub category", ;
+      "SYNTAX"        => "Syntax", ;
+      "ARGUMENTS"     => "Argument(s)", ;
+      "RETURNS"       => "Returns", ;
+      "DESCRIPTION"   => "Description", ;
+      "DATALINK"      => "Data link", ;
+      "DATANOLINK"    => "Data no link", ;
+      "METHODSLINK"   => "Methods link", ;
+      "METHODSNOLINK" => "Methods no link", ;
+      "EXAMPLES"      => "Example(s)", ;
+      "TESTS"         => "Test(s)", ;
+      "STATUS"        => "Status", ;       /* sc_hConstraint[ "status" ] is the constraint list */
+      "COMPLIANCE"    => "Compliance", ;   /* sc_hConstraint[ "compliance" ] is the constraint list */
+      "PLATFORMS"     => "Platform(s)", ;  /* sc_hConstraint[ "platforms" ] is the constraint list */
+      "FILES"         => "File(s)", ;
+      "TAGS"          => "Tag(s)", ;
+      "SEEALSO"       => "See also", ;
+      "END"           => "End" }
+
+   hb_HCaseMatch( sc_hFields, .F. )
+
+   #define _S TPL_START
+   #define _E TPL_END
+   #define _T TPL_TEMPLATE
+   #define _R TPL_REQUIRED
+   #define _O TPL_OPTIONAL
+   #define _P TPL_PREFORMATTED
+   #define _U TPL_OUTPUT
+
+   /* The columns of this array correspond to the elements of sc_hFields */
+   sc_hTemplates := { ;
+      "Template"       => { _S, _T,  0+_U,  0+_U,  0, _O,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0   +_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U, _E }, ;
+      "Document"       => { _S, _T, _R+_U, _O+_U, _R, _O,  0+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0   +_U,  0   +_U,  0+_U,  0+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E }, ;
+      "Function"       => { _S, _T, _R+_U, _O+_U, _R, _R, _O+_U, _O+_U, _O+_U, _O+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E }, ;
+      "C Function"     => { _S, _T, _R+_U, _O+_U, _R, _R, _O+_U, _O+_U, _O+_U, _O+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E }, ;
+      "Procedure"      => { _S, _T, _R+_U, _O+_U, _R, _R, _O+_U, _O+_U,     0, _O+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E }, ;
+      "Command"        => { _S, _T, _R+_U, _O+_U, _R, _R, _R+_U, _R+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E }, ;
+      "Class"          => { _S, _T, _R+_U, _O+_U, _R, _R, _R+_U, _R+_U, _R+_U, _R+_U, _O+_U, _O+_U, _O+_U, _O+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E }, ;
+      "Class method"   => { _S, _T, _R+_U, _O+_U, _R, _R, _R+_U, _R+_U, _R+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U, _O+_U, _O+_U, _E }, ;
+      "Class data"     => { _S, _T, _R+_U, _O+_U, _R, _R, _R+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U, _O+_U, _O+_U, _E }, ;
+      "Run time error" => { _S, _T, _R+_U, _O+_U, _R,  0,  0+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U, _O+_U,  0+_U,  0+_U, _O+_U, _O+_U, _E } }
 
    RETURN
 
 STATIC PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
 
-   LOCAL o := Entry():New( , sc_hConstraint )
-   LOCAL idxTemplates, nFrom := 1, nTo := Len( o:Templates )
-   LOCAL idx
+   LOCAL idxTemplates, nFrom := 1, nTo := Len( sc_hTemplates )
+   LOCAL idx, key, fldkey, o
 
    IF ! Empty( cTemplate ) .AND. !( cTemplate == "Template" )
-      IF o:IsTemplate( cTemplate )
-         nFrom := nTo := AScan( o:Templates, {| a | Upper( a[ 1 ] ) == Upper( cTemplate ) } )
-      ELSE
+      nFrom := nTo := hb_HPos( sc_hTemplates, cTemplate )
+      IF nFrom == 0
          ShowHelp( "Unrecognized template '" + cTemplate + "'" )
          RETURN
       ENDIF
    ENDIF
 
    FOR idxTemplates := nFrom TO nTo
-      IF ! Empty( o:Templates[ idxTemplates ] ) .AND. ;
-         ! Empty( o:Templates[ idxTemplates ][ 1 ] ) .AND. ;
-         !( o:Templates[ idxTemplates ][ 1 ] == "Template" )
+
+      key := hb_HKeyAt( sc_hTemplates, idxTemplates )
+
+      IF !( key == "Template" )
 
 #if 0
          IF nFrom != nTo
-            ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
+            ShowSubHelp( key, 1, 0 )
          ENDIF
 #endif
 
-         o:SetTemplate( o:Templates[ idxTemplates ][ 1 ] )
+         o := Entry():New( key )
 
-         FOR idx := 1 TO Len( o:Fields )
-            IF o:Group[ idx ] != 0
-               ShowSubHelp( iif( idx == 1, "/", " " ) + "*  " + cDelimiter + o:Fields[ idx ][ 1 ] + cDelimiter, 1, 0 )
-               IF o:Fields[ idx ][ 1 ] == "TEMPLATE"
-                  ShowSubHelp( " *      " + o:Template, 1, 0 )
-               ELSEIF o:Group[ idx ] != TPL_START .AND. o:Group[ idx ] != TPL_END .AND. .T.
-                  ShowSubHelp( " *      " + iif( o:IsRequired( o:Fields[ idx ][ 1 ] ), "<required>", "<optional>" ), 1, 0 )
+         FOR idx := 1 TO Len( sc_hFields )
+            fldkey := hb_HKeyAt( sc_hFields, idx )
+            IF o:_group[ idx ] != 0
+               ShowSubHelp( iif( idx == 1, "/", " " ) + "*  " + cDelimiter + fldkey + cDelimiter, 1, 0 )
+               IF fldkey == "TEMPLATE"
+                  ShowSubHelp( " *      " + o:fld[ "TEMPLATE" ], 1, 0 )
+               ELSEIF o:_group[ idx ] != TPL_START .AND. o:_group[ idx ] != TPL_END .AND. .T.
+                  ShowSubHelp( " *      " + iif( o:IsRequired( fldkey ), "<required>", "<optional>" ), 1, 0 )
                ENDIF
             ENDIF
          NEXT
@@ -1258,8 +1264,8 @@ STATIC PROCEDURE ShowComplianceHelp()
    LOCAL item
 
    FOR EACH item IN sc_hConstraint[ "compliance" ]
-      ShowSubHelp( item[ 1 ], 1, 0, item:__enumIndex() )
-      ShowSubHelp( Decode( "COMPLIANCE", , item[ 1 ] ), 1, 6, item:__enumIndex() )
+      ShowSubHelp( item:__enumKey(), 1, 0, item:__enumIndex() )
+      ShowSubHelp( ExpandAbbrevs( "COMPLIANCE", item:__enumKey() ), 1, 6, item:__enumIndex() )
       ShowSubHelp( "", 1, 0 )
    NEXT
 
@@ -1270,15 +1276,59 @@ STATIC PROCEDURE ShowPlatformsHelp()
    LOCAL item
 
    FOR EACH item IN sc_hConstraint[ "platforms" ]
-      ShowSubHelp( item[ 1 ], 1, 0, item:__enumIndex() )
-      ShowSubHelp( Decode( "PLATFORMS", , item[ 1 ] ), 1, 6, item:__enumIndex() )
+      ShowSubHelp( item:__enumKey(), 1, 0, item:__enumIndex() )
+      ShowSubHelp( ExpandAbbrevs( "PLATFORMS", item:__enumKey() ), 1, 6, item:__enumIndex() )
       ShowSubHelp( "", 1, 0 )
    NEXT
 
    RETURN
 
+STATIC PROCEDURE DirLoadHBX( cDir, hAll )
+
+   LOCAL aFile
+   LOCAL cFileName
+
+   cDir := hb_DirSepAdd( cDir )
+
+   FOR EACH aFile IN hb_vfDirectory( cDir + "*.hbx" )
+      IF hb_vfExists( cFileName := cDir + aFile[ F_NAME ] )
+         LoadHBX( cFileName, hAll )
+      ENDIF
+   NEXT
+
+   RETURN
+
+STATIC FUNCTION LoadHBX( cFileName, hAll )
+
+   LOCAL cName := StrTran( cFileName, "\", "/" )
+
+   LOCAL cFile
+   LOCAL pRegex
+   LOCAL tmp
+   LOCAL aDynamic := {}
+   LOCAL cFilter
+
+   IF ! HB_ISNULL( cFile := hb_MemoRead( cFileName ) )
+
+      FOR EACH cFilter IN { ;
+         "^DYNAMIC ([a-zA-Z0-9_]*)$", ;
+         "ANNOUNCE ([a-zA-Z0-9_]*)$" }
+
+         IF ! Empty( pRegex := hb_regexComp( cFilter, .T., .T. ) )
+            FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+               IF tmp[ 2 ] $ hAll
+                  hAll[ tmp[ 2 ] ] += "," + cName
+               ELSE
+                  hAll[ tmp[ 2 ] ] := cName
+               ENDIF
+            NEXT
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN aDynamic
+
 #if defined( __HBSCRIPT__HBSHELL )
-SET PROCEDURE TO "_tmplate.prg"
 SET PROCEDURE TO "_genbase.prg"
 SET PROCEDURE TO "_gentxt.prg"
 SET PROCEDURE TO "_genhtml.prg"

@@ -7,8 +7,6 @@
       Document
    $SUBCATEGORY$
       Compiler
-   $ONELINER$
-      Compiler Options
    $DESCRIPTION$
       <b>Invoking the Harbour compiler:  </b> </par>
       ==============================   </par>

@@ -38,6 +38,9 @@
       destroy the original array and release the entire contents of the
       array. This depends, of course, on the data storage type of either
       the array or the variable with the same name as the array.
+
+      CA-Cl*pper v5.x compliant except that arrays in Harbour can have
+      an unlimited number of elements.
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL aArray := Array( 10 )
@@ -50,7 +53,7 @@
    $STATUS$
       R
    $COMPLIANCE$
-      C(array)
+      C
    $FILES$
       Library is core
    $SEEALSO$
@@ -574,6 +577,9 @@
       can sort multidimensional array, descending orders or even (but why
       would you want to do that) sort array that contain different data
       type.
+
+      Codeblock calling frequency and order differs from CA-Cl*pper, since
+      Harbour uses a different (faster) sorting algorithm (quicksort).
    $EXAMPLES$
       // sort numeric values in ascending order
       ASort( { 3, 1, 4, 42, 5, 9 } )     // result: { 1, 3, 4, 5, 9, 42 }
@@ -590,7 +596,7 @@
    $STATUS$
       R
    $COMPLIANCE$
-      C(arrayblock)
+      C
    $FILES$
       Library is core
    $SEEALSO$

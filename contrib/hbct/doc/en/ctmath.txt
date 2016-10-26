@@ -1,12 +1,12 @@
 /* $DOC$
    $NAME$
-      SetPREC()
+      SetPrec()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Set precision of math functions
    $SYNTAX$
-      SetPREC( <nPrecision> ) -> cEmptyString
+      SetPrec( <nPrecision> ) -> cEmptyString
    $ARGUMENTS$
       <nPrecision>    digit count between 1 and 16, defaults to 16
    $RETURNS$
@@ -19,7 +19,7 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      SetPREC() is compatible with CT3's SETPREC.
+      SetPrec() is compatible with CT3's SetPrec().
    $PLATFORMS$
       All
    $FILES$
@@ -50,7 +50,7 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      GetPrec() is compatible with CT3's GETPREC.
+      GetPrec() is compatible with CT3's GetPrec().
    $PLATFORMS$
       All
    $FILES$

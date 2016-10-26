@@ -59,7 +59,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(GT)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -102,7 +102,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(GT)
+      All
    $SEEALSO$
       RESTORE SCREEN, __XRestScreen(), __XSaveScreen()
    $END$
@@ -146,7 +146,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(GT)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -189,7 +189,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(GT)
+      All
    $SEEALSO$
       __XRestScreen(), SAVE SCREEN, __XSaveScreen()
    $END$
@@ -840,7 +840,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      Linux(GT), OS2(GT), Win(GT)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -876,7 +876,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      Linux(GT), OS2(GT), Win(GT)
+      All
    $FILES$
       Library is core
    $SEEALSO$

@@ -47,62 +47,78 @@
 
 #include "hbclass.ch"
 
-#include "fileio.ch"
-
 #define DOCUMENT_  1
 #define INDEX_     2
 
 CREATE CLASS TPLGenerate
 
-   METHOD NewIndex( cDir, cFilename, cTitle, cExtension )
-   METHOD NewDocument( cDir, cFilename, cTitle, cExtension )
+   METHOD NewIndex( cDir, cFilename, cTitle, cExtension, cLang )
+   METHOD NewDocument( cDir, cFilename, cTitle, cExtension, cLang )
    METHOD AddEntry( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
    METHOD AddReference( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
    METHOD BeginSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth++
    METHOD EndSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth--
-   METHOD Generate() INLINE NIL
+   METHOD Generate()
    METHOD IsIndex() INLINE ::nType == INDEX_
 
-   PROTECTED:
+   VAR cFilename AS STRING
 
-   METHOD New( cDir, cFilename, cTitle, cExtension, nType ) HIDDEN
+   HIDDEN:
+
+   METHOD New( cDir, cFilename, cTitle, cExtension, cLang, nType )
+
+   PROTECTED:
 
    VAR nType AS INTEGER
    VAR Depth AS INTEGER INIT 0
 
-   VAR hFile
+   VAR cFile AS STRING INIT ""
    VAR cDir AS STRING
-   VAR cFilename AS STRING
    VAR cTitle AS STRING
    VAR cExtension AS STRING
+   VAR cLang AS STRING
+   VAR cOutFileName AS STRING
 
 ENDCLASS
 
-METHOD NewIndex( cDir, cFilename, cTitle, cExtension ) CLASS TPLGenerate
+METHOD NewIndex( cDir, cFilename, cTitle, cExtension, cLang ) CLASS TPLGenerate
 
-   ::New( cDir, cFilename, cTitle, cExtension, INDEX_ )
-
-   RETURN self
-
-METHOD NewDocument( cDir, cFilename, cTitle, cExtension ) CLASS TPLGenerate
-
-   ::New( cDir, cFilename, cTitle, cExtension, DOCUMENT_ )
+   ::New( cDir, cFilename, cTitle, cExtension, cLang, INDEX_ )
 
    RETURN self
 
-METHOD New( cDir, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
+METHOD NewDocument( cDir, cFilename, cTitle, cExtension, cLang ) CLASS TPLGenerate
+
+   ::New( cDir, cFilename, cTitle, cExtension, cLang, DOCUMENT_ )
+
+   RETURN self
+
+METHOD New( cDir, cFilename, cTitle, cExtension, cLang, nType ) CLASS TPLGenerate
 
    ::cDir := cDir
    ::cFilename := cFilename
    ::cTitle := cTitle
    ::cExtension := cExtension
+   ::cLang := hb_defaultValue( cLang, "en" )
    ::nType := nType
 
-   IF ! hb_vfDirExists( ::cDir )
-      OutStd( hb_eol() + "Creating directory", "'" + ::cDir + "'" )
-      hb_vfDirMake( ::cDir )
+   ::cOutFileName := ;
+      ::cDir + hb_ps() + ;
+      ::cFilename + ;
+      iif( Lower( ::cLang ) == "en", "", "." + ::cLang ) + ;
+      ::cExtension
+
+   RETURN self
+
+METHOD Generate() CLASS TPLGenerate
+
+   LOCAL cDir := hb_FNameDir( ::cOutFileName )
+
+   IF ! hb_vfDirExists( cDir )
+      OutStd( hb_eol() + "Creating directory", "'" + cDir + "'" )
+      hb_vfDirMake( cDir )
    ENDIF
 
-   ::hFile := hb_vfOpen( ::cDir + hb_ps() + ::cFilename + ::cExtension, FO_CREAT + FO_TRUNC + FO_WRITE )
+   hb_MemoWrit( ::cOutFileName, ::cFile )
 
    RETURN self

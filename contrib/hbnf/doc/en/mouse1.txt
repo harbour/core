@@ -106,7 +106,7 @@
          MnuItem1()
       ENDIF
    $SEEALSO$
-      ft_MButPrs() ft_MButRel()
+      ft_MButPrs(), ft_MButRel()
    $END$
  */
 
@@ -134,7 +134,7 @@
    $EXAMPLES$
       ft_MCOnOff( 10, 10, 11, 20 )
    $SEEALSO$
-      ft_MShowCrs() ft_MHideCrs() ft_MXLimit() ft_MYLimit() ft_MInRegion()
+      ft_MShowCrs(), ft_MHideCrs(), ft_MXLimit(), ft_MYLimit(), ft_MInRegion()
    $END$
  */
 
@@ -159,7 +159,7 @@
          nChoice := 1
       ENDIF
    $SEEALSO$
-      ft_MXLimit() ft_MYLimit() ft_MInRegion()
+      ft_MXLimit(), ft_MYLimit(), ft_MInRegion()
    $END$
  */
 
@@ -376,7 +376,7 @@
          ? "No mouse driver is installed"
       ENDIF
    $SEEALSO$
-      ft_MInit() ft_MShowCrs()
+      ft_MInit(), ft_MShowCrs()
    $END$
  */
 
@@ -436,7 +436,7 @@
          ft_MShowCrs()
       ENDIF
    $SEEALSO$
-      ft_MHideCrs() ft_MCOnOff()
+      ft_MHideCrs(), ft_MCOnOff()
    $END$
  */
 
@@ -470,7 +470,7 @@
       @ 10, 10 TO 20, 20
       ft_MShowCrs()
    $SEEALSO$
-      ft_MShowCrs() ft_MCOnOff()
+      ft_MShowCrs(), ft_MCOnOff()
    $END$
  */
 
@@ -514,7 +514,7 @@
       ? "Mouse Column :", nY
       ? "Button Status:", nButton
    $SEEALSO$
-      ft_MGetCoord() ft_MSetPos() ft_MDefCrs() ft_MGetX() ft_MGetY()
+      ft_MGetCoord(), ft_MSetPos(), ft_MDefCrs(), ft_MGetX(), ft_MGetY()
    $END$
  */
 
@@ -539,7 +539,7 @@
    $EXAMPLES$
       ? ft_MGetX()
    $SEEALSO$
-      ft_MGetCoord() ft_MDefCrs() ft_MGetPos() ft_MGetY()
+      ft_MGetCoord(), ft_MDefCrs(), ft_MGetPos(), ft_MGetY()
    $END$
  */
 
@@ -563,7 +563,7 @@
    $EXAMPLES$
       ? ft_MGetY()
    $SEEALSO$
-      ft_MGetCoord() ft_MDefCrs() ft_MGetPos() ft_MGetX()
+      ft_MGetCoord(), ft_MDefCrs(), ft_MGetPos(), ft_MGetX()
    $END$
  */
 
@@ -590,7 +590,7 @@
       ft_MSetPos( 10, 20 )     // position mouse cursor at row 10, col 20
                                // in virtual screen coordinates
    $SEEALSO$
-      ft_MGetPos() ft_MGetCoord() ft_MSetCoord() ft_MGetX() ft_MGetY()
+      ft_MGetPos(), ft_MGetCoord(), ft_MSetCoord(), ft_MGetX(), ft_MGetY()
    $END$
  */
 
@@ -616,7 +616,7 @@
       ft_MSetCoord( 10, 20 )     // position mouse cursor at row 10, col 20
                                  // in text screen coordinates
    $SEEALSO$
-      ft_MGetPos() ft_MGetCoord() ft_MSetPos() ft_MDefCrs() ft_MGetX() ft_MGetY()
+      ft_MGetPos(), ft_MGetCoord(), ft_MSetPos(), ft_MDefCrs(), ft_MGetX(), ft_MGetY()
    $END$
  */
 
@@ -640,7 +640,7 @@
    $EXAMPLES$
       ft_MXLimit( 10, 20 )
    $SEEALSO$
-      ft_MYLimit() ft_MInRegion()
+      ft_MYLimit(), ft_MInRegion()
    $END$
  */
 
@@ -664,7 +664,7 @@
    $EXAMPLES$
       ft_MYLimit( 10, 20 )
    $SEEALSO$
-      ft_MXLimit() ft_MInRegion()
+      ft_MXLimit(), ft_MInRegion()
    $END$
  */
 
@@ -710,7 +710,7 @@
          ? "No Item selected"
       ENDIF
    $SEEALSO$
-      ft_MButRel() ft_MDblClk()
+      ft_MButRel(), ft_MDblClk()
    $END$
  */
 
@@ -751,7 +751,7 @@
          ? "Left button released"
       ENDIF
    $SEEALSO$
-      ft_MButPrs() ft_MDblClk()
+      ft_MButPrs(), ft_MDblClk()
    $END$
  */
 
@@ -849,6 +849,6 @@
       ? "Mouse Column :", nY
       ? "Button Status:", nButton
    $SEEALSO$
-      ft_MGetPos() ft_MSetPos() ft_MDefCrs() ft_MGetX() ft_MGetY()
+      ft_MGetPos(), ft_MSetPos(), ft_MDefCrs(), ft_MGetX(), ft_MGetY()
    $END$
  */

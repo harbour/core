@@ -111,7 +111,7 @@
    $ONELINER$
       Set the Condition and scope for an order
    $SYNTAX$
-      ORDCONSET([<cForCondition>],
+      ordCondSet( [<cForCondition>],
         [<bForCondition>],
         [<lAll>],
         [<bWhileCondition>],
@@ -125,7 +125,7 @@
         [<lAdditive>],
         [<lCurrent>],
         [<lCustom>],
-        [<lNoOptimize>])
+        [<lNoOptimize>] )
    $ARGUMENTS$
       <cForCondition> is a string that specifies the FOR condition for the
       order.

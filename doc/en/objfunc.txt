@@ -405,7 +405,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objAddData(), __objAddMethod(), __objDelInline(), __objGetMethodList(), __objGetMsgList(), __objHasMethod() , __objModInline()
+      __objAddData(), __objAddMethod(), __objDelInline(), __objGetMethodList(), __objGetMsgList(), __objHasMethod(), __objModInline()
    $END$
  */
 

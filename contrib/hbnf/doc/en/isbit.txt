@@ -36,6 +36,6 @@
 
       ? ft_IsBit( "A", 5 )        // result: .F.
    $SEEALSO$
-      ft_BitSet() ft_BitClr()
+      ft_BitSet(), ft_BitClr()
    $END$
  */

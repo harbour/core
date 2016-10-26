@@ -36,9 +36,9 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharAdd()   CharAnd()   CharNot()
-      CharOr()    CharXor()   CharShl()
-      CharShr()   CharRll()   CharRlr()
+      CharAdd(),  CharAnd(),  CharNot(),
+      CharOr(),   CharXor(),  CharShl(),
+      CharShr(),  CharRll(),  CharRlr(),
       CSetRef()
    $END$
  */
@@ -82,9 +82,9 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharAdd()   CharSub()   CharAnd()
-      CharOr()    CharXor()   CharNot()
-      CharShr()   CharRll()   CharRlr()
+      CharAdd(),  CharSub(),  CharAnd(),
+      CharOr(),   CharXor(),  CharNot(),
+      CharShr(),  CharRll(),  CharRlr(),
       CSetRef()
    $END$
  */
@@ -128,9 +128,9 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharAdd()   CharSub()   CharAnd()
-      CharOr()    CharXor()   CharNot()
-      CharShl()   CharRll()   CharRlr()
+      CharAdd(),  CharSub(),  CharAnd(),
+      CharOr(),   CharXor(),  CharNot(),
+      CharShl(),  CharRll(),  CharRlr(),
       CSetRef()
    $END$
  */
@@ -174,9 +174,9 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharAdd()   CharSub()   CharAnd()
-      CharOr()    CharXor()   CharNot()
-      CharShl()   CharShr()   CharRlr()
+      CharAdd(),  CharSub(),  CharAnd(),
+      CharOr(),   CharXor(),  CharNot(),
+      CharShl(),  CharShr(),  CharRlr(),
       CSetRef()
    $END$
  */
@@ -220,9 +220,9 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharAdd()   CharSub()   CharAnd()
-      CharOr()    CharXor()   CharNot()
-      CharShl()   CharShr()   CharRll()
+      CharAdd(),  CharSub(),  CharAnd(),
+      CharOr(),   CharXor(),  CharNot(),
+      CharShl(),  CharShr(),  CharRll(),
       CSetRef()
    $END$
  */

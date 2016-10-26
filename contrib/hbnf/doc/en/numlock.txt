@@ -36,6 +36,6 @@
 
          RETURN ft_NumLock( lOldNum )
    $SEEALSO$
-      ft_CapLock() ft_Ctrl() ft_PrtScr() ft_Shift() ft_Alt()
+      ft_CapLock(), ft_Ctrl(), ft_PrtScr(), ft_Shift(), ft_Alt()
    $END$
  */

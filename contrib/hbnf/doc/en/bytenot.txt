@@ -28,6 +28,6 @@
       cNewByte := ft_ByteNot( hb_BChar( 32 ) )
       ? hb_BCode( cNewByte )     // result: 223
    $SEEALSO$
-      ft_ByteOr() ft_ByteXor() ft_ByteNeg() ft_ByteAnd()
+      ft_ByteOr(), ft_ByteXor(), ft_ByteNeg(), ft_ByteAnd()
    $END$
  */

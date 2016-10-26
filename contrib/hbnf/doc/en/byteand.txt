@@ -30,6 +30,6 @@
       ? hb_BCode( cNewByte )     // result: 11
       ? cNewByte                 // result: non-printable character
    $SEEALSO$
-      ft_ByteOr() ft_ByteXor() ft_ByteNot() ft_ByteNeg()
+      ft_ByteOr(), ft_ByteXor(), ft_ByteNot(), ft_ByteNeg()
    $END$
  */

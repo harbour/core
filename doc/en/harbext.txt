@@ -5,8 +5,6 @@
       Harbour Extensions
    $CATEGORY$
       Document
-   $ONELINER$
-      Harbour Extensions
    $DESCRIPTION$
       <b>Language extensions:</b>   </par>
       --------------------

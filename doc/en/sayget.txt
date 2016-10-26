@@ -82,7 +82,7 @@
 
       NOTE       GET functions/formatting rules:
 
-      <table>
+      <table-noheader>
       @A          Allows only alphabetic characters.
       @B          Numbers will be left justified
       @C          All positive numbers will be followed by CR.
@@ -103,7 +103,7 @@
 
       GET templates/formatting rules:
 
-      <table>
+      <table-noheader>
       A   Only alphabetic characters allowed.
       N   Only alphabetic and numeric characters allowed
       X   Any character allowed.

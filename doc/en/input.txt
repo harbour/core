@@ -90,7 +90,7 @@
       DO WHILE Inkey( 0.1 ) != K_ESC
       ENDDO
       //
-      KEYBOARD "AB"; ? Inkey(), Inkey() // ==>   65   66
+      KEYBOARD "AB"; ? Inkey(), Inkey()  // ->   65   66
    $STATUS$
       S
    $COMPLIANCE$
@@ -136,9 +136,9 @@
       // Clear the keyboard buffer
       CLEAR TYPEAHEAD
       //
-      KEYBOARD Chr( 13 ); ? Inkey() // ==> 13
-      KEYBOARD ";" ? Inkey() // ==> 13
-      KEYBOARD "Hello"; CLEAR TYPEAHEAD; ? Inkey() // ==> 0
+      KEYBOARD Chr( 13 ); ? Inkey()  // -> 13
+      KEYBOARD ";"; ? Inkey()  // -> 13
+      KEYBOARD "Hello"; CLEAR TYPEAHEAD; ? Inkey()  // -> 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -176,8 +176,8 @@
       be inserted.
    $EXAMPLES$
       // Stuff an Alt+PgDn key into the keyboard buffer
-      hb_keyPut( K_ALT_PGDN ); ? Inkey() // ==> 417
-      hb_keyPut( K_F11 ); ? Inkey() // ==> -40
+      hb_keyPut( K_ALT_PGDN ); ? Inkey()  // -> 417
+      hb_keyPut( K_F11 ); ? Inkey()  // -> -40
    $STATUS$
       R
    $COMPLIANCE$
@@ -228,7 +228,7 @@
          ENDIF
       ENDDO
       //
-      KEYBOARD "AB"; ? NextKey(), NextKey() // ==>   65   65
+      KEYBOARD "AB"; ? NextKey(), NextKey()  // ->   65   65
    $STATUS$
       R
    $COMPLIANCE$
@@ -273,7 +273,7 @@
          ENDIF
       ENDDO
       //
-      KEYBOARD "AB"; ? Inkey(), LastKey() // ==>   65   65
+      KEYBOARD "AB"; ? Inkey(), LastKey()  // ->   65   65
    $STATUS$
       R
    $COMPLIANCE$
@@ -319,8 +319,8 @@
       // Clear the keyboard buffer
       CLEAR TYPEAHEAD
       //
-      KEYBOARD Chr( 13 ); ? Inkey() // ==> 13
-      KEYBOARD "Hello"; CLEAR TYPEAHEAD; ? Inkey() // ==> 0
+      KEYBOARD Chr( 13 ); ? Inkey()  // -> 13
+      KEYBOARD "Hello"; CLEAR TYPEAHEAD; ? Inkey()  // -> 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -353,7 +353,7 @@
       key pressed. If the GET buffer was updated during READ, 256 is added
       to the return code.
 
-      <table>
+      <table-doubleheader>
       Exit               Return code     Return code
       Key                (not updated)   (updated)
 

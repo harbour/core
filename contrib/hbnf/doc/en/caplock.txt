@@ -23,6 +23,6 @@
          ? "CapLock is active"
       ENDIF
    $SEEALSO$
-      ft_Alt() ft_Ctrl() ft_NumLock() ft_PrtScr() ft_Shift()
+      ft_Alt(), ft_Ctrl(), ft_NumLock(), ft_PrtScr(), ft_Shift()
    $END$
  */

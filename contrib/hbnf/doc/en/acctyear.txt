@@ -39,6 +39,6 @@
       ? aDateInfo[ 2 ]   //  1989-12-31    beginning of year
       ? aDateInfo[ 3 ]   //  1990-12-29    end of year
    $SEEALSO$
-      ft_DateCnfg() ft_AcctWeek() ft_AcctMonth() ft_AcctQtr()
+      ft_DateCnfg(), ft_AcctWeek(), ft_AcctMonth(), ft_AcctQtr()
    $END$
  */

@@ -51,6 +51,6 @@
         dDate := hb_SToD( "19910331" )  // Not in last 4 days of work week
         ? ft_AcctAdj( dDate, .T. )   // 1991-03-30 (prior week's end)
    $SEEALSO$
-      ft_DateCnfg() ft_DayToBoW()
+      ft_DateCnfg(), ft_DayToBoW()
    $END$
  */

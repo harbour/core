@@ -1501,7 +1501,7 @@
       The table below shows the possible function strings available with
       the Transform() function.
 
-      <table>
+      <table-noheader>
       @B   Left justify the string within the format.
       @C   Issue a CR after format is numbers are positive.
       @D   Put dates in SET DATE format.
@@ -1518,7 +1518,7 @@
       character in the string may be formatted based on using the follow
       characters as template markers for the string.
 
-      <table>
+      <table-noheader>
       A,N,X,9,#   Any data type
       L           Shows logical as "T" or "F"
       Y           Shows logical as "Y" or "N"
