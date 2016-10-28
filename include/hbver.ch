@@ -1,7 +1,7 @@
 /*
  * Header file for hb_Version() function
  *
- * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2015 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,38 +50,46 @@
 #define HB_VER_CH_
 
 /* hb_Version() parameters. */
-#define HB_VERSION_HARBOUR          0  /* default */
-#define HB_VERSION_COMPILER         1
-#define HB_VERSION_MAJOR            2
-#define HB_VERSION_MINOR            3
-#define HB_VERSION_RELEASE          4
-#define HB_VERSION_STATUS           5
-#define HB_VERSION_REVISION         6
-#define HB_VERSION_CHANGELOG_LAST   7
-#define HB_VERSION_CHANGELOG_ID     8
-#define HB_VERSION_PCODE_VER        9
-#define HB_VERSION_PCODE_VER_STR    10
-#define HB_VERSION_BUILD_DATE_STR   11
-#define HB_VERSION_BUILD_DATE       12
-#define HB_VERSION_BUILD_TIME       13
-#define HB_VERSION_BUILD_PLAT       22
-#define HB_VERSION_BUILD_COMP       23
-#define HB_VERSION_FLAG_PRG         14
-#define HB_VERSION_FLAG_C           15
-#define HB_VERSION_FLAG_LINKER      16
-#define HB_VERSION_BITWIDTH         17
-#define HB_VERSION_ENDIANNESS       18
-#define HB_VERSION_MT               19
-#define HB_VERSION_SHARED           26 /* Last. Please continue from here. */
-#define HB_VERSION_UNIX_COMPAT      20
-#define HB_VERSION_PLATFORM         21
-#define HB_VERSION_CPU              24
-#define HB_VERSION_COMPILER_CPP     25
-#define HB_VERSION_MAX_             26
+#define HB_VERSION_HARBOUR              0  /* default */
+#define HB_VERSION_COMPILER             1
+#define HB_VERSION_MAJOR                2
+#define HB_VERSION_MINOR                3
+#define HB_VERSION_RELEASE              4
+#define HB_VERSION_STATUS               5
+#define HB_VERSION_REVISION             6
+#define HB_VERSION_COMMIT_INFO          7
+#define HB_VERSION_ID                   8
+#define HB_VERSION_PCODE_VER            9
+#define HB_VERSION_PCODE_VER_STR        10
+#define HB_VERSION_BUILD_DATE_STR       11
+#define HB_VERSION_BUILD_DATE           12
+#define HB_VERSION_BUILD_TIME           13
+#define HB_VERSION_BUILD_TIMESTAMP_UTC  30  /* Latest value. Continue from here. */
+#define HB_VERSION_BUILD_PLAT           22
+#define HB_VERSION_BUILD_COMP           23
+#define HB_VERSION_FLAG_PRG             14
+#define HB_VERSION_FLAG_C               15
+#define HB_VERSION_FLAG_LINKER          16
+#define HB_VERSION_BITWIDTH             17
+#define HB_VERSION_ENDIANNESS           18
+#define HB_VERSION_MT                   19
+#define HB_VERSION_SHARED               26
+#define HB_VERSION_UNIX_COMPAT          20
+#define HB_VERSION_PLATFORM             21
+#define HB_VERSION_CPU                  24
+#define HB_VERSION_COMPILER_CPP         25
+#define HB_VERSION_URL_BASE             27
+#define HB_VERSION_URL_SOURCE           28
+#define HB_VERSION_OPTIONS              29
+#define HB_VERSION_MAX_                 30
+
+/* HB_LEGACY_LEVEL5 */
+#define HB_VERSION_CHANGELOG_LAST       HB_VERSION_COMMIT_INFO
+#define HB_VERSION_CHANGELOG_ID         HB_VERSION_ID
 
 /* hb_Version( HB_VERSION_ENDIANNESS ) return values. */
-#define HB_VERSION_ENDIAN_LITTLE    1
-#define HB_VERSION_ENDIAN_BIG       2
-#define HB_VERSION_ENDIAN_PDP       3
+#define HB_VERSION_ENDIAN_LITTLE        1
+#define HB_VERSION_ENDIAN_BIG           2
+#define HB_VERSION_ENDIAN_PDP           3
 
 #endif /* HB_VER_CH_ */
