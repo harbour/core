@@ -125,6 +125,8 @@ long hb_ssl_socketRead( PHB_SSLSTREAM pStream, HB_SOCKET sd,
          iToRead = timeout < 0 ? 1 : hb_socketSelectRead( sd, timeout );
          if( iToRead > 0 )
             iToRead = ( int ) len;
+         else if( iToRead == 0 )
+            hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
       }
       else if( iToRead > len )
          iToRead = ( int ) len;
@@ -226,7 +228,6 @@ long hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET sd,
             case SSL_ERROR_WANT_WRITE:
                if( hb_vmRequestQuery() == 0 )
                {
-                  iError = 0;
                   if( timeout > 0 )
                   {
                      HB_MAXUINT timecurr = hb_dateMilliSeconds();
@@ -242,7 +243,11 @@ long hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET sd,
                         if( iError > 0 )
                            continue;
                      }
+                     else
+                        iError = 0;
                   }
+                  else
+                     iError = 0;
                   if( lWritten == 0 && iError == 0 )
                      hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
                   break;

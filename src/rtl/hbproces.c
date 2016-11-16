@@ -102,6 +102,25 @@
 #  endif
 #endif
 
+#if defined( HB_OS_UNIX ) && defined( EINTR )
+#  define HB_FAILURE_RETRY( ret, exp ) \
+   do \
+   { \
+      ( ret ) = ( exp ); \
+      hb_fsSetIOError( ( ret ) != -1, 0 ); \
+   } \
+   while( ( ret ) == -1 && hb_fsOsError() == ( HB_ERRCODE ) EINTR && \
+          hb_vmRequestQuery() == 0 )
+#else
+#  define HB_FAILURE_RETRY( ret, exp ) \
+   do \
+   { \
+      ( ret ) = ( exp ); \
+      hb_fsSetIOError( ( ret ) != -1, 0 ); \
+   } \
+   while( 0 )
+#endif
+
 #if defined( HB_OS_OS2 )
 
 static char * hb_buildArgsOS2( const char *pszFileName, APIRET * ret )
@@ -415,7 +434,7 @@ static int hb_fsProcessExec( const char * pszFileName,
       else if( pid != -1 )
       {
          int iStatus;
-         iResult = waitpid( pid, &iStatus, 0 );
+         HB_FAILURE_RETRY( iResult, waitpid( pid, &iStatus, 0 ) );
 #ifdef ERESTARTSYS
          if( iResult < 0 && errno != ERESTARTSYS )
 #else
@@ -427,31 +446,35 @@ static int hb_fsProcessExec( const char * pszFileName,
          else
             iResult = WIFEXITED( iStatus ) ? WEXITSTATUS( iStatus ) : 0;
       }
+      else
+         hb_fsSetIOError( HB_FALSE, 0 );
    }
-#elif defined( _MSC_VER ) || defined( __LCC__ ) || \
-    defined( __XCC__ ) || defined( __POCC__ )
-   iResult = _spawnvp( _P_WAIT, argv[ 0 ], argv );
-#elif defined( __MINGW32__ ) || defined( __WATCOMC__ )
-   iResult = spawnvp( P_WAIT, argv[ 0 ], ( const char * const * ) argv );
 #else
-   iResult = spawnvp( P_WAIT, argv[ 0 ], ( char * const * ) argv );
-#endif
+#  if defined( _MSC_VER ) || defined( __LCC__ ) || \
+      defined( __XCC__ ) || defined( __POCC__ )
+      iResult = _spawnvp( _P_WAIT, argv[ 0 ], argv );
+#  elif defined( __MINGW32__ ) || defined( __WATCOMC__ )
+      iResult = spawnvp( P_WAIT, argv[ 0 ], ( const char * const * ) argv );
+#  else
+      iResult = spawnvp( P_WAIT, argv[ 0 ], ( char * const * ) argv );
+#  endif
    hb_fsSetIOError( iResult >= 0, 0 );
+#endif
 
    if( iStdIn != FS_ERROR )
    {
       dup2( iStdIn,  0 );
-      close( iStdIn );
+      hb_fsCloseRaw( iStdIn );
    }
    if( iStdOut != FS_ERROR )
    {
       dup2( iStdOut, 1 );
-      close( iStdOut );
+      hb_fsCloseRaw( iStdOut );
    }
    if( iStdErr != FS_ERROR )
    {
       dup2( iStdErr, 2 );
-      close( iStdErr );
+      hb_fsCloseRaw( iStdErr );
    }
 
    hb_vmLock();
@@ -1009,8 +1032,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
    if( pid > 0 )
    {
       hb_vmUnlock();
-      iRetStatus = waitpid( pid, &iStatus, fWait ? 0 : WNOHANG );
-      hb_fsSetIOError( iRetStatus >= 0, 0 );
+      HB_FAILURE_RETRY( iRetStatus, waitpid( pid, &iStatus, fWait ? 0 : WNOHANG ) );
 #ifdef ERESTARTSYS
       if( iRetStatus < 0 && hb_fsOsError() != ( HB_ERRCODE ) ERESTARTSYS )
 #else

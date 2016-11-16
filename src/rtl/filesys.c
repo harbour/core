@@ -767,11 +767,20 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
          {
             if( pid != 0 )
             {
-               int iResult;
+               int iResult, iStatus = 0;
 
-               HB_FAILURE_RETRY( iResult, waitpid( pid, NULL, 0 ) );
+               HB_FAILURE_RETRY( iResult, waitpid( pid, &iStatus, 0 ) );
 
-               if( fRead )
+               iResult = iResult == pid &&
+                         WIFEXITED( iStatus ) &&
+                         WEXITSTATUS( iStatus ) == 0 ? 0 : -1;
+
+               if( iResult != 0 )
+               {
+                  hb_fsClose( hPipeHandle[ 0 ] );
+                  hb_fsClose( hPipeHandle[ 1 ] );
+               }
+               else if( fRead )
                {
                   hb_fsClose( hPipeHandle[ 1 ] );
                   hFileHandle = hPipeHandle[ 0 ];
@@ -808,7 +817,8 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
                for( hNullHandle = 3; hNullHandle < iMaxFD; ++hNullHandle )
                   hb_fsClose( hNullHandle );
 
-               if( fork() == 0 )
+               pid = fork();
+               if( pid == 0 )
                {
                   const char * argv[ 4 ];
 
@@ -825,7 +835,7 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
                   HB_FAILURE_RETRY( iResult, execv( "/bin/sh", ( char ** ) HB_UNCONST( argv ) ) );
 #endif
                }
-               exit( 0 );
+               exit( pid > 0 ? 0 : 1 );
             }
          }
          else

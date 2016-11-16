@@ -85,15 +85,18 @@ EVP_PKEY * hb_EVP_PKEY_par( int iParam )
    return ph ? ( EVP_PKEY * ) *ph : NULL;
 }
 
-HB_FUNC( EVP_PKEY_NEW )
+void hb_EVP_PKEY_ret( EVP_PKEY * pkey )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_PKEY * ), &s_gcEVP_PKEY_funcs );
 
-   EVP_PKEY * ctx = EVP_PKEY_new();
-
-   *ph = ctx;
+   *ph = pkey;
 
    hb_retptrGC( ph );
+}
+
+HB_FUNC( EVP_PKEY_NEW )
+{
+   hb_EVP_PKEY_ret( EVP_PKEY_new() );
 }
 
 HB_FUNC( EVP_PKEY_TYPE )
