@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code
  * This file contains source for first ODBC routines.
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,7 +47,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
  *    SQLNumResultCols()
@@ -443,7 +440,7 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
       SQLRETURN   ret;
       void *      hConnStr;
       HB_SIZE     nConnStr;
-      SQLTCHAR *  cConnStr = ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hConnStr, &nConnStr );
+      SQLTCHAR *  cConnStr = ( SQLTCHAR * ) HB_UNCONST( O_HB_PARSTRDEF( 2, &hConnStr, &nConnStr ) );
       SQLTCHAR    buffer[ 1024 ];
 
       buffer[ 0 ] = '\0';
@@ -481,9 +478,9 @@ HB_FUNC( SQLCONNECT ) /* hDbc, cDSN, cUseName, cPassword --> nRetCode */
       void *     hUser;
       void *     hPass;
       HB_SIZE    nDSN, nUser, nPass;
-      SQLTCHAR * cDSN  = ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hDSN, &nDSN );
-      SQLTCHAR * cUser = ( SQLTCHAR * ) O_HB_PARSTRDEF( 3, &hUser, &nUser );
-      SQLTCHAR * cPass = ( SQLTCHAR * ) O_HB_PARSTRDEF( 4, &hPass, &nPass );
+      SQLTCHAR * cDSN  = ( SQLTCHAR * ) HB_UNCONST( O_HB_PARSTRDEF( 2, &hDSN, &nDSN ) );
+      SQLTCHAR * cUser = ( SQLTCHAR * ) HB_UNCONST( O_HB_PARSTRDEF( 3, &hUser, &nUser ) );
+      SQLTCHAR * cPass = ( SQLTCHAR * ) HB_UNCONST( O_HB_PARSTRDEF( 4, &hPass, &nPass ) );
 
       ret = SQLConnect( hDbc,
                         cDSN,
@@ -564,7 +561,7 @@ HB_FUNC( SQLEXECDIRECT ) /* hStmt, cStatement --> nRetCode */
    {
       void *     hStatement;
       HB_SIZE    nStatement;
-      SQLTCHAR * cStatement = ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hStatement, &nStatement );
+      SQLTCHAR * cStatement = ( SQLTCHAR * ) HB_UNCONST( O_HB_PARSTRDEF( 2, &hStatement, &nStatement ) );
 
       hb_retni( SQLExecDirect( hStmt,
                                cStatement,
@@ -1043,12 +1040,15 @@ HB_FUNC( SQLSETCONNECTATTR ) /* hDbc, nOption, uOption */
 #if ODBCVER >= 0x0300
       hb_retni( SQLSetConnectAttr( hDbc,
                                    ( SQLINTEGER ) hb_parnl( 2 ),
-                                   HB_ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
-                                   HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
+                                   HB_ISCHAR( 3 ) ? ( SQLPOINTER ) HB_UNCONST( hb_parc( 3 ) ) :
+                                                    ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
+                                   HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) :
+                                                    ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
       hb_retni( SQLSetConnectOption( hDbc,
                                      ( SQLUSMALLINT ) hb_parni( 2 ),
-                                     HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : ( SQLULEN ) hb_parnl( 3 ) ) );
+                                     HB_ISCHAR( 3 ) ? ( SQLULEN ) ( HB_PTRUINT ) hb_parc( 3 ) :
+                                                      ( SQLULEN ) hb_parnl( 3 ) ) );
 #endif
    }
    else
@@ -1064,12 +1064,15 @@ HB_FUNC( SQLSETSTMTATTR ) /* hStmt, nOption, uOption --> nRetCode */
 #if ODBCVER >= 0x0300
       hb_retni( SQLSetStmtAttr( hStmt,
                                 ( SQLINTEGER ) hb_parnl( 2 ),
-                                HB_ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
-                                HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
+                                HB_ISCHAR( 3 ) ? ( SQLPOINTER ) HB_UNCONST( hb_parc( 3 ) ) :
+                                                 ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
+                                HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) :
+                                                 ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
       hb_retni( SQLSetStmtOption( hStmt,
                                   ( SQLUSMALLINT ) hb_parni( 2 ),
-                                  HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : ( SQLULEN ) hb_parnl( 3 ) ) );
+                                  HB_ISCHAR( 3 ) ? ( SQLULEN ) ( HB_PTRUINT ) hb_parc( 3 ) :
+                                                   ( SQLULEN ) hb_parnl( 3 ) ) );
 #endif
    }
    else
@@ -1085,7 +1088,7 @@ HB_FUNC( SQLGETCONNECTATTR ) /* hDbc, nOption, @cOption */
 #if ODBCVER >= 0x0300
       SQLPOINTER buffer[ 512 ];
       SQLINTEGER lLen = 0;
-      buffer[ 0 ] = '\0';
+      buffer[ 0 ] = NULL;
       hb_retni( SQLGetConnectAttr( hDbc,
                                    ( SQLINTEGER ) hb_parnl( 2 ),
                                    ( SQLPOINTER ) buffer,
@@ -1114,7 +1117,7 @@ HB_FUNC( SQLGETSTMTATTR ) /* hStmt, nOption, @cOption */
 #if ODBCVER >= 0x0300
       SQLPOINTER buffer[ 512 ];
       SQLINTEGER lLen = 0;
-      buffer[ 0 ] = '\0';
+      buffer[ 0 ] = NULL;
       hb_retni( SQLGetStmtAttr( hStmt,
                                 ( SQLINTEGER ) hb_parnl( 2 ),
                                 ( SQLPOINTER ) buffer,
@@ -1165,7 +1168,7 @@ HB_FUNC( SQLPREPARE ) /* hStmt, cStatement --> nRetCode */
       void * hStatement;
 
       hb_retni( SQLPrepare( hStmt,
-                            ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hStatement, NULL ),
+                            ( SQLTCHAR * ) HB_UNCONST( O_HB_PARSTRDEF( 2, &hStatement, NULL ) ),
                             ( SQLINTEGER ) SQL_NTS ) );
 
       hb_strfree( hStatement );

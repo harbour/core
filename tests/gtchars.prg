@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for terminal character output and codepage
+ * demonstration/test code for terminal character output and codepage
  *    translations
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

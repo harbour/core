@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    SSL encryption for Harbour hb_inet*() connections
+ * SSL encryption for Harbour hb_inet*() connections
  *
  * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -115,8 +113,9 @@ static void hb_inetStartSSL( HB_BOOL fServer )
          {
             HB_MAXINT timeout = HB_ISNUM( 3 ) ? hb_parnint( 3 ) :
                                 hb_znetInetTimeout( pItem, HB_FALSE );
-            PHB_SSLSTREAM pStream = hb_ssl_socketNew( sd, ssl, fServer,
-                                                      timeout, &iResult );
+            PHB_SSLSTREAM pStream = hb_ssl_socketNew( sd, ssl, fServer, timeout,
+                                                      hb_param( 2, HB_IT_POINTER ),
+                                                      &iResult );
             if( pStream )
             {
                if( ! hb_znetInetInitialize( pItem, ( PHB_ZNETSTREAM ) pStream,

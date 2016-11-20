@@ -1,6 +1,5 @@
 /*
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * Gmail work with ssl on port 465 and with tls on port 587
  * tls mode is fully automatic and require that ssl must be disabled at first (We will activate it on request after STARTTLS command)

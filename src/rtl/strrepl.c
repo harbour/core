@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_StrReplace()
  *
  * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -74,13 +72,73 @@ HB_FUNC( HB_STRREPLACE )
          const char * pszText = hb_itemGetCPtr( pText );
          const char * ptr;
          char * pszResult = NULL;
+         HB_SIZE * ptrOpt = NULL;
+         HB_BOOL fNext = HB_FALSE;
          HB_SIZE nDst, nSize, nPos, nAt, nSkip, nTmp;
 
          nDst = hb_itemSize( HB_IS_HASH( pSrc ) ? pSrc : pDst );
+         if( nText > 1024 )
+         {
+            ptrOpt = ( HB_SIZE * ) hb_xgrabz( 256 * sizeof( HB_SIZE ) );
+            for( nAt = 0; nAt < nSrc; ++nAt )
+            {
+               HB_UCHAR uc;
+
+               if( pszSrc )
+                  uc = ( HB_UCHAR ) pszSrc[ nAt ];
+               else
+               {
+                  PHB_ITEM pItem = HB_IS_HASH( pSrc ) ?
+                                   hb_hashGetKeyAt( pSrc, nAt + 1 ) :
+                                   hb_arrayGetItemPtr( pSrc, nAt + 1 );
+                  if( hb_itemGetCLen( pItem ) == 0 )
+                     continue;
+                  uc = ( HB_UCHAR ) hb_itemGetCPtr( pItem )[ 0 ];
+               }
+               if( ptrOpt[ uc ] == 0 )
+                  ptrOpt[ uc ] = nAt + 1;
+               else if( pszSrc == NULL )
+                  fNext = HB_TRUE;
+            }
+         }
+
          nSize = nPos = nSkip = 0;
          while( nPos < nText )
          {
-            if( pszSrc )
+            if( ptrOpt )
+            {
+               nAt = ptrOpt[ ( HB_UCHAR ) pszText[ nPos ] ];
+               if( nAt == 0 || pszSrc )
+                  nSkip = 1;
+               else
+               {
+                  for( ; nAt <= nSrc; ++nAt )
+                  {
+                     if( HB_IS_HASH( pSrc ) )
+                     {
+                        pDst = hb_hashGetKeyAt( pSrc, nAt );
+                        nSkip = hb_itemGetCLen( pDst );
+                        ptr = hb_itemGetCPtr( pDst );
+                     }
+                     else
+                     {
+                        nSkip = hb_arrayGetCLen( pSrc, nAt );
+                        ptr = hb_arrayGetCPtr( pSrc, nAt );
+                     }
+                     if( nSkip > 0 && nSkip <= nText - nPos &&
+                         memcmp( pszText + nPos, ptr, nSkip ) == 0 )
+                        break;
+                     if( !fNext )
+                        nAt = nSrc;
+                  }
+                  if( nAt > nSrc )
+                  {
+                     nAt = 0;
+                     nSkip = 1;
+                  }
+               }
+            }
+            else if( pszSrc )
             {
                ptr = ( const char * )
                      memchr( pszSrc, ( HB_UCHAR ) pszText[ nPos ], nSrc );
@@ -103,7 +161,7 @@ HB_FUNC( HB_STRREPLACE )
                      ptr = hb_arrayGetCPtr( pSrc, nAt );
                   }
                   if( nSkip > 0 && nSkip <= nText - nPos &&
-                      memcmp( pszText + nPos, ptr , nSkip ) == 0 )
+                      memcmp( pszText + nPos, ptr, nSkip ) == 0 )
                      break;
                }
                if( nAt > nSrc )
@@ -167,6 +225,8 @@ HB_FUNC( HB_STRREPLACE )
                }
             }
          }
+         if( ptrOpt )
+            hb_xfree( ptrOpt );
          hb_retclen_buffer( pszResult, nSize );
       }
       else

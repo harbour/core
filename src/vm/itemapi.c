@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Item API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *    hb_itemPCount()
@@ -237,6 +234,18 @@ PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, HB_SIZE nIndex, PHB_ITEM pItem )
    return pArray;
 }
 
+PHB_ITEM hb_itemPutNil( PHB_ITEM pItem )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNil(%p)", pItem ) );
+
+   if( pItem )
+      hb_itemSetNil( pItem );
+   else
+      pItem = hb_itemNew( NULL );
+
+   return pItem;
+}
+
 PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 {
    HB_SIZE nLen, nAlloc;
@@ -264,7 +273,7 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
       pItem = hb_itemNew( NULL );
 
    pItem->type = HB_IT_STRING;
-   pItem->item.asString.value     = ( char * ) szText;
+   pItem->item.asString.value     = ( char * ) HB_UNCONST( szText );
    pItem->item.asString.length    = nLen;
    pItem->item.asString.allocated = nAlloc;
 
@@ -281,7 +290,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
    if( nLen <= 1 )
    {
       nAlloc = 0;
-      szValue = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
+      szValue = ( char * ) HB_UNCONST( hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
    }
    else
    {
@@ -329,8 +338,8 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
    pItem->type = HB_IT_STRING;
    pItem->item.asString.length = nLen;
    pItem->item.asString.allocated = 0;
-   pItem->item.asString.value = ( char * ) ( nLen > 1 ? szText :
-                     hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
+   pItem->item.asString.value = ( char * ) HB_UNCONST( ( nLen > 1 ? szText :
+                     hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] ) );
 
    return pItem;
 }
@@ -352,9 +361,9 @@ PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
    pItem->item.asString.allocated = 0;
 
    if( nLen <= 1 )
-      pItem->item.asString.value = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
+      pItem->item.asString.value = ( char * ) HB_UNCONST( hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
    else if( szText[ nLen ] == '\0' )
-      pItem->item.asString.value = ( char * ) szText;
+      pItem->item.asString.value = ( char * ) HB_UNCONST( szText );
    else
       hb_errInternal( 6003, "Internal error: hb_itemPutCLConst() missing termination character", NULL, NULL );
 
@@ -382,7 +391,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
    if( nLen <= 1 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
+      pItem->item.asString.value = ( char * ) HB_UNCONST( hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
       if( szText )
          hb_xfree( szText );
    }
@@ -412,7 +421,7 @@ PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, HB_SIZE nLen )
    if( nLen <= 1 )
    {
       pItem->item.asString.allocated = 0;
-      pItem->item.asString.value = ( char * ) hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ];
+      pItem->item.asString.value = ( char * ) HB_UNCONST( hb_szAscii[ nLen ? ( unsigned char ) szText[ 0 ] : 0 ] );
       hb_xfree( szText );
    }
    else
@@ -1808,7 +1817,7 @@ void hb_itemMoveToRef( PHB_ITEM pDest, PHB_ITEM pSource )
 
 void hb_itemMoveFromRef( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopyFromRef(%p, %p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMoveFromRef(%p, %p)", pDest, pSource ) );
 
    if( HB_IS_BYREF( pSource ) )
    {
@@ -2063,7 +2072,7 @@ PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE nSize )
    {
       HB_SIZE nAlloc = nSize + 1 +
                 ( pItem->item.asString.allocated <= nSize ? nSize : 0 );
-      pItem->item.asString.value = ( char* )
+      pItem->item.asString.value = ( char * )
                      hb_xRefResize( pItem->item.asString.value,
                                     pItem->item.asString.length,
                                     nAlloc, &pItem->item.asString.allocated );
@@ -2220,6 +2229,126 @@ HB_BOOL hb_itemEqual( PHB_ITEM pItem1, PHB_ITEM pItem2 )
       fResult = HB_IS_BLOCK( pItem2 ) &&
                 pItem1->item.asBlock.value == pItem2->item.asBlock.value;
 
+   else if( HB_IS_SYMBOL( pItem1 ) )
+      fResult = HB_IS_SYMBOL( pItem2 ) &&
+                ( pItem1->item.asSymbol.value == pItem2->item.asSymbol.value ||
+                  ( pItem1->item.asSymbol.value->pDynSym != NULL &&
+                    pItem1->item.asSymbol.value->pDynSym ==
+                    pItem2->item.asSymbol.value->pDynSym ) );
+
+   return fResult;
+}
+
+/* For compatible types compare pItem1 with pItem2 setting piResult
+   to -1, 0 or 1 if pItem1 is <, == or > then pItem2 and return true
+   otherwise return false.
+ */
+HB_BOOL hb_itemCompare( PHB_ITEM pItem1, PHB_ITEM pItem2, HB_BOOL bForceExact, int * piResult )
+{
+   HB_BOOL fResult = HB_FALSE;
+
+   if( HB_IS_NUMERIC( pItem1 ) )
+   {
+      if( HB_IS_NUMINT( pItem1 ) && HB_IS_NUMINT( pItem2 ) )
+      {
+         HB_MAXINT n1 = HB_ITEM_GET_NUMINTRAW( pItem1 ),
+                   n2 = HB_ITEM_GET_NUMINTRAW( pItem2 );
+         *piResult = n1 < n2 ? -1 : ( n1 > n2 ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+      else if( HB_IS_NUMERIC( pItem2 ) )
+      {
+         double d1 = hb_itemGetND( pItem1 ),
+                d2 = hb_itemGetND( pItem2 );
+         *piResult = d1 < d2 ? -1 : ( d1 > d2 ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_STRING( pItem1 ) )
+   {
+      if( HB_IS_STRING( pItem2 ) )
+      {
+         *piResult = hb_itemStrCmp( pItem1, pItem2, bForceExact );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_NIL( pItem1 ) )
+   {
+      if( HB_IS_NIL( pItem2 ) )
+      {
+         *piResult = 0;
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_DATETIME( pItem1 ) )
+   {
+      if( HB_IS_DATETIME( pItem2 ) )
+      {
+         *piResult = pItem1->item.asDateTime.julian < pItem2->item.asDateTime.julian ? -1 :
+                   ( pItem1->item.asDateTime.julian > pItem2->item.asDateTime.julian ? 1 :
+                   ( pItem1->item.asDateTime.time < pItem2->item.asDateTime.time ? -1 :
+                   ( pItem1->item.asDateTime.time > pItem2->item.asDateTime.time ? 1 : 0 ) ) );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_LOGICAL( pItem1 ) )
+   {
+      if( HB_IS_LOGICAL( pItem2 ) )
+      {
+         *piResult = pItem1->item.asLogical.value ?
+                     ( pItem2->item.asLogical.value ? 0 : 1 ) :
+                     ( pItem2->item.asLogical.value ? -1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_ARRAY( pItem1 ) )
+   {
+      if( HB_IS_ARRAY( pItem2 ) )
+      {
+         *piResult = pItem1->item.asArray.value < pItem2->item.asArray.value ? -1 :
+                   ( pItem1->item.asArray.value > pItem2->item.asArray.value ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_HASH( pItem1 ) )
+   {
+      if( HB_IS_HASH( pItem2 ) )
+      {
+         *piResult = pItem1->item.asHash.value < pItem2->item.asHash.value ? -1 :
+                   ( pItem1->item.asHash.value > pItem2->item.asHash.value ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_POINTER( pItem1 ) )
+   {
+      if( HB_IS_POINTER( pItem2 ) )
+      {
+         *piResult = pItem1->item.asPointer.value < pItem2->item.asPointer.value ? -1 :
+                   ( pItem1->item.asPointer.value > pItem2->item.asPointer.value ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_BLOCK( pItem1 ) )
+   {
+      if( HB_IS_BLOCK( pItem2 ) )
+      {
+         *piResult = pItem1->item.asBlock.value < pItem2->item.asBlock.value ? -1 :
+                   ( pItem1->item.asBlock.value > pItem2->item.asBlock.value ? 1 : 0 );
+         fResult = HB_TRUE;
+      }
+   }
+   else if( HB_IS_SYMBOL( pItem1 ) )
+   {
+      if( HB_IS_SYMBOL( pItem2 ) )
+      {
+         *piResult = ( pItem1->item.asSymbol.value == pItem2->item.asSymbol.value ||
+                       ( pItem1->item.asSymbol.value->pDynSym != NULL &&
+                         pItem1->item.asSymbol.value->pDynSym ==
+                         pItem2->item.asSymbol.value->pDynSym ) ) ? 0 :
+                     ( pItem1->item.asSymbol.value < pItem2->item.asSymbol.value ? -1 : 1 );
+         fResult = HB_TRUE;
+      }
+   }
    return fResult;
 }
 
@@ -2669,7 +2798,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
    {
       case HB_IT_STRING:
       case HB_IT_MEMO:
-         buffer = ( char * ) hb_itemGetCPtr( pItem );
+         buffer = ( char * ) HB_UNCONST( hb_itemGetCPtr( pItem ) );
          * nLen = hb_itemGetCLen( pItem );
          * bFreeReq = HB_FALSE;
          break;
@@ -2758,7 +2887,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
       case HB_IT_POINTER:
       {
          int size = ( sizeof( void * ) << 1 ) + 3; /* n bytes for address + 0x + \0 */
-         HB_PTRDIFF addr = ( HB_PTRDIFF ) hb_itemGetPtr( pItem );
+         HB_PTRUINT addr = ( HB_PTRUINT ) hb_itemGetPtr( pItem );
 
          *nLen = size - 1;
          *bFreeReq = HB_TRUE;

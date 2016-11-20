@@ -1,13 +1,8 @@
 /*
- * Harbour Project source code:
  * Document generator - text output
  *
- * Copyright 2009 April White <april users.sourceforge.net>
- * www - http://harbour-project.org
- *
- * Portions of this project are based on hbdoc
- *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
- *    <TODO: list gen... methods used>
+ * Copyright 2009 April White <bright.tigra gmail.com>
+ * Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br> (Portions of this project are based on hbdoc)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,59 +46,62 @@
  */
 
 #include "hbclass.ch"
-#include "hbdoc.ch"
 
-CREATE CLASS GenerateAscii FROM GenerateText
+CREATE CLASS GenerateAscii INHERIT GenerateText
 
-   METHOD NewIndex( cFolder, cFilename, cTitle, cDescription )
-   METHOD NewDocument( cFolder, cFilename, cTitle, cDescription )
+   METHOD NewIndex( cDir, cFilename, cTitle, cLang )
+   METHOD NewDocument( cDir, cFilename, cTitle, cLang )
 
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
+METHOD NewDocument( cDir, cFilename, cTitle, cLang ) CLASS GenerateAscii
 
    ::lContinuous := .T.
-   ::super:NewDocument( cFolder, cFilename, cTitle, cDescription )
+   ::super:NewDocument( cDir, cFilename, cTitle,, cLang )
 
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
+METHOD NewIndex( cDir, cFilename, cTitle, cLang ) CLASS GenerateAscii
 
    ::lContinuous := .T.
-   ::super:NewIndex( cFolder, cFilename, cTitle, cDescription )
+   ::super:NewIndex( cDir, cFilename, cTitle,, cLang )
 
    RETURN self
 
-CREATE CLASS GenerateText FROM TPLGenerate
+CREATE CLASS GenerateText INHERIT TPLGenerate
 
    HIDDEN:
 
+   METHOD WriteEntry( cCaption, cContent, lPreformatted )
+   METHOD AddIndex( oEntry )
+
    PROTECTED:
+
    VAR lContinuous AS LOGICAL INIT .F.
 
    EXPORTED:
-   METHOD NewIndex( cFolder, cFilename, cTitle )
-   METHOD NewDocument( cFolder, cFilename, cTitle )
-   METHOD AddEntry( oEntry )
-   METHOD AddIndex( oEntry ) HIDDEN
-   METHOD BeginSection( cSection, cFilename )
-   // ~ METHOD EndSection( cSection, cFilename ) // will use inherited method
-   METHOD Generate()
 
-   METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
+   METHOD NewIndex( cDir, cFilename, cTitle, cLang )
+   METHOD NewDocument( cDir, cFilename, cTitle, cLang )
+   METHOD AddEntry( oEntry )
+   METHOD BeginSection( cSection, cFilename )
+#if 0
+   METHOD EndSection( cSection, cFilename )  /* will use inherited method */
+#endif
+   METHOD Generate()
 
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateText
+METHOD NewDocument( cDir, cFilename, cTitle, cLang ) CLASS GenerateText
 
-   ::super:NewDocument( cFolder, cFilename, cTitle, ".txt" )
+   ::super:NewDocument( cDir, cFilename, cTitle, ".txt", cLang )
    ::WriteEntry( "", cTitle + hb_eol(), .F. )
 
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
+METHOD NewIndex( cDir, cFilename, cTitle, cLang ) CLASS GenerateText
 
-   ::super:NewIndex( cFolder, cFilename, cTitle, ".txt" )
+   ::super:NewIndex( cDir, cFilename, cTitle, ".txt", cLang )
    ::WriteEntry( "", cTitle + hb_eol(), .F. )
 
    RETURN self
@@ -121,56 +119,51 @@ METHOD BeginSection( cSection, cFilename ) CLASS GenerateText
 
 METHOD AddIndex( oEntry ) CLASS GenerateText
 
-   ::WriteEntry( oEntry:FieldName( "NAME" ), oEntry:Name + " - " + oEntry:OneLiner, .F. )
+   ::WriteEntry( FieldCaption( "NAME" ), oEntry:fld[ "NAME" ] + " - " + oEntry:fld[ "ONELINER" ], .F. )
 
    RETURN self
 
 METHOD AddEntry( oEntry ) CLASS GenerateText
 
-   LOCAL idx
+   LOCAL item
 
-   IF self:IsIndex()
-      self:AddIndex( oEntry )
+   IF ::IsIndex()
+      ::AddIndex( oEntry )
    ELSE
-      FOR idx := 1 TO Len( oEntry:Fields )
-         IF oEntry:IsField( oEntry:Fields[ idx ][ 1 ] ) .AND. oEntry:IsOutput( oEntry:Fields[ idx ][ 1 ] ) .AND. Len( oEntry:&( oEntry:Fields[ idx ][ 1 ] ) ) > 0
-            ::WriteEntry( oEntry:FieldName( oEntry:Fields[ idx ][ 1 ] ), oEntry:&( oEntry:Fields[ idx ][ 1 ] ), oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
+      FOR EACH item IN FieldIDList()
+         IF oEntry:IsField( item ) .AND. oEntry:IsOutput( item ) .AND. Len( oEntry:fld[ item ] ) > 0
+            ::WriteEntry( FieldCaption( item ), oEntry:fld[ item ], oEntry:IsPreformatted( item ) )
          ENDIF
       NEXT
 
       IF ! ::lContinuous
-         FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
+         ::cFile += hb_BChar( 12 ) + hb_eol()
       ENDIF
    ENDIF
 
    RETURN self
 
-METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateText
+METHOD PROCEDURE WriteEntry( cCaption, cContent, lPreformatted ) CLASS GenerateText
 
    LOCAL nIndent
 
-   IF ! Empty( cEntry )
-      nIndent := iif( Len( cCaption ) > 0, 6, 0 )
-      IF Len( cCaption ) > 0 .AND. nIndent > 0
-         FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
+   IF ! Empty( cContent )
+      nIndent := iif( HB_ISNULL( cCaption ), 0, 6 )
+      IF ! HB_ISNULL( cCaption ) .AND. nIndent > 0
+         ::cFile += Space( ::Depth * 6 ) + cCaption + ": " + hb_eol()
       ENDIF
       nIndent += ::Depth * 6
-      DO WHILE Len( cEntry ) > 0
-         FWrite( ::nHandle, Indent( Parse( @cEntry, hb_eol() ), nIndent, 70, lPreformatted ) )
+      DO WHILE ! HB_ISNULL( cContent )
+         ::cFile += Indent( Parse( @cContent, hb_eol() ), nIndent, 70, lPreformatted )
       ENDDO
    ENDIF
 
 METHOD Generate() CLASS GenerateText
 
-   IF ::IsIndex()
-      IF ! ::lContinuous
-         FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
-      ENDIF
+   IF ::IsIndex() .AND. ! ::lContinuous
+      ::cFile += hb_BChar( 12 ) + hb_eol()
    ENDIF
 
-   IF ! Empty( ::nHandle )
-      FClose( ::nHandle )
-      ::nHandle := 0
-   ENDIF
+   ::super:Generate()
 
    RETURN self

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    socket related constant values
+ * socket related constant values
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -179,6 +177,12 @@
 #define HB_SOCKET_IPPROTO_L2TP            115   /* L2TP */
 #define HB_SOCKET_IPPROTO_SCTP            132   /* Stream Control Transmission Protocol */
 #define HB_SOCKET_IPPROTO_RAW             255   /* Raw IP packets */
+
+/* send/recv flags */
+#define HB_SOCKET_MSG_OOB                 0x01  /* process out-of-band data */
+#define HB_SOCKET_MSG_PEEK                0x02  /* peek at incoming messages */
+#define HB_SOCKET_MSG_DONTROUTE           0x04  /* don't use local routing */
+#define HB_SOCKET_MSG_WAITALL             0x08  /* wait for a full request or error */
 
 /* shutdown actions */
 #define HB_SOCKET_SHUT_RD                 0

@@ -72,28 +72,28 @@ static PHB_ITEM hbamf_cls_externalizable_instance( PHB_ITEM pClassFuncStr )
    return NULL;
 }
 
-static char * readByte( amfContext * context )
+static const char * readByte( amfContext * context )
 {
    HB_ISIZ new_position = context->position + 1;
-   char *  byte_ref;
+   const char * byte_ref;
 
    if( new_position < 0 || new_position > context->length )
       return NULL;
 
-   byte_ref = ( char * ) ( context->cBuf + context->position );
+   byte_ref = context->cBuf + context->position;
    context->position = new_position;
    return byte_ref;
 }
 
-static char * readBytes( amfContext * context, HB_ISIZ len )
+static const char * readBytes( amfContext * context, HB_ISIZ len )
 {
    HB_ISIZ new_position = context->position + len;
-   char *  result;
+   const char * result;
 
    if( new_position < 0 || new_position > context->length )
       return NULL;
 
-   result = ( char * ) ( context->cBuf + context->position );
+   result = context->cBuf + context->position;
    context->position = new_position;
    return result;
 }
@@ -140,10 +140,10 @@ static HB_BOOL amfX_decode_double( amfContext * context, double * val )
 
 static HB_BOOL amf3_decode_int( amfContext * context, int * iVal )
 {
-   int    result   = 0;
-   int    byte_cnt = 0;
-   char * byte_ref;
-   char   byte;
+   const char * byte_ref;
+   char byte;
+   int  result   = 0;
+   int  byte_cnt = 0;
 
    byte_ref = readByte( context );
    if( ! byte_ref )
@@ -299,7 +299,7 @@ static HB_BOOL amf3_decode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
    PHB_ITEM pValue;
    HB_BOOL  result;
 
-   for(;; )
+   for( ;; )
    {
       pKey = hb_itemNew( NULL );
       if( ! amf3_deserialize_string( context, pKey ) )
@@ -394,7 +394,7 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
    PHB_ITEM pHash = context->obj_ref;
    int      array_len;
    HB_BOOL  mixed; /* if the result will be a Hash with both numbers and strings as keys */
-   char *   byte_ref;
+   const char * byte_ref;
 
    if( ! amf3_decode_int( context, header_p ) )
       return HB_FALSE;

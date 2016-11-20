@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Dynamic link libraries management functions
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -70,6 +68,13 @@
 #  endif
 #elif defined( HB_OS_OS2 )
 #  include <os2.h>
+#elif defined( HB_OS_DOS ) && defined( __WATCOMC__ ) && !defined( HB_CAUSEWAY_DLL )
+   /* it's broken in recent OpenWatcom builds so enable it
+      for tests only in harbur.dll [druzus] */
+#  if defined( HB_DYNLIB )
+#     define HB_CAUSEWAY_DLL
+#  include <cwdllfnc.h>
+#  endif
 #endif
 
 /* NOTE: VxWorks supports dlopen() functionality only in shared
@@ -143,6 +148,8 @@ PHB_ITEM hb_libLoad( PHB_ITEM pLibName, PHB_ITEM pArgs )
          {
             HB_TRACE( HB_TR_DEBUG, ( "hb_libLoad(): dlopen(): %s", dlerror() ) );
          }
+#elif defined( HB_CAUSEWAY_DLL )
+         hDynLib = LoadLibrary( hb_itemGetCPtr( pLibName ) );
 #else
          {
             int iTODO;
@@ -187,6 +194,9 @@ HB_BOOL hb_libFree( PHB_ITEM pDynLib )
          fResult = DosFreeModule( ( HMODULE ) hDynLib ) == NO_ERROR;
 #elif defined( HB_HAS_DLFCN )
          fResult = dlclose( hDynLib ) == 0;
+#elif defined( HB_CAUSEWAY_DLL )
+         FreeLibrary( hDynLib );
+         fResult = HB_TRUE;
 #endif
       }
       hb_vmUnlockModuleSymbols();
@@ -221,6 +231,8 @@ void * hb_libSymAddr( PHB_ITEM pDynLib, const char * pszSymbol )
          return ( void * ) pProcAddr;
 #elif defined( HB_HAS_DLFCN )
       return dlsym( hDynLib, pszSymbol );
+#elif defined( HB_CAUSEWAY_DLL )
+      return GetProcAddress( hDynLib, pszSymbol );
 #else
       HB_SYMBOL_UNUSED( pszSymbol );
 #endif

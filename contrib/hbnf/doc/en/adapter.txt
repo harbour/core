@@ -29,13 +29,13 @@
 
       DO CASE
       CASE iVideo == 0
-         QOut( "You have a monochrome adapter." )
+         ? "You have a monochrome adapter."
       CASE iVideo == 1
-         QOut( "You have a CGA adapter." )
+         ? "You have a CGA adapter."
       CASE iVideo == 2
-         QOut( "You have an EGA adapter." )
+         ? "You have an EGA adapter."
       CASE iVideo == 3
-         QOut( "You have a VGA adapter." )
+         ? "You have a VGA adapter."
       ENDCASE
    $SEEALSO$
       ft_SetMode()

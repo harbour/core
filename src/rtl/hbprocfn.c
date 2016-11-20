@@ -1,12 +1,9 @@
 /*
- * Harbour Project source code:
  * .prg level functions to create, wait and terminate processes
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  * based on xHarbour code by
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -78,6 +75,7 @@ HB_FUNC( HB_PROCESSOPEN )
 
       hProcess = hb_fsProcessOpen( szName, phStdIn, phStdOut, phStdErr,
                                    fDetach, &ulPID );
+      hb_fsSetFError( hb_fsError() );
       if( hProcess != FS_ERROR )
       {
          if( phStdIn )
@@ -99,7 +97,11 @@ HB_FUNC( HB_PROCESSVALUE )
    HB_FHANDLE hProcess = hb_numToHandle( hb_parnint( 1 ) );
 
    if( hProcess != 0 && hProcess != FS_ERROR && ( hb_pcount() < 2 || HB_ISLOG( 2 ) ) )
-      hb_retni( hb_fsProcessValue( hProcess, hb_pcount() < 2 || hb_parl( 2 ) ) );
+   {
+      int iResult = hb_fsProcessValue( hProcess, hb_pcount() < 2 || hb_parl( 2 ) );
+      hb_fsSetFError( hb_fsError() );
+      hb_retni( iResult );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -109,7 +111,11 @@ HB_FUNC( HB_PROCESSCLOSE )
    HB_FHANDLE hProcess = hb_numToHandle( hb_parnint( 1 ) );
 
    if( hProcess != 0 && hProcess != FS_ERROR && ( hb_pcount() < 2 || HB_ISLOG( 2 ) ) )
-      hb_retl( hb_fsProcessClose( hProcess, hb_pcount() < 2 || hb_parl( 2 ) ) );
+   {
+      HB_BOOL fResult = hb_fsProcessClose( hProcess, hb_pcount() < 2 || hb_parl( 2 ) );
+      hb_fsSetFError( hb_fsError() );
+      hb_retl( fResult );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -143,6 +149,7 @@ HB_FUNC( HB_PROCESSRUN )
       iResult = hb_fsProcessRun( szName, szStdIn, hb_parclen( 2 ),
                                  pStdOutPtr, &nStdOut, pStdErrPtr, &nStdErr,
                                  fDetach );
+      hb_fsSetFError( hb_fsError() );
 
       if( pStdOutBuf )
       {

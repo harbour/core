@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    HVM speed test program
+ * HVM speed test program
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

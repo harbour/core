@@ -1,7 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation
  *
@@ -91,7 +88,7 @@
       PROCEDURE Main()
          USE test NEW
          REPORT FORM test.frm
-         USE
+         dbCloseArea()
          RETURN
    $STATUS$
       R

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    The Hash tables API (PRG level)
+ * The Hash tables API (PRG level)
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -506,6 +504,26 @@ HB_FUNC( HB_HSCAN )
             if( pItem )
             {
                if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, fExact ) == 0 )
+               {
+                  fFound = HB_TRUE;
+                  break;
+               }
+            }
+            else
+               break;
+            ++nStart;
+         }
+      }
+      else if( HB_IS_NUMINT( pValue ) )
+      {
+         HB_MAXINT nValue = hb_itemGetNInt( pValue );
+         while( nCount-- )
+         {
+            PHB_ITEM pItem = hb_hashGetValueAt( pHash, nStart );
+            if( pItem )
+            {
+               if( HB_IS_NUMERIC( pItem ) && hb_itemGetNInt( pItem ) == nValue &&
+                   hb_itemGetND( pItem ) == ( double ) nValue )
                {
                   fFound = HB_TRUE;
                   break;

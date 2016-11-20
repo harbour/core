@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Keyboard API
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999-2012 Viktor Szakats (vszakats.net/harbour)
  *    hb_keyPut()
@@ -256,6 +253,11 @@ HB_FUNC( HB_KEYCHAR )
 HB_FUNC( HB_KEYSTD )
 {
    hb_retni( hb_inkeyKeyStd( hb_parni( 1 ) ) );
+}
+
+HB_FUNC( HB_KEYEXT )
+{
+   hb_retni( hb_inkeyKeyExt( hb_parni( 1 ) ) );
 }
 
 HB_FUNC( HB_KEYMOD )

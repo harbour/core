@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    Socket API wrapper functions
+ * Socket API wrapper functions
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
- * www - http://harbour-project.org/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -446,6 +444,20 @@ void hb_sockexItemClear( PHB_ITEM pItem )
       *pSockPtr = NULL;
 }
 
+HB_BOOL hb_sockexItemReplace( PHB_ITEM pItem, PHB_SOCKEX pSock )
+{
+   PHB_SOCKEX * pSockPtr = ( PHB_SOCKEX * ) hb_itemGetPtrGC( pItem, &s_gcSocketFuncs );
+
+   if( pSockPtr )
+   {
+      if( *pSockPtr )
+         hb_sockexClose( *pSockPtr, HB_FALSE );
+      *pSockPtr = pSock;
+      return HB_TRUE;
+   }
+   return HB_FALSE;
+}
+
 HB_BOOL hb_sockexItemSetFilter( PHB_ITEM pItem, const char * pszFilter, PHB_ITEM pParams )
 {
    PHB_SOCKEX * pSockPtr = ( PHB_SOCKEX * ) hb_itemGetPtrGC( pItem, &s_gcSocketFuncs );
@@ -568,8 +580,11 @@ PHB_SOCKEX hb_sockexNew( HB_SOCKET sd, const char * pszFilter, PHB_ITEM pParams 
                                pFilters[ i ]->Next( pSock, pParams );
          if( pSockNew == NULL )
          {
-            hb_sockexClose( pSock, HB_FALSE );
-            pSock = NULL;
+            if( pSock )
+            {
+               hb_sockexClose( pSock, HB_FALSE );
+               pSock = NULL;
+            }
             break;
          }
          pSock = pSockNew;
@@ -784,21 +799,21 @@ void hb_socekxParamsGetStd( PHB_ITEM pParams,
           HB_IS_STRING( pItem ) )
       {
          *pKeydata = hb_itemGetCPtr( pItem );
-         *pKeylen  = hb_itemGetCLen( pItem );
+         *pKeylen  = ( int ) hb_itemGetCLen( pItem );
       }
       else if( pKeydata && pKeylen &&
                ( pItem = hb_hashGetCItemPtr( pParams, "pass" ) ) != NULL &&
                HB_IS_STRING( pItem ) )
       {
          *pKeydata = hb_itemGetCPtr( pItem );
-         *pKeylen  = hb_itemGetCLen( pItem );
+         *pKeylen  = ( int ) hb_itemGetCLen( pItem );
       }
       if( pIV && pIVlen &&
           ( pItem = hb_hashGetCItemPtr( pParams, "iv" ) ) != NULL &&
           HB_IS_STRING( pItem ) )
       {
          *pIV    = hb_itemGetCPtr( pItem );
-         *pIVlen = hb_itemGetCLen( pItem );
+         *pIVlen = ( int ) hb_itemGetCLen( pItem );
       }
       if( pLevel &&
           ( pItem = hb_hashGetCItemPtr( pParams, "zlib" ) ) != NULL &&

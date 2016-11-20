@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Video subsystem for OS/2 compilers
  *
  * Copyright 1999-2001 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_os2_ReadKey()
@@ -117,6 +114,9 @@
    #endif
 #endif
 #include <conio.h>
+#if defined( __WATCOMC__ )
+   #include <signal.h>
+#endif
 
 static int s_GtId;
 static HB_GT_FUNCS SuperTable;
@@ -140,11 +140,78 @@ static VIOMODEINFO s_vi;
 
 /* keyboard event record */
 static PKBDKEYINFO s_key;
-/* keyboard handle, 0 == default */
-static PHKBD s_hk;
+
+/* keyboard status data */
+static PKBDINFO s_kbd;
 
 /* mouse logical handle */
 static HMOU s_uMouHandle;
+
+
+/* helper functions */
+
+#if defined( __WATCOMC__ )
+
+static HB_BOOL s_fBreak;
+
+static void hb_gt_os2_CtrlBreak_Handler( int iSignal )
+{
+   s_fBreak = HB_TRUE;
+   signal( iSignal, hb_gt_os2_CtrlBreak_Handler );
+}
+
+static void hb_gt_os2_CtrlBrkRestore( void )
+{
+   signal( SIGINT, SIG_DFL );
+   signal( SIGBREAK, SIG_DFL );
+}
+#endif
+
+#ifndef KBDSTF_SHIFT
+   #define KBDSTF_SHIFT ( KBDSTF_RIGHTSHIFT | KBDSTF_LEFTSHIFT )
+#endif
+
+static int hb_gt_os2_keyFlags( HB_USHORT fsState )
+{
+   int iFlags = 0;
+
+   if( fsState & KBDSTF_SHIFT )
+      iFlags |= HB_KF_SHIFT;
+   if( fsState & KBDSTF_CONTROL )
+      iFlags |= HB_KF_CTRL;
+   if( fsState & KBDSTF_ALT )
+      iFlags |= HB_KF_ALT;
+
+   return iFlags;
+}
+
+static int hb_gt_os2_getKbdState( void )
+{
+   int iKbdState = 0;
+
+   memset( s_kbd, 0, sizeof( KBDINFO ) );
+   if( KbdGetStatus( s_kbd, 0 ) == NO_ERROR )
+   {
+      if( s_kbd->fsState & KBDSTF_SHIFT         ) iKbdState |= HB_GTI_KBD_SHIFT;
+      if( s_kbd->fsState & KBDSTF_CONTROL       ) iKbdState |= HB_GTI_KBD_CTRL;
+      if( s_kbd->fsState & KBDSTF_ALT           ) iKbdState |= HB_GTI_KBD_ALT;
+      if( s_kbd->fsState & KBDSTF_SCROLLLOCK_ON ) iKbdState |= HB_GTI_KBD_SCROLOCK;
+      if( s_kbd->fsState & KBDSTF_NUMLOCK_ON    ) iKbdState |= HB_GTI_KBD_NUMLOCK;
+      if( s_kbd->fsState & KBDSTF_CAPSLOCK_ON   ) iKbdState |= HB_GTI_KBD_CAPSLOCK;
+      if( s_kbd->fsState & KBDSTF_INSERT_ON     ) iKbdState |= HB_GTI_KBD_INSERT;
+      if( s_kbd->fsState & KBDSTF_LEFTSHIFT     ) iKbdState |= HB_GTI_KBD_LSHIFT;
+      if( s_kbd->fsState & KBDSTF_RIGHTSHIFT    ) iKbdState |= HB_GTI_KBD_RSHIFT;
+      if( s_kbd->fsState & KBDSTF_LEFTCONTROL   ) iKbdState |= HB_GTI_KBD_LCTRL;
+      if( s_kbd->fsState & KBDSTF_RIGHTCONTROL  ) iKbdState |= HB_GTI_KBD_RCTRL;
+      if( s_kbd->fsState & KBDSTF_LEFTALT       ) iKbdState |= HB_GTI_KBD_LALT;
+      if( s_kbd->fsState & KBDSTF_RIGHTALT      ) iKbdState |= HB_GTI_KBD_RALT;
+   }
+
+   return iKbdState;
+}
+
+
+/* GT methods */
 
 static void hb_gt_os2_mouse_Init( PHB_GT pGT )
 {
@@ -524,7 +591,7 @@ static PVOID hb_gt_os2_allocMem( int iSize )
    APIRET rc;     /* return code from DosXXX api call */
    PVOID pMem;
 
-   rc = DosAllocMem( &pMem, iSize, PAG_COMMIT | OBJ_TILE | PAG_WRITE );
+   rc = DosAllocMem( &pMem, iSize, PAG_COMMIT | PAG_READ | PAG_WRITE | OBJ_TILE );
    if( rc != NO_ERROR )
       hb_errInternal( HB_EI_XGRABALLOC, "hb_gt_os2_allocMem() memory allocation failure.", NULL, NULL );
 
@@ -533,16 +600,14 @@ static PVOID hb_gt_os2_allocMem( int iSize )
 
 static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p,%p)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Init(%p,%p,%p,%p)", pGT, ( HB_PTRUINT ) hFilenoStdin, ( HB_PTRUINT ) hFilenoStdout, ( HB_PTRUINT ) hFilenoStderr ) );
 
    s_vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &s_vi, 0 );        /* fill structure with current video mode settings */
 
    /* Alloc tileable memory for calling a 16 subsystem */
-   s_hk = ( PHKBD ) hb_gt_os2_allocMem( sizeof( HKBD ) );
-   /* it is a long after all, so I set it to zero only one time since it never changes */
-   memset( s_hk, 0, sizeof( HKBD ) );
    s_key = ( PKBDKEYINFO ) hb_gt_os2_allocMem( sizeof( KBDKEYINFO ) );
+   s_kbd = ( PKBDINFO ) hb_gt_os2_allocMem( sizeof( KBDINFO ) );
 
    /* TODO: Is anything else required to initialize the video subsystem?
             I (Maurilio Longo) think that we should set correct codepage
@@ -564,12 +629,28 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
             is equal to 437
     */
 
+   /* 2015-09-07 If someone wants to use CP437 regardless of default OS2
+      settings then he should add to his code:
+         hb_gtInfo( HB_GTI_CODEPAGE, 437 )
+      [druzus]
+    */
+
    VioGetCp( 0, &s_usOldCodePage, 0 );
 
+#if 0
    /* If I could not set codepage 437 I reset previous codepage,
       maybe I do not need to do this */
    if( VioSetCp( 0, 437, 0 ) != NO_ERROR )
       VioSetCp( 0, s_usOldCodePage, 0 );
+#endif
+
+#if defined( __WATCOMC__ )
+   s_fBreak = HB_FALSE;
+   signal( SIGINT, hb_gt_os2_CtrlBreak_Handler );
+   signal( SIGBREAK, hb_gt_os2_CtrlBreak_Handler );
+   atexit( hb_gt_os2_CtrlBrkRestore );
+#endif
+
 
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_os2_GetCursorStyle();
@@ -595,50 +676,77 @@ static void hb_gt_os2_Exit( PHB_GT pGT )
    }
 
    DosFreeMem( s_key );
-   DosFreeMem( s_hk );
+   DosFreeMem( s_kbd );
    VioSetCp( 0, s_usOldCodePage, 0 );
+
+#if defined( __WATCOMC__ )
+   hb_gt_os2_CtrlBrkRestore();
+#endif
 }
 
 static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   int ch;              /* next char if any */
+   int iKey = 0, iFlags = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_ReadKey(%p,%d)", pGT, iEventMask ) );
 
    /* zero out keyboard event record */
    memset( s_key, 0, sizeof( KBDKEYINFO ) );
 
+#if defined( __WATCOMC__ )
+   if( s_fBreak )
+   {
+      s_fBreak = HB_FALSE; /* Indicate that Ctrl+Break has been handled */
+      iKey = HB_BREAK_FLAG; /* Note that Ctrl+Break was pressed */
+   }
+   else
+#endif
    /* Get next character without wait */
-   KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) *s_hk );
-
-   /* extended key codes have 00h or E0h as chChar */
-   if( ( s_key->fbStatus & KBDTRF_EXTENDED_CODE ) &&
-       ( s_key->chChar == 0x00 || s_key->chChar == 0xE0 ) )
+   if( KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) 0 ) == NO_ERROR )
    {
-      /* It was an extended function key lead-in code, so read the actual function key and then offset it by 256,
-         unless extended keyboard events are allowed, in which case offset it by 512 */
-      if( ( s_key->chChar == 0xE0 ) && ( iEventMask & HB_INKEY_RAW ) )
-         ch = ( int ) s_key->chScan + 512;
-      else
-         ch = ( int ) s_key->chScan + 256;
+      iFlags = hb_gt_os2_keyFlags( s_key->fsState );
+
+      /* extended key codes have 00h or E0h as chChar */
+      if( ( s_key->fbStatus & KBDTRF_EXTENDED_CODE ) &&
+          ( s_key->chChar == 0x00 || s_key->chChar == 0xE0 ) )
+         iKey = hb_gt_dos_keyCodeTranslate( ( int ) s_key->chScan + 256,
+                                            iFlags, HB_GTSELF_CPIN( pGT ) );
+      else if( s_key->fbStatus & KBDTRF_FINAL_CHAR_IN )
+      {
+         iKey = ( int ) s_key->chChar;
+         if( ( iFlags & HB_KF_CTRL ) != 0 && ( iKey >= 0 && iKey < 32 ) )
+         {
+            iKey += 'A' - 1;
+            iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+         }
+         else if( iKey < 128 && ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) )
+         {
+            iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+         }
+         else
+         {
+            int uc = HB_GTSELF_KEYTRANS( pGT, iKey );
+            if( uc )
+               iKey = HB_INKEY_NEW_UNICODEF( uc, iFlags );
+            else
+               iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
+         }
+      }
    }
-   else if( s_key->fbStatus & KBDTRF_FINAL_CHAR_IN )
-      ch = ( int ) s_key->chChar;
-   else
-      ch = 0;
 
-   ch = hb_gt_dos_keyCodeTranslate( ch );
-
-   if( ch == 0 )
-      ch = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
-   else
+   if( iKey == 0 )
    {
-      int u = HB_GTSELF_KEYTRANS( pGT, ch );
-      if( u )
-         ch = HB_INKEY_NEW_UNICODE( u );
+      iKey = HB_GTSELF_MOUSEREADKEY( pGT, iEventMask );
+      if( iKey != 0 && ! HB_INKEY_ISEXT( iKey ) && iKey != K_MOUSEMOVE )
+      {
+         memset( s_kbd, 0, sizeof( KBDINFO ) );
+         if( KbdGetStatus( s_kbd, 0 ) == NO_ERROR )
+            iFlags = hb_gt_os2_keyFlags( s_kbd->fsState );
+         iKey = HB_INKEY_NEW_MKEY( iKey, iFlags );
+      }
    }
 
-   return ch;
+   return iKey;
 }
 
 static HB_BOOL hb_gt_os2_IsColor( PHB_GT pGT )
@@ -849,6 +957,26 @@ static HB_BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_KBDSUPPORT:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );
          break;
+
+      case HB_GTI_KBDSHIFTS:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, hb_gt_os2_getKbdState() );
+         break;
+
+      case HB_GTI_CODEPAGE:
+      {
+         USHORT usCodePageNew = ( USHORT ) hb_itemGetNI( pInfo->pNewVal );
+         USHORT usCodePage = 0;
+
+         VioGetCp( 0, &usCodePage, 0 );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, usCodePage );
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
+             usCodePageNew != usCodePage )
+         {
+            if( VioSetCp( 0, usCodePageNew, 0 ) != NO_ERROR )
+               VioSetCp( 0, usCodePage, 0 );
+         }
+         break;
+      }
 
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );

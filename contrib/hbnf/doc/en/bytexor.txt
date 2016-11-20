@@ -29,6 +29,6 @@
       ? hb_BCode( cNewByte )     // result: 23
       ? cNewByte                 // result: non-printable character
    $SEEALSO$
-      ft_ByteOr() ft_ByteNot() ft_ByteNeg() ft_ByteAnd()
+      ft_ByteOr(), ft_ByteNot(), ft_ByteNeg(), ft_ByteAnd()
    $END$
  */

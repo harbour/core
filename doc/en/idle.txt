@@ -8,7 +8,7 @@
    $ONELINER$
       Read me file for Idle States
    $DESCRIPTION$
-      The idle state is the state of the harbour virtual machine when it
+      The idle state is the state of the Harbour virtual machine when it
       waits for the user input from the keyboard or the mouse. The idle
       state is entered during Inkey() calls currently. All applications
       that don't use Inkey() function call can signal the idle states with

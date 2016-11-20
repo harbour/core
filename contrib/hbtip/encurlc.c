@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,7 +59,7 @@ HB_FUNC( TIP_URLENCODE )
       if( nLen )
       {
          HB_BOOL bComplete = hb_parldef( 2, HB_TRUE );
-         HB_ISIZ nPos = 0, nPosRet = 0, nVal;
+         HB_ISIZ nPos = 0, nPosRet = 0;
 
          /* Giving maximum final length possible */
          char * pszRet = ( char * ) hb_xgrab( nLen * 3 + 1 );
@@ -74,12 +72,11 @@ HB_FUNC( TIP_URLENCODE )
             {
                pszRet[ nPosRet ] = '+';
             }
-            else if(
-               ( cElem >= 'A' && cElem <= 'Z' ) ||
-               ( cElem >= 'a' && cElem <= 'z' ) ||
-               ( cElem >= '0' && cElem <= '9' ) ||
-               cElem == '.' || cElem == ',' || cElem == '&' ||
-               cElem == '/' || cElem == ';' || cElem == '_' )
+            else if( ( cElem >= 'A' && cElem <= 'Z' ) ||
+                     ( cElem >= 'a' && cElem <= 'z' ) ||
+                     ( cElem >= '0' && cElem <= '9' ) ||
+                     cElem == '.' || cElem == ',' || cElem == '&' ||
+                     cElem == '/' || cElem == ';' || cElem == '_' )
             {
                pszRet[ nPosRet ] = cElem;
             }
@@ -89,11 +86,12 @@ HB_FUNC( TIP_URLENCODE )
             }
             else /* encode! */
             {
+               HB_UINT uiVal;
                pszRet[ nPosRet++ ] = '%';
-               nVal = ( ( HB_UCHAR ) cElem ) >> 4;
-               pszRet[ nPosRet++ ] = nVal < 10 ? '0' + ( char ) nVal : 'A' + ( char ) nVal - 10;
-               nVal = ( ( HB_UCHAR ) cElem ) & 0x0F;
-               pszRet[ nPosRet ] = nVal < 10 ? '0' + ( char ) nVal : 'A' + ( char ) nVal - 10;
+               uiVal = ( ( HB_UCHAR ) cElem ) >> 4;
+               pszRet[ nPosRet++ ] = ( char ) ( ( uiVal < 10 ? '0' : 'A' - 10 ) + uiVal );
+               uiVal = ( ( HB_UCHAR ) cElem ) & 0x0F;
+               pszRet[ nPosRet ] = ( char ) ( ( uiVal < 10 ? '0' : 'A' - 10 ) + uiVal );
             }
 
             nPosRet++;
@@ -129,26 +127,19 @@ HB_FUNC( TIP_URLDECODE )
          {
             char cElem = pszData[ nPos ];
 
-            if( cElem == '+' )
+            if( cElem == '%' && HB_ISXDIGIT( pszData[ nPos + 1 ] ) &&
+                                HB_ISXDIGIT( pszData[ nPos + 2 ] ) )
             {
-               pszRet[ nPosRet ] = ' ';
-            }
-            else if( cElem == '%' )
-            {
-               if( nPos < nLen - 2 )
-               {
-                  cElem = pszData[ ++nPos ];
-                  pszRet[ nPosRet ]  = cElem < 'A' ? cElem - '0' : cElem - 'A' + 10;
-                  pszRet[ nPosRet ] *= 16;
-
-                  cElem = pszData[ ++nPos ];
-                  pszRet[ nPosRet ] |= cElem < 'A' ? cElem - '0' : cElem - 'A' + 10;
-               }
-               else if( nPosRet > 0 )
-                  break;
+               cElem = pszData[ ++nPos ];
+               pszRet[ nPosRet ]  = cElem - ( cElem >= 'a' ? 'a' - 10 :
+                                            ( cElem >= 'A' ? 'A' - 10 : '0' ) );
+               pszRet[ nPosRet ] <<= 4;
+               cElem = pszData[ ++nPos ];
+               pszRet[ nPosRet ] |= cElem - ( cElem >= 'a' ? 'a' - 10 :
+                                            ( cElem >= 'A' ? 'A' - 10 : '0' ) );
             }
             else
-               pszRet[ nPosRet ] = cElem;
+               pszRet[ nPosRet ] = cElem == '+' ? ' ' : cElem;
 
             nPos++;
             nPosRet++;

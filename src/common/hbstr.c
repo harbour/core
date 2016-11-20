@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour common string functions (accessed from standalone utilities and the RTL)
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_stricmp()
@@ -411,7 +408,7 @@ static double hb_numPow10( int nPrecision )
 
 double hb_numRound( double dNum, int iDec )
 {
-   static const double doBase = 10.0f;
+   static const double doBase = 10.0;
    double doComplete5, doComplete5i, dPow;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_numRound(%lf, %d)", dNum, iDec ) );
@@ -502,10 +499,10 @@ double hb_numRound( double dNum, int iDec )
          doComplete5 = -doComplete5;
    }
 #else
-   if( dNum < 0.0f )
-      doComplete5 -= 5.0f;
+   if( dNum < 0.0 )
+      doComplete5 -= 5.0;
    else
-      doComplete5 += 5.0f;
+      doComplete5 += 5.0;
 #endif
 
    doComplete5 /= doBase;
@@ -820,6 +817,142 @@ char * hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT lNumber )
    }
 
    return &szBuf[ iPos ];
+}
+
+/* if you want to be sure that size of buffer is enough to hold each
+   double number with '\0' terminating character then it should have
+   at least HB_MAX_DOUBLE_LENGTH bytes. If buffer is not large enough
+   then NULL is returned */
+char * hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec )
+{
+   double dInt, dFract, dDig, doBase = 10.0;
+   int iLen, iPos, iPrec;
+   char * szResult;
+   HB_BOOL fFirst;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dblToStr(%p, %" HB_PFS "u, %f, %d)", szBuf, nSize, dNumber, iMaxDec ) );
+
+   iLen = ( int ) ( nSize - 1 );
+   if( iLen <= 0 )
+      return NULL;
+#ifdef HB_NUM_PRECISION
+   iPrec = HB_NUM_PRECISION;
+#else
+   iPrec = 16;
+#endif
+   szResult = szBuf;
+   if( dNumber < 0 )
+   {
+      dFract = modf( -dNumber, &dInt );
+      if( --iLen == 0 )
+      {
+         if( dInt < 1 && dFract < 0.5 )
+         {
+            szBuf[ 0 ] = '0';
+            szBuf[ 1 ] = '\0';
+            return szBuf;
+         }
+         return NULL;
+      }
+      *szBuf++ = '-';
+   }
+   else
+      dFract = modf( dNumber, &dInt );
+
+   iPos = iLen;
+   do
+   {
+      if( iPos == 0 )
+         return NULL;
+      dDig = modf( dInt / doBase + 0.01, &dInt ) * doBase;
+      szBuf[ --iPos ] = '0' + ( char ) ( dDig + 0.01 );
+   }
+   while( dInt >= 1 );
+   if( iPos > 0 )
+      memmove( szBuf, szBuf + iPos, HB_MIN( iLen - iPos, iPrec + 1 ) );
+   iPos = iLen - iPos;
+
+   fFirst = iPos > 1 || szBuf[ 0 ] != '0';
+   if( fFirst )
+   {
+      if( iPos >= iPrec )
+      {
+         fFirst = iPos == iPrec ? dFract >= 0.5 : szBuf[ iPrec ] >= '5';
+         if( iPrec < iPos )
+            memset( szBuf + iPrec , '0', iPos - iPrec );
+         if( fFirst )
+         {
+            for( ;; )
+            {
+               if( --iPrec < 0 )
+               {
+                  if( iPos == iLen )
+                     return NULL;
+                  memmove( szBuf + 1, szBuf, iPos );
+                  *szBuf = '1';
+                  ++iPos;
+                  break;
+               }
+               if( szBuf[ iPrec ] != '9' )
+               {
+                  ++szBuf[ iPrec ];
+                  break;
+               }
+               szBuf[ iPrec ] = '0';
+            }
+         }
+         iPrec = 0;
+      }
+      else
+         iPrec -= iPos;
+   }
+
+   if( iPrec > 0 && iLen - iPos > 1 && iMaxDec != 0 && dFract > 0 )
+   {
+      int iDec = iPos;
+
+      szBuf[ iPos ] = '.';
+      while( ++iPos < iLen && iPrec > 0 && iMaxDec-- != 0 )
+      {
+         dFract = modf( dFract * doBase, &dDig );
+         szBuf[ iPos ] = '0' + ( char ) ( dDig + 0.01 );
+         if( szBuf[ iPos ] != '0' )
+            fFirst = HB_TRUE;
+         if( fFirst )
+            --iPrec;
+      }
+      if( dFract > ( iPrec > 0 ? 0.5 - hb_numPow10( -iPrec ) : 0.2 ) )
+      {
+         iPrec = iPos;
+         for( ;; )
+         {
+            if( --iPrec < 0 )
+            {
+               memmove( szBuf + 1, szBuf, iPos );
+               *szBuf = '1';
+               if( iPos < iLen )
+                  ++iPos;
+               ++iDec;
+               break;
+            }
+            if( iPrec == iDec )
+               --iPrec;
+            if( szBuf[ iPrec ] != '9' )
+            {
+               ++szBuf[ iPrec ];
+               break;
+            }
+            szBuf[ iPrec ] = '0';
+         }
+      }
+      while( iPos > iDec && szBuf[ iPos - 1 ] == '0' )
+         --iPos;
+      if( szBuf[ iPos - 1 ] == '.' )
+         --iPos;
+   }
+
+   szBuf[ iPos ] = '\0';
+   return iPos == 1 && *szResult == '-' && *szBuf == '0' ? szBuf : szResult;
 }
 
 /*

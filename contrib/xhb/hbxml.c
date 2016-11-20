@@ -1,11 +1,8 @@
 /*
- * xHarbour Project source code:
  * HBXML - XML DOM oriented routines
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *    See also MXML library related copyright below
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -653,7 +650,7 @@ static void mxml_node_add_below( PHB_ITEM pTg, PHB_ITEM pNode )
    if( ! HB_IS_NIL( pChild ) )
    {
       /* Scanning up to the last child */
-      for(;; )
+      for( ;; )
       {
          hb_objSendMsg( pChild, "ONEXT", 0 );
          if( HB_IS_NIL( hb_param( -1, HB_IT_ANY ) ) )

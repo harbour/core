@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * CT3 CharPack() and CharUnpack() functions.
  *
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -74,12 +72,12 @@ HB_FUNC( CHARPACK )
          n_in += n_count;
       }
       if( n_out < len )
-         hb_retclen( ( char * ) out, n_out );
+         hb_retclen( ( const char * ) out, n_out );
       hb_xfree( out );
       if( n_out < len )
          return;
    }
-   hb_retclen( ( char * ) in, len );
+   hb_retclen( ( const char * ) in, len );
 }
 
 static HB_UCHAR * buf_append( HB_UCHAR * buf, HB_SIZE * buf_size, HB_SIZE count,
@@ -109,7 +107,7 @@ HB_FUNC( CHARUNPACK )
 
       if( ! ( in[ 0 ] == 158 && in[ 1 ] == 158 ) )
       {
-         hb_retclen( ( char * ) in, len );
+         hb_retclen( ( const char * ) in, len );
          return;
       }
       out = ( HB_UCHAR * ) hb_xgrab( buf_size );
@@ -118,14 +116,14 @@ HB_FUNC( CHARUNPACK )
          if( in[ i ] != 0 )
          {
             hb_xfree( out );
-            hb_retclen( ( char * ) in, len );
+            hb_retclen( ( const char * ) in, len );
             return;
          }
          out = buf_append( out, &buf_size, in[ i + 1 ], in[ i + 2 ], &out_len );
       }
-      hb_retclen( ( char * ) out, out_len );
+      hb_retclen( ( const char * ) out, out_len );
       hb_xfree( out );
       return;
    }
-   hb_retclen( ( char * ) in, len );
+   hb_retclen( ( const char * ) in, len );
 }

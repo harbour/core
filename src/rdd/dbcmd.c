@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Base RDD module
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -271,6 +269,7 @@ HB_FUNC( BOF )
    hb_retl( bBof );
 }
 
+/* dbAppend( [<lUnLockAll>=.T.] ) -> <lSuccess> */
 HB_FUNC( DBAPPEND )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -285,16 +284,6 @@ HB_FUNC( DBAPPEND )
       errCode = SELF_APPEND( pArea, bUnLockAll );
       hb_retl( errCode == HB_SUCCESS );
    }
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
-}
-
-HB_FUNC( DBCLEARFILTER )
-{
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-      SELF_CLEARFILTER( pArea );
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
@@ -326,9 +315,10 @@ HB_FUNC( DBCOMMITALL )
 
 /*
  * In Clipper the arguments are:
- *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg )
- * In Harbour:
- *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) (HB_EXTENSION)
+ *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg ) -> NIL
+ * In Harbour (HB_EXTENSION):
+ *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, ;
+ *              cCodePage, nConnection ) -> <lSuccess>
  */
 HB_FUNC( DBCREATE )
 {
@@ -398,7 +388,7 @@ HB_FUNC( DBCREATE )
 }
 
 /*
- *    hb_dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cCodePage>, <nConnection> ) -> <lSuccess>
+ * hb_dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cCodePage>, <nConnection> ) -> <lSuccess>
  */
 HB_FUNC( HB_DBCREATETEMP )
 {
@@ -463,7 +453,7 @@ HB_FUNC( HB_DBCREATETEMP )
          if .F. it will be opened in the current one. */
 /* NOTE: Has an identical parameter list with dbCreate() */
 
-/* __dbOpenSDF( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) */
+/* __dbOpenSDF( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) -> <lSuccess> */
 HB_FUNC( __DBOPENSDF )
 {
    const char * szFileName, * szAlias, * szDriver, * szCpId;
@@ -537,18 +527,14 @@ HB_FUNC( DBDELETE )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
-HB_FUNC( DBFILTER )
+HB_FUNC( DBRECALL )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
-   {
-      PHB_ITEM pFilter = hb_itemPutC( NULL, NULL );
-      SELF_FILTERTEXT( pArea, pFilter );
-      hb_itemReturnRelease( pFilter );
-   }
+      SELF_RECALL( pArea );
    else
-      hb_retc_null();
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
 HB_FUNC( DBGOBOTTOM )
@@ -680,16 +666,6 @@ HB_FUNC( __DBPACK )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
 }
 
-HB_FUNC( DBRECALL )
-{
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-
-   if( pArea )
-      SELF_RECALL( pArea );
-   else
-      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
-}
-
 HB_FUNC( DBRLOCK )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -767,27 +743,25 @@ HB_FUNC( DBSELECTAREA )
    if( szAlias )
    {
       hb_rddSelectWorkAreaAlias( szAlias );
-      if( hb_rddGetCurrentWorkAreaNumber() == HB_RDD_MAX_AREA_NUM )
-         hb_rddSelectFirstAvailable();
    }
    else
    {
       int iNewArea = hb_parni( 1 );
 
       /*
-       * NOTE: lNewArea >= HB_RDD_MAX_AREA_NUM used intentionally
+       * NOTE: iNewArea >= HB_RDD_MAX_AREA_NUM used intentionally
        * In Clipper area 65535 is reserved for "M" alias [druzus]
        */
       if( iNewArea < 1 || iNewArea >= HB_RDD_MAX_AREA_NUM )
       {
-         hb_rddSelectFirstAvailable();
+         if( hb_rddSelectFirstAvailable() != HB_SUCCESS )
+            hb_rddSelectWorkAreaNumber( 0 );
       }
       else
       {
          hb_rddSelectWorkAreaNumber( iNewArea );
       }
    }
-
 }
 
 HB_FUNC( __DBSETFOUND )
@@ -810,10 +784,18 @@ HB_FUNC( DBSETFILTER )
    {
       PHB_ITEM pBlock, pText;
       DBFILTERINFO pFilterInfo;
+
       pBlock = hb_param( 1, HB_IT_BLOCK );
-      if( pBlock )
+      pText = hb_param( 2, HB_IT_STRING );
+      /* Cl*pper allows to set text filter without codeblock. In local
+         RDDs it effectively does nothing and only dbFilter() returns it
+         but RDDs with automatic filter optimization like CL53/DBFCDX /
+         COMIX/ClipMore or RDDs working with remote data base servers
+         may use only text version of filter and ignore or use with
+         lower priority the codeblock so Harbour has to work like
+         Cl*pper here. [druzus] */
+      if( pBlock || hb_itemGetCLen( pText ) > 0 )
       {
-         pText = hb_param( 2, HB_IT_STRING );
          pFilterInfo.itmCobExpr = pBlock;
          if( pText )
             pFilterInfo.abFilterText = pText;
@@ -833,6 +815,41 @@ HB_FUNC( DBSETFILTER )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+}
+
+HB_FUNC( DBCLEARFILTER )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+      SELF_CLEARFILTER( pArea );
+   else
+      hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
+}
+
+HB_FUNC( DBFILTER )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+   {
+      PHB_ITEM pFilter = hb_itemPutC( NULL, NULL );
+      SELF_FILTERTEXT( pArea, pFilter );
+      hb_itemReturnRelease( pFilter );
+   }
+   else
+      hb_retc_null();
+}
+
+/* Harbour extension to retrieve CB */
+HB_FUNC( HB_DBGETFILTER )
+{
+   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
+   if( pArea )
+      hb_itemReturn( pArea->dbfi.itmCobExpr );
+   else
+      hb_ret();
 }
 
 HB_FUNC( DBSKIP )
@@ -858,7 +875,8 @@ HB_FUNC( DBSTRUCT )
 HB_FUNC( DBTABLEEXT )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   PHB_ITEM pItem = hb_itemPutC( NULL, NULL );
+   PHB_ITEM pItem = hb_itemNew( NULL );
+   HB_ERRCODE errCode = HB_FAILURE;
 
    if( ! pArea )
    {
@@ -870,15 +888,16 @@ HB_FUNC( DBTABLEEXT )
          pArea = ( AREAP ) hb_rddNewAreaNode( pRddNode, uiRddID );
          if( pArea )
          {
-            SELF_INFO( pArea, DBI_TABLEEXT, pItem );
+            errCode = SELF_INFO( pArea, DBI_TABLEEXT, pItem );
             SELF_RELEASE( pArea );
          }
       }
    }
    else
-   {
-      SELF_INFO( pArea, DBI_TABLEEXT, pItem );
-   }
+      errCode = SELF_INFO( pArea, DBI_TABLEEXT, pItem );
+
+   if( errCode != HB_SUCCESS )
+      hb_itemPutC( pItem, NULL );
    hb_itemReturnRelease( pItem );
 }
 
@@ -897,8 +916,9 @@ HB_FUNC( DBUNLOCKALL )
    hb_rddUnLockAll();
 }
 
-/* dbUseArea( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>], [<lShared>], [<lReadonly>], [<cCodePage>], [<nConnection>] ) -> NIL */
-
+/* dbUseArea( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>], ;
+              [<lShared>], [<lReadonly>], [<cCodePage>], ;
+              [<nConnection>] ) -> <lSuccess> */
 HB_FUNC( DBUSEAREA )
 {
    hb_retl( hb_rddOpenTable( hb_parc( 3 ), hb_parc( 2 ),
@@ -1934,7 +1954,7 @@ HB_FUNC( __DBARRANGE )
    hb_retl( errCode == HB_SUCCESS );
 }
 
-/* __dbTrans( nDstArea, aFieldsStru, bFor, bWhile, nNext, nRecord, lRest ) */
+/* __dbTrans( nDstArea, aFieldsStru, bFor, bWhile, nNext, nRecord, lRest ) -> <lSuccess> */
 HB_FUNC( __DBTRANS )
 {
    if( HB_ISNUM( 1 ) )
@@ -2010,6 +2030,10 @@ HB_FUNC( __DBTRANS )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
 }
 
+/* __dbApp( <cNameName>, [<aFields>], ;
+            [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], [<lRest>], ;
+            [<cRDD>], [<nConnection>], [<cCodePage>], ;
+            [<xDelimiter>] ) -> <lSuccess> */
 HB_FUNC( __DBAPP )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -2034,6 +2058,10 @@ HB_FUNC( __DBAPP )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, "APPEND FROM" );
 }
 
+/* __dbCoppy( <cNameName>, [<aFields>], ;
+              [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], [<lRest>], ;
+              [<cRDD>], [<nConnection>], [<cCodePage>], ;
+              [<xDelimiter>] ) -> <lSuccess> */
 HB_FUNC( __DBCOPY )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -2071,7 +2099,7 @@ HB_FUNC( HB_RDDINFO )
    LPRDDNODE  pRDDNode;
    HB_USHORT  uiRddID;
    HB_ULONG   ulConnection;
-   PHB_ITEM   pIndex, pParam;
+   PHB_ITEM   pIndex;
    const char * szDriver;
 
    szDriver = hb_parc( 3 );
@@ -2082,11 +2110,10 @@ HB_FUNC( HB_RDDINFO )
 
    pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
    pIndex = hb_param( 1, HB_IT_NUMERIC );
-   pParam = hb_param( 2, HB_IT_ANY );
 
    if( pRDDNode && pIndex )
    {
-      PHB_ITEM pInfo = hb_itemNew( pParam );
+      PHB_ITEM pInfo = hb_itemParam( 2 );
       SELF_RDDINFO( pRDDNode, ( HB_USHORT ) hb_itemGetNI( pIndex ), ulConnection, pInfo );
       hb_itemReturnRelease( pInfo );
    }
@@ -2096,24 +2123,25 @@ HB_FUNC( HB_RDDINFO )
 
 HB_FUNC( HB_DBDROP )
 {
-   LPRDDNODE  pRDDNode;
-   HB_USHORT  uiRddID;
-   HB_ULONG   ulConnection;
-   const char * szDriver;
-   PHB_ITEM   pName;
+   LPRDDNODE pRDDNode = NULL;
+   HB_ULONG ulConnection = hb_parnl( 4 );
+   const char * szName = hb_parc( 1 );
 
-   szDriver = hb_parc( 3 );
-   if( ! szDriver ) /* no VIA RDD parameter, use default */
+   if( szName )
    {
-      szDriver = hb_rddDefaultDrv( NULL );
+      const char * szDriver;
+
+      if( ! szName[ 0 ] )
+         szName = hb_parc( 2 );
+      szDriver = hb_rddFindDrv( hb_parc( 3 ), szName );
+      if( szDriver )
+         pRDDNode = hb_rddFindNode( szDriver, NULL );  /* find the RDDNODE */
    }
-   ulConnection = hb_parnl( 4 );
 
-   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
-   pName = hb_param( 1, HB_IT_STRING );
-
-   if( pRDDNode && pName )
-      hb_retl( SELF_DROP( pRDDNode, pName, hb_param( 2, HB_IT_STRING ),
+   if( pRDDNode )
+      hb_retl( SELF_DROP( pRDDNode,
+                          hb_param( 1, HB_IT_STRING ),
+                          hb_param( 2, HB_IT_STRING ),
                           ulConnection ) == HB_SUCCESS );
    else
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -2121,23 +2149,24 @@ HB_FUNC( HB_DBDROP )
 
 HB_FUNC( HB_DBEXISTS )
 {
-   LPRDDNODE  pRDDNode;
-   HB_USHORT  uiRddID;
-   HB_ULONG   ulConnection;
-   const char * szDriver;
-   PHB_ITEM   pName;
+   LPRDDNODE pRDDNode = NULL;
+   HB_ULONG ulConnection = hb_parnl( 4 );
+   const char * szName = hb_parc( 1 );
 
-   szDriver = hb_parc( 3 );
-   if( ! szDriver ) /* no VIA RDD parameter, use default */
-      szDriver = hb_rddDefaultDrv( NULL );
+   if( szName )
+   {
+      const char * szDriver;
 
-   ulConnection = hb_parnl( 4 );
-
-   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDD */
-   pName = hb_param( 1, HB_IT_STRING );
-
-   if( pRDDNode && pName )
-      hb_retl( SELF_EXISTS( pRDDNode, pName, hb_param( 2, HB_IT_STRING ),
+      if( ! szName[ 0 ] )
+         szName = hb_parc( 2 );
+      szDriver = hb_rddFindDrv( hb_parc( 3 ), szName );
+      if( szDriver )
+         pRDDNode = hb_rddFindNode( szDriver, NULL );  /* find the RDDNODE */
+   }
+   if( pRDDNode )
+      hb_retl( SELF_EXISTS( pRDDNode,
+                            hb_param( 1, HB_IT_STRING ),
+                            hb_param( 2, HB_IT_STRING ),
                             ulConnection ) == HB_SUCCESS );
    else
       hb_errRT_DBCMD( EG_ARG, EDBCMD_EVAL_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -2145,19 +2174,22 @@ HB_FUNC( HB_DBEXISTS )
 
 HB_FUNC( HB_DBRENAME )
 {
-   LPRDDNODE  pRDDNode;
-   HB_USHORT  uiRddID;
-   HB_ULONG   ulConnection;
-   const char * szDriver;
-   PHB_ITEM   pTable, pIndex, pNewName;
+   LPRDDNODE pRDDNode = NULL;
+   HB_ULONG ulConnection = hb_parnl( 5 );
+   const char * szName = hb_parc( 1 );
+   PHB_ITEM pTable, pIndex, pNewName;
 
-   szDriver = hb_parc( 4 );
-   if( ! szDriver ) /* no VIA RDD parameter, use default */
-      szDriver = hb_rddDefaultDrv( NULL );
+   if( szName )
+   {
+      const char * szDriver;
 
-   ulConnection = hb_parnl( 5 );
+      if( ! szName[ 0 ] )
+         szName = hb_parc( 2 );
+      szDriver = hb_rddFindDrv( hb_parc( 4 ), szName );
+      if( szDriver )
+         pRDDNode = hb_rddFindNode( szDriver, NULL );  /* find the RDDNODE */
+   }
 
-   pRDDNode = hb_rddFindNode( szDriver, &uiRddID );  /* find the RDDNODE */
    pTable = hb_param( 1, HB_IT_STRING );
    pIndex = hb_param( 2, HB_IT_STRING );
    pNewName = hb_param( 3, HB_IT_STRING );

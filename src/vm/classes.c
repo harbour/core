@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Base-routines for OOPS system
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
  *    :CLASSSEL()
@@ -431,7 +428,7 @@ static HB_USHORT hb_clsBucketPos( PHB_DYNS pMsg, HB_USHORT uiMask )
     * HB_DYNS structure
     */
    /*
-      return ( ( HB_USHORT ) ( ( HB_PTRDIFF ) pMsg >> 4 ) & uiMask ) << BUCKETBITS;
+      return ( ( HB_USHORT ) ( ( HB_PTRUINT ) pMsg >> 4 ) & uiMask ) << BUCKETBITS;
     */
 
    /* Using continuous symbol numbers we are 100% sure that we will cover
@@ -1572,15 +1569,15 @@ HB_SIZE hb_clsGetVarIndex( HB_USHORT uiClass, PHB_DYNS pVarSym )
       return 0;
 }
 
-HB_USHORT hb_clsFindClass( const char * szClass, const char * szFunc )
+HB_USHORT hb_clsFindClass( const char * szClass, const char * szClassFunc )
 {
    HB_USHORT uiClass;
 
    for( uiClass = 1; uiClass <= s_uiClasses; uiClass++ )
    {
       if( strcmp( szClass, s_pClasses[ uiClass ]->szName ) == 0 &&
-          ( ! szFunc || ( ! s_pClasses[ uiClass ]->pClassFuncSym ? ! *szFunc :
-            strcmp( szFunc, s_pClasses[ uiClass ]->pClassFuncSym->szName ) == 0 ) ) )
+          ( ! szClassFunc || ( ! s_pClasses[ uiClass ]->pClassFuncSym ? ! *szClassFunc :
+            strcmp( szClassFunc, s_pClasses[ uiClass ]->pClassFuncSym->szName ) == 0 ) ) )
       {
          return uiClass;
       }

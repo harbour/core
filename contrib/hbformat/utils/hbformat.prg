@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour source code formatter (cmdline wrapper)
  *
  * Copyright 2009 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -155,7 +153,7 @@ STATIC PROCEDURE About()
 
    OutStd( ;
       "Harbour Source Formatter " + HBRawVersion() + hb_eol() + ;
-      "Copyright (c) 2009-2015, Alexander S.Kresin" + hb_eol() + ;
+      "Copyright (c) 2009-2016, Alexander S.Kresin" + hb_eol() + ;
       "http://harbour-project.org/" + hb_eol() + ;
       hb_eol() + ;
       "Syntax:  hbformat [options] [@config] <file[s]>" + hb_eol() + ;

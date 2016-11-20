@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    Wrapper functions for minizip library
+ * Wrapper functions for minizip library
  *    Some higher level zip archive functions
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas.at.dbtopas.lt>
  * Copyright 2011-2013 Viktor Szakats (vszakats.net/harbour) (codepage/unicode)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -742,7 +740,7 @@ static HB_BOOL hb_zipGetFileInfo( const char * pszFileName, HB_U32 * pulCRC, HB_
 }
 
 
-/* hb_zipFileCRC32( cFileName ) --> nError */
+/* hb_zipFileCRC32( cFileName ) --> nCRC */
 HB_FUNC( HB_ZIPFILECRC32 )
 {
    const char * szFileName = hb_parc( 1 );
@@ -761,8 +759,6 @@ HB_FUNC( HB_ZIPFILECRC32 )
 static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName, const char * szPassword, int iParamComment, HB_BOOL fUnicode )
 {
    const char * szFileName = hb_parc( iParamFileName );
-   const char * szName     = hb_parc( iParamZipName );
-   char *       pString;
    PHB_FILE     pFile;
    HB_SIZE      nLen;
    HB_FATTR     ulExtAttr;
@@ -958,30 +954,23 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
       szComment = hb_parc( iParamComment );
    }
 
-   if( szName )
+   nLen = strlen( szZipName );
+   if( iParamZipName != iParamFileName )
    {
       /* change path separators to '/' */
-      nLen    = strlen( szZipName );
-      pString = szZipName;
       while( nLen-- )
       {
-         if( pString[ nLen ] == '\\' )
-            pString[ nLen ] = '/';
+         if( szZipName[ nLen ] == '\\' )
+            szZipName[ nLen ] = '/';
       }
    }
    else
    {
-      /* get file name */
-      szZipName = hb_strdup( szFileName );
-
-      nLen    = strlen( szZipName );
-      pString = szZipName;
-
       while( nLen-- )
       {
-         if( pString[ nLen ] == '/' || pString[ nLen ] == '\\' )
+         if( szZipName[ nLen ] == '/' || szZipName[ nLen ] == '\\' )
          {
-            memmove( szZipName, &pString[ nLen + 1 ], strlen( szZipName ) - nLen );
+            memmove( szZipName, &szZipName[ nLen + 1 ], strlen( szZipName ) - nLen );
             break;
          }
       }
@@ -1042,7 +1031,8 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
                                          szPassword, ulCRC, _version_made_by( fUnicode ), flags );
          if( iResult == 0 )
          {
-            pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+            char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+
             while( ( nLen = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) > 0 &&
                    nLen != ( HB_SIZE ) FS_ERROR )
                zipWriteInFileInZip( hZip, pString, ( unsigned ) nLen );

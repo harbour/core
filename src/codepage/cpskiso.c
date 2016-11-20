@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * National Collation Support Module (SKISO)
  *
  * Copyright 2007-2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This file is generated automatically by cpinfo.prg
  */

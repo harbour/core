@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for file lock synchronization between
+ * demonstration/test code for file lock synchronization between
  *    aliased work areas
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

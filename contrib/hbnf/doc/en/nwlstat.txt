@@ -25,6 +25,6 @@
       This function does NOT test for the existence of the NetWare shell.
       The behavior is undefined if no shell is loaded.
    $EXAMPLES$
-      ? "Logical station: " + Str( ft_NWLStat() )
+      ? "Logical station:", ft_NWLStat()
    $END$
  */

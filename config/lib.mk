@@ -26,6 +26,7 @@ HB_DYN_LIBS := \
    gtgui \
    gtwin \
    gtos2 \
+   gtdos \
    gttrm \
    gtcrs \
    gtsln \
@@ -39,6 +40,9 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
 endif
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    HB_DYN_LIBS += hbzlib
+endif
+ifeq ($(HB_PLATFORM),dos)
+   HB_DYN_LIBS += hbdossrl
 endif
 
 # Added only for hbpp

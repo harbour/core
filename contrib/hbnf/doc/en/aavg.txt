@@ -23,12 +23,9 @@
 
       This routine requires ft_ASum().
    $EXAMPLES$
-      ft_AAvg( aSubTotals )          // Get Average of Entire Array
-
-      ft_AAvg( aSubTotals, 5 )       // Get Average of 5th Element On
-
-      ft_AAvg( aSubTotals, , 10 )    // Get Average of 1st 10 Elements
-
-      ft_AAvg( aSubTotals, 5, 10 )   // Get Average of Elements 5-10
+      ? ft_AAvg( aSubTotals )          // Get Average of Entire Array
+      ? ft_AAvg( aSubTotals, 5 )       // Get Average of 5th Element On
+      ? ft_AAvg( aSubTotals, , 10 )    // Get Average of 1st 10 Elements
+      ? ft_AAvg( aSubTotals, 5, 10 )   // Get Average of Elements 5-10
    $END$
  */

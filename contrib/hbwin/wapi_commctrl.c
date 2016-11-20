@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows API functions (commctrl)
  *
  * Pritpal Bedi <pritpal@vouchcac.com> 14Feb2009
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -544,7 +542,7 @@ HB_FUNC( WAPI_TABCTRL_GETROWCOUNT )
 
 HB_FUNC( WAPI_TABCTRL_GETIMAGELIST )
 {
-   hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetImageList( hbwapi_par_raw_HWND( 1 ) ) );
+   hbwapi_ret_NINT( ( HB_PTRUINT ) TabCtrl_GetImageList( hbwapi_par_raw_HWND( 1 ) ) );
 }
 
 /* #define TabCtrl_SetImageList(hwnd, himl) */
@@ -552,7 +550,7 @@ HB_FUNC( WAPI_TABCTRL_GETIMAGELIST )
 
 HB_FUNC( WAPI_TABCTRL_SETIMAGELIST )
 {
-   hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_SetImageList( hbwapi_par_raw_HWND( 1 ),
+   hbwapi_ret_NINT( ( HB_PTRUINT ) TabCtrl_SetImageList( hbwapi_par_raw_HWND( 1 ),
                                                          hbwapi_par_raw_HIMAGELIST( 2 ) ) );
 }
 
@@ -663,7 +661,7 @@ HB_FUNC( WAPI_TABCTRL_SETPADDING )
 HB_FUNC( WAPI_TABCTRL_GETTOOLTIPS )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hbwapi_ret_NINT( ( HB_PTRDIFF ) TabCtrl_GetToolTips( hbwapi_par_raw_HWND( 1 ) ) );
+   hbwapi_ret_NINT( ( HB_PTRUINT ) TabCtrl_GetToolTips( hbwapi_par_raw_HWND( 1 ) ) );
 #else
    hbwapi_ret_NINT( -1 );
 #endif

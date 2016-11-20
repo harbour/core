@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for using mutexes to send/receive
+ * demonstration/test code for using mutexes to send/receive
  *    messages between threads to synchronize divided jobs between
  *    threads.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

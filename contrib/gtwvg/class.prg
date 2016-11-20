@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  *
  * GUI Components
  * Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>
@@ -23,7 +22,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.

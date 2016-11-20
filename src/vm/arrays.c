@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Array API (C level)
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *    hb_arrayIsObject()
@@ -1078,6 +1075,20 @@ HB_SIZE hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB_SI
                }
                while( --nCount > 0 );
             }
+            else if( HB_IS_NUMINT( pValue ) )
+            {
+               HB_MAXINT nValue = hb_itemGetNInt( pValue );
+
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + nStart++;
+
+                  if( HB_IS_NUMERIC( pItem ) && hb_itemGetNInt( pItem ) == nValue &&
+                      hb_itemGetND( pItem ) == ( double ) nValue )
+                     return nStart;
+               }
+               while( --nCount > 0 );
+            }
             else if( HB_IS_NUMERIC( pValue ) )
             {
                double dValue = hb_itemGetND( pValue );
@@ -1241,6 +1252,20 @@ HB_SIZE hb_arrayRevScan( PHB_ITEM pArray, PHB_ITEM pValue, HB_SIZE * pnStart, HB
                   /* NOTE: The order of the pItem and pValue parameters passed to
                            hb_itemStrCmp() is significant, please don't change it. [vszakats] */
                   if( HB_IS_STRING( pItem ) && hb_itemStrCmp( pItem, pValue, fExact ) == 0 )
+                     return nStart + 1;
+               }
+               while( --nCount && nStart-- );
+            }
+            else if( HB_IS_NUMINT( pValue ) )
+            {
+               HB_MAXINT nValue = hb_itemGetNInt( pValue );
+
+               do
+               {
+                  PHB_ITEM pItem = pBaseArray->pItems + nStart;
+
+                  if( HB_IS_NUMERIC( pItem ) && hb_itemGetNInt( pItem ) == nValue &&
+                      hb_itemGetND( pItem ) == ( double ) nValue )
                      return nStart + 1;
                }
                while( --nCount && nStart-- );

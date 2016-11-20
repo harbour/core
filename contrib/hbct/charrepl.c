@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *   CT3 string function CharRepl()
+ * CT3 string function CharRepl()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -110,9 +107,9 @@ HB_FUNC( CHARREPL )
          {
             /* multiple replacements: searching & replacing in pcRet */
             char * pcw = pcRet;
-            while( ( pcw = ( char * ) ct_at_exact_forward( pcw, sStrLen - ( pcw - pcRet ),
-                                                           pcSearch + sIndex, 1,
-                                                           &sMatchStrLen ) ) != NULL )
+            while( ( pcw = ( char * ) HB_UNCONST( ct_at_exact_forward( pcw, sStrLen - ( pcw - pcRet ),
+                                                                       pcSearch + sIndex, 1,
+                                                                       &sMatchStrLen ) ) ) != NULL )
             {
                *pcw++ = *( pcReplace + sReplIndex );
             }

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Date API
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -150,12 +148,24 @@ HB_EXTERN_END
 
 #define HB_TIMEDIFF_DEC       6     /* default number of decimal places in numeric timestamp diff values */
 
-#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
-      defined( HB_OS_SUNOS ) || defined( HB_OS_BEOS ) || \
-      defined( HB_OS_ANDROID ) ) && \
-   ! defined( HB_OS_DARWIN_5 ) && ! defined( HB_HAS_LOCALTIME_R )
-#  define HB_HAS_LOCALTIME_R
+#if ! defined( HB_HAS_LOCALTIME_R )
+#  if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+        defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
+        defined( HB_OS_SUNOS ) || defined( HB_OS_BEOS ) || \
+        defined( HB_OS_ANDROID ) ) && \
+      ! defined( HB_OS_DARWIN_5 )
+#     define HB_HAS_LOCALTIME_R
+#  elif defined( __WATCOMC__ )
+#     if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__ == 1
+#        define HB_HAS_LOCALTIME_R
+#        define localtime_r   localtime_s
+#        define gmtime_r      gmtime_s
+#     elif ! defined( NO_EXT_KEYS )
+#        define HB_HAS_LOCALTIME_R
+#        define localtime_r   _localtime
+#        define gmtime_r      _gmtime
+#     endif
+#  endif
 #endif
 
 #endif /* HB_DATE_H_ */

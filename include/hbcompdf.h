@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    definitions shared by compiler and macro compiler
+ * definitions shared by compiler and macro compiler
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -610,6 +608,11 @@ typedef struct _HB_MODULE
    struct _HB_MODULE *  pNext;
 } HB_MODULE, * PHB_MODULE;
 
+/* definitions for hb_compPCodeEval() support */
+typedef void * PHB_VOID;
+#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PHB_HFUNC pFunc, HB_SIZE nPCodePos, type cargo )
+typedef HB_PCODE_FUNC( ( * PHB_PCODE_FUNC ), PHB_VOID );
+
 typedef struct _HB_DEBUGINFO
 {
    char *    pszModuleName;
@@ -629,6 +632,7 @@ typedef struct _HB_LABEL_INFO
    HB_BOOL   fEndRequest;
    int       iNestedBlock;
    HB_SIZE * pnLabels;
+   const PHB_PCODE_FUNC * pFuncTable;
 } HB_LABEL_INFO, * PHB_LABEL_INFO;
 
 #define HB_MODE_COMPILER      1

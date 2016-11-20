@@ -6,9 +6,9 @@
    $ONELINER$
       Replace tabulator control characters with fill characters
    $SYNTAX$
-      TABEXPAND (<cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
+      TabExpand( <cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
                  [<cNewLineCharacters>], [<cTabChar|nTabChar>],
-                 [<lIgnore141>]) -> cExpandedString
+                 [<lIgnore141>] ) -> cExpandedString
    $ARGUMENTS$
       <cString>
       <nTabWidth>

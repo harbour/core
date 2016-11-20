@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Video subsystem for ANSI terminals
  *
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -457,7 +455,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    int iRows = 25, iCols = 80;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    s_hFilenoStdin  = hFilenoStdin;
    s_hFilenoStdout = hFilenoStdout;
@@ -508,7 +506,14 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       /* atexit( restore_input_mode ); */
       s_curr_TIO.c_lflag &= ~( ICANON | ECHO );
       s_curr_TIO.c_iflag &= ~ICRNL;
+#if 0
       s_curr_TIO.c_cc[ VMIN ] = 0;
+#else
+      /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
+         Ubuntu) in which select() unconditionally accepts stdin for
+         reading if c_cc[ VMIN ] = 0 [druzus] */
+      s_curr_TIO.c_cc[ VMIN ] = 1;
+#endif
       s_curr_TIO.c_cc[ VTIME ] = 0;
       tcsetattr( hFilenoStdin, TCSAFLUSH, &s_curr_TIO );
 
@@ -605,7 +610,7 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
    /* _read_kbd() returns -1 for no key, the switch statement will handle
       this. */
 
-   ch = hb_gt_dos_keyCodeTranslate( ch );
+   ch = hb_gt_dos_keyCodeTranslate( ch, 0, HB_GTSELF_CPIN( pGT ) );
 #elif defined( HB_HAS_TERMIOS )
    {
       struct timeval tv;
@@ -631,9 +636,11 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
          {
             /* It was a function key lead-in code, so read the actual
                function key and then offset it by 256 */
-            ch = _getch() + 256;
+            ch = _getch();
+            if( ch != -1 )
+               ch += 256;
          }
-         ch = hb_gt_dos_keyCodeTranslate( ch );
+         ch = hb_gt_dos_keyCodeTranslate( ch, 0, HB_GTSELF_CPIN( pGT ) );
       }
    }
    else if( ! _eof( ( int ) s_hFilenoStdin ) )
@@ -656,13 +663,15 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
       if( kbhit() )
       {
          ch = getch();
-         if( ( ch == 0 || ch == 224 ) && kbhit() )
+         if( ch == 0 && kbhit() )
          {
             /* It was a function key lead-in code, so read the actual
                function key and then offset it by 256 */
-            ch = getch() + 256;
+            ch = getch();
+            if( ch != -1 )
+               ch += 256;
          }
-         ch = hb_gt_dos_keyCodeTranslate( ch );
+         ch = hb_gt_dos_keyCodeTranslate( ch, 0, HB_GTSELF_CPIN( pGT ) );
       }
    }
    else if( ! eof( s_hFilenoStdin ) )

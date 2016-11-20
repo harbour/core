@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for using QUIT commands and ALWAYS statements
+ * demonstration/test code for using QUIT commands and ALWAYS statements
  *    execution. Child thread uses QUIT before main one.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

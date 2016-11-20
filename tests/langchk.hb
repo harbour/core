@@ -2,7 +2,6 @@
  * Check alignment dependent lang item(s)
  *
  * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  */
 

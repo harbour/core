@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1369,7 +1369,7 @@ HB_FUNC( HPDF_FONT_TEXTWIDTH )
    HPDF_TextWidth tw;
    PHB_ITEM       info = hb_itemArrayNew( 4 );
 
-   tw = HPDF_Font_TextWidth( ( HPDF_Font ) hb_parptr( 1 ), ( HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ) );
+   tw = HPDF_Font_TextWidth( ( HPDF_Font ) hb_parptr( 1 ), ( const HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ) );
 
    hb_arraySetNI( info, 1, tw.numchars );
    hb_arraySetNI( info, 2, tw.numwords );
@@ -1384,7 +1384,7 @@ HB_FUNC( HPDF_FONT_TEXTWIDTH )
 HB_FUNC( HPDF_FONT_MEASURETEXT )
 {
    hb_retni( HPDF_Font_MeasureText( ( HPDF_Font ) hb_parptr( 1 ),
-                                    ( HPDF_BYTE * ) hb_parc( 2 ),
+                                    ( const HPDF_BYTE * ) hb_parc( 2 ),
                                     hb_parni( 3 ),
                                     ( HPDF_REAL ) hb_parnd( 4 ),
                                     ( HPDF_REAL ) hb_parnd( 5 ),

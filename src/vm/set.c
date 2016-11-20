@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Set functions
  *
  * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour)
  *    hb_osEncode()
@@ -201,27 +198,54 @@ static const char * is_devicename( const char * szFileName )
    {
 #if defined( HB_OS_OS2 ) || defined( HB_OS_WIN ) || defined( HB_OS_DOS )
       const char * szDevices[] =
-            { "PRN", "CON", "LPT1", "LPT2", "LPT3",
+            { "NUL", "PRN", "CON",
+              "LPT1", "LPT2", "LPT3",
               "COM1", "COM2", "COM3", "COM4", "COM5",
               "COM6", "COM7", "COM8", "COM9" };
-      int iLen = ( int ) strlen( szFileName ), iFrom, iTo;
+      int iSkip = 0, iLen, iFrom, iTo;
 
+      if( ( szFileName[ 0 ] == '\\' || szFileName[ 0 ] == '/' ) &&
+          ( szFileName[ 1 ] == '\\' || szFileName[ 1 ] == '/' ) )
+      {
+         if( szFileName[ 2 ] == '.' &&
+             ( szFileName[ 3 ] == '\\' || szFileName[ 3 ] == '/' ) )
+         {
+            iSkip = 4;
+            if( hb_strnicmp( szFileName + 4, "PIPE", 4 ) == 0 &&
+                ( szFileName[ 8 ] == '\\' || szFileName[ 8 ] == '/' ) )
+               return szFileName;
+         }
+         if( szFileName[ 2 ] != '\\' && szFileName[ 2 ] != '/' )
+         {
+            for( iFrom = 2, iTo = 0; szFileName[ iFrom ]; ++iFrom )
+            {
+               if( szFileName[ iFrom ] == '\\' || szFileName[ iFrom ] == '/' )
+               {
+                  if( iTo++ )
+                     break;
+               }
+            }
+            if( iTo == 1 )
+               return szFileName;
+         }
+      }
+      iLen = ( int ) strlen( szFileName + iSkip );
       if( iLen >= 3 && iLen <= 4 )
       {
          if( iLen == 3 )
          {
             iFrom = 0;
-            iTo = 0;
+            iTo = 3;
          }
          else
          {
-            iFrom = 2;
+            iFrom = 3;
             iTo = HB_SIZEOFARRAY( szDevices );
          }
          for( ; iFrom < iTo; ++iFrom )
          {
-            if( hb_stricmp( szFileName, szDevices[ iFrom ] ) == 0 )
-               return szDevices[ iFrom ];
+            if( hb_stricmp( szFileName + iSkip, szDevices[ iFrom ] ) == 0 )
+               return iSkip ? szFileName : szDevices[ iFrom ];
          }
       }
 #elif defined( HB_OS_UNIX )
@@ -381,6 +405,20 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    if( *set_value )
       hb_xfree( *set_value );
    *set_value = szFileName;
+}
+
+int hb_setUpdateEpoch( int iYear )
+{
+   if( iYear >= 0 && iYear < 100 )
+   {
+      int iEpoch = hb_setGetEpoch();
+      int iCentury = iEpoch / 100;
+
+      if( iYear < iEpoch % 100 )
+         ++iCentury;
+      iYear += iCentury * 100;
+   }
+   return iYear;
 }
 
 HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
@@ -2744,7 +2782,7 @@ const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSi
 
             if( pszFree == NULL )
             {
-               pszFree = ( char ** ) &szName;
+               pszFree = ( char ** ) HB_UNCONST( &szName );
                nSize = strlen( szName );
             }
             pszBuf = *pszFree;
@@ -2779,7 +2817,7 @@ const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSi
 
             if( pszFree == NULL )
             {
-               pszFree = ( char ** ) &szName;
+               pszFree = ( char ** ) HB_UNCONST( &szName );
                nSize = strlen( szName );
             }
             pszBuf = *pszFree;

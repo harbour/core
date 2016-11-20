@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    LIBXDIFF functions wrapper
+ * LIBXDIFF functions wrapper
  *
  * Copyright 2010 Petr Chornyj <myorg63@mail.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -360,8 +358,8 @@ HB_FUNC( XDL_MMFILE_COMPACT )
 
 /* callbacks */
 
-#define hb_ptrToHandle( p )   ( ( HB_FHANDLE ) ( HB_PTRDIFF ) ( p ) )
-#define hb_parHandlePtr( n )  ( ( void * ) ( HB_PTRDIFF ) hb_numToHandle( hb_parnint( n ) ) )
+#define hb_ptrToHandle( p )   ( ( HB_FHANDLE ) ( HB_PTRUINT ) ( p ) )
+#define hb_parHandlePtr( n )  ( ( void * ) ( HB_PTRUINT ) hb_numToHandle( hb_parnint( n ) ) )
 
 static int xdlt_outf( void * priv, mmbuffer_t * mb, int nbuf )
 {

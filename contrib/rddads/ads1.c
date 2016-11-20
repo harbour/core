@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Advantage Database Server RDD
  *
  * Copyright 1999 Alexander Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,6 +57,7 @@
 #include "hbapilng.h"
 #include "hbdate.h"
 #include "hbset.h"
+#include "hbstack.h"
 
 #include "rddsys.ch"
 #include "rddads.h"
@@ -76,6 +75,19 @@ static HB_USHORT s_uiRddIdADSVFP = ( HB_USHORT ) -1;
 
 static RDDFUNCS adsSuper;
 
+#define ERROR_BUFFER_LEN   512
+
+typedef struct _RDDADSDATA
+{
+   UNSIGNED32 ulError;
+   UNSIGNED32 ulInsertID;
+   UNSIGNED32 ulAffectedRows;
+   UNSIGNED8  szError[ ERROR_BUFFER_LEN + 1 ];
+   char *     szQuery;
+} RDDADSDATA, * LPRDDADSDATA;
+
+#define RDDADSNODE_DATA( r )   ( ( LPRDDADSDATA ) hb_stackGetTSD( ( PHB_TSD ) ( r )->lpvCargo ) )
+
 
 /*
  * -- HELPER FUNCTIONS --
@@ -89,10 +101,10 @@ static void adsSetListener_callback( HB_set_enum setting, HB_set_listener_enum w
       switch( setting )
       {
          case HB_SET_DATEFORMAT:
-            AdsSetDateFormat( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_DATEFORMAT ) );
+            AdsSetDateFormat( ( UNSIGNED8 * ) HB_UNCONST( hb_setGetCPtr( HB_SET_DATEFORMAT ) ) );
             break;
          case HB_SET_DEFAULT:
-            AdsSetDefault( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_DEFAULT ) );
+            AdsSetDefault( ( UNSIGNED8 * ) HB_UNCONST( hb_setGetCPtr( HB_SET_DEFAULT ) ) );
             break;
          case HB_SET_DELETED:
             AdsShowDeleted( ( UNSIGNED16 ) ! hb_setGetL( HB_SET_DELETED ) );
@@ -104,7 +116,7 @@ static void adsSetListener_callback( HB_set_enum setting, HB_set_listener_enum w
             AdsSetExact( ( UNSIGNED16 ) hb_setGetL( HB_SET_EXACT ) );
             break;
          case HB_SET_PATH:
-            AdsSetSearchPath( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_PATH ) );
+            AdsSetSearchPath( ( UNSIGNED8 * ) HB_UNCONST( hb_setGetCPtr( HB_SET_PATH ) ) );
             break;
 
          case HB_SET_DECIMALS:
@@ -132,12 +144,12 @@ static void adsSetSend( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "adsSetSend()" ) );
 
-   AdsSetDateFormat( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_DATEFORMAT ) );
-   AdsSetDefault( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_DEFAULT ) );
+   AdsSetDateFormat( ( UNSIGNED8 * ) HB_UNCONST( hb_setGetCPtr( HB_SET_DATEFORMAT ) ) );
+   AdsSetDefault( ( UNSIGNED8 * ) HB_UNCONST( hb_setGetCPtr( HB_SET_DEFAULT ) ) );
    AdsShowDeleted( ( UNSIGNED16 ) ! hb_setGetL( HB_SET_DELETED ) );
    AdsSetEpoch( ( UNSIGNED16 ) hb_setGetNI( HB_SET_EPOCH ) );
    AdsSetExact( ( UNSIGNED16 ) hb_setGetL( HB_SET_EXACT ) );
-   AdsSetSearchPath( ( UNSIGNED8 * ) hb_setGetCPtr( HB_SET_PATH ) );
+   AdsSetSearchPath( ( UNSIGNED8 * ) HB_UNCONST( hb_setGetCPtr( HB_SET_PATH ) ) );
    AdsSetDecimals( ( UNSIGNED16 ) hb_setGetNI( HB_SET_DECIMALS ) );
 }
 
@@ -360,7 +372,7 @@ static ADSHANDLE hb_adsFindBag( ADSAREAP pArea, const char * szBagName )
    UNSIGNED32 u32Result;
 
    u32Result = AdsOpenIndex( pArea->hTable,
-                             ( UNSIGNED8 * ) szBagName, ahIndex, &u16Count );
+                             ( UNSIGNED8 * ) HB_UNCONST( szBagName ), ahIndex, &u16Count );
    if( u32Result == AE_INDEX_ALREADY_OPEN )
       return ahIndex[ 0 ];
 
@@ -612,7 +624,7 @@ static HB_ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, HB_USHORT nScop
                {
                   UNSIGNED16 u16DataType = ADS_STRINGKEY ;
                   UNSIGNED16 ucLen = ( UNSIGNED16 ) hb_itemGetCLen( pItem );
-                  UNSIGNED8 *pucScope = ( UNSIGNED8 * ) hb_itemGetCPtr( pItem );
+                  UNSIGNED8 * pucScope = ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) );
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
                   UNSIGNED8 * pszKeyFree = NULL;
 #endif
@@ -622,7 +634,7 @@ static HB_ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, HB_USHORT nScop
 #if ADS_LIB_VERSION >= 600
                      u16DataType = ADS_RAWKEY;
 #else
-                     pucScope = pszKeyFree = ( UNSIGNED8 * ) hb_adsOemToAnsi( ( char * ) pucScope, ucLen );
+                     pucScope = pszKeyFree = ( UNSIGNED8 * ) hb_adsOemToAnsi( ( const char * ) pucScope, ucLen );
 #endif
                   }
 #endif
@@ -1026,7 +1038,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
    /* build a seek key */
    if( HB_IS_STRING( pKey ) )
    {
-      pszKey = ( UNSIGNED8* ) hb_itemGetCPtr( pKey );
+      pszKey = ( UNSIGNED8* ) HB_UNCONST( hb_itemGetCPtr( pKey ) );
       u16KeyLen = ( UNSIGNED16 ) hb_itemGetCLen( pKey );
 #ifdef ADS_USE_OEM_TRANSLATION
 #if ADS_LIB_VERSION >= 600
@@ -1035,7 +1047,7 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
       u16KeyType = ADS_STRINGKEY;
       if( hb_ads_bOEM )
       {
-         pszKey = pszKeyFree = ( UNSIGNED8 * ) hb_adsOemToAnsi( ( char * ) pszKey, u16KeyLen );
+         pszKey = pszKeyFree = ( UNSIGNED8 * ) hb_adsOemToAnsi( ( const char * ) pszKey, u16KeyLen );
       }
 #endif
 #else
@@ -2067,46 +2079,19 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
          hb_itemPutL( pItem, u16Null != 0 );
          break;
       }
-
+#if ADS_LIB_VERSION >= 710
       case DBS_TYPE:
       {
          LPFIELD pField = pArea->area.lpFields + uiIndex - 1;
-         const char * szType = NULL;
 
-         switch( pField->uiType )
+         if( pField->uiTypeExtended == ADS_CISTRING )
          {
-            case HB_FT_STRING:
-               if( pField->uiFlags & HB_FF_BINARY )
-                  szType = "RAW";
-               else if( pField->uiFlags & HB_FF_UNICODE )
-                  szType = "NCHAR";
-#if ADS_LIB_VERSION >= 710
-               else if( pField->uiTypeExtended == ADS_CISTRING )
-                  szType = "CICHARACTER";
-#endif
-               break;
-
-            case HB_FT_VARLENGTH:
-               if( pField->uiFlags & HB_FF_BINARY )
-                  szType = "VARBINARY";
-               else if( pField->uiFlags & HB_FF_UNICODE )
-                  szType = "NVARCHAR";
-               else
-                  szType = "VARCHAR";
-               break;
-
-            case HB_FT_MEMO:
-               if( pField->uiFlags & HB_FF_UNICODE )
-                  szType = "NMEMO";
-               break;
-         }
-         if( szType != NULL )
-         {
-            hb_itemPutC( pItem, szType );
+            hb_itemPutC( pItem, "CICHARACTER" );
             break;
          }
          /* no break */
       }
+#endif
       default:
          return SUPER_FIELDINFO( &pArea->area, uiIndex, uiType, pItem );
    }
@@ -2591,7 +2576,7 @@ static HB_ERRCODE adsPutRec( ADSAREAP pArea, const HB_BYTE * pBuffer )
          return HB_FAILURE;
    }
 
-   u32Result = AdsSetRecord( pArea->hTable, ( UNSIGNED8 * ) pBuffer, u32Len );
+   u32Result = AdsSetRecord( pArea->hTable, ( UNSIGNED8 * ) HB_UNCONST( pBuffer ), u32Len );
 
    return u32Result == AE_SUCCESS ? HB_SUCCESS : HB_FAILURE;
 }
@@ -2663,7 +2648,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                if( nLen > ( HB_SIZE ) pField->uiLen )
                   nLen = pField->uiLen;
                u32RetVal = AdsSetStringW( pArea->hTable, ADSFIELD( uiIndex ),
-                                          ( WCHAR * ) pwBuffer,
+                                          ( WCHAR * ) HB_UNCONST( pwBuffer ),
                                           ( UNSIGNED32 ) nLen );
                hb_strfree( hString );
             }
@@ -2678,7 +2663,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                if( hb_ads_bOEM )
                {
 #if ADS_LIB_VERSION >= 600
-                  u32RetVal = AdsSetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), ( UNSIGNED32 ) nLen );
+                  u32RetVal = AdsSetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) ), ( UNSIGNED32 ) nLen );
 #else
                   char * pBuffer = hb_adsOemToAnsi( hb_itemGetCPtr( pItem ), nLen );
                   u32RetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) pBuffer, nLen );
@@ -2688,7 +2673,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                else
 #endif
                {
-                  u32RetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), ( UNSIGNED32 ) nLen );
+                  u32RetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) ), ( UNSIGNED32 ) nLen );
                }
             }
          }
@@ -2781,7 +2766,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                u32RetVal = AdsSetBinary( pArea->hTable, ADSFIELD( uiIndex ),
                   pField->uiTypeExtended,
                   ( UNSIGNED32 ) nLen, 0,
-                  ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ),
+                  ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) ),
                   ( UNSIGNED32 ) nLen );
             }
 #if ADS_LIB_VERSION >= 1000
@@ -2791,7 +2776,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                const HB_WCHAR * pwBuffer = hb_itemGetStrU16( pItem, HB_CDP_ENDIAN_LITTLE,
                                                              &hString, &nLen );
                u32RetVal = AdsSetStringW( pArea->hTable, ADSFIELD( uiIndex ),
-                                          ( WCHAR * ) pwBuffer,
+                                          ( WCHAR * ) HB_UNCONST( pwBuffer ),
                                           ( UNSIGNED32 ) nLen );
                hb_strfree( hString );
             }
@@ -2806,7 +2791,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                hb_adsOemAnsiFree( szRet );
 #else
                u32RetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ),
-                                         ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ),
+                                         ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) ),
                                          ( UNSIGNED32 ) nLen );
 #endif
             }
@@ -2978,6 +2963,11 @@ static HB_ERRCODE adsClose( ADSAREAP pArea )
 {
    HB_TRACE( HB_TR_DEBUG, ( "adsClose(%p)", pArea ) );
 
+   if( pArea->szQuery )
+   {
+      hb_xfree( pArea->szQuery );
+      pArea->szQuery = NULL;
+   }
    return hb_adsCloseCursor( pArea );
 }
 
@@ -3033,7 +3023,8 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
       switch( pField->uiType )
       {
          case HB_FT_STRING:
-            if( pField->uiTypeExtended == ADS_RAW )
+            if( pField->uiFlags & HB_FF_BINARY ||
+                pField->uiTypeExtended == ADS_RAW )
                cType = "Raw";
             else if( pField->uiFlags & HB_FF_UNICODE )
             {
@@ -3198,8 +3189,8 @@ static HB_ERRCODE adsCreate( ADSAREAP pArea, LPDBOPENINFO pCreateInfo )
       pArea->maxFieldLen = 24;
 
    uRetVal = AdsCreateTable( hConnection,
-                             ( UNSIGNED8 * ) pCreateInfo->abName,
-                             ( UNSIGNED8 * ) pCreateInfo->atomAlias,
+                             ( UNSIGNED8 * ) HB_UNCONST( pCreateInfo->abName ),
+                             ( UNSIGNED8 * ) HB_UNCONST( pCreateInfo->atomAlias ),
                              ( UNSIGNED16 ) pArea->iFileType,
                              ( UNSIGNED16 ) hb_ads_iCharType,
                              ( UNSIGNED16 ) hb_ads_iLockType,
@@ -3466,8 +3457,14 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       hTable = pArea->hTable;
       hStatement = pArea->hStatement;
    }
-   else if( szFile && hb_strnicmp( szFile, "SELECT ", 7 ) == 0 )
+   else if( szFile && ( ( hb_strnicmp( szFile, "SELECT ", 7 ) == 0 ) || 
+                        ( hb_strnicmp( szFile, "SQL:", 4 ) == 0 ) ) )
    {
+      if( hb_strnicmp( szFile, "SQL:", 4 ) == 0 ) 
+         szFile += 4;
+
+      pArea->szQuery = hb_strdup( szFile );
+
       u32RetVal = AdsCreateSQLStatement( hConnection, &hStatement );
       if( u32RetVal == AE_SUCCESS )
       {
@@ -3487,7 +3484,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
          u32RetVal = AdsExecuteSQLDirect( hStatement, ( UNSIGNED8 * ) szSQL, &hTable );
          hb_adsOemAnsiFree( szSQL );
 #else
-         u32RetVal = AdsExecuteSQLDirect( hStatement, ( UNSIGNED8 * ) szFile, &hTable );
+         u32RetVal = AdsExecuteSQLDirect( hStatement, ( UNSIGNED8 * ) HB_UNCONST( szFile ), &hTable );
 #endif
 
          if( u32RetVal != AE_SUCCESS )
@@ -3503,10 +3500,13 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
          return HB_FAILURE;
       }
    }
-   else
+   else /* if( hb_strnicmp( szFile, "TABLE:", 6 ) == 0 ) */
    {
       PHB_ITEM pError = NULL;
       HB_BOOL fRetry;
+
+      if( szFile && ( hb_strnicmp( szFile, "TABLE:", 6 ) == 0 ) )
+         szFile += 6;
 
       /* Use an  Advantage Data Dictionary
        * if fDictionary was set for this connection
@@ -3514,8 +3514,8 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
       do
       {
          u32RetVal = AdsOpenTable( hConnection,
-                                   ( UNSIGNED8 * ) pOpenInfo->abName,
-                                   ( UNSIGNED8 * ) pOpenInfo->atomAlias,
+                                   ( UNSIGNED8 * ) HB_UNCONST( szFile ),
+                                   ( UNSIGNED8 * ) HB_UNCONST( pOpenInfo->atomAlias ),
                                    ( fDictionary ? ADS_DEFAULT : ( UNSIGNED16 ) pArea->iFileType ),
                                    ( UNSIGNED16 ) hb_ads_iCharType,
                                    ( UNSIGNED16 ) hb_ads_iLockType,
@@ -3797,7 +3797,7 @@ static HB_ERRCODE adsSysName( ADSAREAP pArea, HB_BYTE * pBuffer )
       u32RetVal = AdsGetTableType( pArea->hTable, &u16TableType );
       if( u32RetVal != AE_SUCCESS )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "Error in adsSysName: %lu  pArea->hTable %p", ( HB_ULONG ) u32RetVal, ( void * ) ( HB_PTRDIFF ) pArea->hTable ) );
+         HB_TRACE( HB_TR_DEBUG, ( "Error in adsSysName: %lu  pArea->hTable %p", ( HB_ULONG ) u32RetVal, ( void * ) ( HB_PTRUINT ) pArea->hTable ) );
          u16TableType = ( UNSIGNED16 ) pArea->iFileType;
       }
    }
@@ -3952,7 +3952,7 @@ static HB_ERRCODE adsSetRel( ADSAREAP pArea, LPDBRELINFO lpdbRelations )
 
    HB_TRACE( HB_TR_DEBUG, ( "adsSetRel(%p, %p)", pArea, lpdbRelations ) );
 
-   szExp = ( UNSIGNED8 * ) hb_itemGetCPtr( lpdbRelations->abKey );
+   szExp = ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( lpdbRelations->abKey ) );
    if( *szExp && adsGetRddType( lpdbRelations->lpaChild->rddID ) >= 0 )
    {
       ADSHANDLE hIndex = ( ( ADSAREAP ) lpdbRelations->lpaChild )->hOrdCurrent;
@@ -3979,7 +3979,7 @@ static HB_ERRCODE adsOrderListAdd( ADSAREAP pArea, LPDBORDERINFO pOrderInfo )
    HB_TRACE( HB_TR_DEBUG, ( "adsOrderListAdd(%p, %p)", pArea, pOrderInfo ) );
 
    u32RetVal = AdsOpenIndex( pArea->hTable,
-                             ( UNSIGNED8 * ) hb_itemGetCPtr( pOrderInfo->atomBagName ),
+                             ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pOrderInfo->atomBagName ) ),
                              ahIndex, &u16ArrayLen );
    if( u32RetVal != AE_SUCCESS && u32RetVal != AE_INDEX_ALREADY_OPEN )
    {
@@ -4212,9 +4212,9 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
 
 #if ADS_LIB_VERSION >= 610
    u32RetVal = AdsCreateIndex61( hTableOrIndex,
-                                 ( UNSIGNED8 * ) pOrderInfo->abBagName,
-                                 ( UNSIGNED8 * ) pOrderInfo->atomBagName,
-                                 ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
+                                 ( UNSIGNED8 * ) HB_UNCONST( pOrderInfo->abBagName ),
+                                 ( UNSIGNED8 * ) HB_UNCONST( pOrderInfo->atomBagName ),
+                                 ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pExprItem ) ),
                                  pArea->area.lpdbOrdCondInfo ?
                                     ( UNSIGNED8 * ) pArea->area.lpdbOrdCondInfo->abFor : NULL,
                                  pucWhile, u32Options,
@@ -4222,9 +4222,9 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
                                  &hIndex );
 #else
    u32RetVal = AdsCreateIndex( hTableOrIndex,
-                               ( UNSIGNED8 * ) pOrderInfo->abBagName,
-                               ( UNSIGNED8 * ) pOrderInfo->atomBagName,
-                               ( UNSIGNED8 * ) hb_itemGetCPtr( pExprItem ),
+                               ( UNSIGNED8 * ) HB_UNCONST( pOrderInfo->abBagName ),
+                               ( UNSIGNED8 * ) HB_UNCONST( pOrderInfo->atomBagName ),
+                               ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pExprItem ) ),
                                pArea->area.lpdbOrdCondInfo ?
                                  ( UNSIGNED8 * ) pArea->area.lpdbOrdCondInfo->abFor : NULL,
                                pucWhile, u32Options,
@@ -4247,7 +4247,7 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
       UNSIGNED16 usArrayLen = 256;
 
       u32RetVal = AdsOpenIndex( pArea->hTable,
-                                ( UNSIGNED8 * ) pOrderInfo->abBagName, ahIndex, &usArrayLen );
+                                ( UNSIGNED8 * ) HB_UNCONST( pOrderInfo->abBagName ), ahIndex, &usArrayLen );
       if( u32RetVal != AE_SUCCESS && u32RetVal != AE_INDEX_ALREADY_OPEN )
       {
          SELF_ORDSETCOND( &pArea->area, NULL );
@@ -4367,7 +4367,7 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO
             AdsIsIndexDescending( hIndex, &u16 );
 
 #if ADS_LIB_VERSION >= 900
-            if( pOrderInfo->itmNewVal && HB_IS_NUMERIC( pOrderInfo->itmNewVal ) )
+            if( pOrderInfo->itmNewVal && HB_IS_LOGICAL( pOrderInfo->itmNewVal ) )
             {
                if( hb_itemGetL( pOrderInfo->itmNewVal ) ? u16 == 0 : u16 != 0 )
                   AdsSetIndexDirection( hIndex, HB_TRUE );
@@ -4559,7 +4559,7 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO
                (AE_INDEX_ALREADY_OPEN)
              */
             u32 = AdsOpenIndex( pArea->hTable,
-                                ( UNSIGNED8 * ) hb_itemGetCPtr( pOrderInfo->atomBagName ),
+                                ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pOrderInfo->atomBagName ) ),
                                 NULL, &u16 );
 
             if( u32 != AE_INDEX_ALREADY_OPEN )
@@ -4570,7 +4570,7 @@ static HB_ERRCODE adsOrderInfo( ADSAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO
                   ADSHANDLE ahIndex[ 1 ];
                   u16 = 1;
                   if( AdsOpenIndex( pArea->hTable,
-                                    ( UNSIGNED8 * ) hb_itemGetCPtr( pOrderInfo->atomBagName ),
+                                    ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pOrderInfo->atomBagName ) ),
                                     ahIndex, &u16 ) == AE_INDEX_ALREADY_OPEN )
                   {
                      AdsCloseIndex( ahIndex[ 0 ] );
@@ -4845,7 +4845,8 @@ static HB_ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
       UNSIGNED32 u32RetVal = AE_INVALID_EXPRESSION;
       const char * pucFilter = hb_itemGetCPtr( pFilterInfo->abFilterText );
 
-      AdsIsExprValid( pArea->hTable, ( UNSIGNED8 * ) pucFilter, &bValidExpr );
+      if( *pucFilter )
+         AdsIsExprValid( pArea->hTable, ( UNSIGNED8 * ) HB_UNCONST( pucFilter ), &bValidExpr );
 
       if( bValidExpr )
       {
@@ -4861,9 +4862,9 @@ static HB_ERRCODE adsSetFilter( ADSAREAP pArea, LPDBFILTERINFO pFilterInfo )
          hb_adsOemAnsiFree( szFilter );
 #else
          if( hb_setGetL( HB_SET_OPTIMIZE ) )
-            u32RetVal = AdsSetAOF( pArea->hTable, ( UNSIGNED8 * ) pucFilter, usResolve );
+            u32RetVal = AdsSetAOF( pArea->hTable, ( UNSIGNED8 * ) HB_UNCONST( pucFilter ), usResolve );
          else
-            u32RetVal = AdsSetFilter( pArea->hTable, ( UNSIGNED8 * ) pucFilter );
+            u32RetVal = AdsSetFilter( pArea->hTable, ( UNSIGNED8 * ) HB_UNCONST( pucFilter ) );
 #endif
       }     /* else let SUPER handle filtering */
       pArea->area.dbfi.fOptimized = u32RetVal == AE_SUCCESS;
@@ -5026,7 +5027,7 @@ static HB_ERRCODE adsGetValueFile( ADSAREAP pArea, HB_USHORT uiIndex, const char
       return HB_SUCCESS;
 
    u32RetVal = AdsBinaryToFile( pArea->hTable, ADSFIELD( uiIndex ),
-                                ( UNSIGNED8 * ) szFile );
+                                ( UNSIGNED8 * ) HB_UNCONST( szFile ) );
    if( u32RetVal != AE_SUCCESS )
    {
       /* commonError( pArea, EG_READ, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL ); */
@@ -5063,7 +5064,7 @@ static HB_ERRCODE adsPutValueFile( ADSAREAP pArea, HB_USHORT uiIndex, const char
       uiMode = ADS_BINARY;
 
    u32RetVal = AdsFileToBinary( pArea->hTable, ADSFIELD( uiIndex ), uiMode,
-                                ( UNSIGNED8 * ) szFile );
+                                ( UNSIGNED8 * ) HB_UNCONST( szFile ) );
    if( u32RetVal != AE_SUCCESS )
    {
       commonError( pArea, EG_WRITE, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
@@ -5212,7 +5213,28 @@ static HB_ERRCODE adsRename( LPRDDNODE pRDD, PHB_ITEM pItemTable, PHB_ITEM pItem
    return HB_FAILURE;
 }
 
-#define  adsInit  NULL
+static void adsTSDRelease( void * cargo )
+{
+   LPRDDADSDATA pData = ( LPRDDADSDATA ) cargo;
+
+   if( pData->szQuery )
+      hb_xfree( pData->szQuery );
+}
+
+static HB_ERRCODE adsInit( LPRDDNODE pRDD )
+{
+   PHB_TSD pTSD;
+
+   pTSD = ( PHB_TSD ) hb_xgrab( sizeof( HB_TSD ) );
+   HB_TSD_INIT( pTSD, sizeof( RDDADSDATA ), NULL, adsTSDRelease );
+   pRDD->lpvCargo = ( void * ) pTSD;
+
+   if( ISSUPER_INIT( pRDD ) )
+      return SUPER_INIT( pRDD );
+   else
+      return HB_SUCCESS;
+}
+
 
 static HB_ERRCODE adsExit( LPRDDNODE pRDD )
 {
@@ -5237,9 +5259,17 @@ static HB_ERRCODE adsExit( LPRDDNODE pRDD )
       }
    }
 
-   /* free pRDD->lpvCargo if necessary */
+   if( pRDD->lpvCargo )
+   {
+      hb_stackReleaseTSD( ( PHB_TSD ) pRDD->lpvCargo );
+      hb_xfree( pRDD->lpvCargo );
+      pRDD->lpvCargo = NULL;
+   }
 
-   return HB_SUCCESS;
+   if( ISSUPER_EXIT( pRDD ) )
+      return SUPER_EXIT( pRDD );
+   else
+      return HB_SUCCESS;
 }
 
 
@@ -5261,6 +5291,71 @@ static HB_ERRCODE adsRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConn
          HB_ADS_PUTCONNECTION( pItem, hOldConnection );
          break;
       }
+
+      case RDDI_CONNECT:
+      {
+         ADSHANDLE hConnect = 0;
+         UNSIGNED32 u32RetVal;
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+
+         if( HB_IS_ARRAY( pItem ) )
+         {
+#if ADS_LIB_VERSION >= 600
+            u32RetVal = AdsConnect60( ( UNSIGNED8 * ) HB_UNCONST( hb_arrayGetCPtr( pItem, 1 ) ) /* pucServerPath */,
+                                      ( UNSIGNED16 ) hb_arrayGetNI( pItem, 2 ) /* usServerTypes */,
+                                      ( UNSIGNED8 * ) HB_UNCONST( hb_arrayGetCPtr( pItem, 3 ) ) /* pucUserName */,
+                                      ( UNSIGNED8 * ) HB_UNCONST( hb_arrayGetCPtr( pItem, 4 ) ) /* pucPassword */,
+                                      ( UNSIGNED32 ) hb_arrayGetNL( pItem, 5 ) /* ulOptions */,
+                                      &hConnect );
+
+#else
+            u32RetVal = AdsConnect( ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) ), &hConnect );
+#endif
+         }
+         else
+         {
+            u32RetVal = AdsConnect( ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pItem ) ), &hConnect );
+         }
+
+         if( u32RetVal == AE_SUCCESS )
+         {
+            hb_ads_setConnection( hConnect );   /* set new default */
+            pData->ulError = pData->ulInsertID = pData->ulAffectedRows = 0;
+            pData->szError[ 0 ] = '\0';
+            HB_ADS_PUTCONNECTION( pItem, hConnect );
+         }
+         else
+         {
+            UNSIGNED16 usLen = ERROR_BUFFER_LEN;
+
+            pData->ulError = u32RetVal;
+            AdsGetLastError( &u32RetVal, pData->szError, &usLen );
+            pData->szError[ usLen ] = '\0';
+            HB_ADS_PUTCONNECTION( pItem, 0 );
+         }
+         break;
+      }
+
+      case RDDI_DISCONNECT:
+      {
+         ADSHANDLE hConnect = HB_ADS_GETCONNECTION( pItem );
+
+         /* NOTE: Only allow disconnect of 0 if explicitly passed.
+                  The thread default connection handle might be 0 if caller
+                  accidentally disconnects twice. */
+    
+         if( ( hConnect != 0 || HB_IS_NUMERIC( pItem ) ) &&
+             AdsDisconnect( hConnect ) == AE_SUCCESS )
+         {
+            hb_ads_clrConnection( hConnect );
+            hb_itemPutL( pItem, HB_TRUE );
+         }
+         else
+            hb_itemPutL( pItem, HB_FALSE );
+
+         break;
+      }
+
       case RDDI_ISDBF:
          hb_itemPutL( pItem, adsGetFileType( pRDD->rddID ) != ADS_ADT );
          break;
@@ -5295,6 +5390,89 @@ static HB_ERRCODE adsRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConn
          {
             hb_ads_setIndexPageSize( iPageSize );
          }
+         break;
+      }
+
+      case RDDI_ERRORNO:
+      {
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         hb_itemPutNL( pItem, ( unsigned long ) pData->ulError );
+         break;
+      }
+
+      case RDDI_ERROR:
+      {
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         hb_itemPutC( pItem, ( char * ) pData->szError );
+         break;
+      }
+
+      case RDDI_INSERTID:
+      {
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         hb_itemPutNL( pItem, ( unsigned long ) pData->ulInsertID );
+         break;
+      }
+
+      case RDDI_AFFECTEDROWS:
+      {
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         hb_itemPutNL( pItem, ( unsigned long ) pData->ulAffectedRows );
+         break;
+      }
+
+      case RDDI_EXECUTE:
+      {
+
+         LPRDDADSDATA pData = RDDADSNODE_DATA( pRDD );
+         ADSHANDLE hConnect = ulConnect ? ( ADSHANDLE ) ulConnect : hb_ads_getConnection();
+         ADSHANDLE hStatement = 0;
+         UNSIGNED32 u32RetVal;
+
+         pData->ulError = pData->ulInsertID = pData->ulAffectedRows = 0;
+         pData->szError[ 0 ] = '\0';
+
+         u32RetVal = AdsCreateSQLStatement( hConnect, &hStatement );
+         if( u32RetVal == AE_SUCCESS )
+         {
+            ADSHANDLE hCursor = 0;
+
+            AdsStmtSetTableType( hStatement, adsGetFileType( pRDD->rddID ) );
+
+            u32RetVal = AdsExecuteSQLDirect( hStatement, ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), &hCursor );
+            if( u32RetVal == AE_SUCCESS ) 
+            {
+               if( AdsGetLastAutoinc( hStatement, &u32RetVal ) == AE_SUCCESS )
+                  pData->ulInsertID = u32RetVal;
+
+               if( AdsGetRecordCount( hStatement, ADS_IGNOREFILTERS, &u32RetVal ) == AE_SUCCESS )
+                  pData->ulAffectedRows = u32RetVal;
+
+               if( hCursor )
+                  AdsCloseTable( hCursor );
+
+               u32RetVal = AE_SUCCESS;
+            }
+            else
+            {
+               UNSIGNED16 usLen = ERROR_BUFFER_LEN;
+
+               pData->ulError = u32RetVal;
+               AdsGetLastError( &u32RetVal, pData->szError, &usLen );
+               pData->szError[ usLen ] = '\0';
+
+            }
+            AdsCloseSQLStatement( hStatement );
+         }
+         else
+         {
+            UNSIGNED16 usLen = ERROR_BUFFER_LEN;
+
+            pData->ulError = u32RetVal;
+            AdsGetLastError( &u32RetVal, pData->szError, &usLen );
+            pData->szError[ usLen ] = '\0';
+         }
+         hb_itemPutL( pItem, u32RetVal == AE_SUCCESS );
          break;
       }
 

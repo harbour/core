@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows API functions (shellapi.h - shell32.dll)
  *
  * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -63,7 +61,7 @@ HB_FUNC( WAPI_SHELLEXECUTE )
    void * hParameters;
    void * hDirectory;
 
-   hb_retnint( ( HB_PTRDIFF ) ShellExecute( ( HWND ) hb_parptr( 1 ),
+   hb_retnint( ( HB_PTRUINT ) ShellExecute( ( HWND ) hb_parptr( 1 ),
                                             HB_PARSTR( 2, &hOperation, NULL ), /* edit, explore, open, print, play?, properties? */
                                             HB_PARSTRDEF( 3, &hFile, NULL ),
                                             HB_PARSTR( 4, &hParameters, NULL ),

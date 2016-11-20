@@ -1,7 +1,4 @@
 /*
- * Harbour Project source code
- * http://harbour-project.org/
- *
  * Clipper Tool III like window system test program
  * Donated to the public domain on 2006-02-11 by Przemyslaw Czerpak
  */

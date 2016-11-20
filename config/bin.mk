@@ -37,6 +37,10 @@ ifeq ($(BUILD_SHARED),yes)
       else
          HB_LIBS_TPL += hbmainstd
       endif
+   else
+   ifeq ($(HB_PLATFORM)-$(HB_COMPILER),dos-watcom)
+      HB_LDFLAGS += FILE $(LIB_DIR)/hbmainstd.lib
+   endif
    endif
    endif
    endif

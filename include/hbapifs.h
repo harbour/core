@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Filesys API
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -123,6 +121,7 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT HB_BOOL    hb_fsChDir       ( const char * pszDirName ); /* change working directory */
 extern HB_EXPORT HB_ERRCODE hb_fsChDrv       ( int iDrive ); /* change working drive */
 extern HB_EXPORT void       hb_fsClose       ( HB_FHANDLE hFileHandle ); /* close a file */
+extern HB_EXPORT void       hb_fsCloseRaw    ( HB_FHANDLE hFileHandle ); /* close a file without setting hb_fsError() */
 extern HB_EXPORT void       hb_fsCommit      ( HB_FHANDLE hFileHandle ); /* commit updates of a file */
 extern HB_EXPORT HB_FHANDLE hb_fsCreate      ( const char * pszFileName, HB_FATTR ulAttr ); /* create a file */
 extern HB_EXPORT HB_FHANDLE hb_fsCreateEx    ( const char * pszFileName, HB_FATTR ulAttr, HB_USHORT uiFlags ); /* create a file, with specific open mode */
@@ -153,6 +152,7 @@ extern HB_EXPORT int        hb_fsLockTest    ( HB_FHANDLE hFileHandle, HB_FOFFSE
                                                HB_FOFFSET nLength, HB_USHORT uiMode );
 extern HB_EXPORT HB_BOOL    hb_fsMkDir       ( const char * pszDirName ); /* create a directory */
 extern HB_EXPORT HB_FHANDLE hb_fsOpen        ( const char * pszFileName, HB_USHORT uiFlags ); /* open a file */
+extern HB_EXPORT HB_FHANDLE hb_fsOpenEx      ( const char * pszFileName, HB_USHORT uiFlags, HB_FATTR nAttr ); /* open or create a file with given attributes */
 extern HB_EXPORT HB_USHORT  hb_fsRead        ( HB_FHANDLE hFileHandle, void * pBuff, HB_USHORT uiCount ); /* read contents of a file into a buffer (<=64K) */
 extern HB_EXPORT HB_SIZE    hb_fsReadLarge   ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount ); /* read contents of a file into a buffer (>64K) */
 extern HB_EXPORT HB_SIZE    hb_fsReadAt      ( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FOFFSET nOffset ); /* read from given offset contents of a file into a buffer (>64K) */
@@ -161,6 +161,7 @@ extern HB_EXPORT HB_BOOL    hb_fsRename      ( const char * pszOldName, const ch
 extern HB_EXPORT HB_ULONG   hb_fsSeek        ( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiMode ); /* reposition an open file */
 extern HB_EXPORT HB_FOFFSET hb_fsSeekLarge   ( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset, HB_USHORT uiFlags ); /* reposition an open file using 64bit API */
 extern HB_EXPORT HB_FOFFSET hb_fsTell        ( HB_FHANDLE hFileHandle ); /* retrieve the current position of a file */
+extern HB_EXPORT HB_FOFFSET hb_fsGetSize     ( HB_FHANDLE hFileHandle ); /* retrieve the size of a file, it may change current seek position */
 extern HB_EXPORT int        hb_fsSetDevMode  ( HB_FHANDLE hFileHandle, int iDevMode ); /* change the device mode of a file (text/binary) */
 extern HB_EXPORT HB_BOOL    hb_fsGetFileTime ( const char * pszFileName, long * plJulian, long * plMillisec );
 extern HB_EXPORT HB_BOOL    hb_fsSetFileTime ( const char * pszFileName, long lJulian, long lMillisec );
@@ -299,6 +300,26 @@ extern HB_EXPORT HB_BOOL      hb_fsMaxFilesError( void );
 extern HB_EXPORT const char * hb_fsNameConv( const char * pszFileName, char ** pszFree );
 #if defined( HB_OS_WIN )
 extern HB_EXPORT HB_WCHAR *   hb_fsNameConvU16( const char * pszFileName );
+#endif
+#if defined( HB_OS_OS2 )
+extern HB_EXPORT HB_BOOL  hb_isWSeB( void );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosOpen( const char * pszFileName,
+                                           HB_FHANDLE * pHFile, HB_ULONG * pulAction,
+                                           HB_ULONG nInitSize, HB_ULONG ulAttribute,
+                                           HB_ULONG fsOpenFlags, HB_ULONG fsOpenMode );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosOpenL( const char * pszFileName,
+                                            HB_FHANDLE * pHFile, HB_ULONG * pulAction,
+                                            HB_FOFFSET nInitSize, HB_ULONG ulAttribute,
+                                            HB_ULONG fsOpenFlags, HB_ULONG fsOpenMode );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosSetFileLocksL( HB_FHANDLE hFile,
+                                                    void * pflUnlock, void * pflLock,
+                                                    HB_ULONG timeout, HB_ULONG flags );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosSetFilePtrL( HB_FHANDLE hFile, HB_FOFFSET nPos,
+                                                 HB_ULONG method, HB_FOFFSET * pnCurPos );
+extern HB_EXPORT HB_ULONG hb_fsOS2DosSetFileSizeL( HB_FHANDLE hFile, HB_FOFFSET nSize );
+extern HB_EXPORT HB_BOOL  hb_fsOS2QueryPathInfo( const char * pszPathName,
+                                                 HB_FOFFSET * pnSize, HB_FATTR * pnAttr,
+                                                 long * plJulian, long * plMillisec );
 #endif
 
 /* Harbour file functions with shared file handles and locks

@@ -10,16 +10,11 @@
    $ARGUMENTS$
       None
    $RETURNS$
-      A numeric corresponding to the number of K memory.
+      A numeric corresponding to the number of KiB memory.
    $DESCRIPTION$
       ft_SysMem() simply reports the amount of conventional memory
-      (up to 640K) installed.
-
-      ft_SysMem() uses DOS interrupt 12h to get this information.
-      For information, refer to Peter Norton's _Programmer's Guide
-      to the IBM PC_ (Brady).
-
+      installed.
    $EXAMPLES$
-      ? "Conventional memory installed: " + Str( ft_SysMem() ) + "K"
+      ? "Conventional memory:", hb_ntos( ft_SysMem() ), "KiB installed"
    $END$
  */

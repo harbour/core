@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for TBrowse class
+ * demonstration/test code for TBrowse class
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

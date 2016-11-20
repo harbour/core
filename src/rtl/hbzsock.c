@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    Harbour extended socket filter with ZLIB compression
+ * Harbour extended socket filter with ZLIB compression
  *
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -211,7 +209,7 @@ static long s_sockexRead( PHB_SOCKEX pSock, void * data, long len, HB_MAXINT tim
       if( pZ->z_read.total_out != 0 )
          lRecv = ( long ) pZ->z_read.total_out;
 
-      return pZ->z_read.total_out != 0 ? ( long ) pZ->z_read.total_out : lRecv;
+      return lRecv;
    }
    else
       return hb_sockexRead( pZ->sock, data, len, timeout );
@@ -225,7 +223,7 @@ static long s_sockexWrite( PHB_SOCKEX pSock, const void * data, long len, HB_MAX
    {
       long lWritten = 0;
 
-      pZ->z_write.next_in  = ( Bytef * ) data;
+      pZ->z_write.next_in  = ( Bytef * ) HB_UNCONST( data );
       pZ->z_write.avail_in = ( uInt ) len;
 
       while( pZ->z_write.avail_in )
@@ -254,7 +252,7 @@ static long s_sockexWrite( PHB_SOCKEX pSock, const void * data, long len, HB_MAX
       return lWritten >= 0 ? ( long ) ( len - pZ->z_write.avail_in ) : lWritten;
    }
    else
-      return hb_sockexWrite( pSock, data, len, timeout );
+      return hb_sockexWrite( pZ->sock, data, len, timeout );
 }
 
 static long s_sockexFlush( PHB_SOCKEX pSock, HB_MAXINT timeout, HB_BOOL fSync )
@@ -277,14 +275,14 @@ static long s_sockexFlush( PHB_SOCKEX pSock, HB_MAXINT timeout, HB_BOOL fSync )
       {
          if( s_zsock_write( pZ, timeout ) <= 0 )
             break;
-         if( err == Z_OK )
+         if( err == Z_OK || err == Z_BUF_ERROR )
             err = deflate( &pZ->z_write, fSync ? Z_FULL_FLUSH : Z_PARTIAL_FLUSH );
       }
       if( err != Z_OK && err != Z_BUF_ERROR )
          hb_socketSetError( HB_ZSOCK_ERROR_BASE - err );
       lResult = HB_ZSOCK_WRBUFSIZE - pZ->z_write.avail_out;
    }
-   return lResult + hb_sockexFlush( HB_ZSOCK_GET( pSock )->sock, timeout, fSync );
+   return lResult + hb_sockexFlush( pZ->sock, timeout, fSync );
 }
 
 static int s_sockexCanRead( PHB_SOCKEX pSock, HB_BOOL fBuffer, HB_MAXINT timeout )

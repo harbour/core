@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Dynamic symbol table management
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -723,8 +721,8 @@ HB_FUNC( __DYNSISFUN ) /* returns .T. if a symbol has a function/procedure point
 }
 
 HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or procedure
-                                     called and consumed times { nTimes, nTime }
-                                     , given the dynamic symbol index */
+                                     called and consumed times { nTimes, nTime },
+                                     given the dynamic symbol index */
 {
    HB_STACK_TLS_PRELOAD
 #ifndef HB_NO_PROFILER

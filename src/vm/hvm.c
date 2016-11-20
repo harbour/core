@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Virtual Machine
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *    hb_vmPushLongConst()
@@ -326,17 +323,46 @@ static void hb_vmAddModuleFunction( PHB_FUNC_LIST * pLstPtr, HB_INIT_FUNC pFunc,
 
    pLst->pFunc = pFunc;
    pLst->cargo = cargo;
+   pLst->hDynLib = s_hDynLibID;
    HB_ATINIT_LOCK();
    pLst->pNext = *pLstPtr;
    *pLstPtr = pLst;
    HB_ATINIT_UNLOCK();
 }
 
-static void hb_vmDoModuleFunctions( PHB_FUNC_LIST pLst )
+static void hb_vmDoModuleFunctions( PHB_FUNC_LIST * pLstPtr )
+{
+   while( *pLstPtr )
+   {
+      PHB_FUNC_LIST pLst = *pLstPtr;
+      *pLstPtr = pLst->pNext;
+      pLst->pFunc( pLst->cargo );
+      hb_xfree( pLst );
+   }
+}
+
+static void hb_vmDoModuleLibFunctions( PHB_FUNC_LIST * pLstPtr, void * hDynLib )
+{
+   while( *pLstPtr )
+   {
+      PHB_FUNC_LIST pLst = *pLstPtr;
+      if( pLst->hDynLib == hDynLib )
+      {
+         *pLstPtr = pLst->pNext;
+         pLst->pFunc( pLst->cargo );
+         hb_xfree( pLst );
+      }
+      else
+         pLstPtr = &pLst->pNext;
+   }
+}
+
+static void hb_vmDoModuleSetLibID( PHB_FUNC_LIST pLst, void * hDynLib, void * hNewDynLib )
 {
    while( pLst )
    {
-      pLst->pFunc( pLst->cargo );
+      if( pLst->hDynLib == hDynLib )
+         pLst->hDynLib = hNewDynLib;
       pLst = pLst->pNext;
    }
 }
@@ -382,17 +408,17 @@ void hb_vmAtQuit( HB_INIT_FUNC pFunc, void * cargo )
 
 static void hb_vmDoModuleInitFunctions( void )
 {
-   hb_vmDoModuleFunctions( s_InitFunctions );
+   hb_vmDoModuleFunctions( &s_InitFunctions );
 }
 
 static void hb_vmDoModuleExitFunctions( void )
 {
-   hb_vmDoModuleFunctions( s_ExitFunctions );
+   hb_vmDoModuleFunctions( &s_ExitFunctions );
 }
 
 static void hb_vmDoModuleQuitFunctions( void )
 {
-   hb_vmDoModuleFunctions( s_QuitFunctions );
+   hb_vmDoModuleFunctions( &s_QuitFunctions );
 }
 
 
@@ -500,83 +526,92 @@ static void hb_vmRequestTest( void )
 /* unlock VM, allow GC and other exclusive single task code execution */
 void hb_vmUnlock( void )
 {
-   HB_STACK_TLS_PRELOAD
-
-   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   if( s_fHVMActive )
    {
-      if( hb_stackUnlock() == 1 )
-      {
-         HB_VM_LOCK();
-         s_iRunningCount--;
-         if( hb_vmThreadRequest )
-         {
-            if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
-            {
-               if( ! hb_stackQuitState() )
-               {
-                  hb_stackSetQuitState( HB_TRUE );
-                  hb_stackSetActionRequest( HB_QUIT_REQUESTED );
-               }
-            }
-            hb_threadCondBroadcast( &s_vmCond );
-         }
-         HB_VM_UNLOCK();
-      }
-   }
+      HB_STACK_TLS_PRELOAD
 
-   HB_TASK_SHEDULER();
+      if( hb_stackId() )   /* check if thread has associated HVM stack */
+      {
+         if( hb_stackUnlock() == 1 )
+         {
+            HB_VM_LOCK();
+            s_iRunningCount--;
+            if( hb_vmThreadRequest )
+            {
+               if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+               {
+                  if( ! hb_stackQuitState() )
+                  {
+                     hb_stackSetQuitState( HB_TRUE );
+                     hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+                  }
+               }
+               hb_threadCondBroadcast( &s_vmCond );
+            }
+            HB_VM_UNLOCK();
+         }
+      }
+
+      HB_TASK_SHEDULER();
+   }
 }
 
 /* lock VM blocking GC and other exclusive single task code execution */
 void hb_vmLock( void )
 {
-   HB_STACK_TLS_PRELOAD
-
-   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   if( s_fHVMActive )
    {
-      if( hb_stackLock() == 0 )
+      HB_STACK_TLS_PRELOAD
+
+      if( hb_stackId() )   /* check if thread has associated HVM stack */
       {
-         HB_VM_LOCK();
-         for( ;; )
+         if( hb_stackLock() == 0 )
          {
-            if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+            HB_VM_LOCK();
+            for( ;; )
             {
-               if( ! hb_stackQuitState() )
+               if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
                {
-                  hb_stackSetQuitState( HB_TRUE );
-                  hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+                  if( ! hb_stackQuitState() )
+                  {
+                     hb_stackSetQuitState( HB_TRUE );
+                     hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+                  }
                }
+               if( hb_vmThreadRequest & HB_THREQUEST_STOP )
+                  hb_threadCondWait( &s_vmCond, &s_vmMtx );
+               else
+                  break;
             }
-            if( hb_vmThreadRequest & HB_THREQUEST_STOP )
-               hb_threadCondWait( &s_vmCond, &s_vmMtx );
-            else
-               break;
+            s_iRunningCount++;
+            HB_VM_UNLOCK();
          }
-         s_iRunningCount++;
-         HB_VM_UNLOCK();
       }
    }
 }
 
 void hb_vmLockForce( void )
 {
-   HB_STACK_TLS_PRELOAD
-
-   if( hb_stackId() )   /* check if thread has associated HVM stack */
+   if( s_fHVMActive )
    {
-      if( hb_stackLock() == 0 )
+      HB_STACK_TLS_PRELOAD
+
+      if( hb_stackId() )   /* check if thread has associated HVM stack */
       {
-         HB_VM_LOCK();
-         if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
+         if( hb_stackLock() == 0 )
          {
-            if( ! hb_stackQuitState() )
+            HB_VM_LOCK();
+            if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
             {
-               hb_stackSetQuitState( HB_TRUE );
-               hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+               if( ! hb_stackQuitState() )
+               {
+                  hb_stackSetQuitState( HB_TRUE );
+                  hb_stackSetActionRequest( HB_QUIT_REQUESTED );
+               }
             }
+            s_iRunningCount++;
+            HB_VM_UNLOCK();
          }
-         s_iRunningCount++;
-         HB_VM_UNLOCK();
       }
    }
 }
@@ -760,8 +795,6 @@ static void hb_vmStackInit( PHB_THREADSTATE pState )
       hb_vmStackAdd( pState );
    }
    HB_VM_UNLOCK();
-
-   hb_vmLock();
 }
 
 static void hb_vmStackRelease( void )
@@ -844,6 +877,7 @@ void hb_vmThreadInit( void * Cargo )
       pState = hb_threadStateNew();
 
    hb_vmStackInit( pState );  /* initialize HVM thread stack */
+   hb_vmLock();
    {
       HB_STACK_TLS_PRELOAD
 
@@ -1079,6 +1113,9 @@ void hb_vmInit( HB_BOOL bStartMainProc )
    /* enable executing PCODE (HVM reenter request) */
    s_fHVMActive = HB_TRUE;
 
+   /* lock main HVM thread */
+   hb_vmLock();
+
 #ifndef HB_NO_DEBUG
    s_pDynsDbgEntry = hb_dynsymFind( "__DBGENTRY" );
    if( s_pDynsDbgEntry )
@@ -1263,7 +1300,7 @@ int hb_vmQuit( void )
    hb_cdpReleaseAll();              /* releases codepages */
 
    /* release all known garbage */
-   if( hb_xquery( HB_MEM_USEDMAX ) == 0 ) /* check if fmstat is ON */
+   if( hb_xquery( HB_MEM_STATISTICS ) == 0 ) /* check if fmstat is ON */
       hb_gcReleaseAll();
 
    hb_vmUnsetExceptionHandler();
@@ -2301,8 +2338,8 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
                PHB_ITEM pItem = hb_stackAllocItem();
 
                pItem->type = HB_IT_TIMESTAMP;
-               pItem->item.asDateTime.julian = ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] );;
-               pItem->item.asDateTime.time = ( long ) HB_PCODE_MKLONG( &pCode[ 5 ] );;
+               pItem->item.asDateTime.julian = ( long ) HB_PCODE_MKLONG( &pCode[ 1 ] );
+               pItem->item.asDateTime.time = ( long ) HB_PCODE_MKLONG( &pCode[ 5 ] );
                pCode += 9;
             }
             break;
@@ -3068,7 +3105,7 @@ static void hb_vmAddInt( PHB_ITEM pResult, HB_LONG lAdd )
       else
       {
          pResult->type = HB_IT_DOUBLE;
-         pResult->item.asDouble.value = ( double ) nVal + lAdd;;
+         pResult->item.asDouble.value = ( double ) nVal + lAdd;
          pResult->item.asDouble.length = HB_DBL_LENGTH( pResult->item.asDouble.value );
          pResult->item.asDouble.decimal = 0;
       }
@@ -3882,6 +3919,27 @@ static void hb_vmExactlyEqual( void )
       hb_itemClear( pItem1 );
       pItem1->type = HB_IT_LOGICAL;
       pItem1->item.asLogical.value = fResult;
+   }
+#ifndef HB_CLP_STRICT
+   else if( HB_IS_BLOCK( pItem1 ) && HB_IS_BLOCK( pItem2 ) )
+   {
+      HB_BOOL fResult = pItem1->item.asBlock.value == pItem2->item.asBlock.value;
+
+      hb_stackPop();
+      hb_itemClear( pItem1 );
+      pItem1->type = HB_IT_LOGICAL;
+      pItem1->item.asLogical.value = fResult;
+   }
+#endif
+   else if( HB_IS_SYMBOL( pItem1 ) && HB_IS_SYMBOL( pItem2 ) )
+   {
+      pItem1->item.asLogical.value =
+               pItem1->item.asSymbol.value == pItem2->item.asSymbol.value ||
+               ( pItem1->item.asSymbol.value->pDynSym != NULL &&
+                 pItem1->item.asSymbol.value->pDynSym ==
+                 pItem2->item.asSymbol.value->pDynSym );
+      pItem1->type = HB_IT_LOGICAL;
+      hb_stackDec();
    }
    else if( HB_IS_ARRAY( pItem1 ) && HB_IS_ARRAY( pItem2 ) &&
             ! hb_objHasOperator( pItem1, HB_OO_OP_EXACTEQUAL ) )
@@ -6904,8 +6962,8 @@ void hb_vmPushStringPcode( const char * szText, HB_SIZE nLength )
    pItem->type = HB_IT_STRING;
    pItem->item.asString.allocated = 0;
    pItem->item.asString.length = nLength;
-   pItem->item.asString.value = ( char * ) ( nLength <= 1 ?
-                        hb_szAscii[ ( unsigned char ) szText[ 0 ] ] : szText );
+   pItem->item.asString.value = ( char * ) HB_UNCONST( ( nLength <= 1 ?
+                        hb_szAscii[ ( unsigned char ) szText[ 0 ] ] : szText ) );
 }
 
 void hb_vmPushSymbol( PHB_SYMB pSym )
@@ -7805,6 +7863,14 @@ void hb_vmInitSymbolGroup( void * hNewDynLib, int argc, const char * argv[] )
          pLastSymbols = pLastSymbols->pNext;
       }
 
+      /* library symbols are modified beforeinit functions
+         execution intentionally because init functions may
+         load new modules [druzus] */
+      hb_vmDoModuleSetLibID( s_InitFunctions, hDynLib, hNewDynLib );
+      hb_vmDoModuleSetLibID( s_ExitFunctions, hDynLib, hNewDynLib );
+      hb_vmDoModuleSetLibID( s_QuitFunctions, hDynLib, hNewDynLib );
+      hb_vmDoModuleLibFunctions( &s_InitFunctions, hNewDynLib );
+
       if( fFound )
       {
          HB_BOOL fClipInit = HB_TRUE;
@@ -7883,15 +7949,16 @@ void hb_vmExitSymbolGroup( void * hDynLib )
          pLastSymbols = pLastSymbols->pNext;
       }
 
+      hb_vmDoModuleLibFunctions( &s_ExitFunctions, hDynLib );
+      hb_vmDoModuleLibFunctions( &s_QuitFunctions, hDynLib );
+
       if( fFound )
       {
          pLastSymbols = s_pSymbols;
          while( pLastSymbols )
          {
             if( pLastSymbols->hDynLib == hDynLib )
-            {
                hb_vmFreeSymbols( pLastSymbols );
-            }
             pLastSymbols = pLastSymbols->pNext;
          }
       }
@@ -8858,40 +8925,41 @@ HB_USHORT hb_vmRequestQuery( void )
 
 HB_BOOL hb_vmRequestReenter( void )
 {
-   HB_STACK_TLS_PRELOAD
-   PHB_ITEM pItem;
-   int iLocks = 0;
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmRequestReenter()" ) );
 
-#if defined( HB_MT_VM )
-   if( ! s_fHVMActive || hb_stackId() == NULL )
-      return HB_FALSE;
-   else
+   if( s_fHVMActive )
    {
-      while( hb_stackLockCount() > 0 )
+      HB_STACK_TLS_PRELOAD
+      PHB_ITEM pItem;
+      int iLocks = 0;
+
+#if defined( HB_MT_VM )
+      if( hb_stackId() == NULL )
+         return HB_FALSE;
+      else
       {
-         hb_vmLock();
-         ++iLocks;
+         while( hb_stackLockCount() > 0 )
+         {
+            hb_vmLock();
+            ++iLocks;
+         }
       }
-   }
-#else
-   if( ! s_fHVMActive )
-      return HB_FALSE;
 #endif
 
-   hb_stackPushReturn();
+      hb_stackPushReturn();
 
-   pItem = hb_stackAllocItem();
-   pItem->type = HB_IT_RECOVER;
-   pItem->item.asRecover.recover = NULL;
-   pItem->item.asRecover.base    = iLocks;
-   pItem->item.asRecover.flags   = 0;
-   pItem->item.asRecover.request = hb_stackGetActionRequest();
+      pItem = hb_stackAllocItem();
+      pItem->type = HB_IT_RECOVER;
+      pItem->item.asRecover.recover = NULL;
+      pItem->item.asRecover.base    = iLocks;
+      pItem->item.asRecover.flags   = 0;
+      pItem->item.asRecover.request = hb_stackGetActionRequest();
 
-   hb_stackSetActionRequest( 0 );
+      hb_stackSetActionRequest( 0 );
 
-   return HB_TRUE;
+      return HB_TRUE;
+   }
+   return HB_FALSE;
 }
 
 void hb_vmRequestRestore( void )
@@ -8941,9 +9009,7 @@ HB_BOOL hb_vmRequestReenterExt( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmRequestReenterExt()" ) );
 
-   if( ! s_fHVMActive )
-      return HB_FALSE;
-   else
+   if( s_fHVMActive )
    {
       HB_USHORT uiAction = 0;
       int iLocks = 0;
@@ -8981,9 +9047,11 @@ HB_BOOL hb_vmRequestReenterExt( void )
       pItem->item.asRecover.request = uiAction | hb_stackGetActionRequest();
 
       hb_stackSetActionRequest( 0 );
+
+      return HB_TRUE;
    }
 
-   return HB_TRUE;
+   return HB_FALSE;
 }
 
 HB_BOOL hb_vmTryEval( PHB_ITEM * pResult, PHB_ITEM pItem, HB_ULONG ulPCount, ... )
@@ -9075,12 +9143,16 @@ HB_BOOL hb_vmIsActive( void )
 
 HB_BOOL hb_vmIsReady( void )
 {
-   HB_STACK_TLS_PRELOAD
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmIsReady()" ) );
 
 #if defined( HB_MT_VM )
-   return s_fHVMActive && hb_stackId();
+   if( s_fHVMActive )
+   {
+      HB_STACK_TLS_PRELOAD
+      return hb_stackId() != NULL;
+   }
+   else
+      return HB_FALSE;
 #else
    return s_fHVMActive;
 #endif
@@ -9116,7 +9188,7 @@ void hb_vmSetLang( PHB_LANG pLang )
 {
    HB_STACK_TLS_PRELOAD
 
-   hb_stackSetLang( ( void * ) pLang );
+   hb_stackSetLang( HB_UNCONST( pLang ) );
 }
 
 void * hb_vmI18N( void )
@@ -12322,16 +12394,59 @@ HB_FUNC( __VMMODULESVERIFY )
    hb_vmVerifySymbols( hb_stackReturnItem() );
 }
 
+HB_FUNC( __VMCOUNTTHREADS )
+{
+   int iStacks, iThreads;
+
+#if defined( HB_MT_VM )
+   HB_STACK_TLS_PRELOAD
+
+   HB_VM_LOCK();
+
+   iStacks = s_iStackCount;
+   iThreads = s_iRunningCount;
+
+   HB_VM_UNLOCK();
+#else
+   iStacks = iThreads = 0;
+#endif
+
+   hb_storni( iStacks, 1 );
+   hb_storni( iThreads, 2 );
+
+   hb_retni( iThreads );
+}
+
 HB_FUNC( __BREAKBLOCK )
 {
    hb_itemReturn( hb_breakBlock() );
+}
+
+HB_FUNC( __RECOVERERRORBLOCK )
+{
+   HB_STACK_TLS_PRELOAD
+
+   HB_ISIZ nRecoverBase = hb_stackGetRecoverBase();
+
+   if( nRecoverBase > 0 && nRecoverBase < hb_stackTopOffset() )
+   {
+      PHB_ITEM pItem = hb_stackItem( nRecoverBase );
+
+      if( HB_IS_POINTER( pItem ) &&
+          pItem->item.asPointer.collect && pItem->item.asPointer.single &&
+          hb_gcFuncs( pItem->item.asPointer.value ) == &s_gcSeqBlockFuncs )
+         hb_itemReturn( ( PHB_ITEM ) pItem->item.asPointer.value );
+   }
 }
 
 HB_FUNC( HB_ARRAYTOPARAMS )
 {
    HB_STACK_TLS_PRELOAD
 
-   hb_retni( 0 );
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+
+   if( pArray )
+      hb_arrayLast( pArray, hb_stackReturnItem() );
 }
 
 HB_FUNC( ERRORLEVEL )

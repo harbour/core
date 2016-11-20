@@ -7,8 +7,6 @@
       Document
    $SUBCATEGORY$
       Compiler
-   $ONELINER$
-      Compiler Options
    $DESCRIPTION$
       <b>Invoking the Harbour compiler:  </b> </par>
       ==============================   </par>
@@ -19,10 +17,10 @@
       or   </par>
          harbour [options] <file[.prg]> [options]   </par>
 
-      The command line options have to be separated by at least one space.
+      The command-line options have to be separated by at least one space.
       The option can start with either '/' character or '-' character.
 
-      <b>The Harbour command line options:  </b> </par>
+      <b>The Harbour command-line options:  </b> </par>
       =================================   </par>
 
       /a               automatic memvar declaration   </par>

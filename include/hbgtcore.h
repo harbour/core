@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Internal Terminal API
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -639,7 +637,7 @@ extern HB_EXPORT void    hb_gt_winapi_setKbdState( int kbdShifts );
 extern HB_EXPORT void    hb_gt_winapi_tone( double dFrequency, double dDuration );
 #endif /* HB_OS_WIN */
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
-extern int hb_gt_dos_keyCodeTranslate( int iKey );
+extern int hb_gt_dos_keyCodeTranslate( int iKey, int iFlags, PHB_CODEPAGE cdp );
 #endif /* HB_OS_DOS || HB_OS_WIN || HB_OS_OS2 */
 
 HB_EXTERN_END

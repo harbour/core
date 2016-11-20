@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Header file for the CodePages API
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -404,15 +402,17 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
 #define HB_MAX_CHAR_LEN             8
 
 /* codepage uses simple binary sorting */
-#define HB_CDP_ISBINSORT(cdp)       ( ( ( cdp )->type & HB_CDP_TYPE_BINSORT ) != 0 )
+#define HB_CDP_ISBINSORT( cdp )     ( ( ( cdp )->type & HB_CDP_TYPE_BINSORT ) != 0 )
 /* codepage uses custom string decoding */
-#define HB_CDP_ISCUSTOM(cdp)        ( ( ( cdp )->type & HB_CDP_TYPE_CUSTOM ) != 0 )
+#define HB_CDP_ISCUSTOM( cdp )      ( ( ( cdp )->type & HB_CDP_TYPE_CUSTOM ) != 0 )
 /* codepage use character indexes instead of bytes ones */
-#define HB_CDP_ISCHARIDX(cdp)       ( ( ( cdp )->type & HB_CDP_TYPE_CHARIDX ) != 0 )
+#define HB_CDP_ISCHARIDX( cdp )     ( ( ( cdp )->type & HB_CDP_TYPE_CHARIDX ) != 0 )
 /* Chr(), Asc() and similar functions operates on Unicode values instead of bytes */
-#define HB_CDP_ISCHARUNI(cdp)       ( ( ( cdp )->type & HB_CDP_TYPE_CHARUNI ) != 0 )
+#define HB_CDP_ISCHARUNI( cdp )     ( ( ( cdp )->type & HB_CDP_TYPE_CHARUNI ) != 0 )
 /* codepage uses UTF-8 encoding */
-#define HB_CDP_ISUTF8(cdp)          ( ( ( cdp )->type & HB_CDP_TYPE_UTF8 ) != 0 )
+#define HB_CDP_ISUTF8( cdp )        ( ( ( cdp )->type & HB_CDP_TYPE_UTF8 ) != 0 )
+
+#define hb_cdpGetID( cdp )          ( ( cdp )->id )
 
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterRaw( PHB_CODEPAGE cdp );
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterNew( const char * id,

@@ -38,14 +38,14 @@
       increments. Returns an 8 element array of calendar data:
 
       Element  Value
-      [1]      Date in current date format.
-      [2]      Numeric month number.
-      [3]      Numeric day number.
-      [4]      Numeric year number.
-      [5]      Month in character format.
-      [6]      Day of the week in character format.
-      [7]      Numeric Julian day.
-      [8]      Current time in time format.
+      [ 1 ]    Date in current date format.
+      [ 2 ]    Numeric month number.
+      [ 3 ]    Numeric day number.
+      [ 4 ]    Numeric year number.
+      [ 5 ]    Month in character format.
+      [ 6 ]    Day of the week in character format.
+      [ 7 ]    Numeric Julian day.
+      [ 8 ]    Current time in time format.
 
       WARNING: ft_Calendar() uses ft_Shadow() and ft_XBox()
                from the Nanforum Toolkit!
@@ -62,6 +62,5 @@
       ? aRetVal[ 8 ]      // Result: 12:45:20
    $SEEALSO$
       ft_DayOfYr()
-
    $END$
  */

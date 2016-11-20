@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * DBF RDD module
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -143,6 +141,7 @@ typedef struct _DBFDATA
    HB_BYTE   bMemoType;        /* DB_MEMO_FPT */
    HB_BYTE   bMemoExtType;     /* DB_MEMOVER_FLEX */
    HB_BYTE   bDecimals;        /* RDDI_DECIMALS */
+   HB_USHORT uiSetHeader;      /* RDDI_SETHEADER */
    HB_USHORT uiDirtyRead;      /* HB_IDXREAD_CLEANMASK */
    HB_USHORT uiIndexPageSize;  /* 0 */
    HB_ULONG  ulMemoBlockSize;  /* 0 */
@@ -207,6 +206,7 @@ typedef struct _DBFAREA
    HB_BYTE     bMemoType;           /* MEMO type used in DBF memo fields */
    HB_BYTE     bLockType;           /* Type of locking shemes */
    HB_BYTE     bCryptType;          /* Type of used encryption */
+   HB_UINT     uiSetHeader;         /* DBF header updating modes DBI_SETHEADER */
    DBFHEADER   dbfHeader;           /* DBF header buffer */
    HB_USHORT * pFieldOffset;        /* Pointer to field offset array */
    PHB_DBFFIELDBITS pFieldBits;     /* Pointer to extended DBF field info array */

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Harbour Windows Printing support functions
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2002 Luiz Rafael Culik <culikr@uol.com.br>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,6 +49,8 @@
 #include "hbwapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
+
+#include "hbwin.ch"
 
 #if ! defined( HB_OS_WIN_CE )
    #include <winspool.h>
@@ -92,7 +92,7 @@ HB_FUNC( WIN_PRINTEREXISTS )
          if( dwNeeded )
          {
             PRINTER_INFO_5 * pPrinterEnumBak;
-            PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
+            PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrabz( dwNeeded );
 
             if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
             {
@@ -184,7 +184,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
       EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned );
       if( dwNeeded )
       {
-         PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+         PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrabz( dwNeeded );
 
          if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwNeeded, &dwReturned ) && dwReturned )
             HB_ITEMPUTSTR( pPrinterName, pPrinterInfo->pPrinterName );
@@ -215,7 +215,7 @@ static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, DWORD * pdw
    GetPrinter( hPrinter, 2, NULL, 0, &dwNeeded );
    if( dwNeeded )
    {
-      PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+      PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrabz( dwNeeded );
       DWORD dwUsed = 0;
 
       if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwUsed ) )
@@ -225,7 +225,7 @@ static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, DWORD * pdw
          EnumJobs( hPrinter, 0, pPrinterInfo->cJobs, 2, NULL, 0, &dwNeeded, &dwReturned );
          if( dwNeeded )
          {
-            JOB_INFO_2 * pJobInfo = ( JOB_INFO_2 * ) hb_xgrab( dwNeeded );
+            JOB_INFO_2 * pJobInfo = ( JOB_INFO_2 * ) hb_xgrabz( dwNeeded );
 
             if( EnumJobs( hPrinter, 0, dwReturned, 2, ( LPBYTE ) pJobInfo, dwNeeded, &dwUsed, &dwReturned ) )
             {
@@ -246,7 +246,7 @@ static HB_BOOL hb_GetJobs( HANDLE hPrinter, JOB_INFO_2 ** ppJobInfo, DWORD * pdw
 
 HB_FUNC( WIN_PRINTERSTATUS )
 {
-   long nStatus = -1;
+   long nStatus = HB_WIN_PRINTER_STATUS_ERROR;
 
 #if ! defined( HB_OS_WIN_CE )
    PHB_ITEM pPrinterName = hb_itemParam( 1 );
@@ -267,7 +267,7 @@ HB_FUNC( WIN_PRINTERSTATUS )
          GetPrinter( hPrinter, 2, NULL, 0, &dwNeeded );
          if( dwNeeded )
          {
-            PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+            PRINTER_INFO_2 * pPrinterInfo = ( PRINTER_INFO_2 * ) hb_xgrabz( dwNeeded );
 
             if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo, dwNeeded, &dwNeeded ) )
                nStatus = ( long ) pPrinterInfo->Status;
@@ -277,7 +277,7 @@ HB_FUNC( WIN_PRINTERSTATUS )
 
          if( nStatus == 0 )
          {
-            JOB_INFO_2 * pJobs;
+            JOB_INFO_2 * pJobs = NULL;
             DWORD dwJobs = 0;
 
             if( hb_GetJobs( hPrinter, &pJobs, &dwJobs ) )
@@ -325,7 +325,7 @@ HB_FUNC( WIN_PRINTERPORTTONAME )
       if( dwNeeded )
       {
          PRINTER_INFO_5 * pPrinterEnumBak;
-         PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
+         PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrabz( dwNeeded );
 
          if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
          {
@@ -527,17 +527,6 @@ HB_FUNC( WIN_PRINTDATARAW )
    hb_retns( nResult );
 }
 
-
-/* Positions for win_printerList() array */
-
-#define HB_WINPRN_NAME    1
-#define HB_WINPRN_PORT    2
-#define HB_WINPRN_TYPE    3
-#define HB_WINPRN_DRIVER  4
-#define HB_WINPRN_SHARE   5
-#define HB_WINPRN_SERVER  6
-#define HB_WINPRN_LEN_    6
-
 HB_FUNC( WIN_PRINTERLIST )
 {
    PHB_ITEM pPrinterArray = hb_itemArrayNew( 0 );
@@ -551,7 +540,7 @@ HB_FUNC( WIN_PRINTERLIST )
    if( dwNeeded )
    {
       PRINTER_INFO_5 * pPrinterEnumBak;
-      PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrab( dwNeeded );
+      PRINTER_INFO_5 * pPrinterEnum = pPrinterEnumBak = ( PRINTER_INFO_5 * ) hb_xgrabz( dwNeeded );
 
       if( EnumPrinters( _ENUMPRN_FLAGS_, NULL, 5, ( LPBYTE ) pPrinterEnum, dwNeeded, &dwNeeded, &dwReturned ) )
       {
@@ -577,7 +566,7 @@ HB_FUNC( WIN_PRINTERLIST )
                         HB_ARRAYSETSTR( pTempItem, HB_WINPRN_NAME, pPrinterEnum->pPrinterName );
 
                         {
-                           PRINTER_INFO_2 * pPrinterInfo2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+                           PRINTER_INFO_2 * pPrinterInfo2 = ( PRINTER_INFO_2 * ) hb_xgrabz( dwNeeded );
 
                            if( GetPrinter( hPrinter, 2, ( LPBYTE ) pPrinterInfo2, dwNeeded, &dwNeeded ) )
                            {

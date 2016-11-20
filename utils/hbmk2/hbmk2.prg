@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour Make (alias hbmk/hbmk2/hbrun)
  *
  * Copyright 1999-2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  * License extensions:
  *   - This source code must be kept and distributed as part
@@ -77,8 +75,8 @@
    Man page HOWTO:
       http://www.schweikhardt.net/man_page_howto.html
    Groff manual:
-      http://www.gnu.org/software/groff/manual/html_node/index.html
-      http://www.gnu.org/software/groff/manual/groff.pdf
+      https://www.gnu.org/software/groff/manual/html_node/index.html
+      https://www.gnu.org/software/groff/manual/groff.pdf
    Troff manual:
       http://cm.bell-labs.com/sys/doc/troff.pdf
  */
@@ -332,7 +330,7 @@ EXTERNAL hbmk_KEYW
    system libs. [vszakats] */
 #define _IS_AUTOLIBSYSPRE( c )  ( hbmk[ _HBMK_cPLAT ] == "win" .AND. Lower( hb_FNameName( c ) ) == "unicows" )
 
-#define _OUT_EOL                e"\n"     /* used when displaying text */
+#define _OUT_EOL                hb_eol()  /* used when displaying text */
 #define _CHR_EOL                Chr( 10 ) /* used when consuming text files */
 #define _FIL_EOL                Chr( 10 ) /* used when creating source files */
 
@@ -765,9 +763,6 @@ STATIC PROCEDURE hbmk_local_entry( ... )
    ENDIF
 
    /* Handle multitarget command lines */
-
-   hb_FSetDevMode( hb_gtInfo( HB_GTI_OUTPUTFD ), FD_TEXT )
-   hb_FSetDevMode( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
 
    nTargetTO_DO := 1
    WHILE .T.
@@ -2397,30 +2392,6 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 
    /* Process build-time configuration */
 
-   IF hbmk[ _HBMK_cPLAT ] == "dos"
-      SWITCH hbmk[ _HBMK_cCOMP ]
-      CASE "djgpp"  ; tmp := "watt"     ; cLibLibPrefix := "lib" ; cLibExt := ".a"   ; EXIT
-      CASE "watcom" ; tmp := "wattcpwf" ; cLibLibPrefix := ""    ; cLibExt := ".lib" ; EXIT
-      OTHERWISE     ; tmp := NIL
-      ENDSWITCH
-
-      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbpmcom" )
-      IF ! Empty( tmp )
-         #if defined( HB_HAS_WATT )
-            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
-            IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
-            ENDIF
-         #else
-            IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" ) .AND. ;
-               hb_FileExists( tmp1 + hb_ps() + cLibLibPrefix + tmp + cLibExt )
-               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
-               AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
-            ENDIF
-         #endif
-      ENDIF
-   ENDIF
-
    /* Process automatic make files in current dir. */
    IF hbmk[ _HBMK_lAutoHBM ] .AND. hb_FileExists( _HBMK_AUTOHBM_NAME )
       IF ! hbmk[ _HBMK_lQuiet ]
@@ -3660,6 +3631,30 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       ENDCASE
    NEXT
 
+   IF hbmk[ _HBMK_cPLAT ] == "dos" .AND. ! hbmk[ _HBMK_lSHARED ]
+      SWITCH hbmk[ _HBMK_cCOMP ]
+      CASE "djgpp"  ; tmp := "watt"     ; cLibLibPrefix := "lib" ; cLibExt := ".a"   ; EXIT
+      CASE "watcom" ; tmp := "wattcpwf" ; cLibLibPrefix := ""    ; cLibExt := ".lib" ; EXIT
+      OTHERWISE     ; tmp := NIL
+      ENDSWITCH
+
+      AAdd( hbmk[ _HBMK_aLIBUSERSYS ], "hbdossrl" )
+      IF ! Empty( tmp )
+         #if defined( HB_HAS_WATT )
+            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
+            IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
+            ENDIF
+         #else
+            IF hb_DirExists( tmp1 := hb_DirSepToOS( GetEnv( "WATT_ROOT" ) ) + hb_ps() + "lib" ) .AND. ;
+               hb_FileExists( tmp1 + hb_ps() + cLibLibPrefix + tmp + cLibExt )
+               AAdd( hbmk[ _HBMK_aLIBPATH ], tmp1 )
+               AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], tmp )
+            ENDIF
+         #endif
+      ENDIF
+   ENDIF
+
    IF hbmk[ _HBMK_lDEBUGPARS ]
       FOR EACH aParam IN aParams
          _hbmk_OutStd( hbmk, hb_StrFormat( "debugpars: %1$3d %2$s", aParam:__enumIndex(), ParamToString( aParam ) ) )
@@ -3982,7 +3977,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cObjExt := ".o"
          IF hbmk[ _HBMK_cPLAT ] == "darwin"
             cBin_Lib := "libtool"
-            cOpt_Lib := "-static {FA} -o {OL} {LO}"
+            cOpt_Lib := "-static -no_warning_for_no_symbols {FA} -o {OL} {LO}"
          ELSE
             DO CASE
             CASE hbmk[ _HBMK_cCOMP ] == "icc"
@@ -4791,14 +4786,16 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          cBin_Link := "wlink" + hbmk[ _HBMK_cCCEXT ]
          DO CASE
          CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Link := "OP quiet SYS linux {FL} NAME {OE} {LO} {DL} {LL} {LB} {LF}{SCRIPT}"
-         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cOpt_Link := "OP quiet SYS dos32a {FL} NAME {OE} {LO} {DL} {LL} {LB} {LF}{SCRIPT}"
+         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cOpt_Link := iif( hbmk[ _HBMK_lSHARED ], ;
+                                                                 "OP quiet,map,stub=cwstub.exe SYS causeway {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}", ;
+                                                                 "OP quiet SYS dos32a {FL} NAME {OE} {LO} {DL} {LL} {LB} {LF}{SCRIPT}" )
          CASE hbmk[ _HBMK_cPLAT ] == "win"   ; cOpt_Link := "OP quiet {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
          CASE hbmk[ _HBMK_cPLAT ] == "os2"   ; cOpt_Link := "OP quiet SYS os2v2 {FL} {IM} NAME {OE} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
          ENDCASE
          cBin_Dyn := cBin_Link
          cDynObjPrefix := cObjPrefix
          DO CASE
-         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cBin_Dyn := NIL
+         CASE hbmk[ _HBMK_cPLAT ] == "dos"   ; cOpt_Dyn := "OP quiet SYS cwdllr OP map,stub=cwstub.exe {FD} {IM} NAME {OD} {LO} {DL} {LL} {LB} {LF} {LS}{SCRIPT}"
          CASE hbmk[ _HBMK_cPLAT ] == "linux" ; cOpt_Dyn := "OP quiet FORM elf dll OP exportall {FD} NAME {OD} {LO} {DL} {LL} {LB} {LF}{SCRIPT}"
             IF hbmk[ _HBMK_lCreateDyn ]
                AAdd( hbmk[ _HBMK_aLIBPATH ], hb_DirSepToOS( GetEnv( "WATCOM") + hb_ps() + "lib386" ) )
@@ -4825,7 +4822,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             /* register callconv (-6r, -5r) puts an underscore after names */
             cLibHBX_Regex := R_( "[\s]_?HB_FUN_([A-Z0-9_]*)_[\s]" )
          ENDIF
-         IF HBMK_ISPLAT( "win|os2" )
+         IF HBMK_ISPLAT( "win|os2|dos" )
             bBlk_ImpLib := {| cSourceDLL, cTargetLib, cFlags | win_implib_command_watcom( hbmk, cBin_Lib + " -q -o={OL} {ID}", cSourceDLL, cTargetLib, cFlags ) }
          ENDIF
          cLibLibExt := cLibExt
@@ -4889,6 +4886,10 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                /* TOFIX: This line is plain guessing. */
                AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + hb_FNameExtSet( hbmk[ _HBMK_cHB_INSTALL_LIB ] + hb_ps() + iif( hbmk[ _HBMK_lGUI ], "hbmainstd", "hbmainstd" ), cLibExt ) )
             ENDIF
+         CASE hbmk[ _HBMK_cPLAT ] == "dos"
+            l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
+            l_aLIBSHARED := { cHarbourDyn + cLibExt }
+            AAdd( hbmk[ _HBMK_aOPTL ], "FILE " + hb_FNameExtSet( hbmk[ _HBMK_cHB_INSTALL_LIB ] + hb_ps() + "hbmainstd", cLibExt ) )
          CASE hbmk[ _HBMK_cPLAT ] == "linux"
             l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
             l_aLIBSHARED := { hbmk[ _HBMK_cDynLibPrefix ] + cHarbourDyn + cDL_Version + hbmk[ _HBMK_cDynLibExt ] }
@@ -9090,50 +9091,52 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
          IF ! dep[ _HBMKDEP_lFound ]
             cName := AllTrim( cName )
 
-            cStdOut := ""
-            hb_processRun( "pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+            hb_processRun( "pkg-config --libs --cflags " + cName,, @cStdOut, @cStdErr )
+            hb_processRun( "pkg-config --modversion " + cName,, @cVersion, @cStdErr )
             IF Empty( cStdOut )
-               hb_processRun( cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               hb_processRun( cName + "-config --libs --cflags",, @cStdOut, @cStdErr )
+               hb_processRun( cName + "-config --version",, @cVersion, @cStdErr )
             ENDIF
 #if defined( __PLATFORM__DARWIN )
             /* Homebrew */
             IF Empty( cStdOut )
-               IF hb_FileExists( "/usr/local/bin/pkg-config" )
-                  hb_processRun( "/usr/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+               IF hb_vfExists( tmp := "/usr/local/bin/pkg-config" )
+                  hb_processRun( tmp + " --libs --cflags " + cName,, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --modversion " + cName,, @cVersion, @cStdErr )
                ENDIF
             ENDIF
             IF Empty( cStdOut )
-               IF hb_FileExists( "/usr/local/bin/" + cName + "-config" )
-                  hb_processRun( "/usr/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               IF hb_vfExists( tmp := "/usr/local/bin/" + cName + "-config" )
+                  hb_processRun( tmp + " --libs --cflags",, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --version",, @cVersion, @cStdErr )
                ENDIF
             ENDIF
             /* MacPorts/DarwinPorts */
             IF Empty( cStdOut )
-               IF hb_FileExists( "/opt/local/bin/pkg-config" )
-                  hb_processRun( "/opt/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+               IF hb_vfExists( tmp := "/opt/local/bin/pkg-config" )
+                  hb_processRun( tmp + " --libs --cflags " + cName,, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --modversion " + cName,, @cVersion, @cStdErr )
                ENDIF
             ENDIF
             IF Empty( cStdOut )
-               IF hb_FileExists( "/opt/local/bin/" + cName + "-config" )
-                  hb_processRun( "/opt/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               IF hb_vfExists( tmp := "/opt/local/bin/" + cName + "-config" )
+                  hb_processRun( tmp + " --libs --cflags",, @cStdOut, @cStdErr )
+                  hb_processRun( tmp + " --version",, @cVersion, @cStdErr )
                ENDIF
             ENDIF
 #endif
 
             IF ! Empty( cStdOut )
 
-               cStdOut := StrTran( cStdOut, Chr( 13 ) )
-               IF ( tmp := At( Chr( 10 ), cStdOut ) ) > 0
-                  cVersion := Left( cStdOut, tmp - 1 )
-                  cStdOut := SubStr( cStdOut, tmp + 1 )
-               ELSE
-                  cVersion := "unknown version"
+               cVersion := hb_StrReplace( cVersion, Chr( 13 ) + Chr( 10 ) )
+               IF Empty( cVersion )
+                  cVersion := "unrecognized version"
                ENDIF
 
-               cStdOut := StrTran( cStdOut, Chr( 10 ), " " )
+               cStdOut := StrTran( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ), " " )
 
                FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
-                  IF Left( cItem, Len( "-I" ) ) == "-I"
+                  IF hb_LeftEq( cItem, "-I" )
                      dep[ _HBMKDEP_lFound ] := .T.
                      EXIT
                   ENDIF
@@ -9143,17 +9146,17 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
 
                   FOR EACH cItem IN hb_ATokens( cStdOut,, .T. )
                      DO CASE
-                     CASE Left( cItem, Len( "-l" ) ) == "-l"
+                     CASE hb_LeftEq( cItem, "-l" )
                         cItem := SubStr( cItem, Len( "-l" ) + 1 )
                         IF _IS_AUTOLIBSYSPRE( cItem )
                            AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cItem )
                         ELSE
                            AAdd( hbmk[ _HBMK_aLIBUSER ], cItem )
                         ENDIF
-                     CASE Left( cItem, Len( "-L" ) ) == "-L"
+                     CASE hb_LeftEq( cItem, "-L" )
                         cItem := SubStr( cItem, Len( "-L" ) + 1 )
                         AAdd( hbmk[ _HBMK_aLIBPATH ], hb_DirSepDel( hb_DirSepToOS( cItem ) ) )
-                     CASE Left( cItem, Len( "-I" ) ) == "-I"
+                     CASE hb_LeftEq( cItem, "-I" )
                         cItem := hb_DirSepDel( hb_DirSepToOS( SubStr( cItem, Len( "-I" ) + 1 ) ) )
                         IF Empty( cIncludeDir )
                            cIncludeDir := cItem
@@ -14195,11 +14198,9 @@ FUNCTION hbshell_ext_get_list()
 STATIC FUNCTION __plugin_ext()
 #pragma __cstream | RETURN %s
 /*
- * Harbour Project source code:
  * extension manager plugin
  *
  * Copyright 2012-2013 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  */
 
 FUNCTION __hbshell_plugin()
@@ -15577,7 +15578,7 @@ STATIC FUNCTION ToMarkdown( cText, cStyle )
       "<"        => "&lt;", ;
       ">"        => "&gt;", ;
       "(c)"      => "&copy;", ;
-      e"\n"      => "  " + _OUT_EOL, ;
+      e"\n"      => "  " + Chr( 10 ), ;
       "\"        => "\\", ;
       "`"        => "\`", ;
       "*"        => "\*", ;
@@ -15626,12 +15627,12 @@ STATIC PROCEDURE ShowHeader( hbmk )
    IF hbmk[ _HBMK_lShellMode ]
       cText := ;
          "Harbour Shell / Script Runner " + HBRawVersion() + e"\n" + ;
-         "Copyright (c) 2007-2013, Viktor Szakáts" + e"\n" + ;
+         "Copyright (c) 2007-2016, Viktor Szakáts" + e"\n" + ;
          "Copyright (c) 2003-2007, Przemysław Czerpak" + e"\n"
    ELSE
       cText := ;
          "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" + ;
-         "Copyright (c) 1999-2013, Viktor Szakáts" + e"\n"
+         "Copyright (c) 1999-2016, Viktor Szakáts" + e"\n"
    ENDIF
 
    IF hbmk[ _HBMK_lMarkdown ]
@@ -16815,7 +16816,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
-their web site at http://www.gnu.org/).
+their web site at https://www.gnu.org/).
 
 License extensions:
   - This source code must be kept and distributed as part

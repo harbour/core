@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Firebird RDBMS low level (client api) interface code.
  *
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -220,7 +218,7 @@ HB_FUNC( FBSTARTTRANSACTION )
       if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
          hb_retnl( isc_sqlcode( status ) );
       else
-         hb_retptr( ( void * ) ( HB_PTRDIFF ) trans );
+         hb_retptr( ( void * ) ( HB_PTRUINT ) trans );
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -228,7 +226,7 @@ HB_FUNC( FBSTARTTRANSACTION )
 
 HB_FUNC( FBCOMMIT )
 {
-   isc_tr_handle trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
+   isc_tr_handle trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 1 );
 
    if( trans )
    {
@@ -245,7 +243,7 @@ HB_FUNC( FBCOMMIT )
 
 HB_FUNC( FBROLLBACK )
 {
-   isc_tr_handle trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
+   isc_tr_handle trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 1 );
 
    if( trans )
    {
@@ -273,7 +271,7 @@ HB_FUNC( FBEXECUTE )
       unsigned short dialect = ( unsigned short ) hb_parni( 3 );
 
       if( HB_ISPOINTER( 4 ) )
-         trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 4 );
+         trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 4 );
       else
       {
          if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
@@ -328,7 +326,7 @@ HB_FUNC( FBQUERY )
       PHB_ITEM aTemp;
 
       if( HB_ISPOINTER( 4 ) )
-         trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 4 );
+         trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 4 );
       else if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
       {
          hb_retnl( isc_sqlcode( status ) );
@@ -445,11 +443,11 @@ HB_FUNC( FBQUERY )
 
       qry_handle = hb_itemArrayNew( 6 );
 
-      hb_arraySetPtr( qry_handle, 1, ( void * ) ( HB_PTRDIFF ) stmt );
-      hb_arraySetPtr( qry_handle, 2, ( void * ) ( HB_PTRDIFF ) sqlda );
+      hb_arraySetPtr( qry_handle, 1, ( void * ) ( HB_PTRUINT ) stmt );
+      hb_arraySetPtr( qry_handle, 2, ( void * ) ( HB_PTRUINT ) sqlda );
 
       if( ! HB_ISPOINTER( 4 ) )
-         hb_arraySetPtr( qry_handle, 3, ( void * ) ( HB_PTRDIFF ) trans );
+         hb_arraySetPtr( qry_handle, 3, ( void * ) ( HB_PTRUINT ) trans );
 
       hb_arraySetNL( qry_handle, 4, ( long ) num_cols );
       hb_arraySetNI( qry_handle, 5, ( int ) dialect );
@@ -468,7 +466,7 @@ HB_FUNC( FBFETCH )
 
    if( aParam )
    {
-      isc_stmt_handle  stmt  = ( isc_stmt_handle ) ( HB_PTRDIFF ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
+      isc_stmt_handle  stmt  = ( isc_stmt_handle ) ( HB_PTRUINT ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
       XSQLDA *         sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
       ISC_STATUS_ARRAY status;
       unsigned short   dialect = ( unsigned short ) hb_itemGetNI( hb_itemArrayGet( aParam, 5 ) );
@@ -489,9 +487,9 @@ HB_FUNC( FBFREE )
 
    if( aParam )
    {
-      isc_stmt_handle  stmt  = ( isc_stmt_handle ) ( HB_PTRDIFF ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
+      isc_stmt_handle  stmt  = ( isc_stmt_handle ) ( HB_PTRUINT ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
       XSQLDA *         sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
-      isc_tr_handle    trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_itemGetPtr( hb_itemArrayGet( aParam, 3 ) );
+      isc_tr_handle    trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_itemGetPtr( hb_itemArrayGet( aParam, 3 ) );
       ISC_STATUS_ARRAY status;
 
       if( isc_dsql_free_statement( status, &stmt, DSQL_drop ) )
@@ -697,7 +695,7 @@ HB_FUNC( FBGETBLOB )
       ISC_STATUS blob_stat;
 
       if( HB_ISPOINTER( 3 ) )
-         trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 3 );
+         trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 3 );
       else
       {
          if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *   I/O driver for serial port streams
+ * I/O driver for serial port streams
  *
  * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,13 +59,13 @@ typedef struct _HB_FILE
 {
    const HB_FILE_FUNCS * pFuncs;
    int                   port;
-   int                   timeout;
+   HB_MAXINT             timeout;
    HB_BOOL               fRead;
    HB_BOOL               fWrite;
 }
 HB_FILE;
 
-static PHB_FILE s_fileNew( int port, int timeout, HB_BOOL fRead, HB_BOOL fWrite );
+static PHB_FILE s_fileNew( int port, HB_MAXINT timeout, HB_BOOL fRead, HB_BOOL fWrite );
 
 static int s_fileGetValue( const char * pszName, int * piLen )
 {
@@ -80,14 +78,14 @@ static int s_fileGetValue( const char * pszName, int * piLen )
    return iValue;
 }
 
-static int s_filePortParams( const char * pszName, int * piTimeout,
+static int s_filePortParams( const char * pszName, HB_MAXINT * pTimeout,
                              int * piBaud, int * piParity,
                              int * piSize, int * piStop,
                              int * piFlow )
 {
    int iPort = 0, iLen, iValue;
 
-   *piTimeout = -1;
+   *pTimeout = -1;
    *piBaud = *piParity = *piSize = *piStop = *piFlow = 0;
 
    pszName += 3;
@@ -256,15 +254,16 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
 {
    PHB_FILE pFile = NULL;
    HB_ERRCODE errcode = 0;
-   int iPort, iTimeout, iBaud, iParity, iSize, iStop, iFlow;
+   int iPort, iBaud, iParity, iSize, iStop, iFlow;
    HB_BOOL fRead, fWrite;
+   HB_MAXINT timeout;
 
    HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDefExt );
    HB_SYMBOL_UNUSED( pPaths );
 
    fRead = fWrite = HB_TRUE;
-   iPort = s_filePortParams( pszName, &iTimeout,
+   iPort = s_filePortParams( pszName, &timeout,
                              &iBaud, &iParity, &iSize, &iStop, &iFlow );
    if( iPort > 0 )
    {
@@ -281,7 +280,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
                fRead = HB_FALSE;
                break;
          }
-         pFile = s_fileNew( iPort, iTimeout, fRead, fWrite );
+         pFile = s_fileNew( iPort, timeout, fRead, fWrite );
       }
       else
          errcode = hb_comGetError( iPort );
@@ -406,11 +405,12 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
          return HB_TRUE;
       }
       case HB_VF_RDHANDLE:
+      case HB_VF_WRHANDLE:
          hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_comGetDeviceHandle( pFile->port ) );
          return HB_TRUE;
 
-      case HB_VF_WRHANDLE:
-         hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_comGetDeviceHandle( pFile->port ) );
+      case HB_VF_IONAME:
+         hb_itemPutC( pValue, "COM:" );
          return HB_TRUE;
    }
 
@@ -464,7 +464,7 @@ static HB_FILE_FUNCS s_fileFuncs =
    s_fileHandle
 };
 
-static PHB_FILE s_fileNew( int port, int timeout, HB_BOOL fRead, HB_BOOL fWrite )
+static PHB_FILE s_fileNew( int port, HB_MAXINT timeout, HB_BOOL fRead, HB_BOOL fWrite )
 {
    PHB_FILE pFile = ( PHB_FILE ) hb_xgrab( sizeof( HB_FILE ) );
 

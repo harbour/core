@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Mouse subsystem for gtsln
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -331,8 +329,8 @@ void hb_gt_sln_mouse_Init( void )
       (void)SLtt_set_mouse_mode( 1, 1 );
 
       /* initial xterm settings */
-      SLtt_write_string( ( char * ) SaveHilit );
-      SLtt_write_string( ( char * ) EnabTrack );
+      SLtt_write_string( ( char * ) HB_UNCONST( SaveHilit ) );
+      SLtt_write_string( ( char * ) HB_UNCONST( EnabTrack ) );
       SLtt_flush_output();
 
       s_iMouseButtons = SLtt_tgetnum( ( char * ) "BT" );
@@ -408,8 +406,8 @@ void hb_gt_sln_mouse_Exit( void )
          const char * RestoHilit = "\033[?1001r"; /* restore old hilittracking */
 
          /* restore xterm settings */
-         SLtt_write_string( ( char * ) DisabTrack );
-         SLtt_write_string( ( char * ) RestoHilit );
+         SLtt_write_string( ( char * ) HB_UNCONST( DisabTrack ) );
+         SLtt_write_string( ( char * ) HB_UNCONST( RestoHilit ) );
          SLtt_flush_output();
 
          /* force mouse usage under xterm */

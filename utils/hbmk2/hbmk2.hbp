@@ -5,7 +5,7 @@
 
 -cflag=-Zm200{wce&allmsvc}
 
--mt
+{!HB_MT='no'}-mt
 
 hbmk2.prg
 
@@ -17,7 +17,7 @@ hbmk2.prg
 
 -DHBMK_WITH_ALL_EMBEDDED_HEADERS
 
--lhbpmcom{dos}
+-lhbdossrl{dos}
 
 # not using these together with .rc input, because some compilers (mingw)
 # do not support multiple .rc inputs

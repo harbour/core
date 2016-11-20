@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Inkey GT API
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
  *    hb_inkeySetLast()
@@ -153,7 +150,7 @@ static const HB_KEY_VALUE s_transKeyStd[] = {
    { '=',       K_ALT_EQUALS,    0,               0 },   /*  61 */
    { '>',       0,               0,               0 },   /*  62 */
    { '?',       0,               K_CTRL_QUESTION, 0 },   /*  63 */
-   { '@',       0,               0,               0 },   /*  64 */
+   { '@',       0,               259,             0 },   /*  64 */
    { 'A',       K_ALT_A,         K_CTRL_A,        0 },   /*  65 */
    { 'B',       K_ALT_B,         K_CTRL_B,        0 },   /*  66 */
    { 'C',       K_ALT_C,         K_CTRL_C,        0 },   /*  67 */
@@ -505,6 +502,22 @@ int hb_inkeyKeyVal( int iKey )
 
    if( HB_INKEY_ISEXT( iKey ) && ! HB_INKEY_ISMOUSEPOS( iKey ) )
       iValue = HB_INKEY_VALUE( iKey );
+
+   return iValue;
+}
+
+int hb_inkeyKeyExt( int iKey )
+{
+   int iValue = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeyKeyVal(%d)", iKey ) );
+
+   if( HB_INKEY_ISKEY( iKey ) )
+   {
+      iValue = HB_INKEY_VALUE( iKey );
+      if( iValue < 1 || iValue > ( int ) HB_SIZEOFARRAY( s_transKeyFun ) )
+         iValue = 0;
+   }
 
    return iValue;
 }

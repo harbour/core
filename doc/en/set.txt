@@ -1,11 +1,8 @@
 /*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    Documentation for: Set(), __SetCentury()
  *
- * Copyright 1999 April White <april@users.sourceforge.net>
+ * Copyright 1999 April White <bright.tigra gmail.com>
  *    Documentation for: SetKey(), hb_SetKeyGet(), hb_SetKeySave(),
  *                       hb_SetKeyCheck(), SET KEY
  *
@@ -360,7 +357,7 @@
                    Specifies a path of directories to search through to
                    locate a file that can't be located in the DEFAULT
                    directory. Defaults to no path (""). Directories must
-                   be separated by a semicolon (e.g., "C:\data;C:\more").
+                   be separated by a semicolon (e.g., "C:\hb\bin;C:\hb\tests").
 
               _SET_PRINTER     <lFlag> | <cOnOff>
 
@@ -872,7 +869,7 @@
       parameters with this command will default the operation to the
       current logged drive and directory.
    $EXAMPLES$
-      SET DEFAULT TO C:\temp
+      SET DEFAULT TO C:\hb\tests
    $STATUS$
       R
    $COMPLIANCE$
@@ -979,7 +976,7 @@
       search hierarchy is: 1 Current drive and directory, 2 The SET DEFAULT
       path; 3 The SET PATH path.
    $EXAMPLES$
-      SET PATH TO C:\harbour\test
+      SET PATH TO C:\hb\tests
    $STATUS$
       R
    $COMPLIANCE$
@@ -1055,7 +1052,7 @@
    $EXAMPLES$
       SET ALTERNATE TO test.txt
       SET ALTERNATE ON
-      ? 'Harbour'
+      ? "Harbour"
       ? "is"
       ? "Power"
       SET ALTERNATE TO
@@ -1207,16 +1204,16 @@
       When SET DECIMALS OFF is used, the following rules apply to the number
       of decimal placed displayed.
 
-      <table>
+      <table-noheader>
        Addition         Same as operand with the greatest number of decimal digits
        Subtraction      Same as operand with the greatest number of decimal digits
        Multiplication   Sum of operand decimal digits
-       Division         Determined by SET DECIMAL TO
-       Exponential      Determined by SET DECIMAL TO
-       Log()            Determined by SET DECIMAL TO
-       Exp()            Determined by SET DECIMAL TO
-       Sqrt()           Determined by SET DECIMAL TO
-       Val()            Determined by SET DECIMAL TO
+       Division         Determined by SET DECIMALS TO
+       Exponential      Determined by SET DECIMALS TO
+       Log()            Determined by SET DECIMALS TO
+       Exp()            Determined by SET DECIMALS TO
+       Sqrt()           Determined by SET DECIMALS TO
+       Val()            Determined by SET DECIMALS TO
       </table>
    $EXAMPLES$
       SET FIXED ON
@@ -1435,5 +1432,148 @@
       C
    $SEEALSO$
       Set()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_setListenerAdd()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbset.h"
+      hb_setListenerAdd( PHB_SET_LISTENER_CALLBACK callback ) --> int
+   $ARGUMENTS$
+      <callback>
+      A pointer to a function taking two enum parameters and returning
+      no value. The first parameter identifies the SET parameter that is
+      to be changed and the second parameter identifies whether the call
+      is from before or after the value is changed. The callback function
+      will be called twice whenever a SET parameter is changed using the
+      Harbour SET function. The first call takes place before the SET
+      value is changed and the second one is after the SET parameter has
+      been changed.
+   $RETURNS$
+      An integer value representing the callback handle, in case the
+      caller needs to deactivate the callback function.
+   $DESCRIPTION$
+      This function allows a subsystem that needs to track the status
+      of some SET parameters to be notified whenever a SET parameter gets
+      changed.
+   $EXAMPLES$
+      void callback_function( HB_set_enum set, HB_set_listener_enum when )
+      {
+         printf("\nCalled for SET parameter %d %s changing.",
+            set, (when ? "after" : "before"));
+      }
+      int handle = hb_setListenerAdd( callback_function );
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is core
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_setListenerRemove()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_setListenerNotify()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbset.h"
+      hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum
+      when ) --> int
+   $ARGUMENTS$
+      <set>
+      The number of the SET parameter that is to be or was changed.
+
+      <when>
+      Set to HB_SET_LISTENER_BEFORE when called before the SET parameter
+      is to be changed and set to HB_SET_LISTENER_AFTER when called
+      after the SET parameter has been changed.
+   $RETURNS$
+      <int>
+   $DESCRIPTION$
+      This function notifies all SET listener callback functions. It
+      must be called any time you change the value of a SET parameter
+      directly instead of using the Harbour SET function. Both before
+      and after the change.
+   $EXAMPLES$
+      hb_setListenerNotify( HB_SET_DECIMALS, HB_SET_LISTENER_BEFORE );
+      hb_set.HB_SET_DECIMALS = 3;
+      hb_setListenerNotify( HB_SET_DECIMALS, HB_SET_LISTENER_AFTER );
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is core
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_setListenerAdd()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_setListenerRemove()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbset.h"
+      hb_setListenerRemove( int handle ) --> int
+   $ARGUMENTS$
+      <handle>
+      The handle for the SET listener callback function to be removed.
+   $RETURNS$
+      The handle if the callback function could not be located or the
+      negative value of the handle if the callback function was removed.
+   $DESCRIPTION$
+      This function removes a SET listener callback function.
+   $EXAMPLES$
+      int handle = hb_setListenerAdd( callback_function );
+      ...
+      hb_setListenerRemove( handle );
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is core
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_setListenerAdd()
    $END$
  */

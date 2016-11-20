@@ -2,7 +2,6 @@
  * ADS memory index driver
  *
  * Copyright 2007 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1027,7 +1026,7 @@ static HB_ERRCODE adsxSysName( ADSXAREAP pArea, HB_BYTE * pBuffer )
       u32RetVal = AdsGetTableType( pArea->adsarea.hTable, &u16TableType );
       if( u32RetVal != AE_SUCCESS )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "Error in adsxSysName: %lu  pArea->adsarea.hTable %p", ( HB_ULONG ) u32RetVal, ( void * ) ( HB_PTRDIFF ) pArea->adsarea.hTable ) );
+         HB_TRACE( HB_TR_DEBUG, ( "Error in adsxSysName: %lu  pArea->adsarea.hTable %p", ( HB_ULONG ) u32RetVal, ( void * ) ( HB_PTRUINT ) pArea->adsarea.hTable ) );
          u16TableType = ( UNSIGNED16 ) pArea->adsarea.iFileType;
       }
    }
@@ -1097,7 +1096,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
 
    /* Test key expression */
    bValidExpr = 0;
-   AdsIsExprValid( pArea->adsarea.hTable, ( UNSIGNED8 * ) hb_itemGetCPtr( pOrderInfo->abExpr ), &bValidExpr );
+   AdsIsExprValid( pArea->adsarea.hTable, ( UNSIGNED8 * ) HB_UNCONST( hb_itemGetCPtr( pOrderInfo->abExpr ) ), &bValidExpr );
    bKeyADS = bValidExpr;
 
    if( pArea->adsarea.area.lpdbOrdCondInfo )
@@ -1145,8 +1144,8 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
 #if ADS_LIB_VERSION >= 610
       u32RetVal = AdsCreateIndex61(
          pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent ? pArea->adsarea.hOrdCurrent : pArea->adsarea.hTable,
-         ( UNSIGNED8 * ) pOrderInfo->abBagName,
-         ( UNSIGNED8 * ) pOrderInfo->atomBagName,
+         ( UNSIGNED8 * ) HB_UNCONST( pOrderInfo->abBagName ),
+         ( UNSIGNED8 * ) HB_UNCONST( pOrderInfo->atomBagName ),
          szKeyExpr[ 0 ] ? szKeyExpr : ( UNSIGNED8 * ) "1",
          bForADS ? ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abFor : NULL,
          bWhileADS ? ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abWhile : NULL,
@@ -1154,8 +1153,8 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
 #else
       u32RetVal = AdsCreateIndex(
          pArea->adsarea.area.lpdbOrdCondInfo->fUseCurrent ? pArea->adsarea.hOrdCurrent : pArea->adsarea.hTable,
-         ( UNSIGNED8 * ) pOrderInfo->abBagName,
-         ( UNSIGNED8 * ) pOrderInfo->atomBagName,
+         ( UNSIGNED8 * ) HB_UNCONST( pOrderInfo->abBagName ),
+         ( UNSIGNED8 * ) HB_UNCONST( pOrderInfo->atomBagName ),
          szKeyExpr[ 0 ] ? szKeyExpr : ( UNSIGNED8 * ) "1",
          bForADS ? ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abFor : NULL,
          bWhileADS ? ( UNSIGNED8 * ) pArea->adsarea.area.lpdbOrdCondInfo->abWhile : NULL,
@@ -1224,7 +1223,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    switch( hb_itemType( pResult ) )
    {
       case HB_IT_STRING:
-      case HB_IT_STRING | HB_IT_MEMO:
+      case HB_IT_MEMO:
          bType = 'C';
          uiLen = ( HB_USHORT ) hb_itemGetCLen( pResult );
          if( uiLen > MIX_MAXKEYLEN )

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Item API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -133,6 +131,7 @@ extern HB_EXPORT PHB_ITEM     hb_itemPutNumType( PHB_ITEM pItem, double dNumber,
 extern HB_EXPORT PHB_ITEM     hb_itemPutPtr    ( PHB_ITEM pItem, void * pValue );
 extern HB_EXPORT PHB_ITEM     hb_itemPutPtrGC  ( PHB_ITEM pItem, void * pValue );
 extern HB_EXPORT PHB_ITEM     hb_itemPutSymbol ( PHB_ITEM pItem, PHB_SYMB pSym );
+extern HB_EXPORT PHB_ITEM     hb_itemPutNil    ( PHB_ITEM pItem );
 extern HB_EXPORT HB_BOOL      hb_itemRelease   ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM     hb_itemReturn    ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM     hb_itemReturnForward( PHB_ITEM pItem );
@@ -152,7 +151,8 @@ extern HB_EXPORT PHB_ITEM     hb_itemParamPtr  ( HB_USHORT uiParam, long lMask )
 extern HB_EXPORT HB_BOOL      hb_itemParamStore( HB_USHORT uiParam, PHB_ITEM pItem );
 extern HB_EXPORT HB_BOOL      hb_itemParamStoreForward( HB_USHORT uiParam, PHB_ITEM pItem );
 extern HB_EXPORT HB_BOOL      hb_itemParamStoreRelease( HB_USHORT uiParam, PHB_ITEM pItem );
-extern HB_EXPORT HB_BOOL      hb_itemEqual( PHB_ITEM pItem1, PHB_ITEM pItem2 );
+extern HB_EXPORT HB_BOOL      hb_itemEqual     ( PHB_ITEM pItem1, PHB_ITEM pItem2 );
+extern HB_EXPORT HB_BOOL      hb_itemCompare   ( PHB_ITEM pItem1, PHB_ITEM pItem2, HB_BOOL bForceExact, int * piResult ); /* For compatible types compare pItem1 with pItem2 setting piResult to -1, 0 or 1 if pItem1 is <, == or > then pItem2 and return true otherwise return false. */
 extern HB_EXPORT int          hb_itemStrCmp    ( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT int          hb_itemStrICmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT void         hb_itemCopy      ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */

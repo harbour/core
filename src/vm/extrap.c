@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Exception handlers
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
  *    hb_winExceptionHandler() Windows exception info dump code.
@@ -142,7 +139,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
          "    Flags:%08X\n",
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode, szCode,
-         ( HB_PTRDIFF ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         ( HB_PTRUINT ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
          pCtx->Rax, pCtx->Rbx, pCtx->Rcx, pCtx->Rdx,
          pCtx->Rsi, pCtx->Rdi, pCtx->Rbp,
          pCtx->R8 , pCtx->R9 , pCtx->R10, pCtx->R11,
@@ -464,7 +461,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                      char buf[ 256 ];
 #if defined( HB_OS_WIN_64 )
                      /* TOFIX: me32.szExePath seemed trashed in some (standalone) tests. */
-                     hb_snprintf( buf, sizeof( buf ), "%016" PFLL "X %016" PFLL "X %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, me32.szExePath );
+                     hb_snprintf( buf, sizeof( buf ), "%016" PFLL "X %016" PFLL "X %s\n", ( HB_PTRUINT ) me32.modBaseAddr, ( HB_PTRUINT ) me32.modBaseSize, me32.szExePath );
 #else
                      char szBuffer[ MAX_PATH ];
                      #if defined( HB_OS_WIN_CE )
@@ -472,7 +469,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                      #else
                         hb_strncpy( szBuffer, me32.szExePath, HB_SIZEOFARRAY( szBuffer ) - 1 );
                      #endif
-                     hb_snprintf( buf, sizeof( buf ), "%08lX %08lX %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, szBuffer );
+                     hb_snprintf( buf, sizeof( buf ), "%08lX %08lX %s\n", ( HB_PTRUINT ) me32.modBaseAddr, ( HB_PTRUINT ) me32.modBaseSize, szBuffer );
 #endif
                      hb_strncat( errmsg, buf, errmsglen );
                   }

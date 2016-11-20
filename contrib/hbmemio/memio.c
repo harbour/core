@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *   Memory file system
+ * Memory file system
  *   I/O driver for Memory file system
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -776,7 +774,7 @@ HB_MEMFS_EXPORT int hb_memfsLockTest( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_F
  *
  *******************************************************/
 
-#define FILE_PREFIX      "mem:"
+#define FILE_PREFIX      "MEM:"
 #define FILE_PREFIX_LEN  strlen( FILE_PREFIX )
 
 typedef struct _HB_FILE
@@ -1092,8 +1090,13 @@ static void s_fileCommit( PHB_FILE pFile )
 static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
 {
    HB_SYMBOL_UNUSED( pFile );
-   HB_SYMBOL_UNUSED( iIndex );
-   HB_SYMBOL_UNUSED( pValue );
+
+   switch( iIndex )
+   {
+      case HB_VF_IONAME:
+         hb_itemPutC( pValue, FILE_PREFIX );
+         return HB_TRUE;
+   }
 
    return HB_FALSE;
 }

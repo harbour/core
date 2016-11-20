@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Editor Class (base for MemoEdit(), debugger, etc.)
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    rewritten whole internal code critical for basic functionality.
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -217,7 +215,7 @@ METHOD LoadText( cText ) CLASS HBEditor
 
 // Saves file being edited, if there is no file name does nothing, returns .T. if OK
 METHOD SaveFile() CLASS HBEditor
-   RETURN ! Empty( ::cFile ) .AND. ;
+   RETURN ! HB_ISNULL( ::cFile ) .AND. ;
           ! ::lDirty := ! hb_MemoWrit( ::cFile, ::GetText() )
 
 // Add a new Line of text at end of current text
@@ -243,7 +241,7 @@ METHOD RemoveLine( nRow ) CLASS HBEditor
 
 // Return line n of text
 METHOD GetLine( nRow ) CLASS HBEditor
-   RETURN iif( nRow >=1 .AND. nRow <= ::LineCount, ::aText[ nRow ]:cText, "" )
+   RETURN iif( nRow >= 1 .AND. nRow <= ::LineCount, ::aText[ nRow ]:cText, "" )
 
 // Return text length of line n
 METHOD LineLen( nRow ) CLASS HBEditor
@@ -366,10 +364,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
 
    SWITCH hb_keyStd( nKey )
    CASE K_DOWN
-      IF ! ::lEditAllow
-         ::Goto( ::nFirstRow + ::nNumRows, ::nCol )
-      ELSE
+      IF ::lEditAllow
          ::Goto( ::nRow + 1, ::nCol )
+      ELSE
+         ::Goto( ::nFirstRow + ::nNumRows, ::nCol )
       ENDIF
       EXIT
 
@@ -382,10 +380,10 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       EXIT
 
    CASE K_UP
-      IF ! ::lEditAllow
-         ::Goto( ::nFirstRow - 1, ::nCol )
-      ELSE
+      IF ::lEditAllow
          ::Goto( ::nRow - 1, ::nCol )
+      ELSE
+         ::Goto( ::nFirstRow - 1, ::nCol )
       ENDIF
       EXIT
 
@@ -480,13 +478,13 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
       CASE ( bKeyBlock := SetKey( nKeyStd ) ) != NIL
          Eval( bKeyBlock )
 
-      CASE hb_ULen( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
-                             Space( TabCount( ::nTabWidth, ::nCol ) ), ;
-                             hb_keyChar( nKey ) ) ) > 0
+      CASE ! HB_ISNULL( cKey := iif( nKeyStd == K_TAB .AND. Set( _SET_INSERT ), ;
+                                     Space( TabCount( ::nTabWidth, ::nCol ) ), ;
+                                     hb_keyChar( nKey ) ) )
          ::lDirty := .T.
          oLine := ::aText[ ::nRow ]
-         IF ::nCol > hb_ULen( oLine:cText ) + 1
-            oLine:cText += Space( ::nCol - hb_ULen( oLine:cText ) - 1 )
+         IF ( nPos := ::nCol - hb_ULen( oLine:cText ) - 1 ) > 0
+            oLine:cText += Space( nPos )
          ENDIF
          oLine:cText := hb_UStuff( oLine:cText, ::nCol, ;
                                iif( Set( _SET_INSERT ), 0, 1 ), cKey )
@@ -602,9 +600,9 @@ METHOD BrowseText( nPassedKey ) CLASS HBEditor
 
    DO WHILE ! ::lExitEdit
       IF nPassedKey == NIL
-         IF ( nKey := Inkey() ) == 0
+         IF ( nKey := Inkey(, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) ) ) == 0
             ::IdleHook()
-            nKey := Inkey( 0 )
+            nKey := Inkey( 0, hb_bitOr( Set( _SET_EVENTMASK ), HB_INKEY_EXT ) )
          ENDIF
       ELSE
          nKey := nPassedKey
@@ -644,27 +642,25 @@ METHOD IdleHook() CLASS HBEditor
 METHOD ReformParagraph() CLASS HBEditor
 
    LOCAL lNext := .T.
-   LOCAL cLine := ""
-   LOCAL nLine
-   LOCAL nLines
-   LOCAL aPos
+   LOCAL cText := ""
+   LOCAL nLine, nRow, nCol
 
+   nCol := Min( hb_ULen( ::aText[ ::nRow ]:cText ) + 1, ::nCol )
    DO WHILE lNext .AND. ::nRow <= Len( ::aText )
-      cLine += ::aText[ ::nRow ]:cText
+      cText += ::aText[ ::nRow ]:cText
       lNext := ::aText[ ::nRow ]:lSoftCR
       ::RemoveLine( ::nRow )
    ENDDO
-   nLines := MLCount( cLine, ::nWordWrapCol + 1, ::nTabWidth )
-   aPos := MPosToLC( cLine, ::nWordWrapCol + 1, ::nCol, ::nTabWidth )
-   IF ::nRow + aPos[ 1 ] - 1 > ::LineCount + nLines
-      ++nLines
-   ENDIF
-   FOR nLine := 1 TO nLines
-      ::InsertLine( MemoLine( cLine, ::nWordWrapCol + 1, nLine, ::nTabWidth,,, .F. ), ;
-                    nLine < nLines, ::nRow + nLine - 1 )
-   NEXT
 
-   RETURN ::GoTo( ::nRow + aPos[ 1 ] - 1, aPos[ 2 ] + 1, _REFRESH_ALL )
+   nLine := ::nRow
+   hb_MLEval( cText, {| cLine, lSoftCR | ::InsertLine( cLine, lSoftCR, nLine++ ) }, ;
+              ::nWordWrapCol + 1, ::nTabWidth,, nCol, @nRow, @nCol )
+   IF nRow > 0
+      ::nRow += nRow - 1
+      ::nCol := nCol + 1
+   ENDIF
+
+   RETURN ::GoTo( ::nRow, ::nCol, _REFRESH_ALL )
 
 // Changes insert state and insertion / overstrike mode of editor
 METHOD InsertState( lInsState ) CLASS HBEditor
@@ -744,21 +740,11 @@ METHOD hitTest( nMRow, nMCol ) CLASS HBEditor
 STATIC FUNCTION Text2Array( cText, nWordWrapCol, nTabWidth )
 
    LOCAL aArray := {}
-   LOCAL cLine
-   LOCAL nLines
-   LOCAL nLine
 
-   FOR EACH cLine IN hb_ATokens( cText, .T. )
-      IF nWordWrapCol != NIL .AND. hb_ULen( cLine ) > nWordWrapCol
-         nLines := MLCount( cLine, nWordWrapCol + 1, nTabWidth )
-         FOR nLine := 1 TO nLines
-            AAdd( aArray, HBTextLine():New( MemoLine( cLine, nWordWrapCol + 1, nLine, nTabWidth,,, .F. ), ;
-                                            nLine < nLines ) )
-         NEXT
-      ELSE
-         AAdd( aArray, HBTextLine():New( cLine, .F. ) )
-      ENDIF
-   NEXT
+   hb_MLEval( cText, {| cLine, lSoftCR | AAdd( aArray, HBTextLine():New( cLine, lSoftCR ) ) }, ;
+              iif( nWordWrapCol != NIL, nWordWrapCol + 1, 0xFFFF ), ;
+              nTabWidth, nWordWrapCol != NIL )
+
    IF Empty( aArray )
       AAdd( aArray, HBTextLine():New() )
    ENDIF

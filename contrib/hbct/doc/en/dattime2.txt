@@ -142,7 +142,7 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      AddMonth() is compatible with CT3's ADDMOTH().
+      AddMonth() is compatible with CT3's AddMonth().
    $PLATFORMS$
       All
    $FILES$
@@ -211,68 +211,6 @@
       Library is hbct.
    $SEEALSO$
 
-   $END$
- */
-
-/* $DOC$
-   $NAME$
-      DaysToMonth()
-   $CATEGORY$
-      CT3 date and time functions
-   $ONELINER$
-      Total number of days from first of Jan to beginning of nMonth.
-   $SYNTAX$
-      DaysToMonth( <nMonth>, <lLeapYear> ) -> nDaysToMonth
-   $ARGUMENTS$
-
-   $RETURNS$
-
-   $DESCRIPTION$
-      lLeap is FALSE for a non-leap year but TRUE if it is. If so and nMonth
-      is greater than 2, ndays is incremented
-      TODO: add further documentation
-   $EXAMPLES$
-
-   $STATUS$
-      Started
-   $COMPLIANCE$
-      DaysToMonth() is a new function in Harbour's CT3 library.
-   $PLATFORMS$
-      All
-   $FILES$
-      Library is hbct.
-   $SEEALSO$
-      DaysInMonth()
-   $END$
- */
-
-/* $DOC$
-   $NAME$
-      DaysInMonth()
-   $CATEGORY$
-      CT3 date and time functions
-   $ONELINER$
-      Returns the number of days in month
-   $SYNTAX$
-      DAYSINMONTH (<nMonth>, <lLeapYear>) -> nDaysInMonth
-   $ARGUMENTS$
-
-   $RETURNS$
-
-   $DESCRIPTION$
-      TODO: add documentation
-   $EXAMPLES$
-
-   $STATUS$
-      Started
-   $COMPLIANCE$
-      DaysInMonth() is a new function in Harbour's CT3 library.
-   $PLATFORMS$
-      All
-   $FILES$
-      Library is hbct.
-   $SEEALSO$
-      DaysToMonth()
    $END$
  */
 

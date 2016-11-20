@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Memvar (PRIVATE/PUBLIC) runtime support
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *    __mvSave()
@@ -272,7 +269,14 @@ static void hb_memvarAddPrivate( PHB_DYNS pDynSym, PHB_ITEM pValue )
       pPrivateStack->stack[ pPrivateStack->count ].pDynSym = pDynSym;
       pPrivateStack->stack[ pPrivateStack->count++ ].pPrevMemvar = hb_dynsymGetMemvar( pDynSym );
 
-      pMemvar = hb_memvarValueNew();
+      if( pValue && HB_IS_MEMVAR( pValue ) )
+      {
+         pMemvar = pValue->item.asMemvar.value;
+         hb_xRefInc( pMemvar );
+         pValue = NULL;
+      }
+      else
+         pMemvar = hb_memvarValueNew();
       hb_dynsymSetMemvar( pDynSym, pMemvar );
    }
 
@@ -1220,7 +1224,7 @@ HB_FUNC( __MVDBGINFO )
       if( pValue )   /* the requested variable was found */
       {
          hb_storc( szName, 3 );
-         hb_itemReturn( pValue );
+         hb_itemCopyFromRef( hb_stackReturnItem(), pValue );
       }
       else
       {

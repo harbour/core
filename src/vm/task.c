@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    platform independent task system. It's used when when OS does not
+ * platform independent task system. It's used when when OS does not
  *    support threads
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -503,6 +501,7 @@ static void hb_taskRun( void )
 static PHB_TASKINFO hb_taskNew( long stack_size )
 {
    PHB_TASKINFO pTask;
+   HB_PTRUINT new_size;
 
    if( stack_size < HB_TASK_STACK_MIN )
       stack_size = HB_TASK_STACK_MIN;
@@ -510,11 +509,11 @@ static PHB_TASKINFO hb_taskNew( long stack_size )
    pTask = ( PHB_TASKINFO ) hb_xgrabz( sizeof( HB_TASKINFO ) );
    pTask->stack = ( char * ) hb_xgrab( stack_size );
 
-   stack_size += ( HB_PTRDIFF ) pTask->stack;
-   stack_size &= ~( HB_TASK_STACK_ALIGN - 1 );
-   stack_size -= ( HB_PTRDIFF ) pTask->stack;
+   new_size = ( HB_PTRUINT ) pTask->stack + stack_size;
+   new_size &= ~ ( HB_PTRUINT ) ( HB_TASK_STACK_ALIGN - 1 );
+   new_size -= ( HB_PTRUINT ) pTask->stack;
 
-   pTask->stack_size = stack_size;
+   pTask->stack_size = ( long ) new_size;
    pTask->id = ++s_iTaskID;
 
    pTask->state = TASK_INIT;

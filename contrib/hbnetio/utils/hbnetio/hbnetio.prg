@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Harbour NETIO server daemon
  *
  * Copyright 2010-2012 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  */
 
@@ -835,7 +833,7 @@ STATIC PROCEDURE HB_Logo()
 
    OutStd( ;
       "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() + ;
-      "Copyright (c) 2009-2015, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
+      "Copyright (c) 2009-2016, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
       "http://harbour-project.org/" + hb_eol() + ;
       hb_eol() )
 

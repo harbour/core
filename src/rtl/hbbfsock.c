@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    Harbour extended socket filter with ZLIB compression
+ * Harbour extended socket filter with BlowFish encryption
  *
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -313,7 +311,7 @@ static PHB_SOCKEX s_sockexNext( PHB_SOCKEX pSock, PHB_ITEM pParams )
       if( keylen > 0 )
       {
          PHB_SOCKEX_BF pBF = ( PHB_SOCKEX_BF ) hb_xgrabz( sizeof( HB_SOCKEX_BF ) );
-         HB_BYTE * pVect =  ( HB_BYTE * ) ( ivlen > 0 ? iv : NULL );
+         const HB_BYTE * pVect = ( const HB_BYTE * ) ( ivlen > 0 ? iv : NULL );
          int i;
 
          hb_blowfishInit( &pBF->bf, keydata, keylen );

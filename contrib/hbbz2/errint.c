@@ -1,8 +1,7 @@
 /*
- * SQL Database Driver include file
+ * BZIP2 functions wrapper
  *
- * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
+ * Copyright 2016 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,21 +44,19 @@
  *
  */
 
-/* NOTE: This file is also used by C code. */
+#include "hbapi.h"
+#include "hbapierr.h"
 
-#ifndef HB_RDDSQL_CH_
-#define HB_RDDSQL_CH_
-
-/* New ...INFO_ constants */
-#define DBI_QUERY             1001
-
-#define RDDI_CONNECT          1001
-#define RDDI_DISCONNECT       1002
-#define RDDI_EXECUTE          1003
-#define RDDI_ERROR            1004
-#define RDDI_ERRORNO          1005
-#define RDDI_NEWID            1006
-#define RDDI_AFFECTEDROWS     1007
-#define RDDI_QUERY            1008
-
+/* Required if bz2 lib was built with BZ_NO_STDIO [vszakats] */
+#ifdef __cplusplus
+extern "C" {
 #endif
+extern HB_EXPORT void bz_internal_error( int errcode );
+#ifdef __cplusplus
+}
+#endif
+
+void bz_internal_error( int errcode )
+{
+   hb_errInternal( ( HB_ERRCODE ) errcode, "libbzip2", NULL, NULL );
+}

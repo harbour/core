@@ -27,12 +27,9 @@
       more reflect a more useful average when there are extreme
       values in the set.
    $EXAMPLES$
-      ft_AMedian( aArray )        // Return Median for entire array
-
-      ft_AMedian( aArray, 2 )     // Return Median for elements from 2 to end
-
-      ft_AMedian( aArray, , 9 )   // Return Median for 1st 9 elements
-
-      ft_AMedian( aArray, 8, 40 ) // Return Median for elements 8 to 40
+      ? ft_AMedian( aArray )        // Return Median for entire array
+      ? ft_AMedian( aArray, 2 )     // Return Median for elements from 2 to end
+      ? ft_AMedian( aArray, , 9 )   // Return Median for 1st 9 elements
+      ? ft_AMedian( aArray, 8, 40 ) // Return Median for elements 8 to 40
    $END$
  */

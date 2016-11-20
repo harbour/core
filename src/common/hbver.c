@@ -73,6 +73,12 @@
    #ifndef VER_NT_WORKSTATION
    #define VER_NT_WORKSTATION  0x0000001
    #endif
+   #ifndef VER_NT_DOMAIN_CONTROLLER
+   #define VER_NT_DOMAIN_CONTROLLER  0x0000002
+   #endif
+   #ifndef VER_NT_SERVER
+   #define VER_NT_SERVER  0x0000003
+   #endif
 
    #ifndef VER_MINORVERSION
    #define VER_MINORVERSION  0x0000001

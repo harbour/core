@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * SQLite3 library low level (client api) interface code
  *
  * Copyright 2007-2010 P.Chornyj <myorg63@mail.ru>
@@ -17,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1796,7 +1795,7 @@ HB_FUNC( SQLITE3_PROFILE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
       sqlite3_profile( pHbSqlite3->db, hb_parl( 2 ) ? SQL3ProfileLog : NULL,
-                       ( void * ) ( HB_ISCHAR( 3 ) ? hb_parcx( 3 ) : NULL ) );
+                       HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parcx( 3 ) ) : NULL );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -1807,7 +1806,7 @@ HB_FUNC( SQLITE3_TRACE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
       sqlite3_trace( pHbSqlite3->db, hb_parl( 2 ) ? SQL3TraceLog : NULL,
-                     ( void * ) ( HB_ISCHAR( 3 ) ? hb_parcx( 3 ) : NULL ) );
+                     HB_ISCHAR( 3 ) ? HB_UNCONST( hb_parcx( 3 ) ) : NULL );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

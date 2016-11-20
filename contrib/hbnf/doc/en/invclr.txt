@@ -16,7 +16,7 @@
       This function inverts a passed color (in the Clipper format: ??/??),
       e.g., "W/N" is converted to "N/W".
    $EXAMPLES$
-      cInverse := ft_InvClr()            // Get Inverse of Current Color
-      cInvErr  := ft_InvClr( cErrColor ) // Get Inverse of cErrorColor
+      ? ft_InvClr()             // Get Inverse of Current Color
+      ? ft_InvClr( cErrColor )  // Get Inverse of cErrorColor
    $END$
  */

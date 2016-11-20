@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    ZLIB functions wrapper
+ * ZLIB functions wrapper
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -105,7 +103,7 @@ static int s_zlibCompress2( char ** pDstPtr, HB_SIZE * pnDst,
    stream.zalloc    = s_zlib_alloc;
    stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;
-   stream.next_in   = ( Bytef* ) pSrc;
+   stream.next_in   = ( Bytef* ) HB_UNCONST( pSrc );
    stream.avail_in  = ( uInt ) nSrc;
    iResult = deflateInit2( &stream, level, Z_DEFLATED,
                            15 + ( fGZip ? 16 : 0 ), 8,
@@ -161,7 +159,7 @@ static HB_SIZE s_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
    stream.zalloc    = s_zlib_alloc;
    stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;
-   stream.next_in   = ( Bytef * ) szSrc;
+   stream.next_in   = ( Bytef * ) HB_UNCONST( szSrc );
    stream.avail_in  = ( uInt ) nLen;
 
    *piResult = inflateInit2( &stream, 15 + 32 );
@@ -196,7 +194,7 @@ static int s_zlibUncompress( char * pDst, HB_SIZE * pnDst,
    stream.zalloc    = s_zlib_alloc;
    stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;
-   stream.next_in   = ( Bytef* ) pSrc;
+   stream.next_in   = ( Bytef* ) HB_UNCONST( pSrc );
    stream.avail_in  = ( uInt ) nSrc;
    iResult = inflateInit2( &stream, 15 + 32 );
 

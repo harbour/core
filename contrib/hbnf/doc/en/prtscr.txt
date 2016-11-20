@@ -22,6 +22,6 @@
       ft_PrtScr( .T. )       // Enable the printscreen key
       MemVar := ft_PrtScr()  // Get the current status
    $SEEALSO$
-      ft_CapLock() ft_Ctrl() ft_NumLock() ft_Shift() ft_Alt()
+      ft_CapLock(), ft_Ctrl(), ft_NumLock(), ft_Shift(), ft_Alt()
    $END$
  */

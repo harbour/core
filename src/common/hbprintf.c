@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * hb_sprintf() function.
+ * hb_snprintf() function.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -161,9 +159,11 @@
 #ifndef __NO_DOUBLE__
 #  ifdef __NO_LONGDOUBLE__
 #     define _x_long_dbl      double
+#     define _FL_FIX          0.0078125
 #     define _MODFD( x, p )   modf( x, p )
 #  else
 #     define _x_long_dbl      long double
+#     define _FL_FIX          0.0078125L
 #     if defined( HB_NO_MODFL ) || \
          defined( __WATCOMC__ ) || defined( __MINGW32CE__ ) || defined( HB_OS_CYGWIN ) || \
          defined( HB_OS_BEOS ) || defined( HB_OS_SYMBIAN ) || \
@@ -566,7 +566,7 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
    do
    {
       ++nums;
-      _MODFD( value / 10 + 0.01, &value );
+      _MODFD( value / 10 + _FL_FIX, &value );
    }
    while( value >= 1 );
    width -= nums;
@@ -599,8 +599,8 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
    n = nums;
    do
    {
-      value = _MODFD( dInt / 10 + 0.01, &dInt ) * 10;
-      c = '0' + ( char ) ( value + 0.01 );
+      value = _MODFD( dInt / 10 + _FL_FIX, &dInt ) * 10;
+      c = '0' + ( char ) ( value + _FL_FIX );
       --n;
       if( size + n < bufsize )
          buffer[ size + n ] = c;
@@ -616,7 +616,7 @@ static size_t put_dbl( char *buffer, size_t bufsize, size_t size,
       while( precision > 0 )
       {
          dFract = _MODFD( dFract * 10, &dInt );
-         c = '0' + ( char ) ( dInt + 0.01 );
+         c = '0' + ( char ) ( dInt + _FL_FIX );
          if( size < bufsize )
             buffer[ size ] = c;
          ++size;
@@ -1227,8 +1227,8 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
                      {
                         double d = va_arg_n( args, _x_double, param );
                         HB_NUMTYPE( value, d );
-                        argval.value.as_x_long_dbl =
-                           ( value & ( _HB_NUM_NAN | _HB_NUM_PINF | _HB_NUM_NINF ) ) == 0 ? d : 0;
+                        argval.value.as_x_long_dbl = ( _x_long_dbl )
+                           ( ( value & ( _HB_NUM_NAN | _HB_NUM_PINF | _HB_NUM_NINF ) ) == 0 ? d : 0 );
                      }
                      if( value & _HB_NUM_NAN )
                         size = put_str( buffer, bufsize, size,

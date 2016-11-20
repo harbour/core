@@ -7,8 +7,6 @@
       Document
    $SUBCATEGORY$
       Compiler
-   $ONELINER$
-      Macro compiler
    $DESCRIPTION$
       <b>Invoking the macro compiler:  </b> </par>
       ==============================   </par>
@@ -47,7 +45,7 @@
       some of them allows to keep strict CA-Cl*pper compatibility.
 
       Available features are:</par>
-      <b>HB_SM_HARBOUR</b> - enables harbour extensions:
+      <b>HB_SM_HARBOUR</b> - enables Harbour extensions:
             operators: ++, --, +=, -=, *=, /=, ^=
             objects: assigments to an instance variable
 

@@ -38,6 +38,8 @@
 
 hbssl.hbx
 
+ssl_hbcon.prg
+
 ssl_hb.c
 ssl_inet.c
 ssl_sock.c

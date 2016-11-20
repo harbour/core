@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    BZIP2 functions wrapper
+ * BZIP2 functions wrapper
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,26 +45,12 @@
  */
 
 #include "hbapi.h"
-
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
 #include <bzlib.h>
 
 #include "hbbz2.ch"
-
-/* Required if bz2 lib was built with BZ_NO_STDIO [vszakats] */
-#ifdef __cplusplus
-extern "C" {
-#endif
-extern void bz_internal_error ( int errcode );
-#ifdef __cplusplus
-}
-#endif
-void bz_internal_error( int errcode )
-{
-   hb_errInternal( ( HB_ERRCODE ) errcode, "libbzip2", NULL, NULL );
-}
 
 static void * hb_bz2Alloc( void * cargo, int nmemb, int size )
 {
@@ -98,7 +82,7 @@ static int hb_bz2Compress( const char * szSrc, HB_SIZE nSrc,
 
    memset( &stream, 0, sizeof( stream ) );
 
-   stream.next_in  = ( char * ) szSrc;
+   stream.next_in  = ( char * ) HB_UNCONST( szSrc );
    stream.avail_in = ( unsigned int ) nSrc;
 
    stream.next_out  = szDst;
@@ -143,7 +127,7 @@ static HB_SIZE hb_bz2UncompressedSize( const char * szSrc, HB_SIZE nLen,
 
    memset( &stream, 0, sizeof( stream ) );
 
-   stream.next_in  = ( char * ) szSrc;
+   stream.next_in  = ( char * ) HB_UNCONST( szSrc );
    stream.avail_in = ( unsigned int ) nLen;
 
    stream.bzalloc = hb_bz2Alloc;
@@ -188,7 +172,7 @@ static int hb_bz2Uncompress( const char * szSrc, HB_SIZE nSrc,
 
    memset( &stream, 0, sizeof( stream ) );
 
-   stream.next_in  = ( char * ) szSrc;
+   stream.next_in  = ( char * ) HB_UNCONST( szSrc );
    stream.avail_in = ( unsigned int ) nSrc;
 
    stream.next_out  = szDst;

@@ -30,7 +30,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharRem()   WordOnly()   WordRem()
+      CharRem(),  WordOnly(),  WordRem()
    $END$
  */
 
@@ -66,7 +66,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharOnly()   CharRem()   WordRem()
+      CharOnly(),  CharRem(),  WordRem()
    $END$
  */
 
@@ -101,7 +101,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharOnly()   WordOnly()   WordRem()
+      CharOnly(),  WordOnly(),  WordRem()
    $END$
  */
 
@@ -137,6 +137,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharOnly()   CharRem()   WordRem()
+      CharOnly(),  CharRem(),  WordRem()
    $END$
  */

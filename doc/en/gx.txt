@@ -33,7 +33,7 @@
       that produce the video mode change.
       The followings are availables for GTDOS:
 
-      <table>
+      <table-noheader>
          12 rows x 40 columns   12 rows x 80 columns
          25 rows x 40 columns   25 rows x 80 columns
          28 rows x 40 columns   28 rows x 80 columns
@@ -43,7 +43,7 @@
 
       The follow modes are available to Windows
 
-      <table>
+      <table-noheader>
          25 rows x 40 columns   25 rows x 80 columns
          50 rows x 40 columns   43 rows x 80 columns
          50 rows x 80 columns
@@ -55,23 +55,23 @@
    $EXAMPLES$
       // The first example change to a 12 lines of display mode:
       IF SetMode( 12, 40 )
-         ? "Hey man are you blind ?"
+         ? "Hey man are you blind?"
       ELSE
-         ? "Mom bring me my glasses!"
+         ? "Mom, bring me my glasses!"
       ENDIF
 
       // Next example change to a 50 lines mode:
       IF SetMode( 50, 80 )
          ? "This wonderful mode was successfully set"
       ELSE
-         ? "Wait. this monitor are not made in rubber !"
+         ? "Wait. this monitor is not made of rubber!"
       ENDIF
    $STATUS$
       R
    $COMPLIANCE$
       Some of these modes are not availables in CA-Cl*pper
    $PLATFORMS$
-      DOS, Win
+      All
    $SEEALSO$
       MaxCol(), MaxRow()
    $END$

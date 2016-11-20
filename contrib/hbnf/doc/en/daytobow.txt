@@ -31,6 +31,6 @@
       ? CDoW( dDate )              // Saturday
       ? ft_DayToBoW( dDate )       // 1
    $SEEALSO$
-      ft_DateCnfg() ft_AcctWeek() ft_Week()
+      ft_DateCnfg(), ft_AcctWeek(), ft_Week()
    $END$
  */

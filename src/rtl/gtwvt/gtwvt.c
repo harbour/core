@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
@@ -15,15 +14,12 @@
  *    Adopted to new GT API
  *
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
  *
  * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +34,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -143,6 +139,8 @@ static HB_CRITICAL_NEW( s_wvtMtx );
    #endif
 #endif
 #endif
+
+#define HB_KF_ALTGR             0x10
 
 static PHB_GTWVT s_wvtWindows[ WVT_MAX_WINDOWS ];
 static int       s_wvtCount = 0;
@@ -274,8 +272,8 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    if( pWVT->hWnd )
       DestroyWindow( pWVT->hWnd );
 
-   if( pWVT->hIcon && pWVT->bIconToFree )
-      DestroyIcon( pWVT->hIcon );
+   if( pWVT->hIconToFree )
+      DestroyIcon( pWVT->hIconToFree );
 
    if( pWVT->TextLine )
       hb_xfree( pWVT->TextLine );
@@ -2137,8 +2135,21 @@ static int hb_gt_wvt_GetKeyFlags( void )
       iFlags |= HB_KF_SHIFT;
    if( GetKeyState( VK_CONTROL ) & 0x8000 )
       iFlags |= HB_KF_CTRL;
-   if( GetKeyState( VK_MENU ) & 0x8000 )
+   if( GetKeyState( VK_LMENU ) & 0x8000 )
       iFlags |= HB_KF_ALT;
+   if( GetKeyState( VK_RMENU ) & 0x8000 )
+      iFlags |= HB_KF_ALTGR;
+
+   return iFlags;
+}
+
+static int hb_gt_wvt_UpdateKeyFlags( int iFlags )
+{
+   if( iFlags & HB_KF_ALTGR )
+   {
+      iFlags |= HB_KF_ALT;
+      iFlags &= ~HB_KF_ALTGR;
+   }
 
    return iFlags;
 }
@@ -2388,7 +2399,8 @@ static void hb_gt_wvt_MouseEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, L
 
    if( keyCode != 0 )
       hb_gt_wvt_AddCharToInputQueue( pWVT,
-                     HB_INKEY_NEW_MKEY( keyCode, hb_gt_wvt_GetKeyFlags() ) );
+                  HB_INKEY_NEW_MKEY( keyCode,
+                        hb_gt_wvt_UpdateKeyFlags( hb_gt_wvt_GetKeyFlags() ) ) );
 }
 
 static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, LPARAM lParam )
@@ -2427,29 +2439,29 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                iKey = HB_KX_ESC;
                break;
 
-            case VK_UP:
-               iKeyPad = HB_KX_UP;
-               break;
-            case VK_DOWN:
-               iKeyPad = HB_KX_DOWN;
-               break;
-            case VK_LEFT:
-               iKeyPad = HB_KX_LEFT;
-               break;
-            case VK_RIGHT:
-               iKeyPad = HB_KX_RIGHT;
-               break;
-            case VK_HOME:
-               iKeyPad = HB_KX_HOME;
-               break;
-            case VK_END:
-               iKeyPad = HB_KX_END;
-               break;
             case VK_PRIOR:
                iKeyPad = HB_KX_PGUP;
                break;
             case VK_NEXT:
                iKeyPad = HB_KX_PGDN;
+               break;
+            case VK_END:
+               iKeyPad = HB_KX_END;
+               break;
+            case VK_HOME:
+               iKeyPad = HB_KX_HOME;
+               break;
+            case VK_LEFT:
+               iKeyPad = HB_KX_LEFT;
+               break;
+            case VK_UP:
+               iKeyPad = HB_KX_UP;
+               break;
+            case VK_RIGHT:
+               iKeyPad = HB_KX_RIGHT;
+               break;
+            case VK_DOWN:
+               iKeyPad = HB_KX_DOWN;
                break;
             case VK_INSERT:
                iKeyPad = HB_KX_INS;
@@ -2528,7 +2540,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                   pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
                   iKey = ( int ) wParam - VK_NUMPAD0 + '0';
                }
-               else if( iFlags == HB_KF_ALT )
+               else if( iFlags == HB_KF_ALT || iFlags == HB_KF_ALTGR )
                   iFlags = 0; /* for ALT + <ASCII_VALUE_FROM_KEYPAD> */
                iFlags |= HB_KF_KEYPAD;
                break;
@@ -2579,7 +2591,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
             iKey = iKeyPad;
             if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
             {
-               if( iFlags == HB_KF_ALT )
+               if( iFlags == HB_KF_ALT || iFlags == HB_KF_ALTGR )
                   iFlags = iKey = 0; /* for ALT + <ASCII_VALUE_FROM_KEYPAD> */
                else
                   iFlags |= HB_KF_KEYPAD;
@@ -2587,14 +2599,16 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
          }
          pWVT->keyFlags = iFlags;
          if( iKey != 0 )
-            iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+            iKey = HB_INKEY_NEW_KEY( iKey, hb_gt_wvt_UpdateKeyFlags( iFlags ) );
          break;
 
       case WM_CHAR:
-         if( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_ALT ) != 0 )
-            /* workaround for AltGR and German keyboard */
-            iFlags &= ~( HB_KF_CTRL | HB_KF_ALT );
+         if( ( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_ALT ) != 0 ) ||
+             ( iFlags & HB_KF_ALTGR ) != 0 )
+            /* workaround for AltGR and some German/Italian keyboard */
+            iFlags &= ~( HB_KF_CTRL | HB_KF_ALT | HB_KF_ALTGR );
       case WM_SYSCHAR:
+         iFlags = hb_gt_wvt_UpdateKeyFlags( iFlags );
          if( ! pWVT->IgnoreWM_SYSCHAR )
          {
             iKey = ( int ) wParam;
@@ -2606,20 +2620,146 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
             }
             else
             {
+               if( message == WM_SYSCHAR && ( iFlags & HB_KF_ALT ) != 0 )
+               {
+                  switch( HIWORD( lParam ) & 0xFF )
+                  {
+                     case  2:
+                        iKey = '1';
+                        break;
+                     case  3:
+                        iKey = '2';
+                        break;
+                     case  4:
+                        iKey = '3';
+                        break;
+                     case  5:
+                        iKey = '4';
+                        break;
+                     case  6:
+                        iKey = '5';
+                        break;
+                     case  7:
+                        iKey = '6';
+                        break;
+                     case  8:
+                        iKey = '7';
+                        break;
+                     case  9:
+                        iKey = '8';
+                        break;
+                     case 10:
+                        iKey = '9';
+                        break;
+                     case 11:
+                        iKey = '0';
+                        break;
+                     case 13:
+                        iKey = '=';
+                        break;
+                     case 14:
+                        iKey = HB_KX_BS;
+                        break;
+                     case 16:
+                        iKey = 'Q';
+                        break;
+                     case 17:
+                        iKey = 'W';
+                        break;
+                     case 18:
+                        iKey = 'E';
+                        break;
+                     case 19:
+                        iKey = 'R';
+                        break;
+                     case 20:
+                        iKey = 'T';
+                        break;
+                     case 21:
+                        iKey = 'Y';
+                        break;
+                     case 22:
+                        iKey = 'U';
+                        break;
+                     case 23:
+                        iKey = 'I';
+                        break;
+                     case 24:
+                        iKey = 'O';
+                        break;
+                     case 25:
+                        iKey = 'P';
+                        break;
+                     case 30:
+                        iKey = 'A';
+                        break;
+                     case 31:
+                        iKey = 'S';
+                        break;
+                     case 32:
+                        iKey = 'D';
+                        break;
+                     case 33:
+                        iKey = 'F';
+                        break;
+                     case 34:
+                        iKey = 'G';
+                        break;
+                     case 35:
+                        iKey = 'H';
+                        break;
+                     case 36:
+                        iKey = 'J';
+                        break;
+                     case 37:
+                        iKey = 'K';
+                        break;
+                     case 38:
+                        iKey = 'L';
+                        break;
+                     case 44:
+                        iKey = 'Z';
+                        break;
+                     case 45:
+                        iKey = 'X';
+                        break;
+                     case 46:
+                        iKey = 'C';
+                        break;
+                     case 47:
+                        iKey = 'V';
+                        break;
+                     case 48:
+                        iKey = 'B';
+                        break;
+                     case 49:
+                        iKey = 'N';
+                        break;
+                     case 50:
+                        iKey = 'M';
+                        break;
+                  }
+               }
 #if defined( UNICODE )
-               if( iKey >= 128 )
+               if( iKey >= 127 )
                   iKey = HB_INKEY_NEW_UNICODEF( iKey, iFlags );
+               else if( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) )
+                  iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
                else
                   iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
 #else
-               int u = HB_GTSELF_KEYTRANS( pWVT->pGT, iKey );
-               if( u )
-                  iKey = HB_INKEY_NEW_UNICODEF( u, iFlags );
-               else
                {
-                  if( pWVT->CodePage == OEM_CHARSET )
-                     iKey = hb_gt_wvt_key_ansi_to_oem( iKey );
-                  iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
+                  int u = HB_GTSELF_KEYTRANS( pWVT->pGT, iKey );
+                  if( u )
+                     iKey = HB_INKEY_NEW_UNICODEF( u, iFlags );
+                  else if( iKey < 127 && ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) )
+                     iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+                  else
+                  {
+                     if( pWVT->CodePage == OEM_CHARSET )
+                        iKey = hb_gt_wvt_key_ansi_to_oem( iKey );
+                     iKey = HB_INKEY_NEW_CHARF( iKey, iFlags );
+                  }
                }
 #endif
             }
@@ -3191,7 +3331,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    int       iCmdShow;
    PHB_GTWVT pWVT;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
    {
@@ -3454,17 +3594,17 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_INPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                                          ( HB_PTRDIFF ) GetStdHandle( STD_INPUT_HANDLE ) );
+                                          ( HB_PTRUINT ) GetStdHandle( STD_INPUT_HANDLE ) );
          break;
 
       case HB_GTI_OUTPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( HB_PTRDIFF ) GetStdHandle( STD_OUTPUT_HANDLE ) );
+                              ( HB_PTRUINT ) GetStdHandle( STD_OUTPUT_HANDLE ) );
          break;
 
       case HB_GTI_ERRORFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( HB_PTRDIFF ) GetStdHandle( STD_ERROR_HANDLE ) );
+                              ( HB_PTRUINT ) GetStdHandle( STD_ERROR_HANDLE ) );
          break;
 
       case HB_GTI_FONTSIZE:
@@ -3792,69 +3932,51 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 #endif
       case HB_GTI_ICONFILE:
-
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-         {
-            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
-            void * hImageName;
-
-            pWVT->bIconToFree = HB_TRUE;
-            pWVT->hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL,
-                                               HB_ITEMGETSTR( pInfo->pNewVal, &hImageName, NULL ),
-                                               IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE );
-            hb_strfree( hImageName );
-            if( pWVT->hWnd )
-            {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
-            }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
-         }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
-         break;
-
       case HB_GTI_ICONRES:
+      {
+         HICON hIcon = NULL, hIconToFree = NULL;
 
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
             void * hIconName;
 
-            pWVT->bIconToFree = HB_FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
+            if( iType == HB_GTI_ICONFILE )
+#if defined( HB_OS_WIN_CE )
+               hIcon = hIconToFree = ( HICON )
+                       LoadImage( ( HINSTANCE ) NULL,
+                                  HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ),
+                                  IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
+#else
+               hIcon = hIconToFree = ( HICON )
+                       LoadImage( ( HINSTANCE ) NULL,
+                                  HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ),
+                                  IMAGE_ICON, 0, 0, LR_LOADFROMFILE | LR_DEFAULTSIZE );
+#endif
+            else
+               hIcon = LoadIcon( pWVT->hInstance,
+                                 HB_ITEMGETSTR( pInfo->pNewVal, &hIconName, NULL ) );
             hb_strfree( hIconName );
-            if( pWVT->hWnd )
-            {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
-            }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
          }
          else if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
-            HICON hIconToFree = pWVT->bIconToFree ? pWVT->hIcon : NULL;
-
-            pWVT->bIconToFree = HB_FALSE;
-            pWVT->hIcon = LoadIcon( pWVT->hInstance,
-                                    MAKEINTRESOURCE( hb_itemGetNI( pInfo->pNewVal ) ) );
-
+            hIcon = LoadIcon( pWVT->hInstance,
+                              MAKEINTRESOURCE( hb_itemGetNI( pInfo->pNewVal ) ) );
+         }
+         if( hIcon != pWVT->hIcon )
+         {
             if( pWVT->hWnd )
             {
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) pWVT->hIcon ); /* Set Title Bar Icon */
-               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) pWVT->hIcon ); /* Set Task List Icon */
+               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon ); /* Set Title Bar Icon */
+               SendNotifyMessage( pWVT->hWnd, WM_SETICON, ICON_BIG  , ( LPARAM ) hIcon ); /* Set Task List Icon */
             }
-
-            if( hIconToFree )
-               DestroyIcon( hIconToFree );
+            if( pWVT->hIconToFree )
+               DestroyIcon( pWVT->hIconToFree );
+            pWVT->hIconToFree = hIconToFree;
+            pWVT->hIcon = hIcon;
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRUINT ) pWVT->hIcon );
          break;
-
+      }
       case HB_GTI_VIEWPORTWIDTH:
       case HB_GTI_VIEWMAXWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->COLS );

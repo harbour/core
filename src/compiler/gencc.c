@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Compiler C source with real code generation
  *
  * Copyright 2006-2009 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -194,14 +192,14 @@ static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE
 
       if( iSize )
       {
-         fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ld, &fValue ) ) break;\n",
+         fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ldL, &fValue ) ) break;\n",
                   szFunc, lValue );
          fprintf( cargo->yyc, "\tif( %sfValue )\n\t\tgoto lab%05" HB_PFS "u;\n",
                   fNot ? "!" : "", HB_GENC_GETLABEL( nPCodePos + 1 + nOffset ) );
          return iSize;
       }
    }
-   fprintf( cargo->yyc, "\tif( hb_xvm%sInt( %ld ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvm%sInt( %ldL ) ) break;\n",
             szFunc, lValue );
    return 1;
 }
@@ -213,13 +211,13 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
       switch( pFunc->pCode[ nPCodePos ] )
       {
          case HB_P_POPLOCAL:
-            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ld );\n",
+            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ldL );\n",
                      HB_PCODE_MKSHORT( &pFunc->pCode[ nPCodePos + 1 ] ),
                      lValue );
             return 3;
 
          case HB_P_POPLOCALNEAR:
-            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ld );\n",
+            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ldL );\n",
                      ( signed char ) pFunc->pCode[ nPCodePos + 1 ], lValue );
             return 2;
 
@@ -245,7 +243,7 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
          case HB_P_ARRAYPUSH:
             if( lValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %ld ) ) break;\n", lValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %ldL ) ) break;\n", lValue );
                return 1;
             }
             break;
@@ -253,27 +251,27 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
          case HB_P_ARRAYPOP:
             if( lValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %ld ) ) break;\n", lValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %ldL ) ) break;\n", lValue );
                return 1;
             }
             break;
 
          case HB_P_MULT:
-            fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %ld ) ) break;\n", lValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %ldL ) ) break;\n", lValue );
             return 1;
 
          case HB_P_DIVIDE:
-            fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %ld ) ) break;\n", lValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %ldL ) ) break;\n", lValue );
             return 1;
 
          case HB_P_MODULUS:
-            fprintf( cargo->yyc, "\tif( hb_xvmModulusByInt( %ld ) ) break;\n", lValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmModulusByInt( %ldL ) ) break;\n", lValue );
             return 1;
 
          case HB_P_MINUS:
             if( lValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ld ) ) break;\n", lValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ldL ) ) break;\n", lValue );
                return 1;
             }
 #if -LONG_MAX > LONG_MIN
@@ -284,11 +282,11 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
             /* no break */
 
          case HB_P_PLUS:
-            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ld ) ) break;\n", lValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ldL ) ) break;\n", lValue );
             return 1;
 
          case HB_P_RETVALUE:
-            fprintf( cargo->yyc, "\thb_xvmRetInt( %ld );\n", lValue );
+            fprintf( cargo->yyc, "\thb_xvmRetInt( %ldL );\n", lValue );
             return 1;
       }
    }
@@ -1286,7 +1284,7 @@ static HB_GENC_FUNC( hb_p_pushlong )
    if( iSkip == 0 )
    {
       fprintf( cargo->yyc, "#if INT_MAX >= INT32_MAX\n" );
-      fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n", ( int ) lVal );
+      fprintf( cargo->yyc, "\thb_xvmPushInteger( %ld );\n", lVal );
       fprintf( cargo->yyc, "#else\n" );
       fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", lVal );
       fprintf( cargo->yyc, "#endif\n" );
@@ -1300,25 +1298,47 @@ static HB_GENC_FUNC( hb_p_pushlonglong )
    HB_GENC_LABEL();
    fprintf( cargo->yyc, "\thb_xvmPushLongLong( %.1f );\n", HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] ) );
    return 9;
-#elif LONG_MAX == LONGLONG_MAX
-   HB_LONGLONG llVal = HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] ), iSkip;
+#elif LONG_MAX < LONGLONG_MAX
+   HB_LONGLONG llVal;
+   char szBuf[ 24 ];
 
    HB_GENC_LABEL();
 
+   llVal = HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] );
+   fprintf( cargo->yyc, "\thb_xvmPushLongLong( HB_LL( %s ) );\n",
+            hb_numToStr( szBuf, sizeof( szBuf ), llVal ) );
+   return 9;
+#else
+   HB_LONGLONG llVal;
+   char szBuf[ 24 ];
+   int iSkip;
+
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "#if LONG_MAX >= LONGLONG_MAX\n" );
+   llVal = HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] );
    iSkip = hb_gencc_checkNumAhead( llVal, pFunc, nPCodePos + 9, cargo );
 
    if( iSkip == 0 )
-   {
       fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", ( long ) llVal );
-   }
-   return 9 + iSkip;
-#else
-   char szBuf[ 24 ];
-   HB_GENC_LABEL();
+   fprintf( cargo->yyc, "#else\n" );
    fprintf( cargo->yyc, "\thb_xvmPushLongLong( HB_LL( %s ) );\n",
-            hb_numToStr( szBuf, sizeof( szBuf ),
-                         HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] ) ) );
-   return 9;
+            hb_numToStr( szBuf, sizeof( szBuf ), llVal ) );
+   if( iSkip > 0 )
+   {
+      int iDone = 0;
+      while( iDone < iSkip )
+      {
+         HB_BYTE opcode = pFunc->pCode[ nPCodePos + 9 + iDone ];
+         if( opcode >= HB_P_LAST_PCODE )
+            break;
+         iDone += ( int ) cargo->pFuncTable[ opcode ]( pFunc, nPCodePos + 9 + iDone, cargo );
+      }
+      if( iDone != iSkip )
+         HB_GENC_ERROR( "PCODE mismatch" );
+   }
+   fprintf( cargo->yyc, "#endif\n" );
+   return 9 + iSkip;
 #endif
 }
 
@@ -2387,6 +2407,7 @@ void hb_compGenCRealCode( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc )
    label_info.fCondJump = HB_FALSE;
    label_info.fEndRequest = HB_FALSE;
    label_info.iNestedBlock = 0;
+   label_info.pFuncTable = ( const PHB_PCODE_FUNC * ) pFuncTable;
    if( pFunc->nPCodePos == 0 )
       label_info.pnLabels = NULL;
    else

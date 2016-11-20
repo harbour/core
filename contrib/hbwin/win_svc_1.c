@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows Service API
  *
- * Copyright 2010 Jose Luis Capel - <jlcapel at hotmail . com>
- * www - http://harbour-project.org
+ * Copyright 2010 Jose Luis Capel <jlcapel at hotmail . com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,31 +52,50 @@
 #if ! defined( HB_OS_WIN_CE )
 
 #if defined( __POCC__ ) || defined( __XCC__ )
-#  include <winsvc.h>   /* it's disabled by WIN32_LEAN_AND_MEAN */
+   #include <winsvc.h>   /* it's disabled by WIN32_LEAN_AND_MEAN */
 #endif
 
 static SERVICE_STATUS        s_ServiceStatus;
 static SERVICE_STATUS_HANDLE s_hStatus;
 static PHB_ITEM              s_pHarbourEntryFunc = NULL;
+static PHB_ITEM              s_pHarbourControlFunc = NULL;
 static TCHAR                 s_lpServiceName[ 256 ];
 
 /* Control handler function */
 static VOID WINAPI hbwin_SvcControlHandler( DWORD fdwControl )
 {
+   if( s_pHarbourControlFunc )
+   {
+      if( hb_vmRequestReenterExt() )
+      {
+         hb_vmPushEvalSym();
+         hb_vmPush( s_pHarbourControlFunc );
+         hb_vmPushNumInt( ( HB_MAXINT ) fdwControl );
+         hb_vmSend( 1 );
+         hb_vmRequestRestore();
+      }
+      else
+         HB_TRACE( HB_TR_DEBUG, ( "HVM stack not available" ) );
+      return;
+   }
+
    switch( fdwControl )
    {
       case SERVICE_CONTROL_STOP:
          s_ServiceStatus.dwWin32ExitCode = 0;
          s_ServiceStatus.dwCurrentState  = SERVICE_STOPPED;
-         return;
+         break;
 
       case SERVICE_CONTROL_SHUTDOWN:
          s_ServiceStatus.dwWin32ExitCode = 0;
          s_ServiceStatus.dwCurrentState  = SERVICE_STOPPED;
+         break;
+
+      default:
          return;
    }
 
-   SetServiceStatus( s_hStatus, &s_ServiceStatus ); /* Report current status */
+   SetServiceStatus( s_hStatus, &s_ServiceStatus );  /* Report current status */
 }
 
 static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
@@ -102,9 +119,12 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
             DWORD i;
             int iArgCount = 0;
 
-            /* We report the running status to SCM. */
-            s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
-            SetServiceStatus( s_hStatus, &s_ServiceStatus );
+            if( ! s_pHarbourControlFunc )
+            {
+               /* We report the running status to SCM. */
+               s_ServiceStatus.dwCurrentState = SERVICE_RUNNING;
+               SetServiceStatus( s_hStatus, &s_ServiceStatus );
+            }
 
             hb_vmPushEvalSym();
             hb_vmPush( s_pHarbourEntryFunc );
@@ -139,18 +159,22 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
 HB_FUNC( WIN_SERVICEGETSTATUS )
 {
 #if ! defined( HB_OS_WIN_CE )
-   hb_retnl( s_ServiceStatus.dwCurrentState );
+   hb_retnint( s_ServiceStatus.dwCurrentState );
 #else
-   hb_retnl( 0 );
+   hb_retnint( 0 );
 #endif
 }
 
 HB_FUNC( WIN_SERVICESETSTATUS )
 {
 #if ! defined( HB_OS_WIN_CE )
+   HB_BOOL bRetVal;
    s_ServiceStatus.dwCurrentState = ( DWORD ) hb_parnl( 1 );
-   hb_retl( SetServiceStatus( s_hStatus, &s_ServiceStatus ) );
+   bRetVal = ( HB_BOOL ) SetServiceStatus( s_hStatus, &s_ServiceStatus );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retl( bRetVal );
 #else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
    hb_retl( HB_FALSE );
 #endif
 }
@@ -158,9 +182,13 @@ HB_FUNC( WIN_SERVICESETSTATUS )
 HB_FUNC( WIN_SERVICESETEXITCODE )
 {
 #if ! defined( HB_OS_WIN_CE )
+   HB_BOOL bRetVal;
    s_ServiceStatus.dwWin32ExitCode = ( DWORD ) hb_parnl( 1 );
-   hb_retl( SetServiceStatus( s_hStatus, &s_ServiceStatus ) );
+   bRetVal = ( HB_BOOL ) SetServiceStatus( s_hStatus, &s_ServiceStatus );
+   hbwapi_SetLastError( GetLastError() );
+   hb_retl( bRetVal );
 #else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
    hb_retl( HB_FALSE );
 #endif
 }
@@ -168,122 +196,20 @@ HB_FUNC( WIN_SERVICESETEXITCODE )
 HB_FUNC( WIN_SERVICESTOP )
 {
 #if ! defined( HB_OS_WIN_CE )
+   HB_BOOL bRetVal;
    s_ServiceStatus.dwCurrentState = SERVICE_STOPPED;
-   SetServiceStatus( s_hStatus, &s_ServiceStatus );
-#endif
-}
-
-HB_FUNC( WIN_SERVICEINSTALL )
-{
-   HB_BOOL bRetVal = HB_FALSE;
-
-#if ! defined( HB_OS_WIN_CE )
-
-   void * hPath;
-   LPCTSTR lpPath = HB_PARSTR( 3, &hPath, NULL );
-
-   TCHAR lpPathBuffer[ MAX_PATH ];
-
-   if( lpPath == NULL )
-   {
-      if( GetModuleFileName( NULL, lpPathBuffer, HB_SIZEOFARRAY( lpPathBuffer ) ) )
-         lpPath = lpPathBuffer;
-      else
-         hbwapi_SetLastError( GetLastError() );
-   }
-
-   if( lpPath )
-   {
-      SC_HANDLE schSCM = OpenSCManager( NULL, NULL, SC_MANAGER_ALL_ACCESS );
-
-      if( schSCM )
-      {
-         SC_HANDLE schSrv;
-
-         void * hServiceName;
-         void * hDisplayName;
-
-         LPCTSTR lpServiceName = HB_PARSTRDEF( 1, &hServiceName, NULL );
-         LPCTSTR lpDisplayName = HB_PARSTRDEF( 2, &hDisplayName, NULL );
-
-         schSrv = CreateService( schSCM,                    /* SCM database */
-                                 lpServiceName,             /* name of service */
-                                 lpDisplayName,             /* service name to display */
-                                 SERVICE_ALL_ACCESS,        /* desired access */
-                                 SERVICE_WIN32_OWN_PROCESS, /* service type */
-                                 HB_ISNUM( 4 ) ? ( DWORD ) hb_parnl( 4 ) : SERVICE_DEMAND_START,
-                                                            /* start type */
-                                 SERVICE_ERROR_NORMAL,      /* error control type */
-                                 lpPath,                    /* path to service's binary */
-                                 NULL,                      /* no load ordering group */
-                                 NULL,                      /* no tag identifier */
-                                 NULL,                      /* no dependencies */
-                                 NULL,                      /* LocalSystem account */
-                                 NULL );                    /* no password */
-
-         if( schSrv )
-         {
-            bRetVal = HB_TRUE;
-
-            CloseServiceHandle( schSrv );
-         }
-         else
-            hbwapi_SetLastError( GetLastError() );
-
-         hb_strfree( hServiceName );
-         hb_strfree( hDisplayName );
-
-         CloseServiceHandle( schSCM );
-      }
-      else
-         hbwapi_SetLastError( GetLastError() );
-   }
-
-   hb_strfree( hPath );
-
-#endif
+   bRetVal = ( HB_BOOL ) SetServiceStatus( s_hStatus, &s_ServiceStatus );
+   hbwapi_SetLastError( GetLastError() );
    hb_retl( bRetVal );
-}
-
-HB_FUNC( WIN_SERVICEDELETE )
-{
-   HB_BOOL bRetVal = HB_FALSE;
-
-#if ! defined( HB_OS_WIN_CE )
-   SC_HANDLE schSCM = OpenSCManager( NULL, NULL, SC_MANAGER_ALL_ACCESS );
-
-   if( schSCM )
-   {
-      void * hServiceName;
-
-      SC_HANDLE schSrv = OpenService( schSCM,
-                                      HB_PARSTRDEF( 1, &hServiceName, NULL ),
-                                      SERVICE_ALL_ACCESS );
-
-      if( schSrv )
-      {
-         /* TODO: check if service is up and then stop it */
-
-         bRetVal = ( HB_BOOL ) DeleteService( schSrv );
-
-         CloseServiceHandle( schSrv );
-      }
-      else
-         hbwapi_SetLastError( GetLastError() );
-
-      hb_strfree( hServiceName );
-
-      CloseServiceHandle( schSCM );
-   }
-   else
-      hbwapi_SetLastError( GetLastError() );
+#else
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
+   hb_retl( HB_FALSE );
 #endif
-   hb_retl( bRetVal );
 }
 
 HB_FUNC( WIN_SERVICESTART )
 {
-   HB_BOOL bRetVal = HB_FALSE;
+   HB_BOOL bRetVal;
 
 #if ! defined( HB_OS_WIN_CE )
    PHB_ITEM pEntryFunc;
@@ -298,10 +224,21 @@ HB_FUNC( WIN_SERVICESTART )
       s_pHarbourEntryFunc = NULL;
    }
 
-   pEntryFunc = hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL );
+   pEntryFunc = hb_param( 2, HB_IT_EVALITEM );
 
    if( pEntryFunc )
       s_pHarbourEntryFunc = hb_itemNew( pEntryFunc );
+
+   if( s_pHarbourControlFunc )
+   {
+      hb_itemRelease( s_pHarbourControlFunc );
+      s_pHarbourControlFunc = NULL;
+   }
+
+   pEntryFunc = hb_param( 3, HB_IT_EVALITEM );
+
+   if( pEntryFunc )
+      s_pHarbourControlFunc = hb_itemNew( pEntryFunc );
 
    lpServiceTable[ 0 ].lpServiceName = s_lpServiceName;
    lpServiceTable[ 0 ].lpServiceProc = ( LPSERVICE_MAIN_FUNCTION ) hbwin_SvcMainFunction;
@@ -309,11 +246,11 @@ HB_FUNC( WIN_SERVICESTART )
    lpServiceTable[ 1 ].lpServiceName = NULL;
    lpServiceTable[ 1 ].lpServiceProc = NULL;
 
-   if( StartServiceCtrlDispatcher( lpServiceTable ) )
-      bRetVal = HB_TRUE;
-   else
-      hbwapi_SetLastError( GetLastError() );
-
+   bRetVal = ( HB_BOOL ) StartServiceCtrlDispatcher( lpServiceTable );
+   hbwapi_SetLastError( GetLastError() );
+#else
+   bRetVal = HB_FALSE;
+   hbwapi_SetLastError( ERROR_NOT_SUPPORTED );
 #endif
    hb_retl( bRetVal );
 }

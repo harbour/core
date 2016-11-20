@@ -24,8 +24,8 @@
 
       Be aware that this function is both quite time - O(Len(cString1)*Len(cString2)) - and memory consuming -
       O((Len(cString1)+1)*(Len(cString2)+1)*sizeof(int)) - so keep the strings as short as possible.
-      E.g., on common 32 bit systems (sizeof(int) == 4), calling StrDiff() with two strings of 1024 bytes
-      in length will consume 4 MB of memory. To not impose unneeded restrictions, the function will only check if
+      E.g., on common 32-bit systems (sizeof(int) == 4), calling StrDiff() with two strings of 1024 bytes
+      in length will consume 4 MiB of memory. To not impose unneeded restrictions, the function will only check if
       (Len(cString1)+1)*(Len(cString2)+1)*sizeof(int) <= UINT_MAX, although allocing UINT_MAX bytes will not
       work on most systems. If this simple check fails, -1 is returned.
 

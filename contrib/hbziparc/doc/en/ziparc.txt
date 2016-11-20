@@ -121,7 +121,7 @@
       Set this function before opening archives that are in removable media.
       This block will be released, when the caller finish it job.
    $EXAMPLES$
-      hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
+      hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + hb_ntos( nDisk ) ) } )
    $COMPLIANCE$
       This function is a Harbour extension
    $PLATFORMS$
@@ -337,7 +337,7 @@
    $EXAMPLES$
       PROCEDURE Main()
 
-         hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
+         hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + hb_ntos( nDisk ) ) } )
 
          IF hb_ZipFileByPKSpan( "test.zip", "test.prg" )
             ? "File was successfully created"
@@ -473,7 +473,7 @@
    $ONELINER$
       Unzip a compressed file
    $SYNTAX$
-      hb_UnzipFile( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
+      hb_UnzipFile( <cFile>, <bBlock>, <lWithPath>, <cPassword>, <cPath>,
                     <cFile> | <aFile>, <pFileProgress> ) --> lCompress
    $ARGUMENTS$
       <cFile>   Name of the zip file to extract
@@ -482,7 +482,7 @@
 
       <lWithPath> Toggle to create directory if needed
 
-      <cPassWord> Password to use to extract files
+      <cPassword> Password to use to extract files
 
       <cPath>    Path to extract the files to - mandatory
 
@@ -511,8 +511,9 @@
    $EXAMPLES$
       PROCEDURE Main()
 
-         LOCAL aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
+         LOCAL aExtract
 
+         aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
          IF hb_UnzipFile( "test.zip",,,, "." + hb_ps(), aExtract )
             ? "File was successfully extracted"
          ENDIF
@@ -521,6 +522,7 @@
          IF hb_UnzipFile( "test2.zip", {| cFile | QOut( cFile ) },,, "." + hb_ps(), aExtract )
             ? "File was successfully extracted"
          ENDIF
+
          RETURN
    $STATUS$
       R

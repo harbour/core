@@ -397,6 +397,7 @@ DYNAMIC hb_dbCreateTemp
 DYNAMIC hb_dbDetach
 DYNAMIC hb_dbDrop
 DYNAMIC hb_dbExists
+DYNAMIC hb_dbGetFilter
 DYNAMIC hb_dbPack
 DYNAMIC hb_dbRename
 DYNAMIC hb_dbRequest
@@ -410,6 +411,7 @@ DYNAMIC hb_DirCreate
 DYNAMIC hb_DirDelete
 DYNAMIC hb_Directory
 DYNAMIC hb_DirExists
+DYNAMIC hb_DirRemoveAll
 DYNAMIC hb_DirScan
 DYNAMIC hb_DirSepAdd
 DYNAMIC hb_DirSepDel
@@ -437,6 +439,7 @@ DYNAMIC hb_FGetDateTime
 DYNAMIC hb_FieldDec
 DYNAMIC hb_FieldLen
 DYNAMIC hb_FieldType
+DYNAMIC hb_FileDelete
 DYNAMIC hb_FileExists
 DYNAMIC hb_FileMatch
 DYNAMIC hb_FIsDevice
@@ -645,6 +648,7 @@ DYNAMIC hb_jsonEncode
 DYNAMIC hb_keyChar
 DYNAMIC hb_keyClear
 DYNAMIC hb_keyCode
+DYNAMIC hb_keyExt
 DYNAMIC hb_keyIns
 DYNAMIC hb_keyLast
 DYNAMIC hb_keyMod
@@ -690,7 +694,9 @@ DYNAMIC hb_MethodName
 DYNAMIC hb_MGetBounds
 DYNAMIC hb_MilliSeconds
 DYNAMIC hb_Minute
+DYNAMIC hb_MLEval
 DYNAMIC hb_MMiddleDown
+DYNAMIC hb_MSecToT
 DYNAMIC hb_mtvm
 DYNAMIC hb_mutexCreate
 DYNAMIC hb_mutexEval
@@ -703,6 +709,7 @@ DYNAMIC hb_mutexSubscribeNow
 DYNAMIC hb_mutexUnlock
 DYNAMIC hb_mvRestore
 DYNAMIC hb_mvSave
+DYNAMIC hb_ntoc
 DYNAMIC hb_NToColor
 DYNAMIC hb_ntos
 DYNAMIC hb_NToT
@@ -762,6 +769,7 @@ DYNAMIC hb_ScrMaxRow
 DYNAMIC hb_Scroll
 DYNAMIC hb_Sec
 DYNAMIC hb_SecondsCPU
+DYNAMIC hb_SecToT
 DYNAMIC hb_Serialize
 DYNAMIC hb_SetClsHandle
 DYNAMIC hb_SetDispCP
@@ -1557,6 +1565,7 @@ DYNAMIC __QQPub
 DYNAMIC __Quit
 DYNAMIC __QuitCancel
 DYNAMIC __rddPreallocate
+DYNAMIC __RecoverErrorBlock
 DYNAMIC __ReportForm
 DYNAMIC __Run
 DYNAMIC __Sender
@@ -1569,6 +1578,7 @@ DYNAMIC __TextRestore
 DYNAMIC __TextSave
 DYNAMIC __TracePrgCalls
 DYNAMIC __TypeFile
+DYNAMIC __vmCountThreads
 DYNAMIC __vmItemID
 DYNAMIC __vmModulesVerify
 DYNAMIC __vmNoInternals

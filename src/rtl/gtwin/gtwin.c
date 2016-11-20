@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem for Windows compilers ver.2
  * Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
@@ -12,7 +11,6 @@
  *     (with 2004 work on Readkey)
  *
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
  *    hb_gt_win_CtrlHandler()
@@ -24,8 +22,6 @@
  *    hb_gt_ReadKey()
  *
  * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,7 +36,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -104,35 +100,34 @@
 #  define HB_GTWIN_USE_SETCONSOLEMENUCLOSE  /* Enable undocumented Windows API function call */
 #endif
 
-#if ( defined( NTDDI_VERSION ) && ( ( defined( NTDDI_VISTA ) && NTDDI_VERSION >= NTDDI_VISTA ) || \
-                                    ( defined( NTDDI_LONGHORN ) && NTDDI_VERSION >= NTDDI_LONGHORN ) ) ) && ! defined( __POCC__ )
-#  if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
-#     define HB_GTWIN_USE_PCONSOLEINFOEX
-#  endif
-#else
-#  if ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 )
-      typedef struct _HB_CONSOLE_SCREEN_BUFFER_INFOEX
-      {
-         ULONG cbSize;
-         COORD dwSize;
-         COORD dwCursorPosition;
-         WORD wAttributes;
-         SMALL_RECT srWindow;
-         COORD dwMaximumWindowSize;
-         WORD wPopupAttributes;
-         BOOL bFullscreenSupported;
-         COLORREF ColorTable[ 16 ];
-      } HB_CONSOLE_SCREEN_BUFFER_INFOEX, * HB_PCONSOLE_SCREEN_BUFFER_INFOEX;
-      #define CONSOLE_SCREEN_BUFFER_INFOEX  HB_CONSOLE_SCREEN_BUFFER_INFOEX
-      #define PCONSOLE_SCREEN_BUFFER_INFOEX HB_PCONSOLE_SCREEN_BUFFER_INFOEX
-#  endif
-#  if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
-#     define HB_GTWIN_USE_PCONSOLEINFOEX
-#  endif
+#if ! defined( __WATCOMC__ ) || ( __WATCOMC__ < 1280 )
+   typedef struct _HB_CONSOLE_SCREEN_BUFFER_INFOEX
+   {
+      ULONG cbSize;
+      COORD dwSize;
+      COORD dwCursorPosition;
+      WORD wAttributes;
+      SMALL_RECT srWindow;
+      COORD dwMaximumWindowSize;
+      WORD wPopupAttributes;
+      BOOL bFullscreenSupported;
+      COLORREF ColorTable[ 16 ];
+   } HB_CONSOLE_SCREEN_BUFFER_INFOEX, * HB_PCONSOLE_SCREEN_BUFFER_INFOEX;
+   #undef CONSOLE_SCREEN_BUFFER_INFOEX
+   #undef PCONSOLE_SCREEN_BUFFER_INFOEX
+   #define CONSOLE_SCREEN_BUFFER_INFOEX  HB_CONSOLE_SCREEN_BUFFER_INFOEX
+   #define PCONSOLE_SCREEN_BUFFER_INFOEX HB_PCONSOLE_SCREEN_BUFFER_INFOEX
+#endif
+#if ! defined( HB_GTWIN_USE_PCONSOLEINFOEX )
+#  define HB_GTWIN_USE_PCONSOLEINFOEX
 #endif
 
 #ifndef MOUSE_WHEELED
 #  define MOUSE_WHEELED                0x0004
+#endif
+
+#ifndef MOUSE_HWHEELED
+#  define MOUSE_HWHEELED               0x0008
 #endif
 
 #ifndef CONSOLE_FULLSCREEN_HARDWARE
@@ -146,11 +141,6 @@
 #ifndef CONSOLE_WINDOWED_MODE
 #  define CONSOLE_WINDOWED_MODE        0
 #endif
-
-/*
-   To disable mouse, initialization was made in cmdarg.c
- */
-static HB_BOOL s_bMouseEnable = HB_TRUE;
 
 /* *********************************************************************** */
 
@@ -193,16 +183,16 @@ static const COLORREF s_colorsDef[ 16 ] = { RGB( 0x00, 0x00, 0x00 ),
                                             RGB( 0xFF, 0xFF, 0x00 ),
                                             RGB( 0xFF, 0xFF, 0xFF ) };
 
-static HB_BOOL     s_bWin9x;
+static HB_BOOL     s_fWin9x;
 static COLORREF    s_colorsOld[ 16 ];
-static HB_BOOL     s_bResetColors;
-static HB_BOOL     s_bOldClosable;
-static HB_BOOL     s_bClosable;
-static HB_BOOL     s_bSpecialKeyHandling;
-static HB_BOOL     s_bAltKeyHandling;
-static DWORD       s_dwAltGrBits;       /* JC: used to verify ALT+GR on different platforms */
-static HB_BOOL     s_bBreak;            /* Used to signal Ctrl+Break to hb_inkeyPoll() */
-static HB_BOOL     s_bSuspend;
+static HB_BOOL     s_fResetColors;
+static HB_BOOL     s_fOldClosable;
+static HB_BOOL     s_fClosable;
+static HB_BOOL     s_fMouseEnable;
+static HB_BOOL     s_fSpecialKeyHandling;
+static HB_BOOL     s_fAltKeyHandling;
+static HB_BOOL     s_fBreak;
+static HB_BOOL     s_fSuspend;
 static int         s_iCursorStyle;
 static int         s_iOldCurStyle;
 static int         s_iCurRow;
@@ -228,224 +218,31 @@ static CONSOLE_SCREEN_BUFFER_INFO s_csbi,     /* active screen mode */
 
 #define INPUT_BUFFER_LEN  32
 
-static DWORD         s_cNumRead;   /* Ok to use DWORD here, because this is specific... */
-static DWORD         s_cNumIndex;  /* ...to the Windows API, which defines DWORD, etc.  */
-static WORD          s_wRepeated = 0;   /* number of times the event (key) was repeated */
-static INPUT_RECORD  s_irInBuf[ INPUT_BUFFER_LEN ];
-static HB_BOOL       s_altisdown = HB_FALSE;
-static int           s_altnum = 0;
-static int           s_mouseLast;  /* Last mouse button to be pressed                   */
-static int           s_mouse_iCol;
-static int           s_mouse_iRow;
+static DWORD         s_dwNumRead;   /* Ok to use DWORD here, because this is specific... */
+static DWORD         s_dwNumIndex;  /* ...to the Windows API, which defines DWORD, etc.  */
+static INPUT_RECORD  s_irBuffer[ INPUT_BUFFER_LEN ];
+static HB_BOOL       s_fAltIsDown = HB_FALSE;
+static int           s_iAltVal = 0;
 
-typedef struct _CLIPKEYCODE
+static int           s_mouse_buttons;
+static int           s_mouse_col;
+static int           s_mouse_row;
+
+/* *********************************************************************** */
+
+static int hb_gt_win_keyFlags( DWORD dwState )
 {
-   int key;
-   int alt_key;
-   int ctrl_key;
-   int shift_key;
-   int altgr_key;
-} CLIPKEYCODE;
+   int iFlags = 0;
 
-#define CLIP_STDKEY_COUNT  96
-#define CLIP_EXTKEY_COUNT  34
+   if( dwState & SHIFT_PRESSED )
+      iFlags |= HB_KF_SHIFT;
+   if( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) )
+      iFlags |= HB_KF_CTRL;
+   if( dwState & ( LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED ) )
+      iFlags |= HB_KF_ALT;
 
-/* Keypad keys */
-
-
-static const CLIPKEYCODE s_stdKeyTab[ CLIP_STDKEY_COUNT ] = {
-   { 32,  0,               0,               0, 0        },             /* ' ' */
-   { 33,  0,               0,               0, 0        },             /* '!' */
-   { 34,  0,               0,               0, 0        },             /* '"' */
-   { 35,  0,               0,               0, 0        },             /* '#' */
-   { 36,  0,               0,               0, 0        },             /* '$' */
-   { 37,  0,               0,               0, 0        },             /* '%' */
-   { 38,  0,               0,               0, 0        },             /* '&' */
-   { 39,  K_ALT_QUOTE,     7,               0, 0        },             /* ''' */
-   { 40,  0,               0,               0, 0        },             /* '(' */
-   { 41,  0,               0,               0, 0        },             /* ')' */
-   { 42,  0,               0,               0, 0        },             /* '*' */
-   { 43,  0,               0,               0, 0        },             /* '+' */
-   { 44,  K_ALT_COMMA,     0,               0, 0        },             /* ',' */
-   { 45,  K_ALT_MINUS,     398,             0, 0        },             /* '-' */
-   { 46,  K_ALT_PERIOD,    0,               0, 0        },             /* '.' */
-   { 47,  K_ALT_SLASH,     0,               0, 0        },             /* '/' */
-   { 48,  K_ALT_0,         0,               0, K_ALT_0  },             /* '0' */
-   { 49,  K_ALT_1,         0,               0, K_ALT_1  },             /* '1' */
-   { 50,  K_ALT_2,         259,             0, K_ALT_2  },             /* '2' */
-   { 51,  K_ALT_3,         27,              0, K_ALT_3  },             /* '3' */
-   { 52,  K_ALT_4,         28,              0, K_ALT_4  },             /* '4' */
-   { 53,  K_ALT_5,         29,              0, K_ALT_5  },             /* '5' */
-   { 54,  K_ALT_6,         30,              0, K_ALT_6  },             /* '6' */
-   { 55,  K_ALT_7,         31,              0, K_ALT_7  },             /* '7' */
-   { 56,  K_ALT_8,         127,             0, K_ALT_8  },             /* '8' */
-   { 57,  K_ALT_9,         0,               0, K_ALT_9  },             /* '9' */
-   { 58,  0,               0,               0, 0        },             /* ':' */
-   { 59,  K_ALT_SC,        0,               0, 0        },             /* ';' */
-   { 60,  0,               0,               0, 0        },             /* '<' */
-   { 61,  K_ALT_EQUALS,    0,               0, 0        },             /* '=' */
-   { 62,  0,               0,               0, 0        },             /* '>' */
-   { 63,  0,               K_CTRL_QUESTION, 0, 0        },             /* '?' */
-   { 64,  0,               0,               0, 0        },             /* '@' */
-   { 65,  K_ALT_A,         K_CTRL_A,        0, K_ALT_A  },             /* 'A' */
-   { 66,  K_ALT_B,         K_CTRL_B,        0, K_ALT_B  },             /* 'B' */
-   { 67,  K_ALT_C,         K_CTRL_C,        0, K_ALT_C  },             /* 'C' */
-   { 68,  K_ALT_D,         K_CTRL_D,        0, K_ALT_D  },             /* 'D' */
-   { 69,  K_ALT_E,         K_CTRL_E,        0, K_ALT_E  },             /* 'E' */
-   { 70,  K_ALT_F,         K_CTRL_F,        0, K_ALT_F  },             /* 'F' */
-   { 71,  K_ALT_G,         K_CTRL_G,        0, K_ALT_G  },             /* 'G' */
-   { 72,  K_ALT_H,         K_CTRL_H,        0, K_ALT_H  },             /* 'H' */
-   { 73,  K_ALT_I,         K_CTRL_I,        0, K_ALT_I  },             /* 'I' */
-   { 74,  K_ALT_J,         K_CTRL_J,        0, K_ALT_J  },             /* 'J' */
-   { 75,  K_ALT_K,         K_CTRL_K,        0, K_ALT_K  },             /* 'K' */
-   { 76,  K_ALT_L,         K_CTRL_L,        0, K_ALT_L  },             /* 'L' */
-   { 77,  K_ALT_M,         K_CTRL_M,        0, K_ALT_M  },             /* 'M' */
-   { 78,  K_ALT_N,         K_CTRL_N,        0, K_ALT_N  },             /* 'N' */
-   { 79,  K_ALT_O,         K_CTRL_O,        0, K_ALT_O  },             /* 'O' */
-   { 80,  K_ALT_P,         K_CTRL_P,        0, K_ALT_P  },             /* 'P' */
-   { 81,  K_ALT_Q,         K_CTRL_Q,        0, K_ALT_Q  },             /* 'Q' */
-   { 82,  K_ALT_R,         K_CTRL_R,        0, K_ALT_R  },             /* 'R' */
-   { 83,  K_ALT_S,         K_CTRL_S,        0, K_ALT_S  },             /* 'S' */
-   { 84,  K_ALT_T,         K_CTRL_T,        0, K_ALT_T  },             /* 'T' */
-   { 85,  K_ALT_U,         K_CTRL_U,        0, K_ALT_U  },             /* 'U' */
-   { 86,  K_ALT_V,         K_CTRL_V,        0, K_ALT_V  },             /* 'V' */
-   { 87,  K_ALT_W,         K_CTRL_W,        0, K_ALT_W  },             /* 'W' */
-   { 88,  K_ALT_X,         K_CTRL_X,        0, K_ALT_X  },             /* 'X' */
-   { 89,  K_ALT_Y,         K_CTRL_Y,        0, K_ALT_Y  },             /* 'Y' */
-   { 90,  K_ALT_Z,         K_CTRL_Z,        0, K_ALT_Z  },             /* 'Z' */
-   { 91,  K_ALT_OSB,       0,               0, 0        },             /* '[' */
-   { 92,  K_ALT_BACKSLASH, 0,               0, 0        },             /* '\' */
-   { 93,  K_ALT_CSB,       0,               0, 0        },             /* ']' */
-   { 94,  K_ALT_6,         0,               0, 0        },             /* '^' */
-   { 95,  0,               0,               0, 0        },             /* '_' */
-   { 96,  K_ALT_BACKQUOTE, 0,               0, 0        },             /* '`' */
-   { 97,  K_ALT_A,         K_CTRL_A,        0, K_ALT_A  },             /* 'a' */
-   { 98,  K_ALT_B,         K_CTRL_B,        0, K_ALT_B  },             /* 'b' */
-   { 99,  K_ALT_C,         K_CTRL_C,        0, K_ALT_C  },             /* 'c' */
-   { 100, K_ALT_D,         K_CTRL_D,        0, K_ALT_D  },             /* 'd' */
-   { 101, K_ALT_E,         K_CTRL_E,        0, K_ALT_E  },             /* 'e' */
-   { 102, K_ALT_F,         K_CTRL_F,        0, K_ALT_F  },             /* 'f' */
-   { 103, K_ALT_G,         K_CTRL_G,        0, K_ALT_G  },             /* 'g' */
-   { 104, K_ALT_H,         K_CTRL_H,        0, K_ALT_H  },             /* 'h' */
-   { 105, K_ALT_I,         K_CTRL_I,        0, K_ALT_I  },             /* 'i' */
-   { 106, K_ALT_J,         K_CTRL_J,        0, K_ALT_J  },             /* 'j' */
-   { 107, K_ALT_K,         K_CTRL_K,        0, K_ALT_K  },             /* 'k' */
-   { 108, K_ALT_L,         K_CTRL_L,        0, K_ALT_L  },             /* 'l' */
-   { 109, K_ALT_M,         K_CTRL_M,        0, K_ALT_M  },             /* 'm' */
-   { 110, K_ALT_N,         K_CTRL_N,        0, K_ALT_N  },             /* 'n' */
-   { 111, K_ALT_O,         K_CTRL_O,        0, K_ALT_O  },             /* 'o' */
-   { 112, K_ALT_P,         K_CTRL_P,        0, K_ALT_P  },             /* 'p' */
-   { 113, K_ALT_Q,         K_CTRL_Q,        0, K_ALT_Q  },             /* 'q' */
-   { 114, K_ALT_R,         K_CTRL_R,        0, K_ALT_R  },             /* 'r' */
-   { 115, K_ALT_S,         K_CTRL_S,        0, K_ALT_S  },             /* 's' */
-   { 116, K_ALT_T,         K_CTRL_T,        0, K_ALT_T  },             /* 't' */
-   { 117, K_ALT_U,         K_CTRL_U,        0, K_ALT_U  },             /* 'u' */
-   { 118, K_ALT_V,         K_CTRL_V,        0, K_ALT_V  },             /* 'v' */
-   { 119, K_ALT_W,         K_CTRL_W,        0, K_ALT_W  },             /* 'w' */
-   { 120, K_ALT_X,         K_CTRL_X,        0, K_ALT_X  },             /* 'x' */
-   { 121, K_ALT_Y,         K_CTRL_Y,        0, K_ALT_Y  },             /* 'y' */
-   { 122, K_ALT_Z,         K_CTRL_Z,        0, K_ALT_Z  },             /* 'z' */
-   { 123, 282,             27,              0, 0        },             /* '{' */
-   { 124, 299,             28,              0, 0        },             /* '|' */
-   { 125, 283,             29,              0, 0        },             /* '}' */
-   { 126, 297,             297,             0, 0        },             /* '~' */
-   { 127, K_ALT_BS,        127,             0, K_ALT_BS },             /* 0x7F */
-};
-
-#define EXKEY_F1          ( 0 )
-#define EXKEY_F2          ( 1 )
-#define EXKEY_F3          ( 2 )
-#define EXKEY_F4          ( 3 )
-#define EXKEY_F5          ( 4 )
-#define EXKEY_F6          ( 5 )
-#define EXKEY_F7          ( 6 )
-#define EXKEY_F8          ( 7 )
-#define EXKEY_F9          ( 8 )
-#define EXKEY_F10         ( 9 )
-#define EXKEY_F11         ( 10 )
-#define EXKEY_F12         ( 11 )
-#define EXKEY_UP          ( 12 )
-#define EXKEY_DOWN        ( 13 )
-#define EXKEY_LEFT        ( 14 )
-#define EXKEY_RIGHT       ( 15 )
-#define EXKEY_INS         ( 16 )
-#define EXKEY_DEL         ( 17 )
-#define EXKEY_HOME        ( 18 )
-#define EXKEY_END         ( 19 )
-#define EXKEY_PGUP        ( 20 )
-#define EXKEY_PGDN        ( 21 )
-#define EXKEY_BS          ( 22 )
-#define EXKEY_TAB         ( 23 )
-#define EXKEY_ESC         ( 24 )
-#define EXKEY_ENTER       ( 25 )
-#define EXKEY_KPENTER     ( 26 )
-#define EXKEY_CENTER      ( 27 )
-#define EXKEY_PRTSCR      ( 28 )
-#define EXKEY_PAUSE       ( 29 )
-#define EXKEY_KPASTERISK  ( 30 )
-#define EXKEY_KPPLUS      ( 31 )
-#define EXKEY_KPMINUS     ( 32 )
-#define EXKEY_KPDIVIDE    ( 33 )
-
-/* xHarbour compatible definitions */
-#if ! defined( K_SH_LEFT )
-#define K_SH_LEFT         K_LEFT     /* Shift-Left  == Left  */
-#define K_SH_UP           K_UP       /* Shift-Up    == Up    */
-#define K_SH_RIGHT        K_RIGHT    /* Shift-Right == Right */
-#define K_SH_DOWN         K_DOWN     /* Shift-Down  == Down  */
-#define K_SH_INS          K_INS      /* Shift-Ins   == Ins   */
-#define K_SH_DEL          K_DEL      /* Shift-Del   == Del   */
-#define K_SH_HOME         K_HOME     /* Shift-Home  == Home  */
-#define K_SH_END          K_END      /* Shift-End   == End   */
-#define K_SH_PGUP         K_PGUP     /* Shift-PgUp  == PgUp  */
-#define K_SH_PGDN         K_PGDN     /* Shift-PgDn  == PgDn  */
-#define K_SH_RETURN       K_RETURN   /* Shift-Enter == Enter */
-#define K_SH_ENTER        K_ENTER    /* Shift-Enter == Enter */
-#endif
-
-static const CLIPKEYCODE extKeyTab[ CLIP_EXTKEY_COUNT ] = {
-   { K_F1,      K_ALT_F1,        K_CTRL_F1,        K_SH_F1,    K_ALT_F1        }, /*  00 */
-   { K_F2,      K_ALT_F2,        K_CTRL_F2,        K_SH_F2,    K_ALT_F2        }, /*  01 */
-   { K_F3,      K_ALT_F3,        K_CTRL_F3,        K_SH_F3,    K_ALT_F3        }, /*  02 */
-   { K_F4,      K_ALT_F4,        K_CTRL_F4,        K_SH_F4,    K_ALT_F4        }, /*  03 */
-   { K_F5,      K_ALT_F5,        K_CTRL_F5,        K_SH_F5,    K_ALT_F5        }, /*  04 */
-   { K_F6,      K_ALT_F6,        K_CTRL_F6,        K_SH_F6,    K_ALT_F6        }, /*  05 */
-   { K_F7,      K_ALT_F7,        K_CTRL_F7,        K_SH_F7,    K_ALT_F7        }, /*  06 */
-   { K_F8,      K_ALT_F8,        K_CTRL_F8,        K_SH_F8,    K_ALT_F8        }, /*  07 */
-   { K_F9,      K_ALT_F9,        K_CTRL_F9,        K_SH_F9,    K_ALT_F9        }, /*  08 */
-   { K_F10,     K_ALT_F10,       K_CTRL_F10,       K_SH_F10,   K_ALT_F10       }, /*  09 */
-   { K_F11,     K_ALT_F11,       K_CTRL_F11,       K_SH_F11,   K_ALT_F11       }, /*  10 */
-   { K_F12,     K_ALT_F12,       K_CTRL_F12,       K_SH_F12,   K_ALT_F12       }, /*  11 */
-
-   { K_UP,      K_ALT_UP,        K_CTRL_UP,        K_SH_UP,    K_ALT_UP        }, /*  12 */
-   { K_DOWN,    K_ALT_DOWN,      K_CTRL_DOWN,      K_SH_DOWN,  K_ALT_DOWN      }, /*  13 */
-   { K_LEFT,    K_ALT_LEFT,      K_CTRL_LEFT,      K_SH_LEFT,  K_ALT_LEFT      }, /*  14 */
-   { K_RIGHT,   K_ALT_RIGHT,     K_CTRL_RIGHT,     K_SH_RIGHT, K_ALT_RIGHT     }, /*  15 */
-   { K_INS,     K_ALT_INS,       K_CTRL_INS,       K_SH_INS,   K_ALT_INS       }, /*  16 */
-   { K_DEL,     K_ALT_DEL,       K_CTRL_DEL,       K_SH_DEL,   K_ALT_DEL       }, /*  17 */
-   { K_HOME,    K_ALT_HOME,      K_CTRL_HOME,      K_SH_HOME,  K_ALT_HOME      }, /*  18 */
-   { K_END,     K_ALT_END,       K_CTRL_END,       K_SH_END,   K_ALT_END       }, /*  19 */
-   { K_PGUP,    K_ALT_PGUP,      K_CTRL_PGUP,      K_SH_PGUP,  K_ALT_PGUP      }, /*  20 */
-   { K_PGDN,    K_ALT_PGDN,      K_CTRL_PGDN,      K_SH_PGDN,  K_ALT_PGDN      }, /*  21 */
-
-   { K_BS,      K_ALT_BS,        127,              0,          K_ALT_BS        }, /*  22 */
-   { K_TAB,     K_ALT_TAB,       K_CTRL_TAB,       K_SH_TAB,   K_ALT_TAB       }, /*  23 */
-   { K_ESC,     K_ALT_ESC,       K_ESC,            0,          K_ALT_TAB       }, /*  24 */
-
-   { K_ENTER,   K_ALT_ENTER,     K_CTRL_ENTER,     K_SH_ENTER, K_ALT_ENTER     }, /*  25 */
-
-   { K_ENTER,   KP_ALT_ENTER,    K_CTRL_ENTER,     0,          KP_ALT_ENTER    }, /*  26 */
-   { KP_CENTER, 0,               KP_CTRL_5,        0,          0               }, /*  27 */
-   { 0,         0,               K_CTRL_PRTSCR,    0,          0               }, /*  28 */
-   { 0,         0,               HB_BREAK_FLAG,    0,          0               }, /*  29 */
-
-/* under win98 it seems that these keypad keys are 'enhanced' */
-   { 42,        KP_ALT_ASTERISK, KP_CTRL_ASTERISK, 0,          KP_ALT_ASTERISK }, /*  30 */
-   { 43,        KP_ALT_PLUS,     KP_CTRL_PLUS,     0,          KP_ALT_PLUS     }, /*  31 */
-   { 45,        KP_ALT_MINUS,    KP_CTRL_MINUS,    0,          KP_ALT_MINUS    }, /*  32 */
-   { 47,        KP_ALT_SLASH,    KP_CTRL_SLASH,    0,          KP_ALT_SLASH    } /*  33 */
-
-};
+   return iFlags;
+}
 
 static int hb_gt_win_getKbdState( void )
 {
@@ -600,8 +397,8 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
 
       case CTRL_CLOSE_EVENT:
       case CTRL_BREAK_EVENT:
-         if( ! s_bSuspend )
-            s_bBreak = HB_TRUE;
+         if( ! s_fSuspend )
+            s_fBreak = HB_TRUE;
          bHandled = TRUE;
          break;
 
@@ -609,7 +406,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
       case CTRL_SHUTDOWN_EVENT:
       default:
 #if 0
-         printf( " Event %ld ", dwCtrlType );
+         printf( " Event %lu ", ( HB_ULONG ) dwCtrlType );
 #endif
          bHandled = FALSE;
    }
@@ -621,7 +418,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
 
 static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
 {
-   int iRow, iCol, i;
+   int iRow, iCol;
 
 #if ! defined( UNICODE )
    PHB_CODEPAGE cdp;
@@ -645,7 +442,7 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
 
    for( iRow = psrWin->Top; iRow <= psrWin->Bottom; ++iRow )
    {
-      i = iRow * _GetScreenWidth() + psrWin->Left;
+      int i = iRow * _GetScreenWidth() + psrWin->Left;
       for( iCol = psrWin->Left; iCol <= psrWin->Right; ++iCol )
       {
 #if defined( UNICODE )
@@ -728,6 +525,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
    else if( s_pCharInfoScreen )
    {
       hb_xfree( s_pCharInfoScreen );
+      s_pCharInfoScreen = NULL;
       s_nScreenBuffSize = 0;
    }
 }
@@ -736,7 +534,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
 
 static HB_BOOL hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
 {
-   static HB_BOOL s_bChecked = HB_FALSE;
+   static HB_BOOL s_fChecked = HB_FALSE;
 
    typedef BOOL ( WINAPI * P_SETCONSOLESCREENBUFFERINFOEX )( HANDLE, PCONSOLE_SCREEN_BUFFER_INFOEX );
    typedef BOOL ( WINAPI * P_GETCONSOLESCREENBUFFERINFOEX )( HANDLE, PCONSOLE_SCREEN_BUFFER_INFOEX );
@@ -746,7 +544,7 @@ static HB_BOOL hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
    HB_BOOL bDone = HB_FALSE;
    int tmp;
 
-   if( ! s_bChecked )
+   if( ! s_fChecked )
    {
       HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
       if( hModule )
@@ -754,7 +552,7 @@ static HB_BOOL hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
          s_pGetConsoleScreenBufferInfoEx = ( P_GETCONSOLESCREENBUFFERINFOEX ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleScreenBufferInfoEx" );
          s_pSetConsoleScreenBufferInfoEx = ( P_SETCONSOLESCREENBUFFERINFOEX ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleScreenBufferInfoEx" );
       }
-      s_bChecked = HB_TRUE;
+      s_fChecked = HB_TRUE;
    }
 
    if( s_pGetConsoleScreenBufferInfoEx )
@@ -772,11 +570,11 @@ static HB_BOOL hb_gt_win_SetPalette_Vista( HB_BOOL bSet, COLORREF * colors )
          }
          else if( s_pSetConsoleScreenBufferInfoEx )
          {
-            if( ! s_bResetColors )
+            if( ! s_fResetColors )
             {
                for( tmp = 0; tmp < 16; ++tmp )
                   s_colorsOld[ tmp ] = info.ColorTable[ tmp ];
-               s_bResetColors = HB_TRUE;
+               s_fResetColors = HB_TRUE;
             }
             for( tmp = 0; tmp < 16; ++tmp )
                info.ColorTable[ tmp ] = colors[ tmp ];
@@ -823,37 +621,60 @@ static HB_BOOL hb_gt_win_SetPalette( HB_BOOL bSet, COLORREF * colors )
 
 static HWND hb_getConsoleWindowHandle( void )
 {
-   TCHAR oldTitle[ 256 ], tmpTitle[ 32 ];
-   HWND hWnd = NULL;
+   static HB_BOOL s_fChecked = HB_FALSE;
 
-   if( GetConsoleTitle( oldTitle, HB_SIZEOFARRAY( oldTitle ) ) )
+   typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
+   static P_GETCONSOLEWINDOW s_pGetConsoleWindow = NULL;
+
+   HWND hWnd;
+
+   if( ! s_fChecked )
    {
-      int iTmp = 0;
-      DWORD dwVal;
+      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+      if( hModule )
+         s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleWindow" );
+      s_fChecked = HB_TRUE;
+   }
 
-      tmpTitle[ iTmp++ ] = TEXT( '>' );
-      tmpTitle[ iTmp++ ] = TEXT( '>' );
-      dwVal = GetCurrentProcessId();
-      do
-         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
-      while( ( dwVal /= 26 ) );
-      tmpTitle[ iTmp++ ] = TEXT( ':' );
-      dwVal = GetTickCount();
-      do
-         tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
-      while( ( dwVal /= 26 ) );
-      tmpTitle[ iTmp++ ] = TEXT( '<' );
-      tmpTitle[ iTmp++ ] = TEXT( '<' );
-      tmpTitle[ iTmp ] = TEXT( '\0' );
+   if( s_pGetConsoleWindow )
+      hWnd = s_pGetConsoleWindow();
+   else
+   {
+      TCHAR oldTitle[ 256 ];
 
-      if( SetConsoleTitle( tmpTitle ) )
+      hWnd = NULL;
+
+      if( GetConsoleTitle( oldTitle, HB_SIZEOFARRAY( oldTitle ) ) )
       {
-         HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 200;
-         /* repeat in a loop to be sure title is changed */
+         TCHAR tmpTitle[ 32 ];
+
+         int iTmp = 0;
+         DWORD dwVal;
+
+         tmpTitle[ iTmp++ ] = TEXT( '>' );
+         tmpTitle[ iTmp++ ] = TEXT( '>' );
+         dwVal = GetCurrentProcessId();
          do
-            hWnd = FindWindow( NULL, tmpTitle );
-         while( hWnd == NULL && hb_dateMilliSeconds() < nTimeOut );
-         SetConsoleTitle( oldTitle );
+            tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+         while( ( dwVal /= 26 ) );
+         tmpTitle[ iTmp++ ] = TEXT( ':' );
+         dwVal = GetTickCount();
+         do
+            tmpTitle[ iTmp++ ] = TEXT( 'A' ) + dwVal % 26;
+         while( ( dwVal /= 26 ) );
+         tmpTitle[ iTmp++ ] = TEXT( '<' );
+         tmpTitle[ iTmp++ ] = TEXT( '<' );
+         tmpTitle[ iTmp ] = TEXT( '\0' );
+
+         if( SetConsoleTitle( tmpTitle ) )
+         {
+            HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 200;
+            /* repeat in a loop to be sure title is changed */
+            do
+               hWnd = FindWindow( NULL, tmpTitle );
+            while( hWnd == NULL && hb_dateMilliSeconds() < nTimeOut );
+            SetConsoleTitle( oldTitle );
+         }
       }
    }
 
@@ -862,36 +683,9 @@ static HWND hb_getConsoleWindowHandle( void )
 
 static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 {
-   static HB_BOOL s_bChecked = HB_FALSE;
-
-   typedef HWND ( WINAPI * P_GETCONSOLEWINDOW )( void );
-   static P_GETCONSOLEWINDOW s_pGetConsoleWindow = NULL;
-
-#if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
-   typedef BOOL ( WINAPI * P_SETCONSOLEMENUCLOSE )( BOOL );
-   static P_SETCONSOLEMENUCLOSE s_pSetConsoleMenuClose = NULL;
-#endif
-
    HB_BOOL bOldClosable = HB_TRUE;
-   HWND hWnd;
 
-   if( ! s_bChecked )
-   {
-      HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
-      if( hModule )
-      {
-         s_pGetConsoleWindow = ( P_GETCONSOLEWINDOW ) HB_WINAPI_GETPROCADDRESS( hModule, "GetConsoleWindow" );
-#if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
-         s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleMenuClose" );
-#endif
-      }
-      s_bChecked = HB_TRUE;
-   }
-
-   if( s_pGetConsoleWindow )
-      hWnd = s_pGetConsoleWindow();
-   else
-      hWnd = hb_getConsoleWindowHandle();
+   HWND hWnd = hb_getConsoleWindowHandle();
 
    if( hWnd )
    {
@@ -904,6 +698,19 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
          if( bSet )
          {
 #if defined( HB_GTWIN_USE_SETCONSOLEMENUCLOSE )
+            typedef BOOL ( WINAPI * P_SETCONSOLEMENUCLOSE )( BOOL );
+
+            static HB_BOOL s_fChecked = HB_FALSE;
+            static P_SETCONSOLEMENUCLOSE s_pSetConsoleMenuClose = NULL;
+
+            if( ! s_fChecked )
+            {
+               HMODULE hModule = GetModuleHandle( TEXT( "kernel32.dll" ) );
+               if( hModule )
+                  s_pSetConsoleMenuClose = ( P_SETCONSOLEMENUCLOSE ) HB_WINAPI_GETPROCADDRESS( hModule, "SetConsoleMenuClose" );
+               s_fChecked = HB_TRUE;
+            }
+
             if( s_pSetConsoleMenuClose )
                s_pSetConsoleMenuClose( bClosable );
 #endif
@@ -919,26 +726,24 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 
 static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
-   s_bWin9x = hb_iswin9x();
-
-   if( s_bWin9x )
-      s_dwAltGrBits = RIGHT_ALT_PRESSED;
-   else
-      s_dwAltGrBits = LEFT_CTRL_PRESSED | RIGHT_ALT_PRESSED;
+   s_fWin9x = hb_iswin9x();
 
    /* stdin && stdout && stderr */
    s_hStdIn  = hFilenoStdin;
    s_hStdOut = hFilenoStdout;
    s_hStdErr = hFilenoStderr;
 
-   s_bBreak = s_bSuspend = HB_FALSE;
-   s_cNumRead = 0;
-   s_cNumIndex = 0;
+   s_fMouseEnable = HB_TRUE;
+   s_fBreak = s_fSuspend =
+   s_fSpecialKeyHandling =
+   s_fAltKeyHandling = HB_FALSE;
+   s_dwNumRead = s_dwNumIndex = 0;
    s_iOldCurStyle = s_iCursorStyle = SC_NORMAL;
-   s_bSpecialKeyHandling = HB_FALSE;
-   s_bAltKeyHandling = HB_TRUE;
+
+   /* AllocConsole() initializes standard input, standard output,
+      and standard error handles for the new console. [jarabal] */
 
 #ifndef HB_NO_ALLOC_CONSOLE
    /*
@@ -980,8 +785,6 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
          hb_errInternal( 10001, "Can't allocate console", NULL, NULL );
    }
 
-   /* AllocConsole() initializes standard input, standard output,
-      and standard error handles for the new console. [jarabal] */
    /* Add Ctrl+Break handler [vszakats] */
    SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, TRUE );
 
@@ -1024,10 +827,10 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    GetConsoleMode( s_HOutput, &s_dwomode );
    GetConsoleMode( s_HInput, &s_dwimode );
 
-   SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
+   SetConsoleMode( s_HInput, s_fMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
 
-   s_bClosable = s_bOldClosable = hb_gt_win_SetCloseButton( HB_FALSE, HB_FALSE );
-   s_bResetColors = HB_FALSE;
+   s_fClosable = s_fOldClosable = hb_gt_win_SetCloseButton( HB_FALSE, HB_FALSE );
+   s_fResetColors = HB_FALSE;
 
    HB_GTSELF_SETFLAG( pGT, HB_GTI_REDRAWMAX, 4 );
 
@@ -1045,14 +848,15 @@ static void hb_gt_win_Exit( PHB_GT pGT )
 
    HB_GTSELF_REFRESH( pGT );
 
-   hb_gt_win_SetCloseButton( HB_TRUE, s_bOldClosable );
-   if( s_bResetColors )
+   hb_gt_win_SetCloseButton( HB_TRUE, s_fOldClosable );
+   if( s_fResetColors )
       hb_gt_win_SetPalette( HB_TRUE, s_colorsOld );
 
    if( s_pCharInfoScreen )
    {
       hb_xfree( s_pCharInfoScreen );
       s_pCharInfoScreen = NULL;
+      s_nScreenBuffSize = 0;
    }
 
    if( s_HOutput != INVALID_HANDLE_VALUE )
@@ -1209,7 +1013,7 @@ static HB_BOOL hb_gt_win_Suspend( PHB_GT pGT )
       SetConsoleMode( s_HOutput, s_dwomode );
       SetConsoleMode( s_HInput, s_dwimode );
    }
-   s_bSuspend = HB_TRUE;
+   s_fSuspend = HB_TRUE;
    return HB_TRUE;
 }
 
@@ -1221,376 +1025,322 @@ static HB_BOOL hb_gt_win_Resume( PHB_GT pGT )
    {
       SetConsoleCtrlHandler( hb_gt_win_CtrlHandler, TRUE );
       SetConsoleMode( s_HOutput, s_dwomode );
-      SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
+      SetConsoleMode( s_HInput, s_fMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
       hb_gt_win_xInitScreenParam( pGT );
       hb_gt_win_xSetCursorStyle();
    }
-   s_bSuspend = HB_FALSE;
+   s_fSuspend = HB_FALSE;
    return HB_TRUE;
 }
 
 /* *********************************************************************** */
 
-static int Handle_Alt_Key( HB_BOOL * paltisdown, int * paltnum, WORD wKey, int ch )
+static int Handle_Alt_Key( INPUT_RECORD * pInRec, HB_BOOL * pAltIsDown, int * pAltVal )
 {
-   if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
+   int iVal = 0;
+
+   switch( ( pInRec->Event.KeyEvent.dwControlKeyState & ENHANCED_KEY ) == 0 ?
+           pInRec->Event.KeyEvent.wVirtualScanCode : 0 )
    {
-      /*
-         on Keydown, it better be the alt or a numpad key,
-         or bail out.
-       */
-      switch( wKey )
-      {
-         case 0x38:
-         case 0x47:
-         case 0x48:
-         case 0x49:
-         case 0x4b:
-         case 0x4c:
-         case 0x4d:
-         case 0x4f:
-         case 0x50:
-         case 0x51:
-         case 0x52:
+      case 0x49: ++iVal;   /* 9 */
+      case 0x48: ++iVal;   /* 8 */
+      case 0x47: ++iVal;   /* 7 */
+      case 0x4d: ++iVal;   /* 6 */
+      case 0x4c: ++iVal;   /* 5 */
+      case 0x4b: ++iVal;   /* 4 */
+      case 0x51: ++iVal;   /* 3 */
+      case 0x50: ++iVal;   /* 2 */
+      case 0x4f: ++iVal;   /* 1 */
+      case 0x52:           /* 0 */
+         if( pInRec->Event.KeyEvent.bKeyDown )
+            *pAltVal = *pAltVal * 10 + iVal;
+         iVal = 0;
+         break;
+      case 0x38:           /* Alt */
+         if( pInRec->Event.KeyEvent.bKeyDown )
             break;
-
-         default:
-            *paltisdown = HB_FALSE;
-            break;
-      }
-   }
-   else
-   {
-      /* Keypad handling is done during Key up */
-
-      unsigned short nm = 10;
-
-      switch( wKey )
-      {
-         case 0x38:
-            /* Alt key ... */
-#if 0
-            printf( " the state %ld\n", s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState );
+         else if( pInRec->Event.KeyEvent.dwControlKeyState & 0x04000000 )
+#if defined( UNICODE )
+            iVal = *pAltVal & 0xFFFF;
+#else
+            iVal = *pAltVal & 0xFF;
 #endif
-
-            if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState &
-                0x04000000 )
-            /* ... has been released after a numpad entry */
-            {
-               ch = *paltnum & 0xff;
-               ++s_cNumIndex;
-            }
-            else
-            /* ... has been released after no numpad entry */
-            {
-               s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown = 1;
-            }
-            *paltisdown = HB_FALSE;
-            *paltnum = 0;
-            break;
-
-         case 0x52: --nm;
-         case 0x4f: --nm;
-         case 0x50: --nm;
-         case 0x51: --nm;
-         case 0x4b: --nm;
-         case 0x4c: --nm;
-         case 0x4d: --nm;
-         case 0x47: --nm;
-         case 0x48: --nm;
-         case 0x49: --nm;
-            *paltnum = ( ( *paltnum * 10 ) & 0xff ) + nm;
-            break;
-
-         default:
-            *paltisdown = HB_FALSE;
-            break;
-      }
+         /* no break */
+      default:
+         *pAltIsDown = HB_FALSE;
+         break;
    }
-   return ch;
+   return iVal;
 }
 
-static int SpecialHandling( WORD * wChar, unsigned short wKey, int ch, HB_BOOL lReverse )
+static int SpecialHandling( WORD wScan, int iKey, HB_BOOL fShifted )
 {
-   if( lReverse )
+   int iStd, iShift;
+
+   switch( wScan )
    {
-      switch( wKey )
-      {
-         case 2:           /* 1 to 9 */
-         case 3:
-         case 4:
-         case 5:
-         case 6:
-         case 7:
-         case 8:
-         case 9:
-         case 10:
-            ch = wKey + 31;
-            break;
-
-         case 11:          /* 0 */
-            ch = 41;
-            break;
-
-         case 12:          /* - */
-            ch = 95;
-            break;
-
-         case 13:          /* = */
-            ch = 43;
-            break;
-
-         case 26:          /* [ */
-            ch = 123;
-            break;
-
-         case 27:          /* ] */
-            ch = 125;
-            break;
-
-         case 39:          /* ; */
-            ch = 58;
-            break;
-
-         case 40:          /* ' */
-            ch = 34;
-            break;
-
-         case 41:          /* ` */
-            ch = 126;
-            break;
-
-         case 43:          /* \ */
-            ch = 124;
-            break;
-
-         case 51:          /* , */
-            ch = 60;
-            break;
-
-         case 52:          /* . */
-            ch = 62;
-            break;
-
-         case 53:          /* / */
-            ch = 63;
-            break;
-
-         default:
-            break;
-      }
+      case 2:
+         iStd = '1';
+         iShift = '!';
+         break;
+      case 3:
+         iStd = '2';
+         iShift = '@';
+         break;
+      case 4:
+         iStd = '3';
+         iShift = '#';
+         break;
+      case 5:
+         iStd = '4';
+         iShift = '$';
+         break;
+      case 6:
+         iStd = '5';
+         iShift = '%';
+         break;
+      case 7:
+         iStd = '6';
+         iShift = '^';
+         break;
+      case 8:
+         iStd = '7';
+         iShift = '&';
+         break;
+      case 9:
+         iStd = '8';
+         iShift = '*';
+         break;
+      case 10:
+         iStd = '9';
+         iShift = '(';
+         break;
+      case 11:
+         iStd = '0';
+         iShift = ')';
+         break;
+      case 12:
+         iStd = '-';
+         iShift = '_';
+         break;
+      case 13:
+         iStd = '=';
+         iShift = '+';
+         break;
+      case 26:
+         iStd = '[';
+         iShift = '{';
+         break;
+      case 27:
+         iStd = ']';
+         iShift = '}';
+         break;
+      case 39:
+         iStd = ';';
+         iShift = ':';
+         break;
+      case 40:
+         iStd = '\'';
+         iShift = '"';
+         break;
+      case 41:
+         iStd = '`';
+         iShift = '~';
+         break;
+      case 43:
+         iStd = '\\';
+         iShift = '|';
+         break;
+      case 51:
+         iStd = ',';
+         iShift = '<';
+         break;
+      case 52:
+         iStd = '.';
+         iShift = '>';
+         break;
+      case 53:
+         iStd = '/';
+         iShift = '?';
+         break;
+      default:
+         iStd = iShift = 0;
+         break;
    }
-   else
-   {
-      switch( wKey )
-      {
-         case 2:           /* 1 to 9 */
-         case 3:
-         case 4:
-         case 5:
-         case 6:
-         case 7:
-         case 8:
-         case 9:
-         case 10:
-            ch = *wChar = wKey + 47;
-            break;
 
-         case 11:          /* 0 */
-            ch = *wChar = 48;
-            break;
+   if( iStd != 0 && iKey == ( fShifted ? iStd : iShift ) )
+      iKey = fShifted ? iShift : iStd;
 
-         case 12:          /* - */
-            ch = 45;
-            break;
-
-         case 13:          /* = */
-            ch = *wChar = 61;
-            break;
-
-         case 26:          /* [ */
-            ch = *wChar = 91;
-            break;
-
-         case 27:          /* ] */
-            ch = *wChar = 93;
-            break;
-
-         case 39:          /* ; */
-            ch = *wChar = 59;
-            break;
-
-         case 40:          /* ' */
-            ch = 39;
-            break;
-
-         case 41:          /* ` */
-            ch = *wChar = 96;
-            break;
-
-         case 43:          /* \ */
-            ch = *wChar = 92;
-            break;
-
-         case 51:          /* , */
-            ch = *wChar = 44;
-            break;
-
-         case 52:          /* . */
-            ch = *wChar = 46;
-            break;
-
-         case 53:          /* / */
-            ch = 47;
-            break;
-
-         default:
-            break;
-      }
-   }
-   return ch;
+   return iKey;
 }
 
 static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   int ch = 0,
-       extKey = -1;
-   const CLIPKEYCODE * clipKey = NULL;
+   int iKey = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_ReadKey(%p,%d)", pGT, iEventMask ) );
 
-   HB_SYMBOL_UNUSED( pGT );
+   HB_SYMBOL_UNUSED( iEventMask );
 
    /* First check for Ctrl+Break, which is handled by gtwin.c */
-   if( s_bBreak )
+   if( s_fBreak )
    {
       /* Reset the global Ctrl+Break flag */
-      s_bBreak = HB_FALSE;
-      ch = HB_BREAK_FLAG; /* Indicate that Ctrl+Break was pressed */
+      s_fBreak = HB_FALSE;
+      iKey = HB_BREAK_FLAG; /* Indicate that Ctrl+Break was pressed */
    }
    /* Check for events only when the event buffer is exhausted. */
-   else if( s_wRepeated == 0 && s_cNumRead <= s_cNumIndex )
+   else if( s_dwNumIndex >= s_dwNumRead )
    {
       /* Check for keyboard input */
 
-      s_cNumRead = 0;
-      GetNumberOfConsoleInputEvents( s_HInput, &s_cNumRead );
+      s_dwNumRead = 0;
+      GetNumberOfConsoleInputEvents( s_HInput, &s_dwNumRead );
 
-      if( s_cNumRead )
+      if( s_dwNumRead )
       {
 #if defined( UNICODE )
          /* Workaround for UNICOWS bug:
                http://blogs.msdn.com/michkap/archive/2007/01/13/1460724.aspx
             [vszakats] */
 
-         if( s_bWin9x )
+         if( s_fWin9x )
          {
             DWORD tmp;
 
             for( tmp = 0; tmp < INPUT_BUFFER_LEN; ++tmp )
-               s_irInBuf[ tmp ].EventType = 0xFFFF;
+               s_irBuffer[ tmp ].EventType = 0xFFFF;
          }
 #endif
 
          /* Read keyboard input */
          ReadConsoleInput( s_HInput,          /* input buffer handle   */
-                           s_irInBuf,         /* buffer to read into   */
+                           s_irBuffer,         /* buffer to read into   */
                            INPUT_BUFFER_LEN,  /* size of read buffer   */
-                           &s_cNumRead );     /* number of records read */
+                           &s_dwNumRead );     /* number of records read */
          /* Set up to process the first input event */
-         s_cNumIndex = 0;
+         s_dwNumIndex = 0;
 
 #if defined( UNICODE )
-         if( s_bWin9x )
+         if( s_fWin9x )
          {
             DWORD tmp;
 
-            for( tmp = 0; tmp < s_cNumRead; ++tmp )
+            for( tmp = 0; tmp < s_dwNumRead; ++tmp )
             {
-               if( s_irInBuf[ tmp ].EventType == 0xFFFF )
-                  s_irInBuf[ tmp ].EventType = KEY_EVENT;
+               if( s_irBuffer[ tmp ].EventType == 0xFFFF )
+                  s_irBuffer[ tmp ].EventType = KEY_EVENT;
             }
          }
 #endif
 
-#ifdef _TRACE
+#if defined( _TRACE ) || defined( _TRACE_KEYPRESS )
          {
             DWORD tmp;
-
-            for( tmp = 0; tmp < s_cNumRead; ++tmp )
-               printf( "eventtype %d "
-                       "downflag %d "
-                       "key 0x%04x "
-                       "scan 0x%04x "
-                       "achar %d "
-                       "wchar %d "
-                       "state %ld "
-                       "repeat %d\n",
-                       s_irInBuf[ tmp ].EventType,
-                       ( int ) s_irInBuf[ tmp ].Event.KeyEvent.bKeyDown,
-                       s_irInBuf[ tmp ].Event.KeyEvent.wVirtualKeyCode,   /* key code */
-                       s_irInBuf[ tmp ].Event.KeyEvent.wVirtualScanCode,  /* scan code */
-                       s_irInBuf[ tmp ].Event.KeyEvent.uChar.AsciiChar,   /* char */
-                       s_irInBuf[ tmp ].Event.KeyEvent.uChar.UnicodeChar, /* char unicode */
-                       s_irInBuf[ tmp ].Event.KeyEvent.dwControlKeyState, /* state */
-                       s_irInBuf[ tmp ].Event.KeyEvent.wRepeatCount );
+            for( tmp = 0; tmp < s_dwNumRead; ++tmp )
+            {
+               INPUT_RECORD * pInRec = &s_irBuffer[ tmp ];
+               if( pInRec->EventType == KEY_EVENT )
+               {
+#ifndef _TRACE
+                  switch( pInRec->Event.KeyEvent.wVirtualScanCode )
+                  {
+                     case 0x38:  /* ALT */
+                     case 0x1d:  /* CTRL */
+                     case 0x2a:  /* LSHIFT */
+                     case 0x36:  /* RSHIFT */
+                        /* ignore control keys */
+                        continue;
+                     default:
+                        if( ! pInRec->Event.KeyEvent.bKeyDown )
+                           continue;
+                  }
+#endif
+                  printf( "KEY_EVENT "
+                          "key=0x%04x "
+                          "scan=0x%04x "
+                          "state=0x%04x "
+                          "uchar=%d "
+                          "repeat=%d\n",
+                          ( int ) pInRec->Event.KeyEvent.wVirtualKeyCode,     /* VK_* key code */
+                          ( int ) pInRec->Event.KeyEvent.wVirtualScanCode,    /* scan code */
+                          ( int ) pInRec->Event.KeyEvent.dwControlKeyState,   /* state */
+                          ( int ) pInRec->Event.KeyEvent.uChar.UnicodeChar,   /* char */
+                          ( int ) pInRec->Event.KeyEvent.wRepeatCount );      /* repeat */
+               }
+#ifdef _TRACE
+               else if( pInRec->EventType == MOUSE_EVENT )
+                  printf( "MOUSE_EVENT "
+                          "buttonState=0x%02x "
+                          "eventFlags=0x%02x "
+                          "ctrlKeys=0x%04x "
+                          "posXY=(%d,%d)\n",
+                          ( int ) pInRec->Event.MouseEvent.dwButtonState,
+                          ( int ) pInRec->Event.MouseEvent.dwEventFlags,
+                          ( int ) pInRec->Event.MouseEvent.dwControlKeyState,
+                          ( int ) pInRec->Event.MouseEvent.dwMousePosition.X,
+                          ( int ) pInRec->Event.MouseEvent.dwMousePosition.Y );
+               else if( pInRec->EventType == WINDOW_BUFFER_SIZE_EVENT )
+                  printf( "WINDOW_BUFFER_SIZE_EVENT x=%d, y=%d\n",
+                          pInRec->Event.WindowBufferSizeEvent.dwSize.X,
+                          pInRec->Event.WindowBufferSizeEvent.dwSize.Y );
+               else if( pInRec->EventType == FOCUS_EVENT )
+                  printf( "FOCUS_EVENT bSetFocus=%d\n",
+                          pInRec->Event.FocusEvent.bSetFocus );
+               else if( pInRec->EventType == MENU_EVENT )
+                  printf( "MENU_EVENT commandId=%d\n",
+                          pInRec->Event.MenuEvent.dwCommandId );
+               else
+                  printf( "UNKNOWN_EVENT %d\n",
+                          pInRec->EventType );
+#endif
+            }
          }
 #endif
       }
    }
 
    /* Only process one keyboard event at a time. */
-   if( s_wRepeated > 0 || s_cNumRead > s_cNumIndex )
+   if( iKey == 0 && s_dwNumIndex < s_dwNumRead )
    {
-      if( s_irInBuf[ s_cNumIndex ].EventType == KEY_EVENT )
+      INPUT_RECORD * pInRec = &s_irBuffer[ s_dwNumIndex ];
+      HB_BOOL fPop = HB_TRUE;
+
+      if( pInRec->EventType == KEY_EVENT )
       {
          /* Save the keyboard state and ASCII, scan, key code */
-         WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
-         WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
-         DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
+         WORD wScan = pInRec->Event.KeyEvent.wVirtualScanCode;
+         WORD wVKey = pInRec->Event.KeyEvent.wVirtualKeyCode;
+         DWORD dwState = pInRec->Event.KeyEvent.dwControlKeyState;
+         int iFlags = hb_gt_win_keyFlags( dwState );
+         int iChar = 0;
 
-         HB_BOOL bHandled = HB_FALSE;
+         if( pInRec->Event.KeyEvent.wRepeatCount-- > 1 )
+            fPop = HB_FALSE;
 
-         /* Only process key down events */
-
-         if( s_bAltKeyHandling )
+         if( s_fAltKeyHandling )
          {
-#ifdef _TRACE
-            printf( "altisdown %d altnum %d\n", ( int ) s_altisdown, ( int ) s_altnum );
-#endif
-            if( s_altisdown )
+            if( s_fAltIsDown )
+               iChar = Handle_Alt_Key( pInRec, &s_fAltIsDown, &s_iAltVal );
+            else if( wScan == 0x38 /* Alt */ &&
+                     pInRec->Event.KeyEvent.bKeyDown &&
+                     ( dwState & NUMLOCK_ON ) == 0 )
             {
-               ch = Handle_Alt_Key( &s_altisdown, &s_altnum, wKey, ch );
-#ifdef _TRACE
-               if( ! s_altisdown )
-                   printf( "alt went up\n" );
-#endif
-            }
-            else
-            {
-               if( wKey == 0x38 &&
-                   s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown &&
-                   ( dwState & NUMLOCK_ON ) )
-               {
-                  s_altisdown = HB_TRUE;
-                  bHandled = HB_TRUE;
-#ifdef _TRACE
-                  printf( "alt went down\n" );
-#endif
-               }
+               s_fAltIsDown = HB_TRUE;
+               s_iAltVal = 0;
             }
          }
 
-         if( bHandled )
+         if( iChar != 0 || s_fAltIsDown )
          {
-            /* key event already processed */
+            /* Our own routine to process ALT + KeyPad NUMs */
          }
-         else if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
+         else if( pInRec->Event.KeyEvent.bKeyDown )
          {
 #if defined( UNICODE )
-            ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
+            iChar = pInRec->Event.KeyEvent.uChar.UnicodeChar;
 #else
-            ch = ( HB_UCHAR ) s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
+            iChar = ( HB_UCHAR ) pInRec->Event.KeyEvent.uChar.AsciiChar;
 #endif
 
             /*
@@ -1615,201 +1365,438 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
              *
              */
 
-            if( s_bSpecialKeyHandling &&
-                ( dwState & CAPSLOCK_ON ) &&
-                s_bWin9x )
+            if( s_fSpecialKeyHandling && ( dwState & CAPSLOCK_ON ) )
+               iChar = SpecialHandling( wScan, iChar, ( dwState & SHIFT_PRESSED ) != 0 );
+
+            switch( wVKey )
             {
-               ch = SpecialHandling( &wChar, wKey, ch, ( dwState & SHIFT_PRESSED ) );
-            }
+               case VK_BACK:
+                  iKey = HB_KX_BS;
+                  break;
+               case VK_TAB:
+                  iKey = HB_KX_TAB;
+                  break;
+               case VK_RETURN:
+                  iKey = HB_KX_ENTER;
+                  if( ( dwState & ENHANCED_KEY ) != 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_ESCAPE:
+                  iKey = HB_KX_ESC;
+                  break;
+               case VK_PRIOR:
+                  iKey = HB_KX_PGUP;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_NEXT:
+                  iKey = HB_KX_PGDN;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_END:
+                  iKey = HB_KX_END;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_HOME:
+                  iKey = HB_KX_HOME;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_LEFT:
+                  iKey = HB_KX_LEFT;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_UP:
+                  iKey = HB_KX_UP;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_RIGHT:
+                  iKey = HB_KX_RIGHT;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_DOWN:
+                  iKey = HB_KX_DOWN;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_INSERT:
+                  iKey = HB_KX_INS;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
+               case VK_DELETE:
+                  iKey = HB_KX_DEL;
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     iFlags |= HB_KF_KEYPAD;
+                  break;
 
-            if( s_wRepeated == 0 )
-               s_wRepeated = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wRepeatCount;
+               case VK_F1:
+                  iKey = HB_KX_F1;
+                  break;
+               case VK_F2:
+                  iKey = HB_KX_F2;
+                  break;
+               case VK_F3:
+                  iKey = HB_KX_F3;
+                  break;
+               case VK_F4:
+                  iKey = HB_KX_F4;
+                  break;
+               case VK_F5:
+                  iKey = HB_KX_F5;
+                  break;
+               case VK_F6:
+                  iKey = HB_KX_F6;
+                  break;
+               case VK_F7:
+                  iKey = HB_KX_F7;
+                  break;
+               case VK_F8:
+                  iKey = HB_KX_F8;
+                  break;
+               case VK_F9:
+                  iKey = HB_KX_F9;
+                  break;
+               case VK_F10:
+                  iKey = HB_KX_F10;
+                  break;
+               case VK_F11:
+                  iKey = HB_KX_F11;
+                  break;
+               case VK_F12:
+                  iKey = HB_KX_F12;
+                  break;
 
-            if( s_wRepeated > 0 ) /* Might not be redundant */
-               s_wRepeated--;
-#ifdef _TRACE
-            printf( "hb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d\n", dwState, wChar, wKey, ch );
+               case VK_SNAPSHOT:
+                  iKey = HB_KX_PRTSCR;
+                  break;
+               case VK_CANCEL:
+                  if( ( dwState & ENHANCED_KEY ) == 0 )
+                     break;
+                  iFlags |= HB_KF_CTRL;
+               case VK_PAUSE:
+                  iKey = HB_KX_PAUSE;
+                  break;
+
+               case VK_CLEAR:
+                  iKey = HB_KX_CENTER;
+                  iFlags |= HB_KF_KEYPAD;
+                  break;
+
+               case VK_NUMPAD0:
+               case VK_NUMPAD1:
+               case VK_NUMPAD2:
+               case VK_NUMPAD3:
+               case VK_NUMPAD4:
+               case VK_NUMPAD5:
+               case VK_NUMPAD6:
+               case VK_NUMPAD7:
+               case VK_NUMPAD8:
+               case VK_NUMPAD9:
+                  if( iFlags == HB_KF_ALT )
+                     iKey = iFlags = 0; /* for ALT + <ASCII/UNICODE_VALUE_FROM_KEYPAD> */
+                  else
+                  {
+                     if( iFlags & HB_KF_CTRL )
+                        iKey = ( int ) wVKey - VK_NUMPAD0 + '0';
+                     iFlags |= HB_KF_KEYPAD;
+                  }
+                  break;
+               case VK_DECIMAL:
+               case VK_SEPARATOR:
+                  iFlags |= HB_KF_KEYPAD;
+                  if( iFlags & HB_KF_CTRL )
+                     iKey = '.';
+                  break;
+
+               case VK_DIVIDE:
+                  iFlags |= HB_KF_KEYPAD;
+                  if( iFlags & HB_KF_CTRL )
+                     iKey = '/';
+                  break;
+               case VK_MULTIPLY:
+                  iFlags |= HB_KF_KEYPAD;
+                  if( iFlags & HB_KF_CTRL )
+                     iKey = '*';
+                  break;
+               case VK_SUBTRACT:
+                  iFlags |= HB_KF_KEYPAD;
+                  if( iFlags & HB_KF_CTRL )
+                     iKey = '-';
+                  break;
+               case VK_ADD:
+                  iFlags |= HB_KF_KEYPAD;
+                  if( iFlags & HB_KF_CTRL )
+                     iKey = '+';
+                  break;
+#ifdef VK_OEM_2
+               case VK_OEM_2:
+                  if( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_SHIFT ) != 0 )
+                     iKey = '?';
+                  break;
 #endif
-
-            if( wChar == 8 )                   /* VK_BACK */
-               extKey = EXKEY_BS;
-            else if( wChar == 9 )              /* VK_TAB */
-               extKey = EXKEY_TAB;
-            else if( wChar == 13 )             /* VK_RETURN */
-               extKey = EXKEY_ENTER;
-            else if( wChar == 27 )             /* VK_ESCAPE */
-               extKey = EXKEY_ESC;
-            else if( wChar == 33 )             /* VK_PRIOR */
-               extKey = EXKEY_PGUP;
-            else if( wChar == 34 )             /* VK_NEXT */
-               extKey = EXKEY_PGDN;
-            else if( wChar == 35 )             /* VK_END */
-               extKey = EXKEY_END;
-            else if( wChar == 36 )             /* VK_HOME */
-               extKey = EXKEY_HOME;
-            else if( wChar == 37 )             /* VK_LEFT */
-               extKey = EXKEY_LEFT;
-            else if( wChar == 38 )             /* VK_UP */
-               extKey = EXKEY_UP;
-            else if( wChar == 39 )             /* VK_RIGHT */
-               extKey = EXKEY_RIGHT;
-            else if( wChar == 40 )             /* VK_DOWN */
-               extKey = EXKEY_DOWN;
-            else if( wChar == 45 )             /* VK_INSERT */
-               extKey = EXKEY_INS;
-            else if( wChar == 46 && ch != 46 ) /* VK_DELETE */
-            {
-               /* International keyboard under Win98 - when VirtualKey and Ascii
-                  char are both 46, then it's keypad del key, but numlock is on,
-                  so treat as '.' else DEL
-                */
-               extKey = EXKEY_DEL;
-            }
-            else if( wChar == 191 && ch == 63 && ( dwState & ENHANCED_KEY ) )
-            {                 /* numpad '/' always */
-               /* This is the Win98 test */
-               ch = 47;
-            }
-            else if( wChar == 106 )  /* VK_MULTIPLY */
-               extKey = EXKEY_KPASTERISK;
-            else if( wChar == 107 )  /* VK_ADD */
-               extKey = EXKEY_KPPLUS;
-            else if( wChar == 109 )  /* VK_SUBTRACT */
-               extKey = EXKEY_KPMINUS;
-            else if( wChar == 111 || /* VK_DIVIDE */
-                     ( wChar == 191 && ( dwState & ENHANCED_KEY ) ) )
-            {
-               /* This should be for other than Win98 */
-               extKey = EXKEY_KPDIVIDE;
-            }
-            else if( wChar >= 112 && wChar <= 123 )   /* F1-F12 VK_F1-VK_F12 */
-               extKey = wChar - 112;
-            else if( ch >= K_SPACE && ch <= K_CTRL_BS )
-               clipKey = &s_stdKeyTab[ ch - K_SPACE ];
-            else if( ch > 0 && ch < K_SPACE && ( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
-               clipKey = &s_stdKeyTab[ ch + '@' ];
-
-            if( extKey > -1 )
-               clipKey = &extKeyTab[ extKey ];
-
-            if( clipKey )
-            {
-               if( ( dwState & SHIFT_PRESSED ) && ( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) )
-               {
-                  if( clipKey->key == K_TAB )
-                     ch = K_CTRL_SH_TAB;
-               }
-               else if( dwState & LEFT_ALT_PRESSED )
-                  ch = clipKey->alt_key;
-               else if( dwState & RIGHT_ALT_PRESSED )
-                  ch = clipKey->altgr_key;
-               else if( dwState & ( LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) )
-                  ch = clipKey->ctrl_key;
-               else if( dwState & SHIFT_PRESSED )
-                  ch = clipKey->shift_key;
-               else
-                  ch = clipKey->key;
-
-               if( ch == 0 )  /* for keys that are only on shift or AltGr */
-                  ch = clipKey->key;
-            }
-#if defined( UNICODE )
-            else if( ch >= 127 )
-               ch = HB_INKEY_NEW_UNICODE( ch );
-#else
-            else
-            {
-               int u = HB_GTSELF_KEYTRANS( pGT, ch );
-               if( u )
-                  ch = HB_INKEY_NEW_UNICODE( u );
-            }
+#ifdef VK_APPS
+               case VK_APPS:
+                  iKey = HB_K_MENU;
+                  break;
 #endif
+               default:
+                  if( ( dwState & ( LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED |
+                                    LEFT_CTRL_PRESSED | RIGHT_CTRL_PRESSED ) ) == LEFT_ALT_PRESSED )
+                  {
+                     switch( wScan )
+                     {
+                        case  2:
+                           iKey = '1';
+                           break;
+                        case  3:
+                           iKey = '2';
+                           break;
+                        case  4:
+                           iKey = '3';
+                           break;
+                        case  5:
+                           iKey = '4';
+                           break;
+                        case  6:
+                           iKey = '5';
+                           break;
+                        case  7:
+                           iKey = '6';
+                           break;
+                        case  8:
+                           iKey = '7';
+                           break;
+                        case  9:
+                           iKey = '8';
+                           break;
+                        case 10:
+                           iKey = '9';
+                           break;
+                        case 11:
+                           iKey = '0';
+                           break;
+                        case 13:
+                           iKey = '=';
+                           break;
+                        case 16:
+                           iKey = 'Q';
+                           break;
+                        case 17:
+                           iKey = 'W';
+                           break;
+                        case 18:
+                           iKey = 'E';
+                           break;
+                        case 19:
+                           iKey = 'R';
+                           break;
+                        case 20:
+                           iKey = 'T';
+                           break;
+                        case 21:
+                           iKey = 'Y';
+                           break;
+                        case 22:
+                           iKey = 'U';
+                           break;
+                        case 23:
+                           iKey = 'I';
+                           break;
+                        case 24:
+                           iKey = 'O';
+                           break;
+                        case 25:
+                           iKey = 'P';
+                           break;
+                        case 30:
+                           iKey = 'A';
+                           break;
+                        case 31:
+                           iKey = 'S';
+                           break;
+                        case 32:
+                           iKey = 'D';
+                           break;
+                        case 33:
+                           iKey = 'F';
+                           break;
+                        case 34:
+                           iKey = 'G';
+                           break;
+                        case 35:
+                           iKey = 'H';
+                           break;
+                        case 36:
+                           iKey = 'J';
+                           break;
+                        case 37:
+                           iKey = 'K';
+                           break;
+                        case 38:
+                           iKey = 'L';
+                           break;
+                        case 44:
+                           iKey = 'Z';
+                           break;
+                        case 45:
+                           iKey = 'X';
+                           break;
+                        case 46:
+                           iKey = 'C';
+                           break;
+                        case 47:
+                           iKey = 'V';
+                           break;
+                        case 48:
+                           iKey = 'B';
+                           break;
+                        case 49:
+                           iKey = 'N';
+                           break;
+                        case 50:
+                           iKey = 'M';
+                           break;
+                     }
+                  }
+                  break;
+            }
          }
-         else if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode == VK_MENU )
-            /* && s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode == 0x38 */
+         else if( wVKey == VK_MENU && ( dwState & NUMLOCK_ON ) != 0 )
          {
 #if defined( UNICODE )
-            ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
+            iChar = pInRec->Event.KeyEvent.uChar.UnicodeChar;
 #else
-            ch = ( HB_UCHAR ) s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar;
+            iChar = ( HB_UCHAR ) pInRec->Event.KeyEvent.uChar.AsciiChar;
 #endif
-            if( ch != 0 )
-            {
+         }
+
+         if( iKey != 0 )
+            iKey = HB_INKEY_NEW_KEY( iKey, iFlags );
+         else if( ( iFlags & HB_KF_CTRL ) != 0 && ( iChar > 0 && iChar < 32 ) )
+         {
+            iChar += 'A' - 1;
+            iKey = HB_INKEY_NEW_KEY( iChar, iFlags );
+         }
+         else if( iChar != 0 )
+         {
 #if defined( UNICODE )
-               if( ch >= 127 )
-                  ch = HB_INKEY_NEW_UNICODE( ch );
+            if( iChar >= 127 )
+               iKey = HB_INKEY_NEW_UNICODEF( iChar, iFlags );
 #else
-               int u = HB_GTSELF_KEYTRANS( pGT, ch );
-               if( u )
-                  ch = HB_INKEY_NEW_UNICODE( u );
+            int u = HB_GTSELF_KEYTRANS( pGT, iChar );
+            if( u )
+               iKey = HB_INKEY_NEW_UNICODEF( u, iFlags );
 #endif
+            else if( iChar < 127 && ( iFlags & ( HB_KF_CTRL | HB_KF_ALT ) ) )
+            {
+               if( iChar >= 32 &&
+                   ( ( ( iFlags & HB_KF_CTRL ) != 0 && ( iFlags & HB_KF_ALT ) != 0 ) ||
+                     ( dwState & ( LEFT_ALT_PRESSED | RIGHT_ALT_PRESSED ) ) == RIGHT_ALT_PRESSED ) )
+               {
+                  iFlags &= ~( HB_KF_CTRL | HB_KF_ALT );
+                  iKey = HB_INKEY_NEW_CHARF( iChar, iFlags );
+               }
+               else
+                  iKey = HB_INKEY_NEW_KEY( iChar, iFlags );
             }
+            else
+               iKey = HB_INKEY_NEW_CHARF( iChar, iFlags );
+         }
+#ifdef _TRACE
+         if( iKey != 0 )
+            printf( "hb_gt_ReadKey(): dwState=0x%04x, wVKey0x%04x, wScan0x%04x, iKey=%d\n", ( int ) dwState, wVKey, wScan, iKey );
+#endif
+      }
+      else if( pInRec->EventType == FOCUS_EVENT )
+      {
+         iKey = pInRec->Event.FocusEvent.bSetFocus ? HB_K_GOTFOCUS : HB_K_LOSTFOCUS;
+      }
+      else if( pInRec->EventType == WINDOW_BUFFER_SIZE_EVENT )
+      {
+         if( s_pCharInfoScreen )
+         {
+            hb_gt_win_xInitScreenParam( pGT );
+            iKey = HB_K_RESIZE;
          }
       }
-      else if( s_bMouseEnable &&
-               s_irInBuf[ s_cNumIndex ].EventType == MOUSE_EVENT &&
-               iEventMask & ~( INKEY_KEYBOARD | HB_INKEY_RAW ) )
+      else if( pInRec->EventType == MOUSE_EVENT )
       {
-         /* mouse wheel events use screen based mouse possition */
-         if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags != MOUSE_WHEELED )
-         {
-            s_mouse_iCol = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.X;
-            s_mouse_iRow = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwMousePosition.Y;
-         }
+         int iFlags = hb_gt_win_keyFlags( pInRec->Event.MouseEvent.dwControlKeyState );
 
-         if( iEventMask & INKEY_MOVE &&
-             s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_MOVED )
+         /* mouse wheel events use screen based mouse possition */
+         if( pInRec->Event.MouseEvent.dwEventFlags == MOUSE_HWHEELED )
          {
-            ch = K_MOUSEMOVE;
+            /* unsupported */
          }
-         else if( iEventMask & INKEY_MWHEEL &&
-                  s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == MOUSE_WHEELED )
+         else if( pInRec->Event.MouseEvent.dwEventFlags == MOUSE_WHEELED )
          {
-            ch = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState & 0xFF000000 ?
+            iKey = ( pInRec->Event.MouseEvent.dwButtonState & 0xFF000000 ) ?
                  K_MWBACKWARD : K_MWFORWARD;
+            iKey = HB_INKEY_NEW_MKEY( iKey, iFlags );
          }
-         else if( iEventMask & INKEY_LDOWN &&
-                  s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+         else if( s_mouse_col != pInRec->Event.MouseEvent.dwMousePosition.X ||
+                  s_mouse_row != pInRec->Event.MouseEvent.dwMousePosition.Y )
+         {
+            s_mouse_col = pInRec->Event.MouseEvent.dwMousePosition.X;
+            s_mouse_row = pInRec->Event.MouseEvent.dwMousePosition.Y;
+            iKey = HB_INKEY_NEW_MPOS( s_mouse_col, s_mouse_row );
+            fPop = pInRec->Event.MouseEvent.dwEventFlags == MOUSE_MOVED;
+         }
+         else if( pInRec->Event.MouseEvent.dwButtonState & ~s_mouse_buttons &
                   FROM_LEFT_1ST_BUTTON_PRESSED )
          {
-            ch = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK ?
-                 K_LDBLCLK : K_LBUTTONDOWN;
-            s_mouseLast = K_LBUTTONDOWN;
+            iKey = pInRec->Event.MouseEvent.dwEventFlags == DOUBLE_CLICK ?
+                   K_LDBLCLK : K_LBUTTONDOWN;
+            iKey = HB_INKEY_NEW_MKEY( iKey, iFlags );
+            s_mouse_buttons |= FROM_LEFT_1ST_BUTTON_PRESSED;
          }
-         else if( iEventMask & INKEY_RDOWN &&
-                  s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState &
+         else if( pInRec->Event.MouseEvent.dwButtonState & ~s_mouse_buttons &
                   RIGHTMOST_BUTTON_PRESSED )
          {
-            ch = s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == DOUBLE_CLICK ?
-                 K_RDBLCLK : K_RBUTTONDOWN;
-            s_mouseLast = K_RBUTTONDOWN;
+            iKey = pInRec->Event.MouseEvent.dwEventFlags == DOUBLE_CLICK ?
+                   K_RDBLCLK : K_RBUTTONDOWN;
+            iKey = HB_INKEY_NEW_MKEY( iKey, iFlags );
+            s_mouse_buttons |= RIGHTMOST_BUTTON_PRESSED;
          }
-         else if( s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwEventFlags == 0 &&
-                  s_irInBuf[ s_cNumIndex ].Event.MouseEvent.dwButtonState == 0 )
+         else if( pInRec->Event.MouseEvent.dwButtonState & ~s_mouse_buttons &
+                  FROM_LEFT_2ND_BUTTON_PRESSED )
          {
-            if( iEventMask & INKEY_LUP && s_mouseLast == K_LBUTTONDOWN )
-            {
-               ch = K_LBUTTONUP;
-               s_mouseLast = 0;
-            }
-            else if( iEventMask & INKEY_RUP && s_mouseLast == K_RBUTTONDOWN )
-            {
-               ch = K_RBUTTONUP;
-               s_mouseLast = 0;
-            }
+            iKey = pInRec->Event.MouseEvent.dwEventFlags == DOUBLE_CLICK ?
+                   K_MDBLCLK : K_MBUTTONDOWN;
+            iKey = HB_INKEY_NEW_MKEY( iKey, iFlags );
+            s_mouse_buttons |= FROM_LEFT_2ND_BUTTON_PRESSED;
+         }
+         else if( ~pInRec->Event.MouseEvent.dwButtonState & s_mouse_buttons &
+                  FROM_LEFT_1ST_BUTTON_PRESSED )
+         {
+            iKey = HB_INKEY_NEW_MKEY( K_LBUTTONUP, iFlags );
+            s_mouse_buttons ^= FROM_LEFT_1ST_BUTTON_PRESSED;
+         }
+         else if( ~pInRec->Event.MouseEvent.dwButtonState & s_mouse_buttons &
+                  RIGHTMOST_BUTTON_PRESSED )
+         {
+            iKey = HB_INKEY_NEW_MKEY( K_RBUTTONUP, iFlags );
+            s_mouse_buttons ^= RIGHTMOST_BUTTON_PRESSED;
+         }
+         else if( ~pInRec->Event.MouseEvent.dwButtonState & s_mouse_buttons &
+                  FROM_LEFT_2ND_BUTTON_PRESSED )
+         {
+            iKey = HB_INKEY_NEW_MKEY( K_MBUTTONUP, iFlags );
+            s_mouse_buttons ^= FROM_LEFT_2ND_BUTTON_PRESSED;
          }
       }
 
-      /* Set up to process the next input event (if any) */
-      if( s_wRepeated == 0 )
-         s_cNumIndex++;
+      if( fPop )
+         s_dwNumIndex++;
    }
-#if 0
-   if( ch )
-      printf( " %ld:%ld", ch, extKey );
-#endif
 
-   return ch;
+   return iKey;
 }
 
 /* *********************************************************************** */
@@ -1887,9 +1874,9 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutL( pInfo->pResult, hb_gt_win_IsFullScreen() );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
-            HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
-            if( hb_itemGetL( pInfo->pResult ) != bNewValue )
-               hb_gt_win_FullScreen( bNewValue );
+            HB_BOOL fNewValue = hb_itemGetL( pInfo->pNewVal );
+            if( hb_itemGetL( pInfo->pResult ) != fNewValue )
+               hb_gt_win_FullScreen( fNewValue );
          }
          break;
 
@@ -1937,28 +1924,28 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
 
       case HB_GTI_CLOSABLE:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bClosable );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_fClosable );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
-            HB_BOOL bNewValue = hb_itemGetL( pInfo->pNewVal );
-            if( bNewValue != s_bClosable )
+            HB_BOOL fNewValue = hb_itemGetL( pInfo->pNewVal );
+            if( fNewValue != s_fClosable )
             {
-               hb_gt_win_SetCloseButton( HB_TRUE, bNewValue );
-               s_bClosable = bNewValue;
+               hb_gt_win_SetCloseButton( HB_TRUE, fNewValue );
+               s_fClosable = fNewValue;
             }
          }
          break;
 
       case HB_GTI_CLOSEMODE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_bClosable ? 0 : 2 );
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_fClosable ? 0 : 2 );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
             int iVal = hb_itemGetNI( pInfo->pNewVal );
             if( iVal >= 0 && iVal <= 2 &&
-                ( s_bClosable ? ( iVal != 0 ) : ( iVal == 0 ) ) )
+                ( s_fClosable ? ( iVal != 0 ) : ( iVal == 0 ) ) )
             {
-               s_bClosable = iVal == 0;
-               hb_gt_win_SetCloseButton( HB_TRUE, s_bClosable );
+               s_fClosable = iVal == 0;
+               hb_gt_win_SetCloseButton( HB_TRUE, s_fClosable );
             }
          }
          break;
@@ -1973,22 +1960,6 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_ALTENTER:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, ! hb_iswinvista() );
-         break;
-
-      case HB_GTI_FONTNAME:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
-         break;
-
-      case HB_GTI_FONTSIZE:
-      case HB_GTI_FONTWIDTH:
-      case HB_GTI_FONTWEIGHT:
-      case HB_GTI_FONTQUALITY:
-      case HB_GTI_FONTATTRIBUTE:
-         pInfo->pResult = hb_itemPutNI( pInfo->pResult, 0 );
-         break;
-
-      case HB_GTI_FONTSEL:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
          break;
 
       case HB_GTI_PALETTE:
@@ -2072,23 +2043,23 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_KBDSPECIAL:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bSpecialKeyHandling );
-         if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
-            s_bSpecialKeyHandling = hb_itemGetL( pInfo->pNewVal );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_fSpecialKeyHandling );
+         if( s_fWin9x && hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
+            s_fSpecialKeyHandling = hb_itemGetL( pInfo->pNewVal );
          break;
 
       case HB_GTI_KBDALT:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bAltKeyHandling );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_fAltKeyHandling );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
-            s_bAltKeyHandling = hb_itemGetL( pInfo->pNewVal );
+            s_fAltKeyHandling = hb_itemGetL( pInfo->pNewVal );
          break;
 
       case HB_GTI_MOUSESTATUS:
-         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_bMouseEnable );
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, s_fMouseEnable );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_LOGICAL )
          {
-            s_bMouseEnable = hb_itemGetL( pInfo->pNewVal );
-            SetConsoleMode( s_HInput, s_bMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
+            s_fMouseEnable = hb_itemGetL( pInfo->pNewVal );
+            SetConsoleMode( s_HInput, s_fMouseEnable ? ENABLE_MOUSE_INPUT : 0x0000 );
          }
          break;
 
@@ -2111,6 +2082,10 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_WINHANDLE:
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, hb_getConsoleWindowHandle() );
+         break;
+
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
@@ -2124,23 +2099,23 @@ static HB_BOOL hb_gt_win_mouse_IsPresent( PHB_GT pGT )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   return s_bMouseEnable;
+   return s_fMouseEnable;
 }
 
 static void hb_gt_win_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   *piRow = s_mouse_iRow;
-   *piCol = s_mouse_iCol;
+   *piRow = s_mouse_row;
+   *piCol = s_mouse_col;
 }
 
 static void hb_gt_win_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
    HB_SYMBOL_UNUSED( pGT );
 
-   s_mouse_iRow = iRow;
-   s_mouse_iCol = iCol;
+   s_mouse_row = iRow;
+   s_mouse_col = iCol;
 }
 
 static HB_BOOL hb_gt_win_mouse_ButtonState( PHB_GT pGT, int iButton )

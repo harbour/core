@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem based on ncurses screen library.
  *
  * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
@@ -17,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -68,7 +67,7 @@ static volatile HB_BOOL s_WinSizeChangeFlag = HB_FALSE;
 
 static int s_iStdIn, s_iStdOut, s_iStdErr;
 
-typedef struct evtFD
+typedef struct
 {
    int    fd;
    int    mode;
@@ -77,11 +76,12 @@ typedef struct evtFD
    int ( * eventFunc )( int, int, void * );
 } evtFD;
 
-typedef struct mouseEvent
+typedef struct
 {
    int row, col;
    int buttonstate;
    int lbuttons;
+   int flags;
    int lbup_row, lbup_col;
    int lbdn_row, lbdn_col;
    int rbup_row, rbup_col;
@@ -95,19 +95,19 @@ typedef struct mouseEvent
    struct timeval BM_time;
 } mouseEvent;
 
-typedef struct keyTab
+typedef struct _keyTab
 {
    int ch;
    int key;
-   struct keyTab * nextCh;
-   struct keyTab * otherCh;
+   struct _keyTab * nextCh;
+   struct _keyTab * otherCh;
 } keyTab;
 
 typedef struct InOutBase
 {
    int terminal_type;
 
-   struct keyTab * pKeyTab;
+   keyTab * pKeyTab;
    int key_flag;
    int esc_delay;
    int key_counter;
@@ -175,204 +175,38 @@ static void set_sig_handler( int iSig );
 
 static void curs_wrkaround( void );
 
-typedef struct ClipKeyCode
-{
-   int key;
-   int alt_key;
-   int ctrl_key;
-   int shift_key;
-} ClipKeyCode;
-
-/* The tables below are indexed by internal key value,
- * It cause that we don't have to make any linear scans
- * to access information proper ClipKeyCode entry
- */
-static const ClipKeyCode stdKeyTab[ NO_STDKEYS ] = {
-   { K_SPACE,   0,            0,        0 },            /*  32 */
-   { '!',       0,            0,        0 },            /*  33 */
-   { '"',       0,            0,        0 },            /*  34 */
-   { '#',       0,            0,        0 },            /*  35 */
-   { '$',       0,            0,        0 },            /*  36 */
-   { '%',       0,            0,        0 },            /*  37 */
-   { '&',       0,            0,        0 },            /*  38 */
-   { '\'',      296,          7,        0 },            /*  39 */
-   { '(',       0,            0,        0 },            /*  40 */
-   { ')',       0,            0,        0 },            /*  41 */
-   { '*',       0,            0,        0 },            /*  42 */
-   { '+',       0,            0,        0 },            /*  43 */
-   { ',',       307,          0,        0 },            /*  44 */
-   { '-',       386,          31,       0 },            /*  45 */
-   { '.',       308,          0,        0 },            /*  46 */
-   { '/',       309,          127,      0 },            /*  47 */
-   { '0',       K_ALT_0,      0,        0 },            /*  48 */
-   { '1',       K_ALT_1,      0,        0 },            /*  49 */
-   { '2',       K_ALT_2,      259,      0 },            /*  50 */
-   { '3',       K_ALT_3,      27,       0 },            /*  51 */
-   { '4',       K_ALT_4,      28,       0 },            /*  52 */
-   { '5',       K_ALT_5,      29,       0 },            /*  53 */
-   { '6',       K_ALT_6,      30,       0 },            /*  54 */
-   { '7',       K_ALT_7,      31,       0 },            /*  55 */
-   { '8',       K_ALT_8,      127,      0 },            /*  56 */
-   { '9',       K_ALT_9,      0,        0 },            /*  57 */
-   { ':',       0,            0,        0 },            /*  58 */
-   { ';',       295,          0,        0 },            /*  59 */
-   { '<',       0,            0,        0 },            /*  60 */
-   { '=',       K_ALT_EQUALS, 0,        0 },            /*  61 */
-   { '>',       0,            0,        0 },            /*  62 */
-   { '?',       0,            0,        0 },            /*  63 */
-   { '@',       0,            0,        0 },            /*  64 */
-   { 'A',       K_ALT_A,      K_CTRL_A, 0 },            /*  65 */
-   { 'B',       K_ALT_B,      K_CTRL_B, 0 },            /*  66 */
-   { 'C',       K_ALT_C,      K_CTRL_C, 0 },            /*  67 */
-   { 'D',       K_ALT_D,      K_CTRL_D, 0 },            /*  68 */
-   { 'E',       K_ALT_E,      K_CTRL_E, 0 },            /*  69 */
-   { 'F',       K_ALT_F,      K_CTRL_F, 0 },            /*  70 */
-   { 'G',       K_ALT_G,      K_CTRL_G, 0 },            /*  71 */
-   { 'H',       K_ALT_H,      K_CTRL_H, 0 },            /*  72 */
-   { 'I',       K_ALT_I,      K_CTRL_I, 0 },            /*  73 */
-   { 'J',       K_ALT_J,      K_CTRL_J, 0 },            /*  74 */
-   { 'K',       K_ALT_K,      K_CTRL_K, 0 },            /*  75 */
-   { 'L',       K_ALT_L,      K_CTRL_L, 0 },            /*  76 */
-   { 'M',       K_ALT_M,      K_CTRL_M, 0 },            /*  77 */
-   { 'N',       K_ALT_N,      K_CTRL_N, 0 },            /*  78 */
-   { 'O',       K_ALT_O,      K_CTRL_O, 0 },            /*  79 */
-   { 'P',       K_ALT_P,      K_CTRL_P, 0 },            /*  80 */
-   { 'Q',       K_ALT_Q,      K_CTRL_Q, 0 },            /*  81 */
-   { 'R',       K_ALT_R,      K_CTRL_R, 0 },            /*  82 */
-   { 'S',       K_ALT_S,      K_CTRL_S, 0 },            /*  83 */
-   { 'T',       K_ALT_T,      K_CTRL_T, 0 },            /*  84 */
-   { 'U',       K_ALT_U,      K_CTRL_U, 0 },            /*  85 */
-   { 'V',       K_ALT_V,      K_CTRL_V, 0 },            /*  86 */
-   { 'W',       K_ALT_W,      K_CTRL_W, 0 },            /*  87 */
-   { 'X',       K_ALT_X,      K_CTRL_X, 0 },            /*  88 */
-   { 'Y',       K_ALT_Y,      K_CTRL_Y, 0 },            /*  89 */
-   { 'Z',       K_ALT_Z,      K_CTRL_Z, 0 },            /*  90 */
-   { '[',       282,          27,       0 },            /*  91 */
-   { '\\',      299,          28,       0 },            /*  92 */
-   { ']',       283,          29,       0 },            /*  93 */
-   { '^',       K_ALT_6,      30,       0 },            /*  94 */
-   { '_',       386,          31,       0 },            /*  95 */
-   { '`',       297,          297,      0 },            /*  96 */
-   { 'a',       K_ALT_A,      K_CTRL_A, 0 },            /*  97 */
-   { 'b',       K_ALT_B,      K_CTRL_B, 0 },            /*  98 */
-   { 'c',       K_ALT_C,      K_CTRL_C, 0 },            /*  99 */
-   { 'd',       K_ALT_D,      K_CTRL_D, 0 },            /* 100 */
-   { 'e',       K_ALT_E,      K_CTRL_E, 0 },            /* 101 */
-   { 'f',       K_ALT_F,      K_CTRL_F, 0 },            /* 102 */
-   { 'g',       K_ALT_G,      K_CTRL_G, 0 },            /* 103 */
-   { 'h',       K_ALT_H,      K_CTRL_H, 0 },            /* 104 */
-   { 'i',       K_ALT_I,      K_CTRL_I, 0 },            /* 105 */
-   { 'j',       K_ALT_J,      K_CTRL_J, 0 },            /* 106 */
-   { 'k',       K_ALT_K,      K_CTRL_K, 0 },            /* 107 */
-   { 'l',       K_ALT_L,      K_CTRL_L, 0 },            /* 108 */
-   { 'm',       K_ALT_M,      K_CTRL_M, 0 },            /* 109 */
-   { 'n',       K_ALT_N,      K_CTRL_N, 0 },            /* 110 */
-   { 'o',       K_ALT_O,      K_CTRL_O, 0 },            /* 111 */
-   { 'p',       K_ALT_P,      K_CTRL_P, 0 },            /* 112 */
-   { 'q',       K_ALT_Q,      K_CTRL_Q, 0 },            /* 113 */
-   { 'r',       K_ALT_R,      K_CTRL_R, 0 },            /* 114 */
-   { 's',       K_ALT_S,      K_CTRL_S, 0 },            /* 115 */
-   { 't',       K_ALT_T,      K_CTRL_T, 0 },            /* 116 */
-   { 'u',       K_ALT_U,      K_CTRL_U, 0 },            /* 117 */
-   { 'v',       K_ALT_V,      K_CTRL_V, 0 },            /* 118 */
-   { 'w',       K_ALT_W,      K_CTRL_W, 0 },            /* 119 */
-   { 'x',       K_ALT_X,      K_CTRL_X, 0 },            /* 120 */
-   { 'y',       K_ALT_Y,      K_CTRL_Y, 0 },            /* 121 */
-   { 'z',       K_ALT_Z,      K_CTRL_Z, 0 },            /* 122 */
-   { '{',       282,          27,       0 },            /* 123 */
-   { '|',       299,          28,       0 },            /* 124 */
-   { '}',       283,          29,       0 },            /* 125 */
-   { '~',       297,          297,      0 },            /* 126 */
-   { K_CTRL_BS, K_ALT_BS,     127,      0 }             /* 127 */
-};
-
-static const ClipKeyCode extdKeyTab[ NO_EXTDKEYS ] = {
-   { K_F1,      K_ALT_F1,     K_CTRL_F1,     K_SH_F1    }, /*  00 */
-   { K_F2,      K_ALT_F2,     K_CTRL_F2,     K_SH_F2    }, /*  01 */
-   { K_F3,      K_ALT_F3,     K_CTRL_F3,     K_SH_F3    }, /*  02 */
-   { K_F4,      K_ALT_F4,     K_CTRL_F4,     K_SH_F4    }, /*  03 */
-   { K_F5,      K_ALT_F5,     K_CTRL_F5,     K_SH_F5    }, /*  04 */
-   { K_F6,      K_ALT_F6,     K_CTRL_F6,     K_SH_F6    }, /*  05 */
-   { K_F7,      K_ALT_F7,     K_CTRL_F7,     K_SH_F7    }, /*  06 */
-   { K_F8,      K_ALT_F8,     K_CTRL_F8,     K_SH_F8    }, /*  07 */
-   { K_F9,      K_ALT_F9,     K_CTRL_F9,     K_SH_F9    }, /*  08 */
-   { K_F10,     K_ALT_F10,    K_CTRL_F10,    K_SH_F10   }, /*  09 */
-   { K_F11,     K_ALT_F11,    K_CTRL_F11,    K_SH_F11   }, /*  10 */
-   { K_F12,     K_ALT_F12,    K_CTRL_F12,    K_SH_F12   }, /*  11 */
-
-   { K_UP,      K_ALT_UP,     K_CTRL_UP,     K_SH_UP    }, /*  12 */
-   { K_DOWN,    K_ALT_DOWN,   K_CTRL_DOWN,   K_SH_DOWN  }, /*  13 */
-   { K_LEFT,    K_ALT_LEFT,   K_CTRL_LEFT,   K_SH_LEFT  }, /*  14 */
-   { K_RIGHT,   K_ALT_RIGHT,  K_CTRL_RIGHT,  K_SH_RIGHT }, /*  15 */
-   { K_INS,     K_ALT_INS,    K_CTRL_INS,    K_SH_INS   }, /*  16 */
-   { K_DEL,     K_ALT_DEL,    K_CTRL_DEL,    K_SH_DEL   }, /*  17 */
-   { K_HOME,    K_ALT_HOME,   K_CTRL_HOME,   K_SH_HOME  }, /*  18 */
-   { K_END,     K_ALT_END,    K_CTRL_END,    K_SH_END   }, /*  19 */
-   { K_PGUP,    K_ALT_PGUP,   K_CTRL_PGUP,   K_SH_PGUP  }, /*  20 */
-   { K_PGDN,    K_ALT_PGDN,   K_CTRL_PGDN,   K_SH_PGDN  }, /*  21 */
-
-   { K_BS,      K_ALT_BS,     127,           K_SH_BS    }, /*  22 */
-   { K_TAB,     K_ALT_TAB,    K_CTRL_TAB,    K_SH_TAB   }, /*  23 */
-   { K_ESC,     K_ALT_ESC,    K_ESC,         0          }, /*  24 */
-
-   { K_ENTER,   K_ALT_ENTER,  K_CTRL_ENTER,  K_SH_ENTER }, /*  25 */
-
-   { K_ENTER,   KP_ALT_ENTER, K_CTRL_ENTER,  0          }, /*  26 */
-   { KP_CENTER, 0,            KP_CTRL_5,     0          }, /*  27 */
-   { K_PRTSCR,  0,            K_CTRL_PRTSCR, 0          }, /*  28 */
-   { K_PAUSE,   0,            0,             0          } /*  29 */
-};
-
-
 static int getClipKey( int nKey )
 {
-   int nRet = 0, nFlag = 0, n;
+   int nRet = 0, nFlag, n;
 
    if( IS_CLIPKEY( nKey ) )
       nRet = GET_CLIPKEY( nKey );
+   else if( HB_INKEY_ISEXT( nKey ) )
+      nRet = nKey;
    else
    {
-      nFlag = GET_KEYMASK( nKey );
-      nKey  = CLR_KEYMASK( nKey );
-      if( nFlag & KEY_EXTDMASK )
-      {
-         if( nKey >= 0 && nKey < NO_EXTDKEYS )
-         {
-            if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
-                 extdKeyTab[nKey].shift_key != 0 )
-               nRet = extdKeyTab[nKey].shift_key;
-            else if( ( nFlag & KEY_ALTMASK ) && extdKeyTab[nKey].alt_key != 0 )
-               nRet = extdKeyTab[nKey].alt_key;
-            else if( ( nFlag & KEY_CTRLMASK )
-                      && extdKeyTab[nKey].ctrl_key != 0 )
-               nRet = extdKeyTab[nKey].ctrl_key;
-            else
-               nRet = extdKeyTab[nKey].key;
-         }
-      }
+      n = GET_KEYMASK( nKey );
+      nKey = CLR_KEYMASK( nKey );
+      nFlag = 0;
+      if( n & KEY_SHIFTMASK )
+         nFlag |= HB_KF_SHIFT;
+      if( n & KEY_CTRLMASK )
+         nFlag |= HB_KF_CTRL;
+      if( n & KEY_ALTMASK )
+         nFlag |= HB_KF_ALT;
+      if( n & KEY_KPADMASK )
+         nFlag |= HB_KF_KEYPAD;
+
+      if( n & KEY_EXTDMASK )
+         nRet = HB_INKEY_NEW_KEY( nKey, nFlag );
       else
       {
          if( nKey > 0 && nKey < 32 )
          {
-            nFlag |= KEY_CTRLMASK;
+            nFlag |= HB_KF_CTRL;
             nKey += ( 'A' - 1 );
          }
-         n = nKey - 32;
-         if( n >= 0 && n < NO_STDKEYS )
-         {
-            if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
-                 stdKeyTab[ n ].shift_key != 0 )
-               nRet = stdKeyTab[ n ].shift_key;
-            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[ n ].alt_key != 0 )
-               nRet = stdKeyTab[ n ].alt_key;
-            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[ n ].ctrl_key != 0 )
-               nRet = stdKeyTab[ n ].ctrl_key;
-            else
-               nRet = stdKeyTab[ n ].key;
-         }
-         else
-            nRet = nKey;
-
+         nRet = HB_INKEY_NEW_KEY( nKey, nFlag );
       }
    }
 
@@ -521,11 +355,29 @@ static void set_sig_handler( int iSig )
 #endif
 }
 
+static HB_BOOL write_ttyseq( InOutBase * ioBase, const char * seq )
+{
+   HB_BOOL success;
+
+   if( ioBase->baseout != NULL )
+   {
+      size_t seqlen = strlen( seq );
+      success = ( fwrite( seq, seqlen, 1, ioBase->baseout ) == seqlen );
+      fflush( ioBase->baseout );
+   }
+   else
+   {
+      int seqlen = strlen( seq );
+      success = ( write( ioBase->base_outfd, seq, seqlen ) == seqlen );
+   }
+
+   return success;
+}
 
 static int add_efds( InOutBase * ioBase, int fd, int mode,
                      int ( * eventFunc )( int, int, void * ), void * data )
 {
-   struct evtFD * pefd = NULL;
+   evtFD * pefd = NULL;
    int i, fl;
 
    if( eventFunc == NULL && mode != O_RDONLY )
@@ -608,395 +460,6 @@ static void del_all_efds( InOutBase * ioBase )
    }
 }
 
-static int get_inch( InOutBase * ioBase, int milisec )
-{
-   int nRet = 0, npfd = -1, nchk = ioBase->efds_no, lRead = 0;
-   int mode, i, n, counter;
-   struct timeval tv, * ptv;
-   struct evtFD * pefd = NULL;
-   fd_set rfds, wfds;
-
-   if( milisec == 0 )
-      ptv = NULL;
-   else
-   {
-      if( milisec < 0 )
-         milisec = 0;
-      tv.tv_sec = ( milisec / 1000 );
-      tv.tv_usec = ( milisec % 1000 ) * 1000;
-      ptv = &tv;
-   }
-
-   while( nRet == 0 && lRead == 0 )
-   {
-      n = -1;
-      FD_ZERO( &rfds );
-      FD_ZERO( &wfds );
-      for( i = 0; i < ioBase->efds_no; i++ )
-      {
-         if( ioBase->event_fds[ i ]->status == EVTFDSTAT_RUN )
-         {
-            if( ioBase->event_fds[ i ]->mode == O_RDWR
-                || ioBase->event_fds[ i ]->mode == O_RDONLY )
-            {
-               FD_SET( ioBase->event_fds[ i ]->fd, &rfds );
-               if( n < ioBase->event_fds[ i ]->fd )
-                  n = ioBase->event_fds[ i ]->fd;
-            }
-            if( ioBase->event_fds[ i ]->mode == O_RDWR
-                || ioBase->event_fds[ i ]->mode == O_WRONLY )
-            {
-               FD_SET( ioBase->event_fds[ i ]->fd, &wfds );
-               if( n < ioBase->event_fds[ i ]->fd )
-                  n = ioBase->event_fds[ i ]->fd;
-            }
-         }
-      }
-
-      counter = ioBase->key_counter;
-      if( select( n + 1, &rfds, &wfds, NULL, ptv ) > 0 )
-      {
-         for( i = 0; i < ioBase->efds_no; i++ )
-         {
-            n = ( FD_ISSET( ioBase->event_fds[ i ]->fd, &rfds ) ? 1 : 0 ) |
-                ( FD_ISSET( ioBase->event_fds[ i ]->fd, &wfds ) ? 2 : 0 );
-            if( n != 0 )
-            {
-               if( ioBase->event_fds[ i ]->eventFunc == NULL )
-               {
-                  lRead = 1;
-                  if( STDIN_BUFLEN > ioBase->stdin_inbuf )
-                  {
-                     unsigned char buf[ STDIN_BUFLEN ];
-
-                     n = read( ioBase->event_fds[ i ]->fd, buf,
-                               STDIN_BUFLEN - ioBase->stdin_inbuf );
-                     if( n == 0 )
-                        ioBase->event_fds[ i ]->status = EVTFDSTAT_STOP;
-                     else
-                        for( i = 0; i < n; i++ )
-                        {
-                           ioBase->stdin_buf[ ioBase->stdin_ptr_r++ ] = buf[ i ];
-                           if( ioBase->stdin_ptr_r == STDIN_BUFLEN )
-                              ioBase->stdin_ptr_r = 0;
-                           ioBase->stdin_inbuf++;
-                        }
-                  }
-               }
-               else if( nRet == 0 && counter == ioBase->key_counter )
-               {
-                  if( n == 3 )
-                     mode = O_RDWR;
-                  else if( n == 2 )
-                     mode = O_WRONLY;
-                  else
-                     mode = O_RDONLY;
-                  ioBase->event_fds[ i ]->status = EVTFDSTAT_STOP;
-                  n = ( ioBase->event_fds[ i ]->eventFunc )( ioBase->
-                                                             event_fds[ i ]->fd,
-                                                             mode,
-                                                             ioBase->
-                                                             event_fds[ i ]->
-                                                             data );
-                  if( IS_EVTFDSTAT( n ) )
-                  {
-                     ioBase->event_fds[ i ]->status = n;
-                     if( nchk > i )
-                        nchk = i;
-                  }
-                  else
-                  {
-                     ioBase->event_fds[ i ]->status = EVTFDSTAT_RUN;
-                     if( IS_CLIPKEY( n ) )
-                     {
-                        nRet = n;
-                        npfd = ioBase->event_fds[ i ]->fd;
-                        if( nchk > i )
-                           nchk = i;
-                     }
-                  }
-               }
-            }
-         }
-      }
-      else
-         lRead = 1;
-   }
-
-   for( i = n = nchk; i < ioBase->efds_no; i++ )
-   {
-      if( ioBase->event_fds[ i ]->status == EVTFDSTAT_DEL )
-         hb_xfree( ioBase->event_fds[ i ] );
-      else if( ioBase->event_fds[ i ]->fd == npfd )
-         pefd = ioBase->event_fds[ i ];
-      else
-      {
-         if( i > n )
-            ioBase->event_fds[ n ] = ioBase->event_fds[ i ];
-         n++;
-      }
-   }
-   if( pefd )
-      ioBase->event_fds[ n++ ] = pefd;
-   ioBase->efds_no = n;
-
-   return nRet;
-}
-
-static int test_bufch( InOutBase * ioBase, int n, int delay )
-{
-   int nKey = 0;
-
-   if( ioBase->stdin_inbuf == n )
-      nKey = get_inch( ioBase, delay );
-
-   return IS_CLIPKEY( nKey ) ? nKey :
-          ( ioBase->stdin_inbuf > n ) ?
-          ioBase->stdin_buf[ ( ioBase->stdin_ptr_l + n ) % STDIN_BUFLEN ] : -1;
-}
-
-static void free_bufch( InOutBase * ioBase, int n )
-{
-   if( n > ioBase->stdin_inbuf )
-      n = ioBase->stdin_inbuf;
-   ioBase->stdin_ptr_l = ( ioBase->stdin_ptr_l + n ) % STDIN_BUFLEN;
-   ioBase->stdin_inbuf -= n;
-}
-
-static int wait_key( InOutBase * ioBase, int milisec )
-{
-   int nKey, esc, n, i, ch, counter;
-   struct keyTab * ptr;
-
-   if( s_WinSizeChangeFlag )
-   {
-      s_WinSizeChangeFlag = HB_FALSE;
-      return K_RESIZE;
-   }
-
- restart:
-   counter = ++( ioBase->key_counter );
-   nKey = esc = n = i = 0;
- again:
-   if( ( nKey = getMouseKey( &ioBase->mLastEvt ) ) != 0 )
-      return nKey;
-
-   ch = test_bufch( ioBase, i,
-                    ioBase->nTermMouseChars ? ioBase->esc_delay : milisec );
-   if( counter != ioBase->key_counter )
-      goto restart;
-
-   if( ch >= 0 && ch <= 255 )
-   {
-      ++i;
-      if( ioBase->nTermMouseChars )
-      {
-         ioBase->cTermMouseBuf[ 3 - ioBase->nTermMouseChars ] = ch;
-         free_bufch( ioBase, i );
-         i = 0;
-         if( --ioBase->nTermMouseChars == 0 )
-            set_tmevt( ioBase->cTermMouseBuf, &ioBase->mLastEvt );
-         goto again;
-      }
-
-      nKey = ch;
-      ptr = ioBase->pKeyTab;
-      if( i == 1 && nKey == K_ESC && esc == 0 )
-         esc = 1;
-      while( ch >= 0 && ch <= 255 && ptr != NULL )
-      {
-         if( ptr->ch == ch )
-         {
-            if( ptr->key != K_UNDEF )
-            {
-               nKey = ptr->key;
-               switch( nKey )
-               {
-                  case K_METAALT:
-                     ioBase->key_flag |= KEY_ALTMASK;
-                     break;
-                  case K_METACTRL:
-                     ioBase->key_flag |= KEY_CTRLMASK;
-                     break;
-                  case K_NATIONAL:
-                     ioBase->nation_mode = ! ioBase->nation_mode;
-                     break;
-                  case K_MOUSETERM:
-                     ioBase->nTermMouseChars = 3;
-                     break;
-                  default:
-                     n = i;
-               }
-               if( n != i )
-               {
-                  free_bufch( ioBase, i );
-                  i = n = nKey = 0;
-                  if( esc == 2 )
-                     break;
-                  esc = 0;
-                  goto again;
-               }
-            }
-            ptr = ptr->nextCh;
-            if( ptr )
-               if( ( ch = test_bufch( ioBase, i, ioBase->esc_delay ) ) != -1 )
-                  ++i;
-            if( counter != ioBase->key_counter )
-               goto restart;
-         }
-         else
-            ptr = ptr->otherCh;
-      }
-   }
-   if( ch == -1 && ioBase->nTermMouseChars )
-      ioBase->nTermMouseChars = 0;
-
-   if( ch != -1 && IS_CLIPKEY( ch ) )
-      nKey = GET_CLIPKEY( ch );
-   else
-   {
-      if( esc == 1 && n == 0 && ( ch != -1 || i >= 2 ) )
-      {
-         nKey = 0;
-         esc = 2;
-         i = n = 1;
-         goto again;
-      }
-      if( esc == 2 )
-      {
-         if( nKey != 0 )
-            ioBase->key_flag |= KEY_ALTMASK;
-         else
-            nKey = K_ESC;
-         if( n == 1 && i > 1 )
-            n = 2;
-      }
-      else if( n == 0 && i > 0 )
-         n = 1;
-
-      if( n > 0 )
-         free_bufch( ioBase, n );
-
-      if( ioBase->key_flag != 0 && nKey != 0 )
-      {
-         nKey |= ioBase->key_flag;
-         ioBase->key_flag = 0;
-      }
-
-      if( ioBase->nation_transtbl && ioBase->nation_mode &&
-          nKey >= 32 && nKey < 128 && ioBase->nation_transtbl[ nKey ] )
-         nKey = ioBase->nation_transtbl[ nKey ];
-      if( ioBase->in_transtbl && nKey >= 0 && nKey <= 255
-          && ioBase->in_transtbl[ nKey ] )
-         nKey = ioBase->in_transtbl[ nKey ];
-
-      if( nKey )
-         nKey = getClipKey( nKey );
-   }
-
-   return nKey;
-}
-
-static HB_BOOL write_ttyseq( InOutBase * ioBase, const char * seq )
-{
-   HB_BOOL success;
-
-   if( ioBase->baseout != NULL )
-   {
-      size_t seqlen = strlen( seq );
-      success = ( fwrite( seq, seqlen, 1, ioBase->baseout ) == seqlen );
-      fflush( ioBase->baseout );
-   }
-   else
-   {
-      int seqlen = strlen( seq );
-      success = ( write( ioBase->base_outfd, seq, seqlen ) == seqlen );
-   }
-
-   return success;
-}
-
-static int addKeyMap( InOutBase * ioBase, int nKey, const char * cdesc )
-{
-   int ret = K_UNDEF, i = 0, c;
-   struct keyTab ** ptr;
-
-   if( cdesc == NULL )
-      return ret;
-
-   c   = ( unsigned char ) cdesc[ i++ ];
-   ptr = &ioBase->pKeyTab;
-
-   while( c )
-   {
-      if( *ptr == NULL )
-      {
-         *ptr = ( struct keyTab * ) hb_xgrab( sizeof( struct keyTab ) );
-         ( *ptr )->ch = c;
-         ( *ptr )->key = K_UNDEF;
-         ( *ptr )->nextCh = NULL;
-         ( *ptr )->otherCh = NULL;
-      }
-      if( ( *ptr )->ch == c )
-      {
-         c = ( unsigned char ) cdesc[ i++ ];
-         if( c )
-            ptr = &( ( *ptr )->nextCh );
-         else
-         {
-            ret = ( *ptr )->key;
-            ( *ptr )->key = nKey;
-         }
-      }
-      else
-         ptr = &( ( *ptr )->otherCh );
-   }
-   return ret;
-}
-
-static int removeKeyMap( InOutBase * ioBase, const char * cdesc )
-{
-   int ret = K_UNDEF, i = 0, c;
-   struct keyTab ** ptr;
-
-   c = ( unsigned char ) cdesc[ i++ ];
-   ptr = &ioBase->pKeyTab;
-
-   while( c && *ptr != NULL )
-   {
-      if( ( *ptr )->ch == c )
-      {
-         c = ( unsigned char ) cdesc[ i++ ];
-         if( ! c )
-         {
-            ret = ( *ptr )->key;
-            ( *ptr )->key = K_UNDEF;
-            if( ( *ptr )->nextCh == NULL && ( *ptr )->otherCh == NULL )
-            {
-               hb_xfree( *ptr );
-               *ptr = NULL;
-            }
-         }
-         else
-            ptr = &( ( *ptr )->nextCh );
-      }
-      else
-         ptr = &( ( *ptr )->otherCh );
-   }
-   return ret;
-}
-
-static void removeAllKeyMap( struct keyTab ** ptr )
-{
-   if( ( *ptr )->nextCh != NULL )
-      removeAllKeyMap( &( ( *ptr )->nextCh ) );
-   if( ( *ptr )->otherCh != NULL )
-      removeAllKeyMap( &( ( *ptr )->otherCh ) );
-
-   hb_xfree( *ptr );
-   *ptr = NULL;
-}
-
 static int getMouseKey( mouseEvent * mEvt )
 {
    int nKey = 0;
@@ -1005,17 +468,17 @@ static int getMouseKey( mouseEvent * mEvt )
    {
       if( mEvt->buttonstate & M_CURSOR_MOVE )
       {
-         nKey = K_MOUSEMOVE;
+         nKey = HB_INKEY_NEW_MPOS( mEvt->col, mEvt->row );
          mEvt->buttonstate &= ~M_CURSOR_MOVE;
       }
       else if( mEvt->buttonstate & M_BUTTON_WHEELUP )
       {
-         nKey = K_MWFORWARD;
+         nKey = HB_INKEY_NEW_MKEY( K_MWFORWARD, mEvt->flags );
          mEvt->buttonstate &= ~M_BUTTON_WHEELUP;
       }
       else if( mEvt->buttonstate & M_BUTTON_WHEELDOWN )
       {
-         nKey = K_MWBACKWARD;
+         nKey = HB_INKEY_NEW_MKEY( K_MWBACKWARD, mEvt->flags );
          mEvt->buttonstate &= ~M_BUTTON_WHEELDOWN;
       }
       else
@@ -1037,6 +500,7 @@ static int getMouseKey( mouseEvent * mEvt )
             nKey = ( mEvt->buttonstate & M_BUTTON_LEFT ) ?
                ( ( mEvt->buttonstate & M_BUTTON_LDBLCK ) ? K_LDBLCLK :
                  K_LBUTTONDOWN ) : K_LBUTTONUP;
+            nKey = HB_INKEY_NEW_MKEY( nKey, mEvt->flags );
             mEvt->lbuttons ^= M_BUTTON_LEFT;
             mEvt->buttonstate &= ~M_BUTTON_LDBLCK;
          }
@@ -1055,6 +519,7 @@ static int getMouseKey( mouseEvent * mEvt )
             nKey = ( mEvt->buttonstate & M_BUTTON_RIGHT ) ?
                ( ( mEvt->buttonstate & M_BUTTON_RDBLCK ) ? K_RDBLCLK :
                  K_RBUTTONDOWN ) : K_RBUTTONUP;
+            nKey = HB_INKEY_NEW_MKEY( nKey, mEvt->flags );
             mEvt->lbuttons ^= M_BUTTON_RIGHT;
             mEvt->buttonstate &= ~M_BUTTON_RDBLCK;
          }
@@ -1073,6 +538,7 @@ static int getMouseKey( mouseEvent * mEvt )
             nKey = ( mEvt->buttonstate & M_BUTTON_MIDDLE ) ?
                ( ( mEvt->buttonstate & M_BUTTON_MDBLCK ) ? K_MDBLCLK :
                  K_MBUTTONDOWN ) : K_MBUTTONUP;
+            nKey = HB_INKEY_NEW_MKEY( nKey, mEvt->flags );
             mEvt->lbuttons ^= M_BUTTON_MIDDLE;
             mEvt->buttonstate &= ~M_BUTTON_MDBLCK;
          }
@@ -1117,6 +583,14 @@ static void chk_mevtdblck( mouseEvent * mEvt )
 static void set_tmevt( unsigned char * cMBuf, mouseEvent * mEvt )
 {
    int row, col;
+
+   mEvt->flags = 0;
+   if( cMBuf[ 0 ] & 0x04 )
+      mEvt->flags |= HB_KF_SHIFT;
+   if( cMBuf[ 0 ] & 0x08 )
+      mEvt->flags |= HB_KF_ALT;
+   if( cMBuf[ 0 ] & 0x10 )
+      mEvt->flags |= HB_KF_CTRL;
 
    col = cMBuf[ 1 ] - 33;
    row = cMBuf[ 2 ] - 33;
@@ -1168,6 +642,14 @@ static int set_gpmevt( int fd, int mode, void * data )
 
    if( Gpm_GetEvent( &gEvt ) > 0 )
    {
+      mEvt->flags = 0;
+      if( gEvt.modifiers & ( 1 << KG_SHIFT ) )
+         mEvt->flags |= HB_KF_SHIFT;
+      if( gEvt.modifiers & ( 1 << KG_CTRL ) )
+         mEvt->flags |= HB_KF_CTRL;
+      if( gEvt.modifiers & ( 1 << KG_ALT ) )
+         mEvt->flags |= HB_KF_ALT;
+
       mEvt->row = gEvt.y;
       mEvt->col = gEvt.x;
       if( gEvt.type & GPM_MOVE )
@@ -1194,7 +676,7 @@ static int set_gpmevt( int fd, int mode, void * data )
    chk_mevtdblck( mEvt );
    nKey = getMouseKey( mEvt );
 
-   return nKey ? SET_CLIPKEY( nKey ) : 0;
+   return nKey ? ( HB_INKEY_ISEXT( nKey ) ? nKey : SET_CLIPKEY( nKey ) ) : 0;
 }
 
 static void flush_gpmevt( mouseEvent * mEvt )
@@ -1246,11 +728,12 @@ static void mouse_init( InOutBase * ioBase )
    else if( ioBase->terminal_type == TERM_LINUX )
    {
       ioBase->Conn.eventMask =
-         GPM_MOVE | GPM_DRAG | GPM_UP | GPM_DOWN | GPM_DOUBLE;
+         GPM_MOVE | GPM_DRAG | GPM_UP | GPM_DOWN | GPM_SINGLE | GPM_DOUBLE;
       /* give me move events but handle them anyway */
       ioBase->Conn.defaultMask = GPM_MOVE | GPM_HARD;
       /* only pure mouse events, no Ctrl,Alt,Shft events */
-      ioBase->Conn.minMod = ioBase->Conn.maxMod = 0;
+      ioBase->Conn.minMod = 0;
+      ioBase->Conn.maxMod = ( ( 1 << KG_SHIFT ) | ( 1 << KG_CTRL ) | ( 1 << KG_ALT ) );
       gpm_zerobased = 1;
       gpm_visiblepointer = 0;
       if( Gpm_Open( &ioBase->Conn, 0 ) >= 0 && gpm_fd >= 0 )
@@ -1296,6 +779,398 @@ static void mouse_exit( InOutBase * ioBase )
    }
 #endif
 }
+
+static int read_bufch( InOutBase * ioBase, int fd )
+{
+   int n = 0, i;
+
+   if( STDIN_BUFLEN > ioBase->stdin_inbuf )
+   {
+      unsigned char buf[ STDIN_BUFLEN ];
+
+      n = read( fd, buf, STDIN_BUFLEN - ioBase->stdin_inbuf );
+
+      for( i = 0; i < n; i++ )
+      {
+         ioBase->stdin_buf[ ioBase->stdin_ptr_r++ ] = buf[ i ];
+         if( ioBase->stdin_ptr_r == STDIN_BUFLEN )
+            ioBase->stdin_ptr_r = 0;
+         ioBase->stdin_inbuf++;
+      }
+   }
+
+   return n;
+}
+
+static int get_inch( InOutBase * ioBase, int milisec )
+{
+   int nRet = 0, npfd = -1, nchk = ioBase->efds_no, lRead = 0;
+   int mode, i, n, counter;
+   struct timeval tv, * ptv;
+   evtFD * pefd = NULL;
+   fd_set rfds, wfds;
+
+   if( milisec == 0 )
+      ptv = NULL;
+   else
+   {
+      if( milisec < 0 )
+         milisec = 0;
+      tv.tv_sec = ( milisec / 1000 );
+      tv.tv_usec = ( milisec % 1000 ) * 1000;
+      ptv = &tv;
+   }
+
+   while( nRet == 0 && lRead == 0 )
+   {
+      n = -1;
+      FD_ZERO( &rfds );
+      FD_ZERO( &wfds );
+      for( i = 0; i < ioBase->efds_no; i++ )
+      {
+         if( ioBase->event_fds[ i ]->status == EVTFDSTAT_RUN )
+         {
+            if( ioBase->event_fds[ i ]->mode == O_RDWR
+                || ioBase->event_fds[ i ]->mode == O_RDONLY )
+            {
+               FD_SET( ioBase->event_fds[ i ]->fd, &rfds );
+               if( n < ioBase->event_fds[ i ]->fd )
+                  n = ioBase->event_fds[ i ]->fd;
+            }
+            if( ioBase->event_fds[ i ]->mode == O_RDWR
+                || ioBase->event_fds[ i ]->mode == O_WRONLY )
+            {
+               FD_SET( ioBase->event_fds[ i ]->fd, &wfds );
+               if( n < ioBase->event_fds[ i ]->fd )
+                  n = ioBase->event_fds[ i ]->fd;
+            }
+         }
+      }
+
+      counter = ioBase->key_counter;
+      if( select( n + 1, &rfds, &wfds, NULL, ptv ) > 0 )
+      {
+         for( i = 0; i < ioBase->efds_no; i++ )
+         {
+            n = ( FD_ISSET( ioBase->event_fds[ i ]->fd, &rfds ) ? 1 : 0 ) |
+                ( FD_ISSET( ioBase->event_fds[ i ]->fd, &wfds ) ? 2 : 0 );
+            if( n != 0 )
+            {
+               if( ioBase->event_fds[ i ]->eventFunc == NULL )
+               {
+                  lRead = 1;
+                  n = read_bufch( ioBase, ioBase->event_fds[ i ]->fd );
+                  if( n == 0 )
+                     ioBase->event_fds[ i ]->status = EVTFDSTAT_STOP;
+               }
+               else if( nRet == 0 && counter == ioBase->key_counter )
+               {
+                  if( n == 3 )
+                     mode = O_RDWR;
+                  else if( n == 2 )
+                     mode = O_WRONLY;
+                  else
+                     mode = O_RDONLY;
+                  ioBase->event_fds[ i ]->status = EVTFDSTAT_STOP;
+                  n = ( ioBase->event_fds[ i ]->eventFunc )( ioBase->
+                                                             event_fds[ i ]->fd,
+                                                             mode,
+                                                             ioBase->
+                                                             event_fds[ i ]->
+                                                             data );
+                  if( IS_EVTFDSTAT( n ) )
+                  {
+                     ioBase->event_fds[ i ]->status = n;
+                     if( nchk > i )
+                        nchk = i;
+                  }
+                  else
+                  {
+                     ioBase->event_fds[ i ]->status = EVTFDSTAT_RUN;
+                     if( IS_CLIPKEY( n ) || HB_INKEY_ISEXT( n ) )
+                     {
+                        nRet = n;
+                        npfd = ioBase->event_fds[ i ]->fd;
+                        if( nchk > i )
+                           nchk = i;
+                     }
+                  }
+               }
+            }
+         }
+      }
+      else
+         lRead = 1;
+   }
+
+   for( i = n = nchk; i < ioBase->efds_no; i++ )
+   {
+      if( ioBase->event_fds[ i ]->status == EVTFDSTAT_DEL )
+         hb_xfree( ioBase->event_fds[ i ] );
+      else if( ioBase->event_fds[ i ]->fd == npfd )
+         pefd = ioBase->event_fds[ i ];
+      else
+      {
+         if( i > n )
+            ioBase->event_fds[ n ] = ioBase->event_fds[ i ];
+         n++;
+      }
+   }
+   if( pefd )
+      ioBase->event_fds[ n++ ] = pefd;
+   ioBase->efds_no = n;
+
+   return nRet;
+}
+
+static int test_bufch( InOutBase * ioBase, int n, int delay )
+{
+   int nKey = 0;
+
+   if( ioBase->stdin_inbuf == n )
+      nKey = get_inch( ioBase, delay );
+
+   return ( IS_CLIPKEY( nKey ) || HB_INKEY_ISEXT( nKey ) ) ? nKey :
+          ( ioBase->stdin_inbuf > n ?
+            ioBase->stdin_buf[ ( ioBase->stdin_ptr_l + n ) % STDIN_BUFLEN ] : -1 );
+}
+
+static void free_bufch( InOutBase * ioBase, int n )
+{
+   if( n > ioBase->stdin_inbuf )
+      n = ioBase->stdin_inbuf;
+   ioBase->stdin_ptr_l = ( ioBase->stdin_ptr_l + n ) % STDIN_BUFLEN;
+   ioBase->stdin_inbuf -= n;
+}
+
+static int wait_key( InOutBase * ioBase, int milisec )
+{
+   int nKey, esc, n, i, ch, counter;
+   keyTab * ptr;
+
+   if( s_WinSizeChangeFlag )
+   {
+      s_WinSizeChangeFlag = HB_FALSE;
+      return K_RESIZE;
+   }
+
+restart:
+   counter = ++( ioBase->key_counter );
+   nKey = esc = n = i = 0;
+again:
+   if( ( nKey = getMouseKey( &ioBase->mLastEvt ) ) != 0 )
+      return nKey;
+
+   ch = test_bufch( ioBase, i, ioBase->nTermMouseChars ? ioBase->esc_delay : milisec );
+   if( counter != ioBase->key_counter )
+      goto restart;
+
+   if( ch >= 0 && ch <= 255 )
+   {
+      ++i;
+      if( ioBase->nTermMouseChars )
+      {
+         ioBase->cTermMouseBuf[ 3 - ioBase->nTermMouseChars ] = ch;
+         free_bufch( ioBase, i );
+         i = 0;
+         if( --ioBase->nTermMouseChars == 0 )
+            set_tmevt( ioBase->cTermMouseBuf, &ioBase->mLastEvt );
+         goto again;
+      }
+
+      nKey = ch;
+      ptr = ioBase->pKeyTab;
+      if( i == 1 && nKey == K_ESC && esc == 0 )
+      {
+         nKey = EXKEY_ESC;
+         esc = 1;
+      }
+      while( ch >= 0 && ch <= 255 && ptr != NULL )
+      {
+         if( ptr->ch == ch )
+         {
+            if( ptr->key != K_UNDEF )
+            {
+               nKey = ptr->key;
+               switch( nKey )
+               {
+                  case K_METAALT:
+                     ioBase->key_flag |= KEY_ALTMASK;
+                     break;
+                  case K_METACTRL:
+                     ioBase->key_flag |= KEY_CTRLMASK;
+                     break;
+                  case K_NATIONAL:
+                     ioBase->nation_mode = ! ioBase->nation_mode;
+                     break;
+                  case K_MOUSETERM:
+                     ioBase->nTermMouseChars = 3;
+                     break;
+                  default:
+                     n = i;
+               }
+               if( n != i )
+               {
+                  free_bufch( ioBase, i );
+                  i = n = nKey = 0;
+                  if( esc == 2 )
+                     break;
+                  esc = 0;
+                  goto again;
+               }
+            }
+            ptr = ptr->nextCh;
+            if( ptr )
+               if( ( ch = test_bufch( ioBase, i, ioBase->esc_delay ) ) != -1 )
+                  ++i;
+            if( counter != ioBase->key_counter )
+               goto restart;
+         }
+         else
+            ptr = ptr->otherCh;
+      }
+   }
+   if( ch == -1 && ioBase->nTermMouseChars )
+      ioBase->nTermMouseChars = 0;
+
+   if( IS_CLIPKEY( ch ) )
+      nKey = GET_CLIPKEY( ch );
+   else if( HB_INKEY_ISEXT( ch ) )
+      nKey = ch;
+   else
+   {
+      if( esc == 1 && n == 0 && ( ch != -1 || i >= 2 ) )
+      {
+         nKey = 0;
+         esc = 2;
+         i = n = 1;
+         goto again;
+      }
+      if( esc == 2 )
+      {
+         if( nKey != 0 )
+            ioBase->key_flag |= KEY_ALTMASK;
+         else
+            nKey = EXKEY_ESC;
+         if( n == 1 && i > 1 )
+            n = 2;
+      }
+      else
+      {
+         if( nKey != 0 && ( ioBase->key_flag & KEY_CTRLMASK ) != 0 &&
+                          ( ioBase->key_flag & KEY_ALTMASK ) != 0 )
+         {
+            ioBase->key_flag &= ~( KEY_CTRLMASK | KEY_ALTMASK );
+            ioBase->key_flag |= KEY_SHIFTMASK;
+         }
+         if( n == 0 && i > 0 )
+            n = 1;
+      }
+
+      if( n > 0 )
+         free_bufch( ioBase, n );
+
+      if( ioBase->key_flag != 0 && nKey != 0 )
+      {
+         nKey |= ioBase->key_flag;
+         ioBase->key_flag = 0;
+      }
+
+      if( ioBase->nation_transtbl && ioBase->nation_mode &&
+          nKey >= 32 && nKey < 128 && ioBase->nation_transtbl[ nKey ] )
+         nKey = ioBase->nation_transtbl[ nKey ];
+      if( ioBase->in_transtbl && nKey > 0 && nKey <= 255
+          && ioBase->in_transtbl[ nKey ] )
+         nKey = ioBase->in_transtbl[ nKey ];
+
+      if( nKey )
+         nKey = getClipKey( nKey );
+   }
+
+   return nKey;
+}
+
+static int addKeyMap( InOutBase * ioBase, int nKey, const char * cdesc )
+{
+   int ret = K_UNDEF, i = 0, c;
+   keyTab ** ptr;
+
+   if( cdesc == NULL )
+      return ret;
+
+   c   = ( unsigned char ) cdesc[ i++ ];
+   ptr = &ioBase->pKeyTab;
+
+   while( c )
+   {
+      if( *ptr == NULL )
+      {
+         *ptr = ( keyTab * ) hb_xgrab( sizeof( keyTab ) );
+         ( *ptr )->ch = c;
+         ( *ptr )->key = K_UNDEF;
+         ( *ptr )->nextCh = NULL;
+         ( *ptr )->otherCh = NULL;
+      }
+      if( ( *ptr )->ch == c )
+      {
+         c = ( unsigned char ) cdesc[ i++ ];
+         if( c )
+            ptr = &( ( *ptr )->nextCh );
+         else
+         {
+            ret = ( *ptr )->key;
+            ( *ptr )->key = nKey;
+         }
+      }
+      else
+         ptr = &( ( *ptr )->otherCh );
+   }
+   return ret;
+}
+
+static int removeKeyMap( InOutBase * ioBase, const char * cdesc )
+{
+   int ret = K_UNDEF, i = 0, c;
+   keyTab ** ptr;
+
+   c = ( unsigned char ) cdesc[ i++ ];
+   ptr = &ioBase->pKeyTab;
+
+   while( c && *ptr != NULL )
+   {
+      if( ( *ptr )->ch == c )
+      {
+         c = ( unsigned char ) cdesc[ i++ ];
+         if( ! c )
+         {
+            ret = ( *ptr )->key;
+            ( *ptr )->key = K_UNDEF;
+            if( ( *ptr )->nextCh == NULL && ( *ptr )->otherCh == NULL )
+            {
+               hb_xfree( *ptr );
+               *ptr = NULL;
+            }
+         }
+         else
+            ptr = &( ( *ptr )->nextCh );
+      }
+      else
+         ptr = &( ( *ptr )->otherCh );
+   }
+   return ret;
+}
+
+static void removeAllKeyMap( keyTab ** ptr )
+{
+   if( ( *ptr )->nextCh != NULL )
+      removeAllKeyMap( &( ( *ptr )->nextCh ) );
+   if( ( *ptr )->otherCh != NULL )
+      removeAllKeyMap( &( ( *ptr )->otherCh ) );
+
+   hb_xfree( *ptr );
+   *ptr = NULL;
+}
+
 
 static void disp_cursor( InOutBase * ioBase )
 {
@@ -1437,7 +1312,7 @@ static char * tiGetS( const char * capname )
 {
    char * ptr;
 
-   ptr = tigetstr( ( char * ) capname );
+   ptr = tigetstr( ( char * ) HB_UNCONST( capname ) );
    if( ptr )
    {
       if( ptr == ( char * ) -1 )
@@ -1532,20 +1407,20 @@ static void init_keys( InOutBase * ioBase )
       addKeyMap( ioBase, EXKEY_PGUP  |KEY_CTRLMASK, "\033[5;5~" );
       addKeyMap( ioBase, EXKEY_PGDN  |KEY_CTRLMASK, "\033[6;5~" );
 
-      addKeyMap( ioBase, EXKEY_F1    |KEY_CTRLMASK|KEY_ALTMASK, "\033O2P" );
-      addKeyMap( ioBase, EXKEY_F2    |KEY_CTRLMASK|KEY_ALTMASK, "\033O2Q" );
-      addKeyMap( ioBase, EXKEY_F3    |KEY_CTRLMASK|KEY_ALTMASK, "\033O2R" );
-      addKeyMap( ioBase, EXKEY_F4    |KEY_CTRLMASK|KEY_ALTMASK, "\033O2S" );
-      addKeyMap( ioBase, EXKEY_F5    |KEY_CTRLMASK|KEY_ALTMASK, "\033[15;2~" );
-      addKeyMap( ioBase, EXKEY_F6    |KEY_CTRLMASK|KEY_ALTMASK, "\033[17;2~" );
-      addKeyMap( ioBase, EXKEY_F7    |KEY_CTRLMASK|KEY_ALTMASK, "\033[18;2~" );
-      addKeyMap( ioBase, EXKEY_F8    |KEY_CTRLMASK|KEY_ALTMASK, "\033[19;2~" );
-      addKeyMap( ioBase, EXKEY_F9    |KEY_CTRLMASK|KEY_ALTMASK, "\033[20;2~" );
-      addKeyMap( ioBase, EXKEY_F10   |KEY_CTRLMASK|KEY_ALTMASK, "\033[21;2~" );
-      addKeyMap( ioBase, EXKEY_F11   |KEY_CTRLMASK|KEY_ALTMASK, "\033[23;2~" );
-      addKeyMap( ioBase, EXKEY_F12   |KEY_CTRLMASK|KEY_ALTMASK, "\033[24;2~" );
+      addKeyMap( ioBase, EXKEY_F1    |KEY_SHIFTMASK, "\033O2P" );
+      addKeyMap( ioBase, EXKEY_F2    |KEY_SHIFTMASK, "\033O2Q" );
+      addKeyMap( ioBase, EXKEY_F3    |KEY_SHIFTMASK, "\033O2R" );
+      addKeyMap( ioBase, EXKEY_F4    |KEY_SHIFTMASK, "\033O2S" );
+      addKeyMap( ioBase, EXKEY_F5    |KEY_SHIFTMASK, "\033[15;2~" );
+      addKeyMap( ioBase, EXKEY_F6    |KEY_SHIFTMASK, "\033[17;2~" );
+      addKeyMap( ioBase, EXKEY_F7    |KEY_SHIFTMASK, "\033[18;2~" );
+      addKeyMap( ioBase, EXKEY_F8    |KEY_SHIFTMASK, "\033[19;2~" );
+      addKeyMap( ioBase, EXKEY_F9    |KEY_SHIFTMASK, "\033[20;2~" );
+      addKeyMap( ioBase, EXKEY_F10   |KEY_SHIFTMASK, "\033[21;2~" );
+      addKeyMap( ioBase, EXKEY_F11   |KEY_SHIFTMASK, "\033[23;2~" );
+      addKeyMap( ioBase, EXKEY_F12   |KEY_SHIFTMASK, "\033[24;2~" );
 
-      addKeyMap( ioBase, EXKEY_TAB   |KEY_CTRLMASK|KEY_ALTMASK, "\033[Z" );
+      addKeyMap( ioBase, EXKEY_TAB   |KEY_SHIFTMASK, "\033[Z" );
 
       /* key added for gnome-terminal and teraterm */
 
@@ -1553,20 +1428,20 @@ static void init_keys( InOutBase * ioBase )
       addKeyMap( ioBase, EXKEY_DEL   |KEY_CTRLMASK, "\033[3;5~" );
       addKeyMap( ioBase, EXKEY_TAB   |KEY_CTRLMASK, "\033[8;5~" );
 
-      addKeyMap( ioBase, EXKEY_UP    |KEY_CTRLMASK|KEY_ALTMASK, "\033[6A" );
-      addKeyMap( ioBase, EXKEY_DOWN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6B" );
-      addKeyMap( ioBase, EXKEY_RIGHT |KEY_CTRLMASK|KEY_ALTMASK, "\033[6C" );
-      addKeyMap( ioBase, EXKEY_LEFT  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6D" );
-      addKeyMap( ioBase, EXKEY_CENTER|KEY_CTRLMASK|KEY_ALTMASK, "\033[6E" );
-      addKeyMap( ioBase, EXKEY_END   |KEY_CTRLMASK|KEY_ALTMASK, "\033[6F" );
-      addKeyMap( ioBase, EXKEY_HOME  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6H" );
-      addKeyMap( ioBase, EXKEY_ENTER |KEY_CTRLMASK|KEY_ALTMASK, "\033[7;6~" );
-      addKeyMap( ioBase, EXKEY_INS   |KEY_CTRLMASK|KEY_ALTMASK, "\033[2;6~" );
-      addKeyMap( ioBase, EXKEY_DEL   |KEY_CTRLMASK|KEY_ALTMASK, "\033[3;6~" );
-      addKeyMap( ioBase, EXKEY_PGUP  |KEY_CTRLMASK|KEY_ALTMASK, "\033[5;6~" );
-      addKeyMap( ioBase, EXKEY_PGDN  |KEY_CTRLMASK|KEY_ALTMASK, "\033[6;6~" );
+      addKeyMap( ioBase, EXKEY_UP    |KEY_SHIFTMASK, "\033[6A" );
+      addKeyMap( ioBase, EXKEY_DOWN  |KEY_SHIFTMASK, "\033[6B" );
+      addKeyMap( ioBase, EXKEY_RIGHT |KEY_SHIFTMASK, "\033[6C" );
+      addKeyMap( ioBase, EXKEY_LEFT  |KEY_SHIFTMASK, "\033[6D" );
+      addKeyMap( ioBase, EXKEY_CENTER|KEY_SHIFTMASK, "\033[6E" );
+      addKeyMap( ioBase, EXKEY_END   |KEY_SHIFTMASK, "\033[6F" );
+      addKeyMap( ioBase, EXKEY_HOME  |KEY_SHIFTMASK, "\033[6H" );
+      addKeyMap( ioBase, EXKEY_ENTER |KEY_SHIFTMASK, "\033[7;6~" );
+      addKeyMap( ioBase, EXKEY_INS   |KEY_SHIFTMASK, "\033[2;6~" );
+      addKeyMap( ioBase, EXKEY_DEL   |KEY_SHIFTMASK, "\033[3;6~" );
+      addKeyMap( ioBase, EXKEY_PGUP  |KEY_SHIFTMASK, "\033[5;6~" );
+      addKeyMap( ioBase, EXKEY_PGDN  |KEY_SHIFTMASK, "\033[6;6~" );
 
-      addKeyMap( ioBase, EXKEY_BS    |KEY_CTRLMASK|KEY_ALTMASK, "\033[W" );
+      addKeyMap( ioBase, EXKEY_BS    |KEY_SHIFTMASK, "\033[W" );
 
       /* end of added */
 
@@ -1587,18 +1462,18 @@ static void init_keys( InOutBase * ioBase )
       addKeyMap( ioBase, EXKEY_F11, "\033[23~" );        /* kf11 */
       addKeyMap( ioBase, EXKEY_F12, "\033[24~" );        /* kf12 */
 
-      addKeyMap( ioBase, EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, "\033[25~" ); /* kf13 */
-      addKeyMap( ioBase, EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, "\033[26~" ); /* kf14 */
-      addKeyMap( ioBase, EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, "\033[28~" ); /* kf15 */
-      addKeyMap( ioBase, EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, "\033[29~" ); /* kf16 */
-      addKeyMap( ioBase, EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, "\033[31~" ); /* kf17 */
-      addKeyMap( ioBase, EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, "\033[32~" ); /* kf18 */
-      addKeyMap( ioBase, EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, "\033[33~" ); /* kf19 */
-      addKeyMap( ioBase, EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, "\033[34~" ); /* kf20 */
-      addKeyMap( ioBase, EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, "\033[35~" ); /* kf21 */
-      addKeyMap( ioBase, EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, "\033[36~" ); /* kf22 */
-      addKeyMap( ioBase, EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, "\033[37~" ); /* kf23 */
-      addKeyMap( ioBase, EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, "\033[38~" ); /* kf24 */
+      addKeyMap( ioBase, EXKEY_F1 |KEY_SHIFTMASK, "\033[25~" ); /* kf13 */
+      addKeyMap( ioBase, EXKEY_F2 |KEY_SHIFTMASK, "\033[26~" ); /* kf14 */
+      addKeyMap( ioBase, EXKEY_F3 |KEY_SHIFTMASK, "\033[28~" ); /* kf15 */
+      addKeyMap( ioBase, EXKEY_F4 |KEY_SHIFTMASK, "\033[29~" ); /* kf16 */
+      addKeyMap( ioBase, EXKEY_F5 |KEY_SHIFTMASK, "\033[31~" ); /* kf17 */
+      addKeyMap( ioBase, EXKEY_F6 |KEY_SHIFTMASK, "\033[32~" ); /* kf18 */
+      addKeyMap( ioBase, EXKEY_F7 |KEY_SHIFTMASK, "\033[33~" ); /* kf19 */
+      addKeyMap( ioBase, EXKEY_F8 |KEY_SHIFTMASK, "\033[34~" ); /* kf20 */
+      addKeyMap( ioBase, EXKEY_F9 |KEY_SHIFTMASK, "\033[35~" ); /* kf21 */
+      addKeyMap( ioBase, EXKEY_F10|KEY_SHIFTMASK, "\033[36~" ); /* kf22 */
+      addKeyMap( ioBase, EXKEY_F11|KEY_SHIFTMASK, "\033[37~" ); /* kf23 */
+      addKeyMap( ioBase, EXKEY_F12|KEY_SHIFTMASK, "\033[38~" ); /* kf24 */
 
       addKeyMap( ioBase, EXKEY_F1 |KEY_CTRLMASK, "\033[39~" );        /* kf25 */
       addKeyMap( ioBase, EXKEY_F2 |KEY_CTRLMASK, "\033[40~" );        /* kf26 */
@@ -1683,18 +1558,18 @@ static void init_keys( InOutBase * ioBase )
    addKeyMap( ioBase, EXKEY_F12,    tiGetS( "kf12"  ) );
 
    /* shifted function keys */
-   addKeyMap( ioBase, EXKEY_F1 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf13" ) );
-   addKeyMap( ioBase, EXKEY_F2 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf14" ) );
-   addKeyMap( ioBase, EXKEY_F3 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf15" ) );
-   addKeyMap( ioBase, EXKEY_F4 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf16" ) );
-   addKeyMap( ioBase, EXKEY_F5 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf17" ) );
-   addKeyMap( ioBase, EXKEY_F6 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf18" ) );
-   addKeyMap( ioBase, EXKEY_F7 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf19" ) );
-   addKeyMap( ioBase, EXKEY_F8 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf20" ) );
-   addKeyMap( ioBase, EXKEY_F9 |KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf21" ) );
-   addKeyMap( ioBase, EXKEY_F10|KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf22" ) );
-   addKeyMap( ioBase, EXKEY_F11|KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf23" ) );
-   addKeyMap( ioBase, EXKEY_F12|KEY_CTRLMASK|KEY_ALTMASK, tiGetS( "kf24" ) );
+   addKeyMap( ioBase, EXKEY_F1 |KEY_SHIFTMASK, tiGetS( "kf13" ) );
+   addKeyMap( ioBase, EXKEY_F2 |KEY_SHIFTMASK, tiGetS( "kf14" ) );
+   addKeyMap( ioBase, EXKEY_F3 |KEY_SHIFTMASK, tiGetS( "kf15" ) );
+   addKeyMap( ioBase, EXKEY_F4 |KEY_SHIFTMASK, tiGetS( "kf16" ) );
+   addKeyMap( ioBase, EXKEY_F5 |KEY_SHIFTMASK, tiGetS( "kf17" ) );
+   addKeyMap( ioBase, EXKEY_F6 |KEY_SHIFTMASK, tiGetS( "kf18" ) );
+   addKeyMap( ioBase, EXKEY_F7 |KEY_SHIFTMASK, tiGetS( "kf19" ) );
+   addKeyMap( ioBase, EXKEY_F8 |KEY_SHIFTMASK, tiGetS( "kf20" ) );
+   addKeyMap( ioBase, EXKEY_F9 |KEY_SHIFTMASK, tiGetS( "kf21" ) );
+   addKeyMap( ioBase, EXKEY_F10|KEY_SHIFTMASK, tiGetS( "kf22" ) );
+   addKeyMap( ioBase, EXKEY_F11|KEY_SHIFTMASK, tiGetS( "kf23" ) );
+   addKeyMap( ioBase, EXKEY_F12|KEY_SHIFTMASK, tiGetS( "kf24" ) );
 }
 
 static void gt_tone( InOutBase * ioBase, double dFrequency, double dDuration )
@@ -2000,6 +1875,11 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
       /* ioBase->curr_TIO.c_oflag |= ONLCR | OPOST; */
 
       memset( ioBase->curr_TIO.c_cc, 0, NCCS );
+
+      /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
+         Ubuntu) in which select() unconditionally accepts stdin for
+         reading if c_cc[ VMIN ] = 0 [druzus] */
+      ioBase->curr_TIO.c_cc[ VMIN ] = 1;
    }
 
 
@@ -2468,7 +2348,7 @@ static void hb_gt_crs_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    InOutBase * ioBase;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    if( ! s_ioBase )
    {

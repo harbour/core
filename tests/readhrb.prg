@@ -5,7 +5,6 @@
  *
  * Eddie Runia <eddie@runia.com>
  * Vailton Renato <vailtom@gmail.com> (Updated to support current harbour implementation)
- * www - http://harbour-project.org
  *
  * Placed in the public domain
  */

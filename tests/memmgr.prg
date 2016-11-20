@@ -1,6 +1,5 @@
 /*
- * Harbour Project source code:
- *    a small memory manager test code
+ * a small memory manager test code
  */
 
 #include "simpleio.ch"

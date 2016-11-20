@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -619,23 +617,20 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TIPMail
 METHOD attachFile( cFileName ) CLASS TIPMail
 
    LOCAL cContent := hb_MemoRead( cFileName )
-   LOCAL cMimeType := tip_FileMimeType( cFileName )
-   LOCAL cDelim := hb_ps()
-
+   LOCAL cBaseName
    LOCAL oAttach
 
-   IF Empty( cContent )
+   IF HB_ISNULL( cContent )
       RETURN .F.
    ENDIF
 
    oAttach   := TIPMail():new( cContent, "base64" )
-   cFileName := SubStr( cFileName, RAt( cFileName, cDelim ) + 1 )
+   cBaseName := hb_FNameNameExt( cFileName )
 
-   oAttach:setFieldPart( "Content-Type", cMimeType )
-   oAttach:setFieldOption( "Content-Type", "name", cFileName )
-
+   oAttach:setFieldPart( "Content-Type", tip_FileMimeType( cFileName ) )
+   oAttach:setFieldOption( "Content-type", "name", cBaseName )
    oAttach:setFieldPart( "Content-Disposition", "attachment" )
-   oAttach:setFieldOption( "Content-Disposition", "filename", cFileName )
+   oAttach:setFieldOption( "Content-Disposition", "filename", cBaseName )
 
    RETURN ::attach( oAttach )
 
@@ -643,26 +638,16 @@ METHOD detachFile( cPath ) CLASS TIPMail
 
    LOCAL cContent := ::getBody()
    LOCAL cFileName := ::getFileName()
-   LOCAL cDelim := hb_ps()
-   LOCAL nFileHandle
 
-   IF Empty( cFileName )
+   IF HB_ISNULL( cFileName )
       RETURN .F.
    ENDIF
 
    IF HB_ISSTRING( cPath )
-      cFileName := StrTran( cPath + cDelim + cFileName, cDelim + cDelim, cDelim )
+      cFileName := hb_DirSepAdd( cPath ) + cFileName
    ENDIF
 
-   nFileHandle := FCreate( cFileName )
-   IF FError() != 0
-      RETURN .F.
-   ENDIF
-
-   FWrite( nFileHandle, cContent )
-   FClose( nFileHandle )
-
-   RETURN FError() == 0
+   RETURN hb_MemoWrit( cFileName, cContent )
 
 METHOD getFileName() CLASS TIPMail
    RETURN StrTran( ::getFieldOption( "Content-Type", "name" ), '"' )

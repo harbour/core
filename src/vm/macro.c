@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Macro compiler main file
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -271,7 +269,7 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pnStringLen )
 
    pHead = ( char * ) memchr( szString, '&', *pnStringLen );
    if( pHead == NULL )
-      return ( char * ) szString;  /* no more processing is required */
+      return ( char * ) HB_UNCONST( szString );  /* no more processing is required */
 
    /* initial length of the string and the result buffer (it can contain null bytes) */
    nResBufLen = nResStrLen = *pnStringLen;
@@ -709,7 +707,7 @@ char * hb_macroExpandString( const char * szString, HB_SIZE nLength, HB_BOOL * p
    if( szString )
       szResultString = hb_macroTextSubst( szString, &nLength );
    else
-      szResultString = ( char * ) szString;
+      szResultString = ( char * ) HB_UNCONST( szString );
    *pfNewString = ( szString != szResultString );
    return szResultString;
 }

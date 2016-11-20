@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    demonstration/test client code for OLE server using hash array with
+ * demonstration/test client code for OLE server using hash array with
  *    strict item order (associative hash array) to define OLE objects
  *    with fixed message numbers (DISPIDs)
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  */
 
 #require "hbwin"

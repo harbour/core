@@ -1,6 +1,5 @@
 /*
- * Harbour Project source code:
- *   CT3 files functions
+ * CT3 files functions
  *
  * SetFattr()
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
@@ -13,8 +12,6 @@
  * DeleteFile(), RenameFile()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +26,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -238,15 +235,18 @@ HB_FUNC( SETFDATI )
 
 HB_FUNC( FILEDELETE )
 {
-   HB_BOOL bReturn = HB_FALSE;
+   const char * pszDirSpec = hb_parc( 1 );
+   HB_BOOL fResult = HB_FALSE;
 
-   if( HB_ISCHAR( 1 ) )
+   if( pszDirSpec )
    {
-      const char * pszDirSpec = hb_parc( 1 );
-      HB_FATTR ulAttr = hb_parnldef( 2, HB_FA_ALL );
+      HB_FATTR nAttr = hb_parnldef( 2, HB_FA_ALL );
       PHB_FFIND ffind;
 
-      if( ( ffind = hb_fsFindFirst( pszDirSpec, ulAttr ) ) != NULL )
+      /* In CT3 this function does not remove directories */
+      nAttr &= ~HB_FA_DIRECTORY;
+
+      if( ( ffind = hb_fsFindFirst( pszDirSpec, nAttr ) ) != NULL )
       {
          PHB_FNAME pFilepath;
 
@@ -260,8 +260,15 @@ HB_FUNC( FILEDELETE )
             pFilepath->szName = ffind->szName;
             hb_fsFNameMerge( szPath, pFilepath );
 
+            if( ffind->attr & HB_FA_READONLY )
+            {
+               if( nAttr & HB_FA_READONLY )
+                  hb_fsSetAttr( szPath, ffind->attr & ~ ( HB_FATTR ) HB_FA_READONLY );
+               else
+                  continue;
+            }
             if( hb_fsDelete( szPath ) )
-               bReturn = HB_TRUE;
+               fResult = HB_TRUE;
          }
          while( hb_fsFindNext( ffind ) );
 
@@ -270,7 +277,7 @@ HB_FUNC( FILEDELETE )
       }
    }
 
-   hb_retl( bReturn );
+   hb_retl( fResult );
 }
 
 HB_FUNC( FILEMOVE )

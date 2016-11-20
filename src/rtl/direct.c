@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Directory() function
  *
  * Copyright 1999 Leslee Griffith <les.griffith@vantagesystems.ca>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -108,17 +106,7 @@ PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes, HB
 
    /* Get the passed attributes and convert them to Harbour Flags */
 
-   ulMask = HB_FA_ARCHIVE |
-            HB_FA_READONLY |
-            HB_FA_DEVICE |
-            HB_FA_TEMPORARY |
-            HB_FA_SPARSE |
-            HB_FA_REPARSE |
-            HB_FA_COMPRESSED |
-            HB_FA_OFFLINE |
-            HB_FA_NOTINDEXED |
-            HB_FA_ENCRYPTED |
-            HB_FA_VOLCOMP;
+   ulMask = HB_FA_ARCHIVE | HB_FA_READONLY;
 
    if( pszAttributes && *pszAttributes )
       ulMask |= hb_fsAttrEncode( pszAttributes );

@@ -6,8 +6,6 @@
  * GTWVW is initially created based on:
  *
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
- *
- * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
@@ -20,15 +18,12 @@
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_wvw_Tone()
  *
  * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +38,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1918,7 +1913,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
             {
                hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
                hb_vmPushNil();
-               hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) hDlg );
+               hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) hDlg );
                hb_vmPushNumInt( message );
                hb_vmPushNumInt( wParam  );
                hb_vmPushNumInt( lParam  );
@@ -1965,7 +1960,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcMLess( HWND hDlg, UINT message, WPARAM wParam, LPA
                {
                   hb_vmPushEvalSym();
                   hb_vmPush( s_pWvwData->s_sApp->pFunc[ iIndex ] );
-                  hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) hDlg );
+                  hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) hDlg );
                   hb_vmPushNumInt( message );
                   hb_vmPushNumInt( wParam );
                   hb_vmPushNumInt( lParam );
@@ -2059,7 +2054,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
                hb_vmPushDynSym( ( PHB_DYNS ) pFunc );
 
                hb_vmPushNil();
-               hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) hDlg    );
+               hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) hDlg    );
                hb_vmPushNumInt( message );
                hb_vmPushNumInt( wParam  );
                hb_vmPushNumInt( lParam  );
@@ -2101,7 +2096,7 @@ BOOL CALLBACK hb_gt_wvwDlgProcModal( HWND hDlg, UINT message, WPARAM wParam, LPA
                {
                   hb_vmPushEvalSym();
                   hb_vmPush( pFunc );
-                  hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) hDlg );
+                  hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) hDlg );
                   hb_vmPushNumInt( message );
                   hb_vmPushNumInt( wParam );
                   hb_vmPushNumInt( lParam );
@@ -2574,7 +2569,7 @@ static void xUserTimerNow( UINT usWinNum, HWND hWnd, UINT message, WPARAM wParam
          hb_vmPushDynSym( s_pWvwData->s_sApp->pSymWVW_TIMER );
          hb_vmPushNil();
          hb_vmPushInteger( ( int ) ( usWinNum ) );
-         hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) hWnd    );
+         hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) hWnd    );
          hb_vmPushNumInt( message );
          hb_vmPushNumInt( wParam  );
          hb_vmPushNumInt( lParam  );
@@ -2775,7 +2770,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                hb_vmPushDynSym( s_pWvwData->s_sApp->pSymWVW_MENUSELECT );
                hb_vmPushNil();
                hb_vmPushInteger( ( int ) ( usWinNum ) );
-               hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) hWnd    );
+               hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) hWnd    );
                hb_vmPushNumInt( message );
                hb_vmPushNumInt( wParam  );
                hb_vmPushNumInt( lParam  );
@@ -3082,7 +3077,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                   hb_vmPushDynSym( s_pWvwData->s_sApp->pSymWVW_SETFOCUS );
                   hb_vmPushNil();
                   hb_vmPushInteger( ( int ) ( usWinNum ) );
-                  hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) hWnd    );
+                  hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) hWnd    );
                   hb_vmDo( 2 );
                   hb_vmRequestRestore();
                }
@@ -3110,7 +3105,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                hb_vmPushDynSym( s_pWvwData->s_sApp->pSymWVW_KILLFOCUS );
                hb_vmPushNil();
                hb_vmPushInteger( ( int ) ( usWinNum ) );
-               hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) hWnd );
+               hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) hWnd );
                hb_vmDo( 2 );
                hb_vmRequestRestore();
             }
@@ -3576,7 +3571,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                   hb_vmPushDynSym( s_pWvwData->s_sApp->pSymWVW_SIZE );
                   hb_vmPushNil();
                   hb_vmPushInteger( ( int ) ( usWinNum ) );
-                  hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) hWnd    );
+                  hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) hWnd    );
                   hb_vmPushNumInt( message );
                   hb_vmPushNumInt( wParam  );
                   hb_vmPushNumInt( lParam  );
@@ -5351,7 +5346,7 @@ static void hb_gt_wvwInputNotAllowed( UINT usWinNum, UINT message, WPARAM wParam
          hb_vmPushDynSym( s_pWvwData->s_sApp->pSymWVW_INPUTFOCUS );
          hb_vmPushNil();
          hb_vmPushInteger( ( int ) ( usWinNum ) );
-         hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRDIFF ) s_pWvwData->s_pWindows[ usWinNum ]->hWnd    );
+         hb_vmPushNumInt( ( HB_MAXINT ) ( HB_PTRUINT ) s_pWvwData->s_pWindows[ usWinNum ]->hWnd    );
          hb_vmPushNumInt( message );
          hb_vmPushNumInt( wParam  );
          hb_vmPushNumInt( lParam  );

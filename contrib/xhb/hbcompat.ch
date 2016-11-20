@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for cross-compatibility between different Harbour flavours
  *
  * Copyright 1999-2009 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -274,7 +272,9 @@
    #xtranslate MaxCol( .T. )                   => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
    #xtranslate NextKey( [<x>] )                => hb_keyNext( <x> )
 
-   #xtranslate Str( <x>, [<y>], [<y>], <z> )   => iif( <z>, hb_ntos( <x> ), Str( <x> ) )
+   #xtranslate Str( <x>, <n>, <d>, <l> )       => iif( <l>, LTrim( Str( <x>, <n>, <d> ) ), Str( <x>, <n>, <d> ) )
+   #xtranslate Str( <x>, <n>,, <l> )           => iif( <l>, LTrim( Str( <x>, <n> ) ), Str( <x>, <n> ) )
+   #xtranslate Str( <x>,,, <l> )               => iif( <l>, hb_ntos( <x> ), Str( <x> ) )
 
    #xuntranslate NetName(                      =>
    #xuntranslate MemoWrit(                     =>
@@ -324,9 +324,9 @@
             They are optimized by Harbour compiler the same way (and even
             more) as these C-like operators, without any bad side-effects. */
    #if defined( XHB_BITOP )
-      #translate ( <exp1> | <exp2> )      => ( hb_bitOr( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> & <exp2> )      => ( hb_bitAnd( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> ^^ <exp2> )     => ( hb_bitXor( ( <exp1> ), ( <exp2> ) ) )
+      #translate ( <exp1> | <exp2> )      => ( xhb_bitOr( ( <exp1> ), ( <exp2> ) ) )
+      #translate ( <exp1> & <exp2> )      => ( xhb_bitAnd( ( <exp1> ), ( <exp2> ) ) )
+      #translate ( <exp1> ^^ <exp2> )     => ( xhb_bitXor( ( <exp1> ), ( <exp2> ) ) )
    #endif
 
    #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;

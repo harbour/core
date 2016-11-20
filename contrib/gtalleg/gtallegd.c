@@ -1,10 +1,7 @@
 /*
- * xHarbour Project source code:
  * Allegro based virtual GT with graphic extensions.
  *
  * Copyright 2004 Mauricio Abre <maurifull@datafull.com>
- * www - http://www.xharbour.org
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -541,7 +538,7 @@ static void hb_gt_alleg_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hF
 {
    int iRet;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_alleg_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    ssfCreateThinFont( &s_ssfDefaultFont );
 
@@ -877,7 +874,7 @@ static HB_BOOL hb_gt_alleg_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_WINTITLE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-            al_set_window_title( ( char * ) hb_itemGetCPtr( pInfo->pNewVal ) );
+            al_set_window_title( ( char * ) HB_UNCONST( hb_itemGetCPtr( pInfo->pNewVal ) ) );
 
          break;
 

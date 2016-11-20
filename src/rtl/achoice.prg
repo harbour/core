@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * AChoice() function
  *
  * Released to Public Domain by Peter Townsend <cephas@tpgi.com.au>
- * www - http://harbour-project.org
  *
  */
 
@@ -44,9 +42,10 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    LOCAL cKey
    LOCAL nAux
 
-   hb_default( @nTop, 0 )
+   nTop := Int( hb_defaultValue( nTop, 0 ) )
+   nBottom := Int( hb_defaultValue( nBottom, 0 ) )
+
    hb_default( @nLeft, 0 )
-   hb_default( @nBottom, 0 )
    hb_default( @nRight, 0 )
 
    IF nRight > MaxCol()
@@ -281,7 +280,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
       CASE nKey == K_CTRL_PGDN .OR. ( nKey == K_END .AND. ! lUserFunc )
 
          IF nPos == nLastItem
-            IF nAtTop == Min( nLastItem, nItems - nNumRows + 1 )
+            IF nAtTop == Min( nLastItem, nItems - Min( nItems, nNumRows ) + 1 )
                nMode := AC_HITBOTTOM
             ELSE
                nAtTop := Min( nLastItem, nItems - nNumRows + 1 )
@@ -323,7 +322,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
       CASE nKey == K_CTRL_END
 
          IF nPos == nLastItem
-            IF nAtTop == Min( nPos, nItems - nNumRows + 1 ) .OR. nPos == nItems
+            IF nAtTop == Min( nPos, nItems - Min( nItems, nNumRows ) + 1 ) .OR. nPos == nItems
                nMode := AC_HITBOTTOM
             ELSE
                nAtTop := Min( nPos, nItems - nNumRows + 1 )

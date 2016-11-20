@@ -118,7 +118,7 @@
     wv[h] = t1 + t2;                                        \
 }
 
-#define SHA512_EXP(a, b, c, d, e, f, g ,h, j)               \
+#define SHA512_EXP(a, b, c, d, e, f, g, h, j)               \
 {                                                           \
     t1 = wv[h] + SHA512_F2(wv[e]) + CH(wv[e], wv[f], wv[g]) \
          + sha512_k[j] + w[j];                              \
@@ -154,10 +154,10 @@ static const uint64 sha384_h0[8] =
              _ULL( 0xdb0c2e0d64f98fa7 ), _ULL( 0x47b5481dbefa4fa4 )};
 
 static const uint64 sha512_h0[8] =
-            {_ULL( 0x6a09e667f3bcc908 ), _ULL( 0xbb67ae8584caa73b ) ,
-             _ULL( 0x3c6ef372fe94f82b ), _ULL( 0xa54ff53a5f1d36f1 ) ,
-             _ULL( 0x510e527fade682d1 ), _ULL( 0x9b05688c2b3e6c1f ) ,
-             _ULL( 0x1f83d9abfb41bd6b ), _ULL( 0x5be0cd19137e2179 ) };
+            {_ULL( 0x6a09e667f3bcc908 ), _ULL( 0xbb67ae8584caa73b ),
+             _ULL( 0x3c6ef372fe94f82b ), _ULL( 0xa54ff53a5f1d36f1 ),
+             _ULL( 0x510e527fade682d1 ), _ULL( 0x9b05688c2b3e6c1f ),
+             _ULL( 0x1f83d9abfb41bd6b ), _ULL( 0x5be0cd19137e2179 )};
 
 static const uint32 sha256_k[64] =
             {0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5,

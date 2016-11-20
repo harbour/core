@@ -1,14 +1,10 @@
 /*
- * Harbour Project source code
- *
  * hbole library demo/test code
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  *    Exm_CDO(), Exm_OOOpen(), Exm_CreateShortcut()
- *
- * www - http://harbour-project.org
  *
  */
 

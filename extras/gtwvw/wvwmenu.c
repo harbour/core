@@ -6,8 +6,6 @@
  * GTWVW is initially created based on:
  *
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
- *
- * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
@@ -20,15 +18,12 @@
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_wvw_Tone()
  *
  * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -43,7 +38,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.

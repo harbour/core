@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The eval stack
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -296,6 +294,7 @@ extern HB_EXPORT int         hb_stackCallDepth( void );
 extern HB_EXPORT void        hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine ); /* get current .prg function name and line number */
 
 extern HB_EXPORT HB_ISIZ     hb_stackBaseProcOffset( int iLevel );
+extern HB_EXPORT HB_ISIZ     hb_stackBaseSymbolOffset( PHB_SYMB pSymbol );
 extern           void        hb_stackDispCall( void );
 
 /* thread specific data */

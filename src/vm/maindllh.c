@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows Harbour DLL entry point
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,7 +21,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -92,12 +90,45 @@ void hb_forceLinkMainStd( void ) {}
 HB_EXTERN_END
 #endif
 
-#elif defined( HB_OS_OS2 )
+#elif defined( HB_OS_OS2 ) && defined( __WATCOMC__ )
 
-#if defined( __WATCOMC__ )
 HB_EXTERN_BEGIN
 void hb_forceLinkMainStd( void ) {}
 HB_EXTERN_END
+
+#elif defined( HB_OS_DOS ) && defined( __WATCOMC__ )
+
+#if defined( _HB_CWDLL_DEBUG )
+#include <cwdllfnc.h>
+HB_EXTERN_BEGIN
+extern char *_LpPgmName;
+HB_EXTERN_END
+
+int main( int iReason, char **dummy )
+{
+   HB_SYMBOL_UNUSED( dummy );
+   if( iReason == 0 )
+   {
+      /* DLL initialization code */
+      printf( "DLL startup...\n" );
+      printf( "DLL File name: %s\n", GetModuleFileName( _psp ) );
+      printf( "Program name: %s\n", _LpPgmName );
+   }
+   else
+   {
+      /* DLL clean up code */
+      printf( "DLL shutdown...\n" );
+   }
+
+   return 0;
+}
+#else
+int main( int iReason, char **dummy )
+{
+   HB_SYMBOL_UNUSED( dummy );
+   HB_SYMBOL_UNUSED( iReason );
+   return 0;
+}
 #endif
 
-#endif
+#endif /* HB_OS_DOS && __WATCOMC__ */

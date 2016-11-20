@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for asynchronous screen updating without
+ * demonstration/test code for asynchronous screen updating without
  *    breaking foreground screen operations.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

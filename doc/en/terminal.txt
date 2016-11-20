@@ -1,7 +1,4 @@
 /*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *    Documentation for: hb_ColorIndex()
  *
@@ -62,7 +59,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(GT)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -105,7 +102,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(GT)
+      All
    $SEEALSO$
       RESTORE SCREEN, __XRestScreen(), __XSaveScreen()
    $END$
@@ -149,7 +146,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(GT)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -192,7 +189,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      All(GT)
+      All
    $SEEALSO$
       __XRestScreen(), SAVE SCREEN, __XSaveScreen()
    $END$
@@ -242,7 +239,7 @@
       TAB key. To select an option the user can press ENTER, SPACE or the
       first letter of the option.
 
-      If the program is executed with the //NOALERT command line switch,
+      If the program is executed with the //NOALERT command-line switch,
       nothing is displayed and it simply returns NIL. This switch could
       be overridden with __NoNoAlert().
 
@@ -293,7 +290,7 @@
       src/rtl/alert.prg the Left-Mouse button could be used to select
       an option.
 
-      The interpretation of the //NOALERT command line switch is done only
+      The interpretation of the //NOALERT command-line switch is done only
       if HB_CLP_UNDOC was define during compilation of src/rtl/alert.prg
 
       <cColorNorm> is a Harbour extension, or at least un-documented
@@ -317,13 +314,13 @@
    $SUBCATEGORY$
       User interface
    $ONELINER$
-      Override //NOALERT command line switch
+      Override //NOALERT command-line switch
    $SYNTAX$
       __NoNoAlert()
    $ARGUMENTS$
       This function takes no arguments.
    $DESCRIPTION$
-      The //NOALERT command line switch cause Clipper to ignore calls to
+      The //NOALERT command-line switch cause Clipper to ignore calls to
       the Alert() function, this function override this behavior
       and always display Alert() dialog box.
    $EXAMPLES$
@@ -368,7 +365,7 @@
    $EXAMPLES$
       // Get the newline character(s) for the current OS.
       OutStd( "Hello World!" + hb_eol() )
-      ? ValType( hb_eol() ) == "C"
+      ? HB_ISSTRING( hb_eol() )
       ? Len( hb_eol() ) <= 2
    $STATUS$
       R
@@ -671,7 +668,7 @@
       take varying length when converted into string depending on its
       source (see Str() for detail).
 
-      There is an undocumented CA-Cl*pper command line switch //STDERR
+      There is an undocumented CA-Cl*pper command-line switch //STDERR
       which can set the file handle to write output from OutErr(). If not
       specified the default STDERR is used, //STDERR or //STDERR:0 set
       OutErr() to output to the same file handle as OutStd(), //STDERR:n
@@ -680,7 +677,7 @@
       the HB_CLP_UNDOC flag.
    $EXAMPLES$
       // write error log information
-      OutErr( Date(), Time(), "Core meltdown detected" )
+      OutErr( hb_DateTime(), "Core meltdown detected" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -721,11 +718,11 @@
 
       On compile time this command is translated into __Eject() function.
    $EXAMPLES$
-      USE Clientes NEW
+      USE clients NEW
       SET DEVICE TO PRINTER
       CurPos := 0
-      WHILE ! Eof()
-         ? Clientes->nome, Clientes->endereco
+      DO WHILE ! Eof()
+         ? clients->NAME, clients->ADDRESS
          Curpos++
          IF Curpos > 59
             Curpos := 0
@@ -733,7 +730,7 @@
          ENDIF
       ENDDO
       SET DEVICE TO SCREEN
-      USE
+      dbCloseArea()
    $STATUS$
       R
    $COMPLIANCE$
@@ -843,7 +840,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      Linux(GT), OS2(GT), Win(GT)
+      All
    $FILES$
       Library is core
    $SEEALSO$
@@ -879,7 +876,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      Linux(GT), OS2(GT), Win(GT)
+      All
    $FILES$
       Library is core
    $SEEALSO$

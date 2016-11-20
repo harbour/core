@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code:
  * ZipArchive interface compatibility implementation.
  *
  * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2008 Toninho (toninhofwi yahoo.com.br)
  * Copyright 2000-2001 Luiz Rafael Culik <culik@sl.conex.net>
  *   (original ZipArchive interface, docs)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not,  write to
  * the Free Software Foundation,  Inc.,  59 Temple Place,  Suite 330,
- * Boston,  MA 02111-1307 USA ( or visit the web site http://www.gnu.org/ ).
+ * Boston,  MA 02111-1307 USA ( or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception,  the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -300,9 +298,9 @@ FUNCTION hb_ZipFile( ;
       aProcFile := {}
       FOR EACH cFN IN hb_defaultValue( acFiles, {} )
          hb_FNameSplit( cFN, @cPath, NIL, NIL, @cDrive )
-         IF hb_LeftEq( cPath, "." + hb_ps() )  /* strip current dir if any */
+         DO WHILE hb_LeftEq( cPath, "." + hb_ps() )  /* strip current dir if any */
             cPath := SubStr( cPath, Len( "." + hb_ps() ) + 1 )
-         ENDIF
+         ENDDO
          IF "?" $ cFN .OR. "*" $ cFN
             IF lFullPath
                cPath := hb_PathJoin( hb_cwd(), cPath )
@@ -344,10 +342,19 @@ FUNCTION hb_ZipFile( ;
             hb_FGetDateTime( cFileToZip, @tTime )
 
             hb_FNameSplit( cFileToZip, @cPath, @cName, @cExt, @cDrive )
-            IF ! lWithDrive .AND. ! Empty( cDrive ) .AND. hb_LeftEq( cPath, cDrive + hb_osDriveSeparator() )
-               cPath := SubStr( cPath, Len( cDrive + hb_osDriveSeparator() ) + 1 )
+            IF lWithPath
+               IF ! lWithDrive
+                  IF ! Empty( cDrive ) .AND. hb_LeftEq( cPath, cDrive += hb_osDriveSeparator() )
+                     cPath := SubStr( cPath, Len( cDrive ) + 1 )
+                  ENDIF
+                  DO WHILE Left( cPath, 1 ) $ "\/"
+                     cPath := SubStr( cPath, 2 )
+                  ENDDO
+               ENDIF
+            ELSE
+               cPath := NIL
             ENDIF
-            hb_zipFileCreate( hZip, StrTran( hb_FNameMerge( iif( lWithPath, cPath, NIL ), cName, cExt ), "\", "/" ), ;
+            hb_zipFileCreate( hZip, hb_FNameMerge( cPath, cName, cExt ), ;
                tTime,,,,, nLevel, cPassword, iif( Empty( cPassword ), NIL, hb_zipFileCRC32( cFileToZip ) ), NIL )
 
             DO WHILE ( nLen := FRead( hHandle, @cBuffer, hb_BLen( cBuffer ) ) ) > 0

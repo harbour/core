@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Default RDD module
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -81,13 +79,10 @@ static void hb_waNodeInsert( PHB_STACKRDD pRddInfo, AREAP pArea )
          iSize = HB_RDD_MAX_AREA_NUM;
 
       if( pRddInfo->uiWaNumMax == 0 )
-      {
          pRddInfo->waNums = ( HB_USHORT * ) hb_xgrab( iSize * sizeof( HB_USHORT ) );
-      }
       else
-      {
          pRddInfo->waNums = ( HB_USHORT * ) hb_xrealloc( pRddInfo->waNums, iSize * sizeof( HB_USHORT ) );
-      }
+
       memset( &pRddInfo->waNums[ pRddInfo->uiWaNumMax ], 0, ( iSize - pRddInfo->uiWaNumMax ) * sizeof( HB_USHORT ) );
       pRddInfo->uiWaNumMax = ( HB_USHORT ) iSize;
    }
@@ -95,9 +90,7 @@ static void hb_waNodeInsert( PHB_STACKRDD pRddInfo, AREAP pArea )
    if( pRddInfo->uiWaSpace == 0 )
    {
       pRddInfo->uiWaSpace = 256;
-      pRddInfo->waList = ( void ** ) hb_xgrab( pRddInfo->uiWaSpace * sizeof(void *) );
-      memset( &pRddInfo->waList[ 0 ], 0, pRddInfo->uiWaSpace * sizeof(void *) );
-      pRddInfo->waList[ 0 ] = NULL;
+      pRddInfo->waList = ( void ** ) hb_xgrabz( pRddInfo->uiWaSpace * sizeof( void * ) );
       uiWaPos = 1;
       pRddInfo->uiWaMax = 2;
    }
@@ -106,9 +99,14 @@ static void hb_waNodeInsert( PHB_STACKRDD pRddInfo, AREAP pArea )
       uiWaPos = pRddInfo->uiWaMax++;
       if( pRddInfo->uiWaMax > pRddInfo->uiWaSpace )
       {
-         pRddInfo->uiWaSpace = ( ( pRddInfo->uiWaMax + 256 ) >> 8 ) << 8;
-         pRddInfo->waList = ( void ** ) hb_xrealloc( pRddInfo->waList, pRddInfo->uiWaSpace * sizeof(void *) );
-         memset( &pRddInfo->waList[ pRddInfo->uiWaMax ], 0, ( pRddInfo->uiWaSpace - pRddInfo->uiWaMax ) * sizeof(void *) );
+         int iSize = ( ( ( int ) pRddInfo->uiWaMax + 256 ) >> 8 ) << 8;
+
+         if( iSize > HB_RDD_MAX_AREA_NUM )
+            iSize = HB_RDD_MAX_AREA_NUM;
+
+         pRddInfo->uiWaSpace = ( HB_USHORT ) iSize;
+         pRddInfo->waList = ( void ** ) hb_xrealloc( pRddInfo->waList, pRddInfo->uiWaSpace * sizeof( void * ) );
+         memset( &pRddInfo->waList[ pRddInfo->uiWaMax ], 0, ( pRddInfo->uiWaSpace - pRddInfo->uiWaMax ) * sizeof( void * ) );
       }
       while( uiWaPos > 1 )
       {
@@ -151,9 +149,14 @@ static void hb_waNodeDelete( PHB_STACKRDD pRddInfo )
          uiWaPos++;
       }
       pRddInfo->waList[ pRddInfo->uiWaMax ] = NULL;
-      if( pRddInfo->uiWaSpace - pRddInfo->uiWaMax >= 256 )
+      if( pRddInfo->uiWaSpace - pRddInfo->uiWaMax > 256 )
       {
-         pRddInfo->uiWaSpace = ( ( pRddInfo->uiWaMax + 256 ) >> 8 ) << 8;
+         int iSize = ( ( ( int ) pRddInfo->uiWaMax + 256 ) >> 8 ) << 8;
+
+         if( iSize > HB_RDD_MAX_AREA_NUM )
+            iSize = HB_RDD_MAX_AREA_NUM;
+
+         pRddInfo->uiWaSpace = ( HB_USHORT ) iSize;
          pRddInfo->waList = ( void ** ) hb_xrealloc( pRddInfo->waList, pRddInfo->uiWaSpace * sizeof( void * ) );
       }
    }
@@ -205,15 +208,15 @@ HB_USHORT hb_rddInsertAreaNode( const char * szDriver )
    if( ! pRddNode )
       return 0;
 
-   pArea = ( AREAP ) hb_rddNewAreaNode( pRddNode, uiRddID );
-   if( ! pArea )
-      return 0;
-
    if( pRddInfo->uiCurrArea == 0 )
    {
       if( hb_rddSelectFirstAvailable() != HB_SUCCESS )
          return 0;
    }
+
+   pArea = ( AREAP ) hb_rddNewAreaNode( pRddNode, uiRddID );
+   if( ! pArea )
+      return 0;
 
    hb_waNodeInsert( pRddInfo, pArea );
 
@@ -333,7 +336,7 @@ HB_ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
    HB_ERRCODE errCode = HB_SUCCESS;
    HB_USHORT uiIndex;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_rddIterateWorkAreas(%p,%p)", pCallBack, cargo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddIterateWorkAreas(%p, %p)", pCallBack, cargo ) );
 
    pRddInfo = hb_stackRDD();
    for( uiIndex = 1; uiIndex < pRddInfo->uiWaMax; uiIndex++ )
@@ -364,7 +367,11 @@ void hb_rddSetNetErr( HB_BOOL fNetErr )
  */
 const char * hb_rddDefaultDrv( const char * szDriver )
 {
-   PHB_STACKRDD pRddInfo = hb_stackRDD();
+   PHB_STACKRDD pRddInfo;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddDefaultDrv(%s)", szDriver ) );
+
+   pRddInfo = hb_stackRDD();
 
    if( szDriver && *szDriver )
    {
@@ -380,11 +387,11 @@ const char * hb_rddDefaultDrv( const char * szDriver )
    }
    else if( ! pRddInfo->szDefaultRDD && hb_rddGetNode( 0 ) )
    {
-      const char * szDrvTable[] = { "DBFNTX", "DBFCDX", "DBFFPT", "DBF", NULL };
+      const char * szDrvTable[] = { "DBFNTX", "DBFCDX", "DBFFPT", "DBF" };
       int i;
 
       pRddInfo->szDefaultRDD = "";
-      for( i = 0; szDrvTable[ i ]; ++i )
+      for( i = 0; i < ( int ) HB_SIZEOFARRAY( szDrvTable ); ++i )
       {
          if( hb_rddFindNode( szDrvTable[ i ], NULL ) )
          {
@@ -395,6 +402,52 @@ const char * hb_rddDefaultDrv( const char * szDriver )
    }
 
    return pRddInfo->szDefaultRDD;
+}
+
+/*
+ * Get default RDD driver respecting passed table/file name
+ */
+const char * hb_rddFindDrv( const char * szDriver, const char * szFileName )
+{
+   LPRDDNODE pRddNode = NULL;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddFindDrv(%s, %s)", szDriver, szFileName ) );
+
+   if( szDriver && *szDriver )
+   {
+      char szNewDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
+
+      hb_strncpyUpper( szNewDriver, szDriver, sizeof( szNewDriver ) - 1 );
+      pRddNode = hb_rddFindNode( szNewDriver, NULL );
+   }
+   else
+   {
+      PHB_STACKRDD pRddInfo = hb_stackRDD();
+
+      if( pRddInfo->szDefaultRDD )
+      {
+         if( pRddInfo->szDefaultRDD[ 0 ] )
+            pRddNode = hb_rddFindNode( pRddInfo->szDefaultRDD, NULL );
+      }
+      else if( hb_rddGetNode( 0 ) )
+      {
+         const char * szDrvTable[] = { "DBFNTX", "DBFCDX", "DBFFPT", "DBF" };
+         int i;
+
+         pRddInfo->szDefaultRDD = "";
+         for( i = 0; i < ( int ) HB_SIZEOFARRAY( szDrvTable ); ++i )
+         {
+            pRddNode = hb_rddFindNode( szDrvTable[ i ], NULL );
+            if( pRddNode )
+            {
+               pRddInfo->szDefaultRDD = szDrvTable[ i ];
+               break;
+            }
+         }
+      }
+   }
+
+   return pRddNode ? hb_rddFindFileNode( pRddNode, szFileName )->szName : NULL;
 }
 
 /*
@@ -479,7 +532,11 @@ static HB_GARBAGE_FUNC( hb_waHolderDestructor )
 
       iArea = hb_rddGetCurrentWorkAreaNumber();
 
-      hb_rddSelectFirstAvailable();
+      if( hb_rddSelectFirstAvailable() != HB_SUCCESS )
+         /* workarea number HB_RDD_MAX_AREA_NUM is reserved
+            for this destructor and used when all other workareas
+            are active [druzus] */
+         hb_rddSelectWorkAreaNumber( HB_RDD_MAX_AREA_NUM );
       hb_waNodeInsert( hb_stackRDD(), pArea );
       hb_rddReleaseCurrentArea();
 
@@ -515,7 +572,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    HB_SIZE nPos;
    int iArea;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_rddDetachArea(%p,%p)", pArea, pCargo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddDetachArea(%p, %p)", pArea, pCargo ) );
 
    /* save current WA number */
    iArea = hb_rddGetCurrentWorkAreaNumber();
@@ -572,7 +629,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
 }
 
 AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
-                         HB_BOOL fNewArea, HB_BOOL fWait )
+                         HB_BOOL fNewArea, HB_ULONG ulMilliSec )
 {
    PHB_DYNS pSymAlias = NULL;
    AREAP pArea = NULL;
@@ -642,14 +699,18 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
          }
       }
 
-      if( pArea || ! fWait )
+      if( pArea || ulMilliSec == 0 )
          break;
 
       hb_vmUnlock();
       /* wait for detached workareas */
-      hb_threadCondWait( &s_waCond, &s_waMtx );
+      if( ulMilliSec == HB_THREAD_INFINITE_WAIT )
+         hb_threadCondWait( &s_waCond, &s_waMtx );
+      else if( ! hb_threadCondTimedWait( &s_waCond, &s_waMtx, ulMilliSec ) )
+         ulMilliSec = 0;
       hb_vmLock();
-      if( hb_vmRequestQuery() != 0 )
+
+      if( ulMilliSec == 0 || hb_vmRequestQuery() != 0 )
          break;
    }
    /* leave critical section */

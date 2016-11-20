@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Default RDD module
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -404,7 +402,7 @@ static HB_ERRCODE hb_waCreateFields( AREAP pArea, PHB_ITEM pStruct )
             dbFieldInfo.uiType = HB_FT_LONG;
             dbFieldInfo.uiDec = uiDec;
             /* DBASE documentation defines maximum numeric field size as 20
-             * but Clipper alows to create longer fileds so I remove this
+             * but Clipper allows to create longer fileds so I remove this
              * limit, Druzus
              */
             /*
@@ -1877,25 +1875,25 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
 
       case RDDI_STRICTREAD:
          fResult = hb_setGetStrictRead();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_STRICTREAD, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_OPTIMIZE:
          fResult = hb_setGetOptimize();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_OPTIMIZE, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_FORCEOPT:
          fResult = hb_setGetForceOpt();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_FORCEOPT, pItem );
          hb_itemPutL( pItem, fResult );
          break;
       case RDDI_AUTOOPEN:
          fResult = hb_setGetAutOpen();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_AUTOPEN, pItem );
          hb_itemPutL( pItem, fResult );
          break;
@@ -1907,7 +1905,7 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
          break;
       case RDDI_AUTOSHARE:
          fResult = hb_setGetAutoShare();
-         if( hb_itemType( pItem ) == HB_IT_LOGICAL )
+         if( hb_itemType( pItem ) & HB_IT_LOGICAL )
             hb_setSetItem( HB_SET_AUTOSHARE, pItem );
          hb_itemPutL( pItem, fResult );
          break;
@@ -2151,6 +2149,10 @@ static LPRDDNODE * s_RddList    = NULL;   /* Registered RDDs pool */
 static HB_USHORT   s_uiRddMax   = 0;      /* Size of RDD pool */
 static HB_USHORT   s_uiRddCount = 0;      /* Number of registered RDD */
 
+static HB_RDDACCEPT * s_rddRedirAccept  = NULL;
+static HB_USHORT      s_uiRddRedirMax   = 0;
+static HB_USHORT      s_uiRddRedirCount = 0;
+
 /*
  * Get RDD node poionter
  */
@@ -2209,6 +2211,76 @@ LPRDDNODE hb_rddFindNode( const char * szDriver, HB_USHORT * uiIndex )
 }
 
 /*
+ * Find a RDD node respecing file/table name
+ */
+LPRDDNODE hb_rddFindFileNode( LPRDDNODE pRddNode, const char * szFileName )
+{
+   HB_USHORT uiCount;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddFindFileNode(%p, %s)", pRddNode, szFileName ) );
+
+   if( szFileName && szFileName[ 0 ] && s_uiRddRedirCount )
+   {
+      for( uiCount = 0; uiCount < s_uiRddRedirCount; uiCount++ )
+      {
+         LPRDDNODE pNode = s_rddRedirAccept[ uiCount ]( pRddNode, szFileName );
+         if( pNode )
+            return pNode;
+      }
+   }
+
+   return pRddNode;
+}
+
+/*
+ * dummy RDD file/table name redirector
+ */
+static LPRDDNODE hb_rddDummyFileAccept( LPRDDNODE pRddNode, const char * szFileName )
+{
+   HB_SYMBOL_UNUSED( pRddNode );
+   HB_SYMBOL_UNUSED( szFileName );
+
+   return NULL;
+}
+/*
+ * Add new RDD file/table name redirector
+ */
+void hb_rddSetFileRedirector( HB_RDDACCEPT funcAccept, HB_BOOL fEnable )
+{
+   HB_USHORT uiCount, uiFree;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddSetFileRedirector(%p, %d)", funcAccept, fEnable ) );
+
+   hb_threadEnterCriticalSection( &s_rddMtx );
+   uiFree = s_uiRddRedirCount + 1;
+   for( uiCount = 0; uiCount < s_uiRddRedirCount; uiCount++ )
+   {
+      if( s_rddRedirAccept[ uiCount ] == funcAccept )
+      {
+         if( ! fEnable )
+            s_rddRedirAccept[ uiCount ] = hb_rddDummyFileAccept;
+         return;
+      }
+      else if( s_rddRedirAccept[ uiCount ] == hb_rddDummyFileAccept )
+         uiFree = uiCount;
+   }
+   if( uiFree < s_uiRddRedirCount )
+      s_rddRedirAccept[ uiFree ] = funcAccept;
+   else
+   {
+      if( s_uiRddRedirCount == s_uiRddRedirMax )
+      {
+         s_uiRddRedirMax += HB_RDD_POOL_ALLOCSIZE;
+         s_rddRedirAccept = ( HB_RDDACCEPT * )
+            hb_xrealloc( s_rddRedirAccept, sizeof( HB_RDDACCEPT ) * s_uiRddRedirMax );
+      }
+      s_rddRedirAccept[ s_uiRddRedirCount ] = funcAccept;
+      s_uiRddRedirCount++;
+   }
+   hb_threadLeaveCriticalSection( &s_rddMtx );
+}
+
+/*
  * Shutdown the RDD system.
  */
 void hb_rddShutDown( void )
@@ -2232,6 +2304,12 @@ void hb_rddShutDown( void )
       hb_xfree( s_RddList );
       s_RddList = NULL;
       s_uiRddMax = s_uiRddCount = 0;
+   }
+   if( s_uiRddRedirCount )
+   {
+      hb_xfree( s_rddRedirAccept );
+      s_rddRedirAccept = NULL;
+      s_uiRddRedirMax = s_uiRddRedirCount = 0;
    }
 }
 

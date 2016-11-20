@@ -29,12 +29,14 @@
       a macro expression.
    $EXAMPLES$
       PROCEDURE Main()
+
          FIELD Id
          FIELD Name
-         USE tests NEW
+         USE test.dbf NEW
          Name := "Sales"
          Id := 5
-         USE
+         dbCloseArea()
+
          RETURN
    $STATUS$
       R
@@ -85,12 +87,13 @@
       PARAMETERS, MEMVAR, STATIC and FIELD, may precede the LOCAL command.
 
       LOCAL array reference may not be initialized (i.e., assigned values)
-      on the same command line as the LOCAL command statement. This can be
+      on the same command-line as the LOCAL command statement. This can be
       done later in the program.
 
       LOCAL variables and arrays are not affected by the RELEASE command.
    $EXAMPLES$
       PROCEDURE Main()
+
          LOCAL n, lVar
 
          n := iif( lVar, "A", 3 )

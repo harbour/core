@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for PIPEIO
+ * demonstration/test code for PIPEIO
  *
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

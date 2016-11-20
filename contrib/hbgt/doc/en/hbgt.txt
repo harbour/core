@@ -4,22 +4,22 @@
    $CATEGORY$
       String Tools
    $ONELINER$
-      Return the ascii value of a specified character in a string
+      Return the ASCII value of a specified character in a string
    $SYNTAX$
       gt_AscPos( <cStr>, <nPos> ) --> nAscVal
    $ARGUMENTS$
       <cStr>  - The string
       <nPos>  - The position in <cStr>
    $RETURNS$
-      <nAscVal> - The ascii value of SubStr( <cStr>, <nPos>, 1 )
+      <nAscVal> - The ASCII value of hb_BSubStr( <cStr>, <nPos>, 1 )
    $DESCRIPTION$
-      Return the ascii value of a specified character in a string
+      Return the ASCII value of a specified character in a string
       Equivalent (but much faster) to
-          Asc(SubStr(cStr, nPos, 1)
+          hb_BCode( hb_BSubStr( cStr, nPos, 1 ) )
 
       NOTE:
          invalid parameters will return -1
-         nPos > Len( cStr ) will return -2
+         nPos > hb_BLen( cStr ) will return -2
 
       This last behaviour is different to the Funcky function of the
       same name.  I changed the behaviour because some of the strings
@@ -43,15 +43,15 @@
    $CATEGORY$
       String Tools
    $ONELINER$
-      Sum the ascii values in a string.
+      Sum the ASCII values in a string.
    $SYNTAX$
       gt_AsciiSum( <cStr> ) --> nSum
    $ARGUMENTS$
       <cStr>  - The string to sum
    $RETURNS$
-      <nSum>    - The sum of all ascii values in <cStr>.
+      <nSum>    - The sum of all ASCII values in <cStr>.
    $DESCRIPTION$
-      Sum the ascii value of every character in the passed string
+      Sum the ASCII value of every character in the passed string
       and return the result.
    $EXAMPLES$
 
@@ -251,11 +251,11 @@
       <nAsc>     - The ASCII value of the first character in <cChars>
                  which appears first in <cStr>
    $DESCRIPTION$
-      Return the ascii value of a character in <cChars>
+      Return the ASCII value of a character in <cChars>
       which appears first in <cStr>.
    $EXAMPLES$
-      ? Chr( gt_ChrFirst( "sa ", "This is a test" ) )  // prints "s"
-      ? Chr( gt_ChrFirst( "et",  "This is a test" ) )   // prints "t"
+      ? hb_BChar( gt_ChrFirst( "sa ", "This is a test" ) )  // prints "s"
+      ? hb_BChar( gt_ChrFirst( "et" , "This is a test" ) )  // prints "t"
    $STATUS$
       R
    $COMPLIANCE$
@@ -575,7 +575,7 @@
    $EXAMPLES$
       cFlags := gt_NewFlag( 20 )   // Create a bit flag string for 20 logical values.
    $SEEALSO$
-      gt_SetFlag() gt_ClrFlag() gt_IsFlag()
+      gt_SetFlag(), gt_ClrFlag(), gt_IsFlag()
    $END$
  */
 
@@ -616,7 +616,7 @@
 
       cFlags := gt_SetFlag( cFlags )
    $SEEALSO$
-      gt_NewFlag() gt_ClrFlag() gt_IsFlag()
+      gt_NewFlag(), gt_ClrFlag(), gt_IsFlag()
    $END$
  */
 
@@ -661,7 +661,7 @@
 
       cFlags := gt_ClrFlag( cFlags )
    $SEEALSO$
-      gt_NewFlag() gt_SetFlag() gt_IsFlag()
+      gt_NewFlag(), gt_SetFlag(), gt_IsFlag()
    $END$
  */
 
@@ -686,10 +686,10 @@
    $EXAMPLES$
       // Print the setting of the flags in a flag string called ``cDave''
 
-      FOR nFlag := 1 to ( Len( cDave ) * 8 )
-         ? "Flag number ", nFlag, " == ", gt_IsFlag( cDave, nFlag )
+      FOR nFlag := 1 TO hb_BLen( cDave ) * 8
+         ? "Flag number", nFlag, "==", gt_IsFlag( cDave, nFlag )
       NEXT
    $SEEALSO$
-      gt_NewFlag() gt_SetFlag() gt_ClrFlag()
+      gt_NewFlag(), gt_SetFlag(), gt_ClrFlag()
    $END$
  */

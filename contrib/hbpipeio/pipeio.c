@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *   I/O driver for PIPE streams
+ * I/O driver for PIPE streams
  *
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -232,6 +230,10 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
       case HB_VF_WRHANDLE:
          hb_itemPutNInt( pValue, ( HB_NHANDLE ) pFile->hPipeWR );
          return HB_TRUE;
+
+      case HB_VF_IONAME:
+         hb_itemPutC( pValue, FILE_PREFIX );
+         return HB_TRUE;
    }
 
    return HB_FALSE;
@@ -354,7 +356,7 @@ HB_FUNC( HB_VFFROMPIPES )
 HB_FUNC( HB_VFOPENPROCESS )
 {
    const char * pszCommand = hb_parc( 1 );
-   HB_FATTR nMode = hb_parnintdef( 2, FO_READ );
+   HB_FATTR nMode = hb_parnldef( 2, FO_READ );
    HB_MAXINT timeout = hb_parnintdef( 3, -1 );
    HB_BOOL fDetach = hb_parl( 4 );
    PHB_FILE pFile;

@@ -1,7 +1,4 @@
 /*
- * The following are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
  * Copyright 2000 Paul Tucker <ptucker@sympatico.ca>
  *    Documentation for: DiskSpace() and related functions
  *
@@ -37,7 +34,7 @@
       If information is requested on a disk that is not available, a runtime
       error 2018 will be raised.
    $EXAMPLES$
-      ? "You can use : " + hb_ntos( DiskSpace() ) + " bytes "
+      ? "You can use:", hb_ntos( DiskSpace() ), "bytes"
 
       // NOTE: See tests/diskspac.prg for another example
    $STATUS$
@@ -45,7 +42,7 @@
    $COMPLIANCE$
       C
    $PLATFORMS$
-      DOS, Win, OS2
+      All
    $FILES$
       Library is core
       Header is fileio.ch
@@ -98,8 +95,8 @@
       error 2018 will be raised.
    $EXAMPLES$
       #include "fileio.ch"
-      ? "You can use : " + hb_ntos( hb_DiskSpace() ) + " bytes " +;
-        "Out of a total of " + hb_ntos( hb_DiskSpace( "C:", HB_FS_TOTAL ) )
+      ? "You can use:", hb_ntos( hb_DiskSpace() ), "bytes", ;
+        "Out of a total of", hb_ntos( hb_DiskSpace( "C:", HB_FS_TOTAL ) )
 
       // NOTE: See tests/diskspac.prg for another example
    $STATUS$
@@ -107,7 +104,7 @@
    $COMPLIANCE$
       H
    $PLATFORMS$
-      DOS, Win, OS2, Unix
+      All
    $FILES$
       Library is core
       Header is fileio.ch

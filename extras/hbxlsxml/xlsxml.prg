@@ -1,8 +1,6 @@
 /*
- * Harbour Project source code:
  *
  * Copyright 2011 Fausto Di Creddo Trautwein, ftwein@yahoo.com.br
- * www - http://harbour-project.org
  *
  * Thanks to Robert F Greer, PHP original version
  * http://sourceforge.net/projects/excelwriterxml/
@@ -20,7 +18,7 @@
  * You should have received a copy of the GNU General PUBLIC License
  * along WITH this software; see the file COPYING.txt.  IF NOT, write TO
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA( OR visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA( OR visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission FOR
  * additional uses of the text contained IN its release of Harbour.

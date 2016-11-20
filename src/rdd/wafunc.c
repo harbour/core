@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Default RDD module
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -582,7 +580,6 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
                             const char * szCpId, HB_ULONG ulConnection,
                             PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
-   char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
    DBOPENINFO pInfo;
    HB_ERRCODE errCode;
    AREAP pArea;
@@ -594,13 +591,16 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
     * shares WA between threads so dbUseArea() should be covered
     * by external mutex to make lNewArea MT safe, [druzus]
     */
-   if( uiArea )
+   if( uiArea && uiArea < HB_RDD_MAX_AREA_NUM )
    {
       hb_rddSelectWorkAreaNumber( uiArea );
       hb_rddReleaseCurrentArea();
    }
-   else
-      hb_rddSelectFirstAvailable();
+   else if( hb_rddSelectFirstAvailable() != HB_SUCCESS )
+   {
+      hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+      return HB_FAILURE;
+   }
 
    /* Clipper clears NETERR flag before parameter validation, [druzus]
     */
@@ -611,16 +611,10 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
     *    if( szDriver && strlen( szDriver ) > 1 )
     * but I do not think we should replicate it, [druzus]
     */
-   if( szDriver && szDriver[ 0 ] )
-   {
-      hb_strncpyUpper( szDriverBuffer, szDriver, sizeof( szDriverBuffer ) - 1 );
-      szDriver = szDriverBuffer;
-   }
-   else
-      szDriver = hb_rddDefaultDrv( NULL );
+   szDriver = hb_rddFindDrv( szDriver, szFileName );
 
-   /* First try to create new are node and validate RDD name */
-   if( ! hb_rddInsertAreaNode( szDriver ) )
+   /* First try to create new area node and validate RDD name */
+   if( ! szDriver || ! hb_rddInsertAreaNode( szDriver ) )
    {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
       return HB_FAILURE;
@@ -670,7 +664,6 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
                               const char * szCpId, HB_ULONG ulConnection,
                               PHB_ITEM pStruct, PHB_ITEM pDelim )
 {
-   char szDriverBuffer[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
    DBOPENINFO pInfo;
    HB_ERRCODE errCode;
    HB_USHORT uiPrevArea;
@@ -682,14 +675,6 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
       return HB_FAILURE;
    }
 
-   if( szDriver && szDriver[ 0 ] )
-   {
-      hb_strncpyUpper( szDriverBuffer, szDriver, sizeof( szDriverBuffer ) - 1 );
-      szDriver = szDriverBuffer;
-   }
-   else
-      szDriver = hb_rddDefaultDrv( NULL );
-
    uiPrevArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
 
    /* 0 means chose first available in hb_rddInsertAreaNode() */
@@ -697,8 +682,10 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    if( uiArea )
       hb_rddReleaseCurrentArea();
 
+   szDriver = hb_rddFindDrv( szDriver, szFileName );
+
    /* Create a new WorkArea node */
-   if( ! hb_rddInsertAreaNode( szDriver ) )
+   if( ! szDriver || ! hb_rddInsertAreaNode( szDriver ) )
    {
       hb_rddSelectWorkAreaNumber( uiPrevArea );
       hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -749,6 +736,11 @@ HB_ERRCODE hb_rddCreateTableTemp( const char * szDriver,
    HB_USHORT uiPrevArea;
    AREAP pArea;
 
+   uiPrevArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
+
+   /* 0 means chose first available in hb_rddInsertAreaNode() */
+   hb_rddSelectWorkAreaNumber( 0 );
+
    if( szDriver && szDriver[ 0 ] )
    {
       hb_strncpyUpper( szDriverBuffer, szDriver, sizeof( szDriverBuffer ) - 1 );
@@ -756,11 +748,6 @@ HB_ERRCODE hb_rddCreateTableTemp( const char * szDriver,
    }
    else
       szDriver = hb_rddDefaultDrv( NULL );
-
-   uiPrevArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
-
-   /* 0 means chose first available in hb_rddInsertAreaNode() */
-   hb_rddSelectWorkAreaNumber( 0 );
 
    /* Create a new WorkArea node */
    if( ! hb_rddInsertAreaNode( szDriver ) )
@@ -1130,9 +1117,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
    memset( &dbTransInfo, 0, sizeof( dbTransInfo ) );
    uiPrevArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
 
-   if( szDriver == NULL )
-      /* szDriver = SELF_RDDNODE( pArea )->szName; */
-      szDriver = hb_rddDefaultDrv( NULL );
+   szDriver = hb_rddFindDrv( szDriver, szFileName );
 
    if( fExport )
    {

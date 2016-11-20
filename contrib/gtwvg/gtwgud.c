@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
@@ -15,15 +14,12 @@
  *    Adopted to new GT API
  *
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_Tone()
  *
  * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,7 +34,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -881,9 +877,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             PHB_ITEM pEvParams = hb_itemNew( NULL );
 
             hb_arrayNew( pEvParams, 3 );
-            hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) hWnd );
-            hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
-            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
+            hb_arraySetNInt( pEvParams, 1, ( HB_PTRUINT ) hWnd );
+            hb_arraySetNInt( pEvParams, 2, ( HB_PTRUINT ) wParam );
+            hb_arraySetNInt( pEvParams, 3, ( HB_PTRUINT ) lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_SETFOCUS, pEvParams );
             return 0;
@@ -893,9 +889,9 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             PHB_ITEM pEvParams = hb_itemNew( NULL );
 
             hb_arrayNew( pEvParams, 3 );
-            hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) hWnd );
-            hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
-            hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
+            hb_arraySetNInt( pEvParams, 1, ( HB_PTRUINT ) hWnd );
+            hb_arraySetNInt( pEvParams, 2, ( HB_PTRUINT ) wParam );
+            hb_arraySetNInt( pEvParams, 3, ( HB_PTRUINT ) lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS, pEvParams );
             return 0;
@@ -1023,7 +1019,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
                hb_arrayNew( pEvParams, 3 );
                hb_arraySetNI( pEvParams, 1, iHi );                              /* Notification Code  */
                hb_arraySetNI( pEvParams, 2, iLo );                              /* Control identifier */
-               hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) ( HWND ) lParam ); /* Controls hWnd      */
+               hb_arraySetNInt( pEvParams, 3, ( HB_PTRUINT ) ( HWND ) lParam ); /* Controls hWnd      */
 
                hb_gt_wvt_FireEvent( pWVT, HB_GTE_COMMAND, pEvParams );
             }
@@ -1035,7 +1031,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             hb_arrayNew( pEvParams, 2 );
 
             hb_arraySetNI( pEvParams, 1, ( int ) wParam );
-            hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lParam );
+            hb_arraySetNInt( pEvParams, 2, ( HB_PTRUINT ) lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_NOTIFY, pEvParams );
             break;
@@ -1065,8 +1061,8 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             hb_arrayNew( pEvParams, 2 );
 
-            hb_arraySetNInt( pEvParams, 1, ( HB_PTRDIFF ) wParam );
-            hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) lParam );
+            hb_arraySetNInt( pEvParams, 1, ( HB_PTRUINT ) wParam );
+            hb_arraySetNInt( pEvParams, 2, ( HB_PTRUINT ) lParam );
 
             iResult = hb_gt_wvt_FireEvent( pWVT, HB_GTE_CTLCOLOR, pEvParams );
 
@@ -1083,7 +1079,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
-            hb_arraySetNInt( pEvParams, 3, ( HB_MAXINT ) ( HB_PTRDIFF ) lParam );
+            hb_arraySetNInt( pEvParams, 3, ( HB_MAXINT ) ( HB_PTRUINT ) lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_HSCROLL, pEvParams );
             return 0;
@@ -1096,7 +1092,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
 
             hb_arraySetNL( pEvParams, 1, ( long ) LOWORD( wParam ) );
             hb_arraySetNL( pEvParams, 2, ( long ) HIWORD( wParam ) );
-            hb_arraySetNInt( pEvParams, 3, ( HB_MAXINT ) ( HB_PTRDIFF ) lParam );
+            hb_arraySetNInt( pEvParams, 3, ( HB_MAXINT ) ( HB_PTRUINT ) lParam );
 
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_VSCROLL, pEvParams );
             return 0;
@@ -1210,7 +1206,7 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    int       iCmdShow;
    PHB_GTWVT pWVT;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
    {
@@ -1312,17 +1308,17 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
       case HB_GTI_INPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( HB_PTRDIFF ) GetStdHandle( STD_INPUT_HANDLE ) );
+                              ( HB_PTRUINT ) GetStdHandle( STD_INPUT_HANDLE ) );
          break;
 
       case HB_GTI_OUTPUTFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( HB_PTRDIFF ) GetStdHandle( STD_OUTPUT_HANDLE ) );
+                              ( HB_PTRUINT ) GetStdHandle( STD_OUTPUT_HANDLE ) );
          break;
 
       case HB_GTI_ERRORFD:
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult,
-                              ( HB_PTRDIFF ) GetStdHandle( STD_ERROR_HANDLE ) );
+                              ( HB_PTRUINT ) GetStdHandle( STD_ERROR_HANDLE ) );
          break;
 
       case HB_GTI_SETFONT:
@@ -1479,7 +1475,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( hIconToFree )
                DestroyIcon( hIconToFree );
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRUINT ) pWVT->hIcon );
          break;
 
       case HB_GTI_ICONRES:
@@ -1519,7 +1515,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( hIconToFree )
                DestroyIcon( hIconToFree );
          }
-         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hIcon );
+         pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRUINT ) pWVT->hIcon );
          break;
       case HB_GTI_VIEWMAXWIDTH:
       {
@@ -1713,7 +1709,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          {
             case HB_GTS_WINDOWHANDLE:
                if( pWVT->hWnd )
-                  pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRDIFF ) pWVT->hWnd );
+                  pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRUINT ) pWVT->hWnd );
                break;
 
             case HB_GTS_CENTERWINDOW:

@@ -1,19 +1,15 @@
 /*
- * xHarbour Project source code:
- *    The internet protocol / TCP support
+ * The internet protocol / TCP support
  *
  * Copyright 2002 Giancarlo Niccolai [gian@niccolai.ws]
  *                Ron Pinkas [Ron@RonPinkas.com]
  *                Marcelo Lombardo [marcelo.lombardo@newage-software.com.br]
- * www - http://www.xharbour.org
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    updated and ported to Harbour
- * www - http://harbour-project.org
  *
  * Copyright 2008 Miguel Angel marchuet <miguelangel@marchuet.net>
  *    added dinamic system buffer
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +24,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1276,7 +1272,11 @@ static void hb_inetConnectInternal( HB_BOOL fResolve )
          szHost = szAddr = hb_socketResolveAddr( szHost, HB_SOCKET_AF_INET );
 
       if( fResolve && ! szAddr )
+      {
          hb_inetGetError( socket );
+         if( socket->iError == 0 )
+            socket->iError = HB_SOCKET_ERR_WRONGADDR;
+      }
       else
       {
          /* Creates comm socket */

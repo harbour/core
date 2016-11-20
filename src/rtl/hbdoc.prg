@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * HBDOC reader
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -147,9 +145,10 @@ STATIC PROCEDURE __hbdoc__read_langdir( aEntry, cDir, hMeta, aErrMsg )
    LOCAL aFile
    LOCAL nCount
 
+   hMeta[ "_LANG" ] := hb_FNameName( hb_DirSepDel( cDir ) )
+
    nCount := 0
    FOR EACH aFile IN Directory( cDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
-      hMeta[ "_LANG" ] := aFile[ F_NAME ]
       __hbdoc__read_file( aEntry, cDir + hb_ps() + aFile[ F_NAME ], hMeta, aErrMsg )
       ++nCount
    NEXT
@@ -246,7 +245,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
                   consecutive lines. [vszakats] */
                nStartCol := Len( cLine ) - Len( LTrim( cLine ) ) + 1
             ELSE
-               hEntry[ cSection ] += Chr( 13 ) + Chr( 10 )
+               hEntry[ cSection ] += Chr( 10 )
             ENDIF
             hEntry[ cSection ] += SubStr( cLine, nStartCol )
          ELSEIF ! Empty( cLine )

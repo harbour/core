@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for NETIOSRV remote management
+ * demonstration/test code for NETIOSRV remote management
  *
  * Copyright 2010-2011 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  */
 

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Set API
  *
  * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -260,6 +258,8 @@ extern HB_EXPORT HB_BOOL      hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM
 extern HB_EXPORT HB_BOOL      hb_setSetItem2( HB_set_enum set_specifier, PHB_ITEM pItem1, PHB_ITEM pItem2 );
 
 extern HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void );
+
+extern HB_EXPORT int          hb_setUpdateEpoch( int iYear );
 
 extern HB_EXPORT HB_BOOL      hb_setGetCentury( void );
 extern HB_EXPORT HB_BOOL      hb_setSetCentury( HB_BOOL );

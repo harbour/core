@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *   I/O driver for TCP streams
+ * I/O driver for TCP streams
  *
  * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -57,7 +55,7 @@
 
 #include "hbsocket.h"
 
-#define FILE_PREFIX      "tcp:"
+#define FILE_PREFIX      "TCP:"
 #define FILE_PREFIX_LEN  strlen( FILE_PREFIX )
 
 typedef struct _HB_FILE
@@ -65,11 +63,11 @@ typedef struct _HB_FILE
    const HB_FILE_FUNCS * pFuncs;
    PHB_SOCKEX            sock;
    HB_BOOL               fEof;
-   int                   timeout;
+   HB_MAXINT             timeout;
 }
 HB_FILE;
 
-static PHB_FILE s_fileNew( PHB_SOCKEX sock, int timeout );
+static PHB_FILE s_fileNew( PHB_SOCKEX sock, HB_MAXINT timeout );
 
 static HB_BOOL s_fileAccept( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
 {
@@ -87,7 +85,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * pszName,
    HB_ERRCODE errcode = 0;
    HB_SIZE nLen = 0;
    int iPort = 0;
-   int timeout = -1;
+   HB_MAXINT timeout = -1;
 
    HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pszDefExt );
@@ -306,6 +304,10 @@ static HB_BOOL s_fileConfigure( PHB_FILE pFile, int iIndex, PHB_ITEM pValue )
       case HB_VF_WRHANDLE:
          hb_itemPutNInt( pValue, ( HB_NHANDLE ) hb_sockexGetHandle( pFile->sock ) );
          return HB_TRUE;
+
+      case HB_VF_IONAME:
+         hb_itemPutC( pValue, FILE_PREFIX );
+         return HB_TRUE;
    }
 
    return HB_FALSE;
@@ -358,7 +360,7 @@ static HB_FILE_FUNCS s_fileFuncs =
    s_fileHandle
 };
 
-static PHB_FILE s_fileNew( PHB_SOCKEX sock, int timeout )
+static PHB_FILE s_fileNew( PHB_SOCKEX sock, HB_MAXINT timeout )
 {
    PHB_FILE pFile = ( PHB_FILE ) hb_xgrab( sizeof( HB_FILE ) );
 

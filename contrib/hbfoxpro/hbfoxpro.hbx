@@ -22,15 +22,21 @@
 #endif
 
 DYNAMIC AElement
+DYNAMIC Between
 DYNAMIC Filter
+DYNAMIC fox_At
 DYNAMIC fox___DynCall
 DYNAMIC FSize
+DYNAMIC Id
+DYNAMIC InList
 DYNAMIC InsMode
 DYNAMIC Key
+DYNAMIC LineNo
 DYNAMIC NDX
 DYNAMIC Occurs
 DYNAMIC Parameters
 DYNAMIC PrintStatus
+DYNAMIC Program
 DYNAMIC Relation
 DYNAMIC SCols
 DYNAMIC SRows

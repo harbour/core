@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    Low level tone code common to some GT drivers
+ * Low level tone code common to some GT drivers
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * the body of TONE function from Windows taken from GTWIN created by
  * the following authors:
@@ -25,7 +23,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -69,8 +67,9 @@
 #undef HB_HAS_WIN9X_TONE
 
 #if defined( HB_CPU_X86 ) && \
-    ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
-      defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
+    ( ( defined( _MSC_VER ) && _MSC_VER < 1900 ) || \
+      defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || \
+      defined( __MINGW32__ ) )
 
 #define HB_HAS_WIN9X_TONE
 
@@ -84,14 +83,14 @@ static int hb_Inp9x( unsigned short int usPort )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_Inp9x(%hu)", usPort ) );
 
-   #if defined( __BORLANDC__ ) || defined( __DMC__ )
+   #if defined( __DMC__ ) || ( defined( __BORLANDC__ ) && ! defined( __clang__ ) )
 
       _DX = usPort;
       __emit__(0xEC);         /* ASM  IN AL, DX */
       __emit__(0x32,0xE4);    /* ASM XOR AH, AH */
       usVal = _AX;
 
-   #elif defined( __XCC__ ) || defined( __POCC__ )
+   #elif defined( __XCC__ ) || defined( __POCC__ ) || defined( __BORLANDC__ )
 
       __asm {
                mov   dx, usPort
@@ -122,13 +121,13 @@ static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_Outp9x(%hu, %hu)", usPort, usVal ) );
 
-   #if defined( __BORLANDC__ ) || defined( __DMC__ )
+   #if defined( __DMC__ ) || ( defined( __BORLANDC__ ) && ! defined( __clang__ ) )
 
       _DX = usPort;
       _AL = usVal;
       __emit__(0xEE);        /* ASM OUT DX, AL */
 
-   #elif defined( __XCC__ ) || defined( __POCC__ )
+   #elif defined( __XCC__ ) || defined( __POCC__ ) || defined( __BORLANDC__ )
 
       __asm {
                mov   dx, usPort

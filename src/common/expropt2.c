@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Compiler Expression Optimizer - reducing expressions
  *
  * Copyright 1999 Ryszard Glab
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1962,7 +1960,8 @@ PHB_EXPR hb_compExprListStrip( PHB_EXPR pSelf, HB_COMP_DECL )
 {
    while( pSelf->ExprType == HB_ET_LIST &&
           hb_compExprListLen( pSelf ) == 1 &&
-          pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE )
+          pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE &&
+          ! hb_compExprIsArrayToParams( pSelf->value.asList.pExprList ) )
    {
       /* replace the list with a simple expression
        *  ( EXPR ) -> EXPR
@@ -2068,14 +2067,14 @@ HB_BOOL hb_compExprReduceCHR( PHB_EXPR pSelf, HB_COMP_DECL )
          }
          else
          {
-            pExpr->value.asString.string = ( char * ) hb_szAscii[ ( int ) pArg->value.asNum.val.l & 0xff ];
+            pExpr->value.asString.string = ( char * ) HB_UNCONST( hb_szAscii[ ( int ) pArg->value.asNum.val.l & 0xff ] );
             pExpr->value.asString.dealloc = HB_FALSE;
             pExpr->nLength = 1;
          }
       }
       else
       {
-         pExpr->value.asString.string = ( char * ) hb_szAscii[ ( unsigned int ) pArg->value.asNum.val.d & 0xff ];
+         pExpr->value.asString.string = ( char * ) HB_UNCONST( hb_szAscii[ ( unsigned int ) pArg->value.asNum.val.d & 0xff ] );
          pExpr->value.asString.dealloc = HB_FALSE;
          pExpr->nLength = 1;
       }
@@ -2101,9 +2100,9 @@ HB_BOOL hb_compExprReduceBCHAR( PHB_EXPR pSelf, HB_COMP_DECL )
 
       pExpr->ValType = HB_EV_STRING;
       pExpr->value.asString.string =
-         ( char * ) hb_szAscii[ ( pArg->value.asNum.NumType == HB_ET_LONG ?
-                           ( unsigned int ) pArg->value.asNum.val.l :
-                           ( unsigned int ) pArg->value.asNum.val.d ) & 0xff ];
+         ( char * ) HB_UNCONST( hb_szAscii[ ( pArg->value.asNum.NumType == HB_ET_LONG ?
+                                ( unsigned int ) pArg->value.asNum.val.l :
+                                ( unsigned int ) pArg->value.asNum.val.d ) & 0xff ] );
       pExpr->value.asString.dealloc = HB_FALSE;
       pExpr->nLength = 1;
 
@@ -2412,8 +2411,8 @@ HB_BOOL hb_compExprReduceUPPER( PHB_EXPR pSelf, HB_COMP_DECL )
          {
             if( pArg->nLength == 1 )
             {
-               szValue = ( char * ) hb_szAscii[ HB_TOUPPER( ( unsigned char )
-                                          pArg->value.asString.string[ 0 ] ) ];
+               szValue = ( char * ) HB_UNCONST( hb_szAscii[ HB_TOUPPER( ( unsigned char )
+                                                   pArg->value.asString.string[ 0 ] ) ] );
                fDealloc = HB_FALSE;
             }
             else

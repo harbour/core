@@ -5,8 +5,6 @@
       Harbour Extensions
    $CATEGORY$
       Document
-   $ONELINER$
-      Harbour Extensions
    $DESCRIPTION$
       <b>Language extensions:</b>   </par>
       --------------------
@@ -57,7 +55,7 @@
 
       * The Harbour debugger provides new interesting classes:
 
-        - Class TDbWindow could be the foundation for a generic multiplatform
+        - Class TDbWindow could be the foundation for a generic multi-platform
 
         - Class TForm
 
@@ -66,7 +64,7 @@
       <b>RTL enhanced functionality:</b>   </par>
       ---------------------------
 
-      - hb_DiskSpace( <nDrive>, <nType> )
+      - hb_vfDirSpace( <nDir>, <nType> )
 
         The second parameter is a Harbour (optional) parameter and indicates the
         type of diskinfo being requested.  See en/diskspac.txt for info.

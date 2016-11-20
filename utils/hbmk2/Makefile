@@ -10,7 +10,11 @@ RC_SOURCES := \
 
 PRG_MAIN := hbmk2.prg
 
-LIBS = $(HB_LIBS_MT_RDD)
+ifeq ($(HB_MT),no)
+   LIBS = $(HB_LIBS_ST_RDD)
+else
+   LIBS = $(HB_LIBS_MT_RDD)
+endif
 
 HB_PRGFLAGS += -u -i$(TOP)
 

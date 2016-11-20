@@ -1,51 +1,8 @@
 /*
- * Harbour Project source code:
- * Hash table type and functions
- *
- * Copyright 2009 April White <april@users.sourceforge.net>
- * www - http://harbour-project.org
- *
- * Based on the content of hashfunc.c and hashes.c
+ * Copyright 2009 April White <bright.tigra gmail.com>
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
+ * See COPYING.txt for licensing terms.
  *
  */
 
@@ -67,6 +24,10 @@
       can be of type: number, date, datetime, string, pointer
 
       <Value1> entry value; can be of type: block, string, numeric, date/datetime, logical, nil, pointer, array, hash table
+
+      Equivalent to:
+         hsTable := { => }
+         hsTable := { <Key1> => <Value1>, <Key2> => <Value2>, <KeyN> => <ValueN> }
    $RETURNS$
       A hash table built from the initial key/value pairs
    $DESCRIPTION$
@@ -100,7 +61,7 @@
    $SYNTAX$
       hb_HHasKey( <hsTable>, <Key> ) -> lExists
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> a key value to be queried for;
       can be of type: number, date, datetime, string, pointer
@@ -137,7 +98,7 @@
    $SYNTAX$
       hb_HPos( <hsTable>, <Key> ) -> nPosition
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> key for which its position is to be determined;
       can be of type: number, date, datetime, string, pointer
@@ -176,7 +137,7 @@
    $SYNTAX$
       hb_HGet( <hsTable>, <Key> ) -> <Value>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> key to be retrieve from the hash table;
       can be of type: number, date, datetime, string, pointer
@@ -215,7 +176,7 @@
    $SYNTAX$
       hb_HGetDef( <hsTable>, <Key>, [<DefaultValue>] ) -> <Value>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> key to be retrieve from the hash table;
       can be of type: number, date, datetime, string, pointer
@@ -256,7 +217,7 @@
    $SYNTAX$
       hb_HSet( <hsTable>, <Key>, <Value> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> the key of the entry to be set;
       can be of type: number, date, datetime, string, pointer
@@ -295,7 +256,7 @@
    $SYNTAX$
       hb_HDel( <hsTable>, <Key> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Key> key to be removed from the hash table;
       can be of type: number, date, datetime, string, pointer
@@ -332,7 +293,7 @@
    $SYNTAX$
       hb_HKeyAt( <hsTable>, <nPosition> ) -> <Key>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nPosition> the position of an entry within the hash table that will
       be returned
@@ -370,7 +331,7 @@
    $SYNTAX$
       hb_HValueAt( <hsTable>, <nPosition>, [<NewValue>] ) -> <Value>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nPosition> the position of an entry within the hash table that will
       be returned
@@ -410,7 +371,7 @@
    $SYNTAX$
       hb_HPairAt( <hsTable>, <nPosition> ) -> <aKeyValue>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nPosition> the position of an entry within the hash table that will
       be returned
@@ -447,7 +408,7 @@
    $SYNTAX$
       hb_HDelAt( <hsTable>, <nPosition> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nPosition> the position of an entry within the hash table that will
       be deleted
@@ -484,7 +445,7 @@
    $SYNTAX$
       hb_HKeys( <hsTable> ) -> <aKeys>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
    $RETURNS$
       An array of all the hash table keys
    $DESCRIPTION$
@@ -518,7 +479,7 @@
    $SYNTAX$
       hb_HValues( <hsTable> ) -> <aValues>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
    $RETURNS$
       An array of all the hash values
    $DESCRIPTION$
@@ -552,7 +513,7 @@
    $SYNTAX$
       hb_HFill( <hsTable>, <Value> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Value> fill value; can be of type: block, string, numeric, date/datetime, logical, nil, pointer, array, hash table
    $RETURNS$
@@ -588,7 +549,7 @@
    $SYNTAX$
       hb_HClone( <hsTable> ) -> <hsDestination>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
    $RETURNS$
       A cloned copy of the hash table
    $DESCRIPTION$
@@ -622,9 +583,9 @@
    $SYNTAX$
       hb_HCopy( <hsDestination>, <hsSource>, [<nStart>], [<nCount>] ) -> <hsDestination>
    $ARGUMENTS$
-      <hsDestination> a destination hash table, created by hb_Hash()
+      <hsDestination> a destination hash table
 
-      <hsSource> a source hash table, created by hb_Hash()
+      <hsSource> a source hash table
 
       <nStart> starting index, defaults to 1 if omitted
 
@@ -662,9 +623,9 @@
    $SYNTAX$
       hb_HMerge( <hsDestination>, <hsSource>, <bBlock>|<nPosition> ) -> <hsDestination>
    $ARGUMENTS$
-      <hsDestination> a destination hash table, created by hb_Hash()
+      <hsDestination> a destination hash table
 
-      <hsSource> a source hash table, created by hb_Hash()
+      <hsSource> a source hash table
 
       <bBlock> a code block that will be evaluated for each entry within the
       source hash table; the code block will be passed the entry key, value and
@@ -708,7 +669,7 @@
    $SYNTAX$
       hb_HEval( <hsTable>, <bBlock>, [<nStart>], [<nCount>] ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <bBlock> code block to be evaluated
 
@@ -751,7 +712,7 @@
    $SYNTAX$
       hb_HScan( <hsTable>, <Value>, [<nStart>], [<nCount>, [<lExact>] ) -> nPosition
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <Value> to be located within the hash table
 
@@ -794,7 +755,7 @@
    $SYNTAX$
       hb_HSort( <hsTable> ) -> <hsSortedTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
    $RETURNS$
       The hash table sorted
 
@@ -830,7 +791,7 @@
    $SYNTAX$
       hb_HCaseMatch( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <lFlag> a logical value indicating to turn on or off
       the 'case match' flag of the hash table
@@ -869,7 +830,7 @@
    $SYNTAX$
       hb_HBinary( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <lFlag> a logical value indicating to turn on or off
       the 'binary' flag of the hash table
@@ -909,7 +870,7 @@
    $SYNTAX$
       hb_HAutoAdd( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <lFlag> a logical value indicating to turn on or off
       the 'auto add' flag of the hash table
@@ -949,7 +910,7 @@
    $SYNTAX$
       hb_HAllocate( <hsTable>, <nItems> )
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <nItems> number of items to preallocate in the hash table
    $DESCRIPTION$
@@ -983,7 +944,7 @@
    $SYNTAX$
       hb_HDefault( <hsTable>, <DefaultValue> ) -> <OldDefaultValye>
    $ARGUMENTS$
-      <hsTable> a hash table, created by hb_Hash()
+      <hsTable> a hash table
 
       <DefaultValue>
    $RETURNS$

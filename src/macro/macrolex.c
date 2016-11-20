@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    small and MT safe lexer for macro compiler
+ * small and MT safe lexer for macro compiler
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -552,7 +550,7 @@ int hb_macro_yylex( YYSTYPE * yylval_ptr, PHB_MACRO pMacro )
                   {
                      yylval_ptr->string++;
                      if( pLex->pDst - yylval_ptr->string > HB_SYMBOL_NAME_LEN + 1 )
-                        ( ( char * ) yylval_ptr->string )[ HB_SYMBOL_NAME_LEN ] = '\0';
+                        ( ( char * ) HB_UNCONST( yylval_ptr->string ) )[ HB_SYMBOL_NAME_LEN ] = '\0';
                      return MACROVAR;
                   }
                   return MACROTEXT;
@@ -765,7 +763,7 @@ int hb_macro_yylex( YYSTYPE * yylval_ptr, PHB_MACRO pMacro )
                         break;
                   }
                   if( pLex->pDst - yylval_ptr->string > HB_SYMBOL_NAME_LEN + 1 )
-                     ( ( char * ) yylval_ptr->string )[ HB_SYMBOL_NAME_LEN ] = '\0';
+                     ( ( char * ) HB_UNCONST( yylval_ptr->string ) )[ HB_SYMBOL_NAME_LEN ] = '\0';
                }
                return IDENTIFIER;
             }

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * ActiveX core module
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -104,7 +102,7 @@ HB_BOOL hb_oleAxInit( void )
       PHB_AX_WININIT pAtlAxWinInit;
 
       s_hLib = hbwapi_LoadLibrarySystem( TEXT( "atl.dll" ) );
-      if( ( unsigned long ) ( HB_PTRDIFF ) s_hLib <= 32 )
+      if( ( HB_PTRUINT ) s_hLib <= 32 )
       {
          s_hLib = NULL;
          return HB_FALSE;

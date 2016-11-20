@@ -33,7 +33,7 @@
    $RETURNS$
       <cSortedString>          the string resulting from the sort process
    $DESCRIPTION$
-      The CHARSORT function sorts the characters within a string <cString>.
+      The CharSort() function sorts the characters within a string <cString>.
       With the parameters <nIgnoreCharacters> and <nSortLength>, you can
       determine that only the substring from position <nIgnoreCharacters>+1
       to position <nIgnoreCharacters>+<nSortLength> within <cString> should

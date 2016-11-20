@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Command line and environment argument management
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -421,7 +419,7 @@ void hb_cmdargUpdate( void )
                   hb_strncat( s_szAppName, pFName->szPath, HB_PATH_MAX - 1 );
                   pFName->szPath = hb_strdup( s_szAppName );
                   hb_fsFNameMerge( s_szAppName, pFName );
-                  hb_xfree( ( void * ) pFName->szPath );
+                  hb_xfree( HB_UNCONST( pFName->szPath ) );
                   s_argv[ 0 ] = s_szAppName;
                }
             }
@@ -810,7 +808,7 @@ HB_FUNC( HB_CMDLINE )
          *--ptr = '\0';
 
          /* Convert from OS codepage */
-         hb_retc_buffer( ( char * ) hb_osDecodeCP( pszBuffer, NULL, NULL ) );
+         hb_retc_buffer( ( char * ) HB_UNCONST( hb_osDecodeCP( pszBuffer, NULL, NULL ) ) );
       }
    }
    else
@@ -861,6 +859,14 @@ void hb_cmdargProcess( void )
             DosSetMaxFH( iHandles );
          #elif defined( HB_OS_DOS )
             _grow_handles( iHandles );
+         #endif
+      #endif
+   }
+   else if( iHandles < 0 )
+   {
+      #if defined( __WATCOMC__ )
+         #if defined( HB_OS_OS2 )
+            DosSetMaxFH( 256 );
          #endif
       #endif
    }

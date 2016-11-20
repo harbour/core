@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Eval API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *    hb_itemDo() ( based on HB_DO() by Ryszard Glab )
@@ -396,16 +393,16 @@ HB_FUNC( HB_FORNEXT ) /* nStart, nEnd | bEnd, bCode, nStep */
  *    hb_ExecFromArray( <cFuncName> [, <aParams> ] )
  *    hb_ExecFromArray( @<funcName>() [, <aParams> ] )
  *    hb_ExecFromArray( <bCodeBlock> [, <aParams> ] )
- *    hb_ExecFromArray( <oObject> , <cMethodName> [, <aParams> ] )
- *    hb_ExecFromArray( <oObject> , @<msgName>() [, <aParams> ] )
+ *    hb_ExecFromArray( <oObject>, <cMethodName> [, <aParams> ] )
+ *    hb_ExecFromArray( <oObject>, @<msgName>() [, <aParams> ] )
  * or:
  *    hb_ExecFromArray( <aExecArray> )
  * where <aExecArray> is in one of the following format:
  *    { <cFuncName> [, <params,...>] }
  *    { @<funcName>() [, <params,...>] }
  *    { <bCodeBlock> [, <params,...>] }
- *    { <oObject> , <cMethodName> [, <params,...>] }
- *    { <oObject> , @<msgName>() [, <params,...>] }
+ *    { <oObject>, <cMethodName> [, <params,...>] }
+ *    { <oObject>, @<msgName>() [, <params,...>] }
  */
 HB_FUNC( HB_EXECFROMARRAY )
 {

@@ -1,15 +1,12 @@
 /*
- * Harbour Project source code:
  * Alert(), hb_Alert() functions
  *
  * Released to Public Domain by Vladimir Kazimirchik <v_kazimirchik@yahoo.com>
- * www - http://harbour-project.org
  *
  */
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *    Changes for higher Clipper compatibility, console mode, extensions

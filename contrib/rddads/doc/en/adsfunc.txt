@@ -17,7 +17,7 @@
       <lSuccess>  True if the file is successfully written.
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
-      AdsBlob2File() is a wrapper for AdsBinaryToFile.
+      AdsBlob2File() is a wrapper for AdsBinaryToFile().
    $EXAMPLES$
 
    $STATUS$
@@ -56,7 +56,7 @@
       <lSuccess>   True if the file is successfully written.
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
-      AdsFile2Blob() is a wrapper for AdsFileToBinary.
+      AdsFile2Blob() is a wrapper for AdsFileToBinary().
       Use of this function is illegal in an ADS transaction.
    $EXAMPLES$
 
@@ -121,7 +121,7 @@
 
       <nType>   The type of operation:
 
-      <table>
+      <table-noheader>
       ADS_AOF_ADD_RECORD      Add the record to the AOF (set the bit). This is the default operation.
       ADS_AOF_REMOVE_RECORD   Remove the record from the AOF (clear the bit).
       ADS_AOF_TOGGLE_RECORD   Switch the record into or out of the AOF.
@@ -141,19 +141,19 @@
       The maximum number of records that can be customized in a single call is
       16, 383, so <aRecNos> must not be longer than this.
 
-      Calls to AdsCustomizeAOF must be made after an application has created a
-      filter with a call to AdsSetAOF. To create a completely empty record set
-      (to which records can be added with calls to AdsCustomizeAOF), use ".F." as
-      the filter expression given to AdsSetAOF. To create a completely full
+      Calls to AdsCustomizeAOF() must be made after an application has created a
+      filter with a call to AdsSetAOF(). To create a completely empty record set
+      (to which records can be added with calls to AdsCustomizeAOF()), use ".F." as
+      the filter expression given to AdsSetAOF(). To create a completely full
       record set (from which records can be removed), use ".T." as the filter
       expression.
 
       WARNING: Always start with a FULLY optimized AOF!
       If an application must use a filter expression that is not fully optimized
       as the starting point for customization, the ADS_RESOLVE_IMMEDIATE option
-      should be used with the call to AdsSetAOF. Otherwise, the dynamic filter
+      should be used with the call to AdsSetAOF(). Otherwise, the dynamic filter
       resolution that occurs on the server will automatically remove records that
-      have been added through the AdsCustomizeAOF calls. The
+      have been added through the AdsCustomizeAOF() calls. The
       filter expressions ".T." and ".F." both result in fully optimized AOFs
       regardless of available indexes.
 
@@ -248,13 +248,13 @@
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
-      Retrieve the filter expression used in the call to AdsSetAOF
+      Retrieve the filter expression used in the call to AdsSetAOF()
    $SYNTAX$
       AdsGetAOF() --> cFilter
    $ARGUMENTS$
       None
    $RETURNS$
-      <cFilter>  The filter expression used in the call to AdsSetAOF.
+      <cFilter>  The filter expression used in the call to AdsSetAOF().
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
@@ -507,7 +507,7 @@
 
       Options are defined in ads.ch:
 
-      <table>
+      <table-noheader>
          ADS_RESPECTFILTERS   Respect filters and scopes
          ADS_IGNOREFILTERS    Ignore filters and scopes
          ADS_RESPECTSCOPES    Respect scopes only
@@ -554,8 +554,8 @@
 
       <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
 
-      <table>
       Options are defined in ads.ch:
+      <table-noheader>
          ADS_RESPECTFILTERS   Respect filters and scopes
          ADS_IGNOREFILTERS    Ignore filters and scopes
          ADS_RESPECTSCOPES    Respect scopes only
@@ -563,8 +563,8 @@
    $RETURNS$
       <nKeyNo>   The logical key number of the current record in the given index.
    $DESCRIPTION$
-      See ace.hlp for full details about the Advantage Database Server.</par>
-      Wrapper for AdsGetKeyNum. </par>
+      See ace.hlp for full details about the Advantage Database Server.
+      Wrapper for AdsGetKeyNum.
       This function may be slow on a large database with
       ADS_RESPECTFILTERS set because it walks through the keys to get the
       current position.  Compare to AdsGetRelKeyPos().
@@ -607,7 +607,7 @@
       If a file is opened in the proprietary mode, other applications cannot
       open it in a "write" mode. So if non-Advantage applications need
       concurrent access to the data files, use the Compatibility locking mode
-      by calling  AdsLocking( .F. ).
+      by calling AdsLocking( .F. ).
 
       AdsLocking() is a Get/Set function for the locking mode. It affects
       files at the time they are opened. So when a data
@@ -689,7 +689,7 @@
    $RETURNS$
       NIL
    $DESCRIPTION$
-      See ace.hlp for full details on AdsRegisterProgressCallback.
+      See ace.hlp for full details on AdsRegisterProgressCallback().
       ace32.dll does not support the EVAL/EVERY clauses. Remember, there
       is an external process doing the indexing that knows nothing of
       Harbour expressions or codeblocks. Even with Local Server it's the
@@ -701,16 +701,15 @@
          ...
          AdsRegCallback( {| nPercent | outputstuff( nPercent ) }  )
          /* The above codeblock will be called approximately
-              every 2 seconds while indexing.
-              The codeblock can return .T. to abort.   */
-         INDEX ON First + LAST + LABEL1 + LABEL2 TAG First
+            every 2 seconds while indexing.
+            The codeblock can return .T. to abort. */
+         INDEX ON FIRST + LAST + LABEL1 + LABEL2 TAG First
          AdsClrCallback()
          RETURN
 
-      FUNCTION outputstuff( nPercent )  /* The "callback" function */
+      STATIC FUNCTION outputstuff( nPercent )  /* The "callback" function */
          ? "output stuff", nPercent
-         RETURN Inkey() == K_ESC
-         /*  If press ESC, returns .T. to abort.   */
+         RETURN hb_keyStd( Inkey() ) == K_ESC  /* If press ESC, returns .T. to abort. */
    $STATUS$
       R
    $COMPLIANCE$
@@ -959,7 +958,7 @@
    $RETURNS$
       <lActiveIndex>
    $DESCRIPTION$
-      Equivalent to <b>Empty( ordSetFocus() )<\b>, but faster.
+      Equivalent to <b>Empty( ordSetFocus() )</b>, but faster.
    $EXAMPLES$
 
    $STATUS$
@@ -1004,7 +1003,7 @@
       the record has been explicitly locked already. If not, we throw
       an error so the developer can catch the missing lock condition.
       For performance reasons, Release code should leave this OFF.
-      Although the call to AdsIsRecordLocked is documented as a client
+      Although the call to AdsIsRecordLocked() is documented as a client
       call, not a server request, and should be fast, it will be
       called for EACH FIELD as it is assigned a value.
 
@@ -1124,7 +1123,7 @@
    $DESCRIPTION$
       Advantage uses Handles to control connections to various servers.
       It's possible that an app may open some files via the Remote server,
-      but others via the Local server or an Internect connection.
+      but others via the Local server or an Internet connection.
       This function identifies the type of server used by a connection handle.
       Note that after a table is opened, the type of connection used for
       that workarea can be retrieved with AdsGetTableConType().
@@ -1207,6 +1206,8 @@
          AdsDDCreateUser( , "Luiz", "papael", "This is luiz User" )
          // Add the tables
          AdsDDAddTable( "Table1", "table1.adt", "table1.adi" )
+         // ...
+      ENDIF
    $STATUS$
       R
    $COMPLIANCE$
@@ -1276,11 +1277,11 @@
    $RETURNS$
       <nRetVal>     ???
    $DESCRIPTION$
-      AdsCacheOpenTables allows table closes to be cached in order for
-      subsequent opens to occur faster. A call to AdsCloseTable with
+      AdsCacheOpenTables() allows table closes to be cached in order for
+      subsequent opens to occur faster. A call to AdsCloseTable() with
       the table cache greater than zero results in the table appearing
       closed to an application, but still open on the Advantage server.
-      AdsCacheOpenTables is a global setting that affects the behavior
+      AdsCacheOpenTables() is a global setting that affects the behavior
       of the entire application. The default number of open tables that
       are cached is 0.
    $EXAMPLES$
@@ -1314,12 +1315,12 @@
    $RETURNS$
       <nRetVal>     ???
    $DESCRIPTION$
-      AdsCacheOpenCursors allows cursor closes to be cached in
+      AdsCacheOpenCursors() allows cursor closes to be cached in
       order for subsequent SELECTS to occur faster. A call to
-      AdsCloseTable with the cursor cache greater than zero results
+      AdsCloseTable() with the cursor cache greater than zero results
       in the cursor appearing closed to an application, but still
       open on the Advantage server.
-      AdsCacheOpenCursors is a global setting that affects the
+      AdsCacheOpenCursors() is a global setting that affects the
       behavior of the entire application. The default number of
       open cursors that are cached is 25.
    $EXAMPLES$
@@ -1355,7 +1356,7 @@
    $RETURNS$
       <nRetVal>     ???
    $DESCRIPTION$
-      AdsCloseCachedTables can be used to close all cached tables
+      AdsCloseCachedTables() can be used to close all cached tables
       on a given connection. All cached closed tables on the client
       will be closed, as well as all cache closed tables on the server
       that might have been used when executing SQL statements.
@@ -1366,7 +1367,7 @@
    $COMPLIANCE$
       Harbour extension
    $PLATFORMS$
-      Ads 7.x and above, Windows, Linux
+      ADS 7.x and above, Windows, Linux
    $FILES$
       Library is rddads
       Header is ads.ch

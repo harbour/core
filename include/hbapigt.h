@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Terminal API
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +46,6 @@
 
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    Keyboard related declarations
@@ -314,6 +311,7 @@ extern HB_EXPORT void       hb_inkeyExit( void );           /* reset inkey pool 
 
 extern HB_EXPORT HB_SIZE    hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize ); /* convert key value to string */
 extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour extended key code to cl*pper inkey code */
+extern HB_EXPORT int        hb_inkeyKeyExt( int iKey );     /* extract function/edit key code value HB_KX_* from Harbour extended key code */
 extern HB_EXPORT int        hb_inkeyKeyMod( int iKey );     /* extract keyboard modifiers HB_KF_* from Harbour extended key code */
 extern HB_EXPORT int        hb_inkeyKeyVal( int iKey );     /* extract key/character code from Harbour extended key code */
 
@@ -355,6 +353,7 @@ extern HB_EXPORT int        hb_inkeyKeyVal( int iKey );     /* extract key/chara
 #define HB_INKEY_NEW_MPOS( x, y )   ( ( ( ( y ) & HB_INKEY_EXT_POSMASK ) << HB_INKEY_EXT_POSBITS ) | \
                                       ( ( x ) & HB_INKEY_EXT_POSMASK ) | \
                                       ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEPOS ) )
+#define HB_INKEY_NEW_EVENT( e )      ( ( e ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_EVENT ) )
 
 #define HB_INKEY_MOUSEPOSX( n )     ( ( n ) & HB_INKEY_EXT_POSMASK )
 #define HB_INKEY_MOUSEPOSY( n )     ( ( ( n ) >> HB_INKEY_EXT_POSBITS ) & HB_INKEY_EXT_POSMASK )

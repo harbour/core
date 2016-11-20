@@ -3,10 +3,8 @@
 // Clipper. Inkey() is used to pause the display at certain points to make
 // it easier to compare scrolling compatibility. A Tone() is sounded before
 // each Inkey(0) call.
-/* Harbour Project source code
-   http://harbour-project.org/
-   Public domain program written by David G. Holm <dholm@jsd-llc.com>
-*/
+
+/* Public domain program written by David G. Holm <dholm@jsd-llc.com> */
 
 PROCEDURE Main()
 

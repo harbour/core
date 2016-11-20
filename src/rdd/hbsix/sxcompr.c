@@ -1,6 +1,5 @@
 /*
- * Harbour Project source code:
- *    SIX compatible functions:
+ * SIX compatible functions:
  *          hb_LZSSxCompressMem()
  *          hb_LZSSxDecompressMem()
  *          hb_LZSSxCompressFile()
@@ -12,7 +11,6 @@
  *          _SX_STRCOMPRESS
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +25,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -207,7 +205,7 @@ static void hb_LZSSxExit( PHB_LZSSX_COMPR pCompr )
 }
 
 static PHB_LZSSX_COMPR hb_LZSSxInit(
-                        PHB_FILE pInput, HB_BYTE * pSrcBuf, HB_SIZE nSrcBuf,
+                        PHB_FILE pInput, const HB_BYTE * pSrcBuf, HB_SIZE nSrcBuf,
                         PHB_FILE pOutput, HB_BYTE * pDstBuf, HB_SIZE nDstBuf )
 {
    PHB_LZSSX_COMPR pCompr = ( PHB_LZSSX_COMPR ) hb_xgrab( sizeof( HB_LZSSX_COMPR ) );
@@ -218,7 +216,7 @@ static PHB_LZSSX_COMPR hb_LZSSxInit(
       nDstBuf = LZSS_IOBUFLEN;
 
    pCompr->pInput      = pInput;
-   pCompr->inBuffer    = pSrcBuf;
+   pCompr->inBuffer    = ( HB_BYTE * ) HB_UNCONST( pSrcBuf );
    pCompr->inBuffSize  = nSrcBuf;
    pCompr->inBuffPos   = 0;
    pCompr->inBuffRead  = ( pInput == NULL ) ? nSrcBuf : 0;
@@ -565,7 +563,7 @@ HB_BOOL hb_LZSSxCompressMem( const char * pSrcBuf, HB_SIZE nSrcLen,
    PHB_LZSSX_COMPR pCompr;
    HB_SIZE nSize;
 
-   pCompr = hb_LZSSxInit( NULL, ( HB_BYTE * ) pSrcBuf, nSrcLen,
+   pCompr = hb_LZSSxInit( NULL, ( const HB_BYTE * ) pSrcBuf, nSrcLen,
                           NULL, ( HB_BYTE * ) pDstBuf, nDstLen );
    nSize = hb_LZSSxEncode( pCompr );
    hb_LZSSxExit( pCompr );
@@ -580,7 +578,7 @@ HB_BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, HB_SIZE nSrcLen,
    PHB_LZSSX_COMPR pCompr;
    HB_BOOL fResult;
 
-   pCompr = hb_LZSSxInit( NULL, ( HB_BYTE * ) pSrcBuf, nSrcLen,
+   pCompr = hb_LZSSxInit( NULL, ( const HB_BYTE * ) pSrcBuf, nSrcLen,
                           NULL, ( HB_BYTE * ) pDstBuf, nDstLen );
    fResult = hb_LZSSxDecode( pCompr );
    hb_LZSSxExit( pCompr );

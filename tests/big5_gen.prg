@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    code to generate C source with conversion tables between BIG5 and UCS16
+ * code to generate C source with conversion tables between BIG5 and UCS16
  *    using data defined by Unicode, Inc. in BIG5.TXT
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 
@@ -129,12 +127,10 @@ proc main()
 
    cResult := ;
       "/*" + hb_eol() + ;
-      " * Harbour Project source code:" + hb_eol() + ;
-      " *    BIG5 <-> UCS16 conversion tables" + hb_eol() + ;
-      " *    code generated automatically by tests/big5_gen.prg" + hb_eol() + ;
+      " * BIG5 <-> UCS16 conversion tables" + hb_eol() + ;
+      " * code generated automatically by tests/big5_gen.prg" + hb_eol() + ;
       " *" + hb_eol() + ;
       " * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>" + hb_eol() + ;
-      " * www - http://harbour-project.org" + hb_eol() + ;
       " *" + hb_eol() + ;
       " */" + hb_eol() + ;
        hb_eol()

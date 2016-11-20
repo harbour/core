@@ -1,12 +1,7 @@
 /*
- * Harbour Project source code:
- * Document generator include file
+ * OpenSSL API (SSL) - Harbour extensions
  *
- * Copyright 2009 April White <april users.sourceforge.net>
- * www - http://harbour-project.org
- *
- * Portions of this project are based on hbdoc
- *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
+ * Copyright 2016 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,23 +44,48 @@
  *
  */
 
-#ifndef HBDOC_CH_
-#define HBDOC_CH_
+/* hb_SSL_new() -> <pSSL> */
+FUNCTION hb_SSL_new()
 
-MEMVAR p_aCategories
-MEMVAR p_aCompliance
-MEMVAR p_aPlatforms
-MEMVAR p_aStatus
-MEMVAR p_aConversionList
+   STATIC s_onceControl
 
-// Template definitions
-#define TPL_START            1
-#define TPL_END              2
-#define TPL_REQUIRED         4 // intentially has a 'required' and 'optional' flag
-#define TPL_OPTIONAL         8
-#define TPL_PREFORMATTED     16
-#define TPL_CONSTRAINTLIST   32
-#define TPL_TEMPLATE         64
-#define TPL_OUTPUT           128
+   /* initialize SSL library */
+   hb_threadOnce( @s_onceControl, {|| SSL_init(), ;
+                  RAND_seed( hb_randStr( 20 ) + hb_TToS( hb_DateTime() ) ) } )
 
-#endif
+   /* create a new SSL structure for a connection */
+   RETURN SSL_new( SSL_CTX_new() )
+
+/* hb_SSL_connect_socket( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) -> <lConnected> */
+FUNCTION hb_SSL_connect_socket( pSocket, nTimeout, cInfo )
+
+   LOCAL nErr
+   LOCAL ssl
+
+   ssl := hb_SSL_new()
+   IF !Empty( pSocket := hb_socketNewSSL_connect( @pSocket, ssl, nTimeout ) )
+      cInfo := "SSL connected with " + SSL_get_cipher( ssl ) + " encryption."
+      RETURN .T.
+   ENDIF
+
+   nErr := ERR_get_error()
+   cInfo := hb_StrFormat( "SSL connection error [%d] %s", ;
+                          nErr, ERR_error_string( nErr ) )
+   RETURN .F.
+
+/* hb_SSL_connect_inet( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) -> <lConnected> */
+FUNCTION hb_SSL_connect_inet( pInetSock, nTimeout, cInfo )
+
+   LOCAL nResult, nErr
+   LOCAL ssl
+
+   ssl := hb_SSL_new()
+   IF ( nResult := hb_inetSSL_CONNECT( pInetSock, ssl, nTimeout ) ) == 1
+      cInfo := "SSL connected with " + SSL_get_cipher( ssl ) + " encryption."
+      RETURN .T.
+   ENDIF
+
+   nErr := ERR_get_error()
+   cInfo := hb_StrFormat( "SSL connection error [%d:%d] %s", ;
+                          nResult, nErr, ERR_error_string( nErr ) )
+   RETURN .F.

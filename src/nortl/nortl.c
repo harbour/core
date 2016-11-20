@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  *
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -494,6 +492,10 @@ void hb_fsSetIOError( HB_BOOL fResult, HB_USHORT uiOperation )
    HB_SYMBOL_UNUSED( uiOperation );
 }
 
+void  hb_fsSetError( HB_ERRCODE uiError )
+{
+   HB_SYMBOL_UNUSED( uiError );
+}
 
 /* file name conversion */
 
@@ -518,7 +520,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
 
       if( s_cDirSep != HB_OS_PATH_DELIM_CHR )
       {
-         char * p = ( char * ) szFileName;
+         char * p = ( char * ) HB_UNCONST( szFileName );
          while( *p )
          {
             if( *p == s_cDirSep )
@@ -542,7 +544,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
                ++pFileName->szName;
                --nLen;
             }
-            ( ( char * ) pFileName->szName )[ nLen ] = '\0';
+            ( ( char * ) HB_UNCONST( pFileName->szName ) )[ nLen ] = '\0';
          }
          if( pFileName->szExtension )
          {
@@ -554,7 +556,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
                ++pFileName->szExtension;
                --nLen;
             }
-            ( ( char * ) pFileName->szExtension )[ nLen ] = '\0';
+            ( ( char * ) HB_UNCONST( pFileName->szExtension ) )[ nLen ] = '\0';
          }
       }
 
@@ -562,28 +564,28 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       if( s_iFileCase == HB_SET_CASE_LOWER )
       {
          if( pFileName->szName )
-            hb_strlow( ( char * ) pFileName->szName );
+            hb_strlow( ( char * ) HB_UNCONST( pFileName->szName ) );
          if( pFileName->szExtension )
-            hb_strlow( ( char * ) pFileName->szExtension );
+            hb_strlow( ( char * ) HB_UNCONST( pFileName->szExtension ) );
       }
       else if( s_iFileCase == HB_SET_CASE_UPPER )
       {
          if( pFileName->szName )
-            hb_strupr( ( char * ) pFileName->szName );
+            hb_strupr( ( char * ) HB_UNCONST( pFileName->szName ) );
          if( pFileName->szExtension )
-            hb_strupr( ( char * ) pFileName->szExtension );
+            hb_strupr( ( char * ) HB_UNCONST( pFileName->szExtension ) );
       }
 
       /* DIRCASE */
       if( pFileName->szPath )
       {
          if( s_iDirCase == HB_SET_CASE_LOWER )
-            hb_strlow( ( char * ) pFileName->szPath );
+            hb_strlow( ( char * ) HB_UNCONST( pFileName->szPath ) );
          else if( s_iDirCase == HB_SET_CASE_UPPER )
-            hb_strupr( ( char * ) pFileName->szPath );
+            hb_strupr( ( char * ) HB_UNCONST( pFileName->szPath ) );
       }
 
-      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      hb_fsFNameMerge( ( char * ) HB_UNCONST( szFileName ), pFileName );
       hb_xfree( pFileName );
    }
    else if( pszFree )
@@ -609,7 +611,7 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
 
       if( s_cDirSep != HB_OS_PATH_DELIM_CHR )
       {
-         char * p = ( char * ) szFileName;
+         char * p = ( char * ) HB_UNCONST( szFileName );
          while( *p )
          {
             if( *p == s_cDirSep )

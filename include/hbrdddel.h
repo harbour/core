@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    DELIM RDD
+ * DELIM RDD
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,6 +54,17 @@ HB_EXTERN_BEGIN
 /* DELIMITED default file extensions */
 #define DELIM_TABLEEXT                    ".txt"
 
+#define DELIMNODE_DATA( r )   ( ( LPDELIMDATA ) hb_stackGetTSD( ( PHB_TSD ) ( r )->lpvCargo ) )
+
+/*
+ * Private DELIM RDD data kept in RDDNODE
+ */
+typedef struct _DELIMDATA
+{
+   char      szTableExt[ HB_MAX_FILE_EXT + 1 ];
+   HB_USHORT uiSetHeader;      /* RDDI_SETHEADER */
+} DELIMDATA, * LPDELIMDATA;
+
 
 /*
  *  DELIM WORKAREA
@@ -76,31 +85,29 @@ typedef struct _DELIMAREA
    *  example.
    */
 
-   PHB_FILE    pFile;                  /* Data file handle */
-   char *      szFileName;             /* Name of data file */
-   char *      szEol;                  /* EOL marker */
-   HB_USHORT   uiEolLen;               /* Size of EOL marker */
-   char        cDelim;                 /* Character field delimiter */
-   char        cSeparator;             /* Field separator */
-   HB_USHORT   uiRecordLen;            /* Size of record */
-   HB_USHORT * pFieldOffset;           /* Pointer to field offset array */
-   HB_BYTE *   pRecord;                /* Buffer of record data */
-   HB_BYTE *   pBuffer;                /* Read/Write */
-   HB_SIZE     nBufferSize;            /* IO buffer size */
-   HB_SIZE     nBufferRead;            /* Number of bytes in read buffer */
-   HB_SIZE     nBufferIndex;           /* Index to read read buffer */
-   HB_FOFFSET  nRecordOffset;          /* Current record offest */
-   HB_FOFFSET  nNextOffset;            /* Next record offest */
-   HB_FOFFSET  nFileSize;              /* File table size in export mode */
-   HB_FOFFSET  nBufferStart;           /* Start offset of read buffer */
-   HB_ULONG    ulRecNo;                /* Current record */
-   HB_ULONG    ulRecCount;             /* Number of records (in export) */
-   HB_BOOL     fTransRec;              /* Can put whole records */
-   HB_BOOL     fFlush;                 /* Data was written to table and not commited */
-   HB_BOOL     fShared;                /* Shared file */
-   HB_BOOL     fReadonly;              /* Read only file */
-   HB_BOOL     fPositioned;            /* Positioned record */
-   HB_BOOL     fRecordChanged;         /* Record changed */
+   PHB_FILE    pFile;               /* Data file handle */
+   char *      szFileName;          /* Name of data file */
+   char *      szEol;               /* EOL marker */
+   HB_USHORT   uiEolLen;            /* Size of EOL marker */
+   char        cDelim;              /* Character field delimiter */
+   char        cSeparator;          /* Field separator */
+   HB_USHORT   uiRecordLen;         /* Size of record */
+   HB_USHORT * pFieldOffset;        /* Pointer to field offset array */
+   HB_BYTE *   pRecord;             /* Buffer of record data */
+   HB_BYTE *   pBuffer;             /* Read/Write */
+   HB_SIZE     nBufferSize;         /* IO buffer size */
+   HB_SIZE     nBufferRead;         /* Number of bytes in read buffer */
+   HB_SIZE     nBufferAtRead;       /* The index in the buffer where we should read next peace of data */
+   HB_SIZE     nBufferIndex;        /* Index to read read buffer */
+   HB_ULONG    ulRecNo;             /* Current record */
+   HB_ULONG    ulRecCount;          /* Number of records (in export) */
+   HB_BOOL     fTransRec;           /* Can put whole records */
+   HB_BOOL     fFlush;              /* Data was written to table and not commited */
+   HB_BOOL     fShared;             /* Shared file */
+   HB_BOOL     fReadonly;           /* Read only file */
+   HB_BOOL     fPositioned;         /* Positioned record */
+   HB_BOOL     fRecordChanged;      /* Record changed */
+   HB_BOOL     fAnyEol;             /* Check for CRLF, LF, CR and LFCR EOLs */
 } DELIMAREA;
 
 typedef DELIMAREA * LPDELIMAREA;

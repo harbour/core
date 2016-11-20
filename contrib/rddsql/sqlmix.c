@@ -2,7 +2,6 @@
  * SQL MIX (Memory Index) Database Driver
  *
  * Copyright 2007 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1566,7 +1565,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
    switch( hb_itemType( pResult ) )
    {
       case HB_IT_STRING:
-      case HB_IT_STRING | HB_IT_MEMO:
+      case HB_IT_MEMO:
          bType = 'C';
          uiLen = ( HB_USHORT ) hb_itemGetCLen( pResult );
          if( uiLen > MIX_MAXKEYLEN )
@@ -1651,7 +1650,7 @@ static HB_ERRCODE sqlmixOrderCreate( SQLMIXAREAP pArea, LPDBORDERCREATEINFO pOrd
          SELF_GOTO( &pArea->sqlarea.area, ulRecNo );
          return HB_FAILURE;
       }
-      if( hb_itemType( pArea->sqlarea.area.valResult ) != HB_IT_LOGICAL )
+      if( ( hb_itemType( pArea->sqlarea.area.valResult ) & HB_IT_LOGICAL ) == 0 )
       {
          hb_itemRelease( pArea->sqlarea.area.valResult );
          pArea->sqlarea.area.valResult = 0;
@@ -1751,7 +1750,7 @@ static HB_ERRCODE sqlmixOrderInfo( SQLMIXAREAP pArea, HB_USHORT uiIndex, LPDBORD
                   pArea->sqlarea.area.valResult = NULL;
                   if( SELF_EVALBLOCK( &pArea->sqlarea.area, pForItem ) == HB_SUCCESS )
                   {
-                     if( hb_itemType( pArea->sqlarea.area.valResult ) == HB_IT_LOGICAL )
+                     if( hb_itemType( pArea->sqlarea.area.valResult ) & HB_IT_LOGICAL )
                      {
                         pTag->szForExpr = hb_strdup( pForExpr );
                         pTag->pForItem  = pForItem;

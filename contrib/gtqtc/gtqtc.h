@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    QT Console
+ * QT Console
  * Copyright 2013 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  * Slightly based on GTQTC
  * Copyright 2009-2011 Pritpal Bedi <pritpal@vouchcac.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -342,7 +340,7 @@ class QTConsole : public QWidget
    Q_OBJECT
 
 public:
-   QTConsole( PHB_GTQTC pStructQTC, QWidget *parent = 0 );
+   QTConsole( PHB_GTQTC pStructQTC, QWidget *parnt = 0 );
    virtual ~QTConsole( void );
 
    PHB_GTQTC      pQTC;
@@ -362,20 +360,20 @@ public:
    void repaintChars( const QRect & rect );
 
 protected:
-   void inputMethodEvent( QInputMethodEvent * event );
-   void keyPressEvent( QKeyEvent * event );
-   void keyReleaseEvent( QKeyEvent * event );
-   void mousePressEvent( QMouseEvent * event );
-   void mouseMoveEvent( QMouseEvent * event );
-   void mouseReleaseEvent( QMouseEvent * event );
-   void mouseDoubleClickEvent( QMouseEvent * event );
-   void paintEvent( QPaintEvent * event );
-   void resizeEvent( QResizeEvent * event );
-   void wheelEvent( QWheelEvent * event );
-   void timerEvent( QTimerEvent * event );
-   void focusInEvent( QFocusEvent * event );
-   void focusOutEvent( QFocusEvent * event );
-   bool event( QEvent * event );
+   void inputMethodEvent( QInputMethodEvent * evt );
+   void keyPressEvent( QKeyEvent * evt );
+   void keyReleaseEvent( QKeyEvent * evt );
+   void mousePressEvent( QMouseEvent * evt );
+   void mouseMoveEvent( QMouseEvent * evt );
+   void mouseReleaseEvent( QMouseEvent * evt );
+   void mouseDoubleClickEvent( QMouseEvent * evt );
+   void paintEvent( QPaintEvent * evt );
+   void resizeEvent( QResizeEvent * evt );
+   void wheelEvent( QWheelEvent * evt );
+   void timerEvent( QTimerEvent * evt );
+   void focusInEvent( QFocusEvent * evt );
+   void focusOutEvent( QFocusEvent * evt );
+   bool event( QEvent * evt );
 };
 
 
@@ -392,7 +390,7 @@ public:
     void setResizing( void );
 
 protected:
-    void closeEvent( QCloseEvent * event );
+    void closeEvent( QCloseEvent * evt );
 };
 
 #endif /* HB_QTC_H_ */

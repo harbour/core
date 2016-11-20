@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * FoxPro compatible Occurs() function
+ * FoxPro compatible Occurs() and At() functions
  *
  * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,3 +54,15 @@ FUNCTION Occurs( cSub, cStr )
    ENDIF
 
    RETURN nCount
+
+
+FUNCTION fox_At( cSub, cStr, nOccurrence )
+   LOCAL nPos := 0
+
+   IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )
+      hb_default( @nOccurrence, 1 )
+      DO WHILE --nOccurrence >= 0 .AND. ( nPos := hb_At( cSub, cStr, nPos + 1 ) ) != 0
+      ENDDO
+   ENDIF
+
+RETURN nPos

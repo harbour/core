@@ -1,5 +1,4 @@
 /*
- * xHarbour Project source code:
  * Text file reading functions
  *
  * Copyright 2003 Marcelo Lombardo - lombardo@uol.com.br
@@ -18,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,7 +60,7 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
    HB_ISIZ nRead = 0, nOffset, nSize;
    char *  pBuff;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsReadLine(%p, %" HB_PFS "d, %p, %p, %" HB_PFS "d, %p, %p)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, pTerm, pnTermSizes, nTerms, pbFound, pbEOF ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsReadLine(%p, %" HB_PFS "d, %p, %p, %" HB_PFS "d, %p, %p)", ( void * ) ( HB_PTRUINT ) hFileHandle, *plBuffLen, pTerm, pnTermSizes, nTerms, pbFound, pbEOF ) );
 
    *pbFound = HB_FALSE;
    *pbEOF   = HB_FALSE;

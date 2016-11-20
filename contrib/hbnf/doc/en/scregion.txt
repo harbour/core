@@ -33,7 +33,7 @@
       @ 0, 0, 24, 79 BOX "222222222"          // fill the screen with 2's
       ft_RstRgn( cScreen )                    // restore the 1's region
    $SEEALSO$
-      ft_RstRgn() ft_RgnStack()
+      ft_RstRgn(), ft_RgnStack()
    $END$
  */
 
@@ -79,7 +79,7 @@
       @ 0, 0, 24, 79 BOX "222222222"         // fill the screen with 2's
       ft_RstRgn( cScreen, 20, 60 )           // restore to a different location
    $SEEALSO$
-      ft_SavRgn() ft_RgnStack()
+      ft_SavRgn(), ft_RgnStack()
    $END$
  */
 
@@ -149,6 +149,6 @@
       ft_RgnStack( "pop" )        // restore the 4's region
       ft_RgnStack( "pop all" )    // restore the 3's, 2's and 1's regions
    $SEEALSO$
-      ft_SavRgn() ft_RstRgn()
+      ft_SavRgn(), ft_RstRgn()
    $END$
  */

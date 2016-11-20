@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * FreeImage graphic library low level (client api) interface code.
  *
  * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
  * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
- * www - http://www.xharbour.org http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -368,7 +366,7 @@ HB_FUNC( FI_LOADFROMMEMORY )
       const char *      szImage = hb_parc( 2 );
       int flags = hb_parni( 3 );
 
-      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) szImage, ( DWORD ) hb_parclen( 2 ) );
+      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) HB_UNCONST( szImage ), ( DWORD ) hb_parclen( 2 ) );
       FIBITMAP * dib    = FreeImage_LoadFromMemory( fif, stream, flags );
       FreeImage_CloseMemory( stream );
 
@@ -639,7 +637,7 @@ HB_FUNC( FI_GETFILETYPEFROMMEMORY )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) hb_parc( 1 ), ( int ) hb_parclen( 1 ) );
+      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) HB_UNCONST( hb_parc( 1 ) ), ( int ) hb_parclen( 1 ) );
       int        size   = hb_parni( 1 );
 
       hb_retni( FreeImage_GetFileTypeFromMemory( stream, size ) );
@@ -963,7 +961,7 @@ HB_FUNC( FI_SETBACKGROUNDCOLOR )
        HB_ISCHAR( 2 ) && hb_parclen( 2 ) >= sizeof( RGBQUAD ) )
    {
       FIBITMAP * dib     = hb_FIBITMAP_par( 1 );
-      RGBQUAD *  bkcolor = ( RGBQUAD * ) hb_itemGetCPtr( hb_param( 2, HB_IT_STRING ) );
+      RGBQUAD *  bkcolor = ( RGBQUAD * ) HB_UNCONST( hb_itemGetCPtr( hb_param( 2, HB_IT_STRING ) ) );
 
       hb_fi_retl( FreeImage_SetBackgroundColor( dib, bkcolor ) );
    }
@@ -1220,7 +1218,7 @@ HB_FUNC( FI_CONVERTTOTYPE )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagID(FITAG *tag, WORD id); */
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagType(FITAG *tag, FREE_IMAGE_MDTYPE type); */
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagCount(FITAG *tag, DWORD count); */
-/* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagLength(FITAG *tag, DWORD length) */;
+/* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagLength(FITAG *tag, DWORD length) */
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetTagValue(FITAG *tag, const void *value); */
 
 /* iterator */

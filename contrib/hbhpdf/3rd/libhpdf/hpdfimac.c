@@ -18,7 +18,6 @@
 #include "hpdfconf.h"
 #include "hpdfutil.h"
 #include "hpdf.h"
-#include <memory.h>
 #include <string.h>
 #include <assert.h>
 

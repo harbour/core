@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    MT mode functions
+ * MT mode functions
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,7 +47,7 @@
 /*
   Harbour level API:
 
-  hb_threadStart( [<nThreadAttrs> ,] <@sStart()> | <bStart> | <cStart> [, <params,...> ] ) -> <pThID>
+  hb_threadStart( [ <nThreadAttrs>, ] <@sStart()> | <bStart> | <cStart> [, <params,...> ] ) -> <pThID>
   hb_threadSelf() -> <pThID> | NIL
   hb_threadID( [ <pThID> ] ) -> <nThNo>
   hb_threadJoin( <pThID> [, @<xRetCode> ] ) -> <lOK>
@@ -59,7 +57,7 @@
   hb_threadWaitForAll() -> NIL
   hb_threadWait( <pThID> | <apThID>, [ <nTimeOut> ] [, <lAll> ] ) => <nThInd> | <nThCount> | 0
   hb_threadOnce( @<onceControl> [, <bAction> | <@sAction()> ] ) -> <lFirstCall>
-  hb_threadOnceInit( @<item> <value> ) -> <lInitialized>
+  hb_threadOnceInit( @<item>, <value> ) -> <lInitialized>
   hb_mutexCreate() -> <pMtx>
   hb_mutexLock( <pMtx> [, <nTimeOut> ] ) -> <lLocked>
   hb_mutexUnlock( <pMtx> ) -> <lOK>
@@ -756,10 +754,6 @@ HB_BOOL hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_T * mutex, HB_ULON
 #elif defined( HB_TASK_THREAD )
 
    return HB_COND_TIMEDWAIT( cond, mutex, ulMilliSec ) != 0;
-
-#elif defined( HB_TASK_THREAD )
-
-   return HB_COND_WAIT( cond, mutex ) != 0;
 
 #elif defined( HB_PTHREAD_API )
    struct timespec ts;
@@ -1620,13 +1614,13 @@ HB_FUNC( HB_THREADONCE )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_threadOnceInit( @<item> <value> ) -> <lInitialized>
+/* hb_threadOnceInit( @<item>, <value> ) -> <lInitialized>
  * assign <value> to @<item> only if <item> is NIL
  */
 HB_FUNC( HB_THREADONCEINIT )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
-   PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
 
    if( pItem && pValue && HB_ISBYREF( 1 ) && ! HB_ISBYREF( 2 ) )
    {

@@ -5,17 +5,17 @@
 
 # ---------------------------------------------------------------
 # GNU make docs:
-#    http://www.gnu.org/software/make/manual/make.html
+#    https://www.gnu.org/software/make/manual/make.html
 #    http://www.wanderinghorse.net/computing/make/
 #    http://www.jgc.org/feeds/topic-gnumake.xml
 #    http://lists.gnu.org/archive/html/help-make/
 #    http://make.paulandlesley.org/
 # Portable shell programming:
-#    http://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
-#    http://www.gnu.org/software/bash/manual/bashref.html
+#    https://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
+#    https://www.gnu.org/software/bash/manual/bashref.html
 #    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
 # GNU coding standards:
-#    http://www.gnu.org/prep/standards/standards.html
+#    https://www.gnu.org/prep/standards/standards.html
 # GNU Make NEWS:
 #    http://cvs.savannah.gnu.org/viewvc/make/NEWS?root=make&view=markup
 # ---------------------------------------------------------------
@@ -162,6 +162,12 @@ ifeq ($(HB_INIT_DONE),)
          $(warning ! Warning: HB_INSTALL_IMPLIB option has an effect only if 'install' is requested.)
       endif
    endif
+
+   ifneq ($(HB_MT),)
+      ifeq ($(filter $(HB_MT),yes no),)
+         export HB_MT :=
+      endif
+   endif
 endif
 
 # Make platform detection
@@ -272,6 +278,9 @@ ifeq ($(HB_INIT_DONE),)
    endif
    ifneq ($(HB_INSTALL_IMPLIB),)
       $(info ! HB_INSTALL_IMPLIB: $(HB_INSTALL_IMPLIB))
+   endif
+   ifneq ($(HB_MT),)
+      $(info ! HB_MT: $(HB_MT))
    endif
 endif
 
@@ -874,7 +883,18 @@ ifeq ($(HB_COMPILER),)
          endif
       endif
    else
-   ifneq ($(filter $(HB_PLATFORM),aix hpux bsd beos qnx cygwin),)
+   ifeq ($(HB_PLATFORM),bsd)
+      HB_COMP_PATH := $(call find_in_path_par,clang,/usr/bin)
+      ifneq ($(HB_COMP_PATH),)
+         HB_COMPILER := clang
+      else
+         HB_COMP_PATH := $(call find_in_path_par,gcc,/usr/bin)
+         ifneq ($(HB_COMP_PATH),)
+            HB_COMPILER := gcc
+         endif
+      endif
+   else
+   ifneq ($(filter $(HB_PLATFORM),aix hpux beos qnx cygwin),)
       HB_COMP_PATH := $(call find_in_path,gcc)
       ifneq ($(HB_COMP_PATH),)
          HB_COMPILER := gcc
@@ -961,6 +981,7 @@ ifeq ($(HB_COMPILER),)
    endif
    endif
    endif
+   endif
 
    # autodetect watcom platform by looking at the header path config
    ifeq ($(HB_COMPILER),watcom)
@@ -986,7 +1007,7 @@ ifneq ($(HB_CC_DET),)
 
       ifeq ($(wildcard $(HB_CCPATH)$(HB_CCPREFIX)gcc$(HB_HOST_BIN_EXT)),)
          ifeq ($(HB_CCPATH),)
-            ifeq ($(call find_in_path $(HB_CCPREFIX)gcc),)
+            ifeq ($(call find_in_path,$(HB_CCPREFIX)gcc),)
                HB_CCPREFIX :=
             endif
          else
@@ -1023,7 +1044,7 @@ ifneq ($(HB_CC_DET),)
 
       ifeq ($(wildcard $(HB_CCPATH)$(HB_CCPREFIX)gcc$(HB_HOST_BIN_EXT)),)
          ifeq ($(HB_CCPATH),)
-            ifeq ($(call find_in_path $(HB_CCPREFIX)gcc),)
+            ifeq ($(call find_in_path,$(HB_CCPREFIX)gcc),)
                HB_CCPREFIX :=
             endif
          else

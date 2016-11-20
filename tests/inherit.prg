@@ -6,7 +6,6 @@
 
 /*
  * Written by Eddie Runia <eddie@runia.comu>
- * www - http://harbour-project.org
  *
  * Placed in the public domain
  */

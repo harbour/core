@@ -17,16 +17,16 @@
       or circular references ( a[ 1 ] := b; b[ 1 ] := c; c[ 1 ] := a ) that
       cannot be properly deallocated by simple reference counting.
 
-      Since all variables in harbour are stored inside some available tables
+      Since all variables in Harbour are stored inside some available tables
       (the eval stack, memvars table and array of static variables) then checking
       if the reference is still alive is quite easy and doesn't require any
       special treatment during memory allocation. Additionaly the garbage
-      collector is scanning some internal data used by harbour objects
+      collector is scanning some internal data used by Harbour objects
       implementation that also stores some values that can contain memory
       references. These data are used to initialize class instance variables
       and are stored in class shared variables.
 
-      In special cases when the value of a harbour variable is stored internally
+      In special cases when the value of a Harbour variable is stored internally
       in some static area (at C or assembler level), the garbage collector will
       be not able to scan such values since it doesn't know their location. This
       could cause some memory blocks to be released prematurely. To prevent the
@@ -46,7 +46,7 @@
 
       The idle state is a state when there is no real application code
       executed. For example, the user code is stopped for 0.1 of a second
-      during Inkey(0.1) - Harbour is checking the keyboard only
+      during Inkey( 0.1 ) - Harbour is checking the keyboard only
       during this time. It leaves however quite enough time for
       many other background tasks. One such background task can be looking
       for unreferenced memory blocks.
@@ -81,15 +81,15 @@
       with the same flag before the sweep step will start.
       See hb_gcCollectAll() and hb_gcItemRef()
 
-      Calling the garbage collector from harbour code   </par>
+      Calling the garbage collector from Harbour code   </par>
       -----------------------------------------------
 
-      The garbage collector can be called directly from the harbour code.
+      The garbage collector can be called directly from the Harbour code.
       This is usefull in situations where there is no idle states available
       or the application is working in the loop with no user interaction
       and there is many memory allocations.
       See hb_gcAll() for explanation of how to call this function from your
-      harbour code.
+      Harbour code.
    $SEEALSO$
       hb_gcAlloc(), hb_gcFree(), hb_gcCollectAll(), hb_gcItemRef(), hb_gcAll(), hb_idleState()
    $END$
@@ -125,12 +125,12 @@
    $DESCRIPTION$
       hb_gcAlloc() is used to allocate the memory that will be tracked
       by the garbage collector. It allows to properly release memory
-      in case of self-referencing or cross-referencing harbour level
+      in case of self-referencing or cross-referencing Harbour level
       variables.
       Memory allocated with this function should be released with
       hb_gcFree() function or it will be automatically deallocated
       by the GC if it is not locked or if it is not referenced by some
-      harbour level variable.
+      Harbour level variable.
    $STATUS$
       C
    $COMPLIANCE$

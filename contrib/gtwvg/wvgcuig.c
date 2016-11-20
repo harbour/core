@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  *
  * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * Based on:
@@ -17,8 +16,6 @@
  *
  * See COPYING.txt for licensing terms.
  *
- * www - http://harbour-project.org
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option )
@@ -32,7 +29,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.   If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -217,7 +214,7 @@ HB_FUNC( WVG_SETGOBJDATA )
 #if ! defined( HB_OS_WIN_CE )
                case GOBJ_OBJDATA_PICTUREEX:
                   if( HB_ISNUM( 3 )  )
-                     gObj->iPicture = ( IPicture * ) ( HB_PTRDIFF ) hb_parni( 3 );
+                     gObj->iPicture = ( IPicture * ) ( HB_PTRUINT ) hb_parni( 3 );
                   break;
                case GOBJ_OBJDATA_PICTURE:
                   if( HB_ISNUM( 3 ) && hb_parni( 3 ) <= WVT_PICTURES_MAX )
@@ -259,29 +256,29 @@ HB_FUNC( WVG_SETGOBJDATA )
                case GOBJ_OBJDATA_HFONT:
                   if( gObj->hFont && gObj->bDestroyFont )
                      DeleteObject( gObj->hFont );
-                  gObj->hFont        = ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->hFont        = ( HFONT ) ( HB_PTRUINT ) hb_parnint( 3 );
                   gObj->bDestroyFont = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_HPEN:
                   if( gObj->hPen && gObj->bDestroyPen )
                      DeleteObject( gObj->hPen );
-                  gObj->hPen        = ( HPEN ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->hPen        = ( HPEN ) ( HB_PTRUINT ) hb_parnint( 3 );
                   gObj->bDestroyPen = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_HBRUSH:
                   if( gObj->hBrush && gObj->bDestroyBrush )
                      DeleteObject( gObj->hBrush );
-                  gObj->hBrush        = ( HBRUSH ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->hBrush        = ( HBRUSH ) ( HB_PTRUINT ) hb_parnint( 3 );
                   gObj->bDestroyBrush = HB_TRUE;
                   break;
                case GOBJ_OBJDATA_COLORTEXT:
                   if( HB_ISNUM( 3 ) )
-                     gObj->crRGBText = ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                     gObj->crRGBText = ( COLORREF ) ( HB_PTRUINT ) hb_parnint( 3 );
                   else
                      bSuccess = HB_FALSE;
                   break;
                case GOBJ_OBJDATA_COLORBK:
-                  gObj->crRGBBk = ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( 3 );
+                  gObj->crRGBBk = ( COLORREF ) ( HB_PTRUINT ) hb_parnint( 3 );
                   break;
                case GOBJ_OBJDATA_BLOCK:
                   if( gObj->bBlock )
@@ -1337,7 +1334,7 @@ HB_FUNC( WVG_TEXTBOX )
    gObj->crRGBText = ( COLORREF ) hb_parnint( 9 );
    gObj->crRGBBk   = ( COLORREF ) hb_parnint( 10 );
 
-   gObj->hFont        = ( HFONT ) ( HB_PTRDIFF ) hb_parnint( 11 );
+   gObj->hFont        = ( HFONT ) ( HB_PTRUINT ) hb_parnint( 11 );
    gObj->bDestroyFont = HB_FALSE;
 
    gObj->gObjNext = pWVT->gObjs;
@@ -1423,7 +1420,7 @@ HB_FUNC( WVG_PICTUREEX )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = ( IPicture * ) ( HB_PTRDIFF ) hb_parnint( 6 );
+      gObj->iPicture        = ( IPicture * ) ( HB_PTRUINT ) hb_parnint( 6 );
       gObj->iData           = ( hb_parl( 7 ) ? 1 : 0 );
       gObj->bDestroyPicture = HB_FALSE;
 
@@ -1534,8 +1531,18 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
       if( gObj->iData == 1 )
       {
-         iHt = ( int ) ( ( float )  wd * lHeight / lWidth );
-         iWd = ( int ) ( ( float ) iHt * lWidth / lHeight );
+         if( lHeight > lWidth )
+         {
+            iWd = ( int ) ( ( double )  ht * lWidth / lHeight );
+            iWd = HB_MIN( iWd, wd );
+            iHt = ( int ) ( ( double ) iWd * lHeight / lWidth );
+         }
+         else
+         {
+            iHt = ( int ) ( ( double )  wd * lHeight / lWidth );
+            iHt = HB_MIN( iHt, ht );
+            iWd = ( int ) ( ( double ) iHt * lWidth / lHeight );
+         }
          x  += abs( ( iWd - wd ) / 2 );
          y  += abs( ( iHt - ht ) / 2 );
          wd  = iWd;

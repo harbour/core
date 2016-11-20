@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for Advantage Database Server RDD
  *
  * Copyright 1999 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -151,6 +149,7 @@ typedef struct _ADSAREA_
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;
    ADSHANDLE hStatement;
+   char *    szQuery;
 } ADSAREA;
 
 typedef ADSAREA * ADSAREAP;
@@ -188,6 +187,7 @@ extern HB_BOOL hb_ads_bTestRecLocks;
 
 extern ADSHANDLE  hb_ads_getConnection( void );
 extern ADSHANDLE  hb_ads_defConnection( ADSHANDLE hConnect, const char * szName );
+extern void       hb_ads_clrConnection( ADSHANDLE hConnect );
 extern void       hb_ads_setConnection( ADSHANDLE hConnect );
 extern int        hb_ads_getIndexPageSize( void );
 extern void       hb_ads_setIndexPageSize( int iIndexPageSize );
@@ -214,8 +214,8 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
                                          UNSIGNED32 * pulLen );
 
 #else
-#  define hb_adsOemToAnsi( s, l )  ( ( char * ) ( s ) )
-#  define hb_adsAnsiToOem( s, l )  ( ( char * ) ( s ) )
+#  define hb_adsOemToAnsi( s, l )  ( ( char * ) HB_UNCONST( s ) )
+#  define hb_adsAnsiToOem( s, l )  ( ( char * ) HB_UNCONST( s ) )
 #  define hb_adsOemAnsiFree( s )
 #endif
 

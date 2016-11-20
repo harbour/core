@@ -4,11 +4,9 @@
 %name-prefix "hb_comp_yy"
 %{
 /*
- * Harbour Project source code:
  * Compiler YACC rules and actions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -275,7 +273,7 @@ extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error manageme
    We cannot use destructors for expressions. The internal bison logic cannot
    detect properly if the expression was used or not in our grammar definition
    so it's possible that destructors will never be executed or executed for
-   expressions which we freed ourself.
+   expressions which we freed ourselves.
 
 %destructor {
                HB_COMP_EXPR_FREE( $$ );
@@ -469,7 +467,7 @@ Statement  : ExecFlow CrlfStmnt
 CompTimeStr : LITERAL {
                if( $1.dealloc )
                {
-                  $1.string = ( char * ) hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE );
+                  $1.string = ( char * ) HB_UNCONST( hb_compIdentifierNew( HB_COMP_PARAM, $1.string, HB_IDENT_FREE ) );
                   $1.dealloc = HB_FALSE;
                }
                hb_compModuleAdd( HB_COMP_PARAM, $1.string, HB_FALSE );

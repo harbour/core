@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Date API (C level)
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,7 +45,6 @@
  */
 /*
  * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    hb_timeFormat()
@@ -339,17 +336,7 @@ static int hb_dateUnformatRaw( const char * szDate, const char * szDateFormat, l
       }
       iSize = count;
 
-      if( y_value >= 0 && y_value < 100 )
-      {
-         count = hb_setGetEpoch();
-         digit = count / 100;
-         count %= 100;
-
-         if( y_value >= count )
-            y_value += ( digit * 100 );
-         else
-            y_value += ( ( digit * 100 ) + 100 );
-      }
+      y_value = hb_setUpdateEpoch( y_value );
    }
 
    *plDate = hb_dateEncode( y_value, m_value, d_value );

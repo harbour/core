@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows API functions (winbase)
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,7 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this software; see the file COPYING.txt.  If not, write to
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -234,17 +232,17 @@ HB_FUNC( WAPI_GETPROCADDRESS )
    LPCTSTR lpProcName = HB_PARSTR( 2, &hProcName, NULL );
    pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ),
                            lpProcName ? lpProcName :
-                           ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+                           ( LPCTSTR ) ( HB_PTRUINT ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
    hb_strfree( hProcName );
 #else
    pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ),
                            HB_ISCHAR( 2 ) ? hb_parc( 2 ) :
-                           ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+                           ( LPCSTR ) ( HB_PTRUINT ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
 #endif
    hbwapi_SetLastError( dwLastError );
-   hb_retptr( ( void * ) ( HB_PTRDIFF ) pProc );
+   hb_retptr( ( void * ) ( HB_PTRUINT ) pProc );
 }
 
 /* HMODULE WINAPI GetModuleHandle( __in_opt LPCTSTR lpModuleName ); */
