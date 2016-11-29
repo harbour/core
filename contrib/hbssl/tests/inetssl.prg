@@ -38,6 +38,10 @@ PROCEDURE Main( delay )
    /* wait for server being ready to accept incoming connections */
    DO WHILE ! s_lReady
       hb_idleSleep( 0.01 )
+      IF hb_threadWait( thrd, 0 ) != 0
+         hb_threadJoin( thrd )
+         QUIT
+      ENDIF
    ENDDO
 
    /* start client */
@@ -96,14 +100,15 @@ STATIC FUNCTION Client()
 STATIC FUNCTION Server()
    LOCAL sockSrv, sockConn, ssl_ctx, ssl, nResult, nErr, cLine
 
+   ? "SERVER: loading certificates..."
+   ssl_ctx := SSL_CTX_new()
+   LoadCertificates( ssl_ctx, PEM_CERT_FILE, PEM_CERT_FILE )
+   ssl := SSL_new( ssl_ctx )
+
    ? "SERVER: create listen socket..."
    IF Empty( sockSrv := hb_inetServer( N_PORT ) )
       ? "SERVER: cannot create listen socket."
    ELSE
-      ? "SERVER: loading certificates..."
-      ssl_ctx := SSL_CTX_new()
-      LoadCertificates( ssl_ctx, PEM_CERT_FILE, PEM_CERT_FILE )
-      ssl := SSL_new( ssl_ctx )
 
       ? "SERVER: waiting for connections..."
       hb_inetTimeout( sockSrv, 100 )

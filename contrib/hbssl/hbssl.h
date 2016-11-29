@@ -209,6 +209,7 @@ extern const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam );
 
 extern void *             hb_EVP_PKEY_is( int iParam );
 extern EVP_PKEY *         hb_EVP_PKEY_par( int iParam );
+extern void               hb_EVP_PKEY_ret( EVP_PKEY * pkey );
 
 extern char *             hb_openssl_strdup( const char * pszText );
 
