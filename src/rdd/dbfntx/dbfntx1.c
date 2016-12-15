@@ -1967,7 +1967,7 @@ static HB_ERRCODE hb_ntxIndexHeaderRead( LPNTXINDEX pIndex )
    else
    {
       LPNTXHEADER lpNTX = ( LPNTXHEADER ) pIndex->HeaderBuff;
-      HB_ULONG ulRootPage, ulVersion;
+      HB_ULONG ulRootPage, ulVersion, ulNext;
       LPTAGINFO pTag;
 
       if( pIndex->Compound )
@@ -1980,12 +1980,13 @@ static HB_ERRCODE hb_ntxIndexHeaderRead( LPNTXINDEX pIndex )
 
       ulVersion = HB_GET_LE_UINT16( lpNTX->version );
       ulRootPage = HB_GET_LE_UINT32( lpNTX->root );
-      pIndex->NextAvail = HB_GET_LE_UINT32( lpNTX->next_page );
-      if( pIndex->Version != ulVersion || ( pTag &&
-          ( pTag->Signature != type || ulRootPage != pTag->RootBlock ) ) )
+      ulNext = HB_GET_LE_UINT32( lpNTX->next_page );
+      if( pIndex->Version != ulVersion || pIndex->NextAvail != ulNext ||
+          ( pTag && ( pTag->Signature != type || ulRootPage != pTag->RootBlock ) ) )
       {
          hb_ntxDiscardBuffers( pIndex );
          pIndex->Version = ulVersion;
+         pIndex->NextAvail = ulNext;
          if( pTag )
          {
             pTag->RootBlock = ulRootPage;
@@ -5983,10 +5984,10 @@ static HB_ERRCODE hb_ntxGoCold( NTXAREAP pArea )
                            break;
                         }
                         fLck = HB_TRUE;
-                        if( ( pTag->pIndex->Compound && ! pTag->HeadBlock ) ||
-                            ! pTag->RootBlock )
-                           fAdd = fDel = HB_FALSE;
                      }
+                     if( ( pTag->pIndex->Compound && ! pTag->HeadBlock ) ||
+                         ! hb_ntxTagHeaderCheck( pTag ) )
+                        fAdd = fDel = HB_FALSE;
                      if( fDel )
                      {
                         if( hb_ntxTagKeyDel( pTag, pTag->HotKeyInfo ) )
@@ -6595,7 +6596,7 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
       if( iTag )
       {
          pTag->HeadBlock = pIndex->lpTags[ iTag - 1 ]->HeadBlock;
-         if( pIndex->lpTags[ iTag - 1 ]->RootBlock &&
+         if( hb_ntxTagHeaderCheck( pIndex->lpTags[ iTag - 1 ] ) &&
              ! hb_ntxTagPagesFree( pIndex->lpTags[ iTag - 1 ],
                                    pIndex->lpTags[ iTag - 1 ]->RootBlock ) )
          {

@@ -266,6 +266,11 @@ int hb_sln_Init_Terminal( int phase )
          /* already done in Slang library */
          /* newTTY.c_cc[ VDSUSP ] = 255; */  /* disable ^Y delayed suspend processing */
 
+         /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
+            Ubuntu) in which select() unconditionally accepts stdin for
+            reading if c_cc[ VMIN ] = 0 [druzus] */
+         newTTY.c_cc[ VMIN ] = 1;
+
          if( tcsetattr( SLang_TT_Read_FD, TCSADRAIN, &newTTY ) == 0 )
             /* everything looks ok so far */
             ret = 1;
