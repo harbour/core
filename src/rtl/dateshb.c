@@ -289,6 +289,16 @@ HB_FUNC( HB_TTOD )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_TTON )
+{
+   PHB_ITEM pTime = hb_param( 1, HB_IT_DATETIME );
+
+   if( pTime )
+      hb_retnd( hb_itemGetTD( pTime ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_NTOT )
 {
    PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
@@ -299,12 +309,52 @@ HB_FUNC( HB_NTOT )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( HB_TTON )
+HB_FUNC( HB_NTOMSEC )
 {
-   PHB_ITEM pTime = hb_param( 1, HB_IT_DATETIME );
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
 
-   if( pTime )
-      hb_retnd( hb_itemGetTD( pTime ) );
+   if( pNum )
+      hb_retnint( ( HB_MAXINT ) ( hb_itemGetND( pNum ) * HB_MILLISECS_PER_DAY ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_NTOSEC )
+{
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNum )
+      hb_retnd( hb_itemGetND( pNum ) * HB_SECONDS_PER_DAY );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_NTOMIN )
+{
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNum )
+      hb_retnd( hb_itemGetND( pNum ) * HB_MINUTES_PER_DAY );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_NTOHOUR )
+{
+   PHB_ITEM pNum = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pNum )
+      hb_retnd( hb_itemGetND( pNum ) * 24 );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_TTOSEC )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_retnd( ( double ) lDate * HB_SECONDS_PER_DAY + ( double ) lTime / 1000 );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -325,6 +375,36 @@ HB_FUNC( HB_MSECTOT )
 
    if( pNum )
       hb_rettd( hb_itemGetND( pNum ) / HB_MILLISECS_PER_DAY );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_TTOMSEC )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_retnd( ( double ) lDate * HB_MILLISECS_PER_DAY + lTime );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_TTOMIN )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_retnd( ( double ) lDate * HB_MINUTES_PER_DAY + ( double ) lTime / ( 60 * 1000 ) );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_TTOHOUR )
+{
+   long lDate, lTime;
+
+   if( hb_partdt( &lDate, &lTime, 1 ) )
+      hb_retnd( ( double ) lDate * 24 + ( double ) lTime / ( 60 * 60 * 1000 ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

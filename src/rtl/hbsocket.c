@@ -130,6 +130,8 @@
 #     define HB_HAS_GETHOSTBYADDR
 #     if ! defined( HB_HAS_POLL ) && ! defined( HB_NO_POLL ) && \
          defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 200112L
+         /* use poll() instead of select() to avoid FD_SETSIZE (1024 in Linux)
+            file handle limit */
 #        define HB_HAS_POLL
 #     endif
 #  endif

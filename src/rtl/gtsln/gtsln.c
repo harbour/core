@@ -479,7 +479,7 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
 {
    if( isatty( iStdOut ) && isatty( iStdIn ) )
    {
-      const char * szBuf = "\r\303\255\033[6n  \r";
+      const char * szBuf = "\r\303\255\033[6n\r  \r";
       int len = strlen( szBuf );
 
       if( write( iStdOut, szBuf, len ) == len )
