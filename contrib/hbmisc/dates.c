@@ -95,22 +95,19 @@ static int hb_doy( int iYear, int iMonth, int iDay )
    return iDoy + iDay;
 }
 
-static int hb_woy( int iYear, int iMonth, int iDay, HB_BOOL bISO )
+static int hb_woy( long lDate, HB_BOOL fISO )
 {
-   int iWeek, n;
+   int iYear, iMonth, iDay;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_woy(%d, %d, %d, %d)", iYear, iMonth, iDay, ( int ) bISO ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_woy(%ld, %d)", lDate, ( int ) fISO ) );
 
-   iDay  = hb_doy( iYear, iMonth, iDay );
-   n     = ( ( ( 1 - ( bISO ? 1 : 0 ) ) % 7 ) ) - 1;
-   iDay += ( n > 0 ) ? 1 : 0;
-   iWeek = iDay / 7;
-   if( bISO )
-      iWeek += ( n < 4 ) ? 1 : 0;
-   else
-      ++iWeek;
+   hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
 
-   return iWeek;
+   if( fISO )
+      hb_dateDecode( lDate + 3 - ( hb_dateDOW( iYear, iMonth, iDay ) + 5 ) % 7,
+                     &iYear, &iMonth, &iDay );
+
+   return ( hb_doy( iYear, iMonth, iDay ) - 1 ) / 7 + 1;
 }
 
 HB_FUNC( AMONTHS )
@@ -165,19 +162,10 @@ HB_FUNC( HBMISC_DAYSINMONTH )
       hb_retni( 0 );
 }
 
-/* Return the nWeek of the year (1 - 52, 0 - 52 if ISO) */
-
 HB_FUNC( WOY )
 {
    PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
 
-   if( pDate )
-   {
-      int iYear, iMonth, iDay;
-
-      hb_dateDecode( hb_itemGetDL( pDate ), &iYear, &iMonth, &iDay );
-      hb_retni( hb_woy( iYear, iMonth, iDay, hb_parldef( 2, HB_TRUE ) ) );
-   }
-   else
-      hb_retni( 0 );
+   hb_retni( pDate == NULL ? 0 :
+             hb_woy( hb_itemGetDL( pDate ), hb_parldef( 2, HB_TRUE ) ) );
 }
