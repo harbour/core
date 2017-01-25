@@ -715,7 +715,6 @@ METHOD ConvertFnc( cLine, nBegin, nEnd ) CLASS HBFormatCode
    IF ::lCase .AND. ::nCaseFnc > 0
 
       cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
-
       IF ( nPos := hb_AtI( "," + cToken + ",", ::cFunctions ) ) > 0
 
          IF ::nCaseFnc > 1
@@ -727,8 +726,10 @@ METHOD ConvertFnc( cLine, nBegin, nEnd ) CLASS HBFormatCode
          cLine := iif( nBegin == 1, cToken + SubStr( cLine, nEnd ), ;
             Left( cLine, nBegin - 1 ) + cToken + SubStr( cLine, nEnd ) )
       ELSEIF ::nCaseUnk > 0
-         cToken := iif( ::nCaseUnk == 2, Lower( cToken ), ;
-            Left( cToken, 1 ) + Lower( SubStr( cToken, 2 ) ) )
+	 IF ::nCaseUnk > 1
+            cToken := iif( ::nCaseUnk == 2, Lower( cToken ), ;
+               Left( cToken, 1 ) + Lower( SubStr( cToken, 2 ) ) )
+	 ENDIF
          cLine := iif( nBegin == 1, cToken + SubStr( cLine, nEnd ), ;
             Left( cLine, nBegin - 1 ) + cToken + SubStr( cLine, nEnd ) )
       ENDIF
