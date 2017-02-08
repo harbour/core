@@ -370,6 +370,42 @@ int hb_dateJulianDOW( long lJulian )
       return 0;
 }
 
+HB_BOOL hb_dateDecWeek( long lJulian, int * piYear, int * piWeek, int * piDay )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dateDecWeek(%ld,%p,%p,%p)", lJulian, piYear, piWeek, piDay ) );
+
+   if( lJulian >= HB_STR_DATE_BASE )
+   {
+      int iMonth, iDay;
+
+      *piDay = ( int ) ( lJulian % 7 ) + 1;
+      lJulian += 4 - *piDay;
+      hb_dateDecode( lJulian, piYear, &iMonth, &iDay );
+      *piWeek = ( lJulian - hb_dateEncode( *piYear, 1, 1 ) ) / 7 + 1;
+
+      return HB_TRUE;
+   }
+
+   *piYear = *piWeek = *piDay = 0;
+
+   return HB_FALSE;
+}
+
+long hb_dateEncWeek( int iYear, int iWeek, int iDay )
+{
+   long lDate = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dateEncWeek(%d,%d,%d)", iYear, iWeek, iDay ) );
+
+   if( iWeek > 0 && iWeek <= 53 && iDay > 0 && iDay <= 7 )
+   {
+      lDate = hb_dateEncode( iYear, 1, 1 );
+      lDate += ( iWeek - 1 ) * 7 + iDay - ( lDate + 3 ) % 7 + 2;
+   }
+
+   return lDate;
+}
+
 int hb_dateDOW( int iYear, int iMonth, int iDay )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_dateDOW(%d, %d, %d)", iYear, iMonth, iDay ) );
@@ -704,26 +740,72 @@ HB_BOOL hb_timeStampStrGet( const char * szDateTime,
          ++szDateTime;
       if( HB_ISDIGIT( szDateTime[ 0 ] ) && HB_ISDIGIT( szDateTime[ 1 ] ) &&
           HB_ISDIGIT( szDateTime[ 2 ] ) && HB_ISDIGIT( szDateTime[ 3 ] ) &&
-          ( szDateTime[ 4 ] == '-' || szDateTime[ 4 ] == '/' || szDateTime[ 4 ] == '.' ) &&
-          HB_ISDIGIT( szDateTime[ 5 ] ) && HB_ISDIGIT( szDateTime[ 6 ] ) &&
-          szDateTime[ 7 ] == szDateTime[ 4 ] &&
-          HB_ISDIGIT( szDateTime[ 9 ] ) && HB_ISDIGIT( szDateTime[ 9 ] ) &&
-          ! HB_ISDIGIT( szDateTime[ 10 ] ) )
+          ( szDateTime[ 4 ] == '-' || szDateTime[ 4 ] == '/' || szDateTime[ 4 ] == '.' ) )
       {
          iYear  = ( ( ( int ) ( szDateTime[ 0 ] - '0' )   * 10 +
                       ( int ) ( szDateTime[ 1 ] - '0' ) ) * 10 +
                       ( int ) ( szDateTime[ 2 ] - '0' ) ) * 10 +
                       ( int ) ( szDateTime[ 3 ] - '0' );
-         iMonth = ( szDateTime[ 5 ] - '0' ) * 10 + ( szDateTime[ 6 ] - '0' );
-         iDay   = ( szDateTime[ 8 ] - '0' ) * 10 + ( szDateTime[ 9 ] - '0' );
-         if( hb_dateEncode( iYear, iMonth, iDay ) != 0 ||
-             ( iYear == 0 && iMonth == 0 && iDay == 0 ) )
+         /* ISO 8601 Calendar dates: YYYY-MM-DD */
+         if( HB_ISDIGIT( szDateTime[ 5 ] ) && HB_ISDIGIT( szDateTime[ 6 ] ) &&
+             szDateTime[ 7 ] == szDateTime[ 4 ] &&
+             HB_ISDIGIT( szDateTime[ 8 ] ) && HB_ISDIGIT( szDateTime[ 9 ] ) &&
+             ! HB_ISDIGIT( szDateTime[ 10 ] ) )
          {
-            szDateTime += 10;
+            iMonth = ( szDateTime[ 5 ] - '0' ) * 10 + ( szDateTime[ 6 ] - '0' );
+            iDay   = ( szDateTime[ 8 ] - '0' ) * 10 + ( szDateTime[ 9 ] - '0' );
+
+            if( hb_dateEncode( iYear, iMonth, iDay ) != 0 ||
+                ( iYear == 0 && iMonth == 0 && iDay == 0 ) )
+            {
+               szDateTime += 10;
+               fValid = HB_TRUE;
+            }
+         }
+         /* ISO 8601 Week dates: YYYY-Www-D */
+         else if( ( szDateTime[ 5 ] == 'W' || szDateTime[ 5 ] == 'w' ) &&
+                  HB_ISDIGIT( szDateTime[ 6 ] ) && HB_ISDIGIT( szDateTime[ 7 ] ) &&
+                  szDateTime[ 8 ] == szDateTime[ 4 ] &&
+                  HB_ISDIGIT( szDateTime[ 9 ] ) && ! HB_ISDIGIT( szDateTime[ 10 ] ) )
+         {
+            long lDate = hb_dateEncWeek( iYear,
+                                         ( szDateTime[ 6 ] - '0' ) * 10 + ( szDateTime[ 7 ] - '0' ),
+                                         szDateTime[ 9 ] - '0' );
+            if( lDate )
+            {
+               hb_dateDecode( lDate, &iYear, &iMonth, &iDay );
+               szDateTime += 10;
+               fValid = HB_TRUE;
+            }
+         }
+         /* ISO 8601 Ordinal dates: YYYY-DDD */
+         else if( szDateTime[ 4 ] == '-' && HB_ISDIGIT( szDateTime[ 5 ] ) &&
+                  HB_ISDIGIT( szDateTime[ 6 ] ) && HB_ISDIGIT( szDateTime[ 7 ] ) &&
+                  ! HB_ISDIGIT( szDateTime[ 8 ] ) )
+         {
+            iDay = ( ( int ) ( szDateTime[ 5 ] - '0' )   * 10 +
+                     ( int ) ( szDateTime[ 6 ] - '0' ) ) * 10 +
+                     ( int ) ( szDateTime[ 7 ] - '0' );
+            if( iDay > 0 && ( iDay <= 365 || ( iDay == 366 &&
+                iYear % 4 == 0 && ( iYear % 100 != 0 || iYear % 400 == 0 ) ) ) )
+            {
+               long lDate = hb_dateEncode( iYear, 1, 1 );
+               if( lDate )
+               {
+                  hb_dateDecode( lDate + iDay - 1, &iYear, &iMonth, &iDay );
+                  szDateTime += 8;
+                  fValid = HB_TRUE;
+               }
+            }
+         }
+
+         if( fValid )
+         {
             if( *szDateTime == 'T' || *szDateTime == 't' )
             {
                if( HB_ISDIGIT( szDateTime[ 1 ] ) )
                   ++szDateTime;
+               fValid = HB_FALSE;
             }
             else
             {
@@ -733,7 +815,6 @@ HB_BOOL hb_timeStampStrGet( const char * szDateTime,
                   ++szDateTime;
                if( *szDateTime == '\0' )
                   szDateTime = NULL;
-               fValid = HB_TRUE;
             }
          }
          else

@@ -70,6 +70,8 @@ extern HB_EXPORT char * hb_dateDecStr( char * szDate, long lJulian );
 extern HB_EXPORT long   hb_dateEncStr( const char * szDate );
 extern HB_EXPORT int    hb_dateDOW( int iYear, int iMonth, int iDay );
 extern HB_EXPORT int    hb_dateJulianDOW( long lJulian );
+extern HB_EXPORT HB_BOOL hb_dateDecWeek( long lJulian, int * piYear, int * piWeek, int * piDay );
+extern HB_EXPORT long   hb_dateEncWeek( int iYear, int iWeek, int iDay );
 
 /* RTL functions */
 extern HB_EXPORT const char * hb_dateCMonth( int iMonth );

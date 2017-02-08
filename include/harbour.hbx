@@ -961,6 +961,7 @@ DYNAMIC hb_vfUnlock
 DYNAMIC hb_vfWrite
 DYNAMIC hb_vfWriteAt
 DYNAMIC hb_WAEval
+DYNAMIC hb_Week
 DYNAMIC hb_WildMatch
 DYNAMIC hb_WildMatchI
 DYNAMIC hb_ZCompress

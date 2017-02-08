@@ -584,6 +584,25 @@ HB_FUNC( HB_STRTOTS )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* get week number and other parts ISO 8601 week date:
+   hb_Week( <dDate>, [@<nYear>], [@<nDayOfWeek>] ) -> <nWeek> */
+HB_FUNC( HB_WEEK )
+{
+   PHB_ITEM pDate = hb_param( 1, HB_IT_DATETIME );
+
+   if( pDate )
+   {
+      int iYear, iWeek, iDay;
+
+      hb_dateDecWeek( hb_itemGetDL( pDate ), &iYear, &iWeek, &iDay );
+      hb_storni( iYear, 2 );
+      hb_storni( iDay, 3 );
+      hb_retni( iWeek );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_UTCOFFSET )
 {
    if( HB_ISDATETIME( 1 ) )
