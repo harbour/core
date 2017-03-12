@@ -1146,6 +1146,7 @@ HB_FUN_HB_VFUNLOCK
 HB_FUN_HB_VFWRITE
 HB_FUN_HB_VFWRITEAT
 HB_FUN_HB_WAEVAL
+HB_FUN_HB_WEEK
 HB_FUN_HB_WILDMATCH
 HB_FUN_HB_WILDMATCHI
 HB_FUN_HB_ZCOMPRESS
@@ -2316,8 +2317,10 @@ hb_dateCDOW
 hb_dateCMonth
 hb_dateDOW
 hb_dateDecStr
+hb_dateDecWeek
 hb_dateDecode
 hb_dateEncStr
+hb_dateEncWeek
 hb_dateEncode
 hb_dateFormat
 hb_dateJulianDOW

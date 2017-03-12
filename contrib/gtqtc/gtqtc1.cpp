@@ -3016,27 +3016,16 @@ void QTConsole::focusOutEvent( QFocusEvent * evt )
 
 void QTConsole::mouseMoveEvent( QMouseEvent * evt )
 {
-   if( pQTC->fSelectCopy &&
-       ( evt->buttons() & Qt::LeftButton ) &&
-       ( evt->modifiers() & Qt::ShiftModifier ) )
+   if( pQTC->fSelectCopy && selectMode )
    {
-      if( ! selectMode )
-      {
-         selectMode = true;
-         selectRect.setCoords( evt->x(), evt->y(), evt->x(), evt->y() );
-         update( hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) ) );
-      }
-      else
-      {
-         QRect rSel1 = hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) );
-         selectRect.setBottomRight( evt->pos() );
-         QRect rSel2 = hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) );
-         if( rSel1 != rSel2 )
-            update( QRegion( rSel1 ).xored( QRegion( rSel2 ) ) );
-      }
+      QRect rSel1 = hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) );
+      selectRect.setBottomRight( evt->pos() );
+      QRect rSel2 = hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) );
+      if( rSel1 != rSel2 )
+         update( QRegion( rSel1 ).xored( QRegion( rSel2 ) ) );
    }
-
-   hb_gt_qtc_setMouseKey( pQTC, evt->x(), evt->y(), 0, evt->modifiers() );
+   else
+      hb_gt_qtc_setMouseKey( pQTC, evt->x(), evt->y(), 0, evt->modifiers() );
 }
 
 void QTConsole::wheelEvent( QWheelEvent * evt )
@@ -3101,6 +3090,13 @@ void QTConsole::mousePressEvent( QMouseEvent * evt )
    switch( evt->button() )
    {
       case Qt::LeftButton:
+         if( ! selectMode && ( evt->modifiers() & Qt::ShiftModifier ) )
+         {
+            selectMode = true;
+            selectRect.setCoords( evt->x(), evt->y(), evt->x(), evt->y() );
+            update( hb_gt_qtc_unmapRect( pQTC, hb_gt_qtc_mapRect( pQTC, image, selectRect ) ) );
+            return;
+         }
          iKey = K_LBUTTONDOWN;
          break;
 
@@ -3127,6 +3123,11 @@ void QTConsole::mouseReleaseEvent( QMouseEvent * evt )
    switch( evt->button() )
    {
       case Qt::LeftButton:
+         if( selectMode )
+         {
+            copySelection();
+            return;
+         }
          iKey = K_LBUTTONUP;
          break;
 
