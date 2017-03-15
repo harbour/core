@@ -577,20 +577,22 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
       // hope this is not a big file....
       nFile := FOpen( cFile )
       /* TOFIX: Error checking on nFile. [vszakats] */
-      nbuf := 8192
-      nRead := nBuf
-      // cBuf := Space( nBuf )
-      DO WHILE nRead == nBuf
-         // nRead := FRead( nFile, @cBuf, nBuf )
-         cBuf := FReadStr( nFile, nBuf )
-         nRead := hb_BLen( cBuf )
-#if 0
-         IF nRead < nBuf
-            cBuf := PadR( cBuf, nRead )
-         ENDIF
-#endif
-         cData += cBuf
-      ENDDO
+      nBuf  := 65536
+      cBuf := Space( nBuf )
+      WHILE ! HB_FEof( nFile )
+          nRead := FRead( nFile, @cBuf, nBuf )
+          IF nRead == nBuf
+              cData += cBuf
+          ELSE
+              FSeek( nFile, nRead * (-1), FS_RELATIVE)
+              cBuf := Space( nRead )
+              nBuf := nRead
+              nRead := FRead (nFile, @cBuf, nBuf)
+              IF nRead == nBuf
+                  cData += cBuf
+              ENDIF
+          ENDIF
+      END
       FClose( nFile )
       cData += cCrlf
    NEXT
