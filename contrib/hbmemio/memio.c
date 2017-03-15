@@ -830,11 +830,11 @@ static HB_BOOL s_fileRename( PHB_FILE_FUNCS pFuncs, const char * szName, const c
 }
 
 
-static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pSrcFile, const char * pszDstFile )
+static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pszSrcFile, const char * pszDstFile )
 {
    HB_SYMBOL_UNUSED( pFuncs );
    /* TODO: optimize it when both points to MEMIO files */
-   return hb_fsCopy( pSrcFile, pszDstFile );
+   return hb_fsCopy( pszSrcFile, pszDstFile );
 }
 
 

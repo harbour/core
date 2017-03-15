@@ -87,7 +87,7 @@
 
 #include <windowsx.h>
 
-#if defined( __BORLANDC__ ) && ( __BORLANDC__ >= 1552 )
+#if defined( __BORLANDC__ ) && ( __BORLANDC__ >= 0x610 )
 #  undef NONAMELESSUNION
 #endif
 

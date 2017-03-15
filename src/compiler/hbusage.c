@@ -111,7 +111,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
                 "\nSyntax:  %s <file[s][.prg]|@file> [options]\n", szSelf );
    hb_compOutStd( HB_COMP_PARAM, buffer );
 
-   for( iLine = 0; iLine < ( int ) ( sizeof( s_szOptions ) / sizeof( char * ) ); iLine++ )
+   for( iLine = 0; iLine < ( int ) HB_SIZEOFARRAY( s_szOptions ); iLine++ )
       hb_compOutStd( HB_COMP_PARAM, s_szOptions[ iLine ] );
 }
 
@@ -155,10 +155,10 @@ void hb_compPrintModes( HB_COMP_DECL )
    hb_compOutStd( HB_COMP_PARAM,
                   "\nCompatibility flags: -k[options]\n" );
 
-   for( iLine = 0; iLine < ( int ) ( sizeof( s_szOptions ) / sizeof( char * ) ); iLine++ )
+   for( iLine = 0; iLine < ( int ) HB_SIZEOFARRAY( s_szOptions ); iLine++ )
    {
       hb_compOutStd( HB_COMP_PARAM, s_szOptions[ iLine ] );
-      if( iLine < ( int ) ( sizeof( s_flags ) / sizeof( int ) ) &&
+      if( iLine < ( int ) HB_SIZEOFARRAY( s_flags ) &&
           ( s_flags[ iLine ] < 0 ? HB_COMP_ISSUPPORTED( ~s_flags[ iLine ] ) == 0 :
                                    HB_COMP_ISSUPPORTED( s_flags[ iLine ] ) != 0 ) )
          hb_compOutStd( HB_COMP_PARAM, " (default)" );
@@ -183,7 +183,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Andi Jahja (xharbour cbn.net.id)\n"
          "Antonio Carlos Pantaglione (toninho fwi.com.br)\n"
          "Antonio Linares (alinares fivetechsoft.com)\n"
-         "April White (april users.sourceforge.net)\n"
+         "April White (bright.tigra gmail.com)\n"
          "Bil Simser (bsimser home.com)\n"
          "Bill Robertson (arcadia2 sbcglobal.net)\n"
          "Brian Hays (bhays abacuslaw.com)\n"
@@ -215,6 +215,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Jon Berg (jmberg pnh10.med.navy.mil)\n"
          "Jorge A. Giraldo (jorgeagiraldo emtelsa.multi.net.co)\n"
          "Jose Lalin (dezac corevia.com)\n"
+         "Klas Engwall (harbour engwall.com)\n"
          "Kwon, Oh-Chul (ohchul fivetech.net)\n"
          "Leslee Griffith (les.griffith vantagesystems.ca)\n"
          "Lorenzo Fiorini (lorenzo.fiorini gmail com)\n"
@@ -247,6 +248,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Randy Portnoff (randy palmasdev.com)\n"
          "Richard Alexandre Cuylen (racuylen altern.org)\n"
          "Robert Arseniuk (roberta jmpolska.com)\n"
+         "Rolf (elchs unitybox.de)\n"
          "Ron Pinkas (ron profit-master.com)\n"
          "Ross Presser (ross_presser imtek.com)\n"
          "Ryszard Glab (rglab imid.med.pl)\n"

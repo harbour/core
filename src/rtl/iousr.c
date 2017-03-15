@@ -218,12 +218,12 @@ static HB_BOOL s_fileRename( PHB_FILE_FUNCS pFuncs, const char * pszName, const 
    return hb_parl( -1 );
 }
 
-static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pSrcFile, const char * pszDstFile )
+static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pszSrcFile, const char * pszDstFile )
 {
    PHB_IOUSR pIO = s_getUsrIO( pFuncs );
 
    s_pushMethod( pIO, IOUSR_COPY );
-   hb_vmPushString( pSrcFile, strlen( pSrcFile ) );
+   hb_vmPushString( pszSrcFile, strlen( pszSrcFile ) );
    hb_vmPushString( pszDstFile, strlen( pszDstFile ) );
    hb_vmDo( 2 );
 

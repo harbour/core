@@ -127,14 +127,14 @@
 
 
 #if defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || \
-    ( defined( isfinite ) && defined( isnan ) && defined( isinf ) )
+    ( defined( isfinite ) && defined( isnan ) )
 
    /* use C99 macros */
 #  define hb_isfinite( d )    isfinite( d )
 #  define HB_NUMTYPE( v, d )  do { \
                                  v = ( isfinite( d ) ? 0 : \
                                        ( isnan( d ) ? _HB_NUM_NAN : \
-                                         ( isinf( d ) < 0 ? _HB_NUM_NINF : \
+                                         ( hb_signbit( d ) ? _HB_NUM_NINF : \
                                            _HB_NUM_PINF ) ) ); \
                               } while( 0 )
 

@@ -4989,7 +4989,7 @@ static void hb_cdxCreateFName( CDXAREAP pArea, const char * szBagName,
          szBaseName[ 0 ] = '\0';
    }
 
-   if( ( hb_setGetDefExtension() && ! pFileName->szExtension ) || ! fName )
+   if( ! fName || ( ! pFileName->szExtension && hb_setGetDefExtension() ) )
    {
       DBORDERINFO pExtInfo;
       memset( &pExtInfo, 0, sizeof( pExtInfo ) );
@@ -7192,8 +7192,15 @@ static HB_ERRCODE hb_cdxOpen( CDXAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       pArea->dbfarea.fHasTags = HB_FALSE;
       hb_cdxCreateFName( pArea, NULL, NULL, szFileName, NULL );
-      if( hb_fileExists( szFileName, NULL ) ||
-          DBFAREA_DATA( &pArea->dbfarea )->fStrictStruct )
+      /* CL5.3/COMIX CDX RDDs looks for production indexes
+         only in the directory where DBF file is located but
+         CL5.2/SIXCDX RDDs also respects SET PATH [druzus] */
+      if( DBFAREA_DATA( &pArea->dbfarea )->fStrictStruct ||
+#if defined( HB_SIXCDX )
+          hb_fileExists( szFileName, szFileName ) )
+#else
+          hb_fileExists( szFileName, NULL ) )
+#endif
       {
          DBORDERINFO pOrderInfo;
 

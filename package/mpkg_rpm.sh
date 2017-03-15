@@ -128,6 +128,11 @@ if ( [ ! -f /usr/include/pcre.h ] && [ ! -f /usr/local/include/pcre.h ] ) || \
 then
    INST_PARAM="${INST_PARAM} --with localpcre"
 fi
+if ( [ ! -f /usr/include/bzlib.h ] && [ ! -f /usr/local/include/bzlib.h ] ) || \
+   [ "$HB_WITH_BZIP2" = "local" ]
+then
+   INST_PARAM="${INST_PARAM} --with localbz2"
+fi
 
 TOINST_LST=""
 for i in ${NEED_RPM}

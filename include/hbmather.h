@@ -58,7 +58,7 @@ HB_EXTERN_BEGIN
       #define exception _exception
    #endif
 #elif defined( __BORLANDC__ )
-   #if ( __BORLANDC__ == 1328 ) && defined( __cplusplus )
+   #if ( __BORLANDC__ == 0x530 ) && defined( __cplusplus )
       /* NOTE: There seem to be a bug in Borland C++ 5.3 C++ mode which prevents
                the redefinition of matherr, because nor "_exception" neither
                "exception" will work. [vszakats] */
@@ -66,7 +66,7 @@ HB_EXTERN_BEGIN
       #define HB_MATH_HANDLER
       #define matherr _matherr
       /* NOTE: This is needed for Borland C++ 5.5 in C++/STDC mode. [vszakats] */
-      #if ( __BORLANDC__ >= 1360 )
+      #if ( __BORLANDC__ >= 0x550 )
          #define exception _exception
       #endif
    #endif

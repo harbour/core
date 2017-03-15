@@ -946,6 +946,7 @@ DYNAMIC hb_vfLinkSym
 DYNAMIC hb_vfLoad
 DYNAMIC hb_vfLock
 DYNAMIC hb_vfLockTest
+DYNAMIC hb_vfMoveFile
 DYNAMIC hb_vfOpen
 DYNAMIC hb_vfRead
 DYNAMIC hb_vfReadAt
