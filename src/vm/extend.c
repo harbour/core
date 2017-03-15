@@ -507,11 +507,7 @@ int  hb_parni( int iParam )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
-#else
-         return ( int ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_INT( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -535,11 +531,7 @@ int  hb_parnidef( int iParam, int iDefValue )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
-#else
-         return ( int ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_INT( pItem->item.asDouble.value );
    }
 
    return iDefValue;
@@ -563,11 +555,7 @@ long  hb_parnl( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( long ) ( unsigned long ) pItem->item.asDouble.value;
-#else
-         return ( long ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONG( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -591,11 +579,7 @@ long  hb_parnldef( int iParam, long lDefValue )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( long ) ( unsigned long ) pItem->item.asDouble.value;
-#else
-         return ( long ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONG( pItem->item.asDouble.value );
    }
 
    return lDefValue;
@@ -619,7 +603,7 @@ HB_ISIZ hb_parns( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_ISIZ ) pItem->item.asDouble.value;
+         return HB_CAST_ISIZ( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -643,7 +627,7 @@ HB_ISIZ hb_parnsdef( int iParam, HB_ISIZ nDefValue )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_ISIZ ) pItem->item.asDouble.value;
+         return HB_CAST_ISIZ( pItem->item.asDouble.value );
    }
 
    return nDefValue;
@@ -668,11 +652,7 @@ HB_LONGLONG  hb_parnll( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_LONGLONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_LONGLONG ) ( HB_ULONGLONG ) pItem->item.asDouble.value;
-#else
-         return ( HB_LONGLONG ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONGLONG( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -697,11 +677,7 @@ HB_MAXINT hb_parnint( int iParam )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_MAXINT ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
-#else
-         return ( HB_MAXINT ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_MAXINT( pItem->item.asDouble.value );
    }
 
    return 0;
@@ -725,11 +701,7 @@ HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT nDefValue )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_MAXINT ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
-#else
-         return ( HB_MAXINT ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_MAXINT( pItem->item.asDouble.value );
    }
 
    return nDefValue;
@@ -1171,11 +1143,7 @@ int  hb_parvni( int iParam, ... )
       else if( HB_IS_LONG( pItem ) )
          return ( int ) pItem->item.asLong.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( int ) ( unsigned int ) pItem->item.asDouble.value;
-#else
-         return ( int ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_INT( pItem->item.asDouble.value );
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -1210,11 +1178,7 @@ long  hb_parvnl( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( long ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( long ) ( unsigned long ) pItem->item.asDouble.value;
-#else
-         return ( long ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONG( pItem->item.asDouble.value );
       /* CA-Cl*pper does it */
       else if( HB_IS_DATETIME( pItem ) )
          return ( long ) pItem->item.asDateTime.julian;
@@ -1252,7 +1216,7 @@ HB_ISIZ hb_parvns( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_ISIZ ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-         return ( HB_ISIZ ) pItem->item.asDouble.value;
+         return HB_CAST_ISIZ( pItem->item.asDouble.value );
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -1288,11 +1252,7 @@ HB_LONGLONG hb_parvnll( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_LONGLONG ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_LONGLONG ) ( HB_ULONGLONG ) pItem->item.asDouble.value;
-#else
-         return ( HB_LONGLONG ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_LONGLONG( pItem->item.asDouble.value );
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;
@@ -1328,11 +1288,7 @@ HB_MAXINT hb_parvnint( int iParam, ... )
       else if( HB_IS_INTEGER( pItem ) )
          return ( HB_MAXINT ) pItem->item.asInteger.value;
       else if( HB_IS_DOUBLE( pItem ) )
-#if defined( __GNUC__ )
-         return ( HB_MAXINT ) ( HB_MAXUINT ) pItem->item.asDouble.value;
-#else
-         return ( HB_MAXINT ) pItem->item.asDouble.value;
-#endif
+         return HB_CAST_MAXINT( pItem->item.asDouble.value );
       else if( HB_IS_ARRAY( pItem ) )
       {
          va_list va;

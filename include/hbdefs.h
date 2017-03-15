@@ -473,6 +473,12 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
 #define HB_LIM_INT32(l)       ( INT32_MIN <= (l) && (l) <= INT32_MAX )
 #define HB_LIM_INT64(l)       ( INT64_MIN <= (l) && (l) <= INT64_MAX )
 
+#define HB_CAST_INT( d )      ( ( int ) ( HB_MAXINT ) ( d ) )
+#define HB_CAST_LONG( d )     ( ( long ) ( HB_MAXINT ) ( d ) )
+#define HB_CAST_LONGLONG( d ) ( ( HB_LONGLONG ) ( d ) )
+#define HB_CAST_MAXINT( d )   ( ( HB_MAXINT ) ( d ) )
+#define HB_CAST_ISIZ( d )     ( ( HB_ISIZ ) ( HB_MAXINT ) ( d ) )
+
 /*
  * It's a hack for compilers which don't support LL suffix for LONGLONG
  * numeric constant. This suffix is necessary for some compilers -
