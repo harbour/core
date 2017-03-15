@@ -109,7 +109,7 @@
 
 /* few macros for some platform dependent floating point functions/macros */
 
-#if ( defined( __BORLANDC__ ) && __BORLANDC__ < 1410 ) || \
+#if ( defined( __BORLANDC__ ) && __BORLANDC__ < 0x582 ) || \
     ( defined( __WATCOMC__ ) && __WATCOMC__ < 1270 ) || \
     defined( HB_OS_QNX ) || defined( HB_OS_SYMBIAN ) || \
     defined( __DCC__ ) || defined( __TINYC__ ) || \
