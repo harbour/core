@@ -355,7 +355,8 @@ static HB_BOOL s_fileExists( PHB_FILE_FUNCS pFuncs, const char * pszFileName, ch
 {
    HB_SYMBOL_UNUSED( pFuncs );
 
-   return hb_spFileExists( pszFileName, pRetPath );
+   return pRetPath ? hb_spFileExists( pszFileName, pRetPath ) :
+                     hb_fsFileExists( pszFileName );
 }
 
 static HB_BOOL s_fileDelete( PHB_FILE_FUNCS pFuncs, const char * pszFileName )
@@ -372,11 +373,11 @@ static HB_BOOL s_fileRename( PHB_FILE_FUNCS pFuncs, const char * pszName, const 
    return hb_fsRename( pszName, pszNewName );
 }
 
-static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pSrcFile, const char * pszDstFile )
+static HB_BOOL s_fileCopy( PHB_FILE_FUNCS pFuncs, const char * pszSrcFile, const char * pszDstFile )
 {
    HB_SYMBOL_UNUSED( pFuncs );
 
-   return hb_fsCopy( pSrcFile, pszDstFile );
+   return hb_fsCopy( pszSrcFile, pszDstFile );
 }
 
 static HB_BOOL s_fileDirExists( PHB_FILE_FUNCS pFuncs, const char * pszDirName )
@@ -1156,7 +1157,8 @@ HB_BOOL hb_fileExists( const char * pszFileName, char * pRetPath )
    if( i >= 0 )
       return s_pFileTypes[ i ]->Exists( s_pFileTypes[ i ], pszFileName, pRetPath );
 
-   return hb_spFileExists( pszFileName, pRetPath );
+   return pRetPath ? hb_spFileExists( pszFileName, pRetPath ) :
+                     hb_fsFileExists( pszFileName );
 }
 
 HB_BOOL hb_fileDelete( const char * pszFileName )
@@ -1179,14 +1181,31 @@ HB_BOOL hb_fileRename( const char * pszFileName, const char * pszNewName )
    return hb_fsRename( pszFileName, pszNewName );
 }
 
-HB_BOOL hb_fileCopy( const char * pSrcFile, const char * pszDstFile )
+HB_BOOL hb_fileCopy( const char * pszSrcFile, const char * pszDstFile )
 {
-   int i = s_fileFindDrv( pSrcFile );
+   int i = s_fileFindDrv( pszSrcFile );
 
    if( i >= 0 )
-      return s_pFileTypes[ i ]->Copy( s_pFileTypes[ i ], pSrcFile, pszDstFile );
+      return s_pFileTypes[ i ]->Copy( s_pFileTypes[ i ], pszSrcFile, pszDstFile );
 
-   return hb_fsCopy( pSrcFile, pszDstFile );
+   return hb_fsCopy( pszSrcFile, pszDstFile );
+}
+
+HB_BOOL hb_fileMove( const char * pszSrcFile, const char * pszDstFile )
+{
+   int iS = s_fileFindDrv( pszSrcFile ),
+       iD = s_fileFindDrv( pszDstFile );
+
+   if( iS == iD )
+   {
+      if( iS >= 0 ?
+          s_pFileTypes[ iS ]->Rename( s_pFileTypes[ iS ], pszSrcFile, pszDstFile ) :
+          hb_fsRename( pszSrcFile, pszDstFile ) )
+         return HB_TRUE;
+   }
+
+   return hb_fsCopy( pszSrcFile, pszDstFile ) &&
+          hb_fileDelete( pszSrcFile );
 }
 
 HB_BOOL hb_fileDirExists( const char * pszDirName )

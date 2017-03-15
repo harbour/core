@@ -3815,7 +3815,7 @@ static void hb_nsxCreateFName( NSXAREAP pArea, const char * szBagName, HB_BOOL *
          szTagName[ 0 ] = '\0';
    }
 
-   if( ( hb_setGetDefExtension() && ! pFileName->szExtension ) || ! fName )
+   if( ! fName || ( ! pFileName->szExtension && hb_setGetDefExtension() ) )
    {
       DBORDERINFO pExtInfo;
       memset( &pExtInfo, 0, sizeof( pExtInfo ) );
@@ -6608,6 +6608,12 @@ static HB_ERRCODE hb_nsxOpen( NSXAREAP pArea, LPDBOPENINFO pOpenInfo )
       char szFileName[ HB_PATH_MAX ];
 
       hb_nsxCreateFName( pArea, NULL, NULL, szFileName, NULL );
+      /* CL5.2 DBFCDX and Six3 CDX/NSX RDDs looking for
+         production indexes respect SET PATH but Harbour in
+         core DBF* index RDDs is CL5.3/COMIX compatible and
+         looks for production indexes only in the directory
+         where DBF file is located and only SIXCDX Harbour
+         RDD is CL5.2/Six3 compatible [druzus] */
       if( hb_fileExists( szFileName, NULL ) ||
           DBFAREA_DATA( &pArea->dbfarea )->fStrictStruct )
       {

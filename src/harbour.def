@@ -1131,6 +1131,7 @@ HB_FUN_HB_VFLINKSYM
 HB_FUN_HB_VFLOAD
 HB_FUN_HB_VFLOCK
 HB_FUN_HB_VFLOCKTEST
+HB_FUN_HB_VFMOVEFILE
 HB_FUN_HB_VFOPEN
 HB_FUN_HB_VFREAD
 HB_FUN_HB_VFREADAT
@@ -2457,6 +2458,7 @@ hb_fileLoad
 hb_fileLoadData
 hb_fileLock
 hb_fileLockTest
+hb_fileMove
 hb_filePOpen
 hb_fileParam
 hb_fileRead

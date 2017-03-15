@@ -70,7 +70,7 @@
 %define hb_sln    export HB_WITH_SLANG=%{!?_without_slang:yes}%{?_without_slang:no}
 %define hb_x11    export HB_WITH_X11=%{!?_without_x11:yes}%{?_without_x11:no}
 %define hb_ssl    export HB_WITH_OPENSSL=%{?_with_openssl:yes}%{!?_with_openssl:no}
-%define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local}
+%define hb_local  export HB_WITH_ZLIB=%{?_with_localzlib:local} ; export HB_WITH_PCRE=%{?_with_localpcre:local} ; export HB_WITH_BZIP2=%{?_with_localbz2:local}
 %define hb_proot  export HB_INSTALL_PKG_ROOT=${RPM_BUILD_ROOT}
 %define hb_bdir   export HB_INSTALL_BIN=${RPM_BUILD_ROOT}%{_bindir}
 %define hb_ldir   export HB_INSTALL_LIB=${RPM_BUILD_ROOT}%{_libdir}/%{name}
@@ -409,13 +409,13 @@ make install %{?_smp_mflags}
 %{?_without_curses:rm -f $HB_INSTALL_LIB/libgtcrs.a}
 %{?_without_slang:rm -f $HB_INSTALL_LIB/libgtsln.a}
 %{!?_with_openssl:rm -f $HB_INSTALL_LIB/libhbssl.a}
-rm -fR %{!?hb_ldconf:$HB_INSTALL_ETC/ld.so.conf.d}
-rm -f %{?hb_ldconf:$RPM_BUILD_ROOT/%{_libdir}/*.so*}
+%{!?_with_localbz2:rm -f $HB_INSTALL_LIB/libbz2.a}
+%{!?hb_ldconf:rm -fR $HB_INSTALL_ETC/ld.so.conf.d}
+%{?hb_ldconf:rm -f $RPM_BUILD_ROOT/%{_libdir}/*.so*}
 rm -f $RPM_BUILD_ROOT/%{_bindir}/{3rdpatch.hb,check.hb,commit.hb,harbour.ucf}
 rm -f $HB_INSTALL_LIB/libjpeg.a \
       $HB_INSTALL_LIB/libpng.a \
       $HB_INSTALL_LIB/libtiff.a \
-      $HB_INSTALL_LIB/libbz2.a \
       $HB_INSTALL_LIB/liblibhpdf.a \
       $HB_INSTALL_LIB/libsqlite3.a \
       $HB_INSTALL_LIB/libexpat.a \
@@ -523,6 +523,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/libhbmzip.a
 %dir %{_datadir}/%{name}/contrib/hbbz2
 %{_datadir}/%{name}/contrib/hbbz2/*
+%{?_with_localbz2:%{_libdir}/%{name}/libbz2.a}
 %{_libdir}/%{name}/libhbbz2.a
 %dir %{_datadir}/%{name}/contrib/hblzf
 %{_datadir}/%{name}/contrib/hblzf/*

@@ -389,6 +389,7 @@ extern HB_EXPORT HB_BOOL      hb_fileExists     ( const char * pszFileName, char
 extern HB_EXPORT HB_BOOL      hb_fileDelete     ( const char * pszFileName );
 extern HB_EXPORT HB_BOOL      hb_fileRename     ( const char * pszFileName, const char * pszNewName );
 extern HB_EXPORT HB_BOOL      hb_fileCopy       ( const char * pszSrcFile, const char * pszDstFile );
+extern HB_EXPORT HB_BOOL      hb_fileMove       ( const char * pszSrcFile, const char * pszDstFile );
 
 extern HB_EXPORT HB_BOOL      hb_fileDirExists  ( const char * pszDirName );
 extern HB_EXPORT HB_BOOL      hb_fileDirMake    ( const char * pszDirName );

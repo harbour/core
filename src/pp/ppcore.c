@@ -5766,13 +5766,16 @@ void hb_pp_readRules( PHB_PP_STATE pState, const char * szRulesFile )
 /*
  * close all open input files and set the given buffer as input stream
  */
-HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * pBuffer, HB_SIZE nLen, int iStartLine )
+HB_BOOL hb_pp_inBuffer( PHB_PP_STATE pState, const char * szFileName,
+                        const char * pBuffer, HB_SIZE nLen, int iStartLine )
 {
    hb_pp_InFileFree( pState );
 
    pState->fError = HB_FALSE;
 
    pState->pFile = hb_pp_FileBufNew( pBuffer, nLen );
+   if( szFileName )
+      pState->pFile->szFileName = hb_strdup( szFileName );
    pState->pFile->iCurrentLine = iStartLine;
    pState->pFile->iLastLine = iStartLine + 1;
    pState->iFiles++;

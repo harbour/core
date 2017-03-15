@@ -212,6 +212,25 @@ HB_FUNC( HB_VFCOPYFILE )
    hb_retni( iResult );
 }
 
+/* hb_vfMoveFile( <cFileSrc>, <cFileDst> ) -> <nResult> */
+HB_FUNC( HB_VFMOVEFILE )
+{
+   const char * pszSource = hb_parc( 1 ),
+              * pszDestin = hb_parc( 2 );
+   HB_ERRCODE uiError = 2;
+   int iResult = F_ERROR;
+
+   if( pszSource && pszDestin )
+   {
+      if( hb_fileMove( pszSource, pszDestin ) )
+         iResult = 0;
+      uiError = hb_fsError();
+   }
+
+   hb_fsSetFError( uiError );
+   hb_retni( iResult );
+}
+
 /* hb_vfDirExists( <cDirName> ) -> <lExists> */
 HB_FUNC( HB_VFDIREXISTS )
 {

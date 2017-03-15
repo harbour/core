@@ -1,5 +1,5 @@
 /*
- * HB_COMPILE() - compiler interface
+ * hb_compile*() - compiler interface
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -231,18 +231,19 @@ HB_FUNC( HB_COMPILEBUF )
 
 HB_FUNC( HB_COMPILEFROMBUF )
 {
-   int iResult, argc;
-   const char ** argv;
-   const char * szSource;
-   PHB_ITEM pIncItem;
-   PHB_PP_OPEN_FUNC pOpenFunc;
-   PHB_PP_MSG_FUNC pMsgFunc;
-   HB_BYTE * pBuffer;
-   HB_SIZE nLen;
 
-   szSource = hb_parc( 1 );
+   const char * szSource = hb_parc( 1 );
+
    if( szSource )
    {
+      int iResult, argc;
+      const char ** argv;
+      PHB_ITEM pIncItem;
+      PHB_PP_OPEN_FUNC pOpenFunc;
+      PHB_PP_MSG_FUNC pMsgFunc;
+      HB_BYTE * pBuffer;
+      HB_SIZE nLen;
+
       hb_compGenArgList( 2, hb_pcount(), &argc, &argv, &pIncItem, &pOpenFunc, &pMsgFunc );
       iResult = hb_compMainExt( argc, argv, &pBuffer, &nLen, szSource, 0, pIncItem, pOpenFunc, pMsgFunc );
       hb_xfree( ( void * ) argv );
