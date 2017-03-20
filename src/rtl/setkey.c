@@ -90,6 +90,19 @@ static void hb_setkeyRelease( void * cargo )
 
 static HB_TSD_NEW( s_skData, sizeof( HB_SK_DATA ), NULL, hb_setkeyRelease );
 
+static HB_BOOL sk_testActive( PHB_ITEM pIsActive, int iKeyCode )
+{
+   if( pIsActive )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( pIsActive );
+      hb_vmPushInteger( iKeyCode );
+      hb_vmSend( 1 );
+      return hb_parldef( -1, HB_TRUE );
+   }
+   return HB_TRUE;
+}
+
 static PHB_SETKEY sk_findkey( int iKeyCode, PHB_SETKEY sk_list,
                               PHB_SETKEY * sk_list_end )
 {
@@ -144,9 +157,8 @@ static void sk_add( PHB_SETKEY * sk_list_ptr, HB_BOOL bReturn,
 
          hb_itemRelease( sk_list_tmp->pAction );
          if( sk_list_tmp->pIsActive )
-         {
             hb_itemRelease( sk_list_tmp->pIsActive );
-         }
+
          /* Set the new values or free the entry */
 
          if( pAction )
@@ -175,9 +187,9 @@ static void sk_add( PHB_SETKEY * sk_list_ptr, HB_BOOL bReturn,
 
 HB_FUNC( SETKEY )
 {
-   PHB_ITEM pKeyCode = hb_param( 1, HB_IT_NUMERIC );
+   int iKeyCode = hb_parni( 1 );
 
-   if( pKeyCode )
+   if( iKeyCode != 0 )
    {
       PHB_SK_DATA sk_data = ( PHB_SK_DATA ) hb_stackGetTSD( &s_skData );
 
@@ -187,7 +199,7 @@ HB_FUNC( SETKEY )
          PHB_SETKEY sk_list_tmp, sk_list_end;
 
          /* sk_list_end is not used in this context */
-         sk_list_tmp = sk_findkey( hb_itemGetNI( pKeyCode ), sk_data->sk_list, &sk_list_end );
+         sk_list_tmp = sk_findkey( iKeyCode, sk_data->sk_list, &sk_list_end );
 
          if( sk_list_tmp )
             hb_itemReturn( sk_list_tmp->pAction );
@@ -195,7 +207,7 @@ HB_FUNC( SETKEY )
       else
       {
          /* Set a SETKEY value */
-         sk_add( &sk_data->sk_list, HB_TRUE, hb_itemGetNI( pKeyCode ),
+         sk_add( &sk_data->sk_list, HB_TRUE, iKeyCode,
                  hb_param( 2, HB_IT_EVALITEM ), NULL );
       }
    }
@@ -203,9 +215,9 @@ HB_FUNC( SETKEY )
 
 HB_FUNC( HB_SETKEY )
 {
-   PHB_ITEM pKeyCode = hb_param( 1, HB_IT_NUMERIC );
+   int iKeyCode = hb_parni( 1 );
 
-   if( pKeyCode )
+   if( iKeyCode != 0 )
    {
       PHB_SK_DATA sk_data = ( PHB_SK_DATA ) hb_stackGetTSD( &s_skData );
 
@@ -215,20 +227,28 @@ HB_FUNC( HB_SETKEY )
          PHB_SETKEY sk_list_tmp, sk_list_end;
 
          /* sk_list_end is not used in this context */
-         sk_list_tmp = sk_findkey( hb_itemGetNI( pKeyCode ), sk_data->sk_list, &sk_list_end );
+         sk_list_tmp = sk_findkey( iKeyCode, sk_data->sk_list, &sk_list_end );
+         if( sk_list_tmp == NULL )
+         {
+            int iKeyStd = hb_inkeyKeyStd( iKeyCode );
+
+            if( iKeyStd != iKeyCode )
+            {
+               sk_list_tmp = sk_findkey( iKeyStd, sk_data->sk_list, &sk_list_end );
+               iKeyCode = iKeyStd;
+            }
+         }
 
          if( sk_list_tmp )
          {
-            PHB_ITEM pIsActiveResults = sk_list_tmp->pIsActive ? hb_vmEvalBlockV( sk_list_tmp->pIsActive, 1, pKeyCode ) : NULL;
-
-            if( pIsActiveResults == NULL || ! HB_IS_LOGICAL( pIsActiveResults ) || hb_itemGetL( pIsActiveResults ) )
+            if( sk_testActive( sk_list_tmp->pIsActive, iKeyCode ) )
                hb_itemReturn( sk_list_tmp->pAction );
          }
       }
       else
       {
          /* Set a SETKEY value */
-         sk_add( &sk_data->sk_list, HB_TRUE, hb_itemGetNI( pKeyCode ),
+         sk_add( &sk_data->sk_list, HB_TRUE, iKeyCode,
                  hb_param( 2, HB_IT_EVALITEM ), hb_param( 3, HB_IT_EVALITEM ) );
       }
    }
@@ -331,32 +351,41 @@ HB_FUNC( HB_SETKEYSAVE )
 
 HB_FUNC( HB_SETKEYCHECK )
 {
-   PHB_ITEM pKeyCode = hb_param( 1, HB_IT_NUMERIC );
    HB_BOOL bIsKeySet = HB_FALSE;
+   int iKeyCode = hb_parni( 1 );
 
-   if( pKeyCode )
+   if( iKeyCode != 0 )
    {
       PHB_SK_DATA sk_data = ( PHB_SK_DATA ) hb_stackGetTSD( &s_skData );
       PHB_SETKEY sk_list_tmp, sk_list_end;
 
       /* sk_list_end is not used in this context */
-      sk_list_tmp = sk_findkey( hb_itemGetNI( pKeyCode ), sk_data->sk_list, &sk_list_end );
+      sk_list_tmp = sk_findkey( iKeyCode, sk_data->sk_list, &sk_list_end );
+      if( sk_list_tmp == NULL )
+      {
+         int iKeyStd = hb_inkeyKeyStd( iKeyCode );
+
+         if( iKeyStd != iKeyCode )
+         {
+            sk_list_tmp = sk_findkey( iKeyStd, sk_data->sk_list, &sk_list_end );
+            iKeyCode = iKeyStd;
+         }
+      }
 
       if( sk_list_tmp )
       {
-         PHB_ITEM pIsActiveResults = sk_list_tmp->pIsActive ? hb_vmEvalBlockV( sk_list_tmp->pIsActive, 1, pKeyCode ) : NULL;
-
-         if( pIsActiveResults == NULL || ! HB_IS_LOGICAL( pIsActiveResults ) || hb_itemGetL( pIsActiveResults ) )
+         if( sk_testActive( sk_list_tmp->pIsActive, iKeyCode ) )
          {
-            bIsKeySet = HB_TRUE;
+            HB_USHORT uiPCount = ( HB_USHORT ) hb_pcount(), uiParam;
 
-            switch( hb_pcount() )
-            {
-               case 1:  hb_vmEvalBlockV( sk_list_tmp->pAction, 1, pKeyCode ); break;
-               case 2:  hb_vmEvalBlockV( sk_list_tmp->pAction, 2, hb_param( 2, HB_IT_ANY ), pKeyCode ); break;
-               case 3:  hb_vmEvalBlockV( sk_list_tmp->pAction, 3, hb_param( 2, HB_IT_ANY ), hb_param( 3, HB_IT_ANY ), pKeyCode ); break;
-               default: hb_vmEvalBlockV( sk_list_tmp->pAction, 4, hb_param( 2, HB_IT_ANY ), hb_param( 3, HB_IT_ANY ), hb_param( 4, HB_IT_ANY ), pKeyCode ); break;
-            }
+            hb_vmPushEvalSym();
+            hb_vmPush( sk_list_tmp->pAction );
+            for( uiParam = 2; uiParam <= uiPCount; ++uiParam )
+               hb_vmPush( hb_stackItemFromBase( uiParam ) );
+            hb_vmPushInteger( iKeyCode );
+            hb_vmSend( uiPCount );
+
+            bIsKeySet = HB_TRUE;
          }
       }
    }
