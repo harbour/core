@@ -70,7 +70,7 @@ const char * const hb_comp_szErrors[] =
    "Invalid selector '%s' in send",
    "ANNOUNCEd procedure '%s' must be a public symbol",
    "Jump PCode not found",
-   "CASE or OTHERWISE does not match DO CASE",
+   "CASE or OTHERWISE does not match DO CASE or SWITCH",
    "Code block contains both macro and declared symbol references '%s'",
    "GET contains complex macro",
    "Unterminated inline block in function '%s'",
@@ -95,6 +95,9 @@ const char * const hb_comp_szErrors[] =
    "Invalid ALWAYS after %s in RECOVER code",
    "File write error",
    "Duplicate case value",
+   "ENDWITH does not match WITH OBJECT",
+   "ENDSWITCH does not match SWITCH",
+   "END SEQUENCE does not match BEGIN SEQUENCE",
    /* Some historical, funny sounding error messages from original CA-Cl*pper.
       They serve no purpose whatsoever. [vszakats] */
    "END wreaks terrible vengeance on control stack",

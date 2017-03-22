@@ -485,7 +485,7 @@ create_db()
 
 #ifdef __HARBOUR__
    #include "hbmemory.ch"
-   if MEMORY( HB_MEM_USEDMAX ) != 0
+   if MEMORY( HB_MEM_STATISTICS ) != 0
       ? "Warning !!! Memory statistic enabled."
       ?
    endif

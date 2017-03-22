@@ -105,6 +105,8 @@ static void hb_compSwitchEnd( HB_COMP_DECL );
 static PHB_EXPR hb_compCheckMethod( HB_COMP_DECL, PHB_EXPR pExpr );
 static PHB_EXPR hb_compCheckPassByRef( HB_COMP_DECL, PHB_EXPR pExpr );
 
+static void hb_compErrStru( HB_COMP_DECL, int iError );
+
 #ifdef HB_YYDEBUG
    #define YYDEBUG        1 /* Parser debug information support */
 #endif
@@ -385,7 +387,7 @@ Statement  : ExecFlow CrlfStmnt
                                          HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) );
                                       else
                                          HB_COMP_EXPR_FREE( HB_COMP_ERROR_SYNTAX( $1 ) );
-                                       HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
+                                      HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
                                     }
            | PareExpList CrlfStmnt  { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
            | ExprPreOp CrlfStmnt    { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
@@ -1383,6 +1385,27 @@ ExecFlow   : IfEndif
            | WithObject
            ;
 
+ErrEndFor    : NEXT      { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_NEXTFOR ); }
+             ;
+
+ErrEndCase   : ENDCASE   { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDCASE ); }
+             ;
+
+ErrEndIf     : ENDIF     { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDIF ); }
+             ;
+
+ErrEndWith   : ENDWITH   { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDWITH ); }
+             ;
+
+ErrEndSeq    : ENDSEQ    { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDSEQ ); }
+             ;
+
+ErrEndWhile  : ENDDO     { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDDO ); }
+             ;
+
+ErrEndSwitch : ENDSWITCH { hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDSWITCH ); }
+             ;
+
 IfEndif    : IfBegin EndIf                    { hb_compGenJumpHere( $1, HB_COMP_PARAM ); }
            | IfBegin IfElse EndIf             { hb_compGenJumpHere( $1, HB_COMP_PARAM ); }
            | IfBegin IfElseIf EndIf           { hb_compGenJumpHere( $1, HB_COMP_PARAM ); hb_compElseIfFix( HB_COMP_PARAM, $2 ); }
@@ -1432,6 +1455,12 @@ EndIf      : EndIfID
 
 EndIfID    : ENDIF
            | END
+           | ErrEndFor
+           | ErrEndCase
+           | ErrEndWhile
+           | ErrEndWith
+           | ErrEndSeq
+           | ErrEndSwitch
            ;
 
 DoCase     : DoCaseBegin
@@ -1460,6 +1489,12 @@ EndCase    : EndCaseID
 
 EndCaseID  : ENDCASE
            | END
+           | ErrEndIf
+           | ErrEndFor
+           | ErrEndWhile
+           | ErrEndWith
+           | ErrEndSeq
+           | ErrEndSwitch
            ;
 
 DoCaseStart : DOCASE { ++HB_COMP_PARAM->functions.pLast->wCaseCounter; hb_compLinePushIfDebugger( HB_COMP_PARAM );} Crlf
@@ -1540,6 +1575,12 @@ EndWhile   : EndWhileID
 
 EndWhileID : ENDDO
            | END
+           | ErrEndIf
+           | ErrEndFor
+           | ErrEndCase
+           | ErrEndWith
+           | ErrEndSeq
+           | ErrEndSwitch
            ;
 
 ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
@@ -1628,7 +1669,12 @@ ForStatements : EmptyStats EndForID
 EndForID   : NEXT
            | NEXT IdentName
            | END
-           | END IdentName
+           | ErrEndIf
+           | ErrEndCase
+           | ErrEndWhile
+           | ErrEndWith
+           | ErrEndSeq
+           | ErrEndSwitch
            ;
 
 ForVar     : IdentName     { $$ = hb_compExprNewVarRef( $1, HB_COMP_PARAM ); }
@@ -1718,6 +1764,12 @@ EndSwitch   : EndSwitchID
 
 EndSwitchID : ENDSWITCH
             | END
+            | ErrEndIf
+            | ErrEndFor
+            | ErrEndCase
+            | ErrEndWhile
+            | ErrEndWith
+            | ErrEndSeq
             ;
 
 SwitchStart : DOSWITCH
@@ -1819,6 +1871,12 @@ BeginSeq    : BEGINSEQ        /* 1 */
 
 EndSeqID    : ENDSEQ
             | END
+            | ErrEndIf
+            | ErrEndFor
+            | ErrEndCase
+            | ErrEndWhile
+            | ErrEndWith
+            | ErrEndSwitch
             ;
 
 BlockSeq    : /* no always */    { $$ = 0; }
@@ -1932,6 +1990,12 @@ WithObject : WITHOBJECT Expression Crlf
 
 EndWithID  : ENDWITH
            | END
+           | ErrEndIf
+           | ErrEndFor
+           | ErrEndCase
+           | ErrEndWhile
+           | ErrEndSeq
+           | ErrEndSwitch
            ;
 
 Crlf       : '\n'       { HB_COMP_PARAM->fError = HB_FALSE; }
@@ -2841,6 +2905,11 @@ static PHB_EXPR hb_compCheckMethod( HB_COMP_DECL, PHB_EXPR pExpr )
    return pExpr;
 }
 
+static void hb_compErrStru( HB_COMP_DECL, int iError )
+{
+   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', iError, NULL, NULL );
+}
+
 /* ************************************************************************* */
 
 HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PHB_HFUNC pFunc )
@@ -2900,6 +2969,26 @@ void yyerror( HB_COMP_DECL, const char * s )
       if( HB_COMP_PARAM->iErrorCount == 0 || ! hb_pp_eof( HB_COMP_PARAM->pLex->pPP ) )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INCOMPLETE_STMT, NULL, NULL );
    }
+   else if( HB_COMP_PARAM->pLex->iState == NEXT )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_NEXTFOR );
+   else if( HB_COMP_PARAM->pLex->iState == ELSE )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_UNMATCHED_ELSE );
+   else if( HB_COMP_PARAM->pLex->iState == ELSEIF )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_UNMATCHED_ELSEIF );
+   else if( HB_COMP_PARAM->pLex->iState == ENDIF || HB_COMP_PARAM->pLex->iState == END )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDIF );
+   else if( HB_COMP_PARAM->pLex->iState == CASE || HB_COMP_PARAM->pLex->iState == OTHERWISE )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_CASE );
+   else if( HB_COMP_PARAM->pLex->iState == ENDCASE )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDCASE );
+   else if( HB_COMP_PARAM->pLex->iState == ENDDO )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDDO );
+   else if( HB_COMP_PARAM->pLex->iState == ENDWITH )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDWITH );
+   else if( HB_COMP_PARAM->pLex->iState == ENDSEQ )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDSEQ );
+   else if( HB_COMP_PARAM->pLex->iState == ENDSWITCH )
+      hb_compErrStru( HB_COMP_PARAM, HB_COMP_ERR_ENDSWITCH );
    else
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_YACC, s, HB_COMP_PARAM->pLex->lasttok );
 }
