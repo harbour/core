@@ -500,7 +500,7 @@ LineStat   : Crlf          { $<lNumber>$ = 0; }
            | Statement     { $<lNumber>$ = 1; }
            | Declaration   { $<lNumber>$ = 1; }
            | Line          { $<lNumber>$ = 0; }
-           | ControlError  { $<lNumber>$ = 0; hb_compCheckUnclosedStru( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast ); }
+           | /* error */ Function
            | error         { if( HB_COMP_PARAM->ilastLineErr && HB_COMP_PARAM->ilastLineErr == HB_COMP_PARAM->currLine )
                              {
                                 yyclearin;
@@ -512,18 +512,6 @@ LineStat   : Crlf          { $<lNumber>$ = 0; }
                              }
                              $<lNumber>$ = 0;
                            }
-           ;
-
-ControlError : FunScopeId FUNCTION  IdentName Crlf
-             | FunScopeId FUNCTION  IdentName '(' Params ')' Crlf
-             | FunScopeId PROCEDURE IdentName Crlf
-             | FunScopeId PROCEDURE IdentName '(' Params ')' Crlf
-             ;
-
-FunScopeId :
-           | STATIC
-           | INIT
-           | EXIT
            ;
 
 Statements : LineStat
