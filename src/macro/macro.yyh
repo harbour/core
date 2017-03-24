@@ -91,7 +91,7 @@ extern int hb_macro_yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 142 "macro.y" /* yacc.c:1909  */
+#line 140 "macro.y" /* yacc.c:1909  */
 
    const char * string; /* to hold a string returned by lex */
    int       iNumber;   /* to hold a temporary integer number */

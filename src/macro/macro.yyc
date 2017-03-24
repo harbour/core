@@ -201,7 +201,7 @@
 #endif
 
 
-#line 207 "macroy.c" /* yacc.c:339  */
+#line 205 "macroy.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -282,7 +282,7 @@ extern int hb_macro_yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 142 "macro.y" /* yacc.c:355  */
+#line 140 "macro.y" /* yacc.c:355  */
 
    const char * string; /* to hold a string returned by lex */
    int       iNumber;   /* to hold a temporary integer number */
@@ -315,7 +315,7 @@ union YYSTYPE
       long     time;    /* to hold milliseconds */
    } valTimeStamp;
 
-#line 321 "macroy.c" /* yacc.c:355  */
+#line 319 "macroy.c" /* yacc.c:355  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -328,7 +328,7 @@ int hb_macro_yyparse (PHB_MACRO pMacro);
 #endif /* !YY_HB_MACRO_YY_MACROY_H_INCLUDED  */
 
 /* Copy the second part of user declarations.  */
-#line 175 "macro.y" /* yacc.c:358  */
+#line 173 "macro.y" /* yacc.c:358  */
 
 /* This must be placed after the above union - the union is
  * typedef-ined to YYSTYPE
@@ -338,7 +338,7 @@ extern int  yyparse( PHB_MACRO );            /* main yacc parsing function */
 extern void yyerror( PHB_MACRO, const char * );    /* parsing error management function */
 
 
-#line 344 "macroy.c" /* yacc.c:358  */
+#line 342 "macroy.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -639,27 +639,27 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,   259,   259,   269,   277,   286,   287,   290,   293,   296,
-     301,   306,   311,   312,   317,   322,   327,   332,   333,   336,
-     337,   343,   346,   351,   354,   373,   378,   381,   388,   389,
-     394,   395,   396,   397,   398,   401,   402,   403,   406,   407,
-     408,   409,   410,   411,   412,   421,   422,   423,   424,   425,
-     430,   431,   432,   433,   434,   435,   436,   437,   438,   439,
-     440,   441,   442,   443,   444,   445,   446,   447,   448,   453,
-     456,   461,   471,   472,   475,   476,   479,   480,   481,   482,
-     483,   486,   487,   492,   495,   496,   497,   502,   506,   507,
-     508,   509,   510,   511,   512,   513,   514,   515,   516,   517,
-     518,   519,   520,   521,   522,   523,   524,   525,   526,   527,
-     528,   529,   530,   531,   532,   533,   534,   535,   538,   539,
-     542,   543,   546,   546,   560,   561,   565,   566,   569,   570,
-     571,   572,   573,   574,   575,   576,   577,   578,   579,   580,
-     581,   582,   583,   584,   585,   586,   587,   588,   589,   590,
-     596,   597,   603,   606,   607,   610,   611,   612,   615,   618,
-     621,   624,   627,   630,   633,   636,   637,   638,   639,   640,
-     641,   644,   645,   646,   647,   648,   649,   652,   653,   656,
-     657,   658,   659,   660,   661,   662,   663,   664,   667,   673,
-     674,   675,   678,   679,   683,   682,   690,   691,   696,   697,
-     698,   699,   702,   703,   706,   707,   710,   713,   717
+       0,   257,   257,   267,   275,   284,   285,   288,   291,   294,
+     299,   304,   309,   310,   315,   320,   325,   330,   331,   334,
+     335,   341,   344,   349,   352,   371,   376,   379,   386,   387,
+     392,   393,   394,   395,   396,   399,   400,   401,   404,   405,
+     406,   407,   408,   409,   410,   419,   420,   421,   422,   423,
+     428,   429,   430,   431,   432,   433,   434,   435,   436,   437,
+     438,   439,   440,   441,   442,   443,   444,   445,   446,   451,
+     454,   459,   469,   470,   473,   474,   477,   478,   479,   480,
+     481,   484,   485,   490,   493,   494,   495,   500,   504,   505,
+     506,   507,   508,   509,   510,   511,   512,   513,   514,   515,
+     516,   517,   518,   519,   520,   521,   522,   523,   524,   525,
+     526,   527,   528,   529,   530,   531,   532,   533,   536,   537,
+     540,   541,   544,   544,   558,   559,   563,   564,   567,   568,
+     569,   570,   571,   572,   573,   574,   575,   576,   577,   578,
+     579,   580,   581,   582,   583,   584,   585,   586,   587,   588,
+     594,   595,   601,   604,   605,   608,   609,   610,   613,   616,
+     619,   622,   625,   628,   631,   634,   635,   636,   637,   638,
+     639,   642,   643,   644,   645,   646,   647,   650,   651,   654,
+     655,   656,   657,   658,   659,   660,   661,   662,   665,   671,
+     672,   673,   676,   677,   681,   680,   688,   689,   694,   695,
+     696,   697,   700,   701,   704,   705,   708,   711,   715
 };
 #endif
 
@@ -1849,7 +1849,7 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 259 "macro.y" /* yacc.c:1646  */
+#line 257 "macro.y" /* yacc.c:1646  */
     {
                            HB_MACRO_DATA->exprType = hb_compExprType( (yyvsp[0].asExpr) );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_REFER )
@@ -1860,11 +1860,11 @@ yyreduce:
                               hb_macroExprGenPop( (yyvsp[0].asExpr), HB_COMP_PARAM );
                            hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         }
-#line 1866 "macroy.c" /* yacc.c:1646  */
+#line 1864 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 3:
-#line 269 "macro.y" /* yacc.c:1646  */
+#line 267 "macro.y" /* yacc.c:1646  */
     {
                            HB_MACRO_DATA->exprType = hb_compExprType( (yyvsp[0].asExpr) );
                            if( HB_MACRO_DATA->Flags &  HB_MACRO_GEN_PUSH )
@@ -1873,137 +1873,137 @@ yyreduce:
                               hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
                            hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         }
-#line 1879 "macroy.c" /* yacc.c:1646  */
+#line 1877 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 4:
-#line 277 "macro.y" /* yacc.c:1646  */
+#line 275 "macro.y" /* yacc.c:1646  */
     {
                   HB_TRACE( HB_TR_DEBUG, ( "macro -> invalid syntax: %s", HB_MACRO_DATA->string ) );
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
                   HB_MACRO_ABORT;
                }
-#line 1889 "macroy.c" /* yacc.c:1646  */
+#line 1887 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 286 "macro.y" /* yacc.c:1646  */
+#line 284 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewDouble( (yyvsp[0].valDouble).dNumber, (yyvsp[0].valDouble).bWidth, (yyvsp[0].valDouble).bDec, HB_COMP_PARAM ); }
-#line 1895 "macroy.c" /* yacc.c:1646  */
+#line 1893 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 287 "macro.y" /* yacc.c:1646  */
+#line 285 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewLong( (yyvsp[0].valLong).lNumber, HB_COMP_PARAM ); }
-#line 1901 "macroy.c" /* yacc.c:1646  */
+#line 1899 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 290 "macro.y" /* yacc.c:1646  */
+#line 288 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewDate( ( long ) (yyvsp[0].valLong).lNumber, HB_COMP_PARAM ); }
-#line 1907 "macroy.c" /* yacc.c:1646  */
+#line 1905 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 293 "macro.y" /* yacc.c:1646  */
+#line 291 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewTimeStamp( (yyvsp[0].valTimeStamp).date, (yyvsp[0].valTimeStamp).time, HB_COMP_PARAM ); }
-#line 1913 "macroy.c" /* yacc.c:1646  */
+#line 1911 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 296 "macro.y" /* yacc.c:1646  */
+#line 294 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewLong( (yyvsp[-1].valLong).lNumber, HB_COMP_PARAM ); }
-#line 1919 "macroy.c" /* yacc.c:1646  */
+#line 1917 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 301 "macro.y" /* yacc.c:1646  */
+#line 299 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewNil( HB_COMP_PARAM ); }
-#line 1925 "macroy.c" /* yacc.c:1646  */
+#line 1923 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 306 "macro.y" /* yacc.c:1646  */
+#line 304 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewString( (yyvsp[0].valChar).string, (yyvsp[0].valChar).length, HB_FALSE, HB_COMP_PARAM ); }
-#line 1931 "macroy.c" /* yacc.c:1646  */
+#line 1929 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 311 "macro.y" /* yacc.c:1646  */
+#line 309 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewLogical( HB_TRUE, HB_COMP_PARAM ); }
-#line 1937 "macroy.c" /* yacc.c:1646  */
+#line 1935 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 312 "macro.y" /* yacc.c:1646  */
+#line 310 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewLogical( HB_FALSE, HB_COMP_PARAM ); }
-#line 1943 "macroy.c" /* yacc.c:1646  */
+#line 1941 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 317 "macro.y" /* yacc.c:1646  */
+#line 315 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewSelf( HB_COMP_PARAM ); }
-#line 1949 "macroy.c" /* yacc.c:1646  */
+#line 1947 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 322 "macro.y" /* yacc.c:1646  */
+#line 320 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArray( (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 1955 "macroy.c" /* yacc.c:1646  */
+#line 1953 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 327 "macro.y" /* yacc.c:1646  */
+#line 325 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 1961 "macroy.c" /* yacc.c:1646  */
+#line 1959 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 332 "macro.y" /* yacc.c:1646  */
+#line 330 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewHash( NULL, HB_COMP_PARAM ); }
-#line 1967 "macroy.c" /* yacc.c:1646  */
+#line 1965 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 333 "macro.y" /* yacc.c:1646  */
+#line 331 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewHash( (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 1973 "macroy.c" /* yacc.c:1646  */
+#line 1971 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 336 "macro.y" /* yacc.c:1646  */
+#line 334 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprNewList( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr) ); }
-#line 1979 "macroy.c" /* yacc.c:1646  */
+#line 1977 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 337 "macro.y" /* yacc.c:1646  */
+#line 335 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( hb_compExprAddListExpr( (yyvsp[-4].asExpr), (yyvsp[-2].asExpr) ), (yyvsp[0].asExpr) ); }
-#line 1985 "macroy.c" /* yacc.c:1646  */
+#line 1983 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 343 "macro.y" /* yacc.c:1646  */
+#line 341 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 1991 "macroy.c" /* yacc.c:1646  */
+#line 1989 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 346 "macro.y" /* yacc.c:1646  */
+#line 344 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAlias( (yyvsp[-1].string), HB_COMP_PARAM ); }
-#line 1997 "macroy.c" /* yacc.c:1646  */
+#line 1995 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 23:
-#line 351 "macro.y" /* yacc.c:1646  */
+#line 349 "macro.y" /* yacc.c:1646  */
     {  (yyval.asExpr) = hb_compExprNewMacro( NULL, '&', (yyvsp[0].string), HB_COMP_PARAM );
                                  HB_MACRO_CHECK( (yyval.asExpr) );
                               }
-#line 2005 "macroy.c" /* yacc.c:1646  */
+#line 2003 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 354 "macro.y" /* yacc.c:1646  */
+#line 352 "macro.y" /* yacc.c:1646  */
     {  HB_BOOL fNewString;
                                  char * szVarName = hb_macroTextSymbol( (yyvsp[0].string), strlen( (yyvsp[0].string) ), &fNewString );
                                  if( szVarName )
@@ -2021,273 +2021,273 @@ yyreduce:
                                     YYABORT;
                                  }
                               }
-#line 2027 "macroy.c" /* yacc.c:1646  */
+#line 2025 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 25:
-#line 373 "macro.y" /* yacc.c:1646  */
+#line 371 "macro.y" /* yacc.c:1646  */
     { hb_compExprMacroAsAlias( (yyvsp[-1].asExpr) ); }
-#line 2033 "macroy.c" /* yacc.c:1646  */
+#line 2031 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 26:
-#line 378 "macro.y" /* yacc.c:1646  */
+#line 376 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMacro( (yyvsp[0].asExpr), 0, NULL, HB_COMP_PARAM ); }
-#line 2039 "macroy.c" /* yacc.c:1646  */
+#line 2037 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 28:
-#line 388 "macro.y" /* yacc.c:1646  */
+#line 386 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAlias( "FIELD", HB_COMP_PARAM ); }
-#line 2045 "macroy.c" /* yacc.c:1646  */
+#line 2043 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 29:
-#line 389 "macro.y" /* yacc.c:1646  */
+#line 387 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2051 "macroy.c" /* yacc.c:1646  */
+#line 2049 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 30:
-#line 394 "macro.y" /* yacc.c:1646  */
+#line 392 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2057 "macroy.c" /* yacc.c:1646  */
+#line 2055 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 31:
-#line 395 "macro.y" /* yacc.c:1646  */
+#line 393 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2063 "macroy.c" /* yacc.c:1646  */
+#line 2061 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 32:
-#line 396 "macro.y" /* yacc.c:1646  */
+#line 394 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2069 "macroy.c" /* yacc.c:1646  */
+#line 2067 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 33:
-#line 397 "macro.y" /* yacc.c:1646  */
+#line 395 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2075 "macroy.c" /* yacc.c:1646  */
+#line 2073 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 34:
-#line 398 "macro.y" /* yacc.c:1646  */
+#line 396 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2081 "macroy.c" /* yacc.c:1646  */
+#line 2079 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 35:
-#line 401 "macro.y" /* yacc.c:1646  */
+#line 399 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVar( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 2087 "macroy.c" /* yacc.c:1646  */
+#line 2085 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 38:
-#line 406 "macro.y" /* yacc.c:1646  */
+#line 404 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2093 "macroy.c" /* yacc.c:1646  */
+#line 2091 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 39:
-#line 407 "macro.y" /* yacc.c:1646  */
+#line 405 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2099 "macroy.c" /* yacc.c:1646  */
+#line 2097 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 40:
-#line 408 "macro.y" /* yacc.c:1646  */
+#line 406 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2105 "macroy.c" /* yacc.c:1646  */
+#line 2103 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 41:
-#line 409 "macro.y" /* yacc.c:1646  */
+#line 407 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2111 "macroy.c" /* yacc.c:1646  */
+#line 2109 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 42:
-#line 410 "macro.y" /* yacc.c:1646  */
+#line 408 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2117 "macroy.c" /* yacc.c:1646  */
+#line 2115 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 43:
-#line 411 "macro.y" /* yacc.c:1646  */
+#line 409 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2123 "macroy.c" /* yacc.c:1646  */
+#line 2121 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 44:
-#line 412 "macro.y" /* yacc.c:1646  */
+#line 410 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasVar( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2129 "macroy.c" /* yacc.c:1646  */
+#line 2127 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 45:
-#line 421 "macro.y" /* yacc.c:1646  */
+#line 419 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2135 "macroy.c" /* yacc.c:1646  */
+#line 2133 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 46:
-#line 422 "macro.y" /* yacc.c:1646  */
+#line 420 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2141 "macroy.c" /* yacc.c:1646  */
+#line 2139 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 47:
-#line 423 "macro.y" /* yacc.c:1646  */
+#line 421 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2147 "macroy.c" /* yacc.c:1646  */
+#line 2145 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 48:
-#line 424 "macro.y" /* yacc.c:1646  */
+#line 422 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2153 "macroy.c" /* yacc.c:1646  */
+#line 2151 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 49:
-#line 425 "macro.y" /* yacc.c:1646  */
+#line 423 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewAliasExpr( (yyvsp[-1].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2159 "macroy.c" /* yacc.c:1646  */
+#line 2157 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 50:
-#line 430 "macro.y" /* yacc.c:1646  */
+#line 428 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2165 "macroy.c" /* yacc.c:1646  */
+#line 2163 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 51:
-#line 431 "macro.y" /* yacc.c:1646  */
+#line 429 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2171 "macroy.c" /* yacc.c:1646  */
+#line 2169 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 52:
-#line 432 "macro.y" /* yacc.c:1646  */
+#line 430 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2177 "macroy.c" /* yacc.c:1646  */
+#line 2175 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 53:
-#line 433 "macro.y" /* yacc.c:1646  */
+#line 431 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2183 "macroy.c" /* yacc.c:1646  */
+#line 2181 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 54:
-#line 434 "macro.y" /* yacc.c:1646  */
+#line 432 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2189 "macroy.c" /* yacc.c:1646  */
+#line 2187 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 55:
-#line 435 "macro.y" /* yacc.c:1646  */
+#line 433 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2195 "macroy.c" /* yacc.c:1646  */
+#line 2193 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 56:
-#line 436 "macro.y" /* yacc.c:1646  */
+#line 434 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2201 "macroy.c" /* yacc.c:1646  */
+#line 2199 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 57:
-#line 437 "macro.y" /* yacc.c:1646  */
+#line 435 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2207 "macroy.c" /* yacc.c:1646  */
+#line 2205 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 58:
-#line 438 "macro.y" /* yacc.c:1646  */
+#line 436 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2213 "macroy.c" /* yacc.c:1646  */
+#line 2211 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 59:
-#line 439 "macro.y" /* yacc.c:1646  */
+#line 437 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2219 "macroy.c" /* yacc.c:1646  */
+#line 2217 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 60:
-#line 440 "macro.y" /* yacc.c:1646  */
+#line 438 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2225 "macroy.c" /* yacc.c:1646  */
+#line 2223 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 61:
-#line 441 "macro.y" /* yacc.c:1646  */
+#line 439 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2231 "macroy.c" /* yacc.c:1646  */
+#line 2229 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 62:
-#line 442 "macro.y" /* yacc.c:1646  */
+#line 440 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2237 "macroy.c" /* yacc.c:1646  */
+#line 2235 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 63:
-#line 443 "macro.y" /* yacc.c:1646  */
+#line 441 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2243 "macroy.c" /* yacc.c:1646  */
+#line 2241 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 64:
-#line 444 "macro.y" /* yacc.c:1646  */
+#line 442 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2249 "macroy.c" /* yacc.c:1646  */
+#line 2247 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 65:
-#line 445 "macro.y" /* yacc.c:1646  */
+#line 443 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2255 "macroy.c" /* yacc.c:1646  */
+#line 2253 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 66:
-#line 446 "macro.y" /* yacc.c:1646  */
+#line 444 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2261 "macroy.c" /* yacc.c:1646  */
+#line 2259 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 67:
-#line 447 "macro.y" /* yacc.c:1646  */
+#line 445 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2267 "macroy.c" /* yacc.c:1646  */
+#line 2265 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 68:
-#line 448 "macro.y" /* yacc.c:1646  */
+#line 446 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2273 "macroy.c" /* yacc.c:1646  */
+#line 2271 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 69:
-#line 453 "macro.y" /* yacc.c:1646  */
+#line 451 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_macroExprNewFunCall( hb_compExprNewFunName( (yyvsp[-3].string), HB_COMP_PARAM ), (yyvsp[-1].asExpr), HB_COMP_PARAM );
                                             HB_MACRO_CHECK( (yyval.asExpr) );
                                           }
-#line 2281 "macroy.c" /* yacc.c:1646  */
+#line 2279 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 70:
-#line 456 "macro.y" /* yacc.c:1646  */
+#line 454 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_macroExprNewFunCall( (yyvsp[-3].asExpr), (yyvsp[-1].asExpr), HB_COMP_PARAM );
                                             HB_MACRO_CHECK( (yyval.asExpr) );
                                           }
-#line 2289 "macroy.c" /* yacc.c:1646  */
+#line 2287 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 71:
-#line 461 "macro.y" /* yacc.c:1646  */
+#line 459 "macro.y" /* yacc.c:1646  */
     {  if( hb_compExprParamListLen( (yyvsp[-1].asExpr) ) != 0 )
                                                 {
                                                    hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
@@ -2296,125 +2296,125 @@ yyreduce:
                                                 else
                                                    (yyval.asExpr) = hb_compExprNewFunRef( (yyvsp[-3].string), HB_COMP_PARAM );
                                              }
-#line 2302 "macroy.c" /* yacc.c:1646  */
+#line 2300 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 72:
-#line 471 "macro.y" /* yacc.c:1646  */
+#line 469 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2308 "macroy.c" /* yacc.c:1646  */
+#line 2306 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 73:
-#line 472 "macro.y" /* yacc.c:1646  */
+#line 470 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 2314 "macroy.c" /* yacc.c:1646  */
+#line 2312 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 76:
-#line 479 "macro.y" /* yacc.c:1646  */
+#line 477 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewVarRef( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 2320 "macroy.c" /* yacc.c:1646  */
+#line 2318 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 77:
-#line 480 "macro.y" /* yacc.c:1646  */
+#line 478 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewRef( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2326 "macroy.c" /* yacc.c:1646  */
+#line 2324 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 78:
-#line 481 "macro.y" /* yacc.c:1646  */
+#line 479 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewRef( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2332 "macroy.c" /* yacc.c:1646  */
+#line 2330 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 79:
-#line 482 "macro.y" /* yacc.c:1646  */
+#line 480 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewRef( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2338 "macroy.c" /* yacc.c:1646  */
+#line 2336 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 80:
-#line 483 "macro.y" /* yacc.c:1646  */
+#line 481 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); (yyval.asExpr)->value.asList.reference = HB_TRUE; }
-#line 2344 "macroy.c" /* yacc.c:1646  */
+#line 2342 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 81:
-#line 486 "macro.y" /* yacc.c:1646  */
+#line 484 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgRef( HB_COMP_PARAM ); }
-#line 2350 "macroy.c" /* yacc.c:1646  */
+#line 2348 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 83:
-#line 492 "macro.y" /* yacc.c:1646  */
+#line 490 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMethodObject( (yyvsp[0].asExpr), (yyvsp[-2].asExpr) ); }
-#line 2356 "macroy.c" /* yacc.c:1646  */
+#line 2354 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 84:
-#line 495 "macro.y" /* yacc.c:1646  */
+#line 493 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewSend( (yyvsp[0].string), HB_COMP_PARAM ); }
-#line 2362 "macroy.c" /* yacc.c:1646  */
+#line 2360 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 85:
-#line 496 "macro.y" /* yacc.c:1646  */
+#line 494 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMacroSend( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2368 "macroy.c" /* yacc.c:1646  */
+#line 2366 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 86:
-#line 497 "macro.y" /* yacc.c:1646  */
+#line 495 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMacroSend( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2374 "macroy.c" /* yacc.c:1646  */
+#line 2372 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 87:
-#line 502 "macro.y" /* yacc.c:1646  */
+#line 500 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewMethodCall( (yyvsp[-3].asExpr), (yyvsp[-1].asExpr) ); }
-#line 2380 "macroy.c" /* yacc.c:1646  */
+#line 2378 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 110:
-#line 528 "macro.y" /* yacc.c:1646  */
+#line 526 "macro.y" /* yacc.c:1646  */
     { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[0].asExpr), HB_SM_HARBOUR ); }
-#line 2386 "macroy.c" /* yacc.c:1646  */
+#line 2384 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 111:
-#line 529 "macro.y" /* yacc.c:1646  */
+#line 527 "macro.y" /* yacc.c:1646  */
     { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[0].asExpr), HB_SM_HARBOUR ); }
-#line 2392 "macroy.c" /* yacc.c:1646  */
+#line 2390 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 112:
-#line 530 "macro.y" /* yacc.c:1646  */
+#line 528 "macro.y" /* yacc.c:1646  */
     { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[0].asExpr), HB_SM_HARBOUR ); }
-#line 2398 "macroy.c" /* yacc.c:1646  */
+#line 2396 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 118:
-#line 538 "macro.y" /* yacc.c:1646  */
+#line 536 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); HB_MACRO_CHECK( (yyval.asExpr) ); }
-#line 2404 "macroy.c" /* yacc.c:1646  */
+#line 2402 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 119:
-#line 539 "macro.y" /* yacc.c:1646  */
+#line 537 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); HB_MACRO_CHECK( (yyval.asExpr) ); }
-#line 2410 "macroy.c" /* yacc.c:1646  */
+#line 2408 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 120:
-#line 542 "macro.y" /* yacc.c:1646  */
+#line 540 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewArgRef( HB_COMP_PARAM ); }
-#line 2416 "macroy.c" /* yacc.c:1646  */
+#line 2414 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 122:
-#line 546 "macro.y" /* yacc.c:1646  */
+#line 544 "macro.y" /* yacc.c:1646  */
     {
                                        if( !( HB_MACRO_DATA->Flags & HB_MACRO_GEN_LIST ) )
                                        {
@@ -2423,339 +2423,339 @@ yyreduce:
                                           YYABORT;
                                        }
                                     }
-#line 2429 "macroy.c" /* yacc.c:1646  */
+#line 2427 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 123:
-#line 554 "macro.y" /* yacc.c:1646  */
+#line 552 "macro.y" /* yacc.c:1646  */
     {
                                        HB_MACRO_DATA->uiListElements = 1;
                                        (yyval.asExpr) = hb_compExprAddListExpr( ( HB_MACRO_DATA->Flags & HB_MACRO_GEN_PARE ) ? hb_compExprNewList( (yyvsp[-3].asExpr), HB_COMP_PARAM ) : hb_compExprNewArgList( (yyvsp[-3].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr) );
                                     }
-#line 2438 "macroy.c" /* yacc.c:1646  */
+#line 2436 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 125:
-#line 561 "macro.y" /* yacc.c:1646  */
+#line 559 "macro.y" /* yacc.c:1646  */
     { HB_MACRO_DATA->uiListElements++;
                                                   (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 2445 "macroy.c" /* yacc.c:1646  */
+#line 2443 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 126:
-#line 565 "macro.y" /* yacc.c:1646  */
+#line 563 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewEmpty( HB_COMP_PARAM ); }
-#line 2451 "macroy.c" /* yacc.c:1646  */
+#line 2449 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 148:
-#line 589 "macro.y" /* yacc.c:1646  */
+#line 587 "macro.y" /* yacc.c:1646  */
     { HB_MACRO_IFENABLED( (yyval.asExpr), (yyvsp[0].asExpr), HB_SM_HARBOUR ); }
-#line 2457 "macroy.c" /* yacc.c:1646  */
+#line 2455 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 150:
-#line 596 "macro.y" /* yacc.c:1646  */
+#line 594 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewPostInc( (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 2463 "macroy.c" /* yacc.c:1646  */
+#line 2461 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 151:
-#line 597 "macro.y" /* yacc.c:1646  */
+#line 595 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewPostDec( (yyvsp[-1].asExpr), HB_COMP_PARAM ); }
-#line 2469 "macroy.c" /* yacc.c:1646  */
+#line 2467 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 152:
-#line 603 "macro.y" /* yacc.c:1646  */
+#line 601 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2475 "macroy.c" /* yacc.c:1646  */
+#line 2473 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 153:
-#line 606 "macro.y" /* yacc.c:1646  */
+#line 604 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewPreInc( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2481 "macroy.c" /* yacc.c:1646  */
+#line 2479 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 154:
-#line 607 "macro.y" /* yacc.c:1646  */
+#line 605 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewPreDec( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2487 "macroy.c" /* yacc.c:1646  */
+#line 2485 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 155:
-#line 610 "macro.y" /* yacc.c:1646  */
+#line 608 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewNot( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2493 "macroy.c" /* yacc.c:1646  */
+#line 2491 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 156:
-#line 611 "macro.y" /* yacc.c:1646  */
+#line 609 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewNegate( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2499 "macroy.c" /* yacc.c:1646  */
+#line 2497 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 157:
-#line 612 "macro.y" /* yacc.c:1646  */
+#line 610 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr); }
-#line 2505 "macroy.c" /* yacc.c:1646  */
+#line 2503 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 158:
-#line 615 "macro.y" /* yacc.c:1646  */
+#line 613 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAssign( (yyvsp[-2].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2511 "macroy.c" /* yacc.c:1646  */
+#line 2509 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 159:
-#line 618 "macro.y" /* yacc.c:1646  */
+#line 616 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlusEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2517 "macroy.c" /* yacc.c:1646  */
+#line 2515 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 160:
-#line 621 "macro.y" /* yacc.c:1646  */
+#line 619 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinusEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2523 "macroy.c" /* yacc.c:1646  */
+#line 2521 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 161:
-#line 624 "macro.y" /* yacc.c:1646  */
+#line 622 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMultEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2529 "macroy.c" /* yacc.c:1646  */
+#line 2527 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 162:
-#line 627 "macro.y" /* yacc.c:1646  */
+#line 625 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDivEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2535 "macroy.c" /* yacc.c:1646  */
+#line 2533 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 163:
-#line 630 "macro.y" /* yacc.c:1646  */
+#line 628 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewModEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2541 "macroy.c" /* yacc.c:1646  */
+#line 2539 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 164:
-#line 633 "macro.y" /* yacc.c:1646  */
+#line 631 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewExpEq( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2547 "macroy.c" /* yacc.c:1646  */
+#line 2545 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 171:
-#line 644 "macro.y" /* yacc.c:1646  */
+#line 642 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPlus( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2553 "macroy.c" /* yacc.c:1646  */
+#line 2551 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 172:
-#line 645 "macro.y" /* yacc.c:1646  */
+#line 643 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMinus( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2559 "macroy.c" /* yacc.c:1646  */
+#line 2557 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 173:
-#line 646 "macro.y" /* yacc.c:1646  */
+#line 644 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMult( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2565 "macroy.c" /* yacc.c:1646  */
+#line 2563 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 174:
-#line 647 "macro.y" /* yacc.c:1646  */
+#line 645 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewDiv( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2571 "macroy.c" /* yacc.c:1646  */
+#line 2569 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 175:
-#line 648 "macro.y" /* yacc.c:1646  */
+#line 646 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewMod( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2577 "macroy.c" /* yacc.c:1646  */
+#line 2575 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 176:
-#line 649 "macro.y" /* yacc.c:1646  */
+#line 647 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewPower( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2583 "macroy.c" /* yacc.c:1646  */
+#line 2581 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 177:
-#line 652 "macro.y" /* yacc.c:1646  */
+#line 650 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewAnd( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2589 "macroy.c" /* yacc.c:1646  */
+#line 2587 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 178:
-#line 653 "macro.y" /* yacc.c:1646  */
+#line 651 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewOr( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2595 "macroy.c" /* yacc.c:1646  */
+#line 2593 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 179:
-#line 656 "macro.y" /* yacc.c:1646  */
+#line 654 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewEQ( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2601 "macroy.c" /* yacc.c:1646  */
+#line 2599 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 180:
-#line 657 "macro.y" /* yacc.c:1646  */
+#line 655 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewLT( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2607 "macroy.c" /* yacc.c:1646  */
+#line 2605 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 181:
-#line 658 "macro.y" /* yacc.c:1646  */
+#line 656 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewGT( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2613 "macroy.c" /* yacc.c:1646  */
+#line 2611 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 182:
-#line 659 "macro.y" /* yacc.c:1646  */
+#line 657 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewLE( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2619 "macroy.c" /* yacc.c:1646  */
+#line 2617 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 183:
-#line 660 "macro.y" /* yacc.c:1646  */
+#line 658 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewGE( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2625 "macroy.c" /* yacc.c:1646  */
+#line 2623 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 184:
-#line 661 "macro.y" /* yacc.c:1646  */
+#line 659 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewNE( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2631 "macroy.c" /* yacc.c:1646  */
+#line 2629 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 185:
-#line 662 "macro.y" /* yacc.c:1646  */
+#line 660 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewNE( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2637 "macroy.c" /* yacc.c:1646  */
+#line 2635 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 186:
-#line 663 "macro.y" /* yacc.c:1646  */
+#line 661 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewIN( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2643 "macroy.c" /* yacc.c:1646  */
+#line 2641 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 187:
-#line 664 "macro.y" /* yacc.c:1646  */
+#line 662 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprSetOperand( hb_compExprNewEqual( (yyvsp[-2].asExpr), HB_COMP_PARAM ), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2649 "macroy.c" /* yacc.c:1646  */
+#line 2647 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 189:
-#line 673 "macro.y" /* yacc.c:1646  */
+#line 671 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_macroExprNewArrayAt( (yyvsp[-2].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2655 "macroy.c" /* yacc.c:1646  */
+#line 2653 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 190:
-#line 674 "macro.y" /* yacc.c:1646  */
+#line 672 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_macroExprNewArrayAt( (yyvsp[-2].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2661 "macroy.c" /* yacc.c:1646  */
+#line 2659 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 191:
-#line 675 "macro.y" /* yacc.c:1646  */
+#line 673 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_macroExprNewArrayAt( (yyvsp[-3].asExpr), (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2667 "macroy.c" /* yacc.c:1646  */
+#line 2665 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 192:
-#line 678 "macro.y" /* yacc.c:1646  */
+#line 676 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2673 "macroy.c" /* yacc.c:1646  */
+#line 2671 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 193:
-#line 679 "macro.y" /* yacc.c:1646  */
+#line 677 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 2679 "macroy.c" /* yacc.c:1646  */
+#line 2677 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 194:
-#line 683 "macro.y" /* yacc.c:1646  */
+#line 681 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewCodeBlock( NULL, 0, 0, HB_COMP_PARAM ); }
-#line 2685 "macroy.c" /* yacc.c:1646  */
+#line 2683 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 195:
-#line 685 "macro.y" /* yacc.c:1646  */
+#line 683 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-4].asExpr); }
-#line 2691 "macroy.c" /* yacc.c:1646  */
+#line 2689 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 196:
-#line 690 "macro.y" /* yacc.c:1646  */
+#line 688 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddCodeblockExpr( (yyvsp[(-2) - (1)].asExpr), (yyvsp[0].asExpr) ); }
-#line 2697 "macroy.c" /* yacc.c:1646  */
+#line 2695 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 197:
-#line 691 "macro.y" /* yacc.c:1646  */
+#line 689 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddCodeblockExpr( (yyvsp[(-2) - (3)].asExpr), (yyvsp[0].asExpr) ); }
-#line 2703 "macroy.c" /* yacc.c:1646  */
+#line 2701 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 198:
-#line 696 "macro.y" /* yacc.c:1646  */
+#line 694 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = NULL; }
-#line 2709 "macroy.c" /* yacc.c:1646  */
+#line 2707 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 199:
-#line 697 "macro.y" /* yacc.c:1646  */
+#line 695 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = NULL; (yyvsp[-1].asExpr)->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; }
-#line 2715 "macroy.c" /* yacc.c:1646  */
+#line 2713 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 200:
-#line 698 "macro.y" /* yacc.c:1646  */
+#line 696 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[0].asExpr);   }
-#line 2721 "macroy.c" /* yacc.c:1646  */
+#line 2719 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 201:
-#line 699 "macro.y" /* yacc.c:1646  */
+#line 697 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = (yyvsp[-2].asExpr);   (yyvsp[-3].asExpr)->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; }
-#line 2727 "macroy.c" /* yacc.c:1646  */
+#line 2725 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 202:
-#line 702 "macro.y" /* yacc.c:1646  */
+#line 700 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprCBVarAdd( (yyvsp[-1].asExpr), (yyvsp[0].string), ' ', HB_COMP_PARAM ); }
-#line 2733 "macroy.c" /* yacc.c:1646  */
+#line 2731 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 203:
-#line 703 "macro.y" /* yacc.c:1646  */
+#line 701 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprCBVarAdd( (yyvsp[-3].asExpr), (yyvsp[0].string), ' ', HB_COMP_PARAM ); HB_MACRO_CHECK( (yyval.asExpr) ); }
-#line 2739 "macroy.c" /* yacc.c:1646  */
+#line 2737 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 204:
-#line 706 "macro.y" /* yacc.c:1646  */
+#line 704 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewList( (yyvsp[0].asExpr), HB_COMP_PARAM ); }
-#line 2745 "macroy.c" /* yacc.c:1646  */
+#line 2743 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 205:
-#line 707 "macro.y" /* yacc.c:1646  */
+#line 705 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprAddListExpr( (yyvsp[-2].asExpr), (yyvsp[0].asExpr) ); }
-#line 2751 "macroy.c" /* yacc.c:1646  */
+#line 2749 "macroy.c" /* yacc.c:1646  */
     break;
 
   case 208:
-#line 718 "macro.y" /* yacc.c:1646  */
+#line 716 "macro.y" /* yacc.c:1646  */
     { (yyval.asExpr) = hb_compExprNewIIF( hb_compExprAddListExpr( hb_compExprAddListExpr( hb_compExprNewList( (yyvsp[-5].asExpr), HB_COMP_PARAM ), (yyvsp[-3].asExpr) ), (yyvsp[-1].asExpr) ) ); }
-#line 2757 "macroy.c" /* yacc.c:1646  */
+#line 2755 "macroy.c" /* yacc.c:1646  */
     break;
 
 
-#line 2761 "macroy.c" /* yacc.c:1646  */
+#line 2759 "macroy.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -2983,7 +2983,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 721 "macro.y" /* yacc.c:1906  */
+#line 719 "macro.y" /* yacc.c:1906  */
 
 
 

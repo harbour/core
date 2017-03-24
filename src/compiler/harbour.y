@@ -1058,12 +1058,17 @@ CodeBlock   : BlockHead
             }
             EmptyStats '}'
             {  /* 6 */
-               hb_compCodeBlockEnd( HB_COMP_PARAM );
-               $$ = hb_compExprSetCodeblockBody( $1,
-                     HB_COMP_PARAM->functions.pLast->pCode + $<sNumber>3,
-                     HB_COMP_PARAM->functions.pLast->nPCodePos - $<sNumber>3 );
-               HB_COMP_PARAM->functions.pLast->nPCodePos = $<sNumber>3;
-               HB_COMP_PARAM->lastLine = $<sNumber>2;
+               /* protection against nested function/procedure inside extended block */
+               if( HB_COMP_PARAM->iErrorCount == 0 ||
+                   HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK )
+               {
+                  hb_compCodeBlockEnd( HB_COMP_PARAM );
+                  $$ = hb_compExprSetCodeblockBody( $1,
+                          HB_COMP_PARAM->functions.pLast->pCode + $<sNumber>3,
+                          HB_COMP_PARAM->functions.pLast->nPCodePos - $<sNumber>3 );
+                  HB_COMP_PARAM->functions.pLast->nPCodePos = $<sNumber>3;
+                  HB_COMP_PARAM->lastLine = $<sNumber>2;
+               }
             }
             ;
 

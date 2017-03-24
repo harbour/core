@@ -569,13 +569,11 @@ static const char * s_szStaticFun[] = {
    "__BREAKBLOCK"
 };
 
-#define STATIC_FUNCTIONS  ( sizeof( s_szStaticFun ) / sizeof( char * ) )
-
 static HB_BOOL hb_compStaticFunction( const char * szName )
 {
    unsigned int ui;
 
-   for( ui = 0; ui < STATIC_FUNCTIONS; ++ui )
+   for( ui = 0; ui < HB_SIZEOFARRAY( s_szStaticFun ); ++ui )
    {
       if( strcmp( szName, s_szStaticFun[ ui ] ) == 0 )
          return HB_TRUE;
