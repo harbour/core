@@ -68,7 +68,7 @@ STATIC FUNCTION DefError( oError )
       RETURN 0
    ENDIF
 
-   // By default, retry on RDD lock error failure */
+   // By default, retry on RDD lock error failure
    IF oError:genCode == EG_LOCK .AND. ;
       oError:canRetry
       // oError:tries++

@@ -98,6 +98,7 @@ const char * const hb_comp_szErrors[] =
    "ENDWITH does not match WITH OBJECT",
    "ENDSWITCH does not match SWITCH",
    "END SEQUENCE does not match BEGIN SEQUENCE",
+   "Code block contains both macro and with object messages ':%s'",
    /* Some historical, funny sounding error messages from original CA-Cl*pper.
       They serve no purpose whatsoever. [vszakats] */
    "END wreaks terrible vengeance on control stack",
@@ -246,11 +247,19 @@ PHB_EXPR hb_compWarnMeaningless( HB_COMP_DECL, PHB_EXPR pExpr )
    return pExpr;
 }
 
-void hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock )
+void hb_compErrorCodeblockDecl( HB_COMP_DECL, const char * szVarName )
 {
    HB_BOOL fError = HB_COMP_PARAM->fError;
 
-   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK, szBlock, NULL );
+   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_BLOCK, szVarName, NULL );
+   HB_COMP_PARAM->fError = fError; /* restore error flag for this line */
+}
+
+void hb_compErrorCodeblockWith( HB_COMP_DECL, const char * szMessage )
+{
+   HB_BOOL fError = HB_COMP_PARAM->fError;
+
+   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_WITHOBJECT_MACROBLOCK, szMessage, NULL );
    HB_COMP_PARAM->fError = fError; /* restore error flag for this line */
 }
 

@@ -1366,12 +1366,8 @@ HB_SIZE hb_compExprParamListCheck( HB_COMP_DECL, PHB_EXPR pExpr )
       while( pElem )
       {
          if( ( pElem->ExprType == HB_ET_MACRO && HB_SUPPORT_XBASE &&
-               pElem->value.asMacro.SubType != HB_ET_MACRO_SYMBOL &&
-               pElem->value.asMacro.SubType != HB_ET_MACRO_REFER &&
-               pElem->value.asMacro.SubType != HB_ET_MACRO_ALIASED &&
-               ( pElem->value.asMacro.SubType & HB_ET_MACRO_PARE ) == 0 ) ||
-             ( pElem->ExprType == HB_ET_ARGLIST &&
-               pElem->value.asList.reference ) ||
+               ( pElem->value.asMacro.SubType & HB_ET_MACRO_NOLIST ) == 0 ) ||
+             ( pElem->ExprType == HB_ET_ARGLIST && pElem->value.asList.reference ) ||
              hb_compExprIsArrayToParams( pElem ) )
          {
             /* &macro was passed

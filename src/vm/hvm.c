@@ -889,7 +889,6 @@ void hb_vmThreadInit( void * Cargo )
 
       if( pState->pSet )
       {
-         /* TODO: add set sharing */
          memcpy( hb_stackSetStruct(), pState->pSet, sizeof( HB_SET_STRUCT ) );
          hb_xfree( pState->pSet );
          pState->pSet = NULL;
@@ -9021,11 +9020,26 @@ HB_BOOL hb_vmRequestReenterExt( void )
       if( hb_stackId() == NULL )
       {
          uiAction = HB_VMSTACK_REQUESTED;
-         /* TODO: add protection against executing hb_threadStateNew()
-          * during GC pass
-          */
+
+         /* protection against executing hb_threadStateNew() during GC pass */
+         HB_VM_LOCK();
+         for( ;; )
+         {
+            if( hb_vmThreadRequest & HB_THREQUEST_STOP )
+               hb_threadCondWait( &s_vmCond, &s_vmMtx );
+            else
+               break;
+         }
+         s_iRunningCount++;
+         HB_VM_UNLOCK();
+
          hb_vmThreadInit( NULL );
          HB_STACK_TLS_RELOAD
+
+         HB_VM_LOCK();
+         s_iRunningCount--;
+         hb_threadCondBroadcast( &s_vmCond );
+         HB_VM_UNLOCK();
       }
       else
       {

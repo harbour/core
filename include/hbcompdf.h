@@ -170,6 +170,11 @@ typedef enum
 #define HB_ET_MACRO_PARE    32   /* &variable used as parentesised expressions. */
 #define HB_ET_MACRO_REFER   64   /* &macro used in @ (pass by reference) */
 #define HB_ET_MACRO_ASSIGN 128   /* o:&msgname := value */
+#define HB_ET_MACRO_NOLIST ( HB_ET_MACRO_SYMBOL | HB_ET_MACRO_ALIASED | \
+                             HB_ET_MACRO_ASSIGN | HB_ET_MACRO_PARE | \
+                             HB_ET_MACRO_REFER )
+#define HB_ET_MACRO_NOPARE ( HB_ET_MACRO_SYMBOL | HB_ET_MACRO_ALIASED | \
+                             HB_ET_MACRO_ASSIGN | HB_ET_MACRO_REFER )
 
 /* types of expressions
  * NOTE: the order of these definition is important - change it carefully

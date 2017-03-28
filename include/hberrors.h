@@ -127,10 +127,11 @@ HB_EXTERN_BEGIN
 #define HB_COMP_ERR_ENDWITH                     71
 #define HB_COMP_ERR_ENDSWITCH                   72
 #define HB_COMP_ERR_ENDSEQ                      73
-#define HB_COMP_ERR_HISTORICAL_1                74
-#define HB_COMP_ERR_HISTORICAL_2                75
-#define HB_COMP_ERR_HISTORICAL_3                76
-#define HB_COMP_ERR_HISTORICAL_4                77
+#define HB_COMP_ERR_WITHOBJECT_MACROBLOCK       74
+#define HB_COMP_ERR_HISTORICAL_1                75
+#define HB_COMP_ERR_HISTORICAL_2                76
+#define HB_COMP_ERR_HISTORICAL_3                77
+#define HB_COMP_ERR_HISTORICAL_4                78
 
 #define HB_COMP_WARN_AMBIGUOUS_VAR              1
 #define HB_COMP_WARN_MEMVAR_ASSUMED             2

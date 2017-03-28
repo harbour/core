@@ -1414,18 +1414,22 @@ Anyhow so far in both compilers it is only source code decoration and it's
 simply ignored during compilation. The syntax is similar but not the same.
 In VO:
    LOCAL var1, var2 AS LOGICAL
-means that var1 and var2 are character variables and are initialized to .F.
+means that var1 and var2 are logical variables and are initialized to .F.
 at runtime. In Harbour and xHarbour 'AS <type>' has to be repeated after
 each variable so in above code only var2 is strongly typed but not var1.
 To declare both variables as logical ones it should be changed to:
    LOCAL var1 AS STRING, var2 AS STRING
+and to make implicit initialication user has to write code like:
+   LOCAL var1 AS STRING := "foo", var2 AS STRING := "bar"
+instead of:
+   LOCAL var := "foo", var2 := "bar" AS STRING
 Such syntax is also not compatible with syntax of typed object variables
 (see TYPED OBJECT VARIABLES below) where
    VAR v1, v2 AS LOGICAL
 declares both variables as logical ones.
 This can strongly confuse users so in the future adding fully functional
 support for strong typed variables probably it will be changed to syntax
-compatible with other xBase compatible languages.
+compatible with other xBase like languages.
 Now please remember that neither Harbour nor xHarbour make type validation
 during compilation and at runtime and typed variables are not implicitly
 initialized to empty value of given type.

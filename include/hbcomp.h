@@ -268,8 +268,10 @@ extern void     hb_compErrorMacro( HB_COMP_DECL, const char * szText );
 extern void     hb_compErrorVParams( HB_COMP_DECL, const char * szFuncOrBlock );
 
 extern PHB_EXPR hb_compErrorStatic( HB_COMP_DECL, const char *, PHB_EXPR );
-extern void     hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock );
+extern void     hb_compErrorCodeblockDecl( HB_COMP_DECL, const char * szVarName );
+extern void     hb_compErrorCodeblockWith( HB_COMP_DECL, const char * szMessage );
 
+extern void     hb_compPushMacroVar( HB_COMP_DECL, const char * szText );
 extern void     hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_BOOL fMacro );
 
 /* Codeblocks */
