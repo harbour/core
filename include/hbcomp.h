@@ -84,7 +84,6 @@ extern void hb_compParserRun( HB_COMP_DECL );
 #define HB_VSCOMP_TH_STATIC  ( HB_VSCOMP_STATIC | HB_VSCOMP_THREAD )
 
 /* return detailed information about a class of variable  */
-extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define HB_VS_UNDECLARED      0
 /* variables declared in a current codeblock/function/procedure */
 #define HB_VS_CBLOCAL_VAR     1     /* func/proc local variables and parameters used in codeblock (detached) */

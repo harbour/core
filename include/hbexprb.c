@@ -1137,16 +1137,11 @@ static HB_EXPR_FUNC( hb_compExprUseList )
          break;
 
       case HB_EA_DELETE:
-         if( pSelf->value.asList.pExprList )
+         while( pSelf->value.asList.pExprList )
          {
-            PHB_EXPR pNext, pExpr = pSelf->value.asList.pExprList;
-            while( pExpr )
-            {
-               pNext = pExpr->pNext;    /* store next expression */
-               HB_COMP_EXPR_FREE( pExpr );
-               pExpr = pNext;
-            }
-            pSelf->value.asList.pExprList = NULL;
+            PHB_EXPR pExpr = pSelf->value.asList.pExprList;
+            pSelf->value.asList.pExprList = pExpr->pNext;
+            HB_COMP_EXPR_FREE( pExpr );
          }
          break;
    }

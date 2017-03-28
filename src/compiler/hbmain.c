@@ -895,7 +895,7 @@ const char * hb_compStaticVariableName( HB_COMP_DECL, HB_USHORT wVar )
    return pVar ? pVar->szName : NULL;
 }
 
-int hb_compVariableScope( HB_COMP_DECL, const char * szVarName )
+static int hb_compVariableScope( HB_COMP_DECL, const char * szVarName )
 {
    int iScope;
 

@@ -500,7 +500,7 @@ LineStat   : Crlf          { $<lNumber>$ = 0; }
            | Statement     { $<lNumber>$ = 1; }
            | Declaration   { $<lNumber>$ = 1; }
            | Line          { $<lNumber>$ = 0; }
-           | ControlError  { $<lNumber>$ = 0; hb_compCheckUnclosedStru( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast ); }
+           | /* error */ Function
            | error         { if( HB_COMP_PARAM->ilastLineErr && HB_COMP_PARAM->ilastLineErr == HB_COMP_PARAM->currLine )
                              {
                                 yyclearin;
@@ -512,18 +512,6 @@ LineStat   : Crlf          { $<lNumber>$ = 0; }
                              }
                              $<lNumber>$ = 0;
                            }
-           ;
-
-ControlError : FunScopeId FUNCTION  IdentName Crlf
-             | FunScopeId FUNCTION  IdentName '(' Params ')' Crlf
-             | FunScopeId PROCEDURE IdentName Crlf
-             | FunScopeId PROCEDURE IdentName '(' Params ')' Crlf
-             ;
-
-FunScopeId :
-           | STATIC
-           | INIT
-           | EXIT
            ;
 
 Statements : LineStat
@@ -1070,12 +1058,17 @@ CodeBlock   : BlockHead
             }
             EmptyStats '}'
             {  /* 6 */
-               hb_compCodeBlockEnd( HB_COMP_PARAM );
-               $$ = hb_compExprSetCodeblockBody( $1,
-                     HB_COMP_PARAM->functions.pLast->pCode + $<sNumber>3,
-                     HB_COMP_PARAM->functions.pLast->nPCodePos - $<sNumber>3 );
-               HB_COMP_PARAM->functions.pLast->nPCodePos = $<sNumber>3;
-               HB_COMP_PARAM->lastLine = $<sNumber>2;
+               /* protection against nested function/procedure inside extended block */
+               if( HB_COMP_PARAM->iErrorCount == 0 ||
+                   HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK )
+               {
+                  hb_compCodeBlockEnd( HB_COMP_PARAM );
+                  $$ = hb_compExprSetCodeblockBody( $1,
+                          HB_COMP_PARAM->functions.pLast->pCode + $<sNumber>3,
+                          HB_COMP_PARAM->functions.pLast->nPCodePos - $<sNumber>3 );
+                  HB_COMP_PARAM->functions.pLast->nPCodePos = $<sNumber>3;
+                  HB_COMP_PARAM->lastLine = $<sNumber>2;
+               }
             }
             ;
 
