@@ -365,8 +365,8 @@ PROCEDURE Main_HVMA()
    HBTEST saArray[ 0 ]                    IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 "
    HBTEST saArray[ 0 ] := 1               IS "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 "
 #endif
-   HBTEST saArray[ 1000 ]                 IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 "
-   HBTEST saArray[ 1000 ] := 1            IS "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 "
+   HBTEST saArray[ 1000 ]                 IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 ", "E 2 BASE 1132 Bound error (array access) OS:0 #:0 A:2:A:{.[1].};N:1000 "
+   HBTEST saArray[ 1000 ] := 1            IS "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 ", "E 2 BASE 1133 Bound error (array assign) OS:0 #:0 A:1:N:1000 "
 #ifndef __HARBOUR__
    // this error is reported at compile time
    HBTEST saArray[ -1 ]                   IS "E 2 BASE 1132 Bound error (array access) OS:0 #:0 "
@@ -538,8 +538,8 @@ PROCEDURE Main_HVMA()
    HBTEST RTSTR( 50000000000000 )                 IS " 15  50000000000000"
    HBTEST RTSTR( 500000000000000 )                IS " 16  500000000000000"
    HBTEST RTSTR( 00000000000005 )                 IS " 10          5"
-   HBTEST RTSTR( 00000500000000000000 )           IS " 21       500000000000000"
-   HBTEST RTSTR( 0500000000000000 )               IS " 17   500000000000000"
+   HBTEST RTSTR( 00000500000000000000 )           IS " 21       500000000000000", " 16  500000000000000"
+   HBTEST RTSTR( 0500000000000000 )               IS " 17   500000000000000"    , " 16  500000000000000"
    HBTEST RTSTR( 0500000000000000.5 )             IS " 18  500000000000000.5"
    HBTEST RTSTR( 5000000000000000 )               IS " 17  5000000000000000"
    HBTEST RTSTR( 50000000000000000 )              IS " 18  50000000000000000"

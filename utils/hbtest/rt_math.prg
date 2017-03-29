@@ -351,7 +351,7 @@ PROCEDURE Main_MATH()
    HBTEST Str( 100.00 / 10.0           )  IS "        10.00"
    HBTEST Str( sdDate - sdDateE        )  IS "   2445785"
    HBTEST Str( sdDate - sdDate         )  IS "         0"
-   HBTEST Str( 1234567890 * 1234567890 )  IS " 1524157875019052000"  /* real val is 1524157875019052100 */
+   HBTEST Str( 1234567890 * 1234567890 )  IS " 1524157875019052000" /* real val is 1524157875019052100 */, " 1524157875019052100"
 
    /* Mod() */
 

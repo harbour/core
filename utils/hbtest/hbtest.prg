@@ -86,6 +86,7 @@ STATIC s_nFail
 STATIC s_nFhnd
 STATIC s_nCount
 STATIC s_lShowAll
+STATIC s_lNoAltResult
 STATIC s_lShortcut
 STATIC s_aSkipList
 STATIC s_nStartTime
@@ -99,7 +100,7 @@ STATIC s_lDBFAvail := .F.
    REQUEST HB_GT_CGI_DEFAULT
 #endif
 
-PROCEDURE Main( cPar1, cPar2 )
+PROCEDURE Main( cPar1, cPar2, cPar3 )
 
    OutStd( "Harbour Regression Test Suite" + hb_eol() +;
            "Copyright (c) 1999-2016, Viktor Szakats" + hb_eol() +;
@@ -110,6 +111,9 @@ PROCEDURE Main( cPar1, cPar2 )
    ENDIF
    IF cPar2 == NIL
       cPar2 := ""
+   ENDIF
+   IF cPar3 == NIL
+      cPar3 := ""
    ENDIF
 
    IF "/?" $ Lower( cPar1 ) .OR. ;
@@ -124,6 +128,7 @@ PROCEDURE Main( cPar1, cPar2 )
               hb_eol() +;
               "Options:  -h, -?        Display this help." + hb_eol() +;
               "          -all          Display all tests, not only the failures." + hb_eol() +;
+              "          -noalt        Ignore alternative results." + hb_eol() +;
               "          -skip:<list>  Skip the listed test numbers." + hb_eol() )
 
       RETURN
@@ -131,7 +136,7 @@ PROCEDURE Main( cPar1, cPar2 )
 
    /* Initialize test */
 
-   TEST_BEGIN( cPar1 + " " + cPar2 )
+   TEST_BEGIN( cPar1 + " " + cPar2 + " " + cPar3 )
 
    Main_HVM()
    Main_HVMA()
@@ -213,6 +218,10 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    s_lShowAll := ;
       "/all" $ Lower( cParam ) .OR. ;
       "-all" $ Lower( cParam )
+
+   s_lNoAltResult := ;
+      "/noalt" $ Lower( cParam ) .OR. ;
+      "-noalt" $ Lower( cParam )
 
    s_aSkipList := ListToNArray( CMDLGetValue( Lower( cParam ), "/skip:", "" ) )
    IF Empty( s_aSkipList )
@@ -331,7 +340,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 FUNCTION TEST_DBFAvail()
    RETURN s_lDBFAvail
 
-PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
+PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected, xResultAlter )
 
    LOCAL xResult
    LOCAL oError
@@ -371,18 +380,9 @@ PROCEDURE TEST_CALL( cBlock, bBlock, xResultExpected )
 
       ErrorBlock( bOldError )
 
-      IF lRTE
-         lFailed := !( XToStr( xResult ) == XToStr( xResultExpected ) )
-      ELSE
-         IF !( ValType( xResult ) == ValType( xResultExpected ) )
-            IF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
-               lFailed := !( XToStr( xResult ) == xResultExpected )
-            ELSE
-               lFailed := .T.
-            ENDIF
-         ELSE
-            lFailed := !( xResult == xResultExpected )
-         ENDIF
+      lFailed := ResultCompare( lRTE, xResult, xResultExpected )
+      IF lFailed .AND. ! s_lNoAltResult .AND. PCount() >= 4
+         lFailed := ResultCompare( lRTE, xResult, xResultAlter )
       ENDIF
 
    ENDIF
@@ -459,6 +459,26 @@ STATIC PROCEDURE TEST_END()
    ErrorLevel( iif( s_nFail != 0, 1, 0 ) )
 
    RETURN
+
+FUNCTION ResultCompare( lRTE, xResult, xResultExpected )
+
+   LOCAL lFailed
+
+   IF lRTE
+      lFailed := !( XToStr( xResult ) == XToStr( xResultExpected ) )
+   ELSE
+      IF !( ValType( xResult ) == ValType( xResultExpected ) )
+         IF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
+            lFailed := !( XToStr( xResult ) == xResultExpected )
+         ELSE
+            lFailed := .T.
+         ENDIF
+      ELSE
+         lFailed := !( xResult == xResultExpected )
+      ENDIF
+   ENDIF
+
+   RETURN lFailed
 
 FUNCTION XToStr( xValue )
 

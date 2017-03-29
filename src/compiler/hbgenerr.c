@@ -98,7 +98,7 @@ const char * const hb_comp_szErrors[] =
    "ENDWITH does not match WITH OBJECT",
    "ENDSWITCH does not match SWITCH",
    "END SEQUENCE does not match BEGIN SEQUENCE",
-   "Code block contains both macro and with object messages ':%s'",
+   "Code block contains both macro and WITH OBJECT messages ':%s'",
    /* Some historical, funny sounding error messages from original CA-Cl*pper.
       They serve no purpose whatsoever. [vszakats] */
    "END wreaks terrible vengeance on control stack",
