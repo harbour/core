@@ -2541,7 +2541,6 @@ hb_fsPipeIsData
 hb_fsPipeRead
 hb_fsPipeUnblock
 hb_fsPipeWrite
-hb_fsPoll
 hb_fsProcessClose
 hb_fsProcessOpen
 hb_fsProcessRun
