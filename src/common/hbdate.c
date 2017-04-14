@@ -1116,6 +1116,39 @@ double hb_timeLocalToUTC( double dTimeStamp )
                                  iHour, iMinutes, iSeconds ) / HB_SECONDS_PER_DAY;
 }
 
+HB_MAXUINT hb_timerGet( void )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timerInit()" ) );
+
+   return hb_dateMilliSeconds();
+}
+
+HB_MAXUINT hb_timerInit( HB_MAXINT nTimeOut )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timerInit(%" PFHL "d)", nTimeOut ) );
+
+   return nTimeOut > 0 ? hb_timerGet() : 0;
+}
+
+HB_MAXINT hb_timerTest( HB_MAXINT nTimeOut, HB_MAXUINT * pnTimer )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timerTest(%" PFHL "d, %p)", nTimeOut, pnTimer ) );
+
+   if( nTimeOut > 0 )
+   {
+      HB_MAXUINT nTime = hb_timerGet();
+
+      if( nTime > *pnTimer )
+      {
+         nTimeOut -= nTime - *pnTimer;
+         if( nTimeOut < 0 )
+            nTimeOut = 0;
+      }
+      *pnTimer = nTime;
+   }
+   return nTimeOut;
+}
+
 #if defined( HB_OS_VXWORKS )
 
 /* NOTE: This function is declared, but not present in

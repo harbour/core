@@ -54,6 +54,8 @@
 #include "hbinit.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbapifs.h"
+#include "hbdate.h"
 
 #include "hbapicdp.h"
 

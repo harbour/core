@@ -72,6 +72,7 @@ typedef struct
    int    fd;
    int    mode;
    int    status;
+   int    index;
    void * data;
    int ( * eventFunc )( int, int, void * );
 } evtFD;
@@ -147,6 +148,7 @@ typedef struct InOutBase
    int stdin_ptr_r;
    int stdin_inbuf;
 
+   PHB_POLLFD pPollSet;
    evtFD ** event_fds;
    int      efds_size;
    int      efds_no;
@@ -406,13 +408,12 @@ static int add_efds( InOutBase * ioBase, int fd, int mode,
    {
       if( ioBase->efds_size <= ioBase->efds_no )
       {
-         if( ioBase->event_fds == NULL )
-            ioBase->event_fds = ( evtFD ** )
-               hb_xgrab( ( ioBase->efds_size += 10 ) * sizeof( evtFD * ) );
-         else
-            ioBase->event_fds = ( evtFD ** )
+         ioBase->event_fds = ( evtFD ** )
                hb_xrealloc( ioBase->event_fds,
                             ( ioBase->efds_size += 10 ) * sizeof( evtFD * ) );
+         ioBase->pPollSet = ( PHB_POLLFD )
+               hb_xrealloc( ioBase->pPollSet,
+                            ioBase->efds_size * sizeof( HB_POLLFD ) );
       }
 
       pefd = ( evtFD * ) hb_xgrab( sizeof( evtFD ) );
@@ -454,8 +455,10 @@ static void del_all_efds( InOutBase * ioBase )
          hb_xfree( ioBase->event_fds[ i ] );
 
       hb_xfree( ioBase->event_fds );
+      hb_xfree( ioBase->pPollSet );
 
       ioBase->event_fds = NULL;
+      ioBase->pPollSet = NULL;
       ioBase->efds_no = ioBase->efds_size = 0;
    }
 }
@@ -683,13 +686,7 @@ static void flush_gpmevt( mouseEvent * mEvt )
 {
    if( gpm_fd >= 0 )
    {
-      struct timeval tv = { 0, 0 };
-      fd_set rfds;
-
-      FD_ZERO( &rfds );
-      FD_SET( gpm_fd, &rfds );
-
-      while( select( gpm_fd + 1, &rfds, NULL, NULL, &tv ) > 0 )
+      while( hb_fsCanRead( gpm_fd, 0 ) > 0 )
          set_gpmevt( gpm_fd, O_RDONLY, ( void * ) mEvt );
 
       while( getMouseKey( mEvt ) ) ;
@@ -802,58 +799,51 @@ static int read_bufch( InOutBase * ioBase, int fd )
    return n;
 }
 
-static int get_inch( InOutBase * ioBase, int milisec )
+static int get_inch( InOutBase * ioBase, HB_MAXINT timeout )
 {
-   int nRet = 0, npfd = -1, nchk = ioBase->efds_no, lRead = 0;
+   int nRet = 0, nNext = 0, npfd = -1, nchk = ioBase->efds_no, lRead = 0;
    int mode, i, n, counter;
-   struct timeval tv, * ptv;
    evtFD * pefd = NULL;
-   fd_set rfds, wfds;
+   HB_MAXUINT timer;
 
-   if( milisec == 0 )
-      ptv = NULL;
-   else
-   {
-      if( milisec < 0 )
-         milisec = 0;
-      tv.tv_sec = ( milisec / 1000 );
-      tv.tv_usec = ( milisec % 1000 ) * 1000;
-      ptv = &tv;
-   }
+   timer = hb_timerInit( timeout );
 
-   while( nRet == 0 && lRead == 0 )
+   do
    {
-      n = -1;
-      FD_ZERO( &rfds );
-      FD_ZERO( &wfds );
-      for( i = 0; i < ioBase->efds_no; i++ )
+      for( i = n = 0; i < ioBase->efds_no; i++ )
       {
          if( ioBase->event_fds[ i ]->status == EVTFDSTAT_RUN )
          {
-            if( ioBase->event_fds[ i ]->mode == O_RDWR
-                || ioBase->event_fds[ i ]->mode == O_RDONLY )
-            {
-               FD_SET( ioBase->event_fds[ i ]->fd, &rfds );
-               if( n < ioBase->event_fds[ i ]->fd )
-                  n = ioBase->event_fds[ i ]->fd;
-            }
-            if( ioBase->event_fds[ i ]->mode == O_RDWR
-                || ioBase->event_fds[ i ]->mode == O_WRONLY )
-            {
-               FD_SET( ioBase->event_fds[ i ]->fd, &wfds );
-               if( n < ioBase->event_fds[ i ]->fd )
-                  n = ioBase->event_fds[ i ]->fd;
-            }
+            ioBase->pPollSet[ n ].fd = ioBase->event_fds[ i ]->fd;
+            ioBase->pPollSet[ n ].events = 0;
+            ioBase->pPollSet[ n ].revents = 0;
+            if( ioBase->event_fds[ i ]->mode == O_RDWR ||
+                ioBase->event_fds[ i ]->mode == O_RDONLY )
+               ioBase->pPollSet[ n ].events |= HB_POLLIN;
+            if( ioBase->event_fds[ i ]->mode == O_RDWR ||
+                ioBase->event_fds[ i ]->mode == O_WRONLY )
+               ioBase->pPollSet[ n ].events |= HB_POLLOUT;
+            ioBase->event_fds[ i ]->index = n++;
+         }
+         else
+         {
+            ioBase->event_fds[ i ]->index = -1;
+            if( ioBase->event_fds[ i ]->status == EVTFDSTAT_STOP &&
+                ioBase->event_fds[ i ]->eventFunc == NULL )
+               nNext = HB_INKEY_NEW_EVENT( HB_K_TERMINATE );
          }
       }
 
       counter = ioBase->key_counter;
-      if( select( n + 1, &rfds, &wfds, NULL, ptv ) > 0 )
+      if( hb_fsPoll( ioBase->pPollSet, n, timeout ) > 0 )
       {
          for( i = 0; i < ioBase->efds_no; i++ )
          {
-            n = ( FD_ISSET( ioBase->event_fds[ i ]->fd, &rfds ) ? 1 : 0 ) |
-                ( FD_ISSET( ioBase->event_fds[ i ]->fd, &wfds ) ? 2 : 0 );
+            n = ioBase->event_fds[ i ]->index;
+            if( n < 0 )
+               continue;
+            n = ioBase->pPollSet[ n ].revents;
+            n = ( ( n & HB_POLLIN ) ? 1 : 0 ) | ( ( n & HB_POLLOUT ) ? 2 : 0 );
             if( n != 0 )
             {
                if( ioBase->event_fds[ i ]->eventFunc == NULL )
@@ -861,7 +851,10 @@ static int get_inch( InOutBase * ioBase, int milisec )
                   lRead = 1;
                   n = read_bufch( ioBase, ioBase->event_fds[ i ]->fd );
                   if( n == 0 )
+                  {
                      ioBase->event_fds[ i ]->status = EVTFDSTAT_STOP;
+                     nRet = HB_INKEY_NEW_EVENT( HB_K_CLOSE );
+                  }
                }
                else if( nRet == 0 && counter == ioBase->key_counter )
                {
@@ -902,6 +895,8 @@ static int get_inch( InOutBase * ioBase, int milisec )
       else
          lRead = 1;
    }
+   while( nRet == 0 && lRead == 0 &&
+          ( timeout = hb_timerTest( timeout, &timer ) ) != 0 );
 
    for( i = n = nchk; i < ioBase->efds_no; i++ )
    {
@@ -920,7 +915,7 @@ static int get_inch( InOutBase * ioBase, int milisec )
       ioBase->event_fds[ n++ ] = pefd;
    ioBase->efds_no = n;
 
-   return nRet;
+   return nRet == 0 ? nNext : nRet;
 }
 
 static int test_bufch( InOutBase * ioBase, int n, int delay )
@@ -2290,7 +2285,7 @@ int HB_GT_FUNC( gt_CloseTerm( int iHandle ) )
 
 int HB_GT_FUNC( gt_WaitKey( double dTimeOut ) )
 {
-   return wait_key( s_ioBase, ( int ) ( dTimeOut * 1000.0 ) );
+   return wait_key( s_ioBase, ( int ) ( dTimeOut >= 0 ? dTimeOut * 1000.0 : -1 ) );
 }
 
 int HB_GT_FUNC( gt_AddKeyMap( int iKey, char * szSequence ) )
@@ -2679,7 +2674,7 @@ static int hb_gt_crs_ReadKey( PHB_GT pGT, int iEventMask )
 
    HB_SYMBOL_UNUSED( iEventMask );
 
-   iKey = wait_key( s_ioBase, -1 );
+   iKey = wait_key( s_ioBase, 0 );
 
    if( iKey == K_RESIZE )
    {

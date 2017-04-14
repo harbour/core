@@ -96,9 +96,9 @@ const char * hb_ssl_socketErrorStr( int iError )
 long hb_ssl_socketRead( PHB_SSLSTREAM pStream, HB_SOCKET sd,
                         void * buffer, long len, HB_MAXINT timeout )
 {
-   HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
    long lRead = -1;
    int iToRead = -1;
+   HB_MAXUINT timer;
 
    /* sd = SSL_get_rfd( pStream->ssl ); */
 
@@ -116,6 +116,8 @@ long hb_ssl_socketRead( PHB_SSLSTREAM pStream, HB_SOCKET sd,
       if( hb_socketSetBlockingIO( sd, timeout < 0 ) >= 0 )
          pStream->blocking = !pStream->blocking;
    }
+
+   timer = hb_timerInit( timeout );
 
    if( len > 0 )
    {
@@ -152,12 +154,8 @@ long hb_ssl_socketRead( PHB_SSLSTREAM pStream, HB_SOCKET sd,
                {
                   if( timeout > 0 )
                   {
-                     HB_MAXUINT timecurr = hb_dateMilliSeconds();
-                     if( timecurr > timer )
-                        timeout -= timecurr - timer;
-                     if( timeout > 0 )
+                     if( ( timeout = hb_timerTest( timeout, &timer ) ) != 0 )
                      {
-                        timer = timecurr;
                         if( iError == SSL_ERROR_WANT_READ )
                            iError = hb_socketSelectRead( sd, timeout );
                         else
@@ -185,8 +183,8 @@ long hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET sd,
                          const void * buffer, long len, HB_MAXINT timeout,
                          long * plast )
 {
-   HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
    long lWritten = 0, lWr = 0;
+   HB_MAXUINT timer;
 
    /* sd = SSL_get_wfd( pStream->ssl ); */
 
@@ -204,6 +202,8 @@ long hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET sd,
       if( hb_socketSetBlockingIO( sd, timeout < 0 ) >= 0 )
          pStream->blocking = !pStream->blocking;
    }
+
+   timer = hb_timerInit( timeout );
 
    while( len > 0 )
    {
@@ -230,12 +230,8 @@ long hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET sd,
                {
                   if( timeout > 0 )
                   {
-                     HB_MAXUINT timecurr = hb_dateMilliSeconds();
-                     if( timecurr > timer )
-                        timeout -= timecurr - timer;
-                     if( timeout > 0 )
+                     if( ( timeout = hb_timerTest( timeout, &timer ) ) != 0 )
                      {
-                        timer = timecurr;
                         if( iError == SSL_ERROR_WANT_READ )
                            iError = hb_socketSelectRead( sd, timeout );
                         else
@@ -276,13 +272,11 @@ PHB_SSLSTREAM hb_ssl_socketNew( HB_SOCKET sd, SSL * ssl, HB_BOOL fServer,
                                 HB_MAXINT timeout, PHB_ITEM pSSL,
                                 int * piResult )
 {
-   int iResult;
-
    PHB_SSLSTREAM pStream;
    HB_MAXUINT timer;
+   int iResult;
 
    pStream = ( HB_SSLSTREAM * ) hb_xgrabz( sizeof( HB_SSLSTREAM ) );
-   timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 
    pStream->ssl = ssl;
    pStream->pSSL = pSSL ? hb_itemNew( pSSL ) : NULL;
@@ -292,6 +286,9 @@ PHB_SSLSTREAM hb_ssl_socketNew( HB_SOCKET sd, SSL * ssl, HB_BOOL fServer,
 
    SSL_set_mode( ssl, HB_SSL_MODE_AUTO_RETRY );
    iResult = SSL_set_fd( ssl, sd );
+
+   timer = hb_timerInit( timeout );
+
    while( iResult == 1 )
    {
       if( fServer )
@@ -312,16 +309,7 @@ PHB_SSLSTREAM hb_ssl_socketNew( HB_SOCKET sd, SSL * ssl, HB_BOOL fServer,
             }
             else if( timeout > 0 )
             {
-               HB_MAXUINT timecurr = hb_dateMilliSeconds();
-               if( timecurr > timer )
-               {
-                  timeout -= timecurr - timer;
-                  if( timeout < 0 )
-                     timeout = 0;
-                  timer = timecurr;
-               }
-
-               if( timeout > 0 )
+               if( ( timeout = hb_timerTest( timeout, &timer ) ) != 0 )
                {
                   if( iError == SSL_ERROR_WANT_READ )
                      iError = hb_socketSelectRead( sd, timeout );

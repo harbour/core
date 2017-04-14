@@ -348,26 +348,22 @@ static HB_BOOL s_srvRecvAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
    long lRead = 0, l;
-   HB_MAXUINT end_timer;
-
-   end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
+   HB_MAXINT timeout = conn->timeout;
+   HB_MAXUINT timer = hb_timerInit( timeout );
 
    while( lRead < len && ! conn->stop )
    {
       l = hb_sockexRead( conn->sock, ptr + lRead, len - lRead, 1000 );
-      if( l <= 0 )
-      {
-         if( l == 0 ||
-             hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
-             hb_vmRequestQuery() != 0 ||
-             ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
-            break;
-      }
-      else
+      if( l > 0 )
       {
          lRead += l;
          conn->rd_count += l;
       }
+      else if( l == 0 ||
+               hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
+               ( timeout = hb_timerTest( timeout, &timer ) ) == 0 ||
+               hb_vmRequestQuery() != 0 )
+         break;
    }
 
    return lRead == len;
@@ -377,11 +373,11 @@ static HB_BOOL s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
    long lSent = 0, l;
-   HB_MAXUINT end_timer;
 
    if( ! conn->mutex || hb_threadMutexLock( conn->mutex ) )
    {
-      end_timer = conn->timeout > 0 ? hb_dateMilliSeconds() + conn->timeout : 0;
+      HB_MAXINT timeout = conn->timeout;
+      HB_MAXUINT timer = hb_timerInit( timeout );
 
       while( lSent < len && ! conn->stop )
       {
@@ -391,13 +387,10 @@ static HB_BOOL s_srvSendAll( PHB_CONSRV conn, void * buffer, long len )
             lSent += l;
             conn->wr_count += l;
          }
-         else
-         {
-            if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
-                hb_vmRequestQuery() != 0 ||
-                ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
-               break;
-         }
+         else if( hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
+                  ( timeout = hb_timerTest( timeout, &timer ) ) == 0 ||
+                  hb_vmRequestQuery() != 0 )
+            break;
       }
       if( lSent == len && ! conn->stop )
       {

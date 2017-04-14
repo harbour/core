@@ -78,15 +78,8 @@ static HB_BOOL GetGpmEvent( Gpm_Event * Evt )
 {
    if( s_bMousePresent && gpm_fd >= 0 )
    {
-      struct timeval tv = { 0, 0 };
-      fd_set ReadFD;
-
-      FD_ZERO( &ReadFD );
-      FD_SET( gpm_fd, &ReadFD );
-
-      if( select( gpm_fd + 1, &ReadFD, NULL, NULL, &tv ) > 0 )
-         if( FD_ISSET( gpm_fd, &ReadFD ) )
-            return Gpm_GetEvent( Evt ) > 0;
+      if( hb_fsCanRead( gpm_fd, 0 ) > 0 )
+         return Gpm_GetEvent( Evt ) > 0;
    }
 
    return HB_FALSE;

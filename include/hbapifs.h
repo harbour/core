@@ -195,6 +195,31 @@ extern HB_EXPORT HB_BOOL    hb_fsLink        ( const char * pszExisting, const c
 extern HB_EXPORT HB_BOOL    hb_fsLinkSym     ( const char * pszTarget, const char * pszNewFile ); /* create symbolic (soft) link */
 extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* returns the link pointed to */
 
+#if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
+/* for POSIX systems only, hides low level select()/poll() access,
+   intentionally covered by HB_OS_UNIX / __DJGPP__ macros to generate
+   compile time error in code which tries to use it on other platforms */
+
+typedef struct
+{
+   HB_FHANDLE  fd;
+   HB_SHORT    events;
+   HB_SHORT    revents;
+} HB_POLLFD, * PHB_POLLFD;
+
+#define HB_POLLIN    0x0001 /* There is data to read */
+#define HB_POLLPRI   0x0002 /* There is urgent data to read */
+#define HB_POLLOUT   0x0004 /* Writing now will not block */
+#define HB_POLLERR   0x0008 /* Error condition */
+#define HB_POLLHUP   0x0010 /* Hung up */
+#define HB_POLLNVAL  0x0020 /* Invalid polling request */
+
+extern HB_EXPORT int        hb_fsPoll        ( PHB_POLLFD pPollSet, int iCount, HB_MAXINT nTimeOut );
+extern HB_EXPORT int        hb_fsCanRead     ( HB_FHANDLE hFileHandle, HB_MAXINT nTimeOut );
+extern HB_EXPORT int        hb_fsCanWrite    ( HB_FHANDLE hFileHandle, HB_MAXINT nTimeOut );
+#endif /* HB_OS_UNIX */
+
+
 #define hb_fsFLock( h, s, l )   hb_fsLock( h, s, l, FL_LOCK )
 #define hb_fsFUnlock( h, s, l ) hb_fsLock( h, s, l, FL_UNLOCK )
 

@@ -330,19 +330,11 @@ static int hb_gt_std_ReadKey( PHB_GT pGT, int iEventMask )
    pGTSTD = HB_GTSTD_GET( pGT );
 
 #if defined( HB_HAS_TERMIOS )
+   if( hb_fsCanRead( pGTSTD->hStdin, 0 ) > 0 )
    {
-      struct timeval tv;
-      fd_set rfds;
-      tv.tv_sec = 0;
-      tv.tv_usec = 0;
-      FD_ZERO( &rfds );
-      FD_SET( pGTSTD->hStdin, &rfds );
-      if( select( pGTSTD->hStdin + 1, &rfds, NULL, NULL, &tv ) > 0 )
-      {
-         HB_BYTE bChar;
-         if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
-            ch = bChar;
-      }
+      HB_BYTE bChar;
+      if( hb_fsRead( pGTSTD->hStdin, &bChar, 1 ) == 1 )
+         ch = bChar;
    }
 #elif defined( _MSC_VER ) && ! defined( HB_OS_WIN_CE )
    if( pGTSTD->fStdinConsole )

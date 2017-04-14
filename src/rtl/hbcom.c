@@ -483,9 +483,9 @@ int hb_comLastNum( void )
 
 #if defined( HB_HAS_TERMIOS )
 
-#define HB_COM_IS_EINTR()  ( errno == EINTR )
-#define HB_COM_IS_EBADF()  ( errno == EBADF )
-#define HB_COM_GETERROR()  ( errno )
+#define HB_COM_IS_EINTR( pCom )  ( ( pCom )->oserr == EINTR )
+#define HB_COM_IS_EBADF( pCom )  ( ( pCom )->oserr  == EBADF )
+#define HB_COM_GETERROR()        ( errno )
 
 #if defined( HB_OS_LINUX )
 #  define HB_HAS_SELECT_TIMER
@@ -539,14 +539,14 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
    int iResult;
 
 #if defined( HB_HAS_POLL )
-   HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
+   HB_MAXUINT timer = hb_timerInit( timeout );
    struct pollfd fds;
 
    fds.fd = pCom->fd;
    fds.events = POLLIN;
    fds.revents = 0;
 
-   for( ;; )
+   do
    {
       int tout = timeout < 0 || timeout > 1000 ? 1000 : ( int ) timeout;
       iResult = poll( &fds, 1, tout );
@@ -563,34 +563,16 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
          }
          iResult = 0;
       }
-      if( ( ( iResult == 0 && ( timeout < 0 || timeout > 1000 ) ) ||
-            ( iResult == -1 && timeout != 0 && HB_COM_IS_EINTR() ) ) &&
-          hb_vmRequestQuery() == 0 )
-      {
-         if( timeout < 0 )
-            continue;
-         else
-         {
-            HB_MAXUINT timecurr = hb_dateMilliSeconds();
-            if( timecurr > timer )
-            {
-               timeout -= timecurr - timer;
-               if( timeout > 0 )
-               {
-                  timer = timecurr;
-                  continue;
-               }
-            }
-         }
-      }
-      break;
+      else if( iResult == -1 && HB_COM_IS_EINTR( pCom ) )
+         iResult = 0;
    }
+   while( iResult == 0 && ( timeout = hb_timerTest( timeout, &timer ) ) != 0 &&
+          hb_vmRequestQuery() == 0 );
 #else /* ! HB_HAS_POLL */
    struct timeval tv;
    fd_set rfds;
-
 #  if ! defined( HB_HAS_SELECT_TIMER )
-   HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
+   HB_MAXUINT timer = hb_timerInit( timeout );
 #  else
    tv.tv_sec = ( long ) ( timeout / 1000 );
    tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
@@ -598,9 +580,6 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
 
    for( ;; )
    {
-      FD_ZERO( &rfds );
-      FD_SET( pCom->fd, &rfds );
-
       if( timeout < 0 )
       {
          tv.tv_sec = 1;
@@ -614,26 +593,21 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
       }
 #  endif
 
+      FD_ZERO( &rfds );
+      FD_SET( pCom->fd, &rfds );
       iResult = select( ( int ) ( pCom->fd + 1 ), &rfds, NULL, NULL, &tv );
+      hb_comSetOsError( pCom, iResult == -1 );
       if( iResult > 0 && ! FD_ISSET( pCom->fd, &rfds ) )
          iResult = 0;
-      hb_comSetOsError( pCom, iResult == -1 );
-      if( iResult == 0 && timeout < 0 && hb_vmRequestQuery() == 0 )
-         continue;
-      if( iResult != -1 || timeout == 0 || ! HB_COM_IS_EINTR() ||
+      else if( iResult == -1 && HB_COM_IS_EINTR( pCom ) )
+         iResult = 0;
+#  if defined( HB_HAS_SELECT_TIMER )
+      if( iResult != 0 || timeout >= 0 || hb_vmRequestQuery() != 0 )
+         break;
+#  else
+      if( iResult != 0 || ( timeout = hb_timerTest( timeout, &timer ) ) == 0 ||
           hb_vmRequestQuery() != 0 )
          break;
-#  if ! defined( HB_HAS_SELECT_TIMER )
-      else if( timeout > 0 )
-      {
-         HB_MAXUINT timecurr = hb_dateMilliSeconds();
-         if( timecurr > timer )
-         {
-            if( ( timeout -= timecurr - timer ) <= 0 )
-               break;
-            timer = timecurr;
-         }
-      }
 #  endif
    }
 #endif /* ! HB_HAS_POLL */
@@ -646,14 +620,14 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
    int iResult;
 
 #if defined( HB_HAS_POLL )
-   HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
+   HB_MAXUINT timer = hb_timerInit( timeout );
    struct pollfd fds;
 
    fds.fd = pCom->fd;
    fds.events = POLLOUT;
    fds.revents = 0;
 
-   for( ;; )
+   do
    {
       int tout = timeout < 0 || timeout > 1000 ? 1000 : ( int ) timeout;
       iResult = poll( &fds, 1, tout );
@@ -670,34 +644,16 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
          }
          iResult = 0;
       }
-      if( ( ( iResult == 0 && ( timeout < 0 || timeout > 1000 ) ) ||
-            ( iResult == -1 && timeout != 0 && HB_COM_IS_EINTR() ) ) &&
-          hb_vmRequestQuery() == 0 )
-      {
-         if( timeout < 0 )
-            continue;
-         else
-         {
-            HB_MAXUINT timecurr = hb_dateMilliSeconds();
-            if( timecurr > timer )
-            {
-               timeout -= timecurr - timer;
-               if( timeout > 0 )
-               {
-                  timer = timecurr;
-                  continue;
-               }
-            }
-         }
-      }
-      break;
+      else if( iResult == -1 && HB_COM_IS_EINTR( pCom ) )
+         iResult = 0;
    }
+   while( iResult == 0 && ( timeout = hb_timerTest( timeout, &timer ) ) != 0 &&
+          hb_vmRequestQuery() == 0 );
 #else /* ! HB_HAS_POLL */
    struct timeval tv;
    fd_set wfds;
-
 #  if ! defined( HB_HAS_SELECT_TIMER )
-   HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
+   HB_MAXUINT timer = hb_timerInit( timeout );
 #  else
    tv.tv_sec = ( long ) ( timeout / 1000 );
    tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
@@ -705,9 +661,6 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
 
    for( ;; )
    {
-      FD_ZERO( &wfds );
-      FD_SET( pCom->fd, &wfds );
-
       if( timeout < 0 )
       {
          tv.tv_sec = 1;
@@ -721,28 +674,22 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
       }
 #  endif
 
+      FD_ZERO( &wfds );
+      FD_SET( pCom->fd, &wfds );
       iResult = select( ( int ) ( pCom->fd + 1 ), NULL, &wfds, NULL, &tv );
+      hb_comSetOsError( pCom, iResult == -1 );
       if( iResult > 0 && ! FD_ISSET( pCom->fd, &wfds ) )
          iResult = 0;
-      hb_comSetOsError( pCom, iResult == -1 );
-      if( iResult == 0 && timeout < 0 && hb_vmRequestQuery() == 0 )
-         continue;
-      if( iResult != -1 || timeout == 0 || ! HB_COM_IS_EINTR() ||
+      else if( iResult == -1 && HB_COM_IS_EINTR( pCom ) )
+         iResult = 0;
+#  if defined( HB_HAS_SELECT_TIMER )
+      if( iResult != 0 || timeout >= 0 || hb_vmRequestQuery() != 0 )
+         break;
+#  else
+      if( iResult != 0 || ( timeout = hb_timerTest( timeout, &timer ) ) == 0 ||
           hb_vmRequestQuery() != 0 )
          break;
-#  if ! defined( HB_HAS_SELECT_TIMER )
-      else if( timeout > 0 )
-      {
-         HB_MAXUINT timecurr = hb_dateMilliSeconds();
-         if( timecurr > timer )
-         {
-            if( ( timeout -= timecurr - timer ) <= 0 )
-               break;
-            timer = timecurr;
-         }
-      }
 #  endif
-      break;
    }
 #endif /* ! HB_HAS_POLL */
 
@@ -1350,7 +1297,7 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
             lSent = write( pCom->fd, data, len );
             hb_comSetOsError( pCom, lSent == -1 );
          }
-         while( lSent == -1 && HB_COM_IS_EINTR() && hb_vmRequestQuery() == 0 );
+         while( lSent == -1 && HB_COM_IS_EINTR( pCom ) && hb_vmRequestQuery() == 0 );
       }
       hb_vmLock();
    }
@@ -1398,7 +1345,7 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
             lReceived = read( pCom->fd, ( char * ) data, len );
             hb_comSetOsError( pCom, lReceived == -1 );
          }
-         while( lReceived == -1 && HB_COM_IS_EINTR() && hb_vmRequestQuery() == 0 );
+         while( lReceived == -1 && HB_COM_IS_EINTR( pCom ) && hb_vmRequestQuery() == 0 );
       }
       hb_vmLock();
    }
@@ -1581,9 +1528,9 @@ int hb_comClose( int iPort )
          iResult = close( pCom->fd );
          hb_comSetOsError( pCom, iResult == -1 );
       }
-      while( iResult == -1 && HB_COM_IS_EINTR() && hb_vmRequestQuery() == 0 );
+      while( iResult == -1 && HB_COM_IS_EINTR( pCom ) && hb_vmRequestQuery() == 0 );
 
-      if( iResult != -1 || HB_COM_IS_EBADF() )
+      if( iResult != -1 || HB_COM_IS_EBADF( pCom ) )
       {
          pCom->fd = ( HB_FHANDLE ) FS_ERROR;
          pCom->status &= ~HB_COM_OPEN;
@@ -3530,7 +3477,7 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
    if( pCom )
    {
       const char * buffer = ( const char * ) data;
-      HB_MAXUINT timer = timeout <= 0 ? 0 : ( hb_dateMilliSeconds() + timeout );
+      HB_MAXUINT timer = hb_timerInit( timeout );
 
       hb_comSetOsError( pCom, SER_SUCCESS );
       lSent = 0;
@@ -3556,7 +3503,7 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
 
          if( len > 0 )
          {
-            if( timer == 0 || timer < hb_dateMilliSeconds() )
+            if( ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
             {
                if( lSent == 0 )
                {
@@ -3583,7 +3530,7 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
    if( pCom )
    {
       char * buffer = ( char * ) data;
-      HB_MAXUINT timer = timeout <= 0 ? 0 : ( hb_dateMilliSeconds() + timeout );
+      HB_MAXUINT timer = hb_timerInit( timeout );
 
       hb_comSetOsError( pCom, SER_SUCCESS );
       lReceived = 0;
@@ -3606,7 +3553,7 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
          buffer += iRecv;
          len -= iRecv;
 
-         if( lReceived > 0 || timer == 0 || timer < hb_dateMilliSeconds() )
+         if( lReceived > 0 || ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
          {
             if( lReceived == 0 )
             {
@@ -4069,7 +4016,7 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
    if( pCom )
    {
       const char * buffer = ( const char * ) data;
-      HB_MAXUINT timer = timeout <= 0 ? 0 : ( hb_dateMilliSeconds() + timeout );
+      HB_MAXUINT timer = hb_timerInit( timeout );
 
       hb_comSetOsError( pCom, 0 );
       lSent = 0;
@@ -4086,7 +4033,7 @@ long hb_comSend( int iPort, const void * data, long len, HB_MAXINT timeout )
          {
             buffer += iSent;
             len -= iSent;
-            if( timer == 0 || timer < hb_dateMilliSeconds() )
+            if( ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
             {
                if( lSent == 0 )
                {
@@ -4115,7 +4062,7 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
    if( pCom )
    {
       char * buffer = ( char * ) data;
-      HB_MAXUINT timer = timeout <= 0 ? 0 : ( hb_dateMilliSeconds() + timeout );
+      HB_MAXUINT timer = hb_timerInit( timeout );
 
       hb_comSetOsError( pCom, 0 );
       lReceived = 0;
@@ -4134,7 +4081,7 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
          }
          else if( iErr == COM_BUFEMPTY )
          {
-            if( lReceived > 0 || timer == 0 || timer < hb_dateMilliSeconds() )
+            if( lReceived > 0 || ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
             {
                if( lReceived == 0 )
                {

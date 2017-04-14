@@ -245,6 +245,7 @@ typedef struct
    int    fd;
    int    mode;
    int    status;
+   int    index;
    void * cargo;
    int ( * eventFunc )( int, int, void * );
 } evtFD;
@@ -371,6 +372,7 @@ typedef struct _HB_GTTRM
    int stdin_ptr_r;
    int stdin_inbuf;
 
+   PHB_POLLFD pPollSet;
    evtFD ** event_fds;
    int efds_size;
    int efds_no;
@@ -667,13 +669,12 @@ static int add_efds( PHB_GTTRM pTerm, int fd, int mode,
    {
       if( pTerm->efds_size <= pTerm->efds_no )
       {
-         if( pTerm->event_fds == NULL )
-            pTerm->event_fds = ( evtFD ** )
-               hb_xgrab( ( pTerm->efds_size += 10 ) * sizeof( evtFD * ) );
-         else
-            pTerm->event_fds = ( evtFD ** )
+         pTerm->event_fds = ( evtFD ** )
                hb_xrealloc( pTerm->event_fds,
                             ( pTerm->efds_size += 10 ) * sizeof( evtFD * ) );
+         pTerm->pPollSet = ( PHB_POLLFD )
+               hb_xrealloc( pTerm->pPollSet,
+                            pTerm->efds_size * sizeof( HB_POLLFD ) );
       }
 
       pefd = ( evtFD * ) hb_xgrab( sizeof( evtFD ) );
@@ -682,7 +683,7 @@ static int add_efds( PHB_GTTRM pTerm, int fd, int mode,
       pefd->cargo = cargo;
       pefd->eventFunc = eventFunc;
       pefd->status = EVTFDSTAT_RUN;
-      pTerm->event_fds[pTerm->efds_no++] = pefd;
+      pTerm->event_fds[ pTerm->efds_no++ ] = pefd;
    }
 
    return fd;
@@ -717,8 +718,10 @@ static void del_all_efds( PHB_GTTRM pTerm )
          hb_xfree( pTerm->event_fds[ i ] );
 
       hb_xfree( pTerm->event_fds );
+      hb_xfree( pTerm->pPollSet );
 
       pTerm->event_fds = NULL;
+      pTerm->pPollSet = NULL;
       pTerm->efds_no = pTerm->efds_size = 0;
    }
 }
@@ -964,13 +967,7 @@ static void flush_gpmevt( PHB_GTTRM pTerm )
 {
    if( gpm_fd >= 0 )
    {
-      struct timeval tv = { 0, 0 };
-      fd_set rfds;
-
-      FD_ZERO( &rfds );
-      FD_SET( gpm_fd, &rfds );
-
-      while( select( gpm_fd + 1, &rfds, NULL, NULL, &tv ) > 0 )
+      while( hb_fsCanRead( gpm_fd, 0 ) > 0 )
          set_gpmevt( gpm_fd, O_RDONLY, ( void * ) pTerm );
 
       while( getMouseKey( &pTerm->mLastEvt ) ) ;
@@ -1082,61 +1079,51 @@ static int read_bufch( PHB_GTTRM pTerm, int fd )
    return n;
 }
 
-static int get_inch( PHB_GTTRM pTerm, int milisec )
+static int get_inch( PHB_GTTRM pTerm, HB_MAXINT timeout )
 {
    int nRet = 0, nNext = 0, npfd = -1, nchk = pTerm->efds_no, lRead = 0;
    int mode, i, n, counter;
-   struct timeval tv, * ptv;
    evtFD * pefd = NULL;
-   fd_set rfds, wfds;
+   HB_MAXUINT timer;
 
-   if( milisec == 0 )
-      ptv = NULL;
-   else
-   {
-      if( milisec < 0 )
-         milisec = 0;
-      tv.tv_sec = ( milisec / 1000 );
-      tv.tv_usec = ( milisec % 1000 ) * 1000;
-      ptv = &tv;
-   }
+   timer = hb_timerInit( timeout );
 
-   while( nRet == 0 && lRead == 0 )
+   do
    {
-      n = -1;
-      FD_ZERO( &rfds );
-      FD_ZERO( &wfds );
-      for( i = 0; i < pTerm->efds_no; i++ )
+      for( i = n = 0; i < pTerm->efds_no; i++ )
       {
          if( pTerm->event_fds[ i ]->status == EVTFDSTAT_RUN )
          {
+            pTerm->pPollSet[ n ].fd = pTerm->event_fds[ i ]->fd;
+            pTerm->pPollSet[ n ].events = 0;
+            pTerm->pPollSet[ n ].revents = 0;
             if( pTerm->event_fds[ i ]->mode == O_RDWR ||
                 pTerm->event_fds[ i ]->mode == O_RDONLY )
-            {
-               FD_SET( pTerm->event_fds[ i ]->fd, &rfds );
-               if( n < pTerm->event_fds[ i ]->fd )
-                  n = pTerm->event_fds[ i ]->fd;
-            }
+               pTerm->pPollSet[ n ].events |= HB_POLLIN;
             if( pTerm->event_fds[ i ]->mode == O_RDWR ||
                 pTerm->event_fds[ i ]->mode == O_WRONLY )
-            {
-               FD_SET( pTerm->event_fds[ i ]->fd, &wfds );
-               if( n < pTerm->event_fds[ i ]->fd )
-                  n = pTerm->event_fds[ i ]->fd;
-            }
+               pTerm->pPollSet[ n ].events |= HB_POLLOUT;
+            pTerm->event_fds[ i ]->index = n++;
          }
-         else if( pTerm->event_fds[ i ]->status == EVTFDSTAT_STOP &&
-                  pTerm->event_fds[ i ]->eventFunc == NULL )
-            nNext = HB_INKEY_NEW_EVENT( HB_K_TERMINATE );
+         else
+         {
+            pTerm->event_fds[ i ]->index = -1;
+            if( pTerm->event_fds[ i ]->status == EVTFDSTAT_STOP &&
+                pTerm->event_fds[ i ]->eventFunc == NULL )
+               nNext = HB_INKEY_NEW_EVENT( HB_K_TERMINATE );
+         }
       }
 
       counter = pTerm->key_counter;
-      if( select( n + 1, &rfds, &wfds, NULL, ptv ) > 0 )
+      if( hb_fsPoll( pTerm->pPollSet, n, timeout ) > 0 )
       {
          for( i = 0; i < pTerm->efds_no; i++ )
          {
-            n = ( FD_ISSET( pTerm->event_fds[ i ]->fd, &rfds ) ? 1 : 0 ) |
-                ( FD_ISSET( pTerm->event_fds[ i ]->fd, &wfds ) ? 2 : 0 );
+            n = pTerm->event_fds[ i ]->index;
+            if( n < 0 )
+               continue;
+            n = pTerm->pPollSet[ n ].revents;
+            n = ( ( n & HB_POLLIN ) ? 1 : 0 ) | ( ( n & HB_POLLOUT ) ? 2 : 0 );
             if( n != 0 )
             {
                if( pTerm->event_fds[ i ]->eventFunc == NULL )
@@ -1188,6 +1175,8 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
       else
          lRead = 1;
    }
+   while( nRet == 0 && lRead == 0 &&
+          ( timeout = hb_timerTest( timeout, &timer ) ) != 0 );
 
    for( i = n = nchk; i < pTerm->efds_no; i++ )
    {
@@ -1979,7 +1968,8 @@ static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iC
    {
       char rdbuf[ 64 ];
       int i, j, n, d, y, x;
-      HB_MAXUINT end_timer, cur_time;
+      HB_MAXINT timeout;
+      HB_MAXUINT timer;
 
       hb_gt_trm_termOut( pTerm, "\x1B[6n", 4 );
       if( szPost )
@@ -1990,7 +1980,8 @@ static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iC
       pTerm->fPosAnswer = HB_FALSE;
 
       /* wait up to 2 seconds for answer */
-      end_timer = hb_dateMilliSeconds() + 2000;
+      timeout = 2000;
+      timer = hb_timerInit( timeout );
       for( ;; )
       {
          /* loking for cursor position in "\033[%d;%dR" */
@@ -2038,23 +2029,13 @@ static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iC
          }
          if( n == sizeof( rdbuf ) )
             break;
-         cur_time = hb_dateMilliSeconds();
-         if( cur_time > end_timer )
+
+         if( ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
             break;
          else
          {
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-            struct timeval tv;
-            fd_set rdfds;
-            int iMilliSec;
-
-            FD_ZERO( &rdfds );
-            FD_SET( pTerm->hFilenoStdin, &rdfds );
-            iMilliSec = ( int ) ( end_timer - cur_time );
-            tv.tv_sec = iMilliSec / 1000;
-            tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
-
-            if( select( pTerm->hFilenoStdin + 1, &rdfds, NULL, NULL, &tv ) <= 0 )
+            if( hb_fsCanRead( pTerm->hFilenoStdin, timeout ) <= 0 )
                break;
             i = read( pTerm->hFilenoStdin, rdbuf + n, sizeof( rdbuf ) - n );
 #else
@@ -3579,7 +3560,7 @@ static int hb_gt_trm_ReadKey( PHB_GT pGT, int iEventMask )
 
    HB_SYMBOL_UNUSED( iEventMask );
 
-   iKey = wait_key( HB_GTTRM_GET( pGT ), -1 );
+   iKey = wait_key( HB_GTTRM_GET( pGT ), 0 );
 
    if( iKey == K_RESIZE )
    {

@@ -235,7 +235,8 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
    {
       char rdbuf[ 64 ];
       int i, j, n, d, y, x;
-      HB_MAXUINT end_timer, time;
+      HB_MAXINT timeout;
+      HB_MAXUINT timer;
 
       hb_gt_pca_termOut( "\x1B[6n", 4 );
       hb_gt_pca_termFlush();
@@ -243,7 +244,8 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
       n = j = x = y = 0;
 
       /* wait up to 2 seconds for answer */
-      end_timer = hb_dateMilliSeconds() + 2000;
+      timeout = 2000;
+      timer = hb_timerInit( timeout );
       for( ;; )
       {
          /* loking for cursor position in "\033[%d;%dR" */
@@ -279,23 +281,13 @@ static void hb_gt_pca_AnsiGetCurPos( int * iRow, int * iCol )
          }
          if( n == ( int ) sizeof( rdbuf ) )
             break;
-         time = hb_dateMilliSeconds();
-         if( time > end_timer )
+
+         if( ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
             break;
          else
          {
 #if defined( HB_HAS_TERMIOS )
-            struct timeval tv;
-            fd_set rdfds;
-            int iMilliSec;
-
-            FD_ZERO( &rdfds );
-            FD_SET( s_hFilenoStdin, &rdfds );
-            iMilliSec = ( int ) ( end_timer - time );
-            tv.tv_sec = iMilliSec / 1000;
-            tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
-
-            if( select( s_hFilenoStdin + 1, &rdfds, NULL, NULL, &tv ) <= 0 )
+            if( hb_fsCanRead( s_hFilenoStdin, timeout ) <= 0 )
                break;
             i = read( s_hFilenoStdin, rdbuf + n, sizeof( rdbuf ) - n );
 #else
@@ -612,19 +604,11 @@ static int hb_gt_pca_ReadKey( PHB_GT pGT, int iEventMask )
 
    ch = hb_gt_dos_keyCodeTranslate( ch, 0, HB_GTSELF_CPIN( pGT ) );
 #elif defined( HB_HAS_TERMIOS )
+   if( hb_fsCanRead( s_hFilenoStdin, 0 ) > 0 )
    {
-      struct timeval tv;
-      fd_set rfds;
-      tv.tv_sec = 0;
-      tv.tv_usec = 0;
-      FD_ZERO( &rfds );
-      FD_SET( s_hFilenoStdin, &rfds );
-      if( select( s_hFilenoStdin + 1, &rfds, NULL, NULL, &tv ) > 0 )
-      {
-         HB_BYTE bChar;
-         if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
-            ch = bChar;
-      }
+      HB_BYTE bChar;
+      if( hb_fsRead( s_hFilenoStdin, &bChar, 1 ) == 1 )
+         ch = bChar;
    }
 #elif defined( _MSC_VER ) && ! defined( HB_OS_WIN_CE )
    if( s_bStdinConsole )

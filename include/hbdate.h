@@ -142,6 +142,10 @@ extern HB_EXPORT void   hb_timeStampUnformat( const char * szDateTime,
                                               const char * szDateFormat, const char * szTimeFormat,
                                               long * plJulian, long * plMilliSec );
 
+extern HB_EXPORT HB_MAXUINT hb_timerGet( void );
+extern HB_EXPORT HB_MAXUINT hb_timerInit( HB_MAXINT nTimeOut );
+extern HB_EXPORT HB_MAXINT  hb_timerTest( HB_MAXINT nTimeOut, HB_MAXUINT * pnTimer );
+
 HB_EXTERN_END
 
 #define HB_MINUTES_PER_DAY    ( 24 * 60 )

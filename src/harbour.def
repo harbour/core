@@ -2541,6 +2541,7 @@ hb_fsPipeIsData
 hb_fsPipeRead
 hb_fsPipeUnblock
 hb_fsPipeWrite
+hb_fsPoll
 hb_fsProcessClose
 hb_fsProcessOpen
 hb_fsProcessRun
@@ -3452,6 +3453,9 @@ hb_timeStrGet
 hb_timeStrRawGet
 hb_timeUTCOffset
 hb_timeUnformat
+hb_timerGet
+hb_timerInit
+hb_timerTest
 hb_tr_level
 hb_tr_stealth
 hb_tr_trace

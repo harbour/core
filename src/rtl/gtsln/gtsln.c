@@ -486,11 +486,13 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
       {
          char rdbuf[ 64 ];
          int i, j, n, d, y, x;
-         HB_MAXUINT end_timer, cur_time;
+         HB_MAXINT timeout;
+         HB_MAXUINT timer;
 
          n = j = x = y = 0;
          /* wait up to 2 seconds for answer */
-         end_timer = hb_dateMilliSeconds() + 2000;
+         timeout = 2000;
+         timer = hb_timerInit( timeout );
          for( ;; )
          {
             /* loking for cursor position in "\033[%d;%dR" */
@@ -525,22 +527,12 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
             }
             if( n == sizeof( rdbuf ) )
                break;
-            cur_time = hb_dateMilliSeconds();
-            if( cur_time > end_timer )
+
+            if( ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
                break;
             else
             {
-               struct timeval tv;
-               fd_set rdfds;
-               int iMilliSec;
-
-               FD_ZERO( &rdfds );
-               FD_SET( iStdIn, &rdfds );
-               iMilliSec = ( int ) ( end_timer - cur_time );
-               tv.tv_sec = iMilliSec / 1000;
-               tv.tv_usec = ( iMilliSec % 1000 ) * 1000;
-
-               if( select( iStdIn + 1, &rdfds, NULL, NULL, &tv ) <= 0 )
+               if( hb_fsCanRead( iStdIn, timeout ) <= 0 )
                   break;
                i = read( iStdIn, rdbuf + n, sizeof( rdbuf ) - n );
                if( i <= 0 )

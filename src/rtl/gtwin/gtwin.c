@@ -668,11 +668,13 @@ static HWND hb_getConsoleWindowHandle( void )
 
          if( SetConsoleTitle( tmpTitle ) )
          {
-            HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 200;
+            HB_MAXINT timeout = 200;
+            HB_MAXUINT timer = hb_timerInit( timeout );
+
             /* repeat in a loop to be sure title is changed */
             do
                hWnd = FindWindow( NULL, tmpTitle );
-            while( hWnd == NULL && hb_dateMilliSeconds() < nTimeOut );
+            while( hWnd == NULL && ( timeout = hb_timerTest( timeout, &timer ) ) != 0 );
             SetConsoleTitle( oldTitle );
          }
       }

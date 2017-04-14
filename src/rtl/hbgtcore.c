@@ -2926,7 +2926,8 @@ static int hb_gt_def_InkeyNext( PHB_GT pGT, int iEventMask )
 /* Wait for keyboard input */
 static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int iEventMask )
 {
-   HB_MAXUINT end_timer;
+   HB_MAXUINT timer;
+   HB_MAXINT timeout;
    PHB_ITEM pKey;
    HB_BOOL fPop;
    int iKey;
@@ -2945,10 +2946,8 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
    }
 
    /* Wait forever ?, Use fixed value 100 for strict Clipper compatibility */
-   if( fWait && dSeconds * 100 >= 1 )
-      end_timer = hb_dateMilliSeconds() + ( HB_MAXUINT ) ( dSeconds * 1000 );
-   else
-      end_timer = 0;
+   timeout = ( fWait && dSeconds * 100 >= 1 ) ? ( HB_MAXINT ) ( dSeconds * 1000 ) : -1;
+   timer = hb_timerInit( timeout );
 
    for( ;; )
    {
@@ -2969,8 +2968,8 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
       }
 
       /* immediately break if a VM request is pending. */
-      if( ! fWait || hb_vmRequestQuery() != 0 ||
-                    ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
+      if( ! fWait || ( timeout = hb_timerTest( timeout, &timer ) ) == 0 ||
+          hb_vmRequestQuery() != 0 )
          break;
 
       HB_GTSELF_UNLOCK( pGT );
@@ -3298,7 +3297,7 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
    {
       if( iEventMask & INKEY_LDOWN && HB_GTSELF_MOUSEBUTTONPRESSED( pGT, 0, &iRow, &iCol ) )
       {
-         HB_MAXUINT timer = hb_dateMilliSeconds();
+         HB_MAXUINT timer = hb_timerGet();
          if( timer - pGT->nMouseLeftTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
             iKey = K_LDBLCLK;
          else
@@ -3311,7 +3310,7 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
       }
       else if( iEventMask & INKEY_RDOWN && HB_GTSELF_MOUSEBUTTONPRESSED( pGT, 1, &iRow, &iCol ) )
       {
-         HB_MAXUINT timer = hb_dateMilliSeconds();
+         HB_MAXUINT timer = hb_timerGet();
          if( timer - pGT->nMouseRightTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
             iKey = K_RDBLCLK;
          else
@@ -3324,7 +3323,7 @@ static int hb_gt_def_MouseReadKey( PHB_GT pGT, int iEventMask )
       }
       else if( iEventMask & INKEY_MMIDDLE && HB_GTSELF_MOUSEBUTTONPRESSED( pGT, 2, &iRow, &iCol ) )
       {
-         HB_MAXUINT timer = hb_dateMilliSeconds();
+         HB_MAXUINT timer = hb_timerGet();
          if( timer - pGT->nMouseMiddleTimer <= ( HB_MAXUINT ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( pGT ) )
             iKey = K_MDBLCLK;
          else

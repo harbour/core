@@ -4478,18 +4478,8 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
             if( ! wnd->ClipboardRcvd && wnd->ClipboardRequest == aRequest )
             {
                HB_ULONG ulTime = hb_gt_xwc_CurrentTime() - ulCurrentTime;
-               struct timeval timeout;
-               fd_set readfds;
 
-               if( ulTime > 3000 )
-                  break;
-               ulTime = 3000 - ulTime;
-               timeout.tv_sec = ulTime / 1000;
-               timeout.tv_usec = ( ulTime % 1000 ) / 1000;
-
-               FD_ZERO( &readfds );
-               FD_SET( iConnFD, &readfds );
-               if( select( iConnFD + 1, &readfds, NULL, NULL, &timeout ) <= 0 )
+               if( ulTime > 3000 || hb_fsCanRead( iConnFD, 3000 - ulTime ) <= 0 )
                   break;
             }
          }
@@ -5008,8 +4998,9 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
       }
       else
       {
-         HB_MAXUINT nTimeOut = hb_dateMilliSeconds() + 1000;
          HB_BOOL fResizable = wnd->fResizable;
+         HB_MAXINT timeout;
+         HB_MAXUINT timer;
 
 #ifdef XWC_DEBUG
          printf( "SetMode(%d,%d) begin\n", iRow, iCol ); fflush( stdout );
@@ -5024,12 +5015,15 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
          hb_gt_xwc_ResizeRequest( wnd, iCol, iRow );
          HB_XWC_XLIB_UNLOCK( wnd->dpy );
 
+         timeout = 1000;
+         timer = hb_timerInit( timeout );
+
          do
          {
             hb_gt_xwc_RealRefresh( wnd, HB_TRUE );
             if( iCol == wnd->cols && iRow == wnd->rows )
                fResult = HB_TRUE;
-            else if( hb_dateMilliSeconds() > nTimeOut )
+            else if( ( timeout = hb_timerTest( timeout, &timer ) ) == 0 )
                break;
             else
                hb_releaseCPU();

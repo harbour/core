@@ -191,20 +191,11 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
 
       if( s_iDebugFd > 0 && HB_ISCHAR( 1 ) )
       {
-         fd_set wrds;
-         struct timeval tv = { 0, 100000 }; /* wait each time a tenth of second */
-         FD_ZERO( &wrds );
-         FD_SET( s_iDebugFd, &wrds );
-
-         if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
+         if( hb_fsCanWrite( s_iDebugFd, 100 ) > 0 ) /* wait each time a tenth of second */
          {
             if( ( HB_SIZE ) write( s_iDebugFd, szMsg, nMsgLen ) == nMsgLen )
             {
-               tv.tv_sec  = 0;
-               tv.tv_usec = 100000;
-               FD_ZERO( &wrds );
-               FD_SET( s_iDebugFd, &wrds );
-               if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
+               if( hb_fsCanWrite( s_iDebugFd, 100 ) > 0 )
                {
                   if( write( s_iDebugFd, "\n", 1 ) != 1 )
                   {

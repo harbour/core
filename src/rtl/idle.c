@@ -143,13 +143,15 @@ void hb_idleSleep( double dSeconds )
 {
    if( dSeconds >= 0 )
    {
-      HB_MAXUINT end_timer = hb_dateMilliSeconds() + ( HB_MAXUINT ) ( dSeconds * 1000 );
+      HB_MAXINT timeout = dSeconds > 0 ? ( HB_MAXINT ) ( dSeconds * 1000 ) : 0;
+      HB_MAXUINT timer = hb_timerInit( timeout );
 
       do
       {
          hb_idleState();
       }
-      while( hb_dateMilliSeconds() < end_timer && hb_vmRequestQuery() == 0 );
+      while( ( timeout = hb_timerTest( timeout, &timer ) ) != 0 &&
+             hb_vmRequestQuery() == 0 );
 
       hb_idleReset();
    }
