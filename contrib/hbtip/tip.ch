@@ -1,4 +1,4 @@
-*/*
+/*
  * TIP Class oriented Internet protocol library (header)
  *
  * Copyright 2002 Giancarlo Niccolai <gian@niccolai.ws>

@@ -2,6 +2,7 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
+ * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com> (tip_GetEncoder())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,13 +45,7 @@
  *
  */
 
-/*
- Internet Messaging: http://www.ietf.org/rfc/rfc2045.txt
- */
-
-/* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
-   Added Function: tip_GetEncoder()
-*/
+/* Internet Messaging: https://www.ietf.org/rfc/rfc2045.txt */
 
 #include "hbclass.ch"
 

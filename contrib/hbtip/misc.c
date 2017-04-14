@@ -2,7 +2,7 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (tip_TimeStamp() rework, cleanups)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbdate.h"
 
@@ -60,7 +59,7 @@ HB_FUNC( TIP_TIMESTAMP )
    int  iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
    long lOffset;
 
-   /* TOFIX: wrong result is returned when empty dates it's passed */
+   /* FIXME: wrong result is returned when empty dates it's passed */
 
    if( HB_ISDATE( 1 ) )
    {
@@ -88,28 +87,6 @@ HB_FUNC( TIP_TIMESTAMP )
                 ( int ) ( ( lOffset % 3600 ) / 60 ) );
 
    hb_retc( szRet );
-}
-
-/*
-   Case insensitive string comparison to optimize this expression:
-   IF Lower( <cSubStr> ) == Lower( SubStr( <cString>, <nStart>, Len( <cSubStr> ) ) )
-   <cString> must be provided as a pointer to the character string containing a substring
-   <nStart> is the numeric position to start comparison in <cString>
-   <cSubStr> is the character string to compare with characters in <cString>, beginning at <nStart>
- */
-
-HB_FUNC( __TIP_PSTRCOMPI )
-{
-   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pStart  = hb_param( 2, HB_IT_NUMERIC );
-   PHB_ITEM pSubstr = hb_param( 3, HB_IT_STRING );
-
-   if( pString && pStart && pSubstr )
-      hb_retl( hb_strnicmp( hb_itemGetCPtr( pString ) + hb_itemGetNS( pStart ) - 1,
-                            hb_itemGetCPtr( pSubstr ),
-                            hb_itemGetCLen( pSubstr ) ) == 0 );
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( TIP_HTMLSPECIALCHARS )

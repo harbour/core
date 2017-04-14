@@ -48,7 +48,7 @@
 #define _HB_THTML
 
 /* Content model shortcut encoding taken from Tidy library
-   http://www.html-tidy.org */
+   http://www.html-tidy.org/ */
 
 #define CM_UNKNOWN                  0
 #define CM_EMPTY                    0x000001  /* Elements with no content. Map to HTML specification. */
