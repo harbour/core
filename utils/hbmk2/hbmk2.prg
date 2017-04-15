@@ -4453,14 +4453,15 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ELSE
             AAdd( hbmk[ _HBMK_aOPTL ], "-o{OE}" )
          ENDIF
-         l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
          IF hbmk[ _HBMK_lWINUNI ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "wce"
+            AAdd( l_aLIBSYS, "mmtimer" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
          ENDIF
+         l_aLIBSYS := ArrayAJoin( { l_aLIBSYS, l_aLIBSYSCORE, l_aLIBSYSMISC } )
          DO CASE
          CASE _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             /* NOTE: Newer xhb versions use "-x.y.z" version numbers. */
@@ -5207,6 +5208,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "wce"
+            AAdd( l_aLIBSYS, "winmm" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )
             DO CASE
@@ -5311,6 +5313,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "wce"
+            AAdd( l_aLIBSYS, "winmm" )
             AAdd( hbmk[ _HBMK_aOPTC ], "-D_WINCE" ) /* Required by pocc Windows headers */
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNDER_CE" )
             AAdd( hbmk[ _HBMK_aOPTRES ], "-DUNDER_CE" )

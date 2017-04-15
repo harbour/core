@@ -50,6 +50,8 @@ endif
 LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
+SYSLIBS := $(subst winmm,mmtimer,$(SYSLIBS))
+
 LIBPATHS := $(foreach dir,$(LIB_DIR),-L$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 

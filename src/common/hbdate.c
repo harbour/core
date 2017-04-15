@@ -1118,9 +1118,62 @@ double hb_timeLocalToUTC( double dTimeStamp )
 
 HB_MAXUINT hb_timerGet( void )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_timerInit()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timerGet()" ) );
 
-   return hb_dateMilliSeconds();
+#if defined( _POSIX_C_SOURCE ) && _POSIX_C_SOURCE >= 199309L && defined( CLOCK_REALTIME )
+   static int s_iClkId = -1;
+   struct timespec ts;
+
+   if( s_iClkId < 0 )
+   {
+      int i, piClkId[] = {
+#  if defined( CLOCK_MONOTONIC )
+         CLOCK_MONOTONIC,
+#  endif
+#  if defined( CLOCK_MONOTONIC_COARSE )
+         CLOCK_MONOTONIC_COARSE,
+#  endif
+#  if defined( CLOCK_REALTIME )
+         CLOCK_REALTIME,
+#  endif
+#  if defined( CLOCK_REALTIME_COARSE )
+         CLOCK_REALTIME_COARSE,
+#  endif
+         0 };
+
+      for( i = 0; i < ( int ) HB_SIZEOFARRAY( piClkId ); ++i )
+      {
+         s_iClkId = piClkId[ i ];
+         if( s_iClkId == 0 || clock_getres( s_iClkId, &ts ) == 0 )
+            break;
+      }
+   }
+   if( s_iClkId != 0 && clock_gettime( s_iClkId, &ts ) == 0 )
+      return ( HB_MAXUINT ) ts.tv_sec * 1000 + ts.tv_nsec / 1000000;
+#endif
+#if defined( HB_OS_UNIX ) || defined( HB_OS_OS2 )
+   {
+      struct timeval tv;
+      gettimeofday( &tv, NULL );
+      return ( HB_MAXUINT ) tv.tv_sec * 1000 + tv.tv_usec / 1000;
+   }
+#elif defined( HB_OS_WIN )
+   {
+      static DWORD s_dwCounter = 0, s_dwLast = 0;
+      DWORD dwTime = timeGetTime();
+
+      if( dwTime < s_dwLast )
+         ++s_dwCounter;
+      s_dwLast = dwTime;
+      return ( ( HB_MAXUINT ) s_dwCounter << 32 ) + dwTime;
+   }
+#else
+   {
+      struct timeb tb;
+      ftime( &tb );
+      return ( HB_MAXUINT ) tb.time * 1000 + tb.millitm;
+   }
+#endif
 }
 
 HB_MAXUINT hb_timerInit( HB_MAXINT nTimeOut )
