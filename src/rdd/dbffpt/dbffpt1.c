@@ -147,6 +147,7 @@ static int hb_memoDefaultType( LPRDDNODE pRDD, HB_ULONG ulConnect )
    int iType = DB_MEMO_FPT;
    PHB_ITEM pItem = hb_stackAllocItem();
 
+   hb_itemClear( pItem );
    if( SELF_RDDINFO( pRDD, RDDI_MEMOTYPE, ulConnect, pItem ) == HB_SUCCESS )
       iType = hb_itemGetNI( pItem );
    hb_stackPop();

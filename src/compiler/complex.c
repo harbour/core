@@ -1019,7 +1019,8 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
                    ! HB_PP_TOKEN_ISEOC( pToken->pNext ) )
                {
                   if( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_MACROVAR ||
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_MACROTEXT )
+                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_MACROTEXT ||
+                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_AMPERSAND )
                   {
                      pLex->iState = PRIVATE;
                      return PRIVATE;

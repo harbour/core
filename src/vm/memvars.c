@@ -397,7 +397,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem )
 HB_ERRCODE hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn;
-   HB_ERRCODE bSuccess = HB_FAILURE;
+   HB_ERRCODE errCode = HB_FAILURE;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGet(%p, %p)", pItem, pMemvarSymb ) );
 
@@ -418,13 +418,13 @@ HB_ERRCODE hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
             hb_itemCopy( pItem, hb_itemUnRef( pMemvar ) );
          else
             hb_itemCopy( pItem, pMemvar );
-         bSuccess = HB_SUCCESS;
+         errCode = HB_SUCCESS;
       }
    }
    else
       hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
 
-   return bSuccess;
+   return errCode;
 }
 
 void hb_memvarGetValue( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )

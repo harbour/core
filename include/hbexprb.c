@@ -839,7 +839,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
          PHB_EXPR pExp = pSelf->value.asReference;
          if( pExp->ExprType == HB_ET_MACRO )
          {
-            if( pExp->value.asMacro.SubType == HB_ET_MACRO_VAR )
+            if( pExp->value.asMacro.SubType & HB_ET_MACRO_VAR )
             {
                pExp->value.asMacro.SubType |= HB_ET_MACRO_REFER;
                HB_EXPR_USE( pExp, HB_EA_PUSH_PCODE );
@@ -1440,7 +1440,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                pList->value.asList.reference = HB_FALSE;
             }
             else if( pList->ExprType == HB_ET_MACRO &&
-                     pList->value.asMacro.SubType == HB_ET_MACRO_VAR )
+                     pList->value.asMacro.SubType & HB_ET_MACRO_VAR )
             {
                pList->value.asMacro.SubType |= HB_ET_MACRO_REFER;
                HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
@@ -1521,7 +1521,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                pList->value.asList.reference = HB_FALSE;
             }
             else if( pList->ExprType == HB_ET_MACRO &&
-                     pList->value.asMacro.SubType == HB_ET_MACRO_VAR )
+                     pList->value.asMacro.SubType & HB_ET_MACRO_VAR )
             {
                pList->value.asMacro.SubType |= HB_ET_MACRO_REFER;
                HB_EXPR_USE( pList, HB_EA_PUSH_PCODE );
@@ -1625,13 +1625,13 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
 
          /* compile & run - leave a result on the eval stack
           */
-         if( pSelf->value.asMacro.SubType == HB_ET_MACRO_SYMBOL )
+         if( pSelf->value.asMacro.SubType & HB_ET_MACRO_SYMBOL )
             HB_GEN_FUNC1( PCode1, HB_P_MACROSYMBOL );
 
          else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_REFER )
             HB_GEN_FUNC1( PCode1, HB_P_MACROPUSHREF );
 
-         else if( pSelf->value.asMacro.SubType == HB_ET_MACRO_ALIASED )
+         else if( pSelf->value.asMacro.SubType & HB_ET_MACRO_ALIASED )
          {
             /* NOTE: pcode for alias context is generated in
              * hb_compExprUseAliasVar()
@@ -1711,7 +1711,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
          /* compile & run - macro compiler will generate pcode to pop a value
           * from the eval stack
           */
-         if( pSelf->value.asMacro.SubType != HB_ET_MACRO_ALIASED )
+         if( ( pSelf->value.asMacro.SubType & HB_ET_MACRO_ALIASED ) == 0 )
          {
             HB_GEN_FUNC1( PCode1, HB_P_MACROPOP );
 
@@ -4874,7 +4874,7 @@ static void hb_compExprPushOperEq( PHB_EXPR pSelf, HB_BYTE bOpEq, HB_COMP_DECL )
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
-         if( usType == HB_ET_MACRO_VAR )
+         if( usType & HB_ET_MACRO_VAR )
          {
             /* NOTE: direct type change */
             pSelf->value.asOperator.pLeft->value.asMacro.SubType |= HB_ET_MACRO_REFER;
@@ -5025,7 +5025,7 @@ static void hb_compExprUseOperEq( PHB_EXPR pSelf, HB_BYTE bOpEq, HB_COMP_DECL )
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
-         if( usType == HB_ET_MACRO_VAR )
+         if( usType & HB_ET_MACRO_VAR )
          {
             /* NOTE: direct type change */
             pSelf->value.asOperator.pLeft->value.asMacro.SubType |= HB_ET_MACRO_REFER;
@@ -5138,7 +5138,7 @@ static void hb_compExprPushPreOp( PHB_EXPR pSelf, HB_BYTE bOper, HB_COMP_DECL )
    else if( HB_SUPPORT_HARBOUR )
    {
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
-          pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+          pSelf->value.asOperator.pLeft->value.asMacro.SubType & HB_ET_MACRO_VAR )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          /* NOTE: direct type change */
@@ -5245,7 +5245,7 @@ static void hb_compExprPushPostOp( PHB_EXPR pSelf, HB_BYTE bOper, HB_COMP_DECL )
    else if( HB_SUPPORT_HARBOUR )
    {
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
-          pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+          pSelf->value.asOperator.pLeft->value.asMacro.SubType & HB_ET_MACRO_VAR )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          /* NOTE: direct type change */
@@ -5354,7 +5354,7 @@ static void hb_compExprUsePreOp( PHB_EXPR pSelf, HB_BYTE bOper, HB_COMP_DECL )
    else if( HB_SUPPORT_HARBOUR )
    {
       if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_MACRO &&
-          pSelf->value.asOperator.pLeft->value.asMacro.SubType == HB_ET_MACRO_VAR )
+          pSelf->value.asOperator.pLeft->value.asMacro.SubType & HB_ET_MACRO_VAR )
       {
          HB_USHORT usType = pSelf->value.asOperator.pLeft->value.asMacro.SubType;
          /* NOTE: direct type change */

@@ -655,8 +655,7 @@ PHB_EXPR hb_compExprNewAliasExpr( PHB_EXPR pAlias, PHB_EXPR pExpList,
    if( pAlias->ExprType == HB_ET_MACRO )
    {
       /* Is it a special case &variable->( expressionList ) */
-      if( pAlias->value.asMacro.SubType == HB_ET_MACRO_VAR ||
-          pAlias->value.asMacro.SubType == HB_ET_MACRO_EXPR )
+      if( pAlias->value.asMacro.SubType & ( HB_ET_MACRO_VAR | HB_ET_MACRO_EXPR ) )
          pAlias->value.asMacro.SubType = HB_ET_MACRO_ALIASED;
    }
 

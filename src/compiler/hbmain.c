@@ -2160,17 +2160,14 @@ static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PHB_HFUNC pFunc, HB_BOOL fErro
       if( fError )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FUNC_DUPL, pFunc->szName, NULL );
    }
-   else
+   else if( ! hb_compCheckReservedNames( HB_COMP_PARAM, pFunc->szName, fError ) )
    {
-      if( ! hb_compCheckReservedNames( HB_COMP_PARAM, pFunc->szName, fError ) )
-      {
-         PHB_HSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
-         if( ! pSym )
-            pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
-         pSym->cScope |= pFunc->cScope | HB_FS_LOCAL;
-         pSym->pFunc = pFunc;
-         return HB_TRUE;
-      }
+      PHB_HSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
+      if( ! pSym )
+         pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
+      pSym->cScope |= pFunc->cScope | HB_FS_LOCAL;
+      pSym->pFunc = pFunc;
+      return HB_TRUE;
    }
    return HB_FALSE;
 }
