@@ -251,8 +251,6 @@ extern int  hb_compMainExt( int argc, const char * const argv[], HB_BYTE ** pBuf
 extern void hb_compOutStd( HB_COMP_DECL, const char * szMessage );
 extern void hb_compOutErr( HB_COMP_DECL, const char * szMessage );
 
-extern void hb_compExprLstDealloc( HB_COMP_DECL );
-
 extern PHB_EXPR hb_compExprGenStatement( PHB_EXPR, HB_COMP_DECL );
 extern PHB_EXPR hb_compExprGenPush( PHB_EXPR, HB_COMP_DECL );
 extern PHB_EXPR hb_compExprGenPop( PHB_EXPR, HB_COMP_DECL );

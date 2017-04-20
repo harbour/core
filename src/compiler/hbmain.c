@@ -3801,9 +3801,6 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
 /* initialize support variables */
 static void hb_compInitVars( HB_COMP_DECL )
 {
-   if( HB_COMP_PARAM->iErrorCount != 0 )
-      hb_compExprLstDealloc( HB_COMP_PARAM );
-
    HB_COMP_PARAM->functions.iCount = 0;
    HB_COMP_PARAM->functions.pFirst = NULL;
    HB_COMP_PARAM->functions.pLast  = NULL;
