@@ -1351,8 +1351,11 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
          }
          else
          {
-            UNSIGNED32 ulCount = 0;
-            hb_stornl( ( AdsGetRecordCount( pArea->hStatement, ADS_IGNOREFILTERS, &ulCount ) == AE_SUCCESS ) ? ( long ) ulCount : -1, 2 );
+            if ( HB_ISBYREF( 2 ) )
+            {
+              UNSIGNED32 ulCount = 0;
+              hb_stornl( ( AdsGetRecordCount( pArea->hStatement, ADS_IGNOREFILTERS, &ulCount ) == AE_SUCCESS ) ? ( long ) ulCount : -1, 2 );
+            }
             hb_adsCloseCursor( pArea );
          }
 
@@ -1409,8 +1412,11 @@ HB_FUNC( ADSEXECUTESQL )
          }
          else
          {
-            UNSIGNED32 ulCount = 0;
-            hb_stornl( ( AdsGetRecordCount( pArea->hStatement, ADS_IGNOREFILTERS, &ulCount ) == AE_SUCCESS ) ? ( long ) ulCount : -1, 2 );
+            if ( HB_ISBYREF( 2 ) )
+            {
+              UNSIGNED32 ulCount = 0;
+              hb_stornl( ( AdsGetRecordCount( pArea->hStatement, ADS_IGNOREFILTERS, &ulCount ) == AE_SUCCESS ) ? ( long ) ulCount : -1, 2 );
+            }
             hb_adsCloseCursor( pArea );
          }
 
