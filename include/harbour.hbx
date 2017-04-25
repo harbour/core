@@ -749,6 +749,8 @@ DYNAMIC hb_ps
 DYNAMIC hb_PValue
 DYNAMIC hb_PWrite
 DYNAMIC hb_rand32
+DYNAMIC hb_randInt
+DYNAMIC hb_randNum
 DYNAMIC hb_Random
 DYNAMIC hb_RandomInt
 DYNAMIC hb_RandomIntMax
