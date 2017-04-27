@@ -443,7 +443,7 @@ static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
       pVal = hb_hashGetValueAt( pItem, i );
       if( HB_IS_STRING( pKey ) )
       {
-         if( ! amf3_encode_string( context, pKey ) )
+         if( ! amf3_serialize_string( context, pKey ) )
             return HB_FALSE;
          if( ! amf3_encode( context, pVal ) )
             return HB_FALSE;

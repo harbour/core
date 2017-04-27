@@ -1637,8 +1637,8 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
 
                   hb_compGenJumpFalse( $<sNumber>11 - HB_COMP_PARAM->functions.pLast->nPCodePos, HB_COMP_PARAM );
                   hb_compLoopEnd( HB_COMP_PARAM );
-                  if( hb_compExprAsSymbol( $<asExpr>2 ) )
-                     hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( $<asExpr>2 ) );
+                  if( hb_compExprAsSymbol( $2 ) )
+                     hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( $2 ) );
                   HB_COMP_EXPR_FREE( $<asExpr>5 );  /* deletes $5, $2, $4 */
                   HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                }
