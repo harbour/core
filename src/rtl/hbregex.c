@@ -256,9 +256,11 @@ static HB_BOOL hb_regex( int iRequest )
       hb_errRT_BASE_SubstR( EG_ARG, 3014, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return HB_FALSE;
    }
-   pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
-                         ( ! hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 ) |
-                         ( hb_parl( 4 ) ? HBREG_NEWLINE : 0 ) );
+    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
+                         ( !hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 ) |
+                         ( hb_parl( 4 ) ? HBREG_NEWLINE : 0 ) |
+						 ( hb_parl( 8 ) ? HBREG_DOTALL : 0 ) );
+
    if( ! pRegEx )
       return HB_FALSE;
 
