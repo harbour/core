@@ -2804,6 +2804,7 @@ static HB_TYPE hb_clsGetItemType( PHB_ITEM pItem, HB_TYPE nDefault )
             case 'c':
                if( hb_strnicmp( hb_itemGetCPtr( pItem ), "code", 4 ) == 0 )
                   return HB_IT_BLOCK;
+               /* fallthrough */
             case '\0':
                return HB_IT_STRING;
 

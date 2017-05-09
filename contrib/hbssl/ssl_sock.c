@@ -169,6 +169,7 @@ long hb_ssl_socketRead( PHB_SSLSTREAM pStream, HB_SOCKET sd,
                   hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
                   break;
                }
+               /* fallthrough */
             default:
                hb_socketSetError( HB_SSL_SOCK_ERROR_BASE + iError );
          }
@@ -248,6 +249,7 @@ long hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET sd,
                      hb_socketSetError( HB_SOCKET_ERR_TIMEOUT );
                   break;
                }
+               /* fallthrough */
             default:
                hb_socketSetError( HB_SSL_SOCK_ERROR_BASE + iError );
          }

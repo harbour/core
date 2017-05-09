@@ -104,7 +104,7 @@ static void do_charswap( int iSwitch )
             case DO_CHARSWAP_WORDSWAP_CHARSWAP:
                pcRet[ sRetIndex++ ] = pcSub[ 3 ];
                pcRet[ sRetIndex++ ] = pcSub[ 2 ];
-               /* no 'break' here !! */
+               /* fallthrough */
             case DO_CHARSWAP_CHARSWAP:
                pcRet[ sRetIndex++ ] = pcSub[ 1 ];
                pcRet[ sRetIndex++ ] = pcSub[ 0 ];

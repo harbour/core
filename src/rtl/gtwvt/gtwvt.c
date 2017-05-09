@@ -2516,6 +2516,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                if( ( lParam & WVT_EXTKEY_FLAG ) == 0 )
                   break;
                iFlags |= HB_KF_CTRL;
+               /* fallthrough */
             case VK_PAUSE:
                pWVT->IgnoreWM_SYSCHAR = HB_TRUE;
                iKey = HB_KX_PAUSE;
@@ -2607,6 +2608,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
              ( iFlags & HB_KF_ALTGR ) != 0 )
             /* workaround for AltGR and some German/Italian keyboard */
             iFlags &= ~( HB_KF_CTRL | HB_KF_ALT | HB_KF_ALTGR );
+         /* fallthrough */
       case WM_SYSCHAR:
          iFlags = hb_gt_wvt_UpdateKeyFlags( iFlags );
          if( ! pWVT->IgnoreWM_SYSCHAR )
@@ -3682,6 +3684,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
             default:
                iVal = 0;
+               break;
          }
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, iVal );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )

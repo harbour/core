@@ -1183,14 +1183,14 @@ static HB_ULONG hb_fptCountSMTItemLength( FPTAREAP pArea, PHB_ITEM pItem,
       case HB_IT_INTEGER:
       case HB_IT_LONG:
       {
-         HB_MAXINT iVal;
-         iVal = hb_itemGetNInt( pItem );
+         HB_MAXINT iVal = hb_itemGetNInt( pItem );
          if( HB_LIM_INT32( iVal ) )
          {
             ulSize = 5;
             break;
          }
       }
+      /* fallthrough */
       case HB_IT_DOUBLE:
          ulSize = 11;
          break;
@@ -1331,6 +1331,7 @@ static void hb_fptStoreSMTItem( FPTAREAP pArea, PHB_ITEM pItem, HB_BYTE ** bBufP
             *bBufPtr += 4;
             break;
          }
+         /* fallthrough */
       case HB_IT_DOUBLE:
          dVal = hb_itemGetND( pItem );
          hb_itemGetNLen( pItem, &iWidth, &iDec );

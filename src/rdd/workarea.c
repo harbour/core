@@ -1939,7 +1939,7 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
             hb_itemPutCLPtr( pItem, szResult, strlen( szResult ) );
             break;
          }
-         /* no break - return HB_FAILURE */
+         /* fallthrough */ /*return HB_FAILURE */
       }
       case RDDI_TABLEEXT:
       case RDDI_ORDBAGEXT:
@@ -1950,7 +1950,7 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
       case RDDI_TRIGGER:
       case RDDI_PENDINGTRIGGER:
          hb_itemPutC( pItem, NULL );
-         /* no break - return HB_FAILURE */
+         /* fallthrough */ /*return HB_FAILURE */
 
       default:
          return HB_FAILURE;

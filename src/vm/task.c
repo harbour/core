@@ -752,13 +752,13 @@ void hb_taskResume( void * pTaskPtr )
 #endif
          case TASK_SLEEPING:
             hb_taskWakeUp( pTask );
-            /* no break */
+            /* fallthrough */
 #if defined( HB_HAS_UCONTEXT )
          case TASK_INIT:
 #endif
          case TASK_SUSPEND:
             pTask->state = TASK_RUNNING;
-            /* no break */
+            /* fallthrough */
          case TASK_RUNNING:
 #if defined( HB_HAS_UCONTEXT )
             {

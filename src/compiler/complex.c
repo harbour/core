@@ -756,7 +756,7 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
             pLex->iState = OPERATOR;
             return HASHOP;
          }
-         /* no break */
+         /* fallthrough */
       case HB_PP_TOKEN_PLUS:
       case HB_PP_TOKEN_MINUS:
       case HB_PP_TOKEN_MULT:

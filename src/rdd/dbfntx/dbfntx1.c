@@ -476,6 +476,7 @@ static LPKEYINFO hb_ntxKeyPutItem( LPKEYINFO pKey, PHB_ITEM pItem, HB_ULONG ulRe
             hb_itemGetTS( pItem, pKey->key );
             break;
          }
+         /* fallthrough */
       case 'D':
          if( pTag->KeyLength < 8 )
          {
@@ -5508,6 +5509,7 @@ static HB_ERRCODE hb_ntxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
                      hb_ntxSortKeyAdd( pSort, pArea->dbfarea.ulRecNo, szBuffer, 17 );
                      break;
                   }
+                  /* fallthrough */
                case HB_IT_DATE:
                   hb_itemGetDS( pItem, szBuffer );
                   hb_ntxSortKeyAdd( pSort, pArea->dbfarea.ulRecNo, szBuffer, 8 );
