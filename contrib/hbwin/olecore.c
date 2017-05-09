@@ -391,7 +391,7 @@ static SAFEARRAY * hb_oleSafeArrayFromString( PHB_ITEM pItem, VARTYPE vt )
    UINT cElements = ( UINT ) hb_itemGetCLen( pItem );
    SAFEARRAY * pSafeArray = SafeArrayCreateVector( vt, 0, cElements );
 
-   if( pSafeArray )
+   if( pSafeArray && cElements > 0 )
    {
       void * pData;
       if( SafeArrayAccessData( pSafeArray, &pData ) == S_OK )
@@ -1471,10 +1471,8 @@ static HRESULT GetNamedParams( IDispatch * pDisp, OLECHAR * szMethodName, PHB_IT
    HRESULT lOleError;
 
    pNames[ 0 ] = szMethodName;
-   phStrings[ 0 ] = NULL;
-   pArgs[ 0 ] = NULL;
 
-   for( nPos = 1; nPos < nLen; ++nPos )
+   for( nPos = 1; nPos <= nLen; ++nPos )
    {
       PHB_ITEM pKey = hb_hashGetKeyAt( pHash, nPos );
       if( HB_IS_STRING( pKey ) )
