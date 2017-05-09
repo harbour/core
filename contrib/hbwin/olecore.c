@@ -1401,7 +1401,8 @@ HB_BOOL hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
 
 /* IDispatch parameters, return value handling */
 
-static void GetParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_BOOL fUseRef )
+static void GetParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_BOOL fUseRef,
+                       UINT uiNamedArgs, PHB_ITEM * pNamedArgs, DISPID * pDispIds )
 {
    VARIANTARG * pArgs = NULL, * pRefs;
    UINT         uiArgCount, uiArg, uiRefs;
@@ -1412,7 +1413,7 @@ static void GetParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_BOOL fUseRef
    else
       uiArgCount -= uiOffset;
 
-   if( uiArgCount > 0 )
+   if( uiArgCount > 0 || uiNamedArgs > 0 )
    {
       uiRefs = 0;
       if( fUseRef )
@@ -1424,28 +1425,77 @@ static void GetParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_BOOL fUseRef
          }
       }
 
-      pArgs = ( VARIANTARG * ) hb_xgrab( sizeof( VARIANTARG ) * ( uiArgCount + uiRefs ) );
-      pRefs = &pArgs[ uiArgCount ];
+      pArgs = ( VARIANTARG * ) hb_xgrab( sizeof( VARIANTARG ) * ( uiArgCount + uiRefs + uiNamedArgs ) );
+      pRefs = &pArgs[ uiArgCount + uiNamedArgs ];
+
+      for( uiArg = 0; uiArg < uiNamedArgs; uiArg++ )
+      {
+         VARIANT * pVariant = &pArgs[ uiArg ];
+         VariantInit( pVariant );
+         hb_oleItemToVariantRef( pVariant, pNamedArgs[ uiArg ], NULL, NULL );
+      }
 
       for( uiArg = 0; uiArg < uiArgCount; uiArg++ )
       {
-         VariantInit( &pArgs[ uiArg ] );
-         if( fUseRef && HB_ISBYREF( uiOffset + uiArgCount - uiArg ) )
+         VARIANT * pVariant = &pArgs[ uiArg + uiNamedArgs ];
+         int iParam = ( int ) ( uiOffset + uiArgCount - uiArg );
+
+         VariantInit( pVariant );
+         if( fUseRef && HB_ISBYREF( iParam ) )
          {
             VariantInit( pRefs );
-            hb_oleItemToVariantRef( pRefs, hb_param( uiOffset + uiArgCount - uiArg, HB_IT_ANY ),
-                                    &pArgs[ uiArg ], NULL );
+            hb_oleItemToVariantRef( pRefs, hb_param( iParam, HB_IT_ANY ),
+                                    pVariant, NULL );
             ++pRefs;
          }
          else
-            hb_oleItemToVariantRef( &pArgs[ uiArg ], hb_param( uiOffset + uiArgCount - uiArg, HB_IT_ANY ), NULL, NULL );
+            hb_oleItemToVariantRef( pVariant, hb_param( iParam, HB_IT_ANY ), NULL, NULL );
       }
    }
 
    dispparam->rgvarg = pArgs;
-   dispparam->cArgs  = uiArgCount;
-   dispparam->rgdispidNamedArgs = 0;
-   dispparam->cNamedArgs = 0;
+   dispparam->cArgs  = uiArgCount + uiNamedArgs;
+   dispparam->rgdispidNamedArgs = pDispIds;
+   dispparam->cNamedArgs = uiNamedArgs;
+}
+
+#define HB_OLE_MAX_NAMEDARGS  32
+
+static HRESULT GetNamedParams( IDispatch * pDisp, OLECHAR * szMethodName, PHB_ITEM pHash,
+                               UINT * puiNamedArgs, PHB_ITEM * pArgs, DISPID * pDispIds )
+{
+   OLECHAR * pNames[ HB_OLE_MAX_NAMEDARGS + 1 ];
+   void * phStrings[ HB_OLE_MAX_NAMEDARGS ];
+   HB_SIZE nLen = hb_hashLen( pHash ), nPos;
+   int iArgs = 0, iArg;
+   HRESULT lOleError;
+
+   pNames[ 0 ] = szMethodName;
+   phStrings[ 0 ] = NULL;
+   pArgs[ 0 ] = NULL;
+
+   for( nPos = 1; nPos < nLen; ++nPos )
+   {
+      PHB_ITEM pKey = hb_hashGetKeyAt( pHash, nPos );
+      if( HB_IS_STRING( pKey ) )
+      {
+         pNames[ iArgs + 1 ] = ( HB_WCHAR * ) HB_UNCONST( hb_itemGetStrU16( pKey, HB_CDP_ENDIAN_NATIVE, &phStrings[ iArgs ], NULL ) );
+         if( pNames[ iArgs + 1 ] != NULL )
+         {
+            pArgs[ iArgs ] = hb_hashGetValueAt( pHash, nPos );
+            if( ++iArgs == HB_OLE_MAX_NAMEDARGS )
+               break;
+         }
+      }
+   }
+   *puiNamedArgs = ( UINT ) iArgs;
+
+   lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ),
+                                                pNames, iArgs + 1, LOCALE_USER_DEFAULT, pDispIds );
+   for( iArg = 0; iArg < iArgs; ++iArg )
+      hb_strfree( phStrings[ iArg ] );
+
+   return lOleError;
 }
 
 static void PutParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_USHORT uiClass )
@@ -1790,6 +1840,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    UINT         uiArgErr;
    HRESULT      lOleError;
    HB_USHORT    uiClass;
+   int          iPCount;
 
    hb_oleInit();
 
@@ -1804,12 +1855,14 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
    if( ! pDisp )
       return;
 
+   iPCount = hb_pcount();
+
    szMethod = hb_itemGetSymbol( hb_stackBaseItem() )->szName;
    AnsiToWideBuffer( szMethod, szMethodWide, ( int ) HB_SIZEOFARRAY( szMethodWide ) );
 
    /* Try property put */
 
-   if( szMethod[ 0 ] == '_' && hb_pcount() >= 1 )
+   if( szMethod[ 0 ] == '_' && iPCount >= 1 )
    {
       pMemberArray = &szMethodWide[ 1 ];
       lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ), &pMemberArray,
@@ -1820,7 +1873,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
          DISPID lPropPut = DISPID_PROPERTYPUT;
 
          memset( &excep, 0, sizeof( excep ) );
-         GetParams( &dispparam, 0, HB_FALSE );
+         GetParams( &dispparam, 0, HB_FALSE, 0, NULL, NULL );
          dispparam.rgdispidNamedArgs = &lPropPut;
          dispparam.cNamedArgs = 1;
 
@@ -1831,7 +1884,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
          FreeParams( &dispparam );
 
          /* assign method should return assigned value */
-         hb_itemReturn( hb_param( hb_pcount(), HB_IT_ANY ) );
+         hb_itemReturn( hb_param( iPCount, HB_IT_ANY ) );
 
          hb_oleSetError( lOleError );
          if( lOleError != S_OK )
@@ -1856,15 +1909,34 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
    /* Try property get and invoke */
 
-   pMemberArray = szMethodWide;
-   lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ),
-                                                &pMemberArray, 1, LOCALE_USER_DEFAULT, &dispid );
+   if( iPCount >= 1 && HB_ISHASH( 1 ) )
+   {
+      /* named parameters are passsed in hash array */
+      PHB_ITEM pArgs[ HB_OLE_MAX_NAMEDARGS  ];
+      DISPID pDispIds[ HB_OLE_MAX_NAMEDARGS + 1 ];
+      UINT uiNamedArgs;
+
+      lOleError = GetNamedParams( pDisp, szMethodWide, hb_param( 1, HB_IT_HASH ),
+                                  &uiNamedArgs, pArgs, pDispIds );
+      if( lOleError == S_OK )
+      {
+         dispid = pDispIds[ 0 ];
+         GetParams( &dispparam, 1, HB_TRUE, uiNamedArgs, pArgs, &pDispIds[ 1 ] );
+      }
+   }
+   else
+   {
+      pMemberArray = szMethodWide;
+      lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ),
+                                                   &pMemberArray, 1, LOCALE_USER_DEFAULT, &dispid );
+      if( lOleError == S_OK )
+         GetParams( &dispparam, 0, HB_TRUE, 0, NULL, NULL );
+   }
 
    if( lOleError == S_OK )
    {
       memset( &excep, 0, sizeof( excep ) );
       VariantInit( &variant );
-      GetParams( &dispparam, 0, HB_TRUE );
 
       lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) dispid, HB_ID_REF( IID_NULL ),
                                             LOCALE_USER_DEFAULT,
@@ -1939,7 +2011,7 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
       DISPID lPropPut = DISPID_PROPERTYPUT;
 
       memset( &excep, 0, sizeof( excep ) );
-      GetParams( &dispparam, 0, HB_FALSE );
+      GetParams( &dispparam, 0, HB_FALSE, 0, NULL, NULL );
       dispparam.rgdispidNamedArgs = &lPropPut;
       dispparam.cNamedArgs = 1;
 
@@ -1957,7 +2029,7 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
       /* Access */
       memset( &excep, 0, sizeof( excep ) );
       VariantInit( &variant );
-      GetParams( &dispparam, 0, HB_TRUE );
+      GetParams( &dispparam, 0, HB_TRUE, 0, NULL, NULL );
 
       lOleError = HB_VTBL( pDisp )->Invoke( HB_THIS_( pDisp ) DISPID_VALUE, HB_ID_REF( IID_NULL ),
                                             LOCALE_USER_DEFAULT,
@@ -2016,7 +2088,7 @@ HB_FUNC( __OLEGETNAMEID )
       void * hMethod;
       DISPID dispid;
 
-      pwszMethod = ( HB_WCHAR * ) hb_parstr_u16( 1, HB_CDP_ENDIAN_NATIVE, &hMethod, NULL );
+      pwszMethod = ( HB_WCHAR * ) hb_parstr_u16( 2, HB_CDP_ENDIAN_NATIVE, &hMethod, NULL );
       lOleError = HB_VTBL( pDisp )->GetIDsOfNames( HB_THIS_( pDisp ) HB_ID_REF( IID_NULL ),
                                                    &pwszMethod, 1, LOCALE_USER_DEFAULT, &dispid );
       hb_strfree( hMethod );
@@ -2069,7 +2141,7 @@ static void hb_oleInvokeCall( WORD wFlags )
 
          memset( &excep, 0, sizeof( excep ) );
          VariantInit( &variant );
-         GetParams( &dispparam, uiOffset, ! fPut );
+         GetParams( &dispparam, uiOffset, ! fPut, 0, NULL, NULL );
          if( fPut )
          {
             dispparam.rgdispidNamedArgs = &lPropPut;
