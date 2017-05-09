@@ -2081,16 +2081,12 @@ static HB_ERRCODE adsFieldInfo( ADSAREAP pArea, HB_USHORT uiIndex, HB_USHORT uiT
       }
 #if ADS_LIB_VERSION >= 710
       case DBS_TYPE:
-      {
-         LPFIELD pField = pArea->area.lpFields + uiIndex - 1;
-
-         if( pField->uiTypeExtended == ADS_CISTRING )
+         if( pArea->area.lpFields[ uiIndex - 1 ].uiTypeExtended == ADS_CISTRING )
          {
             hb_itemPutC( pItem, "CICHARACTER" );
             break;
          }
          /* fallthrough */
-      }
 #endif
       default:
          return SUPER_FIELDINFO( &pArea->area, uiIndex, uiType, pItem );

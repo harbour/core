@@ -1926,20 +1926,9 @@ static HB_ERRCODE hb_waRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulCo
          const char * szExt = hb_setGetMFileExt();
          char * szResult = szExt ? hb_strdup( szExt ) : NULL;
          if( hb_itemType( pItem ) & HB_IT_STRING )
-         {
             hb_setSetItem( HB_SET_MFILEEXT, pItem );
-            if( szResult )
-               hb_itemPutCLPtr( pItem, szResult, strlen( szResult ) );
-            else
-               hb_itemPutC( pItem, NULL );
-            break;
-         }
-         else if( szResult )
-         {
-            hb_itemPutCLPtr( pItem, szResult, strlen( szResult ) );
-            break;
-         }
-         /* fallthrough */ /*return HB_FAILURE */
+         hb_itemPutCPtr( pItem, szResult );
+         break;
       }
       case RDDI_TABLEEXT:
       case RDDI_ORDBAGEXT:
