@@ -602,13 +602,6 @@ static SAFEARRAY * hb_oleSafeArrayFromItem( PHB_ITEM pItem, VARTYPE vt )
                      ptr = &V_CY( &v );
                   }
                   break;
-               case VT_DECIMAL:
-                  if( pStr == NULL )
-                  {
-                     VarDecFromR8( hb_arrayGetND( pItem, uiPos ), &HB_WIN_U1( &v, decVal ) /*&V_DECIMAL( &v )*/ );
-                     ptr = &HB_WIN_U1( &v, decVal ); /*&V_DECIMAL( &v )*/
-                  }
-                  break;
                case VT_DATE:
                   if( pStr == NULL )
                   {
@@ -616,28 +609,16 @@ static SAFEARRAY * hb_oleSafeArrayFromItem( PHB_ITEM pItem, VARTYPE vt )
                      ptr = &V_R8( &v );
                   }
                   break;
-#ifdef HB_OLE_PASS_POINTERS
-               case VT_PTR:
-                  if( pStr == NULL )
-                  {
-                     V_BYREF( &v ) = hb_arrayGetPtr( pItem, uiPos );
-                     ptr = &V_BYREF( &v );
-                  }
-                  break;
-#endif
                case VT_BSTR:
                   if( pStr == NULL )
-                  {
-                     V_BSTR( &v ) = hb_oleItemToString( hb_arrayGetItemPtr( pItem, uiPos ) );
-                     ptr = &V_BSTR( &v );
-                  }
+                     ptr = hb_oleItemToString( hb_arrayGetItemPtr( pItem, uiPos ) );
                   break;
             }
 
             if( ptr != NULL )
             {
                long lIndex[ 1 ];
-               lIndex[ 0 ] = ( long ) uiPos;
+               lIndex[ 0 ] = ( long ) uiPos - 1;
                SafeArrayPutElement( pSafeArray, lIndex, ptr );
             }
             else
