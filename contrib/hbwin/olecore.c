@@ -408,11 +408,15 @@ static SAFEARRAY * hb_oleSafeArrayFromString( PHB_ITEM pItem, VARTYPE vt )
    return pSafeArray;
 }
 
+
 static HB_BOOL hb_oleSafeArrayToString( PHB_ITEM pItem, SAFEARRAY * pSafeArray )
 {
    long lFrom, lTo;
+   VARTYPE vt;
 
    if( SafeArrayGetElemsize( pSafeArray ) == 1 &&
+       SafeArrayGetVartype( pSafeArray, &vt ) == S_OK &&
+       ( vt == VT_I1 || vt == VT_UI1 ) &&
        SafeArrayGetLBound( pSafeArray, 1, &lFrom ) == S_OK &&
        SafeArrayGetUBound( pSafeArray, 1, &lTo ) == S_OK &&
        lFrom <= lTo + 1 ) /* accept empty arrays */
@@ -427,6 +431,8 @@ static HB_BOOL hb_oleSafeArrayToString( PHB_ITEM pItem, SAFEARRAY * pSafeArray )
    }
    return HB_FALSE;
 }
+
+
 static VARIANT * hb_oleVariantParam( int iParam )
 {
    VARIANT * pVariant = ( VARIANT * ) hb_parptrGC( &s_gcVariantFuncs, iParam );
