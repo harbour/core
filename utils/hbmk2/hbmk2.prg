@@ -15630,12 +15630,12 @@ STATIC PROCEDURE ShowHeader( hbmk )
    IF hbmk[ _HBMK_lShellMode ]
       cText := ;
          "Harbour Shell / Script Runner " + HBRawVersion() + e"\n" + ;
-         "Copyright (c) 2007-2016, Viktor Szakáts" + e"\n" + ;
+         "Copyright (c) 2007-2016, Viktor Szakats" + e"\n" + ;
          "Copyright (c) 2003-2007, Przemysław Czerpak" + e"\n"
    ELSE
       cText := ;
          "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" + ;
-         "Copyright (c) 1999-2016, Viktor Szakáts" + e"\n"
+         "Copyright (c) 1999-2016, Viktor Szakats" + e"\n"
    ENDIF
 
    IF hbmk[ _HBMK_lMarkdown ]
@@ -16431,7 +16431,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
 
    LOCAL aLst_Auth := { ;
       NIL, ;
-      { "Viktor Szakáts (vszakats.net/harbour)", "" } }
+      { "Viktor Szakats (vszakats.net/harbour)", "" } }
 
    // ; Examples
 

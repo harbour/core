@@ -1547,7 +1547,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
           */
          HB_EXPR_USE( pSelf->value.asList.pExprList, HB_EA_PUSH_POP );
          HB_EXPR_USE( pSelf->value.asList.pIndex, HB_EA_PUSH_POP );
-         /* no break */
+         /* fallthrough */
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( HB_COMP_PARAM, pSelf );
          break;

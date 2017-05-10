@@ -4225,6 +4225,7 @@ static void hb_cdxTagKeyRead( LPCDXTAG pTag, HB_BYTE bTypRead )
 
          case PREV_RECORD:
             bTypRead = PRVU_RECORD;
+            /* fallthrough */
          case BTTM_RECORD:
             fAfter = HB_TRUE;
             break;

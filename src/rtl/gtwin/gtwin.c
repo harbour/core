@@ -409,6 +409,7 @@ static BOOL WINAPI hb_gt_win_CtrlHandler( DWORD dwCtrlType )
          printf( " Event %lu ", ( HB_ULONG ) dwCtrlType );
 #endif
          bHandled = FALSE;
+         break;
    }
 
    return bHandled;
@@ -1044,16 +1045,16 @@ static int Handle_Alt_Key( INPUT_RECORD * pInRec, HB_BOOL * pAltIsDown, int * pA
    switch( ( pInRec->Event.KeyEvent.dwControlKeyState & ENHANCED_KEY ) == 0 ?
            pInRec->Event.KeyEvent.wVirtualScanCode : 0 )
    {
-      case 0x49: ++iVal;   /* 9 */
-      case 0x48: ++iVal;   /* 8 */
-      case 0x47: ++iVal;   /* 7 */
-      case 0x4d: ++iVal;   /* 6 */
-      case 0x4c: ++iVal;   /* 5 */
-      case 0x4b: ++iVal;   /* 4 */
-      case 0x51: ++iVal;   /* 3 */
-      case 0x50: ++iVal;   /* 2 */
-      case 0x4f: ++iVal;   /* 1 */
-      case 0x52:           /* 0 */
+      case 0x49: ++iVal;  /* fallthrough */ /* 9 */
+      case 0x48: ++iVal;  /* fallthrough */ /* 8 */
+      case 0x47: ++iVal;  /* fallthrough */ /* 7 */
+      case 0x4d: ++iVal;  /* fallthrough */ /* 6 */
+      case 0x4c: ++iVal;  /* fallthrough */ /* 5 */
+      case 0x4b: ++iVal;  /* fallthrough */ /* 4 */
+      case 0x51: ++iVal;  /* fallthrough */ /* 3 */
+      case 0x50: ++iVal;  /* fallthrough */ /* 2 */
+      case 0x4f: ++iVal;  /* fallthrough */ /* 1 */
+      case 0x52:                            /* 0 */
          if( pInRec->Event.KeyEvent.bKeyDown )
             *pAltVal = *pAltVal * 10 + iVal;
          iVal = 0;
@@ -1067,7 +1068,7 @@ static int Handle_Alt_Key( INPUT_RECORD * pInRec, HB_BOOL * pAltIsDown, int * pA
 #else
             iVal = *pAltVal & 0xFF;
 #endif
-         /* no break */
+         /* fallthrough */
       default:
          *pAltIsDown = HB_FALSE;
          break;
@@ -1481,6 +1482,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
                   if( ( dwState & ENHANCED_KEY ) == 0 )
                      break;
                   iFlags |= HB_KF_CTRL;
+                  /* fallthrough */
                case VK_PAUSE:
                   iKey = HB_KX_PAUSE;
                   break;

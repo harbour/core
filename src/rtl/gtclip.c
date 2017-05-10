@@ -223,6 +223,7 @@ HB_BOOL hb_gt_winapi_getClipboard( HB_UINT uFormat, PHB_ITEM pItem )
                case CF_OEMTEXT:
                case CF_TEXT:
                   nSize = hb_strnlen( ( const char * ) lpMem, nSize );
+                  /* fallthrough */
                default:
                   if( nSize )
                      hb_itemPutStrLen( pItem, uFormat == CF_TEXT ?

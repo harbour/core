@@ -82,6 +82,8 @@ static void hb_compExprDealloc( HB_COMP_DECL, PHB_EXPR pExpr )
       }
       hb_xfree( pExpItm );
    }
+   else
+      pExpr->ExprType = HB_ET_NONE;
 }
 
 static PHB_EXPR hb_compExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )

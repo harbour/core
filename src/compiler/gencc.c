@@ -279,7 +279,7 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
                break;
 #endif
             lValue = -lValue;
-            /* no break */
+            /* fallthrough */
 
          case HB_P_PLUS:
             fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ldL ) ) break;\n", lValue );

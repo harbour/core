@@ -1270,6 +1270,7 @@ HB_FUNC( NETIO_SERVER )
 
             case NETIO_UNLOCK:
                fNoAnswer = HB_TRUE;
+               /* fallthrough */
             case NETIO_LOCK:
             case NETIO_TESTLOCK:
                iFileNo = HB_GET_LE_UINT16( &msgbuf[ 4 ] );
@@ -1418,6 +1419,7 @@ HB_FUNC( NETIO_SERVER )
 
             case NETIO_PROC:
                fNoAnswer = HB_TRUE;
+               /* fallthrough */
             case NETIO_PROCIS:
             case NETIO_PROCW:
             case NETIO_FUNC:

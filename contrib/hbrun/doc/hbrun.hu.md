@@ -1,8 +1,8 @@
 Harbour Shell / Script Runner 3\.2\.0dev \(r2013\-04\-03 03:33\)  
-Copyright \(c\) 2007\-2013, Viktor Szakáts  
+Copyright \(c\) 2007\-2013, Viktor Szakats  
 Copyright \(c\) 2003\-2007, Przemysław Czerpak  
 <http://harbour\-project\.org/>  
-Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakáts Viktor  
+Magyar \(hu\) fordítás: Copyright \(c\) 2009\-2013, Szakats Viktor  
 
 Használat:  
   
@@ -113,4 +113,4 @@ License extensions:
 Szerző:  
 
 
- - Viktor Szakáts \(vszakats\.net/harbour\) 
+ - Viktor Szakats \(vszakats\.net/harbour\) 

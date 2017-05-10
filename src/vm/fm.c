@@ -289,7 +289,7 @@ static HB_BOOL s_fInitedFM = HB_FALSE;
 
 #ifdef HB_FM_STATISTICS
 
-#define HB_MEMINFO_SIGNATURE  0x19730403
+#define HB_MEMINFO_SIGNATURE  0xfeedbeef
 
 typedef struct _HB_MEMINFO
 {

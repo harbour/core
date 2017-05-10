@@ -1864,7 +1864,7 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          HB_GTSELF_SETCURSORSTYLE( pGT, SC_NORMAL );
          HB_GTSELF_DISPEND( pGT );
          HB_GTSELF_FLUSH( pGT );
-         /* no break; */
+         /* fallthrough */
 
       case HB_GTI_GETWIN:  /* save screen buffer, cursor shape and position */
       {

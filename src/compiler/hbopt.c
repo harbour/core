@@ -449,7 +449,7 @@ static HB_OPT_FUNC( hb_p_not )
                }
             }
          }
-         /* no break; */
+         /* fallthrough */
 #endif
       default:
          opcode = HB_P_LAST_PCODE;

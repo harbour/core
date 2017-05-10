@@ -1879,7 +1879,7 @@ static HB_ERRCODE hb_dbfAddField( DBFAREAP pArea, LPDBFIELDINFO pFieldInfo )
       case HB_FT_BLOB:
       case HB_FT_OLE:
          pFieldInfo->uiFlags |= HB_FF_BINARY;
-         /* no break */
+         /* fallthrough */
       case HB_FT_MEMO:
          if( pArea->bMemoType == DB_MEMO_SMT )
             pFieldInfo->uiLen = 10;
@@ -2222,7 +2222,7 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
             hb_itemPutTDT( pItem, 0, HB_GET_LE_INT32( pArea->pRecord + pArea->pFieldOffset[ uiIndex ] ) );
             break;
          }
-         /* no break */
+         /* fallthrough */
 
       case HB_FT_MODTIME:
       case HB_FT_TIMESTAMP:
@@ -4348,10 +4348,17 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                case 'L':
                case 'D':
                   if( pField->bFieldFlags & ~HB_FF_NULLABLE )
+                  {
                      uiFlags = 0;
+                     break;
+                  }
+                  /* fallthrough */
                case 'N':
                   if( pField->bFieldFlags & ~( HB_FF_NULLABLE | HB_FF_AUTOINC ) )
+                  {
                      uiFlags = 0;
+                     break;
+                  }
                   else if( ( pField->bFieldFlags & HB_FF_AUTOINC ) != 0 )
                   {
                      if( HB_GET_LE_UINT32( pField->bReserved1 ) != 0 ||
@@ -4362,6 +4369,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                         uiFlags = 0;
                      break;
                   }
+                  /* fallthrough */
                case 'C':
                case 'M':
                case 'V':
@@ -4612,6 +4620,7 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
                if( pArea->uiRecordLen >= dbFieldInfo.uiLen )
                   continue;
             }
+            /* fallthrough */
 
          default:
             errCode = HB_FAILURE;
@@ -4973,6 +4982,7 @@ static HB_ERRCODE hb_dbfSortInit( LPDBSORTREC pSortRec, LPDBSORTINFO pSortInfo )
             }
             if( pField->uiLen == 3 )
                break;
+            /* fallthrough */
          case HB_FT_MEMO:
          case HB_FT_IMAGE:
          case HB_FT_BLOB:
@@ -4993,6 +5003,7 @@ static HB_ERRCODE hb_dbfSortInit( LPDBSORTREC pSortRec, LPDBSORTINFO pSortInfo )
                pSortInfo->lpdbsItem[ uiCount ].uiFlags |= SF_LONG;
                break;
             }
+            /* fallthrough */
          case HB_FT_FLOAT:
          case HB_FT_DOUBLE:
          case HB_FT_CURDOUBLE:
@@ -6144,6 +6155,7 @@ static HB_ERRCODE hb_dbfReadDBHeader( DBFAREAP pArea )
          {
             case 0x31:
                pArea->fAutoInc = HB_TRUE;
+               /* fallthrough */
             case 0x30:
             case 0x32:
                if( pArea->dbfHeader.bHasTags & 0x02 )

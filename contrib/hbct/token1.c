@@ -98,7 +98,7 @@ static void do_token1( int iSwitch )
    {
       case DO_TOKEN1_TOKEN:
          ct_token->iPreSeparator = ct_token->iPostSeparator = -1;
-         /* no "break" here !! */
+         /* fallthrough */
       case DO_TOKEN1_ATTOKEN:
       case DO_TOKEN1_NUMTOKEN:
       case DO_TOKEN1_TOKENLOWER:
