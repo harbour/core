@@ -386,53 +386,6 @@ static IEnumVARIANT * hb_oleenumParam( int iParam )
 }
 
 
-static SAFEARRAY * hb_oleSafeArrayFromString( PHB_ITEM pItem, VARTYPE vt )
-{
-   UINT cElements = ( UINT ) hb_itemGetCLen( pItem );
-   SAFEARRAY * pSafeArray = SafeArrayCreateVector( vt, 0, cElements );
-
-   if( pSafeArray && cElements > 0 )
-   {
-      void * pData;
-      if( SafeArrayAccessData( pSafeArray, &pData ) == S_OK )
-      {
-         memcpy( pData, hb_itemGetCPtr( pItem ), cElements );
-         SafeArrayUnaccessData( pSafeArray );
-      }
-      else
-      {
-         SafeArrayDestroy( pSafeArray );
-         pSafeArray = NULL;
-      }
-   }
-   return pSafeArray;
-}
-
-
-static HB_BOOL hb_oleSafeArrayToString( PHB_ITEM pItem, SAFEARRAY * pSafeArray )
-{
-   long lFrom, lTo;
-   VARTYPE vt;
-
-   if( SafeArrayGetElemsize( pSafeArray ) == 1 &&
-       SafeArrayGetVartype( pSafeArray, &vt ) == S_OK &&
-       ( vt == VT_I1 || vt == VT_UI1 ) &&
-       SafeArrayGetLBound( pSafeArray, 1, &lFrom ) == S_OK &&
-       SafeArrayGetUBound( pSafeArray, 1, &lTo ) == S_OK &&
-       lFrom <= lTo + 1 ) /* accept empty arrays */
-   {
-      void * pData;
-      if( SafeArrayAccessData( pSafeArray, &pData ) == S_OK )
-      {
-         hb_itemPutCL( pItem, ( const char * ) pData, lTo - lFrom + 1 );
-         SafeArrayUnaccessData( pSafeArray );
-         return HB_TRUE;
-      }
-   }
-   return HB_FALSE;
-}
-
-
 static VARIANT * hb_oleVariantParam( int iParam )
 {
    VARIANT * pVariant = ( VARIANT * ) hb_parptrGC( &s_gcVariantFuncs, iParam );
@@ -503,6 +456,53 @@ static void hb_oleStringToItem( BSTR strVal, PHB_ITEM pItem )
 {
    hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_NATIVE, strVal,
                         SysStringLen( strVal ) );
+}
+
+
+static SAFEARRAY * hb_oleSafeArrayFromString( PHB_ITEM pItem, VARTYPE vt )
+{
+   UINT cElements = ( UINT ) hb_itemGetCLen( pItem );
+   SAFEARRAY * pSafeArray = SafeArrayCreateVector( vt, 0, cElements );
+
+   if( pSafeArray && cElements > 0 )
+   {
+      void * pData;
+      if( SafeArrayAccessData( pSafeArray, &pData ) == S_OK )
+      {
+         memcpy( pData, hb_itemGetCPtr( pItem ), cElements );
+         SafeArrayUnaccessData( pSafeArray );
+      }
+      else
+      {
+         SafeArrayDestroy( pSafeArray );
+         pSafeArray = NULL;
+      }
+   }
+   return pSafeArray;
+}
+
+
+static HB_BOOL hb_oleSafeArrayToString( PHB_ITEM pItem, SAFEARRAY * pSafeArray )
+{
+   long lFrom, lTo;
+   VARTYPE vt;
+
+   if( SafeArrayGetElemsize( pSafeArray ) == 1 &&
+       SafeArrayGetVartype( pSafeArray, &vt ) == S_OK &&
+       ( vt == VT_I1 || vt == VT_UI1 ) &&
+       SafeArrayGetLBound( pSafeArray, 1, &lFrom ) == S_OK &&
+       SafeArrayGetUBound( pSafeArray, 1, &lTo ) == S_OK &&
+       lFrom <= lTo + 1 ) /* accept empty arrays */
+   {
+      void * pData;
+      if( SafeArrayAccessData( pSafeArray, &pData ) == S_OK )
+      {
+         hb_itemPutCL( pItem, ( const char * ) pData, lTo - lFrom + 1 );
+         SafeArrayUnaccessData( pSafeArray );
+         return HB_TRUE;
+      }
+   }
+   return HB_FALSE;
 }
 
 
