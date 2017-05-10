@@ -86,12 +86,17 @@ typedef struct
 {
    HRESULT lOleError;
    HB_BOOL fNullDate;
+   HB_BOOL fNil2Null;
    int     iInit;
 } HB_OLEDATA, * PHB_OLEDATA;
 
 static void hb_oleDataInit( void * cargo )
 {
    PHB_OLEDATA pOleData = ( PHB_OLEDATA ) cargo;
+
+   /* default settings: */
+   pOleData->fNullDate = HB_FALSE;
+   pOleData->fNil2Null = HB_FALSE;
 
 #if defined( HB_OS_WIN_CE )
    if( CoInitializeEx( NULL, COINIT_APARTMENTTHREADED ) == S_OK )
@@ -145,6 +150,17 @@ static void hb_oleSetNullDateFlag( HB_BOOL fNullDate )
 static HB_BOOL hb_oleGetNullDateFlag( void )
 {
    return hb_getOleData()->fNullDate;
+}
+
+
+static void hb_oleSetNil2NullFlag( HB_BOOL fNil2Null )
+{
+   hb_getOleData()->fNil2Null = fNil2Null;
+}
+
+static HB_BOOL hb_oleGetNil2NullFlag( void )
+{
+   return hb_getOleData()->fNil2Null;
 }
 
 
@@ -799,6 +815,7 @@ static void hb_oleItemToVariantRef( VARIANT * pVariant, PHB_ITEM pItem,
       case HB_IT_TIMESTAMP:
       {
          double dDate = hb_itemGetTD( pItem );
+
          if( dDate == 0 && hb_oleGetNullDateFlag() )
          {
             V_VT( pVariant ) = VT_NULL;
@@ -895,6 +912,11 @@ static void hb_oleItemToVariantRef( VARIANT * pVariant, PHB_ITEM pItem,
             }
          }
          break;
+
+      case HB_IT_NIL:
+         if( hb_oleGetNil2NullFlag() )
+            V_VT( pVariant ) = VT_NULL;
+         /* fallthrough */
 
       default:
          if( pVarRef )
@@ -2602,12 +2624,20 @@ HB_FUNC( __OLEVARIANTNEW )
       hb_errRT_OLE( EG_ARG, 1018, 0, NULL, HB_ERR_FUNCNAME, NULL );
 }
 
-/* __oleVariantNullDate( [<lNewNullFlag>] ) -> <lPrevNullFlag> */
+/* __oleVariantNullDate( [<lNewNullDateFlag>] ) -> <lPrevNullDateFlag> */
 HB_FUNC( __OLEVARIANTNULLDATE )
 {
    hb_retl( hb_oleGetNullDateFlag() );
    if( HB_ISLOG( 1 ) )
       hb_oleSetNullDateFlag( hb_parl( 1 ) );
+}
+
+/* __oleVariantNil2Null( [<lNewNil2NullFlag>] ) -> <lPrevNil2NullFlag> */
+HB_FUNC( __OLEVARIANTNIL2NULL )
+{
+   hb_retl( hb_oleGetNil2NullFlag() );
+   if( HB_ISLOG( 1 ) )
+      hb_oleSetNil2NullFlag( hb_parl( 1 ) );
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_olecore_init_ )
