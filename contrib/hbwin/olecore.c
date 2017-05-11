@@ -490,7 +490,16 @@ static SAFEARRAY * hb_oleSafeArrayFromItem( PHB_ITEM pItem, VARTYPE vt )
          return NULL;
    }
 
-   pSafeArray = SafeArrayCreateVector( vt, 0, cElements );
+   if( cElements == 0 )
+   {
+      SAFEARRAYBOUND sabound[ 1 ];
+
+      sabound[ 0 ].lLbound = 0;
+      sabound[ 0 ].cElements = 0;
+      pSafeArray = SafeArrayCreate( vt, 1, sabound );
+   }
+   else
+      pSafeArray = SafeArrayCreateVector( vt, 0, cElements );
 
    if( pSafeArray && cElements > 0 )
    {
