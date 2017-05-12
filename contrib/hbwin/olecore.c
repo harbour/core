@@ -475,6 +475,81 @@ static void hb_oleStringToItem( BSTR strVal, PHB_ITEM pItem )
 }
 
 
+static void hb_oleVariantRef( VARIANT * pVariant, VARIANT * pVarRef )
+{
+   V_VT( pVarRef ) = V_VT( pVariant ) | VT_BYREF;
+
+   switch( V_VT( pVariant ) )
+   {
+      case VT_I1:
+         V_I1REF( pVarRef ) = &V_I1( pVariant );
+         break;
+      case VT_UI1:
+         V_UI1REF( pVarRef ) = &V_UI1( pVariant );
+         break;
+      case VT_I2:
+         V_I2REF( pVarRef ) = &V_I2( pVariant );
+         break;
+      case VT_UI2:
+         V_UI2REF( pVarRef ) = &V_UI2( pVariant );
+         break;
+      case VT_I4:
+         V_I4REF( pVarRef ) = &V_I4( pVariant );
+         break;
+      case VT_UI4:
+         V_UI4REF( pVarRef ) = &V_UI4( pVariant );
+         break;
+      case VT_I8:
+#if defined( HB_OLE_NO_LLREF ) || defined( HB_OLE_NO_LL )
+            /* workaround for wrong OLE variant structure definition */
+         V_R8REF( pVarRef ) = &V_R8( pVariant );
+#else
+         V_I8REF( pVarRef ) = &V_I8( pVariant );
+#endif
+         break;
+      case VT_UI8:
+#if defined( HB_OLE_NO_LLREF ) || defined( HB_OLE_NO_LL )
+            /* workaround for wrong OLE variant structure definition */
+         V_R8REF( pVarRef ) = &V_R8( pVariant );
+#else
+         V_I8REF( pVarRef ) = &V_I8( pVariant );
+#endif
+         break;
+      case VT_INT:
+         V_INTREF( pVarRef ) = &V_INT( pVariant );
+         break;
+      case VT_UINT:
+         V_UINTREF( pVarRef ) = &V_UINT( pVariant );
+         break;
+      case VT_ERROR:
+         V_ERRORREF( pVarRef ) = &V_ERROR( pVariant );
+         break;
+      case VT_BOOL:
+         V_BOOLREF( pVarRef ) = &V_BOOL( pVariant );
+         break;
+      case VT_R4:
+         V_R4REF( pVarRef ) = &V_R4( pVariant );
+         break;
+      case VT_R8:
+         V_R8REF( pVarRef ) = &V_R8( pVariant );
+         break;
+      case VT_CY:
+         V_CYREF( pVarRef ) = &V_CY( pVariant );
+         break;
+      case VT_DATE:
+         V_R8REF( pVarRef ) = &V_R8( pVariant );
+         break;
+      case VT_BSTR:
+         V_BSTRREF( pVarRef ) = &V_BSTR( pVariant );
+         break;
+      default:
+         V_VT( pVarRef ) = VT_VARIANT | VT_BYREF;
+         V_BYREF( pVarRef ) = pVariant;
+         break;
+   }
+}
+
+
 static SAFEARRAY * hb_oleSafeArrayFromItem( PHB_ITEM pItem, VARTYPE vt )
 {
    SAFEARRAY * pSafeArray;
@@ -866,11 +941,7 @@ static void hb_oleItemToVariantRef( VARIANT * pVariant, PHB_ITEM pItem,
          else if( ( pVarPtr = hb_oleItemGetVariant( pItem ) ) != NULL )
          {
             if( pVarRef )
-            {
-               /* TODO: use real type reference instead of VT_VARIANT */
-               V_VT( pVarRef ) = VT_VARIANT | VT_BYREF;
-               V_BYREF( pVarRef ) = pVarPtr;
-            }
+               hb_oleVariantRef( pVarPtr, pVarRef );
             else
                VariantCopy( pVariant, pVarPtr );
          }
@@ -1701,14 +1772,19 @@ static void PutParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_USHORT uiCla
    PHB_ITEM pItem = NULL;
    UINT uiArg;
 
-   for( uiArg = 0; uiArg < dispparam->cArgs; uiArg++ )
+   if( dispparam->cNamedArgs > 0 )
+      ++uiOffset;
+
+   for( uiArg = dispparam->cNamedArgs; uiArg < dispparam->cArgs; uiArg++ )
    {
-      if( HB_ISBYREF( uiOffset + dispparam->cArgs - uiArg ) )
+      HB_USHORT uiParam = ( HB_USHORT ) ( uiOffset + dispparam->cArgs - uiArg - dispparam->cNamedArgs );
+
+      if( HB_ISBYREF( uiParam ) )
       {
          if( ! pItem )
             pItem = hb_itemNew( NULL );
          hb_oleVariantToItemEx( pItem, &dispparam->rgvarg[ uiArg ], uiClass );
-         hb_itemParamStoreForward( ( HB_USHORT ) ( uiOffset + dispparam->cArgs - uiArg ), pItem );
+         hb_itemParamStoreForward( uiParam, pItem );
          VariantClear( pRefs );
          pRefs++;
       }
