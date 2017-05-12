@@ -477,6 +477,12 @@ static void hb_oleStringToItem( BSTR strVal, PHB_ITEM pItem )
 
 static void hb_oleVariantRef( VARIANT * pVariant, VARIANT * pVarRef )
 {
+   if( V_VT( pVariant ) & VT_BYREF )
+   {
+      VariantCopy( pVarRef, pVariant );
+      return;
+   }
+
    V_VT( pVarRef ) = V_VT( pVariant ) | VT_BYREF;
 
    switch( V_VT( pVariant ) )
@@ -543,8 +549,13 @@ static void hb_oleVariantRef( VARIANT * pVariant, VARIANT * pVarRef )
          V_BSTRREF( pVarRef ) = &V_BSTR( pVariant );
          break;
       default:
-         V_VT( pVarRef ) = VT_VARIANT | VT_BYREF;
-         V_BYREF( pVarRef ) = pVariant;
+         if( V_VT( pVariant ) & VT_ARRAY )
+            V_ARRAYREF( pVarRef ) = &V_ARRAY( pVariant );
+         else
+         {
+            V_VT( pVarRef ) = VT_VARIANT | VT_BYREF;
+            V_BYREF( pVarRef ) = pVariant;
+         }
          break;
    }
 }
