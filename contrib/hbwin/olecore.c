@@ -66,6 +66,12 @@
    #define HB_OLE_NO_LLREF
 #endif
 
+#if ! defined( HB_OLE_NO_SAFEARRAYGETVARTYPE ) && \
+    ( defined( __DMC__ ) || \
+      defined(  __MINGW32CE__ ) || \
+      ( defined( __WATCOMC__ ) && ( __WATCOMC__ < 1270 ) ) )
+   #define HB_OLE_NO_SAFEARRAYGETVARTYPE
+#endif
 
 /* base date value in OLE (1899-12-30) as julian day */
 #define HB_OLE_DATE_BASE  0x0024D9AB
@@ -758,10 +764,12 @@ static SAFEARRAY * hb_oleSafeArrayFromItem( PHB_ITEM pItem, VARTYPE vt )
 static HB_BOOL hb_oleSafeArrayToString( PHB_ITEM pItem, SAFEARRAY * pSafeArray )
 {
    long lFrom, lTo;
-   VARTYPE vt;
+   VARTYPE vt = VT_UI1;
 
    if( SafeArrayGetElemsize( pSafeArray ) == 1 &&
+#if ! defined( HB_OLE_NO_SAFEARRAYGETVARTYPE )
        SafeArrayGetVartype( pSafeArray, &vt ) == S_OK &&
+#endif
        ( vt == VT_I1 || vt == VT_UI1 ) &&
        SafeArrayGetLBound( pSafeArray, 1, &lFrom ) == S_OK &&
        SafeArrayGetUBound( pSafeArray, 1, &lTo ) == S_OK &&
