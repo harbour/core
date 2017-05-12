@@ -638,6 +638,14 @@ static SAFEARRAY * hb_oleSafeArrayFromItem( PHB_ITEM pItem, VARTYPE vt )
                   if( pStr == NULL )
                      ptr = hb_oleItemToString( hb_arrayGetItemPtr( pItem, uiPos ) );
                   break;
+               case VT_VARIANT:
+                  if( pStr == NULL )
+                  {
+                     VariantInit( &v );
+                     hb_oleItemToVariant( &v, hb_arrayGetItemPtr( pItem, uiPos ) );
+                     ptr = &v;
+                  }
+                  break;
             }
 
             if( ptr != NULL )
@@ -645,6 +653,8 @@ static SAFEARRAY * hb_oleSafeArrayFromItem( PHB_ITEM pItem, VARTYPE vt )
                long lIndex[ 1 ];
                lIndex[ 0 ] = ( long ) uiPos - 1;
                SafeArrayPutElement( pSafeArray, lIndex, ptr );
+               if( vt == VT_VARIANT )
+                  VariantClear( &v );
             }
             else
             {
@@ -2610,6 +2620,12 @@ HB_FUNC( __OLEVARIANTNEW )
             V_DISPATCH( &variant ) = pDisp;
             HB_VTBL( pDisp )->AddRef( HB_THIS( pDisp ) );
          }
+         break;
+
+      case VT_VARIANT:
+         VariantInit( &variant );
+         if( pInit != NULL )
+            hb_oleItemToVariant( &variant, pInit );
          break;
 
       default:
