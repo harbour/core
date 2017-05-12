@@ -1082,7 +1082,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
             if( SafeArrayGetElement( pSafeArray, plIndex,
                                      vt == VT_VARIANT ? ( void * ) &vItem :
                                      ( vt == VT_DECIMAL ? ( void * ) &HB_WIN_U1( &vItem, decVal ) :
-                                     ( void * ) &HB_WIN_U3( &vItem, ullVal ) ) ) == S_OK )
+                                     ( void * ) &HB_WIN_U3( &vItem, bVal ) ) ) == S_OK )
             {
                if( vt != VT_VARIANT )
                   V_VT( &vItem ) = vt; /* it's reserved in VT_DECIMAL structure */
