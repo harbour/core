@@ -1800,7 +1800,7 @@ static void PutParams( DISPPARAMS * dispparam, HB_UINT uiOffset, HB_USHORT uiCla
 
    for( uiArg = dispparam->cNamedArgs; uiArg < dispparam->cArgs; uiArg++ )
    {
-      HB_USHORT uiParam = ( HB_USHORT ) ( uiOffset + dispparam->cArgs - uiArg - dispparam->cNamedArgs );
+      HB_USHORT uiParam = ( HB_USHORT ) ( uiOffset + dispparam->cArgs - uiArg );
 
       if( HB_ISBYREF( uiParam ) )
       {
