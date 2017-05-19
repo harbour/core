@@ -396,8 +396,8 @@ ifeq ($(HB_HOST_PLAT),)
    endif
 endif
 
-ifneq ($(filter $(HB_HOST_PLAT),win),)
-   ifeq ($(HB_BUILD_CONTRIB_DYN),)
+ifeq ($(HB_BUILD_CONTRIB_DYN),)
+   ifneq ($(filter $(HB_HOST_PLAT),win android),)
       export HB_BUILD_CONTRIB_DYN := yes
    endif
 endif
@@ -2004,11 +2004,13 @@ ifeq ($(HB_INIT_DONE),)
             HB_DYNLIB_POST := .$(HB_DYN_VER)
             HB_DYNLIB_POSC := .$(HB_DYN_VERCPT)
          else
-            # libharbour.s?.2.1.0
-            # libharbour.s?.2.1 ->
-            # libharbour.s? ->
-            HB_DYNLIB_PEXT := .$(HB_DYN_VER)
-            HB_DYNLIB_PEXC := .$(HB_DYN_VERCPT)
+            ifneq ($(HB_PLATFORM),android)
+               # libharbour.s?.2.1.0
+               # libharbour.s?.2.1 ->
+               # libharbour.s? ->
+               HB_DYNLIB_PEXT := .$(HB_DYN_VER)
+               HB_DYNLIB_PEXC := .$(HB_DYN_VERCPT)
+            endif
          endif
       endif
       endif

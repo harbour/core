@@ -5,7 +5,7 @@
 
 -w3 -es2
 
--stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc}
+-stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc|(hbdyn&android)}
 
 -pic
 
