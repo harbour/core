@@ -94,6 +94,7 @@
 #define HB_XML_ERROR_RESERVED_PREFIX_XML                38
 #define HB_XML_ERROR_RESERVED_PREFIX_XMLNS              39
 #define HB_XML_ERROR_RESERVED_NAMESPACE_URI             40
+#define HB_XML_ERROR_INVALID_ARGUMENT                   41
 
 #define HB_XML_INITIALIZED                              0
 #define HB_XML_PARSING                                  1
