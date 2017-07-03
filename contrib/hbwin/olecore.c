@@ -568,7 +568,7 @@ static void hb_oleVariantRef( VARIANT * pVariant, VARIANT * pVarRef )
 
 
 static HB_BOOL hb_oleSafeArrayFill( SAFEARRAY * pSafeArray, VARTYPE vt, PHB_ITEM pItem,
-                                    int iDims, long * plSize, long * plIndex )
+                                    int iDims, int iDim, long * plSize, long * plIndex )
 {
    const char * pStr;
    void * pData;
@@ -590,21 +590,21 @@ static HB_BOOL hb_oleSafeArrayFill( SAFEARRAY * pSafeArray, VARTYPE vt, PHB_ITEM
    else
       return HB_FALSE;
 
-   cElements = ( UINT ) plSize[ --iDims ];
+   cElements = ( UINT ) plSize[ iDim - 1 ];
    if( uiPos < cElements )
       cElements = uiPos;
 
-   if( iDims > 0 )
+   if( iDim < iDims )
    {
       if( pStr )
          return HB_FALSE;
 
       for( uiPos = 1; uiPos <= cElements; ++uiPos )
       {
-         plIndex[ iDims ] = ( long ) ( uiPos - 1 );
+         plIndex[ iDim - 1 ] = ( long ) ( uiPos - 1 );
          if( ! hb_oleSafeArrayFill( pSafeArray, vt,
                                     hb_arrayGetItemPtr( pItem, uiPos ),
-                                    iDims, plSize, plIndex ) )
+                                    iDims, iDim + 1, plSize, plIndex ) )
             return HB_FALSE;
       }
       return HB_TRUE;
@@ -752,7 +752,7 @@ static HB_BOOL hb_oleSafeArrayFill( SAFEARRAY * pSafeArray, VARTYPE vt, PHB_ITEM
 
       if( ptr != NULL )
       {
-         plIndex[ 0 ] = ( long ) ( uiPos - 1 );
+         plIndex[ iDim - 1 ] = ( long ) ( uiPos - 1 );
          SafeArrayPutElement( pSafeArray, plIndex, ptr );
          if( vt == VT_VARIANT )
             VariantClear( &v );
@@ -806,7 +806,7 @@ static SAFEARRAY * hb_oleSafeArrayFromItem( PHB_ITEM pItem, VARTYPE vt,
    if( pSafeArray && pItem && iDims && plSize[ 0 ] )
    {
       if( ! hb_oleSafeArrayFill( pSafeArray, vt, pItem,
-                                 iDims, plSize, plIndex ) )
+                                 iDims, 1, plSize, plIndex ) )
       {
          SafeArrayDestroy( pSafeArray );
          pSafeArray = NULL;
@@ -1122,7 +1122,7 @@ void hb_oleItemToVariantEx( VARIANT * pVariant, PHB_ITEM pItem,
 
 
 static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
-                                   int iDim, long * plIndex, VARTYPE vt,
+                                   int iDims, int iDim, long * plIndex, VARTYPE vt,
                                    HB_USHORT uiClass )
 {
    long lFrom, lTo;
@@ -1134,13 +1134,13 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
       HB_SIZE ul = 0;
 
       hb_arrayNew( pItem, lTo - lFrom + 1 );
-      if( --iDim == 0 )
+      if( iDim == iDims )
       {
          VARIANT vItem;
          VariantInit( &vItem );
          do
          {
-            plIndex[ iDim ] = lFrom;
+            plIndex[ iDim - 1 ] = lFrom;
             /* hack: for non VT_VARIANT arrays create VARIANT dynamically
              *       using pointer to union in variant structure which
              *       holds all variant values except VT_DECIMAL which is
@@ -1163,9 +1163,9 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
       {
          do
          {
-            plIndex[ iDim ] = lFrom;
+            plIndex[ iDim - 1 ] = lFrom;
             hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ),
-                                   pSafeArray, iDim, plIndex, vt, uiClass );
+                                   pSafeArray, iDims, iDim + 1, plIndex, vt, uiClass );
          }
          while( ++lFrom <= lTo );
       }
@@ -1461,15 +1461,15 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
                                      V_ARRAY( pVariant );
             if( pSafeArray )
             {
-               int iDim = ( int ) SafeArrayGetDim( pSafeArray );
+               int iDims = ( int ) SafeArrayGetDim( pSafeArray );
 
-               if( iDim >= 1 )
+               if( iDims >= 1 )
                {
-                  if( iDim > 1 || ! hb_oleSafeArrayToString( pItem, pSafeArray ) )
+                  if( iDims > 1 || ! hb_oleSafeArrayToString( pItem, pSafeArray ) )
                   {
-                     long * plIndex = ( long * ) hb_xgrab( iDim * sizeof( long ) );
+                     long * plIndex = ( long * ) hb_xgrab( iDims * sizeof( long ) );
 
-                     hb_oleSafeArrayToItem( pItem, pSafeArray, iDim, plIndex,
+                     hb_oleSafeArrayToItem( pItem, pSafeArray, iDims, 1, plIndex,
                            ( VARTYPE ) ( V_VT( pVariant ) & ~( VT_ARRAY | VT_BYREF ) ),
                            uiClass );
                      hb_xfree( plIndex );
@@ -2827,10 +2827,10 @@ HB_FUNC( __OLEVARIANTNEW )
                   --iPCount;
                while( iPCount > 0 )
                {
-                  plSize[ iDims - iPCount ] = hb_parnl( iPCount + 2 );
-                  if( plSize[ iDims - iPCount ] <= 0 )
-                     break;
                   --iPCount;
+                  plSize[ iPCount ] = hb_parnl( iPCount + 3 );
+                  if( plSize[ iPCount ] <= 0 )
+                     break;
                }
 
                if( iPCount <= 0 )
