@@ -15,6 +15,12 @@
 
 #ifdef _WIN32
 #define getpid GetCurrentProcessId
+#elif defined(__WATCOMC__) && defined(__DOS__)
+#include <process.h>                    /* getpid() */
+#include <sys/timeb.h>                  /* ftime() */
+#elif defined(__WATCOMC__) && defined(__OS2__)
+#include <process.h>                    /* getpid() */
+#include <sys/time.h>                   /* gettimeofday() */
 #else
 #include <sys/time.h>                   /* gettimeofday() */
 #include <sys/types.h>                  /* getpid() */
@@ -755,7 +761,7 @@ writeRandomBytes_RtlGenRandom(void * target, size_t count) {
 
   if (advapi32) {
     const RTLGENRANDOM_FUNC RtlGenRandom
-        = (RTLGENRANDOM_FUNC)GetProcAddress(advapi32, "SystemFunction036");
+        = (RTLGENRANDOM_FUNC)HB_WINAPI_GETPROCADDRESS(advapi32, "SystemFunction036");
     if (RtlGenRandom) {
       if (RtlGenRandom((PVOID)target, (ULONG)count) == TRUE) {
         success = 1;
@@ -773,10 +779,21 @@ writeRandomBytes_RtlGenRandom(void * target, size_t count) {
 static unsigned long
 gather_time_entropy(void)
 {
-#ifdef _WIN32
+#ifdef _WINCE
+  SYSTEMTIME st;
+  GetSystemTime(&st);
+  return ( ( ( ( long ) st.wDay * 24 +
+                        st.wHour ) * 60 +
+                        st.wMinute ) * 60 +
+                        st.wSecond ) * 1000 + st.wMilliseconds;
+#elif defined(_WIN32)
   FILETIME ft;
   GetSystemTimeAsFileTime(&ft); /* never fails */
   return ft.dwHighDateTime ^ ft.dwLowDateTime;
+#elif defined(__WATCOMC__) && defined(__DOS__)
+  struct timeb tb;
+  ftime( &tb );
+  return tb.time ^ tb.millitm;
 #else
   struct timeval tv;
   int gettimeofday_res;
@@ -795,7 +812,11 @@ gather_time_entropy(void)
 
 static unsigned long
 ENTROPY_DEBUG(const char * label, unsigned long entropy) {
+#ifdef _WINCE
+  const char * const EXPAT_ENTROPY_DEBUG = NULL;
+#else
   const char * const EXPAT_ENTROPY_DEBUG = getenv("EXPAT_ENTROPY_DEBUG");
+#endif
   if (EXPAT_ENTROPY_DEBUG && ! strcmp(EXPAT_ENTROPY_DEBUG, "1")) {
     fprintf(stderr, "Entropy: %s --> 0x%0*lx (%lu bytes)\n",
         label,

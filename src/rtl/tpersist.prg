@@ -65,6 +65,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
    LOCAL nPos
    LOCAL cLine
    LOCAL cProp
+   LOCAL cInd
    LOCAL uValue
    LOCAL aWords
    LOCAL lStart := .T.
@@ -121,7 +122,13 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
          ENDIF
 
          IF !Empty( cProp )
-            ATail( aObjects ):&cProp := uValue
+            IF ( nPos := At( "[", cProp ) ) > 0
+               cInd := SubStr( cProp, nPos + 1, Len( cProp ) - nPos - 1 )
+               cProp := Left( cProp, nPos - 1 )
+               ATail( aObjects ):&cProp[ &cInd ] := uValue
+            ELSE
+               ATail( aObjects ):&cProp := uValue
+            ENDIF
          ENDIF
 
       END SEQUENCE

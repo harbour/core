@@ -7,6 +7,10 @@
 #  define WIN32_LEAN_AND_MEAN
 #  include <windows.h>
 #  undef WIN32_LEAN_AND_MEAN
+#  include "hbwinuni.h"
+#endif
+#if defined( HB_OS_WIN_CE ) && ! defined( _WINCE )
+#  define _WINCE
 #endif
 
 /* 1234 = LITLE_ENDIAN, 4321 = BIG_ENDIAN */

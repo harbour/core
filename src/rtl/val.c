@@ -86,8 +86,7 @@ HB_FUNC( HB_VAL )
 
       fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue, &iDec, &iWidth );
 
-      if( HB_ISNUM( 2 ) )
-         iLen = hb_parni( 2 );
+      iLen = hb_parnidef( 2, iLen );
 
       if( fDbl && iDec > 0 )
          iLen -= iDec + 1;

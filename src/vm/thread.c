@@ -54,11 +54,13 @@
   hb_threadDetach( <pThID> ) -> <lOK>
 * hb_threadQuitRequest( <pThID> ) -> <lOK>
   hb_threadTerminateAll() -> NIL
+  hb_threadIsMain( [ <pThID> ] ) -> <lMainHvmThread>
   hb_threadWaitForAll() -> NIL
   hb_threadWait( <pThID> | <apThID>, [ <nTimeOut> ] [, <lAll> ] ) => <nThInd> | <nThCount> | 0
   hb_threadOnce( @<onceControl> [, <bAction> | <@sAction()> ] ) -> <lFirstCall>
   hb_threadOnceInit( @<item>, <value> ) -> <lInitialized>
   hb_mutexCreate() -> <pMtx>
+  hb_mutexExists( <pMtx> ) -> <lExists>
   hb_mutexLock( <pMtx> [, <nTimeOut> ] ) -> <lLocked>
   hb_mutexUnlock( <pMtx> ) -> <lOK>
   hb_mutexNotify( <pMtx> [, <xVal>] ) -> NIL
@@ -1318,6 +1320,24 @@ HB_FUNC( HB_THREADID )
 #endif
 }
 
+HB_FUNC( HB_THREADISMAIN )
+{
+#if defined( HB_MT_VM )
+   HB_STACK_TLS_PRELOAD
+
+   if( hb_pcount() > 0 )
+   {
+      PHB_THREADSTATE pThread = hb_thParam( 1, 0 );
+      if( pThread )
+         hb_retl( hb_vmThreadIsMain( pThread ) );
+   }
+   else
+      hb_retl( hb_vmThreadIsMain( NULL ) );
+#else
+   hb_retl( HB_TRUE );
+#endif
+}
+
 #if defined( HB_MT_VM )
 static int hb_threadWait( PHB_THREADSTATE * pThreads, int iThreads,
                           HB_BOOL fAll, HB_ULONG ulMilliSec )
@@ -2552,6 +2572,12 @@ PHB_ITEM hb_threadMutexTimedSubscribe( PHB_ITEM pItem, HB_ULONG ulMilliSec, HB_B
 #endif
    }
    return pResult;
+}
+
+HB_FUNC( HB_MUTEXEXISTS )
+{
+   HB_STACK_TLS_PRELOAD
+   hb_retl( hb_itemGetPtrGC( hb_param( 1, HB_IT_POINTER ), &s_gcMutexFuncs ) != NULL );
 }
 
 HB_FUNC( HB_MUTEXCREATE )
