@@ -491,6 +491,7 @@ static void adsGetKeyItem( ADSAREAP pArea, PHB_ITEM pItem, int iKeyType,
             break;
          }
 #endif
+         /* fallthrough */
       case ADS_STRING:
          hb_itemPutCL( pItem, pKeyBuf, iKeyLen );
          break;
@@ -619,6 +620,7 @@ static HB_ERRCODE adsScopeSet( ADSAREAP pArea, ADSHANDLE hOrder, HB_USHORT nScop
                   }
 #endif
                }
+               /* fallthrough */
             case ADS_STRING:
                if( HB_IS_STRING( pItem ) )
                {

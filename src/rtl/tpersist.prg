@@ -104,9 +104,9 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
             CASE "OBJECT"
                IF lStart
                   lStart := .F.
-               ELSEIF aWords[ 3 ] == "AS" .AND. hb_LeftEq( aWords[ 2 ], "::" )
-                  cProp := SubStr( aWords[ 2 ], 3 )
-                  uValue := &( aWords[ 4 ] )():CreateNew()
+               ELSEIF aWords[ Len( aWords ) - 1 ] == "AS" .AND. hb_LeftEq( aWords[ 2 ], "::" )
+                  cProp := SubStr( AllTrim( SubStr( cLine, 7, RAt( " AS ", cLine ) - 7 ) ), 3 )
+                  uValue := &( aTail( aWords ) )():CreateNew()
                ENDIF
                EXIT
             CASE "ENDOBJECT"
@@ -114,7 +114,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
                EXIT
             CASE "ARRAY"
                IF hb_LeftEq( aWords[ 2 ], "::" )
-                  cProp := SubStr( aWords[ 2 ], 3 )
+                  cProp := SubStr( AllTrim( SubStr( cLine, 6, RAt( " LEN ", cLine ) - 6 ) ), 3 )
                   uValue := Array( Val( ATail( aWords ) ) )
                ENDIF
                EXIT
@@ -123,7 +123,8 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
 
          IF !Empty( cProp )
             IF ( nPos := At( "[", cProp ) ) > 0
-               cInd := SubStr( cProp, nPos + 1, Len( cProp ) - nPos - 1 )
+               cInd := hb_StrReplace( SubStr( cProp, nPos + 1, Len( cProp ) - nPos - 1 ), ;
+                                      { " " => "", "][" => "," } )
                cProp := Left( cProp, nPos - 1 )
                ATail( aObjects ):&cProp[ &cInd ] := uValue
             ELSE

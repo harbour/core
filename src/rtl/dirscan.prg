@@ -104,7 +104,7 @@ FUNCTION hb_DirRemoveAll( cDir )
       RETURN hb_vfDirRemove( cDir ) == 0
    ENDIF
 
-   RETURN .F.
+   RETURN .T.
 
 FUNCTION hb_FileDelete( cFileMask, cAttr )
 

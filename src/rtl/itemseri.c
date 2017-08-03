@@ -1815,21 +1815,24 @@ char * hb_itemSerializeCP( PHB_ITEM pItem, int iFlags,
    if( ( iFlags & HB_SERIALIZE_COMPRESS ) != 0 && nSize > 20 )
    {
       HB_SIZE nDest = hb_zlibCompressBound( nSize );
-      char * pDest = ( char * ) hb_xgrab( nDest );
-      if( hb_zlibCompress( pDest, &nDest, ( const char * ) pBuffer, nSize,
-                           HB_ZLIB_COMPRESSION_DEFAULT ) == HB_ZLIB_RES_OK )
+      if( nDest > 0 )
       {
-         if( nDest + 9 < nSize )
+         char * pDest = ( char * ) hb_xgrab( nDest );
+         if( hb_zlibCompress( pDest, &nDest, ( const char * ) pBuffer, nSize,
+                           HB_ZLIB_COMPRESSION_DEFAULT ) == HB_ZLIB_RES_OK )
          {
-            pBuffer[ 0 ] = HB_SERIAL_ZCOMPRESS;
-            HB_PUT_LE_UINT32( &pBuffer[ 1 ], nDest );
-            HB_PUT_LE_UINT32( &pBuffer[ 5 ], nSize );
-            memcpy( &pBuffer[ 9 ], pDest, nDest );
-            nSize = nDest + 9;
-            pBuffer = ( HB_UCHAR * ) hb_xrealloc( pBuffer, nSize + 1 );
+            if( nDest + 9 < nSize )
+            {
+               pBuffer[ 0 ] = HB_SERIAL_ZCOMPRESS;
+               HB_PUT_LE_UINT32( &pBuffer[ 1 ], nDest );
+               HB_PUT_LE_UINT32( &pBuffer[ 5 ], nSize );
+               memcpy( &pBuffer[ 9 ], pDest, nDest );
+               nSize = nDest + 9;
+               pBuffer = ( HB_UCHAR * ) hb_xrealloc( pBuffer, nSize + 1 );
+            }
          }
+         hb_xfree( pDest );
       }
-      hb_xfree( pDest );
    }
 
    pBuffer[ nSize ] = '\0';
