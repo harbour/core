@@ -2,7 +2,7 @@
 ; NSIS installer script for Harbour
 ;
 ; Copyright 2009 Viktor Szakats (vszakats.net/harbour)
-; See COPYING.txt for licensing terms.
+; See LICENSE.txt for licensing terms.
 ; ---------------------------------------------------------------
 
 ; TODO: option: install .dlls to system paths
@@ -67,7 +67,7 @@ InstallDir C:\hb$%HB_VS%
 ;--------------------------------
 ; License Language String
 
-LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_ABSROOT%COPYING.txt"
+LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_ABSROOT%LICENSE.txt"
 
 ;--------------------------------
 ; The stuff to install
@@ -82,7 +82,7 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_ABSROOT%RELNOTES.txt"
 
   File /nonfatal "$%HB_ABSROOT%README.md"
-  File /nonfatal "$%HB_ABSROOT%COPYING.txt"
+  File /nonfatal "$%HB_ABSROOT%LICENSE.txt"
   File /nonfatal "$%HB_ABSROOT%ChangeLog.txt*"
 
   SetOutPath $INSTDIR\bin
