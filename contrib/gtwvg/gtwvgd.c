@@ -4088,6 +4088,10 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             pWVT->pNotifierGUI = hb_itemNew( pInfo->pNewVal );
          break;
 
+      case HB_GTI_WINHANDLE:
+         pInfo->pResult = hb_itemPutPtr( pInfo->pResult, pWVT->hWnd );
+         break;
+
       default:
          return HB_GTSUPER_INFO( pGT, iType, pInfo );
    }
