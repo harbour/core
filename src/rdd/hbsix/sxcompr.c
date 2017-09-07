@@ -179,8 +179,7 @@ typedef struct _HB_LZSSX_COMPR
    HB_SIZE    outBuffPos;
    HB_BOOL    fOutFree;
 
-   HB_SIZE    ulMaxSize;
-   HB_SIZE    ulOutSize;
+   HB_SIZE    nOutSize;
    HB_BOOL    fResult;
    HB_BOOL    fContinue;
 
@@ -227,8 +226,7 @@ static PHB_LZSSX_COMPR hb_LZSSxInit(
    pCompr->outBuffPos  = 0;
    pCompr->fOutFree    = ( pOutput != NULL && pDstBuf == NULL );
 
-   pCompr->ulMaxSize   = 0;
-   pCompr->ulOutSize   = 0;
+   pCompr->nOutSize    = 0;
    pCompr->fResult     = HB_TRUE;
    pCompr->fContinue   = HB_FALSE;
 
@@ -256,7 +254,7 @@ static HB_BOOL hb_LZSSxFlush( PHB_LZSSX_COMPR pCompr )
       }
       else
       {
-         pCompr->ulOutSize += pCompr->outBuffPos;
+         pCompr->nOutSize += pCompr->outBuffPos;
          pCompr->outBuffPos = 0;
       }
    }

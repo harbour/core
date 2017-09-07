@@ -2261,7 +2261,7 @@ HB_FUNC( HBXML_DATAREAD )
    PHB_ITEM   pRoot;
    MXML_REFIL refil;
    char       buffer[ 512 ], * buf;
-   HB_SIZE    ulLen;
+   HB_SIZE    nLen;
 
    if( pDoc == NULL || pParam == NULL ||
        ( ! HB_IS_STRING( pParam ) && ! HB_IS_NUMERIC( pParam ) ) )
@@ -2270,8 +2270,8 @@ HB_FUNC( HBXML_DATAREAD )
       return;
    }
 
-   if( hb_itemGetWriteCL( pParam, &buf, &ulLen ) )
-      mxml_refil_setup( &refil, NULL, buf, ulLen, ulLen );
+   if( hb_itemGetWriteCL( pParam, &buf, &nLen ) )
+      mxml_refil_setup( &refil, NULL, buf, nLen, nLen );
    else /* can only be an integer, that is, a file handle */
    {
       mxml_refil_setup( &refil,

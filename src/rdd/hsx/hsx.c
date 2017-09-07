@@ -499,7 +499,7 @@ static int hb_hsxStrCmp( const char * pSub, HB_SIZE nSub, const char * pStr, HB_
 {
    HB_BOOL fResult = HB_FALSE;
    HB_UCHAR c1, c2;
-   HB_SIZE ul;
+   HB_SIZE nPos;
 
    if( nSub == 0 )
       return HSX_SUCCESSFALSE;
@@ -507,10 +507,10 @@ static int hb_hsxStrCmp( const char * pSub, HB_SIZE nSub, const char * pStr, HB_
    while( ! fResult && nLen >= nSub )
    {
       fResult = HB_TRUE;
-      for( ul = 0; fResult && ul < nSub; ul++ )
+      for( nPos = 0; fResult && nPos < nSub; nPos++ )
       {
-         c1 = ( HB_UCHAR ) pSub[ ul ];
-         c2 = ( HB_UCHAR ) pStr[ ul ];
+         c1 = ( HB_UCHAR ) pSub[ nPos ];
+         c2 = ( HB_UCHAR ) pStr[ nPos ];
          if( fNoCase )
          {
             if( iFilter == 3 )
@@ -1284,7 +1284,7 @@ static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE nLen,
       iResult = HSX_SUCCESSFALSE;
    else
    {
-      HB_SIZE ul, ull;
+      HB_SIZE nPos1, nPos2;
 
       switch( iType )
       {
@@ -1298,31 +1298,31 @@ static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE nLen,
             break;
          case HSX_VERIFY_AND:
             iResult = HSX_SUCCESS;
-            for( ul = 0; ul < nSub && iResult == HSX_SUCCESS; ul++ )
+            for( nPos1 = 0; nPos1 < nSub && iResult == HSX_SUCCESS; nPos1++ )
             {
-               while( szSub[ ul ] == ' ' && ul < nSub )
-                  ++ul;
-               ull = ul;
-               while( szSub[ ull ] != ' ' && ull < nSub )
-                  ++ull;
-               iResult = hb_hsxStrCmp( &szSub[ ul ], ull - ul, szText, nLen,
+               while( szSub[ nPos1 ] == ' ' && nPos1 < nSub )
+                  ++nPos1;
+               nPos2 = nPos1;
+               while( szSub[ nPos2 ] != ' ' && nPos2 < nSub )
+                  ++nPos2;
+               iResult = hb_hsxStrCmp( &szSub[ nPos1 ], nPos2 - nPos1, szText, nLen,
                                        pHSX->fIgnoreCase, pHSX->iFilterType );
-               ul = ull;
+               nPos1 = nPos2;
             }
             break;
 #if 0
          case HSX_VERIFY_OR:
             iResult = HSX_SUCCESSFALSE;
-            for( ul = 0; ul < nSub && iResult == HSX_SUCCESSFALSE; ul++ )
+            for( nPos1 = 0; nPos1 < nSub && iResult == HSX_SUCCESSFALSE; nPos1++ )
             {
-               while( szSub[ ul ] == ' ' && ul < nSub )
-                  ++ul;
-               ull = ul;
-               while( szSub[ ull ] != ' ' && ull < nSub )
-                  ++ull;
-               iResult = hb_hsxStrCmp( &szSub[ ul ], ull - ul, szText, nLen,
+               while( szSub[ nPos1 ] == ' ' && nPos1 < nSub )
+                  ++nPos1;
+               nPos2 = nPos1;
+               while( szSub[ nPos2 ] != ' ' && nPos2 < nSub )
+                  ++nPos2;
+               iResult = hb_hsxStrCmp( &szSub[ nPos1 ], nPos2 - nPos1, szText, nLen,
                                        pHSX->fIgnoreCase, pHSX->iFilterType );
-               ul = ull;
+               nPos1 = nPos2;
             }
             break;
 #endif
@@ -1836,7 +1836,7 @@ HB_FUNC( HS_FILTER )
 {
    const char * szText = hb_parc( 2 );
    char * pBuff = NULL;
-   HB_SIZE nLen = hb_parclen( 2 ), ull, ul;
+   HB_SIZE nLen = hb_parclen( 2 );
    HB_ULONG ulRecords = 0;
    int iHandle = -1, iResult = HSX_BADPARMS;
    HB_BOOL fNew = HB_FALSE, fToken = HB_TRUE;
@@ -1894,17 +1894,19 @@ HB_FUNC( HS_FILTER )
          /* to be SIX compatible divide given text on space delimited tokens */
          if( fToken )
          {
+            HB_SIZE nPos2, nPos1;
+
             iResult = HSX_SUCCESS;
-            for( ul = 0; ul < nLen && iResult == HSX_SUCCESS; ul++ )
+            for( nPos1 = 0; nPos1 < nLen && iResult == HSX_SUCCESS; nPos1++ )
             {
-               while( szText[ ul ] == ' ' && ul < nLen )
-                  ++ul;
-               ull = ul;
-               while( szText[ ull ] != ' ' && ull < nLen )
-                  ++ull;
-               iResult = hb_hsxFilter( iHandle, &szText[ ul ], ull - ul,
+               while( szText[ nPos1 ] == ' ' && nPos1 < nLen )
+                  ++nPos1;
+               nPos2 = nPos1;
+               while( szText[ nPos2 ] != ' ' && nPos2 < nLen )
+                  ++nPos2;
+               iResult = hb_hsxFilter( iHandle, &szText[ nPos1 ], nPos2 - nPos1,
                                        hb_param( 3, HB_IT_ANY ), HSX_VERIFY_PHRASE );
-               ul = ull;
+               nPos1 = nPos2;
             }
          }
          else

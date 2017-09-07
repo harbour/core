@@ -190,12 +190,12 @@ static PMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_US
    {
       case 'C':
       {
-         HB_SIZE ul = hb_itemGetCLen( pItem );
-         if( ul > ( HB_SIZE ) uiLen )
-            ul = uiLen;
-         memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
-         if( ul < ( HB_SIZE ) uiLen )
-            memset( pKey->val + ul, ' ', ( HB_SIZE ) uiLen - ul );
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
+         if( nLen > ( HB_SIZE ) uiLen )
+            nLen = uiLen;
+         memcpy( pKey->val, hb_itemGetCPtr( pItem ), nLen );
+         if( nLen < ( HB_SIZE ) uiLen )
+            memset( pKey->val + nLen, ' ', ( HB_SIZE ) uiLen - nLen );
          break;
       }
       case 'N':
@@ -783,9 +783,9 @@ static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, H
 
    if( pArea->pTagCurrent->bType == 'C' )
    {
-      HB_SIZE ul = hb_itemGetCLen( pKey );
-      if( ul < ( HB_SIZE ) uiLen )
-         uiLen = ( HB_USHORT ) ul;
+      HB_SIZE nLen = hb_itemGetCLen( pKey );
+      if( nLen < ( HB_SIZE ) uiLen )
+         uiLen = ( HB_USHORT ) nLen;
    }
 
    /* reset any pending relations - I hope ACE make the same and the problem

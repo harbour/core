@@ -56,10 +56,10 @@ HB_FUNC( STRPEEK )
 
    if( pText && HB_ISNUM( 2 ) )
    {
-      HB_SIZE ulPos = hb_parns( 2 );
+      HB_SIZE nPos = hb_parns( 2 );
 
-      if( ulPos > 0 && ulPos <= hb_itemGetCLen( pText ) )
-         hb_retni( ( unsigned char ) hb_itemGetCPtr( pText )[ ulPos - 1 ] );
+      if( nPos > 0 && nPos <= hb_itemGetCLen( pText ) )
+         hb_retni( ( unsigned char ) hb_itemGetCPtr( pText )[ nPos - 1 ] );
       else
          hb_retni( 0 );
    }
@@ -74,13 +74,13 @@ HB_FUNC( STRPOKE )
 
    if( pText && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
-      HB_SIZE ulPos = hb_parns( 2 ), ulLen;
+      HB_SIZE nPos = hb_parns( 2 ), nLen;
       char *  pszText;
 
-      if( ulPos > 0 && hb_itemGetWriteCL( pText, &pszText, &ulLen ) &&
-          ulPos <= ulLen )
+      if( nPos > 0 && hb_itemGetWriteCL( pText, &pszText, &nLen ) &&
+          nPos <= nLen )
       {
-         pszText[ ulPos - 1 ] = ( char ) ( hb_parni( 3 ) & 0xff );
+         pszText[ nPos - 1 ] = ( char ) ( hb_parni( 3 ) & 0xff );
       }
       hb_itemReturn( pText );
    }

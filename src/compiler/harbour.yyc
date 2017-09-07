@@ -7577,7 +7577,7 @@ static HB_COMP_CARGO2_FUNC( hb_compEnumEvalStart )
 
 static void hb_compEnumStart( HB_COMP_DECL, PHB_EXPR pVars, PHB_EXPR pExprs, int descend )
 {
-   HB_SIZE ulLen;
+   HB_SIZE nLen;
 
    if( hb_compExprListLen( pVars ) != hb_compExprListLen( pExprs ) )
    {
@@ -7585,15 +7585,15 @@ static void hb_compEnumStart( HB_COMP_DECL, PHB_EXPR pVars, PHB_EXPR pExprs, int
    }
 
    HB_COMP_PARAM->fDescend = descend < 0;
-   ulLen = hb_compExprListEval2( HB_COMP_PARAM, pVars, pExprs, hb_compEnumEvalStart );
+   nLen = hb_compExprListEval2( HB_COMP_PARAM, pVars, pExprs, hb_compEnumEvalStart );
 
-   if( ulLen > 255 )
+   if( nLen > 255 )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_TOOMANY, NULL, NULL );
    }
    else
    {
-      hb_compGenPCode3( HB_P_ENUMSTART, ( HB_BYTE ) ( ulLen & 0xFF ), ( HB_BYTE ) ( descend > 0 ? 1 : 0 ), HB_COMP_PARAM );
+      hb_compGenPCode3( HB_P_ENUMSTART, ( HB_BYTE ) ( nLen & 0xFF ), ( HB_BYTE ) ( descend > 0 ? 1 : 0 ), HB_COMP_PARAM );
    }
 }
 
@@ -7715,13 +7715,13 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
    PHB_SWITCHCMD pSwitch = pFunc->pSwitch;
    PHB_EXPR pExpr = pSwitch->pExpr;
    PHB_SWITCHCASE pCase, pTmp;
-   HB_SIZE ulExitPos, ulCountPos;
+   HB_SIZE nExitPos, nCountPos;
    int iCount = 0;
 
    /* skip switch pcode if there was no EXIT in the last CASE
     * or in the DEFAULT case
    */
-   ulExitPos = hb_compGenJump( 0, HB_COMP_PARAM );
+   nExitPos = hb_compGenJump( 0, HB_COMP_PARAM );
    hb_compGenJumpHere( pSwitch->nOffset + 1, HB_COMP_PARAM );
 
    pCase = pSwitch->pCases;
@@ -7765,7 +7765,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
       HB_BOOL fMacroText = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
 
       pExpr = hb_compExprGenPush( pExpr, HB_COMP_PARAM );
-      ulCountPos = pFunc->nPCodePos + 1;
+      nCountPos = pFunc->nPCodePos + 1;
       hb_compGenPCode3( HB_P_SWITCH, 0, 0, HB_COMP_PARAM );
       HB_COMP_PARAM->fSwitchCase = HB_TRUE;
       HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
@@ -7787,14 +7787,14 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
          hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
                               pSwitch->nDefault, HB_COMP_PARAM );
       }
-      HB_PUT_LE_UINT16( pFunc->pCode + ulCountPos, iCount );
+      HB_PUT_LE_UINT16( pFunc->pCode + nCountPos, iCount );
 
       HB_COMP_PARAM->fSwitchCase = fSwitchCase;
       if( fMacroText )
          HB_COMP_PARAM->supported |= HB_COMPFLAG_MACROTEXT;
    }
 
-   hb_compGenJumpHere( ulExitPos, HB_COMP_PARAM );
+   hb_compGenJumpHere( nExitPos, HB_COMP_PARAM );
 
    if( pExpr )
       HB_COMP_EXPR_FREE( pExpr );

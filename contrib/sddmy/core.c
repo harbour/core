@@ -491,14 +491,14 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    char      szBuffer[ 64 ];
    HB_BOOL   bError;
    PHB_ITEM  pError;
-   HB_SIZE   ulLen;
+   HB_SIZE   nLen;
 
    bError = HB_FALSE;
    uiIndex--;
    pField = pArea->area.lpFields + uiIndex;
 
    pValue = pSDDData->pNatRecord[ uiIndex ];
-   ulLen  = pSDDData->pNatLength[ uiIndex ];
+   nLen   = pSDDData->pNatLength[ uiIndex ];
 
    /* NULL => NIL (?) */
    if( ! pValue )
@@ -516,22 +516,22 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
          /* Expand strings to field length */
          pStr = ( char * ) hb_xgrab( pField->uiLen + 1 );
-         memcpy( pStr, pValue, ulLen );
+         memcpy( pStr, pValue, nLen );
 
-         if( ( HB_SIZE ) pField->uiLen > ulLen )
-            memset( pStr + ulLen, ' ', pField->uiLen - ulLen );
+         if( ( HB_SIZE ) pField->uiLen > nLen )
+            memset( pStr + nLen, ' ', pField->uiLen - nLen );
 
          pStr[ pField->uiLen ] = '\0';
          hb_itemPutCRaw( pItem, pStr, pField->uiLen );
 #else
          /* Do not expand strings */
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
 #endif
          break;
       }
 
       case HB_FT_MEMO:
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
          hb_itemSetCMemo( pItem );
          break;
 

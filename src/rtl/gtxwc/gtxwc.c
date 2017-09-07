@@ -309,7 +309,7 @@ typedef struct
 static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync );
 static void hb_gt_xwc_InvalidatePts( PXWND_DEF wnd, int left, int top, int right, int bottom );
 static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd, int left, int top, int right, int bottom );
-static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE ulSize, HB_BOOL fCopy );
+static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE nSize, HB_BOOL fCopy );
 
 /************************ globals ********************************/
 
@@ -3379,14 +3379,14 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
 
             if( cdpin && cdpin != wnd->utf8CDP )
             {
-               HB_SIZE ulLen = wnd->ClipboardSize;
+               HB_SIZE nLen = wnd->ClipboardSize;
                unsigned char * pBuffer = ( unsigned char * )
-                     hb_cdpnDup( ( const char * ) wnd->ClipboardData, &ulLen,
+                     hb_cdpnDup( ( const char * ) wnd->ClipboardData, &nLen,
                                  wnd->utf8CDP, cdpin );
 
                XChangeProperty( wnd->dpy, req->requestor, req->property,
                                 s_atomString, 8, PropModeReplace,
-                                pBuffer, ulLen );
+                                pBuffer, nLen );
                hb_xfree( pBuffer );
             }
             else
@@ -4384,11 +4384,11 @@ static void hb_gt_xwc_ClearSelection( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE ulSize, HB_BOOL fCopy )
+static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE nSize, HB_BOOL fCopy )
 {
    HB_XWC_XLIB_LOCK( wnd->dpy );
 
-   if( ulSize == 0 )
+   if( nSize == 0 )
       hb_gt_xwc_ClearSelection( wnd );
 
    if( wnd->ClipboardData != NULL )
@@ -4397,17 +4397,17 @@ static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE 
       wnd->ClipboardData = NULL;
    }
 
-   wnd->ClipboardSize = ulSize;
+   wnd->ClipboardSize = nSize;
    wnd->ClipboardTime = wnd->lastEventTime;
    wnd->ClipboardOwner = HB_FALSE;
 
-   if( ulSize > 0 )
+   if( nSize > 0 )
    {
       if( fCopy )
       {
-         wnd->ClipboardData = ( unsigned char * ) hb_xgrab( ulSize + 1 );
-         memcpy( wnd->ClipboardData, szData, ulSize );
-         wnd->ClipboardData[ ulSize ] = '\0';
+         wnd->ClipboardData = ( unsigned char * ) hb_xgrab( nSize + 1 );
+         memcpy( wnd->ClipboardData, szData, nSize );
+         wnd->ClipboardData[ nSize ] = '\0';
       }
       else
          wnd->ClipboardData = ( unsigned char * ) HB_UNCONST( szData );

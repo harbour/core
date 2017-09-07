@@ -197,8 +197,8 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
 
 #ifdef ADS_USE_OEM_TRANSLATION
    extern HB_BOOL hb_ads_bOEM;
-   extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE ulLen );
-   extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE ulLen );
+   extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE nLen );
+   extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE nLen );
    extern void    hb_adsOemAnsiFree( char * pcString );
 
    /* NOTE: Undocumented ACE function. */

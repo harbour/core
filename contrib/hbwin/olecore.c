@@ -1131,7 +1131,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
        SafeArrayGetUBound( pSafeArray, iDim, &lTo ) == S_OK &&
        lFrom <= lTo )
    {
-      HB_SIZE ul = 0;
+      HB_SIZE nIndex = 0;
 
       hb_arrayNew( pItem, lTo - lFrom + 1 );
       if( iDim == iDims )
@@ -1153,7 +1153,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
             {
                if( vt != VT_VARIANT )
                   V_VT( &vItem ) = vt; /* it's reserved in VT_DECIMAL structure */
-               hb_oleVariantToItemEx( hb_arrayGetItemPtr( pItem, ++ul ), &vItem, uiClass );
+               hb_oleVariantToItemEx( hb_arrayGetItemPtr( pItem, ++nIndex ), &vItem, uiClass );
                VariantClear( &vItem );
             }
          }
@@ -1164,7 +1164,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
          do
          {
             plIndex[ iDim - 1 ] = lFrom;
-            hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ),
+            hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++nIndex ),
                                    pSafeArray, iDims, iDim + 1, plIndex, vt, uiClass );
          }
          while( ++lFrom <= lTo );

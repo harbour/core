@@ -151,15 +151,15 @@ static PMIXKEY hb_mixKeyPutItem( PMIXKEY pKey, PHB_ITEM pItem, HB_ULONG ulRecNo,
    {
       case 'C':
       {
-         HB_SIZE ul = hb_itemGetCLen( pItem );
+         HB_SIZE nLen = hb_itemGetCLen( pItem );
 
-         if( ul > ( HB_SIZE ) pTag->uiKeyLen )
-            ul = pTag->uiKeyLen;
+         if( nLen > ( HB_SIZE ) pTag->uiKeyLen )
+            nLen = pTag->uiKeyLen;
 
-         memcpy( pKey->val, hb_itemGetCPtr( pItem ), ul );
+         memcpy( pKey->val, hb_itemGetCPtr( pItem ), nLen );
 
-         if( ul < ( HB_SIZE ) pTag->uiKeyLen )
-            memset( pKey->val + ul, ' ', ( HB_SIZE ) pTag->uiKeyLen - ul );
+         if( nLen < ( HB_SIZE ) pTag->uiKeyLen )
+            memset( pKey->val + nLen, ' ', ( HB_SIZE ) pTag->uiKeyLen - nLen );
 
          break;
       }
@@ -333,13 +333,11 @@ static void hb_mixTagPrintNode( PMIXTAG pTag, PMIXNODE pNode, int iLevel )
 
 static PMIXNODE hb_mixTagCreateNode( PMIXTAG pTag, HB_BOOL fLeaf )
 {
-   PMIXNODE pNode;
-   HB_SIZE  ulSize;
+   HB_SIZE  nSize = ( fLeaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + MIX_NODE_ORDER * pTag->uiTotalLen;
+   PMIXNODE pNode = ( PMIXNODE ) hb_xgrabz( nSize );
 
-   ulSize = ( fLeaf ? sizeof( MIXNODELEAF ) : sizeof( MIXNODE ) ) + MIX_NODE_ORDER * pTag->uiTotalLen;
-
-   pNode = ( PMIXNODE ) hb_xgrabz( ulSize );
    pNode->Leaf = fLeaf ? 1 : 0;
+
    return pNode;
 }
 

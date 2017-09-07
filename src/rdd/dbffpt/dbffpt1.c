@@ -1418,9 +1418,9 @@ static HB_ERRCODE hb_fptReadRawSMTItem( FPTAREAP pArea, PHB_ITEM pItem, HB_FOFFS
          {
             if( iTrans == FPT_TRANS_CP && ulLen > 0 )
             {
-               HB_SIZE ulSize = ulLen + 1;
+               HB_SIZE nSize = ulLen + 1;
                HB_SIZE nLen = ulLen;
-               hb_cdpnDup3( pBuffer, ulLen, pBuffer, &nLen, &pBuffer, &ulSize,
+               hb_cdpnDup3( pBuffer, ulLen, pBuffer, &nLen, &pBuffer, &nSize,
                             pArea->area.cdPage, hb_vmCDP() );
                ulLen = ( HB_ULONG ) nLen;
             }
@@ -1837,9 +1837,9 @@ static HB_ERRCODE hb_fptReadSixItem( FPTAREAP pArea, HB_BYTE ** pbMemoBuf, HB_BY
                {
                   if( iTrans == FPT_TRANS_CP && ulLen > 0 )
                   {
-                     HB_SIZE ulSize = ulLen;
-                     pszStr = hb_cdpnDup( pszStr, &ulSize, pArea->area.cdPage, hb_vmCDP() );
-                     hb_itemPutCLPtr( pItem, pszStr, ulSize );
+                     HB_SIZE nSize = ulLen;
+                     pszStr = hb_cdpnDup( pszStr, &nSize, pArea->area.cdPage, hb_vmCDP() );
+                     hb_itemPutCLPtr( pItem, pszStr, nSize );
                   }
                   else
                      hb_itemPutCL( pItem, pszStr, ulLen );
@@ -2766,9 +2766,9 @@ static HB_ERRCODE hb_fptGetMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
             if( iTrans == FPT_TRANS_CP && ulSize != 0 )
             {
                HB_SIZE nSize = ulSize;
-               HB_SIZE ulBufSize = ulSize + 1;
+               HB_SIZE nBufSize = ulSize + 1;
                hb_cdpnDup3( pBuffer, ulSize, pBuffer, &nSize,
-                            &pBuffer, &ulBufSize,
+                            &pBuffer, &nBufSize,
                             pArea->area.cdPage, hb_vmCDP() );
                ulSize = ( HB_ULONG ) nSize;
             }
@@ -2792,9 +2792,9 @@ static HB_ERRCODE hb_fptGetMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
                if( iTrans == FPT_TRANS_CP && ulSize != 0 )
                {
                   HB_SIZE nSize = ulSize;
-                  HB_SIZE ulBufSize = ulSize + 1;
+                  HB_SIZE nBufSize = ulSize + 1;
                   hb_cdpnDup3( pBuffer, ulSize, pBuffer, &nSize,
-                               &pBuffer, &ulBufSize,
+                               &pBuffer, &nBufSize,
                                pArea->area.cdPage, hb_vmCDP() );
                   ulSize = ( HB_ULONG ) nSize;
                }
@@ -2886,9 +2886,9 @@ static HB_ERRCODE hb_fptGetMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
                   if( iTrans == FPT_TRANS_CP && ulSize != 0 )
                   {
                      HB_SIZE nSize = ulSize;
-                     HB_SIZE ulBufSize = ulSize + 1;
+                     HB_SIZE nBufSize = ulSize + 1;
                      hb_cdpnDup3( pBuffer, ulSize, pBuffer, &nSize,
-                                  &pBuffer, &ulBufSize,
+                                  &pBuffer, &nBufSize,
                                   pArea->area.cdPage, hb_vmCDP() );
                      ulSize = ( HB_ULONG ) nSize;
                   }
@@ -3800,21 +3800,21 @@ static HB_ERRCODE hb_fptPutVarField( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
          }
          else if( HB_IS_STRING( pItem ) )
          {
-            HB_SIZE ulLen = hb_itemGetCLen( pItem );
+            HB_SIZE nLen = hb_itemGetCLen( pItem );
 
             pBlock = ( const HB_BYTE * ) hb_itemGetCPtr( pItem );
-            if( ulLen > HB_VF_CHAR )
-               ulLen = HB_VF_CHAR;
-            if( ulLen > 0 && ( pField->uiFlags & HB_FF_BINARY ) == 0 &&
+            if( nLen > HB_VF_CHAR )
+               nLen = HB_VF_CHAR;
+            if( nLen > 0 && ( pField->uiFlags & HB_FF_BINARY ) == 0 &&
                 hb_vmCDP() != pArea->area.cdPage )
             {
                pBlock = pAlloc = ( HB_BYTE * )
-                                 hb_cdpnDup( ( const char * ) pBlock, &ulLen,
+                                 hb_cdpnDup( ( const char * ) pBlock, &nLen,
                                              hb_vmCDP(), pArea->area.cdPage );
-               if( ulLen > HB_VF_CHAR )
-                  ulLen = HB_VF_CHAR;
+               if( nLen > HB_VF_CHAR )
+                  nLen = HB_VF_CHAR;
             }
-            uiType = ( HB_USHORT ) ulLen;
+            uiType = ( HB_USHORT ) nLen;
             if( uiType <= pField->uiLen - 2 )
             {
                memcpy( pFieldBuf, pBlock, uiType );

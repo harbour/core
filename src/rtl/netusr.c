@@ -92,11 +92,11 @@ char * hb_username( void )
 {
 #if defined( HB_OS_WIN )
 
-   DWORD ulLen = 256;
+   DWORD dwLen = 256;
    TCHAR lpValue[ 256 ];
 
    lpValue[ 0 ] = TEXT( '\0' );
-   GetUserName( lpValue, &ulLen );
+   GetUserName( lpValue, &dwLen );
    lpValue[ 255 ] = TEXT( '\0' );
 
    if( lpValue[ 0 ] )

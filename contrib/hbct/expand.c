@@ -1,5 +1,5 @@
 /*
- * CT3 string function:  Expand()
+ * CT3 string function: Expand()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -48,7 +48,7 @@
 
 HB_FUNC( EXPAND )
 {
-   HB_SIZE nLen = hb_parclen( 1 ), ulSize, ul;
+   HB_SIZE nLen = hb_parclen( 1 );
 
    if( nLen > 0 )
    {
@@ -59,6 +59,7 @@ HB_FUNC( EXPAND )
       {
          char * szDest, * szPtr, cRepl;
          int iRepl, i;
+         HB_SIZE nSize, nPos;
 
          iRepl = hb_parni( 2 );
          i = hb_pcount();
@@ -83,16 +84,16 @@ HB_FUNC( EXPAND )
             else
                cRepl = ' ';
          }
-         ulSize = ( nLen - 1 ) * ( iRepl + 1 ) + 1;
-         szPtr = szDest = ( char * ) hb_xgrab( ulSize + 1 );
+         nSize = ( nLen - 1 ) * ( iRepl + 1 ) + 1;
+         szPtr = szDest = ( char * ) hb_xgrab( nSize + 1 );
          *szPtr++ = szText[ 0 ];
-         for( ul = 1; ul < nLen; ++ul )
+         for( nPos = 1; nPos < nLen; ++nPos )
          {
             for( i = 0; i < iRepl; ++i )
                *szPtr++ = cRepl;
-            *szPtr++ = szText[ ul ];
+            *szPtr++ = szText[ nPos ];
          }
-         hb_retclen_buffer( szDest, ulSize );
+         hb_retclen_buffer( szDest, nSize );
       }
    }
    else

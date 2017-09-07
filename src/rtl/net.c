@@ -109,11 +109,11 @@ char * hb_netname( void )
 {
 #if defined( HB_OS_WIN )
 
-   DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
+   DWORD dwLen = MAX_COMPUTERNAME_LENGTH + 1;
    TCHAR lpValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
 
    lpValue[ 0 ] = TEXT( '\0' );
-   GetComputerName( lpValue, &ulLen );
+   GetComputerName( lpValue, &dwLen );
    lpValue[ MAX_COMPUTERNAME_LENGTH ] = TEXT( '\0' );
 
    if( lpValue[ 0 ] )

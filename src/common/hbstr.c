@@ -187,31 +187,31 @@ char * hb_strdup( const char * pszText )
 char * hb_strndup( const char * pszText, HB_SIZE nLen )
 {
    char * pszDup;
-   HB_SIZE ul;
+   HB_SIZE nPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_strndup(%.*s, %" HB_PFS "d)", ( int ) nLen, pszText, nLen ) );
 
-   ul = 0;
-   while( nLen-- && pszText[ ul ] )
-      ++ul;
+   nPos = 0;
+   while( nLen-- && pszText[ nPos ] )
+      ++nPos;
 
-   pszDup = ( char * ) hb_xgrab( ul + 1 );
-   memcpy( pszDup, pszText, ul );
-   pszDup[ ul ] = '\0';
+   pszDup = ( char * ) hb_xgrab( nPos + 1 );
+   memcpy( pszDup, pszText, nPos );
+   pszDup[ nPos ] = '\0';
 
    return pszDup;
 }
 
 HB_SIZE hb_strnlen( const char * pszText, HB_SIZE nLen )
 {
-   HB_SIZE ul = 0;
+   HB_SIZE nPos = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_strnlen(%.*s, %" HB_PFS "d)", ( int ) nLen, pszText, nLen ) );
 
    while( nLen-- && *pszText++ )
-      ++ul;
+      ++nPos;
 
-   return ul;
+   return nPos;
 }
 
 char * hb_strduptrim( const char * pszText )
@@ -237,20 +237,20 @@ char * hb_strduptrim( const char * pszText )
 
 HB_SIZE hb_strlentrim( const char * pszText )
 {
-   HB_SIZE ul = 0;
+   HB_SIZE nPos = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_strlentrim(%s)", pszText ) );
 
    while( pszText[ 0 ] == ' ' )
       ++pszText;
 
-   while( pszText[ ul ] )
-      ++ul;
+   while( pszText[ nPos ] )
+      ++nPos;
 
-   while( ul && pszText[ ul - 1 ] == ' ' )
-      --ul;
+   while( nPos && pszText[ nPos - 1 ] == ' ' )
+      --nPos;
 
-   return ul;
+   return nPos;
 }
 
 int hb_stricmp( const char * s1, const char * s2 )
@@ -1113,27 +1113,27 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 
 char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
 {
-   HB_SIZE ul = *pnLen, nStripped = 0;
-   char * ptr, * dst, ch;
+   HB_SIZE nPos = *pnLen, nStripped = 0;
+   char * ptr, * dst;
 
    ptr = dst = str;
-   while( ul )
+   while( nPos )
    {
       if( *ptr == '\\' )
          break;
       ++ptr; ++dst;
-      --ul;
+      --nPos;
    }
 
-   while( ul-- )
+   while( nPos-- )
    {
-      ch = *ptr++;
+      char ch = *ptr++;
       if( ch == '\\' )
       {
          ++nStripped;
-         if( ul )
+         if( nPos )
          {
-            ul--;
+            nPos--;
             ch = *ptr++;
             switch( ch )
             {
@@ -1167,21 +1167,21 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
                case '6':
                case '7':
                   ch -= '0';
-                  if( ul && *ptr >= '0' && *ptr <= '7' )
+                  if( nPos && *ptr >= '0' && *ptr <= '7' )
                   {
                      ch = ( ch << 3 ) | ( *ptr++ - '0' );
                      ++nStripped;
-                     if( --ul && *ptr >= '0' && *ptr <= '7' )
+                     if( --nPos && *ptr >= '0' && *ptr <= '7' )
                      {
                         ch = ( ch << 3 ) | ( *ptr++ - '0' );
                         ++nStripped;
-                        --ul;
+                        --nPos;
                      }
                   }
                   break;
                case 'x':
                   ch = 0;
-                  while( ul )
+                  while( nPos )
                   {
                      if( *ptr >= '0' && *ptr <= '9' )
                         ch = ( ch << 4 ) | ( *ptr++ - '0' );
@@ -1192,7 +1192,7 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
                      else
                         break;
                      ++nStripped;
-                     --ul;
+                     --nPos;
                   }
                   break;
                case '\\':
@@ -1223,9 +1223,9 @@ char * hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
    pBuffer[ *pnLen ] = '\0';
    if( iMethod == 1 )
    {
-      HB_SIZE ul;
-      for( ul = 0; ul < *pnLen; ul++ )
-         pBuffer[ ul ] ^= 0xF3;
+      HB_SIZE nPos;
+      for( nPos = 0; nPos < *pnLen; nPos++ )
+         pBuffer[ nPos ] ^= 0xF3;
    }
    return pBuffer;
 }
@@ -1238,9 +1238,9 @@ char * hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
    pBuffer[ *pnLen ] = '\0';
    if( iMethod == 1 )
    {
-      HB_SIZE ul;
-      for( ul = 0; ul < *pnLen; ul++ )
-         pBuffer[ ul ] ^= 0xF3;
+      HB_SIZE nPos;
+      for( nPos = 0; nPos < *pnLen; nPos++ )
+         pBuffer[ nPos ] ^= 0xF3;
    }
    return pBuffer;
 }

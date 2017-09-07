@@ -441,11 +441,11 @@ int hb_macro_yylex( YYSTYPE * yylval_ptr, PHB_MACRO pMacro )
             if( pLex->nSrc < pLex->nLen &&
                 HB_ISDIGIT( pLex->pString[ pLex->nSrc ] ) )
             {
-               HB_SIZE ul = pLex->nSrc;
-               while( ++ul < pLex->nLen &&
-                      HB_ISDIGIT( pLex->pString[ ul ] ) ) {};
-               ul -= --pLex->nSrc;
-               return hb_lexNumConv( yylval_ptr, pLex, ul );
+               HB_SIZE nPos = pLex->nSrc;
+               while( ++nPos < pLex->nLen &&
+                      HB_ISDIGIT( pLex->pString[ nPos ] ) ) {};
+               nPos -= --pLex->nSrc;
+               return hb_lexNumConv( yylval_ptr, pLex, nPos );
             }
             if( pLex->nLen - pLex->nSrc >= 4 &&
                 pLex->pString[ pLex->nSrc + 3 ] == '.' )

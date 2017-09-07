@@ -497,7 +497,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    char *    pValue;
    HB_BOOL   bError;
    PHB_ITEM  pError;
-   HB_SIZE   ulLen;
+   HB_SIZE   nLen;
 
    bError = HB_FALSE;
    uiIndex--;
@@ -508,18 +508,18 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
       return HB_SUCCESS;
 
    pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
-   ulLen  = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
+   nLen   = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
 
-/*   printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, ulLen ); */
+/*   printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, nLen ); */
 
    switch( pField->uiType )
    {
       case HB_FT_STRING:
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
          break;
 
       case HB_FT_MEMO:
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
          hb_itemSetCMemo( pItem );
          break;
 
