@@ -381,16 +381,17 @@ static int KeyTranslationTable[][ 2 ] =
 
 /* *********************************************************************** */
 
-#define KeyTranslationTableSize \
-            ( sizeof( KeyTranslationTable ) / ( 2 * sizeof ( int ) ) )
+#define KeyTranslationTableSize  HB_SIZEOFARRAY( KeyTranslationTable )
 
 /* a very simple sort algorithm */
 static void hb_sln_SortKeyTranslationTable( void )
 {
-   int i, j, min, KeyTmp[ 2 ];
+   int i;
 
    for( i = 0; i < ( ( int ) KeyTranslationTableSize - 1 ); i++ )
    {
+      int j, min, KeyTmp[ 2 ];
+
       min = i;
 
       for( j = i + 1; j < ( int ) KeyTranslationTableSize; j++ )
@@ -412,11 +413,10 @@ static void hb_sln_SortKeyTranslationTable( void )
       }
    }
 
-/*
+#if 0
    for( i = 0; i < KeyTranslationTableSize; i++ )
       fprintf( stderr, "%02x %8x %8x\n", i, KeyTranslationTable[ i ][ 0 ], KeyTranslationTable[ i ][ 1 ] );
- */
-
+#endif
 }
 
 /* ************************************************************************* */
@@ -424,16 +424,14 @@ static void hb_sln_SortKeyTranslationTable( void )
 /* standard binary search */
 static int hb_sln_FindKeyTranslation( int SlangKey )
 {
-   int Start, Stop, CurPos;
-
    if( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
        ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )
    {
-      Start = 0; Stop = KeyTranslationTableSize - 1;
+      int Start = 0, Stop = KeyTranslationTableSize - 1;
 
       while( Start <= Stop )
       {
-         CurPos = ( Start + Stop ) / 2;
+         int CurPos = ( Start + Stop ) / 2;
 
          /* fprintf( stderr, "%d %d %d\n", i, KeyTranslationTable[ i ][ 0 ], KeyTranslationTable[ i ][ 1 ] ); */
 

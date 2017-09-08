@@ -349,7 +349,7 @@ void hb_gt_sln_mouse_Init( void )
       Conn.eventMask = GPM_MOVE | GPM_UP | GPM_DOWN | GPM_DRAG | GPM_DOUBLE;
       /* give me move events but handle them anyway */
       Conn.defaultMask= GPM_MOVE | GPM_HARD;
-      /* only pure mouse events, no Ctrl,Alt,Shft events */
+      /* only pure mouse events, no Ctrl,Alt,Shift events */
       Conn.minMod = 0;
       Conn.maxMod = 0;
 
@@ -396,7 +396,7 @@ void hb_gt_sln_mouse_Exit( void )
       if( hb_sln_UnderXterm )
       {
          const char * DisabTrack = "\033[?1000l"; /* disable mouse tracking */
-         const char * RestoHilit = "\033[?1001r"; /* restore old hilittracking */
+         const char * RestoHilit = "\033[?1001r"; /* restore old hilit tracking */
 
          /* restore xterm settings */
          SLtt_write_string( ( char * ) HB_UNCONST( DisabTrack ) );

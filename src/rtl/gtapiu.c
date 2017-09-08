@@ -100,7 +100,7 @@ HB_BOOL hb_gtWVis( HB_GT_WND * wnd, HB_USHORT iStatus ) /* USHORT in CA-Cl*pper 
    return HB_FALSE;
 }
 
-HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ) /* System Level Request */
+HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ) /* System-Level Request */
 {
    /* Do nothing in Harbour, since the low-level GT API is
       implemented with a different method than in CA-Cl*pper. */

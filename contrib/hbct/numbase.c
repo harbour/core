@@ -119,7 +119,7 @@ HB_FUNC( NTOC )
 {
    char szBuffer[ 256 ], * pszResult = NULL;
    HB_MAXINT nValue = 0;
-   int iBase = hb_parnidef( 2, 10 ), iLen = hb_parni( 3 ), i;
+   int iBase = hb_parnidef( 2, 10 ), iLen = hb_parni( 3 );
 
    if( iLen < 0 || iLen > ( int ) sizeof( szBuffer ) )
       iLen = sizeof( szBuffer );
@@ -127,6 +127,7 @@ HB_FUNC( NTOC )
    if( iBase >= 2 && iBase <= 36 && ct_numParam( 1, &nValue ) )
    {
       HB_MAXUINT uValue = ( HB_MAXUINT ) nValue;
+      int i;
 
       i = iLen == 0 ? ( int ) sizeof( szBuffer ) : iLen;
       do

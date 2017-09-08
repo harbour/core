@@ -116,7 +116,7 @@ typedef HB_VMHANDLE HANDLE;
 typedef ERRCODE IHELP;
 typedef ERRCODE ICODE;
 
-/* default func ptr -- USHORT return, USHORT param */
+/* default function pointer -- USHORT return, USHORT param */
 typedef USHORT  ( * FUNCP )( USHORT param, ...);
 typedef FUNCP * FUNCPP;
 

@@ -90,7 +90,7 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
    NEXT
 
    /* Recalculate the CRC */
-   nSIDCRC := nKey * 51 // Max Value is 99603. a 5 chars number
+   nSIDCRC := nKey * 51  // Max Value is 99603. a 5 chars number
    cTemp   := StrZero( nSIDCRC, 5 )
 
    cSIDCRC := ""

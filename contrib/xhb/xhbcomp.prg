@@ -1,5 +1,5 @@
 /*
- * xhb compatibility functions
+ * xHarbour compatibility functions
  *
  * Copyright 2007 Viktor Szakats (vszakats.net/harbour)
  *
@@ -60,7 +60,8 @@ ANNOUNCE XHB_LIB
 
 INIT PROCEDURE xhb_Init()
 
-   /* Add calls to do initial settings to Harbour to be more compatible with xhb. */
+   /* Add calls to do initial settings to Harbour to be more compatible with
+      xHarbour. */
 
    ASSOCIATE CLASS _Character    WITH TYPE Character
    ASSOCIATE CLASS _Numeric      WITH TYPE Numeric

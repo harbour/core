@@ -47,13 +47,11 @@
 /* TODO: - Unicode support */
 /* TODO: - Receive support */
 
-/* NOTE: Source of information:
-         http://www.smssolutions.net/tutorials/gsm/sendsmsat/
-         http://www.smssolutions.net/tutorials/gsm/receivesmsat/
-         http://www.developershome.com/sms/sendSmsByAtCommands.asp
-         http://www.developershome.com/sms/readSmsByAtCommands.asp
-         http://www.dreamfabric.com/sms/
-         [vszakats] */
+/* Source of information:
+   https://web.archive.org/web/www.smssolutions.net/tutorials/gsm/sendsmsat/
+   https://web.archive.org/web/www.smssolutions.net/tutorials/gsm/receivesmsat/
+   https://web.archive.org/web/20121115163620/dreamfabric.com/sms/
+ */
 
 STATIC FUNCTION port_send( h, s )
    RETURN hb_comSend( h, s )
@@ -101,7 +99,7 @@ FUNCTION sms_ReceiveAll( cPort, cPIN )
 
    RETURN aRetVal
 
-/* --------------------- */
+/* --- */
 
 #define _SMSCTX_xHnd          1
 #define _SMSCTX_cPIN          2

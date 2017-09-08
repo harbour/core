@@ -1,5 +1,5 @@
 /*
- * Header file for cross-compatibility with xhb
+ * Header file for cross-compatibility with xHarbour
  *
  * Copyright 1999-2007 {list of individual authors and e-mail addresses}
  *

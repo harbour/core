@@ -68,7 +68,7 @@
 
       - value   = initial value of var
 
-      - pos     = index is a powerfull access method. You can use same method to get/set
+      - pos     = index is a powerful access method. You can use same method to get/set
                   data, but trough index you can access to correct data.
                   example:
                   ....

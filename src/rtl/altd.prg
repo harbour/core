@@ -5,11 +5,6 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
@@ -49,14 +44,14 @@
  *
  */
 
-#define ALTD_DISABLE   0
-#define ALTD_ENABLE    1
+#define ALTD_DISABLE  0
+#define ALTD_ENABLE   1
 
 PROCEDURE AltD( nAction )
 
    IF PCount() == 0
 
-      /* do not activate the debugger imediatelly because the module
+      /* do not activate the debugger immediately because the module
          where AltD() was called can have no debugger info - stop
          on first LINE with debugged info */
       __dbgInvokeDebug( Set( _SET_DEBUG ) )

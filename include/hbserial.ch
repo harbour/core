@@ -1,5 +1,5 @@
 /*
- * header file for item serialization flags
+ * Header file for item serialization flags
  *
  * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

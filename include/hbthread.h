@@ -1,5 +1,5 @@
 /*
- * header file with MT mode functions
+ * Header file with MT mode functions
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -365,7 +365,7 @@ typedef HB_THREAD_STARTFUNC( PHB_THREAD_STARTFUNC );
 
 extern HB_EXPORT void hb_threadReleaseCPU( void );
 
-/* atomic oprtations */
+/* atomic operations */
 extern HB_EXPORT void        hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value );
 extern HB_EXPORT HB_COUNTER  hb_atomic_get( volatile HB_COUNTER * pCounter );
 extern HB_EXPORT void        hb_atomic_inc( volatile HB_COUNTER * pCounter );

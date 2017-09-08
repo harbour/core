@@ -1,7 +1,7 @@
 /*
- * Compatibility functions from the SAMPLES directory of Clipper.
+ * Compatibility functions from the SOURCE/SAMPLE directory of CA-Cl*pper.
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ static char * hb_SecToTimeStr( char * pszTime, long lTime )
 {
    int iValue;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_SecToTimeStr(%p, %ld)", pszTime, lTime ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_SecToTimeStr(%p, %ld)", ( void * ) pszTime, lTime ) );
 
    iValue = ( int ) ( ( lTime / 3600 ) % 24 );
    pszTime[ 0 ] = ( char ) ( iValue / 10 ) + '0';

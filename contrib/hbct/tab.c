@@ -272,7 +272,7 @@ HB_FUNC( TABPACK )
          {
             if( sTabIndex == sTabWidth - 1 )
             {
-               /* we have just found the last character of a tabstopp */
+               /* we have just found the last character of a tabstop */
                *( pcRet + sRetLen ) = cTab;
                sRetLen++;
                sFillCount = 0;
@@ -290,7 +290,7 @@ HB_FUNC( TABPACK )
          {
             *( pcRet + sRetLen ) = cTab;
             sRetLen++;
-            /* discard any fill characters before the tabstopp */
+            /* discard any fill characters before the tabstop */
             sFillCount = 0;
             sTabIndex = 0;
             sIndex++;

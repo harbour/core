@@ -1,6 +1,6 @@
 /*
- * IsBegSeq() -> <lResult>
  * FlagShip compatible function
+ *    IsBegSeq() --> <lResult>
  * Test if currently executed code is encapsulated inside
  * begin sequence / end sequence statement activated by
  * current or any upper level function/procedure

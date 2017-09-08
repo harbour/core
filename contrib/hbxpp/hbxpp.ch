@@ -84,7 +84,7 @@
 #define HB_B_THIN_UNI   hb_UTF8ToStrBox( "█▀███▄██" )
 #define HB_B_FAT_UNI    hb_UTF8ToStrBox( "████████" )
 
-/* TEXT INTO <varname> [WRAP [<cEOL>]] [TRIMMED]  */
+/* TEXT INTO <varname> [WRAP [<cEOL>]] [TRIMMED] */
 #xcommand TEXT INTO <v> [<wrp:WRAP>] [<trm:TRIMMED>] => ;
             #pragma __text | <v> += iif( <.trm.>, LTrim( %s ), %s ) +;
                                     iif( <.wrp.>, hb_eol(), "" ); <v> := ""

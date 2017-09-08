@@ -1,5 +1,5 @@
 /*
- * simple unicode sort table
+ * Simple unicode sort table
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

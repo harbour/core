@@ -6,7 +6,7 @@
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -14,12 +14,11 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
-
 
 #include "hbcomp.h"
 #include "hbassert.h"
@@ -251,7 +250,7 @@ const HB_BYTE hb_comp_pcode_len[] = {
    1,        /* HB_P_ENUMEND               */
    3,        /* HB_P_SWITCH                */
    5,        /* HB_P_PUSHDATE              */
-             /* optimalization of inlined math operations */
+             /* optimization of inlined math operations */
    1,        /* HB_P_PLUSEQPOP             */
    1,        /* HB_P_MINUSEQPOP            */
    1,        /* HB_P_MULTEQPOP             */
@@ -443,7 +442,7 @@ static PHB_PCODE_FUNC s_psize_table[] =
    NULL,                       /* HB_P_ENUMEND               */
    NULL,                       /* HB_P_SWITCH                */
    NULL,                       /* HB_P_PUSHDATE              */
-                               /* optimalization of inlined math operations */
+                               /* optimization of inlined math operations */
    NULL,                       /* HB_P_PLUSEQPOP             */
    NULL,                       /* HB_P_MINUSEQPOP            */
    NULL,                       /* HB_P_MULTEQPOP             */
@@ -516,7 +515,6 @@ void hb_compPCodeEval( PHB_HFUNC pFunc, const PHB_PCODE_FUNC * pFunctions, void 
 {
    HB_SIZE nPos = 0;
    HB_SIZE nSkip;
-   HB_BYTE opcode;
 
    /* Make sure that table is correct */
    assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );
@@ -524,7 +522,7 @@ void hb_compPCodeEval( PHB_HFUNC pFunc, const PHB_PCODE_FUNC * pFunctions, void 
 
    while( nPos < pFunc->nPCodePos )
    {
-      opcode = pFunc->pCode[ nPos ];
+      HB_BYTE opcode = pFunc->pCode[ nPos ];
       if( opcode < HB_P_LAST_PCODE )
       {
          PHB_PCODE_FUNC pCall = pFunctions[ opcode ];

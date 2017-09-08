@@ -1,5 +1,5 @@
 /*
- * initialization and switch functions for CT3 math functions
+ * Initialization and switch functions for CT3 math functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>

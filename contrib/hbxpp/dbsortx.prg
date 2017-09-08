@@ -1,5 +1,5 @@
 /*
- * XPP compatible dbSort() function
+ * Xbase++ compatible dbSort() function
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *

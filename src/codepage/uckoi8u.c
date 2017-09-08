@@ -1,7 +1,6 @@
 /*
  * KOI8-U <-> Unicode conversion table
  *
- *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  *
  * This program is free software; you can redistribute it and/or modify

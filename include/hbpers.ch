@@ -54,6 +54,6 @@
 
 #xcommand ARRAY <obj> LEN <nLen> => <obj> := Array( <nLen> )
 
-#xcommand ENDARRAY =>  /* Just used to ease the read of the ascii file */
+#xcommand ENDARRAY =>  /* Just used to ease the read of the ASCII file */
 
 #endif

@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Compatible xbpActiveXControl Class
  *
  * Copyright 2008 Andy Wos
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
@@ -45,14 +45,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *              Xbase++ Compatible xbpActiveXControl Class
- *
- *                 Pritpal Bedi  <bedipritpal@hotmail.com>
- *                              08Nov2008
  */
 
 #include "hbclass.ch"
@@ -67,7 +61,7 @@
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-CREATE CLASS WvgActiveXControl FROM WvgWindow
+CREATE CLASS WvgActiveXControl INHERIT WvgWindow
 
    VAR    oOLE
    VAR    CLSID                              INIT ""
@@ -107,7 +101,7 @@ CREATE CLASS WvgActiveXControl FROM WvgWindow
    METHOD mouseMove()
    METHOD activate()
 
-   ERROR HANDLER OnError
+   ERROR HANDLER OnError()
 
 ENDCLASS
 

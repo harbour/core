@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 HB_FUNC_TRANSLATE( __CLASSINS, __CLASSINSTANCE )
 HB_FUNC_TRANSLATE( __CLASSNAM, __CLASSNAME )

@@ -3,6 +3,7 @@
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (hb_F_Eof())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,16 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
- *    hb_F_Eof()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -108,7 +99,7 @@ HB_FUNC( HB_VMMODE )
 #if   defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) && ! defined( HB_GUI )
    hb_retni( 2 ); /* optimized for console applications */
 #elif defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) && defined( HB_GUI )
-   hb_retni( 1 ); /* optimized for gui applications */
+   hb_retni( 1 ); /* optimized for GUI applications */
 #else
    hb_retni( 0 ); /* no optimization */
 #endif
@@ -223,7 +214,8 @@ HB_FUNC( CURDIRX )
    else
       iDrv = iCurDrv;
 
-   /* NOTE: hb_fsCurDirBuffEx() in xhb, but I couldn't decipher the difference. [vszakats] */
+   /* NOTE: hb_fsCurDirBuffEx() in xHarbour, but I couldn't decipher the
+            difference. [vszakats] */
    hb_fsCurDirBuff( iDrv, pbyBuffer, HB_PATH_MAX );
 
    hb_retc_buffer( pbyBuffer );

@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbp3State Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbp3State Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               07Dec2008
  */
 
 #include "hbclass.ch"
@@ -66,7 +60,7 @@
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-CREATE CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS Wvg3State INHERIT WvgWindow, WvgDataRef
 
    VAR    autosize                              INIT .F.
    VAR    caption                               INIT ""

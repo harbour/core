@@ -65,7 +65,7 @@
 
 #include "ace.h"
 
-/* Autodetect ACE version. */
+/* Auto-detect ACE version. */
 #if   defined( ADS_ROOT_DD_ALIAS )
    #define _ADS_LIB_VERSION  1110 /* or upper */
 #elif defined( ADS_GET_FORMAT_WEB )
@@ -112,23 +112,18 @@ HB_EXTERN_BEGIN
 UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8 * pucFileName );
 #endif
 
-/*
- *  ADS WORKAREA
- *  --------
- *  The Workarea Structure of Advantage Database Server RDD
- *
- */
+/* ADS WORKAREA
+   The Workarea Structure of Advantage Database Server RDD */
 
 typedef struct _ADSAREA_
 {
    AREA area;
 
-   /*
-    *  ADS's additions to the workarea structure
+   /* ADS's additions to the workarea structure
     *
-    *  Warning: The above section MUST match WORKAREA exactly!  Any
-    *  additions to the structure MUST be added below, as in this
-    *  example.
+    * Warning: The above section MUST match WORKAREA exactly!  Any
+    * additions to the structure MUST be added below, as in this
+    * example.
     */
 
    LPDBRELINFO lpdbPendingRel;    /* Pointer to parent rel struct */

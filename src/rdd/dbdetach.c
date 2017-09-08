@@ -51,7 +51,7 @@
 #include "hbthread.h"
 
 /*
- * hb_dbDetach( [<nWorkArea>|<cAlias>], [<xCargo>] ) -> <lSuccess>
+ * hb_dbDetach( [<nWorkArea>|<cAlias>], [<xCargo>] ) --> <lSuccess>
  */
 HB_FUNC( HB_DBDETACH )
 {
@@ -91,7 +91,7 @@ HB_FUNC( HB_DBDETACH )
 
 /*
  * hb_dbRequest( [<cAlias>], [<lFreeArea>], [<@xCargo>], [<nTimeOut>|<lWait>] )
- *          -> <lSuccess>
+ *          --> <lSuccess>
  */
 HB_FUNC( HB_DBREQUEST )
 {

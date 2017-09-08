@@ -1,5 +1,5 @@
 /*
- * dummy I/O driver initialization
+ * Dummy I/O driver initialization
  *
  * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

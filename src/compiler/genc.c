@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -167,7 +167,6 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
    PHB_HINLINE pInline;
    FILE *      yyc; /* file handle for C output */
    HB_BOOL     fHasHbInline = HB_FALSE;
-   int         iFuncSuffix;
 
    hb_fsFNameMerge( szFileName, pFileName );
    if( ! pFileName->szExtension )
@@ -210,6 +209,8 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
    if( pFunc )
    {
+      int iFuncSuffix;
+
       hb_compDumpFindCFunc( HB_COMP_PARAM );
 
       pInline = HB_COMP_PARAM->inlines.pFirst;
@@ -497,8 +498,8 @@ static void hb_compGenCByteStr( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen 
    {
       HB_BYTE uchr = ( HB_BYTE ) pText[ nPos ];
       /*
-       * NOTE: After optimization some Chr(n) can be converted
-       *    into a string containing nonprintable characters.
+       * NOTE: After optimization some Chr( n ) can be converted
+       *    into a string containing non-printable characters.
        *
        * TODO: add switch to use hexadecimal format "%#04x"
        */
@@ -515,7 +516,7 @@ static void hb_compGenCLocalName( PHB_HFUNC pFunc, int iLocal, HB_SIZE nPCodePos
 
    if( cargo->nEndBlockPos > nPCodePos )
    {
-      /* we are accesing variables within a codeblock */
+      /* we are accessing variables within a codeblock */
       /* the names of codeblock variable are lost     */
       if( iLocal < 0 )
          fprintf( cargo->yyc, "\t/* localvar%i */", -iLocal );
@@ -2666,7 +2667,7 @@ static const PHB_GENC_FUNC s_verbose_table[] = {
    hb_p_enumend,
    hb_p_switch,
    hb_p_pushdate,
-   /* optimalization of inlined math operations (+=, -= */
+   /* optimization of inlined math operations (+=, -= */
    hb_p_pluseqpop,
    hb_p_minuseqpop,
    hb_p_multeqpop,

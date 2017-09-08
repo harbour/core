@@ -1,5 +1,5 @@
 /*
- * xhb hb_BuildInfo() emulation.
+ * xHarbour hb_BuildInfo() emulation.
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  *

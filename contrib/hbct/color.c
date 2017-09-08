@@ -80,11 +80,12 @@ HB_FUNC( COLORTON )
 
 HB_FUNC( NTOCOLOR )
 {
-   char szColorString[ 10 ];
    int iColor = hb_parnidef( 1, -1 );
 
    if( iColor >= 0x00 && iColor <= 0xff )
    {
+      char szColorString[ 10 ];
+
       if( hb_parl( 2 ) )
          hb_gtColorsToString( &iColor, 1, szColorString, sizeof( szColorString ) );
       else

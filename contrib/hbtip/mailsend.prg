@@ -69,7 +69,7 @@ FUNCTION hb_SendMail( ... )
    xTrace      -> Optional. If set to .T., a log file is created (smtp-<n>.log). Standard setting is .F.
                             If a block is passed, it will be called for each log event with the message a string, no param on session close.
    lPopAuth    -> Optional. Do POP3 authentication before sending mail.
-   lNoAuth     -> Optional. Disable Autentication methods
+   lNoAuth     -> Optional. Disable authentication methods
    nTimeOut    -> Optional. Number os ms to wait default 10000 (10s)
    cReplyTo    -> Optional.
    lSSL        -> Optional. Need SSL at connect time (TLS need this param set to False)

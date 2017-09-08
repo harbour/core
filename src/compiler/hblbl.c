@@ -1,5 +1,5 @@
 /*
- * generate table with jump labels
+ * Generate table with jump labels
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  *
@@ -321,7 +321,7 @@ static const PHB_LABEL_FUNC s_GenLabelFuncTable[] =
    NULL,                       /* HB_P_ENUMEND               */
    NULL,                       /* HB_P_SWITCH                */
    NULL,                       /* HB_P_PUSHDATE              */
-                               /* optimalization of inlined math operations */
+                               /* optimization of inlined math operations */
    NULL,                       /* HB_P_PLUSEQPOP             */
    NULL,                       /* HB_P_MINUSEQPOP            */
    NULL,                       /* HB_P_MULTEQPOP             */

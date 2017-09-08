@@ -1,6 +1,6 @@
 /*
  * Undocumented CA-Cl*pper function used to validate
- *    instance variable type in assign messages.
+ * instance variable type in assign messages.
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -57,12 +57,12 @@ FUNCTION __eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
    IF ValType( xValue ) == cType
       lError := .F.
       IF xMin != NIL
-         lError := !( xValue >= xMin )
+         lError := ! xValue >= xMin
       ENDIF
       /* NOTE: In CA-Cl*pper 5.2, xMin validation result is
                ignored when xMax != NIL. Harbour is doing the same. */
       IF xMax != NIL
-         lError := !( xValue <= xMax )
+         lError := ! xValue <= xMax
       ENDIF
    ELSE
       lError := .T.
@@ -83,7 +83,7 @@ FUNCTION __eInstVar52( oVar, cMethod, xValue, cType, nSubCode, xMin, xMax )
       oError:subcode := nSubCode
       oError:args := { xValue }
       xValue := Eval( ErrorBlock(), oError )
-      IF !( ValType( xValue ) == cType )
+      IF ! ValType( xValue ) == cType
          __errInHandler()
       ENDIF
    ENDIF

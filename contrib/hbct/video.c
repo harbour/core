@@ -1,6 +1,5 @@
 /*
- *
- * CT3 video functions
+ * CT3 video functions:
  * CharPix(), VGAPalette(), VideoType(), SetFont()
  *
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
@@ -43,9 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- *
- * See COPYING.txt for licensing terms.
  *
  */
 

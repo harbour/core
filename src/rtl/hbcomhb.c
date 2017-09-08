@@ -210,7 +210,7 @@ HB_FUNC( HB_COMOUTPUTSTATE )
 
 HB_FUNC( HB_COMSENDBREAK )
 {
-   /* 50ms break is enough for baudrate 300 and higher */
+   /* 50ms break is enough for baud-rate 300 and higher */
    hb_retl( hb_comSendBreak( hb_parni( 1 ), hb_parnidef( 2, 50 ) ) == 0 );
 }
 

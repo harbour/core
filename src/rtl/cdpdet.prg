@@ -170,7 +170,7 @@ STATIC FUNCTION __UnixParseLangCP( cString, /* @ */ cLang )
       cCP := Stuff( cCP, Len( "iso8859" ) + 1, 0, "-" )
    ENDIF
 
-   /* Convert UNIX CP name to Harbour CP ID */
+   /* Convert Unix CP name to Harbour CP ID */
    SWITCH cCP
    CASE "utf8"
    CASE "cp437"

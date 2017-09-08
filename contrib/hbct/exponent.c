@@ -1,8 +1,8 @@
 /*
- * CT3 Number and bit manipulation functions: - Mantissa()
- *                                              - Exponent()
+ * CT3 Number and bit manipulation functions:
+ *    Mantissa(), Exponent()
  *
- * Copyright 2002 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
+ * Copyright 2002 Walter Negro - FOEESITRA <waltern@foeesitra.org.ar>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

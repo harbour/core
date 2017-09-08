@@ -77,11 +77,9 @@ HB_FUNC( STRSWAP )
       sCmpLen = ( sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2 );
       for( sIndex = 0; sIndex < sCmpLen; sIndex++ )
       {
-         char cExchange;
-
          if( iChange1 )
          {
-            cExchange = *( pcString1 + sIndex );
+            char cExchange = *( pcString1 + sIndex );
             *( pcRet1 + sIndex ) = *( pcString2 + sIndex );
             if( iChange2 )
                *( pcRet2 + sIndex ) = cExchange;

@@ -1,7 +1,5 @@
 /*
- * CT3 video functions:
- *
- * ClearEol(), ClEol(), ClWin()
+ * CT3 video functions: ClearEol(), ClEol(), ClWin()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -63,5 +61,4 @@ FUNCTION ClEol( nRow, nCol )
    RETURN ClearWin( nRow, nCol, nRow, /* MaxCol() */, 7 /* "W/N" */, " " )
 
 FUNCTION ClWin( nRow, nCol )
-
    RETURN ClearWin( nRow, nCol, /* MaxRow() */, /* MaxCol() */, 7 /* "W/N" */, " " )

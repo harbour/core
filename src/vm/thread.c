@@ -47,29 +47,29 @@
 /*
   Harbour level API:
 
-  hb_threadStart( [ <nThreadAttrs>, ] <@sStart()> | <bStart> | <cStart> [, <params,...> ] ) -> <pThID>
-  hb_threadSelf() -> <pThID> | NIL
-  hb_threadID( [ <pThID> ] ) -> <nThNo>
-  hb_threadJoin( <pThID> [, @<xRetCode> ] ) -> <lOK>
-  hb_threadDetach( <pThID> ) -> <lOK>
-* hb_threadQuitRequest( <pThID> ) -> <lOK>
-  hb_threadTerminateAll() -> NIL
-  hb_threadIsMain( [ <pThID> ] ) -> <lMainHvmThread>
-  hb_threadWaitForAll() -> NIL
+  hb_threadStart( [ <nThreadAttrs>, ] <@sStart()> | <bStart> | <cStart> [, <params,...> ] ) --> <pThID>
+  hb_threadSelf() --> <pThID> | NIL
+  hb_threadID( [ <pThID> ] ) --> <nThNo>
+  hb_threadJoin( <pThID> [, @<xRetCode> ] ) --> <lOK>
+  hb_threadDetach( <pThID> ) --> <lOK>
+* hb_threadQuitRequest( <pThID> ) --> <lOK>
+  hb_threadTerminateAll() --> NIL
+  hb_threadIsMain( [ <pThID> ] ) --> <lMainHvmThread>
+  hb_threadWaitForAll() --> NIL
   hb_threadWait( <pThID> | <apThID>, [ <nTimeOut> ] [, <lAll> ] ) => <nThInd> | <nThCount> | 0
-  hb_threadOnce( @<onceControl> [, <bAction> | <@sAction()> ] ) -> <lFirstCall>
-  hb_threadOnceInit( @<item>, <value> ) -> <lInitialized>
-  hb_mutexCreate() -> <pMtx>
-  hb_mutexExists( <pMtx> ) -> <lExists>
-  hb_mutexLock( <pMtx> [, <nTimeOut> ] ) -> <lLocked>
-  hb_mutexUnlock( <pMtx> ) -> <lOK>
-  hb_mutexNotify( <pMtx> [, <xVal>] ) -> NIL
-  hb_mutexNotifyAll( <pMtx> [, <xVal>] ) -> NIL
-  hb_mutexSubscribe( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
-  hb_mutexSubscribeNow( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) -> <lSubscribed>
-  hb_mutexEval( <pMtx>, <bCode> | <@sFunc()> [, <params,...> ] ) -> <xCodeResult>
-** hb_mutexQueueInfo( <pMtx>, [ @<nWaitersCount> ], [ @<nQueueLength> ] ) -> .T.
-  hb_mtvm() -> <lMultiThreadVM>
+  hb_threadOnce( @<onceControl> [, <bAction> | <@sAction()> ] ) --> <lFirstCall>
+  hb_threadOnceInit( @<item>, <value> ) --> <lInitialized>
+  hb_mutexCreate() --> <pMtx>
+  hb_mutexExists( <pMtx> ) --> <lExists>
+  hb_mutexLock( <pMtx> [, <nTimeOut> ] ) --> <lLocked>
+  hb_mutexUnlock( <pMtx> ) --> <lOK>
+  hb_mutexNotify( <pMtx> [, <xVal>] ) --> NIL
+  hb_mutexNotifyAll( <pMtx> [, <xVal>] ) --> NIL
+  hb_mutexSubscribe( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) --> <lSubscribed>
+  hb_mutexSubscribeNow( <pMtx>, [ <nTimeOut> ] [, @<xSubscribed> ] ) --> <lSubscribed>
+  hb_mutexEval( <pMtx>, <bCode> | <@sFunc()> [, <params,...> ] ) --> <xCodeResult>
+** hb_mutexQueueInfo( <pMtx>, [ @<nWaitersCount> ], [ @<nQueueLength> ] ) --> .T.
+  hb_mtvm() --> <lMultiThreadVM>
 
   * - this function call can be ignored by the destination thread in some
       cases. HVM does not guaranties that the QUIT signal will be always
@@ -300,7 +300,7 @@ void hb_threadReleaseCPU( void )
    }
 
    /* the code below is simpler but seems that some Linux kernels
-    * (f.e. from  Centos 5.1) have problems with nanosleep()
+    * (f.e. from CentOS 5.1) have problems with nanosleep()
     * so it was replaced by above code
     */
 
@@ -528,7 +528,7 @@ static HB_CRITICAL_NEW( s_atomicMtx );
 void hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value )
 {
    /* NOTE: on some platforms it may be necessary to protect this
-    * by cirtical section, f.e. when HB_COUNTER cannot be accessed
+    * by critical section, f.e. when HB_COUNTER cannot be accessed
     * using single memory access by CPU.
     */
    *pCounter = value;
@@ -537,7 +537,7 @@ void hb_atomic_set( volatile HB_COUNTER * pCounter, HB_COUNTER value )
 HB_COUNTER hb_atomic_get( volatile HB_COUNTER * pCounter )
 {
    /* NOTE: on some platforms it may be necessary to protect this
-    * by cirtical section, f.e. when HB_COUNTER cannot be accessed
+    * by critical section, f.e. when HB_COUNTER cannot be accessed
     * using single memory access by CPU.
     */
    return *pCounter;
@@ -859,7 +859,7 @@ HB_BOOL hb_threadJoin( HB_THREAD_HANDLE th_h )
    return HB_FALSE;
 #elif defined( HB_OS_OS2 )
    APIRET rc = DosWaitThread( &th_h, DCWW_WAIT );
-   /* TOFIX: ERROR_INVALID_THREADID is a hack for failing DosWaitThread()
+   /* FIXME: ERROR_INVALID_THREADID is a hack for failing DosWaitThread()
     *        when thread terminates before DosWaitThread() call.
     *        OS2 users please check and fix this code if possible.
     */
@@ -1501,7 +1501,6 @@ HB_FUNC( HB_THREADWAIT )
 #if defined( HB_MT_VM )
 #  define HB_THREAD_WAIT_ALLOC  16
    HB_STACK_TLS_PRELOAD
-   HB_BOOL fAll;
    HB_ULONG ulMilliSec = HB_THREAD_INFINITE_WAIT;
    PHB_THREADSTATE * pThreads, pAlloc[ HB_THREAD_WAIT_ALLOC ];
    int iThreads = -1;
@@ -1538,6 +1537,8 @@ HB_FUNC( HB_THREADWAIT )
 
    if( iThreads > 0 )
    {
+      HB_BOOL fAll;
+
       if( HB_ISNUM( 2 ) )
       {
          double dTimeOut = hb_parnd( 2 );
@@ -1571,7 +1572,7 @@ HB_FUNC( HB_THREADTERMINATEALL )
 #endif
 }
 
-/* hb_threadOnce( @<onceControl> [, <bAction> ] ) -> <lFirstCall>
+/* hb_threadOnce( @<onceControl> [, <bAction> ] ) --> <lFirstCall>
  * Execute <bAction> only once. <onceControl> is variable which holds
  * the execution status and have to be initialized to NIL. In most of
  * cases it will be simple static variable in user code.
@@ -1582,7 +1583,7 @@ HB_FUNC( HB_THREADTERMINATEALL )
  * If thread calls hb_threadOnce() with the same <onceControl> variable
  * recursively from <bAction> then hb_threadOnce() returns immediately
  * returning HB_FALSE without executing <bAction>.
- * This function returns logical value indicating if it was 1-st call to
+ * This function returns logical value indicating if it was 1st call to
  * hb_threadOnce() for given <onceControl> variable
  */
 HB_FUNC( HB_THREADONCE )
@@ -1634,7 +1635,7 @@ HB_FUNC( HB_THREADONCE )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_threadOnceInit( @<item>, <value> ) -> <lInitialized>
+/* hb_threadOnceInit( @<item>, <value> ) --> <lInitialized>
  * assign <value> to @<item> only if <item> is NIL
  */
 HB_FUNC( HB_THREADONCEINIT )

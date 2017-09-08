@@ -1,6 +1,6 @@
 /*
- * StrOccurs( <cSub>, <cStr>, [<lAny>] ) -> <nCount>
  * Undocumented FlagShip compatible function
+ *    StrOccurs( <cSub>, <cStr>, [<lAny>] ) --> <nCount>
  *
  * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -46,6 +46,7 @@
  */
 
 FUNCTION StrOccurs( cSub, cStr, lAny )
+
    LOCAL nCount := 0, nPos := 0
 
    IF HB_ISSTRING( cSub ) .AND. HB_ISSTRING( cStr )

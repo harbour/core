@@ -64,7 +64,7 @@ typedef struct _DBFHEADER
    HB_BYTE   uiRecordLen[ 2 ];
    HB_BYTE   bReserved1[ 2 ];
    HB_BYTE   bTransaction;       /* 1-transaction begin */
-   HB_BYTE   bEncrypted;         /* 1-encryptpted table */
+   HB_BYTE   bEncrypted;         /* 1-encrypted table */
    HB_BYTE   bReserved2[ 12 ];
    HB_BYTE   bHasTags;           /* bit filed: 1-production index, 2-memo file in VFP */
    HB_BYTE   bCodePage;
@@ -85,8 +85,8 @@ typedef struct _DBFFIELD
    HB_BYTE   bLen;
    HB_BYTE   bDec;
    HB_BYTE   bFieldFlags;          /* 1-system column, 2-nullable, 4-binary */
-   HB_BYTE   bCounter[ 4 ];        /* autoincrement counter */
-   HB_BYTE   bStep;                /* autoincrement step */
+   HB_BYTE   bCounter[ 4 ];        /* auto-increment counter */
+   HB_BYTE   bStep;                /* auto-increment step */
    HB_BYTE   bReserved2[ 7 ];
    HB_BYTE   bHasTag;
 } DBFFIELD;

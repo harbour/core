@@ -1,7 +1,5 @@
 /*
- * CT3 GET function:
- *
- * GetSecret()
+ * CT3 GET function: GetSecret()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -47,8 +45,8 @@
  */
 
 #include "getexit.ch"
-#include "setcurs.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 
 FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
 
@@ -93,7 +91,7 @@ STATIC FUNCTION _HIDE( cVar )
 
    RETURN PadR( Replicate( "*", Len( RTrim( cVar ) ) ), Len( cVar ) )
 
-STATIC FUNCTION _VALUE( cVar, lHide, xNew )
+STATIC FUNCTION _VALUE( /* @ */ cVar, lHide, xNew )
 
    IF lHide
       RETURN _HIDE( cVar )
@@ -103,7 +101,7 @@ STATIC FUNCTION _VALUE( cVar, lHide, xNew )
 
    RETURN cVar
 
-STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
+STATIC PROCEDURE _SECRET( /* @ */ _cGetSecret, /* @ */ lHide, oGet, oGetList )
 
    LOCAL nKey, nLen, bKeyBlock
    LOCAL cKey

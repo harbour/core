@@ -1,5 +1,5 @@
 /*
- * GET system active getlist handler for default HBGETLIST/GETSYS/READVAR
+ * GET system active GetList handler for default HBGetList()/GetSys/ReadVar()
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *

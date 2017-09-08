@@ -72,7 +72,7 @@ PROCEDURE __dbgShowWorkAreas()
 
    LOCAL nOldArea := Select()
 
-   hb_WAEval( {|| AAdd( aAlias, { select(), Alias() } ) } )
+   hb_WAEval( {|| AAdd( aAlias, { Select(), Alias() } ) } )
 
    IF Len( aAlias ) == 0
       __dbgAlert( "No workareas in use" )
@@ -131,7 +131,7 @@ PROCEDURE __dbgShowWorkAreas()
 
    oCol:ColorBlock := {|| iif( aAlias[ n1 ][ 1 ] == Select() .AND. n2 == 1, { 3, 4 }, { 1, 2 } ) }
 
-   /* Struc browse */
+   /* Structure browser */
 
    aStruc := ( aAlias[ n1 ][ 1 ] )->( dbStruct() )
 

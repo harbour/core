@@ -1,9 +1,7 @@
 /*
  * National Collation Support Module (LT775)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * Lithuanian collation sequence
- * 2010, by Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>
+ * Copyright 2010 Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

@@ -46,7 +46,7 @@
  */
 
 #undef _WIN32_IE
-#define _WIN32_IE  0x0500 /* request Windows 2000 features for NOTIFYICONDATA */
+#define _WIN32_IE  0x0500  /* request Windows 2000 features for NOTIFYICONDATA */
 
 #include "hbwapi.h"
 #include "hbapiitm.h"
@@ -82,7 +82,7 @@
 
 /* win_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
                         [<cTooltip>], [<lAddDel>],
-                        [<cInfo>], [<nInfoTimeOut>], [<cInfoTitle>], [<nInfoFlags>] ) -> <lOK> */
+                        [<cInfo>], [<nInfoTimeOut>], [<cInfoTitle>], [<nInfoFlags>] ) --> <lOK> */
 HB_FUNC( WIN_SHELLNOTIFYICON )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -122,8 +122,8 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 }
 
 /* Details:
-      http://msdn.microsoft.com/en-us/library/bb762164(VS.85).aspx
-      http://msdn.microsoft.com/en-us/library/bb759795(v=VS.85).aspx
+      https://msdn.microsoft.com/library/bb762164
+      https://msdn.microsoft.com/library/bb759795
  */
 
 #if ! defined( HB_OS_WIN_CE )

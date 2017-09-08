@@ -2,7 +2,6 @@
  * Compiler Harbour Portable Object (.hrb) generation
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
- *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    rewritten to work on memory buffers and with new compiler code
  *
@@ -17,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -92,12 +91,12 @@ void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize )
       nLen = strlen( pSym->szName ) + 1;
       memcpy( ptr, pSym->szName, nLen );
       ptr += nLen;
-      /* TOFIX: this conversion strips upper byte from symbol scope
+      /* FIXME: this conversion strips upper byte from symbol scope
        *        Now we added workaround for it by using some strict
        *        bit order and restoring some others at runtime when
        *        .hrb file is loaded but we should create new format
        *        for .hrb files in which this field will have at least
-       *        16bit [druzus]
+       *        16-bit [druzus]
        */
       *ptr++ = ( HB_BYTE ) pSym->cScope;
       /* symbol type */

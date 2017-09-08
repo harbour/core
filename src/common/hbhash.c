@@ -66,7 +66,7 @@ static void hb_hashItemDelete( PHB_HASH_TABLE pTable, PHB_HASH_ITEM pItem )
 }
 
 /* create a new  hash table
- * nSize = initial numer of items in the table
+ * nSize = initial number of items in the table
  * pHashTable = a function that calculates a hash key value
  *       (first parameter is a value to add)
  * pDelete = a function that clears item's value before item's releasing
@@ -103,11 +103,10 @@ void hb_hashTableKill( PHB_HASH_TABLE pTable )
    {
       if( pTable->pItems[ nSize ] )
       {
-         PHB_HASH_ITEM pItem, pFree;
-         pItem = pTable->pItems[ nSize ];
+         PHB_HASH_ITEM pItem = pTable->pItems[ nSize ];
          while( pItem )
          {
-            pFree = pItem;
+            PHB_HASH_ITEM pFree = pItem;
             pItem = pItem->next;
             hb_hashItemDelete( pTable, pFree );
          }
@@ -171,7 +170,7 @@ PHB_HASH_TABLE hb_hashTableResize( PHB_HASH_TABLE pTable, HB_SIZE nNewSize )
    return pNew;
 }
 
-/* add a new value into th ehash table */
+/* add a new value into the hash table */
 HB_BOOL hb_hashTableAdd( PHB_HASH_TABLE pTable, const void * pKey, const void * pValue )
 {
    HB_SIZE nKey;

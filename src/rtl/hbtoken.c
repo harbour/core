@@ -1,5 +1,5 @@
 /*
- *
+ * hb_token*() functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -54,7 +54,7 @@
 #define _HB_TOK_RESPECT_BQUOTE   0x04
 #define _HB_TOK_ISDELIM          0x08
 #define _HB_TOK_EOL_DELIM        0x10
-#define _HB_TOK_STRIP_QUUTE      0x20
+#define _HB_TOK_STRIP_QUOTE      0x20
 
 static HB_SIZE hb_tokenCount( const char * szLine, HB_SIZE nLen,
                               const char * szDelim, HB_SIZE nDelim,
@@ -310,16 +310,19 @@ HB_FUNC( HB_TOKENGET )
 
 /* like hb_tokenGet() but returns next token starting from passed position
  * (0 based) inside string, f.e.:
- *    hb_tokenPtr( cString, @nTokPos, Chr( 9 ) ) -> cToken
+ *    hb_tokenPtr( cString, @nTokPos, Chr( 9 ) ) --> cToken
  */
 HB_FUNC( HB_TOKENPTR )
 {
-   const char * szLine, * szDelim, * szToken;
-   HB_SIZE nLen, nDelim, nSkip, nToken;
+   const char * szLine, * szDelim;
+   HB_SIZE nLen, nDelim;
    int iFlags;
 
    if( hb_tokenParam( 3, hb_parns( 2 ), &szLine, &nLen, &szDelim, &nDelim, &iFlags ) )
    {
+      const char * szToken;
+      HB_SIZE nSkip, nToken;
+
       szToken = hb_tokenGet( szLine, nLen, szDelim, &nDelim, iFlags,
                              1, &nToken );
       if( szToken && nLen > nToken )

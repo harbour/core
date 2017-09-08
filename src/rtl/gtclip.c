@@ -1,5 +1,5 @@
 /*
- * Low level ClipBoard code common to some GT drivers
+ * Low-level ClipBoard code common to some GT drivers
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

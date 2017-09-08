@@ -219,12 +219,12 @@ HB_FUNC( WIN_GETTEXTSIZE )
       {
          SIZE sSize;
 
-         GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );     /* Get the length of the text in device size */
+         GetTextExtentPoint32( hDC, lpData, ( int ) nLen, &sSize );  /* Get the length of the text in device size */
 
-         if( ! hb_parldef( 4, 1 ) )
-            lResult = ( long ) sSize.cy;    /* return the height */
+         if( hb_parldef( 4, HB_TRUE ) )
+            lResult = ( long ) sSize.cx;  /* return the width */
          else
-            lResult = ( long ) sSize.cx;    /* return the width */
+            lResult = ( long ) sSize.cy;  /* return the height */
       }
 
       hb_strfree( hData );

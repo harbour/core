@@ -46,7 +46,7 @@
 
 #pragma -b-
 
-#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
+#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject class */
 #include "hbclass.ch"
 
 #include "inkey.ch"
@@ -105,7 +105,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
 
    oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    oBrwSets:ColorSpec := __dbg():ClrModal()
-   oBrwSets:Cargo := { 1, {} }  // Actual highligthed row
+   oBrwSets:Cargo := { 1, {} }  // Actual highlighted row
    AAdd( oBrwSets:Cargo[ 2 ], aArray )
 
    oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::arrayName + "[" + hb_ntos( oBrwSets:cargo[ 1 ] ) + "]" } ) )
@@ -146,7 +146,7 @@ METHOD PROCEDURE doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1, ;
                   oBrowse:getColumn( 2 ):Width, @cValue, ;
                   __dbgExprValidBlock(), __dbgColors()[ 2 ], 256 )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          pItem[ nSet ] := &cValue
       RECOVER USING oErr
          __dbgAlert( oErr:description )

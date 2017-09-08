@@ -61,7 +61,7 @@ static AREAP s_foxAreaPointer( int iParam )
 
       if( szAlias )
          hb_rddGetAliasNumber( szAlias, &iArea );
-      else 
+      else
          iArea = hb_parni( iParam );
 
       return ( AREAP ) hb_rddGetWorkAreaPointer( iArea );

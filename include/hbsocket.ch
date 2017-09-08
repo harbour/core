@@ -1,5 +1,5 @@
 /*
- * socket related constant values
+ * Socket related constant values
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -197,11 +197,11 @@
 #define HB_SOCKET_IFF_MULTICAST           0x0010   /* Supports multicast */
 
 /* Harbour interface information indexes */
-#define HB_SOCKET_IFINFO_FAMILY           1     /* adress family */
+#define HB_SOCKET_IFINFO_FAMILY           1     /* address family */
 #define HB_SOCKET_IFINFO_NAME             2     /* interface name */
 #define HB_SOCKET_IFINFO_FLAGS            3     /* flags HB_SOCKET_IFF_* */
 #define HB_SOCKET_IFINFO_ADDR             4     /* interface address */
-#define HB_SOCKET_IFINFO_NETMASK          5     /* subnetmask */
+#define HB_SOCKET_IFINFO_NETMASK          5     /* subnet mask */
 #define HB_SOCKET_IFINFO_BROADCAST        6     /* broadcast address */
 #define HB_SOCKET_IFINFO_P2PADDR          7     /* point-to-point address */
 #define HB_SOCKET_IFINFO_HWADDR           8     /* hardware address */

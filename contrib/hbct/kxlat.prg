@@ -53,7 +53,7 @@
 
 /* Trick to make it work in the STATIC initializer.
    It's safe because it's only used with ASCII chars. */
-#define hb_keyCode( x ) Asc( x )
+#define hb_keyCode( x )  Asc( x )
 
 STATIC s_hTrs := { => }
 STATIC s_hMutex := hb_mutexCreate()

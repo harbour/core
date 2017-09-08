@@ -226,7 +226,7 @@ FUNCTION hb_DirSepAdd( cDir )
 
    IF ! Empty( cDir ) .AND. ;
       ! _ISDRIVESPEC( cDir ) .AND. ;
-      !( Right( cDir, 1 ) == hb_ps() )
+      ! Right( cDir, 1 ) == hb_ps()
 
       cDir += hb_ps()
    ENDIF
@@ -241,14 +241,14 @@ FUNCTION hb_DirSepDel( cDir )
 
    IF Empty( hb_osDriveSeparator() )
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-         !( cDir == hb_ps() + hb_ps() )
+         ! cDir == hb_ps() + hb_ps()
 
          cDir := hb_StrShrink( cDir )
       ENDDO
    ELSE
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-         !( cDir == hb_ps() + hb_ps() ) .AND. ;
-         !( Right( cDir, Len( hb_osDriveSeparator() ) + 1 ) == hb_osDriveSeparator() + hb_ps() )
+         ! cDir == hb_ps() + hb_ps() .AND. ;
+         ! Right( cDir, Len( hb_osDriveSeparator() ) + 1 ) == hb_osDriveSeparator() + hb_ps()
 
          cDir := hb_StrShrink( cDir )
       ENDDO

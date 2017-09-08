@@ -47,7 +47,7 @@
 #include "hbclass.ch"
 
 /* An URL:
-   https://user:passwd@example.com:port/mypages/mysite/page.html?avar=0&avar1=1
+   https://user:passwd@example.org:port/mypages/mysite/page.html?avar=0&avar1=1
    ^---^   ^--^ ^----^ ^---------^ ^--^ ^----------------------^ ^------------^
    cProto   UID  PWD     cServer  nPort          cPath               cQuery
                                         ^------------^ ^-------^
@@ -110,7 +110,7 @@ METHOD SetAddress( cUrl ) CLASS TUrl
       RETURN .T.
    ENDIF
 
-   // TOPLEVEL url parsing. May fail.
+   // Top-level URL parsing. May fail.
    IF Empty( aMatch := hb_regex( ::cREuri, cUrl ) )
       RETURN .F.
    ENDIF

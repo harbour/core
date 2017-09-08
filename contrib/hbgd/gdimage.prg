@@ -70,7 +70,7 @@ CREATE CLASS GDImage
 
    METHOD New( sx, sy )  CONSTRUCTOR
 
-   /* IMAGE CREATION, DESTRUCTION, LOADING AND SAVING  */
+   /* IMAGE CREATION, DESTRUCTION, LOADING AND SAVING */
 
    // Create in memory
    METHOD Create( sx, sy )                 INLINE ::pImage := gdImageCreate( sx, sy ), Self
@@ -132,7 +132,7 @@ CREATE CLASS GDImage
    DESTRUCTOR Destruct()
 #endif
 
-   /* DRAWING FUNCTIONS */
+   /* Drawing functions */
 
    METHOD SetPixel( x, y, color )          INLINE hb_default( @color, ::pColor ), gdImageSetPixel( ::pImage, x, y, color )
    METHOD Line( x1, y1, x2, y2, color )    INLINE hb_default( @color, ::pColor ), gdImageLine( ::pImage, x1, y1, x2, y2, color )

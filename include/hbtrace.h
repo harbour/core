@@ -153,7 +153,7 @@ HB_EXTERN_BEGIN
 #define HB_TRACE(l, x)                HB_ECHO_TRACE_##l(x)
 
 /* NOTE: This will print tracing info without changing current
- * filename/linenum information - this is usefull if we want to
+ * filename/linenum information - this is useful if we want to
  * trace the source of unreleased memory blocks
  */
 #define HB_ECHO_STEALTH( l, x ) do \

@@ -1,7 +1,5 @@
 /*
- * CT3 video functions:
- *
- * SaveCursor(), RestCursor()
+ * CT3 video functions: SaveCursor(), RestCursor()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

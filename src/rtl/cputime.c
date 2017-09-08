@@ -71,7 +71,7 @@
 #endif
 
 /*
-   SecondsCPU(n) -> nTime
+   SecondsCPU( n ) --> nTime
    FlagShip/CLIP compatible function, which reports how many CPU and/or
    system seconds have elapsed since the beginning of the program execution.
     n == 1  utime  -> user CPU time of the current process

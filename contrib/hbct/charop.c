@@ -295,10 +295,11 @@ void ct_charop( int iMode )
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
-      int iError = 0;
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
+         int iError = 0;
+
          switch( iMode )
          {
             case CT_CHAROP_CHARADD:

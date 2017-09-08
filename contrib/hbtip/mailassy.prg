@@ -2,7 +2,7 @@
  * tip_MailAssemble() (This version started from Luiz's original work on SendMail())
  *
  * Copyright 2007 Luiz Rafael Culik Guimaraes and Patrick Mast
- * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (SSL support)
+ * Copyright 2009-2017 Viktor Szakats (vszakats.net/harbour) (SSL support)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

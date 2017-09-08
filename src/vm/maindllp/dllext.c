@@ -2,14 +2,7 @@
  * Windows pcode DLL entry point and VM/RTL routing functions
  *
  * Copyright 2001 Antonio Linares <alinares@fivetech.com>
- *
- * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * rewritten
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
+ * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (rewritten)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

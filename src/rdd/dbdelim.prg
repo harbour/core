@@ -4,7 +4,6 @@
  *
  * Copyright 2001-2003 David G. Holm <dholm@jsd-llc.com>
  * APPEND FROM code submitted by Marco Braida <marcobra@elart.it>
- *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    function __dbDelim() replaced by the new one which uses
  *    DELIM RDD I've just created

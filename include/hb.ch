@@ -1,7 +1,7 @@
 /*
  * Main Harbour header
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2017 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -54,6 +54,7 @@
 #include "hbgtinfo.ch"
 #include "hbhash.ch"
 #include "hbserial.ch"
+#include "hbver.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 

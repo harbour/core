@@ -88,7 +88,7 @@ typedef struct _SDFAREA
    HB_ULONG    ulRecNo;             /* Current record */
    HB_ULONG    ulRecCount;          /* Number of records (in export) */
    HB_BOOL     fTransRec;           /* Can put whole records */
-   HB_BOOL     fFlush;              /* Data was written to SDF and not commited */
+   HB_BOOL     fFlush;              /* Data was written to SDF and not committed */
    HB_BOOL     fShared;             /* Shared file */
    HB_BOOL     fReadonly;           /* Read only file */
    HB_BOOL     fPositioned;         /* Positioned record */

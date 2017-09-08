@@ -71,7 +71,7 @@ PROCEDURE Main_STR()
 #ifndef RT_NO_C
 
 #ifdef __PLATFORM__WINDOWS
-   IF .F.   /* [U]LONG is 32 bit integer in Win64 */
+   IF .F.   /* [U]LONG is 32-bit integer in Windows 64-bit */
 #else
    IF l64
 #endif
@@ -442,7 +442,7 @@ PROCEDURE Main_STR()
    /* TODO: StrTran() */
 
 /* NOTE: It seems like CA-Cl*pper 5.x is not aware of the BREAK return value of
-         the error handler, so the error is thrown, but we can't catch it.
+         the error handler, so the error is thrown, but we cannot catch it.
          This bug is fixed in CA-Cl*pper 5.3 [vszakats] */
 #ifndef __CLIPPER__
 #ifndef __XPP__
@@ -503,13 +503,13 @@ PROCEDURE Main_STR()
 #ifdef __HARBOUR__
    #pragma -kh-
 #endif
-   HBTEST At( "", "" )                    IS 1  /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
-   HBTEST At( "", "ABCDEF" )              IS 1  /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
+   HBTEST At( "", "" )                    IS 1  /* Bug in CA-Cl*pper compiler optimizer, it should return 0 */
+   HBTEST At( "", "ABCDEF" )              IS 1  /* Bug in CA-Cl*pper compiler optimizer, it should return 0 */
 #ifdef __HARBOUR__
    /* enable Harbour extensions and test correct results results */
    #pragma -kh+
-   HBTEST At( "", "" )                    IS 0  /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
-   HBTEST At( "", "ABCDEF" )              IS 0  /* Bug in CA-Cl*ppers compiler optimizer, it should return 0 */
+   HBTEST At( "", "" )                    IS 0  /* Bug in CA-Cl*pper compiler optimizer, it should return 0 */
+   HBTEST At( "", "ABCDEF" )              IS 0  /* Bug in CA-Cl*pper compiler optimizer, it should return 0 */
 #endif
    HBTEST At( scStringE, scStringE )      IS 0
    HBTEST At( scStringE, "ABCDEF" )       IS 0

@@ -1,7 +1,7 @@
 /*
- * CT3 Miscellaneous functions: - KeyTime()
+ * CT3 Miscellaneous functions: KeyTime()
  *
- * Copyright 2005 Pavel Tsarenko - <tpe2@mail.ru>
+ * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,8 +60,8 @@ FUNCTION KeyTime( nKey, cClockTime )
       nMin := Val( SubStr( cClockTime, 4, 2 ) )
       nSec := Val( SubStr( cClockTime, 7, 2 ) )
       nLast := -1
-      t_hIdle := hb_idleAdd( {|| doKeyTime( nKey, cClockTime, nHour, nMin, nSec, ;
-         @nLast ) } )
+      t_hIdle := hb_idleAdd( ;
+         {|| doKeyTime( nKey, cClockTime, nHour, nMin, nSec, @nLast ) } )
       RETURN .T.
    ENDIF
 
@@ -69,12 +69,13 @@ FUNCTION KeyTime( nKey, cClockTime )
 
 STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
 
-   LOCAL ccTime := Time()
-   LOCAL nHr := Val( SubStr( ccTime, 1, 2 ) )
-   LOCAL nMn := Val( SubStr( ccTime, 4, 2 ) )
-   LOCAL nSc := Val( SubStr( ccTime, 7, 2 ) )
+   LOCAL cTime := Time()
+   LOCAL nHr := Val( SubStr( cTime, 1, 2 ) )
+   LOCAL nMn := Val( SubStr( cTime, 4, 2 ) )
+   LOCAL nSc := Val( SubStr( cTime, 7, 2 ) )
 
-   IF nHour == 99
+   DO CASE
+   CASE nHour == 99
       IF nHr > nLast
          hb_keyPut( nKey )
          nLast := nHr
@@ -83,7 +84,7 @@ STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
             t_hIdle := NIL
          ENDIF
       ENDIF
-   ELSEIF nMin == 99 .AND. nHr == nHour
+   CASE nMin == 99 .AND. nHr == nHour
       IF nMn > nLast
          hb_keyPut( nKey )
          nLast := nMn
@@ -92,7 +93,7 @@ STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
             t_hIdle := NIL
          ENDIF
       ENDIF
-   ELSEIF nSec == 99 .AND. nHr == nHour .AND. nMn == nMin
+   CASE nSec == 99 .AND. nHr == nHour .AND. nMn == nMin
       IF nSc > nLast
          hb_keyPut( nKey )
          nLast := nSc
@@ -101,10 +102,10 @@ STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
             t_hIdle := NIL
          ENDIF
       ENDIF
-   ELSEIF ccTime > cClockTime
+   CASE cTime > cClockTime
       hb_keyPut( nKey )
       hb_idleDel( t_hIdle )
       t_hIdle := NIL
-   ENDIF
+   ENDCASE
 
    RETURN

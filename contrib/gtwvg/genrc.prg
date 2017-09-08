@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Parts Compatible functions
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,10 @@
  *
  */
 
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                  Xbase++ Parts Compatible functions
-//
-//                Pritpal Bedi  <bedipritpal@hotmail.com>
-//                              03Dec2011
-//
+/*                                EkOnkar
+ *                          ( The LORD is ONE )
+ */
+
 #include "hbclass.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"

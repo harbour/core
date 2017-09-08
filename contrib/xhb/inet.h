@@ -1,5 +1,5 @@
 /*
- * The Internet Protocol / TCP support (xhb compatibility header)
+ * The Internet Protocol / TCP support (xHarbour compatibility header)
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  *

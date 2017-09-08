@@ -1,8 +1,8 @@
 /*
- * xhb compatibility functions HSetPartition()/HGetPartition()
+ * xHarbour compatibility functions HSetPartition()/HGetPartition()
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- * Copyright 2003 Giancarlo Niccolai
+ * Copyright 2003 Giancarlo Niccolai <gc@niccolai.ws>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* Dummy compatibility functions mimicing RTE behavior only.
+/* Dummy compatibility functions mimicking RTE behavior only.
    The rest is not needed in Harbour */
 
 HB_FUNC( HSETPARTITION )
@@ -60,9 +60,9 @@ HB_FUNC( HSETPARTITION )
    if( ! pHash )
       hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else if( hb_hashLen( pHash ) > 0 )
-      hb_errRT_BASE( EG_ARG, 2017, "Can't change partitioning in a non-empty hash", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2017, "Cannot change partitioning in a non-empty hash", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else if( ( hb_hashGetFlags( pHash ) & HB_HASH_KEEPORDER ) != 0 )
-      hb_errRT_BASE( EG_ARG, 2017, "Can't set partitioning in a hash with associative array compatibility", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      hb_errRT_BASE( EG_ARG, 2017, "Cannot set partitioning in a hash with associative array compatibility", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    else if( uiLevel < 1 || uiLevel > 8 )
       hb_errRT_BASE( EG_ARG, 2017, "Pagination level must be between 1 and 8", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

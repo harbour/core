@@ -1,5 +1,5 @@
 /*
- * Compiler command line and environment parameters checking
+ * Compiler command-line and environment parameters checking
  *
  * Copyright 2015 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -119,7 +119,7 @@ static void hb_compChkIgnoredInfo( HB_COMP_DECL, const char * szSwitch )
    char buffer[ 64 ];
 
    hb_snprintf( buffer, sizeof( buffer ),
-                "Ignored unsupported command line option: %s\n", szSwitch );
+                "Ignored unsupported command-line option: %s\n", szSwitch );
    hb_compOutStd( HB_COMP_PARAM, buffer );
 }
 
@@ -455,6 +455,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   break;
                default:
                   szSwPtr = hb_compChkOptionAddPath( HB_COMP_PARAM, szSwPtr, fEnv );
+                  break;
             }
             break;
 
@@ -592,6 +593,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   default:
                      ch = -1;
                      --szSwPtr;
+                     break;
                }
                if( ch == -1 )
                   break;
@@ -693,6 +695,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
                   /* fallthrough */
                default:
                   HB_COMP_PARAM->fQuiet = HB_TRUE;
+                  break;
             }
             break;
 
@@ -838,7 +841,7 @@ static const char * hb_compChkParseSwitch( HB_COMP_DECL, const char * szSwitch,
    return "";
 }
 
-/* check command line parameters */
+/* check command-line parameters */
 void hb_compChkCommandLine( HB_COMP_DECL, int argc, const char * const argv[] )
 {
    int i;

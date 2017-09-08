@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpTreeView compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbpTreeView compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               26Nov2008
  */
 
 #include "hbclass.ch"
@@ -62,11 +56,11 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgComboBox  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgComboBox INHERIT WvgWindow, WvgDataRef
 
-   VAR    type                                  INIT    WVGCOMBO_DROPDOWN
-   VAR    drawMode                              INIT    WVG_DRAW_NORMAL
-   VAR    nCurSelected                          INIT    0
+   VAR    type                                  INIT WVGCOMBO_DROPDOWN
+   VAR    drawMode                              INIT WVG_DRAW_NORMAL
+   VAR    nCurSelected                          INIT 0
 
    VAR    aInfo                                 INIT    NIL
 

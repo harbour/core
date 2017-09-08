@@ -55,9 +55,8 @@ HB_FUNC( HB_STRXOR )
    if( pItem )
    {
       PHB_ITEM     pItem2;
-      HB_SIZE      nLen1, nLen2, n, n2;
+      HB_SIZE      nLen1, n;
       const char * pStr1;
-      const char * pStr2;
       char *       pRet;
 
       pStr1 = hb_itemGetCPtr( pItem );
@@ -65,10 +64,11 @@ HB_FUNC( HB_STRXOR )
 
       if( ( pItem2 = hb_param( 2, HB_IT_STRING ) ) != NULL )
       {
-         nLen2 = hb_itemGetCLen( pItem2 );
+         HB_SIZE nLen2 = hb_itemGetCLen( pItem2 );
          if( nLen2 )
          {
-            pStr2 = hb_itemGetCPtr( pItem2 );
+            const char * pStr2 = hb_itemGetCPtr( pItem2 );
+            HB_SIZE n2;
 
             pRet = ( char * ) hb_xgrab( nLen1 + 1 );
             memcpy( pRet, pStr1, nLen1 + 1 );

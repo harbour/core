@@ -1,6 +1,5 @@
 /*
- * CT3 Number and bit manipulation functions:
- *       EnvParam()
+ * EnvParam()
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -77,10 +76,11 @@ HB_FUNC( ENVPARAM )
     defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
    char * const * pEnviron = environ, * const * pEnv;
    char * pResult = NULL, * pDst;
-   HB_SIZE nSize = 0;
 
    if( pEnviron )
    {
+      HB_SIZE nSize = 0;
+
       for( pEnv = pEnviron; *pEnv; pEnv++ )
          nSize += strlen( *pEnv ) + 2;
 
@@ -105,7 +105,7 @@ HB_FUNC( ENVPARAM )
       hb_retc_null();
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    LPTCH lpEnviron = GetEnvironmentStrings(), lpEnv;
-   LPTSTR lpResult = NULL, lpDst;
+   LPTSTR lpResult = NULL;
    HB_SIZE nSize = 0;
 
    if( lpEnviron )
@@ -118,6 +118,8 @@ HB_FUNC( ENVPARAM )
       }
       if( nSize > 0 )
       {
+         LPTSTR lpDst;
+
          lpResult = ( LPTSTR ) hb_xgrab( ( nSize + 1 ) * sizeof( TCHAR ) );
          for( lpEnv = lpEnviron, lpDst = lpResult; *lpEnv; lpEnv++ )
          {

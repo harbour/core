@@ -1,5 +1,5 @@
 /*
- * A platform indpendent include file to include unistd.h and/or io.h
+ * Platform independent include file to include unistd.h and/or io.h
  *
  * Copyright 2001 {list of individual authors and e-mail addresses}
  *

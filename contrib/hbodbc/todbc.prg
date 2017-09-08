@@ -1,6 +1,9 @@
 /*
  * ODBC Access Class
  *
+ * Copyright 2006 Marcelo Lombardo <lombardo@uol.com.br>
+ *   (:SetCnnOptions(), :GetCnnOptions(), :Commit(), :RollBack(),
+ *   :SetStmtOptions(), :GetStmtOptions(), :SetAutoCommit())
  * Copyright 1999 Felipe G. Coury <fcoury@creation.com.br>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -41,21 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1996 Marcelo Lombardo <lombardo@uol.com.br>
- *
- * METHOD SetCnnOptions( nType, uBuffer )
- * METHOD GetCnnOptions( nType )
- * METHOD Commit()
- * METHOD RollBack()
- * METHOD SetStmtOptions( nType, uBuffer )
- * METHOD GetStmtOptions( nType )
- * METHOD SetAutoCommit( lEnable )
  *
  */
 

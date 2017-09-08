@@ -1,6 +1,6 @@
 /*
- * common file with all HVM functions for compilers which can improve
- *    speed automatically inlining functions
+ * Common file with all HVM functions for compilers which can improve
+ * speed automatically inlining functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -66,10 +66,10 @@
 
 /* For Linux and mremap() function */
 #ifndef _GNU_SOURCE
-#  define _GNU_SOURCE
+#define _GNU_SOURCE
 #endif
 
-/* warning the order of included files is important
+/* Warning: the order of included files is important
  * due to macros used to overload some functions
  */
 

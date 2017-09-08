@@ -1,5 +1,5 @@
 /*
- * example of Harbour codepage using UTF8 encoding
+ * Example of Harbour codepage using UTF-8 encoding
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

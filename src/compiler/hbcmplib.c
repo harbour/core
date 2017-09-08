@@ -44,7 +44,6 @@
  *
  */
 
-#include "hbapi.h"
 #include "hbcomp.h"
 
 static void s_pp_msg( void * cargo, int iErrorFmt, int iLine,

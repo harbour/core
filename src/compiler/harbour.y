@@ -83,8 +83,8 @@ static void hb_compLoopExit( HB_COMP_DECL );
 static void hb_compLoopHere( HB_COMP_DECL );
 static long hb_compLoopCount( HB_COMP_DECL );
 
-static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, HB_SIZE nOffset ); /* generates a support structure for elseifs pcode fixups */
-static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
+static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, HB_SIZE nOffset ); /* generates a support structure for ELSEIFs pcode fixups */
+static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements the ELSEIFs pcode fixups */
 
 static void hb_compRTVariableAdd( HB_COMP_DECL, PHB_EXPR, HB_BOOL );
 static void hb_compRTVariableGen( HB_COMP_DECL, const char * );
@@ -191,9 +191,9 @@ extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error manageme
 %token THREAD
 
 /*the lowest precedence*/
-/*postincrement and postdecrement*/
+/*post-increment and post-decrement*/
 %left   POST
-/*assigment - from right to left*/
+/*assignment - from right to left*/
 %right  INASSIGN
 %right  PLUSEQ MINUSEQ
 %right  MULTEQ DIVEQ MODEQ
@@ -210,7 +210,7 @@ extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error manageme
 %right  '*' '/' '%'
 %right  POWER
 %right  UNARY
-/*preincrement and predecrement*/
+/*pre-increment and pre-decrement*/
 %right  PRE
 /*special operators*/
 %right  ALIASOP '&' '@'
@@ -1083,7 +1083,7 @@ PareExpListAlias : PareExpList ALIASOP
                  ;
 
 /* NOTE: Clipper allows to pass variable by reference only as
- * function arguments, IIF() 2-nd and 3-rd arguments and as
+ * function arguments, iif() 2nd and 3rd arguments and as
  * explicit array items {...@var...}
  * AFAIK these are also the only one places where empty expressions in
  * the parenthesis expressions list are accepted
@@ -1839,7 +1839,7 @@ BeginSeq    : BEGINSEQ        /* 1 */
                   {
                      if( $<lNumber>4 != lLoopCount )
                      {
-                        /* ALWAYS statement after RECOVER with EXIT/LOOP statments */
+                        /* ALWAYS statement after RECOVER with EXIT/LOOP statements */
                         hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_ALWAYS_AFTER_EXIT, "EXIT/LOOP", NULL );
                      }
                      --HB_COMP_PARAM->functions.pLast->wAlwaysCounter;

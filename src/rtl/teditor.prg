@@ -93,12 +93,12 @@ CREATE CLASS HBEditor
    METHOD ExitState()                                    // Returns ::lExitEdit
 
    METHOD KeyboardHook( nKey )                           // Gets called every time there is a key not handled directly by HBEditor
-   METHOD IdleHook()                                     // Gets called every time there are no more keys to hanlde just before HBEditor blocks itself waiting for a char
+   METHOD IdleHook()                                     // Gets called every time there are no more keys to handle just before HBEditor blocks itself waiting for a char
 
    METHOD Resize( nTop, nLeft, nBottom, nRight )         // Redefines editor window size and refreshes it
    METHOD SetColor( cColorString )                       // Sets/retrieves color used for screen writes
-   METHOD Hilite()                                       // Start Hilighting swapping first two color definitions inside cColorSpec
-   METHOD DeHilite()                                     // Stop Hilighting
+   METHOD Hilite()                                       // Start highlighting swapping first two color definitions inside cColorSpec
+   METHOD DeHilite()                                     // Stop highlighting
 
    METHOD Row()                                          // Returns current line position on the screen
    METHOD Col()                                          // Returns current column position on the screen
@@ -215,7 +215,7 @@ METHOD LoadText( cText ) CLASS HBEditor
 
 // Saves file being edited, if there is no file name does nothing, returns .T. if OK
 METHOD SaveFile() CLASS HBEditor
-   RETURN ! HB_ISNULL( ::cFile ) .AND. ;
+   RETURN ! ::cFile == "" .AND. ;
           ! ::lDirty := ! hb_MemoWrit( ::cFile, ::GetText() )
 
 // Add a new Line of text at end of current text

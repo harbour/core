@@ -1,5 +1,5 @@
 /*
- *
+ * Regex functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -106,8 +106,8 @@ PHB_REGEX hb_regexCompile( const char * szRegEx, HB_SIZE nLen, int iFlags )
 
    HB_SYMBOL_UNUSED( nLen );
 
-   pRegEx = ( PHB_REGEX ) hb_gcAllocate( sizeof( HB_REGEX ), &s_gcRegexFuncs );
-   memset( pRegEx, 0, sizeof( HB_REGEX ) );
+   pRegEx = ( PHB_REGEX ) hb_gcAllocate( sizeof( *pRegEx ), &s_gcRegexFuncs );
+   memset( pRegEx, 0, sizeof( *pRegEx ) );
    pRegEx->fFree = HB_TRUE;
    pRegEx->iFlags = iFlags;
 

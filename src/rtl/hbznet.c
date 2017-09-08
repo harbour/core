@@ -671,7 +671,7 @@ PHB_SOCKEX hb_sockexNewZNet( HB_SOCKET sd, const void * keydata, int keylen,
 }
 
 /* hb_socketNewZNet( <pSocket>, [<cPass>], ;
-                     [<nCompressionLevel>], [<nStrategy>] ) -> <pSocket>
+                     [<nCompressionLevel>], [<nStrategy>] ) --> <pSocket>
  */
 HB_FUNC( HB_SOCKETNEWZNET )
 {

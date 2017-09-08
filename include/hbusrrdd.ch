@@ -44,7 +44,6 @@
  *
  */
 
-
 /* Movement and positioning methods */
 #define UR_BOF                                  1
 #define UR_EOF                                  2
@@ -158,7 +157,7 @@
 #define UR_READDBHEADER                        92
 #define UR_WRITEDBHEADER                       93
 
-/* non WorkArea functions       */
+/* non WorkArea functions */
 #define UR_INIT                                94
 #define UR_EXIT                                95
 #define UR_DROP                                96

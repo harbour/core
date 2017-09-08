@@ -1,5 +1,5 @@
 /*
- * xhb stream classes
+ * xHarbour stream classes
  *
  * Copyright 2009 {list of individual authors and e-mail addresses}
  *

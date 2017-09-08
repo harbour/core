@@ -304,7 +304,7 @@
    #xtranslate hb_enumIndex( <!v!> ) => <v>:__enumIndex()
 
    /* TRY / CATCH / FINALLY / END */
-   #xcommand TRY  => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   #xcommand TRY => BEGIN SEQUENCE WITH __BreakBlock()
    #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
    #xcommand FINALLY => ALWAYS
 
@@ -314,19 +314,19 @@
 
    /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
    #translate ( <exp1> IN <exp2> )     => ( ( <exp1> ) $ ( <exp2> ) )
-   #translate ( <exp1> HAS <exp2> )    => ( hb_regexHas( ( <exp2> ), ( <exp1> ) ) )
-   #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( ( <exp2> ), ( <exp1> ) ) )
-   #translate ( <exp1> \<\< <exp2> )   => ( hb_bitShift( ( <exp1> ), ( <exp2> ) ) )
-   #translate ( <exp1> >> <exp2> )     => ( hb_bitShift( ( <exp1> ), -( <exp2> ) ) )
+   #translate ( <exp1> HAS <exp2> )    => hb_regexHas( <exp2>, <exp1> )
+   #translate ( <exp1> LIKE <exp2> )   => hb_regexLike( <exp2>, <exp1> )
+   #translate ( <exp1> \<\< <exp2> )   => hb_bitShift( <exp1>, <exp2> )
+   #translate ( <exp1> >> <exp2> )     => hb_bitShift( <exp1>, -( <exp2> ) )
    /* NOTE: These macros can break some valid Harbour/Clipper constructs,
             so they are disabled by default. Enable them with care, or
             even better to switch to use HB_BIT*() functions directly.
             They are optimized by Harbour compiler the same way (and even
             more) as these C-like operators, without any bad side-effects. */
    #if defined( XHB_BITOP )
-      #translate ( <exp1> | <exp2> )      => ( xhb_bitOr( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> & <exp2> )      => ( xhb_bitAnd( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> ^^ <exp2> )     => ( xhb_bitXor( ( <exp1> ), ( <exp2> ) ) )
+      #translate ( <exp1> | <exp2> )      => xhb_bitOr( <exp1>, <exp2> )
+      #translate ( <exp1> & <exp2> )      => xhb_bitAnd( <exp1>, <exp2> )
+      #translate ( <exp1> ^^ <exp2> )     => xhb_bitXor( <exp1>, <exp2> )
    #endif
 
    #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;
@@ -512,7 +512,7 @@
                                                    hb_HKeepOrder( h ) ;;
                                                    RETURN .T. ; }:eval( <x> )
 
-   /* Inet functions */
+   /* inet*() functions */
    #xtranslate inetInit( [<x,...>] )                => hb_inetInit( <x> )
    #xtranslate inetCleanup( [<x,...>] )             => hb_inetCleanup( <x> )
    #xtranslate inetCreate( [<x,...>] )              => hb_inetCreate( <x> )

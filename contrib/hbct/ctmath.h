@@ -1,7 +1,7 @@
 /*
  * CA-T*ols for Harbour, Math header file
  *
- * Copyright 2001 Alejandro de garate <alex_degarate@hotmail.com>
+ * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ HB_EXTERN_BEGIN
 extern int ct_math_init( void );
 extern int ct_math_exit( void );
 
-/* set & get precision */
+/* set and get precision */
 extern void ct_setprecision( int iPrecision );
 extern int ct_getprecision( void );
 

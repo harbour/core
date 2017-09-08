@@ -65,7 +65,6 @@ HB_BOOL hb_fsFile( const char * pszFileName )
 HB_BOOL hb_fsIsDirectory( const char * pszFileName )
 {
    HB_BOOL bResult = HB_FALSE;
-   PHB_FFIND ffind;
    char * pszFree = NULL;
    int iLen;
 
@@ -80,6 +79,7 @@ HB_BOOL hb_fsIsDirectory( const char * pszFileName )
 
    if( iLen && iLen <= ( HB_PATH_MAX - 1 ) )
    {
+      PHB_FFIND ffind;
       if( ( ffind = hb_fsFindFirst( pszFileName, HB_FA_DIRECTORY ) ) != NULL )
       {
          do

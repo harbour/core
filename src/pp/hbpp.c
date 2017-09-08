@@ -1,7 +1,7 @@
 /*
- * preprocessor static rules generator.
- *    It creates .c file with tables for defines/[x]translates/[x]commands
- *    found in given .ch or .prg file
+ * Preprocessor static rules generator.
+ * It creates .c file with tables for defines/[x]translates/[x]commands
+ * found in given .ch or .prg file
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -193,8 +193,8 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState, const char * 
 {
    int iDefs = 0, iTrans = 0, iCmds = 0;
 
-   fprintf( fout, "/*\n * $" "Id" "$\n */\n\n/*\n"
-            " * Build in preprocessor rules.\n"
+   fprintf( fout, "/*\n"
+            " * Built-in preprocessor rules.\n"
             " *\n"
             " * Copyright 2006-2016 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
             " *\n"
@@ -321,7 +321,6 @@ static char * hb_pp_escapeString( char * szString )
 static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeLogID, char * szLastEntry )
 {
    int iResult = 0;
-   char * pszEnv;
    FILE * fout;
 
    fout = hb_fopen( szVerFile, "w" );
@@ -334,6 +333,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
    }
    else
    {
+      char * pszEnv;
       char * pszEscaped;
 
       fprintf( fout, "/*\n"

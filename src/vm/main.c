@@ -56,5 +56,5 @@
 #elif defined( HB_MAIN_WIN )
    #include "mainwin.c"
 #else
-   #include "mainstd.c" /* Use the standard ANSI C entry point if not speficied */
+   #include "mainstd.c" /* Use the standard ANSI C entry point if not specified */
 #endif

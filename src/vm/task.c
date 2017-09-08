@@ -1,6 +1,6 @@
 /*
- * platform independent task system. It's used when when OS does not
- *    support threads
+ * Platform independent task system. It's used when when OS does not
+ * support threads
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -400,7 +400,7 @@ static void hb_taskFinalize( PHB_TASKINFO pTask )
 #endif
    }
 
-   /* it cannot happen for runing threads */
+   /* it cannot happen for running threads */
 
    /* remove from mutex lockers queue */
    if( pTask->locking )

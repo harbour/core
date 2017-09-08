@@ -334,7 +334,7 @@ void hb_langReleaseAll( void )
 
 HB_BOOL hb_langRegister( PHB_LANG lang )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_langRegister(%p)", lang ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langRegister(%p)", ( const void * ) lang ) );
 
    if( lang )
    {
@@ -365,7 +365,7 @@ PHB_LANG hb_langSelect( PHB_LANG lang )
 {
    PHB_LANG langOld;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_langSelect(%p)", lang ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langSelect(%p)", ( const void * ) lang ) );
 
    langOld = hb_vmLang();
    if( lang )
@@ -483,7 +483,7 @@ HB_FUNC( HB_LANGMESSAGE )
 }
 
 /* hb_langNew( <cNewLangId>, <cNewLangCpId>,
- *             <cLangId>, <cLangCpId> ) -> <lOK>
+ *             <cLangId>, <cLangCpId> ) --> <lOK>
  */
 HB_FUNC( HB_LANGNEW )
 {

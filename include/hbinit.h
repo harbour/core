@@ -53,7 +53,7 @@ HB_EXTERN_BEGIN
 
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols, const char * szModuleName, HB_ULONG ulID, HB_USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
-#define HB_INIT_SYMBOLS_END( func ) HB_INIT_SYMBOLS_EX_END( func, __FILE__, 0L, 0x0000 )
+#define HB_INIT_SYMBOLS_END( func ) HB_INIT_SYMBOLS_EX_END( func, "", 0L, 0x0000 )
 
 /* By default in all C++ builds use static variable initialization as startup
    code with the exception for GCC which new versions show warning about
@@ -163,7 +163,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
       defined( __GNUC__ ) || \
       defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) || \
       defined( __DCC__ ) || \
-      defined( __TINYC__ ) /* TOFIX: __TINYC__ */ || \
+      defined( __TINYC__ ) /* FIXME: __TINYC__ */ || \
       defined( __clang__ )
 
    #if defined( HB_PRAGMA_STARTUP ) || defined( HB_DATASEG_STARTUP )
@@ -265,7 +265,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
       static HB_$INITSYM _s_init_func_##func = func;
 
    /*  After each '*_END' symbol, additional 'hooks' are required
-    *  See the C output of a generated prg for example
+    *  See the C output of a generated .prg for example
     */
 
 #elif defined( __WATCOMC__ )

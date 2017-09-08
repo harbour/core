@@ -1,8 +1,8 @@
 /*
  * Telepathy emulation library
  *
- * Copyright 2000, 2001 Dan Levitt <dan@boba-fett.net>
- * Copyright 2004, 2005 Maurilio Longo <maurilio.longo@libero.it>
+ * Copyright 2000-2001 Dan Levitt <dan@boba-fett.net>
+ * Copyright 2004-2005 Maurilio Longo <maurilio.longo@libero.it>
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
@@ -46,31 +46,26 @@
  *
  */
 
-/*
-   This is based upon a library originally made by Dan Levitt <dan@boba-fett.net>
+/* This is based upon a library originally made by Dan Levitt <dan@boba-fett.net>
    The original files have been committed as v1.0. So you can always retrieve them
-   (see VCS docs on how to)
-*/
+   (see VCS docs on how to) */
 
 #include "telepath.ch"
 
 #include "hbcom.ch"
 
-
-#define TPFP_NAME          1               /* Structure of ports array */
+#define TPFP_NAME          1  /* Structure of ports array */
 #define TPFP_HANDLE        2
 #define TPFP_BAUD          3
 #define TPFP_DBITS         4
 #define TPFP_PARITY        5
 #define TPFP_SBITS         6
-#define TPFP_OC            7               /* Open/Close Flag */
+#define TPFP_OC            7  /* Open/Close Flag */
 #define TPFP_INBUF         8
-#define TPFP_INBUF_SIZE    9               /* Size of input buffer */
+#define TPFP_INBUF_SIZE    9  /* Size of input buffer */
 
-
-THREAD STATIC t_aPorts               // Array with port info
-THREAD STATIC t_nErrorCode := 0      // Error code from last operation, 0 if no error
-
+THREAD STATIC t_aPorts           // Array with port info
+THREAD STATIC t_nErrorCode := 0  // Error code from last operation, 0 if no error
 
 FUNCTION tp_baud( nPort, nNewBaud )
 

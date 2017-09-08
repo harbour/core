@@ -1,5 +1,5 @@
 /*
- * generate line information for debugger
+ * Generate line information for debugger
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  *

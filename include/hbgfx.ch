@@ -54,9 +54,9 @@
 /*
  * NOTE: ACQUIRE / RELEASE screen pair must work same way DispBegin()/DispEnd() pair does
  *       (that is, with an internal counter), as lots of function may want to 'acquire/release' it.
- *       However, a GT must properly manage its gfx output if the user didn't requested to acquire the
+ *       However, a GT must properly manage its GFX output if the user didn't requested to acquire the
  *       screen, so this is under user choice.
- *       (the user just needs to know that it is not the same to aquire the screen, draw 100 lines, then
+ *       (the user just needs to know that it is not the same to acquire the screen, draw 100 lines, then
  *       release screen, than simply drawing 100 lines -as the GT will be acquiring/releasing the screen
  *       100 times, which will slow down things a lot-) [Mauricio]
  */

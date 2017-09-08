@@ -47,9 +47,7 @@
 #ifndef HB_SIX_DEF_CH_
 #define HB_SIX_DEF_CH_
 
-/*
- * Event Constants for Trigger System
- */
+/* Event Constants for Trigger System */
 #define EVENT_PREUSE          1
 #define EVENT_POSTUSE         2
 #define EVENT_UPDATE          3
@@ -65,21 +63,15 @@
 #define EVENT_PREMEMOPACK     13
 #define EVENT_POSTMEMOPACK    14
 
-/*
- * Trigger Toggle Values
- */
+/* Trigger Toggle Values */
 #define TRIGGER_ENABLE        1
 #define TRIGGER_DISABLE       2
 #define TRIGGER_REMOVE        3
 #define TRIGGER_INSTALL       4
 #define TRIGGER_PENDING       5  /* Internal Use Only */
 
-
-/*
- * sx_File2Blob() actions
- */
+/* sx_File2Blob() actions */
 #define BLOB_FILECOMPRESS     1
 #define BLOB_FILEENCRYPT      2
-
 
 #endif /* HB_SIX_DEF_CH_ */

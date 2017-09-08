@@ -54,7 +54,7 @@
 #define DO_CHARSWAP_WORDSWAP           1
 #define DO_CHARSWAP_WORDSWAP_CHARSWAP  2
 
-/* helper function for the charswap and wordswap functions */
+/* helper function for the CharSwap() and WordSwap() functions */
 static void do_charswap( int iSwitch )
 {
    /* suppress return value ? */

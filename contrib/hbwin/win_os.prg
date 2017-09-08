@@ -1,5 +1,5 @@
 /*
- * Windows OS version information
+ * Windows OS - safe LAN networking
  *
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  *
@@ -44,14 +44,11 @@
  *
  */
 
-/*
- * Operating system functions for Windows
- *
- * Program to check and set Windows Registry settings
- * for safe networking - all versions of Windows to XP SP2
+/* Function to check and set Windows Registry settings
+ * for safe networking - for all versions of Windows.
  *
  * Also includes check for buggy VREDIR.VXD under Win95
- * and if the correct patch file is found - run it.
+ * and if the correct patch file is found.
  */
 
 #include "directry.ch"

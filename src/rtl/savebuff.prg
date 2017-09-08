@@ -1,5 +1,5 @@
 /*
- * SaveScreen() buffer help functions
+ * SaveScreen() buffer helper functions
  *
  * Copyright 2012 Viktor Szakats (vszakats.net/harbour)
  *

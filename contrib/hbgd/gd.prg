@@ -1,5 +1,5 @@
 /*
- * GD graphic library prg level (client api) interface code.
+ * GD graphic library .prg level (client API) interface code.
  *
  * Copyright 2004 Francesco Saverio Giudice <info@fsgiudice.com>
  *

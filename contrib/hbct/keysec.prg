@@ -1,7 +1,7 @@
 /*
- * CT3 Miscellaneous functions: - KeySec()
+ * CT3 Miscellaneous functions: KeySec()
  *
- * Copyright 2005 Pavel Tsarenko - <tpe2@mail.ru>
+ * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

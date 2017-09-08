@@ -1,5 +1,5 @@
 /*
- * PostgreSQL RDBMS low level (client api) interface code.
+ * PostgreSQL RDBMS low-level (client API) interface code.
  *
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  *
@@ -47,12 +47,12 @@
 #include "hbclass.ch"
 #include "postgres.ch"
 
-#define _STRU_FIELDNAME             1
-#define _STRU_FIELDTYPE             2
-#define _STRU_FIELDLEN              3
-#define _STRU_FIELDDEC              4
-#define _STRU_TABLE                 5
-#define _STRU_TABLECOL              6
+#define _STRU_FIELDNAME     1
+#define _STRU_FIELDTYPE     2
+#define _STRU_FIELDLEN      3
+#define _STRU_FIELDDEC      4
+#define _STRU_TABLE         5
+#define _STRU_TABLECOL      6
 
 CREATE CLASS TPQServer
 

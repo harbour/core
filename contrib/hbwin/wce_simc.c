@@ -1,5 +1,5 @@
 /*
- * SIM interface code (low level)
+ * SIM interface code (low-level)
  *
  * Copyright 2009 Jose Luis Capel <jlcapel@hotmail.com>
  *

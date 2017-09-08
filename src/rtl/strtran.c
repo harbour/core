@@ -2,7 +2,6 @@
  * StrTran() function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * rewritten to fix incompatibilities with Clipper and fatal performance
  * of original code
@@ -52,7 +51,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* TOFIX: Check for string overflow, Clipper can crash if the resulting
+/* FIXME: Check for string overflow, Clipper can crash if the resulting
           string is too large. Example:
           StrTran( "...", ".", Replicate( "A", 32000 ) ) [vszakats] */
 

@@ -1,5 +1,5 @@
 /*
- * dbDrop() Harbour extension.
+ * dbDrop() Harbour extension
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
@@ -45,7 +45,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 #ifndef HB_CLP_STRICT
 

@@ -45,8 +45,6 @@
  */
 
 #include "hbzebra.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 static const char s_code[] = {
    0x10,  /* 0 */
@@ -80,7 +78,7 @@ static void _code11_add( PHB_BITBUFFER pBits, char code, int iFlags, HB_BOOL fLa
    {
       for( i = 0; i < 5; i++ )
       {
-         hb_bitbuffer_cat_int( pBits, i & 1 ? 0 : 31, code & 1 ? 5 : 2 );
+         hb_bitbuffer_cat_int( pBits, ( i & 1 ) ? 0 : 31, ( code & 1 ) ? 5 : 2 );
          code >>= 1;
       }
       if( ! fLast )
@@ -90,7 +88,7 @@ static void _code11_add( PHB_BITBUFFER pBits, char code, int iFlags, HB_BOOL fLa
    {
       for( i = 0; i < 5; i++ )
       {
-         hb_bitbuffer_cat_int( pBits, i & 1 ? 0 : 31, code & 1 ? 3 : 1 );
+         hb_bitbuffer_cat_int( pBits, ( i & 1 ) ? 0 : 31, ( code & 1 ) ? 3 : 1 );
          code >>= 1;
       }
       if( ! fLast )
@@ -100,7 +98,7 @@ static void _code11_add( PHB_BITBUFFER pBits, char code, int iFlags, HB_BOOL fLa
    {
       for( i = 0; i < 5; i++ )
       {
-         hb_bitbuffer_cat_int( pBits, i & 1 ? 0 : 31, code & 1 ? 2 : 1 );
+         hb_bitbuffer_cat_int( pBits, ( i & 1 ) ? 0 : 31, ( code & 1 ) ? 2 : 1 );
          code >>= 1;
       }
       if( ! fLast )
@@ -110,8 +108,8 @@ static void _code11_add( PHB_BITBUFFER pBits, char code, int iFlags, HB_BOOL fLa
 
 PHB_ZEBRA hb_zebra_create_code11( const char * szCode, HB_SIZE nLen, int iFlags )
 {
-   PHB_ZEBRA  pZebra;
-   int        csum, ksum, i, iLen = ( int ) nLen;
+   PHB_ZEBRA     pZebra;
+   unsigned int  csum, ksum, i, iLen = ( unsigned int ) nLen;
 
    pZebra = hb_zebra_create();
    pZebra->iType = HB_ZEBRA_TYPE_CODE11;
@@ -139,8 +137,8 @@ PHB_ZEBRA hb_zebra_create_code11( const char * szCode, HB_SIZE nLen, int iFlags 
    {
       int no = _code11_charno( szCode[ i ] );
       _code11_add( pZebra->pBits, s_code[ no ], iFlags, HB_FALSE );
-      ksum += ( ( iLen + 1 - i ) % 9 ? ( iLen + 1 - i ) % 9 : 9 ) * no;
-      csum += ( ( iLen - i ) % 10 ? ( iLen - i ) % 10 : 10 ) * no;
+      ksum += ( ( ( iLen + 1 - i ) % 9 ) ? ( iLen + 1 - i ) % 9 : 9 ) * no;
+      csum += ( ( ( iLen - i ) % 10 ) ? ( iLen - i ) % 10 : 10 ) * no;
    }
 
    /* checksum */

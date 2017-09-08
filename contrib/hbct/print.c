@@ -1,5 +1,5 @@
 /*
- * CT3 Printer functions:
+ * CT3 Printer functions
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (PrintReady())
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru> (PrintSend())

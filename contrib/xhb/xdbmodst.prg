@@ -1,5 +1,5 @@
 /*
- * dbModifyStructure( <cFile> ) -> lSuccess
+ * dbModifyStructure( <cFile> ) --> lSuccess
  *
  * Copyright 2009 Ron Pinkas <Ron.Pinkas at xHarbour.com>
  *

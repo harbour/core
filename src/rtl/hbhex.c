@@ -1,6 +1,5 @@
 /*
- * hb_NumToHex()
- *    hb_HexToNum()
+ * hb_NumToHex(), hb_HexToNum()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -182,7 +181,6 @@ HB_FUNC( HB_HEXTOSTR )
    {
       HB_SIZE nDest, ul;
       const char * szPtr;
-      char * szDest;
 
       szPtr = szStr;
       ul = nStr;
@@ -202,7 +200,8 @@ HB_FUNC( HB_HEXTOSTR )
       {
          int iVal = 0x10;
 
-         szDest = ( char * ) hb_xgrab( nDest + 1 );
+         char * szDest = ( char * ) hb_xgrab( nDest + 1 );
+
          /* ul = 0; see above stop condition */
          do
          {

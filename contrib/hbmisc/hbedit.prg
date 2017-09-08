@@ -1,6 +1,4 @@
-/*
- * Copyright 1999 Ryszard Glab
- */
+/* Copyright 1999 Ryszard Glab */
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -9,14 +7,14 @@
 
 #define EDIT_LOWER      0       // convert to lowercase
 #define EDIT_UPPER      1       // convert to uppercase
-#define EDIT_SAME       2       // no convertion
+#define EDIT_SAME       2       // no conversion
 
-#define EDIT_HARD       13      // hard cariage
+#define EDIT_HARD       13      // hard carriage
 
 #define EDIT_EDIT       .T.     // full edit mode
 #define EDIT_VIEW       .F.     // view only mode
 
-//  The editor structure
+// The editor structure
 //
 #define E_EDIT          1           // pointer returned be ED_NEW
 #define E_TOP           2           // position on the screen
@@ -34,17 +32,16 @@
 
 THREAD STATIC t_nESize := 4096       // default buffer size
 
-//
 // 1993-03-06 19:52
 //
 // nTop, nLeft, nBottom, nRight - position on the screen
 // nLength - the line length
-// cFrame - the frame to be drawed around the editor
+// cFrame - the frame to be drawn around the editor
 // cTitle - comment displayed in upper, left corner
 // cColor - colors used to draw the editor
 // nSize - the size of memory buffer that holds the edited text - the buffer
 //         will not grow at current design
-// nEscape - the character code used as a marker of color highlighing
+// nEscape - the character code used as a marker of color highlighting
 // For example if its value is 126 '~' then the following text:
 // normal text ~2text in bold~1 back to normal text
 // will be displayed with 'text in bold' highlighted using the second

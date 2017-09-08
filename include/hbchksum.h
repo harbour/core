@@ -1,5 +1,5 @@
 /*
- * header files for functions to calculate different checksums
+ * Header files for functions to calculate different checksums
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

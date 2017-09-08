@@ -2,7 +2,9 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com> (setHeader(), attachFile(), detachFile(), getFileName(), isMultiPart(), getMultiParts())
+ * Copyright 2007 Hannes Ziegler <hz AT knowlexbase.com>
+ *   (setHeader(), attachFile(), detachFile(), getFileName(), isMultiPart(),
+ *   getMultiParts())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -305,7 +307,7 @@ METHOD ToString() CLASS TIPMail
       IF Empty( ::aAttachments )
          cRet += ::cBody + iif( ::lBodyEncoded, "", e"\r\n" )
       ELSE
-         // if there are attachements, the body of the message has to be treated as an attachment. [GD]
+         // if there are attachments, the body of the message has to be treated as an attachment. [GD]
          cRet += ;
             "--" + cBoundary + e"\r\n" + ;
             "Content-Disposition: inline" + e"\r\n" + ;

@@ -2,7 +2,6 @@
  * Text file reading functions
  *
  * Copyright 2003 Marcelo Lombardo - lombardo@uol.com.br
- * http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -87,7 +86,6 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
       nRead = hb_fsReadLarge( hFileHandle, pBuff + nOffset, nSize - nOffset );
 
       /* scan the read buffer */
-
       if( nRead > 0 )
       {
          for( nPos = 0; nPos < nRead; nPos++ )
@@ -155,8 +153,7 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
    return pBuff;
 }
 
-/* PRG level fReadLine( <Handle>, <@buffer>, [<aTerminators | cTerminator>], [<nReadingBlock>] ) */
-
+/* hb_FReadLine( <Handle>, <@buffer>, [<aTerminators | cTerminator>], [<nReadingBlock>] ) --> nError */
 HB_FUNC( HB_FREADLINE )
 {
    PHB_ITEM      pTerm1;

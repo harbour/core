@@ -5,11 +5,6 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version, with one exception:
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
@@ -70,7 +65,7 @@
 #  include <os2.h>
 #elif defined( HB_OS_DOS ) && defined( __WATCOMC__ ) && !defined( HB_CAUSEWAY_DLL )
    /* it's broken in recent OpenWatcom builds so enable it
-      for tests only in harbur.dll [druzus] */
+      for tests only in harbour.dll [druzus] */
 #  if defined( HB_DYNLIB )
 #     define HB_CAUSEWAY_DLL
 #  include <cwdllfnc.h>
@@ -273,7 +268,7 @@ HB_FUNC( HB_LIBERROR )
 }
 
 /* Get FUNCTION or PROCEDURE symbol from given library.
- *    hb_libGetFunSym( <pLibHandle>, <cFuncName> ) -> <sFuncSym> | NIL
+ *    hb_libGetFunSym( <pLibHandle>, <cFuncName> ) --> <sFuncSym> | NIL
  */
 HB_FUNC( HB_LIBGETFUNSYM )
 {

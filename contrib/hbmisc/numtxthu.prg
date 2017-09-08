@@ -44,8 +44,6 @@
  *
  */
 
-/* UTF-8 */
-
 FUNCTION NumToTxtHU( nValue )
 
    LOCAL aTort := { "tized", "század", "ezred", "tízezred", "százezred", "milliomod", "milliárdod" }
@@ -69,7 +67,7 @@ FUNCTION NumToTxtHU( nValue )
 
       tmp1 := Len( tmp2 := SubStr( Str( tmp, 8, 6 ), 3 ) )
 
-      WHILE SubStr( tmp2, tmp1, 1 ) == "0" .AND. tmp1 > 0
+      DO WHILE SubStr( tmp2, tmp1, 1 ) == "0" .AND. tmp1 > 0
          tmp1--
       ENDDO
 

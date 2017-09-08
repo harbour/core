@@ -48,17 +48,13 @@
 #ifndef HB_RDDSQL_H_
 #define HB_RDDSQL_H_
 
+#include "hbapi.h"
 #include "hbapirdd.h"
 #include "hbdbferr.h"
 #include "hbapierr.h"
 #include "hbapilng.h"
-#include "hbapi.h"
 
-/*
-   ====================================================================
-   SQLBASE
-   ====================================================================
- */
+/* SQLBASE */
 
 #define MAX_FIELD_NAME       64
 
@@ -73,9 +69,7 @@ typedef struct _SQLBASEAREA
 {
    AREA area;
 
-   /*
-    *  SQLBASE additions to the workarea structure
-    */
+   /* SQLBASE additions to the workarea structure */
 
    LPDBRELINFO lpdbPendingRel;
 
@@ -113,11 +107,7 @@ typedef struct _SQLDDCONNECTION
 } SQLDDCONNECTION;
 
 
-/*
-   ====================================================================
-   SQLMIX
-   ====================================================================
- */
+/* SQLMIX */
 
 #define MIX_MAXKEYLEN      1024
 #define MIX_MAXTAGNAMELEN  16
@@ -178,7 +168,7 @@ typedef struct _MIXTAG
    PMIXKEY HotKey;
    HB_BOOL HotFor;
 
-   PHB_CODEPAGE pCodepage;          /* National sorttable for character key tags, NULL otherwise */
+   PHB_CODEPAGE pCodepage;          /* National sort table for character key tags, NULL otherwise */
 } MIXTAG, * PMIXTAG;
 
 
@@ -196,11 +186,7 @@ typedef struct _SQLMIXAREA
 } SQLMIXAREA, * SQLMIXAREAP;
 
 
-/*
-   ====================================================================
-   SQLDD
-   ====================================================================
- */
+/* SQLDD */
 
 typedef HB_ERRCODE ( *SDDFUNC_CONNECT )( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 typedef HB_ERRCODE ( *SDDFUNC_DISCONNECT )( SQLDDCONNECTION * pConnection );

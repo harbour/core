@@ -1,5 +1,5 @@
 /*
- * Header file for dynmaic PCODE modules (HRB) options
+ * Header file for dynamic PCODE modules (HRB) options
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

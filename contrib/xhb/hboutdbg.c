@@ -78,8 +78,7 @@ static int  s_iXtermPid     = 0;
 
 static void debugInit( void )
 {
-   int       iPid, iFifoResult;
-   char      szDebugTitle[ 30 ];
+   int       iFifoResult;
    PHB_FNAME pFileName = NULL;
    char      szDebugName[ 128 ];
 
@@ -101,6 +100,9 @@ static void debugInit( void )
 
    if( iFifoResult == 0 || iFifoResult == EEXIST )
    {
+      char szDebugTitle[ 30 ];
+      int  iPid;
+
       hb_snprintf( szDebugTitle, sizeof( szDebugTitle ), "%s - Debug", pFileName->szName );
 
       iPid = fork();
@@ -114,7 +116,7 @@ static void debugInit( void )
          if( iFifoResult != EEXIST )
          {
             s_iXtermPid = execlp( "xterm", "xterm", "-T", szDebugTitle, "-e",
-                                  "cat", szDebugName, ( char * ) NULL );
+                                  "cat", szDebugName, NULL );
 
             if( s_iXtermPid <= 0 )
             {
@@ -164,7 +166,7 @@ HB_BOOL hb_OutDebugName( PHB_ITEM pName )
 void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
 {
 #if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS )
-   int iStatus, iPid;
+   int iStatus;
 
    /* Are we under X? */
    if( getenv( "DISPLAY" ) != NULL )
@@ -176,10 +178,10 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
       if( s_iDebugFd <= 0 || s_iXtermPid == 0 )
          return;
 
-      /* Chech if display process has terminated in the meanwhile */
+      /* Check if display process has terminated in the meanwhile */
       if( ! s_iUseDebugName )
       {
-         iPid = waitpid( s_iXtermPid, &iStatus, WNOHANG );
+         int iPid = waitpid( s_iXtermPid, &iStatus, WNOHANG );
          if( iPid == s_iXtermPid || iPid == -1 )
          {
             s_iXtermPid = 0;

@@ -49,7 +49,7 @@
 #include "hbapierr.h"
 
 /* returns the maximum of two date or numerics */
-/* NOTE: CA-Cl*pper returns 1-st item when they are equal [druzus] */
+/* NOTE: CA-Cl*pper returns 1st item when they are equal [druzus] */
 HB_FUNC( MAX )
 {
    PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );
@@ -110,7 +110,7 @@ HB_FUNC( MAX )
 }
 
 /* returns the minimum of two date or numerics */
-/* NOTE: CA-Cl*pper returns 1-st item when they are equal [druzus] */
+/* NOTE: CA-Cl*pper returns 1st item when they are equal [druzus] */
 HB_FUNC( MIN )
 {
    PHB_ITEM p1 = hb_param( 1, HB_IT_ANY );

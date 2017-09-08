@@ -52,7 +52,6 @@ HB_FUNC( HB_COLORINDEX )
    {
       const char * pszColor = hb_parc( 1 );
       HB_SIZE      nColorPos;
-      HB_SIZE      nColorLen;
       int          iColorIndex = hb_parni( 2 );
 
       /* Skip the given number of commas */
@@ -65,6 +64,8 @@ HB_FUNC( HB_COLORINDEX )
       /* if found, continue */
       if( iColorIndex == 0 )
       {
+         HB_SIZE nColorLen;
+
          /* Skip the spaces after the comma */
          while( pszColor[ nColorPos ] == ' ' )
             nColorPos++;

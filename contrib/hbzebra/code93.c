@@ -45,8 +45,6 @@
  */
 
 #include "hbzebra.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 
 static const char s_code[] = {
@@ -170,8 +168,8 @@ PHB_ZEBRA hb_zebra_create_code93( const char * szCode, HB_SIZE nLen, int iFlags 
          hb_bitbuffer_cat_int( pZebra->pBits, 1, 1 );
          hb_bitbuffer_cat_int( pZebra->pBits, s_code[ no ], 7 );
          hb_bitbuffer_cat_int( pZebra->pBits, 0, 1 );
-         ksum += ( k % 15 ? k % 15 : 15 ) * no;  k--;
-         csum += ( k % 20 ? k % 20 : 20 ) * no;
+         ksum += ( ( k % 15 ) ? k % 15 : 15 ) * no; k--;
+         csum += ( ( k % 20 ) ? k % 20 : 20 ) * no;
       }
       else
       {
@@ -227,10 +225,10 @@ PHB_ZEBRA hb_zebra_create_code93( const char * szCode, HB_SIZE nLen, int iFlags 
          hb_bitbuffer_cat_int( pZebra->pBits, 1, 1 );
          hb_bitbuffer_cat_int( pZebra->pBits, s_code[ no2 ], 7 );
          hb_bitbuffer_cat_int( pZebra->pBits, 0, 1 );
-         ksum += ( k % 15 ? k % 15 : 15 ) * no1;  k--;
-         csum += ( k % 20 ? k % 20 : 20 ) * no1;
-         ksum += ( k % 15 ? k % 15 : 15 ) * no2;  k--;
-         csum += ( k % 20 ? k % 20 : 20 ) * no2;
+         ksum += ( ( k % 15 ) ? k % 15 : 15 ) * no1; k--;
+         csum += ( ( k % 20 ) ? k % 20 : 20 ) * no1;
+         ksum += ( ( k % 15 ) ? k % 15 : 15 ) * no2; k--;
+         csum += ( ( k % 20 ) ? k % 20 : 20 ) * no2;
       }
    }
 

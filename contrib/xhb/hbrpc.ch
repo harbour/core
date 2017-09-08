@@ -1,6 +1,5 @@
 /*
- * Remote Procedure Call code
- * Standard definitions
+ * Remote Procedure Call code - Standard definitions
  *
  * Copyright 2003 Giancarlo Niccolai <giancarlo@niccolai.ws>
  *

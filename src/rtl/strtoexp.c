@@ -1,5 +1,5 @@
 /*
- * hb_StrToExp() function - convert string to valid macrocompiler expression
+ * hb_StrToExp() function - convert string to valid macro-compiler expression
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

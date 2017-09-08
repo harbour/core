@@ -1,5 +1,5 @@
 /*
- * header file for SIX compatible functions
+ * Header file for SIX compatible functions
  *
  * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *

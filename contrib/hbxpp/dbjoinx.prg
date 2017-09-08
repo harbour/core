@@ -1,5 +1,5 @@
 /*
- * XPP compatible dbJoin() function
+ * Xbase++ compatible dbJoin() function
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
  *

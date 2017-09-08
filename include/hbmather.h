@@ -54,7 +54,7 @@ HB_EXTERN_BEGIN
 
 #if defined( __WATCOMC__ )
    #define HB_MATH_HANDLER
-   #if ( __WATCOMC__ > 1000 ) /* && defined( __cplusplus ) */
+   #if __WATCOMC__ > 1000  /* && defined( __cplusplus ) */
       #define exception _exception
    #endif
 #elif defined( __BORLANDC__ )
@@ -93,21 +93,21 @@ HB_EXTERN_BEGIN
 
 typedef struct _HB_MATH_EXCEPTION
 {
-   int            type;
-   const char *   funcname;
-   const char *   error;
-   double         arg1;
-   double         arg2;
-   double         retval;
-   int            retvalwidth;
-   int            retvaldec;
-   int            handled;
+   int          type;
+   const char * funcname;
+   const char * error;
+   double       arg1;
+   double       arg2;
+   double       retval;
+   int          retvalwidth;
+   int          retvaldec;
+   int          handled;
 } HB_MATH_EXCEPTION;
 
 typedef int ( * HB_MATH_HANDLERPROC )( HB_MATH_EXCEPTION * err );
 
 extern HB_EXPORT void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc );
-extern HB_EXPORT HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc, double arg1, double arg2, double dResult );
+extern HB_EXPORT HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc, double arg1, double arg2, double dResult );
 
 extern HB_EXPORT int hb_mathSetErrMode( int imode );
 extern HB_EXPORT int hb_mathGetErrMode( void );

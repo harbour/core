@@ -54,10 +54,10 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT double hb_secondsCPU( int n );
 
 extern HB_EXPORT double hb_dateSeconds( void );
-/* return UTC julian timestamp in milliseconds */
+/* return UTC Julian timestamp in milliseconds */
 extern HB_EXPORT HB_MAXUINT hb_dateMilliSeconds( void );
 
-/* functions to operate on julian date values */
+/* functions to operate on Julian date values */
 
 extern HB_EXPORT void   hb_dateTimeStr( char * pszTime );
 extern HB_EXPORT void   hb_dateToday( int * piYear, int * piMonth, int * piDay );
@@ -162,7 +162,7 @@ HB_EXTERN_END
       ! defined( HB_OS_DARWIN_5 )
 #     define HB_HAS_LOCALTIME_R
 #  elif defined( __WATCOMC__ )
-#     if defined(__STDC_WANT_LIB_EXT1__) && __STDC_WANT_LIB_EXT1__ == 1
+#     if defined( __STDC_WANT_LIB_EXT1__ ) && __STDC_WANT_LIB_EXT1__ == 1
 #        define HB_HAS_LOCALTIME_R
 #        define localtime_r   localtime_s
 #        define gmtime_r      gmtime_s

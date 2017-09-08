@@ -1,5 +1,5 @@
 /*
- * low level functions to create, wait and terminate processes
+ * Low-level functions to create, wait and terminate processes
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * based on xHarbour code by
@@ -235,7 +235,7 @@ static void hb_getCommand( const char * pszFileName,
 
 #elif defined( HB_PROCESS_USEFILES ) || defined( HB_OS_UNIX )
 
-/* convert command to argument list using standard bourne shell encoding:
+/* convert command to argument list using standard Bourne shell encoding:
  * "" and '' can be used to group parameters with blank characters,
  * the escape character is '\', quoting by '' disables escape character.
  */
@@ -508,7 +508,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
    HB_FHANDLE hResult = FS_ERROR;
    HB_BOOL fError = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFileName, phStdin, phStdout, phStderr, fDetach, pulPID ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFileName, ( void * ) phStdin, ( void * ) phStdout, ( void * ) phStderr, fDetach, ( void * ) pulPID ) );
 
    if( phStdin != NULL )
       fError = ! hb_fsPipeCreate( hPipeIn );
@@ -1133,7 +1133,7 @@ int hb_fsProcessRun( const char * pszFileName,
    HB_SIZE nOutSize, nErrSize, nOutBuf, nErrBuf;
    int iResult;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pStdInBuf, pStdInBuf, nStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pszFileName, ( const void * ) pStdInBuf, nStdInLen, ( void * ) pStdOutPtr, ( void * ) pulStdOut, ( void * ) pStdErrPtr, ( void * ) pulStdErr, fDetach ) );
 
    nOutBuf = nErrBuf = nOutSize = nErrSize = 0;
    pOutBuf = pErrBuf = NULL;
@@ -1693,6 +1693,8 @@ int hb_fsProcessRun( const char * pszFileName,
       int iTODO;
 
       HB_SYMBOL_UNUSED( nStdInLen );
+      HB_SYMBOL_UNUSED( nOutSize );
+      HB_SYMBOL_UNUSED( nErrSize );
 
 #endif
    }

@@ -1,11 +1,8 @@
 /*
  * Windows dialogs
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *    win_PrintDlgDC()
- *
- * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    win_GetOpenFileName(), win_GetSaveFileName()
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (win_PrintDlgDC())
+ * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (win_GetOpenFileName(), win_GetSaveFileName())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -57,7 +54,7 @@
 #include <commdlg.h>
 
 /* win_PrintDlgDC( [@<cDevice>], [<nFromPage>], [<nToPage>], [<nCopies>] )
- *                -> <hDC>
+ *                --> <hDC>
  */
 HB_FUNC( WIN_PRINTDLGDC )
 {
@@ -286,9 +283,9 @@ static void s_GetFileName( HB_BOOL fSave )
    hb_strfree( hDefExt );
 }
 
-/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
- *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ *    --> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  *
  */
 HB_FUNC( WIN_GETOPENFILENAME )
@@ -296,9 +293,9 @@ HB_FUNC( WIN_GETOPENFILENAME )
    s_GetFileName( HB_FALSE );
 }
 
-/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>], ;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
- *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
+ *    --> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  *
  */
 HB_FUNC( WIN_GETSAVEFILENAME )

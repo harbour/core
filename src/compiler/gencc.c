@@ -77,8 +77,8 @@ void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen )
    {
       HB_BYTE uchr = ( HB_BYTE ) pText[ nPos ];
       /*
-       * NOTE: After optimization some Chr(n) can be converted
-       *       into a string containing nonprintable characters.
+       * NOTE: After optimization some Chr( n ) can be converted
+       *       into a string containing non-printable characters.
        *
        * ? is escaped to avoid conflicts with trigraph sequences which
        * are part of ANSI C standard
@@ -1639,7 +1639,7 @@ static HB_GENC_FUNC( hb_p_seqend )
 
    HB_GENC_LABEL();
 
-   if( nOffset == 4 ) /* no RECOVER clasue */
+   if( nOffset == 4 ) /* no RECOVER clause */
       fprintf( cargo->yyc, "\tbreak;\n\t}\n\tif( hb_xvmSeqEnd() ) break;\n" );
    else               /* RECOVER exists */
       fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05" HB_PFS "u;\n\t}\n",
@@ -2344,7 +2344,7 @@ static const PHB_GENC_FUNC s_verbose_table[] = {
    hb_p_enumend,
    hb_p_switch,
    hb_p_pushdate,
-   /* optimalization of inlined math operations (+=, -= */
+   /* optimization of inlined math operations (+=, -= */
    hb_p_pluseqpop,
    hb_p_minuseqpop,
    hb_p_multeqpop,

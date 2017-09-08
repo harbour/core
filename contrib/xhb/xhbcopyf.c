@@ -63,7 +63,7 @@ static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest, PHB_IT
    PHB_FILE pSource;
    PHB_ITEM pError = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s, %p)", pszSource, pszDest, pBlock ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s, %p)", pszSource, pszDest, ( void * ) pBlock ) );
 
    do
    {

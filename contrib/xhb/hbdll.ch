@@ -1,5 +1,7 @@
 /*
+ * DLL call header
  *
+ * Copyright 200? {list of individual authors and e-mail addresses}
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +50,7 @@
 #define __DLL_CH
 
 #define DC_MICROSOFT           0x0000      // Default
-#define DC_BORLAND             0x0001      // Borland compat
+#define DC_BORLAND             0x0001      // Borland compatibility
 #define DC_CALL_CDECL          DLL_CDECL
 #define DC_CALL_STD            DLL_STDCALL
 #define DC_RETVAL_MATH4        0x0100      // Return value in ST

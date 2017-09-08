@@ -53,19 +53,19 @@ HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 {
    HB_BOOL fResult = HB_FALSE;
    PHB_FILE pSrcFile;
-   PHB_FILE pDstFile;
 
    if( ( pSrcFile = hb_fileExtOpen( pszSource, NULL, FO_READ | FO_SHARED | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
    {
+      PHB_FILE pDstFile;
       HB_ERRCODE errCode;
 
       if( ( pDstFile = hb_fileExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
       {
-         HB_SIZE nBytesRead;
          void * pbyBuffer = hb_xgrab( HB_FSCOPY_BUFFERSIZE );
 
          for( ;; )
          {
+            HB_SIZE nBytesRead;
             if( ( nBytesRead = hb_fileRead( pSrcFile, pbyBuffer, HB_FSCOPY_BUFFERSIZE, -1 ) ) > 0 &&
                 nBytesRead != ( HB_SIZE ) FS_ERROR )
             {

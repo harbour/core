@@ -1,5 +1,5 @@
 /*
- * Std applications entry point
+ * Standard application entry point
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
  *
@@ -60,7 +60,7 @@ int _crt0_startup_flags = _CRT0_FLAG_USE_DOS_SLASHES;
 
 char ** __crt0_glob_function( char * _arg )
 {
-   /* This function disables command line wildcard expansion. */
+   /* This function disables command-line wildcard expansion. */
    HB_SYMBOL_UNUSED( _arg );
 
    return 0;
@@ -76,7 +76,7 @@ HB_EXTERN_END
 
 int main( int argc, char * argv[] )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "main(%d, %p)", argc, argv ) );
+   HB_TRACE( HB_TR_DEBUG, ( "main(%d, %p)", argc, ( void * ) argv ) );
 
 #if defined( __DJGPP__ )
    __system_flags =

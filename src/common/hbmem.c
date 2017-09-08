@@ -49,7 +49,7 @@
 /* hb_xmemcpy() and hb_xmemset() are only needed when
    unsigned int and unsigned long differ in length */
 
-/* unfortunately it's not true - on 64bit platforms int is 32 bit
+/* unfortunately it's not true - on 64-bit platforms int is 32 bits
    and long is 64.
    we need these functions only when max(size_t) < max(long)
    what could be detected and set in header files. Here check

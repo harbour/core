@@ -1,5 +1,5 @@
 /*
- * Harbour Graphic Terminal low level code
+ * Harbour Graphic Terminal low-level code
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
  *
@@ -293,7 +293,7 @@ static HB_BOOL hb_gt_def_IsColor( PHB_GT pGT )
          [vszakats] */
 static void hb_gt_def_GetColorStr( PHB_GT pGT, char * pszColorString )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_GetColorStr(%p,%s)", pGT, pszColorString ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_GetColorStr(%p,%s)", ( void * ) pGT, pszColorString ) );
 
    HB_GTSELF_COLORSTOSTRING( pGT, pGT->pColor, pGT->iColorCount,
                              pszColorString, HB_CLRSTR_LEN );
@@ -301,7 +301,7 @@ static void hb_gt_def_GetColorStr( PHB_GT pGT, char * pszColorString )
 
 static void hb_gt_def_SetColorStr( PHB_GT pGT, const char * szColorString )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_SetColorStr(%p,%s)", pGT, szColorString ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_SetColorStr(%p,%s)", ( void * ) pGT, szColorString ) );
 
    HB_GTSELF_STRINGTOCOLORS( pGT, szColorString, &pGT->pColor, &pGT->iColorCount );
    pGT->iColorIndex = HB_CLR_STANDARD; /* HB_GTSELF_COLORSELECT( pGT, HB_CLR_STANDARD ); */
@@ -373,7 +373,7 @@ static const char * hb_gt_def_ColorDecode( const char * szColorString, int * piC
    int nColor = 0, iCount = 0;
    HB_BOOL bFore = HB_TRUE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_ColorDecode(%s,%p)", szColorString, piColor ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_ColorDecode(%s,%p)", szColorString, ( void * ) piColor ) );
 
    while( ( c = *szColorString++ ) != 0 )
    {
@@ -478,10 +478,9 @@ static int hb_gt_def_ColorNum( PHB_GT pGT, const char * szColorString )
 static void hb_gt_def_StringToColors( PHB_GT pGT, const char * szColorString, int ** pColorsPtr, int * piColorCount )
 {
    int * pColors;
-   int nPos = 0;
    int nColor;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_StringToColors(%p,%s,%p,%p)", pGT, szColorString, pColorsPtr, piColorCount ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_StringToColors(%p,%s,%p,%p)", ( void * ) pGT, szColorString, ( void * ) pColorsPtr, ( void * ) piColorCount ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -503,6 +502,8 @@ static void hb_gt_def_StringToColors( PHB_GT pGT, const char * szColorString, in
    }
    else
    {
+      int nPos = 0;
+
       do
       {
          szColorString = hb_gt_def_ColorDecode( szColorString, &nColor );
@@ -529,7 +530,7 @@ static void hb_gt_def_ColorsToString( PHB_GT pGT, int * pColors, int iColorCount
 {
    int iColorIndex, iPos;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_ColorsToString(%p,%p,%d,%p,%d)", pGT, pColors, iColorCount, pszColorString, iBufSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_ColorsToString(%p,%p,%d,%p,%d)", ( void * ) pGT, ( void * ) pColors, iColorCount, ( void * ) pszColorString, iBufSize ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -643,7 +644,7 @@ static void hb_gt_def_SetSnowFlag( PHB_GT pGT, HB_BOOL fNoSnow )
 {
    /*
     * NOTE: This is a compatibility function which have to be implemented
-    *       in low level GT driver.
+    *       in low-level GT driver.
     *       If you're running on a CGA and snow is a problem speak up!
     */
 
@@ -1365,7 +1366,7 @@ static void hb_gt_def_DrawShadow( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int iRight,
                               int iColor, HB_USHORT usChar, int iRows, int iCols )
 {
-   int iColOld, iColNew, iColSize, iColClear, iClrs, iLength, iFlag = 0;
+   int iColOld, iColNew, iColSize, iColClear, iClrs, iLength;
 
    iColSize = iRight - iLeft;
    iLength = iColSize + 1;
@@ -1388,6 +1389,7 @@ static void hb_gt_def_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
    if( iLength > 0 && iTop <= iBottom )
    {
       void * pBuffer = NULL;
+      int iFlag = 0;
 
       if( ( iRows || iCols ) && iColSize >= 0 && ( iBottom - iTop >= iRows ) )
       {
@@ -1470,7 +1472,7 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
 
          while( iTop <= iBottom )
          {
-            int iRowPos, i;
+            int iRowPos;
 
             if( iRows >= 0 )
                iRowPos = iTop++;
@@ -1480,6 +1482,8 @@ static void hb_gt_def_ScrollArea( PHB_GT pGT, int iTop, int iLeft, int iBottom, 
             if( fMove && ( iRows == 0 ||
                 ( iRowPos + iRows >= iTop && iRowPos + iRows <= iBottom ) ) )
             {
+               int i;
+
                lIndex = ( long ) iRowPos * iWidth + iColNew;
                if( lOffset < 0 )
                {
@@ -1874,7 +1878,7 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( ! pInfo->pResult )
             pInfo->pResult = hb_itemNew( NULL );
          hb_arrayNew( pInfo->pResult, 7 );
-         /* 7-th item is allocated for GTCTW window number */
+         /* 7th item is allocated for GTCTW window number */
          HB_GTSELF_GETPOS( pGT, &iRow, &iCol );
          hb_arraySetNI( pInfo->pResult, 1, iRow );
          hb_arraySetNI( pInfo->pResult, 2, iCol );
@@ -2001,16 +2005,13 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
        pOptions && ( iOptions = ( int ) hb_arrayLen( pOptions ) ) > 0 )
    {
       HB_SIZE nLen;
-      void * hMessage, * hOpt;
-      const HB_WCHAR * szMessageW = hb_itemGetStrU16( pMessage, HB_CDP_ENDIAN_NATIVE, &hMessage, &nLen ),
-                     * szOptW;
+      void * hMessage;
+      const HB_WCHAR * szMessageW = hb_itemGetStrU16( pMessage, HB_CDP_ENDIAN_NATIVE, &hMessage, &nLen );
       HB_BOOL fScreen = HB_FALSE, fKeyBoard = HB_FALSE;
       PHB_CODEPAGE cdp = HB_GTSELF_HOSTCP( pGT );
       char szKey[ HB_MAX_CHAR_LEN ];
       HB_SIZE nChar;
-      int iKey, i, iDspCount, iStyle, iRows, iCols,
-          iRow, iCol, iTop, iLeft, iBottom, iRight, iMnuCol, iPos, iClr;
-      void * pBuffer = NULL;
+      int iKey, i, iRows, iCols;
       HB_GT_INFO gtInfo;
 
       memset( &gtInfo, 0, sizeof( gtInfo ) );
@@ -2032,6 +2033,8 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
       if( fScreen )
       {
+         void * pBuffer = NULL;
+         int iDspCount, iStyle, iRow, iCol, iTop, iLeft, iBottom, iRight, iPos, iClr;
          HB_UINT ulLines = 0, ulWidth = 0, ulCurrWidth = 0, ulMsg = 0, ulDst = 0,
                  ulLast = 0, ulSpace1 = 0, ulSpace2 = 0, ulDefWidth, ulMaxWidth;
          HB_WCHAR * szMsgDsp;
@@ -2190,10 +2193,13 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
          iPos = 1;
          while( iRet == 0 )
          {
+            int iMnuCol;
             HB_GTSELF_DISPBEGIN( pGT );
             iMnuCol = iLeft + ( ( ulWidth - ulCurrWidth ) >> 1 ) + 3;
             for( i = 1; i <= iOptions; ++i )
             {
+               void * hOpt;
+               const HB_WCHAR * szOptW;
                iClr = i == iPos ? iClrHigh : iClrNorm;
                szOptW = hb_arrayGetStrU16( pOptions, i, HB_CDP_ENDIAN_NATIVE, &hOpt, &nLen );
                HB_GTSELF_PUTTEXTW( pGT, iBottom - 1, iMnuCol, iClr, s_szSpaceW, 1 );
@@ -2614,7 +2620,7 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
 {
    int iMask;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyFilter(%p,%d,%d)", pGT, iKey, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyFilter(%p,%d,%d)", ( void * ) pGT, iKey, iEventMask ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2747,7 +2753,7 @@ static void hb_gt_def_InkeyPut( PHB_GT pGT, int iKey )
 {
    int iHead;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyPut(%p,%d)", pGT, iKey ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyPut(%p,%d)", ( void * ) pGT, iKey ) );
 
    iHead = pGT->inkeyHead;
 
@@ -2784,7 +2790,7 @@ static void hb_gt_def_InkeyPut( PHB_GT pGT, int iKey )
 /* Inset the key into head of keyboard buffer */
 static void hb_gt_def_InkeyIns( PHB_GT pGT, int iKey )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyIns(%p,%d)", pGT, iKey ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyIns(%p,%d)", ( void * ) pGT, iKey ) );
 
    if( --pGT->inkeyTail < 0 )
       pGT->inkeyTail = pGT->inkeyBufferSize - 1;
@@ -2805,7 +2811,7 @@ static void hb_gt_def_InkeyIns( PHB_GT pGT, int iKey )
 /* helper internal function */
 static HB_BOOL hb_gt_def_InkeyNextCheck( PHB_GT pGT, int iEventMask, int * iKey )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyNextCheck(%p,%p)", pGT, iKey ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyNextCheck(%p,%p)", ( void * ) pGT, ( void * ) iKey ) );
 
    if( pGT->StrBuffer )
    {
@@ -2840,7 +2846,7 @@ static void hb_gt_def_InkeyPollDo( PHB_GT pGT )
 {
    int iKey;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyPollDo(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyPollDo(%p)", ( void * ) pGT ) );
 
    iKey = HB_GTSELF_READKEY( pGT, HB_INKEY_ALL | HB_INKEY_EXT );
 
@@ -2897,14 +2903,14 @@ static void hb_gt_def_InkeyPollDo( PHB_GT pGT )
 /* Poll the console keyboard to stuff the Harbour buffer */
 static void hb_gt_def_InkeyPoll( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyPoll(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyPoll(%p)", ( void * ) pGT ) );
 
    /*
     * Clipper 5.3 always poll events without respecting
     * _SET_TYPEAHEAD when CL5.2 only when it's non zero.
-    * IMHO keeping CL5.2 behavior will be more accurate for harbour
+    * IMHO keeping CL5.2 behavior will be more accurate for Harbour
     * because it allows to control it by user what some times could be
-    * necessary due to different low level GT behavior on some platforms
+    * necessary due to different low-level GT behavior on some platforms
     */
    if( hb_setGetTypeAhead() )
       hb_gt_def_InkeyPollDo( pGT );
@@ -2915,7 +2921,7 @@ static int hb_gt_def_InkeyNext( PHB_GT pGT, int iEventMask )
 {
    int iKey = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyNext(%p,%d)", pGT, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyNext(%p,%d)", ( void * ) pGT, iEventMask ) );
 
    HB_GTSELF_INKEYPOLL( pGT );
    hb_gt_def_InkeyNextCheck( pGT, iEventMask, &iKey );
@@ -2930,14 +2936,14 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
    HB_MAXINT timeout;
    PHB_ITEM pKey;
    HB_BOOL fPop;
-   int iKey;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyGet(%p,%d,%f,%d)", pGT, ( int ) fWait, dSeconds, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyGet(%p,%d,%f,%d)", ( void * ) pGT, ( int ) fWait, dSeconds, iEventMask ) );
 
    pKey = NULL;
 
    if( pGT->pInkeyReadBlock )
    {
+      int iKey;
       HB_GTSELF_UNLOCK( pGT );
       iKey = hb_itemGetNI( hb_vmEvalBlock( pGT->pInkeyReadBlock ) );
       HB_GTSELF_LOCK( pGT );
@@ -2988,7 +2994,7 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
 /* Return the value of the last key that was extracted */
 static int hb_gt_def_InkeyLast( PHB_GT pGT, int iEventMask )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyLast(%p,%d)", pGT, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyLast(%p,%d)", ( void * ) pGT, iEventMask ) );
 
    HB_GTSELF_INKEYPOLL( pGT );
 
@@ -3000,7 +3006,7 @@ static int hb_gt_def_InkeySetLast( PHB_GT pGT, int iKey )
 {
    int iLast;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeySetLast(%p,%d)", pGT, iKey ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeySetLast(%p,%d)", ( void * ) pGT, iKey ) );
 
    iLast = pGT->inkeyLast;
    pGT->inkeyLast = iKey;
@@ -3011,7 +3017,7 @@ static int hb_gt_def_InkeySetLast( PHB_GT pGT, int iKey )
 /* Set text into inkey buffer */
 static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeySetText(%p,%s,%" HB_PFS "u)", pGT, szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeySetText(%p,%s,%" HB_PFS "u)", ( void * ) pGT, szText, nLen ) );
 
    if( pGT->StrBuffer )
    {
@@ -3043,7 +3049,7 @@ static void hb_gt_def_InkeyReset( PHB_GT pGT )
 {
    int iTypeAhead;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyReset(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyReset(%p)", ( void * ) pGT ) );
 
    if( pGT->StrBuffer )
    {
@@ -3078,7 +3084,7 @@ static void hb_gt_def_InkeyReset( PHB_GT pGT )
 /* reset inkey pool to default state and free any allocated resources */
 static void hb_gt_def_InkeyExit( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyExit(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeyExit(%p)", ( void * ) pGT ) );
 
    if( pGT->StrBuffer )
    {
@@ -3378,7 +3384,7 @@ static void hb_gt_def_WhoCares( PHB_GT pGT, void * pCargo )
    HB_SYMBOL_UNUSED( pCargo );
 }
 
-/* ************************************************************************* */
+/* - */
 
 #if defined( __GNUC__ ) && 0
 static const HB_GT_FUNCS s_gtCoreFunc =
@@ -3640,7 +3646,7 @@ static const HB_GT_FUNCS s_gtCoreFunc =
 };
 #endif
 
-/* ************************************************************************* */
+/* - */
 
 static char s_gtNameBuf[ HB_GT_NAME_MAX_ + 1 ];
 
@@ -3724,11 +3730,9 @@ HB_BOOL hb_gtRegister( const HB_GT_INIT * gtInit )
 
 PHB_GT hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable )
 {
-   int iPos;
-
    if( szGtName )
    {
-      iPos = hb_gt_FindEntry( szGtName );
+      int iPos = hb_gt_FindEntry( szGtName );
 
       if( iPos == -1 )
       {

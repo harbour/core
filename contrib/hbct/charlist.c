@@ -106,7 +106,6 @@ void ct_charlist( int iMode )
             if( acCharCnt[ sCnt ] == cScan )
                acCharCnt[ sRetStrLen++ ] = ( HB_UCHAR ) sCnt;
          }
-
       }
       hb_retclen( acCharCnt, sRetStrLen );
    }

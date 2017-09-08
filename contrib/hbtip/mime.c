@@ -619,7 +619,7 @@ static const char * s_findMimeStringInTree( const char * cData, HB_SIZE nLen, in
    if( elem->alternate != 0 )
       return s_findMimeStringInTree( cData, nLen, iElem + elem->alternate );
 
-   return NULL;  /* total giveup */
+   return NULL;  /* give up */
 }
 
 static const char * s_findStringMimeType( const char * cData, HB_SIZE nLen )

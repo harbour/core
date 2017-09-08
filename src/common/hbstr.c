@@ -2,6 +2,7 @@
  * Harbour common string functions (accessed from standalone utilities and the RTL)
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_stricmp())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_stricmp()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -255,12 +246,14 @@ HB_SIZE hb_strlentrim( const char * pszText )
 
 int hb_stricmp( const char * s1, const char * s2 )
 {
-   int rc = 0, c1, c2;
+   int rc = 0, c1;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_stricmp(%s, %s)", s1, s2 ) );
 
    do
    {
+      int c2;
+
       c1 = HB_TOUPPER( ( unsigned char ) *s1 );
       c2 = HB_TOUPPER( ( unsigned char ) *s2 );
 
@@ -278,7 +271,7 @@ int hb_stricmp( const char * s1, const char * s2 )
    return rc;
 }
 
-/* warning: It is not case sensitive */
+/* Warning: It is not case sensitive */
 int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 {
    HB_SIZE nCount;
@@ -306,14 +299,14 @@ int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 /*
    AJ: 2004-02-23
    Concatenates multiple strings into a single result.
-   Eg. hb_xstrcat (buffer, "A", "B", NULL) stores "AB" in buffer.
+   Eg. hb_xstrcat( buffer, "A", "B", NULL ) stores "AB" in buffer.
  */
 char * hb_xstrcat( char * szDest, const char * szSrc, ... )
 {
    char * szResult = szDest;
    va_list va;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_xstrcat(%p, %p, ...)", szDest, szSrc ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xstrcat(%p, %p, ...)", ( void * ) szDest, ( const void * ) szSrc ) );
 
    while( *szDest )
       szDest++;
@@ -346,7 +339,7 @@ char * hb_xstrcpy( char * szDest, const char * szSrc, ... )
    char * szResult;
    va_list va;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_xstrcpy(%p, %p, ...)", szDest, szSrc ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xstrcpy(%p, %p, ...)", ( void * ) szDest, ( const void * ) szSrc ) );
 
    if( szDest == NULL )
    {
@@ -438,7 +431,7 @@ double hb_numRound( double dNum, int iDec )
  * numbers so we can decrease the precision to 15 digits and use
  * the cut part for proper rounding. It should resolve
  * most of problems. But if someone totally  not understand FL
- * and will try to convert big matrix or sth like that it's quite
+ * and will try to convert big matrix or something like that it's quite
  * possible that he chose one of the natural school algorithm which
  * works nice with real numbers but can give very bad results in FL.
  * In such case it could be good to decrease precision even more.
@@ -569,7 +562,7 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, 
    int iLen, iPos = 0;
    int c, iWidth, iDec = 0, iDecR = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_str2number(%d, %p, %" HB_PFS "u, %p, %p, %p, %p)", ( int ) fPCode, szNum, nLen, lVal, dVal, piDec, piWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_str2number(%d, %p, %" HB_PFS "u, %p, %p, %p, %p)", ( int ) fPCode, ( const void * ) szNum, nLen, ( void * ) lVal, ( void * ) dVal, ( void * ) piDec, ( void * ) piWidth ) );
 
    iLen = ( int ) nLen;
 
@@ -733,25 +726,25 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, 
 
 HB_BOOL hb_compStrToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_compStrToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, plVal, pdVal, piDec, piWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compStrToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, ( void * ) plVal, ( void * ) pdVal, ( void * ) piDec, ( void * ) piWidth ) );
    return hb_str2number( HB_TRUE, szNum, nLen, plVal, pdVal, piDec, piWidth );
 }
 
 HB_BOOL hb_valStrnToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_valStrnToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, plVal, pdVal, piDec, piWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_valStrnToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, ( void * ) plVal, ( void * ) pdVal, ( void * ) piDec, ( void * ) piWidth ) );
    return hb_str2number( HB_FALSE, szNum, nLen, plVal, pdVal, piDec, piWidth );
 }
 
 HB_BOOL hb_strToNum( const char * szNum, HB_MAXINT * plVal, double * pdVal )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strToNum(%s, %p, %p)", szNum, plVal, pdVal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strToNum(%s, %p, %p)", szNum, ( void * ) plVal, ( void * ) pdVal ) );
    return hb_str2number( HB_FALSE, szNum, strlen( szNum ), plVal, pdVal, NULL, NULL );
 }
 
 HB_BOOL hb_strnToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * plVal, double * pdVal )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strnToNum(%.*s, %" HB_PFS "u, %p, %p)", ( int ) nLen, szNum, nLen, plVal, pdVal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strnToNum(%.*s, %" HB_PFS "u, %p, %p)", ( int ) nLen, szNum, nLen, ( void * ) plVal, ( void * ) pdVal ) );
    return hb_str2number( HB_FALSE, szNum, nLen, plVal, pdVal, NULL, NULL );
 }
 
@@ -789,7 +782,7 @@ char * hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT lNumber )
    int iPos = ( int ) nSize;
    HB_BOOL fNeg = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_numToStr(%p, %" HB_PFS "u, %" PFHL "i)", szBuf, nSize, lNumber ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_numToStr(%p, %" HB_PFS "u, %" PFHL "i)", ( void * ) szBuf, nSize, lNumber ) );
 
    szBuf[ --iPos ] = '\0';
    if( lNumber < 0 )
@@ -830,7 +823,7 @@ char * hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec )
    char * szResult;
    HB_BOOL fFirst;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dblToStr(%p, %" HB_PFS "u, %f, %d)", szBuf, nSize, dNumber, iMaxDec ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dblToStr(%p, %" HB_PFS "u, %f, %d)", ( void * ) szBuf, nSize, dNumber, iMaxDec ) );
 
    iLen = ( int ) ( nSize - 1 );
    if( iLen <= 0 )
@@ -955,8 +948,7 @@ char * hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec )
    return iPos == 1 && *szResult == '-' && *szBuf == '0' ? szBuf : szResult;
 }
 
-/*
- * This function copies szText to destination buffer.
+/* This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null and the nLen param is pDest size not pSource limit
  */
@@ -964,7 +956,7 @@ char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpy(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpy(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    pDest[ nLen ] = '\0';
 
@@ -974,8 +966,7 @@ char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/*
- * This function copies szText to destination buffer.
+/* This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncat, this routine will always append
  *       a null and the nLen param is pDest size not pSource limit
  */
@@ -983,7 +974,7 @@ char * hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncat(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncat(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    pDest[ nLen ] = '\0';
 
@@ -999,18 +990,16 @@ char * hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to lower case.
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to lower case. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyLower(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyLower(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    pDest[ nLen ] = '\0';
 
@@ -1023,18 +1012,16 @@ char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to upper case.
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to upper case. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyUpper(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyUpper(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    pDest[ nLen ] = '\0';
 
@@ -1047,19 +1034,17 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to upper case AND Trims it
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to upper case AND Trims it */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
    HB_SIZE nSLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyUpperTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyUpperTrim(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    nSLen = 0;
    while( nSLen < nLen && pSource[ nSLen ] )
@@ -1081,9 +1066,9 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/*
- * This function copies trimed szText to destination buffer.
- * NOTE: Unlike the documentation for strncpy, this routine will always append
+/* This function copies trimed szText to destination buffer. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null
  */
 char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
@@ -1091,7 +1076,7 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
    char * pBuf = pDest;
    HB_SIZE nSLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyTrim(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    nSLen = 0;
    while( nSLen < nLen && pSource[ nSLen ] )

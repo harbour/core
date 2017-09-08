@@ -1,5 +1,5 @@
 /*
- * Cryptography for xharbour
+ * Cryptography for xHarbour
  *
  * Copyright 2003 Giancarlo Niccolai <giancarlo@niccolai.ws>
  * SEE ALSO COPYRIGHT NOTICE FOR NXS BELOW.
@@ -45,9 +45,8 @@
  *
  */
 
-/***************************************************************
- * NXS aglorithm is FREE SOFTWARE. It can be reused for any
- * purpose, provided that this copiright notice is still present
+/* NXS algorithm is FREE SOFTWARE. It can be reused for any
+ * purpose, provided that this copyright notice is still present
  * in the software.
  *
  * This program is distributed WITHOUT ANY WARRANTY that it can
@@ -56,7 +55,7 @@
  * NXS author is Giancarlo Niccolai <giancarlo@niccolai.ws>
  *
  * Adler 32 CRC is copyrighted by Martin Adler
- **************************************************************/
+ */
 
 #ifndef HBNXS_H
 #define HBNXS_H

@@ -160,10 +160,10 @@ static void hb_sln_Init_KeyTranslations( void )
    };
 
    /* on Unix systems ESC is a special key so let
-      assume ESC is a doble pressed ESC key    */
+      assume ESC is a double pressed ESC key */
    SLkp_define_keysym( ( char * ) "^[^[", SL_KEY_ESC );
 
-   /* try to define Shft-Fn and Ctrl-Fn keys.
+   /* try to define Shift-Fn and Ctrl-Fn keys.
       Because we assume terminal has only 10 Fkeys
       so F11-F30 is generated with Shift & Ctrl.
       This is not guaranteed to work in all cases */
@@ -171,7 +171,7 @@ static void hb_sln_Init_KeyTranslations( void )
    keyname[ 0 ] = 'F';
    keyname[ 2 ] = 0;
 
-   /* Shft & Ctrl FKeys definition takes place in two
+   /* Shift & Ctrl FKeys definition takes place in two
       phases : from '1' to '9' and from 'A' to 'K' */
    for( i = 1; i <= 2; i++ )
    {
@@ -202,7 +202,7 @@ static void hb_sln_Init_KeyTranslations( void )
          keyname[ 1 ] = ch;
 
          /* QUESTION: why Slang reports error for defining Alt+O ???.
-                      Have I any hidden error in key definitiions ??? */
+                      Have I any hidden error in key definitions ??? */
          if( ch != 'O' )
             SLkp_define_keysym( keyname, SL_KEY_ALT( ch ) );
       }
@@ -300,7 +300,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    HB_BOOL fInput;
    int iKey;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_ReadKey(%p,%d)", pGT, ( int ) iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_ReadKey(%p,%d)", ( void * ) pGT, ( int ) iEventMask ) );
 
    /* user AbortKey break */
    if( SLKeyBoard_Quit == 1 )
@@ -340,13 +340,13 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    {
       if( hb_sln_escDelay == 0 )
       {
-         /* standard acction, wait a 1 second for next char and if not then exit */
+         /* standard action, wait a 1 second for next char and if not then exit */
          if( 0 == SLang_input_pending( 10 ) )
             return 0;
       }
       else
       {
-         /* wait hb_sln_escDelay milisec for next char and in not return ESC keycode */
+         /* wait hb_sln_escDelay millisec for next char and in not return ESC keycode */
          if( 0 == SLang_input_pending( -HB_MAX( hb_sln_escDelay, 0 ) ) )
             return 033;
       }
@@ -400,7 +400,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
       if( tmp != 0 )
          return tmp;
 
-      /* TOFIX: this code is broken - needs a diffrent aproach */
+      /* FIXME: this code is broken - needs a different approach */
       tmp = hb_sln_FindKeyTranslation( ch );
       if( tmp != 0 || ch > 256 )
          return tmp;
@@ -469,7 +469,7 @@ static int hb_sln_try_get_Kbd_State( void )
          IOcommand = KB_ISSCANCODE;
          if( ioctl( 0, TCSETSC, &IOcommand ) >= 0 )
          {
-            /* if SCANCODE mode is set corectly try get KBD state */
+            /* if SCANCODE mode is set correctly try get KBD state */
             if( ioctl( 0, KDGKBSTATE, &modifiers ) < 0 )
                modifiers = 0;
 

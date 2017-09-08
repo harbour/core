@@ -1,6 +1,5 @@
 /*
- * All HB_CODEPAGE_* externals.
- * (Compatibility header)
+ * All HB_CODEPAGE_* externals. (Compatibility header)
  *
  * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  *

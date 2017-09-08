@@ -50,8 +50,8 @@
 CREATE CLASS amf_Obj
 
    METHOD New( hCachedData ) CONSTRUCTOR
-   ERROR HANDLER noMessage
-   METHOD msgNotFound
+   ERROR HANDLER noMessage( ... )
+   METHOD msgNotFound( cMessage, ... )
 
    PROTECTED:
 
@@ -67,7 +67,7 @@ CREATE CLASS amf_Obj
    ACCESS RealClass INLINE ::cRealClass
    ACCESS RpcOid INLINE ::nRpcOid
 
-END CLASS
+ENDCLASS
 
 METHOD New( hCachedData ) CLASS amf_Obj
 
@@ -76,7 +76,6 @@ METHOD New( hCachedData ) CLASS amf_Obj
    RETURN self
 
 METHOD noMessage( ... ) CLASS amf_Obj
-
    RETURN ::msgNotFound( __GetMessage(), ... )
 
 METHOD msgNotFound( cMessage, ... ) CLASS amf_Obj
@@ -102,7 +101,7 @@ CREATE CLASS amf_Raw
    PROTECTED:
    VAR cData
 
-END CLASS
+ENDCLASS
 
 METHOD New( cData ) CLASS amf_Raw
 

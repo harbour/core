@@ -44,7 +44,7 @@
  *
  */
 
-/* NOTE: DiskSpace() supports larger disks than 2GB. CA-Cl*pper will always
+/* NOTE: DiskSpace() supports larger disks than 2 GiB. CA-Cl*pper will always
          return a (long) value, Harbour may return a (double) for large
          values, the decimal places are always set to zero, though. */
 
@@ -116,9 +116,8 @@ HB_FUNC( DISKSPACE )
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 
 #else
-   /* NOTE: Borland doesn't seem to deal with the un-named
-            struct that is part of ULARGE_INTEGER
-            [pt] */
+   /* NOTE: For compilers that don't seem to deal with the
+            unnamed struct that is part of ULARGE_INTEGER [pt] */
 #  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).u.LowPart + \
                                     ( double ) (v).u.HighPart * \
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )

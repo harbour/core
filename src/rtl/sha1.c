@@ -1,14 +1,14 @@
 /*
- * sha1.c
+ * WARNING: Outdated, insecure algorithm.
  *
- * Originally witten by Steve Reid <steve@edmweb.com>
+ * Originally written by Steve Reid <steve@edmweb.com>
  *
  * Modified by Aaron D. Gifford <agifford@infowest.com>
  *
  * NO COPYRIGHT - THIS IS 100% IN THE PUBLIC DOMAIN
  *
  * The original unmodified version is available at:
- *    ftp://ftp.funet.fi/pub/crypt/hash/sha/sha1.c
+ *    http://www.nic.funet.fi/pub/crypt/hash/sha/sha1.c
  *
  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR(S) AND CONTRIBUTORS ``AS IS'' AND
  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -38,7 +38,7 @@ static sha1_quadbyte rol( sha1_quadbyte value, int bits )
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
 
 /* blk0() and blk() perform the initial expand. */
-/* I got the idea of expanding during the round function from SSLeay */
+/* I got the idea of expanding during the round function from OpenSSL */
 
 #ifdef HB_LITTLE_ENDIAN
 #define blk0(i) (block->l[i] = (rol(block->l[i],24)&(sha1_quadbyte)0xFF00FF00) \

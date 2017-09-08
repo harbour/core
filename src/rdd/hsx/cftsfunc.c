@@ -1,13 +1,13 @@
 /*
  * HiPer-SEEK / CFTS compatible library
- *    Cfts*() functions
+ * Cfts*() functions
  *
  * Copyright 2005 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *
  * Credits:
  *    Many thanks for Mindaugas Kavaliauskas for his assistance,
- *    informations about HSX internals, code checking and general
- *    helping in many things when this library was written.
+ *    information about HSX internals, code checking and general
+ *    help in many things when this library was written.
  *                                                          Przemek.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,7 +51,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 HB_FUNC_TRANSLATE( CFTSADD   , HS_ADD )
 HB_FUNC_TRANSLATE( CFTSCLOSE , HS_CLOSE )

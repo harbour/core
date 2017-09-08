@@ -103,7 +103,6 @@ PROCEDURE hb_HashAddMember( aName, cType, uInit, oObj )
          EXIT
 
       ENDSWITCH
-
    ENDIF
 
    FOR EACH cName IN aName

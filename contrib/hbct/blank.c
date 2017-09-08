@@ -2,7 +2,6 @@
  * CT3 Blank() function
  *
  * Copyright 2009 Pavel Tsarenko <tpe2@mail.ru>
- * http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -91,7 +90,8 @@ HB_FUNC( BLANK )
          HB_SIZE nLen = hb_itemGetCLen( pItem );
          char * szResult = ( char * ) hb_xgrab( nLen + 1 );
 
-         hb_xmemset( szResult, ' ', nLen );
+         if( nLen > 0 )
+            hb_xmemset( szResult, ' ', nLen );
          if( bRef )
             hb_storclen( szResult, nLen, 1 );
          if( bRet )

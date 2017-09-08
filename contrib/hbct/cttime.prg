@@ -73,7 +73,7 @@ FUNCTION TimeToSec( cTime )
       ENDIF
    ENDIF
 
-   RETURN Round( nSec, 2 ) /* round FL val to be sure that you can compare it */
+   RETURN Round( nSec, 2 )  /* round FL val to be sure that you can compare it */
 
 FUNCTION SecToTime( nSec, lHundredth )
 

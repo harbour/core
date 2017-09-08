@@ -1,5 +1,5 @@
 /*
- * wildcards / file match functions
+ * Wildcards / file match functions
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -90,7 +90,7 @@
 
 /* holder of memory block information */
 /* NOTE: HB_USHORT is used intentionally to fill up the structure to
- * full 16 bytes (on 16/32 bit environment)
+ * full 16 bytes (on 16/32-bit environment)
  */
 typedef struct HB_GARBAGE_
 {
@@ -386,7 +386,7 @@ void hb_gcGripDrop( PHB_ITEM pItem )
 }
 
 /* Lock a memory pointer so it will not be released if stored
-   outside of harbour variables
+   outside of Harbour variables
  */
 void * hb_gcLock( void * pBlock )
 {
@@ -409,7 +409,7 @@ void * hb_gcLock( void * pBlock )
 }
 
 /* Unlock a memory pointer so it can be released if there is no
-   references inside of harbour variables
+   references inside of Harbour variables
  */
 void * hb_gcUnlock( void * pBlock )
 {
@@ -724,7 +724,7 @@ void hb_gcReleaseAll( void )
 {
    if( s_pCurrBlock )
    {
-      PHB_GARBAGE pAlloc, pDelete;
+      PHB_GARBAGE pAlloc;
 
       s_bCollecting = HB_TRUE;
 
@@ -742,7 +742,8 @@ void hb_gcReleaseAll( void )
 
       do
       {
-         HB_TRACE( HB_TR_INFO, ( "Release %p", s_pCurrBlock ) );
+         PHB_GARBAGE pDelete;
+         HB_TRACE( HB_TR_INFO, ( "Release %p", ( void * ) s_pCurrBlock ) );
          pDelete = s_pCurrBlock;
          hb_gcUnlink( &s_pCurrBlock, pDelete );
          HB_GC_AUTO_DEC();
@@ -779,7 +780,7 @@ HB_FUNC( HB_GCALL )
     */
    hb_ret();
 
-   hb_gcCollectAll( hb_parldef( 1, 1 ) );
+   hb_gcCollectAll( hb_parldef( 1, HB_TRUE ) );
 }
 
 #ifdef HB_GC_AUTO

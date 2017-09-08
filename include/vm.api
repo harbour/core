@@ -46,10 +46,8 @@
 
 /* DON'T USE THIS FILE FOR NEW HARBOUR C CODE */
 
-/* -------------------------------------------------------- */
-/* Warning: VM functionality is not supported by Harbour.   */
-/*          All functions will emulate constant failure.    */
-/* -------------------------------------------------------- */
+/* WARNING: VM functionality is not supported by Harbour.
+            All functions will emulate constant failure. */
 
 #ifndef _VM_API
 #define _VM_API

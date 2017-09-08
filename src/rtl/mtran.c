@@ -54,7 +54,7 @@ static HB_SIZE hb_strMemotran( char * pszResult, const char * pszString, HB_SIZE
    HB_SIZE nStringPos = 0;
    HB_SIZE nResultPos = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strMemotran(%p, %s, %" HB_PFS "u, %x, %x)", pszResult, pszString, nStringLen, cHardCR, cSoftCR ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strMemotran(%p, %s, %" HB_PFS "u, %x, %x)", ( void * ) pszResult, pszString, nStringLen, cHardCR, cSoftCR ) );
 
    while( nStringPos < nStringLen )
    {
@@ -95,8 +95,8 @@ HB_FUNC( MEMOTRAN )
       if( pszRepl )
          cHardCR = *pszRepl;
 
-      /* CA-Cl*pper checks 3-rd cSoftCR parameter only
-       * if 2-nd one cHardCR is specified [druzus]
+      /* CA-Cl*pper checks 3rd cSoftCR parameter only
+       * if 2nd one cHardCR is specified [druzus]
        */
 #ifdef HB_CLP_STRICT
       if( pszRepl )

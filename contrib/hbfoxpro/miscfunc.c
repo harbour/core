@@ -45,7 +45,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 HB_FUNC_TRANSLATE( PARAMETERS, PCOUNT )
 HB_FUNC_TRANSLATE( SROWS, MAXROW )

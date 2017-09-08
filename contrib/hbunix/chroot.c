@@ -1,5 +1,5 @@
 /*
- * UNIX function wrappers (chroot)
+ * Unix function wrappers (chroot)
  *
  * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
  *

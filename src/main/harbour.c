@@ -1,5 +1,5 @@
 /*
- *
+ * Harbour standalone compiler entry point
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

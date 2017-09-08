@@ -46,11 +46,10 @@
 
 #include "hbapi.h"
 
-/*
-   Algorithm:
+/* Algorithm:
       http://wiki.yak.net/589/Bubble_Babble_Encoding.txt
    Implementation based on this code:
-      http://www.nitrxgen.net/source/bubblebabble.txt
+      [LOST LINK] www.nitrxgen.net/source/bubblebabble.txt
  */
 
 HB_FUNC( BUBBLEBABBLEENCODE )
@@ -65,15 +64,15 @@ HB_FUNC( BUBBLEBABBLEENCODE )
    HB_ISIZ nPos = 0;
    HB_ISIZ i;
 
-   HB_BYTE byte1;
-   HB_BYTE byte2;
-
    int iSeed = 1;
 
    pszResult[ nPos++ ] = 'x';
 
    for( i = 0;; i += 2 )
    {
+      HB_BYTE byte1;
+      HB_BYTE byte2;
+
       if( i >= nInputLen )
       {
          pszResult[ nPos++ ] = s_szVowels[ iSeed % 6 ];

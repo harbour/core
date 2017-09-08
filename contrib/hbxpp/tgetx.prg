@@ -59,7 +59,7 @@ CREATE CLASS xpp_Get INHERIT Get
 ENDCLASS
 
 /* NOTE: Not tested or compared to Xbase++. [vszakats] */
-/* TOFIX: To make it work when @S was used. [vszakats] */
+/* FIXME: To make it work when @S was used. [vszakats] */
 
 METHOD posInBuffer( nRow, nCol ) CLASS xpp_Get
 

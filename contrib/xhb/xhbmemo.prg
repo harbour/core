@@ -48,10 +48,9 @@
 #include "memoedit.ch"
 #include "inkey.ch"
 
-//
 // A specialized HBEditor which can simulate MemoEdit() behaviour
-//
-CREATE CLASS xhb_TMemoEditor FROM XHBEditor
+
+CREATE CLASS xhb_TMemoEditor INHERIT XHBEditor
 
    VAR    xUserFunction   // User Function called to change default MemoEdit() behaviour
 

@@ -115,7 +115,7 @@ STATIC FUNCTION DefError( oError )
       iif( cOSError == NIL, "", ";" + cOSError ), aOptions ) ) == 0
    ENDDO
 
-   IF ! Empty( nChoice )
+   IF ! Empty( nChoice )  /* Alert() may return NIL */
       SWITCH aOptions[ nChoice ]
       CASE "Break"
          Break( oError )
@@ -137,12 +137,10 @@ STATIC FUNCTION DefError( oError )
 
    n := 1
    DO WHILE ! Empty( ProcName( ++n ) )
-
       OutErr( hb_eol() )
       OutErr( hb_StrFormat( "Called from %1$s(%2$d)  ", ;
-              ProcName( n ), ;
-              ProcLine( n ) ) )
-
+         ProcName( n ), ;
+         ProcLine( n ) ) )
    ENDDO
 
    ErrorLevel( 1 )

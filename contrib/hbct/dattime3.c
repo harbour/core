@@ -47,7 +47,7 @@
 
 /* stime() exists only in SVr4, SVID, X/OPEN and Linux */
 #ifndef _SVID_SOURCE
-#  define _SVID_SOURCE
+#define _SVID_SOURCE
 #endif
 
 #include "hbapi.h"

@@ -55,7 +55,7 @@
    #include <windows.h>
 #endif
 
-/* TOFIX: The screen buffer handling is not right for all platforms (Windows)
+/* FIXME: The screen buffer handling is not right for all platforms (Windows)
           The output of the launched (MS-DOS?) app is not visible. */
 
 HB_FUNC( __RUN )
@@ -67,9 +67,7 @@ HB_FUNC( __RUN )
 #if defined( HB_OS_WIN_CE )
       hb_fsProcessRun( pszCommand, NULL, 0, NULL, NULL, NULL, NULL, HB_FALSE );
 #elif defined( HB_OS_WIN )
-      LPTSTR lpCommand;
-
-      lpCommand = HB_CHARDUP( pszCommand );
+      LPTSTR lpCommand = HB_CHARDUP( pszCommand );
       ( void ) HB_WINAPI_SYSTEM( lpCommand );
       hb_xfree( lpCommand );
 #else

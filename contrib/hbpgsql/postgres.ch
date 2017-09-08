@@ -1,6 +1,8 @@
 /*
- * PostgreSQL RDBMS low level (client api) interface code.
+ * PostgreSQL RDBMS low-level (client API) interface code.
  *
+ * Copyright 2016 P.Chornyj <myorg63@mail.ru>
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -47,6 +49,7 @@
 #ifndef HBPOSTGRES_CH_
 #define HBPOSTGRES_CH_
 
+/* PQstatus() */
 #define CONNECTION_OK                   0
 #define CONNECTION_BAD                  1
 #define CONNECTION_STARTED              2
@@ -57,6 +60,7 @@
 #define CONNECTION_SSL_STARTUP          7
 #define CONNECTION_NEEDED               8
 
+/* PQresultStatus() */
 #define PGRES_EMPTY_QUERY               0
 #define PGRES_COMMAND_OK                1
 #define PGRES_TUPLES_OK                 2
@@ -66,6 +70,7 @@
 #define PGRES_NONFATAL_ERROR            6
 #define PGRES_FATAL_ERROR               7
 
+/* PQtransactionStatus() */
 #define PQTRANS_IDLE                    0
 #define PQTRANS_ACTIVE                  1
 #define PQTRANS_INTRANS                 2

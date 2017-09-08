@@ -51,7 +51,7 @@
 #define DO_COUNT_COUNTLEFT   0
 #define DO_COUNT_COUNTRIGHT  1
 
-/* helper function for the countxxx functions */
+/* helper function for the Count*() functions */
 static void do_count( int iSwitch )
 {
    /* param check */
@@ -76,7 +76,7 @@ static void do_count( int iSwitch )
       {
          case DO_COUNT_COUNTLEFT:
             pc = pcString;
-            while( ( *pc == cSearch ) && ( pc < pcString + sStrLen ) )
+            while( *pc == cSearch && pc < ( pcString + sStrLen ) )
             {
                sRetVal++;
                pc++;
@@ -85,7 +85,7 @@ static void do_count( int iSwitch )
 
          case DO_COUNT_COUNTRIGHT:
             pc = pcString + sStrLen - 1;
-            while( ( *pc == cSearch ) && ( pc >= pcString ) )
+            while( *pc == cSearch && pc >= pcString )
             {
                sRetVal++;
                pc--;

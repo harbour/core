@@ -1,5 +1,5 @@
 /*
- * constant values for CT3 serial communication com_*() functions
+ * Constant values for CT3 serial communication com_*() functions
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

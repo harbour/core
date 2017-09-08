@@ -52,7 +52,7 @@
 /* also returns the new length in lLen */
 const char * hb_strLTrim( const char * szText, HB_SIZE * nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strLTrim(%s, %p)", szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strLTrim(%s, %p)", szText, ( void * ) nLen ) );
 
    while( *nLen && HB_ISSPACE( *szText ) )
    {
@@ -127,7 +127,7 @@ HB_FUNC( RTRIM )
          hb_retclen( szText, nLen );
    }
    else
-      /* NOTE: "TRIM" is right here [vszakats] */
+      /* NOTE: "TRIM" is correct here [vszakats] */
       hb_errRT_BASE_SubstR( EG_ARG, 1100, NULL, "TRIM", HB_ERR_ARGS_BASEPARAMS );
 }
 

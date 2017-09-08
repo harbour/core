@@ -49,12 +49,12 @@
 
 #include "ct.h"
 
-HB_FUNC( CHARSLIST ) /* HB_EXTENSION */
+HB_FUNC( CHARSLIST )  /* HB_EXTENSION */
 {
    ct_charlist( CT_CHARLIST_CHARSLIST );
 }
 
-HB_FUNC( CHARHIST ) /* HB_EXTENSION */
+HB_FUNC( CHARHIST )  /* HB_EXTENSION */
 {
    ct_charlist( CT_CHARLIST_CHARHIST );
 }

@@ -46,41 +46,36 @@
 
 #include "hbclass.ch"
 
-#define CODEC            100
-#define CODEB            101
-#define CODEA            102
-#define FNC1             103
-#define STARTA           104
-#define STARTB           105
-#define STARTC           106
+#define CODEC       100
+#define CODEB       101
+#define CODEA       102
+#define FNC1        103
+#define STARTA      104
+#define STARTB      105
+#define STARTC      106
 
-CREATE CLASS GDBarCode FROM GDBar
+CREATE CLASS GDBarCode INHERIT GDBar
 
    VAR nType
 
    // EAN-13 ISBN
-
    METHOD New( nTypeCode ) CONSTRUCTOR
    METHOD Draw( cText )
    METHOD Draw13( cText )
    METHOD DrawText13()
 
    // EAN-8
-
    METHOD Draw8( cText )
    METHOD DrawText8()
 
    // EAN-128
-
    METHOD Draw128( cText, cModeCode )
 
    // I25
-
    METHOD DrawI25( cText )
    METHOD GenCodei25()
 
    // Utils
-
    METHOD FindCharCode( cString, cChar )
    METHOD MixCode( value )
    METHOD Findcode( uval )

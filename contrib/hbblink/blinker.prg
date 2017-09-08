@@ -246,7 +246,7 @@ FUNCTION BliMgrSts( nParam )
    CASE BliCacheSize
    CASE BliExtMemAvail
    CASE BliOverlayLoc
-   CASE BliVirMemAvail  /* fall through */
+   CASE BliVirMemAvail  /* fallthrough */
    ENDSWITCH
 
    RETURN 0

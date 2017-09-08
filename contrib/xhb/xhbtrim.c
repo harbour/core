@@ -70,11 +70,11 @@ HB_FUNC( XHB_RTRIM )
          hb_retclen( szText, nLen );
    }
    else
-      /* NOTE: "TRIM" is right here [vszakats] */
+      /* NOTE: "TRIM" is correct here [vszakats] */
       hb_errRT_BASE_SubstR( EG_ARG, 1100, NULL, "TRIM", HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* synonymn for XHB_RTRIM */
+/* synonym for xhb_RTrim() */
 HB_FUNC_TRANSLATE( XHB_TRIM, XHB_RTRIM )
 
 /* trims leading and trailing spaces from a string */

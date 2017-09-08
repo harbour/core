@@ -1,5 +1,5 @@
 /*
- * xhb compatibility wrappers
+ * xHarbour compatibility wrappers
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *
@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 HB_FUNC_TRANSLATE( GTPROCESSMESSAGES , NEXTKEY         )
 HB_FUNC_TRANSLATE( GFXPRIMITIVE      , HB_GFXPRIMITIVE )

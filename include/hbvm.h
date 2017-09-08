@@ -77,7 +77,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHOR
    {
       PHB_SYMB  pModuleSymbols;     /* pointer to module symbol table */
       HB_USHORT uiModuleSymbols;    /* number of symbols on that table */
-      HB_USHORT uiStaticsOffset;    /* ofset of statics base symbol */
+      HB_USHORT uiStaticsOffset;    /* offset of statics base symbol */
       struct _HB_SYMBOLS * pNext;   /* pointer to the next SYMBOLS structure */
       HB_SYMBOLSCOPE hScope;        /* scope collected from all symbols in module used to speed initialization code */
       void *    hDynLib;            /* handler to dynamic library */
@@ -135,7 +135,7 @@ extern HB_EXPORT HB_BOOL   hb_vmIsReady( void );
 #define HB_BREAK_REQUESTED    2     /* break to nearest RECOVER/END sequence */
 #define HB_ENDPROC_REQUESTED  4     /* immediately return from procedure (error handler in macro evaluation) */
 #ifdef _HB_API_INTERNAL_
-#define HB_VMSTACK_REQUESTED  0x100 /* inetrnel flag to signal thread local stack */
+#define HB_VMSTACK_REQUESTED  0x100 /* internal flag to signal thread local stack */
 #endif
 
 /* Public PCode functions */

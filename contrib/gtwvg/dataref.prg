@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ dataRef Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                    Xbase++ dataRef Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               06Dec2008
  */
 
 #include "hbclass.ch"

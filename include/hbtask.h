@@ -1,6 +1,6 @@
 /*
- * platform independent task system. It's used when when OS does not
- *    support threads
+ * Platform independent task system. It's used when when OS does not
+ * support threads
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

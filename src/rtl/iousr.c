@@ -1,5 +1,5 @@
 /*
- * IOUSRD - library to create new FILE IO redirectors at prg level
+ * IOUSRD - library to create new FILE IO redirectors at .prg level
  *
  * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -751,10 +751,10 @@ HB_FUNC( IOUSR_REGISTER )
       s_errRT_IOUSR( EG_ARG, 1001, "Argument error" );
 }
 
-/* IOUSR_SetError( [<nError> [, <nBase> ]] ) -> <nPrevError> */
+/* IOUSR_SetError( [<nError> [, <nBase> ]] ) --> <nPrevError> */
 HB_FUNC( IOUSR_SETERROR )
 {
-   HB_ERRCODE errCode = hb_fsError();
+   HB_ERRCODE errCodePrev = hb_fsError();
 
    if( HB_ISNUM( 1 ) )
    {
@@ -764,5 +764,5 @@ HB_FUNC( IOUSR_SETERROR )
       hb_fsSetError( errCodeNew );
    }
 
-   hb_retni( errCode );
+   hb_retni( errCodePrev );
 }

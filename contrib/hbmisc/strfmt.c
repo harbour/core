@@ -59,7 +59,7 @@ typedef struct
 } STRPAR;
 
 /* TODO: Add support for embedded PICTURE string in mask string. */
-/* TODO: Add a way to control trimming. (but 99.99% of the time, trimming is actually useful) */
+/* TODO: Add a way to disable trimming. (but 99.99% of the time, trimming is actually useful) */
 
 HB_FUNC( STRFORMAT )
 {

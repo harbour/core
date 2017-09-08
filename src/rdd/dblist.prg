@@ -42,7 +42,7 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
-*/
+ */
 
 /* NOTE: lAll is a dummy parameter, nothing seems to depend on it. [vszakats] */
 
@@ -59,16 +59,16 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
 
    /* Choose the output style */
    IF lOff
-      bOutBlock := {|| QOut( iif( Deleted(), "*", " " ) ),;
+      bOutBlock := {|| QOut( iif( Deleted(), "*", " " ) ), ;
                        AEval( abEval, {| bEval | QQOut( Eval( bEval ), "" ) } ) }
    ELSE
-      bOutBlock := {|| QOut( Str( RecNo(), 7 ), iif( Deleted(), "*", " " ) ),;
+      bOutBlock := {|| QOut( Str( RecNo(), 7 ), iif( Deleted(), "*", " " ) ), ;
                        AEval( abEval, {| bEval | QQOut( Eval( bEval ), "" ) } ) }
    ENDIF
 
    /* Save SETs */
 
-   IF ! Empty( lToPrint )
+   IF ! Empty( lToPrint )  /* => hb_defaultValue( lToPrint, .F. ) */
       lOldPrinter := Set( _SET_PRINTER, .T. )
    ENDIF
    IF ! Empty( cToFileName )
@@ -83,12 +83,12 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
 
    BEGIN SEQUENCE
 
-      IF Empty( lAll ) .AND. ;
+      IF Empty( lAll ) .AND. ;  /* => hb_defaultValue( lAll, .F. ) */
          Empty( bFor ) .AND. ;
          Empty( bWhile ) .AND. ;
-         Empty( nNext ) .AND. ;
-         Empty( nRecord ) .AND. ;
-         Empty( lRest )
+         Empty( nNext ) .AND. ;  /* => nNext == NIL .OR. nNext == 0 */
+         Empty( nRecord ) .AND. ;  /* => nRecord == NIL .OR. nRecord == 0 */
+         Empty( lRest )  /* => hb_defaultValue( lRest, .F. ) */
 
          Eval( bOutBlock )
       ELSE

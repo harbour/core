@@ -2,6 +2,7 @@
  * SetPos(), Row(), Col() functions
  *
  * Copyright 1999 Bil Simser <bsimser@home.com>
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (SetPos())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,21 +45,11 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    SetPos()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbapigt.h"
 #include "hbapiitm.h"
 
-HB_FUNC( SETPOS ) /* Sets the screen position */
+HB_FUNC( SETPOS )  /* Sets the screen position */
 {
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
       hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
@@ -71,7 +62,7 @@ HB_FUNC( SETPOS ) /* Sets the screen position */
 #endif
 }
 
-HB_FUNC( ROW ) /* Return the current screen row position (zero origin) */
+HB_FUNC( ROW )  /* Return the current screen row position (zero origin) */
 {
    int iRow;
    int iCol;
@@ -81,7 +72,7 @@ HB_FUNC( ROW ) /* Return the current screen row position (zero origin) */
    hb_retni( iRow );
 }
 
-HB_FUNC( COL ) /* Return the current screen column position (zero origin) */
+HB_FUNC( COL )  /* Return the current screen column position (zero origin) */
 {
    int iRow;
    int iCol;

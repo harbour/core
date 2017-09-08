@@ -1,5 +1,4 @@
 /*
- *
  * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * Based on:
  *
@@ -14,22 +13,20 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
- * See COPYING.txt for licensing terms.
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,7 +44,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -65,9 +62,6 @@
  *                     CUI Enhancement Oriented
  *                         No Callbacks etc.
  *                            Pure Statics
- *                                 .
- *                Pritpal Bedi <bedipritpal@hotmail.com>
- *                            28Feb2009
  */
 
 #include "hbwinole.h"
@@ -139,9 +133,9 @@ HB_FUNC( WVG_CLEARGUIOBJECTS )
          if( pWVT->gObjs->bBlock )
             hb_itemRelease( pWVT->gObjs->bBlock );
 #if ! defined( HB_OS_WIN_CE )
-         if( pWVT->gObjs->iPicture )
+         if( pWVT->gObjs->pPicture )
             if( pWVT->gObjs->bDestroyPicture )
-               HB_VTBL( pWVT->gObjs->iPicture )->Release( HB_THIS( pWVT->gObjs->iPicture ) );
+               HB_VTBL( pWVT->gObjs->pPicture )->Release( HB_THIS( pWVT->gObjs->pPicture ) );
 #endif
          hb_xfree( pWVT->gObjs );
          pWVT->gObjs = gObj;
@@ -214,11 +208,11 @@ HB_FUNC( WVG_SETGOBJDATA )
 #if ! defined( HB_OS_WIN_CE )
                case GOBJ_OBJDATA_PICTUREEX:
                   if( HB_ISNUM( 3 )  )
-                     gObj->iPicture = ( IPicture * ) ( HB_PTRUINT ) hb_parni( 3 );
+                     gObj->pPicture = ( IPicture * ) ( HB_PTRUINT ) hb_parni( 3 );
                   break;
                case GOBJ_OBJDATA_PICTURE:
                   if( HB_ISNUM( 3 ) && hb_parni( 3 ) <= WVT_PICTURES_MAX )
-                     gObj->iPicture = pWVT->pGUI->iPicture[ hb_parni( 3 ) - 1 ];
+                     gObj->pPicture = pWVT->pGUI->pPicture[ hb_parni( 3 ) - 1 ];
                   break;
                case GOBJ_OBJDATA_IMAGE:
                {
@@ -227,7 +221,7 @@ HB_FUNC( WVG_SETGOBJDATA )
                   if( HB_ISNUM( 3 ) )
                   {
                      if( hb_parni( 3 ) <= WVT_PICTURES_MAX )
-                        iPicture = pWVT->pGUI->iPicture[ hb_parni( 3 ) - 1 ];
+                        iPicture = pWVT->pGUI->pPicture[ hb_parni( 3 ) - 1 ];
                   }
                   else
                   {
@@ -245,9 +239,9 @@ HB_FUNC( WVG_SETGOBJDATA )
                   }
                   if( iPicture )
                   {
-                     if( gObj->bDestroyPicture && gObj->iPicture )
-                        HB_VTBL( gObj->iPicture )->Release( HB_THIS( gObj->iPicture ) );
-                     gObj->iPicture        = iPicture;
+                     if( gObj->bDestroyPicture && gObj->pPicture )
+                        HB_VTBL( gObj->pPicture )->Release( HB_THIS( gObj->pPicture ) );
+                     gObj->pPicture        = iPicture;
                      gObj->bDestroyPicture = HB_TRUE;
                   }
                   break;
@@ -1386,7 +1380,7 @@ HB_FUNC( WVG_PICTURE )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = pWVT->pGUI->iPicture[ hb_parni( 6 ) - 1 ];
+      gObj->pPicture        = pWVT->pGUI->pPicture[ hb_parni( 6 ) - 1 ];
       gObj->iData           = ( hb_parl( 7 ) ? 1 : 0 );
       gObj->bDestroyPicture = HB_FALSE;
 
@@ -1420,7 +1414,7 @@ HB_FUNC( WVG_PICTUREEX )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture        = ( IPicture * ) ( HB_PTRUINT ) hb_parnint( 6 );
+      gObj->pPicture        = ( IPicture * ) ( HB_PTRUINT ) hb_parnint( 6 );
       gObj->iData           = ( hb_parl( 7 ) ? 1 : 0 );
       gObj->bDestroyPicture = HB_FALSE;
 
@@ -1454,7 +1448,7 @@ HB_FUNC( WVG_IMAGE )
    {
       case GOBJ_IMAGESOURCE_SLOT:
          if( HB_ISNUM( 7 ) && hb_parni( 7 ) <= WVT_PICTURES_MAX )
-            iPicture = pWVT->pGUI->iPicture[ hb_parni( 7 ) - 1 ];
+            iPicture = pWVT->pGUI->pPicture[ hb_parni( 7 ) - 1 ];
          break;
       case GOBJ_IMAGESOURCE_RESOURCE:
       {
@@ -1490,7 +1484,7 @@ HB_FUNC( WVG_IMAGE )
       gObj->aOffset.iBottom = hb_parvni( 5, 3 );
       gObj->aOffset.iRight  = hb_parvni( 5, 4 );
 
-      gObj->iPicture = iPicture;
+      gObj->pPicture = iPicture;
       gObj->iData           = ( hb_parl( 9 ) ? 1 : 0 );
 
       if( iSource == GOBJ_IMAGESOURCE_SLOT )
@@ -1517,7 +1511,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
    POINT      lpp     = { 0, 0 };
 
    HDC        hdc      = pWVT->hGuiDC;
-   IPicture * iPicture = gObj->iPicture;
+   IPicture * iPicture = gObj->pPicture;
 
    if( iPicture )
    {

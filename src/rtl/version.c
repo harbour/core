@@ -2,6 +2,7 @@
  * Version related functions
  *
  * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (timestamp conversion)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

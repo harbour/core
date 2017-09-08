@@ -58,7 +58,7 @@
 #include "hbdate.h"
 #include "hb_io.h"
 
-/* ------------------------------------------------------------- */
+/* --- */
 
 #if defined( HB_OS_DOS )
 
@@ -178,8 +178,8 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
+       * defined and effectively enables lseek64()/flock64()/ftruncate64()
+       * functions on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
    #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
@@ -187,7 +187,7 @@
    #endif
 #endif
 
-/* ------------------------------------------------------------- */
+/* --- */
 
 HB_FATTR hb_fsAttrFromRaw( HB_FATTR raw_attr )
 {
@@ -344,7 +344,7 @@ HB_FATTR hb_fsAttrToRaw( HB_FATTR nAttr )
 }
 
 /* Converts a CA-Cl*pper compatible file attribute string
-   to the internal reprensentation. */
+   to the internal representation. */
 
 HB_FATTR hb_fsAttrEncode( const char * szAttr )
 {
@@ -352,7 +352,7 @@ HB_FATTR hb_fsAttrEncode( const char * szAttr )
    char ch;
    HB_FATTR nAttr = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrEncode(%p)", szAttr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrEncode(%p)", ( const void * ) szAttr ) );
 
    while( ( ch = ( char ) HB_TOUPPER( *pos ) ) != '\0' )
    {
@@ -382,7 +382,7 @@ char * hb_fsAttrDecode( HB_FATTR nAttr, char * szAttr )
 {
    char * ptr = szAttr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrDecode(%u, %p)", nAttr, szAttr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrDecode(%u, %p)", nAttr, ( void * ) szAttr ) );
 
    /* Using the same order as CA-Cl*pper did: RHSVDA. */
    if( nAttr & HB_FA_READONLY   ) *ptr++ = 'R';
@@ -423,7 +423,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    ffind->szName[ 0 ] = '\0';
    ffind->size = 0;
 
-   /* Do platform dependant first/next search */
+   /* Do platform dependent first/next search */
 
    hb_vmUnlock();
 
@@ -686,7 +686,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
             else
             {
 #if defined( __XCC__ ) || ( defined( __POCC__ ) && __POCC__ >= 500 )
-               /* NOTE: PellesC 5.00.1 will go into an infinite loop if we don't
+               /* NOTE: Pelles C 5.00.1 will go into an infinite loop if we don't
                         split this into two operations. [vszakats] */
                ffind->size  = ( HB_FOFFSET ) info->pFindFileData.nFileSizeLow;
                ffind->size += ( HB_FOFFSET ) info->pFindFileData.nFileSizeHigh << 32;
@@ -964,7 +964,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
       if( ffind->pszFree )
          hb_xfree( ffind->pszFree );
 
-      /* Do platform dependant cleanup */
+      /* Do platform dependent cleanup */
 
       if( ffind->info )
       {

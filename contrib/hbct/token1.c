@@ -120,7 +120,6 @@ static void do_token1( int iSwitch )
       HB_SIZE sSubStrLen;
       HB_SIZE sRetStrLen = 0;
       HB_SIZE nToken = 0;
-      HB_SIZE nSkipCnt;
       const char * pc;
 
       /* separator string */
@@ -179,6 +178,7 @@ static void do_token1( int iSwitch )
       while( nToken < nTokenCounter )
       {
          HB_SIZE sMatchedPos = sSeparatorStrLen;
+         HB_SIZE nSkipCnt;
 
          /* Skip the left nSkip successive separators */
          nSkipCnt = 0;

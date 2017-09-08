@@ -1,5 +1,5 @@
 /*
- * Common header file for the source of Harbour itself.
+ * Common header file for the source of Harbour itself
  *
  * Copyright 2001-2002 Viktor Szakats (vszakats.net/harbour)
  *

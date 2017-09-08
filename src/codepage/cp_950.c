@@ -1,5 +1,5 @@
 /*
- * example of Harbour codepage using CP950 encoding
+ * Example of Harbour codepage using CP950 encoding
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

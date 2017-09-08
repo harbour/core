@@ -1,5 +1,5 @@
 /*
- * Harbour source code formatter (cmdline wrapper)
+ * Harbour source code formatter (command-line wrapper)
  *
  * Copyright 2009 Alexander S.Kresin <alex@belacy.belgorod.su>
  *
@@ -55,7 +55,10 @@ PROCEDURE Main( ... )
 
    LOCAL oRef, aParams, cFileName, cInitDir, i, cParam, lRecursive := .F.
 
-   // AltD( 2 ); AltD()
+#if 0
+   AltD( 2 )
+   AltD()
+#endif
    aParams := hb_AParams()
 
    IF Empty( aParams ) .OR. ( Left( cFileName := ATail( aParams ), 1 ) $ "@/-" )

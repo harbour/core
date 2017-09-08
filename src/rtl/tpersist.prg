@@ -121,7 +121,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
             ENDSWITCH
          ENDIF
 
-         IF !Empty( cProp )
+         IF ! Empty( cProp )
             IF ( nPos := At( "[", cProp ) ) > 0
                cInd := hb_StrReplace( SubStr( cProp, nPos + 1, Len( cProp ) - nPos - 1 ), ;
                                       { " " => "", "][" => "," } )

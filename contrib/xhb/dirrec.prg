@@ -48,14 +48,14 @@
  * It does not change current drive or current directory so
  * unlike the xHarbour version it's MT safe.
  * It also returns relative paths which are more similar to
- * Directory() function results so they can be easy used
+ * *Directory() function results so they can be easy used
  * directly in other code, f.e. to create archive without
  * absolute paths. Please note that user can easy convert
- * relative paths to absolte ones by simple adding CurDir()
+ * relative paths to absolute ones by simple adding CurDir()
  * and/or cPath parameter passed to DirectoryRecurse() but
  * reverted conversion may not be possible in some cases.
- * The 3-rd xHarbour parameter <lCaseMach> is ignored because
- * harbour uses platform native rules to check filename mask
+ * The 3rd xHarbour parameter <lCaseMach> is ignored because
+ * Harbour uses platform native rules to check filename mask
  * respecting SET FILECASE and SET DIRCASE settings.
  * xHarbour does not add "D" to attribute list used for directory
  * tree scanning so user always have to add it manually and later

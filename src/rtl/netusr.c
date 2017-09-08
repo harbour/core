@@ -44,16 +44,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *    Support for DJGPP/GCC/OS2 for netname
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 
 #if defined( HB_OS_WIN )

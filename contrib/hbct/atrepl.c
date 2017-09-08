@@ -99,10 +99,10 @@ HB_FUNC( ATREPL )
 
       if( nCounter != 0 )
       {
-         /* depending on iReplaceMode: replace all occurences including the nth one
-            or only the nth occurence
-            NOTE: if iReplaceMode = false and the nth occurence does not exist,
-            all occurences are replaced */
+         /* depending on iReplaceMode: replace all occurrences including the nth one
+            or only the nth occurrence
+            NOTE: if iReplaceMode = false and the nth occurrence does not exist,
+            all occurrences are replaced */
          char * pcRetSubStr;
          HB_SIZE sRetSubStrLen;
          HB_SIZE nMatchCounter = 0;
@@ -141,7 +141,7 @@ HB_FUNC( ATREPL )
             nMatchCounter++;
 
             /* replace match ? */
-            if( ( iReplaceMode == 0 ) || ( nMatchCounter == nCounter ) )
+            if( iReplaceMode == 0 || nMatchCounter == nCounter )
             {
                if( nMatchStrLen < nReplaceLen )
                {

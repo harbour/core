@@ -47,7 +47,7 @@
 #include "hbclass.ch"
 #include "gd.ch"
 
-CREATE CLASS GDChart FROM GDImage
+CREATE CLASS GDChart INHERIT GDImage
 
    VAR cTitle
    VAR cAxisX
@@ -60,7 +60,6 @@ CREATE CLASS GDChart FROM GDImage
    VAR aSeries
    VAR aDataOfHashes         // Hash contains graph datas
    VAR hDefs
-
 
    METHOD New( sx, sy )  CONSTRUCTOR
    METHOD AddData( hData )

@@ -54,7 +54,7 @@
 #include <math.h>
 #endif
 
-/* NOTE: Workaround for Pellec C 5.00 not having an 'inf' (HUGE_VAL)
+/* NOTE: Workaround for Pelles C 5.00 not having an 'inf' (HUGE_VAL)
          in '-Tarm-coff' mode. [vszakats] */
 #if defined( __POCC__ ) && defined( HB_OS_WIN_CE )
    #undef HUGE_VAL

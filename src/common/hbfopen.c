@@ -1,5 +1,5 @@
 /*
- *
+ * hb_fopen() function
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

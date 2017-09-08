@@ -1,5 +1,5 @@
 /*
- * xhb compatibility wrappers
+ * xHarbour compatibility wrappers
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *
@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 /* MT functions */
 HB_FUNC_TRANSLATE( HB_MULTITHREAD           , HB_MTVM               )

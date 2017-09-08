@@ -62,7 +62,7 @@ HB_FUNC( SPACE )
       {
          char * szResult = ( char * ) hb_xgrab( nLen + 1 );
 
-         /* NOTE: String overflow could never occure since a string can
+         /* NOTE: String overflow could never occur since a string can
                   be as large as ULONG_MAX, and the maximum length that
                   can be specified is LONG_MAX here. [vszakats] */
          /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); */

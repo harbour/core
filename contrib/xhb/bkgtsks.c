@@ -53,11 +53,11 @@
 #include "error.ch"
 
 #if defined( HB_OS_UNIX )
-#if defined( HB_OS_DARWIN )
-   #include <unistd.h>    /* We need usleep() in Darwin */
-#else
-   #include <time.h>
-#endif
+   #if defined( HB_OS_DARWIN )
+      #include <unistd.h>  /* We need usleep() in Darwin */
+   #else
+      #include <time.h>
+   #endif
 #endif
 
 HB_EXTERN_BEGIN
@@ -435,7 +435,7 @@ HB_FUNC( HB_BACKGROUNDACTIVE )
    if( s_pBackgroundTasks && HB_ISNUM( 1 ) )
    {
       /* TODO: access to pointers from harbour code */
-      bOldActive = hb_backgroundActive( hb_parnl( 1 ), hb_parldef( 2, 1 ) );
+      bOldActive = hb_backgroundActive( hb_parnl( 1 ), hb_parldef( 2, HB_TRUE ) );
    }
 
    hb_retl( bOldActive ); /* return old active value */

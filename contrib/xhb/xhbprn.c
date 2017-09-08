@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 #if defined( HB_OS_WIN )
 

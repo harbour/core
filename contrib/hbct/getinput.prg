@@ -1,7 +1,5 @@
 /*
- * CT3 GET function:
- *
- * GetInput()
+ * CT3 GET function: GetInput()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

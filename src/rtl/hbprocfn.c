@@ -56,10 +56,6 @@ HB_FUNC( HB_PROCESSOPEN )
    PHB_ITEM pStdIn  = hb_param( 2, HB_IT_BYREF );
    PHB_ITEM pStdOut = hb_param( 3, HB_IT_BYREF );
    PHB_ITEM pStdErr = hb_param( 4, HB_IT_BYREF );
-   HB_BOOL fDetach = hb_parl( 5 );
-   HB_FHANDLE hStdIn, *phStdIn, hStdOut, *phStdOut, hStdErr, *phStdErr;
-   HB_FHANDLE hProcess;
-   HB_ULONG ulPID;
 
    if( szName &&
        ( pStdIn  || HB_ISNIL( 2 ) ) &&
@@ -69,6 +65,11 @@ HB_FUNC( HB_PROCESSOPEN )
        ( HB_ISBYREF( 6 ) || HB_ISNIL( 6 ) ) &&
        ( ! pStdIn || ( pStdIn != pStdOut && pStdIn != pStdErr ) ) )
    {
+      HB_BOOL fDetach = hb_parl( 5 );
+      HB_FHANDLE hStdIn, *phStdIn, hStdOut, *phStdOut, hStdErr, *phStdErr;
+      HB_FHANDLE hProcess;
+      HB_ULONG ulPID;
+
       phStdIn  = pStdIn  ? &hStdIn  : NULL;
       phStdOut = pStdOut ? &hStdOut : NULL;
       phStdErr = pStdErr ? ( pStdOut == pStdErr ? phStdOut : &hStdErr ) : NULL;
@@ -121,7 +122,7 @@ HB_FUNC( HB_PROCESSCLOSE )
 }
 
 /* hb_processRun( <cCommand>, [ <cStdIn> ], [ @<cStdOut> ], [ @<cStdErr> ], ;
-                  [ <lDetach> ] ) -> <nResult> */
+                  [ <lDetach> ] ) --> <nResult> */
 HB_FUNC( HB_PROCESSRUN )
 {
    const char * szName = hb_parc( 1 );

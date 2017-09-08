@@ -44,10 +44,8 @@
  *
  */
 
-/* -------------------------------------------------------- */
-/* Warning: VM functionality is not supported by Harbour.   */
-/*          All functions will emulate constant failure.    */
-/* -------------------------------------------------------- */
+/* WARNING: VM functionality is not supported by Harbour.
+            All functions will emulate constant failure. */
 
 #include "hbapi.h"
 

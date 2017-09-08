@@ -46,13 +46,13 @@
 
 #pragma -b-
 
-#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
+#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject class */
 #include "hbclass.ch"
 
 #include "inkey.ch"
 #include "setcurs.ch"
 
-/* object message descirption */
+/* object message description */
 #define OMSG_NAME       1
 #define OMSG_VALUE      2
 #define OMSG_EDIT       3
@@ -186,7 +186,7 @@ METHOD PROCEDURE doGet( oBrowse ) CLASS HBDbObject
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1, ;
                   oBrowse:getColumn( oBrowse:colPos ):Width, @cValue, ;
                   __dbgExprValidBlock(), __dbgColors()[ 2 ], 256 )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          __dbgObjSetValue( ::TheObj, aItemRef[ OMSG_NAME ], &cValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )
@@ -273,7 +273,7 @@ STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
       xResult := __dbgSendMsg( nProcLevel, oObject, cVar )
       lCanAcc := .T.
    RECOVER
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          /* Try to access variables using class code level */
          xResult := __dbgSendMsg( 0, oObject, cVar )
          lCanAcc := .T.
@@ -293,7 +293,7 @@ STATIC FUNCTION __dbgObjSetValue( oObject, cVar, xValue )
    BEGIN SEQUENCE WITH {|| Break() }
       __dbgSendMsg( nProcLevel, oObject, "_" + cVar, xValue )
    RECOVER
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          /* Try to access variables using class code level */
          __dbgSendMsg( 0, oObject, "_" + cVar, xValue )
       RECOVER USING oErr

@@ -1,7 +1,7 @@
 /*
  * Turbo Boyer-Moore (Crochemore) string search
  *    Based on this code:
- *       http://www-igm.univ-mlv.fr/~lecroq/string/node15.html
+ *       https://web.archive.org/web/www-igm.univ-mlv.fr/~lecroq/string/node15.html
  *    Authors:
  *       Christian Charras, Thierry Lecroq
  *
@@ -112,7 +112,7 @@ static void preBmGs( const char * needle, HB_ISIZ m, HB_ISIZ bmGs[] )
 HB_ISIZ hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_ISIZ n )
 {
    HB_ISIZ r = 0;
-   HB_ISIZ bcShift, i, j, shift, u, v, turboShift;
+   HB_ISIZ bcShift, j, shift, u, v, turboShift;
    HB_ISIZ bmBc[ ASIZE ];
    HB_ISIZ * bmGs;
 
@@ -127,7 +127,7 @@ HB_ISIZ hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_I
    shift = m;
    while( j <= n - m )
    {
-      i = m - 1;
+      HB_ISIZ i = m - 1;
       while( i >= 0 && needle[ i ] == haystack[ i + j ] )
       {
          --i;

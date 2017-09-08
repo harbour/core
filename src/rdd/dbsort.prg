@@ -47,7 +47,7 @@
 /* NOTE: Compared to CA-Cl*pper, Harbour has three extra parameters
          (cRDD, nConnection, cCodePage). */
 
-FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest,;
+FUNCTION __dbSort( cToFileName, aFields, bFor, bWhile, nNext, nRecord, lRest, ;
                    cRDD, nConnection, cCodePage )
 
    LOCAL nOldArea

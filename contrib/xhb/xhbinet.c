@@ -1,5 +1,5 @@
 /*
- * xhb compatibility wrappers
+ * xHarbour compatibility wrappers
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 HB_FUNC_TRANSLATE( INETINIT                , HB_INETINIT                )
 HB_FUNC_TRANSLATE( INETCLEANUP             , HB_INETCLEANUP             )

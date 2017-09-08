@@ -3,8 +3,8 @@
  *    FileCopy(), FileCOpen(), FileCCLose(), FileAppend()
  *
  *    Author...: Frederic J. Bell
- *    Dated....: Jun,17 94
- *    Revised..: Sep,20 94
+ *    Dated....: 1994-06-17
+ *    Revised..: 1994-09-20
  *    Purpose..: Replaces the following CA-T*ols functions which generate GPF's
  *               FileCopy(), FileCOpen(), FileAppend()!
  *    Relies on: Clipper (can you believe it!)
@@ -66,12 +66,8 @@ THREAD STATIC t_hSrcFile := F_ERROR
 THREAD STATIC t_lSetDaTi := .T.
 THREAD STATIC t_fileTime
 
-/*
- * FileCopy()
- * This is a replacement for the CA-T*ols III function of the
- * same name that causes GPF's.
- */
-
+/* This is a replacement for the CA-T*ols III function of the
+   same name that causes GPF's. */
 FUNCTION FileCopy( cSource, cDest, lMode )
 
    LOCAL hDstFile

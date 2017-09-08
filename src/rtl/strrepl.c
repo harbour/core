@@ -49,7 +49,7 @@
 #include "hbapierr.h"
 
 /* hb_StrReplace( <cString>, [ <cSource> | <acSource> | <hReplace> ], [ <cDest> | <acDest> ] )
- *    -> <cResult>
+ *    --> <cResult>
  */
 HB_FUNC( HB_STRREPLACE )
 {

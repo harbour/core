@@ -1,6 +1,6 @@
 /*
  * Memory file system
- *   I/O driver for Memory file system
+ * I/O driver for Memory file system
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  *
@@ -58,11 +58,7 @@
 
 #include "directry.ch"
 
-/******************************************************
- *
- *  Memory file system
- *
- *******************************************************/
+/* -- Memory file system --- */
 
 /* change this define for public hb_memfs*() API */
 #ifdef HB_MEMFS_PUBLIC_API
@@ -171,13 +167,15 @@ static void memfsInit( void )
 /* Note: returns 1 based index! */
 static HB_ULONG memfsInodeFind( const char * szName, HB_ULONG * pulPos )
 {
-   HB_ULONG ulLeft, ulRight, ulMiddle;
-   int i;
+   HB_ULONG ulLeft, ulRight;
 
    ulLeft = 0;
    ulRight = s_fs.ulInodeCount;
    while( ulLeft < ulRight )
    {
+      HB_ULONG ulMiddle;
+      int i;
+
       ulMiddle = ( ulLeft + ulRight ) >> 1;
       i = strcmp( szName, s_fs.pInodes[ ulMiddle ]->szName );
       if( i == 0 )
@@ -255,7 +253,9 @@ static PHB_MEMFS_FILE memfsHandleToFile( HB_FHANDLE hFile )
 {
    if( hFile == FS_ERROR || ( HB_ULONG ) hFile == 0 || ( HB_ULONG ) hFile > s_fs.ulFileAlloc || s_fs.pFiles[ ( HB_ULONG ) hFile - 1 ] == NULL )
    {
-      /* hb_errInternal( 9999, "memfsHandleToFile: Invalid file handle", NULL, NULL ); */
+#if 0
+      hb_errInternal( 9999, "memfsHandleToFile: Invalid file handle", NULL, NULL );
+#endif
       return NULL;
    }
    else
@@ -298,7 +298,7 @@ static HB_FHANDLE memfsHandleAlloc( PHB_MEMFS_FILE pFile )
 }
 
 
-/* ======== Public Memory FS functions ======== */
+/* --- Public Memory FS functions --- */
 
 HB_MEMFS_EXPORT HB_ERRCODE hb_memfsError( void )
 {
@@ -651,7 +651,6 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
 {
    PHB_MEMFS_FILE  pFile;
    PHB_MEMFS_INODE pInode;
-   HB_FOFFSET      llNewAlloc;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
       return HB_FALSE;  /* invalid handle */
@@ -668,7 +667,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
    /* Reallocate if neccesary */
    if( pInode->llAlloc < llOffset )
    {
-      llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
+      HB_FOFFSET llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
 
       if( llNewAlloc < llOffset )
          llNewAlloc = llOffset;
@@ -768,11 +767,7 @@ HB_MEMFS_EXPORT int hb_memfsLockTest( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_F
    return 0;
 }
 
-/******************************************************
- *
- *  I/O Driver for Memory file system
- *
- *******************************************************/
+/* --- I/O Driver for Memory file system --- */
 
 #define FILE_PREFIX      "MEM:"
 #define FILE_PREFIX_LEN  strlen( FILE_PREFIX )
@@ -950,7 +945,6 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
    HB_FHANDLE hFile;
    char       szNameNew[ HB_PATH_MAX ];
    HB_USHORT  uiFlags;
-   HB_SIZE    nLen;
 
    HB_SYMBOL_UNUSED( pFuncs );
    HB_SYMBOL_UNUSED( pPaths );
@@ -960,7 +954,7 @@ static PHB_FILE s_fileOpen( PHB_FILE_FUNCS pFuncs, const char * szName,
 
    if( szDefExt )
    {
-      nLen = strlen( szNameNew );
+      HB_SIZE nLen = strlen( szNameNew );
       do
       {
          if( nLen == 0 || strchr( HB_OS_PATH_DELIM_CHR_LIST, szNameNew[ nLen - 1 ] ) )

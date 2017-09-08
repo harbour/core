@@ -1,6 +1,5 @@
 /*
- * Remote Procedure Call code
- * Client class
+ * Remote Procedure Call code - Client class
  *
  * Copyright 2003 Giancarlo Niccolai <giancarlo@niccolai.ws>
  *

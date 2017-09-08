@@ -69,9 +69,7 @@ HB_FUNC( HB_RUN )
          iResult = hb_fsProcessRun( pszCommand,
                                     NULL, 0, NULL, NULL, NULL, NULL, HB_FALSE );
 #elif defined( HB_OS_WIN )
-         LPTSTR lpCommand;
-
-         lpCommand = HB_CHARDUP( pszCommand );
+         LPTSTR lpCommand = HB_CHARDUP( pszCommand );
          iResult = HB_WINAPI_SYSTEM( lpCommand );
          hb_xfree( lpCommand );
 #else

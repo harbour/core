@@ -1,6 +1,4 @@
-/*
- * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- */
+/* Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl> */
 
 HBNETIO is implementation of alternative RDD IO API for Harbour with
 additional RPC support. It contains either client and server code.
@@ -13,12 +11,12 @@ Client side functions:
 ======================
    netio_Connect( [<cServer>], [<nPort>], [<nTimeOut>], ;
                   [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
-         -> <lConnected>
+         --> <lConnected>
       Register HBNETIO as alternative RDD IO API redirecting all files
       with name starting with "net:" to HBNETIO server, set default
       server address, port and connection parameters and tries to set
       the connection to this server.
-      When executed 1-st time it sets default connection parameters
+      When executed 1st time it sets default connection parameters
       for all threads. Each thread can overwrite these default settings
       with its own local ones calling netio_Connect() function.
       Each successful call to netio_Connect() increase the reference
@@ -34,11 +32,11 @@ Client side functions:
       It possible to open many different connections and keep them open.
       In RDD IO operations and RPC calls it's possible to specify server
       address as part of file or procedure/function name, i.e.
-         USE net:192.168.0.2:2942:path/to/file
-         netio_ProcExec( "192.168.0.2:2942:procname" )
+         USE net:example.org:2942:path/to/file
+         netio_ProcExec( "example.org:2942:procname" )
       or using UNC paths:
-         USE net://192.168.0.2:2942/path/to/file
-         netio_ProcExec( "//192.168.0.2:2942/procname" )
+         USE net://example.org:2942/path/to/file
+         netio_ProcExec( "//example.org:2942/procname" )
       It's also possible to specify the password. The connection string
       is in format:
          <server>[:<port>[:<passwd>]]:<filepath|funcname>
@@ -58,29 +56,29 @@ Client side functions:
 
    netio_GetConnection( [<cServer>], [<nPort>], [<nTimeOut>], ;
                         [<cPasswd>], [<nCompressionLevel>], [<nStrategy>] )
-         -> <pConnection> | NIL
+         --> <pConnection> | NIL
       Get pointer item with HBNETIO connection. It can be used to speedup
       RPC calls and stream functions when <pConnection> is passed as
       parameter to these functions.
 
 
-   netio_Disconnect( [<cServer>], [<nPort>] ) -> <lOK>
+   netio_Disconnect( [<cServer>], [<nPort>] ) --> <lOK>
       Close the connection created by netio_Connect()
 
 
    netio_Decode( [@]<cFullName>, [@<cServer>], [@<nPort>], [@<nTimeOut>], ;
                  [@<cPasswd>], [@<nCompressionLevel>], [@<nStrategy>] )
-         -> <lDecoded>
+         --> <lDecoded>
       Decode connection parameters from <cFullName> and default settings.
       Return .T. if <cFullName> contains any connection settings.
       <cFullName> does not need to be prefixed with "net:"
 
 
-   netio_TimeOut( <pConnection> [, <nTimeOut>] ) -> [<nTimeOut>]
+   netio_TimeOut( <pConnection> [, <nTimeOut>] ) --> [<nTimeOut>]
       Get/Set client side timeout for messages
 
 
-   netio_SetPath( <pConnection> [, <cPath>] ) -> [<cPrevPath>]
+   netio_SetPath( <pConnection> [, <cPath>] ) --> [<cPrevPath>]
       Set/Get path prefix for automatic file redirection to HBNETIO.
       If automatic redirection is activated then <cPath> is removed
       from file name passed to HBNETIO server, i.e.:
@@ -91,31 +89,31 @@ Client side functions:
          use "//myserver/myshare/data/table"
 
 
-   netio_ProcExists( [<pConnection>,] <cProcName> ) -> <lExists>
+   netio_ProcExists( [<pConnection>,] <cProcName> ) --> <lExists>
       Check if function or procedure exists on the server side.
 
 
-   netio_ProcExec( [<pConnection>,] <cProcName> [, <params,...>] ) -> <lSent>
+   netio_ProcExec( [<pConnection>,] <cProcName> [, <params,...>] ) --> <lSent>
       Execute function or procedure on server the side do not wait for
       confirmation from the server.
 
 
    netio_ProcExecW( [<pConnection>,] <cProcName> [, <params,...>] )
-         -> <lExecuted>
+         --> <lExecuted>
       Execute function or procedure on the server side and wait for
       confirmation from the server.
 
 
    netio_FuncExec( [<pConnection>,] <cFuncName> [, <params,...>] )
-         -> <xFuncRetVal>
+         --> <xFuncRetVal>
       Execute function on the server side and wait for function return
       value sent by the server.
 
 
    netio_OpenDataStream( [<pConnection>,] <cStreamFuncName> [, <params,...>] )
-         -> <nStreamID>
+         --> <nStreamID>
    netio_OpenItemStream( [<pConnection>,] <cStreamFuncName> [, <params,...>] )
-         -> <nStreamID>
+         --> <nStreamID>
       open communication stream/channel which allow to send data
       asynchronously from server to client.
       It executes on the server side:
@@ -129,12 +127,12 @@ Client side functions:
       just like <cProcName> in NETIO_PROC*() functions.
 
    netio_CloseStream( <nStreamID>,
-                      [<pConnection>] | [[<cServer>], [<nPort>]] ) -> <lOK>
+                      [<pConnection>] | [[<cServer>], [<nPort>]] ) --> <lOK>
       close communication stream/channel
 
    netio_GetData( <nStreamID>,
                   [<pConnection>] | [[<cServer>], [<nPort>]] )
-         -> <aData> | <cData> | NIL
+         --> <aData> | <cData> | NIL
       retrieve data sent from the server by communication stream.
       If stream was open by netio_OpenDataStream() then data is returned
       as string.
@@ -146,27 +144,27 @@ Client side functions:
 Server side functions:
 ======================
    netio_Listen( [<nPort>], [<cIfAddr>], [<cRootDir>], [<lRPC>] )
-            -> <pListenSocket> | NIL
+            --> <pListenSocket> | NIL
    netio_Accept( <pListenSocket>, [<nTimeOut>],
                  [<cPass>], [<nCompressionLevel>], [<nStrategy>] )
-            -> <pConnectionSocket> | NIL
+            --> <pConnectionSocket> | NIL
    netio_Compress( <pConnectionSocket>,
-                   [<cPass>], [<nCompressionLevel>], [<nStrategy>] ) -> NIL
-   netio_VerifyClient( <pConnectionSocket> ) -> <lAccepted>
-   netio_Server( <pConnectionSocket> ) -> NIL
-   netio_ServedConnection() -> <pConnectionSocket>
-   netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) -> <lPrev>
+                   [<cPass>], [<nCompressionLevel>], [<nStrategy>] ) --> NIL
+   netio_VerifyClient( <pConnectionSocket> ) --> <lAccepted>
+   netio_Server( <pConnectionSocket> ) --> NIL
+   netio_ServedConnection() --> <pConnectionSocket>
+   netio_RPC( <pListenSocket> | <pConnectionSocket> [, <lEnable>] ) --> <lPrev>
    netio_RPCFilter( <pConnectionSocket>,
-                    <sFuncSym> | <hValue> | NIL ) -> NIL
-   netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) -> NIL
-   netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) -> [<nTimeOut>]
+                    <sFuncSym> | <hValue> | NIL ) --> NIL
+   netio_ServerStop( <pListenSocket> | <pConnectionSocket> [, <lStop>] ) --> NIL
+   netio_ServerTimeOut( <pConnectionSocket> [, <nTimeOut>] ) --> [<nTimeOut>]
    netio_MTServer( [<nPort>], [<cIfAddr>], [<cRootDir>],
                    [<xRPC> | <sFuncSym> | <hValue>],
                    [<cPasswd>], [<nCompressionLevel>], [<nStrategy>],
                    [<sSrvFunc>] )
-            -> <pListenSocket>
+            --> <pListenSocket>
 
    netio_SrvStatus( <pConnectionSocket>
-                    [, <nStreamID> | <nSrvInfo>, @<xData>] ) -> <nStatus>
-   netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> ) -> <lSent>
-   netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> ) -> <lSent>
+                    [, <nStreamID> | <nSrvInfo>, @<xData>] ) --> <nStatus>
+   netio_SrvSendItem( <pConnectionSocket>, <nStreamID>, <xData> ) --> <lSent>
+   netio_SrvSendData( <pConnectionSocket>, <nStreamID>, <cData> ) --> <lSent>

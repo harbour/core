@@ -1,5 +1,5 @@
 /*
- * Header file for error hanlding
+ * Header file for error handling
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  *
@@ -95,12 +95,12 @@
 #define EG_APPENDLOCK   40
 #define EG_LOCK         41
 
-#define EG_DESTRUCTOR   45      /* Harbour special */
-#define EG_ARRACCESS    46      /* Harbour special */
-#define EG_ARRASSIGN    47      /* Harbour special */
-#define EG_ARRDIMENSION 48      /* Harbour special */
-#define EG_NOTARRAY     49      /* Harbour special */
-#define EG_CONDITION    50      /* Harbour special */
+#define EG_DESTRUCTOR   45      /* Harbour extension */
+#define EG_ARRACCESS    46      /* Harbour extension */
+#define EG_ARRASSIGN    47      /* Harbour extension */
+#define EG_ARRDIMENSION 48      /* Harbour extension */
+#define EG_NOTARRAY     49      /* Harbour extension */
+#define EG_CONDITION    50      /* Harbour extension */
 
 /* Internal errors */
 #define HB_EI_ERRUNRECOV        9000 /* "Unrecoverable error %lu: " */

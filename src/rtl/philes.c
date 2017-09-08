@@ -520,7 +520,7 @@ HB_FUNC( HB_FISDEVICE )
 }
 
 /* hb_PRead( <nPipeHandle>, <@cBuffer>, [<nBytes>], [<nTimeOut>] )
-      -> <nBytesRead> */
+      --> <nBytesRead> */
 HB_FUNC( HB_PREAD )
 {
    HB_FHANDLE hPipe = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
@@ -558,7 +558,7 @@ HB_FUNC( HB_PREAD )
 }
 
 /* hb_PWrite( <nPipeHandle>, <cBuffer>, [<nBytes>], [<nTimeOut>] )
-      -> <nBytesWritten> */
+      --> <nBytesWritten> */
 HB_FUNC( HB_PWRITE )
 {
    HB_FHANDLE hPipe = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );

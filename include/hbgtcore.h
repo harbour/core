@@ -492,7 +492,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_WHOCARES(g,p)                 (g)->pFuncTable->WhoCares(g,p)
 
 #ifndef HB_GTSUPERTABLE
-#  define HB_GTSUPERTABLE(g)  HB_GTSUPER
+#define HB_GTSUPERTABLE(g)  HB_GTSUPER
 #endif
 
 #define HB_GTSUPER_LOCK(g)                       (HB_GTSUPERTABLE(g))->Lock(g)
@@ -624,7 +624,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 extern HB_EXPORT HB_BOOL hb_gtRegister( const HB_GT_INIT * gtInit );
 extern HB_EXPORT PHB_GT  hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable );
 
-/* low level GT functions common to different GTs supported by RTL */
+/* low-level GT functions common to different GTs supported by RTL */
 extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC );
 extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen );
 extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen );

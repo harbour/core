@@ -1,8 +1,8 @@
 /*
  * .prg interface to preprocessor
- *    __pp_StdRules() function
- *       intentionally in separate file to not force linking
- *       standard PP rules table when user does not need them
+ * __pp_StdRules() function
+ *    intentionally in separate file to not force linking
+ *    standard PP rules table when user does not need them
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -47,8 +47,8 @@
  *
  */
 
-#include "hbpp.h"
 #include "hbapi.h"
+#include "hbpp.h"
 
 HB_FUNC( __PP_STDRULES )
 {

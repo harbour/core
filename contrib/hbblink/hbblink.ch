@@ -55,7 +55,7 @@
 #define BliCacheLoc         1  /* Get location of real mode overlay cache (EMS/XMS) */
 #define BliCacheSize        2  /* Get size of overlay cache */
 #define BliExtMemAvail      3  /* Get bytes extended memory available to the extender */
-#define BliHostMode         4  /* Get DOS extender host mode (DPMI/VCPI/XMS) */
+#define BliHostMode         4  /* Get MS-DOS extender host mode (DPMI/VCPI/XMS) */
 #define BliMachineMode      5  /* Get current machine mode (real, protected) */
 #define BliOverlayLoc       6  /* Get location of overlay area */
 #define BliOverlaySize      7  /* Get size of overlay area */

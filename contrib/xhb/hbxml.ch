@@ -1,6 +1,5 @@
 /*
  * HBXML - XML DOM oriented routines
- * Define wrappers for xHarbour PRG.
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *
@@ -51,7 +50,7 @@
 
 /* Styles */
 #define HBXML_STYLE_NOINDENT      0  /* no indent nodes and insert new line after each node */
-#define HBXML_STYLE_INDENT        1  /* indent nodes with 1 space and insert new line after each node  (default) */
+#define HBXML_STYLE_INDENT        1  /* indent nodes with 1 space and insert new line after each node (default) */
 #define HBXML_STYLE_TAB           2  /* indent nodes with tab spaces and insert new line after each node */
 #define HBXML_STYLE_THREESPACES   4  /* indent nodes with 3 spaces and insert new line after each node */
 #define HBXML_STYLE_NOESCAPE      8

@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 /* Extended Drivers */
 HB_FUNC( CGA40 )      { ; }

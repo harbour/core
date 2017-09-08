@@ -3048,7 +3048,7 @@ static PHB_EXPR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 {
    PHB_EXPR pExpr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprNew(%p,%i)", HB_COMP_PARAM, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprNew(%p,%i)", ( void * ) HB_COMP_PARAM, iType ) );
 
    pExpr = hb_macroExprAlloc( HB_COMP_PARAM );
    pExpr->ExprType = iType;

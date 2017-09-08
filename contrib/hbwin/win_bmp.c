@@ -94,7 +94,7 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
    if( pBuffer )
    {
-      /* TOFIX: No check is done on read data from disk which is a large security hole
+      /* FIXME: No check is done on read data from disk which is a large security hole
                 and may cause GPF even in simple error cases, like invalid file content.
                 [vszakats] */
 

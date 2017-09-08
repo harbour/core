@@ -47,7 +47,6 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
-#include "hbvmpub.h"
 #include "hbstack.h"
 #include "hbthread.h"
 

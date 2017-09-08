@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpPushButton Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                 Xbase++ xbpPushButton Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               26Nov2008
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgPushButton  INHERIT  WvgWindow
+CREATE CLASS WvgPushButton INHERIT WvgWindow
 
    VAR    autosize                              INIT .F.
    VAR    border                                INIT .T.

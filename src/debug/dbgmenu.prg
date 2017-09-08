@@ -50,8 +50,8 @@
 #xcommand MENUITEM [ <oMenuItem> PROMPT ] <cPrompt> ;
           [ IDENT <nIdent> ] [ ACTION <uAction,...> ] ;
           [ CHECKED <bChecked> ] => ;
-   [ <oMenuItem> := ] HBDbMenu():AddItem( HBDbMenuItem():New( <cPrompt>,;
-   [{||<uAction>}], [<bChecked>], [<nIdent>] ) )
+   [ <oMenuItem> := ] HBDbMenu():AddItem( HBDbMenuItem():New( <cPrompt>, ;
+   [{|| <uAction> }], [<bChecked>], [<nIdent>] ) )
 #xcommand SEPARATOR => HBDbMenu():AddItem( HBDbMenuItem():New( "-" ) )
 #xcommand ENDMENU => ATail( HBDbMenu():aMenus ):Build()
 

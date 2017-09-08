@@ -99,7 +99,7 @@ METHOD __enumSkip( enum, lDescend ) CLASS win_oleAuto
 
 METHOD PROCEDURE __enumStop() CLASS win_oleAuto
 
-   ::__hObjEnum := NIL     /* activate autodestructor */
+   ::__hObjEnum := NIL     /* activate auto-destructor */
 
    RETURN
 

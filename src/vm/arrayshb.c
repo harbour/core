@@ -206,7 +206,7 @@ HB_FUNC( AFILL )
          HB_SIZE nStart, nCount;
          HB_ISIZ lStart = hb_parns( 3 ), lCount = hb_parns( 4 );
 
-         /* Explicy lCount of 0 - Nothing to do! */
+         /* Explicit lCount of 0 - Nothing to do! */
          if( HB_ISNUM( 4 ) && lCount == 0 )
             return;
          /* Clipper aborts if negative start. */

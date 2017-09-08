@@ -71,7 +71,7 @@
    hb_BChar( 0x01 ) + ;
    hb_BChar( 0x00 ) )
 
-FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
+PROCEDURE hb_mvSave( cFileName, cMask, lIncludeMask )
 
    LOCAL nCount
    LOCAL xValue
@@ -156,7 +156,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
       Eval( ErrorBlock(), oError )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 

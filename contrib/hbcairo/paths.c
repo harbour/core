@@ -44,10 +44,8 @@
  *
  */
 
-
 #include "hbcairo.h"
 #include "hbapistr.h"
-
 
 HB_FUNC( CAIRO_APPEND_PATH )
 {
@@ -58,7 +56,6 @@ HB_FUNC( CAIRO_APPEND_PATH )
       cairo_append_path( pCairo, pPath );
 }
 
-
 HB_FUNC( CAIRO_ARC )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -66,7 +63,6 @@ HB_FUNC( CAIRO_ARC )
    if( pCairo )
       cairo_arc( pCairo, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) );
 }
-
 
 HB_FUNC( CAIRO_ARC_NEGATIVE )
 {
@@ -76,7 +72,6 @@ HB_FUNC( CAIRO_ARC_NEGATIVE )
       cairo_arc_negative( pCairo, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) );
 }
 
-
 HB_FUNC( CAIRO_CLOSE_PATH )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -84,7 +79,6 @@ HB_FUNC( CAIRO_CLOSE_PATH )
    if( pCairo )
       cairo_close_path( pCairo );
 }
-
 
 HB_FUNC( CAIRO_COPY_PATH )
 {
@@ -94,7 +88,6 @@ HB_FUNC( CAIRO_COPY_PATH )
       hb_cairo_path_ret( cairo_copy_path( pCairo ) );
 }
 
-
 HB_FUNC( CAIRO_COPY_PATH_FLAT )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -103,7 +96,6 @@ HB_FUNC( CAIRO_COPY_PATH_FLAT )
       hb_cairo_path_ret( cairo_copy_path_flat( pCairo ) );
 }
 
-
 HB_FUNC( CAIRO_CURVE_TO )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -111,7 +103,6 @@ HB_FUNC( CAIRO_CURVE_TO )
    if( pCairo )
       cairo_curve_to( pCairo, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ) );
 }
-
 
 HB_FUNC( CAIRO_GET_CURRENT_POINT )
 {
@@ -128,7 +119,6 @@ HB_FUNC( CAIRO_GET_CURRENT_POINT )
    }
 }
 
-
 HB_FUNC( CAIRO_HAS_CURRENT_POINT )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -139,7 +129,6 @@ HB_FUNC( CAIRO_HAS_CURRENT_POINT )
    }
 }
 
-
 HB_FUNC( CAIRO_LINE_TO )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -147,7 +136,6 @@ HB_FUNC( CAIRO_LINE_TO )
    if( pCairo )
       cairo_line_to( pCairo, hb_parnd( 2 ), hb_parnd( 3 ) );
 }
-
 
 HB_FUNC( CAIRO_MOVE_TO )
 {
@@ -157,7 +145,6 @@ HB_FUNC( CAIRO_MOVE_TO )
       cairo_move_to( pCairo, hb_parnd( 2 ), hb_parnd( 3 ) );
 }
 
-
 HB_FUNC( CAIRO_NEW_PATH )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -165,7 +152,6 @@ HB_FUNC( CAIRO_NEW_PATH )
    if( pCairo )
       cairo_new_path( pCairo );
 }
-
 
 HB_FUNC( CAIRO_PATH_EXTENTS )
 {
@@ -185,7 +171,6 @@ HB_FUNC( CAIRO_PATH_EXTENTS )
    }
 }
 
-
 HB_FUNC( CAIRO_RECTANGLE )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -193,7 +178,6 @@ HB_FUNC( CAIRO_RECTANGLE )
    if( pCairo )
       cairo_rectangle( pCairo, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
 }
-
 
 HB_FUNC( CAIRO_REL_CURVE_TO )
 {
@@ -203,7 +187,6 @@ HB_FUNC( CAIRO_REL_CURVE_TO )
       cairo_rel_curve_to( pCairo, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ), hb_parnd( 7 ) );
 }
 
-
 HB_FUNC( CAIRO_REL_LINE_TO )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -212,7 +195,6 @@ HB_FUNC( CAIRO_REL_LINE_TO )
       cairo_rel_line_to( pCairo, hb_parnd( 2 ), hb_parnd( 3 ) );
 }
 
-
 HB_FUNC( CAIRO_REL_MOVE_TO )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -220,7 +202,6 @@ HB_FUNC( CAIRO_REL_MOVE_TO )
    if( pCairo )
       cairo_rel_move_to( pCairo, hb_parnd( 2 ), hb_parnd( 3 ) );
 }
-
 
 HB_FUNC( CAIRO_TEXT_PATH )
 {

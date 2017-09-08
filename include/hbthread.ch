@@ -1,5 +1,5 @@
 /*
- * header file with MT mode constant values
+ * Header file with MT mode constant values
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

@@ -56,14 +56,14 @@
 /* helper function for the *one functions */
 static void do_charone( int iSwitch )
 {
-   const char * pcString;
-   HB_SIZE sStrLen;
-   const char * pcDeleteSet;
-   HB_SIZE sDeleteSetLen;
-
    /* param check */
    if( HB_ISCHAR( 1 ) )
    {
+      const char * pcString;
+      const char * pcDeleteSet;
+      HB_SIZE sStrLen;
+      HB_SIZE sDeleteSetLen;
+
       if( HB_ISCHAR( 2 ) )
       {
          pcString = hb_parc( 2 );
@@ -161,7 +161,7 @@ static void do_charone( int iSwitch )
                   }
                }
 
-               /* copy last character if string len is odd */
+               /* copy last character if string length is odd */
                if( sStrLen & 1 )
                   pcRet[ sRetStrLen++ ] = pcString[ sStrLen - 1 ];
 

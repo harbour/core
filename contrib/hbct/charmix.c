@@ -1,10 +1,9 @@
 /*
  * CharMix() CT3 function
  *
- * Initial code: Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *
- * CT3 conformity: Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
- *                 Author: Martin Vogel <vogel@inttec.de>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (Initial code)
+ * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
+ *        Author: Martin Vogel <vogel@inttec.de> (CT3 conformity)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

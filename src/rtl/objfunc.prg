@@ -2,6 +2,8 @@
  * Dynamic Object management and misc. Object related functions
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
+ * Copyright 1999 Antonio Linares <alinares@fivetech.com> (__objGetMsgList())
+ * Copyright 2000 Jf. Lefebvre <jfl@mafact.com> and Ra. Cuylen <rac@mafact.com> (__objDerivedFrom())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,21 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- *    __objGetMsgList
- *
- * Copyright 2000 Jf. Lefebvre <jfl@mafact.com> and Ra. Cuylen <rac@mafact.com>
- *    __objDerivedFrom
- *
- * New Param for Method :ClassSel() to allow it to return only ClassData array
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -240,13 +227,14 @@ FUNCTION __objDerivedFrom( oObject, xSuper )
       __errRT_BASE( EG_ARG, 3101, , ProcName( 0 ) )
    ENDIF
 
-   IF HB_ISOBJECT( xSuper )
+   DO CASE
+   CASE HB_ISOBJECT( xSuper )
       cClassName := xSuper:ClassName()
-   ELSEIF HB_ISSTRING( xSuper )
+   CASE HB_ISSTRING( xSuper )
       cClassName := hb_asciiUpper( xSuper )
-   ELSE
+   OTHERWISE
       __errRT_BASE( EG_ARG, 3101, , ProcName( 0 ) )
-   ENDIF
+   ENDCASE
 
    RETURN __clsParent( oObject:ClassH, cClassName )
 

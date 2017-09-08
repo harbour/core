@@ -46,7 +46,6 @@
  */
 
 #include "hbzebra.h"
-#include "hbapierr.h"
 #include "hbvm.h"
 
 typedef void ( *HB_ZEBRA_CALLBACK )( void * cargo, double dX, double dY, double dWidth, double dHeight );
@@ -55,7 +54,7 @@ int hb_zebra_draw( PHB_ZEBRA pZebra, HB_ZEBRA_CALLBACK pCallback, void * cargo, 
 {
    double  dLast;
    HB_SIZE n, nLen, nCount;
-   HB_BOOL fBit, fLastBit;
+   HB_BOOL fLastBit;
    int     i, iCol = pZebra->iCol;
 
    HB_SYMBOL_UNUSED( iFlags );
@@ -70,7 +69,7 @@ int hb_zebra_draw( PHB_ZEBRA pZebra, HB_ZEBRA_CALLBACK pCallback, void * cargo, 
    i = 0;
    for( n = 0; n < nLen; n++ )
    {
-      fBit = hb_bitbuffer_get( pZebra->pBits, n );
+      HB_BOOL fBit = hb_bitbuffer_get( pZebra->pBits, n );
       if( fBit != fLastBit )
       {
          if( fLastBit && pCallback )

@@ -1,6 +1,5 @@
 /*
- * CT3 Number and bit manipulation functions: - FToC()
- *                                              - CToF()
+ * CT3 Number and bit manipulation functions: FToC(), CToF()
  *
  * Copyright 2002 Walter Negro - FOEESITRA" <waltern@foeesitra.org.ar>
  *

@@ -53,7 +53,7 @@
 
 static HB_SIZE s_strAtI( PHB_CODEPAGE cdp, const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "s_strAtI(%p, %s, %" HB_PFS "u, %s, %" HB_PFS "u)", cdp, szSub, nSubLen, szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "s_strAtI(%p, %s, %" HB_PFS "u, %s, %" HB_PFS "u)", ( void * ) cdp, szSub, nSubLen, szText, nLen ) );
 
    if( nSubLen > 0 && nLen >= nSubLen )
    {
@@ -91,7 +91,7 @@ HB_FUNC( HB_ATI )
       const char * pszText     = hb_itemGetCPtr( pText );
       HB_SIZE      nTextLength = hb_itemGetCLen( pText );
       HB_SIZE      nStart      = hb_parns( 3 );
-      HB_SIZE      nFrom, nTo, nPos = 0;
+      HB_SIZE      nFrom, nPos = 0;
 
       if( nStart <= 1 )
          nStart = nFrom = 0;
@@ -102,6 +102,8 @@ HB_FUNC( HB_ATI )
 
       if( nFrom < nTextLength )
       {
+         HB_SIZE nTo;
+
          pszText     += nFrom;
          nTextLength -= nFrom;
          if( HB_ISNUM( 4 ) )

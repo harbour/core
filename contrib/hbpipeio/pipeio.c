@@ -339,7 +339,7 @@ static PHB_FILE hb_fileFromPipeHandle( HB_FHANDLE hProcess, HB_FHANDLE hPipeRD, 
 }
 
 /* hb_vfFromPipes( [<hReads>], [<hWrite>], [<hProcess>], [<nTimeout>] )
-         -> <pHandle> | NIL */
+         --> <pHandle> | NIL */
 HB_FUNC( HB_VFFROMPIPES )
 {
    HB_FHANDLE hPipeRD = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
@@ -352,7 +352,7 @@ HB_FUNC( HB_VFFROMPIPES )
 }
 
 /* hb_vfOpenProcess( <cCommand>, [<nMode>=FO_READ], [<nTimeout>], [<lDetach>] )
-         -> <pHandle> | NIL */
+         --> <pHandle> | NIL */
 HB_FUNC( HB_VFOPENPROCESS )
 {
    const char * pszCommand = hb_parc( 1 );

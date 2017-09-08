@@ -49,20 +49,20 @@
  *
  */
 
-#define NTSR_MALE   1
-#define NTSR_FEMA   2
-#define NTSR_MIDD   3
-#define NTSR_1000_1 4
-#define NTSR_1000_2 5
-#define NTSR_1000_3 6
-#define NTSR_CNT    7
-#define NTSR_ROD    8
-#define NTSR_ORDG   9
-#define NTSR_CURR   10
-#define NTSR_CENT   11
-#define NTSR_MINUS  12
-#define NTSR_MONTH  13
-#define NTSR_YEAR   14
+#define NTSR_MALE    1
+#define NTSR_FEMA    2
+#define NTSR_MIDD    3
+#define NTSR_1000_1  4
+#define NTSR_1000_2  5
+#define NTSR_1000_3  6
+#define NTSR_CNT     7
+#define NTSR_ROD     8
+#define NTSR_ORDG    9
+#define NTSR_CURR    10
+#define NTSR_CENT    11
+#define NTSR_MINUS   12
+#define NTSR_MONTH   13
+#define NTSR_YEAR    14
 
 /* Russian messages */
 STATIC sc_aRus := { ;
@@ -420,7 +420,7 @@ STATIC sc_aBel := { ;
 
 /*
  * nValue:  integer value;
- * cLang:   language Id ("ru", "uk", "be"), russian ("ru") by default;
+ * cLang:   language Id ("ru", "uk", "be"), Russian ("ru") by default;
  * nGender: masculine (default), feminine or neuter gender;
  * lOrd:    ordinals, cardinal numbers if omitted
  */
@@ -443,7 +443,7 @@ FUNCTION NumToTxtRU( nValue, cLang, nGender, lOrd )
 
 /*
  * nValue:  integer value;
- * cLang:   language Id ("ru", "uk", "be"), russian ("ru") by default;
+ * cLang:   language Id ("ru", "uk", "be"), Russian ("ru") by default;
  * nMode1:  1 - in words,
  *          2 - in words and short name,
  *          3 - in numbers,

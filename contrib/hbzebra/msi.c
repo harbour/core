@@ -45,18 +45,16 @@
  */
 
 #include "hbzebra.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 
 static char _msi_checksum( const char * szCode )
 {
-   int i, j = 1, k, sum = 0;
+   int i, j = 1, sum = 0;
 
    /* Luhn algorithm */
    for( i = ( int ) strlen( szCode ) - 1; i >= 0; i-- )
    {
-      k = ( szCode[ i ] - '0' ) * ( j ? 2 : 1 );
+      int k = ( szCode[ i ] - '0' ) * ( j ? 2 : 1 );
       if( k > 9 )
          k -= 9;
       sum += k;

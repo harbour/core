@@ -1,5 +1,5 @@
 /*
- * Header file for cross-compatibility with xhb class code extensions
+ * Header file for cross-compatibility with xHarbour class code extensions
  *
  * Warning: using this functionality may break logical inheritance
  *          scheme or even some internal class definitions in both

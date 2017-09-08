@@ -88,8 +88,8 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
+       * defined and effectively enables lseek64()/flock64()/ftruncate64()
+       * functions on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
    #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE ) && ! defined( __WATCOMC__ )
@@ -101,10 +101,11 @@
 static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir, HB_BOOL fTrans )
 {
    HB_BOOL fOK = HB_FALSE;
-   char * pTmp;
 
    if( pszTempDir && *pszTempDir != '\0' )
    {
+      char * pTmp;
+
       if( fTrans )
          hb_osStrDecode2( pszTempDir, pszName, HB_PATH_MAX - 1 );
       else
@@ -214,11 +215,12 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
       else
 #endif /* HB_HAS_MKSTEMP */
       {
-         int i, n;
+         int i;
          double d = hb_random_num(), x;
 
          for( i = 0; i < 6; i++ )
          {
+            int n;
             d = d * 36;
             n = ( int ) d;
             d = modf( d, &x );

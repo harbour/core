@@ -1,5 +1,5 @@
 /*
- * dbRename() Harbour extension.
+ * dbRename() Harbour extension
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 #ifndef HB_CLP_STRICT
 

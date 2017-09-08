@@ -54,9 +54,9 @@
    136, a rather pointless relocation IMHO. I found no way to replicate
    that behaviour in the character strings below, so if you allow Chr( 146 )
    and Chr( 145 ) to be saved in indexed fields there WILL be index corruption
-   if data is shared between Clipper and Harbour. Upper()/Lower() converson
+   if data is shared between Clipper and Harbour. Upper()/Lower() conversion
    of those characters as well as all accented characters must be done
-   programatically just like in Clipper.
+   programmatically just like in Clipper.
 
    For sharing data with Clipper, assuming that the Chr( 146 ) and Chr( 145 )
    problem is properly taken care of in your code, this codepage version
@@ -73,7 +73,7 @@
           between Clipper and Harbour applications.
  */
 
-/*
+#if 0
 #define HB_CP_ID        SVCLIP
 #define HB_CP_INFO      "Swedish CP-437"
 #define HB_CP_UNITB     HB_UNITB_437
@@ -81,7 +81,7 @@
 #define HB_CP_UPPER     "ABCDEÉFGHIJKLMNOPQRSTUVWXYÜZÅÄÖ"
 #define HB_CP_LOWER     "abcdeèfghijklmnopqrstuvwxyüzåäö"
 #define HB_CP_UTF8
-*/
+#endif
 
 #define HB_CP_ID        SV437C
 #define HB_CP_INFO      "Swedish CP-437 (ntxswe.obj compatible)"

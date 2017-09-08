@@ -1,11 +1,12 @@
 /*
- *  Generates Javascript and DHTML list menus
- *     (see the website/jList dir for an example)
+ * Generates Javascript and DHTML list menus
+ * (see the website/jList dir for an example)
  *
- *     Uses list.js and resize.js (heavily modified) found at
- *     developer.netscape.com
+ * Uses list.js and resize.js (heavily modified) found at
+ * developer.netscape.com
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,16 +49,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbclass.ch"
 #include "cgi.ch"
 
@@ -79,29 +70,17 @@ CREATE CLASS TJSList
 
    METHOD New( name, lOpen, width, height, bgColor, ;
       FONT, fntColor, fntSize, cMinusImg, cPlusImg )
-
    METHOD NewNode( name, lOpen, width, height, bgColor )
-
    METHOD SetFont( name, font, fntColor, fntSize )
-
    METHOD AddItem( name, url, bgColor )
-
    METHOD AddLink( name, url, img, bgColor )
-
    METHOD EndNode( name, caption )
-
    METHOD Build( xPos, yPos )
-
    METHOD Put( cFile )
 
 ENDCLASS
 
-/****
-*
-*     Create main node
-*
-*/
-
+/* Create main node */
 METHOD New( name, lOpen, width, height, bgColor, ;
       FONT, fntColor, fntSize, cMinusImg, cPlusImg ) CLASS TJSList
 

@@ -44,7 +44,7 @@
  *
  */
 
-/* TOFIX: There are several things in this file which are not part of the
+/* FIXME: There are several things in this file which are not part of the
           standard Harbour API, in other words these things are not
           guaranteed to remain unchanged. To avoid confusion these should be
           moved to somewhere else (like hbrtl.h). [vszakats] */
@@ -154,7 +154,7 @@ typedef struct
    HB_ISIZ    nWithObject;    /* stack offset to base current WITH OBJECT item */
    HB_ISIZ    nRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
    HB_USHORT  uiActionRequest;/* request for some action - stop processing of opcodes */
-   HB_USHORT  uiQuitState;    /* HVM is quiting */
+   HB_USHORT  uiQuitState;    /* HVM is quitting */
    HB_STACK_STATE state;      /* first (default) stack state frame */
    HB_STACKRDD rdd;           /* RDD related data */
    char       szDate[ 9 ];    /* last returned date from hb_pards() YYYYMMDD format */

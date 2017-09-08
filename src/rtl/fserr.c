@@ -1,5 +1,5 @@
 /*
- *
+ * Error code translations
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *

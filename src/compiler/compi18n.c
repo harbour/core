@@ -44,11 +44,8 @@
  *
  */
 
-
 #include "hbcomp.h"
 
-
-/* ============================ I18N ============================ */
 static PHB_I18NTABLE hb_compI18nCreate( void )
 {
    PHB_I18NTABLE pI18n;

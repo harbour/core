@@ -59,7 +59,7 @@ static const HB_ERRCODE sulErrorSubcodes[] =
    CT_ERROR_REPLRIGHT
 };
 
-/* helper function for the replxxx functions */
+/* helper function for the Repl*() functions */
 static void do_replace( int iSwitch )
 {
    /* suppressing return value ? */

@@ -2,7 +2,8 @@
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (tip_TimeStamp() rework, cleanups)
+ * Copyright 1999-2017 Viktor Szakats (vszakats.net/harbour)
+ *    (tip_TimeStamp() rework, cleanups)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +50,9 @@
 #include "hbapierr.h"
 #include "hbdate.h"
 
-/* Internet timestamp based on RFC 822 & RFC 2822 */
+/* Internet timestamp based on:
+   https://tools.ietf.org/html/rfc822
+   https://tools.ietf.org/html/rfc2822 */
 HB_FUNC( TIP_TIMESTAMP )
 {
    static const char * s_days[]   = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
@@ -65,7 +68,7 @@ HB_FUNC( TIP_TIMESTAMP )
    {
       hb_dateDecode( hb_pardl( 1 ), &iYear, &iMonth, &iDay );
 
-      /* For compatibility, seconds() value */
+      /* For compatibility, Seconds() value */
       if( HB_ISNUM( 2 ) )
          hb_timeDecode( ( long ) ( hb_parnd( 2 ) * 1000 ),
                         &iHour, &iMinute, &iSecond, &iMSec );

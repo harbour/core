@@ -551,7 +551,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
          return;
 
       case HB_DBG_STATICNAME:
-         HB_TRACE( HB_TR_DEBUG, ( "STATICNAME %s index %d frame %p", szName, nIndex, pFrame ) );
+         HB_TRACE( HB_TR_DEBUG, ( "STATICNAME %s index %d frame %p", szName, nIndex, ( void * ) pFrame ) );
 
          hb_dbgAddStatic( info, szName, nIndex, pFrame );
          return;
@@ -611,7 +611,6 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
                hb_xfree( info->szToCursorModule );
             }
          }
-
          /* Check if we must skip every level above info->nTraceLevel */
          else if( info->bTraceOver )
          {
@@ -633,7 +632,7 @@ void hb_dbgEntry( int nMode, int nLine, const char * szName, int nIndex, PHB_ITE
                return;
          }
 
-         /* Check if'we skipping to the end of current routine */
+         /* Check if we're skipping to the end of current routine */
          if( info->bNextRoutine )
             return;
 

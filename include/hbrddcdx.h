@@ -140,9 +140,9 @@ HB_EXTERN_BEGIN
 #define CDX_TYPE_COMPOUND      0x40    /* FoxPro */
 #define CDX_TYPE_STRUCTURE     0x80    /* FoxPro */
 
-#define CDX_CMP_EXACT          0x00    /* exact comparision */
-#define CDX_CMP_PREFIX         0x01    /* prefix comparision */
-#define CDX_CMP_DATE           0x02    /* date comparision */
+#define CDX_CMP_EXACT          0x00    /* exact comparison */
+#define CDX_CMP_PREFIX         0x01    /* prefix comparison */
+#define CDX_CMP_DATE           0x02    /* date comparison */
 
 /*
  SIx3 order temperature flags:
@@ -183,7 +183,7 @@ HB_EXTERN_BEGIN
    0x20     - in index header: ADI file, in ADI tag header: ASCII
    0x00     - in ADI tag header: UNICODE
 */
-/* CDX index node strucutres */
+/* CDX index node structures */
 /* Compact Index Header Record */
 typedef struct _CDXTAGHEADER
 {
@@ -234,7 +234,7 @@ typedef struct _CDXEXTNODE
    HB_BYTE     recBits;          /* number of bits for record number */
    HB_BYTE     dupBits;          /* number of bits for duplicate count */
    HB_BYTE     trlBits;          /* number of bits for trailing count */
-   HB_BYTE     keyBytes;         /* total number of bytes for recnn/dup/trail info */
+   HB_BYTE     keyBytes;         /* total number of bytes for recno/dup/trail info */
 } CDXEXTNODE;
 
 
@@ -275,12 +275,12 @@ typedef struct _CDXPAGE
    HB_BOOL   fChanged;
    HB_BOOL   fBufChanged;
 
-   HB_SHORT  bufKeyNum;                    /* do not change these vars' order             */
-   HB_SHORT  bufKeyPos;                    /* they have to be just after the node         */
-   HB_SHORT  bufKeyLen;                    /* and maybe temporary overwriten when adding  */
-   HB_SHORT  iFree;                        /* new key to interior node record.            */
+   HB_SHORT  bufKeyNum;                    /* do not change these vars' order */
+   HB_SHORT  bufKeyPos;                    /* they have to be just after the node */
+   HB_SHORT  bufKeyLen;                    /* and maybe temporary overwritten when adding */
+   HB_SHORT  iFree;                        /* new key to interior node record. */
 
-   HB_BYTE * pKeyBuf;                      /* pointer to uncompressed leaf page key pool  */
+   HB_BYTE * pKeyBuf;                      /* pointer to uncompressed leaf page key pool */
 
    struct _CDXPAGE * Owner;
    struct _CDXPAGE * Child;
@@ -317,13 +317,13 @@ typedef struct _CDXTAG
    PHB_ITEM  pForItem;        /* item with a macro pcode for a tag for expression */
    HB_USHORT uiType;          /* a type of key expression value */
    HB_USHORT uiLen;           /* length of the key expression value */
-   HB_USHORT nField;          /* Field number for simple (one field) key expersion */
+   HB_USHORT nField;          /* Field number for simple (one field) key expression */
    HB_BYTE   bTrail;          /* trailing character for shorter key value */
    HB_BYTE   OptFlags;        /* index options flag */
    HB_BOOL   AscendKey;       /* ascending/descending order flag */
    HB_BOOL   UniqueKey;       /* unique order flag */
    HB_BOOL   Custom;          /* custom order flag */
-   HB_BOOL   Template;        /* user keyadata in ordKeyAdd()/ordKeyDel() accepted */
+   HB_BOOL   Template;        /* user key data in ordKeyAdd()/ordKeyDel() accepted */
    HB_BOOL   MultiKey;        /* repeated key values in custom indexes accepted */
    HB_BOOL   Partial;         /* order is updated only partially - missing keys possible */
    HB_BOOL   ChgOnly;         /* only existing key modifications are updated, no new key added */
@@ -392,8 +392,8 @@ typedef struct _CDXINDEX
    HB_BOOL    RdLck;
    HB_BOOL    WrLck;
 #endif
-   HB_BOOL    fChanged;       /* changes written to index, need upadte ulVersion */
-   HB_BOOL    fFlush;         /* changes written to index, need upadte ulVersion */
+   HB_BOOL    fChanged;       /* changes written to index, need to update ulVersion */
+   HB_BOOL    fFlush;         /* changes written to index, need to update ulVersion */
    HB_ULONG   ulVersion;      /* network version/update flag */
 } CDXINDEX, * LPCDXINDEX;
 
@@ -418,13 +418,13 @@ typedef struct
    HB_BOOL    fReindex;       /* HB_TRUE if reindexing is in process */
    HB_ULONG   ulMaxRec;       /* the highest record number */
    HB_ULONG   ulTotKeys;      /* total number of keys indexed */
-   HB_ULONG   ulKeys;         /* keys in curently created page */
+   HB_ULONG   ulKeys;         /* keys in currently created page */
    HB_ULONG   ulPages;        /* number of pages */
    HB_ULONG   ulCurPage;      /* current page */
    HB_ULONG   ulPgKeys;       /* maximum number of key in page memory buffer */
    HB_ULONG   ulMaxKey;       /* maximum number of keys in single page */
    HB_BYTE *  pKeyPool;       /* memory buffer for current page then for pages */
-   HB_BYTE *  pStartKey;      /* begining of key pool after sorting */
+   HB_BYTE *  pStartKey;      /* beginning of key pool after sorting */
    LPCDXSWAPPAGE pSwapPage;   /* list of pages */
    LPCDXPAGE  NodeList[ CDX_STACKSIZE ];  /* Stack of pages */
    HB_ULONG   ulFirst;
@@ -451,15 +451,15 @@ typedef struct _CDXAREA
    DBFAREA dbfarea;
 
    /*
-   *  CDX's additions to the workarea structure
-   *
-   *  Warning: The above section MUST match DBFAREA exactly! Any
-   *  additions to the structure MUST be added below, as in this
-   *  example.
-   */
+    * CDX's additions to the workarea structure
+    *
+    * Warning: The above section MUST match DBFAREA exactly! Any
+    * additions to the structure MUST be added below, as in this
+    * example.
+    */
 
    LPCDXSORTINFO  pSort;         /* Index build structure */
-   LPCDXINDEX     lpIndexes;     /* Pointer to indexes array  */
+   LPCDXINDEX     lpIndexes;     /* Pointer to indexes array */
    const HB_UCHAR * sortTab;     /* Table with sorted characters */
    HB_BOOL        fCdxAppend;    /* Appended record changed */
    HB_BOOL        fSortCDP;      /* Use CDP functions for sorting */

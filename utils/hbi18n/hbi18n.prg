@@ -1,5 +1,5 @@
 /*
- * Harbour i18n .pot/.hbl file manger
+ * Harbour i18n .pot/.hbl file manager
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -48,9 +48,9 @@
 #include "hbver.ch"
 #include "directry.ch"
 
-#define _HB_I18N_MERGE  1
-#define _HB_I18N_GENHBL 2
-#define _HB_I18N_TRANS  3
+#define _HB_I18N_MERGE   1
+#define _HB_I18N_GENHBL  2
+#define _HB_I18N_TRANS   3
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
@@ -141,13 +141,17 @@ PROCEDURE Main( ... )
       Logo()
    ENDIF
 
-   IF nMode == _HB_I18N_MERGE
+   SWITCH nMode
+   CASE _HB_I18N_MERGE
       Merge( aFiles, cFileOut )
-   ELSEIF nMode == _HB_I18N_GENHBL
+      EXIT
+   CASE _HB_I18N_GENHBL
       GenHBL( aFiles, cFileOut, lEmpty )
-   ELSEIF nMode == _HB_I18N_TRANS
+      EXIT
+   CASE _HB_I18N_TRANS
       AutoTrans( cFileIn, aFiles, cFileOut )
-   ENDIF
+      EXIT
+   ENDSWITCH
 
    RETURN
 
@@ -204,17 +208,15 @@ STATIC PROCEDURE ErrorMsg( cErrorMsg )
 
 STATIC FUNCTION ExpandWildCards( aFiles )
 
-/* do not expand wild cards in environments where SHELL already does it.
- * In *nixes it's possible that file name will contains "*" or "?".
- */
+/* Do not expand wild cards in environments where SHELL already does it.
+   In *nixes it's possible that file name will contains "*" or "?". */
 
 #ifndef __PLATFORM__UNIX
 
    LOCAL cFile, cRealFile
    LOCAL aRealFiles
-   LOCAL lWild
+   LOCAL lWild := .F.
 
-   lWild := .F.
    FOR EACH cFile IN aFiles
       IF "*" $ cFile .OR. "?" $ cFile
          lWild := .T.
@@ -245,13 +247,11 @@ STATIC FUNCTION LoadFiles( aFiles )
    LOCAL cErrorMsg
    LOCAL n
 
-   aTrans := __i18n_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
-   IF aTrans == NIL
+   IF ( aTrans := __i18n_potArrayLoad( aFiles[ 1 ], @cErrorMsg ) ) == NIL
       ErrorMsg( cErrorMsg )
    ENDIF
    FOR n := 2 TO Len( aFiles )
-      aTrans2 := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
-      IF aTrans2 == NIL
+      IF ( aTrans2 := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg ) ) == NIL
          ErrorMsg( cErrorMsg )
       ENDIF
       __i18n_potArrayJoin( aTrans, aTrans2, @hIndex )

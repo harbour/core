@@ -1,8 +1,7 @@
 /*
  * National Collation Support Module (ITISB)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * Spanish MS-DOS support by Antonio Linares <alinares@fivetechsoft.com>
+ * Copyright 2002 Antonio Linares <alinares@fivetechsoft.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

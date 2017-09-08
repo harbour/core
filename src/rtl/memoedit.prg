@@ -61,7 +61,7 @@ CREATE CLASS HBMemoEditor INHERIT HBEditor
    METHOD MemoInit( xUserFunction )          // This method is called after ::New() returns to perform ME_INIT actions
    METHOD Edit()                             // Calls ::super:Edit( nKey ) but is needed to handle configurable keys
    METHOD KeyboardHook( nKey )               // Gets called every time there is a key not handled directly by HBEditor
-   METHOD IdleHook()                         // Gets called every time there are no more keys to hanlde
+   METHOD IdleHook()                         // Gets called every time there are no more keys to handle
 
    METHOD HandleUserKey( nKey, nUdfReturn )  // Handles keys returned to MemoEdit() by user function
    METHOD xDo( nStatus )                     // Calls xUserFunction saving and restoring cursor position and shape

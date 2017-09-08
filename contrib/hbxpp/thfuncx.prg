@@ -1,5 +1,5 @@
 /*
- * XPP compatible thread functions
+ * Xbase++ compatible thread functions
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -47,14 +47,15 @@
 FUNCTION ThreadID()
    RETURN hb_threadID()
 
-
 FUNCTION ThreadObject( oThread )
+
    THREAD STATIC t_oThread
+
    IF PCount() > 0
       t_oThread := oThread
    ENDIF
-   RETURN t_oThread
 
+   RETURN t_oThread
 
 FUNCTION ThreadWait( aThreads, nTimeOut )
 

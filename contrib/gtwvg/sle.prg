@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpSLE compatible Class
  *
  * Copyright 2008-2011 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                    Xbase++ xbpSLE compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               07Dec2008
  */
 
 #include "hbclass.ch"

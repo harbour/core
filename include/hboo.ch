@@ -2,6 +2,7 @@
  * Header file for low-level object engine
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2000 JF Lefebvre <jfl@mafact.com> and RA Cuylen <rac@mafact.com> (Many enhancements (scopes, class methods))
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,25 +45,15 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 JF Lefebvre <jfl@mafact.com> and RA Cuylen <rac@mafact.com>
- *    Many enhancements (scopes, class methods)
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* NOTE: This file is also used by C code. */
 
 #ifndef HB_OO_CH_
 #define HB_OO_CH_
 
-/* Used by objfunc.prg (__objGetMsgList) and classes.c (hb___msgClsSel()) */
-#define HB_MSGLISTALL   0
-#define HB_MSGLISTCLASS 1
-#define HB_MSGLISTPURE  2
+/* Used by objfunc.prg (__objGetMsgList()) and classes.c (hb___msgClsSel()) */
+#define HB_MSGLISTALL    0
+#define HB_MSGLISTCLASS  1
+#define HB_MSGLISTPURE   2
 
 /* Method or Data attribute (nScope)*/
 #define HB_OO_CLSTP_EXPORTED        1 /* No comment, default */

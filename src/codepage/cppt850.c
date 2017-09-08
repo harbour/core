@@ -1,9 +1,7 @@
 /*
  * National Collation Support Module (PT850)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * Portuguese collating sequence (PT850) done
- * by Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
+ * Copyright 2002 Luiz Rafael Culik Guimaraes <culikr@uol.com.br>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by

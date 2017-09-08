@@ -48,6 +48,9 @@
 #define HB_ZEBRA_H_
 
 #include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+
 #include "hbzebra.ch"
 
 typedef struct

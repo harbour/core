@@ -45,7 +45,7 @@
  *
  */
 
-/* Internet Messaging: https://www.ietf.org/rfc/rfc2045.txt */
+/* Internet Messaging: https://tools.ietf.org/html/rfc2045 */
 
 #include "hbclass.ch"
 

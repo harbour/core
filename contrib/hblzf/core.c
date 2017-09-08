@@ -81,7 +81,7 @@ HB_FUNC( HB_LZF_VERSION )
    hb_retni( LZF_VERSION );
 }
 
-/* Return if lzf was optimized for speed (or for compression) */
+/* Return if LZF was optimized for speed (or for compression) */
 HB_FUNC( HB_LZF_OPTIMIZED_FOR_SPEED )
 {
 #if ULTRA_FAST
@@ -224,7 +224,7 @@ HB_FUNC( HB_LZF_DECOMPRESS )
             }
          }
          else
-            hb_storni( ( buffer_size ) ? HB_LZF_BUF_ERROR : HB_LZF_MEM_ERROR, 3 );
+            hb_storni( buffer_size ? HB_LZF_BUF_ERROR : HB_LZF_MEM_ERROR, 3 );
       }
       else
       {

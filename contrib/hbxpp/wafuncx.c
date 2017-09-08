@@ -1,5 +1,5 @@
 /*
- * XBASE++ compatible workarea functions
+ * Xbase++ compatible workarea functions
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -66,13 +66,12 @@ HB_FUNC( WORKSPACELIST )
    PHB_ITEM pArray;
 
    if( hb_parni( 1 ) == DB_ZEROSPACE )
-   {
       pArray = hb_rddDetachedList();
-   }
    else
    {
       pArray = hb_itemArrayNew( 0 );
       hb_rddIterateWorkAreas( s_waList, pArray );
    }
+
    hb_itemReturnRelease( pArray );
 }

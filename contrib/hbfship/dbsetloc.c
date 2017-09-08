@@ -1,6 +1,6 @@
 /*
- * dbSetLocate[Block]( <bFor> ) -> <lSet>
  * FlagShip compatible functions
+ * dbSetLocate[Block]( <bFor> ) --> <lSet>
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *

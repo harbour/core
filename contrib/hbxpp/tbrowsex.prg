@@ -50,7 +50,7 @@
 
 #include "hbclass.ch"
 
-#define _TBR_COORD( n )       Int( n )
+#define _TBR_COORD( n )  Int( n )
 
 CREATE CLASS xpp_TBrowse INHERIT TBrowse
 
@@ -73,7 +73,7 @@ METHOD viewArea() CLASS xpp_TBrowse
       ::doConfigure()
    ENDIF
 
-   // TOFIX
+   // FIXME
 
    nWidth := nFrozenWidth := _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1
    /* _MAXFREEZE( ::nFrozen, ::aColData, @nWidth ) */
@@ -94,9 +94,10 @@ METHOD firstScrCol() CLASS xpp_TBrowse
       ::doConfigure()
    ENDIF
 
-   // TOFIX
-
-// RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
+#if 0
+   // FIXME
+   RETURN iif( ::leftVisible == 0, 0, ::aColData[ ::leftVisible ][ _TBCI_COLPOS ] )
+#endif
    RETURN 0
 
 METHOD _left() CLASS xpp_TBrowse

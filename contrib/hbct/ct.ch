@@ -45,12 +45,11 @@
  *
  */
 
-
 #ifndef _CT_CH
 #define _CT_CH 1
 
 /* subsystem name */
-#define CT_SUBSYSTEM "CT"
+#define CT_SUBSYSTEM  "CT"
 
 /* CSetArgErr() argument error behaviour */
 #include "error.ch"

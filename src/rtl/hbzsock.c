@@ -544,7 +544,7 @@ static PHB_SOCKEX s_sockexNext( PHB_SOCKEX pSock, PHB_ITEM pParams )
    return pSockNew;
 }
 
-/* hb_socketNewZSock( <pSocket>, [<hParams>] ) -> <pSocket> */
+/* hb_socketNewZSock( <pSocket>, [<hParams>] ) --> <pSocket> */
 HB_FUNC( HB_SOCKETNEWZSOCK )
 {
    PHB_SOCKEX pSock = hb_sockexParam( 1 );

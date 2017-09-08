@@ -1,16 +1,12 @@
 /*
- * CT3 files functions
+ * CT3 files functions: SetFAttr()
  *
- * SetFattr()
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *
- * SetFDaTi(), FileSMax(), FileDelete()
+ *    SetFDaTi(), FileSMax(), FileDelete()
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
- *
- * FileSeek(), FileSize(), FileAttr(), FileTime(), FileDate()
- * FileMove(), FileSMax(),
- * DeleteFile(), RenameFile()
- *
+ *    FileSeek(), FileSize(), FileAttr(), FileTime(), FileDate()
+ *    FileMove(), FileSMax(),
+ *    DeleteFile(), RenameFile()
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
@@ -202,13 +198,14 @@ HB_FUNC( SETFDATI )
 
    if( szFile && *szFile )
    {
-      PHB_ITEM pDate, pTime;
       long lJulian, lMillisec;
 
       if( HB_ISTIMESTAMP( 1 ) )
          hb_partdt( &lJulian, &lMillisec, 1 );
       else
       {
+         PHB_ITEM pDate, pTime;
+
          pDate = hb_param( 2, HB_IT_DATE );
          if( pDate )
             pTime = hb_param( 3, HB_IT_STRING );

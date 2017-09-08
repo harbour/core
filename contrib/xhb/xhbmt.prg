@@ -56,7 +56,7 @@ FUNCTION StartThread( p1, p2, ... )
 
    RETURN hb_threadStart( p1, p2, ... )
 
-FUNCTION Subscribe( mtx, nTimeOut, lSubscribed )
+FUNCTION Subscribe( mtx, nTimeOut, /* @ */ lSubscribed )
 
    LOCAL xSubscribed
 
@@ -66,7 +66,7 @@ FUNCTION Subscribe( mtx, nTimeOut, lSubscribed )
 
    RETURN xSubscribed
 
-FUNCTION SubscribeNow( mtx, nTimeOut, lSubscribed )
+FUNCTION SubscribeNow( mtx, nTimeOut, /* @ */ lSubscribed )
 
    LOCAL xSubscribed
 
@@ -86,24 +86,24 @@ FUNCTION IsValidThread( pThID )
 
    BEGIN SEQUENCE WITH {|| Break() }
       lValid := hb_threadID( pThID ) != 0
-   recover
+   RECOVER
       lValid := .F.
    END SEQUENCE
 
    RETURN lValid
 
-FUNCTION KillThread( pThID )
+PROCEDURE KillThread( pThID )
 
    hb_threadQuitRequest( pThID )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION StopThread( pThID )
+PROCEDURE StopThread( pThID )
 
    hb_threadQuitRequest( pThID )
    hb_threadJoin( pThID )
 
-   RETURN NIL
+   RETURN
 
 FUNCTION ThreadSleep( nTimeOut )
    RETURN hb_idleSleep( nTimeOut / 1000 )

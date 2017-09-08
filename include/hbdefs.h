@@ -78,8 +78,7 @@
 #  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && ! defined( _INTPTR_T )
 #     define _INTPTR_T
 #  endif
-   /* workaround for BCC 5.8 bug */
-   #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 )
+   #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x0582 )  /* workaround for compiler bug */
       #undef INT32_MIN
       #define INT32_MIN ((int32_t) (-INT32_MAX-1))
       #undef INT64_MIN
@@ -89,10 +88,20 @@
    #endif
 #endif
 
-/*
+#if ( defined( __GNUC__ ) || defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) ) && \
+    ( defined( _ISOC99_SOURCE ) || defined( _STDC_C99 ) || \
+      ( defined( __STDC_VERSION__ ) && __STDC_VERSION__ >= 199901L ) )
+   #define HB_C99_STATIC    static
+   #define HB_C99_RESTRICT  restrict
+#else
+   #define HB_C99_STATIC
+   #define HB_C99_RESTRICT
+#endif
+
+#if 0
 #define HB_CLIPPER_INT_ITEMS
 #define HB_LONG_LONG_OFF
-*/
+#endif
 
 #if defined( HB_OS_WIN )
    #if defined( HB_OS_WIN_64 )
@@ -640,7 +649,7 @@ typedef HB_U32 HB_FATTR;
 #if ! defined( HB_PDP_ENDIAN ) && ! defined( HB_BIG_ENDIAN ) && \
     ! defined( HB_LITTLE_ENDIAN )
 
-   /* I intentionaly move the first two #if/#elif to the begining
+   /* I intentionaly move the first two #if/#elif to the beginning
       to avoid compiler error when this macro will be defined as
       empty statement in next conditions, F.e. SunOS
     */
@@ -1480,7 +1489,7 @@ typedef HB_U32 HB_FATTR;
    #define HB_SYMBOL_UNUSED( symbol )  ( void ) symbol
 #endif
 
-/* ***********************************************************************
+/*
  * The name of starting procedure
  * Note: You have to define it in case when Harbour cannot find the proper
  * starting procedure (due to unknown order of static data initialization)

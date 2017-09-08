@@ -44,7 +44,7 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbdefs.h"
 
 HB_FUNC_TRANSLATE( ACCELERATO, ACCELERATOR )
 HB_FUNC_TRANSLATE( COLORSELEC, COLORSELECT )

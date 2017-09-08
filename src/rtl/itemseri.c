@@ -1,5 +1,5 @@
 /*
- * item serialization code
+ * Item serialization code
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -205,7 +205,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
                                    const HB_UCHAR * pBuffer, HB_SIZE nOffset,
                                    PHB_REF_LIST pRefList );
 
-/*
+#if 0
 static void hb_itemSerialRefListShow( PHB_REF_LIST pRefList )
 {
    HB_SIZE nPos;
@@ -223,7 +223,7 @@ static void hb_itemSerialRefListShow( PHB_REF_LIST pRefList )
    }
    printf( "================================\n" ); fflush( stdout );
 }
-*/
+#endif
 
 static void hb_itemSerialRefListInit( PHB_REF_LIST pRefList )
 {
@@ -503,7 +503,6 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
    HB_SIZE nSize, nLen, u;
    HB_MAXINT lVal;
    HB_USHORT uiClass;
-   PHB_ITEM pDefVal;
    const char * szVal;
 
    if( HB_IS_BYREF( pItem ) )
@@ -614,6 +613,8 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
          }
          else
          {
+            PHB_ITEM pDefVal;
+
             if( ( hb_hashGetFlags( pItem ) & ~HB_HASH_RESORT ) != HB_HASH_FLAG_DEFAULT )
                nSize = 3;
             else
@@ -660,7 +661,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
    int iWidth, iDecimal;
    long l, l2;
    const char * szVal;
-   HB_SIZE nRef, nLen, nSize, n;
+   HB_SIZE nRef, nLen, n;
 
    if( HB_IS_BYREF( pItem ) )
       pItem = hb_itemUnRef( pItem );
@@ -807,7 +808,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
          }
          else
          {
-            nSize = n = nLen;
+            HB_SIZE nSize = n = nLen;
             while( n && szVal[ n - 1 ] == ' ' )
                --n;
             n = nLen - n;
@@ -1900,11 +1901,12 @@ HB_FUNC( HB_SERIALIZE )
 
 HB_FUNC( HB_DESERIALIZE )
 {
-   PHB_ITEM pItem, pParam = hb_param( 1, HB_IT_BYREF );
+   PHB_ITEM pParam = hb_param( 1, HB_IT_BYREF );
    HB_SIZE nSize = hb_parclen( 1 );
 
    if( nSize )
    {
+      PHB_ITEM pItem;
       PHB_CODEPAGE cdpIn, cdpOut;
       const char * pBuffer = hb_parc( 1 );
       const char * pszCdpIn = hb_parc( 2 ),

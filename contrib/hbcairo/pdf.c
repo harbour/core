@@ -44,10 +44,8 @@
  *
  */
 
-
 #include "hbcairo.h"
 #include "cairo-pdf.h"
-
 
 HB_FUNC( CAIRO_PDF_SURFACE_CREATE )
 {
@@ -57,7 +55,6 @@ HB_FUNC( CAIRO_PDF_SURFACE_CREATE )
    hb_retptr( NULL );
 #endif
 }
-
 
 HB_FUNC( CAIRO_PDF_SURFACE_SET_SIZE )
 {

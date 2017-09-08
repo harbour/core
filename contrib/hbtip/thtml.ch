@@ -48,7 +48,7 @@
 #define _HB_THTML
 
 /* Content model shortcut encoding taken from Tidy library
-   http://www.html-tidy.org/ */
+   https://github.com/htacg/tidy-html5 */
 
 #define CM_UNKNOWN                  0
 #define CM_EMPTY                    0x000001  /* Elements with no content. Map to HTML specification. */
@@ -74,7 +74,7 @@
 #define CM_NO_INDENT                0x040000  /* Elements whose content needs to be indented only if containing one
                                                  CM_BLOCK element. */
 #define CM_OBSOLETE                 0x080000  /* Elements that are obsolete (such as "dir", "menu"). */
-#define CM_NEW                      0x100000  /* User defined elements. Used to determine how attributes wihout value
+#define CM_NEW                      0x100000  /* User defined elements. Used to determine how attributes without value
                                                  should be printed. */
 #define CM_OMITST                   0x200000  /* Elements that cannot be omitted. */
 

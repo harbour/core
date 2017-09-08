@@ -1,5 +1,5 @@
 /*
- * Firebird RDBMS low level (client api) interface code.
+ * Firebird RDBMS low-level (client API) interface code.
  *
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  *
@@ -42,59 +42,57 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- * See COPYING.txt for licensing terms.
- *
  */
 
 #include "hbclass.ch"
 
-#define SQL_TEXT                        452
-#define SQL_VARYING                     448
-#define SQL_SHORT                       500
-#define SQL_LONG                        496
-#define SQL_FLOAT                       482
-#define SQL_DOUBLE                      480
-#define SQL_D_FLOAT                     530
-#define SQL_TIMESTAMP                   510
-#define SQL_BLOB                        520
-#define SQL_ARRAY                       540
-#define SQL_QUAD                        550
-#define SQL_TYPE_TIME                   560
-#define SQL_TYPE_DATE                   570
-#define SQL_INT64                       580
+#define SQL_TEXT            452
+#define SQL_VARYING         448
+#define SQL_SHORT           500
+#define SQL_LONG            496
+#define SQL_FLOAT           482
+#define SQL_DOUBLE          480
+#define SQL_D_FLOAT         530
+#define SQL_TIMESTAMP       510
+#define SQL_BLOB            520
+#define SQL_ARRAY           540
+#define SQL_QUAD            550
+#define SQL_TYPE_TIME       560
+#define SQL_TYPE_DATE       570
+#define SQL_INT64           580
 #define SQL_DATE                        SQL_TIMESTAMP
 
 CREATE CLASS TFbServer
 
-   VAR      db
-   VAR      trans
-   VAR      StartedTrans
-   VAR      nError
-   VAR      lError
-   VAR      dialect
+   VAR db
+   VAR trans
+   VAR StartedTrans
+   VAR nError
+   VAR lError
+   VAR dialect
 
-   METHOD   New( cServer, cUser, cPassword, nDialect )
-   METHOD   Destroy()  INLINE FBClose( ::db )
-   METHOD   Close()    INLINE FBClose( ::db )
+   METHOD New( cServer, cUser, cPassword, nDialect )
+   METHOD Destroy()  INLINE FBClose( ::db )
+   METHOD Close()    INLINE FBClose( ::db )
 
-   METHOD   TableExists( cTable )
-   METHOD   ListTables()
-   METHOD   TableStruct( cTable )
+   METHOD TableExists( cTable )
+   METHOD ListTables()
+   METHOD TableStruct( cTable )
 
-   METHOD   StartTransaction()
-   METHOD   Commit()
-   METHOD   Rollback()
+   METHOD StartTransaction()
+   METHOD Commit()
+   METHOD Rollback()
 
-   METHOD   Execute( cQuery )
-   METHOD   Query( cQuery )
+   METHOD Execute( cQuery )
+   METHOD Query( cQuery )
 
-   METHOD   Update( oRow, cWhere )
-   METHOD   Delete( oRow, cWhere )
-   METHOD   Append( oRow )
+   METHOD Update( oRow, cWhere )
+   METHOD Delete( oRow, cWhere )
+   METHOD Append( oRow )
 
-   METHOD   NetErr()   INLINE ::lError
-   METHOD   Error()    INLINE FBError( ::nError )
-   METHOD   ErrorNo()  INLINE ::nError
+   METHOD NetErr()   INLINE ::lError
+   METHOD Error()    INLINE FBError( ::nError )
+   METHOD ErrorNo()  INLINE ::nError
 
 ENDCLASS
 

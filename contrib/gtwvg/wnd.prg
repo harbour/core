@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Compatible xbpWindow Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,16 +44,9 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *                  Xbase++ Compatible xbpWindow Class
- *
- *                 Pritpal Bedi  <bedipritpal@hotmail.com>
- *                              08Nov2008
  */
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -63,16 +56,14 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-//
-// To Switch Over from ASCALLBACK() to SET/GET_Prop() calls
-//
+/* To Switch Over from ASCALLBACK() to SET/GET_Prop() calls */
 #if 0
 #define __BYASCALLBACK__
 #else
 #define __BYSETPROP__
 #endif
 
-CREATE CLASS WvgWindow  INHERIT  WvgPartHandler
+CREATE CLASS WvgWindow INHERIT WvgPartHandler
 
    /*  CONFIGURATION */
    VAR    animate                               INIT  .F.

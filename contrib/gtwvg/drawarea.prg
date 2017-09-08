@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ WvgDialog's Helper Class
  *
  * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                   Xbase++ WvgDialog's Helper Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               15Feb2009
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgDrawingArea  INHERIT  WvgWindow
+CREATE CLASS WvgDrawingArea INHERIT WvgWindow
 
    VAR    caption                               INIT ""
    VAR    clipParent                            INIT .T.

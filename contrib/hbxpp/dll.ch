@@ -60,7 +60,7 @@
 #define DLL_OSAPI                   DLL_CDECL
 #endif
 
-/* Only for compatiblity.
+/* Only for compatibility.
    Harbour always copies the string to a temporary buffer. */
 #define DLL_CALLMODE_COPY           0
 #define DLL_CALLMODE_NORMAL         DLL_CALLMODE_COPY

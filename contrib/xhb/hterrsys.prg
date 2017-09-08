@@ -2,6 +2,7 @@
  * HTML output conversion
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,16 +45,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "error.ch"
 #include "cgi.ch"
 
@@ -68,11 +59,6 @@ REQUEST MemoWrit
 
 STATIC s_bFixCorrupt
 STATIC s_cErrFooter  := " "
-
-
-/***
-* DefError()
-*/
 
 #if 0
 
@@ -102,16 +88,14 @@ STATIC FUNCTION xhb_cgi_DefError( e )
          .AND. e:canDefault
 
       NetErr( .T. )
-      RETURN .F.                    // NOTE
-
+      RETURN .F.
    ENDIF
 
-   // for lock error during APPEND BLANK, set NetErr() and subsystem default
+   // for lock error during dbAppend(), set NetErr() and subsystem default
    IF e:genCode == EG_APPENDLOCK .AND. e:canDefault
 
       NetErr( .T. )
-      RETURN .F.                    // NOTE
-
+      RETURN .F.
    ENDIF
 
    // build error message

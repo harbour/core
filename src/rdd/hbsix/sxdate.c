@@ -1,10 +1,10 @@
 /*
  * SIX compatible functions:
- *          hb_sxDtoP()
- *          hb_sxPtoD()
+ *       hb_sxDtoP()
+ *       hb_sxPtoD()
  *
- *          sx_DToP()
- *          sx_PToD()
+ *       sx_DToP()
+ *       sx_PToD()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -56,7 +56,7 @@ char * hb_sxDtoP( char * pDate, long lJulian )
    int iYear, iMonth, iDay;
    long lPDate;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_sxDtoP(%p, %ld)", pDate, lJulian ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_sxDtoP(%p, %ld)", ( void * ) pDate, lJulian ) );
 
    hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
    lPDate = ( ( ( iYear << 1 ) | ( iMonth >> 3 ) ) << 8 ) |
@@ -68,13 +68,13 @@ char * hb_sxDtoP( char * pDate, long lJulian )
 
 long hb_sxPtoD( const char * pDate )
 {
-   int iYear, iMonth, iDay;
-   long lPDate;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_sxPtoD(%p)", pDate ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_sxPtoD(%p)", ( const void * ) pDate ) );
 
    if( pDate )
    {
+      int iYear, iMonth, iDay;
+      long lPDate;
+
       lPDate = HB_GET_BE_UINT24( pDate );
       iDay = lPDate & 0x1f;
       iMonth = ( lPDate >> 5 ) & 0x0f;

@@ -1,7 +1,6 @@
 /*
- * Functions:
- * SetFCreate(), CSetSafety(), StrFile(), FileStr(), ScreenFile()
- * ScreenFile(), FileScreen()
+ * StrFile(), FileStr(), ScreenFile(), FileScreen()
+ * SetFCreate(), CSetSafety()
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  *

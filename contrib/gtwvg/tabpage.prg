@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpTabPage compatible Class
  *
  * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbpTabPage compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               01Mar2009
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgTabPage  INHERIT  WvgWindow
+CREATE CLASS WvgTabPage INHERIT WvgWindow
 
    VAR    caption                               INIT NIL /* Character string, Numeric, Object ("")                                                                           */
    VAR    clipChildren                          INIT .T. /* Determines whether Xbase Parts in the child list are clipped during graphic output.                              */

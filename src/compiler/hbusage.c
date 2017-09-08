@@ -46,9 +46,6 @@
 
 #include "hbcomp.h"
 
-/*
- * Prints available options
- */
 void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
 {
    static const char * s_szOptions[] =
@@ -115,9 +112,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
       hb_compOutStd( HB_COMP_PARAM, s_szOptions[ iLine ] );
 }
 
-/*
- * List of compatibility/features modes
- */
+/* List of compatibility/features modes */
 void hb_compPrintModes( HB_COMP_DECL )
 {
    static const char * s_szOptions[] =
@@ -165,15 +160,12 @@ void hb_compPrintModes( HB_COMP_DECL )
    }
 }
 
-/*
- * Prints credits
- */
 void hb_compPrintCredits( HB_COMP_DECL )
 {
    hb_compOutStd( HB_COMP_PARAM,
          "\n"
-         "Credits:  The Harbour Team at harbour-project.org\n"
-         "          (replace space with @ in e-mail addresses)\n"
+         "Credits:  The Harbour Team\n"
+         "          (replace space with @ in email addresses)\n"
          "\n"
          "Alejandro de Garate (alex_degarate hotmail com)\n"
          "Aleksander Czajczynski <hb fki.pl>\n"
@@ -264,9 +256,6 @@ void hb_compPrintCredits( HB_COMP_DECL )
       );
 }
 
-/*
- * Prints logo
- */
 void hb_compPrintLogo( HB_COMP_DECL )
 {
    char * szVer = hb_verHarbour();

@@ -1,6 +1,5 @@
 /*
  * CT3 string functions
- *
  *   - AfterAtNum()
  *   - BeforAtNum()
  *   - AtNum()

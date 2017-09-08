@@ -1,6 +1,5 @@
 /*
  * dbf structure related functions:
- *
  *    FieldSize(), FieldDeci(), FieldNum(), DbfSize()
  *
  * Copyright 2000 Alexander Kresin <alex@belacy.belgorod.su>
@@ -62,18 +61,16 @@ HB_FUNC( DBFSIZE )
    if( ( pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer() ) != NULL )
    {
       PHB_ITEM pSize = hb_itemNew( NULL );
-      HB_ULONG ulRecSize, ulRecCount;
 
       if( SELF_INFO( pArea, DBI_GETHEADERSIZE, pSize ) == HB_SUCCESS )
       {
          llSize = hb_itemGetNL( pSize ) + 1;
          if( SELF_INFO( pArea, DBI_GETRECSIZE, pSize ) == HB_SUCCESS )
          {
+            HB_ULONG ulRecSize, ulRecCount;
             ulRecSize = hb_itemGetNL( pSize );
             if( SELF_RECCOUNT( pArea, &ulRecCount ) == HB_SUCCESS )
-            {
                llSize += ( HB_MAXINT ) ulRecCount * ulRecSize;
-            }
          }
       }
       hb_itemRelease( pSize );

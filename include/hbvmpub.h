@@ -177,7 +177,7 @@ struct _HB_SYMB;
    typedef void    HB_STACK;
 
    /*
-    * The first version reduce the number of modification in existing 3-rd
+    * The first version reduce the number of modification in existing 3rd
     * party code but in longer terms I'd prefer to disable it and left
     * only the second one where PHB_DYNS is mapped to void*.
     * This will allow us to fully redesign dynamic symbol internals
