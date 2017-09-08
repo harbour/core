@@ -13,14 +13,14 @@
       - next scan all variables if these memory blocks are still referenced.
 
       Notice that only arrays, objects and codeblocks are collected because
-      these are the only datatypes that can cause self-references ( a[ 1 ] := a )
-      or circular references ( a[ 1 ] := b; b[ 1 ] := c; c[ 1 ] := a ) that
+      these are the only datatypes that can cause self-references `a[ 1 ] := a`
+      or circular references `a[ 1 ] := b; b[ 1 ] := c; c[ 1 ] := a` that
       cannot be properly deallocated by simple reference counting.
 
       Since all variables in Harbour are stored inside some available tables
       (the eval stack, memvars table and array of static variables) then checking
       if the reference is still alive is quite easy and doesn't require any
-      special treatment during memory allocation. Additionaly the garbage
+      special treatment during memory allocation. Additionally the garbage
       collector is scanning some internal data used by Harbour objects
       implementation that also stores some values that can contain memory
       references. These data are used to initialize class instance variables
@@ -33,10 +33,12 @@
       premature deallocation of such memory blocks the static data have to store
       a pointer to the value created with hb_itemNew() function.
       Example:
+        ```c
         static HB_ITEM s_item; /* this item can be released by the GC */
 
         static PHB_ITEM pItem; /* this item will be maintained correctly */
         pItem = hb_itemNew( hb_param( 1, IT_BLOCK ) );
+        ```
 
       However, scanning of all variables can be a time consuming operation. It
       requires that all allocated arrays have to be traversed through all their
@@ -46,19 +48,19 @@
 
       The idle state is a state when there is no real application code
       executed. For example, the user code is stopped for 0.1 of a second
-      during Inkey( 0.1 ) - Harbour is checking the keyboard only
+      during `Inkey( 0.1 )` - Harbour is checking the keyboard only
       during this time. It leaves however quite enough time for
       many other background tasks. One such background task can be looking
       for unreferenced memory blocks.
 
-      Allocating memory    </par>
+      Allocating memory
       -----------------
 
       The garbage collector collects memory blocks allocated with hb_gcAlloc()
       function calls. Memory allocated by hb_gcAlloc() should be released with
       hb_gcFree() function.
 
-      The garbage collecting   </par>
+      The garbage collecting
       ----------------------
 
       During scanning of unreferenced memory the GC is using a mark & sweep
@@ -81,11 +83,11 @@
       with the same flag before the sweep step will start.
       See hb_gcCollectAll() and hb_gcItemRef()
 
-      Calling the garbage collector from Harbour code   </par>
+      Calling the garbage collector from Harbour code
       -----------------------------------------------
 
       The garbage collector can be called directly from the Harbour code.
-      This is usefull in situations where there is no idle states available
+      This is useful in situations where there is no idle states available
       or the application is working in the loop with no user interaction
       and there is many memory allocations.
       See hb_gcAll() for explanation of how to call this function from your
@@ -132,7 +134,7 @@
       by the GC if it is not locked or if it is not referenced by some
       Harbour level variable.
    $STATUS$
-      C
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -164,7 +166,7 @@
       hb_gcFree() is used to deallocate the memory that was
       allocated with the hb_gcAlloc() function.
    $STATUS$
-      C
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -197,7 +199,7 @@
       memory blocks. After scanning all unused memory blocks and blocks
       that are not locked are released.
    $STATUS$
-      C
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -239,7 +241,7 @@
             passed item can be released prematurely during the closest
             garbage collection).
    $STATUS$
-      C
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -268,7 +270,7 @@
       This function releases all memory blocks that are considered
       as the garbage.
    $STATUS$
-      Harbour
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$

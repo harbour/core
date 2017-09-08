@@ -1,9 +1,4 @@
-/*
- *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
- * See COPYING.txt for licensing terms.
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbexpat"
 

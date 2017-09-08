@@ -1,13 +1,11 @@
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (vszakats.net/harbour) (rework)
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# ---------------------------------------------------------------
 # See batch docs here:
-#    http://www.computerhope.com/batch.htm
+#    https://www.computerhope.com/batch.htm
 #    http://www.robvanderwoude.com/batchcommands.php
-# ---------------------------------------------------------------
 
 ifneq ($(HB_SHELL),sh)
 

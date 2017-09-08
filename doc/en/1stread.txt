@@ -1,11 +1,6 @@
-/*
- * Copyright 2009 April White <bright.tigra gmail.com>
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 2009 April White <bright.tigra gmail.com>
    $TEMPLATE$
       Document
    $NAME$
@@ -26,12 +21,12 @@
       Clipper). The goal of Harbour is to produce a cross platform CA-Cl*pper
       compatible compiler.
 
-      The Harbour website is at <URL:https://vszakats.github.io/harbour-core/>.
-      If you have any problems with this copy of Harbour please visit our web
+      The Harbour website is at <https://vszakats.github.io/harbour-core/>.
+      If you have any problem with this copy of Harbour please visit our web
       site and ensure that you are using the latest release.
 
       If you are reading this file as part of a source distribution of Harbour you
-      probably want to start by reading `dirstruc.txt` because this is your map to
+      probably want to start by reading doc/dirstruc.txt because this is your map to
       the Harbour source directories.
 
       Harbour is a superset of Clipper and is backwards compatible with nearly

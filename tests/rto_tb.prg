@@ -1,7 +1,8 @@
 /*
- * Regression tests for classes TBrowse/TBColumn
+ * Regression tests for classes TBrowse()/TBColumn()
  *
  * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (eInstVar() - from RTL)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,35 +45,25 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    eInstVar() (from RTL)
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* NOTE: This source can be compiled with both Harbour and CA-Cl*pper. */
 
 #include "error.ch"
 #include "fileio.ch"
 
 #ifndef __HARBOUR__
-   #define hb_eol()     ( Chr( 13 ) + Chr( 10 ) )
-   #define hb_ntos( n ) LTrim( Str( n ) )
+   #define hb_eol()      ( Chr( 13 ) + Chr( 10 ) )
+   #define hb_ntos( n )  LTrim( Str( n ) )
 #endif
 
 #ifdef __XHARBOUR__
    #ifndef HB_COMPAT_C53
-      /* It makes xhb crash. */
+      /* It makes xHarbour crash. */
       /* #define HB_COMPAT_C53 */
    #endif
 #endif
 
-#translate TEST_L_TBR( <x> ) => TEST_C_TBR( o, #<x>, {|| <x> } )
-#translate TEST_L_TBC( <x> ) => TEST_C_TBC( o, #<x>, {|| <x> } )
+#xtranslate TEST_L_TBR( <x> ) => TEST_C_TBR( o, #<x>, {|| <x> } )
+#xtranslate TEST_L_TBC( <x> ) => TEST_C_TBC( o, #<x>, {|| <x> } )
 
 STATIC s_cTest := ""
 STATIC s_xVar := NIL

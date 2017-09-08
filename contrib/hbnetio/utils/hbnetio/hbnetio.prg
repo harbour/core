@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -100,7 +100,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
    ENDIF
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   Set( _SET_TIMEFORMAT, "HH:MM:SS.FFF" )
+   Set( _SET_TIMEFORMAT, "hh:mm:ss.fff" )
 
    HB_Logo()
 
@@ -201,7 +201,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
          HB_Usage()
          RETURN
       OTHERWISE
-         netiosrv_LogEvent( hb_StrFormat( "Warning: Unknown command line parameter ignored: %1$s", cParam ) )
+         netiosrv_LogEvent( hb_StrFormat( "Warning: Unrecognized command-line parameter ignored: %1$s", cParam ) )
       ENDCASE
    NEXT
 
@@ -423,7 +423,7 @@ STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManag
       /* Handle positive filter */
       IF ! Empty( netiosrv[ _NETIOSRV_hAllow ] )
          hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
-         IF !( cAddressPeer $ netiosrv[ _NETIOSRV_hAllow ] )
+         IF ! cAddressPeer $ netiosrv[ _NETIOSRV_hAllow ]
             IF hb_HScan( netiosrv[ _NETIOSRV_hAllow ], {| tmp | hb_WildMatch( tmp, cAddressPeer ) } ) == 0
                lBlocked := .T.
             ENDIF
@@ -493,7 +493,7 @@ STATIC PROCEDURE netiosrv_conn_register( netiosrv, pConnectionSocket )
 
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
-   IF !( pConnectionSocket $ netiosrv[ _NETIOSRV_hConnection ] )
+   IF ! pConnectionSocket $ netiosrv[ _NETIOSRV_hConnection ]
       netiosrv[ _NETIOSRV_hConnection ][ pConnectionSocket ] := nconn
    ENDIF
 
@@ -733,7 +733,7 @@ STATIC FUNCTION netiomgm_rpc_filtermod( netiosrv, hList, lAdd, cAddress )
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
 
    IF lAdd
-      IF !( cAddress $ hList )
+      IF ! cAddress $ hList
          hList[ cAddress ] := NIL
       ELSE
          lSuccess := .F.

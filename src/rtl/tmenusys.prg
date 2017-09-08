@@ -133,7 +133,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          ::cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 
-      hb_Scroll( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
+      Scroll( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
 
       ::cMsgSaveS := SaveScreen( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
    ENDIF

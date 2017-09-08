@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# This script requires "TAR" utilities for compression.
+# This script requires 'GNU tar' tool for compression.
 
 if [ "$1" = "zip" ] || [ "$1" = "ZIP" ]; then
    hb_archbin="zip"

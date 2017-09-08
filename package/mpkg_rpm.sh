@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # ---------------------------------------------------------------
-# Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
+# Copyright 2003 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
 # simple script to build RPMs from Harbour sources
 #
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 test_reqrpm()

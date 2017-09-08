@@ -11,9 +11,9 @@
       Locks part or all of any file
    $SYNTAX$
       hb_FLock( <nHandle>, <nOffset>, <nBytes> [, <nType ] )
-                --> <lSuccess>
+                --> lSuccess
    $ARGUMENTS$
-      <nHandle>  Dos file handle
+      <nHandle>  OS file handle
 
       set>  Offset of the first byte of the region to be locked.
 
@@ -24,7 +24,7 @@
       <lSuccess> .T. if the lock was obtained, else .F.
    $DESCRIPTION$
       This function attempts to lock a region of the file whose file handle
-      is <nHandle>. This is a low level file function.  To lock Harbour
+      is <nHandle>. This is a low-level file function.  To lock Harbour
       data files use either the FLock() or RLock() function.
 
       The value of <nHandle> is obtained from either a call to the FOpen()
@@ -36,14 +36,14 @@
 
       <nBytes> is the length of the region to be locked in bytes.
 
-      e> is the type of lock requested.  There are two types of locks:
-      sive write locks ( <nType> = 0x0000 ) - the default, and shared
-      locks( <nType> = 0x0100 ).  Additionally you can specify a
-      ing version of this function (that is it won't return until
-      r  an error has occurred or the lock has been obtained) by
-      g Ox0200 to the above values.
+      <nType> is the type of lock requested.  There are two types of locks:
+      exclusive write locks ( <nType> = 0x0000 ) - the default, and shared
+      read locks ( <nType> = 0x0100 ).  Additionally you can specify a
+      blocking version of this function (that is it won't return until
+      either an error has occurred or the lock has been obtained) by
+      adding 0x0200 to the above values.
    $EXAMPLES$
-      refer to tests/tflock.prg
+      // refer to tests/tflock.prg
    $STATUS$
       R
    $COMPLIANCE$
@@ -69,9 +69,9 @@
    $ONELINER$
       Unlocks part or all of any file
    $SYNTAX$
-      hb_FUnlock( <nHandle>, <nOffset>, <nBytes> ) --> <lSuccess>
+      hb_FUnlock( <nHandle>, <nOffset>, <nBytes> ) --> lSuccess
    $ARGUMENTS$
-      <nHandle>  Dos file handle
+      <nHandle>  OS file handle
 
       set>  Offset of the first byte of the region to be locked.
 
@@ -80,7 +80,7 @@
       <lSuccess> .T. if the lock was removed, else .F.
    $DESCRIPTION$
       This function attempts to unlock a region of the file whose file
-      handle is <nHandle>. This is a low level file function.  To
+      handle is <nHandle>. This is a low-level file function.  To
       unlock Harbour data files use the dbUnlock() function.
 
       The value of <nHandle> is obtained from either a call to the FOpen()
@@ -92,7 +92,7 @@
 
       <nBytes> is the length of the region to be unlocked in bytes.
    $EXAMPLES$
-      refer to tests/tflock.prg
+      // refer to tests/tflock.prg
    $STATUS$
       R
    $COMPLIANCE$

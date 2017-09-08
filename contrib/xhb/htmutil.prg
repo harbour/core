@@ -1,7 +1,8 @@
 /*
- * Misc Suport Functions for HTMLLIB
+ * Misc Support Functions for HTMLLIB
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -44,26 +45,12 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
+#include "html.ch"
 
 #include "html.ch"
 #include "hbclass.ch"
 
 THREAD STATIC t_aGreek := {}
-
-/****
-*
-*     BackButton()
-*
-*/
 
 PROCEDURE BackButton( cImage, oHtm )
 
@@ -79,12 +66,6 @@ PROCEDURE BackButton( cImage, oHtm )
       OF oHtm
 
    RETURN
-
-/****
-*
-*     BackFormButton()
-*
-*/
 
 PROCEDURE BackFormButton( cImage, oForm )
 
@@ -109,12 +90,6 @@ PROCEDURE BackFormButton( cImage, oForm )
    ENDIF
 
    RETURN
-
-/****
-*
-*     PutCounter()
-*
-*/
 
 FUNCTION PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
 

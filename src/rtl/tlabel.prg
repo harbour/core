@@ -307,7 +307,7 @@ METHOD SampleLabels() CLASS HBLabelForm
       cKey := hb_keyChar( Inkey( 0 ) )
       DispOut( cKey )
       IF Row() == MaxRow()
-         hb_Scroll( 0, 0, MaxRow(), MaxCol(), 1 )
+         Scroll( 0, 0, MaxRow(), MaxCol(), 1 )
          SetPos( MaxRow(), 0 )
       ELSE
          SetPos( Row() + 1, 0 )

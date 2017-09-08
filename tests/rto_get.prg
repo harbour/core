@@ -51,11 +51,11 @@
 #include "inkey.ch"
 
 #ifndef __HARBOUR__
-   #define hb_eol()     ( Chr( 13 ) + Chr( 10 ) )
-   #define hb_ntos( n ) LTrim( Str( n ) )
+   #define hb_eol()      ( Chr( 13 ) + Chr( 10 ) )
+   #define hb_ntos( n )  LTrim( Str( n ) )
 #endif
 
-#translate TEST_LINE( <x> ) => TEST_CALL( o, #<x>, {|| <x> } )
+#xtranslate TEST_LINE( <x> ) => TEST_CALL( o, #<x>, {|| <x> } )
 
 STATIC s_cTest := ""
 STATIC s_xVar := NIL

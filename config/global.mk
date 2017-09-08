@@ -3,22 +3,20 @@
 # See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# ---------------------------------------------------------------
 # GNU make docs:
 #    https://www.gnu.org/software/make/manual/make.html
-#    http://www.wanderinghorse.net/computing/make/
-#    http://www.jgc.org/feeds/topic-gnumake.xml
-#    http://lists.gnu.org/archive/html/help-make/
-#    http://make.paulandlesley.org/
+#    http://wanderinghorse.net/computing/make/
+#    https://blog.jgc.org/2013/02/updated-list-of-my-gnu-make-articles.html
+#    https://lists.gnu.org/archive/html/help-make/
+#    http://make.mad-scientist.net/
 # Portable shell programming:
 #    https://www.gnu.org/software/autoconf/manual/html_node/Portable-Shell.html
 #    https://www.gnu.org/software/bash/manual/bashref.html
-#    http://www.opengroup.org/onlinepubs/009695399/utilities/xcu_chap02.html
+#    https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html
 # GNU coding standards:
 #    https://www.gnu.org/prep/standards/standards.html
 # GNU Make NEWS:
-#    http://cvs.savannah.gnu.org/viewvc/make/NEWS?root=make&view=markup
-# ---------------------------------------------------------------
+#    https://git.savannah.gnu.org/cgit/make.git/tree/NEWS
 
 # NOTE: $(realpath/abspath) need GNU Make 3.81 or upper
 # NOTE: $(eval) needs GNU Make 3.80 or upper
@@ -43,7 +41,7 @@ endif
 # Arbitrary pattern which we do not expect to occur in real-world path names
 substpat := !@!@
 
-# This is not strictly necessary, but it does signficantly reduce
+# This is not strictly necessary, but it does significantly reduce
 # the number of rules that make has to evaluate otherwise, which may give
 # a performance boost on a slow system.
 .SUFFIXES:
@@ -326,7 +324,7 @@ else
 endif
 
 # NOTE: This can be need if we want to run some internal command which are
-#       missing from GNU Make's internal autodetection list. Like 'move' on
+#       missing from GNU Make's internal auto-detection list. Like 'move' on
 #       non-*nix shells. [vszakats]
 CMDPREF :=
 ifneq ($(HB_SHELL),sh)
@@ -517,13 +515,13 @@ ifeq ($(HB_PLATFORM),)
       endif
    endif
    ifneq ($(HB_PLATFORM),)
-      HB_PLAT_AUTO := (autodetected)
+      HB_PLAT_AUTO := (auto-detected)
    endif
 endif
 
 HB_COMPILER_ORI := $(HB_COMPILER)
 
-# enable CC autodetection in *nix cross builds
+# enable CC auto-detection in *nix cross builds
 HB_CC_DET :=
 ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
    ifeq ($(filter $(HB_HOST_PLAT),win dos os2),)
@@ -983,7 +981,7 @@ ifeq ($(HB_COMPILER),)
    endif
    endif
 
-   # autodetect watcom platform by looking at the header path config
+   # auto-detect watcom platform by looking at the header path config
    ifeq ($(HB_COMPILER),watcom)
       ifneq ($(call find_in_path_prw,os2.h,$(INCLUDE)),)
          HB_PLATFORM := os2
@@ -999,7 +997,7 @@ ifeq ($(HB_COMPILER),)
    endif
 endif
 
-# autodetect CC values for given platform/compiler
+# auto-detect CC values for given platform/compiler
 ifneq ($(HB_CC_DET),)
    ifeq ($(HB_PLATFORM)-$(HB_COMPILER),win-mingw)
 
@@ -1265,7 +1263,7 @@ endif
 ifeq ($(HB_COMPILER_ORI),)
    ifneq ($(HB_COMPILER),)
       HB_COMP_PATH := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
-      HB_COMP_AUTO := (autodetected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),)$(if $(HB_CCPREFIX), [$(HB_CCPREFIX)*],)$(if $(HB_CCSUFFIX), [*$(HB_CCSUFFIX)],))
+      HB_COMP_AUTO := (auto-detected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),)$(if $(HB_CCPREFIX), [$(HB_CCPREFIX)*],)$(if $(HB_CCSUFFIX), [*$(HB_CCSUFFIX)],))
       HB_COMP_VERD := $(if $(HB_COMPILER_VER), (v$(HB_COMPILER_VER)),)
    endif
 endif
@@ -1274,10 +1272,10 @@ export HB_CCPREFIX
 export HB_CCSUFFIX
 
 ifeq ($(HB_PLATFORM),)
-   $(error ! HB_PLATFORM not set, could not autodetect)
+   $(error ! HB_PLATFORM not set, could not auto-detect)
 endif
 ifeq ($(HB_COMPILER),)
-   $(error ! HB_COMPILER not set, could not autodetect)
+   $(error ! HB_COMPILER not set, could not auto-detect)
 endif
 
 export HB_PLATFORM
@@ -1289,7 +1287,7 @@ ifneq ($(HB_COMP_PATH),)
    export HB_COMP_PATH_PUB := $(HB_COMP_PATH)
 endif
 
-# Always autodetect bcc location (hack)
+# Always auto-detect bcc location (hack)
 ifeq ($(HB_COMP_PATH_PUB),)
    ifeq ($(HB_PLATFORM)-$(HB_COMPILER),win-bcc)
       HB_COMP_PATH := $(call find_in_path_raw,bcc32.exe)
@@ -1415,10 +1413,10 @@ ifeq ($(HB_INIT_DONE),)
    ifeq ($(HB_COMPILER),djgpp)
       # NOTE: We do need DJGPP build of GNU Make on Windows
       #       systems. The reason is that this uses special
-      #       trick to pass command lines to other DJGPP tools
-      #       (like gcc) to overcome 126 chars MS-DOS command
+      #       trick to pass command-lines to other DJGPP tools
+      #       (f.e. to gcc) to overcome 126 chars MS-DOS command
       #       line length limitation. IOW: mingw32-make.exe
-      #       wo not work with DJGPP on Windows hosts.
+      #       will not work with DJGPP on Windows hosts.
       #       [vszakats]
       ifeq ($(HB_HOST_PLAT),win)
          ifneq ($(HB_MAKE_PLAT),dos)
@@ -1507,7 +1505,7 @@ ifneq ($(HB_HOST_PLAT)$(HB_HOST_CPU),$(HB_PLATFORM)$(HB_CPU))
             # 'Windows host, Cygwin target'
             ifneq ($(HB_HOST_PLAT)-$(HB_PLATFORM),win-cygwin)
                HB_CROSS_BUILD := yes
-               # Try to autosetup
+               # Try to auto-setup
                ifneq ($(HB_SRC_ROOTPATH),)
                   _HB_ROOT_BIN := $(HB_SRC_ROOTPATH)
                else
@@ -1698,10 +1696,11 @@ ifeq ($(HB_BUILD_PKG),yes)
       endif
       endif
 
-      # HB_TOP              - dir where packages will be created (root of Harbour source tree)
+      # HB_TOP              - dir where release packages will be
+      #                       created (root of Harbour source tree)
       # HB_INSTALL_PKG_ROOT - dir which has to be packed
-      # HB_PKGNAME          - name of the install package
-      # HB_INSTALL_PREFIX   - dir where Harbour dirs will be created
+      # HB_PKGNAME          - name of the release package
+      # HB_INSTALL_PREFIX   - dir where Harbour subdirectories will be created
       #
       #   <HB_TOP><plat/comp  ><HB_BUILD_PKG_PREFIX>
       #   <HB_INSTALL_PKG_ROOT>
@@ -1763,7 +1762,7 @@ else
          else
             HB_INSTALL_PREFIX := /usr/local
          endif
-         # Add postfix for cross builds
+         # Add suffix for cross builds
          ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
             HB_INSTALL_PREFIX := $(HB_INSTALL_PREFIX)/harbour-$(HB_PLATFORM)-$(HB_COMPILER)
          endif

@@ -3,13 +3,13 @@
 # Dave Pearson <davep@davep.org>
 # Harbour RPM spec file
 #
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------
 # HOWTO .rpm docs:
-#    http://fedoraproject.org/wiki/PackageMaintainers/CreatingPackageHowTo
-#    http://www.gurulabs.com/downloads/GURULABS-RPM-LAB/GURULABS-RPM-GUIDE-v1.0.PDF
+#    https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+#    https://www.gurulabs.com/media/files/courseware-samples/GURULABS-RPM-GUIDE-v1.0.PDF
 # ---------------------------------------------------------------
 
 # TOFIX: Contrib packages with dependencies will be packaged

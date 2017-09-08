@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -185,7 +185,7 @@ STATIC PROCEDURE hbnetiocon_waitStream( netiocli, bBlock ) /* in separate thread
       IF ! Empty( netiocli[ _NETIOCLI_pConnection ] )
          IF hb_MilliSeconds() > nLastPing + 5000
             /* Is connection alive? */
-            BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+            BEGIN SEQUENCE WITH __BreakBlock()
                netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_ping" )
             RECOVER
                hbnetiocon_dispevent( netiocli, "Connection lost." )

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -73,20 +73,20 @@ PROCEDURE WinMain( ... )
 
    OTHERWISE
 
-      netiosrv_Main( .T., ... ) /* Interactive */
+      netiosrv_Main( .T., ... )  /* Interactive */
       EXIT
 
    ENDSWITCH
 
    RETURN
 
-PROCEDURE hbnetio_WinServiceEntry( ... )
+STATIC PROCEDURE hbnetio_WinServiceEntry( ... )
 
 #if 0
    LOCAL bSignal := {|| win_serviceGetStatus() != WIN_SERVICE_RUNNING }
 #endif
 
-   netiosrv_Main( .F., ... ) /* Non-interactive */
+   netiosrv_Main( .F., ... )  /* Non-interactive */
 
    win_serviceSetExitCode( 0 )
    win_serviceStop()
