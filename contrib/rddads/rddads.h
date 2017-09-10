@@ -44,6 +44,8 @@
  *
  */
 
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapirdd.h"
 
 #if defined( HB_OS_WIN )
