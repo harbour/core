@@ -351,7 +351,9 @@ typedef struct _CDXTAG
    struct _CDXINDEX * pIndex; /* a parent index info */
    struct _CDXTAG   * pNext;  /* pointer to next tag in index */
 
-   /* CDXSTACK  PageStack[ CDX_STACKSIZE ]; */  /* stack with page path to current key */
+   #if 0
+   CDXSTACK   PageStack[ CDX_STACKSIZE ];  /* stack with page path to current key */
+   #endif
    LPCDXPAGE  RootPage;       /* pointer to root of keys tree in memory */
    LPCDXKEY   CurKey;         /* current value of key expression */
    LPCDXKEY   HotKey;         /* value of hot key expression */

@@ -222,8 +222,10 @@ HB_FUNC_STATIC( msgNull );
 HB_FUNC_STATIC( msgClassH );
 HB_FUNC_STATIC( msgClassName );
 HB_FUNC_STATIC( msgClassSel );
-/* HB_FUNC_STATIC( msgClass ); */
-/* HB_FUNC_STATIC( msgClassParent ); */
+#if 0
+HB_FUNC_STATIC( msgClass );
+HB_FUNC_STATIC( msgClassParent );
+#endif
 
 /* --- */
 
@@ -4969,7 +4971,9 @@ HB_FUNC_STATIC( msgSetData )
 /* No comment :-) */
 HB_FUNC_STATIC( msgVirtual )
 {
-   /* hb_ret(); */ /* NOTE: It's safe to comment this out */
+   #if 0
+   hb_ret(); /* NOTE: It's safe to have this commented out. */
+   #endif
 }
 
 HB_FUNC_STATIC( msgNull )

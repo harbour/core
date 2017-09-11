@@ -119,7 +119,9 @@ double hb_secondsCPU( int n )
          d += tm.tms_stime;
 
       /* In POSIX-1996 the CLK_TCK symbol is mentioned as obsolescent */
-      /* d /= CLK_TCK; */
+      #if 0
+      d /= CLK_TCK;
+      #endif
       d /= ( double ) sysconf( _SC_CLK_TCK );
    }
 #else

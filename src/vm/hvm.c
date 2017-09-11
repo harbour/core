@@ -668,7 +668,9 @@ void hb_vmTerminateThreads( void )
          hb_threadCondWait( &s_vmCond, &s_vmMtx );
 
       ++s_iRunningCount;
-      /* hb_vmThreadRequest &= ~HB_THREQUEST_QUIT; */
+      #if 0
+      hb_vmThreadRequest &= ~HB_THREQUEST_QUIT;
+      #endif
       hb_vmThreadRequest = 0;
 
       HB_VM_UNLOCK();
@@ -5053,7 +5055,9 @@ static const HB_BYTE * hb_vmSwitch( const HB_BYTE * pCode, HB_USHORT casesCnt )
             case HB_P_PUSHSTRSHORT:
                if( HB_IS_STRING( pSwitch ) )
                {
-                  /*fFound = hb_itemStrCmp( pItem1, pItem2, bExact );*/
+                  #if 0
+                  fFound = hb_itemStrCmp( pItem1, pItem2, bExact );
+                  #endif
                   fFound = ( HB_SIZE ) pCode[ 1 ] - 1 == pSwitch->item.asString.length &&
                            memcmp( pSwitch->item.asString.value, &pCode[ 2 ],
                                    pSwitch->item.asString.length ) == 0;
@@ -8546,7 +8550,10 @@ static PHB_ITEM hb_vmMsgRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
       pMsgRef->value.type |= HB_IT_DEFAULT;
       hb_stackPopReturn();
    }
-   return NULL; /*&pMsgIdxRef->value;*/
+   return NULL;
+   #if 0
+   return &pMsgIdxRef->value;
+   #endif
 }
 
 static void hb_vmMsgRefCopy( PHB_ITEM pDest )
@@ -8699,7 +8706,10 @@ static PHB_ITEM hb_vmMsgIdxRefWrite( PHB_ITEM pRefer, PHB_ITEM pSource )
       pMsgIdxRef->value.type |= HB_IT_DEFAULT;
    }
 
-   return NULL; /*&pMsgIdxRef->value;*/
+   return NULL;
+   #if 0
+   return &pMsgIdxRef->value;
+   #endif
 }
 
 static void hb_vmMsgIdxRefCopy( PHB_ITEM pDest )

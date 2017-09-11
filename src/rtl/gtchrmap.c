@@ -325,7 +325,9 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
          }
          else if( n == 1 )
          {
-            /* printf("line: %3d\tfrom=%d, to=%d, op='%c', val=%d, mod=%d\n", line, from, to, op, val, mod); */
+            #if 0
+            printf( "line: %3d\tfrom=%d, to=%d, op='%c', val=%d, mod=%d\n", line, from, to, op, val, mod );
+            #endif
             for( i = from; i <= to; ++i )
             {
                switch( op )

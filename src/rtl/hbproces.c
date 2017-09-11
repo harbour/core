@@ -1078,7 +1078,9 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
       fResult = TerminateProcess( hProc, fGentle ? 0 : 1 ) != 0;
       hb_fsSetIOError( fResult, 0 );
       /* hProc has to be closed by hb_fsProcessValue() */
-      /* CloseHandle( hProc ); */
+      #if 0
+      CloseHandle( hProc );
+      #endif
    }
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );

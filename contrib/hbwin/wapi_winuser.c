@@ -683,12 +683,12 @@ HB_FUNC( WAPI_APPENDMENU )
 #if 0
 HB_FUNC( WAPI_GETMENUITEMINFO )
 {
-   /* GetMenuItemInfo(); */
+   GetMenuItemInfo();
 }
 
 HB_FUNC( WAPI_SETMENUITEMINFO )
 {
-   /* SetMenuItemInfo(); */
+   SetMenuItemInfo();
 }
 #endif
 

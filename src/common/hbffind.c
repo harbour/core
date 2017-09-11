@@ -439,7 +439,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       {
          ffind->bFirst = HB_FALSE;
 
-         /* tzset(); */
+         #if 0
+         tzset();
+         #endif
 
 #if defined( __WATCOMC__ )
          bFound = ( _dos_findfirst( ffind->pszFileMask, ( HB_USHORT ) hb_fsAttrToRaw( ffind->attrmask ), &info->entry ) == 0 );
@@ -756,7 +758,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          if( info->pattern[ 0 ] == '.' )
             ffind->attrmask |= HB_FA_HIDDEN;
 
-         /* tzset(); */
+         #if 0
+         tzset();
+         #endif
 
          info->dir = opendir( dirname );
          hb_strncpy( info->path, dirname, sizeof( info->path ) - 1 );
@@ -854,7 +858,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
    {
       int iTODO; /* TODO: for given platform */
 
-      /* HB_SYMBOL_UNUSED( ffind ); */
+      #if 0
+      HB_SYMBOL_UNUSED( ffind );
+      #endif
 
       HB_SYMBOL_UNUSED( iYear );
       HB_SYMBOL_UNUSED( iMonth );

@@ -604,7 +604,9 @@ HB_FUNC( WAPI_TABCTRL_SETCURFOCUS )
 /* (int)SNDMSG((hwnd), TCM_SETMINTABWIDTH, 0, x) */
 HB_FUNC( WAPI_TABCTRL_SETMINTABWIDTH )
 {
-   /* hbwapi_ret_NI( TabCtrl_SetMinTabWidth( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) ); */
+   #if 0
+   hbwapi_ret_NI( TabCtrl_SetMinTabWidth( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) );
+   #endif
    hbwapi_ret_NI( ( int ) SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_SETMINTABWIDTH, ( WPARAM ) 0, ( LPARAM ) hbwapi_par_INT( 2 ) ) );
 }
 
@@ -612,7 +614,9 @@ HB_FUNC( WAPI_TABCTRL_SETMINTABWIDTH )
 /* (void)SNDMSG((hwnd), TCM_DESELECTALL, fExcludeFocus, 0) */
 HB_FUNC( WAPI_TABCTRL_DESELECTALL )
 {
-   /* TabCtrl_DeselectAll( hbwapi_par_raw_HWND( 1 ), hbwapi_par_UINT( 2 ) ); */
+   #if 0
+   TabCtrl_DeselectAll( hbwapi_par_raw_HWND( 1 ), hbwapi_par_UINT( 2 ) );
+   #endif
    SendMessage( hbwapi_par_raw_HWND( 1 ), TCM_DESELECTALL, ( WPARAM ) hbwapi_par_UINT( 2 ), ( LPARAM ) 0 );
 }
 
@@ -819,7 +823,9 @@ HB_FUNC( WAPI_TREEVIEW_GETINSERTMARKCOLOR )
 /* BOOL TreeView_GetISearchString( HWND hwndTV, LPTSTR lpsz ); */
 HB_FUNC( WAPI_TREEVIEW_GETISEARCHSTRING )
 {
-   /* hbwapi_ret_( TreeView_GetISearchString( hbwapi_par_raw_HWND( 1 ), LPTSTR ) ); */
+   #if 0
+   hbwapi_ret_( TreeView_GetISearchString( hbwapi_par_raw_HWND( 1 ), LPTSTR ) );
+   #endif
 }
 
 /* BOOL TreeView_GetItem( HWND hwndTV, LPTVITEM pitem );

@@ -289,8 +289,6 @@ HB_FUNC( WIN_SYSREFRESH )
             case WM_KEYUP:
                /* Perform any required cleanup. */
                break;
-               /* exit; */
-
 #endif
             default:
                TranslateMessage( &msg );

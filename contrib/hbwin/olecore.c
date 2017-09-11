@@ -1406,7 +1406,9 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
                           *V_CYREF( pVariant ), &dblVal ) != S_OK )
             dblVal = 0;
          hb_itemPutND( pItem, dblVal );
-         /* hb_itemPutNDLen( pItem, dblVal, 0, 4 ); */
+         #if 0
+         hb_itemPutNDLen( pItem, dblVal, 0, 4 );
+         #endif
          break;
       }
 

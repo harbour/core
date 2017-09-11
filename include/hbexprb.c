@@ -546,7 +546,9 @@ static HB_EXPR_FUNC( hb_compExprUseSelf )
          /* Clipper allows such operation and because some valid Clipper
           * code needs it then I disabled error message, [druzus]
           */
-         /* HB_COMP_ERROR_TYPE( pSelf ); */
+         #if 0
+         HB_COMP_ERROR_TYPE( pSelf );
+         #endif
          break;
       case HB_EA_ARRAY_INDEX:
          hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* SELF cannot be used as array index element */

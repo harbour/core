@@ -1941,7 +1941,9 @@ static HB_ERRCODE hb_ntxIndexHeaderRead( LPNTXINDEX pIndex )
 #else
       LPCTXHEADER lpCTX = ( LPCTXHEADER ) pIndex->HeaderBuff;
       HB_ULONG ulVersion, ulNext;
-      /* HB_USHORT usTags = HB_GET_LE_UINT16( lpCTX->ntags ); */
+      #if 0
+      HB_USHORT usTags = HB_GET_LE_UINT16( lpCTX->ntags );
+      #endif
 
       ulVersion = HB_GET_LE_UINT32( lpCTX->version );
       ulNext = HB_GET_LE_UINT32( lpCTX->freepage );
@@ -5178,7 +5180,9 @@ static void hb_ntxSortOut( LPNTXSORTINFO pSort )
       pSort->pSwapPage[ 0 ].ulCurKey = 0;
       pSort->pSwapPage[ 0 ].pKeyPool = pSort->pStartKey;
    }
-   /* printf("pSort->ulPages=%ld, pSort->ulPgKeys=%ld", pSort->ulPages, pSort->ulPgKeys);fflush(stdout); */
+   #if 0
+   printf( "pSort->ulPages=%ld, pSort->ulPgKeys=%ld", pSort->ulPages, pSort->ulPgKeys ); fflush( stdout );
+   #endif
 
    hb_ntxSortOrderPages( pSort );
 

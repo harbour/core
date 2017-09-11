@@ -2382,7 +2382,9 @@ static HB_BOOL hb_nsxTagGetPrevKey( LPTAGINFO pTag, HB_UCHAR * pKeyVal, int iLev
          return HB_TRUE;
       }
    }
-   /* memset( pKeyVal, pTag->TrailChar, pTag->KeyLength ); */
+   #if 0
+   memset( pKeyVal, pTag->TrailChar, pTag->KeyLength );
+   #endif
    return HB_FALSE;
 }
 

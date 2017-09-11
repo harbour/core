@@ -115,8 +115,10 @@ static int s_translateSignal( HB_UINT sig, HB_UINT subsig );
 
 #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 
-/* TODO: Register the old signal action to allow graceful fallback
-         static struct sigaction s_aOldAction[ SIGUSR2 + 1 ]; */
+/* TODO: Register the old signal action to allow graceful fallback */
+#if 0
+static struct sigaction s_aOldAction[ SIGUSR2 + 1 ];
+#endif
 
 /* Implementation of the signal translation table */
 static S_TUPLE s_sigTable[] =

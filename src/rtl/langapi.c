@@ -196,7 +196,9 @@ static HB_LANG s_lang_en =
 HB_LANG_ANNOUNCE( EN )
 
 /* Always link in the default language */
-/* HB_LANG_REQUEST( HB_LANG_DEFAULT ); */
+#if 0
+HB_LANG_REQUEST( HB_LANG_DEFAULT );
+#endif
 
 /* NOTE: This is the maximum number of registered languages, later this can be
          made dynamic. */

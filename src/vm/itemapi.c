@@ -2509,7 +2509,9 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
          double dInt, dFract, dDig, doBase = 10.0;
          int iPrec, iFirst = -1;
 
-         /* dNumber = hb_numRound( dNumber, iDec ); */
+         #if 0
+         dNumber = hb_numRound( dNumber, iDec );
+         #endif
 
 #ifdef HB_NUM_PRECISION
          iPrec = HB_NUM_PRECISION;

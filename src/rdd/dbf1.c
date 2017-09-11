@@ -612,7 +612,9 @@ static HB_BOOL hb_dbfTriggerDo( DBFAREAP pArea, int iEvent,
          }
          else
          {
-            /* SIx3 makes: hb_vmPushInteger( 0 ); */
+            #if 0
+            hb_vmPushInteger( 0 );  /* SIx3 makes this */
+            #endif
             hb_vmProc( 3 );
          }
          fResult = hb_parl( -1 );
@@ -3433,7 +3435,9 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
             pField->uiLen = 8;
             pThisField->bLen = ( HB_BYTE ) pField->uiLen;
             pThisField->bFieldFlags |= HB_FF_BINARY;
-            /* HB_PUT_LE_UINT64( pThisField->bReserved2, 0 ); */
+            #if 0
+            HB_PUT_LE_UINT64( pThisField->bReserved2, 0 );
+            #endif
             pArea->uiRecordLen += pField->uiLen;
             pArea->fModStamp = HB_TRUE;
             break;
@@ -4431,7 +4435,9 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
    {
       pField = ( LPDBFFIELD ) ( pBuffer + uiCount * sizeof( DBFFIELD ) );
       pField->bName[ 10 ] = '\0';
-      /* hb_strupp( ( char * ) pField->bName ); */
+      #if 0
+      hb_strupp( ( char * ) pField->bName );
+      #endif
       dbFieldInfo.atomName = ( const char * ) pField->bName;
       dbFieldInfo.uiLen = pField->bLen;
       dbFieldInfo.uiDec = 0;
@@ -4557,7 +4563,9 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
             if( pArea->bTableType == DB_DBF_VFP )
             {
                dbFieldInfo.uiType = HB_FT_VARLENGTH;
-               /* dbFieldInfo.uiFlags &= ~HB_FF_BINARY; */
+               #if 0
+               dbFieldInfo.uiFlags &= ~HB_FF_BINARY;
+               #endif
                hb_dbfAllocNullFlag( pArea, uiCount, HB_TRUE );
             }
             else
@@ -5718,7 +5726,9 @@ static HB_ERRCODE hb_dbfForceRel( DBFAREAP pArea )
 
       /* update buffers */
       /* commented out - see comment above in CHILDSYNC() method, Druzus */
-      /* SELF_GOCOLD( &pArea->area ); */
+      #if 0
+      SELF_GOCOLD( &pArea->area );
+      #endif
 
       return SELF_RELEVAL( &pArea->area, lpdbPendingRel );
    }

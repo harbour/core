@@ -151,7 +151,9 @@ static void memfsExit( void * cargo )
 
 static void memfsInit( void )
 {
-   /* HB_CRITICAL_INIT( s_mtx ); */
+   #if 0
+   HB_CRITICAL_INIT( s_mtx );
+   #endif
    s_error = 0;
    s_fs.ulInodeCount = 0;
    s_fs.ulInodeAlloc = HB_MEMFS_INITSIZE;

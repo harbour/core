@@ -1617,7 +1617,9 @@ HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine )
 
 const char * hb_dbgGetModuleName( void * handle, const char * szName )
 {
-   /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
+   #if 0
+   HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle;
+   #endif
    HB_SYMBOL_UNUSED( handle );
 
    if( szName )

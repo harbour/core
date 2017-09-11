@@ -128,7 +128,7 @@ static int hb_jpeg_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int *
          if( nPos >= nBufferSize )
             return _JPEG_RET_OVERRUN;
 
-         bpc = *( buffer + nPos ); /* nPos += 1; */
+         bpc = *( buffer + nPos );
 
          break;
       }

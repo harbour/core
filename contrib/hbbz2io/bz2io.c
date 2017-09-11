@@ -586,7 +586,9 @@ static void s_fileFlush( PHB_FILE pFile, HB_BOOL fDirty )
 {
    if( pFile->iMode != FO_READ && pFile->fInited )
    {
-      /* s_bz2_flush( pFile, HB_FALSE ); */
+      #if 0
+      s_bz2_flush( pFile, HB_FALSE );
+      #endif
       _PHB_FILE->pFuncs->Flush( _PHB_FILE, fDirty );
    }
    else

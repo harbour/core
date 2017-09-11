@@ -952,7 +952,9 @@ static void hb_mixTagSkip( PMIXTAG pTag, HB_LONG lSkip )
    pNode = pTag->CurNode;
    uiPos = pTag->CurPos;
 
-/*   printf("hb_mixTagSkip: CurNode=%p, CurPos=%d lSkip=%d\n", pNode, uiPos, lSkip ); */
+   #if 0
+   printf( "hb_mixTagSkip: CurNode=%p, CurPos=%d lSkip=%d\n", pNode, uiPos, lSkip );
+   #endif
 
    if( lSkip > 0 )
    {

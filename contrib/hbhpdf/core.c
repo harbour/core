@@ -1398,7 +1398,7 @@ HB_FUNC( HPDF_VERSION_TEXT )
 
 /* --- New Functions in LibHaru 2.2.0 --- */
 
-/* HPDF_EXPORT(HPDF_STATUS) HPDF_GetContents (HPDF_Doc pdf, HPDF_BYTE *buf, HPDF_UINT32 *size); */
+/* HPDF_GetContents( hDoc, @cBuffer ) --> nStatus */
 HB_FUNC( HPDF_GETCONTENTS )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -1420,7 +1420,7 @@ HB_FUNC( HPDF_GETCONTENTS )
 #endif
 }
 
-/* HPDF_EXPORT(HPDF_STATUS) HPDF_CheckError (HPDF_Error error); */
+/* HPDF_CheckError( pError ) --> nStatus */
 HB_FUNC( HPDF_CHECKERROR )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -1430,7 +1430,7 @@ HB_FUNC( HPDF_CHECKERROR )
 #endif
 }
 
-/* HPDF_EXPORT(HPDF_STATUS) HPDF_Page_SetZoom (HPDF_Page page, HPDF_REAL zoom); */
+/* HPDF_Page_SetZoom( hPage, nZoom ) --> nStatus */
 HB_FUNC( HPDF_PAGE_SETZOOM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -1440,12 +1440,7 @@ HB_FUNC( HPDF_PAGE_SETZOOM )
 #endif
 }
 
-/* HPDF_EXPORT(HPDF_Dict)
-   HPDF_Page_Create3DView (HPDF_Page       page,
-                        HPDF_U3D        u3d,
-                        HPDF_Annotation   annot3d,
-                        const char *name);
- */
+/* HPDF_Page_Create3DView( hPage, pU3d, pAnnot3d, cName ) --> pDict */
 HB_FUNC( HPDF_PAGE_CREATE3DVIEW )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -1455,7 +1450,7 @@ HB_FUNC( HPDF_PAGE_CREATE3DVIEW )
 #endif
 }
 
-/* HPDF_EXPORT(HPDF_EmbeddedFile) HPDF_AttachFile (HPDF_Doc pdf, const char *file); */
+/* HPDF_AttachFile( hDoc, cFile ) --> pEmbeddedFile */
 HB_FUNC( HPDF_ATTACHFILE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -1465,13 +1460,7 @@ HB_FUNC( HPDF_ATTACHFILE )
 #endif
 }
 
-/* HPDF_EXPORT(HPDF_OutputIntent)
-   HPDF_ICC_LoadIccFromMem (HPDF_Doc   pdf,
-                        HPDF_MMgr   mmgr,
-                        HPDF_Stream iccdata,
-                        HPDF_Xref   xref,
-                        int         numcomponent);
- */
+/* HPDF_ICC_LoadIccFromMem( hDoc, pMMgr, pICCDataStream, pXref, nNumComponent ) --> pOutputIntent */
 HB_FUNC( HPDF_ICC_LOADICCFROMMEM )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -1481,7 +1470,7 @@ HB_FUNC( HPDF_ICC_LOADICCFROMMEM )
 #endif
 }
 
-/* HPDF_EXPORT(HPDF_OutputIntent) HPDF_LoadIccProfileFromFile (HPDF_Doc  pdf, const char* icc_file_name, int  numcomponent); */
+/* HPDF_LoadIccProfileFromFile( hDoc, cICCFileName, nNumComponent ) --> pOutputIntent */
 HB_FUNC( HPDF_LOADICCPROFILEFROMFILE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -1491,7 +1480,7 @@ HB_FUNC( HPDF_LOADICCPROFILEFROMFILE )
 #endif
 }
 
-/* HPDF_EXPORT(HPDF_STATUS) HPDF_UseUTFEncodings (HPDF_Doc pdf); */
+/* HPDF_UseUTFEncodings( hDoc ) --> nStatus */
 HB_FUNC( HPDF_USEUTFENCODINGS )
 {
 #if HB_HPDF_VERS( 2, 3, 0 )

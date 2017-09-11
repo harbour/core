@@ -1160,7 +1160,9 @@ static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
    }
 #ifdef DEBUG_CODE
    HB_TRACE( HB_TR_ALWAYS, ( "mask:%d", iMaskMin ) );
-/* iMaskMin = 0; */
+   #if 0
+   iMaskMin = 0;
+   #endif
    HB_TRACE( HB_TR_ALWAYS, ( "mask applied:%d", iMaskMin ) );
 #endif
    _qr_mask_pattern( pBits, iVersion, iMaskMin );

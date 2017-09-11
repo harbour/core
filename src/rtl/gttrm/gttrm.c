@@ -466,13 +466,19 @@ static void sig_handler( int iSigNo )
          s_WinSizeChangeFlag = HB_TRUE;
          break;
       case SIGINT:
-         /* s_InetrruptFlag = HB_TRUE; */
+         #if 0
+         s_InetrruptFlag = HB_TRUE;
+         #endif
          break;
       case SIGQUIT:
-         /* s_BreakFlag = HB_TRUE; */
+         #if 0
+         s_BreakFlag = HB_TRUE;
+         #endif
          break;
       case SIGTSTP:
-         /* s_DebugFlag = HB_TRUE; */
+         #if 0
+         s_DebugFlag = HB_TRUE;
+         #endif
          break;
       case SIGTTOU:
          s_fRestTTY = HB_FALSE;
@@ -909,7 +915,9 @@ static void set_tmevt( PHB_GTTRM pTerm, unsigned char * cMBuf, mouseEvent * mEvt
          break;
    }
    chk_mevtdblck( pTerm );
-   /* printf( "\r\nmouse event: %02x, %02x, %02x\r\n", cMBuf[ 0 ], cMBuf[ 1 ], cMBuf[ 2 ] ); */
+   #if 0
+   printf( "\r\nmouse event: %02x, %02x, %02x\r\n", cMBuf[ 0 ], cMBuf[ 1 ], cMBuf[ 2 ] );
+   #endif
 }
 
 #if defined( HB_HAS_GPM )
@@ -3362,7 +3370,9 @@ static void hb_gt_trm_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
       tcgetattr( pTerm->hFilenoStdin, &pTerm->saved_TIO );
       memcpy( &pTerm->curr_TIO, &pTerm->saved_TIO, sizeof( struct termios ) );
-      /* atexit( restore_input_mode ); */
+      #if 0
+      atexit( restore_input_mode );
+      #endif
       pTerm->curr_TIO.c_lflag &= ~( ECHO | ECHONL | ICANON | ISIG | IEXTEN );
       pTerm->curr_TIO.c_lflag |= NOFLSH;
       pTerm->curr_TIO.c_cflag &= ~( CSIZE | PARENB );
@@ -3377,8 +3387,10 @@ static void hb_gt_trm_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
          *buntu) in which select() unconditionally accepts stdin for
          reading if c_cc[ VMIN ] = 0 [druzus] */
       pTerm->curr_TIO.c_cc[ VMIN ] = 1;
-      /* pTerm->curr_TIO.c_cc[ VMIN ] = 0; */
-      /* pTerm->curr_TIO.c_cc[ VTIME ] = 0; */
+      #if 0
+      pTerm->curr_TIO.c_cc[ VMIN ] = 0;
+      pTerm->curr_TIO.c_cc[ VTIME ] = 0;
+      #endif
       tcsetattr( pTerm->hFilenoStdin, TCSAFLUSH, &pTerm->curr_TIO );
       act.sa_handler = SIG_DFL;
 

@@ -218,7 +218,9 @@ HB_EXTERN_BEGIN
     * anyhow I'd prefer to not make such strict binding to OS values because
     * it may cause troubles when code will be ported to other platforms.
     */
-   /* typedef TID                HB_THREAD_NO; */
+   #if 0
+   typedef TID                HB_THREAD_NO;
+   #endif
    typedef HB_MAXINT          HB_THREAD_NO;
    typedef TID                HB_THREAD_ID;
    typedef TID                HB_THREAD_HANDLE;

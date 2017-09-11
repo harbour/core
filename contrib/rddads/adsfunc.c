@@ -327,7 +327,7 @@ HB_FUNC( ADSGETCONNECTIONTYPE )
          pusConnectType = AE_INVALID_CONNECTION_HANDLE;  /* It may have set an error value, or leave as 0. */
    }
    else
-      pusConnectType = AE_NO_CONNECTION;  /* AE_INVALID_CONNECTION_HANDLE; */
+      pusConnectType = AE_NO_CONNECTION;  /* AE_INVALID_CONNECTION_HANDLE */
 
    hb_retni( pusConnectType );
 }

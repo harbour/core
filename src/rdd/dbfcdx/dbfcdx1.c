@@ -1173,8 +1173,9 @@ static void hb_cdxIndexCheckVersion( LPCDXINDEX pIndex )
       pIndex->freePage = ulFree;
       hb_cdxIndexDiscardBuffers( pIndex );
    }
-   /* TODO: !!! ## remove it it's for test only */
-   /* hb_cdxIndexDiscardBuffers( pIndex ); */
+   #if 0
+   hb_cdxIndexDiscardBuffers( pIndex );  /* TODO: !!! ## remove it it's for test only */
+   #endif
 }
 
 /*
@@ -9820,7 +9821,9 @@ static void hb_cdxTagDoIndex( LPCDXTAG pTag, HB_BOOL fReindex )
 #if ! defined( HB_SIXCDX )
       if( pEvalItem && lStep )
       {
-         /* pArea->dbfarea.area.fEof = HB_TRUE; */
+         #if 0
+         pArea->dbfarea.area.fEof = HB_TRUE;
+         #endif
          hb_cdxEvalCond( pArea, pEvalItem, HB_FALSE );
       }
 #endif

@@ -331,7 +331,9 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
       {
          if( ( h = hb_LZSSxRead( pCompr ) ) == -1 )
          {
-            /* fResult = HB_FALSE; */
+            #if 0
+            fResult = HB_FALSE;
+            #endif
             break;
          }
          offset = LZSS_OFFSET( c, h );   /* get offset to ring buffer */

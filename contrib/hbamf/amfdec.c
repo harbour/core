@@ -468,7 +468,9 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
 
    return decode_dynamic_array_AMF3( context, pItem, array_len, mixed );
 
-   /* return HB_TRUE; */
+   #if 0
+   return HB_TRUE;
+   #endif
 }
 
 /* Decode a date. */
@@ -583,7 +585,9 @@ static PHB_ITEM class_def_from_classname( /* amfContext * context, */ PHB_ITEM p
 
    hb_strfree( pszBuffer );
 
-   /* uiClass = hb_objGetClass( pItem ); */
+   #if 0
+   uiClass = hb_objGetClass( pItem );
+   #endif
    if( ! uiClass )
       return NULL;
 
@@ -674,7 +678,7 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
 
    if( pMappedClassDef )
    {
-      pKey = hb_itemPutC( NULL, "class_def" ); /* hb_itemNew( NULL ); */
+      pKey = hb_itemPutC( NULL, "class_def" );  /* hb_itemNew( NULL ); */
 
       if( ! hb_hashAdd( pClass, pKey, pMappedClassDef ) )
       {
@@ -1073,7 +1077,9 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
    }
    else if( obj_type == 1 )
    {
-      /* result = HB_TRUE; */
+      #if 0
+      result = HB_TRUE;
+      #endif
       result = amf3_decode_externalizable( context, pItem /*, pMappedClassDef */ );
    }
    else if( obj_type == 2 )

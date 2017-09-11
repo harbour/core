@@ -937,7 +937,9 @@ static HB_ERRCODE hb_waOrderInfo( AREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO 
    /* CA-Cl*pper does not generate RT error when default ORDERINFO() method
     * is called
     */
-   /* hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME ); */
+   #if 0
+   hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
+   #endif
 
    return HB_FAILURE;
 }
@@ -1540,7 +1542,9 @@ static HB_ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
                    * non numerical record IDs then this method should be overloaded
                    * to use SELF_GOTOID(), [druzus]
                    */
-                  /* errCode = SELF_GOTOID( pArea, pResult ); */
+                  #if 0
+                  errCode = SELF_GOTOID( pArea, pResult );
+                  #endif
                   errCode = SELF_GOTO( pArea, hb_itemGetNL( pResult ) );
                   if( errCode == HB_SUCCESS )
                   {

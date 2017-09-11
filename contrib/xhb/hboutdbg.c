@@ -185,7 +185,9 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
          if( iPid == s_iXtermPid || iPid == -1 )
          {
             s_iXtermPid = 0;
-            /* close( s_iDebugFd ); */
+            #if 0
+            close( s_iDebugFd );
+            #endif
             s_iDebugFd = 0;
             return;
          }

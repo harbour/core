@@ -239,13 +239,17 @@ static HB_UINT SizeOfCStructure( PHB_ITEM aDef, HB_UINT uiAlign )
 
       uiSize += uiMemberSize;
 
-      /* printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", nIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize ); */
+      #if 0
+      printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", nIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize );
+      #endif
    }
 
    if( ( cShift = ( HB_BYTE ) ( uiSize % uiAlign ) ) > 0 )
       uiSize += uiAlign - cShift;
 
-   /* printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", nIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize ); */
+   #if 0
+   printf( "#%" HB_PFS "u Size: %u Align: %u Pad: %u Shift %i Size: %u\n", nIndex, uiMemberSize, uiAlign, uiPad, cShift, uiSize );
+   #endif
 
    return uiSize;
 }
@@ -282,13 +286,17 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
 
    *puiSize = SizeOfCStructure( aDef, uiAlign );
 
-   /* printf( "Size: %i\n", *puiSize ); */
+   #if 0
+   printf( "Size: %i\n", *puiSize );
+   #endif
 
    Buffer = ( HB_BYTE * ) hb_xgrab( *puiSize + 1 );
 
    for( nIndex = 0; nIndex < nLen; nIndex++ )
    {
-      /* printf( "#: %i\n", nIndex ); */
+      #if 0
+      printf( "#: %i\n", nIndex );
+      #endif
 
       switch( ( pBaseDef->pItems + nIndex )->item.asInteger.value )
       {
@@ -474,7 +482,9 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
             uiOffset += uiPad - cShift;
       }
 
-      /* printf( "* Size: %i Offset: %i\n", uiMemberSize, uiOffset ); */
+      #if 0
+      printf( "* Size: %i Offset: %i\n", uiMemberSize, uiOffset );
+      #endif
 
       switch( ( pBaseDef->pItems + nIndex )->item.asInteger.value )
       {
@@ -909,7 +919,9 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
                hb_errRT_BASE( EG_ARG, 2023, NULL, "ArrayToStructure", 3, hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
       }
 
-      /* printf( "Wrote %i bytes at Offset %i\n", uiMemberSize, uiOffset ); */
+      #if 0
+      printf( "Wrote %i bytes at Offset %i\n", uiMemberSize, uiOffset );
+      #endif
 
       uiOffset += uiMemberSize;
    }
@@ -954,9 +966,13 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
 #endif
    PHB_BASEARRAY pBaseVar;
 
-   /* TraceLog( NULL, "StructureToArray(%p, %p, %u, %i) ->%u\n", ( const void * ) Buffer, ( void * ) aDef, uiAlign, bAdoptNested, nLen ); */
+   #if 0
+   TraceLog( NULL, "StructureToArray(%p, %p, %u, %i) ->%u\n", ( const void * ) Buffer, ( void * ) aDef, uiAlign, bAdoptNested, nLen );
+   #endif
 
-   /* hb_arrayNew( pRet, nLen ); */
+   #if 0
+   hb_arrayNew( pRet, nLen );
+   #endif
    pBaseVar = pRet->item.asArray.value;
 
    uiOffset = 0;
@@ -1063,11 +1079,15 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
          if( ( cShift = ( HB_BYTE ) ( uiOffset % uiPad ) ) > 0 )
             uiOffset += uiPad - cShift;
 
-         /* TraceLog( NULL, "* Size: %i Offset: %i Pad: %i\n", uiMemberSize, uiOffset, uiPad ); */
+         #if 0
+         TraceLog( NULL, "* Size: %i Offset: %i Pad: %i\n", uiMemberSize, uiOffset, uiPad );
+         #endif
       }
       else
       {
-         /* TraceLog( NULL, "* Size: %i Offset: %i\n", uiMemberSize, uiOffset ); */
+         #if 0
+         TraceLog( NULL, "* Size: %i Offset: %i\n", uiMemberSize, uiOffset );
+         #endif
       }
 
       if( ( uiOffset + uiMemberSize ) > nBufferLen )
@@ -1086,16 +1106,22 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
          case CTYPE_CHAR_PTR:  /* char * */
             if( HB_IS_STRING( pBaseVar->pItems + nIndex ) && ( pBaseVar->pItems + nIndex )->item.asString.value == *( ( char ** ) ( Buffer + uiOffset ) ) )
             {
-               /* TraceLog( NULL, "IDENTICAL: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "IDENTICAL: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
             }
             else if( ! bAdoptNested )
             {
-               /* TraceLog( NULL, "Static: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "Static: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
                hb_itemPutCConst( pBaseVar->pItems + nIndex, *( ( char ** ) ( Buffer + uiOffset ) ) );
             }
             else
             {
-               /* TraceLog( NULL, "Adopt: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "Adopt: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
                hb_itemPutC( pBaseVar->pItems + nIndex, *( ( char ** ) ( Buffer + uiOffset ) ) );
             }
             break;
@@ -1103,16 +1129,22 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
          case CTYPE_UNSIGNED_CHAR_PTR:  /* unsigned char * */
             if( HB_IS_STRING( pBaseVar->pItems + nIndex ) && ( pBaseVar->pItems + nIndex )->item.asString.value == *( ( char ** ) ( Buffer + uiOffset ) ) )
             {
-               /* TraceLog( NULL, "IDENTICAL: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "IDENTICAL: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
             }
             else if( ! bAdoptNested )
             {
-               /* TraceLog( NULL, "Static: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "Static: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
                hb_itemPutCConst( pBaseVar->pItems + nIndex, *( ( char ** ) ( Buffer + uiOffset ) ) );
             }
             else
             {
-               /* TraceLog( NULL, "Adopt: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) ); */
+               #if 0
+               TraceLog( NULL, "Adopt: %s\n", *( ( char ** ) ( Buffer + uiOffset ) ) );
+               #endif
                hb_itemPutC( pBaseVar->pItems + nIndex, *( ( char ** ) ( Buffer + uiOffset ) ) );
             }
             break;
@@ -1192,11 +1224,15 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
             hb_objSendMsg( pStructure, "SizeOf", 0 );
             uiNestedSize = ( HB_UINT ) hb_parns( -1 );
 
-            /* TraceLog( NULL, "* NestedSize: %i Offset: %i\n", uiNestedSize, uiOffset ); */
+            #if 0
+            TraceLog( NULL, "* NestedSize: %i Offset: %i\n", uiNestedSize, uiOffset );
+            #endif
 
             if( ( pBaseDef->pItems + nIndex )->item.asInteger.value > CTYPE_STRUCTURE_PTR )
             {
-               /* printf( "Offset %i Pointer: %p\n", uiOffset, *( char ** ) ( (long ** )( Buffer + uiOffset ) ) ); */
+               #if 0
+               printf( "Offset %i Pointer: %p\n", uiOffset, *( char ** ) ( (long ** )( Buffer + uiOffset ) ) );
+               #endif
 
                if( *( char ** ) ( ( long ** ) ( Buffer + uiOffset ) ) )
                {
@@ -1227,13 +1263,17 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
                Adopt.type = HB_IT_LOGICAL;
                Adopt.item.asLogical.value = bAdoptNested;
 
-               /* TraceLog( NULL, "Before Devalue\n" ); */
+               #if 0
+               TraceLog( NULL, "Before Devalue\n" );
+               #endif
 
                hb_itemPutCRawStatic( pInternalBuffer, ( char * ) ( HB_BYTE * ) ( Buffer + uiOffset ), uiNestedSize );
 
                hb_objSendMsg( pStructure, "DEVALUE", 1, &Adopt );
 
-               /* TraceLog( NULL, "After Devalue\n" ); */
+               #if 0
+               TraceLog( NULL, "After Devalue\n" );
+               #endif
             }
 
             hb_itemMove( pBaseVar->pItems + nIndex, pStructure );
@@ -1244,7 +1284,9 @@ static PHB_ITEM StructureToArray( HB_BYTE * Buffer, HB_SIZE nBufferLen, PHB_ITEM
 
       uiOffset += uiMemberSize;
 
-      /* TraceLog( NULL, "AFTER Size: %i Offset: %i\n", uiMemberSize, uiOffset ); */
+      #if 0
+      TraceLog( NULL, "AFTER Size: %i Offset: %i\n", uiMemberSize, uiOffset );
+      #endif
    }
 
    return pRet;

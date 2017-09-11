@@ -456,7 +456,9 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
 
    if( HB_TOUPPER( pVarType->cVarType ) == 'S' )
    {
-      /* printf( "\nVariable %s is of Class: %s\n", szVarName, pVarType->szFromClass ); */
+      #if 0
+      printf( "\nVariable %s is of Class: %s\n", szVarName, pVarType->szFromClass );
+      #endif
       pVar->pClass = hb_compClassFind( HB_COMP_PARAM, pVarType->szFromClass );
       if( ! pVar->pClass )
       {
@@ -1065,7 +1067,9 @@ PHB_HCLASS hb_compClassAdd( HB_COMP_DECL, const char * szClassName, const char *
    PHB_HCLASS pClass;
    PHB_HDECLARED pDeclared;
 
-   /*printf( "Declaring Class: %s\n", szClassName );*/
+   #if 0
+   printf( "Declaring Class: %s\n", szClassName );
+   #endif
 
    if( HB_COMP_PARAM->iWarnings < 3 )
       return NULL;
@@ -1118,7 +1122,9 @@ PHB_HDECLARED hb_compMethodAdd( HB_COMP_DECL, PHB_HCLASS pClass, const char * sz
 {
    PHB_HDECLARED pMethod;
 
-   /*printf( "\nDeclaring Method: %s of Class: %s Pointer: %li\n", szMethodName, pClass->szName, pClass );*/
+   #if 0
+   printf( "\nDeclaring Method: %s of Class: %s Pointer: %li\n", szMethodName, pClass->szName, pClass );
+   #endif
 
    if( HB_COMP_PARAM->iWarnings < 3 )
       return NULL;
@@ -1184,7 +1190,9 @@ PHB_HDECLARED hb_compDeclaredAdd( HB_COMP_DECL, const char * szDeclaredName )
    if( HB_COMP_PARAM->iWarnings < 3 )
       return NULL;
 
-   /*printf( "\nDeclaring Function: %s\n", szDeclaredName, NULL );*/
+   #if 0
+   printf( "\nDeclaring Function: %s\n", szDeclaredName, NULL );
+   #endif
 
    if( ( pDeclared = hb_compDeclaredFind( HB_COMP_PARAM, szDeclaredName ) ) != NULL )
    {
@@ -1262,7 +1270,9 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VART
    }
    else /* Declared Method Parameter */
    {
-      /* printf( "\nAdding parameter: %s Type: %c In Method: %s Class: %s FROM CLASS: %s\n", szVarName, pVarType->cVarType, HB_COMP_PARAM->pLastMethod->szName, HB_COMP_PARAM->pLastClass->szName, pVarType->szFromClass ); */
+      #if 0
+      printf( "\nAdding parameter: %s Type: %c In Method: %s Class: %s FROM CLASS: %s\n", szVarName, pVarType->cVarType, HB_COMP_PARAM->pLastMethod->szName, HB_COMP_PARAM->pLastClass->szName, pVarType->szFromClass );
+      #endif
 
       HB_COMP_PARAM->pLastMethod->iParamCount++;
 
@@ -1283,7 +1293,9 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VART
       {
          HB_COMP_PARAM->pLastMethod->pParamClasses[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = hb_compClassFind( HB_COMP_PARAM, pVarType->szFromClass );
 
-         /* printf( "\nParameter: %s FROM CLASS: %s\n", szVarName, HB_COMP_PARAM->pLastMethod->pParamClasses[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ]->szName ); */
+         #if 0
+         printf( "\nParameter: %s FROM CLASS: %s\n", szVarName, HB_COMP_PARAM->pLastMethod->pParamClasses[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ]->szName );
+         #endif
       }
    }
 }
@@ -1689,12 +1701,16 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PHB_HFUNC pFunc )
          }
          else /* Check Global Statics. */
          {
-            /* PHB_HVAR pVar = pFunc->pStatics; */
+            #if 0
+            PHB_HVAR pVar = pFunc->pStatics;
+            #endif
             PHB_HVAR pVar = HB_COMP_PARAM->functions.pFirst->pStatics;
 
             while( pVar )
             {
-               /*printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );*/
+               #if 0
+               printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );
+               #endif
 
                if( ! ( pVar->iUsed & HB_VU_USED ) && ( pVar->iUsed & HB_VU_INITIALIZED ) )
                   hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAL_NOT_USED, pVar->szName, NULL );
@@ -3389,7 +3405,9 @@ void hb_compStaticDefStart( HB_COMP_DECL )
       {
          /* uncomment this if you want to always set main module name
             not the one where first static variable was declared */
-         /* HB_COMP_PARAM->currModule = HB_COMP_PARAM->szFile; */
+         #if 0
+         HB_COMP_PARAM->currModule = HB_COMP_PARAM->szFile;
+         #endif
          hb_compGenModuleName( HB_COMP_PARAM, HB_COMP_PARAM->pInitFunc->szName );
       }
    }

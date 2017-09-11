@@ -2400,7 +2400,9 @@ static HB_ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, HB_BYTE ** pbMemoBuf, HB_B
             errCode = EDBF_CORRUPT;
          break;
       default:
-         /* fprintf( stderr, "Unknown FLEX array item: 0x%x = %d\n", usType, usType ); fflush( stderr ); */
+         #if 0
+         fprintf( stderr, "Unknown FLEX array item: 0x%x = %d\n", usType, usType ); fflush( stderr );
+         #endif
          errCode = EDBF_CORRUPT;
          hb_itemClear( pItem );
          break;

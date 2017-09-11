@@ -147,22 +147,30 @@ static void sig_handler( int iSigNo )
 #endif
 #ifdef SIGWINCH
       case SIGWINCH:
-         /* s_WinSizeChangeFlag = HB_TRUE; */
+         #if 0
+         s_WinSizeChangeFlag = HB_TRUE;
+         #endif
          break;
 #endif
 #ifdef SIGINT
       case SIGINT:
-         /* s_InetrruptFlag = HB_TRUE; */
+         #if 0
+         s_InetrruptFlag = HB_TRUE;
+         #endif
          break;
 #endif
 #ifdef SIGQUIT
       case SIGQUIT:
-         /* s_BreakFlag = HB_TRUE; */
+         #if 0
+         s_BreakFlag = HB_TRUE;
+         #endif
          break;
 #endif
 #ifdef SIGTSTP
       case SIGTSTP:
-         /* s_DebugFlag = HB_TRUE; */
+         #if 0
+         s_DebugFlag = HB_TRUE;
+         #endif
          break;
 #endif
 #ifdef SIGTTOU
@@ -495,7 +503,9 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
       tcgetattr( hFilenoStdin, &s_saved_TIO );
       memcpy( &s_curr_TIO, &s_saved_TIO, sizeof( struct termios ) );
-      /* atexit( restore_input_mode ); */
+      #if 0
+      atexit( restore_input_mode );
+      #endif
       s_curr_TIO.c_lflag &= ~( ICANON | ECHO );
       s_curr_TIO.c_iflag &= ~ICRNL;
 #if 0

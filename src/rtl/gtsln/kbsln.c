@@ -198,7 +198,9 @@ static void hb_sln_Init_KeyTranslations( void )
    {
       for( ch = AltChars[ i ][ 0 ]; ch <= AltChars[ i ][ 1 ]; ch++ )
       {
-         /* fprintf( stderr, "%d %c\n", i, ch ); */
+         #if 0
+         fprintf( stderr, "%d %c\n", i, ch );
+         #endif
          keyname[ 1 ] = ch;
 
          /* QUESTION: why Slang reports error for defining Alt+O ???.
@@ -214,13 +216,17 @@ static void hb_sln_Init_KeyTranslations( void )
       keyseq = SLtt_tgetstr( ( char * ) "Km" );
       if( ( keyseq != NULL ) && ( keyseq[ 0 ] != 0 ) )
       {
-         /* fprintf( stderr, "%s\r\n", keyseq ); */
+         #if 0
+         fprintf( stderr, "%s\r\n", keyseq );
+         #endif
          SLkp_define_keysym( keyseq, SL_KEY_MOU );
       }
    }
 
    /* five on numeric console */
-   /* SLkp_define_keysym( "^[[G", SL_KEY_NUM_5 ); */
+   #if 0
+   SLkp_define_keysym( "^[[G", SL_KEY_NUM_5 );
+   #endif
 }
 
 /* *********************************************************************** */
@@ -264,7 +270,9 @@ int hb_sln_Init_Terminal( int phase )
          newTTY.c_cc[ VSTART ] = 255;  /* disable ^Q start/stop processing */
          newTTY.c_cc[ VSUSP ]  = 255;  /* disable ^Z suspend processing */
          /* already done in Slang library */
-         /* newTTY.c_cc[ VDSUSP ] = 255; */  /* disable ^Y delayed suspend processing */
+         #if 0
+         newTTY.c_cc[ VDSUSP ] = 255;  /* disable ^Y delayed suspend processing */
+         #endif
 
          /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
             Ubuntu) in which select() unconditionally accepts stdin for
@@ -316,7 +324,9 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
 #endif
 
       /* TODO: we need here some kind of screen redrawing */
-      /*SLsmg_refresh();*/
+      #if 0
+      SLsmg_refresh();
+      #endif
       HB_GTSELF_RESIZE( pGT, SLtt_Screen_Rows, SLtt_Screen_Cols );
       return HB_K_RESIZE;
    }

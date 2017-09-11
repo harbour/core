@@ -69,7 +69,7 @@ static void STAItm( PHB_ITEM pItmPar )
          cRes[ i++ ] = '\'';
       cRes[ i++ ] = *c++;
    }
-   cRes[ i++ ] = '\''; /* cRes[ i ] = '\0'; */
+   cRes[ i++ ] = '\'';
    hb_itemPutCLPtr( pItmPar, cRes, i );
 }
 

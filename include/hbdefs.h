@@ -566,7 +566,9 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
 /* #define PCODE_LONG_LIM(l)     HB_LIM_LONG( l ) */
 
 /* type of HB_ITEM */
-/* typedef USHORT HB_TYPE; */
+#if 0
+typedef USHORT HB_TYPE;
+#endif
 typedef HB_U32 HB_TYPE;
 
 /* type of file attributes */

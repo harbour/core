@@ -100,7 +100,9 @@ long hb_ssl_socketRead( PHB_SSLSTREAM pStream, HB_SOCKET sd,
    int iToRead = -1;
    HB_MAXUINT timer;
 
-   /* sd = SSL_get_rfd( pStream->ssl ); */
+   #if 0
+   sd = SSL_get_rfd( pStream->ssl );
+   #endif
 
 #if LONG_MAX > INT_MAX
    if( len > INT_MAX )
@@ -187,7 +189,9 @@ long hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET sd,
    long lWritten = 0, lWr = 0;
    HB_MAXUINT timer;
 
-   /* sd = SSL_get_wfd( pStream->ssl ); */
+   #if 0
+   sd = SSL_get_wfd( pStream->ssl );
+   #endif
 
 #if LONG_MAX > INT_MAX
    if( len > INT_MAX )

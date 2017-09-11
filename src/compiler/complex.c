@@ -1077,7 +1077,9 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
                      /* DO identifier [WITH <args>] */
                      pToken = hb_pp_tokenGet( pLex->pPP );
                      /* do not upper next token for case sensitive file systems */
-                     /* hb_pp_tokenUpper( pToken ); */
+                     #if 0
+                     hb_pp_tokenUpper( pToken );
+                     #endif
                      pLex->lasttok = yylval_ptr->string =
                               hb_comp_tokenIdentifer( HB_COMP_PARAM, pToken );
                      pLex->iState = IDENTIFIER;

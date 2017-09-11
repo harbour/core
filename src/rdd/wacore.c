@@ -578,7 +578,9 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    SELF_GOCOLD( pArea );
 
    /* tests shows that Xbase++ does not remove locks */
-   /* SELF_UNLOCK( pArea, NULL ); */
+   #if 0
+   SELF_UNLOCK( pArea, NULL );
+   #endif
 
    /* Xbase++ documentation says that child areas are also detached but
     * but tests shows that it's not true and either child or parent relations

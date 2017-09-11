@@ -1608,7 +1608,9 @@ HB_FUNC( NETIO_SERVER )
 
          if( fNoAnswer )
          {
-            /* continue; */ /* do not send dummy record */
+            #if 0
+            continue; /* do not send dummy record */
+            #endif
             HB_PUT_LE_UINT32( &msg[ 0 ], NETIO_SYNC );
             memset( msg + 4, '\0', NETIO_MSGLEN - 4 );
             len = NETIO_MSGLEN;

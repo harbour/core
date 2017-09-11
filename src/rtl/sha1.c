@@ -102,7 +102,9 @@ static void SHA1_Transform(sha1_quadbyte state[5], sha1_byte buffer[64]) {
     state[3] += d;
     state[4] += e;
     /* Wipe variables */
-    /* a = b = c = d = e = 0; */
+    #if 0
+    a = b = c = d = e = 0;
+    #endif
 }
 
 
@@ -160,7 +162,9 @@ void hb_SHA1_Final(sha1_byte digest[SHA1_DIGEST_LENGTH], SHA_CTX *context) {
          ((context->state[i>>2] >> ((3-(i & 3)) * 8) ) & 255);
     }
     /* Wipe variables */
-    /* i = 0; */
+    #if 0
+    i = 0;
+    #endif
     memset(context->buffer, 0, SHA1_BLOCK_LENGTH);
     memset(context->state, 0, SHA1_DIGEST_LENGTH);
     memset(context->count, 0, 8);

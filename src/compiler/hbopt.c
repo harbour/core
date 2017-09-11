@@ -1684,7 +1684,9 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
          if( pLocals[ usIndex ].bFlags == ( OPT_LOCAL_FLAG_PUSH | OPT_LOCAL_FLAG_POPSELF ) ||
              pLocals[ usIndex ].bFlags == OPT_LOCAL_FLAG_POPSELF )
          {
-            /* printf( "Info: %s(%d) selfifying variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName ); */
+            #if 0
+            printf( "Info: %s(%d) selfifying variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName );
+            #endif
             hb_compPCodeEnumSelfifyLocal( pFunc, usIndex + 1 );
             pLocals[ usIndex ].bFlags = 0;
          }
@@ -1726,7 +1728,9 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
             }
             else
             {
-               /* printf( "Info: %s(%d) removing unused variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName ); */
+               #if 0
+               printf( "Info: %s(%d) removing unused variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName );
+               #endif
 
                /* Delete pVar from the linked list */
                *ppVar = pVar->pNext;

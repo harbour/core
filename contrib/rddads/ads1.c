@@ -210,7 +210,9 @@ static void DumpArea( ADSAREAP pArea )  /* For debugging: call this to dump ads 
    UNSIGNED32 u32RetVal, ulRetAOF, ulRetFilt;
    UNSIGNED8  pucFormat[ 16 ];
    UNSIGNED8  pucFilter[ 1025 ];
-/* UNSIGNED8  aucBuffer[ MAX_STR_LEN + 1 ]; */
+   #if 0
+   UNSIGNED8  aucBuffer[ MAX_STR_LEN + 1 ];
+   #endif
    UNSIGNED8  pucIndexName[ MAX_STR_LEN + 1 ];
    UNSIGNED8  pucIndexExpr[ MAX_STR_LEN + 1 ];
    UNSIGNED8  pucIndexCond[ MAX_STR_LEN + 1 ];
@@ -1137,7 +1139,9 @@ static HB_ERRCODE adsSeek( ADSAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_
    if( pArea->area.fBof && ! pArea->area.fEof )
    {
       HB_ERRCODE errCode = SELF_GOTO( &pArea->area, 0 );
-      /* HB_ERRCODE errCode = SELF_GOTOP( &pArea->area ); */
+      #if 0
+      HB_ERRCODE errCode = SELF_GOTOP( &pArea->area );
+      #endif
       pArea->area.fBof = HB_FALSE;
 #if defined( ADS_USE_OEM_TRANSLATION ) && ADS_LIB_VERSION < 600
       if( pszKeyFree )
@@ -5093,7 +5097,9 @@ static HB_ERRCODE adsGetValueFile( ADSAREAP pArea, HB_USHORT uiIndex, const char
                                 ( UNSIGNED8 * ) HB_UNCONST( szFile ) );
    if( u32RetVal != AE_SUCCESS )
    {
-      /* commonError( pArea, EG_READ, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL ); */
+      #if 0
+      commonError( pArea, EG_READ, ( HB_ERRCODE ) u32RetVal, 0, NULL, 0, NULL );
+      #endif
       return HB_FAILURE;
    }
    return HB_SUCCESS;

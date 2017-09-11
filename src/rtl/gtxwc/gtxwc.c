@@ -3165,7 +3165,9 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
                         break;
 
                      nI += hb_cdpTextPutU16( wnd->utf8CDP, pBuffer + nI, nSize - nI, usChar );
-                     /* nI += hb_cdpU16CharToUTF8( pBuffer + nI, &usChar ); */
+                     #if 0
+                     nI += hb_cdpU16CharToUTF8( pBuffer + nI, &usChar );
+                     #endif
                   }
                   if( wnd->markTop < wnd->markBottom )
                      pBuffer[ nI++ ] = '\n';
@@ -3798,7 +3800,9 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   break;
 
                case CH_CHBX:
-                  /* hb_gt_xwc_DrawBoxChar( wnd, icol, irow, chTrans->u.ch16, color ); */
+                  #if 0
+                  hb_gt_xwc_DrawBoxChar( wnd, icol, irow, chTrans->u.ch16, color );
+                  #endif
                   break;
 
                case CH_NONE:
@@ -4368,7 +4372,9 @@ static HB_BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char * fontFace,
 
    /* a shortcut for window height and width */
    wnd->fontHeight = xfs->max_bounds.ascent + xfs->max_bounds.descent;
-   /* wnd->fontWidth = xfs->max_bounds.rbearing - xfs->min_bounds.lbearing; */
+   #if 0
+   wnd->fontWidth = xfs->max_bounds.rbearing - xfs->min_bounds.lbearing;
+   #endif
    wnd->fontWidth = xfs->max_bounds.width;
 
    if( wnd->xfs )
@@ -4954,10 +4960,14 @@ static void hb_gt_xwc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_GTSELF_SEMICOLD( pGT );
 
    /* For immediate connection to XSarver and screen Window show */
-   /* hb_gt_xwc_RealRefresh( wnd, HB_TRUE ); */
+   #if 0
+   hb_gt_xwc_RealRefresh( wnd, HB_TRUE );
+   #endif
 
    /* For connection to XSarver only */
-   /* hb_gt_xwc_ConnectX( wnd, HB_TRUE ); */
+   #if 0
+   hb_gt_xwc_ConnectX( wnd, HB_TRUE );
+   #endif
 }
 
 /* *********************************************************************** */
@@ -5091,7 +5101,9 @@ static int hb_gt_xwc_ReadKey( PHB_GT pGT, int iEventMask )
 
    wnd = HB_GTXWC_GET( pGT );
    hb_gt_xwc_LateRefresh( wnd );
-   /* hb_gt_xwc_RealRefresh( wnd, HB_FALSE ); */
+   #if 0
+   hb_gt_xwc_RealRefresh( wnd, HB_FALSE );
+   #endif
 
    if( hb_gt_xwc_GetCharFromInputQueue( wnd, &c ) )
       return c;
@@ -5603,7 +5615,9 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   /* this mode is not supported yet by GTXWC */
                   break;
                case HB_GTI_RESIZEMODE_ROWS:
-                  /* wnd->iResizeMode = iVal; */
+                  #if 0
+                  wnd->iResizeMode = iVal;
+                  #endif
                   break;
             }
          }

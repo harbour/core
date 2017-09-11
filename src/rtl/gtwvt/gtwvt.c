@@ -149,13 +149,15 @@ static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
    memset( &wndclass, 0, sizeof( wndclass ) );
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
    wndclass.lpfnWndProc   = hb_gt_wvt_WndProc;
-/* wndclass.cbClsExtra    = 0; */
-/* wndclass.cbWndExtra    = 0; */
    wndclass.hInstance     = hInstance;
-/* wndclass.hIcon         = NULL; */
    wndclass.hCursor       = LoadCursor( NULL, IDC_ARROW );
-/* wndclass.hbrBackground = NULL; */
-/* wndclass.lpszMenuName  = NULL; */
+#if 0
+   wndclass.cbClsExtra    = 0;
+   wndclass.cbWndExtra    = 0;
+   wndclass.hIcon         = NULL;
+   wndclass.hbrBackground = NULL;
+   wndclass.lpszMenuName  = NULL;
+#endif
    wndclass.lpszClassName = s_szClassName;
 
    if( ! RegisterClass( &wndclass ) )
@@ -3141,7 +3143,9 @@ static void hb_gt_wvt_CreateWindow( PHB_GTWVT pWVT )
 {
    DWORD dwStyle;
 
-   /* InitCommonControls(); */
+   #if 0
+   InitCommonControls();
+   #endif
 
    dwStyle = pWVT->bResizable ? _WVT_WS_DEF : _WVT_WS_NORESIZE;
 
@@ -3350,7 +3354,9 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       HB_GTSELF_SETFLAG( pGT, HB_GTI_REDRAWMAX, 1 );
       HB_GTSELF_SEMICOLD( pGT );
 
-      /* hb_gt_wvt_CreateConsoleWindow( pWVT ); */
+      #if 0
+      hb_gt_wvt_CreateConsoleWindow( pWVT );
+      #endif
    }
    else
       hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );

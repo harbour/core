@@ -433,7 +433,9 @@ static int hb_sln_FindKeyTranslation( int SlangKey )
       {
          int CurPos = ( Start + Stop ) / 2;
 
-         /* fprintf( stderr, "%d %d %d\n", i, KeyTranslationTable[ i ][ 0 ], KeyTranslationTable[ i ][ 1 ] ); */
+         #if 0
+         fprintf( stderr, "%d %d %d\n", i, KeyTranslationTable[ i ][ 0 ], KeyTranslationTable[ i ][ 1 ] );
+         #endif
 
          if( SlangKey == KeyTranslationTable[ CurPos ][ 0 ] )
             return KeyTranslationTable[ CurPos ][ 1 ];
@@ -446,7 +448,9 @@ static int hb_sln_FindKeyTranslation( int SlangKey )
       }
    }
 
-   /* return SlangKey; */
+   #if 0
+   return SlangKey;
+   #endif
    return 0;
 }
 

@@ -257,7 +257,9 @@ PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
                hb_arraySet( dboi.itmNewVal, DBRMI_HIVAL, hb_arrayGetItemPtr( pItem, 5 ) );
             }
             SELF_ORDINFO( pArea, DBOI_SCOPEEVAL, &dboi );
-            /* bitcount ulSize = hb_itemGetNL( dboi.itmResult ); */
+            #if 0
+            bitcount ulSize = hb_itemGetNL( dboi.itmResult );
+            #endif
             hb_itemRelease( dboi.itmNewVal );
             hb_itemRelease( dboi.itmResult );
             return pMap;

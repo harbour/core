@@ -143,7 +143,9 @@ typedef struct
    int            oserr;
    int            port;
    char *         name;
-/* struct termios tio; */
+   #if 0
+   struct termios tio;
+   #endif
 }
 HB_COM, * PHB_COM;
 
@@ -2260,7 +2262,9 @@ int hb_comClose( int iPort )
    if( pCom )
    {
       hb_vmUnlock();
-      /* FlushFileBuffers( pCom->hComm ); */
+      #if 0
+      FlushFileBuffers( pCom->hComm );
+      #endif
       fResult = CloseHandle( pCom->hComm );
       pCom->hComm = INVALID_HANDLE_VALUE;
       pCom->status &= ~HB_COM_OPEN;
@@ -3091,7 +3095,9 @@ int hb_comClose( int iPort )
    if( pCom )
    {
       hb_vmUnlock();
-      /* DosResetBuffer( pCom->hFile ); */
+      #if 0
+      DosResetBuffer( pCom->hFile );
+      #endif
       rc = DosClose( pCom->hFile );
       pCom->hFile = 0;
       pCom->status &= ~HB_COM_OPEN;

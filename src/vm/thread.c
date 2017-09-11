@@ -339,7 +339,9 @@ static void _hb_thread_wait_add( HB_COND_T * cond, PHB_WAIT_LIST pWaiting )
    /* It's not necessary because we have workaround for possible race
     * condition inside _hb_thread_cond_wait() function
     */
-   /* WaitForSingleObject( pWaiting->cond, 0 ); */
+   #if 0
+   WaitForSingleObject( pWaiting->cond, 0 );
+   #endif
 #endif
    pWaiting->signaled = HB_FALSE;
 

@@ -2574,7 +2574,9 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parnt ) : QWidget( parnt )
    /* Warning! Qt::WA_KeyCompression attribute creates problems when
     * barcode readers are used - some characters are eaten [druzus]
     */
-   /* setAttribute( Qt::WA_KeyCompression ); */
+   #if 0
+   setAttribute( Qt::WA_KeyCompression );
+   #endif
 
    /* Qt::WA_InputMethodEnabled disables support for
     * national characters in few European countries
@@ -2582,7 +2584,9 @@ QTConsole::QTConsole( PHB_GTQTC pStructQTC, QWidget *parnt ) : QWidget( parnt )
     * If some Asian users needs it then we will have
     * to enable it optionally [druzus]
     */
-   /* setAttribute( Qt::WA_InputMethodEnabled ); */
+   #if 0
+   setAttribute( Qt::WA_InputMethodEnabled );
+   #endif
 
 #if defined( HB_OS_ANDROID ) || defined( HB_OS_IOS ) || defined( HB_OS_WIN_CE )
    setInputMethodHints( Qt::ImhNoPredictiveText );

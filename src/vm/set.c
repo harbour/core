@@ -1116,7 +1116,9 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
     * IMHO it's a bug in Clipper (side effect of some internal solutions) and
     * we should not try to emulate it [druzus].
     */
-   /* pSet->HB_SET_DEBUG = HB_FALSE; */
+   #if 0
+   pSet->HB_SET_DEBUG = HB_FALSE;
+   #endif
    pSet->HB_SET_DEBUG = hb_dynsymFind( "__DBGENTRY" ) ? HB_TRUE : HB_FALSE;
    pSet->HB_SET_DECIMALS = 2;
    pSet->HB_SET_DEFAULT = hb_strdup( "" );

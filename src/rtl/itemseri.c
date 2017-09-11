@@ -1690,7 +1690,9 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
                                        nOffset, pRefList );
          /* we do not support xHarbour codeblock deserialization: HB_RestoreBlock( pItem ) */
-         /* hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_B ); */
+         #if 0
+         hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_B );
+         #endif
          hb_itemClear( pItem );
          break;
       case HB_SERIAL_XHB_H:

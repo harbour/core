@@ -72,7 +72,10 @@ HB_FUNC( AMFSTDIO_READ )
 {
    char *     pszStrIn     = ( char * ) hb_xgrab( SINGLEBUF );
    char *     pszLenPrefix = ( char * ) hb_xgrab( 5 );
-   char *     pszBuf;    /* = ( char * ) hb_xgrab( SINGLEBUF ); */
+   #if 0
+   char *     pszBuf;      = ( char * ) hb_xgrab( SINGLEBUF );
+   #endif
+   char *     pszBuf;
    char *     pszTmp = pszLenPrefix;
    HB_USHORT  nBytes;
    int        nTotal = 0;
