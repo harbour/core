@@ -1693,7 +1693,9 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PHB_HFUNC pFunc )
 
          /* NOTE: For some reason this will not work for the static init
             function, so I'm using an ugly hack instead. [vszakats] */
-/*       if( !( pFunc->funFlags & HB_FUNF_USES_STATICS ) ) */
+         #if 0
+         if( !( pFunc->funFlags & HB_FUNF_USES_STATICS ) )
+         #endif
          if( pFunc->pCode[ 8 ] == HB_P_ENDPROC )
          {
             pFunc->nPCodePos -= 3;

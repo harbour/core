@@ -552,7 +552,7 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
             dbFieldInfo.uiType = HB_FT_TIME;
             break;
 
-         /*  SQL_DATETIME = SQL_DATE = 9 */
+         /* SQL_DATETIME = SQL_DATE = 9 */
          case SQL_TIMESTAMP:
 #if ODBCVER >= 0x0300
          case SQL_TYPE_TIMESTAMP:

@@ -928,12 +928,12 @@ static HB_ERRCODE adsGoTo( ADSAREAP pArea, HB_ULONG ulRecNo )
       u32RetVal = AdsGotoRecord( pArea->hTable, 0 );
    }
 
-   /*  Usually AdsGotoRecord( *, 0 ) is valid call and returns no error,
-    *  but if previous error was AE_INVALID_RECORD_NUMBER, the following
-    *  AdsGotoRecord( *, 0 ) returns the same error. I'm not sure if this
-    *  AdsGotoRecord( *, 0 ) will position to phantom record and return
-    *  empty fields. I hope I have not made any regressions in code, since
-    *  it replicates previous behaviour. [Mindaugas]
+   /* Usually AdsGotoRecord( *, 0 ) is valid call and returns no error,
+    * but if previous error was AE_INVALID_RECORD_NUMBER, the following
+    * AdsGotoRecord( *, 0 ) returns the same error. I'm not sure if this
+    * AdsGotoRecord( *, 0 ) will position to phantom record and return
+    * empty fields. I hope I have not made any regressions in code, since
+    * it replicates previous behaviour. [Mindaugas]
     */
    if( u32RetVal != AE_SUCCESS && u32RetVal != AE_INVALID_RECORD_NUMBER )
    {

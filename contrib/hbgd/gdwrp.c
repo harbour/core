@@ -1700,7 +1700,7 @@ HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr i
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int r, int g, int b) */
+HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /* gdImageColorClosestHWB(gdImagePtr im, int r, int g, int b) */
 {
    if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&

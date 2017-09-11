@@ -576,7 +576,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFormatCode
                   IF nBegin > 1 .AND. SubStr( cLine, nBegin - 1, 1 ) == "." .AND. nEnd == nBegin
                      ::ConvertBool( @cLine, nBegin, i )
                      IF Len( cLine ) != nLen
-                        /*  If .not. was converted to ! */
+                        /* If .not. was converted to ! */
                         i -= ( nLen - Len( cLine ) )
                         nLen := Len( cLine )
                      ELSE

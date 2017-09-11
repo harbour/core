@@ -279,8 +279,8 @@ HB_FUNC( HB_FREADLEN )
    hb_fsSetFError( uiError );
 }
 
-/* NOTE: This function should not return the leading and trailing */
-/*       (back)slashes. [vszakats] */
+/* NOTE: This function should not return the leading and trailing
+         (back)slashes. [vszakats] */
 
 /* TODO: Xbase++ is able to change to the specified directory. */
 

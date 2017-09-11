@@ -1296,7 +1296,7 @@ HB_SIZE hb_xquery( int iMode )
 
    switch( iMode )
    {
-      case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
+      case HB_MEM_CHAR:       /* (Free Variable Space [KB]) */
 #if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
@@ -1317,7 +1317,7 @@ HB_SIZE hb_xquery( int iMode )
 #endif
          break;
 
-      case HB_MEM_BLOCK:      /*               (Largest String [KB]) */
+      case HB_MEM_BLOCK:      /* (Largest String [KB]) */
 #if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
@@ -1338,7 +1338,7 @@ HB_SIZE hb_xquery( int iMode )
 #endif
          break;
 
-      case HB_MEM_RUN:        /*               (RUN Memory [KB]) */
+      case HB_MEM_RUN:        /* (RUN Memory [KB]) */
 #if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;

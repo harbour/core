@@ -470,7 +470,7 @@ static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
 
 static HB_ERRCODE sqlbaseGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength )
 {
-   /*  TODO: should we use this code? */
+   /* TODO: should we use this code? */
 #if 0
    if( pArea->area.lpFields[ uiIndex ].uiType == HB_IT_MEMO )
       return pArea->pSDD->GetVarLen( pArea, uiIndex, pLength );

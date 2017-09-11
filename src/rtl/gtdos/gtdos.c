@@ -1107,7 +1107,7 @@ static void vmode43x80( void )
 {
    union REGS regs;
 
-   regs.HB_XREGS.ax = 0x1201;               /*  select 350 scan line mode */
+   regs.HB_XREGS.ax = 0x1201;               /* select 350 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.ax = 0x0003;               /* mode in AL, if higher bit is on, No CLS */
@@ -1126,7 +1126,7 @@ static void vmode50x80( void )
 {
    union REGS regs;
 
-   regs.HB_XREGS.ax = 0x1202;               /*  select 400 scan line mode */
+   regs.HB_XREGS.ax = 0x1202;               /* select 400 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.ax = 0x0003;               /* mode in AL, if bit 7 is on, No CLS */

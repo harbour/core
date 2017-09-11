@@ -1933,20 +1933,20 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
    ioBase->attr_mask = ( chtype ) -1;
    if( has_colors() )
    {
-      /*  DOS->CURSES color mapping
+      /* DOS->CURSES color mapping
          DOS              -> curses
          --------------------------------
-         0 black         -> COLOR_BLACK
-         1 blue          -> COLOR_BLUE
-         2 green         -> COLOR_GREEN
-         3 cyan          -> COLOR_CYAN
-         4 red           -> COLOR_RED
-         5 magenta       -> COLOR_MAGENTA
-         6 yellow        -> COLOR_YELLOW
-         7 light gray    -> COLOR_WHITE
+          0 black         -> COLOR_BLACK
+          1 blue          -> COLOR_BLUE
+          2 green         -> COLOR_GREEN
+          3 cyan          -> COLOR_CYAN
+          4 red           -> COLOR_RED
+          5 magenta       -> COLOR_MAGENTA
+          6 yellow        -> COLOR_YELLOW
+          7 light gray    -> COLOR_WHITE
 
-         8 gray          -> BOLD/BLINK BLACK
-         9 light blue    -> BOLD/BLINK BLUE
+          8 gray          -> BOLD/BLINK BLACK
+          9 light blue    -> BOLD/BLINK BLUE
          10 light green   -> BOLD/BLINK GREEN
          11 light cyan    -> BOLD/BLINK CYAN
          12 light red     -> BOLD/BLINK RED

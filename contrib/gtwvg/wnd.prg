@@ -65,7 +65,7 @@
 
 CREATE CLASS WvgWindow INHERIT WvgPartHandler
 
-   /*  CONFIGURATION */
+   /* Configuration */
    VAR    animate                               INIT .F.
    VAR    clipChildren                          INIT .F.
    VAR    clipParent                            INIT .F.
@@ -77,18 +77,18 @@ CREATE CLASS WvgWindow INHERIT WvgPartHandler
 
    VAR    pointerFocus                          INIT .T.
 
-   /*  RUNTIME VAR  */
+   /* Runtime variables */
    VAR    dropZone                              INIT .F.
    VAR    helpLink
    VAR    s_tooltipText                         INIT ""
-   METHOD tooltipText                           SETGET
+   METHOD tooltipText( cText )                  SETGET
 
    VAR    clr_FG
    VAR    clr_BG
    VAR    fnt_COMMPOUNDNAME
    VAR    fnt_hFont
 
-   /*  CALLBACK SLOTS */
+   /* Callback slots */
    VAR    sl_enter
    VAR    sl_leave
    VAR    sl_lbClick

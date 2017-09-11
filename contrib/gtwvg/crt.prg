@@ -60,7 +60,7 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
 
    VAR    oMenu
 
-   /*  CONFIGURATION */
+   /* Configuration */
    VAR    alwaysOnTop                           INIT .F.        /* Determines whether the dialog can be covered by other windows */
    VAR    border                                INIT 0          /* Border type for the XbpCrt window */
    VAR    clipChildren                          INIT .F.
@@ -92,7 +92,7 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    xSize                                 INIT 640 READONLY
    VAR    ySize                                 INIT 400 READONLY
 
-   /*  GUI Specifics */
+   /* GUI Specifics */
    VAR    animate                               INIT .F.
    VAR    clipParent                            INIT .F.
    VAR    clipSiblings                          INIT .T.
@@ -100,7 +100,7 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    sizeRedraw                            INIT .F.
    VAR    tabStop                               INIT .F.
 
-   /*  CALLBACK SLOTS */
+   /* Callback slots */
    VAR    sl_enter
    VAR    sl_leave
    VAR    sl_lbClick
@@ -134,7 +134,7 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    sl_dragLeave
    VAR    sl_dragDrop
 
-   /*  Harbour implementation */
+   /* Harbour implementation */
    VAR    resizable                             INIT .T.
    VAR    resizeMode                            INIT HB_GTI_RESIZEMODE_FONT
    VAR    style                                 INIT ( WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX )
@@ -160,13 +160,13 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    METHOD refresh()                             INLINE ::invalidateRect()
    METHOD refreshEx()
 
-   /* LIFE CYCLE */
+   /* Life cycle */
    METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD destroy()
 
-   /*  METHODS */
+   /* Methods */
    METHOD currentPos()
    METHOD currentSize()
    METHOD captureMouse()

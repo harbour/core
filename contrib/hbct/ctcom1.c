@@ -308,7 +308,7 @@ HB_FUNC( COM_ERRCHR )
    hb_retl( hb_comErrorChar( hb_parni( 1 ), hb_ctComCharParam( 2 ) ) != -1 );
 }
 
-/*  com_Remote( <nComPort>, [<nCharacter|cCharacter>] ) --> <lActive>
+/* com_Remote( <nComPort>, [<nCharacter|cCharacter>] ) --> <lActive>
  */
 HB_FUNC( COM_REMOTE )
 {

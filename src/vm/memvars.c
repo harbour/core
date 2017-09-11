@@ -665,8 +665,8 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, int iScope, PHB_ITEM
              */
             pMemvar->type = HB_IT_LOGICAL;
 
-            /* NOTE: PUBLIC variables named CLIPPER and HARBOUR are initialized */
-            /*       to .T., this is normal Clipper behaviour. [vszakats] */
+            /* NOTE: PUBLIC variables named CLIPPER and HARBOUR are initialized
+                     to .T., this is normal Clipper behaviour. [vszakats] */
 
             pMemvar->item.asLogical.value =
                         ( strcmp( pDynVar->pSymbol->szName, "HARBOUR" ) == 0 ||

@@ -516,10 +516,9 @@ static HB_ERRCODE hb_fptWriteGCitems( FPTAREAP pArea, LPMEMOGCTABLE pGCtable, HB
          if( ( pArea->uiMemoVersion == DB_MEMOVER_FLEX ||
                pArea->uiMemoVersion == DB_MEMOVER_CLIP ) &&
              /* TODO: check what FLEX/CL53 exactly does in such situations */
-             /*       Tests show that FLEX/CL53 does not reuse larger blocks
-              *       which can leave 8 or less dummy bytes so such problem
-              *       does not exists. [druzus]
-              */
+             /* Tests show that FLEX/CL53 does not reuse larger blocks
+                which can leave 8 or less dummy bytes so such problem
+                does not exists. [druzus] */
              pGCtable->pGCitems[ i ].ulSize * pArea->ulMemoBlockSize >=
              sizeof( FPTBLOCK ) )
          {

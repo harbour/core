@@ -811,7 +811,7 @@ METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
       // Tack on the spacing for double/triple/etc.
       IF ::aReportData[ RPT_SPACING ] > 1
 
-         /*  Double space problem in REPORT FORM at the bottom of the page  */
+         /* Double space problem in REPORT FORM at the bottom of the page  */
          IF ::nLinesLeft >= ::aReportData[ RPT_SPACING ] - 1
 
             FOR nLine := 2 TO ::aReportData[ RPT_SPACING ]

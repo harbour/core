@@ -847,16 +847,16 @@ static void hb_wvg_Outline( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop,
 
    SelectObject( pWVT->hdc, gObj->hPen );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );     /*  Top    */
+   MoveToEx( hdc, iLeft, iTop, NULL );     /* Top */
    LineTo( hdc, iRight, iTop );
 
-   MoveToEx( hdc, iLeft, iTop, NULL );     /*  Left   */
+   MoveToEx( hdc, iLeft, iTop, NULL );     /* Left */
    LineTo( hdc, iLeft, iBottom );
 
-   MoveToEx( hdc, iLeft, iBottom, NULL );  /*  Bottom */
+   MoveToEx( hdc, iLeft, iBottom, NULL );  /* Bottom */
    LineTo( hdc, iRight, iBottom );
 
-   MoveToEx( hdc, iRight, iTop, NULL );    /*  Right  */
+   MoveToEx( hdc, iRight, iTop, NULL );    /* Right */
    LineTo( hdc, iRight, iBottom + 1 );
 }
 

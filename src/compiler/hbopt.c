@@ -966,7 +966,7 @@ static HB_BOOL hb_compIsUncondJump( HB_BYTE bPCode )
    return bPCode == HB_P_JUMPNEAR ||
           bPCode == HB_P_JUMP ||
           bPCode == HB_P_JUMPFAR;
-/*   || bPCode == HB_P_SEQEND;
+/*     || bPCode == HB_P_SEQEND;
    BEGIN SEQUENCE/END SEQUENCE logic could not be processed using conditional/unconditional
    jumps. I set HB_P_SEQEND as conditional jump though this PCode instruction is processed
    as unconditional jump by Harbour VM. This hack solves 'Variable is assigned but not used'
@@ -1579,7 +1579,7 @@ static void hb_compPCodeEnumRenumberLocals( PHB_HFUNC pFunc, PHB_OPT_LOCAL pLoca
                {
                   isVar = pLocals[ isVar - 1 ].isNumber;
 
-                  assert( isVar > 0 );  /*  We do not allow removal of detached locals */
+                  assert( isVar > 0 );  /* We do not allow removal of detached locals */
 
                   pVar[ 0 ] = HB_LOBYTE( isVar );
                   pVar[ 1 ] = HB_HIBYTE( isVar );

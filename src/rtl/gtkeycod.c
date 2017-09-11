@@ -328,12 +328,12 @@ int hb_gt_dos_keyCodeTranslate( int iKey, int iFlags, PHB_CODEPAGE cdp )
          iFlags |= iKeyPad;
          break;
 
-      case 370:   /*  Ctrl + Print */
+      case 370:   /* Ctrl + Print */
          iKey = HB_KX_PRTSCR;
          iFlags |= HB_KF_CTRL;
          break;
 
-      case 371:   /*  Ctrl + Left arrow */
+      case 371:   /* Ctrl + Left arrow */
          iKey = HB_KX_LEFT;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;
@@ -357,7 +357,7 @@ int hb_gt_dos_keyCodeTranslate( int iKey, int iFlags, PHB_CODEPAGE cdp )
          iKey = HB_KX_PGUP;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;
-      case 397:   /*  Ctrl + Up arrow */
+      case 397:   /* Ctrl + Up arrow */
          iKey = HB_KX_UP;
          iFlags |= HB_KF_CTRL | iKeyPad;
          break;
