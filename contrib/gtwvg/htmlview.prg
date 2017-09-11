@@ -85,37 +85,37 @@ CREATE CLASS WvgHTMLViewer INHERIT WvgActiveXControl
    METHOD xDocumentComplete( cURI )
    METHOD setHTML( cHTML )
 
-   METHOD back()                                INLINE  ::goBack()
-   METHOD forward()                             INLINE  ::goForward()
-   METHOD home()                                INLINE  ::goHome()
-   METHOD search()                              INLINE  ::goSearch()
-   METHOD isBusy()                              INLINE  ::busy()
+   METHOD back()                                INLINE ::goBack()
+   METHOD forward()                             INLINE ::goForward()
+   METHOD home()                                INLINE ::goHome()
+   METHOD search()                              INLINE ::goSearch()
+   METHOD isBusy()                              INLINE ::busy()
 
-   VAR    sl_beforeNavigate                                                  PROTECTED
+   VAR    sl_beforeNavigate                     PROTECTED
    ACCESS beforeNavigate                        INLINE ::sl_beforeNavigate
    ASSIGN beforeNavigate( bBlock )              INLINE ::sl_beforeNavigate := bBlock
 
-   VAR    sl_navigateComplete                                                PROTECTED
+   VAR    sl_navigateComplete                   PROTECTED
    ACCESS navigateComplete                      INLINE ::sl_navigateComplete
    ASSIGN navigateComplete( bBlock )            INLINE ::sl_navigateComplete := bBlock
 
-   VAR    sl_statusTextChange                                                PROTECTED
+   VAR    sl_statusTextChange                   PROTECTED
    ACCESS statusTextChange                      INLINE ::sl_statusTextChange
    ASSIGN statusTextChange( bBlock )            INLINE ::sl_statusTextChange := bBlock
 
-   VAR    sl_progressChange                                                  PROTECTED
+   VAR    sl_progressChange                     PROTECTED
    ACCESS progressChange                        INLINE ::sl_progressChange
    ASSIGN progressChange( bBlock )              INLINE ::sl_progressChange := bBlock
 
-   VAR    sl_titleChange                                                     PROTECTED
+   VAR    sl_titleChange                        PROTECTED
    ACCESS titleChange                           INLINE ::sl_titleChange
    ASSIGN titleChange( bBlock )                 INLINE ::sl_titleChange := bBlock
 
-   VAR    sl_documentComplete                                                PROTECTED
+   VAR    sl_documentComplete                   PROTECTED
    ACCESS documentComplete                      INLINE ::sl_documentComplete
    ASSIGN documentComplete( bBlock )            INLINE ::sl_documentComplete := bBlock
 
-   VAR    CLSID                                 INIT   "Shell.Explorer"      PROTECTED
+   VAR    CLSID                                 PROTECTED INIT "Shell.Explorer"
 
 ENDCLASS
 
@@ -156,7 +156,7 @@ METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
    HB_SYMBOL_UNUSED( Headers )
 
    IF PCount() >= 1 .AND. HB_ISBLOCK( ::sl_beforeNavigate )
-      Eval( ::sl_beforeNavigate, cURL, NIL, Self )
+      Eval( ::sl_beforeNavigate, cURL, , Self )
       RETURN NIL
    ENDIF
 
@@ -165,7 +165,7 @@ METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
 METHOD WvgHTMLViewer:xStatusTextChange( cText )
 
    IF HB_ISBLOCK( ::sl_statusTextChange )
-      Eval( ::sl_statusTextChange, cText, NIL, Self )
+      Eval( ::sl_statusTextChange, cText, , Self )
    ENDIF
 
    RETURN Self
@@ -173,7 +173,7 @@ METHOD WvgHTMLViewer:xStatusTextChange( cText )
 METHOD WvgHTMLViewer:xNavigateComplete( cURL )
 
    IF HB_ISBLOCK( ::sl_navigateComplete )
-      Eval( ::sl_navigateComplete, cURL, NIL, Self )
+      Eval( ::sl_navigateComplete, cURL, , Self )
    ENDIF
 
    RETURN Self
@@ -189,7 +189,7 @@ METHOD WvgHTMLViewer:xProgressChange( nProgress, nProgMax )
 METHOD WvgHTMLViewer:xTitleChange( cTitle )
 
    IF HB_ISBLOCK( ::sl_titleChange )
-      Eval( ::sl_titleChange, cTitle, NIL, Self )
+      Eval( ::sl_titleChange, cTitle, , Self )
    ENDIF
 
    RETURN Self
@@ -197,7 +197,7 @@ METHOD WvgHTMLViewer:xTitleChange( cTitle )
 METHOD WvgHTMLViewer:xDocumentComplete( cURI )
 
    IF HB_ISBLOCK( ::sl_documentComplete )
-      Eval( ::sl_documentComplete, cURI, NIL, Self )
+      Eval( ::sl_documentComplete, cURI, , Self )
    ENDIF
 
    RETURN Self

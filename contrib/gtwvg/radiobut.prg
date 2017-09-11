@@ -76,7 +76,7 @@ CREATE CLASS WvgRadioButton INHERIT WvgWindow, WvgDataRef
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+METHOD WvgRadioButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -86,7 +86,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadio
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+METHOD WvgRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -108,16 +108,16 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRa
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
+METHOD WvgRadioButton:handleEvent( nMessage, aNM )
 
    SWITCH nMessage
 
    CASE HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
-         ::editBuffer := ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+         ::editBuffer := ( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
 
          IF HB_ISBLOCK( ::sl_lbClick )
-            Eval( ::sl_lbClick, ::editBuffer, NIL, self )
+            Eval( ::sl_lbClick, ::editBuffer, , Self )
             RETURN 0
          ENDIF
       ENDIF
@@ -127,23 +127,23 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    RETURN 1
 
-METHOD destroy() CLASS WvgRadioButton
+METHOD PROCEDURE WvgRadioButton:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+METHOD WvgRadioButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-METHOD setCaption( xCaption ) CLASS WvgRadioButton
+METHOD WvgRadioButton:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

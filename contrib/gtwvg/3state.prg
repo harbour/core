@@ -115,49 +115,47 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
+   ::editBuffer := wvg_Button_GetCheck( ::hWnd )
 
    RETURN Self
 
 METHOD Wvg3State:handleEvent( nMessage, aNM )
 
-   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", ::ClassName(), nMessage )
 
    DO CASE
-
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
-         ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
+         ::editBuffer := wvg_Button_GetCheck( ::hWnd )
 
          IF HB_ISBLOCK( ::sl_lbClick )
-            Eval( ::sl_lbClick, ::editBuffer, NIL, self )
+            Eval( ::sl_lbClick, ::editBuffer, , Self )
             RETURN 0
-
          ENDIF
       ENDIF
 
-   CASE nMessage ==  HB_GTE_CTLCOLOR
+   CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    ENDCASE
 
    RETURN 1
 
-METHOD Wvg3State:destroy()
+METHOD PROCEDURE Wvg3State:destroy()
 
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", ::ClassName() )
 
    ::WvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD Wvg3State:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -169,7 +167,7 @@ METHOD Wvg3State:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

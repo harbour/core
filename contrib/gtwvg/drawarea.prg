@@ -89,7 +89,7 @@ METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::oParent:addChild( Self )
 
-   Wvg_RegisterClass_ByName( ::className() )
+   wvg_RegisterClass_ByName( ::className() )
 
    ::createControl()
 
@@ -103,18 +103,18 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
       IF HB_ISBLOCK( ::sl_resize )
-         Eval( ::sl_resize, NIL, NIL, self )
+         Eval( ::sl_resize, , , Self )
       ENDIF
       AEval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
-         Wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
          RETURN EVENT_HANDELLED
       ENDIF
 
@@ -122,8 +122,8 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-METHOD destroy() CLASS WvgDrawingArea
+METHOD PROCEDURE WvgDrawingArea:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN

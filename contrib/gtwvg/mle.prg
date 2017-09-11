@@ -58,14 +58,14 @@
 
 CREATE CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
 
-   VAR    border                                INIT    .T.
-   VAR    editable                              INIT    .T.
-   VAR    horizScroll                           INIT    .T.
-   VAR    vertScroll                            INIT    .T.
-   VAR    wordWrap                              INIT    .T.
-   VAR    ignoreTab                             INIT    .F.
+   VAR    border                                INIT .T.
+   VAR    editable                              INIT .T.
+   VAR    horizScroll                           INIT .T.
+   VAR    vertScroll                            INIT .T.
+   VAR    wordWrap                              INIT .T.
+   VAR    ignoreTab                             INIT .F.
 
-   VAR    bufferLength                          INIT    32000
+   VAR    bufferLength                          INIT 32000
 
    METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -88,20 +88,20 @@ CREATE CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
    METHOD lineFromChar()                        VIRTUAL
    METHOD pos()                                 VIRTUAL
 
-   VAR    sl_undo                               INIT    .T.
-   ACCESS undo                                  INLINE  iif( ::sl_undo, NIL, NIL )
-   ASSIGN undo( lUndo )                         INLINE  ::sl_undo := lUndo
+   VAR    sl_undo                               INIT .T.
+   ACCESS undo                                  INLINE iif( ::sl_undo, NIL, NIL )
+   ASSIGN undo( lUndo )                         INLINE ::sl_undo := lUndo
 
    METHOD setEditable()                         VIRTUAL
    METHOD setWrap()                             VIRTUAL
 
    VAR    sl_hScroll
-   ACCESS hScroll                               INLINE  ::sl_hScroll
-   ASSIGN hScroll( bBlock )                     INLINE  ::sl_hScroll := bBlock
+   ACCESS hScroll                               INLINE ::sl_hScroll
+   ASSIGN hScroll( bBlock )                     INLINE ::sl_hScroll := bBlock
 
    VAR    sl_vScroll
-   ACCESS vScroll                               INLINE  ::sl_vScroll
-   ASSIGN vScroll( bBlock )                     INLINE  ::sl_vScroll := bBlock
+   ACCESS vScroll                               INLINE ::sl_vScroll
+   ASSIGN vScroll( bBlock )                     INLINE ::sl_vScroll := bBlock
 
    METHOD changed( lChanged )                   SETGET
 
@@ -165,22 +165,22 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
       DO CASE
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
          IF HB_ISBLOCK( ::sl_killInputFocus )
-            Eval( ::sl_killInputFocus, NIL, NIL, Self )
+            Eval( ::sl_killInputFocus, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
          IF HB_ISBLOCK( ::sl_setInputFocus )
-            Eval( ::sl_setInputFocus, NIL, NIL, Self )
+            Eval( ::sl_setInputFocus, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_HSCROLL
          IF HB_ISBLOCK( ::sl_hScroll )
-            Eval( ::sl_hScroll, NIL, NIL, Self )
+            Eval( ::sl_hScroll, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_VSCROLL
          IF HB_ISBLOCK( ::sl_vScroll )
-            Eval( ::sl_vScroll, NIL, NIL, Self )
+            Eval( ::sl_vScroll, , , Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_CHANGE
@@ -191,13 +191,13 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
    CASE nMessage ==  HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    CASE nMessage ==  HB_GTE_ANY
@@ -212,22 +212,22 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
          CASE aNM[ NMH_code ] == WM_KILLFOCUS
             IF HB_ISBLOCK( ::sl_killInputFocus )
-               Eval( ::sl_killInputFocus, NIL, NIL, Self )
+               Eval( ::sl_killInputFocus, , , Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_SETFOCUS
             IF HB_ISBLOCK( ::sl_setInputFocus )
-               Eval( ::sl_setInputFocus, NIL, NIL, Self )
+               Eval( ::sl_setInputFocus, , , Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_HSCROLL
             IF HB_ISBLOCK( ::sl_hScroll )
-               Eval( ::sl_hScroll, NIL, NIL, Self )
+               Eval( ::sl_hScroll, , , Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_VSCROLL
             IF HB_ISBLOCK( ::sl_vScroll )
-               Eval( ::sl_vScroll, NIL, NIL, Self )
+               Eval( ::sl_vScroll, , , Self )
             ENDIF
 
          ENDCASE
@@ -237,11 +237,11 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-METHOD WvgMLE:destroy()
+METHOD PROCEDURE WvgMLE:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgMLE:changed( lChanged )
 
@@ -266,11 +266,11 @@ METHOD WvgMLE:copyMarked()
    LOCAL n, nB, nE
 
    n := ::sendMessage( EM_GETSEL )
-   nB := Wvg_LOWORD( n )
-   nE := Wvg_HIWORD( n )
+   nB := wvg_LOWORD( n )
+   nE := wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
-      Wvt_SetClipboard( SubStr( ::getData(), nB, n ) )
+      wvt_SetClipboard( SubStr( ::getData(), nB, n ) )
    ENDIF
 
    RETURN n
@@ -280,8 +280,8 @@ METHOD WvgMLE:cutMarked()
    LOCAL n, nB, nE, cText
 
    n := ::sendMessage( EM_GETSEL )
-   nB := Wvg_LOWORD( n )
-   nE := Wvg_HIWORD( n )
+   nB := wvg_LOWORD( n )
+   nE := wvg_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
       cText := ::getData()

@@ -175,10 +175,9 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
    RETURN Self
 
-PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
+METHOD PROCEDURE WvgActiveXControl:execEvent( nEvent, ... )
 
 #if 0
-
    LOCAL cEvents := hb_ValToStr( nEvent ) + ", "
    LOCAL aEvents := { ... }
 
@@ -205,7 +204,7 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
          ::rePosition()
       ENDIF
       IF HB_ISBLOCK( ::sl_resize )
-         Eval( ::sl_resize, NIL, NIL, Self )
+         Eval( ::sl_resize, , , Self )
       ENDIF
       EXIT
 
@@ -219,13 +218,12 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
 METHOD WvgActiveXControl:OnError()
 
 #if 0
-
    hb_traceLog( "HI: " + hb_ValToStr( __GetMessage() ) + " : " + Str( Len( hb_AParams() ) ) )
 #endif
 
    RETURN hb_ExecFromArray( ::oOLE, __GetMessage(), hb_AParams() )
 
-METHOD WvgActiveXControl:Destroy()
+METHOD PROCEDURE WvgActiveXControl:Destroy()
 
    IF ! Empty( ::oOLE:__hObj )
       IF wapi_IsWindow( ::pWnd )
@@ -235,7 +233,7 @@ METHOD WvgActiveXControl:Destroy()
       ::hWnd := NIL
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 
@@ -246,51 +244,37 @@ METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
    RETURN Self
 
 METHOD WvgActiveXControl:inheritPresParams()
-
-   LOCAL lSuccess := .T.
-
-   RETURN lSuccess
+   RETURN .T.
 
 METHOD WvgActiveXControl:presParamsChanged()
-
    RETURN Self
 
 METHOD WvgActiveXControl:setInputFocus()
-
    RETURN Self
 
 METHOD WvgActiveXControl:subscribeStdEvents()
-
    RETURN NIL
 
 METHOD WvgActiveXControl:unsubscribeStdEvents()
-
    RETURN Self
 
 METHOD WvgActiveXControl:keyDown()
-
    RETURN Self
 
 METHOD WvgActiveXControl:click()
-
    RETURN Self
 
 METHOD WvgActiveXControl:dblClick()
-
    RETURN Self
 
 METHOD WvgActiveXControl:mouseDown()
-
    RETURN Self
 
 METHOD WvgActiveXControl:mouseUp()
-
    RETURN Self
 
 METHOD WvgActiveXControl:mouseMove()
-
    RETURN Self
 
 METHOD WvgActiveXControl:activate()
-
    RETURN Self

@@ -82,7 +82,6 @@ CREATE CLASS WvgDataRef
 ENDCLASS
 
 METHOD WvgDataRef:new()
-
    RETURN self
 
 METHOD WvgDataRef:getData()
@@ -98,10 +97,10 @@ METHOD WvgDataRef:getData()
       ENDIF
 
    CASE ::className() == "EDIT"
-      ::sl_editBuffer := Wvg_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
+      ::sl_editBuffer := wvg_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
 
    CASE ::className() == "LISTBOX"
-      ::sl_editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
+      ::sl_editBuffer := wvg_LBGetCurSel( ::hWnd ) + 1
 
 #if 0 /* This is contrary the documentation of Xbase++ */
       IF ::oParent:className() == "COMBOBOX"
@@ -110,7 +109,7 @@ METHOD WvgDataRef:getData()
             AAdd( ::sl_editBuffer, ::getItem( i ) )
          NEXT
       ELSE
-         ::sl_editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
+         ::sl_editBuffer := wvg_LBGetCurSel( ::hWnd ) + 1
       ENDIF
 #endif
    ENDCASE
@@ -140,17 +139,17 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    CASE ::className() == "LISTBOX"    /* Single Selection */
       IF HB_ISNUMERIC( ::sl_editBuffer )
-         RETURN Wvg_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
+         RETURN wvg_lbSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
 
    CASE ::className() == "SysTreeView32"
       IF ::sl_editBuffer != NIL .AND. ::sl_editBuffer:hItem != NIL
-         Wvg_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
+         wvg_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
 
    CASE ::className() == "EDIT"
       IF HB_ISSTRING( ::sl_editBuffer )
-         Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
+         wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
 
    CASE ::className() == "SCROLLBAR"
@@ -161,7 +160,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
    CASE ::className() == "COMBOBOX"
       IF HB_ISARRAY( ::sl_editBuffer )
          // NOT sure which way it should behave.
-         // XBase++ documentation IN this regard is crappy.
+         // Xbase++ documentation IN this regard is crappy.
          FOR EACH s IN ::sl_editBuffer
             ::addItem( s )
          NEXT
@@ -172,13 +171,12 @@ METHOD WvgDataRef:setData( xValue, mp2 )
    RETURN ::sl_editBuffer
 
 METHOD WvgDataRef:undo()
-
    RETURN .F.
 
 METHOD WvgDataRef:validate( xParam )
 
    IF PCount() == 0 .AND. HB_ISBLOCK( ::sl_validate )
-      RETURN Eval( ::sl_validate, self )
+      RETURN Eval( ::sl_validate, Self )
    ELSEIF HB_ISBLOCK( xParam )
       ::sl_validate := xParam
    ENDIF

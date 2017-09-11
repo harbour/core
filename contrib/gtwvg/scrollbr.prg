@@ -81,7 +81,7 @@ CREATE CLASS WvgScrollBar INHERIT WvgWindow, WvgDataRef
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
+METHOD WvgScrollBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -91,7 +91,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrol
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
+METHOD WvgScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -127,7 +127,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
+METHOD WvgScrollBar:handleEvent( nMessage, aNM )
 
    LOCAL nScrMsg, nScrPos, nCommand
 
@@ -140,7 +140,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ENDIF
 
@@ -212,9 +212,8 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDCASE
 
       ::sl_editBuffer := nScrPos
-      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, Self )
+      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, , Self )
       RETURN EVENT_HANDELLED
-
 
    CASE nMessage == HB_GTE_VSCROLL
       IF ::isParentCrt()
@@ -284,20 +283,20 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDCASE
 
       ::sl_editBuffer := nScrPos
-      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
+      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, , Self )
       RETURN EVENT_HANDELLED
 
    ENDCASE
 
    RETURN EVENT_UNHANDELLED
 
-METHOD destroy() CLASS WvgScrollBar
+METHOD PROCEDURE WvgScrollBar:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
-METHOD Scroll( xParam ) CLASS WvgScrollBar
+METHOD WvgScrollBar:Scroll( xParam )
 
    IF HB_ISBLOCK( xParam )
       ::sl_xbeSB_Scroll := xParam
@@ -305,7 +304,7 @@ METHOD Scroll( xParam ) CLASS WvgScrollBar
 
    RETURN self
 
-METHOD setRange( aRange ) CLASS WvgScrollBar
+METHOD WvgScrollBar:setRange( aRange )
 
    LOCAL aOldRange, nMin, nMax
 
@@ -321,8 +320,5 @@ METHOD setRange( aRange ) CLASS WvgScrollBar
 
    RETURN aOldRange
 
-METHOD setScrollBoxSize( nUnits ) CLASS WvgScrollBar
-
-   LOCAL nOldUnits := nUnits
-
-   RETURN nOldUnits
+METHOD WvgScrollBar:setScrollBoxSize( nUnits )
+   RETURN nUnits

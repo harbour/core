@@ -56,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-THREAD STATIC t_oCrt := NIL
+THREAD STATIC t_oCrt
 
 EXIT PROCEDURE KillGTChildren()
 
@@ -74,7 +74,7 @@ FUNCTION WvgSetAppWindow( oCrt )
    IF Empty( oCrt )
       IF Empty( t_oCrt )
          t_oCrt := WvgCrt():new()
-         t_oCrt:hWnd := Wvt_GetWindowHandle()
+         t_oCrt:hWnd := wvt_GetWindowHandle()
          t_oCrt:pWnd := win_N2P( t_oCrt:hWnd )
          hb_gtInfo( HB_GTI_NOTIFIERBLOCKGUI, {| nEvent, ... | t_oCrt:notifier( nEvent, ... ) } )
          t_oCrt:isGT := .T.

@@ -61,44 +61,44 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    oMenu
 
    /*  CONFIGURATION */
-   VAR    alwaysOnTop                           INIT  .F.        /* Determines whether the dialog can be covered by other windows */
-   VAR    border                                INIT  0          /* Border type for the XbpCrt window */
-   VAR    clipChildren                          INIT  .F.
-   VAR    closable                              INIT  .T.
-   VAR    fontHeight                            INIT  16
-   VAR    fontWidth                             INIT  10
-   VAR    fontName                              INIT  "Courier New"
-   VAR    gridMove                              INIT  .F.
-   VAR    icon                                  INIT  0
-   VAR    minMax                                INIT  .T.
-   VAR    sysMenu                               INIT  .T.
-   VAR    taskList                              INIT  .T.
-   VAR    title                                 INIT  " "
-   VAR    titleBar                              INIT  .T.
-   VAR    visible                               INIT  .T.
+   VAR    alwaysOnTop                           INIT .F.        /* Determines whether the dialog can be covered by other windows */
+   VAR    border                                INIT 0          /* Border type for the XbpCrt window */
+   VAR    clipChildren                          INIT .F.
+   VAR    closable                              INIT .T.
+   VAR    fontHeight                            INIT 16
+   VAR    fontWidth                             INIT 10
+   VAR    fontName                              INIT "Courier New"
+   VAR    gridMove                              INIT .F.
+   VAR    icon                                  INIT 0
+   VAR    minMax                                INIT .T.
+   VAR    sysMenu                               INIT .T.
+   VAR    taskList                              INIT .T.
+   VAR    title                                 INIT " "
+   VAR    titleBar                              INIT .T.
+   VAR    visible                               INIT .T.
 
-   VAR    autoFocus                             INIT  .T.
-   VAR    autoMark                              INIT  .T.
-   VAR    dropFont                              INIT  .T.
-   VAR    dropZone                              INIT  .F.
-   VAR    helpLink                              INIT  NIL
-   VAR    maxCol                                INIT  79
-   VAR    maxRow                                INIT  24
-   VAR    mouseMode                             INIT  1          /* Determines whether mouse coordinates are given as graphics or text coordinates.*/
-   VAR    modalResult                           INIT  NIL        /* Specifies the result of a modal dialog.                                        */
-   VAR    aSyncFlush                            INIT  .F.        /* Determines the display behavior of text-mode output.                           */
-   VAR    tooltipText                           INIT  ""
-   VAR    useShortCuts                          INIT  .F.        /* Enables shortcut keys for the system menu                                      */
-   VAR    xSize                                 INIT  640 READONLY
-   VAR    ySize                                 INIT  400 READONLY
+   VAR    autoFocus                             INIT .T.
+   VAR    autoMark                              INIT .T.
+   VAR    dropFont                              INIT .T.
+   VAR    dropZone                              INIT .F.
+   VAR    helpLink
+   VAR    maxCol                                INIT 79
+   VAR    maxRow                                INIT 24
+   VAR    mouseMode                             INIT 1          /* Determines whether mouse coordinates are given as graphics or text coordinates.*/
+   VAR    modalResult                                           /* Specifies the result of a modal dialog.                                        */
+   VAR    aSyncFlush                            INIT .F.        /* Determines the display behavior of text-mode output.                           */
+   VAR    tooltipText                           INIT ""
+   VAR    useShortCuts                          INIT .F.        /* Enables shortcut keys for the system menu                                      */
+   VAR    xSize                                 INIT 640 READONLY
+   VAR    ySize                                 INIT 400 READONLY
 
    /*  GUI Specifics */
-   VAR    animate                               INIT  .F.
-   VAR    clipParent                            INIT  .F.
-   VAR    clipSiblings                          INIT  .T.
-   VAR    group                                 INIT  0          /* XBP_NO_GROUP */
-   VAR    sizeRedraw                            INIT  .F.
-   VAR    tabStop                               INIT  .F.
+   VAR    animate                               INIT .F.
+   VAR    clipParent                            INIT .F.
+   VAR    clipSiblings                          INIT .T.
+   VAR    group                                 INIT 0          /* XBP_NO_GROUP */
+   VAR    sizeRedraw                            INIT .F.
+   VAR    tabStop                               INIT .F.
 
    /*  CALLBACK SLOTS */
    VAR    sl_enter
@@ -124,7 +124,7 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    sl_killDisplayFocus                    /* only for CRT */
    VAR    sl_killInputFocus
    VAR    sl_move
-   VAR    sl_paint                               /* only for gui dialogs */
+   VAR    sl_paint                               /* only for GUI dialogs */
    VAR    sl_quit
    VAR    sl_resize
    VAR    sl_setDisplayFocus                     /* only for CRT */
@@ -134,25 +134,25 @@ CREATE CLASS WvgCrt INHERIT WvgWindow, WvgPartHandler
    VAR    sl_dragLeave
    VAR    sl_dragDrop
 
-   /*  HARUR implementation */
-   VAR    resizable                             INIT  .T.
-   VAR    resizeMode                            INIT  HB_GTI_RESIZEMODE_FONT
-   VAR    style                                 INIT  ( WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX )
-   VAR    exStyle                               INIT  0
-   VAR    lModal                                INIT  .F.
+   /*  Harbour implementation */
+   VAR    resizable                             INIT .T.
+   VAR    resizeMode                            INIT HB_GTI_RESIZEMODE_FONT
+   VAR    style                                 INIT ( WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX )
+   VAR    exStyle                               INIT 0
+   VAR    lModal                                INIT .F.
    VAR    pGTp
    VAR    pGT
-   VAR    objType                               INIT  objTypeCrt
-   VAR    ClassName                             INIT  "WVGCRT"
+   VAR    objType                               INIT objTypeCrt
+   VAR    ClassName                             INIT "WVGCRT"
    VAR    drawingArea
    VAR    hWnd
-   VAR    aPos                                  INIT  { 0, 0 }
-   VAR    aSize                                 INIT  { 24, 79 }
-   VAR    aPresParams                           INIT  {}
-   VAR    lHasInputFocus                        INIT  .F.
-   VAR    nFrameState                           INIT  0  /* normal */
+   VAR    aPos                                  INIT { 0, 0 }
+   VAR    aSize                                 INIT { 24, 79 }
+   VAR    aPresParams                           INIT {}
+   VAR    lHasInputFocus                        INIT .F.
+   VAR    nFrameState                           INIT 0  /* normal */
 
-   VAR    isGT                                  INIT  .F.
+   VAR    isGT                                  INIT .F.
 
    METHOD setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
@@ -254,7 +254,7 @@ METHOD WvgCrt:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::visible := lVisible
    ENDIF
 
-   /*  Drawing Area of oCrt will point to itself */
+   /* Drawing Area of oCrt will point to itself */
    ::drawingArea := Self
 
    RETURN Self
@@ -307,12 +307,10 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF HB_ISNUMERIC( ::icon )
       hb_gtInfo( HB_GTI_ICONRES, ::icon )
+   ELSEIF ".ico" $ Lower( ::icon )
+      hb_gtInfo( HB_GTI_ICONFILE, ::icon )
    ELSE
-      IF ".ico" $ Lower( ::icon )
-         hb_gtInfo( HB_GTI_ICONFILE, ::icon )
-      ELSE
-         hb_gtInfo( HB_GTI_ICONRES, ::icon )
-      ENDIF
+      hb_gtInfo( HB_GTI_ICONRES, ::icon )
    ENDIF
 
    /* CreateWindow() be forced to execute */
@@ -379,15 +377,12 @@ METHOD WvgCrt:destroy()
    RETURN Self
 
 METHOD WvgCrt:currentPos()
-
    RETURN Self
 
 METHOD WvgCrt:currentSize()
-
    RETURN { hb_gtInfo( HB_GTI_SCREENWIDTH ), hb_gtInfo( HB_GTI_SCREENHEIGHT ) }
 
 METHOD WvgCrt:captureMouse()
-
    RETURN Self
 
 METHOD WvgCrt:disable()
@@ -404,25 +399,22 @@ METHOD WvgCrt:enable()
 
 METHOD WvgCrt:getFrameState()
 
-   IF Wvg_IsIconic( ::hWnd )
+   IF wvg_IsIconic( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MINIMIZED
    ENDIF
-   IF Wvg_IsZoomed( ::hWnd )
+   IF wvg_IsZoomed( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MAXIMIZED
    ENDIF
 
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
 
 METHOD WvgCrt:getHWND()
-
    RETURN ::hWnd
 
 METHOD WvgCrt:getModalState()
-
    RETURN Self
 
 METHOD WvgCrt:hasInputFocus()
-
    RETURN ::lHasInputFocus
 
 METHOD WvgCrt:hide()
@@ -432,7 +424,7 @@ METHOD WvgCrt:hide()
    RETURN Self
 
 METHOD WvgCrt:refreshEx()
-   Wvg_InvalidateRect( ::hWnd )
+   wvg_InvalidateRect( ::hWnd )
    RETURN Self
 
 METHOD WvgCrt:invalidateRect( nTop, nLeft, nBottom, nRight )
@@ -442,24 +434,20 @@ METHOD WvgCrt:invalidateRect( nTop, nLeft, nBottom, nRight )
    __defaultNIL( @nBottom, MaxRow() )
    __defaultNIL( @nRight, MaxCol() )
 
-   Wvt_InvalidateRect( nTop, nLeft, nBottom, nRight )
+   wvt_InvalidateRect( nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
 METHOD WvgCrt:isEnabled()
-
    RETURN Self
 
 METHOD WvgCrt:isVisible()
-
    RETURN Self
 
 METHOD WvgCrt:lockPS()
-
    RETURN Self
 
 METHOD WvgCrt:lockUpdate()
-
    RETURN Self
 
 METHOD WvgCrt:menuBar()
@@ -471,19 +459,15 @@ METHOD WvgCrt:menuBar()
    RETURN ::oMenu
 
 METHOD WvgCrt:setColorBG()
-
    RETURN Self
 
 METHOD WvgCrt:setColorFG()
-
    RETURN Self
 
 METHOD WvgCrt:setFont()
-
    RETURN Self
 
 METHOD WvgCrt:setFontCompoundName()
-
    RETURN ""
 
 METHOD WvgCrt:setFrameState( nState )
@@ -506,27 +490,21 @@ METHOD WvgCrt:setFrameState( nState )
    RETURN lSuccess
 
 METHOD WvgCrt:setModalState()
-
    RETURN Self
 
 METHOD WvgCrt:setPointer()
-
    RETURN Self
 
 METHOD WvgCrt:setTrackPointer()
-
    RETURN Self
 
 METHOD WvgCrt:setPos()
-
    RETURN Self
 
 METHOD WvgCrt:setPosAndSize()
-
    RETURN Self
 
 METHOD WvgCrt:setPresParam()
-
    RETURN Self
 
 METHOD WvgCrt:setSize( aSize, lPaint )
@@ -548,29 +526,24 @@ METHOD WvgCrt:show()
    RETURN Self
 
 METHOD WvgCrt:showModal()
-
    RETURN Self
 
 METHOD WvgCrt:toBack()
-
    RETURN Self
 
 METHOD WvgCrt:toFront()
-
-   RETURN Wvg_SetWindowPosToTop( ::hWnd )
+   RETURN wvg_SetWindowPosToTop( ::hWnd )
 
 METHOD WvgCrt:unlockPS()
-
    RETURN Self
 
 METHOD WvgCrt:winDevice()
-
    RETURN Self
 
 METHOD WvgCrt:enter( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_enter )
-      Eval( ::sl_enter, xParam, NIL, Self )
+      Eval( ::sl_enter, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -584,7 +557,7 @@ METHOD WvgCrt:enter( xParam )
 METHOD WvgCrt:leave( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_leave )
-      Eval( ::sl_leave, NIL, NIL, Self )
+      Eval( ::sl_leave, , , Self )
       RETURN Self
    ENDIF
 
@@ -598,7 +571,7 @@ METHOD WvgCrt:leave( xParam )
 METHOD WvgCrt:lbClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_lbClick )
-      Eval( ::sl_lbClick, xParam, NIL, Self )
+      Eval( ::sl_lbClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -612,7 +585,7 @@ METHOD WvgCrt:lbClick( xParam )
 METHOD WvgCrt:lbDblClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_lbDblClick )
-      Eval( ::sl_lbDblClick, xParam, NIL, Self )
+      Eval( ::sl_lbDblClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -626,7 +599,7 @@ METHOD WvgCrt:lbDblClick( xParam )
 METHOD WvgCrt:lbDown( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_lbDown )
-      Eval( ::sl_lbDown, xParam, NIL, Self )
+      Eval( ::sl_lbDown, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -640,7 +613,7 @@ METHOD WvgCrt:lbDown( xParam )
 METHOD WvgCrt:lbUp( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_lbUp )
-      Eval( ::sl_lbUp, xParam, NIL, Self )
+      Eval( ::sl_lbUp, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -654,7 +627,7 @@ METHOD WvgCrt:lbUp( xParam )
 METHOD WvgCrt:mbClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_mbClick )
-      Eval( ::sl_mbClick, xParam, NIL, Self )
+      Eval( ::sl_mbClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -668,7 +641,7 @@ METHOD WvgCrt:mbClick( xParam )
 METHOD WvgCrt:mbDblClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_mbDblClick )
-      Eval( ::sl_mbDblClick, xParam, NIL, Self )
+      Eval( ::sl_mbDblClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -682,7 +655,7 @@ METHOD WvgCrt:mbDblClick( xParam )
 METHOD WvgCrt:mbDown( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_mbDown )
-      Eval( ::sl_mbDown, xParam, NIL, Self )
+      Eval( ::sl_mbDown, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -696,7 +669,7 @@ METHOD WvgCrt:mbDown( xParam )
 METHOD WvgCrt:mbUp( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_mbUp )
-      Eval( ::sl_mbUp, xParam, NIL, Self )
+      Eval( ::sl_mbUp, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -710,7 +683,7 @@ METHOD WvgCrt:mbUp( xParam )
 METHOD WvgCrt:motion( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_motion )
-      Eval( ::sl_motion, xParam, NIL, Self )
+      Eval( ::sl_motion, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -724,7 +697,7 @@ METHOD WvgCrt:motion( xParam )
 METHOD WvgCrt:rbClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_rbClick )
-      Eval( ::sl_rbClick, xParam, NIL, Self )
+      Eval( ::sl_rbClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -738,7 +711,7 @@ METHOD WvgCrt:rbClick( xParam )
 METHOD WvgCrt:rbDblClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_rbDblClick )
-      Eval( ::sl_rbDblClick, xParam, NIL, Self )
+      Eval( ::sl_rbDblClick, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -752,7 +725,7 @@ METHOD WvgCrt:rbDblClick( xParam )
 METHOD WvgCrt:rbDown( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_rbDown )
-      Eval( ::sl_rbDown, xParam, NIL, Self )
+      Eval( ::sl_rbDown, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -766,7 +739,7 @@ METHOD WvgCrt:rbDown( xParam )
 METHOD WvgCrt:rbUp( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_rbUp )
-      Eval( ::sl_rbUp, xParam, NIL, Self )
+      Eval( ::sl_rbUp, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -780,7 +753,7 @@ METHOD WvgCrt:rbUp( xParam )
 METHOD WvgCrt:wheel( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_wheel )
-      Eval( ::sl_wheel, xParam, NIL, Self )
+      Eval( ::sl_wheel, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -794,7 +767,7 @@ METHOD WvgCrt:wheel( xParam )
 METHOD WvgCrt:close( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_close )
-      Eval( ::sl_close, NIL, NIL, Self )
+      Eval( ::sl_close, , , Self )
       RETURN Self
    ENDIF
 
@@ -808,7 +781,7 @@ METHOD WvgCrt:close( xParam )
 METHOD WvgCrt:helpRequest( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_helpRequest )
-      Eval( ::sl_helpRequest, NIL, NIL, Self )
+      Eval( ::sl_helpRequest, , , Self )
       RETURN Self
    ENDIF
 
@@ -822,7 +795,7 @@ METHOD WvgCrt:helpRequest( xParam )
 METHOD WvgCrt:keyboard( xParam )
 
    IF HB_ISNUMERIC( xParam ) .AND. HB_ISBLOCK( ::sl_keyboard )
-      Eval( ::sl_keyboard, xParam, NIL, Self )
+      Eval( ::sl_keyboard, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -836,7 +809,7 @@ METHOD WvgCrt:keyboard( xParam )
 METHOD WvgCrt:killDisplayFocus( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_killDisplayFocus )
-      Eval( ::sl_killDisplayFocus, NIL, NIL, Self )
+      Eval( ::sl_killDisplayFocus, , , Self )
       RETURN Self
    ENDIF
 
@@ -850,7 +823,7 @@ METHOD WvgCrt:killDisplayFocus( xParam )
 METHOD WvgCrt:killInputFocus( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_killInputFocus )
-      Eval( ::sl_killInputFocus, NIL, NIL, Self )
+      Eval( ::sl_killInputFocus, , , Self )
       RETURN Self
    ENDIF
 
@@ -864,7 +837,7 @@ METHOD WvgCrt:killInputFocus( xParam )
 METHOD WvgCrt:move( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_move )
-      Eval( ::sl_move, xParam, NIL, Self )
+      Eval( ::sl_move, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -878,7 +851,7 @@ METHOD WvgCrt:move( xParam )
 METHOD WvgCrt:paint( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_paint )
-      Eval( ::sl_paint, xParam, NIL, Self )
+      Eval( ::sl_paint, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -918,7 +891,7 @@ METHOD WvgCrt:resize( xParam )
 METHOD WvgCrt:setDisplayFocus( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::setDisplayFocus )
-      Eval( ::setDisplayFocus, NIL, NIL, Self )
+      Eval( ::setDisplayFocus, , , Self )
       RETURN Self
    ENDIF
 
@@ -932,7 +905,7 @@ METHOD WvgCrt:setDisplayFocus( xParam )
 METHOD WvgCrt:setInputFocus( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_setInputFocus )
-      Eval( ::sl_setInputFocus, NIL, NIL, Self )
+      Eval( ::sl_setInputFocus, , , Self )
       RETURN Self
    ENDIF
 
@@ -960,7 +933,7 @@ METHOD WvgCrt:dragEnter( xParam, xParam1 )
 METHOD WvgCrt:dragMotion( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_dragMotion )
-      Eval( ::sl_dragMotion, xParam, NIL, Self )
+      Eval( ::sl_dragMotion, xParam, , Self )
       RETURN Self
    ENDIF
 
@@ -974,7 +947,7 @@ METHOD WvgCrt:dragMotion( xParam )
 METHOD WvgCrt:dragLeave( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_dragLeave )
-      Eval( ::sl_dragLeave, NIL, NIL, Self )
+      Eval( ::sl_dragLeave, , , Self )
       RETURN Self
    ENDIF
 
