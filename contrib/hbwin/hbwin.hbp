@@ -36,13 +36,15 @@ wapi_err.c
 wapi_misc.c
 wapi_mmsystem.c
 wapi_shellapi.c
-wapi_winbase.c
+wapi_winbase_1.c
+wapi_winbase_2.c
 wapi_winbase_mutex.c
 wapi_wingdi.c
 wapi_wingdi_font.c
 wapi_winnetwk.c
 wapi_winnls.c
-wapi_winuser.c
+wapi_winuser_1.c
+wapi_winuser_2.c
 wapi_winuser_dlg.c
 wce_simc.c
 wce_smsc.c
@@ -51,7 +53,8 @@ win_bmpd.c
 win_com.c
 win_dlg.c
 win_evnt.c
-win_misc.c
+win_misc_1.c
+win_misc_2.c
 win_osc.c
 win_prn1.c
 win_prn2.c
