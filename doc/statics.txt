@@ -5,7 +5,7 @@ does not generate the proper pcode for them).
   So I would like to make an introduction to static variables management as
 it is a sophisticated system that Harbour is going to implement.
 
-  It is something publically known that Clipper static variables are
+  It is something publicly known that Clipper static variables are
 located at the bottom of the data segment. This has caused all kinds of
 troubles. This is why when I designed Five I did it in a way that could not
 cause any trouble in the future.

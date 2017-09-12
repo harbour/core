@@ -543,7 +543,7 @@ METHOD Refresh() CLASS TFbQuery
    IF HB_ISARRAY( qry )
       ::numcols := qry[ 4 ]
 
-      /* TOFIX: This is faulty code. ::aStruct will become zero length, out of sync with ::numcols. */
+      /* FIXME: This is faulty code. ::aStruct will become zero length, out of sync with ::numcols. */
       ::aStruct := StructConvert( qry[ 6 ], ::db, ::dialect )
 
       ::lError := .F.

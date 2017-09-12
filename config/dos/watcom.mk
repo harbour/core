@@ -97,7 +97,7 @@ ifeq ($(HB_BUILD_DYN),dostest)
       DLIBS_COMMA :=
    endif
 
-   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
    define dynlib_object
       @$(ECHO) $(ECHOQUOTE)FILE '$(file)'$(ECHOQUOTE) >> __dyn__.tmp
 

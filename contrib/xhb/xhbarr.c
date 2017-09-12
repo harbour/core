@@ -149,7 +149,7 @@ HB_FUNC( ASPLICE )
    }
 }
 
-/* TOFIX: Move this to hbxpp library */
+/* FIXME: Move this to hbxpp library */
 /* Synonym of ASplice() Xbase++ compatibility (extended with optional replacemenet values) */
 HB_FUNC_TRANSLATE( AREMOVE, ASPLICE )
 

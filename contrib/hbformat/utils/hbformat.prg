@@ -47,6 +47,7 @@
 #require "hbformat"
 
 #include "directry.ch"
+#include "hbver.ch"
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -61,7 +62,7 @@ PROCEDURE Main( ... )
 #endif
    aParams := hb_AParams()
 
-   IF Empty( aParams ) .OR. ( Left( cFileName := ATail( aParams ), 1 ) $ "@/-" )
+   IF Empty( aParams ) .OR. Left( cFileName := ATail( aParams ), 1 ) $ "@/-"
       About()
       RETURN
    ENDIF
@@ -139,8 +140,8 @@ STATIC PROCEDURE DirEval( cInitDir, cMask, lRecur, bCode )
 
    FOR EACH file IN Directory( cInitDir + cMask, "HSD" )
       IF "D" $ file[ F_ATTR ]
-         IF !( "." == file[ F_NAME ] ) .AND. ;
-            !( ".." == file[ F_NAME ] ) .AND. lRecur
+         IF ! "." == file[ F_NAME ] .AND. ;
+            ! ".." == file[ F_NAME ] .AND. lRecur
             DirEval( cInitDir + file[ F_NAME ], cMask, lRecur, bCode )
          ENDIF
       ELSE
@@ -156,9 +157,13 @@ STATIC PROCEDURE About()
 
    OutStd( ;
       "Harbour Source Formatter " + HBRawVersion() + hb_eol() + ;
-      "Copyright (c) 2009-2016, Alexander S.Kresin" + hb_eol() + ;
-      "http://harbour-project.org/" + hb_eol() + ;
-      hb_eol() + ;
+      "Copyright (c) 2010-" + ;
+         "2016" + ", " + ;
+         hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
+      "Copyright (c) 2009, Alexander S.Kresin" + hb_eol() + ;
+      hb_eol() )
+
+   OutStd( ;
       "Syntax:  hbformat [options] [@config] <file[s]>" + hb_eol() + ;
       hb_eol() )
 

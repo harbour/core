@@ -71,10 +71,6 @@
 /* Don't change the position of this #include. */
 #include "rt_vars.ch"
 
-#ifndef __HARBOUR__
-   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
-#endif
-
 #define TEST_RESULT_COL1_WIDTH  1
 #define TEST_RESULT_COL2_WIDTH  20
 #define TEST_RESULT_COL3_WIDTH  40
@@ -98,13 +94,20 @@ STATIC s_lDBFAvail := .F.
 
    ANNOUNCE HB_GTSYS
    REQUEST HB_GT_CGI_DEFAULT
+
+   #define COPYRIGHT_YEAR  "2016"
+#else
+   #define COPYRIGHT_YEAR  "present"
+
+   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
 PROCEDURE Main( cPar1, cPar2, cPar3 )
 
-   OutStd( "Harbour Regression Test Suite" + hb_eol() +;
-           "Copyright (c) 1999-2016, Viktor Szakats" + hb_eol() +;
-           "http://harbour-project.org/" + hb_eol() )
+   OutStd( ;
+      "Harbour Compatibility and Regression Test Suite" + hb_eol() + ;
+      "Copyright (c) 1999-" + COPYRIGHT_YEAR + ", " + ;
+      "Viktor Szakats" + hb_eol() )
 
    IF cPar1 == NIL
       cPar1 := ""
@@ -130,7 +133,6 @@ PROCEDURE Main( cPar1, cPar2, cPar3 )
               "          -all          Display all tests, not only the failures." + hb_eol() + ;
               "          -noalt        Ignore alternative results." + hb_eol() + ;
               "          -skip:<list>  Skip the listed test numbers." + hb_eol() )
-
       RETURN
    ENDIF
 

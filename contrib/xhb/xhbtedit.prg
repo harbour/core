@@ -2983,7 +2983,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    ENDDO
 
    DO WHILE nRetLen < ncSLen
-      /* TOFIX: Note that hb_tokenGet() is not able to cope with delimiters longer than one char */
+      /* FIXME: Note that hb_tokenGet() is not able to cope with delimiters longer than one char */
       // Dos - OS/2 - Windows have CRLF as EOL
       IF nEOLLen > 1
          cLine := StrTran( hb_tokenPtr( @cString, @nTokPos, cEOL ), SubStr( cEOL, 2 ) )
@@ -3088,4 +3088,4 @@ METHOD BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
    RETURN NIL
 
 STATIC FUNCTION __SoftCR()
-   RETURN hb_BChar( 141 ) + Chr( 10 ) /* TOFIX: Won't work in UTF-8 mode */
+   RETURN hb_BChar( 141 ) + Chr( 10 ) /* FIXME: Won't work in UTF-8 mode */

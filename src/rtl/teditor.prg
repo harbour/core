@@ -55,7 +55,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-/* TOFIX: Leave this here, until this code is cleaned off of RTEs */
+/* FIXME: Leave this here, until this code is cleaned off of RTEs */
 #pragma linenumber=on
 
 #define _REFRESH_NONE   0
@@ -564,14 +564,14 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
          // if it's a movement key ::MoveCursor() handles it
 
       CASE nKeyStd == K_CTRL_B .OR. nKeyStd == K_ALT_B
-         /* TOFIX: K_ALT_B is not Cl*pper compatible, added as workaround
+         /* FIXME: K_ALT_B is not Cl*pper compatible, added as workaround
                    for missing in some GTs extended keycodes which are
                    necessary to resolve K_CTRL_B and K_CTRL_RIGHT keycode
                    conflict */
          ::ReformParagraph()
 
       CASE nKeyStd == K_CTRL_W .OR. nKeyStd == K_ALT_W
-         /* TOFIX: K_ALT_W is not Cl*pper compatible, added as workaround
+         /* FIXME: K_ALT_W is not Cl*pper compatible, added as workaround
                    for missing in some GTs extended keycodes which are
                    necessary to resolve K_CTRL_W and K_CTRL_END keycode
                    conflict */

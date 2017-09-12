@@ -57,7 +57,7 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
 
    hb_mutexLock( s_hbcomm_mutex )
 
-   /* TOFIX: We should get that number from core to avoid
+   /* FIXME: We should get that number from core to avoid
              getting mixed up with com port access outside this
              compatibility interface. [vszakats] */
    nPort := Len( s_hPort ) + 1

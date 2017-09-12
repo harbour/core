@@ -12,7 +12,7 @@
 #    https://www.gurulabs.com/media/files/courseware-samples/GURULABS-RPM-GUIDE-v1.0.PDF
 # ---------------------------------------------------------------
 
-# TOFIX: Contrib packages with dependencies will be packaged
+# FIXME: Contrib packages with dependencies will be packaged
 #        into separate .rpms, but their headers will be packaged
 #        into the core Harbour package. This f.e. makes it impossible
 #        to detect a Harbour contrib package by checking the existence

@@ -30,9 +30,11 @@
          - add support for subnet masks in allow/block lists, f.e. 172.16.0.0/12, and same for IPv6 */
 
 #include "fileio.ch"
+#include "inkey.ch"
 
 #include "hbhrb.ch"
 #include "hbsocket.ch"
+#include "hbver.ch"
 
 #include "hbnetio.ch"
 
@@ -284,7 +286,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       ENDIF
 
       /* Command prompt */
-      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .and. inkey() != 27
+      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .AND. inkey() != 27
          hb_idleSleep( 5 )
       ENDDO
 
@@ -833,8 +835,10 @@ STATIC PROCEDURE HB_Logo()
 
    OutStd( ;
       "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() + ;
-      "Copyright (c) 2009-2016, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
-      "http://harbour-project.org/" + hb_eol() + ;
+      "Copyright (c) 2009-" + ;
+         "2016" + ", " + ;
+         "Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
+      hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
       hb_eol() )
 
    RETURN

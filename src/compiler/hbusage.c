@@ -260,8 +260,11 @@ void hb_compPrintLogo( HB_COMP_DECL )
 {
    char * szVer = hb_verHarbour();
 
+   #define HB_VER_COMMIT_YEAR  "2016"
+   #define HB_VER_ORIGIN_URL   "http://harbour-project.org/"
+
    hb_compOutStd( HB_COMP_PARAM, szVer );
    hb_compOutStd( HB_COMP_PARAM,
-                  "\nCopyright (c) 1999-2016, http://harbour-project.org/\n" );
+      "\nCopyright (c) 1999-" HB_VER_COMMIT_YEAR ", " HB_VER_ORIGIN_URL "\n" );
    hb_xfree( szVer );
 }

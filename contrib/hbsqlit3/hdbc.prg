@@ -347,7 +347,7 @@ METHOD new( pDB, pStmt ) CLASS hdbcSQLTResultSet
 
    ::pDB := pDB
    ::pStmt := pStmt
-   ::pRes := pStmt:pRes /* TOFIX ! */
+   ::pRes := pStmt:pRes /* FIXME ! */
 
    ::nRows := 100
 

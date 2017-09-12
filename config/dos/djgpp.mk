@@ -69,7 +69,7 @@ LD_OUT := -o
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(SYSLIBPATHS),-L$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 #       It causes that every command will be separated by LF
 define lib_object
    @$(ECHO) $(ECHOQUOTE)ADDMOD $(file)$(ECHOQUOTE) >> __lib__.tmp
@@ -88,7 +88,7 @@ define create_library
    $(ARSTRIP)
 endef
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define link_file
    @$(ECHO) $(ECHOQUOTE)$(file)$(ECHOQUOTE) >> __link__.tmp
 
@@ -120,7 +120,7 @@ ifeq ($(HB_BUILD_DYN),dostest)
    DFLAGS += --whole-archive
    DLIBS :=
 
-   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
    define dynlib_object
       @$(ECHO) $(ECHOQUOTE)$(subst \,/,$(file))$(ECHOQUOTE) >> __dyn__.tmp
 

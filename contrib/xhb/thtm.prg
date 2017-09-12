@@ -354,7 +354,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
       ::cStr += ">" + CRLF()
    ENDIF
 #if 0
-/* TOFIX: Luiz please review it */
+/* FIXME: Luiz please review it */
    ::cStr += ;
       '   <link title="' + cLinkTitle + '"' + CRLF() + ;
       '                href="mailto:culik@sl.conex.net" >' + CRLF() + ;

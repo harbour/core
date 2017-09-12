@@ -838,7 +838,7 @@ FUNCTION Greek2Html( cText )
       t_aGreek := InitGreek()
    ENDIF
    FOR I := 1 TO Len( cText )
-      cStr += t_aGreek[ Asc( SubStr( cText, i, 1 ) ) ] /* TOFIX: for unicode */
+      cStr += t_aGreek[ Asc( SubStr( cText, i, 1 ) ) ] /* FIXME: for unicode */
    NEXT
 
    RETURN cStr

@@ -917,7 +917,7 @@ STATIC FUNCTION HttpDateFormat( tDate )
       { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
       PadL( Day( tDate ), 2, "0" ) + " " + ;
       { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + ;
-      " " + PadL( Year( tDate ), 4, "0" ) + " " + hb_TToC( tDate, "", "HH:MM:SS" ) + " GMT" // TOFIX: time zone
+      " " + PadL( Year( tDate ), 4, "0" ) + " " + hb_TToC( tDate, "", "HH:MM:SS" ) + " GMT" // FIXME: time zone
 
 STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 

@@ -20,6 +20,8 @@
  *
  */
 
+#include "hbver.ch"
+
 #define _NETIOMGM_IPV4_DEF  "127.0.0.1"
 #define _NETIOMGM_PORT_DEF  2940
 
@@ -261,12 +263,12 @@ STATIC PROCEDURE DisconnectLow( netiocli )
    RETURN
 
 STATIC FUNCTION MyClientInfo()
-
-   RETURN { "OS()"          => OS()          , ;
-            "Version()"     => Version()     , ;
-            "hb_Compiler()" => hb_Compiler() , ;
-            "NetName()"     => NetName()     , ;
-            "hb_UserName()" => hb_UserName() }
+   RETURN { ;
+      "OS()"          => OS()          , ;
+      "Version()"     => Version()     , ;
+      "hb_Compiler()" => hb_Compiler() , ;
+      "NetName()"     => NetName()     , ;
+      "hb_UserName()" => hb_UserName() }
 
 STATIC FUNCTION XToStrX( xValue )
 
@@ -329,8 +331,10 @@ STATIC FUNCTION XToStrX( xValue )
 STATIC PROCEDURE cmdAbout( netiocli )
 
    hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + StrTran( Version(), "Harbour " ) )
-   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2015, Viktor Szakats" )
-   hbnetiocon_dispevent( netiocli, "http://harbour-project.org/" )
+   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-" + ;
+      "2015" + ", " + ;
+      "Viktor Szakats" )
+   hbnetiocon_dispevent( netiocli, hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN
 

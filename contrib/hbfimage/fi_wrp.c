@@ -45,7 +45,7 @@
  *
  */
 
-/* TOFIX: To use strings (or other solutions) for remaining raw pointers. */
+/* FIXME: To use strings (or other solutions) for remaining raw pointers. */
 
 #include "hbapi.h"
 #include "hbapiitm.h"

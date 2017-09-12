@@ -179,7 +179,7 @@ PROCEDURE Main( ... )
             mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionFull )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
-            /* TOFIX: Rewrite this in .prg:
+            /* FIXME: Rewrite this in .prg:
                ld="/usr/lib"
                if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
                   then

@@ -12,7 +12,7 @@ the C code:
 
   HB_TRACE( level, ( "printf-style parameters", arg1, arg2 ) );
 
-The level specified for the HB_TRACE call affects harbour in two ways:
+The level specified for the HB_TRACE call affects Harbour in two ways:
 compilation time and run time.
 
 
@@ -61,7 +61,7 @@ one of
 
 with the following effect: any calls to HB_TRACE that were left by the
 compiler and which have a level lower or equal to HB_TR_LEVEL will
-print its arguments on stderr.
+print its arguments on STDERR.
 
 
 EXAMPLES
@@ -91,7 +91,7 @@ usually set the HB_USER_CFLAGS environment variable like this:
 
   export HB_USER_CFLAGS='-DHB_TR_LEVEL=HB_TR_INFO'
 
-or for other OS (eg: MS-DOS, Windows)
+or for other OS (e.g.: MS-DOS, Windows)
 
   SET HB_USER_CFLAGS=-DHB_TR_LEVEL_INFO
 
@@ -101,7 +101,7 @@ can set an environment variable like this:
 
   export HB_TR_LEVEL=HB_TR_WARNING
 
-or for other OS (eg: MS-DOS, Windows)
+or for other OS (e.g.: MS-DOS, Windows)
 
   SET HB_TR_LEVEL=HB_TR_WARNING
 
@@ -115,8 +115,8 @@ USAGE
 
 When Harbour is compiled/run with some level of tracing and then used
 to compile a regular Harbour application, the app will output LOTS of
-tracing information to stderr.  If you are using a sensible command
-shell (such as bash) you can redirect stderr to a file like this:
+tracing information to STDERR.  If you are using a sensible command
+shell (such as bash) you can redirect STDERR to a file like this:
 
   my_app 2> trace.txt
 
@@ -124,18 +124,18 @@ shell (such as bash) you can redirect stderr to a file like this:
 REDIRECTION
 ===========
 
-The output generated while tracing goes to stderr by default. You can
+The output generated while tracing goes to STDERR by default. You can
 control this at run-time by setting the environment variable
 HB_TR_OUTPUT to the name of a file where you would like the tracing
 output to be directed. If there is any problem opening the file for
-writing, the output reverts to stderr.
+writing, the output reverts to STDERR.
 
-When it happens an error and the controller of errors of harbour cannot
-intercept it (eg: GPF), it can happen that part of information of tracing
+When it happens an error and the controller of errors of Harbour cannot
+intercept it (e.g.: GPF), it can happen that part of information of tracing
 it is not written. This problem is avoided setting the environment
 variable HB_TR_FLUSH to 1 (one). This makes that every time that one
 record is sent to write, don't remain in the buffer, but rather it is
-writen in the file before continuing with the execution.
+written in the file before continuing with the execution.
 This set can produce an important reduction of speed of execution.
 
 TRACING THE PREPROCESSOR AND COMPILER
