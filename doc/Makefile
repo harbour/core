@@ -15,7 +15,7 @@ DOC_FILES := \
    gtslang.txt \
    hdr_tpl.txt \
    howtorel.txt \
-   howtorep.txt \
+   howtovcs.txt \
    locks.txt \
    oldnews.txt \
    pcode.txt \
