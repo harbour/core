@@ -21,7 +21,7 @@ FUNCTION UWMainNew()
 
    LOCAL oW := UWMain()
 
-   session[ "_uthis", "main" ] := oW
+   session[ "_uthis" ][ "main" ] := oW
 
    RETURN oW
 
@@ -92,7 +92,7 @@ METHOD Add( oWidget, nRow, nCol ) CLASS UWLayoutGrid
          AEval( ::aChilds, {| x | AAdd( x, {} ) } )
       NEXT
    ENDIF
-   AAdd( ::aChilds[ nRow, nCol ], oWidget )
+   AAdd( ::aChilds[ nRow ][ nCol ], oWidget )
 
    RETURN Self
 
@@ -311,11 +311,11 @@ METHOD Paint() CLASS UWMenu
    LOCAL nI
 
    UWrite( '<div>' )
-   FOR nI := 1 TO Len( Self:aItems )
+   FOR nI := 1 TO Len( ::aItems )
       IF nI != 1
          UWrite( '&nbsp;|&nbsp;' )
       ENDIF
-      UWrite( '<a href="' + Self:aItems[ nI, 2 ] + '">' + UHtmlEncode( Self:aItems[ nI, 1 ] ) + '</a>' )
+      UWrite( '<a href="' + ::aItems[ nI ][ 2 ] + '">' + UHtmlEncode( ::aItems[ nI ][ 1 ] ) + '</a>' )
    NEXT
    UWrite( '</div>' )
 
@@ -351,8 +351,8 @@ METHOD Output() CLASS UWBrowse
 
    // Header
    cRet += '<tr>'
-   FOR nI := 1 TO Len( Self:aColumns )
-      cRet += '<th>' + UHtmlEncode( Self:aColumns[ nI, 2 ] ) + '</th>'
+   FOR nI := 1 TO Len( ::aColumns )
+      cRet += '<th>' + UHtmlEncode( ::aColumns[ nI ][ 2 ] ) + '</th>'
    NEXT
    cRet += '</tr>'
 
@@ -364,20 +364,21 @@ METHOD Output() CLASS UWBrowse
    ENDIF
    DO WHILE ! Eof()
       cRet += '<tr>'
-      FOR nI := 1 TO Len( Self:aColumns )
-         xField := Self:aColumns[ nI, 3 ]
-         IF HB_ISSTRING( xField )
+      FOR nI := 1 TO Len( ::aColumns )
+         xField := ::aColumns[ nI ][ 3 ]
+         DO CASE
+         CASE HB_ISSTRING( xField )
             xI := FieldGet( FieldPos( xField ) )
-         ELSEIF HB_ISEVALITEM( xField )
+         CASE HB_ISEVALITEM( xField )
             xI := Eval( xField )
-         ENDIF
+         ENDCASE
          SWITCH ValType( xI )
          CASE "C"  ; xI := RTrim( xI ); EXIT
          CASE "N"  ; xI := Str( xI ); EXIT
          CASE "D"  ; xI := DToC( xI ); EXIT
          OTHERWISE ; xI := "ValType()==" + ValType( xI )
          ENDSWITCH
-         IF ! Self:aColumns[ nI, 4 ]
+         IF ! ::aColumns[ nI ][ 4 ]
             xI := UHtmlEncode( xI )
          ENDIF
          cRet += '<td><nobr>' + xI + '</nobr></td>'
@@ -462,7 +463,7 @@ PROCEDURE UProcWidgets( cURL, aMap )
       nI := 1
       nL := Min( Len( aURL ), Len( aStack ) )
       DO WHILE nI <= nL
-         IF aStack[ nI, 1 ] == aURL[ nI ]
+         IF aStack[ nI ][ 1 ] == aURL[ nI ]
             nI++
          ELSE
             EXIT
@@ -523,7 +524,7 @@ PROCEDURE UWDefaultHandler( cMethod )
 
    IF cMethod == "GET"
       IF ( cID := hb_HGetDef( get, "ajax" ) ) == NIL
-         session[ "_uthis", "main" ]:Paint()
+         session[ "_uthis" ][ "main" ]:Paint()
       ELSE
          IF ( oW := UGetWidgetById( cID ) ) != NIL
             UAddHeader( "Content-type", "text/html; charset=UTF-8" )
@@ -538,13 +539,13 @@ STATIC PROCEDURE SetWId( oW, cID )
 
    IF cID != NIL
       oW:cID := cID
-      session[ "_uthis", "idhash", cID ] := oW
+      session[ "_uthis" ][ "idhash" ][ cID ] := oW
    ENDIF
 
    RETURN
 
 FUNCTION UGetWidgetById( cID )
-   RETURN hb_HGetDef( session[ "_uthis", "idhash" ], cID )
+   RETURN hb_HGetDef( session[ "_uthis" ][ "idhash" ], cID )
 
 STATIC FUNCTION uhttpd_split( cSeparator, cString )
 

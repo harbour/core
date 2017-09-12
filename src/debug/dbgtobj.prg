@@ -143,14 +143,14 @@ METHOD addWindows( nRow ) CLASS HBDbObject
 
    nMaxLen := 0
    AEval( ::pItems, {| x | nMaxLen := Max( nMaxLen, Len( x[ OMSG_NAME ] ) ) } )
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::pItems[ ::arrayindex, OMSG_NAME ] } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::pItems[ ::arrayindex ][ OMSG_NAME ] } ) )
    oCol:width := nMaxLen
    oCol:DefColor := { 1, 2 }
    oBrwSets:Freeze := 1
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| iif( ! ::pItems[ ::ArrayIndex, OMSG_EDIT ], ;
-      ::pItems[ ::ArrayIndex, OMSG_VALUE ], ;
-      __dbgValToExp( __dbgObjGetValue( ::TheObj, ::pItems[ ::arrayindex, OMSG_NAME ] ) ) ) } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| iif( ! ::pItems[ ::ArrayIndex ][ OMSG_EDIT ], ;
+      ::pItems[ ::ArrayIndex ][ OMSG_VALUE ], ;
+      __dbgValToExp( __dbgObjGetValue( ::TheObj, ::pItems[ ::arrayindex ][ OMSG_NAME ] ) ) ) } ) )
 
    oCol:DefColor := { 1, 3 }
    oCol:width := oWndSets:nRight - oWndSets:nLeft - nMaxLen - 2

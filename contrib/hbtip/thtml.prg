@@ -1100,7 +1100,7 @@ STATIC FUNCTION __AttrToStr( cName, cValue, aAttr, oTHtmlNode )
       RETURN oTHtmlNode:error( "Invalid HTML attribute for: <" + oTHtmlNode:htmlTagName + ">", oTHtmlNode:className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
 
-   IF aAttr[ nPos, 2 ] == HTML_ATTR_TYPE_BOOL
+   IF aAttr[ nPos ][ 2 ] == HTML_ATTR_TYPE_BOOL
       RETURN " " + cName
    ENDIF
 
@@ -1326,7 +1326,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
 
-   IF aAttr[ nPos, 2 ] == HTML_ATTR_TYPE_BOOL
+   IF aAttr[ nPos ][ 2 ] == HTML_ATTR_TYPE_BOOL
       hHash[ cName ] := ""
    ELSE
       hHash[ cName ] := cValue

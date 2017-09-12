@@ -1,9 +1,8 @@
-/*
- *    Pritpal Bedi <bedipritpal@hotmail.com>
- */
+/* Pritpal Bedi <bedipritpal@hotmail.com> */
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "setcurs.ch"
 
 #xuntranslate Alert( =>
 
@@ -110,7 +109,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    // check for columns
    // place 2 spaces before and after the buttons
-   nColCap   := Len( cCaption ) + 7  // " - "+"  "+caption+"  "
+   nColCap   := Len( cCaption ) + 7  // " - " + "  " + cCaption + "  "
    nColTxt   := 0
    IF ! Empty( aText_ )
       AEval( aText_, {| e | nColTxt := Max( nColTxt, Len( e ) ) } )
@@ -131,7 +130,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       aTrg_[ i ] := Upper( SubStr( aButtons_[ i ], 1, 1 ) )
    NEXT
 
-   //                        Create a new Window
+   // Create a new Window
    B_CRT nTop, nLeft, nBottom - 1, nRight MODAL ICON "dia_excl.ico" TITLE "  " + cCaption INTO oCrt
 
    nTop    := -1
@@ -156,11 +155,11 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    DispBegin()
    SetColor( pal_[ DLG_CLR_TEXT ] )
 
-   Wvg_BoxRaised( nTop, nLeft, nBottom, nRight )
+   wvg_BoxRaised( nTop, nLeft, nBottom, nRight )
 
    SetColor( pal_[ DLG_CLR_TEXT ] )
    IF ! Empty( aText_ )
-      FOR  i := 1 TO Len( aText_ )
+      FOR i := 1 TO Len( aText_ )
          @ nTop + 1 + i, nLeft SAY PadC( aText_[ i ], nRight - nLeft + 1 )
       NEXT
    ENDIF
@@ -181,7 +180,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    SetColor( pal_[ DLG_CLR_HISEL ] )
    @ nBtnRow, nBtnCol_[ sel ] + 2 SAY SubStr( aButtons_[ sel ], 1, 1 )
 
-   AEval( x_, {| e_ | Wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
+   AEval( x_, {| e_ | wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
 
    DispEnd()
 
@@ -303,14 +302,13 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
 
    RETURN oCrt
 
-FUNCTION DoModalWindow()
+PROCEDURE DoModalWindow()
 
    LOCAL oCrt, nSel, pGT
    LOCAL aLastPaint := WvtSetBlocks( {} )
 
-   /* This part can be clubbed in a separate prg for different dialogs
-    * OR can be loaded from a data dictionary.
-    */
+   /* This part can be clubbed in a separate .prg for different dialogs
+      OR can be loaded from a data dictionary. */
 
    oCrt := WvgCrt():New( , , { 4, 8 }, { 12, 49 }, , .T. )
 
@@ -329,15 +327,14 @@ FUNCTION DoModalWindow()
 
    pGT := SetGT( 3, hb_gtSelect() )
 
-   // Here goes the Clipper Code
+   // Here goes the Cl*pper Code
    SetColor( "N/W" )
    CLS
    DO WHILE .T.
       nSel := Just_Alert( "I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window", { "OK" } )
 
-      IF nSel == 0  .OR. nSel == 1
+      IF nSel == 0 .OR. nSel == 1
          EXIT
-
       ENDIF
    ENDDO
 
@@ -346,4 +343,4 @@ FUNCTION DoModalWindow()
 
    WvtSetBlocks( aLastPaint )
 
-   RETURN NIL
+   RETURN

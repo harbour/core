@@ -73,48 +73,48 @@ FUNCTION WvtPaintObjects()
       FOR i := 1 TO nBlocks
          lExe := .T.
 
-         IF aBlocks[ i, 3 ] != NIL .AND. ! Empty( aBlocks[ i, 3 ] )
+         IF aBlocks[ i ][ 3 ] != NIL .AND. ! Empty( aBlocks[ i ][ 3 ] )
             /* Check parameters against tlbr_ depending upon the
                type of object and attributes contained in aAttr */
             DO CASE
-            CASE aBlocks[ i, 3, 1 ] == WVT_BLOCK_GRID_V
-               b := aBlocks[ i, 3, 6 ]
+            CASE aBlocks[ i ][ 3 ][ 1 ] == WVT_BLOCK_GRID_V
+               b := aBlocks[ i ][ 3 ][ 6 ]
                IF Len( b:aColumnsSep ) == 0
                   lExe := .F.
                ELSE
                   nLeft  := b:aColumnsSep[ 1 ]
                   nRight := b:aColumnsSep[ Len( b:aColumnsSep ) ]
-                  IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   < bottom */
-                     tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm > top    */
-                     tlbr_[ 2 ] <= nRight + 1       .AND. ; /* left  < right  */
-                     tlbr_[ 4 ] >= nLeft  - 2             ) /* right > left   */
+                  IF tlbr_[ 1 ] > aBlocks[ i ][ 3 ][ 4 ] .OR. ;  /* top    > bottom */
+                     tlbr_[ 3 ] < aBlocks[ i ][ 3 ][ 2 ] .OR. ;  /* bottom < top    */
+                     tlbr_[ 2 ] > nRight + 1 .OR. ;              /* left   > right  */
+                     tlbr_[ 4 ] < nLeft - 2                      /* right  < left   */
                      lExe := .F.
                   ENDIF
                ENDIF
 
-            CASE aBlocks[ i, 3, 1 ] == WVT_BLOCK_GETS
-               IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   < bott  */
-                  tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm > top   */
-                  tlbr_[ 2 ] <= aBlocks[ i, 3, 5 ] .AND. ; /* left  < righ  */
-                  tlbr_[ 4 ] >= aBlocks[ i, 3, 3 ]       ) /* right > left  */
+            CASE aBlocks[ i ][ 3 ][ 1 ] == WVT_BLOCK_GETS
+               IF tlbr_[ 1 ] > aBlocks[ i ][ 3 ][ 4 ] .OR. ;  /* top    > bottom */
+                  tlbr_[ 3 ] < aBlocks[ i ][ 3 ][ 2 ] .OR. ;  /* bottom < top    */
+                  tlbr_[ 2 ] > aBlocks[ i ][ 3 ][ 5 ] .OR. ;  /* left   > right  */
+                  tlbr_[ 4 ] < aBlocks[ i ][ 3 ][ 3 ]         /* right  < left   */
                   lExe := .F.
                ENDIF
 
             OTHERWISE
-               /* If refreshing rectangle's top is less than objects' bottom    */
-               /* and left is less than objects' right                          */
-               /*                                                               */
-               IF !( tlbr_[ 1 ] <= aBlocks[ i, 3, 4 ] .AND. ; /* top   <= bottom  */
-                  tlbr_[ 3 ] >= aBlocks[ i, 3, 2 ] .AND. ; /* bootm >= top     */
-                  tlbr_[ 2 ] <= aBlocks[ i, 3, 5 ] .AND. ; /* left  < right    */
-                  tlbr_[ 4 ] >= aBlocks[ i, 3, 3 ]       ) /* right > left     */
+               /* If refreshing rectangle's top is less than objects' bottom
+                * and left is less than objects' right
+                */
+               IF tlbr_[ 1 ] > aBlocks[ i ][ 3 ][ 4 ] .OR. ;  /* top    > bottom */
+                  tlbr_[ 3 ] < aBlocks[ i ][ 3 ][ 2 ] .OR. ;  /* bottom < top    */
+                  tlbr_[ 2 ] > aBlocks[ i ][ 3 ][ 5 ] .OR. ;  /* left   > right  */
+                  tlbr_[ 4 ] < aBlocks[ i ][ 3 ][ 3 ]         /* right  < left   */
                   lExe := .F.
                ENDIF
             ENDCASE
          ENDIF
 
          IF lExe
-            Eval( aBlocks[ i, 2 ] )
+            Eval( aBlocks[ i ][ 2 ] )
          ENDIF
       NEXT
    ENDIF
@@ -145,17 +145,17 @@ FUNCTION wvg_SetPaint( cID, nAction, xData, aAttr )
 
    IF xData != NIL
       IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
-         IF ( n1 := AScan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
-            oldData := t_paint_[ n, 2, n1, 2 ]
-            t_paint_[ n, 2, n1, 2 ] := xData
-            t_paint_[ n, 2, n1, 3 ] := aAttr
+         IF ( n1 := AScan( t_paint_[ n ][ 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
+            oldData := t_paint_[ n ][ 2 ][ n1 ][ 2 ]
+            t_paint_[ n ][ 2 ][ n1 ][ 2 ] := xData
+            t_paint_[ n ][ 2 ][ n1 ][ 3 ] := aAttr
          ELSE
-            AAdd( t_paint_[ n, 2 ], { nAction, xData, aAttr } )
+            AAdd( t_paint_[ n ][ 2 ], { nAction, xData, aAttr } )
          ENDIF
       ELSE
          AAdd( t_paint_, { cID, {} } )
          n := Len( t_paint_ )
-         AAdd( t_paint_[ n, 2 ], { nAction, xData, aAttr } )
+         AAdd( t_paint_[ n ][ 2 ], { nAction, xData, aAttr } )
       ENDIF
    ENDIF
 
@@ -166,7 +166,7 @@ FUNCTION wvg_GetPaint( cID )
    LOCAL n
 
    IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
-      RETURN t_paint_[ n, 2 ]
+      RETURN t_paint_[ n ][ 2 ]
    ENDIF
 
    RETURN {}
@@ -176,9 +176,9 @@ FUNCTION wvg_DelPaint( cID, nAction )
    LOCAL xData, n1, n
 
    IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
-      IF ( n1 := AScan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
-         xData := t_paint_[ n, 2, n1, 2 ]
-         t_paint_[ n, 2, n1, 2 ] := {|| .T. }
+      IF ( n1 := AScan( t_paint_[ n ][ 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
+         xData := t_paint_[ n ][ 2 ][ n1 ][ 2 ]
+         t_paint_[ n ][ 2 ][ n1 ][ 2 ] := {|| .T. }
       ENDIF
    ENDIF
 
@@ -362,7 +362,7 @@ FUNCTION wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
       nH := nRows
    ENDIF
 
-   aDlg[ 1, 4 ]++      /* item count */
+   aDlg[ 1 ][ 4 ]++  /* item count */
 
    AAdd( aDlg[  2 ], iif( HB_ISNUMERIC( nHelpId  ), nHelpId, 0 ) )
    AAdd( aDlg[  3 ], iif( HB_ISNUMERIC( nExStyle ), nExStyle, 0 ) )

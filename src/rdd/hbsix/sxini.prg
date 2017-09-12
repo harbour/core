@@ -141,10 +141,9 @@ FUNCTION sx_IniHeader( cHeaderName, nArea )
       nArea := Select()
    ENDIF
 
-   IF nArea $ SxIniInfo
-      IF cHeaderName $ SxIniInfo[ nArea ]
-         RETURN SxIniInfo[ nArea, cHeaderName ]
-      ENDIF
+   IF nArea $ SxIniInfo .AND. ;
+      cHeaderName $ SxIniInfo[ nArea ]
+      RETURN SxIniInfo[ nArea ][ cHeaderName ]
    ENDIF
 
    RETURN {}

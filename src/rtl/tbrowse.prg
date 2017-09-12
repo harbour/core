@@ -547,8 +547,8 @@ METHOD colorRect( aRect, aColors ) CLASS TBrowse
       FOR nRow := aRect[ 1 ] TO aRect[ 3 ]
          ::readRecord( nRow )
          FOR nCol := aRect[ 2 ] TO aRect[ 4 ]
-            ::aCellColors[ nRow, nCol ][ 1 ] := aColors[ 1 ]
-            ::aCellColors[ nRow, nCol ][ 2 ] := aColors[ 2 ]
+            ::aCellColors[ nRow ][ nCol ][ 1 ] := aColors[ 1 ]
+            ::aCellColors[ nRow ][ nCol ][ 2 ] := aColors[ 2 ]
          NEXT
          ::dispRow( nRow )
       NEXT
@@ -612,7 +612,7 @@ METHOD readRecord( nRow ) CLASS TBrowse
       IF nRow <= ::nLastRow
          nToMove := nRow - ::nBufferPos
          nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, nToMove ) )
-         /* TOFIX: add protection against unexpected results
+         /* FIXME: add protection against unexpected results
           *        CA-Cl*pper does not fully respect here the returned
           *        value and current code below replicates what Clipper
           *        seems to do but it means that in network environment
@@ -802,7 +802,7 @@ METHOD stabilize() CLASS TBrowse
          ::nRowPos := ::nLastRow
       ENDIF
       IF ::nBufferPos != ::nRowPos
-         /* TOFIX: add protection against unexpected results
+         /* FIXME: add protection against unexpected results
           *        CA-Cl*pper does not fully respect here the returned
           *        value and current code below replicates what Clipper
           *        seems to do but it means that in network environment
@@ -881,7 +881,7 @@ METHOD cellValue( nRow, nCol ) CLASS TBrowse
       nCol >= 1 .AND. nCol <= ::colCount .AND. ;
       ::aCellStatus[ nRow ]
 
-      RETURN ::aCellValues[ nRow, nCol ]
+      RETURN ::aCellValues[ nRow ][ nCol ]
    ENDIF
 
    RETURN NIL
@@ -893,7 +893,7 @@ METHOD cellColor( nRow, nCol ) CLASS TBrowse
       nCol >= 1 .AND. nCol <= ::colCount .AND. ;
       ::aCellStatus[ nRow ]
 
-      RETURN ::aCellColors[ nRow, nCol ]
+      RETURN ::aCellColors[ nRow ][ nCol ]
    ENDIF
 
    RETURN NIL

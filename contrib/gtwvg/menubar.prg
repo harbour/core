@@ -214,8 +214,8 @@ METHOD WvgMenuBar:delItem( nItemNum )
    LOCAL lResult := .F.
 
    IF nItemNum > 0 .AND. nItemNum <= ::numItems()
-      IF ::aMenuItems[ nItemNum, WVT_MENU_TYPE ] == MF_POPUP
-         ::aMenuItems[ nItemNum, WVT_MENU_MENUOBJ ]:Destroy()
+      IF ::aMenuItems[ nItemNum ][ WVT_MENU_TYPE ] == MF_POPUP
+         ::aMenuItems[ nItemNum ][ WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
 
       IF ( lResult := wvg_DeleteMenu( ::hMenu, nItemNum - 1, MF_BYPOSITION ) ) /* Remember ZERO base */
@@ -336,11 +336,11 @@ METHOD WvgMenuBar:findMenuItemById( nId )
       x := ::numItems()
 
       DO WHILE x > 0 .AND. Empty( aResult )
-         IF ::aMenuItems[ x, WVT_MENU_TYPE ] == MF_POPUP
-            aResult := ::aMenuItems[ x, WVT_MENU_MENUOBJ ]:findMenuItemById( nId )
+         IF ::aMenuItems[ x ][ WVT_MENU_TYPE ] == MF_POPUP
+            aResult := ::aMenuItems[ x ][ WVT_MENU_MENUOBJ ]:findMenuItemById( nId )
 
-         ELSEIF ::aMenuItems[ x, WVT_MENU_IDENTIFIER ] == nId
-            aResult := { x, ::aMenuItems[ x, WVT_MENU_ACTION ], ::sl_itemSelected, Self }
+         ELSEIF ::aMenuItems[ x ][ WVT_MENU_IDENTIFIER ] == nId
+            aResult := { x, ::aMenuItems[ x ][ WVT_MENU_ACTION ], ::sl_itemSelected, Self }
 
          ENDIF
          x--
@@ -357,10 +357,10 @@ METHOD WvgMenuBar:findMenuPosById( nId )
       x := ::numItems()
 
       DO WHILE x > 0 .AND. Empty( nPos )
-         IF ::aMenuItems[ x, WVT_MENU_TYPE ] == MF_POPUP
-            nPos := ::aMenuItems[ x, WVT_MENU_MENUOBJ ]:findMenuPosById( nId )
+         IF ::aMenuItems[ x ][ WVT_MENU_TYPE ] == MF_POPUP
+            nPos := ::aMenuItems[ x ][ WVT_MENU_MENUOBJ ]:findMenuPosById( nId )
 
-         ELSEIF ::aMenuItems[ x, WVT_MENU_IDENTIFIER ] == nId
+         ELSEIF ::aMenuItems[ x ][ WVT_MENU_IDENTIFIER ] == nId
             nPos := x
 
          ENDIF
@@ -405,7 +405,11 @@ METHOD WvgMenuBar:disableItem( nItemNum )
 METHOD WvgMenuBar:getItem( nItemNum )
 
    IF HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0 .AND. nItemNum <= Len( ::aMenuItems )
-      RETURN { ::aMenuItems[ nItemNum, 3 ], ::aMenuItems[ nItemNum, 4 ], ::aMenuItems[ nItemNum, 5 ], ::aMenuItems[ nItemNum, 6 ] }
+      RETURN { ;
+         ::aMenuItems[ nItemNum ][ 3 ], ;
+         ::aMenuItems[ nItemNum ][ 4 ], ;
+         ::aMenuItems[ nItemNum ][ 5 ], ;
+         ::aMenuItems[ nItemNum ][ 6 ] }
    ENDIF
 
    RETURN NIL

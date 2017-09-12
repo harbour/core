@@ -1,17 +1,16 @@
-/*
- *    Wvt*Classes Demonstration
+/* Wvt*Classes Demonstration
  *
- *    This protocol can be clubbed with pure console implementation
- *    AND can be called IN a separate thread as well as modal TO
- *    current window.
+ * This protocol can be clubbed with pure console implementation
+ * and can be called in a separate thread as well as modal to
+ * current window.
  *
- *    Pritpal Bedi <bedipritpal@hotmail.com>
+ * Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
-FUNCTION DialogWvgClassesOne( nMode )
+PROCEDURE DialogWvgClassesOne( nMode )
 
    LOCAL bBlock
 
@@ -34,9 +33,9 @@ FUNCTION DialogWvgClassesOne( nMode )
       MyDialogOne()
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION MyDialogOne( oCrt )
+STATIC PROCEDURE MyDialogOne( oCrt )
 
    LOCAL aObjects := WvtSetBlocks( {} )
    LOCAL nWinRows, nWinCols, cWinTitle, cFont, nHeight
@@ -53,7 +52,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    WvtSetKeys( .F. )
    lChkMouse := SetMouseCheck( .F. )
 
-   hPopup := Wvt_SetPopupMenu()
+   hPopup := wvt_SetPopupMenu()
    Popups()
 
    cTxt := "GTWVG is capable of designing virtually any preceivable control "
@@ -73,7 +72,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    AAdd( aImg_, GetResource( "v_notes1.bmp" ) )
    AAdd( aImg_, GetResource( "v_selct1.bmp" ) )
    ? "."
-   Wvt_ShowWindow( 1 )
+   wvt_ShowWindow( 1 )
    nWinRows  := 55
    nWinCols  := 185
    cWinTitle := "WvtGui Dialog One"
@@ -141,7 +140,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    oBtn := WvtPushButton():New( oDlg, 124, 6, 129, 7, 137 )
    oBtn:cCaption  := "Print"
-   oBtn:bOnLeftUp := {|| Wvt_Keyboard( 379 ) }
+   oBtn:bOnLeftUp := {|| wvt_Keyboard( 379 ) }
    oBtn:Tooltip   := "Open Printing Dialog for the Browser in Focus"
    oDlg:AddObject( oBtn )
 
@@ -183,7 +182,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oGet:AddGets( 12, nGetCol, "GTWvt               ", "@! ", "W+/B*,N/W*" )
    oGet:AddGets( 14, nGetCol, Date() )
    oGet:AddGets( 16, nGetCol, 2122.57, "@Z 99999999.99", "w+/R,GR+/B" )
-   oGet:Tooltip   := "WvtGets():New() - ReadModal() like Clipper"
+   oGet:Tooltip   := "WvtGets():New() - ReadModal() like Cl*pper"
    oGet:cDesc     := "Normal Get Box"
    oGet:bOnCreate := bBlock
    oDlg:AddObject( oGet )
@@ -282,7 +281,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oMenu:Caption := "Other Dialogs"
    oMenu:AddItem( "Dialog Two", {|| DialogWvgClassesTwo() } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Exit",       {|| Wvt_Keyboard( K_ESC ) } )
+   oMenu:AddItem( "Exit",       {|| wvt_Keyboard( K_ESC ) } )
    g_oMenuBar:addItem( "", oMenu )
 
    oDlg:oMenu := g_oMenuBar
@@ -322,12 +321,12 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    WvtSetBlocks( aObjects )
    WvtSetKeys( .T. )
-   Wvt_SetPopupMenu( hPopup )
+   wvt_SetPopupMenu( hPopup )
    SetMouseCheck( lChkMouse )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION DialogWvgClassesTwo()
+PROCEDURE DialogWvgClassesTwo()
 
    LOCAL aObjects := WvtSetBlocks( {} )
    LOCAL oDlg     := WvtDialog():New( 30, 90, "My Dialog Two" )
@@ -339,7 +338,7 @@ FUNCTION DialogWvgClassesTwo()
    oMenu:Caption := "Miscellaneous"
    oMenu:AddItem( "Progressbar", {|| ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 ) } )
    oMenu:AddItem( "-" )
-   oMenu:AddItem( "Exit",        {|| Wvt_Keyboard( K_ESC ) } )
+   oMenu:AddItem( "Exit",        {|| wvt_Keyboard( K_ESC ) } )
    g_oMenuBar:addItem( "", oMenu )
 
    oDlg:oMenu := g_oMenuBar
@@ -385,9 +384,9 @@ FUNCTION DialogWvgClassesTwo()
 
    WvtSetBlocks( aObjects )
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
+STATIC PROCEDURE ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
 
    LOCAL i
 
@@ -411,9 +410,9 @@ STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
    oPBar3:DeActivate()
    oPBar4:DeActivate()
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
+STATIC PROCEDURE ExeProgressBar( oPBar, oPBar3 )
 
    LOCAL i
 
@@ -427,4 +426,4 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
    oPBar:DeActivate()
    oPBar3:DeActivate()
 
-   RETURN NIL
+   RETURN
