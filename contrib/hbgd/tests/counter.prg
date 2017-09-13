@@ -1,5 +1,4 @@
-/*
- * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
+/* Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  *
  * Counter sample
  * usage:
@@ -9,11 +8,11 @@
 
 #require "hbgd"
 
-/* Some digits images from:
-   http://www.digitmania.holowww.com/all.html */
+/* Some digit images from:
+   https://web.archive.org/web/www.digitmania.holowww.com/all.html */
 
-#define IMAGES_IN  "digits" + hb_ps()
-#define IMAGES_OUT "imgs_out" + hb_ps()
+#define IMAGES_IN   "imgs_in" + hb_ps()
+#define IMAGES_OUT  "imgs_out" + hb_ps()
 
 #define DISPLAY_NUM  10
 

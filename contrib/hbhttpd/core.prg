@@ -1633,7 +1633,7 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
    IF cFileName == NIL
       cFileName := MEMVAR->server[ "SCRIPT_NAME" ]
    ENDIF
-   cFileName := UOsFileName( hb_DirBase() + "tpl/" + cFileName + ".tpl" )
+   cFileName := UOsFileName( hb_DirBase() + "tpl/" + cFileName + ".html" )
    IF hb_FileExists( cFileName )
       cTpl := hb_MemoRead( cFileName )
       BEGIN SEQUENCE

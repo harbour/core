@@ -39,7 +39,6 @@ ChangeLog.txt ident
 *.sfc     text
 *.spec    text
 *.sx      text
-*.tpl     text
 *.txt     text
 *.ucf     text
 *.vbs     text
