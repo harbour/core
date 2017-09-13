@@ -13654,8 +13654,8 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
 STATIC FUNCTION hbmk_CoreHeaderFiles()
    THREAD STATIC t_hHeaders := NIL
 
-#if defined( HBMK_WITH_EMBEDDED_HEADERS ) .OR. ;
-    defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
+#if defined( HBMK_WITH_BUILTIN_HEADERS_TOP ) .OR. ;
+    defined( HBMK_WITH_BUILTIN_HEADERS_ALL )
 
    IF t_hHeaders == NIL
       t_hHeaders := { => }
@@ -13667,7 +13667,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 #if defined( _HBSHELL_EXTRA_HEADER )
       ADD HEADER TO t_hHeaders FILE _HBSHELL_EXTRA_HEADER
 #endif
-#if defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
+#if defined( HBMK_WITH_BUILTIN_HEADERS_ALL )
       ADD HEADER TO t_hHeaders FILE "achoice.ch"
       ADD HEADER TO t_hHeaders FILE "assert.ch"
       ADD HEADER TO t_hHeaders FILE "blob.ch"
@@ -16548,9 +16548,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
    AAdd( aLst_File_Shell, { _EXT_FILE_          , hb_StrFormat( I_( "list of extensions to load in interactive Harbour shell. One extension per line, part of line beyond a '#' character is ignored. Alternate filename on %2$s: %1$s. Resides in [*]: %3$s" ), _EXT_FILE_ALT, _EXT_FILE_ALT_OS, __hbshell_ConfigDir( hbmk[ _HBMK_lMarkdown ] ) ) } )
 #endif
 
-#if defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
+#if defined( HBMK_WITH_BUILTIN_HEADERS_ALL )
    AAdd( aLst_Config, I_( "Embed all core Harbour headers." ) )
-#elif defined( HBMK_WITH_EMBEDDED_HEADERS )
+#elif defined( HBMK_WITH_BUILTIN_HEADERS_TOP )
    AAdd( aLst_Config, I_( "Embed frequently used core Harbour headers." ) )
 #endif
 #ifndef _HBMK_EMBEDDED_
