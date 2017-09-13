@@ -57,7 +57,7 @@ endif
 # ORIGIN http://zlib.net/
 # VER    1.2.11
 # URL    https://github.com/madler/zlib/archive/v1.2.11.zip
-# DIFF   zlib.dif
+# DIFF   zlib.diff
 #
 # MAP    README
 # MAP    adler32.c

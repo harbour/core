@@ -854,8 +854,8 @@ Version 1.0.0 rc1 (2008-06-04) tag: 1.0.0rc1
 
 General
 =============================
-- The SourceForge repository was moved from CVS to SVN
-- added docs/howtorep.txt
+- The source repository was moved from CVS to SVN
+- added docs/howtovcs.txt
 - changed pack_src.sh to extract list of files from local SVN copy using
   SVN commands
 - improved CYGWIN compatibility
@@ -870,15 +870,15 @@ General
   who want to change the grammar files needs bison
 - removed all HB_COMPAT_XHB definitions from source code - now all covered
   extensions should be supported by hbcompat.ch and/or xhb library
-- removed 3-rd party header files from SVN, f.e.: ace.h
+- removed 3rd party header files from SVN, f.e.: ace.h
 
 Portability
 -----------
 - eliminated errno access for platforms which do not have it.
 - added support for PocketPC WINCE with MSVC, POCC, CeGCC and MinGWCE.
 - added support for cross WinCE builds
-- extended hb* scripts for cross builds: hbw* - Win32, hbce* - WinCE
-- added support for creating RPMs with Harbour cross build for Win32 and
+- extended hb* scripts for cross builds: hbw* - Windows, hbce* - WinCE
+- added support for creating RPMs with Harbour cross build for Windows and
   WinCE.
 - added support for MS-Windows UNICDE builds.
 - added support for shared libraries (.sl) in HPUX builds

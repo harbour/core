@@ -23,7 +23,7 @@ xmltok.c
 # ORIGIN https://expat.sourceforge.net/
 # VER    2.2.1
 # URL    https://downloads.sourceforge.net/project/expat/expat/2.2.1/expat-2.2.1.tar.bz2
-# DIFF   expat.dif
+# DIFF   expat.diff
 #
 # MAP    COPYING
 # MAP    lib/xmlparse.c       xmlparse.c

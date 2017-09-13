@@ -29,7 +29,7 @@ unzip.c
 # ORIGIN http://zlib.net/
 # VER    1.2.8
 # URL    https://downloads.sourceforge.net/libpng/zlib128.zip
-# DIFF   minizip.dif
+# DIFF   minizip.diff
 #
 # MAP    README
 # MAP    contrib/minizip/crypt.h crypt.h

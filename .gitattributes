@@ -13,7 +13,7 @@ ChangeLog.txt ident
 *.cpp     text
 *.css     text
 *.def     text
-*.dif     text
+*.diff    text
 *.h       text
 *.hb      text
 *.hbc     text
@@ -30,6 +30,7 @@ ChangeLog.txt ident
 *.mft     text
 *.mk      text
 *.nsi     text
+*.patch   text
 *.pem     text
 *.po      text
 *.prg     text
@@ -73,7 +74,7 @@ ChangeLog.txt ident
 *.pdf     binary
 *.pfb     binary
 *.png     binary
-*.sq3     binary
+*.sqlite3 binary
 *.tif     binary
 
 # TOTEST:

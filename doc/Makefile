@@ -4,7 +4,7 @@ DOC_FILES := \
    c_std.txt \
    class_tp.txt \
    clipper.txt \
-   cmdline.txt \
+   cmdline.md \
    cmpopt.txt \
    codebloc.txt \
    codestyl.txt \
