@@ -50,19 +50,18 @@
  * set default memo type to SMT
  */
 
-#include "rddsys.ch"
-#include "hbusrrdd.ch"
 #include "dbinfo.ch"
+#include "hbusrrdd.ch"
+#include "rddsys.ch"
 
 /* Force linking DBFCDX and DBFFPT from which our RDD inherits */
 REQUEST DBFCDX
 REQUEST DBFFPT
 
-/* Announce our RDD for forign REQUESTs */
+/* Announce our RDD for foreign REQUESTs */
 ANNOUNCE SMTCDX
 
 FUNCTION SMTCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
-
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       "DBFCDX", {}, pSuperRddID ) /* We are inheriting from DBFCDX */
 

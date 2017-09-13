@@ -16,7 +16,7 @@ CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_HOST_INC)
 
-# uncomment this if you want to force creating 64bit binaries on IA64
+# uncomment this if you want to force creating 64-bit binaries on IA64
 #CFLAGS += -mlp64
 #LDFLAGS += -mlp64
 

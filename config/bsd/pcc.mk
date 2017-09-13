@@ -1,4 +1,4 @@
-# TODO: No autodetection
+# TODO: No auto-detection
 
 ifeq ($(HB_BUILD_MODE),cpp)
    HB_BUILD_MODE := c

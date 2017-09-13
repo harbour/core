@@ -77,7 +77,7 @@ define lib_object
 endef
 
 # We have to use script to overcome the MS-DOS limit of max 128 characters
-# in commmand line
+# in command-line
 define create_library
    @$(ECHO) $(ECHOQUOTE)CREATE $(LIB_DIR)/$@$(ECHOQUOTE) > __lib__.tmp
    $(foreach file,$(^F),$(lib_object))

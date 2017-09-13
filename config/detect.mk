@@ -74,7 +74,7 @@ _DET_INC_HEAD := /gpm.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 
-# Detect slang
+# Detect s-lang
 
 _DET_DSP_NAME := slang
 _DET_VAR_INC_ := HB_INC_SLANG

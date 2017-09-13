@@ -273,7 +273,7 @@ PROCEDURE Main( ... )
             ELSEIF Empty( query_stdout( "tar --version" ) )
                cBin_Tar := ""
             ELSEIF "bsdtar" $ query_stdout( "tar --version" )
-               /* tar is mapped to bsdtar starting OS X 10.6 */
+               /* tar is mapped to bsdtar starting Mac OS X 10.6 */
                lGNU_Tar := .F.
             ENDIF
 
@@ -654,7 +654,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
                hExtern := { => }
                FOR EACH tmp IN aResult
                   tmp[ 2 ] := hb_asciiUpper( tmp[ 2 ] )
-                  IF !( tmp[ 2 ] $ hExtern )
+                  IF ! tmp[ 2 ] $ hExtern
                      AAdd( aExtern, tmp[ 2 ] )
                      hExtern[ tmp[ 2 ] ] := NIL
                   ENDIF

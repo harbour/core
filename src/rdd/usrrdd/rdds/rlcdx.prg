@@ -46,14 +46,14 @@
 
 /*
  * A simple RDD which introduce lock counters. It has full DBFCDX
- * functionality from which it inherits but if you execute dbRLock(100)
- * twice then you will have to also repeat call to dbRUnlock(100) to
+ * functionality from which it inherits but if you execute dbRLock( 100 )
+ * twice then you will have to also repeat call to dbRUnlock( 100 ) to
  * really unlock the record 100. The same if for FLock()
  * This idea comes from one of messages sent by Mindaugas Kavaliauskas.
  */
 
-#include "rddsys.ch"
 #include "hbusrrdd.ch"
+#include "rddsys.ch"
 
 ANNOUNCE RLCDX
 
@@ -61,8 +61,8 @@ ANNOUNCE RLCDX
  * methods: NEW and RELEASE receive pointer to work area structure
  * not work area number. It's necessary because the can be executed
  * before work area is allocated
- * these methods does not have to execute SUPER methods - these is
- * always done by low level USRRDD code
+ * these methods does not have to execute SUPER methods - this is
+ * always done by low-level USRRDD code
  */
 
 STATIC FUNCTION RLCDX_NEW( pWA )
@@ -86,10 +86,8 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
 
    /* Convert EXCLUSIVE locks to DBLM_MULTIPLE */
    IF aLockInfo[ UR_LI_METHOD ] == DBLM_EXCLUSIVE
-
       aLockInfo[ UR_LI_METHOD ] := DBLM_MULTIPLE
       aLockInfo[ UR_LI_RECORD ] := RecNo()
-
    ENDIF
 
    IF aLockInfo[ UR_LI_METHOD ] == DBLM_MULTIPLE      /* RLOCK */
@@ -107,14 +105,13 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
       IF aWData[ 1 ] > 0
          aLockInfo[ UR_LI_RESULT ] := .T.
          RETURN HB_SUCCESS
-      ELSEIF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
-         ++aWData[ 2, i, 2 ]
+      ELSEIF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) > 0
+         ++aWData[ 2 ][ i ][ 2 ]
          aLockInfo[ UR_LI_RESULT ] := .T.
          RETURN HB_SUCCESS
       ENDIF
 
-      nResult := UR_SUPER_LOCK( nWA, aLockInfo )
-      IF nResult == HB_SUCCESS
+      IF ( nResult := UR_SUPER_LOCK( nWA, aLockInfo ) ) == HB_SUCCESS
          IF aLockInfo[ UR_LI_RESULT ]
             AAdd( aWData[ 2 ], { xRecID, 1 } )
          ENDIF
@@ -129,8 +126,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
          RETURN HB_SUCCESS
       ENDIF
 
-      nResult := UR_SUPER_LOCK( nWA, aLockInfo )
-      IF nResult == HB_SUCCESS
+      IF ( nResult := UR_SUPER_LOCK( nWA, aLockInfo ) ) == HB_SUCCESS
 
          /* FLOCK always first remove all RLOCKs, even if it fails */
          ASize( aWData[ 2 ], 0 )
@@ -153,8 +149,8 @@ STATIC FUNCTION RLCDX_UNLOCK( nWA, xRecID )
    LOCAL aWData := USRRDD_AREADATA( nWA ), i
 
    IF HB_ISNUMERIC( xRecID ) .AND. xRecID > 0
-      IF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
-         IF --aWData[ 2, i, 2 ] > 0
+      IF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) > 0
+         IF --aWData[ 2 ][ i ][ 2 ] > 0
             RETURN HB_SUCCESS
          ENDIF
          hb_ADel( aWData[ 2 ], i, .T. )
@@ -180,16 +176,15 @@ STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
 
    lUnlockAll := .F.
 
-   nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_APPEND( nWA, lUnlockAll ) ) == HB_SUCCESS
 
       aWData := USRRDD_AREADATA( nWA )
       IF aWData[ 1 ] == 0
          xRecId := RecNo()
          /* Some RDDs may allow to set phantom locks with RLOCK so we should
             check if it's not the case and increase the counter when it is */
-         IF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
-            ++aWData[ 2, i, 2 ]
+         IF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) > 0
+            ++aWData[ 2 ][ i ][ 2 ]
          ELSE
             AAdd( aWData[ 2 ], { xRecID, 1 } )
          ENDIF
@@ -212,10 +207,10 @@ FUNCTION RLCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuper
    LOCAL cSuperRDD := "DBFCDX" /* We are inheriting from DBFCDX */
    LOCAL aMethods[ UR_METHODCOUNT ]
 
-   aMethods[ UR_NEW  ]   := ( @RLCDX_NEW()    )
-   aMethods[ UR_LOCK ]   := ( @RLCDX_LOCK()   )
-   aMethods[ UR_UNLOCK ] := ( @RLCDX_UNLOCK() )
-   aMethods[ UR_APPEND ] := ( @RLCDX_APPEND() )
+   aMethods[ UR_NEW  ]   := @RLCDX_NEW()
+   aMethods[ UR_LOCK ]   := @RLCDX_LOCK()
+   aMethods[ UR_UNLOCK ] := @RLCDX_UNLOCK()
+   aMethods[ UR_APPEND ] := @RLCDX_APPEND()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMethods, pSuperRddID )

@@ -46,16 +46,16 @@
 
 /*
  * A simple RDD which adds automatically update HSX indexes to DBFCDX
- * To create new HSX index for current work area use: HSX_CREATE()
- * To open already existing one use HSX_OPEN(),
- * To close use: HSX_CLOSE()
- * To retieve an handle use: HSX_HANDLE()
+ * To create new HSX index for current work area use: hsx_Create()
+ * To open already existing one use hsx_Open(),
+ * To close use: hsx_Close()
+ * To retrieve an handle use: hsx_Handle()
  */
 
-#include "rddsys.ch"
-#include "hbusrrdd.ch"
-#include "fileio.ch"
 #include "dbinfo.ch"
+#include "fileio.ch"
+#include "hbusrrdd.ch"
+#include "rddsys.ch"
 
 ANNOUNCE HSCDX
 
@@ -63,8 +63,8 @@ ANNOUNCE HSCDX
  * methods: NEW and RELEASE receive pointer to work area structure
  * not work area number. It's necessary because the can be executed
  * before work area is allocated
- * these methods does not have to execute SUPER methods - these is
- * always done by low level USRRDD code
+ * these methods does not have to execute SUPER methods - this is
+ * always done by low-level USRRDD code
  */
 
 STATIC FUNCTION _HSX_NEW( pWA )
@@ -72,7 +72,7 @@ STATIC FUNCTION _HSX_NEW( pWA )
    LOCAL aWData := { .F., {}, {} }
 
    /*
-    * Set in our private AREA item the array where we will kepp HSX indexes
+    * Set in our private AREA item the array where we will keep HSX indexes
     * and HOT buffer flag
     */
 
@@ -102,8 +102,7 @@ STATIC FUNCTION _HSX_GOCOLD( nWA )
 
    LOCAL nResult, aWData, nHSX, nRecNo, nKeyNo
 
-   nResult := UR_SUPER_GOCOLD( nWA )
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_GOCOLD( nWA ) ) == HB_SUCCESS
       aWData := USRRDD_AREADATA( nWA )
       IF aWData[ 1 ]
          IF ! Empty( aWData[ 2 ] )
@@ -129,8 +128,7 @@ STATIC FUNCTION _HSX_GOHOT( nWA )
 
    LOCAL nResult, aWData
 
-   nResult := UR_SUPER_GOHOT( nWA )
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_GOHOT( nWA ) ) == HB_SUCCESS
       aWData := USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF
@@ -141,8 +139,7 @@ STATIC FUNCTION _HSX_APPEND( nWA, lUnlockAll )
 
    LOCAL nResult, aWData
 
-   nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
-   IF nResult == HB_SUCCESS
+   IF ( nResult := UR_SUPER_APPEND( nWA, lUnlockAll ) ) == HB_SUCCESS
       aWData := USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF
@@ -154,7 +151,7 @@ STATIC FUNCTION _HSX_APPEND( nWA, lUnlockAll )
  * with current work are and automatically updated.
  */
 
-FUNCTION HSX_CREATE( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
+FUNCTION hsx_Create( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
 
    LOCAL aWData, nHsx := -1, nOpenMode
 
@@ -164,9 +161,7 @@ FUNCTION HSX_CREATE( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
       aWData := USRRDD_AREADATA( Select() )
       nOpenMode := iif( dbInfo( DBI_SHARED ), 1, 0 ) + ;
          iif( dbInfo( DBI_ISREADONLY ), 2, 0 )
-      nHsx := hs_Index( cFile, cExpr, nKeySize, nOpenMode, ;
-         nBufSize, lCase, nFiltSet )
-      IF nHsx >= 0
+      IF ( nHsx := hs_Index( cFile, cExpr, nKeySize, nOpenMode, nBufSize, lCase, nFiltSet ) ) >= 0
          AAdd( aWData[ 2 ], nHsx )
          AAdd( aWData[ 3 ], cFile )
       ENDIF
@@ -174,7 +169,7 @@ FUNCTION HSX_CREATE( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
 
    RETURN nHsx
 
-PROCEDURE HSX_OPEN( cFile, nBufSize )
+PROCEDURE hsx_Open( cFile, nBufSize )
 
    LOCAL aWData, nHsx, nOpenMode
 
@@ -184,8 +179,7 @@ PROCEDURE HSX_OPEN( cFile, nBufSize )
       aWData := USRRDD_AREADATA( Select() )
       nOpenMode := iif( dbInfo( DBI_SHARED ), 1, 0 ) + ;
          iif( dbInfo( DBI_ISREADONLY ), 2, 0 )
-      nHsx := hs_Open( cFile, nBufSize, nOpenMode )
-      IF nHsx >= 0
+      IF ( nHsx := hs_Open( cFile, nBufSize, nOpenMode ) ) >= 0
          AAdd( aWData[ 2 ], nHsx )
          AAdd( aWData[ 3 ], cFile )
       ENDIF
@@ -193,20 +187,21 @@ PROCEDURE HSX_OPEN( cFile, nBufSize )
 
    RETURN
 
-PROCEDURE HSX_CLOSE( xHSX )
+PROCEDURE hsx_Close( xHSX )
 
    LOCAL aWData, nSlot
 
    IF Used() .AND. rddName() == "HSCDX"
       aWData := USRRDD_AREADATA( Select() )
-      IF HB_ISNUMERIC( xHSX )
+      DO CASE
+      CASE HB_ISNUMERIC( xHSX )
          nSlot := AScan( aWData[ 2 ], xHSX )
-      ELSEIF HB_ISSTRING( xHSX )
+      CASE HB_ISSTRING( xHSX )
          nSlot := AScan( aWData[ 3 ], {| _1 | _1 == xHSX } )
-      ELSE
+      OTHERWISE
          nSlot := 0
-      ENDIF
-      IF nSlot != 0
+      ENDCASE
+      IF nSlot > 0
          hb_ADel( aWData[ 2 ], nSlot, .T. )
          hb_ADel( aWData[ 3 ], nSlot, .T. )
       ENDIF
@@ -214,7 +209,7 @@ PROCEDURE HSX_CLOSE( xHSX )
 
    RETURN
 
-FUNCTION HSX_HANDLE( cFile )
+FUNCTION hsx_Handle( cFile )
 
    LOCAL aWData, nSlot
 
@@ -222,13 +217,13 @@ FUNCTION HSX_HANDLE( cFile )
       aWData := USRRDD_AREADATA( Select() )
       nSlot := AScan( aWData[ 3 ], {| _1 | _1 == cFile } )
       IF nSlot != 0
-         RETURN aWData[ 2, nSlot ]
+         RETURN aWData[ 2 ][ nSlot ]
       ENDIF
    ENDIF
 
    RETURN -1
 
-FUNCTION HSX_FILE( nHsx )
+FUNCTION hsx_File( nHsx )
 
    LOCAL aWData, nSlot
 
@@ -236,20 +231,20 @@ FUNCTION HSX_FILE( nHsx )
       aWData := USRRDD_AREADATA( Select() )
       nSlot := AScan( aWData[ 3 ], nHsx )
       IF nSlot != 0
-         RETURN aWData[ 3, nSlot ]
+         RETURN aWData[ 3 ][ nSlot ]
       ENDIF
    ENDIF
 
    RETURN ""
 
-FUNCTION HSX_GET( nSlot )
+FUNCTION hsx_Get( nSlot )
 
    LOCAL aWData
 
    IF Used() .AND. rddName() == "HSCDX"
       aWData := USRRDD_AREADATA( Select() )
       IF nSlot > 0 .AND. nSlot <= Len( aWData[ 2 ] )
-         RETURN aWData[ 2, nSlot ]
+         RETURN aWData[ 2 ][ nSlot ]
       ENDIF
    ENDIF
 
@@ -269,11 +264,11 @@ FUNCTION HSCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuper
    LOCAL cSuperRDD := "DBFCDX" /* We are inheriting from DBFCDX */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
-   aMyFunc[ UR_NEW    ] := ( @_HSX_NEW()    )
-   aMyFunc[ UR_CLOSE  ] := ( @_HSX_CLOSE()  )
-   aMyFunc[ UR_GOCOLD ] := ( @_HSX_GOCOLD() )
-   aMyFunc[ UR_GOHOT  ] := ( @_HSX_GOHOT()  )
-   aMyFunc[ UR_APPEND ] := ( @_HSX_APPEND() )
+   aMyFunc[ UR_NEW    ] := @_HSX_NEW()
+   aMyFunc[ UR_CLOSE  ] := @_HSX_CLOSE()
+   aMyFunc[ UR_GOCOLD ] := @_HSX_GOCOLD()
+   aMyFunc[ UR_GOHOT  ] := @_HSX_GOHOT()
+   aMyFunc[ UR_APPEND ] := @_HSX_APPEND()
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
       cSuperRDD, aMyFunc, pSuperRddID )
