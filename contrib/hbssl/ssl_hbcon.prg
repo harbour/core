@@ -44,7 +44,7 @@
  *
  */
 
-/* hb_SSL_new() -> <pSSL> */
+/* hb_SSL_new() --> <pSSL> */
 FUNCTION hb_SSL_new()
 
    STATIC s_onceControl
@@ -56,14 +56,14 @@ FUNCTION hb_SSL_new()
    /* create a new SSL structure for a connection */
    RETURN SSL_new( SSL_CTX_new() )
 
-/* hb_SSL_connect_socket( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) -> <lConnected> */
+/* hb_SSL_connect_socket( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) --> <lConnected> */
 FUNCTION hb_SSL_connect_socket( pSocket, nTimeout, cInfo )
 
    LOCAL nErr
    LOCAL ssl
 
    ssl := hb_SSL_new()
-   IF !Empty( pSocket := hb_socketNewSSL_connect( @pSocket, ssl, nTimeout ) )
+   IF ! Empty( pSocket := hb_socketNewSSL_connect( @pSocket, ssl, nTimeout ) )
       cInfo := "SSL connected with " + SSL_get_cipher( ssl ) + " encryption."
       RETURN .T.
    ENDIF
@@ -73,7 +73,7 @@ FUNCTION hb_SSL_connect_socket( pSocket, nTimeout, cInfo )
                           nErr, ERR_error_string( nErr ) )
    RETURN .F.
 
-/* hb_SSL_connect_inet( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) -> <lConnected> */
+/* hb_SSL_connect_inet( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) --> <lConnected> */
 FUNCTION hb_SSL_connect_inet( pInetSock, nTimeout, cInfo )
 
    LOCAL nResult, nErr

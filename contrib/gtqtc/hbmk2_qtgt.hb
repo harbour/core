@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -31,6 +31,7 @@
 #define I_( x )                 hb_i18n_gettext( x )
 
 FUNCTION hbmk_plugin_qt( hbmk )
+
    LOCAL cRetVal := ""
 
    LOCAL cSrc
@@ -146,7 +147,7 @@ FUNCTION hbmk_plugin_qt( hbmk )
 
    RETURN cRetVal
 
-STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
+STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lSuffix )
    LOCAL cBIN
    LOCAL cEnv
    LOCAL aEnvList
@@ -155,9 +156,12 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
    cBIN := GetEnv( cEnvQT )
    IF Empty( cBIN )
 
-      IF lPostfix
-         cName += GetEnv( "HB_QTPOSTFIX" )
-         aEnvList := { "HB_QTPATH", "HB_QTPOSTFIX" }
+      IF lSuffix
+         IF ! ( cEnv := GetEnv( "HB_QTPOSTFIX" ) ) == ""  /* Compatibility */
+            hb_SetEnv( "HB_QTSUFFIX", cEnv )
+         ENDIF
+         cName += GetEnv( "HB_QTSUFFIX" )
+         aEnvList := { "HB_QTPATH", "HB_QTSUFFIX" }
       ELSE
          aEnvList := { "HB_QTPATH" }
       ENDIF
