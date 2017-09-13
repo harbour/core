@@ -93,8 +93,10 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
 
    LOCAL aCanBeUpper := { ;
       "Makefile", ;
-      "README.md", ;
-      "COPYING.txt", ;
+      "DEPRECATED.*", ;
+      "LICENSE.*", ;
+      "README.*", ;
+      "WARNING.*", ;
       "*/RELNOTES.txt", ;
       "*/HARBOUR_README_*.txt", ;
       "ChangeLog.txt", ;

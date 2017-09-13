@@ -1,19 +1,8 @@
-/*
-   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
-
-   Mapping of gtwvt functions and their coresponding ones in gtwvw.
-
-   header file to be included in your gtwvt program if you
-   wish to link it with gtwvw.
-
-   WARNING:
-   This mapping is made globally. Should you find any error(s) please let me know.
-*/
-
-MEMVAR _wvwtemp_
+/* Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
+   Mapping of GTWVT functions and their corresponding ones in GTWVW.
+   Header file to be included in your GTWVT program if you wish to link it with GTWVW. */
 
 /* PART-1: WINDOW INDEPENDENT (the same parameter list) */
-/* ==================================================== */
 
 #xtranslate Wvt_CreateMenu         ( [<vlist,...>] )  => wvw_CreateMenu         ( [<vlist>] )
 #xtranslate Wvt_CreatePopupMenu    ( [<vlist,...>] )  => wvw_CreatePopupMenu    ( [<vlist>] )
@@ -51,31 +40,29 @@ MEMVAR _wvwtemp_
 #xtranslate Wvt_CBSetCurSel        ( [<vlist,...>] )  => wvw_CBSetCurSel        ( [<vlist>] )
 #xtranslate Wvt_DlgSetIcon         ( [<vlist,...>] )  => wvw_DlgSetIcon         ( [<vlist>] )
 
-
 /* These functions do not exist in WVT. */
 //Wvt_SetVertCaret       ( [<vlist,...>] )  => wvw_SetVertCaret       ( [<vlist>] )
 //Wvt_SetDefLineSpacing  ( [<vlist,...>] )  => wvw_SetDefLineSpacing  ( [<vlist>] )
 
 /* PART-2: WINDOW DEPENDENT (additional nWinNum parameter) */
-/* ======================================================= */
 
 /*
   Notes:
 
-  nWinNum parameter passed as NIL will be translated by gtwvw into :
+  nWinNum parameter passed as NIL will be translated by GTWVW into:
     IF MainCoordMode
        Topmost Window
     ELSE
        Current Window
     ENDIF
 
-  Since gtwvt application can't be in MainCoordMode,
+  Since GTWVT application cannot be in MainCoordMode,
   the following approach makes these functions work on current window.
 
   You may want to replace NIL with your own function/variable by which you can decide
   which window to direct your output to.
 
-*/
+ */
 
 #xtranslate Wvt_SetMenu             ( [<vlist,...>] )    =>  wvw_SetMenu             ( NIL [, <vlist>] )
 #xtranslate Wvt_SetPopupMenu        ( [<vlist,...>] )    =>  wvw_SetPopupMenu        ( NIL [, <vlist>] )
@@ -136,8 +123,8 @@ MEMVAR _wvwtemp_
 
 #xtranslate Wvt_SetMousePos         ( [<vlist,...>] )    =>  wvw_SetMousePos         ( NIL [, <vlist>] )
 
-/* in gtwvt no pending rect is reflected as {0,0,0,0}
-   in gtwvw no pending rect is reflected as {y1,x1,y2,x2} where y1 > y2 or x1 > x2
+/* in GTWVT no pending rect is reflected as {0,0,0,0}
+   in GTWVW no pending rect is reflected as {y1,x1,y2,x2} where y1 > y2 or x1 > x2
    thus we need some temporary var to check this exception
 */
 #xtranslate Wvt_GetPaintRect        ( [<vlist,...>] )    =>  ( _wvwtemp_ := wvw_GetPaintRect( NIL [, <vlist>] ), ;
@@ -171,34 +158,33 @@ MEMVAR _wvwtemp_
 #xtranslate Wvt_DrawStatusBar ( [<vlist,...>] )          =>  wvw_DrawStatusBar ( NIL [, <vlist>] )
 
 /* Native Statusbar functions. Currently none in WVT.
-   WVT uses different approach (Wvt_DrawStatusBar) */
-//wvw_sbCreate
-//wvw_sbDestroy
-//wvw_sbAddPart
-//wvw_sbRefresh
-//wvw_sbSetText
-//wvw_sbGetText
-//wvw_sbGetParts
+   WVT uses different approach (wvt_DrawStatusBar()) */
+//wvw_sbCreate()
+//wvw_sbDestroy()
+//wvw_sbAddPart()
+//wvw_sbRefresh()
+//wvw_sbSetText()
+//wvw_sbGetText()
+//wvw_sbGetParts()
 
 /* Toolbar functions. Currently none in WVT. WVT uses different approach. */
-//wvw_tbCreate
-//wvw_tbAddButton
-//wvw_tbButtonCount
-//wvw_tbDelButton
-//wvw_tbEnableButton
-//wvw_tbDestroy
+//wvw_tbCreate()
+//wvw_tbAddButton()
+//wvw_tbButtonCount()
+//wvw_tbDelButton()
+//wvw_tbEnableButton()
+//wvw_tbDestroy()
 
 /* Scrollbar functions. Currently none in WVT. WVT uses different approach. */
-//wvw_xbCreate
-//wvw_xbDestroy
-//wvw_xbUpdate
-//wvw_xbEnable
+//wvw_xbCreate()
+//wvw_xbDestroy()
+//wvw_xbUpdate()
+//wvw_xbEnable()
 
 /* Line Spacing. Currently none in WVT. */
-//wvw_SetLineSpacing
+//wvw_SetLineSpacing()
 
-/* PART-3: RESERVED FUNCTION NAMES ("callback" prg functions, called by gtwvw) */
-/* =========================================================================== */
+/* PART-3: RESERVED FUNCTION NAMES ("callback" .prg functions, called by GTWVW) */
 
 /*
   Notes:
@@ -210,18 +196,20 @@ MEMVAR _wvwtemp_
   However, once you open a second window you you should decide what to do
   with nWinNum parameter in these callback functions.
 
-  Typically your WVT_xxx function will need adjustment like below:
+  Typically your WVT_*() function will need adjustment like below:
 
-      FUNCTION WVT_xxx(...)
-         LOCAL nOldWin := wvw_nSetCurWindow( nWinNum ) //<-- add this
+      FUNCTION WVT_*( ... )
 
-         ...existing code...
+         LOCAL nOldWin := wvw_nSetCurWindow( nWinNum )  // <-- add this
 
-         wvw_nSetCurWindow( nOldWin ) //<--add this
+         /* ...existing code... */
+
+         wvw_nSetCurWindow( nOldWin )  // <-- add this
+
          RETURN NIL
 
   Although the above may be enough, each individual function may need careful review
-  to make sure it follows gtwvw convention. For example, if you have multiple
+  to make sure it follows GTWVW convention. For example, if you have multiple
   exit points in that function.
 
   IMPORTANT NOTES ON MainCoord Mode:

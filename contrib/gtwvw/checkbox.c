@@ -2,43 +2,24 @@
  * Video subsystem for Windows using GUI windows instead of Console
  * with multiple windows support
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
- * gtwvw checkbox/progressbar  functions
+ * GTWVW checkbox functions
  * GTWVW is initially created based on:
- *
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
- * Video subsystem for Windows using GUI windows instead of Console
- *     Copyright 2003 Peter Rees <peter@rees.co.nz>
- *                    Rees Software & Systems Ltd
- * based on
- *   Bcc ConIO Video subsystem by
- *     Copyright 2002 Marek Paliwoda <paliwoda@inteia.pl>
- *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
- *   Video subsystem for Windows compilers
- *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
- *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
- *
- * The following parts are Copyright of the individual authors.
- *
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_wvw_Tone()
- *
- * See COPYING.txt for licensing terms.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,7 +37,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -68,12 +49,8 @@
 
 #include "hbgtwvw.h"
 
-
-/* CHECKBOX begins                                                   */
-
-
-/*wvw_cxCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset,;
- *              nStretchBitmap, lMap3Dcolors)
+/* wvw_cxCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset, ;
+ *               nStretchBitmap, lMap3Dcolors, @hControl, nStyle )
  * create CHECKBOX for window nWinNum
  * nTop: row of top/left corner (in character unit)
  * nLeft: col of top/left corner (in character unit)
@@ -88,11 +65,11 @@
  *                0.5: bitmap covers 50% of button
  *                0: bitmap is not stretch
  *               (default is 1)
- * lMap3Dcolors: defaults to .f.
- *           if .t. the following color mapping will be performed:
- *              RGB(192,192,192) --> COLOR_3DFACE   ("transparent")
- *              RGB(128,128,128) --> COLOR_3DSHADOW
- *              RGB(223,223,223) --> COLOR_3DLIGHT
+ * lMap3Dcolors: defaults to .F.
+ *           if .T. the following color mapping will be performed:
+ *              RGB( 192, 192, 192 ) --> COLOR_3DFACE   ("transparent")
+ *              RGB( 128, 128, 128 ) --> COLOR_3DSHADOW
+ *              RGB( 223, 223, 223 ) --> COLOR_3DLIGHT
  *           This might be desirable to have transparent effect.
  *           LIMITATION: this will work on 256 colored bitmaps only
  *
@@ -107,10 +84,7 @@
  *
  * returns control id of newly created CHECKBOX of windows nWinNum
  * returns 0 if failed
- *
- * example:
  */
-
 HB_FUNC( WVW_CXCREATE )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;

@@ -4,8 +4,8 @@
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
  *
  * GTWVW is initially created based on:
- *
  * =Id: gtwvt.c,v 1.60 2004-01-26 08:14:07 vouchcac Exp =
+ *
  * Video subsystem for Windows using GUI windows instead of Console
  *     Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                    Rees Software & Systems Ltd
@@ -17,28 +17,36 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
- * The following parts are Copyright of the individual authors.
- *
- *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *    hb_gt_wvw_Tone()
  *
- * See COPYING.txt for licensing terms.
+ * (C) 2003-2004 Giancarlo Niccolai <gc@niccolai.ws>
+ *         Standard xplatform GT Info system,
+ *         Graphical object system and event system.
+ *         hb_gtInfo() And GTO_* implementation.
+ *
+ * (C) 2004 Mauricio Abre <maurifull@datafull.com>
+ *         Cross-GT, multi-platform Graphics API
+ *
+ * (C) 2009 Cristiam Azambuja <cristiam@datacempro.com.br>
+ *          Marson de Paula <marson@datacempro.com.br>
+ *          Data Cempro Informatica (www.datacempro.com.br)
+ *          Refactoring for xHarbour 1.2.1
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,7 +64,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -64,22 +72,6 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- */
-
-/*
- * Individual authors:
- * (C) 2003-2004 Giancarlo Niccolai <gc at niccolai dot ws>
- *         Standard xplatform GT Info system,
- *         Graphical object system and event system.
- *         hb_gtInfo() And GTO_* implementation.
- *
- * (C) 2004 Mauricio Abre <maurifull@datafull.com>
- *         Cross-GT, multiplatform Graphics API
- *
- * (C) 2009 Cristiam Azambuja <cristiam@datacempro.com.br>
- *          Marson de Paula <marson@datacempro.com.br>
- *          Data Cempro Informatica (www.datacempro.com.br)
- *          Refactoring for xHarbour 1.2.1
  */
 
 #include "hbgtwvw.h"
