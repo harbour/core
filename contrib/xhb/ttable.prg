@@ -785,7 +785,7 @@ METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
    ::aOrders     := {}
    ::Area        := 0
    ::Alias       := cALIAS
-   ::nDataOffset := Len( self )         // 66
+   ::nDataOffset := Len( Self )         // 66
 
    RETURN Self
 
@@ -855,7 +855,7 @@ METHOD FldInit() CLASS HBTable
    LOCAL oNew
    LOCAL nScope    := 1
 
-   ::nDataOffset := Len( self ) - 1
+   ::nDataOffset := Len( Self ) - 1
 
    ::Buffer := Array( ( ::Alias )->( FCount() ) )
    IF Empty( ::Buffer )

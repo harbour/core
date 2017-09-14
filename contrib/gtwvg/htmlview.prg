@@ -207,4 +207,4 @@ METHOD WvgHTMLViewer:setHTML( cHTML )
    ::document:innerHTML := cHTML
    ::refresh()
 
-   RETURN self
+   RETURN Self

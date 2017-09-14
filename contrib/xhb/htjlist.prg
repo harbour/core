@@ -187,7 +187,7 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
 
    AAdd( ::aScript, cStr )
 
-   RETURN self
+   RETURN Self
 
 /****
 *
@@ -207,7 +207,7 @@ METHOD AddItem( name, url, bgColor ) CLASS TJSList
    ::nItems++
    AAdd( ::aScript, cStr )
 
-   RETURN self
+   RETURN Self
 
 /****
 *
@@ -228,7 +228,7 @@ METHOD AddLink( name, url, img, bgColor ) CLASS TJSList
    ::nItems++
    AAdd( ::aScript, cStr )
 
-   RETURN self
+   RETURN Self
 
 METHOD EndNode( name, caption ) CLASS TJSList
 
@@ -240,7 +240,7 @@ METHOD EndNode( name, caption ) CLASS TJSList
    ::nItems++
    AAdd( ::aScript, cStr )
 
-   RETURN self
+   RETURN Self
 
 METHOD Build( xPos, yPos ) CLASS TJSList
 

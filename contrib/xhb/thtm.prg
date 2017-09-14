@@ -506,7 +506,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
    t_oPage := Self
 
-   RETURN self
+   RETURN Self
 
 METHOD NewAlt( cType ) CLASS THtml
 
@@ -517,8 +517,7 @@ METHOD NewAlt( cType ) CLASS THtml
 
    t_oPage := Self
 
-   RETURN self
-
+   RETURN Self
 
 /****
 *

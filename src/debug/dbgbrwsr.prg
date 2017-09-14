@@ -272,7 +272,7 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbBrowser
       ::Configure():ForceStable()
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 CREATE CLASS HBDbColumn
 

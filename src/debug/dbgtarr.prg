@@ -231,7 +231,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
    ::aWindows[ ::nCurWindow ]:SetCaption( cName + "[" + hb_ntos( oBrwSets:cargo[ 1 ] ) + ".." + ;
       hb_ntos( Len( aArray ) ) + "]" )
 
-   RETURN self
+   RETURN Self
 
 FUNCTION __dbgArrays( aArray, cVarName, lEditable )
    RETURN HBDbArray():New( aArray, cVarName, lEditable )

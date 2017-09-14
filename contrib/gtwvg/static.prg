@@ -197,7 +197,7 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 #endif
 
-   ::oParent:addChild( SELF )
+   ::oParent:addChild( Self )
 
    ::createControl()
 

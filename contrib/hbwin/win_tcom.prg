@@ -107,7 +107,7 @@ METHOD Init( cPortName, nBaudRate, nParity, nByteSize, nStopBits ) CLASS win_Com
       ENDIF
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD QueueSize( nInQueue, nOutQueue ) CLASS win_Com
    RETURN win_comSetQueueSize( ::nPort, nInQueue, nOutQueue )

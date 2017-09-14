@@ -638,7 +638,7 @@ METHOD WvtDialog:CreateObjects()
       ENDSWITCH
    NEXT
 
-   RETURN self
+   RETURN Self
 
 METHOD WvtDialog:Eval( bBlock, p1, p2, p3, p4, p5 )
 
@@ -1003,7 +1003,7 @@ METHOD WvtBrowse:Create()
 METHOD WvtBrowse:SetVBar()
 
    IF ::lVSBar
-      ::oVBar := WvtScrollBar():New( self, 999991, ;
+      ::oVBar := WvtScrollBar():New( Self, 999991, ;
          ::oBrw:nTop, ::oBrw:nRight + 1, ::oBrw:nBottom, ::oBrw:nRight + 2 )
       ::oVBar:nBarType   := WVT_SCROLLBAR_VERT
       ::oVBar:bTotal     := ::bTotalRecords
@@ -1033,7 +1033,7 @@ METHOD WvtBrowse:SetVBar()
 METHOD WvtBrowse:SetHBar()
 
    IF ::lHSBar
-      ::oHBar := WvtScrollBar():New( self, 999990, ;
+      ::oHBar := WvtScrollBar():New( Self, 999990, ;
          ::oBrw:nBottom + 1, ::oBrw:nLeft, ::oBrw:nBottom + 1, ::oBrw:nRight )
       ::oHBar:nBarType   := 2
       ::oHBar:bTotal     := ::bTotalColumns
@@ -1288,7 +1288,7 @@ METHOD WvtStatusBar:SetPanels( aPanels )
       oPanel:cColor := ::cColor
    NEXT
 
-   RETURN self
+   RETURN Self
 
 METHOD WvtStatusBar:Update( nPanel, cText, cColor )
 
@@ -1582,7 +1582,7 @@ METHOD WvtToolBar:AddButton( cFileImage, bBlock, cTooltip )
 
    nCol := ( ::nBottom - ::nTop + 1 ) * 2
 
-   oObj := WvtToolButton():New( self )
+   oObj := WvtToolButton():New( Self )
 
    oObj:lActive    := ::lActive
    oObj:nTop       := ::nTop
@@ -1623,7 +1623,7 @@ METHOD WvtToolBar:HoverOn()
       ::Refresh()
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD WvtToolBar:HoverOff()
 

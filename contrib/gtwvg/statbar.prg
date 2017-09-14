@@ -98,7 +98,7 @@ METHOD WvgStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
       ::style += SBARS_SIZEGRIP
    ENDIF
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -192,7 +192,7 @@ METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
    HB_SYMBOL_UNUSED( cDLL )
 
    oPanel := WvgStatusBarPanel():new( cCaption, nStyle, cKey )
-   oPanel:oParent := self
+   oPanel:oParent := Self
 
    oPanel:index := ::numItems + 1
 

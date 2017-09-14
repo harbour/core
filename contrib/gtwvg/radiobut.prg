@@ -90,7 +90,7 @@ METHOD WvgRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oParent:addChild( SELF )
+   ::oParent:addChild( Self )
 
    ::createControl()
 

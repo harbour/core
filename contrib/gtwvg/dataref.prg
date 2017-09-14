@@ -82,7 +82,7 @@ CREATE CLASS WvgDataRef
 ENDCLASS
 
 METHOD WvgDataRef:new()
-   RETURN self
+   RETURN Self
 
 METHOD WvgDataRef:getData()
 

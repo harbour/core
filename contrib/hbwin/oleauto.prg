@@ -73,11 +73,11 @@ METHOD __enumStart( enum, lDescend ) CLASS win_oleAuto
    IF ! Empty( hObjEnum := __oleEnumCreate( ::__hObj, lDescend ) )
       IF ! Empty( ::__hObjEnum )
          /* small hack - clone the object array for nested FOR EACH calls */
-         self := __objClone( self )
+         Self := __objClone( Self )
       ENDIF
       ::__hObjEnum := hObjEnum
       /* set base value for enumerator */
-      ( @enum ):__enumBase( self )
+      ( @enum ):__enumBase( Self )
       RETURN ::__enumSkip( @enum, lDescend )
    ENDIF
 

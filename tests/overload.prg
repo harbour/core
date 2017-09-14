@@ -40,7 +40,7 @@ CREATE CLASS TString
 
    VAR cValue
 
-   METHOD New( cText ) INLINE ::cValue := cText, self
+   METHOD New( cText ) INLINE ::cValue := cText, Self
 
    OPERATOR "="  ARG cArg INLINE ::cValue =  cArg
    OPERATOR "==" ARG cArg INLINE ::cValue == cArg

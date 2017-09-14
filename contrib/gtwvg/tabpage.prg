@@ -106,7 +106,7 @@ METHOD WvgTabPage:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style += TCS_FOCUSNEVER
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -163,7 +163,7 @@ METHOD WvgTabPage:tabActivate( xParam )
       ::sl_tabActivate := xParam
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD WvgTabPage:minimize()
 

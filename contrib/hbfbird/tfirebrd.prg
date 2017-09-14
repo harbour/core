@@ -112,7 +112,7 @@ METHOD New( cServer, cUser, cPassword, nDialect ) CLASS TFbServer
       ::nError := ::db
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD StartTransaction() CLASS TFbServer
 
@@ -517,7 +517,7 @@ METHOD New( nDB, cQuery, nDialect ) CLASS TFbQuery
 
    ::Refresh()
 
-   RETURN self
+   RETURN Self
 
 METHOD Refresh() CLASS TFbQuery
 
@@ -812,7 +812,7 @@ METHOD new( row, struct, nDb, nDialect, aTable ) CLASS TFbRow
    ::aTables := aTable
    ::aChanged := Array( Len( row ) )
 
-   RETURN self
+   RETURN Self
 
 METHOD Changed( nField ) CLASS TFbRow
 

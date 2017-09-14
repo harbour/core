@@ -453,7 +453,7 @@ METHOD WvgCrt:lockUpdate()
 METHOD WvgCrt:menuBar()
 
    IF ! HB_ISOBJECT( ::oMenu )
-      ::oMenu := WvgMenuBar():New( self ):create()
+      ::oMenu := WvgMenuBar():New( Self ):create()
    ENDIF
 
    RETURN ::oMenu

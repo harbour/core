@@ -158,7 +158,7 @@ STATIC FUNCTION Show()
 //                                      Set a whole list symbols to value
 //                                      Normal way of set objects from external
 //                                      sources, like memo files.
-// <oObject>                            Set self according to the DATA
+// <oObject>                            Set Self according to the DATA
 //                                      contained in <oObject>
 //                                      Can be used to transfer info from
 //                                      one class to another
@@ -204,23 +204,23 @@ STATIC FUNCTION Show()
 
 STATIC FUNCTION Transfer( ... )
 
-   LOCAL self   := QSelf()
+   LOCAL Self   := QSelf()
    LOCAL aParam := __dbgVMParLList()
    LOCAL nLen   := PCount()
    LOCAL xRet
    LOCAL xData
 
    IF nLen == 0
-      xRet := __objGetValueList( self, ::aExcept() )
+      xRet := __objGetValueList( Self, ::aExcept() )
    ELSE
       FOR EACH xData IN aParam
 
          IF HB_ISARRAY( xData )
 
             IF HB_ISARRAY( xData[ 1 ] )         // 2D array passed
-               xRet := __objSetValueList( self, xData )
+               xRet := __objSetValueList( Self, xData )
             ELSE                                // 1D array passed
-               xRet := __objSetValueList( self, { xData } )
+               xRet := __objSetValueList( Self, { xData } )
             ENDIF
 
          ELSEIF HB_ISOBJECT( xData )            // Object passed

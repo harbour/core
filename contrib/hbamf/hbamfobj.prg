@@ -73,7 +73,7 @@ METHOD New( hCachedData ) CLASS amf_Obj
 
    ::hCachedData := hCachedData
 
-   RETURN self
+   RETURN Self
 
 METHOD noMessage( ... ) CLASS amf_Obj
    RETURN ::msgNotFound( __GetMessage(), ... )
@@ -107,4 +107,4 @@ METHOD New( cData ) CLASS amf_Raw
 
    ::cData := cData
 
-   RETURN self
+   RETURN Self

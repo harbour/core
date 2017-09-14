@@ -97,29 +97,29 @@ END CLASS
 
 METHOD INIT( type ) CLASS myClass
 
-   ? "Hi, I'm INIT method of class:", self:classname()
+   ? "Hi, I'm INIT method of class:", Self:classname()
    ::type := type
 
-   RETURN self
+   RETURN Self
 
 PROCEDURE DTOR CLASS myClass
 
-   ? "   Hi, I'm desturctor of class: ", self:classname()
+   ? "   Hi, I'm desturctor of class: ", Self:classname()
 
    IF ::type == 1
-      ? "   I'm storing reference to self in instance variable."
+      ? "   I'm storing reference to Self in instance variable."
       ? "   Bad practice but safe in Harbour because it will be destroyed."
-      ::var1 := self
+      ::var1 := Self
    ELSEIF ::Type == 2
-      ? "   I'm storing reference to self in class variable."
+      ? "   I'm storing reference to Self in class variable."
       ? "   It's programmer bug which should cause RT error."
-      ::var2 := self
+      ::var2 := Self
    ELSEIF ::Type == 3
-      ? "   I'm storing reference to self in public variable."
+      ? "   I'm storing reference to Self in public variable."
       ? "   It's programmer bug which should cause RT error."
-      P := self
+      P := Self
    ELSE
-      ? "   I do not store any references to self."
+      ? "   I do not store any references to Self."
       ? "   It's a safe destructor."
    ENDIF
 

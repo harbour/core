@@ -101,7 +101,7 @@ METHOD WvgScrollBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
       ::style += SBS_HORZ
    ENDIF
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -302,7 +302,7 @@ METHOD WvgScrollBar:Scroll( xParam )
       ::sl_xbeSB_Scroll := xParam
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD WvgScrollBar:setRange( aRange )
 

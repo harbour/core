@@ -128,7 +128,7 @@ METHOD WvgTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::style += TVS_HASLINES + TVS_LINESATROOT
    ENDIF
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -403,7 +403,7 @@ METHOD WvgTreeViewItem:addItem( cCaption )
    oItem := WvgTreeViewItem():New()
 
    oItem:hTree   := ::hTree
-   oItem:oParent := self
+   oItem:oParent := Self
    oItem:caption := cCaption
    oItem:oWnd    := ::oWnd
 

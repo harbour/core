@@ -2537,7 +2537,7 @@ METHOD mRowPos() CLASS TBrowse
       ::doConfigure()
    ENDIF
 
-   _mBrwPos( self, @mRow, @mCol )
+   _mBrwPos( Self, @mRow, @mCol )
 
    RETURN mRow
 
@@ -2550,7 +2550,7 @@ METHOD mColPos() CLASS TBrowse
       ::doConfigure()
    ENDIF
 
-   _mBrwPos( self, @mRow, @mCol )
+   _mBrwPos( Self, @mRow, @mCol )
 
    RETURN mCol
 #endif

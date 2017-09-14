@@ -100,7 +100,7 @@ METHOD New( nLevel, cHelo, cServer, cSendTo, cSubject, cFrom ) CLASS HB_LogEmail
       ::cAddress := cFrom
    ENDIF
 
-   RETURN SELF
+   RETURN Self
 
 /* hb_inetInit() must be called here */
 METHOD Open( cName ) CLASS HB_LogEmail

@@ -378,4 +378,4 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbWindow
       ::Show( ::lFocused )
    ENDIF
 
-   RETURN self
+   RETURN Self
