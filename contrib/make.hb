@@ -1,4 +1,4 @@
-#!/usr/bin/hbrun --hb:gtcgi
+#!/usr/bin/env hbmk2
 /*
  * Package build orchestrator script
  *
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -103,7 +103,7 @@ PROCEDURE Main( ... )
    #4 install        install        _ACT_INC_INST          -inc -instpath=
    #5 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -rebuildall -instpath=
  */
-PROCEDURE Standalone( aParams, hProjectList )
+STATIC PROCEDURE Standalone( aParams, hProjectList )
 
    LOCAL hProjectReqList
 
@@ -116,7 +116,7 @@ PROCEDURE Standalone( aParams, hProjectList )
    LOCAL lCustom
    LOCAL cCustomDir
 
-   /* Processing cmdline options */
+   /* Processing command-line options */
 
    DO CASE
    CASE AScanL( aParams, "clean" ) > 0 .AND. ;
@@ -142,24 +142,25 @@ PROCEDURE Standalone( aParams, hProjectList )
    cOptionsUser := ""
    lCustom := .F.
    FOR EACH tmp IN aParams
-      IF !( Lower( tmp ) == "install" ) .AND. ;
-         !( Lower( tmp ) == "clean" ) .AND. ;
-         !( Lower( tmp ) == "all" ) .AND. ;
-         !( Lower( tmp ) == "first" ) .AND. ;
-         !( Lower( tmp ) == "rebuild" ) .AND. ;
-         !( Lower( tmp ) == "verbose" )
+      IF ! Lower( tmp ) == "install" .AND. ;
+         ! Lower( tmp ) == "clean" .AND. ;
+         ! Lower( tmp ) == "all" .AND. ;
+         ! Lower( tmp ) == "first" .AND. ;
+         ! Lower( tmp ) == "rebuild" .AND. ;
+         ! Lower( tmp ) == "verbose"
 
          cOptionsUser += " " + tmp
 
          /* If anything else is passed than options or GNU Make keywords,
             consider it a custom project build, f.e. in tests */
-         IF !( Left( tmp, 1 ) == "-" )
+         IF ! Left( tmp, 1 ) == "-"
             lCustom := .T.
          ENDIF
       ENDIF
    NEXT
 
-   /* Assemble list of primary targets (registered projects in current directory) */
+   /* Assemble list of primary targets (registered projects in or under
+      current directory) */
 
    hProjectReqList := { => }
 
@@ -172,7 +173,8 @@ PROCEDURE Standalone( aParams, hProjectList )
    ENDIF
 
    IF ! lCustom
-      /* Find out which projects are in current dir, these will be our primary targets */
+      /* Find out which projects are in current dir, these will be our
+         primary targets */
       FOR EACH tmp IN hProjectList
          tmp1 := hb_ps() + hb_FNameDir( hb_DirSepToOS( tmp:__enumKey() ) )
          IF tmp1 == Right( hb_cwd(), Len( tmp1 ) ) /* Not ultimate solution */
@@ -216,7 +218,7 @@ PROCEDURE Standalone( aParams, hProjectList )
    #6 install clean  install    install clean    _ACT_INC_INST          -inc -instpath=
                      clean      install clean    _ACT_INC_CLEAN         -inc -clean
  */
-PROCEDURE GNUMake( aParams, hProjectList )
+STATIC PROCEDURE GNUMake( aParams, hProjectList )
 
    LOCAL cProject
    LOCAL hProjectReqList
@@ -255,11 +257,10 @@ PROCEDURE GNUMake( aParams, hProjectList )
       IF AScanL( aGNUMakeParams, "clean" ) > 0 .AND. ;
          AScanL( aGNUMakeParams, "install" ) > 0 .AND. ;
          AScanL( aGNUMakeParams, "install" ) > AScanL( aGNUMakeParams, "clean" )
-         /* Use rebuild mode. This is needed because the clean phase
-            might not have been called previously by GNU Make, f.e.
-            because hbrun or hbmk2 wasn't available. -rebuildall is
-            costless, so we do it to make sure to build cleanly.
-            [vszakats] */
+         /* Use rebuild mode. This is needed because the clean phase might not
+            have been called previously by core GNU Make, f.e. because hbrun
+            or hbmk2 wasn't available. -rebuildall is costless, so we do it to
+            make sure to build cleanly. [vszakats] */
          nAction := _ACT_INC_REBUILD_INST
       ELSE
          nAction := _ACT_INC_INST
@@ -339,7 +340,7 @@ PROCEDURE GNUMake( aParams, hProjectList )
    hb_SetEnv( "_HB_INSTALL_ETC", GetEnv( "HB_INSTALL_ETC" ) )
    hb_SetEnv( "_HB_INSTALL_CONTRIB", GetEnv( "HB_INSTALL_CONTRIB" ) )
 
-   /* Override hbmk2 autodetection. WARNING: Must be in sync with global.mk logic */
+   /* Override hbmk2 auto-detection. WARNING: Must be in sync with global.mk logic */
    hb_SetEnv( "HB_INSTALL_PREFIX", s_cRoot )
    hb_SetEnv( "HB_INSTALL_BIN", s_cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
    hb_SetEnv( "HB_INSTALL_LIB", s_cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
@@ -392,7 +393,8 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
    aSortedList := TopoSort( aPairList )
 
-   /* Add referenced project not present in our list and featuring an .hbp file */
+   /* Add referenced project not present in our list and featuring an .hbp
+      file */
    FOR EACH cProject IN aSortedList
       IF AddProject( hProjectList, @cProject )
          call_hbmk2_hbinfo( s_cBase + s_cHome + cProject, hProjectList[ cProject ] )
@@ -404,9 +406,9 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
       (we need "cType" to decide about dynamic build) */
    IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes"
       FOR EACH cProject IN aSortedList
-         IF !( cProject $ hProjectReqList ) .AND. ;
+         IF ! cProject $ hProjectReqList .AND. ;
             cProject $ hProjectList .AND. ;
-            !( "lChecked" $ hProjectList[ cProject ] )
+            ! "lChecked" $ hProjectList[ cProject ]
             call_hbmk2_hbinfo( s_cBase + s_cHome + cProject, hProjectList[ cProject ] )
          ENDIF
       NEXT
@@ -415,18 +417,20 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    /* Convert action to hbmk2 options */
 
    cOptions := " -inc"
-   IF nAction == _ACT_INC_CLEAN
+   SWITCH nAction
+   CASE _ACT_INC_CLEAN
       cOptions += " -clean"
-   ELSEIF nAction == _ACT_INC_REBUILD .OR. ;
-          nAction == _ACT_INC_REBUILD_INST
+      EXIT
+   CASE _ACT_INC_REBUILD
+   CASE _ACT_INC_REBUILD_INST
       cOptions += " -rebuildall"
-   ENDIF
+      EXIT
+   ENDSWITCH
 
    cMakeFlags := GetEnv( "MAKEFLAGS" )
    IF " -j " $ " " + cMakeFlags + " "
       /* GNU Make uses job server to limit number of concurrent operations
-       * We cannot read it from MAKEFLAGS so I set it to arbitrary value: 8
-       */
+         We cannot read it from MAKEFLAGS so I set it to arbitrary value: 8 */
       cOptions += " -jobs=8"
    ENDIF
 
@@ -643,7 +647,7 @@ STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )
 
    AddDeptPair( aPairList, "", cParent )
 
-   hNode := { "child" => {}, "name" => cParent, "parent" => NIL }
+   hNode := { "child" => {}, "name" => cParent, "parent" => }
    nLevel := 0
    FOR EACH hFlatTreeElement IN aFlatTree
       /* Min() protects against jumping more than one level down in one step */
@@ -699,7 +703,7 @@ STATIC FUNCTION TopoSort( aEdgeList )
       FOR EACH tmp IN aEdgeList
          IF tmp[ 1 ] == n
             m := tmp[ 2 ]
-            tmp[ 1 ] := tmp[ 2 ] := NIL /* set to invalid value. TOOPT: Delete this member from list */
+            tmp[ 1 ] := tmp[ 2 ] := NIL  /* set to invalid value. TOOPT: Delete this member from list */
             IF AScan( aEdgeList, {| tmp | tmp[ 2 ] == m } ) == 0
                hTopNodes[ m ] := NIL
             ENDIF
@@ -715,7 +719,7 @@ STATIC FUNCTION TopoSort( aEdgeList )
 
    RETURN aList
 
-FUNCTION AddProject( hProjectList, cFileName )
+STATIC FUNCTION AddProject( hProjectList, cFileName )
 
    LOCAL cDir
    LOCAL cName
@@ -727,11 +731,12 @@ FUNCTION AddProject( hProjectList, cFileName )
 
       hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
 
-      IF Empty( cName )
+      DO CASE
+      CASE Empty( cName )
          cName := DirGetName( cDir )
-      ELSEIF Empty( cDir )
+      CASE Empty( cDir )
          cDir := cName
-      ENDIF
+      ENDCASE
       IF Empty( cExt )
          cExt := ".hbp"
       ENDIF
@@ -745,12 +750,11 @@ FUNCTION AddProject( hProjectList, cFileName )
             RETURN .T.
          ENDIF
       ENDIF
-
    ENDIF
 
    RETURN .F.
 
-PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
+STATIC PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
 
    LOCAL cItem
 
@@ -763,7 +767,7 @@ PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
 
    RETURN
 
-PROCEDURE LoadProjectListFromString( hProjectList, cString )
+STATIC PROCEDURE LoadProjectListFromString( hProjectList, cString )
 
    LOCAL cItem
 
