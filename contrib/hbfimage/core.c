@@ -644,8 +644,6 @@ HB_FUNC( FI_GETFILETYPEFROMMEMORY )
 HB_FUNC( FI_GETIMAGETYPE )
 {
    if( hb_FIBITMAP_is( 1 ) )
-
-   if( dib )
       hb_retni( FreeImage_GetImageType( hb_FIBITMAP_par( 1 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
