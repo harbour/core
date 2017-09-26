@@ -252,6 +252,16 @@
 #define HB_BOXCH_TRANS_MAX          0xFF
 
 
+typedef struct _HB_GTWVT_MNU
+{
+   int      iKey;
+   int      iEvent;
+   void *   hName;
+   LPCTSTR  lpName;
+   struct _HB_GTWVT_MNU * pNext;
+} HB_GTWVT_MNU, * PHB_GTWVT_MNU;
+
+
 typedef struct
 {
    PHB_GT   pGT;                          /* core GT pointer */
@@ -338,6 +348,8 @@ typedef struct
    HB_BOOL  bSelectCopy;
    void *   hSelectCopy;
    LPCTSTR  lpSelectCopy;
+
+   PHB_GTWVT_MNU pMenu;
 
    RECT     sRectNew;
    RECT     sRectOld;

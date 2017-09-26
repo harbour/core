@@ -509,20 +509,34 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
 
    s_error = uiError;
 
-   if( ! pFile )
+   if( pFile )
    {
-      HB_MEMFSMT_UNLOCK();
-      return FS_ERROR;
-   }
-   pFile->pInode->uiDeny |= uiFlags & FOX_DENYFLAGS;
-   if( uiFlags & FOX_READ )
-      pFile->pInode->uiCountRead++;
-   if( uiFlags & FOX_WRITE )
-      pFile->pInode->uiCountWrite++;
+      if( uiFlags & FO_TRUNC )
+      {
+         pFile->pInode->llSize = 0;
+         if( pFile->pInode->llAlloc != HB_MEMFS_INITSIZE )
+         {
+            pFile->pInode->llAlloc = HB_MEMFS_INITSIZE;
+            hb_xfree( pFile->pInode->pData );
+            pFile->pInode->pData = ( char * ) hb_xgrab( ( HB_ULONG ) pFile->pInode->llAlloc );
+         }
+         memset( pFile->pInode->pData, 0, ( HB_SIZE ) pFile->pInode->llAlloc );
+      }
 
-   pFile->uiFlags = uiFlags;
-   hFile = memfsHandleAlloc( pFile );
+      pFile->pInode->uiDeny |= uiFlags & FOX_DENYFLAGS;
+      if( uiFlags & FOX_READ )
+         pFile->pInode->uiCountRead++;
+      if( uiFlags & FOX_WRITE )
+         pFile->pInode->uiCountWrite++;
+
+      pFile->uiFlags = uiFlags;
+      hFile = memfsHandleAlloc( pFile );
+   }
+   else
+      hFile = FS_ERROR;
+
    HB_MEMFSMT_UNLOCK();
+
    return hFile;
 }
 

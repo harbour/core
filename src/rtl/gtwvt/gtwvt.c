@@ -140,7 +140,9 @@ static const TCHAR s_szClassName[] = TEXT( "Harbour_WVT_Class" );
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT );
+#if defined( UNICODE )
 static void hb_gt_wvt_ResetBoxCharBitmaps( PHB_GTWVT pWVT );
+#endif
 
 static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 {
@@ -236,6 +238,15 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    }
 
    HB_WVT_UNLOCK();
+
+   while( pWVT->pMenu )
+   {
+      PHB_GTWVT_MNU pMenu = pWVT->pMenu;
+
+      pWVT->pMenu = pMenu->pNext;
+      hb_strfree( pWVT->hSelectCopy );
+      hb_xfree( pMenu );
+   }
 
    if( pWVT->hSelectCopy )
       hb_strfree( pWVT->hSelectCopy );
@@ -366,6 +377,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->lpSelectCopy      = TEXT( "Mark and Copy" );
    pWVT->hSelectCopy       = NULL;
    pWVT->bSelectCopy       = HB_TRUE;
+
+   pWVT->pMenu             = NULL;
 
    {
       PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
@@ -1377,6 +1390,7 @@ static HBITMAP hb_gt_wvt_DefineBoxChar( PHB_GTWVT pWVT, HB_USHORT usCh )
 
 /* *********************************************************************** */
 
+#if defined( UNICODE )
 static void hb_gt_wvt_ResetBoxCharBitmaps( PHB_GTWVT pWVT )
 {
    int i;
@@ -1390,6 +1404,7 @@ static void hb_gt_wvt_ResetBoxCharBitmaps( PHB_GTWVT pWVT )
    for( i = 0; i < HB_BOXCH_TRANS_COUNT; ++i )
       pWVT->boxIndex[ i ] = HB_BOXCH_TRANS_MAX;
 }
+#endif
 
 /* *********************************************************************** */
 
@@ -3109,13 +3124,22 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
          return 0;
 
       case WM_SYSCOMMAND:
-         switch( wParam )
+         if( wParam == SYS_EV_MARK )
          {
-
-            case SYS_EV_MARK:
+            pWVT->bBeginMarked = HB_TRUE;
+            return 0;
+         }
+         else if( wParam > SYS_EV_MARK )
+         {
+            PHB_GTWVT_MNU pMenu = pWVT->pMenu;
+            while( pMenu )
             {
-               pWVT->bBeginMarked = HB_TRUE;
-               return 0;
+               if( ( WPARAM ) pMenu->iEvent == wParam )
+               {
+                  hb_gt_wvt_AddCharToInputQueue( pWVT, pMenu->iKey );
+                  return 0;
+               }
+               pMenu = pMenu->pNext;
             }
          }
          break;
@@ -3180,13 +3204,23 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
 
          {
             HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+
             if( hSysMenu )
             {
+               PHB_GTWVT_MNU pMenu = pWVT->pMenu;
+
                /* Create "Mark" prompt in SysMenu to allow console type copy operation */
                AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
                /* CloseButton [x] and "Close" window menu item */
                EnableMenuItem( hSysMenu, SC_CLOSE, MF_BYCOMMAND |
                                ( pWVT->CloseMode < 2 ? MF_ENABLED : MF_GRAYED ) );
+
+               /* Create user menu */
+               while( pMenu )
+               {
+                  AppendMenu( hSysMenu, MF_STRING, pMenu->iEvent, pMenu->lpName );
+                  pMenu = pMenu->pNext;
+               }
             }
          }
          if( pWVT->bFullScreen )
@@ -4082,6 +4116,64 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_SYSMENUADD:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_FALSE );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
+         {
+            iVal = hb_itemGetNI( pInfo->pNewVal );
+            if( iVal != 0 )
+            {
+               HB_BOOL fAdd = ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_STRING ) != 0;
+               PHB_GTWVT_MNU * pMenu = &pWVT->pMenu;
+               int iEvent = SYS_EV_MARK;
+
+               while( * pMenu )
+               {
+                  if( ( * pMenu )->iKey == iVal )
+                     break;
+                  iEvent = HB_MAX( iEvent, ( * pMenu )->iEvent );
+                  pMenu = &( * pMenu )->pNext;
+               }
+               if( * pMenu )
+               {
+                  hb_strfree( ( * pMenu )->hName );
+                  iEvent = ( * pMenu )->iEvent;
+                  if( ! fAdd )
+                  {
+                     PHB_GTWVT_MNU pFree = * pMenu;
+                     * pMenu = ( * pMenu )->pNext;
+                     hb_xfree( pFree );
+                  }
+               }
+               else
+               {
+                  if( fAdd )
+                  {
+                     * pMenu = ( PHB_GTWVT_MNU ) hb_xgrab( sizeof( HB_GTWVT_MNU ) );
+                     ( * pMenu )->iKey   = iVal;
+                     ( * pMenu )->iEvent = iEvent + 1;
+                     ( * pMenu )->pNext  = NULL;
+                  }
+                  iEvent = 0;
+               }
+               if( fAdd )
+                  ( * pMenu )->lpName = HB_ITEMGETSTR( pInfo->pNewVal2, &( * pMenu )->hName, NULL );
+               if( pWVT->hWnd )
+               {
+                  HMENU hSysMenu = GetSystemMenu( pWVT->hWnd, FALSE );
+                  if( hSysMenu )
+                  {
+                     if( iEvent != 0 )
+                        DeleteMenu( hSysMenu, iEvent, MF_BYCOMMAND );
+                     if( fAdd )
+                        AppendMenu( hSysMenu, MF_STRING, ( * pMenu )->iEvent, ( * pMenu )->lpName );
+                  }
+               }
+               pInfo->pResult = hb_itemPutL( pInfo->pResult, fAdd || iEvent != 0 );
+            }
+         }
+         break;
+
       case HB_GTI_SELECTCOPY:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
@@ -4095,10 +4187,15 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                   hb_strfree( pWVT->hSelectCopy );
                   pWVT->lpSelectCopy = HB_ITEMGETSTR( pInfo->pNewVal, &pWVT->hSelectCopy, NULL );
                   pWVT->bSelectCopy = HB_TRUE;
-#if ! defined( HB_OS_WIN_CE )  /* WinCE does not support ModifyMenu */
                   if( hSysMenu )
+                  {
+#if defined( HB_OS_WIN_CE )  /* WinCE does not support ModifyMenu */
+                     DeleteMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND );
+                     AppendMenu( hSysMenu, MF_STRING, SYS_EV_MARK, pWVT->lpSelectCopy );
+#else
                      ModifyMenu( hSysMenu, SYS_EV_MARK, MF_BYCOMMAND | MF_STRING | MF_ENABLED, SYS_EV_MARK, pWVT->lpSelectCopy );
 #endif
+                  }
                }
             }
          }
