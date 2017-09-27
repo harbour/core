@@ -150,7 +150,8 @@
 #define HB_GTI_RESIZESTEP       73  /* Enable/Disable window resizing steps */
 #define HB_GTI_CLOSEMODE        74  /* Close event: 0 terminate application, >=1 generate HB_K_CLOSE, 2 disable close button */
 #define HB_GTI_MINIMIZED        75  /* Get/Set Window's Minimized status (supported by: GTQTC, GTXWC) */
-#define HB_GTI_SYSMENUADD       76  /* Add item to window system menu with keycode to generate when selected */
+#define HB_GTI_QUICKEDIT        76  /* Enable/Disable quick edit mode (supported by: GTWVT) */
+#define HB_GTI_SYSMENUADD       77  /* Add item to window system menu with keycode to generate when selected (supported by: GTWVT) */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
