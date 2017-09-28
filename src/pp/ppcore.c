@@ -1494,7 +1494,7 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
 
       if( pEolTokenPtr &&
           ( pEolTokenPtr != pState->pNextTokenPtr ||
-            ( pState->iNestedBlock &&
+            ( pState->iNestedBlock && pState->pFile->iTokens &&
               ( pState->pFile->pLineBuf ? pState->pFile->nLineBufLen == 0 :
                                           pState->pFile->fEof ) ) ) )
       {
@@ -1507,6 +1507,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             iStartLine++;
             iLines++;
          }
+         if( pToken == NULL )
+            pState->pNextTokenPtr = pEolTokenPtr;
          *pEolTokenPtr = pToken;
       }
 
