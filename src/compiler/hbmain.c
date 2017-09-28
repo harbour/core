@@ -4209,6 +4209,9 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
       /* Clear and reinitialize preprocessor state */
       hb_pp_reset( HB_COMP_PARAM->pLex->pPP );
+      HB_COMP_PARAM->pLex->iState = HB_COMP_PARAM->pLex->iClose =
+      HB_COMP_PARAM->pLex->iScope = 0;
+      HB_COMP_PARAM->pLex->fEol = HB_FALSE;
       hb_compDeclaredReset( HB_COMP_PARAM );
 
       if( ! szBuffer )

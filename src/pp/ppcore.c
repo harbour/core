@@ -1492,7 +1492,11 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          n = 0;
       }
 
-      if( pEolTokenPtr && pEolTokenPtr != pState->pNextTokenPtr )
+      if( pEolTokenPtr &&
+          ( pEolTokenPtr != pState->pNextTokenPtr ||
+            ( pState->iNestedBlock &&
+              ( pState->pFile->pLineBuf ? pState->pFile->nLineBufLen == 0 :
+                                          pState->pFile->fEof ) ) ) )
       {
          PHB_PP_TOKEN pToken = *pEolTokenPtr;
 
@@ -3649,11 +3653,35 @@ static HB_BOOL hb_pp_tokenStopExtBlock( PHB_PP_TOKEN * pTokenPtr )
 {
    PHB_PP_TOKEN pToken = *pTokenPtr;
 
-   if( HB_PP_TOKEN_ISEOC( pToken ) && pToken->pNext &&
-       HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_RIGHT_CB )
+   if( HB_PP_TOKEN_ISEOC( pToken ) && pToken->pNext )
    {
-      *pTokenPtr = pToken->pNext->pNext;
-      return HB_TRUE;
+      pToken = pToken->pNext;
+      if( HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_RIGHT_CB )
+      {
+         *pTokenPtr = pToken->pNext;
+         return HB_TRUE;
+      }
+      if( pToken->pNext &&
+          HB_PP_TOKEN_TYPE( pToken->type ) == HB_PP_TOKEN_KEYWORD &&
+          HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
+      {
+         PHB_PP_TOKEN pFirst = pToken;
+
+         if( hb_pp_tokenValueCmp( pToken, "INIT", HB_PP_CMP_DBASE ) ||
+             hb_pp_tokenValueCmp( pToken, "EXIT", HB_PP_CMP_DBASE ) ||
+             hb_pp_tokenValueCmp( pToken, "STATIC", HB_PP_CMP_DBASE ) )
+            pToken = pToken->pNext;
+
+         if( hb_pp_tokenValueCmp( pToken, "FUNCTION", HB_PP_CMP_DBASE ) ||
+             hb_pp_tokenValueCmp( pToken, "PROCEDURE", HB_PP_CMP_DBASE ) )
+         {
+            if( pToken != pFirst ||
+                HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD )
+
+            *pTokenPtr = pFirst;
+            return HB_TRUE;
+         }
+      }
    }
    return HB_FALSE;
 }

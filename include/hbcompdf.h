@@ -525,6 +525,7 @@ typedef struct _HB_HFUNC
    PHB_SWITCHCMD     pSwitch;
    PHB_ELSEIF        elseif;
    PHB_RTVAR         rtvars;
+   HB_USHORT         wSeqBegCounter;
    HB_USHORT         wSeqCounter;
    HB_USHORT         wAlwaysCounter;
    HB_USHORT         wForCounter;
@@ -729,6 +730,8 @@ typedef struct _HB_COMP_LEX
 {
    PHB_PP_STATE   pPP;
    int            iState;
+   int            iClose;
+   int            iScope;
    HB_BOOL        fEol;
    const char *   lasttok;
 } HB_COMP_LEX, * PHB_COMP_LEX;

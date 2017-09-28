@@ -146,7 +146,7 @@ static const HB_LEX_KEY s_keytable[] =
    { "STATIC",      4,  6, STATIC         },
    { "STEP",        4,  4, STEP           },
    { "SWITCH",      4,  6, DOSWITCH       },
-   { "THREAD",      4,  6, THREAD         },
+   { "THREAD",      4,  6, THREAD_STATIC  },
    { "TO",          2,  2, TO             },
    { "WHILE",       4,  5, WHILE          },
    { "WITH",        4,  4, WITH           },
@@ -477,12 +477,69 @@ static int hb_comp_dayTimeDecode( PHB_COMP_LEX pLex, PHB_PP_TOKEN pToken,
 }
 #endif
 
+static int hb_comp_funcStart( HB_COMP_DECL, YYSTYPE * yylval_ptr )
+{
+   HB_COMP_PARAM->pLex->iClose = HB_COMP_PARAM->functions.pLast->wIfCounter +
+                                 HB_COMP_PARAM->functions.pLast->wForCounter +
+                                 HB_COMP_PARAM->functions.pLast->wWhileCounter +
+                                 HB_COMP_PARAM->functions.pLast->wCaseCounter +
+                                 HB_COMP_PARAM->functions.pLast->wSwitchCounter +
+                                 HB_COMP_PARAM->functions.pLast->wWithObjectCnt +
+                                 HB_COMP_PARAM->functions.pLast->wSeqBegCounter +
+                                 ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ? 1 : 0 );
+   if( HB_COMP_PARAM->pLex->iClose > 0 )
+   {
+      HB_COMP_PARAM->pLex->iClose <<= 1;
+      HB_COMP_PARAM->functions.pLast->wIfCounter =
+      HB_COMP_PARAM->functions.pLast->wForCounter =
+      HB_COMP_PARAM->functions.pLast->wWhileCounter =
+      HB_COMP_PARAM->functions.pLast->wCaseCounter =
+      HB_COMP_PARAM->functions.pLast->wSwitchCounter =
+      HB_COMP_PARAM->functions.pLast->wWithObjectCnt =
+      HB_COMP_PARAM->functions.pLast->wSeqBegCounter = 0;
+      HB_COMP_PARAM->functions.pLast->wSeqCounter = 0;
+//      printf( "\nEX=%d, iClose=%d => ENDERR", ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) != 0, HB_COMP_PARAM->pLex->iClose );
+      return ENDERR;
+   }
+   yylval_ptr->iNumber = HB_COMP_PARAM->pLex->iScope;
+   return HB_COMP_PARAM->pLex->iState;
+}
+
 extern int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL );
 
 int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
 {
    PHB_COMP_LEX pLex = HB_COMP_PARAM->pLex;
-   PHB_PP_TOKEN pToken = hb_pp_tokenGet( pLex->pPP );
+   PHB_PP_TOKEN pToken;
+
+   if( ! HB_COMP_PARAM->fExit )
+   {
+      if( pLex->iClose < 0 )
+      {
+         hb_comp_funcStart( HB_COMP_PARAM, yylval_ptr );
+         if( pLex->iClose > 0 )
+            return ENDERR;
+      }
+      else if( pLex->iClose > 0 )
+      {
+         if( --pLex->iClose == 0 )
+         {
+//            printf( "\nEX=%d, iClose=%d => %s\n", ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) != 0, HB_COMP_PARAM->pLex->iClose, HB_COMP_PARAM->pLex->lasttok );
+            yylval_ptr->iNumber = pLex->iScope;
+            return pLex->iState;
+         }
+         if( pLex->iClose == 1 && HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK )
+         {
+            pLex->iClose = -1;
+//            printf( "\nEX=%d, iClose=%d => ;\n", ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) != 0, HB_COMP_PARAM->pLex->iClose );
+            return ';';
+         }
+//         printf( "\nEX=%d, iClose=%d => %s", ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) != 0, HB_COMP_PARAM->pLex->iClose, pLex->iClose & 1 ? ";" : "ENDERR" );
+         return pLex->iClose & 1 ? ';' : ENDERR;
+      }
+   }
+
+   pToken = hb_pp_tokenGet( pLex->pPP );
 
    if( pLex->fEol )
    {
@@ -492,6 +549,15 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
 
    if( ! pToken || HB_COMP_PARAM->fExit )
    {
+      if( ! HB_COMP_PARAM->fExit )
+      {
+         hb_comp_funcStart( HB_COMP_PARAM, yylval_ptr );
+         if( pLex->iClose > 0 )
+         {
+            HB_COMP_PARAM->pLex->iScope = HB_COMP_PARAM->pLex->iState = 0;
+            return ENDERR;
+         }
+      }
       pLex->lasttok = NULL;
       return 0;
    }
@@ -790,19 +856,20 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
          {
             case FUNCTION:
             case PROCEDURE:
-               if( HB_SUPPORT_HARBOUR &&
-                   ( ( pLex->iState != LOOKUP && pLex->iState != STATIC &&
-                       pLex->iState != INIT && pLex->iState != EXIT ) ||
-                     HB_PP_TOKEN_ISEOC( pToken->pNext ) ||
-                     HB_PP_TOKEN_TYPE( pToken->pNext->type ) != HB_PP_TOKEN_KEYWORD ) )
+               if( ! HB_SUPPORT_HARBOUR ||
+                   ( pLex->iState == LOOKUP && pToken->pNext &&
+                     HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD ) )
                {
-                  iType = IDENTIFIER;
-                  break;
+                  pLex->iScope = HB_FS_PUBLIC;
+                  pLex->iState = iType;
+                  return hb_comp_funcStart( HB_COMP_PARAM, yylval_ptr );
                }
-               pLex->iState = iType;
-               return pLex->iState;
+               iType = IDENTIFIER;
+               break;
 
             case INIT:
+            case EXIT:
+            case STATIC:
                if( pLex->iState == LOOKUP && pToken->pNext &&
                    HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
                    pToken->pNext->len >= 4 &&
@@ -811,8 +878,34 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
                      hb_strnicmp( "PROCEDURE", pToken->pNext->value,
                                   pToken->pNext->len ) == 0 ) )
                {
-                  pLex->iState = INIT;
-                  return INIT;
+                  pLex->iScope = iType == INIT ? HB_FS_INIT :
+                                 ( iType == EXIT ? HB_FS_EXIT : HB_FS_STATIC );
+                  pLex->iState = HB_TOUPPER( pToken->pNext->value[ 0 ] ) == 'F' ?
+                                 FUNCTION : PROCEDURE;
+                  hb_pp_tokenGet( pLex->pPP );
+                  return hb_comp_funcStart( HB_COMP_PARAM, yylval_ptr );
+               }
+               else if( pLex->iState == LOOKUP &&
+                        ( ( iType == EXIT && HB_PP_TOKEN_ISEOC( pToken->pNext ) ) ||
+                          ( iType == STATIC && pToken->pNext &&
+                            HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD ) ) )
+               {
+                  pLex->iState = iType;
+                  return iType;
+               }
+               iType = IDENTIFIER;
+               break;
+
+            case THREAD_STATIC:
+               if( pLex->iState == LOOKUP && pToken->pNext &&
+                   HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
+                   pToken->pNext->len >= 4 &&
+                   hb_strnicmp( "STATIC", pToken->pNext->value,
+                                pToken->pNext->len ) == 0 )
+               {
+                  hb_pp_tokenGet( pLex->pPP );
+                  pLex->iState = THREAD_STATIC;
+                  return THREAD_STATIC;
                }
                iType = IDENTIFIER;
                break;
@@ -1261,19 +1354,6 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
                iType = IDENTIFIER;
                break;
 
-            case THREAD:
-               if( pLex->iState == LOOKUP && ! HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
-                   HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
-                   pToken->pNext->len >= 4 &&
-                   hb_strnicmp( "STATIC", pToken->pNext->value,
-                                pToken->pNext->len ) == 0 )
-               {
-                  pLex->iState = LOOKUP;
-                  return iType;
-               }
-               iType = IDENTIFIER;
-               break;
-
             case IN:
                if( pLex->iState == IDENTIFIER )
                {
@@ -1287,10 +1367,8 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
                   iType = IDENTIFIER;
                break;
 
-            case EXIT:
             case LOOP:
             case LOCAL:
-            case STATIC:
             case MEMVAR:
             case PUBLIC:
             case PRIVATE:

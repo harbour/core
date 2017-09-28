@@ -106,6 +106,7 @@ static PHB_EXPR hb_compCheckMethod( HB_COMP_DECL, PHB_EXPR pExpr );
 static PHB_EXPR hb_compCheckPassByRef( HB_COMP_DECL, PHB_EXPR pExpr );
 
 static void hb_compErrStru( HB_COMP_DECL, int iError );
+static void hb_compErrUnclosed( HB_COMP_DECL, const char * szStru );
 
 #ifdef HB_YYDEBUG
    #define YYDEBUG        1 /* Parser debug information support */
@@ -169,11 +170,12 @@ extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error manageme
 %}
 
 
-%token FUNCTION PROCEDURE IDENTIFIER RETURN NIL NUM_DOUBLE INASSIGN NUM_LONG
-%token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF LITERAL TRUEVALUE FALSEVALUE
-%token ANNOUNCE EXTERN DYNAMIC INIT EXIT AND OR NOT PUBLIC EQ NE1 NE2
+%token FUNCTION PROCEDURE IDENTIFIER RETURN NIL
+%token LOCAL STATIC IIF IF ELSE ELSEIF END ENDIF ENDERR
+%token LITERAL TRUEVALUE FALSEVALUE NUM_DOUBLE INASSIGN NUM_LONG
+%token ANNOUNCE EXTERN DYNAMIC AND OR NOT PUBLIC EQ NE1 NE2
 %token INC DEC ALIASOP DOCASE CASE OTHERWISE ENDCASE ENDDO MEMVAR
-%token WHILE LOOP FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
+%token WHILE LOOP EXIT INIT FOR NEXT TO STEP LE GE FIELD IN PARAMETERS
 %token PLUSEQ MINUSEQ MULTEQ DIVEQ POWER EXPEQ MODEQ
 %token PRIVATE BEGINSEQ BREAK RECOVER RECOVERUSING ALWAYS ENDSEQ
 %token DO WITH SELF LINE
@@ -188,7 +190,7 @@ extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error manageme
 %token NUM_DATE TIMESTAMP
 %token EPSILON
 %token HASHOP
-%token THREAD
+%token THREAD_STATIC
 
 /*the lowest precedence*/
 /*post-increment and post-decrement*/
@@ -224,7 +226,8 @@ extern void yyerror( HB_COMP_DECL, const char * );     /* parsing error manageme
 %type <valLong>   NUM_LONG
 %type <valLong>   NUM_DATE
 %type <valTimeStamp> TIMESTAMP
-%type <iNumber> FunScope
+%type <iNumber> FUNCTION
+%type <iNumber> PROCEDURE
 %type <iNumber> Descend
 %type <iNumber> Params ParamList
 %type <iNumber> VarList ExtVarList
@@ -322,16 +325,10 @@ Line       : LINE NUM_LONG Crlf
                     $5.dealloc = HB_FALSE; }
            ;
 
-Function   : FunScope FUNCTION  IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf
-           | FunScope PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, HB_FUNF_PROCEDURE ); } Crlf
-           | FunScope FUNCTION  IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER; } '(' Params ')' Crlf
-           | FunScope PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, HB_FUNF_PROCEDURE ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER;} '(' Params ')' Crlf
-           ;
-
-FunScope   :                  { $$ = HB_FS_PUBLIC; }
-           | STATIC           { $$ = HB_FS_STATIC; }
-           | INIT             { $$ = HB_FS_INIT; }
-           | EXIT             { $$ = HB_FS_EXIT; }
+Function   : FUNCTION  IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $2, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf
+           | PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $2, ( HB_SYMBOLSCOPE ) $1, HB_FUNF_PROCEDURE ); } Crlf
+           | FUNCTION  IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $2, ( HB_SYMBOLSCOPE ) $1, 0 ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER; } '(' Params ')' Crlf
+           | PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $2, ( HB_SYMBOLSCOPE ) $1, HB_FUNF_PROCEDURE ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER;} '(' Params ')' Crlf
            ;
 
 Params     : /*no parameters */ { $$ = 0; }
@@ -501,7 +498,7 @@ LineStat   : Crlf          { $<lNumber>$ = 0; }
            | Statement     { $<lNumber>$ = 1; }
            | Declaration   { $<lNumber>$ = 1; }
            | Line          { $<lNumber>$ = 0; }
-           | /* error */ Function
+           /* | error Function */
            | error         { if( HB_COMP_PARAM->ilastLineErr && HB_COMP_PARAM->ilastLineErr == HB_COMP_PARAM->currLine )
                              {
                                 yyclearin;
@@ -549,7 +546,6 @@ IdentName  : IDENTIFIER
            | PARAMETERS       { $$ = $<string>1; }
            | PROCREQ          { $$ = $<string>1; }
            | DESCEND          { $$ = $<string>1; }
-           | THREAD           { $$ = $<string>1; }
            ;
 
 /* Numeric values
@@ -1057,7 +1053,7 @@ CodeBlock   : BlockHead
                   pVar =pVar->pNext;
                }
             }
-            EmptyStats '}'
+            EmptyStats BlockEnd
             {  /* 6 */
                /* protection against nested function/procedure inside extended block */
                if( HB_COMP_PARAM->iErrorCount == 0 ||
@@ -1072,6 +1068,11 @@ CodeBlock   : BlockHead
                }
             }
             ;
+
+BlockEnd    : '}'
+            | ENDERR ';' { hb_compErrUnclosed( HB_COMP_PARAM, "{||...}" ); }
+            ;
+
 
 ExpList     : Expression               { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
             | ExpList ',' Expression   { $$ = hb_compExprAddListExpr( $1, $3 ); }
@@ -1099,7 +1100,7 @@ VarDefs  : LOCAL { HB_COMP_PARAM->iVarScope = HB_VSCOMP_LOCAL; hb_compLinePush( 
            VarList Crlf
          | STATIC { HB_COMP_PARAM->iVarScope = HB_VSCOMP_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
            VarList Crlf
-         | THREAD STATIC { HB_COMP_PARAM->iVarScope = HB_VSCOMP_TH_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
+         | THREAD_STATIC { HB_COMP_PARAM->iVarScope = HB_VSCOMP_TH_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
            VarList Crlf
          | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_USES_LOCAL_PARAMS )
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
@@ -1449,6 +1450,7 @@ EndIf      : EndIfID
 
 EndIfID    : ENDIF
            | END
+           | ENDERR { hb_compErrUnclosed( HB_COMP_PARAM, "IF" ); }
            | ErrEndFor
            | ErrEndCase
            | ErrEndWhile
@@ -1483,6 +1485,7 @@ EndCase    : EndCaseID
 
 EndCaseID  : ENDCASE
            | END
+           | ENDERR { hb_compErrUnclosed( HB_COMP_PARAM, "CASE" ); }
            | ErrEndIf
            | ErrEndFor
            | ErrEndWhile
@@ -1569,6 +1572,7 @@ EndWhile   : EndWhileID
 
 EndWhileID : ENDDO
            | END
+           | ENDERR { hb_compErrUnclosed( HB_COMP_PARAM, "WHILE" ); }
            | ErrEndIf
            | ErrEndFor
            | ErrEndCase
@@ -1663,6 +1667,7 @@ ForStatements : EmptyStats EndForID
 EndForID   : NEXT
            | NEXT IdentName
            | END
+           | ENDERR { hb_compErrUnclosed( HB_COMP_PARAM, "FOR" ); }
            | ErrEndIf
            | ErrEndCase
            | ErrEndWhile
@@ -1758,6 +1763,7 @@ EndSwitch   : EndSwitchID
 
 EndSwitchID : ENDSWITCH
             | END
+            | ENDERR { hb_compErrUnclosed( HB_COMP_PARAM, "SWITCH" ); }
             | ErrEndIf
             | ErrEndFor
             | ErrEndCase
@@ -1806,6 +1812,7 @@ BeginSeq    : BEGINSEQ        /* 1 */
                {              /* 2 */
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   ++HB_COMP_PARAM->functions.pLast->wSeqCounter;
+                  ++HB_COMP_PARAM->functions.pLast->wSeqBegCounter;
                   $<sNumber>$ = hb_compSequenceBegin( HB_COMP_PARAM );
                }
                BlockSeq       /* 3 */
@@ -1828,8 +1835,6 @@ BeginSeq    : BEGINSEQ        /* 1 */
                    */
                   if( $7 )
                      hb_compGenJumpThere( $<sNumber>2, $7, HB_COMP_PARAM );
-                  else if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
-                     --HB_COMP_PARAM->functions.pLast->wSeqCounter;
                }
                AlwaysSeq      /* 9 */
                {              /* 10 */
@@ -1861,10 +1866,15 @@ BeginSeq    : BEGINSEQ        /* 1 */
                                          $<lNumber>5 != 0, $7 != 0, $<lNumber>4 == lLoopCount );
                }
                EndSeqID       /* 10 */
+               {
+                  if( HB_COMP_PARAM->functions.pLast->wSeqBegCounter )
+                     --HB_COMP_PARAM->functions.pLast->wSeqBegCounter;
+               }
             ;
 
 EndSeqID    : ENDSEQ
             | END
+            | ENDERR { hb_compErrUnclosed( HB_COMP_PARAM, "BEGIN SEQUENCE" ); }
             | ErrEndIf
             | ErrEndFor
             | ErrEndCase
@@ -1895,17 +1905,23 @@ Always      : ALWAYS
                }
             ;
 
-RecoverSeq  : /* no recover */   { $$ = 0; HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
+RecoverSeq  : /* no recover */
+               {
+                  $$ = 0;
+                  if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
+                     --HB_COMP_PARAM->functions.pLast->wSeqCounter;
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
+               }
             | RecoverEmpty Crlf EmptyStats
             | RecoverUsing Crlf EmptyStats
             ;
 
 RecoverEmpty : RECOVER
                {
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   hb_compGenPCode2( HB_P_SEQRECOVER, HB_P_POP, HB_COMP_PARAM );
                }
@@ -1913,10 +1929,10 @@ RecoverEmpty : RECOVER
 
 RecoverUsing : RECOVERUSING IdentName
                {
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   hb_compLinePushIfInside( HB_COMP_PARAM );
                   hb_compGenPCode1( HB_P_SEQRECOVER, HB_COMP_PARAM );
                   hb_compGenPopVar( $2, HB_COMP_PARAM );
@@ -1984,6 +2000,7 @@ WithObject : WITHOBJECT Expression Crlf
 
 EndWithID  : ENDWITH
            | END
+           | ENDERR { hb_compErrUnclosed( HB_COMP_PARAM, "WITH OBJECT" ); }
            | ErrEndIf
            | ErrEndFor
            | ErrEndCase
@@ -2902,6 +2919,12 @@ static PHB_EXPR hb_compCheckMethod( HB_COMP_DECL, PHB_EXPR pExpr )
 static void hb_compErrStru( HB_COMP_DECL, int iError )
 {
    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', iError, NULL, NULL );
+}
+
+static void hb_compErrUnclosed( HB_COMP_DECL, const char * szStru )
+{
+   HB_COMP_PARAM->fError = HB_FALSE;
+   hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, szStru, NULL );
 }
 
 /* ************************************************************************* */
