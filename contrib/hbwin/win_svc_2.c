@@ -46,6 +46,10 @@
 
 #include "hbwapi.h"
 
+#if defined( __POCC__ ) || defined( __XCC__ )
+   #include <winsvc.h>   /* it's disabled by WIN32_LEAN_AND_MEAN */
+#endif
+
 HB_FUNC( WIN_SERVICEINSTALL )
 {
    HB_BOOL bRetVal = HB_FALSE;

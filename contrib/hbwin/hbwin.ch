@@ -720,6 +720,7 @@
 #define WIN_MB_DEFMASK                     0x00000F00
 #define WIN_MB_MODEMASK                    0x00003000
 #define WIN_MB_MISCMASK                    0x0000C000
+#define WIN_MB_TIMEDOUT                    0x00007D00
 
 /* win_SHFileOperation() functions */
 #define WIN_FO_MOVE                        0x0001

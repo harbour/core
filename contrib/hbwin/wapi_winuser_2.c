@@ -61,3 +61,46 @@ HB_FUNC( WAPI_MESSAGEBOX )
    hb_strfree( hStr1 );
    hb_strfree( hStr2 );
 }
+
+static int s_MessageBoxTimeout( IN HWND hWnd,
+                                IN LPCTSTR lpText, IN LPCTSTR lpCaption,
+                                IN UINT uType, IN WORD wLanguageId,
+                                IN DWORD dwMilliseconds )
+{
+   /* undocumented Windows API */
+   typedef int ( __stdcall * _HB_MSGBOXTOUT )( IN HWND hWnd,
+                                               IN LPCTSTR lpText, IN LPCTSTR lpCaption,
+                                               IN UINT uType, IN WORD wLanguageId,
+                                               IN DWORD dwMilliseconds );
+   static _HB_MSGBOXTOUT s_pMessageBoxTimeout = ( _HB_MSGBOXTOUT ) -1;
+
+   if( s_pMessageBoxTimeout == ( _HB_MSGBOXTOUT ) -1 )
+   {
+      HMODULE hModule = GetModuleHandle( TEXT( "user32.dll" ) );
+      s_pMessageBoxTimeout = hModule == NULL ? NULL : ( _HB_MSGBOXTOUT )
+               HB_WINAPI_GETPROCADDRESST( hModule, "MessageBoxTimeout" );
+   }
+
+   return s_pMessageBoxTimeout ?
+            s_pMessageBoxTimeout( hWnd, lpText, lpCaption, uType,
+                                  wLanguageId, dwMilliseconds ) :
+            MessageBoxEx( hWnd, lpText, lpCaption, uType, wLanguageId );
+}
+
+HB_FUNC( WAPI_MESSAGEBOXTIMEOUT )
+{
+   void * hStr1;
+   void * hStr2;
+
+   int iResult = s_MessageBoxTimeout( hbwapi_par_raw_HWND( 1 ),
+                                      HB_PARSTR( 2, &hStr1, NULL ),
+                                      HB_PARSTR( 3, &hStr2, NULL ),
+                                      hbwapi_par_UINT( 4 ),
+                                      hbwapi_par_WORD( 5 ),
+                                      hbwapi_par_DWORD( 6 ) );
+
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_NI( iResult );
+   hb_strfree( hStr1 );
+   hb_strfree( hStr2 );
+}

@@ -61,7 +61,7 @@
     ( defined( __WATCOMC__ ) || defined( _MSC_VER ) || \
       defined( __MINGW32__ ) || defined( __BORLANDC__ ) || \
       defined( __DMC__ ) ) && \
-    ! defined( __MINGW32CE__ )
+    ! defined( __MINGW32CE__ ) && ! defined( __POCC__ ) && ! defined( __XCC__ )
    #define HB_USE_FSOPEN
    #include <share.h>
    #if ! defined( SH_DENYNO ) && defined( _SH_DENYNO )
