@@ -1,6 +1,6 @@
 /*
- * functions to access files with shared handles and locks
- *    (buffers in the future)
+ * Functions to access files with shared handles and locks
+ * (buffers in the future)
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -70,8 +70,8 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
+       * defined and effectively enables lseek64()/flock64()/ftruncate64()
+       * functions on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
    #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
@@ -479,7 +479,6 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
 #endif
    HB_BOOL fResult, fShared;
    int iMode;
-   HB_FHANDLE hFile;
    char * pszFile;
 
    HB_SYMBOL_UNUSED( pFuncs );
@@ -497,8 +496,8 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
    {
       if( iMode == FO_WRITE && fShared )
       {
-         if( access( ( char * ) pszFile, R_OK ) == 0 ||
-             access( ( char * ) pszFile, F_OK ) != 0 )
+         if( access( pszFile, R_OK ) == 0 ||
+             access( pszFile, F_OK ) != 0 )
          {
             nExFlags = ( nExFlags ^ FO_WRITE ) | FO_READWRITE;
             iMode = FO_READWRITE;
@@ -517,9 +516,9 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
    hb_threadEnterCriticalSection( &s_fileMtx );
 
 #  if defined( HB_USE_LARGEFILE64 )
-   fResult = stat64( ( char * ) pszFile, &statbuf ) == 0;
+   fResult = stat64( pszFile, &statbuf ) == 0;
 #  else
-   fResult = stat( ( char * ) pszFile, &statbuf ) == 0;
+   fResult = stat( pszFile, &statbuf ) == 0;
 #  endif
    hb_fsSetIOError( fResult, 0 );
 
@@ -559,7 +558,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
    if( fResult && pFile == NULL )
 #endif /* HB_OS_UNIX */
    {
-      hFile = hb_fsExtOpen( pszFile, NULL,
+      HB_FHANDLE hFile = hb_fsExtOpen( pszFile, NULL,
                             nExFlags & ~ ( HB_FATTR ) ( FXO_DEFAULTS | FXO_COPYNAME ),
                             NULL, NULL );
       if( hFile != FS_ERROR )
@@ -623,7 +622,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
                   hb_fsClose( hFile );
                   hFile = FS_ERROR;
 #if defined( HB_USE_SHARELOCKS ) && ! defined( HB_USE_BSDLOCKS )
-                  /* TOFIX: possible race condition */
+                  /* FIXME: possible race condition */
                   hb_fsLockLarge( pFile->hFile, HB_SHARELOCK_POS, HB_SHARELOCK_SIZE,
                                   FL_LOCK | FLX_SHARED );
 #endif
@@ -638,7 +637,7 @@ static PHB_FILE s_fileExtOpen( PHB_FILE_FUNCS pFuncs, const char * pszFileName, 
                }
                if( hFile != FS_ERROR )
                {
-                  /* TOFIX: possible race condition in MT mode,
+                  /* FIXME: possible race condition in MT mode,
                    *        close() is not safe due to existing locks
                    *        which are removed.
                    */
@@ -1463,8 +1462,10 @@ HB_FHANDLE hb_fileHandle( PHB_FILE pFile )
 
 /* internal FILE structures only */
 
-PHB_FILE hb_fileCreateTemp( const char * pszDir, const char * pszPrefix,
-                            HB_FATTR ulAttr, char * pszName )
+PHB_FILE hb_fileCreateTemp( const char * pszDir,
+                            const char * pszPrefix,
+                            HB_FATTR ulAttr,
+                            char * pszName )
 {
    PHB_FILE pFile = NULL;
    HB_FHANDLE hFile;

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -93,19 +93,19 @@ static int s_macroFlags = HB_SM_DEFAULT;
 
 #define HB_SM_ISUSERCP()         ( HB_CDP_ISCHARUNI( hb_vmCDP() ) ? HB_COMPFLAG_USERCP : 0 )
 
-/* ************************************************************************* */
+/* - */
 
 /* Compile passed string into a pcode buffer
  *
  * 'pMacro' - pointer to HB_MACRO structure that will hold all information
- *    nedded for macro compilation and evaluation
+ *    needed for macro compilation and evaluation
  * 'szString'  - a string to compile
  * 'iFlag' - specifies if compiled code should generate pcodes either for push
  *    operation (for example: var :=&macro) or for pop operation (&macro :=var)
  */
 static int hb_macroParse( PHB_MACRO pMacro )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroParse(%p)", pMacro ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroParse(%p)", ( void * ) pMacro ) );
 
    /* initialize the output (pcode) buffer - it will be filled by yacc */
    pMacro->pCodeInfo = &pMacro->pCodeInfoBuffer;
@@ -134,7 +134,7 @@ static int hb_macroParse( PHB_MACRO pMacro )
  */
 static void hb_macroClear( PHB_MACRO pMacro )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroClear(%p)", pMacro ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroClear(%p)", ( void * ) pMacro ) );
 
    hb_xfree( pMacro->pCodeInfo->pCode );
    if( pMacro->pError )
@@ -143,7 +143,7 @@ static void hb_macroClear( PHB_MACRO pMacro )
 
 void hb_macroDelete( PHB_MACRO pMacro )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroDelete(%p)", pMacro ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroDelete(%p)", ( void * ) pMacro ) );
 
    hb_macroClear( pMacro );
    hb_xfree( pMacro );
@@ -155,7 +155,7 @@ static HB_BOOL hb_macroCheckParam( PHB_ITEM pItem )
 {
    HB_BOOL bValid = HB_TRUE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroCheckParam(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroCheckParam(%p)", ( void * ) pItem ) );
 
    if( ! HB_IS_STRING( pItem ) )
    {
@@ -199,7 +199,7 @@ static HB_ERROR_HANDLE( hb_macroErrorType )
  */
 void hb_macroRun( PHB_MACRO pMacro )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroRun(%p)", pMacro ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroRun(%p)", ( void * ) pMacro ) );
 
    hb_vmExecute( pMacro->pCodeInfo->pCode, NULL );
 }
@@ -208,7 +208,7 @@ static void hb_macroSyntaxError( PHB_MACRO pMacro )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroSyntaxError(%p)", pMacro ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroSyntaxError(%p)", ( void * ) pMacro ) );
 
    if( pMacro && pMacro->pError )
    {
@@ -233,10 +233,10 @@ static void hb_macroSyntaxError( PHB_MACRO pMacro )
    }
 }
 
-/* This replaces all '&var' or '&var.' occurences within a given string
+/* This replaces all '&var' or '&var.' occurrences within a given string
  * with the value of variable 'var' if this variable exists and contains
  * a string value. The value of variable is also searched for
- * occurences of macro operator and if it is found then it is expanded
+ * occurrences of macro operator and if it is found then it is expanded
  * until there is no more macro operators.
  * NOTE:
  *    this does not evaluate a macro expression - there is a simple text
@@ -418,7 +418,7 @@ void hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroGetValue(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroGetValue(%p)", ( void * ) pItem ) );
 
    if( hb_macroCheckParam( pItem ) )
    {
@@ -434,7 +434,7 @@ void hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags )
       struMacro.status    = HB_MACRO_CONT;
       struMacro.length    = pItem->item.asString.length;
       /*
-       * Clipper appears to expand nested macros staticly vs. by
+       * Clipper appears to expand nested macros statically vs. by
        * Macro Parser, f.e.:
        *       PROCEDURE Main()
        *          LOCAL cText
@@ -505,7 +505,7 @@ void hb_macroSetValue( PHB_ITEM pItem, int flags )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroSetValue(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroSetValue(%p)", ( void * ) pItem ) );
 
    if( hb_macroCheckParam( pItem ) )
    {
@@ -549,7 +549,7 @@ void hb_macroPushReference( PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroPushReference(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroPushReference(%p)", ( void * ) pItem ) );
 
    if( hb_macroCheckParam( pItem ) )
    {
@@ -676,7 +676,7 @@ static void hb_macroUseAliased( PHB_ITEM pAlias, PHB_ITEM pVar, int iFlag, int i
  */
 void hb_macroPopAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroPopAliasedValue(%p, %p)", pAlias, pVar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroPopAliasedValue(%p, %p)", ( void * ) pAlias, ( void * ) pVar ) );
 
    hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_POP, flags );
 }
@@ -688,7 +688,7 @@ void hb_macroPopAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags )
  */
 void hb_macroPushAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroPushAliasedValue(%p, %p)", pAlias, pVar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroPushAliasedValue(%p, %p)", ( void * ) pAlias, ( void * ) pVar ) );
 
    hb_macroUseAliased( pAlias, pVar, HB_MACRO_GEN_PUSH, flags );
 }
@@ -702,7 +702,7 @@ char * hb_macroExpandString( const char * szString, HB_SIZE nLength, HB_BOOL * p
 {
    char * szResultString;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExpandString(%s,%" HB_PFS "u,%p)", szString, nLength, pfNewString ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExpandString(%s,%" HB_PFS "u,%p)", szString, nLength, ( void * ) pfNewString ) );
 
    if( szString )
       szResultString = hb_macroTextSubst( szString, &nLength );
@@ -716,7 +716,7 @@ char * hb_macroTextSymbol( const char * szString, HB_SIZE nLength, HB_BOOL * pfN
 {
    char * szResult = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroTextSymbol(%s,%" HB_PFS "u,%p)", szString, nLength, pfNewString ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroTextSymbol(%s,%" HB_PFS "u,%p)", szString, nLength, ( void * ) pfNewString ) );
 
    if( szString )
    {
@@ -859,7 +859,7 @@ static void hb_macroSetGetBlock( PHB_DYNS pVarSym, PHB_ITEM pItem,
       bPushPcode = HB_P_MPUSHALIASEDFIELD;
       bPopPcode  = HB_P_MPOPALIASEDFIELD;
    }
-   else if( !fMemVar )
+   else if( ! fMemVar )
    {
       bPushPcode = HB_P_MPUSHFIELD;
       bPopPcode  = HB_P_MPOPFIELD;
@@ -1017,7 +1017,7 @@ HB_FUNC( FIELDWBLOCK )
 void hb_macroPushSymbol( PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroPushSymbol(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroPushSymbol(%p)", ( void * ) pItem ) );
 
    if( hb_macroCheckParam( pItem ) )
    {
@@ -1059,7 +1059,7 @@ void hb_macroPushSymbol( PHB_ITEM pItem )
  */
 void hb_macroTextValue( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroTextValue(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroTextValue(%p)", ( void * ) pItem ) );
 
    if( hb_macroCheckParam( pItem ) )
    {
@@ -1087,7 +1087,7 @@ const char * hb_macroGetType( PHB_ITEM pItem )
    HB_STACK_TLS_PRELOAD
    const char * szType;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroGetType(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroGetType(%p)", ( void * ) pItem ) );
 
    if( hb_macroCheckParam( pItem ) )
    {
@@ -1134,7 +1134,7 @@ const char * hb_macroGetType( PHB_ITEM pItem )
 
             /* Set our temporary error handler. We do not need any error
              * messages here - we need to know only if evaluation was
-             * successfull. If evaluation was successfull then the data type
+             * successful. If evaluation was successful then the data type
              * of expression can be determined.
              */
             struErr.Func  = hb_macroErrorType;
@@ -1145,7 +1145,7 @@ const char * hb_macroGetType( PHB_ITEM pItem )
 
             if( struMacro.status & HB_MACRO_CONT )
             {
-               /* Evaluation was successfull
+               /* Evaluation was successful
                 * Now the value of expression is placed on the eval stack -
                 * check its type and pop it from the stack
                 */
@@ -1238,7 +1238,7 @@ HB_FUNC( HB_SETMACRO )
       hb_ret();    /* return NIL */
 }
 
-/* ************************************************************************* */
+/* - */
 
 /* returns the order + 1 of a variable if defined or zero */
 int hb_macroLocalVarGetPos( const char * szVarName, HB_COMP_DECL )
@@ -1577,7 +1577,7 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
    }
 }
 
-/* generates the pcode to push a nonaliased variable value to the virtual
+/* generates the pcode to push a non-aliased variable value to the virtual
  * machine stack
  */
 void hb_macroGenPushVar( const char * szVarName, HB_COMP_DECL )
@@ -1788,7 +1788,7 @@ void hb_macroGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
    pFunc->nPCodePos += nSize;
 }
 
-/* ************************************************************************* */
+/* - */
 
 void hb_macroError( int iError, HB_COMP_DECL )
 {
@@ -1796,14 +1796,12 @@ void hb_macroError( int iError, HB_COMP_DECL )
    HB_MACRO_DATA->status &= ~HB_MACRO_CONT;  /* clear CONT bit */
 }
 
-/*
- * Start a new pcode buffer for a codeblock
- */
+/* Start a new pcode buffer for a codeblock */
 void hb_macroCodeBlockStart( HB_COMP_DECL )
 {
    PHB_PCODE_INFO pCB;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroCodeBlockStart(%p)", HB_COMP_PARAM ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroCodeBlockStart(%p)", ( void * ) HB_COMP_PARAM ) );
 
    pCB = ( PHB_PCODE_INFO ) hb_xgrab( sizeof( HB_PCODE_INFO ) );
 
@@ -1826,7 +1824,7 @@ void hb_macroCodeBlockEnd( HB_COMP_DECL )
    HB_USHORT usParms = 0;   /* number of codeblock parameters */
    PHB_CBVAR pVar;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroCodeBlockEnd(%p)", HB_COMP_PARAM ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroCodeBlockEnd(%p)", ( void * ) HB_COMP_PARAM ) );
 
    /* a currently processed codeblock */
    pCodeblock = HB_PCODE_DATA;

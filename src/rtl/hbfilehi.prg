@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -226,7 +226,7 @@ FUNCTION hb_DirSepAdd( cDir )
 
    IF ! Empty( cDir ) .AND. ;
       ! _ISDRIVESPEC( cDir ) .AND. ;
-      !( Right( cDir, 1 ) == hb_ps() )
+      ! Right( cDir, 1 ) == hb_ps()
 
       cDir += hb_ps()
    ENDIF
@@ -241,14 +241,14 @@ FUNCTION hb_DirSepDel( cDir )
 
    IF Empty( hb_osDriveSeparator() )
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-         !( cDir == hb_ps() + hb_ps() )
+         ! cDir == hb_ps() + hb_ps()
 
          cDir := hb_StrShrink( cDir )
       ENDDO
    ELSE
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-         !( cDir == hb_ps() + hb_ps() ) .AND. ;
-         !( Right( cDir, Len( hb_osDriveSeparator() ) + 1 ) == hb_osDriveSeparator() + hb_ps() )
+         ! cDir == hb_ps() + hb_ps() .AND. ;
+         ! Right( cDir, Len( hb_osDriveSeparator() ) + 1 ) == hb_osDriveSeparator() + hb_ps()
 
          cDir := hb_StrShrink( cDir )
       ENDDO

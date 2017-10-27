@@ -1,37 +1,37 @@
 /*
  * SIX compatible function:
- *          sx_TagOrder() *
- *          sx_TagNo()
- *          sx_Freeze()
- *          sx_Warm()
- *          sx_Chill()
- *          sx_Thermometer()
- *          sx_ClrScope()
- *          sx_SetScope()
- *          sx_IsReindex()
- *          sx_Step()
- *          sx_KeySincluded()
- *          sx_I_IndexName()
- *          sx_I_TagName()
- *          sx_IndexCount()
- *          sx_IndexName()
- *          sx_IndexType()
- *          sx_KeyAdd()
- *          sx_KeyDrop()
- *          sx_KeyData()
- *          sx_KeySkip()
- *          sx_KeyCount()
- *          sx_KeyNo()
- *          sx_KeyGoto()
- *          sx_SkipUnique()
- *          sx_SeekLast()
- *          sx_TagUnique()
- *          sx_WildSeek()
- *          sx_ROXLock()
- *          sx_ROXUnlock()
- *          sx_IsMyROX()
- *          sx_IsROXLock()
- *          sx_SortOption()
+ *       sx_TagOrder() *
+ *       sx_TagNo()
+ *       sx_Freeze()
+ *       sx_Warm()
+ *       sx_Chill()
+ *       sx_Thermometer()
+ *       sx_ClrScope()
+ *       sx_SetScope()
+ *       sx_IsReindex()
+ *       sx_Step()
+ *       sx_KeySincluded()
+ *       sx_I_IndexName()
+ *       sx_I_TagName()
+ *       sx_IndexCount()
+ *       sx_IndexName()
+ *       sx_IndexType()
+ *       sx_KeyAdd()
+ *       sx_KeyDrop()
+ *       sx_KeyData()
+ *       sx_KeySkip()
+ *       sx_KeyCount()
+ *       sx_KeyNo()
+ *       sx_KeyGoto()
+ *       sx_SkipUnique()
+ *       sx_SeekLast()
+ *       sx_TagUnique()
+ *       sx_WildSeek()
+ *       sx_ROXLock()
+ *       sx_ROXUnlock()
+ *       sx_IsMyROX()
+ *       sx_IsROXLock()
+ *       sx_SortOption()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -46,9 +46,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -125,13 +125,13 @@ HB_FUNC( SX_TAGORDER )
 }
 
 /*
- * sx_TagNo(tag,bag) -> nTagPosInBag
+ * sx_TagNo( tag, bag ) --> nTagPosInBag
  * returns order position in order bag
  */
 HB_FUNC( SX_TAGNO )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   int iBagOrder = 0, iOrder;
+   int iBagOrder = 0;
 
    if( pArea )
    {
@@ -142,7 +142,7 @@ HB_FUNC( SX_TAGNO )
          Info.itmResult = hb_itemPutNI( NULL, 0 );
          if( SELF_ORDINFO( pArea, DBOI_NUMBER, &Info ) == HB_SUCCESS )
          {
-            iOrder = hb_itemGetNI( Info.itmResult );
+            int iOrder = hb_itemGetNI( Info.itmResult );
             if( iOrder )
             {
                Info.itmOrder = hb_itemPutNI( NULL, iOrder );
@@ -248,7 +248,7 @@ HB_FUNC( SX_CHILL )
 HB_FUNC( SX_THERMOMETER )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   int iTemperature = -1, i;
+   int iTemperature = -1;
 
    if( pArea )
    {
@@ -256,6 +256,7 @@ HB_FUNC( SX_THERMOMETER )
 
       if( hb_sxOrdParam( &Info ) )
       {
+         int i;
          Info.itmResult = hb_itemPutNI( NULL, 0 );
          SELF_ORDINFO( pArea, DBOI_NUMBER, &Info );
          i = hb_itemGetNI( Info.itmResult );
@@ -679,10 +680,11 @@ HB_FUNC( SX_WILDSEEK )
    const char * szPattern = hb_parc( 1 );
    HB_BOOL fCont = hb_parl( 2 );
    HB_BOOL fFound = HB_FALSE;
-   int iOrder = 0;
 
    if( pArea )
    {
+      int iOrder = 0;
+
       DBORDERINFO Info;
       memset( &Info, 0, sizeof( Info ) );
       Info.itmResult = hb_itemNew( NULL );

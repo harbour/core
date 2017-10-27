@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -43,7 +43,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
 
 #include "hbcomp.h"
 
@@ -303,9 +302,9 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             else
             {
                if( iValue )
-                  iValue = HB_COMP_PARAM->supported & iFlag ? 0 : 1;
+                  iValue = ( HB_COMP_PARAM->supported & iFlag ) ? 0 : 1;
                else
-                  iValue = HB_COMP_PARAM->supported & iFlag ? 1 : 0;
+                  iValue = ( HB_COMP_PARAM->supported & iFlag ) ? 1 : 0;
             }
          }
       }
@@ -415,7 +414,7 @@ void hb_compInitPP( HB_COMP_DECL, PHB_PP_OPEN_FUNC pOpenFunc )
 
       hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP, ! HB_COMP_PARAM->fNoArchDefs );
 
-      /* Add /D and /undef: command line or envvar defines */
+      /* Add /D and /undef: command-line or envvar defines */
       hb_compChkSetDefines( HB_COMP_PARAM );
 
       /* add extended definitions files (-u+<file>) */

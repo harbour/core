@@ -2,6 +2,7 @@
  * The Fixed Memory API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (hb_xquery())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_xquery()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -323,7 +314,7 @@ typedef struct _HB_MEMINFO
 #define HB_FM_BLOCKSIZE( p )  ( s_fStatistic ? HB_FM_PTR( pMem )->nSize : 0 )
 
 /* NOTE: we cannot use here HB_TRACE because it will overwrite the
- * function name/line number of code which called hb_xalloc/hb_xgrab
+ * function name/line number of code which called hb_xalloc()/hb_xgrab()
  */
 #define HB_TRACE_FM  HB_TRACE_STEALTH
 
@@ -622,7 +613,7 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
          /* NOTE: PRG line number/procname is not very useful during hunting
           * for memory leaks - this is why we are using the previously stored
           * function/line info - this is a location of code that called
-          * hb_xalloc/hb_xgrab
+          * hb_xalloc()/hb_xgrab()
           */
          pMem->uiProcLine = pTrace->line; /* C line number */
          if( pTrace->file )
@@ -713,7 +704,7 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
          /* NOTE: PRG line number/procname is not very useful during hunting
           * for memory leaks - this is why we are using the previously stored
           * function/line info - this is a location of code that called
-          * hb_xalloc/hb_xgrab
+          * hb_xalloc()/hb_xgrab()
           */
          pMem->uiProcLine = pTrace->line; /* C line number */
          if( pTrace->file )
@@ -1152,17 +1143,21 @@ static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE nSize )
 
    nPrintable = 0;
    for( nIndex = 0; nIndex < nSize; nIndex++ )
+   {
       if( ( cMem[ nIndex ] & 0x60 ) != 0 )
          nPrintable++;
+   }
 
    if( nPrintable * 100 / nSize > 70 ) /* more then 70% printable chars */
    {
       /* format as string of original chars */
       for( nIndex = 0; nIndex < nSize; nIndex++ )
+      {
          if( cMem[ nIndex ] >= ' ' )
             membuffer[ nIndex ] = cMem[ nIndex ];
          else
             membuffer[ nIndex ] = '.';
+      }
       membuffer[ nIndex ] = '\0';
    }
    else
@@ -1170,9 +1165,8 @@ static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE nSize )
       /* format as hex */
       for( nIndex = 0; nIndex < nSize; nIndex++ )
       {
-         int lownibble, hinibble;
-         hinibble = cMem[ nIndex ] >> 4;
-         lownibble = cMem[ nIndex ] & 0x0F;
+         HB_BYTE hinibble = cMem[ nIndex ] >> 4;
+         HB_BYTE lownibble = cMem[ nIndex ] & 0x0F;
          membuffer[ nIndex * 2 ]     = hinibble <= 9 ?
                                ( '0' + hinibble ) : ( 'A' + hinibble - 10 );
          membuffer[ nIndex * 2 + 1 ] = lownibble <= 9 ?
@@ -1302,7 +1296,7 @@ HB_SIZE hb_xquery( int iMode )
 
    switch( iMode )
    {
-      case HB_MEM_CHAR:       /*               (Free Variable Space [KB]) */
+      case HB_MEM_CHAR:       /* (Free Variable Space [KB]) */
 #if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
@@ -1323,7 +1317,7 @@ HB_SIZE hb_xquery( int iMode )
 #endif
          break;
 
-      case HB_MEM_BLOCK:      /*               (Largest String [KB]) */
+      case HB_MEM_BLOCK:      /* (Largest String [KB]) */
 #if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
@@ -1344,7 +1338,7 @@ HB_SIZE hb_xquery( int iMode )
 #endif
          break;
 
-      case HB_MEM_RUN:        /*               (RUN Memory [KB]) */
+      case HB_MEM_RUN:        /* (RUN Memory [KB]) */
 #if defined( HB_OS_WIN )
          {
             MEMORYSTATUS memorystatus;
@@ -1507,7 +1501,7 @@ HB_SIZE hb_xquery( int iMode )
          nResult = hb_stackTopOffset();
          break;
       }
-      case HB_MEM_STATISTICS: /* Harbour extension (Is FM statistic is enabled?) */
+      case HB_MEM_STATISTICS: /* Harbour extension (Is FM statistic enabled?) */
 #ifdef HB_FM_STATISTICS
          nResult = s_fStatistic;
 #else

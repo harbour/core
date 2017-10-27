@@ -6,7 +6,7 @@
    $CATEGORY$
       Document
    $ONELINER$
-      Read me file for Idle States
+      Readme file for Idle States
    $DESCRIPTION$
       The idle state is the state of the Harbour virtual machine when it
       waits for the user input from the keyboard or the mouse. The idle
@@ -80,7 +80,7 @@
    $ONELINER$
       Removes the background task from the list of tasks.
    $SYNTAX$
-      hb_idleDel( <nHandle> ) --> <bAction>
+      hb_idleDel( <nHandle> ) --> bAction
    $ARGUMENTS$
       <nHandle> is the identifier of the task returned by the
       hb_idleAdd() function.
@@ -89,7 +89,7 @@
       passed to hb_idleAdd() function
    $DESCRIPTION$
       hb_idleDel() removes the action associated with passed identifier
-      from the list of background tasks. The identifer should be the
+      from the list of background tasks. The identifier should be the
       value returned by the previous call of hb_idleAdd() function.
 
       If specified task is defined then the codeblock is returned
@@ -137,8 +137,8 @@
       nTask1 := hb_idleAdd( {|| SayTime() } )
       nTask2 := hb_idleAdd( {|| SaveScreen() } )
       DO WHILE ! bFinished
-        bFinished := DoSomethingVeryImportant()
-        hb_idleState()
+         bFinished := DoSomethingVeryImportant()
+         hb_idleState()
       ENDDO
       cbAction := hb_idleDel( nTask1 )
       hb_idleDel( nTask2 )
@@ -156,7 +156,7 @@
 
 /* $DOC$
    $TEMPLATE$
-      Procedure
+      C Function
    $NAME$
       hb_idleState()
    $CATEGORY$

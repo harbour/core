@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,13 +49,13 @@
 #ifndef HB_DEBUGGER_CH_
 #define HB_DEBUGGER_CH_
 
-/* Mode of __dbgEntry calls (the first parameter) */
-#define HB_DBG_MODULENAME     1  /* 2nd argumment is a module name */
+/* Mode of __dbgEntry() calls (the first parameter) */
+#define HB_DBG_MODULENAME     1  /* 2nd argument is a module name */
 #define HB_DBG_LOCALNAME      2  /* 2nd argument is a local var name */
 #define HB_DBG_STATICNAME     3  /* 2nd arg is a static var name */
 #define HB_DBG_ENDPROC        4  /* exit from a procedure */
 #define HB_DBG_SHOWLINE       5  /* show current line */
-#define HB_DBG_GETENTRY       6  /* initialize C __dbgEntry function pointer */
+#define HB_DBG_GETENTRY       6  /* initialize C __dbgEntry() function pointer */
 #define HB_DBG_ACTIVATE       7  /* activate debugger interface */
 #define HB_DBG_VMQUIT         8  /* call internal debugger destructors */
 
@@ -93,7 +93,7 @@
 #define HB_DBG_WP_RESULT         4  /* expression result */
 #define HB_DBG_WP_LEN            4
 
-/* Information structure stored in __dbgGetBreakPoints array */
+/* Information structure stored in __dbgGetBreakPoints() array */
 #define HB_DBG_BP_LINE           1  /* line number */
 #define HB_DBG_BP_MODULE         2  /* module name */
 #define HB_DBG_BP_FUNC           3  /* function name */

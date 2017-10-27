@@ -1,5 +1,5 @@
 /*
- *
+ * Standard PP rules
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -621,7 +621,7 @@
                   [BMPOFF X <bX> Y <bY>] => ;
          SetPos( <row>, <col> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
-         ATail( GetList ):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>,;
+         ATail( GetList ):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>, ;
                <{sb}>, <stl>, <sX>, <sY>, <cX>, <cY>, <bmap>, <bX>, <bY> ) ;;
          ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;
@@ -635,7 +635,7 @@
          SetPos( <top>, <left> ) ;;
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
          ATail( GetList ):Control := _RadioGrp_( ATail( Getlist ):row, ;
-               ATail( Getlist ):col, <bottom>, <right>, <v>, <buttons>, <cap>,;
+               ATail( Getlist ):col, <bottom>, <right>, <v>, <buttons>, <cap>, ;
                <msg>, <clr>, <{fb}>, <stl> ) ;;
          ATail( GetList ):reader := {| a, b, c, d | GUIReader( a, b, c, d ) } ;;
        [ ATail( GetList ):<snd> ;] [ ATail( GetList ):Control:<gsnd> ;] ;

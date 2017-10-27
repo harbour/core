@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1013,12 +1013,12 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( pArray )
                {
-                  HB_SIZE ulPos;
-                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+                  HB_SIZE nPos;
+                  HB_SIZE nLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
+                  for( nPos = 0; nPos < nLen; ++nPos )
                   {
-                     PHB_ITEM pSubArray = hb_arrayGetItemPtr( pArray, ulPos + 1 );
+                     PHB_ITEM pSubArray = hb_arrayGetItemPtr( pArray, nPos + 1 );
 
                      curl_formadd( &hb_curl->pHTTPPOST_First,
                                    &hb_curl->pHTTPPOST_Last,
@@ -1047,11 +1047,11 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( pArray )
                {
-                  HB_SIZE ulPos;
-                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+                  HB_SIZE nPos;
+                  HB_SIZE nLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
-                     hb_curl->pHTTPHEADER = curl_slist_append( hb_curl->pHTTPHEADER, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+                  for( nPos = 0; nPos < nLen; ++nPos )
+                     hb_curl->pHTTPHEADER = curl_slist_append( hb_curl->pHTTPHEADER, hb_arrayGetCPtr( pArray, nPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTPHEADER, hb_curl->pHTTPHEADER );
                }
@@ -1067,11 +1067,11 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( pArray )
                {
-                  HB_SIZE ulPos;
-                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+                  HB_SIZE nPos;
+                  HB_SIZE nLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
-                     hb_curl->pHTTP200ALIASES = curl_slist_append( hb_curl->pHTTP200ALIASES, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+                  for( nPos = 0; nPos < nLen; ++nPos )
+                     hb_curl->pHTTP200ALIASES = curl_slist_append( hb_curl->pHTTP200ALIASES, hb_arrayGetCPtr( pArray, nPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_HTTP200ALIASES, hb_curl->pHTTP200ALIASES );
                }
@@ -1130,11 +1130,11 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( pArray )
                {
-                  HB_SIZE ulPos;
-                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+                  HB_SIZE nPos;
+                  HB_SIZE nLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
-                     hb_curl->pMAIL_RCPT = curl_slist_append( hb_curl->pMAIL_RCPT, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+                  for( nPos = 0; nPos < nLen; ++nPos )
+                     hb_curl->pMAIL_RCPT = curl_slist_append( hb_curl->pMAIL_RCPT, hb_arrayGetCPtr( pArray, nPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_MAIL_RCPT, hb_curl->pMAIL_RCPT );
                }
@@ -1169,11 +1169,11 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( pArray )
                {
-                  HB_SIZE ulPos;
-                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+                  HB_SIZE nPos;
+                  HB_SIZE nLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
-                     hb_curl->pQUOTE = curl_slist_append( hb_curl->pQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+                  for( nPos = 0; nPos < nLen; ++nPos )
+                     hb_curl->pQUOTE = curl_slist_append( hb_curl->pQUOTE, hb_arrayGetCPtr( pArray, nPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_QUOTE, hb_curl->pQUOTE );
                }
@@ -1188,11 +1188,11 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( pArray )
                {
-                  HB_SIZE ulPos;
-                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+                  HB_SIZE nPos;
+                  HB_SIZE nLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
-                     hb_curl->pPOSTQUOTE = curl_slist_append( hb_curl->pPOSTQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+                  for( nPos = 0; nPos < nLen; ++nPos )
+                     hb_curl->pPOSTQUOTE = curl_slist_append( hb_curl->pPOSTQUOTE, hb_arrayGetCPtr( pArray, nPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_POSTQUOTE, hb_curl->pPOSTQUOTE );
                }
@@ -1207,11 +1207,11 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( pArray )
                {
-                  HB_SIZE ulPos;
-                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+                  HB_SIZE nPos;
+                  HB_SIZE nLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
-                     hb_curl->pQUOTE = curl_slist_append( hb_curl->pPREQUOTE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+                  for( nPos = 0; nPos < nLen; ++nPos )
+                     hb_curl->pQUOTE = curl_slist_append( hb_curl->pPREQUOTE, hb_arrayGetCPtr( pArray, nPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_PREQUOTE, hb_curl->pPREQUOTE );
                }
@@ -1443,11 +1443,11 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( pArray )
                {
-                  HB_SIZE ulPos;
-                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+                  HB_SIZE nPos;
+                  HB_SIZE nLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
-                     hb_curl->pRESOLVE = curl_slist_append( hb_curl->pRESOLVE, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+                  for( nPos = 0; nPos < nLen; ++nPos )
+                     hb_curl->pRESOLVE = curl_slist_append( hb_curl->pRESOLVE, hb_arrayGetCPtr( pArray, nPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_RESOLVE, hb_curl->pRESOLVE );
                }
@@ -1608,11 +1608,11 @@ HB_FUNC( CURL_EASY_SETOPT )
 
                if( pArray )
                {
-                  HB_SIZE ulPos;
-                  HB_SIZE ulArrayLen = hb_arrayLen( pArray );
+                  HB_SIZE nPos;
+                  HB_SIZE nLen = hb_arrayLen( pArray );
 
-                  for( ulPos = 0; ulPos < ulArrayLen; ++ulPos )
-                     hb_curl->pTELNETOPTIONS = curl_slist_append( hb_curl->pTELNETOPTIONS, hb_arrayGetCPtr( pArray, ulPos + 1 ) );
+                  for( nPos = 0; nPos < nLen; ++nPos )
+                     hb_curl->pTELNETOPTIONS = curl_slist_append( hb_curl->pTELNETOPTIONS, hb_arrayGetCPtr( pArray, nPos + 1 ) );
 
                   res = curl_easy_setopt( hb_curl->curl, CURLOPT_TELNETOPTIONS, hb_curl->pTELNETOPTIONS );
                }

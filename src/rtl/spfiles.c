@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,7 +53,7 @@ HB_BOOL hb_spFile( const char * pszFileName, char * pszRetPath )
    HB_BOOL bIsFile = HB_FALSE;
    PHB_FNAME pFilepath;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_spFile(%s, %p)", pszFileName, pszRetPath ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spFile(%s, %p)", pszFileName, ( void * ) pszRetPath ) );
 
    if( pszRetPath )
       pszPath = pszRetPath;
@@ -117,7 +117,7 @@ HB_BOOL hb_spFileExists( const char * pszFileName, char * pszRetPath )
    HB_BOOL bIsFile = HB_FALSE;
    PHB_FNAME pFilepath;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_spFileExists(%s, %p)", pszFileName, pszRetPath ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spFileExists(%s, %p)", pszFileName, ( void * ) pszRetPath ) );
 
    if( pszRetPath )
       pszPath = pszRetPath;
@@ -179,7 +179,7 @@ HB_FHANDLE hb_spOpen( const char * pszFileName, HB_USHORT uiFlags )
 {
    char szPath[ HB_PATH_MAX ];
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_spOpen(%p, %hu)", pszFileName, uiFlags ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spOpen(%p, %hu)", ( const void * ) pszFileName, uiFlags ) );
 
    if( hb_spFile( pszFileName, szPath ) )
       return hb_fsOpen( szPath, uiFlags );
@@ -192,7 +192,7 @@ HB_FHANDLE hb_spCreate( const char * pszFileName, HB_FATTR ulAttr )
    char szPath[ HB_PATH_MAX ];
    PHB_FNAME pFilepath;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_spCreate(%p, %u)", pszFileName, ulAttr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spCreate(%p, %u)", ( const void * ) pszFileName, ulAttr ) );
 
    pFilepath = hb_fsFNameSplit( pszFileName );
    if( ! pFilepath->szPath )
@@ -209,7 +209,7 @@ HB_FHANDLE hb_spCreateEx( const char * pszFileName, HB_FATTR ulAttr, HB_USHORT u
    char szPath[ HB_PATH_MAX ];
    PHB_FNAME pFilepath;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_spCreateEx(%p, %u, %hu)", pszFileName, ulAttr, uiFlags ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spCreateEx(%p, %u, %hu)", ( const void * ) pszFileName, ulAttr, uiFlags ) );
 
    pFilepath = hb_fsFNameSplit( pszFileName );
    if( ! pFilepath->szPath )

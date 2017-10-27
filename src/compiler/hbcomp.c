@@ -1,5 +1,5 @@
 /*
- * allocate/free new compiler context
+ * Allocate/free new compiler context
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -43,7 +43,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
 
 #include "hbcomp.h"
 
@@ -90,7 +89,7 @@ static PHB_EXPR hb_compExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 {
    PHB_EXPR pExpr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprNew(%p,%i)", HB_COMP_PARAM, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprNew(%p,%i)", ( void * ) HB_COMP_PARAM, iType ) );
 
    pExpr = hb_compExprAlloc( HB_COMP_PARAM );
    pExpr->ExprType = iType;
@@ -263,13 +262,13 @@ PHB_COMP hb_comp_new( void )
                          HB_COMPFLAG_SHORTCUTS;
 
       pComp->fSwitchCase       = HB_FALSE;
-      pComp->fPPO              = HB_FALSE;   /* flag indicating, is ppo output needed */
+      pComp->fPPO              = HB_FALSE;   /* flag indicating, is .ppo output needed */
       pComp->fLineNumbers      = HB_TRUE;    /* holds if we need pcodes with line numbers */
       pComp->fAnyWarning       = HB_FALSE;   /* holds if there was any warning during the compilation process */
       pComp->fAutoMemvarAssume = HB_FALSE;   /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
-      pComp->fForceMemvars     = HB_FALSE;   /* holds if memvars are assumed when accesing undeclared variable (-v)*/
+      pComp->fForceMemvars     = HB_FALSE;   /* holds if memvars are assumed when accessing undeclared variable (-v)*/
       pComp->fDebugInfo        = HB_FALSE;   /* holds if generate debugger required info */
-      pComp->fHideSource       = HB_FALSE;   /* do not stor .prg file names in PCODE */
+      pComp->fHideSource       = HB_FALSE;   /* do not store .prg file names in PCODE */
       pComp->fNoStartUp        = HB_FALSE;   /* C code generation embed HB_FS_FIRST or not */
       pComp->fCredits          = HB_FALSE;   /* print credits */
       pComp->fBuildInfo        = HB_FALSE;   /* print build info */

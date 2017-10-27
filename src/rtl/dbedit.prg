@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -142,25 +142,28 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
 
       bBlock := iif( Type( cBlock ) == "M", {|| "  <Memo>  " }, hb_macroBlock( cBlock ) )
 
-      IF HB_ISARRAY( xColumnHeaders ) .AND. Len( xColumnHeaders ) >= nPos .AND. HB_ISSTRING( xColumnHeaders[ nPos ] )
+      DO CASE
+      CASE HB_ISARRAY( xColumnHeaders ) .AND. Len( xColumnHeaders ) >= nPos .AND. HB_ISSTRING( xColumnHeaders[ nPos ] )
          cHeading := xColumnHeaders[ nPos ]
-      ELSEIF HB_ISSTRING( xColumnHeaders )
+      CASE HB_ISSTRING( xColumnHeaders )
          cHeading := xColumnHeaders
-      ENDIF
+      ENDCASE
 
       oColumn := TBColumnNew( cHeading, bBlock )
 
-      IF HB_ISARRAY( xColumnSayPictures ) .AND. nPos <= Len( xColumnSayPictures ) .AND. HB_ISSTRING( xColumnSayPictures[ nPos ] ) .AND. ! Empty( xColumnSayPictures[ nPos ] )
+      DO CASE
+      CASE HB_ISARRAY( xColumnSayPictures ) .AND. nPos <= Len( xColumnSayPictures ) .AND. HB_ISSTRING( xColumnSayPictures[ nPos ] ) .AND. ! Empty( xColumnSayPictures[ nPos ] )
          oColumn:picture := xColumnSayPictures[ nPos ]
-      ELSEIF HB_ISSTRING( xColumnSayPictures ) .AND. ! Empty( xColumnSayPictures )
+      CASE HB_ISSTRING( xColumnSayPictures ) .AND. ! Empty( xColumnSayPictures )
          oColumn:picture := xColumnSayPictures
-      ENDIF
+      ENDCASE
 
-      IF HB_ISARRAY( xColumnFootings ) .AND. nPos <= Len( xColumnFootings ) .AND. HB_ISSTRING( xColumnFootings[ nPos ] )
+      DO CASE
+      CASE HB_ISARRAY( xColumnFootings ) .AND. nPos <= Len( xColumnFootings ) .AND. HB_ISSTRING( xColumnFootings[ nPos ] )
          oColumn:footing := xColumnFootings[ nPos ]
-      ELSEIF HB_ISSTRING( xColumnFootings )
+      CASE HB_ISSTRING( xColumnFootings )
          oColumn:footing := xColumnFootings
-      ENDIF
+      ENDCASE
 
       IF HB_ISARRAY( xHeadingSeparators ) .AND. nPos <= Len( xHeadingSeparators ) .AND. HB_ISSTRING( xHeadingSeparators[ nPos ] )
          oColumn:headSep := xHeadingSeparators[ nPos ]
@@ -179,9 +182,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
 
    nOldCUrsor := SetCursor( SC_NONE )
 
-   /* --------------------------- */
    /* Go into the processing loop */
-   /* --------------------------- */
 
    lAppend := .F.
    lFlag := .T.
@@ -281,10 +282,9 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
    RETURN .T.
 
 
-/* NOTE: CA-Cl*pper uses intermediate function CALLUSER()
- *       to execute user function. We're replicating this behavior
- *       for code which may check ProcName() results in user function
- */
+/* NOTE: CA-Cl*pper uses intermediate function CallUser()
+         to execute user function. We're replicating this behavior
+         for code which may check ProcName() results in user function */
 STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
 
    LOCAL nPrevRecNo
@@ -358,10 +358,8 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
 
 
 /* helper function to detect empty tables. It's not perfect but
- * it functionally uses the same conditions as CA-Cl*pper
- */
+   it functionally uses the same conditions as CA-Cl*pper */
 STATIC FUNCTION IsDbEmpty()
-
    RETURN LastRec() == 0 .OR. ;
       ( Bof() .AND. ( Eof() .OR. RecNo() == LastRec() + 1 ) )
 
@@ -371,14 +369,15 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
    LOCAL nSkipped := 0
 
    IF LastRec() != 0
-      IF nRecs == 0
+      DO CASE
+      CASE nRecs == 0
          IF Eof() .AND. ! lAppend
             dbSkip( -1 )
             nSkipped := -1
          ELSE
             dbSkip( 0 )
          ENDIF
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
+      CASE nRecs > 0 .AND. RecNo() != LastRec() + 1
          DO WHILE nSkipped < nRecs
             dbSkip()
             IF Eof()
@@ -391,7 +390,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             ENDIF
             nSkipped++
          ENDDO
-      ELSEIF nRecs < 0
+      CASE nRecs < 0
          DO WHILE nSkipped > nRecs
             dbSkip( -1 )
             IF Bof()
@@ -399,7 +398,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             ENDIF
             nSkipped--
          ENDDO
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN nSkipped

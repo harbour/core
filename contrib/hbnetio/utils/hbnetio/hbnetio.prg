@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -30,9 +30,11 @@
          - add support for subnet masks in allow/block lists, f.e. 172.16.0.0/12, and same for IPv6 */
 
 #include "fileio.ch"
+#include "inkey.ch"
 
 #include "hbhrb.ch"
 #include "hbsocket.ch"
+#include "hbver.ch"
 
 #include "hbnetio.ch"
 
@@ -100,7 +102,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
    ENDIF
 
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
-   Set( _SET_TIMEFORMAT, "HH:MM:SS.FFF" )
+   Set( _SET_TIMEFORMAT, "hh:mm:ss.fff" )
 
    HB_Logo()
 
@@ -201,7 +203,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
          HB_Usage()
          RETURN
       OTHERWISE
-         netiosrv_LogEvent( hb_StrFormat( "Warning: Unknown command line parameter ignored: %1$s", cParam ) )
+         netiosrv_LogEvent( hb_StrFormat( "Warning: Unrecognized command-line parameter ignored: %1$s", cParam ) )
       ENDCASE
    NEXT
 
@@ -284,7 +286,7 @@ PROCEDURE netiosrv_Main( lUI, ... )
       ENDIF
 
       /* Command prompt */
-      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .and. inkey() != 27
+      DO WHILE ! netiosrv[ _NETIOSRV_lQuit ] .AND. inkey() != 27
          hb_idleSleep( 5 )
       ENDDO
 
@@ -423,7 +425,7 @@ STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManag
       /* Handle positive filter */
       IF ! Empty( netiosrv[ _NETIOSRV_hAllow ] )
          hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
-         IF !( cAddressPeer $ netiosrv[ _NETIOSRV_hAllow ] )
+         IF ! cAddressPeer $ netiosrv[ _NETIOSRV_hAllow ]
             IF hb_HScan( netiosrv[ _NETIOSRV_hAllow ], {| tmp | hb_WildMatch( tmp, cAddressPeer ) } ) == 0
                lBlocked := .T.
             ENDIF
@@ -493,7 +495,7 @@ STATIC PROCEDURE netiosrv_conn_register( netiosrv, pConnectionSocket )
 
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
-   IF !( pConnectionSocket $ netiosrv[ _NETIOSRV_hConnection ] )
+   IF ! pConnectionSocket $ netiosrv[ _NETIOSRV_hConnection ]
       netiosrv[ _NETIOSRV_hConnection ][ pConnectionSocket ] := nconn
    ENDIF
 
@@ -733,7 +735,7 @@ STATIC FUNCTION netiomgm_rpc_filtermod( netiosrv, hList, lAdd, cAddress )
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
 
    IF lAdd
-      IF !( cAddress $ hList )
+      IF ! cAddress $ hList
          hList[ cAddress ] := NIL
       ELSE
          lSuccess := .F.
@@ -833,8 +835,10 @@ STATIC PROCEDURE HB_Logo()
 
    OutStd( ;
       "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() + ;
-      "Copyright (c) 2009-2016, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
-      "http://harbour-project.org/" + hb_eol() + ;
+      "Copyright (c) 2009-" + ;
+         "2016" + ", " + ;
+         "Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
+      hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
       hb_eol() )
 
    RETURN

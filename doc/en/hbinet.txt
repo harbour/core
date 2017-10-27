@@ -1,12 +1,6 @@
-/*
- * Copyright (date unknown) Giancarlo Niccolai <gian@niccolai.ws>
- *    Documentation for: Harbour INET API
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -18,7 +12,7 @@
    $ONELINER$
       Activate Harbour INET support
    $SYNTAX$
-      hb_inetInit() -> lResult
+      hb_inetInit() --> lResult
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
@@ -30,7 +24,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -43,6 +37,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -63,7 +59,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -76,6 +72,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -87,7 +85,7 @@
    $ONELINER$
       Create an INET socket
    $SYNTAX$
-      hb_inetCreate( [ <nTimeout> ] ) -> SOCKET
+      hb_inetCreate( [ <nTimeout> ] ) --> <SOCKET>
    $ARGUMENTS$
       <nTimeout> Socket timeout (optional) TODO: what is the scale (seconds, milliseconds?)
    $RETURNS$
@@ -100,7 +98,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -113,6 +111,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -124,14 +124,14 @@
    $ONELINER$
       Close an INET socket
    $SYNTAX$
-      hb_inetClose( <socket> ) -> nResult
+      hb_inetClose( <socket> ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
       Returns 0 on success or -1 on error; on error, the error code is set;
       (actually, on success the socket error code is set to 1 -- socket closed )
    $DESCRIPTION$
-      Closes the socket, notifiying both ends of the communication pipe that the
+      Closes the socket, notifying both ends of the communication pipe that the
       connection is over.
 
       If you have threads waiting for data to be read from
@@ -145,7 +145,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -158,6 +158,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -169,7 +171,7 @@
    $ONELINER$
       ?
    $SYNTAX$
-      hb_inetFD( <socket> [, <lNoSocket> ] ) -> nResult
+      hb_inetFD( <socket> [, <lNoSocket> ] ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -181,7 +183,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -194,6 +196,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -205,7 +209,7 @@
    $ONELINER$
       Get the status of a socket
    $SYNTAX$
-      hb_inetstatus( <socket> ) -> nResult
+      hb_inetstatus( <socket> ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
@@ -215,7 +219,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -228,6 +232,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -239,7 +245,7 @@
    $ONELINER$
       Get the last INET error code
    $SYNTAX$
-      hb_inetErrorCode( <socket> ) -> nResult
+      hb_inetErrorCode( <socket> ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
@@ -253,7 +259,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -266,6 +272,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -277,11 +285,11 @@
    $ONELINER$
       Get the last INET error code description
    $SYNTAX$
-      hb_inetErrorDesc( <socket> ) -> cResult
+      hb_inetErrorDesc( <socket> ) --> cResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
-      System-dependant error string
+      System-dependent error string
    $DESCRIPTION$
       Returns a string describing the last error that occurred in the socket;
       the string is system dependent, and should be used only for debugging
@@ -289,7 +297,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -302,6 +310,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -321,7 +331,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -334,6 +344,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -345,7 +357,7 @@
    $ONELINER$
       Get the number of bytes last read or sent
    $SYNTAX$
-      hb_inetCount( <socket> ) -> nResult
+      hb_inetCount( <socket> ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
@@ -356,7 +368,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -369,6 +381,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -380,7 +394,7 @@
    $ONELINER$
       Get a remote server address
    $SYNTAX$
-      hb_inetAddress( <socket> ) -> cResult
+      hb_inetAddress( <socket> ) --> cResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
@@ -394,7 +408,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -407,6 +421,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -418,7 +434,7 @@
    $ONELINER$
       Get the port a socket is bound to.
    $SYNTAX$
-      hb_inetPort( <socket> ) -> cResult
+      hb_inetPort( <socket> ) --> cResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
@@ -429,7 +445,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -442,6 +458,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -453,7 +471,7 @@
    $ONELINER$
       Get or change the timeout value of a socket
    $SYNTAX$
-      hb_inetTimeout( <socket> [, <nTimeout> ] ) -> nPreviousTimeout
+      hb_inetTimeout( <socket> [, <nTimeout> ] ) --> nPreviousTimeout
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -465,7 +483,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -478,6 +496,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -498,7 +518,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -511,6 +531,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -522,7 +544,7 @@
    $ONELINER$
       Get or change the time limit value of a socket
    $SYNTAX$
-      hb_inetTimeLimit( <socket> [, <nTimeLimit> ) -> NIL
+      hb_inetTimeLimit( <socket> [, <nTimeLimit> ) --> NIL
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -534,7 +556,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -547,6 +569,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -566,7 +590,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -579,6 +603,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -590,22 +616,22 @@
    $ONELINER$
       Get or change the periodic callback value of a socket
    $SYNTAX$
-      hb_inetPeriodCallback( <socket> [, <xCallback> ] ) -> xPreviousCallback
+      hb_inetPeriodCallback( <socket> [, <xCallback> ] ) --> xPreviousCallback
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
-      xCallback a new periodic callback
+      <xCallback> a new periodic callback
    $RETURNS$
       The previous periodic callback value
    $DESCRIPTION$
       Sets or returns the socket periodic callback value
 
-      xCallback can be one of: a codeblock, an array of (...), or a (symbol)
+      <xCallback> can be one of: a codeblock, an array of (...), or a (symbol)
       TODO: describe these better
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -618,6 +644,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -637,7 +665,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -650,6 +678,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -661,7 +691,7 @@
    $ONELINER$
       Get the socket send buffer size
    $SYNTAX$
-      hb_inetGetSndBufSize( <socket> ) -> nResult
+      hb_inetGetSndBufSize( <socket> ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
@@ -671,7 +701,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -684,6 +714,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -695,7 +727,7 @@
    $ONELINER$
       Get the socket receive buffer size
    $SYNTAX$
-      hb_inetGetRcvBufSize( <socket> ) -> nResult
+      hb_inetGetRcvBufSize( <socket> ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
@@ -705,7 +737,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -718,6 +750,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -729,19 +763,19 @@
    $ONELINER$
       Set the send buffer size of a socket
    $SYNTAX$
-      hb_inetSetSndBufSize( <socket>, <nSize> ) -> nSize
+      hb_inetSetSndBufSize( <socket>, <nSize> ) --> nSize
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
-      nSize
+      <nSize>
    $RETURNS$
-      Returns the passed nSize or -1 on error
+      Returns the passed <nSize> or -1 on error
    $DESCRIPTION$
       Sets the send buffer size of a socket
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -754,6 +788,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -765,19 +801,19 @@
    $ONELINER$
       Set the receive buffer size of a socket
    $SYNTAX$
-      hb_inetSetRcvBufSize( <socket>, nSize ) -> nSize
+      hb_inetSetRcvBufSize( <socket>, <nSize> ) --> nSize
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
-      nSize
+      <nSize>
    $RETURNS$
-      Returns the passed nSize or -1 on error
+      Returns the passed <nSize> or -1 on error
    $DESCRIPTION$
       Sets the receive buffer size of a socket
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -790,6 +826,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -801,20 +839,20 @@
    $ONELINER$
       Read from a socket
    $SYNTAX$
-      hb_inetRecv( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
+      hb_inetRecv( <socket>, @<cResult>, [ <nAmount> ] ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
       <cResult> is the target buffer and must be passed by reference
 
       <nAmount> is the upper limit of characters to be read from the socket.
-      If not passed this defaults to the length of cResult
+      If not passed this defaults to the length of <cResult>
    $RETURNS$
       The number of the characters read from the socket.
    $DESCRIPTION$
       Reads from the socket into a buffer.
 
-      The parameter cString must be preallocated so that it has enough
+      The parameter <cString> must be preallocated so that it has enough
       space to receive the data. The routine will block the thread until some
       bytes are read from the socket, the socket is closed (either from the
       receiver or the sender side) or a network error occurs, whichever comes
@@ -823,13 +861,13 @@
 
       Notice that there is no guarantee that all the available bytes will be
       read before the function returns, in fact, hb_inetRecv() returns as soon it
-      is able to fill cString with one or more bytes. To block the current
-      process until the whole cString is filled (or nAmount bytes are read),
+      is able to fill <cString> with one or more bytes. To block the current
+      process until the whole <cString> is filled (or <nAmount> bytes are read),
       use the hb_inetRecvAll().
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -842,6 +880,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -853,25 +893,25 @@
    $ONELINER$
       Read from a socket without blocking
    $SYNTAX$
-      hb_inetRecvAll( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
+      hb_inetRecvAll( <socket>, @<cResult>, [ <nAmount> ] ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
       <cResult> is the target buffer and must be passed by reference
 
       <nAmount> is the upper limit of characters to be read from the socket.
-      If not passed this defaults to the length of cResult
+      If not passed this defaults to the length of <cResult>
    $RETURNS$
       The number of the characters read from the socket. Might be
-      less than nAmount on premature socket closing or on network error.
+      less than <nAmount> on premature socket closing or on network error.
    $DESCRIPTION$
       This function works exactly as hb_inetRecv() except that it
-      blocks until nAmount bytes are read, if nAmount is given, or
-      cString is filled for its whole length.
+      blocks until <nAmount> bytes are read, if <nAmount> is given, or
+      <cString> is filled for its whole length.
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -884,6 +924,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -895,7 +937,7 @@
    $ONELINER$
       Read a line from a socket
    $SYNTAX$
-      hb_inetRecvLine( <socket> [, @<nBytesRead>, [, <nMaxLength> [, <nBufSize> ]]] ) -> cResult
+      hb_inetRecvLine( <socket> [, @<nBytesRead>, [, <nMaxLength> [, <nBufSize> ]]] ) --> cResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -917,25 +959,25 @@
       The returned string does not contain the trailing CRLF sequence, so an
       empty line is effectively returned as an empty string.
 
-      If the nBytesRead parameter is given, it will contain the number of bytes
+      If the <nBytesRead> parameter is given, it will contain the number of bytes
       read from the socket, including the CRLF sequence, so that in normal
-      conditions, nResult will report a count equal to the length of the
-      returned string plus 2. nBytesRead will be 0 if stream is closed before
+      conditions, <nResult> will report a count equal to the length of the
+      returned string plus 2. <nBytesRead> will be 0 if stream is closed before
       a CRLF sequence is read, and will be -1 on error.
 
-      An optional nMaxLength parameter can be given to allow a maximum character
+      An optional <nMaxLength> parameter can be given to allow a maximum character
       count before the data is returned anyway. If this number is reached before
-      a CRLF sequence is encountered, nBytesRead will contain the value one.
+      a CRLF sequence is encountered, <nBytesRead> will contain the value one.
 
-      Finally, a nBufSize parameter can be given. If not, memory allocation
+      Finally, a <nBufSize> parameter can be given. If not, memory allocation
       will be increased by discrete amounts of 80 bytes. The programmer
-      can provide here a different allocation strategy (e.g. setting nBufSize
-      equal to nMaxLength, memory for reading the line will be allocated only
+      can provide here a different allocation strategy (e.g. setting <nBufSize>
+      equal to <nMaxLength>, memory for reading the line will be allocated only
       once, at the beginning of the function).
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -948,6 +990,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -959,7 +1003,7 @@
    $ONELINER$
       Read a block from a socket
    $SYNTAX$
-      hb_inetRecvEndblock( <socket> [, <cBlock >[, @<nBytesRead> [, <nMaxLength> [, <nBufSize> ]]]] ) -> cResult
+      hb_inetRecvEndblock( <socket> [, <cBlock >[, @<nBytesRead> [, <nMaxLength> [, <nBufSize> ]]]] ) --> cResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -974,13 +1018,12 @@
       Block read
    $DESCRIPTION$
       This function operates exactly the same way as hb_inetRecvLine(), but
-      the "record termination" is customizable through the cBlock parameter.
+      the "record termination" is customizable through the <cBlock> parameter.
       If not given, this parameter defaults to the CRLF sequence.
-      Provided by: Marcelo Lombardo
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -993,6 +1036,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1004,7 +1049,7 @@
    $ONELINER$
       Get whether there is data ready in a socket
    $SYNTAX$
-      hb_inetDataReady( <socket>, [ <nMillisec> ] ) -> nResult
+      hb_inetDataReady( <socket>, [ <nMillisec> ] ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -1016,11 +1061,11 @@
       Verifies if some data is available to be read in the socket without blocking
       execution of the caller.
 
-      If nMillisecs is not given, the function returns
+      If <nMillisecs> is not given, the function returns
       immediately 1 if there is some data to be read, 0 if there isn't any data and
       -1 in case of error.
 
-      If nMillisecs is given, the functon will wait up to that
+      If <nMillisecs> is given, the function will wait up to that
       amount of milliseconds for data to be available; if some data arrives in the
       meanwhile, the wait is immediately interrupted.
 
@@ -1032,7 +1077,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1045,6 +1090,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1056,7 +1103,7 @@
    $ONELINER$
       Sent data through a socket
    $SYNTAX$
-      hb_inetSend( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
+      hb_inetSend( <socket>, <cBuffer> [, <nLength> ] ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -1068,10 +1115,10 @@
    $DESCRIPTION$
       Send data being stored in a string over the socket.
 
-      The nLength parameter can be given to allow writing only a part of
+      The <nLength> parameter can be given to allow writing only a part of
       the string.
 
-      There is no guarantee that all of cBuffer will be
+      There is no guarantee that all of <cBuffer> will be
       sent, as this is a decision that is up to the OS; this function does not
       take care to ensure that the data is really sent; check
       the returned number and send the part that has not been sent.
@@ -1083,7 +1130,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1096,6 +1143,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1107,7 +1156,7 @@
    $ONELINER$
       Send data through a socket with blocking
    $SYNTAX$
-      hb_inetSendAll( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
+      hb_inetSendAll( <socket>, <cBuffer> [, <nLength> ] ) --> nResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -1122,7 +1171,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1135,6 +1184,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1146,18 +1197,18 @@
    $ONELINER$
       Get an array of IP addresses of a host
    $SYNTAX$
-      hb_inetGetHosts( <cName> ) -> aHosts
+      hb_inetGetHosts( <cName> ) --> aHosts
    $ARGUMENTS$
       <cName>
    $RETURNS$
       An array of IP addresses
    $DESCRIPTION$
       Returns an array containing all the IP addresses associated with a given
-      host name. The IP addressess returned by this funtion are strings in
-      quad dot notations, eg "127.0.0.1", and can be directly used into
+      host name. The IP addresses returned by this function are strings in
+      quad dot notations, e.g. "127.0.0.1", and can be directly used into
       hb_inetConnectIP().
 
-      cName can be any string: valid DNS names (eg.
+      <cName> can be any string: valid DNS names (e.g.
       "example.org"), locally available names (e.g. "localhost" or
       windows Network Neighborhood names), or even IP addresses in quad
       dot notation.
@@ -1171,7 +1222,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1184,6 +1235,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1195,7 +1248,7 @@
    $ONELINER$
       Get an array of aliases of a server
    $SYNTAX$
-      hb_inetGetAlias( <cName> ) -> aHosts
+      hb_inetGetAlias( <cName> ) --> aHosts
    $ARGUMENTS$
       <cName>
    $RETURNS$
@@ -1210,7 +1263,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1223,6 +1276,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1234,7 +1289,7 @@
    $ONELINER$
       Create a socket bound to a port
    $SYNTAX$
-      hb_inetServer( <port> [, <cBindAddr> [, <nListenLimit> ]]  ) -> SOCKET
+      hb_inetServer( <port> [, <cBindAddr> [, <nListenLimit> ]]  ) --> <SOCKET>
    $ARGUMENTS$
       <port>
 
@@ -1248,7 +1303,7 @@
 
       If the computer on which hb_inetServer() is called has more than one logical
       interface (e.g. one network card, one loopback and one PPP address),
-      cBindAddr can be specified to select only one of these interfaces to accept
+      <cBindAddr> can be specified to select only one of these interfaces to accept
       connections for this process. This is useful when a server is present on
       two networks, and the service is to be available only in one of them. Also,
       the same port on other addresses is left free to be used, so you can have
@@ -1257,10 +1312,10 @@
       network could be radically different from an FTP server available for
       the internet.
 
-      nListenLimit is the number of incoming connections accepted by kernel before the
+      <nListenLimit> is the number of incoming connections accepted by kernel before the
       kernel has the chance to report them to the application program. If
-      the sockets receive nListenLimit connections before accepting them
-      all, the nListenLimit + 1 connection will be notified to be "busy" by
+      the sockets receive <nListenLimit> connections before accepting them
+      all, the `nListenLimit + 1` connection will be notified to be "busy" by
       the kernel. The default value of 10 is enough for even
       a heavy duty server.
 
@@ -1268,7 +1323,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1281,6 +1336,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1292,7 +1349,7 @@
    $ONELINER$
       Wait until a socket is ready
    $SYNTAX$
-      hb_inetAccept( <socket> ) -> SOCKET
+      hb_inetAccept( <socket> ) --> <SOCKET>
    $ARGUMENTS$
       An INET socket
    $RETURNS$
@@ -1301,13 +1358,13 @@
       Waits until a connection is available on a socket created with hb_inetServer(),
       returns a socket that can be used to communicate with the incoming client.
 
-      On error, NIL is returned and error code sets in the passed SOCKET.
+      On error, NIL is returned and error code sets in the passed <SOCKET>.
 
       This error can be accessed using hb_inetErrorCode() function.
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1320,6 +1377,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1331,9 +1390,9 @@
    $ONELINER$
       Connect a socket to a remote server by IP address or name
    $SYNTAX$
-      hb_inetConnect( <cAddress>, <nPort> ) -> SOCKET
+      hb_inetConnect( <cAddress>, <nPort> ) --> <SOCKET>
 
-      hb_inetConnect( <cAddress>, <nPort>, <socket> ) -> NIL
+      hb_inetConnect( <cAddress>, <nPort>, <socket> ) --> NIL
    $ARGUMENTS$
       <cAddress>
 
@@ -1345,7 +1404,7 @@
 
       (Second form has no return value)
    $DESCRIPTION$
-      Connects to a remote server described by cAddress, that can be in
+      Connects to a remote server described by <cAddress>, that can be in
       quad dot notation (e.g. "127.0.0.1") or in DNS name (e.g.
       "example.org"), using the desired port.
 
@@ -1358,9 +1417,9 @@
       hb_inetGetHosts() is not called in the same moment as an hb_inetConnect()).
 
       The second version of this function accepts a pre-built socket
-      as a parameter. This allows to kill asyncronously a thread waiting
+      as a parameter. This allows to kill asynchronously a thread waiting
       for hb_inetConnect() to connect, and then cleaning up the leftover
-      socket data. Also, it is possible to give timeout to the given SOCKET,
+      socket data. Also, it is possible to give timeout to the given <SOCKET>,
       but this timeout will be used only in the connection phase, after that
       the network address resolution is completed. Use hb_inetGetHosts() and
       hb_inetConnectIP() for a finer timeout control.
@@ -1370,7 +1429,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1383,6 +1442,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1394,9 +1455,9 @@
    $ONELINER$
       Connect to a remote server by IP address
    $SYNTAX$
-      hb_inetConnectIP( <cAddress>, <nPort> ) -> SOCKET
+      hb_inetConnectIP( <cAddress>, <nPort> ) --> <SOCKET>
 
-      hb_inetConnectIP( <cAddress>, <nPort>, <socket> ) -> NIL
+      hb_inetConnectIP( <cAddress>, <nPort>, <socket> ) --> NIL
    $ARGUMENTS$
       <cAddress>
 
@@ -1408,22 +1469,22 @@
 
       (Second form has no return value)
    $DESCRIPTION$
-      Connects to a remote server described by cAddress, that can be specified
+      Connects to a remote server described by <cAddress>, that can be specified
       only in quad dot IPv4 notation (e.g. "127.0.0.1"), using the desired port.
-      This version of hb_inetConnect() does not use gethostbyname, and thus is thread
+      This version of hb_inetConnect() does not use gethostbyname(), and thus is thread
       safe and can be used in combination with hb_inetGetHosts() to have a finer
       timeout control while connecting to a server, and a finer error control.
 
       The second version of this function accepts a pre-built socket
-      as a parameter. This allows to kill asyncronously a thread waiting
+      as a parameter. This allows to kill asynchronously a thread waiting
       for hb_inetConnectIP() to connect, and then cleaning up the leftover
-      socket data. Also, it is possible to give timeout at the given SOCKET.
+      socket data. Also, it is possible to give timeout at the given <SOCKET>.
 
       On error, the error of the returned socket is set.
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1436,6 +1497,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1447,19 +1510,19 @@
    $ONELINER$
       Create a datagram socket
    $SYNTAX$
-      hb_inetDGram( [<lBroadcast>] ) -> SOCKET
+      hb_inetDGram( [<lBroadcast>] ) --> <SOCKET>
    $ARGUMENTS$
-      lBroadcast
+      <lBroadcast>
    $RETURNS$
       An INET socket
    $DESCRIPTION$
       Creates a datagram-oriented socket that will be able to send data and
       eventually receive data. Since the socket is not bound, the program can't
-      retrieve the address at which this socket appaers to be, but a second
+      retrieve the address at which this socket appears to be, but a second
       socket receiving a message sent from this one would be able to reply
       correctly with a datagram that can be read from a non-bound socket.
 
-      If lBroadcast is set to .T., the routine creates a broadcast capable socket:
+      If <lBroadcast> is set to .T., the routine creates a broadcast capable socket:
       it will be able to receive and send broadcast messages. On most systems this
       requires special user privileges.
 
@@ -1468,7 +1531,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1481,6 +1544,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1492,7 +1557,7 @@
    $ONELINER$
       Create a bound datagram socket
    $SYNTAX$
-      hb_inetDGramBind( <nPort>, [<cAddress> [, <lBroadcast>] ] ) -> SOCKET
+      hb_inetDGramBind( <nPort>, [<cAddress> [, <lBroadcast>] ] ) --> <SOCKET>
    $ARGUMENTS$
       <nPort>
 
@@ -1503,9 +1568,9 @@
       An INET socket
    $DESCRIPTION$
       Creates a datagram-oriented socket and binds it to a particular port, and
-      eventually to a certain interface if cAddress is given and not NIL.
+      eventually to a certain interface if <cAddress> is given and not NIL.
 
-      If lBroadcast is set to .T., the routine creates a broadcast capable socket:
+      If <lBroadcast> is set to .T., the routine creates a broadcast capable socket:
       it will be able to receive and send broadcast messages. On most systems this
       requires special user privileges.
 
@@ -1516,7 +1581,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1529,6 +1594,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1540,7 +1607,7 @@
    $ONELINER$
       Send data to a datagram socket
    $SYNTAX$
-      hb_inetDGramSend( <socket>, <cAddress>, <nPort>, <cBuffer> [, <nSize> ] ) -> nBytesSent
+      hb_inetDGramSend( <socket>, <cAddress>, <nPort>, <cBuffer> [, <nSize> ] ) --> nBytesSent
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -1554,12 +1621,12 @@
    $RETURNS$
       Returns number of bytes sent, or -1 on error
    $DESCRIPTION$
-      Sends a datagram (a fixed length data) to a determined ip address (cAddress,
+      Sends a datagram (a fixed length data) to a determined IP address (<cAddress>,
       to be specified in quad-dot notation) and port.
 
-      If nSize is not specified,
-      all the data in cBuffer will be sent; if nSize is specified, only
-      the first nSize bytes of cBuffer will be sent.
+      If <nSize> is not specified,
+      all the data in <cBuffer> will be sent; if <nSize> is specified, only
+      the first <nSize> bytes of <cBuffer> will be sent.
 
       There isn't any guarantee that all the data required to be written is
       really sent to the socket: the calling program should check for the
@@ -1570,14 +1637,14 @@
       less than the system datagram size will be sent and received
       as a single item.
 
-      If the socket is created in broadcast mode, the cAddress element
+      If the socket is created in broadcast mode, the <cAddress> element
       can be a broadcast address.
 
       Returns -1 on error, or the number of bytes actually sent on success.
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1590,6 +1657,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1601,7 +1670,7 @@
    $ONELINER$
       Get data from a datagram socket
    $SYNTAX$
-      hb_inetDGramRecv( <socket>, @<cBuffer> [, <nSize> ] ) -> nBytesRead
+      hb_inetDGramRecv( <socket>, @<cBuffer> [, <nSize> ] ) --> nBytesRead
    $ARGUMENTS$
       <socket> a socket previously created / opened
 
@@ -1611,17 +1680,17 @@
    $RETURNS$
       Returns number of bytes read, or -1 on error
    $DESCRIPTION$
-      Reads at maximum nSize bytes incoming from a UDP socket, if nSize is
-      given, or reads at maximum cBuffer length if nSize is not given.
+      Reads at maximum <nSize> bytes incoming from a UDP socket, if <nSize> is
+      given, or reads at maximum <cBuffer> length if <nSize> is not given.
 
       There isn't any guarantee that all the data required to be read is
       really sent from the kernel to the application: the kernel should
       just return the last complete datagram that has been received, up
-      to nSize bytes.
+      to <nSize> bytes.
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1634,6 +1703,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1645,7 +1716,7 @@
    $ONELINER$
       Get a CRLF sequence for internet protocols
    $SYNTAX$
-      hb_inetCRLF() -> cResult
+      hb_inetCRLF() --> cResult
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
@@ -1655,7 +1726,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$
@@ -1668,6 +1739,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright Giancarlo Niccolai <gian@niccolai.ws>
    $TEMPLATE$
       Function
    $NAME$
@@ -1679,7 +1752,7 @@
    $ONELINER$
       Get whether a variable is a socket
    $SYNTAX$
-      hb_inetIsSocket( <socket> ) -> lResult
+      hb_inetIsSocket( <socket> ) --> lResult
    $ARGUMENTS$
       <socket> a socket previously created / opened
    $RETURNS$
@@ -1689,7 +1762,7 @@
    $EXAMPLES$
 
    $STATUS$
-
+      R
    $COMPLIANCE$
       H
    $PLATFORMS$

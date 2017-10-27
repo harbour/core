@@ -10,13 +10,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -34,7 +34,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -89,7 +89,7 @@ typedef struct
    int rbdn_row, rbdn_col;
    int mbup_row, mbup_col;
    int mbdn_row, mbdn_col;
-   /* to analize DBLCLK on xterm */
+   /* to analyze DBLCLK on xterm */
    int click_delay;
    struct timeval BL_time;
    struct timeval BR_time;
@@ -179,7 +179,7 @@ static void curs_wrkaround( void );
 
 static int getClipKey( int nKey )
 {
-   int nRet = 0, nFlag, n;
+   int nRet = 0;
 
    if( IS_CLIPKEY( nKey ) )
       nRet = GET_CLIPKEY( nKey );
@@ -187,9 +187,9 @@ static int getClipKey( int nKey )
       nRet = nKey;
    else
    {
-      n = GET_KEYMASK( nKey );
+      int nFlag = 0;
+      int n = GET_KEYMASK( nKey );
       nKey = CLR_KEYMASK( nKey );
-      nFlag = 0;
       if( n & KEY_SHIFTMASK )
          nFlag |= HB_KF_SHIFT;
       if( n & KEY_CTRLMASK )
@@ -447,10 +447,10 @@ static void del_efds( InOutBase * ioBase, int fd )
 
 static void del_all_efds( InOutBase * ioBase )
 {
-   int i;
-
    if( ioBase->event_fds != NULL )
    {
+      int i;
+
       for( i = 0; i < ioBase->efds_no; i++ )
          hb_xfree( ioBase->event_fds[ i ] );
 
@@ -628,7 +628,9 @@ static void set_tmevt( unsigned char * cMBuf, mouseEvent * mEvt )
          break;
    }
    chk_mevtdblck( mEvt );
-   /* printf( "\n\rmouse event: %02x, %02x, %02x\n\r", cMBuf[ 0 ], cMBuf[ 1 ], cMBuf[ 2 ] ); */
+   #if 0
+   printf( "\n\rmouse event: %02x, %02x, %02x\n\r", cMBuf[ 0 ], cMBuf[ 1 ], cMBuf[ 2 ] );
+   #endif
 }
 
 #if defined( HB_HAS_GPM )
@@ -728,7 +730,7 @@ static void mouse_init( InOutBase * ioBase )
          GPM_MOVE | GPM_DRAG | GPM_UP | GPM_DOWN | GPM_SINGLE | GPM_DOUBLE;
       /* give me move events but handle them anyway */
       ioBase->Conn.defaultMask = GPM_MOVE | GPM_HARD;
-      /* only pure mouse events, no Ctrl,Alt,Shft events */
+      /* only pure mouse events, no Ctrl,Alt,Shift events */
       ioBase->Conn.minMod = 0;
       ioBase->Conn.maxMod = ( ( 1 << KG_SHIFT ) | ( 1 << KG_CTRL ) | ( 1 << KG_ALT ) );
       gpm_zerobased = 1;
@@ -1172,7 +1174,7 @@ static void disp_cursor( InOutBase * ioBase )
    if( ioBase->cursor != ioBase->lcursor )
    {
       int lcurs = -1;
-      char escseq[ 64 ], * cv = NULL;
+      char * cv = NULL;
 
       switch( ioBase->cursor )
       {
@@ -1206,15 +1208,19 @@ static void disp_cursor( InOutBase * ioBase )
       {
          if( ioBase->terminal_type == TERM_LINUX )
          {
+            char escseq[ 64 ];
             hb_snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%dc",
                          ioBase->cursor == SC_NONE ? 'l' : 'h', lcurs );
             write_ttyseq( ioBase, escseq );
          }
          else if( cv != NULL )
+         {
             /* curses cursor shape set */
-            /* curs_set( ncurs ); */
+            #if 0
+            curs_set( ncurs );
+            #endif
             write_ttyseq( ioBase, cv );
-
+         }
       }
 
       ioBase->lcursor = ioBase->cursor;
@@ -1269,16 +1275,17 @@ static void gt_ttyrestore( InOutBase * ioBase )
 static HB_BOOL gt_outstr( InOutBase * ioBase, int fd, const char * str,
                           int len )
 {
-   unsigned char * buf, c;
-   int i;
    HB_BOOL success;
 
    if( ioBase->out_transtbl != NULL )
    {
+      unsigned char * buf;
+      int i;
+
       buf = ( unsigned char * ) hb_xgrab( len );
       for( i = 0; i < len; ++i )
       {
-         c = str[ i ];
+         unsigned char c = str[ i ];
          if( c != 9 && c != 10 && c != 13 && ioBase->out_transtbl[ c ] )
             buf[ i ] = ioBase->out_transtbl[ c ];
          else
@@ -1367,7 +1374,9 @@ static void init_keys( InOutBase * ioBase )
 #endif
 
    /* some harcoded sequences */
-   /* addKeyMap( ioBase, K_ESC, "\033\033" ); */
+   #if 0
+   addKeyMap( ioBase, K_ESC, "\033\033" );
+   #endif
    addKeyMap( ioBase, EXKEY_ENTER, "\r" );
    addKeyMap( ioBase, K_MOUSETERM, "\033[M" );
 
@@ -1569,10 +1578,9 @@ static void init_keys( InOutBase * ioBase )
 
 static void gt_tone( InOutBase * ioBase, double dFrequency, double dDuration )
 {
-   char escseq[ 64 ];
-
    if( ioBase->terminal_type == TERM_LINUX && ioBase->beep != NULL )
    {
+      char escseq[ 64 ];
       hb_snprintf( escseq, sizeof( escseq ), "\033[10;%d]\033[11;%d]%s",
                    ( int ) dFrequency,
                    ( int ) ( dDuration * 1000.0 / 18.2 ), ioBase->beep );
@@ -1591,7 +1599,6 @@ static void set_sig_keys( InOutBase * ioBase, int key_int, int key_brk,
 {
    if( isatty( ioBase->base_infd ) )
    {
-
       /* set SIGINT character, default ^C */
       if( key_int >= 0 && key_int <= 255 )
          ioBase->curr_TIO.c_cc[ VINTR ] = key_int;
@@ -1604,13 +1611,15 @@ static void set_sig_keys( InOutBase * ioBase, int key_int, int key_brk,
       if( key_stp >= 0 && key_stp <= 255 )
          ioBase->curr_TIO.c_cc[ VSUSP ] = key_stp;
 
-      /* enable siganls from terminal device */
+      /* enable signals from terminal device */
       if( ioBase->curr_TIO.c_cc[ VINTR ] != 0 ||
           ioBase->curr_TIO.c_cc[ VQUIT ] != 0 ||
           ioBase->curr_TIO.c_cc[ VSUSP ] != 0 )
          ioBase->curr_TIO.c_lflag |= ISIG;
 
-      /* ioctl( ioBase->base_infd, TIOCSCTTY, 0 ); */
+      #if 0
+      ioctl( ioBase->base_infd, TIOCSCTTY, 0 );
+      #endif
       gt_ttyset( ioBase );
    }
 }
@@ -1680,11 +1689,12 @@ static int gt_resize( InOutBase * ioBase )
 
 static int gt_setsize( InOutBase * ioBase, int rows, int cols )
 {
-   int ret = -1, r, c;
-   char escseq[ 64 ];
+   int ret = -1;
 
    if( ioBase->terminal_type == TERM_XTERM )
    {
+      int r, c;
+      char escseq[ 64 ];
       hb_snprintf( escseq, sizeof( escseq ), "\033[8;%d;%dt", rows, cols );
       write_ttyseq( ioBase, escseq );
       /* dirty hack - wait for SIGWINCH */
@@ -1717,10 +1727,10 @@ static int gt_setsize( InOutBase * ioBase, int rows, int cols )
 
 static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE cdpHost )
 {
-   int i;
-
    if( cdpTerm && cdpHost && cdpTerm != cdpHost )
    {
+      int i;
+
       if( ioBase->in_transtbl == NULL )
          ioBase->in_transtbl = ( unsigned char * ) hb_xgrab( 256 );
 
@@ -1737,13 +1747,12 @@ static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE 
 static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE cdpTerm, int transBox )
 {
    int i, aSet;
-   chtype ch;
 
    aSet = ( cdpHost && cdpTerm );
 
    for( i = 0; i < 256; i++ )
    {
-      ch = ioBase->charmap[ i ] & 0xffff;
+      chtype ch = ioBase->charmap[ i ] & 0xffff;
       switch( ( ioBase->charmap[ i ] >> 16 ) & 0xff )
       {
          case 1:
@@ -1808,7 +1817,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
 {
    InOutBase * ioBase;
    int bg, fg;
-   unsigned int i, n;
+   unsigned int i;
    char buf[ 256 ], * ptr, * crsterm = NULL;
 
    ioBase = ( InOutBase * ) hb_xgrabz( sizeof( InOutBase ) );
@@ -1867,18 +1876,20 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
       ioBase->curr_TIO.c_cflag |= CS8 | CREAD;
       ioBase->curr_TIO.c_iflag &= ~( IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON );
       ioBase->curr_TIO.c_oflag &= ~OPOST;
-      /* ioBase->curr_TIO.c_oflag |= ONLCR | OPOST; */
+      #if 0
+      ioBase->curr_TIO.c_oflag |= ONLCR | OPOST;
+      #endif
 
       memset( ioBase->curr_TIO.c_cc, 0, NCCS );
 
       /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
-         Ubuntu) in which select() unconditionally accepts stdin for
+         *buntu) in which select() unconditionally accepts stdin for
          reading if c_cc[ VMIN ] = 0 [druzus] */
       ioBase->curr_TIO.c_cc[ VMIN ] = 1;
    }
 
 
-   /* curses SCREEN initialisation */
+   /* curses SCREEN initialization */
    if( ioBase->base_infd == fileno( stdin ) )
       ioBase->basein = stdin;
    else
@@ -1922,20 +1933,20 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
    ioBase->attr_mask = ( chtype ) -1;
    if( has_colors() )
    {
-      /*  DOS->CURSES color maping
+      /* DOS->CURSES color mapping
          DOS              -> curses
          --------------------------------
-         0 black         -> COLOR_BLACK
-         1 blue          -> COLOR_BLUE
-         2 green         -> COLOR_GREEN
-         3 cyan          -> COLOR_CYAN
-         4 red           -> COLOR_RED
-         5 magenta       -> COLOR_MAGENTA
-         6 yellow        -> COLOR_YELLOW
-         7 light gray    -> COLOR_WHITE
+          0 black         -> COLOR_BLACK
+          1 blue          -> COLOR_BLUE
+          2 green         -> COLOR_GREEN
+          3 cyan          -> COLOR_CYAN
+          4 red           -> COLOR_RED
+          5 magenta       -> COLOR_MAGENTA
+          6 yellow        -> COLOR_YELLOW
+          7 light gray    -> COLOR_WHITE
 
-         8 gray          -> BOLD/BLINK BLACK
-         9 light blue    -> BOLD/BLINK BLUE
+          8 gray          -> BOLD/BLINK BLACK
+          9 light blue    -> BOLD/BLINK BLUE
          10 light green   -> BOLD/BLINK GREEN
          11 light cyan    -> BOLD/BLINK CYAN
          12 light red     -> BOLD/BLINK RED
@@ -1968,8 +1979,9 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
 #endif
       for( i = 0; i < 256; i++ )
       {
+         unsigned int n;
          bg = ( i >> 4 ) & 0x07; /* extract background color bits 4-6 */
-         fg = ( i & 0x07 );      /* extract forground color bits 0-2 */
+         fg = ( i & 0x07 );      /* extract foreground color bits 0-2 */
          n = bg * 8 + fg;
          /* n = bg * COLORS + fg */
          if( n == 0 )
@@ -1979,7 +1991,7 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
          if( ( i & 0x88 ) == 0 )
             init_pair( n, color_map[ fg ], color_map[ bg ] );
          ioBase->attr_map[ i ] = COLOR_PAIR( n );
-         if( i & 0x08 )        /* highlight forground bit 3 */
+         if( i & 0x08 )        /* highlight foreground bit 3 */
             ioBase->attr_map[ i ] |= A_BOLD;
          if( i & 0x80 )        /* blink/highlight background bit 7 */
             ioBase->attr_map[ i ] |= A_BLINK;
@@ -1991,13 +2003,13 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
       for( i = 0; i < 256; i++ )
       {
          bg = ( i >> 4 ) & 0x07; /* extract background color bits 4-6 */
-         fg = ( i & 0x07 );      /* extract forground color bits 0-2 */
+         fg = ( i & 0x07 );      /* extract foreground color bits 0-2 */
          ioBase->attr_map[ i ] = 0;
          if( fg < bg )
             ioBase->attr_map[ i ] |= A_REVERSE;
          if( fg == 1 )         /* underline? */
             ioBase->attr_map[ i ] |= A_UNDERLINE;
-         if( i & 0x08 )        /* highlight forground bit 3 */
+         if( i & 0x08 )        /* highlight foreground bit 3 */
             ioBase->attr_map[ i ] |= A_BOLD;
          if( i & 0x80 )        /* blink/highlight background bit 7 */
             ioBase->attr_map[ i ] |= A_BLINK;
@@ -2089,7 +2101,7 @@ static void destroy_ioBase( InOutBase * ioBase )
    /* restore terminal settings */
    gt_ttyrestore( ioBase );
 
-   /* kill terminal proces if any */
+   /* kill terminal process if any */
    if( ioBase->termpid > 0 )
    {
       kill( ioBase->termpid, SIGTERM );
@@ -2177,7 +2189,7 @@ static int set_active_ioBase( int iNO_ioBase )
 
 static int add_new_ioBase( InOutBase * ioBase )
 {
-   int i, n, add = 0;
+   int i, add = 0;
 
    for( i = 0; i < s_iSize_ioBaseTab && ! add; ++i )
       if( ! s_ioBaseTab[ i ] )
@@ -2188,6 +2200,8 @@ static int add_new_ioBase( InOutBase * ioBase )
 
    if( ! add )
    {
+      int n;
+
       if( s_ioBaseTab == NULL )
          s_ioBaseTab = ( InOutBase ** ) hb_xgrab(
                         ( s_iSize_ioBaseTab += 10 ) * sizeof( InOutBase * ) );
@@ -2207,14 +2221,14 @@ static int add_new_ioBase( InOutBase * ioBase )
 
 static int del_ioBase( int iNO_ioBase )
 {
-   int i;
-
    if( iNO_ioBase >= 0 && iNO_ioBase < s_iSize_ioBaseTab )
    {
       destroy_ioBase( s_ioBaseTab[ iNO_ioBase ] );
       s_ioBaseTab[ iNO_ioBase ] = NULL;
       if( s_iActive_ioBase == iNO_ioBase )
       {
+         int i;
+
          s_iActive_ioBase = -1;
          s_ioBase = NULL;
          for( i = 0; i < s_iSize_ioBaseTab && ! s_ioBase; ++i )
@@ -2228,10 +2242,10 @@ static int del_ioBase( int iNO_ioBase )
 
 static void del_all_ioBase( void )
 {
-   int i;
-
    if( s_ioBaseTab )
    {
+      int i;
+
       for( i = 0; i < s_iSize_ioBaseTab; ++i )
          if( s_ioBaseTab[ i ] )
             destroy_ioBase( s_ioBaseTab[ i ] );
@@ -2341,12 +2355,12 @@ void HB_GT_FUNC( gt_CatchSignal( int iSig ) )
 
 static void hb_gt_crs_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   InOutBase * ioBase;
-
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Init(%p,%p,%p,%p)", ( void * ) pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    if( ! s_ioBase )
    {
+      InOutBase * ioBase;
+
       s_iStdIn  = hFilenoStdin;
       s_iStdOut = hFilenoStdout;
       s_iStdErr = hFilenoStderr;
@@ -2378,7 +2392,7 @@ static void hb_gt_crs_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 static void hb_gt_crs_Exit( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Exit(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Exit(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_EXIT( pGT );
 
@@ -2389,7 +2403,7 @@ static void hb_gt_crs_Exit( PHB_GT pGT )
 
 static HB_BOOL hb_gt_crs_IsColor( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_IsColor(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_IsColor(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2400,7 +2414,7 @@ static HB_BOOL hb_gt_crs_IsColor( PHB_GT pGT )
 
 static HB_BOOL hb_gt_crs_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetMode(%p,%d,%d)", ( void * ) pGT, iRows, iCols ) );
 
    if( gt_setsize( s_ioBase, iRows, iCols ) == 0 )
    {
@@ -2415,7 +2429,7 @@ static HB_BOOL hb_gt_crs_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 static void hb_gt_crs_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetBlink(%p, %d)", pGT, ( int ) fBlink ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetBlink(%p, %d)", ( void * ) pGT, ( int ) fBlink ) );
 
    if( fBlink )
       s_ioBase->attr_mask |= A_BLINK;
@@ -2429,7 +2443,7 @@ static void hb_gt_crs_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 
 static void hb_gt_crs_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2444,7 +2458,7 @@ static void hb_gt_crs_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 static const char * hb_gt_crs_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Version(%p,%d)", pGT, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Version(%p,%d)", ( void * ) pGT, iType ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2456,42 +2470,42 @@ static const char * hb_gt_crs_Version( PHB_GT pGT, int iType )
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_OutStd( PHB_GT pGT, const char * szStr, HB_SIZE ulLen )
+static void hb_gt_crs_OutStd( PHB_GT pGT, const char * szStr, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutStd(%p,%s,%lu)", pGT, szStr, ulLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutStd(%p,%s,%lu)", ( void * ) pGT, szStr, nLen ) );
 
    if( s_ioBase )
    {
       if( s_ioBase->stdoutfd == -1 )
-         HB_GTSELF_WRITECON( pGT, szStr, ulLen );
+         HB_GTSELF_WRITECON( pGT, szStr, nLen );
       else
-         gt_outstd( s_ioBase, szStr, ulLen );
+         gt_outstd( s_ioBase, szStr, nLen );
    }
    else
-      HB_GTSUPER_OUTSTD( pGT, szStr, ulLen );
+      HB_GTSUPER_OUTSTD( pGT, szStr, nLen );
 }
 
 /* *********************************************************************** */
 
-static void hb_gt_crs_OutErr( PHB_GT pGT, const char * szStr, HB_SIZE ulLen )
+static void hb_gt_crs_OutErr( PHB_GT pGT, const char * szStr, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutErr(%p,%s,%lu)", pGT, szStr, ulLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_OutErr(%p,%s,%lu)", ( void * ) pGT, szStr, nLen ) );
    if( s_ioBase )
    {
       if( s_ioBase->stderrfd == -1 )
-         HB_GTSELF_WRITECON( pGT, szStr, ulLen );
+         HB_GTSELF_WRITECON( pGT, szStr, nLen );
       else
-         gt_outerr( s_ioBase, szStr, ulLen );
+         gt_outerr( s_ioBase, szStr, nLen );
    }
    else
-      HB_GTSUPER_OUTERR( pGT, szStr, ulLen );
+      HB_GTSUPER_OUTERR( pGT, szStr, nLen );
 }
 
 /* *********************************************************************** */
 
 static HB_BOOL hb_gt_crs_Suspend( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Suspend(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Suspend(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2509,7 +2523,7 @@ static HB_BOOL hb_gt_crs_Suspend( PHB_GT pGT )
 
 static HB_BOOL hb_gt_crs_Resume( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Resume(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Resume(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2518,7 +2532,9 @@ static HB_BOOL hb_gt_crs_Resume( PHB_GT pGT )
       s_ioBase->lcursor = SC_UNDEF;
       wrefresh( s_ioBase->hb_stdscr );
       gt_ttyset( s_ioBase );
-      /* redrawwin( s_ioBase->hb_stdscr ); */
+      #if 0
+      redrawwin( s_ioBase->hb_stdscr );
+      #endif
       gt_refresh( s_ioBase );
    }
 
@@ -2529,7 +2545,7 @@ static HB_BOOL hb_gt_crs_Resume( PHB_GT pGT )
 
 static HB_BOOL hb_gt_crs_PreExt( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PreExt(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PreExt(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2543,7 +2559,7 @@ static HB_BOOL hb_gt_crs_PreExt( PHB_GT pGT )
 
 static HB_BOOL hb_gt_crs_PostExt( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PostExt(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_PostExt(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2554,7 +2570,7 @@ static HB_BOOL hb_gt_crs_PostExt( PHB_GT pGT )
 
 static HB_BOOL hb_gt_crs_mouse_IsPresent( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_IsPresent(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_IsPresent(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2565,7 +2581,7 @@ static HB_BOOL hb_gt_crs_mouse_IsPresent( PHB_GT pGT )
 
 static void hb_gt_crs_mouse_Show( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Show(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Show(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2580,7 +2596,7 @@ static void hb_gt_crs_mouse_Show( PHB_GT pGT )
 
 static void hb_gt_crs_mouse_Hide( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Hide(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Hide(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2594,7 +2610,7 @@ static void hb_gt_crs_mouse_Hide( PHB_GT pGT )
 
 static void hb_gt_crs_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Col(%p,%p,%p)", pGT, piRow, piCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_Col(%p,%p,%p)", ( void * ) pGT, ( void * ) piRow, ( void * ) piCol ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2606,7 +2622,7 @@ static void hb_gt_crs_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 
 static void hb_gt_crs_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_SetPos(%p,%i,%i)", pGT, iRow, iCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_SetPos(%p,%i,%i)", ( void * ) pGT, iRow, iCol ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2622,7 +2638,7 @@ static HB_BOOL hb_gt_crs_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    HB_BOOL ret = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_ButtonState(%p,%i)", pGT, iButton ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_ButtonState(%p,%i)", ( void * ) pGT, iButton ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2649,7 +2665,7 @@ static HB_BOOL hb_gt_crs_mouse_ButtonState( PHB_GT pGT, int iButton )
 
 static int hb_gt_crs_mouse_CountButton( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_CountButton(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_CountButton(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -2658,7 +2674,7 @@ static int hb_gt_crs_mouse_CountButton( PHB_GT pGT )
 
 static void hb_gt_crs_mouse_SetDoubleClickSpeed( PHB_GT pGT, int iSpeed )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_SetDoubleClickSpeed(%p,%d)", pGT, iSpeed ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_mouse_SetDoubleClickSpeed(%p,%d)", ( void * ) pGT, iSpeed ) );
 
    HB_GTSUPER_MOUSESETDOUBLECLICKSPEED( pGT, iSpeed );
    s_ioBase->mLastEvt.click_delay = iSpeed;
@@ -2670,7 +2686,7 @@ static int hb_gt_crs_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int iKey;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_ReadKey(%p,%d)", pGT, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_ReadKey(%p,%d)", ( void * ) pGT, iEventMask ) );
 
    HB_SYMBOL_UNUSED( iEventMask );
 
@@ -2690,7 +2706,7 @@ static int hb_gt_crs_ReadKey( PHB_GT pGT, int iEventMask )
 
 static HB_BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, ( int ) fBox ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", ( void * ) pGT, pszTermCDP, pszHostCDP, ( int ) fBox ) );
 
    if( HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox ) )
    {
@@ -2705,7 +2721,7 @@ static HB_BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const c
 
 static HB_BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", ( void * ) pGT, pszTermCDP, pszHostCDP ) );
 
    if( HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP ) )
    {
@@ -2719,7 +2735,7 @@ static HB_BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const ch
 
 static HB_BOOL hb_gt_crs_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Info(%p,%d,%p)", pGT, iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Info(%p,%d,%p)", ( void * ) pGT, iType, ( void * ) pInfo ) );
 
    if( s_ioBase )
    {
@@ -2749,7 +2765,7 @@ static HB_BOOL hb_gt_crs_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Redraw(%p,%d,%d,%d)", ( void * ) pGT, iRow, iCol, iSize ) );
 
    if( s_ioBase )
    {
@@ -2764,8 +2780,8 @@ static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          if( ! HB_GTSELF_GETSCRUC( pGT, iRow, iCol++, &iColor, &bAttr, &uc, HB_FALSE ) )
             break;
          ch = ( s_ioBase->attr_map[ iColor ] & s_ioBase->attr_mask ) |
-              ( bAttr & HB_GT_ATTR_BOX ? s_ioBase->box_chmap[ uc ] :
-                                         s_ioBase->std_chmap[ uc ] );
+              ( ( bAttr & HB_GT_ATTR_BOX ) ? s_ioBase->box_chmap[ uc ] :
+                                             s_ioBase->std_chmap[ uc ] );
          waddch( s_ioBase->hb_stdscr, ch );
       }
    }
@@ -2775,7 +2791,7 @@ static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
 static void hb_gt_crs_Refresh( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Refresh(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Refresh(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_REFRESH( pGT );
    if( s_ioBase )
@@ -2794,7 +2810,7 @@ static void hb_gt_crs_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", ( void * ) pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_crs_Init;
    pFuncTable->Exit                       = hb_gt_crs_Exit;

@@ -1,11 +1,5 @@
 /*
- *
- * FParse()
- * FParseEx()
- * FParseLine()
- * FLineCount()
- * FCharCount()
- * FWordCount()
+ * FParse*(), F*Count()
  *
  * Copyright 2004 Andi Jahja <xharbour@cbn.net.id>
  *
@@ -20,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,8 +44,9 @@
  *
  */
 
-/*
-   FParse( cFile, cDelimiter ) -> array
+/* FIXME: use Harbour VF IO API */
+
+/* FParse( cFile, cDelimiter ) --> array
 
    Purpose:
       Parse a delimited text file.
@@ -113,13 +108,9 @@ static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter,
             {
                /* an '"' after '"' ? */
                if( szText[ i + 1 ] != '"' )
-               {
                   szResult[ ui ] = szText[ i + 1 ];
-               }
                else
-               {
                   szResult[ ui ] = '\0';
-               }
 
                ++i;
 
@@ -171,13 +162,9 @@ static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter,
                      while( ++i < nLen )
                      {
                         if( szText[ i ] == iDelimiter )
-                        {
                            break;
-                        }
                         else
-                        {
                            szResult[ ++ui ] = szText[ i ];
-                        }
                      }
                   }
                }
@@ -216,16 +203,12 @@ static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter,
                               break;
                            }
                            else
-                           {
                               szResult[ ++ui ] = szText[ i ];
-                           }
                         }
                      }
                   }
                   else
-                  {
                      szResult[ ++ui ] = szText[ i ];
-                  }
                }
                word_count++;
                szResult[ ui + 1 ] = '\0';
@@ -270,9 +253,7 @@ static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharC
       if( ( HB_BYTE ) *string == delimiter )
       {
          while( ( HB_BYTE ) *string == delimiter )
-         {
             string++;
-         }
 
          if( bufptr > buffer )
          {
@@ -281,15 +262,11 @@ static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharC
          }
       }
       else
-      {
          last_char = *bufptr++ = *string++;
-      }
    }
 
    if( last_char > 0 )
-   {
       word_count++;
-   }
 
    *bufptr = '\0';
 
@@ -314,15 +291,15 @@ static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharC
 
 static HB_BOOL file_read( FILE * stream, char * string, int * iCharCount )
 {
-   int ch, cnbr = 0;
+   int cnbr = 0;
 
    memset( string, ' ', MAX_READ );
 
    for( ;; )
    {
-      ch = fgetc( stream );
+      int ch = fgetc( stream );
 
-      if( ( ch == '\n' ) || ( ch == EOF ) || ( ch == 26 ) )
+      if( ch == '\n' || ch == EOF || ch == 26 )
       {
          *iCharCount    = cnbr;
          string[ cnbr ] = '\0';
@@ -331,9 +308,7 @@ static HB_BOOL file_read( FILE * stream, char * string, int * iCharCount )
       else
       {
          if( cnbr < MAX_READ && ch != '\r' )
-         {
             string[ cnbr++ ] = ( char ) ch;
-         }
       }
 
       if( cnbr >= MAX_READ )
@@ -353,7 +328,6 @@ HB_FUNC( FPARSE )
    PHB_ITEM pArray;
    PHB_ITEM pItem;
    char *   string;
-   char **  tokens;
    int      iToken, iCharCount = 0;
    HB_BYTE  nByte;
 
@@ -396,7 +370,7 @@ HB_FUNC( FPARSE )
       /* parse the read line */
       int iWord = 0;
 
-      tokens = hb_tokensplit( string, nByte, iCharCount, &iWord );
+      char ** tokens = hb_tokensplit( string, nByte, iCharCount, &iWord );
 
       /* prepare empty array */
       hb_arrayNew( pItem, iWord );
@@ -494,7 +468,6 @@ HB_FUNC( FWORDCOUNT )
    FILE *   inFile;
    PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
    char *   string;
-   char **  tokens;
    int      iCharCount = 0;
    HB_BYTE  nByte      = ' ';
    HB_SIZE  nWordCount = 0;
@@ -530,7 +503,7 @@ HB_FUNC( FWORDCOUNT )
    {
       int iWord = 0;
 
-      tokens = hb_tokensplit( string, nByte, iCharCount, &iWord );
+      char ** tokens = hb_tokensplit( string, nByte, iCharCount, &iWord );
 
       nWordCount += iWord;
 
@@ -582,9 +555,7 @@ HB_FUNC( FLINECOUNT )
    while( ( ch = fgetc( inFile ) ) != EOF )
    {
       if( ch == '\n' )
-      {
          nLineCount++;
-      }
    }
 
    /* return number of lines */

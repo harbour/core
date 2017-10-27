@@ -35,12 +35,12 @@ FUNCTION __AtPrompt( nRow, nCol, cPrompt, cMsg, cColor )
    ENDDO
 
    // add to the static array
-   AAdd( t_aLevel[ t_nPointer ], ;
-         { nRow, ;      // _ITM_ROW
-           nCol, ;      // _ITM_COL
-           cPrompt, ;   // _ITM_PROMPT
-           cMsg, ;      // _ITM_MSG
-           cColor } )   // _ITM_COLOR
+   AAdd( t_aLevel[ t_nPointer ], { ;
+      nRow, ;      // _ITM_ROW
+      nCol, ;      // _ITM_COL
+      cPrompt, ;   // _ITM_PROMPT
+      cMsg, ;      // _ITM_MSG
+      cColor } )   // _ITM_COLOR
 
    // put this prompt on the screen right now
    DispOutAt( nRow, nCol, cPrompt, cColor )

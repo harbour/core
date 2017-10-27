@@ -1,6 +1,6 @@
 /*
  * CP950 <-> UCS16 conversion tables
- *    code generated automatically by tests/cp950gen.prg
+ * code generated automatically by tests/cp950gen.prg
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

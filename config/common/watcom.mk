@@ -1,12 +1,10 @@
 # GNU Make file for Open Watcom C/C++ compiler
 # (shell specific rules)
 
-# ---------------------------------------------------------------
 # See option docs here:
-#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
-#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
-#    http://www.users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
-# ---------------------------------------------------------------
+#    https://users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/cpopts.html
+#    https://users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlink.html
+#    https://users.pjwstk.edu.pl/~jms/qnx/help/watcom/compiler-tools/wlib.html
 
 # NOTE: Hack to force no extension for Linux binaries created on non-Linux hosts.
 #       Otherwise they become '.elf'. [vszakats]
@@ -33,14 +31,14 @@ AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) $(LIB_DIR)/$@ $(foreac
 
 ifeq ($(HB_SHELL),dos)
 
-   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
    #       It causes that every command will be separated by LF
    define link_file
       @$(ECHO) $(ECHOQUOTE)FILE $(file)$(ECHOQUOTE) >> __link__.tmp
 
    endef
 
-   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
    define link_lib
       @$(ECHO) $(ECHOQUOTE)LIB $(lib)$(ECHOQUOTE) >> __link__.tmp
 
@@ -55,7 +53,7 @@ ifeq ($(HB_SHELL),dos)
 
    LD_RULE = $(link_exe_file) $(HB_USER_LDFLAGS)
 
-   # NOTE: The empty line directly before 'endef' HAVE TO exist!
+   # NOTE: The empty line directly before 'endef' HAS TO exist!
    define lib_object
       @$(ECHO) $(ECHOQUOTE)-+$(file)$(ECHOQUOTE) >> __lib__.tmp
 
@@ -94,7 +92,7 @@ ifeq ($(ANYDOS),yes)
    # disable DOS/32A Banner
    export DOS32A := /NOC
 
-   # work arround to DOS command line size limit
+   # workaround for MS-DOS command-line length limit
    ifneq ($(findstring wcc386,$(CC)),)
       export WCC386 := $(strip $(subst $(CC_DIRSEPFROM),$(CC_DIRSEPTO),$(CC_FLAGS)))
    else

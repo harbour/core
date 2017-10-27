@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -95,12 +95,12 @@ CREATE CLASS RadioGroup FUNCTION HBRadioGroup
    METHOD left( nLeft ) SETGET
    METHOD message( cMessage ) SETGET
    METHOD right( nRight ) SETGET
-   METHOD textValue() SETGET                  /* NOTE: Undocumented CA-Cl*pper var. */
+   METHOD textValue() SETGET                   /* NOTE: Undocumented CA-Cl*pper var. */
    METHOD top( nTop ) SETGET
    METHOD typeOut() SETGET
-   METHOD value() SETGET                      /* NOTE: Undocumented CA-Cl*pper var. */
+   METHOD value() SETGET                       /* NOTE: Undocumented CA-Cl*pper var. */
 
-   METHOD New( nTop, nLeft, nBottom, nRight ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( nTop, nLeft, nBottom, nRight )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -170,11 +170,12 @@ METHOD display() CLASS RadioGroup
       cUnSelBox := ::cHotBox
    ENDIF
 
-   IF ! Empty( cSelBox )
+   DO CASE
+   CASE ! Empty( cSelBox )
       hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
-   ELSEIF ! Empty( cUnSelBox )
+   CASE ! Empty( cUnSelBox )
       hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cUnSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
-   ENDIF
+   ENDCASE
 
    IF ! Empty( cCaption := ::cCaption )
 
@@ -191,7 +192,6 @@ METHOD display() CLASS RadioGroup
       IF nPos > 0
          hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
       ENDIF
-
    ENDIF
 
    AEval( ::aItems, {| o | o:display() } )
@@ -204,13 +204,14 @@ METHOD getAccel( xKey ) CLASS RadioGroup
 
    LOCAL cKey
 
-   IF HB_ISSTRING( xKey )
+   DO CASE
+   CASE HB_ISSTRING( xKey )
       cKey := xKey
-   ELSEIF HB_ISNUMERIC( xKey )
+   CASE HB_ISNUMERIC( xKey )
       cKey := hb_keyChar( xKey )
-   ELSE
+   OTHERWISE
       RETURN 0
-   ENDIF
+   ENDCASE
 
    IF Len( cKey ) > 0
       cKey := Lower( cKey )
@@ -231,29 +232,33 @@ METHOD hitTest( nMRow, nMCol ) CLASS RadioGroup
    DO CASE
    CASE Empty( ::cColdbox + ::cHotBox )
    CASE nMRow == ::nTop
-      IF nMCol == ::nLeft
+      DO CASE
+      CASE nMCol == ::nLeft
          RETURN HTTOPLEFT
-      ELSEIF nMCol == ::nRight
+      CASE nMCol == ::nRight
          RETURN HTTOPRIGHT
-      ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
+      CASE nMCol >= ::nLeft .AND. nMCol <= ::nRight
          RETURN HTTOP
-      ENDIF
+      ENDCASE
    CASE nMRow == ::nBottom
-      IF nMCol == ::nLeft
+      DO CASE
+      CASE nMCol == ::nLeft
          RETURN HTBOTTOMLEFT
-      ELSEIF nMCol == ::nRight
+      CASE nMCol == ::nRight
          RETURN HTBOTTOM
-      ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
+      CASE nMCol >= ::nLeft .AND. nMCol <= ::nRight
          RETURN HTBOTTOMRIGHT
-      ENDIF
+      ENDCASE
    CASE nMCol == ::nLeft
-      IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
+      IF nMRow >= ::nTop .AND. ;
+         nMRow <= ::nBottom
          RETURN HTLEFT
       ELSE
          RETURN HTNOWHERE
       ENDIF
    CASE nMCol == ::nRight
-      IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
+      IF nMRow >= ::nTop .AND. ;
+         nMRow <= ::nBottom
          RETURN HTRIGHT
       ELSE
          RETURN HTNOWHERE
@@ -328,7 +333,6 @@ METHOD killFocus() CLASS RadioGroup
 
       MSetCursor( nOldMCur )
       SetCursor( ::nCursor )
-
    ENDIF
 
    RETURN Self
@@ -391,7 +395,6 @@ METHOD prevItem() CLASS RadioGroup
       ENDCASE
 
       ::changeButton( nValue, nPos )
-
    ENDIF
 
    RETURN Self
@@ -480,7 +483,6 @@ METHOD changeButton( nUnselect, nSelect ) CLASS RadioGroup
       ::nValue := nSelect
       ::cTextValue := ::aItems[ nSelect ]:data
       ::xBuffer := iif( HB_ISNUMERIC( ::xBuffer ), nSelect, ::cTextValue )
-
    ENDIF
 
    MSetCursor( nOldMCur )
@@ -625,8 +627,8 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS RadioGroup
    ELSE
       cColor := SetColor()
       ::cColorSpec := ;
-         hb_ColorIndex( cColor, CLR_BORDER     ) + "," + ;
-         hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BORDER ) + "," + ;
+         hb_ColorIndex( cColor, CLR_STANDARD ) + "," + ;
          hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
@@ -635,7 +637,7 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS RadioGroup
 FUNCTION RadioGroup( nTop, nLeft, nBottom, nRight )
    RETURN HBRadioGroup():New( nTop, nLeft, nBottom, nRight )
 
-FUNCTION _RADIOGRP_( nTop, nLeft, nBottom, nRight, xValue, aItems, cCaption, cMessage, cColorSpec, bFBlock )
+FUNCTION _RadioGrp_( nTop, nLeft, nBottom, nRight, xValue, aItems, cCaption, cMessage, cColorSpec, bFBlock )
 
    LOCAL o
 
@@ -649,7 +651,6 @@ FUNCTION _RADIOGRP_( nTop, nLeft, nBottom, nRight, xValue, aItems, cCaption, cMe
       AEval( aItems, {| aItem | o:AddItem( aItem ) } )
 
       o:select( xValue )
-
    ENDIF
 
    RETURN o

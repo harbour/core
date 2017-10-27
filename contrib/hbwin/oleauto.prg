@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -70,15 +70,14 @@ METHOD __enumStart( enum, lDescend ) CLASS win_oleAuto
 
    LOCAL hObjEnum
 
-   hObjEnum := __oleEnumCreate( ::__hObj, lDescend )
-   IF ! Empty( hObjEnum )
+   IF ! Empty( hObjEnum := __oleEnumCreate( ::__hObj, lDescend ) )
       IF ! Empty( ::__hObjEnum )
          /* small hack - clone the object array for nested FOR EACH calls */
-         self := __objClone( self )
+         Self := __objClone( Self )
       ENDIF
       ::__hObjEnum := hObjEnum
       /* set base value for enumerator */
-      ( @enum ):__enumBase( self )
+      ( @enum ):__enumBase( Self )
       RETURN ::__enumSkip( @enum, lDescend )
    ENDIF
 
@@ -100,7 +99,7 @@ METHOD __enumSkip( enum, lDescend ) CLASS win_oleAuto
 
 METHOD PROCEDURE __enumStop() CLASS win_oleAuto
 
-   ::__hObjEnum := NIL     /* activate autodestructor */
+   ::__hObjEnum := NIL     /* activate auto-destructor */
 
    RETURN
 
@@ -111,8 +110,7 @@ FUNCTION win_oleGetActiveObject( ... )
 
    LOCAL oOle, hOle
 
-   hOle := __oleGetActiveObject( ... )
-   IF ! Empty( hOle )
+   IF ! Empty( hOle := __oleGetActiveObject( ... ) )
       oOle := win_oleAuto()
       oOle:__hObj := hOle
    ENDIF
@@ -124,8 +122,7 @@ FUNCTION win_oleCreateObject( ... )
 
    LOCAL oOle, hOle
 
-   hOle := __oleCreateObject( ... )
-   IF ! Empty( hOle )
+   IF ! Empty( hOle := __oleCreateObject( ... ) )
       oOle := win_oleAuto()
       oOle:__hObj := hOle
    ENDIF

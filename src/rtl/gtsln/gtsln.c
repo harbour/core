@@ -10,13 +10,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -34,7 +34,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -105,7 +105,7 @@ static int s_iCursorStyle = SC_NORMAL;
 /* indicate if we are currently running a command from system */
 static HB_BOOL s_bSuspended = HB_FALSE;
 
-/* the name of an environmet variable containig a definition of nation chars.*/
+/* the name of an environment variable containing a definition of nation chars.*/
 /* A definition is a list of pairs of chars. The first char in each pair is  */
 /* an ASCII key, which should be pressed *after* a "DeadKey" was pressed to  */
 /* get the nation char, a second in that pair is a corresponding nation char */
@@ -130,10 +130,12 @@ static void sigwinch_handler( int iSig )
 
 static void hb_sln_colorTrans( void )
 {
-   int i, clr, fg, bg;
+   int i;
 
    for( i = 0; i < 256; i++ )
    {
+      int clr, fg, bg;
+
       fg = ( i & 0x0F );
       /*
        * bit 7 is a blinking attribute - not used when console is not in
@@ -212,7 +214,7 @@ static void hb_sln_setSingleBox( void )
 
 static void hb_sln_setACSCtrans( void )
 {
-   unsigned char * p, ch;
+   unsigned char * p;
    SLsmg_Char_Type chBoard[ 3 ], chArrow[ 4 ];
 
    memset( &chArrow, 0, sizeof( chArrow ) );
@@ -236,7 +238,7 @@ static void hb_sln_setACSCtrans( void )
       memset( &SLch, 0, sizeof( SLsmg_Char_Type ) );
       for( i = 0; i < len; i += 2 )
       {
-         ch = *p++;
+         unsigned char ch = *p++;
          HB_SLN_BUILD_RAWCHAR( SLch, *p++, 0 );
          HB_SLN_SET_ACSC( SLch );
          switch( ch )
@@ -404,7 +406,7 @@ static void hb_sln_setKeyTrans( PHB_GT pGT )
    p = getenv( hb_NationCharsEnvName );
    if( p )
    {
-      int len = strlen( p ) >> 1, ch;
+      int len = strlen( p ) >> 1;
 
       /* no more than 128 National chars are allowed */
       if( len > 128 )
@@ -416,7 +418,7 @@ static void hb_sln_setKeyTrans( PHB_GT pGT )
       len <<= 1;
       for( i = 0; i < len; i += 2 )
       {
-         ch = ( unsigned char ) p[ i + 1 ];
+         int ch = ( unsigned char ) p[ i + 1 ];
          hb_sln_convKDeadKeys[ i + 1 ] = ( unsigned char ) p[ i ];
          hb_sln_convKDeadKeys[ i + 2 ] = ch;
          hb_sln_inputTab[ ( unsigned char ) p[ i ] ] = ch;
@@ -437,7 +439,7 @@ static void hb_sln_SetCursorStyle( int iStyle )
    {
       SLtt_set_cursor_visibility( iStyle != SC_NONE );
 
-      /* NOTE: cursor apearence works only under linux console */
+      /* NOTE: cursor appearance works only under linux console */
       if( hb_sln_UnderLinuxConsole && s_iCursorStyle != iStyle )
       {
          /* keyseq to define cursor shape under linux console */
@@ -462,7 +464,7 @@ static void hb_sln_SetCursorStyle( int iStyle )
                break;
 
             case SC_SPECIAL2:
-               /* TODO: find a proper sequqnce to set a cursor
+               /* TODO: find a proper sequence to set a cursor
                   to SC_SPECIAL2 under Linux console  */
                cursDefseq[ 3 ] = '4';
                break;
@@ -495,7 +497,7 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
          timer = hb_timerInit( timeout );
          for( ;; )
          {
-            /* loking for cursor position in "\033[%d;%dR" */
+            /* looking for cursor position in "\033[%d;%dR" */
             while( j < n && rdbuf[ j ] != '\033' )
                ++j;
             if( n - j >= 6 )
@@ -552,7 +554,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    HB_BOOL gt_Inited = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Init(%p,%p,%p,%p)", ( void * ) pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    /* stdin && stdout && stderr */
    s_hStdIn  = hFilenoStdin;
@@ -567,7 +569,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    SLang_TT_Read_FD  = -1;
    SLang_TT_Write_FD = -1;
 
-   /* read a terminal descripion from a terminfo database */
+   /* read a terminal description from a terminfo database */
    SLtt_get_terminfo();
 
    /* initialize higher-level Slang routines */
@@ -586,7 +588,9 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                         hb_sln_isUTF8( SLang_TT_Write_FD, SLang_TT_Read_FD ) );
 #endif
 #ifdef HB_SLN_UNICODE
-            /* SLsmg_Setlocale = 0; */
+         #if 0
+         SLsmg_Setlocale = 0;
+         #endif
 #endif
             /* initialize a screen handling subsytem */
          if( SLsmg_init_smg() != -1 )
@@ -597,7 +601,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
             /* do not indicate USER_BREAK in SLang_Error - ??? */
             SLang_Ignore_User_Abort = 1;
 
-            /* no default abort procesing */
+            /* no default abort processing */
             SLang_set_abort_signal( NULL );
 
             /* NOTE: this is incompatible with CLIPPER
@@ -610,7 +614,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                 s_iCursorStyle = SC_UNAVAIL;
 
             /* NOTE: this driver is implemented in a way that it is
-               imposible to get intensity/blinking background mode.
+               impossible to get intensity/blinking background mode.
                The reason is the way Slang is written.
                This is incompatible with Clipper.
                But when the console is in UTF-8 mode we don't need
@@ -693,7 +697,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 static void hb_gt_sln_Exit( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Exit(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Exit(%p)", ( void * ) pGT ) );
 
    /* restore a standard bell frequency and duration */
    if( hb_sln_UnderLinuxConsole )
@@ -721,7 +725,7 @@ static void hb_gt_sln_Exit( PHB_GT pGT )
 
 static HB_BOOL hb_gt_sln_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_SetMode(%p,%d,%d)", ( void * ) pGT, iRows, iCols ) );
 
    HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iRows );
@@ -735,7 +739,7 @@ static HB_BOOL hb_gt_sln_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 static HB_BOOL hb_gt_sln_IsColor( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_IsColor(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_IsColor(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -746,7 +750,7 @@ static HB_BOOL hb_gt_sln_IsColor( PHB_GT pGT )
 
 static void hb_gt_sln_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_SetBlink(%p,%d)", pGT, ( int ) fBlink ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_SetBlink(%p,%d)", ( void * ) pGT, ( int ) fBlink ) );
 
    /*
     * We cannot switch remote terminal between blinking and highlight mode
@@ -769,7 +773,7 @@ static void hb_gt_sln_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 
 static void hb_gt_sln_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
    /* TODO: Implement this for other consoles than linux ? */
 
@@ -804,7 +808,7 @@ static void hb_gt_sln_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 static const char * hb_gt_sln_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Version(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Version(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -882,7 +886,7 @@ static HB_BOOL hb_gt_sln_PostExt( PHB_GT pGT )
 
 static HB_BOOL hb_gt_sln_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Info(%p,%d,%p)", pGT, iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Info(%p,%d,%p)", ( void * ) pGT, iType, ( void * ) pInfo ) );
 
    switch( iType )
    {
@@ -939,7 +943,7 @@ static HB_BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const ch
 
 static void hb_gt_sln_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Redraw(%p,%d,%d,%d)", ( void * ) pGT, iRow, iCol, iSize ) );
 
    if( s_fActive )
    {
@@ -988,7 +992,7 @@ static void hb_gt_sln_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
 static void hb_gt_sln_Refresh( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Refresh(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Refresh(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_REFRESH( pGT );
    if( s_fActive )
@@ -1009,7 +1013,7 @@ static void hb_gt_sln_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", ( void * ) pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_sln_Init;
    pFuncTable->Exit                       = hb_gt_sln_Exit;

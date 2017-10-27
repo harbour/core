@@ -8,8 +8,8 @@ static HB_LANG s_lang =
       /* Identification */
 
       "de_AT",
-      "German-Austria",
-      "Deutsch-Österreich",
+      "German (Austria)",
+      "Deutsch (Österreich)",
       "",
       "UTF8",
       "",

@@ -1,5 +1,5 @@
 /*
- * Header file for error hanlding
+ * Header file for error handling
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -95,12 +95,12 @@
 #define EG_APPENDLOCK   40
 #define EG_LOCK         41
 
-#define EG_DESTRUCTOR   45      /* Harbour special */
-#define EG_ARRACCESS    46      /* Harbour special */
-#define EG_ARRASSIGN    47      /* Harbour special */
-#define EG_ARRDIMENSION 48      /* Harbour special */
-#define EG_NOTARRAY     49      /* Harbour special */
-#define EG_CONDITION    50      /* Harbour special */
+#define EG_DESTRUCTOR   45      /* Harbour extension */
+#define EG_ARRACCESS    46      /* Harbour extension */
+#define EG_ARRASSIGN    47      /* Harbour extension */
+#define EG_ARRDIMENSION 48      /* Harbour extension */
+#define EG_NOTARRAY     49      /* Harbour extension */
+#define EG_CONDITION    50      /* Harbour extension */
 
 /* Internal errors */
 #define HB_EI_ERRUNRECOV        9000 /* "Unrecoverable error %lu: " */

@@ -2,6 +2,7 @@
  * Header file for low-level object engine
  *
  * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2000 JF Lefebvre <jfl@mafact.com> and RA Cuylen <rac@mafact.com> (Many enhancements (scopes, class methods))
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,25 +45,15 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 JF Lefebvre <jfl@mafact.com> and RA Cuylen <rac@mafact.com>
- *    Many enhancements (scopes, class methods)
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* NOTE: This file is also used by C code. */
 
 #ifndef HB_OO_CH_
 #define HB_OO_CH_
 
-/* Used by objfunc.prg (__objGetMsgList) and classes.c (hb___msgClsSel()) */
-#define HB_MSGLISTALL   0
-#define HB_MSGLISTCLASS 1
-#define HB_MSGLISTPURE  2
+/* Used by objfunc.prg (__objGetMsgList()) and classes.c (hb___msgClsSel()) */
+#define HB_MSGLISTALL    0
+#define HB_MSGLISTCLASS  1
+#define HB_MSGLISTPURE   2
 
 /* Method or Data attribute (nScope)*/
 #define HB_OO_CLSTP_EXPORTED        1 /* No comment, default */

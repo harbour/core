@@ -5,8 +5,7 @@ include $(TOP)$(ROOT)config/global.mk
 PRG_SOURCES := \
    hbmk2.prg \
 
-RC_SOURCES := \
-   hbmk2.rc
+RC_SOURCES := harbour.rc
 
 PRG_MAIN := hbmk2.prg
 
@@ -31,6 +30,6 @@ endif
 # is better than Main()
 HB_PRGFLAGS += -DHBMK_USE_APPMAIN
 
-HB_PRGFLAGS += -DHBMK_WITH_ALL_EMBEDDED_HEADERS
+HB_PRGFLAGS += -DHBMK_WITH_BUILTIN_HEADERS_ALL
 
 include $(TOP)$(ROOT)config/bin.mk

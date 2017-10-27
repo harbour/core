@@ -1,5 +1,5 @@
 /*
- * item serialization code
+ * Item serialization code
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -205,7 +205,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
                                    const HB_UCHAR * pBuffer, HB_SIZE nOffset,
                                    PHB_REF_LIST pRefList );
 
-/*
+#if 0
 static void hb_itemSerialRefListShow( PHB_REF_LIST pRefList )
 {
    HB_SIZE nPos;
@@ -223,7 +223,7 @@ static void hb_itemSerialRefListShow( PHB_REF_LIST pRefList )
    }
    printf( "================================\n" ); fflush( stdout );
 }
-*/
+#endif
 
 static void hb_itemSerialRefListInit( PHB_REF_LIST pRefList )
 {
@@ -503,7 +503,6 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
    HB_SIZE nSize, nLen, u;
    HB_MAXINT lVal;
    HB_USHORT uiClass;
-   PHB_ITEM pDefVal;
    const char * szVal;
 
    if( HB_IS_BYREF( pItem ) )
@@ -614,6 +613,8 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
          }
          else
          {
+            PHB_ITEM pDefVal;
+
             if( ( hb_hashGetFlags( pItem ) & ~HB_HASH_RESORT ) != HB_HASH_FLAG_DEFAULT )
                nSize = 3;
             else
@@ -660,7 +661,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
    int iWidth, iDecimal;
    long l, l2;
    const char * szVal;
-   HB_SIZE nRef, nLen, nSize, n;
+   HB_SIZE nRef, nLen, n;
 
    if( HB_IS_BYREF( pItem ) )
       pItem = hb_itemUnRef( pItem );
@@ -807,7 +808,7 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
          }
          else
          {
-            nSize = n = nLen;
+            HB_SIZE nSize = n = nLen;
             while( n && szVal[ n - 1 ] == ' ' )
                --n;
             n = nLen - n;
@@ -1689,7 +1690,9 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
          nOffset = hb_deserializeItem( pItem, cdpIn, cdpOut, pBuffer,
                                        nOffset, pRefList );
          /* we do not support xHarbour codeblock deserialization: HB_RestoreBlock( pItem ) */
-         /* hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_B ); */
+         #if 0
+         hb_itemSerialTypedSet( pRefList, pItem, HB_SERIAL_XHB_B );
+         #endif
          hb_itemClear( pItem );
          break;
       case HB_SERIAL_XHB_H:
@@ -1815,21 +1818,24 @@ char * hb_itemSerializeCP( PHB_ITEM pItem, int iFlags,
    if( ( iFlags & HB_SERIALIZE_COMPRESS ) != 0 && nSize > 20 )
    {
       HB_SIZE nDest = hb_zlibCompressBound( nSize );
-      char * pDest = ( char * ) hb_xgrab( nDest );
-      if( hb_zlibCompress( pDest, &nDest, ( const char * ) pBuffer, nSize,
-                           HB_ZLIB_COMPRESSION_DEFAULT ) == HB_ZLIB_RES_OK )
+      if( nDest > 0 )
       {
-         if( nDest + 9 < nSize )
+         char * pDest = ( char * ) hb_xgrab( nDest );
+         if( hb_zlibCompress( pDest, &nDest, ( const char * ) pBuffer, nSize,
+                           HB_ZLIB_COMPRESSION_DEFAULT ) == HB_ZLIB_RES_OK )
          {
-            pBuffer[ 0 ] = HB_SERIAL_ZCOMPRESS;
-            HB_PUT_LE_UINT32( &pBuffer[ 1 ], nDest );
-            HB_PUT_LE_UINT32( &pBuffer[ 5 ], nSize );
-            memcpy( &pBuffer[ 9 ], pDest, nDest );
-            nSize = nDest + 9;
-            pBuffer = ( HB_UCHAR * ) hb_xrealloc( pBuffer, nSize + 1 );
+            if( nDest + 9 < nSize )
+            {
+               pBuffer[ 0 ] = HB_SERIAL_ZCOMPRESS;
+               HB_PUT_LE_UINT32( &pBuffer[ 1 ], nDest );
+               HB_PUT_LE_UINT32( &pBuffer[ 5 ], nSize );
+               memcpy( &pBuffer[ 9 ], pDest, nDest );
+               nSize = nDest + 9;
+               pBuffer = ( HB_UCHAR * ) hb_xrealloc( pBuffer, nSize + 1 );
+            }
          }
+         hb_xfree( pDest );
       }
-      hb_xfree( pDest );
    }
 
    pBuffer[ nSize ] = '\0';
@@ -1897,11 +1903,12 @@ HB_FUNC( HB_SERIALIZE )
 
 HB_FUNC( HB_DESERIALIZE )
 {
-   PHB_ITEM pItem, pParam = hb_param( 1, HB_IT_BYREF );
+   PHB_ITEM pParam = hb_param( 1, HB_IT_BYREF );
    HB_SIZE nSize = hb_parclen( 1 );
 
    if( nSize )
    {
+      PHB_ITEM pItem;
       PHB_CODEPAGE cdpIn, cdpOut;
       const char * pBuffer = hb_parc( 1 );
       const char * pszCdpIn = hb_parc( 2 ),

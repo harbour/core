@@ -3,16 +3,16 @@
 # Dave Pearson <davep@davep.org>
 # Harbour RPM spec file
 #
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------
 # HOWTO .rpm docs:
-#    http://fedoraproject.org/wiki/PackageMaintainers/CreatingPackageHowTo
-#    http://www.gurulabs.com/downloads/GURULABS-RPM-LAB/GURULABS-RPM-GUIDE-v1.0.PDF
+#    https://fedoraproject.org/wiki/How_to_create_an_RPM_package
+#    https://www.gurulabs.com/media/files/courseware-samples/GURULABS-RPM-GUIDE-v1.0.PDF
 # ---------------------------------------------------------------
 
-# TOFIX: Contrib packages with dependencies will be packaged
+# FIXME: Contrib packages with dependencies will be packaged
 #        into separate .rpms, but their headers will be packaged
 #        into the core Harbour package. This f.e. makes it impossible
 #        to detect a Harbour contrib package by checking the existence
@@ -25,19 +25,19 @@
 # please add your distro suffix if it does not belong to the ones recognized below
 # and remember that order checking can be important
 
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandriva-release-common 2>/dev/null) && echo "mdv$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' mandriva-release-common 2>/dev/null) && echo "mdv$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' fedora-release 2>/dev/null) && echo "fc$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' fedora-release 2>/dev/null) && echo "fc$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' centos-release 2>/dev/null) && echo "el$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' centos-release 2>/dev/null) && echo "el$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' suse-release 2>/dev/null) && echo "sus$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' suse-release 2>/dev/null) && echo "sus$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' openSUSE-release 2>/dev/null) && echo "sus$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' openSUSE-release 2>/dev/null) && echo "sus$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %(release=$(rpm -q --queryformat='%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release"|tr -d ".")
+%define platform %(release=$(rpm -q --queryformat='%{VERSION}' redhat-release 2>/dev/null) && echo "rh$release" | tr -d '.')
 %if "%{platform}" == ""
-%define platform %([ -f /etc/pld-release ] && cat /etc/pld-release|sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/')
+%define platform %([ -f /etc/pld-release ] && cat /etc/pld-release | sed -e '/1/ !d' -e 's/[^0-9]//g' -e 's/^/pld/')
 %if "%{platform}" == ""
 %undefine platform
 %endif
@@ -91,7 +91,7 @@
 Summary:        Free software Clipper compatible compiler
 Summary(pl):    Darmowy kompilator kompatybilny z językiem Clipper.
 Summary(pt_BR): Um compilador Clipper compativel Gratis
-Summary(ru):    ????????? ??????????, ??????????? ? ?????? Clipper.
+Summary(ru):    Свободный компилятор, совместимый с языком Clipper.
 Summary(hu):    Szabad szoftver Clipper kompatibilis fordító
 Name:           %{name}
 Version:        %{version}
@@ -123,9 +123,9 @@ Esse pacote contem um compilador, um pré-processador, arquivos de cabeçalho
 uma maquina virtual e documentaçăo.
 
 %description -l ru
-%{dname} - ?????????????????? ??????????, ??????????? ? ?????? CA-Cl*pper.
-???? ????? ???????? ??????????, ????????????, ????? ??????????, ???????????
-?????? ? ????????????.
+%{dname} - многоплатформенный компилятор, совместимый с языком CA-Cl*pper.
+Этот пакет содержит компилятор, препроцессор, файлы заголовков, виртуальную
+машину и документацию.
 
 %description -l hu
 %{dname} egy több platformon is működő CA-Cl*pper kompatibilis
@@ -139,7 +139,7 @@ fordítóprogram. A csomag része a fordító maga, az előfordító, fejléc
 %package lib
 Summary:        Shared runtime libaries for %{dname} compiler
 Summary(pl):    Dzielone bilioteki dla kompilatora %{dname}
-Summary(ru):    ????????? ???????????? ?????????? ??? ??????????? %{dname}
+Summary(ru):    Совместно используемые библиотеки для компилятора %{dname}
 Summary(hu):    Megosztott könyvtárak a(z) %{dname} fordítóhoz
 Group:          Development/Languages
 Provides:       lib%{name}.so
@@ -160,9 +160,9 @@ Esse pacote %{dname} provem as bibliotecas compartilhadas para programas
 linkados dinamicamente.
 
 %description -l ru lib
-%{dname} - ??????????, ??????????? ? ?????? CA-Cl*pper.
-???? ????? ???????? ????????? ???????????? ?????????? %{dname},
-??????????? ??? ?????? ??????????? ?????????????? ????????.
+%{dname} - компилятор, совместимый с языком CA-Cl*pper.
+Этот пакет содержит совместно используемые библиотеки %{dname},
+необходимые для работы динамически скомпонованных программ.
 
 %description -l hu lib
 A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
@@ -177,7 +177,7 @@ programokhoz szükséges megosztott (dinamikus) futtatókönyvtárakat.
 Summary:        Contrib runtime libaries for %{dname} compiler
 Summary(pl):    Bilioteki z drzewa contrib dla kompilatora %{dname}
 Summary(pt_BR): Libs contrib para %{dname}
-Summary(ru):    ?????????? ?? ?????? contrib ??? ??????????? %{dname}
+Summary(ru):    Библиотеки из дерева contrib для компилятора %{dname}
 Summary(hu):    Kiegészítő könyvtárak a(z) %{dname} fordítóhoz
 Group:          Development/Languages
 Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}
@@ -197,8 +197,8 @@ Esse pacote %{dname} provem as bibliotecas contrib para linkagem
 dos programas.
 
 %description -l ru contrib
-%{dname} - ??????????, ??????????? ? ?????? CA-Cl*pper.
-???? ????? ???????? ??????????? ?????????? %{dname} ?? ?????? contrib.
+%{dname} - компилятор, совместимый с языком CA-Cl*pper.
+Этот пакет содержит статические библиотеки %{dname} из дерева contrib.
 
 %description -l hu contrib
 A(z) %{dname} egy Clipper kompatibilis fordítóprogram.
@@ -286,18 +286,18 @@ statikus szerkesztéshez.
 
 ## firebird library
 %{?_with_firebird:%package firebird}
-%{?_with_firebird:Summary:        FireBird library bindings for %{dname} compiler}
-%{?_with_firebird:Summary(pl):    Bilioteka FireBird dla kompilatora %{dname}}
+%{?_with_firebird:Summary:        Firebird library bindings for %{dname} compiler}
+%{?_with_firebird:Summary(pl):    Bilioteka Firebird dla kompilatora %{dname}}
 %{?_with_firebird:Group:          Development/Languages}
 %{?_with_firebird:Requires:       %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
 
 %{?_with_firebird:%description firebird}
 %{?_with_firebird:%{dname} is a Clipper compatible compiler.}
-%{?_with_firebird:This package provides %{dname} FireBird library for program linking.}
+%{?_with_firebird:This package provides %{dname} Firebird library for program linking.}
 
 %{?_with_firebird:%description -l pl firebird}
 %{?_with_firebird:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
-%{?_with_firebird:Ten pakiet udostępnia statyczn+ biliotekę FireBird dla kompilatora %{dname}.}
+%{?_with_firebird:Ten pakiet udostępnia statyczn+ biliotekę Firebird dla kompilatora %{dname}.}
 
 ## freeimage library
 #%{?_with_freeimage:%package freeimage}
@@ -381,7 +381,7 @@ statikus szerkesztéshez.
 
 %prep
 %setup -c %{name}
-rm -rf $RPM_BUILD_ROOT
+rm -rf "$RPM_BUILD_ROOT"
 
 ######################################################################
 ## Build.
@@ -396,7 +396,7 @@ make %{?_smp_mflags}
 ## Install.
 ######################################################################
 
-# Install harbour itself.
+# Install Harbour itself.
 
 %install
 %{hb_env}
@@ -435,7 +435,7 @@ rm -f $HB_INSTALL_LIB/libjpeg.a \
 ######################################################################
 ## Clean.
 ######################################################################
-rm -rf $RPM_BUILD_ROOT
+rm -rf "$RPM_BUILD_ROOT"
 
 ######################################################################
 ## File list.
@@ -726,15 +726,15 @@ rm -rf $RPM_BUILD_ROOT
 ######################################################################
 
 %changelog
-* Thu Aug 05 2008 Viktor Szakats (vszakats.net/harbour)
+* Tue Aug 05 2008 Viktor Szakats (vszakats.net/harbour)
 - removed hbdot, hbverfix, hbpptest
-- hbrun now fully replaces hbdot.
+- hbrun now fully replaces hbdot
 
 * Thu Aug 23 2007 Przemyslaw Czerpak <druzus@priv.onet.pl>
 + added hbdot
 - removed PP package
 
-* Fri Mar 23 2005 Przemyslaw Czerpak <druzus@priv.onet.pl>
+* Wed Mar 23 2005 Przemyslaw Czerpak <druzus@priv.onet.pl>
 - removed bison and flex from dependences list
 
 * Sat Aug 09 2003 Przemyslaw Czerpak <druzus@polbox.com>
@@ -768,7 +768,7 @@ rm -rf $RPM_BUILD_ROOT
 
 * Thu Jan 17 2002 Dave Pearson <davep@davep.org>
 - Removed the use of the /etc/profile.d scripts for setting the
-  harbour environment variables. The settings are now placed
+  Harbour environment variables. The settings are now placed
   directly in gharbour and harbour-link. This means that this .spec
   file should be more useful on RPM using platforms other than RedHat.
 
@@ -789,7 +789,7 @@ rm -rf $RPM_BUILD_ROOT
 - Added the setting of $HB_GT_LIB to the environment (ncurses is used).
 - Added support for installing hbmake.
 
-* Mon Jun 28 2001 Dave Pearson <davep@davep.org>
+* Thu Jun 28 2001 Dave Pearson <davep@davep.org>
 - Changed the gharbour script so that it only invokes the C compiler if a C
   file was output. This stops any error messages when someone is using the
   -g option to output other target types.
@@ -801,8 +801,8 @@ rm -rf $RPM_BUILD_ROOT
 - Added README.RPM to the documentation directory.
 
 * Sat Jan 06 2001 Dave Pearson <davep@davep.org>
-- The gharbour script now passes the harbour include directory, using -I,
-  to harbour.
+- The gharbour script now passes the Harbour include directory, using -I,
+  to Harbour.
 
 * Thu Aug 24 2000 Dave Pearson <davep@davep.org>
 - Changed the files section so that hbrun doesn't get installed. It isn't
@@ -823,13 +823,13 @@ rm -rf $RPM_BUILD_ROOT
 - Added 'bash' and 'sh-utils' to the list of required packages.
 
 * Tue Aug 01 2000 Dave Pearson <davep@davep.org>
-- Added harbour environment scripts to /etc/profile.d.
+- Added Harbour environment scripts to /etc/profile.d.
 - Added generation of gharbour and harbour-link commands.
 
 * Mon Jul 31 2000 Dave Pearson <davep@davep.org>
 - Re-worked the layout of the spec file to make it cleaner and easier to
   read and maintain.
-- The latest harbour ChangeLog.txt is now installed into the RPM's doc
+- The latest Harbour ChangeLog.txt is now installed into the RPM's doc
   directory.
 - The content of the RPM's doc directory reflects the layout and content of
-  the harbour source's doc directory.
+  the Harbour source's doc directory.

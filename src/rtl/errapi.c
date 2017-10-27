@@ -2,6 +2,8 @@
  * The Error API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2016 Viktor Szakats (vszakats.net/harbour) (DosError(), __errInHandler(), __errRT*(), hb_errLaunch*(), hb_err*Flags(), hb_errRT*())
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (rewritten in C ERROR class and all hb_errGet*() and hb_errPut*() functions)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,32 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    DosError()
- *    __errInHandler()
- *    __errRT_BASE()
- *    __errRT_SBASE()
- *    hb_errLaunch()
- *    hb_errLaunchSubst()
- *    hb_errGetFlags()
- *    hb_errPutFlags()
- *    hb_errRT_New()
- *    hb_errRT_New_Subst()
- *    hb_errRT_BASE()
- *    hb_errRT_BASE_Ext1()
- *    hb_errRT_BASE_Subst()
- *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    rewritten in C ERROR class and all hb_errGet*() and hb_errPut*()
- *    functions
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -560,7 +536,7 @@ HB_USHORT hb_errLaunch( PHB_ITEM pError )
       if( pErrData->errorHandler )
       {
          /* there is a low-level error handler defined - use it instead
-          * of normal Harbour-level one
+          * of normal Harbour level one
           */
          pErrData->errorHandler->Error = pError;
          pErrData->errorHandler->ErrorBlock = pErrData->errorBlock;
@@ -654,7 +630,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       if( pErrData->errorHandler )
       {
          /* there is a low-level error handler defined - use it instead
-          * of normal Harbour-level one
+          * of normal Harbour level one
           */
          pErrData->errorHandler->Error = pError;
          pErrData->errorHandler->ErrorBlock = pErrData->errorBlock;
@@ -1048,7 +1024,7 @@ HB_USHORT hb_errRT_BASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const cha
    HB_ULONG ulArgPos;
 
    /* I replaced EF_CANRETRY with EF_NONE for Clipper compatibility
-    * If it's wrong and I missed sth please fix me, Druzus.
+    * If it's wrong and I missed something please fix me, Druzus.
     */
    pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE /* EF_CANRETRY */ );
 

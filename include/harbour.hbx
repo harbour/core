@@ -700,6 +700,7 @@ DYNAMIC hb_MSecToT
 DYNAMIC hb_mtvm
 DYNAMIC hb_mutexCreate
 DYNAMIC hb_mutexEval
+DYNAMIC hb_mutexExists
 DYNAMIC hb_mutexLock
 DYNAMIC hb_mutexNotify
 DYNAMIC hb_mutexNotifyAll
@@ -859,6 +860,7 @@ DYNAMIC hb_StrToUTF8
 DYNAMIC hb_StrXor
 DYNAMIC hb_threadDetach
 DYNAMIC hb_threadID
+DYNAMIC hb_threadIsMain
 DYNAMIC hb_threadJoin
 DYNAMIC hb_threadOnce
 DYNAMIC hb_threadOnceInit

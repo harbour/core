@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -512,7 +512,7 @@ PROCEDURE Main_TRANS()
    HBTEST Transform( .T., "@RZ ABCDEFGHIJKLMNOPQRSTUVWXYZ9#!$ *.," ) IS "                                  "
    HBTEST Transform( .F., "@RZ ABCDEFGHIJKLMNOPQRSTUVWXYZ9#!$ *.," ) IS "                                  "
 
-   SET DATE FORMAT TO "MM/DD/YY"
+   Set( _SET_DATEFORMAT, "MM/DD/YY" )
 
    HBTEST Transform( "abcd", "@9!*" )                   IS "ABCD"
    HBTEST Transform( "abcd", "@_9!*" )                  IS "ABCD"
@@ -540,30 +540,30 @@ PROCEDURE Main_TRANS()
    HBTEST Transform(             0, "@C 9.99" )         IS "0.00"
 
    dt := hb_SToD( "19871231" )
-   SET DATE FORMAT TO "MM:DD:YYYY"
+   Set( _SET_DATEFORMAT, "MM:DD:YYYY" )
    HBTEST Transform( dt, "@E" )       IS "31:12:1987"
-   SET DATE FORMAT TO "MM:DD:YY"
+   Set( _SET_DATEFORMAT, "MM:DD:YY" )
    HBTEST Transform( dt, "@E" )       IS "31:12:87"
-   SET DATE FORMAT TO "MM<DD>YY"
+   Set( _SET_DATEFORMAT, "MM<DD>YY" )
    HBTEST Transform( dt, "@E" )       IS "31<12>87"
 #ifdef __HARBOUR__
    /* this are wrongly converted by CA-Cl*pper */
-   SET DATE FORMAT TO "DD:MM:YYYY"
+   Set( _SET_DATEFORMAT, "DD:MM:YYYY" )
    HBTEST Transform( dt, "@E" )       IS "31:12:1987"
-   SET DATE FORMAT TO "YYYY:MM:DD"
+   Set( _SET_DATEFORMAT, "YYYY:MM:DD" )
    HBTEST Transform( dt, "@E" )       IS "31:12:1987"
-   SET DATE FORMAT TO "YYYY:DD:MM"
+   Set( _SET_DATEFORMAT, "YYYY:DD:MM" )
    HBTEST Transform( dt, "@E" )       IS "31:12:1987"
-   SET DATE FORMAT TO "YY:MM:DD"
+   Set( _SET_DATEFORMAT, "YY:MM:DD" )
    HBTEST Transform( dt, "@E" )       IS "31:12:87"
-   SET DATE FORMAT TO "DD:MM:YY"
+   Set( _SET_DATEFORMAT, "DD:MM:YY" )
    HBTEST Transform( dt, "@E" )       IS "31:12:87"
-   SET DATE FORMAT TO "<YY:DD.MM>"
+   Set( _SET_DATEFORMAT, "<YY:DD.MM>" )
    HBTEST Transform( dt, "@E" )       IS "<31:12.87>"
-   SET DATE FORMAT TO "|YY|MM|DD|"
+   Set( _SET_DATEFORMAT, "|YY|MM|DD|" )
    HBTEST Transform( dt, "@E" )       IS "|31|12|87|"
 #endif
-   SET DATE FORMAT TO "MM.DD.YYYY"
+   Set( _SET_DATEFORMAT, "MM.DD.YYYY" )
    HBTEST Transform( dt, "@E" )       IS "31.12.1987"
 
    HBTEST Transform(            -5, "@(Z $###,##9.99" )  IS "(      5.00)"
@@ -697,7 +697,7 @@ PROCEDURE Main_TRANS()
    HBTEST Transform( "abcdefghij", "@S0! <XXXXXXXX>"  ) IS "<BCDEFGHI>"
    HBTEST Transform( "abcdefghij", "@S5! <XXXXXXXX>"  ) IS "<BCDE"
 
-   SET FIXED ON
+   Set( _SET_FIXED, .T. )
 
    HBTEST Transform(              1234,        ) IS "            1234"
    HBTEST Transform(              1234, ""     ) IS "            1234"
@@ -728,20 +728,20 @@ PROCEDURE Main_TRANS()
    HBTEST Transform(       Val( "12" ),        ) IS "      12"
    HBTEST Transform(      Val( "123" ),        ) IS "      123"
    HBTEST Transform(     Val( "1234" ),        ) IS "      1234"
-   SET DECIMAL TO 3
+   Set( _SET_DECIMALS, 3 )
    HBTEST Transform(               0.0,        ) IS "         0.000"
    HBTEST Transform(        Val( "1" ),        ) IS "        1"
    HBTEST Transform(       Val( "12" ),        ) IS "        12"
    HBTEST Transform(      Val( "123" ),        ) IS "        123"
    HBTEST Transform(     Val( "1234" ),        ) IS "        1234"
-   SET DECIMAL TO 4
+   Set( _SET_DECIMALS, 4 )
    HBTEST Transform(               0.0,        ) IS "         0.0000"
    HBTEST Transform(        Val( "1" ),        ) IS "          1"
    HBTEST Transform(       Val( "12" ),        ) IS "          12"
    HBTEST Transform(      Val( "123" ),        ) IS "          123"
    HBTEST Transform(     Val( "1234" ),        ) IS "          1234"
 
-   SET FIXED OFF
+   Set( _SET_FIXED, .F. )
 
    HBTEST Transform(             -1234,        ) IS "     -1234"
    HBTEST Transform(             -1234, "@B"   ) IS "-1234     "

@@ -102,7 +102,7 @@ endif
 # ORIGIN http://www.ijg.org/
 # VER    9a
 # URL    http://www.ijg.org/files/jpegsrc.v9a.tar.gz
-# DIFF   jpeg.dif
+# DIFF   jpeg.diff
 #
 # MAP    README
 # MAP    cderror.h

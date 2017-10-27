@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -68,12 +68,11 @@
 void hb_put_ieee754( HB_BYTE * ptr, double d )
 {
    int iExp, iSig;
-   double df;
 
 #if defined( HB_LONG_LONG_OFF )
    HB_U32 l1, l2;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_put_ieee754(%p, %f)", ptr, d ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_put_ieee754(%p, %f)", ( void * ) ptr, d ) );
 
    iSig = d < 0 ? 1 : 0;
    if( d == 0.0 )
@@ -82,7 +81,7 @@ void hb_put_ieee754( HB_BYTE * ptr, double d )
    }
    else
    {
-      df = frexp( iSig ? -d : d, &iExp );
+      double df = frexp( iSig ? -d : d, &iExp );
       l1 = ( HB_U32 ) ldexp( df, HB_MANTISSA_BITS + 1 );
       l2 = ( HB_U32 ) ldexp( df, HB_MANTISSA_BITS + 1 - 32 ) &
                          ( ( ( HB_U32 ) 1 << ( HB_MANTISSA_BITS - 32 ) ) - 1 );
@@ -95,7 +94,7 @@ void hb_put_ieee754( HB_BYTE * ptr, double d )
 #else
    HB_U64 ll;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_put_ieee754(%p, %f)", ptr, d ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_put_ieee754(%p, %f)", ( void * ) ptr, d ) );
 
    iSig = d < 0 ? 1 : 0;
    if( d == 0.0 )
@@ -104,7 +103,7 @@ void hb_put_ieee754( HB_BYTE * ptr, double d )
    }
    else
    {
-      df = frexp( iSig ? -d : d, &iExp );
+      double df = frexp( iSig ? -d : d, &iExp );
       ll = ( HB_U64 ) ldexp( df, HB_MANTISSA_BITS + 1 ) & HB_MANTISSA_MASK;
       ll |= ( HB_U64 ) ( ( iExp + HB_EXPONENT_ADD - 1 ) & HB_EXPONENT_MASK ) <<
                        HB_MANTISSA_BITS;
@@ -122,7 +121,7 @@ double hb_get_ieee754( const HB_BYTE * ptr )
    HB_U32 l1, l2;
    double d;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_get_ieee754(%p)", ptr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_get_ieee754(%p)", ( const void * ) ptr ) );
 
    l1 = HB_GET_LE_UINT32( ptr );
    l2 = HB_GET_LE_UINT32( ptr + 4 );
@@ -138,7 +137,7 @@ double hb_get_ieee754( const HB_BYTE * ptr )
 #else
    HB_U64 ll;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_get_ieee754(%p)", ptr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_get_ieee754(%p)", ( const void * ) ptr ) );
 
    ll = HB_GET_LE_UINT64( ptr );
    iSig = ( int ) ( ll >> ( HB_MANTISSA_BITS + HB_EXPONENT_BITS ) ) & 1;
@@ -158,10 +157,9 @@ double hb_get_ieee754( const HB_BYTE * ptr )
 void hb_put_ord_ieee754( HB_BYTE * ptr, double d )
 {
    int iExp, iSig;
-   double df;
    HB_U32 l1, l2;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_put_ord_ieee754(%p, %f)", ptr, d ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_put_ord_ieee754(%p, %f)", ( void * ) ptr, d ) );
 
    iSig = d < 0 ? 1 : 0;
    if( d == 0.0 )
@@ -170,7 +168,7 @@ void hb_put_ord_ieee754( HB_BYTE * ptr, double d )
    }
    else
    {
-      df = frexp( iSig ? -d : d, &iExp );
+      double df = frexp( iSig ? -d : d, &iExp );
       l1 = ( HB_U32 ) ldexp( df, HB_MANTISSA_BITS + 1 );
       l2 = ( HB_U32 ) ldexp( df, HB_MANTISSA_BITS + 1 - 32 ) &
                          ( ( ( HB_U32 ) 1 << ( HB_MANTISSA_BITS - 32 ) ) - 1 );
@@ -196,7 +194,7 @@ double hb_get_ord_ieee754( const HB_BYTE * ptr )
    HB_U32 l1, l2;
    double d;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_get_ord_ieee754(%p)", ptr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_get_ord_ieee754(%p)", ( const void * ) ptr ) );
 
    l1 = HB_GET_BE_UINT32( ptr + 4 );
    l2 = HB_GET_BE_UINT32( ptr );
@@ -218,12 +216,12 @@ double hb_get_ord_ieee754( const HB_BYTE * ptr )
 
 /*
  * I added function hb_get_rev_double() and hb_get_std_double() because
- * some compilers does not like constraction used by in HB_GET_LE_DOUBLE
+ * some compilers does not like construction used by in HB_GET_LE_DOUBLE()
  * macro => d = { ... }
  */
 double hb_get_rev_double( const HB_BYTE * ptr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_get_rev_double(%p)", ptr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_get_rev_double(%p)", ( const void * ) ptr ) );
 
    {
 #if defined( __GNUC__ )
@@ -251,7 +249,7 @@ double hb_get_rev_double( const HB_BYTE * ptr )
 
 double hb_get_std_double( const HB_BYTE * ptr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_get_std_double(%p)", ptr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_get_std_double(%p)", ( const void * ) ptr ) );
 
    {
 #if defined( __GNUC__ )
@@ -289,7 +287,7 @@ double hb_get_le_uint64( const HB_BYTE * ptr )
 {
    HB_U32 l1, l2;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_get_le_uint64(%p)", ptr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_get_le_uint64(%p)", ( const void * ) ptr ) );
 
    l1 = HB_GET_LE_UINT32( ptr );
    l2 = HB_GET_LE_UINT32( ptr + 4 );
@@ -301,7 +299,7 @@ double hb_get_le_int64( const HB_BYTE * ptr )
    HB_U32 l1;
    HB_I32 l2;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_get_le_int64(%p)", ptr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_get_le_int64(%p)", ( const void * ) ptr ) );
 
    l1 = HB_GET_LE_UINT32( ptr );
    l2 = HB_GET_LE_INT32( ptr + 4 );
@@ -312,7 +310,7 @@ void hb_put_le_uint64( const HB_BYTE * ptr, double d )
 {
    HB_U32 l1, l2;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_put_le_uint64(%p)", ptr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_put_le_uint64(%p)", ( const void * ) ptr ) );
 
    l1 = ( HB_U32 ) ( d );
    l2 = ( HB_U32 ) ( d / 4294967296.0 );

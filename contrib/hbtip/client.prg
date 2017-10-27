@@ -19,9 +19,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -70,7 +70,7 @@ CREATE CLASS TIPClient
    CLASS VAR bInitSocks  INIT .F.
    CLASS VAR cCRLF       INIT tip_CRLF()
 
-   VAR oUrl                      /* url to wich to connect */
+   VAR oUrl                      /* URL to which to connect */
    VAR oCredentials              /* credential needed to access the service */
    VAR nStatus           INIT 0  /* basic status */
    VAR SocketCon
@@ -113,7 +113,7 @@ CREATE CLASS TIPClient
    VAR cProxyPassword
    VAR lProxyXferSSL     INIT .F.  /* SSL should only be enabled after proxy connection
                                       NOTE: I've only checked HTTP POST / GET, unsure if
-                                      there are other funtions with this issue. */
+                                      there are other functions with this issue. */
 
    METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl )
@@ -411,7 +411,7 @@ METHOD Read( nLen ) CLASS TIPClient
             IMO the proper fix would have been done to hb_inetRecvAll(). [vszakats] */
          ::nLastRead := ::inetRecvAll( ::SocketCon, @cStr0, nLen )
       ELSE
-         // S.R. if len of file is less than RCV_BUF_SIZE hb_inetRecvAll return 0
+         // S.R. if length of file is less than RCV_BUF_SIZE hb_inetRecvAll() returns 0
          //      ::nLastRead := ::InetRecvAll( ::SocketCon, @cStr0, nLen )
          ::inetRecvAll( ::SocketCon, @cStr0, nLen )
          ::nLastRead := ::inetCount( ::SocketCon )

@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,7 +51,7 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-/* hb_UChar( <nCode> ) -> <cText>
+/* hb_UChar( <nCode> ) --> <cText>
  * return string with U+nCode character in HVM CP encoding
  */
 HB_FUNC( HB_UCHAR )
@@ -69,7 +69,7 @@ HB_FUNC( HB_UCHAR )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_BChar( <nCode> ) -> <cText>
+/* hb_BChar( <nCode> ) --> <cText>
  * return 1 byte string with <nCode> value
  */
 HB_FUNC( HB_BCHAR )
@@ -84,8 +84,8 @@ HB_FUNC( HB_BCHAR )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_UCode( <cText> ) -> <nCode>
- * return unicode value of 1-st character (not byte) in given string
+/* hb_UCode( <cText> ) --> <nCode>
+ * return unicode value of 1st character (not byte) in given string
  */
 HB_FUNC( HB_UCODE )
 {
@@ -98,8 +98,8 @@ HB_FUNC( HB_UCODE )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_BCode( <cText> ) -> <nCode>
- * return value of 1-st byte in given string
+/* hb_BCode( <cText> ) --> <nCode>
+ * return value of 1st byte in given string
  */
 HB_FUNC( HB_BCODE )
 {
@@ -111,7 +111,7 @@ HB_FUNC( HB_BCODE )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_ULen( <cText> ) -> <nChars>
+/* hb_ULen( <cText> ) --> <nChars>
  * return string length in characters
  */
 HB_FUNC( HB_ULEN )
@@ -125,7 +125,7 @@ HB_FUNC( HB_ULEN )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_BLen( <cText> ) -> <nBytes>
+/* hb_BLen( <cText> ) --> <nBytes>
  * return string length in bytes
  */
 HB_FUNC( HB_BLEN )
@@ -138,8 +138,8 @@ HB_FUNC( HB_BLEN )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_UPeek( <cText>, <n> ) -> <nCode>
- * return unicode value of <n>-th character in given string
+/* hb_UPeek( <cText>, <n> ) --> <nCode>
+ * return unicode value of <n>th character in given string
  */
 HB_FUNC( HB_UPEEK )
 {
@@ -167,8 +167,8 @@ HB_FUNC( HB_UPEEK )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_BPeek( <cText>, <n> ) -> <nCode>
- * return value of <n>-th byte in given string
+/* hb_BPeek( <cText>, <n> ) --> <nCode>
+ * return value of <n>th byte in given string
  */
 HB_FUNC( HB_BPEEK )
 {
@@ -185,8 +185,8 @@ HB_FUNC( HB_BPEEK )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_UPoke( [@]<cText>, <n>, <nVal> ) -> <cText>
- * change <n>-th character in given string to unicode <nVal> one and return modified text
+/* hb_UPoke( [@]<cText>, <n>, <nVal> ) --> <cText>
+ * change <n>th character in given string to unicode <nVal> one and return modified text
  */
 HB_FUNC( HB_UPOKE )
 {
@@ -237,8 +237,8 @@ HB_FUNC( HB_UPOKE )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_BPoke( [@]<cText>, <n>, <nVal> ) -> <cText>
- * change <n>-th byte in given string to <nVal> and return modified text
+/* hb_BPoke( [@]<cText>, <n>, <nVal> ) --> <cText>
+ * change <n>th byte in given string to <nVal> and return modified text
  */
 HB_FUNC( HB_BPOKE )
 {
@@ -260,7 +260,7 @@ HB_FUNC( HB_BPOKE )
       hb_errRT_BASE_SubstR( EG_ARG, 1111, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_USubStr( <cString>, <nStart>, <nCount> ) -> <cSubstring>
+/* hb_USubStr( <cString>, <nStart>, <nCount> ) --> <cSubstring>
  */
 HB_FUNC( HB_USUBSTR )
 {
@@ -308,7 +308,7 @@ HB_FUNC( HB_USUBSTR )
       hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_BSubStr( <cString>, <nStart>, <nCount> ) -> <cSubstring>
+/* hb_BSubStr( <cString>, <nStart>, <nCount> ) --> <cSubstring>
  */
 HB_FUNC( HB_BSUBSTR )
 {
@@ -354,7 +354,7 @@ HB_FUNC( HB_BSUBSTR )
       hb_errRT_BASE_SubstR( EG_ARG, 1110, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_ULeft( <cString>, <nCount> ) -> <cSubstring>
+/* hb_ULeft( <cString>, <nCount> ) --> <cSubstring>
  */
 HB_FUNC( HB_ULEFT )
 {
@@ -380,7 +380,7 @@ HB_FUNC( HB_ULEFT )
       hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_BLeft( <cString>, <nCount> ) -> <cSubstring>
+/* hb_BLeft( <cString>, <nCount> ) --> <cSubstring>
  */
 HB_FUNC( HB_BLEFT )
 {
@@ -404,7 +404,7 @@ HB_FUNC( HB_BLEFT )
       hb_errRT_BASE_SubstR( EG_ARG, 1124, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_URight( <cString>, <nCount> ) -> <cSubstring>
+/* hb_URight( <cString>, <nCount> ) --> <cSubstring>
  */
 HB_FUNC( HB_URIGHT )
 {
@@ -432,7 +432,7 @@ HB_FUNC( HB_URIGHT )
       hb_retc_null();
 }
 
-/* hb_BRight( <cString>, <nCount> ) -> <cSubstring>
+/* hb_BRight( <cString>, <nCount> ) --> <cSubstring>
  */
 HB_FUNC( HB_BRIGHT )
 {
@@ -452,7 +452,7 @@ HB_FUNC( HB_BRIGHT )
 }
 
 
-/* hb_UAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+/* hb_UAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) --> <nAt>
  */
 HB_FUNC( HB_UAT )
 {
@@ -465,7 +465,7 @@ HB_FUNC( HB_UAT )
       const char * pszText = hb_itemGetCPtr( pText );
       HB_SIZE nTextLength = hb_itemGetCLen( pText );
       HB_SIZE nStart = hb_parns( 3 );
-      HB_SIZE nFrom, nTo, nPos = 0;
+      HB_SIZE nFrom, nPos = 0;
 
       if( nStart <= 1 )
          nStart = nFrom = 0;
@@ -474,6 +474,8 @@ HB_FUNC( HB_UAT )
 
       if( nFrom < nTextLength )
       {
+         HB_SIZE nTo;
+
          pszText += nFrom;
          nTextLength -= nFrom;
          if( HB_ISNUM( 4 ) )
@@ -506,7 +508,7 @@ HB_FUNC( HB_UAT )
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_BAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+/* hb_BAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) --> <nAt>
  */
 HB_FUNC( HB_BAT )
 {
@@ -518,7 +520,7 @@ HB_FUNC( HB_BAT )
       const char * pszText = hb_itemGetCPtr( pText );
       HB_SIZE nTextLength = hb_itemGetCLen( pText );
       HB_SIZE nStart = hb_parns( 3 );
-      HB_SIZE nFrom, nTo, nPos = 0;
+      HB_SIZE nFrom, nPos = 0;
 
       if( nStart <= 1 )
          nStart = nFrom = 0;
@@ -527,6 +529,8 @@ HB_FUNC( HB_BAT )
 
       if( nFrom < nTextLength )
       {
+         HB_SIZE nTo;
+
          pszText += nFrom;
          nTextLength -= nFrom;
          if( HB_ISNUM( 4 ) )
@@ -558,7 +562,7 @@ HB_FUNC( HB_BAT )
       hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* hb_BRAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+/* hb_BRAt( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) --> <nAt>
  */
 HB_FUNC( HB_BRAT )
 {
@@ -612,7 +616,7 @@ HB_FUNC( HB_BRAT )
    hb_retns( nPos );
 }
 
-/* hb_BStuff( <cString>, <nAt>, <nDel>, <cIns> ) -> <cResult>
+/* hb_BStuff( <cString>, <nAt>, <nDel>, <cIns> ) --> <cResult>
  */
 HB_FUNC( HB_BSTUFF )
 {
@@ -657,7 +661,7 @@ HB_FUNC( HB_BSTUFF )
       hb_retc_null();
 }
 
-/* hb_UStuff( <cString>, <nAt>, <nDel>, <cIns> ) -> <cResult>
+/* hb_UStuff( <cString>, <nAt>, <nDel>, <cIns> ) --> <cResult>
  */
 HB_FUNC( HB_USTUFF )
 {
@@ -703,5 +707,3 @@ HB_FUNC( HB_USTUFF )
    else
       hb_retc_null();
 }
-
-/* TODO: PadR(), PadC(), PadL() */

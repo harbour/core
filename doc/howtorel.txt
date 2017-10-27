@@ -8,13 +8,13 @@ By Przemyslaw Czerpak (druzus/at/priv.onet.pl)
    with the above unused empty directories will be removed
    from your repository copy.
    Please check if all your files are unmodified. You can redirect
-   stdout output from cvs command to a file to see if all files are
+   STDOUT output from cvs command to a file to see if all files are
    exactly the same.
-2. Update files which contain harbour release number. Now these are:
+2. Update files which contain Harbour release number. Now these are:
     harbour.spec
     include/hbver.h
 3. Set proper release date in NEWS (found as doc/oldnews.txt) and
-   if necessary update release informations. Also add the exact
+   if necessary update release information. Also add the exact
    tag name to this file, for example "tag: build46".
 4. Update ChangeLog.txt and commit your modifications.
 5. Update hbver.h with ChangeLog.txt file ID and your last entry ID.

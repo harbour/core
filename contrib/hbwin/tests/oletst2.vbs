@@ -1,8 +1,4 @@
-'
 ' Copyright 2010 Viktor Szakats (vszakats.net/harbour)
-'
-' See COPYING.txt for licensing terms.
-'
 
 Dim tst2 : Set tst2 = WScript.CreateObject("MyOleTimeServer")
 

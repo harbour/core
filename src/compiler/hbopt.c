@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -473,7 +473,6 @@ static HB_OPT_FUNC( hb_p_jumpfar )
    HB_BYTE * pAddr = &pFunc->pCode[ nPCodePos + 1 ];
    HB_ISIZ nOffset = HB_PCODE_MKINT24( pAddr );
    HB_SIZE nNewPos = nPCodePos + nOffset;
-   HB_BOOL fLine = HB_FALSE;
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -483,12 +482,15 @@ static HB_OPT_FUNC( hb_p_jumpfar )
    }
    else
    {
+      HB_BOOL fLine = HB_FALSE;
+
       if( pFunc->pCode[ nNewPos ] == HB_P_LINE )
       {
          fLine = HB_TRUE;
          nNewPos += 3;
          nOffset += 3;
       }
+
       switch( pFunc->pCode[ nNewPos ] )
       {
          case HB_P_JUMPFAR:
@@ -964,7 +966,7 @@ static HB_BOOL hb_compIsUncondJump( HB_BYTE bPCode )
    return bPCode == HB_P_JUMPNEAR ||
           bPCode == HB_P_JUMP ||
           bPCode == HB_P_JUMPFAR;
-/*   || bPCode == HB_P_SEQEND;
+/*     || bPCode == HB_P_SEQEND;
    BEGIN SEQUENCE/END SEQUENCE logic could not be processed using conditional/unconditional
    jumps. I set HB_P_SEQEND as conditional jump though this PCode instruction is processed
    as unconditional jump by Harbour VM. This hack solves 'Variable is assigned but not used'
@@ -1179,7 +1181,7 @@ static void hb_compPCodeEnumScanLocals( PHB_HFUNC pFunc, PHB_OPT_LOCAL pLocals )
          case HB_P_PUSHBLOCKLARGE:
          {
             HB_BYTE * pCode = &pFunc->pCode[ nPos + 5 ];
-            HB_USHORT usVarCount, usVar;
+            HB_USHORT usVarCount;
 
             if( pFunc->pCode[ nPos ] == HB_P_PUSHBLOCKLARGE )
                pCode++;
@@ -1187,6 +1189,7 @@ static void hb_compPCodeEnumScanLocals( PHB_HFUNC pFunc, PHB_OPT_LOCAL pLocals )
             usVarCount = HB_PCODE_MKUSHORT( pCode );
             while( usVarCount-- )
             {
+               HB_USHORT usVar;
                pCode += 2;
                usVar = HB_PCODE_MKUSHORT( pCode );
                if( usVar > 0 )
@@ -1339,7 +1342,7 @@ static int hb_compPCodeTraceAssignedUnused( PHB_HFUNC pFunc, HB_SIZE nPos, HB_BY
          if( hb_compPCodeTraceAssignedUnused( pFunc, nPos2, pMap, isLocal, fCanBreak ) )
             return 1;
       }
-      else if( pFunc->pCode[ nPos ] == HB_P_SWITCH ) /* Switch is multiplace jump */
+      else if( pFunc->pCode[ nPos ] == HB_P_SWITCH ) /* Switch is multi-place jump */
       {
          HB_USHORT us, usCount = HB_PCODE_MKUSHORT( pFunc->pCode + nPos + 1 );
 
@@ -1368,13 +1371,13 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PHB_HFUNC pFunc, PHB_O
 {
    HB_BYTE * pMap;
    HB_SIZE nPos = 0, nLastPos = 0;
-   HB_SHORT isLocal;
    HB_USHORT usLine = 0;
 
    pMap = ( HB_BYTE * ) hb_xgrab( pFunc->nPCodePos );
 
    while( nPos < pFunc->nPCodePos )
    {
+      HB_SHORT isLocal;
       int iCheck = 0;
 
       if( pFunc->pCode[ nPos ] == HB_P_POPLOCAL ||
@@ -1472,8 +1475,8 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PHB_HFUNC pFunc, PHB_O
             {
                char szFun[ 256 ];
 
-               /* TOFIX: We calculate line number by simple tracking last HB_P_LINE,
-                  but it can work bad, if line number optimizator is clever enough.
+               /* FIXME: We calculate line number by simple tracking last HB_P_LINE,
+                  but it can work bad, if line number optimizer is clever enough.
                   To obtain real line number we need one more tree scan or other
                   algorithm. [Mindaugas] */
 
@@ -1560,7 +1563,6 @@ static void hb_compPCodeEnumRenumberLocals( PHB_HFUNC pFunc, PHB_OPT_LOCAL pLoca
          {
             HB_BYTE * pVar = &pFunc->pCode[ nPos + 5 ];
             HB_USHORT usVarCount;
-            HB_SHORT isVar;
 
             if( pFunc->pCode[ nPos ] == HB_P_PUSHBLOCKLARGE )
                pVar++;
@@ -1568,6 +1570,8 @@ static void hb_compPCodeEnumRenumberLocals( PHB_HFUNC pFunc, PHB_OPT_LOCAL pLoca
             usVarCount = HB_PCODE_MKUSHORT( pVar );
             while( usVarCount-- )
             {
+               HB_SHORT isVar;
+
                pVar += 2;
                isVar = HB_PCODE_MKSHORT( pVar );
 
@@ -1575,7 +1579,7 @@ static void hb_compPCodeEnumRenumberLocals( PHB_HFUNC pFunc, PHB_OPT_LOCAL pLoca
                {
                   isVar = pLocals[ isVar - 1 ].isNumber;
 
-                  assert( isVar > 0 );  /*  We do not allow removal of detached locals */
+                  assert( isVar > 0 );  /* We do not allow removal of detached locals */
 
                   pVar[ 0 ] = HB_LOBYTE( isVar );
                   pVar[ 1 ] = HB_HIBYTE( isVar );
@@ -1593,11 +1597,10 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
 {
    PHB_HFUNC     pFunc = HB_COMP_PARAM->functions.pLast;
    PHB_OPT_LOCAL pLocals;
-   PHB_HVAR      pVar, * ppVar;
+   PHB_HVAR      pVar;
    HB_USHORT     usLocalCount, usIndex;
-   HB_BOOL       fBool;
 
-   /* Many (perhaps ALL) functions of pcode trace optimization dependes on pcodes.
+   /* Many (perhaps ALL) functions of pcode trace optimization depends on pcodes.
       Please, check these functions if new pcode is added, or existing changed.
       Special attention should be paid, if new pcode introduces branching, codeblocks,
       or are related to parameters, local variables. [Mindaugas] */
@@ -1615,8 +1618,8 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    if( ! usLocalCount )
       return;
 
-   /* TOFIX: Support for PARAMETER sentence is not implemented.
-             The temporary solution is to disable optmisation at all if PARAMETER is used.  */
+   /* FIXME: Support for PARAMETER sentence is not implemented.
+             The temporary solution is to disable optimization at all if PARAMETER is used.  */
    {
       HB_SIZE nPos = 0;
 
@@ -1646,7 +1649,7 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
        *       if .F.
        *          x := 1
        *       endif
-       *    return
+       *       return
        * [druzus]
        */
 #if 0
@@ -1681,7 +1684,9 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
          if( pLocals[ usIndex ].bFlags == ( OPT_LOCAL_FLAG_PUSH | OPT_LOCAL_FLAG_POPSELF ) ||
              pLocals[ usIndex ].bFlags == OPT_LOCAL_FLAG_POPSELF )
          {
-            /* printf( "Info: %s(%d) selfifying variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName ); */
+            #if 0
+            printf( "Info: %s(%d) selfifying variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName );
+            #endif
             hb_compPCodeEnumSelfifyLocal( pFunc, usIndex + 1 );
             pLocals[ usIndex ].bFlags = 0;
          }
@@ -1695,18 +1700,21 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
    /* Delete unused */
    if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) && ! HB_COMP_PARAM->fDebugInfo )
    {
-      fBool = 0;
+      HB_BOOL fBool = HB_FALSE;
+
       for( usIndex = pFunc->wParamCount; usIndex < usLocalCount; usIndex++ )
       {
          if( pLocals[ usIndex ].bFlags == 0 )
          {
-            fBool = 1;
+            fBool = HB_TRUE;
             break;
          }
       }
 
       if( fBool )
       {
+         PHB_HVAR * ppVar;
+
          usIndex = usLocalCount = 0;
          ppVar = & pFunc->pLocals;
          pVar = pFunc->pLocals;
@@ -1720,7 +1728,9 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
             }
             else
             {
-               /* printf( "Info: %s(%d) removing unused variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName ); */
+               #if 0
+               printf( "Info: %s(%d) removing unused variable '%s'\n", pFunc->szName, pVar->iDeclLine, pVar->szName );
+               #endif
 
                /* Delete pVar from the linked list */
                *ppVar = pVar->pNext;

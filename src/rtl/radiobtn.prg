@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,7 +62,7 @@ CREATE CLASS RadioButtn FUNCTION HBRadioButton
 
    EXPORTED:
 
-   VAR cargo                                 /* NOTE: CA-Cl*pper 5.3 has a bug, where this var is filled with NIL everytime its value is read ( cargo := o:cargo ). */
+   VAR cargo                                 /* NOTE: CA-Cl*pper 5.3 has a bug, where this var is filled with NIL every time its value is read ( cargo := o:cargo ). */
 
    METHOD display()
    METHOD hitTest( nMRow, nMCol )
@@ -85,7 +85,7 @@ CREATE CLASS RadioButtn FUNCTION HBRadioButton
    METHOD sBlock( bSBlock ) SETGET
    METHOD style( cStyle ) SETGET
 
-   METHOD New( nRow, nCol, cCaption, cData ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( nRow, nCol, cCaption, cData )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -184,13 +184,14 @@ METHOD isAccel( xKey ) CLASS RadioButtn
 
    LOCAL cKey
 
-   IF HB_ISSTRING( xKey )
+   DO CASE
+   CASE HB_ISSTRING( xKey )
       cKey := xKey
-   ELSEIF HB_ISNUMERIC( xKey )
+   CASE HB_ISNUMERIC( xKey )
       cKey := hb_keyChar( xKey )
-   ELSE
+   OTHERWISE
       RETURN .F.
-   ENDIF
+   ENDCASE
 
    RETURN Len( cKey ) > 0 .AND. hb_AtI( "&" + cKey, ::cCaption ) > 0
 
@@ -328,7 +329,7 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RadioButtn
    ::cCaption := hb_defaultValue( cCaption, "" )
    ::nCol     := nCol
    ::nRow     := nRow
-   ::cData    := cData /* NOTE: Every type is allowed here to be fully compatible */
+   ::cData    := cData  /* NOTE: Every type is allowed here to be fully compatible */
 
    IF IsDefColor()
       ::cColorSpec := "W/N,W+/N,W+/N,N/W,W/N,W/N,W+/N"

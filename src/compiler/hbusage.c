@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,9 +46,6 @@
 
 #include "hbcomp.h"
 
-/*
- * Prints available options
- */
 void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
 {
    static const char * s_szOptions[] =
@@ -115,9 +112,7 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
       hb_compOutStd( HB_COMP_PARAM, s_szOptions[ iLine ] );
 }
 
-/*
- * List of compatibility/features modes
- */
+/* List of compatibility/features modes */
 void hb_compPrintModes( HB_COMP_DECL )
 {
    static const char * s_szOptions[] =
@@ -165,15 +160,12 @@ void hb_compPrintModes( HB_COMP_DECL )
    }
 }
 
-/*
- * Prints credits
- */
 void hb_compPrintCredits( HB_COMP_DECL )
 {
    hb_compOutStd( HB_COMP_PARAM,
          "\n"
-         "Credits:  The Harbour Team at harbour-project.org\n"
-         "          (replace space with @ in e-mail addresses)\n"
+         "Credits:  The Harbour Team\n"
+         "          (replace space with @ in email addresses)\n"
          "\n"
          "Alejandro de Garate (alex_degarate hotmail com)\n"
          "Aleksander Czajczynski <hb fki.pl>\n"
@@ -264,15 +256,15 @@ void hb_compPrintCredits( HB_COMP_DECL )
       );
 }
 
-/*
- * Prints logo
- */
 void hb_compPrintLogo( HB_COMP_DECL )
 {
    char * szVer = hb_verHarbour();
 
+   #define HB_VER_COMMIT_YEAR  "2016"
+   #define HB_VER_ORIGIN_URL   "http://harbour-project.org/"
+
    hb_compOutStd( HB_COMP_PARAM, szVer );
    hb_compOutStd( HB_COMP_PARAM,
-                  "\nCopyright (c) 1999-2016, http://harbour-project.org/\n" );
+      "\nCopyright (c) 1999-" HB_VER_COMMIT_YEAR ", " HB_VER_ORIGIN_URL "\n" );
    hb_xfree( szVer );
 }

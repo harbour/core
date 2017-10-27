@@ -2,6 +2,7 @@
  * Editing and Forms Class for HTMLLIB
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,32 +45,16 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbclass.ch"
 #include "cgi.ch"
 
-#define _OPTION_TEXT     1
-#define _OPTION_VALUE    2
-#define _OPTION_LABEL    3
-#define _OPTION_SELECTED 4
-#define _OPTION_DISABLED 5
+#define _OPTION_TEXT      1
+#define _OPTION_VALUE     2
+#define _OPTION_LABEL     3
+#define _OPTION_SELECTED  4
+#define _OPTION_DISABLED  5
 
 STATIC s_oForm
-
-/****
-*
-*     Class THtmlControl()
-*
-*/
 
 CREATE CLASS THtmlControl
 
@@ -122,70 +107,38 @@ CREATE CLASS THtmlControl
    VAR onKeyDown
    VAR onKeyUp
 
-   METHOD SetName( c ) INLINE ::Name := c
-
-   METHOD SetValue( c ) INLINE ::Value := c
-
-   METHOD SetStyle( c ) INLINE ::Style := c
-
-   METHOD SetId( c ) INLINE ::id := c
-
-   METHOD SetRows( c ) INLINE ::Rows := c
-
-   METHOD SetCols( c ) INLINE ::Cols := c
-
-   METHOD SetCaption( c ) INLINE ::Caption := c
-
-   METHOD SetPicture( c ) INLINE ::picture := c
-
-   METHOD SetOnBlur( c ) INLINE ::onBlur := c
-
+   METHOD SetName( c )     INLINE ::Name := c
+   METHOD SetValue( c )    INLINE ::Value := c
+   METHOD SetStyle( c )    INLINE ::Style := c
+   METHOD SetId( c )       INLINE ::id := c
+   METHOD SetRows( c )     INLINE ::Rows := c
+   METHOD SetCols( c )     INLINE ::Cols := c
+   METHOD SetCaption( c )  INLINE ::Caption := c
+   METHOD SetPicture( c )  INLINE ::picture := c
+   METHOD SetOnBlur( c )   INLINE ::onBlur := c
    METHOD SetOnChange( c ) INLINE ::onChange := c
-
-   METHOD SetOnFocus( c ) INLINE ::onFocus := c
-
+   METHOD SetOnFocus( c )  INLINE ::onFocus := c
    METHOD SetOnSelect( c ) INLINE ::onSelect := c
-
-   METHOD SetOnClick( c ) INLINE ::onClick := c
-
+   METHOD SetOnClick( c )  INLINE ::onClick := c
    METHOD SetOnMsOver( c ) INLINE ::onMouseOver := c
-
-   METHOD SetOnMsOut( c ) INLINE ::onMouseOut := c
-
-   METHOD SetSize( n ) INLINE ::Size := n
-
+   METHOD SetOnMsOut( c )  INLINE ::onMouseOut := c
+   METHOD SetSize( n )     INLINE ::Size := n
    METHOD SetMaxChars( n ) INLINE ::MaxChars := n
-
-   METHOD SetChecked( l ) INLINE ::Checked := l
-
-   METHOD SetAlign( c ) INLINE ::Align := c
-
-   METHOD SetWrap( c ) INLINE ::wrap := c
-
-   METHOD SetSource( c ) INLINE ::Source := c
-
+   METHOD SetChecked( l )  INLINE ::Checked := l
+   METHOD SetAlign( c )    INLINE ::Align := c
+   METHOD SetWrap( c )     INLINE ::wrap := c
+   METHOD SetSource( c )   INLINE ::Source := c
    METHOD SetReadOnly( l ) INLINE ::readOnly := l
-
    METHOD SetDisabled( l ) INLINE ::disabled := l
-
    METHOD SetMultiple( l ) INLINE ::multiple := l
-
    METHOD SetOnMsDown( c ) INLINE ::onMouseDown := c
-
-   METHOD SetOnMsUp( c ) INLINE ::onMouseup := c
-
+   METHOD SetOnMsUp( c )   INLINE ::onMouseup := c
    METHOD SetOnKPress( c ) INLINE ::onKeyPress := c
-
-   METHOD SetOnKDown( c ) INLINE ::onKeyDown := c
-
-   METHOD SetOnKUp( c ) INLINE ::onKeyUp := c
-
-   METHOD SetLabel( l ) INLINE ::lLabel := l
-
+   METHOD SetOnKDown( c )  INLINE ::onKeyDown := c
+   METHOD SetOnKUp( c )    INLINE ::onKeyUp := c
+   METHOD SetLabel( l )    INLINE ::lLabel := l
    METHOD Put()
-
    METHOD AddOption( cOption, cValue, cLabel, lSelected, lDisabled )
-
    METHOD SetControl( name, rows, cols, size, maxchars, value, onfocus, ;
       onblur, onchange, onselect, onclick, onmsover, onmsout, ;
       onmsdown, onmsup, onkdown, onkup, onkprs, ;
@@ -193,12 +146,6 @@ CREATE CLASS THtmlControl
       align, wrap, type, Style, ID, lLabel )
 
 ENDCLASS
-
-/****
-*
-*     THtmlControl():Put()
-*
-*/
 
 METHOD Put() CLASS THtmlControl
 

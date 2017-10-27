@@ -1,0 +1,23 @@
+-w3 -es2 -kmo -l
+
+-o${hb_name}
+
+-nulrdd
+
+-gtcgi
+
+hbdoc.prg
+_base.prg
+_html.prg
+_txt.prg
+_xml.prg
+
+# NOTE: hbdoc doesn't work from other locations than
+#       the current one, so we don't install it yet.
+# $hb_pkg_install.hbm
+
+# default -run params useful to update the online docs
+# on the Harbour website
+-runflag=-html
+
+{allgcc}-ldflag=-fno-lto

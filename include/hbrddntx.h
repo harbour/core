@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -77,11 +77,11 @@ HB_EXTERN_BEGIN
 
 #define CTX_MAX_TAGS                 63
 
-#define NTX_MAX_KEY                     256     /* Max len of key */
-#define NTX_MAX_EXP                     256     /* Max len of KEY/FOR expression */
+#define NTX_MAX_KEY                     256     /* Max length of key */
+#define NTX_MAX_EXP                     256     /* Max length of KEY/FOR expression */
 #define NTXBLOCKBITS                     10     /* Size of NTX block in bits */
 #define NTXBLOCKSIZE      (1<<NTXBLOCKBITS)     /* Size of block in NTX file */
-#define NTX_MAX_TAGNAME                  10     /* Max len of tag name */
+#define NTX_MAX_TAGNAME                  10     /* Max length of tag name */
 #define NTX_HDR_UNUSED                  473     /* the unused part of header */
 #define NTX_PAGES_PER_TAG                 8
 #define NTX_STACKSIZE                    32     /* Maximum page stack size */
@@ -92,32 +92,32 @@ HB_EXTERN_BEGIN
 
 typedef struct _NTXHEADER     /* Header of NTX file */
 {
-   HB_BYTE  type[2];
-   HB_BYTE  version[2];
-   HB_BYTE  root[4];
-   HB_BYTE  next_page[4];
-   HB_BYTE  item_size[2];
-   HB_BYTE  key_size[2];
-   HB_BYTE  key_dec[2];
-   HB_BYTE  max_item[2];
-   HB_BYTE  half_page[2];
+   HB_BYTE  type[ 2 ];
+   HB_BYTE  version[ 2 ];
+   HB_BYTE  root[ 4 ];
+   HB_BYTE  next_page[ 4 ];
+   HB_BYTE  item_size[ 2 ];
+   HB_BYTE  key_size[ 2 ];
+   HB_BYTE  key_dec[ 2 ];
+   HB_BYTE  max_item[ 2 ];
+   HB_BYTE  half_page[ 2 ];
    HB_BYTE  key_expr[ NTX_MAX_EXP ];
-   HB_BYTE  unique[1];
-   HB_BYTE  unknown1[1];
-   HB_BYTE  descend[1];
-   HB_BYTE  unknown2[1];
+   HB_BYTE  unique[ 1 ];
+   HB_BYTE  unknown1[ 1 ];
+   HB_BYTE  descend[ 1 ];
+   HB_BYTE  unknown2[ 1 ];
    HB_BYTE  for_expr[ NTX_MAX_EXP ];
    HB_BYTE  tag_name[ NTX_MAX_TAGNAME + 2 ];
-   HB_BYTE  custom[1];
+   HB_BYTE  custom[ 1 ];
    HB_BYTE  unused[ NTX_HDR_UNUSED ];
 } NTXHEADER;
 typedef NTXHEADER * LPNTXHEADER;
 
 typedef struct
 {
-   HB_BYTE  type[2];
-   HB_BYTE  version[2];
-   HB_BYTE  root[4];
+   HB_BYTE  type[ 2 ];
+   HB_BYTE  version[ 2 ];
+   HB_BYTE  root[ 4 ];
 } NTXHEADERUPDT;
 
 typedef struct _CTXTAGITEM    /* TAG item in compound NTX (CTX) header */
@@ -308,13 +308,13 @@ typedef struct
    HB_BOOL    fReindex;       /* HB_TRUE if reindexing is in process */
    HB_ULONG   ulMaxRec;       /* the highest record number */
    HB_ULONG   ulTotKeys;      /* total number of keys indexed */
-   HB_ULONG   ulKeys;         /* keys in curently created page */
+   HB_ULONG   ulKeys;         /* keys in currently created page */
    HB_ULONG   ulPages;        /* number of pages */
    HB_ULONG   ulCurPage;      /* current page */
    HB_ULONG   ulPgKeys;       /* maximum number of key in page memory buffer */
    HB_ULONG   ulMaxKey;       /* maximum number of keys in single page */
    HB_BYTE *  pKeyPool;       /* memory buffer for current page then for pages */
-   HB_BYTE *  pStartKey;      /* begining of key pool after sorting */
+   HB_BYTE *  pStartKey;      /* beginning of key pool after sorting */
    LPNTXSWAPPAGE pSwapPage;   /* list of pages */
    LPPAGEINFO NodeList[ NTX_STACKSIZE ];   /* Stack of pages */
    HB_ULONG   ulFirst;

@@ -1,6 +1,6 @@
 /*
  * MySQL DBMS defines
- * These defines are clipper code level equivalent of mysql.h and mysql_com.h
+ * These defines are Cl*pper code level equivalent of mysql.h and mysql_com.h
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  *
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +50,7 @@
 
 /* MySQL field types */
 #define MYSQL_TYPE_DECIMAL      0
-#define MYSQL_TYPE_TINY         1  /* NOTE: TINY is used to map clipper logical values to MySQL tables, so 0 == .F., 1 == .T. */
+#define MYSQL_TYPE_TINY         1  /* NOTE: TINY is used to map Cl*pper logical values to MySQL tables, so 0 == .F., 1 == .T. */
 #define MYSQL_TYPE_SHORT        2
 #define MYSQL_TYPE_LONG         3
 #define MYSQL_TYPE_FLOAT        4
@@ -78,7 +78,7 @@
 #define MYSQL_TYPE_GEOMETRY     255
 
 /* MySQL field structure item number
-   (C level structure is translated to a clipper array) */
+   (C level structure is translated to a Cl*pper array) */
 #define MYSQL_FS_NAME           1     /* Name of column */
 #define MYSQL_FS_TABLE          2     /* Table of column if column was a field */
 #define MYSQL_FS_DEF            3     /* Default value (set by mysql_list_fields) */
@@ -89,20 +89,20 @@
 #define MYSQL_FS_DECIMALS       8     /* Number of decimals in field */
 
 /* MySQL field flags */
-#define NOT_NULL_FLAG           1     /* Field can't be NULL */
-#define PRI_KEY_FLAG            2     /* Field is part of a primary key */
-#define UNIQUE_KEY_FLAG         4     /* Field is part of a unique key */
-#define MULTIPLE_KEY_FLAG       8     /* Field is part of a key */
-#define BLOB_FLAG               16    /* Field is a blob */
-#define UNSIGNED_FLAG           32    /* Field is unsigned */
-#define ZEROFILL_FLAG           64    /* Field is zerofill */
-#define BINARY_FLAG             128
+#define NOT_NULL_FLAG           hb_bitShift( 1, 0 )   /* Field cannot be NULL */
+#define PRI_KEY_FLAG            hb_bitShift( 1, 1 )   /* Field is part of a primary key */
+#define UNIQUE_KEY_FLAG         hb_bitShift( 1, 2 )   /* Field is part of a unique key */
+#define MULTIPLE_KEY_FLAG       hb_bitShift( 1, 3 )   /* Field is part of a key */
+#define BLOB_FLAG               hb_bitShift( 1, 4 )   /* Field is a blob */
+#define UNSIGNED_FLAG           hb_bitShift( 1, 5 )   /* Field is unsigned */
+#define ZEROFILL_FLAG           hb_bitShift( 1, 6 )   /* Field is zerofill */
+#define BINARY_FLAG             hb_bitShift( 1, 7 )
 /* The following are only sent to new clients */
-#define ENUM_FLAG               256   /* field is an enum */
-#define AUTO_INCREMENT_FLAG     512   /* field is a autoincrement field */
-#define TIMESTAMP_FLAG          1024  /* Field is a timestamp */
-#define PART_KEY_FLAG           16384 /* Intern; Part of some key */
-#define GROUP_FLAG              32768 /* Intern group field */
+#define ENUM_FLAG               hb_bitShift( 1, 8 )   /* field is an enum */
+#define AUTO_INCREMENT_FLAG     hb_bitShift( 1, 9 )   /* field is a auto-increment field */
+#define TIMESTAMP_FLAG          hb_bitShift( 1, 10 )  /* Field is a timestamp */
+#define PART_KEY_FLAG           hb_bitShift( 1, 14 )  /* Intern; Part of some key */
+#define GROUP_FLAG              hb_bitShift( 1, 15 )  /* Intern group field */
 
 /* Extension to DBS_xxx defines to encompass NOT NULL fields, needed by indexes */
 #define DBS_NOTNULL             5     /* True if field has to be NOT NULL */

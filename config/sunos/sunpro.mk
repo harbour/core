@@ -25,14 +25,14 @@ CXX := $(HB_CCACHE) $(HB_CCPATH)$(HB_CCPREFIX)sunCC$(HB_CCSUFFIX)
 
 CFLAGS += -I. -I$(HB_HOST_INC)
 
-# try to keep `-fast' as left as possible, as later optim
+# try to keep `-fast' as left as possible, as later optimization
 # flags may override values set by `-fast', and this way
 # no warnings are generated.
 
 ifneq ($(HB_BUILD_OPTIM),no)
    # Together with $(HB_ISAOPT) above, these are supposed to (somewhat)
    # conform to the Blastwave build standards, see
-   #    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
+   #    https://web.archive.org/web/wiki.blastwave.org/mediawiki/index.php/Build_Standards
    # Try to keep them this way.
    CFLAGS += -fast
    CFLAGS += -xnolibmopt

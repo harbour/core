@@ -1,5 +1,5 @@
 /*
- * PostgreSQL RDBMS low level (client api) interface code.
+ * PostgreSQL RDBMS low-level (client API) interface code.
  *
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,12 +47,12 @@
 #include "hbclass.ch"
 #include "postgres.ch"
 
-#define _STRU_FIELDNAME             1
-#define _STRU_FIELDTYPE             2
-#define _STRU_FIELDLEN              3
-#define _STRU_FIELDDEC              4
-#define _STRU_TABLE                 5
-#define _STRU_TABLECOL              6
+#define _STRU_FIELDNAME     1
+#define _STRU_FIELDTYPE     2
+#define _STRU_FIELDLEN      3
+#define _STRU_FIELDDEC      4
+#define _STRU_TABLE         5
+#define _STRU_TABLECOL      6
 
 CREATE CLASS TPQServer
 
@@ -116,7 +116,7 @@ METHOD New( cHost, cDatabase, cUser, cPass, nPort, Schema ) CLASS TPQserver
       ENDIF
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 METHOD Destroy() CLASS TPQserver
 
@@ -543,7 +543,7 @@ METHOD New( pDB, cQuery, lallCols, cSchema, res ) CLASS TPQquery
 
    ::Refresh( res == NIL )
 
-   RETURN self
+   RETURN Self
 
 METHOD Destroy() CLASS TPQquery
 
@@ -1225,7 +1225,7 @@ METHOD new( row, old, struct ) CLASS TPQrow
    ::aOld := old
    ::aStruct := struct
 
-   RETURN self
+   RETURN Self
 
 METHOD FieldGet( nField ) CLASS TPQrow
 

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,7 +46,7 @@
 
 #pragma -b-
 
-#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
+#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject class */
 #include "hbclass.ch"
 
 #include "inkey.ch"
@@ -105,7 +105,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
 
    oBrwSets := HBDbBrowser():New( oWndSets:nTop + 1, oWndSets:nLeft + 1, oWndSets:nBottom - 1, oWndSets:nRight - 1 )
    oBrwSets:ColorSpec := __dbg():ClrModal()
-   oBrwSets:Cargo := { 1, {} }  // Actual highligthed row
+   oBrwSets:Cargo := { 1, {} }  // Actual highlighted row
    AAdd( oBrwSets:Cargo[ 2 ], aArray )
 
    oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::arrayName + "[" + hb_ntos( oBrwSets:cargo[ 1 ] ) + "]" } ) )
@@ -146,7 +146,7 @@ METHOD PROCEDURE doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1, ;
                   oBrowse:getColumn( 2 ):Width, @cValue, ;
                   __dbgExprValidBlock(), __dbgColors()[ 2 ], 256 )
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          pItem[ nSet ] := &cValue
       RECOVER USING oErr
          __dbgAlert( oErr:description )
@@ -231,7 +231,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
    ::aWindows[ ::nCurWindow ]:SetCaption( cName + "[" + hb_ntos( oBrwSets:cargo[ 1 ] ) + ".." + ;
       hb_ntos( Len( aArray ) ) + "]" )
 
-   RETURN self
+   RETURN Self
 
 FUNCTION __dbgArrays( aArray, cVarName, lEditable )
    RETURN HBDbArray():New( aArray, cVarName, lEditable )

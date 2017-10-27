@@ -2,7 +2,6 @@
  * hb_TabExpand() and hb_ReadLine() functions
  *
  * Copyright 2004 Marcelo Lombardo - lombardo@uol.com.br
- * http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -57,7 +56,9 @@ static void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen
    HB_SIZE nPos, nCurrCol, nLastBlk;
    HB_BOOL bBreak = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_readLine(%p, %" HB_PFS "u, %" HB_PFS "u, %" HB_PFS "u, %d, %p, %p, %" HB_PFS "u, %p, %p, %p, %p)", szText, nTextLen, nLineLen, nTabLen, bWrap, pTerm, pnTermSizes, nTerms, pbFound, pbEOF, pnEnd, pnEndOffset ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_readLine(%p, %" HB_PFS "u, %" HB_PFS "u, %" HB_PFS "u, %d, %p, %p, %" HB_PFS "u, %p, %p, %p, %p)",
+             ( const void * ) szText, nTextLen, nLineLen, nTabLen, bWrap, ( const void * ) pTerm,
+             ( void * ) pnTermSizes, nTerms, ( void * ) pbFound, ( void * ) pbEOF, ( void * ) pnEnd, ( void * ) pnEndOffset ) );
 
    *pbFound     = HB_FALSE;
    *pbEOF       = HB_FALSE;
@@ -117,7 +118,7 @@ static void hb_readLine( const char * szText, HB_SIZE nTextLen, HB_SIZE nLineLen
       }
       else if( szText[ nPos ] == HB_CHAR_SOFT1 && szText[ nPos + 1 ] == HB_CHAR_SOFT2 )
       {
-         /* Clipper does NOT considers SOFT CR as a word seperator - WHY?
+         /* Clipper does NOT consider SOFT CR as a word separator - WHY?
             Should we not fix that? */
          #if 0
          nLastBlk = nPos;
@@ -170,7 +171,7 @@ static HB_ISIZ hb_tabexpand( const char * szString, char * szRet, HB_ISIZ nEnd, 
    for( nPos = 0; nPos <= nEnd; nPos++ )
    {
       if( szString[ nPos ] == HB_CHAR_HT )
-         nSpAdded += ( ( nTabLen > 0 ) ? nTabLen - ( ( nPos + nSpAdded ) % nTabLen ) - 1 : 0 );
+         nSpAdded += ( nTabLen > 0 ? nTabLen - ( ( nPos + nSpAdded ) % nTabLen ) - 1 : 0 );
       else if( ( nPos < nEnd && szString[ nPos ] == HB_CHAR_SOFT1 && szString[ nPos + 1 ] == HB_CHAR_SOFT2 ) || szString[ nPos ] == HB_CHAR_LF )
          nSpAdded--;
       else
@@ -186,8 +187,7 @@ HB_FUNC( HB_TABEXPAND )
    HB_ISIZ      nStrLen   = hb_parclen( 1 );
    HB_SIZE      nTabLen   = hb_parns( 2 );
    HB_SIZE      nTabCount = 0;
-   HB_ISIZ      nPos, nSize;
-   char *       szRet;
+   HB_ISIZ      nPos;
 
    for( nPos = 0; nPos < nStrLen; nPos++ )
    {
@@ -195,10 +195,12 @@ HB_FUNC( HB_TABEXPAND )
          ++nTabCount;
    }
 
-   if( ( nStrLen == 0 ) || ( nTabCount == 0 ) || ( nTabLen == 0 ) )
+   if( nStrLen == 0 || nTabCount == 0 || nTabLen == 0 )
       hb_retc( szText );
    else
    {
+      HB_ISIZ nSize;
+      char * szRet;
       nSize = nStrLen + nTabCount * ( nTabLen - 1 );
       szRet = ( char * ) hb_xgrab( nSize + 1 );
       memset( szRet, ' ', nSize );
@@ -216,7 +218,6 @@ HB_FUNC( HB_READLINE )
    HB_SIZE *     pnTermSizes;
    HB_SIZE       nTabLen, nTerms;
    HB_SIZE       nLineSize = hb_parni( 3 );
-   HB_SIZE       i;
    HB_BOOL       bWrap = hb_parl( 5 );
    HB_BOOL       bFound, bEOF;
    HB_SIZE       nStartOffset;
@@ -256,6 +257,8 @@ HB_FUNC( HB_READLINE )
 
    if( HB_IS_ARRAY( pTerm1 ) )
    {
+      HB_SIZE i;
+
       nTerms      = hb_arrayLen( pTerm1 );
       pTerm       = ( const char ** ) hb_xgrab( sizeof( char * ) * nTerms );
       pnTermSizes = ( HB_SIZE * ) hb_xgrab( sizeof( HB_SIZE ) * nTerms );

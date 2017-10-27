@@ -1,5 +1,5 @@
 /*
- * CT3 string function:  CharSpread()
+ * CT3 string function: CharSpread()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,22 +62,22 @@ HB_FUNC( CHARSPREAD )
       else
       {
          const char * szText = hb_parc( 1 );
-         char * szDest, cDelim = ' ';
-         HB_ISIZ nTokens = 0, iRepl, iRest, iFirst, i;
-         HB_SIZE ul, nDst, nRest;
+         char cDelim = ' ';
+         HB_ISIZ nTokens = 0;
+         HB_SIZE nPos;
 
          if( HB_ISCHAR( 3 ) )
             cDelim = hb_parc( 3 )[ 0 ];
          else if( HB_ISNUM( 3 ) )
             cDelim = ( char ) hb_parni( 3 );
 
-         for( ul = 0; ul < nLen; ++ul )
+         for( nPos = 0; nPos < nLen; ++nPos )
          {
-            if( szText[ ul ] == cDelim )
+            if( szText[ nPos ] == cDelim )
             {
                nTokens++;
-               while( ul + 1 < nLen && szText[ ul + 1 ] == cDelim )
-                  ++ul;
+               while( nPos + 1 < nLen && szText[ nPos + 1 ] == cDelim )
+                  ++nPos;
             }
          }
 
@@ -85,19 +85,25 @@ HB_FUNC( CHARSPREAD )
             hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
          else
          {
+            HB_ISIZ iRepl, iRest, iFirst;
+            HB_SIZE nDst, nRest;
+            char * szDest;
+
             nRest = ( HB_SIZE ) nSize - nLen;
             iRepl = nRest / nTokens;
             iRest = nRest % nTokens;
             iFirst = ( iRest + 1 ) >> 1;
             iRest >>= 1;
             szDest = ( char * ) hb_xgrab( nSize + 1 );
-            for( nDst = ul = 0; ul < nLen; ++ul )
+            for( nDst = nPos = 0; nPos < nLen; ++nPos )
             {
-               szDest[ nDst++ ] = szText[ ul ];
-               if( szText[ ul ] == cDelim )
+               szDest[ nDst++ ] = szText[ nPos ];
+               if( szText[ nPos ] == cDelim )
                {
-                  while( ul + 1 < nLen && szText[ ul + 1 ] == cDelim )
-                     szDest[ nDst++ ] = szText[ ++ul ];
+                  HB_ISIZ i;
+
+                  while( nPos + 1 < nLen && szText[ nPos + 1 ] == cDelim )
+                     szDest[ nDst++ ] = szText[ ++nPos ];
                   i = iRepl;
                   if( iFirst )
                   {

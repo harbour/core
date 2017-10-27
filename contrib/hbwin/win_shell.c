@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,7 +46,7 @@
  */
 
 #undef _WIN32_IE
-#define _WIN32_IE  0x0500 /* request Windows 2000 features for NOTIFYICONDATA */
+#define _WIN32_IE  0x0500  /* request Windows 2000 features for NOTIFYICONDATA */
 
 #include "hbwapi.h"
 #include "hbapiitm.h"
@@ -82,7 +82,7 @@
 
 /* win_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
                         [<cTooltip>], [<lAddDel>],
-                        [<cInfo>], [<nInfoTimeOut>], [<cInfoTitle>], [<nInfoFlags>] ) -> <lOK> */
+                        [<cInfo>], [<nInfoTimeOut>], [<cInfoTitle>], [<nInfoFlags>] ) --> <lOK> */
 HB_FUNC( WIN_SHELLNOTIFYICON )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -122,8 +122,8 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 }
 
 /* Details:
-      http://msdn.microsoft.com/en-us/library/bb762164(VS.85).aspx
-      http://msdn.microsoft.com/en-us/library/bb759795(v=VS.85).aspx
+      https://msdn.microsoft.com/library/bb762164
+      https://msdn.microsoft.com/library/bb759795
  */
 
 #if ! defined( HB_OS_WIN_CE )

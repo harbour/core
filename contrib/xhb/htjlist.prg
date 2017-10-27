@@ -1,11 +1,12 @@
 /*
- *  Generates Javascript and DHTML list menus
- *     (see the website/jList dir for an example)
+ * Generates Javascript and DHTML list menus
+ * (see the website/jList dir for an example)
  *
- *     Uses list.js and resize.js (heavily modified) found at
- *     developer.netscape.com
+ * Uses list.js and resize.js (heavily modified) found at
+ * developer.netscape.com
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +19,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,16 +49,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbclass.ch"
 #include "cgi.ch"
 
@@ -79,29 +70,17 @@ CREATE CLASS TJSList
 
    METHOD New( name, lOpen, width, height, bgColor, ;
       FONT, fntColor, fntSize, cMinusImg, cPlusImg )
-
    METHOD NewNode( name, lOpen, width, height, bgColor )
-
    METHOD SetFont( name, font, fntColor, fntSize )
-
    METHOD AddItem( name, url, bgColor )
-
    METHOD AddLink( name, url, img, bgColor )
-
    METHOD EndNode( name, caption )
-
    METHOD Build( xPos, yPos )
-
    METHOD Put( cFile )
 
 ENDCLASS
 
-/****
-*
-*     Create main node
-*
-*/
-
+/* Create main node */
 METHOD New( name, lOpen, width, height, bgColor, ;
       FONT, fntColor, fntSize, cMinusImg, cPlusImg ) CLASS TJSList
 
@@ -208,7 +187,7 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
 
    AAdd( ::aScript, cStr )
 
-   RETURN self
+   RETURN Self
 
 /****
 *
@@ -228,7 +207,7 @@ METHOD AddItem( name, url, bgColor ) CLASS TJSList
    ::nItems++
    AAdd( ::aScript, cStr )
 
-   RETURN self
+   RETURN Self
 
 /****
 *
@@ -249,7 +228,7 @@ METHOD AddLink( name, url, img, bgColor ) CLASS TJSList
    ::nItems++
    AAdd( ::aScript, cStr )
 
-   RETURN self
+   RETURN Self
 
 METHOD EndNode( name, caption ) CLASS TJSList
 
@@ -261,7 +240,7 @@ METHOD EndNode( name, caption ) CLASS TJSList
    ::nItems++
    AAdd( ::aScript, cStr )
 
-   RETURN self
+   RETURN Self
 
 METHOD Build( xPos, yPos ) CLASS TJSList
 

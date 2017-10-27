@@ -1,7 +1,7 @@
 /*
  * Windows API functions
  *
- * Copyright 2011 Vailton Renato
+ * Copyright 2011 Vailton Renato (and others)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,10 +51,8 @@
 
 #include <windowsx.h>
 
-/*
- * Application-defined callback used with the CreateDialog and DialogBox... It
- * processes messages sent to a modal or modeless dialog box.
- */
+/* Application-defined callback used with the CreateDialog and DialogBox... It
+   processes messages sent to a modal or modeless dialog box. */
 static BOOL CALLBACK wapi_DialogFuncProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam )
 {
    PHB_SYMB pSymbol;
@@ -89,9 +87,7 @@ static BOOL CALLBACK wapi_DialogFuncProc( HWND hDlg, UINT message, WPARAM wParam
    return ( BOOL ) hb_parnl( -1 );
 }
 
-/*
- * Creates a modal dialog box from a dialog box template resource.
- */
+/* Creates a modal dialog box from a dialog box template resource. */
 HB_FUNC( WAPI_DIALOGBOXPARAM )
 {
    INT_PTR nResult = DialogBoxParam(
@@ -106,10 +102,8 @@ HB_FUNC( WAPI_DIALOGBOXPARAM )
    hbwapi_ret_NINT( nResult );
 }
 
-/*
- * Destroys a modal dialog box, causing the system to end any processing for the
- * dialog box.
- */
+/* Destroys a modal dialog box, causing the system to end any processing for the
+   dialog box. */
 HB_FUNC( WAPI_ENDDIALOG )
 {
    hbwapi_ret_L( EndDialog( hbwapi_par_raw_HWND( 1 ),
@@ -117,9 +111,7 @@ HB_FUNC( WAPI_ENDDIALOG )
    hbwapi_SetLastError( GetLastError() );
 }
 
-/*
- * Sets the title or text of a control in a dialog box.
- */
+/* Sets the title or text of a control in a dialog box. */
 HB_FUNC( WAPI_SETDLGITEMTEXT )
 {
    void * hStr;
@@ -132,9 +124,7 @@ HB_FUNC( WAPI_SETDLGITEMTEXT )
    hb_strfree( hStr );
 }
 
-/*
- * Retrieves the title or text associated with a control in a dialog box.
- */
+/* Retrieves the title or text associated with a control in a dialog box. */
 HB_FUNC( WAPI_GETDLGITEMTEXT )
 {
    HWND    nItem    = GetDlgItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) );
@@ -151,18 +141,14 @@ HB_FUNC( WAPI_GETDLGITEMTEXT )
    hb_xfree( lpResult );
 }
 
-/*
- * Retrieves a handle to a control in the specified dialog box.
- */
+/* Retrieves a handle to a control in the specified dialog box. */
 HB_FUNC( WAPI_GETDLGITEM )
 {
    hbwapi_ret_raw_HWND( GetDlgItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ) ) );
    hbwapi_SetLastError( GetLastError() );
 }
 
-/*
- * Adds a string to a list in a combo box.
- */
+/* Adds a string to a list in a combo box. */
 HB_FUNC( WAPI_COMBOBOX_ADDSTRING )
 {
    void * hStr;

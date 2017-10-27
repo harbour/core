@@ -2,6 +2,7 @@
  * Set functions
  *
  * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
+ * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour) (hb_osEncode(), hb_osDecode())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,17 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2008-2009 Viktor Szakats (vszakats.net/harbour)
- *    hb_osEncode()
- *    hb_osDecode()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -88,7 +78,7 @@ static char set_char( PHB_ITEM pItem, char oldChar )
 {
    char newChar = oldChar;
 
-   HB_TRACE( HB_TR_DEBUG, ( "set_char(%p, %c)", pItem, oldChar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "set_char(%p, %c)", ( void * ) pItem, oldChar ) );
 
    if( HB_IS_STRING( pItem ) )
    {
@@ -110,7 +100,7 @@ static HB_BOOL set_logical( PHB_ITEM pItem, HB_BOOL bDefault )
 {
    HB_BOOL bLogical = bDefault;
 
-   HB_TRACE( HB_TR_DEBUG, ( "set_logical(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "set_logical(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -138,7 +128,7 @@ static HB_BOOL set_logical( PHB_ITEM pItem, HB_BOOL bDefault )
 
 static int set_number( PHB_ITEM pItem, int iOldValue )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "set_number(%p, %d)", pItem, iOldValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "set_number(%p, %d)", ( void * ) pItem, iOldValue ) );
 
    return HB_IS_NUMERIC( pItem ) ? hb_itemGetNI( pItem ) : iOldValue;
 }
@@ -147,13 +137,13 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
 {
    char * szString;
 
-   HB_TRACE( HB_TR_DEBUG, ( "set_string(%p, %s)", pItem, szOldString ) );
+   HB_TRACE( HB_TR_DEBUG, ( "set_string(%p, %s)", ( void * ) pItem, szOldString ) );
 
    if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
    {
       if( szOldString )
          hb_xfree( szOldString );
-      /* Limit size of SET strings to 64K, truncating if source is longer */
+      /* Limit size of SET strings to 64 KiB, truncating if source is longer */
       szString = hb_strndup( hb_itemGetCPtr( pItem ), USHRT_MAX );
    }
    else
@@ -166,7 +156,7 @@ static void close_handle( PHB_SET_STRUCT pSet, HB_set_enum set_specifier )
 {
    PHB_FILE * handle_ptr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "close_handle(%p,%d)", pSet, ( int ) set_specifier ) );
+   HB_TRACE( HB_TR_DEBUG, ( "close_handle(%p, %d)", ( void * ) pSet, ( int ) set_specifier ) );
 
    switch( set_specifier )
    {
@@ -202,7 +192,7 @@ static const char * is_devicename( const char * szFileName )
               "LPT1", "LPT2", "LPT3",
               "COM1", "COM2", "COM3", "COM4", "COM5",
               "COM6", "COM7", "COM8", "COM9" };
-      int iSkip = 0, iLen, iFrom, iTo;
+      int iSkip = 0, iLen;
 
       if( ( szFileName[ 0 ] == '\\' || szFileName[ 0 ] == '/' ) &&
           ( szFileName[ 1 ] == '\\' || szFileName[ 1 ] == '/' ) )
@@ -217,6 +207,7 @@ static const char * is_devicename( const char * szFileName )
          }
          if( szFileName[ 2 ] != '\\' && szFileName[ 2 ] != '/' )
          {
+            int iFrom, iTo;
             for( iFrom = 2, iTo = 0; szFileName[ iFrom ]; ++iFrom )
             {
                if( szFileName[ iFrom ] == '\\' || szFileName[ iFrom ] == '/' )
@@ -232,6 +223,8 @@ static const char * is_devicename( const char * szFileName )
       iLen = ( int ) strlen( szFileName + iSkip );
       if( iLen >= 3 && iLen <= 4 )
       {
+         int iFrom, iTo;
+
          if( iLen == 3 )
          {
             iFrom = 0;
@@ -277,7 +270,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    char ** set_value;
    HB_BOOL fPipe = HB_FALSE, fStripEof;
 
-   HB_TRACE( HB_TR_DEBUG, ( "open_handle(%p, %s, %d, %d)", pSet, file_name, ( int ) fAppend, ( int ) set_specifier ) );
+   HB_TRACE( HB_TR_DEBUG, ( "open_handle(%p, %s, %d, %d)", ( void * ) pSet, file_name, ( int ) fAppend, ( int ) set_specifier ) );
 
    switch( set_specifier )
    {
@@ -434,7 +427,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
     */
    if( old_century_setting != new_century_setting )
    {
-      int count, digit, size, y_size, y_start, y_stop;
+      int count, size, y_size, y_start, y_stop;
       char * szDateFormat, * szNewFormat;
 
       /* Convert to upper case and determine where year is */
@@ -443,7 +436,7 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
       size = ( int ) strlen( szDateFormat );
       for( count = 0; count < size; count++ )
       {
-         digit = HB_TOUPPER( ( HB_UCHAR ) szDateFormat[ count ] );
+         int digit = HB_TOUPPER( ( HB_UCHAR ) szDateFormat[ count ] );
          if( digit == 'Y' )
          {
             if( y_start == -1 )
@@ -526,7 +519,7 @@ static char * hb_set_PRINTFILE_default( void )
 #elif defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
    return hb_strdup( "LPT1" );
 #else
-   return hb_strdup( "PRN" ); /* TOFIX */
+   return hb_strdup( "PRN" ); /* FIXME */
 #endif
 }
 
@@ -1005,7 +998,7 @@ PHB_ITEM hb_setGetItem( HB_set_enum set_specifier, PHB_ITEM pResult,
             if( HB_IS_NIL( pArg1 ) )
                pSet->HB_SET_HBOUTLOG = NULL;
             else
-               /* Limit size of SET strings to 64K, truncating if source is longer */
+               /* Limit size of SET strings to 64 KiB, truncating if source is longer */
                pSet->HB_SET_HBOUTLOG = hb_strndup( hb_itemGetCPtr( pArg1 ), USHRT_MAX );
             hb_xsetfilename( pSet->HB_SET_HBOUTLOG );
          }
@@ -1090,7 +1083,7 @@ HB_FUNC( SET )
 
 void hb_setInitialize( PHB_SET_STRUCT pSet )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_setInitialize(%p)", pSet ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_setInitialize(%p)", ( void * ) pSet ) );
 
    pSet->HB_SET_ALTERNATE = HB_FALSE;
    pSet->HB_SET_ALTFILE = NULL;
@@ -1103,6 +1096,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
    pSet->hb_set_century = HB_FALSE;
    pSet->hb_set_prndevice = HB_FALSE;
    pSet->HB_SET_COLOR = ( char * ) hb_xgrab( HB_CLRSTR_LEN + 1 );
+   /* NOTE: color must be synced with the one in IsDefColor() function */
    hb_strncpy( pSet->HB_SET_COLOR, "W/N,N/W,N/N,N/N,N/W", HB_CLRSTR_LEN );
    pSet->HB_SET_CONFIRM = HB_FALSE;
    pSet->HB_SET_CONSOLE = HB_TRUE;
@@ -1122,7 +1116,9 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
     * IMHO it's a bug in Clipper (side effect of some internal solutions) and
     * we should not try to emulate it [druzus].
     */
-   /* pSet->HB_SET_DEBUG = HB_FALSE; */
+   #if 0
+   pSet->HB_SET_DEBUG = HB_FALSE;
+   #endif
    pSet->HB_SET_DEBUG = hb_dynsymFind( "__DBGENTRY" ) ? HB_TRUE : HB_FALSE;
    pSet->HB_SET_DECIMALS = 2;
    pSet->HB_SET_DEFAULT = hb_strdup( "" );
@@ -1332,13 +1328,14 @@ int hb_setListenerRemove( int listener )
 HB_BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
-   PHB_SET_STRUCT pSet = hb_stackSetStruct();
    HB_BOOL fResult = HB_FALSE;
-   char * szValue;
-   int iValue;
 
    if( pItem )
    {
+      PHB_SET_STRUCT pSet = hb_stackSetStruct();
+      char * szValue;
+      int iValue;
+
       hb_setListenerNotify( set_specifier, HB_SET_LISTENER_BEFORE );
 
       switch( set_specifier )
@@ -1346,7 +1343,7 @@ HB_BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
          case HB_SET_ALTFILE:
          case HB_SET_EXTRAFILE:
          case HB_SET_PRINTFILE:
-            /* This sets needs 3-rd parameter to indicate additive mode
+            /* This sets needs 3rd parameter to indicate additive mode
              * so they cannot be fully supported by this function
              */
             if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )

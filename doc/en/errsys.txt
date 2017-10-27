@@ -1,12 +1,6 @@
-/*
- * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: ErrorSys()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Function
    $NAME$

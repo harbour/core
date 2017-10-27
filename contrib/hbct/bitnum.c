@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -89,11 +89,13 @@ HB_BOOL ct_numParam( int iParam, HB_MAXINT * plNum )
 
 HB_FUNC( NUMAND )
 {
-   int iPCount = hb_pcount(), i = 1;
+   int iPCount = hb_pcount();
    HB_MAXINT lValue = -1, lNext = 0;
 
    if( iPCount && ct_numParam( 1, &lValue ) )
    {
+      int i = 1;
+
       while( --iPCount && ct_numParam( ++i, &lNext ) )
          lValue &= lNext;
 
@@ -105,11 +107,13 @@ HB_FUNC( NUMAND )
 
 HB_FUNC( NUMOR )
 {
-   int iPCount = hb_pcount(), i = 1;
+   int iPCount = hb_pcount();
    HB_MAXINT lValue = -1, lNext = 0;
 
    if( iPCount && ct_numParam( 1, &lValue ) )
    {
+      int i = 1;
+
       while( --iPCount && ct_numParam( ++i, &lNext ) )
          lValue |= lNext;
 
@@ -121,11 +125,13 @@ HB_FUNC( NUMOR )
 
 HB_FUNC( NUMXOR )
 {
-   int iPCount = hb_pcount(), i = 1;
+   int iPCount = hb_pcount();
    HB_MAXINT lValue = -1, lNext = 0;
 
    if( iPCount && ct_numParam( 1, &lValue ) )
    {
+      int i = 1;
+
       while( --iPCount && ct_numParam( ++i, &lNext ) )
          lValue ^= lNext;
 
@@ -218,14 +224,16 @@ HB_FUNC( NUMMIRR )
 
 HB_FUNC( CLEARBIT )
 {
-   int iPCount = hb_pcount(), iBit, i = 1;
+   int iPCount = hb_pcount();
    HB_MAXINT lValue;
 
    if( ct_numParam( 1, &lValue ) )
    {
+      int i = 1;
+
       while( --iPCount )
       {
-         iBit = hb_parni( ++i );
+         int iBit = hb_parni( ++i );
          if( iBit < 1 || iBit > 64 )
             break;
          lValue &= ~( ( ( HB_MAXINT ) 1 ) << ( iBit - 1 ) );
@@ -240,14 +248,16 @@ HB_FUNC( CLEARBIT )
 
 HB_FUNC( SETBIT )
 {
-   int iPCount = hb_pcount(), iBit, i = 1;
+   int iPCount = hb_pcount();
    HB_MAXINT lValue;
 
    if( ct_numParam( 1, &lValue ) )
    {
+      int i = 1;
+
       while( --iPCount )
       {
-         iBit = hb_parni( ++i );
+         int iBit = hb_parni( ++i );
          if( iBit < 1 || iBit > 64 )
             break;
          lValue |= ( ( HB_MAXINT ) 1 ) << ( iBit - 1 );

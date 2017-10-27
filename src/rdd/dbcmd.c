@@ -3,6 +3,7 @@
  *
  * Copyright 1999 Bruno Cantero <bruno@issnet.net>
  * Copyright 2004-2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
+ * Copyright 2002 Horacio Roldan <harbour_ar@yahoo.com.ar> (hb_rddIterateWorkAreas(), hb_rddGetTempAlias())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,16 +46,6 @@
  *
  */
 
-/*
- * The following functions are added by
- *       Horacio Roldan <harbour_ar@yahoo.com.ar>
- *
- * hb_rddIterateWorkAreas()
- * hb_rddGetTempAlias()
- * hb_rddGetTempAlias()
- *
- */
-
 #include "hbapi.h"
 #include "hbapirdd.h"
 #include "hbapierr.h"
@@ -62,7 +53,7 @@
 #include "hbvm.h"
 #include "hbset.h"
 
-/* The 5-th parameter is Harbour extensions */
+/* The 5th parameter is Harbour extension */
 HB_FUNC( AFIELDS )
 {
    HB_USHORT uiFields, uiCount;
@@ -167,11 +158,8 @@ HB_FUNC( AFIELDS )
 
 HB_FUNC( ALIAS )
 {
-   int iArea;
-   AREAP pArea;
+   AREAP pArea = ( AREAP ) hb_rddGetWorkAreaPointer( ( HB_AREANO ) hb_parni( 1 ) );
 
-   iArea = hb_parni( 1 );
-   pArea = ( AREAP ) hb_rddGetWorkAreaPointer( iArea );
    if( pArea )
    {
       char szAlias[ HB_RDD_MAX_ALIAS_LEN + 1 ];
@@ -269,14 +257,14 @@ HB_FUNC( BOF )
    hb_retl( bBof );
 }
 
-/* dbAppend( [<lUnLockAll>=.T.] ) -> <lSuccess> */
+/* dbAppend( [<lUnLockAll>=.T.] ) --> <lSuccess> */
 HB_FUNC( DBAPPEND )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
    {
-      HB_BOOL bUnLockAll = hb_parldef( 1, 1 );
+      HB_BOOL bUnLockAll = hb_parldef( 1, HB_TRUE );
       HB_ERRCODE errCode;
 
       /* Clipper clears NETERR flag before APPEND */
@@ -315,25 +303,25 @@ HB_FUNC( DBCOMMITALL )
 
 /*
  * In Clipper the arguments are:
- *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg ) -> NIL
+ *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg ) --> NIL
  * In Harbour (HB_EXTENSION):
  *    dbCreate( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, ;
- *              cCodePage, nConnection ) -> <lSuccess>
+ *              cCodePage, nConnection ) --> <lSuccess>
  */
 HB_FUNC( DBCREATE )
 {
    const char * szFileName, * szAlias, * szDriver, * szCpId;
    HB_USHORT uiSize, uiLen;
-   PHB_ITEM pStruct, pFieldDesc, pDelim;
+   PHB_ITEM pStruct, pDelim;
    HB_BOOL fKeepOpen, fCurrArea;
    HB_ULONG ulConnection;
 
    /*
-    * NOTE: 4-th, 5-th and 6-th parameters are undocumented Clipper ones
-    * 4-th is boolean flag indicating if file should stay open (any boolean
-    *      value will enable this behavior)
-    * 5-th is alias - if not given then WA is open without alias
-    * 6-th is optional DELIMITED value used by some RDDs like DELIM
+    * NOTE: 4th, 5th and 6th parameters are undocumented Clipper ones
+    * 4th is boolean flag indicating if file should stay open (any boolean
+    *     value will enable this behavior)
+    * 5th is alias - if not given then WA is open without alias
+    * 6th is optional DELIMITED value used by some RDDs like DELIM
     */
 
    szFileName = hb_parc( 1 );
@@ -366,7 +354,7 @@ HB_FUNC( DBCREATE )
 
    for( uiSize = 1; uiSize <= uiLen; ++uiSize )
    {
-      pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
+      PHB_ITEM pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
 
       /* Validate items types of fields */
       if( hb_arrayLen( pFieldDesc ) < 4 ||
@@ -388,13 +376,13 @@ HB_FUNC( DBCREATE )
 }
 
 /*
- * hb_dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cCodePage>, <nConnection> ) -> <lSuccess>
+ * hb_dbCreateTemp( <cAlias>, <aStruct>, <cRDD>, <cCodePage>, <nConnection> ) --> <lSuccess>
  */
 HB_FUNC( HB_DBCREATETEMP )
 {
    const char * szAlias, * szDriver, * szCpId;
    HB_USHORT uiSize, uiLen;
-   PHB_ITEM pStruct, pFieldDesc;
+   PHB_ITEM pStruct;
    HB_ULONG ulConnection;
 
    szAlias = hb_parc( 1 );
@@ -423,7 +411,7 @@ HB_FUNC( HB_DBCREATETEMP )
 
    for( uiSize = 1; uiSize <= uiLen; ++uiSize )
    {
-      pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
+      PHB_ITEM pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
 
       /* Validate items types of fields */
       if( hb_arrayLen( pFieldDesc ) < 4 ||
@@ -453,20 +441,20 @@ HB_FUNC( HB_DBCREATETEMP )
          if .F. it will be opened in the current one. */
 /* NOTE: Has an identical parameter list with dbCreate() */
 
-/* __dbOpenSDF( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) -> <lSuccess> */
+/* __dbOpenSDF( cFile, aStruct, cRDD, lKeepOpen, cAlias, cDelimArg, cCodePage, nConnection ) --> <lSuccess> */
 HB_FUNC( __DBOPENSDF )
 {
    const char * szFileName, * szAlias, * szDriver, * szCpId;
    HB_USHORT uiSize, uiLen;
-   PHB_ITEM pStruct, pFieldDesc, pDelim;
+   PHB_ITEM pStruct, pDelim;
    HB_BOOL fKeepOpen, fCurrArea;
    HB_ULONG ulConnection;
    HB_ERRCODE errCode;
 
    /*
-    * NOTE: 4-th and 5-th parameters are undocumented Clipper ones
-    * 4-th is boolean flag indicating if file should stay open and
-    * 5-th is alias - if not given then WA is open without alias
+    * NOTE: 4th and 5th parameters are undocumented Clipper ones
+    * 4th is boolean flag indicating if file should stay open and
+    * 5th is alias - if not given then WA is open without alias
     */
 
    szFileName = hb_parc( 1 );
@@ -490,7 +478,7 @@ HB_FUNC( __DBOPENSDF )
 
    for( uiSize = 1; uiSize <= uiLen; ++uiSize )
    {
-      pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
+      PHB_ITEM pFieldDesc = hb_arrayGetItemPtr( pStruct, uiSize );
 
       /* Validate items types of fields */
       if( hb_arrayLen( pFieldDesc ) < 4 ||
@@ -575,11 +563,12 @@ HB_FUNC( DBGOTOP )
 
 HB_FUNC( __DBLOCATE )
 {
-   DBSCOPEINFO dbScopeInfo;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
    {
+      DBSCOPEINFO dbScopeInfo;
+
       dbScopeInfo.itmCobFor   = hb_param( 1, HB_IT_BLOCK );
       dbScopeInfo.lpstrFor    = NULL;
       dbScopeInfo.itmCobWhile = hb_param( 2, HB_IT_BLOCK );
@@ -630,7 +619,6 @@ HB_FUNC( __DBCONTINUE )
 
 HB_FUNC( __DBPACK )
 {
-   PHB_ITEM pBlock, pEvery;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    if( pArea )
@@ -639,9 +627,10 @@ HB_FUNC( __DBPACK )
        * Additional feature: __dbPack( [<bBlock>, [<nEvery>] )
        * Code Block to execute for every record.
        */
-      pBlock = hb_param( 1, HB_IT_BLOCK );
+      PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
       if( pBlock )
       {
+         PHB_ITEM pEvery;
          hb_itemRelease( pArea->valResult );
          pArea->valResult = hb_itemArrayNew( 2 );
          hb_arraySet( pArea->valResult, 1, pBlock );
@@ -721,7 +710,7 @@ HB_FUNC( DBSEEK )
       {
          PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
          HB_BOOL bSoftSeek = HB_ISLOG( 2 ) ? ( HB_BOOL ) hb_parl( 2 ) : hb_setGetSoftSeek();
-         HB_BOOL bFindLast = hb_parl( 3 ), fFound = HB_FALSE;
+         HB_BOOL bFindLast = hb_parl( 3 ) /* HB_EXTENSION */, fFound = HB_FALSE;
          if( SELF_SEEK( pArea, bSoftSeek, pKey, bFindLast ) == HB_SUCCESS )
          {
             if( SELF_FOUND( pArea, &fFound ) != HB_SUCCESS )
@@ -841,7 +830,7 @@ HB_FUNC( DBFILTER )
       hb_retc_null();
 }
 
-/* Harbour extension to retrieve CB */
+/* Harbour extension to retrieve filter codeblock */
 HB_FUNC( HB_DBGETFILTER )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -918,7 +907,7 @@ HB_FUNC( DBUNLOCKALL )
 
 /* dbUseArea( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>], ;
               [<lShared>], [<lReadonly>], [<cCodePage>], ;
-              [<nConnection>] ) -> <lSuccess> */
+              [<nConnection>] ) --> <lSuccess> */
 HB_FUNC( DBUSEAREA )
 {
    hb_retl( hb_rddOpenTable( hb_parc( 3 ), hb_parc( 2 ),
@@ -983,7 +972,6 @@ HB_FUNC( FIELDGET )
 
 HB_FUNC( FIELDNAME )
 {
-   char * szName;
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    HB_USHORT uiFields, uiIndex = ( HB_FIELDNO ) hb_parni( 1 );
 
@@ -992,7 +980,7 @@ HB_FUNC( FIELDNAME )
       if( SELF_FIELDCOUNT( pArea, &uiFields ) == HB_SUCCESS &&
           uiIndex <= uiFields )
       {
-         szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
+         char * szName = ( char * ) hb_xgrab( pArea->uiMaxFieldNameLength + 1 );
          szName[ 0 ] = '\0';
          SELF_FIELDNAME( pArea, uiIndex, szName );
          hb_retc_buffer( szName );
@@ -1094,7 +1082,6 @@ HB_FUNC( INDEXORD )
       hb_retni( 0 );
 }
 
-/* Same as RecCount() */
 HB_FUNC( LASTREC )
 {
    HB_ULONG ulRecCount = 0;
@@ -1223,7 +1210,7 @@ HB_FUNC( ORDCONDSET )
       pItem = hb_param( 2, HB_IT_BLOCK );
       lpdbOrdCondInfo->itmCobFor = pItem ? hb_itemNew( pItem ) : NULL;
 
-      lpdbOrdCondInfo->fAll = hb_parldef( 3, 1 );
+      lpdbOrdCondInfo->fAll = hb_parldef( 3, HB_TRUE );
 
       lpdbOrdCondInfo->abWhile = hb_parclen( 17 ) > 0 ?
                                  hb_strdup( hb_parc( 17 ) ) : NULL;
@@ -1257,7 +1244,7 @@ HB_FUNC( ORDCONDSET )
       /* 19th parameter is CL5.2 USEFILTER parameter which means
          that RDD should respect SET FILTER and SET DELETED flag */
       lpdbOrdCondInfo->fUseFilter    = hb_parl( 19 );
-      /* 20th parameter is Harbour extenstion and informs RDD that
+      /* 20th parameter is Harbour extension and informs RDD that
          index is not shared between other clients */
       lpdbOrdCondInfo->fExclusive    = hb_parl( 20 );
 
@@ -1581,12 +1568,12 @@ HB_FUNC( RDDNAME )
 
 HB_FUNC( RDDREGISTER )
 {
-   HB_USHORT uiLen;
-   char szDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
+   HB_USHORT uiLen = ( HB_USHORT ) hb_parclen( 1 );
 
-   uiLen = ( HB_USHORT ) hb_parclen( 1 );
    if( uiLen > 0 )
    {
+      char szDriver[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ];
+
       if( uiLen > HB_RDD_MAX_DRIVERNAME_LEN )
          uiLen = HB_RDD_MAX_DRIVERNAME_LEN;
 
@@ -1791,7 +1778,6 @@ HB_FUNC( DBSETRELATION )
       DBRELINFO dbRelations;
       AREAP pChildArea;
       HB_AREANO uiChildArea;
-      char * szAlias = NULL;
 
       if( hb_pcount() < 2 ||
           hb_param( 1, HB_IT_NUMERIC | HB_IT_STRING ) == NULL ||
@@ -1820,7 +1806,7 @@ HB_FUNC( DBSETRELATION )
 
       if( ! pChildArea )
       {
-         hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0 );
+         hb_errRT_BASE( EG_NOALIAS, EDBCMD_NOALIAS, NULL, NULL, 0 );
          return;
       }
 
@@ -1850,7 +1836,6 @@ HB_FUNC( __DBARRANGE )
    /* TODO: check what Clipper does when pDstArea == NULL or pSrcArea == pDstArea */
    if( pSrcArea && pDstArea && pSrcArea != pDstArea )
    {
-      HB_USHORT uiCount, uiDest;
       DBSORTINFO dbSortInfo;
       /* structure with fields copied copied from source WorkArea */
       PHB_ITEM pStruct = hb_param( 2, HB_IT_ARRAY );
@@ -1885,7 +1870,8 @@ HB_FUNC( __DBARRANGE )
          dbSortInfo.uiItemCount = pFields ? ( HB_USHORT ) hb_arrayLen( pFields ) : 0;
          if( dbSortInfo.uiItemCount > 0 )
          {
-            char * szFieldLine, * szPos;
+            HB_USHORT uiCount, uiDest;
+            char * szFieldLine;
             HB_SIZE nSize = 0;
 
             dbSortInfo.lpdbsItem = ( LPDBSORTITEM ) hb_xgrab( dbSortInfo.uiItemCount * sizeof( DBSORTITEM ) );
@@ -1898,6 +1884,7 @@ HB_FUNC( __DBARRANGE )
             szFieldLine = ( char * ) hb_xgrab( nSize + 1 );
             for( uiDest = 0, uiCount = 1; uiCount <= dbSortInfo.uiItemCount; ++uiCount )
             {
+               char * szPos;
                dbSortInfo.lpdbsItem[ uiDest ].uiFlags = 0;
                hb_strncpyUpper( szFieldLine, hb_arrayGetCPtr( pFields, uiCount ),
                                 hb_arrayGetCLen( pFields, uiCount ) );
@@ -1954,7 +1941,7 @@ HB_FUNC( __DBARRANGE )
    hb_retl( errCode == HB_SUCCESS );
 }
 
-/* __dbTrans( nDstArea, aFieldsStru, bFor, bWhile, nNext, nRecord, lRest ) -> <lSuccess> */
+/* __dbTrans( nDstArea, aFieldsStru, bFor, bWhile, nNext, nRecord, lRest ) --> <lSuccess> */
 HB_FUNC( __DBTRANS )
 {
    if( HB_ISNUM( 1 ) )
@@ -2033,7 +2020,7 @@ HB_FUNC( __DBTRANS )
 /* __dbApp( <cNameName>, [<aFields>], ;
             [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], [<lRest>], ;
             [<cRDD>], [<nConnection>], [<cCodePage>], ;
-            [<xDelimiter>] ) -> <lSuccess> */
+            [<xDelimiter>] ) --> <lSuccess> */
 HB_FUNC( __DBAPP )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -2061,7 +2048,7 @@ HB_FUNC( __DBAPP )
 /* __dbCoppy( <cNameName>, [<aFields>], ;
               [<bFor>], [<bWhile>], [<nNext>], [<nRecord>], [<lRest>], ;
               [<cRDD>], [<nConnection>], [<cCodePage>], ;
-              [<xDelimiter>] ) -> <lSuccess> */
+              [<xDelimiter>] ) --> <lSuccess> */
 HB_FUNC( __DBCOPY )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
@@ -2315,12 +2302,13 @@ HB_FUNC( __DBSKIPPER )
    if( pArea )
    {
       HB_LONG lSkipped = 0;
-      HB_LONG lRecs = 1;
       HB_BOOL fBEof;
       HB_ULONG ulRecords = 0;
 
       if( SELF_RECCOUNT( pArea, &ulRecords ) == HB_SUCCESS && ulRecords > 0 )
       {
+         HB_LONG lRecs = 1;
+
          if( HB_ISNUM( 1 ) )
             lRecs = hb_parnl( 1 );
 

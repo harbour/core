@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbp3State Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                  Xbase++ xbp3State Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               07Dec2008
  */
 
 #include "hbclass.ch"
@@ -66,7 +60,7 @@
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-CREATE CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS Wvg3State INHERIT WvgWindow, WvgDataRef
 
    VAR    autosize                              INIT .F.
    VAR    caption                               INIT ""
@@ -101,7 +95,7 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
 
    ::createControl()
 
@@ -121,49 +115,47 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
+   ::editBuffer := wvg_Button_GetCheck( ::hWnd )
 
    RETURN Self
 
 METHOD Wvg3State:handleEvent( nMessage, aNM )
 
-   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", ::ClassName(), nMessage )
 
    DO CASE
-
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
-         ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
+         ::editBuffer := wvg_Button_GetCheck( ::hWnd )
 
          IF HB_ISBLOCK( ::sl_lbClick )
-            Eval( ::sl_lbClick, ::editBuffer, NIL, self )
+            Eval( ::sl_lbClick, ::editBuffer, , Self )
             RETURN 0
-
          ENDIF
       ENDIF
 
-   CASE nMessage ==  HB_GTE_CTLCOLOR
+   CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
+         RETURN wvg_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    ENDCASE
 
    RETURN 1
 
-METHOD Wvg3State:destroy()
+METHOD PROCEDURE Wvg3State:destroy()
 
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
+   hb_traceLog( "          %s:destroy()", ::ClassName() )
 
    ::WvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
 METHOD Wvg3State:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -175,7 +167,7 @@ METHOD Wvg3State:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

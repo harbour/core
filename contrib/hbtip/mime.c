@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -75,125 +75,124 @@ typedef struct tag_mime
 static const MIME_ENTRY s_mimeTable[] =
 {
    /* MS-DOS/Windows executable */
-   /*  0*/ { 0,  "MZ",                                "application/x-dosexec",         0, 0, 0                                                                },
+   /*  0 */ { 0,  "MZ",                                "application/x-dosexec",         0, 0, 0                                                                },
 
    /* ELF file */
-   /*  1*/ { 0,  "\177ELF",                           NULL,                            1, 0, 0                                                                },
-   /*  2*/ { 4,  "\x00",                              NULL,                            3, 1, MIME_FLAG_CONTINUE                                               },
-   /*  3*/ { 4,  "\x01",                              NULL,                            2, 1, MIME_FLAG_CONTINUE                                               },
-   /*  4*/ { 4,  "\x02",                              NULL,                            1, 0, MIME_FLAG_CONTINUE                                               },
-   /*  5*/ { 5,  "\x00",                              NULL,                            2, 1, MIME_FLAG_CONTINUE                                               },
-   /*  6*/ { 5,  "\x01",                              NULL,                            1, 0, MIME_FLAG_CONTINUE                                               },
-   /*  7*/ { 16, "\x00",                              "application/x-object",          0, 1, MIME_FLAG_CONTINUE                                               },
-   /*  8*/ { 16, "\x01",                              "application/x-object",          0, 1, MIME_FLAG_CONTINUE                                               },
-   /*  9*/ { 16, "\x02",                              "application/x-executable",      0, 1, MIME_FLAG_CONTINUE                                               },
-   /* 10*/ { 16, "\x03",                              "application/x-sharedlib",       0, 1, MIME_FLAG_CONTINUE                                               },
-   /* 11*/ { 16, "\x04",                              "application/x-coredump",        0, 0, MIME_FLAG_CONTINUE                                               },
+   /*  1 */ { 0,  "\177ELF",                           NULL,                            1, 0, 0                                                                },
+   /*  2 */ { 4,  "\x00",                              NULL,                            3, 1, MIME_FLAG_CONTINUE                                               },
+   /*  3 */ { 4,  "\x01",                              NULL,                            2, 1, MIME_FLAG_CONTINUE                                               },
+   /*  4 */ { 4,  "\x02",                              NULL,                            1, 0, MIME_FLAG_CONTINUE                                               },
+   /*  5 */ { 5,  "\x00",                              NULL,                            2, 1, MIME_FLAG_CONTINUE                                               },
+   /*  6 */ { 5,  "\x01",                              NULL,                            1, 0, MIME_FLAG_CONTINUE                                               },
+   /*  7 */ { 16, "\x00",                              "application/x-object",          0, 1, MIME_FLAG_CONTINUE                                               },
+   /*  8 */ { 16, "\x01",                              "application/x-object",          0, 1, MIME_FLAG_CONTINUE                                               },
+   /*  9 */ { 16, "\x02",                              "application/x-executable",      0, 1, MIME_FLAG_CONTINUE                                               },
+   /* 10 */ { 16, "\x03",                              "application/x-sharedlib",       0, 1, MIME_FLAG_CONTINUE                                               },
+   /* 11 */ { 16, "\x04",                              "application/x-coredump",        0, 0, MIME_FLAG_CONTINUE                                               },
 
    /* Shell script */
-   /* 12*/ { 0,  "#!/bin/sh",                         "application/x-shellscript",     0, 0, 0                                                                },
-   /* 13*/ { 0,  "#! /bin/sh",                        "application/x-shellscript",     0, 0, 0                                                                },
-   /* 14*/ { 0,  "#!/bin/csh",                        "application/x-shellscript",     0, 0, 0                                                                },
-   /* 15*/ { 0,  "#! /bin/csh",                       "application/x-shellscript",     0, 0, 0                                                                },
-   /* 16*/ { 0,  "#!/bin/ksh",                        "application/x-shellscript",     0, 0, 0                                                                },
-   /* 17*/ { 0,  "#! /bin/ksh",                       "application/x-shellscript",     0, 0, 0                                                                },
-   /* 18*/ { 0,  "#!/bin/tcsh",                       "application/x-shellscript",     0, 0, 0                                                                },
-   /* 19*/ { 0,  "#! /bin/tcsh",                      "application/x-shellscript",     0, 0, 0                                                                },
-   /* 20*/ { 0,  "#!/usr/local/bin/tcsh",             "application/x-shellscript",     0, 0, 0                                                                },
-   /* 21*/ { 0,  "#! /usr/local/bin/tcsh",            "application/x-shellscript",     0, 0, 0                                                                },
-   /* 22*/ { 0,  "#!/bin/bash",                       "application/x-shellscript",     0, 0, 0                                                                },
-   /* 23*/ { 0,  "#! /bin/bash",                      "application/x-shellscript",     0, 0, 0                                                                },
-   /* 24*/ { 0,  "#!/usr/local/bin/bash",             "application/x-shellscript",     0, 0, 0                                                                },
-   /* 25*/ { 0,  "#! /usr/local/bin/bash",            "application/x-shellscript",     0, 0, 0                                                                },
+   /* 12 */ { 0,  "#!/bin/sh",                         "application/x-shellscript",     0, 0, 0                                                                },
+   /* 13 */ { 0,  "#! /bin/sh",                        "application/x-shellscript",     0, 0, 0                                                                },
+   /* 14 */ { 0,  "#!/bin/csh",                        "application/x-shellscript",     0, 0, 0                                                                },
+   /* 15 */ { 0,  "#! /bin/csh",                       "application/x-shellscript",     0, 0, 0                                                                },
+   /* 16 */ { 0,  "#!/bin/ksh",                        "application/x-shellscript",     0, 0, 0                                                                },
+   /* 17 */ { 0,  "#! /bin/ksh",                       "application/x-shellscript",     0, 0, 0                                                                },
+   /* 18 */ { 0,  "#!/bin/tcsh",                       "application/x-shellscript",     0, 0, 0                                                                },
+   /* 19 */ { 0,  "#! /bin/tcsh",                      "application/x-shellscript",     0, 0, 0                                                                },
+   /* 20 */ { 0,  "#!/usr/local/bin/tcsh",             "application/x-shellscript",     0, 0, 0                                                                },
+   /* 21 */ { 0,  "#! /usr/local/bin/tcsh",            "application/x-shellscript",     0, 0, 0                                                                },
+   /* 22 */ { 0,  "#!/bin/bash",                       "application/x-shellscript",     0, 0, 0                                                                },
+   /* 23 */ { 0,  "#! /bin/bash",                      "application/x-shellscript",     0, 0, 0                                                                },
+   /* 24 */ { 0,  "#!/usr/local/bin/bash",             "application/x-shellscript",     0, 0, 0                                                                },
+   /* 25 */ { 0,  "#! /usr/local/bin/bash",            "application/x-shellscript",     0, 0, 0                                                                },
 
    /* Java object code*/
-   /* 26*/ { 0,  "\xCA\xFE\xBA\xBE",                  "application/java",              0, 0, 0                                                                },
+   /* 26 */ { 0,  "\xCA\xFE\xBA\xBE",                  "application/java",              0, 0, 0                                                                },
 
    /* Perl */
-   /* 27*/ { 0,  "#!/bin/perl",                       "application/x-perl",            0, 0, 0                                                                },
-   /* 28*/ { 0,  "#! /bin/perl",                      "application/x-perl",            0, 0, 0                                                                },
-   /* 29*/ { 0,  "eval \"exec /bin/perl",             "application/x-perl",            0, 0, 0                                                                },
-   /* 30*/ { 0,  "#!/usr/bin/perl",                   "application/x-perl",            0, 0, 0                                                                },
-   /* 31*/ { 0,  "#! /usr/bin/perl",                  "application/x-perl",            0, 0, 0                                                                },
-   /* 32*/ { 0,  "eval \"exec /usr/bin/perl",         "application/x-perl",            0, 0, 0                                                                },
-   /* 33*/ { 0,  "#!/usr/local/bin/perl",             "application/x-perl",            0, 0, 0                                                                },
-   /* 34*/ { 0,  "#! /usr/local/bin/perl",            "application/x-perl",            0, 0, 0                                                                },
-   /* 35*/ { 0,  "eval \"exec /usr/local/bin/perl",   "application/x-perl",            0, 0, 0                                                                },
+   /* 27 */ { 0,  "#!/bin/perl",                       "application/x-perl",            0, 0, 0                                                                },
+   /* 28 */ { 0,  "#! /bin/perl",                      "application/x-perl",            0, 0, 0                                                                },
+   /* 29 */ { 0,  "eval \"exec /bin/perl",             "application/x-perl",            0, 0, 0                                                                },
+   /* 30 */ { 0,  "#!/usr/bin/perl",                   "application/x-perl",            0, 0, 0                                                                },
+   /* 31 */ { 0,  "#! /usr/bin/perl",                  "application/x-perl",            0, 0, 0                                                                },
+   /* 32 */ { 0,  "eval \"exec /usr/bin/perl",         "application/x-perl",            0, 0, 0                                                                },
+   /* 33 */ { 0,  "#!/usr/local/bin/perl",             "application/x-perl",            0, 0, 0                                                                },
+   /* 34 */ { 0,  "#! /usr/local/bin/perl",            "application/x-perl",            0, 0, 0                                                                },
+   /* 35 */ { 0,  "eval \"exec /usr/local/bin/perl",   "application/x-perl",            0, 0, 0                                                                },
 
    /* Python */
-   /* 36*/ { 0,  "#!/bin/python",                     "application/x-python",          0, 0, 0                                                                },
-   /* 37*/ { 0,  "#! /bin/python",                    "application/x-python",          0, 0, 0                                                                },
-   /* 38*/ { 0,  "eval \"exec /bin/python",           "application/x-python",          0, 0, 0                                                                },
-   /* 39*/ { 0,  "#!/usr/bin/python",                 "application/x-python",          0, 0, 0                                                                },
-   /* 40*/ { 0,  "#! /usr/bin/python",                "application/x-python",          0, 0, 0                                                                },
-   /* 41*/ { 0,  "eval \"exec /usr/bin/python",       "application/x-python",          0, 0, 0                                                                },
-   /* 42*/ { 0,  "#!/usr/local/bin/python",           "application/x-python",          0, 0, 0                                                                },
-   /* 43*/ { 0,  "#! /usr/local/bin/python",          "application/x-python",          0, 0, 0                                                                },
-   /* 44*/ { 0,  "eval \"exec /usr/local/bin/python", "application/x-python",          0, 0, 0                                                                },
+   /* 36 */ { 0,  "#!/bin/python",                     "application/x-python",          0, 0, 0                                                                },
+   /* 37 */ { 0,  "#! /bin/python",                    "application/x-python",          0, 0, 0                                                                },
+   /* 38 */ { 0,  "eval \"exec /bin/python",           "application/x-python",          0, 0, 0                                                                },
+   /* 39 */ { 0,  "#!/usr/bin/python",                 "application/x-python",          0, 0, 0                                                                },
+   /* 40 */ { 0,  "#! /usr/bin/python",                "application/x-python",          0, 0, 0                                                                },
+   /* 41 */ { 0,  "eval \"exec /usr/bin/python",       "application/x-python",          0, 0, 0                                                                },
+   /* 42 */ { 0,  "#!/usr/local/bin/python",           "application/x-python",          0, 0, 0                                                                },
+   /* 43 */ { 0,  "#! /usr/local/bin/python",          "application/x-python",          0, 0, 0                                                                },
+   /* 44 */ { 0,  "eval \"exec /usr/local/bin/python", "application/x-python",          0, 0, 0                                                                },
 
    /* Unix compress (.z) */
-   /* 45*/ { 0,  "\x1F\x9D",                          "application/x-compress",        0, 0, 0                                                                },
+   /* 45 */ { 0,  "\x1F\x9D",                          "application/x-compress",        0, 0, 0                                                                },
 
    /* Unix gzip */
-   /* 46*/ { 0,  "\x1F\x8B",                          "application/x-gzip",            0, 0, 0                                                                },
+   /* 46 */ { 0,  "\x1F\x8B",                          "application/x-gzip",            0, 0, 0                                                                },
 
    /* PKzip */
-   /* 47 { 0, "PK\x03\x04", "application/x-zip", 0, 0, 0 }, 2010-12-15 support of xlsx/ods */
+   /* 47    { 0,  "PK\x03\x04",                        "application/x-zip",             0, 0, 0 }, 2010-12-15 support of xlsx/ods */
 
    /* xml */
-   /* 48*/ { 0,  "<?xml",                             "application/xml",               0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 48 */ { 0,  "<?xml",                             "application/xml",               0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
 
    /* html */
-   /* 49*/ { 0,  "<html",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 50*/ { 0,  "<title",                            "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 51*/ { 0,  "<head",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 52*/ { 0,  "<body",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 53*/ { 0,  "<!--",                              "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS                        },
-   /* 54*/ { 0,  "<h",                                "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 55*/ { 0,  "<!",                                "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 49 */ { 0,  "<html",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 50 */ { 0,  "<title",                            "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 51 */ { 0,  "<head",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 52 */ { 0,  "<body",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 53 */ { 0,  "<!--",                              "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS                        },
+   /* 54 */ { 0,  "<h",                                "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 55 */ { 0,  "<!",                                "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
 
    /* Postscript */
-   /* 56*/ { 0,  "%!",                                "application/postscript",        0, 0, 0                                                                },
-   /* 57*/ { 0,  "\x04%!",                            "application/postscript",        0, 0, 0                                                                },
+   /* 56 */ { 0,  "%!",                                "application/postscript",        0, 0, 0                                                                },
+   /* 57 */ { 0,  "\x04%!",                            "application/postscript",        0, 0, 0                                                                },
 
    /* PDF */
-   /* 58*/ { 0,  "%PDF-",                             "application/pdf",               0, 0, 0                                                                },
+   /* 58 */ { 0,  "%PDF-",                             "application/pdf",               0, 0, 0                                                                },
 
    /* DVI */
-   /* 59*/ { 0,  "\xF7\x02",                          "application/dvi",               0, 0, 0                                                                },
+   /* 59 */ { 0,  "\xF7\x02",                          "application/dvi",               0, 0, 0                                                                },
 
    /* PNG image */
-   /* 60*/ { 0,  "\x89PNG",                           "image/png",                     0, 0, 0                                                                },
+   /* 60 */ { 0,  "\x89PNG",                           "image/png",                     0, 0, 0                                                                },
 
    /* XPM image */
-   /* 61*/ { 0,  "/* XPM",                            "image/x-xpm",                   0, 0, 0                                                                },
+   /* 61 */ { 0,  "/* XPM",                            "image/x-xpm",                   0, 0, 0                                                                },
 
    /* TIFF image */
-   /* 62*/ { 0,  "II",                                "image/tiff",                    0, 0, 0                                                                },
-   /* 63*/ { 0,  "MM",                                "image/tiff",                    0, 0, 0                                                                },
+   /* 62 */ { 0,  "II",                                "image/tiff",                    0, 0, 0                                                                },
+   /* 63 */ { 0,  "MM",                                "image/tiff",                    0, 0, 0                                                                },
 
    /* GIF image */
-   /* 64*/ { 0,  "GIF89z",                            "image/x-compressed-gif",        0, 0, 0                                                                },
-   /* 65*/ { 0,  "GIF",                               "image/gif",                     0, 0, 0                                                                },
+   /* 64 */ { 0,  "GIF89z",                            "image/x-compressed-gif",        0, 0, 0                                                                },
+   /* 65 */ { 0,  "GIF",                               "image/gif",                     0, 0, 0                                                                },
 
    /* JPEG image */
-   /* 66*/ { 0,  "\xFF\xD8",                          "image/jpeg",                    0, 0, 0                                                                },
+   /* 66 */ { 0,  "\xFF\xD8",                          "image/jpeg",                    0, 0, 0                                                                },
 
    /* ICO image */
-   /* 67*/ { 2,  "\x01\x00",                          "image/x-icon",                  0, 0, 0                                                                },
+   /* 67 */ { 2,  "\x01\x00",                          "image/x-icon",                  0, 0, 0                                                                },
 
    /* OGG file */
-   /* 68*/ { 0,  "OggS",                              "application/ogg",               0, 0, 0                                                                },
+   /* 68 */ { 0,  "OggS",                              "application/ogg",               0, 0, 0                                                                },
 
    /* FLV file */
-   /* 69*/ { 0,  "FLV",                               "video/x-flv",                   0, 0, 0                                                                },
+   /* 69 */ { 0,  "FLV",                               "video/x-flv",                   0, 0, 0                                                                },
 
    /* SWF compressed file */
-   /* 70*/ { 0,  "CWS",                               "application/x-shockwave-flash", 0, 0, 0                                                                },
+   /* 70 */ { 0,  "CWS",                               "application/x-shockwave-flash", 0, 0, 0                                                                },
 
    /* SWF uncompressed file */
-   /* 71*/ { 0,  "FWS",                               "application/x-shockwave-flash", 0, 0, 0                                                                }
-
+   /* 71 */ { 0,  "FWS",                               "application/x-shockwave-flash", 0, 0, 0                                                                }
 };
 
 /* Find MIME by extension */
@@ -619,7 +618,7 @@ static const char * s_findMimeStringInTree( const char * cData, HB_SIZE nLen, in
    if( elem->alternate != 0 )
       return s_findMimeStringInTree( cData, nLen, iElem + elem->alternate );
 
-   return NULL;  /* total giveup */
+   return NULL;  /* give up */
 }
 
 static const char * s_findStringMimeType( const char * cData, HB_SIZE nLen )

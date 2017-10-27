@@ -10,7 +10,7 @@
        PSTest.prg
 
 3.) Apply supplied patch to the source using GNU Patch:
-    patch -lNi ps32.dif
+    patch -lNi ps32.patch
 
 4.) Build it:
     hbmk2 ps32.hbp

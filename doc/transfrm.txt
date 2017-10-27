@@ -69,5 +69,5 @@ The following functions mean something :
                 date format is British, using @E displays the date in
                 American. Harbour always treats @E as British.
 
-                So is Harbour's behaviour a bug fix or a bug?
+                So is Harbour's behavior a bug fix or a bug?
         */

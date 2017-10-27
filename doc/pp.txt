@@ -332,7 +332,7 @@ making in last days.
                 to macro tokens expressions starting with '&' followed by '('.
                 The macro tokens are stringify in differ way. If macro
                 does not have any internal '&' characters and has at most
-                one '.' as last character then as result non quited keyword
+                one '.' as last character then as result non quoted keyword
                 is generated. Otherwise it generate strings with stripped first
                 '&' character.
                 If expression starts with '&' token followed by single
@@ -450,7 +450,7 @@ making in last days.
    The optional match patterns are one of the weakest point of current PP.
    Even such simple code:
         #xcommand CMD <x> [IN [GET] [PUT]] => ? #<x>
-        CMD sth IN PUT GET
+        CMD something IN PUT GET
    Is not well preprocessed.
 
 20. rule have to begin with non empty token or the rule will never be used.
@@ -492,7 +492,7 @@ making in last days.
             If anything substituted
                continue
 
-            Do While 1-st token match some #[x]command pattern
+            Do While 1st token match some #[x]command pattern
                substitute
             EndDo
 
@@ -500,7 +500,7 @@ making in last days.
 
          Output processed token until the last one or ; token
 
-         If 1-st token is '#'
+         If 1st token is '#'
             continue
 
          Remove all tokens in the list until the last one or ; token
@@ -647,15 +647,15 @@ making in last days.
       Such special status can be added automatically when ; token is followed
       by # or ; is quoted by \
    d. already existing xHarbour extensions:
-         #[x]unTrasnslate, #[x]unCommand
+         #[x]untranslate, #[x]uncommand
       but modified to locate match pattern which can cover exactly the same
       data.
          #if
       but working with integer to allow using 64bit ones which are broken
       due to conversion to double. The semantic for expressions will be
       similar to C one with the exception to ! (not) operator precedence.
-      I do not think that Clipper/xbase users are familiar with the exact
-      not operator precedence in C which is differ then the one in xbase
+      I do not think that Clipper/xBase users are familiar with the exact
+      not operator precedence in C which is differ then the one in xBase
       world.
    e. modified version of Harbour's
          #pragma {__text, __stream, __cstream, __endtext}

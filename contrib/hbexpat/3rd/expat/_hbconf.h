@@ -1,8 +1,18 @@
-
 #ifndef _HBCONF_H
 #define _HBCONF_H
 
 #include "hbdefs.h"
+
+#if defined( HB_OS_WIN )
+#  define WIN32_LEAN_AND_MEAN
+#  include <windows.h>
+#  undef WIN32_LEAN_AND_MEAN
+#  include "hbwinuni.h"
+#endif
+#if defined( HB_OS_WIN_CE ) && ! defined( _WINCE )
+#  define _WINCE
+#endif
+
 /* 1234 = LITLE_ENDIAN, 4321 = BIG_ENDIAN */
 #if defined( HB_LITTLE_ENDIAN )
 #  define BYTEORDER 1234

@@ -1,6 +1,6 @@
 /*
  * MySQL DBMS classes.
- * These classes try to emulate clipper dbXXXX functions on a SQL query
+ * These classes try to emulate Cl*pper db*() functions on a SQL query
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  *
@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -57,7 +57,7 @@ CREATE CLASS TMySQLRow
 
    VAR aRow                                     // a single row of answer
    VAR aDirty                                   // array of booleans set to .T. if corresponding field of aRow has been changed
-   VAR aOldValue                                // If aDirty[n] is .T. aOldValue[n] keeps a copy of changed value if aRow[n] is part of a primary key
+   VAR aOldValue                                // If aDirty[ n ] is .T. aOldValue[ n ] keeps a copy of changed value if aRow[ n ] is part of a primary key
 
    VAR aOriValue                                // Original values ( same as TMySQLtable:aOldValue )
 
@@ -66,14 +66,14 @@ CREATE CLASS TMySQLRow
 
    METHOD New( aRow, aFStruct, cTableName )     // Create a new Row object
 
-   METHOD FieldGet( cnField )                   // Same as clipper ones, but FieldGet() and FieldPut() accept a string as
+   METHOD FieldGet( cnField )                   // Same as Cl*pper ones, but FieldGet() and FieldPut() accept a string as
    METHOD FieldPut( cnField, Value )            // field identifier, not only a number
    METHOD FieldName( nNum )
    METHOD FieldPos( cFieldName )
 
    METHOD FieldLen( nNum )                      // Length of field N
    METHOD FieldDec( nNum, lFormat )             // How many decimals in field N
-   METHOD FieldType( nNum )                     // Clipper type of field N
+   METHOD FieldType( nNum )                     // Cl*pper type of field N
 
    METHOD MakePrimaryKeyWhere()                 // returns a WHERE x=y statement which uses primary key (if available)
 
@@ -98,7 +98,6 @@ METHOD New( aRow, aFStruct, cTableName ) CLASS TMySQLRow
 
    RETURN Self
 
-
 METHOD FieldGet( cnField ) CLASS TMySQLRow
 
    LOCAL nNum := iif( HB_ISSTRING( cnField ), ::FieldPos( cnField ), cnField )
@@ -114,7 +113,6 @@ METHOD FieldGet( cnField ) CLASS TMySQLRow
    ENDIF
 
    RETURN NIL
-
 
 METHOD FieldPut( cnField, Value ) CLASS TMySQLRow
 
@@ -143,7 +141,6 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLRow
 
    RETURN NIL
 
-
 // Given a field name returns it's position
 METHOD FieldPos( cFieldName ) CLASS TMySQLRow
 
@@ -151,21 +148,16 @@ METHOD FieldPos( cFieldName ) CLASS TMySQLRow
 
    RETURN AScan( ::aFieldStruct, {| aItem | Upper( aItem[ MYSQL_FS_NAME ] ) == cUpperName } )
 
-
 // Returns name of field N
 METHOD FieldName( nNum ) CLASS TMySQLRow
-
    RETURN iif( nNum >= 1 .AND. nNum <= Len( ::aFieldStruct ), ::aFieldStruct[ nNum ][ MYSQL_FS_NAME ], "" )
 
-
 METHOD FieldLen( nNum ) CLASS TMySQLRow
-
    RETURN iif( nNum >= 1 .AND. nNum <= Len( ::aFieldStruct ), ::aFieldStruct[ nNum ][ MYSQL_FS_LENGTH ], 0 )
 
-/*
-   lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
-   lFormat is usefull for copying table structure from mysql to dbf
-*/
+/* lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
+   lFormat is useful for copying table structure from mysql to dbf
+ */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
    hb_default( @lFormat, .F. )
@@ -181,7 +173,6 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
    ENDIF
 
    RETURN 0
-
 
 METHOD FieldType( nNum ) CLASS TMySQLRow
 
@@ -215,7 +206,6 @@ METHOD FieldType( nNum ) CLASS TMySQLRow
 
    RETURN "U"
 
-
 // returns a WHERE x=y statement which uses primary key (if available)
 METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
 
@@ -240,7 +230,6 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
             cWhere += ClipValue2SQL( ::aRow[ nI ] )
          ENDIF
       ENDIF
-
    NEXT
 
    IF ! Empty( cWhere )
@@ -249,7 +238,7 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLRow
 
    RETURN cWhere
 
-/* -------------------------------------------------------- */
+/* --- */
 
 // Every single query submitted to MySQL server
 CREATE CLASS TMySQLQuery
@@ -282,7 +271,7 @@ CREATE CLASS TMySQLQuery
 
    METHOD GetRow( nRow )                // return Row n of answer
 
-   METHOD Skip( nRows )                 // Same as clipper ones
+   METHOD Skip( nRows )                 // Same as Cl*pper ones
 
    METHOD Bof() INLINE ::lBof
    METHOD Eof() INLINE ::lEof
@@ -303,7 +292,7 @@ CREATE CLASS TMySQLQuery
 
    METHOD FieldLen( nNum )              // Length of field N
    METHOD FieldDec( nNum, lFormat )     // How many decimals in field N
-   METHOD FieldType( nNum )             // Clipper type of field N
+   METHOD FieldType( nNum )             // Cl*pper type of field N
 
 ENDCLASS
 
@@ -337,13 +326,11 @@ METHOD New( nSocket, cQuery ) CLASS TMySQLQuery
          ::aRow := Array( ::nNumFields )
 
          FOR nI := 1 TO ::nNumFields
-
             aField := mysql_fetch_field( ::nResultHandle )
             AAdd( ::aFieldStruct, aField )
             IF ::lFieldAsData
                __objAddData( Self, ::aFieldStruct[ nI ][ MYSQL_FS_NAME ] )
             ENDIF
-
          NEXT
 
          ::getRow( ::nCurRow )
@@ -355,7 +342,6 @@ METHOD New( nSocket, cQuery ) CLASS TMySQLQuery
    ENDIF
 
    RETURN Self
-
 
 METHOD Refresh() CLASS TMySQLQuery
 
@@ -396,7 +382,7 @@ METHOD Refresh() CLASS TMySQLQuery
 
 METHOD Skip( nRows ) CLASS TMySQLQuery
 
-   LOCAL lbof
+   LOCAL lBof
 
    // NOTE: MySQL row count starts from 0
    hb_default( @nRows, 1 )
@@ -410,7 +396,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
       // Negative movement
       IF ( ::RecNo() + nRows ) < 1
          nRows := - ::RecNo() + 1
-         // Clipper: only SKIP movement can set Bof() to .T.
+         // Cl*pper: only SKIP movement can set Bof() to .T.
          ::lBof := .T.  // Try to skip before first record
       ENDIF
    ELSE
@@ -423,13 +409,13 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
    ::nCurRow := ::nCurRow + nRows
 
    // Maintain ::bof() true until next movement
-   // Clipper: only SKIP movement can set Bof() to .T.
-   lbof := ::Bof()
+   // Cl*pper: only SKIP movement can set Bof() to .T.
+   lBof := ::Bof()
 
    // mysql_data_seek( ::nResultHandle, ::nCurRow - 1 )
    ::getRow( ::nCurrow )
 
-   IF lbof
+   IF lBof
       ::lBof := .T.
    ENDIF
 
@@ -531,17 +517,13 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
             IF ::lFieldAsData
                __objSetValueList( Self, { { ::aFieldStruct[ i ][ MYSQL_FS_NAME ], ::aRow[ i ] } } )
             ENDIF
-
          NEXT
 
          oRow := TMySQLRow():New( ::aRow, ::aFieldStruct )
-
       ENDIF
-
    ENDIF
 
    RETURN iif( ::aRow == NIL, NIL, oRow )
-
 
 // Free result handle and associated resources
 METHOD Destroy() CLASS TMySQLQuery
@@ -550,11 +532,8 @@ METHOD Destroy() CLASS TMySQLQuery
 
    RETURN Self
 
-
 METHOD FCount() CLASS TMySQLQuery
-
    RETURN ::nNumFields
-
 
 METHOD Error() CLASS TMySQLQuery
 
@@ -620,7 +599,6 @@ METHOD FieldGet( cnField ) CLASS TMySQLQuery
 
    RETURN NIL
 
-
 METHOD FieldLen( nNum ) CLASS TMySQLQuery
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
@@ -628,12 +606,9 @@ METHOD FieldLen( nNum ) CLASS TMySQLQuery
    ENDIF
 
    RETURN 0
+/* lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
 
-
-/*
-   lFormat: when .T. method returns number of formatted decimal places from mysql table otherwise _SET_DECIMALS.
-   lFormat is usefull for copying table structure from mysql to dbf
-*/
+   lFormat is useful for copying table structure from mysql to dbf */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 
    hb_default( @lFormat, .F. )
@@ -649,11 +624,9 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 
    RETURN 0
 
-
 METHOD FieldType( nNum ) CLASS TMySQLQuery
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
-
       SWITCH ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ]
       CASE MYSQL_TYPE_TINY
       CASE MYSQL_TYPE_SHORT
@@ -682,12 +655,12 @@ METHOD FieldType( nNum ) CLASS TMySQLQuery
 
    RETURN "U"
 
-/* -------------------------------------------------------- */
+/* --- */
 
 // A Table is a query without joins; this way I can Insert() e Delete() rows.
 // NOTE: it's always a SELECT result, so it will contain a full table only if
 //       SELECT * FROM ... was issued
-CREATE CLASS TMySQLTable FROM TMySQLQuery
+CREATE CLASS TMySQLTable INHERIT TMySQLQuery
 
    VAR cTable                                       // name of table
    VAR aOldValue                                    //  keeps a copy of old value
@@ -731,7 +704,6 @@ METHOD New( nSocket, cQuery, cTableName ) CLASS TMySQLTable
 
    RETURN Self
 
-
 METHOD GetRow( nRow ) CLASS TMySQLTable
 
    LOCAL oRow := ::super:GetRow( nRow ), i
@@ -748,7 +720,6 @@ METHOD GetRow( nRow ) CLASS TMySQLTable
 
    RETURN oRow
 
-
 METHOD Skip( nRow ) CLASS TMySQLTable
 
    LOCAL i
@@ -760,7 +731,6 @@ METHOD Skip( nRow ) CLASS TMySQLTable
    NEXT
 
    RETURN NIL
-
 
 /* Creates an update query for changed fields and submits it to server */
 METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
@@ -819,13 +789,10 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
                ::aOldValue[ i ] := ::FieldGet( i )
             NEXT
          ENDIF
-
       ELSE
          ::lError := .T.
       ENDIF
-
    ELSE
-
       IF oRow:cTable == ::cTable
 
          FOR i := 1 TO Len( oRow:aRow )
@@ -855,19 +822,18 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
          IF mysql_query( ::nSocket, cUpdateQuery ) == 0
 
-            // All values are commited
+            // All values are committed
             AFill( oRow:aDirty, .F. )
             AFill( oRow:aOldValue, NIL )
 
             oRow:aOriValue := AClone( oRow:aRow )
 
-            // Clipper maintain same record pointer
+            // Cl*pper maintain same record pointer
 
             // After refresh(), position of current record is often unpredictable
             IF lRefresh
                ::refresh()
             ENDIF
-
          ELSE
             ::lError := .T.
          ENDIF
@@ -875,7 +841,6 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    ENDIF
 
    RETURN ! ::lError
-
 
 METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
@@ -903,7 +868,6 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
          // remove last " AND "
          cWhere := Left( cWhere, Len( cWhere ) - 5 )
          cDeleteQuery += cWhere
-
       ELSE
          // MakePrimaryKeyWhere is based in fields part of a primary key
          cDeleteQuery += ::MakePrimaryKeyWhere()
@@ -911,7 +875,7 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
       IF mysql_query( ::nSocket, cDeleteQuery ) == 0
          ::lError := .F.
-         // Clipper maintain same record pointer
+         // Cl*pper maintain same record pointer
 
          // After refresh(), position of current record is often unpredictable
          IF lRefresh
@@ -924,7 +888,6 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
       ELSE
          ::lError := .T.
       ENDIF
-
    ELSE
 
       IF oRow:cTable == ::cTable
@@ -955,7 +918,6 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
             IF lRefresh
                ::refresh()
             ENDIF
-
          ELSE
             ::lError := .T.
          ENDIF
@@ -963,7 +925,6 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    ENDIF
 
    RETURN ! ::lError
-
 
 // Adds a row with values passed into oRow
 METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
@@ -997,7 +958,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
 
       IF mysql_query( ::nSocket, cInsertQuery ) == 0
          ::lError := .F.
-         // Clipper add record at end
+         // Cl*pper add record at end
          ::nCurRow := ::LastRec() + 1
 
          // After refresh(), position of current record is often unpredictable
@@ -1016,7 +977,6 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
       ELSE
          ::lError := .T.
       ENDIF
-
    ELSE
 
       IF oRow:cTable == ::cTable
@@ -1043,13 +1003,13 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
          IF mysql_query( ::nSocket, cInsertQuery ) == 0
             ::lError := .F.
 
-            // All values are commited
+            // All values are committed
             AFill( oRow:aDirty, .F. )
             AFill( oRow:aOldValue, NIL )
 
             oRow:aOriValue := AClone( oRow:aRow )
 
-            // Clipper add record at end
+            // Cl*pper add record at end
             ::nCurRow := ::LastRec() + 1
 
             // After refresh(), position of current record is often unpredictable
@@ -1062,11 +1022,9 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
             ::lError := .T.
          ENDIF
       ENDIF
-
    ENDIF
 
    RETURN .F.
-
 
 METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
 
@@ -1120,7 +1078,6 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
 
    RETURN TMySQLRow():New( aRow, ::aFieldStruct, ::cTable, .F. )
 
-
 METHOD FieldPut( cnField, Value ) CLASS TMySQLTable
 
    LOCAL nNum
@@ -1150,7 +1107,6 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLTable
    ENDIF
 
    RETURN NIL
-
 
 METHOD Refresh() CLASS TMySQLTABLE
 
@@ -1189,7 +1145,6 @@ METHOD Refresh() CLASS TMySQLTABLE
 
    RETURN ! ::lError
 
-
 // returns a WHERE x=y statement which uses primary key (if available)
 METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
 
@@ -1215,7 +1170,7 @@ METHOD MakePrimaryKeyWhere() CLASS TMySQLTable
 
    RETURN cWhere
 
-/* -------------------------------------------------------- */
+/* --- */
 
 // Every available MySQL server
 CREATE CLASS TMySQLServer
@@ -1328,7 +1283,6 @@ METHOD CreateDatabase( cDataBase ) CLASS TMySQLServer
 
    RETURN .F.
 
-
 // NOTE: OS/2 port of MySQL is picky about table names, that is if you create a table with
 // an upper case name you cannot alter it (for example) using a lower case name, this violates
 // OS/2 case insensibility about names
@@ -1415,7 +1369,6 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
    ENDIF
 
    RETURN .F.
-
 
 METHOD CreateIndex( cName, cTable, aFNames, lUnique ) CLASS TMySQLServer
 
@@ -1515,25 +1468,20 @@ METHOD Query( cQuery ) CLASS TMySQLServer
 
    RETURN oQuery
 
-
 METHOD Error() CLASS TMySQLServer
 
    ::lError := .F.
 
    RETURN iif( Empty( ::nSocket ), "No connection to server", mysql_error( ::nSocket ) )
 
-
 METHOD ListDBs() CLASS TMySQLServer
-
    RETURN mysql_list_dbs( ::nSocket )
 
-
 METHOD ListTables() CLASS TMySQLServer
-
    RETURN mysql_list_tables( ::nSocket )
 
 
-/* TOFIX: Conversion creates a .dbf with fields of wrong dimension (often) */
+/* FIXME: Conversion creates a .dbf with fields of wrong dimension (often) */
 METHOD TableStruct( cTable ) CLASS TMySQLServer
 
    LOCAL aStruct := {}
@@ -1602,7 +1550,6 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
             AAdd( aStruct, aSField )
          ENDIF
       NEXT
-
    ENDIF
 #endif
 

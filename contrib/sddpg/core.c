@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,11 +45,10 @@
  */
 
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbvm.h"
-
-#include "hbrddsql.h"
 
 #include "libpq-fe.h"
 
@@ -149,7 +148,7 @@ HB_CALL_ON_STARTUP_END( _hb_sddpostgre_init_ )
 #endif
 
 
-/* ===================================================================================== */
+/* --- */
 static HB_USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
@@ -162,8 +161,7 @@ static HB_USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSub
 }
 
 
-/* ============= SDD METHODS ============================================================= */
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE pgsqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    PGconn *       pConn;
@@ -387,7 +385,9 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             bError = HB_TRUE;
             break;
       }
-      /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", dbFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
+#if 0
+      HB_TRACE( HB_TR_ALWAYS, ( "field:%s type=%d size=%d format=%d mod=%d err=%d", dbFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ), PQfmod( pResult, uiCount ), bError ) );
+#endif
 
       if( ! bError )
       {
@@ -438,9 +438,10 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
 
-/*       if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
+#if 0
+         if( dbFieldInfo.uiType == HB_IT_DOUBLE || dbFieldInfo.uiType == HB_IT_INTEGER )
             dbFieldInfo.uiType = HB_IT_LONG;
- */
+#endif
 
          if( ! bError )
             bError = ( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE );
@@ -496,30 +497,34 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
    LPFIELD   pField;
    char *    pValue;
    HB_BOOL   bError;
-   PHB_ITEM  pError;
-   HB_SIZE   ulLen;
+   HB_SIZE   nLen;
 
    bError = HB_FALSE;
    uiIndex--;
    pField = pArea->area.lpFields + uiIndex;
 
    if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
-      /* TOFIX: it breaks defined field type */
+   {
+      hb_itemClear( pItem );
+      /* FIXME: it breaks defined field type */
       return HB_SUCCESS;
+   }
 
    pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
-   ulLen  = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
+   nLen   = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
 
-/*   printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, ulLen ); */
+#if 0
+   HB_TRACE( HB_TR_ALWAYS, ( "fieldget recno=%d index=%d value=%s len=%d", dbFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), pArea->ulRecNo, uiIndex, pValue, nLen ) );
+#endif
 
    switch( pField->uiType )
    {
       case HB_FT_STRING:
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
          break;
 
       case HB_FT_MEMO:
-         hb_itemPutCL( pItem, pValue, ulLen );
+         hb_itemPutCL( pItem, pValue, nLen );
          hb_itemSetCMemo( pItem );
          break;
 
@@ -541,7 +546,6 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
       case HB_FT_LOGICAL:
          hb_itemPutL( pItem, pValue[ 0 ] == 'T' || pValue[ 0 ] == 'Y' );
          break;
-
 
       case HB_FT_DATE:
       {
@@ -567,7 +571,7 @@ static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
 
    if( bError )
    {
-      pError = hb_errNew();
+      PHB_ITEM pError = hb_errNew();
       hb_errPutGenCode( pError, EG_DATATYPE );
       hb_errPutDescription( pError, hb_langDGetErrorDesc( EG_DATATYPE ) );
       hb_errPutSubCode( pError, EDBF_DATATYPE );

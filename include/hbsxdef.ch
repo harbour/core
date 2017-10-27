@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,9 +47,7 @@
 #ifndef HB_SIX_DEF_CH_
 #define HB_SIX_DEF_CH_
 
-/*
- * Event Constants for Trigger System
- */
+/* Event Constants for Trigger System */
 #define EVENT_PREUSE          1
 #define EVENT_POSTUSE         2
 #define EVENT_UPDATE          3
@@ -65,21 +63,15 @@
 #define EVENT_PREMEMOPACK     13
 #define EVENT_POSTMEMOPACK    14
 
-/*
- * Trigger Toggle Values
- */
+/* Trigger Toggle Values */
 #define TRIGGER_ENABLE        1
 #define TRIGGER_DISABLE       2
 #define TRIGGER_REMOVE        3
 #define TRIGGER_INSTALL       4
 #define TRIGGER_PENDING       5  /* Internal Use Only */
 
-
-/*
- * sx_File2Blob() actions
- */
+/* sx_File2Blob() actions */
 #define BLOB_FILECOMPRESS     1
 #define BLOB_FILEENCRYPT      2
-
 
 #endif /* HB_SIX_DEF_CH_ */

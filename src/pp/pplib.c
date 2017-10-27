@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,9 +44,8 @@
  *
  */
 
-
-#include "hbpp.h"
 #include "hbapi.h"
+#include "hbpp.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapierr.h"
@@ -58,7 +57,7 @@ static void hb_pp_ErrorMessage( void * cargo, const char * const szMsgTable[],
                                 char cPrefix, int iCode,
                                 const char * szParam1, const char * szParam2 )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_pp_ErrorGen(%p, %p, %c, %d, %s, %s)", cargo, szMsgTable, cPrefix, iCode, szParam1, szParam2 ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pp_ErrorGen(%p, %p, %c, %d, %s, %s)", cargo, ( const void * ) szMsgTable, cPrefix, iCode, szParam1, szParam2 ) );
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -148,18 +147,19 @@ PHB_PP_STATE hb_pp_Param( int iParam )
 
 /*
  * initialize new PP context and return pointer to it.
- * __pp_Init( [<cIncludePath>], [<cStdChFile> ] [, <lArchDefs>] ) -> <pPP>
+ * __pp_Init( [<cIncludePath>], [<cStdChFile> ] [, <lArchDefs>] ) --> <pPP>
  * when <cStdChFile> is empty string ("") then no default rules are used
  * only the dynamically created #defines like __HARBOUR__, __DATE__, __TIME__
  */
 HB_FUNC( __PP_INIT )
 {
-   PHB_PP_STATE * pStatePtr, pState = hb_pp_new();
+   PHB_PP_STATE pState = hb_pp_new();
 
    if( pState )
    {
+      PHB_PP_STATE * pStatePtr;
       const char * szPath = hb_parc( 1 ), * szStdCh = hb_parc( 2 );
-      HB_BOOL fArchDefs = hb_parldef( 3, 1 );
+      HB_BOOL fArchDefs = hb_parldef( 3, HB_TRUE );
       PHB_ITEM ppItem;
 
       pStatePtr = ( PHB_PP_STATE * ) hb_gcAllocate( sizeof( PHB_PP_STATE ),
@@ -190,7 +190,7 @@ HB_FUNC( __PP_INIT )
 
 /*
  * add new (or replace previous) include paths.
- * __pp_Path( <pPP>, <cPath> [, <lClearPrev>] ) -> NIL
+ * __pp_Path( <pPP>, <cPath> [, <lClearPrev>] ) --> NIL
  */
 HB_FUNC( __PP_PATH )
 {
@@ -202,7 +202,7 @@ HB_FUNC( __PP_PATH )
 
 /*
  * reset the PP context (remove all rules added by user or preprocessed code)
- * __pp_Reset( <pPP> ) -> NIL
+ * __pp_Reset( <pPP> ) --> NIL
  */
 HB_FUNC( __PP_RESET )
 {
@@ -214,7 +214,7 @@ HB_FUNC( __PP_RESET )
 
 /*
  * preprocess and execute new preprocessor directive
- * __pp_AddRule( <pPP>, <cDirective> ) -> <lOK>
+ * __pp_AddRule( <pPP>, <cDirective> ) --> <lOK>
  */
 HB_FUNC( __PP_ADDRULE )
 {
@@ -239,7 +239,7 @@ HB_FUNC( __PP_ADDRULE )
          hb_pp_parseLine( pState, szText, &nLen );
 
          /* probably for parsing #included files the old code was making
-            sth like that */
+            something like that */
          do
          {
             if( hb_vmRequestQuery() != 0 )
@@ -256,7 +256,7 @@ HB_FUNC( __PP_ADDRULE )
 
 /*
  * preprocess given code and return result
- * __pp_Process( <pPP>, <cCode> ) -> <cPreprocessedCode>
+ * __pp_Process( <pPP>, <cCode> ) --> <cPreprocessedCode>
  */
 HB_FUNC( __PP_PROCESS )
 {

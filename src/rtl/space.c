@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,10 +62,12 @@ HB_FUNC( SPACE )
       {
          char * szResult = ( char * ) hb_xgrab( nLen + 1 );
 
-         /* NOTE: String overflow could never occure since a string can
+         /* NOTE: String overflow could never occur since a string can
                   be as large as ULONG_MAX, and the maximum length that
                   can be specified is LONG_MAX here. [vszakats] */
-         /* hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); */
+         #if 0
+         hb_errRT_BASE( EG_STROVERFLOW, 1233, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+         #endif
 
          hb_xmemset( szResult, ' ', nLen );
          hb_retclen_buffer( szResult, nLen );

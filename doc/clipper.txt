@@ -59,43 +59,43 @@ Note:
      to enumerator item changes the original string only if it was passed
      to FOR EACH statement by reference, i.e.:
          FOR EACH c IN @string
-            IF ! isAlpha( c )
-               c := "*"
+            IF IsAlpha( c )
+               c := Upper( c )
             ELSE
-               c := upper( c )
+               c := "*"
             ENDIF
          NEXT
    - after the loop the controlling variable(s) restore the value which
      they had before entering the loop
    - the enumerator variable supports the following properties
-      :__enumIndex   - the loop counter for variable
-      :__enumKey     - the hash key value of traversed hash item pair
-      :__enumBase    - the value that is being traversed
-      :__enumValue   - the value of variable
-      :__enumIsFirst - is it the first enumerated item?
-      :__enumIsLast  - is it the last enumerated item?
+      :__enumIndex()   - the loop counter for variable
+      :__enumKey()     - the hash key value of traversed hash item pair
+      :__enumBase()    - the value that is being traversed
+      :__enumValue()   - the value of variable
+      :__enumIsFirst() - is it the first enumerated item?
+      :__enumIsLast()  - is it the last enumerated item?
    - defining new class or overloading existing one user can define
      his own behavior of FOR EACH iterating overloading chosen of above
      methods and/or the following ones:
-      :__enumStart
-      :__enumSkip
-      :__enumStop
+      :__enumStart()
+      :__enumSkip()
+      :__enumStop()
      By default FOR EACH iterate all object instance variables
 
 for example:
-   a := 'A'
-   b := 'B'
+   a := "A"
+   b := "B"
    FOR EACH a, b IN { 1, 2, 3, 4 }, "abcd"
-      ? a, b   //prints: 1 a
-               //        2 b
-               //        3 c
-               //        4 d
+      ? a, b   // prints: 1 a
+               //         2 b
+               //         3 c
+               //         4 d
    NEXT
-   ? a, b   //prints: A B
+   ? a, b   // prints: A B
 
    // you can use EXIT statement inside the loop
    FOR EACH a IN { 1, 2, 3, 4 }
-      IF a:__enumindex == 3
+      IF a:__enumIndex() == 3
          ? a
          EXIT
       ENDIF
@@ -107,13 +107,13 @@ for example:
       a *= 2
       str := Upper( str )
    NEXT
-   // now 'arr' stores { 2, 4, 6 }
-   // howerer 'str' still stores "abc"
+   // now `arr` stores { 2, 4, 6 }
+   // however `str` still stores "abc"
 
 Notice the difference:
    FOR EACH a IN someValue
-      ? a:__enumindex   //prints current value of the index
-      ? (a):__enumindex //sends '__enumindex' message to the current value
+      ? a:__enumIndex()      // prints current value of the index
+      ? ( a ):__enumIndex()  // sends `__enumindex()` message to the current value
    NEXT
 
 
@@ -129,7 +129,7 @@ Harbour supports the following statement:
    form of sending messages to the object. You can use the syntax
    :message( [params] )
    :property
-   to send messages to the object specified by 'expression'
+   to send messages to the object specified by `expression`
 
 for example:
    WITH OBJECT myobj:a[ 1 ]:myitem
@@ -142,7 +142,7 @@ for example:
    myobj:a[ 1 ]:myitem:value := 9
 
    Inside WITH OBJECT/END you can access (or even assign a new object)
-   using a special reserved property :__withobject
+   using a special reserved property :__withObject()
 
        The runtime error will be generated at the time of message
        sending (or property access/assign) if <objexpression>
@@ -150,16 +150,16 @@ for example:
 
 for example:
    CREATE CLASS foo
-      VAR name INIT 'FOO'
+      VAR name INIT "FOO"
    ENDCLASS
 
    CREATE CLASS bar
-      VAR name INIT 'BAR'
+      VAR name INIT "BAR"
    ENDCLASS
 
    WITH OBJECT foo():new()
-      ? :name                 //prints 'FOO'
-      ? :__withobject:name    //also prints 'FOO'
-      ? :__withobject := bar():new()
-      ? :name                 //prints 'BAR'
+      ? :name                   // prints `FOO`
+      ? :__withObject():name    // also prints `FOO`
+      ? :__withObject := bar():new()
+      ? :name                   // prints `BAR`
    ENDWITH

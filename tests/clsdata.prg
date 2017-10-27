@@ -29,39 +29,39 @@ FUNCTION TBaseObject()
 
 STATIC FUNCTION NewBase()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ::Data1 := 1
    ::ClassData1 := "A"
 
-   RETURN self
+   RETURN Self
 
 STATIC FUNCTION Test()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ? "Inside ::Test()"
    ? "calling ::Method1()"
    ::Method1()
 
-   RETURN self
+   RETURN Self
 
 STATIC FUNCTION Method1Base()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ? "I am Method1 from TBaseObject"
    ::Method2()
 
-   RETURN self
+   RETURN Self
 
 STATIC FUNCTION Method2Base()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ? "I am Method2 from TBaseObject"
 
-   RETURN self
+   RETURN Self
 
 FUNCTION HBObject()
 
@@ -81,7 +81,7 @@ FUNCTION HBObject()
 
 STATIC FUNCTION New()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ::TBaseObject:NewBase()
    ::Data1 := 1
@@ -90,21 +90,21 @@ STATIC FUNCTION New()
    // ClassData2 override ClassData1
    ::ClassData2 := "B"
 
-   RETURN self
+   RETURN Self
 
 STATIC FUNCTION Method1()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ? "I am Method1 from HBObject"
    ::TBaseObject:Method1()
 
-   RETURN self
+   RETURN Self
 
 STATIC FUNCTION Method2()
 
-   LOCAL self := QSelf()
+   LOCAL Self := QSelf()
 
    ? "I am Method2 from HBObject"
 
-   RETURN self
+   RETURN Self

@@ -1,7 +1,7 @@
 /*
  * FlagShip compatible functions:
- * StrPeek( cStr, nPos ) -> nASC
- * StrPoke( cStr, nPos, nASCval ) -> cStr
+ * StrPeek( cStr, nPos ) --> nASC
+ * StrPoke( cStr, nPos, nASCval ) --> cStr
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
  *
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,10 +56,10 @@ HB_FUNC( STRPEEK )
 
    if( pText && HB_ISNUM( 2 ) )
    {
-      HB_SIZE ulPos = hb_parns( 2 );
+      HB_SIZE nPos = hb_parns( 2 );
 
-      if( ulPos > 0 && ulPos <= hb_itemGetCLen( pText ) )
-         hb_retni( ( unsigned char ) hb_itemGetCPtr( pText )[ ulPos - 1 ] );
+      if( nPos > 0 && nPos <= hb_itemGetCLen( pText ) )
+         hb_retni( ( unsigned char ) hb_itemGetCPtr( pText )[ nPos - 1 ] );
       else
          hb_retni( 0 );
    }
@@ -74,13 +74,13 @@ HB_FUNC( STRPOKE )
 
    if( pText && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
-      HB_SIZE ulPos = hb_parns( 2 ), ulLen;
+      HB_SIZE nPos = hb_parns( 2 ), nLen;
       char *  pszText;
 
-      if( ulPos > 0 && hb_itemGetWriteCL( pText, &pszText, &ulLen ) &&
-          ulPos <= ulLen )
+      if( nPos > 0 && hb_itemGetWriteCL( pText, &pszText, &nLen ) &&
+          nPos <= nLen )
       {
-         pszText[ ulPos - 1 ] = ( char ) ( hb_parni( 3 ) & 0xff );
+         pszText[ nPos - 1 ] = ( char ) ( hb_parni( 3 ) & 0xff );
       }
       hb_itemReturn( pText );
    }

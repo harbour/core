@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,8 +45,6 @@
  */
 
 #include "hbzebra.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 
 static const char s_code[] = { 0x0C, 0x11, 0x12, 0x03, 0x14, 0x05, 0x06, 0x18, 0x09, 0x0A };
@@ -56,7 +54,7 @@ static char _itf_checksum( const char * szCode )
    int i, sum = 0;
 
    for( i = 0; szCode[ i ]; i++ )
-      sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 1 : 3 );
+      sum += ( szCode[ i ] - '0' ) * ( ( i & 1 ) ? 1 : 3 );
    return '0' + ( 100000 - sum ) % 10;
 }
 
@@ -77,7 +75,7 @@ PHB_ZEBRA hb_zebra_create_itf( const char * szCode, HB_SIZE nLen, int iFlags )
          return pZebra;
       }
    }
-   if( ( iLen + ( iFlags & HB_ZEBRA_FLAG_CHECKSUM ? 1 : 0 ) ) & 1 )
+   if( ( iLen + ( ( iFlags & HB_ZEBRA_FLAG_CHECKSUM ) ? 1 : 0 ) ) & 1 )
    {
       pZebra->szCode = ( char * ) hb_xgrab( iLen + 2 );
       pZebra->szCode[ 0 ] = '0';
@@ -124,11 +122,11 @@ PHB_ZEBRA hb_zebra_create_itf( const char * szCode, HB_SIZE nLen, int iFlags )
    for( i = 0; szCode[ i ]; i += 2 )
    {
       char c1 = s_code[ szCode[ i ] - '0' ], c2 = szCode[ i + 1 ] ? s_code[ szCode[ i + 1 ] - '0' ] : csum;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );  c1 >>= 1;  c2 >>= 1;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );  c1 >>= 1;  c2 >>= 1;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );  c1 >>= 1;  c2 >>= 1;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );  c1 >>= 1;  c2 >>= 1;
-      hb_bitbuffer_cat_int( pZebra->pBits, 31, c1 & 1 ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, c2 & 1 ? iW : iN );
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );  c1 >>= 1;  c2 >>= 1;
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );  c1 >>= 1;  c2 >>= 1;
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );  c1 >>= 1;  c2 >>= 1;
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );  c1 >>= 1;  c2 >>= 1;
+      hb_bitbuffer_cat_int( pZebra->pBits, 31, ( c1 & 1 ) ? iW : iN );  hb_bitbuffer_cat_int( pZebra->pBits, 0, ( c2 & 1 ) ? iW : iN );
       if( ! szCode[ i + 1 ] )
          break;
    }

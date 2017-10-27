@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,13 +44,11 @@
  *
  */
 
-
 #include "hbcairo.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-
-/* ============ cairo_pattern_t * support ============ */
+/* --- cairo_pattern_t * support --- */
 static HB_GARBAGE_FUNC( hb_cairo_pattern_destructor )
 {
    cairo_pattern_t ** ppPattern = ( cairo_pattern_t ** ) Cargo;
@@ -62,13 +60,11 @@ static HB_GARBAGE_FUNC( hb_cairo_pattern_destructor )
    }
 }
 
-
 static const HB_GC_FUNCS s_gcPatternFuncs =
 {
    hb_cairo_pattern_destructor,
    hb_gcDummyMark
 };
-
 
 cairo_pattern_t * hb_cairoPatternItemGet( PHB_ITEM pItem )
 {
@@ -77,7 +73,6 @@ cairo_pattern_t * hb_cairoPatternItemGet( PHB_ITEM pItem )
    return ppPattern ? *ppPattern : NULL;
 }
 
-
 PHB_ITEM hb_cairoPatternItemPut( PHB_ITEM pItem, cairo_pattern_t * pPattern )
 {
    cairo_pattern_t ** ppPattern = ( cairo_pattern_t ** ) hb_gcAllocate( sizeof( cairo_pattern_t * ), &s_gcPatternFuncs );
@@ -85,7 +80,6 @@ PHB_ITEM hb_cairoPatternItemPut( PHB_ITEM pItem, cairo_pattern_t * pPattern )
    *ppPattern = pPattern;
    return hb_itemPutPtrGC( pItem, ppPattern );
 }
-
 
 cairo_pattern_t * hb_cairo_pattern_param( int iParam )
 {
@@ -98,12 +92,10 @@ cairo_pattern_t * hb_cairo_pattern_param( int iParam )
    return NULL;
 }
 
-
 void hb_cairo_pattern_ret( cairo_pattern_t * pPattern )
 {
    hb_cairoPatternItemPut( hb_stackReturnItem(), pPattern );
 }
-
 
 HB_FUNC( CAIRO_PATTERN_DESTROY )
 {
@@ -118,7 +110,6 @@ HB_FUNC( CAIRO_PATTERN_DESTROY )
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-
 HB_FUNC( CAIRO_PATTERN_ADD_COLOR_STOP_RGB )
 {
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
@@ -127,7 +118,6 @@ HB_FUNC( CAIRO_PATTERN_ADD_COLOR_STOP_RGB )
       cairo_pattern_add_color_stop_rgb( pPattern, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ) );
 }
 
-
 HB_FUNC( CAIRO_PATTERN_ADD_COLOR_STOP_RGBA )
 {
    cairo_pattern_t * pPattern = hb_cairo_pattern_param( 1 );
@@ -135,7 +125,6 @@ HB_FUNC( CAIRO_PATTERN_ADD_COLOR_STOP_RGBA )
    if( pPattern )
       cairo_pattern_add_color_stop_rgba( pPattern, hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) );
 }
-
 
 HB_FUNC( CAIRO_PATTERN_GET_COLOR_STOP_COUNT )
 {
@@ -156,7 +145,6 @@ HB_FUNC( CAIRO_PATTERN_GET_COLOR_STOP_COUNT )
    hb_retni( -1 );              /* There is no good CAIRO_STATUS_* for this */
 #endif
 }
-
 
 HB_FUNC( CAIRO_PATTERN_GET_COLOR_STOP_RGBA )
 {
@@ -187,18 +175,15 @@ HB_FUNC( CAIRO_PATTERN_GET_COLOR_STOP_RGBA )
 #endif
 }
 
-
 HB_FUNC( CAIRO_PATTERN_CREATE_RGB )
 {
    hb_cairo_pattern_ret( cairo_pattern_create_rgb( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ) ) );
 }
 
-
 HB_FUNC( CAIRO_PATTERN_CREATE_RGBA )
 {
    hb_cairo_pattern_ret( cairo_pattern_create_rgba( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 3 ) ) );
 }
-
 
 HB_FUNC( CAIRO_PATTERN_GET_RGBA )
 {
@@ -227,12 +212,10 @@ HB_FUNC( CAIRO_PATTERN_GET_RGBA )
 #endif
 }
 
-
 HB_FUNC( CAIRO_PATTERN_CREATE_FOR_SURFACE )
 {
    hb_cairo_pattern_ret( cairo_pattern_create_for_surface( hb_cairo_surface_param( 1 ) ) );
 }
-
 
 HB_FUNC( CAIRO_PATTERN_GET_SURFACE )
 {
@@ -255,12 +238,10 @@ HB_FUNC( CAIRO_PATTERN_GET_SURFACE )
 #endif
 }
 
-
 HB_FUNC( CAIRO_PATTERN_CREATE_LINEAR )
 {
    hb_cairo_pattern_ret( cairo_pattern_create_linear( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ) ) );
 }
-
 
 HB_FUNC( CAIRO_PATTERN_GET_LINEAR_POINTS )
 {
@@ -289,12 +270,10 @@ HB_FUNC( CAIRO_PATTERN_GET_LINEAR_POINTS )
 #endif
 }
 
-
 HB_FUNC( CAIRO_PATTERN_CREATE_RADIAL )
 {
    hb_cairo_pattern_ret( cairo_pattern_create_radial( hb_parnd( 1 ), hb_parnd( 2 ), hb_parnd( 3 ), hb_parnd( 4 ), hb_parnd( 5 ), hb_parnd( 6 ) ) );
 }
-
 
 HB_FUNC( CAIRO_PATTERN_GET_RADIAL_CIRCLES )
 {
@@ -326,7 +305,6 @@ HB_FUNC( CAIRO_PATTERN_GET_RADIAL_CIRCLES )
    hb_retni( -1 );              /* There is no good CAIRO_STATUS_* for this */
 #endif
 }
-
 
 HB_FUNC( CAIRO_PATTERN_STATUS )
 {

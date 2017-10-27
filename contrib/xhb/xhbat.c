@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,12 +53,12 @@
 
 static HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   char cLastChar = ' ';
-
    HB_TRACE( HB_TR_DEBUG, ( "hb_AtSkipStrings(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen ) );
 
    if( nSubLen > 0 && nLen >= nSubLen )
    {
+      char cLastChar = ' ';
+
       HB_SIZE nPos    = 0;
       HB_SIZE nSubPos = 0;
 
@@ -182,7 +182,6 @@ HB_FUNC( ATI )
       HB_ISIZ  nLen   = hb_itemGetCLen( pText );
       HB_ISIZ  nStart = pStart ? hb_itemGetNS( pStart ) : 1;
       HB_ISIZ  nEnd   = pEnd ? hb_itemGetNS( pEnd ) : nLen;
-      HB_SIZE  nPos;
 
       if( nStart < 0 )
       {
@@ -203,8 +202,8 @@ HB_FUNC( ATI )
          hb_retns( 0 );
       else
       {
-         nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
-                           hb_itemGetCPtr( pText ) + nStart, nEnd - nStart );
+         HB_SIZE nPos = hb_strAtI( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                                   hb_itemGetCPtr( pText ) + nStart, nEnd - nStart );
          hb_retns( nPos ? nPos + nStart : 0 );
       }
    }

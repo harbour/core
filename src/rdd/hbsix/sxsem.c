@@ -1,8 +1,8 @@
 /*
  * SIX compatible functions:
- *          sx_MakeSem()
- *          sx_KillSem()
- *          sx_IsSem()
+ *       sx_MakeSem()
+ *       sx_KillSem()
+ *       sx_IsSem()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,7 +48,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapicdp.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapirdd.h"
@@ -137,7 +136,6 @@ static PHB_FILE hb_sxSemOpen( char * szFileName, HB_BOOL * pfNewFile )
 HB_FUNC( SX_MAKESEM )
 {
    char szFileName[ HB_PATH_MAX ];
-   HB_BYTE buffer[ 2 ];
    int iUsers = -1;
    HB_BOOL fError = HB_FALSE, fNewFile = HB_FALSE;
 
@@ -147,6 +145,8 @@ HB_FUNC( SX_MAKESEM )
 
       if( pFile != NULL )
       {
+         HB_BYTE buffer[ 2 ];
+
          if( fNewFile )
             iUsers = 1;
          else
@@ -174,7 +174,6 @@ HB_FUNC( SX_MAKESEM )
 HB_FUNC( SX_KILLSEM )
 {
    char szFileName[ HB_PATH_MAX ];
-   HB_BYTE buffer[ 2 ];
    int iUsers = -1;
 
    if( hb_sxSemName( szFileName ) )
@@ -183,6 +182,7 @@ HB_FUNC( SX_KILLSEM )
 
       if( pFile != NULL )
       {
+         HB_BYTE buffer[ 2 ];
          if( hb_fileReadAt( pFile, buffer, 2, 0 ) == 2 )
          {
             iUsers = HB_GET_LE_INT16( buffer ) - 1;

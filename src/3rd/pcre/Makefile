@@ -80,7 +80,7 @@ endif
 # ORIGIN http://www.pcre.org/
 # VER    8.34
 # URL    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.34.tar.gz
-# DIFF   pcre.dif
+# DIFF   pcre.diff
 #
 # MAP    LICENCE
 # MAP    config.h.generic               config.h

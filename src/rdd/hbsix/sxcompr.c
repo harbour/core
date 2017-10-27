@@ -1,14 +1,14 @@
 /*
  * SIX compatible functions:
- *          hb_LZSSxCompressMem()
- *          hb_LZSSxDecompressMem()
- *          hb_LZSSxCompressFile()
- *          hb_LZSSxDecompressFile()
+ *       hb_LZSSxCompressMem()
+ *       hb_LZSSxDecompressMem()
+ *       hb_LZSSxCompressFile()
+ *       hb_LZSSxDecompressFile()
  *
- *          SX_FCOMPRESS
- *          SX_FDECOMPRESS
- *          _SX_STRDECOMPRESS
- *          _SX_STRCOMPRESS
+ *       sx_FCompress()
+ *       sx_FDecompress()
+ *       _sx_StrDecompress()
+ *       _sx_StrCompress()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -23,9 +23,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -72,7 +72,7 @@
    wanted to reduce memory overhead in used algorithm for finding the
    longest match? The SIX was written for 16-bit DOS and the memory
    consumption was important though it should not be too much. They
-   documented ~9KB increasing the ring buffer size should be linear to
+   documented ~9 KiB increasing the ring buffer size should be linear to
    other used (helper) structures.
    The next interesting thing is that it dynamically overwrites the ring
    buffer with stream data and does not use any separate look ahead buffers.
@@ -81,7 +81,7 @@
    Our algorithm has to make the same with the ring buffer to be compatible.
    UPDATE: Using smaller ring buffer without increasing the match pointer
    suggested me that it is possible that someone didn't understand it fully
-   and modified already existing algorithm. I spend a while with a google
+   and modified already existing algorithm. I spend a while on the internet
    looking for old LZSS implementations and I've found it. IMHO in 99%
    this code is used in SIX. This is lzss.c file written by Haruhiko Okumura
    with the following note in header:
@@ -120,7 +120,7 @@
 #define HB_SX_UNCOMPRESED  0xFFFFFFFFUL
 
 
-/* number of bits for encoded item (position,length) */
+/* number of bits for encoded item (position, length) */
 #define ITEMBITS           16
 /* unused DUMMY bits - who does know why SIX has it? */
 #define DUMMYBITS          1
@@ -139,7 +139,7 @@
 #define RBUFMASK           ( ( 1 << OFFSETBITS ) - 1 )
 /* the bit mask for match length */
 #define MATCHMASK          ( ( 1 << LENGTHBITS ) - 1 )
-/* get ringbuffer index */
+/* get ring buffer index */
 #define RBUFINDEX( i )       ( ( i ) & RBUFMASK )
 
 /* get ring buffer offset position from low and high bytes */
@@ -179,8 +179,7 @@ typedef struct _HB_LZSSX_COMPR
    HB_SIZE    outBuffPos;
    HB_BOOL    fOutFree;
 
-   HB_SIZE    ulMaxSize;
-   HB_SIZE    ulOutSize;
+   HB_SIZE    nOutSize;
    HB_BOOL    fResult;
    HB_BOOL    fContinue;
 
@@ -227,8 +226,7 @@ static PHB_LZSSX_COMPR hb_LZSSxInit(
    pCompr->outBuffPos  = 0;
    pCompr->fOutFree    = ( pOutput != NULL && pDstBuf == NULL );
 
-   pCompr->ulMaxSize   = 0;
-   pCompr->ulOutSize   = 0;
+   pCompr->nOutSize    = 0;
    pCompr->fResult     = HB_TRUE;
    pCompr->fContinue   = HB_FALSE;
 
@@ -256,7 +254,7 @@ static HB_BOOL hb_LZSSxFlush( PHB_LZSSX_COMPR pCompr )
       }
       else
       {
-         pCompr->ulOutSize += pCompr->outBuffPos;
+         pCompr->nOutSize += pCompr->outBuffPos;
          pCompr->outBuffPos = 0;
       }
    }
@@ -333,7 +331,9 @@ static HB_BOOL hb_LZSSxDecode( PHB_LZSSX_COMPR pCompr )
       {
          if( ( h = hb_LZSSxRead( pCompr ) ) == -1 )
          {
-            /* fResult = HB_FALSE; */
+            #if 0
+            fResult = HB_FALSE;
+            #endif
             break;
          }
          offset = LZSS_OFFSET( c, h );   /* get offset to ring buffer */
@@ -463,7 +463,7 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
    HB_UCHAR itemSet[ ITEMSETSIZE ];
    HB_UCHAR itemMask;
    HB_SIZE nSize = 0;
-   HB_SHORT i, c, len, r, s, last_match_length, item;
+   HB_SHORT i, c, len, r, s, item;
 
    for( i = RBUFLENGTH + 1; i < RBUFLENGTH + 257; i++ )
       pCompr->right[ i ] = DUMMYNODE;
@@ -490,6 +490,8 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
 
    do
    {
+      HB_SHORT last_match_length;
+
       if( pCompr->match_length > len )
          pCompr->match_length = len;
       if( pCompr->match_length < MINLENGTH )
@@ -612,28 +614,26 @@ HB_BOOL hb_LZSSxDecompressFile( PHB_FILE pInput, PHB_FILE pOutput )
 HB_FUNC( SX_FCOMPRESS )
 {
    HB_BOOL fRet = HB_FALSE;
-   PHB_FILE pInput, pOutput;
    const char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
-   HB_BYTE buf[ 4 ];
-   HB_SIZE nSize;
 
    if( szSource && *szSource && szDestin && *szDestin )
    {
-      pInput = hb_fileExtOpen( szSource, NULL, FO_READ | FO_DENYNONE |
-                               FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
+      PHB_FILE pInput = hb_fileExtOpen( szSource, NULL, FO_READ | FO_DENYNONE |
+                                        FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
       if( pInput != NULL )
       {
-         pOutput = hb_fileExtOpen( szDestin, NULL, FO_READWRITE |
-                                   FO_EXCLUSIVE | FXO_TRUNCATE |
-                                   FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
+         PHB_FILE pOutput = hb_fileExtOpen( szDestin, NULL, FO_READWRITE |
+                                            FO_EXCLUSIVE | FXO_TRUNCATE |
+                                            FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
          if( pOutput != NULL )
          {
             /* store uncompressed file size in first 4 bytes of destination
              * file in little endian order - for SIX3 compatibility
              */
-            nSize = ( HB_SIZE ) hb_fileSize( pInput );
+            HB_SIZE nSize = ( HB_SIZE ) hb_fileSize( pInput );
             if( hb_fileSeek( pInput, 0, FS_SET ) == 0 )
             {
+               HB_BYTE buf[ 4 ];
                HB_PUT_LE_UINT32( buf, nSize );
                if( hb_fileWrite( pOutput, buf, 4, -1 ) == 4 )
                   fRet = hb_LZSSxCompressFile( pInput, pOutput, NULL );
@@ -649,18 +649,17 @@ HB_FUNC( SX_FCOMPRESS )
 HB_FUNC( SX_FDECOMPRESS )
 {
    HB_BOOL fRet = HB_FALSE;
-   PHB_FILE pInput, pOutput;
    const char * szSource = hb_parc( 1 ), * szDestin = hb_parc( 2 );
 
    if( szSource && *szSource && szDestin && *szDestin )
    {
-      pInput = hb_fileExtOpen( szSource, NULL, FO_READ | FO_DENYNONE |
-                               FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
+      PHB_FILE pInput = hb_fileExtOpen( szSource, NULL, FO_READ | FO_DENYNONE |
+                                        FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
       if( pInput != NULL )
       {
-         pOutput = hb_fileExtOpen( szDestin, NULL, FO_READWRITE |
-                                   FO_EXCLUSIVE | FXO_TRUNCATE |
-                                   FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
+         PHB_FILE pOutput = hb_fileExtOpen( szDestin, NULL, FO_READWRITE |
+                                            FO_EXCLUSIVE | FXO_TRUNCATE |
+                                            FXO_DEFAULTS | FXO_SHARELOCK, NULL, NULL );
          if( pOutput != NULL )
          {
             /* skip the four bytes with original file length */
@@ -677,11 +676,11 @@ HB_FUNC( SX_FDECOMPRESS )
 HB_FUNC( _SX_STRCOMPRESS )
 {
    const char * pStr = hb_parc( 1 );
-   char * pBuf;
 
    if( pStr )
    {
       HB_SIZE nLen = hb_parclen( 1 ), nBuf, nDst;
+      char * pBuf;
 
       /* this is for strict SIX compatibility - in general very bad idea */
       nBuf = nLen + 257;
@@ -705,7 +704,6 @@ HB_FUNC( _SX_STRDECOMPRESS )
 {
    HB_BOOL fOK = HB_FALSE;
    const char * pStr = hb_parc( 1 );
-   char * pBuf;
 
    if( pStr )
    {
@@ -721,7 +719,7 @@ HB_FUNC( _SX_STRDECOMPRESS )
          }
          else
          {
-            pBuf = ( char * ) hb_xalloc( nBuf + 1 );
+            char * pBuf = ( char * ) hb_xalloc( nBuf + 1 );
             if( pBuf )
             {
                fOK = hb_LZSSxDecompressMem( pStr + 4, nLen - 4, pBuf, nBuf );

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -86,7 +86,7 @@ extern HB_EXPORT HB_BOOL hb_xvmSwitchGet( PHB_ITEM * );
 
 extern HB_EXPORT void    hb_xvmSetLine( HB_USHORT uiLine );           /* set .prg line number information */
 
-extern HB_EXPORT void    hb_xvmFrame( int iLocals, int iParams );  /* increases the stack pointer for the amount of locals and params suplied */
+extern HB_EXPORT void    hb_xvmFrame( int iLocals, int iParams );  /* increases the stack pointer for the amount of locals and params supplied */
 extern HB_EXPORT void    hb_xvmVFrame( int iLocals, int iParams ); /* increases the stack pointer for the amount of locals and variable params */
 extern HB_EXPORT void    hb_xvmSFrame( PHB_SYMB pSymbol );
 extern HB_EXPORT void    hb_xvmStatics( PHB_SYMB pSymbol, HB_USHORT uiStatics );
@@ -110,8 +110,8 @@ extern HB_EXPORT void    hb_xvmPushBlockLarge( const HB_BYTE * pCode, PHB_SYMB p
 extern HB_EXPORT void    hb_xvmPushSelf( void );
 extern HB_EXPORT void    hb_xvmPushVParams( void );
 extern HB_EXPORT void    hb_xvmPushAParams( void );
-extern HB_EXPORT void    hb_xvmPushLocal( HB_SHORT iLocal );          /* pushes the containts of a local onto the stack */
-extern HB_EXPORT void    hb_xvmPushLocalByRef( HB_SHORT iLocal );     /* pushes a local by refrence onto the stack */
+extern HB_EXPORT void    hb_xvmPushLocal( HB_SHORT iLocal );          /* pushes the content of a local onto the stack */
+extern HB_EXPORT void    hb_xvmPushLocalByRef( HB_SHORT iLocal );     /* pushes a local by reference onto the stack */
 extern HB_EXPORT void    hb_xvmPopLocal( HB_SHORT iLocal );           /* pops the stack latest value onto a local */
 extern HB_EXPORT HB_BOOL hb_xvmPushField( PHB_SYMB pSymbol );
 extern HB_EXPORT HB_BOOL hb_xvmPopField( PHB_SYMB pSymbol );
@@ -131,7 +131,7 @@ extern HB_EXPORT HB_BOOL hb_xvmSwapAlias( void );                  /* swaps item
 extern HB_EXPORT HB_BOOL hb_xvmLocalAddInt( int iLocal, HB_LONG lAdd ); /* add integer to given local variable */
 extern HB_EXPORT HB_BOOL hb_xvmLocalInc( int iLocal );             /* increment given local variable */
 extern HB_EXPORT HB_BOOL hb_xvmLocalDec( int iLocal );             /* decrement given local variable */
-extern HB_EXPORT HB_BOOL hb_xvmLocalIncPush( int iLocal );         /* increment given local variable and pussh it on HVM stack */
+extern HB_EXPORT HB_BOOL hb_xvmLocalIncPush( int iLocal );         /* increment given local variable and push it on HVM stack */
 
 extern HB_EXPORT HB_BOOL hb_xvmAnd( void );
 extern HB_EXPORT HB_BOOL hb_xvmOr( void );
@@ -154,7 +154,7 @@ extern HB_EXPORT HB_BOOL hb_xvmInstring( void );                   /* check whet
 extern HB_EXPORT HB_BOOL hb_xvmPlus( void );                       /* sums the latest two values on the stack, removes them and leaves the result */
 extern HB_EXPORT HB_BOOL hb_xvmPlusEq( void );
 extern HB_EXPORT HB_BOOL hb_xvmPlusEqPop( void );
-extern HB_EXPORT HB_BOOL hb_xvmMinus( void );                      /* substracts the latest two values on the stack, removes them and leaves the result */
+extern HB_EXPORT HB_BOOL hb_xvmMinus( void );                      /* subtracts the latest two values on the stack, removes them and leaves the result */
 extern HB_EXPORT HB_BOOL hb_xvmMinusEq( void );
 extern HB_EXPORT HB_BOOL hb_xvmMinusEqPop( void );
 extern HB_EXPORT HB_BOOL hb_xvmMult( void );                       /* multiplies the latest two values on the stack, removes them and leaves the result */

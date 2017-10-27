@@ -5,18 +5,18 @@
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/ ).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -34,7 +34,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -44,9 +44,7 @@
  *
  */
 
-//--------------------------------------------------//
-// Collected by Pritpal Bedi <pritpal@vouchcac.com>
-//--------------------------------------------------//
+/* Collected by Pritpal Bedi <pritpal@vouchcac.com> */
 
 #ifndef _HARUPDF_CH
 #define _HARUPDF_CH
@@ -310,9 +308,9 @@
 
 #define HPDF_BS_DEF_WIDTH                   1
 
-/* defalt page-size */
-#define HPDF_DEF_PAGE_WIDTH                 595.276F
-#define HPDF_DEF_PAGE_HEIGHT                841.89F
+/* default page size */
+#define HPDF_DEF_PAGE_WIDTH                 595.276
+#define HPDF_DEF_PAGE_HEIGHT                841.89
 
 /* compression mode */
 #define HPDF_COMP_NONE                      0x00
@@ -320,8 +318,10 @@
 #define HPDF_COMP_IMAGE                     0x02
 #define HPDF_COMP_METADATA                  0x04
 #define HPDF_COMP_ALL                       0x0F
-/* #define HPDF_COMP_BEST_COMPRESS             0x10 */
-/* #define HPDF_COMP_BEST_SPEED                0x20 */
+#if 0
+#define HPDF_COMP_BEST_COMPRESS             0x10
+#define HPDF_COMP_BEST_SPEED                0x20
+#endif
 #define HPDF_COMP_MASK                      0xFF
 
 /* permission flags (only Revision 2 is supported) */
@@ -623,143 +623,143 @@
 #define HPDF_COUNTRY_ZW                     "ZW"    /* ZIMBABWE */
 
 /* lang code definition */
-#define HPDF_LANG_AA                        "aa"     /* Afar */
-#define HPDF_LANG_AB                        "ab"     /* Abkhazian */
-#define HPDF_LANG_AF                        "af"     /* Afrikaans */
-#define HPDF_LANG_AM                        "am"     /* Amharic */
-#define HPDF_LANG_AR                        "ar"     /* Arabic */
-#define HPDF_LANG_AS                        "as"     /* Assamese */
-#define HPDF_LANG_AY                        "ay"     /* Aymara */
-#define HPDF_LANG_AZ                        "az"     /* Azerbaijani */
-#define HPDF_LANG_BA                        "ba"     /* Bashkir */
-#define HPDF_LANG_BE                        "be"     /* Byelorussian */
-#define HPDF_LANG_BG                        "bg"     /* Bulgarian */
-#define HPDF_LANG_BH                        "bh"     /* Bihari */
-#define HPDF_LANG_BI                        "bi"     /* Bislama */
-#define HPDF_LANG_BN                        "bn"     /* Bengali Bangla */
-#define HPDF_LANG_BO                        "bo"     /* Tibetan */
-#define HPDF_LANG_BR                        "br"     /* Breton */
-#define HPDF_LANG_CA                        "ca"     /* Catalan */
-#define HPDF_LANG_CO                        "co"     /* Corsican */
-#define HPDF_LANG_CS                        "cs"     /* Czech */
-#define HPDF_LANG_CY                        "cy"     /* Welsh */
-#define HPDF_LANG_DA                        "da"     /* Danish */
-#define HPDF_LANG_DE                        "de"     /* German */
-#define HPDF_LANG_DZ                        "dz"     /* Bhutani */
-#define HPDF_LANG_EL                        "el"     /* Greek */
-#define HPDF_LANG_EN                        "en"     /* English */
-#define HPDF_LANG_EO                        "eo"     /* Esperanto */
-#define HPDF_LANG_ES                        "es"     /* Spanish */
-#define HPDF_LANG_ET                        "et"     /* Estonian */
-#define HPDF_LANG_EU                        "eu"     /* Basque */
-#define HPDF_LANG_FA                        "fa"     /* Persian */
-#define HPDF_LANG_FI                        "fi"     /* Finnish */
-#define HPDF_LANG_FJ                        "fj"     /* Fiji */
-#define HPDF_LANG_FO                        "fo"     /* Faeroese */
-#define HPDF_LANG_FR                        "fr"     /* French */
-#define HPDF_LANG_FY                        "fy"     /* Frisian */
-#define HPDF_LANG_GA                        "ga"     /* Irish */
-#define HPDF_LANG_GD                        "gd"     /* Scots Gaelic */
-#define HPDF_LANG_GL                        "gl"     /* Galician */
-#define HPDF_LANG_GN                        "gn"     /* Guarani */
-#define HPDF_LANG_GU                        "gu"     /* Gujarati */
-#define HPDF_LANG_HA                        "ha"     /* Hausa */
-#define HPDF_LANG_HI                        "hi"     /* Hindi */
-#define HPDF_LANG_HR                        "hr"     /* Croatian */
-#define HPDF_LANG_HU                        "hu"     /* Hungarian */
-#define HPDF_LANG_HY                        "hy"     /* Armenian */
-#define HPDF_LANG_IA                        "ia"     /* Interlingua */
-#define HPDF_LANG_IE                        "ie"     /* Interlingue */
-#define HPDF_LANG_IK                        "ik"     /* Inupiak */
-#define HPDF_LANG_IN                        "in"     /* Indonesian */
-#define HPDF_LANG_IS                        "is"     /* Icelandic */
-#define HPDF_LANG_IT                        "it"     /* Italian */
-#define HPDF_LANG_IW                        "iw"     /* Hebrew */
-#define HPDF_LANG_JA                        "ja"     /* Japanese */
-#define HPDF_LANG_JI                        "ji"     /* Yiddish */
-#define HPDF_LANG_JW                        "jw"     /* Javanese */
-#define HPDF_LANG_KA                        "ka"     /* Georgian */
-#define HPDF_LANG_KK                        "kk"     /* Kazakh */
-#define HPDF_LANG_KL                        "kl"     /* Greenlandic */
-#define HPDF_LANG_KM                        "km"     /* Cambodian */
-#define HPDF_LANG_KN                        "kn"     /* Kannada */
-#define HPDF_LANG_KO                        "ko"     /* Korean */
-#define HPDF_LANG_KS                        "ks"     /* Kashmiri */
-#define HPDF_LANG_KU                        "ku"     /* Kurdish */
-#define HPDF_LANG_KY                        "ky"     /* Kirghiz */
-#define HPDF_LANG_LA                        "la"     /* Latin */
-#define HPDF_LANG_LN                        "ln"     /* Lingala */
-#define HPDF_LANG_LO                        "lo"     /* Laothian */
-#define HPDF_LANG_LT                        "lt"     /* Lithuanian */
-#define HPDF_LANG_LV                        "lv"     /* Latvian,Lettish */
-#define HPDF_LANG_MG                        "mg"     /* Malagasy */
-#define HPDF_LANG_MI                        "mi"     /* Maori */
-#define HPDF_LANG_MK                        "mk"     /* Macedonian */
-#define HPDF_LANG_ML                        "ml"     /* Malayalam */
-#define HPDF_LANG_MN                        "mn"     /* Mongolian */
-#define HPDF_LANG_MO                        "mo"     /* Moldavian */
-#define HPDF_LANG_MR                        "mr"     /* Marathi */
-#define HPDF_LANG_MS                        "ms"     /* Malay */
-#define HPDF_LANG_MT                        "mt"     /* Maltese */
-#define HPDF_LANG_MY                        "my"     /* Burmese */
-#define HPDF_LANG_NA                        "na"     /* Nauru */
-#define HPDF_LANG_NE                        "ne"     /* Nepali */
-#define HPDF_LANG_NL                        "nl"     /* Dutch */
-#define HPDF_LANG_NO                        "no"     /* Norwegian */
-#define HPDF_LANG_OC                        "oc"     /* Occitan */
-#define HPDF_LANG_OM                        "om"     /* (Afan)Oromo */
-#define HPDF_LANG_OR                        "or"     /* Oriya */
-#define HPDF_LANG_PA                        "pa"     /* Punjabi */
-#define HPDF_LANG_PL                        "pl"     /* Polish */
-#define HPDF_LANG_PS                        "ps"     /* Pashto,Pushto */
-#define HPDF_LANG_PT                        "pt"     /* Portuguese  */
-#define HPDF_LANG_QU                        "qu"     /* Quechua */
-#define HPDF_LANG_RM                        "rm"     /* Rhaeto-Romance */
-#define HPDF_LANG_RN                        "rn"     /* Kirundi */
-#define HPDF_LANG_RO                        "ro"     /* Romanian */
-#define HPDF_LANG_RU                        "ru"     /* Russian */
-#define HPDF_LANG_RW                        "rw"     /* Kinyarwanda */
-#define HPDF_LANG_SA                        "sa"     /* Sanskrit */
-#define HPDF_LANG_SD                        "sd"     /* Sindhi */
-#define HPDF_LANG_SG                        "sg"     /* Sangro */
-#define HPDF_LANG_SH                        "sh"     /* Serbo-Croatian */
-#define HPDF_LANG_SI                        "si"     /* Singhalese */
-#define HPDF_LANG_SK                        "sk"     /* Slovak */
-#define HPDF_LANG_SL                        "sl"     /* Slovenian */
-#define HPDF_LANG_SM                        "sm"     /* Samoan */
-#define HPDF_LANG_SN                        "sn"     /* Shona */
-#define HPDF_LANG_SO                        "so"     /* Somali */
-#define HPDF_LANG_SQ                        "sq"     /* Albanian */
-#define HPDF_LANG_SR                        "sr"     /* Serbian */
-#define HPDF_LANG_SS                        "ss"     /* Siswati */
-#define HPDF_LANG_ST                        "st"     /* Sesotho */
-#define HPDF_LANG_SU                        "su"     /* Sundanese */
-#define HPDF_LANG_SV                        "sv"     /* Swedish */
-#define HPDF_LANG_SW                        "sw"     /* Swahili */
-#define HPDF_LANG_TA                        "ta"     /* Tamil */
-#define HPDF_LANG_TE                        "te"     /* Tegulu */
-#define HPDF_LANG_TG                        "tg"     /* Tajik */
-#define HPDF_LANG_TH                        "th"     /* Thai */
-#define HPDF_LANG_TI                        "ti"     /* Tigrinya */
-#define HPDF_LANG_TK                        "tk"     /* Turkmen */
-#define HPDF_LANG_TL                        "tl"     /* Tagalog */
-#define HPDF_LANG_TN                        "tn"     /* Setswanato Tonga */
-#define HPDF_LANG_TR                        "tr"     /* Turkish */
-#define HPDF_LANG_TS                        "ts"     /* Tsonga */
-#define HPDF_LANG_TT                        "tt"     /* Tatar */
-#define HPDF_LANG_TW                        "tw"     /* Twi */
-#define HPDF_LANG_UK                        "uk"     /* Ukrainian */
-#define HPDF_LANG_UR                        "ur"     /* Urdu */
-#define HPDF_LANG_UZ                        "uz"     /* Uzbek */
-#define HPDF_LANG_VI                        "vi"     /* Vietnamese */
-#define HPDF_LANG_VO                        "vo"     /* Volapuk */
-#define HPDF_LANG_WO                        "wo"     /* Wolof */
-#define HPDF_LANG_XH                        "xh"     /* Xhosa */
-#define HPDF_LANG_YO                        "yo"     /* Yoruba */
-#define HPDF_LANG_ZH                        "zh"     /* Chinese */
-#define HPDF_LANG_ZU                        "zu"     /* Zulu */
+#define HPDF_LANG_AA                        "aa"    /* Afar */
+#define HPDF_LANG_AB                        "ab"    /* Abkhazian */
+#define HPDF_LANG_AF                        "af"    /* Afrikaans */
+#define HPDF_LANG_AM                        "am"    /* Amharic */
+#define HPDF_LANG_AR                        "ar"    /* Arabic */
+#define HPDF_LANG_AS                        "as"    /* Assamese */
+#define HPDF_LANG_AY                        "ay"    /* Aymara */
+#define HPDF_LANG_AZ                        "az"    /* Azerbaijani */
+#define HPDF_LANG_BA                        "ba"    /* Bashkir */
+#define HPDF_LANG_BE                        "be"    /* Byelorussian */
+#define HPDF_LANG_BG                        "bg"    /* Bulgarian */
+#define HPDF_LANG_BH                        "bh"    /* Bihari */
+#define HPDF_LANG_BI                        "bi"    /* Bislama */
+#define HPDF_LANG_BN                        "bn"    /* Bengali Bangla */
+#define HPDF_LANG_BO                        "bo"    /* Tibetan */
+#define HPDF_LANG_BR                        "br"    /* Breton */
+#define HPDF_LANG_CA                        "ca"    /* Catalan */
+#define HPDF_LANG_CO                        "co"    /* Corsican */
+#define HPDF_LANG_CS                        "cs"    /* Czech */
+#define HPDF_LANG_CY                        "cy"    /* Welsh */
+#define HPDF_LANG_DA                        "da"    /* Danish */
+#define HPDF_LANG_DE                        "de"    /* German */
+#define HPDF_LANG_DZ                        "dz"    /* Bhutani */
+#define HPDF_LANG_EL                        "el"    /* Greek */
+#define HPDF_LANG_EN                        "en"    /* English */
+#define HPDF_LANG_EO                        "eo"    /* Esperanto */
+#define HPDF_LANG_ES                        "es"    /* Spanish */
+#define HPDF_LANG_ET                        "et"    /* Estonian */
+#define HPDF_LANG_EU                        "eu"    /* Basque */
+#define HPDF_LANG_FA                        "fa"    /* Persian */
+#define HPDF_LANG_FI                        "fi"    /* Finnish */
+#define HPDF_LANG_FJ                        "fj"    /* Fiji */
+#define HPDF_LANG_FO                        "fo"    /* Faeroese */
+#define HPDF_LANG_FR                        "fr"    /* French */
+#define HPDF_LANG_FY                        "fy"    /* Frisian */
+#define HPDF_LANG_GA                        "ga"    /* Irish */
+#define HPDF_LANG_GD                        "gd"    /* Scots Gaelic */
+#define HPDF_LANG_GL                        "gl"    /* Galician */
+#define HPDF_LANG_GN                        "gn"    /* Guarani */
+#define HPDF_LANG_GU                        "gu"    /* Gujarati */
+#define HPDF_LANG_HA                        "ha"    /* Hausa */
+#define HPDF_LANG_HI                        "hi"    /* Hindi */
+#define HPDF_LANG_HR                        "hr"    /* Croatian */
+#define HPDF_LANG_HU                        "hu"    /* Hungarian */
+#define HPDF_LANG_HY                        "hy"    /* Armenian */
+#define HPDF_LANG_IA                        "ia"    /* Interlingua */
+#define HPDF_LANG_IE                        "ie"    /* Interlingue */
+#define HPDF_LANG_IK                        "ik"    /* Inupiak */
+#define HPDF_LANG_IN                        "in"    /* Indonesian */
+#define HPDF_LANG_IS                        "is"    /* Icelandic */
+#define HPDF_LANG_IT                        "it"    /* Italian */
+#define HPDF_LANG_IW                        "iw"    /* Hebrew */
+#define HPDF_LANG_JA                        "ja"    /* Japanese */
+#define HPDF_LANG_JI                        "ji"    /* Yiddish */
+#define HPDF_LANG_JW                        "jw"    /* Javanese */
+#define HPDF_LANG_KA                        "ka"    /* Georgian */
+#define HPDF_LANG_KK                        "kk"    /* Kazakh */
+#define HPDF_LANG_KL                        "kl"    /* Greenlandic */
+#define HPDF_LANG_KM                        "km"    /* Cambodian */
+#define HPDF_LANG_KN                        "kn"    /* Kannada */
+#define HPDF_LANG_KO                        "ko"    /* Korean */
+#define HPDF_LANG_KS                        "ks"    /* Kashmiri */
+#define HPDF_LANG_KU                        "ku"    /* Kurdish */
+#define HPDF_LANG_KY                        "ky"    /* Kirghiz */
+#define HPDF_LANG_LA                        "la"    /* Latin */
+#define HPDF_LANG_LN                        "ln"    /* Lingala */
+#define HPDF_LANG_LO                        "lo"    /* Laothian */
+#define HPDF_LANG_LT                        "lt"    /* Lithuanian */
+#define HPDF_LANG_LV                        "lv"    /* Latvian,Lettish */
+#define HPDF_LANG_MG                        "mg"    /* Malagasy */
+#define HPDF_LANG_MI                        "mi"    /* Maori */
+#define HPDF_LANG_MK                        "mk"    /* Macedonian */
+#define HPDF_LANG_ML                        "ml"    /* Malayalam */
+#define HPDF_LANG_MN                        "mn"    /* Mongolian */
+#define HPDF_LANG_MO                        "mo"    /* Moldavian */
+#define HPDF_LANG_MR                        "mr"    /* Marathi */
+#define HPDF_LANG_MS                        "ms"    /* Malay */
+#define HPDF_LANG_MT                        "mt"    /* Maltese */
+#define HPDF_LANG_MY                        "my"    /* Burmese */
+#define HPDF_LANG_NA                        "na"    /* Nauru */
+#define HPDF_LANG_NE                        "ne"    /* Nepali */
+#define HPDF_LANG_NL                        "nl"    /* Dutch */
+#define HPDF_LANG_NO                        "no"    /* Norwegian */
+#define HPDF_LANG_OC                        "oc"    /* Occitan */
+#define HPDF_LANG_OM                        "om"    /* (Afan)Oromo */
+#define HPDF_LANG_OR                        "or"    /* Oriya */
+#define HPDF_LANG_PA                        "pa"    /* Punjabi */
+#define HPDF_LANG_PL                        "pl"    /* Polish */
+#define HPDF_LANG_PS                        "ps"    /* Pashto,Pushto */
+#define HPDF_LANG_PT                        "pt"    /* Portuguese */
+#define HPDF_LANG_QU                        "qu"    /* Quechua */
+#define HPDF_LANG_RM                        "rm"    /* Rhaeto-Romance */
+#define HPDF_LANG_RN                        "rn"    /* Kirundi */
+#define HPDF_LANG_RO                        "ro"    /* Romanian */
+#define HPDF_LANG_RU                        "ru"    /* Russian */
+#define HPDF_LANG_RW                        "rw"    /* Kinyarwanda */
+#define HPDF_LANG_SA                        "sa"    /* Sanskrit */
+#define HPDF_LANG_SD                        "sd"    /* Sindhi */
+#define HPDF_LANG_SG                        "sg"    /* Sangro */
+#define HPDF_LANG_SH                        "sh"    /* Serbo-Croatian */
+#define HPDF_LANG_SI                        "si"    /* Singhalese */
+#define HPDF_LANG_SK                        "sk"    /* Slovak */
+#define HPDF_LANG_SL                        "sl"    /* Slovenian */
+#define HPDF_LANG_SM                        "sm"    /* Samoan */
+#define HPDF_LANG_SN                        "sn"    /* Shona */
+#define HPDF_LANG_SO                        "so"    /* Somali */
+#define HPDF_LANG_SQ                        "sq"    /* Albanian */
+#define HPDF_LANG_SR                        "sr"    /* Serbian */
+#define HPDF_LANG_SS                        "ss"    /* Siswati */
+#define HPDF_LANG_ST                        "st"    /* Sesotho */
+#define HPDF_LANG_SU                        "su"    /* Sundanese */
+#define HPDF_LANG_SV                        "sv"    /* Swedish */
+#define HPDF_LANG_SW                        "sw"    /* Swahili */
+#define HPDF_LANG_TA                        "ta"    /* Tamil */
+#define HPDF_LANG_TE                        "te"    /* Tegulu */
+#define HPDF_LANG_TG                        "tg"    /* Tajik */
+#define HPDF_LANG_TH                        "th"    /* Thai */
+#define HPDF_LANG_TI                        "ti"    /* Tigrinya */
+#define HPDF_LANG_TK                        "tk"    /* Turkmen */
+#define HPDF_LANG_TL                        "tl"    /* Tagalog */
+#define HPDF_LANG_TN                        "tn"    /* Setswanato Tonga */
+#define HPDF_LANG_TR                        "tr"    /* Turkish */
+#define HPDF_LANG_TS                        "ts"    /* Tsonga */
+#define HPDF_LANG_TT                        "tt"    /* Tatar */
+#define HPDF_LANG_TW                        "tw"    /* Twi */
+#define HPDF_LANG_UK                        "uk"    /* Ukrainian */
+#define HPDF_LANG_UR                        "ur"    /* Urdu */
+#define HPDF_LANG_UZ                        "uz"    /* Uzbek */
+#define HPDF_LANG_VI                        "vi"    /* Vietnamese */
+#define HPDF_LANG_VO                        "vo"    /* Volapuk */
+#define HPDF_LANG_WO                        "wo"    /* Wolof */
+#define HPDF_LANG_XH                        "xh"    /* Xhosa */
+#define HPDF_LANG_YO                        "yo"    /* Yoruba */
+#define HPDF_LANG_ZH                        "zh"    /* Chinese */
+#define HPDF_LANG_ZU                        "zu"    /* Zulu */
 
-/* Graphis mode */
+/* Graphics mode */
 #define HPDF_GMODE_PAGE_DESCRIPTION         0x0001
 #define HPDF_GMODE_PATH_OBJECT              0x0002
 #define HPDF_GMODE_TEXT_OBJECT              0x0004
@@ -773,6 +773,9 @@
 #define HPDF_PDFA_1B                        1
 
 /* Error code */
+
+#define HB_HPDF_BADPARAM                    -2
+#define HB_HPDF_NOTSUPPORTED                -1
 
 /* NOTE: After making any changes in the list below,
          always update hb_HPDF_GetErrorString() accordingly. */

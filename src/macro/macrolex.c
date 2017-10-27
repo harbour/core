@@ -1,5 +1,5 @@
 /*
- * small and MT safe lexer for macro compiler
+ * Small and MT safe lexer for macro compiler
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -441,11 +441,11 @@ int hb_macro_yylex( YYSTYPE * yylval_ptr, PHB_MACRO pMacro )
             if( pLex->nSrc < pLex->nLen &&
                 HB_ISDIGIT( pLex->pString[ pLex->nSrc ] ) )
             {
-               HB_SIZE ul = pLex->nSrc;
-               while( ++ul < pLex->nLen &&
-                      HB_ISDIGIT( pLex->pString[ ul ] ) ) {};
-               ul -= --pLex->nSrc;
-               return hb_lexNumConv( yylval_ptr, pLex, ul );
+               HB_SIZE nPos = pLex->nSrc;
+               while( ++nPos < pLex->nLen &&
+                      HB_ISDIGIT( pLex->pString[ nPos ] ) ) {};
+               nPos -= --pLex->nSrc;
+               return hb_lexNumConv( yylval_ptr, pLex, nPos );
             }
             if( pLex->nLen - pLex->nSrc >= 4 &&
                 pLex->pString[ pLex->nSrc + 3 ] == '.' )

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,7 +44,7 @@
  *
  */
 
-/* TOFIX: There are several things in this file which are not part of the
+/* FIXME: There are several things in this file which are not part of the
           standard Harbour API, in other words these things are not
           guaranteed to remain unchanged. To avoid confusion these should be
           moved to somewhere else (like hbrtl.h). [vszakats] */
@@ -114,7 +114,7 @@ HB_EXTERN_BEGIN
  * These macros are slower but can be usable in debugging some code.
  * They are a little bit more safe in buggy code but they can
  * also hide bugs which should be exploited as soon as possible to
- * know that sth is wrong and has to be fixed.
+ * know that something is wrong and has to be fixed.
  * the version below which check only chosen bits allow compiler to
  * use some optimizations if used CPU supports it. F.e. on standard
  * x86 machines they can save few CPU cycles. [druzus]
@@ -144,8 +144,8 @@ HB_EXTERN_BEGIN
 #define HB_IS_COMPLEX( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 )
 #define HB_IS_GCITEM( p )     ( ( HB_ITEM_TYPE( p ) & HB_IT_GCITEM ) != 0 )
 #define HB_IS_EVALITEM( p )   ( ( HB_ITEM_TYPE( p ) & HB_IT_EVALITEM ) != 0 )
-#define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
 #define HB_IS_HASHKEY( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_HASHKEY ) != 0 )
+#define HB_IS_BADITEM( p )    ( ( HB_ITEM_TYPE( p ) & HB_IT_COMPLEX ) != 0 && ( HB_ITEM_TYPE( p ) & ~( HB_IT_COMPLEX | HB_IT_MEMOFLAG ) ) != 0 )
 #define HB_IS_OBJECT( p )     ( HB_IS_ARRAY( p ) && HB_ARRAY_OBJ( p ) )
 #define HB_IS_NUMBER( p )     HB_IS_NUMERIC( p )
 
@@ -346,7 +346,7 @@ struct hb_struRefer
    union {
       struct _HB_BASEARRAY * array;       /* array (statics and array item references) */
       struct _HB_CODEBLOCK * block;       /* codeblock */
-      struct _HB_ITEM * itemPtr;          /* item pointer  */
+      struct _HB_ITEM * itemPtr;          /* item pointer */
       struct _HB_ITEM ** *itemsbasePtr;   /* local variables */
    } BasePtr;
    HB_ISIZ offset;                        /* 0 for static variables */
@@ -542,18 +542,19 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_S
 
 #define hb_xgrabz( n )        memset( hb_xgrab( ( n ) ), 0, ( n ) )
 #define hb_xmemdup( p, n )    memcpy( hb_xgrab( ( n ) ), ( p ), ( n ) )
+#define hb_xreallocz( p, n )  memset( hb_xrealloc( ( p ), ( n ) ), 0, ( n ) )
 
 /* #if UINT_MAX == ULONG_MAX */
-/* it fails on 64bit platforms where int has 32 bit and long has 64 bit.
+/* it fails on 64-bit platforms where int has 32 bits and long has 64 bits.
    we need these functions only when max(size_t) < max(long)
-   and only on 16bit platforms, so the below condition seems to be
+   and only on 16-bit platforms, so the below condition seems to be
    more reasonable. */
 #if UINT_MAX > USHRT_MAX
-   /* NOTE: memcpy/memset can work with HB_SIZE data blocks */
+   /* NOTE: memcpy()/memset() can work with HB_SIZE data blocks */
    #define  hb_xmemcpy  memcpy
    #define  hb_xmemset  memset
 #else
-   /* NOTE: otherwise, the hb_xmemcpy and hb_xmemset functions
+   /* NOTE: otherwise, the hb_xmemcpy() and hb_xmemset() functions
             will be used to copy and/or set HB_SIZE data blocks */
 extern HB_EXPORT void * hb_xmemcpy( void * pDestArg, const void * pSourceArg, HB_SIZE nLen ); /* copy more than memcpy() can */
 extern HB_EXPORT void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE nLen ); /* set more than memset() can */
@@ -681,18 +682,18 @@ extern HB_EXPORT void *       hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iPar
 extern HB_EXPORT HB_LONGLONG  hb_parvnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
 #endif
 
-extern HB_EXPORT int    hb_pcount( void ); /* returns the number of suplied parameters */
+extern HB_EXPORT int    hb_pcount( void ); /* returns the number of supplied parameters */
 extern HB_EXPORT void   hb_ret( void );  /* post a NIL return value */
 extern HB_EXPORT void   hb_retc( const char * szText ); /* returns a string */
 extern HB_EXPORT void   hb_retc_null( void ); /* returns an empty string */
-extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* sames as above, but accepts an allocated buffer */
+extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* same as above, but accepts an allocated buffer */
 extern HB_EXPORT void   hb_retc_const( const char * szText ); /* returns a string as a pcode based string */
 extern HB_EXPORT void   hb_retclen( const char * szText, HB_SIZE nLen ); /* returns a string with a specific length */
-extern HB_EXPORT void   hb_retclen_buffer( char * szText, HB_SIZE nLen ); /* sames as above, but accepts an allocated buffer */
+extern HB_EXPORT void   hb_retclen_buffer( char * szText, HB_SIZE nLen ); /* same as above, but accepts an allocated buffer */
 extern HB_EXPORT void   hb_retclen_const( const char * szText, HB_SIZE nLen ); /* returns a string with a specific length formed from a constant buffer */
 extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, must use YYYYMMDD format */
 extern HB_EXPORT void   hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
-extern HB_EXPORT void   hb_retdl( long lJulian ); /* returns a long value as a julian date */
+extern HB_EXPORT void   hb_retdl( long lJulian ); /* returns a long value as a Julian date */
 extern HB_EXPORT void   hb_rettd( double dTimeStamp ); /* returns a double value as a timestamp */
 extern HB_EXPORT void   hb_rettdt( long lJulian, long lMilliSec ); /* returns two long values as a timestamp */
 extern HB_EXPORT void   hb_retl( int iTrueFalse ); /* returns a logical integer */
@@ -794,7 +795,7 @@ extern HB_EXPORT int    hb_storvnll( HB_LONGLONG llValue, int iParam, ... ); /* 
 
 /* array management */
 extern HB_EXPORT HB_BOOL      hb_arrayNew( PHB_ITEM pItem, HB_SIZE nLen ); /* creates a new array */
-extern HB_EXPORT HB_SIZE      hb_arrayLen( PHB_ITEM pArray ); /* retrieves the array len */
+extern HB_EXPORT HB_SIZE      hb_arrayLen( PHB_ITEM pArray ); /* retrieves the array length */
 extern HB_EXPORT HB_BOOL      hb_arrayIsObject( PHB_ITEM pArray ); /* retrieves if the array is an object */
 extern HB_EXPORT void *       hb_arrayId( PHB_ITEM pArray ); /* retrieves the array unique ID */
 extern HB_EXPORT PHB_ITEM     hb_arrayFromId( PHB_ITEM pItem, void * pArrayId );
@@ -958,9 +959,9 @@ extern HB_EXPORT int       hb_printf_params( const char * format );
 
 extern HB_EXPORT HB_BOOL   hb_strMatchFile( const char * pszString, const char * szPattern ); /* compare two strings using platform dependent rules for file matching */
 extern HB_EXPORT HB_BOOL   hb_strMatchRegExp( const char * szString, const char * szPattern ); /* compare two strings using a regular expression pattern */
-extern HB_EXPORT HB_BOOL   hb_strMatchWild( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to be prefix of given string */
-extern HB_EXPORT HB_BOOL   hb_strMatchWildExact( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) - patern have to cover whole string */
-extern HB_EXPORT HB_BOOL   hb_strMatchCaseWildExact( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) ignoring the case of the characters - patern have to cover whole string */
+extern HB_EXPORT HB_BOOL   hb_strMatchWild( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) - pattern have to be prefix of given string */
+extern HB_EXPORT HB_BOOL   hb_strMatchWildExact( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) - pattern have to cover whole string */
+extern HB_EXPORT HB_BOOL   hb_strMatchCaseWildExact( const char * szString, const char * szPattern ); /* compare two strings using pattern with wildcard (?*) ignoring the case of the characters - pattern have to cover whole string */
 extern HB_EXPORT HB_BOOL   hb_strEmpty( const char * szText, HB_SIZE nLen ); /* returns whether a string contains only white space */
 extern HB_EXPORT void      hb_strDescend( char * szStringTo, const char * szStringFrom, HB_SIZE nLen ); /* copy a string to a buffer, inverting each character */
 extern HB_EXPORT HB_SIZE   hb_strAt( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen ); /* returns an index to a sub-string within another string */
@@ -981,8 +982,8 @@ extern HB_EXPORT HB_BOOL   hb_strIsDigit( const char * szChar );
 extern HB_EXPORT HB_BOOL   hb_strIsAlpha( const char * szChar );
 extern HB_EXPORT HB_BOOL   hb_strIsLower( const char * szChar );
 extern HB_EXPORT HB_BOOL   hb_strIsUpper( const char * szChar );
-extern HB_EXPORT char *    hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy at most nLen bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
-extern HB_EXPORT char *    hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy at most nLen-strlen(pDest) bytes from string buffer to another buffer and _always_ set 0 in destin buffer */
+extern HB_EXPORT char *    hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy at most nLen bytes from string buffer to another buffer and _always_ set 0 in destination buffer */
+extern HB_EXPORT char *    hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy at most nLen-strlen(pDest) bytes from string buffer to another buffer and _always_ set 0 in destination buffer */
 extern HB_EXPORT char *    hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen );
 extern HB_EXPORT char *    hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy an existing string buffer to another buffer, as lower case */
 extern HB_EXPORT char *    hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen ); /* copy an existing string buffer to another buffer, as upper case */
@@ -1048,11 +1049,11 @@ extern           HB_LONG   hb_dynsymCount( void ); /* number of dynamic symbols 
 /* Symbol management */
 extern HB_EXPORT PHB_SYMB  hb_symbolNew( const char * szName ); /* create a new symbol */
 
-/* Command line and environment argument management */
-extern HB_EXPORT void          hb_cmdargInit( int argc, char * argv[] ); /* initialize command line argument API's */
-extern HB_EXPORT int           hb_cmdargARGC( void ); /* retrieve command line argument count */
-extern HB_EXPORT char **       hb_cmdargARGV( void ); /* retrieve command line argument buffer pointer */
-extern HB_EXPORT const char *  hb_cmdargARGVN( int argc ); /* retrieve given command line argument */
+/* Command-line and environment argument management */
+extern HB_EXPORT void          hb_cmdargInit( int argc, char * argv[] ); /* initialize command-line argument API's */
+extern HB_EXPORT int           hb_cmdargARGC( void ); /* retrieve command-line argument count */
+extern HB_EXPORT char **       hb_cmdargARGV( void ); /* retrieve command-line argument buffer pointer */
+extern HB_EXPORT const char *  hb_cmdargARGVN( int argc ); /* retrieve given command-line argument */
 extern HB_EXPORT HB_BOOL       hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
 extern HB_EXPORT char *        hb_cmdargProgName( void ); /* return application name with path or NULL if not set, caller must free returned value with hb_xfree() if not NULL */
 extern HB_EXPORT char *        hb_cmdargBaseProgName( void ); /* return application name without path or NULL if not set, caller must free returned value with hb_xfree() if not NULL */
@@ -1061,7 +1062,7 @@ extern           void          hb_cmdargUpdate( void ); /* update arguments afte
 extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //GT:cgi) */
 extern           int           hb_cmdargNum( const char * pszName ); /* Returns the numeric value of an internal switch (like //F:90) */
-extern           void          hb_cmdargProcess( void ); /* Check for command line internal arguments */
+extern           void          hb_cmdargProcess( void ); /* Check for command-line internal arguments */
 #if defined( HB_OS_WIN )
 extern HB_EXPORT void          hb_winmainArgInit( void * hInstance, void * hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
 extern HB_EXPORT HB_BOOL       hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
@@ -1084,7 +1085,7 @@ extern           void       hb_memvarGetValue( PHB_ITEM pItem, PHB_SYMB pMemvarS
 extern           void       hb_memvarGetRefer( PHB_ITEM pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
 extern           HB_SIZE    hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
 extern           void       hb_memvarSetPrivatesBase( HB_SIZE nBase ); /* release PRIVATE variables created after specified base */
-extern           void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base ofsset so they will not be removed when function return */
+extern           void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base offset so they will not be removed when function return */
 extern           void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue );
 extern           char *     hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen );
 extern           void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue );
@@ -1136,7 +1137,7 @@ extern           void         hb_macroPushSymbol( PHB_ITEM pItem ); /* handle a 
 extern           void         hb_macroRun( PHB_MACRO pMacro ); /* executes pcode compiled by macro compiler */
 extern           PHB_MACRO    hb_macroCompile( const char * szString ); /* compile a string and return a pcode buffer */
 extern           void         hb_macroDelete( PHB_MACRO pMacro ); /* release all memory allocated for macro evaluation */
-extern           char *       hb_macroTextSymbol( const char * szString, HB_SIZE nLength, HB_BOOL * pfNewString ); /* substitute macro variables occurences within a given string and check if result is a valid function or variable name */
+extern           char *       hb_macroTextSymbol( const char * szString, HB_SIZE nLength, HB_BOOL * pfNewString ); /* substitute macro variables occurrences within a given string and check if result is a valid function or variable name */
 extern           char *       hb_macroExpandString( const char * szString, HB_SIZE nLength, HB_BOOL * pfNewString ); /* expands valid '&' operator */
 extern           void         hb_macroPopAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags ); /* compiles and evaluates an aliased macro expression */
 extern           void         hb_macroPushAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags ); /* compiles and evaluates an aliased macro expression */
@@ -1181,7 +1182,7 @@ extern HB_EXPORT const char * hb_verCPU( void );             /* retrieves a cons
 extern HB_EXPORT const char * hb_verPlatformMacro( void );   /* retrieves a constant string with OS platform (as it appears in __PLATFORM__* macro) */
 extern HB_EXPORT char *       hb_verPlatform( void );        /* retrieves a newly allocated buffer containing platform version */
 extern HB_EXPORT char *       hb_verCompiler( void );        /* retrieves a newly allocated buffer containing compiler version */
-extern HB_EXPORT char *       hb_verHarbour( void );         /* retrieves a newly allocated buffer containing harbour version */
+extern HB_EXPORT char *       hb_verHarbour( void );         /* retrieves a newly allocated buffer containing Harbour version */
 extern HB_EXPORT char *       hb_verPCode( void );           /* retrieves a newly allocated buffer containing PCode version */
 extern HB_EXPORT char *       hb_verBuildDate( void );       /* retrieves a newly allocated buffer containing build date and time */
 extern HB_EXPORT void         hb_verBuildInfo( void );       /* display harbour, compiler, and platform versions to standard console */
@@ -1213,7 +1214,7 @@ extern HB_EXPORT HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int 
 extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );
 
 /* OS/Harbour codepage conversion */
-extern HB_EXPORT HB_BOOL      hb_osUseCP( void ); /* Is OS<->Harbour codepage conversion enabled?  */
+extern HB_EXPORT HB_BOOL      hb_osUseCP( void ); /* Is OS<->Harbour codepage conversion enabled? */
 extern HB_EXPORT const char * hb_osEncodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize ); /* Convert a string sent to a system call, from Harbour codepage. */
 extern HB_EXPORT const char * hb_osDecodeCP( const char * szName, char ** pszFree, HB_SIZE * pnSize ); /* Convert a string received from a system call, to Harbour codepage. */
 

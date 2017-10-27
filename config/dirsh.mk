@@ -26,7 +26,7 @@ endif
 
 ifeq ($(HB_SHELL),dos)
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 #       It causes that every command will be separated by LF
 define dir_mk
    @$(MK_OS) $(MKFLAGS) -C $(file) $@

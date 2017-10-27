@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,7 +44,7 @@
  *
  */
 
-/* hb_SSL_new() -> <pSSL> */
+/* hb_SSL_new() --> <pSSL> */
 FUNCTION hb_SSL_new()
 
    STATIC s_onceControl
@@ -56,14 +56,14 @@ FUNCTION hb_SSL_new()
    /* create a new SSL structure for a connection */
    RETURN SSL_new( SSL_CTX_new() )
 
-/* hb_SSL_connect_socket( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) -> <lConnected> */
+/* hb_SSL_connect_socket( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) --> <lConnected> */
 FUNCTION hb_SSL_connect_socket( pSocket, nTimeout, cInfo )
 
    LOCAL nErr
    LOCAL ssl
 
    ssl := hb_SSL_new()
-   IF !Empty( pSocket := hb_socketNewSSL_connect( @pSocket, ssl, nTimeout ) )
+   IF ! Empty( pSocket := hb_socketNewSSL_connect( @pSocket, ssl, nTimeout ) )
       cInfo := "SSL connected with " + SSL_get_cipher( ssl ) + " encryption."
       RETURN .T.
    ENDIF
@@ -73,7 +73,7 @@ FUNCTION hb_SSL_connect_socket( pSocket, nTimeout, cInfo )
                           nErr, ERR_error_string( nErr ) )
    RETURN .F.
 
-/* hb_SSL_connect_inet( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) -> <lConnected> */
+/* hb_SSL_connect_inet( <pSocket>, [ <nTimeOut> ], [ @<cInfo> ] ) --> <lConnected> */
 FUNCTION hb_SSL_connect_inet( pInetSock, nTimeout, cInfo )
 
    LOCAL nResult, nErr

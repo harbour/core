@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,17 +52,17 @@
 /*
  * NOTE: ACQUIRE / RELEASE screen pair must work same way DispBegin()/DispEnd() pair does
  *       (that is, with an internal counter), as lots of function may want to 'acquire/release' it.
- *       However, a GT must properly manage its gfx output if the user didn't requested to acquire the
+ *       However, a GT must properly manage its GFX output if the user didn't requested to acquire the
  *       screen, so this is under user choice.
- *       (the user just needs to know that it is not the same to aquire the screen, draw 100 lines, then
+ *       (the user just needs to know that it is not the same to acquire the screen, draw 100 lines, then
  *       release screen, than simply drawing 100 lines -as the GT will be acquiring/releasing the screen
  *       100 times, which will slow down things a lot-) [Mauricio]
  */
 
 /* Misc, internals */
-#define HB_GFX_ACQUIRESCREEN   1  /* Some GTs may require that you 'acquire' the screen before doing gfx things */
+#define HB_GFX_ACQUIRESCREEN   1  /* Some GTs may require that you 'acquire' the screen before doing GFX things */
 #define HB_GFX_RELEASESCREEN   2  /* Release a previously 'acquired' screen */
-#define HB_GFX_MAKECOLOR       3  /* Calculate gfx color number based on RGBA values */
+#define HB_GFX_MAKECOLOR       3  /* Calculate GFX color number based on RGBA values */
 /* Functions that affect drawing area */
 #define HB_GFX_CLIPTOP        10
 #define HB_GFX_CLIPLEFT       11
@@ -86,7 +86,7 @@
 /* Drawing mode constants */
 #define HB_GFX_MODE_SOLID      1  /* Solid mode, no translucency, no patterned primitives */
 #define HB_GFX_MODE_XOR        2  /* XOR with current screen contents */
-#define HB_GFX_MODE_ALPHA      3  /* Use alpha for transluced effect (SLOW) */
+#define HB_GFX_MODE_ALPHA      3  /* Use alpha for translucent effect (SLOW) */
 /* TODO: add patterned mode drawings */
 
 #endif /* _HBGFXDEF_CH_ */

@@ -93,8 +93,10 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
 
    LOCAL aCanBeUpper := { ;
       "Makefile", ;
-      "README.md", ;
-      "COPYING.txt", ;
+      "DEPRECATED.*", ;
+      "LICENSE.*", ;
+      "README.*", ;
+      "WARNING.*", ;
       "*/RELNOTES.txt", ;
       "*/HARBOUR_README_*.txt", ;
       "ChangeLog.txt", ;
@@ -111,7 +113,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
       "*.po", ;
       "*.md", ;
       "*.html", ;
-      "*/hb-charmap.def", ;  /* TOFIX: Use 8.3 name */
+      "*/hb-charmap.def", ;  /* FIXME: Use 8.3 name */
       "debian/*", ;
       "package/*", ;
       "lib/3rd/*", ;
@@ -494,7 +496,7 @@ STATIC FUNCTION StripCStrings( cFile )
    LOCAL tmp
 
    DO WHILE ( tmp := hb_BAt( '"', cFile, nPos ) ) > 0
-      /* TOFIX: imprecise escaped char detection */
+      /* FIXME: imprecise escaped char detection */
       IF ( !( hb_BSubStr( cFile, tmp - 1, 1 ) == "\" ) .OR. ;
          hb_BSubStr( cFile, tmp - 2, 2 ) == "\\" ) .AND. ;
          !( hb_BSubStr( cFile, tmp - 1, 1 ) + hb_BSubStr( cFile, tmp + 1, 1 ) == "''" )

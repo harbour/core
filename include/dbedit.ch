@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,15 +48,15 @@
 #define _DBEDIT_CH
 
 /* User function entry modes */
-#define DE_IDLE         0       /* Idle                                    */
-#define DE_HITTOP       1       /* Attempt to cursor past top of file      */
-#define DE_HITBOTTOM    2       /* Attempt to cursor past bottom of file   */
-#define DE_EMPTY        3       /* No records in work area                 */
-#define DE_EXCEPT       4       /* Key exception                           */
+#define DE_IDLE         0       /* Idle */
+#define DE_HITTOP       1       /* Attempt to cursor past top of file */
+#define DE_HITBOTTOM    2       /* Attempt to cursor past bottom of file */
+#define DE_EMPTY        3       /* No records in work area */
+#define DE_EXCEPT       4       /* Key exception */
 
 /* User function return codes */
-#define DE_ABORT        0       /* Abort dbEdit()                          */
-#define DE_CONT         1       /* Continue dbEdit()                       */
+#define DE_ABORT        0       /* Abort dbEdit() */
+#define DE_CONT         1       /* Continue dbEdit() */
 #define DE_REFRESH      2       /* Force reread/redisplay of all data rows */
 #ifdef HB_CLP_UNDOC
    #define DE_APPEND       3       /* Undocumented CA-Cl*pper append mode in DBEdit */

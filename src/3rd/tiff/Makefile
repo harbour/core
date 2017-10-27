@@ -91,7 +91,7 @@ endif
 # ORIGIN http://www.remotesensing.org/libtiff/
 # VER    4.0.3
 # URL    http://download.osgeo.org/libtiff/tiff-4.0.3.zip
-# DIFF   tiff.dif
+# DIFF   tiff.diff
 #
 # MAP    COPYRIGHT                LICENSE
 # MAP    libtiff/tif_aux.c        auxtif.c

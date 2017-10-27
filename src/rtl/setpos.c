@@ -2,6 +2,7 @@
  * SetPos(), Row(), Col() functions
  *
  * Copyright 1999 Bil Simser <bsimser@home.com>
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (SetPos())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,21 +45,11 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    SetPos()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbapigt.h"
 #include "hbapiitm.h"
 
-HB_FUNC( SETPOS ) /* Sets the screen position */
+HB_FUNC( SETPOS )  /* Sets the screen position */
 {
    if( HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
       hb_gtSetPos( hb_parni( 1 ), hb_parni( 2 ) );
@@ -71,7 +62,7 @@ HB_FUNC( SETPOS ) /* Sets the screen position */
 #endif
 }
 
-HB_FUNC( ROW ) /* Return the current screen row position (zero origin) */
+HB_FUNC( ROW )  /* Return the current screen row position (zero origin) */
 {
    int iRow;
    int iCol;
@@ -81,7 +72,7 @@ HB_FUNC( ROW ) /* Return the current screen row position (zero origin) */
    hb_retni( iRow );
 }
 
-HB_FUNC( COL ) /* Return the current screen column position (zero origin) */
+HB_FUNC( COL )  /* Return the current screen column position (zero origin) */
 {
    int iRow;
    int iCol;

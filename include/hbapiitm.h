@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -155,7 +155,7 @@ extern HB_EXPORT HB_BOOL      hb_itemEqual     ( PHB_ITEM pItem1, PHB_ITEM pItem
 extern HB_EXPORT HB_BOOL      hb_itemCompare   ( PHB_ITEM pItem1, PHB_ITEM pItem2, HB_BOOL bForceExact, int * piResult ); /* For compatible types compare pItem1 with pItem2 setting piResult to -1, 0 or 1 if pItem1 is <, == or > then pItem2 and return true otherwise return false. */
 extern HB_EXPORT int          hb_itemStrCmp    ( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT int          hb_itemStrICmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact ); /* our string compare */
-extern HB_EXPORT void         hb_itemCopy      ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
+extern HB_EXPORT void         hb_itemCopy      ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its content */
 extern HB_EXPORT void         hb_itemCopyToRef ( PHB_ITEM pDest, PHB_ITEM pSource );
 extern HB_EXPORT void         hb_itemCopyFromRef( PHB_ITEM pDest, PHB_ITEM pSource );
 extern HB_EXPORT void         hb_itemMove      ( PHB_ITEM pDest, PHB_ITEM pSource ); /* moves the value of an item without incrementing of reference counters, source is cleared */
@@ -212,7 +212,7 @@ extern PHB_ITEM hb_itemPutPtrRawGC( PHB_ITEM pItem, void * pValue );
 #  define hb_itemRawMove( dst, src )      hb_itemMove( (dst), (src) )
 #endif
 
-   /* intentional low level hack to eliminate race condition in
+   /* intentional low-level hack to eliminate race condition in
     * unprotected readonly access in few places in core code only.
     * hb_item[Raw]Move() moves HB_ITEM structure members first coping
     * 'type' and then 'item' parts of HB_ITEM. In this macro the order

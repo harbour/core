@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -65,6 +65,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
    LOCAL nPos
    LOCAL cLine
    LOCAL cProp
+   LOCAL cInd
    LOCAL uValue
    LOCAL aWords
    LOCAL lStart := .T.
@@ -103,9 +104,9 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
             CASE "OBJECT"
                IF lStart
                   lStart := .F.
-               ELSEIF aWords[ 3 ] == "AS" .AND. hb_LeftEq( aWords[ 2 ], "::" )
-                  cProp := SubStr( aWords[ 2 ], 3 )
-                  uValue := &( aWords[ 4 ] )():CreateNew()
+               ELSEIF aWords[ Len( aWords ) - 1 ] == "AS" .AND. hb_LeftEq( aWords[ 2 ], "::" )
+                  cProp := SubStr( AllTrim( SubStr( cLine, 7, RAt( " AS ", cLine ) - 7 ) ), 3 )
+                  uValue := &( aTail( aWords ) )():CreateNew()
                ENDIF
                EXIT
             CASE "ENDOBJECT"
@@ -113,15 +114,22 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
                EXIT
             CASE "ARRAY"
                IF hb_LeftEq( aWords[ 2 ], "::" )
-                  cProp := SubStr( aWords[ 2 ], 3 )
+                  cProp := SubStr( AllTrim( SubStr( cLine, 6, RAt( " LEN ", cLine ) - 6 ) ), 3 )
                   uValue := Array( Val( ATail( aWords ) ) )
                ENDIF
                EXIT
             ENDSWITCH
          ENDIF
 
-         IF !Empty( cProp )
-            ATail( aObjects ):&cProp := uValue
+         IF ! Empty( cProp )
+            IF ( nPos := At( "[", cProp ) ) > 0
+               cInd := hb_StrReplace( SubStr( cProp, nPos + 1, Len( cProp ) - nPos - 1 ), ;
+                                      { " " => "", "][" => "," } )
+               cProp := Left( cProp, nPos - 1 )
+               ATail( aObjects ):&cProp[ &cInd ] := uValue
+            ELSE
+               ATail( aObjects ):&cProp := uValue
+            ENDIF
          ENDIF
 
       END SEQUENCE

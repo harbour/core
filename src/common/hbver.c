@@ -22,9 +22,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -265,7 +265,7 @@ const char * hb_verPlatformMacro( void )
 }
 
 /* NOTE: Must be larger than 128, which is the maximum size of
-         osVer.szCSDVersion (Windows). [vszakats] */
+         osvi.szCSDVersion (Windows). [vszakats] */
 #define PLATFORM_BUF_SIZE  255
 
 char * hb_verPlatform( void )
@@ -339,19 +339,15 @@ char * hb_verPlatform( void )
 
    {
       unsigned long aulQSV[ QSV_MAX ] = { 0 };
-      APIRET rc;
-
-      rc = DosQuerySysInfo( 1L, QSV_MAX, ( void * ) aulQSV, sizeof( ULONG ) * QSV_MAX );
+      APIRET rc = DosQuerySysInfo( 1L, QSV_MAX, ( void * ) aulQSV, sizeof( ULONG ) * QSV_MAX );
 
       if( rc == 0 )
       {
          /* is this OS/2 2.x ? */
          if( aulQSV[ QSV_VERSION_MINOR - 1 ] < 30 )
-         {
             hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2 %ld.%02ld",
                          aulQSV[ QSV_VERSION_MAJOR - 1 ] / 10,
                          aulQSV[ QSV_VERSION_MINOR - 1 ] );
-         }
          else
             hb_snprintf( pszPlatform, PLATFORM_BUF_SIZE + 1, "OS/2 %2.2f",
                          ( float ) aulQSV[ QSV_VERSION_MINOR - 1 ] / 10 );

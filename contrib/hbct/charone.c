@@ -17,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,14 +56,14 @@
 /* helper function for the *one functions */
 static void do_charone( int iSwitch )
 {
-   const char * pcString;
-   HB_SIZE sStrLen;
-   const char * pcDeleteSet;
-   HB_SIZE sDeleteSetLen;
-
    /* param check */
    if( HB_ISCHAR( 1 ) )
    {
+      const char * pcString;
+      const char * pcDeleteSet;
+      HB_SIZE sStrLen;
+      HB_SIZE sDeleteSetLen;
+
       if( HB_ISCHAR( 2 ) )
       {
          pcString = hb_parc( 2 );
@@ -161,7 +161,7 @@ static void do_charone( int iSwitch )
                   }
                }
 
-               /* copy last character if string len is odd */
+               /* copy last character if string length is odd */
                if( sStrLen & 1 )
                   pcRet[ sRetStrLen++ ] = pcString[ sStrLen - 1 ];
 

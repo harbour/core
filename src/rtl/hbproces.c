@@ -1,5 +1,5 @@
 /*
- * low level functions to create, wait and terminate processes
+ * Low-level functions to create, wait and terminate processes
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * based on xHarbour code by
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -235,7 +235,7 @@ static void hb_getCommand( const char * pszFileName,
 
 #elif defined( HB_PROCESS_USEFILES ) || defined( HB_OS_UNIX )
 
-/* convert command to argument list using standard bourne shell encoding:
+/* convert command to argument list using standard Bourne shell encoding:
  * "" and '' can be used to group parameters with blank characters,
  * the escape character is '\', quoting by '' disables escape character.
  */
@@ -508,7 +508,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFileName,
    HB_FHANDLE hResult = FS_ERROR;
    HB_BOOL fError = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFileName, phStdin, phStdout, phStderr, fDetach, pulPID ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFileName, ( void * ) phStdin, ( void * ) phStdout, ( void * ) phStderr, fDetach, ( void * ) pulPID ) );
 
    if( phStdin != NULL )
       fError = ! hb_fsPipeCreate( hPipeIn );
@@ -1078,7 +1078,9 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
       fResult = TerminateProcess( hProc, fGentle ? 0 : 1 ) != 0;
       hb_fsSetIOError( fResult, 0 );
       /* hProc has to be closed by hb_fsProcessValue() */
-      /* CloseHandle( hProc ); */
+      #if 0
+      CloseHandle( hProc );
+      #endif
    }
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -1133,7 +1135,7 @@ int hb_fsProcessRun( const char * pszFileName,
    HB_SIZE nOutSize, nErrSize, nOutBuf, nErrBuf;
    int iResult;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pStdInBuf, pStdInBuf, nStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pszFileName, ( const void * ) pStdInBuf, nStdInLen, ( void * ) pStdOutPtr, ( void * ) pulStdOut, ( void * ) pStdErrPtr, ( void * ) pulStdErr, fDetach ) );
 
    nOutBuf = nErrBuf = nOutSize = nErrSize = 0;
    pOutBuf = pErrBuf = NULL;
@@ -1693,6 +1695,8 @@ int hb_fsProcessRun( const char * pszFileName,
       int iTODO;
 
       HB_SYMBOL_UNUSED( nStdInLen );
+      HB_SYMBOL_UNUSED( nOutSize );
+      HB_SYMBOL_UNUSED( nErrSize );
 
 #endif
    }

@@ -1,5 +1,5 @@
 /*
- * socket C API
+ * Socket C API
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -305,7 +305,7 @@
 #endif
 
 #if defined( __POCC__ ) && ( __POCC__ >= 500 ) && defined( HB_OS_WIN_64 )
-   /* TOFIX: Bad workaround for the '__WSAFDIsSet unresolved' problem
+   /* FIXME: Bad workaround for the '__WSAFDIsSet unresolved' problem
              in Pelles C 5.00.13 AMD64 mode, to make final executables
              link at all. Some hbsocket.c features (or the whole module)
              won't properly work though. [vszakats] */
@@ -328,7 +328,7 @@
 #include "hbthread.h"
 #include "hbdate.h"
 
-/* TODO change error description to sth more user friendly */
+/* TODO change error description to something more user friendly */
 static const char * s_socketErrors[] = {
    "OK",
    "EPIPE",
@@ -1865,7 +1865,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 #else /* ! HB_HAS_POLL */
    int iResult, iError;
    struct timeval tv;
-   fd_set wfds, * pefds;
+   fd_set wfds;
 #  if defined( HB_OS_WIN )
    fd_set efds;
 #  endif
@@ -1879,6 +1879,8 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 
    for( ;; )
    {
+      fd_set * pefds;
+
       if( timeout < 0 )
       {
          tv.tv_sec = 1;
@@ -2118,6 +2120,7 @@ char * hb_socketAddrGetName( const void * pSockAddr, unsigned len )
             {
                int iTODO;
                szAddr = NULL;
+               HB_SYMBOL_UNUSED( sa );
             }
 #  endif
             if( szAddr )
@@ -2502,7 +2505,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    HB_SOCKET newsd = HB_NO_SOCKET;
    HB_SOCKADDR_STORAGE st;
    socklen_t len = sizeof( st );
-   int ret, err;
+   int ret;
 
    hb_vmUnlock();
    if( pSockAddr && puiLen )
@@ -2513,6 +2516,8 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
    ret = hb_socketSelectRD( sd, timeout );
    if( ret > 0 )
    {
+      int err;
+
       /* it's necessary to set non blocking IO to be sure that application
        * will not be frozen inside accept(). It may happen if some asynchronous
        * network error appear after above Select() or when other thread
@@ -2549,7 +2554,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
 
 int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_MAXINT timeout )
 {
-   int ret, blk, err, rawerr;
+   int ret, blk, err;
 
    hb_vmUnlock();
 
@@ -2580,6 +2585,7 @@ int hb_socketConnect( HB_SOCKET sd, const void * pSockAddr, unsigned uiLen, HB_M
 
    if( blk > 0 )
    {
+      int rawerr;
       err = hb_socketGetOsError();
       rawerr = err ? 0 : hb_socketGetError();
 
@@ -2818,8 +2824,8 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
 
 #if defined( TCP_NODELAY )
    /*
-    * Turn off the nagle algorithm for the specified socket.
-    * The nagle algorithm says that we should delay sending
+    * Turn off the Nagle algorithm for the specified socket.
+    * The Nagle algorithm says that we should delay sending
     * partial packets in the hopes of getting more data.
     * There are bad interactions between persistent connections and
     * Nagle's algorithm that have severe performance penalties.
@@ -2838,7 +2844,7 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
 }
 
 /* NOTE: For notes on Windows, see:
-         https://msdn.microsoft.com/en-us/library/windows/desktop/ms740621.aspx
+         https://msdn.microsoft.com/library/ms740621
          [vszakats] */
 int hb_socketSetExclusiveAddr( HB_SOCKET sd, HB_BOOL fExclusive )
 {
@@ -2872,7 +2878,7 @@ int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
     * clean all pending connections addressed to previous port owner
     */
    #if defined( HB_OS_WIN )
-      /* SO_REUSEADDR in MS-Windows makes sth completly different
+      /* SO_REUSEADDR in MS-Windows makes something completely different
        * then in other OS-es
        */
       HB_SYMBOL_UNUSED( sd );
@@ -2979,9 +2985,10 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
    {
 #if defined( HB_HAS_INET_PTON )
       struct ipv6_mreq mreq;
-      int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr ), ret;
+      int err = inet_pton( AF_INET6, szAddr, &mreq.ipv6mr_multiaddr );
       if( err > 0 )
       {
+         int ret;
          mreq.ipv6mr_interface = 0;
 #if ! defined( IPV6_JOIN_GROUP ) && defined( IPV6_ADD_MEMBERSHIP )
 #  define IPV6_JOIN_GROUP  IPV6_ADD_MEMBERSHIP
@@ -3499,7 +3506,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 
    if( iResult == 0 )
    {
-      int iCount = 0, i;
+      int iCount = 0;
       ai = res;
       while( ai )
       {
@@ -3516,6 +3523,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
             char * szResult = hb_socketAddrGetName( res->ai_addr, ( unsigned ) res->ai_addrlen );
             if( szResult )
             {
+               int i;
                for( i = 1; i <= iCount; ++i )
                {
                   if( strcmp( hb_arrayGetCPtr( pItem, i ), szResult ) == 0 )
@@ -3547,7 +3555,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
 
       hb_vmUnlock();
 
-      /* gethostbyname() in Windows and OS2 does not accept direct IP
+      /* gethostbyname() in Windows and OS/2 does not accept direct IP
        * addresses
        */
 #if ( defined( HB_OS_WIN ) || defined( HB_OS_OS2 ) ) && \

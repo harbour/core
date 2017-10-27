@@ -1,11 +1,12 @@
-//                   GTWVT Console GUI Interface
+// GTWVT Console GUI Interface
 //
-//               Pritpal Bedi <bedipritpal@hotmail.com>
+// Copyright (c) Pritpal Bedi <pritpal@vouchcac.com>
 
 #require "gtwvg"
 
 #include "inkey.ch"
 #include "hbgtinfo.ch"
+#include "hbver.ch"
 
 #define IMAGE_VOUCH                hb_DirBase() + "vouch1.bmp"
 #define IMAGE_BROWSE               hb_DirBase() + "v_browse.ico"
@@ -28,29 +29,29 @@ PROCEDURE Main()
 
    Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 
-   Wvt_SetGUI( .T. )
-   Wvt_SetFont( "Courier New", 18, 0, 0 )
-   Wvt_SetMouseMove( .T. )
+   wvt_SetGUI( .T. )
+   wvt_SetFont( "Courier New", 18, 0, 0 )
+   wvt_SetMouseMove( .T. )
 
    SetColor( "N/W" )
    CLS
-   Wvt_ShowWindow( SW_RESTORE )
+   wvt_ShowWindow( SW_RESTORE )
    Wvt_SetTitle( "Harbour's GTWVG Demo ( Simplified )" )
-   Wvt_SetIcon( hb_DirBase() +  "vr_1.ico" )
+   wvt_SetIcon( hb_DirBase() +  "vr_1.ico" )
 
    SetGT( 1, hb_gtSelect() )
 
    aPaint := {}
 
-   AAdd( aPaint, { "Label", {|| Wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) }, { WVT_BLOCK_LABEL, 1, 10, 3, 50 } } )
-   AAdd( aPaint, { "Box_1", {|| Wvt_DrawBoxRaised( 4, 4, 20, 75 ) }, { WVT_BLOCK_BOX, 4, 4, 20, 75 } } )
-   AAdd( aPaint, { "Box_2", {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) }, { WVT_BLOCK_BOX, 7, 61, 13, 70 } } )
-   AAdd( aPaint, { "Box_3", {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) }, { WVT_BLOCK_BOX, 15, 59, 18, 72 } } )
-   AAdd( aPaint, { "Box_4", {|| Wvt_DrawBoxGroup( 5, 6, 19, 44 ) }, { WVT_BLOCK_BOX, 5, 6, 19, 44 } } )
-   AAdd( aPaint, { "Image", {|| Wvt_DrawImage( 8, 62, 12, 69, IMAGE_VOUCH ) }, { WVT_BLOCK_IMAGE, 8, 62, 12, 69 } } )
-   AAdd( aPaint, { "Box_5", {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) }, { WVT_BLOCK_BOX, 7, 48, 13, 55 } } )
-   AAdd( aPaint, { "Line_1", {|| Wvt_DrawLine( MaxRow() - 2, 0, MaxRow() - 2, MaxCol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) }, NIL } )
-   AAdd( aPaint, { "Gets", {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) }, NIL } )
+   AAdd( aPaint, { "Label", {|| wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) }, { WVT_BLOCK_LABEL, 1, 10, 3, 50 } } )
+   AAdd( aPaint, { "Box_1", {|| wvt_DrawBoxRaised( 4, 4, 20, 75 ) }, { WVT_BLOCK_BOX, 4, 4, 20, 75 } } )
+   AAdd( aPaint, { "Box_2", {|| wvt_DrawBoxRecessed( 7, 61, 13, 70 ) }, { WVT_BLOCK_BOX, 7, 61, 13, 70 } } )
+   AAdd( aPaint, { "Box_3", {|| wvt_DrawBoxGroup( 15, 59, 18, 72 ) }, { WVT_BLOCK_BOX, 15, 59, 18, 72 } } )
+   AAdd( aPaint, { "Box_4", {|| wvt_DrawBoxGroup( 5, 6, 19, 44 ) }, { WVT_BLOCK_BOX, 5, 6, 19, 44 } } )
+   AAdd( aPaint, { "Image", {|| wvt_DrawImage( 8, 62, 12, 69, IMAGE_VOUCH ) }, { WVT_BLOCK_IMAGE, 8, 62, 12, 69 } } )
+   AAdd( aPaint, { "Box_5", {|| wvt_DrawBoxRecessed( 7, 48, 13, 55 ) }, { WVT_BLOCK_BOX, 7, 48, 13, 55 } } )
+   AAdd( aPaint, { "Line_1", {|| wvt_DrawLine( MaxRow() - 2, 0, MaxRow() - 2, MaxCol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) }, NIL } )
+   AAdd( aPaint, { "Gets", {|| AEval( GetList, {| oGet | wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) }, NIL } )
 
    ExecForm( aPaint )
 
@@ -58,23 +59,23 @@ PROCEDURE Main()
 
 /* This function must be linked with the application */
 
-FUNCTION Wvt_Paint()
+FUNCTION wvt_Paint()  /* must be a public function */
 
    WvtPaintObjects()
 
    RETURN NIL
 
-STATIC FUNCTION ExecForm( aPaint )
+STATIC PROCEDURE ExecForm( aPaint )
 
-   LOCAL cColor    := SetColor()
+   LOCAL cColor  := SetColor()
    LOCAL aPnt
-   LOCAL dDate     := Date()
-   LOCAL cName     := PadR( "Pritpal Bedi", 35 )
-   LOCAL cAdd1     := PadR( "60, New Professor Colony", 35 )
-   LOCAL cAdd2     := PadR( "Ludhiana, INDIA", 35 )
-   LOCAL cAdd3     := PadR( "http://hbide.vouch.info", 35 )
-   LOCAL nSlry     := 20000
-   LOCAL nColGet   := 8
+   LOCAL dDate   := Date()
+   LOCAL cName   := PadR( "Pritpal Bedi", 35 )
+   LOCAL cAdd1   := PadR( "60, New Professor Colony", 35 )
+   LOCAL cAdd2   := PadR( "Ludhiana, INDIA", 35 )
+   LOCAL cAdd3   := PadR( hb_Version( HB_VERSION_URL_BASE ), 35 )
+   LOCAL nSlry   := 20000
+   LOCAL nColGet := 8
 
    aPnt := WvtSetPaint( aPaint )
 
@@ -88,22 +89,21 @@ STATIC FUNCTION ExecForm( aPaint )
    @  9, nColGet SAY "<" + PadC( "Name", 33 ) + ">"
    @ 12, nColGet SAY "<" + PadC( "Address", 33 ) + ">"
    @ 16, 61      SAY "< Salary >"
-   @  7, nColGet GET dDate WHEN  DispStatusMsg( "Date must be Valid" )
-   @ 10, nColGet GET cName WHEN  DispStatusMsg( "Must be one of the list!" ) VALID ( MyChoice() < 7 )
-   @ 13, nColGet GET cAdd1 WHEN  DispStatusMsg( "Press F2 to get modal window" )
-   @ 15, nColGet GET cAdd2 WHEN  DispStatusMsg( "Press F2 to activate modal window" )
-   @ 17, nColGet GET cAdd3 WHEN  DispStatusMsg( "Press F2 to bring in front a modal window" )
+   @  7, nColGet GET dDate WHEN DispStatusMsg( "Date must be Valid" )
+   @ 10, nColGet GET cName WHEN DispStatusMsg( "Must be one of the list!" ) VALID ( MyChoice() < 7 )
+   @ 13, nColGet GET cAdd1 WHEN DispStatusMsg( "Press F2 to get modal window" )
+   @ 15, nColGet GET cAdd2 WHEN DispStatusMsg( "Press F2 to activate modal window" )
+   @ 17, nColGet GET cAdd3 WHEN DispStatusMsg( "Press F2 to bring in front a modal window" )
    @ 17, 61      GET nSlry PICTURE "@Z 9999999.99" WHEN ClearStatusMsg()
-
 
    READ
 
    SetColor( cColor )
    WvtSetPaint( aPnt )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION SetGT( nIndex, pGT )
+STATIC FUNCTION SetGT( nIndex, pGT )
 
    LOCAL oldGT
    STATIC s_pGT_ := { NIL, NIL, NIL }
@@ -136,21 +136,22 @@ FUNCTION DispStatusMsg( cMsg )
    ClearStatusMsg()
 
    /* NOTE: The GUI function used as such is not subject to autopainting */
-   Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, RGB( 198, 198, 198 ), "Arial", 18, , 900 )
+   wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, RGB( 198, 198, 198 ), "Arial", 18, , 900 )
 
    RETURN .T.
 
-FUNCTION ClearStatusMsg()
+STATIC FUNCTION ClearStatusMsg()
 
    LOCAL nRow := Row()
    LOCAL nCol := Col()
 
    hb_DispOutAt( MaxRow(), 42, Space( 37 ), "W/W" )
+
    SetPos( nRow, nCol )
 
    RETURN .T.
 
-FUNCTION DoModalDialog()
+STATIC PROCEDURE DoModalDialog()
 
    LOCAL oCrt, nSel
    LOCAL aPnt   := WvtSetPaint( {} )
@@ -167,7 +168,7 @@ FUNCTION DoModalDialog()
    oCrt:Create()
    oCrt:show()
 
-   AAdd( aPaint, { "Box_V", {|| Wvt_DrawBoxRaised( 1, 2, 11, 47 ) }, NIL, { WVT_BLOCK_BOX, 0, 0, MaxRow(), MaxCol() } } )
+   AAdd( aPaint, { "Box_V", {|| wvt_DrawBoxRaised( 1, 2, 11, 47 ) }, NIL, { WVT_BLOCK_BOX, 0, 0, MaxRow(), MaxCol() } } )
    WvtSetPaint( aPaint )
 
    SetColor( "N/W" )
@@ -183,16 +184,16 @@ FUNCTION DoModalDialog()
 
    WvtSetPaint( aPnt )
 
-   RETURN NIL
+   RETURN
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-FUNCTION hb_GTSYS()
+PROCEDURE hb_GTSYS()  /* must be a public function */
 
    REQUEST HB_GT_WVG_DEFAULT
    REQUEST HB_GT_WVT
    REQUEST HB_GT_WGU
 
-   RETURN NIL
+   RETURN
 
 #endif

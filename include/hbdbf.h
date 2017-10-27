@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -64,7 +64,7 @@ typedef struct _DBFHEADER
    HB_BYTE   uiRecordLen[ 2 ];
    HB_BYTE   bReserved1[ 2 ];
    HB_BYTE   bTransaction;       /* 1-transaction begin */
-   HB_BYTE   bEncrypted;         /* 1-encryptpted table */
+   HB_BYTE   bEncrypted;         /* 1-encrypted table */
    HB_BYTE   bReserved2[ 12 ];
    HB_BYTE   bHasTags;           /* bit filed: 1-production index, 2-memo file in VFP */
    HB_BYTE   bCodePage;
@@ -85,8 +85,8 @@ typedef struct _DBFFIELD
    HB_BYTE   bLen;
    HB_BYTE   bDec;
    HB_BYTE   bFieldFlags;          /* 1-system column, 2-nullable, 4-binary */
-   HB_BYTE   bCounter[ 4 ];        /* autoincrement counter */
-   HB_BYTE   bStep;                /* autoincrement step */
+   HB_BYTE   bCounter[ 4 ];        /* auto-increment counter */
+   HB_BYTE   bStep;                /* auto-increment step */
    HB_BYTE   bReserved2[ 7 ];
    HB_BYTE   bHasTag;
 } DBFFIELD;

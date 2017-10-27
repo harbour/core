@@ -1,10 +1,27 @@
+#!/usr/bin/env hbmk2
+
 /*
  * This Harbour script is part of the GNU Make-based build system.
  * WARNING: Running it separately is not supported.
  *
  * Copyright 2009-2010 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2003 Przemyslaw Czerpak (druzus/at/priv.onet.pl) (embedded autoinstall bash script)
- * See COPYING.txt for licensing terms.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
+ *
  */
 
 #pragma -w3
@@ -51,7 +68,7 @@ PROCEDURE Main( ... )
 
       /* Installing some misc files */
       tmp := GetEnvC( "HB_INSTALL_DOC" )
-      IF !( tmp == "no" )
+      IF ! tmp == "no"
          IF GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos"
             tmp := GetEnvC( "HB_INSTALL_PREFIX" )
          ENDIF
@@ -64,7 +81,7 @@ PROCEDURE Main( ... )
                   mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
                NEXT
 
-               mk_hb_FCopy( "COPYING.txt", tmp + hb_ps() )
+               mk_hb_FCopy( "LICENSE.txt", tmp + hb_ps() )
                mk_hb_FCopy( "README.md", tmp + hb_ps() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )
@@ -130,7 +147,7 @@ PROCEDURE Main( ... )
          ENDIF
       ENDIF
 
-      IF !( GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos|cygwin" ) .AND. ;
+      IF ! GetEnvC( "HB_PLATFORM" ) $ "win|wce|os2|dos|cygwin" .AND. ;
          ! Empty( GetEnvC( "HB_INSTALL_DYN" ) ) .AND. ;
          hb_FileExists( hb_DirSepToOS( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) )
 
@@ -140,8 +157,12 @@ PROCEDURE Main( ... )
          cDynVersionComp := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POSC" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXC" )
          cDynVersionless := GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" )                               + GetEnvC( "HB_DYNLIB_EXT" )
 
-         mk_hb_FLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionComp )
-         mk_hb_FLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
+         IF ! cDynVersionFull == cDynVersionComp
+            mk_hb_FLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionComp )
+         ENDIF
+         IF ! cDynVersionFull == cDynVersionless
+            mk_hb_FLinkSym( cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + cDynVersionless )
+         ENDIF
 
          DO CASE
          CASE EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/lib/harbour" ) .OR. ;
@@ -149,12 +170,16 @@ PROCEDURE Main( ... )
               EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib/harbour" ) .OR. ;
               EndsWith( GetEnvC( "HB_INSTALL_DYN" ), "/usr/local/lib64/harbour" )
 
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionless )
-            mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionComp )
+            IF ! cDynVersionFull == cDynVersionless
+               mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionless )
+            ENDIF
+            IF ! cDynVersionFull == cDynVersionComp
+               mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionComp )
+            ENDIF
             mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, hb_DirSepToOS( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionFull )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
-            /* TOFIX: Rewrite this in .prg:
+            /* FIXME: Rewrite this in .prg:
                ld="/usr/lib"
                if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
                   then
@@ -185,7 +210,7 @@ PROCEDURE Main( ... )
 
       /* Creating docs for core */
 
-      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_DOC" ) ) .AND. !( tmp == "no" )
+      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_DOC" ) ) .AND. ! tmp == "no"
 
          OutStd( "! Compiling core documentation (.hbd)..." + hb_eol() )
 
@@ -201,7 +226,7 @@ PROCEDURE Main( ... )
          mk_hbr( tmp )
       ENDIF
 
-      /* Creating install packages */
+      /* Creating release packages */
 
       IF GetEnvC( "HB_BUILD_PKG" ) == "yes" .AND. ;
          ! Empty( GetEnvC( "HB_TOP" ) )
@@ -248,7 +273,7 @@ PROCEDURE Main( ... )
             ELSEIF Empty( query_stdout( "tar --version" ) )
                cBin_Tar := ""
             ELSEIF "bsdtar" $ query_stdout( "tar --version" )
-               /* tar is mapped to bsdtar starting OS X 10.6 */
+               /* tar is mapped to bsdtar starting Mac OS X 10.6 */
                lGNU_Tar := .F.
             ENDIF
 
@@ -282,7 +307,7 @@ PROCEDURE Main( ... )
 
                hb_cwd( cOldDir )
 
-               IF !( GetEnvC( "HB_PLATFORM" ) == "dos" )
+               IF ! GetEnvC( "HB_PLATFORM" ) == "dos"
 
                   tmp := GetEnvC( "HB_TOP" ) + hb_ps() + cTar_Name + ".inst.sh"
 
@@ -323,10 +348,8 @@ PROCEDURE Main( ... )
       /* Executing user postinst configuration script */
 
       IF ! Empty( tmp := GetEnvC( "HB_INSTALL_SCRIPT" ) )
-
          mk_hb_processRun( tmp )
       ENDIF
-
    ELSE
       /* Regenerating extern headers */
 
@@ -496,7 +519,7 @@ STATIC FUNCTION mk_extern_core()
    IF GetEnvC( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
       ! Empty( GetEnvC( "HB_DYNLIB_BASE" ) )
 
-      /* TOFIX: Use list of libs instead of dynamic lib */
+      /* FIXME: Use list of libs instead of dynamic lib */
       IF ( aExtern := __hb_extern_get_list( hb_DirSepToOS( GetEnvC( "HB_DYNLIB_DIR" ) ) + hb_ps() + GetEnvC( "HB_DYNLIB_PREF" ) + GetEnvC( "HB_DYNLIB_BASE" ) + GetEnvC( "HB_DYNLIB_POST" ) + GetEnvC( "HB_DYNLIB_EXT" ) + GetEnvC( "HB_DYNLIB_PEXT" ) ) ) != NIL
 
          OutStd( "! Generating core extern headers..." + hb_eol() )
@@ -631,7 +654,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
                hExtern := { => }
                FOR EACH tmp IN aResult
                   tmp[ 2 ] := hb_asciiUpper( tmp[ 2 ] )
-                  IF !( tmp[ 2 ] $ hExtern )
+                  IF ! tmp[ 2 ] $ hExtern
                      AAdd( aExtern, tmp[ 2 ] )
                      hExtern[ tmp[ 2 ] ] := NIL
                   ENDIF

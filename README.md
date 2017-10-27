@@ -34,7 +34,7 @@ and interfaces to many popular APIs.
    hope they will be useful, but there is NO GUARANTEE that they are
    complete, accurate, non-infringing or usable for any purpose whatsoever.
    Contributors are NOT LIABLE for any damages that result from using
-   Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
+   Harbour in any ways. For more legal details, see [LICENSE](LICENSE.txt).
 
    If you think you can make Harbour better, start to contribute.
    See [How to Participate](#how-to-participate).
@@ -1953,7 +1953,6 @@ Supported shells per host platforms:
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
 
-
-This document Copyright &copy; 2009-2015 Viktor Szakats (vszakats.net/harbour)<br />
-Licensed under [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/)<br />
-See [COPYING](COPYING.txt).
+---
+This document Copyright &copy;&nbsp;2009&ndash;present Viktor Szakats (vszakats.net/harbour)<br />
+[![Creative Commons Attribution-ShareAlike 4.0](https://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by-sa.svg)](https://creativecommons.org/licenses/by-sa/4.0/)

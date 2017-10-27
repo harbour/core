@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -86,8 +86,8 @@ HB_FUNC( MOD )
           * representation: integer or double, size and number of
           * decimal places, it can be seen in code like:
           *    PROCEDURE Main()
-          *       SET FIXED ON
-          *       ? Transform( Mod( 12345, 0 ),"" )
+          *       Set( _SET_FIXED, .T. )
+          *       ? Transform( Mod( 12345, 0 ), "" )
           *       RETURN
           *
           * [druzus]
@@ -105,6 +105,7 @@ HB_FUNC( MOD )
 
 /*
    FUNCTION Mod( cl_num, cl_base )
+
       LOCAL cl_result := cl_num % cl_base
 
       RETURN iif( cl_base = 0, cl_num, iif( cl_result * cl_base < 0, cl_result + cl_base, cl_result ) )

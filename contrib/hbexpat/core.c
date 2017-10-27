@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,16 +44,13 @@
  *
  */
 
-/*
-   Author James Clark:
+/* Author of expat, James Clark:
       http://www.jclark.com/xml/
    Using Expat:
-      http://www.xml.com/pub/a/1999/09/expat/index.html
-      http://www.xml.com/lpt/a/47
+      https://www.xml.com/pub/a/1999/09/expat/
  */
 
-/*
-   TODO:
+/* TODO:
       XML_SetExternalEntityRefHandler()
       XML_SetExternalEntityRefHandlerArg()
       XML_ExternalEntityParserCreate()
@@ -63,7 +60,12 @@
 
 #include "expat.h"
 
-#define HB_EXPAT_VERS( ma, mi, mu )  ( XML_MAJOR_VERSION > ma || ( XML_MAJOR_VERSION == ma && ( XML_MINOR_VERSION > mi || ( XML_MINOR_VERSION == mi && XML_MICRO_VERSION >= mu ) ) ) )
+#define HB_EXPAT_VERS( ma, mi, mu )  \
+   ( XML_MAJOR_VERSION > ma || \
+   ( XML_MAJOR_VERSION == ma && \
+   ( XML_MINOR_VERSION > mi || \
+   ( XML_MINOR_VERSION == mi && \
+     XML_MICRO_VERSION >= mu ) ) ) )
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -122,8 +124,7 @@ typedef struct _HB_EXPAT
          hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); \
    }
 
-/* Global initialization/deinitialization */
-/* -------------------------------------- */
+/* --- Global initialization/de-initialization --- */
 
 static void * XMLCALL hb_expat_xgrab( size_t size )
 {
@@ -141,8 +142,7 @@ static void * XMLCALL hb_expat_xrealloc( void * p, size_t size )
    return hb_xrealloc( p, size );
 }
 
-/* Callbacks */
-/* --------- */
+/* --- Callbacks --- */
 
 /* Common */
 
@@ -643,8 +643,7 @@ static int XMLCALL hb_expat_NotStandaloneHandler( void * userdata )
    return iResult;
 }
 
-/* Constructor/Destructor */
-/* ---------------------- */
+/* --- Constructor/Destructor --- */
 
 static void PHB_EXPAT_free( PHB_EXPAT hb_expat, HB_BOOL bFree )
 {
@@ -733,8 +732,7 @@ static void hb_expat_setvar( PHB_EXPAT hb_expat, int iHandler, PHB_ITEM pBlock )
    }
 }
 
-/* Harbour interface */
-/* ----------------- */
+/* --- Harbour interface --- */
 
 HB_FUNC( XML_PARSERCREATE )
 {
@@ -916,8 +914,6 @@ HB_FUNC( XML_SETUNKNOWNENCODINGHANDLER )
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-/* ; */
 
 HB_FUNC( XML_PARSE )
 {

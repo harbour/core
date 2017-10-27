@@ -1,7 +1,7 @@
 /* Please note the following comments we may use everywhere
    NOTE: Notes
    TODO: something should be added here
-   TOFIX: something needs to be fixed
+   FIXME: something needs to be fixed
    OBSOLETE: something could be removed from here
    QUESTION: I had some questions at this point but I could not get an answer
    OPT: something is commented out to improve performance
@@ -76,13 +76,7 @@ Code Implementation
        Function calls in assert conditions may also cause this problem, if
        they modify one of their arguments or global variables.
 
-[7] When commenting out code using a #if statement, do NOT use 0 only. Instead
-    use "<cvs username here>_0". For example, #if FOO_0, where FOO is your
-    cvs user foo.  This allows easier tracking of why code was commented out,
-    especially in bundled libraries.
-
-
-[8] Use hb_xgrab()/hb_xalloc(), hb_xfree(), hb_xrealloc(), hb_xsize() to
+[7] Use hb_xgrab()/hb_xalloc(), hb_xfree(), hb_xrealloc(), hb_xsize() to
     manage memory allocations. These functions implement an internal
     "safety-net" mechanism that ensures the deallocation of any unfreed
     memory at the end of an application.  They also provide useful
@@ -113,7 +107,7 @@ Naming Conventions
 
 [4] Static variables should be prefixed with 's_'
 
-[5] Global variables (variables shared beetwen modules) should be
+[5] Global variables (variables shared between modules) should be
     prefixed with 'hb_<module_prefix>', e.g. hb_vm_bDebug, hb_gc_pStart
 
 
@@ -126,7 +120,7 @@ Syntax and indentation
     accept C++-style comments in C code, you have to ensure that your
     code would compile with other compilers as well.
 
-[2] Don't use K&R-style.  Of course, we can't and don't want to
+[2] Do not use K&R-style.  Of course, we cannot and do not want to
     force anybody to use a style he or she is not used to, but,
     at the very least, when you write code that goes into the core
     of Harbour or one of its standard modules, please don't use the K&R
@@ -169,8 +163,8 @@ Documentation
 [1] Whenever be possible document yourself functions you developed.
     Usually it's hard to understand code written by other person, moreover
     when it involves some obscure algorithm, system's vars or attributes
-    or data unavailable for the documentator.
-    This is particularly evident for low level functions.
+    or data unavailable for the documentation writers.
+    This is particularly evident for low-level functions.
 
 [2] After some time function was written, work becomes more difficult because
     it's needed to read the code several times (even for the own developer).
@@ -192,11 +186,11 @@ Documentation
 
 [6] If you are the developer of the function, and you are using system's
     functions or vars undocumented, please explain it as much as possible.
-    If you use a obscure or strange algorithm (i.e md5 ) please explain what
-    it does and how it works.
+    If you use a obscure or strange algorithm please explain what it does
+    and how it works.
 
-[7] Notes, remarks and explainings enclose always between the /* */ pair,
-    please don't use the double bar // because it difficults portability.
+[7] Notes, remarks and explaining enclose always between the /* */ pair,
+    please don't use the double bar // because it may break portability.
 
 [8] Remember... documentation it's a much time consuming work, usually
     takes more time writing the documentation of a function that writing

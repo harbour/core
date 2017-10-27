@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -105,7 +105,7 @@ static void hb_gt_cgi_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    PHB_GTCGI pGTCGI;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Init(%p,%p,%p,%p)", ( void * ) pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    HB_GTLOCAL( pGT ) = pGTCGI = ( PHB_GTCGI ) hb_xgrabz( sizeof( HB_GTCGI ) );
 
@@ -124,7 +124,7 @@ static void hb_gt_cgi_Exit( PHB_GT pGT )
 {
    PHB_GTCGI pGTCGI;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Exit(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Exit(%p)", ( void * ) pGT ) );
 
    HB_GTSELF_REFRESH( pGT );
 
@@ -150,7 +150,7 @@ static void hb_gt_cgi_Exit( PHB_GT pGT )
 
 static int hb_gt_cgi_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_ReadKey(%p,%d)", pGT, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_ReadKey(%p,%d)", ( void * ) pGT, iEventMask ) );
 
    HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iEventMask );
@@ -160,7 +160,7 @@ static int hb_gt_cgi_ReadKey( PHB_GT pGT, int iEventMask )
 
 static HB_BOOL hb_gt_cgi_IsColor( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_IsColor(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_IsColor(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -172,7 +172,7 @@ static void hb_gt_cgi_Bell( PHB_GT pGT )
    static const char s_szBell[] = { HB_CHAR_BEL, 0 };
    PHB_GTCGI pGTCGI;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Bell(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Bell(%p)", ( void * ) pGT ) );
 
    pGTCGI = HB_GTCGI_GET( pGT );
 
@@ -181,7 +181,7 @@ static void hb_gt_cgi_Bell( PHB_GT pGT )
 
 static const char * hb_gt_cgi_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Version(%p,%d)", pGT, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Version(%p,%d)", ( void * ) pGT, iType ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -196,7 +196,7 @@ static void hb_gt_cgi_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
 {
    int iHeight, iWidth;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", pGT, iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Scroll(%p,%d,%d,%d,%d,%d,%d,%d,%d)", ( void * ) pGT, iTop, iLeft, iBottom, iRight, iColor, usChar, iRows, iCols ) );
 
    /* Provide some basic scroll support for full screen */
    HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
@@ -342,7 +342,7 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    int iLineFeed, iHeight, iWidth, iLen;
    PHB_GTCGI pGTCGI;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Redraw(%p,%d,%d,%d)", ( void * ) pGT, iRow, iCol, iSize ) );
 
    pGTCGI = HB_GTCGI_GET( pGT );
    HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
@@ -407,7 +407,7 @@ static void hb_gt_cgi_Refresh( PHB_GT pGT )
    int iHeight, iWidth;
    PHB_GTCGI pGTCGI;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Refresh(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Refresh(%p)", ( void * ) pGT ) );
 
    pGTCGI = HB_GTCGI_GET( pGT );
    HB_GTSELF_GETSIZE( pGT, &iHeight, &iWidth );
@@ -426,7 +426,7 @@ static void hb_gt_cgi_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", ( void * ) pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_cgi_Init;
    pFuncTable->Exit                       = hb_gt_cgi_Exit;

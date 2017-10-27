@@ -1,7 +1,6 @@
 /*
- * PostgreSQL RDBMS low level (client api) interface code.
+ * PostgreSQL RDBMS low-level (client API) interface code.
  *
- * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (GC support)
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
  *
  * This program is free software; you can redistribute it and/or modify
@@ -15,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -75,7 +74,7 @@ static HB_BOOL addToContext( pgCopyContext * context, const char c )
       HB_VM_UNLOCK();
       fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
       HB_VM_LOCK();
-      if( !fOK )
+      if( ! fOK )
          return HB_FALSE;
 
       context->position = 0;
@@ -96,7 +95,7 @@ static HB_BOOL addStrToContext( pgCopyContext * context, const char * str )
          HB_VM_UNLOCK();
          fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
          HB_VM_LOCK();
-         if( !fOK )
+         if( ! fOK )
             return HB_FALSE;
 
          context->position = 0;
@@ -119,7 +118,7 @@ static HB_BOOL addStrnToContext( pgCopyContext * context, const char * str, HB_S
          HB_VM_UNLOCK();
          fOK = PQputCopyData( context->connection, context->buffer, context->position ) != -1;
          HB_VM_LOCK();
-         if( !fOK )
+         if( ! fOK )
             return HB_FALSE;
 
          context->position = 0;
@@ -367,7 +366,7 @@ HB_FUNC( HB_PQCOPYFROMWA )
       hb_xfree( szInit );
       HB_VM_LOCK();
 
-      while( !bFail && ( nCount == 0 || uiRecCount < nCount ) &&
+      while( ! bFail && ( nCount == 0 || uiRecCount < nCount ) &&
              ( ! pWhile || hb_itemGetL( hb_vmEvalBlock( pWhile ) ) ) )
       {
 

@@ -2,6 +2,15 @@
  * The Item API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
+ *    hb_itemPCount(), hb_itemParamPtr(), hb_itemReturnPtr()
+ *    hb_itemPutDL(), hb_itemPutNI(), hb_itemGetDL(), hb_itemGetNI(),
+ *    hb_itemGetCPtr(), hb_itemPutCLPtr(), hb_itemGetCLen(), hb_itemGetNLen()
+ *    hb_itemPutCConst(), hb_itemPutCLConst()
+ *    hb_itemPutNLen(), hb_itemPutNDLen(), hb_itemPutNILen(), hb_itemPutNLLen()
+ *    hb_itemPutD(), hb_itemSetCMemo()
+ * Copyright 1999 Eddie Runia <eddie@runia.com> (hb_itemStrCmp())
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_itemStr(), hb_itemString(), hb_itemValToStr())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +23,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,40 +53,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2007 Viktor Szakats (vszakats.net/harbour)
- *    hb_itemPCount()
- *    hb_itemParamPtr()
- *    hb_itemReturnPtr()
- *    hb_itemPutDL()
- *    hb_itemPutNI()
- *    hb_itemGetDL()
- *    hb_itemGetNI()
- *    hb_itemGetCPtr()
- *    hb_itemGetCLPtr()
- *    hb_itemGetCLen()
- *    hb_itemGetNLen()
- *    hb_itemPutCConst()
- *    hb_itemPutCLConst()
- *    hb_itemPutNLen()
- *    hb_itemPutNDLen()
- *    hb_itemPutNILen()
- *    hb_itemPutNLLen()
- *    hb_itemPutD()
- *    hb_itemSetCMemo()
- *
- * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    hb_itemStrCmp()
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_itemStr(), hb_itemString(), and hb_itemValToStr().
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbvmopt.h"
 /* hbfloat.h have to be included before other header files */
 #include "hbfloat.h"
@@ -94,7 +69,7 @@
 
 PHB_ITEM hb_itemNew( PHB_ITEM pNull )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemNew(%p)", pNull ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemNew(%p)", ( void * ) pNull ) );
 
    return hb_gcGripGet( pNull );
 }
@@ -117,7 +92,7 @@ PHB_ITEM hb_itemParamPtr( HB_USHORT uiParam, long lMask )
 
 HB_BOOL hb_itemParamStore( HB_USHORT uiParam, PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemParamStore(%hu, %p)", uiParam, pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemParamStore(%hu, %p)", uiParam, ( void * ) pItem ) );
 
    if( hb_param( uiParam, HB_IT_BYREF ) )
    {
@@ -136,7 +111,7 @@ HB_BOOL hb_itemParamStore( HB_USHORT uiParam, PHB_ITEM pItem )
 
 HB_BOOL hb_itemParamStoreForward( HB_USHORT uiParam, PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemParamStoreForward(%hu, %p)", uiParam, pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemParamStoreForward(%hu, %p)", uiParam, ( void * ) pItem ) );
 
    if( hb_param( uiParam, HB_IT_BYREF ) )
    {
@@ -155,7 +130,7 @@ HB_BOOL hb_itemParamStoreForward( HB_USHORT uiParam, PHB_ITEM pItem )
 
 HB_BOOL hb_itemParamStoreRelease( HB_USHORT uiParam, PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemParamStoreRelease(%hu, %p)", uiParam, pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemParamStoreRelease(%hu, %p)", uiParam, ( void * ) pItem ) );
 
    if( hb_param( uiParam, HB_IT_BYREF ) )
    {
@@ -186,7 +161,7 @@ HB_USHORT hb_itemPCount( void )
 
 HB_BOOL hb_itemRelease( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemRelease(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemRelease(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -214,7 +189,7 @@ PHB_ITEM hb_itemArrayGet( PHB_ITEM pArray, HB_SIZE nIndex )
 {
    PHB_ITEM pItem;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemArrayGet(%p, %" HB_PFS "u)", pArray, nIndex ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemArrayGet(%p, %" HB_PFS "u)", ( void * ) pArray, nIndex ) );
 
    pItem = hb_itemNew( NULL );
 
@@ -226,7 +201,7 @@ PHB_ITEM hb_itemArrayGet( PHB_ITEM pArray, HB_SIZE nIndex )
 
 PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, HB_SIZE nIndex, PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemArrayPut(%p, %" HB_PFS "u, %p)", pArray, nIndex, pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemArrayPut(%p, %" HB_PFS "u, %p)", ( void * ) pArray, nIndex, ( void * ) pItem ) );
 
    if( pArray )
       hb_arraySet( pArray, nIndex, pItem );
@@ -236,7 +211,7 @@ PHB_ITEM hb_itemArrayPut( PHB_ITEM pArray, HB_SIZE nIndex, PHB_ITEM pItem )
 
 PHB_ITEM hb_itemPutNil( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNil(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNil(%p)", ( void * ) pItem ) );
 
    if( pItem )
       hb_itemSetNil( pItem );
@@ -250,7 +225,7 @@ PHB_ITEM hb_itemPutC( PHB_ITEM pItem, const char * szText )
 {
    HB_SIZE nLen, nAlloc;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutC(%p, %s)", pItem, szText ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutC(%p, %s)", ( void * ) pItem, szText ) );
 
    nLen = szText ? strlen( szText ) : 0;
    if( nLen <= 1 )
@@ -285,7 +260,7 @@ PHB_ITEM hb_itemPutCL( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
    HB_SIZE nAlloc;
    char * szValue;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCL(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) nLen, szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCL(%p, %.*s, %" HB_PFS "u)", ( void * ) pItem, ( int ) nLen, szText, nLen ) );
 
    if( nLen <= 1 )
    {
@@ -323,7 +298,7 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
 {
    HB_SIZE nLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCConst(%p, %s)", pItem, szText ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCConst(%p, %s)", ( void * ) pItem, szText ) );
 
    if( pItem )
    {
@@ -346,7 +321,7 @@ PHB_ITEM hb_itemPutCConst( PHB_ITEM pItem, const char * szText )
 
 PHB_ITEM hb_itemPutCLConst( PHB_ITEM pItem, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCLConst(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) nLen, szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCLConst(%p, %.*s, %" HB_PFS "u)", ( void * ) pItem, ( int ) nLen, szText, nLen ) );
 
    if( pItem )
    {
@@ -374,7 +349,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
 {
    HB_SIZE nLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCPtr(%p, %s)", pItem, szText ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCPtr(%p, %s)", ( void * ) pItem, szText ) );
 
    if( pItem )
    {
@@ -406,7 +381,7 @@ PHB_ITEM hb_itemPutCPtr( PHB_ITEM pItem, char * szText )
 
 PHB_ITEM hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCLPtr(%p, %.*s, %" HB_PFS "u)", pItem, ( int ) nLen, szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutCLPtr(%p, %.*s, %" HB_PFS "u)", ( void * ) pItem, ( int ) nLen, szText, nLen ) );
 
    if( pItem )
    {
@@ -444,7 +419,7 @@ void hb_itemSetCMemo( PHB_ITEM pItem )
 
 char * hb_itemGetC( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetC(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetC(%p)", ( void * ) pItem ) );
 
    if( pItem && HB_IS_STRING( pItem ) )
    {
@@ -463,7 +438,7 @@ char * hb_itemGetC( PHB_ITEM pItem )
 
 const char * hb_itemGetCPtr( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetCPtr(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetCPtr(%p)", ( void * ) pItem ) );
 
    if( pItem && HB_IS_STRING( pItem ) )
       return pItem->item.asString.value;
@@ -473,7 +448,7 @@ const char * hb_itemGetCPtr( PHB_ITEM pItem )
 
 HB_SIZE hb_itemGetCLen( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetCLen(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetCLen(%p)", ( void * ) pItem ) );
 
    if( pItem && HB_IS_STRING( pItem ) )
       return pItem->item.asString.length;
@@ -483,7 +458,7 @@ HB_SIZE hb_itemGetCLen( PHB_ITEM pItem )
 
 HB_SIZE hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopyC(%p, %s, %" HB_PFS "u)", pItem, szBuffer, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopyC(%p, %s, %" HB_PFS "u)", ( void * ) pItem, szBuffer, nLen ) );
 
    if( pItem && HB_IS_STRING( pItem ) )
    {
@@ -520,7 +495,7 @@ HB_BOOL hb_itemFreeC( char * szText )
 
 char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetDS(%p, %p)", pItem, szDate ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetDS(%p, %p)", ( void * ) pItem, ( void * ) szDate ) );
 
    if( pItem && HB_IS_DATETIME( pItem ) )
       return hb_dateDecStr( szDate, pItem->item.asDateTime.julian );
@@ -530,7 +505,7 @@ char * hb_itemGetDS( PHB_ITEM pItem, char * szDate )
 
 long hb_itemGetDL( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetDL(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetDL(%p)", ( void * ) pItem ) );
 
    if( pItem && HB_IS_DATETIME( pItem ) )
       return pItem->item.asDateTime.julian;
@@ -544,7 +519,7 @@ long hb_itemGetDL( PHB_ITEM pItem )
  */
 char * hb_itemGetTS( PHB_ITEM pItem, char * szDateTime )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetTS(%p, %s)", pItem, szDateTime ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetTS(%p, %s)", ( void * ) pItem, szDateTime ) );
 
    if( pItem && HB_IS_DATETIME( pItem ) )
       return hb_timeStampStrRawPut( szDateTime, pItem->item.asDateTime.julian,
@@ -555,7 +530,7 @@ char * hb_itemGetTS( PHB_ITEM pItem, char * szDateTime )
 
 double hb_itemGetTD( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetTD(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetTD(%p)", ( void * ) pItem ) );
 
    if( pItem && HB_IS_DATETIME( pItem ) )
       return hb_timeStampPackDT( pItem->item.asDateTime.julian,
@@ -566,7 +541,7 @@ double hb_itemGetTD( PHB_ITEM pItem )
 
 HB_BOOL hb_itemGetTDT( PHB_ITEM pItem, long * plJulian, long * plMilliSec )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetTDT(%p,%p,%p)", pItem, plJulian, plMilliSec ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetTDT(%p,%p,%p)", ( void * ) pItem, ( void * ) plJulian, ( void * ) plMilliSec ) );
 
    if( pItem && HB_IS_DATETIME( pItem ) )
    {
@@ -583,7 +558,7 @@ HB_BOOL hb_itemGetTDT( PHB_ITEM pItem, long * plJulian, long * plMilliSec )
 
 HB_BOOL hb_itemGetL( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetL(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetL(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -605,7 +580,7 @@ HB_BOOL hb_itemGetL( PHB_ITEM pItem )
 
 HB_BOOL hb_itemGetLX( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetLX(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetLX(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -634,7 +609,7 @@ HB_BOOL hb_itemGetLX( PHB_ITEM pItem )
 
 double hb_itemGetND( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetND(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetND(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -653,7 +628,7 @@ double hb_itemGetND( PHB_ITEM pItem )
 
 int hb_itemGetNI( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNI(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNI(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -672,7 +647,7 @@ int hb_itemGetNI( PHB_ITEM pItem )
 
 long hb_itemGetNL( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNL(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNL(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -691,7 +666,7 @@ long hb_itemGetNL( PHB_ITEM pItem )
 
 HB_ISIZ hb_itemGetNS( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNS(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNS(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -710,7 +685,7 @@ HB_ISIZ hb_itemGetNS( PHB_ITEM pItem )
 
 HB_MAXINT hb_itemGetNInt( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNL(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNL(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -730,7 +705,7 @@ HB_MAXINT hb_itemGetNInt( PHB_ITEM pItem )
 #ifndef HB_LONG_LONG_OFF
 HB_LONGLONG hb_itemGetNLL( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNL(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNL(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -750,7 +725,7 @@ HB_LONGLONG hb_itemGetNLL( PHB_ITEM pItem )
 
 void * hb_itemGetPtr( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetPtr(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetPtr(%p)", ( void * ) pItem ) );
 
    if( pItem && HB_IS_POINTER( pItem ) )
       return pItem->item.asPointer.value;
@@ -760,7 +735,7 @@ void * hb_itemGetPtr( PHB_ITEM pItem )
 
 void * hb_itemGetPtrGC( PHB_ITEM pItem, const HB_GC_FUNCS * pFuncs )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetPtrGC(%p,%p)", pItem, pFuncs ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetPtrGC(%p,%p)", ( void * ) pItem, ( const void * ) pFuncs ) );
 
    if( pItem && HB_IS_POINTER( pItem ) &&
        pItem->item.asPointer.collect &&
@@ -772,7 +747,7 @@ void * hb_itemGetPtrGC( PHB_ITEM pItem, const HB_GC_FUNCS * pFuncs )
 
 PHB_SYMB hb_itemGetSymbol( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetSymbol(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetSymbol(%p)", ( void * ) pItem ) );
 
    if( pItem && HB_IS_SYMBOL( pItem ) )
       return pItem->item.asSymbol.value;
@@ -782,7 +757,7 @@ PHB_SYMB hb_itemGetSymbol( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemReturn(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemReturn(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -795,7 +770,7 @@ PHB_ITEM hb_itemReturn( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemReturnForward( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemReturnForward(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemReturnForward(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -808,7 +783,7 @@ PHB_ITEM hb_itemReturnForward( PHB_ITEM pItem )
 
 void hb_itemReturnRelease( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemReturnRelease(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemReturnRelease(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -821,7 +796,7 @@ void hb_itemReturnRelease( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, const char * szDate )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutDS(%p, %.8s)", pItem, szDate ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutDS(%p, %.8s)", ( void * ) pItem, szDate ) );
 
    if( pItem )
    {
@@ -840,7 +815,7 @@ PHB_ITEM hb_itemPutDS( PHB_ITEM pItem, const char * szDate )
 
 PHB_ITEM hb_itemPutD( PHB_ITEM pItem, int iYear, int iMonth, int iDay )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutD(%p, %04i, %02i, %02i)", pItem, iYear, iMonth, iDay ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutD(%p, %04i, %02i, %02i)", ( void * ) pItem, iYear, iMonth, iDay ) );
 
    if( pItem )
    {
@@ -859,7 +834,7 @@ PHB_ITEM hb_itemPutD( PHB_ITEM pItem, int iYear, int iMonth, int iDay )
 
 PHB_ITEM hb_itemPutDL( PHB_ITEM pItem, long lJulian )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutDL(%p, %ld)", pItem, lJulian ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutDL(%p, %ld)", ( void * ) pItem, lJulian ) );
 
    if( pItem )
    {
@@ -878,7 +853,7 @@ PHB_ITEM hb_itemPutDL( PHB_ITEM pItem, long lJulian )
 
 PHB_ITEM hb_itemPutTS( PHB_ITEM pItem, const char * szDateTime )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutTS(%p, %s)", pItem, szDateTime ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutTS(%p, %s)", ( void * ) pItem, szDateTime ) );
 
    if( pItem )
    {
@@ -899,7 +874,7 @@ PHB_ITEM hb_itemPutTD( PHB_ITEM pItem, double dTimeStamp )
 {
    long lJulian, lMilliSec;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutTD(%p, %lf)", pItem, dTimeStamp ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutTD(%p, %lf)", ( void * ) pItem, dTimeStamp ) );
 
    if( pItem )
    {
@@ -919,7 +894,7 @@ PHB_ITEM hb_itemPutTD( PHB_ITEM pItem, double dTimeStamp )
 
 PHB_ITEM hb_itemPutTDT( PHB_ITEM pItem, long lJulian, long lMilliSec )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutTDT(%p, %ld, %ld)", pItem, lJulian, lMilliSec ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutTDT(%p, %ld, %ld)", ( void * ) pItem, lJulian, lMilliSec ) );
 
    if( pItem )
    {
@@ -938,7 +913,7 @@ PHB_ITEM hb_itemPutTDT( PHB_ITEM pItem, long lJulian, long lMilliSec )
 
 PHB_ITEM hb_itemPutL( PHB_ITEM pItem, HB_BOOL bValue )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutL(%p, %d)", pItem, ( int ) bValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutL(%p, %d)", ( void * ) pItem, ( int ) bValue ) );
 
    if( pItem )
    {
@@ -958,7 +933,7 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutND(%p, %lf)", pItem, dNumber ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutND(%p, %lf)", ( void * ) pItem, dNumber ) );
 
    if( pItem )
    {
@@ -978,7 +953,7 @@ PHB_ITEM hb_itemPutND( PHB_ITEM pItem, double dNumber )
 
 PHB_ITEM hb_itemPutNI( PHB_ITEM pItem, int iNumber )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNI(%p, %d)", pItem, iNumber ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNI(%p, %d)", ( void * ) pItem, iNumber ) );
 
    if( pItem )
    {
@@ -997,7 +972,7 @@ PHB_ITEM hb_itemPutNI( PHB_ITEM pItem, int iNumber )
 
 PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNL(%p, %ld)", pItem, lNumber ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNL(%p, %ld)", ( void * ) pItem, lNumber ) );
 
    if( pItem )
    {
@@ -1014,7 +989,7 @@ PHB_ITEM hb_itemPutNL( PHB_ITEM pItem, long lNumber )
 
 PHB_ITEM hb_itemPutNS( PHB_ITEM pItem, HB_ISIZ nNumber )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNS(%p, %" HB_PFS "d)", pItem, nNumber ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNS(%p, %" HB_PFS "d)", ( void * ) pItem, nNumber ) );
 
    if( pItem )
    {
@@ -1051,7 +1026,7 @@ PHB_ITEM hb_itemPutNS( PHB_ITEM pItem, HB_ISIZ nNumber )
 #ifndef HB_LONG_LONG_OFF
 PHB_ITEM hb_itemPutNLL( PHB_ITEM pItem, HB_LONGLONG llNumber )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNL(%p, %" PFLL "d)", pItem, llNumber ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNL(%p, %" PFLL "d)", ( void * ) pItem, llNumber ) );
 
    if( pItem )
    {
@@ -1077,7 +1052,7 @@ PHB_ITEM hb_itemPutNLL( PHB_ITEM pItem, HB_LONGLONG llNumber )
 
 PHB_ITEM hb_itemPutNInt( PHB_ITEM pItem, HB_MAXINT nNumber )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNInt(%p, %" PFHL "d)", pItem, nNumber ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNInt(%p, %" PFHL "d)", ( void * ) pItem, nNumber ) );
 
    if( pItem )
    {
@@ -1106,7 +1081,7 @@ PHB_ITEM hb_itemPutNInt( PHB_ITEM pItem, HB_MAXINT nNumber )
 
 PHB_ITEM hb_itemPutNIntLen( PHB_ITEM pItem, HB_MAXINT nNumber, int iWidth )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNIntLen(%p, %" PFHL "d, %d)", pItem, nNumber, iWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNIntLen(%p, %" PFHL "d, %d)", ( void * ) pItem, nNumber, iWidth ) );
 
    if( HB_LIM_INT( nNumber ) )
    {
@@ -1124,7 +1099,7 @@ PHB_ITEM hb_itemPutNIntLen( PHB_ITEM pItem, HB_MAXINT nNumber, int iWidth )
 
 PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNLen(%p, %lf, %d, %d)", pItem, dNumber, iWidth, iDec ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNLen(%p, %lf, %d, %d)", ( void * ) pItem, dNumber, iWidth, iDec ) );
 
    if( iDec < 0 )
    {
@@ -1150,7 +1125,7 @@ PHB_ITEM hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 
 PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNDLen(%p, %lf, %d, %d)", pItem, dNumber, iWidth, iDec ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNDLen(%p, %lf, %d, %d)", ( void * ) pItem, dNumber, iWidth, iDec ) );
 
    if( pItem )
    {
@@ -1179,7 +1154,7 @@ PHB_ITEM hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec )
 
 PHB_ITEM hb_itemPutNDDec( PHB_ITEM pItem, double dNumber, int iDec )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNDDec(%p, %lf, %i)", pItem, dNumber, iDec ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNDDec(%p, %lf, %i)", ( void * ) pItem, dNumber, iDec ) );
 
    if( pItem )
    {
@@ -1209,7 +1184,7 @@ PHB_ITEM hb_itemPutNDDec( PHB_ITEM pItem, double dNumber, int iDec )
 
 double hb_itemGetNDDec( PHB_ITEM pItem, int * piDec )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNDDec(%p,%p)", pItem, piDec ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNDDec(%p,%p)", ( void * ) pItem, ( void * ) piDec ) );
 
    if( HB_IS_INTEGER( pItem ) )
    {
@@ -1234,7 +1209,7 @@ double hb_itemGetNDDec( PHB_ITEM pItem, int * piDec )
 
 PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNILen(%p, %d, %d)", pItem, iNumber, iWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNILen(%p, %d, %d)", ( void * ) pItem, iNumber, iWidth ) );
 
    if( pItem )
    {
@@ -1256,7 +1231,7 @@ PHB_ITEM hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth )
 
 PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNLLen(%p, %ld, %d)", pItem, lNumber, iWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNLLen(%p, %ld, %d)", ( void * ) pItem, lNumber, iWidth ) );
 
    if( pItem )
    {
@@ -1288,7 +1263,7 @@ PHB_ITEM hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth )
 #ifndef HB_LONG_LONG_OFF
 PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, HB_LONGLONG llNumber, int iWidth )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNLLLen(%p, %" PFLL "d, %d)", pItem, llNumber, iWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNLLLen(%p, %" PFLL "d, %d)", ( void * ) pItem, llNumber, iWidth ) );
 
    if( pItem )
    {
@@ -1320,7 +1295,7 @@ PHB_ITEM hb_itemPutNLLLen( PHB_ITEM pItem, HB_LONGLONG llNumber, int iWidth )
 
 PHB_ITEM hb_itemPutNumType( PHB_ITEM pItem, double dNumber, int iDec, int iType1, int iType2 )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNumType( %p, %lf, %d, %i, %i)", pItem, dNumber, iDec, iType1, iType2 ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutNumType( %p, %lf, %d, %i, %i)", ( void * ) pItem, dNumber, iDec, iType1, iType2 ) );
 
    if( iDec || iType1 & HB_IT_DOUBLE || iType2 & HB_IT_DOUBLE )
    {
@@ -1346,7 +1321,7 @@ PHB_ITEM hb_itemPutNumType( PHB_ITEM pItem, double dNumber, int iDec, int iType1
 
 PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutPtr(%p, %p)", pItem, pValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutPtr(%p, %p)", ( void * ) pItem, pValue ) );
 
    if( pItem )
    {
@@ -1366,7 +1341,7 @@ PHB_ITEM hb_itemPutPtr( PHB_ITEM pItem, void * pValue )
 
 PHB_ITEM hb_itemPutPtrGC( PHB_ITEM pItem, void * pValue )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutPtrGC(%p, %p)", pItem, pValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutPtrGC(%p, %p)", ( void * ) pItem, pValue ) );
 
    if( pItem )
    {
@@ -1388,7 +1363,7 @@ PHB_ITEM hb_itemPutPtrGC( PHB_ITEM pItem, void * pValue )
 
 PHB_ITEM hb_itemPutPtrRawGC( PHB_ITEM pItem, void * pValue )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutPtrRawGC(%p, %p)", pItem, pValue ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutPtrRawGC(%p, %p)", ( void * ) pItem, pValue ) );
 
    if( pItem )
    {
@@ -1408,7 +1383,7 @@ PHB_ITEM hb_itemPutPtrRawGC( PHB_ITEM pItem, void * pValue )
 
 PHB_ITEM hb_itemPutSymbol( PHB_ITEM pItem, PHB_SYMB pSym )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutSymbol(%p,%p)", pItem, pSym ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPutSymbol(%p,%p)", ( void * ) pItem, ( void * ) pSym ) );
 
    if( pItem )
    {
@@ -1429,7 +1404,7 @@ PHB_ITEM hb_itemPutSymbol( PHB_ITEM pItem, PHB_SYMB pSym )
 
 void hb_itemGetNLen( PHB_ITEM pItem, int * piWidth, int * piDecimal )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNLen(%p, %p, %p)", pItem, piWidth, piDecimal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetNLen(%p, %p, %p)", ( void * ) pItem, ( void * ) piWidth, ( void * ) piDecimal ) );
 
    if( pItem )
    {
@@ -1458,7 +1433,7 @@ void hb_itemGetNLen( PHB_ITEM pItem, int * piWidth, int * piDecimal )
 
 HB_SIZE hb_itemSize( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemSize(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemSize(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -1475,7 +1450,7 @@ HB_SIZE hb_itemSize( PHB_ITEM pItem )
 
 HB_TYPE hb_itemType( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemType(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemType(%p)", ( void * ) pItem ) );
 
    if( pItem )
       return ( HB_TYPE ) HB_ITEM_TYPE( pItem );
@@ -1485,7 +1460,7 @@ HB_TYPE hb_itemType( PHB_ITEM pItem )
 
 const char * hb_itemTypeStr( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemTypeStr(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemTypeStr(%p)", ( void * ) pItem ) );
 
    if( pItem )
    {
@@ -1535,7 +1510,7 @@ const char * hb_itemTypeStr( PHB_ITEM pItem )
 
 void hb_itemInit( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemInit(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemInit(%p)", ( void * ) pItem ) );
 
    if( pItem )
       pItem->type = HB_IT_NIL;
@@ -1545,7 +1520,7 @@ void hb_itemClear( PHB_ITEM pItem )
 {
    HB_TYPE type;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemClear(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemClear(%p)", ( void * ) pItem ) );
 
    type = HB_ITEM_TYPERAW( pItem );
    pItem->type = HB_IT_NIL;
@@ -1592,7 +1567,7 @@ void hb_itemClear( PHB_ITEM pItem )
 
 void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopy(%p, %p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopy(%p, %p)", ( void * ) pDest, ( void * ) pSource ) );
 
    if( pDest == pSource )
       hb_errInternal( HB_EI_ITEMBADCOPY, NULL, "hb_itemCopy()", NULL );
@@ -1625,7 +1600,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
          if( HB_IS_MEMVAR( pSource ) )
             hb_memvarValueIncRef( pSource->item.asMemvar.value );
 
-         else if( HB_IS_ENUM( pSource ) )    /* enumerators cannnot be copied */
+         else if( HB_IS_ENUM( pSource ) )    /* enumerators cannot be copied */
             pDest->type = HB_IT_NIL;
 
          else if( HB_IS_EXTREF( pSource ) )
@@ -1652,7 +1627,7 @@ void hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
 
 void hb_itemCopyToRef( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopyToRef(%p, %p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopyToRef(%p, %p)", ( void * ) pDest, ( void * ) pSource ) );
 
    if( HB_IS_BYREF( pDest ) )
    {
@@ -1685,7 +1660,7 @@ void hb_itemCopyToRef( PHB_ITEM pDest, PHB_ITEM pSource )
 
 void hb_itemCopyFromRef( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopyFromRef(%p, %p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCopyFromRef(%p, %p)", ( void * ) pDest, ( void * ) pSource ) );
 
    if( HB_IS_BYREF( pSource ) )
    {
@@ -1704,7 +1679,7 @@ void hb_itemCopyFromRef( PHB_ITEM pDest, PHB_ITEM pSource )
  */
 void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMove(%p, %p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMove(%p, %p)", ( void * ) pDest, ( void * ) pSource ) );
 
    if( pDest == pSource )
       hb_errInternal( HB_EI_ITEMBADCOPY, NULL, "hb_itemMove()", NULL );
@@ -1723,7 +1698,7 @@ void hb_itemMove( PHB_ITEM pDest, PHB_ITEM pSource )
 
 void hb_itemMoveRef( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMoveRef(%p, %p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMoveRef(%p, %p)", ( void * ) pDest, ( void * ) pSource ) );
 
    if( HB_IS_BYREF( pSource ) )
    {
@@ -1754,7 +1729,7 @@ void hb_itemMoveRef( PHB_ITEM pDest, PHB_ITEM pSource )
 
 void hb_itemMoveToRef( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMoveToRef(%p, %p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMoveToRef(%p, %p)", ( void * ) pDest, ( void * ) pSource ) );
 
    if( HB_IS_BYREF( pDest ) )
    {
@@ -1801,7 +1776,7 @@ void hb_itemMoveToRef( PHB_ITEM pDest, PHB_ITEM pSource )
 
 void hb_itemMoveFromRef( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMoveFromRef(%p, %p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemMoveFromRef(%p, %p)", ( void * ) pDest, ( void * ) pSource ) );
 
    if( HB_IS_BYREF( pSource ) )
    {
@@ -1821,7 +1796,7 @@ void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
    HB_ITEM temp;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemSwap(%p, %p)", pItem1, pItem2 ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemSwap(%p, %p)", ( void * ) pItem1, ( void * ) pItem2 ) );
 
    /*
     * It's safe to use this version because our GC cannot be
@@ -1841,7 +1816,7 @@ void hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
 
 PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnRefOnce(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnRefOnce(%p)", ( void * ) pItem ) );
 
    if( HB_IS_BYREF( pItem ) )
    {
@@ -1966,7 +1941,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnRef(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnRef(%p)", ( void * ) pItem ) );
 
    do
    {
@@ -1982,7 +1957,7 @@ PHB_ITEM hb_itemUnRef( PHB_ITEM pItem )
  */
 PHB_ITEM hb_itemUnRefWrite( PHB_ITEM pItem, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnRefWrite(%p,%p)", pItem, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnRefWrite(%p,%p)", ( void * ) pItem, ( void * ) pSource ) );
 
    if( HB_IS_EXTREF( pItem ) )
    {
@@ -2023,7 +1998,7 @@ PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
 {
    PHB_ITEM pLast;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnRefRefer(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnRefRefer(%p)", ( void * ) pItem ) );
 
    do
    {
@@ -2040,7 +2015,7 @@ PHB_ITEM hb_itemUnRefRefer( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE nSize )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemReSizeString(%p,%" HB_PFS "u)", pItem, nSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemReSizeString(%p,%" HB_PFS "u)", ( void * ) pItem, nSize ) );
 
    if( pItem->item.asString.allocated == 0 )
    {
@@ -2073,7 +2048,7 @@ PHB_ITEM hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE nSize )
 
 PHB_ITEM hb_itemUnShareString( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnShareString(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnShareString(%p)", ( void * ) pItem ) );
 
    if( pItem->item.asString.allocated == 0 ||
        hb_xRefCount( pItem->item.asString.value ) > 1 )
@@ -2097,7 +2072,7 @@ PHB_ITEM hb_itemUnShareString( PHB_ITEM pItem )
 
 PHB_ITEM hb_itemUnShare( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnShare(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemUnShare(%p)", ( void * ) pItem ) );
 
    if( HB_IS_BYREF( pItem ) )
       pItem = hb_itemUnRef( pItem );
@@ -2110,7 +2085,7 @@ PHB_ITEM hb_itemUnShare( PHB_ITEM pItem )
 
 HB_BOOL hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pnLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetWriteCL(%p,%p,%p)", pItem, pszValue, pnLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetWriteCL(%p,%p,%p)", ( void * ) pItem, ( void * ) pszValue, ( void * ) pnLen ) );
 
    if( pItem )
    {
@@ -2132,7 +2107,7 @@ HB_BOOL hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pnLen )
 /* clone the given item */
 PHB_ITEM hb_itemClone( PHB_ITEM pItem )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemClone(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemClone(%p)", ( void * ) pItem ) );
 
    if( HB_IS_ARRAY( pItem ) )
    {
@@ -2149,7 +2124,7 @@ PHB_ITEM hb_itemClone( PHB_ITEM pItem )
 
 void hb_itemCloneTo( PHB_ITEM pDest, PHB_ITEM pSource )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCloneTo(%p,%p)", pDest, pSource ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemCloneTo(%p,%p)", ( void * ) pDest, ( void * ) pSource ) );
 
    if( HB_IS_ARRAY( pSource ) )
    {
@@ -2349,7 +2324,7 @@ int hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
    HB_SIZE nMinLen;
    int iRet = 0; /* Current status */
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemStrCmp(%p, %p, %d)", pFirst, pSecond, ( int ) bForceExact ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemStrCmp(%p, %p, %d)", ( void * ) pFirst, ( void * ) pSecond, ( int ) bForceExact ) );
 
    szFirst = pFirst->item.asString.value;
    szSecond = pSecond->item.asString.value;
@@ -2432,7 +2407,7 @@ int hb_itemStrICmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact )
    HB_SIZE nMinLen;
    int iRet = 0; /* Current status */
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemStrICmp(%p, %p, %d)", pFirst, pSecond, ( int ) bForceExact ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemStrICmp(%p, %p, %d)", ( void * ) pFirst, ( void * ) pSecond, ( int ) bForceExact ) );
 
    szFirst = pFirst->item.asString.value;
    szSecond = pSecond->item.asString.value;
@@ -2534,7 +2509,9 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
          double dInt, dFract, dDig, doBase = 10.0;
          int iPrec, iFirst = -1;
 
-         /* dNumber = hb_numRound( dNumber, iDec ); */
+         #if 0
+         dNumber = hb_numRound( dNumber, iDec );
+         #endif
 
 #ifdef HB_NUM_PRECISION
          iPrec = HB_NUM_PRECISION;
@@ -2708,7 +2685,7 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
    This function should be used by any function that wants to format numeric
    data for displaying, printing, or putting in a database.
 
-   Note: The caller is responsible for calling hb_xfree to free the results
+   Note: The caller is responsible for calling hb_xfree() to free the results
          buffer, but ONLY if the return value is not a NULL pointer! (If a NULL
          pointer is returned, then there was a conversion error.)
  */
@@ -2716,7 +2693,7 @@ char * hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec )
 {
    char * szResult = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemStr(%p, %p, %p)", pNumber, pWidth, pDec ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemStr(%p, %p, %p)", ( void * ) pNumber, ( void * ) pWidth, ( void * ) pDec ) );
 
    if( pNumber )
    {
@@ -2776,7 +2753,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
 {
    char * buffer;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemString(%p, %p, %p)", pItem, nLen, bFreeReq ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemString(%p, %p, %p)", ( void * ) pItem, ( void * ) nLen, ( void * ) bFreeReq ) );
 
    switch( HB_ITEM_TYPE( pItem ) )
    {
@@ -2903,7 +2880,7 @@ char * hb_itemString( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq )
 
 char * hb_itemPadConv( PHB_ITEM pItem, HB_SIZE * pnSize, HB_BOOL * bFreeReq )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPadConv(%p, %p, %p)", pItem, pnSize, bFreeReq ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemPadConv(%p, %p, %p)", ( void * ) pItem, ( void * ) pnSize, ( void * ) bFreeReq ) );
 
    if( pItem )
    {
@@ -2954,7 +2931,7 @@ PHB_ITEM hb_itemValToStr( PHB_ITEM pItem )
    HB_SIZE nLen;
    HB_BOOL bFreeReq;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_itemValToStr(%p)", pItem ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemValToStr(%p)", ( void * ) pItem ) );
 
    buffer = hb_itemString( pItem, &nLen, &bFreeReq );
    if( bFreeReq )

@@ -8,6 +8,7 @@
 -stop{dos|wce}
 
 -depkeyhead=gs:iapi.h
+-depcontrol=gs:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=gs:${HB_WITH_GS}
 -depincpath=gs:/usr/include
 -depincpath=gs:/usr/include/ghostscript

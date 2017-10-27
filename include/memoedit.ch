@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,26 +48,26 @@
 #define _MEMOEDIT_CH
 
 /* User callback status modes */
-#define ME_IDLE         0       /* Idle, all keys processed        */
-#define ME_UNKEY        1       /* Unknown key, memo unaltered     */
-#define ME_UNKEYX       2       /* Unknown key, memo altered       */
-#define ME_INIT         3       /* Initialization mode             */
+#define ME_IDLE         0       /* Idle, all keys processed */
+#define ME_UNKEY        1       /* Unknown key, memo unaltered */
+#define ME_UNKEYX       2       /* Unknown key, memo altered */
+#define ME_INIT         3       /* Initialization mode */
 #ifndef HB_CLP_STRICT
-#define ME_REQUEST      4       /* Memoedit requests an input from */
-                                /* the user function, e.g. after   */
-                                /* ME_PASTE                        */ /* Xbase++ extension */
+#define ME_REQUEST      4       /* MemoEdit() requests an input from */
+                                /* the user function, e.g. after */
+                                /* ME_PASTE */  /* Xbase++ extension */
 #endif
 
 /* User callback return codes */
-#define ME_DEFAULT      0       /* Perform default action          */
-#define ME_IGNORE       32      /* Ignore unknown key              */
-#define ME_DATA         33      /* Treat unknown key as data       */
-#define ME_TOGGLEWRAP   34      /* Toggle word-wrap mode           */
-#define ME_TOGGLESCROLL 35      /* Toggle scrolling mode           */
-#define ME_WORDRIGHT    100     /* Perform word-right operation    */
-#define ME_BOTTOMRIGHT  101     /* Perform bottom-right operation  */
+#define ME_DEFAULT      0       /* Perform default action */
+#define ME_IGNORE       32      /* Ignore unknown key */
+#define ME_DATA         33      /* Treat unknown key as data */
+#define ME_TOGGLEWRAP   34      /* Toggle word-wrap mode */
+#define ME_TOGGLESCROLL 35      /* Toggle scrolling mode */
+#define ME_WORDRIGHT    100     /* Perform word-right operation */
+#define ME_BOTTOMRIGHT  101     /* Perform bottom-right operation */
 #ifndef HB_CLP_STRICT
-#define ME_PASTE        110     /* Paste string into buffer        */ /* Xbase++ extension */
+#define ME_PASTE        110     /* Paste string into buffer */  /* Xbase++ extension */
 #endif
 
 /* NOTE: Return codes 1-31 cause MemoEdit() to perform the */

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -99,7 +99,7 @@ static int s_zlibCompress2( char ** pDstPtr, HB_SIZE * pnDst,
    z_stream stream;
    int iResult;
 
-   memset( &stream, 0, sizeof( z_stream ) );
+   memset( &stream, 0, sizeof( stream ) );
    stream.zalloc    = s_zlib_alloc;
    stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;
@@ -155,7 +155,7 @@ static HB_SIZE s_zlibUncompressedSize( const char * szSrc, HB_SIZE nLen,
    z_stream stream;
    HB_SIZE nDest = 0;
 
-   memset( &stream, 0, sizeof( z_stream ) );
+   memset( &stream, 0, sizeof( stream ) );
    stream.zalloc    = s_zlib_alloc;
    stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;
@@ -190,7 +190,7 @@ static int s_zlibUncompress( char * pDst, HB_SIZE * pnDst,
    z_stream stream;
    int iResult;
 
-   memset( &stream, 0, sizeof( z_stream ) );
+   memset( &stream, 0, sizeof( stream ) );
    stream.zalloc    = s_zlib_alloc;
    stream.zfree     = s_zlib_free;
    stream.opaque    = NULL;
@@ -221,7 +221,7 @@ static int s_zlibUncompress( char * pDst, HB_SIZE * pnDst,
 }
 
 /*
- * hb_ZLibVersion( [<nType>] ) -> <cZlibVersion>
+ * hb_ZLibVersion( [<nType>] ) --> <cZlibVersion>
  */
 HB_FUNC( HB_ZLIBVERSION )
 {
@@ -237,7 +237,7 @@ HB_FUNC( HB_ZLIBVERSION )
 }
 
 /*
- * hb_ZCompressBound( <cData> | <nDataLen> ) -> <nMaxCompressLen>
+ * hb_ZCompressBound( <cData> | <nDataLen> ) --> <nMaxCompressLen>
  */
 HB_FUNC( HB_ZCOMPRESSBOUND )
 {
@@ -251,7 +251,7 @@ HB_FUNC( HB_ZCOMPRESSBOUND )
 
 /*
  * hb_ZUncompressLen( <cCompressedData>, [<@nResult>] )
- *          -> <nUnCompressedDataLen> or -1 on error
+ *          --> <nUnCompressedDataLen> or -1 on error
  */
 HB_FUNC( HB_ZUNCOMPRESSLEN )
 {
@@ -408,7 +408,7 @@ HB_FUNC( HB_ZUNCOMPRESS )
 }
 
 /*
- * hb_gzCompressBound( <cData> | <nDataLen> ) -> <nMaxCompressLen>
+ * hb_gzCompressBound( <cData> | <nDataLen> ) --> <nMaxCompressLen>
  */
 HB_FUNC( HB_GZCOMPRESSBOUND )
 {

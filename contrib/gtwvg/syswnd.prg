@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ Compatible xbpPartHandler Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                               EkOnkar
+/*                               EkOnkar
  *                         ( The LORD is ONE )
- *
- *                Xbase++ Compatible xbpPartHandler Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               08Nov2008
  */
 
 #include "hbclass.ch"
@@ -78,7 +72,7 @@ CREATE CLASS WvgSysWindow INHERIT WvgPartHandler
    METHOD currentPos()
    METHOD currentSize()
 
-   VAR    aPos                                  INIT    { 0, 0 }
+   VAR    aPos                                  INIT { 0, 0 }
 
    VAR    hWnd                                  PROTECTED
    VAR    nOldProc                              PROTECTED
@@ -86,16 +80,16 @@ CREATE CLASS WvgSysWindow INHERIT WvgPartHandler
 
 
    VAR    sl_helpRequest
-   ACCESS helpRequest                           INLINE  ::sl_helpRequest
-   ASSIGN helpRequest( bBlock )                 INLINE  ::sl_helpRequest := bBlock
+   ACCESS helpRequest                           INLINE ::sl_helpRequest
+   ASSIGN helpRequest( bBlock )                 INLINE ::sl_helpRequest := bBlock
 
    VAR    sl_move
-   ACCESS move                                  INLINE  ::sl_move
-   ASSIGN move( bBlock )                        INLINE  ::sl_move := bBlock
+   ACCESS move                                  INLINE ::sl_move
+   ASSIGN move( bBlock )                        INLINE ::sl_move := bBlock
 
    VAR    sl_quit
-   ACCESS quit                                  INLINE  ::sl_quit
-   ASSIGN quit( bBlock )                        INLINE  ::sl_quit := bBlock
+   ACCESS quit                                  INLINE ::sl_quit
+   ASSIGN quit( bBlock )                        INLINE ::sl_quit := bBlock
 
 ENDCLASS
 
@@ -128,32 +122,26 @@ METHOD WvgSysWindow:create( oParent, oOwner, aPos )
    RETURN Self
 
 METHOD WvgSysWindow:configure()
-
    RETURN Self
 
 METHOD WvgSysWindow:destroy()
-
    RETURN Self
 
 METHOD WvgSysWindow:disable()
-
    RETURN Self
 
 METHOD WvgSysWindow:enable()
-
    RETURN Self
 
 METHOD WvgSysWindow:hide()
-
    RETURN Self
 
 METHOD WvgSysWindow:show()
-
    RETURN Self
 
 METHOD WvgSysWindow:SetPos( aPos )
 
-   Wvg_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .F. )
+   wvg_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .F. )
 
    RETURN Self
 
@@ -161,7 +149,7 @@ METHOD WvgSysWindow:currentPos()
 
    LOCAL aRect
 
-   aRect := Wvg_GetWindowRect( ::hWnd )
+   aRect := wvg_GetWindowRect( ::hWnd )
 
    RETURN { aRect[ 1 ], aRect[ 2 ] }
 
@@ -169,54 +157,52 @@ METHOD WvgSysWindow:currentSize()
 
    LOCAL aRect
 
-   aRect := Wvg_GetClientRect( ::hWnd )
+   aRect := wvg_GetClientRect( ::hWnd )
 
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
-/*
- *                       Class WvgFontDialog()
- */
+/* Class WvgFontDialog() */
 CREATE CLASS WvgFontDialog INHERIT WvgSysWindow
 
    /* Appearance */
-   VAR    title                                 INIT   ""
-   VAR    buttonApply                           INIT   .F.
-   VAR    buttonCancel                          INIT   .T.
-   VAR    buttonHelp                            INIT   .F.
-   VAR    buttonOk                              INIT   .T.
-   VAR    buttonReset                           INIT   .F.
-   VAR    strikeOut                             INIT   .T.
-   VAR    underscore                            INIT   .T.
+   VAR    title                                 INIT ""
+   VAR    buttonApply                           INIT .F.
+   VAR    buttonCancel                          INIT .T.
+   VAR    buttonHelp                            INIT .F.
+   VAR    buttonOk                              INIT .T.
+   VAR    buttonReset                           INIT .F.
+   VAR    strikeOut                             INIT .T.
+   VAR    underscore                            INIT .T.
 
-   VAR    name                                  INIT   .T.
-   VAR    style                                 INIT   .T.
-   VAR    size                                  INIT   .T.
+   VAR    name                                  INIT .T.
+   VAR    style                                 INIT .T.
+   VAR    size                                  INIT .T.
 
-   VAR    displayFilter                         INIT   .T.
-   VAR    printerFilter                         INIT   .T.
+   VAR    displayFilter                         INIT .T.
+   VAR    printerFilter                         INIT .T.
 
-   VAR    familyName                            INIT   " "
-   VAR    nominalPointSize                      INIT   0
+   VAR    familyName                            INIT " "
+   VAR    nominalPointSize                      INIT 0
 
-   VAR    bitmapOnly                            INIT   .F.
-   VAR    fixedOnly                             INIT   .F.
-   VAR    proportionalOnly                      INIT   .T.
+   VAR    bitmapOnly                            INIT .F.
+   VAR    fixedOnly                             INIT .F.
+   VAR    proportionalOnly                      INIT .T.
 
 
-   VAR    outLine                               INIT   .T.
-   VAR    previewBGClr                          INIT   RGB( 255, 255, 255 )
-   VAR    previewFGClr                          INIT   RGB( 0, 0, 0 )
-   VAR    previewString                         INIT   " "
-   VAR    printerPS                             INIT   NIL
-   VAR    screenPS                              INIT   NIL
+   VAR    outLine                               INIT .T.
+   VAR    previewBGClr                          INIT RGB( 255, 255, 255 )
+   VAR    previewFGClr                          INIT RGB( 0, 0, 0 )
+   VAR    previewString                         INIT " "
+   VAR    printerPS                             INIT NIL
+   VAR    screenPS                              INIT NIL
 
-   VAR    synthesizeFonts                       INIT   .T.
+   VAR    synthesizeFonts                       INIT .T.
 
-   VAR    vectorOnly                            INIT   .F.
-   VAR    vectorSizes                           INIT   {}
+   VAR    vectorOnly                            INIT .F.
+   VAR    vectorSizes                           INIT {}
 
-   VAR    viewPrinterFonts                      INIT   .F.
-   VAR    viewScreenFonts                       INIT   .T.
+   VAR    viewPrinterFonts                      INIT .F.
+   VAR    viewScreenFonts                       INIT .T.
 
    METHOD new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
    METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
@@ -241,15 +227,15 @@ CREATE CLASS WvgFontDialog INHERIT WvgSysWindow
 
    VAR    oScreenPS
    VAR    oPrinterPS
-   VAR    aPos                                  INIT   { 0, 0 }
-   VAR    ok                                    INIT   .F.
+   VAR    aPos                                  INIT { 0, 0 }
+   VAR    ok                                    INIT .F.
 
    METHOD wndProc( hWnd, nMessage, nwParam, nlParam )
    METHOD GetWvgFont( aFont )                   PROTECTED
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialog
+METHOD WvgFontDialog:new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
 
    __defaultNIL( @oParent, ::oParent )
    __defaultNIL( @oOwner, ::oOwner )
@@ -267,7 +253,7 @@ METHOD new( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialog
 
    RETURN Self
 
-METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialog
+METHOD WvgFontDialog:create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
 
    __defaultNIL( @oParent, ::oParent )
    __defaultNIL( @oOwner, ::oOwner )
@@ -290,11 +276,13 @@ METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialo
 
    ::WvgSysWindow:create( oParent, oOwner )
 
-   /* ::nWndProc := hb_AsCallBack( "WNDPROC", Self ) */
+#if 0
+   ::nWndProc := hb_AsCallBack( "WNDPROC", Self )
+#endif
 
    RETURN Self
 
-METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
+METHOD WvgFontDialog:wndProc( hWnd, nMessage, nwParam, nlParam )
 
    LOCAL aRect, nL, nH
 
@@ -306,43 +294,43 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
       ::hWnd := hWnd
 
       IF ! Empty( ::title )
-         Wvg_SetWindowText( ::hWnd, ::title )
+         wvg_SetWindowText( ::hWnd, ::title )
       ENDIF
       IF ! ::buttonCancel
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, IDCANCEL ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, IDCANCEL ), .F. )
       ENDIF
       IF ! ::buttonApply
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1026 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1026 ), .F. )
       ENDIF
       IF ! ::buttonHelp
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1038 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1038 ), .F. )
       ENDIF
       IF ! ::strikeOut
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1040 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1040 ), .F. )
       ENDIF
       IF ! ::underscore
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1041 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1041 ), .F. )
       ENDIF
       IF ! ::name
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1136 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1136 ), .F. )
       ENDIF
       IF ! ::style
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1137 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1137 ), .F. )
       ENDIF
       IF ! ::size
-         Wvg_EnableWindow( Wvg_GetDlgItem( ::hWnd, 1138 ), .F. )
+         wvg_EnableWindow( wvg_GetDlgItem( ::hWnd, 1138 ), .F. )
       ENDIF
 
       IF ::aPos[ 1 ] > 0 .OR. ::aPos[ 2 ] > 0
-         aRect := Wvg_GetWindowRect( ::hWnd )
-         Wvg_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ], .F. )
+         aRect := wvg_GetWindowRect( ::hWnd )
+         wvg_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ], .F. )
       ENDIF
 
       RETURN 1
 
    CASE nMessage == WM_COMMAND
-      nL := Wvg_LOWORD( nwParam )
-      nH := Wvg_HIWORD( nwParam )
+      nL := wvg_LOWORD( nwParam )
+      nH := wvg_HIWORD( nwParam )
 
       HB_SYMBOL_UNUSED( nH )
 
@@ -351,17 +339,17 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
       CASE nL == IDOK
          ::ok := .T.
          IF HB_ISBLOCK( ::sl_activateOk )
-            Eval( ::sl_activateOk, ::GetWvgFont(), NIL, Self )
+            Eval( ::sl_activateOk, ::GetWvgFont(), , Self )
          ENDIF
 
       CASE nL == IDCANCEL
          IF HB_ISBLOCK( ::sl_activateCancel )
-            Eval( ::sl_activateCancel, NIL, NIL, Self )
+            Eval( ::sl_activateCancel, , , Self )
          ENDIF
 
       CASE nL == 1026
          IF HB_ISBLOCK( ::sl_activateApply )
-            Eval( ::sl_activateApply, ::GetWvgFont(), NIL, Self )
+            Eval( ::sl_activateApply, ::GetWvgFont(), , Self )
          ENDIF
 
       CASE nL == 1038  /* Help */
@@ -372,18 +360,18 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
 
    RETURN 0
 
-METHOD display( nMode ) CLASS WvgFontDialog
+METHOD WvgFontDialog:display( nMode )
 
    LOCAL hWnd, aInfo
 
    IF nMode == 0
       hWnd := ::oParent:hWnd
    ELSE
-      hWnd := Wvg_GetDesktopWindow()
+      hWnd := wvg_GetDesktopWindow()
    ENDIF
 
    ::ok := .F.
-   aInfo := Wvg_ChooseFont( hWnd, {| h, m, w, l | ::wndProc( h, m, w, l ) }, ::familyName, ;
+   aInfo := wvg_ChooseFont( hWnd, {| h, m, w, l | ::wndProc( h, m, w, l ) }, ::familyName, ;
       ::nominalPointSize, ::viewScreenFonts, ::viewPrinterFonts )
    IF ! ::ok
       RETURN NIL
@@ -391,28 +379,28 @@ METHOD display( nMode ) CLASS WvgFontDialog
 
    RETURN ::GetWvgFont( aInfo )
 
-METHOD destroy() CLASS WvgFontDialog
+METHOD WvgFontDialog:destroy()
 
-   /* hb_FreeCallBack( ::nWndProc ) */
+#if 0
+   hb_FreeCallBack( ::nWndProc )
+#endif
 
    RETURN Self
 
-/*
- * Only callable from ::activateOK and ::activateApply
- */
-METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
+/* Only callable from ::activateOK and ::activateApply */
+METHOD WvgFontDialog:GetWvgFont( aFont )
 
    LOCAL oWvgFont
 
    IF ! HB_ISARRAY( aFont )
-      aFont := Wvg_ChooseFont_GetLogFont( ::hWnd )
+      aFont := wvg_ChooseFont_GetLogFont( ::hWnd )
    ENDIF
 
    oWvgFont := WvgFont():new()
 
    oWvgFont:familyName       := aFont[ 1 ]
    oWvgFont:height           := aFont[ 2 ]
-   oWvgFont:nominalPointSize := Wvg_HeightToPointSize( /* hdc */, oWvgFont:height )
+   oWvgFont:nominalPointSize := wvg_HeightToPointSize( /* hdc */, oWvgFont:height )
    oWvgFont:width            := aFont[ 3 ]
    oWvgFont:bold             := aFont[ 4 ] > 400
    oWvgFont:italic           := aFont[ 5 ]
@@ -425,46 +413,44 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 
    RETURN oWvgFont
 
-/*
-                            Class WvgFont()
-*/
+/* Class WvgFont() */
 CREATE CLASS WvgFont
 
    VAR    hFont
    VAR    oPS
    VAR    hdc
 
-   VAR    familyName                            INIT   ""
-   VAR    height                                INIT   0
-   VAR    nominalPointSize                      INIT   0
+   VAR    familyName                            INIT ""
+   VAR    height                                INIT 0
+   VAR    nominalPointSize                      INIT 0
 
-   VAR    width                                 INIT   0
-   VAR    widthClass                            INIT   .F.
+   VAR    width                                 INIT 0
+   VAR    widthClass                            INIT .F.
 
-   VAR    bold                                  INIT   .F.
-   VAR    weightClass                           INIT   FW_DONTCARE
+   VAR    bold                                  INIT .F.
+   VAR    weightClass                           INIT WIN_FW_DONTCARE
 
-   VAR    italic                                INIT   .F.
-   VAR    strikeout                             INIT   .F.
-   VAR    underscore                            INIT   .F.
-   VAR    codePage                              INIT   DEFAULT_CHARSET
+   VAR    italic                                INIT .F.
+   VAR    strikeout                             INIT .F.
+   VAR    underscore                            INIT .F.
+   VAR    codePage                              INIT WIN_DEFAULT_CHARSET
 
-   VAR    fixed                                 INIT   .F.
-   VAR    antiAliased                           INIT   .F.
+   VAR    fixed                                 INIT .F.
+   VAR    antiAliased                           INIT .F.
 
-   VAR    compoundName                          INIT   ""
+   VAR    compoundName                          INIT ""
    METHOD setCompoundName( cName )              INLINE ::compoundName := cName
 
-   VAR    generic                               INIT   .T.
+   VAR    generic                               INIT .T.
 
-   VAR    baseLine                              INIT   0                READONLY
-   VAR    dbcs                                  INIT   .F.
-   VAR    kerning                               INIT   .F.
-   VAR    mbcs                                  INIT   .F.
-   VAR    vector                                INIT   .F.
-   VAR    outlined                              INIT   .F.
+   VAR    baseLine                              INIT 0 READONLY
+   VAR    dbcs                                  INIT .F.
+   VAR    kerning                               INIT .F.
+   VAR    mbcs                                  INIT .F.
+   VAR    vector                                INIT .F.
+   VAR    outlined                              INIT .F.
 
-   VAR    aFontInfo                             INIT   {}
+   VAR    aFontInfo                             INIT {}
 
    METHOD new( oPS )
    METHOD create( cFontName )
@@ -476,7 +462,7 @@ CREATE CLASS WvgFont
 
 ENDCLASS
 
-METHOD new( oPS ) CLASS WvgFont
+METHOD WvgFont:new( oPS )
 
    __defaultNIL( @oPS, ::oPS )
 
@@ -484,7 +470,7 @@ METHOD new( oPS ) CLASS WvgFont
 
    RETURN Self
 
-METHOD create( cFontName ) CLASS WvgFont
+METHOD WvgFont:create( cFontName )
 
    __defaultNIL( @cFontName, ::familyName )
 
@@ -494,7 +480,7 @@ METHOD create( cFontName ) CLASS WvgFont
 
    RETURN Self
 
-METHOD configure( cFontName ) CLASS WvgFont
+METHOD WvgFont:configure( cFontName )
 
    __defaultNIL( @cFontName, ::familyName )
 
@@ -504,31 +490,28 @@ METHOD configure( cFontName ) CLASS WvgFont
 
    RETURN Self
 
-METHOD destroy() CLASS WvgFont
+METHOD WvgFont:destroy()
 
    IF ::hFont != NIL
-      Wvg_DeleteObject( ::hFont )
+      wvg_DeleteObject( ::hFont )
    ENDIF
 
    RETURN Self
 
-METHOD list() CLASS WvgFont
+METHOD WvgFont:list()
+   RETURN {}
 
-   LOCAL aList := {}
-
-   RETURN aList
-
-METHOD createFont() CLASS WvgFont
+METHOD WvgFont:createFont()
 
    LOCAL aFont
 
    IF ::hFont != NIL
-      Wvg_DeleteObject( ::hFont )
+      wvg_DeleteObject( ::hFont )
       ::hFont := NIL
    ENDIF
 
    IF ::oPS != NIL
-      ::height := Wvg_PointSizeToHeight( ::oPS:hdc, ::nominalPointSize )
+      ::height := wvg_PointSizeToHeight( ::oPS:hdc, ::nominalPointSize )
    ENDIF
 
    ::aFontInfo := Array( 15 )
@@ -548,7 +531,7 @@ METHOD createFont() CLASS WvgFont
    ::aFontInfo[ 13 ] := DEFAULT_QUALITY
    ::aFontInfo[ 14 ] := NIL
 
-   aFont := Wvg_FontCreate( ::aFontInfo )
+   aFont := wvg_FontCreate( ::aFontInfo )
 
    IF Empty( aFont[ 1 ] )
       RETURN NIL

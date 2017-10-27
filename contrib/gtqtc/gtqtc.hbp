@@ -5,11 +5,11 @@
 
 -w3 -es2
 
--stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc}
+-stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc|(hbdyn&android)}
 
 -pic
 
--plugin=hbmk2_qtmoc.hb
+-plugin=hbmk2_qtgt.hb
 
 -depcontrol=qt5:${HB_WITH_QT}
 -depkeyhead=qt5:QtCore/QJsonObject

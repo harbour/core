@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +52,7 @@
 /* also returns the new length in lLen */
 const char * hb_strLTrim( const char * szText, HB_SIZE * nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strLTrim(%s, %p)", szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strLTrim(%s, %p)", szText, ( void * ) nLen ) );
 
    while( *nLen && HB_ISSPACE( *szText ) )
    {
@@ -127,7 +127,7 @@ HB_FUNC( RTRIM )
          hb_retclen( szText, nLen );
    }
    else
-      /* NOTE: "TRIM" is right here [vszakats] */
+      /* NOTE: "TRIM" is correct here [vszakats] */
       hb_errRT_BASE_SubstR( EG_ARG, 1100, NULL, "TRIM", HB_ERR_ARGS_BASEPARAMS );
 }
 

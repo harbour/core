@@ -1,136 +1,3 @@
-/*
- * Copyright 1999 Jose Lanin <dezac@corevia.com>
- *    Documentation for: ProcLine(), ProcFile(), ProcName()
- *
- * Copyright 1999 Eddie Ruina
- *   Documentation for: __dbgVMVarLGet()
- *
- * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: CLIPINIT(), __SetHelpK()
- *
- * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- *    Documentation for: Do()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
-/* $DOC$
-   $TEMPLATE$
-      Function
-   $NAME$
-      ProcName()
-   $CATEGORY$
-      API
-   $SUBCATEGORY$
-      Application
-   $ONELINER$
-      Gets the name of the current function on the stack
-   $SYNTAX$
-      ProcName( <nLevel> ) --> <cProcName>
-   $ARGUMENTS$
-      <nLevel> is the function level required.
-   $RETURNS$
-      <cProcName> The name of the function that it is being executed.
-   $DESCRIPTION$
-      This function looks at the top of the stack and gets the current
-      executed function if no arguments are passed. Otherwise it returns
-      the name of the function or procedure at <nLevel>.
-   $EXAMPLES$
-      // This test will show the functions and procedures in stack.
-      // before executing it.
-      PROCEDURE Main()
-         LOCAL n := 1
-         DO WHILE ! Empty( ProcName( n ) )
-            ? ProcName( n++ )
-         ENDDO
-         RETURN
-   $STATUS$
-      R
-   $COMPLIANCE$
-      C
-   $FILES$
-      Library is core
-   $SEEALSO$
-      ProcLine(), ProcFile()
-   $END$
- */
-
-/* $DOC$
-   $TEMPLATE$
-      Function
-   $NAME$
-      ProcLine()
-   $CATEGORY$
-      API
-   $SUBCATEGORY$
-      Application
-   $ONELINER$
-      Gets the line number of the current function on the stack.
-   $SYNTAX$
-      ProcLine( <nLevel> ) --> <nLine>
-   $ARGUMENTS$
-      <nLevel> is the function level required.
-   $RETURNS$
-      <nLine> The line number of the function that it is being executed.
-   $DESCRIPTION$
-      This function looks at the top of the stack and gets the current
-      line number of the executed function if no arguments are passed.
-      Otherwise it returns the line number of the function or procedure
-      at <nLevel>.
-   $EXAMPLES$
-      PROCEDURE Main()
-         ? ProcLine( 0 )
-         ? ProcName( 2 )
-         RETURN
-   $STATUS$
-      R
-   $COMPLIANCE$
-      C
-   $FILES$
-      Library is core
-   $SEEALSO$
-      ProcName(), ProcFile()
-   $END$
- */
-
-/* $DOC$
-   $TEMPLATE$
-      Function
-   $NAME$
-      ProcFile()
-   $CATEGORY$
-      API
-   $SUBCATEGORY$
-      Application
-   $ONELINER$
-      This function allways returns an empty string.
-   $SYNTAX$
-      ProcFile( <xExp> ) --> <cEmptyString>
-   $ARGUMENTS$
-      <xExp> is any valid type.
-   $RETURNS$
-      <cEmptyString> Return an empty string
-   $DESCRIPTION$
-      This function is added to the RTL for full compatibility. It
-      always returns an empty string.
-   $EXAMPLES$
-      PROCEDURE Main()
-         ? ProcFile()
-         ? ProcFile( NIL )
-         ? ProcFile( 2 )
-         RETURN
-   $STATUS$
-      R
-   $COMPLIANCE$
-      C
-   $FILES$
-      Library is core
-   $SEEALSO$
-      ProcName(), ProcLine()
-   $END$
- */
-
 /* $DOC$
    $TEMPLATE$
       Function
@@ -143,7 +10,7 @@
    $ONELINER$
       Retrieves the value of an argument.
    $SYNTAX$
-      hb_PValue( <nArg> ) --> <xExp>
+      hb_PValue( <nArg> ) --> xExp
    $ARGUMENTS$
       A number that indicates the argument to check.
    $RETURNS$
@@ -151,7 +18,8 @@
    $DESCRIPTION$
       This function is useful to check the value stored in an argument.
    $EXAMPLES$
-      PROCEDURE Test( nValue, cString )
+      Test( 123, "abc" )
+      STATIC PROCEDURE Test( nValue, cString )
          IF PCount() == 2
             ? hb_PValue( 1 ), nValue
             ? hb_PValue( 2 ), cString
@@ -180,7 +48,7 @@
    $ONELINER$
       Retrieves the number of arguments passed to a function.
    $SYNTAX$
-      PCount() --> <nArgs>
+      PCount() --> nArgs
    $ARGUMENTS$
       None
    $RETURNS$
@@ -190,7 +58,9 @@
       This function is useful to check if a function or procedure
       has received the required number of arguments.
    $EXAMPLES$
-      PROCEDURE Test( xExp )
+      Test()
+      Test( "abc" )
+      STATIC PROCEDURE Test( xExp )
          IF PCount() == 0
             ? "This function needs a parameter"
          ELSE
@@ -227,7 +97,9 @@
       This function terminates the current application and returns
       to the system.
    $EXAMPLES$
-      PROCEDURE EndApp( lYesNo )
+      EndApp( .F. )
+      EndApp( .T. )
+      STATIC PROCEDURE EndApp( lYesNo )
          IF lYesNo
             __Quit()
          ENDIF
@@ -244,6 +116,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Function
    $NAME$
@@ -279,6 +153,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Chen Kedem <niki@actcom.co.il>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -288,13 +164,13 @@
    $SUBCATEGORY$
       Internal
    $ONELINER$
-      Set F1 as the default help key
+      Set <F1> as the default help key
    $SYNTAX$
       __SetHelpK()
    $ARGUMENTS$
       None.
    $DESCRIPTION$
-      Set F1 to execute a function called HELP if such a function is
+      Set <F1> to execute a function called HELP if such a function is
       linked into the program.
    $STATUS$
       R
@@ -317,7 +193,7 @@
    $SUBCATEGORY$
       Error
    $ONELINER$
-      Exits from a BEGIN SEQUENCE block
+      Exits from a `BEGIN SEQUENCE` block
    $SYNTAX$
       Break( <xExp> )
    $ARGUMENTS$
@@ -325,7 +201,7 @@
       If do not want to pass any argument, just use NIL.
    $DESCRIPTION$
       This function passes control to the RECOVER statement in a
-      BEGIN SEQUENCE block.
+      `BEGIN SEQUENCE` block.
    $EXAMPLES$
       Break( NIL )
    $STATUS$
@@ -340,6 +216,8 @@
  */
 
 /* $DOC$
+   $AUTHOR$
+      Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
    $TEMPLATE$
       Function
    $NAME$
@@ -351,7 +229,7 @@
    $ONELINER$
       Calls a procedure or a function
    $SYNTAX$
-      Do( <xFuncProc> [, <xArguments...>] ) --> <xRetVal>
+      Do( <xFuncProc> [, <xArguments...>] ) --> xRetVal
    $ARGUMENTS$
       <xFuncProc> = Either a string with a function/procedure name to be called
       or a codeblock to evaluate.
@@ -362,24 +240,27 @@
       <xRetVal> A value that was returned from called function.
    $DESCRIPTION$
       This function can be called either by the Harbour compiler or by user.
-      The compiler always passes the item of IT_SYMBOL type that stores the
-      name of procedure specified in DO <proc> WITH ... statement.
+      The compiler always passes the item of HB_IT_SYMBOL type that stores the
+      name of procedure specified in `DO <proc> WITH ...` statement.
 
       If called procedure/function doesn't exist then a runtime error
       is generated.
 
       This function can be used as replacement of macro operator.
-      It is also used internally to implement DO <proc> WITH <args...>
+      It is also used internally to implement `DO <proc> WITH <args...>`
       In this case <xFuncProc> is of type HB_SYMB.
    $EXAMPLES$
-      cbCode := {| x | MyFunc( x ) }
-      Do( cbCode, 1 )
+      LOCAL cFunction := "MyFunc"
 
-      cFunction := "MyFunc"
-      xRetVal := Do( cFunction, 2 )
+      ? Do( cFunction, 1 )  // Old style
+      DO &cFunction WITH 2  // Old style with macro
 
-      // Old style (slower):
-      DO &cFunction WITH 3
+      ? Do( {| n | MyFunc( n ) }, 3 )
+      ? Do( @MyFunc(), 4 )
+
+      FUNCTION MyFunc( n )  /* must be a public function for old style calls */
+         ? n
+         RETURN n + 1
    $COMPLIANCE$
       C
    $FILES$

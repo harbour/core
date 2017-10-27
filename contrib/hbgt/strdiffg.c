@@ -1,11 +1,8 @@
 /*
- * GT CLIPPER STANDARD HEADER
- *
- * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Date......: 1993-05-24
  *
- * This is an original work by Andy Leighton and is placed in the
+ * This is an original work by Andy M Leighton and is placed in the
  * public domain.
  */
 
@@ -20,17 +17,14 @@ HB_FUNC( GT_STRDIFF )
       HB_ISIZ      pos;
       HB_ISIZ      len = hb_parclen( 2 );
 
-      /*
-         loop through comparing both strings
-
+      /* loop through comparing both strings
          NOTE: pos starts at 1, so as to return a string index
-               for CLIPPER
-       */
+               for Cl*pper */
 
       for( pos = 1; ( pos <= len ) && ( *s1 == *s2 ); s2++, s1++ )
          pos++;
 
-      if( pos > len )   /* strings match exactly!!! */
+      if( pos > len )  /* strings match exactly */
          hb_retc_null();
       else
          hb_retc( s2 );
