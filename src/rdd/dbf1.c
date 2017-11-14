@@ -459,6 +459,11 @@ static void hb_dbfSetBlankRecord( DBFAREAP pArea, int iType )
             bNext = '\0';
             break;
 
+         case HB_FT_VARLENGTH:
+            if( pField->uiFlags & HB_FF_UNICODE )
+               uiLen = ( uiLen + 1 ) << 1;
+            /* fallthrough */
+
          default:
             bNext = '\0';
             break;
@@ -2171,7 +2176,8 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
          if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
          {
             nLen = HB_GET_LE_UINT16( &pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] + ( nLen << 1 ) ] );
-            if( nLen == 0xFFFF )
+            if( nLen == 0xFFFF ||
+                nLen > pField->uiLen ) /* protection against corrupted files */
                nLen = 0;
             hb_itemPutStrLenU16( pItem, HB_CDP_ENDIAN_LITTLE,
                                  ( const HB_WCHAR * ) &pArea->pRecord[ pArea->pFieldOffset[ uiIndex ] ],
@@ -3885,7 +3891,7 @@ static HB_ERRCODE hb_dbfFieldInfo( DBFAREAP pArea, HB_USHORT uiIndex, HB_USHORT 
          pField = pArea->area.lpFields + uiIndex - 1;
          hb_itemPutL( pItem,
             ( pField->uiFlags & HB_FF_NULLABLE ) != 0 &&
-            hb_dbfGetNullFlag( pArea, pArea->pFieldBits[ uiIndex ].uiNullBit ) );
+            hb_dbfGetNullFlag( pArea, pArea->pFieldBits[ uiIndex - 1 ].uiNullBit ) );
          return HB_SUCCESS;
       case DBS_COUNTER:
          if( hb_dbfIsAutoIncField( pArea->area.lpFields + uiIndex - 1 ) != HB_AUTOINC_NONE )
