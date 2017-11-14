@@ -45,6 +45,7 @@
  */
 
 #include "hbwapi.h"
+#include "hbapiitm.h"
 
 HB_FUNC( WAPI_GETLASTERROR )
 {
@@ -133,4 +134,38 @@ HB_FUNC( WAPI_OUTPUTDEBUGSTRING )
    OutputDebugString( HB_PARSTR( 1, &hOutputString, NULL ) );
 
    hb_strfree( hOutputString );
+}
+
+#define TARGET_PATH_BUFFER_SIZE     4096
+HB_FUNC( WAPI_QUERYDOSDEVICE )
+{
+   void * hDeviceName;
+   LPTSTR lpTargetPath = ( LPTSTR ) hb_xgrab( TARGET_PATH_BUFFER_SIZE * sizeof( TCHAR ) );
+   DWORD dwResult;
+
+   dwResult = QueryDosDevice( HB_PARSTR( 1, &hDeviceName, NULL ), lpTargetPath, TARGET_PATH_BUFFER_SIZE );
+   hbwapi_SetLastError( GetLastError() );
+   if( dwResult )
+   {
+      PHB_ITEM pArray = hb_itemArrayNew( 0 ), pItem = NULL;
+      DWORD dwPos, dwStart;
+
+      dwPos = dwStart = 0;
+      while( lpTargetPath[ dwPos ] )
+      {
+         if( ! lpTargetPath[ ++dwPos ] )
+         {
+            pItem = HB_ITEMPUTSTRLEN( pItem, lpTargetPath + dwStart, dwPos - dwStart - 1 );
+            hb_arrayAdd( pArray, pItem );
+            dwStart = ++dwPos;
+         }
+      }
+      hb_itemRelease( pItem );
+      hb_itemReturnRelease( pArray );
+   }
+   else
+      hb_reta( 0 );
+
+   hb_strfree( hDeviceName );
+   hb_xfree( lpTargetPath );
 }

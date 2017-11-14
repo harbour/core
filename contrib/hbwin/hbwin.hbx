@@ -143,6 +143,7 @@ DYNAMIC wapi_MulDiv
 DYNAMIC wapi_OpenMutex
 DYNAMIC wapi_OutputDebugString
 DYNAMIC wapi_PlaySound
+DYNAMIC wapi_QueryDosDevice
 DYNAMIC wapi_QueryPerformanceCounter
 DYNAMIC wapi_QueryPerformanceFrequency
 DYNAMIC wapi_Rectangle
