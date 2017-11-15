@@ -139,6 +139,7 @@ HB_FUNC( WAPI_OUTPUTDEBUGSTRING )
 #define TARGET_PATH_BUFFER_SIZE     4096
 HB_FUNC( WAPI_QUERYDOSDEVICE )
 {
+#if ! defined( HB_OS_WIN_CE )
    void * hDeviceName;
    LPTSTR lpTargetPath = ( LPTSTR ) hb_xgrab( TARGET_PATH_BUFFER_SIZE * sizeof( TCHAR ) );
    DWORD dwResult;
@@ -168,4 +169,7 @@ HB_FUNC( WAPI_QUERYDOSDEVICE )
 
    hb_strfree( hDeviceName );
    hb_xfree( lpTargetPath );
+#else
+   hb_reta( 0 );
+#endif
 }

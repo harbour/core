@@ -84,7 +84,11 @@ static int s_MessageBoxTimeout( IN HWND hWnd,
    return s_pMessageBoxTimeout ?
             s_pMessageBoxTimeout( hWnd, lpText, lpCaption, uType,
                                   wLanguageId, dwMilliseconds ) :
+#if ! defined( HB_OS_WIN_CE )
             MessageBoxEx( hWnd, lpText, lpCaption, uType, wLanguageId );
+#else
+            MessageBox( hWnd, lpText, lpCaption, uType );
+#endif
 }
 
 HB_FUNC( WAPI_MESSAGEBOXTIMEOUT )
