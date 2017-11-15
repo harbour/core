@@ -2468,12 +2468,11 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
          else if( u16Type == ADS_BINARY || u16Type == ADS_IMAGE )
          {
             u32RetVal = AdsGetBinaryLength( pArea->hTable, ADSFIELD( uiIndex ), &u32Length );
-            if( u32RetVal != AE_SUCCESS )
+            if( u32RetVal != AE_SUCCESS || u32Length == 0 )
                hb_itemPutC( pItem, NULL );
             else
             {
-               u32Length++;                  /* make room for NULL */
-               pucBuf = ( UNSIGNED8 * ) hb_xgrab( u32Length );
+               pucBuf = ( UNSIGNED8 * ) hb_xgrab( ++u32Length ); /* ++ to make room for NULL */
                u32RetVal = AdsGetBinary( pArea->hTable, ADSFIELD( uiIndex ), 0, pucBuf, &u32Length );
                if( u32RetVal != AE_SUCCESS )
                {
@@ -2503,8 +2502,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
 #endif
             else
             {
-               u32Length++;                 /* make room for NULL */
-               pucBuf = ( UNSIGNED8 * ) hb_xgrab( u32Length );
+               pucBuf = ( UNSIGNED8 * ) hb_xgrab( ++u32Length );  /* ++ to make room for NULL */
                u32RetVal = AdsGetString( pArea->hTable, ADSFIELD( uiIndex ), pucBuf, &u32Length, ADS_NONE );
                if( u32RetVal != AE_SUCCESS )
                   hb_itemPutC( pItem, NULL );
