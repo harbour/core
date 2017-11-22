@@ -3246,15 +3246,17 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       switch( pField->uiType )
       {
          case HB_FT_STRING:
-            uiLen = pField->uiLen;
             if( ( pField->uiFlags & HB_FF_UNICODE ) != 0 )
             {
                pThisField->bType = '\x1A';
-               uiLen <<= 1;
+               if( pField->uiLen > 32767 )
+                  pField->uiLen = 32767;
+               uiLen = ( pField->uiLen << 1 );
             }
             else
             {
                pThisField->bType = 'C';
+               uiLen = pField->uiLen;
             }
             pThisField->bLen = ( HB_BYTE ) uiLen;
             pThisField->bDec = ( HB_BYTE ) ( uiLen >> 8 );
@@ -3463,7 +3465,7 @@ static HB_ERRCODE hb_dbfCreate( DBFAREAP pArea, LPDBOPENINFO pCreateInfo )
       }
 
       if( pArea->pFieldOffset[ uiCount ] > pArea->uiRecordLen )
-         errSubCode = EDBF_DATATYPE;
+         errSubCode = EDBF_DATAWIDTH;
       if( errSubCode != 0 )
          break;
 
@@ -4124,7 +4126,7 @@ static HB_ERRCODE hb_dbfNewArea( DBFAREAP pArea )
 static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
    HB_ERRCODE errCode;
-   HB_USHORT uiFields, uiCount, uiSkip, uiDecimals, uiFlags, uiFlagsMask;
+   HB_USHORT uiFields, uiCount, uiSkip, uiDecimals, uiLen, uiFlags, uiFlagsMask;
    HB_BOOL fRawBlob;
    PHB_ITEM pError, pItem;
    PHB_FNAME pFileName;
@@ -4611,13 +4613,19 @@ static HB_ERRCODE hb_dbfOpen( DBFAREAP pArea, LPDBOPENINFO pOpenInfo )
          case '\x1A':
             dbFieldInfo.uiType = HB_FT_STRING;
             dbFieldInfo.uiFlags |= HB_FF_UNICODE;
-            dbFieldInfo.uiLen = ( pField->bLen + pField->bDec * 256 ) >> 1;
+            uiLen = pField->bLen + pField->bDec * 256;
+            if( uiLen & 1 )
+               errCode = HB_FAILURE;
+            dbFieldInfo.uiLen = uiLen >> 1;
             break;
 
          case '\x1B':
             dbFieldInfo.uiType = HB_FT_VARLENGTH;
             dbFieldInfo.uiFlags |= HB_FF_UNICODE;
-            dbFieldInfo.uiLen = ( ( pField->bLen + pField->bDec * 256 ) >> 1 ) - 1;
+            uiLen = pField->bLen + pField->bDec * 256;
+            if( uiLen & 1 || uiLen < 2 )
+               errCode = HB_FAILURE;
+            dbFieldInfo.uiLen = ( uiLen >> 1 ) - 1;
             break;
 
          case '\x1C':

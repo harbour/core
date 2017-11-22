@@ -1986,14 +1986,14 @@ static HB_ERRCODE adsCreateFields( ADSAREAP pArea, PHB_ITEM pStruct )
             break;
       }
 
+      if( errCode == HB_SUCCESS )
+         errCode = SELF_ADDFIELD( &pArea->area, &dbFieldInfo ); /* Add field */
+
       if( errCode != HB_SUCCESS )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
          return errCode;
       }
-      /* Add field */
-      if( SELF_ADDFIELD( &pArea->area, &dbFieldInfo ) == HB_FAILURE )
-         return HB_FAILURE;
    }
    return HB_SUCCESS;
 }
