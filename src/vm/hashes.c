@@ -946,6 +946,15 @@ void * hb_hashId( PHB_ITEM pHash )
       return NULL;
 }
 
+/* retrieves numer of references to the hash */
+HB_COUNTER hb_hashRefs( PHB_ITEM pHash )
+{
+   if( HB_IS_HASH( pHash ) )
+      return hb_gcRefCount( pHash->item.asHash.value );
+   else
+      return 0;
+}
+
 void hb_hashCloneBody( PHB_ITEM pDest, PHB_ITEM pHash, PHB_NESTED_CLONED pClonedList )
 {
    HB_SIZE nPos;

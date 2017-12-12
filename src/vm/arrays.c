@@ -300,6 +300,15 @@ void * hb_arrayId( PHB_ITEM pArray )
       return NULL;
 }
 
+/* retrieves numer of references to the array */
+HB_COUNTER hb_arrayRefs( PHB_ITEM pArray )
+{
+   if( pArray && HB_IS_ARRAY( pArray ) )
+      return hb_gcRefCount( pArray->item.asArray.value );
+   else
+      return 0;
+}
+
 PHB_ITEM hb_arrayFromId( PHB_ITEM pItem, void * pArrayId )
 {
    HB_STACK_TLS_PRELOAD

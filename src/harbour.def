@@ -1918,6 +1918,7 @@ HB_FUN___TRACEPRGCALLS
 HB_FUN___TYPEFILE
 HB_FUN___VMCOUNTTHREADS
 HB_FUN___VMITEMID
+HB_FUN___VMITEMREFS
 HB_FUN___VMMODULESVERIFY
 HB_FUN___VMNOINTERNALS
 HB_FUN___WAIT
@@ -2031,6 +2032,7 @@ hb_arrayIsObject
 hb_arrayLast
 hb_arrayLen
 hb_arrayNew
+hb_arrayRefs
 hb_arrayRevScan
 hb_arrayScan
 hb_arraySelfParams
@@ -2161,6 +2163,7 @@ hb_cmdargInit
 hb_cmdargIsInternal
 hb_cmdargProgName
 hb_codeblockId
+hb_codeblockRefs
 hb_comClose
 hb_comDiscardChar
 hb_comErrorChar
@@ -2702,6 +2705,7 @@ hb_hashJoin
 hb_hashLen
 hb_hashNew
 hb_hashPreallocate
+hb_hashRefs
 hb_hashRemove
 hb_hashScan
 hb_hashScanSoft

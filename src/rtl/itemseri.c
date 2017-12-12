@@ -296,6 +296,33 @@ static PHB_REF_ITEM hb_itemSerialOffsetFind( PHB_REF_LIST pRefList, HB_SIZE nOff
    return NULL;
 }
 
+static PHB_REF_ITEM hb_itemSerialRefNew( PHB_REF_LIST pRefList, HB_SIZE nPos )
+{
+   PHB_REF_ITEM pRef;
+   HB_SIZE nMove;
+
+   if( pRefList->nCount >= pRefList->nSize )
+   {
+      if( pRefList->nSize == 0 )
+         pRefList->nSize = HB_SERIAL_REFLSTINIT;
+      else
+         pRefList->nSize += pRefList->nSize >> 1;
+      pRefList->pRefs = ( PHB_REF_ITEM )
+                        hb_xrealloc( pRefList->pRefs,
+                                     pRefList->nSize * sizeof( HB_REF_ITEM ) );
+   }
+
+   nMove = pRefList->nCount - nPos;
+   pRef = &pRefList->pRefs[ pRefList->nCount++ ];
+   while( nMove-- > 0 )
+   {
+      *pRef = *( pRef - 1 );
+      pRef--;
+   }
+
+   return pRef;
+}
+
 /* used by hb_itemSerialSize() for HB_IT_ARRAY and HB_IT_HASH */
 static HB_BOOL hb_itemSerialValueRef( PHB_REF_LIST pRefList, void * value,
                                       HB_SIZE nOffset )
@@ -309,21 +336,7 @@ static HB_BOOL hb_itemSerialValueRef( PHB_REF_LIST pRefList, void * value,
       return HB_TRUE;
    }
 
-   if( pRefList->nCount >= pRefList->nSize )
-   {
-      if( pRefList->nSize == 0 )
-         pRefList->nSize = HB_SERIAL_REFLSTINIT;
-      else
-         pRefList->nSize += pRefList->nSize >> 1;
-      pRefList->pRefs = ( PHB_REF_ITEM )
-                        hb_xrealloc( pRefList->pRefs,
-                                     pRefList->nSize * sizeof( HB_REF_ITEM ) );
-   }
-
-   pRef = &pRefList->pRefs[ nPos ];
-   if( nPos < pRefList->nCount )
-      memmove( pRef + 1, pRef, ( pRefList->nCount - nPos ) * sizeof( HB_REF_ITEM ) );
-   pRefList->nCount++;
+   pRef = hb_itemSerialRefNew( pRefList, nPos );
 
    pRef->value = value;
    pRef->nOffset = nOffset;
@@ -384,21 +397,7 @@ static HB_BOOL hb_itemSerialOffsetRef( PHB_REF_LIST pRefList, HB_SIZE nOffset )
    if( hb_itemSerialOffsetFind( pRefList, nOffset, 0, &nPos ) != NULL )
       return HB_TRUE;
 
-   if( pRefList->nCount >= pRefList->nSize )
-   {
-      if( pRefList->nSize == 0 )
-         pRefList->nSize = HB_SERIAL_REFLSTINIT;
-      else
-         pRefList->nSize += pRefList->nSize >> 1;
-      pRefList->pRefs = ( PHB_REF_ITEM )
-                        hb_xrealloc( pRefList->pRefs,
-                                     pRefList->nSize * sizeof( HB_REF_ITEM ) );
-   }
-
-   pRef = &pRefList->pRefs[ nPos ];
-   if( nPos < pRefList->nCount )
-      memmove( pRef + 1, pRef, ( pRefList->nCount - nPos ) * sizeof( HB_REF_ITEM ) );
-   pRefList->nCount++;
+   pRef = hb_itemSerialRefNew( pRefList, nPos );
 
    pRef->value = NULL;
    pRef->nOffset = nOffset;
@@ -416,23 +415,7 @@ static void hb_itemSerialTypedRef( PHB_REF_LIST pRefList, int iType,
 
    if( hb_itemSerialOffsetFind( pRefList, nIndex, iType, &nPos ) == NULL )
    {
-      PHB_REF_ITEM pRef;
-
-      if( pRefList->nCount >= pRefList->nSize )
-      {
-         if( pRefList->nSize == 0 )
-            pRefList->nSize = HB_SERIAL_REFLSTINIT;
-         else
-            pRefList->nSize += pRefList->nSize >> 1;
-         pRefList->pRefs = ( PHB_REF_ITEM )
-                           hb_xrealloc( pRefList->pRefs,
-                                        pRefList->nSize * sizeof( HB_REF_ITEM ) );
-      }
-
-      pRef = &pRefList->pRefs[ nPos ];
-      if( nPos < pRefList->nCount )
-         memmove( pRef + 1, pRef, ( pRefList->nCount - nPos ) * sizeof( HB_REF_ITEM ) );
-      pRefList->nCount++;
+      PHB_REF_ITEM pRef = hb_itemSerialRefNew( pRefList, nPos );
 
       pRef->value = NULL;
       pRef->nOffset = nIndex;
@@ -585,7 +568,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
             if( szClass && szFunc )
                nSize += strlen( szClass ) + strlen( szFunc ) + 3;
          }
-         if( ( iFlags & HB_SERIALIZE_IGNOREREF ) == 0 &&
+         if( ( iFlags & HB_SERIALIZE_IGNOREREF ) == 0 && hb_arrayRefs( pItem ) > 1 &&
              hb_itemSerialValueRef( pRefList, hb_arrayId( pItem ), nOffset + nSize ) )
          {
             nSize = 5;
@@ -606,7 +589,7 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, int iFlags,
          break;
 
       case HB_IT_HASH:
-         if( ( iFlags & HB_SERIALIZE_IGNOREREF ) == 0 &&
+         if( ( iFlags & HB_SERIALIZE_IGNOREREF ) == 0 && hb_hashRefs( pItem ) > 1 &&
              hb_itemSerialValueRef( pRefList, hb_hashId( pItem ), nOffset ) )
          {
             nSize = 5;
@@ -875,7 +858,9 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
          break;
 
       case HB_IT_ARRAY:
-         if( hb_itemSerialValueOffset( pRefList, hb_arrayId( pItem ), nOffset, &nRef ) )
+         nRef = HB_SERIAL_DUMMYOFFSET;
+         if( hb_arrayRefs( pItem ) > 1 &&
+             hb_itemSerialValueOffset( pRefList, hb_arrayId( pItem ), nOffset, &nRef ) )
          {
             pBuffer[ nOffset++ ] = HB_SERIAL_REF;
             HB_PUT_LE_UINT32( &pBuffer[ nOffset ], nRef );
@@ -927,7 +912,9 @@ static HB_SIZE hb_serializeItem( PHB_ITEM pItem, HB_BOOL iFlags,
          break;
 
       case HB_IT_HASH:
-         if( hb_itemSerialValueOffset( pRefList, hb_hashId( pItem ), nOffset, &nRef ) )
+         nRef = HB_SERIAL_DUMMYOFFSET;
+         if( hb_hashRefs( pItem ) > 1 &&
+             hb_itemSerialValueOffset( pRefList, hb_hashId( pItem ), nOffset, &nRef ) )
          {
             pBuffer[ nOffset++ ] = HB_SERIAL_REF;
             HB_PUT_LE_UINT32( &pBuffer[ nOffset ], nRef );

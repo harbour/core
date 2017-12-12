@@ -293,3 +293,12 @@ void * hb_codeblockId( PHB_ITEM pItem )
    else
       return NULL;
 }
+
+/* retrieves numer of references to the codeblock */
+HB_COUNTER hb_codeblockRefs( PHB_ITEM pItem )
+{
+   if( HB_IS_BLOCK( pItem ) )
+      return hb_gcRefCount( pItem->item.asBlock.value );
+   else
+      return 0;
+}
