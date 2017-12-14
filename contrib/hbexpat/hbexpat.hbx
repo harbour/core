@@ -39,7 +39,6 @@ DYNAMIC XML_GetSpecifiedAttributeCount
 DYNAMIC XML_GetUserData
 DYNAMIC XML_Parse
 DYNAMIC XML_ParserCreate
-DYNAMIC XML_ParserFree
 DYNAMIC XML_ParserReset
 DYNAMIC XML_ResumeParser
 DYNAMIC XML_SetAttlistDeclHandler
@@ -73,7 +72,7 @@ DYNAMIC XML_SetUserData
 DYNAMIC XML_SetXMLDeclHandler
 DYNAMIC XML_StopParser
 DYNAMIC XML_UseForeignDTD
-DYNAMIC __hb_XML_CdpU16Map
+DYNAMIC __hb_XML_cdpU16Map
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBEXPAT__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

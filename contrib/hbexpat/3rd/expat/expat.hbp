@@ -8,8 +8,10 @@
 -hbx=
 
 -warn=low
+-cpp=no
 -pic
 
+loadlibr.c
 xmlparse.c
 xmlrole.c
 xmltok.c
@@ -20,9 +22,8 @@ xmltok.c
 {bcc}-cflag=-w-8008
 {bcc}-cflag=-w-8066
 
-# ORIGIN https://expat.sourceforge.net/
-# VER    2.2.1
-# URL    https://downloads.sourceforge.net/project/expat/expat/2.2.1/expat-2.2.1.tar.bz2
+# ORIGIN https://libexpat.github.io/
+# URL    https://downloads.sourceforge.net/project/expat/expat/2.2.5/expat-2.2.5.tar.bz2
 # DIFF   expat.diff
 #
 # MAP    COPYING
@@ -38,6 +39,7 @@ xmltok.c
 # MAP    lib/iasciitab.h      iasciita.h
 # MAP    lib/internal.h       internal.h
 # MAP    lib/latin1tab.h      latin1ta.h
+# MAP    lib/loadlibrary.c    loadlibr.c
 # MAP    lib/nametab.h        nametab.h
 # MAP    lib/siphash.h        siphash.h
 # MAP    lib/utf8tab.h        utf8tab.h

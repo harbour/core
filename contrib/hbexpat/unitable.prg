@@ -46,11 +46,11 @@
 
 #include "hbextcdp.ch"
 
-#define _UNI_NAME_NORM( s ) StrTran( StrTran( StrTran( s, "-" ), "." ), " " )
+#define _UNI_NAME_NORM( s )  hb_StrReplace( s, "-. " )
 
 FUNCTION hb_XML_get_unicode_table( cCP )
 
-   THREAD STATIC t_uni := NIL
+   THREAD STATIC t_uni
 
    LOCAL cdp
 
@@ -62,9 +62,8 @@ FUNCTION hb_XML_get_unicode_table( cCP )
       NEXT
    ENDIF
 
-   cCP := _UNI_NAME_NORM( cCP )
-   IF cCP $ t_uni
-      RETURN __hb_XML_CdpU16Map( t_uni[ cCP ] )
+   IF ( cCP := _UNI_NAME_NORM( cCP ) ) $ t_uni
+      RETURN __hb_XML_cdpU16Map( t_uni[ cCP ] )
    ENDIF
 
    RETURN NIL

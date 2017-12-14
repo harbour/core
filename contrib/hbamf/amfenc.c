@@ -1,5 +1,5 @@
 /* Ilina Stoilkovska <anili100/at/gmail.com> 2011
- * Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
+ * Aleksander Czajczynski <hb/at/fki.pl> 2011-2017
  *
  * Encoding Harbour items to AMF3
  *
@@ -33,6 +33,7 @@ typedef struct
    HB_BOOL  use_strstr;
    HB_BOOL  str_rtrim;
    HB_SIZE  strstr_count; /* used only when str_ref is disabled */
+   HB_SIZE  objnref_count; /* items that should normally appear in obj_ref, but GC says that they are not referenced */
    PHB_ITEM obj_ref;
    PHB_ITEM str_ref;
    PHB_ITEM strstr_ref;
@@ -270,7 +271,17 @@ static int amf3_add_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem 
          return -1;
       }
 
-      pVal = hb_itemNew( NULL );
+      if( pHash == context->str_ref )
+         result = ( int ) ( hb_hashLen( pHash ) + context->strstr_count );
+         /* ->strstr_count > 0 only when some inner context inside
+          * user-defined conversion function uses only strstr mode
+          * like amf3_FromWA() function f.e. */
+      else if( pHash == context->obj_ref )
+         result = ( int ) ( hb_hashLen( pHash ) + context->objnref_count );
+      else
+         result = ( int ) ( hb_hashLen( pHash ) );
+
+      pVal = hb_itemPutNS( NULL, result );
 
       if( ! hb_hashAdd( pHash, pKey, pVal ) )
       {
@@ -281,10 +292,7 @@ static int amf3_add_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem 
       hb_itemRelease( pVal );
 
       hb_itemRelease( pKey );
-      result = ( int ) ( hb_hashLen( pHash ) - 1 + context->strstr_count );
-      /* used only when some inner context inside
-       * conversion function uses only strstr mode
-       * like amf3_FromWA() function f.e. */
+
    }
 
    if( ( HB_IS_STRING( pItem ) || HB_IS_MEMO( pItem ) ) && context->use_strstr )
@@ -312,6 +320,7 @@ static int amf3_get_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem 
    {
       PHB_ITEM pKey = hb_itemNew( NULL );
       HB_SIZE nPos;
+      PHB_ITEM pVal;
 
       _ref_realItemPtr( pKey, pItem );
       if( ! HB_IS_POINTER( pKey ) && ! HB_IS_DOUBLE( pKey ) )
@@ -319,7 +328,15 @@ static int amf3_get_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem 
          hb_itemRelease( pKey );
          return -1;
       }
-      if( hb_hashScan( pHash, pKey, &nPos ) )
+
+      if( context->objnref_count )
+      {
+         pVal = hb_hashGetItemPtr( pHash, pKey, 0 );
+         hb_itemRelease( pKey );
+         if( pVal )
+            return ( int ) hb_itemGetNS( pVal );
+      }
+      else if( hb_hashScan( pHash, pKey, &nPos ) )
       {
          hb_itemRelease( pKey );
          return ( int ) ( nPos - 1 );
@@ -484,10 +501,18 @@ static HB_BOOL amf3_encode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_serialize_hash( amfContext * context, PHB_ITEM pItem )
 {
-   HB_BOOL result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
+   if( context->use_refs )
+   {
+      if( hb_hashRefs( pItem ) > 1 )
+      {
+         HB_BOOL result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
 
-   if( result > -1 )
-      return result;
+         if( result > -1 )
+            return result;
+      }
+      else
+         context->objnref_count++;
+   }
 
    return amf3_encode_hash( context, pItem );
 }
@@ -574,13 +599,11 @@ static HB_BOOL amf3_encode_array( amfContext * context, PHB_ITEM pItem )
       PHB_ITEM pArrayItem;
       int result;
 
-      pArrayItem = hb_itemNew( NULL );
-      hb_arrayGet( pItem, i, pArrayItem );
+      pArrayItem = hb_arrayGetItemPtr( pItem, i );
       if( ! pArrayItem )
          return HB_FALSE;
 
       result = amf3_encode( context, pArrayItem );
-      hb_itemRelease( pArrayItem );
       if( ! result )
          return HB_FALSE;
    }
@@ -590,10 +613,19 @@ static HB_BOOL amf3_encode_array( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_serialize_array( amfContext * context, PHB_ITEM pItem )
 {
-   int result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
+   if( context->use_refs )
+   {
+      if( hb_arrayRefs( pItem ) > 1 )
+      {
+         int result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
 
-   if( result > -1 )
-      return result;
+         if( result > -1 )
+            return result;
+      }
+      else
+         context->objnref_count++;
+   }
+
    return amf3_encode_array( context, pItem );
 }
 
@@ -909,10 +941,18 @@ static HB_BOOL amf3_serialize_object( amfContext * context, PHB_ITEM pItem )
       return result;
    }
 
-   result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
+   if( context->use_refs )
+   {
+      if( hb_arrayRefs( pItem ) > 1 )
+      {
+         result = amf3_encode_reference( context, context->obj_ref, pItem, 0 );
 
-   if( result > -1 )
-      return result;
+         if( result > -1 )
+            return result;
+      }
+      else
+         context->objnref_count++;
+   }
 
    return amf3_encode_object( context, pItem );
 }
@@ -1024,12 +1064,14 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
          context->obj_ref   = outer_context->obj_ref;
          context->str_ref   = outer_context->str_ref;
          context->class_ref = outer_context->class_ref;
+         context->objnref_count = outer_context->objnref_count;
       }
       else
       {
          context->obj_ref   = hb_hashNew( NULL );
          context->str_ref   = hb_hashNew( NULL );
          context->class_ref = hb_hashNew( NULL );
+         context->objnref_count = 0;
       }
    }
    else
@@ -1068,7 +1110,9 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
 
 static void context_release( amfContext * context, amfContext * outer_context )
 {
-   if( context->use_refs && ! ( outer_context && outer_context->use_refs ) )
+   if( outer_context && outer_context->use_refs )
+      outer_context->objnref_count = context->objnref_count;
+   else if( context->use_refs )
    {
       hb_itemRelease( context->obj_ref );
       hb_itemRelease( context->str_ref );
@@ -1378,6 +1422,7 @@ HB_FUNC( AMF3_ENCODE )
    context->use_refs      = HB_TRUE;
    context->conv_function = pFuncSym;
    context->encode_ba     = lBA;
+   context->objnref_count = 0;
 
    /* "strstr" is another optional idea of catching similar strings,
       key in this hash is not the pointer to C char, but the string

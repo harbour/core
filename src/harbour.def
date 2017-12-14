@@ -1989,6 +1989,9 @@ gzungetc
 gzvprintf
 gzwrite
 hb_adler32
+hb_arc4random
+hb_arc4random_buf
+hb_arc4random_uniform
 hb_arrayAdd
 hb_arrayAddForward
 hb_arrayBaseParams
