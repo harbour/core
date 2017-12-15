@@ -16,7 +16,15 @@ xmlparse.c
 xmlrole.c
 xmltok.c
 
--cflag=-DHARBOUR_CONF
+-cflag=-DNDEBUG{!debug}
+-cflag=-DHAVE_EXPAT_CONFIG_H
+# needed to have <expat_config.h> found:
+-I.
+
+# Use Harbour core arc4random implementation only when building static lib.
+# This way the dynamic lib won't depend on Harbour dynlib.
+-cflag=-DHB_FORCE_ARC4RANDOM{!hbdyn}
+
 {hblib}-cflag=-DXML_STATIC
 {bcc}-cflag=-w-8057
 {bcc}-cflag=-w-8008
