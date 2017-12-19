@@ -82,6 +82,23 @@ void hb_gt_BaseFree( PHB_GT pGT )
       HB_GTSELF_UNLOCK( pGT );
 }
 
+void hb_gt_BaseUnlock( PHB_GT pGT )
+{
+   HB_GTSELF_UNLOCK( pGT );
+}
+
+void hb_gt_BaseLock( PHB_GT pGT )
+{
+   HB_GTSELF_LOCK( pGT );
+}
+
+void hb_gtSleep( PHB_GT pGT, double dSeconds )
+{
+   HB_GTSELF_UNLOCK( pGT );
+   hb_idleSleep( dSeconds );
+   HB_GTSELF_LOCK( pGT );
+}
+
 /* helper internal function */
 static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
 {
@@ -743,11 +760,10 @@ static void hb_gt_def_OutErr( PHB_GT pGT, const char * szStr, HB_SIZE nLen )
 
 static void hb_gt_def_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( dFrequency );
 
    /* convert Clipper (MS-DOS) timer tick units to seconds ( x / 18.2 ) */
-   hb_idleSleep( dDuration / 18.2 );
+   hb_gtSleep( pGT, dDuration / 18.2 );
 }
 
 static void hb_gt_def_Bell( PHB_GT pGT )

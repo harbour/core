@@ -10,6 +10,10 @@ else
    endif
 endif
 
+ifneq ($(HB_USER_DCFLAGS),)
+   HB_DYN_COPT += $(HB_USER_DCFLAGS)
+endif
+
 ifeq ($(HB_DYN_COPT),)
    OBJ_DYN_SUFFIX :=
 else

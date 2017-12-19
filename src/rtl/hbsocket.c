@@ -2786,7 +2786,7 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, HB_BOOL fBlocking )
    if( ret != -1 )
    {
       HB_BOOL fBlocked;
-      long flags;
+      int flags;
       fBlocked = ( ret & O_NONBLOCK ) == 0;
       if( fBlocking ? ! fBlocked : fBlocked )
       {

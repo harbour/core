@@ -984,7 +984,7 @@ static void hb_gt_dos_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 #endif
 
    /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
-   hb_idleSleep( dDuration / 18.2 );
+   hb_gtSleep( pGT, dDuration / 18.2 );
 
 #if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
    nosound();

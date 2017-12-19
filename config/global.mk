@@ -208,6 +208,9 @@ ifeq ($(HB_INIT_DONE),)
    ifneq ($(HB_USER_DFLAGS),)
       $(info ! HB_USER_DFLAGS: $(HB_USER_DFLAGS))
    endif
+   ifneq ($(HB_USER_DCFLAGS),)
+      $(info ! HB_USER_DCFLAGS: $(HB_USER_DCFLAGS))
+   endif
    ifneq ($(HB_USER_LIBS),)
       $(info ! HB_USER_LIBS: $(HB_USER_LIBS))
    endif

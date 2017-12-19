@@ -2445,13 +2445,11 @@ static void hb_gt_crs_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
-   HB_SYMBOL_UNUSED( pGT );
-
    gt_tone( s_ioBase, dFrequency, dDuration );
 
    if( s_ioBase->terminal_type == TERM_LINUX )
       /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
-      hb_idleSleep( dDuration / 18.2 );
+      hb_gtSleep( pGT, dDuration / 18.2 );
 }
 
 /* *********************************************************************** */

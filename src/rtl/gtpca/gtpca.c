@@ -697,8 +697,6 @@ static void hb_gt_pca_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_pca_Tone(%p, %lf, %lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
-   HB_SYMBOL_UNUSED( pGT );
-
    /* Output an ASCII BEL character to cause a sound */
    /* but throttle to max once per second, in case of sound */
    /* effects prgs calling lots of short tone sequences in */
@@ -715,7 +713,7 @@ static void hb_gt_pca_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    HB_SYMBOL_UNUSED( dFrequency );
 
    /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
-   hb_idleSleep( dDuration / 18.2 );
+   hb_gtSleep( pGT, dDuration / 18.2 );
 }
 
 static void hb_gt_pca_Bell( PHB_GT pGT )

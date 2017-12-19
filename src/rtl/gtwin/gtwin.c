@@ -1809,7 +1809,9 @@ static void hb_gt_win_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
    HB_SYMBOL_UNUSED( pGT );
 
+   hb_gt_BaseUnlock( pGT );
    hb_gt_winapi_tone( dFrequency, dDuration );
+   hb_gt_BaseLock( pGT );
 }
 
 /* *********************************************************************** */

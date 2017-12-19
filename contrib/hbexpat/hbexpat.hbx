@@ -39,6 +39,7 @@ DYNAMIC XML_GetSpecifiedAttributeCount
 DYNAMIC XML_GetUserData
 DYNAMIC XML_Parse
 DYNAMIC XML_ParserCreate
+DYNAMIC XML_ParserFree
 DYNAMIC XML_ParserReset
 DYNAMIC XML_ResumeParser
 DYNAMIC XML_SetAttlistDeclHandler

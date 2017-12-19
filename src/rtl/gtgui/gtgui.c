@@ -258,8 +258,9 @@ static void hb_gt_gui_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
 #if defined( HB_OS_WIN )
-   HB_SYMBOL_UNUSED( pGT );
+   hb_gt_BaseUnlock( pGT );
    hb_gt_winapi_tone( dFrequency, dDuration );
+   hb_gt_BaseLock( pGT );
 #else
    HB_GTSUPER_TONE( pGT, dFrequency, dDuration );
 #endif

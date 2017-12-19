@@ -783,8 +783,6 @@ static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
-   HB_SYMBOL_UNUSED( pGT );
-
    /* The conversion from Clipper timer tick units to
       milliseconds is * 1000.0 / 18.2. */
 
@@ -794,12 +792,14 @@ static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
       dFrequency = 32767.0;
    ulDuration = ( ULONG ) ( dDuration * 1000.0 / 18.2 ); /* milliseconds */
 
+   hb_gt_BaseUnlock( pGT );
    while( ulDuration > 0 )
    {
       USHORT temp = ( USHORT ) HB_MIN( ulDuration, USHRT_MAX );
       ulDuration -= temp;
       DosBeep( ( USHORT ) dFrequency, temp );
    }
+   hb_gt_BaseLock( pGT );
 }
 
 static const char * hb_gt_os2_Version( PHB_GT pGT, int iType )

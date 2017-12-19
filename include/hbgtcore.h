@@ -347,6 +347,9 @@ typedef struct _HB_GT_BASE
 
 extern HB_EXPORT PHB_GT hb_gt_Base( void );
 extern HB_EXPORT void hb_gt_BaseFree( PHB_GT pGT );
+extern HB_EXPORT void hb_gt_BaseUnlock( PHB_GT pGT );
+extern HB_EXPORT void hb_gt_BaseLock( PHB_GT pGT );
+extern HB_EXPORT void hb_gtSleep( PHB_GT pGT, double dSeconds );
 extern HB_EXPORT PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 extern HB_EXPORT void hb_gt_gcMark( void );
 

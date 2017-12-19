@@ -5138,7 +5138,7 @@ static void hb_gt_xwc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
       XSync( wnd->dpy, False );
       HB_XWC_XLIB_UNLOCK( wnd->dpy );
    }
-   hb_idleSleep( dDuration );
+   hb_gtSleep( pGT, dDuration );
 }
 
 /* *********************************************************************** */
