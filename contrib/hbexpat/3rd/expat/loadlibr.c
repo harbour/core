@@ -117,7 +117,7 @@ HMODULE _Expat_LoadLibrary(LPCTSTR filename)
       /* Allocate space for the full DLL path (Room for the null terminator
          is included in systemdirlen) */
       size_t filenamelen = _tcslen(filename);
-      TCHAR *path = malloc(sizeof(TCHAR) * (systemdirlen + 1 + filenamelen));
+      TCHAR *path = (TCHAR *) malloc(sizeof(TCHAR) * (systemdirlen + 1 + filenamelen));
       if(path && GetSystemDirectory(path, systemdirlen)) {
         /* Calculate the full DLL path */
         _tcscpy(path + _tcslen(path), TEXT("\\"));

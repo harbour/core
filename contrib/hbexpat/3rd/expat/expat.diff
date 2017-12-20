@@ -1,6 +1,28 @@
+diff --strip-trailing-cr -urN expat.orig/loadlibr.c expat/loadlibr.c
+--- expat.orig/loadlibr.c	2017-09-11 15:16:52.000000000 +0000
++++ expat/loadlibr.c	2017-12-20 11:25:28.652000000 +0000
+@@ -32,6 +32,9 @@
+ 
+ #if defined(_WIN32)
+ 
++#if defined(UNICODE) && !defined(_UNICODE)
++#define _UNICODE
++#endif
+ #include <windows.h>
+ #include <tchar.h>
+ 
+@@ -114,7 +117,7 @@
+       /* Allocate space for the full DLL path (Room for the null terminator
+          is included in systemdirlen) */
+       size_t filenamelen = _tcslen(filename);
+-      TCHAR *path = malloc(sizeof(TCHAR) * (systemdirlen + 1 + filenamelen));
++      TCHAR *path = (TCHAR *) malloc(sizeof(TCHAR) * (systemdirlen + 1 + filenamelen));
+       if(path && GetSystemDirectory(path, systemdirlen)) {
+         /* Calculate the full DLL path */
+         _tcscpy(path + _tcslen(path), TEXT("\\"));
 diff --strip-trailing-cr -urN expat.orig/winconfi.h expat/winconfi.h
 --- expat.orig/winconfi.h	2017-09-03 14:47:40.000000000 +0000
-+++ expat/winconfi.h	2017-12-14 11:38:06.000000000 +0000
++++ expat/winconfi.h	2017-12-19 20:29:14.992000000 +0000
 @@ -1,63 +1 @@
 -/*
 -                            __  __            _
@@ -68,7 +90,7 @@ diff --strip-trailing-cr -urN expat.orig/winconfi.h expat/winconfi.h
 +#include "_hbconf.h"
 diff --strip-trailing-cr -urN expat.orig/xmlparse.c expat/xmlparse.c
 --- expat.orig/xmlparse.c	2017-10-31 16:20:31.000000000 +0000
-+++ expat/xmlparse.c	2017-12-14 11:59:45.000000000 +0000
++++ expat/xmlparse.c	2017-12-20 11:26:49.912000000 +0000
 @@ -43,6 +43,12 @@
  
  #ifdef _WIN32
@@ -123,9 +145,30 @@ diff --strip-trailing-cr -urN expat.orig/xmlparse.c expat/xmlparse.c
  #else
    struct timeval tv;
    int gettimeofday_res;
+@@ -829,7 +846,11 @@
+ 
+ static unsigned long
+ ENTROPY_DEBUG(const char * label, unsigned long entropy) {
++#ifdef _WINCE
++  const char * const EXPAT_ENTROPY_DEBUG = NULL;
++#else
+   const char * const EXPAT_ENTROPY_DEBUG = getenv("EXPAT_ENTROPY_DEBUG");
++#endif
+   if (EXPAT_ENTROPY_DEBUG && ! strcmp(EXPAT_ENTROPY_DEBUG, "1")) {
+     fprintf(stderr, "Entropy: %s --> 0x%0*lx (%lu bytes)\n",
+         label,
+@@ -7186,7 +7207,7 @@
+     charsRequired++;
+ 
+     /* Now allocate space for the copy */
+-    result = memsuite->malloc_fcn(charsRequired * sizeof(XML_Char));
++    result = (XML_Char *) memsuite->malloc_fcn(charsRequired * sizeof(XML_Char));
+     if (result == NULL)
+         return NULL;
+     /* Copy the original into place */
 diff --strip-trailing-cr -urN expat.orig/xmlrole.c expat/xmlrole.c
 --- expat.orig/xmlrole.c	2017-09-03 14:47:40.000000000 +0000
-+++ expat/xmlrole.c	2017-12-14 11:38:11.000000000 +0000
++++ expat/xmlrole.c	2017-12-19 20:29:15.000000000 +0000
 @@ -36,7 +36,7 @@
  #include "winconfi.h"
  #else
@@ -137,7 +180,7 @@ diff --strip-trailing-cr -urN expat.orig/xmlrole.c expat/xmlrole.c
  
 diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
 --- expat.orig/xmltok.c	2017-09-11 17:31:49.000000000 +0000
-+++ expat/xmltok.c	2017-12-14 11:38:17.000000000 +0000
++++ expat/xmltok.c	2017-12-19 20:29:15.000000000 +0000
 @@ -47,7 +47,7 @@
  #include "winconfi.h"
  #else
