@@ -59,6 +59,7 @@
 #endif
 
 #include "hbssl.ch"
+#undef __HBEXTREQ__
 #include "hbssl.hbx"
 
 #define RCV_BUF_SIZE  Int( ::InetRcvBufSize( ::SocketCon ) / 2 )

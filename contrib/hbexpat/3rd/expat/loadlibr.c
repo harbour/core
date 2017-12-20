@@ -32,6 +32,9 @@
 
 #if defined(_WIN32)
 
+#if defined(UNICODE) && !defined(_UNICODE)
+#define _UNICODE
+#endif
 #include <windows.h>
 #include <tchar.h>
 
