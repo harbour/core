@@ -644,6 +644,7 @@ HB_FUN_HB_HSET
 HB_FUN_HB_HSETAUTOADD
 HB_FUN_HB_HSETBINARY
 HB_FUN_HB_HSETCASEMATCH
+HB_FUN_HB_HSETDEF
 HB_FUN_HB_HSETORDER
 HB_FUN_HB_HSORT
 HB_FUN_HB_HVALUEAT
@@ -2860,6 +2861,7 @@ hb_itemStrICmp
 hb_itemString
 hb_itemSwap
 hb_itemType
+hb_itemTypeCmp
 hb_itemTypeStr
 hb_itemUnRef
 hb_itemUnRefOnce

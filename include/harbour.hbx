@@ -548,6 +548,7 @@ DYNAMIC hb_HSet
 DYNAMIC hb_HSetAutoAdd
 DYNAMIC hb_HSetBinary
 DYNAMIC hb_HSetCaseMatch
+DYNAMIC hb_HSetDef
 DYNAMIC hb_HSetOrder
 DYNAMIC hb_HSort
 DYNAMIC hb_HValueAt

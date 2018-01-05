@@ -1506,6 +1506,67 @@ const char * hb_itemTypeStr( PHB_ITEM pItem )
    return "U";
 }
 
+typedef enum
+{
+   HB_IT_U,
+   HB_IT_N,
+   HB_IT_C,
+   HB_IT_L,
+   HB_IT_T,
+   HB_IT_B,
+   HB_IT_H,
+   HB_IT_A,
+   HB_IT_O,
+   HB_IT_P,
+   HB_IT_S
+} HB_IT_BASIC;
+
+static HB_IT_BASIC s_hb_itemTypeBasic( PHB_ITEM pItem )
+{
+   switch( HB_ITEM_TYPE( pItem ) )
+   {
+      case HB_IT_ARRAY:
+         return hb_arrayIsObject( pItem ) ? HB_IT_O : HB_IT_A;
+
+      case HB_IT_BLOCK:
+         return HB_IT_B;
+
+      case HB_IT_DATE:
+      case HB_IT_TIMESTAMP:
+         return HB_IT_T;
+
+      case HB_IT_LOGICAL:
+         return HB_IT_L;
+
+      case HB_IT_INTEGER:
+      case HB_IT_LONG:
+      case HB_IT_DOUBLE:
+         return HB_IT_N;
+
+      case HB_IT_STRING:
+      case HB_IT_MEMO:
+         return HB_IT_C;
+
+      case HB_IT_HASH:
+         return HB_IT_H;
+
+      case HB_IT_POINTER:
+         return HB_IT_P;
+
+      case HB_IT_SYMBOL:
+         return HB_IT_S;
+   }
+
+   return HB_IT_U;
+}
+
+HB_BOOL hb_itemTypeCmp( PHB_ITEM pItem1, PHB_ITEM pItem2 )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemTypeCmp(%p, %p)", ( void * ) pItem1, ( void * ) pItem2 ) );
+
+   return s_hb_itemTypeBasic( pItem1 ) == s_hb_itemTypeBasic( pItem2 );
+}
+
 /* Internal API, not standard Clipper */
 
 void hb_itemInit( PHB_ITEM pItem )

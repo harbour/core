@@ -82,8 +82,12 @@ FUNCTION hb_DirRemoveAll( cDir )
 
    LOCAL aFile, cPath, cFile, nAttr
 
-   IF hb_vfDirExists( cDir )
-      cPath := hb_DirSepAdd( cDir )
+   IF ! Empty( cDir ) .AND. hb_vfDirExists( cDir )
+      cPath := hb_DirSepDel( cDir )
+      IF hb_vfAttrGet( cPath, @nAttr ) .AND. ! hb_bitAnd( nAttr, HB_FA_READONLY ) == 0
+         hb_vfAttrSet( cPath, hb_bitXor( nAttr, HB_FA_READONLY ) )
+      ENDIF
+      cPath := hb_DirSepAdd( cPath )
       FOR EACH aFile IN hb_vfDirectory( cPath + hb_osFileMask(), "HSDL" )
          IF "D" $ aFile[ F_ATTR ] .AND. ! "L" $ aFile[ F_ATTR ]
             IF !( aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".." .OR. aFile[ F_NAME ] == "" )

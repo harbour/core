@@ -138,7 +138,8 @@ extern HB_EXPORT PHB_ITEM     hb_itemReturnForward( PHB_ITEM pItem );
 extern HB_EXPORT void         hb_itemReturnRelease( PHB_ITEM pItem );
 extern HB_EXPORT HB_SIZE      hb_itemSize      ( PHB_ITEM pItem );
 extern HB_EXPORT HB_TYPE      hb_itemType      ( PHB_ITEM pItem );
-extern HB_EXPORT const char * hb_itemTypeStr ( PHB_ITEM pItem );
+extern HB_EXPORT const char * hb_itemTypeStr   ( PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL      hb_itemTypeCmp   ( PHB_ITEM pItem1, PHB_ITEM pItem2 );
 #ifndef HB_LONG_LONG_OFF
 extern HB_EXPORT HB_LONGLONG  hb_itemGetNLL    ( PHB_ITEM pItem );
 extern HB_EXPORT PHB_ITEM     hb_itemPutNLL    ( PHB_ITEM pItem, HB_LONGLONG lNumber );

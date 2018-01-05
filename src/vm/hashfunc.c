@@ -146,6 +146,35 @@ HB_FUNC( HB_HGETDEF )
       hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( HB_HSETDEF )
+{
+   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
+   PHB_ITEM pKey = hb_param( 2, HB_IT_HASHKEY );
+
+   if( pHash && pKey )
+   {
+      PHB_ITEM pDefault = hb_param( 3, HB_IT_ANY ), pDest;
+      int iFlags = hb_hashGetFlags( pHash );
+
+      if( ( iFlags & HB_HASH_AUTOADD_ACCESS ) == 0 )
+         hb_hashSetFlags( pHash, HB_HASH_AUTOADD_ACCESS );
+
+      pDest = hb_hashGetItemPtr( pHash, pKey, HB_HASH_AUTOADD_ACCESS );
+
+      if( ( iFlags & HB_HASH_AUTOADD_ACCESS ) == 0 )
+         hb_hashClearFlags( pHash, HB_HASH_AUTOADD_ACCESS );
+
+      if( pDest )
+      {
+         if( pDefault && ! hb_itemTypeCmp( pDest, pDefault ) )
+            hb_itemCopy( pDest, pDefault );
+         hb_itemReturn( pDest );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_HGETREF )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
