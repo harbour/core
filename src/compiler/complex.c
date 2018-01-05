@@ -498,7 +498,6 @@ static int hb_comp_funcStart( HB_COMP_DECL, YYSTYPE * yylval_ptr )
       HB_COMP_PARAM->functions.pLast->wWithObjectCnt =
       HB_COMP_PARAM->functions.pLast->wSeqBegCounter = 0;
       HB_COMP_PARAM->functions.pLast->wSeqCounter = 0;
-//      printf( "\nEX=%d, iClose=%d => ENDERR", ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) != 0, HB_COMP_PARAM->pLex->iClose );
       return ENDERR;
    }
    yylval_ptr->iNumber = HB_COMP_PARAM->pLex->iScope;
@@ -524,18 +523,15 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
       {
          if( --pLex->iClose == 0 )
          {
-//            printf( "\nEX=%d, iClose=%d => %s\n", ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) != 0, HB_COMP_PARAM->pLex->iClose, HB_COMP_PARAM->pLex->lasttok );
             yylval_ptr->iNumber = pLex->iScope;
             return pLex->iState;
          }
          if( pLex->iClose == 1 && HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK )
          {
             pLex->iClose = -1;
-//            printf( "\nEX=%d, iClose=%d => ;\n", ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) != 0, HB_COMP_PARAM->pLex->iClose );
             return ';';
          }
-//         printf( "\nEX=%d, iClose=%d => %s", ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) != 0, HB_COMP_PARAM->pLex->iClose, pLex->iClose & 1 ? ";" : "ENDERR" );
-         return pLex->iClose & 1 ? ';' : ENDERR;
+         return ( pLex->iClose & 1 ) ? ';' : ( int ) ENDERR;
       }
    }
 
