@@ -4493,6 +4493,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          ENDIF
          IF hbmk[ _HBMK_lWINUNI ]
             AAdd( hbmk[ _HBMK_aOPTC ], "-DUNICODE" )
+            AAdd( hbmk[ _HBMK_aOPTC ], "-D_UNICODE" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "wce"
             AAdd( l_aLIBSYS, "mmtimer" )
