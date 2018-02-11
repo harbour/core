@@ -85,6 +85,7 @@
 #include "hbvm.h"
 #include "hbstack.h"
 #include "hbthread.h"
+#include "hbdate.h"
 #include "netio.h"
 #include "hbserial.ch"
 
@@ -186,13 +187,20 @@ static long s_fileRecvAll( PHB_CONCLI conn, void * buffer, long len )
 {
    HB_BYTE * ptr = ( HB_BYTE * ) buffer;
    long lRead = 0, l;
+   HB_MAXINT timeout = conn->timeout;
+   HB_MAXUINT timer = hb_timerInit( timeout );
 
    while( lRead < len )
    {
-      l = hb_sockexRead( conn->sock, ptr + lRead, len - lRead, conn->timeout );
-      if( l <= 0 )
-         break;
-      lRead += l;
+      l = hb_sockexRead( conn->sock, ptr + lRead, len - lRead, 1000 );
+      if( l > 0 )
+         lRead += l;
+
+      else if( l == 0 ||
+               hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
+               ( timeout = hb_timerTest( timeout, &timer ) ) == 0 ||
+               hb_vmRequestQuery() != 0 )
+      break;
    }
    return lRead;
 }
