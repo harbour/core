@@ -2743,11 +2743,14 @@ hb_inkeySetText
 hb_iswin10
 hb_iswin2k
 hb_iswin2k3
+hb_iswin7
 hb_iswin8
 hb_iswin81
 hb_iswin9x
 hb_iswince
+hb_iswine
 hb_iswinnt
+hb_iswinsp
 hb_iswinver
 hb_iswinvista
 hb_itemArrayGet

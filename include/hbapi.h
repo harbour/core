@@ -1203,16 +1203,19 @@ extern HB_EXPORT const char * hb_verFlagsPRG( void );        /* retrieves a stat
 extern HB_EXPORT const char * hb_verHB_PLAT( void );         /* retrieves a static buffer containing build time HB_PLATFORM setting */
 extern HB_EXPORT const char * hb_verHB_COMP( void );         /* retrieves a static buffer containing build time HB_COMPILER setting */
 
-extern HB_EXPORT HB_BOOL hb_iswin9x( void );    /* return HB_TRUE if OS == Windows 9x, ME */
-extern HB_EXPORT HB_BOOL hb_iswinnt( void );    /* return HB_TRUE if OS == Windows NT or newer */
+extern HB_EXPORT int     hb_iswine( void );     /* return non-zero if OS == Wine */
+extern HB_EXPORT int     hb_iswin9x( void );    /* return non-zero if OS == Windows 9x, ME */
+extern HB_EXPORT int     hb_iswinnt( void );    /* return non-zero if OS == Windows NT or newer */
 extern HB_EXPORT HB_BOOL hb_iswin2k( void );    /* return HB_TRUE if OS == Windows 2000 or newer */
 extern HB_EXPORT HB_BOOL hb_iswin2k3( void );   /* return HB_TRUE if OS == Windows 2003 Server or newer */
 extern HB_EXPORT HB_BOOL hb_iswinvista( void ); /* return HB_TRUE if OS == Windows Vista or newer */
+extern HB_EXPORT HB_BOOL hb_iswin7( void );     /* return HB_TRUE if OS == Windows 7 or newer */
 extern HB_EXPORT HB_BOOL hb_iswin8( void );     /* return HB_TRUE if OS == Windows 8 or newer */
 extern HB_EXPORT HB_BOOL hb_iswin81( void );    /* return HB_TRUE if OS == Windows 8.1 or newer */
 extern HB_EXPORT HB_BOOL hb_iswin10( void );    /* return HB_TRUE if OS == Windows 10 or newer */
 extern HB_EXPORT HB_BOOL hb_iswince( void );    /* return HB_TRUE if OS is Windows CE or Windows Mobile */
-extern HB_EXPORT HB_BOOL hb_iswinver( int iMajorVersion, int iMinorVersion, int iType, HB_BOOL fOrUpper );
+extern HB_EXPORT HB_BOOL hb_iswinver( int iMajor, int iMinor, int iType, HB_BOOL fOrUpper );
+extern HB_EXPORT HB_BOOL hb_iswinsp( int iServicePackMajor, HB_BOOL fOrUpper );
 
 extern HB_EXPORT HB_BOOL hb_printerIsReady( const char * pszPrinterName );
 
