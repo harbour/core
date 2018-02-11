@@ -1,5 +1,5 @@
 /*
-   Harbour Project - http://www.harbour-project.org
+   Harbour Project - https://harbour.github.io
 
    Please left here information about any modifications to original
    ZLIB files. It will make upgrading ZLIB library much more easier

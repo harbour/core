@@ -1937,7 +1937,7 @@ Supported shells per host platforms:
 
 # Harbour Links
 
-  * [Homepage](http://harbour-project.org/)
+  * [Homepage](https://harbour.github.io/)
   * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
   * [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
   * [Source code](https://github.com/harbour/core)

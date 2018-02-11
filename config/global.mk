@@ -191,7 +191,7 @@ ifeq ($(HB_INIT_DONE),)
       endif
    endif
 
-   $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - http://harbour-project.org)
+   $(info ! Building Harbour $(HB_VER_MAJOR).$(HB_VER_MINOR).$(HB_VER_RELEASE)$(HB_VER_STATUS) from source - https://harbour.github.io)
    $(info ! MAKE: $(MAKE) $(MAKE_VERSION) $(SHELL) $(HB_MAKECMDGOALS) $(MAKEFLAGS) $(if $(MAKESHELL),MAKESHELL: $(MAKESHELL),))
    ifneq ($(HB_USER_PRGFLAGS),)
       $(info ! HB_USER_PRGFLAGS: $(HB_USER_PRGFLAGS))

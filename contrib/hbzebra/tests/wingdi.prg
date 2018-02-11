@@ -70,7 +70,7 @@ PROCEDURE Main()
             DrawBarcode( hDC, 440,   1, "CODE128",    "Wikipedia" )
             DrawBarcode( hDC, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
             DrawBarcode( hDC, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)" )
-            DrawBarcode( hDC, 580,   1, "QRCODE",     "http://harbour-project.org/" )
+            DrawBarcode( hDC, 580,   1, "QRCODE",     "http://harbour.github.io/" )
 
             wapi_EndPage( hDC )
          ENDIF
