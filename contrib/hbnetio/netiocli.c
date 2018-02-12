@@ -195,12 +195,11 @@ static long s_fileRecvAll( PHB_CONCLI conn, void * buffer, long len )
       l = hb_sockexRead( conn->sock, ptr + lRead, len - lRead, 1000 );
       if( l > 0 )
          lRead += l;
-
       else if( l == 0 ||
                hb_socketGetError() != HB_SOCKET_ERR_TIMEOUT ||
                ( timeout = hb_timerTest( timeout, &timer ) ) == 0 ||
                hb_vmRequestQuery() != 0 )
-      break;
+         break;
    }
    return lRead;
 }
