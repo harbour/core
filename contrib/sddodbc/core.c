@@ -688,12 +688,18 @@ static HB_ERRCODE odbcClose( SQLBASEAREAP pArea )
 
 static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
-   SQLHSTMT  hStmt = ( ( SDDDATA * ) pArea->pSDDData )->hStmt;
+   SQLHSTMT  hStmt;
    SQLRETURN res;
    SQLLEN    iLen;
    PHB_ITEM  pArray, pItem;
    LPFIELD   pField;
    HB_USHORT ui;
+
+   /* No pArea->pSDDData for DBCreate() area...
+    * though pArea->fFetched == HB_TRUE for them
+    */
+   if( pArea->pSDDData )
+      hStmt = ( ( SDDDATA * ) pArea->pSDDData )->hStmt;
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
