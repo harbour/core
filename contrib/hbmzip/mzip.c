@@ -1,6 +1,6 @@
 /*
  * Wrapper functions for minizip library
- *    Some higher level zip archive functions
+ * Some higher-level ZIP archive functions
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas.at.dbtopas.lt>
  * Copyright 2011-2013 Viktor Szakats (vszakats.net/harbour) (codepage/unicode)
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -95,8 +95,8 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
+       * defined and effectively enables lseek64()/flock64()/ftruncate64()
+       * functions on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
    #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
@@ -104,10 +104,10 @@
    #endif
 #endif
 
-#define _ZIP_FLAG_UNICODE  ( 1 << 11 ) /* Language encoding flag (EFS) */
+#define _ZIP_FLAG_UNICODE  ( 1 << 11 )  /* Language encoding flag (EFS) */
 
 #if defined( HB_OS_UNIX )
-   #define _VER_PLATFORM   0x03 /* it's necessary for file attributes in unzip */
+   #define _VER_PLATFORM   0x03  /* it's necessary for file attributes in unzip */
 #else
    #define _VER_PLATFORM   0x00
 #endif
@@ -237,10 +237,10 @@ HB_FUNC( HB_ZIPOPEN )
 
    if( szFileName )
    {
-      zipcharpc pszGlobalComment = NULL;
-      char *    pszFree;
-      zipFile   hZip = zipOpen2( hb_fsNameConv( szFileName, &pszFree ), hb_parnidef( 2, APPEND_STATUS_CREATE ),
-                                 &pszGlobalComment, NULL );
+      const char * pszGlobalComment = NULL;
+      char *       pszFree;
+      zipFile      hZip = zipOpen2( hb_fsNameConv( szFileName, &pszFree ), hb_parnidef( 2, APPEND_STATUS_CREATE ),
+                                    &pszGlobalComment, NULL );
 
       if( pszFree )
          hb_xfree( pszFree );
@@ -253,7 +253,7 @@ HB_FUNC( HB_ZIPOPEN )
          hb_retptrGC( phZip );
 
          if( pszGlobalComment )
-            hb_storc( ( const char * ) pszGlobalComment, 3 );
+            hb_storc( pszGlobalComment, 3 );
       }
    }
    else
@@ -542,8 +542,6 @@ HB_FUNC( HB_UNZIPFILEINFO )
       char szFileName[ HB_PATH_MAX * 3 ];
       unz_file_info ufi;
       int  iResult;
-      char buf[ 16 ];
-      long lJulian, lMillisec;
 
       iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szFileName, sizeof( szFileName ) - 1,
                                        NULL, 0, NULL, 0 );
@@ -552,6 +550,8 @@ HB_FUNC( HB_UNZIPFILEINFO )
       if( iResult == UNZ_OK )
       {
          HB_BOOL fUnicode = ( ufi.flag & _ZIP_FLAG_UNICODE ) != 0;
+
+         long lJulian, lMillisec;
 
          szFileName[ sizeof( szFileName ) - 1 ] = '\0';
 
@@ -568,6 +568,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stortdt( lJulian, lMillisec, 3 );
          if( HB_ISBYREF( 4 ) )
          {
+            char buf[ 16 ];
             hb_snprintf( buf, sizeof( buf ), "%02d:%02d:%02d",
                          ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
                          ufi.tmu_date.tm_sec );
@@ -670,7 +671,7 @@ HB_FUNC( HB_UNZIPFILECLOSE )
 
 /*
  *
- * Higher level functions - not a wrappers of minizip code
+ * Higher-level functions - not wrappers of minizip code
  *
  */
 
@@ -682,7 +683,7 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( PHB_FILE pFile, HB_U32 * pulCRC, HB_
    if( pFile != NULL )
    {
       unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-      HB_SIZE         nRead, u;
+      HB_SIZE         nRead;
 
       do
       {
@@ -692,6 +693,7 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( PHB_FILE pFile, HB_U32 * pulCRC, HB_
             ulCRC = crc32( ulCRC, pString, ( uInt ) nRead );
             if( fText )
             {
+               HB_SIZE u;
                for( u = 0; u < nRead; ++u )
                {
                   if( pString[ u ] < 0x20 ?
@@ -981,7 +983,7 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
 
    zfi.external_fa = ulExtAttr;
    /* TODO: zip.exe test: 0 for binary file, 1 for text. Does not depend on
-      extension. We should analyse content of file to determine this??? */
+      extension. We should analyze content of file to determine this??? */
    zfi.internal_fa = 0;
 
    if( ulExtAttr & 0x40000000 )
@@ -1129,7 +1131,7 @@ static int hb_zipStoreFileHandle( zipFile hZip, PHB_FILE pFile, int iParamZipNam
       zfi.internal_fa = fText ? 1 : 0;
    else
       /* TODO: zip.exe test: 0 for binary file, 1 for text. Does not depend on
-         extension. We should analyse content of file to determine this??? */
+         extension. We should analyze content of file to determine this??? */
       zfi.internal_fa = 0;
 
    iResult = zipOpenNewFileInZip4( hZip, szZipName, &zfi, NULL, 0, NULL, 0, szComment,
@@ -1190,7 +1192,6 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
    char          szNameRaw[ HB_PATH_MAX * 3 ];
    char *        szName;
    HB_SIZE       nPos, nLen;
-   char          cSep, * pString;
    unz_file_info ufi;
    int           iResult;
    PHB_FILE      pFile;
@@ -1225,13 +1226,13 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
 
    nLen = strlen( szName );
 
-   /* Test shows that files in subfolders can be stored to zip file without
-      explicitly adding folder. So, let's create a required path */
+   /* Test shows that files in subdirectories can be stored to zip file without
+      explicitly adding directory. So, let's create a required path */
 
    nPos = 1;
    while( nPos < nLen )
    {
-      cSep = szName[ nPos ];
+      char cSep = szName[ nPos ];
 
       /* allow both path separators, ignore terminating path separator */
       if( ( cSep == '\\' || cSep == '/' ) && nPos < nLen - 1 )
@@ -1255,7 +1256,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
                               FXO_TRUNCATE | FXO_SHARELOCK, NULL, NULL );
       if( pFile != NULL )
       {
-         pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+         char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
 
          while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
             if( hb_fileWrite( pFile, pString, ( HB_SIZE ) iResult, -1 ) != ( HB_SIZE ) iResult )

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -51,7 +51,7 @@
          the required attribute. */
 
 /* NOTE: CA-Cl*pper RTrim()s the filename before doing the existence check.
-         This is not multiplatform friendly, so Harbour doesn't do any
+         This is not multi-platform friendly, so Harbour doesn't do any
          modification on the filename. [vszakats]
          For easier portability in Harbour user can optionally enable
          leading and trailing spaces stripping by

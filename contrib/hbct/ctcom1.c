@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -77,63 +77,63 @@ static void hb_ctComTestMSR( int iLine )
    hb_retl( fResult );
 }
 
-/* com_Count( <nComPort> ) -> <nCharactersInInputBuffer>
+/* com_Count( <nComPort> ) --> <nCharactersInInputBuffer>
  */
 HB_FUNC( COM_COUNT )
 {
    hb_retni( hb_comInputCount( hb_parni( 1 ) ) );
 }
 
-/* com_SCount( <nComPort> ) -> <nCharactersInOutputBuffer>
+/* com_SCount( <nComPort> ) --> <nCharactersInOutputBuffer>
  */
 HB_FUNC( COM_SCOUNT )
 {
    hb_retni( hb_comOutputCount( hb_parni( 1 ) ) );
 }
 
-/* com_Flush( <nComPort> ) -> <lInputBufferCleared>
+/* com_Flush( <nComPort> ) --> <lInputBufferCleared>
  */
 HB_FUNC( COM_FLUSH )
 {
    hb_retl( hb_comFlush( hb_parni( 1 ), HB_COM_IFLUSH ) != -1 );
 }
 
-/* com_SFlush( <nComPort> ) -> <lOutputBufferCleared>
+/* com_SFlush( <nComPort> ) --> <lOutputBufferCleared>
  */
 HB_FUNC( COM_SFLUSH )
 {
    hb_retl( hb_comFlush( hb_parni( 1 ), HB_COM_OFLUSH ) != -1 );
 }
 
-/* com_CTS( <nComPort> ) -> <lCTSActive>
+/* com_CTS( <nComPort> ) --> <lCTSActive>
  */
 HB_FUNC( COM_CTS )
 {
    hb_ctComTestMSR( HB_COM_MSR_CTS );
 }
 
-/* com_DCD( <nComPort> ) -> <lDCDActive>
+/* com_DCD( <nComPort> ) --> <lDCDActive>
  */
 HB_FUNC( COM_DCD )
 {
    hb_ctComTestMSR( HB_COM_MSR_DCD );
 }
 
-/* com_DSR( <nComPort> ) -> <lDSRActive>
+/* com_DSR( <nComPort> ) --> <lDSRActive>
  */
 HB_FUNC( COM_DSR )
 {
    hb_ctComTestMSR( HB_COM_MSR_DSR );
 }
 
-/* com_Ring( <nComPort> ) -> <lActiveRing>
+/* com_Ring( <nComPort> ) --> <lActiveRing>
  */
 HB_FUNC( COM_RING )
 {
    hb_ctComTestMSR( HB_COM_MSR_RI );
 }
 
-/* com_RTS( <nComPort>, [<lNewRTSStatus>] ) -> <lOldRTSStatus>
+/* com_RTS( <nComPort>, [<lNewRTSStatus>] ) --> <lOldRTSStatus>
  */
 HB_FUNC( COM_RTS )
 {
@@ -150,7 +150,7 @@ HB_FUNC( COM_RTS )
    hb_retl( ( iMCR & HB_COM_MCR_RTS ) != 0 );
 }
 
-/* com_DTR( <nComPort>, [<lNewDTRStatus>] ) -> <lOldDTRStatus>
+/* com_DTR( <nComPort>, [<lNewDTRStatus>] ) --> <lOldDTRStatus>
  */
 HB_FUNC( COM_DTR )
 {
@@ -167,7 +167,7 @@ HB_FUNC( COM_DTR )
    hb_retl( ( iMCR & HB_COM_MCR_DTR ) != 0 );
 }
 
-/* com_MCR( <nComPort>, [<nMCR>] ) -> <nMCR> (MCR_*)
+/* com_MCR( <nComPort>, [<nMCR>] ) --> <nMCR> (MCR_*)
  */
 HB_FUNC( COM_MCR )
 {
@@ -187,7 +187,7 @@ HB_FUNC( COM_MCR )
    hb_retni( iMCR );
 }
 
-/* com_MSR( <nComPort> ) -> <nMSR> (MSR_*)
+/* com_MSR( <nComPort> ) --> <nMSR> (MSR_*)
  */
 HB_FUNC( COM_MSR )
 {
@@ -199,7 +199,7 @@ HB_FUNC( COM_MSR )
    hb_retni( iMSR );
 }
 
-/* com_LSR( <nComPort> ) -> <nLSR> (LSR_*)
+/* com_LSR( <nComPort> ) --> <nLSR> (LSR_*)
  */
 HB_FUNC( COM_LSR )
 {
@@ -211,14 +211,14 @@ HB_FUNC( COM_LSR )
    hb_retni( iLSR );
 }
 
-/* com_Break( <nComPort>, <nDurationInMilliSecs>=100 ) -> <lSuccess>
+/* com_Break( <nComPort>, <nDurationInMilliSecs>=100 ) --> <lSuccess>
  */
 HB_FUNC( COM_BREAK )
 {
    hb_retl( hb_comSendBreak( hb_parni( 1 ), hb_parnidef( 2, 100 ) ) != 0 );
 }
 
-/* com_Hard( <nComPort>, [<lNewHandshake>], [<lDTR/DSR>] ) -> <lOldHandshake>
+/* com_Hard( <nComPort>, [<lNewHandshake>], [<lDTR/DSR>] ) --> <lOldHandshake>
  */
 HB_FUNC( COM_HARD )
 {
@@ -244,7 +244,7 @@ HB_FUNC( COM_HARD )
 }
 
 /* com_Soft( <nComPort>, [<lNewHandshake>],
-             [<cXONchar>], [<cXOFFchar>] ) -> <lOldHandshake>
+             [<cXONchar>], [<cXOFFchar>] ) --> <lOldHandshake>
  */
 HB_FUNC( COM_SOFT )
 {
@@ -270,7 +270,7 @@ HB_FUNC( COM_SOFT )
    hb_retl( fResult );
 }
 
-/* com_Soft_R( <nComPort>, [<lXOFFFlag>] ) -> <lXOFFFlag>
+/* com_Soft_R( <nComPort>, [<lXOFFFlag>] ) --> <lXOFFFlag>
  */
 HB_FUNC( COM_SOFT_R )
 {
@@ -288,7 +288,7 @@ HB_FUNC( COM_SOFT_R )
    hb_retl( fResult );
 }
 
-/* com_Soft_S( <nComPort> ) -> <lXOFFFlag>
+/* com_Soft_S( <nComPort> ) --> <lXOFFFlag>
  */
 HB_FUNC( COM_SOFT_S )
 {
@@ -301,21 +301,21 @@ HB_FUNC( COM_SOFT_S )
    hb_retl( fResult );
 }
 
-/* com_ErrChr( <nComPort>, [<nErrorCharacter|cErrorCharacter>] ) -> <lChanged>
+/* com_ErrChr( <nComPort>, [<nErrorCharacter|cErrorCharacter>] ) --> <lChanged>
  */
 HB_FUNC( COM_ERRCHR )
 {
    hb_retl( hb_comErrorChar( hb_parni( 1 ), hb_ctComCharParam( 2 ) ) != -1 );
 }
 
-/*  com_Remote( <nComPort>, [<nCharacter|cCharacter>] ) -> <lActive>
+/* com_Remote( <nComPort>, [<nCharacter|cCharacter>] ) --> <lActive>
  */
 HB_FUNC( COM_REMOTE )
 {
    hb_retl( hb_comDiscardChar( hb_parni( 1 ), hb_ctComCharParam( 2 ) ) > 0 );
 }
 
-/* com_SMode( <nComPort> ) -> <nSendMode>
+/* com_SMode( <nComPort> ) --> <nSendMode>
  */
 HB_FUNC( COM_SMODE )
 {
@@ -336,7 +336,7 @@ HB_FUNC( COM_SMODE )
    hb_retni( iResult );
 }
 
-/* com_Event( <nComPort>, <nMode> ) -> <nCode>
+/* com_Event( <nComPort>, <nMode> ) --> <nCode>
  */
 HB_FUNC( COM_EVENT )
 {
@@ -344,7 +344,7 @@ HB_FUNC( COM_EVENT )
    hb_retni( 0 );
 }
 
-/* com_Key( <nComPort>, [<nKeyValue1>], [<nKeyValue2>] ) -> <lActive>
+/* com_Key( <nComPort>, [<nKeyValue1>], [<nKeyValue2>] ) --> <lActive>
  */
 HB_FUNC( COM_KEY )
 {
@@ -353,7 +353,7 @@ HB_FUNC( COM_KEY )
 }
 
 /* com_SKey( [<nComPort>], [<nKeyValue1|cKeyValue1>],
- *                         [<nKeyValue2|cKeyValue2>] ) -> <lActive>
+ *                         [<nKeyValue2|cKeyValue2>] ) --> <lActive>
  */
 HB_FUNC( COM_SKEY )
 {
@@ -362,7 +362,7 @@ HB_FUNC( COM_SKEY )
 }
 
 /* com_Init( <nComPort>, [<nBaudRate>=300], [<cParity:E,O,M,S,N>=N],
- *           [<nDataLength:7,8>=8], [<nStopBits:1,2>=1] ) -> <lInitialized>
+ *           [<nDataLength:7,8>=8], [<nStopBits:1,2>=1] ) --> <lInitialized>
  */
 HB_FUNC( COM_INIT )
 {
@@ -376,7 +376,7 @@ HB_FUNC( COM_INIT )
 }
 
 /* com_Open( <nComPort>, [<nBufferIn>=100] [, <nBufferOut>=0],
- *           [<lTrapMode>] ) -> <lStatus>
+ *           [<lTrapMode>] ) --> <lStatus>
  */
 HB_FUNC( COM_OPEN )
 {
@@ -389,7 +389,7 @@ HB_FUNC( COM_OPEN )
    hb_retl( hb_comOpen( iPort ) != -1 );
 }
 
-/* com_Close( <nComPort> ) -> <lClosed>
+/* com_Close( <nComPort> ) --> <lClosed>
  */
 HB_FUNC( COM_CLOSE )
 {
@@ -399,7 +399,7 @@ HB_FUNC( COM_CLOSE )
    hb_retl( hb_comClose( iPort ) != -1 );
 }
 
-/* com_Read( <nComPort>, [<nLength>], [<lNoDelete>] ) -> <cCharacterstring>
+/* com_Read( <nComPort>, [<nLength>], [<lNoDelete>] ) --> <cCharacterstring>
  */
 HB_FUNC( COM_READ )
 {
@@ -440,7 +440,7 @@ HB_FUNC( COM_READ )
       hb_retclen_buffer( data, lRecv );
 }
 
-/* com_Send( <nComPort>, <cString|nChar> ) -> <nNotSendLength>
+/* com_Send( <nComPort>, <cString|nChar> ) --> <nNotSendLength>
  */
 HB_FUNC( COM_SEND )
 {
@@ -469,42 +469,42 @@ HB_FUNC( COM_SEND )
    hb_retnl( lLen );
 }
 
-/* com_Num() -> <nMaxCom>
+/* com_Num() --> <nMaxCom>
  */
 HB_FUNC( COM_NUM )
 {
    hb_retni( hb_comLastNum() );
 }
 
-/* com_GetIO( <nComPort> ) -> <nIOPort> | -1
+/* com_GetIO( <nComPort> ) --> <nIOPort> | -1
  */
 HB_FUNC( COM_GETIO )
 {
    /* TODO! */
 }
 
-/* com_SetIO( <nComPort>, <nIOPort|cIOPort> ) -> <lChanged>
+/* com_SetIO( <nComPort>, <nIOPort|cIOPort> ) --> <lChanged>
  */
 HB_FUNC( COM_SETIO )
 {
    /* TODO! */
 }
 
-/* com_GetIRQ( <nComPort> ) -> <nIRQ> | -1
+/* com_GetIRQ( <nComPort> ) --> <nIRQ> | -1
  */
 HB_FUNC( COM_GETIRQ )
 {
    /* TODO! */
 }
 
-/* com_SetIRQ( <nComPort>, <nIRQ|cIRQ> ) -> <lChanged>
+/* com_SetIRQ( <nComPort>, <nIRQ|cIRQ> ) --> <lChanged>
  */
 HB_FUNC( COM_SETIRQ )
 {
    /* TODO! */
 }
 
-/* com_DevName( <nComPort> [, <cNewName> ] ) -> <cPrevName>
+/* com_DevName( <nComPort> [, <cNewName> ] ) --> <cPrevName>
  */
 HB_FUNC( COM_DEVNAME )
 {

@@ -20,4 +20,4 @@ ${hb_name}.hbx
 odbc.c
 
 todbc.prg
-browodbc.prg
+browse.prg

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -81,7 +81,7 @@ CREATE CLASS ScrollBar FUNCTION HBScrollBar
    METHOD update()
    METHOD hitTest( nMRow, nMCol )
 
-   METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient )  /* NOTE: This method is a Harbour extension [vszakats] */
 
    PROTECTED:
 
@@ -115,10 +115,10 @@ METHOD display() CLASS ScrollBar
 
    IF ::CalcThumbPos()
 
-      cStyle    := ::cStyle
-      nOffset   := ::nOffset
-      nStart    := ::nStart
-      nEnd      := ::nEnd - 1
+      cStyle  := ::cStyle
+      nOffset := ::nOffset
+      nStart  := ::nStart
+      nEnd    := ::nEnd - 1
 
       DispBegin()
 
@@ -216,9 +216,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS ScrollBar
          CASE nMRow == ::nThumbPos + ::nStart
             RETURN HTSCROLLTHUMBDRAG
          ENDCASE
-
       ENDIF
-
    ELSE
 
       DO CASE
@@ -236,7 +234,6 @@ METHOD hitTest( nMRow, nMCol ) CLASS ScrollBar
       CASE nMCol == ::nThumbPos + ::nStart
          RETURN HTSCROLLTHUMBDRAG
       ENDCASE
-
    ENDIF
 
    RETURN HTNOWHERE
@@ -342,15 +339,16 @@ METHOD thumbPos( nThumbPos ) CLASS ScrollBar
 
    IF HB_ISNUMERIC( nThumbPos )
 
-      IF nThumbPos < 1
+      DO CASE
+      CASE nThumbPos < 1
          ::nThumbPos := 1
-      ELSEIF nThumbPos >= ::nBarLength
+      CASE nThumbPos >= ::nBarLength
          ::nThumbPos := ::nBarLength
-      ELSEIF nThumbPos >= ::nBarLength - 1
+      CASE nThumbPos >= ::nBarLength - 1
          ::nThumbPos := nThumbPos
-      ELSE
+      OTHERWISE
          ::nThumbPos := nThumbPos
-      ENDIF
+      ENDCASE
 
       ::lOverride := ( nThumbPos != 0 )
    ENDIF
@@ -385,10 +383,10 @@ METHOD CalcThumbPos() CLASS ScrollBar
 
 /* New definitions for better coding. These are screen codepage dependent,
    but can be changed with the setStyle method. */
-#define SB_UPARROW      Chr( 24 ) /* LOW-ASCII "↑" */
-#define SB_DNARROW      Chr( 25 ) /* LOW-ASCII "↓" */
-#define SB_RIGHTARROW   Chr( 27 ) /* LOW-ASCII "→" */
-#define SB_LEFTARROW    Chr( 26 ) /* LOW-ASCII "←" */
+#define SB_UPARROW      Chr( 24 )  /* LOW-ASCII "↑" */
+#define SB_DNARROW      Chr( 25 )  /* LOW-ASCII "↓" */
+#define SB_RIGHTARROW   Chr( 27 )  /* LOW-ASCII "→" */
+#define SB_LEFTARROW    Chr( 26 )  /* LOW-ASCII "←" */
 
 #define SB_THUMB        hb_UTF8ToStr( "░" )
 #define SB_TRACK        hb_UTF8ToStr( "▓" )
@@ -415,13 +413,16 @@ METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) CLASS ScrollBar
    ::start      := nStart
    ::nBarLength := nEnd - nStart - 1
 
-   IF nOrient == SCROLL_VERTICAL
+   SWITCH nOrient
+   CASE SCROLL_VERTICAL
       ::cStyle := SB_UPARROW + SB_THUMB + SB_TRACK + SB_DNARROW
       ::aBitmaps := { "arrow_u.bmu", "arrow_d.bmu", "arrow_e.bmu" }
-   ELSEIF nOrient == SCROLL_HORIZONTAL
+      EXIT
+   CASE SCROLL_HORIZONTAL
       ::cStyle := SB_LEFTARROW + SB_THUMB + SB_TRACK + SB_RIGHTARROW
       ::aBitmaps := { "arrow_l.bmu", "arrow_r.bmu", "arrow_e.bmu" }
-   ENDIF
+      EXIT
+   ENDSWITCH
 
    cColor := SetColor()
    ::cColorSpec := ;

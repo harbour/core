@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -1093,13 +1093,14 @@ STATIC FUNCTION INSTANCE_DATA( oValue )
 
    cData := "[" + hb_ntos( Len( oValue ) ) + "]:"
    FOR i := 1 TO Len( oValue )
-      IF HB_ISSTRING( oValue[ i ] )
+      DO CASE
+      CASE HB_ISSTRING( oValue[ i ] )
          cData += " " + oValue[ i ]
-      ELSEIF oValue[ i ] == NIL
+      CASE oValue[ i ] == NIL
          cData += " NIL"
-      ELSE
+      OTHERWISE
          cData += " ..."
-      ENDIF
+      ENDCASE
    NEXT
 
    RETURN cData
@@ -1113,25 +1114,27 @@ EXPORTED:
    CLASS VAR   var2
    METHOD      init
    DESTRUCTOR  dtor
-END CLASS
+ENDCLASS
 
 METHOD INIT( type ) CLASS DTORCLASS
    ::type := type
-RETURN self
+   RETURN Self
 
 METHOD PROCEDURE DTOR CLASS DTORCLASS
-   IF ::type == 1
+
+   DO CASE
+   CASE ::Type == 1
       cDtorResult += "Reference to self in instance variable."
       ::var1 := self
-   ELSEIF ::Type == 2
+   CASE ::Type == 2
       cDtorResult += "Reference to self in class variable."
       ::var2 := self
-   ELSEIF ::Type == 3
+   CASE ::Type == 3
       cDtorResult += "Reference to self in private memvar."
       objHolder := self
-   ELSE
+   OTHERWISE
       cDtorResult += "No references to self."
-   ENDIF
+   ENDCASE
 
    RETURN
 
@@ -1142,28 +1145,28 @@ EXPORTED:
     VAR x1 INIT "(x1)"
     VAR y1 INIT "(y1)"
     VAR z1 INIT "(z1)"
-END CLASS
+ENDCLASS
 
-CREATE CLASS IVARSCLASS2 FROM IVARSCLASS1
+CREATE CLASS IVARSCLASS2 INHERIT IVARSCLASS1
 EXPORTED:
     VAR x2 INIT "(x2)"
     VAR y2 INIT "(y2)"
     VAR z2 INIT "(z2)"
-END CLASS
+ENDCLASS
 
-CREATE CLASS IVARSCLASS3 FROM IVARSCLASS1, IVARSCLASS2
+CREATE CLASS IVARSCLASS3 INHERIT IVARSCLASS1, IVARSCLASS2
 EXPORTED:
     VAR x3 INIT "(x3)"
     VAR y3 INIT "(y3)"
     VAR z3 INIT "(z3)"
-END CLASS
+ENDCLASS
 
-CREATE CLASS IVARSCLASS4 FROM IVARSCLASS3, IVARSCLASS2
+CREATE CLASS IVARSCLASS4 INHERIT IVARSCLASS3, IVARSCLASS2
 EXPORTED:
     VAR x4 INIT "(x4)"
     VAR y4 INIT "(y4)"
     VAR z4 INIT "(z4)"
-END CLASS
+ENDCLASS
 
 
 
@@ -1172,28 +1175,28 @@ EXPORTED:
    CLASS VAR x1 INIT "(x1)"
    CLASS VAR y1 INIT "(y1)"
    CLASS VAR z1 INIT "(z1)"
-END CLASS
+ENDCLASS
 
-CREATE CLASS CVARSCLASS2 FROM CVARSCLASS1
+CREATE CLASS CVARSCLASS2 INHERIT CVARSCLASS1
 EXPORTED:
    CLASS VAR x2 INIT "(x2)"
    CLASS VAR y2 INIT "(y2)"
    CLASS VAR z2 INIT "(z2)"
-END CLASS
+ENDCLASS
 
-CREATE CLASS CVARSCLASS3 FROM CVARSCLASS1, CVARSCLASS2
+CREATE CLASS CVARSCLASS3 INHERIT CVARSCLASS1, CVARSCLASS2
 EXPORTED:
    CLASS VAR x3 INIT "(x3)"
    CLASS VAR y3 INIT "(y3)"
    CLASS VAR z3 INIT "(z3)"
-END CLASS
+ENDCLASS
 
-CREATE CLASS CVARSCLASS4 FROM CVARSCLASS3, CVARSCLASS2
+CREATE CLASS CVARSCLASS4 INHERIT CVARSCLASS3, CVARSCLASS2
 EXPORTED:
    CLASS VAR x4 INIT "(x4)"
    CLASS VAR y4 INIT "(y4)"
    CLASS VAR z4 INIT "(z4)"
-END CLASS
+ENDCLASS
 
 
 
@@ -1204,21 +1207,21 @@ EXPORTED:
    CLASS VAR z1 INIT "(z1)" SHARED
 ENDCLASS
 
-CREATE CLASS SVARSCLASS2 FROM SVARSCLASS1
+CREATE CLASS SVARSCLASS2 INHERIT SVARSCLASS1
 EXPORTED:
    CLASS VAR x2 INIT "(x2)" SHARED
    CLASS VAR y2 INIT "(y2)" SHARED
    CLASS VAR z2 INIT "(z2)" SHARED
 ENDCLASS
 
-CREATE CLASS SVARSCLASS3 FROM SVARSCLASS1, SVARSCLASS2
+CREATE CLASS SVARSCLASS3 INHERIT SVARSCLASS1, SVARSCLASS2
 EXPORTED:
    CLASS VAR x3 INIT "(x3)" SHARED
    CLASS VAR y3 INIT "(y3)" SHARED
    CLASS VAR z3 INIT "(z3)" SHARED
 ENDCLASS
 
-CREATE CLASS SVARSCLASS4 FROM SVARSCLASS3, SVARSCLASS2
+CREATE CLASS SVARSCLASS4 INHERIT SVARSCLASS3, SVARSCLASS2
 EXPORTED:
    CLASS VAR x4 INIT "(x4)" SHARED
    CLASS VAR y4 INIT "(y4)" SHARED
@@ -1246,7 +1249,6 @@ EXPORTED:
 ENDCLASS
 
 METHOD m1 CLASS NVCLASS1
-
    RETURN "NVCLASS1:M1 " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1260,7 +1262,6 @@ METHOD m1 CLASS NVCLASS1
          ::z()
 
 METHOD x CLASS NVCLASS1
-
    RETURN "NVCLASS1:X  " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1271,7 +1272,6 @@ METHOD x CLASS NVCLASS1
           hb_CStr( ::v )
 
 METHOD y CLASS NVCLASS1
-
    RETURN "NVCLASS1:Y  " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1282,7 +1282,6 @@ METHOD y CLASS NVCLASS1
           hb_CStr( ::v )
 
 METHOD z CLASS NVCLASS1
-
    RETURN "NVCLASS1:Z  " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1313,7 +1312,6 @@ EXPORTED:
 ENDCLASS
 
 METHOD m2 CLASS NVCLASS2
-
    RETURN "NVCLASS2:M2 " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1327,7 +1325,6 @@ METHOD m2 CLASS NVCLASS2
          ::z()
 
 METHOD x CLASS NVCLASS2
-
    RETURN "NVCLASS2:X  " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1338,7 +1335,6 @@ METHOD x CLASS NVCLASS2
           hb_CStr( ::v )
 
 METHOD y CLASS NVCLASS2
-
    RETURN "NVCLASS2:Y  " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1349,7 +1345,6 @@ METHOD y CLASS NVCLASS2
           hb_CStr( ::v )
 
 METHOD z CLASS NVCLASS2
-
    RETURN "NVCLASS2:Z  " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1360,7 +1355,7 @@ METHOD z CLASS NVCLASS2
           hb_CStr( ::v )
 
 
-CREATE CLASS NVCLASS3 FROM NVCLASS1, NVCLASS2
+CREATE CLASS NVCLASS3 INHERIT NVCLASS1, NVCLASS2
 HIDDEN:
    VAR a init "(a3)"
    CLASS VAR b init "(b3)"
@@ -1381,7 +1376,6 @@ EXPORTED:
 ENDCLASS
 
 METHOD m3 CLASS NVCLASS3
-
    RETURN "NVCLASS3:M3 " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1395,7 +1389,6 @@ METHOD m3 CLASS NVCLASS3
          ::z()
 
 METHOD x CLASS NVCLASS3
-
    RETURN "NVCLASS3:X  " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1406,7 +1399,6 @@ METHOD x CLASS NVCLASS3
           hb_CStr( ::v )
 
 METHOD y CLASS NVCLASS3
-
    RETURN "NVCLASS3:Y  " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1417,7 +1409,6 @@ METHOD y CLASS NVCLASS3
           hb_CStr( ::v )
 
 METHOD z CLASS NVCLASS3
-
    RETURN "NVCLASS3:Z  " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;
@@ -1428,12 +1419,11 @@ METHOD z CLASS NVCLASS3
           hb_CStr( ::v )
 
 
-CREATE CLASS NVCLASS4 FROM NVCLASS3
+CREATE CLASS NVCLASS4 INHERIT NVCLASS3
    METHOD m4
 ENDCLASS
 
-METHOD m4
-
+METHOD m4 CLASS NVCLASS4
    RETURN "NVCLASS4:M4 " + ;
           hb_CStr( ::a ) + " " + ;
           hb_CStr( ::b ) + " " + ;

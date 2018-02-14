@@ -1,36 +1,36 @@
 /*
  * SIX compatible functions:
- *          sxChar()
- *          sxNum()
- *          sxDate()
- *          sxLog()
- *          sx_Compress()
- *          sx_Decompress()
- *          sx_TagInfo()
- *          sx_TagCount()
- *          sx_Tags()
- *          sx_SetTag()
- *          sx_KillTag()
- *          sx_FileOrder()
- *          sx_SetFileOrd()
- *          rdd_Count()
- *          rdd_Name()
- *          rdd_Info()
- *          sx_IsDBT()
- *          sx_AutoOpen()
- *          sx_AutoShare()
- *          sx_Blob2File()
- *          sx_File2Blob()
- *          sx_dbCreate()
- *          sx_VSigLen()
- *          sx_MemoExt()
- *          sx_MemoBlk()
- *          sx_SetMemoBlock()
- *          sx_StrXCheck()
- *          sx_LockRetry()
- *          sx_IsLocked()
- *          sx_SetTrigger()
- *          sx_VFGet()
+ *       sxChar()
+ *       sxNum()
+ *       sxDate()
+ *       sxLog()
+ *       sx_Compress()
+ *       sx_Decompress()
+ *       sx_TagInfo()
+ *       sx_TagCount()
+ *       sx_Tags()
+ *       sx_SetTag()
+ *       sx_KillTag()
+ *       sx_FileOrder()
+ *       sx_SetFileOrd()
+ *       rdd_Count()
+ *       rdd_Name()
+ *       rdd_Info()
+ *       sx_IsDBT()
+ *       sx_AutoOpen()
+ *       sx_AutoShare()
+ *       sx_Blob2File()
+ *       sx_File2Blob()
+ *       sx_dbCreate()
+ *       sx_VSigLen()
+ *       sx_MemoExt()
+ *       sx_MemoBlk()
+ *       sx_SetMemoBlock()
+ *       sx_StrXCheck()
+ *       sx_LockRetry()
+ *       sx_IsLocked()
+ *       sx_SetTrigger()
+ *       sx_VFGet()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -45,9 +45,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -227,34 +227,33 @@ FUNCTION sx_TagInfo( cIndex )
          nFirst := 1
       ENDIF
       FOR i := nFirst TO nOrds
-         aInfo[ i, 1 ] := ordName( i )
-         aInfo[ i, 2 ] := ordKey( i )
-         aInfo[ i, 3 ] := ordFor( i )
-         aInfo[ i, 4 ] := ordIsUnique( i )
-         aInfo[ i, 5 ] := ordDescend( i )
-         aInfo[ i, 6 ] := ordCustom( i )
+         aInfo[ i ][ 1 ] := ordName( i )
+         aInfo[ i ][ 2 ] := ordKey( i )
+         aInfo[ i ][ 3 ] := ordFor( i )
+         aInfo[ i ][ 4 ] := ordIsUnique( i )
+         aInfo[ i ][ 5 ] := ordDescend( i )
+         aInfo[ i ][ 6 ] := ordCustom( i )
       NEXT
-   ELSE
-      aInfo := {}
+      RETURN aInfo
    ENDIF
 
-   RETURN aInfo
+   RETURN {}
 
 FUNCTION sx_TagCount( xIndex )
 
    LOCAL nTags := 0, cIndex, nOrder
 
    IF Used()
-      IF HB_ISNUMERIC( xIndex )
-         nOrder := sx_TagOrder( 1, xIndex )
-         IF nOrder != 0
+      DO CASE
+      CASE HB_ISNUMERIC( xIndex )
+         IF ( nOrder := sx_TagOrder( 1, xIndex ) ) != 0
             cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
          ENDIF
-      ELSEIF HB_ISSTRING( xIndex ) .AND. ! Empty( xIndex )
+      CASE HB_ISSTRING( xIndex ) .AND. ! Empty( xIndex )
          cIndex := xIndex
-      ELSE
+      OTHERWISE
          cIndex := dbOrderInfo( DBOI_FULLPATH )
-      ENDIF
+      ENDCASE
       IF ! Empty( cIndex )
          nTags := ordCount( cIndex )
       ENDIF
@@ -267,13 +266,14 @@ FUNCTION sx_Tags( xIndex )
    LOCAL aTagNames := {}, nOrder, nTags
 
    IF Used()
-      IF HB_ISNUMERIC( xIndex )
+      DO CASE
+      CASE HB_ISNUMERIC( xIndex )
          nOrder := sx_TagOrder( 1, xIndex )
-      ELSEIF HB_ISSTRING( xIndex ) .AND. ! Empty( xIndex )
+      CASE HB_ISSTRING( xIndex ) .AND. ! Empty( xIndex )
          nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex )
-      ELSE
+      OTHERWISE
          nOrder := ordNumber()
-      ENDIF
+      ENDCASE
       IF nOrder != 0
          nTags := ordCount( dbOrderInfo( DBOI_FULLPATH,, nOrder ) )
          DO WHILE --nTags >= 0
@@ -337,16 +337,17 @@ FUNCTION sx_KillTag( xTag, xIndex )
 
    IF HB_ISLOGICAL( xTag )
       IF xTag
-         IF Empty( xIndex )
+         DO CASE
+         CASE Empty( xIndex )
             cIndex := sx_IndexName()
-         ELSEIF HB_ISNUMERIC( xIndex )
+         CASE HB_ISNUMERIC( xIndex )
             cIndex := sx_IndexName( 1, xIndex )
-         ELSEIF HB_ISSTRING( xIndex )
+         CASE HB_ISSTRING( xIndex )
             nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex )
             IF nOrder != 0
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
             ENDIF
-         ENDIF
+         ENDCASE
          IF ! Empty( cIndex )
             IF ordBagClear( cIndex )
                lRet := FErase( cIndex ) != F_ERROR
@@ -372,8 +373,7 @@ FUNCTION sx_KillTag( xTag, xIndex )
          ELSEIF HB_ISSTRING( xIndex )
             nOrder := sx_TagOrder( xTag, xIndex )
          ELSE
-            nOrder := sx_TagOrder( 1, xIndex )
-            IF nOrder != 0
+            IF ( nOrder := sx_TagOrder( 1, xIndex ) ) != 0
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
                IF Empty( cIndex )
                   nOrder := 0
@@ -416,37 +416,36 @@ FUNCTION rdd_Name( nRDD )
 
 FUNCTION rdd_Info( xID )
 
-   LOCAL aInfo, cRDD
+   LOCAL cRDD
 
-   IF HB_ISNUMERIC( xID )
-      IF ! Empty( Alias( xID ) )
+   DO CASE
+   CASE HB_ISNUMERIC( xID )
+      IF ! Alias( xID ) == ""
          ( xID )->( rddName() )
       ENDIF
-   ELSEIF HB_ISSTRING( xID )
+   CASE HB_ISSTRING( xID )
       cRDD := Upper( AllTrim( xID ) )
       IF AScan( rddList(), {| x | Upper( x ) == cRDD } ) == 0
          cRDD := NIL
       ENDIF
-   ELSEIF xID == NIL
+   CASE xID == NIL
       cRDD := rddSetDefault()
-   ENDIF
+   ENDCASE
 
    IF Empty( cRDD )
-      aInfo := {}
-   ELSE
-      aInfo := Array( 6 )
-      aInfo[ 1 ] := cRDD
-      aInfo[ 2 ] := .T.
-      aInfo[ 3 ] := hb_rddInfo( RDDI_TABLEEXT, NIL, cRDD )
-      aInfo[ 4 ] := hb_rddInfo( RDDI_ORDBAGEXT, NIL, cRDD )
-      aInfo[ 5 ] := hb_rddInfo( RDDI_ORDEREXT, NIL, cRDD )
-      aInfo[ 6 ] := hb_rddInfo( RDDI_MEMOEXT, NIL, cRDD )
+      RETURN {}
    ENDIF
 
-   RETURN aInfo
+   RETURN { ;
+      cRDD, ;
+      .T., ;
+      hb_rddInfo( RDDI_TABLEEXT, , cRDD ), ;
+      hb_rddInfo( RDDI_ORDBAGEXT, , cRDD ), ;
+      hb_rddInfo( RDDI_ORDEREXT, , cRDD ), ;
+      hb_rddInfo( RDDI_MEMOEXT, , cRDD ) }
 
 FUNCTION sx_IsDBT( cRDD )
-   RETURN hb_rddInfo( RDDI_MEMOTYPE, NIL, cRDD ) == DB_MEMO_DBT
+   RETURN hb_rddInfo( RDDI_MEMOTYPE, , cRDD ) == DB_MEMO_DBT
 
 FUNCTION sx_MemoExt( cNewExt, cRDD )
    RETURN hb_rddInfo( RDDI_MEMOEXT, cNewExt, cRDD )
@@ -515,11 +514,12 @@ FUNCTION sx_VSigLen( xField )
    LOCAL nResult := 0, nField := 0
 
    IF Used()
-      IF HB_ISSTRING( xField )
+      DO CASE
+      CASE HB_ISSTRING( xField )
          nField := FieldPos( xField )
-      ELSEIF HB_ISNUMERIC( xField )
+      CASE HB_ISNUMERIC( xField )
          nField := xField
-      ENDIF
+      ENDCASE
       IF nField >= 1 .AND. nField <= FCount()
          nResult := FieldLen( nField )
          IF FieldType( nField ) == "V" .AND. nResult >= 6
@@ -533,7 +533,7 @@ FUNCTION sx_VSigLen( xField )
 FUNCTION sx_VFGet( cExpr, nLen )
 
    /* Our RDDs does not use any internal flags to cut V-Fields so
-    * we can simply evaluate given expression */
+      we can simply evaluate given expression */
 
    IF Used() .AND. PCount() == 2
       RETURN PadR( &cExpr, nLen )  /* NOTE: Macro operator! */
@@ -543,23 +543,21 @@ FUNCTION sx_VFGet( cExpr, nLen )
 
 FUNCTION sx_IsLocked( xRec )
 
-   LOCAL lResult := .F., xRecord
+   LOCAL xRecord
 
    IF Used()
       xRecord := iif( xRec == NIL, RecNo(), xRec )
-      /*
-       * Don't be confused by function name.
-       * Even if it looks strange and results are not very usable due
-       * to possible race condition then this is what SIX3 exactly does.
-       */
+      /* Don't be confused by function name.
+         Even if it looks strange and results are not very usable due
+         to possible race condition then this is what SIX3 exactly does. */
       IF sx_Rlock( xRecord )
          sx_Unlock( xRecord )
       ELSE
-         lResult := .T.
+         RETURN .T.
       ENDIF
    ENDIF
 
-   RETURN lResult
+   RETURN .F.
 
 FUNCTION sx_SetTrigger( nAction, cTriggerName, cRDD /* Harbour extensions */ )
 

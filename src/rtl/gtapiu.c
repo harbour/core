@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -100,7 +100,7 @@ HB_BOOL hb_gtWVis( HB_GT_WND * wnd, HB_USHORT iStatus ) /* USHORT in CA-Cl*pper 
    return HB_FALSE;
 }
 
-HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ) /* System Level Request */
+HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ) /* System-Level Request */
 {
    /* Do nothing in Harbour, since the low-level GT API is
       implemented with a different method than in CA-Cl*pper. */

@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ xbpPushButton Compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                 Xbase++ xbpPushButton Compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               06Dec2008
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgRadioButton  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgRadioButton INHERIT WvgWindow, WvgDataRef
 
    VAR    autosize                              INIT .F.
    VAR    caption                               INIT ""
@@ -82,7 +76,7 @@ CREATE CLASS WvgRadioButton  INHERIT  WvgWindow, WvgDataRef
 
 ENDCLASS
 
-METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+METHOD WvgRadioButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -92,11 +86,11 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadio
 
    RETURN Self
 
-METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+METHOD WvgRadioButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oParent:addChild( SELF )
+   ::oParent:addChild( Self )
 
    ::createControl()
 
@@ -114,16 +108,16 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRa
 
    RETURN Self
 
-METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
+METHOD WvgRadioButton:handleEvent( nMessage, aNM )
 
    SWITCH nMessage
 
    CASE HB_GTE_COMMAND
       IF aNM[ NMH_code ] == BN_CLICKED
-         ::editBuffer := ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
+         ::editBuffer := ( wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
 
          IF HB_ISBLOCK( ::sl_lbClick )
-            Eval( ::sl_lbClick, ::editBuffer, NIL, self )
+            Eval( ::sl_lbClick, ::editBuffer, , Self )
             RETURN 0
          ENDIF
       ENDIF
@@ -133,23 +127,23 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    RETURN 1
 
-METHOD destroy() CLASS WvgRadioButton
+METHOD PROCEDURE WvgRadioButton:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN
 
-METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
+METHOD WvgRadioButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-METHOD setCaption( xCaption ) CLASS WvgRadioButton
+METHOD WvgRadioButton:setCaption( xCaption )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
+      wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
    ENDIF
 
    RETURN Self

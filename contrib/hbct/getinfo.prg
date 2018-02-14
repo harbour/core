@@ -1,11 +1,8 @@
 /*
  * CT3 GET/READ Functions
  *
- * SaveGets(), RestGets()
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *
- * CountGets(), CurrentGet(), GetFldRow(), GetFldCol(), GetFldVar()
- * Copyright 2004 Philip Chee <philip@aleytys.pc.my>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (SaveGets(), RestGets())
+ * Copyright 2004 Philip Chee <philip@aleytys.pc.my> (CountGets(), CurrentGet(), GetFldRow(), GetFldCol(), GetFldVar())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,11 +56,9 @@ FUNCTION SaveGets()
    RETURN aGetList
 
 FUNCTION RestGets( aGetList )
-
    RETURN ( GetList := aGetList ) != NIL
 
 FUNCTION CountGets()
-
    RETURN Len( GetList )
 
 FUNCTION CurrentGet()

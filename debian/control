@@ -20,7 +20,7 @@ Description: Compiler for the xBase superset language often referred to as Clipp
  compiler CA-Cl*pper).
  .
  Harbour is a cross platform compiler and is known to compile and run on
- MS-DOS, MS Windows, OS/2 and GNU/Linux, *BSD systems, Mac OS X, HP-UX and
+ MS-DOS, MS Windows, OS/2 and GNU/Linux, *BSD systems, macOS, HP-UX and
  other *nixes
  .
  The main advantage Harbour has over other Clipper compilers is that it

@@ -1,5 +1,7 @@
 /*
+ * CTYPE_* constants
  *
+ * Copyright 2000 {list of individual authors and e-mail addresses}
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,38 +47,38 @@
 #ifndef __HBCTYPES_CH_
 #define __HBCTYPES_CH_
 
-#define CTYPE_VOID                     0
+#define CTYPE_VOID                  0
 
-#define CTYPE_CHAR                     1
-#define CTYPE_UNSIGNED_CHAR           -1
-#define CTYPE_CHAR_PTR                10
-#define CTYPE_UNSIGNED_CHAR_PTR      -10
+#define CTYPE_CHAR                  1
+#define CTYPE_UNSIGNED_CHAR         -1
+#define CTYPE_CHAR_PTR              10
+#define CTYPE_UNSIGNED_CHAR_PTR     -10
 
-#define CTYPE_SHORT                    2
-#define CTYPE_UNSIGNED_SHORT          -2
-#define CTYPE_SHORT_PTR               20
-#define CTYPE_UNSIGNED_SHORT_PTR     -20
+#define CTYPE_SHORT                 2
+#define CTYPE_UNSIGNED_SHORT        -2
+#define CTYPE_SHORT_PTR             20
+#define CTYPE_UNSIGNED_SHORT_PTR    -20
 
-#define CTYPE_INT                      3
-#define CTYPE_UNSIGNED_INT            -3
-#define CTYPE_INT_PTR                 30
-#define CTYPE_UNSIGNED_INT_PTR       -30
+#define CTYPE_INT                   3
+#define CTYPE_UNSIGNED_INT          -3
+#define CTYPE_INT_PTR               30
+#define CTYPE_UNSIGNED_INT_PTR      -30
 
-#define CTYPE_LONG                     4
-#define CTYPE_UNSIGNED_LONG           -4
-#define CTYPE_LONG_PTR                40
-#define CTYPE_UNSIGNED_LONG_PTR      -40
+#define CTYPE_LONG                  4
+#define CTYPE_UNSIGNED_LONG         -4
+#define CTYPE_LONG_PTR              40
+#define CTYPE_UNSIGNED_LONG_PTR     -40
 
-#define CTYPE_FLOAT                    5
-#define CTYPE_FLOAT_PTR               50
+#define CTYPE_FLOAT                 5
+#define CTYPE_FLOAT_PTR             50
 
-#define CTYPE_DOUBLE                   6
-#define CTYPE_DOUBLE_PTR              60
+#define CTYPE_DOUBLE                6
+#define CTYPE_DOUBLE_PTR            60
 
-#define CTYPE_VOID_PTR                 7
+#define CTYPE_VOID_PTR              7
 
 /* _Must_ be smaller than CTYPE_STRUCTURE_PTR */
 #define CTYPE_STRUCTURE             1000
-#define CTYPE_STRUCTURE_PTR        10000
+#define CTYPE_STRUCTURE_PTR         10000
 
 #endif /* __HBCTYPES_CH_ */

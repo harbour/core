@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -64,9 +64,9 @@ FUNCTION CallDll32( cFunction, cLibrary, ... )
    /* Use Windows system .dll calling convention on Windows systems,
       like in original lib. Original .lib was a Windows-only solution.
       [vszakats] */
-#  define _DEF_CALLCONV_ HB_DYN_CALLCONV_STDCALL
+   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_STDCALL
 #else
-#  define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
+   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
 #endif
 
 FUNCTION hb_DynaCall1( cFunction, cLibrary, nCount, ... )
@@ -79,7 +79,7 @@ FUNCTION hb_DynaCall1( cFunction, cLibrary, nCount, ... )
 
       hb_mutexLock( s_mutex )
 
-      IF !( cLibrary $ s_hDLL )
+      IF ! cLibrary $ s_hDLL
          s_hDLL[ cLibrary ] := hb_libLoad( cLibrary )
       ENDIF
 

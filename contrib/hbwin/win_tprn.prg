@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,11 +54,11 @@
 
    Simple example
 
-   TODO: Colour printing
+   TODO: Color printing
          etc....
 
    Peter Rees 2004-01-21 <peter@rees.co.nz>
-*/
+ */
 
 #include "hbclass.ch"
 
@@ -79,7 +79,7 @@ CREATE CLASS win_Prn
    METHOD StartPage()
    METHOD EndPage( lStartNewPage )  // If lStartNewPage == .T. then StartPage() is called for the next page of output
    METHOD NewLine()
-   METHOD NewPage( lDelay )         // If lDelay == .T. then new page is not created immediately but just before 1-st output
+   METHOD NewPage( lDelay )         // If lDelay == .T. then new page is not created immediately but just before 1st output
    METHOD CheckPage()
    METHOD GetDocumentProperties()
    METHOD SetFont( cFontName, nPointSize, xWidth, nBold, lUnderline, lItalic, nCharSet, lManualSize )
@@ -95,17 +95,17 @@ CREATE CLASS win_Prn
    METHOD Bold( nWeight )
    METHOD UnderLine( lUnderline )
    METHOD Italic( lItalic )
-   METHOD SetDuplexType( nDuplexType )                // Get/Set current Duplexmode
-   METHOD SetPrintQuality( nPrintQuality )            // Get/Set Printquality
+   METHOD SetDuplexType( nDuplexType )                // Get/Set current duplex mode
+   METHOD SetPrintQuality( nPrintQuality )            // Get/Set print quality
    METHOD CharSet( nCharSet )
 
 
-   METHOD SetPos( nPosX, nPosY )                      // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
+   METHOD SetPos( nPosX, nPosY )                      // WARNING: ( Col, Row ) _NOT_ ( Row, Col )
    METHOD SetColor( nClrText, nClrPane, nAlign )
-   METHOD SetBkMode( nMode )                          // Set Background mode: WIN_TRANSPARENT or WIN_OPAQUE
+   METHOD SetBkMode( nMode )                          // Set background mode: WIN_TRANSPARENT or WIN_OPAQUE
 
-   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) // nAlign : WIN_TA_*
-   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )   // **WARNING** : ( Col, Row ) _NOT_ ( Row, Col )
+   METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign )  // nAlign : WIN_TA_*
+   METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlign )   // WARNING: ( Col, Row ) _NOT_ ( Row, Col )
 
 
    METHOD SetPen( nStyle, nWidth, nColor )
@@ -124,18 +124,18 @@ CREATE CLASS win_Prn
    METHOD SetPRC( nRow, nCol )   // Based on ::LineHeight and current ::CharWidth
    METHOD PRow()
    METHOD PCol()
-   METHOD MaxRow()               // Based on ::LineHeight and Form dimensions
-   METHOD MaxCol()               // Based on ::CharWidth and Form dimensions
+   METHOD MaxRow()               // Based on ::LineHeight and form dimensions
+   METHOD MaxCol()               // Based on ::CharWidth and form dimensions
 
    METHOD MM_TO_POSX( nMm )      // Convert position on page from MM to pixel location Column
    METHOD MM_TO_POSY( nMm )      //   "       "      "    "    "   "  "   "      "     Row
    METHOD INCH_TO_POSX( nInch )  // Convert position on page from INCH to pixel location Column
    METHOD INCH_TO_POSY( nInch )  //   "       "      "    "    "   "    "   "       "    Row
 
-   METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize,;     // Print text string at location
-                      nWidth, nBold, lUnderLine, lItalic, nCharSet,; // in specified font and color.
-                      lNewLine, lUpdatePosX, nColor, nAlign )        // Restore original font and colour
-                                                                     // after printing.
+   METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;     // Print text string at location
+                      nWidth, nBold, lUnderLine, lItalic, nCharSet, ; // in specified font and color.
+                      lNewLine, lUpdatePosX, nColor, nAlign )         // Restore original font and color
+                                                                      // after printing.
 
    METHOD GetDeviceCaps( nCaps )
 
@@ -148,13 +148,13 @@ CREATE CLASS win_Prn
 
    VAR AskProperties    INIT .F.
 
-   // These next 6 variables must be set before calling ::Create() if
-   // you wish to alter the defaults
+   /* These next 6 variables must be set before calling ::Create() if
+      you wish to alter the defaults */
    VAR FormType         INIT 0
    VAR BinNumber        INIT 0
    VAR Landscape        INIT .F.
    VAR Copies           INIT 1
-   VAR PaperLength      INIT 0                           // Value is * 1/10 of mm   1000 = 10cm
+   VAR PaperLength      INIT 0                           // Value is * 1/10 of mm   1000 == 10cm
    VAR PaperWidth       INIT 0                           //   "    "    "     "       "     "
 
    VAR SetFontOk        INIT .F.
@@ -163,7 +163,7 @@ CREATE CLASS win_Prn
    VAR FontPointSize    INIT 12                          // Point size for font
    VAR FontWidth        INIT { 0, 0 }                    // { Mul, Div } Calc width: nWidth := wapi_MulDiv( nMul, win_GetDeviceCaps( HDC, WIN_LOGPIXELSX ), nDiv )
                                                          // If font width is specified it is in "characters per inch" to emulate DotMatrix
-   VAR fBold            INIT 0                   HIDDEN  // font darkness weight (Bold). See wingdi.h or WIN SDK CreateFont() for valid values
+   VAR fBold            INIT 0                   HIDDEN  // font darkness weight (Bold). See wingdi.h or Windows SDK CreateFont() for valid values.
    VAR fUnderLine       INIT .F.                 HIDDEN  // UnderLine is on or off
    VAR fItalic          INIT .F.                 HIDDEN  // Italic is on or off
    VAR fCharSet         INIT WIN_DEFAULT_CHARSET HIDDEN

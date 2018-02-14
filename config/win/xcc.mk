@@ -61,7 +61,7 @@ else
    DYNFIX :=
 endif
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define dynlib_object
    @$(ECHO) $(ECHOQUOTE)$(subst /,\,$(file))$(ECHOQUOTE) >> __dyn__.tmp
 

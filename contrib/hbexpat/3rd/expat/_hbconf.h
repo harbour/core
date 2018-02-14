@@ -1,12 +1,22 @@
 #ifndef _HBCONF_H
 #define _HBCONF_H
 
-#include "hbdefs.h"
+#include "hbapi.h"
+#include "hbarc4.h"
+
+#if defined( HB_FORCE_ARC4RANDOM )
+#  define HAVE_ARC4RANDOM_BUF
+#  define arc4random_buf hb_arc4random_buf
+#endif
 
 #if defined( HB_OS_WIN )
 #  define WIN32_LEAN_AND_MEAN
 #  include <windows.h>
 #  undef WIN32_LEAN_AND_MEAN
+#  include "hbwinuni.h"
+#endif
+#if defined( HB_OS_WIN_CE ) && ! defined( _WINCE )
+#  define _WINCE
 #endif
 
 /* 1234 = LITLE_ENDIAN, 4321 = BIG_ENDIAN */

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -207,13 +207,14 @@ METHOD display() CLASS PushButton
 
    DispBegin()
 
-   IF ::lBuffer
+   DO CASE
+   CASE ::lBuffer
       cColor := hb_ColorIndex( ::cColorSpec, 2 )
-   ELSEIF ::lHasFocus
+   CASE ::lHasFocus
       cColor := hb_ColorIndex( ::cColorSpec, 1 )
-   ELSE
+   OTHERWISE
       cColor := hb_ColorIndex( ::cColorSpec, 0 )
-   ENDIF
+   ENDCASE
 
    IF ( nPos := At( "&", cCaption ) ) == 0
    ELSEIF nPos == Len( cCaption )
@@ -242,7 +243,6 @@ METHOD display() CLASS PushButton
       IF nPos != 0
          hb_DispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
-
    ENDIF
 
    DispEnd()
@@ -362,7 +362,7 @@ METHOD New( nRow, nCol, cCaption ) CLASS PushButton
 FUNCTION PushButton( nRow, nCol, cCaption )
    RETURN HBPushButton():New( nRow, nCol, cCaption )
 
-FUNCTION _PUSHBUTT_( cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, nSizeX, nSizeY, nCapXOff, nCapYOff, cBitmap, nBmpXOff, nBmpYOff )
+FUNCTION _PushButt_( cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, nSizeX, nSizeY, nCapXOff, nCapYOff, cBitmap, nBmpXOff, nBmpYOff )
 
    LOCAL o := HBPushButton():New( Row(), Col(), cCaption )
 

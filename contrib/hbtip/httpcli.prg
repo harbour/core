@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -372,7 +372,7 @@ METHOD ReadAll() CLASS TIPClientHTTP
 
 METHOD PROCEDURE setCookie( cLine ) CLASS TIPClientHTTP
 
-   // docs from https://www.ietf.org/rfc/rfc2109.txt
+   // docs from https://tools.ietf.org/html/rfc2109
    LOCAL cHost, cPath, cName, cValue, aElements
    LOCAL cDefaultHost := ::oUrl:cServer, cDefaultPath := ::oUrl:cPath
    LOCAL x
@@ -471,11 +471,11 @@ METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
 /* nType: 0=as found as the separator in the stdin stream
           1=as found as the last one in the stdin stream
-          2=as found in the CGI enviroment
+          2=as found in the CGI environment
    Examples:
    0: -----------------------------41184676334     // in the body or stdin stream
    1: -----------------------------41184676334--   // last one of the stdin stream
-   2: ---------------------------41184676334       // in the header or CGI envirnment
+   2: ---------------------------41184676334       // in the header or CGI environment
  */
 METHOD Boundary( nType ) CLASS TIPClientHTTP
 

@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -73,7 +73,7 @@
    #define HB_OLE_NO_SAFEARRAYGETVARTYPE
 #endif
 
-/* base date value in OLE (1899-12-30) as julian day */
+/* base date value in OLE (1899-12-30) as Julian day */
 #define HB_OLE_DATE_BASE  0x0024D9AB
 
 static PHB_DYNS s_pDyns_hb_oleauto;
@@ -1131,7 +1131,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
        SafeArrayGetUBound( pSafeArray, iDim, &lTo ) == S_OK &&
        lFrom <= lTo )
    {
-      HB_SIZE ul = 0;
+      HB_SIZE nIndex = 0;
 
       hb_arrayNew( pItem, lTo - lFrom + 1 );
       if( iDim == iDims )
@@ -1153,7 +1153,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
             {
                if( vt != VT_VARIANT )
                   V_VT( &vItem ) = vt; /* it's reserved in VT_DECIMAL structure */
-               hb_oleVariantToItemEx( hb_arrayGetItemPtr( pItem, ++ul ), &vItem, uiClass );
+               hb_oleVariantToItemEx( hb_arrayGetItemPtr( pItem, ++nIndex ), &vItem, uiClass );
                VariantClear( &vItem );
             }
          }
@@ -1164,7 +1164,7 @@ static void hb_oleSafeArrayToItem( PHB_ITEM pItem, SAFEARRAY * pSafeArray,
          do
          {
             plIndex[ iDim - 1 ] = lFrom;
-            hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++ul ),
+            hb_oleSafeArrayToItem( hb_arrayGetItemPtr( pItem, ++nIndex ),
                                    pSafeArray, iDims, iDim + 1, plIndex, vt, uiClass );
          }
          while( ++lFrom <= lTo );
@@ -1206,7 +1206,7 @@ void hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch * pdispVal, HB_USHORT uiCla
          hb_vmRequestRestore();
 
          /* We should store object to pItem after hb_vmRequestRestore(),
-          * because pItem actualy can be stack's return item!
+          * because pItem actually can be stack's return item!
           */
          hb_itemMove( pItem, pObject );
          hb_itemRelease( pObject );
@@ -1334,7 +1334,7 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
          break;
 
       case VT_UI8:
-         /* TODO: sign is lost. Convertion to double will lose significant digits. */
+         /* TODO: sign is lost. Conversion to double will lose significant digits. */
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_MAXINT ) V_UI4( pVariant ) );
 #elif defined( HB_OLE_NO_LL )
@@ -1346,7 +1346,7 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
          break;
 
       case VT_UI8 | VT_BYREF:
-         /* TODO: sign is lost. Convertion to double will lose significant digits. */
+         /* TODO: sign is lost. Conversion to double will lose significant digits. */
 #if HB_VMLONG_MAX == INT32_MAX || defined( HB_LONG_LONG_OFF )
          hb_itemPutNInt( pItem, ( HB_MAXINT ) *V_UI4REF( pVariant ) );
 #elif defined( HB_OLE_NO_LLREF )
@@ -1406,7 +1406,9 @@ void hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClas
                           *V_CYREF( pVariant ), &dblVal ) != S_OK )
             dblVal = 0;
          hb_itemPutND( pItem, dblVal );
-         /* hb_itemPutNDLen( pItem, dblVal, 0, 4 ); */
+         #if 0
+         hb_itemPutNDLen( pItem, dblVal, 0, 4 );
+         #endif
          break;
       }
 
@@ -2284,7 +2286,7 @@ HB_FUNC( WIN_OLEAUTO___ONERROR )
 
    if( iPCount >= 1 && HB_ISHASH( 1 ) )
    {
-      /* named parameters are passsed in hash array */
+      /* named parameters are passed in hash array */
       PHB_ITEM pArgs[ HB_OLE_MAX_NAMEDARGS  ];
       DISPID pDispIds[ HB_OLE_MAX_NAMEDARGS + 1 ];
       UINT uiNamedArgs;
@@ -2576,7 +2578,7 @@ HB_FUNC( __OLEINVOKEPUT )
 }
 
 
-/* __oleVariantGetValue( <pVariant> ) -> <xValue> */
+/* __oleVariantGetValue( <pVariant> ) --> <xValue> */
 HB_FUNC( __OLEVARIANTGETVALUE )
 {
    VARIANT * pVariant = hb_oleVariantParam( 1 );
@@ -2585,7 +2587,7 @@ HB_FUNC( __OLEVARIANTGETVALUE )
       hb_oleVariantToItemEx( hb_stackReturnItem(), pVariant, 0 );
 }
 
-/* __oleVariantGetType( <pVariant> ) -> <nVariantType> */
+/* __oleVariantGetType( <pVariant> ) --> <nVariantType> */
 HB_FUNC( __OLEVARIANTGETTYPE )
 {
    VARIANT * pVariant = hb_oleVariantParam( 1 );
@@ -2594,7 +2596,7 @@ HB_FUNC( __OLEVARIANTGETTYPE )
       hb_retni( V_VT( pVariant ) );
 }
 
-/* __oleVariantNew( <nVariantType>, [<xInitValue>], [<nDims,...>] ) -> <pVariant> */
+/* __oleVariantNew( <nVariantType>, [<xInitValue>], [<nDims,...>] ) --> <pVariant> */
 HB_FUNC( __OLEVARIANTNEW )
 {
    int iType = hb_parni( 1 );
@@ -2853,7 +2855,7 @@ HB_FUNC( __OLEVARIANTNEW )
       hb_errRT_OLE( EG_ARG, 1018, 0, NULL, HB_ERR_FUNCNAME, NULL );
 }
 
-/* __oleVariantNullDate( [<lNewNullDateFlag>] ) -> <lPrevNullDateFlag> */
+/* __oleVariantNullDate( [<lNewNullDateFlag>] ) --> <lPrevNullDateFlag> */
 HB_FUNC( __OLEVARIANTNULLDATE )
 {
    hb_retl( hb_oleGetNullDateFlag() );
@@ -2861,7 +2863,7 @@ HB_FUNC( __OLEVARIANTNULLDATE )
       hb_oleSetNullDateFlag( hb_parl( 1 ) );
 }
 
-/* __oleVariantNil2Null( [<lNewNil2NullFlag>] ) -> <lPrevNil2NullFlag> */
+/* __oleVariantNil2Null( [<lNewNil2NullFlag>] ) --> <lPrevNil2NullFlag> */
 HB_FUNC( __OLEVARIANTNIL2NULL )
 {
    hb_retl( hb_oleGetNil2NullFlag() );

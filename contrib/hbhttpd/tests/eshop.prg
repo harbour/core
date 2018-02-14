@@ -303,7 +303,7 @@ STATIC FUNCTION proc_account_edit()
 
    cName := users->NAME
    IF hb_HHasKey( session, "formdata_account/edit" )
-      cName := session[ "formdata_account/edit", "name" ]
+      cName := session[ "formdata_account/edit" ][ "name" ]
    ENDIF
    IF server[ "REQUEST_METHOD" ] == "POST"
       cName := hb_HGetDef( post, "name", "" )
@@ -349,8 +349,8 @@ STATIC FUNCTION proc_register()
    cUser := ""
    cName := ""
    IF hb_HHasKey( session, "formdata_register" )
-      cUser := session[ "formdata_register", "user" ]
-      cName := session[ "formdata_register", "name" ]
+      cUser := session[ "formdata_register" ][ "user" ]
+      cName := session[ "formdata_register" ][ "name" ]
    ENDIF
    IF server[ "REQUEST_METHOD" ] == "POST"
       dbUseArea( .T., , "users", "users", .T., .F. )
@@ -363,7 +363,7 @@ STATIC FUNCTION proc_register()
       IF Empty( cUser ) .OR. Empty( cName ) .OR. Empty( cPassword1 ) .OR. Empty( cPassword2 )
          session[ "formdata_register" ] := { "user" => cUser, "name" => cName }
          URedirect( "?err=1" )
-      ELSEIF !( cPassword1 == cPassword2 )
+      ELSEIF ! cPassword1 == cPassword2
          session[ "formdata_register" ] := { "user" => cUser, "name" => cName }
          URedirect( "?err=2" )
       ELSEIF dbSeek( cUser, .F. )

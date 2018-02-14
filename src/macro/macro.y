@@ -20,9 +20,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -165,7 +165,7 @@
    } valDouble;
    struct
    {
-      long     date;    /* to hold julian date */
+      long     date;    /* to hold Julian date */
       long     time;    /* to hold milliseconds */
    } valTimeStamp;
 }
@@ -188,9 +188,9 @@ extern void yyerror( PHB_MACRO, const char * );    /* parsing error management f
 %token EPSILON
 
 /*the lowest precedence*/
-/*postincrement and postdecrement*/
+/*post-increment and post-decrement*/
 %left   POST
-/*assigment - from right to left*/
+/*assignment - from right to left*/
 %right  INASSIGN
 %right  PLUSEQ MINUSEQ
 %right  MULTEQ DIVEQ MODEQ
@@ -207,7 +207,7 @@ extern void yyerror( PHB_MACRO, const char * );    /* parsing error management f
 %right  '*' '/' '%'
 %right  POWER
 %right  UNARY
-/*preincrement and predecrement*/
+/*pre-increment and pre-decrement*/
 %right  PRE
 /*special operators*/
 %right  ALIASOP '&' '@'
@@ -780,7 +780,7 @@ static PHB_EXPR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 {
    PHB_EXPR pExpr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprNew(%p,%i)", HB_COMP_PARAM, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprNew(%p,%i)", ( void * ) HB_COMP_PARAM, iType ) );
 
    pExpr = hb_macroExprAlloc( HB_COMP_PARAM );
    pExpr->ExprType = iType;

@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,14 +49,17 @@
 
 HB_FUNC( CTOBIT )
 {
-   HB_SIZE nString = hb_parclen( 1 ), nPattern, n;
+   HB_SIZE nString = hb_parclen( 1 );
    int iResult = 0;
 
    if( nString > 0 )
    {
-      nPattern = hb_parclen( 2 );
+      HB_SIZE nPattern = hb_parclen( 2 );
+
       if( nPattern >= 1 && nPattern <= 16 )
       {
+         HB_SIZE n;
+
          const char * pszString = hb_parc( 1 ),
                     * pszPattern = hb_parc( 2 );
 
@@ -101,7 +104,7 @@ HB_FUNC( BITTOC )
       {
          while( nPattern-- > 0 )
          {
-            *--pszResult = iValue & 1 ? pszPattern[ nPattern ] : ' ';
+            *--pszResult = ( iValue & 1 ) ? pszPattern[ nPattern ] : ' ';
             ++iLen;
             iValue >>= 1;
          }

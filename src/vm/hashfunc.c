@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,13 +54,14 @@
 
 HB_FUNC( HB_HASH )
 {
-   int iPCount = hb_pcount(), iParam;
+   int iPCount = hb_pcount();
 
    if( iPCount & 1 )
       hb_errRT_BASE( EG_BOUND, 1131, NULL, hb_langDGetErrorDesc( EG_ARRDIMENSION ), HB_ERR_ARGS_BASEPARAMS );
    else
    {
       PHB_ITEM pHash = hb_hashNew( NULL );
+      int iParam;
       for( iParam = 1; iParam <= iPCount; iParam += 2 )
       {
          PHB_ITEM pKey = hb_param( iParam, HB_IT_HASHKEY );
@@ -139,6 +140,35 @@ HB_FUNC( HB_HGETDEF )
          PHB_ITEM pDefault = hb_param( 3, HB_IT_ANY );
          if( pDefault )
             hb_itemReturn( pDefault );
+      }
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 1123, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_HSETDEF )
+{
+   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
+   PHB_ITEM pKey = hb_param( 2, HB_IT_HASHKEY );
+
+   if( pHash && pKey )
+   {
+      PHB_ITEM pDefault = hb_param( 3, HB_IT_ANY ), pDest;
+      int iFlags = hb_hashGetFlags( pHash );
+
+      if( ( iFlags & HB_HASH_AUTOADD_ACCESS ) == 0 )
+         hb_hashSetFlags( pHash, HB_HASH_AUTOADD_ACCESS );
+
+      pDest = hb_hashGetItemPtr( pHash, pKey, HB_HASH_AUTOADD_ACCESS );
+
+      if( ( iFlags & HB_HASH_AUTOADD_ACCESS ) == 0 )
+         hb_hashClearFlags( pHash, HB_HASH_AUTOADD_ACCESS );
+
+      if( pDest )
+      {
+         if( pDefault && ! hb_itemTypeCmp( pDest, pDefault ) )
+            hb_itemCopy( pDest, pDefault );
+         hb_itemReturn( pDest );
       }
    }
    else
@@ -377,10 +407,11 @@ HB_FUNC( HB_HMERGE )
 {
    PHB_ITEM pDest = hb_param( 1, HB_IT_HASH );
    PHB_ITEM pSource = hb_param( 2, HB_IT_HASH );
-   PHB_ITEM pAction = hb_param( 3, HB_IT_EVALITEM | HB_IT_NUMERIC );
 
    if( pDest && pSource )
    {
+      PHB_ITEM pAction = hb_param( 3, HB_IT_EVALITEM | HB_IT_NUMERIC );
+
       if( pAction && HB_IS_EVALITEM( pAction ) )
       {
          HB_SIZE nLen = hb_hashLen( pSource ), nPos = 0;
@@ -690,12 +721,14 @@ HB_FUNC( HB_HSORT )
 HB_FUNC( HB_HCASEMATCH )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
 
    if( pHash )
    {
+      PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
       int iFlags = hb_hashGetFlags( pHash );
+
       hb_retl( ( iFlags & HB_HASH_IGNORECASE ) == 0 );
+
       if( pValue )
       {
          if( hb_itemGetL( pValue ) )
@@ -720,12 +753,14 @@ HB_FUNC( HB_HCASEMATCH )
 HB_FUNC( HB_HBINARY )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
 
    if( pHash )
    {
+      PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
       int iFlags = hb_hashGetFlags( pHash );
+
       hb_retl( ( iFlags & HB_HASH_BINARY ) != 0 );
+
       if( pValue )
       {
          if( hb_itemGetL( pValue ) )
@@ -750,10 +785,10 @@ HB_FUNC( HB_HBINARY )
 HB_FUNC( HB_HAUTOADD )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL | HB_IT_NUMERIC );
 
    if( pHash )
    {
+      PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL | HB_IT_NUMERIC );
       int iOldFlags = hb_hashGetFlags( pHash ) & HB_HASH_AUTOADD_MASK;
 
       hb_retni( iOldFlags );
@@ -788,12 +823,14 @@ HB_FUNC( HB_HAUTOADD )
 HB_FUNC( HB_HKEEPORDER )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
 
    if( pHash )
    {
+      PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
       int iFlags = hb_hashGetFlags( pHash );
+
       hb_retl( ( iFlags & HB_HASH_KEEPORDER ) != 0 );
+
       if( pValue )
       {
          if( hb_itemGetL( pValue ) )

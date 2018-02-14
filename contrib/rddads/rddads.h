@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,6 +44,8 @@
  *
  */
 
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapirdd.h"
 
 #if defined( HB_OS_WIN )
@@ -65,7 +67,7 @@
 
 #include "ace.h"
 
-/* Autodetect ACE version. */
+/* Auto-detect ACE version. */
 #if   defined( ADS_ROOT_DD_ALIAS )
    #define _ADS_LIB_VERSION  1110 /* or upper */
 #elif defined( ADS_GET_FORMAT_WEB )
@@ -112,23 +114,18 @@ HB_EXTERN_BEGIN
 UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8 * pucFileName );
 #endif
 
-/*
- *  ADS WORKAREA
- *  --------
- *  The Workarea Structure of Advantage Database Server RDD
- *
- */
+/* ADS WORKAREA
+   The Workarea Structure of Advantage Database Server RDD */
 
 typedef struct _ADSAREA_
 {
    AREA area;
 
-   /*
-    *  ADS's additions to the workarea structure
+   /* ADS's additions to the workarea structure
     *
-    *  Warning: The above section MUST match WORKAREA exactly!  Any
-    *  additions to the structure MUST be added below, as in this
-    *  example.
+    * Warning: The above section MUST match WORKAREA exactly!  Any
+    * additions to the structure MUST be added below, as in this
+    * example.
     */
 
    LPDBRELINFO lpdbPendingRel;    /* Pointer to parent rel struct */
@@ -197,8 +194,8 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
 
 #ifdef ADS_USE_OEM_TRANSLATION
    extern HB_BOOL hb_ads_bOEM;
-   extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE ulLen );
-   extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE ulLen );
+   extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE nLen );
+   extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE nLen );
    extern void    hb_adsOemAnsiFree( char * pcString );
 
    /* NOTE: Undocumented ACE function. */

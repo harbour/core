@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -158,16 +158,14 @@ PHB_EXPR hb_compExprReduceMod( PHB_EXPR pSelf, HB_COMP_DECL )
          default:
             if( HB_SUPPORT_HARBOUR )
             {
-               double dValue, dDivisor;
-
-               dDivisor = pRight->value.asNum.NumType == HB_ET_LONG ?
-                          ( double ) pRight->value.asNum.val.l :
-                          pRight->value.asNum.val.d;
+               double dDivisor = pRight->value.asNum.NumType == HB_ET_LONG ?
+                                 ( double ) pRight->value.asNum.val.l :
+                                 pRight->value.asNum.val.d;
                if( dDivisor )
                {
-                  dValue = pLeft->value.asNum.NumType == HB_ET_LONG ?
-                           ( double ) pLeft->value.asNum.val.l :
-                           pLeft->value.asNum.val.d;
+                  double dValue = pLeft->value.asNum.NumType == HB_ET_LONG ?
+                                  ( double ) pLeft->value.asNum.val.l :
+                                  pLeft->value.asNum.val.d;
                   pSelf->value.asNum.val.d = fmod( dValue, dDivisor );
                   pSelf->value.asNum.bWidth = HB_DEFAULT_WIDTH;
                   pSelf->value.asNum.bDec = HB_DEFAULT_DECIMALS;
@@ -986,7 +984,7 @@ PHB_EXPR hb_compExprReduceIN( PHB_EXPR pSelf, HB_COMP_DECL )
       /* Both arguments are literal strings
        */
 
-      /* NOTE: If macro substitiution is not didabled (-kM compiler
+      /* NOTE: If macro substitution is not disabled (-kM compiler
        *       switch) then we cannot reduce also strings which
        *       have macro operator '&'
        */
@@ -1004,7 +1002,7 @@ PHB_EXPR hb_compExprReduceIN( PHB_EXPR pSelf, HB_COMP_DECL )
           *       But this bug exist only in compiler and CA-Cl*pper macro
           *       compiler does not have optimizer. This bug is replicated
           *       by us only when Harbour extensions in compiler (-kh) are
-          *       not enabled f.e. in strict Clipper cmpatible mode (-kc)
+          *       not enabled f.e. in strict Clipper compatible mode (-kc)
           *       [druzus]
           */
          if( pLeft->nLength == 0 )
@@ -1055,7 +1053,7 @@ PHB_EXPR hb_compExprReduceNE( PHB_EXPR pSelf, HB_COMP_DECL )
 
          case HB_ET_STRING:
             /* NOTE: the result depends on SET EXACT setting then it
-             * cannot be optimized except the case when NULL string are
+             * cannot be optimized except the case when null strings are
              * compared - "" != "" is always HB_FALSE regardless of EXACT
              * setting
              */
@@ -1575,10 +1573,10 @@ PHB_EXPR hb_compExprReduceEQ( PHB_EXPR pSelf, HB_COMP_DECL )
          case HB_ET_STRING:
             /* NOTE: when not exact comparison (==) is used
              * the result depends on SET EXACT setting then it
-             * cannot be optimized except the case when NULL string are
+             * cannot be optimized except the case when null strings are
              * compared - "" = "" is always TRUE regardless of EXACT
              * setting.
-             * If macro substitiution is not didabled (-kM compiler
+             * If macro substitution is not disabled (-kM compiler
              * switch) then we cannot reduce also strings which
              * have macro operator '&'
              */
@@ -1899,8 +1897,8 @@ PHB_EXPR hb_compExprReduceIIF( PHB_EXPR pSelf, HB_COMP_DECL )
          /* store the TRUE expression as a result of reduction
           */
          pSelf = pExpr;
-         pExpr = pExpr->pNext;       /* skip to HB_FALSE expression */
-         HB_COMP_EXPR_FREE( pExpr ); /* delete HB_FALSE expr */
+         pExpr = pExpr->pNext;       /* skip to FALSE expression */
+         HB_COMP_EXPR_FREE( pExpr ); /* delete FALSE expression */
          pSelf->pNext = NULL;
       }
       else
@@ -1917,10 +1915,10 @@ PHB_EXPR hb_compExprReduceIIF( PHB_EXPR pSelf, HB_COMP_DECL )
           */
          pSelf->value.asList.pExprList = NULL;
          HB_COMP_EXPR_FREE( pSelf );
-         /* store the HB_FALSE expression as a result of reduction
+         /* store the FALSE expression as a result of reduction
           */
          pSelf = pExpr->pNext;
-         HB_COMP_EXPR_FREE( pExpr );      /* delete TRUE expr */
+         HB_COMP_EXPR_FREE( pExpr );      /* delete TRUE expression */
          pSelf->pNext = NULL;
       }
 
@@ -1981,17 +1979,18 @@ HB_BOOL hb_compExprReduceAT( PHB_EXPR pSelf, HB_COMP_DECL )
    PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
    PHB_EXPR pSub   = pParms->value.asList.pExprList;
    PHB_EXPR pText  = pSub->pNext;
-   PHB_EXPR pReduced;
 
    if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING &&
        ! HB_SUPPORT_USERCP )
    {
+      PHB_EXPR pReduced;
+
       /* NOTE: CA-Cl*pper has a bug in At( "", cText ) compile time
-       *       optimization and always set 1 as result in such cses.
+       *       optimization and always set 1 as result in such cases.
        *       This bug exist only in compiler and CA-Cl*pper macro
        *       compiler does not have optimizer. This bug is replicated
        *       by us only when Harbour extensions in compiler (-kh) are
-       *       not enabled f.e. in strict Clipper cmpatible mode (-kc)
+       *       not enabled f.e. in strict Clipper compatible mode (-kc)
        *       [druzus]
        */
       if( pSub->nLength == 0 )
@@ -2042,12 +2041,12 @@ HB_BOOL hb_compExprReduceCHR( PHB_EXPR pSelf, HB_COMP_DECL )
       /* NOTE: CA-Cl*pper's compiler optimizer will be wrong for those
        *       Chr() cases where the passed parameter is a constant which
        *       can be divided by 256 but it's not zero, in this case it
-       *       will return an empty string instead of a Chr(0). [vszakats]
+       *       will return an empty string instead of a Chr( 0 ). [vszakats]
        *
        *       But this bug exist only in compiler and CA-Cl*pper macro
        *       compiler does not have optimizer. This bug is replicated
        *       by us only when Harbour extensions in compiler (-kh) are
-       *       not enabled f.e. in strict Clipper cmpatible mode (-kc)
+       *       not enabled f.e. in strict Clipper compatible mode (-kc)
        *       [druzus]
        */
 
@@ -2121,7 +2120,7 @@ HB_BOOL hb_compExprReduceLEN( PHB_EXPR pSelf, HB_COMP_DECL )
    PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
    PHB_EXPR pArg = pParms->value.asList.pExprList;
 
-   /* TOFIX: do not optimize when array/hash args have user expressions */
+   /* FIXME: do not optimize when array/hash args have user expressions */
    if( ( pArg->ExprType == HB_ET_STRING && ! HB_SUPPORT_USERCP ) ||
        pArg->ExprType == HB_ET_ARRAY ||
        pArg->ExprType == HB_ET_HASH )
@@ -2152,7 +2151,7 @@ HB_BOOL hb_compExprReduceEMPTY( PHB_EXPR pSelf, HB_COMP_DECL )
 
       case HB_ET_ARRAY:
       case HB_ET_HASH:
-         /* TOFIX: do not optimize when array/hash args have user expressions */
+         /* FIXME: do not optimize when array/hash args have user expressions */
          fResult = pArg->nLength == 0;
          break;
 

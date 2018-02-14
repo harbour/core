@@ -914,12 +914,12 @@ return
    METHOD Notifier:init
       ::aQueue := {}
       ::oSignal := Signal():new()
-      RETURN self
+      RETURN Self
 
    METHOD Notifier:notify( xValue )
       AAdd( ::aQueue, xValue )
       ::oSignal:signal()
-      RETURN self
+      RETURN Self
 
    METHOD Notifier:subscribe()
       LOCAL xResult

@@ -16,7 +16,7 @@ CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_HOST_INC)
 
-# uncomment this if you want to force creating 64bit binaries
+# uncomment this if you want to force creating 64-bit binaries
 #CFLAGS += -maix64
 #LDFLAGS += -maix64 -Wl,-b64
 #DFLAGS += -maix64 -Wl,-b64
@@ -73,12 +73,12 @@ AR_RULE = ( $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) rc $(LIB_DIR)/$@ $(^
 
 DY := $(CC)
 DFLAGS += -shared -Wl,-G $(LIBPATHS)
-# TOFIX: CHECKME, there was space between -o and output name
+# FIXME: CHECKME, there was space between -o and output name
 #DY_OUT := -o$(subst x,x, )
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 #define dynlib_object
 #   @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
 

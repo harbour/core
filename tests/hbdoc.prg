@@ -2,7 +2,6 @@
  * HBDOC reader test
  *
  * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
- *
  */
 
 #include "directry.ch"

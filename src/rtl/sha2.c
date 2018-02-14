@@ -1,7 +1,7 @@
 /*
  * FIPS 180-2 SHA-224/256/384/512 implementation
- * Last update: 02/02/2007
- * Issue date:  04/30/2005
+ * Last update: 2007-02-02
+ * Issue date:  2005-04-30
  *
  * Copyright (C) 2005, 2007 Olivier Gay <olivier.gay@a3.epfl.ch>
  * All rights reserved.

@@ -1,14 +1,14 @@
 /*
- * demonstration code for alternative RDD IO API which uses own
- *    very simple TCP/IP file server with RPC support
- *    All files which names starts 'net:' are redirected to this API.
- *    This is code for simple MT server which is activated by:
- *       netio_MTServer( [<nPort>], [<cIfAddr>], [<cRootDir>], [<xRPC>],
- *                       [<cPasswd>], [<nCompressionLevel>], [<nStrategy>],
- *                       [<sSrvFunc>] )
- *                                              -> <pListenSocket> | NIL
- *    and can be stopped by:
- *       netio_ServerStop( <pListenSocket>, .T. )
+ * Demonstration code for alternative RDD IO API which uses own
+ * very simple TCP/IP file server with RPC support
+ * All files which names starts 'net:' are redirected to this API.
+ * This is code for simple MT server which is activated by:
+ *    netio_MTServer( [<nPort>], [<cIfAddr>], [<cRootDir>], [<xRPC>],
+ *                    [<cPasswd>], [<nCompressionLevel>], [<nStrategy>],
+ *                    [<sSrvFunc>] )
+ *                                           --> <pListenSocket> | NIL
+ * and can be stopped by:
+ *    netio_ServerStop( <pListenSocket>, .T. )
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -23,9 +23,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -109,7 +109,7 @@ STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, sSrvFunc, ... )
 
    LOCAL pConnectionSocket
 
-   WHILE .T.
+   DO WHILE .T.
       pConnectionSocket := netio_Accept( pListenSocket,, ... )
       IF Empty( pConnectionSocket )
          EXIT

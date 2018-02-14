@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,10 +48,10 @@
          the Ukrainian alphabet and uses non-cyrillic
          versions for another two (Іі), because the
          originals cannot be encoded in CP-866:
-           Ґ - U+0490 - http://codepoints.net/U+0490
-           ґ - U+0491 - http://codepoints.net/U+0491
-           І - U+0406 - http://codepoints.net/U+0406
-           і - U+0456 - http://codepoints.net/U+0456
+           Ґ - U+0490 - https://codepoints.net/U+0490
+           ґ - U+0491 - https://codepoints.net/U+0491
+           І - U+0406 - https://codepoints.net/U+0406
+           і - U+0456 - https://codepoints.net/U+0456
          [druzus/vszakats] */
 
 #define HB_CP_ID        UA866

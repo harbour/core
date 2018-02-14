@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -43,8 +43,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
-#include "hbapi.h"
 
 /* These functions are only for compatibility with existing
  * xHarbour code. Harbour does not emulate associative arrays by
@@ -79,7 +77,7 @@ static HB_BOOL s_isHashAA( PHB_ITEM pHash )
    return ( hb_hashGetFlags( pHash ) & HB_HASH_KEEPORDER ) != 0;
 }
 
-/* haAGetKeyAt( <hValue>, <nPos> ) -> <value> */
+/* haAGetKeyAt( <hValue>, <nPos> ) --> <value> */
 HB_FUNC( HAAGETKEYAT )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -99,7 +97,7 @@ HB_FUNC( HAAGETKEYAT )
    }
 }
 
-/* haAGetValueAt( <hValue>, <nPos> ) -> <value> */
+/* haAGetValueAt( <hValue>, <nPos> ) --> <value> */
 HB_FUNC( HAAGETVALUEAT )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -119,7 +117,7 @@ HB_FUNC( HAAGETVALUEAT )
    }
 }
 
-/* haASetValueAt( <hValue>, <nPos>, <value> ) -> NIL */
+/* haASetValueAt( <hValue>, <nPos>, <value> ) --> NIL */
 HB_FUNC( HAASETVALUEAT )
 {
    PHB_ITEM pHash  = hb_param( 1, HB_IT_HASH );
@@ -140,7 +138,7 @@ HB_FUNC( HAASETVALUEAT )
    }
 }
 
-/* haADelAt( <hValue>, <nPos> ) -> NIL */
+/* haADelAt( <hValue>, <nPos> ) --> NIL */
 HB_FUNC( HAADELAT )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -154,7 +152,7 @@ HB_FUNC( HAADELAT )
       s_errRT_hashBound();
 }
 
-/* haAGetPos( <hValue>, <xKey> ) -> <nPos> */
+/* haAGetPos( <hValue>, <xKey> ) --> <nPos> */
 HB_FUNC( HAAGETPOS )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -172,7 +170,7 @@ HB_FUNC( HAAGETPOS )
    }
 }
 
-/* haAGetRealPos( <hValue>, <nPos> ) -> <nRealPos> */
+/* haAGetRealPos( <hValue>, <nPos> ) --> <nRealPos> */
 HB_FUNC( HAAGETREALPOS )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -188,7 +186,7 @@ HB_FUNC( HAAGETREALPOS )
       s_errRT_hashArg();
 }
 
-/* HGetVAAPos( <hValue> ) -> <aOrder> */
+/* HGetVAAPos( <hValue> ) --> <aOrder> */
 HB_FUNC( HGETVAAPOS )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
@@ -206,7 +204,7 @@ HB_FUNC( HGETVAAPOS )
       s_errRT_hashArg();
 }
 
-/* HSetAACompatibility( <hValue>, <lAACompat> ) -> <lDone> */
+/* HSetAACompatibility( <hValue>, <lAACompat> ) --> <lDone> */
 HB_FUNC( HSETAACOMPATIBILITY )
 {
    PHB_ITEM pHash  = hb_param( 1, HB_IT_HASH );
@@ -224,7 +222,7 @@ HB_FUNC( HSETAACOMPATIBILITY )
       s_errRT_hashArg();
 }
 
-/* HGetAACompatibility( <hValue> ) -> <lAACompat> */
+/* HGetAACompatibility( <hValue> ) --> <lAACompat> */
 HB_FUNC( HGETAACOMPATIBILITY )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );

@@ -2,6 +2,8 @@
  * Header file for Class commands
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
+ * Copyright 2000-07 JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com> (Class(y), TopClass and Visual Object compatibility, multiple inheritance)
+ * Copyright 2000-08-2001 JF. Lefebvre <jfl@mafact.com> (Scoping, Delegating, DATA Shared, Support of 10 Chars limits)
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    most of rules rewritten
  *
@@ -16,9 +18,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,22 +48,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2000 ( ->07/2000 ) JF. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
- *    Support for Class(y), TopClass and Visual Object compatibility
- *    Support for MI (multiple inheritance),
-
- * Copyright 2000-2001 ( 08/2000-> ) JF. Lefebvre <jfl@mafact.com>
- *    Scoping (Protect, Hidden and Readonly),
- *    Delegating, DATA Shared
- *    Support of 10 Chars limits
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #ifndef HB_CLASS_CH_
 #define HB_CLASS_CH_
 
@@ -82,7 +68,7 @@
 
 /* There is also two compatibility define you can use */
 /* HB_CLS_NOTOBJECT which IF DEFINED, disable the auto inherit of HBObject */
-/* (which in fact also disable the classy compatibility :new(...) => :Init(...)  */
+/* (which in fact also disable the classy compatibility :new(...) => :Init(...) */
 /* HB_CLS_NOAUTOINIT which disable the (VO like) AutoInit for Logical, Numeric, */
 /* Date and Timestamp when not specifically initiated */
 /* These two are disabled by default */
@@ -279,7 +265,7 @@ DECLARE HBClass ;
       local Self AS CLASS <ClassName> := QSelf() AS CLASS <ClassName>
 
 #xcommand __HB_CLS_DECLARE_METHOD <MethodName> <!ClassName!> => ;
-      #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
+   #xcommand METHOD \<type: FUNCTION, PROCEDURE> <MethodName> CLASS <ClassName> _CLASS_IMPLEMENTATION_ => ;
          DECLARED METHOD \<type> <MethodName> CLASS <ClassName>
 
 #xcommand __HB_CLS_DECLARE_METHOD <!MethodName!> <!ClassName!> => ;

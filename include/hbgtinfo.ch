@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,15 +59,15 @@
 #define HB_GTI_DESKTOPHEIGHT    7   /* Get height of desktop in pixels */
 #define HB_GTI_DESKTOPDEPTH     8   /* Amount of bits used for colors in system */
 #define HB_GTI_COMPATBUFFER     9   /* Use DOS CGA/EGA/VGA character/attribute buffer in SAVE/REST SCREEN */
-#define HB_GTI_KBDSHIFTS        10  /* Keyboard shift/ctrl/alt, caps/num/scroll & winkeys state */
+#define HB_GTI_KBDSHIFTS        10  /* Keyboard shift/ctrl/alt, caps/num/scroll/windows keys' state */
 #define HB_GTI_KBDSPECIAL       11  /* This will get/set the status of the top row
                                        shift state handling. Enable to correct a
                                        documented keyboard handling bug under Win9x.
                                        Enable if the caps-lock key affects the top
-                                       row keys.  (Alternate language keys are not
+                                       row keys. (Alternate language keys are not
                                        handled properly by this temporary fix.
                                        Default is disabled. */
-#define HB_GTI_KBDALT           12  /* This will get/set the status of the alt-numpad
+#define HB_GTI_KBDALT           12  /* This will get/set the status of the Alt-NumPad
                                        key handling.
                                        Default is Enabled. */
 #define HB_GTI_ISSCREENPOS      13  /* Is full screen cursor positioning supported by GT driver? */
@@ -79,7 +79,7 @@
 #define HB_GTI_DESKTOPROWS      20  /* Get Size of desktop in character rows */
 #define HB_GTI_DESKTOPCOLS      21  /* Get Size of desktop in character cols */
 #define HB_GTI_FONTWEIGHT       22  /* Get/set the weight of the font used in application */
-#define HB_GTI_FONTQUALITY      23  /* Get/set quality of font rendering in the appl. */
+#define HB_GTI_FONTQUALITY      23  /* Get/set quality of font rendering in the application */
 #define HB_GTI_FONTNAME         24  /* Set-only font name */
 #define HB_GTI_CODEPAGE         25  /* codepage */
 #define HB_GTI_WINTITLE         26  /* title */
@@ -94,11 +94,11 @@
 #define HB_GTI_ESCDELAY         33  /* Get/Set escape key delay */
 
 /* these 2 are used for MaxCol(?) and MaxRow(?) */
-#define HB_GTI_VIEWMAXHEIGHT    34  /* Maximum viewable height:for current mode */
-#define HB_GTI_VIEWMAXWIDTH     35  /* Maximum viewable width:either win or full scrn */
+#define HB_GTI_VIEWMAXHEIGHT    34  /* Maximum viewable height: for current mode */
+#define HB_GTI_VIEWMAXWIDTH     35  /* Maximum viewable width: either window or full screen */
 
-#define HB_GTI_VIEWPORTHEIGHT   36  /* Current viewport height:for current mode */
-#define HB_GTI_VIEWPORTWIDTH    37  /* Current viewport width:either win or full scrn */
+#define HB_GTI_VIEWPORTHEIGHT   36  /* Current viewport height: for current mode */
+#define HB_GTI_VIEWPORTWIDTH    37  /* Current viewport width: either window or full screen */
 
 #define HB_GTI_STDOUTCON        38  /* redirect STDOUT to console */
 #define HB_GTI_STDERRCON        39  /* redirect STDERR to console */
@@ -143,13 +143,15 @@
 #define HB_GTI_MAXIMIZED        66  /* Get/Set Window's Maximized status (supported by: GTWVT) */
 #define HB_GTI_FONTATTRIBUTE    67  /* Get/Set font attribute */
 #define HB_GTI_UNITRANS         68  /* Set translation table for UNICODE characters */
-#define HB_GTI_WINHANDLE        69  /* Get console window low level handle */
+#define HB_GTI_WINHANDLE        69  /* Get console window low-level handle */
 #define HB_GTI_MOUSEPOS_XY      70  /* Get mouse position in pixels */
 #define HB_GTI_DISPIMAGE        71  /* Display image with given name */
 #define HB_GTI_REDRAWMAX        72  /* Maximum number of unchanged neighboring chars in redrawn line */
 #define HB_GTI_RESIZESTEP       73  /* Enable/Disable window resizing steps */
 #define HB_GTI_CLOSEMODE        74  /* Close event: 0 terminate application, >=1 generate HB_K_CLOSE, 2 disable close button */
 #define HB_GTI_MINIMIZED        75  /* Get/Set Window's Minimized status (supported by: GTQTC, GTXWC) */
+#define HB_GTI_QUICKEDIT        76  /* Enable/Disable quick edit mode (supported by: GTWVT) */
+#define HB_GTI_SYSMENUADD       77  /* Add item to window system menu with keycode to generate when selected (supported by: GTWVT) */
 
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
@@ -196,7 +198,7 @@
 #define HB_GTE_RESIZED          5
 #endif
 
-/* Harbour GT Reszing mode constants */
+/* Harbour GT resizing mode constants */
 #define HB_GTI_RESIZEMODE_FONT  0   /* Default */
 #define HB_GTI_RESIZEMODE_ROWS  1
 

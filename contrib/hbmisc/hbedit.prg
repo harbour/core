@@ -1,6 +1,4 @@
-/*
- * Copyright 1999 Ryszard Glab
- */
+/* Copyright 1999 Ryszard Glab */
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -9,14 +7,14 @@
 
 #define EDIT_LOWER      0       // convert to lowercase
 #define EDIT_UPPER      1       // convert to uppercase
-#define EDIT_SAME       2       // no convertion
+#define EDIT_SAME       2       // no conversion
 
-#define EDIT_HARD       13      // hard cariage
+#define EDIT_HARD       13      // hard carriage
 
 #define EDIT_EDIT       .T.     // full edit mode
 #define EDIT_VIEW       .F.     // view only mode
 
-//  The editor structure
+// The editor structure
 //
 #define E_EDIT          1           // pointer returned be ED_NEW
 #define E_TOP           2           // position on the screen
@@ -34,17 +32,16 @@
 
 THREAD STATIC t_nESize := 4096       // default buffer size
 
-//
 // 1993-03-06 19:52
 //
 // nTop, nLeft, nBottom, nRight - position on the screen
 // nLength - the line length
-// cFrame - the frame to be drawed around the editor
+// cFrame - the frame to be drawn around the editor
 // cTitle - comment displayed in upper, left corner
 // cColor - colors used to draw the editor
 // nSize - the size of memory buffer that holds the edited text - the buffer
 //         will not grow at current design
-// nEscape - the character code used as a marker of color highlighing
+// nEscape - the character code used as a marker of color highlighting
 // For example if its value is 126 '~' then the following text:
 // normal text ~2text in bold~1 back to normal text
 // will be displayed with 'text in bold' highlighted using the second
@@ -108,12 +105,10 @@ FUNCTION EditorTitle( oEdit, cTitle )
 
    RETURN _cTitle
 
-//
 // Sets
 // EDIT_EDIT - full edit mode
 // EDIT_VIEW - view only mode (no changes in text are allowed)
 //
-
 FUNCTION EditorMode( oEdit, lMode )
 
    LOCAL _lMode := oEdit[ E_MODE ]
@@ -134,30 +129,24 @@ FUNCTION EditorSize( nSize )
 
    RETURN _nSize
 
-//
 // Appends passed text to the text already stored in editor
 //
-
 PROCEDURE EditorAddText( oEdit, cText )
 
    ed_AddText( oEdit[ E_EDIT ], cText )
 
    RETURN
 
-//
 // Sets new text in editor
 //
-
 PROCEDURE EditorSetText( oEdit, cText )
 
    ed_SetText( oEdit[ E_EDIT ], cText )
 
    RETURN
 
-//
 // Inserts passed text into editor starting from passed line number
 //
-
 PROCEDURE EditorInsText( oEdit, cText, nLine )
 
    IF nLine == NIL
@@ -168,9 +157,8 @@ PROCEDURE EditorInsText( oEdit, cText, nLine )
 
    RETURN
 
-//
 // Retrieves the text from editor
-// nCarret - specifies if soft carriage return (141/10) should be replaced by
+// nCarRet - specifies if soft carriage return (141/10) should be replaced by
 //    hard carriage returns (13/10)
 //
 
@@ -183,38 +171,29 @@ FUNCTION EditorGetText( oEdit, nCarret )
 //
 // Returns the line count stored in editor
 //
-
 FUNCTION EditorLCount( oEdit )
-
    RETURN ed_LCount( oEdit[ E_EDIT ] )
 
-//
 // Returns the specified line of text from the editor
 //
-
 FUNCTION EditorGetLine( oEdit, nLine )
-
    RETURN ed_GetLine( oEdit[ E_EDIT ], nLine )
 
-//
 // Returns the next line of text
 //
 // It can be used:
 // nLCount := EditorLCount( oEdit )
 // cLine := EditorGetLine( oEdit, 1 )
 // FOR i := 2 TO nLCount
-//   cLine := EditorNextLine( oEdit )
+//    cLine := EditorNextLine( oEdit )
 // NEXT
 //
-
 FUNCTION EditorNextLine( oEdit )
-
    RETURN ed_GetNext( oEdit[ E_EDIT ] )
 
-//
 // Edit the specified file
 //
-// xInput - the filename to edit or a handle to a file retrned by FOPEN
+// xInput - the filename to edit or a handle to a file returned by FOpen()
 // cOutput - the name of the file created in 'save' operation
 // nLineLen - the line length
 // nHelp - the index into help subsystem
@@ -266,7 +245,6 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
 
    RETURN lSaved
 
-//
 // Reads a text from a file into the editor
 //
 // oEditor  - existing editor
@@ -274,7 +252,7 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
 // nOffset - the starting offset
 // nLen - the number of characters to read
 // lConv - specifies if some unprintable characters should be converted
-//    (NOTE: it was used to allow display charcters with ASCII code 27 and 26)
+//    (NOTE: it was used to allow display characters with ASCII code 27 and 26)
 //
 
 FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
@@ -282,7 +260,6 @@ FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
    RETURN ed_ReadText( oEditor[ E_EDIT ], nHandle, nOffset, nLen, ;
       iif( lConv == NIL, .T., lConv ) )
 
-//
 // Start the editor
 //
 // oEdit - the editor object
@@ -290,7 +267,6 @@ FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
 // lFrame - specifies if the frame around the editor should be displayed
 // nHelp - the help index into help subsystem
 //
-
 FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 
    LOCAL nRow, nCol := 0, nKey, bKey, oBox, nCursor, nState
@@ -334,13 +310,12 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
       by oEditor[ E_EDIT ] - it is tricky solution to speed access (we
       don't need to pass the editor handle with every ed_*() call
       (Well... this editor was created when AT-286 computers worked in
-      its full glory :)
-   */
+      its full glory :) */
    ed_Config( oEdit[ E_EDIT ], nTop, nLeft, nBottom, nRight, 0, 0 )
 
    DO WHILE .T.
       nRow := ed_Stabilize( oEdit[ E_EDIT ] )    // displays all visible lines
-      // It doesn't uses incremantal stabilization for performance reasons
+      // It doesn't uses incremental stabilization for performance reasons
 
       IF nRow != ed_Row( oEdit[ E_EDIT ] )
          nRow := ed_Row( oEdit[ E_EDIT ] )
@@ -395,7 +370,6 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 
    SetCursor( nCursor )
    RestBox( oBox )
-   // HELPREST.
 
    RETURN lSaved
 

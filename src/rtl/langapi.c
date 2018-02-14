@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -196,7 +196,9 @@ static HB_LANG s_lang_en =
 HB_LANG_ANNOUNCE( EN )
 
 /* Always link in the default language */
-/* HB_LANG_REQUEST( HB_LANG_DEFAULT ); */
+#if 0
+HB_LANG_REQUEST( HB_LANG_DEFAULT );
+#endif
 
 /* NOTE: This is the maximum number of registered languages, later this can be
          made dynamic. */
@@ -334,7 +336,7 @@ void hb_langReleaseAll( void )
 
 HB_BOOL hb_langRegister( PHB_LANG lang )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_langRegister(%p)", lang ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langRegister(%p)", ( const void * ) lang ) );
 
    if( lang )
    {
@@ -365,7 +367,7 @@ PHB_LANG hb_langSelect( PHB_LANG lang )
 {
    PHB_LANG langOld;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_langSelect(%p)", lang ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langSelect(%p)", ( const void * ) lang ) );
 
    langOld = hb_vmLang();
    if( lang )
@@ -483,7 +485,7 @@ HB_FUNC( HB_LANGMESSAGE )
 }
 
 /* hb_langNew( <cNewLangId>, <cNewLangCpId>,
- *             <cLangId>, <cLangCpId> ) -> <lOK>
+ *             <cLangId>, <cLangCpId> ) --> <lOK>
  */
 HB_FUNC( HB_LANGNEW )
 {

@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -119,7 +119,7 @@ HB_FUNC( NTOC )
 {
    char szBuffer[ 256 ], * pszResult = NULL;
    HB_MAXINT nValue = 0;
-   int iBase = hb_parnidef( 2, 10 ), iLen = hb_parni( 3 ), i;
+   int iBase = hb_parnidef( 2, 10 ), iLen = hb_parni( 3 );
 
    if( iLen < 0 || iLen > ( int ) sizeof( szBuffer ) )
       iLen = sizeof( szBuffer );
@@ -127,6 +127,7 @@ HB_FUNC( NTOC )
    if( iBase >= 2 && iBase <= 36 && ct_numParam( 1, &nValue ) )
    {
       HB_MAXUINT uValue = ( HB_MAXUINT ) nValue;
+      int i;
 
       i = iLen == 0 ? ( int ) sizeof( szBuffer ) : iLen;
       do

@@ -1,5 +1,5 @@
 /*
- * IOUSRD - library to create new FILE IO redirectors at prg level
+ * IOUSRD - library to create new FILE IO redirectors at .prg level
  *
  * Copyright 2014 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -751,10 +751,10 @@ HB_FUNC( IOUSR_REGISTER )
       s_errRT_IOUSR( EG_ARG, 1001, "Argument error" );
 }
 
-/* IOUSR_SetError( [<nError> [, <nBase> ]] ) -> <nPrevError> */
+/* IOUSR_SetError( [<nError> [, <nBase> ]] ) --> <nPrevError> */
 HB_FUNC( IOUSR_SETERROR )
 {
-   HB_ERRCODE errCode = hb_fsError();
+   HB_ERRCODE errCodePrev = hb_fsError();
 
    if( HB_ISNUM( 1 ) )
    {
@@ -764,5 +764,5 @@ HB_FUNC( IOUSR_SETERROR )
       hb_fsSetError( errCodeNew );
    }
 
-   hb_retni( errCode );
+   hb_retni( errCodePrev );
 }

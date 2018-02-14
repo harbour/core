@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,40 +47,40 @@
 #ifndef HB_VERX_CH_
 #define HB_VERX_CH_
 
-#define _HB_VER_MAJOR                1  /* int   */
-#define _HB_VER_MINOR                2  /* int   */
-#define _HB_VER_REVISION             3  /* int   */
-#define _HB_VER_LEX                  4  /* char  */
-#define _HB_VER_AS_STRING            5  /* char  */
-#define _HB_PCODE_VER                6  /* int   */
-#define _HB_VER_COMPILER             7  /* char  */
-#define _HB_VER_PLATFORM             8  /* char  */
-#define _HB_VER_BUILD_DATE           9  /* char  */
-#define _HB_VER_BUILD_TIME          10  /* char  */
-#define _HB_VER_LENTRY              11  /* char  */
-#define _HB_VER_CHLCVS              12  /* char  */
-#define _HB_VER_C_USR               13  /* char  */
-#define _HB_VER_L_USR               14  /* char  */
-#define _HB_VER_PRG_USR             15  /* char  */
-#define _HB_EXTENSION               16  /* bool  */
-#define _HB_C52_UNDOC               17  /* bool  */
-#define _HB_C52_STRICT              18  /* bool  */
-#define _HB_COMPAT_C53              19  /* bool  */
-#define _HB_COMPAT_XPP              20  /* bool  */
-#define _HB_COMPAT_VO               21  /* bool  */
-#define _HB_COMPAT_FLAGSHIP         22  /* bool  */
-#define _HB_COMPAT_FOXPRO           23  /* bool  */
-#define _HB_COMPAT_DBASE            24  /* bool  */
-#define _HB_HARBOUR_OBJ_GENERATION  25  /* bool  */
-#define _HB_HARBOUR_STRICT_ANSI_C   26  /* bool  */
-#define _HB_CPLUSPLUS               27  /* bool  */
-#define _HB_HARBOUR_YYDEBUG         28  /* bool  */
-#define _HB_SYMBOL_NAME_LEN         29  /* int   */
-#define _HB_MULTITHREAD             30  /* bool  */
-#define _HB_VM_OPTIMIZATION         31  /* int   */
-#define _HB_LANG_ID                 32  /* char  */
-#define _HB_ARRAY_MODE              33  /* int   */
+#define _HB_VER_MAJOR                1  /* int */
+#define _HB_VER_MINOR                2  /* int */
+#define _HB_VER_REVISION             3  /* int */
+#define _HB_VER_LEX                  4  /* char */
+#define _HB_VER_AS_STRING            5  /* char */
+#define _HB_PCODE_VER                6  /* int */
+#define _HB_VER_COMPILER             7  /* char */
+#define _HB_VER_PLATFORM             8  /* char */
+#define _HB_VER_BUILD_DATE           9  /* char */
+#define _HB_VER_BUILD_TIME          10  /* char */
+#define _HB_VER_LENTRY              11  /* char */
+#define _HB_VER_CHLCVS              12  /* char */
+#define _HB_VER_C_USR               13  /* char */
+#define _HB_VER_L_USR               14  /* char */
+#define _HB_VER_PRG_USR             15  /* char */
+#define _HB_EXTENSION               16  /* bool */
+#define _HB_C52_UNDOC               17  /* bool */
+#define _HB_C52_STRICT              18  /* bool */
+#define _HB_COMPAT_C53              19  /* bool */
+#define _HB_COMPAT_XPP              20  /* bool */
+#define _HB_COMPAT_VO               21  /* bool */
+#define _HB_COMPAT_FLAGSHIP         22  /* bool */
+#define _HB_COMPAT_FOXPRO           23  /* bool */
+#define _HB_COMPAT_DBASE            24  /* bool */
+#define _HB_HARBOUR_OBJ_GENERATION  25  /* bool */
+#define _HB_HARBOUR_STRICT_ANSI_C   26  /* bool */
+#define _HB_CPLUSPLUS               27  /* bool */
+#define _HB_HARBOUR_YYDEBUG         28  /* bool */
+#define _HB_SYMBOL_NAME_LEN         29  /* int */
+#define _HB_MULTITHREAD             30  /* bool */
+#define _HB_VM_OPTIMIZATION         31  /* int */
+#define _HB_LANG_ID                 32  /* char */
+#define _HB_ARRAY_MODE              33  /* int */
 #define _HB_CREDITS                 34  /* array */
-#define _HB_VER_LAST                35  /* last  */
+#define _HB_VER_LAST                35  /* last */
 
 #endif /* HB_VERX_CH_ */

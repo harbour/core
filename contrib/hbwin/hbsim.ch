@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,10 +50,10 @@
 /* Error codes for SIM API */
 #define SIM_E_OK                        0               // This is non standard...
 #define SIM_E_HB_MISC                   -1              // This is non standard...
-#define SIM_E_HB_NOTINITIALIZED         -10             // This is non standard (class tsim not initialized sim)
+#define SIM_E_HB_NOTINITIALIZED         -10             // This is non standard (class wce_Sim not initialized sim)
 #define SIM_E_SIMFAILURE                -100            // SIM failure was detected
 #define SIM_E_SIMBUSY                   -200            // SIM is busy
-#define SIM_E_SIMWRONG                  -300            // Inorrect SIM was inserted
+#define SIM_E_SIMWRONG                  -300            // Incorrect SIM was inserted
 #define SIM_E_NOSIMMSGSTORAGE           -400            // SIM isn't capable of storing messages
 #define SIM_E_SIMTOOLKITBUSY            -500            // SIM Application Toolkit is busy
 #define SIM_E_SIMDOWNLOADERROR          -600            // SIM data download error
@@ -97,7 +97,7 @@
 #define SIM_PBSTORAGE_EMERGENCY         0x00000001      // Emergency dial list
 #define SIM_PBSTORAGE_FIXEDDIALING      0x00000002      // SIM fixed dialing list
 #define SIM_PBSTORAGE_LASTDIALING       0x00000004      // SIM last dialing list
-#define SIM_PBSTORAGE_OWNNUMBERS        0x00000008      // SIM ownnumbers lists
+#define SIM_PBSTORAGE_OWNNUMBERS        0x00000008      // SIM own numbers lists
 #define SIM_PBSTORAGE_SIM               0x00000010      // General SIM Storage
 #define SIM_NUMPBSTORAGES               5               // Number of phonebook storages
 

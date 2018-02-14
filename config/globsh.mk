@@ -1,13 +1,11 @@
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (vszakats.net/harbour) (rework)
-# See COPYING.txt for licensing terms.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
-# ---------------------------------------------------------------
 # See batch docs here:
-#    http://www.computerhope.com/batch.htm
+#    https://www.computerhope.com/batch.htm
 #    http://www.robvanderwoude.com/batchcommands.php
-# ---------------------------------------------------------------
 
 ifneq ($(HB_SHELL),sh)
 
@@ -81,8 +79,8 @@ endif
 
 ifeq ($(HB_SHELL),nt)
 
-# NOTE: According to http://support.microsoft.com/kb/830473
-#       The command line length limit for cmd.exe is 8191 chars
+# NOTE: According to https://support.microsoft.com/kb/830473
+#       The command-line length limit for cmd.exe is 8191 chars
 #       for Windows XP and upper and 2047 for Windows NT and 2000.
 #       This is true for commands which are recognized as shell
 #       commands (by using an internal list). For the rest
@@ -136,7 +134,7 @@ endif
 
 ifeq ($(HB_SHELL),os2)
 
-# NOTE: Maximum size of command line in OS/2 is limited to 1024
+# NOTE: Maximum size of command-line in OS/2 is limited to 1024
 #       characters.
 
 # NOTE: Comment on included OS/2 GNU tools:
@@ -186,9 +184,9 @@ endif
 
 ifeq ($(HB_SHELL),dos)
 
-# NOTE: MS-DOS command line length has a limit of 126 characters.
+# NOTE: MS-DOS command-line length has a limit of 126 characters.
 #       When using DJGPP GNU Make to invoke other DJGPP tools this limit
-#       is about 13KB, as they do special trick to overcome it.
+#       is about 13 kB, as they do special trick to overcome it.
 #       See these DJGPP FAQs:
 #          http://www.delorie.com/djgpp/v2faq/faq16_4.html
 #          http://www.delorie.com/djgpp/v2faq/faq16_5.html

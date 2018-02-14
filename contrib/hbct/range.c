@@ -15,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -58,7 +58,7 @@ HB_FUNC( RANGEREM )
       const unsigned char * pc;
       unsigned char ucChar1, ucChar2;
       HB_SIZE sRetIndex;
-      int iMode, iBool;
+      int iMode;
 
       if( HB_ISCHAR( 1 ) )
          ucChar1 = *( ( const unsigned char * ) hb_parc( 1 ) );
@@ -76,7 +76,8 @@ HB_FUNC( RANGEREM )
       sRetIndex = 0;
       for( pc = ( const unsigned char * ) pcString; pc < ( const unsigned char * ) pcString + sStrLen; pc++ )
       {
-         iBool = ( ( *pc ) >= ucChar1 );
+         int iBool = ( ( *pc ) >= ucChar1 );
+
          if( iMode )
             iBool |= ( ( *pc ) <= ucChar2 );
          else
@@ -125,7 +126,7 @@ HB_FUNC( RANGEREPL )
       const unsigned char * pc;
       unsigned char ucChar1, ucChar2, ucReplace;
       HB_SIZE sRetIndex;
-      int iMode, iBool;
+      int iMode;
 
       if( HB_ISCHAR( 1 ) )
          ucChar1 = *( ( const unsigned char * ) hb_parc( 1 ) );
@@ -148,7 +149,8 @@ HB_FUNC( RANGEREPL )
       sRetIndex = 0;
       for( pc = ( const unsigned char * ) pcString; pc < ( const unsigned char * ) pcString + sStrLen; pc++ )
       {
-         iBool = ( ( *pc ) >= ucChar1 );
+         int iBool = ( ( *pc ) >= ucChar1 );
+
          if( iMode )
             iBool |= ( ( *pc ) <= ucChar2 );
          else
@@ -169,7 +171,7 @@ HB_FUNC( RANGEREPL )
       hb_storclen( pcRet, sStrLen, 3 );
 
       if( iNoRef )
-         /* Contrary to the official documentation, RANGREPL() returns NIL instead of .F.
+         /* Contrary to the official documentation, RangeRepl() returns NIL instead of .F.
           * in this situation. If the string is not passed by reference, it returns the
           * string regardless of iNoRef. */
          hb_ret();

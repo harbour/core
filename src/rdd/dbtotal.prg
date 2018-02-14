@@ -1,5 +1,5 @@
 /*
- * __DBTOTAL FUNCTION
+ * __dbTotal() function
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,8 +54,8 @@
          - won't crash with "No exported method: EVAL" if xKey is not
            block and table is not indexed. */
 
-FUNCTION __dbTotal( cFile, xKey, aFields,;
-                    xFor, xWhile, nNext, nRec, lRest,;
+FUNCTION __dbTotal( cFile, xKey, aFields, ;
+                    xFor, xWhile, nNext, nRec, lRest, ;
                     cRDD, nConnection, cCodePage )
 
    LOCAL nOldArea
@@ -74,23 +74,25 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    LOCAL oError
    LOCAL lError := .F.
 
-   IF HB_ISEVALITEM( xWhile )
+   DO CASE
+   CASE HB_ISEVALITEM( xWhile )
       bWhileBlock := xWhile
       lRest := .T.
-   ELSEIF HB_ISSTRING( xWhile ) .AND. ! Empty( xWhile )
+   CASE HB_ISSTRING( xWhile ) .AND. ! Empty( xWhile )
       bWhileBlock := hb_macroBlock( xWhile )
       lRest := .T.
-   ELSE
+   OTHERWISE
       bWhileBlock := {|| .T. }
-   ENDIF
+   ENDCASE
 
-   IF HB_ISEVALITEM( xFor )
+   DO CASE
+   CASE HB_ISEVALITEM( xFor )
       bForBlock := xFor
-   ELSEIF HB_ISSTRING( xFor ) .AND. ! Empty( xFor )
+   CASE HB_ISSTRING( xFor ) .AND. ! Empty( xFor )
       bForBlock := hb_macroBlock( xFor )
-   ELSE
+   OTHERWISE
       bForBlock := {|| .T. }
-   ENDIF
+   ENDCASE
 
    __defaultNIL( @lRest, .F. )
 

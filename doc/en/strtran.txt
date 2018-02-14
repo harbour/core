@@ -1,0 +1,54 @@
+/* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      StrTran()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Translate substring value with a main string
+   $SYNTAX$
+      StrTran( <cString>, <cLocString>, [<cRepString>], [<nPos>],
+               [<nOccurrences>] ) --> cReturn
+   $ARGUMENTS$
+      <cString>     The main string to search
+
+      <cLocString>  The string to locate in the main string
+
+      <cRepString>  The string to replace the <cLocString>
+
+      <nPos>        The first occurrence to be replaced
+
+      <nOccurrences> Number of occurrence to replace
+   $RETURNS$
+      <cReturn>  Formatted string
+   $DESCRIPTION$
+      This function searches for any occurrence of <cLocString> in <cString>
+      and replaces it with <cRepString>. If <cRepString> is not specified, a
+      NULL byte will replace <cLocString>.
+
+      If <nPos> is used, its value defines the first occurrence to be
+      replaced. The default value is 1. Additionally, if used, the value of
+      <nOccurrences> tell the function how many occurrences of <cLocString>
+      in <cString> are to the replaced. The default of <nOccurrences> is
+      all occurrences.
+   $EXAMPLES$
+      ? StrTran( "Harbour  Power", "  ", " " )  // --> "Harbour Power"
+      ? StrTran( "Harbour  Power  The Future  of  xBase", "  ", " " , , 2 )
+        // --> "Harbour Power The future  of  xBase"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Libraty is rtl
+   $SEEALSO$
+      SubStr(), At()
+   $END$
+ */

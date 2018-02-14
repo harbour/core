@@ -1,6 +1,4 @@
-/*
- * Copyright 1999 {list of individual authors and e-mail addresses}
- */
+/* Copyright 1999 {list of individual authors and e-mail addresses} */
 
 #include "hbapi.h"
 
@@ -16,7 +14,7 @@ static const char * hb_strtoken( const char * szText,
 
    HB_TRACE( HB_TR_DEBUG,
              ( "hb_strtoken(%s, %" HB_PFS "d, %" HB_PFS "d, %d, %p)", szText, nText, nIndex,
-               ( int ) cDelimiter, pnLen ) );
+               ( int ) cDelimiter, ( void * ) pnLen ) );
 
    do
    {
@@ -57,7 +55,7 @@ static const char * hb_strtoken( const char * szText,
    }
 }
 
-/* returns the nth occurence of a substring within a token-delimited string */
+/* returns the nth occurrence of a substring within a token-delimited string */
 HB_FUNC( STRTOKEN )
 {
    const char * szText;

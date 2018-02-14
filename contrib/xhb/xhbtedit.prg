@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,45 +45,38 @@
  */
 
 /*
- *               Pritpal Bedi <pritpal@vouchcac.com>
- *                            2004-02-28
+ * Teditor Fix: v3.0beta 2004-04-17
+ * Copyright 2004 Giancarlo Niccolai <antispam /at/ niccolai.ws>
  *
- *   Suppor for Clipper's MemoEdit( ..., nTextBufferRow, nTextBufferCol, nWindowRow, nWindowCol )
- *   Rearrangement of code in logical sections.
- *   Reformatting of code to be more readable.
- *   Navigation code broken into small methods for easy mainainability on lines with TBrowse()
- *
+ * Minimal revision for proper working (especially with word wrapping).
+ * Fixed many functions
+ * Added GotoCol() and GotoPos() to goto a logical column or position;
+ * they translate this movement in a adequate ::SetPos call.
  */
 
 /*
+ * Pritpal Bedi <pritpal@vouchcac.com> 2004-02-28
  *
- * Teditor Fix: v3.0beta 2004-04-17
- * Copyright 2004 Giancarlo Niccolai <antispam /at/ niccolai /dot/ ws>
- *
- * Minimal revision for proper working (expecially with word warping).
- * Fixed many funtions
- * Added GotoCol() and GotoPos() to goto a logical column or position;
- * they translate this movement in a adequate ::SetPos call.
- *
- * Modifications are based upon the following source file:
+ * Support for Cl*pper's MemoEdit( ..., nTextBufferRow, nTextBufferCol, nWindowRow, nWindowCol )
+ * Rearrangement of code in logical sections.
+ * Reformatting of code to be more readable.
+ * Navigation code broken into small methods for easy maintainability on lines with TBrowse()
  */
 
 /*
  * Teditor Fix: v2.0 2003-11-17
  * Copyright 2003 Lance Owens <servant@gnosis.org>
  *
- * This Revised Version has a completely rewritten edit method key commands, with dynamic line and paragraph reformatting.
+ * This revised version has a completely rewritten edit method key commands, with dynamic line and paragraph reformatting.
  * Includes a fix for the bugs in TEditor key processing that previously caused array errors
  *
- * Note: -- If using the paste function to enter text, increase size of keyboard buffer to 2048 or 4096!
- *          Otherwise buffer will overrun -- it takes some processor time to do all the dynamic reformatting
- *       -- SetCursor() is used to change cursor between insert and overwrite. Modify if desired....
- *          This will need to be cleared to return to original cursor within MemoEdit()!!
- *       -- K_LEFT is set to exit MemoEdit() in read-only mode, in addition to the standard exit keys ESC.
- *       -- __SoftCR() "soft CR" inserted by Clipper MemoEdit() is automatically removed when encountered in text
- *       -- Color persistence problems in previous version corrected by taking SetColor() at Method New file call.
- *
- * Modifications are based upon the following source file:
+ * NOTE: - If using the paste function to enter text, increase size of keyboard buffer to 2048 or 4096!
+ *         Otherwise buffer will overrun -- it takes some processor time to do all the dynamic reformatting
+ *       - SetCursor() is used to change cursor between insert and overwrite. Modify if desired....
+ *         This will need to be cleared to return to original cursor within MemoEdit()!!
+ *       - K_LEFT is set to exit MemoEdit() in read-only mode, in addition to the standard exit keys ESC.
+ *       - __SoftCR() "soft CR" inserted by Cl*pper MemoEdit() is automatically removed when encountered in text
+ *       - Color persistence problems in previous version corrected by taking SetColor() at Method New file call.
  */
 
 #include "hbclass.ch"
@@ -2990,7 +2983,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    ENDDO
 
    DO WHILE nRetLen < ncSLen
-      /* TOFIX: Note that hb_tokenGet() is not able to cope with delimiters longer than one char */
+      /* FIXME: Note that hb_tokenGet() is not able to cope with delimiters longer than one char */
       // Dos - OS/2 - Windows have CRLF as EOL
       IF nEOLLen > 1
          cLine := StrTran( hb_tokenPtr( @cString, @nTokPos, cEOL ), SubStr( cEOL, 2 ) )
@@ -3095,4 +3088,4 @@ METHOD BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
    RETURN NIL
 
 STATIC FUNCTION __SoftCR()
-   RETURN hb_BChar( 141 ) + Chr( 10 ) /* TOFIX: Won't work in UTF-8 mode */
+   RETURN hb_BChar( 141 ) + Chr( 10 ) /* FIXME: Won't work in UTF-8 mode */

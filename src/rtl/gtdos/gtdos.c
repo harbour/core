@@ -2,6 +2,26 @@
  * Video subsystem for DOS compilers
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ *    hb_gt_CtrlBrkHandler()
+ *    hb_gt_CtrlBrkRestore()
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_gt_ReadKey()
+ * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
+ *    vmode12x40()
+ *    vmode25x40()
+ *    vmode28x40()
+ *    vmode50x40()
+ *    vmode12x80()
+ *    vmode25x80()
+ *    vmode28x80()
+ *    vmode43x80()
+ *    vmode50x80()
+ *    hb_gt_SetMode()
+ *    hb_gt_GetDisplay()
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ * Copyright 1999 Luiz Rafael Culik <Culik@sl.conex.net>
+ *    Harbour Mouse Subsystem for DOS
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +34,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,40 +64,7 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *    hb_gt_CtrlBrkHandler()
- *    hb_gt_CtrlBrkRestore()
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_gt_ReadKey()
- *
- * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
- *    vmode12x40()
- *    vmode25x40()
- *    vmode28x40()
- *    vmode50x40()
- *    vmode12x80()
- *    vmode25x80()
- *    vmode28x80()
- *    vmode43x80()
- *    vmode50x80()
- *    hb_gt_SetMode()
- *    hb_gt_GetDisplay()
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *                Luiz Rafael Culik <Culik@sl.conex.net>
- *    Harbour Mouse Subsystem for DOS
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
-/*
- * This module is based on VIDMGR by Andrew Clarke and modified for Harbour.
- */
+/* This module is based on VIDMGR by Andrew Clarke and modified for Harbour. */
 
 /* NOTE: User programs should never call this layer directly! */
 
@@ -96,8 +83,7 @@
 #include <conio.h>
 
 
-/*
- * use mouse driver save/restore state functions,
+/* Use mouse driver save/restore state functions,
  * add other compilers for which calling real mode
  * interrupts with memory pointer is implemented.
  */
@@ -264,7 +250,7 @@ static int hb_gt_dos_GetScreenMode( void )
 
 static void hb_gt_dos_GetScreenSize( int * piRows, int * piCols )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetScreenSize(%p, %p)", piRows, piCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetScreenSize(%p, %p)", ( void * ) piRows, ( void * ) piCols ) );
 
    *piRows = ( int ) HB_PEEK_BYTE( 0x0040, 0x0084 ) + 1;
    *piCols = ( int ) HB_PEEK_BYTE( 0x0040, 0x004A );
@@ -275,7 +261,7 @@ static HB_BYTE FAR * hb_gt_dos_ScreenAddress( PHB_GT pGT )
 {
    HB_BYTE FAR * ptr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_ScreenAddress(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_ScreenAddress(%p)", ( void * ) pGT ) );
 
    #if defined( __WATCOMC__ ) && defined( __386__ )
    if( HB_GTSELF_ISCOLOR( pGT ) )
@@ -311,7 +297,7 @@ static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
    HB_BYTE * pScreenPtr = s_pScreenAddress;
 #endif
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetScreenContents(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetScreenContents(%p)", ( void * ) pGT ) );
 
    bxAttr = 0;
    cdp = HB_GTSELF_CPTERM( pGT );
@@ -333,6 +319,7 @@ static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
          gettext( iCol + 1, iRow + 1, iCol + 1, iRow + 1, &ch_attr );
          bChar = ch_attr & 0xFF;
          bAttr = ch_attr >> 8;
+         HB_SYMBOL_UNUSED( pScreenPtr );
 #elif defined( __DJGPP__ )
          int iChar, iAttr;
          ScreenGetChar( &iChar, &iAttr, iCol, iRow );
@@ -354,7 +341,7 @@ static void hb_gt_dos_GetCursorPosition( int * piRow, int * piCol )
 {
    union REGS regs;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetCursorPosition(%p, %p)", piRow, piCol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetCursorPosition(%p, %p)", ( void * ) piRow, ( void * ) piCol ) );
 
    regs.h.ah = 0x03;
    regs.h.bh = 0;
@@ -397,7 +384,7 @@ static void hb_gt_dos_GetCursorSize( unsigned char * start, unsigned char * end 
 {
    union REGS regs;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetCursorSize(%p, %p)", start, end ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetCursorSize(%p, %p)", ( void * ) start, ( void * ) end ) );
 
    regs.h.ah = 0x03;
    regs.h.bh = 0;
@@ -817,7 +804,7 @@ static void hb_gt_dos_mouse_GetBounds( PHB_GT pGT, int * piTop, int * piLeft, in
 
 static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Init(%p,%d,%d,%d)", pGT, hFilenoStdin, hFilenoStdout, hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Init(%p,%d,%d,%d)", ( void * ) pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    s_bBreak = HB_FALSE;
 
@@ -872,7 +859,7 @@ static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 static void hb_gt_dos_Exit( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Exit(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Exit(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_EXIT( pGT );
 }
@@ -881,7 +868,7 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int iKey = 0, iFlags = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_ReadKey(%p,%d)", pGT, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_ReadKey(%p,%d)", ( void * ) pGT, iEventMask ) );
 
 #if defined( __DJGPP__ )
    /* Check to see if Ctrl+Break has been detected */
@@ -949,7 +936,7 @@ static int hb_gt_dos_ReadKey( PHB_GT pGT, int iEventMask )
 
 static HB_BOOL hb_gt_dos_IsColor( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_IsColor(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_IsColor(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -958,7 +945,7 @@ static HB_BOOL hb_gt_dos_IsColor( PHB_GT pGT )
 
 static HB_BOOL hb_gt_dos_GetBlink( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetBlink(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_GetBlink(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -969,7 +956,7 @@ static void hb_gt_dos_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
    union REGS regs;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_SetBlink(%p,%d)", pGT, ( int ) fBlink ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_SetBlink(%p,%d)", ( void * ) pGT, ( int ) fBlink ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -982,7 +969,7 @@ static void hb_gt_dos_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 
 static void hb_gt_dos_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -992,10 +979,12 @@ static void hb_gt_dos_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    sound( ( unsigned ) dFrequency );
 #elif defined( __DJGPP__ )
    sound( ( int ) dFrequency );
+#else
+   HB_SYMBOL_UNUSED( dFrequency );
 #endif
 
    /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
-   hb_idleSleep( dDuration / 18.2 );
+   hb_gtSleep( pGT, dDuration / 18.2 );
 
 #if defined( __BORLANDC__ ) || defined( __WATCOMC__ )
    nosound();
@@ -1006,7 +995,7 @@ static void hb_gt_dos_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 
 static const char * hb_gt_dos_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Version(%p,%d)", pGT, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Version(%p,%d)", ( void * ) pGT, iType ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1059,7 +1048,7 @@ static void vmode28x40( void )
    regs.HB_XREGS.ax = 0x0001;               /* video mode 40 cols */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
-   regs.HB_XREGS.ax = 0x1111;               /* load 8x8 monochrome char set into RAM */
+   regs.HB_XREGS.ax = 0x1111;               /* load 8x8 monochrome font into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 }
 
@@ -1070,7 +1059,7 @@ static void vmode50x40( void )
    regs.HB_XREGS.ax = 0x0001;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
-   regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
+   regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot font into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    outportw( 0x03D4, 0x060A );
 }
@@ -1099,7 +1088,7 @@ static void vmode25x80( void )
    regs.HB_XREGS.ax = 0x0083;              /* mode in AL, if higher bit is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                   /* load block 0 (BL = 0) */
-   regs.HB_XREGS.ax = 0x1114;              /* load 8x14 VGA char set into RAM */
+   regs.HB_XREGS.ax = 0x1114;              /* load 8x14 VGA font into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 }
 
@@ -1110,7 +1099,7 @@ static void vmode28x80( void )
    regs.HB_XREGS.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                   /* load block 0 (BL = 0) */
-   regs.HB_XREGS.ax = 0x1111;              /* load 8x8 monochrome char set into RAM */
+   regs.HB_XREGS.ax = 0x1111;              /* load 8x8 monochrome font into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 }
 
@@ -1118,18 +1107,18 @@ static void vmode43x80( void )
 {
    union REGS regs;
 
-   regs.HB_XREGS.ax = 0x1201;              /*  select 350 scan line mode */
+   regs.HB_XREGS.ax = 0x1201;               /* select 350 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
-   regs.HB_XREGS.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
+   regs.HB_XREGS.ax = 0x0003;               /* mode in AL, if higher bit is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
-   regs.h.bh = 0x1;                 /* bytes per character */
-   regs.h.bl = 0x0;                 /* load block 0 */
-   regs.HB_XREGS.ax = 0x1112;              /* load 8x8 double dot char set into RAM */
+   regs.h.bh = 0x1;                         /* bytes per character */
+   regs.h.bl = 0x0;                         /* load block 0 */
+   regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot font into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
-   outportw( 0x03D4, 0x060A );      /* update cursor size / pointers */
+   outportw( 0x03D4, 0x060A );              /* update cursor size / pointers */
 #if ! defined( __DJGPP__ )
-   HB_POKE_BYTE( 0x40, 0x84, 42 );  /* 42 rows number update */
+   HB_POKE_BYTE( 0x40, 0x84, 42 );          /* 42 rows number update */
 #endif
 }
 
@@ -1137,13 +1126,13 @@ static void vmode50x80( void )
 {
    union REGS regs;
 
-   regs.HB_XREGS.ax = 0x1202;               /*  select 400 scan line mode */
+   regs.HB_XREGS.ax = 0x1202;               /* select 400 scan line mode */
    regs.h.bl = 0x30;
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.ax = 0x0003;               /* mode in AL, if bit 7 is on, No CLS */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
-   regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
+   regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot font into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 }
 
@@ -1188,7 +1177,7 @@ static HB_BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
    /* HB_GTSELF_ISCOLOR( pGT ) test for color card, we need to know if it is a VGA board...*/
    HB_BOOL bIsVGA, bIsVesa, bSuccess;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_SetMode(%p,%d,%d)", ( void * ) pGT, iRows, iCols ) );
 
    bIsVGA = ( hb_gt_dos_GetDisplay() == 8 );
    bIsVesa = HB_FALSE;
@@ -1232,7 +1221,7 @@ static HB_BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
 
    hb_gt_dos_GetScreenSize( &s_iRows, &s_iCols );
 
-   /* Check for succesful */
+   /* Check for success */
    if( s_iRows == iRows && s_iCols == iCols )
    {
       bSuccess = HB_TRUE;
@@ -1260,7 +1249,7 @@ static HB_BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 static HB_BOOL hb_gt_dos_PostExt( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_PostExt(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_PostExt(%p)", ( void * ) pGT ) );
 
    hb_gt_dos_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    hb_gt_dos_GetScreenContents( pGT );
@@ -1271,7 +1260,7 @@ static HB_BOOL hb_gt_dos_PostExt( PHB_GT pGT )
 
 static HB_BOOL hb_gt_dos_Resume( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Resume(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Resume(%p)", ( void * ) pGT ) );
 
    s_iScreenMode = hb_gt_dos_GetScreenMode();
 #if ! defined( __DJGPP__ )
@@ -1301,7 +1290,7 @@ static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    HB_UCHAR uc;
    int iLen = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Redraw(%p,%d,%d,%d)", ( void * ) pGT, iRow, iCol, iSize ) );
 
    while( iLen < iSize )
    {
@@ -1312,6 +1301,7 @@ static void hb_gt_dos_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       {
          short ch_attr = ( ( short ) iColor << 8 ) | uc;
          puttext( iCol + iLen + 1, iRow + 1, iCol + iLen + 1, iRow + 1, &ch_attr );
+         HB_SYMBOL_UNUSED( pScreenPtr );
       }
 #elif defined( __DJGPP__ )
       ScreenPutChar( uc, iColor, iCol + iLen, iRow );
@@ -1326,7 +1316,7 @@ static void hb_gt_dos_Refresh( PHB_GT pGT )
 {
    int iRow, iCol, iStyle;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Refresh(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Refresh(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_REFRESH( pGT );
 
@@ -1343,7 +1333,7 @@ static void hb_gt_dos_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_dos_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Info(%p,%d,%p)", pGT, iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_dos_Info(%p,%d,%p)", ( void * ) pGT, iType, pInfo ) );
 
    switch( iType )
    {
@@ -1369,7 +1359,7 @@ static HB_BOOL hb_gt_dos_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", ( void * ) pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_dos_Init;
    pFuncTable->Exit                       = hb_gt_dos_Exit;

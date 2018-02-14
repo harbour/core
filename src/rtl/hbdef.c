@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,67 +47,11 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-typedef enum
-{
-   HB_IT_U,
-   HB_IT_N,
-   HB_IT_C,
-   HB_IT_L,
-   HB_IT_T,
-   HB_IT_B,
-   HB_IT_H,
-   HB_IT_A,
-   HB_IT_O,
-   HB_IT_P,
-   HB_IT_S
-} HB_IT_BASIC;
-
-static HB_IT_BASIC s_hb_itemTypeBasic( PHB_ITEM pItem )
-{
-   switch( HB_ITEM_TYPE( pItem ) )
-   {
-      case HB_IT_ARRAY:
-         return hb_arrayIsObject( pItem ) ? HB_IT_O : HB_IT_A;
-
-      case HB_IT_BLOCK:
-         return HB_IT_B;
-
-      case HB_IT_DATE:
-      case HB_IT_TIMESTAMP:
-         return HB_IT_T;
-
-      case HB_IT_LOGICAL:
-         return HB_IT_L;
-
-      case HB_IT_INTEGER:
-      case HB_IT_LONG:
-      case HB_IT_DOUBLE:
-         return HB_IT_N;
-
-      case HB_IT_STRING:
-      case HB_IT_MEMO:
-         return HB_IT_C;
-
-      case HB_IT_HASH:
-         return HB_IT_H;
-
-      case HB_IT_POINTER:
-         return HB_IT_P;
-
-      case HB_IT_SYMBOL:
-         return HB_IT_S;
-   }
-
-   return HB_IT_U;
-}
-
 HB_FUNC( HB_DEFAULT )
 {
    PHB_ITEM pDefault = hb_param( 2, HB_IT_ANY );
 
-   if( pDefault &&
-       s_hb_itemTypeBasic( hb_param( 1, HB_IT_ANY ) ) !=
-       s_hb_itemTypeBasic( pDefault ) )
+   if( pDefault && ! hb_itemTypeCmp( hb_param( 1, HB_IT_ANY ), pDefault ) )
       hb_itemParamStore( 1, pDefault );
 }
 
@@ -116,8 +60,7 @@ HB_FUNC( HB_DEFAULTVALUE )
    PHB_ITEM pParam = hb_param( 1, HB_IT_ANY );
    PHB_ITEM pDefault = hb_param( 2, HB_IT_ANY );
 
-   if( pDefault &&
-       s_hb_itemTypeBasic( pParam ) != s_hb_itemTypeBasic( pDefault ) )
+   if( pDefault && ! hb_itemTypeCmp( pParam, pDefault ) )
       pParam = pDefault;
 
    hb_itemReturn( pParam );

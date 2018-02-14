@@ -1,15 +1,18 @@
-/*
- *    TBrowse Demonstration with GUI Elements
+/* TBrowse Demonstration with GUI Elements
  *
- *    This protocol can be clubbed with pure console implementation
- *    AND can be called IN a separate thread as well as modal TO
- *    current window.
+ * This protocol can be clubbed with pure console implementation
+ * and can be called in a separate thread as well as modal to
+ * current window.
  *
- *    Pritpal Bedi <bedipritpal@hotmail.com>
+ * Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
+#include "button.ch"
+#include "dbstruct.ch"
 #include "inkey.ch"
+#include "setcurs.ch"
 #include "hbgtinfo.ch"
+#include "hbver.ch"
 
 #define K_MOVING                1001
 
@@ -26,25 +29,24 @@
 #define K_SBTHUMBTRACKVERT      1059
 #define K_SBTHUMBTRACKHORZ      1060
 
-FUNCTION WvtMyBrowse()
+PROCEDURE WvtMyBrowse()
 
    IF hb_mtvm()
       hb_threadStart( {| oCrt | oCrt := WvgCrt():new( , , { -1, -2 }, { 34, 69 }, , .T. ), ;
          oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS, ;
          oCrt:icon := GetResource( "dia_excl.ico" ), ;
          oCrt:create(), ;
-         Wvt_SetGUI( .T. ), ;
+         wvt_SetGUI( .T. ), ;
          ExecBrowser( oCrt ), ;
-         oCrt:destroy();
-         } )
+         oCrt:destroy() } )
 
    ELSE
       ExecBrowser()
    ENDIF
 
-   RETURN NIL
+   RETURN
 
-FUNCTION ExecBrowser( oCrt )
+STATIC PROCEDURE ExecBrowser( oCrt )
 
    LOCAL nKey, bBlock, oBrowse, aLastPaint, i, pGT
    LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr, info_ // , oLB
@@ -59,7 +61,7 @@ FUNCTION ExecBrowser( oCrt )
    LOCAL nCol       := Col()
    LOCAL cColor     := SetColor( "N/W*,N/GR*,,,N/W*" )
    LOCAL aObjects   := WvtSetObjects( {} )
-   LOCAL hPopup     := Wvt_SetPopupMenu()
+   LOCAL hPopup     := wvt_SetPopupMenu()
    LOCAL oVBar, oHBar, oCom, oTre, oChk, oSLE, oLBx, aNvg, oIdx
 
    STATIC s_nStyle := 0
@@ -75,7 +77,7 @@ FUNCTION ExecBrowser( oCrt )
    oTBar := BrwBuildToolBar( oCrt )
    oTBar:buttonClick := {| oBtn | Vou_ExecTBarAction( oBtn ) }
 
-   SetMode( MaxRow() + 1, MaxCol() + 1 )  /* Neccessary because adding menu has reduced the overall size of window */
+   SetMode( MaxRow() + 1, MaxCol() + 1 )  /* Necessary because adding menu has reduced the overall size of window */
 
    pGT := SetGT( 2, hb_gtSelect() )
 
@@ -85,7 +87,7 @@ FUNCTION ExecBrowser( oCrt )
 
    USE ( cFileDbf ) NEW SHARED VIA ( cRDD )
    IF NetErr()
-      RETURN NIL
+      RETURN
    ENDIF
    IF FLock()
       INDEX ON Test->FIRST TAG "001" TO ( cFileIndex )
@@ -119,14 +121,14 @@ FUNCTION ExecBrowser( oCrt )
    IF s_nStyle > 5
       s_nStyle := 0
    ENDIF
-   Wvt_SetPen( s_nStyle, 0, RGB( 210,1210,210 ) )
+   wvt_SetPen( s_nStyle, 0, RGB( 210,1210,210 ) )
    s_nStyle++
-   hb_gtInfo( HB_GTI_WINTITLE, "WVT Gui TBrowse()" )
+   hb_gtInfo( HB_GTI_WINTITLE, "WVT GUI TBrowse()" )
 
-   AAdd( aBlocks, {|| Wvt_DrawBoxRaised( oBrowse:nTop - 2, oBrowse:nLeft - 2, oBrowse:nBottom + 1, oBrowse:nRight + 2 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
-   AAdd( aBlocks, {|| Wvt_DrawGridHorz( oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, Len( oBrowse:aColumnsSep ) ) } )
+   AAdd( aBlocks, {|| wvt_DrawBoxRaised( oBrowse:nTop - 2, oBrowse:nLeft - 2, oBrowse:nBottom + 1, oBrowse:nRight + 2 ) } )
+   AAdd( aBlocks, {|| wvt_DrawBoxRecessed( oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
+   AAdd( aBlocks, {|| wvt_DrawGridHorz( oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
+   AAdd( aBlocks, {|| wvt_DrawGridVert( oBrowse:nTop, oBrowse:nBottom, oBrowse:aColumnsSep, Len( oBrowse:aColumnsSep ) ) } )
 
    Vou_BrwAddScrollBars( oCrt, oBrowse, @oVBar, @oHBar )
 
@@ -144,7 +146,7 @@ FUNCTION ExecBrowser( oCrt )
    BrwBuildButtons( oCrt, oBrowse )
    oTre := BrwBuildTree( oCrt, oBrowse )
 
-   Wvt_Keyboard( HB_K_RESIZE ) /* Refresh All GUI Controls */
+   wvt_Keyboard( HB_K_RESIZE ) /* Refresh All GUI Controls */
 
    WHILE ! lEnd
       DispBegin()
@@ -198,7 +200,7 @@ FUNCTION ExecBrowser( oCrt )
       ENDCASE
    ENDDO
 
-   Wvt_SetPen( 0 )
+   wvt_SetPen( 0 )
    WvtSetBlocks( aLastPaint )
    WvtSetObjects( aObjects )
 
@@ -207,13 +209,14 @@ FUNCTION ExecBrowser( oCrt )
    SetCursor( nCursor )
 
    dbCloseArea()
+
    IF oCrt == NIL
       RestScreen( 0, 0, MaxRow(), MaxCol(), cScr )
    ENDIF
-   Wvt_SetPopupMenu( hPopup )
+   wvt_SetPopupMenu( hPopup )
    SetGT( 2, pGT )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, lActiveX, cFileDbf )
 
@@ -234,12 +237,16 @@ STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTr
    oVBar:setPosAndSize()
    oHBar:setPosAndSize()
    oCom:setPosAndSize()
-// oSLE:setPosAndSize()
-// oLBx:setPosAndSize()
-// oIdx:setPosAndSize()
+#if 0
+   oSLE:setPosAndSize()
+   oLBx:setPosAndSize()
+   oIdx:setPosAndSize()
+#endif
 
    oTre:setPosAndSize()
-// oChk:setPosAndSize()
+#if 0
+   oChk:setPosAndSize()
+#endif
 
    BrwReposButtons( oCrt ) /* Because we are repositioning at the center of console width */
 
@@ -259,7 +266,7 @@ STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTr
 
    RETURN .T.
 
-STATIC FUNCTION BrwShowColumn( oBrw, cHeading )
+STATIC PROCEDURE BrwShowColumn( oBrw, cHeading )
 
    LOCAL i, j, nCur
 
@@ -281,7 +288,7 @@ STATIC FUNCTION BrwShowColumn( oBrw, cHeading )
    oBrw:refreshCurrent()
    oBrw:forceStable()
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
 
@@ -294,7 +301,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    oTree:create( , , { -24, -1 }, { {|| -( MaxRow() - 1 - 24 ) }, -10 } )
    oTree:setColorFG( "W+" )
    oTree:setColorBG( "R*" )
-   oTree:itemSelected := {| oItem | Wvg_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
+   oTree:itemSelected := {| oItem | wvg_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -322,9 +329,11 @@ STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
 
    oCom := WvgActiveXControl():new( oCrt, , { -24, -13 }, { {|| -( MaxRow() - 1 - 24 ) }, {|| -( MaxCol() - 1 - 13 ) } }, , .F. )
    oCom:CLSID := "Shell.Explorer.2"
-// oCom:mapEvent( 269, {|| uiDebug( " E X P L O R E R - 2 6 9" ) } )
+#if 0
+   oCom:mapEvent( 269, {|| uiDebug( "EXPLORER-269" ) } )
+#endif
    oCom:create()
-   oCom:navigate( "http://hbide.vouch.info" )
+   oCom:navigate( hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN oCom
 
@@ -345,13 +354,13 @@ STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
 
    RETURN oXbp
 
-STATIC FUNCTION BrwSetThisOrder( oBrw, nOrd )
+STATIC PROCEDURE BrwSetThisOrder( oBrw, nOrd )
 
    dbSetOrder( nOrd )
    oBrw:refreshAll()
    oBrw:forceStable()
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
 
@@ -419,8 +428,8 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    oXbp:setColorFG( "N"  )
    oXbp:setColorBG( "BG+"  )
    oXbp:returnPressed := {| m1, m2, o | m1 := m2, oCom:navigate( RTrim( o:getData() ) ) }
-   oXbp:tooltipText := "Type-in a http:// address and press ENTER"
-   oXbp:setData( "http://hbide.vouch.info/" )
+   oXbp:tooltipText := "Type-in a web address and press ENTER"
+   oXbp:setData( hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN { oLbl, oXbp }
 
@@ -433,16 +442,16 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
    oXbp := WvgCheckBox():new( oCrt )
    oXbp:pointerFocus := .F.
    oXbp:caption      := "ActiveX"
-   oXbp:selected     := {| x, y, o | x := y, lActiveX := o:getData(), Wvt_Keyboard( HB_K_RESIZE ) }
+   oXbp:selected     := {| x, y, o | x := y, lActiveX := o:getData(), wvt_Keyboard( HB_K_RESIZE ) }
    oXbp:selection    := .F.
    oXbp:create( , , { -23, -1 }, { -1, -10 } )
    oXbp:setColorFG( "R+" )
    oXbp:setColorBG( "W" )
-   oXbp:tooltipText  := "Naviagate: http://hbide.vouch.info"
+   oXbp:tooltipText  := "Navigate: " + hb_Version( HB_VERSION_URL_BASE )
 
    RETURN oXbp
 
-STATIC FUNCTION BrwReposButtons( oCrt )
+STATIC PROCEDURE BrwReposButtons( oCrt )
 
    LOCAL oXbp, nOff, nTtl, nG, i
    LOCAL aW   := { 10, 10, 10, 10, 10 }
@@ -462,20 +471,20 @@ STATIC FUNCTION BrwReposButtons( oCrt )
       ENDIF
    NEXT
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
+STATIC PROCEDURE BrwBuildButtons( oCrt, oBrw )
 
    LOCAL oPB, nOff, nTtl, nG, i
    LOCAL aPmt := { "Modal Window", "Maximize", "Go Top", "Go Bottom", "Right Most" }
-   LOCAL aAct := { {|| Wvt_Keyboard( K_F3 ) }, ;
-      {|| Wvt_Keyboard( K_F4 ) }, ;
+   LOCAL aAct := { {|| wvt_Keyboard( K_F3 ) }, ;
+      {|| wvt_Keyboard( K_F4 ) }, ;
       {|| oBrw:goTop(), oBrw:forceStable() }, ;
       {|| oBrw:goBottom(), oBrw:forceStable() }, ;
       {|| oBrw:panEnd(), oBrw:forceStable() } }
    LOCAL aW   := { 10, 10, 10, 10, 10 }
 
-   nG := 2
+   nG   := 2
    nTtl := 0
    AEval( aW, {| e | nTtl += e } )
    nTtl += ( Len( aW ) - 1 ) * nG
@@ -501,25 +510,25 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
       nOff += aW[ i ] + nG
    NEXT
 
-   RETURN NIL
+   RETURN
 
-FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
+STATIC PROCEDURE Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
 
-   oHBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nBottom + 1 ) }, {|| -( oBrw:nLeft ) } }, ;
+   oHBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nBottom + 1 ) }, {|| -oBrw:nLeft } }, ;
       { -1, {|| -( oBrw:nRight - oBrw:nLeft + 1 ) } } )
    oHBar:range := { 1, oBrw:colCount }
    oHBar:type  := WVGSCROLL_HORIZONTAL
    oHBar:create()
    oHBar:scroll := {| mp1 | oBrw:colPos := mp1[ 1 ], oBrw:refreshCurrent(), oBrw:forceStable() }
 
-   oVBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nTop ) }, {|| -( oBrw:nRight + 1 ) } }, ;
+   oVBar := WvgScrollBar():new( oCrt, , { {|| -oBrw:nTop }, {|| -( oBrw:nRight + 1 ) } }, ;
       { {|| -( oBrw:nBottom - oBrw:nTop + 1 ) }, {|| -2 } } )
    oVBar:range := { 1, LastRec() }
    oVBar:type  := WVGSCROLL_VERTICAL
    oVBar:create()
    oVBar:scroll := {| mp1 | Vou_BrwSetVScroll( mp1, oBrw ) }
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION BrwBuildMenu( oCrt )
 
@@ -673,7 +682,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    RETURN lRet
 
-FUNCTION Vou_NavigateToCell( oBrowse )
+STATIC FUNCTION Vou_NavigateToCell( oBrowse )
 
    LOCAL nCount
 
@@ -686,23 +695,23 @@ FUNCTION Vou_NavigateToCell( oBrowse )
          nCount := oBrowse:mRowPos - oBrowse:RowPos
 
          DispBegin()
-         WHILE nCount < 0
+         DO WHILE nCount < 0
             nCount++
             oBrowse:Up()
          ENDDO
 
-         WHILE nCount > 0
-            nCount --
+         DO WHILE nCount > 0
+            nCount--
             oBrowse:Down()
          ENDDO
 
          nCount := oBrowse:mColPos - oBrowse:ColPos
-         WHILE nCount < 0
+         DO WHILE nCount < 0
             nCount++
             oBrowse:Left()
          ENDDO
 
-         WHILE nCount > 0
+         DO WHILE nCount > 0
             nCount--
             oBrowse:Right()
          ENDDO
@@ -733,7 +742,7 @@ STATIC FUNCTION DbSkipBlock( n )
       ENDDO
    ENDIF
 
-   RETURN  nSkipped
+   RETURN nSkipped
 
 STATIC FUNCTION TBNext()
 
@@ -743,7 +752,7 @@ STATIC FUNCTION TBNext()
    IF Eof()
       lMoved := .F.
    ELSE
-      dbSkip( 1 )
+      dbSkip()
       IF Eof()
          lMoved := .F.
          dbGoto( nSaveRecNum )
@@ -770,28 +779,28 @@ STATIC FUNCTION VouBlockField( i )
 
    RETURN  {|| FieldGet( i ) }
 
-STATIC FUNCTION Vou_ExecTBarAction( oBtn )
+STATIC PROCEDURE Vou_ExecTBarAction( oBtn )
 
    SWITCH oBtn:caption
    CASE "New"
-      Wvt_Keyboard( K_DOWN      ); EXIT
+      wvt_Keyboard( K_DOWN      ); EXIT
    CASE "Select"
-      Wvt_Keyboard( K_UP        ); EXIT
+      wvt_Keyboard( K_UP        ); EXIT
    CASE "Calendar"
-      Wvt_Keyboard( K_RIGHT     ); EXIT
+      wvt_Keyboard( K_RIGHT     ); EXIT
    CASE "Tools"
-      Wvt_Keyboard( K_LEFT      ); EXIT
+      wvt_Keyboard( K_LEFT      ); EXIT
    CASE "Index"
-      Wvt_Keyboard( K_PGDN      ); EXIT
+      wvt_Keyboard( K_PGDN      ); EXIT
    CASE "Show"
-      Wvt_Keyboard( K_PGUP      ); EXIT
+      wvt_Keyboard( K_PGUP      ); EXIT
    CASE "Hide"
-      Wvt_Keyboard( K_CTRL_HOME ); EXIT
+      wvt_Keyboard( K_CTRL_HOME ); EXIT
    ENDSWITCH
 
-   RETURN NIL
+   RETURN
 
-FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
+STATIC PROCEDURE Vou_BrwSetVScroll( mp1, oBrowse )
 
    SWITCH mp1[ 2 ]
 
@@ -830,7 +839,7 @@ FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
 
    oBrowse:forceStable()
 
-   RETURN NIL
+   RETURN
 
 /* For brosers inside WvtDialog() */
 

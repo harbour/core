@@ -9,7 +9,7 @@
 
 -pic
 
--plugin=hbmk2_qtmoc.hb
+-plugin=hbmk2_qtgt.hb
 
 -depcontrol=qt5:${HB_WITH_QT}
 -depkeyhead=qt5:QtCore/QJsonObject

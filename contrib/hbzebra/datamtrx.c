@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,26 +48,23 @@
    DataMatrix is ISO/IEC 16022:2006
 
    Some info links:
-     http://www.gs1.org/docs/barcodes/GS1_DataMatrix_Introduction_and_technical_overview.pdf
-     http://www.aipsys.com/dmintro.htm
+     https://web.archive.org/web/20150208040021/www.gs1.org/docs/barcodes/GS1_DataMatrix_Introduction_and_technical_overview.pdf
+     https://web.archive.org/web/20161114095405/www.aipsys.com/dmintro.htm
 
-   Open source projects, that implements DataMatrix:
-     http://www.datenfreihafen.org/projects/iec16022.html
-     http://www.libdmtx.org/
-     http://www.codeproject.com/Articles/66495/DataMatrixNet-ported-to-Compact-Framework.aspx
+   Open source projects, that implement DataMatrix:
+     https://www.datenfreihafen.org/projects/iec16022.html
+     https://web.archive.org/web/20130325083148/www.libdmtx.org/
+     https://www.codeproject.com/Articles/66495/DataMatrixNet-ported-to-Compact-Framework.aspx
 
    Online encoder:
-     http://www.bcgen.com/datamatrix-barcode-creator.html
-     http://www.bcmaker.com/demos/datamatrix.php
+     https://www.barcodetools.com/generator/index.html
 
    Online decoder:
-     http://www.datasymbol.com/barcode-recognition-sdk/barcode-reader/online-barcode-decoder.html
+     https://www.datasymbol.com/barcode-reader-sdk/barcode-reader-sdk-for-windows/online-barcode-decoder.html
 
  */
 
 #include "hbzebra.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 
 /* Special CodeWords */
@@ -154,14 +151,14 @@ static int _datamatrix_encode( const char * szCode, int iLen, unsigned char * pC
 static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned char * pEC, int iECLen, int * pPoly, int * pExp, int * pLog, int iMod )
 {
    int i, j;
-   unsigned char iM;
 
    for( i = 0; i < iECLen; i++ )
       pEC[ i ] = 0;
 
    for( i = 0; i < iDataLen; i++ )
    {
-      iM = pData[ i ] ^ pEC[ iECLen - 1 ];
+      unsigned char iM = pData[ i ] ^ pEC[ iECLen - 1 ];
+
       for( j = iECLen - 1; j > 0; j-- )
       {
          if( iM && pPoly[ j ] )

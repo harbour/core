@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -100,14 +100,12 @@ typedef struct
    OCI_Statement * pStmt;
 } SDDDATA;
 
-
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection );
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
 static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea );
 static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea );
 static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
-
 
 static SDDNODE s_ocidd =
 {
@@ -169,9 +167,8 @@ HB_CALL_ON_STARTUP_END( _hb_ocidd_init_ )
    HB_DATASEG_FUNC( _hb_ocidd_init_ )
    #include "hbiniseg.h"
 #endif
+/* --- */
 
-
-/*=====================================================================================*/
 static HB_USHORT hb_errRT_OCIDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    PHB_ITEM  pError;
@@ -183,7 +180,6 @@ static HB_USHORT hb_errRT_OCIDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, c
 
    return uiAction;
 }
-
 
 static char * ocilibGetError( HB_ERRCODE * pErrCode )
 {
@@ -202,7 +198,7 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    }
    else
    {
-      szRet      = hb_strdup( "Unable to get error message" );
+      szRet      = hb_strdup( "Could not get the error message" );
       iNativeErr = 9999;
    }
 
@@ -212,9 +208,7 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    return szRet;
 }
 
-
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    OCI_Connection * cn;
@@ -240,7 +234,6 @@ static HB_ERRCODE ocilibConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    return HB_FAILURE;
 }
 
-
 static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection )
 {
    HB_ERRCODE errCode;
@@ -249,7 +242,6 @@ static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection )
    hb_xfree( pConnection->pSDDConn );
    return errCode;
 }
-
 
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
@@ -284,7 +276,6 @@ static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    OCI_StatementFree( st );
    return HB_FAILURE;
 }
-
 
 static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 {
@@ -511,7 +502,6 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    return HB_SUCCESS;
 }
 
-
 static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
@@ -526,7 +516,6 @@ static HB_ERRCODE ocilibClose( SQLBASEAREAP pArea )
    }
    return HB_SUCCESS;
 }
-
 
 static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {

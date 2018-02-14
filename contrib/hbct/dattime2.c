@@ -1,18 +1,15 @@
 /*
- * CT3 Date & Time functions, part II: - AddMonth()
- *                                       - CToDoW()
- *                                       - CToMonth()
- *                                       - DaysInMonth()
- *                                       - DaysToMonth()
- *                                       - DMY()
- *                                       - DoY()
- *                                       - IsLeap()
- *                                       - LastDayOM()
- *                                       - MDY()
- *                                       - NToCDoW()
- *                                       - NToCMonth()
- *                                       - Quarter()
- *                                       - Week()
+ * CT3 Date & Time functions, part II:
+ *   AddMonth()
+ *   DMY()
+ *   DoY()
+ *   IsLeap()
+ *   LastDayOM()
+ *   MDY()
+ *   NToCDoW()
+ *   NToCMonth()
+ *   Quarter()
+ *   Week()
  *
  * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru>
  *
@@ -27,9 +24,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -289,9 +286,7 @@ HB_FUNC( ADDMONTH )
 
    iDays = ct_daysinmonth( iMonth, ct_isleap( iYear ) );
    if( iDay > iDays )
-   {
       iDay = iDays;
-   }
 
    lJulian = hb_dateEncode( iYear, iMonth, iDay );
    if( fTimeStamp )
@@ -374,7 +369,7 @@ HB_FUNC( LASTDAYOM )
       bLeap = ct_isleap( iYear );
    }
 
-   hb_retni( ( iMonth && ( iMonth <= 12 ) ? ct_daysinmonth( iMonth, bLeap ) : 0 ) );
+   hb_retni( ( iMonth && iMonth <= 12 ) ? ct_daysinmonth( iMonth, bLeap ) : 0 );
 }
 
 HB_FUNC( NTOCDOW )

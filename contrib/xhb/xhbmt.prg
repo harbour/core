@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,7 +56,7 @@ FUNCTION StartThread( p1, p2, ... )
 
    RETURN hb_threadStart( p1, p2, ... )
 
-FUNCTION Subscribe( mtx, nTimeOut, lSubscribed )
+FUNCTION Subscribe( mtx, nTimeOut, /* @ */ lSubscribed )
 
    LOCAL xSubscribed
 
@@ -66,7 +66,7 @@ FUNCTION Subscribe( mtx, nTimeOut, lSubscribed )
 
    RETURN xSubscribed
 
-FUNCTION SubscribeNow( mtx, nTimeOut, lSubscribed )
+FUNCTION SubscribeNow( mtx, nTimeOut, /* @ */ lSubscribed )
 
    LOCAL xSubscribed
 
@@ -86,24 +86,24 @@ FUNCTION IsValidThread( pThID )
 
    BEGIN SEQUENCE WITH {|| Break() }
       lValid := hb_threadID( pThID ) != 0
-   recover
+   RECOVER
       lValid := .F.
    END SEQUENCE
 
    RETURN lValid
 
-FUNCTION KillThread( pThID )
+PROCEDURE KillThread( pThID )
 
    hb_threadQuitRequest( pThID )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION StopThread( pThID )
+PROCEDURE StopThread( pThID )
 
    hb_threadQuitRequest( pThID )
    hb_threadJoin( pThID )
 
-   RETURN NIL
+   RETURN
 
 FUNCTION ThreadSleep( nTimeOut )
    RETURN hb_idleSleep( nTimeOut / 1000 )

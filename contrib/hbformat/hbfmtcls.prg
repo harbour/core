@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,7 +53,7 @@
 #define RF_STATE_CODE   3
 #define RF_STATE_RET    4
 
-// TOFIX:
+// FIXME:
 //   1. in PP commands "<var>" should not be converted to "< var >"
 //   2. To add a space between "!" operator and its argument
 //      unless it's beginning with a parenthesis:
@@ -149,7 +149,7 @@ METHOD New( aParams, cIniName ) CLASS HBFormatCode
       NEXT
    ENDIF
 
-   IF !( Right( ::cCommands, 1 ) == "," )
+   IF ! Right( ::cCommands, 1 ) == ","
       ::cCommands += ","
    ENDIF
 
@@ -161,7 +161,7 @@ METHOD New( aParams, cIniName ) CLASS HBFormatCode
       "LOOP,MENU,NEXT,PACK,PRINT,QUIT,READ,RECALL,REINDEX,RELEASE,RENAME,REQUEST,REPLACE,RESTORE," + ;
       "RUN,SAVE,SEEK,SELECT,SET,SKIP,SORT,STORE,SUM,TEXT,TOTAL,UNLOCK,USE,VAR,WAIT,ZAP,"
 
-   IF !( Right( ::cClauses, 1 ) == "," )
+   IF ! Right( ::cClauses, 1 ) == ","
       ::cClauses += ","
    ENDIF
 
@@ -171,10 +171,10 @@ METHOD New( aParams, cIniName ) CLASS HBFormatCode
       "EXACT,EXCLUSIVE,FILTER,FIXED,FORMAT,INHERIT,INTENSITY,KEY,LIKE,MARGIN,MESSAGE,NEW,NIL,OFF,ON,ORDER,PATH,PICTURE,PRINTER,PROMPT," + ;
       "PROTECTED,RELATION,SCOREBOARD,SEQUENCE,SOFTSEEK,STEP,STRUCTURE,TYPEAHEAD,UNIQUE,WRAP,TAG,TO,TOP,VALID,WHEN,"
 
-   IF !( Right( ::cFunctions, 1 ) == "," )
+   IF ! Right( ::cFunctions, 1 ) == ","
       ::cFunctions += ","
    ENDIF
-   IF !( ",STR," $ Upper( ::cFunctions ) )
+   IF ! ",STR," $ Upper( ::cFunctions )
       ::cFunctions += "iif,ISNIL,ISARRAY,ISBLOCK,ISCHARACTER,ISDATE,ISLOGICAL,ISMEMO,ISNUMBER,ISOBJECT,Main"
       __hbformat_BuildListOfFunctions( @::cFunctions, ::cHBXList )
    ENDIF
@@ -576,7 +576,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFormatCode
                   IF nBegin > 1 .AND. SubStr( cLine, nBegin - 1, 1 ) == "." .AND. nEnd == nBegin
                      ::ConvertBool( @cLine, nBegin, i )
                      IF Len( cLine ) != nLen
-                        /*  If .not. was converted to ! */
+                        /* If .not. was converted to ! */
                         i -= ( nLen - Len( cLine ) )
                         nLen := Len( cLine )
                      ELSE
@@ -673,7 +673,7 @@ METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS HBFormatCode
 
    IF ::lCase
 
-      IF ! HB_ISNUMERIC( nBegin ) /* TOFIX: Temporary hack to avoid RTE when processing contrib/hbhttpd/core.prg */
+      IF ! HB_ISNUMERIC( nBegin ) /* FIXME: Temporary hack to avoid RTE when processing contrib/hbhttpd/core.prg */
          ::nErr := 1
          ::cLineErr := cLine
          RETURN .F.

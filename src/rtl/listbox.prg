@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -418,29 +418,33 @@ METHOD hitTest( nMRow, nMCol ) CLASS ListBox
 
       DO CASE
       CASE nMRow == nTop
-         IF nMCol == ::nLeft
+         DO CASE
+         CASE nMCol == ::nLeft
             RETURN HTTOPLEFT
-         ELSEIF nMCol == ::nRight
+         CASE nMCol == ::nRight
             RETURN HTTOPRIGHT
-         ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
+         CASE nMCol >= ::nLeft .AND. nMCol <= ::nRight
             RETURN HTTOP
-         ENDIF
+         ENDCASE
       CASE nMRow == ::nBottom
-         IF nMCol == ::nLeft
+         DO CASE
+         CASE nMCol == ::nLeft
             RETURN HTBOTTOMLEFT
-         ELSEIF nMCol == ::nRight
+         CASE nMCol == ::nRight
             RETURN HTBOTTOMRIGHT
-         ELSEIF nMCol >= ::nLeft .AND. nMCol <= ::nRight
+         CASE nMCol >= ::nLeft .AND. nMCol <= ::nRight
             RETURN HTBOTTOM
-         ENDIF
+         ENDCASE
       CASE nMCol == ::nLeft
-         IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
+         IF nMRow >= ::nTop .AND. ;
+            nMRow <= ::nBottom
             RETURN HTLEFT
          ELSE
             RETURN HTNOWHERE
          ENDIF
       CASE nMCol == ::nRight
-         IF nMRow >= ::nTop .AND. nMRow <= ::nBottom
+         IF nMRow >= ::nTop .AND. ;
+            nMRow <= ::nBottom
             RETURN HTRIGHT
          ELSE
             RETURN HTNOWHERE
@@ -682,14 +686,14 @@ METHOD select( xPos ) CLASS ListBox
    DO CASE
    CASE cType == "C"
       nPos := ::findData( xPos )
-      IF !( ValType( ::xBuffer ) $ "CU" )
+      IF ! ValType( ::xBuffer ) $ "CU"
          ::xBuffer := nPos
       ELSEIF ::nValue == 0
          ::xBuffer := xPos
       ELSE
          ::xBuffer := _LISTBOX_ITEMDATA( ::aItems[ nPos ] )
       ENDIF
-   CASE !( cType == "N" )
+   CASE ! cType == "N"
       RETURN ::nValue
    CASE xPos < 1
       RETURN ::nValue
@@ -760,7 +764,7 @@ METHOD setFocus() CLASS ListBox
 METHOD setItem( nPos, aItem ) CLASS ListBox
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
-      Len( aItem ) == 2 .AND. ;
+      Len( aItem ) == _ITEM_xData .AND. ;
       HB_ISSTRING( aItem[ _ITEM_cText ] )
 
       ::aItems[ nPos ] := aItem
@@ -776,7 +780,7 @@ METHOD setText( nPos, cText ) CLASS ListBox
 
    RETURN Self
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD changeItem( nOldPos, nNewPos ) CLASS ListBox
 
@@ -827,7 +831,7 @@ METHOD scrollbarPos() CLASS ListBox
 
    RETURN ( ( nCount - nLength ) * ::nTopItem + nLength - nSize ) / ( nCount - nSize )
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD bitmap( cBitmap ) CLASS ListBox
 
@@ -1035,7 +1039,7 @@ METHOD vScroll( oVScroll ) CLASS ListBox
 
    RETURN ::oVScroll
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD New( nTop, nLeft, nBottom, nRight, lDropDown ) CLASS ListBox
 
@@ -1079,7 +1083,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown ) CLASS ListBox
 FUNCTION ListBox( nTop, nLeft, nBottom, nRight, lDropDown )
    RETURN HBListBox():New( nTop, nLeft, nBottom, nRight, lDropDown )
 
-FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
+FUNCTION _ListBox_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
                     cMessage, cColorSpec, bFBlock, bSBlock, lDropDown, lScrollBar, cBitmap )
 
    LOCAL o
@@ -1098,13 +1102,18 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption, ;
       o:sBlock    := bSBlock
 
       FOR EACH xItem IN aItems
-         IF ! HB_ISARRAY( xItem )
+         DO CASE
+         CASE ! HB_ISARRAY( xItem )
             o:addItem( xItem )
-         ELSEIF Len( xItem ) == _ITEM_cText
+         CASE Len( xItem ) == _ITEM_cText
             o:addItem( xItem[ _ITEM_cText ] )
-         ELSE
+#ifdef HB_CLP_STRICT
+         OTHERWISE  /* Cl*pper will RTE on empty subarray */
+#else
+         CASE Len( xItem ) >= _ITEM_xData
+#endif
             o:addItem( xItem[ _ITEM_cText ], xItem[ _ITEM_xData ] )
-         ENDIF
+         ENDCASE
       NEXT
 
       IF hb_defaultValue( lScrollBar, .F. )

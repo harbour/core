@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,25 +48,23 @@
    PDF417 is ISO/IEC 15438:2006
 
    Good short PDF417 description:
-     http://grandzebu.net/index.php?page=/informatique/codbar-en/pdf417.htm
+     https://grandzebu.net/informatique/codbar-en/pdf417.htm
 
    Free PDF417 specification (in Russian):
-     http://protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=122345&pageK=D11DCCF9-B540-4CB2-A514-C3547043FC68
+     [LOST LINK] protect.gost.ru/v.aspx?control=8&baseC=-1&page=0&month=-1&year=-1&search=&RegNum=1&DocOnPageCount=15&id=122345&pageK=D11DCCF9-B540-4CB2-A514-C3547043FC68
 
    Online generator:
-     http://www.bcmaker.com/demos/pdf417.php
-     http://www.terryburton.co.uk/barcodewriter/generator/
+     https://www.barcodetools.com/generator/index.html
+     https://www.terryburton.co.uk/barcodewriter/generator/
 
    Online decoder:
-     http://www.datasymbol.com/barcode-recognition-sdk/barcode-reader/online-barcode-decoder.html
+     https://www.datasymbol.com/barcode-recognition-sdk/barcode-reader/online-barcode-decoder.html
  */
 
 #include "hbzebra.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
-#define CODE_START          0x2AFF  /* 17 bit width */
-#define CODE_STOP           0x2517F /* 18 bit width */
+#define CODE_START          0x2AFF  /* 17-bit width */
+#define CODE_STOP           0x2517F /* 18-bit width */
 
 #define LATCH_TEXT          900
 #define LATCH_BYTE          901
@@ -537,7 +535,7 @@ static int _pdf417_ec_size( int iLevel )
 
 static int _pdf417_default_ec_level( int iDataSize )
 {
-   /* http://www.idautomation.com/pdf417faq.html */
+   /* https://www.idautomation.com/barcode-faq/2d/pdf417/ */
    if( iDataSize <= 40 )
       return 2;
    if( iDataSize <= 160 )
@@ -549,7 +547,7 @@ static int _pdf417_default_ec_level( int iDataSize )
 
 static int _pdf417_width( int iColCount, int iFlags )
 {
-   return 17 + ( iColCount + 2 ) * 17 + 18 - ( iFlags & HB_ZEBRA_FLAG_PDF417_TRUNCATED ? 34 : 0 );
+   return 17 + ( iColCount + 2 ) * 17 + 18 - ( ( iFlags & HB_ZEBRA_FLAG_PDF417_TRUNCATED ) ? 34 : 0 );
 }
 
 static int _pdf417_left_codeword( int iRow, int iRowCount, int iColCount, int iLevel )
@@ -1015,12 +1013,11 @@ static int _pdf417_encode_text( const char * szCode, int iLen, int * pCW, int iP
 
 static int _pdf417_encode_numeric( const char * szCode, int iLen, int * pCW, int iPos )
 {
-   /* Some very long integer (147bit) arithmetics shoud be implemented to encode
+   /* Some very long integer (147-bit) arithmetics should be implemented to encode
       digits in an effective way. I use more simple way and encode digits in groups
-      not longer that 18 digits. 64bit integer arithmetics do this job */
+      not longer that 18 digits. 64-bit integer arithmetics do this job */
 
-   HB_LONGLONG  ill;
-   int  i, j, k;
+   int i, j;
 
    HB_TRACE( HB_TR_DEBUG, ( "encode numeric len=%d", iLen ) );
    if( iLen == 0 )
@@ -1029,7 +1026,8 @@ static int _pdf417_encode_numeric( const char * szCode, int iLen, int * pCW, int
    i = 0;
    while( i < iLen )
    {
-      k = iLen - i;
+      HB_LONGLONG ill;
+      int k = iLen - i;
       if( k > 18 )
          k = 18;
 
@@ -1073,8 +1071,8 @@ static int _pdf417_encode( const char * szCode, int iLen, int * pCW )
          if( _pdf417_isdigit( szCode[ i ] ) )
          {
             /*
-               Digit in textmode uses 0.5 CW, in numeric mode 0.3409 CW.
-               To save 2 CW + average remainig space in text mode we must
+               Digit in text mode uses 0.5 CW, in numeric mode 0.3409 CW.
+               To save 2 CW + average remaining space in text mode we must
                have 2.5 / (0.5-0.3409) = 15.71 digits
              */
             for( j = i + 1; j < iLen && _pdf417_isdigit( szCode[ j ] ); j++ )
@@ -1196,7 +1194,7 @@ static void _pdf417_reed_solomon( int * pCW, int iLen, int iLevel )
 {
    int * pEC;
    const unsigned short * coef;
-   int i, j, iM, iECLen;
+   int i, j, iECLen;
 
    iECLen = _pdf417_ec_size( iLevel );
 
@@ -1238,7 +1236,7 @@ static void _pdf417_reed_solomon( int * pCW, int iLen, int iLevel )
 
    for( i = 0; i < iLen; i++ )
    {
-      iM = ( pCW[ i ] + pEC[ iECLen - 1 ] ) % 929;
+      int iM = ( pCW[ i ] + pEC[ iECLen - 1 ] ) % 929;
       for( j = iECLen - 1; j >= 0; j-- )
       {
          if( j )
@@ -1309,7 +1307,7 @@ PHB_ZEBRA hb_zebra_create_pdf417( const char * szCode, HB_SIZE nLen, int iFlags,
       for( ;; )
       {
          iColCount = ( iDataCount + _pdf417_ec_size( iLevel ) + iRowCount - 1 ) / iRowCount;
-         /* w:h aspect ration is less than 2:1 for defaul 3x module height */
+         /* w:h aspect ration is less than 2:1 for default 3x module height */
          HB_TRACE( HB_TR_DEBUG, ( "iDataCount=%d iRowCount=%d iColCount=%d", iDataCount, iRowCount, iColCount ) );
          if( ( _pdf417_width( iColCount, iFlags ) < iRowCount * 3 * 2 || iColCount == 1 ) &&
              iColCount <= MAX_COL_COUNT &&

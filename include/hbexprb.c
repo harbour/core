@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,7 +45,6 @@
  */
 
 #include "hbcomp.h"
-#include "hbmacro.ch"
 
 #if ! defined( HB_HASH_USES_ARRAY_INDEXES )
 #  define HB_HASH_USES_ARRAY_INDEXES
@@ -174,7 +173,7 @@ const PHB_EXPR_FUNC hb_comp_ExprTable[ HB_EXPR_COUNT ] = {
    hb_compExprUseVariable,
    hb_compExprUsePostInc,     /* post-operators -> lowest precedence */
    hb_compExprUsePostDec,
-   hb_compExprUseAssign,      /* assigments */
+   hb_compExprUseAssign,      /* assignments */
    hb_compExprUsePlusEq,
    hb_compExprUseMinusEq,
    hb_compExprUseMultEq,
@@ -547,7 +546,9 @@ static HB_EXPR_FUNC( hb_compExprUseSelf )
          /* Clipper allows such operation and because some valid Clipper
           * code needs it then I disabled error message, [druzus]
           */
-         /* HB_COMP_ERROR_TYPE( pSelf ); */
+         #if 0
+         HB_COMP_ERROR_TYPE( pSelf );
+         #endif
          break;
       case HB_EA_ARRAY_INDEX:
          hb_compErrorIndex( HB_COMP_PARAM, pSelf );     /* SELF cannot be used as array index element */
@@ -1202,7 +1203,7 @@ static HB_EXPR_FUNC( hb_compExprUseArgList )
 }
 
 /* NOTE: In PUSH operation it leaves all expressions on the eval stack,
- *       the expresions are divided into macro compiled blocks
+ *       the expressions are divided into macro compiled blocks
  */
 static HB_EXPR_FUNC( hb_compExprUseMacroArgList )
 {
@@ -1342,10 +1343,10 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                       */
                      PHB_EXPR pNew = HB_COMP_EXPR_NEW( HB_ET_NONE );
                      memcpy( pNew, pExpr, sizeof( HB_EXPR ) );
-                     /* This will suppres releasing of memory occupied by components of
+                     /* This will suppress releasing of memory occupied by components of
                       * the expression - we have just copied them into the new expression.
                       * This method is simpler then traversing the list and releasing all
-                      * but this choosen one.
+                      * but this chosen one.
                       */
                      pExpr->ExprType = HB_ET_NONE;
                      /* Here comes the magic */
@@ -1602,7 +1603,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             {
                /* complex macro expression: prefix&var.suffix
                 * all components should be placed as a string that will
-                * be compiled after text susbstitution
+                * be compiled after text substitution
                 */
 
                /* Check if macrotext variable does not refer to
@@ -1694,7 +1695,7 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
             {
                /* complex macro expression: prefix&var.suffix
                 * all components should be placed as a string that will
-                * be compiled after text susbstitution
+                * be compiled after text substitution
                 */
 
                /* Check if macrotext variable does not refer to
@@ -2358,7 +2359,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasVar )
    return pSelf;
 }
 
-/* handler for expression->( exression, ... ) syntax
+/* handler for expression->( expression, ... ) syntax
  */
 static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
 {
@@ -2396,7 +2397,7 @@ static HB_EXPR_FUNC( hb_compExprUseAliasExpr )
          HB_EXPR_USE( pSelf->value.asAlias.pExpList, HB_EA_PUSH_PCODE );
          /* swap the two last items on the eval stack: one item is a
           * value returned by evaluated expression and the second item
-          * is previously selected workarea. After swaping select again
+          * is previously selected workarea. After swapping select again
           * the restored workarea.
           */
          HB_GEN_FUNC1( PCode1, HB_P_SWAPALIAS );
@@ -2535,7 +2536,7 @@ static HB_EXPR_FUNC( hb_compExprUseVariable )
           * operator only (if 'any_expr' is not a string) - an alias value
           * is placed on the eval stack before macro compilation.
           * The HB_MACRO_GEN_ALIASED flag is used to signal that we have to
-          * genearate alias aware pcode even if we known a variable part only.
+          * generate alias aware pcode even if we known a variable part only.
           */
          if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_ALIASED )
             HB_GEN_FUNC4( PushAliasedVar, pSelf->value.asSymbol.name, HB_FALSE, NULL, 0 );
@@ -2713,7 +2714,7 @@ static HB_EXPR_FUNC( hb_compExprUseSend )
          }
          else
          {
-            /* acces to instance variable */
+            /* access to instance variable */
             hb_compExprPushSendPush( pSelf, HB_COMP_PARAM );
             HB_GEN_FUNC2( PCode2, HB_P_SENDSHORT, 0 );
          }
@@ -2910,7 +2911,7 @@ static HB_EXPR_FUNC( hb_compExprUseAssign )
          break;
 
       case HB_EA_PUSH_PCODE:
-         /* NOTE: assigment to an object instance variable needs special handling
+         /* NOTE: assignment to an object instance variable needs special handling
           */
          if( pSelf->value.asOperator.pLeft->ExprType == HB_ET_SEND )
          {
@@ -4551,11 +4552,11 @@ static HB_BOOL hb_compExprCodeblockPush( PHB_EXPR pSelf, int iEarlyEvalPass, HB_
          pExpr->pNext = pNext;  /* restore the link to next expression */
       }
 
-      /* Generate push/pop pcodes for all expresions except the last one
+      /* Generate push/pop pcodes for all expressions except the last one
        * The value of the last expression is used as a return value
        * of a codeblock evaluation
        */
-      /* NOTE: This will genereate warnings if constant value is
+      /* NOTE: This will generate warnings if constant value is
        * used as an expression - some operators will generate it too
        * e.g.
        * Eval( {|| 3+5, func()} )
@@ -4624,7 +4625,7 @@ static void hb_compExprCodeblockEarly( PHB_EXPR pSelf, HB_COMP_DECL )
    }
    else
    {
-      /* generate code to check if macroexpression refers to local, static
+      /* generate code to check if macro-expression refers to local, static
        * or field variables and generate error in such case or disable
        * iEarlyEvalPass when -kd (MACRODECL) switch is used.
        * In the 2nd case hb_compExprCodeblockPush() returns true and generated
@@ -4741,7 +4742,7 @@ static void hb_compExprPushSendPopPush( PHB_EXPR pObj, PHB_EXPR pValue,
       /* Push message */
       if( pObj->value.asMessage.szMessage )
       {
-         /* HB_TRUE used intnetionally to not push object variable in WITH OBJECT */
+         /* HB_TRUE used intentionally not to push object variable in WITH OBJECT */
          HB_GEN_FUNC2( Message, pObj->value.asMessage.szMessage, HB_TRUE );
       }
       else
@@ -5476,7 +5477,7 @@ static PHB_EXPR hb_compExprReduceList( PHB_EXPR pList, HB_COMP_DECL )
 {
    PHB_EXPR * pExpr;
 
-   /* NOTE: During optimalization an expression on the list can be
+   /* NOTE: During optimization an expression on the list can be
     * replaced by the new one
     */
 

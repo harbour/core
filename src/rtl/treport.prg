@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -180,7 +180,7 @@ CREATE CLASS HBReportForm
 
 ENDCLASS
 
-METHOD New( cFrmName AS STRING, ;
+METHOD PROCEDURE New( cFrmName AS STRING, ;
       lPrinter AS LOGICAL, ;
       cAltFile AS STRING, ;
       lNoConsole AS LOGICAL, ;
@@ -421,7 +421,7 @@ METHOD New( cFrmName AS STRING, ;
       BREAK xBreakVal
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 METHOD PrintIt( cString AS STRING ) CLASS HBReportForm
 
@@ -486,7 +486,7 @@ METHOD ReportHeader() CLASS HBReportForm
       NEXT
    NEXT
 
-   AAdd( aPageHeader, "" )  // S87 compat.
+   AAdd( aPageHeader, "" )  // S87 compatibility
 
    nLinesInHeader := Len( aPageHeader )
    nMaxColLength := 0
@@ -532,7 +532,7 @@ METHOD ReportHeader() CLASS HBReportForm
 
    RETURN Self
 
-METHOD ExecuteReport() CLASS HBReportForm
+METHOD PROCEDURE ExecuteReport() CLASS HBReportForm
 
    LOCAL aRecordHeader  := {}          // Header for the current record
    LOCAL aRecordToPrint := {}          // Current record to print
@@ -724,11 +724,12 @@ METHOD ExecuteReport() CLASS HBReportForm
       // Determine the max number of lines needed by each expression
       nMaxLines := 1
       FOR EACH aCol IN ::aReportData[ RPT_COLUMNS ]
-         IF aCol[ RCT_TYPE ] $ "M"
+         DO CASE
+         CASE aCol[ RCT_TYPE ] $ "M"
             nMaxLines := Max( XMLCOUNT( Eval( aCol[ RCT_EXP ] ), aCol[ RCT_WIDTH ] ), nMaxLines )
-         ELSEIF aCol[ RCT_TYPE ] $ "C"
+         CASE aCol[ RCT_TYPE ] $ "C"
             nMaxLines := Max( XMLCOUNT( StrTran( Eval( aCol[ RCT_EXP ] ), ";", hb_eol() ), aCol[ RCT_WIDTH ] ), nMaxLines )
-         ENDIF
+         ENDCASE
       NEXT
 
       // Size aRecordToPrint to the maximum number of lines it will need, then
@@ -810,7 +811,7 @@ METHOD ExecuteReport() CLASS HBReportForm
       // Tack on the spacing for double/triple/etc.
       IF ::aReportData[ RPT_SPACING ] > 1
 
-         /*  Double space problem in REPORT FORM at the bottom of the page  */
+         /* Double space problem in REPORT FORM at the bottom of the page  */
          IF ::nLinesLeft >= ::aReportData[ RPT_SPACING ] - 1
 
             FOR nLine := 2 TO ::aReportData[ RPT_SPACING ]
@@ -821,7 +822,7 @@ METHOD ExecuteReport() CLASS HBReportForm
       ENDIF
    ENDIF    // Was this a summary report?
 
-   RETURN NIL
+   RETURN
 
 METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
@@ -1015,20 +1016,13 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
    RETURN aReport
 
-/***
-*  GetExpr( nPointer ) --> cString
-*
-*  Reads an expression from EXPR_BUFF via the OFFSETS_BUFF and returns
-*  a pointer to offset contained in OFFSETS_BUFF that in turn points
-*  to an expression located in the EXPR_BUFF string.
-*
-*  Notes:
-*
-*     1. The expression is empty if:
-*         a. Passed pointer is equal to 65535
-*         b. Character following character pointed to by pointer is Chr( 0 )
-*/
-
+/* Reads an expression from EXPR_BUFF via the OFFSETS_BUFF and returns
+   a pointer to offset contained in OFFSETS_BUFF that in turn points
+   to an expression located in the EXPR_BUFF string.
+   Notes:
+      1. The expression is empty if:
+          a. Passed pointer is equal to 65535
+          b. Character following character pointed to by pointer is hb_BChar( 0 ) */
 METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
 
    LOCAL nExprOffset
@@ -1036,11 +1030,11 @@ METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
    LOCAL nOffsetOffset := 0
    LOCAL cString := ""
 
-   // Stuff for dBASE compatability.
+   // Stuff for dBase compatibility.
 
    IF nPointer != 65535
 
-      // Convert FILE offset to CLIPPER string offset
+      // Convert FILE offset to Cl*pper string offset
       nPointer++
 
       // Calculate offset into OFFSETS_BUFF
@@ -1060,7 +1054,7 @@ METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
       // Extract string
       cString := hb_BSubStr( ::cExprBuff, nExprOffset, nExprLength )
 
-      // dBASE does this so we must do it too
+      // dBase does this so we must do it too
       // Character following character pointed to by pointer is NULL
       IF hb_BLeft( cString, 1 ) == hb_BChar( 0 )
          cString := ""
@@ -1096,10 +1090,6 @@ STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
 
    RETURN MLCount( RTrim( cString ), nLineLength, nTabSize, lWrap )
 
-/***
-*  XMEMOLINE( <cString>, [<nLineLength>], [<nLineNumber>],
-*             [<nTabSize>], [<lWrap>] ) --> cLine
-*/
 STATIC FUNCTION XMEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap )
 
    hb_default( @nLineLength, 79 )
@@ -1140,18 +1130,12 @@ STATIC FUNCTION ParseHeader( cHeaderString, nFields )
 
    RETURN aPageHeader
 
-/***
-*  GetColumn( <cFieldBuffer>, @<nOffset> ) --> aColumn
-*
-*  Get a COLUMN element from FIELDS_BUFF string using nOffset to point to
-*  the current FIELDS_OFFSET block.
-*
-*  Notes:
-*     1. The Header or Contents expressions are empty if:
-*        a. Passed pointer is equal to 65535
-*        b. Character following character pointed to by pointer is Chr( 0 )
-*/
-
+/* Get a COLUMN element from FIELDS_BUFF string using nOffset to point to
+   the current FIELDS_OFFSET block.
+   Notes:
+      1. The Header or Contents expressions are empty if:
+         a. Passed pointer is equal to 65535
+         b. Character following character pointed to by pointer is hb_BChar( 0 ) */
 METHOD GetColumn( cFieldsBuffer AS STRING, /* @ */ nOffset AS NUMERIC ) CLASS HBReportForm
 
    LOCAL aColumn[ RCT_COUNT ]
@@ -1233,9 +1217,11 @@ STATIC FUNCTION MakeAStr( uVar, cType )
 
    RETURN "INVALID EXPRESSION"
 
-FUNCTION __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
+PROCEDURE __ReportForm( cFRMName, lPrinter, cAltFile, lNoConsole, bFor, ;
       bWhile, nNext, nRecord, lRest, lPlain, cHeading, ;
       lBEject, lSummary )
 
-   RETURN HBReportForm():New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nRecord, ;
+   HBReportForm():New( cFrmName, lPrinter, cAltFile, lNoConsole, bFor, bWhile, nNext, nRecord, ;
       lRest, lPlain, cHeading, lBEject, lSummary )
+
+   RETURN

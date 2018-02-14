@@ -13,20 +13,18 @@
 
 #pragma -km+
 
-/*
-  Docs:
+/* Docs:
 
-  RFC 1945 - Hypertext Transfer Protocol -- HTTP/1.0
-  RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1
-  HTTP Made Really Easy (http://www.jmarshall.com/easy/http/)
-*/
+   RFC 1945 - Hypertext Transfer Protocol -- HTTP/1.0 - https://tools.ietf.org/html/rfc1945
+   RFC 2616 - Hypertext Transfer Protocol -- HTTP/1.1 - https://tools.ietf.org/html/rfc2616
+   HTTP Made Really Easy - https://www.jmarshall.com/easy/http/
+ */
 
-
-#define THREAD_COUNT_PREALLOC    3
+#define THREAD_COUNT_PREALLOC   3
 #define THREAD_COUNT_MAX        50
-#define SESSION_TIMEOUT        600
+#define SESSION_TIMEOUT         600
 
-#define CR_LF                       ( Chr( 13 ) + Chr( 10 ) )
+#define CR_LF                   ( Chr( 13 ) + Chr( 10 ) )
 
 THREAD STATIC t_cResult, t_nStatusCode, t_aHeader, t_aSessionData
 
@@ -35,12 +33,14 @@ MEMVAR server, get, post, cookie, session, httpd
 CREATE CLASS UHttpd MODULE FRIENDLY
 
    EXPORTED:
+
    METHOD Run( hConfig )
    METHOD Stop()
 
    VAR cError INIT ""
 
    HIDDEN:
+
    VAR hConfig
 
    VAR aFirewallFilter
@@ -63,7 +63,6 @@ CREATE CLASS UHttpd MODULE FRIENDLY
 ENDCLASS
 
 FUNCTION UHttpdNew()
-
    RETURN UHttpd()
 
 METHOD Run( hConfig ) CLASS UHttpd
@@ -71,11 +70,11 @@ METHOD Run( hConfig ) CLASS UHttpd
    LOCAL hSocket, nI, aI, xValue, aThreads, nJobs, nWorkers
 
    IF ! hb_mtvm()
-      Self:cError := "Multithread support required"
+      ::cError := "Multithread support required"
       RETURN .F.
    ENDIF
 
-   Self:hConfig := { ;
+   ::hConfig := { ;
       "SSL"                  => .F., ;
       "Port"                 => 80, ;
       "BindAddress"          => "0.0.0.0", ;
@@ -89,67 +88,66 @@ METHOD Run( hConfig ) CLASS UHttpd
       "FirewallFilter"       => "0.0.0.0/0" }
 
    FOR EACH xValue IN hConfig
-      IF ! hb_HHasKey( Self:hConfig, xValue:__enumKey ) .OR. !( ValType( xValue ) == ValType( Self:hConfig[ xValue:__enumKey ] ) )
-         Self:cError := "Invalid config option '" + xValue:__enumKey + "'"
+      IF ! hb_HHasKey( ::hConfig, xValue:__enumKey ) .OR. !( ValType( xValue ) == ValType( ::hConfig[ xValue:__enumKey ] ) )
+         ::cError := "Invalid config option '" + xValue:__enumKey + "'"
          RETURN .F.
       ENDIF
-      Self:hConfig[ xValue:__enumKey ] := xValue
+      ::hConfig[ xValue:__enumKey ] := xValue
    NEXT
 
-
-   IF Self:hConfig[ "SSL" ]
-      IF Self:lHasSSL
+   IF ::hConfig[ "SSL" ]
+      IF ::lHasSSL
          SSL_init()
          DO WHILE RAND_status() != 1
             RAND_add( Str( hb_Random(), 18, 15 ) + Str( hb_MilliSeconds(), 20 ), 1 )
          ENDDO
 
-         Self:hSSLCtx := SSL_CTX_new( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
-         SSL_CTX_set_options( Self:hSSLCtx, HB_SSL_OP_NO_TLSv1 )
-         IF SSL_CTX_use_PrivateKey_file( Self:hSSLCtx, Self:hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
-            Self:cError := "Invalid private key file"
+         ::hSSLCtx := SSL_CTX_new( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
+         SSL_CTX_set_options( ::hSSLCtx, HB_SSL_OP_NO_TLSv1 )
+         IF SSL_CTX_use_PrivateKey_file( ::hSSLCtx, ::hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+            ::cError := "Invalid private key file"
             RETURN .F.
          ENDIF
-         IF SSL_CTX_use_certificate_file( Self:hSSLCtx, Self:hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
-            Self:cError := "Invalid certificate file"
+         IF SSL_CTX_use_certificate_file( ::hSSLCtx, ::hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+            ::cError := "Invalid certificate file"
             RETURN .F.
          ENDIF
       ELSE
-         Self:cError := "SSL not supported"
+         ::cError := "SSL not supported"
          RETURN .F.
       ENDIF
    ENDIF
 
-   IF Self:hConfig[ "Port" ] < 1 .OR. Self:hConfig[ "Port" ] > 65535
-      Self:cError := "Invalid port number"
+   IF ::hConfig[ "Port" ] < 1 .OR. ::hConfig[ "Port" ] > 65535
+      ::cError := "Invalid port number"
       RETURN .F.
    ENDIF
 
-   IF ParseFirewallFilter( Self:hConfig[ "FirewallFilter" ], @aI )
-      Self:aFirewallFilter := aI
+   IF ParseFirewallFilter( ::hConfig[ "FirewallFilter" ], @aI )
+      ::aFirewallFilter := aI
    ELSE
-      Self:cError := "Invalid firewall filter"
+      ::cError := "Invalid firewall filter"
       RETURN .F.
    ENDIF
 
-   Self:hmtxQueue   := hb_mutexCreate()
-   Self:hmtxLog     := hb_mutexCreate()
-   Self:hmtxSession := hb_mutexCreate()
+   ::hmtxQueue   := hb_mutexCreate()
+   ::hmtxLog     := hb_mutexCreate()
+   ::hmtxSession := hb_mutexCreate()
 
-   IF Empty( Self:hListen := hb_socketOpen() )
-      Self:cError := "Socket create error: " + hb_socketErrorString()
+   IF Empty( ::hListen := hb_socketOpen() )
+      ::cError := "Socket create error: " + hb_socketErrorString()
       RETURN .F.
    ENDIF
 
-   IF ! hb_socketBind( Self:hListen, { HB_SOCKET_AF_INET, Self:hConfig[ "BindAddress" ], Self:hConfig[ "Port" ] } )
-      Self:cError := "Bind error: " + hb_socketErrorString()
-      hb_socketClose( Self:hListen )
+   IF ! hb_socketBind( ::hListen, { HB_SOCKET_AF_INET, ::hConfig[ "BindAddress" ], ::hConfig[ "Port" ] } )
+      ::cError := "Bind error: " + hb_socketErrorString()
+      hb_socketClose( ::hListen )
       RETURN .F.
    ENDIF
 
-   IF ! hb_socketListen( Self:hListen )
-      Self:cError := "Listen error: " + hb_socketErrorString()
-      hb_socketClose( Self:hListen )
+   IF ! hb_socketListen( ::hListen )
+      ::cError := "Listen error: " + hb_socketErrorString()
+      hb_socketClose( ::hListen )
       RETURN .F.
    ENDIF
 
@@ -158,49 +156,49 @@ METHOD Run( hConfig ) CLASS UHttpd
       AAdd( aThreads, hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @ProcessConnection(), Self ) )
    NEXT
 
-   Self:lStop := .F.
-   Self:hSession := { => }
+   ::lStop := .F.
+   ::hSession := { => }
 
    DO WHILE .T.
-      IF Empty( hSocket := hb_socketAccept( Self:hListen,, 1000 ) )
+      IF Empty( hSocket := hb_socketAccept( ::hListen,, 1000 ) )
          IF hb_socketGetError() == HB_SOCKET_ERR_TIMEOUT
-            Eval( Self:hConfig[ "Idle" ], Self )
-            IF Self:lStop
+            Eval( ::hConfig[ "Idle" ], Self )
+            IF ::lStop
                EXIT
             ENDIF
          ELSE
-            Self:LogError( "[error] Accept error: " + hb_socketErrorString() )
+            ::LogError( "[error] Accept error: " + hb_socketErrorString() )
          ENDIF
       ELSE
-         Eval( Self:hConfig[ "Trace" ], "New connection", hSocket )
-         IF hb_mutexQueueInfo( Self:hmtxQueue, @nWorkers, @nJobs ) .AND. ;
+         Eval( ::hConfig[ "Trace" ], "New connection", hSocket )
+         IF hb_mutexQueueInfo( ::hmtxQueue, @nWorkers, @nJobs ) .AND. ;
                Len( aThreads ) < THREAD_COUNT_MAX .AND. ;
                nJobs >= nWorkers
             AAdd( aThreads, hb_threadStart( HB_THREAD_INHERIT_PUBLIC, @ProcessConnection(), Self ) )
          ENDIF
-         hb_mutexNotify( Self:hmtxQueue, hSocket )
+         hb_mutexNotify( ::hmtxQueue, hSocket )
       ENDIF
    ENDDO
-   hb_socketClose( Self:hListen )
+   hb_socketClose( ::hListen )
 
    /* End child threads */
-   AEval( aThreads, {|| hb_mutexNotify( Self:hmtxQueue, NIL ) } )
+   AEval( aThreads, {|| hb_mutexNotify( ::hmtxQueue, NIL ) } )
    AEval( aThreads, {| h | hb_threadJoin( h ) } )
 
    RETURN .T.
 
 METHOD Stop() CLASS UHttpd
 
-   Eval( Self:hConfig[ "Trace" ], "stopping" )
-   Self:lStop := .T.
+   Eval( ::hConfig[ "Trace" ], "stopping" )
+   ::lStop := .T.
 
    RETURN NIL
 
 METHOD LogError( cError ) CLASS UHttpd
 
-   hb_mutexLock( Self:hmtxLog )
-   Eval( Self:hConfig[ "LogError" ], DToS( Date() ) + " " + Time() + " " + cError )
-   hb_mutexUnlock( Self:hmtxLog )
+   hb_mutexLock( ::hmtxLog )
+   Eval( ::hConfig[ "LogError" ], DToS( Date() ) + " " + Time() + " " + cError )
+   hb_mutexUnlock( ::hmtxLog )
 
    RETURN NIL
 
@@ -208,15 +206,15 @@ METHOD LogAccess() CLASS UHttpd
 
    LOCAL cDate := DToS( Date() ), cTime := Time()
 
-   hb_mutexLock( Self:hmtxLog )
-   Eval( Self:hConfig[ "LogAccess" ], ;
+   hb_mutexLock( ::hmtxLog )
+   Eval( ::hConfig[ "LogAccess" ], ;
       server[ "REMOTE_ADDR" ] + " - - [" + Right( cDate, 2 ) + "/" + ;
       { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Val( SubStr( cDate, 5, 2 ) ) ] + ;
       "/" + Left( cDate, 4 ) + ":" + cTime + ' +0000] "' + server[ "REQUEST_ALL" ] + '" ' + ;
       hb_ntos( t_nStatusCode ) + " " + hb_ntos( Len( t_cResult ) ) + ;
       ' "' + server[ "HTTP_REFERER" ] + '" "' + server[ "HTTP_USER_AGENT" ] + ;
       '"' )
-   hb_mutexUnlock( Self:hmtxLog )
+   hb_mutexUnlock( ::hmtxLog )
 
    RETURN NIL
 
@@ -261,7 +259,7 @@ STATIC FUNCTION ParseFirewallFilter( cFilter, aFilter )
                ENDIF
             ELSE
                nPrefix := Val( cI )
-               IF nPrefix < 0 .OR. nPrefix > 32 .OR. !( hb_ntos( nPrefix ) == cI )
+               IF nPrefix < 0 .OR. nPrefix > 32 .OR. ! hb_ntos( nPrefix ) == cI
                   RETURN .F.
                ENDIF
             ENDIF
@@ -491,7 +489,7 @@ STATIC FUNCTION ProcessConnection( oServer )
          ENDDO
 
          IF nErr != 0
-            Eval( oServer:hConfig[ "Trace" ], "Close connection1", hSocket )
+            Eval( oServer:hConfig[ "Trace" ], "Close connection", hSocket )
             hb_socketShutdown( hSocket )
             hb_socketClose( hSocket )
             LOOP
@@ -614,9 +612,9 @@ STATIC FUNCTION ProcessConnection( oServer )
             IF !( Left( server[ "SERVER_PROTOCOL" ], 5 ) == "HTTP/" )
                USetStatusCode( 400 ) /* Bad request */
                UAddHeader( "Connection", "close" )
-            ELSEIF !( SubStr( server[ "SERVER_PROTOCOL" ], 6 ) $ "1.0 1.1" )
+            ELSEIF ! SubStr( server[ "SERVER_PROTOCOL" ], 6 ) $ "1.0 1.1"
                USetStatusCode( 505 ) /* HTTP version not supported */
-            ELSEIF !( server[ "REQUEST_METHOD" ] $ "GET POST" )
+            ELSEIF ! server[ "REQUEST_METHOD" ] $ "GET POST"
                USetStatusCode( 501 ) /* Not implemented */
             ELSE
                IF server[ "SERVER_PROTOCOL" ] == "HTTP/1.1"
@@ -801,7 +799,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
          ENDSWITCH
       ENDIF
    NEXT
-   IF !( server[ "QUERY_STRING" ] == "" )
+   IF ! server[ "QUERY_STRING" ] == ""
       FOR EACH cI IN hb_ATokens( server[ "QUERY_STRING" ], "&" )
          IF ( nI := At( "=", cI ) ) > 0
             get[ UUrlDecode( Left( cI, nI - 1 ) ) ] := UUrlDecode( SubStr( cI, nI + 1 ) )
@@ -813,7 +811,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
 
    RETURN nContentLength
 
-STATIC FUNCTION ParseRequestBody( cRequest )
+STATIC PROCEDURE ParseRequestBody( cRequest )
 
    LOCAL nI, cPart, cEncoding
 
@@ -822,7 +820,7 @@ STATIC FUNCTION ParseRequestBody( cRequest )
       IF ( nI := At( "CHARSET=", Upper( server[ "CONTENT_TYPE" ] ) ) ) > 0
          cEncoding := Upper( SubStr( server[ "CONTENT_TYPE" ], nI + 8 ) )
       ENDIF
-      IF !( cRequest == "" )
+      IF ! cRequest == ""
          IF cEncoding == "UTF-8"
             FOR EACH cPart IN hb_ATokens( cRequest, "&" )
                IF ( nI := At( "=", cPart ) ) > 0
@@ -843,7 +841,7 @@ STATIC FUNCTION ParseRequestBody( cRequest )
       ENDIF
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION MakeResponse( hConfig )
 
@@ -856,47 +854,47 @@ STATIC FUNCTION MakeResponse( hConfig )
 
    cRet := iif( server[ "SERVER_PROTOCOL" ] == "HTTP/1.0", "HTTP/1.0 ", "HTTP/1.1 " )
    SWITCH t_nStatusCode
-   CASE 100 ;  cStatus := "100 Continue"                        ;  EXIT
-   CASE 101 ;  cStatus := "101 Switching Protocols"             ;  EXIT
-   CASE 200 ;  cStatus := "200 OK"                              ;  EXIT
-   CASE 201 ;  cStatus := "201 Created"                         ;  EXIT
-   CASE 202 ;  cStatus := "202 Accepted"                        ;  EXIT
-   CASE 203 ;  cStatus := "203 Non-Authoritative Information"   ;  EXIT
-   CASE 204 ;  cStatus := "204 No Content"                      ;  EXIT
-   CASE 205 ;  cStatus := "205 Reset Content"                   ;  EXIT
-   CASE 206 ;  cStatus := "206 Partial Content"                 ;  EXIT
-   CASE 300 ;  cStatus := "300 Multiple Choices"                ;  EXIT
-   CASE 301 ;  cStatus := "301 Moved Permanently"               ;  EXIT
-   CASE 302 ;  cStatus := "302 Found"                           ;  EXIT
-   CASE 303 ;  cStatus := "303 See Other"                       ;  EXIT
-   CASE 304 ;  cStatus := "304 Not Modified"                    ;  EXIT
-   CASE 305 ;  cStatus := "305 Use Proxy"                       ;  EXIT
-   CASE 307 ;  cStatus := "307 Temporary Redirect"              ;  EXIT
-   CASE 400 ;  cStatus := "400 Bad Request"                     ;  EXIT
-   CASE 401 ;  cStatus := "401 Unauthorized"                    ;  EXIT
-   CASE 402 ;  cStatus := "402 Payment Required"                ;  EXIT
-   CASE 403 ;  cStatus := "403 Forbidden"                       ;  EXIT
-   CASE 404 ;  cStatus := "404 Not Found"                       ;  EXIT
-   CASE 405 ;  cStatus := "405 Method Not Allowed"              ;  EXIT
-   CASE 406 ;  cStatus := "406 Not Acceptable"                  ;  EXIT
-   CASE 407 ;  cStatus := "407 Proxy Authentication Required"   ;  EXIT
-   CASE 408 ;  cStatus := "408 Request Timeout"                 ;  EXIT
-   CASE 409 ;  cStatus := "409 Conflict"                        ;  EXIT
-   CASE 410 ;  cStatus := "410 Gone"                            ;  EXIT
-   CASE 411 ;  cStatus := "411 Length Required"                 ;  EXIT
-   CASE 412 ;  cStatus := "412 Precondition Failed"             ;  EXIT
-   CASE 413 ;  cStatus := "413 Request Entity Too Large"        ;  EXIT
-   CASE 414 ;  cStatus := "414 Request-URI Too Long"            ;  EXIT
-   CASE 415 ;  cStatus := "415 Unsupprted Media Type"           ;  EXIT
-   CASE 416 ;  cStatus := "416 Requested Range Not Satisfiable" ;  EXIT
-   CASE 417 ;  cStatus := "417 Expectation Failed"              ;  EXIT
-   CASE 500 ;  cStatus := "500 Internal Server Error"           ;  EXIT
-   CASE 501 ;  cStatus := "501 Not Implemented"                 ;  EXIT
-   CASE 502 ;  cStatus := "502 Bad Gateway"                     ;  EXIT
-   CASE 503 ;  cStatus := "503 Service Unavailable"             ;  EXIT
-   CASE 504 ;  cStatus := "504 Gateway Timeout"                 ;  EXIT
-   CASE 505 ;  cStatus := "505 HTTP Version Not Supported"      ;  EXIT
-   OTHERWISE;  cStatus := "500 Internal Server Error"
+   CASE 100 ; cStatus := "100 Continue"                        ;  EXIT
+   CASE 101 ; cStatus := "101 Switching Protocols"             ;  EXIT
+   CASE 200 ; cStatus := "200 OK"                              ;  EXIT
+   CASE 201 ; cStatus := "201 Created"                         ;  EXIT
+   CASE 202 ; cStatus := "202 Accepted"                        ;  EXIT
+   CASE 203 ; cStatus := "203 Non-Authoritative Information"   ;  EXIT
+   CASE 204 ; cStatus := "204 No Content"                      ;  EXIT
+   CASE 205 ; cStatus := "205 Reset Content"                   ;  EXIT
+   CASE 206 ; cStatus := "206 Partial Content"                 ;  EXIT
+   CASE 300 ; cStatus := "300 Multiple Choices"                ;  EXIT
+   CASE 301 ; cStatus := "301 Moved Permanently"               ;  EXIT
+   CASE 302 ; cStatus := "302 Found"                           ;  EXIT
+   CASE 303 ; cStatus := "303 See Other"                       ;  EXIT
+   CASE 304 ; cStatus := "304 Not Modified"                    ;  EXIT
+   CASE 305 ; cStatus := "305 Use Proxy"                       ;  EXIT
+   CASE 307 ; cStatus := "307 Temporary Redirect"              ;  EXIT
+   CASE 400 ; cStatus := "400 Bad Request"                     ;  EXIT
+   CASE 401 ; cStatus := "401 Unauthorized"                    ;  EXIT
+   CASE 402 ; cStatus := "402 Payment Required"                ;  EXIT
+   CASE 403 ; cStatus := "403 Forbidden"                       ;  EXIT
+   CASE 404 ; cStatus := "404 Not Found"                       ;  EXIT
+   CASE 405 ; cStatus := "405 Method Not Allowed"              ;  EXIT
+   CASE 406 ; cStatus := "406 Not Acceptable"                  ;  EXIT
+   CASE 407 ; cStatus := "407 Proxy Authentication Required"   ;  EXIT
+   CASE 408 ; cStatus := "408 Request Timeout"                 ;  EXIT
+   CASE 409 ; cStatus := "409 Conflict"                        ;  EXIT
+   CASE 410 ; cStatus := "410 Gone"                            ;  EXIT
+   CASE 411 ; cStatus := "411 Length Required"                 ;  EXIT
+   CASE 412 ; cStatus := "412 Precondition Failed"             ;  EXIT
+   CASE 413 ; cStatus := "413 Request Entity Too Large"        ;  EXIT
+   CASE 414 ; cStatus := "414 Request-URI Too Long"            ;  EXIT
+   CASE 415 ; cStatus := "415 Unsupprted Media Type"           ;  EXIT
+   CASE 416 ; cStatus := "416 Requested Range Not Satisfiable" ;  EXIT
+   CASE 417 ; cStatus := "417 Expectation Failed"              ;  EXIT
+   CASE 500 ; cStatus := "500 Internal Server Error"           ;  EXIT
+   CASE 501 ; cStatus := "501 Not Implemented"                 ;  EXIT
+   CASE 502 ; cStatus := "502 Bad Gateway"                     ;  EXIT
+   CASE 503 ; cStatus := "503 Service Unavailable"             ;  EXIT
+   CASE 504 ; cStatus := "504 Gateway Timeout"                 ;  EXIT
+   CASE 505 ; cStatus := "505 HTTP Version Not Supported"      ;  EXIT
+   OTHERWISE; cStatus := "500 Internal Server Error"
    ENDSWITCH
 
    cRet += cStatus + CR_LF
@@ -919,7 +917,7 @@ STATIC FUNCTION HttpDateFormat( tDate )
       { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
       PadL( Day( tDate ), 2, "0" ) + " " + ;
       { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + ;
-      " " + PadL( Year( tDate ), 4, "0" ) + " " + hb_TToC( tDate, "", "HH:MM:SS" ) + " GMT" // TOFIX: time zone
+      " " + PadL( Year( tDate ), 4, "0" ) + " " + hb_TToC( tDate, "", "HH:MM:SS" ) + " GMT" // FIXME: time zone
 
 STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 
@@ -943,13 +941,16 @@ STATIC FUNCTION HttpDateUnformat( cDate, tDate )
 STATIC FUNCTION UErrorHandler( oErr, oServer )
 
    Eval( oServer:hConfig[ "Trace" ], "UErrorHandler" )
-   IF oErr:genCode == EG_ZERODIV;  RETURN 0
-   ELSEIF oErr:genCode == EG_LOCK;     RETURN .T.
-   ELSEIF ( oErr:genCode == EG_OPEN .AND. oErr:osCode == 32 .OR. ;
+   DO CASE
+   CASE oErr:genCode == EG_ZERODIV
+      RETURN 0
+   CASE oErr:genCode == EG_LOCK
+      RETURN .T.
+   CASE ( oErr:genCode == EG_OPEN .AND. oErr:osCode == 32 .OR. ;
          oErr:genCode == EG_APPENDLOCK ) .AND. oErr:canDefault
       NetErr( .T. )
       RETURN .F.
-   ENDIF
+   ENDCASE
    oServer:LogError( GetErrorDesc( oErr ) )
    IF oErr != NIL // Dummy check to avoid unreachable code warning for RETURN NIL
       Break( oErr )
@@ -1124,9 +1125,7 @@ STATIC FUNCTION cvt2str( xI, lLong )
    RETURN NIL
 
 
-/********************************************************************
-  Public functions
-********************************************************************/
+/* Public functions */
 
 PROCEDURE USetStatusCode( nStatusCode )
 
@@ -1139,7 +1138,7 @@ FUNCTION UGetHeader( cType )
    LOCAL nI
 
    IF ( nI := AScan( t_aHeader, {| x | Upper( x[ 1 ] ) == Upper( cType ) } ) ) > 0
-      RETURN t_aHeader[ nI, 2 ]
+      RETURN t_aHeader[ nI ][ 2 ]
    ENDIF
 
    RETURN NIL
@@ -1149,7 +1148,7 @@ PROCEDURE UAddHeader( cType, cValue )
    LOCAL nI
 
    IF ( nI := AScan( t_aHeader, {| x | Upper( x[ 1 ] ) == Upper( cType ) } ) ) > 0
-      t_aHeader[ nI, 2 ] := cValue
+      t_aHeader[ nI ][ 2 ] := cValue
    ELSE
       AAdd( t_aHeader, { cType, cValue } )
    ENDIF
@@ -1211,7 +1210,7 @@ PROCEDURE USessionStart()
       t_aSessionData := httpd:hSession[ cSID ]
       IF hb_mutexLock( t_aSessionData[ 1 ], 0 )
 
-         // No concurent sessions
+         // No concurrent sessions
          IF t_aSessionData[ 3 ] > hb_MilliSeconds()
             t_aSessionData[ 3 ] := hb_MilliSeconds() + SESSION_TIMEOUT * 1000
             session := t_aSessionData[ 2 ]
@@ -1221,7 +1220,7 @@ PROCEDURE USessionStart()
          ENDIF
       ELSE
 
-         // Concurent process exists
+         // Concurrent process exists
          hb_mutexUnlock( httpd:hmtxSession )
 
          // Wait for session
@@ -1239,7 +1238,7 @@ PROCEDURE USessionStart()
                USessionCreateInternal()
             ENDIF
          ELSE
-            // Session was destroyed by concurent process
+            // Session was destroyed by concurrent process
             USessionCreateInternal()
          ENDIF
       ENDIF
@@ -1267,7 +1266,7 @@ PROCEDURE USessionDestroy()
 
 FUNCTION UOsFileName( cFileName )
 
-   IF !( hb_ps() == "/" )
+   IF ! hb_ps() == "/"
       RETURN StrTran( cFileName, "/", hb_ps() )
    ENDIF
 
@@ -1462,9 +1461,9 @@ PROCEDURE UProcFiles( cFileName, lIndex )
             iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
       ENDIF
 
-      UWrite( '<html><body><h1>Index of ' + server[ "SCRIPT_NAME" ] + '</h1><pre>      ' )
-      UWrite( '<a href="?s=n">Name</a>                                                  ' )
-      UWrite( '<a href="?s=m">Modified</a>             ' )
+      UWrite( '<html><body><h1>Index of ' + server[ "SCRIPT_NAME" ] + '</h1><pre>' )
+      UWrite( '<a href="?s=n">Name</a>' )
+      UWrite( '<a href="?s=m">Modified</a>' )
       UWrite( '<a href="?s=s">Size</a>' + CR_LF + '<hr>' )
       FOR EACH aF IN aDir
          IF Left( aF[ 1 ], 1 ) == "."
@@ -1634,7 +1633,7 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
    IF cFileName == NIL
       cFileName := MEMVAR->server[ "SCRIPT_NAME" ]
    ENDIF
-   cFileName := UOsFileName( hb_DirBase() + "tpl/" + cFileName + ".tpl" )
+   cFileName := UOsFileName( hb_DirBase() + "tpl/" + cFileName + ".html" )
    IF hb_FileExists( cFileName )
       cTpl := hb_MemoRead( cFileName )
       BEGIN SEQUENCE
@@ -1721,7 +1720,7 @@ STATIC FUNCTION compile_buffer( cTpl, nStart, aCode )
 
    RETURN Len( cTpl ) + 1
 
-STATIC FUNCTION SUBSTRCOUNT( cSub, cString, nStart, nEnd )
+STATIC FUNCTION SubStrCount( cSub, cString, nStart, nEnd )
 
    LOCAL nCount := 0
 

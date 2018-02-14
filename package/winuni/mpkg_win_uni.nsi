@@ -2,7 +2,7 @@
 ; NSIS installer script for Harbour
 ;
 ; Copyright 2009 Viktor Szakats (vszakats.net/harbour)
-; See COPYING.txt for licensing terms.
+; See LICENSE.txt for licensing terms.
 ; ---------------------------------------------------------------
 
 ; TODO: option: install .dlls to system paths
@@ -15,7 +15,7 @@ SetCompressor /solid lzma
   !define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
   !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
   !define MUI_FINISHPAGE_SHOWREADME 'notepad.exe "$\"$INSTDIR\README.md$\""'
-  !define MUI_ICON "..\harb_win.ico"
+  !define MUI_ICON "..\harbour.ico"
   !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
 
 SetDateSave on
@@ -67,7 +67,7 @@ InstallDir C:\hb$%HB_VS%
 ;--------------------------------
 ; License Language String
 
-LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_ABSROOT%COPYING.txt"
+LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_ABSROOT%LICENSE.txt"
 
 ;--------------------------------
 ; The stuff to install
@@ -82,7 +82,7 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_ABSROOT%RELNOTES.txt"
 
   File /nonfatal "$%HB_ABSROOT%README.md"
-  File /nonfatal "$%HB_ABSROOT%COPYING.txt"
+  File /nonfatal "$%HB_ABSROOT%LICENSE.txt"
   File /nonfatal "$%HB_ABSROOT%ChangeLog.txt*"
 
   SetOutPath $INSTDIR\bin
@@ -335,7 +335,7 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour.lnk" "$INSTDIR" "" "$INSTDIR" 0
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbrun.exe" "" "$INSTDIR\bin\hbrun.exe" 0
   CreateDirectory "$SMPROGRAMS\Harbour $%HB_VM%\Links"
-  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
+  WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour.github.io/"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Users' Mailing List.url"        "InternetShortcut" "URL" "http://groups.google.com/group/harbour-users/"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Developers' Mailing List.url"   "InternetShortcut" "URL" "http://groups.google.com/group/harbour-devel/"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Development.url"                "InternetShortcut" "URL" "https://github.com/harbour"

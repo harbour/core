@@ -16,7 +16,7 @@ CC_OUT := -o
 
 CFLAGS += -I. -I$(HB_HOST_INC)
 
-# uncomment this if you want to force creating 64bit binaries on IA64
+# uncomment this if you want to force creating 64-bit binaries on IA64
 #CFLAGS += -mlp64
 #LDFLAGS += -mlp64
 
@@ -53,7 +53,7 @@ DFLAGS += -shared $(LIBPATHS)
 DY_OUT := -o$(subst x,x, )
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(SYSLIBS),-l$(lib))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define dynlib_object
    @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
 

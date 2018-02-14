@@ -1,5 +1,5 @@
 /*
- * Header file for C functions in xhb contrib folder
+ * Header file for C functions in xHarbour contrib directory
  *
  * Copyright 2008 {list of individual authors and e-mail addresses}
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,7 +54,7 @@ HB_EXTERN_BEGIN
 
 /* functions in hboutdbg.c */
 extern HB_EXPORT HB_BOOL hb_OutDebugName( PHB_ITEM pName );
-extern HB_EXPORT void hb_OutDebug( const char * szMsg, HB_SIZE ulMsgLen );
+extern HB_EXPORT void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen );
 
 /* functions in dbgfxc.c */
 extern HB_EXPORT HB_BOOL hb_ToOutDebugOnOff( HB_BOOL bOnOff );

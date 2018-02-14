@@ -2,7 +2,7 @@
 
 rem ---------------------------------------------------------------
 rem Copyright 2009-2013 Viktor Szakats (vszakats.net/harbour)
-rem See COPYING.txt for licensing terms.
+rem See LICENSE.txt for licensing terms.
 rem ---------------------------------------------------------------
 
 rem - Adjust target dir, mingw dirs, set HB_DIR_UPX, HB_DIR_7Z, HB_DIR_MINGW,
@@ -101,7 +101,7 @@ rem ; Create unified archive
 echo.> _hbfiles
 echo "%HB_DR%RELNOTES.txt"                          >> _hbfiles
 echo "%HB_DR%README.md"                             >> _hbfiles
-echo "%HB_DR%COPYING.txt"                           >> _hbfiles
+echo "%HB_DR%LICENSE.txt"                           >> _hbfiles
 echo "%HB_DR%ChangeLog*.txt"                        >> _hbfiles
 echo "%HB_DR%bin\*-%HB_VS%.dll"                     >> _hbfiles
 echo "%HB_DR%bin\harbour.exe"                       >> _hbfiles

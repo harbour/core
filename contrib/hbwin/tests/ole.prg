@@ -1,11 +1,10 @@
 /*
- * hbole library demo/test code
+ * OLE demo/test code
  *
  * Copyright 2007 Enrico Maria Giordano e.m.giordano at emagsoftware.it
- * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2008-2017 Viktor Szakats (vszakats.net/harbour)
  *    Exm_CDO(), Exm_OOOpen(), Exm_CreateShortcut()
- *
+ * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
  */
 
 #require "hbwin"
@@ -204,7 +203,7 @@ STATIC PROCEDURE Exm_MSOutlook2()
 
       FOR i := 1 TO 10
          oMail:Recipients:Add( "Contact" + hb_ntos( i ) + ;
-            "<contact" + hb_ntos( i ) + "@server.com>" )
+            "<contact" + hb_ntos( i ) + "@example.org>" )
       NEXT
 
       oLista := oOL:CreateItem( 7 /* olDistributionListItem */ )
@@ -225,9 +224,9 @@ STATIC PROCEDURE Exm_IExplorer()
 
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:Visible := .T.
-      oIE:Navigate( "http://harbour-project.org" )
+      oIE:Navigate( "https://harbour.github.io" )
    ELSE
-      ? "Error. IExplorer not available.", win_oleErrorText()
+      ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -239,12 +238,12 @@ STATIC PROCEDURE Exm_IExplorer2()
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
       oIE:__hSink := __axRegisterHandler( oIE:__hObj, {| ... | QOut( ... ) } )
       oIE:Visible := .T.
-      oIE:Navigate( "http://harbour-project.org" )
+      oIE:Navigate( "https://harbour.github.io" )
       WHILE oIE:ReadyState != 4
          hb_idleSleep( 0 )
       ENDDO
    ELSE
-      ? "Error. IExplorer not available.", win_oleErrorText()
+      ? "Error. Internet Explorer not available.", win_oleErrorText()
    ENDIF
 
    RETURN
@@ -386,12 +385,16 @@ STATIC FUNCTION OO_ConvertToURL( cString )
 
    RETURN "file:" + cString
 
-STATIC PROCEDURE Exm_CDO()
+STATIC PROCEDURE Exm_CDO()  /* STARTTLS not supported by CDO */
 
    LOCAL oCDOMsg
    LOCAL oCDOConf
 
+   LOCAL cFrom
+
    IF ( oCDOMsg := win_oleCreateObject( "CDO.Message" ) ) != NIL
+
+      cFrom := "from@example.org"
 
       oCDOConf := win_oleCreateObject( "CDO.Configuration" )
 
@@ -402,13 +405,13 @@ STATIC PROCEDURE Exm_CDO()
       oCDOConf:Fields:Update()
 
       oCDOMsg:Configuration := oCDOConf
-      oCDOMsg:BodyPart:Charset := "iso-8859-2" // "iso-8859-1" "utf-8"
-      oCDOMsg:To := "test@localhost"
-      oCDOMsg:From := "sender@localhost"
+      oCDOMsg:BodyPart:Charset := "utf-8"
+      oCDOMsg:To := "to@example.org"
+      oCDOMsg:From := cFrom
       oCDOMsg:Subject := "Test message"
       oCDOMsg:TextBody := "Test message body"
 
-      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+      BEGIN SEQUENCE WITH __BreakBlock()
          oCDOMsg:Send()
       RECOVER
          ? "Error: CDO send error.", win_oleErrorText()
@@ -440,7 +443,7 @@ STATIC PROCEDURE Exm_ADODB()
    IF ( oRs := win_oleCreateObject( "ADODB.Recordset" ) ) != NIL
 
       oRs:Open( "SELECT * FROM test ORDER BY First", ;
-         "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + hb_DirBase() + "\..\..\hbodbc\tests\test.mdb", ;
+         "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + hb_DirBase() + "..\..\hbodbc\tests\test.mdb", ;
          adOpenForwardOnly, ;
          adLockReadOnly )
 
@@ -460,7 +463,7 @@ STATIC PROCEDURE Exm_SOAP()
 
    IF ! Empty( oSoapClient := win_oleCreateObject( "MSSOAP.SoapClient30" ) )
 
-      oSoapClient:msSoapInit( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL" )
+      oSoapClient:msSoapInit( "https://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL" )
 
       ? oSoapClient:InvertStringCase( "lower UPPER" )
    ELSE
@@ -477,9 +480,9 @@ STATIC PROCEDURE Exm_PocketSOAP()
    IF ! Empty( oHttp ) .OR. ! Empty( oEnvelope )
 
       oEnvelope:EncodingStyle := ""
-      oEnvelope:SetMethod( "InvertStringCase", "http://www.dataaccess.com/webservicesserver/" )
+      oEnvelope:SetMethod( "InvertStringCase", "http:" + "//www.dataaccess.com/webservicesserver/" )
       oEnvelope:Parameters:Create( "sAString", "lower UPPER" )
-      oHttp:Send( "http://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL", oEnvelope:Serialize() )
+      oHttp:Send( "https://www.dataaccess.com/webservicesserver/textcasing.wso?WSDL", oEnvelope:Serialize() )
       oEnvelope:Parse( oHttp )
 
       ? oEnvelope:Parameters:Item( 0 ):Value

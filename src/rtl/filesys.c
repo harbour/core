@@ -2,6 +2,18 @@
  * The FileSys API (C level)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
+ *    hb_fsSetError(), hb_fsSetDevMode(), hb_fsReadLarge(), hb_fsWriteLarge()
+ *    hb_fsCurDirBuff(), hb_fsBaseDirBuff()
+ *    fs_win_get_drive(), fs_win_set_drive()
+ * Copyright 1999 Jose Lalin <dezac@corevia.com>
+ *    hb_fsChDrv(), hb_fsCurDrv(), hb_fsIsDrv(), hb_fsIsDevice()
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>, David G. Holm <dholm@jsd-llc.com>
+ *    hb_fsEof()
+ * Copyright 2001 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>, <tecnico.sireinsa@ctv.es>
+ *    Added platform check for any compiler to use the Windows
+ *    API calls to allow opening an unlimited number of files
+ *    simultaneously.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +26,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,39 +53,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
- *    hb_fsSetError()
- *    hb_fsSetDevMode()
- *    hb_fsReadLarge()
- *    hb_fsWriteLarge()
- *    hb_fsCurDirBuff()
- *    hb_fsBaseDirBuff()
- *    fs_win_get_drive()
- *    fs_win_set_drive()
- *
- * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    hb_fsChDrv()
- *    hb_fsCurDrv()
- *    hb_fsIsDrv()
- *    hb_fsIsDevice()
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *            and David G. Holm <dholm@jsd-llc.com>
- *    hb_fsEof()
- *
- * Copyright 2001 Jose Gimenez (JFG) <jfgimenez@wanadoo.es>
- *                                   <tecnico.sireinsa@ctv.es>
- *    Added platform check for any compiler to use the Windows
- *    API calls to allow openning an unlimited number of files
- *    simultaneously.
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -222,8 +201,8 @@
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
-       * defined and effectively enables lseek64/flock64/ftruncate64 functions
-       * on 32bit machines.
+       * defined and effectively enables lseek64()/flock64()/ftruncate64()
+       * functions on 32-bit machines.
        */
       #define HB_USE_LARGEFILE64
    #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE ) && ! defined( __WATCOMC__ )
@@ -411,20 +390,18 @@ static void fs_win_set_drive( int iDrive )
 
 static HANDLE DosToWinHandle( HB_FHANDLE fHandle )
 {
-   if( fHandle == ( HB_FHANDLE ) FS_ERROR )
-      return NULL;
-
-   else if( fHandle == ( HB_FHANDLE ) HB_STDIN_HANDLE )
-      return GetStdHandle( STD_INPUT_HANDLE );
-
-   else if( fHandle == ( HB_FHANDLE ) HB_STDOUT_HANDLE )
-      return GetStdHandle( STD_OUTPUT_HANDLE );
-
-   else if( fHandle == ( HB_FHANDLE ) HB_STDERR_HANDLE )
-      return GetStdHandle( STD_ERROR_HANDLE );
-
-   else
-      return ( HANDLE ) fHandle;
+   switch( fHandle )
+   {
+      case ( HB_FHANDLE ) FS_ERROR:
+         return NULL;
+      case ( HB_FHANDLE ) HB_STDIN_HANDLE:
+         return GetStdHandle( STD_INPUT_HANDLE );
+      case ( HB_FHANDLE ) HB_STDOUT_HANDLE:
+         return GetStdHandle( STD_OUTPUT_HANDLE );
+      case ( HB_FHANDLE ) HB_STDERR_HANDLE:
+         return GetStdHandle( STD_ERROR_HANDLE );
+   }
+   return ( HANDLE ) fHandle;
 }
 
 static void convert_open_flags( HB_BOOL fCreate, HB_FATTR nAttr, HB_USHORT uiFlags,
@@ -586,7 +563,7 @@ static void convert_open_flags( HB_BOOL fCreate, HB_FATTR nAttr, HB_USHORT uiFla
                                 int * flags, unsigned * mode,
                                 int * share, int * attr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "convert_open_flags(%d, %u, %hu, %p, %p, %p, %p)", fCreate, nAttr, uiFlags, flags, mode, share, attr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "convert_open_flags(%d, %u, %hu, %p, %p, %p, %p)", fCreate, nAttr, uiFlags, ( void * ) flags, ( void * ) mode, ( void * ) share, ( void * ) attr ) );
 
    /* file access mode */
 #if defined( HB_OS_UNIX )
@@ -720,7 +697,7 @@ HB_FHANDLE hb_fsGetOsHandle( HB_FHANDLE hFileHandle )
 }
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-/* for POSIX systems only, hides low level select()/poll() access,
+/* for POSIX systems only, hides low-level select()/poll() access,
    intentionally covered by HB_OS_UNIX macro to generate compile time
    error in code which tries to use it on other platforms */
 
@@ -855,7 +832,7 @@ int hb_fsPoll( PHB_POLLFD pPollSet, int iCount, HB_MAXINT nTimeOut )
 {
    int iResult;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsPoll(%p, %d, %" PFHL "d)", pPollSet, iCount, nTimeOut ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsPoll(%p, %d, %" PFHL "d)", ( void * ) pPollSet, iCount, nTimeOut ) );
 
    hb_vmUnlock();
 
@@ -1048,7 +1025,7 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
 {
    HB_FHANDLE hFileHandle = FS_ERROR;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsPOpen(%p, %s)", pszFileName, pszMode ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsPOpen(%p, %s)", ( const void * ) pszFileName, pszMode ) );
 
 #if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS ) && ! defined( HB_OS_SYMBIAN )
    {
@@ -1192,16 +1169,16 @@ HB_FHANDLE hb_fsPOpen( const char * pszFileName, const char * pszMode )
 #if defined( HB_OS_OS2 )
 #  if ! defined( HB_OS2_NONAMEDPIPES ) && ! defined( HB_OS2_USENAMEDPIPES )
 
-/* In OS2 anonymous pipes are not simulated by named pipes and
+/* In OS/2 anonymous pipes are not simulated by named pipes and
    unlike in MS-Windows functions for named pipes cannot be used
    with anonymous ones. Read/Write operations from/to anonymous
-   pipes are always blocking on OS2. For unblocking access we
+   pipes are always blocking on OS/2. For unblocking access we
    have to emulate anonymous pipe using named one [druzus] */
 #     define HB_OS2_USENAMEDPIPES
 
 #  endif
 
-/* the size of sustem IO buffers in OS2 pipes */
+/* the size of system IO buffers in OS/2 pipes */
 #  define HB_OS2_PIPEBUFSIZE        4096
 
 #endif
@@ -1210,7 +1187,7 @@ HB_BOOL hb_fsPipeCreate( HB_FHANDLE hPipe[ 2 ] )
 {
    HB_BOOL fResult;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsPipeCreate(%p)", hPipe ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsPipeCreate(%p)", ( void * ) hPipe ) );
 
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 {
@@ -1910,7 +1887,7 @@ HB_BOOL hb_fsGetFileTime( const char * pszFileName, long * plJulian, long * plMi
 {
    HB_BOOL fResult;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetFileTime(%s, %p, %p)", pszFileName, plJulian, plMillisec ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetFileTime(%s, %p, %p)", pszFileName, ( void * ) plJulian, ( void * ) plMillisec ) );
 
    fResult = HB_FALSE;
    *plJulian = *plMillisec = 0;
@@ -2066,7 +2043,7 @@ HB_BOOL hb_fsGetAttr( const char * pszFileName, HB_FATTR * pnAttr )
 {
    HB_BOOL fResult;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetAttr(%s, %p)", pszFileName, pnAttr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetAttr(%s, %p)", pszFileName, ( void * ) pnAttr ) );
 
    hb_vmUnlock();
 
@@ -2875,7 +2852,7 @@ HB_SIZE hb_fsReadAt( HB_FHANDLE hFileHandle, void * pBuff, HB_SIZE nCount, HB_FO
    }
 #  endif /* HB_WIN_IOREAD_LIMIT */
 
-/* TOFIX: below are not atom operations. It has to be fixed for RDD
+/* FIXME: below are not atom operations. It has to be fixed for RDD
  *        file access with shared file handles in aliased work areas
  */
 #elif defined( HB_OS_OS2 )
@@ -3014,7 +2991,7 @@ HB_SIZE hb_fsWriteAt( HB_FHANDLE hFileHandle, const void * pBuff, HB_SIZE nCount
    }
 #  endif /* HB_WIN_IOWRITE_LIMIT */
 
-/* TOFIX: below are not atom operations. It has to be fixed for RDD
+/* FIXME: below are not atom operations. It has to be fixed for RDD
  *        file access with shared file handles in aliased work areas
  */
 #elif defined( HB_OS_OS2 )
@@ -3152,7 +3129,7 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
 
 #else
 
-   /* NOTE: close() functions releases all locks regardles if it is an
+   /* NOTE: close() functions releases all locks regardless if it is an
     * original or duplicated file handle
     */
    /* This hack is very dangerous. POSIX standard define that if _ANY_
@@ -3160,7 +3137,7 @@ void hb_fsCommit( HB_FHANDLE hFileHandle )
     * pointed by this descriptor are removed. It doesn't matter they
     * were done using different descriptor. It means that we now clean
     * all locks on hFileHandle with the code below if the OS is POSIX
-    * compilant. I vote to disable it. [druzus]
+    * compliant. I vote to disable it. [druzus]
     */
    {
       int dup_handle;
@@ -3582,7 +3559,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
 
    hb_vmUnlock();
 #if defined( HB_OS_WIN )
-   /* This DOS hack creates 2GB file size limit, Druzus */
+   /* This DOS hack creates 2 GiB file size limit, Druzus */
    if( lOffset < 0 && nFlags == SEEK_SET )
    {
       ulPos = ( ULONG ) INVALID_SET_FILE_POINTER;
@@ -3604,7 +3581,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
    {
       APIRET ret;
 
-      /* This DOS hack creates 2GB file size limit, Druzus */
+      /* This DOS hack creates 2 GiB file size limit, Druzus */
       if( lOffset < 0 && nFlags == SEEK_SET )
          ret = 25; /* 'Seek Error' */
       else
@@ -3618,7 +3595,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
       }
    }
 #else
-   /* This DOS hack creates 2GB file size limit, Druzus */
+   /* This DOS hack creates 2 GiB file size limit, Druzus */
    if( lOffset < 0 && nFlags == SEEK_SET )
    {
       ulPos = ( HB_ULONG ) -1;
@@ -3632,7 +3609,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
       /* small trick to resolve problem with position reported for directories */
       if( ulPos == LONG_MAX && lOffset == 0 && nFlags == SEEK_END )
       {
-         /* we do not need to use fstat64() here on 32 bit platforms, [druzus] */
+         /* we do not need to use fstat64() here on 32-bit platforms, [druzus] */
          struct stat st;
 
          if( fstat( hFileHandle, &st ) == 0 )
@@ -4270,7 +4247,7 @@ HB_BOOL hb_fsGetCWD( char * pszBuffer, HB_SIZE nSize )
 {
    HB_BOOL fResult;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetCWD(%p,%" HB_PFS "u)", pszBuffer, nSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetCWD(%p,%" HB_PFS "u)", ( void * ) pszBuffer, nSize ) );
 
    pszBuffer[ 0 ] = '\0';
 
@@ -4621,7 +4598,7 @@ HB_BOOL hb_fsIsDevice( HB_FHANDLE hFileHandle )
    return fResult;
 }
 
-/* convert file name for hb_fsExtOpen
+/* convert file name for hb_fsExtOpen()
  * caller must free the returned buffer
  */
 char * hb_fsExtName( const char * pszFileName, const char * pDefExt,
@@ -4707,7 +4684,7 @@ HB_FHANDLE hb_fsExtOpen( const char * pszFileName, const char * pDefExt,
    const char * szPath;
    char * szFree = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsExtOpen(%s, %s, %u, %p, %p)", pszFileName, pDefExt, nExFlags, pPaths, pError ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsExtOpen(%s, %s, %u, %p, %p)", pszFileName, pDefExt, nExFlags, ( const void * ) pPaths, ( void * ) pError ) );
 
 #if 0
    #define FXO_TRUNCATE   0x0100  /* Create (truncate if exists) */
@@ -4868,8 +4845,8 @@ const char * hb_fsNameConv( const char * pszFileName, char ** pszFree )
 
 /*
    Convert file and dir case. The allowed SET options are:
-      LOWER - Convert all caracters of file to lower
-      UPPER - Convert all caracters of file to upper
+      LOWER - Convert all characters of file to lower
+      UPPER - Convert all characters of file to upper
       MIXED - Leave as is
 
    The allowed environment options are:
@@ -5012,8 +4989,8 @@ HB_WCHAR * hb_fsNameConvU16( const char * pszFileName )
 
 /*
    Convert file and dir case. The allowed SET options are:
-      LOWER - Convert all caracters of file to lower
-      UPPER - Convert all caracters of file to upper
+      LOWER - Convert all characters of file to lower
+      UPPER - Convert all characters of file to upper
       MIXED - Leave as is
 
    The allowed environment options are:

@@ -1,7 +1,7 @@
 /*
- * preprocessor static rules generator.
- *    It creates .c file with tables for defines/[x]translates/[x]commands
- *    found in given .ch or .prg file
+ * Preprocessor static rules generator.
+ * It creates .c file with tables for defines/[x]translates/[x]commands
+ * found in given .ch or .prg file
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,6 +47,8 @@
  */
 
 #include "hbapi.h"
+
+#define _DEFAULT_ORIGIN_URL  "https://harbour.github.io/"
 
 int hb_verRevision( void )
 {
@@ -193,10 +195,10 @@ static void hb_pp_generateRules( FILE * fout, PHB_PP_STATE pState, const char * 
 {
    int iDefs = 0, iTrans = 0, iCmds = 0;
 
-   fprintf( fout, "/*\n * $" "Id" "$\n */\n\n/*\n"
-            " * Build in preprocessor rules.\n"
+   fprintf( fout, "/*\n"
+            " * Built-in preprocessor rules.\n"
             " *\n"
-            " * Copyright 2006-2016 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+            " * Copyright 2006-present Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
             " *\n"
             " * This file is generated automatically by Harbour preprocessor\n"
             " * and is covered by the same license as Harbour PP\n"
@@ -318,10 +320,12 @@ static char * hb_pp_escapeString( char * szString )
    return szResult;
 }
 
-static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeLogID, char * szLastEntry )
+static int hb_pp_generateVerInfo( char * szVerFile,
+                                  int iRevID,
+                                  char * szChangeLogID,
+                                  char * szLastEntry )
 {
    int iResult = 0;
-   char * pszEnv;
    FILE * fout;
 
    fout = hb_fopen( szVerFile, "w" );
@@ -334,12 +338,13 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iRevID, char * szChangeL
    }
    else
    {
+      char * pszEnv;
       char * pszEscaped;
 
       fprintf( fout, "/*\n"
                " * Version information and build time switches.\n"
                " *\n"
-               " * Copyright 2008-2016 Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
+               " * Copyright 2008-present Przemyslaw Czerpak <druzus / at / priv.onet.pl>\n"
                " *\n"
                " * This file is generated automatically by Harbour preprocessor\n"
                " * and is covered by the same license as Harbour PP\n"
@@ -786,7 +791,7 @@ int main( int argc, char * argv[] )
    {
       printf( "Harbour Preprocessor %d.%d.%d%s\n",
               HB_VER_MAJOR, HB_VER_MINOR, HB_VER_RELEASE, HB_VER_STATUS );
-      printf( "Copyright (c) 1999-2016, http://harbour-project.org/\n" );
+      printf( "Copyright (c) 1999-present, %s\n", _DEFAULT_ORIGIN_URL );
    }
 
    if( szFile )

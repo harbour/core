@@ -1,8 +1,9 @@
 /*
+ * WARNING: Outdated, insecure algorithm.
+ *
  * Harbour MD5 Support
  *
  * Copyright 2004 Dmitry V. Korzhov <dk@april26.spb.ru>
- *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    updated for current Harbour code, other then x86@32 machines,
  *    files and buffers longer then 2^32 and some fixes
@@ -18,9 +19,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,7 +54,7 @@
 
    PRG functions:
 
-   hb_MD5( <cString> ) -> <cMD5>
+   hb_MD5( <cString> ) --> <cMD5>
          Calculates RFC 1321 MD5 digest (128-bit checksum)
       Parameters:
          <cString>   - string variable to calculate MD5
@@ -61,7 +62,7 @@
          ASCII hex MD5 digest as 32-byte string
          empty string on error
 
-   hb_MD5File( <cFileName> ) -> <cMD5>
+   hb_MD5File( <cFileName> ) --> <cMD5>
          Calculates RFC 1321 MD5 digest (128-bit checksum) of a file contents
          (file size is limited by OS limits only)
       Parameters:
@@ -84,7 +85,7 @@ typedef struct
 } MD5_BUF;
 
 /*
-   Pseudofunctions;
+   Pseudo-functions;
    A[x] - accumulators[4]
    T[x] - Value table[64]
    X[x] - buffer[16]
@@ -248,7 +249,7 @@ void hb_md5( const void * data, HB_SIZE nLen, char * digest )
 
    /* perform startup procedures */
    hb_md5accinit( md5.accum );
-   /* count full 512bit blocks in data*/
+   /* count full 512-bit blocks in data*/
    n = nLen >> 6;
    /* process full blocks */
    for( i = 0; i < n; i++, ucdata += 64 )
@@ -358,7 +359,7 @@ HB_BOOL hb_md5file( const char * pszFileName, char * digest )
    return HB_FALSE;
 }
 
-HB_FUNC( HB_MD5 )
+HB_FUNC( HB_MD5 )  /* Considered insecure. Use SHA256 or higher instead. */
 {
    const char * pszStr = hb_parc( 1 );
 
@@ -382,7 +383,7 @@ HB_FUNC( HB_MD5 )
       hb_retc_null();  /* return empty string on wrong call */
 }
 
-HB_FUNC( HB_MD5FILE )
+HB_FUNC( HB_MD5FILE )  /* Considered insecure. Use SHA256 or higher instead. */
 {
    const char * pszFileName = hb_parc( 1 );
    char dststr[ 16 ];

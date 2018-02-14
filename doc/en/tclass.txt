@@ -1,12 +1,6 @@
-/*
- * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
- *    Documentation
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 2000 Brian Hays <bhays@abacuslaw.com>
    $TEMPLATE$
       Function
    $NAME$
@@ -25,27 +19,23 @@
       HBClass() is usually accessed by defining a class with the commands
       defined in hbclass.ch:
 
-        CREATE CLASS HBGetList    // Calls HBClass() to create the HBGetList class
-           ...
-        ENDCLASS
+      CREATE CLASS HBGetList  // Calls HBClass() to create the HBGetList class
+         ...
+      ENDCLASS
    $ARGUMENTS$
 
    $RETURNS$
-      An instance of the HBClass Class. This special object's :New()
+      An instance of the HBClass() Class. This special object's `:New()`
       method can then create the classes you define.
    $DESCRIPTION$
-      HBClass is a class that ...
+      HBClass() is a class that ...
       The class methods are as follows:
 
-        New()                 Create a new instance of the class
+      `:New()`              Create a new instance of the class
    $EXAMPLES$
-      PROCEDURE TestObject()
-         LOCAL oObject
+      LOCAL oObject := HBClass():New( "TMyClass" )
 
-         oObject := HBClass():New( "TMyClass" )
-         oObject:End()
-
-         RETURN
+      oObject:End()
    $STATUS$
       R
    $COMPLIANCE$
@@ -63,6 +53,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objHasData(), Object Oriented Programming, CLASS
+      __objHasData(), CLASS
    $END$
  */

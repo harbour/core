@@ -1,0 +1,167 @@
+/* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      DirRemove()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Attempt to remove an directory
+   $SYNTAX$
+      DirRemove( <cDirectory> ) --> nError
+   $ARGUMENTS$
+      <cDirectory>  The name of the directory you want to remove.
+   $RETURNS$
+      <nError> 0 if directory was successfully removed, otherwise
+      the number of the last error.
+   $DESCRIPTION$
+      This function attempt to remove the specified directory in <cDirectory>
+      If this function fails, it will return the last OS error code number.
+      See FError() function for the description of the error.
+   $EXAMPLES$
+      LOCAL cDir
+      IF DirRemove( cDir := hb_DirSepToOS( "./mydir" ) ) == 0
+         ? "Removing directory", cDir, "was successful"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C53
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      MakeDir(), DirChange(), IsDisk(), DiskChange(), DiskName(), FError()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      DirChange()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Changes the directory
+   $SYNTAX$
+      DirChange( <cDirectory> ) --> nError
+   $ARGUMENTS$
+      <cDirectory>  The name of the directory you want do change into.
+   $RETURNS$
+      <nError> 0 if directory was successfully changed, otherwise
+      the number of the last error.
+   $DESCRIPTION$
+      This function attempt to change the current directory to the one
+      specified in <cDirectory>. If this function fails, it will return
+      the last OS error code number. See FError() function for the
+      description of the error.
+   $EXAMPLES$
+      IF DirChange( hb_DirSepToOS( "./mydir" ) ) == 0
+         ? "Change to directory was successful"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C53
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      MakeDir(), DirRemove(), IsDisk(), DiskChange(), DiskName(), FError()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      MakeDir()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Create a new directory
+   $SYNTAX$
+      MakeDir( <cDirectory> ) --> nError
+   $ARGUMENTS$
+      <cDirectory>  The name of the directory you want to create.
+   $RETURNS$
+      <nError> 0 if directory was successfully created, otherwise
+      the number of the last error.
+   $DESCRIPTION$
+      This function attempt to create a new directory with the name contained
+      in <cDirectory>. If this function fails, it will return the last OS
+      error code number. See FError() function for the description of the
+      error
+   $EXAMPLES$
+      LOCAL cDir
+      IF MakeDir( cDir := hb_DirSepToOS( "./mydir" ) ) == 0
+         ? "Directory", cDir, "successfully created"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C53
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      DirChange(), DirRemove(), IsDisk(), DiskChange(), DiskName(), FError()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      IsDisk()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+      Verify if a drive is ready
+   $SYNTAX$
+      IsDisk( <cDrive> ) --> lSuccess
+   $ARGUMENTS$
+      <cDrive>  An valid drive letter
+   $RETURNS$
+      <lSuccess>  .T. is the drive is ready, otherwise .F.
+   $DESCRIPTION$
+      This function attempts to access a drive. If the access to the drive
+      was successful, it will return true (.T.), otherwise false (.F.). This
+      function is useful for backup function, so you can determine if the
+      drive that will receive the backup data is ready or not.
+   $EXAMPLES$
+      IF IsDisk( "A" )
+         ? "Drive is ready"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C53
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is core
+   $SEEALSO$
+      DirChange(), MakeDir(), DirRemove(), DiskChange(), DiskName()
+   $END$
+ */

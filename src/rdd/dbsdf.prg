@@ -3,7 +3,6 @@
  * Appends the contents of an SDF text file to a database.
  *
  * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
- *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *    function __dbSDF() replaced by the new one which uses
  *    SDF RDD I've just created
@@ -19,9 +18,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,6 +51,6 @@
 REQUEST SDF
 
 FUNCTION __dbSDF( lExport, cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cCodePage )
-   RETURN iif( lExport,;
-      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF", , cCodePage ) ,;
+   RETURN iif( lExport, ;
+      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF", , cCodePage ), ;
       __dbApp( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "SDF", , cCodePage ) )

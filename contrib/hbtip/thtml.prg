@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -40,6 +40,7 @@
  *
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
@@ -89,7 +90,7 @@ THREAD STATIC t_cHtmlUnicChars
 THREAD STATIC t_aHtmlAnsiEntities  // HTML character entities (ANSI character set)
 THREAD STATIC t_cHtmlAnsiChars
 #endif
-THREAD STATIC t_lInit := .F.       // initilization flag for HTML data
+THREAD STATIC t_lInit := .F.       // initialization flag for HTML data
 
 #ifdef _DEBUG_
 #xtranslate HIDDEN: => EXPORTED:   // debugger cannot see HIDDEN iVars
@@ -1099,7 +1100,7 @@ STATIC FUNCTION __AttrToStr( cName, cValue, aAttr, oTHtmlNode )
       RETURN oTHtmlNode:error( "Invalid HTML attribute for: <" + oTHtmlNode:htmlTagName + ">", oTHtmlNode:className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
 
-   IF aAttr[ nPos, 2 ] == HTML_ATTR_TYPE_BOOL
+   IF aAttr[ nPos ][ 2 ] == HTML_ATTR_TYPE_BOOL
       RETURN " " + cName
    ENDIF
 
@@ -1325,7 +1326,7 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
 
-   IF aAttr[ nPos, 2 ] == HTML_ATTR_TYPE_BOOL
+   IF aAttr[ nPos ][ 2 ] == HTML_ATTR_TYPE_BOOL
       hHash[ cName ] := ""
    ELSE
       hHash[ cName ] := cValue
@@ -1621,7 +1622,7 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
    RETURN lRet
 
 /* HTML Tag data are adopted for Harbour from Tidy
-   http://www.html-tidy.org/ */
+   https://github.com/htacg/tidy-html5 */
 
 STATIC PROCEDURE _Init_Html_TagTypes
 
@@ -4268,7 +4269,7 @@ FUNCTION ANSIToHtml( cAnsiText )
 FUNCTION OEMToHtml( cOemText )
    RETURN ANSIToHtml( hb_OEMToANSI( cOemText ) )
 
-// This function returs the HTML character entities that are exchangeable between ANSI and OEM character sets
+// This function returns the HTML character entities that are exchangeable between ANSI and OEM character sets
 STATIC PROCEDURE _Init_Html_AnsiCharacterEntities()
 
    t_cHtmlAnsiChars := ;

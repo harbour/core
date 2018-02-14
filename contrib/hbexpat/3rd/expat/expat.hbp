@@ -8,22 +8,31 @@
 -hbx=
 
 -warn=low
+-cpp=no
 -pic
 
+loadlibr.c
 xmlparse.c
 xmlrole.c
 xmltok.c
 
--cflag=-DHARBOUR_CONF
+-cflag=-DNDEBUG{!debug}
+-cflag=-DHAVE_EXPAT_CONFIG_H
+# needed to have <expat_config.h> found:
+-I.
+
+# Use Harbour core arc4random implementation only when building static lib.
+# This way the dynamic lib won't depend on Harbour dynlib.
+-cflag=-DHB_FORCE_ARC4RANDOM{!hbdyn}
+
 {hblib}-cflag=-DXML_STATIC
 {bcc}-cflag=-w-8057
 {bcc}-cflag=-w-8008
 {bcc}-cflag=-w-8066
 
-# ORIGIN https://expat.sourceforge.net/
-# VER    2.2.1
-# URL    https://downloads.sourceforge.net/project/expat/expat/2.2.1/expat-2.2.1.tar.bz2
-# DIFF   expat.dif
+# ORIGIN https://libexpat.github.io/
+# URL    https://downloads.sourceforge.net/project/expat/expat/2.2.5/expat-2.2.5.tar.bz2
+# DIFF   expat.diff
 #
 # MAP    COPYING
 # MAP    lib/xmlparse.c       xmlparse.c
@@ -38,6 +47,7 @@ xmltok.c
 # MAP    lib/iasciitab.h      iasciita.h
 # MAP    lib/internal.h       internal.h
 # MAP    lib/latin1tab.h      latin1ta.h
+# MAP    lib/loadlibrary.c    loadlibr.c
 # MAP    lib/nametab.h        nametab.h
 # MAP    lib/siphash.h        siphash.h
 # MAP    lib/utf8tab.h        utf8tab.h

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,16 +50,16 @@
 #define XDLT_STD_BLKSIZE        ( 1024 * 8 )
 #define XDLT_MAX_LINE_SIZE      80
 
-#define XDF_NEED_MINIMAL        ( hb_bitShift( 1, 1 ) )
+#define XDF_NEED_MINIMAL        hb_bitShift( 1, 1 )
 
-#define XDL_PATCH_NORMAL        ( Asc( "-" ) )
-#define XDL_PATCH_REVERSE       ( Asc( "+" ) )
+#define XDL_PATCH_NORMAL        Asc( "-" )
+#define XDL_PATCH_REVERSE       Asc( "+" )
 #define XDL_PATCH_MODEMASK      ( hb_bitShift( 1, 8 ) - 1 )
-#define XDL_PATCH_IGNOREBSPACE  ( hb_bitShift( 1, 8 ) )
+#define XDL_PATCH_IGNOREBSPACE  hb_bitShift( 1, 8 )
 
-#define XDL_MMB_READONLY        ( hb_bitShift( 1, 0 ) )
+#define XDL_MMB_READONLY        hb_bitShift( 1, 0 )
 
-#define XDL_MMF_ATOMIC          ( hb_bitShift( 1, 0 ) )
+#define XDL_MMF_ATOMIC          hb_bitShift( 1, 0 )
 
 #define XDL_BDOP_INS            1
 #define XDL_BDOP_CPY            2

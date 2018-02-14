@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -112,7 +112,7 @@ HB_EXTERN_BEGIN
 #define HB_FF_HIDDEN          0x0001 /* System Column (not visible to user) */
 #define HB_FF_NULLABLE        0x0002 /* Column can store null values */
 #define HB_FF_BINARY          0x0004 /* Binary column */
-#define HB_FF_AUTOINC         0x0008 /* Column is autoincrementing */
+#define HB_FF_AUTOINC         0x0008 /* Column is auto-incrementing */
 #define HB_FF_COMPRESSED      0x0010 /* Column is compressed */
 #define HB_FF_ENCRYPTED       0x0020 /* Column is encrypted */
 #define HB_FF_UNICODE         0x0040 /* Column stores Unicode strings */
@@ -282,7 +282,7 @@ typedef struct
    PHB_ITEM itmOrder;     /* Name or Number of the Order */
    PHB_ITEM itmCobExpr;   /* Code block containing the KEY expression */
    PHB_ITEM itmResult;    /* Operation result */
-   PHB_ITEM itmNewVal;    /* New Setting   */
+   PHB_ITEM itmNewVal;    /* New Setting */
    HB_BOOL  fAllTags;     /* Open all tags */
 } DBORDERINFO;
 
@@ -738,7 +738,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_VLO   setLocate;        /*-Set the locate scope for the specified WorkArea. */
    DBENTRYP_VOS   setScope;         /*  */
    DBENTRYP_VPL   skipScope;        /*  */
-   DBENTRYP_B     locate;           /* reposition cursor to postions set by setLocate */
+   DBENTRYP_B     locate;           /* reposition cursor to positions set by setLocate */
 
 
    /* Miscellaneous */
@@ -750,7 +750,7 @@ typedef struct _RDDFUNCS
 
    /* Network operations */
 
-   DBENTRYP_VSP   rawlock;          /* Perform a lowlevel network lock in the specified WorkArea. */
+   DBENTRYP_VSP   rawlock;          /* Perform a low-level network lock in the specified WorkArea. */
    DBENTRYP_VL    lock;             /* Perform a network lock in the specified WorkArea. */
    DBENTRYP_I     unlock;           /* Release network locks in the specified WorkArea. */
 
@@ -790,7 +790,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 #define RDDFUNCSCOUNT   ( sizeof( RDDFUNCS ) / sizeof( DBENTRYP_V ) )
 
-/* RDD Node structure              */
+/* RDD Node structure */
 typedef struct _RDDNODE
 {
    char szName[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ]; /* Name of RDD */

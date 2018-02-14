@@ -548,6 +548,7 @@ DYNAMIC hb_HSet
 DYNAMIC hb_HSetAutoAdd
 DYNAMIC hb_HSetBinary
 DYNAMIC hb_HSetCaseMatch
+DYNAMIC hb_HSetDef
 DYNAMIC hb_HSetOrder
 DYNAMIC hb_HSort
 DYNAMIC hb_HValueAt
@@ -700,6 +701,7 @@ DYNAMIC hb_MSecToT
 DYNAMIC hb_mtvm
 DYNAMIC hb_mutexCreate
 DYNAMIC hb_mutexEval
+DYNAMIC hb_mutexExists
 DYNAMIC hb_mutexLock
 DYNAMIC hb_mutexNotify
 DYNAMIC hb_mutexNotifyAll
@@ -859,6 +861,7 @@ DYNAMIC hb_StrToUTF8
 DYNAMIC hb_StrXor
 DYNAMIC hb_threadDetach
 DYNAMIC hb_threadID
+DYNAMIC hb_threadIsMain
 DYNAMIC hb_threadJoin
 DYNAMIC hb_threadOnce
 DYNAMIC hb_threadOnceInit
@@ -1592,6 +1595,7 @@ DYNAMIC __TracePrgCalls
 DYNAMIC __TypeFile
 DYNAMIC __vmCountThreads
 DYNAMIC __vmItemID
+DYNAMIC __vmItemRefs
 DYNAMIC __vmModulesVerify
 DYNAMIC __vmNoInternals
 DYNAMIC __Wait

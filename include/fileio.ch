@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,10 +50,10 @@
 #define _FILEIO_CH
 
 /* File create flags */
-#define FC_NORMAL          0           /* No file attributes are set      */
+#define FC_NORMAL          0           /* No file attributes are set */
 #define FC_READONLY        1           /* Read-only file attribute is set */
-#define FC_HIDDEN          2           /* Hidden file attribute is set    */
-#define FC_SYSTEM          4           /* System file attribute is set    */
+#define FC_HIDDEN          2           /* Hidden file attribute is set */
+#define FC_SYSTEM          4           /* System file attribute is set */
 
 /* File attributes flags */
 #define HB_FA_ALL          0x00000000
@@ -93,31 +93,38 @@
 #define HB_FA_XOTH         0x00010000  /* 0001 execute/search by others */
 
 /* File access flags */
-#define FO_READ            0           /* File is opened for reading             */
-#define FO_WRITE           1           /* File is opened for writing             */
+#define FO_READ            0           /* File is opened for reading */
+#define FO_WRITE           1           /* File is opened for writing */
 #define FO_READWRITE       2           /* File is opened for reading and writing */
 
 /* File open flags */
-#define FO_CREAT           0x0100      /* create and open file */
-#define FO_TRUNC           0x0200      /* open with truncation */
-#define FO_EXCL            0x0400      /* create and open only if file doesn't exist */
-#define FO_DEFAULTS        0x1000      /* Use SET command defaults */
+#define HB_FO_CREAT        0x0100      /* create and open file */
+#define HB_FO_TRUNC        0x0200      /* open with truncation */
+#define HB_FO_EXCL         0x0400      /* create and open only if file doesn't exist */
+#define HB_FO_DEFAULTS     0x1000      /* Use SET command defaults */
+
+/* Constants breaking Cl*pper namespace.
+   Leaving it here for compatibility */
+#define FO_CREAT           HB_FO_CREAT     /* Harbour extension */
+#define FO_TRUNC           HB_FO_TRUNC     /* Harbour extension */
+#define FO_EXCL            HB_FO_EXCL      /* Harbour extension */
+#define FO_DEFAULTS        HB_FO_DEFAULTS  /* Use SET command defaults */
 
 /* File sharing flags */
-#define FO_COMPAT          0           /* No sharing specified                               */
-#define FO_EXCLUSIVE       16          /* Deny further attempts to open the file             */
+#define FO_COMPAT          0           /* No sharing specified */
+#define FO_EXCLUSIVE       16          /* Deny further attempts to open the file */
 #define FO_DENYWRITE       32          /* Deny further attempts to open the file for writing */
 #define FO_DENYREAD        48          /* Deny further attempts to open the file for reading */
-#define FO_DENYNONE        64          /* Do not deny any further attempts to open the file  */
+#define FO_DENYNONE        64          /* Do not deny any further attempts to open the file */
 #define FO_SHARED          FO_DENYNONE
 
 /* File seek mode flags */
-#define FS_SET             0           /* Seek from beginning of file    */
+#define FS_SET             0           /* Seek from beginning of file */
 #define FS_RELATIVE        1           /* Seek from current file pointer */
-#define FS_END             2           /* Seek from end of file          */
+#define FS_END             2           /* Seek from end of file */
 
 /* File mode flags */
-#define FD_BINARY          1           /* Binary mode (raw)  */
+#define FD_BINARY          1           /* Binary mode (raw) */
 #define FD_RAW             FD_BINARY
 #define FD_TEXT            2           /* Text mode (cooked) */
 #define FD_COOKED          FD_TEXT

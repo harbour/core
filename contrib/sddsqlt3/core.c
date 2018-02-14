@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,14 @@
  *
  */
 
-#include "hbapi.h"
+#include "hbrddsql.h"
+
 #include "hbapiitm.h"
 #include "hbapistr.h"
 #include "hbdate.h"
+#include "hbset.h"
 #include "hbvm.h"
 #include "hbset.h"
-
-#include "hbrddsql.h"
 
 #include <sqlite3.h>
 
@@ -78,7 +78,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea );
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
 
-
 static SDDNODE s_sqlt3dd =
 {
    NULL,
@@ -92,7 +91,6 @@ static SDDNODE s_sqlt3dd =
    ( SDDFUNC_GETVALUE ) NULL,
    ( SDDFUNC_GETVARLEN ) NULL
 };
-
 
 static void hb_sqlt3dd_init( void * cargo )
 {
@@ -144,8 +142,7 @@ HB_CALL_ON_STARTUP_END( _hb_sqlt3dd_init_ )
    #include "hbiniseg.h"
 #endif
 
-
-/*=====================================================================================*/
+/* --- */
 static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    PHB_ITEM  pError;
@@ -157,7 +154,6 @@ static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode,
 
    return uiAction;
 }
-
 
 static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
 {
@@ -174,7 +170,7 @@ static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
    }
    else
    {
-      szRet = hb_strdup( "Unable to get error message" );
+      szRet = hb_strdup( "Could not get the error message" );
       iNativeErr = 9999;
    }
 
@@ -236,9 +232,7 @@ static HB_USHORT sqlite3DeclType(sqlite3_stmt * st, HB_USHORT uiIndex )
 #endif
 }
 
-
-/*============= SDD METHODS =============================================================*/
-
+/* --- SDD METHODS --- */
 static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    sqlite3 * db;
@@ -256,7 +250,6 @@ static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
 
    return db ? HB_SUCCESS : HB_FAILURE;
 }
-
 
 static HB_ERRCODE sqlite3Disconnect( SQLDDCONNECTION * pConnection )
 {
@@ -355,6 +348,12 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       dbFieldInfo.uiType = sqlite3DeclType( st, uiIndex );
       pItem = hb_arrayGetItemPtr( pItemEof, uiIndex + 1 );
 
+      /* There are no field length limits stored in the SQLite3 database,
+         so we're resorting to setting some arbitrary default values to
+         make apps relying on these (f.e. Browse()/GET) to behave somewhat
+         better. For better results, update apps to untie UI metrics from
+         any database field/value widths. [vszakats] */
+
       switch( dbFieldInfo.uiType )
       {
          case HB_FT_STRING:
@@ -421,7 +420,6 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    return HB_SUCCESS;
 }
 
-
 static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
 {
    SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
@@ -436,7 +434,6 @@ static HB_ERRCODE sqlite3Close( SQLBASEAREAP pArea )
    }
    return HB_SUCCESS;
 }
-
 
 static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {

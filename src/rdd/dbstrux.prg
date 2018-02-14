@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -69,12 +69,12 @@ FUNCTION __dbCopyXStruct( cFileName )
       __dbCreate( cFileName, , , .F. )
 
       AEval( aStruct, {| aField | ;
-         iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255,;
-            ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), ),;
-         dbAppend(),;
-         FIELD->FIELD_NAME := aField[ DBS_NAME ],;
-         FIELD->FIELD_TYPE := aField[ DBS_TYPE ],;
-         FIELD->FIELD_LEN := aField[ DBS_LEN ],;
+         iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255, ;
+            ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), ), ;
+         dbAppend(), ;
+         FIELD->FIELD_NAME := aField[ DBS_NAME ], ;
+         FIELD->FIELD_TYPE := aField[ DBS_TYPE ], ;
+         FIELD->FIELD_LEN := aField[ DBS_LEN ], ;
          FIELD->FIELD_DEC := aField[ DBS_DEC ] } )
 
    /* NOTE: CA-Cl*pper has a bug, where only a plain RECOVER statement is
@@ -94,7 +94,7 @@ FUNCTION __dbCopyXStruct( cFileName )
 
    RETURN .T.
 
-/* NOTE: Compared to CA-Cl*pper, Harbour has two extra parameters
+/* NOTE: Compared to CA-Cl*pper, Harbour:
          (cCodePage, nConnection). */
 
 FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConnection )
@@ -141,9 +141,9 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
          /* Type detection is more in sync with dbCreate() logic in Harbour, as lowercase "C"
             and padded/continued strings ("C ", "C...") are also accepted. */
 
-         AEval( aStruct, {| aField | iif( hb_LeftEqI( aField[ DBS_TYPE ], "C" ) .AND. aField[ DBS_DEC ] != 0,;
-                                     ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256,;
-                                       aField[ DBS_DEC ] := 0 ), NIL ) } )
+         AEval( aStruct, {| aField | iif( hb_LeftEqI( aField[ DBS_TYPE ], "C" ) .AND. aField[ DBS_DEC ] != 0, ;
+            ( aField[ DBS_LEN ] += aField[ DBS_DEC ] * 256, ;
+              aField[ DBS_DEC ] := 0 ), NIL ) } )
 
          dbCreate( cFileName, aStruct, cRDD, lNew, cAlias, , cCodePage, nConnection )
 
@@ -174,8 +174,8 @@ FUNCTION __dbStructFilter( aStruct, aFieldList )
    bFindName := {| aField | aField[ DBS_NAME ] == cName }
 
    AEval( aFieldList, {| cFieldName, nIndex | ;
-         cName := RTrim( Upper( cFieldName ) ),;
-         nIndex := AScan( aStruct, bFindName ),;
-         iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex ] ) ) } )
+      cName := RTrim( Upper( cFieldName ) ), ;
+      nIndex := AScan( aStruct, bFindName ), ;
+      iif( nIndex == 0, NIL, AAdd( aStructFiltered, aStruct[ nIndex ] ) ) } )
 
    RETURN aStructFiltered

@@ -10,8 +10,6 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     (with 2004 work on Readkey)
  *
- * The following parts are Copyright of the individual authors.
- *
  * Copyright 1999-2010 Viktor Szakats (vszakats.net/harbour)
  *    hb_gt_win_CtrlHandler()
  *    hb_gt_win_SetCloseButton()
@@ -21,8 +19,6 @@
  *    hb_gt_Tone()
  *    hb_gt_ReadKey()
  *
- * See COPYING.txt for licensing terms.
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -30,13 +26,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,7 +50,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -426,7 +422,7 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
    HB_BYTE bxAttr;
 #endif
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_xGetScreenContents(%p,%p)", pGT, psrWin ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_xGetScreenContents(%p,%p)", ( void * ) pGT, ( void * ) psrWin ) );
 
 #if ! defined( UNICODE )
    bxAttr = 0;
@@ -466,7 +462,7 @@ static void hb_gt_win_xGetScreenContents( PHB_GT pGT, SMALL_RECT * psrWin )
 
 static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_xInitScreenParam(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_xInitScreenParam(%p)", ( void * ) pGT ) );
 
    if( GetConsoleScreenBufferInfo( s_HOutput, &s_csbi ) )
    {
@@ -492,7 +488,7 @@ static void hb_gt_win_xInitScreenParam( PHB_GT pGT )
       s_iUpdtBottom = s_iUpdtRight = 0;
 
       /*
-       * Unfortunatelly Windows refuse to read to big area :-(
+       * Unfortunately Windows refuse to read to big area :-(
        * (I do not know why) so we cannot read the whole console
        * buffer { 0, 0, s_csbi.dwSize.Y - 1, s_csbi.dwSize.X - 1 }
        * because it reads nothing, [druzus]
@@ -729,7 +725,7 @@ static HB_BOOL hb_gt_win_SetCloseButton( HB_BOOL bSet, HB_BOOL bClosable )
 
 static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Init(%p,%p,%p,%p)", ( void * ) pGT, ( void * ) ( HB_PTRUINT ) hFilenoStdin, ( void * ) ( HB_PTRUINT ) hFilenoStdout, ( void * ) ( HB_PTRUINT ) hFilenoStderr ) );
 
    s_fWin9x = hb_iswin9x();
 
@@ -753,8 +749,8 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
     * This is a hack for MSYS console. It does not support full screen output
     * so nothing can be seen on the screen and we have to close the MSYS
     * console to be able to allocate the MS-Windows one.
-    * Unfortunatelly I do not know any method to detect the MSYS console
-    * so I used this hack with checking OSTYPE environemnt variable. [druzus]
+    * Unfortunately I do not know any method to detect the MSYS console
+    * so I used this hack with checking OSTYPE environment variable. [druzus]
     */
    {
       TCHAR lpOsType[ 16 ];
@@ -785,7 +781,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       }
 #endif
       if( s_HInput == INVALID_HANDLE_VALUE )
-         hb_errInternal( 10001, "Can't allocate console", NULL, NULL );
+         hb_errInternal( 10001, "Could not allocate console", NULL, NULL );
    }
 
    /* Add Ctrl+Break handler [vszakats] */
@@ -801,7 +797,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                      0, 0 );
 
    if( s_HOutput == INVALID_HANDLE_VALUE )
-      hb_errInternal( 10001, "Can't allocate console (output)", NULL, NULL );
+      hb_errInternal( 10001, "Could not allocate console (output)", NULL, NULL );
 
    s_HInput = CreateFile( TEXT( "CONIN$" ),                 /* filename    */
                      GENERIC_READ    | GENERIC_WRITE,       /* Access flag */
@@ -811,7 +807,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
                      0, 0 );
 
    if( s_HInput == INVALID_HANDLE_VALUE )
-      hb_errInternal( 10001, "Can't allocate console (input)", NULL, NULL );
+      hb_errInternal( 10001, "Could not allocate console (input)", NULL, NULL );
 
    GetConsoleScreenBufferInfo( s_HOutput, &s_csbi );
 
@@ -847,7 +843,7 @@ static void hb_gt_win_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 static void hb_gt_win_Exit( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Exit(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Exit(%p)", ( void * ) pGT ) );
 
    HB_GTSELF_REFRESH( pGT );
 
@@ -886,7 +882,7 @@ static HB_BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    HB_BOOL fRet = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_SetMode(%p,%d,%d)", ( void * ) pGT, iRows, iCols ) );
 
    if( s_HOutput != INVALID_HANDLE_VALUE && iRows > 0 && iCols > 0 )
    {
@@ -981,7 +977,7 @@ static HB_BOOL hb_gt_win_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 static const char * hb_gt_win_Version( PHB_GT pGT, int iType )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Version(%p,%d)", pGT, iType ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Version(%p,%d)", ( void * ) pGT, iType ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -995,7 +991,7 @@ static const char * hb_gt_win_Version( PHB_GT pGT, int iType )
 
 static HB_BOOL hb_gt_win_PostExt( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_PostExt(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_PostExt(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_POSTEXT( pGT );
    if( s_pCharInfoScreen )
@@ -1007,7 +1003,7 @@ static HB_BOOL hb_gt_win_PostExt( PHB_GT pGT )
 
 static HB_BOOL hb_gt_win_Suspend( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Suspend(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Suspend(%p)", ( void * ) pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -1022,7 +1018,7 @@ static HB_BOOL hb_gt_win_Suspend( PHB_GT pGT )
 
 static HB_BOOL hb_gt_win_Resume( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Resume(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Resume(%p)", ( void * ) pGT ) );
 
    if( s_pCharInfoScreen )
    {
@@ -1181,7 +1177,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int iKey = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_ReadKey(%p,%d)", pGT, iEventMask ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_ReadKey(%p,%d)", ( void * ) pGT, iEventMask ) );
 
    HB_SYMBOL_UNUSED( iEventMask );
 
@@ -1204,7 +1200,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
       {
 #if defined( UNICODE )
          /* Workaround for UNICOWS bug:
-               http://blogs.msdn.com/michkap/archive/2007/01/13/1460724.aspx
+               https://web.archive.org/web/blogs.msdn.com/michkap/archive/2007/01/13/1460724.aspx
             [vszakats] */
 
          if( s_fWin9x )
@@ -1217,10 +1213,10 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 #endif
 
          /* Read keyboard input */
-         ReadConsoleInput( s_HInput,          /* input buffer handle   */
-                           s_irBuffer,         /* buffer to read into   */
-                           INPUT_BUFFER_LEN,  /* size of read buffer   */
-                           &s_dwNumRead );     /* number of records read */
+         ReadConsoleInput( s_HInput,          /* input buffer handle    */
+                           s_irBuffer,        /* buffer to read into    */
+                           INPUT_BUFFER_LEN,  /* size of read buffer    */
+                           &s_dwNumRead );    /* number of records read */
          /* Set up to process the first input event */
          s_dwNumIndex = 0;
 
@@ -1347,10 +1343,10 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 #endif
 
             /*
-             * Under Win9x, Upper row keys are affected by caps-lock
+             * Under Win9x, upper row keys are affected by caps-lock
              * and should not be.  There are 2 solutions - the first
              * is to enable the calling of SpecialHandling below - which
-             * will only be activated under Win9x (Preferrably under user
+             * will only be activated under Win9x (Preferably under user
              * control, since they know if their keyboard isn't working), or
              * just enable KeyB handling in config.sys, and do not enable the
              * following call.
@@ -1359,7 +1355,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
              * (With some clarification by Paul Tucker)
              * If making this fix the default under Win98, then it doesn't
              * work for non-US keyboards.  (The default has now been changed)
-             * I tried to replicate the problem under Win98SE (spanish),
+             * I tried to replicate the problem under Win98SE (Spanish),
              * but it works fine. I hope someone could tell me how the
              * problem appears, for try to fix it.
 
@@ -1733,7 +1729,7 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
       {
          int iFlags = hb_gt_win_keyFlags( pInRec->Event.MouseEvent.dwControlKeyState );
 
-         /* mouse wheel events use screen based mouse possition */
+         /* mouse wheel events use screen based mouse position */
          if( pInRec->Event.MouseEvent.dwEventFlags == MOUSE_HWHEELED )
          {
             /* unsupported */
@@ -1809,11 +1805,13 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 /* dDuration is in 'Ticks' (18.2 per second) */
 static void hb_gt_win_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Tone(%p,%lf,%lf)", ( void * ) pGT, dFrequency, dDuration ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
+   hb_gt_BaseUnlock( pGT );
    hb_gt_winapi_tone( dFrequency, dDuration );
+   hb_gt_BaseLock( pGT );
 }
 
 /* *********************************************************************** */
@@ -1870,7 +1868,7 @@ static HB_BOOL hb_gt_win_FullScreen( HB_BOOL bFullScreen )
 
 static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Info(%p,%d,%p)", pGT, iType, pInfo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Info(%p,%d,%p)", ( void * ) pGT, iType, pInfo ) );
 
    switch( iType )
    {
@@ -2153,7 +2151,7 @@ static int hb_gt_win_mouse_CountButton( PHB_GT pGT )
 
 static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Redraw(%p,%d,%d,%d)", ( void * ) pGT, iRow, iCol, iSize ) );
 
    if( iSize > 0 && s_pCharInfoScreen &&
        iRow < ( int ) _GetScreenHeight() && iCol < ( int ) _GetScreenWidth() )
@@ -2188,7 +2186,7 @@ static void hb_gt_win_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
 static void hb_gt_win_Refresh( PHB_GT pGT )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Refresh(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_win_Refresh(%p)", ( void * ) pGT ) );
 
    HB_GTSUPER_REFRESH( pGT );
    if( s_pCharInfoScreen )
@@ -2215,7 +2213,7 @@ static void hb_gt_win_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", ( void * ) pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_win_Init;
    pFuncTable->Exit                       = hb_gt_win_Exit;

@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -204,7 +204,7 @@ typedef struct _DBFAREA
    HB_USHORT   uiNullCount;         /* Number of null flags */
    HB_BYTE     bTableType;          /* DBF type */
    HB_BYTE     bMemoType;           /* MEMO type used in DBF memo fields */
-   HB_BYTE     bLockType;           /* Type of locking shemes */
+   HB_BYTE     bLockType;           /* Type of locking schemes */
    HB_BYTE     bCryptType;          /* Type of used encryption */
    HB_UINT     uiSetHeader;         /* DBF header updating modes DBI_SETHEADER */
    DBFHEADER   dbfHeader;           /* DBF header buffer */
@@ -217,8 +217,8 @@ typedef struct _DBFAREA
    HB_BOOL     fHasMemo;            /* WorkArea with Memo fields */
    HB_BOOL     fHasTags;            /* WorkArea with MDX or CDX index */
    HB_BOOL     fModStamp;           /* WorkArea with modification autoupdate fields */
-   HB_BOOL     fDataFlush;          /* data was written to DBF and not commited */
-   HB_BOOL     fMemoFlush;          /* data was written to MEMO and not commited */
+   HB_BOOL     fDataFlush;          /* data was written to DBF and not committed */
+   HB_BOOL     fMemoFlush;          /* data was written to MEMO and not committed */
    HB_BOOL     fShared;             /* Shared file */
    HB_BOOL     fReadonly;           /* Read only file */
    HB_BOOL     fTemporary;          /* Temporary file */
@@ -233,10 +233,10 @@ typedef struct _DBFAREA
    HB_BOOL     fFLocked;            /* HB_TRUE if file is locked */
    HB_BOOL     fHeaderLocked;       /* HB_TRUE if DBF header is locked */
    HB_BOOL     fPackMemo;           /* Pack memo file in pack operation */
-   HB_BOOL     fTransRec;           /* HB_TRUE if records are transfered to this area, allow to change autoupdate fields and disable their initialization */
+   HB_BOOL     fTransRec;           /* HB_TRUE if records are transferred to this area, allow to change autoupdate fields and disable their initialization */
    HB_BOOL     fTrigger;            /* Execute trigger function */
    LPDBOPENINFO lpdbOpenInfo;       /* Pointer to current dbOpenInfo structure in OPEN/CREATE methods */
-   LPDBRELINFO lpdbPendingRel;      /* Pointer to parent rel struct */
+   LPDBRELINFO lpdbPendingRel;      /* Pointer to parent relation struct */
    HB_ULONG *  pLocksPos;           /* List of records locked */
    HB_ULONG    ulNumLocksPos;       /* Number of records locked */
    char *      pCryptKey;           /* Pointer to encryption key */

@@ -1,5 +1,6 @@
 /*
  * QT Console
+ *
  * Copyright 2013 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  * Slightly based on GTQTC
  * Copyright 2009-2011 Pritpal Bedi <pritpal@vouchcac.com>
@@ -15,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -164,11 +165,11 @@
 
 #define HB_BOXCH_SNG_V_DBL_L        0x255E /* BOX DRAWINGS VERTICAL SINGLE AND RIGHT DOUBLE (Single Vertical double left junction) */
 #define HB_BOXCH_SNG_V_DBL_R        0x2561 /* BOX DRAWINGS VERTICAL SINGLE AND LEFT DOUBLE (Single vertical double right junction) */
-#define HB_BOXCH_SNG_DBL_CRS        0x256A /* BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE (Single cross (double horiz) */
+#define HB_BOXCH_SNG_DBL_CRS        0x256A /* BOX DRAWINGS VERTICAL SINGLE AND HORIZONTAL DOUBLE (Single cross (double horizontal) */
 
 
 #define HB_BOXCH_DBL_L_SNG_T        0x2553 /* BOX DRAWINGS DOWN DOUBLE AND RIGHT SINGLE (Double left single top angle) */
-#define HB_BOXCH_DBL_T_SNG_D        0x2564 /* BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE (Double top signle junction down) */
+#define HB_BOXCH_DBL_T_SNG_D        0x2564 /* BOX DRAWINGS DOWN SINGLE AND HORIZONTAL DOUBLE (Double top single junction down) */
 #define HB_BOXCH_DBL_R_SNG_T        0x2555 /* BOX DRAWINGS DOWN SINGLE AND LEFT DOUBLE (Double right single top angle) */
 
 #define HB_BOXCH_DBL_L_SNG_B        0x2559 /* BOX DRAWINGS UP DOUBLE AND RIGHT SINGLE (Double left single bottom angle) */
@@ -177,7 +178,7 @@
 
 #define HB_BOXCH_DBL_V_SNG_R        0x2562 /* BOX DRAWINGS VERTICAL DOUBLE AND LEFT SINGLE (Double Vertical single left junction) */
 #define HB_BOXCH_DBL_V_SNG_L        0x255F /* BOX DRAWINGS VERTICAL DOUBLE AND RIGHT SINGLE (Double vertical single right junction) */
-#define HB_BOXCH_DBL_SNG_CRS        0x256B /* BOX DRAWINGS VERTICAL DOUBLE AND HORIZONTAL SINGLE (Double cross (single horiz) */
+#define HB_BOXCH_DBL_SNG_CRS        0x256B /* BOX DRAWINGS VERTICAL DOUBLE AND HORIZONTAL SINGLE (Double cross (single horizontal) */
 
 #define HB_BOXCH_FULL               0x2588 /* FULL BLOCK */
 #define HB_BOXCH_FULL_B             0x2584 /* LOWER HALF BLOCK */
@@ -315,7 +316,7 @@ typedef struct
 
    QBitmap *   boxImage[ HB_BOXCH_TRANS_MAX ];   /* bitmaps with box drawing characters */
    HB_UCHAR    boxIndex[ HB_BOXCH_TRANS_COUNT ]; /* indexes to bitmap array */
-   int         boxCount;                         /* numebr of defined box characters */
+   int         boxCount;                         /* number of defined box characters */
 
    QIcon *     qIcon;                        /* application icon */
    QString *   wndTitle;                     /* window title */
@@ -323,8 +324,8 @@ typedef struct
    HB_BOOL     fAltEnter;                    /* ALT+ENTER switch between fullscreen mode */
    HB_BOOL     fResizable;                   /* enable/disable window resizing */
    HB_BOOL     fResizeInc;                   /* enable/disable resize progression */
-   HB_BOOL     fMaximized;                   /* enter/leave mximize mode */
-   HB_BOOL     fMinimized;                   /* enter/leave mximize ( e.g. as icon in taskbar ) mode */
+   HB_BOOL     fMaximized;                   /* enter/leave maximize mode */
+   HB_BOOL     fMinimized;                   /* enter/leave maximize (e.g. as icon in TaskBar) mode */
    HB_BOOL     fFullScreen;                  /* enable/disable fullscreen mode */
    HB_BOOL     fSelectCopy;                  /* allow marking texts by mouse left button with shift */
    HB_BOOL     fRepaint;                     /* force internal image repainting */

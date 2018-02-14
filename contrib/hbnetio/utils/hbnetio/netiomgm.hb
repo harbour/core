@@ -14,11 +14,13 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at https://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
+
+#include "hbver.ch"
 
 #define _NETIOMGM_IPV4_DEF  "127.0.0.1"
 #define _NETIOMGM_PORT_DEF  2940
@@ -185,7 +187,7 @@ STATIC PROCEDURE hbnetiocon_waitStream( netiocli, bBlock ) /* in separate thread
       IF ! Empty( netiocli[ _NETIOCLI_pConnection ] )
          IF hb_MilliSeconds() > nLastPing + 5000
             /* Is connection alive? */
-            BEGIN SEQUENCE WITH {| oError | Break( oError ) }
+            BEGIN SEQUENCE WITH __BreakBlock()
                netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_ping" )
             RECOVER
                hbnetiocon_dispevent( netiocli, "Connection lost." )
@@ -261,12 +263,12 @@ STATIC PROCEDURE DisconnectLow( netiocli )
    RETURN
 
 STATIC FUNCTION MyClientInfo()
-
-   RETURN { "OS()"          => OS()          , ;
-            "Version()"     => Version()     , ;
-            "hb_Compiler()" => hb_Compiler() , ;
-            "NetName()"     => NetName()     , ;
-            "hb_UserName()" => hb_UserName() }
+   RETURN { ;
+      "OS()"          => OS()          , ;
+      "Version()"     => Version()     , ;
+      "hb_Compiler()" => hb_Compiler() , ;
+      "NetName()"     => NetName()     , ;
+      "hb_UserName()" => hb_UserName() }
 
 STATIC FUNCTION XToStrX( xValue )
 
@@ -329,8 +331,10 @@ STATIC FUNCTION XToStrX( xValue )
 STATIC PROCEDURE cmdAbout( netiocli )
 
    hbnetiocon_dispevent( netiocli, "Harbour NETIO Server Management Console " + StrTran( Version(), "Harbour " ) )
-   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-2015, Viktor Szakats" )
-   hbnetiocon_dispevent( netiocli, "http://harbour-project.org/" )
+   hbnetiocon_dispevent( netiocli, "Copyright (c) 2009-" + ;
+      "2015" + ", " + ;
+      "Viktor Szakats" )
+   hbnetiocon_dispevent( netiocli, hb_Version( HB_VERSION_URL_BASE ) )
 
    RETURN
 

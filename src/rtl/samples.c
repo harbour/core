@@ -1,7 +1,7 @@
 /*
- * Compatibility functions from the SAMPLES directory of Clipper.
+ * Compatibility functions from the SOURCE/SAMPLE directory of CA-Cl*pper.
  *
- * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +52,7 @@ static char * hb_SecToTimeStr( char * pszTime, long lTime )
 {
    int iValue;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_SecToTimeStr(%p, %ld)", pszTime, lTime ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_SecToTimeStr(%p, %ld)", ( void * ) pszTime, lTime ) );
 
    iValue = ( int ) ( ( lTime / 3600 ) % 24 );
    pszTime[ 0 ] = ( char ) ( iValue / 10 ) + '0';

@@ -1,10 +1,10 @@
-//                                EnOnkar
-//                          ( The Lord is ONE )
-//                                   .
-//            Xbase++ Compatible XbpDialog() based Application
+//                     EnOnkar
+//               ( The Lord is ONE )
+//                        .
+// Xbase++ Compatible XbpDialog() based Application
 //
-//                  Pritpal Bedi <pritpal@vouchcac.com>
-//                              2008-12-08
+//       Pritpal Bedi <pritpal@vouchcac.com>
+//                   2008-12-08
 
 #require "gtwvg"
 
@@ -42,7 +42,7 @@ PROCEDURE Main()
 
    // --------------------------- StatusBar ---------------------------\\
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .T. )
-   oSBar:panelClick := {| oPanel | Wvg_MessageBox( , oPanel:caption ) }
+   oSBar:panelClick := {| oPanel | wvg_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := "My Root Panel"
    oPanel1 := oSBar:addItem()
@@ -91,7 +91,7 @@ PROCEDURE Main()
    AAdd( aParts, "DataRef"          )
 
    AEval( aParts, {| e | oListBox:addItem( e ) } )
-   oListBox:itemSelected := {|| Wvg_MessageBox( , oListBox:getCurItem() ) }
+   oListBox:itemSelected := {|| wvg_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )    // show selected "XbpToolBar"
 
    // --------------------------- PushButton --------------------------\\
@@ -111,7 +111,7 @@ PROCEDURE Main()
    oTree:create()
    oTree:setColorBG( RGB( 120, 15, 240 ) )
    oTree:setColorFG( RGB( 15, 240, 120 ) )
-   oTree:itemSelected := {| oItem | iif( oItem != NIL, Wvg_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {| oItem | iif( oItem != NIL, wvg_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -174,7 +174,7 @@ PROCEDURE Main()
    oRadio  := WvgRadioButton():new( oStatic2, , { 10, 10 }, { 100, 15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {| m1, m2, obj | m1 := m1, m2 := m2, Wvg_MessageBox( , obj:caption + iif( obj:selection, "< S >", "< N >" ) ) }
+   oRadio:selected  := {| m1, m2, obj | m1 := m1, m2 := m2, wvg_MessageBox( , obj:caption + iif( obj:selection, "< S >", "< N >" ) ) }
    oRadio:create()
 
    oRadio  := WvgRadioButton():new( oStatic2, , { 10, 35 }, { 100, 15 } )
@@ -184,7 +184,7 @@ PROCEDURE Main()
    oCheck  := WvgCheckBox():New( oStatic2, , { 10, 70 }, { 100, 15 }, , .T. )
    oCheck:caption   := "Checkbox A"
    oCheck:create()
-   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, Wvg_MessageBox( , iif( o:getData(), "I am selected", "I am not selected" ) ) }
+   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, wvg_MessageBox( , iif( o:getData(), "I am selected", "I am not selected" ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp    := Wvg3State():new()
@@ -198,7 +198,7 @@ PROCEDURE Main()
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1, m2, oBtn | m1 := m1, m2 := m2, Wvg_MessageBox( , "3State B", aState[ oBtn:getData() + 1 ] ) }
+   oXbp:selected := {| m1, m2, oBtn | m1 := m1, m2 := m2, wvg_MessageBox( , "3State B", aState[ oBtn:getData() + 1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -369,7 +369,7 @@ STATIC FUNCTION MyFunctionXbp( nMode )
       Tone( MUSIC_WAITON[ 1 ], 1 )
 
    CASE nMode == 3
-      Wvg_MessageBox( , "Button clicked!" )
+      wvg_MessageBox( , "Button clicked!" )
 
    CASE nMode == 101  // Charge
       Eval( {|| Tone( 523, 2 ), Tone( 698, 2 ), Tone( 880, 2 ), Tone( 1046, 4 ), Tone( 880, 2 ), Tone( 1046, 8 ) } )
@@ -400,7 +400,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
    oFontDlg:familyName       := "Courier New"
    oFontDlg:strikeout        := .T.
    oFontDlg:underscore       := .F.
-// oFontDlg:activateOk       := {|| Wvg_MessageBox( , "activateOK Event Handelled in Windows!" ) }
+// oFontDlg:activateOk       := {|| wvg_MessageBox( , "activateOK Event Handelled in Windows!" ) }
    oFontDlg:nominalPointSize := 12
 
 // oFontDlg:size             := .F.

@@ -1,7 +1,7 @@
 /*-
  * HMAC-SHA-224/256/384/512 implementation
- * Last update: 06/15/2005
- * Issue date:  06/15/2005
+ * Last update: 2005-06-15
+ * Issue date:  2005-06-15
  *
  * Copyright (C) 2005 Olivier Gay <olivier.gay@a3.epfl.ch>
  * All rights reserved.

@@ -1,7 +1,7 @@
 /*
  * Header File for Video subsystem for Windows using GUI windows instead of Console
- * Copyright 2003 Peter Rees <peter@rees.co.nz>
- *                Rees Software & Systems Ltd
+ *
+ * Copyright 2003 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,8 +44,8 @@
  *
  */
 
-#ifndef HB_WVT_H_
-#define HB_WVT_H_
+#ifndef HB_WGU_H_
+#define HB_WGU_H_
 
 #define HB_GT_NAME  WGU
 
@@ -303,34 +303,34 @@ typedef struct
    HB_BOOL  bResizable;
    HB_BOOL  bClosable;
 
-   /*          To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed>            */
+   /* To Be Split in 2 Structures <1 GUI dynamic> <2 GUI fixed> */
 
-   int       rowStart;                      /* Holds nTop    of last WM_PAINT rectangle returned by Wvt_GetPaintRect()*/
-   int       rowStop;                       /* Holds nBottom of last WM_PAINT rectangle                               */
-   int       colStart;                      /* Holds nLeft   of last WM_PAINT rectangle                               */
-   int       colStop;                       /* Holds nRight  of last WM_PAINT rectangle                               */
+   int       rowStart;                      /* Holds nTop    of last WM_PAINT rectangle returned by wvt_GetPaintRect() */
+   int       rowStop;                       /* Holds nBottom of last WM_PAINT rectangle */
+   int       colStart;                      /* Holds nLeft   of last WM_PAINT rectangle */
+   int       colStop;                       /* Holds nRight  of last WM_PAINT rectangle */
 
-   int       iFactor;                       /* Transparency factor 0~255                                              */
+   int       iFactor;                       /* Transparency factor 0~255 */
 
-   int       LastMenuEvent;                 /* Last menu item selected                                                */
-   int       MenuKeyEvent;                  /* User definable event number for windows menu command                   */
-   HB_BOOL   InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx()                   */
-   HB_BOOL   EnableShortCuts;               /* Determines whether ALT key enables menu or system menu                 */
+   int       LastMenuEvent;                 /* Last menu item selected */
+   int       MenuKeyEvent;                  /* User definable event number for windows menu command */
+   HB_BOOL   InvalidateWindow;              /* Flag for controlling whether to use ScrollWindowEx() */
+   HB_BOOL   EnableShortCuts;               /* Determines whether ALT key enables menu or system menu */
 
    HB_BOOL   bPaint;
    HB_BOOL   bGetFocus;
    HB_BOOL   bSetFocus;
    HB_BOOL   bKillFocus;
 
-   HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll                      */
-   wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll*/
-   HINSTANCE hUser32;                       /* Handle to the loaded library user32.dll                       */
-   wvtSetLayeredWindowAttributes pfnLayered;/* Pointer to set Windows attribute - transparency.              */
+   HINSTANCE hMSImg32;                      /* Handle to the loaded library msimg32.dll */
+   wvtGradientFill pfnGF;                   /* Pointer to Address of the GradientFill function in MSImg32.dll */
+   HINSTANCE hUser32;                       /* Handle to the loaded library user32.dll */
+   wvtSetLayeredWindowAttributes pfnLayered;/* Pointer to set Windows attribute - transparency. */
 
-   PHB_GT_PARAMS  pPP;                      /* Presentation Parameters                                       */
+   PHB_GT_PARAMS  pPP;                      /* Presentation Parameters */
 
-   HB_BOOL   bTracking;                     /* To track if mouse has eneter or left the window area          */
-   HB_BOOL   bResizing;                     /* To know when it is in resizing mode                           */
+   HB_BOOL   bTracking;                     /* To track if mouse has entered or left the window area */
+   HB_BOOL   bResizing;                     /* To know when it is in resizing mode */
    int       width;
    int       height;
 
@@ -423,4 +423,4 @@ extern void     wvt_Size2ArrayEx( SIZE * siz, PHB_ITEM aSize );
 
 HB_EXTERN_END
 
-#endif /* HB_WVT_H_ */
+#endif /* HB_WGU_H_ */

@@ -10,7 +10,7 @@ They can be emulated by fcntl() or flock() locks. Harbour uses flock()
 in systems where it does not create conflicts with fcntl() locks used
 to synchronize file access by different processes in shared mode.
 Currently it's enabled by default only in Linux (tests with *BSD systems
-and MacOSX showed that it interacts with fcntl locks causing deadlocks).
+and macOS showed that it interacts with fcntl locks causing deadlocks).
 On other POSIX systems Harbour uses fcntl() read and write locks at
 address 0x7fffffff (size 1) to simulate shared and exclusive mode.
 
@@ -126,13 +126,13 @@ CDX WRITE LOCK:  @0xfffeffff : 0x10001
     prepare the index modification in memory and before writing to
     index file lock @0xffff0000 : 0x10000
   to eliminate starvation effect caused by many readers
-  on each 16-th read lock reading process tries to lock write
+  on each 16th read lock reading process tries to lock write
   area @0xfffeffff : 1 instead and then sets normal read lock
 
 In Harbour it's DB_DBFLOCK_COMIX.
 
 
-HARBOUR 32-bit locking
+Harbour 32-bit locking
 ======================
 all locks are exclusive (*), in index shared locks are emulated
 
@@ -148,13 +148,13 @@ CDX WRITE LOCK:  @0xfffeffff : 0x10001
     prepare the index modification in memory and before writing to
     index file lock @0xffff0000 : 0x10000
   to eliminate starvation effect caused by many readers
-  on each 16-th read lock reading process tries to lock write
+  on each 16th read lock reading process tries to lock write
   area @0xfffeffff : 1 instead and then sets normal read lock
 
 In Harbour it's DB_DBFLOCK_HB32.
 
 
-HARBOUR 64-bit locking
+Harbour 64-bit locking
 ======================
 all locks are exclusive (*), in index shared locks are emulated
 
@@ -170,7 +170,7 @@ CDX WRITE LOCK:  @0x7fffffff00000000 : 0x10001
     prepare the index modification in memory and before writing to
     index file lock @0x7fffffff00000001 : 0x10000
   to eliminate starvation effect caused by many readers
-  on each 16-th read lock reading process tries to lock write
+  on each 16th read lock reading process tries to lock write
   area @0x7fffffff00000000 : 1 instead and then sets normal read lock
 
 In Harbour it's DB_DBFLOCK_HB64.

@@ -41,7 +41,7 @@ PROCEDURE Main()
    DrawBarcode( page, 440,   1, "CODE128",    "Wikipedia" )
    DrawBarcode( page, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
    DrawBarcode( page, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)" )
-   DrawBarcode( page, 580,   1, "QRCODE",     "http://harbour-project.org/" )
+   DrawBarcode( page, 580,   1, "QRCODE",     "http://harbour.github.io/" )
 
    FErase( hb_FNameExtSet( __FILE__, ".pdf" ) )
    ? HPDF_SaveToFile( pdf, hb_FNameExtSet( __FILE__, ".pdf" ) )

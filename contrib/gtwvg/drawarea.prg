@@ -1,5 +1,5 @@
 /*
- * Source file for the Wvg*Classes
+ * Xbase++ WvgDialog's Helper Class
  *
  * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                   Xbase++ WvgDialog's Helper Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               15Feb2009
  */
 
 #include "hbclass.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-CREATE CLASS WvgDrawingArea  INHERIT  WvgWindow
+CREATE CLASS WvgDrawingArea INHERIT WvgWindow
 
    VAR    caption                               INIT ""
    VAR    clipParent                            INIT .T.
@@ -95,7 +89,7 @@ METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::oParent:addChild( Self )
 
-   Wvg_RegisterClass_ByName( ::className() )
+   wvg_RegisterClass_ByName( ::className() )
 
    ::createControl()
 
@@ -109,18 +103,18 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
       IF HB_ISBLOCK( ::sl_resize )
-         Eval( ::sl_resize, NIL, NIL, self )
+         Eval( ::sl_resize, , , Self )
       ENDIF
       AEval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
+         wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         Wvg_SetBkMode( aNM[ 1 ], 1 )
-         Wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
+         wvg_SetBkMode( aNM[ 1 ], 1 )
+         wvg_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
          RETURN EVENT_HANDELLED
       ENDIF
 
@@ -128,8 +122,8 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-METHOD destroy() CLASS WvgDrawingArea
+METHOD PROCEDURE WvgDrawingArea:destroy()
 
    ::wvgWindow:destroy()
 
-   RETURN NIL
+   RETURN

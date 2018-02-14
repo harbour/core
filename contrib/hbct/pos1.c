@@ -1,9 +1,7 @@
 /*
  * PosAlpha(), PosLower(), PosRange() and PosUpper() CT3 string functions
  *
- * PosUpper() Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
- *
- * PosAlpha(), PosLower(), PosRange()
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (PosUpper())
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
  *
@@ -18,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,12 +54,12 @@
 #define DO_POS1_POSRANGE  2
 #define DO_POS1_POSUPPER  3
 
-/* helper function for the posxxx() functions */
+/* helper function for the Pos*() functions */
 static void do_pos1( int iSwitch )
 {
    if( HB_ISCHAR( 1 ) &&                  /* all functions need string as 1st param */
-       ( iSwitch != DO_POS1_POSRANGE ||   /* that's the only condition for all funcs _except_ POSRANGE */
-         ( iSwitch == DO_POS1_POSRANGE && /* In addition, POSRANGE needs .. */
+       ( iSwitch != DO_POS1_POSRANGE ||   /* that's the only condition for all functions _except_ PosRange() */
+         ( iSwitch == DO_POS1_POSRANGE && /* In addition, PosRange() needs .. */
            HB_ISCHAR( 2 ) &&              /* .. string as 2nd .. */
            HB_ISCHAR( 3 ) ) ) )           /* .. and 3rd param */
    {
@@ -114,7 +112,7 @@ static void do_pos1( int iSwitch )
                break;
 
             case DO_POS1_POSRANGE:
-               iDoRet = ( ( ucChar1 <= *puc ) && ( ucChar2 >= *puc ) );
+               iDoRet = ( ucChar1 <= *puc && ucChar2 >= *puc );
                break;
 
             case DO_POS1_POSUPPER:
@@ -134,10 +132,11 @@ static void do_pos1( int iSwitch )
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
-      HB_ERRCODE iError = 0;
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
+         HB_ERRCODE iError = 0;
+
          switch( iSwitch )
          {
             case DO_POS1_POSALPHA:

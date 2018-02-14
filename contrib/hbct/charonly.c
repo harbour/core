@@ -19,9 +19,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -69,10 +69,10 @@ static void do_charonly( int iSwitch )
       HB_SIZE sOnlySetLen = hb_parclen( 1 );
       char * pcRet;
       HB_SIZE sRetStrLen = 0;
-      int iShift, iBool;
-      const char * pcSub, * pc;
+      int iShift;
+      const char * pcSub;
 
-      /* check for zero-length strings  */
+      /* check for zero-length strings */
       switch( iSwitch )
       {
          case DO_CHARONLY_CHARONLY:
@@ -109,19 +109,17 @@ static void do_charonly( int iSwitch )
 
       for( pcSub = pcString; pcSub < pcString + sStrLen + 1 - iShift; pcSub += iShift )
       {
-         pc = ct_at_exact_forward( pcOnlySet, sOnlySetLen, pcSub, iShift, NULL );
-         iBool = ( ( pc != NULL ) && ( ( ( pc - pcOnlySet ) % iShift ) == 0 ) );
-         if( iBool ? ( iSwitch == DO_CHARONLY_CHARONLY ||
-                       iSwitch == DO_CHARONLY_WORDONLY )
-                   : ( iSwitch == DO_CHARONLY_CHARREM ||
-                       iSwitch == DO_CHARONLY_WORDREM ) )
+         const char * pc = ct_at_exact_forward( pcOnlySet, sOnlySetLen, pcSub, iShift, NULL );
+         HB_BOOL fBool = ( pc != NULL && ( ( pc - pcOnlySet ) % iShift ) == 0 );
+         if( fBool ? iSwitch == DO_CHARONLY_CHARONLY || iSwitch == DO_CHARONLY_WORDONLY
+                   : iSwitch == DO_CHARONLY_CHARREM  || iSwitch == DO_CHARONLY_WORDREM )
          {
             for( pc = pcSub; pc < pcSub + iShift; pc++ )
                pcRet[ sRetStrLen++ ] = *pc;
          }
       }
 
-      /* copy last character if string len is odd */
+      /* copy last character if string length is odd */
       if( iShift == 2 && sStrLen % 2 == 1 )
          pcRet[ sRetStrLen++ ] = pcString[ sStrLen - 1 ];
 
@@ -131,10 +129,12 @@ static void do_charonly( int iSwitch )
    else
    {
       PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode(), iError = 0;
+      int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
+         int iError = 0;
+
          switch( iSwitch )
          {
             case DO_CHARONLY_CHARONLY:

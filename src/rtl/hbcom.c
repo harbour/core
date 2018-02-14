@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -143,7 +143,9 @@ typedef struct
    int            oserr;
    int            port;
    char *         name;
-/* struct termios tio; */
+   #if 0
+   struct termios tio;
+   #endif
 }
 HB_COM, * PHB_COM;
 
@@ -711,7 +713,7 @@ int hb_comInputCount( int iPort )
       hb_comSetOsError( pCom, iResult == -1 );
 #elif defined( FIONREAD ) && ! defined( HB_OS_CYGWIN )
       /* Cygwin sys/termios.h explicitly says that "TIOCINQ is
-       * utilized instead of FIONREAD which has been accupied for
+       * utilized instead of FIONREAD which has been occupied for
        * other purposes under CYGWIN", so don't give Cygwin
        * even a chance to hit this code path. */
       int iResult = ioctl( pCom->fd, FIONREAD, &iCount );
@@ -807,7 +809,7 @@ int hb_comFlush( int iPort, int iType )
  */
 
 #ifdef HB_OS_LINUX
-   /* hack for missing defintions in standard header files */
+   /* hack for missing definitions in standard header files */
 #  ifndef TIOCM_OUT1
 #     define TIOCM_OUT1    0x2000
 #  endif
@@ -1329,7 +1331,7 @@ long hb_comRecv( int iPort, void * data, long len, HB_MAXINT timeout )
 #else
       if( timeout != pCom->rdtimeout )
       {
-         /* TODO: implent timeout settings
+         /* TODO: implement timeout settings
           *          tio.c_cc[ VTIME ] = ( timeout + 50 ) / 100;
           *          tio.c_cc[ VMIN ]  = 0;
           *       in DJGPP builds
@@ -1383,7 +1385,7 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
          tio.c_cc[ VMIN ]  = 0;  /* minimum number of characters for read */
 #else
          /* workaround for bug in some Linux kernels (i.e. 3.13.0-64-generic
-            Ubuntu) in which select() unconditionally accepts stdin for
+            *buntu) in which select() unconditionally accepts stdin for
             reading if c_cc[ VMIN ] = 0 [druzus] */
          tio.c_cc[ VMIN ] = 1;
 #endif
@@ -2260,7 +2262,9 @@ int hb_comClose( int iPort )
    if( pCom )
    {
       hb_vmUnlock();
-      /* FlushFileBuffers( pCom->hComm ); */
+      #if 0
+      FlushFileBuffers( pCom->hComm );
+      #endif
       fResult = CloseHandle( pCom->hComm );
       pCom->hComm = INVALID_HANDLE_VALUE;
       pCom->status &= ~HB_COM_OPEN;
@@ -3091,7 +3095,9 @@ int hb_comClose( int iPort )
    if( pCom )
    {
       hb_vmUnlock();
-      /* DosResetBuffer( pCom->hFile ); */
+      #if 0
+      DosResetBuffer( pCom->hFile );
+      #endif
       rc = DosClose( pCom->hFile );
       pCom->hFile = 0;
       pCom->status &= ~HB_COM_OPEN;
@@ -3185,7 +3191,7 @@ static void hb_comSetOsError( PHB_COM pCom, int iError )
          break;
       case SER_ERR_IRQ_NOT_FOUND:         /* Could not find an IRQ for the specified COM port */
       case SER_ERR_LOCK_MEM:              /* Could not lock memory in DPMI mode */
-      case SER_ERR_UNKNOWN:               /* An unknown error occured */
+      case SER_ERR_UNKNOWN:               /* An unknown error occurred */
       default:
          pCom->error = iError < 0 ? HB_COM_ERR_OTHER : 0;
    }

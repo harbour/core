@@ -1,5 +1,5 @@
 /*
- *
+ * Regex header
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -83,16 +83,19 @@ typedef HB_REGEX * PHB_REGEX;
    #define HB_REGMATCH_SIZE( n )    ( ( n ) * 3 )
    #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]
    #define HB_REGMATCH_EO( p, n )   ( p )[ ( n ) * 2 + 1 ]
+   #define HB_REGMATCH_UNSET        ( -1 )
 #elif defined( HB_POSIX_REGEX )
    #define HB_REGMATCH              regmatch_t
    #define HB_REGMATCH_SIZE( n )    ( n )
    #define HB_REGMATCH_SO( p, n )   ( p )[ n ].rm_so
    #define HB_REGMATCH_EO( p, n )   ( p )[ n ].rm_eo
+   #define HB_REGMATCH_UNSET        ( -1 )
 #else
    #define HB_REGMATCH              int
    #define HB_REGMATCH_SIZE( n )    ( ( n ) * 2 )
    #define HB_REGMATCH_SO( p, n )   ( p )[ ( n ) * 2 ]
    #define HB_REGMATCH_EO( p, n )   ( p )[ ( n ) * 2 + 1 ]
+   #define HB_REGMATCH_UNSET        ( -1 )
 #endif
 
 typedef void ( * HB_REG_FREE )( PHB_REGEX );
@@ -103,10 +106,10 @@ extern void hb_regexInit( HB_REG_FREE pFree, HB_REG_COMP pComp, HB_REG_EXEC pExe
 extern HB_BOOL hb_regexIs( PHB_ITEM pItem );
 
 #ifndef REG_EXTENDED
-#  define REG_EXTENDED  0x00
+#define REG_EXTENDED  0x00
 #endif
 #ifndef REG_NOSUB
-#  define REG_NOSUB     0x00
+#define REG_NOSUB     0x00
 #endif
 
 #else
@@ -124,7 +127,7 @@ typedef void * PHB_REGEX;
 #define HBREG_DOTALL    0x40
 
 #ifndef REGEX_MAX_GROUPS
-#  define REGEX_MAX_GROUPS 16
+#define REGEX_MAX_GROUPS 16
 #endif
 
 HB_EXTERN_BEGIN

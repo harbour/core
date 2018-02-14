@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -161,17 +161,17 @@ HB_FUNC( WOPEN )
 {
    int iColor;
 
-   /* 6-th (color) and 7-th (lVisible) parameters are Harbour extensions */
+   /* 6th (color) and 7th (lVisible) parameters are Harbour extensions */
    iColor = hb_ctColorParam( 6, -1 );   /* Harbour extension */ /* HB_EXTENSION */
    hb_retni( hb_ctwCreateWindow( hb_parni( 1 ), hb_parni( 2 ),
                                  hb_parni( 3 ), hb_parni( 4 ),
                                  hb_parl( 5 ), iColor,
-                                 hb_parldef( 7, 1 ) ) ); /* HB_EXTENSION */
+                                 hb_parldef( 7, HB_TRUE ) ) ); /* HB_EXTENSION */
 }
 
 HB_FUNC( WCLOSE )
 {
-   /* 1-st parameter (window handle) is Harbour extension */
+   /* 1st parameter (window handle) is Harbour extension */
    hb_retni( hb_ctwCloseWindow( HB_ISNUM( 1 ) ? hb_parni( 1 ) : /* HB_EXTENSION */
                                              hb_ctwCurrentWindow() ) );
 }
@@ -181,11 +181,10 @@ HB_FUNC( WACLOSE )
    hb_retni( hb_ctwCloseAllWindows() );
 }
 
-HB_FUNC( WSELECT )
+HB_FUNC( WSELECT )  /* 2nd parameter (fBringToTop) is Harbour extension */
 {
-   /* 2-nd parameter (fBringToTop) is Harbour extension */
    hb_retni( HB_ISNUM( 1 ) ? hb_ctwSelectWindow( hb_parni( 1 ),
-                                                 hb_parldef( 2, 1 ) ) : /* HB_EXTENSION */
+                                                 hb_parldef( 2, HB_TRUE ) ) : /* HB_EXTENSION */
                           hb_ctwCurrentWindow() );
 }
 
@@ -388,7 +387,7 @@ HB_FUNC( HBCT_MAXCOL ) /* Return the maximum screen/window column number (zero o
  */
 
 /*
-   WAlias( <nHandle> ) -> <nHandle> | -1
+   WAlias( <nHandle> ) --> <nHandle> | -1
    change current window handle to <nHandle>
    if <nHandle> is not used by other window
    or is current window.
@@ -398,7 +397,7 @@ HB_FUNC( WALIAS )
    int iWindow = hb_parnidef( 1, -1 );
 
    /* 255 is original CT3 limit,
-    * harbour CTWIN does not have such intenral limits
+    * Harbour CTWIN does not have such internal limits
     */
    if( iWindow >= 0 && iWindow <= 255 )
       iWindow = hb_ctwChangeWindowHandle( iWindow );
@@ -409,8 +408,8 @@ HB_FUNC( WALIAS )
 }
 
 /*
-   WList() -> <cHandleList>
-   _WStack() -> <cHandleList>
+   WList() --> <cHandleList>
+   _WStack() --> <cHandleList>
    return string with window handles in each character,
    the last character is the top window.
 

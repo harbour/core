@@ -75,7 +75,7 @@ EXAMPLES
 #pragma linenumber=off
 /* #pragma -l */
 
-This is the same as calling Harbour with the -l switch in the command line,
+This is the same as calling Harbour with the -l switch in the command-line,
 but with the great benefit that if you forgot to pass the switch, it will
 be used anyway because it is included inside the source.
 
@@ -89,7 +89,7 @@ SPECIAL PRAGMAS
 ===============
   These pragmas allows to control the processing of PRG source within
 the preprocessor. The special handling is done with a text enclosed
-betwen the '#pragma <type>' and '#pragma __endtext'
+between the '#pragma <type>' and '#pragma __endtext'
 
 #pragma __text
 --------------
@@ -97,10 +97,10 @@ Syntax:
   #pragma __text '|' [LineOutputCode] '|' [FinallyCode] '|' [StartupCode]
 
   Every line of text is stringified using '[' and ']' markers and is
-  passed to 'LineOutputCode' using C '%s' formating code. The result
+  passed to 'LineOutputCode' using C '%s' formatting code. The result
   text is passed further to the syntax analyzer. The 'StartupCode'
-  is returned at the very beginning of procesing. The 'FinallyCode'
-  is returned at the end. If 'LineOutputCode' is ommited then all
+  is returned at the very beginning of processing. The 'FinallyCode'
+  is returned at the end. If 'LineOutputCode' is omitted then all
   lines are ignored.
 
   For example, this pragma is used to implement TEXT/ENDTEXT command
@@ -136,19 +136,19 @@ Syntax:
 ?
 
   TEXT TO VAR v
-  This is 'example' text with ''""[] embeded
+  This is 'example' text with ''""[] embedded
   ENDTEXT
 
   The above example is preprocessed into:
-  v:=[This is 'example' text with ''""[] embeded]
+  v:=[This is 'example' text with ''""[] embedded]
 
 #pragma __cstream
 ----------------
 Syntax:
   #pragma __cstream '|' [JoinLineCode] '|' [EndingCode] '|' [StartingCode]
 
-  This is simmilar to '#pragma __stream' with the additional convertion
-  of C esc sequences e.g \n \t \r \b
+  This is similar to '#pragma __stream' with the additional conversion
+  of C Esc sequences e.g \n \t \r \b
 
   For example:
 
@@ -156,18 +156,18 @@ Syntax:
            #pragma __cstream|%s||<var>:=
 
   TEXT TO VAR v
-  This is 'example' text with ''""[] embeded and C \n
+  This is 'example' text with ''""[] embedded and C \n
   sequence
   ENDTEXT
   ? v
 
   The above example is preprocessed into:
-  v:=[This is 'example' text with ''""[] embeded and C \nsequence]
+  v:=[This is 'example' text with ''""[] embedded and C \nsequence]
   QOut(v)
 
   and at runtime the following is printed:
 
-  This is 'example' text with ''""[] embeded and C
+  This is 'example' text with ''""[] embedded and C
   sequence
 
 #pragma __endtext
@@ -189,7 +189,7 @@ Syntax:
 
   This pragma sets the maximum number of preprocess iterations during
   the source code translation. The default value is 1024.
-  This is the same as /r= command line switch
+  This is the same as /r= command-line switch
 
   For example:
 

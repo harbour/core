@@ -14,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,10 +44,8 @@
  *
  */
 
-
 #include "hbcairo.h"
 #include "cairo-ps.h"
-
 
 HB_FUNC( CAIRO_PS_SURFACE_CREATE )
 {
@@ -57,7 +55,6 @@ HB_FUNC( CAIRO_PS_SURFACE_CREATE )
    hb_retptr( NULL );
 #endif
 }
-
 
 HB_FUNC( CAIRO_PS_SURFACE_SET_SIZE )
 {
@@ -71,7 +68,6 @@ HB_FUNC( CAIRO_PS_SURFACE_SET_SIZE )
 #endif
 }
 
-
 HB_FUNC( CAIRO_PS_SURFACE_SET_EPS )
 {
 #ifdef CAIRO_HAS_PS_SURFACE
@@ -83,7 +79,6 @@ HB_FUNC( CAIRO_PS_SURFACE_SET_EPS )
    hb_cairo_surface_param( 1 );
 #endif
 }
-
 
 HB_FUNC( CAIRO_PS_SURFACE_GET_EPS )
 {

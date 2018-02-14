@@ -1,10 +1,10 @@
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (vszakats.net/harbour)
-# See COPYING.txt for licensing terms.
-#
-# This make file will detect optional 3rd party components
-# used in Harbour core code.
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
+
+# This makefile will detect optional 3rd party components
+# used in Harbour core code.
 
 # config/conf.mk if present, is able to override HB_HAS_* values.
 
@@ -74,7 +74,7 @@ _DET_INC_HEAD := /gpm.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 
-# Detect slang
+# Detect s-lang
 
 _DET_DSP_NAME := slang
 _DET_VAR_INC_ := HB_INC_SLANG

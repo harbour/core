@@ -2,6 +2,7 @@
  * HBGetList Class
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
+ * Copyright 2001 Luiz Rafael Culik (Support for CA-Cl*pper 5.3 GET-system)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site https://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -41,16 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- *
- * Copyright 2001 Luiz Rafael Culik
- *    Support for CA-Cl*pper 5.3 Getsystem
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -149,7 +140,7 @@ CREATE CLASS HBGetList
 
 ENDCLASS
 
-/* -------------------------------------------- */
+/* --- */
 
 #ifdef HB_COMPAT_C53
 METHOD ReadModal( nPos, oMenu, nMsgRow, nMsgLeft, nMsgRight, cMsgColor ) CLASS HBGetList
@@ -179,7 +170,7 @@ METHOD ReadModal() CLASS HBGetList
          cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 
-      hb_Scroll( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
+      Scroll( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
 
       ::cMsgSaveS := SaveScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
    ENDIF
@@ -412,7 +403,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
 
       IF ! HB_ISOBJECT( oMenu )
          nButton := 0
-      ELSEIF !( oMenu:ClassName() == "TOPBARMENU" )
+      ELSEIF ! oMenu:ClassName() == "TOPBARMENU"
          nButton := 0
       ELSEIF ( nButton := oMenu:hitTest( nMRow, nMCol ) ) != 0
          ::nMenuID := MenuModal( oMenu, nHotItem, aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGRIGHT ], aMsg[ MSGCOLOR ] )
@@ -809,6 +800,7 @@ METHOD ShowScoreboard() CLASS HBGetList
    RETURN Self
 
 METHOD DateMsg() CLASS HBGetList
+
    LOCAL nKey
 
    IF Set( _SET_SCOREBOARD )
@@ -912,7 +904,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
             oGet:varPut( oGUI:value )
             EXIT
          ENDIF
-         /* fall through */
+         /* fallthrough */
       OTHERWISE
          oGet:varPut( oGUI:buffer )
       ENDSWITCH
@@ -1086,7 +1078,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
 
       IF ! HB_ISOBJECT( oMenu )
          nButton := 0
-      ELSEIF !( oMenu:ClassName() == "TOPBARMENU" )
+      ELSEIF ! oMenu:ClassName() == "TOPBARMENU"
          nButton := 0
       ELSEIF ( nButton := oMenu:hitTest( nMRow, nMCol ) ) != 0
          ::nMenuID := MenuModal( oMenu, nHotItem, aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGRIGHT ], aMsg[ MSGCOLOR ] )
@@ -1146,7 +1138,7 @@ METHOD GUIPreValidate( oGet, oGUI, aMsg ) CLASS HBGetList
 
       lWhen := Eval( oGet:preBlock, oGet, aMsg )
 
-      IF !( oGUI:ClassName() == "TBROWSE" )
+      IF ! oGUI:ClassName() == "TBROWSE"
          oGet:display()
       ENDIF
 
@@ -1180,7 +1172,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
       RETURN .T.                   // NOTE
    ENDIF
 
-   IF !( oGUI:ClassName() == "TBROWSE" )
+   IF ! oGUI:ClassName() == "TBROWSE"
       xOldValue := oGet:varGet()
       SWITCH oGUI:ClassName()
       CASE "LISTBOX"
@@ -1189,13 +1181,13 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
             xNewValue := oGUI:value
             EXIT
          ENDIF
-         /* fall through */
+         /* fallthrough */
       OTHERWISE
          xNewValue := oGUI:buffer
       ENDSWITCH
    ENDIF
 
-   IF !( xOldValue == xNewValue )
+   IF ! xOldValue == xNewValue
       oGet:varPut( xNewValue )
       ::lUpdated := .T.
    ENDIF
@@ -1211,7 +1203,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
       SetPos( oGet:row, oGet:col )
 
       ::ShowScoreBoard()
-      IF !( oGUI:ClassName() == "TBROWSE" )
+      IF ! oGUI:ClassName() == "TBROWSE"
          oGUI:Select( oGet:varGet() )
       ENDIF
 
@@ -1302,7 +1294,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
 
       IF ! HB_ISOBJECT( oMenu )
          nButton := 0
-      ELSEIF !( oMenu:ClassName() == "TOPBARMENU" )
+      ELSEIF ! oMenu:ClassName() == "TOPBARMENU"
          nButton := 0
       ELSEIF ( nButton := oMenu:hitTest( nMRow, nMCol ) ) != 0
          ::nMenuID := MenuModal( oMenu, nHotItem, aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGRIGHT ], aMsg[ MSGCOLOR ] )
@@ -1441,7 +1433,7 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
          oGet  := ::aGetList[ nGet ]
 
          IF HB_ISOBJECT( oGet:control ) .AND. ;
-            !( oGet:Control:ClassName() == "TBROWSE" )
+            ! oGet:Control:ClassName() == "TBROWSE"
 
             cCaption := oGet:control:caption
          ELSE
@@ -1662,7 +1654,7 @@ METHOD EraseGetMsg( aMsg ) CLASS HBGetList
 
    RETURN Self
 
-/* -------------------------------------------- */
+/* --- */
 
 METHOD New( GetList ) CLASS HBGetList
 
