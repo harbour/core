@@ -160,6 +160,8 @@ PROCEDURE __dbgShowWorkAreas()
 
 STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
 
+   LOCAL oDebug := __dbg()
+
    /* Display captions */
 
    hb_DispOutAt( oDlg:nTop, oDlg:nLeft + 5, " Area ", oDlg:cColor )
@@ -193,8 +195,7 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
    aBrw[ 1 ]:ForceStable()
    aBrw[ 2 ]:ForceStable()
    aBrw[ 3 ]:ForceStable()
-   aBrw[ 2 ]:Dehilite()
-   aBrw[ 3 ]:Dehilite()
+   AEval( aBrw, {| a, i | iif( oDebug:nWaFocus == i, a:HiLite(), a:DeHilite() ) } )
 
    UpdateInfo( oDlg, Alias() )
 
