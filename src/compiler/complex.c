@@ -837,6 +837,7 @@ int hb_comp_yylex( YYSTYPE * yylval_ptr, HB_COMP_DECL )
 
       case HB_PP_TOKEN_EOL:
          pLex->fEol = HB_TRUE;
+         /* fallthrough */
       case HB_PP_TOKEN_EOC:
          pLex->iState = LOOKUP;
          return ( HB_UCHAR ) pToken->value[ 0 ];

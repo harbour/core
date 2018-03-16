@@ -881,7 +881,7 @@ void hb_retstrlen( void * cdp, const char * szText, HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_retstrlen(%p,%s,%" HB_PFS "u)", cdp, ( const void * ) szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retstrlen(%p,%s,%" HB_PFS "u)", cdp, szText, nLen ) );
 
    hb_itemPutStrLen( hb_stackReturnItem(), cdp, szText, nLen );
 }
@@ -909,7 +909,7 @@ int hb_storstr( void * cdp, const char * szText, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_storstr(%p,%s,%d)", cdp, ( const void * ) szText, iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storstr(%p,%s,%d)", cdp, szText, iParam ) );
 
    if( iParam == -1 )
    {
@@ -991,7 +991,7 @@ int hb_storstrlen( void * cdp, const char * szText, HB_SIZE nLen, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_storstrlen(%p,%s,%" HB_PFS "u,%d)", cdp, ( const void * ) szText, nLen, iParam ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storstrlen(%p,%s,%" HB_PFS "u,%d)", cdp, szText, nLen, iParam ) );
 
    if( iParam == -1 )
    {

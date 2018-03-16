@@ -900,6 +900,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
       case HB_EA_PUSH_POP:
       case HB_EA_STATEMENT:
          hb_compWarnMeaningless( HB_COMP_PARAM, pSelf );
+         /* fallthrough */
       case HB_EA_DELETE:
          HB_COMP_EXPR_FREE( pSelf->value.asReference );
          break;

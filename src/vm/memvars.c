@@ -574,7 +574,7 @@ char * hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen )
    PHB_DYNS pDynVar;
    char * szValue = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetStrValuePtr(%s, %p)", ( void * ) szVarName, ( void * ) pnLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetStrValuePtr(%s, %p)", szVarName, ( void * ) pnLen ) );
 
    pDynVar = hb_memvarFindSymbol( szVarName, *pnLen );
 
