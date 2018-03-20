@@ -1,4 +1,0 @@
-/*
-   NOTE: I deleted all the information in this file due to copyright
-         violation! 2004-4-19 [ckedem].
- */

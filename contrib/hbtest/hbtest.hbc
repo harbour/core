@@ -1,7 +1,0 @@
-description=Regression test framework
-
-incpaths=.
-
-headers=hbtest.ch
-
-libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

@@ -1,5 +1,0 @@
-This contrib is deprecated and not maintained anymore.
-
-It also never leapt out of an experimental stage, so use it with caution.
-
-Please switch to the Harbour core serial API ASAP.
