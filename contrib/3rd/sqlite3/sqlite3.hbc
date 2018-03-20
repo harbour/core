@@ -1,3 +1,0 @@
-libs=${hb_name}
-
-cflags=-DSQLITE_OMIT_LOAD_EXTENSION=1{minix}

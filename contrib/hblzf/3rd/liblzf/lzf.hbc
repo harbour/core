@@ -1,3 +1,0 @@
-libs=${hb_name}
-
-cflags=-DAVOID_ERRNO=1{wce}

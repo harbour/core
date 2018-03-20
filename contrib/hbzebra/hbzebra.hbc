@@ -1,7 +1,0 @@
-description=Barcode creating functions
-
-incpaths=.
-
-headers=${hb_name}.ch
-
-libs=${hb_name}

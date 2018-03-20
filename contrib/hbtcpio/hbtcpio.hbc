@@ -1,3 +1,0 @@
-description=I/O driver for TCP streams
-
-libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

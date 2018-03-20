@@ -7,7 +7,6 @@ C_MAIN := harbour.c
 RC_SOURCES := harbour.rc
 
 LIBS := \
-   hbcplr \
    hbpp \
    hbnortl \
    hbcommon \

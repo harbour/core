@@ -1,9 +1,0 @@
-# Testing dirty function overload
--ldflag={allgcc}-Wl,--allow-multiple-definition
--ldflag={allmsvc|allpocc|xcc|watcom}/force:multiple
-
-t0.prg
-t1.prg
-t2.prg
-
--nulrdd
