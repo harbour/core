@@ -26,9 +26,12 @@ else
    endif
 
    DIRS += \
-      doc \
       include \
-      src \
+      src/nortl \
+      src/common \
+      src/pp \
+      src/main \
+      src/compiler
 
    ifeq ($(_CONTRIB_FIRST),yes)
 

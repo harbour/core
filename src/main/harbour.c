@@ -122,8 +122,6 @@ int main( int argc, char * argv[] )
 {
    int iResult;
 
-   iResult = hb_compMain( argc, ( const char * const * ) argv );
-
    hb_xexit();
 
    return iResult;
