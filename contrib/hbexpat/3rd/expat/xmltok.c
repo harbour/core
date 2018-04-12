@@ -33,7 +33,7 @@
 #include <stddef.h>
 #include <string.h>  /* memcpy */
 
-#if defined(_MSC_VER) && (_MSC_VER <= 1700)
+#if ( defined(_MSC_VER) && (_MSC_VER <= 1700) ) || ( defined( __BORLANDC__ ) && __BORLANDC__ <= 0x582 )
   /* for vs2012/11.0/1700 and earlier Visual Studio compilers */
 # define bool   int
 # define false  0
