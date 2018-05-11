@@ -340,6 +340,8 @@ DYNAMIC SSL_set_read_ahead
 DYNAMIC SSL_set_rfd
 DYNAMIC SSL_set_shutdown
 DYNAMIC SSL_set_ssl_method
+DYNAMIC SSL_set_tlsext_host_name
+DYNAMIC SSL_set_verify
 DYNAMIC SSL_set_verify_result
 DYNAMIC SSL_set_wfd
 DYNAMIC SSL_shutdown
