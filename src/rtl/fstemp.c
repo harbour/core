@@ -131,7 +131,7 @@ static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir, HB_B
 
    if( fOK )
    {
-#  if defined( __DJGPP__ ) || defined( HB_OS_OS2 )
+#  if defined( __DJGPP__ )
       /* convert '/' to '\' */
       char * pszDelim = pszName;
       while( ( pszDelim = strchr( pszDelim, '/' ) ) != NULL )
@@ -293,12 +293,12 @@ static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char 
       HB_SYMBOL_UNUSED( pszPrefix );
 
       pTmpBuffer[ 0 ] = '\0';
-      fResult = ( tmpnam( pTmpBuffer ) != NULL );
+      fResult = ( tmpnam( pszBuffer ) != NULL );
       pTmpBuffer[ L_tmpnam ] = '\0';
 
       if( fResult )
       {
-#  if defined( __DJGPP__ ) || defined( HB_OS_OS2 )
+#  if defined( __DJGPP__ )
          /* convert '/' to '\' */
          char * pszDelim = pTmpBuffer;
          while( ( pszDelim = strchr( pszDelim, '/' ) ) != NULL )
@@ -334,7 +334,6 @@ HB_FHANDLE hb_fsCreateTemp( const char * pszDir, const char * pszPrefix, HB_FATT
    {
       if( hb_fsTempName( pszName, pszDir, pszPrefix ) )
       {
-
 #if defined( HB_OS_WIN )
          /* Using FO_TRUNC on win platforms as hb_fsTempName() uses GetTempFileName(),
             which creates the file, so FO_EXCL would fail at this point. [vszakats] */
