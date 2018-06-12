@@ -603,7 +603,6 @@ FUNCTION wvt_GetRGBColorByString( cColor, nForeBack )
             s := SubStr( cColor, 1, n - 1 )
          ELSE
             s := SubStr( cColor, n + 1 )
-            s := SubStr( cColor, n + 1 )
             IF "," $ s
                s := Substr( s, 1, At( ",", s ) - 1 )
             ENDIF
