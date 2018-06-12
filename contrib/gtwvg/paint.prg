@@ -625,7 +625,7 @@ FUNCTION wvt_GetRGBColorByString( cColor, nForeBack )
       ELSEIF Val( s ) > 0 .AND. Val( s ) < 16
          nIndex := Val( s )
       ELSEIF s == "0"
-         RETURN 0
+         nIndex := 0
       ENDIF
    ENDIF
 
