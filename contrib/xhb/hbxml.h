@@ -84,6 +84,7 @@
 #define MXML_STYLE_TAB                0x0002
 #define MXML_STYLE_THREESPACES        0x0004
 #define MXML_STYLE_NOESCAPE           0x0008
+#define MXML_STYLE_NONEWLINE          0x0010
 
 /* Status values */
 

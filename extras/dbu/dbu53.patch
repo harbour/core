@@ -24,7 +24,7 @@ diff -u dbu53ori/dbu.prg dbu53pat/dbu.prg
 +      hb_cdpSelect( "UTF8EX" )
 +      hb_gtInfo( HB_GTI_BOXCP, "UTF8EX" )
 +   ENDIF
-+   SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
++   SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE, .T. ) } )
 +
     IF (ISCOLOR() .OR. "/C" $ UPPER(param2)) .AND. .NOT. "/M" $ UPPER(param2)
        // make it pretty

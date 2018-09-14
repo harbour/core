@@ -35,7 +35,7 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
    # only needed for win/wce, for other platforms this is noop
    HB_CFLAGS_STA := -DPCRE_STATIC
 
-   ifeq ($(filter $(HB_PLATFORM),win wince dos vxworks),)
+   ifeq ($(filter $(HB_PLATFORM),win wce dos vxworks),)
       HB_CFLAGS +=  -DHAVE_STDINT_H
    else
       ifeq ($(HB_PLATFORM),sunos)

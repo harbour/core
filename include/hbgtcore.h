@@ -205,7 +205,7 @@ typedef struct
    int       (* InkeyLast) ( HB_GT_PTR, int iEventMask );
    int       (* InkeyNext) ( HB_GT_PTR, int iEventMask );
    void      (* InkeyPoll) ( HB_GT_PTR );
-   void      (* InkeySetText) ( HB_GT_PTR, const char * szText, HB_SIZE nLen );
+   void      (* InkeySetText) ( HB_GT_PTR, const char * szText, HB_SIZE nLen, HB_BOOL fEol );
    int       (* InkeySetLast) ( HB_GT_PTR, int iKey );
    void      (* InkeyReset) ( HB_GT_PTR );
    void      (* InkeyExit) ( HB_GT_PTR );
@@ -463,7 +463,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_INKEYLAST(g,m)                (g)->pFuncTable->InkeyLast(g,m)
 #define HB_GTSELF_INKEYNEXT(g,m)                (g)->pFuncTable->InkeyNext(g,m)
 #define HB_GTSELF_INKEYPOLL(g)                  (g)->pFuncTable->InkeyPoll(g)
-#define HB_GTSELF_INKEYSETTEXT(g,s,l)           (g)->pFuncTable->InkeySetText(g,s,l)
+#define HB_GTSELF_INKEYSETTEXT(g,s,l,e)         (g)->pFuncTable->InkeySetText(g,s,l,e)
 #define HB_GTSELF_INKEYSETLAST(g,k)             (g)->pFuncTable->InkeySetLast(g,k)
 #define HB_GTSELF_INKEYRESET(g)                 (g)->pFuncTable->InkeyReset(g)
 #define HB_GTSELF_INKEYEXIT(g)                  (g)->pFuncTable->InkeyExit(g)
@@ -593,7 +593,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSUPER_INKEYLAST(g,m)                (HB_GTSUPERTABLE(g))->InkeyLast(g,m)
 #define HB_GTSUPER_INKEYNEXT(g,m)                (HB_GTSUPERTABLE(g))->InkeyNext(g,m)
 #define HB_GTSUPER_INKEYPOLL(g)                  (HB_GTSUPERTABLE(g))->InkeyPoll(g)
-#define HB_GTSUPER_INKEYSETTEXT(g,s,l)           (HB_GTSUPERTABLE(g))->InkeySetText(g,s,l)
+#define HB_GTSUPER_INKEYSETTEXT(g,s,l,e)         (HB_GTSUPERTABLE(g))->InkeySetText(g,s,l,e)
 #define HB_GTSUPER_INKEYSETLAST(g,k)             (HB_GTSUPERTABLE(g))->InkeySetLast(g,k)
 #define HB_GTSUPER_INKEYRESET(g)                 (HB_GTSUPERTABLE(g))->InkeyReset(g)
 #define HB_GTSUPER_INKEYEXIT(g)                  (HB_GTSUPERTABLE(g))->InkeyExit(g)

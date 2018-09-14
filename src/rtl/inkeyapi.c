@@ -313,16 +313,16 @@ int hb_inkeySetLast( int iKey )
    return iLast;
 }
 
-void hb_inkeySetText( const char * szText, HB_SIZE nLen )
+void hb_inkeySetText( const char * szText, HB_SIZE nLen, HB_BOOL fEol )
 {
    PHB_GT pGT;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeySetText(%s,%" HB_PFS "u)", szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_inkeySetText(%s,%" HB_PFS "u, %d)", szText, nLen, fEol ) );
 
    pGT = hb_gt_Base();
    if( pGT )
    {
-      HB_GTSELF_INKEYSETTEXT( pGT, szText, nLen );
+      HB_GTSELF_INKEYSETTEXT( pGT, szText, nLen, fEol );
       hb_gt_BaseFree( pGT );
    }
 }

@@ -1200,10 +1200,12 @@ HB_FUNC( SSL_SET_TLSEXT_HOST_NAME )
 {
    if( hb_SSL_is( 1 ) )
    {
+#if defined( SSL_set_tlsext_host_name ) || OPENSSL_VERSION_NUMBER >= 0x00908060L
       SSL * ssl = hb_SSL_par( 1 );
 
       if( ssl )
          SSL_set_tlsext_host_name( ssl, hb_parc( 2 ) );
+#endif
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

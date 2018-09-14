@@ -2035,11 +2035,19 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_CLIPBOARDDATA:
       {
          QString qStr = QApplication::clipboard()->text();
+         if( qStr.isEmpty() && QApplication::clipboard()->supportsSelection() )
+         {
+            qStr = QApplication::clipboard()->text( QClipboard::Selection );
+            if( qStr.isEmpty() && QApplication::clipboard()->supportsFindBuffer() )
+               qStr = QApplication::clipboard()->text( QClipboard::FindBuffer );
+         }
          pInfo->pResult = hb_gt_qtc_itemPutQString( pInfo->pResult, &qStr );
          if( pInfo->pNewVal && HB_IS_STRING( pInfo->pNewVal ) )
          {
             hb_gt_qtc_itemGetQString( pInfo->pNewVal, &qStr );
             QApplication::clipboard()->setText( qStr );
+            if( QApplication::clipboard()->supportsSelection() )
+               QApplication::clipboard()->setText( qStr, QClipboard::Selection );
          }
          break;
       }
@@ -2826,6 +2834,8 @@ void QTConsole::copySelection( void )
    }
 
    QApplication::clipboard()->setText( qStr );
+   if( QApplication::clipboard()->supportsSelection() )
+      QApplication::clipboard()->setText( qStr, QClipboard::Selection );
 }
 
 void QTConsole::repaintChars( const QRect & rx )
