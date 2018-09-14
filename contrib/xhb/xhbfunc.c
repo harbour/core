@@ -117,7 +117,7 @@ HB_FUNC( XHB__KEYBOARD )
    }
    else if( HB_ISCHAR( 1 ) )
    {
-      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
+      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ), HB_FALSE );
    }
    else if( HB_ISARRAY( 1 ) )
    {
@@ -135,7 +135,7 @@ HB_FUNC( XHB__KEYBOARD )
          }
          else if( HB_IS_STRING( pItem ) )
          {
-            hb_inkeySetText( ( const char * ) hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ) );
+            hb_inkeySetText( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), HB_FALSE );
          }
       }
    }

@@ -254,7 +254,7 @@ METHOD HandleUserKey( nKey, nUdfReturn ) CLASS HBMemoEditor
 
 #ifndef HB_CLP_STRICT
    CASE ME_PASTE  /* Xbase++ compatibility */
-      hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
+      hb_gtInfo( HB_GTI_CLIPBOARDPASTE, .T. )
       EXIT
 #endif
 

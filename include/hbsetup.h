@@ -151,7 +151,8 @@
       defined( __MINGW64__ )
    #define HB_CPU_X86_64
 
-#elif defined( __arm64__ )
+#elif defined( __arm64__ ) || \
+      defined( __aarch64__ )
    #define HB_CPU_ARM_64
 
 #elif defined( __arm__ ) || \

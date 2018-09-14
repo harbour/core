@@ -103,7 +103,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
              aHistory[ ++nHistIndex ], ;
              ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ), ;
                   ManageCursor( cCommand ) } )
-      bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+      bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE, .T. ) } )
 
       bKeyTab   := SetKey( K_TAB, {|| CompleteCmd( @cCommand, hCommands ) } )
 
@@ -251,7 +251,7 @@ STATIC FUNCTION hbnetiocon_GetHidden()
    ATail( GetList ):display()
 
    SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-   bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+   bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE, .T. ) } )
 
    READ
 

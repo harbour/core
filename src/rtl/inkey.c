@@ -102,7 +102,7 @@ HB_FUNC( __KEYBOARD )
    hb_inkeyReset();
 
    if( HB_ISCHAR( 1 ) )
-      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ) );
+      hb_inkeySetText( hb_parc( 1 ), hb_parclen( 1 ), HB_FALSE );
 }
 
 HB_FUNC( HB_KEYCLEAR )

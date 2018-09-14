@@ -1961,7 +1961,8 @@ static HB_BOOL hb_gt_def_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_CLIPBOARDPASTE:
          if( HB_GTSELF_INFO( pGT, HB_GTI_CLIPBOARDDATA, pInfo ) )
             HB_GTSELF_INKEYSETTEXT( pGT, hb_itemGetCPtr( pInfo->pResult ),
-                                         hb_itemGetCLen( pInfo->pResult ) );
+                                         hb_itemGetCLen( pInfo->pResult ),
+                                         hb_itemGetL( pInfo->pNewVal ) );
          break;
 
       case HB_GTI_NOTIFIERBLOCK:
@@ -3031,9 +3032,9 @@ static int hb_gt_def_InkeySetLast( PHB_GT pGT, int iKey )
 }
 
 /* Set text into inkey buffer */
-static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, HB_SIZE nLen )
+static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, HB_SIZE nLen, HB_BOOL fEol )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeySetText(%p,%s,%" HB_PFS "u)", ( void * ) pGT, szText, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_def_InkeySetText(%p,%s,%" HB_PFS "u, %d)", ( void * ) pGT, szText, nLen, fEol ) );
 
    if( pGT->StrBuffer )
    {
@@ -3045,13 +3046,29 @@ static void hb_gt_def_InkeySetText( PHB_GT pGT, const char * szText, HB_SIZE nLe
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
       HB_SIZE nIndex = 0;
-      HB_WCHAR wc;
+      HB_WCHAR wc, prev = 0;
 
       pGT->StrBufferSize = pGT->StrBufferPos = 0;
       pGT->StrBuffer = ( HB_WCHAR * ) hb_xgrab( nLen * sizeof( HB_WCHAR ) );
       while( HB_CDPCHAR_GET( cdp, szText, nLen, &nIndex, &wc ) )
-         pGT->StrBuffer[ pGT->StrBufferSize++ ] = wc == ';' ? HB_CHAR_CR : wc;
-
+      {
+         if( fEol )
+         {
+            if( wc == HB_CHAR_LF )
+            {
+               if( prev == HB_CHAR_CR )
+               {
+                  prev = 0;
+                  continue;
+               }
+               else
+                  wc = HB_CHAR_CR;
+            }
+         }
+         else if( wc == ';' )
+            wc = HB_CHAR_CR;
+         pGT->StrBuffer[ pGT->StrBufferSize++ ] = prev = wc;
+      }
       if( pGT->StrBufferSize == 0 )
       {
          hb_xfree( pGT->StrBuffer );

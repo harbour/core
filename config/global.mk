@@ -367,8 +367,10 @@ ifeq ($(HB_HOST_PLAT),)
             _DETPLAT_STR := $(OS)
             include $(TOP)$(ROOT)config/detplat.mk
             ifeq ($(HB_HOST_PLAT),)
-               _DETPLAT_STR := $(shell uname -s)
-               include $(TOP)$(ROOT)config/detplat.mk
+               ifneq ($(call find_in_path,uname),)
+                  _DETPLAT_STR := $(shell uname -s)
+                  include $(TOP)$(ROOT)config/detplat.mk
+               endif
             endif
          endif
       endif
