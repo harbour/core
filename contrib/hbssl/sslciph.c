@@ -44,9 +44,6 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-
 #include "hbssl.h"
 
 HB_FUNC( SSL_CIPHER_DESCRIPTION )

@@ -487,6 +487,40 @@ HB_BOOL hb_itemFreeC( char * szText )
       return HB_FALSE;
 }
 
+const char * hb_itemGetCRef( PHB_ITEM pItem, void ** phRef, HB_SIZE * pnLen )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetCRef(%p, %p, %p)", ( void * ) pItem, ( void * ) phRef, ( void * ) pnLen ) );
+
+   * phRef = NULL;
+
+   if( pItem && HB_IS_STRING( pItem ) )
+   {
+      if( pnLen )
+         * pnLen = pItem->item.asString.length;
+
+      if( pItem->item.asString.allocated )
+      {
+         * phRef = ( void * ) pItem->item.asString.value;
+         hb_xRefInc( pItem->item.asString.value );
+      }
+
+      return pItem->item.asString.value;
+   }
+
+   if( pnLen )
+      * pnLen = 0;
+
+   return NULL;
+}
+
+void hb_itemFreeCRef( void * hRef )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemFreeCRef(%p)", hRef ) );
+
+   if( hRef )
+      hb_xRefFree( hRef );
+}
+
 /* NOTE: Clipper is buggy and will not append a trailing zero, although
          the NG says that it will. Check your buffers, since what may have
          worked with Clipper could overrun the buffer with Harbour.
