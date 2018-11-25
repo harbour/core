@@ -1,6 +1,4 @@
-description=Cups wrapper (*nix printing)
-
-incpaths=.
+description=CUPS bindings (*nix printing)
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 

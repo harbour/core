@@ -1,0 +1,106 @@
+/* $DOC$
+   $AUTHOR$
+      Copyright 2011 Chris Gonnerman
+   $TEMPLATE$
+      Function
+   $NAME$
+      cupsGetDefault()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+   $ONELINER$
+      Returns the CUPS name of the default printer.
+   $SYNTAX$
+      cupsGetDefault() --> cPrinterName
+   $ARGUMENTS$
+   $RETURNS$
+   $DESCRIPTION$
+      Returns the CUPS name of the default printer on the default server,
+      or an empty string if no printer is configured as default printer.
+
+      Refer to the CUPS documentation for more details of these operations,
+      including a list of valid printing options.
+   $EXAMPLES$
+   $STATUS$
+      R
+   $COMPLIANCE$
+      cups
+   $PLATFORMS$
+      *nix
+   $FILES$
+      Library is hbcups
+   $SEEALSO$
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 2011 Chris Gonnerman
+   $TEMPLATE$
+      Function
+   $NAME$
+      cupsGetDests()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+   $ONELINER$
+      Returns a list of all CUPS printers.
+   $SYNTAX$
+      cupsGetDests() --> aPrinterNames
+   $ARGUMENTS$
+   $RETURNS$
+   $DESCRIPTION$
+      Returns a list of all CUPS printers on the default server.
+
+      Refer to the CUPS documentation for more details of these operations,
+      including a list of valid printing options.
+   $EXAMPLES$
+   $STATUS$
+      R
+   $COMPLIANCE$
+      cups
+   $PLATFORMS$
+      *nix
+   $FILES$
+      Library is hbcups
+   $SEEALSO$
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 2011 Chris Gonnerman
+   $TEMPLATE$
+      Function
+   $NAME$
+      cupsPrintFile()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+   $ONELINER$
+      Prints the named file on the named printer.
+   $SYNTAX$
+      cupsPrintFile( <cPrinterName>, <cFileName>, <cTitle>, [ <aOptions> | <hOptions> ] )
+        --> nJobNumber
+   $ARGUMENTS$
+   $RETURNS$
+   $DESCRIPTION$
+      Prints the named file on the named printer (on the default server), using
+      the given title.  Options may be passed as an array of strings of the
+      form "option=value" or as a hash of options and values (again expressed
+      as character strings).  Returns the job number, or 0 on error.
+
+      Refer to the CUPS documentation for more details of these operations,
+      including a list of valid printing options.
+   $EXAMPLES$
+   $STATUS$
+      R
+   $COMPLIANCE$
+      cups
+   $PLATFORMS$
+      *nix
+   $FILES$
+      Library is hbcups
+   $SEEALSO$
+   $END$
+ */

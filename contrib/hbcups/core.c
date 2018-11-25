@@ -116,3 +116,11 @@ HB_FUNC( CUPSPRINTFILE )
 
    cupsFreeOptions( num_options, options );
 }
+
+HB_FUNC( HB_CUPS_VERSION )
+{
+   hb_storni( CUPS_VERSION_MAJOR, 1 );
+   hb_storni( CUPS_VERSION_MINOR, 2 );
+   hb_storni( CUPS_VERSION_PATCH, 3 );
+   hb_retni( CUPS_VERSION_MAJOR * 1000 + CUPS_VERSION_MINOR * 100 + CUPS_VERSION_PATCH );
+}
