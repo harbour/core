@@ -5426,6 +5426,31 @@ HB_FUNC( __CLSMSGTYPE )
       hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* __clsMsgScope( <hClass>, <cMsgName> | <sMsgName> ) --> <nScope>
+ *
+ * return scope of method attached to given message,
+ * <nScope> is one of HB_OO_CLSTP_* values defined in hboo.ch or
+ * -1 if message is not supported.
+ */
+HB_FUNC( __CLSMSGSCOPE )
+{
+   PHB_DYNS pMessage = hb_objGetMsgSym( hb_param( 2, HB_IT_ANY ) );
+
+   if( pMessage )
+   {
+      HB_STACK_TLS_PRELOAD
+      HB_USHORT uiClass = ( HB_USHORT ) hb_parni( 1 );
+      PMETHOD pMethod = NULL;
+
+      if( uiClass && uiClass <= s_uiClasses )
+         pMethod = hb_clsFindMsg( s_pClasses[ uiClass ], pMessage );
+
+      hb_retni( pMethod ? pMethod->uiScope : -1 );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 /* extend the size of classes buffer to given value to avoid later
  * RT reallocations. It may be useful in some very seldom cases
  * for MT programs which will allocate dynamically at runtime
