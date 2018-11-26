@@ -7,7 +7,7 @@
 
 -stop{win|wce|dos}
 
--depurlbase=cups:https://cups.org/
+#-depurlbase=cups:https://cups.org/
 -deppkgname=cups:libcups2-dev{deb}
 -deppkgname=cups:libcups2-devel{rpm}
 -deppkgname=cups:cups-devel{rpm}
