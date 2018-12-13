@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for cross-compatibility between different Harbour flavours
  *
  * Copyright 1999-2009 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -274,7 +272,9 @@
    #xtranslate MaxCol( .T. )                   => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
    #xtranslate NextKey( [<x>] )                => hb_keyNext( <x> )
 
-   #xtranslate Str( <x>, [<y>], [<y>], <z> )   => iif( <z>, hb_ntos( <x> ), Str( <x> ) )
+   #xtranslate Str( <x>, <n>, <d>, <l> )       => iif( <l>, LTrim( Str( <x>, <n>, <d> ) ), Str( <x>, <n>, <d> ) )
+   #xtranslate Str( <x>, <n>,, <l> )           => iif( <l>, LTrim( Str( <x>, <n> ) ), Str( <x>, <n> ) )
+   #xtranslate Str( <x>,,, <l> )               => iif( <l>, hb_ntos( <x> ), Str( <x> ) )
 
    #xuntranslate NetName(                      =>
    #xuntranslate MemoWrit(                     =>
@@ -304,7 +304,7 @@
    #xtranslate hb_enumIndex( <!v!> ) => <v>:__enumIndex()
 
    /* TRY / CATCH / FINALLY / END */
-   #xcommand TRY  => BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+   #xcommand TRY => BEGIN SEQUENCE WITH __BreakBlock()
    #xcommand CATCH [<!oErr!>] => RECOVER [USING <oErr>] <-oErr->
    #xcommand FINALLY => ALWAYS
 
@@ -314,19 +314,19 @@
 
    /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
    #translate ( <exp1> IN <exp2> )     => ( ( <exp1> ) $ ( <exp2> ) )
-   #translate ( <exp1> HAS <exp2> )    => ( hb_regexHas( ( <exp2> ), ( <exp1> ) ) )
-   #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( ( <exp2> ), ( <exp1> ) ) )
-   #translate ( <exp1> \<\< <exp2> )   => ( hb_bitShift( ( <exp1> ), ( <exp2> ) ) )
-   #translate ( <exp1> >> <exp2> )     => ( hb_bitShift( ( <exp1> ), -( <exp2> ) ) )
+   #translate ( <exp1> HAS <exp2> )    => hb_regexHas( <exp2>, <exp1> )
+   #translate ( <exp1> LIKE <exp2> )   => hb_regexLike( <exp2>, <exp1> )
+   #translate ( <exp1> \<\< <exp2> )   => hb_bitShift( <exp1>, <exp2> )
+   #translate ( <exp1> >> <exp2> )     => hb_bitShift( <exp1>, -( <exp2> ) )
    /* NOTE: These macros can break some valid Harbour/Clipper constructs,
             so they are disabled by default. Enable them with care, or
             even better to switch to use HB_BIT*() functions directly.
             They are optimized by Harbour compiler the same way (and even
             more) as these C-like operators, without any bad side-effects. */
    #if defined( XHB_BITOP )
-      #translate ( <exp1> | <exp2> )      => ( hb_bitOr( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> & <exp2> )      => ( hb_bitAnd( ( <exp1> ), ( <exp2> ) ) )
-      #translate ( <exp1> ^^ <exp2> )     => ( hb_bitXor( ( <exp1> ), ( <exp2> ) ) )
+      #translate ( <exp1> | <exp2> )      => xhb_bitOr( <exp1>, <exp2> )
+      #translate ( <exp1> & <exp2> )      => xhb_bitAnd( <exp1>, <exp2> )
+      #translate ( <exp1> ^^ <exp2> )     => xhb_bitXor( <exp1>, <exp2> )
    #endif
 
    #command @ <row>, <col> PROMPT <prompt> [ MESSAGE <msg> ] [ COLOR <color> ] => ;
@@ -512,7 +512,7 @@
                                                    hb_HKeepOrder( h ) ;;
                                                    RETURN .T. ; }:eval( <x> )
 
-   /* Inet functions */
+   /* inet*() functions */
    #xtranslate inetInit( [<x,...>] )                => hb_inetInit( <x> )
    #xtranslate inetCleanup( [<x,...>] )             => hb_inetCleanup( <x> )
    #xtranslate inetCreate( [<x,...>] )              => hb_inetCreate( <x> )

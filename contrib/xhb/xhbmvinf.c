@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    xHarbour compatible __mvSymbolInfo() function
+ * xHarbour compatible __mvSymbolInfo() function
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -58,12 +56,17 @@ HB_FUNC( __MVSYMBOLINFO )
    if( pArray )
    {
       HB_SIZE nLen = hb_arrayLen( pArray ), n;
+      PHB_ITEM pValue = hb_itemNew( NULL );
+
       for( n = 1; n <= nLen; ++n )
       {
          PHB_ITEM pItem = hb_arrayGetItemPtr( pArray, n );
          PHB_SYMB pSym  = hb_arrayGetSymbol( pItem, 1 );
+         hb_itemCopyFromRef( pValue, hb_arrayGetItemPtr( pItem, 2 ) );
          hb_arraySetC( pItem, 1, pSym->szName );
+         hb_arraySetForward( pItem, 2, pValue );
       }
+      hb_itemRelease( pValue );
       hb_itemReturnRelease( pArray );
    }
    else

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * MENUSYS parts
  *
  * Copyright 2002 Larry Sevilla <lsevilla@nddc.edu.ph>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -69,12 +67,8 @@ FUNCTION ShowMsg( aMsg, lMode )
 
    RETURN .F.
 
-/***
-*
-*  ShortCut processing for initial Get or Menu Item.
-*
-***/
-FUNCTION IsShortcut( oMenu, nKey, nID )
+/* ShortCut processing for initial Get or Menu Item. */
+FUNCTION IsShortcut( oMenu, nKey, /* @ */ nID )
 
    LOCAL nItem
    LOCAL nTotal
@@ -82,16 +76,17 @@ FUNCTION IsShortcut( oMenu, nKey, nID )
    LOCAL oItem
    LOCAL i
 
+   DO CASE
    // Test for top menu item not a TopBar Menu:
-   IF !( oMenu:ClassName() == "TOPBARMENU" )
+   CASE ! oMenu:ClassName() == "TOPBARMENU"
 
       RETURN IsQuick( oMenu, nKey, @nID )
 
    // Test and assign top menu item shortCut, enabled, and ! PopUp:
    // Changed by enclosing assignment before ':Enabled':
-   ELSEIF ( nShortCut := oMenu:getShortCt( nKey ) ) > 0 .AND. ;
-          ( oItem := oMenu:getItem( nShortcut ) ):enabled .AND. ;
-          ! oItem:isPopUp()
+   CASE ( nShortCut := oMenu:getShortCt( nKey ) ) > 0 .AND. ;
+        ( oItem := oMenu:getItem( nShortcut ) ):enabled .AND. ;
+        ! oItem:isPopUp()
 
       oMenu:select( nShortCut )
       Eval( oItem:data, oItem )
@@ -100,7 +95,7 @@ FUNCTION IsShortcut( oMenu, nKey, nID )
       RETURN .T.
 
    // Test and assignment for TopBar MenuItem:
-   ELSEIF nShortCut == 0
+   CASE nShortCut == 0
 
       nTotal := oMenu:itemCount
       nItem  := oMenu:current
@@ -124,17 +119,13 @@ FUNCTION IsShortcut( oMenu, nKey, nID )
          ENDIF
       NEXT
 
-   ENDIF
+   ENDCASE
 
    RETURN .F.
 
-/***
-*
-*  Navigates to the next Get or Menu Item from the
-*  Current if more than one uses the same ShortCut.
-*
-***/
-FUNCTION IsQuick( oMenu, nKey, nID )
+/* Navigates to the next Get or Menu Item from the
+   Current if more than one uses the same ShortCut. */
+FUNCTION IsQuick( oMenu, nKey, /* @ */ nID )
 
    LOCAL nItem
    LOCAL nTotal

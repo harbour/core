@@ -1,4 +1,3 @@
-
 -stop{hbdyn}
 
 -stop{poccarm}
@@ -21,6 +20,9 @@
 -cpp=no
 -pic
 
+-cflag=-DSQLITE_ENABLE_FTS3
+-cflag=-DSQLITE_ENABLE_FTS3_PARENTHESIS
+
 -cflag=-DSQLITE_OMIT_DEPRECATED
 -cflag=-DSQLITE_ENABLE_COLUMN_METADATA
 -cflag=-D_WIN32_WCE=0x0300{wce}
@@ -35,6 +37,7 @@
 
 -cflag=-DSQLITE_THREADSAFE=0{minix}
 -cflag=-DSQLITE_OMIT_LOAD_EXTENSION=1{minix}
+-cflag=-DSQLITE_OMIT_WAL=1{minix}
 
 # mingw 4.5.0/4.5.1 revisions fail compiling in iso90 mode. It's fixed in 4.5.2.
 -c=gnu90{allgcc&HB_COMP_VER='45'}
@@ -42,9 +45,9 @@
 sqlite3.c
 
 # ORIGIN http://www.sqlite.org/
-# VER    3.7.16
-# URL    http://sqlite.org/2013/sqlite-amalgamation-3071600.zip
-# DIFF   sqlite3.dif
+# VER    3.8.2
+# URL    http://sqlite.org/2013/sqlite-amalgamation-3080200.zip
+# DIFF   sqlite3.diff
 #
 # MAP    sqlite3.c
 # MAP    sqlite3.h

@@ -1,4 +1,3 @@
-
 The Clipper OBJ and pcode model (GNU|Open|Clipper project)
 ==========================================================
 

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * Command line and environment argument management
+ * Command-line and environment argument management
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -65,7 +63,7 @@
    #include <os2.h>
 #endif
 
-/* Command line argument management */
+/* Command-line argument management */
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
@@ -93,12 +91,11 @@ static HB_BOOL s_WinMainParam  = HB_FALSE;
 
 void hb_winmainArgVBuild( void )
 {
-   LPCTSTR lpCmdLine, lpSrc;
+   LPCTSTR lpCmdLine;
    LPTSTR * lpArgV;
    LPTSTR lpDst, lpArg, lpModuleName;
    HB_SIZE nSize, nModuleName;
    int iArgC;
-   HB_BOOL fQuoted;
 
    /* NOTE: MAX_PATH used intentionally instead of HB_MAX_PATH */
    lpModuleName = ( LPTSTR ) HB_WINARG_ALLOC( ( MAX_PATH + 1 ) * sizeof( TCHAR ) );
@@ -114,6 +111,9 @@ void hb_winmainArgVBuild( void )
 
    while( lpCmdLine && ! lpArgV && iArgC != 0 )
    {
+      HB_BOOL fQuoted;
+      LPCTSTR lpSrc;
+
       if( nSize != 0 )
       {
          lpArgV = ( LPTSTR * ) HB_WINARG_ALLOC( iArgC * sizeof( LPTSTR ) +
@@ -207,7 +207,7 @@ void hb_winmainArgVBuild( void )
                because in console apps the name may be truncated
                in some cases, and in GUI apps it's not filled
                at all. [vszakats] */
-      if( GetModuleFileName( NULL, lpArgV[ 0 ], nModuleName ) != 0 )
+      if( GetModuleFileName( NULL, lpArgV[ 0 ], ( DWORD ) nModuleName ) != 0 )
       {
          /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
          lpArgV[ 0 ][ nModuleName - 1 ] = 0;
@@ -293,7 +293,7 @@ HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdS
 
 void hb_cmdargInit( int argc, char * argv[] )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargInit(%d, %p)", argc, argv ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargInit(%d, %p)", argc, ( void * ) argv ) );
 
 #if defined( HB_OS_WIN )
    if( s_lpArgV )
@@ -421,7 +421,7 @@ void hb_cmdargUpdate( void )
                   hb_strncat( s_szAppName, pFName->szPath, HB_PATH_MAX - 1 );
                   pFName->szPath = hb_strdup( s_szAppName );
                   hb_fsFNameMerge( s_szAppName, pFName );
-                  hb_xfree( ( void * ) pFName->szPath );
+                  hb_xfree( HB_UNCONST( pFName->szPath ) );
                   s_argv[ 0 ] = s_szAppName;
                }
             }
@@ -461,10 +461,10 @@ int hb_cmdargPushArgs( void )
 
 HB_BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, piLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, ( void * ) piLen ) );
 
    /* NOTE: Not checking for '--' here, as it would filter out
-            valid command line options used by applications. [vszakats] */
+            valid command-line options used by applications. [vszakats] */
 
    if( hb_strnicmp( szArg, "--hb:", 5 ) == 0 ||
        hb_strnicmp( szArg, "//hb:", 5 ) == 0 )
@@ -496,7 +496,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargGet(%s, %d)", pszName, ( int ) bRetValue ) );
 
-   /* Check the command line first */
+   /* Check the command-line first */
 
    for( i = 1; i < s_argc; i++ )
    {
@@ -685,7 +685,7 @@ HB_FUNC( HB_ARGSTRING )
    hb_retc_null();
 }
 
-/* Returns the number of command line arguments passed to the application, this
+/* Returns the number of command-line arguments passed to the application, this
    also includes the internal arguments. */
 
 HB_FUNC( HB_ARGC )
@@ -693,9 +693,9 @@ HB_FUNC( HB_ARGC )
    hb_retni( s_argc - 1 );
 }
 
-/* Returns a command line argument passed to the application. Calling it with
+/* Returns a command-line argument passed to the application. Calling it with
    the parameter zero or no parameter, it will return the name of the executable,
-   as written in the command line. */
+   as written in the command-line. */
 
 HB_FUNC( HB_ARGV )
 {
@@ -740,6 +740,22 @@ HB_FUNC( HB_ARGSHIFT )
          ++iArg;
       }
    }
+}
+
+HB_FUNC( HB_ACMDLINE )
+{
+   if( s_argc > 1 )
+   {
+      int iPos, iLen = s_argc - 1;
+      PHB_ITEM pArray = hb_itemArrayNew( iLen );
+
+      for( iPos = 1; iPos <= iLen; ++iPos )
+         hb_arraySetCPtr( pArray, iPos, hb_cmdargDup( iPos ) );
+
+      hb_itemReturnRelease( pArray );
+   }
+   else
+      hb_reta( 0 );
 }
 
 HB_FUNC( HB_CMDLINE )
@@ -794,14 +810,14 @@ HB_FUNC( HB_CMDLINE )
          *--ptr = '\0';
 
          /* Convert from OS codepage */
-         hb_retc_buffer( ( char * ) hb_osDecodeCP( pszBuffer, NULL, NULL ) );
+         hb_retc_buffer( ( char * ) HB_UNCONST( hb_osDecodeCP( pszBuffer, NULL, NULL ) ) );
       }
    }
    else
       hb_retc_null();
 }
 
-/* Check for command line internal arguments */
+/* Check for command-line internal arguments */
 void hb_cmdargProcess( void )
 {
    int iHandles;
@@ -845,6 +861,14 @@ void hb_cmdargProcess( void )
             DosSetMaxFH( iHandles );
          #elif defined( HB_OS_DOS )
             _grow_handles( iHandles );
+         #endif
+      #endif
+   }
+   else if( iHandles < 0 )
+   {
+      #if defined( __WATCOMC__ )
+         #if defined( HB_OS_OS2 )
+            DosSetMaxFH( 256 );
          #endif
       #endif
    }

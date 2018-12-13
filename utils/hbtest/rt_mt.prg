@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour MT simple test
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -65,7 +63,7 @@ PROCEDURE Main_MT()
    RETURN
 
 #ifdef __HARBOUR__
-FUNCTION DO_MTTES1()
+STATIC FUNCTION DO_MTTES1()
 
    LOCAL aThreads, aResults, i, nDigit, nSum, nExpected
    LOCAL mtxJobs, mtxResults
@@ -103,11 +101,11 @@ FUNCTION DO_MTTES1()
    RETURN "ERROR, final sum: " + hb_ntos( nSum ) + ;
                  " expected: " + hb_ntos( nExpected )
 
-PROCEDURE thFunc( mtxJobs, mtxResults )
+STATIC PROCEDURE thFunc( mtxJobs, mtxResults )
 
    LOCAL xJob, xResult
 
-   WHILE .T.
+   DO WHILE .T.
       hb_mutexSubscribe( mtxJobs,, @xJob )
       IF xJob == NIL
          EXIT

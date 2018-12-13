@@ -1,4 +1,3 @@
-
 #require "hblzf"
 
 #define TEST_STRING "This is test of LZF extension"

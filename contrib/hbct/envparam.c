@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
- *    CT3 Number and bit manipulation functions:
- *       EnvParam()
+ * EnvParam()
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,7 +46,7 @@
 
 #include "hbapi.h"
 
-#if defined( HB_OS_UNIX )
+#if defined( HB_OS_UNIX ) && ! defined( HB_OS_IOS )
 #  include <unistd.h>
 #  if defined( HB_OS_DARWIN )
 #     include <crt_externs.h>
@@ -75,13 +72,15 @@
 
 HB_FUNC( ENVPARAM )
 {
-#if defined( HB_OS_UNIX ) || defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
+#if ( defined( HB_OS_UNIX ) && ! defined( HB_OS_IOS ) ) || \
+    defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
    char * const * pEnviron = environ, * const * pEnv;
    char * pResult = NULL, * pDst;
-   HB_SIZE nSize = 0;
 
    if( pEnviron )
    {
+      HB_SIZE nSize = 0;
+
       for( pEnv = pEnviron; *pEnv; pEnv++ )
          nSize += strlen( *pEnv ) + 2;
 
@@ -101,12 +100,12 @@ HB_FUNC( ENVPARAM )
    }
 
    if( pResult )
-      hb_retc_buffer( ( char * ) hb_osDecodeCP( pResult, NULL, NULL ) );
+      hb_retc_buffer( ( char * ) HB_UNCONST( hb_osDecodeCP( pResult, NULL, NULL ) ) );
    else
       hb_retc_null();
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    LPTCH lpEnviron = GetEnvironmentStrings(), lpEnv;
-   LPTSTR lpResult = NULL, lpDst;
+   LPTSTR lpResult = NULL;
    HB_SIZE nSize = 0;
 
    if( lpEnviron )
@@ -119,6 +118,8 @@ HB_FUNC( ENVPARAM )
       }
       if( nSize > 0 )
       {
+         LPTSTR lpDst;
+
          lpResult = ( LPTSTR ) hb_xgrab( ( nSize + 1 ) * sizeof( TCHAR ) );
          for( lpEnv = lpEnviron, lpDst = lpResult; *lpEnv; lpEnv++ )
          {
@@ -131,9 +132,9 @@ HB_FUNC( ENVPARAM )
             *lpDst++ = '\n';
          }
       }
-   }
 
-   FreeEnvironmentStrings( lpEnviron );
+      FreeEnvironmentStrings( lpEnviron );
+   }
 
    if( lpResult )
    {

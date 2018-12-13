@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Windows API function font load/unload (wingdi.h)
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -75,8 +73,8 @@ HB_FUNC( WAPI_ADDFONTRESOURCEEX )
       static _HB_ADDFONTRESOURCEEX s_pAddFontResourceEx = NULL;
 
       if( ! s_pAddFontResourceEx )
-         s_pAddFontResourceEx = ( _HB_ADDFONTRESOURCEEX ) GetProcAddress( GetModuleHandle( TEXT( "gdi32.dll" ) ),
-            HB_WINAPI_FUNCTION_NAME( "AddFontResourceEx" ) );
+         s_pAddFontResourceEx = ( _HB_ADDFONTRESOURCEEX ) HB_WINAPI_GETPROCADDRESST( GetModuleHandle( TEXT( "gdi32.dll" ) ),
+            "AddFontResourceEx" );
 
       if( s_pAddFontResourceEx )
       {
@@ -101,8 +99,8 @@ HB_FUNC( WAPI_REMOVEFONTRESOURCEEX )
       static _HB_REMOVEFONTRESOURCEEX s_pRemoveFontResourceEx = NULL;
 
       if( ! s_pRemoveFontResourceEx )
-         s_pRemoveFontResourceEx = ( _HB_REMOVEFONTRESOURCEEX ) GetProcAddress( GetModuleHandle( TEXT( "gdi32.dll" ) ),
-            HB_WINAPI_FUNCTION_NAME( "RemoveFontResourceEx" ) );
+         s_pRemoveFontResourceEx = ( _HB_REMOVEFONTRESOURCEEX ) HB_WINAPI_GETPROCADDRESST( GetModuleHandle( TEXT( "gdi32.dll" ) ),
+            "RemoveFontResourceEx" );
 
       if( s_pRemoveFontResourceEx )
       {

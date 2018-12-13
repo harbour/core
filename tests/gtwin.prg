@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for using more then one console window.
+ * demonstration/test code for using more then one console window.
  *    It needs GT driver which supports such functionality, i.e.
  *    GTWVT in MS-Windows or GTXWC in XWindow.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

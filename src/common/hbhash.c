@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour simple hash table implementation
  *
  * Copyright 1999-2002 Ryszard Glab <rglab@imid.med.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -68,7 +66,7 @@ static void hb_hashItemDelete( PHB_HASH_TABLE pTable, PHB_HASH_ITEM pItem )
 }
 
 /* create a new  hash table
- * nSize = initial numer of items in the table
+ * nSize = initial number of items in the table
  * pHashTable = a function that calculates a hash key value
  *       (first parameter is a value to add)
  * pDelete = a function that clears item's value before item's releasing
@@ -90,8 +88,7 @@ PHB_HASH_TABLE hb_hashTableCreate( HB_SIZE nSize,
    pTable->pCompFunc = pComp;
    pTable->nCount = pTable->nUsed = 0;
 
-   pTable->pItems = ( PHB_HASH_ITEM * ) hb_xgrab( sizeof( PHB_HASH_ITEM ) * nSize );
-   memset( pTable->pItems, 0, sizeof( PHB_HASH_ITEM ) * nSize );
+   pTable->pItems = ( PHB_HASH_ITEM * ) hb_xgrabz( sizeof( PHB_HASH_ITEM ) * nSize );
 
    return pTable;
 }
@@ -106,11 +103,10 @@ void hb_hashTableKill( PHB_HASH_TABLE pTable )
    {
       if( pTable->pItems[ nSize ] )
       {
-         PHB_HASH_ITEM pItem, pFree;
-         pItem = pTable->pItems[ nSize ];
+         PHB_HASH_ITEM pItem = pTable->pItems[ nSize ];
          while( pItem )
          {
-            pFree = pItem;
+            PHB_HASH_ITEM pFree = pItem;
             pItem = pItem->next;
             hb_hashItemDelete( pTable, pFree );
          }
@@ -174,7 +170,7 @@ PHB_HASH_TABLE hb_hashTableResize( PHB_HASH_TABLE pTable, HB_SIZE nNewSize )
    return pNew;
 }
 
-/* add a new value into th ehash table */
+/* add a new value into the hash table */
 HB_BOOL hb_hashTableAdd( PHB_HASH_TABLE pTable, const void * pKey, const void * pValue )
 {
    HB_SIZE nKey;

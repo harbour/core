@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    HVM speed test program
+ * HVM speed test program
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 
@@ -487,7 +485,7 @@ create_db()
 
 #ifdef __HARBOUR__
    #include "hbmemory.ch"
-   if MEMORY( HB_MEM_USEDMAX ) != 0
+   if MEMORY( HB_MEM_STATISTICS ) != 0
       ? "Warning !!! Memory statistic enabled."
       ?
    endif
@@ -916,12 +914,12 @@ return
    METHOD Notifier:init
       ::aQueue := {}
       ::oSignal := Signal():new()
-      RETURN self
+      RETURN Self
 
    METHOD Notifier:notify( xValue )
       AAdd( ::aQueue, xValue )
       ::oSignal:signal()
-      RETURN self
+      RETURN Self
 
    METHOD Notifier:subscribe()
       LOCAL xResult

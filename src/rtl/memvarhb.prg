@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * MEMVAR save/restore functions with >10 long variable name support.
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -73,7 +71,7 @@
    hb_BChar( 0x01 ) + ;
    hb_BChar( 0x00 ) )
 
-FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
+PROCEDURE hb_mvSave( cFileName, cMask, lIncludeMask )
 
    LOCAL nCount
    LOCAL xValue
@@ -86,7 +84,6 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
    LOCAL tmp
 
    LOCAL oError
-   LOCAL xRecover
    LOCAL nRetries
 
    IF HB_ISSTRING( cFileName )
@@ -96,7 +93,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
       ENDIF
 
       IF ! HB_ISSTRING( cMask ) .OR. ;
-         Empty( cMask ) .OR. Left( cMask, 1 ) == "*"
+         Empty( cMask ) .OR. hb_LeftEq( cMask, "*" )
          cMask := "*"
       ENDIF
 
@@ -119,8 +116,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
 
       nRetries := 0
       DO WHILE .T.
-         fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE )
-         IF fhnd == F_ERROR
+         IF ( fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE ) ) == F_ERROR
             oError := ErrorNew()
 
             oError:severity    := ES_ERROR
@@ -133,8 +129,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
             oError:osCode      := FError()
             oError:tries       := ++nRetries
 
-            xRecover := Eval( ErrorBlock(), oError )
-            IF HB_ISLOGICAL( xRecover ) .AND. xRecover
+            IF hb_defaultValue( Eval( ErrorBlock(), oError ), .F. )
                LOOP
             ENDIF
          ENDIF
@@ -161,7 +156,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
       Eval( ErrorBlock(), oError )
    ENDIF
 
-   RETURN NIL
+   RETURN
 
 FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
@@ -176,14 +171,11 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
    LOCAL fhnd
 
    LOCAL oError
-   LOCAL xRecover
    LOCAL nRetries
 
    IF HB_ISSTRING( cFileName )
 
-      hb_default( @lAdditive, .T. )
-
-      IF ! lAdditive
+      IF ! hb_defaultValue( lAdditive, .T. )
          __mvClear()
       ENDIF
 
@@ -192,7 +184,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
       ENDIF
 
       IF ! HB_ISSTRING( cFileName ) .OR. ;
-         Empty( cMask ) .OR. Left( cMask, 1 ) == "*"
+         Empty( cMask ) .OR. hb_LeftEq( cMask, "*" )
          cMask := "*"
       ENDIF
 
@@ -200,8 +192,8 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
       nRetries := 0
       DO WHILE .T.
-         fhnd := FOpen( cFileName, FO_READ )
-         IF fhnd == F_ERROR
+
+         IF ( fhnd := FOpen( cFileName ) ) == F_ERROR
             oError := ErrorNew()
 
             oError:severity    := ES_ERROR
@@ -214,8 +206,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
             oError:osCode      := FError()
             oError:tries       := ++nRetries
 
-            xRecover := Eval( ErrorBlock(), oError )
-            IF HB_ISLOGICAL( xRecover ) .AND. xRecover
+            IF hb_defaultValue( Eval( ErrorBlock(), oError ), .F. )
                LOOP
             ENDIF
          ENDIF
@@ -228,9 +219,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
       xValue := NIL
 
-      cBuffer := Space( _HBMEM_SIG_LEN )
-      FRead( fhnd, @cBuffer, Len( cBuffer ) )
-      IF cBuffer == _HBMEM_SIGNATURE
+      IF hb_FReadLen( fhnd, _HBMEM_SIG_LEN ) == _HBMEM_SIGNATURE
 
          cBuffer := Space( FSeek( fhnd, 0, FS_END ) - _HBMEM_SIG_LEN )
          FSeek( fhnd, _HBMEM_SIG_LEN, FS_SET )

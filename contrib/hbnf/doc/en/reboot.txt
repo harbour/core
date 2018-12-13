@@ -1,4 +1,3 @@
-
 /* $DOC$
    $NAME$
       ft_Reboot()
@@ -29,6 +28,5 @@
       // Issue a warm boot
 
       ft_Reboot( WARM )
-
    $END$
  */

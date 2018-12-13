@@ -1,4 +1,3 @@
-
 #require "hbnf"
 
 PROCEDURE Main( cHexNum )

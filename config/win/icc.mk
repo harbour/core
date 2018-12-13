@@ -1,4 +1,3 @@
-
 # Intel(R) C/C++ Compiler (usage is largely compatible with msvc)
 
 OBJ_EXT := .obj
@@ -54,7 +53,7 @@ DFLAGS += -nologo -dll -subsystem:console $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define dynlib_object
    @$(ECHO) $(ECHOQUOTE)$(file)$(ECHOQUOTE) >> __dyn__.tmp
 

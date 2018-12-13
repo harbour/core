@@ -1,0 +1,798 @@
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      Array()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Create an uninitialized array of specified length
+   $SYNTAX$
+      Array( <nElements>[, <nElements>...] ) --> aArray
+   $ARGUMENTS$
+      <nElements> is the number of elements in the specified dimension.
+   $RETURNS$
+      <aArray> an array of specified dimensions.
+   $DESCRIPTION$
+      This function returns an uninitialized array with the length of
+      <nElements>.
+
+      Nested arrays are uninitialized within the same array
+      pointer reference if additional parameters are specified.
+
+      Establishing a memory variable with the same name as the array may
+      destroy the original array and release the entire contents of the
+      array. This depends, of course, on the data storage type of either
+      the array or the variable with the same name as the array.
+
+      CA-Cl*pper v5.x compliant except that arrays in Harbour can have
+      an unlimited number of elements.
+   $EXAMPLES$
+      LOCAL aArray := Array( 10 ), tmp
+      FOR tmp := 1 TO Len( aArray )
+         aArray[ tmp ] := Array( tmp )
+      NEXT
+      ? hb_ValToExp( aArray )  // --> { { NIL }, { NIL, NIL }, ... }
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AAdd(), ADel(), AFill(), AIns()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      AAdd()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Dynamically add an element to an array
+   $SYNTAX$
+      AAdd( <aArray>, [<xValue>] ) --> xValue
+   $ARGUMENTS$
+      <aArray> The name of an array
+
+      <xValue> Element to add to array <aArray>
+   $RETURNS$
+      <xValue> if specified <xValue>, <xValue> will be returned,
+      otherwise this function returns a NIL value.
+   $DESCRIPTION$
+      This function dynamically increases the length of the <aArray>
+      by adding one new element to the end of the array and optionally
+      stores the value <xValue> to that newly created element.
+
+      <xValue> may be of an data type, including an array reference pointer,
+      which in turn may be stored to an array's subscript position.
+   $EXAMPLES$
+      LOCAL aArray := {}, tmp
+      AAdd( aArray, 10 )
+      FOR tmp := 1 TO 10
+         AAdd( aArray, tmp )
+      NEXT
+      ? hb_ValToExp( aArray )  // --> { 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AIns(), ASize()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      ASize()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Adjust the size of an array
+   $SYNTAX$
+      ASize( <aArray>, <nLen> ) --> aArray
+   $ARGUMENTS$
+      <aArray> Name of array to be dynamically altered
+
+      <nLen>  Numeric value representing the new size (i.e. number of elements)
+              of <aArray>
+   $RETURNS$
+      The function returns a reference to <aArray>.
+   $DESCRIPTION$
+      This function will dynamically increase or decrease the size of
+      <aArray> by adjusting the length of the array to <nLen> subscript
+      positions.
+
+      If the length of the array <aArray> is shortened, the redundant elements
+      are removed from the end of array. If the length of the array is lengthened
+      the new elements are added to the end of array and they are assigned a NIL value.
+   $EXAMPLES$
+      LOCAL aArray := { 1 }
+      ? hb_ValToExp( aArray )  // --> { 1 }
+      ASize( aArray, 3 )
+      ? hb_ValToExp( aArray )  // --> { 1, NIL, NIL }
+      ASize( aArray, 1 )
+      ? hb_ValToExp( aArray )  // --> { 1 }
+   $STATUS$
+      R
+   $COMPLIANCE$
+      If HB_COMPAT_C53 is defined, the function generates an Error,
+      else it will return the array itself.
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AAdd(), ADel(), AFill(), AIns()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      ATail()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Returns the last element of an array
+   $SYNTAX$
+      ATail( <aArray> ) --> xValue
+   $ARGUMENTS$
+      <aArray> is the array.
+   $RETURNS$
+      <xValue> the value of the last element in the array.
+   $DESCRIPTION$
+      This function return the value of the last element in the array
+      named <aArray>. Same as `xValue := aArray[ Len( aArray ) ]`
+   $EXAMPLES$
+      LOCAL aArray := { "Harbour", "is", "Supreme", "Power" }
+      ? ATail( aArray )  // --> "Power"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Len(), Array(), ASize(), AAdd()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      AIns()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Insert a NIL value at an array subscript position.
+   $SYNTAX$
+      AIns( <aArray>, <nPos> ) --> aArray
+   $ARGUMENTS$
+      <aArray> Array name.
+
+      <nPos> Subscript position in <aArray>
+   $RETURNS$
+      a reference to <aArray>.
+   $DESCRIPTION$
+      This function inserts a NIL value in the array named <aArray>
+      at the <nPos>th position.
+
+      All array elements starting with the <nPos>th position will be
+      shifted down one subscript position in the array list and the
+      last item in the array will be removed completely. In other words,
+      if an array element were to be inserted at the fifth subscript
+      position, the element previously in the fifth position would now
+      be located at the sixth position. The length of the array <aArray>
+      will remain unchanged.
+
+      Note: To avoid loosing last element, you can use hb_AIns()
+      which supports auto-sizing of array.
+   $EXAMPLES$
+      LOCAL aArray := { "Harbour", "is", "Power!", "!!!" }
+      AIns( aArray, 4 )
+      ? hb_ValToExp( aArray )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      hb_AIns(), AAdd(), ACopy(), ADel(), AEval(), AFill(), ASize()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      2016 Pete D. <pete_westg@yahoo.gr>
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_AIns()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Inserts a value at an array subscript position and optionally increases
+      the length of array.
+   $SYNTAX$
+      hb_AIns( <aArray>, [<nPos>], [<xValue>], [<lAutoSize>] ) --> aArray
+   $ARGUMENTS$
+      <aArray> The array name into which the value <xValue> will be inserted.
+
+      <nPos> Subscript position in <aArray>. Default: 1st position
+
+      <xValue> Value to be inserted
+
+      <lAutoSize> Boolean flag to increase or not the size of <aArray>.
+                  Default value: .F.
+   $RETURNS$
+      A reference to array <aArray>
+   $DESCRIPTION$
+      This function inserts <xValue> in the <nPos> position of the array,
+      moving all the items one position down in the array list.
+      If <lAutoSize> is .T., a new element will be added at the end of array,
+      making room for the previous last element, which means the length of array
+      will be increased by 1.
+
+      If <lAutoSize> is .F. (or is not passed) the function behaves like AIns(),
+      that is, the size of <aArray> won't change and the last item of <aArray>
+      will be lost.
+   $EXAMPLES$
+      LOCAL aArray := { "Harbour", "Power!" }
+      hb_AIns( aArray, 2, "is", .F. )
+      ? hb_ValToExp( aArray )  // --> { "Harbour", "is" }
+      hb_AIns( aArray, 2, "is", .T. )
+      ? hb_ValToExp( aArray )  // --> { "Harbour", "is", "Power!" }
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AIns(), AAdd(), ADel(), AFill(), ASize()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      ADel()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Delete an element from an array.
+   $SYNTAX$
+      ADel( <aArray>, <nPos> ) --> aArray
+   $ARGUMENTS$
+      <aArray> Name of array from which an element is to be removed.
+
+      <nPos>   Subscript of the element to be removed.
+   $RETURNS$
+      <aArray> an array pointer reference.
+   $DESCRIPTION$
+      This function deletes the element found at <nPos> subscript position
+      in the array <aArray>. All elements in the array <aArray> below the
+      given subscript position <nPos> will move up one position in the array.
+
+      In other words, what was formerly the sixth subscript position
+      will become the fifth subscript position. The length of the array
+      <aArray> will remain unchanged, as the last element in the array will
+      become a NIL data type.
+
+      Note: To completely remove an element and decrease the length of array
+      you can use hb_ADel() that supports auto-sizing.
+   $EXAMPLES$
+      LOCAL aArray := { "Harbour", "is", "Power" }
+      ADel( aArray, 2 )
+      ? hb_ValToExp( aArray )  // --> { "Harbour", "Power", NIL }
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      hb_ADel(), ACopy(), AIns(), AFill()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      2016 Pete D. <pete_westg@yahoo.gr>
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_ADel()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Delete an element from an array.
+   $SYNTAX$
+      hb_ADel( <aArray>, [<nPos>], [<lAutoSize>] ) --> aArray
+   $ARGUMENTS$
+      <aArray> Name of array from which an element is to be removed.
+
+      <nPos>  Subscript of the element to be removed. Default value: 1.
+
+      <lAutoSize> Boolean flag specifying if the array will be resized or not.
+                  Default value: .F. (no resize).
+   $RETURNS$
+      <aArray> an array pointer reference.
+   $DESCRIPTION$
+      This function deletes the element value (not the element itself!)
+      stored in position <nPos> and shifts all the following values,
+      one position up.
+
+      If <lAutoSize> is .T., then the last element is removed and the size
+      of the array is decreased by one, otherwise the length of the array
+      remains unchanged and a NIL value will be stored in the last element,
+      just like in ADel().
+   $EXAMPLES$
+      LOCAL aArray := { "Harbour", "is", "Power" }
+      hb_ADel( aArray, 2 )
+      ? hb_ValToExp( aArray )  // --> { "Harbour", "Power", NIL } - length unchanged
+      hb_ADel( aArray, 2, .T. )
+      ? hb_ValToExp( aArray )  // --> a{ "Harbour", "Power" } - length decreased
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      ADel(), ACopy(), AIns(), AFill()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      AFill()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Fill an array with a specified value
+   $SYNTAX$
+      AFill( <aArray>, <xValue>, [<nStart>], [<nCount>] ) --> aArray
+   $ARGUMENTS$
+      <aArray> Name of array to be filled.
+
+      <xValue> Expression to be globally filled in <aArray>
+
+      <nStart> Subscript starting position
+
+      <nCount> Number of subscript to be filled
+   $RETURNS$
+      <aArray> pointer to the array.
+   $DESCRIPTION$
+      This function will fill each element of an array named <aArray> with
+      the value <xValue>. If specified, <nStart> denotes the beginning
+      element to be filled and the array elements will continue to be
+      filled for <nCount> positions.
+
+      If neither <nStart>/<nCount> specified, the value of <nStart> will be 1,
+      and the value of <nCount> will be the value of `Len( <aArray> )`;
+      thus, all subscript positions in the array <aArray> will be filled
+      with the value of <xValue>.
+
+      This function will work on only a single dimension of <aArray>.
+      If there are array pointer references within a subscript <aArray>,
+      those values will be lost, since this function will overwrite those
+      values with new values.
+   $EXAMPLES$
+      LOCAL aArray := { NIL, 0, 1, 2 }
+      AFill( aArray, 5 )
+      ? hb_ValToExp( aArray )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AAdd(), AEval(), dbStruct()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      AScan()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Scan array elements for a specified condition
+   $SYNTAX$
+      AScan( <aArray>, <xSearch>, [<nStart>], [<nCount>] ) --> nStoppedAt
+   $ARGUMENTS$
+      <aArray>    Array to be scanned.
+
+      <xSearch>   Expression to search for in <aTarget>
+
+      <nStart>    Beginning subscript position at which to start the search.
+
+      <nCount>    Number of elements to scan with <aTarget>.
+   $RETURNS$
+      <nStoppedAt> A numeric value of subscript position where <xSearch>
+      was found, or 0 if <xSearch> is not found.
+   $DESCRIPTION$
+      This function scan the content of array named <aArray> for the
+      value of <xSearch>. The return value is the position in the array
+      <aArray> in which <xSearch> was found. If it was not found, the
+      return value will be 0.
+
+      <nStart> is the position from which to start scanning. The default
+      is 1. (1st element)
+      <nCount>, if specified, is the number of array elements to be scanned.
+      The default is all elements in the array <aArray>.
+
+      If <xSearch> is a code block, the operation of the function is
+      slightly different. Each array subscript pointer reference is
+      passed to the code block to be evaluated. The scanning routine
+      will continue until the value obtained from the code block is a
+      logical true (.T.) or until the end of the array has been reached.
+   $EXAMPLES$
+      #include "directry.ch"
+      LOCAL aDir := hb_vfDirectory( "*.prg" )
+      ? AScan( aDir,,, ;
+         {| aFile, nPos | HB_SYMBOL_UNUSED( nPos ), aFile[ F_NAME ] == "test.prg" } )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is not CA-Cl*pper compatible.
+      CA-Cl*pper AScan() is affected by the `SET EXACT ON`/`OFF` Condition
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AEval()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      2016 Pete D. <pete_westg@yahoo.gr>
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_AScan()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Scan array elements for a specified condition
+   $SYNTAX$
+      hb_AScan( <aArray>, <xSearch>, [<nStart>], [<nCount>], [<lExact>] ) --> nPosition
+   $ARGUMENTS$
+      <aArray>    Array to be scanned.
+
+      <xSearch>   Expression to search for in <aArray>
+
+      <nStart>    Beginning subscript position at which to start the search.
+                  Default value: 1
+
+      <nCount>    Number of elements to be scanned within <aArray>.
+                  Default value: All elements.
+
+      <lExact>    Boolean flag specifying if an "Exact" search will be
+                  performed or not. Default value: .F.
+   $RETURNS$
+      <nPosition> A numeric value > 0 indicating the array position
+      where <xSearch> was found, or 0 if nothing found.
+   $DESCRIPTION$
+      The function scans (left to right) for <xSearch> into <aArray>
+      and returns <nPosition> of <aArray> in which <xSearch>
+      was found or 0 (zero) if nothing found.
+
+      If <lExact> is .T., then an exact search will be performed.
+      When <xSearch> is a code block, the operation of the function
+      is slightly different. See AScan() for details.
+   $EXAMPLES$
+      LOCAL a := { "there", "here" }
+      Set( _SET_EXACT, .F. )
+      ? AScan( a, "he" )            // --> 2
+      ? hb_AScan( a, "he",,, .F. )  // --> 2
+      ? hb_AScan( a, "he",,, .T. )  // --> 0
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AScan(), AEval()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      AEval()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Evaluates the subscript element of an array
+   $SYNTAX$
+      AEval( <aArray>, <bBlock>, [<nStart>], [<nCount>] ) --> aArray
+   $ARGUMENTS$
+      <aArray> Is the array to be evaluated.
+
+      <bBlock> Is a code block to evaluate for each element processed.
+
+      <nStart> The beginning array element index to evaluate.
+
+      <nCount> The number of elements to process.
+   $RETURNS$
+      <aArray> an array pointer reference.
+   $DESCRIPTION$
+      This function evaluates the elements of <aArray>, and executes for each
+      of them the processing that's defined with <bBlock>.
+      By default, all the elements of array are being processed, starting from
+      1st and up to the last element.
+
+      If  <nStart> and/or <nCount> parameters are given, then the processing
+      starts from <nStart> element and continues for the next <nCount> elements
+      (if defined) or up to the last element of the array.
+
+      The <bBlock> code block receives two parameters: the element value and
+      element's index (position) into the array. i.e. `{| xValue, nIndex | ... }`
+      Worth to note that elements are passed to code block 'by value',
+      thus any change being made to this value doesn't  affects the value of
+      element in the array.
+   $EXAMPLES$
+      LOCAL a := { 10, 20, 30 }
+      AEval( a, {| e, n | QOut( e * n + 1 , a[ n ] ) } )
+      ? a[ 1 ], a[ 2 ], a[ 3 ]  // array elements unchanged
+      ? "----"
+      AEval( a, {| e, n | QOut( e * n + 1, a[ n ] *= n + 1 ) }, 2, 1 )
+      /* Here the 2nd element been changed, because we've explicitly used
+         its pointer 'a[ n ] *= ...' into array */
+      ? a[ 1 ], a[ 2 ], a[ 3 ]
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      Eval(), dbEval()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      ACopy()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Copy elements from one array to another
+   $SYNTAX$
+      ACopy( <aSource>, <aTarget>, [<nStart>], [<nCount>], [<nTargetPos>] ) --> aTarget
+   $ARGUMENTS$
+      <aSource> is the array to copy elements from.
+
+      <aTarget> is the array to copy elements to.
+
+      <nStart>  is the beginning subscript position to copy from <aSource>
+
+      <nCount>  the number of subscript elements to copy from <aSource>.
+
+      <nTargetPos> the starting subscript position in <aTarget> to copy
+      elements to.
+   $RETURNS$
+      <aTarget> an array pointer reference
+   $DESCRIPTION$
+      This function copies array elements from <aSource> to <aTarget>.
+      <nStart> is the beginning element to be copied from <aSource>;
+      the default is 1.
+
+      <nCount> is the number of elements to be copied from <aSource>;
+      the default is the entire array.
+      <nTargetPos> is the subscript number in the target array, <aTarget>,
+      to which array elements are to be copied; the default is 1.
+
+      This function will copy all data types in <aSource> to <aTarget>.
+      If an array element in <aSource> is a pointer reference to another
+      array, that array pointer will be copied to <aTarget>; not all
+      subdimensions will be copied from one array to the next. This must
+      be accomplished via the AClone() function.
+
+      Note:
+      If array <aSource> is larger then <aTarget>, array elements will
+      start copying at <nTargetPos> and continue copying until the end
+      of array <aTarget> is reached. The ACopy() function doesn't append
+      subscript positions to the target array, the size of the target
+      array <aTarget> remains constant.
+   $EXAMPLES$
+      LOCAL nCount := 2, nStart := 1
+      LOCAL aOne := { "Harbour", " is ", "Power" }
+      LOCAL aTwo := { "Clipper", " was ", "Power" }
+      ACopy( aOne, aTwo, nStart, nCount )
+      ? hb_ValToExp( aTwo )  // --> { "Harbour", " is ", "Power" }
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AClone(), ADel(), AEval(), AFill(), AIns(), ASort()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
+   $TEMPLATE$
+      Function
+   $NAME$
+      AClone()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Duplicate a  multidimensional array
+   $SYNTAX$
+      AClone( <aSource> ) --> aDuplicate
+   $ARGUMENTS$
+      <aSource> Name of the array to be cloned.
+   $RETURNS$
+      <aDuplicate> A new array pointer reference complete with nested
+      array values.
+   $DESCRIPTION$
+      This function makes a complete copy of the array expressed as
+      <aSource> and return a cloned set of array values. This provides
+      a complete set of arrays values for all dimensions within the
+      original array <aSource>
+   $EXAMPLES$
+      LOCAL aOne := { "Harbour", " is ", "POWER" }
+      LOCAL aTwo := AClone( aOne )
+      ? hb_ValToExp( aTwo )  // --> { "Harbour", " is ", "POWER" }
+      aOne[ 1 ] := "The Harbour Compiler"
+      ? hb_ValToExp( aOne )  // --> { "The Harbour Compiler", " is ", "POWER" }
+      ? hb_ValToExp( aTwo )  // --> { "Harbour", " is ", "POWER" }
+   $STATUS$
+      R
+   $COMPLIANCE$
+      CA-Cl*pper will return NIL if the parameter is not an array.
+   $FILES$
+      Library is core
+   $SEEALSO$
+      ACopy(), ADel(), AIns(), ASize()
+   $END$
+ */
+
+/* $DOC$
+   $AUTHOR$
+      Copyright 1999 Chen Kedem <niki@actcom.co.il>
+   $TEMPLATE$
+      Function
+   $NAME$
+      ASort()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Array
+   $ONELINER$
+      Sort an array
+   $SYNTAX$
+      ASort( <aArray>, [<nStart>], [<nCount>], [<bSort>] ) --> aArray
+   $ARGUMENTS$
+      <aArray> Array to be sorted.
+
+      <nStart> The first element to start the sort from, default is 1.
+
+      <nCount> Number of elements starting from <nStart> to sort, default
+               is all elements.
+
+      <bSort> Code block for sorting order, default is ascending order
+      `{| x, y | x < y }`. The code block should accept two parameters and
+      must return .T. if the sort is in order, .F. if not.
+   $RETURNS$
+      <aArray> reference to the now sorted <aArray> or NIL if the
+      passed <aArray> is not an array.
+   $DESCRIPTION$
+      ASort() sort all or part of a given array. If <bSort> is omitted,
+      the function expect <aArray> to be one dimensional array containing
+      single data type (one of: Character, Date, Logical, Numeric) and sort
+      this array in ascending order: Character are sorted by their ASCII
+      value, Dates are sorted chronologically, Logical put .F. values before
+      .T., Numeric are sorted by their value.
+      If <bSort> is specified, it is used to handle the sorting order. With
+      each time the block is evaluate, two array elements are passed to the
+      code block, and <bSort> must return a logical value that state if
+      those elements are in order (.T.) or not (.F.). Using this block you
+      can sort multidimensional array, descending orders or even (but why
+      would you want to do that) sort array that contain different data
+      type.
+
+      Codeblock calling frequency and order differs from CA-Cl*pper, since
+      Harbour uses a different (faster) sorting algorithm (quicksort).
+   $EXAMPLES$
+      LOCAL aKeys, bSort, aPair
+
+      // Sort numeric values in ascending order
+      aKeys := { 3, 1, 4, 42, 5, 9 }
+      ASort( aKeys )
+      ? hb_ValToExp( aKeys )  // --> { 1, 3, 4, 5, 9, 42 }
+
+      // Sort character strings in descending lexical order
+      aKeys := { "Ctrl", "Alt", "Delete" }
+      bSort := {| x, y | Upper( x ) > Upper( y ) }
+      ASort( aKeys,,, bSort )
+      ? hb_ValToExp( aKeys )  // --> { "Delete", "Ctrl", "Alt" }
+
+      // Sort two-dimensional array according to 2nd element of each pair
+      aPair := { { "Sun", 8 }, { "Mon", 1 }, { "Tue", 57 }, { "Wed", -6 } }
+      ASort( aPair,,, {| x, y | x[ 2 ] < y[ 2 ] } )
+      ? hb_ValToExp( aPair )  // --> { { "Wed", -6 }, { "Mon", 1 }, { "Sun", 8 }, { "Tue", 57 } }
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is core
+   $SEEALSO$
+      AScan(), Eval(), SORT
+   $END$
+ */

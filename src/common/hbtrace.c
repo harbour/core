@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- * Tracing functions.
+ * Tracing functions
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.net)
+ * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 1999 Gonzalo Diethelm <gonzalo.diethelm@iname.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -187,8 +185,6 @@ int hb_tr_level( void )
 
       s_level = HB_TR_DEFAULT;
 
-      /* ; */
-
       if( s_fp == NULL )
       {
          if( hb_getenv_buffer( "HB_TR_OUTPUT", env, sizeof( env ) ) &&
@@ -202,8 +198,6 @@ int hb_tr_level( void )
          else
             s_fp = stderr;
       }
-
-      /* ; */
 
       if( hb_getenv_buffer( "HB_TR_LEVEL", env, sizeof( env ) ) &&
           env[ 0 ] != '\0' )
@@ -221,23 +215,17 @@ int hb_tr_level( void )
          }
       }
 
-      /* ; */
-
       if( s_sysout < 0 )
       {
          s_sysout = ( hb_getenv_buffer( "HB_TR_SYSOUT", env, sizeof( env ) ) &&
                       env[ 0 ] != '\0' ) ? 1 : 0;
       }
 
-      /* ; */
-
       if( s_flush < 0 )
       {
          s_flush = ( hb_getenv_buffer( "HB_TR_FLUSH", env, sizeof( env ) ) &&
                      env[ 0 ] != '\0' ) ? 1 : 0;
       }
-
-      /* ; */
 
       s_enabled = enabled;
    }
@@ -398,7 +386,7 @@ void hb_tr_trace( const char * fmt, ... )
       pTrace->level = -1;
       /* NOTE: resetting file name/line number will cause that we will unable
        * to report the location of code that allocated unreleased memory blocks
-       * See hb_xalloc/hb_xgrab in src/vm/fm.c
+       * See hb_xalloc()/hb_xgrab() in src/vm/fm.c
        */
       if( hb_tr_level() < HB_TR_DEBUG )
       {

@@ -1,4 +1,3 @@
-
 /* $DOC$
    $NAME$
       Mantissa()

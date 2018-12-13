@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    LIBXDIFF functions wrapper
+ * LIBXDIFF functions wrapper
  *
  * Copyright 2010 Petr Chornyj <myorg63@mail.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -180,9 +178,9 @@ HB_FUNC( XDL_INIT_MMFILE )
       hb_xfree( mmf );
 }
 
-/*
-   HB_FUNC( XDL_FREE_MMFILE )
-   {
+#if 0
+HB_FUNC( XDL_FREE_MMFILE )
+{
    HB_MMF * phb_mmf = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
 
    if( phb_mmf && phb_mmf->mmf )
@@ -192,8 +190,8 @@ HB_FUNC( XDL_INIT_MMFILE )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
- */
+}
+#endif
 
 /* int xdl_mmfile_iscompact(mmfile_t *mmf) */
 
@@ -230,7 +228,6 @@ HB_FUNC( XDL_READ_MMFILE )
       PHB_ITEM pData = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
       char *   data;
       HB_SIZE  size;
-      long     lResult;
 
       if( pData )
       {
@@ -247,7 +244,8 @@ HB_FUNC( XDL_READ_MMFILE )
 
       if( data && size )
       {
-         lResult = xdl_read_mmfile( phb_mmf->mmf, data, ( long ) size );
+         long lResult = xdl_read_mmfile( phb_mmf->mmf, data, ( long ) size );
+
          if( lResult == -1 )
          {
             hb_retc_null();
@@ -360,8 +358,8 @@ HB_FUNC( XDL_MMFILE_COMPACT )
 
 /* callbacks */
 
-#define hb_ptrToHandle( p )   ( ( HB_FHANDLE ) ( HB_PTRDIFF ) ( p ) )
-#define hb_parHandlePtr( n )  ( ( void * ) ( HB_PTRDIFF ) hb_numToHandle( hb_parnint( n ) ) )
+#define hb_ptrToHandle( p )   ( ( HB_FHANDLE ) ( HB_PTRUINT ) ( p ) )
+#define hb_parHandlePtr( n )  ( ( void * ) ( HB_PTRUINT ) hb_numToHandle( hb_parnint( n ) ) )
 
 static int xdlt_outf( void * priv, mmbuffer_t * mb, int nbuf )
 {

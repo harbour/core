@@ -1,4 +1,3 @@
-
 # GCC with OMF object format.
 #
 # This is available with GCC 3.3.5 as an option,

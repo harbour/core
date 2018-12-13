@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Color functions for Getsys and Menu System
  *
  * Copyright 2003 Walter Negro <anegro@overnet.com.ar>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,16 +83,15 @@ FUNCTION GetPairPos( cColor, nColor )
 
 FUNCTION GetPairLen( cColor, nColor )
 
-   LOCAL nPos := GetPairPos( cColor, nColor )
+   LOCAL nPos
    LOCAL nLen
 
-   IF nPos == 0
+   IF ( nPos := GetPairPos( cColor, nColor ) ) == 0
       RETURN 0
    ENDIF
 
-   nLen := At( ",", SubStr( cColor, nPos ) )
-
-   RETURN iif( nLen == 0, Len( cColor ) - nPos + 1, nLen - 1 )
+   RETURN iif( ( nLen := At( ",", SubStr( cColor, nPos ) ) ) == 0, ;
+               Len( cColor ) - nPos + 1, nLen - 1 )
 
 FUNCTION GetClrFore( cColor )
 
@@ -104,7 +101,7 @@ FUNCTION GetClrFore( cColor )
       RETURN ""
    ENDIF
 
-   RETURN SubStr( cColor, 1, nPos - 1 )
+   RETURN Left( cColor, nPos - 1 )
 
 FUNCTION GetClrBack( cColor )
 
@@ -164,11 +161,12 @@ FUNCTION ApplyDefau( cColor, xClr1, xClr2, xClr3, xClr4, xClr5, xClr6, xClr7, xC
    LOCAL xNewColor
    LOCAL n
 
-   IF PCount() == 0
+   SWITCH PCount()
+   CASE 0
       RETURN ""
-   ELSEIF PCount() == 1
+   CASE 1
       RETURN cColor
-   ENDIF
+   ENDSWITCH
 
    cSetColor := SetColor()
 

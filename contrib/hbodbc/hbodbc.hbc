@@ -1,4 +1,3 @@
-
 description=ODBC wrapper (SQL/db)
 
 incpaths=.

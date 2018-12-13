@@ -1,4 +1,3 @@
-
 OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
@@ -62,9 +61,11 @@ RC := rc.exe
 RC_OUT := -fo$(subst x,x, )
 RCFLAGS += -I. -I$(HB_HOST_INC)
 # Windows SDK 7.0 also supports it, but we cannot detect it.
-ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500),)
-   RCFLAGS += -nologo
-endif
+# # NOTE: Compiler version is not enough to detect supported
+# #       parameters when Platform SDK rc.exe is used.
+# ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500),)
+#    RCFLAGS += -nologo
+# endif
 
 # # NOTE: -GA flag should be disabled when building MT _.dlls_,
 # #       as it creates bad code according to MS docs [vszakats].
@@ -88,7 +89,7 @@ DFLAGS += -nologo -dll -subsystem:console $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define dynlib_object
    @$(ECHO) $(ECHOQUOTE)$(file)$(ECHOQUOTE) >> __dyn__.tmp
 

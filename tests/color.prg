@@ -7,7 +7,6 @@
 // This demo will be expanded over time.
 //
 // Written by Paul Tucker {ptucker@sympatico.ca>
-// www - http://harbour-project.org
 //
 // This test program placed in the public domain
 //

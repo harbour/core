@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header File for Video subsystem for Windows using GUI windows instead of Console
  * Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                Rees Software & Systems Ltd
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -69,9 +67,8 @@
    #include "hbwince.h"
 #endif
 
-#define WVT_CHAR_QUEUE_SIZE        128
-#define WVT_MAX_TITLE_SIZE         128
-#define WVT_MAX_WINDOWS            256
+#define WVT_MAX_WINDOWS             256
+
 #if defined( HB_OS_WIN_CE )
 #  define WVT_DEFAULT_ROWS         15
 #  define WVT_DEFAULT_COLS         50
@@ -83,29 +80,30 @@
 #  define WVT_DEFAULT_FONT_HEIGHT  20
 #  define WVT_DEFAULT_FONT_WIDTH   10
 #endif
-#define WVT_DEFAULT_FONT_ATTR      0
-#define WVT_DEFAULT_FONT_NAME      TEXT( "Courier New" )
 
-#define WVT_EXTKEY_FLAG            ( 1 << 24 )
+#define WVT_DEFAULT_FONT_ATTR       0
+#define WVT_DEFAULT_FONT_NAME       TEXT( "Courier New" )
 
-#define BLACK                      RGB( 0x00, 0x00, 0x00 )
-#define BLUE                       RGB( 0x00, 0x00, 0xAA )
-#define GREEN                      RGB( 0x00, 0xAA, 0x00 )
-#define CYAN                       RGB( 0x00, 0xAA, 0xAA )
-#define RED                        RGB( 0xAA, 0x00, 0x00 )
-#define MAGENTA                    RGB( 0xAA, 0x00, 0xAA )
-#define BROWN                      RGB( 0xAA, 0x55, 0x00 )
-#define LIGHT_GRAY                 RGB( 0xAA, 0xAA, 0xAA )
-#define GRAY                       RGB( 0x55, 0x55, 0x55 )
-#define BRIGHT_BLUE                RGB( 0x55, 0x55, 0xFF )
-#define BRIGHT_GREEN               RGB( 0x55, 0xFF, 0x55 )
-#define BRIGHT_CYAN                RGB( 0x55, 0xFF, 0xFF )
-#define BRIGHT_RED                 RGB( 0xFF, 0x55, 0x55 )
-#define BRIGHT_MAGENTA             RGB( 0xFF, 0x55, 0xFF )
-#define YELLOW                     RGB( 0xFF, 0xFF, 0x55 )
-#define WHITE                      RGB( 0xFF, 0xFF, 0xFF )
+#define WVT_EXTKEY_FLAG             ( 1 << 24 )
 
-#define WM_MY_UPDATE_CARET         ( WM_USER + 0x0101 )
+#define BLACK                       RGB( 0x00, 0x00, 0x00 )
+#define BLUE                        RGB( 0x00, 0x00, 0xAA )
+#define GREEN                       RGB( 0x00, 0xAA, 0x00 )
+#define CYAN                        RGB( 0x00, 0xAA, 0xAA )
+#define RED                         RGB( 0xAA, 0x00, 0x00 )
+#define MAGENTA                     RGB( 0xAA, 0x00, 0xAA )
+#define BROWN                       RGB( 0xAA, 0x55, 0x00 )
+#define LIGHT_GRAY                  RGB( 0xAA, 0xAA, 0xAA )
+#define GRAY                        RGB( 0x55, 0x55, 0x55 )
+#define BRIGHT_BLUE                 RGB( 0x55, 0x55, 0xFF )
+#define BRIGHT_GREEN                RGB( 0x55, 0xFF, 0x55 )
+#define BRIGHT_CYAN                 RGB( 0x55, 0xFF, 0xFF )
+#define BRIGHT_RED                  RGB( 0xFF, 0x55, 0x55 )
+#define BRIGHT_MAGENTA              RGB( 0xFF, 0x55, 0xFF )
+#define YELLOW                      RGB( 0xFF, 0xFF, 0x55 )
+#define WHITE                       RGB( 0xFF, 0xFF, 0xFF )
+
+#define WM_MY_UPDATE_CARET          ( WM_USER + 0x0101 )
 
 /* Box char unicode values */
 #define HB_BOXCH_ARROW_R            0x0010 /* ARROW RIGHT */
@@ -254,6 +252,16 @@
 #define HB_BOXCH_TRANS_MAX          0xFF
 
 
+typedef struct _HB_GTWVT_MNU
+{
+   int      iKey;
+   int      iEvent;
+   void *   hName;
+   LPCTSTR  lpName;
+   struct _HB_GTWVT_MNU * pNext;
+} HB_GTWVT_MNU, * PHB_GTWVT_MNU;
+
+
 typedef struct
 {
    PHB_GT   pGT;                          /* core GT pointer */
@@ -276,7 +284,7 @@ typedef struct
 
    POINT    MousePos;                     /* the last mouse position */
 
-   int      Keys[ WVT_CHAR_QUEUE_SIZE ];  /* Array to hold the characters & events */
+   int      Keys[ 128 ];                  /* Array to hold the characters & events */
    int      keyPointerIn;                 /* Offset into key array for character to be placed */
    int      keyPointerOut;                /* Offset into key array of next character to read */
    int      keyLastPos;                   /* last inkey code position in buffer */
@@ -300,7 +308,7 @@ typedef struct
    HB_BOOL  fInit;                        /* logical variable indicating that window should be open */
 
    HICON    hIcon;                        /* Title Bar and Task List icon. Can be NULL. */
-   HB_BOOL  bIconToFree;                  /* Do we need to free this icon when it's not NULL? */
+   HICON    hIconToFree;                  /* Do we need to free this icon when it's not NULL? */
 
    void *   hWindowTitle;
    LPCTSTR  lpWindowTitle;
@@ -325,7 +333,7 @@ typedef struct
    HB_BOOL  IgnoreWM_SYSCHAR;
 
    HB_BOOL  bResizable;
-   HB_BOOL  bClosable;
+   HB_BOOL  bMaximized;                   /* Flag is set when window has been maximized */
    HB_BOOL  bFullScreen;
    HB_BOOL  bAltEnter;                    /* Can use Alt+Enter to enter full screen mode */
    int      MarginTop;
@@ -334,7 +342,6 @@ typedef struct
    int      iNewPosX;
    int      iNewPosY;
 
-   HB_BOOL  bMaximized;                   /* Flag is set when window has been maximized */
    HB_BOOL  bBeingMarked;                 /* Flag to control DOS window like copy operation */
    HB_BOOL  bBeginMarked;
 
@@ -342,9 +349,12 @@ typedef struct
    void *   hSelectCopy;
    LPCTSTR  lpSelectCopy;
 
+   PHB_GTWVT_MNU pMenu;
+
    RECT     sRectNew;
    RECT     sRectOld;
 
+   int      CloseMode;
    int      ResizeMode;                   /* Sets the resizing mode either to FONT or ROWS */
 
    HB_BOOL  bResizing;
@@ -357,23 +367,23 @@ typedef struct
 } HB_GTWVT, * PHB_GTWVT;
 
 #ifndef WM_MOUSEWHEEL
-#  define WM_MOUSEWHEEL     0x020A
+#define WM_MOUSEWHEEL       0x020A
 #endif
 #ifndef WM_ENTERSIZEMOVE
-#  define WM_ENTERSIZEMOVE  561
+#define WM_ENTERSIZEMOVE    0x0231
 #endif
 #ifndef WM_EXITSIZEMOVE
-#  define WM_EXITSIZEMOVE   562
+#define WM_EXITSIZEMOVE     0x0232
 #endif
 
 #ifndef SWP_DEFERERASE
-#  define SWP_DEFERERASE    0x2000
+#define SWP_DEFERERASE      0x2000
 #endif
 #ifndef SW_NORMAL
-#  define SW_NORMAL         1
+#define SW_NORMAL           1
 #endif
 #ifndef SC_MAXIMIZE
-#  define SC_MAXIMIZE       0xF030
+#define SC_MAXIMIZE         0xF030
 #endif
 
 #define SYS_EV_MARK         1000

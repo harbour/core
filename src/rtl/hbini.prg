@@ -1,47 +1,46 @@
 /*
- * xHarbour Project source code:
  * Handling .ini files
  *
  * Copyright 2002 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://www.xharbour.org
  *
- * this program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General public License as published by
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
- * this program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS for A PARTICULAR PURPOSE.  See the
- * GNU General public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General public License
- * along with this software; see the file COPYING.txt.  if not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * You should have received a copy of the GNU General Public License
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
- * As a special exception, xHarbour license gives permission for
- * additional uses of the text contained in its release of xHarbour.
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
  *
- * The exception is that, if you link the xHarbour libraries with other
+ * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General public License.
+ * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
- * linking the xHarbour library code into it.
+ * linking the Harbour library code into it.
  *
- * this exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General public License.
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
  *
- * this exception applies only to the code released with this xHarbour
- * explicit exception.  if you add/copy code from other sources,
- * as the General public License permits, the above exception does
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
- * if you write modifications of your own for xHarbour, it is your choice
+ * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
- * if you do not wish that, delete this exception notice.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
@@ -51,7 +50,7 @@
  *    ; A line starting with a ';' is a comment
  *    # Also, a '#' marks a comment up to the end of the line
  *    [NewSection]
- *    Variable = Value
+ *    Variable=Value
  *    OtherVariable: Value
  *
  * You can pass a list of "potential" .ini files in a ';' separated path;
@@ -66,7 +65,7 @@
  *      "SectionN" => { "Key1" => "Val1", ... , "KeyN" => "ValN" }
  *    }
  *
- * Main is the default section (variables that are declared without a section).
+ * 'MAIN' is the default section (variables that are declared without a section).
  *
  */
 
@@ -91,43 +90,33 @@ FUNCTION hb_iniNew( lAutoMain )
 
    LOCAL hIni := { => }
 
-   hb_HKeepOrder( hIni, .T. )
-
-   hb_default( @lAutoMain, .T. )
-
-   IF lAutoMain
+   IF hb_defaultValue( lAutoMain, .T. )
       hIni[ "MAIN" ] := { => }
-      hb_HKeepOrder( hIni[ "MAIN" ], .T. )
    ENDIF
 
    RETURN hIni
 
 FUNCTION hb_iniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
-
-   RETURN hb_iniReadStr( iif( HB_ISSTRING( cFileSpec ), hb_IniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
+   RETURN hb_iniReadStr( iif( HB_ISSTRING( cFileSpec ), hb_iniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
 
 FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
 
    LOCAL hIni := { => }
 
-   hb_HKeepOrder( hIni, .T. )
-
    /* Default case sensitiveness for keys */
    hb_default( @lKeyCaseSens, .T. )
-   hb_default( @cSplitters, "=" )
    hb_default( @lAutoMain, .T. )
-   hb_default( @cData, "" )
 
    hb_HCaseMatch( hIni, lKeyCaseSens )
 
    IF lAutoMain
       hIni[ "MAIN" ] := { => }
-      hb_HKeepOrder( hIni[ "MAIN" ], .T. )
    ENDIF
 
-   RETURN hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
+   RETURN hb_iniStringLow( hIni, hb_defaultValue( cData, "" ), lKeyCaseSens, ;
+                           hb_defaultValue( cSplitters, "=" ), lAutoMain )
 
-STATIC FUNCTION hb_IniFileLow( cFileSpec )
+STATIC FUNCTION hb_iniFileLow( cFileSpec )
 
    LOCAL cFile, nLen
    LOCAL hFile
@@ -148,7 +137,7 @@ STATIC FUNCTION hb_IniFileLow( cFileSpec )
    NEXT
 
    IF hFile == F_ERROR
-      RETURN NIL
+      RETURN ""
    ENDIF
 
    /* we'll read the whole file, then we'll break it in lines. */
@@ -160,11 +149,9 @@ STATIC FUNCTION hb_IniFileLow( cFileSpec )
 
    RETURN cData
 
-STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
+STATIC FUNCTION hb_iniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
 
-   LOCAL nLen
    LOCAL aKeyVal, hCurrentSection
-   LOCAL nLineEnd
    LOCAL cLine
    LOCAL reComment, reInclude, reSection, reSplitters
 
@@ -173,108 +160,66 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
    reSection := hb_regexComp( "[[](.*)[]]" )
    reSplitters := hb_regexComp( cSplitters )
 
-   /* Always begin with the MAIN section */
-   IF lAutoMain
-      hCurrentSection := hIni[ "MAIN" ]
-   ELSE
-      hCurrentSection := hIni
-   ENDIF
+   /* Always begin with the 'MAIN' section */
+   hCurrentSection := iif( lAutoMain, hIni[ "MAIN" ], hIni )
 
    cLine := ""
-   DO WHILE Len( cData ) > 0
-      nLen := 2
-      nLineEnd := At( Chr( 13 ) + Chr( 10 ), cData )
-      IF nLineEnd == 0
-         nLineEnd := At( Chr( 10 ) + Chr( 13 ), cData )
-         IF nLineEnd == 0
-            nLen := 1
-            nLineEnd := At( Chr( 10 ), cData )
-            IF nLineEnd == 0
-               nLineEnd := At( Chr( 13 ), cData )
-               IF nLineEnd == 0
-                  nLineEnd := Len( cData ) + 1
-               ENDIF
-            ENDIF
+   FOR EACH cData IN hb_ATokens( cData, .T. )
+      cLine += AllTrim( cData )
+
+      /* Sum up lines terminating with "<space>||" ...*/
+      IF Right( cLine, 3 ) == " ||"
+         cLine := hb_StrShrink( cLine, 2 )
+         /* ... but proceed if stream over */
+         IF ! cData:__enumIsLast()
+            LOOP
          ENDIF
       ENDIF
-
-      /* Get the current line */
-      cLine += AllTrim( SubStr( cData, 1, nLineEnd - 1 ) )
-      /* remove current line */
-      cData := SubStr( cData, nLineEnd + nLen )
 
       /* Skip void lines */
       IF Empty( cLine )
          LOOP
       ENDIF
 
-      /* Sum up lines terminating with "<space>||" ...*/
-      IF Len( cLine ) > 3 .AND. SubStr( cLine, -3, 3 ) == " ||"
-
-         cLine := SubStr( cLine, 1, Len( cLine ) - 2 )
-         /* ... but proceed if stream over */
-         IF Len( cData ) > 0
+      /* remove eventual comments */
+      IF ! Empty( aKeyVal := hb_regexSplit( reComment, cLine ) )
+         IF Empty( cLine := AllTrim( aKeyVal[ 1 ] ) )
+            /* Skip all comment lines */
             LOOP
          ENDIF
-
-      ENDIF
-
-      /* remove eventual comments */
-      aKeyVal := hb_regexSplit( reComment, cLine )
-      IF ! Empty( aKeyVal )
-         cLine := AllTrim( aKeyVal[ 1 ] )
-      ENDIF
-
-      /* Skip all comment lines */
-      IF Empty( cLine )
-         LOOP
       ENDIF
 
       /* Is it an "INCLUDE" statement ? */
-      aKeyVal := hb_regex( reInclude, cLine )
-      IF ! Empty( aKeyVal )
+      IF ! Empty( aKeyVal := hb_regex( reInclude, cLine ) )
          /* ignore void includes */
          aKeyVal[ 2 ] := AllTrim( aKeyVal[ 2 ] )
          IF Len( aKeyVal[ 2 ] ) == 0
             LOOP
          ENDIF
-         hb_IniStringLow( hIni, hb_IniFileLow( aKeyVal[ 2 ] ), lKeyCaseSens, cSplitters, lAutoMain )
-         cLine := ""
-         LOOP
-      ENDIF
-
+         hb_iniStringLow( hIni, hb_iniFileLow( aKeyVal[ 2 ] ), lKeyCaseSens, cSplitters, lAutoMain )
       /* Is it a NEW section? */
-      aKeyVal := hb_regex( reSection, cLine )
-      IF ! Empty( aKeyVal )
+      ELSEIF ! Empty( aKeyVal := hb_regex( reSection, cLine ) )
          cLine := AllTrim( aKeyVal[ 2 ] )
          IF Len( cLine ) != 0
             hCurrentSection := { => }
-            hb_HKeepOrder( hCurrentSection, .T. )
             IF ! lKeyCaseSens
                cLine := Upper( cLine )
             ENDIF
             hIni[ cLine ] := hCurrentSection
          ENDIF
-         cLine := ""
-         LOOP
-      ENDIF
-
       /* Is it a valid key */
-      aKeyVal := hb_regexSplit( reSplitters, cLine,,, 1 )
-      IF Len( aKeyVal ) == 1
+      ELSEIF Len( aKeyVal := hb_regexSplit( reSplitters, cLine,,, 1 ) ) == 1
          /* TODO: Signal error */
-         cLine := ""
-         LOOP
+      ELSE
+         /* If not case sensitive, use upper keys */
+         IF ! lKeyCaseSens
+            aKeyVal[ 1 ] := Upper( aKeyVal[ 1 ] )
+         ENDIF
+         hCurrentSection[ AllTrim( aKeyVal[ 1 ] ) ] := AllTrim( aKeyVal[ 2 ] )
       ENDIF
 
-      /* If not case sensitive, use upper keys */
-      IF ! lKeyCaseSens
-         aKeyVal[ 1 ] := Upper( aKeyVal[ 1 ] )
-      ENDIF
-
-      hCurrentSection[ AllTrim( aKeyVal[ 1 ] ) ] := AllTrim( aKeyVal[ 2 ] )
       cLine := ""
-   ENDDO
+   NEXT
 
    RETURN hIni
 
@@ -286,7 +231,6 @@ FUNCTION hb_iniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
    cBuffer := hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
-   // if cBuffer == NIL I have to stop here
    IF ! HB_ISSTRING( cBuffer )
       RETURN .F.
    ENDIF
@@ -335,34 +279,31 @@ FUNCTION hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
    hb_default( @lAutoMain, .T. )
 
    // Fix if lAutoMain is .T. but I haven't a MAIN section
-   IF lAutoMain .AND. ! hb_HHasKey( hIni, "MAIN" )
+   IF lAutoMain .AND. !( "MAIN" $ hIni )
       lAutoMain := .F.
    ENDIF
 
-   /* Write toplevel section */
+   /* Write top-level section */
    IF lAutoMain
-      /* When automain is on, write the main section */
-      hb_HEval( hIni[ "MAIN" ], ;
-         {| cKey, xVal | cBuffer += hb_CStr( cKey ) + " = " + ;
-         hb_CStr( xVal ) + cNewLine } )
-
+      /* When lAutoMain is on, write the 'main' section */
+      hb_HEval( hIni[ "MAIN" ], {| cKey, xVal | ;
+         cBuffer += hb_CStr( cKey ) + "=" + hb_CStr( xVal ) + cNewLine } )
    ELSE
-      /* When automain is off, just write all the toplevel variables. */
-      hb_HEval( hIni, {| cKey, xVal | iif( ! HB_ISHASH( xVal ), ;
-         cBuffer += hb_CStr( cKey ) + " = " + ;
-         hb_CStr( xVal ) + cNewLine, /* nothing */ ) } )
+      /* When lAutoMain is off, just write all the top-level variables. */
+      hb_HEval( hIni, {| cKey, xVal | iif( HB_ISHASH( xVal ), /* nothing */, ;
+         cBuffer += hb_CStr( cKey ) + "=" + hb_CStr( xVal ) + cNewLine ) } )
    ENDIF
 
    FOR EACH cSection IN hIni
 
-      /* Avoid re-processing main section */
+      /* Avoid re-processing 'MAIN' section */
       IF lAutoMain
-         /* When automain is on, skip section named MAIN */
+         /* When lAutoMain is on, skip section named 'MAIN' */
          IF cSection:__enumKey == "MAIN"
             LOOP
          ENDIF
       ELSE
-         /* When automain is off, skip all the toplevel variables. */
+         /* When lAutoMain is off, skip all the top-level variables. */
          IF ! HB_ISHASH( cSection )
             LOOP
          ENDIF
@@ -379,4 +320,4 @@ FUNCTION hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
       cBuffer += cCommentEnd + cNewLine
    ENDIF
 
-   RETURN iif( ! Empty( cBuffer ), cBuffer, NIL )
+   RETURN iif( Empty( cBuffer ), NIL, cBuffer )

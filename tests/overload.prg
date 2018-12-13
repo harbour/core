@@ -2,7 +2,6 @@
 // Implementation of operator overload in Harbour
 //
 // Written by Eddie Runia <eddie@runia.com>
-// www - http://harbour-project.org
 //
 // Placed in the public domain
 //
@@ -41,7 +40,7 @@ CREATE CLASS TString
 
    VAR cValue
 
-   METHOD New( cText ) INLINE ::cValue := cText, self
+   METHOD New( cText ) INLINE ::cValue := cText, Self
 
    OPERATOR "="  ARG cArg INLINE ::cValue =  cArg
    OPERATOR "==" ARG cArg INLINE ::cValue == cArg

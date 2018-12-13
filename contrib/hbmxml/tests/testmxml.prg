@@ -5,11 +5,11 @@
  *
  * These coded instructions, statements, and computer programs are the
  * property of Michael R Sweet and are protected by Federal copyright
- * law.  Distribution and use rights are outlined in the file "COPYING.txt"
+ * law.  Distribution and use rights are outlined in the file "LICENSE.txt"
  * which should have been included with this file.  If this file is
  * missing or damaged, see the license at:
  *
- *     http://www.minixml.org/
+ *     https://www.msweet.org/projects.php?Z3
  *
  * Harbour port Copyright (c) 2011 Tamas TEVESZ <ice@extreme.hu>
  *
@@ -30,10 +30,7 @@ STATIC s_aTypes := { ;
 
 STATIC s_aSAXEventCounts := { 0, 0, 0, 0, 0, 0 }
 
-/*
- * 'main()' - Main entry for test program.
- */
-
+/* Main entry for test program. */
 PROCEDURE Main( cFileArg )
 
    LOCAL hTree                            /* XML tree */
@@ -52,9 +49,7 @@ PROCEDURE Main( cFileArg )
       QUIT
    ENDIF
 
-   /*
-    * Test the basic functionality...
-    */
+   /* Test the basic functionality */
 
    hTree := mxmlNewElement( MXML_NO_PARENT, "element" )
    IF Empty( hTree )

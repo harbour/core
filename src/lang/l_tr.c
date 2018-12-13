@@ -1,4 +1,4 @@
-/* Last Translator: hbtest (harbour syenar.net) */
+/* Last Translator: vszakats */
 
 #include "hbapilng.h"
 

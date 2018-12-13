@@ -1,0 +1,192 @@
+diff --strip-trailing-cr -urN expat.orig/loadlibr.c expat/loadlibr.c
+--- expat.orig/loadlibr.c	2017-09-11 15:16:52.000000000 +0000
++++ expat/loadlibr.c	2017-12-20 11:25:28.652000000 +0000
+@@ -32,6 +32,9 @@
+ 
+ #if defined(_WIN32)
+ 
++#if defined(UNICODE) && !defined(_UNICODE)
++#define _UNICODE
++#endif
+ #include <windows.h>
+ #include <tchar.h>
+ 
+@@ -114,7 +117,7 @@
+       /* Allocate space for the full DLL path (Room for the null terminator
+          is included in systemdirlen) */
+       size_t filenamelen = _tcslen(filename);
+-      TCHAR *path = malloc(sizeof(TCHAR) * (systemdirlen + 1 + filenamelen));
++      TCHAR *path = (TCHAR *) malloc(sizeof(TCHAR) * (systemdirlen + 1 + filenamelen));
+       if(path && GetSystemDirectory(path, systemdirlen)) {
+         /* Calculate the full DLL path */
+         _tcscpy(path + _tcslen(path), TEXT("\\"));
+diff --strip-trailing-cr -urN expat.orig/winconfi.h expat/winconfi.h
+--- expat.orig/winconfi.h	2017-09-03 14:47:40.000000000 +0000
++++ expat/winconfi.h	2017-12-19 20:29:14.992000000 +0000
+@@ -1,63 +1 @@
+-/*
+-                            __  __            _
+-                         ___\ \/ /_ __   __ _| |_
+-                        / _ \\  /| '_ \ / _` | __|
+-                       |  __//  \| |_) | (_| | |_
+-                        \___/_/\_\ .__/ \__,_|\__|
+-                                 |_| XML parser
+-
+-   Copyright (c) 1997-2000 Thai Open Source Software Center Ltd
+-   Copyright (c) 2000-2017 Expat development team
+-   Licensed under the MIT license:
+-
+-   Permission is  hereby granted,  free of charge,  to any  person obtaining
+-   a  copy  of  this  software   and  associated  documentation  files  (the
+-   "Software"),  to  deal in  the  Software  without restriction,  including
+-   without  limitation the  rights  to use,  copy,  modify, merge,  publish,
+-   distribute, sublicense, and/or sell copies of the Software, and to permit
+-   persons  to whom  the Software  is  furnished to  do so,  subject to  the
+-   following conditions:
+-
+-   The above copyright  notice and this permission notice  shall be included
+-   in all copies or substantial portions of the Software.
+-
+-   THE  SOFTWARE  IS  PROVIDED  "AS  IS",  WITHOUT  WARRANTY  OF  ANY  KIND,
+-   EXPRESS  OR IMPLIED,  INCLUDING  BUT  NOT LIMITED  TO  THE WARRANTIES  OF
+-   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+-   NO EVENT SHALL THE AUTHORS OR  COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+-   DAMAGES OR  OTHER LIABILITY, WHETHER  IN AN  ACTION OF CONTRACT,  TORT OR
+-   OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+-   USE OR OTHER DEALINGS IN THE SOFTWARE.
+-*/
+-
+-#ifndef WINCONFIG_H
+-#define WINCONFIG_H
+-
+-#define WIN32_LEAN_AND_MEAN
+-#include <windows.h>
+-#undef WIN32_LEAN_AND_MEAN
+-
+-#include <memory.h>
+-#include <string.h>
+-
+-
+-#if defined(HAVE_EXPAT_CONFIG_H)  /* e.g. MinGW */
+-# include <expat_config.h>
+-#else  /* !defined(HAVE_EXPAT_CONFIG_H) */
+-
+-
+-#define XML_NS 1
+-#define XML_DTD 1
+-#define XML_CONTEXT_BYTES 1024
+-
+-/* we will assume all Windows platforms are little endian */
+-#define BYTEORDER 1234
+-
+-/* Windows has memmove() available. */
+-#define HAVE_MEMMOVE
+-
+-
+-#endif /* !defined(HAVE_EXPAT_CONFIG_H) */
+-
+-
+-#endif /* ndef WINCONFIG_H */
++#include "_hbconf.h"
+diff --strip-trailing-cr -urN expat.orig/xmlparse.c expat/xmlparse.c
+--- expat.orig/xmlparse.c	2017-10-31 16:20:31.000000000 +0000
++++ expat/xmlparse.c	2017-12-20 11:26:49.912000000 +0000
+@@ -43,6 +43,12 @@
+ 
+ #ifdef _WIN32
+ #define getpid GetCurrentProcessId
++#elif defined(__WATCOMC__) && defined(__DOS__)
++#include <process.h>                    /* getpid() */
++#include <sys/timeb.h>                  /* ftime() */
++#elif defined(__WATCOMC__) && defined(__OS2__)
++#include <process.h>                    /* getpid() */
++#include <sys/time.h>                   /* gettimeofday() */
+ #else
+ #include <sys/time.h>                   /* gettimeofday() */
+ #include <sys/types.h>                  /* getpid() */
+@@ -56,7 +62,7 @@
+ #ifdef _WIN32
+ #include "winconfi.h"
+ #elif defined(HAVE_EXPAT_CONFIG_H)
+-#include <expat_config.h>
++#include <expat_co.h>
+ #endif /* ndef _WIN32 */
+ 
+ #include "ascii.h"
+@@ -783,7 +789,7 @@
+ 
+   if (advapi32) {
+     const RTLGENRANDOM_FUNC RtlGenRandom
+-        = (RTLGENRANDOM_FUNC)GetProcAddress(advapi32, "SystemFunction036");
++        = (RTLGENRANDOM_FUNC)HB_WINAPI_GETPROCADDRESS(advapi32, "SystemFunction036");
+     if (RtlGenRandom) {
+       if (RtlGenRandom((PVOID)target, (ULONG)count) == TRUE) {
+         success = 1;
+@@ -803,10 +809,21 @@
+ static unsigned long
+ gather_time_entropy(void)
+ {
+-#ifdef _WIN32
++#ifdef _WINCE
++  SYSTEMTIME st;
++  GetSystemTime(&st);
++  return ( ( ( ( long ) st.wDay * 24 +
++                        st.wHour ) * 60 +
++                        st.wMinute ) * 60 +
++                        st.wSecond ) * 1000 + st.wMilliseconds;
++#elif defined(_WIN32)
+   FILETIME ft;
+   GetSystemTimeAsFileTime(&ft); /* never fails */
+   return ft.dwHighDateTime ^ ft.dwLowDateTime;
++#elif defined(__WATCOMC__) && defined(__DOS__)
++  struct timeb tb;
++  ftime( &tb );
++  return tb.time ^ tb.millitm;
+ #else
+   struct timeval tv;
+   int gettimeofday_res;
+@@ -829,7 +846,11 @@
+ 
+ static unsigned long
+ ENTROPY_DEBUG(const char * label, unsigned long entropy) {
++#ifdef _WINCE
++  const char * const EXPAT_ENTROPY_DEBUG = NULL;
++#else
+   const char * const EXPAT_ENTROPY_DEBUG = getenv("EXPAT_ENTROPY_DEBUG");
++#endif
+   if (EXPAT_ENTROPY_DEBUG && ! strcmp(EXPAT_ENTROPY_DEBUG, "1")) {
+     fprintf(stderr, "Entropy: %s --> 0x%0*lx (%lu bytes)\n",
+         label,
+@@ -7186,7 +7207,7 @@
+     charsRequired++;
+ 
+     /* Now allocate space for the copy */
+-    result = memsuite->malloc_fcn(charsRequired * sizeof(XML_Char));
++    result = (XML_Char *) memsuite->malloc_fcn(charsRequired * sizeof(XML_Char));
+     if (result == NULL)
+         return NULL;
+     /* Copy the original into place */
+diff --strip-trailing-cr -urN expat.orig/xmlrole.c expat/xmlrole.c
+--- expat.orig/xmlrole.c	2017-09-03 14:47:40.000000000 +0000
++++ expat/xmlrole.c	2017-12-19 20:29:15.000000000 +0000
+@@ -36,7 +36,7 @@
+ #include "winconfi.h"
+ #else
+ #ifdef HAVE_EXPAT_CONFIG_H
+-#include <expat_config.h>
++#include <expat_co.h>
+ #endif
+ #endif /* ndef _WIN32 */
+ 
+diff --strip-trailing-cr -urN expat.orig/xmltok.c expat/xmltok.c
+--- expat.orig/xmltok.c	2017-09-11 17:31:49.000000000 +0000
++++ expat/xmltok.c	2017-12-19 20:29:15.000000000 +0000
+@@ -47,7 +47,7 @@
+ #include "winconfi.h"
+ #else
+ #ifdef HAVE_EXPAT_CONFIG_H
+-#include <expat_config.h>
++#include <expat_co.h>
+ #endif
+ #endif /* ndef _WIN32 */
+ 

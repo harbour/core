@@ -1,9 +1,4 @@
-'
-' Copyright 2010 Viktor Szakats (harbour syenar.net)
-' www - http://harbour-project.org
-'
-' See COPYING.txt for licensing terms.
-'
+' Copyright 2010 Viktor Szakats (vszakats.net/harbour)
 
 Dim tst2 : Set tst2 = WScript.CreateObject("MyOleTimeServer")
 

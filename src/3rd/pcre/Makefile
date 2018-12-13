@@ -1,4 +1,3 @@
-
 ROOT := ../../../
 
 include $(TOP)$(ROOT)config/global.mk
@@ -32,17 +31,22 @@ LIBNAME := hbpcre
 
 ifneq ($(HB_HAS_PCRE_LOCAL),)
 
-   HB_CFLAGS += -DHAVE_STDINT_H=0
    HB_CFLAGS += -DSUPPORT_UTF -DSUPPORT_UCP
    # only needed for win/wce, for other platforms this is noop
    HB_CFLAGS_STA := -DPCRE_STATIC
 
-   ifneq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 msvcarm icc iccia64 djgpp),)
-      HB_CFLAGS += -DHAVE_INTTYPES_H=0
+   ifeq ($(filter $(HB_PLATFORM),win wce dos vxworks),)
+      HB_CFLAGS +=  -DHAVE_STDINT_H
    else
-   ifneq ($(filter $(HB_PLATFORM),vxworks),)
-      HB_CFLAGS += -DHAVE_INTTYPES_H=0
-   endif
+      ifeq ($(HB_PLATFORM),sunos)
+         HB_CFLAGS += -DHAVE_INTTYPES_H
+      else
+         ifeq ($(filter $(HB_COMPILER),bcc msvc msvc64 msvcia64 msvcarm icc iccia64 djgpp),)
+            ifeq ($(filter $(HB_PLATFORM),vxworks),)
+               HB_CFLAGS +=  -DHAVE_STDINT_H
+            endif
+         endif
+      endif
    endif
 
 #   ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc mvc64)$(filter $(HB_PLATFORM),darwin linux),)
@@ -74,9 +78,9 @@ else
 endif
 
 # ORIGIN http://www.pcre.org/
-# VER    8.31
-# URL    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.31.tar.gz
-# DIFF   pcre.dif
+# VER    8.34
+# URL    ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.34.tar.gz
+# DIFF   pcre.diff
 #
 # MAP    LICENCE
 # MAP    config.h.generic               config.h

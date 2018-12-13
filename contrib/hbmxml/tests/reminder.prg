@@ -1,4 +1,3 @@
-
 #require "hbmxml"
 
 STATIC s_mxml_error := .F.

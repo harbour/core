@@ -1,9 +1,8 @@
-
 OBJ_EXT := .obj
 LIB_PREF :=
 LIB_EXT := .lib
 
-HB_DYN_COPT := -DHB_DYNLIB
+HB_DYN_COPT := -DHB_DYNLIB -bd
 
 ifeq ($(HB_BUILD_MODE),cpp)
    CC := wpp386
@@ -74,7 +73,7 @@ DY_OUT :=
 DLIBS := $(HB_USER_LIBS)
 DLIBS += $(foreach lib,$(LIBS),$(LIB_DIR)/$(lib))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define dynlib_object
    @$(ECHO) $(ECHOQUOTE)FILE '$(file)'$(ECHOQUOTE) >> __dyn__.tmp
 

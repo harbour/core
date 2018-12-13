@@ -1,9 +1,9 @@
 /*
- * Harbour Project source code:
  * Exception handlers
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
+ * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt) (hb_winExceptionHandler() Windows exception info dump code.)
+ * Copyright 2008-2010 Viktor Szakats (vszakats.net/harbour) (hb_winExceptionHandler() Module listing code, x86_64/WinCE/ARM support, OS/2, MIPS32, MIPS64, SH, IA64 CPU dumps.)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,24 +46,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2008 Mindaugas Kavaliauskas (dbtopas at dbtopas.lt)
- *    hb_winExceptionHandler() Windows exception info dump code.
- *
- * Copyright 2008-2010 Viktor Szakats (harbour syenar.net)
- *    hb_winExceptionHandler() Module listing code.
- *    hb_winExceptionHandler() x64 support.
- *    hb_winExceptionHandler() WinCE/ARM support.
- *    hb_winExceptionHandler() OS/2 CPU dump.
- *    hb_winExceptionHandler() MIPS32, MIPS64, SH, IA64 CPU dumps.
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbvm.h"
 #include "hbapifs.h"
@@ -84,6 +66,7 @@
 #  if ! defined( __TINYC__ )
 #     include <tlhelp32.h>
 #  endif
+#  include "hbwinuni.h"
 #  if defined( HB_OS_WIN_CE )
 #     include "hbwince.h"
 #  endif
@@ -112,21 +95,36 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
 
 #if defined( HB_OS_WIN_64 ) && defined( HB_CPU_X86_64 )
    {
+      char buf[ 32 ];
       PCONTEXT pCtx = pExceptionInfo->ContextRecord;
+      const char * szCode;
+
+      /* two most common codes */
+      switch( pExceptionInfo->ExceptionRecord->ExceptionCode )
+      {
+         case EXCEPTION_ACCESS_VIOLATION:
+            szCode = " " "ACCESS_VIOLATION";
+            break;
+         case EXCEPTION_IN_PAGE_ERROR:
+            szCode = " " "IN_PAGE_ERROR";
+            break;
+         default:
+            szCode = "";
+      }
 
       hb_snprintf( errmsg, errmsglen,
          "\n\n"
-         "    Exception Code:%08X\n"
-         "    Exception Address:0x%016" PFLL "X\n"
-         "    RAX:0x%016" PFLL "X  RBX:0x%016" PFLL "X  RCX:0x%016" PFLL "X  RDX:0x%016" PFLL "X\n"
-         "    RSI:0x%016" PFLL "X  RDI:0x%016" PFLL "X  RBP:0x%016" PFLL "X\n"
-         "    R8 :0x%016" PFLL "X  R9 :0x%016" PFLL "X  R10:0x%016" PFLL "X  R11:0x%016" PFLL "X\n"
-         "    R12:0x%016" PFLL "X  R13:0x%016" PFLL "X  R14:0x%016" PFLL "X  R15:0x%016" PFLL "X\n"
-         "    CS:RIP:%04X:0x%016" PFLL "X  SS:RSP:%04X:0x%016" PFLL "X\n"
+         "    Exception Code:%08X%s\n"
+         "    Exception Address:%016" PFLL "X\n"
+         "    RAX:%016" PFLL "X  RBX:%016" PFLL "X  RCX:%016" PFLL "X  RDX:%016" PFLL "X\n"
+         "    RSI:%016" PFLL "X  RDI:%016" PFLL "X  RBP:%016" PFLL "X\n"
+         "    R8 :%016" PFLL "X  R9 :%016" PFLL "X  R10:%016" PFLL "X  R11:%016" PFLL "X\n"
+         "    R12:%016" PFLL "X  R13:%016" PFLL "X  R14:%016" PFLL "X  R15:%016" PFLL "X\n"
+         "    CS:RIP:%04X:%016" PFLL "X  SS:RSP:%04X:%016" PFLL "X\n"
          "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
          "    Flags:%08X\n",
-         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
-         ( HB_PTRDIFF ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode, szCode,
+         ( HB_PTRUINT ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
          pCtx->Rax, pCtx->Rbx, pCtx->Rcx, pCtx->Rdx,
          pCtx->Rsi, pCtx->Rdi, pCtx->Rbp,
          pCtx->R8 , pCtx->R9 , pCtx->R10, pCtx->R11,
@@ -135,9 +133,23 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          ( HB_U32 ) pCtx->SegDs, ( HB_U32 ) pCtx->SegEs, ( HB_U32 ) pCtx->SegFs, ( HB_U32 ) pCtx->SegGs,
          ( HB_U32 ) pCtx->EFlags );
 
+      if( pExceptionInfo->ExceptionRecord->NumberParameters &&
+          pExceptionInfo->ExceptionRecord->NumberParameters < ( DWORD ) EXCEPTION_MAXIMUM_PARAMETERS )
+      {
+         DWORD arg;
+
+         hb_strncat( errmsg, "    Exception Parameters:", errmsglen );
+         for( arg = 0; arg < pExceptionInfo->ExceptionRecord->NumberParameters; ++arg )
+         {
+            hb_snprintf( buf, sizeof( buf ), " %016" PFLL "X", ( HB_U64 ) pExceptionInfo->ExceptionRecord->ExceptionInformation[ arg ] );
+            hb_strncat( errmsg, buf, errmsglen );
+         }
+         hb_strncat( errmsg, "\n", errmsglen );
+      }
+
       /* TODO: 64-bit stack trace.
                See: - StackWalk64()
-                    - http://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
+                    - https://www.codeproject.com/KB/threads/StackWalker.aspx?fid=202364 */
    }
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
    {
@@ -146,16 +158,16 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
       hb_snprintf( errmsg, errmsglen,
          "\n\n"
          "    Exception Code:%08X\n"
-         "    Exception Address:0x%016" PFLL "X\n"
-         "    IS0 :0x%016" PFLL "X  IS1 :0x%016" PFLL "X  IS2 :0x%016" PFLL "X  IS3 :0x%016" PFLL "X\n"
-         "    IT0 :0x%016" PFLL "X  IT1 :0x%016" PFLL "X  IT2 :0x%016" PFLL "X  IT3 :0x%016" PFLL "X\n"
-         "    IT4 :0x%016" PFLL "X  IT5 :0x%016" PFLL "X  IT6 :0x%016" PFLL "X  IT7 :0x%016" PFLL "X\n"
-         "    IT8 :0x%016" PFLL "X  IT9 :0x%016" PFLL "X  IT10:0x%016" PFLL "X  IT11:0x%016" PFLL "X\n"
-         "    IT12:0x%016" PFLL "X  IT13:0x%016" PFLL "X  IT14:0x%016" PFLL "X  IT15:0x%016" PFLL "X\n"
-         "    IT16:0x%016" PFLL "X  IT17:0x%016" PFLL "X  IT18:0x%016" PFLL "X  IT19:0x%016" PFLL "X\n"
-         "    IT20:0x%016" PFLL "X  IT21:0x%016" PFLL "X  IT22:0x%016" PFLL "X\n"
-         "    IGp :0x%016" PFLL "X  IV0 :0x%016" PFLL "X  ISp :0x%016" PFLL "X  ITeb:0x%016" PFLL "X\n"
-         "    INat:0x%016" PFLL "X\n",
+         "    Exception Address:%016" PFLL "X\n"
+         "    IS0 :%016" PFLL "X  IS1 :%016" PFLL "X  IS2 :%016" PFLL "X  IS3 :%016" PFLL "X\n"
+         "    IT0 :%016" PFLL "X  IT1 :%016" PFLL "X  IT2 :%016" PFLL "X  IT3 :%016" PFLL "X\n"
+         "    IT4 :%016" PFLL "X  IT5 :%016" PFLL "X  IT6 :%016" PFLL "X  IT7 :%016" PFLL "X\n"
+         "    IT8 :%016" PFLL "X  IT9 :%016" PFLL "X  IT10:%016" PFLL "X  IT11:%016" PFLL "X\n"
+         "    IT12:%016" PFLL "X  IT13:%016" PFLL "X  IT14:%016" PFLL "X  IT15:%016" PFLL "X\n"
+         "    IT16:%016" PFLL "X  IT17:%016" PFLL "X  IT18:%016" PFLL "X  IT19:%016" PFLL "X\n"
+         "    IT20:%016" PFLL "X  IT21:%016" PFLL "X  IT22:%016" PFLL "X\n"
+         "    IGp :%016" PFLL "X  IV0 :%016" PFLL "X  ISp :%016" PFLL "X  ITeb:%016" PFLL "X\n"
+         "    INat:%016" PFLL "X\n",
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
          pExceptionInfo->ExceptionRecord->ExceptionAddress,
          pCtx->IntS0 , pCtx->IntS1 , pCtx->IntS2 , pCtx->IntS3 ,
@@ -175,12 +187,12 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
       hb_snprintf( errmsg, errmsglen,
          "\n\n"
          "    Exception Code:%08X\n"
-         "    Exception Address:0x%08X\n"
-         "    R0 :0x%08X  R1 :0x%08X  R2 :0x%08X  R3 :0x%08X\n"
-         "    R4 :0x%08X  R5 :0x%08X  R6 :0x%08X  R7 :0x%08X\n"
-         "    R8 :0x%08X  R9 :0x%08X  R10:0x%08X  R11:0x%08X\n"
-         "    R12:0x%08X\n"
-         "    SP :0x%08X  LR :0x%08X  PC :0x%08X\n"
+         "    Exception Address:%08X\n"
+         "    R0 :%08X  R1 :%08X  R2 :%08X  R3 :%08X\n"
+         "    R4 :%08X  R5 :%08X  R6 :%08X  R7 :%08X\n"
+         "    R8 :%08X  R9 :%08X  R10:%08X  R11:%08X\n"
+         "    R12:%08X\n"
+         "    SP :%08X  LR :%08X  PC :%08X\n"
          "    Flags:%08X\n",
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
@@ -198,17 +210,17 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
       hb_snprintf( errmsg, errmsglen,
          "\n\n"
          "    Exception Code:%08X\n"
-         "    Exception Address:0x%08X\n"
-         "    IZe:0x%08X  IAt:0x%08X  ILo:0x%08X  IHi:0x%08X\n"
-         "    IA0:0x%08X  IA1:0x%08X  IA2:0x%08X  IA3:0x%08X\n"
-         "    IT0:0x%08X  IT1:0x%08X  IT2:0x%08X  IT3:0x%08X\n"
-         "    IT4:0x%08X  IT5:0x%08X  IT6:0x%08X  IT7:0x%08X\n"
-         "    IT8:0x%08X  IT9:0x%08X  IV0:0x%08X  IV1:0x%08X\n"
-         "    IS0:0x%08X  IS1:0x%08X  IS2:0x%08X  IS3:0x%08X\n"
-         "    IS4:0x%08X  IS5:0x%08X  IS6:0x%08X  IS7:0x%08X\n"
-         "    IS8:0x%08X  IK0:0x%08X  IK1:0x%08X\n"
-         "    IGp:0x%08X  ISp:0x%08X  IRa:0x%08X\n"
-         "    Fsr:0x%08X  Fir:0x%08X  Psr:0x%08X\n",
+         "    Exception Address:%08X\n"
+         "    IZe:%08X  IAt:%08X  ILo:%08X  IHi:%08X\n"
+         "    IA0:%08X  IA1:%08X  IA2:%08X  IA3:%08X\n"
+         "    IT0:%08X  IT1:%08X  IT2:%08X  IT3:%08X\n"
+         "    IT4:%08X  IT5:%08X  IT6:%08X  IT7:%08X\n"
+         "    IT8:%08X  IT9:%08X  IV0:%08X  IV1:%08X\n"
+         "    IS0:%08X  IS1:%08X  IS2:%08X  IS3:%08X\n"
+         "    IS4:%08X  IS5:%08X  IS6:%08X  IS7:%08X\n"
+         "    IS8:%08X  IK0:%08X  IK1:%08X\n"
+         "    IGp:%08X  ISp:%08X  IRa:%08X\n"
+         "    Fsr:%08X  Fir:%08X  Psr:%08X\n",
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
          ( HB_U32 ) pCtx->IntZero, ( HB_U32 ) pCtx->IntAt, ( HB_U32 ) pCtx->IntLo, ( HB_U32 ) pCtx->IntHi,
@@ -229,17 +241,17 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
       hb_snprintf( errmsg, errmsglen,
          "\n\n"
          "    Exception Code:%08X\n"
-         "    Exception Address:0x%016" PFLL "X\n"
-         "    IZe:0x%016" PFLL "X  IAt:0x%016" PFLL "X  ILo:0x%016" PFLL "X  IHi:0x%016" PFLL "X\n"
-         "    IA0:0x%016" PFLL "X  IA1:0x%016" PFLL "X  IA2:0x%016" PFLL "X  IA3:0x%016" PFLL "X\n"
-         "    IT0:0x%016" PFLL "X  IT1:0x%016" PFLL "X  IT2:0x%016" PFLL "X  IT3:0x%016" PFLL "X\n"
-         "    IT4:0x%016" PFLL "X  IT5:0x%016" PFLL "X  IT6:0x%016" PFLL "X  IT7:0x%016" PFLL "X\n"
-         "    IT8:0x%016" PFLL "X  IT9:0x%016" PFLL "X  IV0:0x%016" PFLL "X  IV1:0x%016" PFLL "X\n"
-         "    IS0:0x%016" PFLL "X  IS1:0x%016" PFLL "X  IS2:0x%016" PFLL "X  IS3:0x%016" PFLL "X\n"
-         "    IS4:0x%016" PFLL "X  IS5:0x%016" PFLL "X  IS6:0x%016" PFLL "X  IS7:0x%016" PFLL "X\n"
-         "    IS8:0x%016" PFLL "X  IK0:0x%016" PFLL "X  IK1:0x%016" PFLL "X\n"
-         "    IGp:0x%016" PFLL "X  ISp:0x%016" PFLL "X  IRa:0x%016" PFLL "X\n"
-         "    Fsr:0x%016" PFLL "X  Fir:0x%016" PFLL "X  Psr:0x%016" PFLL "X\n",
+         "    Exception Address:%016" PFLL "X\n"
+         "    IZe:%016" PFLL "X  IAt:%016" PFLL "X  ILo:%016" PFLL "X  IHi:%016" PFLL "X\n"
+         "    IA0:%016" PFLL "X  IA1:%016" PFLL "X  IA2:%016" PFLL "X  IA3:%016" PFLL "X\n"
+         "    IT0:%016" PFLL "X  IT1:%016" PFLL "X  IT2:%016" PFLL "X  IT3:%016" PFLL "X\n"
+         "    IT4:%016" PFLL "X  IT5:%016" PFLL "X  IT6:%016" PFLL "X  IT7:%016" PFLL "X\n"
+         "    IT8:%016" PFLL "X  IT9:%016" PFLL "X  IV0:%016" PFLL "X  IV1:%016" PFLL "X\n"
+         "    IS0:%016" PFLL "X  IS1:%016" PFLL "X  IS2:%016" PFLL "X  IS3:%016" PFLL "X\n"
+         "    IS4:%016" PFLL "X  IS5:%016" PFLL "X  IS6:%016" PFLL "X  IS7:%016" PFLL "X\n"
+         "    IS8:%016" PFLL "X  IK0:%016" PFLL "X  IK1:%016" PFLL "X\n"
+         "    IGp:%016" PFLL "X  ISp:%016" PFLL "X  IRa:%016" PFLL "X\n"
+         "    Fsr:%016" PFLL "X  Fir:%016" PFLL "X  Psr:%016" PFLL "X\n",
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
          pExceptionInfo->ExceptionRecord->ExceptionAddress,
          pCtx->IntZero, pCtx->IntAt, pCtx->IntLo, pCtx->IntHi,
@@ -260,12 +272,12 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
       hb_snprintf( errmsg, errmsglen,
          "\n\n"
          "    Exception Code:%08X\n"
-         "    Exception Address:0x%08X\n"
-         "    R0 :0x%08X  R1 :0x%08X  R2 :0x%08X  R3 :0x%08X\n"
-         "    R4 :0x%08X  R5 :0x%08X  R6 :0x%08X  R7 :0x%08X\n"
-         "    R8 :0x%08X  R9 :0x%08X  R10:0x%08X  R11:0x%08X\n"
-         "    R12:0x%08X  R13:0x%08X  R14:0x%08X  R15:0x%08X\n"
-         "    PR :0x%08X MACH:0x%08X MACL:0x%08X  GBR:0x%08X\n",
+         "    Exception Address:%08X\n"
+         "    R0 :%08X  R1 :%08X  R2 :%08X  R3 :%08X\n"
+         "    R4 :%08X  R5 :%08X  R6 :%08X  R7 :%08X\n"
+         "    R8 :%08X  R9 :%08X  R10:%08X  R11:%08X\n"
+         "    R12:%08X  R13:%08X  R14:%08X  R15:%08X\n"
+         "    PR :%08X MACH:%08X MACL:%08X  GBR:%08X\n",
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
          ( HB_U32 ) pCtx->R0 , ( HB_U32 ) pCtx->R1 , ( HB_U32 ) pCtx->R2 , ( HB_U32 ) pCtx->R3 ,
@@ -276,25 +288,33 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
    }
 #elif defined( HB_CPU_X86 )
    {
-      char              buf[ 64 + MAX_PATH ];
-      PCONTEXT          pCtx = pExceptionInfo->ContextRecord;
-      unsigned char *   pc;
-      unsigned int *    sc;
-      unsigned int *    ebp;
-      unsigned int      eip;
-      unsigned int      j;
-      int               i;
+      char         buf[ 64 + MAX_PATH ];
+      PCONTEXT     pCtx = pExceptionInfo->ContextRecord;
+      const char * szCode;
+
+      /* two most common codes */
+      switch( pExceptionInfo->ExceptionRecord->ExceptionCode )
+      {
+         case EXCEPTION_ACCESS_VIOLATION:
+            szCode = " " "ACCESS_VIOLATION";
+            break;
+         case EXCEPTION_IN_PAGE_ERROR:
+            szCode = " " "IN_PAGE_ERROR";
+            break;
+         default:
+            szCode = "";
+      }
 
       hb_snprintf( errmsg, errmsglen,
          "\n\n"
-         "    Exception Code:%08X\n"
+         "    Exception Code:%08X%s\n"
          "    Exception Address:%08X\n"
          "    EAX:%08X  EBX:%08X  ECX:%08X  EDX:%08X\n"
          "    ESI:%08X  EDI:%08X  EBP:%08X\n"
          "    CS:EIP:%04X:%08X  SS:ESP:%04X:%08X\n"
          "    DS:%04X  ES:%04X  FS:%04X  GS:%04X\n"
          "    Flags:%08X\n",
-         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode,
+         ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionCode, szCode,
          ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionAddress,
          ( HB_U32 ) pCtx->Eax, ( HB_U32 ) pCtx->Ebx, ( HB_U32 ) pCtx->Ecx, ( HB_U32 ) pCtx->Edx,
          ( HB_U32 ) pCtx->Esi, ( HB_U32 ) pCtx->Edi, ( HB_U32 ) pCtx->Ebp,
@@ -302,51 +322,74 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          ( HB_U32 ) pCtx->SegDs, ( HB_U32 ) pCtx->SegEs, ( HB_U32 ) pCtx->SegFs, ( HB_U32 ) pCtx->SegGs,
          ( HB_U32 ) pCtx->EFlags );
 
-      hb_strncat( errmsg, "    CS:EIP:", errmsglen );
-      pc = ( unsigned char * ) pCtx->Eip;
-      for( i = 0; i < 16; i++ )
+      if( pExceptionInfo->ExceptionRecord->NumberParameters &&
+          pExceptionInfo->ExceptionRecord->NumberParameters < ( DWORD ) EXCEPTION_MAXIMUM_PARAMETERS )
       {
-         /* TOFIX: Unsafe funcion. */
-         if( IsBadReadPtr( pc, 1 ) )
-            break;
-         hb_snprintf( buf, sizeof( buf ) - 1, " %02X", ( int ) pc[ i ] );
-         hb_strncat( errmsg, buf, errmsglen );
-      }
-      hb_strncat( errmsg, "\n    SS:ESP:", errmsglen );
-      sc = ( unsigned int * ) pCtx->Esp;
-      for( i = 0; i < 16; i++ )
-      {
-         /* TOFIX: Unsafe funcion. */
-         if( IsBadReadPtr( sc, 4 ) )
-            break;
-         hb_snprintf( buf, sizeof( buf ), " %08X", sc[ i ] );
-         hb_strncat( errmsg, buf, errmsglen );
-      }
-      hb_strncat( errmsg, "\n\n", errmsglen );
-      hb_strncat( errmsg, "    C stack:\n", errmsglen );
-      hb_strncat( errmsg, "    EIP:     EBP:       Frame: OldEBP, RetAddr, Params...\n", errmsglen );
-      eip = pCtx->Eip;
-      ebp = ( unsigned int * ) pCtx->Ebp;
-      /* TOFIX: Unsafe funcion. */
-      if( ! IsBadWritePtr( ebp, 8 ) )
-      {
-         for( i = 0; i < 20; i++ )
+         DWORD arg;
+
+         hb_strncat( errmsg, "    Exception Parameters:", errmsglen );
+         for( arg = 0; arg < pExceptionInfo->ExceptionRecord->NumberParameters; ++arg )
          {
-            /* TOFIX: Unsafe funcion. */
-            if( ( unsigned int ) ebp % 4 != 0 || IsBadWritePtr( ebp, 40 ) || ( unsigned int ) ebp >= ebp[ 0 ] )
-               break;
-            hb_snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
+            hb_snprintf( buf, sizeof( buf ), " %08X", ( HB_U32 ) pExceptionInfo->ExceptionRecord->ExceptionInformation[ arg ] );
             hb_strncat( errmsg, buf, errmsglen );
-            for( j = 0; j < 10 && ( unsigned int ) ( ebp + j ) < ebp[ 0 ]; j++ )
-            {
-               hb_snprintf( buf, sizeof( buf ), " %08X", ebp[ j ] );
-               hb_strncat( errmsg, buf, errmsglen );
-            }
-            hb_strncat( errmsg, "\n", errmsglen );
-            eip = ebp[ 1 ];
-            ebp = ( unsigned int * ) ebp[ 0 ];
          }
          hb_strncat( errmsg, "\n", errmsglen );
+      }
+
+      {
+         unsigned char * pc;
+         unsigned int *  sc;
+         unsigned int *  ebp;
+         unsigned int    eip;
+         unsigned int    j;
+         int             i;
+
+         hb_strncat( errmsg, "    CS:EIP:", errmsglen );
+         pc = ( unsigned char * ) pCtx->Eip;
+         for( i = 0; i < 16; i++ )
+         {
+            /* FIXME: Unsafe function. */
+            if( IsBadReadPtr( pc, 1 ) )
+               break;
+            hb_snprintf( buf, sizeof( buf ), " %02X", ( int ) pc[ i ] );
+            hb_strncat( errmsg, buf, errmsglen );
+         }
+         hb_strncat( errmsg, "\n    SS:ESP:", errmsglen );
+         sc = ( unsigned int * ) pCtx->Esp;
+         for( i = 0; i < 16; i++ )
+         {
+            /* FIXME: Unsafe function. */
+            if( IsBadReadPtr( sc, 4 ) )
+               break;
+            hb_snprintf( buf, sizeof( buf ), " %08X", sc[ i ] );
+            hb_strncat( errmsg, buf, errmsglen );
+         }
+         hb_strncat( errmsg, "\n\n", errmsglen );
+         hb_strncat( errmsg, "    C stack:\n", errmsglen );
+         hb_strncat( errmsg, "    EIP:     EBP:       Frame: OldEBP, RetAddr, Params...\n", errmsglen );
+         eip = pCtx->Eip;
+         ebp = ( unsigned int * ) pCtx->Ebp;
+         /* FIXME: Unsafe function. */
+         if( ! IsBadWritePtr( ebp, 8 ) )
+         {
+            for( i = 0; i < 20; i++ )
+            {
+               /* FIXME: Unsafe function. */
+               if( ( unsigned int ) ebp % 4 != 0 || IsBadWritePtr( ebp, 40 ) || ( unsigned int ) ebp >= ebp[ 0 ] )
+                  break;
+               hb_snprintf( buf, sizeof( buf ), "    %08X %08X  ", ( int ) eip, ( int ) ebp );
+               hb_strncat( errmsg, buf, errmsglen );
+               for( j = 0; j < 10 && ( unsigned int ) ( ebp + j ) < ebp[ 0 ]; j++ )
+               {
+                  hb_snprintf( buf, sizeof( buf ), " %08X", ebp[ j ] );
+                  hb_strncat( errmsg, buf, errmsglen );
+               }
+               hb_strncat( errmsg, "\n", errmsglen );
+               eip = ebp[ 1 ];
+               ebp = ( unsigned int * ) ebp[ 0 ];
+            }
+            hb_strncat( errmsg, "\n", errmsglen );
+         }
       }
    }
 #endif
@@ -374,9 +417,9 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          typedef BOOL ( WINAPI * P_M32F )( HANDLE, LPMODULEENTRY32 ); /* Module32First() */
          typedef BOOL ( WINAPI * P_M32N )( HANDLE, LPMODULEENTRY32 ); /* Module32Next() */
 
-         P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) GetProcAddress( hToolhelp, "CreateToolhelp32Snapshot" );
-         P_M32F     pModule32First            = ( P_M32F     ) GetProcAddress( hToolhelp, "Module32First" );
-         P_M32N     pModule32Next             = ( P_M32N     ) GetProcAddress( hToolhelp, "Module32Next" );
+         P_CTH32SSH pCreateToolhelp32Snapshot = ( P_CTH32SSH ) HB_WINAPI_GETPROCADDRESS( hToolhelp, "CreateToolhelp32Snapshot" );
+         P_M32F     pModule32First            = ( P_M32F     ) HB_WINAPI_GETPROCADDRESS( hToolhelp, "Module32First" );
+         P_M32N     pModule32Next             = ( P_M32N     ) HB_WINAPI_GETPROCADDRESS( hToolhelp, "Module32Next" );
 
          if( pCreateToolhelp32Snapshot &&
              pModule32First &&
@@ -402,8 +445,8 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                   {
                      char buf[ 256 ];
 #if defined( HB_OS_WIN_64 )
-                     /* TOFIX: me32.szExePath seemed trashed in some (standalone) tests. */
-                     hb_snprintf( buf, sizeof( buf ), "0x%016" PFLL "X 0x%016" PFLL "X %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, me32.szExePath );
+                     /* FIXME: me32.szExePath seemed trashed in some (standalone) tests. */
+                     hb_snprintf( buf, sizeof( buf ), "%016" PFLL "X %016" PFLL "X %s\n", ( HB_PTRUINT ) me32.modBaseAddr, ( HB_PTRUINT ) me32.modBaseSize, me32.szExePath );
 #else
                      char szBuffer[ MAX_PATH ];
                      #if defined( HB_OS_WIN_CE )
@@ -411,7 +454,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                      #else
                         hb_strncpy( szBuffer, me32.szExePath, HB_SIZEOFARRAY( szBuffer ) - 1 );
                      #endif
-                     hb_snprintf( buf, sizeof( buf ), "0x%08lX 0x%08lX %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, szBuffer );
+                     hb_snprintf( buf, sizeof( buf ), "%08lX %08lX %s\n", ( HB_PTRUINT ) me32.modBaseAddr, ( HB_PTRUINT ) me32.modBaseSize, szBuffer );
 #endif
                      hb_strncat( errmsg, buf, errmsglen );
                   }
@@ -536,7 +579,7 @@ void hb_vmSetExceptionHandler( void )
       s_regRec.ExceptionHandler = ( ERR ) hb_os2ExceptionHandler;
       rc = DosSetExceptionHandler( &s_regRec );
       if( rc != NO_ERROR )
-         hb_errInternal( HB_EI_ERRUNRECOV, "Unable to setup exception handler (DosSetExceptionHandler())", NULL, NULL );
+         hb_errInternal( HB_EI_ERRUNRECOV, "Could not setup exception handler (DosSetExceptionHandler())", NULL, NULL );
    }
 #elif defined( HB_SIGNAL_EXCEPTION_HANDLER )
    {
@@ -570,7 +613,7 @@ void hb_vmUnsetExceptionHandler( void )
    {
       APIRET rc;                             /* Return code                   */
 
-      /* I don't do any check on return code since harbour is exiting in any case */
+      /* I don't do any check on return code since Harbour is exiting in any case */
       rc = DosUnsetExceptionHandler( &s_regRec );
       HB_SYMBOL_UNUSED( rc );
    }

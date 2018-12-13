@@ -1,4 +1,3 @@
-
 #require "hbgd"
 
 #define IMAGES_OUT "imgs_out" + hb_ps()

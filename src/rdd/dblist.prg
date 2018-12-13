@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * __dbList() function
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,7 +42,7 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
-*/
+ */
 
 /* NOTE: lAll is a dummy parameter, nothing seems to depend on it. [vszakats] */
 
@@ -53,9 +51,6 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
    LOCAL lOldPrinter
    LOCAL lOldExtra
    LOCAL cOldExtraFile
-   LOCAL cPath
-   LOCAL cName
-   LOCAL cExt
 
    LOCAL oError
    LOCAL lError := .F.
@@ -64,37 +59,36 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
 
    /* Choose the output style */
    IF lOff
-      bOutBlock := {|| QOut( iif( Deleted(), "*", " " ) ),;
+      bOutBlock := {|| QOut( iif( Deleted(), "*", " " ) ), ;
                        AEval( abEval, {| bEval | QQOut( Eval( bEval ), "" ) } ) }
    ELSE
-      bOutBlock := {|| QOut( Str( RecNo(), 7 ), iif( Deleted(), "*", " " ) ),;
+      bOutBlock := {|| QOut( Str( RecNo(), 7 ), iif( Deleted(), "*", " " ) ), ;
                        AEval( abEval, {| bEval | QQOut( Eval( bEval ), "" ) } ) }
    ENDIF
 
    /* Save SETs */
 
-   IF ! Empty( lToPrint )
+   IF ! Empty( lToPrint )  /* => hb_defaultValue( lToPrint, .F. ) */
       lOldPrinter := Set( _SET_PRINTER, .T. )
    ENDIF
    IF ! Empty( cToFileName )
-      hb_FNameSplit( cToFileName, @cPath, @cName, @cExt )
-      IF Set( _SET_DEFEXTENSIONS ) .AND. Empty( cExt )
-         cExt := ".txt"
-      ENDIF
       lOldExtra := Set( _SET_EXTRA, .T. )
-      cOldExtraFile := Set( _SET_EXTRAFILE, hb_FNameMerge( cPath, cName, cExt ) )
+      cOldExtraFile := Set( _SET_EXTRAFILE, ;
+                            iif( Set( _SET_DEFEXTENSIONS ), ;
+                                 hb_FNameExtSetDef( cToFileName, ".txt" ), ;
+                                 cToFileName ) )
    ENDIF
 
    /* Do the job */
 
    BEGIN SEQUENCE
 
-      IF Empty( lAll ) .AND. ;
+      IF Empty( lAll ) .AND. ;  /* => hb_defaultValue( lAll, .F. ) */
          Empty( bFor ) .AND. ;
          Empty( bWhile ) .AND. ;
-         Empty( nNext ) .AND. ;
-         Empty( nRecord ) .AND. ;
-         Empty( lRest )
+         Empty( nNext ) .AND. ;  /* => nNext == NIL .OR. nNext == 0 */
+         Empty( nRecord ) .AND. ;  /* => nRecord == NIL .OR. nRecord == 0 */
+         Empty( lRest )  /* => hb_defaultValue( lRest, .F. ) */
 
          Eval( bOutBlock )
       ELSE

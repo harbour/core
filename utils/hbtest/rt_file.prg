@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Regression tests for the runtime library (file)
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,15 +57,13 @@
 PROCEDURE Main_FILE()
 
    LOCAL cFileName := "$$FILEIO.TMP"
-   LOCAL nFlags
 
    LOCAL cBuff4   := Space( 4 )
    LOCAL cBuff100 := Space( 100 )
 
    LOCAL fhnd
 
-   nFlags := FC_NORMAL
-   fhnd := FCreate( cFileName, nFlags )
+   fhnd := FCreate( cFileName )
 
    HBTEST FError()                                                   IS 0
    HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )                 IS "E: 0      R: 12"
@@ -136,8 +132,7 @@ PROCEDURE Main_FILE()
    HBTEST TESTFIER( FRename( "NOT_HERE.$$$", 'A' ) )                 IS 'E: 2      R: -1'
    HBTEST TESTFIER( FOpen( "NOT_HERE.$$$" ) )                        IS 'E: 2      R: -1'
 
-   nFlags := FO_READWRITE
-   fhnd := FOpen( cFileName, nFlags )
+   fhnd := FOpen( cFileName, FO_READWRITE )
 
    HBTEST FError()                                                   IS 0
    HBTEST TESTFIER( FWrite( fhnd, ">1234567890<" ) )                 IS "E: 0      R: 12"

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Zebra barcode library
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,8 +45,6 @@
  */
 
 #include "hbzebra.h"
-#include "hbapiitm.h"
-#include "hbapierr.h"
 
 
 /* Usually one character bitmap does not fit into 1 byte, but if we use enough
@@ -125,7 +121,7 @@ static void _code39_add( PHB_BITBUFFER pBits, char code, int iFlags, HB_BOOL fLa
    {
       for( i = 0; i < 8; i++ )
       {
-         hb_bitbuffer_cat_int( pBits, i & 1 ? 0 : 31, code & 1 ? 5 : 2 );
+         hb_bitbuffer_cat_int( pBits, ( i & 1 ) ? 0 : 31, ( code & 1 ) ? 5 : 2 );
          cnt += ( code & 1 );
          code >>= 1;
       }
@@ -137,7 +133,7 @@ static void _code39_add( PHB_BITBUFFER pBits, char code, int iFlags, HB_BOOL fLa
    {
       for( i = 0; i < 8; i++ )
       {
-         hb_bitbuffer_cat_int( pBits, i & 1 ? 0 : 31, code & 1 ? 3 : 1 );
+         hb_bitbuffer_cat_int( pBits, ( i & 1 ) ? 0 : 31, ( code & 1 ) ? 3 : 1 );
          cnt += ( code & 1 );
          code >>= 1;
       }
@@ -149,7 +145,7 @@ static void _code39_add( PHB_BITBUFFER pBits, char code, int iFlags, HB_BOOL fLa
    {
       for( i = 0; i < 8; i++ )
       {
-         hb_bitbuffer_cat_int( pBits, i & 1 ? 0 : 31, code & 1 ? 2 : 1 );
+         hb_bitbuffer_cat_int( pBits, ( i & 1 ) ? 0 : 31, ( code & 1 ) ? 2 : 1 );
          cnt += ( code & 1 );
          code >>= 1;
       }

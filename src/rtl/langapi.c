@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Language API
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -198,7 +196,9 @@ static HB_LANG s_lang_en =
 HB_LANG_ANNOUNCE( EN )
 
 /* Always link in the default language */
-/* HB_LANG_REQUEST( HB_LANG_DEFAULT ); */
+#if 0
+HB_LANG_REQUEST( HB_LANG_DEFAULT );
+#endif
 
 /* NOTE: This is the maximum number of registered languages, later this can be
          made dynamic. */
@@ -229,8 +229,11 @@ static void hb_langRelease( PHB_LANG_BASE pBase )
    if( pBase->lang )
    {
       if( pBase->buffer )
+      {
          hb_xfree( pBase->buffer );
-      pBase->lang = NULL;
+         pBase->buffer = NULL;
+      }
+      pBase->lang = pBase == s_langList ? &s_lang_en : NULL;
    }
 }
 
@@ -263,11 +266,14 @@ static HB_BOOL hb_langTranslate( const char * szNewId, PHB_LANG lang, PHB_CODEPA
    PHB_LANG_BASE pBase;
    HB_LANG_TRANS trans;
    char *        buffer, * ptr;
-   HB_SIZE       nSize = 0;
+   HB_SIZE       nSize;
    int i;
 
    if( ! szNewId || *szNewId == 0 || ! lang || ! cdpIn || ! cdpOut || cdpIn == cdpOut )
       return HB_FALSE;
+
+   memset( &trans, 0, sizeof( trans ) );
+   nSize = sizeof( trans );
 
    for( i = 0; i < HB_LANG_ITEM_MAX_; ++i )
    {
@@ -280,19 +286,14 @@ static HB_BOOL hb_langTranslate( const char * szNewId, PHB_LANG lang, PHB_CODEPA
       else
          pszTrans = hb_cdpDup( lang->pItemList[ i ], cdpIn, cdpOut );
 
-      if( strcmp( pszTrans, lang->pItemList[ i ] ) == 0 )
-      {
-         hb_xfree( pszTrans );
-         trans.pItemList[ i ] = NULL;
-      }
-      else
+      if( strcmp( pszTrans, lang->pItemList[ i ] ) != 0 )
       {
          trans.pItemList[ i ] = pszTrans;
          nSize += strlen( pszTrans ) + 1;
       }
+      else
+         hb_xfree( pszTrans );
    }
-
-   nSize += sizeof( HB_LANG_TRANS );
 
    buffer = ( char * ) hb_xgrab( nSize );
    ptr    = buffer + sizeof( trans );
@@ -302,7 +303,7 @@ static HB_BOOL hb_langTranslate( const char * szNewId, PHB_LANG lang, PHB_CODEPA
       {
          HB_SIZE nLen = strlen( trans.pItemList[ i ] ) + 1;
          memcpy( ptr, trans.pItemList[ i ], nLen );
-         hb_xfree( ( void * ) trans.pItemList[ i ] );
+         hb_xfree( HB_UNCONST( trans.pItemList[ i ] ) );
          trans.pItemList[ i ] = ptr;
          ptr += nLen;
       }
@@ -335,7 +336,7 @@ void hb_langReleaseAll( void )
 
 HB_BOOL hb_langRegister( PHB_LANG lang )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_langRegister(%p)", lang ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langRegister(%p)", ( const void * ) lang ) );
 
    if( lang )
    {
@@ -366,7 +367,7 @@ PHB_LANG hb_langSelect( PHB_LANG lang )
 {
    PHB_LANG langOld;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_langSelect(%p)", lang ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langSelect(%p)", ( const void * ) lang ) );
 
    langOld = hb_vmLang();
    if( lang )
@@ -484,7 +485,7 @@ HB_FUNC( HB_LANGMESSAGE )
 }
 
 /* hb_langNew( <cNewLangId>, <cNewLangCpId>,
- *             <cLangId>, <cLangCpId> ) -> <lOK>
+ *             <cLangId>, <cLangCpId> ) --> <lOK>
  */
 HB_FUNC( HB_LANGNEW )
 {

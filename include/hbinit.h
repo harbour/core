@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for automatic static initialization
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,12 +53,15 @@ HB_EXTERN_BEGIN
 
 extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols, const char * szModuleName, HB_ULONG ulID, HB_USHORT uiPcodeVer ); /* module symbols initialization with extended information */
 
-#define HB_INIT_SYMBOLS_END( func ) HB_INIT_SYMBOLS_EX_END( func, __FILE__, 0L, 0x0000 )
+#define HB_INIT_SYMBOLS_END( func ) HB_INIT_SYMBOLS_EX_END( func, "", 0L, 0x0000 )
 
-/* By default in all C++ builds use static vars initialization as startup code */
+/* By default in all C++ builds use static variable initialization as startup
+   code with the exception for GCC which new versions show warning about
+   defined but not used static variable initialized with this method. */
 #if defined( __cplusplus ) && ! defined( HB_STATIC_STARTUP ) && \
     ! defined( HB_PRAGMA_STARTUP ) && ! defined( HB_GNUC_STARTUP ) && \
-    ! defined( HB_INITSEG_STARTUP ) && ! defined( HB_DATASEG_STARTUP )
+    ! defined( HB_INITSEG_STARTUP ) && ! defined( HB_DATASEG_STARTUP ) && \
+    ! defined( __GNUC__ )
    #define HB_STATIC_STARTUP
 #endif
 
@@ -162,7 +163,8 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
       defined( __GNUC__ ) || \
       defined( __SUNPRO_C ) || defined( __SUNPRO_CC ) || \
       defined( __DCC__ ) || \
-      defined( __TINYC__ ) /* TOFIX: __TINYC__ */
+      defined( __TINYC__ ) /* FIXME: __TINYC__ */ || \
+      defined( __clang__ )
 
    #if defined( HB_PRAGMA_STARTUP ) || defined( HB_DATASEG_STARTUP )
       #error Wrong macros set for startup code - clean your make/env settings.
@@ -263,7 +265,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSy
       static HB_$INITSYM _s_init_func_##func = func;
 
    /*  After each '*_END' symbol, additional 'hooks' are required
-    *  See the C output of a generated prg for example
+    *  See the C output of a generated .prg for example
     */
 
 #elif defined( __WATCOMC__ )

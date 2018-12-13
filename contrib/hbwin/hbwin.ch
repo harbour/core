@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * hbwin header
  *
- * Copyright 2008 Viktor Szakats (harbour syenar.net)
+ * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -674,6 +672,18 @@
 #define WIN_SERVICE_DISABLED               0x00000004
 #define WIN_SERVICE_SYSTEM_START           0x00000001
 
+/* win_serviceControl() control codes */
+#define WIN_SERVICE_CONTROL_STOP           0x00000001
+#define WIN_SERVICE_CONTROL_PAUSE          0x00000002
+#define WIN_SERVICE_CONTROL_CONTINUE       0x00000003
+#define WIN_SERVICE_CONTROL_INTERROGATE    0x00000004
+#define WIN_SERVICE_CONTROL_SHUTDOWN       0x00000005
+#define WIN_SERVICE_CONTROL_PARAMCHANGE    0x00000006
+#define WIN_SERVICE_CONTROL_NETBINDADD     0x00000007
+#define WIN_SERVICE_CONTROL_NETBINDREMOVE  0x00000008
+#define WIN_SERVICE_CONTROL_NETBINDENABLE  0x00000009
+#define WIN_SERVICE_CONTROL_NETBINDDISABLE 0x0000000A
+
 /* wapi_MessageBox()/wapi_MessageBeep() flags */
 #define WIN_MB_OK                          0x00000000
 #define WIN_MB_OKCANCEL                    0x00000001
@@ -710,6 +720,7 @@
 #define WIN_MB_DEFMASK                     0x00000F00
 #define WIN_MB_MODEMASK                    0x00003000
 #define WIN_MB_MISCMASK                    0x0000C000
+#define WIN_MB_TIMEDOUT                    0x00007D00
 
 /* win_SHFileOperation() functions */
 #define WIN_FO_MOVE                        0x0001
@@ -775,5 +786,33 @@
 #define HB_RPC_S_ASYNC_CALL_PENDING        997
 #define HB_RPC_S_UNKNOWN_PRINCIPAL         1332
 #define HB_RPC_S_TIMEOUT                   1460
+
+/* win_PrinterStatus() return values */
+#define HB_WIN_PRINTER_STATUS_ERROR              ( -1 )
+#define WIN_PRINTER_STATUS_PAUSED                0x00000001
+#define WIN_PRINTER_STATUS_ERROR                 0x00000002
+#define WIN_PRINTER_STATUS_PENDING_DELETION      0x00000004
+#define WIN_PRINTER_STATUS_PAPER_JAM             0x00000008
+#define WIN_PRINTER_STATUS_PAPER_OUT             0x00000010
+#define WIN_PRINTER_STATUS_MANUAL_FEED           0x00000020
+#define WIN_PRINTER_STATUS_PAPER_PROBLEM         0x00000040
+#define WIN_PRINTER_STATUS_OFFLINE               0x00000080
+#define WIN_PRINTER_STATUS_IO_ACTIVE             0x00000100
+#define WIN_PRINTER_STATUS_BUSY                  0x00000200
+#define WIN_PRINTER_STATUS_PRINTING              0x00000400
+#define WIN_PRINTER_STATUS_OUTPUT_BIN_FULL       0x00000800
+#define WIN_PRINTER_STATUS_NOT_AVAILABLE         0x00001000
+#define WIN_PRINTER_STATUS_WAITING               0x00002000
+#define WIN_PRINTER_STATUS_PROCESSING            0x00004000
+#define WIN_PRINTER_STATUS_INITIALIZING          0x00008000
+#define WIN_PRINTER_STATUS_WARMING_UP            0x00010000
+#define WIN_PRINTER_STATUS_TONER_LOW             0x00020000
+#define WIN_PRINTER_STATUS_NO_TONER              0x00040000
+#define WIN_PRINTER_STATUS_PAGE_PUNT             0x00080000
+#define WIN_PRINTER_STATUS_USER_INTERVENTION     0x00100000
+#define WIN_PRINTER_STATUS_OUT_OF_MEMORY         0x00200000
+#define WIN_PRINTER_STATUS_DOOR_OPEN             0x00400000
+#define WIN_PRINTER_STATUS_SERVER_UNKNOWN        0x00800000
+#define WIN_PRINTER_STATUS_POWER_SAVE            0x01000000
 
 #endif /* HBWIN_CH_ */

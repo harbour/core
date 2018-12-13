@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * Source file for the Wvg*Classes
+ * Xbase++ xbpBitmap compatible Class
  *
  * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
- * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,14 +44,8 @@
  *
  */
 
-/*
- *                                EkOnkar
+/*                                EkOnkar
  *                          ( The LORD is ONE )
- *
- *                   Xbase++ xbpBitmap compatible Class
- *
- *                  Pritpal Bedi <bedipritpal@hotmail.com>
- *                               06Dec2008
  */
 
 #include "hbclass.ch"
@@ -66,12 +58,12 @@
 
 CREATE CLASS WvgBitmap
 
-   VAR    bits                                  INIT 0        READONLY
-   VAR    bufferOffset                          INIT 0        READONLY
-   VAR    planes                                INIT 0        READONLY
+   VAR    bits                                  INIT 0 READONLY
+   VAR    bufferOffset                          INIT 0 READONLY
+   VAR    planes                                INIT 0 READONLY
    VAR    transparentClr                        INIT 0
-   VAR    xSize                                 INIT 0        READONLY
-   VAR    ySize                                 INIT 0        READONLY
+   VAR    xSize                                 INIT 0 READONLY
+   VAR    ySize                                 INIT 0 READONLY
 
    VAR    hBitmap
    VAR    hDCcompat
@@ -96,14 +88,13 @@ CREATE CLASS WvgBitmap
 
 ENDCLASS
 
-METHOD new() CLASS WvgBitmap
-
+METHOD WvgBitmap:new()
    RETURN Self
 
-METHOD create( oPScompat ) CLASS WvgBitmap
+METHOD WvgBitmap:create( oPScompat )
 
    IF oPScompat == NIL
-      ::hDCComp := Wvg_GetDC()
+      ::hDCComp := wvg_GetDC()
       ::lDCToDestroy := .T.
    ELSE
       ::hDCComp := oPScompat:hDC
@@ -111,13 +102,13 @@ METHOD create( oPScompat ) CLASS WvgBitmap
 
    RETURN Self
 
-METHOD destroy() CLASS WvgBitmap
+METHOD WvgBitmap:destroy()
 
-   IF ::hBitmap != nil
-      Wvg_DeleteObject( ::hBitmap )
+   IF ::hBitmap != NIL
+      wvg_DeleteObject( ::hBitmap )
    ENDIF
    IF ::lDCtoDestroy
-      Wvg_ReleaseDC( ::hDCcompat )
+      wvg_ReleaseDC( ::hDCcompat )
    ENDIF
 
    RETURN Self

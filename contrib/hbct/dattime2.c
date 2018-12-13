@@ -1,22 +1,17 @@
 /*
- * Harbour Project source code:
- *   CT3 Date & Time functions, part II: - AddMonth()
- *                                       - CToDoW()
- *                                       - CToMonth()
- *                                       - DaysInMonth()
- *                                       - DaysToMonth()
- *                                       - DMY()
- *                                       - DoY()
- *                                       - IsLeap()
- *                                       - LastDayOM()
- *                                       - MDY()
- *                                       - NToCDoW()
- *                                       - NToCMonth()
- *                                       - Quarter()
- *                                       - Week()
+ * CT3 Date & Time functions, part II:
+ *   AddMonth()
+ *   DMY()
+ *   DoY()
+ *   IsLeap()
+ *   LastDayOM()
+ *   MDY()
+ *   NToCDoW()
+ *   NToCMonth()
+ *   Quarter()
+ *   Week()
  *
  * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,9 +24,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -83,10 +78,10 @@ static int ct_daysinmonth( int iMonth, HB_BOOL bLeap )
 
 static int ct_daystomonth( int iMonth, HB_BOOL bLeap )
 {
-   static const int iMonthes[] = {
+   static const int sc_iMonths[] = {
       0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
 
-   return ( iMonth < 1 && iMonth > 12 ) ? 0 : iMonthes[ iMonth - 1 ] +
+   return ( iMonth < 1 || iMonth > 12 ) ? 0 : sc_iMonths[ iMonth - 1 ] +
           ( ( bLeap && iMonth > 2 ) ? 1 : 0 );
 }
 
@@ -107,12 +102,13 @@ HB_FUNC( CTODOW )
 
    if( nLen )
    {
+      PHB_CODEPAGE cdp = hb_vmCDP();
       const char * szParam = hb_parc( 1 );
 
       for( iDow = 7; iDow > 0; iDow-- )
       {
          const char * szDow = hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + iDow - 1 );
-         if( hb_strnicmp( szDow, szParam, nLen ) == 0 )
+         if( hb_cdpicmp( szDow, strlen( szDow ), szParam, nLen, cdp, HB_FALSE ) == 0 )
             break;
       }
    }
@@ -127,11 +123,12 @@ HB_FUNC( CTOMONTH )
 
    if( nLen )
    {
+      PHB_CODEPAGE cdp = hb_vmCDP();
       const char * szParam = hb_parc( 1 );
       for( iMonth = 12; iMonth > 0; iMonth-- )
       {
          const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
-         if( hb_strnicmp( szMonth, szParam, nLen ) == 0 )
+         if( hb_cdpicmp( szMonth, strlen( szMonth ), szParam, nLen, cdp, HB_FALSE ) == 0 )
             break;
       }
    }
@@ -289,9 +286,7 @@ HB_FUNC( ADDMONTH )
 
    iDays = ct_daysinmonth( iMonth, ct_isleap( iYear ) );
    if( iDay > iDays )
-   {
       iDay = iDays;
-   }
 
    lJulian = hb_dateEncode( iYear, iMonth, iDay );
    if( fTimeStamp )
@@ -374,7 +369,7 @@ HB_FUNC( LASTDAYOM )
       bLeap = ct_isleap( iYear );
    }
 
-   hb_retni( ( iMonth && ( iMonth <= 12 ) ? ct_daysinmonth( iMonth, bLeap ) : 0 ) );
+   hb_retni( ( iMonth && iMonth <= 12 ) ? ct_daysinmonth( iMonth, bLeap ) : 0 );
 }
 
 HB_FUNC( NTOCDOW )

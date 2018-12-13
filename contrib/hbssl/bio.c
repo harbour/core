@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * OpenSSL API (BIO) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,29 +44,101 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-
 #include "hbssl.h"
 
-void * hb_BIO_is( int iParam )
+#include "hbapiitm.h"
+
+/* */
+
+typedef struct
 {
-   return hb_parptr( iParam );
+   BIO *    bio;
+   void *   hStrRef;
+} HB_BIO, * PHB_BIO;
+
+static PHB_BIO PHB_BIO_create( BIO * bio, void * hStrRef )
+{
+   PHB_BIO hb_bio = ( PHB_BIO ) hb_xgrab( sizeof( HB_BIO ) );
+
+   hb_bio->bio       = bio;
+   hb_bio->hStrRef   = hStrRef;
+
+   return hb_bio;
 }
+
+static void PHB_BIO_free( PHB_BIO hb_bio )
+{
+   if( hb_bio->hStrRef )
+      hb_itemFreeCRef( hb_bio->hStrRef );
+
+   hb_xfree( hb_bio );
+}
+
+/* HB_BIO GC handler */
+
+/* BIO destructor, it's executed automatically */
+static HB_GARBAGE_FUNC( HB_BIO_Destructor )
+{
+   /* Retrieve image pointer holder */
+   HB_BIO ** ptr = ( HB_BIO ** ) Cargo;
+
+   /* Check if pointer is not NULL to avoid multiple freeing */
+   if( *ptr )
+   {
+      PHB_BIO_free( *ptr );
+
+      /* set pointer to NULL to avoid multiple freeing */
+      *ptr = NULL;
+   }
+}
+
+static const HB_GC_FUNCS s_gcBIOFuncs =
+{
+   HB_BIO_Destructor,
+   hb_gcDummyMark
+};
 
 BIO * hb_BIO_par( int iParam )
 {
-   return ( BIO * ) hb_parptr( iParam );
+   HB_BIO ** ptr = ( HB_BIO ** ) hb_parptrGC( &s_gcBIOFuncs, iParam );
+
+   return ptr ? ( *ptr )->bio : NULL;
 }
 
-static int hb_BIO_METHOD_is( int iParam )
+HB_BOOL hb_BIO_is( int iParam )
+{
+   HB_BIO ** ptr = ( HB_BIO ** ) hb_parptrGC( &s_gcBIOFuncs, iParam );
+
+   return ptr && ( *ptr )->bio;
+}
+
+static void hb_BIO_ret( BIO * bio, void * hStrRef )
+{
+   HB_BIO ** ptr = ( HB_BIO ** ) hb_gcAllocate( sizeof( HB_BIO * ), &s_gcBIOFuncs );
+
+   *ptr = PHB_BIO_create( bio, hStrRef );
+
+   hb_retptrGC( ( void * ) ptr );
+}
+
+/* */
+
+static HB_BOOL hb_BIO_METHOD_is( int iParam )
 {
    return HB_ISCHAR( iParam );
 }
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+static const BIO_METHOD * hb_BIO_METHOD_par( int iParam )
+#else
 static BIO_METHOD * hb_BIO_METHOD_par( int iParam )
+#endif
 {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+   const BIO_METHOD * p;
+#else
    BIO_METHOD * p;
+#endif
 
    switch( hb_parni( iParam ) )
    {
@@ -141,7 +211,7 @@ static int hb_BIO_METHOD_ptr_to_id( const BIO_METHOD * p )
 HB_FUNC( BIO_NEW )
 {
    if( hb_BIO_METHOD_is( 1 ) )
-      hb_retptr( BIO_new( hb_BIO_METHOD_par( 1 ) ) );
+      hb_BIO_ret( BIO_new( hb_BIO_METHOD_par( 1 ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -151,7 +221,12 @@ HB_FUNC( BIO_SET )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio && hb_BIO_METHOD_is( 2 ) )
+#if OPENSSL_VERSION_NUMBER < 0x10100000L || \
+    defined( LIBRESSL_VERSION_NUMBER )
       hb_retni( BIO_set( bio, hb_BIO_METHOD_par( 2 ) ) );
+#else
+      hb_retni( 0 );
+#endif
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -191,7 +266,7 @@ HB_FUNC( BIO_TEST_FLAGS )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
-#if ! defined( HB_OPENSSL_OLD_OSX_ )
+#if OPENSSL_VERSION_NUMBER >= 0x00908050L && ! defined( HB_OPENSSL_OLD_OSX_ )
       hb_retni( BIO_test_flags( bio, hb_parni( 2 ) ) );
 #else
       hb_retni( 0 );
@@ -403,7 +478,7 @@ HB_FUNC( BIO_GET_CLOSE )
 HB_FUNC( BIO_NEW_SOCKET )
 {
    if( HB_ISNUM( 1 ) )
-      hb_retptr( BIO_new_socket( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
+      hb_BIO_ret( BIO_new_socket( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -412,7 +487,7 @@ HB_FUNC( BIO_NEW_DGRAM )
 {
 #ifndef OPENSSL_NO_DGRAM
    if( HB_ISNUM( 1 ) )
-      hb_retptr( BIO_new_dgram( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
+      hb_BIO_ret( BIO_new_dgram( hb_parni( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #else
@@ -423,7 +498,7 @@ HB_FUNC( BIO_NEW_DGRAM )
 HB_FUNC( BIO_NEW_FD )
 {
    if( HB_ISNUM( 1 ) )
-      hb_retptr( BIO_new_fd( hb_parnl( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ) );
+      hb_BIO_ret( BIO_new_fd( hb_parnl( 1 ), hb_parnidef( 2, BIO_NOCLOSE ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -431,16 +506,23 @@ HB_FUNC( BIO_NEW_FD )
 HB_FUNC( BIO_NEW_FILE )
 {
    if( HB_ISCHAR( 1 ) )
-      hb_retptr( BIO_new_file( hb_parc( 1 ), hb_parcx( 2 ) ) );
+      hb_BIO_ret( BIO_new_file( hb_parc( 1 ), hb_parcx( 2 ) ), NULL );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( BIO_NEW_MEM_BUF )
 {
-   if( HB_ISCHAR( 1 ) )
-      /* NOTE: Discarding 'const' */
-      hb_retptr( BIO_new_mem_buf( ( char * ) hb_parc( 1 ), ( int ) hb_parclen( 1 ) ) );
+   PHB_ITEM pBuffer = hb_param( 1, HB_IT_STRING );
+
+   if( pBuffer )
+   {
+      void * hStrRef;
+      HB_SIZE nLen;
+      const char * pszBuffer = hb_itemGetCRef( pBuffer, &hStrRef, &nLen );
+
+      hb_BIO_ret( BIO_new_mem_buf( HB_UNCONST( pszBuffer ), ( int ) nLen ), hStrRef );
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -530,43 +612,35 @@ HB_FUNC( BIO_PUTS )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( BIO_VFREE )
-{
-   BIO * bio = hb_BIO_par( 1 );
-
-   if( bio )
-      BIO_vfree( bio );
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( BIO_FREE )
 {
-   BIO * bio = hb_BIO_par( 1 );
+   void ** ph = ( void ** ) hb_parptrGC( &s_gcBIOFuncs, 1 );
 
-   if( bio )
-      hb_retni( BIO_free( bio ) );
+   if( ph )
+   {
+      BIO * bio = ( BIO * ) *ph;
+      *ph = NULL;
+      hb_retni( bio ? BIO_free( bio ) : 0 );
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( BIO_FREE_ALL )
-{
-   BIO * bio = hb_BIO_par( 1 );
+HB_FUNC_TRANSLATE( BIO_VFREE, BIO_FREE )
+HB_FUNC_TRANSLATE( BIO_FREE_ALL, BIO_FREE )  /* These wrappers don't allow to create chained BIOs, so this is valid. */
 
-   if( bio )
-      BIO_free_all( bio );
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/* ------------ connect ------------ */
+/* --- connect --- */
 
 HB_FUNC( BIO_NEW_CONNECT )
 {
    if( HB_ISCHAR( 1 ) )
-      /* NOTE: Discarding 'const' */
-      hb_retptr( BIO_new_connect( ( char * ) hb_parc( 1 ) ) );
+#if OPENSSL_VERSION_NUMBER >= 0x10002000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
+      hb_BIO_ret( BIO_new_connect( hb_parc( 1 ) ), NULL );
+#else
+      /* NOTE: Discarding 'const', OpenSSL will strdup() */
+      hb_BIO_ret( BIO_new_connect( ( char * ) HB_UNCONST( hb_parc( 1 ) ) ), NULL );
+#endif
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -574,8 +648,13 @@ HB_FUNC( BIO_NEW_CONNECT )
 HB_FUNC( BIO_NEW_ACCEPT )
 {
    if( HB_ISCHAR( 1 ) )
-      /* NOTE: Discarding 'const' */
-      hb_retptr( BIO_new_accept( ( char * ) hb_parc( 1 ) ) );
+#if OPENSSL_VERSION_NUMBER >= 0x10002000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
+      hb_BIO_ret( BIO_new_accept( hb_parc( 1 ) ), NULL );
+#else
+      /* NOTE: Discarding 'const', OpenSSL will strdup() */
+      hb_BIO_ret( BIO_new_accept( ( char * ) HB_UNCONST( hb_parc( 1 ) ) ), NULL );
+#endif
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -585,7 +664,7 @@ HB_FUNC( BIO_SET_CONN_HOSTNAME )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio && HB_ISCHAR( 2 ) )
-      hb_retnl( BIO_set_conn_hostname( bio, hb_parc( 2 ) ) );
+      hb_retnl( BIO_set_conn_hostname( bio, HB_UNCONST( hb_parc( 2 ) ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -595,7 +674,7 @@ HB_FUNC( BIO_SET_CONN_PORT )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio && HB_ISCHAR( 2 ) )
-      hb_retnl( BIO_set_conn_port( bio, hb_parc( 2 ) ) );
+      hb_retnl( BIO_set_conn_port( bio, HB_UNCONST( hb_parc( 2 ) ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -618,7 +697,17 @@ HB_FUNC( BIO_SET_CONN_IP )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio && HB_ISCHAR( 2 ) && hb_parclen( 2 ) == 4 )
-      hb_retnl( BIO_set_conn_ip( bio, hb_parc( 2 ) ) );
+   {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      HB_SYMBOL_UNUSED( bio );  /* TODO: reimplement using BIO_set_conn_address() */
+      hb_retnl( 0 );
+#else
+      if( hb_parclen( 2 ) == 4 )
+         hb_retnl( BIO_set_conn_ip( bio, HB_UNCONST( hb_parc( 2 ) ) ) );
+      else
+         hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -648,23 +737,44 @@ HB_FUNC( BIO_GET_CONN_IP )
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
+   {
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+      HB_SYMBOL_UNUSED( bio );  /* TODO: reimplement using BIO_get_conn_address() */
+      hb_retc_null();
+#elif OPENSSL_VERSION_NUMBER >= 0x00906040L
       hb_retc( BIO_get_conn_ip( bio ) );
+#else
+      hb_retc( BIO_get_conn_ip( bio, 0 ) );
+#endif
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-#if 0
-/* NOTE: Commented due to bugs in OpenSSL declaration. Bug report sent #1989 */
 HB_FUNC( BIO_GET_CONN_INT_PORT )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L  /* fixed here: https://rt.openssl.org/Ticket/Display.html?id=1989&user=guest&pass=guest */
    BIO * bio = hb_BIO_par( 1 );
 
    if( bio )
+   {
+#if OPENSSL_VERSION_NUMBER == 0x1000206fL /* 1.0.2f */ || \
+    OPENSSL_VERSION_NUMBER == 0x1000112fL /* 1.0.1r */
+      /* Fix for header regression */
+      hb_retnl( BIO_ctrl( bio, BIO_C_GET_CONNECT, 3, NULL ) );
+#elif OPENSSL_VERSION_NUMBER >= 0x10101000L
+      const BIO_ADDR * ba = BIO_get_conn_address( bio );
+      hb_retnl( ba ? hb_socketNToHS( BIO_ADDR_rawport( ba ) ) : 0 );
+#else
       hb_retnl( BIO_get_conn_int_port( bio ) );
+#endif
+   }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
+#else
+   hb_errRT_BASE( EG_UNSUPPORTED, 2001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #endif
+}
 
 HB_FUNC( BIO_SET_NBIO )
 {

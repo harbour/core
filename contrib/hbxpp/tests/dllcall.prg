@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    DLL call demonstration.
+ * DLL call demonstration.
  *
- * Copyright 2008 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  *
  */
 

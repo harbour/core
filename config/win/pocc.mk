@@ -1,4 +1,3 @@
-
 # GNU Make file for Pelles ISO C Compiler
 
 OBJ_EXT := .obj
@@ -53,7 +52,7 @@ DFLAGS += -nologo -dll $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS),$(lib)$(LIB_EXT))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define dynlib_object
    @$(ECHO) $(ECHOQUOTE)$(file)$(ECHOQUOTE) >> __dyn__.tmp
 

@@ -1,5 +1,5 @@
 // ; Donated to the public domain by
-//   Viktor Szakats (harbour syenar.net)
+//   Viktor Szakats (vszakats.net/harbour)
 
 MEMVAR m_cLongerNameThen10Chars
 #ifdef __HARBOUR__

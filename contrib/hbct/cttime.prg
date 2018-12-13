@@ -1,10 +1,8 @@
 /*
- * xHarbour Project source code:
  * TimeToSec(), SecToTime(), Millisec()
  *
  * Copyright 2003 Piero Vincenzo Lupano <pierovincenzo1956@supereva.it>
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -75,16 +73,16 @@ FUNCTION TimeToSec( cTime )
       ENDIF
    ENDIF
 
-   RETURN Round( nSec, 2 ) /* round FL val to be sure that you can compare it */
+   RETURN Round( nSec, 2 )  /* round FL val to be sure that you can compare it */
 
-FUNCTION SecToTime( nSec, lHundr )
+FUNCTION SecToTime( nSec, lHundredth )
 
    LOCAL i, h, n
 
    n := iif( ! HB_ISNUMERIC( nSec ), Seconds(), nSec )
 
-   IF HB_ISLOGICAL( lHundr ) .AND. lHundr
-      h := ":" + StrZero( ( nSec * 100 ) % 100, 2 )
+   IF HB_ISLOGICAL( lHundredth ) .AND. lHundredth
+      h := StrZero( ( nSec * 100 ) % 100, 2 )
    ELSE
       h := ""
    ENDIF
@@ -92,7 +90,7 @@ FUNCTION SecToTime( nSec, lHundr )
    n := Int( n % 86400 )
 
    FOR i := 1 TO 3
-      h := StrZero( n % 60, 2 ) + iif( Len( h ) == 0, "", ":" ) + h
+      h := StrZero( n % 60, 2 ) + iif( h == "", "", ":" + h )
       n := Int( n / 60 )
    NEXT
 

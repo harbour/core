@@ -1,4 +1,3 @@
-
 #pragma -b+
 
 #include "hbclass.ch"

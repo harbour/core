@@ -1,4 +1,3 @@
-
 #require "hbnf"
 
 #ifndef __HARBOUR__

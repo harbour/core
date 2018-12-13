@@ -1,11 +1,9 @@
 #!/usr/bin/hbmk2
 /*
- * Harbour Project source code:
  * Various validations of filenames and file content, meant to be
  * run before committing to repository.
  *
- * Copyright 2013 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * their web site at https://www.gnu.org/).
  *
  */
 
@@ -95,8 +93,10 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
 
    LOCAL aCanBeUpper := { ;
       "Makefile", ;
-      "README.md", ;
-      "COPYING.txt", ;
+      "DEPRECATED.*", ;
+      "LICENSE.*", ;
+      "README.*", ;
+      "WARNING.*", ;
       "*/RELNOTES.txt", ;
       "*/HARBOUR_README_*.txt", ;
       "ChangeLog.txt", ;
@@ -113,7 +113,7 @@ STATIC FUNCTION CheckFile( cName, /* @ */ aErr, lApplyFixes )
       "*.po", ;
       "*.md", ;
       "*.html", ;
-      "*/hb-charmap.def", ;  /* TOFIX: Use 8.3 name */
+      "*/hb-charmap.def", ;  /* FIXME: Use 8.3 name */
       "debian/*", ;
       "package/*", ;
       "lib/3rd/*", ;
@@ -346,7 +346,7 @@ STATIC FUNCTION RTrimEOL( cFile )
 
 /*
  * UTF-8 encoding detection, based on filestr.cpp from Far Manager.
- * Harbour adaptation Copyright 2013 Viktor Szakats (harbour syenar.net)
+ * Harbour adaptation Copyright 2013 Viktor Szakats (vszakats.net/harbour)
  */
 
 /*
@@ -496,7 +496,7 @@ STATIC FUNCTION StripCStrings( cFile )
    LOCAL tmp
 
    DO WHILE ( tmp := hb_BAt( '"', cFile, nPos ) ) > 0
-      /* TOFIX: imprecise escaped char detection */
+      /* FIXME: imprecise escaped char detection */
       IF ( !( hb_BSubStr( cFile, tmp - 1, 1 ) == "\" ) .OR. ;
          hb_BSubStr( cFile, tmp - 2, 2 ) == "\\" ) .AND. ;
          !( hb_BSubStr( cFile, tmp - 1, 1 ) + hb_BSubStr( cFile, tmp + 1, 1 ) == "''" )

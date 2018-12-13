@@ -1,4 +1,3 @@
-
 Grumpfish Speller library port for Harbour.
 
 With kind permission of author Joseph D. Booth,

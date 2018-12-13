@@ -21,9 +21,30 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC AElement
+DYNAMIC Between
+DYNAMIC Filter
+DYNAMIC fox_At
 DYNAMIC fox___DynCall
+DYNAMIC FSize
+DYNAMIC Id
+DYNAMIC InList
+DYNAMIC InsMode
+DYNAMIC Key
+DYNAMIC LineNo
+DYNAMIC NDX
+DYNAMIC Occurs
+DYNAMIC Parameters
+DYNAMIC PrintStatus
+DYNAMIC Program
+DYNAMIC Relation
+DYNAMIC SCols
+DYNAMIC SRows
 DYNAMIC Sys
+DYNAMIC VarRead
 DYNAMIC __fox_Array
+DYNAMIC __fox_Seek
+DYNAMIC __fox_Used
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBFOXPRO__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

@@ -1,9 +1,9 @@
 /*
- * Harbour Project source code:
  * The Error API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
+ * Copyright 1999-2016 Viktor Szakats (vszakats.net/harbour) (DosError(), __errInHandler(), __errRT*(), hb_errLaunch*(), hb_err*Flags(), hb_errRT*())
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (rewritten in C ERROR class and all hb_errGet*() and hb_errPut*() functions)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -43,33 +43,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    DosError()
- *    __errInHandler()
- *    __errRT_BASE()
- *    __errRT_SBASE()
- *    hb_errLaunch()
- *    hb_errLaunchSubst()
- *    hb_errGetFlags()
- *    hb_errPutFlags()
- *    hb_errRT_New()
- *    hb_errRT_New_Subst()
- *    hb_errRT_BASE()
- *    hb_errRT_BASE_Ext1()
- *    hb_errRT_BASE_Subst()
- *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *    rewritten in C ERROR class and all hb_errGet*() and hb_errPut*()
- *    functions
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -454,7 +427,7 @@ HB_FUNC( __ERRINHANDLER )
 
 HB_FUNC( ERRORBLOCK )
 {
-   PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_BLOCK );
+   PHB_ITEM pNewErrorBlock = hb_param( 1, HB_IT_EVALITEM );
    PHB_ITEM pErrorBlock = hb_errorBlock();
 
    hb_itemReturn( pErrorBlock );
@@ -543,7 +516,7 @@ HB_USHORT hb_errLaunch( PHB_ITEM pError )
       PHB_ITEM pResult;
 
       /* Check if we have a valid error handler */
-      if( ! pErrData->errorBlock || hb_itemType( pErrData->errorBlock ) != HB_IT_BLOCK )
+      if( ! pErrData->errorBlock || ! HB_IS_EVALITEM( pErrData->errorBlock ) )
          hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
@@ -563,7 +536,7 @@ HB_USHORT hb_errLaunch( PHB_ITEM pError )
       if( pErrData->errorHandler )
       {
          /* there is a low-level error handler defined - use it instead
-          * of normal Harbour-level one
+          * of normal Harbour level one
           */
          pErrData->errorHandler->Error = pError;
          pErrData->errorHandler->ErrorBlock = pErrData->errorBlock;
@@ -588,14 +561,14 @@ HB_USHORT hb_errLaunch( PHB_ITEM pError )
 
          /* If the error block didn't return a logical value, */
          /* or the canSubstitute flag has been set, consider it as a failure */
-         if( hb_itemType( pResult ) != HB_IT_LOGICAL || ( uiFlags & EF_CANSUBSTITUTE ) )
+         if( ! HB_IS_LOGICAL( pResult ) || ( uiFlags & EF_CANSUBSTITUTE ) )
             bFailure = HB_TRUE;
          else
          {
             uiAction = hb_itemGetL( pResult ) ? E_RETRY : E_DEFAULT;
 
             if( ( uiAction == E_DEFAULT && !( uiFlags & EF_CANDEFAULT ) ) ||
-                ( uiAction == E_RETRY   && !( uiFlags & EF_CANRETRY   ) ) )
+                ( uiAction == E_RETRY   && !( uiFlags & EF_CANRETRY ) ) )
                bFailure = HB_TRUE;
          }
 
@@ -637,7 +610,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       HB_USHORT uiFlags = hb_errGetFlags( pError );
 
       /* Check if we have a valid error handler */
-      if( ! pErrData->errorBlock || hb_itemType( pErrData->errorBlock ) != HB_IT_BLOCK )
+      if( ! pErrData->errorBlock || ! HB_IS_EVALITEM( pErrData->errorBlock ) )
          hb_errInternal( HB_EI_ERRNOBLOCK, NULL, NULL, NULL );
 
       /* Check if the error launcher was called too many times recursively */
@@ -657,7 +630,7 @@ PHB_ITEM hb_errLaunchSubst( PHB_ITEM pError )
       if( pErrData->errorHandler )
       {
          /* there is a low-level error handler defined - use it instead
-          * of normal Harbour-level one
+          * of normal Harbour level one
           */
          pErrData->errorHandler->Error = pError;
          pErrData->errorHandler->ErrorBlock = pErrData->errorBlock;
@@ -1051,7 +1024,7 @@ HB_USHORT hb_errRT_BASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const cha
    HB_ULONG ulArgPos;
 
    /* I replaced EF_CANRETRY with EF_NONE for Clipper compatibility
-    * If it's wrong and I missed sth please fix me, Druzus.
+    * If it's wrong and I missed something please fix me, Druzus.
     */
    pError = hb_errRT_New( ES_ERROR, HB_ERR_SS_BASE, errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE /* EF_CANRETRY */ );
 

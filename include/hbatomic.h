@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    header file with functions for atomic operations
+ * Header file with functions for atomic operations
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,16 +83,50 @@ HB_EXTERN_BEGIN
 
 
 /* Inline assembler version of atomic operations on memory reference counters */
-#if defined( __GNUC__ )
+#if defined( __GNUC__ ) || ( defined( HB_OS_WIN ) && defined( __clang__ ) )
 
 #  if defined( HB_USE_GCCATOMIC_OFF )
 #     undef HB_USE_GCCATOMIC
-#  elif ( ( __GNUC__ > 4 ) || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1) ) && \
+#  elif defined( HB_OS_OS2 ) && \
+        ( __GNUC__ < 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ <= 5 ) )
+      /* allow users to enable it manually by HB_USE_GCCATOMIC macro */
+      /* #undef HB_USE_GCCATOMIC */
+#  elif ( __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 1 ) ) && \
         ! defined( __MINGW32CE__ ) && ! defined( HB_USE_GCCATOMIC )
+#     define HB_USE_GCCATOMIC
+#  elif defined( HB_OS_WIN ) && defined( __clang__ )
 #     define HB_USE_GCCATOMIC
 #  endif
 
-#  if defined( HB_CPU_X86 ) || defined( HB_CPU_X86_64 )
+#  if defined( HB_USE_GCCATOMIC )
+
+#     define HB_ATOM_INC( p )       __sync_add_and_fetch( (p), 1 )
+#     define HB_ATOM_DEC( p )       __sync_sub_and_fetch( (p), 1 )
+#     define HB_ATOM_GET( p )       ( *(p) )
+#     define HB_ATOM_SET( p, n )    do { *(p) = (n); } while(0)
+
+      static __inline__ void hb_spinlock_acquire( int * l )
+      {
+         for( ;; )
+         {
+            if( ! __sync_lock_test_and_set( l, 1 ) )
+               return;
+
+            #ifdef HB_SPINLOCK_REPEAT
+               if( ! __sync_lock_test_and_set( l, 1 ) )
+                  return;
+            #endif
+            HB_SCHED_YIELD();
+         }
+      }
+
+#     define HB_SPINLOCK_T          int
+#     define HB_SPINLOCK_INIT       0
+#     define HB_SPINLOCK_TRY(l)     (__sync_lock_test_and_set(l, 1)==0)
+#     define HB_SPINLOCK_RELEASE(l) __sync_lock_release(l)
+#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
+
+#  elif defined( HB_CPU_X86 ) || defined( HB_CPU_X86_64 )
 
 #     if HB_COUNTER_SIZE == 4
 
@@ -185,34 +217,6 @@ HB_EXTERN_BEGIN
 #     define HB_SPINLOCK_INIT       0
 #     define HB_SPINLOCK_TRY(l)     (hb_spinlock_trylock(l)==0)
 #     define HB_SPINLOCK_RELEASE(l) hb_spinlock_release(l)
-#     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
-
-#  elif defined( HB_USE_GCCATOMIC )
-
-#     define HB_ATOM_INC( p )       __sync_add_and_fetch( (p), 1 )
-#     define HB_ATOM_DEC( p )       __sync_sub_and_fetch( (p), 1 )
-#     define HB_ATOM_GET( p )       ( *(p) )
-#     define HB_ATOM_SET( p, n )    do { *(p) = (n); } while(0)
-
-      static __inline__ void hb_spinlock_acquire( int * l )
-      {
-         for( ;; )
-         {
-            if( ! __sync_lock_test_and_set( l, 1 ) )
-               return;
-
-            #ifdef HB_SPINLOCK_REPEAT
-               if( ! __sync_lock_test_and_set( l, 1 ) )
-                  return;
-            #endif
-            HB_SCHED_YIELD();
-         }
-      }
-
-#     define HB_SPINLOCK_T          int
-#     define HB_SPINLOCK_INIT       0
-#     define HB_SPINLOCK_TRY(l)     (__sync_lock_test_and_set(l, 1)==0)
-#     define HB_SPINLOCK_RELEASE(l) __sync_lock_release(l)
 #     define HB_SPINLOCK_ACQUIRE(l) hb_spinlock_acquire(l)
 
 #  elif defined( HB_CPU_PPC )
@@ -412,7 +416,7 @@ HB_EXTERN_BEGIN
 #  endif
 
    /* Spin locks */
-#  if ! defined( HB_SPINLOCK_T ) || 1 /* <= force using OSSpinLock */
+#  if ! defined( HB_SPINLOCK_T )
 #     undef HB_SPINLOCK_T
 #     undef HB_SPINLOCK_INIT
 #     undef HB_SPINLOCK_TRY
@@ -509,8 +513,7 @@ HB_EXTERN_BEGIN
 #        define HB_SPINLOCK_REPEAT     63
 #     endif
 
-/* workaround for borland C/C++ compiler limitation */
-#if defined( __BORLANDC__ )
+#if defined( __BORLANDC__ )  /* workaround for compiler limitation */
 #     define hb_spinlock_acquire_r( sl ) \
       do { \
          HB_SPINLOCK_T * l = &(sl)->lock; \

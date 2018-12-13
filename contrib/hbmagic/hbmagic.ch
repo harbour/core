@@ -56,7 +56,7 @@
 #define MAGIC_NO_CHECK_ASCII    MAGIC_NO_CHECK_TEXT
 
 /* Defined for backwards compatibility; do nothing */
-#define MAGIC_NO_CHECK_FORTRAN  0x000000 /* Don't check ascii/fortran */
-#define MAGIC_NO_CHECK_TROFF    0x000000 /* Don't check ascii/troff */
+#define MAGIC_NO_CHECK_FORTRAN  0x000000 /* Don't check ASCII/fortran */
+#define MAGIC_NO_CHECK_TROFF    0x000000 /* Don't check ASCII/troff */
 
 #endif /* HBMAGIC_CH_ */

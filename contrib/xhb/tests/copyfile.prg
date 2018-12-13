@@ -1,4 +1,3 @@
-
 #require "xhb"
 
 PROCEDURE Main()

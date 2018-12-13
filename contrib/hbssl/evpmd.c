@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * OpenSSL API (EVP MD) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2009-2016 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,13 +44,16 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-#include "hbapiitm.h"
-
 #include "hbssl.h"
 
+#include "hbapiitm.h"
+
 #include <openssl/evp.h>
+
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+   #define EVP_MD_CTX_new   EVP_MD_CTX_create
+   #define EVP_MD_CTX_free  EVP_MD_CTX_destroy
+#endif
 
 HB_FUNC( OPENSSL_ADD_ALL_DIGESTS )
 {
@@ -67,7 +68,13 @@ static HB_GARBAGE_FUNC( EVP_MD_CTX_release )
    if( ph && *ph )
    {
       /* Destroy the object */
+#if defined( LIBRESSL_VERSION_NUMBER )
       EVP_MD_CTX_destroy( ( EVP_MD_CTX * ) *ph );
+#elif OPENSSL_VERSION_NUMBER >= 0x00907000L
+      EVP_MD_CTX_free( ( EVP_MD_CTX * ) *ph );
+#else
+      hb_xfree( *ph );
+#endif
 
       /* set pointer to NULL just in case */
       *ph = NULL;
@@ -80,9 +87,9 @@ static const HB_GC_FUNCS s_gcEVP_MD_CTX_funcs =
    hb_gcDummyMark
 };
 
-static void * hb_EVP_MD_CTX_is( int iParam )
+static HB_BOOL hb_EVP_MD_CTX_is( int iParam )
 {
-   return hb_parptrGC( &s_gcEVP_MD_CTX_funcs, iParam );
+   return hb_parptrGC( &s_gcEVP_MD_CTX_funcs, iParam ) != NULL;
 }
 
 static EVP_MD_CTX * hb_EVP_MD_CTX_par( int iParam )
@@ -92,7 +99,7 @@ static EVP_MD_CTX * hb_EVP_MD_CTX_par( int iParam )
    return ph ? ( EVP_MD_CTX * ) *ph : NULL;
 }
 
-int hb_EVP_MD_is( int iParam )
+HB_BOOL hb_EVP_MD_is( int iParam )
 {
    return HB_ISCHAR( iParam ) || HB_ISNUM( iParam );
 }
@@ -117,12 +124,17 @@ const EVP_MD * hb_EVP_MD_par( int iParam )
       case HB_EVP_MD_MD5:        p = EVP_md5();       break;
 #endif
 #ifndef OPENSSL_NO_SHA
+#if OPENSSL_VERSION_NUMBER < 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
       case HB_EVP_MD_SHA:        p = EVP_sha();       break;
+#endif
       case HB_EVP_MD_SHA1:       p = EVP_sha1();      break;
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
       case HB_EVP_MD_DSS:        p = EVP_dss();       break;
       case HB_EVP_MD_DSS1:       p = EVP_dss1();      break;
-#if ! defined( HB_OPENSSL_OLD_OSX_ )
+#if OPENSSL_VERSION_NUMBER >= 0x00908000L && ! defined( HB_OPENSSL_OLD_OSX_ )
       case HB_EVP_MD_ECDSA:      p = EVP_ecdsa();     break;
+#endif
 #endif
 #endif
 #ifndef OPENSSL_NO_SHA256
@@ -160,11 +172,17 @@ static int hb_EVP_MD_ptr_to_id( const EVP_MD * p )
    else if( p == EVP_md5()       ) n = HB_EVP_MD_MD5;
 #endif
 #ifndef OPENSSL_NO_SHA
+#if OPENSSL_VERSION_NUMBER < 0x10100000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
    else if( p == EVP_sha()       ) n = HB_EVP_MD_SHA;
+#endif
    else if( p == EVP_sha1()      ) n = HB_EVP_MD_SHA1;
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
    else if( p == EVP_dss()       ) n = HB_EVP_MD_DSS;
    else if( p == EVP_dss1()      ) n = HB_EVP_MD_DSS1;
-#if ! defined( HB_OPENSSL_OLD_OSX_ )
+#endif
+#if OPENSSL_VERSION_NUMBER >= 0x00908000L && \
+    OPENSSL_VERSION_NUMBER < 0x10100000L && ! defined( HB_OPENSSL_OLD_OSX_ )
    else if( p == EVP_ecdsa()     ) n = HB_EVP_MD_ECDSA;
 #endif
 #endif
@@ -214,7 +232,11 @@ HB_FUNC( EVP_MD_NID )
 {
    const EVP_MD * md = hb_EVP_MD_par( 1 );
 
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
    hb_retni( md ? EVP_MD_nid( md ) : 0 );
+#else
+   hb_retni( md ? EVP_MD_type( md ) : 0 );
+#endif
 }
 
 HB_FUNC( EVP_MD_PKEY_TYPE )
@@ -238,42 +260,50 @@ HB_FUNC( EVP_MD_BLOCK_SIZE )
    hb_retni( md ? EVP_MD_block_size( md ) : 0 );
 }
 
-HB_FUNC( EVP_MD_CTX_CREATE )
+HB_FUNC( EVP_MD_CTX_NEW )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( EVP_MD_CTX * ), &s_gcEVP_MD_CTX_funcs );
+   EVP_MD_CTX * ctx;
 
-   EVP_MD_CTX * ctx = EVP_MD_CTX_create();
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L && \
+    ! defined( LIBRESSL_VERSION_NUMBER )
+   ctx = EVP_MD_CTX_new();
+#else
+   ctx = ( EVP_MD_CTX * ) hb_xgrabz( sizeof( EVP_MD_CTX ) );
+#endif
 
    *ph = ctx;
 
    hb_retptrGC( ph );
 }
 
-HB_FUNC( EVP_MD_CTX_INIT )
+HB_FUNC_TRANSLATE( EVP_MD_CTX_CREATE, EVP_MD_CTX_NEW )
+
+HB_FUNC( EVP_MD_CTX_RESET )
 {
    if( hb_EVP_MD_CTX_is( 1 ) )
    {
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
-         EVP_MD_CTX_init( ctx );
-   }
-   else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-HB_FUNC( EVP_MD_CTX_CLEANUP )
-{
-   if( hb_EVP_MD_CTX_is( 1 ) )
-   {
-      EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
-
-      if( ctx )
+      {
+#if defined( LIBRESSL_VERSION_NUMBER )
          hb_retni( EVP_MD_CTX_cleanup( ctx ) );
+#elif OPENSSL_VERSION_NUMBER >= 0x10100000L
+         hb_retni( EVP_MD_CTX_reset( ctx ) );
+#elif OPENSSL_VERSION_NUMBER >= 0x00907000L
+         hb_retni( EVP_MD_CTX_cleanup( ctx ) );
+#else
+         hb_retni( 0 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
+
+HB_FUNC_TRANSLATE( EVP_MD_CTX_INIT, EVP_MD_CTX_RESET )
+HB_FUNC_TRANSLATE( EVP_MD_CTX_CLEANUP, EVP_MD_CTX_RESET )
 
 HB_FUNC( EVP_MD_CTX_MD )
 {
@@ -310,7 +340,13 @@ HB_FUNC( EVP_MD_CTX_COPY_EX )
       EVP_MD_CTX * ctx_in  = hb_EVP_MD_CTX_par( 2 );
 
       if( ctx_out && ctx_in )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_MD_CTX_copy_ex( ctx_out, ctx_in ) );
+#else
+         hb_retni( 0 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -325,7 +361,14 @@ HB_FUNC( EVP_DIGESTINIT )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_DigestInit( ctx, md ) );
+#else
+         EVP_DigestInit( ctx, md );
+         hb_retni( 1 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -340,7 +383,13 @@ HB_FUNC( EVP_DIGESTINIT_EX )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_DigestInit_ex( ctx, md, ( ENGINE * ) hb_parptr( 3 ) ) );
+#else
+         hb_retni( 0 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -353,7 +402,14 @@ HB_FUNC( EVP_DIGESTUPDATE )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_DigestUpdate( ctx, hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ) ) );
+#else
+         EVP_DigestUpdate( ctx, hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ) );
+         hb_retni( 1 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -370,7 +426,12 @@ HB_FUNC( EVP_DIGESTFINAL )
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE + 1 );
          unsigned int    size   = 0;
 
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_DigestFinal( ctx, buffer, &size ) );
+#else
+         EVP_DigestFinal( ctx, buffer, &size );
+         hb_retni( 1 );
+#endif
 
          if( size > 0 )
          {
@@ -396,6 +457,7 @@ HB_FUNC( EVP_DIGESTFINAL_EX )
 
       if( ctx )
       {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE + 1 );
          unsigned int    size   = 0;
 
@@ -411,6 +473,7 @@ HB_FUNC( EVP_DIGESTFINAL_EX )
             hb_xfree( buffer );
             hb_storc( NULL, 2 );
          }
+#endif
       }
    }
    else
@@ -441,7 +504,13 @@ HB_FUNC( EVP_SIGNINIT_EX )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_SignInit_ex( ctx, md, ( ENGINE * ) hb_parptr( 3 ) ) );
+#else
+         hb_retni( 0 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -454,7 +523,14 @@ HB_FUNC( EVP_SIGNUPDATE )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_SignUpdate( ctx, hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ) ) );
+#else
+         EVP_SignUpdate( ctx, hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ) );
+         hb_retni( 1 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -498,7 +574,14 @@ HB_FUNC( EVP_VERIFYINIT )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_VerifyInit( ctx, md ) );
+#else
+         EVP_VerifyInit( ctx, md );
+         hb_retni( 1 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -513,7 +596,13 @@ HB_FUNC( EVP_VERIFYINIT_EX )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_VerifyInit_ex( ctx, md, ( ENGINE * ) hb_parptr( 3 ) ) );
+#else
+         hb_retni( 0 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -526,7 +615,14 @@ HB_FUNC( EVP_VERIFYUPDATE )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
+      {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
          hb_retni( EVP_VerifyUpdate( ctx, hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ) ) );
+#else
+         EVP_VerifyUpdate( ctx, hb_parcx( 2 ), ( size_t ) hb_parclen( 2 ) );
+         hb_retni( 1 );
+#endif
+      }
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -539,7 +635,7 @@ HB_FUNC( EVP_VERIFYFINAL )
       EVP_MD_CTX * ctx = hb_EVP_MD_CTX_par( 1 );
 
       if( ctx )
-         hb_retni( EVP_VerifyFinal( ctx, ( const unsigned char * ) hb_parcx( 2 ), ( unsigned int ) hb_parclen( 2 ), hb_EVP_PKEY_par( 3 ) ) );
+         hb_retni( EVP_VerifyFinal( ctx, ( HB_SSL_CONST unsigned char * ) hb_parcx( 2 ), ( unsigned int ) hb_parclen( 2 ), hb_EVP_PKEY_par( 3 ) ) );
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

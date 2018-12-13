@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Debugger (HBDbMenuItem Class)
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +50,7 @@
 
 #pragma -b-
 
-#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
+#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject class */
 #include "hbclass.ch"
 
 CREATE CLASS HBDbMenuItem
@@ -75,11 +73,9 @@ ENDCLASS
 
 METHOD New( cPrompt, bAction, lChecked, xIdent ) CLASS HBDbMenuItem
 
-   hb_default( @lChecked, .F. )
-
    ::cPrompt  := cPrompt
    ::bAction  := bAction
-   ::lChecked := lChecked
+   ::lChecked := hb_defaultValue( lChecked, .F. )
    ::Ident    := xIdent
 
    RETURN Self
@@ -94,6 +90,8 @@ METHOD Display( cClrText, cClrHotKey ) CLASS HBDbMenuItem
       ( nAt := At( "~", ::cPrompt ) ) - 1, ;
       SubStr( ::cPrompt, nAt + 1, 1 ), cClrHotKey )
 
-   hb_DispOutAtBox( ::nRow, ::nCol, iif( ::lChecked, hb_UTF8ToStrBox( "√" ), "" ), cClrText )
+   IF ::lChecked
+      hb_DispOutAtBox( ::nRow, ::nCol, hb_UTF8ToStrBox( "√" ), cClrText )
+   ENDIF
 
    RETURN Self

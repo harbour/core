@@ -1,4 +1,4 @@
-/* Last Translator: hbtest (harbour syenar.net) */
+/* Last Translator: hbtest */
 
 #include "hbapilng.h"
 
@@ -89,7 +89,7 @@ static HB_LANG s_lang =
       "",
       "Nem támogatott művelet",
       "Korlát túllépve",
-      "Index hiba felfedezve",
+      "Sérült vagy hibás adat",
       "Nem megfelelő adattípus",
       "Túl széles adat",
       "Nem megnyitott munkaterület",
@@ -97,8 +97,8 @@ static HB_LANG s_lang =
       "Kizárólagos megnyitási mód szükséges",
       "Zárolás szükséges",
       "Írás nem megengedett",
-      "Zárolás nem sikerült új rekord felvitelekor",
-      "Zárolás nem sikerült",
+      "Zárolás sikertelen új rekord felvitelekor",
+      "Zárolás sikertelen",
       "",
       "",
       "",
@@ -112,9 +112,9 @@ static HB_LANG s_lang =
       /* Internal error names */
 
       "Kezelhetetlen hiba %d: ",
-      "Hiba kezelési hiba",
+      "Hibakezelési hiba",
       "Nincs ERRORBLOCK() a hiba kezeléséhez",
-      "Túl sok rekurzív hiba kezelő hívás",
+      "Túl sok rekurzív hibakezelő hívás",
       "Az RDD hibás vagy nem sikerült betölteni",
       "Nem megfelelő típusú metódus (%s)",
       "hb_xgrab nem tud memóriát foglalni",

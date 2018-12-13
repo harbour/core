@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Harbour Compiler
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,8 +47,8 @@
 #ifndef HB_COMP_H_
 #define HB_COMP_H_
 
-#include "hbmacro.ch"
 #include "hbapi.h"
+#include "hbmacro.ch"
 #include "hberrors.h"
 #include "hbpp.h"
 #include "hbmacro.h"
@@ -60,11 +58,6 @@
 
 HB_EXTERN_BEGIN
 
-/* definitions for hb_compPCodeEval() support */
-typedef void * PHB_VOID;
-#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PHB_HFUNC pFunc, HB_SIZE nPCodePos, type cargo )
-typedef HB_PCODE_FUNC( ( * PHB_PCODE_FUNC ), PHB_VOID );
-
 extern HB_ISIZ hb_compPCodeSize( PHB_HFUNC, HB_SIZE );
 extern void hb_compPCodeEval( PHB_HFUNC, const PHB_PCODE_FUNC *, void * );
 extern void hb_compPCodeTrace( PHB_HFUNC, const PHB_PCODE_FUNC *, void * );
@@ -72,9 +65,7 @@ extern void hb_compPCodeTrace( PHB_HFUNC, const PHB_PCODE_FUNC *, void * );
 extern void hb_compGenLabelTable( PHB_HFUNC pFunc, PHB_LABEL_INFO label_info );
 extern PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL );
 
-extern void hb_compChkFileSwitches( int argc, char * argv[] );
-
-extern void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[], PHB_PP_OPEN_FUNC pOpenFunc );
+extern void hb_compInitPP( HB_COMP_DECL, PHB_PP_OPEN_FUNC pOpenFunc );
 extern void hb_compCompileEnd( HB_COMP_DECL );
 
 extern int  hb_comp_yyparse( HB_COMP_DECL );
@@ -92,8 +83,7 @@ extern void hb_compParserRun( HB_COMP_DECL );
 #define HB_VSCOMP_MEMVAR     ( HB_VSCOMP_PUBLIC | HB_VSCOMP_PRIVATE )
 #define HB_VSCOMP_TH_STATIC  ( HB_VSCOMP_STATIC | HB_VSCOMP_THREAD )
 
-/* return detailed information about a class of variable  */
-extern int hb_compVariableScope( HB_COMP_DECL, const char * );
+/* return detailed information about a class of variable */
 #define HB_VS_UNDECLARED      0
 /* variables declared in a current codeblock/function/procedure */
 #define HB_VS_CBLOCAL_VAR     1     /* func/proc local variables and parameters used in codeblock (detached) */
@@ -126,7 +116,7 @@ extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define HB_FUNF_WITH_RETURN       0x0020   /* there was RETURN statement in previous line */
 #define HB_FUNF_EXTBLOCK          0x0040   /* it's extended codeblock */
 #define HB_FUNF_FILE_DECL         0x0080   /* pseudo function with file wide declarations */
-#define HB_FUNF_FILE_FIRST        0x0100   /* 1-st real or pseudo function in compiled .prg module */
+#define HB_FUNF_FILE_FIRST        0x0100   /* 1st real or pseudo function in compiled .prg module */
 #define HB_FUNF_ATTACHED          0x0200   /* function attached to function list */
 
 extern               void         hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
@@ -135,7 +125,7 @@ extern               void         hb_compFunctionMarkStatic( HB_COMP_DECL, const
 extern HB_EXPORT_INT const char * hb_compGetFuncID( const char * szFuncName, HB_FUNC_ID * pFunID, int * piFlags );
 extern               HB_BOOL      hb_compFunCallCheck( HB_COMP_DECL, const char *, int );
 
-extern PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char * szFromClass );
+extern PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, HB_BYTE cVarType, const char * szFromClass );
 extern void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarType ); /* add a new param, local, static variable to a function definition or a public or private */
 extern PHB_HVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int * piScope );
 extern const char * hb_compLocalVariableName( PHB_HFUNC pFunc, HB_USHORT wVar );   /* returns the name of local variable */
@@ -261,8 +251,6 @@ extern int  hb_compMainExt( int argc, const char * const argv[], HB_BYTE ** pBuf
 extern void hb_compOutStd( HB_COMP_DECL, const char * szMessage );
 extern void hb_compOutErr( HB_COMP_DECL, const char * szMessage );
 
-extern void hb_compExprLstDealloc( HB_COMP_DECL );
-
 extern PHB_EXPR hb_compExprGenStatement( PHB_EXPR, HB_COMP_DECL );
 extern PHB_EXPR hb_compExprGenPush( PHB_EXPR, HB_COMP_DECL );
 extern PHB_EXPR hb_compExprGenPop( PHB_EXPR, HB_COMP_DECL );
@@ -278,8 +266,10 @@ extern void     hb_compErrorMacro( HB_COMP_DECL, const char * szText );
 extern void     hb_compErrorVParams( HB_COMP_DECL, const char * szFuncOrBlock );
 
 extern PHB_EXPR hb_compErrorStatic( HB_COMP_DECL, const char *, PHB_EXPR );
-extern void     hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock );
+extern void     hb_compErrorCodeblockDecl( HB_COMP_DECL, const char * szVarName );
+extern void     hb_compErrorCodeblockWith( HB_COMP_DECL, const char * szMessage );
 
+extern void     hb_compPushMacroVar( HB_COMP_DECL, const char * szText );
 extern void     hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_BOOL fMacro );
 
 /* Codeblocks */
@@ -294,9 +284,10 @@ extern void hb_compCodeBlockRewind( HB_COMP_DECL );                     /* resta
 extern HB_SIZE hb_compExprListEval( HB_COMP_DECL, PHB_EXPR pExpr, PHB_COMP_CARGO_FUNC pEval );
 extern HB_SIZE hb_compExprListEval2( HB_COMP_DECL, PHB_EXPR pExpr1, PHB_EXPR pExpr2, PHB_COMP_CARGO2_FUNC pEval );
 
-extern void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const args[] );
-extern void hb_compChkPaths( HB_COMP_DECL );
-extern void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const args[] );
+extern void hb_compChkCommandLine( HB_COMP_DECL, int argc, const char * const argv[] );
+extern void hb_compChkEnvironment( HB_COMP_DECL );
+extern void hb_compChkAddIncPaths( HB_COMP_DECL );
+extern void hb_compChkSetDefines( HB_COMP_DECL );
 
 extern void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf );
 extern void hb_compPrintCredits( HB_COMP_DECL );
@@ -351,27 +342,27 @@ extern const HB_BYTE hb_comp_pcode_len[];
 #define HB_IDENT_FREE         1
 #define HB_IDENT_COPY         2
 
-/* /GC command line setting types */
+/* /GC command-line setting types */
 #define HB_COMPGENC_COMPACT     0
 #define HB_COMPGENC_NORMAL      1
 #define HB_COMPGENC_VERBOSE     2
 #define HB_COMPGENC_REALCODE    3
 
-/* /ES command line setting types */
+/* /ES command-line setting types */
 #define HB_EXITLEVEL_DEFAULT    0
 #define HB_EXITLEVEL_SETEXIT    1
 #define HB_EXITLEVEL_DELTARGET  2
 
-/* /kx command line setting types - compatibility modes
+/* /kx command-line setting types - compatibility modes
  * (turn on a bit in HB_ULONG word)
 */
 #define HB_COMPFLAG_HARBOUR      HB_SM_HARBOUR     /* 1 -kh */
 #define HB_COMPFLAG_XBASE        HB_SM_XBASE       /* 2 -kx */
-#define HB_COMPFLAG_SHORTCUTS    HB_SM_SHORTCUTS   /* 8 -z enable sortcuts for logical operators */
+#define HB_COMPFLAG_SHORTCUTS    HB_SM_SHORTCUTS   /* 8 -z enable shortcuts for logical operators */
 #define HB_COMPFLAG_ARRSTR       HB_SM_ARRSTR      /* 16 -ks strings as array of bytes */
-#define HB_COMPFLAG_EXTOPT       HB_SM_EXTOPT      /* 32 -ko clipper incompatible optimizations */
+#define HB_COMPFLAG_EXTOPT       HB_SM_EXTOPT      /* 32 -ko Cl*pper incompatible optimizations */
 #define HB_COMPFLAG_RT_MACRO     HB_SM_RT_MACRO    /* 64 -kr */
-#define HB_COMPFLAG_OPTJUMP      0x0100            /* -kj turn off jump optimalization */
+#define HB_COMPFLAG_OPTJUMP      0x0100            /* -kj turn off jump optimization */
 #define HB_COMPFLAG_HB_INLINE    0x0200            /* -ki hb_inLine(...) { ... } support */
 #define HB_COMPFLAG_MACROTEXT    0x0400            /* -kM turn off macrotext substitution */
 #define HB_COMPFLAG_USERCP       0x0800            /* -ku strings in user encoding */

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    PRG functions for MD5 encryption/decryption using
- *    CFB (cipher feedback) mode
+ * PRG functions for MD5 encryption/decryption using
+ * CFB (cipher feedback) mode
  *
  * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -65,7 +63,7 @@ static void hb_md5_next_seed( char * vect, const char * pszKey, int iLen )
    hb_md5( vect, 16, vect );
 }
 
-/* hb_MD5Encrypt( <cText>, <cPasswd> ) -> <cCipher>
+/* hb_MD5Encrypt( <cText>, <cPasswd> ) --> <cCipher>
  */
 HB_FUNC( HB_MD5ENCRYPT )
 {
@@ -73,7 +71,7 @@ HB_FUNC( HB_MD5ENCRYPT )
 
    if( pData && hb_parclen( 2 ) > 0 )
    {
-      HB_SIZE nLen = hb_itemGetCLen( pData ), n;
+      HB_SIZE nLen = hb_itemGetCLen( pData );
 
       if( nLen )
       {
@@ -82,6 +80,7 @@ HB_FUNC( HB_MD5ENCRYPT )
          const char * pszKey = hb_parc( 2 );
          int iLen = ( int ) hb_parclen( 2 );
          char vect[ 16 ];
+         HB_SIZE n;
 
          hb_md5_init_seed( vect, pszKey, iLen );
 
@@ -99,7 +98,7 @@ HB_FUNC( HB_MD5ENCRYPT )
    }
 }
 
-/* hb_MD5Decrypt( <cCipher>, <cPasswd> ] ) -> <cText>
+/* hb_MD5Decrypt( <cCipher>, <cPasswd> ] ) --> <cText>
  */
 HB_FUNC( HB_MD5DECRYPT )
 {
@@ -107,7 +106,7 @@ HB_FUNC( HB_MD5DECRYPT )
 
    if( pData && hb_parclen( 2 ) > 0 )
    {
-      HB_SIZE nLen = hb_itemGetCLen( pData ), n;
+      HB_SIZE nLen = hb_itemGetCLen( pData );
 
       if( nLen )
       {
@@ -116,6 +115,7 @@ HB_FUNC( HB_MD5DECRYPT )
          const char * pszKey = hb_parc( 2 );
          int iLen = ( int ) hb_parclen( 2 );
          char vect[ 16 ];
+         HB_SIZE n;
 
          hb_md5_init_seed( vect, pszKey, iLen );
 

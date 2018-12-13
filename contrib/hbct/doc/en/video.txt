@@ -1,9 +1,8 @@
-
 /* $DOC$
    $NAME$
       CharPix()
    $CATEGORY$
-      HBCT video functions
+      hbct video functions
    $ONELINER$
       Gets the number of scan lines per character.
    $SYNTAX$
@@ -33,7 +32,7 @@
    $NAME$
       VGAPalette()
    $CATEGORY$
-      HBCT video functions
+      hbct video functions
    $ONELINER$
       Changes VGA palette colors
    $SYNTAX$
@@ -63,7 +62,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      EGAPALETTE() FONTRESET()
+      EGAPalette(), FontReset()
    $END$
  */
 
@@ -71,7 +70,7 @@
    $NAME$
       VideoType()
    $CATEGORY$
-      HBCT video functions
+      hbct video functions
    $ONELINER$
       Detects supported video adapter modes
    $SYNTAX$
@@ -93,7 +92,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      ISCGA(), ISEGA(), ISHERCULES(), ISMCGA(), ISMONO(), ISPGA(), ISVGA()
+      IsCGA(), IsEGA(), IsHercules(), IsMCGA(), IsMono(), IsPGA(), IsVGA()
    $END$
  */
 
@@ -101,7 +100,7 @@
    $NAME$
       SetFont()
    $CATEGORY$
-      HBCT video functions
+      hbct video functions
    $ONELINER$
       Loads font from a string.
    $SYNTAX$

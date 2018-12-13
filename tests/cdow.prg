@@ -1,4 +1,3 @@
-
 PROCEDURE Main()
 
    ? CMonth( Date() )

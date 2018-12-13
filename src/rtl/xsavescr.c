@@ -1,9 +1,8 @@
 /*
- * Harbour Project source code:
  * __XSaveScreen()/__XRestScreen() functions
  *
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (Rewritten in C)
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,17 +45,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    Rewritten in C
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapigt.h"
 #include "hbstack.h"
 
@@ -67,6 +55,8 @@ typedef struct
 {
    int    row;
    int    col;
+   int    maxrow;
+   int    maxcol;
    void * buffer;
 } HB_SCRDATA, * PHB_SCRDATA;
 
@@ -86,11 +76,13 @@ HB_FUNC( __XSAVESCREEN )
    HB_SIZE nSize;
 
    hb_gtGetPos( &pScrData->row, &pScrData->col );
-   hb_gtRectSize( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), &nSize );
+   pScrData->maxrow = hb_gtMaxRow();
+   pScrData->maxcol = hb_gtMaxCol();
+   hb_gtRectSize( 0, 0, pScrData->maxrow, pScrData->maxcol, &nSize );
    if( pScrData->buffer )
       hb_xfree( pScrData->buffer );
    pScrData->buffer = hb_xgrab( nSize );
-   hb_gtSave( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pScrData->buffer );
+   hb_gtSave( 0, 0, pScrData->maxrow, pScrData->maxcol, pScrData->buffer );
 }
 
 /* NOTE: There's no check about the screen size on restore, so this will
@@ -100,11 +92,11 @@ HB_FUNC( __XSAVESCREEN )
 
 HB_FUNC( __XRESTSCREEN )
 {
-   PHB_SCRDATA pScrData = ( PHB_SCRDATA ) hb_stackGetTSD( &s_scrData );
+   PHB_SCRDATA pScrData = ( PHB_SCRDATA ) hb_stackTestTSD( &s_scrData );
 
-   if( pScrData->buffer )
+   if( pScrData && pScrData->buffer )
    {
-      hb_gtRest( 0, 0, hb_gtMaxRow(), hb_gtMaxCol(), pScrData->buffer );
+      hb_gtRest( 0, 0, pScrData->maxrow, pScrData->maxcol, pScrData->buffer );
       hb_xfree( pScrData->buffer );
       pScrData->buffer = NULL;
 

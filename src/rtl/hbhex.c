@@ -1,10 +1,7 @@
 /*
- * Harbour Project source code:
- *    hb_NumToHex()
- *    hb_HexToNum()
+ * hb_NumToHex(), hb_HexToNum()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,7 +53,7 @@ HB_FUNC( HB_HEXTONUM )
 
    if( szHex )
    {
-      HB_MAXUINT ulNum = 0;
+      HB_MAXUINT nNum = 0;
 
       while( *szHex == ' ' )
          szHex++;
@@ -72,12 +69,12 @@ HB_FUNC( HB_HEXTONUM )
             iDigit = c - ( 'a' - 10 );
          else
          {
-            ulNum = 0;
+            nNum = 0;
             break;
          }
-         ulNum = ( ulNum << 4 ) + iDigit;
+         nNum = ( nNum << 4 ) + iDigit;
       }
-      hb_retnint( ulNum );
+      hb_retnint( nNum );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -85,7 +82,7 @@ HB_FUNC( HB_HEXTONUM )
 
 HB_FUNC( HB_NUMTOHEX )
 {
-   HB_MAXUINT ulNum;
+   HB_MAXUINT nNum;
    int        iLen;
    HB_BOOL    fDefaultLen;
    char       ret[ 33 ];
@@ -103,9 +100,9 @@ HB_FUNC( HB_NUMTOHEX )
    }
 
    if( HB_ISNUM( 1 ) )
-      ulNum = hb_parnint( 1 );
+      nNum = hb_parnint( 1 );
    else if( HB_ISPOINTER( 1 ) )
-      ulNum = ( HB_PTRDIFF ) hb_parptr( 1 );
+      nNum = ( HB_PTRUINT ) hb_parptr( 1 );
    else
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -115,11 +112,11 @@ HB_FUNC( HB_NUMTOHEX )
    ret[ iLen ] = '\0';
    do
    {
-      int iDigit = ( int ) ( ulNum & 0x0F );
+      int iDigit = ( int ) ( nNum & 0x0F );
       ret[ --iLen ] = ( char ) ( iDigit + ( iDigit < 10 ? '0' : 'A' - 10 ) );
-      ulNum >>= 4;
+      nNum >>= 4;
    }
-   while( fDefaultLen ? ulNum != 0 : iLen != 0 );
+   while( fDefaultLen ? nNum != 0 : iLen != 0 );
 
    hb_retc( &ret[ iLen ] );
 }
@@ -184,7 +181,6 @@ HB_FUNC( HB_HEXTOSTR )
    {
       HB_SIZE nDest, ul;
       const char * szPtr;
-      char * szDest;
 
       szPtr = szStr;
       ul = nStr;
@@ -204,7 +200,8 @@ HB_FUNC( HB_HEXTOSTR )
       {
          int iVal = 0x10;
 
-         szDest = ( char * ) hb_xgrab( nDest + 1 );
+         char * szDest = ( char * ) hb_xgrab( nDest + 1 );
+
          /* ul = 0; see above stop condition */
          do
          {

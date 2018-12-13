@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * OpenSSL API (X509) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,12 +44,15 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-
+/* This must come before #include "hbssl.h".
+   OpenSSL 1.1.x and upper don't require Windows headers anymore,
+   but if #included, it still must come before its own headers.
+   The Harbour wrapper code doesn't need the Windows headers, so
+   they will be dropped once 1.0.2 is EOLed in 2019-12-31. */
+#include "hbdefs.h"
 #if defined( HB_OS_WIN )
-#  include <windows.h>
-#  include <wincrypt.h>
+   #include <windows.h>
+   #include <wincrypt.h>
 #endif
 
 #include "hbssl.h"
@@ -84,9 +85,9 @@ static const HB_GC_FUNCS s_gcX509_funcs =
    hb_gcDummyMark
 };
 
-void * hb_X509_is( int iParam )
+HB_BOOL hb_X509_is( int iParam )
 {
-   return hb_parptrGC( &s_gcX509_funcs, iParam );
+   return hb_parptrGC( &s_gcX509_funcs, iParam ) != NULL;
 }
 
 X509 * hb_X509_par( int iParam )
@@ -146,4 +147,17 @@ HB_FUNC( X509_NAME_ONELINE )
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #endif
+}
+
+HB_FUNC( X509_GET_PUBKEY )
+{
+   if( hb_X509_is( 1 ) )
+   {
+      X509 * x509 = hb_X509_par( 1 );
+
+      if( x509 )
+         hb_retptr( X509_get_pubkey( x509 ) );
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

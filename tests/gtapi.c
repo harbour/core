@@ -1,4 +1,3 @@
-
 #include "hbapigt.h"
 
 int main( void )

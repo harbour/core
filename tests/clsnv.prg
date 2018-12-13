@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for non virtual hidden messages
+ * demonstration/test code for non virtual hidden messages
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 
@@ -60,7 +58,7 @@ METHOD m1
    ? "   execute ::z(),  should be: MYCLASS3:Z()"
    ::z()
 
-   RETURN self
+   RETURN Self
 
 METHOD x
 
@@ -72,7 +70,7 @@ METHOD x
    ? "      e =>", ::e, ",  should be: (e3)"
    ? "      f =>", ::f, ",  should be: (f3)"
 
-   RETURN self
+   RETURN Self
 
 METHOD y
 
@@ -84,7 +82,7 @@ METHOD y
    ? "      e =>", ::e, ",  should be: (e3)"
    ? "      f =>", ::f, ",  should be: (f3)"
 
-   RETURN self
+   RETURN Self
 
 METHOD z
 
@@ -96,7 +94,7 @@ METHOD z
    ? "      e =>", ::e, ",  should be: (e3)"
    ? "      f =>", ::f, ",  should be: (f3)"
 
-   RETURN self
+   RETURN Self
 
    CREATE CLASS myclass2
    hidden:
@@ -133,7 +131,7 @@ METHOD m2
    ? "   execute ::z(),  should be: MYCLASS3:Z()"
    ::z()
 
-   RETURN self
+   RETURN Self
 
 METHOD x
 
@@ -145,7 +143,7 @@ METHOD x
    ? "      e =>", ::e, ",  should be: (e3)"
    ? "      f =>", ::f, ",  should be: (f3)"
 
-   RETURN self
+   RETURN Self
 
 METHOD y
 
@@ -157,7 +155,7 @@ METHOD y
    ? "      e =>", ::e, ",  should be: (e3)"
    ? "      f =>", ::f, ",  should be: (f3)"
 
-   RETURN self
+   RETURN Self
 
 METHOD z
 
@@ -169,7 +167,7 @@ METHOD z
    ? "      e =>", ::e, ",  should be: (e3)"
    ? "      f =>", ::f, ",  should be: (f3)"
 
-   RETURN self
+   RETURN Self
 
 CREATE CLASS myclass3 FROM myclass1, myclass2
    hidden:
@@ -206,7 +204,7 @@ METHOD m3
    ? "   execute ::z(),  should be: MYCLASS3:Z()"
    ::z()
 
-   RETURN self
+   RETURN Self
 
 METHOD x
 
@@ -218,7 +216,7 @@ METHOD x
    ? "      e =>", ::e, ",  should be: (e3)"
    ? "      f =>", ::f, ",  should be: (f3)"
 
-   RETURN self
+   RETURN Self
 
 METHOD y
 
@@ -230,7 +228,7 @@ METHOD y
    ? "      e =>", ::e, ",  should be: (e3)"
    ? "      f =>", ::f, ",  should be: (f3)"
 
-   RETURN self
+   RETURN Self
 
 METHOD z
 
@@ -242,4 +240,4 @@ METHOD z
    ? "      e =>", ::e, ",  should be: (e3)"
    ? "      f =>", ::f, ",  should be: (f3)"
 
-   RETURN self
+   RETURN Self

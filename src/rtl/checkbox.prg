@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * CheckBox class
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -117,7 +115,7 @@ METHOD setFocus() CLASS CheckBox
       ::lHasFocus := .T.
       ::display()
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF
@@ -133,7 +131,7 @@ METHOD select( lState ) CLASS CheckBox
    IF lOldState != ::lBuffer
       ::display()
 
-      IF HB_ISBLOCK( ::bSBlock )
+      IF HB_ISEVALITEM( ::bSBlock )
          Eval( ::bSBlock )
       ENDIF
    ENDIF
@@ -145,13 +143,12 @@ METHOD killFocus() CLASS CheckBox
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF HB_ISBLOCK( ::bFBlock )
+      IF HB_ISEVALITEM( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
       ::display()
       SetCursor( ::nCursor )
-
    ENDIF
 
    RETURN Self
@@ -217,7 +214,6 @@ METHOD display() CLASS CheckBox
          hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
             hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
-
    ENDIF
 
    DispEnd()
@@ -328,11 +324,11 @@ METHOD New( nRow, nCol, cCaption ) CLASS CheckBox
 
    __defaultNIL( @cCaption, "" )
 
-   ::caption  := cCaption
-   ::capRow   := nRow
-   ::capCol   := nCol + 3 + 1
-   ::row      := nRow
-   ::col      := nCol
+   ::caption := cCaption
+   ::capRow  := nRow
+   ::capCol  := nCol + 3 + 1
+   ::row     := nRow
+   ::col     := nCol
 
    IF IsDefColor()
       ::cColorSpec := "W/N,W+/N,W/N,W+/N"
@@ -347,7 +343,7 @@ METHOD New( nRow, nCol, cCaption ) CLASS CheckBox
 
    RETURN Self
 
-FUNCTION _CHECKBOX_( lState, cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, aBitmaps )
+FUNCTION _CheckBox_( lState, cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, aBitmaps )
 
    LOCAL o := HBCheckBox():New( Row(), Col(), cCaption )
 

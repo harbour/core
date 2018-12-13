@@ -1,4 +1,3 @@
-
 all : first
 
 BIN_EXT := .vxe

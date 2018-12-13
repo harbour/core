@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for WinCE console program
+ * demonstration/test code for WinCE console program
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

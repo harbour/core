@@ -1,10 +1,9 @@
 /*
- * Harbour Project source code:
- * MySQL DBMS low level (client api) interface code.
+ * MySQL DBMS low-level (client API) interface code.
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net) (GC support)
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour) (GC support)
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
- * www - http://harbour-project.org
+ * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net> (DATATOSQL(), FILETOSQLBINARY())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,17 +46,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *    DATATOSQL(), FILETOSQLBINARY()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapiitm.h"
@@ -70,8 +58,9 @@
 
 #include "mysql.h"
 
-/* NOTE: OS/2 EMX port of MySQL needs libmysqlclient.a from 3.21.33b build which has st and mt
-         versions of client library. I'm using ST version since harbour is single threaded.
+/* NOTE: OS/2 EMX port of MySQL needs libmysqlclient.a from 3.21.33b build
+         which has ST and MT versions of client library. I'm using ST version
+         since Harbour is single threaded.
          You need also .h files from same distribution. */
 
 /* GC object handlers */

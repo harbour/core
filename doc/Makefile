@@ -1,11 +1,10 @@
-
 ROOT := ../
 
 DOC_FILES := \
    c_std.txt \
    class_tp.txt \
    clipper.txt \
-   cmdline.txt \
+   cmdline.md \
    cmpopt.txt \
    codebloc.txt \
    codestyl.txt \
@@ -16,7 +15,7 @@ DOC_FILES := \
    gtslang.txt \
    hdr_tpl.txt \
    howtorel.txt \
-   howtorep.txt \
+   howtovcs.txt \
    locks.txt \
    oldnews.txt \
    pcode.txt \

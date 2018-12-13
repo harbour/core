@@ -1,11 +1,10 @@
 /*
- * Harbour Project source code:
  * The Date API (Harbour level)
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * Copyright 2004 Giancarlo Niccolai <gc -at- niccolai -dot- ws>
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2004 Giancarlo Niccolai <gc@niccolai.ws>
+ * Copyright 2006 Pavel Tsarenko <tpe2@mail.ru> (DaysInMonth(), DaysToMonth())
  * Copyright 2007 Walter Negro <anegro@overnet.com.ar>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,9 +84,7 @@ HB_FUNC( TIMEOFDAY )
    char szResult[ 9 ];
 
    if( hb_pcount() == 0 )
-   {
       hb_dateTimeStr( szResult );
-   }
    else
    {
       int iSeconds = hb_parni( 1 );
@@ -95,6 +92,7 @@ HB_FUNC( TIMEOFDAY )
       hb_snprintf( szResult, sizeof( szResult ), "%02d:%02d:%02d",
                    iSeconds / 3600, ( iSeconds % 3600 ) / 60, iSeconds % 60 );
    }
+
    hb_retclen( szResult, 8 );
 }
 
@@ -112,5 +110,5 @@ HB_FUNC( TTOD )
    if( HB_ISDATE( 1 ) )
       hb_retdl( hb_pardl( 1 ) );
    else
-      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+      hb_errRT_BASE_SubstR( EG_ARG, 1120, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

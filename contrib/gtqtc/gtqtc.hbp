@@ -1,4 +1,3 @@
-
 -hblib
 -inc
 
@@ -6,22 +5,31 @@
 
 -w3 -es2
 
--stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc}
+-stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc|(hbdyn&android)}
 
--plugin=hbmk2_qtmoc.hb
+-pic
 
--deppkgname=qt:QtCore
--depkeyhead=qt:QtCore/qglobal.h
--depcontrol=qt:no{HB_BUILD_3RDEXT='no'}
--depcontrol=qt:${HB_WITH_QT}
-{!darwin}-depincpath=qt:/usr/include/qt4
-{!darwin}-depincpath=qt:/usr/lib/qt4/include
-{!darwin}-depincpath=qt:/usr/include
-{bsd}-depincpath=qt:/usr/local/include/qt4
-{darwin}-depincpath=qt:/Developer/qt/include
-{darwin}-depincpath=qt:/Library/Frameworks
-{darwin}-depincpath=qt:/usr/local/include
-{beos}-depincpath=qt:/boot/common/include
+-plugin=hbmk2_qtgt.hb
+
+-depcontrol=qt5:${HB_WITH_QT}
+-depkeyhead=qt5:QtCore/QJsonObject
+-depoptional=qt5:yes
+-depincpath=qt5:/usr/local/opt/qt5/include{darwin}
+-depincpath=qt5:/usr/local/include/qt5{bsd}
+-depfinish=qt5
+
+{!HBMK_HAS_QT5&!darwin&!android}-deppkgname=qt:QtCore
+{!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h
+{!HBMK_HAS_QT5}-depcontrol=qt:${HB_WITH_QT}
+{!HBMK_HAS_QT5&HB_BUILD_3RDEXT='no'}-depcontrol=qt:no
+{!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/include/qt4
+{!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/lib/qt4/include
+{!HBMK_HAS_QT5&!darwin&!android}-depincpath=qt:/usr/include
+{!HBMK_HAS_QT5&bsd}-depincpath=qt:/usr/local/include/qt4
+{!HBMK_HAS_QT5&beos}-depincpath=qt:/boot/common/include
+{!HBMK_HAS_QT5&darwin}-depincpath=qt:/Developer/qt/include
+{!HBMK_HAS_QT5&darwin}-depincpath=qt:/Library/Frameworks
+{!HBMK_HAS_QT5&darwin}-depincpath=qt:/usr/local/include
 
 gtqtc1.cpp
 gtqtc.h

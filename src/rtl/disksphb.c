@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_DiskSpace() function
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -75,38 +73,27 @@
    #include <dos.h>
 #endif
 
-HB_FUNC( HB_DISKSPACE )
+double hb_fsDiskSpace( const char * pszPath, HB_USHORT uiType )
 {
-   HB_USHORT uiType = ( HB_USHORT ) hb_parnidef( 2, HB_DISK_AVAIL );
+   char szPathBuf[ 2 ];
    double dSpace = 0.0;
 
    if( uiType > HB_DISK_TOTAL )
       uiType = HB_DISK_AVAIL;
 
+   if( ! pszPath )
+   {
+      szPathBuf[ 0 ] = HB_OS_PATH_DELIM_CHR;
+      szPathBuf[ 1 ] = '\0';
+      pszPath = szPathBuf;
+   }
+
 #if defined( HB_OS_WIN )
    {
-      void * hPath;
-      LPCTSTR lpPath = HB_PARSTR( 1, &hPath, NULL );
-      TCHAR szPathBuf[ 4 ];
+      LPCTSTR lpPath;
+      LPTSTR lpFree;
 
-      if( ! lpPath )
-      {
-#ifdef HB_OS_HAS_DRIVE_LETTER
-         if( HB_ISNUM( 1 ) )
-         {
-            szPathBuf[ 0 ] = ( TCHAR ) hb_parni( 1 ) + 'A' - 1;
-            szPathBuf[ 1 ] = HB_OS_DRIVE_DELIM_CHR;
-            szPathBuf[ 2 ] = HB_OS_PATH_DELIM_CHR;
-            szPathBuf[ 3 ] = '\0';
-         }
-         else
-#endif
-         {
-            szPathBuf[ 0 ] = HB_OS_PATH_DELIM_CHR;
-            szPathBuf[ 1 ] = '\0';
-         }
-         lpPath = szPathBuf;
-      }
+      lpPath = HB_FSNAMECONV( pszPath, &lpFree );
 
       {
          UINT uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
@@ -122,11 +109,10 @@ HB_FUNC( HB_DISKSPACE )
 
          if( ! s_fInit )
          {
-            s_pGetDiskFreeSpaceEx =
-               ( P_GDFSE )
-                  GetProcAddress( GetModuleHandle( HB_WINAPI_KERNEL32_DLL() ),
-                                  HB_WINAPI_FUNCTION_NAME( "GetDiskFreeSpaceEx" ) );
-
+            HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
+            if( hModule )
+               s_pGetDiskFreeSpaceEx = ( P_GDFSE )
+                  HB_WINAPI_GETPROCADDRESST( hModule, "GetDiskFreeSpaceEx" );
             s_fInit = HB_TRUE;
          }
 
@@ -190,10 +176,17 @@ HB_FUNC( HB_DISKSPACE )
 
             ULARGE_INTEGER i64FreeBytesToCaller, i64TotalBytes, i64FreeBytes;
 
+#if ! defined( HB_OS_WIN_CE ) && ! defined( HB_OS_WIN_64 )
+            fResult = s_pGetDiskFreeSpaceEx( lpPath,
+                                             ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
+                                             ( PULARGE_INTEGER ) &i64TotalBytes,
+                                             ( PULARGE_INTEGER ) &i64FreeBytes );
+#else
             fResult = GetDiskFreeSpaceEx( lpPath,
                                           ( PULARGE_INTEGER ) &i64FreeBytesToCaller,
                                           ( PULARGE_INTEGER ) &i64TotalBytes,
                                           ( PULARGE_INTEGER ) &i64FreeBytes );
+#endif
             hb_fsSetIOError( fResult, 0 );
 
             if( fResult )
@@ -221,24 +214,19 @@ HB_FUNC( HB_DISKSPACE )
          }
          SetErrorMode( uiErrMode );
       }
-      hb_strfree( hPath );
+      if( lpFree )
+         hb_xfree( lpFree );
    }
 #elif defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
    {
       HB_USHORT uiDrive;
 
-      if( HB_ISNUM( 1 ) )
-         uiDrive = ( HB_USHORT ) hb_parni( 1 );
-      else
-      {
-         const char * szPath = hb_parc( 1 );
-         uiDrive = szPath == NULL || szPath[ 0 ] == 0 ||
-                   szPath[ 1 ] != HB_OS_DRIVE_DELIM_CHR ? 0 :
-                   ( szPath[ 0 ] >= 'A' && szPath[ 0 ] <= 'Z' ?
-                     szPath[ 0 ] - 'A' + 1 :
-                   ( szPath[ 0 ] >= 'a' && szPath[ 0 ] <= 'z' ?
-                     szPath[ 0 ] - 'a' + 1 : 0 ) );
-      }
+      uiDrive = pszPath == NULL || pszPath[ 0 ] == 0 ||
+                pszPath[ 1 ] != HB_OS_DRIVE_DELIM_CHR ? 0 :
+                ( pszPath[ 0 ] >= 'A' && pszPath[ 0 ] <= 'Z' ?
+                  pszPath[ 0 ] - 'A' + 1 :
+                ( pszPath[ 0 ] >= 'a' && pszPath[ 0 ] <= 'z' ?
+                  pszPath[ 0 ] - 'a' + 1 : 0 ) );
 #if defined( HB_OS_DOS )
       for( ;; )
       {
@@ -287,17 +275,17 @@ HB_FUNC( HB_DISKSPACE )
 #else /* HB_OS_OS2 */
       {
          struct _FSALLOCATE fsa;
-         USHORT rc;
+         APIRET rc;
          /* Query level 1 info from filesystem */
-         while( ( rc = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) ) != 0 )
+         while( ( rc = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) ) != NO_ERROR )
          {
             if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, ( EF_CANDEFAULT | EF_CANRETRY ), HB_ERR_ARGS_BASEPARAMS ) != E_RETRY )
                break;
          }
 
-         hb_fsSetIOError( rc == 0, 0 );
+         hb_fsSetError( ( HB_ERRCODE ) rc );
 
-         if( rc == 0 )
+         if( rc == NO_ERROR )
          {
             switch( uiType )
             {
@@ -336,35 +324,13 @@ HB_FUNC( HB_DISKSPACE )
 #endif
       char * pszFree;
 
-      char szPathBuf[ 4 ];
-      const char * szPath = hb_parc( 1 );
-
-      if( ! szPath )
-      {
-#ifdef HB_OS_HAS_DRIVE_LETTER
-         if( HB_ISNUM( 1 ) )
-         {
-            szPathBuf[ 0 ] = ( char ) hb_parni( 1 ) + 'A' - 1;
-            szPathBuf[ 1 ] = HB_OS_DRIVE_DELIM_CHR;
-            szPathBuf[ 2 ] = HB_OS_PATH_DELIM_CHR;
-            szPathBuf[ 3 ] = '\0';
-         }
-         else
-#endif
-         {
-            szPathBuf[ 0 ] = HB_OS_PATH_DELIM_CHR;
-            szPathBuf[ 1 ] = '\0';
-         }
-         szPath = szPathBuf;
-      }
-
-      szPath = hb_fsNameConv( szPath, &pszFree );
+      pszPath = hb_fsNameConv( pszPath, &pszFree );
 
 #if defined( HB_OS_DARWIN ) || defined( HB_OS_ANDROID ) || \
     defined( HB_OS_VXWORKS )
-      if( statfs( szPath, &sf ) == 0 )
+      if( statfs( pszPath, &sf ) == 0 )
 #else
-      if( statvfs( szPath, &sf ) == 0 )
+      if( statvfs( pszPath, &sf ) == 0 )
 #endif
       {
          switch( uiType )
@@ -402,5 +368,31 @@ HB_FUNC( HB_DISKSPACE )
    }
 #endif
 
-   hb_retnlen( dSpace, -1, 0 );
+   return dSpace;
+}
+
+HB_FUNC( HB_DISKSPACE )
+{
+   const char * pszPath = hb_parc( 1 );
+   HB_USHORT uiType = ( HB_USHORT ) hb_parnidef( 2, HB_DISK_AVAIL );
+
+#ifdef HB_OS_HAS_DRIVE_LETTER
+   char szPathBuf[ 4 ];
+
+   if( ! pszPath )
+   {
+      int iDrive = hb_parni( 1 );
+
+      if( iDrive >= 1 && iDrive < 32 )
+      {
+         szPathBuf[ 0 ] = ( char ) iDrive + 'A' - 1;
+         szPathBuf[ 1 ] = HB_OS_DRIVE_DELIM_CHR;
+         szPathBuf[ 2 ] = HB_OS_PATH_DELIM_CHR;
+         szPathBuf[ 3 ] = '\0';
+         pszPath = szPathBuf;
+      }
+   }
+#endif
+
+   hb_retnlen( hb_fsDiskSpace( pszPath, uiType ), -1, 0 );
 }

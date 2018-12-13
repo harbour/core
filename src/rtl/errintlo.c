@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The Error API (internal error)
  *
- * Copyright 1999-2004 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2004 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -60,10 +58,9 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
 {
    char buffer[ 8192 ];
    char file[ HB_PATH_MAX ];
-   const char * szFile, * szInfo;
+   const char * szFile;
    HB_BOOL fStack, fLang;
    HB_USHORT uiLine;
-   int iLevel;
    FILE * hLog;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_errInternal(%d, %s, %s, %s)", errCode, szText, szPar1, szPar2 ) );
@@ -84,6 +81,8 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
    hLog = hb_fopen( szFile, "a+" );
    if( hLog )
    {
+      const char * szInfo;
+
       char szTime[ 9 ];
       int  iYear, iMonth, iDay;
 
@@ -91,7 +90,7 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
       hb_dateTimeStr( szTime );
 
       fprintf( hLog, "Application Internal Error - %s\n", hb_cmdargARGVN( 0 ) );
-      fprintf( hLog, "Terminated at: %04d.%02d.%02d %s\n", iYear, iMonth, iDay, szTime );
+      fprintf( hLog, "Terminated at: %04d-%02d-%02d %s\n", iYear, iMonth, iDay, szTime );
       szInfo = fStack ? hb_setGetCPtr( HB_SET_HBOUTLOGINFO ) : NULL;
       if( szInfo && *szInfo )
          fprintf( hLog, "Info: %s\n", szInfo );
@@ -122,7 +121,7 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
 
    if( fStack && hb_stackTotalItems() )
    {
-      iLevel = 0;
+      int iLevel = 0;
       while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
       {
          char msg[ HB_SYMBOL_NAME_LEN + HB_SYMBOL_NAME_LEN + 32 ];

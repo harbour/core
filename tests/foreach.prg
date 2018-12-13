@@ -1,4 +1,3 @@
-
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
 PROCEDURE Main()

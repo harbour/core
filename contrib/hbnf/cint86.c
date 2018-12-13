@@ -1,4 +1,3 @@
-
 #include "hbapi.h"
 
 HB_FUNC( FT_INT86 )

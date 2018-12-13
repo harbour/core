@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * GD graphic library class
  *
  * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
- * www - http://www.xharbour.org http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -72,7 +70,7 @@ CREATE CLASS GDImage
 
    METHOD New( sx, sy )  CONSTRUCTOR
 
-   /* IMAGE CREATION, DESTRUCTION, LOADING AND SAVING  */
+   /* IMAGE CREATION, DESTRUCTION, LOADING AND SAVING */
 
    // Create in memory
    METHOD Create( sx, sy )                 INLINE ::pImage := gdImageCreate( sx, sy ), Self
@@ -134,7 +132,7 @@ CREATE CLASS GDImage
    DESTRUCTOR Destruct()
 #endif
 
-   /* DRAWING FUNCTIONS */
+   /* Drawing functions */
 
    METHOD SetPixel( x, y, color )          INLINE hb_default( @color, ::pColor ), gdImageSetPixel( ::pImage, x, y, color )
    METHOD Line( x1, y1, x2, y2, color )    INLINE hb_default( @color, ::pColor ), gdImageLine( ::pImage, x1, y1, x2, y2, color )

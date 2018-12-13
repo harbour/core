@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the RDD API
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -114,7 +112,7 @@ HB_EXTERN_BEGIN
 #define HB_FF_HIDDEN          0x0001 /* System Column (not visible to user) */
 #define HB_FF_NULLABLE        0x0002 /* Column can store null values */
 #define HB_FF_BINARY          0x0004 /* Binary column */
-#define HB_FF_AUTOINC         0x0008 /* Column is autoincrementing */
+#define HB_FF_AUTOINC         0x0008 /* Column is auto-incrementing */
 #define HB_FF_COMPRESSED      0x0010 /* Column is compressed */
 #define HB_FF_ENCRYPTED       0x0020 /* Column is encrypted */
 #define HB_FF_UNICODE         0x0040 /* Column stores Unicode strings */
@@ -125,6 +123,8 @@ HB_EXTERN_BEGIN
 
 #define DBTF_MATCH         0x0001
 #define DBTF_PUTREC        0x0002
+#define DBTF_CPYCTR        0x0004
+#define DBTF_RECALL        0x0008
 
 
 
@@ -282,7 +282,7 @@ typedef struct
    PHB_ITEM itmOrder;     /* Name or Number of the Order */
    PHB_ITEM itmCobExpr;   /* Code block containing the KEY expression */
    PHB_ITEM itmResult;    /* Operation result */
-   PHB_ITEM itmNewVal;    /* New Setting   */
+   PHB_ITEM itmNewVal;    /* New Setting */
    HB_BOOL  fAllTags;     /* Open all tags */
 } DBORDERINFO;
 
@@ -738,7 +738,7 @@ typedef struct _RDDFUNCS
    DBENTRYP_VLO   setLocate;        /*-Set the locate scope for the specified WorkArea. */
    DBENTRYP_VOS   setScope;         /*  */
    DBENTRYP_VPL   skipScope;        /*  */
-   DBENTRYP_B     locate;           /* reposition cursor to postions set by setLocate */
+   DBENTRYP_B     locate;           /* reposition cursor to positions set by setLocate */
 
 
    /* Miscellaneous */
@@ -750,7 +750,7 @@ typedef struct _RDDFUNCS
 
    /* Network operations */
 
-   DBENTRYP_VSP   rawlock;          /* Perform a lowlevel network lock in the specified WorkArea. */
+   DBENTRYP_VSP   rawlock;          /* Perform a low-level network lock in the specified WorkArea. */
    DBENTRYP_VL    lock;             /* Perform a network lock in the specified WorkArea. */
    DBENTRYP_I     unlock;           /* Release network locks in the specified WorkArea. */
 
@@ -790,7 +790,7 @@ typedef RDDFUNCS * PRDDFUNCS;
 
 #define RDDFUNCSCOUNT   ( sizeof( RDDFUNCS ) / sizeof( DBENTRYP_V ) )
 
-/* RDD Node structure              */
+/* RDD Node structure */
 typedef struct _RDDNODE
 {
    char szName[ HB_RDD_MAX_DRIVERNAME_LEN + 1 ]; /* Name of RDD */
@@ -805,6 +805,9 @@ typedef struct _RDDNODE
 } RDDNODE;
 
 typedef RDDNODE * LPRDDNODE;
+
+/* RDD file/table name redirector function */
+typedef LPRDDNODE ( * HB_RDDACCEPT )( LPRDDNODE pRddNode, const char * szFileName );
 
 
 /*--------------------* SELF Methods *------------------------*/
@@ -1177,8 +1180,11 @@ extern HB_EXPORT HB_ERRCODE   hb_rddInheritEx( RDDFUNCS * pTable, const RDDFUNCS
 extern HB_EXPORT HB_BOOL      hb_rddIsDerivedFrom( HB_USHORT uiRddID, HB_USHORT uiSuperRddID );
 extern HB_EXPORT LPRDDNODE    hb_rddGetNode( HB_USHORT uiNode );
 extern HB_EXPORT LPRDDNODE    hb_rddFindNode( const char * szDriver, HB_USHORT * uiIndex );
+extern HB_EXPORT LPRDDNODE    hb_rddFindFileNode( LPRDDNODE pRddNode, const char * szFileName );
+extern HB_EXPORT void         hb_rddSetFileRedirector( HB_RDDACCEPT funcAccept, HB_BOOL fEnable );
 extern HB_EXPORT HB_USHORT    hb_rddFieldIndex( AREAP pArea, const char * szName );
 extern HB_EXPORT HB_USHORT    hb_rddFieldExpIndex( AREAP pArea, const char * szField );
+extern HB_EXPORT const char * hb_rddFindDrv( const char * szDriver, const char * szFileName );
 extern HB_EXPORT const char * hb_rddDefaultDrv( const char * szDriver );
 extern HB_EXPORT HB_ERRCODE   hb_rddSelectFirstAvailable( void );
 extern HB_EXPORT HB_ERRCODE   hb_rddVerifyAliasName( const char * szAlias );
@@ -1207,6 +1213,9 @@ extern HB_EXPORT HB_ERRCODE   hb_rddCreateTableTemp(
                                  const char * szAlias,
                                  const char * szCpId, HB_ULONG ulConnection,
                                  PHB_ITEM pStruct );
+extern HB_EXPORT HB_ERRCODE   hb_dbTransCounters( LPDBTRANSINFO lpdbTransInfo );
+extern HB_EXPORT PHB_ITEM     hb_dbTransInfoPut( PHB_ITEM pItem, LPDBTRANSINFO lpdbTransInfo );
+extern HB_EXPORT LPDBTRANSINFO hb_dbTransInfoGet( PHB_ITEM pItem );
 extern HB_EXPORT HB_ERRCODE   hb_dbTransStruct(
                                  AREAP lpaSource, AREAP lpaDest,
                                  LPDBTRANSINFO lpdbTransInfo,
@@ -1229,7 +1238,7 @@ extern HB_EXPORT HB_ERRCODE   hb_rddEvalWA( PHB_ITEM pBlock );
 
 extern HB_EXPORT HB_ERRCODE   hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo );
 extern HB_EXPORT AREAP        hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
-                                                 HB_BOOL fNewArea, HB_BOOL fWait );
+                                                 HB_BOOL fNewArea, HB_ULONG ulMilliSec );
 extern HB_EXPORT PHB_ITEM     hb_rddDetachedList( void );
 
 typedef HB_ERRCODE ( * WACALLBACK )( AREAP, void * );

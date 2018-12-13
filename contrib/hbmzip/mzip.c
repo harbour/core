@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    Wrapper functions for minizip library
- *    Some higher level zip archive functions
+ * Wrapper functions for minizip library
+ * Some higher-level ZIP archive functions
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas.at.dbtopas.lt>
- * Copyright 2011-2013 Viktor Szakats (harbour syenar.net) (codepage/unicode)
- * www - http://harbour-project.org
+ * Copyright 2011-2013 Viktor Szakats (vszakats.net/harbour) (codepage/unicode)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,12 +46,21 @@
  *
  */
 
+#if ! defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE  1
+#endif
+
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapistr.h"
 #include "hbdate.h"
 #include "hbset.h"
+
+#if ! defined( HB_OS_UNIX )
+#  undef _LARGEFILE64_SOURCE
+#endif
+
 #include "zip.h"
 #include "unzip.h"
 
@@ -84,10 +91,23 @@
    #include <os2.h>
 #endif
 
-#define _ZIP_FLAG_UNICODE  ( 1 << 11 ) /* Language encoding flag (EFS) */
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+   #if defined( __USE_LARGEFILE64 )
+      /*
+       * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
+       * defined and effectively enables lseek64()/flock64()/ftruncate64()
+       * functions on 32-bit machines.
+       */
+      #define HB_USE_LARGEFILE64
+   #elif defined( HB_OS_UNIX ) && defined( O_LARGEFILE )
+      #define HB_USE_LARGEFILE64
+   #endif
+#endif
+
+#define _ZIP_FLAG_UNICODE  ( 1 << 11 )  /* Language encoding flag (EFS) */
 
 #if defined( HB_OS_UNIX )
-   #define _VER_PLATFORM   0x03 /* it's necessary for file attributes in unzip */
+   #define _VER_PLATFORM   0x03  /* it's necessary for file attributes in unzip */
 #else
    #define _VER_PLATFORM   0x00
 #endif
@@ -158,6 +178,29 @@ static unzFile hb_unzipfileParam( int iParam )
    return NULL;
 }
 
+static PHB_FILE hb_fileHandleParam( int iParam, HB_BOOL * pfFree )
+{
+   PHB_FILE pFile = NULL;
+
+   * pfFree = HB_FALSE;
+   if( HB_ISNUM( iParam ) )
+   {
+      HB_FHANDLE hFile = hb_numToHandle( hb_parnint( iParam ) );
+      if( hFile != FS_ERROR )
+      {
+         pFile = hb_fileFromHandle( hFile );
+         * pfFree = HB_TRUE;
+      }
+   }
+   else
+      pFile = hb_fileParam( iParam );
+
+   if( pFile != NULL )
+      return pFile;
+
+   hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   return NULL;
+}
 
 static HB_FATTR hb_translateExtAttr( const char * szFileName, HB_FATTR ulExtAttr )
 {
@@ -194,10 +237,10 @@ HB_FUNC( HB_ZIPOPEN )
 
    if( szFileName )
    {
-      zipcharpc pszGlobalComment = NULL;
-      char *    pszFree;
-      zipFile   hZip = zipOpen2( hb_fsNameConv( szFileName, &pszFree ), hb_parnidef( 2, APPEND_STATUS_CREATE ),
-                                 &pszGlobalComment, NULL );
+      const char * pszGlobalComment = NULL;
+      char *       pszFree;
+      zipFile      hZip = zipOpen2( hb_fsNameConv( szFileName, &pszFree ), hb_parnidef( 2, APPEND_STATUS_CREATE ),
+                                    &pszGlobalComment, NULL );
 
       if( pszFree )
          hb_xfree( pszFree );
@@ -210,7 +253,7 @@ HB_FUNC( HB_ZIPOPEN )
          hb_retptrGC( phZip );
 
          if( pszGlobalComment )
-            hb_storc( ( const char * ) pszGlobalComment, 3 );
+            hb_storc( pszGlobalComment, 3 );
       }
    }
    else
@@ -499,8 +542,6 @@ HB_FUNC( HB_UNZIPFILEINFO )
       char szFileName[ HB_PATH_MAX * 3 ];
       unz_file_info ufi;
       int  iResult;
-      char buf[ 16 ];
-      long lJulian, lMillisec;
 
       iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szFileName, sizeof( szFileName ) - 1,
                                        NULL, 0, NULL, 0 );
@@ -509,6 +550,8 @@ HB_FUNC( HB_UNZIPFILEINFO )
       if( iResult == UNZ_OK )
       {
          HB_BOOL fUnicode = ( ufi.flag & _ZIP_FLAG_UNICODE ) != 0;
+
+         long lJulian, lMillisec;
 
          szFileName[ sizeof( szFileName ) - 1 ] = '\0';
 
@@ -525,6 +568,7 @@ HB_FUNC( HB_UNZIPFILEINFO )
          hb_stortdt( lJulian, lMillisec, 3 );
          if( HB_ISBYREF( 4 ) )
          {
+            char buf[ 16 ];
             hb_snprintf( buf, sizeof( buf ), "%02d:%02d:%02d",
                          ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
                          ufi.tmu_date.tm_sec );
@@ -627,28 +671,29 @@ HB_FUNC( HB_UNZIPFILECLOSE )
 
 /*
  *
- * Higher level functions - not a wrappers of minizip code
+ * Higher-level functions - not wrappers of minizip code
  *
  */
 
-static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, HB_U32 * pulCRC, HB_BOOL * pfText )
+static HB_BOOL hb_zipGetFileInfoFromHandle( PHB_FILE pFile, HB_U32 * pulCRC, HB_BOOL * pfText )
 {
    HB_BOOL fText = pfText != NULL, fResult = HB_FALSE;
    HB_U32  ulCRC = 0;
 
-   if( hFile != FS_ERROR )
+   if( pFile != NULL )
    {
       unsigned char * pString = ( unsigned char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-      HB_SIZE         nRead, u;
+      HB_SIZE         nRead;
 
       do
       {
-         nRead = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE );
-         if( nRead > 0 )
+         nRead = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 );
+         if( nRead > 0 && nRead != ( HB_SIZE ) FS_ERROR )
          {
             ulCRC = crc32( ulCRC, pString, ( uInt ) nRead );
             if( fText )
             {
+               HB_SIZE u;
                for( u = 0; u < nRead; ++u )
                {
                   if( pString[ u ] < 0x20 ?
@@ -681,21 +726,23 @@ static HB_BOOL hb_zipGetFileInfoFromHandle( HB_FHANDLE hFile, HB_U32 * pulCRC, H
    return fResult;
 }
 
-static HB_BOOL hb_zipGetFileInfo( const char * szFileName, HB_U32 * pulCRC, HB_BOOL * pfText )
+static HB_BOOL hb_zipGetFileInfo( const char * pszFileName, HB_U32 * pulCRC, HB_BOOL * pfText )
 {
-   HB_FHANDLE hFile;
-   HB_BOOL    fResult;
+   PHB_FILE pFile;
+   HB_BOOL  fResult;
 
-   hFile   = hb_fsOpen( szFileName, FO_READ );
-   fResult = hb_zipGetFileInfoFromHandle( hFile, pulCRC, pfText );
-   if( hFile != FS_ERROR )
-      hb_fsClose( hFile );
+   pFile = hb_fileExtOpen( pszFileName, NULL,
+                           FO_READ | FO_SHARED | FO_PRIVATE | FXO_SHARELOCK,
+                           NULL, NULL );
+   fResult = hb_zipGetFileInfoFromHandle( pFile, pulCRC, pfText );
+   if( pFile != NULL )
+      hb_fileClose( pFile );
 
    return fResult;
 }
 
 
-/* hb_zipFileCRC32( cFileName ) --> nError */
+/* hb_zipFileCRC32( cFileName ) --> nCRC */
 HB_FUNC( HB_ZIPFILECRC32 )
 {
    const char * szFileName = hb_parc( 1 );
@@ -714,9 +761,7 @@ HB_FUNC( HB_ZIPFILECRC32 )
 static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName, const char * szPassword, int iParamComment, HB_BOOL fUnicode )
 {
    const char * szFileName = hb_parc( iParamFileName );
-   const char * szName     = hb_parc( iParamZipName );
-   char *       pString;
-   HB_FHANDLE   hFile;
+   PHB_FILE     pFile;
    HB_SIZE      nLen;
    HB_FATTR     ulExtAttr;
    zip_fileinfo zfi;
@@ -724,9 +769,7 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
    HB_BOOL      fError;
    HB_BOOL      fText;
    HB_U32       ulCRC;
-
-   uLong flags = 0;
-
+   uLong        flags = 0;
    void *       hZipName = NULL;
    void *       hComment = NULL;
    char *       szZipName;
@@ -737,6 +780,7 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
    ulExtAttr = 0;
 
 #if defined( HB_OS_WIN )
+   if( hb_fileIsLocalName( szFileName ) )
    {
       LPTSTR  lpFileNameFree;
       LPCTSTR lpFileName = HB_FSNAMECONV( szFileName, &lpFileNameFree );
@@ -744,10 +788,9 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
 
       if( attr != INVALID_FILE_ATTRIBUTES )
       {
-         ulExtAttr = hb_translateExtAttr( szFileName, attr &
-                                          ( FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN |
-                                            FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_DIRECTORY |
-                                            FILE_ATTRIBUTE_ARCHIVE ) );
+         ulExtAttr = attr & ( FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN |
+                              FILE_ATTRIBUTE_SYSTEM | FILE_ATTRIBUTE_DIRECTORY |
+                              FILE_ATTRIBUTE_ARCHIVE );
       }
       else
          fError = HB_TRUE;
@@ -755,13 +798,56 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
       if( lpFileNameFree )
          hb_xfree( lpFileNameFree );
    }
-#elif defined( HB_OS_UNIX )
+   else
+#elif defined( HB_OS_OS2 )
+   if( hb_fileIsLocalName( szFileName ) )
    {
-      struct stat statbuf;
-      struct tm   st;
+      FILESTATUS3 fs3;
+      APIRET      ulrc;
       char *      pszFree;
 
+      ulrc = DosQueryPathInfo( ( PCSZ ) hb_fsNameConv( szFileName, &pszFree ), FIL_STANDARD, &fs3, sizeof( fs3 ) );
+
+      if( pszFree )
+         hb_xfree( pszFree );
+
+      if( ulrc == NO_ERROR )
+      {
+         if( fs3.attrFile & FILE_READONLY )
+            ulExtAttr |= HB_FA_READONLY;
+         if( fs3.attrFile & FILE_HIDDEN )
+            ulExtAttr |= HB_FA_HIDDEN;
+         if( fs3.attrFile & FILE_SYSTEM )
+            ulExtAttr |= HB_FA_SYSTEM;
+         if( fs3.attrFile & FILE_DIRECTORY )
+            ulExtAttr |= HB_FA_DIRECTORY;
+         if( fs3.attrFile & FILE_ARCHIVED )
+            ulExtAttr |= HB_FA_ARCHIVE;
+
+         zfi.tmz_date.tm_sec  = fs3.ftimeLastWrite.twosecs * 2;
+         zfi.tmz_date.tm_min  = fs3.ftimeLastWrite.minutes;
+         zfi.tmz_date.tm_hour = fs3.ftimeLastWrite.hours;
+         zfi.tmz_date.tm_mday = fs3.fdateLastWrite.day;
+         zfi.tmz_date.tm_mon  = fs3.fdateLastWrite.month;
+         zfi.tmz_date.tm_year = fs3.fdateLastWrite.year + 1980;
+      }
+      else
+         fError = HB_TRUE;
+   }
+   else
+#elif defined( HB_OS_UNIX )
+   if( hb_fileIsLocalName( szFileName ) )
+   {
+      struct tm   st;
+      time_t      ftime;
+      char *      pszFree;
+#  if defined( HB_USE_LARGEFILE64 )
+      struct stat64 statbuf;
+      if( stat64( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
+#  else
+      struct stat statbuf;
       if( stat( hb_fsNameConv( szFileName, &pszFree ), &statbuf ) == 0 )
+#  endif
       {
          if( S_ISDIR( statbuf.st_mode ) )
          {
@@ -784,10 +870,11 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
                       ( ( statbuf.st_mode & S_IWUSR ) ? 0x00800000 : 0 ) |
                       ( ( statbuf.st_mode & S_IRUSR ) ? 0x01000000 : 0 );
 
+         ftime = statbuf.st_mtime;
 #  if defined( HB_HAS_LOCALTIME_R )
-         localtime_r( &statbuf.st_mtime, &st );
+         localtime_r( &ftime, &st );
 #  else
-         st = *localtime( &statbuf.st_mtime );
+         st = *localtime( &ftime );
 #  endif
 
          zfi.tmz_date.tm_sec  = st.tm_sec;
@@ -803,88 +890,56 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
       if( pszFree )
          hb_xfree( pszFree );
    }
-#elif defined( HB_OS_DOS )
-   {
-#  if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
-      int    attr;
-      char * pszFree;
-
-      attr = _chmod( hb_fsNameConv( szFileName, &pszFree ), 0, 0 );
-
-      if( pszFree )
-         hb_xfree( pszFree );
-
-      if( attr != -1 )
-#  else
-      HB_FATTR attr;
-
-      if( hb_fsGetAttr( szFileName, &attr ) )
-#  endif
-      {
-         ulExtAttr = attr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM |
-                              HB_FA_DIRECTORY | HB_FA_ARCHIVE );
-
-         ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
-      }
-      else
-         fError = HB_TRUE;
-   }
-#elif defined( HB_OS_OS2 )
-   {
-      FILESTATUS3 fs3;
-      APIRET      ulrc;
-      HB_FATTR    ulAttr;
-      char *      pszFree;
-
-      ulrc = DosQueryPathInfo( ( PCSZ ) hb_fsNameConv( szFileName, &pszFree ), FIL_STANDARD, &fs3, sizeof( fs3 ) );
-
-      if( pszFree )
-         hb_xfree( pszFree );
-
-      if( ulrc == NO_ERROR )
-      {
-         ulAttr = 0;
-         if( fs3.attrFile & FILE_READONLY )
-            ulAttr |= HB_FA_READONLY;
-         if( fs3.attrFile & FILE_HIDDEN )
-            ulAttr |= HB_FA_HIDDEN;
-         if( fs3.attrFile & FILE_SYSTEM )
-            ulAttr |= HB_FA_SYSTEM;
-         if( fs3.attrFile & FILE_DIRECTORY )
-            ulAttr |= HB_FA_DIRECTORY;
-         if( fs3.attrFile & FILE_ARCHIVED )
-            ulAttr |= HB_FA_ARCHIVE;
-
-         ulExtAttr = hb_translateExtAttr( szFileName, ulAttr );
-
-         zfi.tmz_date.tm_sec  = fs3.ftimeLastWrite.twosecs * 2;
-         zfi.tmz_date.tm_min  = fs3.ftimeLastWrite.minutes;
-         zfi.tmz_date.tm_hour = fs3.ftimeLastWrite.hours;
-         zfi.tmz_date.tm_mday = fs3.fdateLastWrite.day;
-         zfi.tmz_date.tm_mon  = fs3.fdateLastWrite.month;
-         zfi.tmz_date.tm_year = fs3.fdateLastWrite.year + 1980;
-      }
-      else
-         fError = HB_TRUE;
-   }
-#else
-   {
-      HB_FATTR attr;
-
-      if( ! hb_fsGetAttr( szFileName, &attr ) )
-         ulExtAttr = 0x81B60020;  /* FILE_ATTRIBUTE_ARCHIVE | rw-rw-rw- */
-      else
-      {
-         ulExtAttr = attr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM |
-                              HB_FA_DIRECTORY | HB_FA_ARCHIVE );
-
-         ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
-      }
-   }
+   else
 #endif
+   {
+      HB_FATTR attr;
+      long lJulian, lMillisec;
+
+      if( ! hb_fileAttrGet( szFileName, &attr ) )
+         ulExtAttr = 0x81B60020;  /* HB_FA_ARCHIVE | rw-rw-rw- */
+      else
+      {
+#if defined( HB_OS_UNIX )
+         if( attr & HB_FA_DIRECTORY )
+            ulExtAttr |= 0x40000000;
+         else
+         {
+            ulExtAttr |= 0x80000000;
+            ulExtAttr |= HB_FA_ARCHIVE;
+         }
+         /* Harbour uses the same binary values for unix access rights and
+          * DOS/WIN/OS2 attributes so we can use them directly
+          */
+         ulExtAttr |= attr & ( HB_FA_RWXU | HB_FA_RWXG | HB_FA_RWXO );
+#endif
+         ulExtAttr |= attr & ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM |
+                               HB_FA_DIRECTORY | HB_FA_ARCHIVE );
+      }
+
+      if( hb_fileTimeGet( szFileName, &lJulian, &lMillisec ) )
+      {
+         int iYear, iMonth, iDay;
+         int iHour, iMinute, iSecond, iMSec;
+
+         hb_dateDecode( lJulian, &iYear, &iMonth, &iDay );
+         hb_timeDecode( lMillisec, &iHour, &iMinute, &iSecond, &iMSec );
+
+         zfi.tmz_date.tm_sec  = iSecond;
+         zfi.tmz_date.tm_min  = iMinute;
+         zfi.tmz_date.tm_hour = iHour;
+         zfi.tmz_date.tm_mday = iDay;
+         zfi.tmz_date.tm_mon  = iMonth - 1;
+         zfi.tmz_date.tm_year = iYear;
+      }
+   }
 
    if( fError )
       return -200;
+
+#if ! defined( HB_OS_UNIX )
+   ulExtAttr = hb_translateExtAttr( szFileName, ulExtAttr );
+#endif
 
    if( ! HB_ISCHAR( iParamZipName ) )
       iParamZipName = iParamFileName;
@@ -901,30 +956,23 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
       szComment = hb_parc( iParamComment );
    }
 
-   if( szName )
+   nLen = strlen( szZipName );
+   if( iParamZipName != iParamFileName )
    {
       /* change path separators to '/' */
-      nLen    = strlen( szZipName );
-      pString = szZipName;
       while( nLen-- )
       {
-         if( pString[ nLen ] == '\\' )
-            pString[ nLen ] = '/';
+         if( szZipName[ nLen ] == '\\' )
+            szZipName[ nLen ] = '/';
       }
    }
    else
    {
-      /* get file name */
-      szZipName = hb_strdup( szFileName );
-
-      nLen    = strlen( szZipName );
-      pString = szZipName;
-
       while( nLen-- )
       {
-         if( pString[ nLen ] == '/' || pString[ nLen ] == '\\' )
+         if( szZipName[ nLen ] == '/' || szZipName[ nLen ] == '\\' )
          {
-            memmove( szZipName, &pString[ nLen + 1 ], strlen( szZipName ) - nLen );
+            memmove( szZipName, &szZipName[ nLen + 1 ], strlen( szZipName ) - nLen );
             break;
          }
       }
@@ -935,7 +983,7 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
 
    zfi.external_fa = ulExtAttr;
    /* TODO: zip.exe test: 0 for binary file, 1 for text. Does not depend on
-      extension. We should analyse content of file to determine this??? */
+      extension. We should analyze content of file to determine this??? */
    zfi.internal_fa = 0;
 
    if( ulExtAttr & 0x40000000 )
@@ -949,16 +997,18 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
    }
    else
    {
-      hFile = hb_fsOpen( szFileName, FO_READ );
-
-      if( hFile != FS_ERROR )
+      pFile = hb_fileExtOpen( szFileName, NULL,
+                              FO_READ | FO_SHARED | FO_PRIVATE | FXO_SHARELOCK,
+                              NULL, NULL );
+      if( pFile != NULL )
       {
 #if defined( HB_OS_WIN )
+         if( hb_fileIsLocal( pFile ) )
          {
             FILETIME   ftutc, ft;
             SYSTEMTIME st;
 
-            if( GetFileTime( ( HANDLE ) hb_fsGetOsHandle( hFile ), NULL, NULL, &ftutc ) &&
+            if( GetFileTime( ( HANDLE ) hb_fileHandle( pFile ), NULL, NULL, &ftutc ) &&
                 FileTimeToLocalFileTime( &ftutc, &ft ) &&
                 FileTimeToSystemTime( &ft, &st ) )
             {
@@ -983,15 +1033,17 @@ static int hb_zipStoreFile( zipFile hZip, int iParamFileName, int iParamZipName,
                                          szPassword, ulCRC, _version_made_by( fUnicode ), flags );
          if( iResult == 0 )
          {
-            pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-            while( ( nLen = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
+            char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+
+            while( ( nLen = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) > 0 &&
+                   nLen != ( HB_SIZE ) FS_ERROR )
                zipWriteInFileInZip( hZip, pString, ( unsigned ) nLen );
 
             hb_xfree( pString );
 
             zipCloseFileInZip( hZip );
          }
-         hb_fsClose( hFile );
+         hb_fileClose( pFile );
       }
       else
          iResult = -200 - hb_fsError();
@@ -1024,7 +1076,7 @@ HB_FUNC( HB_ZIPSTOREFILE )
 }
 
 
-static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, int iParamZipName, const char * szPassword, int iParamComment, HB_BOOL fUnicode )
+static int hb_zipStoreFileHandle( zipFile hZip, PHB_FILE pFile, int iParamZipName, const char * szPassword, int iParamComment, HB_BOOL fUnicode )
 {
    HB_SIZE      nLen;
    zip_fileinfo zfi;
@@ -1039,7 +1091,7 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, int iParamZipN
    char *       szZipName;
    const char * szComment;
 
-   if( hFile == FS_ERROR )
+   if( pFile == NULL )
       return -200;
 
    if( fUnicode )
@@ -1075,11 +1127,11 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, int iParamZipN
 
    ulCRC = 0;
    fText = HB_FALSE;
-   if( szPassword && hb_zipGetFileInfoFromHandle( hFile, &ulCRC, &fText ) )
+   if( szPassword && hb_zipGetFileInfoFromHandle( pFile, &ulCRC, &fText ) )
       zfi.internal_fa = fText ? 1 : 0;
    else
       /* TODO: zip.exe test: 0 for binary file, 1 for text. Does not depend on
-         extension. We should analyse content of file to determine this??? */
+         extension. We should analyze content of file to determine this??? */
       zfi.internal_fa = 0;
 
    iResult = zipOpenNewFileInZip4( hZip, szZipName, &zfi, NULL, 0, NULL, 0, szComment,
@@ -1089,8 +1141,9 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, int iParamZipN
    if( iResult == 0 )
    {
       char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
-      hb_fsSeek( hFile, 0, FS_SET );
-      while( ( nLen = hb_fsReadLarge( hFile, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
+      hb_fileSeek( pFile, 0, FS_SET );
+      while( ( nLen = hb_fileRead( pFile, pString, HB_Z_IOBUF_SIZE, -1 ) ) > 0 &&
+             nLen != ( HB_SIZE ) FS_ERROR )
          zipWriteInFileInZip( hZip, pString, ( unsigned ) nLen );
       hb_xfree( pString );
 
@@ -1112,14 +1165,22 @@ static int hb_zipStoreFileHandle( zipFile hZip, HB_FHANDLE hFile, int iParamZipN
 /* hb_zipStoreFileHandle( hZip, fhnd, cZipName, [ cPassword ], [ cComment ], [ lUnicode ] ) --> nError */
 HB_FUNC( HB_ZIPSTOREFILEHANDLE )
 {
-   HB_FHANDLE hFile = hb_numToHandle( hb_parnint( 2 ) );
-
-   if( hFile != FS_ERROR && HB_ISCHAR( 3 ) )
+   if( HB_ISCHAR( 3 ) )
    {
       zipFile hZip = hb_zipfileParam( 1 );
 
       if( hZip )
-         hb_retni( hb_zipStoreFileHandle( hZip, hFile, 3, hb_parc( 4 ), 5, hb_parl( 6 ) ) );
+      {
+         HB_BOOL fFree;
+         PHB_FILE pFile = hb_fileHandleParam( 2, &fFree );
+
+         if( pFile != NULL )
+         {
+            hb_retni( hb_zipStoreFileHandle( hZip, pFile, 3, hb_parc( 4 ), 5, hb_parl( 6 ) ) );
+            if( fFree )
+               hb_fileDetach( pFile );
+         }
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1128,13 +1189,12 @@ HB_FUNC( HB_ZIPSTOREFILEHANDLE )
 
 static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, const char * szPassword )
 {
-   char szNameRaw[ HB_PATH_MAX * 3 ];
+   char          szNameRaw[ HB_PATH_MAX * 3 ];
    char *        szName;
    HB_SIZE       nPos, nLen;
-   char          cSep, * pString;
    unz_file_info ufi;
-   int        iResult;
-   HB_FHANDLE hFile;
+   int           iResult;
+   PHB_FILE      pFile;
 
    iResult = unzGetCurrentFileInfo( hUnzip, &ufi, szNameRaw, sizeof( szNameRaw ) - 1,
                                     NULL, 0, NULL, 0 );
@@ -1166,19 +1226,19 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
 
    nLen = strlen( szName );
 
-   /* Test shows that files in subfolders can be stored to zip file without
-      explicitly adding folder. So, let's create a required path */
+   /* Test shows that files in subdirectories can be stored to zip file without
+      explicitly adding directory. So, let's create a required path */
 
    nPos = 1;
    while( nPos < nLen )
    {
-      cSep = szName[ nPos ];
+      char cSep = szName[ nPos ];
 
       /* allow both path separators, ignore terminating path separator */
       if( ( cSep == '\\' || cSep == '/' ) && nPos < nLen - 1 )
       {
          szName[ nPos ] = '\0';
-         hb_fsMkDir( szName );
+         hb_fileDirMake( szName );
          szName[ nPos ] = cSep;
       }
       nPos++;
@@ -1186,23 +1246,26 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
 
    if( ufi.external_fa & 0x40000000 ) /* DIRECTORY */
    {
-      hb_fsMkDir( szName );
-      iResult = UNZ_OK;
+      if( ! hb_fileDirMake( szName ) )
+         iResult = -200 - hb_fsError();
    }
    else
    {
-      hFile = hb_fsCreate( szName, FC_NORMAL );
-
-      if( hFile != FS_ERROR )
+      pFile = hb_fileExtOpen( szName, NULL,
+                              FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                              FXO_TRUNCATE | FXO_SHARELOCK, NULL, NULL );
+      if( pFile != NULL )
       {
-         pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+         char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
 
          while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
-            hb_fsWriteLarge( hFile, pString, ( HB_SIZE ) iResult );
+            if( hb_fileWrite( pFile, pString, ( HB_SIZE ) iResult, -1 ) != ( HB_SIZE ) iResult )
+               break;
 
          hb_xfree( pString );
 
 #if defined( HB_OS_WIN )
+         if( hb_fileIsLocal( pFile ) )
          {
             FILETIME   ftutc, ft;
             SYSTEMTIME st;
@@ -1218,12 +1281,12 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
             if( SystemTimeToFileTime( &st, &ft ) &&
                 LocalFileTimeToFileTime( &ft, &ftutc ) )
             {
-               SetFileTime( ( HANDLE ) hb_fsGetOsHandle( hFile ), &ftutc, &ftutc, &ftutc );
+               SetFileTime( ( HANDLE ) hb_fileHandle( pFile ), &ftutc, &ftutc, &ftutc );
             }
          }
 #endif
 
-         hb_fsClose( hFile );
+         hb_fileClose( pFile );
       }
       else
          iResult = -200 - hb_fsError();
@@ -1231,6 +1294,7 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
    unzCloseCurrentFile( hUnzip );
 
 #if defined( HB_OS_WIN )
+   if( hb_fileIsLocalName( szName ) )
    {
       LPTSTR  lpFileNameFree;
       LPCTSTR lpFileName = HB_FSNAMECONV( szName, &lpFileNameFree );
@@ -1240,71 +1304,9 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
       if( lpFileNameFree )
          hb_xfree( lpFileNameFree );
    }
-#elif defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-   {
-      struct utimbuf utim;
-      struct tm      st;
-      time_t         tim;
-
-      char *       pszFree;
-      const char * szNameOS = hb_fsNameConv( szName, &pszFree );
-
-#  if defined( __DJGPP__ )
-      _chmod( szNameOS, 1, ufi.external_fa & 0xFF );
-#  else
-      HB_FATTR ulAttr = ufi.external_fa;
-
-      if( ( ulAttr & 0xFFFF0000 ) == 0 )
-         ulAttr = hb_translateExtAttr( szName, ulAttr );
-
-      chmod( szNameOS,
-             ( ( ulAttr & 0x00010000 ) ? S_IXOTH : 0 ) |
-             ( ( ulAttr & 0x00020000 ) ? S_IWOTH : 0 ) |
-             ( ( ulAttr & 0x00040000 ) ? S_IROTH : 0 ) |
-             ( ( ulAttr & 0x00080000 ) ? S_IXGRP : 0 ) |
-             ( ( ulAttr & 0x00100000 ) ? S_IWGRP : 0 ) |
-             ( ( ulAttr & 0x00200000 ) ? S_IRGRP : 0 ) |
-             ( ( ulAttr & 0x00400000 ) ? S_IXUSR : 0 ) |
-             ( ( ulAttr & 0x00800000 ) ? S_IWUSR : 0 ) |
-             ( ( ulAttr & 0x01000000 ) ? S_IRUSR : 0 ) );
-#  endif
-      memset( &st, 0, sizeof( st ) );
-
-      st.tm_sec  = ufi.tmu_date.tm_sec;
-      st.tm_min  = ufi.tmu_date.tm_min;
-      st.tm_hour = ufi.tmu_date.tm_hour;
-      st.tm_mday = ufi.tmu_date.tm_mday;
-      st.tm_mon  = ufi.tmu_date.tm_mon;
-      st.tm_year = ufi.tmu_date.tm_year - 1900;
-
-      tim = mktime( &st );
-#  if defined( HB_HAS_LOCALTIME_R )
-      gmtime_r( &tim, &st );
-#  else
-      st = *gmtime( &tim );
-#  endif
-      utim.actime = utim.modtime = mktime( &st );
-
-      utime( szNameOS, &utim );
-
-      if( pszFree )
-         hb_xfree( pszFree );
-   }
-#elif defined( HB_OS_DOS )
-   {
-#  if defined( __RSX32__ ) || defined( __GNUC__ )
-      char * pszFree;
-
-      _chmod( hb_fsNameConv( szName, &pszFree ), 1, ufi.external_fa & 0xFF );
-
-      if( pszFree )
-         hb_xfree( pszFree );
-#  else
-      hb_fsSetAttr( szName, ufi.external_fa & 0xFF );
-#  endif
-   }
-
+   else
 #elif defined( HB_OS_OS2 )
+   if( hb_fileIsLocalName( szName ) )
    {
       FILESTATUS3 fs3;
       APIRET      ulrc;
@@ -1348,11 +1350,68 @@ static int hb_unzipExtractCurrentFile( unzFile hUnzip, const char * szFileName, 
       if( pszFree )
          hb_xfree( pszFree );
    }
-#else
+   else
+#elif defined( HB_OS_UNIX )
+   if( hb_fileIsLocalName( szName ) )
    {
-      hb_fsSetAttr( szName, ufi.external_fa );
+      struct utimbuf utim;
+      struct tm      st;
+
+      char *       pszFree;
+      const char * szNameOS = hb_fsNameConv( szName, &pszFree );
+
+      HB_FATTR ulAttr = ufi.external_fa;
+
+      if( ( ulAttr & 0xFFFF0000 ) == 0 )
+         ulAttr = hb_translateExtAttr( szName, ulAttr );
+
+      ( void ) chmod( szNameOS,
+                      ( ( ulAttr & 0x00010000 ) ? S_IXOTH : 0 ) |
+                      ( ( ulAttr & 0x00020000 ) ? S_IWOTH : 0 ) |
+                      ( ( ulAttr & 0x00040000 ) ? S_IROTH : 0 ) |
+                      ( ( ulAttr & 0x00080000 ) ? S_IXGRP : 0 ) |
+                      ( ( ulAttr & 0x00100000 ) ? S_IWGRP : 0 ) |
+                      ( ( ulAttr & 0x00200000 ) ? S_IRGRP : 0 ) |
+                      ( ( ulAttr & 0x00400000 ) ? S_IXUSR : 0 ) |
+                      ( ( ulAttr & 0x00800000 ) ? S_IWUSR : 0 ) |
+                      ( ( ulAttr & 0x01000000 ) ? S_IRUSR : 0 ) );
+      memset( &st, 0, sizeof( st ) );
+
+      st.tm_sec  = ufi.tmu_date.tm_sec;
+      st.tm_min  = ufi.tmu_date.tm_min;
+      st.tm_hour = ufi.tmu_date.tm_hour;
+      st.tm_mday = ufi.tmu_date.tm_mday;
+      st.tm_mon  = ufi.tmu_date.tm_mon;
+      st.tm_year = ufi.tmu_date.tm_year - 1900;
+      st.tm_isdst = -1;
+
+      utim.actime = utim.modtime = mktime( &st );
+      ( void ) utime( szNameOS, &utim );
+
+      if( pszFree )
+         hb_xfree( pszFree );
    }
+   else
 #endif
+   {
+      long lJulian, lMillisec;
+      HB_FATTR ulAttr = ufi.external_fa;
+
+      lJulian = hb_dateEncode( ufi.tmu_date.tm_year, ufi.tmu_date.tm_mon + 1,
+                               ufi.tmu_date.tm_mday );
+      lMillisec = hb_timeEncode( ufi.tmu_date.tm_hour, ufi.tmu_date.tm_min,
+                                 ufi.tmu_date.tm_sec, 0 );
+      hb_fileTimeSet( szName, lJulian, lMillisec );
+
+#if defined( HB_OS_UNIX )
+      if( ( ulAttr & 0xFFFF0000 ) == 0 )
+         ulAttr = hb_translateExtAttr( szName, ulAttr );
+      ulAttr &= 0x01FF0000;
+#else
+      ulAttr &= 0xFF;
+#endif
+      hb_fileAttrSet( szName, ulAttr );
+   }
 
    hb_xfree( szName );
 
@@ -1370,12 +1429,12 @@ HB_FUNC( HB_UNZIPEXTRACTCURRENTFILE )
 }
 
 
-static int hb_unzipExtractCurrentFileToHandle( unzFile hUnzip, HB_FHANDLE hFile, const char * szPassword )
+static int hb_unzipExtractCurrentFileToHandle( unzFile hUnzip, PHB_FILE pFile, const char * szPassword )
 {
    unz_file_info ufi;
    int iResult;
 
-   if( hFile == FS_ERROR )
+   if( pFile == NULL )
       return -200;
 
    iResult = unzGetCurrentFileInfo( hUnzip, &ufi, NULL, 0,
@@ -1390,38 +1449,35 @@ static int hb_unzipExtractCurrentFileToHandle( unzFile hUnzip, HB_FHANDLE hFile,
 
    if( ! ( ufi.external_fa & 0x40000000 ) ) /* DIRECTORY */
    {
-      if( hFile != FS_ERROR )
-      {
-         char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
+      char * pString = ( char * ) hb_xgrab( HB_Z_IOBUF_SIZE );
 
-         while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
-            hb_fsWriteLarge( hFile, pString, ( HB_SIZE ) iResult );
+      while( ( iResult = unzReadCurrentFile( hUnzip, pString, HB_Z_IOBUF_SIZE ) ) > 0 )
+         if( hb_fileWrite( pFile, pString, ( HB_SIZE ) iResult, -1 ) != ( HB_SIZE ) iResult )
+            break;
 
-         hb_xfree( pString );
+      hb_xfree( pString );
 
 #if defined( HB_OS_WIN )
+      if( hb_fileIsLocal( pFile ) )
+      {
+         FILETIME   ftutc, ft;
+         SYSTEMTIME st;
+
+         st.wSecond       = ( WORD ) ufi.tmu_date.tm_sec;
+         st.wMinute       = ( WORD ) ufi.tmu_date.tm_min;
+         st.wHour         = ( WORD ) ufi.tmu_date.tm_hour;
+         st.wDay          = ( WORD ) ufi.tmu_date.tm_mday;
+         st.wMonth        = ( WORD ) ufi.tmu_date.tm_mon + 1;
+         st.wYear         = ( WORD ) ufi.tmu_date.tm_year;
+         st.wMilliseconds = 0;
+
+         if( SystemTimeToFileTime( &st, &ft ) &&
+             LocalFileTimeToFileTime( &ft, &ftutc ) )
          {
-            FILETIME   ftutc, ft;
-            SYSTEMTIME st;
-
-            st.wSecond       = ( WORD ) ufi.tmu_date.tm_sec;
-            st.wMinute       = ( WORD ) ufi.tmu_date.tm_min;
-            st.wHour         = ( WORD ) ufi.tmu_date.tm_hour;
-            st.wDay          = ( WORD ) ufi.tmu_date.tm_mday;
-            st.wMonth        = ( WORD ) ufi.tmu_date.tm_mon + 1;
-            st.wYear         = ( WORD ) ufi.tmu_date.tm_year;
-            st.wMilliseconds = 0;
-
-            if( SystemTimeToFileTime( &st, &ft ) &&
-                LocalFileTimeToFileTime( &ft, &ftutc ) )
-            {
-               SetFileTime( ( HANDLE ) hb_fsGetOsHandle( hFile ), &ftutc, &ftutc, &ftutc );
-            }
+            SetFileTime( ( HANDLE ) hb_fileHandle( pFile ), &ftutc, &ftutc, &ftutc );
          }
-#endif
       }
-      else
-         iResult = -200 - hb_fsError();
+#endif
    }
    unzCloseCurrentFile( hUnzip );
 
@@ -1435,7 +1491,17 @@ HB_FUNC( HB_UNZIPEXTRACTCURRENTFILETOHANDLE )
    unzFile hUnzip = hb_unzipfileParam( 1 );
 
    if( hUnzip )
-      hb_retni( hb_unzipExtractCurrentFileToHandle( hUnzip, hb_numToHandle( hb_parnint( 2 ) ), hb_parc( 3 ) ) );
+   {
+      HB_BOOL fFree;
+      PHB_FILE pFile = hb_fileHandleParam( 2, &fFree );
+
+      if( pFile != NULL )
+      {
+         hb_retni( hb_unzipExtractCurrentFileToHandle( hUnzip, pFile, hb_parc( 3 ) ) );
+         if( fFree )
+            hb_fileDetach( pFile );
+      }
+   }
 }
 
 
@@ -1444,7 +1510,7 @@ static int hb_zipDeleteFile( const char * szZipFile, const char * szFileMask )
    char            szTempFile[ HB_PATH_MAX ];
    char            szCurrFile[ HB_PATH_MAX * 3 ];
    PHB_FNAME       pFileName;
-   HB_FHANDLE      hFile;
+   PHB_FILE        pFile;
    unzFile         hUnzip;
    zipFile         hZip;
    unz_global_info ugi;
@@ -1472,11 +1538,11 @@ static int hb_zipDeleteFile( const char * szZipFile, const char * szFileMask )
       return UNZ_ERRNO;
 
    pFileName = hb_fsFNameSplit( szZipFile );
-   hFile     = hb_fsCreateTemp( pFileName->szPath, NULL, FC_NORMAL, szTempFile );
+   pFile     = hb_fileCreateTemp( pFileName->szPath, NULL, FC_NORMAL, szTempFile );
    hZip      = NULL;
-   if( hFile != FS_ERROR )
+   if( pFile != NULL )
    {
-      hb_fsClose( hFile );
+      hb_fileClose( pFile );
       hZip = zipOpen( szTempFile, APPEND_STATUS_CREATE );
    }
    hb_xfree( pFileName );
@@ -1637,14 +1703,14 @@ static int hb_zipDeleteFile( const char * szZipFile, const char * szFileMask )
       hb_xfree( pszGlobalComment );
 
    if( iResult != UNZ_OK )
-      hb_fsDelete( szTempFile );
+      hb_fileDelete( szTempFile );
    else
    {
-      hb_fsDelete( szZipFile );
+      hb_fileDelete( szZipFile );
 
       if( iFilesLeft == 0 )
-         hb_fsDelete( szTempFile );
-      else if( ! hb_fsRename( szTempFile, szZipFile ) )
+         hb_fileDelete( szTempFile );
+      else if( ! hb_fileRename( szTempFile, szZipFile ) )
          iResult = UNZ_ERRNO;
    }
 

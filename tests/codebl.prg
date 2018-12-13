@@ -1,4 +1,3 @@
-
 STATIC s_cbStatic
 
 PROCEDURE Main()

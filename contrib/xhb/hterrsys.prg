@@ -1,9 +1,8 @@
 /*
- * Harbour Project source code:
- *    HTML output conversion
+ * HTML output conversion
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
- * www - http://harbour-project.org
+ * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net> (Porting this library to Harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,17 +45,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Porting this library to Harbour
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "error.ch"
 #include "cgi.ch"
 
@@ -71,11 +59,6 @@ REQUEST MemoWrit
 
 STATIC s_bFixCorrupt
 STATIC s_cErrFooter  := " "
-
-
-/***
-* DefError()
-*/
 
 #if 0
 
@@ -105,16 +88,14 @@ STATIC FUNCTION xhb_cgi_DefError( e )
          .AND. e:canDefault
 
       NetErr( .T. )
-      RETURN .F.                    // NOTE
-
+      RETURN .F.
    ENDIF
 
-   // for lock error during APPEND BLANK, set NetErr() and subsystem default
+   // for lock error during dbAppend(), set NetErr() and subsystem default
    IF e:genCode == EG_APPENDLOCK .AND. e:canDefault
 
       NetErr( .T. )
-      RETURN .F.                    // NOTE
-
+      RETURN .F.
    ENDIF
 
    // build error message

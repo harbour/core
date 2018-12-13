@@ -1,9 +1,8 @@
 /*
- * Harbour Project source code:
  * NetName() function
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net> (Support for DJGPP/GCC/OS2 for NetName())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,61 +45,41 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
- *    Support for DJGPP/GCC/OS2 for netname
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 #include "hbapi.h"
 
-#if defined( HB_OS_OS2 ) && defined( __GNUC__ )
-
-   #include "hb_io.h"
-
-   /* 2004-03-25 - <maurilio.longo@libero.it>
-      not needed anymore as of GCC 3.2.2 */
-
-   #include <pwd.h>
-   #include <sys/types.h>
-
-   #if defined( __EMX__ ) && __GNUC__ * 1000 + __GNUC_MINOR__ < 3002
-      #include <emx/syscalls.h>
-      #define gethostname __gethostname
-   #endif
-
-#elif defined( HB_OS_DOS )
-
-   #include <dos.h>
-   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
-      #include "hb_io.h"
-      #include <sys/param.h>
-   #endif
-
-#elif defined( HB_OS_UNIX )
-
-   #if ! defined( __WATCOMC__ )
-      #if defined( HB_OS_VXWORKS )
-         #include <hostLib.h>
-      #else
-         #include <pwd.h>
-      #endif
-      #include <sys/types.h>
-   #endif
-   #include <unistd.h>
-
-#elif defined( HB_OS_WIN )
+#if defined( HB_OS_WIN )
 
    #include <windows.h>
    #include "hbwinuni.h"
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
    #endif
+
+#elif defined( HB_OS_DOS )
+
+   #include "hb_io.h"
+   #if defined( __DJGPP__ ) || defined( __RSX32__ ) || defined( __GNUC__ )
+      #include <sys/param.h>
+   #endif
+
+#elif defined( HB_OS_OS2 ) && defined( __GNUC__ )
+
+   #include "hb_io.h"
+
+   /* 2004-03-25 - <maurilio.longo@libero.it>
+      not needed anymore as of GCC 3.2.2 */
+
+   #if defined( __EMX__ ) && __GNUC__ * 1000 + __GNUC_MINOR__ < 3002
+      #include <emx/syscalls.h>
+      #define gethostname __gethostname
+   #endif
+
+#elif defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ )
+
+   #if defined( HB_OS_VXWORKS )
+      #include <hostLib.h>
+   #endif
+   #include <unistd.h>
 
 #endif
 
@@ -119,16 +98,17 @@
 
 char * hb_netname( void )
 {
-#if defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
+#if defined( HB_OS_WIN )
 
-#  if defined( __WATCOMC__ )
-      return hb_getenv( "HOSTNAME" );
-#  else
-      char szValue[ MAXGETHOSTNAME + 1 ];
-      szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
-      gethostname( szValue, MAXGETHOSTNAME );
-      return szValue[ 0 ] ? hb_osStrDecode( szValue ) : NULL;
-#  endif
+   DWORD dwLen = MAX_COMPUTERNAME_LENGTH + 1;
+   TCHAR lpValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
+
+   lpValue[ 0 ] = TEXT( '\0' );
+   GetComputerName( lpValue, &dwLen );
+   lpValue[ MAX_COMPUTERNAME_LENGTH ] = TEXT( '\0' );
+
+   if( lpValue[ 0 ] )
+      return HB_OSSTRDUP( lpValue );
 
 #elif defined( HB_OS_DOS )
 
@@ -136,87 +116,41 @@ char * hb_netname( void )
       char szValue[ MAXGETHOSTNAME + 1 ];
       szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
       gethostname( szValue, MAXGETHOSTNAME );
-      return szValue[ 0 ] ? hb_osStrDecode( szValue ) : NULL;
+      if( szValue[ 0 ] )
+         return hb_osStrDecode( szValue );
 #  else
       union REGS regs;
       struct SREGS sregs;
-      char * pszValue = ( char * ) hb_xgrab( 16 );
-      pszValue[ 0 ] = '\0';
+      char szValue[ 16 ];
+      szValue[ 0 ] = szValue[ 15 ] = '\0';
 
       regs.HB_XREGS.ax = 0x5E00;
-      regs.HB_XREGS.dx = FP_OFF( pszValue );
-      sregs.ds = FP_SEG( pszValue );
+      regs.HB_XREGS.dx = FP_OFF( szValue );
+      sregs.ds = FP_SEG( szValue );
 
       HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
 
-      if( regs.h.ch == 0 )
-         pszValue = '\0';
-
-      return pszValue;
+      if( regs.h.ch != 0 && szValue[ 0 ] )
+         return hb_osStrDecode( szValue );
 #  endif
 
-#elif defined( HB_OS_WIN )
+#elif ( defined( HB_OS_UNIX ) && ! defined( __WATCOMC__ ) ) || \
+      ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
 
-   DWORD ulLen = MAX_COMPUTERNAME_LENGTH + 1;
-   TCHAR lpValue[ MAX_COMPUTERNAME_LENGTH + 1 ];
-
-   lpValue[ 0 ] = TEXT( '\0' );
-   GetComputerName( lpValue, &ulLen );
-   lpValue[ MAX_COMPUTERNAME_LENGTH ] = TEXT( '\0' );
-
-   return lpValue[ 0 ] ? HB_OSSTRDUP( lpValue ) : NULL;
-
-#else
-
-   return NULL;
+   char szValue[ MAXGETHOSTNAME + 1 ];
+   szValue[ 0 ] = szValue[ MAXGETHOSTNAME ] = '\0';
+   gethostname( szValue, MAXGETHOSTNAME );
+   if( szValue[ 0 ] )
+      return hb_osStrDecode( szValue );
 
 #endif
-}
 
-/* NOTE: The caller must free the returned buffer. [vszakats] */
-
-char * hb_username( void )
-{
-#if defined( HB_OS_UNIX ) || ( defined( HB_OS_OS2 ) && defined( __GNUC__ ) )
-
-#  if defined( __WATCOMC__ ) || defined( HB_OS_VXWORKS )
-      return hb_getenv( "USER" );
-#  else
-      struct passwd * pwd = getpwuid( getuid() );
-      return pwd && pwd->pw_name ? hb_osStrDecode( pwd->pw_name ) : hb_getenv( "USER" );
-#  endif
-
-#elif defined( HB_OS_WIN )
-
-   DWORD ulLen = 256;
-   TCHAR lpValue[ 256 ];
-
-   lpValue[ 0 ] = TEXT( '\0' );
-   GetUserName( lpValue, &ulLen );
-   lpValue[ 255 ] = TEXT( '\0' );
-
-   return lpValue[ 0 ] ? HB_OSSTRDUP( lpValue ) : NULL;
-
-#else
-
-   return NULL;
-
-#endif
+   return hb_getenv( "HOSTNAME" );
 }
 
 HB_FUNC( NETNAME )
 {
    char * buffer = hb_netname();
-
-   if( buffer )
-      hb_retc_buffer( buffer );
-   else
-      hb_retc_null();
-}
-
-HB_FUNC( HB_USERNAME )
-{
-   char * buffer = hb_username();
 
    if( buffer )
       hb_retc_buffer( buffer );

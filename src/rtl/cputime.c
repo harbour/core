@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_SecondsCPU()
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -73,7 +71,7 @@
 #endif
 
 /*
-   SecondsCPU(n) -> nTime
+   SecondsCPU( n ) --> nTime
    FlagShip/CLIP compatible function, which reports how many CPU and/or
    system seconds have elapsed since the beginning of the program execution.
     n == 1  utime  -> user CPU time of the current process
@@ -88,7 +86,7 @@ double hb_secondsCPU( int n )
 {
    double d = 0.0;
 
-#if defined( HB_OS_WIN ) && ! defined( HB_OS_UNIX )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) && ! defined( HB_OS_UNIX )
    FILETIME Create, Exit, Kernel, User;
 #endif
 
@@ -121,13 +119,15 @@ double hb_secondsCPU( int n )
          d += tm.tms_stime;
 
       /* In POSIX-1996 the CLK_TCK symbol is mentioned as obsolescent */
-      /* d /= CLK_TCK; */
+      #if 0
+      d /= CLK_TCK;
+      #endif
       d /= ( double ) sysconf( _SC_CLK_TCK );
    }
 #else
    if( n > 10 )
       n -= 10;
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    if( hb_iswinnt() &&
        GetProcessTimes( GetCurrentProcess(), &Create, &Exit, &Kernel, &User ) )
    {

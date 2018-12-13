@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for thread static variables
+ * demonstration/test code for thread static variables
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

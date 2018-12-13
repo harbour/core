@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the generated C language source code
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -66,6 +64,7 @@ struct _HB_SYMB;
 #  define HB_ITEM_TYPE( p )      ( HB_ITEM_TYPERAW( p ) & ~ HB_IT_DEFAULT )
 #  define HB_OBJ_CLASS( p )      ( ( p )->item.asArray.value->uiClass )
 #  define HB_ARRAY_OBJ( p )      ( ( p )->item.asArray.value->uiClass != 0 )
+#  define HB_VM_PUSHNIL()        do { hb_stackAllocItem()->type = HB_IT_NIL; } while( 0 )
 
 #  define HB_ITEM_GET_NUMINTRAW( p )  ( HB_IS_INTEGER( p ) ? \
                                         ( HB_MAXINT ) (p)->item.asInteger.value : \
@@ -157,7 +156,11 @@ struct _HB_SYMB;
 #  undef _HB_STACK_MACROS_
 
 /* This is ugly trick but works without speed overhead */
-#  define HB_ITEM_TYPERAW( p )   ( * ( HB_TYPE * ) ( p ) )
+#if defined( __cplusplus )
+#     define HB_ITEM_TYPERAW( p )   ( * static_cast< HB_TYPE * >( p ) )
+#else
+#     define HB_ITEM_TYPERAW( p )   ( * ( HB_TYPE * ) ( p ) )
+#endif
 /* if you do not like it then use this definition */
 /* #  define HB_ITEM_TYPERAW( p )   ( hb_itemType( p ) ) */
 
@@ -174,7 +177,7 @@ struct _HB_SYMB;
    typedef void    HB_STACK;
 
    /*
-    * The first version reduce the number of modification in existing 3-rd
+    * The first version reduce the number of modification in existing 3rd
     * party code but in longer terms I'd prefer to disable it and left
     * only the second one where PHB_DYNS is mapped to void*.
     * This will allow us to fully redesign dynamic symbol internals
@@ -218,29 +221,30 @@ typedef HB_CARGO_FUNC( ( * PHB_CARGO_FUNC ) );
 
 typedef void * ( * PHB_ALLOCUPDT_FUNC )( void *, int );
 
-typedef void (*HB_INIT_FUNC)(void *);
+typedef void ( * HB_INIT_FUNC )( void * );
 /* List of functions used by hb_vmAtInit()/hb_vmAtExit() */
 typedef struct _HB_FUNC_LIST
 {
    HB_INIT_FUNC   pFunc;
    void *         cargo;
+   void *         hDynLib;
    struct _HB_FUNC_LIST * pNext;
 } HB_FUNC_LIST, * PHB_FUNC_LIST;
 
 /* Harbour Functions scope ( HB_SYMBOLSCOPE ) */
-#define HB_FS_PUBLIC    ( ( HB_SYMBOLSCOPE ) 0x0001 )
-#define HB_FS_STATIC    ( ( HB_SYMBOLSCOPE ) 0x0002 )
-#define HB_FS_FIRST     ( ( HB_SYMBOLSCOPE ) 0x0004 )
-#define HB_FS_INIT      ( ( HB_SYMBOLSCOPE ) 0x0008 )
-#define HB_FS_EXIT      ( ( HB_SYMBOLSCOPE ) 0x0010 )
-#define HB_FS_MESSAGE   ( ( HB_SYMBOLSCOPE ) 0x0020 )
-#define HB_FS_MEMVAR    ( ( HB_SYMBOLSCOPE ) 0x0080 )
-#define HB_FS_PCODEFUNC ( ( HB_SYMBOLSCOPE ) 0x0100 )
-#define HB_FS_LOCAL     ( ( HB_SYMBOLSCOPE ) 0x0200 )
-#define HB_FS_DYNCODE   ( ( HB_SYMBOLSCOPE ) 0x0400 )
-#define HB_FS_DEFERRED  ( ( HB_SYMBOLSCOPE ) 0x0800 )
-#define HB_FS_FRAME     ( ( HB_SYMBOLSCOPE ) 0x1000 )
-#define HB_FS_USED      ( ( HB_SYMBOLSCOPE ) 0x2000 )
+#define HB_FS_PUBLIC    0x0001
+#define HB_FS_STATIC    0x0002
+#define HB_FS_FIRST     0x0004
+#define HB_FS_INIT      0x0008
+#define HB_FS_EXIT      0x0010
+#define HB_FS_MESSAGE   0x0020
+#define HB_FS_MEMVAR    0x0080
+#define HB_FS_PCODEFUNC 0x0100
+#define HB_FS_LOCAL     0x0200
+#define HB_FS_DYNCODE   0x0400
+#define HB_FS_DEFERRED  0x0800
+#define HB_FS_FRAME     0x1000
+#define HB_FS_USED      0x2000
 
 #define HB_FS_INITEXIT ( HB_FS_INIT | HB_FS_EXIT )
 

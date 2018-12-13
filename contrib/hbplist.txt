@@ -1,4 +1,3 @@
-
 gtalleg/gtalleg.hbp
 gtqtc/gtqtc.hbp
 gtwvg/gtwvg.hbp
@@ -6,7 +5,9 @@ hbamf/hbamf.hbp
 hbblat/hbblat.hbp
 hbblink/hbblink.hbp
 hbbz2/hbbz2.hbp                  # uses: bz2 (locally hosted)
+hbbz2io/hbbz2io.hbp              # uses: bz2 (locally hosted)
 hbcairo/hbcairo.hbp
+hbcomio/hbcomio.hbp
 hbcomm/hbcomm.hbp
 hbct/hbct.hbp
 hbcups/hbcups.hbp
@@ -21,6 +22,7 @@ hbfship/hbfship.hbp
 hbgd/hbgd.hbp
 hbgs/hbgs.hbp
 hbgt/hbgt.hbp
+hbgzio/hbgzio.hbp
 hbhpdf/hbhpdf.hbp                # uses: libhpdf (locally hosted)
 hbhttpd/hbhttpd.hbp
 hblzf/hblzf.hbp                  # uses: liblzf (locally hosted)
@@ -37,10 +39,12 @@ hbnf/hbnf.hbp
 hbodbc/hbodbc.hbp
 hboslib/hboslib.hbp
 hbpgsql/hbpgsql.hbp
+hbpipeio/hbpipeio.hbp
 hbrun/hbrun.hbp
 hbsms/hbsms.hbp
 hbsqlit3/hbsqlit3.hbp            # uses: sqlite3 (locally hosted)
 hbssl/hbssl.hbp
+hbtcpio/hbtcpio.hbp
 hbtip/hbtip.hbp
 hbtinymt/hbtinymt.hbp
 hbtpathy/hbtpathy.hbp

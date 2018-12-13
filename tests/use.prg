@@ -1,4 +1,3 @@
-
 #include "simpleio.ch"
 
 #ifndef __HARBOUR__

@@ -163,7 +163,7 @@
 #define PHOTOSHOP_SUPPORT
 #define IPTC_SUPPORT
 
-#if ! defined( HB_OS_DARWIN )
+#if ! defined( HB_OS_UNIX )
 #ifndef O_RDONLY
 #define O_RDONLY 0
 #endif

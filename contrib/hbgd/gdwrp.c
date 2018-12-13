@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * GD graphic library low level (client api) interface code.
+ * GD graphic library low-level (client API) interface code.
  *
  * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
- * www - http://www.xharbour.org http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -76,16 +74,13 @@
 #define IMAGE_WBMP  4
 #define IMAGE_GD    5
 
-/* Internal functions */
-
-/*
- * internal function for handling pointers
+/* Internal function for handling pointers
  *
  * Code of Przemyslaw Czerpak for gdImagePtr
  * adapted also to gdFontPtr
  */
 
-/* gdImage ----------------------- */
+/* gdImage */
 
 /* gdImage destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdImage_Destructor )
@@ -99,7 +94,7 @@ static HB_GARBAGE_FUNC( hb_gdImage_Destructor )
       /* Destroy the image */
       gdImageDestroy( *ptr );
 
-      /* set pointer to NULL to avoid multiple freeing */
+      /* Set pointer to NULL to avoid multiple freeing */
       *ptr = NULL;
    }
 }
@@ -110,7 +105,7 @@ static const HB_GC_FUNCS s_gcGDimageFuncs =
    hb_gcDummyMark
 };
 
-/* function returns gdImage pointer or NULL when wrong variable is
+/* Function returns gdImage pointer or NULL when wrong variable is
    passed or gdImage was freed before */
 static gdImagePtr hb_parGdImage( int iParam )
 {
@@ -124,7 +119,7 @@ static void * hb_isGdImage( int iParam )
    return hb_parptrGC( &s_gcGDimageFuncs, iParam );
 }
 
-/* function create in HVM stack return value item with gdImage pointer */
+/* Function create in HVM stack return value item with gdImage pointer */
 static void hb_retGdImage( gdImagePtr im )
 {
    gdImagePtr * ptr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
@@ -136,7 +131,7 @@ static void hb_retGdImage( gdImagePtr im )
 }
 
 #if 0
-/* function returns PHB_ITEM with gdImage pointer */
+/* Function returns PHB_ITEM with gdImage pointer */
 static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 {
    gdImagePtr * ptr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
@@ -148,7 +143,7 @@ static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 }
 #endif
 
-/* gdFont ----------------------- */
+/* gdFont */
 
 /* gdFont destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdFont_Destructor )
@@ -161,11 +156,11 @@ static HB_GARBAGE_FUNC( hb_gdFont_Destructor )
    {
       /* Destroy the Font */
 #if 0
-      /* do nothing, GD handles it directly and gdFontDestroy() not exists */
+      /* Do nothing, GD handles it directly and gdFontDestroy() not exists */
       gdFontDestroy( *ptr );
 #endif
 
-      /* set pointer to NULL to avoid multiple freeing */
+      /* Set pointer to NULL to avoid multiple freeing */
       *ptr = NULL;
    }
 }
@@ -176,7 +171,7 @@ static const HB_GC_FUNCS s_gcGDfontFuncs =
    hb_gcDummyMark
 };
 
-/* function returns gdFont pointer or NULL when wrong variable is
+/* Function returns gdFont pointer or NULL when wrong variable is
    passed or gdFont was freed before */
 static gdFontPtr hb_parGdFont( int iParam )
 {
@@ -190,7 +185,7 @@ static void * hb_isGdFont( int iParam )
    return hb_parptrGC( &s_gcGDfontFuncs, iParam );
 }
 
-/* function create in HVM stack return value item with gdFont pointer */
+/* Function create in HVM stack return value item with gdFont pointer */
 static void hb_retGdFont( gdFontPtr font )
 {
    gdFontPtr * ptr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
@@ -202,7 +197,7 @@ static void hb_retGdFont( gdFontPtr font )
 }
 
 #if 0
-/* function returns PHB_ITEM with gdFont pointer */
+/* Function returns PHB_ITEM with gdFont pointer */
 static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 {
    gdFontPtr * ptr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
@@ -1416,7 +1411,7 @@ HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int 
       int color = hb_parni( 6 );
 
       /* Write string */
-      gdImageString( im, font, x, y, ( unsigned char * ) hb_parc( 5 ), color );
+      gdImageString( im, font, x, y, ( unsigned char * ) HB_UNCONST( hb_parc( 5 ) ), color );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1441,7 +1436,7 @@ HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
       int color = hb_parni( 6 );
 
       /* Write string */
-      gdImageStringUp( im, font, x, y, ( unsigned char * ) hb_parc( 5 ), color );
+      gdImageStringUp( im, font, x, y, ( unsigned char * ) HB_UNCONST( hb_parc( 5 ) ), color );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1521,7 +1516,9 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       }
 
       /* Write string */
-      err = gdImageStringFTEx( im, &aRect[ 0 ], fgcolor, ( char * ) fontname, ptsize, angle, x, y, ( char * ) string, ( flags != 0 ? &extra : NULL ) );
+      err = gdImageStringFTEx( im, &aRect[ 0 ], fgcolor, ( char * ) HB_UNCONST( fontname ),
+                               ptsize, angle, x, y, ( char * ) HB_UNCONST( string ),
+                               ( flags != 0 ? &extra : NULL ) );
       if( ! err )
       {
          /* Save in array the correct text rectangle dimensions */
@@ -1565,7 +1562,10 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
       int          fgcolor     = hb_parni( 11 ); /* foreground color */
 
       /* Write string */
-      hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion, ( char * ) fontname, points, ( char * ) top, ( char * ) bottom, fgcolor ) );
+      hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion,
+                                      ( char * ) HB_UNCONST( fontname ), points,
+                                      ( char * ) HB_UNCONST( top ),
+                                      ( char * ) HB_UNCONST( bottom ), fgcolor ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1700,7 +1700,7 @@ HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr i
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int r, int g, int b) */
+HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /* gdImageColorClosestHWB(gdImagePtr im, int r, int g, int b) */
 {
    if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Set API
  *
  * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -144,9 +142,9 @@ typedef struct
    /* Lower case members are indirectly related to a SET */
    HB_BOOL        hb_set_century;
    HB_BOOL        hb_set_prndevice;
-   HB_FHANDLE     hb_set_althan;
-   HB_FHANDLE     hb_set_extrahan;
-   HB_FHANDLE     hb_set_printhan;
+   PHB_FILE       hb_set_althan;
+   PHB_FILE       hb_set_extrahan;
+   PHB_FILE       hb_set_printhan;
    HB_PATHNAMES * hb_set_path;
    void *         hb_set_oscp;
    void *         hb_set_dbcp;
@@ -254,19 +252,34 @@ extern HB_EXPORT HB_BOOL      hb_setGetL( HB_set_enum set_specifier );
 extern HB_EXPORT const char * hb_setGetCPtr( HB_set_enum set_specifier );
 extern HB_EXPORT int          hb_setGetNI( HB_set_enum set_specifier );
 extern HB_EXPORT long         hb_setGetNL( HB_set_enum set_specifier );
+extern HB_EXPORT PHB_ITEM     hb_setGetItem( HB_set_enum set_specifier, PHB_ITEM pResult, PHB_ITEM pArg1, PHB_ITEM pArg2 );
 
 extern HB_EXPORT HB_BOOL      hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem );
 extern HB_EXPORT HB_BOOL      hb_setSetItem2( HB_set_enum set_specifier, PHB_ITEM pItem1, PHB_ITEM pItem2 );
 
 extern HB_EXPORT HB_PATHNAMES * hb_setGetFirstSetPath( void );
 
+extern HB_EXPORT int          hb_setUpdateEpoch( int iYear );
+
 extern HB_EXPORT HB_BOOL      hb_setGetCentury( void );
 extern HB_EXPORT HB_BOOL      hb_setSetCentury( HB_BOOL );
 
-extern HB_EXPORT HB_FHANDLE   hb_setGetAltHan( void );
-extern HB_EXPORT HB_FHANDLE   hb_setGetExtraHan( void );
-extern HB_EXPORT HB_FHANDLE   hb_setGetPrintHan( void );
-extern HB_EXPORT HB_FHANDLE   hb_setGetPrinterHandle( int );
+extern HB_EXPORT int          hb_setGetFileCase( void );
+extern HB_EXPORT void         hb_setSetFileCase( int iFileCase );
+
+extern HB_EXPORT int          hb_setGetDirCase( void );
+extern HB_EXPORT void         hb_setSetDirCase( int iDirCase );
+
+extern HB_EXPORT int          hb_setGetDirSeparator( void );
+extern HB_EXPORT void         hb_setSetDirSeparator( int iSeparator );
+
+extern HB_EXPORT HB_BOOL      hb_setGetTrimFileName( void );
+extern HB_EXPORT void         hb_setSetTrimFileName( HB_BOOL fTrim );
+
+extern HB_EXPORT PHB_FILE     hb_setGetAltHan( void );
+extern HB_EXPORT PHB_FILE     hb_setGetExtraHan( void );
+extern HB_EXPORT PHB_FILE     hb_setGetPrintHan( void );
+extern HB_EXPORT PHB_FILE     hb_setGetPrinterHandle( int );
 extern HB_EXPORT HB_BOOL      hb_setGetAlternate( void );
 extern HB_EXPORT const char * hb_setGetAltFile( void );
 extern HB_EXPORT HB_BOOL      hb_setGetAutOpen( void );
@@ -314,9 +327,6 @@ extern HB_EXPORT HB_BOOL      hb_setGetSoftSeek( void );
 extern HB_EXPORT HB_BOOL      hb_setGetStrictRead( void );
 extern HB_EXPORT int          hb_setGetTypeAhead( void );
 extern HB_EXPORT HB_BOOL      hb_setGetUnique( void );
-extern HB_EXPORT int          hb_setGetFileCase( void );
-extern HB_EXPORT int          hb_setGetDirCase( void );
-extern HB_EXPORT int          hb_setGetDirSeparator( void );
 extern HB_EXPORT int          hb_setGetVideoMode( void );
 extern HB_EXPORT HB_BOOL      hb_setGetWrap( void );
 extern HB_EXPORT int          hb_setGetDBFLockScheme( void );
@@ -324,7 +334,6 @@ extern HB_EXPORT HB_BOOL      hb_setGetHardCommit( void );
 extern HB_EXPORT HB_BOOL      hb_setGetForceOpt( void );
 extern HB_EXPORT HB_BOOL      hb_setGetDefExtension( void );
 extern HB_EXPORT const char * hb_setGetEOL( void );
-extern HB_EXPORT HB_BOOL      hb_setGetTrimFileName( void );
 extern HB_EXPORT const char * hb_setGetHBOUTLOG( void );
 extern HB_EXPORT const char * hb_setGetHBOUTLOGINFO( void );
 extern HB_EXPORT const char * hb_setGetOSCODEPAGE( void );

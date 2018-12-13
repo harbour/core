@@ -18,7 +18,7 @@
 #include "hpdfconf.h"
 #include "hpdfutil.h"
 #include "hpdf.h"
-#include <memory.h>
+#include <string.h>
 #include <assert.h>
 
 #define	G3CODES
@@ -78,7 +78,7 @@ typedef struct {
 
 #define	Fax3State(tif)		(&(tif)->tif_data->b)
 #define	EncoderState(tif)	((tif)->tif_data)
-#define	isAligned(p,t)	((((unsigned long)(p)) & (sizeof (t)-1)) == 0)
+#define	isAligned(p,t)	((((size_t)(p)) & (sizeof (t)-1)) == 0)
 
 /* NB: the uint32 casts are to silence certain ANSI-C compilers */
 #define TIFFhowmany(x, y) ((((uint32)(x))+(((uint32)(y))-1))/((uint32)(y)))
@@ -174,6 +174,8 @@ HPDF_Fax3SetupState(struct _HPDF_CCITT_Data *pData, HPDF_UINT          width,
 	HPDF_Fax3BaseState* sp = Fax3State(pData);
 	HPDF_Fax3CodecState* esp = EncoderState(pData);
 	uint32 rowbytes, rowpixels, nruns;
+
+	HPDF_UNUSED (height);
 
 	rowbytes = line_width;
 	rowpixels = width;
@@ -650,6 +652,8 @@ HPDF_Stream_CcittToStream( const HPDF_BYTE   *buf,
 	int lineIncrement;
 	struct _HPDF_CCITT_Data data;
 
+	HPDF_UNUSED (e);
+
 	if(height==0) return 1;
 	if(top_is_first) {
 		pBufPos = buf;
@@ -750,7 +754,7 @@ HPDF_Image_Load1BitImageFromMem  (HPDF_MMgr        mmgr,
  *      TRUE if image is oriented TOP-BOTTOM;
  *      FALSE if image is oriented BOTTOM-TOP
  */
-HPDF_Image
+HPDF_EXPORT(HPDF_Image)
 HPDF_Image_LoadRaw1BitImageFromMem  (HPDF_Doc           pdf,
                            const HPDF_BYTE   *buf,
                           HPDF_UINT          width,

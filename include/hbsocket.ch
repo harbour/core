@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    socket related constant values
+ * Socket related constant values
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,6 +50,7 @@
 #define HB_SOCKET_CH_
 
 /* Harbour socket error codes */
+#define HB_SOCKET_ERR_NONE                0
 #define HB_SOCKET_ERR_PIPE                1
 #define HB_SOCKET_ERR_TIMEOUT             2
 #define HB_SOCKET_ERR_WRONGADDR           3
@@ -179,6 +178,12 @@
 #define HB_SOCKET_IPPROTO_SCTP            132   /* Stream Control Transmission Protocol */
 #define HB_SOCKET_IPPROTO_RAW             255   /* Raw IP packets */
 
+/* send/recv flags */
+#define HB_SOCKET_MSG_OOB                 0x01  /* process out-of-band data */
+#define HB_SOCKET_MSG_PEEK                0x02  /* peek at incoming messages */
+#define HB_SOCKET_MSG_DONTROUTE           0x04  /* don't use local routing */
+#define HB_SOCKET_MSG_WAITALL             0x08  /* wait for a full request or error */
+
 /* shutdown actions */
 #define HB_SOCKET_SHUT_RD                 0
 #define HB_SOCKET_SHUT_WR                 1
@@ -192,11 +197,11 @@
 #define HB_SOCKET_IFF_MULTICAST           0x0010   /* Supports multicast */
 
 /* Harbour interface information indexes */
-#define HB_SOCKET_IFINFO_FAMILY           1     /* adress family */
+#define HB_SOCKET_IFINFO_FAMILY           1     /* address family */
 #define HB_SOCKET_IFINFO_NAME             2     /* interface name */
 #define HB_SOCKET_IFINFO_FLAGS            3     /* flags HB_SOCKET_IFF_* */
 #define HB_SOCKET_IFINFO_ADDR             4     /* interface address */
-#define HB_SOCKET_IFINFO_NETMASK          5     /* subnetmask */
+#define HB_SOCKET_IFINFO_NETMASK          5     /* subnet mask */
 #define HB_SOCKET_IFINFO_BROADCAST        6     /* broadcast address */
 #define HB_SOCKET_IFINFO_P2PADDR          7     /* point-to-point address */
 #define HB_SOCKET_IFINFO_HWADDR           8     /* hardware address */

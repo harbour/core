@@ -1,4 +1,3 @@
-
 PRG_C_SOURCES := $(PRG_SOURCES:.prg=.c)
 PRG_OBJS := $(PRG_SOURCES:.prg=$(OBJ_EXT))
 PRG_EXES := $(PRG_SOURCES:.prg=$(BIN_EXT))

@@ -1,11 +1,10 @@
 /*
- * Harbour Project source code:
- *   CT3 file functions:
+ * CT3 file functions:
  *    FileCopy(), FileCOpen(), FileCCLose(), FileAppend()
  *
  *    Author...: Frederic J. Bell
- *    Dated....: Jun,17 94
- *    Revised..: Sep,20 94
+ *    Dated....: 1994-06-17
+ *    Revised..: 1994-09-20
  *    Purpose..: Replaces the following CA-T*ols functions which generate GPF's
  *               FileCopy(), FileCOpen(), FileAppend()!
  *    Relies on: Clipper (can you believe it!)
@@ -18,8 +17,6 @@
  *    added FileCDaTi() and rewritten above functions for CT3 compatibility
  *    and some problems fixing,
  *
- * www - http://harbour-project.org
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
@@ -31,9 +28,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -67,15 +64,10 @@
 
 THREAD STATIC t_hSrcFile := F_ERROR
 THREAD STATIC t_lSetDaTi := .T.
-THREAD STATIC t_fileDate
 THREAD STATIC t_fileTime
 
-/*
- * FileCopy()
- * This is a replacement for the CA-T*ols III function of the
- * same name that causes GPF's.
- */
-
+/* This is a replacement for the CA-T*ols III function of the
+   same name that causes GPF's. */
 FUNCTION FileCopy( cSource, cDest, lMode )
 
    LOCAL hDstFile
@@ -92,7 +84,7 @@ FUNCTION FileCopy( cSource, cDest, lMode )
    IF t_hSrcFile != F_ERROR
       hDstFile := FCreate( cDest )
       IF hDstFile != F_ERROR
-         DO WHILE ! lDone
+         DO WHILE .T.
             nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
                lDone := .T.
@@ -103,6 +95,9 @@ FUNCTION FileCopy( cSource, cDest, lMode )
                nTotBytes += nDstBytes
             ENDIF
             IF nDstBytes < nSrcBytes
+               IF lMode
+                  FSeek( t_hSrcFile, nDstBytes - nSrcBytes, FS_RELATIVE )
+               ENDIF
                EXIT
             ENDIF
          ENDDO
@@ -111,10 +106,9 @@ FUNCTION FileCopy( cSource, cDest, lMode )
             FClose( t_hSrcFile )
             t_hSrcFile := F_ERROR
          ENDIF
-         t_fileDate := FileDate( cSource )
-         t_fileTime := FileTime( cSource )
-         IF t_lSetDaTi
-            SetFDaTi( cDest, t_fileDate, t_fileTime )
+         hb_FGetDateTime( cSource, @t_fileTime )
+         IF t_lSetDaTi .and. !Empty( t_fileTime )
+            hb_FSetDateTime( cDest, t_fileTime )
          ENDIF
       ELSE
          FClose( t_hSrcFile )
@@ -148,10 +142,10 @@ FUNCTION FileCCont( cDest )
    IF t_hSrcFile != F_ERROR
       hDstFile := FCreate( cDest )
       IF hDstFile != F_ERROR
-         DO WHILE ! lDone
+         DO WHILE .T.
             nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
-               lDone := 0
+               lDone := .T.
                EXIT
             ENDIF
             nDstBytes := FWrite( hDstFile, cBuffer, nSrcBytes )
@@ -167,8 +161,8 @@ FUNCTION FileCCont( cDest )
             FClose( t_hSrcFile )
             t_hSrcFile := F_ERROR
          ENDIF
-         IF t_lSetDaTi
-            SetFDaTi( cDest, t_fileDate, t_fileTime )
+         IF t_lSetDaTi .and. !Empty( t_fileTime )
+            hb_FSetDateTime( cDest, t_fileTime )
          ENDIF
       ENDIF
    ENDIF

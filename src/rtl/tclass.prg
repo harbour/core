@@ -1,9 +1,17 @@
 /*
- * Harbour Project source code:
  * Base Class for internal handling of class creation
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
+ * Copyright 2000 J. Lefebvre <jfl@mafact.com> and RA. Cuylen <rac@mafact.com>
+ *    Multiple inheritance
+ *    Support shared class DATA
+ *    scoping (hidden, protected, readOnly)
+ *    Use of __cls_param function to allow multiple superclass declaration
+ *    Suppress of SetType and SetInit not needed anymore
+ *    Delegation and forwarding
+ *    Preparing the InitClass class method (not working!)
+ * Copyright 1999 Eddie Runia <eddie@runia.com>
+ *    Support for inheritance, default DATA values
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +24,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,27 +54,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 J. Lefebvre <jfl@mafact.com> and RA. Cuylen <rac@mafact.com>
- *    Multiple inheritance
- *    Support shared class DATA
- *    scoping (hidden, protected, readOnly)
- *    Use of __cls_param function to allow multiple superclass declaration
- *    Suppress of SetType and SetInit not more nedded
- *    Delegation and forwarding
- *    Preparing the InitClass class method (not working !!)
- *
- * Copyright 1999 Eddie Runia <eddie@runia.com>
- *    Support for inheritance
- *    Support for default DATA values
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* NOTE: This .prg is also used by the debugger subsystem,
          therefore we need this switch to avoid an infinite
          loop when launching it. [vszakats] */
@@ -80,7 +67,7 @@ REQUEST HBObject
 
 FUNCTION HBClass()
 
-   STATIC s_hClass /* NOTE: Automatically defaults to NIL */
+   STATIC s_hClass  /* NOTE: Automatically defaults to NIL */
 
    LOCAL hClass
 
@@ -170,28 +157,28 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    LOCAL Self := QSelf()
    LOCAL i
 
-   hb_default( @lModuleFriendly, .F. )
-
-   IF HB_ISSYMBOL( xSuper )
+   DO CASE
+   CASE HB_ISSYMBOL( xSuper )
       ::asSuper := { xSuper }
-   ELSEIF Empty( xSuper )
+   CASE Empty( xSuper )
       ::asSuper := {}
-   ELSEIF HB_ISSTRING( xSuper )
+   CASE HB_ISSTRING( xSuper )
       ::asSuper := { __dynsN2Sym( xSuper ) }
-   ELSEIF HB_ISARRAY( xSuper )
+   CASE HB_ISARRAY( xSuper )
       ::asSuper := {}
       FOR EACH i IN xSuper
-         IF HB_ISSYMBOL( i )
+         DO CASE
+         CASE HB_ISSYMBOL( i )
             AAdd( ::asSuper, i )
-         ELSEIF HB_ISSTRING( i ) .AND. ! Empty( i )
+         CASE HB_ISSTRING( i ) .AND. ! Empty( i )
             AAdd( ::asSuper, __dynsN2Sym( i ) )
-         ENDIF
+         ENDCASE
       NEXT
-   ENDIF
+   ENDCASE
 
    ::cName         := hb_asciiUpper( cClassName )
    ::sClassFunc    := sClassFunc
-   ::lModFriendly  := lModuleFriendly
+   ::lModFriendly  := hb_defaultValue( lModuleFriendly, .F. )
 
    ::aDatas        := {}
    ::aMethods      := {}
@@ -214,36 +201,32 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    LOCAL ahSuper := {}
 
 #if 0
-   Self:Class := MetaClass
+   ::Class := MetaClass
 #endif
 
    FOR EACH n IN ::asSuper
-      hClass := __clsInstSuper( n ) /* Super handle available */
-      IF hClass != 0
+      IF ( hClass := __clsInstSuper( n ) ) != 0  /* Super handle available */
          AAdd( ahSuper, hClass )
       ENDIF
    NEXT
 
-   hClass := __clsNew( ::cName, Len( ::aDatas ), ahSuper, ::sClassFunc, ::lModFriendly )
-   ::hClass := hClass
+   ::hClass := hClass := __clsNew( ::cName, Len( ::aDatas ), ahSuper, ::sClassFunc, ::lModFriendly )
 
-   IF ! Empty( ahSuper )
-      IF ahSuper[ 1 ] != 0
-         __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
-         __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
-      ENDIF
+   IF ! Empty( ahSuper ) .AND. ahSuper[ 1 ] != 0
+      __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
+      __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
    ENDIF
    __clsAddMsg( hClass, "REALCLASS", 0, HB_OO_MSG_REALCLASS, 0, HB_OO_CLSTP_EXPORTED )
 
 #if 0
-   // We will work here on the MetaClass object to add the Class Method
-   // as needed
+   /* We will work here on the MetaClass object to add the Class Method
+      as needed */
    FOR EACH n IN ::aClsMethods
       // do it
    NEXT
 #endif
 
-   /* local messages... */
+   /* Local messages */
 
    FOR EACH n IN ::aDatas
       __clsAddMsg( hClass, n[ HB_OO_DATA_SYMBOL ]       , n:__enumIndex(), ;
@@ -253,21 +236,21 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    NEXT
 
    FOR EACH n IN ::aMethods
-      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ],;
-                   HB_OO_MSG_METHOD, NIL, n[ HB_OO_MTHD_SCOPE ] )
+      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ], ;
+                   HB_OO_MSG_METHOD, , n[ HB_OO_MTHD_SCOPE ] )
    NEXT
 
    nClassBegin := __cls_CntClsData( hClass )
    FOR EACH n IN ::aClsDatas
-      __clsAddMsg( hClass, n[ HB_OO_CLSD_SYMBOL ]      , n:__enumIndex() + nClassBegin,;
+      __clsAddMsg( hClass, n[ HB_OO_CLSD_SYMBOL ]      , n:__enumIndex() + nClassBegin, ;
                    HB_OO_MSG_CLSACCESS, n[ HB_OO_CLSD_VALUE ], n[ HB_OO_CLSD_SCOPE ] )
-      __clsAddMsg( hClass, "_" + n[ HB_OO_CLSD_SYMBOL ], n:__enumIndex() + nClassBegin,;
+      __clsAddMsg( hClass, "_" + n[ HB_OO_CLSD_SYMBOL ], n:__enumIndex() + nClassBegin, ;
                    HB_OO_MSG_CLSASSIGN,                      , n[ HB_OO_CLSD_SCOPE ] )
    NEXT
 
    FOR EACH n IN ::aInlines
-      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ],;
-                   HB_OO_MSG_INLINE, NIL, n[ HB_OO_MTHD_SCOPE ] )
+      __clsAddMsg( hClass, n[ HB_OO_MTHD_SYMBOL ], n[ HB_OO_MTHD_PFUNCTION ], ;
+                   HB_OO_MSG_INLINE, , n[ HB_OO_MTHD_SCOPE ] )
    NEXT
 
    FOR EACH n IN ::aVirtuals
@@ -301,18 +284,14 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    RETURN
 
 STATIC FUNCTION Instance()
-
-   LOCAL Self := QSelf()
-
-   RETURN __clsInst( ::hClass )
+   RETURN __clsInst( QSelf():hClass )
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
-   hb_default( @lNoInit, .F. )
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
    /* Default Init for Logical and numeric */
-   IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
+   IF ! hb_defaultValue( lNoInit, .F. ) .AND. ;
+      cType != NIL .AND. xInit == NIL
+
       SWITCH Asc( cType )
       CASE Asc( "L" )   /* Logical */
       CASE Asc( "l" )   /* Logical */
@@ -335,7 +314,7 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
       ENDSWITCH
    ENDIF
 
-   AAdd( QSelf():aDatas, { cData, xInit, cType, nScope } )
+   AAdd( QSelf():aDatas, { cData, xInit, cType, hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ) } )
 
    RETURN
 
@@ -353,13 +332,10 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
 STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
-   hb_default( @lNoInit, .F. )
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
-   nScope := hb_bitOr( nScope, HB_OO_CLSTP_CLASS )
-
    /* Default Init for Logical and numeric */
-   IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
+   IF ! hb_defaultValue( lNoInit, .F. ) .AND. ;
+      cType != NIL .AND. xInit == NIL
+
       SWITCH Asc( cType )
       CASE Asc( "L" )   /* Logical */
       CASE Asc( "l" )   /* Logical */
@@ -382,7 +358,9 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
       ENDSWITCH
    ENDIF
 
-   AAdd( QSelf():aClsDatas, { cData, xInit, cType, nScope } )
+   AAdd( QSelf():aClsDatas, { cData, xInit, cType, ;
+                              hb_bitOr( hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ), ;
+                                        HB_OO_CLSTP_CLASS ) } )
 
    RETURN
 
@@ -400,27 +378,21 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
 STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
-   AAdd( QSelf():aInlines, { cMethod, bCode, nScope } )
+   AAdd( QSelf():aInlines, { cMethod, bCode, hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ) } )
 
    RETURN
 
 STATIC PROCEDURE AddMethod( cMethod, sFuncSym, nScope )
 
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
-   AAdd( QSelf():aMethods, { cMethod, sFuncSym, nScope } )
+   AAdd( QSelf():aMethods, { cMethod, sFuncSym, hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ) } )
 
    RETURN
 
 STATIC PROCEDURE AddClsMethod( cMethod, sFuncSym, nScope )
 
-   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
-
-   nScope := hb_bitOr( nScope, HB_OO_CLSTP_CLASS )
-
-   AAdd( QSelf():aClsMethods, { cMethod, sFuncSym, nScope } )
+   AAdd( QSelf():aClsMethods, { cMethod, sFuncSym, ;
+                                hb_bitOr( hb_defaultValue( nScope, HB_OO_CLSTP_EXPORTED ), ;
+                                          HB_OO_CLSTP_CLASS ) } )
 
    RETURN
 
@@ -434,13 +406,14 @@ STATIC PROCEDURE AddDelegate( xMethod, cDelegMsg, cObject, nScope )
 
    LOCAL mth
 
-   IF HB_ISSTRING( xMethod )
+   DO CASE
+   CASE HB_ISSTRING( xMethod )
       AAdd( QSelf():aDelegates, { xMethod, cDelegMsg, cObject, nScope } )
-   ELSEIF HB_ISARRAY( xMethod )
+   CASE HB_ISARRAY( xMethod )
       FOR EACH mth IN xMethod
          AAdd( QSelf():aDelegates, { mth, cDelegMsg, cObject, nScope } )
       NEXT
-   ENDIF
+   ENDCASE
 
    RETURN
 

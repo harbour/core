@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Dynamic symbol table management
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -101,7 +99,7 @@ static PHB_DYNS hb_dynsymInsert( PHB_SYMB pSymbol, HB_UINT uiPos )
 {
    PHB_DYNS pDynSym;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymInsert(%p,%u)", pSymbol, uiPos ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymInsert(%p, %u)", ( void * ) pSymbol, uiPos ) );
 
    if( ++s_uiDynSymbols == 0 )
    {
@@ -119,8 +117,7 @@ static PHB_DYNS hb_dynsymInsert( PHB_SYMB pSymbol, HB_UINT uiPos )
                sizeof( DYNHB_ITEM ) * ( s_uiDynSymbols - uiPos - 1 ) );
    }
 
-   pDynSym = ( PHB_DYNS ) hb_xgrab( sizeof( HB_DYNS ) );
-   memset( pDynSym, 0, sizeof( HB_DYNS ) );
+   pDynSym = ( PHB_DYNS ) hb_xgrabz( sizeof( HB_DYNS ) );
    pDynSym->pSymbol  = pSymbol;
    pDynSym->uiSymNum = s_uiDynSymbols;
 
@@ -137,7 +134,7 @@ static PHB_DYNS hb_dynsymPos( const char * szName, HB_UINT * puiPos )
 {
    HB_UINT uiFirst, uiLast, uiMiddle;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymPos(%s,%p)", szName, puiPos ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymPos(%s, %p)", szName, ( void * ) puiPos ) );
 
    uiFirst = 0;
    uiLast = s_uiDynSymbols;
@@ -243,7 +240,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )
    PHB_DYNS pDynSym;
    HB_UINT uiPos;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymNew(%p)", pSymbol ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymNew(%p)", ( void * ) pSymbol ) );
 
    HB_DYNSYM_LOCK();
 
@@ -308,10 +305,10 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )
              * decide what to do with them. We can leave it as is or we can
              * try to overload one symbol so both will point to the same
              * function. For .prg code such overloading will work but not
-             * for C code which makes sth like: HB_FUNC_EXEC( funcname );
+             * for C code which makes something like: HB_FUNC_EXEC( funcname );
              * In such case we cannot do anything - we cannot even detect
              * such situation. In some cases even linker cannot detect it
-             * because C compiler can make autoinlining or some bindings
+             * because C compiler can make auto-inlining or some bindings
              * which are not visible for linker
              */
             /* Let's try to overload one of the functions. Simple:
@@ -453,56 +450,56 @@ PHB_SYMB hb_dynsymFindSymbol( const char * szName )
 
 PHB_SYMB hb_dynsymSymbol( PHB_DYNS pDynSym )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymSymbol(%p)", pDynSym ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymSymbol(%p)", ( void * ) pDynSym ) );
 
    return pDynSym->pSymbol;
 }
 
 const char * hb_dynsymName( PHB_DYNS pDynSym )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymName(%p)", pDynSym ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymName(%p)", ( void * ) pDynSym ) );
 
    return pDynSym->pSymbol->szName;
 }
 
 HB_BOOL hb_dynsymIsFunction( PHB_DYNS pDynSym )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymIsFunction(%p)", pDynSym ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymIsFunction(%p)", ( void * ) pDynSym ) );
 
    return pDynSym->pSymbol->value.pFunPtr != NULL;
 }
 
 HB_BOOL hb_dynsymIsMemvar( PHB_DYNS pDynSym )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymIsMemvar(%p)", pDynSym ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymIsMemvar(%p)", ( void * ) pDynSym ) );
 
    return hb_dynsymHandles( pDynSym )->pMemvar != NULL;
 }
 
 PHB_ITEM hb_dynsymGetMemvar( PHB_DYNS pDynSym )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymGetMemvar(%p)", pDynSym ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymGetMemvar(%p)", ( void * ) pDynSym ) );
 
    return ( PHB_ITEM ) hb_dynsymHandles( pDynSym )->pMemvar;
 }
 
 void hb_dynsymSetMemvar( PHB_DYNS pDynSym, PHB_ITEM pMemvar )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymSetMemvar(%p,%p)", pDynSym, pMemvar ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymSetMemvar(%p, %p)", ( void * ) pDynSym, ( void * ) pMemvar ) );
 
    hb_dynsymHandles( pDynSym )->pMemvar = ( void * ) pMemvar;
 }
 
 int hb_dynsymAreaHandle( PHB_DYNS pDynSym )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymAreaHandle(%p)", pDynSym ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymAreaHandle(%p)", ( void * ) pDynSym ) );
 
    return hb_dynsymHandles( pDynSym )->uiArea;
 }
 
 void hb_dynsymSetAreaHandle( PHB_DYNS pDynSym, int iArea )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymSetAreaHandle(%p,%d)", pDynSym, iArea ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymSetAreaHandle(%p, %d)", ( void * ) pDynSym, iArea ) );
 
    hb_dynsymHandles( pDynSym )->uiArea = ( HB_USHORT ) iArea;
 }
@@ -532,7 +529,7 @@ int hb_dynsymToNum( PHB_DYNS pDynSym )
 {
    int iSymNum;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymToNum(%p)", pDynSym ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymToNum(%p)", ( void * ) pDynSym ) );
 
    HB_DYNSYM_LOCK();
 
@@ -576,7 +573,7 @@ void hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
    PHB_DYNS pDynSym = NULL;
    HB_USHORT uiPos = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymEval(%p, %p)", pFunction, Cargo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymEval(%p, %p)", ( void * ) pFunction, Cargo ) );
 
    for( ;; )
    {
@@ -610,7 +607,7 @@ void hb_dynsymProtectEval( PHB_DYNS_FUNC pFunction, void * Cargo )
 {
    HB_USHORT uiPos = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymProtectEval(%p, %p)", pFunction, Cargo ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymProtectEval(%p, %p)", ( void * ) pFunction, Cargo ) );
 
    HB_DYNSYM_LOCK();
 
@@ -674,13 +671,12 @@ HB_FUNC( __DYNSGETNAME ) /* Get name of symbol: cSymbol = __dynsymGetName( dsInd
 HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGetIndex( cSymbol ) */
 {
    HB_STACK_TLS_PRELOAD
-   PHB_DYNS pDynSym;
    HB_UINT uiPos = 0;
    const char * szName = hb_parc( 1 );
 
    if( szName )
    {
-      pDynSym = hb_dynsymFindName( szName );
+      PHB_DYNS pDynSym = hb_dynsymFindName( szName );
       if( pDynSym )
       {
          HB_DYNSYM_LOCK();
@@ -724,8 +720,8 @@ HB_FUNC( __DYNSISFUN ) /* returns .T. if a symbol has a function/procedure point
 }
 
 HB_FUNC( __DYNSGETPRF ) /* profiler: It returns an array with a function or procedure
-                                     called and consumed times { nTimes, nTime }
-                                     , given the dynamic symbol index */
+                                     called and consumed times { nTimes, nTime },
+                                     given the dynamic symbol index */
 {
    HB_STACK_TLS_PRELOAD
 #ifndef HB_NO_PROFILER
@@ -771,4 +767,44 @@ HB_FUNC( __DYNSP2NAME )
    PHB_DYNS pDynSym = ( PHB_DYNS ) hb_parptr( 1 );
 
    hb_retc( pDynSym != NULL ? pDynSym->pSymbol->szName : NULL );
+}
+
+/* internal function used to debug dynamic symbol integrity */
+static int hb_dynsymVerify( void )
+{
+   HB_USHORT uiPos = 0;
+   int iResult = 0;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dynsymVerify()" ) );
+
+   HB_DYNSYM_LOCK();
+
+   while( iResult == 0 && uiPos < s_uiDynSymbols )
+   {
+      PHB_DYNS pDynSym = s_pDynItems[ uiPos ].pDynSym;
+      HB_UINT uiAt;
+      int iCmp;
+
+      if( uiPos > 0 &&
+          ( iCmp = strcmp( s_pDynItems[ uiPos - 1 ].pDynSym->pSymbol->szName,
+                           pDynSym->pSymbol->szName ) ) <= 0 )
+         iResult = iCmp == 0 ? -1 : -2;
+      else if( hb_dynsymPos( pDynSym->pSymbol->szName, &uiAt ) != pDynSym )
+         iResult = -3;
+      else if( uiAt != ( HB_UINT ) uiPos )
+         iResult = -4;
+      else
+         ++uiPos;
+   }
+
+   HB_DYNSYM_UNLOCK();
+
+   return iResult;
+}
+
+HB_FUNC( __DYNSVERIFY )
+{
+   HB_STACK_TLS_PRELOAD
+
+   hb_retni( hb_dynsymVerify() );
 }

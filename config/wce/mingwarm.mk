@@ -1,4 +1,3 @@
-
 ifeq ($(HB_BUILD_MODE),cpp)
    HB_CMP := g++
 else
@@ -51,6 +50,8 @@ endif
 LD := $(CC)
 LD_OUT := -o$(subst x,x, )
 
+SYSLIBS := $(subst winmm,mmtimer,$(SYSLIBS))
+
 LIBPATHS := $(foreach dir,$(LIB_DIR),-L$(dir))
 LDLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
@@ -58,7 +59,7 @@ LDFLAGS += $(LIBPATHS)
 
 AR := $(HB_CCPATH)$(HB_CCPREFIX)ar
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define library_object
    @$(ECHO) $(ECHOQUOTE)$(subst \,/,$(file))$(ECHOQUOTE) >> __lib__.tmp
 
@@ -76,7 +77,7 @@ DFLAGS += -shared $(LIBPATHS)
 DY_OUT := $(LD_OUT)
 DLIBS := $(foreach lib,$(HB_USER_LIBS) $(LIBS) $(SYSLIBS),-l$(lib))
 
-# NOTE: The empty line directly before 'endef' HAVE TO exist!
+# NOTE: The empty line directly before 'endef' HAS TO exist!
 define dynlib_object
    @$(ECHO) $(ECHOQUOTE)INPUT($(subst \,/,$(file)))$(ECHOQUOTE) >> __dyn__.tmp
 

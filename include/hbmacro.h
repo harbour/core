@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Macro compiler
  *
  * Copyright 1999 Ryszard Glab
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,8 +47,8 @@
 #ifndef HB_MACRO_H_
 #define HB_MACRO_H_
 
-#include "hbcompdf.h"
 #include "hbapi.h"
+#include "hbcompdf.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbvm.h"
@@ -66,7 +64,7 @@ HB_EXTERN_BEGIN
 #define HB_MACRO_GEN_POP      2   /* generate POP pcodes */
 #define HB_MACRO_GEN_ALIASED  4   /* force aliased variable */
 #define HB_MACRO_GEN_TYPE     8   /* check the type of expression (from Type() function) */
-#define HB_MACRO_GEN_PARE     16  /* generate parentesized list */
+#define HB_MACRO_GEN_PARE     16  /* generate parenthesized list */
 #define HB_MACRO_GEN_LIST     32  /* generate push operation for every comma separated expressions */
 #define HB_MACRO_GEN_REFER    64  /* generate PUSH pcodes for reference to given expression */
 

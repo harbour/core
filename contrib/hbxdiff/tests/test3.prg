@@ -1,4 +1,3 @@
-
 #require "hbxdiff"
 
 PROCEDURE Main()

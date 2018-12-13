@@ -1,4 +1,3 @@
-
 -hblib
 -inc
 
@@ -12,11 +11,13 @@
 -depcontrol=bzip2:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=bzip2:${HB_WITH_BZIP2}
 -depincpath=bzip2:/usr/include
+-depincpath=bzip2:/usr/local/include
 -depincpathlocal=bzip2:3rd/bz2
 -depfinish=bzip2
 
 ${hb_name}.hbx
 
 core.c
+errint.c
 
 3rd/bz2/bz2.hbc{HBMK_HAS_BZIP2_LOCAL}

@@ -1,16 +1,14 @@
 /*
- * Harbour Project source code:
- *    This code implements BlowFish algorithm designed by Bruce Schneier.
- *    The description of BlowFish algorithm can be found at:
- *       http://www.schneier.com/paper-blowfish-fse.html
- *    This code uses for initial s-boxes and p-array values PI hex digits
- *    taken from tables public at:
- *       http://www.schneier.com/blowfish.html
- *    which can be downloaded from:
- *       http://www.schneier.com/code/constants.txt
+ * This code implements BlowFish algorithm designed by Bruce Schneier.
+ * The description of BlowFish algorithm can be found at:
+ *    https://www.schneier.com/paper-blowfish-fse.html
+ * This code uses for initial s-boxes and p-array values PI hex digits
+ * taken from tables public at:
+ *    https://www.schneier.com/blowfish.html
+ * which can be downloaded from:
+ *    https://www.schneier.com/code/constants.txt
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -23,9 +21,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,7 +53,7 @@
 
 #include "hbbfish.h"
 
-const HB_BLOWFISH s_blowFishInit =
+static const HB_BLOWFISH s_blowFishInit =
 {
    { 0x243f6a88, 0x85a308d3, 0x13198a2e, 0x03707344, 0xa4093822, 0x299f31d0,
      0x082efa98, 0xec4e6c89, 0x452821e6, 0x38d01377, 0xbe5466cf, 0x34e90c6c,

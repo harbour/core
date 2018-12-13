@@ -1,4 +1,3 @@
-
 HB_BUILD_SHARED := no
 
 OBJ_EXT := .o

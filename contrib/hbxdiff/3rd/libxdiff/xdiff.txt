@@ -578,7 +578,7 @@ SEE ALSO
        Also usefull information can be looked up inside the diffutil GNU pack-
        age :
 
-       http://www.gnu.org/software/diffutils/diffutils.html
+       https://www.gnu.org/software/diffutils/diffutils.html
 
 
 LICENSE
@@ -588,7 +588,7 @@ LICENSE
        (at your option) any later version.  A copy of the license is available
        at :
 
-       http://www.gnu.org/copyleft/lesser.html
+       https://www.gnu.org/copyleft/lesser.html
 
 
 AUTHOR

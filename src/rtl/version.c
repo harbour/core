@@ -1,9 +1,8 @@
 /*
- * Harbour Project source code:
  * Version related functions
  *
- * Copyright 1999-2008 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl> (timestamp conversion)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -65,6 +64,8 @@ HB_FUNC( HB_VERSION )
 {
    switch( hb_parni( 1 ) )
    {
+      case HB_VERSION_URL_BASE:       hb_retc_const( "https://github.com/harbour/core/" ); break;
+      case HB_VERSION_URL_SOURCE:     hb_retc_null(); break;
       case HB_VERSION_HARBOUR:        hb_retc_buffer( hb_verHarbour() ); break;
       case HB_VERSION_COMPILER:       hb_retc_buffer( hb_verCompiler() ); break;
       case HB_VERSION_MAJOR:          hb_retni( HB_VER_MAJOR ); break;
@@ -120,13 +121,18 @@ HB_FUNC( HB_VERSION )
          hb_xfree( pszBuildDate );
          break;
       }
+      case HB_VERSION_BUILD_TIMESTAMP_UTC: hb_rettdt( 0, 0 ); break;
       case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;
       case HB_VERSION_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
       case HB_VERSION_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
+      case HB_VERSION_OPTIONS:        hb_retc_null(); break;
       case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
-      case HB_VERSION_MT:             hb_retl( hb_vmIsMt() );
+      case HB_VERSION_MT:             hb_retl( hb_vmIsMt() ); break;
 
-      case HB_VERSION_SHARED:
+      case HB_VERSION_SHARED:  /* FIXME: This only works when platforms has separate
+                                         compilation pass for harbour dynlib build -
+                                         it is 32-bit Windows. */
+
       #if defined( HB_DYNLIB )
          hb_retl( HB_TRUE );
       #else

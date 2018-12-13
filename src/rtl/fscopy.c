@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_fsCopy(), hb_FCopy() functions
  *
- * Copyright 1991-2008 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1991-2008 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,89 +47,80 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-#if defined( HB_OS_UNIX )
-   #include <sys/stat.h>
-   #include <unistd.h>
-#endif
-
 #define HB_FSCOPY_BUFFERSIZE  65536
 
 HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 {
-   HB_ERRCODE errCode;
-   HB_BOOL bRetVal;
-   HB_FHANDLE fhndSource;
-   HB_FHANDLE fhndDest;
+   HB_BOOL fResult = HB_FALSE;
+   PHB_FILE pSrcFile;
 
-   /* TODO: Change to use hb_fileExtOpen() */
-   if( ( fhndSource = hb_fsExtOpen( pszSource, NULL, FO_READ | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
+   if( ( pSrcFile = hb_fileExtOpen( pszSource, NULL, FO_READ | FO_SHARED | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
    {
-      /* TODO: Change to use hb_fileExtOpen() */
-      if( ( fhndDest = hb_fsExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != FS_ERROR )
+      PHB_FILE pDstFile;
+      HB_ERRCODE errCode;
+
+      if( ( pDstFile = hb_fileExtOpen( pszDest, NULL, FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE | FXO_SHARELOCK, NULL, NULL ) ) != NULL )
       {
-#if defined( HB_OS_UNIX )
-         struct stat struFileInfo;
-         int iSuccess = fstat( fhndSource, &struFileInfo );
-#endif
-         HB_SIZE nBytesRead;
          void * pbyBuffer = hb_xgrab( HB_FSCOPY_BUFFERSIZE );
 
          for( ;; )
          {
-            if( ( nBytesRead = hb_fsReadLarge( fhndSource, pbyBuffer, HB_FSCOPY_BUFFERSIZE ) ) > 0 )
+            HB_SIZE nBytesRead;
+            if( ( nBytesRead = hb_fileRead( pSrcFile, pbyBuffer, HB_FSCOPY_BUFFERSIZE, -1 ) ) > 0 &&
+                nBytesRead != ( HB_SIZE ) FS_ERROR )
             {
-               if( nBytesRead != hb_fsWriteLarge( fhndDest, pbyBuffer, nBytesRead ) )
+               if( nBytesRead != hb_fileWrite( pDstFile, pbyBuffer, nBytesRead, -1 ) )
                {
                   errCode = hb_fsError();
-                  bRetVal = HB_FALSE;
                   break;
                }
             }
             else
             {
                errCode = hb_fsError();
-               bRetVal = ( errCode == 0 );
+               fResult = errCode == 0;
                break;
             }
          }
 
          hb_xfree( pbyBuffer );
 
-#if defined( HB_OS_UNIX )
-         if( iSuccess == 0 )
-            fchmod( fhndDest, struFileInfo.st_mode );
-#endif
-
-         hb_fsClose( fhndDest );
+         hb_fileClose( pDstFile );
       }
       else
-      {
          errCode = hb_fsError();
-         bRetVal = HB_FALSE;
+
+      hb_fileClose( pSrcFile );
+
+      if( fResult )
+      {
+         HB_FATTR ulAttr;
+
+         if( hb_fileAttrGet( pszSource, &ulAttr ) )
+            hb_fileAttrSet( pszDest, ulAttr );
       }
-
-      hb_fsClose( fhndSource );
-   }
-   else
-   {
-      errCode = hb_fsError();
-      bRetVal = HB_FALSE;
+      hb_fsSetError( errCode );
    }
 
-   hb_fsSetFError( errCode );
-
-   return bRetVal;
+   return fResult;
 }
 
 HB_FUNC( HB_FCOPY )
 {
+   HB_ERRCODE errCode = 2; /* file not found */
+   HB_BOOL fResult = HB_FALSE;
    const char * pszSource = hb_parc( 1 ), * pszDest = hb_parc( 2 );
 
    if( pszSource && pszDest )
-      hb_retni( hb_fsCopy( pszSource, pszDest ) ? 0 : F_ERROR );
+   {
+      fResult = hb_fsCopy( pszSource, pszDest );
+      errCode = hb_fsError();
+   }
    else
    {
       hb_fsSetFError( 2 /* file not found */ );
       hb_retni( F_ERROR );
    }
+   hb_fsSetFError( errCode );
+   hb_retni( fResult ? 0 : F_ERROR );
 }

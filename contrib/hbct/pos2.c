@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *   PosChar(), PosDel(), PosIns() and PosRepl() CT3 functions
+ * PosChar(), PosDel(), PosIns() and PosRepl() CT3 functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,7 +53,7 @@ HB_FUNC( POSCHAR )
 
    if( hb_parclen( 1 ) > 0 )
    {
-      if( ( hb_parclen( 2 ) > 0 ) || HB_ISNUM( 2 ) )
+      if( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) )
       {
          const char * pcString = hb_parc( 1 );
          HB_SIZE sStrLen = hb_parclen( 1 );
@@ -190,7 +187,6 @@ HB_FUNC( POSINS )
    {
       const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      const char * pcInsert;
       HB_SIZE sInsLen;
 
       if( ( sInsLen = hb_parclen( 2 ) ) > 0 )
@@ -198,7 +194,7 @@ HB_FUNC( POSINS )
          HB_SIZE sStartPos;
          char * pcRet;
 
-         pcInsert = hb_parc( 2 );
+         const char * pcInsert = hb_parc( 2 );
 
          if( HB_ISNUM( 3 ) )
          {
@@ -267,7 +263,6 @@ HB_FUNC( POSREPL )
    {
       const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      const char * pcReplace;
       HB_SIZE sReplLen;
 
       if( ( sReplLen = hb_parclen( 2 ) ) > 0 )
@@ -276,7 +271,7 @@ HB_FUNC( POSREPL )
          char * pcRet;
          HB_SIZE sRetLen;
 
-         pcReplace = hb_parc( 2 );
+         const char * pcReplace = hb_parc( 2 );
 
          if( HB_ISNUM( 3 ) )
          {

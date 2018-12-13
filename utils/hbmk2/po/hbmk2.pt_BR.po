@@ -684,7 +684,7 @@ msgstr "(instalado)"
 
 #, c-format
 msgid "(not installed)"
-msgstr "(não intalado)"
+msgstr "(não instalado)"
 
 #, c-format
 msgid "Hint: Add option '%1$s' for missing function(s): %2$s"

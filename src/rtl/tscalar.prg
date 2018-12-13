@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Harbour implementation of Class(y) Scalar classes
  *
  * Copyright 2004 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,11 +45,11 @@
  */
 
 /* Class(y) documentation is located at:
-   http://www.clipx.net/ng/classy/ngdebc.php */
+   https://harbour.github.io/ng/classy/menu.html */
 
 #include "hbclass.ch"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS ScalarObject FUNCTION HBScalar
 
@@ -82,7 +80,7 @@ METHOD AsString() CLASS ScalarObject
    CASE "H" ; RETURN "{ ... => ... }"
    CASE "L" ; RETURN iif( Self, ".T.", ".F." )
    CASE "N" ; RETURN hb_ntos( Self )
-   CASE "S" ; RETURN "@" + Self:name + "()"
+   CASE "S" ; RETURN "@" + ::name + "()"
    CASE "P" ; RETURN "<0x...>"
    CASE "U" ; RETURN "NIL"
    ENDSWITCH
@@ -100,14 +98,16 @@ METHOD AsExpStr() CLASS ScalarObject
 
    RETURN ::AsString()
 
-METHOD BecomeErr() CLASS ScalarObject
+METHOD PROCEDURE BecomeErr() CLASS ScalarObject
 
+#if 0
    // Not implemented yet
-   // ::error( CSYERR_BECOME, "Message 'become' illegally sent to scalar", ::ClassName() )
+   ::error( CSYERR_BECOME, "Message 'become' illegally sent to scalar", ::ClassName() )
+#endif
 
-   RETURN NIL
+   RETURN
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Array INHERIT HBScalar FUNCTION __HBArray
 
@@ -127,7 +127,7 @@ CREATE CLASS Array INHERIT HBScalar FUNCTION __HBArray
    METHOD IsScalar()
    METHOD Remove( e )
    METHOD Scan( b )
-   METHOD _Size( newSize )                   // assignment method
+   METHOD _Size( newSize )  // assignment method
 
    MESSAGE Append  METHOD Add
 
@@ -162,15 +162,12 @@ METHOD Add( x ) CLASS Array
 
 METHOD Collect( b ) CLASS Array
 
-   LOCAL i
-   LOCAL currElem
+   LOCAL elem
    LOCAL result := {}
-   LOCAL nElems := Len( Self )
 
-   FOR i := 1 TO nElems
-      currElem := Self[ i ]
-      IF Eval( b, currElem )
-         AAdd( result, currElem )
+   FOR EACH elem IN Self
+      IF Eval( b, elem )
+         AAdd( result, elem )
       ENDIF
    NEXT
 
@@ -181,7 +178,7 @@ METHOD Copy() CLASS Array
 
 METHOD DeleteAt( n ) CLASS Array
 
-   IF n > 0 .AND. n <= Len( Self )
+   IF n >= 1 .AND. n <= Len( Self )
       hb_ADel( Self, n, .T. )
    ENDIF
 
@@ -189,12 +186,13 @@ METHOD DeleteAt( n ) CLASS Array
 
 METHOD InsertAt( n, x ) CLASS Array
 
-   IF n > Len( Self )
+   DO CASE
+   CASE n > Len( Self )
       ASize( Self, n )
       Self[ n ] := x
-   ELSEIF n > 0
+   CASE n >= 1
       hb_AIns( Self, n, x, .T. )
-   ENDIF
+   ENDCASE
 
    RETURN Self
 
@@ -223,11 +221,11 @@ METHOD IndexOf( x ) CLASS Array
 
    RETURN 0
 
-METHOD Remove( e ) CLASS Array
+METHOD PROCEDURE Remove( e ) CLASS Array
 
    ::DeleteAt( ::IndexOf( e ) )
 
-   RETURN NIL
+   RETURN
 
 METHOD Scan( b ) CLASS Array
    RETURN AScan( Self, b )
@@ -238,7 +236,7 @@ METHOD _Size( newSize ) CLASS Array
 
    RETURN newSize  // so that assignment works according to standard rules
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Block INHERIT HBScalar FUNCTION __HBBlock
 
@@ -249,7 +247,7 @@ ENDCLASS
 METHOD AsString() CLASS Block
    RETURN "{ || ... }"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Character INHERIT HBScalar FUNCTION __HBCharacter
 
@@ -264,7 +262,7 @@ METHOD AsString() CLASS Character
 METHOD AsExpStr() CLASS Character
    RETURN '"' + Self + '"'
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Date INHERIT HBScalar FUNCTION __HBDate
 
@@ -291,7 +289,7 @@ METHOD Month() CLASS Date
 METHOD Day() CLASS Date
    RETURN Day( Self )
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS TimeStamp INHERIT HBScalar FUNCTION __HBTimeStamp
 
@@ -316,10 +314,10 @@ METHOD AsExpStr() CLASS TimeStamp
    RETURN 'hb_SToT("' + ::AsString() + '")'
 
 METHOD Date() CLASS TimeStamp
-   RETURN hb_TToC( Self, NIL, "" )
+   RETURN hb_TToC( Self,, "" )
 
 METHOD Time() CLASS TimeStamp
-   RETURN hb_TToC( Self, "", "HH:MM:SS" )
+   RETURN hb_TToC( Self, "", "hh:mm:ss" )
 
 METHOD Year() CLASS TimeStamp
    RETURN Year( Self )
@@ -339,7 +337,7 @@ METHOD Minute() CLASS TimeStamp
 METHOD Sec() CLASS TimeStamp
    RETURN hb_Sec( Self )
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Hash INHERIT HBScalar FUNCTION __HBHash
 
@@ -350,7 +348,7 @@ ENDCLASS
 METHOD AsString() CLASS Hash
    RETURN "{ ... => ... }"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Logical INHERIT HBScalar FUNCTION __HBLogical
 
@@ -361,7 +359,7 @@ ENDCLASS
 METHOD AsString() CLASS Logical
    RETURN iif( Self, ".T.", ".F." )
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS NIL INHERIT HBScalar FUNCTION __HBNil
 
@@ -372,7 +370,7 @@ ENDCLASS
 METHOD AsString() CLASS NIL
    RETURN "NIL"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Numeric INHERIT HBScalar FUNCTION __HBNumeric
 
@@ -383,7 +381,7 @@ ENDCLASS
 METHOD AsString() CLASS Numeric
    RETURN hb_ntos( Self )
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Symbol INHERIT HBScalar FUNCTION __HBSymbol
 
@@ -392,9 +390,9 @@ CREATE CLASS Symbol INHERIT HBScalar FUNCTION __HBSymbol
 ENDCLASS
 
 METHOD AsString() CLASS Symbol
-   RETURN "@" + Self:name + "()"
+   RETURN "@" + ::name + "()"
 
-/* -------------------------------------------- */
+/* --- */
 
 CREATE CLASS Pointer INHERIT HBScalar FUNCTION __HBPointer
 
@@ -404,5 +402,3 @@ ENDCLASS
 
 METHOD AsString() CLASS Pointer
    RETURN "<0x...>"
-
-/* -------------------------------------------- */

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * __CopyFile() function
  *
  * Copyright 1999 Andi Jahja <andij@aonlippo.co.id>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,90 +54,116 @@
    #include <unistd.h>
 #endif
 
-#define BUFFER_SIZE  8192
+#ifdef HB_CLP_STRICT
+   #define BUFFER_SIZE  8192
+#else
+   #define BUFFER_SIZE  65536
+#endif
 
-static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
+static HB_BOOL hb_copyfile( const char * pszSource, const char * pszDest )
 {
    HB_BOOL bRetVal = HB_FALSE;
-   HB_FHANDLE fhndSource;
+   PHB_FILE pSource;
    PHB_ITEM pError = NULL;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s)", szSource, szDest ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s)", pszSource, pszDest ) );
 
    do
    {
-      fhndSource = hb_fsExtOpen( szSource, NULL,
-                                 FO_READ | FXO_DEFAULTS | FXO_SHARELOCK,
-                                 NULL, pError );
-      if( fhndSource == FS_ERROR )
+      pSource = hb_fileExtOpen( pszSource, NULL,
+                                FO_READ | FO_SHARED | FO_PRIVATE |
+                                FXO_DEFAULTS | FXO_SHARELOCK,
+                                NULL, pError );
+      if( pSource == NULL )
       {
-         pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 2012, szSource );
+         pError = hb_errRT_FileError( pError, NULL, EG_OPEN, 2012, pszSource );
          if( hb_errLaunch( pError ) != E_RETRY )
             break;
       }
    }
-   while( fhndSource == FS_ERROR );
+   while( pSource == NULL );
 
-   if( fhndSource != FS_ERROR )
+   if( pError )
    {
-      HB_FHANDLE fhndDest;
+      hb_itemRelease( pError );
+      pError = NULL;
+   }
+
+   if( pSource != NULL )
+   {
+      PHB_FILE pDest;
 
       do
       {
-         fhndDest = hb_fsExtOpen( szDest, NULL,
-                                  FXO_TRUNCATE | FO_READWRITE | FO_EXCLUSIVE |
-                                  FXO_DEFAULTS | FXO_SHARELOCK,
-                                  NULL, pError );
-         if( fhndDest == FS_ERROR )
+         pDest = hb_fileExtOpen( pszDest, NULL,
+                                 FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                 FXO_TRUNCATE | FXO_DEFAULTS | FXO_SHARELOCK,
+                                 NULL, pError );
+         if( pDest == NULL )
          {
-            pError = hb_errRT_FileError( pError, NULL, EG_CREATE, 2012, szDest );
+            pError = hb_errRT_FileError( pError, NULL, EG_CREATE, 2012, pszDest );
             if( hb_errLaunch( pError ) != E_RETRY )
                break;
          }
       }
-      while( fhndDest == FS_ERROR );
+      while( pDest == NULL );
 
-      if( fhndDest != FS_ERROR )
+      if( pError )
       {
-#if defined( HB_OS_UNIX )
-         struct stat struFileInfo;
-         int iSuccess = fstat( fhndSource, &struFileInfo );
-#endif
-         void * buffer;
-         HB_USHORT usRead;
+         hb_itemRelease( pError );
+         pError = NULL;
+      }
 
-         buffer = hb_xgrab( BUFFER_SIZE );
+      if( pDest != NULL )
+      {
+         HB_UCHAR * buffer;
+         HB_SIZE nRead;
 
+         buffer = ( HB_UCHAR * ) hb_xgrab( BUFFER_SIZE );
          bRetVal = HB_TRUE;
 
-         while( ( usRead = hb_fsRead( fhndSource, buffer, BUFFER_SIZE ) ) != 0 )
+         while( ( nRead = hb_fileRead( pSource, buffer, BUFFER_SIZE, -1 ) ) != 0 &&
+                nRead != ( HB_SIZE ) FS_ERROR )
          {
-            while( hb_fsWrite( fhndDest, buffer, usRead ) != usRead )
+            HB_SIZE nWritten = 0;
+
+            while( nWritten < nRead )
             {
-               pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, szDest );
-               if( hb_errLaunch( pError ) != E_RETRY )
+               HB_SIZE nDone = hb_fileWrite( pDest, buffer + nWritten, nRead - nWritten, -1 );
+               if( nDone != ( HB_SIZE ) FS_ERROR )
+                  nWritten += nDone;
+               if( nWritten < nRead )
                {
-                  bRetVal = HB_FALSE;
-                  break;
+                  pError = hb_errRT_FileError( pError, NULL, EG_WRITE, 2016, pszDest );
+                  if( hb_errLaunch( pError ) != E_RETRY )
+                  {
+                     bRetVal = HB_FALSE;
+                     break;
+                  }
                }
             }
          }
 
+         if( pError )
+            hb_itemRelease( pError );
+
          hb_xfree( buffer );
 
-#if defined( HB_OS_UNIX )
-         if( iSuccess == 0 )
-            fchmod( fhndDest, struFileInfo.st_mode );
-#endif
-
-         hb_fsClose( fhndDest );
+         hb_fileClose( pDest );
       }
 
-      hb_fsClose( fhndSource );
-   }
+      hb_fileClose( pSource );
 
-   if( pError )
-      hb_itemRelease( pError );
+#if defined( HB_OS_UNIX )
+      if( bRetVal )
+      {
+         HB_FATTR ulAttr;
+
+         if( hb_fileAttrGet( pszSource, &ulAttr ) )
+            hb_fileAttrSet( pszDest, ulAttr );
+      }
+#endif
+   }
 
    return bRetVal;
 }
@@ -148,9 +172,12 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
 
 HB_FUNC( __COPYFILE )
 {
-   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   const char * szSource = hb_parc( 1 );
+   const char * szDest = hb_parc( 2 );
+
+   if( szSource && szDest )
    {
-      if( ! hb_copyfile( hb_parc( 1 ), hb_parc( 2 ) ) )
+      if( ! hb_copyfile( szSource, szDest ) )
          hb_retl( HB_FALSE );
    }
    else

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_ValToExp(), hb_CStr()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -73,9 +71,7 @@ FUNCTION hb_CStr( xVal )
 
 FUNCTION hb_ValToExp( xVal, lRaw )
 
-   hb_default( @lRaw, .F. )
-
-   RETURN s_valToExp( xVal, lRaw )
+   RETURN s_valToExp( xVal, hb_defaultValue( lRaw, .F. ) )
 
 STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
 
@@ -117,7 +113,7 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
             cVal := "{"
             FOR EACH tmp IN xVal
                cKey := s_valToExp( tmp:__enumKey(), lRaw )
-               cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
+               cVal += iif( tmp:__enumIsFirst(), "", ", " ) + ;
                   cKey + "=>" + ;
                   s_valToExp( tmp, lRaw, cInd + cKey, hRefs, @cRefs, @cObjs )
             NEXT
@@ -127,7 +123,7 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
          cVal := "{"
          IF ! lRaw .AND. v == "O"
             FOR EACH tmp IN __objGetIVars( xVal )
-               cVal += iif( tmp:__enumIndex() == 1, '{"', ', {"' ) + ;
+               cVal += iif( tmp:__enumIsFirst(), '{"', ', {"' ) + ;
                        tmp[ 1 ] + '", ' + ;
                        s_valToExp( tmp[ 2 ], lRaw, ;
                                    cInd + hb_ntos( tmp:__enumIndex() ) + ",2", ;
@@ -135,7 +131,7 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
             NEXT
          ELSE
             FOR EACH tmp IN xVal
-               cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
+               cVal += iif( tmp:__enumIsFirst(), "", ", " ) + ;
                   s_valToExp( tmp, lRaw, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs, @cObjs )
             NEXT
          ENDIF

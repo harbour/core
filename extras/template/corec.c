@@ -1,4 +1,3 @@
-
 #include "hbapi.h"
 
 /* Public API implemented in C */

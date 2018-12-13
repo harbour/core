@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * win_printerSetDefault()
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.net) (based on MS sample code)
- * www - http://harbour-project.org
+ * Copyright 2009 Viktor Szakats (vszakats.net/harbour) (based on MS sample code)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -85,7 +83,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
       }
 
       /* Allocate enough space for PRINTER_INFO_2. */
-      ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+      ppi2 = ( PRINTER_INFO_2 * ) hb_xgrabz( dwNeeded );
 
       /* The second GetPrinter() will fill in all the current information
          so that all you have to do is modify what you are interested in. */
@@ -109,7 +107,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 
       /* Tell all open programs that this change occurred.
          Allow each program 1 second to handle this message. */
-      SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0L, ( LPARAM ) ( LPCTSTR ) TEXT( "windows" ), SMTO_NORMAL, 1000, NULL );
+      SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0, ( LPARAM ) ( LPCTSTR ) TEXT( "windows" ), SMTO_NORMAL, 1000, NULL );
    }
    /* If Windows NT, use the SetDefaultPrinter API for Windows 2000,
       or WriteProfileString for version 4.0 and earlier. */
@@ -125,8 +123,8 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          if( ! hWinSpool )
             return HB_FALSE;
 
-         fnSetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool,
-            HB_WINAPI_FUNCTION_NAME( "SetDefaultPrinter" ) );
+         fnSetDefaultPrinter = ( DEFPRINTER ) HB_WINAPI_GETPROCADDRESST( hWinSpool,
+            "SetDefaultPrinter" );
 
          if( ! fnSetDefaultPrinter )
          {
@@ -164,7 +162,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          }
 
          /* Allocate enough space for PRINTER_INFO_2. */
-         ppi2 = ( PRINTER_INFO_2 * ) hb_xgrab( dwNeeded );
+         ppi2 = ( PRINTER_INFO_2 * ) hb_xgrabz( dwNeeded );
 
          /* The second GetPrinter() fills in all the current
             information. */
@@ -206,7 +204,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
 
       /* Tell all open programs that this change occurred.
          Allow each app 1 second to handle this message. */
-      SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0L, 0L, SMTO_NORMAL, 1000, NULL );
+      SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0, 0, SMTO_NORMAL, 1000, NULL );
    }
 
    /* Clean up. */

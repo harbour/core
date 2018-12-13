@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * I18N translation Harbour functions
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -143,7 +141,7 @@ static const HB_PLURAL_FORMS s_plural_forms[] =
    { "VI",    HB_I18N_PLURAL_VI    }
 };
 
-#define HB_PLURAL_FOMRS_COUNT  ( sizeof( s_plural_forms ) / sizeof( HB_PLURAL_FORMS ) )
+#define HB_PLURAL_FOMRS_COUNT  HB_SIZEOFARRAY( s_plural_forms )
 
 static const HB_UCHAR s_signature[ 4 ] = { 193, 'H', 'B', 'L' };
 typedef struct _HB_I18N_TRANS
@@ -199,7 +197,7 @@ static const char * hb_i18n_pluralformid( int iForm )
 }
 
 /* NOTE: Source:
-         http://www.gnu.org/software/hello/manual/gettext/Plural-forms.html
+         https://www.gnu.org/software/hello/manual/gettext/Plural-forms.html
          [vszakats] */
 
 static long hb_i18n_pluralindex( int iForm, PHB_ITEM pNum )
@@ -317,8 +315,7 @@ static PHB_I18N_TRANS hb_i18n_new( void )
    PHB_I18N_TRANS pI18N;
    PHB_ITEM pKey;
 
-   pI18N = ( PHB_I18N_TRANS ) memset( hb_xgrab( sizeof( HB_I18N_TRANS ) ),
-                                      0, sizeof( HB_I18N_TRANS ) );
+   pI18N = ( PHB_I18N_TRANS ) hb_xgrabz( sizeof( HB_I18N_TRANS ) );
    hb_atomic_set( &pI18N->iUsers, 1 );
    pI18N->table = hb_hashNew( hb_itemNew( NULL ) );
    pI18N->context_table = hb_hashNew( hb_itemNew( NULL ) );
@@ -382,7 +379,7 @@ static PHB_I18N_TRANS hb_i18n_initialize( PHB_ITEM pTable )
 
    if( HB_IS_HASH( pTable ) )
    {
-      PHB_ITEM pKey, pContext, pDefContext = NULL, pValue;
+      PHB_ITEM pKey, pContext, pDefContext = NULL;
 
       pKey = hb_itemPutCConst( NULL, "CONTEXT" );
       pContext = hb_hashGetItemPtr( pTable, pKey, 0 );
@@ -394,8 +391,9 @@ static PHB_I18N_TRANS hb_i18n_initialize( PHB_ITEM pTable )
 
       if( pContext && pDefContext )
       {
-         pI18N = ( PHB_I18N_TRANS ) memset( hb_xgrab( sizeof( HB_I18N_TRANS ) ),
-                                            0, sizeof( HB_I18N_TRANS ) );
+         PHB_ITEM pValue;
+
+         pI18N = ( PHB_I18N_TRANS ) hb_xgrabz( sizeof( HB_I18N_TRANS ) );
          hb_atomic_set( &pI18N->iUsers, 1 );
          pI18N->table = pTable;
          pI18N->context_table = hb_itemNew( pContext );
@@ -443,7 +441,7 @@ static PHB_ITEM hb_i18n_serialize( PHB_I18N_TRANS pI18N )
    {
       HB_SIZE nSize;
       HB_U32 ulCRC;
-      char * pBuffer = hb_itemSerialize( pI18N->table, HB_FALSE, &nSize );
+      char * pBuffer = hb_itemSerialize( pI18N->table, 0, &nSize );
       char * pI18Nbuffer;
       PHB_ITEM pKey, pValue;
 
@@ -596,7 +594,7 @@ static HB_BOOL hb_i18n_setpluralform( PHB_I18N_TRANS pI18N, PHB_ITEM pForm,
 
    if( pI18N && pForm )
    {
-      if( HB_IS_BLOCK( pForm ) )
+      if( HB_IS_EVALITEM( pForm ) )
       {
          if( fBase )
          {
@@ -664,7 +662,7 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
                                          const char * szCdpID,
                                          HB_BOOL fBase, HB_BOOL fTranslate )
 {
-   const char * szOldCdpID = NULL, * szKey;
+   const char * szOldCdpID = NULL;
 
    if( pI18N )
    {
@@ -675,6 +673,8 @@ static const char * hb_i18n_setcodepage( PHB_I18N_TRANS pI18N,
          szOldCdpID = cdpage->id;
       if( cdp && cdp != cdpage )
       {
+         const char * szKey;
+
          if( fTranslate && cdpage )
          {
             HB_SIZE nHashLen = hb_hashLen( pI18N->context_table ), ul;
@@ -874,7 +874,7 @@ PHB_ITEM hb_i18n_ngettext( PHB_ITEM pNum, PHB_ITEM pMsgID, PHB_ITEM pContext )
       }
    }
 
-   if( HB_IS_ARRAY( pMsgID ) )
+   if( pMsgID && HB_IS_ARRAY( pMsgID ) )
    {
       long lIndex;
 
@@ -993,7 +993,7 @@ HB_FUNC( HB_I18N_PLURALFORM )
    if( pI18N )
    {
       PHB_ITEM pOldForm = hb_itemNew( NULL );
-      PHB_ITEM pForm = hb_param( iParam, HB_IT_STRING | HB_IT_BLOCK );
+      PHB_ITEM pForm = hb_param( iParam, HB_IT_STRING | HB_IT_EVALITEM );
       HB_BOOL fBase = hb_parl( iParam + 1 );
 
       if( hb_i18n_getpluralform( pI18N, pOldForm, fBase ) )
@@ -1040,9 +1040,10 @@ HB_FUNC( HB_I18N_ADDTEXT )
       {
          if( HB_IS_ARRAY( pTrans ) )
          {
-            HB_SIZE nLen = hb_arrayLen( pTrans ), n;
+            HB_SIZE nLen = hb_arrayLen( pTrans );
             if( nLen != 0 )
             {
+               HB_SIZE n;
                for( n = 1; n <= nLen; ++n )
                {
                   if( ! HB_IS_STRING( hb_arrayGetItemPtr( pTrans, n ) ) )
@@ -1121,7 +1122,7 @@ HB_FUNC( HB_I18N_CHECK )
    hb_retl( hb_i18n_headercheck( hb_parc( 1 ), hb_parclen( 1 ) ) );
 }
 
-/* unoffical function to access ineternal hash table used by i18n set */
+/* unofficial function to access internal hash table used by i18n set */
 HB_FUNC( __I18N_HASHTABLE )
 {
    PHB_I18N_TRANS pI18N;

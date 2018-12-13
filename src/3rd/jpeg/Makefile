@@ -1,4 +1,3 @@
-
 ROOT := ../../../
 
 include $(TOP)$(ROOT)config/global.mk
@@ -86,7 +85,6 @@ ifeq ($(filter $(HB_COMPILER),<>),)
    include $(TOP)$(ROOT)config/detfun.mk
 
    ifneq ($(HB_HAS_JPEG_LOCAL),)
-      HB_CFLAGS += -DHAVE_STDLIB_H -DHAVE_PROTOTYPES
       ifeq ($(HB_COMPILER),poccarm)
          HB_CFLAGS += -DNO_GETENV
       endif
@@ -102,9 +100,9 @@ else
 endif
 
 # ORIGIN http://www.ijg.org/
-# VER    9
-# URL    http://www.ijg.org/files/jpegsrc.v9.tar.gz
-# DIFF   jpeg.dif
+# VER    9a
+# URL    http://www.ijg.org/files/jpegsrc.v9a.tar.gz
+# DIFF   jpeg.diff
 #
 # MAP    README
 # MAP    cderror.h

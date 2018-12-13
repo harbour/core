@@ -1,4 +1,3 @@
-
 #require "hbnf"
 
 #define INITIAL_SEMAPHORE_VALUE     2

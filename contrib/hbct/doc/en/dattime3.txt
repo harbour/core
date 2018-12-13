@@ -1,9 +1,8 @@
-
 /* $DOC$
    $NAME$
       WaitPeriod()
    $CATEGORY$
-      HBCT date and time functions
+      hbct date and time functions
    $ONELINER$
       Pauses a specified time in increments of 1/100 seconds
    $SYNTAX$
@@ -53,7 +52,7 @@
    $NAME$
       TimeValid()
    $CATEGORY$
-      HBCT Date and Time Functions
+      hbct Date and Time Functions
    $ONELINER$
       Determines whether a specIFied time is valid
    $SYNTAX$
@@ -113,7 +112,7 @@
    $NAME$
       SetTime()
    $CATEGORY$
-      HBCT Date and Time Functions
+      hbct Date and Time Functions
    $ONELINER$
       Sets the system clock
    $SYNTAX$
@@ -125,7 +124,7 @@
       <lMode>  Designates whether the time should also be set in the
       CMOS-RAM of an AT.  The default is do not write to CMOS-RAM. Note that in
       Windows platform this adjust is automatic, therefore this parameter is
-      without efect.
+      without effect.
    $RETURNS$
       The FUNCTION RETURNs .T. when the time is set successfully.
    $DESCRIPTION$
@@ -163,7 +162,7 @@
    $NAME$
       SetDate()
    $CATEGORY$
-      HBCT Date and Time Functions
+      hbct Date and Time Functions
    $ONELINER$
       Sets the system date
    $SYNTAX$
@@ -173,8 +172,8 @@
 
       <lMode>  Designates whether the date should also be set in the CMOS-
       RAM of an AT.  The default is do not write (.F.). Note that in Windows
-      plataform this adjust is automatic, therefore this parameter is without
-      efect.
+      platform this adjust is automatic, therefore this parameter is without
+      effect.
    $RETURNS$
       SetDate() RETURNs .T. when the date is successfully set.
    $DESCRIPTION$

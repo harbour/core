@@ -24,7 +24,7 @@
  * @return 32-bit integer
  */
 static uint32_t ini_func1(uint32_t x) {
-    return (x ^ (x >> 27)) * (uint32_t)1664525UL;
+    return (x ^ (x >> 27)) * UINT32_C(1664525);
 }
 
 /**
@@ -34,7 +34,7 @@ static uint32_t ini_func1(uint32_t x) {
  * @return 32-bit integer
  */
 static uint32_t ini_func2(uint32_t x) {
-    return (x ^ (x >> 27)) * (uint32_t)1566083941UL;
+    return (x ^ (x >> 27)) * UINT32_C(1566083941);
 }
 
 /**

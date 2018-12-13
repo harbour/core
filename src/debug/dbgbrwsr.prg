@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * The Debugger Browser
  *
  * Copyright 2004 Ryszard Glab <rglab@imid.med.pl>
  * Copyright 2007 Phil Krylov <phil a t newstar.rinet.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,7 +47,7 @@
 
 #pragma -b-
 
-#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
+#define HB_CLS_NOTOBJECT      /* do not inherit from HBObject class */
 #include "hbclass.ch"
 
 /* HBDbBrowser
@@ -93,8 +91,9 @@ CREATE CLASS HBDbBrowser
    ACCESS ColorSpec            INLINE ::cColorSpec
    ASSIGN ColorSpec( cColors ) METHOD SetColorSpec( cColors )
    METHOD Configure()
-   METHOD DeHiLite()           INLINE Self
-   METHOD HiLite()             INLINE Self
+   METHOD DeHiLite()           INLINE ::DispRow( ::rowPos, .F. )
+   METHOD HiLite()             INLINE ::DispRow( ::rowPos, .T. )
+   METHOD DispRow( nRow, lHiLite )
    METHOD MoveCursor( nSkip )
    METHOD GoTo( nRow )
    METHOD GoTop()              INLINE ::GoTo( 1 ), ::rowPos := 1, ::nFirstVisible := 1, ::RefreshAll()
@@ -105,7 +104,7 @@ CREATE CLASS HBDbBrowser
    METHOD PageUp()             INLINE ::MoveCursor( -::rowCount )
    METHOD GetColumn( nColumn ) INLINE ::aColumns[ nColumn ]
    METHOD RefreshAll()         INLINE AFill( ::aRowState, .F. ), Self
-   METHOD RefreshCurrent()     INLINE iif( ::rowCount > 0 .AND. ::rowPos <= Len( ::aRowState ), ::aRowState[ ::rowPos ] := .F., ), Self
+   METHOD RefreshCurrent()     INLINE iif( ::rowCount >= 1 .AND. ::rowPos <= Len( ::aRowState ), ::aRowState[ ::rowPos ] := .F., ), Self
    METHOD Invalidate()         INLINE ::RefreshAll()
    METHOD Stabilize()          INLINE ::ForceStable()
    METHOD ForceStable()
@@ -122,15 +121,19 @@ METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS HBDbBrowser
 
    RETURN Self
 
-METHOD Configure()
+METHOD Configure() CLASS HBDbBrowser
 
    ::rowCount := ::nBottom - ::nTop + 1
+   IF ::rowPos > ::rowCount
+      ::nFirstVisible += ::rowPos - ::rowCount
+      ::rowPos := ::rowCount
+   ENDIF
    AFill( ASize( ::aRowState, ::rowCount ), .F. )
    ::lConfigured := .T.
 
    RETURN Self
 
-METHOD SetColorSpec( cColors )
+METHOD SetColorSpec( cColors ) CLASS HBDbBrowser
 
    IF HB_ISSTRING( cColors )
       ::cColorSpec := cColors
@@ -139,12 +142,12 @@ METHOD SetColorSpec( cColors )
 
    RETURN ::cColorSpec
 
-METHOD MoveCursor( nSkip )
+METHOD MoveCursor( nSkip ) CLASS HBDbBrowser
 
    LOCAL nSkipped
 
    nSkipped := ::GoTo( ::rowPos + ::nFirstVisible - 1 + nSkip )
-   IF ! ::hitBottom .OR. Abs( nSkipped ) > 0
+   IF ! ::hitBottom .OR. nSkipped != 0
       IF iif( nSkipped > 0, ::rowPos + nSkipped <= ::rowCount, ::rowPos + nSkipped >= 1 )
          ::RefreshCurrent()
          ::rowPos += nSkipped
@@ -157,9 +160,46 @@ METHOD MoveCursor( nSkip )
 
    RETURN Self
 
-METHOD ForceStable()
+METHOD DispRow( nRow, lHiLite ) CLASS HBDbBrowser
 
-   LOCAL nRow, nCol, xData, oCol, nColX, nWid, aClr, nClr
+   LOCAL nColX, nWid, aClr, nClr
+   LOCAL xData
+   LOCAL oCol
+
+   ::GoTo( ::nFirstVisible + nRow - 1 )
+   IF ::hitBottom
+      hb_Scroll( ::nTop + nRow - 1, ::nLeft, ::nTop + nRow - 1, ::nRight,,, ::aColorSpec[ 1 ] )
+   ELSE
+      DispBegin()
+      nColX := ::nLeft
+      FOR EACH oCol IN ::aColumns
+         IF nColX <= ::nRight
+            xData := Eval( oCol:block )
+            nClr := iif( lHiLite, 2, 1 )
+            aClr := Eval( oCol:colorBlock, xData )
+            IF HB_ISARRAY( aClr )
+               nClr := aClr[ nClr ]
+            ELSE
+               nClr := oCol:defColor[ nClr ]
+            ENDIF
+            nWid := oCol:width
+            IF nWid == NIL
+               nWid := Len( xData )
+            ENDIF
+            hb_DispOutAt( ::nTop + nRow - 1, nColX, ;
+                          Left( PadR( xData, nWid ) + iif( oCol:__enumIsLast(), "", " " ), ;
+                                ::nRight - nColX + 1 ), ::aColorSpec[ nClr ] )
+            nColX += nWid + 1
+         ENDIF
+      NEXT
+      DispEnd()
+   ENDIF
+
+   RETURN Self
+
+METHOD ForceStable() CLASS HBDbBrowser
+
+   LOCAL nRow
 
    IF ! ::lConfigured
       ::Configure()
@@ -167,31 +207,7 @@ METHOD ForceStable()
    DispBegin()
    FOR nRow := 1 TO ::rowCount
       IF ! ::aRowState[ nRow ]
-         ::GoTo( ::nFirstVisible + nRow - 1 )
-         IF ::hitBottom
-            hb_DispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
-         ELSE
-            nColX := ::nLeft
-            FOR nCol := 1 TO Len( ::aColumns )
-               IF nColX <= ::nRight
-                  oCol := ::aColumns[ nCol ]
-                  xData := Eval( oCol:block )
-                  nClr := iif( nRow == ::rowPos, 2, 1 )
-                  aClr := Eval( oCol:colorBlock, xData )
-                  IF HB_ISARRAY( aClr )
-                     nClr := aClr[ nClr ]
-                  ELSE
-                     nClr := oCol:defColor[ nClr ]
-                  ENDIF
-                  nWid := oCol:width
-                  IF nWid == NIL
-                     nWid := Len( xData )
-                  ENDIF
-                  hb_DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
-                  nColX += nWid + 1
-               ENDIF
-            NEXT
-         ENDIF
+         ::DispRow( nRow, nRow == ::rowPos )
          ::aRowState[ nRow ] := .T.
       ENDIF
    NEXT
@@ -201,7 +217,7 @@ METHOD ForceStable()
 
    RETURN Self
 
-METHOD GoTo( nRow )
+METHOD GoTo( nRow ) CLASS HBDbBrowser
 
    LOCAL nOldRow := ::nFirstVisible + ::rowPos - 1
    LOCAL nSkipped := 0
@@ -216,31 +232,38 @@ METHOD GoTo( nRow )
 
    RETURN nSkipped - nOldRow + 1
 
-METHOD GoBottom()
+METHOD GoBottom() CLASS HBDbBrowser
+
+   LOCAL nScroll
 
    DO WHILE ! ::hitBottom
       ::PageDown()
    ENDDO
+   IF ::rowPos < ::rowCount .AND. ::nFirstVisible > 1
+      nScroll := Min( ::nFirstVisible - 1, ::rowCount - ::rowPos )
+      ::nFirstVisible -= nScroll
+      ::rowPos += nScroll
+   ENDIF
 
    RETURN Self
 
-METHOD Resize( nTop, nLeft, nBottom, nRight )
+METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBDbBrowser
 
    LOCAL lResize := .F.
 
-   IF nTop != NIL .AND. nTop != ::nTop
+   IF HB_ISNUMERIC( nTop ) .AND. nTop != ::nTop
       ::nTop := nTop
       lResize := .T.
    ENDIF
-   IF nLeft != NIL .AND. nLeft != ::nLeft
+   IF HB_ISNUMERIC( nLeft ) .AND. nLeft != ::nLeft
       ::nLeft := nLeft
       lResize := .T.
    ENDIF
-   IF nBottom != NIL .AND. nBottom != ::nBottom
+   IF HB_ISNUMERIC( nBottom ) .AND. nBottom != ::nBottom
       ::nBottom := nBottom
       lResize := .T.
    ENDIF
-   IF nRight != NIL .AND. nRight != ::nRight
+   IF HB_ISNUMERIC( nRight ) .AND. nRight != ::nRight
       ::nRight := nRight
       lResize := .T.
    ENDIF
@@ -249,7 +272,7 @@ METHOD Resize( nTop, nLeft, nBottom, nRight )
       ::Configure():ForceStable()
    ENDIF
 
-   RETURN self
+   RETURN Self
 
 CREATE CLASS HBDbColumn
 
@@ -260,7 +283,7 @@ CREATE CLASS HBDbColumn
    VAR defColor   AS ARRAY     INIT { 1, 2 }    /* Array of numeric indexes into the color table */
    VAR width      AS USUAL                      /* Column display width */
 
-   METHOD New( cHeading, bBlock )               /* NOTE: This method is a Harbour extension [vszakats] */
+   METHOD New( cHeading, bBlock )
 
 ENDCLASS
 

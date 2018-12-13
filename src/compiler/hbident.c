@@ -1,14 +1,12 @@
 /*
- * Harbour Project source code:
  * The cache for identifiers
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,15 +14,14 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
 #include <string.h>
 
-#include "hbhash.h"
 #include "hbcomp.h"
 
 #define HB_IDENT_TABLE_SIZE  509UL
@@ -52,7 +49,7 @@ const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType 
                        ( const void * ) szIdent, ( const void * ) szIdent );
    }
    else if( iType == HB_IDENT_FREE )
-      hb_xfree( ( void * ) szName );
+      hb_xfree( HB_UNCONST( szName ) );
 
    return szIdent;
 }
@@ -75,7 +72,7 @@ static HB_HASH_FUNC( hb_comp_IdentKey )    /* HB_SIZE func (void *Value, void *C
 /* deletes an identifier */
 static HB_HASH_FUNC( hb_comp_IdentDel )
 {
-   hb_xfree( ( void * ) Value );
+   hb_xfree( HB_UNCONST( Value ) );
    HB_SYMBOL_UNUSED( HashPtr );
    HB_SYMBOL_UNUSED( Cargo );
    return 1;

@@ -1,11 +1,8 @@
 /*
- * xHarbour Project source code:
- * Functions:
- * SetFCreate(), CSetSafety(), StrFile(), FileStr(), ScreenFile()
- * ScreenFile(), FileScreen()
+ * StrFile(), FileStr(), ScreenFile(), FileScreen()
+ * SetFCreate(), CSetSafety()
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -97,8 +94,8 @@ HB_FUNC( CSETSAFETY )
       ct_setsafety( hb_parl( 1 ) );
 }
 
-static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE nLen, HB_BOOL bOverwrite, HB_FOFFSET nOffset,
-                           HB_BOOL bTrunc )
+static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE nLen,
+                           HB_BOOL bOverwrite, HB_FOFFSET nOffset, HB_BOOL bTrunc )
 {
    HB_FHANDLE hFile;
    HB_BOOL bOpen = HB_FALSE;

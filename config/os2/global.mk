@@ -1,4 +1,3 @@
-
 all : first
 
 RES_EXT := .res

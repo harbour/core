@@ -1,4 +1,3 @@
-
 include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(HB_PLATFORM),)
@@ -53,6 +52,7 @@ HB_DYN_LIBS := \
    gtgui \
    gtwin \
    gtos2 \
+   gtdos \
    gttrm \
    gtcrs \
    gtsln \
@@ -66,20 +66,17 @@ endif
 ifneq ($(HB_HAS_ZLIB_LOCAL),)
    HB_DYN_LIBS += hbzlib
 endif
+ifeq ($(HB_PLATFORM),dos)
+   HB_DYN_LIBS += hbdossrl
+endif
 
 #   hbcplr \
 #   hbdebug \
 
-ifneq ($(HB_HAS_PCRE_LOCAL),)
-   HB_DYN_LIBS += hbpcre
-endif
-ifneq ($(HB_HAS_ZLIB_LOCAL),)
-   HB_DYN_LIBS += hbzlib
-endif
-
 
 DYN_FILE :=
 IMP_FILE :=
+DEF_FILE := $(DEFNAME)
 
 ifneq ($(HB_BUILD_DYN),no)
 ifneq ($(DY_RULE),)
@@ -100,7 +97,7 @@ endif
 ifeq ($(HB_DYN_FROM_LIBS),yes)
    ALL_OBJS := $(subst /,$(DIRSEP),$(foreach lib,$(HB_DYN_LIBS),$(wildcard $(LIB_DIR)/$(LIB_PREF)$(lib)$(LIB_EXT))))
 else
-   ALL_OBJS := $(subst /,$(DIRSEP),$(foreach dir,$(DYNDIRLIST),$(wildcard $(TOP)$(ROOT)$(dir)/$(OBJ_DIR)/*$(OBJ_DYN_POSTFIX)$(OBJ_EXT))))
+   ALL_OBJS := $(subst /,$(DIRSEP),$(foreach dir,$(DYNDIRLIST),$(wildcard $(TOP)$(ROOT)$(dir)/$(OBJ_DIR)/*$(OBJ_DYN_SUFFIX)$(OBJ_EXT))))
 endif
 
 first:: dirbase descend

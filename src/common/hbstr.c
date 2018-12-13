@@ -1,9 +1,8 @@
 /*
- * Harbour Project source code:
  * Harbour common string functions (accessed from standalone utilities and the RTL)
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (hb_stricmp())
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -43,17 +42,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_stricmp()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -98,6 +86,33 @@ HB_SIZE hb_strAt( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_S
                   return nPos + 1;
             }
             while( szText[ nPos + nSubPos ] == szSub[ nSubPos ] );
+         }
+      }
+      while( nPos++ < nLen );
+   }
+
+   return 0;
+}
+
+HB_SIZE hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strAt(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen ) );
+
+   if( nSubLen > 0 && nLen >= nSubLen )
+   {
+      HB_SIZE nPos = 0;
+      nLen -= nSubLen;
+      do
+      {
+         if( HB_TOUPPER( szText[ nPos ] ) == HB_TOUPPER( *szSub ) )
+         {
+            HB_SIZE nSubPos = nSubLen;
+            do
+            {
+               if( --nSubPos == 0 )
+                  return nPos + 1;
+            }
+            while( HB_TOUPPER( szText[ nPos + nSubPos ] ) == HB_TOUPPER( szSub[ nSubPos ] ) );
          }
       }
       while( nPos++ < nLen );
@@ -163,31 +178,31 @@ char * hb_strdup( const char * pszText )
 char * hb_strndup( const char * pszText, HB_SIZE nLen )
 {
    char * pszDup;
-   HB_SIZE ul;
+   HB_SIZE nPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_strndup(%.*s, %" HB_PFS "d)", ( int ) nLen, pszText, nLen ) );
 
-   ul = 0;
-   while( nLen-- && pszText[ ul ] )
-      ++ul;
+   nPos = 0;
+   while( nLen-- && pszText[ nPos ] )
+      ++nPos;
 
-   pszDup = ( char * ) hb_xgrab( ul + 1 );
-   memcpy( pszDup, pszText, ul );
-   pszDup[ ul ] = '\0';
+   pszDup = ( char * ) hb_xgrab( nPos + 1 );
+   memcpy( pszDup, pszText, nPos );
+   pszDup[ nPos ] = '\0';
 
    return pszDup;
 }
 
 HB_SIZE hb_strnlen( const char * pszText, HB_SIZE nLen )
 {
-   HB_SIZE ul = 0;
+   HB_SIZE nPos = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_strnlen(%.*s, %" HB_PFS "d)", ( int ) nLen, pszText, nLen ) );
 
    while( nLen-- && *pszText++ )
-      ++ul;
+      ++nPos;
 
-   return ul;
+   return nPos;
 }
 
 char * hb_strduptrim( const char * pszText )
@@ -213,30 +228,32 @@ char * hb_strduptrim( const char * pszText )
 
 HB_SIZE hb_strlentrim( const char * pszText )
 {
-   HB_SIZE ul = 0;
+   HB_SIZE nPos = 0;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_strlentrim(%s)", pszText ) );
 
    while( pszText[ 0 ] == ' ' )
       ++pszText;
 
-   while( pszText[ ul ] )
-      ++ul;
+   while( pszText[ nPos ] )
+      ++nPos;
 
-   while( ul && pszText[ ul - 1 ] == ' ' )
-      --ul;
+   while( nPos && pszText[ nPos - 1 ] == ' ' )
+      --nPos;
 
-   return ul;
+   return nPos;
 }
 
 int hb_stricmp( const char * s1, const char * s2 )
 {
-   int rc = 0, c1, c2;
+   int rc = 0, c1;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_stricmp(%s, %s)", s1, s2 ) );
 
    do
    {
+      int c2;
+
       c1 = HB_TOUPPER( ( unsigned char ) *s1 );
       c2 = HB_TOUPPER( ( unsigned char ) *s2 );
 
@@ -254,7 +271,7 @@ int hb_stricmp( const char * s1, const char * s2 )
    return rc;
 }
 
-/* warning: It is not case sensitive */
+/* Warning: It is not case sensitive */
 int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 {
    HB_SIZE nCount;
@@ -282,14 +299,14 @@ int hb_strnicmp( const char * s1, const char * s2, HB_SIZE count )
 /*
    AJ: 2004-02-23
    Concatenates multiple strings into a single result.
-   Eg. hb_xstrcat (buffer, "A", "B", NULL) stores "AB" in buffer.
+   Eg. hb_xstrcat( buffer, "A", "B", NULL ) stores "AB" in buffer.
  */
 char * hb_xstrcat( char * szDest, const char * szSrc, ... )
 {
    char * szResult = szDest;
    va_list va;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_xstrcat(%p, %p, ...)", szDest, szSrc ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xstrcat(%p, %p, ...)", ( void * ) szDest, ( const void * ) szSrc ) );
 
    while( *szDest )
       szDest++;
@@ -310,7 +327,7 @@ char * hb_xstrcat( char * szDest, const char * szSrc, ... )
 /*
    AJ: 2004-02-23
    Concatenates multiple strings into a single result.
-   Eg. hb_xstrcpy (buffer, "A", "B", NULL) stores "AB" in buffer.
+   Eg. hb_xstrcpy( buffer, "A", "B", NULL ) stores "AB" in buffer.
    Returns szDest.
    Any existing contents of szDest are cleared. If the szDest buffer is NULL,
    allocates a new buffer with the required length and returns that. The
@@ -322,7 +339,7 @@ char * hb_xstrcpy( char * szDest, const char * szSrc, ... )
    char * szResult;
    va_list va;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_xstrcpy(%p, %p, ...)", szDest, szSrc ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xstrcpy(%p, %p, ...)", ( void * ) szDest, ( const void * ) szSrc ) );
 
    if( szDest == NULL )
    {
@@ -354,16 +371,16 @@ char * hb_xstrcpy( char * szDest, const char * szSrc, ... )
 
 static double hb_numPow10( int nPrecision )
 {
-   static const double s_dPow10[ 16 ] = { 1.0,                  /*  0 */
-                                          10.0,                 /*  1 */
-                                          100.0,                /*  2 */
-                                          1000.0,               /*  3 */
-                                          10000.0,              /*  4 */
-                                          100000.0,             /*  5 */
-                                          1000000.0,            /*  6 */
-                                          10000000.0,           /*  7 */
-                                          100000000.0,          /*  8 */
-                                          1000000000.0,         /*  9 */
+   static const double s_dPow10[ 16 ] = { 1.0,                  /* 0 */
+                                          10.0,                 /* 1 */
+                                          100.0,                /* 2 */
+                                          1000.0,               /* 3 */
+                                          10000.0,              /* 4 */
+                                          100000.0,             /* 5 */
+                                          1000000.0,            /* 6 */
+                                          10000000.0,           /* 7 */
+                                          100000000.0,          /* 8 */
+                                          1000000000.0,         /* 9 */
                                           10000000000.0,        /* 10 */
                                           100000000000.0,       /* 11 */
                                           1000000000000.0,      /* 12 */
@@ -384,7 +401,7 @@ static double hb_numPow10( int nPrecision )
 
 double hb_numRound( double dNum, int iDec )
 {
-   static const double doBase = 10.0f;
+   static const double doBase = 10.0;
    double doComplete5, doComplete5i, dPow;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_numRound(%lf, %d)", dNum, iDec ) );
@@ -414,7 +431,7 @@ double hb_numRound( double dNum, int iDec )
  * numbers so we can decrease the precision to 15 digits and use
  * the cut part for proper rounding. It should resolve
  * most of problems. But if someone totally  not understand FL
- * and will try to convert big matrix or sth like that it's quite
+ * and will try to convert big matrix or something like that it's quite
  * possible that he chose one of the natural school algorithm which
  * works nice with real numbers but can give very bad results in FL.
  * In such case it could be good to decrease precision even more.
@@ -475,10 +492,10 @@ double hb_numRound( double dNum, int iDec )
          doComplete5 = -doComplete5;
    }
 #else
-   if( dNum < 0.0f )
-      doComplete5 -= 5.0f;
+   if( dNum < 0.0 )
+      doComplete5 -= 5.0;
    else
-      doComplete5 += 5.0f;
+      doComplete5 += 5.0;
 #endif
 
    doComplete5 /= doBase;
@@ -545,7 +562,7 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, 
    int iLen, iPos = 0;
    int c, iWidth, iDec = 0, iDecR = 0;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_str2number(%d, %p, %" HB_PFS "u, %p, %p, %p, %p)", ( int ) fPCode, szNum, nLen, lVal, dVal, piDec, piWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_str2number(%d, %p, %" HB_PFS "u, %p, %p, %p, %p)", ( int ) fPCode, ( const void * ) szNum, nLen, ( void * ) lVal, ( void * ) dVal, ( void * ) piDec, ( void * ) piWidth ) );
 
    iLen = ( int ) nLen;
 
@@ -709,25 +726,25 @@ static HB_BOOL hb_str2number( HB_BOOL fPCode, const char * szNum, HB_SIZE nLen, 
 
 HB_BOOL hb_compStrToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_compStrToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, plVal, pdVal, piDec, piWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compStrToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, ( void * ) plVal, ( void * ) pdVal, ( void * ) piDec, ( void * ) piWidth ) );
    return hb_str2number( HB_TRUE, szNum, nLen, plVal, pdVal, piDec, piWidth );
 }
 
 HB_BOOL hb_valStrnToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * plVal, double * pdVal, int * piDec, int * piWidth )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_valStrnToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, plVal, pdVal, piDec, piWidth ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_valStrnToNum( %s, %" HB_PFS "u, %p, %p, %p, %p)", szNum, nLen, ( void * ) plVal, ( void * ) pdVal, ( void * ) piDec, ( void * ) piWidth ) );
    return hb_str2number( HB_FALSE, szNum, nLen, plVal, pdVal, piDec, piWidth );
 }
 
 HB_BOOL hb_strToNum( const char * szNum, HB_MAXINT * plVal, double * pdVal )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strToNum(%s, %p, %p)", szNum, plVal, pdVal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strToNum(%s, %p, %p)", szNum, ( void * ) plVal, ( void * ) pdVal ) );
    return hb_str2number( HB_FALSE, szNum, strlen( szNum ), plVal, pdVal, NULL, NULL );
 }
 
 HB_BOOL hb_strnToNum( const char * szNum, HB_SIZE nLen, HB_MAXINT * plVal, double * pdVal )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strnToNum(%.*s, %" HB_PFS "u, %p, %p)", ( int ) nLen, szNum, nLen, plVal, pdVal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strnToNum(%.*s, %" HB_PFS "u, %p, %p)", ( int ) nLen, szNum, nLen, ( void * ) plVal, ( void * ) pdVal ) );
    return hb_str2number( HB_FALSE, szNum, nLen, plVal, pdVal, NULL, NULL );
 }
 
@@ -765,7 +782,7 @@ char * hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT lNumber )
    int iPos = ( int ) nSize;
    HB_BOOL fNeg = HB_FALSE;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_numToStr(%p, %" HB_PFS "u, %" PFHL "i)", szBuf, nSize, lNumber ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_numToStr(%p, %" HB_PFS "u, %" PFHL "i)", ( void * ) szBuf, nSize, lNumber ) );
 
    szBuf[ --iPos ] = '\0';
    if( lNumber < 0 )
@@ -795,8 +812,143 @@ char * hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT lNumber )
    return &szBuf[ iPos ];
 }
 
-/*
- * This function copies szText to destination buffer.
+/* if you want to be sure that size of buffer is enough to hold each
+   double number with '\0' terminating character then it should have
+   at least HB_MAX_DOUBLE_LENGTH bytes. If buffer is not large enough
+   then NULL is returned */
+char * hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec )
+{
+   double dInt, dFract, dDig, doBase = 10.0;
+   int iLen, iPos, iPrec;
+   char * szResult;
+   HB_BOOL fFirst;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dblToStr(%p, %" HB_PFS "u, %f, %d)", ( void * ) szBuf, nSize, dNumber, iMaxDec ) );
+
+   iLen = ( int ) ( nSize - 1 );
+   if( iLen <= 0 )
+      return NULL;
+#ifdef HB_NUM_PRECISION
+   iPrec = HB_NUM_PRECISION;
+#else
+   iPrec = 16;
+#endif
+   szResult = szBuf;
+   if( dNumber < 0 )
+   {
+      dFract = modf( -dNumber, &dInt );
+      if( --iLen == 0 )
+      {
+         if( dInt < 1 && dFract < 0.5 )
+         {
+            szBuf[ 0 ] = '0';
+            szBuf[ 1 ] = '\0';
+            return szBuf;
+         }
+         return NULL;
+      }
+      *szBuf++ = '-';
+   }
+   else
+      dFract = modf( dNumber, &dInt );
+
+   iPos = iLen;
+   do
+   {
+      if( iPos == 0 )
+         return NULL;
+      dDig = modf( dInt / doBase + 0.01, &dInt ) * doBase;
+      szBuf[ --iPos ] = '0' + ( char ) ( dDig + 0.01 );
+   }
+   while( dInt >= 1 );
+   if( iPos > 0 )
+      memmove( szBuf, szBuf + iPos, HB_MIN( iLen - iPos, iPrec + 1 ) );
+   iPos = iLen - iPos;
+
+   fFirst = iPos > 1 || szBuf[ 0 ] != '0';
+   if( fFirst )
+   {
+      if( iPos >= iPrec )
+      {
+         fFirst = iPos == iPrec ? dFract >= 0.5 : szBuf[ iPrec ] >= '5';
+         if( iPrec < iPos )
+            memset( szBuf + iPrec , '0', iPos - iPrec );
+         if( fFirst )
+         {
+            for( ;; )
+            {
+               if( --iPrec < 0 )
+               {
+                  if( iPos == iLen )
+                     return NULL;
+                  memmove( szBuf + 1, szBuf, iPos );
+                  *szBuf = '1';
+                  ++iPos;
+                  break;
+               }
+               if( szBuf[ iPrec ] != '9' )
+               {
+                  ++szBuf[ iPrec ];
+                  break;
+               }
+               szBuf[ iPrec ] = '0';
+            }
+         }
+         iPrec = 0;
+      }
+      else
+         iPrec -= iPos;
+   }
+
+   if( iPrec > 0 && iLen - iPos > 1 && iMaxDec != 0 && dFract > 0 )
+   {
+      int iDec = iPos;
+
+      szBuf[ iPos ] = '.';
+      while( ++iPos < iLen && iPrec > 0 && iMaxDec-- != 0 )
+      {
+         dFract = modf( dFract * doBase, &dDig );
+         szBuf[ iPos ] = '0' + ( char ) ( dDig + 0.01 );
+         if( szBuf[ iPos ] != '0' )
+            fFirst = HB_TRUE;
+         if( fFirst )
+            --iPrec;
+      }
+      if( dFract > ( iPrec > 0 ? 0.5 - hb_numPow10( -iPrec ) : 0.2 ) )
+      {
+         iPrec = iPos;
+         for( ;; )
+         {
+            if( --iPrec < 0 )
+            {
+               memmove( szBuf + 1, szBuf, iPos );
+               *szBuf = '1';
+               if( iPos < iLen )
+                  ++iPos;
+               ++iDec;
+               break;
+            }
+            if( iPrec == iDec )
+               --iPrec;
+            if( szBuf[ iPrec ] != '9' )
+            {
+               ++szBuf[ iPrec ];
+               break;
+            }
+            szBuf[ iPrec ] = '0';
+         }
+      }
+      while( iPos > iDec && szBuf[ iPos - 1 ] == '0' )
+         --iPos;
+      if( szBuf[ iPos - 1 ] == '.' )
+         --iPos;
+   }
+
+   szBuf[ iPos ] = '\0';
+   return iPos == 1 && *szResult == '-' && *szBuf == '0' ? szBuf : szResult;
+}
+
+/* This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null and the nLen param is pDest size not pSource limit
  */
@@ -804,7 +956,7 @@ char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpy(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpy(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    pDest[ nLen ] = '\0';
 
@@ -814,8 +966,7 @@ char * hb_strncpy( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/*
- * This function copies szText to destination buffer.
+/* This function copies szText to destination buffer.
  * NOTE: Unlike the documentation for strncat, this routine will always append
  *       a null and the nLen param is pDest size not pSource limit
  */
@@ -823,7 +974,7 @@ char * hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncat(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncat(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    pDest[ nLen ] = '\0';
 
@@ -839,18 +990,16 @@ char * hb_strncat( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to lower case.
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to lower case. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyLower(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyLower(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    pDest[ nLen ] = '\0';
 
@@ -863,18 +1012,16 @@ char * hb_strncpyLower( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to upper case.
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to upper case. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyUpper(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyUpper(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    pDest[ nLen ] = '\0';
 
@@ -887,19 +1034,17 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/* This function copies and converts szText to upper case AND Trims it
- */
-/*
- * NOTE: Unlike the documentation for strncpy, this routine will always append
- *       a null
- * pt
+/* This function copies and converts szText to upper case AND Trims it */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
+ *       a null [pt]
  */
 char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
    HB_SIZE nSLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyUpperTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyUpperTrim(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    nSLen = 0;
    while( nSLen < nLen && pSource[ nSLen ] )
@@ -921,9 +1066,9 @@ char * hb_strncpyUpperTrim( char * pDest, const char * pSource, HB_SIZE nLen )
    return pBuf;
 }
 
-/*
- * This function copies trimed szText to destination buffer.
- * NOTE: Unlike the documentation for strncpy, this routine will always append
+/* This function copies trimed szText to destination buffer. */
+
+/* NOTE: Unlike the documentation for strncpy, this routine will always append
  *       a null
  */
 char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
@@ -931,7 +1076,7 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
    char * pBuf = pDest;
    HB_SIZE nSLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyTrim(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyTrim(%p, %.*s, %" HB_PFS "u)", ( void * ) pDest, ( int ) nLen, pSource, nLen ) );
 
    nSLen = 0;
    while( nSLen < nLen && pSource[ nSLen ] )
@@ -953,27 +1098,27 @@ char * hb_strncpyTrim( char * pDest, const char * pSource, HB_SIZE nLen )
 
 char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
 {
-   HB_SIZE ul = *pnLen, nStripped = 0;
-   char * ptr, * dst, ch;
+   HB_SIZE nPos = *pnLen, nStripped = 0;
+   char * ptr, * dst;
 
    ptr = dst = str;
-   while( ul )
+   while( nPos )
    {
       if( *ptr == '\\' )
          break;
       ++ptr; ++dst;
-      --ul;
+      --nPos;
    }
 
-   while( ul-- )
+   while( nPos-- )
    {
-      ch = *ptr++;
+      char ch = *ptr++;
       if( ch == '\\' )
       {
          ++nStripped;
-         if( ul )
+         if( nPos )
          {
-            ul--;
+            nPos--;
             ch = *ptr++;
             switch( ch )
             {
@@ -1007,21 +1152,21 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
                case '6':
                case '7':
                   ch -= '0';
-                  if( ul && *ptr >= '0' && *ptr <= '7' )
+                  if( nPos && *ptr >= '0' && *ptr <= '7' )
                   {
                      ch = ( ch << 3 ) | ( *ptr++ - '0' );
                      ++nStripped;
-                     if( --ul && *ptr >= '0' && *ptr <= '7' )
+                     if( --nPos && *ptr >= '0' && *ptr <= '7' )
                      {
                         ch = ( ch << 3 ) | ( *ptr++ - '0' );
                         ++nStripped;
-                        --ul;
+                        --nPos;
                      }
                   }
                   break;
                case 'x':
                   ch = 0;
-                  while( ul )
+                  while( nPos )
                   {
                      if( *ptr >= '0' && *ptr <= '9' )
                         ch = ( ch << 4 ) | ( *ptr++ - '0' );
@@ -1032,7 +1177,7 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
                      else
                         break;
                      ++nStripped;
-                     --ul;
+                     --nPos;
                   }
                   break;
                case '\\':
@@ -1063,9 +1208,9 @@ char * hb_compEncodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
    pBuffer[ *pnLen ] = '\0';
    if( iMethod == 1 )
    {
-      HB_SIZE ul;
-      for( ul = 0; ul < *pnLen; ul++ )
-         pBuffer[ ul ] ^= 0xF3;
+      HB_SIZE nPos;
+      for( nPos = 0; nPos < *pnLen; nPos++ )
+         pBuffer[ nPos ] ^= 0xF3;
    }
    return pBuffer;
 }
@@ -1078,9 +1223,9 @@ char * hb_compDecodeString( int iMethod, const char * szText, HB_SIZE * pnLen )
    pBuffer[ *pnLen ] = '\0';
    if( iMethod == 1 )
    {
-      HB_SIZE ul;
-      for( ul = 0; ul < *pnLen; ul++ )
-         pBuffer[ ul ] ^= 0xF3;
+      HB_SIZE nPos;
+      for( nPos = 0; nPos < *pnLen; nPos++ )
+         pBuffer[ nPos ] ^= 0xF3;
    }
    return pBuffer;
 }

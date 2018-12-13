@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    Harbour class API
+ * Harbour class API
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -100,7 +98,8 @@ extern HB_BOOL    hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STAC
 extern HB_BOOL    hb_objHasOperator( PHB_ITEM pObject, HB_USHORT uiOperator );
 extern HB_BOOL    hb_objOperatorCall( HB_USHORT uiOperator, PHB_ITEM pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
 extern void       hb_objDestructorCall( PHB_ITEM pObject );
-extern void       hb_objCloneTo( PHB_ITEM pDest, PHB_ITEM pSource, PHB_NESTED_CLONED pClonedList );
+extern PHB_ITEM   hb_objCloneTo( PHB_ITEM pDest, PHB_ITEM pObject );
+extern void       hb_objCloneBody( PHB_ITEM pDest, PHB_ITEM pObject, PHB_NESTED_CLONED pClonedList );
 
 #ifndef HB_NO_PROFILER
 /* profiler for object management */
@@ -116,7 +115,7 @@ extern HB_EXPORT const char * hb_clsMethodName( HB_USHORT uiClass, HB_USHORT uiM
 extern HB_EXPORT PHB_SYMB   hb_clsFuncSym( HB_USHORT uiClass );
 extern HB_EXPORT HB_BOOL    hb_clsIsParent( HB_USHORT uiClass, const char * szParentName ); /* is a class handle inherited from szParentName Class ? */
 extern HB_EXPORT HB_SIZE    hb_clsGetVarIndex( HB_USHORT uiClass, PHB_DYNS pVarSym );
-extern HB_EXPORT HB_USHORT  hb_clsFindClass( const char * szClass, const char * szFunc );
+extern HB_EXPORT HB_USHORT  hb_clsFindClass( const char * szClass, const char * szClassFunc );
 
 /* object management */
 extern HB_EXPORT HB_USHORT  hb_objGetClass( PHB_ITEM pItem );      /* get object class handle */

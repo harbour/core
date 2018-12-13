@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * DiskSpace() function
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,7 +44,7 @@
  *
  */
 
-/* NOTE: DiskSpace() supports larger disks than 2GB. CA-Cl*pper will always
+/* NOTE: DiskSpace() supports larger disks than 2 GiB. CA-Cl*pper will always
          return a (long) value, Harbour may return a (double) for large
          values, the decimal places are always set to zero, though. */
 
@@ -118,9 +116,8 @@ HB_FUNC( DISKSPACE )
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
 
 #else
-   /* NOTE: Borland doesn't seem to deal with the un-named
-            struct that is part of ULARGE_INTEGER
-            [pt] */
+   /* NOTE: For compilers that don't seem to deal with the
+            unnamed struct that is part of ULARGE_INTEGER [pt] */
 #  define HB_GET_LARGE_UINT( v )  ( ( double ) (v).u.LowPart + \
                                     ( double ) (v).u.HighPart * \
                                     ( ( ( double ) 0xFFFFFFFF ) + 1 ) )
@@ -163,10 +160,10 @@ HB_FUNC( DISKSPACE )
 
             if( ! s_fInit )
             {
-               s_pGetDiskFreeSpaceEx =
-                  ( P_GDFSE )
-                     GetProcAddress( GetModuleHandle( HB_WINAPI_KERNEL32_DLL() ),
-                                     HB_WINAPI_FUNCTION_NAME( "GetDiskFreeSpaceEx" ) );
+               HMODULE hModule = GetModuleHandle( HB_WINAPI_KERNEL32_DLL() );
+               if( hModule )
+                  s_pGetDiskFreeSpaceEx = ( P_GDFSE )
+                     HB_WINAPI_GETPROCADDRESST( hModule, "GetDiskFreeSpaceEx" );
                s_fInit = HB_TRUE;
             }
 

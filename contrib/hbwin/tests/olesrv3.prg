@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for OLE server which works like
+ * demonstration/test code for OLE server which works like
  *    xHarbour.com OLE servers described at
  *    http://xharbour.com/index.asp?page=add_on_oleserver&show_sub=7&show_i=1
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

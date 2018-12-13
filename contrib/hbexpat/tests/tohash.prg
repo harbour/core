@@ -1,13 +1,8 @@
-/*
- * Harbour Project source code:
- *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
- *
- * See COPYING.txt for licensing terms.
- */
+/* Copyright 2010 Viktor Szakats (vszakats.net/harbour) */
 
 #require "hbexpat"
+
+#include "simpleio.ch"
 
 #define _D_aTree            1
 #define _D_aNode            2
@@ -19,7 +14,6 @@
 #define _N_hAttr            4
 #define _N_MAX_             4
 
-REQUEST HB_CODEPAGE_UTF8
 REQUEST HB_CODEPAGE_UTF8EX
 
 PROCEDURE Main( cFileName )
@@ -30,19 +24,16 @@ PROCEDURE Main( cFileName )
    LOCAL v1, v2, v3
 
    hb_cdpSelect( "UTF8EX" )
+   hb_SetTermCP( hb_cdpTerm() )
 
-   IF cFileName == NIL
-      cFileName := hb_DirBase() + "test.xml"
-   ENDIF
-
-   OutStd( XML_ExpatVersion() + hb_eol() )
+   ? XML_ExpatVersion()
    XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_eol() )
+   ? hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 )
    hb_XML_ExpatVersionInfo( @v1, @v2, @v3 )
-   OutStd( hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 ) + hb_eol() )
+   ? hb_ntos( v1 ) + "." + hb_ntos( v2 ) + "." + hb_ntos( v3 )
 
    IF Empty( p )
-      OutErr( "Couldn't allocate memory for parser" + hb_eol() )
+      ? "Couldn't allocate memory for parser"
       ErrorLevel( -1 )
       RETURN
    ENDIF
@@ -52,30 +43,32 @@ PROCEDURE Main( cFileName )
    aNode[ _N_xValue ] := NIL
    aNode[ _N_hAttr ] := NIL
 
-   hb_HKeepOrder( aNode[ _N_hChild ], .T. )
-
    aUserData := Array( _D_MAX_ )
    aUserData[ _D_aTree ] := aNode
    aUserData[ _D_aNode ] := aUserData[ _D_aTree ]
 
    aNode[ _N_aParent ] := aUserData[ _D_aTree ]
 
-   OutStd( XML_GetUserData( p ) ) ; OutStd( hb_eol() )
+   ? XML_GetUserData( p )
    XML_SetUserData( p, aUserData )
-   OutStd( ValType( XML_GetUserData( p ) ) + hb_eol() )
+   ? ValType( XML_GetUserData( p ) )
    XML_SetElementHandler( p, {| x, e, a | cb_start( x, e, a ) }, {| x | cb_end( x ) } )
    XML_SetCharacterDataHandler( p, {| x, d | cb_data( x, d ) } )
    XML_SetUnknownEncodingHandler( p, {| x, e, i | cb_unknownencoding( x, e, i ) } )
+   XML_SetEndDoctypeDeclHandler( p, @cb_enddoctype() )
 
-   IF XML_Parse( p, MemoRead( cFileName ), .T. ) == HB_XML_STATUS_ERROR
-      OutErr( hb_StrFormat( e"Parse error at line %s:\n%s\n", ;
-         hb_ntos( XML_GetCurrentLineNumber( p ) ), ;
-         XML_ErrorString( XML_GetErrorCode( p ) ) ) )
+   IF XML_Parse( p, MemoRead( hb_defaultValue( cFileName, hb_DirBase() + "test.xml" ) ), .T. ) == HB_XML_STATUS_ERROR
+      ? hb_StrFormat( e"Parse error at line %1$d:\n%2$s", ;
+         XML_GetCurrentLineNumber( p ), ;
+         XML_ErrorString( XML_GetErrorCode( p ) ) )
       ErrorLevel( -1 )
       RETURN
    ENDIF
 
    DUMP( aUserData[ _D_aTree ], 0 )
+
+   hb_MemoWrit( "json_raw.txt", hb_jsonEncode( aUserData[ _D_aTree ], .F. ) )
+   hb_MemoWrit( "json_hum.txt", hb_jsonEncode( aUserData[ _D_aTree ], .T. ) )
 
    RETURN
 
@@ -86,7 +79,7 @@ STATIC PROCEDURE DUMP( hTree, n )
 
    FOR EACH aEl IN hTree[ _N_hChild ]
       FOR EACH aNode IN aEl
-         OutStd( Replicate( "  ", n ) + aEl:__enumKey() + ": '" + aNode[ _N_xValue ] + "'" + DUMPATTR( aNode[ _N_hAttr ] ) + hb_eol() )
+         ? Replicate( "  ", n ) + aEl:__enumKey() + ":", "'" + aNode[ _N_xValue ] + "'" + DUMPATTR( aNode[ _N_hAttr ] )
          DUMP( aNode, n + 1 )
       NEXT
    NEXT
@@ -107,14 +100,16 @@ STATIC FUNCTION DUMPATTR( hAttr )
 
    RETURN s
 
+STATIC FUNCTION cb_enddoctype()
+   RETURN 0
+
 STATIC FUNCTION cb_unknownencoding( xEData, cEncoding, aMap )
 
    LOCAL aMyMap
 
    HB_SYMBOL_UNUSED( xEData )
 
-   aMyMap := hb_XML_get_unicode_table( cEncoding )
-   IF ! Empty( aMyMap )
+   IF ! Empty( aMyMap := hb_XML_get_unicode_table( cEncoding ) )
       ACopy( aMyMap, aMap )
       RETURN HB_XML_STATUS_OK
    ENDIF
@@ -134,8 +129,6 @@ STATIC PROCEDURE cb_start( aUserData, cElement, aAttrList )
    aNewNode[ _N_hChild ] := { => }
    aNewNode[ _N_xValue ] := ""
    aNewNode[ _N_hAttr ] := { => }
-
-   hb_HKeepOrder( aNewNode[ _N_hChild ], .T. )
 
    IF cElement $ aNode[ _N_hChild ]
       AAdd( aNode[ _N_hChild ][ cElement ], aNewNode )

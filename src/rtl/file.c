@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * hb_fsFile() function
  *
- * Copyright 1999-2002 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2002 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,13 +47,13 @@
 #include "hbapi.h"
 #include "hbapifs.h"
 
-HB_BOOL hb_fsFile( const char * pszFilename )
+HB_BOOL hb_fsFile( const char * pszFileName )
 {
    PHB_FFIND ffind;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFile(%s)", pszFilename ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFile(%s)", pszFileName ) );
 
-   if( ( ffind = hb_fsFindFirst( pszFilename, HB_FA_ALL ) ) != NULL )
+   if( ( ffind = hb_fsFindFirst( pszFileName, HB_FA_ALL ) ) != NULL )
    {
       hb_fsFindClose( ffind );
       return HB_TRUE;
@@ -64,25 +62,25 @@ HB_BOOL hb_fsFile( const char * pszFilename )
    return HB_FALSE;
 }
 
-HB_BOOL hb_fsIsDirectory( const char * pszFilename )
+HB_BOOL hb_fsIsDirectory( const char * pszFileName )
 {
    HB_BOOL bResult = HB_FALSE;
-   PHB_FFIND ffind;
    char * pszFree = NULL;
    int iLen;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_fsIsDirectory(%s)", pszFilename ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsIsDirectory(%s)", pszFileName ) );
 
-   iLen = ( int ) strlen( pszFilename );
-   while( iLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFilename[ iLen - 1 ] ) )
+   iLen = ( int ) strlen( pszFileName );
+   while( iLen && strchr( HB_OS_PATH_DELIM_CHR_LIST, pszFileName[ iLen - 1 ] ) )
       --iLen;
 
-   if( pszFilename[ iLen ] )
-      pszFilename = pszFree = hb_strndup( pszFilename, iLen );
+   if( pszFileName[ iLen ] )
+      pszFileName = pszFree = hb_strndup( pszFileName, iLen );
 
    if( iLen && iLen <= ( HB_PATH_MAX - 1 ) )
    {
-      if( ( ffind = hb_fsFindFirst( pszFilename, HB_FA_DIRECTORY ) ) != NULL )
+      PHB_FFIND ffind;
+      if( ( ffind = hb_fsFindFirst( pszFileName, HB_FA_DIRECTORY ) ) != NULL )
       {
          do
          {

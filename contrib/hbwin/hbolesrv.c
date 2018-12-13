@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    OLE server
+ * OLE server
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -153,7 +151,7 @@ static HB_BOOL s_getKeyValue( LPCTSTR lpKey, LPTSTR lpBuffer, int iLen )
    iPos = 0;
    for( ;; )
    {
-      char c = lpKey[ iPos++ ];
+      TCHAR c = lpKey[ iPos++ ];
       if( c == TEXT( '$' ) || c == TEXT( '@' ) || c == TEXT( '\0' ) )
       {
          if( --iPos )
@@ -193,13 +191,13 @@ static HB_BOOL s_getKeyValue( LPCTSTR lpKey, LPTSTR lpBuffer, int iLen )
 #if ! defined( HB_OLE_C_API )
 typedef struct
 {
-   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IDispatch*, REFIID, void** );
-   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IDispatch* );
-   ULONG   ( STDMETHODCALLTYPE * Release ) ( IDispatch* );
-   HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IDispatch*, UINT* );
-   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IDispatch*, UINT, LCID, ITypeInfo** );
-   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IDispatch*, REFIID, LPOLESTR*, UINT, LCID, DISPID* );
-   HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IDispatch*, DISPID, REFIID, LCID, WORD, DISPPARAMS*, VARIANT*, EXCEPINFO*, UINT* );
+   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IDispatch *, REFIID, void ** );
+   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IDispatch * );
+   ULONG   ( STDMETHODCALLTYPE * Release ) ( IDispatch * );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfoCount ) ( IDispatch *, UINT * );
+   HRESULT ( STDMETHODCALLTYPE * GetTypeInfo ) ( IDispatch *, UINT, LCID, ITypeInfo ** );
+   HRESULT ( STDMETHODCALLTYPE * GetIDsOfNames ) ( IDispatch *, REFIID, LPOLESTR *, UINT, LCID, DISPID * );
+   HRESULT ( STDMETHODCALLTYPE * Invoke ) ( IDispatch *, DISPID, REFIID, LCID, WORD, DISPPARAMS *, VARIANT *, EXCEPINFO *, UINT * );
 } IDispatchVtbl;
 #endif
 
@@ -509,11 +507,11 @@ static const IDispatchVtbl IHbOleServer_Vtbl = {
 #if ! defined( HB_OLE_C_API )
 typedef struct
 {
-   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IClassFactory*, REFIID, void** );
-   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IClassFactory* );
-   ULONG   ( STDMETHODCALLTYPE * Release ) ( IClassFactory* );
-   HRESULT ( STDMETHODCALLTYPE * CreateInstance ) ( IClassFactory*, IUnknown*, REFIID, void** );
-   HRESULT ( STDMETHODCALLTYPE * LockServer) ( IClassFactory*, BOOL );
+   HRESULT ( STDMETHODCALLTYPE * QueryInterface ) ( IClassFactory *, REFIID, void ** );
+   ULONG   ( STDMETHODCALLTYPE * AddRef ) ( IClassFactory * );
+   ULONG   ( STDMETHODCALLTYPE * Release ) ( IClassFactory * );
+   HRESULT ( STDMETHODCALLTYPE * CreateInstance ) ( IClassFactory *, IUnknown *, REFIID, void ** );
+   HRESULT ( STDMETHODCALLTYPE * LockServer) ( IClassFactory *, BOOL );
 } IClassFactoryVtbl;
 #endif
 
@@ -721,11 +719,12 @@ STDAPI DllRegisterServer( void )
    LPCTSTR lpValName;
    HRESULT hr = S_OK;
    HKEY hKey;
-   long err;
    int i;
 
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_regTable ); ++i )
    {
+      long err;
+
       s_getKeyValue( s_regTable[ i ][ 0 ], lpKeyName, MAX_REGSTR_SIZE );
       if( s_regTable[ i ][ 1 ] )
       {
@@ -874,10 +873,7 @@ HB_FUNC( WIN_OLESERVERINIT )
                      if( HB_IS_HASH( s_pAction ) )
                         s_fHashClone = HB_TRUE;
                      else
-                     {
                         s_pMsgHash = hb_hashNew( hb_itemNew( NULL ) );
-                        hb_hashSetFlags( s_pMsgHash, HB_HASH_KEEPORDER );
-                     }
                   }
                }
                else if( ! HB_ISNIL( 4 ) )

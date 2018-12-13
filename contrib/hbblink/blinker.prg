@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Blinker compatibility functions.
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -241,14 +239,14 @@ FUNCTION BliMgrSts( nParam )
 
    SWITCH nParam
    CASE BliCacheLoc     ; RETURN BliCacheNone
-   CASE BliCacheSize    ; RETURN 0
-   CASE BliExtMemAvail  ; RETURN 0
    CASE BliHostMode     ; RETURN BliHostNone
    CASE BliMachineMode  ; RETURN BliMode286Prot
-   CASE BliOverlayLoc   ; RETURN 0
    CASE BliOverlaySize  ; RETURN Memory( HB_MEM_CHAR )
    CASE BliRealMemAvail ; RETURN Memory( HB_MEM_CHAR )
-   CASE BliVirMemAvail  ; RETURN 0
+   CASE BliCacheSize
+   CASE BliExtMemAvail
+   CASE BliOverlayLoc
+   CASE BliVirMemAvail  /* fallthrough */
    ENDSWITCH
 
    RETURN 0
@@ -381,7 +379,7 @@ FUNCTION SwpRunCmd( cCommand, nMem, cRunPath, cTempPath )
    HB_SYMBOL_UNUSED( cRunPath )
    HB_SYMBOL_UNUSED( cTempPath )
 
-   IF Empty( cCommand )
+   IF ! HB_ISSTRING( cCommand ) .OR. Empty( cCommand )
 #if defined( __PLATFORM__UNIX )
       cCommand := GetEnv( "SHELL" )
 #else
@@ -389,9 +387,7 @@ FUNCTION SwpRunCmd( cCommand, nMem, cRunPath, cTempPath )
 #endif
    ENDIF
 
-   t_nErrorLevel := hb_run( cCommand )
-
-   RETURN ( t_nErrorLevel != -1 )
+   RETURN ( t_nErrorLevel := hb_run( cCommand ) ) != -1
 
 FUNCTION SwpSetEnv( cString )
 
@@ -399,11 +395,8 @@ FUNCTION SwpSetEnv( cString )
    LOCAL tmp
 
    FOR EACH cPair IN hb_ATokens( cString, hb_BChar( 255 ) )
-      IF ! Empty( cPair )
-         tmp := At( "=", cPair )
-         IF tmp > 0
-            hb_SetEnv( Left( cPair, tmp - 1 ), SubStr( cPair, tmp + 1 ) )
-         ENDIF
+      IF ( tmp := At( "=", cPair ) ) > 0
+         hb_SetEnv( Left( cPair, tmp - 1 ), SubStr( cPair, tmp + 1 ) )
       ENDIF
    NEXT
 

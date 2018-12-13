@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * SaveScreen(), RestScreen() functions
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -111,11 +109,27 @@ HB_FUNC( RESTSCREEN )
    if( HB_ISCHAR( 5 ) )
    {
       int iTop, iLeft, iBottom, iRight;
+      HB_SIZE nSize, nLen;
+      void * pBuffer = NULL;
+      const char * pBufStr = hb_parc( 5 );
       HB_BOOL fNoCheck = HB_FALSE;
 
       hb_getScreenRange( &iTop, &iBottom, fNoCheck, HB_TRUE );
       hb_getScreenRange( &iLeft, &iRight, fNoCheck, HB_FALSE );
 
-      hb_gtRest( iTop, iLeft, iBottom, iRight, hb_parc( 5 ) );
+      nLen = hb_parclen( 5 );
+      hb_gtRectSize( iTop, iLeft, iBottom, iRight, &nSize );
+      if( nLen < nSize )
+      {
+         pBuffer = hb_xgrab( nSize );
+         memcpy( pBuffer, pBufStr, nLen );
+         memset( ( char * ) pBuffer + nLen, 0, nSize - nLen );
+         pBufStr = ( const char * ) pBuffer;
+      }
+
+      hb_gtRest( iTop, iLeft, iBottom, iRight, pBufStr );
+
+      if( pBuffer )
+         hb_xfree( pBuffer );
    }
 }

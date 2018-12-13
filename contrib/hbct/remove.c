@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *   RemAll(), RemLeft() and RemRight() CT3 string functions
+ * RemAll(), RemLeft() and RemRight() CT3 string functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,7 +59,7 @@ static const HB_ERRCODE sulErrorSubcodes[] =
    CT_ERROR_REMRIGHT
 };
 
-/* helper function for the remxxx functions */
+/* helper function for the Rem*() functions */
 static void do_remove( int iSwitch )
 {
    /* param check */
@@ -71,7 +68,6 @@ static void do_remove( int iSwitch )
       const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
       const char * pcRet;
-      const char * pc;
       HB_SIZE sRetLen;
       char cSearch;
 
@@ -87,7 +83,7 @@ static void do_remove( int iSwitch )
 
       if( iSwitch != DO_REMOVE_REMRIGHT )
       {
-         while( ( *pcRet == cSearch ) && ( pcRet < pcString + sStrLen ) )
+         while( *pcRet == cSearch && pcRet < ( pcString + sStrLen ) )
          {
             pcRet++;
             sRetLen--;
@@ -96,8 +92,9 @@ static void do_remove( int iSwitch )
 
       if( iSwitch != DO_REMOVE_REMLEFT )
       {
-         pc = pcString + sStrLen - 1;
-         while( ( *pc == cSearch ) && ( pc >= pcRet ) )
+         const char * pc = pcString + sStrLen - 1;
+
+         while( *pc == cSearch && pc >= pcRet )
          {
             pc--;
             sRetLen--;

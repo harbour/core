@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *
+ * Regex functions
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -102,14 +100,14 @@ HB_BOOL hb_regexIs( PHB_ITEM pItem )
    return hb_itemGetPtrGC( pItem, &s_gcRegexFuncs ) != NULL;
 }
 
-PHB_REGEX hb_regexCompile( const char *szRegEx, HB_SIZE nLen, int iFlags )
+PHB_REGEX hb_regexCompile( const char * szRegEx, HB_SIZE nLen, int iFlags )
 {
    PHB_REGEX pRegEx;
 
    HB_SYMBOL_UNUSED( nLen );
 
-   pRegEx = ( PHB_REGEX ) hb_gcAllocate( sizeof( HB_REGEX ), &s_gcRegexFuncs );
-   memset( pRegEx, 0, sizeof( HB_REGEX ) );
+   pRegEx = ( PHB_REGEX ) hb_gcAllocate( sizeof( *pRegEx ), &s_gcRegexFuncs );
+   memset( pRegEx, 0, sizeof( *pRegEx ) );
    pRegEx->fFree = HB_TRUE;
    pRegEx->iFlags = iFlags;
 
@@ -164,7 +162,7 @@ void hb_regexFree( PHB_REGEX pRegEx )
    }
 }
 
-HB_BOOL hb_regexMatch( PHB_REGEX pRegEx, const char *szString, HB_SIZE nLen, HB_BOOL fFull )
+HB_BOOL hb_regexMatch( PHB_REGEX pRegEx, const char * szString, HB_SIZE nLen, HB_BOOL fFull )
 {
    HB_REGMATCH aMatches[ HB_REGMATCH_SIZE( 1 ) ];
    HB_BOOL fMatch;

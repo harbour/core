@@ -1,4 +1,3 @@
-
 SYSLIBPATHS :=
 
 ifneq ($(HB_LINKING_RTL),)

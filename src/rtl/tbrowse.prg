@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * TBrowse Class
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * This implementation contains code and notes by:
- * Copyright 2008 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2008 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -132,8 +130,9 @@ CREATE CLASS TBrowse
    VAR bGoTopBlock    AS BLOCK INIT {|| NIL }   // 12. Code block executed by TBrowse:goTop()
    VAR bGoBottomBlock AS BLOCK INIT {|| NIL }   // 13. Code block executed by TBrowse:goBottom()
 
-#ifdef HB_COMPAT_C53
    VAR dummy                   INIT ""          // 14. ??? In Clipper it's character variable with internal C level structure containing browse data
+
+#ifdef HB_COMPAT_C53
    VAR cBorder    AS CHARACTER                  // 15. character value defining characters drawn around object
    VAR cMessage                                 // 16. character string displayed on status bar
    VAR keys       AS ARRAY                      // 17. array with SetKey() method values
@@ -212,7 +211,7 @@ CREATE CLASS TBrowse
    METHOD rightVisible()                        // indicates position of rightmost unfrozen column in display
 
    METHOD hilite()                              // highlights the current cell
-   METHOD deHilite()                            // dehighlights the current cell
+   METHOD deHilite()                            // de-highlights the current cell
    METHOD refreshAll()                          // causes all data to be recalculated during the next stabilize
    METHOD refreshCurrent()                      // causes the current row to be refilled and repainted on next stabilize
    METHOD forceStable()                         // performs a full stabilization
@@ -257,7 +256,7 @@ CREATE CLASS TBrowse
    VAR nBufferPos    AS INTEGER INIT 1          // position in row buffer
    VAR nMoveOffset   AS INTEGER INIT 0          // requested repositioning
    VAR nLastRow      AS INTEGER INIT 0          // last row in the buffer
-   VAR nLastScroll   AS INTEGER INIT 0          // last srcoll value
+   VAR nLastScroll   AS INTEGER INIT 0          // last scroll value
    VAR nConfigure    AS INTEGER INIT _TBR_CONF_ALL // configuration status
    VAR nLastPos      AS INTEGER INIT 0          // last calculated column position
    VAR lHitTop       AS LOGICAL INIT .F.        // indicates the beginning of available data
@@ -278,7 +277,7 @@ CREATE CLASS TBrowse
    VAR aCellColors   AS ARRAY   INIT {}         // cell colors buffers for each record
 
    METHOD doConfigure()                         // reconfigures the internal settings of the TBrowse object
-   METHOD setUnstable()                         // set TBrows in unstable mode resetting flags
+   METHOD setUnstable()                         // set TBrowse in unstable mode resetting flags
    METHOD setPosition()                         // synchronize record position with the buffer
    METHOD readRecord( nRow )                    // read current record into the buffer
 
@@ -291,14 +290,15 @@ CREATE CLASS TBrowse
    METHOD dispFrames()                          // display TBrowse border, columns' headings, footings and separators
    METHOD dispRow( nRow )                       // display TBrowse data
 
+#ifndef HB_BRW_STATICMOUSE
    FRIEND FUNCTION _mBrwPos                     // helper function for MRow() and MCol() methods
+#endif
 
 ENDCLASS
 
 
 
 FUNCTION TBrowseNew( nTop, nLeft, nBottom, nRight )
-
    RETURN TBrowse():new( nTop, nLeft, nBottom, nRight )
 
 
@@ -324,7 +324,6 @@ METHOD new( nTop, nLeft, nBottom, nRight ) CLASS TBrowse
    RETURN Self
 
 STATIC FUNCTION _SKIP_RESULT( xResult )
-
    RETURN iif( HB_ISNUMERIC( xResult ), Int( xResult ), 0 )
 
 
@@ -548,8 +547,8 @@ METHOD colorRect( aRect, aColors ) CLASS TBrowse
       FOR nRow := aRect[ 1 ] TO aRect[ 3 ]
          ::readRecord( nRow )
          FOR nCol := aRect[ 2 ] TO aRect[ 4 ]
-            ::aCellColors[ nRow, nCol, 1 ] := aColors[ 1 ]
-            ::aCellColors[ nRow, nCol, 2 ] := aColors[ 2 ]
+            ::aCellColors[ nRow ][ nCol ][ 1 ] := aColors[ 1 ]
+            ::aCellColors[ nRow ][ nCol ][ 2 ] := aColors[ 2 ]
          NEXT
          ::dispRow( nRow )
       NEXT
@@ -613,11 +612,11 @@ METHOD readRecord( nRow ) CLASS TBrowse
       IF nRow <= ::nLastRow
          nToMove := nRow - ::nBufferPos
          nMoved := _SKIP_RESULT( Eval( ::bSkipBlock, nToMove ) )
-         /* TOFIX: add protection against unexpected results
+         /* FIXME: add protection against unexpected results
           *        CA-Cl*pper does not fully respect here the returned
           *        value and current code below replicates what Clipper
           *        seems to do but it means that in network environment
-          *        with concurent modifications wrong records can be
+          *        with concurrent modifications wrong records can be
           *        shown. [druzus]
           */
          IF nToMove > 0
@@ -803,11 +802,11 @@ METHOD stabilize() CLASS TBrowse
          ::nRowPos := ::nLastRow
       ENDIF
       IF ::nBufferPos != ::nRowPos
-         /* TOFIX: add protection against unexpected results
+         /* FIXME: add protection against unexpected results
           *        CA-Cl*pper does not fully respect here the returned
           *        value and current code below replicates what Clipper
           *        seems to do but it means that in network environment
-          *        with concurent modifications wrong records can be
+          *        with concurrent modifications wrong records can be
           *        shown. [druzus]
           */
          nToMove := ::nRowPos - ::nBufferPos
@@ -882,7 +881,7 @@ METHOD cellValue( nRow, nCol ) CLASS TBrowse
       nCol >= 1 .AND. nCol <= ::colCount .AND. ;
       ::aCellStatus[ nRow ]
 
-      RETURN ::aCellValues[ nRow, nCol ]
+      RETURN ::aCellValues[ nRow ][ nCol ]
    ENDIF
 
    RETURN NIL
@@ -894,7 +893,7 @@ METHOD cellColor( nRow, nCol ) CLASS TBrowse
       nCol >= 1 .AND. nCol <= ::colCount .AND. ;
       ::aCellStatus[ nRow ]
 
-      RETURN ::aCellColors[ nRow, nCol ]
+      RETURN ::aCellColors[ nRow ][ nCol ]
    ENDIF
 
    RETURN NIL
@@ -908,7 +907,7 @@ STATIC FUNCTION _DECODECOLORS( cColorSpec )
 
    FOR nPos := 1 TO nColors
       cColor := hb_tokenGet( cColorSpec, nPos, "," )
-      /* For 1-st two colors CA-Cl*pper checks if given color
+      /* For 1st two colors CA-Cl*pper checks if given color
        * definition has at least one of the following characters:
        * "*+/bBgGrRwWnNiIxXuU0123456789"
        * If not then it takes default color value.
@@ -969,7 +968,7 @@ STATIC FUNCTION _COLDEFCOLORS( aDefColorsIdx, nMaxColorIndex )
 
 /* If oCol:colorBlock does not return array length enough then colors
  * are taken from preprocessed during configuration oCol:defColor array.
- * oCol:colorBlock is used only for cells so only 1-st two color indexes
+ * oCol:colorBlock is used only for cells so only 1st two color indexes
  * are significant. [druzus]
  */
 STATIC FUNCTION _CELLCOLORS( aCol, xValue, nMaxColorIndex )
@@ -1036,7 +1035,7 @@ METHOD setUnstable() CLASS TBrowse
       ::doConfigure()
    ENDIF
 
-   /* CA-Cl*pper dehighlights the current cell */
+   /* CA-Cl*pper de-highlights the current cell */
    IF ::lHiLited
       ::deHilite()
    ENDIF
@@ -1122,7 +1121,7 @@ METHOD left() CLASS TBrowse
    DO WHILE .T.
       ::nColPos--
       IF ::nColPos < 1 .OR. ::nColPos > ::colCount .OR. ;
-         ::aColData[ ::nColPos, _TBCI_CELLWIDTH ] != 0
+         ::aColData[ ::nColPos ][ _TBCI_CELLWIDTH ] != 0
          EXIT
       ENDIF
    ENDDO
@@ -1136,7 +1135,7 @@ METHOD right() CLASS TBrowse
    DO WHILE .T.
       ::nColPos++
       IF ::nColPos < 1 .OR. ::nColPos > ::colCount .OR. ;
-         ::aColData[ ::nColPos, _TBCI_CELLWIDTH ] != 0
+         ::aColData[ ::nColPos ][ _TBCI_CELLWIDTH ] != 0
          EXIT
       ENDIF
    ENDDO
@@ -1304,15 +1303,13 @@ METHOD doConfigure() CLASS TBrowse
       IF cColSep == NIL
          cColSep := ::cColSep
       ENDIF
-      cHeadSep := oCol:headSep
-      IF ! HB_ISSTRING( cHeadSep ) .OR. cHeadSep == ""
-         cHeadSep := ::cHeadSep
-         hb_default( @cHeadSep, "" )
+      cHeadSep := hb_defaultValue( oCol:headSep, "" )
+      IF cHeadSep == ""
+         cHeadSep := hb_defaultValue( ::cHeadSep, "" )
       ENDIF
-      cFootSep := oCol:footSep
-      IF ! HB_ISSTRING( cFootSep ) .OR. cFootSep == ""
-         cFootSep := ::cFootSep
-         hb_default( @cFootSep, "" )
+      cFootSep := hb_defaultValue( oCol:footSep, "" )
+      IF cFootSep == ""
+         cFootSep := hb_defaultValue( ::cFootSep, "" )
       ENDIF
       aCol := Array( _TBCI_SIZE )
       aCol[ _TBCI_COLOBJECT   ] := oCol
@@ -1509,7 +1506,7 @@ STATIC FUNCTION _DECODE_FH( cName, nHeight, nWidth )
           * does not calculate it as separator
           */
          IF Right( cName, 1 ) == _TBR_CHR_LINEDELIMITER
-            cName := Left( cName, Len( cName ) - 1 )
+            cName := hb_StrShrink( cName )
          ENDIF
          nHeight := hb_tokenCount( cName, _TBR_CHR_LINEDELIMITER )
          FOR i := 1 TO nHeight
@@ -1557,7 +1554,7 @@ STATIC FUNCTION _MAXFREEZE( nColumns, aColData, nWidth )
 
    /* CA-Cl*pper allows to freeze all columns only when they
     * are fully visible, otherwise it reserves at least one
-    * character for 1-st unfrozen column [druzus]
+    * character for 1st unfrozen column [druzus]
     */
    IF nWidth > 0 .OR. ;
       nWidth == 0 .AND. _NEXTCOLUMN( aColData, nColumns + 1 ) == 0
@@ -1936,7 +1933,6 @@ METHOD colorSpec( cColorSpec ) CLASS TBrowse
 
 
 METHOD colCount() CLASS TBrowse
-
    RETURN Len( ::columns )
 
 
@@ -1956,7 +1952,7 @@ METHOD rowCount() CLASS TBrowse
 
 
 /* NOTE: CA-Cl*pper has a bug where negative nRowPos value will be translated
-         to 16bit unsigned int, so the behaviour will be different in this case.
+         to 16-bit unsigned int, so the behaviour will be different in this case.
          [vszakats] */
 METHOD setRowPos( nRowPos ) CLASS TBrowse
 
@@ -1986,7 +1982,7 @@ METHOD getRowPos() CLASS TBrowse
 
 
 /* NOTE: CA-Cl*pper has a bug where negative nRowPos value will be translated
-         to 16bit unsigned int, so the behaviour will be different in this case.
+         to 16-bit unsigned int, so the behaviour will be different in this case.
          [vszakats] */
 METHOD setColPos( nColPos ) CLASS TBrowse
 
@@ -2209,7 +2205,6 @@ METHOD setColumn( nColumn, oCol ) CLASS TBrowse
 
 /* Gets a specific TBColumn object */
 METHOD getColumn( nColumn ) CLASS TBrowse
-
 #ifdef HB_CLP_STRICT
    RETURN ::columns[ nColumn ]
 #else
@@ -2542,7 +2537,7 @@ METHOD mRowPos() CLASS TBrowse
       ::doConfigure()
    ENDIF
 
-   _mBrwPos( self, @mRow, @mCol )
+   _mBrwPos( Self, @mRow, @mCol )
 
    RETURN mRow
 
@@ -2555,7 +2550,7 @@ METHOD mColPos() CLASS TBrowse
       ::doConfigure()
    ENDIF
 
-   _mBrwPos( self, @mRow, @mCol )
+   _mBrwPos( Self, @mRow, @mCol )
 
    RETURN mCol
 #endif
@@ -2624,21 +2619,21 @@ METHOD setKey( nKey, bBlock ) CLASS TBrowse
 
    IF ::keys == NIL
       ::keys := { ;
-         { K_DOWN       , {| o | o:Down()    , TBR_CONTINUE   } },;
-         { K_END        , {| o | o:End()     , TBR_CONTINUE   } },;
-         { K_CTRL_PGDN  , {| o | o:GoBottom(), TBR_CONTINUE   } },;
-         { K_CTRL_PGUP  , {| o | o:GoTop()   , TBR_CONTINUE   } },;
-         { K_HOME       , {| o | o:Home()    , TBR_CONTINUE   } },;
-         { K_LEFT       , {| o | o:Left()    , TBR_CONTINUE   } },;
-         { K_PGDN       , {| o | o:PageDown(), TBR_CONTINUE   } },;
-         { K_PGUP       , {| o | o:PageUp()  , TBR_CONTINUE   } },;
-         { K_CTRL_END   , {| o | o:PanEnd()  , TBR_CONTINUE   } },;
-         { K_CTRL_HOME  , {| o | o:PanHome() , TBR_CONTINUE   } },;
-         { K_CTRL_LEFT  , {| o | o:PanLeft() , TBR_CONTINUE   } },;
-         { K_CTRL_RIGHT , {| o | o:PanRight(), TBR_CONTINUE   } },;
-         { K_RIGHT      , {| o | o:Right()   , TBR_CONTINUE   } },;
-         { K_UP         , {| o | o:Up()      , TBR_CONTINUE   } },;
-         { K_ESC        , {|   |               TBR_EXIT       } },;
+         { K_DOWN       , {| o | o:Down()    , TBR_CONTINUE   } }, ;
+         { K_END        , {| o | o:End()     , TBR_CONTINUE   } }, ;
+         { K_CTRL_PGDN  , {| o | o:GoBottom(), TBR_CONTINUE   } }, ;
+         { K_CTRL_PGUP  , {| o | o:GoTop()   , TBR_CONTINUE   } }, ;
+         { K_HOME       , {| o | o:Home()    , TBR_CONTINUE   } }, ;
+         { K_LEFT       , {| o | o:Left()    , TBR_CONTINUE   } }, ;
+         { K_PGDN       , {| o | o:PageDown(), TBR_CONTINUE   } }, ;
+         { K_PGUP       , {| o | o:PageUp()  , TBR_CONTINUE   } }, ;
+         { K_CTRL_END   , {| o | o:PanEnd()  , TBR_CONTINUE   } }, ;
+         { K_CTRL_HOME  , {| o | o:PanHome() , TBR_CONTINUE   } }, ;
+         { K_CTRL_LEFT  , {| o | o:PanLeft() , TBR_CONTINUE   } }, ;
+         { K_CTRL_RIGHT , {| o | o:PanRight(), TBR_CONTINUE   } }, ;
+         { K_RIGHT      , {| o | o:Right()   , TBR_CONTINUE   } }, ;
+         { K_UP         , {| o | o:Up()      , TBR_CONTINUE   } }, ;
+         { K_ESC        , {|   |               TBR_EXIT       } }, ;
          { K_LBUTTONDOWN, {| o | TBMouse( o, MRow(), MCol() ) } } }
 
       #ifndef HB_CLP_STRICT
@@ -2648,11 +2643,11 @@ METHOD setKey( nKey, bBlock ) CLASS TBrowse
    ENDIF
 
    IF ( nPos := AScan( ::keys, {| x | x[ _TBC_SETKEY_KEY ] == nKey } ) ) == 0
-      IF HB_ISBLOCK( bBlock )
+      IF HB_ISEVALITEM( bBlock )
          AAdd( ::keys, { nKey, bBlock } )
       ENDIF
       bReturn := bBlock
-   ELSEIF HB_ISBLOCK( bBlock )
+   ELSEIF HB_ISEVALITEM( bBlock )
       ::keys[ nPos ][ _TBC_SETKEY_BLOCK ] := bBlock
       bReturn := bBlock
    ELSEIF PCount() == 1
@@ -2695,25 +2690,27 @@ FUNCTION TBMouse( oBrw, nMRow, nMCol )
 
    IF oBrw:hitTest( nMRow, nMCol ) == HTCELL
 
-      IF ( n := oBrw:mRowPos - oBrw:rowPos ) < 0
+      DO CASE
+      CASE ( n := oBrw:mRowPos - oBrw:rowPos ) < 0
          DO WHILE ++n <= 0
             oBrw:up()
          ENDDO
-      ELSEIF n > 0
+      CASE n > 0
          DO WHILE --n >= 0
             oBrw:down()
          ENDDO
-      ENDIF
+      ENDCASE
 
-      IF ( n := oBrw:mColPos - oBrw:colPos ) < 0
+      DO CASE
+      CASE ( n := oBrw:mColPos - oBrw:colPos ) < 0
          DO WHILE ++n <= 0
             oBrw:left()
          ENDDO
-      ELSEIF n > 0
+      CASE n > 0
          DO WHILE --n >= 0
             oBrw:right()
          ENDDO
-      ENDIF
+      ENDCASE
 
       RETURN TBR_CONTINUE
    ENDIF

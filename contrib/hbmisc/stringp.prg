@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Misc. string functions
  *
  * Copyright 1999 Eddie Runia <eddie@runia.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,8 +46,7 @@
 
 #include "hboo.ch"
 
-/*
- * Convert to character
+/* Convert to character
  *
  * ToChar( <xValue>, [<cSeparator>], [<lDebug>] ) --> <cOut>
  *   <xValue>     : Item to write
@@ -67,7 +64,6 @@
  * NIL        NIL
  * Logical    .T. / .F.
  * Object     <ClassName>(<ClassH>):{<DataSymbol1>:<val1>, ...}
- *
  */
 
 FUNCTION ToChar( xTxt, cSeparator, lDebug )
@@ -128,9 +124,8 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
 
    RETURN cOut
 
-// Non-volatile debugging function showing contents of xItem and returing
+// Non-volatile debugging function showing contents of xItem and returning
 // passed argument.
-
 FUNCTION Debug( xItem )
 
    ? ToChar( xItem, ", ", .T. )

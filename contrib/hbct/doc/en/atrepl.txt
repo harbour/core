@@ -1,4 +1,3 @@
-
 /* $DOC$
    $NAME$
       AtRepl()
@@ -55,6 +54,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CSetAtMupa()   SetAtLike()
+      CSetAtMupa(), SetAtLike()
    $END$
  */

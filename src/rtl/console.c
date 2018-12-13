@@ -1,9 +1,14 @@
 /*
- * Harbour Project source code:
  * The Console API
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
+ * Copyright 1999-2015 Viktor Szakats (vszakats.net/harbour) (hb_conNewLine(), DispOutAt(), hb_StrEOL())
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
+ *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
+ *    DevPos(), __Eject(),
+ *    hb_conOut(), hb_conOutErr(), OutErr(),
+ *    hb_conOutStd(), OutStd(), PCol(), PRow(),
+ *    SetPRC(), and hb_conInit()
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +21,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -43,25 +48,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    hb_conOutAlt(), hb_conOutDev(), DevOut(), hb_conDevPos(),
- *    DevPos(), __Eject(),
- *    hb_conOut(), hb_conOutErr(), OutErr(),
- *    hb_conOutStd(), OutStd(), PCol(), PRow(),
- *    SetPRC(), and hb_conInit()
- *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    hb_conNewLine()
- *    DispOutAt()
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -125,7 +111,7 @@ void hb_conInit( void )
 
 #if ! defined( HB_OS_WIN )
    /* On Windows file handles with numbers 0, 1, 2 are
-      transalted inside filesys to:
+      translated inside filesys to:
       GetStdHandle( STD_INPUT_HANDLE ), GetStdHandle( STD_OUTPUT_HANDLE ),
       GetStdHandle( STD_ERROR_HANDLE ) */
 
@@ -142,7 +128,7 @@ void hb_conInit( void )
 
       if( iStderr == 0 || iStderr == 1 )  /* //STDERR with no parameter or 0 */
          s_hFilenoStderr = s_hFilenoStdout;
-      /* disabled in default builds. It's not multiplatform and very
+      /* disabled in default builds. It's not multi-platform and very
        * dangerous because it can redirect error messages to data files
        * [druzus]
        */
@@ -178,7 +164,7 @@ void hb_conRelease( void )
    /*
     * Clipper does not restore screen size on exit so I removed the code with:
     *    hb_gtSetMode( s_originalMaxRow + 1, s_originalMaxCol + 1 );
-    * If the low level GT drive change some video adapter parameters which
+    * If the low-level GT drive change some video adapter parameters which
     * have to be restored on exit then it should does it in its Exit()
     * method. Here we cannot force any actions because it may cause bad
     * results in some GTs, f.e. when the screen size is controlled by remote
@@ -241,29 +227,29 @@ void hb_conOutErr( const char * szStr, HB_SIZE nLen )
 /* Output an item to the screen and/or printer and/or alternate */
 void hb_conOutAlt( const char * szStr, HB_SIZE nLen )
 {
-   HB_FHANDLE hFile;
+   PHB_FILE pFile;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_conOutAlt(%s, %" HB_PFS "u)", szStr, nLen ) );
 
    if( hb_setGetConsole() )
       hb_gtWriteCon( szStr, nLen );
 
-   if( hb_setGetAlternate() && ( hFile = hb_setGetAltHan() ) != FS_ERROR )
+   if( hb_setGetAlternate() && ( pFile = hb_setGetAltHan() ) != NULL )
    {
       /* Print to alternate file if SET ALTERNATE ON and valid alternate file */
-      hb_fsWriteLarge( hFile, szStr, nLen );
+      hb_fileWrite( pFile, szStr, nLen, -1 );
    }
 
-   if( ( hFile = hb_setGetExtraHan() ) != FS_ERROR )
+   if( ( pFile = hb_setGetExtraHan() ) != NULL )
    {
       /* Print to extra file if valid alternate file */
-      hb_fsWriteLarge( hFile, szStr, nLen );
+      hb_fileWrite( pFile, szStr, nLen, -1 );
    }
 
-   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != FS_ERROR )
+   if( ( pFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != NULL )
    {
       /* Print to printer if SET PRINTER ON and valid printer file */
-      hb_fsWriteLarge( hFile, szStr, nLen );
+      hb_fileWrite( pFile, szStr, nLen, -1 );
       hb_prnPos()->col += ( int ) nLen;
    }
 }
@@ -271,14 +257,14 @@ void hb_conOutAlt( const char * szStr, HB_SIZE nLen )
 /* Output an item to the screen and/or printer */
 static void hb_conOutDev( const char * szStr, HB_SIZE nLen )
 {
-   HB_FHANDLE hFile;
+   PHB_FILE pFile;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_conOutDev(%s, %" HB_PFS "u)", szStr, nLen ) );
 
-   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != FS_ERROR )
+   if( ( pFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != NULL )
    {
       /* Display to printer if SET DEVICE TO PRINTER and valid printer file */
-      hb_fsWriteLarge( hFile, szStr, nLen );
+      hb_fileWrite( pFile, szStr, nLen, -1 );
       hb_prnPos()->col += ( int ) nLen;
    }
    else
@@ -361,13 +347,12 @@ HB_FUNC( QQOUT ) /* writes a list of values to the current device (screen or pri
 
 HB_FUNC( QOUT )
 {
-   HB_FHANDLE hFile;
+   PHB_FILE pFile;
 
    hb_conOutAlt( s_szCrLf, s_iCrLfLen );
 
-   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != FS_ERROR )
+   if( ( pFile = hb_setGetPrinterHandle( HB_SET_PRN_CON ) ) != NULL )
    {
-      char buf[ 256 ];
       PHB_PRNPOS pPrnPos = hb_prnPos();
 
       pPrnPos->row++;
@@ -375,17 +360,19 @@ HB_FUNC( QOUT )
 
       if( pPrnPos->col )
       {
+         char buf[ 256 ];
+
          if( pPrnPos->col > ( int ) sizeof( buf ) )
          {
             char * pBuf = ( char * ) hb_xgrab( pPrnPos->col );
             memset( pBuf, ' ', pPrnPos->col );
-            hb_fsWrite( hFile, pBuf, ( HB_USHORT ) pPrnPos->col );
+            hb_fileWrite( pFile, pBuf, ( HB_USHORT ) pPrnPos->col, -1 );
             hb_xfree( pBuf );
          }
          else
          {
             memset( buf, ' ', pPrnPos->col );
-            hb_fsWrite( hFile, buf, ( HB_USHORT ) pPrnPos->col );
+            hb_fileWrite( pFile, buf, ( HB_USHORT ) pPrnPos->col, -1 );
          }
       }
    }
@@ -396,12 +383,12 @@ HB_FUNC( QOUT )
 HB_FUNC( __EJECT ) /* Ejects the current page from the printer */
 {
    PHB_PRNPOS pPrnPos;
-   HB_FHANDLE hFile;
+   PHB_FILE pFile;
 
-   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_ANY ) ) != FS_ERROR )
+   if( ( pFile = hb_setGetPrinterHandle( HB_SET_PRN_ANY ) ) != NULL )
    {
       static const char s_szEop[ 4 ] = { 0x0C, 0x0D, 0x00, 0x00 }; /* Buffer is 4 bytes to make CodeGuard happy */
-      hb_fsWrite( hFile, s_szEop, 2 );
+      hb_fileWrite( pFile, s_szEop, 2, -1 );
    }
 
    pPrnPos = hb_prnPos();
@@ -420,14 +407,14 @@ HB_FUNC( PCOL ) /* Returns the current printer row position */
 
 static void hb_conDevPos( int iRow, int iCol )
 {
-   HB_FHANDLE hFile;
+   PHB_FILE pFile;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_conDevPos(%d, %d)", iRow, iCol ) );
 
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */
 
-   if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != FS_ERROR )
+   if( ( pFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != NULL )
    {
       int iPRow = iRow;
       int iPCol = iCol + hb_setGetMargin();
@@ -456,7 +443,7 @@ static void hb_conDevPos( int iRow, int iCol )
             {
                if( iPtr + s_iCrLfLen > ( int ) sizeof( buf ) )
                {
-                  hb_fsWrite( hFile, buf, ( HB_USHORT ) iPtr );
+                  hb_fileWrite( pFile, buf, ( HB_USHORT ) iPtr, -1 );
                   iPtr = 0;
                }
                memcpy( &buf[ iPtr ], s_szCrLf, s_iCrLfLen );
@@ -475,7 +462,7 @@ static void hb_conDevPos( int iRow, int iCol )
          {
             if( iPtr == ( int ) sizeof( buf ) )
             {
-               hb_fsWrite( hFile, buf, ( HB_USHORT ) iPtr );
+               hb_fileWrite( pFile, buf, ( HB_USHORT ) iPtr, -1 );
                iPtr = 0;
             }
             buf[ iPtr++ ] = ' ';
@@ -483,7 +470,7 @@ static void hb_conDevPos( int iRow, int iCol )
          }
 
          if( iPtr )
-            hb_fsWrite( hFile, buf, ( HB_USHORT ) iPtr );
+            hb_fileWrite( pFile, buf, ( HB_USHORT ) iPtr, -1 );
       }
    }
    else
@@ -582,7 +569,7 @@ HB_FUNC( DISPOUT ) /* writes a single value to the screen, but is not affected b
 
 /* NOTE: Clipper does no checks about the screen positions. [vszakats] */
 
-HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position, but is not affected by SET ALTERNATE */
+HB_FUNC( DISPOUTAT )  /* writes a single value to the screen at specific position, but is not affected by SET ALTERNATE */
 {
    char * pszString;
    HB_SIZE nLen;
@@ -615,7 +602,7 @@ HB_FUNC( DISPOUTAT ) /* writes a single value to the screen at speficic position
    }
 }
 
-/* Harbour extension, works like DISPOUTAT but does not change cursor position */
+/* Harbour extension, works like DispOutAt() but does not change cursor position */
 
 HB_FUNC( HB_DISPOUTAT )
 {
@@ -646,16 +633,17 @@ HB_FUNC( HB_DISPOUTAT )
    so we can use it to draw graphical elements. */
 HB_FUNC( HB_DISPOUTATBOX )
 {
-   const char * pszString = hb_parc( 3 );
+   HB_SIZE nLen = hb_parclen( 3 );
 
-   if( pszString )
+   if( nLen > 0 )
    {
-      PHB_CODEPAGE cdp;
-      HB_SIZE nLen = hb_parclen( 3 ), nIndex = 0;
-      HB_WCHAR wc;
       int iRow = hb_parni( 1 );
       int iCol = hb_parni( 2 );
+      const char * pszString = hb_parc( 3 );
       int iColor;
+      PHB_CODEPAGE cdp;
+      HB_SIZE nIndex = 0;
+      HB_WCHAR wc;
 
       if( HB_ISCHAR( 4 ) )
          iColor = hb_gtColorToN( hb_parc( 4 ) );
@@ -668,6 +656,8 @@ HB_FUNC( HB_DISPOUTATBOX )
 
       while( HB_CDPCHAR_GET( cdp, pszString, nLen, &nIndex, &wc ) )
          hb_gtPutChar( iRow, iCol++, iColor, HB_GT_ATTR_BOX, wc );
+
+      hb_gtFlush();
    }
 }
 

@@ -1,6 +1,6 @@
 # ---------------------------------------------------------------
-# Copyright 2009 Viktor Szakats (harbour syenar.net)
-# See COPYING.txt for licensing terms.
+# Copyright 2009 Viktor Szakats (vszakats.net/harbour)
+# See LICENSE.txt for licensing terms.
 # ---------------------------------------------------------------
 
 ifneq ($(findstring MINGW,$(_DETPLAT_STR)),)

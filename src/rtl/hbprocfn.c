@@ -1,12 +1,9 @@
 /*
- * Harbour Project source code:
  * .prg level functions to create, wait and terminate processes
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  * based on xHarbour code by
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -59,10 +56,6 @@ HB_FUNC( HB_PROCESSOPEN )
    PHB_ITEM pStdIn  = hb_param( 2, HB_IT_BYREF );
    PHB_ITEM pStdOut = hb_param( 3, HB_IT_BYREF );
    PHB_ITEM pStdErr = hb_param( 4, HB_IT_BYREF );
-   HB_BOOL fDetach = hb_parl( 5 );
-   HB_FHANDLE hStdIn, *phStdIn, hStdOut, *phStdOut, hStdErr, *phStdErr;
-   HB_FHANDLE hProcess;
-   HB_ULONG ulPID;
 
    if( szName &&
        ( pStdIn  || HB_ISNIL( 2 ) ) &&
@@ -72,12 +65,18 @@ HB_FUNC( HB_PROCESSOPEN )
        ( HB_ISBYREF( 6 ) || HB_ISNIL( 6 ) ) &&
        ( ! pStdIn || ( pStdIn != pStdOut && pStdIn != pStdErr ) ) )
    {
+      HB_BOOL fDetach = hb_parl( 5 );
+      HB_FHANDLE hStdIn, *phStdIn, hStdOut, *phStdOut, hStdErr, *phStdErr;
+      HB_FHANDLE hProcess;
+      HB_ULONG ulPID;
+
       phStdIn  = pStdIn  ? &hStdIn  : NULL;
       phStdOut = pStdOut ? &hStdOut : NULL;
       phStdErr = pStdErr ? ( pStdOut == pStdErr ? phStdOut : &hStdErr ) : NULL;
 
       hProcess = hb_fsProcessOpen( szName, phStdIn, phStdOut, phStdErr,
                                    fDetach, &ulPID );
+      hb_fsSetFError( hb_fsError() );
       if( hProcess != FS_ERROR )
       {
          if( phStdIn )
@@ -99,7 +98,11 @@ HB_FUNC( HB_PROCESSVALUE )
    HB_FHANDLE hProcess = hb_numToHandle( hb_parnint( 1 ) );
 
    if( hProcess != 0 && hProcess != FS_ERROR && ( hb_pcount() < 2 || HB_ISLOG( 2 ) ) )
-      hb_retni( hb_fsProcessValue( hProcess, hb_pcount() < 2 || hb_parl( 2 ) ) );
+   {
+      int iResult = hb_fsProcessValue( hProcess, hb_pcount() < 2 || hb_parl( 2 ) );
+      hb_fsSetFError( hb_fsError() );
+      hb_retni( iResult );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -109,13 +112,17 @@ HB_FUNC( HB_PROCESSCLOSE )
    HB_FHANDLE hProcess = hb_numToHandle( hb_parnint( 1 ) );
 
    if( hProcess != 0 && hProcess != FS_ERROR && ( hb_pcount() < 2 || HB_ISLOG( 2 ) ) )
-      hb_retl( hb_fsProcessClose( hProcess, hb_pcount() < 2 || hb_parl( 2 ) ) );
+   {
+      HB_BOOL fResult = hb_fsProcessClose( hProcess, hb_pcount() < 2 || hb_parl( 2 ) );
+      hb_fsSetFError( hb_fsError() );
+      hb_retl( fResult );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* hb_processRun( <cCommand>, [ <cStdIn> ], [ @<cStdOut> ], [ @<cStdErr> ], ;
-                  [ <lDetach> ] ) -> <nResult> */
+                  [ <lDetach> ] ) --> <nResult> */
 HB_FUNC( HB_PROCESSRUN )
 {
    const char * szName = hb_parc( 1 );
@@ -138,11 +145,12 @@ HB_FUNC( HB_PROCESSRUN )
       nStdOut = nStdErr = 0;
       pStdOutBuf = pStdErrBuf = NULL;
       pStdOutPtr = pStdOut ? &pStdOutBuf : NULL;
-      pStdErrPtr = pStdErr ? &pStdErrBuf : NULL;
+      pStdErrPtr = pStdErr ? ( pStdOut == pStdErr ? pStdOutPtr : &pStdErrBuf ) : NULL;
 
       iResult = hb_fsProcessRun( szName, szStdIn, hb_parclen( 2 ),
                                  pStdOutPtr, &nStdOut, pStdErrPtr, &nStdErr,
                                  fDetach );
+      hb_fsSetFError( hb_fsError() );
 
       if( pStdOutBuf )
       {
@@ -157,7 +165,7 @@ HB_FUNC( HB_PROCESSRUN )
          if( ! hb_storclen_buffer( pStdErrBuf, nStdErr, 4 ) )
             hb_xfree( pStdErrBuf );
       }
-      else if( pStdErr )
+      else if( pStdErr && pStdOut != pStdErr )
          hb_storc( NULL, 4 );
 
       hb_retni( iResult );

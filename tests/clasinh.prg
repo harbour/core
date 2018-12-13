@@ -1,4 +1,3 @@
-
 #include "hbclass.ch"
 
 PROCEDURE Main()

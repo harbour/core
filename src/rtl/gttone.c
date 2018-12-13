@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    Low level tone code common to some GT drivers
+ * Low-level tone code common to some GT drivers
  *
  * Copyright 2006 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
- * the body of TONE function from Windows taken from GTWIN created by
+ * the body of Tone() function from Windows taken from GTWIN created by
  * the following authors:
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  * Copyright 1999-2006 Paul Tucker <ptucker@sympatico.ca>
@@ -23,9 +21,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,9 +51,7 @@
  *
  */
 
-
 /* NOTE: User programs should never call this layer directly! */
-
 
 #include "hbgtcore.h"
 
@@ -69,8 +65,9 @@
 #undef HB_HAS_WIN9X_TONE
 
 #if defined( HB_CPU_X86 ) && \
-    ( defined( __BORLANDC__ ) || defined( _MSC_VER ) || \
-      defined( __WATCOMC__ ) || defined( __MINGW32__ ) )
+    ( ( defined( _MSC_VER ) && _MSC_VER < 1900 ) || \
+      defined( __BORLANDC__ ) || defined( __WATCOMC__ ) || \
+      defined( __MINGW32__ ) )
 
 #define HB_HAS_WIN9X_TONE
 
@@ -84,14 +81,14 @@ static int hb_Inp9x( unsigned short int usPort )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_Inp9x(%hu)", usPort ) );
 
-   #if defined( __BORLANDC__ ) || defined( __DMC__ )
+   #if defined( __DMC__ ) || ( defined( __BORLANDC__ ) && ! defined( __clang__ ) )
 
       _DX = usPort;
       __emit__(0xEC);         /* ASM  IN AL, DX */
       __emit__(0x32,0xE4);    /* ASM XOR AH, AH */
       usVal = _AX;
 
-   #elif defined( __XCC__ ) || defined( __POCC__ )
+   #elif defined( __BORLANDC__ ) || defined( __POCC__ ) || defined( __XCC__ )
 
       __asm {
                mov   dx, usPort
@@ -101,6 +98,7 @@ static int hb_Inp9x( unsigned short int usPort )
             }
 
    #elif defined( __MINGW32__ )
+
       __asm__ __volatile__ ("inb %w1,%b0":"=a" (usVal):"Nd" (usPort));
 
    #elif defined( __WATCOMC__ )
@@ -116,19 +114,17 @@ static int hb_Inp9x( unsigned short int usPort )
    return usVal;
 }
 
-/* *********************************************************************** */
-
 static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_Outp9x(%hu, %hu)", usPort, usVal ) );
 
-   #if defined( __BORLANDC__ ) || defined( __DMC__ )
+   #if defined( __DMC__ ) || ( defined( __BORLANDC__ ) && ! defined( __clang__ ) )
 
       _DX = usPort;
       _AL = usVal;
       __emit__(0xEE);        /* ASM OUT DX, AL */
 
-   #elif defined( __XCC__ ) || defined( __POCC__ )
+   #elif defined( __BORLANDC__ ) || defined( __POCC__ ) || defined( __XCC__ )
 
       __asm {
                mov   dx, usPort
@@ -153,7 +149,6 @@ static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
    return usVal;
 }
 
-/* *********************************************************************** */
 /* dDurat is in seconds */
 static void hb_gt_w9xTone( double dFreq, double dDurat )
 {
@@ -212,7 +207,6 @@ static void hb_gt_w9xTone( double dFreq, double dDurat )
 
 #endif
 
-/* *********************************************************************** */
 /* dDurat is in seconds */
 static void hb_gt_wNtTone( double dFreq, double dDurat )
 {
@@ -227,7 +221,6 @@ static void hb_gt_wNtTone( double dFreq, double dDurat )
       hb_idleSleep( dDurat );
 }
 
-/* *********************************************************************** */
 /* dDuration is in 'Ticks' (18.2 per second) */
 void hb_gt_winapi_tone( double dFrequency, double dDuration )
 {
@@ -235,7 +228,7 @@ void hb_gt_winapi_tone( double dFrequency, double dDuration )
 
    /*
     * According to the Clipper NG, the duration in 'ticks' is truncated to the
-    * interger portion  ... Depending on the platform, Harbour allows a finer
+    * integer portion  ... Depending on the platform, Harbour allows a finer
     * resolution, but the minimum is 1 tick (for compatibility)
     */
    /* Convert from ticks to seconds */

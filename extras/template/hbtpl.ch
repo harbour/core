@@ -1,4 +1,3 @@
-
 #ifndef HBTPL_CH
 #define HBTPL_CH
 

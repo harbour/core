@@ -1,4 +1,3 @@
-
 /* Testing dbCreate() with Access database engine */
 
 #require "rddado"

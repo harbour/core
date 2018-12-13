@@ -766,6 +766,11 @@ HPDF_LoadU3DFromFile (HPDF_Doc      pdf,
                             const char    *filename);
 
 HPDF_EXPORT(HPDF_Image)
+HPDF_LoadU3DFromMem  (HPDF_Doc      pdf,
+               const HPDF_BYTE     *buffer,
+                     HPDF_UINT      size);
+
+HPDF_EXPORT(HPDF_Image)
 HPDF_Image_LoadRaw1BitImageFromMem  (HPDF_Doc           pdf,
                            const HPDF_BYTE   *buf,
                           HPDF_UINT          width,
@@ -1459,6 +1464,17 @@ HPDF_Page_SetCMYKStroke  (HPDF_Page  page,
 HPDF_EXPORT(HPDF_STATUS)
 HPDF_Page_ExecuteXObject  (HPDF_Page     page,
                            HPDF_XObject  obj);
+
+/*--- Content streams ----------------------------------------------------*/
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_New_Content_Stream  (HPDF_Page page,
+                               HPDF_Dict* new_stream);
+
+HPDF_EXPORT(HPDF_STATUS)
+HPDF_Page_Insert_Shared_Content_Stream  (HPDF_Page page,
+                                         HPDF_Dict shared_stream);
+
 
 /*--- Marked content -----------------------------------------------------*/
 

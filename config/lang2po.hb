@@ -1,8 +1,24 @@
+#!/usr/bin/env hbmk2
+
 /*
  * Converts core lang modules to standard .po files
  *
- * Copyright 2013 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2013-2017 Viktor Szakats (vszakats.net/harbour)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
@@ -92,7 +108,6 @@ STATIC FUNCTION Meta()
 
    /* NOTE: workaround for Harbour not retaining definition order of hash literals */
    hMeta := { => }
-   hb_HKeepOrder( hMeta, .T. )
    hMeta[ "Project-Id-Version:"        ] := "core-lang"
    hMeta[ "Report-Msgid-Bugs-To:"      ] := "https://groups.google.com/group/harbour-devel/"
    hMeta[ "POT-Creation-Date:"         ] := cISO_TimeStamp
@@ -118,10 +133,10 @@ STATIC FUNCTION ISO_TimeStamp()
    LOCAL nOffset := hb_UTCOffset()
 
    RETURN hb_StrFormat( "%1$s%2$s%3$02d%4$02d", ;
-      hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
+      hb_TToC( hb_DateTime(), "yyyy-mm-dd", "hh:mm" ), ;
       iif( nOffset < 0, "-", "+" ), ;
-      Int( nOffset / 3600 ), ;
-      Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ) )
+      Int( Abs( nOffset ) / 3600 ), ;
+      Int( Abs( nOffset ) % 3600 / 60 ) )
 
 STATIC FUNCTION Item( cOri, cTrs, nPos )
 
@@ -161,7 +176,7 @@ STATIC FUNCTION ConvToC_2( cStr )
 STATIC FUNCTION Comment( nPos )
 
    SWITCH nPos
-   CASE 22  ; RETURN "Colums must be aligned to positions: 1, 19, 32, 48"
+   CASE 22  ; RETURN "Columns must be aligned to character positions: 1, 19, 32, 48"
    CASE 25
    CASE 26
    CASE 27  ; RETURN "Keep the '*' decorations and internal space padding intact."

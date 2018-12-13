@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * ADir() function
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -62,13 +60,12 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
    LOCAL cName
    LOCAL cExt
 
-   // ; CA-Cl*pper would fail on this case.
-
+   // CA-Cl*pper would fail on this case.
    IF ! HB_ISSTRING( cFileMask )
       RETURN 0
    ENDIF
 
-   // ; If no drive/dir specified, use the SET DEFAULT setting.
+   // If no drive/dir specified, use the SET DEFAULT setting.
 
    hb_FNameSplit( cFileMask, @cDir, @cName, @cExt )
 
@@ -76,13 +73,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
       cFileMask := hb_FNameMerge( __DefPath(), cName, cExt )
    ENDIF
 
-   // ;
-
-   IF HB_ISARRAY( aAttr )
-      aDir := Directory( cFileMask, "HSD" )
-   ELSE
-      aDir := Directory( cFileMask )
-   ENDIF
+   //
 
    IF HB_ISARRAY( aName )
       nNameLen := Len( aName )
@@ -100,8 +91,9 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
       nAttrLen := Len( aAttr )
    ENDIF
 
-   // ;
+   //
 
+   aDir := Directory( cFileMask, iif( HB_ISARRAY( aAttr ), "HSD", ) )
    nDirLen := Len( aDir )
 
    FOR nDirPos := 1 TO nDirLen

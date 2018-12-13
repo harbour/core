@@ -1,9 +1,8 @@
 /*
- * Harbour Project source code:
  * Misc FoxPro functions (feel free to expand/fix it as you like)
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+ * Copyright 2010-2013 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,22 +46,52 @@
  */
 
 #include "setcurs.ch"
+#include "dbinfo.ch"
 
 FUNCTION Sys( nValue, xPar1 )
 
    SWITCH nValue
    CASE 0
-      RETURN NetName() + " # " + hb_UserName()
+      RETURN Id()
+   CASE 1
+      RETURN hb_ntos( Date() - CToD( "" ) )
    CASE 2
       RETURN hb_ntos( Seconds() )
+   CASE 5
+      RETURN Set( _SET_DEFAULT )
+   CASE 6
+      RETURN Set( _SET_PRINTFILE )
+   CASE 10
+      RETURN DToC( CToD( "" ) + hb_defaultValue( xPar1, 0 ) )
+   CASE 11
+      RETURN hb_ntos( iif( HB_ISDATETIME( xPar1 ), xPar1, ;
+                           iif( HB_ISSTRING( xPar1 ), CToD( xPar1 ), ;
+                           Date() ) ) - CToD( "" ) )
+   CASE 100
+      RETURN iif( Set( _SET_CONSOLE ), "ON", "OFF" )
+   CASE 101
+      RETURN Set( _SET_DEVICE )
+   CASE 102
+      RETURN iif( Set( _SET_PRINTER ), "ON", "OFF" )
    CASE 2002
-      hb_default( @xPar1, SC_NONE )
-      RETURN SetCursor( xPar1 )
+      RETURN SetCursor( hb_defaultValue( xPar1, SC_NONE ) )
+   CASE 2003
+      RETURN CurDir()
+   CASE 2011
+      RETURN iif( ! dbInfo( DBOI_SHARED ),     "Exclusive", ;
+             iif( dbInfo( DBI_ISFLOCK ),       "File locked", ;
+             iif( dbRecordInfo( DBRI_LOCKED ), "Record locked", ;
+                                               "Not locked" ) ) )
+   CASE 2020
+      RETURN hb_DiskSpace( Set( _SET_DEFAULT ) )
    OTHERWISE
       /* Throw RTE? */
    ENDSWITCH
 
    RETURN NIL
+
+FUNCTION Id()
+   RETURN NetName() + " # " + hb_UserName()
 
 STATIC FUNCTION AFillNested( aValue, xVal )
 
@@ -80,3 +109,9 @@ STATIC FUNCTION AFillNested( aValue, xVal )
 
 FUNCTION __fox_Array( ... )
    RETURN AFillNested( Array( ... ), .F. )
+
+FUNCTION AElement( aValue, ... )
+   RETURN aValue[ ... ]
+
+FUNCTION InsMode( ... )
+   RETURN Set( _SET_INSERT, ... )

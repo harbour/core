@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * SIM test code
  *
  * Copyright 2009 Jose Luis Capel <jlcapel@hotmail.com>
- * www - http://harbour-project.org
  */
 
 #require "hbwin"

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * The eval stack
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,7 +44,7 @@
  *
  */
 
-/* TOFIX: There are several things in this file which are not part of the
+/* FIXME: There are several things in this file which are not part of the
           standard Harbour API, in other words these things are not
           guaranteed to remain unchanged. To avoid confusion these should be
           moved to somewhere else (like hbrtl.h). [vszakats] */
@@ -156,7 +154,7 @@ typedef struct
    HB_ISIZ    nWithObject;    /* stack offset to base current WITH OBJECT item */
    HB_ISIZ    nRecoverBase;   /* current SEQUENCE envelope offset or 0 if no SEQUENCE is active */
    HB_USHORT  uiActionRequest;/* request for some action - stop processing of opcodes */
-   HB_USHORT  uiQuitState;    /* HVM is quiting */
+   HB_USHORT  uiQuitState;    /* HVM is quitting */
    HB_STACK_STATE state;      /* first (default) stack state frame */
    HB_STACKRDD rdd;           /* RDD related data */
    char       szDate[ 9 ];    /* last returned date from hb_pards() YYYYMMDD format */
@@ -296,6 +294,7 @@ extern HB_EXPORT int         hb_stackCallDepth( void );
 extern HB_EXPORT void        hb_stackBaseProcInfo( char * szProcName, HB_USHORT * puiProcLine ); /* get current .prg function name and line number */
 
 extern HB_EXPORT HB_ISIZ     hb_stackBaseProcOffset( int iLevel );
+extern HB_EXPORT HB_ISIZ     hb_stackBaseSymbolOffset( PHB_SYMB pSymbol );
 extern           void        hb_stackDispCall( void );
 
 /* thread specific data */

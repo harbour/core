@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    speed test program for string concatenation by += operator
+ * speed test program for string concatenation by += operator
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

@@ -1,4 +1,3 @@
-
 ifeq ($(HB_BUILD_MODE),cpp)
    HB_CMP := sunCC
 else
@@ -28,7 +27,7 @@ CFLAGS += -I. -I$(HB_HOST_INC)
 ifneq ($(HB_BUILD_OPTIM),no)
    # Together with $(HB_ISAOPT) above, these are supposed to (somewhat)
    # conform to the Blastwave build standards, see
-   #    http://wiki.blastwave.org/mediawiki/index.php/Build_Standards
+   #    https://web.archive.org/web/wiki.blastwave.org/mediawiki/index.php/Build_Standards
    # Try to keep them this way.
    CFLAGS += -fast
    CFLAGS += -xnolibmopt

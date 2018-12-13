@@ -1,4 +1,3 @@
-
 #require "hbsqlit3"
 
 #define _NUMROWS_ 10

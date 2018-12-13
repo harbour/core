@@ -1,4 +1,3 @@
-
 #require "hbfbird"
 
 PROCEDURE Main()

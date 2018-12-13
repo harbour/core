@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for thread return complex values
+ * demonstration/test code for thread return complex values
  *    and detached locals created by thread and used after thread
  *    termination.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 

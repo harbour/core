@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Get Class helpers
  *
  * Copyright 2000 Ron Pinkas <Ron@Profit-Master.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,24 +44,36 @@
  *
  */
 
-REQUEST hb_PValue
-REQUEST PCount
+REQUEST HB_PValue
 
 FUNCTION __Get( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    LOCAL oGet
 
-   IF bSetGet == NIL
+   IF ! HB_ISSTRING( cVarName )
+      RETURN NIL
+   ENDIF
+
+   IF ! HB_ISEVALITEM( bSetGet )
       IF FieldPos( cVarName ) > 0
-         bSetGet := hb_macroBlock( "iif(PCount()==0,FIELD->" + cVarName + ",FIELD->" + cVarName + ":=hb_PValue(1))" )
-      ELSEIF __mvExist( cVarName )
-         bSetGet := {| _1 | iif( _1 == NIL, __mvGet( cVarName ), __mvPut( cVarName, _1 ) ) }
-      ELSE
-         bSetGet := hb_macroBlock( "iif(PCount()==0," + cVarName + "," + cVarName + ":=hb_PValue(1))" )
+         bSetGet := FieldWBlock( cVarName, Select() )
+      ELSEIF ( bSetGet := MemVarBlock( cVarName ) ) == NIL
+         /* If cVarName is not a field name in current workarea then
+          * CA-Cl*pper always tries to create SET/GET block for memvar.
+          * If it cannot (i.e. cVarName is complex expression) then it
+          * macrocompile simple SET/GET block for it. [druzus]
+          */
+         bSetGet := hb_macroBlock( "iif(HB_PValue(1)==NIL," + cVarName + "," + cVarName + ":=hb_PValue(1))" )
       ENDIF
    ENDIF
 
-   oGet := GetNew(,, bSetGet, cVarName, cPicture )
+   /* The Eval() below is executed to force the same RTE as in
+    * CA-Cl*pper so user can create memvar dynamically in his
+    * custom error handler. [druzus]
+    */
+   Eval( bSetGet )
+
+   oGet := GetNew( ,, bSetGet, cVarName, cPicture )
 
    oGet:PreBlock := bWhen
    oGet:PostBlock := bValid
@@ -74,17 +84,26 @@ FUNCTION __GetA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
 
    LOCAL oGet
 
-   IF bGetArray == NIL
+   IF ! HB_ISSTRING( cVarName ) .OR. ! HB_ISARRAY( aIndex )
+      RETURN NIL
+   ENDIF
+
+   IF ! HB_ISEVALITEM( bGetArray )
+      /* CA-Cl*pper creates standard SET/GET block here */
       IF FieldPos( cVarName ) > 0
-         bGetArray := hb_macroBlock( "FIELD->" + cVarName )
-      ELSEIF __mvExist( cVarName )
-         bGetArray := {|| __mvGet( cVarName ) }
+         bGetArray := FieldWBlock( cVarName, Select() )
       ELSE
-         bGetArray := hb_macroBlock( cVarName )
+         DO WHILE ( bGetArray := MemVarBlock( cVarName ) ) == NIL
+            __mvGet( cVarName )
+         ENDDO
       ENDIF
    ENDIF
 
-   oGet := GetNew(,, bGetArray, cVarName, cPicture )
+   IF ! ValType( Eval( bGetArray ) ) $ "AH"
+      RETURN NIL
+   ENDIF
+
+   oGet := GetNew( ,, bGetArray, cVarName, cPicture )
    oGet:SubScript := aIndex
 
    oGet:PreBlock := bWhen

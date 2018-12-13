@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Cairo library: text
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,11 +44,9 @@
  *
  */
 
-
 #include "hbcairo.h"
 #include "hbapistr.h"
 #include "hbapierr.h"
-
 
 HB_FUNC( CAIRO_FONT_EXTENTS )
 {
@@ -70,7 +66,6 @@ HB_FUNC( CAIRO_FONT_EXTENTS )
       hb_arraySetND( pItem, 5, fe.max_y_advance );
    }
 }
-
 
 HB_FUNC( CAIRO_GET_FONT_MATRIX )
 {
@@ -92,7 +87,6 @@ HB_FUNC( CAIRO_GET_FONT_MATRIX )
    }
 }
 
-
 HB_FUNC( CAIRO_SELECT_FONT_FACE )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -104,7 +98,6 @@ HB_FUNC( CAIRO_SELECT_FONT_FACE )
       hb_strfree( hFamily );
    }
 }
-
 
 HB_FUNC( CAIRO_SET_FONT_MATRIX )
 {
@@ -130,7 +123,6 @@ HB_FUNC( CAIRO_SET_FONT_MATRIX )
    }
 }
 
-
 HB_FUNC( CAIRO_SET_FONT_SIZE )
 {
    cairo_t * pCairo = hb_cairo_param( 1 );
@@ -138,7 +130,6 @@ HB_FUNC( CAIRO_SET_FONT_SIZE )
    if( pCairo )
       cairo_set_font_size( pCairo, hb_parnd( 2 ) );
 }
-
 
 HB_FUNC( CAIRO_SHOW_TEXT )
 {
@@ -151,7 +142,6 @@ HB_FUNC( CAIRO_SHOW_TEXT )
       hb_strfree( hText );
    }
 }
-
 
 HB_FUNC( CAIRO_TEXT_EXTENTS )
 {

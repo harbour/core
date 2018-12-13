@@ -1,4 +1,3 @@
-
 /* $DOC$
    $NAME$
       ft_SaveSets()
@@ -20,6 +19,6 @@
    $EXAMPLES$
       aOldSets := ft_SaveSets()
    $SEEALSO$
-      ft_RestSets() ft_SetCentury()
+      ft_RestSets(), ft_SetCentury()
    $END$
  */

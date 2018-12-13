@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Replicate() function
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,28 +52,35 @@
 
 HB_FUNC( REPLICATE )
 {
-   if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
+   if( pItem && HB_ISNUM( 2 ) )
    {
+      HB_SIZE nLen = hb_itemGetCLen( pItem );
       HB_ISIZ nTimes = hb_parns( 2 );
 
-      if( nTimes > 0 )
+      if( nLen > 0 && nTimes > 0 )
       {
-         HB_SIZE nLen = hb_parclen( 1 );
-
-         if( ( double ) ( ( double ) nLen * ( double ) nTimes ) < ( double ) ULONG_MAX )
+         if( nTimes == 1 )
+            hb_itemReturn( pItem );
+         else if( ( double ) nLen * nTimes < HB_SIZE_MAX )
          {
-            const char * szText = hb_parc( 1 );
-            char * szResult = ( char * ) hb_xgrab( ( nLen * nTimes ) + 1 );
-            char * szPtr = szResult;
-            HB_ISIZ n;
+            const char * szText = hb_itemGetCPtr( pItem );
+            HB_SIZE nSize = nLen * nTimes;
+            char * szResult, * szPtr;
 
-            for( n = 0; n < nTimes; ++n )
+            szResult = szPtr = ( char * ) hb_xgrab( nSize + 1 );
+            if( nLen == 1 )
+               memset( szResult, szText[ 0 ], nSize );
+            else
             {
-               hb_xmemcpy( szPtr, szText, nLen );
-               szPtr += nLen;
+               while( nTimes-- > 0 )
+               {
+                  hb_xmemcpy( szPtr, szText, nLen );
+                  szPtr += nLen;
+               }
             }
-
-            hb_retclen_buffer( szResult, nLen * nTimes );
+            hb_retclen_buffer( szResult, nSize );
          }
          else
             hb_errRT_BASE_SubstR( EG_STROVERFLOW, 1234, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

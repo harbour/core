@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    GZIP functions wrapper
+ * GZIP functions wrapper
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -54,6 +52,12 @@
 
 #include <zlib.h>
 
+#if ! defined( HB_NO_GZLIB ) && \
+    defined( HB_OS_WIN_CE ) && defined( _MSC_VER ) && ZLIB_VERNUM >= 0x1240
+   #define HB_NO_GZLIB
+#endif
+
+#ifndef HB_NO_GZLIB
 /* GZIP stream destructor */
 static HB_GARBAGE_FUNC( hb_gz_Destructor )
 {
@@ -84,12 +88,14 @@ static gzFile hb_gzParam( int iParam )
    hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    return NULL;
 }
+#endif
 
 /*
  * hb_gzOpen( <cFile>, <cMode> ) => <pGZipStream> or NIL on Error
  */
 HB_FUNC( HB_GZOPEN )
 {
+#ifndef HB_NO_GZLIB
    const char * cFile = hb_parc( 1 ), * cMode = hb_parc( 2 );
 
    if( cFile && cMode )
@@ -118,6 +124,7 @@ HB_FUNC( HB_GZOPEN )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -125,6 +132,7 @@ HB_FUNC( HB_GZOPEN )
  */
 HB_FUNC( HB_GZDOPEN )
 {
+#ifndef HB_NO_GZLIB
    const char * cMode = hb_parc( 2 );
 
    if( HB_ISNUM( 1 ) && cMode )
@@ -145,6 +153,7 @@ HB_FUNC( HB_GZDOPEN )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -152,6 +161,7 @@ HB_FUNC( HB_GZDOPEN )
  */
 HB_FUNC( HB_GZCLOSE )
 {
+#ifndef HB_NO_GZLIB
    gzFile * gzHolder = ( gzFile * ) hb_parptrGC( &s_gcGZFuncs, 1 );
 
    if( gzHolder )
@@ -169,6 +179,7 @@ HB_FUNC( HB_GZCLOSE )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -176,6 +187,7 @@ HB_FUNC( HB_GZCLOSE )
  */
 HB_FUNC( HB_GZSETPARAMS )
 {
+#ifndef HB_NO_GZLIB
    if( HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -184,6 +196,7 @@ HB_FUNC( HB_GZSETPARAMS )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -191,6 +204,7 @@ HB_FUNC( HB_GZSETPARAMS )
  */
 HB_FUNC( HB_GZREAD )
 {
+#ifndef HB_NO_GZLIB
    PHB_ITEM pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
    char * szBuffer;
    HB_SIZE nLen;
@@ -218,6 +232,7 @@ HB_FUNC( HB_GZREAD )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -225,6 +240,7 @@ HB_FUNC( HB_GZREAD )
  */
 HB_FUNC( HB_GZWRITE )
 {
+#ifndef HB_NO_GZLIB
    const char * szData = hb_parc( 2 );
 
    if( szData )
@@ -245,6 +261,7 @@ HB_FUNC( HB_GZWRITE )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -252,6 +269,7 @@ HB_FUNC( HB_GZWRITE )
  */
 HB_FUNC( HB_GZGETS )
 {
+#ifndef HB_NO_GZLIB
    int iLen = hb_parni( 2 );
 
    if( iLen > 0 )
@@ -278,6 +296,7 @@ HB_FUNC( HB_GZGETS )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -285,6 +304,7 @@ HB_FUNC( HB_GZGETS )
  */
 HB_FUNC( HB_GZPUTS )
 {
+#ifndef HB_NO_GZLIB
    const char * szData = hb_parc( 2 );
 
    if( szData )
@@ -303,6 +323,7 @@ HB_FUNC( HB_GZPUTS )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -310,6 +331,7 @@ HB_FUNC( HB_GZPUTS )
  */
 HB_FUNC( HB_GZPUTC )
 {
+#ifndef HB_NO_GZLIB
    if( HB_ISNUM( 2 ) )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -326,6 +348,7 @@ HB_FUNC( HB_GZPUTC )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -333,6 +356,7 @@ HB_FUNC( HB_GZPUTC )
  */
 HB_FUNC( HB_GZGETC )
 {
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -345,6 +369,7 @@ HB_FUNC( HB_GZGETC )
 
       hb_retni( iResult );
    }
+#endif
 }
 
 /*
@@ -352,6 +377,7 @@ HB_FUNC( HB_GZGETC )
  */
 HB_FUNC( HB_GZUNGETC )
 {
+#ifndef HB_NO_GZLIB
    if( HB_ISNUM( 1 ) )
    {
 #if ZLIB_VERNUM >= 0x1202
@@ -370,6 +396,7 @@ HB_FUNC( HB_GZUNGETC )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -377,6 +404,7 @@ HB_FUNC( HB_GZUNGETC )
  */
 HB_FUNC( HB_GZFLUSH )
 {
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -389,6 +417,7 @@ HB_FUNC( HB_GZFLUSH )
 
       hb_retni( iResult );
    }
+#endif
 }
 
 /*
@@ -396,6 +425,7 @@ HB_FUNC( HB_GZFLUSH )
  */
 HB_FUNC( HB_GZSEEK )
 {
+#ifndef HB_NO_GZLIB
    if( HB_ISNUM( 2 ) )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -413,6 +443,7 @@ HB_FUNC( HB_GZSEEK )
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#endif
 }
 
 /*
@@ -420,6 +451,7 @@ HB_FUNC( HB_GZSEEK )
  */
 HB_FUNC( HB_GZREWIND )
 {
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -432,6 +464,7 @@ HB_FUNC( HB_GZREWIND )
 
       hb_retni( iResult );
    }
+#endif
 }
 
 /*
@@ -439,6 +472,7 @@ HB_FUNC( HB_GZREWIND )
  */
 HB_FUNC( HB_GZTELL )
 {
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -451,6 +485,7 @@ HB_FUNC( HB_GZTELL )
 
       hb_retnint( nResult );
    }
+#endif
 }
 
 /*
@@ -458,6 +493,7 @@ HB_FUNC( HB_GZTELL )
  */
 HB_FUNC( HB_GZEOF )
 {
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -470,6 +506,7 @@ HB_FUNC( HB_GZEOF )
 
       hb_retl( iResult != 0 );
    }
+#endif
 }
 
 /*
@@ -477,6 +514,7 @@ HB_FUNC( HB_GZEOF )
  */
 HB_FUNC( HB_GZDIRECT )
 {
+#ifndef HB_NO_GZLIB
 #if ZLIB_VERNUM >= 0x1230
    gzFile gz = hb_gzParam( 1 );
    if( gz )
@@ -490,6 +528,7 @@ HB_FUNC( HB_GZDIRECT )
       hb_retl( iResult != 0 );
    }
 #endif
+#endif
 }
 
 /*
@@ -497,6 +536,7 @@ HB_FUNC( HB_GZDIRECT )
  */
 HB_FUNC( HB_GZERROR )
 {
+#ifndef HB_NO_GZLIB
    gzFile gz = hb_gzParam( 1 );
 
    if( gz )
@@ -506,6 +546,7 @@ HB_FUNC( HB_GZERROR )
       hb_retc( gzerror( gz, &iErrNum ) );
       hb_storni( iErrNum, 2 );
    }
+#endif
 }
 
 /*
@@ -513,9 +554,11 @@ HB_FUNC( HB_GZERROR )
  */
 HB_FUNC( HB_GZCLEARERR )
 {
+#ifndef HB_NO_GZLIB
 #if ZLIB_VERNUM >= 0x1202
    gzFile gz = hb_gzParam( 1 );
    if( gz )
       gzclearerr( gz );
+#endif
 #endif
 }

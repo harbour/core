@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Base Object from which all object finally inherit
  *
  * Copyright 2000 J. Lefebvre <jfl@mafact.com> and RA. Cuylen <rac@mafact.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -76,14 +74,14 @@ FUNCTION HBObject()
 
          oClass:SetOnError( @HBObject_DftonError() )
 
-         oClass:AddInline( "MSGNOTFOUND"     , {| Self, cMsg | ::Error( "Message not found", Self:className(), cMsg, iif( Left( cMsg, 1 ) == "_", 1005, 1004 ) ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "MSGNOTFOUND"     , {| Self, cMsg | ::Error( "Message not found", ::className(), cMsg, iif( hb_LeftEq( cMsg, "_" ), 1005, 1004 ) ) }, HB_OO_CLSTP_EXPORTED )
 
 #if 0
          oClass:AddMultiData( , , HB_OO_CLSTP_EXPORTED, { "CLASS" }, .F. )
 
-         oClass:AddInline( "ADDMETHOD" , {| Self, cMeth, pFunc, nScopeMeth         | __clsAddMsg( __classH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
-         oClass:AddInline( "ADDVAR"    , {| Self, cVAR, nScopeMeth, uiData, hClass | __clsAddMsg( hClass:=__classH( Self ) ,     cVar , uidata := __cls_IncData( hClass ), HB_OO_MSG_ACCESS, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) )  , ;
-                                                                                     __clsAddMsg( hClass                   , "_"+cVar , uiData                           , HB_OO_MSG_ASSIGN, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "ADDMETHOD" , {| Self, cMeth, pFunc, nScopeMeth         | __clsAddMsg( __classH( Self ), cMeth, pFunc, HB_OO_MSG_METHOD, , iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "ADDVAR"    , {| Self, cVAR, nScopeMeth, uiData, hClass | __clsAddMsg( hClass := __classH( Self ),       cVar , uidata := __cls_IncData( hClass ), HB_OO_MSG_ACCESS, , iif( nScopeMeth == NIL, 1, nScopeMeth ) )  , ;
+                                                                                     __clsAddMsg( hClass                    , "_" + cVar , uiData                           , HB_OO_MSG_ASSIGN, , iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
 
          /* These ones exist within Class(y), so we will probably try to implement it */
 

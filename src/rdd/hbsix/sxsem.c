@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code:
- *    SIX compatible functions:
- *          sx_MakeSem()
- *          sx_KillSem()
- *          sx_IsSem()
+ * SIX compatible functions:
+ *       sx_MakeSem()
+ *       sx_KillSem()
+ *       sx_IsSem()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +48,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapicdp.h"
 #include "hbapiitm.h"
 #include "hbapifs.h"
 #include "hbapirdd.h"
@@ -71,6 +68,7 @@ static HB_BOOL hb_sxSemName( char * szFileName )
    else
    {
       AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
       if( pArea )
       {
          DBORDERINFO pOrderInfo;
@@ -96,25 +94,25 @@ static HB_BOOL hb_sxSemName( char * szFileName )
    return fResult;
 }
 
-static HB_FHANDLE hb_sxSemOpen( char * szFileName, HB_BOOL * pfNewFile )
+static PHB_FILE hb_sxSemOpen( char * szFileName, HB_BOOL * pfNewFile )
 {
-   HB_FHANDLE hFile;
+   PHB_FILE pFile;
    int i = 0;
 
    do
    {
-      hFile = hb_fsExtOpen( szFileName, ".sem",
-                            FO_READWRITE | FO_EXCLUSIVE | FXO_DEFAULTS |
-                            FXO_SHARELOCK | FXO_COPYNAME, NULL, NULL );
-      if( hFile != FS_ERROR )
+      pFile = hb_fileExtOpen( szFileName, ".sem",
+                              FO_READWRITE | FO_EXCLUSIVE | FXO_DEFAULTS |
+                              FXO_SHARELOCK | FXO_COPYNAME, NULL, NULL );
+      if( pFile != NULL )
          break;
 
       if( pfNewFile )
       {
-         hFile = hb_fsExtOpen( szFileName, ".sem", FXO_UNIQUE |
-                               FO_READWRITE | FO_EXCLUSIVE | FXO_DEFAULTS |
-                               FXO_SHARELOCK | FXO_COPYNAME, NULL, NULL );
-         if( hFile != FS_ERROR )
+         pFile = hb_fileExtOpen( szFileName, ".sem", FXO_UNIQUE |
+                                 FO_READWRITE | FO_EXCLUSIVE | FXO_DEFAULTS |
+                                 FXO_SHARELOCK | FXO_COPYNAME, NULL, NULL );
+         if( pFile != NULL )
          {
             *pfNewFile = HB_TRUE;
             break;
@@ -131,28 +129,29 @@ static HB_FHANDLE hb_sxSemOpen( char * szFileName, HB_BOOL * pfNewFile )
    }
    while( ++i < 25 );
 
-   return hFile;
+   return pFile;
 }
 
 
 HB_FUNC( SX_MAKESEM )
 {
    char szFileName[ HB_PATH_MAX ];
-   HB_BYTE buffer[ 2 ];
    int iUsers = -1;
    HB_BOOL fError = HB_FALSE, fNewFile = HB_FALSE;
 
    if( hb_sxSemName( szFileName ) )
    {
-      HB_FHANDLE hFile = hb_sxSemOpen( szFileName, &fNewFile );
-      if( hFile != FS_ERROR )
+      PHB_FILE pFile = hb_sxSemOpen( szFileName, &fNewFile );
+
+      if( pFile != NULL )
       {
+         HB_BYTE buffer[ 2 ];
+
          if( fNewFile )
             iUsers = 1;
          else
          {
-            hb_fsSeek( hFile, 0, FS_SET );
-            if( hb_fsRead( hFile, buffer, 2 ) != 2 )
+            if( hb_fileReadAt( pFile, buffer, 2, 0 ) != 2 )
                fError = HB_TRUE;
             else
                iUsers = HB_GET_LE_INT16( buffer ) + 1;
@@ -160,11 +159,10 @@ HB_FUNC( SX_MAKESEM )
          if( ! fError )
          {
             HB_PUT_LE_UINT16( buffer, iUsers );
-            hb_fsSeek( hFile, 0, FS_SET );
-            if( hb_fsWrite( hFile, buffer, 2 ) != 2 )
+            if( hb_fileWriteAt( pFile, buffer, 2, 0 ) != 2 )
                fError = HB_TRUE;
          }
-         hb_fsClose( hFile );
+         hb_fileClose( pFile );
       }
    }
    if( fError )
@@ -176,24 +174,24 @@ HB_FUNC( SX_MAKESEM )
 HB_FUNC( SX_KILLSEM )
 {
    char szFileName[ HB_PATH_MAX ];
-   HB_BYTE buffer[ 2 ];
    int iUsers = -1;
 
    if( hb_sxSemName( szFileName ) )
    {
-      HB_FHANDLE hFile = hb_sxSemOpen( szFileName, NULL );
-      if( hFile != FS_ERROR )
+      PHB_FILE pFile = hb_sxSemOpen( szFileName, NULL );
+
+      if( pFile != NULL )
       {
-         if( hb_fsRead( hFile, buffer, 2 ) == 2 )
+         HB_BYTE buffer[ 2 ];
+         if( hb_fileReadAt( pFile, buffer, 2, 0 ) == 2 )
          {
             iUsers = HB_GET_LE_INT16( buffer ) - 1;
-            hb_fsSeek( hFile, 0, FS_SET );
             HB_PUT_LE_UINT16( buffer, iUsers );
-            hb_fsWrite( hFile, buffer, 2 );
+            hb_fileWriteAt( pFile, buffer, 2, 0 );
          }
-         hb_fsClose( hFile );
+         hb_fileClose( pFile );
          if( iUsers == 0 )
-            hb_fsDelete( szFileName );
+            hb_fileDelete( szFileName );
       }
    }
    hb_retni( iUsers );
@@ -203,14 +201,14 @@ HB_FUNC( SX_KILLSEM )
 HB_FUNC( SX_ISSEM )
 {
    char szFileName[ HB_PATH_MAX ];
-   HB_FHANDLE hFile = FS_ERROR;
+   PHB_FILE pFile = NULL;
 
    if( hb_sxSemName( szFileName ) )
    {
-      hFile = hb_sxSemOpen( szFileName, NULL );
-      if( hFile != FS_ERROR )
-         hb_fsClose( hFile );
+      pFile = hb_sxSemOpen( szFileName, NULL );
+      if( pFile != NULL )
+         hb_fileClose( pFile );
    }
 
-   hb_retl( hFile != FS_ERROR );
+   hb_retl( pFile != NULL );
 }

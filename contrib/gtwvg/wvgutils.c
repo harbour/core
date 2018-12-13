@@ -1,5 +1,4 @@
 /*
- * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *
  *    Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>
@@ -15,24 +14,20 @@
  *     Copyright 1999-2000 Paul Tucker <ptucker@sympatico.ca>
  *     Copyright 2002 Przemyslaw Czerpak <druzus@polbox.com>
  *
- * See COPYING.txt for licensing terms.
- *
- * www - http://harbour-project.org
- *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option )
+ * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/ ).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,7 +45,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -62,7 +57,7 @@
 
 #include "gtwvg.h"
 
-/* workaround for missing declaration in MinGW32 */
+/* workaround for missing declaration in MinGW */
 #if ! defined( TTM_SETTITLE ) && defined( TTM_SETTITLEA )
    #define TTM_SETTITLE  TTM_SETTITLEA
 #endif
@@ -112,6 +107,8 @@ HB_FUNC( WVT_UTILS )
 /*
  *     Wvt_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
  *                                    lItalic, lUnderline, lStrikeout )
+ *              ->
+ *    { cFontName, nHeight, nWidth, nWeight, nQuality, lItalic, lUnderline, lStrikeout, nRGB }
  */
 HB_FUNC( WVT_CHOOSEFONT )
 {
@@ -170,7 +167,8 @@ HB_FUNC( WVT_CHOOSEFONT )
       hb_arraySetNI( ary, 5, lf.lfQuality );
       hb_arraySetL( ary, 6, lf.lfItalic );
       hb_arraySetL( ary, 7, lf.lfUnderline );
-      hb_arraySetNI( ary, 8, cf.rgbColors );
+      hb_arraySetL( ary, 8, lf.lfStrikeOut );
+      hb_arraySetNI( ary, 9, cf.rgbColors );
 
       hb_itemReturnRelease( ary );
    }
@@ -186,7 +184,8 @@ HB_FUNC( WVT_CHOOSEFONT )
       hb_arraySetNI( ary, 5, 0 );
       hb_arraySetL( ary, 6, 0 );
       hb_arraySetL( ary, 7, 0 );
-      hb_arraySetNI( ary, 8, 0 );
+      hb_arraySetL( ary, 8, 0 );
+      hb_arraySetNI( ary, 9, 0 );
 
       hb_itemReturnRelease( ary );
    }
@@ -202,7 +201,8 @@ HB_FUNC( WVT_CHOOSEFONT )
       hb_arraySetNI( ary, 5, 0 );
       hb_arraySetL( ary, 6, 0 );
       hb_arraySetL( ary, 7, 0 );
-      hb_arraySetNI( ary, 8, 0 );
+      hb_arraySetL( ary, 8, 0 );
+      hb_arraySetNI( ary, 9, 0 );
 
       hb_itemReturnRelease( ary );
    }
@@ -352,7 +352,7 @@ HB_FUNC( WVT_SETTOOLTIPWIDTH )
    int iTipWidth = ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
 
    if( HB_ISNUM( 1 ) )
-      SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
+      SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( HB_PTRUINT ) hb_parnint( 1 ) );
 
    hb_retni( iTipWidth );
 #else
@@ -631,7 +631,7 @@ HB_FUNC( WVT_SETMENU )
    RECT rc = { 0, 0, 0, 0 };
    int  height, width;
 
-   SetMenu( _s->hWnd, ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
+   SetMenu( _s->hWnd, ( HMENU ) ( HB_PTRUINT ) hb_parnint( 1 ) );
 
    GetWindowRect( _s->hWnd, &wi );
    GetClientRect( _s->hWnd, &ci );
@@ -656,38 +656,38 @@ HB_FUNC( WVT_SETPOPUPMENU )
 
    HMENU hPopup = _s->hPopup;
 
-   _s->hPopup = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   _s->hPopup = ( HMENU ) ( HB_PTRUINT ) hb_parnint( 1 );
    if( hPopup )
    {
-      hb_retnint( ( HB_PTRDIFF ) hPopup );
+      hb_retnint( ( HB_PTRUINT ) hPopup );
    }
 }
 
 HB_FUNC( WVT_CREATEMENU )
 {
-   hb_retnint( ( HB_PTRDIFF ) CreateMenu() );
+   hb_retnint( ( HB_PTRUINT ) CreateMenu() );
 }
 
 HB_FUNC( WVT_CREATEPOPUPMENU )
 {
-   hb_retnint( ( HB_PTRDIFF ) CreatePopupMenu() );
+   hb_retnint( ( HB_PTRUINT ) CreatePopupMenu() );
 }
 
 HB_FUNC_TRANSLATE( WVT_APPENDMENU, WVG_APPENDMENU )
 
 HB_FUNC( WVT_DELETEMENU )
 {
-   hb_retl( DeleteMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retl( DeleteMenu( ( HMENU ) ( HB_PTRUINT ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_DESTROYMENU )
 {
-   hb_retl( DestroyMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ) ) );
+   hb_retl( DestroyMenu( ( HMENU ) ( HB_PTRUINT ) hb_parnint( 1 ) ) );
 }
 
 HB_FUNC( WVT_ENABLEMENUITEM )
 {
-   hb_retni( EnableMenuItem( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
+   hb_retni( EnableMenuItem( ( HMENU ) ( HB_PTRUINT ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
 HB_FUNC( WVT_GETLASTMENUEVENT )
@@ -800,7 +800,7 @@ HB_FUNC( WVT_TRACKPOPUPMENU )
 
    GetCursorPos( &xy );
 
-   hb_retnl( TrackPopupMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ),
+   hb_retnl( TrackPopupMenu( ( HMENU ) ( HB_PTRUINT ) hb_parnint( 1 ),
                              TPM_CENTERALIGN | TPM_RETURNCMD,
                              xy.x,
                              xy.y,
@@ -813,7 +813,7 @@ HB_FUNC( WVT_GETMENU )
 {
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
-   hb_retnint( ( HB_PTRDIFF ) GetMenu( _s->hWnd ) );
+   hb_retnint( ( HB_PTRUINT ) GetMenu( _s->hWnd ) );
 }
 
 /*
@@ -867,7 +867,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          hDlg = CreateDialogIndirect( ( HINSTANCE ) wvg_hInstance(),
                                       ( LPDLGTEMPLATE ) HB_PARSTR( 1, &hTemplate, NULL ),
                                       hb_parl( 2 ) ? _s->hWnd : NULL,
-                                      ( DLGPROC ) ( HB_PTRDIFF ) hb_parnint( 3 ) );
+                                      ( DLGPROC ) ( HB_PTRUINT ) hb_parnint( 3 ) );
          hb_strfree( hTemplate );
       }
       else
@@ -932,7 +932,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
       }
    }
 
-   hb_retnint( ( HB_PTRDIFF ) hDlg );
+   hb_retnint( ( HB_PTRUINT ) hDlg );
 }
 
 HB_FUNC( WVT_CREATEDIALOGMODAL )
@@ -945,7 +945,7 @@ HB_FUNC( WVT_CREATEDIALOGMODAL )
    int        iIndex;
    int        iResource = hb_parni( 4 );
    HB_PTRDIFF iResult   = 0;
-   HWND       hParent   = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) : _s->hWnd;
+   HWND       hParent   = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRUINT ) hb_parnint( 5 ) : _s->hWnd;
 
    /* check if we still have room for a new dialog */
    for( iIndex = 0; iIndex < WVT_DLGMD_MAX; iIndex++ )
@@ -1124,7 +1124,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
 
    p = lpwAlign( p );
 
-   hb_retclen( ( LPSTR ) pdlgtemplate, ( ( HB_PTRDIFF ) p - ( HB_PTRDIFF ) pdlgtemplate ) );
+   hb_retclen( ( LPSTR ) pdlgtemplate, ( ( HB_PTRUINT ) p - ( HB_PTRUINT ) pdlgtemplate ) );
 
    LocalFree( LocalHandle( pdlgtemplate ) );
 }
@@ -1135,7 +1135,7 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
  */
 LPWORD lpwAlign( LPWORD lpIn )
 {
-   HB_PTRDIFF ul = ( HB_PTRDIFF ) lpIn;
+   HB_PTRUINT ul = ( HB_PTRUINT ) lpIn;
 
    ul  += 3;
    ul >>= 2;
@@ -1161,36 +1161,36 @@ HB_FUNC( WVT_LBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_LBGETCOUNT )
 {
-   hb_retnl( ( long ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
+   hb_retnl( ( long ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_GETCOUNT, 0, 0 ) );
 }
 
 HB_FUNC( WVT_LBDELETESTRING )
 {
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_DELETESTRING, hb_parni( 3 ), 0 );
 }
 
 HB_FUNC( WVT_LBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parni( 2 ) ), LB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 HB_FUNC( WVT_CBADDSTRING )
 {
    void * hText;
 
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_ADDSTRING, 0, ( LPARAM ) HB_PARSTR( 3, &hText, NULL ) );
    hb_strfree( hText );
 }
 
 HB_FUNC( WVT_CBSETCURSEL )
 {
-   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
+   SendMessage( GetDlgItem( ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ), hb_parni( 2 ) ), CB_SETCURSEL, hb_parni( 3 ), 0 );
 }
 
 /*
@@ -1213,12 +1213,12 @@ HB_FUNC( WVT_DLGSETICON )
 
    if( hIcon )
    {
-      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
-      SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
+      SendMessage( ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ), WM_SETICON, ICON_SMALL, ( LPARAM ) hIcon );  /* Set Title Bar ICON */
+      SendMessage( ( HWND ) ( HB_PTRUINT ) hb_parnint( 1 ), WM_SETICON, ICON_BIG, ( LPARAM ) hIcon );    /* Set Task List Icon */
    }
 
    if( hIcon )
-      hb_retnint( ( HB_PTRDIFF ) hIcon );
+      hb_retnint( ( HB_PTRUINT ) hIcon );
 }
 
 HB_FUNC( WVT_GETFONTHANDLE )
@@ -1231,7 +1231,7 @@ HB_FUNC( WVT_GETFONTHANDLE )
    if( iSlot >= 0 && iSlot < WVT_PICTURES_MAX )
       hFont = _s->pGUI->hUserFonts[ iSlot ];
 
-   hb_retnint( ( HB_PTRDIFF ) hFont );
+   hb_retnint( ( HB_PTRUINT ) hFont );
 }
 
 /*

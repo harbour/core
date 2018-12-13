@@ -1,3 +1,5 @@
+# Copyright 2010 Viktor Szakats (vszakats.net/harbour)
+
 # These may be overridden by local project options.
 
 -q0
@@ -11,10 +13,5 @@
 
 {(HB_BUILD_MODE='cpp')|(!HB_BUILD_MODE&allmsvc)}-cpp=yes
 {HB_BUILD_MODE='c'}-cpp=no
-
--c=iso90
-
-# For cegcc Windows headers
--c=gnu90{wce&allmingw}
 
 -warn=yes

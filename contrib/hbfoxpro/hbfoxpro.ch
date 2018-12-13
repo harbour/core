@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Visual FoxPro compatibility header
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,7 +51,10 @@
 
 /* messages in FP */
 #xtranslate .<!msg!> => :<msg>
+#translate THIS. => Self:
 
+/* Harbour does not support NULL */
+#xtranslate .NULL. => NIL
 
 /* array declarations */
 #xtranslate __FP_DIM( <exp> ) => <exp>
@@ -81,5 +82,43 @@
          __dbList( <.off.>, { <{v}> }, <.all.>, ;
                    <{for}>, <{while}>, <next>, ;
                    <rec>, <.rest.>, <.prn.>, <(f)> )
+
+
+/* commands and standard functions with alias */
+#command SEEK <exp> [<soft: SOFTSEEK>] [<last: LAST>] ;
+              [TAG <tag>] [IN <wa>] => ;
+         __fox_Seek( <exp>, iif( <.soft.>, .T., NIL ), ;
+                            iif( <.last.>, .T., NIL ), ;
+                     <(wa)>, <(tag)> )
+#command SET FILTER TO <exp> IN <wa> [NOOPTIMIZE] => ;
+                                 <wa>->( dbSetFilter( <{exp}>, <"exp"> ) )
+#command SKIP [<n>] IN <wa>   => <wa>->( dbSkip( <n> ) )
+#command UNLOCK IN <wa>       => <wa>->( dbUnlock() )
+#command GO TOP IN <wa>       => <wa>->( dbGoTop() )
+#command GO BOTTOM IN <wa>    => <wa>->( dbGoBottom() )
+#command GOTO <nRec> IN <wa>  => <wa>->( dbGoto( <nRec> ) )
+
+#xtranslate SEEK( <x>, <wa> ) => (<wa>)->( dbSeek( <x> ) )
+#xtranslate RECCOUNT( <wa> )  => (<wa>)->( RecCount() )
+#xtranslate RECSIZE( <wa> )   => (<wa>)->( RecSize() )
+#xtranslate FCOUNT( <wa> )    => (<wa>)->( FCount() )
+#xtranslate RECNO( <wa> )     => (<wa>)->( RecNo() )
+#xtranslate RLOCK( <wa> )     => (<wa>)->( RLock() )
+
+#xtranslate USED( <wa> )    => __fox_Used( <wa> )
+
+#xtranslate At( <sub>, <str>, <occur> )   => fox_At( <sub>, <str>, <occur> )
+
+/* other commands */
+#command SCAN [FOR <for>] [WHILE <while>] [NEXT <next>] ;
+              [RECORD <rec>] [<rest:REST>] [ALL] [NOOPTIMIZE] => ;
+         __dbLocate( <{for}>, <{while}>, <next>, <rec>, <.rest.> ) ;;
+         WHILE Found()
+#command ENDSCAN => __dbContinue(); ENDDO
+
+#command EJECT PAGE => __Eject()
+#command FLUSH      => dbCommitAll()
+#command REGIONAL [<defs,...>] => LOCAL <defs>
+#command CD <(path)> => hb_cwd( <(path)> )
 
 #endif /* HBFOXPRO_CH_ */

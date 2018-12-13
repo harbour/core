@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for Advantage Database Server RDD
  *
  * Copyright 1999 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,6 +44,8 @@
  *
  */
 
+#include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapirdd.h"
 
 #if defined( HB_OS_WIN )
@@ -67,9 +67,11 @@
 
 #include "ace.h"
 
-/* Autodetect ACE version. */
-#if   defined( ADS_GET_FORMAT_WEB )
-   #define _ADS_LIB_VERSION  1100 /* or upper */
+/* Auto-detect ACE version. */
+#if   defined( ADS_ROOT_DD_ALIAS )
+   #define _ADS_LIB_VERSION  1110 /* or upper */
+#elif defined( ADS_GET_FORMAT_WEB )
+   #define _ADS_LIB_VERSION  1100
 #elif defined( ADS_GET_UTF8 )
    #define _ADS_LIB_VERSION  1010
 #elif defined( ADS_DEFAULT_SQL_TIMEOUT )
@@ -112,23 +114,18 @@ HB_EXTERN_BEGIN
 UNSIGNED32 ENTRYPOINT AdsDeleteFile( ADSHANDLE hConnection, UNSIGNED8 * pucFileName );
 #endif
 
-/*
- *  ADS WORKAREA
- *  --------
- *  The Workarea Structure of Advantage Database Server RDD
- *
- */
+/* ADS WORKAREA
+   The Workarea Structure of Advantage Database Server RDD */
 
 typedef struct _ADSAREA_
 {
    AREA area;
 
-   /*
-    *  ADS's additions to the workarea structure
+   /* ADS's additions to the workarea structure
     *
-    *  Warning: The above section MUST match WORKAREA exactly!  Any
-    *  additions to the structure MUST be added below, as in this
-    *  example.
+    * Warning: The above section MUST match WORKAREA exactly!  Any
+    * additions to the structure MUST be added below, as in this
+    * example.
     */
 
    LPDBRELINFO lpdbPendingRel;    /* Pointer to parent rel struct */
@@ -149,6 +146,7 @@ typedef struct _ADSAREA_
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;
    ADSHANDLE hStatement;
+   char *    szQuery;
 } ADSAREA;
 
 typedef ADSAREA * ADSAREAP;
@@ -186,15 +184,18 @@ extern HB_BOOL hb_ads_bTestRecLocks;
 
 extern ADSHANDLE  hb_ads_getConnection( void );
 extern ADSHANDLE  hb_ads_defConnection( ADSHANDLE hConnect, const char * szName );
+extern void       hb_ads_clrConnection( ADSHANDLE hConnect );
 extern void       hb_ads_setConnection( ADSHANDLE hConnect );
+extern int        hb_ads_getIndexPageSize( void );
+extern void       hb_ads_setIndexPageSize( int iIndexPageSize );
 
 extern HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea );
 extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
 
 #ifdef ADS_USE_OEM_TRANSLATION
    extern HB_BOOL hb_ads_bOEM;
-   extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE ulLen );
-   extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE ulLen );
+   extern char *  hb_adsOemToAnsi( const char * pcString, HB_SIZE nLen );
+   extern char *  hb_adsAnsiToOem( const char * pcString, HB_SIZE nLen );
    extern void    hb_adsOemAnsiFree( char * pcString );
 
    /* NOTE: Undocumented ACE function. */
@@ -210,8 +211,8 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
                                          UNSIGNED32 * pulLen );
 
 #else
-#  define hb_adsOemToAnsi( s, l )  ( ( char * ) ( s ) )
-#  define hb_adsAnsiToOem( s, l )  ( ( char * ) ( s ) )
+#  define hb_adsOemToAnsi( s, l )  ( ( char * ) HB_UNCONST( s ) )
+#  define hb_adsAnsiToOem( s, l )  ( ( char * ) HB_UNCONST( s ) )
 #  define hb_adsOemAnsiFree( s )
 #endif
 

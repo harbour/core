@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Compatibility calls.
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * Copyright 2009 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,6 +59,9 @@ FUNCTION GetActiveObject()
 FUNCTION CreateOleObject()
    RETURN NIL
 
+FUNCTION OleDefaultArg()
+   RETURN NIL
+
 #else
 
 
@@ -69,6 +70,8 @@ FUNCTION CreateOleObject()
 #include "hbclass.ch"
 
 #include "error.ch"
+
+#include "hbole.ch"
 
 #define EG_OLEEXCEPTION 1001
 #define DISPID_VALUE    0
@@ -181,13 +184,11 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOleAuto
    LOCAL hOle
 
    IF HB_ISSTRING( xOle )
-      hOle := __oleCreateObject( xOle,, cLicense )
-      IF ! Empty( hOle )
-         ::__hObj := hOle
-         ::cClassName := xOle
-      ELSE
+      IF Empty( hOle := __oleCreateObject( xOle,, cLicense ) )
          RETURN Throw( s_oleError() )
       ENDIF
+      ::__hObj := hOle
+      ::cClassName := xOle
    ELSE
       ::hObj := xOle
       IF ::__hObj == NIL
@@ -204,11 +205,10 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOleAuto
 METHOD GetActiveObject( cClass ) CLASS TOleAuto
 
    IF HB_ISSTRING( cClass )
-      IF ! Empty( ::__hObj := __oleGetActiveObject( cClass ) )
-         ::cClassName := cClass
-      ELSE
+      IF Empty( ::__hObj := __oleGetActiveObject( cClass ) )
          RETURN Throw( s_oleError() )
       ENDIF
+      ::cClassName := cClass
    ELSE
       wapi_MessageBox( , "Invalid parameter type to constructor TOleAuto():GetActiveObject()!", ;
          "OLE Interface", )
@@ -234,27 +234,16 @@ METHOD _OleValue( xValue ) CLASS TOleAuto
    RETURN xRet
 
 OLE OPERATOR "==" METHOD OleValueExactEqual WITH xArg IS ::OleValue == xArg
-
 OLE OPERATOR "=" METHOD OleValueEqual WITH xArg IS ::OleValue = xArg
-
 OLE OPERATOR "!=" METHOD OleValueNotEqual WITH xArg IS ::OleValue != xArg /* Intentionally using != operator */
-
 OLE OPERATOR "+" METHOD OleValuePlus WITH xArg IS ::OleValue + xArg
-
 OLE OPERATOR "-" METHOD OleValueMinus WITH xArg IS ::OleValue - xArg
-
 OLE OPERATOR "*" METHOD OleValueMultiply WITH xArg IS ::OleValue * xArg
-
 OLE OPERATOR "/" METHOD OleValueDivide WITH xArg IS ::OleValue / xArg
-
 OLE OPERATOR "%" METHOD OleValueModulus WITH xArg IS ::OleValue % xArg
-
 OLE OPERATOR "^" METHOD OleValuePower WITH xArg IS ::OleValue ^ xArg
-
 OLE OPERATOR "++" METHOD OleValueInc IS ++::OleValue
-
 OLE OPERATOR "--" METHOD OleValueDec IS --::OleValue
-
 
 FUNCTION CreateObject( xOle, cLicense )
    RETURN TOleAuto():New( xOle,, cLicense )
@@ -264,5 +253,8 @@ FUNCTION GetActiveObject( cString )
 
 FUNCTION CreateOleObject( ... )
    RETURN __oleCreateObject( ... )
+
+FUNCTION OleDefaultArg()
+   RETURN __oleVariantNew( WIN_VT_ERROR, WIN_DISP_E_PARAMNOTFOUND )
 
 #endif /* __PLATFORM__WINDOWS */

@@ -1,0 +1,4 @@
+description=I/O driver for BZIP2 compressed streams
+
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+libs=hbbz2.hbc

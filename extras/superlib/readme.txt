@@ -1,4 +1,3 @@
-
 1.) Download original sources of SuperLib 3.5 from this page:
        http://www.the-oasis.net/ftpmaster.php3?content=ftplib.htm
     Direct link:
@@ -14,7 +13,7 @@
     hbformat -lFCaseLow=yes -nEol=0 -lIndent=no -lCase=no -lSpaces=no "*.prg"
 
 4.) Apply supplied patch to the source using GNU Patch:
-    patch -lNi superlib.dif
+    patch -lNi superlib.patch
 
 5.) Build it:
     hbmk2 superlib.hbp

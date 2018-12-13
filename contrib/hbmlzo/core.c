@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *    hbmLZO (miniLZO functions wrapper).
- *    miniLZO -- mini subset of the LZO real-time data compression library
- *               http://www.oberhumer.com/opensource/lzo/
+ * hbmLZO (miniLZO functions wrapper).
+ * miniLZO -- mini subset of the LZO real-time data compression library
  *
  * Copyright 2011 Petr Chornyj <myorg63@mail.ru>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -80,7 +77,7 @@ static void hb_mlzo_init( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 
    if( lzo_init() != LZO_E_OK )
-      hb_errInternal( HB_EI_VMBADSTARTUP /* TOFIX: ? */, NULL, NULL, NULL );
+      hb_errInternal( HB_EI_VMBADSTARTUP /* FIXME: ? */, NULL, NULL, NULL );
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_mlzo_init_ )
@@ -97,13 +94,13 @@ HB_CALL_ON_STARTUP_END( _hb_mlzo_init_ )
 /* Compression */
 
 /*
- * int lzo1x_1_compress ( const lzo_bytep src,
- *                        lzo_uint  src_len,
- *                        lzo_bytep dst,
- *                        lzo_uintp dst_len,
- *                        lzo_voidp wrkmem );
+ * int lzo1x_1_compress( const lzo_bytep src,
+ *                       lzo_uint  src_len,
+ *                       lzo_bytep dst,
+ *                       lzo_uintp dst_len,
+ *                       lzo_voidp wrkmem );
  *
- * Memory requirements: LZO1X_1_MEM_COMPRESS (64 kB on 32-bit machines)
+ * Memory requirements: LZO1X_1_MEM_COMPRESS (64 KiB on 32-bit machines)
  *
  * Return value:
  *    Always returns LZO_E_OK (this function can never fail).
@@ -136,7 +133,7 @@ HB_FUNC( HB_LZO1X_1_COMPRESS )
          }
          else
          {
-            r = lzo1x_1_compress( ( lzo_bytep ) src, src_len, dst, &dst_len, wrkmem );
+            r = lzo1x_1_compress( ( const lzo_bytep ) src, src_len, dst, &dst_len, wrkmem );
             hb_xfree( wrkmem );
          }
 
@@ -186,7 +183,7 @@ HB_FUNC( HB_LZO1X_DECOMPRESS )
          hb_storni( LZO_E_OUT_OF_MEMORY, 3 );  /* out of memory */
       else
       {
-         int r = lzo1x_decompress( ( lzo_bytep ) src, src_len, dst, &dst_len, NULL );
+         int r = lzo1x_decompress( ( const lzo_bytep ) src, src_len, dst, &dst_len, NULL );
 
          hb_storni( r, 3 );
 
@@ -221,7 +218,7 @@ HB_FUNC( HB_LZO1X_DECOMPRESS_SAFE )
          hb_storni( LZO_E_OUT_OF_MEMORY, 3 );  /* out of memory */
       else
       {
-         int r = lzo1x_decompress_safe( ( lzo_bytep ) src, src_len, dst, &dst_len, NULL );
+         int r = lzo1x_decompress_safe( ( const lzo_bytep ) src, src_len, dst, &dst_len, NULL );
 
          hb_storni( r, 3 );
 
@@ -263,7 +260,7 @@ HB_FUNC( LZO_ADLER32 )
    const char * src = hb_parc( 1 );
 
    if( src )
-      hb_retnint( ( HB_MAXINT ) hb_adler32( 1, ( lzo_bytep ) src, hb_parclen( 1 ) ) );
+      hb_retnint( ( HB_MAXINT ) hb_adler32( 1, src, hb_parclen( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

@@ -1,9 +1,8 @@
 /*
- * Harbour Project source code:
- * CMonth(), CDoW() functions
+ * CMonth(), CDoW(), hb_CDay() functions
  *
+ * Copyright 2014 Viktor Szakats (vszakats.net/harbour) (hb_CDay())
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,7 +54,7 @@
 #if defined( __CODEGUARD__ )
    static const char s_nullStr[ 4 ] = { 0 };
 #else
-#  define s_nullStr     ""
+   #define s_nullStr     ""
 #endif
 
 const char * hb_dateCMonth( int iMonth )
@@ -105,6 +104,16 @@ HB_FUNC( CDOW )
       else
          hb_retc_null();
    }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1117, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+HB_FUNC( HB_CDAY )
+{
+   PHB_ITEM pDay = hb_param( 1, HB_IT_NUMERIC );
+
+   if( pDay )
+      hb_retc_const( hb_dateCDOW( hb_itemGetNI( pDay ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 1117, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

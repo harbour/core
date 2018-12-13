@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Length Prefix Protocol
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,20 +44,17 @@
  *
  */
 
-
-/*
-
-   Idea and protocol
+/* Idea and protocol
    =================
    Very often it is required to accept the whole data message from
    TCP connection. Because of stream nature of TCP, this requires
    additional steps from application like start/end marker, or sending
    length of structure before the structure. The latter simple approach
    was used in Length Prefix Protocol (LPP). Protocol can easily be
-   described by simple Clipper expression:
-    Bin2L(Len(cData)) + cData
+   described by simple Harbour expression:
+    Bin2L( hb_BLen( cData ) ) + cData
 
-   Future extensions: Protocol is limitted to 4GB size for a single LPP
+   Future extensions: Protocol is limited to 4 GiB size for a single LPP
    message. This can be extended in future to use highest bit of length
    (or some highest length values 2^32-1, etc) as a special marker for
    64-bit or similar length encoding.
@@ -76,13 +71,13 @@
     the only new error code (until now) is HB_LPP_ERROR_TOOLARGE
    hb_lppSetLimit( hLPP, nLimit )
     Sets size limit for receiving data. Sending 4 bytes containing
-    large 32-bit value makes receiving application to alllocate a
+    large 32-bit value makes receiving application to allocate a
     large memory block for storage of data to be received. It is very
     easy to crash  application (or system) using such protocol and
     logic. hb_lppSetLimit() helps to protect against such attacks.
     On hb_lppCreate() limit is set to 1024 bytes. This is enough
-    for server/client authentification. After successful
-    authentification server can increase size limit and large LPP
+    for server/client authentication. After successful
+    authentication server can increase size limit and large LPP
     packets can be used.
    hb_lppSend( hLPP, cBuf [, nTimeout = FOREVER ] ) --> lSuccess
    hb_lppRecv( hLPP, @cBuf [, nTimeout = FOREVER ] ) --> lSuccess
@@ -97,12 +92,12 @@
    hLPP := hb_lppCreate( hSocket )
    DO WHILE ! ( lI := hb_lppSend( hLPP, cData, nTimeout ) ) .AND. ;
           hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
-   // draw progressbar using hb_lppSendLen( hLPP )
+      // draw progress bar using hb_lppSendLen( hLPP )
    ENDDO
-   IF lI   // or hb_lppError( hLPP ) == 0
-   // Sent OK
+   IF lI  // or hb_lppError( hLPP ) == 0
+      // Sent OK
    ELSE
-   // error
+      // error
    ENDIF
    hb_hsctpDestroy( hLPP )
 
@@ -110,20 +105,16 @@
    // recv sample
    DO WHILE ! ( lI := hb_lppRecv( hLPP, @cData, nTimeout ) ) .AND. ;
           hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
-   // draw progressbar using hb_lppRecvLen( hLPP )
+      // draw progress bar using hb_lppRecvLen( hLPP )
    ENDDO
    IF lI
-   // Rcvd OK, data in cData
+      // Rcvd OK, data in cData
+   ELSEIF hb_lppError( hLPP ) == 0
+      // remote side shutdown connection
    ELSE
-   IF hb_lppError( hLPP ) == 0
-     // remote side shutdown connection
-   ELSE
-     // error
+      // error
    ENDIF
-   ENDIF
-
  */
-
 
 #include "hbapiitm.h"
 #include "hbapierr.h"

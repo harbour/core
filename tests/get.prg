@@ -1,4 +1,3 @@
-
 PROCEDURE Main()
 
    LOCAL   GetList := {}, cVar := "Hello"

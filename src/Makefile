@@ -1,4 +1,3 @@
-
 ROOT := ../
 
 include $(TOP)$(ROOT)config/global.mk
@@ -38,6 +37,9 @@ else
 
       ifeq ($(HB_PLATFORM),dos)
          DYNDIRLIST_BASE += src/rtl/gtdos
+         ifneq ($(filter $(HB_COMPILER),watcom djgpp),)
+            DYNDIRLIST_BASE += src/3rd/hbdossrl
+         endif
       endif
       ifeq ($(HB_PLATFORM),os2)
          DYNDIRLIST_BASE += src/rtl/gtos2
@@ -50,9 +52,15 @@ else
       endif
       ifneq ($(HB_PLATFORM_UNIX),)
          DYNDIRLIST_BASE += src/rtl/gttrm
-         DYNDIRLIST_BASE += src/rtl/gtcrs
-         DYNDIRLIST_BASE += src/rtl/gtsln
-         DYNDIRLIST_BASE += src/rtl/gtxwc
+         ifneq ($(HB_HAS_CURSES),)
+            DYNDIRLIST_BASE += src/rtl/gtcrs
+         endif
+         ifneq ($(HB_HAS_SLANG),)
+            DYNDIRLIST_BASE += src/rtl/gtsln
+         endif
+         ifneq ($(HB_HAS_X11),)
+            DYNDIRLIST_BASE += src/rtl/gtxwc
+         endif
       endif
       ifeq ($(HB_COMPILER),watcom)
          DYNDIRLIST_BASE += src/vm/maindllh

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * ActiveX core module
  *
  * Copyright 2009 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -104,13 +102,13 @@ HB_BOOL hb_oleAxInit( void )
       PHB_AX_WININIT pAtlAxWinInit;
 
       s_hLib = hbwapi_LoadLibrarySystem( TEXT( "atl.dll" ) );
-      if( ( unsigned long ) ( HB_PTRDIFF ) s_hLib <= 32 )
+      if( ( HB_PTRUINT ) s_hLib <= 32 )
       {
          s_hLib = NULL;
          return HB_FALSE;
       }
-      pAtlAxWinInit      = ( PHB_AX_WININIT ) GetProcAddress( s_hLib, "AtlAxWinInit" );
-      s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) GetProcAddress( s_hLib, "AtlAxGetControl" );
+      pAtlAxWinInit      = ( PHB_AX_WININIT ) HB_WINAPI_GETPROCADDRESS( s_hLib, "AtlAxWinInit" );
+      s_pAtlAxGetControl = ( PHB_AX_GETCTRL ) HB_WINAPI_GETPROCADDRESS( s_hLib, "AtlAxGetControl" );
 
       if( pAtlAxWinInit )
          ( *pAtlAxWinInit )();
@@ -131,7 +129,6 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
 {
    IUnknown *  pUnk  = NULL;
    IDispatch * pDisp = NULL;
-   HRESULT     lOleError;
 
    if( pItem )
       hb_itemClear( pItem );
@@ -143,7 +140,7 @@ PHB_ITEM hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd )
    }
    else
    {
-      lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
+      HRESULT lOleError = ( *s_pAtlAxGetControl )( hWnd, &pUnk );
 
       if( lOleError == S_OK )
       {
@@ -203,11 +200,11 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
          if( lOleError == S_OK )
          {
             MSG Msg;
-            RECT rct;
+            RECT rc;
 
             memset( &Msg, 0, sizeof( Msg ) );
-            GetClientRect( hWnd, &rct );
-            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rct );
+            GetClientRect( hWnd, &rc );
+            HB_VTBL( lpOleObject )->DoVerb( HB_THIS_( lpOleObject ) hb_parni( 2 ), &Msg, lpOleClientSite, 0, hWnd, &rc );
          }
          HB_VTBL( lpOleObject )->Release( HB_THIS( lpOleObject ) );
       }
@@ -219,7 +216,7 @@ HB_FUNC( __AXDOVERB ) /* ( hWndAx, iVerb ) --> hResult */
 }
 
 
-/* ======================== Event handler support ======================== */
+/* --- Event handler support --- */
 
 
 #if ! defined( HB_OLE_C_API )
@@ -400,7 +397,7 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
    TYPEATTR *  pTypeAttr;
    HREFTYPE    hRefType;
    HRESULT     hr;
-   int         iFlags, i, j;
+   int         iFlags, i;
 
    if( ! szEvent )
    {
@@ -493,6 +490,8 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                {
                   if( pTypeAttr->typekind == TKIND_COCLASS )
                   {
+                     int j;
+
                      for( j = 0; j < pTypeAttr->cImplTypes; j++ )
                      {
                         if( szEvent )
@@ -509,23 +508,25 @@ static HRESULT _get_default_sink( IDispatch * iDisp, const char * szEvent, IID *
                                  int  iLen;
 
                                  iLen = WideCharToMultiByte( CP_ACP, 0, bstr, -1, str, sizeof( str ), NULL, NULL );
-                                 str[ iLen - 1 ] = '\0';
-                                 if( ! strcmp( szEvent, str ) )
+                                 if( iLen > 0 )
                                  {
-                                    hr = HB_VTBL( iTISink )->GetTypeAttr( HB_THIS_( iTISink ) & pTypeAttr2 );
-                                    if( hr == S_OK )
+                                    str[ iLen - 1 ] = '\0';
+                                    if( ! strcmp( szEvent, str ) )
                                     {
-                                       *piid = pTypeAttr2->guid;
-                                       HB_VTBL( iTISink )->ReleaseTypeAttr( HB_THIS_( iTISink ) pTypeAttr2 );
+                                       hr = HB_VTBL( iTISink )->GetTypeAttr( HB_THIS_( iTISink ) & pTypeAttr2 );
+                                       if( hr == S_OK )
+                                       {
+                                          *piid = pTypeAttr2->guid;
+                                          HB_VTBL( iTISink )->ReleaseTypeAttr( HB_THIS_( iTISink ) pTypeAttr2 );
 
-                                       HB_VTBL( iTISink )->Release( HB_THIS( iTISink ) );
-                                       HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
-                                       HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
-                                       HB_VTBL( iTL )->Release( HB_THIS( iTL ) );
-                                       return S_OK;
+                                          HB_VTBL( iTISink )->Release( HB_THIS( iTISink ) );
+                                          HB_VTBL( iTI )->ReleaseTypeAttr( HB_THIS_( iTI ) pTypeAttr );
+                                          HB_VTBL( iTI )->Release( HB_THIS( iTI ) );
+                                          HB_VTBL( iTL )->Release( HB_THIS( iTL ) );
+                                          return S_OK;
+                                       }
                                     }
                                  }
-
                               }
                               HB_VTBL( iTISink )->Release( HB_THIS( iTISink ) );
                            }
@@ -587,7 +588,7 @@ static void hb_sink_destruct( void * cargo )
       DWORD dwCookie = pSink->dwCookie;
 
       /* Unadvise() may activate pSink destructor so clear these
-       * items as protection against recursive Unadvise call.
+       * items as protection against recursive Unadvise() call.
        */
       pSink->pConnectionPoint = NULL;
       pSink->dwCookie = 0;

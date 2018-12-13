@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * Harbour source code formatter (cmdline wrapper)
+ * Harbour source code formatter (command-line wrapper)
  *
  * Copyright 2009 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -49,6 +47,7 @@
 #require "hbformat"
 
 #include "directry.ch"
+#include "hbver.ch"
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -57,10 +56,13 @@ PROCEDURE Main( ... )
 
    LOCAL oRef, aParams, cFileName, cInitDir, i, cParam, lRecursive := .F.
 
-   // AltD( 2 ); AltD()
+#if 0
+   AltD( 2 )
+   AltD()
+#endif
    aParams := hb_AParams()
 
-   IF Empty( aParams ) .OR. ( Left( cFileName := ATail( aParams ), 1 ) $ "@/-" )
+   IF Empty( aParams ) .OR. Left( cFileName := ATail( aParams ), 1 ) $ "@/-"
       About()
       RETURN
    ENDIF
@@ -138,8 +140,8 @@ STATIC PROCEDURE DirEval( cInitDir, cMask, lRecur, bCode )
 
    FOR EACH file IN Directory( cInitDir + cMask, "HSD" )
       IF "D" $ file[ F_ATTR ]
-         IF !( "." == file[ F_NAME ] ) .AND. ;
-            !( ".." == file[ F_NAME ] ) .AND. lRecur
+         IF ! "." == file[ F_NAME ] .AND. ;
+            ! ".." == file[ F_NAME ] .AND. lRecur
             DirEval( cInitDir + file[ F_NAME ], cMask, lRecur, bCode )
          ENDIF
       ELSE
@@ -155,9 +157,13 @@ STATIC PROCEDURE About()
 
    OutStd( ;
       "Harbour Source Formatter " + HBRawVersion() + hb_eol() + ;
-      "Copyright (c) 2009-2013, Alexander S.Kresin" + hb_eol() + ;
-      "http://harbour-project.org/" + hb_eol() + ;
-      hb_eol() + ;
+      "Copyright (c) 2010-" + ;
+         "2018" + ", " + ;
+         hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
+      "Copyright (c) 2009, Alexander S.Kresin" + hb_eol() + ;
+      hb_eol() )
+
+   OutStd( ;
       "Syntax:  hbformat [options] [@config] <file[s]>" + hb_eol() + ;
       hb_eol() )
 

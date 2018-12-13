@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Regression tests for the runtime library (array)
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -157,9 +155,9 @@ PROCEDURE Main_ARRAY()
 #ifndef __XPP__
 #ifdef HB_COMPAT_C53
    HBTEST ASize()                         IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( NIL )                    IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( {} )                     IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( ErrorNew() )             IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+   HBTEST ASize( NIL )                    IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:1:U:NIL "
+   HBTEST ASize( {} )                     IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:1:A:{.[0].} "
+   HBTEST ASize( ErrorNew() )             IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:1:O:ERROR Object "
 #else
    HBTEST ASize()                         IS NIL
    HBTEST ASize( NIL )                    IS NIL
@@ -168,9 +166,9 @@ PROCEDURE Main_ARRAY()
 #endif
 #endif
 #ifdef HB_COMPAT_C53
-   HBTEST ASize( NIL, 0 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( NIL, 1 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
-   HBTEST ASize( NIL, -1 )                IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+   HBTEST ASize( NIL, 0 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:2:U:NIL;N:0 "
+   HBTEST ASize( NIL, 1 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:2:U:NIL;N:1 "
+   HBTEST ASize( NIL, -1 )                IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 ", "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 A:2:U:NIL;N:-1 "
 #else
    HBTEST ASize( NIL, 0 )                 IS NIL
    HBTEST ASize( NIL, 1 )                 IS NIL
@@ -208,8 +206,15 @@ PROCEDURE Main_ARRAY()
 #endif
    HBTEST Array( 1 )                      IS "{.[1].}"
    HBTEST Array( -1 )                     IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
-   HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
+#ifdef __HARBOUR__
+   /* disable Harbour extended optimizations to test correct RTE message */
+   #pragma -ko-
+#endif
+   HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 ", "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 A:3:N:1;N:0;N:-10 "
    HBTEST Array( 1, 0, "A" )              IS NIL
+#ifdef __HARBOUR__
+   #pragma -ko+
+#endif
    HBTEST Array( 1, 0, 2 )                IS "{.[1].}"
    HBTEST Array( 4, 3, 2 )                IS "{.[4].}"
    HBTEST Array( 0, 3, 2 )                IS "{.[0].}"
@@ -289,20 +294,20 @@ PROCEDURE Main_ARRAY()
       sorting algorithms. Anyhow the results pattern should match.
       [vszakats] */
 #ifdef __HARBOUR__
-   HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "0" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "1" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "2" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "a" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "A" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "" } ) )  IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| "z" } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| .T. } ) ) IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| .F. } ) ) IS "FEIDGCHBJA"
-   HBTEST TAStr( ASort( TARRv(),,, {|| 2 } ) )   IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| 1 } ) )   IS "DCBAEFIHGJ"
-   HBTEST TAStr( ASort( TARRv(),,, {|| 0 } ) )   IS "FEIDGCHBJA"
+   HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "0" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "1" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "2" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "a" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "A" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "" } ) )  IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| "z" } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .T. } ) ) IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| .F. } ) ) IS "JIHGFEDCBA"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 2 } ) )   IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 1 } ) )   IS "ABCDEFGHIJ"
+   HBTEST TAStr( ASort( TARRv(),,, {|| 0 } ) )   IS "JIHGFEDCBA"
 #else
    HBTEST TAStr( ASort( TARRv(),,, {|| NIL } ) ) IS "IHGFEDCBAJ"
    HBTEST TAStr( ASort( TARRv(),,, {|| hb_SToD() } ) ) IS "IHGFEDCBAJ"
@@ -382,15 +387,15 @@ PROCEDURE Main_ARRAY()
    HBTEST AScan( saAllTypes, sbBlock    ) IS 0
    HBTEST AScan( saAllTypes, sbBlockC   ) IS 0
    HBTEST AScan( saAllTypes, saArray    ) IS 0
-   SET EXACT ON
+   Set( _SET_EXACT, .T. )
    HBTEST AScan( saAllTypes, scString   ) IS 1
    HBTEST AScan( saAllTypes, scStringE  ) IS 2
    HBTEST AScan( saAllTypes, scStringZ  ) IS 3
-   SET EXACT OFF
+   Set( _SET_EXACT, .F. )
 
-   HBTEST TAEVSM()                        IS "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0"  /* Bug in CA-Cl*pper 5.x */
-   HBTEST TASOSM1()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }"
-   HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }"
+   HBTEST TAEVSM()                        IS "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0" /* Bug in CA-Cl*pper 5.x */, "N10N 9N 8N 7N 6         5"
+   HBTEST TASOSM1()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }"      , "NN 5NN 4         3{ 2, 1, 3 }"
+   HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }"              , "NN 5NN 4         3{ 2, 1, 3 }"
 
    RETURN
 

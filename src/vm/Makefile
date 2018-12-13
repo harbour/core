@@ -1,4 +1,3 @@
-
 ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
@@ -46,18 +45,21 @@ else
       C_MAIN := mainstd.c
       DIRS := mainstd maindllh maindllp
    else
-   ifeq ($(HB_PLATFORM),wce)
-      C_MAIN := mainwin.c
-      DIRS := mainstd mainwin maindllh maindllp
-   else
-      ifeq ($(HB_PLATFORM),os2)
-         C_MAIN := mainstd.c
-         DIRS := mainstd maindllh
+      ifeq ($(HB_PLATFORM),wce)
+         C_MAIN := mainwin.c
+         DIRS := mainstd mainwin maindllh maindllp
       else
-         C_MAIN := main.c
+         ifeq ($(HB_PLATFORM),os2)
+            C_MAIN := mainstd.c
+            DIRS := mainstd maindllh
+         else
+            ifeq ($(HB_PLATFORM)-$(HB_COMPILER),dos-watcom)
+               DIRS := mainstd
+            endif
+            C_MAIN := main.c
+         endif
       endif
    endif
-endif
 endif
 
 ifeq ($(HB_HVM_ALL),yes)
@@ -108,6 +110,7 @@ C_SOURCES += \
    proc.c \
    procaddr.c \
    runner.c \
+   short.c \
    vm.c \
    $(C_MAIN) \
 

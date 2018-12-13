@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    code to generate C source with conversion tables between BIG5 and UCS16
+ * code to generate C source with conversion tables between BIG5 and UCS16
  *    using data defined by Unicode, Inc. in BIG5.TXT
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 
@@ -163,12 +161,10 @@ proc main()
 
    cResult := ;
       "/*" + hb_eol() + ;
-      " * Harbour Project source code:" + hb_eol() + ;
-      " *    Unicode character tables" + hb_eol() + ;
-      " *    code generated automatically by tests/uc_gen.prg" + hb_eol() + ;
+      " * Unicode character tables" + hb_eol() + ;
+      " * code generated automatically by tests/uc_gen.prg" + hb_eol() + ;
       " *" + hb_eol() + ;
       " * Copyright 2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>" + hb_eol() + ;
-      " * www - http://harbour-project.org" + hb_eol() + ;
       " *" + hb_eol() + ;
       " */" + hb_eol() + ;
       hb_eol()
@@ -345,7 +341,6 @@ function calc_size16( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    cLine := ""
    hVal := {=>}
    aInd := {}
-   hb_hKeepOrder( hVal, .t. )
    for n := nMin to nMax
       cLine += i2bin( iif( n == 0, 0, aVal[ n ] ) )
       if len( cLine ) == nLine
@@ -401,7 +396,6 @@ function calc_size04( aVal, nMin, nMax, nBit, hVal, aInd, nn )
    cLine := ""
    hVal := {=>}
    aInd := {}
-   hb_hKeepOrder( hVal, .t. )
    for n := nMin to nMax step 2
       cLine += chr( iif( n == 0, 0, aVal[ n ] ) + aVal[ n + 1 ] * 16 )
       if len( cLine ) == nLine

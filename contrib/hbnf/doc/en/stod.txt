@@ -1,4 +1,3 @@
-
 /* $DOC$
    $NAME$
       ft_SToD()
@@ -17,7 +16,6 @@
       program without knowing what the current date type is.  This
       function is the converse of the Clipper DToS() function.
    $EXAMPLES$
-      LOCAL dMyDate
-      dMyDate := ft_SToD( "19901127" )
+      ? ft_SToD( "19901127" )
    $END$
  */

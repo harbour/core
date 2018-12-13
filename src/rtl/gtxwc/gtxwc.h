@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *    XWindow Console
- * Copyright 2003 - Giancarlo Niccolai <antispam /at/ niccolai.ws>
- * Copyright 2004/2006 - Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
+ * XWindow Console
  *
- * www - http://harbour-project.org
- * www - http://www.xharbour.org
+ * Copyright 2003 Giancarlo Niccolai <antispam /at/ niccolai.ws>
+ * Copyright 2004-2006 Przemyslaw Czerpak <druzus /at/ priv.onet.pl>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,13 +11,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -38,7 +35,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -55,11 +52,11 @@
 
 #define HB_GT_NAME  XWC
 
+#include "hbapi.h"
 #include "hbgtcore.h"
 #include "hbinit.h"
 #include "hbset.h"
 #include "hbvm.h"
-#include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
 #include "inkey.ch"
@@ -67,6 +64,7 @@
 #include "hbapicdp.h"
 #include "hbapistr.h"
 #include "hbthread.h"
+#include "hbdate.h"
 
 #include <unistd.h>
 #include <signal.h>
@@ -84,8 +82,8 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 
 #define XWC_CHAR_QUEUE_SIZE         128
 #define XWC_CHAR_BUFFER             1024
-#define XWC_MIN_ROWS                3
-#define XWC_MIN_COLS                6
+#define XWC_MIN_ROWS                1
+#define XWC_MIN_COLS                1
 #define XWC_MAX_ROWS                256
 #define XWC_MAX_COLS                256
 #define XWC_DEFAULT_ROWS            25
@@ -98,21 +96,9 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 /* Font definition */
 #define XWC_DEFAULT_FONT_HEIGHT     18
 #define XWC_DEFAULT_FONT_WIDTH      9
-#define XWC_DEFAULT_FONT_WEIGHT     "medium"
+#define XWC_DEFAULT_FONT_WEIGHT     HB_GTI_FONTW_NORMAL
 #define XWC_DEFAULT_FONT_NAME       "fixed"
 #define XWC_DEFAULT_FONT_ENCODING   "iso10646-1"
-
-#if 0
-#define XWC_DEFAULT_FONT_WEIGHT     "*"
-#define XWC_DEFAULT_FONT_ENCODING   "iso8859-1"
-#define XWC_DEFAULT_FONT_NAME       "Lucida Console"
-
-#define XWC_DEFAULT_FONT_HEIGHT     20
-#define XWC_DEFAULT_FONT_WIDTH      9
-#define XWC_DEFAULT_FONT_WEIGHT     "medium"
-#define XWC_DEFAULT_FONT_NAME       "rcsoft"
-#define XWC_DEFAULT_FONT_ENCODING   "iso10646-1"
-#endif
 
 #define XWC_DEFAULT_FONT_FIXMETRIC  HB_FALSE
 #define XWC_DEFAULT_FONT_CLRBKG     HB_FALSE
@@ -124,7 +110,7 @@ typedef HB_USHORT HB_GT_CELLTYPE;
 
 #define XWC_STD_MASK                ( ExposureMask | StructureNotifyMask | FocusChangeMask | \
                                       ButtonPressMask | ButtonReleaseMask | PointerMotionMask | \
-                                      KeyPressMask | KeyReleaseMask )
+                                      KeyPressMask | KeyReleaseMask | VisibilityChangeMask )
 
 /* Box char unicode values */
 #define HB_BOXCH_ARROW_R            0x0010 /* ARROW RIGHT */

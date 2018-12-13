@@ -1,4 +1,3 @@
-
 PROCEDURE Main()
 
    LOCAL a := { 100, 200, 300 }

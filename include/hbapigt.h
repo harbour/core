@@ -1,9 +1,10 @@
 /*
- * Harbour Project source code:
  * Header file for the Terminal API
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
- * www - http://harbour-project.org
+ * Copyright 1999 David G. Holm <dholm@jsd-llc.com> (Keyboard related declarations, Cursor declarations)
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour) (Mouse related declarations, Undocumented GT API declarations)
+ * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl > (Internal GT code reimplemented in different way)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -43,26 +44,6 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
- *
- */
-
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    Keyboard related declarations
- *    Cursor declarations
- * See above for licensing terms.
- *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    Mouse related declarations
- *    Undocumented GT API declarations
- *
- * Copyright 2005 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- *    Internal GT code reimplemented in different way
- *
- * See COPYING.txt for licensing terms.
  *
  */
 
@@ -180,7 +161,7 @@ extern HB_EXPORT int        hb_gtMaxCol( void );
 extern HB_EXPORT int        hb_gtMaxRow( void );
 extern HB_EXPORT HB_ERRCODE hb_gtPostExt( void );
 extern HB_EXPORT HB_ERRCODE hb_gtPreExt( void );
-extern HB_EXPORT HB_ERRCODE hb_gtSuspend( void ); /* prepare the reminal for shell output */
+extern HB_EXPORT HB_ERRCODE hb_gtSuspend( void ); /* prepare the terminal for shell output */
 extern HB_EXPORT HB_ERRCODE hb_gtResume( void ); /* resume the terminal after the shell output */
 extern HB_EXPORT int        hb_gtReadKey( int iEventMask );
 extern HB_EXPORT HB_ERRCODE hb_gtRectSize( int iTop, int iLeft, int iBottom, int iRight, HB_SIZE * pnBuffSize );
@@ -280,7 +261,7 @@ extern HB_EXPORT void       hb_gtWCurrent( HB_GT_WND * wnd );
 extern HB_EXPORT void       hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect );
 extern HB_EXPORT HB_BOOL    hb_gtWVis( HB_GT_WND * wnd, HB_USHORT uiStatus );
 
-extern HB_EXPORT HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ); /* System Level Request */
+extern HB_EXPORT HB_ERRCODE hb_gtSLR( HB_GT_SLR * pSLR ); /* System-Level Request */
 extern HB_EXPORT HB_ERRCODE hb_gtModalRead( void * );
 extern HB_EXPORT HB_ERRCODE hb_gtFlushCursor( void );
 extern HB_EXPORT HB_ERRCODE hb_gtSetColor( HB_GT_RGB * color );
@@ -308,14 +289,61 @@ extern HB_EXPORT int        hb_inkeyLast( int iEvenMask );  /* Return the value 
 extern HB_EXPORT int        hb_inkeyNext( int iEvenMask );  /* Return the next key without extracting it */
 extern HB_EXPORT void       hb_inkeyPoll( void );           /* Poll the console keyboard to stuff the Harbour buffer */
 extern HB_EXPORT void       hb_inkeyReset( void );          /* Reset the Harbour keyboard buffer */
-extern HB_EXPORT void       hb_inkeySetText( const char * szText, HB_SIZE nLen ); /* Set text into inkey buffer */
+extern HB_EXPORT void       hb_inkeySetText( const char * szText, HB_SIZE nLen, HB_BOOL fEol ); /* Set text into inkey buffer */
 extern HB_EXPORT int        hb_inkeySetLast( int iKey );    /* Set new LastKey() value, return previous one */
 extern HB_EXPORT void       hb_inkeyExit( void );           /* reset inkey pool to default state and free any allocated resources */
 
 extern HB_EXPORT HB_SIZE    hb_inkeyKeyString( int iKey, char * buffer, HB_SIZE nSize ); /* convert key value to string */
-extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour extended key code to cl*pper inkey code */
+extern HB_EXPORT int        hb_inkeyKeyStd( int iKey );     /* convert Harbour extended key code to Cl*pper inkey code */
+extern HB_EXPORT int        hb_inkeyKeyExt( int iKey );     /* extract function/edit key code value HB_KX_* from Harbour extended key code */
 extern HB_EXPORT int        hb_inkeyKeyMod( int iKey );     /* extract keyboard modifiers HB_KF_* from Harbour extended key code */
 extern HB_EXPORT int        hb_inkeyKeyVal( int iKey );     /* extract key/character code from Harbour extended key code */
+
+/* macros to manipulate Harbour extended key codes */
+#define HB_INKEY_EXT_MASK           0xF8000000
+#define HB_INKEY_EXT_BIT            0x40000000
+#define HB_INKEY_EXT_TYPEMASK       0xFF000000
+#define HB_INKEY_EXT_VALBITS        16
+#define HB_INKEY_EXT_VALMASK        ( ( 1 << HB_INKEY_EXT_VALBITS ) - 1 )
+#define HB_INKEY_EXT_FLAGMASK       ( 0xFF << HB_INKEY_EXT_VALBITS )
+#define HB_INKEY_EXT_KEY            0x01000000
+#define HB_INKEY_EXT_CHAR           0x02000000
+#define HB_INKEY_EXT_UNICODE        0x03000000
+#define HB_INKEY_EXT_MOUSEKEY       0x04000000
+#define HB_INKEY_EXT_MOUSEPOS       0x05000000
+#define HB_INKEY_EXT_EVENT          0x06000000
+#define HB_INKEY_EXT_POSBITS        12
+#define HB_INKEY_EXT_POSMASK        ( ( 1 << HB_INKEY_EXT_POSBITS ) - 1 )
+
+#define HB_INKEY_ISEXT( n )         ( ( ( n ) & HB_INKEY_EXT_MASK ) == HB_INKEY_EXT_BIT )
+#define HB_INKEY_TYPE( n )          ( ( ( n ) ^ HB_INKEY_EXT_BIT ) & HB_INKEY_EXT_TYPEMASK )
+#define HB_INKEY_ISKEY( n )         ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_KEY )
+#define HB_INKEY_ISCHAR( n )        ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_CHAR )
+#define HB_INKEY_ISUNICODE( n )     ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_UNICODE )
+#define HB_INKEY_ISMOUSEKEY( n )    ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_MOUSEKEY )
+#define HB_INKEY_ISMOUSEPOS( n )    ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_MOUSEPOS )
+#define HB_INKEY_ISEVENT( n )       ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_EVENT )
+
+#define HB_INKEY_NEW_VALF( v, f )   ( ( ( v ) & HB_INKEY_EXT_VALMASK ) | \
+                                      ( ( ( f ) << HB_INKEY_EXT_VALBITS ) & HB_INKEY_EXT_FLAGMASK ) )
+
+#define HB_INKEY_NEW_MKEY( k, f )   ( HB_INKEY_NEW_VALF( k, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEKEY )
+#define HB_INKEY_NEW_KEY( k, f )    ( HB_INKEY_NEW_VALF( k, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_KEY )
+#define HB_INKEY_NEW_CHAR( b )      ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_CHAR ) )
+#define HB_INKEY_NEW_CHARF( b, f )  ( HB_INKEY_NEW_VALF( b, f ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_CHAR ) )
+#define HB_INKEY_NEW_UNICODE( b )   ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_UNICODE ) )
+#define HB_INKEY_NEW_UNICODEF( b, f ) ( HB_INKEY_NEW_VALF( b, f ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_UNICODE ) )
+
+#define HB_INKEY_NEW_MPOS( x, y )   ( ( ( ( y ) & HB_INKEY_EXT_POSMASK ) << HB_INKEY_EXT_POSBITS ) | \
+                                      ( ( x ) & HB_INKEY_EXT_POSMASK ) | \
+                                      ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEPOS ) )
+#define HB_INKEY_NEW_EVENT( e )     ( ( e ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_EVENT ) )
+
+#define HB_INKEY_MOUSEPOSX( n )     ( ( n ) & HB_INKEY_EXT_POSMASK )
+#define HB_INKEY_MOUSEPOSY( n )     ( ( ( n ) >> HB_INKEY_EXT_POSBITS ) & HB_INKEY_EXT_POSMASK )
+
+#define HB_INKEY_VALUE( n )         ( ( n ) & HB_INKEY_EXT_VALMASK )
+#define HB_INKEY_FLAGS( n )         ( ( ( n ) & HB_INKEY_EXT_FLAGMASK ) >> HB_INKEY_EXT_VALBITS )
 
 HB_EXTERN_END
 

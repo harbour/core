@@ -1,13 +1,11 @@
 /*
- * Harbour Project source code:
  * Turbo Boyer-Moore (Crochemore) string search
  *    Based on this code:
- *       http://www-igm.univ-mlv.fr/~lecroq/string/node15.html
+ *       https://web.archive.org/web/www-igm.univ-mlv.fr/~lecroq/string/node15.html
  *    Authors:
  *       Christian Charras, Thierry Lecroq
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,9 +18,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -114,7 +112,7 @@ static void preBmGs( const char * needle, HB_ISIZ m, HB_ISIZ bmGs[] )
 HB_ISIZ hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_ISIZ n )
 {
    HB_ISIZ r = 0;
-   HB_ISIZ bcShift, i, j, shift, u, v, turboShift;
+   HB_ISIZ bcShift, j, shift, u, v, turboShift;
    HB_ISIZ bmBc[ ASIZE ];
    HB_ISIZ * bmGs;
 
@@ -129,7 +127,7 @@ HB_ISIZ hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_I
    shift = m;
    while( j <= n - m )
    {
-      i = m - 1;
+      HB_ISIZ i = m - 1;
       while( i >= 0 && needle[ i ] == haystack[ i + j ] )
       {
          --i;

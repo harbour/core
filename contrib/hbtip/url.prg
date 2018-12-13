@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,28 +46,27 @@
 
 #include "hbclass.ch"
 
-/*
-* An URL:
-* http://gian:passwd@www.niccolai.ws/mypages/mysite/page.html?avar=0&avar1=1
-* ^--^   ^--^ ^----^ ^-------------^ ^----------------------^ ^------------^
-* cProto  UID  PWD      cServer             cPath                 cQuery
-*                                    ^------------^ ^-------^
-*                                      cDirectory     cFile
-*                                                   ^--^ ^--^
-*                                                 cFname cExt
-*/
+/* An URL:
+   https://user:passwd@example.org:port/mypages/mysite/page.html?avar=0&avar1=1
+   ^---^   ^--^ ^----^ ^---------^ ^--^ ^----------------------^ ^------------^
+   cProto   UID  PWD     cServer  nPort          cPath               cQuery
+                                        ^------------^ ^-------^
+                                          cDirectory     cFile
+                                                       ^--^ ^--^
+                                                     cFname cExt
+ */
 
 CREATE CLASS TUrl
 
-   VAR cAddress
-   VAR cProto
-   VAR cServer
-   VAR cPath
-   VAR cQuery
-   VAR cFile
-   VAR nPort
-   VAR cUserid
-   VAR cPassword
+   VAR cAddress  INIT ""
+   VAR cProto    INIT ""
+   VAR cUserid   INIT ""
+   VAR cPassword INIT ""
+   VAR cServer   INIT ""
+   VAR cPath     INIT ""
+   VAR cQuery    INIT ""
+   VAR cFile     INIT ""
+   VAR nPort     INIT -1
 
    METHOD New( cUrl )
    METHOD SetAddress( cUrl )
@@ -85,7 +82,6 @@ CREATE CLASS TUrl
 
 ENDCLASS
 
-
 METHOD New( cUrl ) CLASS TUrl
 
    ::SetAddress( cUrl )
@@ -96,25 +92,26 @@ METHOD SetAddress( cUrl ) CLASS TUrl
 
    LOCAL aMatch, cServer, cPath
 
+   IF ! HB_ISSTRING( cUrl )
+      RETURN .F.
+   ENDIF
+
    ::cAddress := cUrl
-   ::cProto := ""
-   ::cUserid := ""
-   ::cPassword := ""
-   ::cServer := ""
-   ::cPath := ""
-   ::cQuery := ""
+   ::cProto := ;
+   ::cUserid := ;
+   ::cPassword := ;
+   ::cServer := ;
+   ::cPath := ;
+   ::cQuery := ;
    ::cFile := ""
    ::nPort := -1
 
-   IF Empty( cUrl )
+   IF cUrl == ""
       RETURN .T.
    ENDIF
 
-   // TOPLEVEL url parsing
-   aMatch := hb_regex( ::cREuri, cUrl )
-
-   // May fail
-   IF Empty( aMatch )
+   // Top-level URL parsing. May fail.
+   IF Empty( aMatch := hb_regex( ::cREuri, cUrl ) )
       RETURN .F.
    ENDIF
 
@@ -123,7 +120,7 @@ METHOD SetAddress( cUrl ) CLASS TUrl
    cPath := aMatch[ 4 ]
    ::cQuery := aMatch[ 5 ]
 
-   // server parsing (can't fail)
+   // server parsing (never fails)
    aMatch := hb_regex( ::cREServ, cServer )
    ::cUserId := aMatch[ 2 ]
    ::cPassword := aMatch[ 3 ]
@@ -133,13 +130,12 @@ METHOD SetAddress( cUrl ) CLASS TUrl
       ::nPort := -1
    ENDIF
 
-   // Parse path and file (can't fail)
+   // Parse path and file (never fails)
    aMatch := hb_regex( ::cREFile, cPath )
    ::cPath := aMatch[ 2 ]
    ::cFile := aMatch[ 3 ]
 
    RETURN .T.
-
 
 METHOD BuildAddress() CLASS TUrl
 
@@ -149,88 +145,78 @@ METHOD BuildAddress() CLASS TUrl
       ::cProto := Lower( ::cProto )
    ENDIF
 
-   IF ! Empty( ::cProto ) .AND. ! Empty( ::cServer )
+   IF ! Empty( ::cProto ) .AND. ! ::cServer == ""
       cRet := ::cProto + "://"
    ENDIF
 
-   IF ! Empty( ::cUserid )
+   IF ! ::cUserid == ""
       cRet += ::cUserid
-      IF ! Empty( ::cPassword )
+      IF ! ::cPassword == ""
          cRet += ":" + ::cPassword
       ENDIF
       cRet += "@"
    ENDIF
 
-   IF ! Empty( ::cServer )
+   IF ! ::cServer == ""
       cRet += ::cServer
       IF ::nPort > 0
          cRet += ":" + hb_ntos( ::nPort )
       ENDIF
    ENDIF
 
-   IF Len( ::cPath ) == 0 .OR. !( Right( ::cPath, 1 ) == "/" )
+   IF ::cPath == "" .OR. ! Right( ::cPath, 1 ) == "/"
       ::cPath += "/"
    ENDIF
 
    cRet += ::cPath + ::cFile
-   IF ! Empty( ::cQuery )
+   IF ! ::cQuery == ""
       cRet += "?" + ::cQuery
    ENDIF
 
-   IF Len( cRet ) == 0
-      cRet := NIL
-   ELSE
-      ::cAddress := cRet
-   ENDIF
-
-   RETURN cRet
+   RETURN iif( cRet == "", NIL, ::cAddress := cRet )
 
 METHOD BuildQuery() CLASS TUrl
 
    LOCAL cLine
 
-   IF Len( ::cPath ) == 0 .OR. !( Right( ::cPath, 1 ) == "/" )
+   IF ::cPath == "" .OR. ! Right( ::cPath, 1 ) == "/"
       ::cPath += "/"
    ENDIF
 
    cLine := ::cPath + ::cFile
-   IF ! Empty( ::cQuery )
+   IF ! ::cQuery == ""
       cLine += "?" + ::cQuery
    ENDIF
 
    RETURN cLine
 
-METHOD AddGetForm( xPostData )
+METHOD AddGetForm( xPostData ) CLASS TUrl
 
    LOCAL cData := ""
-   LOCAL nI
-   LOCAL y
-   LOCAL cRet
+   LOCAL item
 
-   IF HB_ISHASH( xPostData )
-      y := Len( xPostData )
-      FOR nI := 1 TO y
-         cData += tip_URLEncode( AllTrim( hb_CStr( hb_HKeyAt( xPostData, nI ) ) ) ) + "="
-         cData += tip_URLEncode( AllTrim( hb_CStr( hb_HValueAt( xPostData, nI ) ) ) )
-         IF nI != y
+   DO CASE
+   CASE HB_ISHASH( xPostData )
+      FOR EACH item IN xPostData
+         cData += ;
+            tip_URLEncode( AllTrim( hb_CStr( item:__enumKey() ) ) ) + "=" + ;
+            tip_URLEncode( AllTrim( hb_CStr( item ) ) )
+         IF ! item:__enumIsLast()
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISARRAY( xPostData )
-      y := Len( xPostData )
-      FOR nI := 1 TO y
-         cData += tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 1 ] ) ) ) + "="
-         cData += tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 2 ] ) ) )
-         IF nI != y
+   CASE HB_ISARRAY( xPostData )
+      FOR EACH item IN xPostData
+         cData += ;
+            tip_URLEncode( AllTrim( hb_CStr( item:__enumIndex() ) ) ) + "=" + ;
+            tip_URLEncode( AllTrim( hb_CStr( item ) ) )
+         IF ! item:__enumIsLast()
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF HB_ISSTRING( xPostData )
+   CASE HB_ISSTRING( xPostData )
       cData := xPostData
-   ENDIF
+   ENDCASE
 
-   IF ! Empty( cData )
-      cRet := ::cQuery += iif( Empty( ::cQuery ), "", "&" ) + cData
-   ENDIF
-
-   RETURN cRet
+   RETURN iif( cData == "", NIL, ;
+      ::cQuery += iif( ::cQuery == "", "", "&" ) + cData )

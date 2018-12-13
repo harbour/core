@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * The CodePages API
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * Copyright 2009-2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -86,6 +84,16 @@ HB_FUNC( HB_CDPSELECT )
       hb_cdpSelectID( id );
 }
 
+HB_FUNC( HB_CDPEXISTS )
+{
+   const char * id = hb_parc( 1 );
+
+   if( id )
+      hb_retl( hb_cdpFind( id ) != NULL );
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( HB_CDPUNIID )
 {
    const char * id = hb_parc( 1 );
@@ -100,6 +108,26 @@ HB_FUNC( HB_CDPINFO )
    PHB_CODEPAGE cdp = id ? hb_cdpFindExt( id ) : hb_vmCDP();
 
    hb_retc( cdp ? cdp->info : NULL );
+}
+
+HB_FUNC( HB_CDPISCHARIDX )
+{
+   const char * id = hb_parc( 1 );
+   PHB_CODEPAGE cdp = id ? hb_cdpFindExt( id ) : hb_vmCDP();
+   HB_BOOL fResult = HB_FALSE;
+
+   if( cdp )
+   {
+      fResult = HB_CDP_ISCHARIDX( cdp );
+      if( HB_CDP_ISCUSTOM( cdp ) && HB_ISLOG( 2 ) )
+      {
+         if( hb_parl( 2 ) )
+            cdp->type |= HB_CDP_TYPE_CHARIDX;
+         else
+            cdp->type &= ~HB_CDP_TYPE_CHARIDX;
+      }
+   }
+   hb_retl( fResult );
 }
 
 HB_FUNC( HB_CDPCHARMAX )
@@ -208,7 +236,6 @@ HB_FUNC( HB_UTF8ASC )
 HB_FUNC( HB_STRTOUTF8 )
 {
    HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
-   const char * szString;
    char * szDest = NULL;
 
    if( nLen )
@@ -225,7 +252,7 @@ HB_FUNC( HB_STRTOUTF8 )
          }
          else
          {
-            szString = hb_parc( 1 );
+            const char * szString = hb_parc( 1 );
             nDest = hb_cdpStrAsUTF8Len( cdp, szString, nLen, 0 );
             szDest = ( char * ) hb_xgrab( nDest + 1 );
             hb_cdpStrToUTF8( cdp, szString, nLen, szDest, nDest + 1 );

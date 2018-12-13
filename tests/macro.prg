@@ -1,4 +1,3 @@
-
 #include "hbclass.ch"
 
 MEMVAR cStr, cStr_1, cVar_1, aVar, oVar, OtherVar, SomeVar, Private

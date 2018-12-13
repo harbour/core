@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * POPUP menu class (Harbour extended)
  *
- * Copyright 2011 Viktor Szakats (harbour syenar.net)
+ * Copyright 2011 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -58,8 +56,8 @@ CREATE CLASS hb_PopupMenu INHERIT HBPopupMenu
    METHOD shadowed( lShadowed ) SETGET
 
    METHOD setCoors( nRow, nCol, lTop )
-   METHOD isShortCut( nKey, nID )
-   METHOD isQuick( nKey, nID )
+   METHOD isShortCut( nKey, /* @ */ nID )
+   METHOD isQuick( nKey, /* @ */ nID )
 
 ENDCLASS
 
@@ -121,7 +119,7 @@ METHOD setCoors( nRow, nCol, lTop ) CLASS hb_PopupMenu
 
    RETURN Self
 
-METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
+METHOD isShortCut( nKey, /* @ */ nID ) CLASS hb_PopupMenu
 
    LOCAL nItem
    LOCAL nTotal
@@ -132,9 +130,10 @@ METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
    DO CASE
    // Test and assign top menu item shortCut, enabled, and ! PopUp:
    // Changed by enclosing assignment before ':Enabled':
-   CASE ( ( nShortCut := ::getShortCt( nKey ) ) > 0 ) .AND. ;
-          ( ( oItem := ::getItem( nShortcut ) ):enabled ) .AND. ;
-          ( !( oItem:isPopUp() ) )
+   CASE ( nShortCut := ::getShortCt( nKey ) ) > 0 .AND. ;
+        ( oItem := ::getItem( nShortcut ) ):enabled .AND. ;
+        ! oItem:isPopUp()
+
       ::select( nShortCut )
       Eval( oItem:data, oItem )
       nID := oItem:id
@@ -151,9 +150,9 @@ METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
 
       // Loop to wrap around through TopMenu from Current Item:
       FOR i := 1 TO nTotal
-         IF !( oItem := ::getItem( nItem ) ):enabled
-         ELSEIF ! oItem:isPopUp()
-         ELSEIF oItem:data:isQuick( nKey, @nID )
+         IF ( oItem := ::getItem( nItem ) ):enabled .AND. ;
+            oItem:isPopUp() .AND. ;
+            oItem:data:isQuick( nKey, @nID )
             RETURN .T.
          ENDIF
          IF ++nItem > nTotal
@@ -165,21 +164,17 @@ METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
 
    RETURN .F.
 
-METHOD isQuick( nKey, nID ) CLASS hb_PopupMenu
+METHOD isQuick( nKey, /* @ */ nID ) CLASS hb_PopupMenu
 
-   LOCAL nItem
-   LOCAL nTotal
    LOCAL nShortCut
    LOCAL oItem
 
    IF ( nShortCut := ::getShortCt( nKey ) ) == 0
 
-      nTotal := ::nItemCount
-
-      FOR nItem := 1 TO nTotal
-         IF !( oItem := ::getItem( nItem ) ):Enabled
-         ELSEIF ! oItem:isPopUp()
-         ELSEIF oItem:Data:isQuick( nKey, @nID )
+      FOR EACH oItem IN ::aItems
+         IF oItem:Enabled .AND. ;
+            oItem:isPopUp() .AND. ;
+            oItem:data:isQuick( nKey, @nID )
             RETURN .T.
          ENDIF
       NEXT
@@ -188,7 +183,7 @@ METHOD isQuick( nKey, nID ) CLASS hb_PopupMenu
 
       IF oItem:enabled
          ::select( nShortCut )
-         Eval( oItem:Data, oItem )
+         Eval( oItem:data, oItem )
          nID := oItem:id
          RETURN .T.
       ENDIF

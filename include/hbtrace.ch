@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Header file with trace constants and PP rules
  *
  * Copyright 1999 Gonzalo Diethelm <gonzalo.diethelm@iname.com>
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,9 +48,7 @@
 #ifndef HB_TRACE_CH_
 #define HB_TRACE_CH_
 
-/*
- * Tracing levels.
- */
+/* Tracing levels. */
 #define HB_TR_ALWAYS     0
 #define HB_TR_FATAL      1
 #define HB_TR_ERROR      2
@@ -66,16 +62,12 @@
 #define HB_TR_ALWAYS     HB_TR_LAST
 #endif
 
-/*
- * Default tracing level.
- */
+/* Default tracing level. */
 #define HB_TR_DEFAULT   HB_TR_WARNING
 
-/*
- * If we compiled without specifying a -DHB_TR_LEVEL, use the value
+/* If we compiled without specifying a -DHB_TR_LEVEL, use the value
  * for HB_TR_DEFAULT.
  */
-
 #ifdef HB_TR_LEVEL_ALWAYS
 #define HB_TR_LEVEL     HB_TR_ALWAYS
 #endif
@@ -101,7 +93,7 @@
 
 #xtranslate HB_TRACE_STEALTH( <l>, <x,...> ) => HB_TRACE( <l>, <x> )
 #xtranslate HB_TRACE( <l>, ( <x,...> ) )     => HB_TRACE( <l>, <x> )
-#xtranslate HB_TRACE( <l>, <x,...> )     => ;
+#xtranslate HB_TRACE( <l>, <x,...> )         => ;
             iif( HB_TR_LEVEL >= <l>, hb_traceLogAt( <l>, <x> ), )
 
 #endif /* HB_TRACE_CH_ */

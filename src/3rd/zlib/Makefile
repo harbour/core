@@ -1,4 +1,3 @@
-
 ROOT := ../../../
 
 include $(TOP)$(ROOT)config/global.mk
@@ -56,9 +55,9 @@ else
 endif
 
 # ORIGIN http://zlib.net/
-# VER    1.2.7
-# URL    http://prdownloads.sourceforge.net/libpng/zlib127.zip?download
-# DIFF   zlib.dif
+# VER    1.2.11
+# URL    https://github.com/madler/zlib/archive/v1.2.11.zip
+# DIFF   zlib.diff
 #
 # MAP    README
 # MAP    adler32.c

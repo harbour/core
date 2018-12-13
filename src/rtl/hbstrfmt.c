@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * hb_StrFormat() functions
+ * hb_StrFormat() function
  *
  * Copyright 2008 Mindaugas Kavaliauskas <dbtopas at dbtopas.lt>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -122,10 +120,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
          continue;
       }
 
-      pFmtSave = pFmt;
-
-      if( ++pFmt >= pFmtEnd )
-         continue;
+      pFmtSave = pFmt++;
 
       if( *pFmt == '%' )
       {
@@ -481,7 +476,10 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
          }
 
          default:
-            bufadd( &buffer, pFmtSave, pFmt - pFmtSave + 1 );
+         {
+            bufadd( &buffer, pFmtSave, pFmt - pFmtSave );
+            continue;
+         }
       }
       pFmt++;
    }
@@ -493,14 +491,16 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
 
 HB_FUNC( HB_STRFORMAT )
 {
-   PHB_ITEM   pFormat = hb_param( 1, HB_IT_STRING );
-   int        i, iParams = hb_pcount();
-   PHB_ITEM * pItemArray = NULL;
+   PHB_ITEM pFormat = hb_param( 1, HB_IT_STRING );
 
    if( pFormat )
    {
+      int        iParams = hb_pcount();
+      PHB_ITEM * pItemArray = NULL;
+
       if( iParams > 1 )
       {
+         int i;
          pItemArray = ( PHB_ITEM * ) hb_xgrab( ( iParams - 1 ) * sizeof( PHB_ITEM ) );
          for( i = 1; i < iParams; i++ )
             pItemArray[ i - 1 ] = hb_param( i + 1, HB_IT_ANY );

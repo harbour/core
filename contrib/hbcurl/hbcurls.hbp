@@ -1,4 +1,3 @@
-
 hbcurl.hbm
 
 -stop{!allwin|hbdyn}

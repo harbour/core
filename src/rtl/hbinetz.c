@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    ZLIB compression for Harbour hb_inet*() connections
+ * ZLIB compression for Harbour hb_inet*() connections
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,14 +59,14 @@ HB_FUNC( HB_INETCOMPRESS )
        iStrategy = hb_parnidef( 3, HB_ZLIB_STRATEGY_DEFAULT );
 
    if( iLevel == HB_ZLIB_COMPRESSION_DISABLE )
-      hb_znetInetInitialize( pItem, NULL, NULL, NULL, NULL, NULL );
+      hb_znetInetInitialize( pItem, NULL, NULL, NULL, NULL, NULL, NULL, NULL );
    else
    {
       PHB_ZNETSTREAM pStream = hb_znetOpen( iLevel, iStrategy );
       if( pStream == NULL )
          pItem = NULL;  /* to force RTE */
       if( hb_znetInetInitialize( pItem, pStream, hb_znetRead, hb_znetWrite,
-                                 hb_znetFlush, hb_znetClose ) )
+                                 hb_znetFlush, hb_znetClose, NULL, NULL ) )
       {
          int keylen = ( int ) hb_parclen( 4 );
          if( keylen )

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    example of Harbour codepage using BIG5 encoding
+ * Example of Harbour codepage using BIG5 encoding
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,15 +54,15 @@ static HB_CDP_GET_FUNC( BIG5_get )
    *wc = 0;
    if( *pnIndex < nLen )
    {
-      HB_UCHAR uc = pSrc[ ( * pnIndex )++ ];
+      HB_UCHAR uc = pSrc[ ( *pnIndex )++ ];
 
       if( uc >= ( HB_BIG5_FIRST >> 8 ) && uc <= ( HB_BIG5_LAST >> 8 ) &&
           *pnIndex < nLen )
       {
-         *wc = s_big5_to_ucs16( ( ( int ) uc << 8 ) | ( HB_UCHAR ) pSrc[ * pnIndex ] );
+         *wc = s_big5_to_ucs16( ( ( int ) uc << 8 ) | ( HB_UCHAR ) pSrc[ *pnIndex ] );
          if( *wc )
          {
-            ( * pnIndex )++;
+            ( *pnIndex )++;
             return HB_TRUE;
          }
       }
@@ -78,16 +76,16 @@ static HB_CDP_GET_FUNC( BIG5_get )
 
 static HB_CDP_PUT_FUNC( BIG5_put )
 {
-   if( * pnIndex < nLen )
+   if( *pnIndex < nLen )
    {
       HB_USHORT b5 = s_ucs16_to_big5( wc );
 
       if( b5 )
       {
-         if( * pnIndex + 1 < nLen )
+         if( *pnIndex + 1 < nLen )
          {
-            HB_PUT_BE_UINT16( &pDst[ ( * pnIndex ) ], b5 );
-            * pnIndex += 2;
+            HB_PUT_BE_UINT16( &pDst[ ( *pnIndex ) ], b5 );
+            *pnIndex += 2;
             return HB_TRUE;
          }
       }
@@ -98,9 +96,9 @@ static HB_CDP_PUT_FUNC( BIG5_put )
 
          if( wc <= cdp->uniTable->wcMax &&
              cdp->uniTable->uniTrans[ wc ] )
-            pDst[ ( * pnIndex )++ ] = cdp->uniTable->uniTrans[ wc ];
+            pDst[ ( *pnIndex )++ ] = cdp->uniTable->uniTrans[ wc ];
          else
-            pDst[ ( * pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
+            pDst[ ( *pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
          return HB_TRUE;
       }
    }

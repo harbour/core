@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * Firebird RDBMS low level (client api) interface code.
+ * Firebird RDBMS low-level (client API) interface code.
  *
  * Copyright 2003 Rodrigo Moreno rodrigo_moreno@yahoo.com
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -44,15 +42,13 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
- * See COPYING.txt for licensing terms.
- *
  */
 
 #include <time.h>
 
 /* NOTE: Ugly hack to avoid this error when compiled with BCC 5.8.2 and above:
          Error E2238 C:\...\Firebird-2.1.1\include\ibase.h 82: Multiple declaration for 'intptr_t' */
-#if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 )
+#if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 0x582 )
 /* Prevent inclusion of <stdint.h> from hbdefs.h */
    #define __STDINT_H
 #endif
@@ -156,7 +152,7 @@ HB_FUNC( FBCONNECT )
    short i = 0;
    int   len;
 
-   /* TOFIX: Possible buffer overflow. Use hb_snprintf(). */
+   /* FIXME: Possible buffer overflow. Use hb_snprintf(). */
    dpb[ i++ ] = isc_dpb_version1;
    dpb[ i++ ] = isc_dpb_user_name;
    len        = ( int ) strlen( user );
@@ -220,7 +216,7 @@ HB_FUNC( FBSTARTTRANSACTION )
       if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
          hb_retnl( isc_sqlcode( status ) );
       else
-         hb_retptr( ( void * ) ( HB_PTRDIFF ) trans );
+         hb_retptr( ( void * ) ( HB_PTRUINT ) trans );
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -228,7 +224,7 @@ HB_FUNC( FBSTARTTRANSACTION )
 
 HB_FUNC( FBCOMMIT )
 {
-   isc_tr_handle trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
+   isc_tr_handle trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 1 );
 
    if( trans )
    {
@@ -245,7 +241,7 @@ HB_FUNC( FBCOMMIT )
 
 HB_FUNC( FBROLLBACK )
 {
-   isc_tr_handle trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 1 );
+   isc_tr_handle trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 1 );
 
    if( trans )
    {
@@ -273,7 +269,7 @@ HB_FUNC( FBEXECUTE )
       unsigned short dialect = ( unsigned short ) hb_parni( 3 );
 
       if( HB_ISPOINTER( 4 ) )
-         trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 4 );
+         trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 4 );
       else
       {
          if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
@@ -328,7 +324,7 @@ HB_FUNC( FBQUERY )
       PHB_ITEM aTemp;
 
       if( HB_ISPOINTER( 4 ) )
-         trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 4 );
+         trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 4 );
       else if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )
       {
          hb_retnl( isc_sqlcode( status ) );
@@ -445,11 +441,11 @@ HB_FUNC( FBQUERY )
 
       qry_handle = hb_itemArrayNew( 6 );
 
-      hb_arraySetPtr( qry_handle, 1, ( void * ) ( HB_PTRDIFF ) stmt );
-      hb_arraySetPtr( qry_handle, 2, ( void * ) ( HB_PTRDIFF ) sqlda );
+      hb_arraySetPtr( qry_handle, 1, ( void * ) ( HB_PTRUINT ) stmt );
+      hb_arraySetPtr( qry_handle, 2, ( void * ) ( HB_PTRUINT ) sqlda );
 
       if( ! HB_ISPOINTER( 4 ) )
-         hb_arraySetPtr( qry_handle, 3, ( void * ) ( HB_PTRDIFF ) trans );
+         hb_arraySetPtr( qry_handle, 3, ( void * ) ( HB_PTRUINT ) trans );
 
       hb_arraySetNL( qry_handle, 4, ( long ) num_cols );
       hb_arraySetNI( qry_handle, 5, ( int ) dialect );
@@ -468,16 +464,16 @@ HB_FUNC( FBFETCH )
 
    if( aParam )
    {
-      isc_stmt_handle  stmt  = ( isc_stmt_handle ) ( HB_PTRDIFF ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
+      isc_stmt_handle  stmt  = ( isc_stmt_handle ) ( HB_PTRUINT ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
       XSQLDA *         sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
       ISC_STATUS_ARRAY status;
       unsigned short   dialect = ( unsigned short ) hb_itemGetNI( hb_itemArrayGet( aParam, 5 ) );
 
-      /* TOFIX */
+      /* FIXME */
       hb_retnl( isc_dsql_fetch( status,
                                 &stmt,
                                 dialect,
-                                sqlda ) == 100L ? -1 : isc_sqlcode( status ) );
+                                sqlda ) == 100 ? -1 : isc_sqlcode( status ) );
    }
    else
       hb_retnl( 0 );
@@ -489,9 +485,9 @@ HB_FUNC( FBFREE )
 
    if( aParam )
    {
-      isc_stmt_handle  stmt  = ( isc_stmt_handle ) ( HB_PTRDIFF ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
+      isc_stmt_handle  stmt  = ( isc_stmt_handle ) ( HB_PTRUINT ) hb_itemGetPtr( hb_itemArrayGet( aParam, 1 ) );
       XSQLDA *         sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
-      isc_tr_handle    trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_itemGetPtr( hb_itemArrayGet( aParam, 3 ) );
+      isc_tr_handle    trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_itemGetPtr( hb_itemArrayGet( aParam, 3 ) );
       ISC_STATUS_ARRAY status;
 
       if( isc_dsql_free_statement( status, &stmt, DSQL_drop ) )
@@ -506,7 +502,7 @@ HB_FUNC( FBFREE )
          return;
       }
 
-      /* TOFIX: Freeing pointer received as parameter? We should at least set the item NULL. */
+      /* FIXME: Freeing pointer received as parameter? We should at least set the item NULL. */
       if( sqlda )
          hb_xfree( sqlda );
 
@@ -525,7 +521,6 @@ HB_FUNC( FBGETDATA )
       XSQLVAR *        var;
       XSQLDA *         sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
       ISC_STATUS_ARRAY status;
-      ISC_QUAD *       blob_id;
 
       int pos = hb_parni( 2 ) - 1;
 
@@ -592,10 +587,11 @@ HB_FUNC( FBGETDATA )
                break;
 
             case SQL_BLOB:
-               blob_id = ( ISC_QUAD * ) var->sqldata;
+            {
+               ISC_QUAD * blob_id = ( ISC_QUAD * ) var->sqldata;
                hb_retptr( ( void * ) blob_id );
                break;
-
+            }
             case SQL_SHORT:
             case SQL_LONG:
             case SQL_INT64:
@@ -697,7 +693,7 @@ HB_FUNC( FBGETBLOB )
       ISC_STATUS blob_stat;
 
       if( HB_ISPOINTER( 3 ) )
-         trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 3 );
+         trans = ( isc_tr_handle ) ( HB_PTRUINT ) hb_parptr( 3 );
       else
       {
          if( isc_start_transaction( status, &trans, 1, &db, 0, NULL ) )

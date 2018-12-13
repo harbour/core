@@ -1,9 +1,8 @@
+#!/usr/bin/env hbmk2
 /*
- * Harbour Project source code:
  * Manage translations and automatic doc generation
  *
- * Copyright 2013 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2013 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,18 +15,17 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- * their web site at http://www.gnu.org/).
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ * (or visit their website at https://www.gnu.org/licenses/).
  *
  */
 
-/*
- * Requires:
+/* Requires:
  *   - curl (built with SSL)
  *   - hbmk2 and hbi18n in PATH
  *   - the target .prg be runnable as script (for doc_make only)
- * Reference: http://help.transifex.com/features/api/api-v2.1.html
+ * Reference: https://docs.transifex.com/api/introduction
  */
 
 #pragma -w3
@@ -56,12 +54,12 @@ PROCEDURE Main( cCommand, cMain, ... )
          iif( Empty( hb_FNameName( cMain := hb_DirSepToOS( cMain ) ) ), cMain + hb_FNameName( hb_DirSepDel( cMain ) ) + ".prg", cMain ), ;
          ... )
    ELSE
-      ? "unknown command or missing target"
+      ? "unrecognized command or missing target"
    ENDIF
 
    RETURN
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC PROCEDURE doc_make( cMain )
 
@@ -103,7 +101,7 @@ STATIC PROCEDURE doc_make( cMain )
 STATIC FUNCTION FToNativeEOL( cFile )
    RETURN hb_MemoWrit( cFile, StrTran( hb_MemoRead( cFile ), e"\n", hb_eol() ) )
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC PROCEDURE src_push( cMain )
 
@@ -135,7 +133,7 @@ STATIC PROCEDURE src_push( cMain )
       #endif
    ELSE
       cContent := hb_StrFormat( ;
-         '#, c-format' + hb_eol() + ;
+         "#, c-format" + hb_eol() + ;
          'msgid ""' + hb_eol() + ;
          'msgstr ""' + hb_eol() + ;
          '"Project-Id-Version: %1$s\n"' + hb_eol() + ;
@@ -185,7 +183,7 @@ STATIC FUNCTION POT_Sort( cFileName )
 
    RETURN .F.
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC PROCEDURE trs_pull( cMain )
 
@@ -346,7 +344,7 @@ STATIC FUNCTION StrUnspace( cString )
 
       cChar := SubStr( cString, tmp, 1 )
 
-      IF !( cChar == " " ) .OR. !( cCharPrev == " " )
+      IF ! cChar == " " .OR. ! cCharPrev == " "
          cResult += cChar
       ENDIF
 
@@ -369,7 +367,7 @@ STATIC FUNCTION PO_Clean( cFNSource, cFNTarget, ... )
 
    RETURN .F.
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC PROCEDURE trs_push( cMain )
 
@@ -422,7 +420,7 @@ STATIC PROCEDURE trs_push( cMain )
 
    RETURN
 
-/* --------------------------------------------- */
+/* --- */
 
 STATIC FUNCTION GetJSON( cString )
 
@@ -521,7 +519,7 @@ STATIC FUNCTION LoadPar( cMain )
 
    RETURN hPar
 
-/* --------------------------------------------- */
+/* --- */
 
 #include "lang2po.hb"
 #include "po2lang.hb"

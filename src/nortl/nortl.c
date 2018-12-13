@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *
+ * Standalone RTL stubs
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -55,9 +53,7 @@
 #include "hbcomp.h"
 #include "hbmemory.ch"
 
-/* ------------------------------------------------------------------------- */
-/* FM statistic module */
-/* ------------------------------------------------------------------------- */
+/* --- FM statistic module --- */
 
 /* remove this 'undef' when number of memory leaks will be reduced to
    reasonable size */
@@ -70,7 +66,7 @@
 #define HB_MEMSTR_BLOCK_MAX   256
 
 #ifndef HB_MEMFILER
-#  define HB_MEMFILER         0xff
+#define HB_MEMFILER         0xff
 #endif
 
 typedef struct _HB_MEMINFO
@@ -313,7 +309,7 @@ void hb_xexit( void )
 
       for( i = 1, pMemBlock = s_pMemBlocks; pMemBlock; ++i, pMemBlock = pMemBlock->pNextBlock )
          HB_TRACE( HB_TR_ERROR, ( "Block %i %p (size %" HB_PFS "u) \"%s\"", i,
-                ( char * ) pMemBlock + HB_MEMINFO_SIZE, pMemBlock->nSize,
+                ( void * ) pMemBlock + HB_MEMINFO_SIZE, pMemBlock->nSize,
                 hb_memToStr( szBuffer, ( char * ) pMemBlock + HB_MEMINFO_SIZE,
                              pMemBlock->nSize ) ) );
    }
@@ -494,6 +490,10 @@ void hb_fsSetIOError( HB_BOOL fResult, HB_USHORT uiOperation )
    HB_SYMBOL_UNUSED( uiOperation );
 }
 
+void  hb_fsSetError( HB_ERRCODE uiError )
+{
+   HB_SYMBOL_UNUSED( uiError );
+}
 
 /* file name conversion */
 
@@ -508,7 +508,6 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
-      HB_SIZE nLen;
 
       if( pszFree )
       {
@@ -518,7 +517,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
 
       if( s_cDirSep != HB_OS_PATH_DELIM_CHR )
       {
-         char * p = ( char * ) szFileName;
+         char * p = ( char * ) HB_UNCONST( szFileName );
          while( *p )
          {
             if( *p == s_cDirSep )
@@ -532,6 +531,8 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       /* strip trailing and leading spaces */
       if( s_fFnTrim )
       {
+         HB_SIZE nLen;
+
          if( pFileName->szName )
          {
             nLen = strlen( pFileName->szName );
@@ -542,7 +543,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
                ++pFileName->szName;
                --nLen;
             }
-            ( ( char * ) pFileName->szName )[ nLen ] = '\0';
+            ( ( char * ) HB_UNCONST( pFileName->szName ) )[ nLen ] = '\0';
          }
          if( pFileName->szExtension )
          {
@@ -554,7 +555,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
                ++pFileName->szExtension;
                --nLen;
             }
-            ( ( char * ) pFileName->szExtension )[ nLen ] = '\0';
+            ( ( char * ) HB_UNCONST( pFileName->szExtension ) )[ nLen ] = '\0';
          }
       }
 
@@ -562,28 +563,28 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
       if( s_iFileCase == HB_SET_CASE_LOWER )
       {
          if( pFileName->szName )
-            hb_strlow( ( char * ) pFileName->szName );
+            hb_strlow( ( char * ) HB_UNCONST( pFileName->szName ) );
          if( pFileName->szExtension )
-            hb_strlow( ( char * ) pFileName->szExtension );
+            hb_strlow( ( char * ) HB_UNCONST( pFileName->szExtension ) );
       }
       else if( s_iFileCase == HB_SET_CASE_UPPER )
       {
          if( pFileName->szName )
-            hb_strupr( ( char * ) pFileName->szName );
+            hb_strupr( ( char * ) HB_UNCONST( pFileName->szName ) );
          if( pFileName->szExtension )
-            hb_strupr( ( char * ) pFileName->szExtension );
+            hb_strupr( ( char * ) HB_UNCONST( pFileName->szExtension ) );
       }
 
       /* DIRCASE */
       if( pFileName->szPath )
       {
          if( s_iDirCase == HB_SET_CASE_LOWER )
-            hb_strlow( ( char * ) pFileName->szPath );
+            hb_strlow( ( char * ) HB_UNCONST( pFileName->szPath ) );
          else if( s_iDirCase == HB_SET_CASE_UPPER )
-            hb_strupr( ( char * ) pFileName->szPath );
+            hb_strupr( ( char * ) HB_UNCONST( pFileName->szPath ) );
       }
 
-      hb_fsFNameMerge( ( char * ) szFileName, pFileName );
+      hb_fsFNameMerge( ( char * ) HB_UNCONST( szFileName ), pFileName );
       hb_xfree( pFileName );
    }
    else if( pszFree )
@@ -602,14 +603,13 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
        s_iFileCase != HB_SET_CASE_MIXED || s_iDirCase != HB_SET_CASE_MIXED )
    {
       PHB_FNAME pFileName;
-      HB_SIZE nLen;
 
       szFileName = pszBuffer = hb_strncpy( ( char * ) hb_xgrab( HB_PATH_MAX ),
                                            szFileName, HB_PATH_MAX - 1 );
 
       if( s_cDirSep != HB_OS_PATH_DELIM_CHR )
       {
-         char * p = ( char * ) szFileName;
+         char * p = ( char * ) HB_UNCONST( szFileName );
          while( *p )
          {
             if( *p == s_cDirSep )
@@ -623,6 +623,8 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
       /* strip trailing and leading spaces */
       if( s_fFnTrim )
       {
+         HB_SIZE nLen;
+
          if( pFileName->szName )
          {
             nLen = strlen( pFileName->szName );
@@ -686,113 +688,42 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
 }
 #endif
 
+int hb_setGetFileCase( void )
+{
+   return s_iFileCase;
+}
+
+int hb_setGetDirCase( void )
+{
+   return s_iDirCase;
+}
+
 int hb_setGetDirSeparator( void )
 {
    return s_cDirSep;
 }
 
-void hb_compChkFileSwitches( int argc, char * argv[] )
+HB_BOOL hb_setGetTrimFileName( void )
 {
-   int i, n;
+   return s_fFnTrim;
+}
 
-   for( i = 1; i < argc; ++i )
-   {
-      if( HB_ISOPTSEP( argv[ i ][ 0 ] ) && argv[ i ][ 1 ] == 'f' )
-      {
-         n = 0;
-         switch( argv[ i ][ 2 ] )
-         {
-            case 'n':
-               if( ! argv[ i ][ 3 ] )
-               {
-                  s_iFileCase = HB_SET_CASE_MIXED;
-                  n = 3;
-               }
-               else if( argv[ i ][ 3 ] == ':' )
-               {
-                  if( argv[ i ][ 4 ] == 'u' )
-                  {
-                     s_iFileCase = HB_SET_CASE_UPPER;
-                     n = 5;
-                  }
-                  else if( argv[ i ][ 4 ] == 'l' )
-                  {
-                     s_iFileCase = HB_SET_CASE_LOWER;
-                     n = 5;
-                  }
-               }
-               else if( argv[ i ][ 3 ] == '-' )
-               {
-                  s_iFileCase = HB_SET_CASE_MIXED;
-                  n = 4;
-               }
-               break;
+void hb_setSetFileCase( int iFileCase )
+{
+   s_iFileCase = iFileCase;
+}
 
-            case 'd':
-               if( ! argv[ i ][ 3 ] )
-               {
-                  s_iDirCase = HB_SET_CASE_MIXED;
-                  n = 3;
-               }
-               else if( argv[ i ][ 3 ] == ':' )
-               {
-                  if( argv[ i ][ 4 ] == 'u' )
-                  {
-                     s_iDirCase = HB_SET_CASE_UPPER;
-                     n = 5;
-                  }
-                  else if( argv[ i ][ 4 ] == 'l' )
-                  {
-                     s_iDirCase = HB_SET_CASE_LOWER;
-                     n = 5;
-                  }
-               }
-               else if( argv[ i ][ 3 ] == '-' )
-               {
-                  s_iDirCase = HB_SET_CASE_MIXED;
-                  n = 4;
-               }
-               break;
+void hb_setSetDirCase( int iDirCase )
+{
+   s_iDirCase = iDirCase;
+}
 
-            case 'p':
-               if( ! argv[ i ][ 3 ] )
-               {
-                  s_cDirSep = HB_OS_PATH_DELIM_CHR;
-                  n = 3;
-               }
-               else if( argv[ i ][ 3 ] == '-' )
-               {
-                  s_cDirSep = HB_OS_PATH_DELIM_CHR;
-                  n = 4;
-               }
-               else if( argv[ i ][ 3 ] == ':' && argv[ i ][ 4 ] )
-               {
-                  s_cDirSep = argv[ i ][ 4 ];
-                  n = 5;
-               }
-               break;
+void hb_setSetDirSeparator( int iSeparator )
+{
+   s_cDirSep = ( char ) iSeparator;
+}
 
-            case 's':
-               if( ! argv[ i ][ 3 ] )
-               {
-                  s_fFnTrim = HB_TRUE;
-                  n = 3;
-               }
-               else if( argv[ i ][ 3 ] == '-' )
-               {
-                  s_fFnTrim = HB_FALSE;
-                  n = 4;
-               }
-               break;
-         }
-         if( n )
-         {
-            argv[ i ] += n;
-            if( argv[ i ][ 0 ] )
-               --i;
-            else
-               argv[ i ] = ( char * ) "-";
-         }
-      }
-   }
+void hb_setSetTrimFileName( HB_BOOL fTrim )
+{
+   s_fFnTrim = fTrim;
 }

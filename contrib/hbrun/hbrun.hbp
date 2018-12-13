@@ -1,9 +1,8 @@
-
 @../../utils/hbmk2/hbmk2.hbp
 
 -o${hb_name}
 
--DHBMK_WITH_ALL_EMBEDDED_HEADERS
+-DHBMK_WITH_BUILTIN_HEADERS_ALL
 
 -DHBMK_WITH_GTXWC{HBMK_WITH_GTXWC='yes'}
 -gtxwc{HBMK_WITH_GTXWC='yes'}

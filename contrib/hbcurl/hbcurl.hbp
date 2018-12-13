@@ -1,4 +1,3 @@
-
 hbcurl.hbm
 
 -depimplibs=curl:../libcurl.dll

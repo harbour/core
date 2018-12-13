@@ -39,12 +39,15 @@ DYNAMIC netio_ProcExecW
 DYNAMIC netio_ProcExists
 DYNAMIC netio_RPC
 DYNAMIC netio_RPCFilter
+DYNAMIC netio_ServedConnection
 DYNAMIC netio_Server
 DYNAMIC netio_ServerStop
 DYNAMIC netio_ServerTimeOut
+DYNAMIC netio_SetPath
 DYNAMIC netio_SrvSendData
 DYNAMIC netio_SrvSendItem
 DYNAMIC netio_SrvStatus
+DYNAMIC netio_TimeOut
 DYNAMIC netio_VerifyClient
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBNETIO__REQUEST )

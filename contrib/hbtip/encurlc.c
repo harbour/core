@@ -1,9 +1,7 @@
 /*
- * xHarbour Project source code:
  * TIP Class oriented Internet protocol library
  *
  * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,57 +50,55 @@
 
 HB_FUNC( TIP_URLENCODE )
 {
-   const char * cData = hb_parc( 1 );
+   const char * pszData = hb_parc( 1 );
 
-   if( cData )
+   if( pszData )
    {
       HB_ISIZ nLen = hb_parclen( 1 );
 
       if( nLen )
       {
          HB_BOOL bComplete = hb_parldef( 2, HB_TRUE );
-         char *  cRet;
-         HB_ISIZ nPos = 0, nPosRet = 0, nVal;
-         char    cElem;
+         HB_ISIZ nPos = 0, nPosRet = 0;
 
          /* Giving maximum final length possible */
-         cRet = ( char * ) hb_xgrab( nLen * 3 + 1 );
+         char * pszRet = ( char * ) hb_xgrab( nLen * 3 + 1 );
 
          while( nPos < nLen )
          {
-            cElem = cData[ nPos ];
+            char cElem = pszData[ nPos ];
 
             if( cElem == ' ' )
             {
-               cRet[ nPosRet ] = '+';
+               pszRet[ nPosRet ] = '+';
             }
-            else if(
-               ( cElem >= 'A' && cElem <= 'Z' ) ||
-               ( cElem >= 'a' && cElem <= 'z' ) ||
-               ( cElem >= '0' && cElem <= '9' ) ||
-               cElem == '.' || cElem == ',' || cElem == '&' ||
-               cElem == '/' || cElem == ';' || cElem == '_' )
+            else if( ( cElem >= 'A' && cElem <= 'Z' ) ||
+                     ( cElem >= 'a' && cElem <= 'z' ) ||
+                     ( cElem >= '0' && cElem <= '9' ) ||
+                     cElem == '.' || cElem == ',' || cElem == '&' ||
+                     cElem == '/' || cElem == ';' || cElem == '_' )
             {
-               cRet[ nPosRet ] = cElem;
+               pszRet[ nPosRet ] = cElem;
             }
             else if( ! bComplete && ( cElem == ':' || cElem == '?' || cElem == '=' ) )
             {
-               cRet[ nPosRet ] = cElem;
+               pszRet[ nPosRet ] = cElem;
             }
             else /* encode! */
             {
-               cRet[ nPosRet++ ] = '%';
-               nVal = ( ( HB_UCHAR ) cElem ) >> 4;
-               cRet[ nPosRet++ ] = nVal < 10 ? '0' + ( char ) nVal : 'A' + ( char ) nVal - 10;
-               nVal = ( ( HB_UCHAR ) cElem ) & 0x0F;
-               cRet[ nPosRet ] = nVal < 10 ? '0' + ( char ) nVal : 'A' + ( char ) nVal - 10;
+               HB_UINT uiVal;
+               pszRet[ nPosRet++ ] = '%';
+               uiVal = ( ( HB_UCHAR ) cElem ) >> 4;
+               pszRet[ nPosRet++ ] = ( char ) ( ( uiVal < 10 ? '0' : 'A' - 10 ) + uiVal );
+               uiVal = ( ( HB_UCHAR ) cElem ) & 0x0F;
+               pszRet[ nPosRet ] = ( char ) ( ( uiVal < 10 ? '0' : 'A' - 10 ) + uiVal );
             }
 
             nPosRet++;
             nPos++;
          }
 
-         hb_retclen_buffer( cRet, nPosRet );
+         hb_retclen_buffer( pszRet, nPosRet );
       }
       else
          hb_retc_null();
@@ -114,57 +110,44 @@ HB_FUNC( TIP_URLENCODE )
 
 HB_FUNC( TIP_URLDECODE )
 {
-   const char * cData = hb_parc( 1 );
+   const char * pszData = hb_parc( 1 );
 
-   if( cData )
+   if( pszData )
    {
       HB_ISIZ nLen = hb_parclen( 1 );
 
       if( nLen )
       {
-         char *  cRet;
          HB_ISIZ nPos = 0, nPosRet = 0;
-         char    cElem;
 
-         /* maximum possible lenght */
-         cRet = ( char * ) hb_xgrab( nLen );
+         /* maximum possible length */
+         char * pszRet = ( char * ) hb_xgrab( nLen );
 
          while( nPos < nLen )
          {
-            cElem = cData[ nPos ];
+            char cElem = pszData[ nPos ];
 
-            if( cElem == '+' )
+            if( cElem == '%' && HB_ISXDIGIT( pszData[ nPos + 1 ] ) &&
+                                HB_ISXDIGIT( pszData[ nPos + 2 ] ) )
             {
-               cRet[ nPosRet ] = ' ';
-            }
-            else if( cElem == '%' )
-            {
-               if( nPos < nLen - 2 )
-               {
-                  cElem = cData[ ++nPos ];
-                  cRet[ nPosRet ]  = cElem < 'A' ? cElem - '0' : cElem - 'A' + 10;
-                  cRet[ nPosRet ] *= 16;
-
-                  cElem = cData[ ++nPos ];
-                  cRet[ nPosRet ] |= cElem < 'A' ? cElem - '0' : cElem - 'A' + 10;
-               }
-               else
-               {
-                  if( nPosRet > 0 )
-                     break;
-               }
+               cElem = pszData[ ++nPos ];
+               pszRet[ nPosRet ]  = cElem - ( cElem >= 'a' ? 'a' - 10 :
+                                            ( cElem >= 'A' ? 'A' - 10 : '0' ) );
+               pszRet[ nPosRet ] <<= 4;
+               cElem = pszData[ ++nPos ];
+               pszRet[ nPosRet ] |= cElem - ( cElem >= 'a' ? 'a' - 10 :
+                                            ( cElem >= 'A' ? 'A' - 10 : '0' ) );
             }
             else
-               cRet[ nPosRet ] = cElem;
+               pszRet[ nPosRet ] = cElem == '+' ? ' ' : cElem;
 
             nPos++;
             nPosRet++;
          }
 
          /* this function also adds a zero */
-         /* hopefully reduce the size of cRet */
-         cRet = ( char * ) hb_xrealloc( cRet, nPosRet + 1 );
-         hb_retclen_buffer( cRet, nPosRet );
+         /* hopefully reduce the size of pszRet */
+         hb_retclen_buffer( ( char * ) hb_xrealloc( pszRet, nPosRet + 1 ), nPosRet );
       }
       else
          hb_retc_null();

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    BZIP2 functions wrapper
+ * BZIP2 functions wrapper
  *
  * Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -47,7 +45,6 @@
  */
 
 #include "hbapi.h"
-
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
@@ -55,22 +52,19 @@
 
 #include "hbbz2.ch"
 
-/* Required if bz2 lib was built with BZ_NO_STDIO [vszakats] */
-void bz_internal_error( int errcode )
-{
-   hb_errInternal( ( HB_ERRCODE ) errcode, "libbzip2", NULL, NULL );
-}
-
 static void * hb_bz2Alloc( void * cargo, int nmemb, int size )
 {
    HB_SYMBOL_UNUSED( cargo );
-   return hb_xalloc( ( HB_SIZE ) nmemb * size );
+
+   return ( nmemb > 0 && size > 0 ) ? hb_xalloc( ( HB_SIZE ) nmemb * size ) : NULL;
 }
 
 static void hb_bz2Free( void * cargo, void * ptr )
 {
    HB_SYMBOL_UNUSED( cargo );
-   hb_xfree( ptr );
+
+   if( ptr )
+      hb_xfree( ptr );
 }
 
 static HB_SIZE hb_bz2CompressBound( HB_SIZE nLen )
@@ -88,7 +82,7 @@ static int hb_bz2Compress( const char * szSrc, HB_SIZE nSrc,
 
    memset( &stream, 0, sizeof( stream ) );
 
-   stream.next_in  = ( char * ) szSrc;
+   stream.next_in  = ( char * ) HB_UNCONST( szSrc );
    stream.avail_in = ( unsigned int ) nSrc;
 
    stream.next_out  = szDst;
@@ -96,7 +90,9 @@ static int hb_bz2Compress( const char * szSrc, HB_SIZE nSrc,
 
    stream.bzalloc = hb_bz2Alloc;
    stream.bzfree  = hb_bz2Free;
-/* stream.opaque  = NULL; */
+#if 0
+   stream.opaque  = NULL;
+#endif
 
    iResult = BZ2_bzCompressInit( &stream, iBlockSize, 0, 0 );
    if( iResult == BZ_OK )
@@ -133,12 +129,14 @@ static HB_SIZE hb_bz2UncompressedSize( const char * szSrc, HB_SIZE nLen,
 
    memset( &stream, 0, sizeof( stream ) );
 
-   stream.next_in  = ( char * ) szSrc;
+   stream.next_in  = ( char * ) HB_UNCONST( szSrc );
    stream.avail_in = ( unsigned int ) nLen;
 
    stream.bzalloc = hb_bz2Alloc;
    stream.bzfree  = hb_bz2Free;
-/* stream.opaque  = NULL; */
+#if 0
+   stream.opaque  = NULL;
+#endif
 
    *piResult = BZ2_bzDecompressInit( &stream, 0, 0 );
    if( *piResult == BZ_OK )
@@ -178,7 +176,7 @@ static int hb_bz2Uncompress( const char * szSrc, HB_SIZE nSrc,
 
    memset( &stream, 0, sizeof( stream ) );
 
-   stream.next_in  = ( char * ) szSrc;
+   stream.next_in  = ( char * ) HB_UNCONST( szSrc );
    stream.avail_in = ( unsigned int ) nSrc;
 
    stream.next_out  = szDst;
@@ -186,7 +184,9 @@ static int hb_bz2Uncompress( const char * szSrc, HB_SIZE nSrc,
 
    stream.bzalloc = hb_bz2Alloc;
    stream.bzfree  = hb_bz2Free;
-/* stream.opaque  = NULL; */
+#if 0
+   stream.opaque  = NULL;
+#endif
 
    iResult = BZ2_bzDecompressInit( &stream, 0, 0 );
    if( iResult == BZ_OK )
@@ -213,17 +213,13 @@ static int hb_bz2Uncompress( const char * szSrc, HB_SIZE nSrc,
    return iResult;
 }
 
-/*
- * hb_bz2_Version() -> <cBZlibVersion>
- */
+/* hb_bz2_Version() --> <cBZlibVersion> */
 HB_FUNC( HB_BZ2_VERSION )
 {
    hb_retc( BZ2_bzlibVersion() );
 }
 
-/*
- * hb_bz2_CompressBound( <cData> | <nDataLen> ) -> <nMaxCompressLen>
- */
+/* hb_bz2_CompressBound( <cData> | <nDataLen> ) --> <nMaxCompressLen> */
 HB_FUNC( HB_BZ2_COMPRESSBOUND )
 {
    if( HB_ISCHAR( 1 ) )
@@ -234,10 +230,8 @@ HB_FUNC( HB_BZ2_COMPRESSBOUND )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/*
- * hb_bz2_UncompressLen( <cCompressedData>, [<@nResult>] )
- *          -> <nUnCompressedDataLen> or -1 on error
- */
+/* hb_bz2_UncompressLen( <cCompressedData>, [<@nResult>] )
+      --> <nUnCompressedDataLen> or -1 on error */
 HB_FUNC( HB_BZ2_UNCOMPRESSLEN )
 {
    const char * szData = hb_parc( 1 );
@@ -261,10 +255,8 @@ HB_FUNC( HB_BZ2_UNCOMPRESSLEN )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/*
- * hb_bz2_Compress( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
- *    => <cCompressedData> or NIL on Error
- */
+/* hb_bz2_Compress( <cData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>], [<nLevel>] )
+      --> <cCompressedData> or NIL on Error */
 HB_FUNC( HB_BZ2_COMPRESS )
 {
    const char * szData = hb_parc( 1 );
@@ -321,10 +313,8 @@ HB_FUNC( HB_BZ2_COMPRESS )
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/*
- * hb_bz2_Uncompress( <cCompressedData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>] )
- *    => <cUnCompressedData> or NIL on Error
- */
+/* hb_bz2_Uncompress( <cCompressedData>, [<nDstBufLen>|<@cBuffer>], [<@nResult>] )
+      --> <cUnCompressedData> or NIL on Error */
 HB_FUNC( HB_BZ2_UNCOMPRESS )
 {
    PHB_ITEM     pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * OpenSSL API (ERR) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,9 +43,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
-#include "hbapi.h"
-#include "hbapierr.h"
 
 #include "hbssl.h"
 
@@ -80,7 +75,11 @@ HB_FUNC( ERR_PEEK_ERROR )
 
 HB_FUNC( ERR_PEEK_LAST_ERROR )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
    hb_retnint( ERR_peek_last_error() );
+#else
+   hb_retnint( -1 );
+#endif
 }
 
 HB_FUNC( ERR_ERROR_STRING )
@@ -133,6 +132,7 @@ HB_FUNC( ERR_PEEK_ERROR_LINE )
 
 HB_FUNC( ERR_PEEK_LAST_ERROR_LINE )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
    const char * file = NULL;
    int          line = 0;
 
@@ -140,6 +140,12 @@ HB_FUNC( ERR_PEEK_LAST_ERROR_LINE )
 
    hb_storc( file, 1 );
    hb_storni( line, 2 );
+#else
+   hb_retnint( -1 );
+
+   hb_storc( NULL, 1 );
+   hb_storni( 0, 2 );
+#endif
 }
 
 HB_FUNC( ERR_GET_ERROR_LINE_DATA )
@@ -174,6 +180,7 @@ HB_FUNC( ERR_PEEK_ERROR_LINE_DATA )
 
 HB_FUNC( ERR_PEEK_LAST_ERROR_LINE_DATA )
 {
+#if OPENSSL_VERSION_NUMBER >= 0x00907000L
    const char * file  = NULL;
    int          line  = 0;
    const char * data  = NULL;
@@ -185,6 +192,14 @@ HB_FUNC( ERR_PEEK_LAST_ERROR_LINE_DATA )
    hb_storni( line, 2 );
    hb_storc( data, 3 );
    hb_storni( flags, 4 );
+#else
+   hb_retnint( -1 );
+
+   hb_storc( NULL, 1 );
+   hb_storni( 0, 2 );
+   hb_storc( NULL, 3 );
+   hb_storni( 0, 4 );
+#endif
 }
 
 HB_FUNC( ERR_FREE_STRINGS )

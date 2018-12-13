@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Date API
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,10 +54,10 @@ HB_EXTERN_BEGIN
 extern HB_EXPORT double hb_secondsCPU( int n );
 
 extern HB_EXPORT double hb_dateSeconds( void );
-/* return UTC julian timestamp in milliseconds */
+/* return UTC Julian timestamp in milliseconds */
 extern HB_EXPORT HB_MAXUINT hb_dateMilliSeconds( void );
 
-/* functions to operate on julian date values */
+/* functions to operate on Julian date values */
 
 extern HB_EXPORT void   hb_dateTimeStr( char * pszTime );
 extern HB_EXPORT void   hb_dateToday( int * piYear, int * piMonth, int * piDay );
@@ -72,6 +70,8 @@ extern HB_EXPORT char * hb_dateDecStr( char * szDate, long lJulian );
 extern HB_EXPORT long   hb_dateEncStr( const char * szDate );
 extern HB_EXPORT int    hb_dateDOW( int iYear, int iMonth, int iDay );
 extern HB_EXPORT int    hb_dateJulianDOW( long lJulian );
+extern HB_EXPORT HB_BOOL hb_dateDecWeek( long lJulian, int * piYear, int * piWeek, int * piDay );
+extern HB_EXPORT long   hb_dateEncWeek( int iYear, int iWeek, int iDay );
 
 /* RTL functions */
 extern HB_EXPORT const char * hb_dateCMonth( int iMonth );
@@ -101,6 +101,9 @@ extern HB_EXPORT void hb_timeStampGetLocal( int * piYear, int * piMonth, int * p
 extern HB_EXPORT void   hb_timeStampGet( long * plJulian, long * plMilliSec );
 
 extern HB_EXPORT long   hb_timeUTCOffset( void ); /* in seconds */
+extern HB_EXPORT double hb_timeLocalToUTC( double dTimeStamp );
+extern HB_EXPORT long hb_timeStampUTCOffset( int iYear, int iMonth, int iDay,
+                                             int iHour, int iMinutes, int iSeconds );
 
 extern HB_EXPORT char * hb_timeStampStrRawPut( char * szDateTime, long lJulian, long lMilliSec );
 extern HB_EXPORT void   hb_timeStampStrRawGet( const char * szDateTime, long * plJulian, long * plMilliSec );
@@ -139,6 +142,10 @@ extern HB_EXPORT void   hb_timeStampUnformat( const char * szDateTime,
                                               const char * szDateFormat, const char * szTimeFormat,
                                               long * plJulian, long * plMilliSec );
 
+extern HB_EXPORT HB_MAXUINT hb_timerGet( void );
+extern HB_EXPORT HB_MAXUINT hb_timerInit( HB_MAXINT nTimeOut );
+extern HB_EXPORT HB_MAXINT  hb_timerTest( HB_MAXINT nTimeOut, HB_MAXUINT * pnTimer );
+
 HB_EXTERN_END
 
 #define HB_MINUTES_PER_DAY    ( 24 * 60 )
@@ -147,12 +154,24 @@ HB_EXTERN_END
 
 #define HB_TIMEDIFF_DEC       6     /* default number of decimal places in numeric timestamp diff values */
 
-#if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
-      defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
-      defined( HB_OS_SUNOS ) || defined( HB_OS_BEOS ) || \
-      defined( HB_OS_ANDROID ) ) && \
-   ! defined( HB_OS_DARWIN_5 ) && ! defined( HB_HAS_LOCALTIME_R )
-#  define HB_HAS_LOCALTIME_R
+#if ! defined( HB_HAS_LOCALTIME_R )
+#  if ( defined( _POSIX_C_SOURCE ) || defined( _XOPEN_SOURCE ) || \
+        defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) || \
+        defined( HB_OS_SUNOS ) || defined( HB_OS_BEOS ) || \
+        defined( HB_OS_ANDROID ) ) && \
+      ! defined( HB_OS_DARWIN_5 )
+#     define HB_HAS_LOCALTIME_R
+#  elif defined( __WATCOMC__ )
+#     if defined( __STDC_WANT_LIB_EXT1__ ) && __STDC_WANT_LIB_EXT1__ == 1
+#        define HB_HAS_LOCALTIME_R
+#        define localtime_r   localtime_s
+#        define gmtime_r      gmtime_s
+#     elif ! defined( NO_EXT_KEYS )
+#        define HB_HAS_LOCALTIME_R
+#        define localtime_r   _localtime
+#        define gmtime_r      _gmtime
+#     endif
+#  endif
 #endif
 
 #endif /* HB_DATE_H_ */

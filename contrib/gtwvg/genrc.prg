@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * Source file for the Wvg*Classes
+ * Xbase++ Parts Compatible functions
  *
  * Copyright 2011 Pritpal Bedi <bedipritpal@hotmail.com>
- * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,14 +44,10 @@
  *
  */
 
-//                               EkOnkar
-//                         ( The LORD is ONE )
-//
-//                  Xbase++ Parts Compatible functions
-//
-//                Pritpal Bedi  <bedipritpal@hotmail.com>
-//                              03Dec2011
-//
+/*                                EkOnkar
+ *                          ( The LORD is ONE )
+ */
+
 #include "hbclass.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
@@ -62,7 +56,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-THREAD STATIC t_oCrt := NIL
+THREAD STATIC t_oCrt
 
 EXIT PROCEDURE KillGTChildren()
 
@@ -80,7 +74,7 @@ FUNCTION WvgSetAppWindow( oCrt )
    IF Empty( oCrt )
       IF Empty( t_oCrt )
          t_oCrt := WvgCrt():new()
-         t_oCrt:hWnd := Wvt_GetWindowHandle()
+         t_oCrt:hWnd := wvt_GetWindowHandle()
          t_oCrt:pWnd := win_N2P( t_oCrt:hWnd )
          hb_gtInfo( HB_GTI_NOTIFIERBLOCKGUI, {| nEvent, ... | t_oCrt:notifier( nEvent, ... ) } )
          t_oCrt:isGT := .T.

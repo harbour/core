@@ -2,7 +2,6 @@
 // Object Array syntax test
 //
 // Written by Eddie Runia <eddie@runia.com>
-// www - http://harbour-project.org
 //
 // Placed in the public domain
 //
@@ -78,7 +77,7 @@ STATIC FUNCTION New()
 
    ::x := { 1, 1 }
 
-   RETURN self
+   RETURN Self
 
 STATIC FUNCTION Get()
 

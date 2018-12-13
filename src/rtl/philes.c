@@ -1,12 +1,10 @@
 /*
- * Harbour Project source code:
  * The FileSys API (Harbour level)
  *
- * Copyright 1999-2009 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2009 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com>
  * Copyright 1999 Manuel Ruiz <mrt@joca.es>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,9 +17,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -241,7 +239,7 @@ HB_FUNC( FREADSTR )
 
       if( nToRead > 0 )
       {
-         HB_FHANDLE fhnd = ( HB_FHANDLE ) hb_parni( 1 );
+         HB_FHANDLE fhnd = hb_numToHandle( hb_parnint( 1 ) );
          char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
          HB_SIZE nRead;
 
@@ -260,8 +258,29 @@ HB_FUNC( FREADSTR )
    hb_fsSetFError( uiError );
 }
 
-/* NOTE: This function should not return the leading and trailing */
-/*       (back)slashes. [vszakats] */
+HB_FUNC( HB_FREADLEN )
+{
+   HB_ERRCODE uiError = 0;
+   HB_SIZE nToRead = hb_parns( 2 );
+
+   if( nToRead > 0 && HB_ISNUM( 1 ) )
+   {
+      HB_FHANDLE fhnd = hb_numToHandle( hb_parnint( 1 ) );
+      char * buffer = ( char * ) hb_xgrab( nToRead + 1 );
+      HB_SIZE nRead;
+
+      nRead = hb_fsReadLarge( fhnd, buffer, nToRead );
+      uiError = hb_fsError();
+
+      hb_retclen_buffer( buffer, nRead );
+   }
+   else
+      hb_retc_null();
+   hb_fsSetFError( uiError );
+}
+
+/* NOTE: This function should not return the leading and trailing
+         (back)slashes. [vszakats] */
 
 /* TODO: Xbase++ is able to change to the specified directory. */
 
@@ -501,15 +520,15 @@ HB_FUNC( HB_FISDEVICE )
 }
 
 /* hb_PRead( <nPipeHandle>, <@cBuffer>, [<nBytes>], [<nTimeOut>] )
-      -> <nBytesRead> */
+      --> <nBytesRead> */
 HB_FUNC( HB_PREAD )
 {
-   HB_FHANDLE hStdHandle = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
+   HB_FHANDLE hPipe = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
    PHB_ITEM pBuffer = hb_param( 2, HB_IT_STRING );
    char * buffer;
    HB_SIZE nSize;
 
-   if( hStdHandle != FS_ERROR && pBuffer && HB_ISBYREF( 2 ) &&
+   if( hPipe != FS_ERROR && pBuffer && HB_ISBYREF( 2 ) &&
        hb_itemGetWriteCL( pBuffer, &buffer, &nSize ) )
    {
       HB_ERRCODE uiError = 0;
@@ -524,14 +543,12 @@ HB_FUNC( HB_PREAD )
 
       if( nSize > 0 )
       {
-         nSize = hb_fsPipeRead( hStdHandle, buffer, nSize, hb_parnint( 4 ) );
+         nSize = hb_fsPipeRead( hPipe, buffer, nSize, hb_parnint( 4 ) );
          uiError = hb_fsError();
       }
-      else
-         nSize = 0;
 
-      if( nSize == ( HB_SIZE ) -1 )
-         hb_retni( -1 );
+      if( nSize == ( HB_SIZE ) FS_ERROR )
+         hb_retni( FS_ERROR );
       else
          hb_retns( nSize );
       hb_fsSetFError( uiError );
@@ -540,6 +557,33 @@ HB_FUNC( HB_PREAD )
       hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+/* hb_PWrite( <nPipeHandle>, <cBuffer>, [<nBytes>], [<nTimeOut>] )
+      --> <nBytesWritten> */
+HB_FUNC( HB_PWRITE )
+{
+   HB_FHANDLE hPipe = hb_numToHandle( hb_parnintdef( 1, FS_ERROR ) );
+   const char * data = hb_parc( 2 );
+
+   if( hPipe != FS_ERROR && data != NULL )
+   {
+      HB_SIZE nLen = hb_parclen( 2 );
+
+      if( HB_ISNUM( 3 ) )
+      {
+         HB_SIZE nWrite = hb_parns( 3 );
+         if( nWrite < nLen )
+            nLen = nWrite;
+      }
+      nLen = hb_fsPipeWrite( hPipe, data, nLen, hb_parnint( 4 ) );
+      hb_fsSetFError( hb_fsError() );
+      if( nLen == ( HB_SIZE ) FS_ERROR )
+         hb_retni( FS_ERROR );
+      else
+         hb_retns( nLen );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 4001, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
 
 HB_FUNC( HB_OSERROR )
 {

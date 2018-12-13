@@ -1,13 +1,11 @@
 /*
- * Harbour Project source code:
- *    Simple program to generate information for Harbour CP module definition.
+ * Simple program to generate information for Harbour CP module definition.
  *    Compile it with Clipper and link with given national sorting module
  *    (usually ntx*.obj) and then execute to generate letters strings for
  *    given national sorting module. Then use this string to define Harbour
  *    CP module in src/codepage/ directory.
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 
@@ -412,11 +410,9 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
 
    cDef := ;
       '/*' + EOL + ;
-      ' * Harbour Project source code:' + EOL + ;
       ' * National Collation Support Module ($1)' + EOL + ;
       ' *' + EOL + ;
       ' * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>' + EOL + ;
-      ' * www - http://harbour-project.org' + EOL + ;
       ' *' + EOL + ;
       ' * This file is generated automatically by cpinfo.prg' + EOL + ;
       ' */' + EOL + EOL + ;

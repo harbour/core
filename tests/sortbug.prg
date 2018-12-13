@@ -1,4 +1,3 @@
-
 PROCEDURE Main()
 
    dbCreate( "testsort", { { "ITEM", "N", 10, 2 } } )

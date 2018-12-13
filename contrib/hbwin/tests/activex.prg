@@ -1,4 +1,3 @@
-
 #require "hbwin"
 
 #include "hbgtinfo.ch"
@@ -46,7 +45,7 @@ METHOD Init( hWnd, cProgId, nTop, nLeft, nWidth, nHeight, cID ) CLASS HActiveX
 #endif
    ::oOLE := win_axGetControl( ::hWnd, {| event, ... | ::Event( event, ... ) }, cID )
 
-   RETURN self
+   RETURN Self
 
 PROCEDURE Event( ... ) CLASS HActiveX
 

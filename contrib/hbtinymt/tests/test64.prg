@@ -1,4 +1,3 @@
-
 #require "hbtinymt"
 
 PROCEDURE Main()

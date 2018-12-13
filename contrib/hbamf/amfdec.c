@@ -1,14 +1,11 @@
-/*******
+/* by Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
  *
- *  by Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
+ * Decoding AMF3 to Harbour items
  *
- *  Decoding AMF3 to Harbour items
- *
- *  Contains portions from
- *  Dave Thompson's MIT licensed
- *  AmFast C library for Python
- *
- ********/
+ * Contains portions from
+ * Dave Thompson's MIT licensed
+ * AmFast C library for Python
+ */
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -72,28 +69,28 @@ static PHB_ITEM hbamf_cls_externalizable_instance( PHB_ITEM pClassFuncStr )
    return NULL;
 }
 
-static char * readByte( amfContext * context )
+static const char * readByte( amfContext * context )
 {
    HB_ISIZ new_position = context->position + 1;
-   char *  byte_ref;
+   const char * byte_ref;
 
    if( new_position < 0 || new_position > context->length )
       return NULL;
 
-   byte_ref = ( char * ) ( context->cBuf + context->position );
+   byte_ref = context->cBuf + context->position;
    context->position = new_position;
    return byte_ref;
 }
 
-static char * readBytes( amfContext * context, HB_ISIZ len )
+static const char * readBytes( amfContext * context, HB_ISIZ len )
 {
    HB_ISIZ new_position = context->position + len;
-   char *  result;
+   const char * result;
 
    if( new_position < 0 || new_position > context->length )
       return NULL;
 
-   result = ( char * ) ( context->cBuf + context->position );
+   result = context->cBuf + context->position;
    context->position = new_position;
    return result;
 }
@@ -109,7 +106,7 @@ static HB_BOOL amfX_decode_double( amfContext * context, double * val )
 
    /*
     * Put bytes from byte array into double
-    * TOFIX: does this aligment work on any platform?
+    * FIXME: does this alignment work on any platform?
 
       union aligned
       {
@@ -140,10 +137,10 @@ static HB_BOOL amfX_decode_double( amfContext * context, double * val )
 
 static HB_BOOL amf3_decode_int( amfContext * context, int * iVal )
 {
-   int    result   = 0;
-   int    byte_cnt = 0;
-   char * byte_ref;
-   char   byte;
+   const char * byte_ref;
+   char byte;
+   int  result   = 0;
+   int  byte_cnt = 0;
 
    byte_ref = readByte( context );
    if( ! byte_ref )
@@ -175,7 +172,7 @@ static HB_BOOL amf3_decode_int( amfContext * context, int * iVal )
       result  |= byte & 0xff;
    }
 
-   /* Move sign bit, since we're converting 29bit->32bit */
+   /* Move sign bit, since we're converting 29-bit -> 32-bit */
    if( result & 0x10000000 )
       result -= 0x20000000;
 
@@ -295,12 +292,12 @@ static HB_BOOL amf3_deserialize_string( amfContext * context, PHB_ITEM pItem )
 /* Add the dynamic attributes of an encoded obj to a dict. */
 static HB_BOOL amf3_decode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
 {
-   PHB_ITEM pKey;
-   PHB_ITEM pValue;
-   HB_BOOL  result;
-
-   for(;; )
+   for( ;; )
    {
+      PHB_ITEM pKey;
+      PHB_ITEM pValue;
+      HB_BOOL  result;
+
       pKey = hb_itemNew( NULL );
       if( ! amf3_deserialize_string( context, pKey ) )
       {
@@ -331,7 +328,7 @@ static HB_BOOL amf3_decode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
    }
 }
 
-/* Populate an array with vals from the buffer. */
+/* Populate an array with values from the buffer. */
 static HB_BOOL decode_dynamic_array_AMF3( amfContext * context, PHB_ITEM pItem, int array_len, HB_BOOL dict )
 {
    int     i;
@@ -394,7 +391,7 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
    PHB_ITEM pHash = context->obj_ref;
    int      array_len;
    HB_BOOL  mixed; /* if the result will be a Hash with both numbers and strings as keys */
-   char *   byte_ref;
+   const char * byte_ref;
 
    if( ! amf3_decode_int( context, header_p ) )
       return HB_FALSE;
@@ -423,8 +420,8 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
    }
 
    array_len = ( int ) ( header >> 1 );
-   /* Original python comment was:
-      Can't use array_len to create a list of known
+   /* Original Python comment was:
+      Cannot use array_len to create a list of known
       length, see ticket #46
       I think that this is not a problem for Harbour */
 
@@ -443,7 +440,6 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
    {
       context->position--;
       hb_hashNew( pItem );
-      hb_hashSetFlags( pHash, HB_HASH_KEEPORDER );
       hb_hashPreallocate( pItem, array_len );
 
       if( ! amf3_decode_dynamic_dict( context, pItem ) )
@@ -472,28 +468,20 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
 
    return decode_dynamic_array_AMF3( context, pItem, array_len, mixed );
 
-   /* return HB_TRUE; */
+   #if 0
+   return HB_TRUE;
+   #endif
 }
 
 /* Decode a date. */
 static HB_BOOL amf3_decode_epoch( amfContext * context, PHB_ITEM pItem )
 {
-   double   dJulian, dTime;
    double   epoch_millisecs;
-   double * epoch_p = &epoch_millisecs;
 
-   if( ! amfX_decode_double( context, epoch_p ) )
+   if( ! amfX_decode_double( context, &epoch_millisecs ) )
       return HB_FALSE;
 
-   /* 210866760000000 unix_epoch milliseconds base in JD */
-   dTime = modf( ( 210866760000000 + epoch_millisecs + 0.5 ) / HB_MILLISECS_PER_DAY, &dJulian );
-
-   hb_itemPutTDT( pItem, ( long ) dJulian, ( long ) ( dTime * HB_MILLISECS_PER_DAY ) );
-
-   /* TOFIX: why following Harbour function doesn't work out of the box?
-      C compiler was MSVC 7.1 (Visual Studio 2003)
-      hb_itemPutTD( pItem, epoch_millisecs + 210866803200000 );
-    */
+   hb_itemPutTD( pItem, ( epoch_millisecs + 210866803200000.4 ) / HB_MILLISECS_PER_DAY );
 
    return HB_TRUE;
 }
@@ -597,7 +585,9 @@ static PHB_ITEM class_def_from_classname( /* amfContext * context, */ PHB_ITEM p
 
    hb_strfree( pszBuffer );
 
-   /* uiClass = hb_objGetClass( pItem ); */
+   #if 0
+   uiClass = hb_objGetClass( pItem );
+   #endif
    if( ! uiClass )
       return NULL;
 
@@ -677,8 +667,8 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
          hb_hashNew( pMappedClassDef ); /* empty hash emulation for now */
       }
 
-      /* PyObject_CallMethodObjArgs(context->class_mapper,
-          context->class_def_name, alias, NULL); */
+      /* PyObject_CallMethodObjArgs( context->class_mapper,
+          context->class_def_name, alias, NULL ); */
    }
    hb_itemRelease( pStrAlias );
 
@@ -688,7 +678,7 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
 
    if( pMappedClassDef )
    {
-      pKey = hb_itemPutC( NULL, "class_def" ); /* hb_itemNew( NULL ); */
+      pKey = hb_itemPutC( NULL, "class_def" );  /* hb_itemNew( NULL ); */
 
       if( ! hb_hashAdd( pClass, pKey, pMappedClassDef ) )
       {
@@ -720,7 +710,7 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
          the raw bytes. */
 
       /* TODO: introduce similar RTE?
-         PyErr_SetString(amfast_DecodeError, "Encoded class is externalizable, but ClassDef is not."); */
+         PyErr_SetString( amfast_DecodeError, "Encoded class is externalizable, but ClassDef is not." ); */
       return HB_FALSE;
    }
 
@@ -811,13 +801,11 @@ static HB_BOOL amf3_deserialize_class_def( amfContext * context, PHB_ITEM pClass
    return HB_TRUE;
 }
 
-/* Returns a dict with vals from an obj. */
+/* Returns a dict with values from an object. */
 static HB_BOOL amf3_decode_obj_attrs( amfContext * context, PHB_ITEM pHash, PHB_ITEM pClass )
 {
    PHB_ITEM pArray;
-   PHB_ITEM pKey;
    PHB_ITEM pValue;
-   HB_BOOL  result;
    HB_SIZE  static_attr_len;
    HB_SIZE  i;
 
@@ -828,12 +816,15 @@ static HB_BOOL amf3_decode_obj_attrs( amfContext * context, PHB_ITEM pHash, PHB_
    if( ! pArray )
       return HB_FALSE;
 
-   /* maybe hb_arrayGetItemPtr(?) could be used */
+   /* maybe hb_arrayGetItemPtr() could be used? */
 
    static_attr_len = hb_arrayLen( pArray );
 
    for( i = 0; i < static_attr_len; i++ )
    {
+      PHB_ITEM pKey;
+      HB_BOOL  result;
+
       pValue = hb_itemNew( NULL );
       if( ! amf3_getItem( context, pValue ) )
       {
@@ -877,12 +868,12 @@ static HB_BOOL amf3_decode_anon_obj( amfContext * context, PHB_ITEM pItem, PHB_I
    PHB_ITEM pAnonHash = hb_itemNew( NULL );
    HB_BOOL  result    = HB_FALSE;
 
-   /* Original python comment which I don't understand:
+   /* Original Python comment which I don't understand:
       We're using merge instead of populating the dict
       directly, because we have to setup a reference to the
       object before decoding it. ?????? */
 
-   /* we (Harbourers) are supplying already initialized hash to next func */
+   /* we (Harbourers) are supplying already initialized hash to next function */
    if( hb_arrayGet( pItem, OBJAMF_VAR_HASH, pAnonHash ) )
       result = amf3_decode_obj_attrs( context, pAnonHash, pClass );
 
@@ -1014,8 +1005,8 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
    {
       /* Anonymous obj == OBJAMF */
       hb_arrayNew( pItem, OBJAMF_VAR_COUNT );
-      /* performance TOFIX, cache class id (in context maybe)
-         to not scan all classes by name everytime */
+      /* performance FIXME, cache class id (in context maybe)
+         to not scan all classes by name every time */
       hb_objSetClass( pItem, "AMF_OBJ", "AMF_OBJ" );
       pValue = hb_itemPutNI( NULL, OBJAMF_VER );
       hb_arraySet( pItem, OBJAMF_VAR_VER, pValue );
@@ -1053,7 +1044,7 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
    }
    else
    {
-      /* Create obj_val for all typed objs. */
+      /* Create obj_val for all typed objects. */
 #if 0
       obj_val = PyObject_CallMethod( class_def, "getInstance", NULL );
 #endif
@@ -1086,7 +1077,9 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
    }
    else if( obj_type == 1 )
    {
-      /* result = HB_TRUE; */
+      #if 0
+      result = HB_TRUE;
+      #endif
       result = amf3_decode_externalizable( context, pItem /*, pMappedClassDef */ );
    }
    else if( obj_type == 2 )

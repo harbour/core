@@ -1,9 +1,12 @@
-
 ROOT := ../../
 
 include $(TOP)$(ROOT)config/global.mk
 
 ifneq ($(DYNDIRLIST_BASE),)
+
+   ifeq ($(HB_MT),no)
+      __HB_BUILD_DYN_ST := yes
+   endif
 
    ifeq ($(__HB_BUILD_DYN_ST),yes)
       DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm
@@ -11,6 +14,7 @@ ifneq ($(DYNDIRLIST_BASE),)
       DYNDIRLIST := $(DYNDIRLIST_BASE) src/vm/vmmt
    endif
    DYNNAME := $(HB_DYNLIB_BASE)
+   DEFNAME := $(TOP)$(ROOT)src/harbour.def
 
    include $(TOP)$(ROOT)config/dyn.mk
 

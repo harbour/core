@@ -1,11 +1,8 @@
 /*
- * Harbour Project source code:
- *   CharRelA() and CharRelRep() CT3 string functions
+ * CharRelA() and CharRelRep() CT3 string functions
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
- *
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -68,7 +65,7 @@ HB_FUNC( CHARRELA )
       HB_SIZE sMatchStrLen;
 
       /* check for empty strings */
-      if( ( sStrToMatchLen1 == 0 ) || ( sStrToMatchLen2 == 0 ) )
+      if( sStrToMatchLen1 == 0 || sStrToMatchLen2 == 0 )
       {
          hb_retns( 0 );
          return;
@@ -167,7 +164,7 @@ HB_FUNC( CHARRELREP )
       /* NOTE: this algorithm is not the best since the search that gave
          the larger relative position in the step before is repeated;
          try a search algorithm alternating between both strings */
-      while( ( sOffset1 < sStrLen1 ) && ( sOffset2 < sStrLen2 ) )
+      while( sOffset1 < sStrLen1 && sOffset2 < sStrLen2 )
       {
          pc1 = ct_at_exact_forward( pcStringToMatch1, sStrToMatchLen1,
                                     pcString1 + sOffset1, sStrLen1 - sOffset1,

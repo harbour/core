@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Compiler C source with real code generation
  *
  * Copyright 2006-2009 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -61,7 +59,7 @@ typedef HB_GENC_FUNC_ * PHB_GENC_FUNC;
    { \
       HB_SIZE nLab = HB_GENC_GETLABEL( nPCodePos ); \
       if( nLab != 0 ) \
-         fprintf( cargo->yyc, "lab%05" HB_PFS "d: ;\n", nLab ); \
+         fprintf( cargo->yyc, "lab%05" HB_PFS "u: ;\n", nLab ); \
    } while( 0 )
 
 #define HB_GENC_ERROR( s )  \
@@ -79,8 +77,8 @@ void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen )
    {
       HB_BYTE uchr = ( HB_BYTE ) pText[ nPos ];
       /*
-       * NOTE: After optimization some Chr(n) can be converted
-       *       into a string containing nonprintable characters.
+       * NOTE: After optimization some Chr( n ) can be converted
+       *       into a string containing non-printable characters.
        *
        * ? is escaped to avoid conflicts with trigraph sequences which
        * are part of ANSI C standard
@@ -194,14 +192,14 @@ static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE
 
       if( iSize )
       {
-         fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ld, &fValue ) ) break;\n",
+         fprintf( cargo->yyc, "\tif( hb_xvm%sIntIs( %ldL, &fValue ) ) break;\n",
                   szFunc, lValue );
-         fprintf( cargo->yyc, "\tif( %sfValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
+         fprintf( cargo->yyc, "\tif( %sfValue )\n\t\tgoto lab%05" HB_PFS "u;\n",
                   fNot ? "!" : "", HB_GENC_GETLABEL( nPCodePos + 1 + nOffset ) );
          return iSize;
       }
    }
-   fprintf( cargo->yyc, "\tif( hb_xvm%sInt( %ld ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvm%sInt( %ldL ) ) break;\n",
             szFunc, lValue );
    return 1;
 }
@@ -213,13 +211,13 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
       switch( pFunc->pCode[ nPCodePos ] )
       {
          case HB_P_POPLOCAL:
-            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ld );\n",
+            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ldL );\n",
                      HB_PCODE_MKSHORT( &pFunc->pCode[ nPCodePos + 1 ] ),
                      lValue );
             return 3;
 
          case HB_P_POPLOCALNEAR:
-            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ld );\n",
+            fprintf( cargo->yyc, "\thb_xvmLocalSetInt( %d, %ldL );\n",
                      ( signed char ) pFunc->pCode[ nPCodePos + 1 ], lValue );
             return 2;
 
@@ -245,7 +243,7 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
          case HB_P_ARRAYPUSH:
             if( lValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %ld ) ) break;\n", lValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPush( %ldL ) ) break;\n", lValue );
                return 1;
             }
             break;
@@ -253,27 +251,27 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
          case HB_P_ARRAYPOP:
             if( lValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %ld ) ) break;\n", lValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmArrayItemPop( %ldL ) ) break;\n", lValue );
                return 1;
             }
             break;
 
          case HB_P_MULT:
-            fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %ld ) ) break;\n", lValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmMultByInt( %ldL ) ) break;\n", lValue );
             return 1;
 
          case HB_P_DIVIDE:
-            fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %ld ) ) break;\n", lValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmDivideByInt( %ldL ) ) break;\n", lValue );
             return 1;
 
          case HB_P_MODULUS:
-            fprintf( cargo->yyc, "\tif( hb_xvmModulusByInt( %ld ) ) break;\n", lValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmModulusByInt( %ldL ) ) break;\n", lValue );
             return 1;
 
          case HB_P_MINUS:
             if( lValue > 0 )
             {
-               fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ld ) ) break;\n", lValue );
+               fprintf( cargo->yyc, "\tif( hb_xvmAddInt( -%ldL ) ) break;\n", lValue );
                return 1;
             }
 #if -LONG_MAX > LONG_MIN
@@ -281,14 +279,14 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCo
                break;
 #endif
             lValue = -lValue;
-            /* no break */
+            /* fallthrough */
 
          case HB_P_PLUS:
-            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ld ) ) break;\n", lValue );
+            fprintf( cargo->yyc, "\tif( hb_xvmAddInt( %ldL ) ) break;\n", lValue );
             return 1;
 
          case HB_P_RETVALUE:
-            fprintf( cargo->yyc, "\thb_xvmRetInt( %ld );\n", lValue );
+            fprintf( cargo->yyc, "\thb_xvmRetInt( %ldL );\n", lValue );
             return 1;
       }
    }
@@ -395,7 +393,7 @@ static HB_GENC_FUNC( hb_p_doshort )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmDo( %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmDo( %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -428,7 +426,7 @@ static HB_GENC_FUNC( hb_p_swap )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmSwap(%d);\n", pFunc->pCode[ nPCodePos + 1 ] );
+   fprintf( cargo->yyc, "\thb_xvmSwap( %u );\n", pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
 
@@ -519,7 +517,7 @@ static HB_GENC_FUNC( hb_p_functionshort )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmFunction( %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmFunction( %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -580,7 +578,7 @@ static HB_GENC_FUNC( hb_p_jumpnear )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tgoto lab%05" HB_PFS "d;\n",
+   fprintf( cargo->yyc, "\tgoto lab%05" HB_PFS "u;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 2;
 }
@@ -591,7 +589,7 @@ static HB_GENC_FUNC( hb_p_jump )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tgoto lab%05" HB_PFS "d;\n",
+   fprintf( cargo->yyc, "\tgoto lab%05" HB_PFS "u;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 3;
 }
@@ -602,7 +600,7 @@ static HB_GENC_FUNC( hb_p_jumpfar )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tgoto lab%05" HB_PFS "d;\n",
+   fprintf( cargo->yyc, "\tgoto lab%05" HB_PFS "u;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 4;
 }
@@ -613,7 +611,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsenear )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( ! fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( ! fValue )\n\t\tgoto lab%05" HB_PFS "u;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 2;
 }
@@ -624,7 +622,7 @@ static HB_GENC_FUNC( hb_p_jumpfalse )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( ! fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( ! fValue )\n\t\tgoto lab%05" HB_PFS "u;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 3;
 }
@@ -635,7 +633,7 @@ static HB_GENC_FUNC( hb_p_jumpfalsefar )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( ! fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( ! fValue )\n\t\tgoto lab%05" HB_PFS "u;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 4;
 }
@@ -646,7 +644,7 @@ static HB_GENC_FUNC( hb_p_jumptruenear )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05" HB_PFS "u;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 2;
 }
@@ -657,7 +655,7 @@ static HB_GENC_FUNC( hb_p_jumptrue )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05" HB_PFS "u;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 3;
 }
@@ -668,7 +666,7 @@ static HB_GENC_FUNC( hb_p_jumptruefar )
 
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05" HB_PFS "d;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPopLogical( &fValue ) ) break;\n\tif( fValue )\n\t\tgoto lab%05" HB_PFS "u;\n",
             HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    return 4;
 }
@@ -693,7 +691,7 @@ static HB_GENC_FUNC( hb_p_line )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmSetLine( %d );\n",
+   fprintf( cargo->yyc, "\thb_xvmSetLine( %hu );\n",
             HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 1 ] ) );
    return 3;
 }
@@ -716,7 +714,7 @@ static HB_GENC_FUNC( hb_p_macropop )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmMacroPop( %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmMacroPop( %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -725,7 +723,7 @@ static HB_GENC_FUNC( hb_p_macropopaliased )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmMacroPopAliased( %d ) ) break;\n", pFunc->pCode[ nPCodePos + 1 ] );
+   fprintf( cargo->yyc, "\tif( hb_xvmMacroPopAliased( %u ) ) break;\n", pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
 
@@ -733,7 +731,7 @@ static HB_GENC_FUNC( hb_p_macropush )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmMacroPush( %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmMacroPush( %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -786,7 +784,7 @@ static HB_GENC_FUNC( hb_p_macropushlist )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmMacroPushList( %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmMacroPushList( %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -803,7 +801,7 @@ static HB_GENC_FUNC( hb_p_macropushpare )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmMacroPushPare( %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmMacroPushPare( %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -812,7 +810,7 @@ static HB_GENC_FUNC( hb_p_macropushaliased )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmMacroPushAliased( %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmMacroPushAliased( %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -915,7 +913,7 @@ static HB_GENC_FUNC( hb_p_parameter )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmParameter( symbols + %hu, %d );\n",
+   fprintf( cargo->yyc, "\thb_xvmParameter( symbols + %hu, %u );\n",
             HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 1 ] ),
             pFunc->pCode[ nPCodePos + 3 ] );
    return 4;
@@ -1062,7 +1060,7 @@ static HB_GENC_FUNC( hb_p_pushaliasedfieldnear )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmPushAliasedField( symbols + %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmPushAliasedField( symbols + %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -1085,16 +1083,16 @@ static HB_GENC_FUNC( hb_p_pushblockshort )
    usSize = pFunc->pCode[ nPCodePos + 1 ] - 2;
    nPCodePos += 2;
 
-   fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE codeblock[ %hd ] = {", usSize );
+   fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE codeblock[ %hu ] = {", usSize );
 
    for( us = 0; us < usSize; ++us )
    {
       if( ( us & 0x0f ) == 0 )
          fprintf( cargo->yyc, "\n\t\t\t" );
       if( us == usSize - 1 )
-         fprintf( cargo->yyc, "%d", pFunc->pCode[ nPCodePos + us ] );
+         fprintf( cargo->yyc, "%u", pFunc->pCode[ nPCodePos + us ] );
       else
-         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ nPCodePos + us ] );
+         fprintf( cargo->yyc, "%u, ", pFunc->pCode[ nPCodePos + us ] );
    }
    fprintf( cargo->yyc, " };\n\t\thb_xvmPushBlockShort( codeblock, symbols );\n\t}\n" );
 
@@ -1110,16 +1108,16 @@ static HB_GENC_FUNC( hb_p_pushblock )
    usSize = HB_PCODE_MKUSHORT( &pFunc->pCode[ nPCodePos + 1 ] ) - 3;
    nPCodePos += 3;
 
-   fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE codeblock[ %hd ] = {", usSize );
+   fprintf( cargo->yyc, "\t{\n\t\tstatic const HB_BYTE codeblock[ %hu ] = {", usSize );
 
    for( us = 0; us < usSize; ++us )
    {
       if( ( us & 0x0f ) == 0 )
          fprintf( cargo->yyc, "\n\t\t\t" );
       if( us == usSize - 1 )
-         fprintf( cargo->yyc, "%d", pFunc->pCode[ nPCodePos + us ] );
+         fprintf( cargo->yyc, "%u", pFunc->pCode[ nPCodePos + us ] );
       else
-         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ nPCodePos + us ] );
+         fprintf( cargo->yyc, "%u, ", pFunc->pCode[ nPCodePos + us ] );
    }
    fprintf( cargo->yyc, " };\n\t\thb_xvmPushBlock( codeblock, symbols );\n\t}\n" );
 
@@ -1142,9 +1140,9 @@ static HB_GENC_FUNC( hb_p_pushblocklarge )
       if( ( ul & 0x0f ) == 0 )
          fprintf( cargo->yyc, "\n\t\t\t" );
       if( ul == nSize - 1 )
-         fprintf( cargo->yyc, "%d", pFunc->pCode[ nPCodePos + ul ] );
+         fprintf( cargo->yyc, "%u", pFunc->pCode[ nPCodePos + ul ] );
       else
-         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ nPCodePos + ul ] );
+         fprintf( cargo->yyc, "%u, ", pFunc->pCode[ nPCodePos + ul ] );
    }
    fprintf( cargo->yyc, " };\n\t\thb_xvmPushBlock( codeblock, symbols );\n\t}\n" );
 
@@ -1156,7 +1154,7 @@ static HB_GENC_FUNC( hb_p_pushdouble )
    HB_GENC_LABEL();
 
 #if 0
-   fprintf( cargo->yyc, "\thb_xvmPushDouble( %.*f, %d, %d );\n",
+   fprintf( cargo->yyc, "\thb_xvmPushDouble( %.*f, %u, %u );\n",
             pFunc->pCode[ nPCodePos + 1 + sizeof( double ) + sizeof( HB_BYTE ) ] + 1,
             HB_PCODE_MKDOUBLE( &pFunc->pCode[ nPCodePos + 1 ] ),
             pFunc->pCode[ nPCodePos + 1 + sizeof( double ) ],
@@ -1170,7 +1168,7 @@ static HB_GENC_FUNC( hb_p_pushdouble )
       double d = HB_PCODE_MKDOUBLE( &pFunc->pCode[ nPCodePos + 1 ] );
       hb_compGenCString( cargo->yyc, ( const HB_BYTE * ) &d, sizeof( double ) );
    }
-   fprintf( cargo->yyc, ", %d, %d );\n",
+   fprintf( cargo->yyc, ", %u, %u );\n",
             pFunc->pCode[ nPCodePos + 1 + sizeof( double ) ],
             pFunc->pCode[ nPCodePos + 1 + sizeof( double ) + sizeof( HB_BYTE ) ] );
 #endif
@@ -1286,7 +1284,7 @@ static HB_GENC_FUNC( hb_p_pushlong )
    if( iSkip == 0 )
    {
       fprintf( cargo->yyc, "#if INT_MAX >= INT32_MAX\n" );
-      fprintf( cargo->yyc, "\thb_xvmPushInteger( %d );\n", ( int ) lVal );
+      fprintf( cargo->yyc, "\thb_xvmPushInteger( %ld );\n", lVal );
       fprintf( cargo->yyc, "#else\n" );
       fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", lVal );
       fprintf( cargo->yyc, "#endif\n" );
@@ -1300,25 +1298,47 @@ static HB_GENC_FUNC( hb_p_pushlonglong )
    HB_GENC_LABEL();
    fprintf( cargo->yyc, "\thb_xvmPushLongLong( %.1f );\n", HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] ) );
    return 9;
-#elif LONG_MAX == LONGLONG_MAX
-   HB_LONGLONG llVal = HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] ), iSkip;
+#elif LONG_MAX < LONGLONG_MAX
+   HB_LONGLONG llVal;
+   char szBuf[ 24 ];
 
    HB_GENC_LABEL();
 
+   llVal = HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] );
+   fprintf( cargo->yyc, "\thb_xvmPushLongLong( HB_LL( %s ) );\n",
+            hb_numToStr( szBuf, sizeof( szBuf ), llVal ) );
+   return 9;
+#else
+   HB_LONGLONG llVal;
+   char szBuf[ 24 ];
+   int iSkip;
+
+   HB_GENC_LABEL();
+
+   fprintf( cargo->yyc, "#if LONG_MAX >= LONGLONG_MAX\n" );
+   llVal = HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] );
    iSkip = hb_gencc_checkNumAhead( llVal, pFunc, nPCodePos + 9, cargo );
 
    if( iSkip == 0 )
-   {
       fprintf( cargo->yyc, "\thb_xvmPushLong( %ldL );\n", ( long ) llVal );
-   }
-   return 9 + iSkip;
-#else
-   char szBuf[ 24 ];
-   HB_GENC_LABEL();
+   fprintf( cargo->yyc, "#else\n" );
    fprintf( cargo->yyc, "\thb_xvmPushLongLong( HB_LL( %s ) );\n",
-            hb_numToStr( szBuf, sizeof( szBuf ),
-                         HB_PCODE_MKLONGLONG( &pFunc->pCode[ nPCodePos + 1 ] ) ) );
-   return 9;
+            hb_numToStr( szBuf, sizeof( szBuf ), llVal ) );
+   if( iSkip > 0 )
+   {
+      int iDone = 0;
+      while( iDone < iSkip )
+      {
+         HB_BYTE opcode = pFunc->pCode[ nPCodePos + 9 + iDone ];
+         if( opcode >= HB_P_LAST_PCODE )
+            break;
+         iDone += ( int ) cargo->pFuncTable[ opcode ]( pFunc, nPCodePos + 9 + iDone, cargo );
+      }
+      if( iDone != iSkip )
+         HB_GENC_ERROR( "PCODE mismatch" );
+   }
+   fprintf( cargo->yyc, "#endif\n" );
+   return 9 + iSkip;
 #endif
 }
 
@@ -1513,7 +1533,7 @@ static HB_GENC_FUNC( hb_p_pushsymnear )
       }
    }
 
-   fprintf( cargo->yyc, "\thb_xvmPushSymbol( symbols + %d );\n",
+   fprintf( cargo->yyc, "\thb_xvmPushSymbol( symbols + %u );\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -1557,7 +1577,7 @@ static HB_GENC_FUNC( hb_p_sendshort )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmSend( %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmSend( %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ] );
    return 2;
 }
@@ -1608,7 +1628,7 @@ static HB_GENC_FUNC( hb_p_seqbegin )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\thb_xvmSeqBegin();\n\tdo {\n" );
+   fprintf( cargo->yyc, "\thb_xvmSeqBegin();\n\tfor( ;; ) {\n" );
    cargo->iNestedBlock++;
    return 4;
 }
@@ -1619,10 +1639,10 @@ static HB_GENC_FUNC( hb_p_seqend )
 
    HB_GENC_LABEL();
 
-   if( nOffset == 4 ) /* no RECOVER clasue */
-      fprintf( cargo->yyc, "\t} while( 0 );\n\tif( hb_xvmSeqEnd() ) break;\n" );
+   if( nOffset == 4 ) /* no RECOVER clause */
+      fprintf( cargo->yyc, "\tbreak;\n\t}\n\tif( hb_xvmSeqEnd() ) break;\n" );
    else               /* RECOVER exists */
-      fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05" HB_PFS "d;\n\t} while( 0 );\n",
+      fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05" HB_PFS "u;\n\t}\n",
                HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    cargo->iNestedBlock--;
    return 4;
@@ -1687,9 +1707,9 @@ static HB_GENC_FUNC( hb_p_threadstatics )
       if( ( ul & 0x0f ) == 0 )
          fprintf( cargo->yyc, "\n\t\t\t" );
       if( ul == nSize - 1 )
-         fprintf( cargo->yyc, "%d", pFunc->pCode[ nPCodePos + ul + 3 ] );
+         fprintf( cargo->yyc, "%u", pFunc->pCode[ nPCodePos + ul + 3 ] );
       else
-         fprintf( cargo->yyc, "%d, ", pFunc->pCode[ nPCodePos + ul + 3 ] );
+         fprintf( cargo->yyc, "%u, ", pFunc->pCode[ nPCodePos + ul + 3 ] );
    }
    fprintf( cargo->yyc, " };\n\t\thb_xvmThreadStatics( %hu, statics );\n\t}\n", w );
 
@@ -1755,7 +1775,7 @@ static HB_GENC_FUNC( hb_p_enumstart )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmEnumStart( %d, %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmEnumStart( %u, %u ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ], pFunc->pCode[ nPCodePos + 2 ] );
    return 3;
 }
@@ -1887,7 +1907,7 @@ static HB_GENC_FUNC( hb_p_switch )
             nPCodePos += 4;
             break;
       }
-      fprintf( cargo->yyc, "\t\t{\n\t\t\thb_stackPop();\n\t\t\tgoto lab%05" HB_PFS "d;\n\t\t}\n",
+      fprintf( cargo->yyc, "\t\t{\n\t\t\thb_stackPop();\n\t\t\tgoto lab%05" HB_PFS "u;\n\t\t}\n",
                HB_GENC_GETLABEL( nNewPos ) );
    }
    if( ! fDefault )
@@ -1921,7 +1941,7 @@ static HB_GENC_FUNC( hb_p_localnearaddint )
 {
    HB_GENC_LABEL();
 
-   fprintf( cargo->yyc, "\tif( hb_xvmLocalAddInt( %d, %d ) ) break;\n",
+   fprintf( cargo->yyc, "\tif( hb_xvmLocalAddInt( %u, %d ) ) break;\n",
             pFunc->pCode[ nPCodePos + 1 ],
             HB_PCODE_MKSHORT( &pFunc->pCode[ nPCodePos + 2 ] ) );
    return 4;
@@ -2324,7 +2344,7 @@ static const PHB_GENC_FUNC s_verbose_table[] = {
    hb_p_enumend,
    hb_p_switch,
    hb_p_pushdate,
-   /* optimalization of inlined math operations (+=, -= */
+   /* optimization of inlined math operations (+=, -= */
    hb_p_pluseqpop,
    hb_p_minuseqpop,
    hb_p_multeqpop,
@@ -2387,12 +2407,12 @@ void hb_compGenCRealCode( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc )
    label_info.fCondJump = HB_FALSE;
    label_info.fEndRequest = HB_FALSE;
    label_info.iNestedBlock = 0;
+   label_info.pFuncTable = ( const PHB_PCODE_FUNC * ) pFuncTable;
    if( pFunc->nPCodePos == 0 )
       label_info.pnLabels = NULL;
    else
    {
-      label_info.pnLabels = ( HB_SIZE * ) hb_xgrab( pFunc->nPCodePos * sizeof( HB_SIZE ) );
-      memset( label_info.pnLabels, 0, pFunc->nPCodePos * sizeof( HB_SIZE ) );
+      label_info.pnLabels = ( HB_SIZE * ) hb_xgrabz( pFunc->nPCodePos * sizeof( HB_SIZE ) );
       hb_compGenLabelTable( pFunc, &label_info );
    }
 

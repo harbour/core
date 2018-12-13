@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Popup menu class
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -157,22 +155,20 @@ METHOD close( lCloseChild ) CLASS PopupMenu
 METHOD delItem( nPos ) CLASS PopupMenu
 
    LOCAL nLen
-   LOCAL aItems
    LOCAL nWidth
+   LOCAL item
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount
 
       nLen := Len( ::aItems[ nPos ]:caption )
 
-      ADel( ::aItems, nPos )
-      ASize( ::aItems, --::nItemCount )
+      hb_ADel( ::aItems, nPos, .T. )
+      ::nItemCount--
 
       IF ::nWidth == nLen + 2
-         aItems := ::aItems
-         nLen := ::nItemCount
          nWidth := 0
-         FOR nPos := 1 TO nLen
-            nWidth := Max( __CapMetrics( aItems[ nPos ] ), nWidth )
+         FOR EACH item IN ::aItems
+            nWidth := Max( __CapMetrics( item ), nWidth )
          NEXT
          ::nWidth := nWidth
       ENDIF
@@ -184,10 +180,8 @@ METHOD display() CLASS PopupMenu
 
    LOCAL nTop
    LOCAL nLeft
-   LOCAL aItems
    LOCAL nCurrent
-   LOCAL nLen
-   LOCAL nPos
+   LOCAL item
    LOCAL nWidth
    LOCAL oPopup
    LOCAL nHotKeyPos
@@ -200,9 +194,7 @@ METHOD display() CLASS PopupMenu
 
       nTop     := ::nTop
       nLeft    := ::nLeft
-      aItems   := ::aItems
       nCurrent := ::nCurrent
-      nLen     := ::nItemCount
       nWidth   := ::nWidth
 
       DispBegin()
@@ -216,58 +208,56 @@ METHOD display() CLASS PopupMenu
       ENDIF
 
       nLeft++
-      FOR nPos := 1 TO nLen
+      FOR EACH item IN ::aItems
 
          nTop++
 
-         // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-         //          to use it for flag purposes.
-         IF aItems[ nPos ]:caption == HB_MENU_SEPARATOR_UNI
+         IF item:__issep
 
             hb_DispOutAtBox( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
 
          ELSE
-            cCaption := PadR( aItems[ nPos ]:caption, nWidth - 1 )
+            cCaption := PadR( item:caption, nWidth - 1 )
 
-            IF aItems[ nPos ]:checked
-               cCaption := SubStr( aItems[ nPos ]:style, 1, 1 ) + cCaption
+            IF item:checked
+               cCaption := SubStr( item:style, 1, 1 ) + cCaption
             ELSE
                cCaption := " " + cCaption
             ENDIF
 
-            IF aItems[ nPos ]:isPopup()
+            IF item:isPopup()
 
-               oPopup := aItems[ nPos ]:data
+               oPopup := item:data
                oPopup:top    := nTop
                oPopup:left   := ::nRight + 1
                oPopup:bottom := NIL
                oPopup:right  := NIL
 
-               cCaption += SubStr( aItems[ nPos ]:style, 2, 1 )
+               cCaption += SubStr( item:style, 2, 1 )
             ELSE
                cCaption += " "
             ENDIF
 
-            aItems[ nPos ]:__row := nTop
-            aItems[ nPos ]:__col := nLeft
+            item:__row := nTop
+            item:__col := nLeft
 
             IF ( nHotKeyPos := At( "&", cCaption ) ) == 0
-               IF ( nCharPos := RAt( SubStr( aItems[ nPos ]:style, 2, 1 ), cCaption ) ) > 0
+               IF ( nCharPos := RAt( SubStr( item:style, 2, 1 ), cCaption ) ) > 0
                   cCaption := Stuff( cCaption, nCharPos - 1, 1, "" )
                ELSE
-                  cCaption := SubStr( cCaption, 1, Len( cCaption ) - 1 )
+                  cCaption := hb_StrShrink( cCaption )
                ENDIF
             ELSEIF nHotKeyPos == Len( RTrim( cCaption ) )
-               cCaption := SubStr( cCaption, 1, Len( cCaption ) - 1 )
+               cCaption := hb_StrShrink( cCaption )
                nHotKeyPos := 0
             ELSE
                cCaption := Stuff( cCaption, nHotKeyPos, 1, "" )
             ENDIF
 
-            hb_DispOutAt( nTop, nLeft, cCaption, hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 1, iif( aItems[ nPos ]:enabled, 0, 4 ) ) ) )
+            hb_DispOutAt( nTop, nLeft, cCaption, hb_ColorIndex( ::cColorSpec, iif( item:__enumIndex() == nCurrent, 1, iif( item:enabled, 0, 4 ) ) ) )
 
-            IF aItems[ nPos ]:enabled .AND. nHotKeyPos != 0
-               hb_DispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 3, 2 ) ) )
+            IF item:enabled .AND. nHotKeyPos != 0
+               hb_DispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), hb_ColorIndex( ::cColorSpec, iif( item:__enumIndex() == nCurrent, 3, 2 ) ) )
             ENDIF
          ENDIF
       NEXT
@@ -283,13 +273,14 @@ METHOD getAccel( xKey ) CLASS PopupMenu
    LOCAL cKey
    LOCAL item
 
-   IF HB_ISSTRING( xKey )
+   DO CASE
+   CASE HB_ISSTRING( xKey )
       cKey := xKey
-   ELSEIF HB_ISNUMERIC( xKey )
+   CASE HB_ISNUMERIC( xKey )
       cKey := hb_keyChar( xKey )
-   ELSE
+   OTHERWISE
       RETURN 0
-   ENDIF
+   ENDCASE
 
    IF Len( cKey ) > 0
       cKey := "&" + cKey
@@ -304,13 +295,11 @@ METHOD getAccel( xKey ) CLASS PopupMenu
 
 METHOD getFirst() CLASS PopupMenu
 
-   LOCAL nPos
-   LOCAL nLen := ::nItemCount
-   LOCAL aItems := ::aItems
+   LOCAL item
 
-   FOR nPos := 1 TO nLen
-      IF aItems[ nPos ]:enabled
-         RETURN nPos
+   FOR EACH item IN ::aItems
+      IF item:enabled
+         RETURN item:__enumIndex()
       ENDIF
    NEXT
 
@@ -321,13 +310,11 @@ METHOD getItem( nPos ) CLASS PopupMenu
 
 METHOD getLast() CLASS PopupMenu
 
-   LOCAL nPos
-   LOCAL nLen := ::nItemCount
-   LOCAL aItems := ::aItems
+   LOCAL item
 
-   FOR nPos := nLen TO 1 STEP -1
-      IF aItems[ nPos ]:enabled
-         RETURN nPos
+   FOR EACH item IN ::aItems DESCEND
+      IF item:enabled
+         RETURN item:__enumIndex()
       ENDIF
    NEXT
 
@@ -337,13 +324,11 @@ METHOD getNext() CLASS PopupMenu
 
    LOCAL nPos
 
-   IF ::nCurrent < ::nItemCount
-      FOR nPos := ::nCurrent + 1 TO ::nItemCount
-         IF ::aItems[ nPos ]:enabled
-            RETURN nPos
-         ENDIF
-      NEXT
-   ENDIF
+   FOR nPos := ::nCurrent + 1 TO ::nItemCount
+      IF ::aItems[ nPos ]:enabled
+         RETURN nPos
+      ENDIF
+   NEXT
 
    RETURN 0
 
@@ -351,13 +336,11 @@ METHOD getPrev() CLASS PopupMenu
 
    LOCAL nPos
 
-   IF ::nCurrent > 1
-      FOR nPos := ::nCurrent - 1 TO 1 STEP -1
-         IF ::aItems[ nPos ]:enabled
-            RETURN nPos
-         ENDIF
-      NEXT
-   ENDIF
+   FOR nPos := ::nCurrent - 1 TO 1 STEP -1
+      IF ::aItems[ nPos ]:enabled
+         RETURN nPos
+      ENDIF
+   NEXT
 
    RETURN 0
 
@@ -366,13 +349,11 @@ METHOD getPrev() CLASS PopupMenu
 
 METHOD getShortCt( nKey ) CLASS PopupMenu
 
-   LOCAL nPos
-   LOCAL nLen := ::nItemCount
-   LOCAL aItems := ::aItems
+   LOCAL item
 
-   FOR nPos := 1 TO nLen
-      IF aItems[ nPos ]:shortcut == nKey
-         RETURN nPos
+   FOR EACH item IN ::aItems
+      IF item:shortcut == nKey
+         RETURN item:__enumIndex()
       ENDIF
    NEXT
 
@@ -423,9 +404,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS PopupMenu
 
       nPos := nMRow - ::nTop
       DO CASE
-      // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
-      //          to use it for flag purposes.
-      CASE ::aItems[ nPos ]:caption == HB_MENU_SEPARATOR_UNI
+      CASE ::aItems[ nPos ]:__issep
          RETURN HTSEPARATOR
       OTHERWISE
          RETURN nPos
@@ -439,12 +418,10 @@ METHOD insItem( nPos, oItem ) CLASS PopupMenu
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
-      ASize( ::aItems, ++::nItemCount )
-      AIns( ::aItems, nPos )
-      ::aItems[ nPos ] := oItem
+      hb_AIns( ::aItems, nPos, oItem, .T. )
+      ::nItemCount++
 
       ::nWidth := Max( __CapMetrics( oItem ), ::nWidth )
-
    ENDIF
 
    RETURN Self

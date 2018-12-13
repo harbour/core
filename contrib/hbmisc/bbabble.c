@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * BubbleBabbleEncode()
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -48,11 +46,10 @@
 
 #include "hbapi.h"
 
-/*
-   Algorithm:
+/* Algorithm:
       http://wiki.yak.net/589/Bubble_Babble_Encoding.txt
    Implementation based on this code:
-      http://www.nitrxgen.net/source/bubblebabble.txt
+      [LOST LINK] www.nitrxgen.net/source/bubblebabble.txt
  */
 
 HB_FUNC( BUBBLEBABBLEENCODE )
@@ -62,13 +59,10 @@ HB_FUNC( BUBBLEBABBLEENCODE )
 
    const char * pszInput  = hb_parcx( 1 );
    HB_ISIZ      nInputLen = hb_parclen( 1 );
-   char *       pszResult = ( char * ) hb_xgrab( ( nInputLen * 4 ) + 1 );
+   char *       pszResult = ( char * ) hb_xgrab( nInputLen * 3 + 6 );
 
    HB_ISIZ nPos = 0;
    HB_ISIZ i;
-
-   HB_BYTE byte1;
-   HB_BYTE byte2;
 
    int iSeed = 1;
 
@@ -76,6 +70,9 @@ HB_FUNC( BUBBLEBABBLEENCODE )
 
    for( i = 0;; i += 2 )
    {
+      HB_BYTE byte1;
+      HB_BYTE byte2;
+
       if( i >= nInputLen )
       {
          pszResult[ nPos++ ] = s_szVowels[ iSeed % 6 ];
@@ -103,7 +100,6 @@ HB_FUNC( BUBBLEBABBLEENCODE )
    }
 
    pszResult[ nPos++ ] = 'x';
-   pszResult[ nPos ]   = '\0';
 
-   hb_retc_buffer( pszResult );
+   hb_retclen_buffer( pszResult, nPos );
 }

@@ -1,4 +1,3 @@
-
 #require "xhb"
 
 #include "hbdll.ch"

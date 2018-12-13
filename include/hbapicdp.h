@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
  * Header file for the CodePages API
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -395,8 +393,8 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
 
 /* maximal size of unicode character in 'char' representation for buffers
  * To encode all ISO 10646 Universal Character Set (UCS) values (characters
- * can en encoded in 31-bit code space) in UTF-8 we need 6 bytes.
- * UC2 characters (16bytes) encoded in UTF8 needs 3 bytes.
+ * can be encoded in 31-bit code space) in UTF-8 we need 6 bytes.
+ * UC2 characters (16-bit) encoded in UTF-8 needs 3 bytes.
  * 8 seems to be a little bit redundant and large enough for all encodings.
  * In theory some other encodings may need more bytes but I do not know any
  * one used in practice. [druzus]
@@ -404,15 +402,17 @@ extern HB_EXPORT void         hb_vmSetCDP( PHB_CODEPAGE pCDP );
 #define HB_MAX_CHAR_LEN             8
 
 /* codepage uses simple binary sorting */
-#define HB_CDP_ISBINSORT(cdp)       ( ( ( cdp )->type & HB_CDP_TYPE_BINSORT ) != 0 )
+#define HB_CDP_ISBINSORT( cdp )     ( ( ( cdp )->type & HB_CDP_TYPE_BINSORT ) != 0 )
 /* codepage uses custom string decoding */
-#define HB_CDP_ISCUSTOM(cdp)        ( ( ( cdp )->type & HB_CDP_TYPE_CUSTOM ) != 0 )
+#define HB_CDP_ISCUSTOM( cdp )      ( ( ( cdp )->type & HB_CDP_TYPE_CUSTOM ) != 0 )
 /* codepage use character indexes instead of bytes ones */
-#define HB_CDP_ISCHARIDX(cdp)       ( ( ( cdp )->type & HB_CDP_TYPE_CHARIDX ) != 0 )
+#define HB_CDP_ISCHARIDX( cdp )     ( ( ( cdp )->type & HB_CDP_TYPE_CHARIDX ) != 0 )
 /* Chr(), Asc() and similar functions operates on Unicode values instead of bytes */
-#define HB_CDP_ISCHARUNI(cdp)       ( ( ( cdp )->type & HB_CDP_TYPE_CHARUNI ) != 0 )
+#define HB_CDP_ISCHARUNI( cdp )     ( ( ( cdp )->type & HB_CDP_TYPE_CHARUNI ) != 0 )
 /* codepage uses UTF-8 encoding */
-#define HB_CDP_ISUTF8(cdp)          ( ( ( cdp )->type & HB_CDP_TYPE_UTF8 ) != 0 )
+#define HB_CDP_ISUTF8( cdp )        ( ( ( cdp )->type & HB_CDP_TYPE_UTF8 ) != 0 )
+
+#define hb_cdpGetID( cdp )          ( ( cdp )->id )
 
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterRaw( PHB_CODEPAGE cdp );
 extern HB_EXPORT HB_BOOL      hb_cdpRegisterNew( const char * id,
@@ -497,7 +497,7 @@ extern HB_EXPORT HB_BOOL      hb_cdpUTF8ToU16NextChar( HB_UCHAR ucChar, int * n,
 
 
 extern HB_EXPORT PHB_ITEM     hb_itemDeserializeCP( const char ** pBufferPtr, HB_SIZE * pnSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut );
-extern HB_EXPORT char *       hb_itemSerializeCP( PHB_ITEM pItem, HB_BOOL fNumSize, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, HB_SIZE * pnSize );
+extern HB_EXPORT char *       hb_itemSerializeCP( PHB_ITEM pItem, int iFlags, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut, HB_SIZE * pnSize );
 
 extern HB_EXPORT HB_WCHAR     hb_cdpUpperWC( PHB_CODEPAGE cdp, HB_WCHAR wc );
 

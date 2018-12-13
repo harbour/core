@@ -1,4 +1,3 @@
-
 /* $DOC$
    $NAME$
       CharOne()
@@ -34,7 +33,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharRem()   WordOne()
+      CharRem(), WordOne()
    $END$
  */
 
@@ -71,6 +70,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CharOne()   CharRem()
+      CharOne(), CharRem()
    $END$
  */

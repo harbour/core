@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * MemoWrit()/MemoRead() functions
  *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 1999-2001 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -50,42 +48,28 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
-/* NOTE: CA-Cl*pper has 64K (65516 bytes exactly) limit on read, in Harbour
+/* NOTE: CA-Cl*pper has ~64 KiB (65516 bytes exactly) limit on read, in Harbour
          this limit is extended, so we are not *strictly* compatible here.
          [vszakats] */
 
 static void hb_memoread( HB_BOOL bHandleEOF )
 {
-   PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
+   const char * pszFileName = hb_parc( 1 );
 
-   if( pFileName )
+   if( pszFileName )
    {
-      HB_FHANDLE fhnd = hb_fsOpen( hb_itemGetCPtr( pFileName ), FO_READ | FO_SHARED | FO_PRIVATE );
+      HB_SIZE nSize;
+      char * pBuffer = ( char * ) hb_fileLoad( pszFileName, 0, &nSize );
 
-      if( fhnd != FS_ERROR )
+      if( pBuffer )
       {
-         HB_SIZE nSize = hb_fsSeek( fhnd, 0, FS_END );
-
-         if( nSize != 0 )
+         /* Don't read the file terminating EOF character */
+         if( bHandleEOF && nSize > 0 )
          {
-            char * pbyBuffer = ( char * ) hb_xgrab( nSize + 1 );
-
-            hb_fsSeek( fhnd, 0, FS_SET );
-            nSize = hb_fsReadLarge( fhnd, pbyBuffer, nSize );
-
-            /* Don't read the file terminating EOF character */
-            if( bHandleEOF && nSize > 0 )
-            {
-               if( pbyBuffer[ nSize - 1 ] == HB_CHAR_EOF )
-                  --nSize;
-            }
-
-            hb_retclen_buffer( pbyBuffer, nSize );
+            if( pBuffer[ nSize - 1 ] == HB_CHAR_EOF )
+               --nSize;
          }
-         else
-            hb_retc_null();
-
-         hb_fsClose( fhnd );
+         hb_retclen_buffer( pBuffer, nSize );
       }
       else
          hb_retc_null();
@@ -106,29 +90,41 @@ HB_FUNC( MEMOREAD )
 
 static HB_BOOL hb_memowrit( HB_BOOL bHandleEOF )
 {
-   PHB_ITEM pFileName = hb_param( 1, HB_IT_STRING );
+   const char * pszFileName = hb_parc( 1 );
    PHB_ITEM pString   = hb_param( 2, HB_IT_STRING );
    HB_BOOL bRetVal    = HB_FALSE;
 
-   if( pFileName && pString )
+   if( pszFileName && pString )
    {
-      HB_FHANDLE fhnd = hb_fsCreate( hb_itemGetCPtr( pFileName ), FC_NORMAL );
+      PHB_FILE pFile = hb_fileExtOpen( pszFileName, NULL,
+                                       FO_READWRITE | FO_EXCLUSIVE | FO_PRIVATE |
+                                       FXO_TRUNCATE | FXO_SHARELOCK,
+                                       NULL, NULL );
 
-      if( fhnd != FS_ERROR )
+      if( pFile != NULL )
       {
          HB_SIZE nSize = hb_itemGetCLen( pString );
+         const char * pData = hb_itemGetCPtr( pString );
 
-         bRetVal = ( hb_fsWriteLarge( fhnd, hb_itemGetCPtr( pString ), nSize ) == nSize );
+         while( nSize > 0 )
+         {
+            HB_SIZE nWritten = hb_fileWrite( pFile, pData, nSize, 0 );
+            if( nWritten == 0 || nWritten == ( HB_SIZE ) FS_ERROR )
+               break;
+            nSize -= nWritten;
+            pData += nWritten;
+         }
+         bRetVal = nSize == 0;
 
          /* NOTE: CA-Cl*pper will add the EOF even if the write failed. [vszakats] */
          /* NOTE: CA-Cl*pper will not return .F. when the EOF could not be written. [vszakats] */
          if( bHandleEOF && bRetVal )  /* if true, then write EOF */
          {
             char cEOF = HB_CHAR_EOF;
-            hb_fsWrite( fhnd, &cEOF, sizeof( char ) );
+            hb_fileWrite( pFile, &cEOF, sizeof( char ), -1 );
          }
 
-         hb_fsClose( fhnd );
+         hb_fileClose( pFile );
       }
    }
 

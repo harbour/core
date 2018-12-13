@@ -92,6 +92,7 @@ DYNAMIC AdsGetMemoDataType
 DYNAMIC AdsGetNumActiveLinks
 DYNAMIC AdsGetNumIndexes
 DYNAMIC AdsGetNumOpenTables
+DYNAMIC ADSGETRECORDCOUNT
 DYNAMIC AdsGetRelKeyPos
 DYNAMIC AdsGetServerName
 DYNAMIC AdsGetServerTime
@@ -104,6 +105,7 @@ DYNAMIC AdsIsEmpty
 DYNAMIC AdsIsEncryptionEnabled
 DYNAMIC AdsIsExprValid
 DYNAMIC AdsIsIndexed
+DYNAMIC AdsIsNull
 DYNAMIC AdsIsRecordEncrypted
 DYNAMIC AdsIsRecordInAOF
 DYNAMIC AdsIsRecordLocked
@@ -151,12 +153,14 @@ DYNAMIC AdsSetDeleted
 DYNAMIC AdsSetEpoch
 DYNAMIC AdsSetExact
 DYNAMIC AdsSetFileType
+DYNAMIC AdsSetIndexDirection
 DYNAMIC AdsSetRelKeyPos
 DYNAMIC AdsSetSearchPath
 DYNAMIC AdsSetServerType
 DYNAMIC AdsShowError
 DYNAMIC AdsStmtSetTableLockType
 DYNAMIC AdsStmtSetTablePassword
+DYNAMIC ADSSTMTSETTABLEREADONLY
 DYNAMIC AdsTestLogin
 DYNAMIC AdsTestRecLocks
 DYNAMIC AdsUnlockRecord

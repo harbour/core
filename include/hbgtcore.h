@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Header file for the Internal Terminal API
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -207,7 +205,7 @@ typedef struct
    int       (* InkeyLast) ( HB_GT_PTR, int iEventMask );
    int       (* InkeyNext) ( HB_GT_PTR, int iEventMask );
    void      (* InkeyPoll) ( HB_GT_PTR );
-   void      (* InkeySetText) ( HB_GT_PTR, const char * szText, HB_SIZE nLen );
+   void      (* InkeySetText) ( HB_GT_PTR, const char * szText, HB_SIZE nLen, HB_BOOL fEol );
    int       (* InkeySetLast) ( HB_GT_PTR, int iKey );
    void      (* InkeyReset) ( HB_GT_PTR );
    void      (* InkeyExit) ( HB_GT_PTR );
@@ -290,8 +288,9 @@ typedef struct _HB_GT_BASE
    PHB_SCREENCELL screenBuffer;     /* window foreground (board) current buffer */
    PHB_SCREENCELL prevBuffer;       /* window foreground (board) previous buffer */
 
-   HB_BOOL *      pLines;           /* Touched Window lines */
-   HB_BOOL        fRefresh;         /* Should Window be refreshed */
+   HB_BOOL *      pLines;           /* touched Window lines */
+   HB_BOOL        fRefresh;         /* should Window be refreshed */
+   int            iRedrawMax;       /* maximum number of unchanged neighboring chars in redrawn line */
 
    HB_BOOL        fVgaCell;
    HB_BOOL        fIsColor;
@@ -348,6 +347,9 @@ typedef struct _HB_GT_BASE
 
 extern HB_EXPORT PHB_GT hb_gt_Base( void );
 extern HB_EXPORT void hb_gt_BaseFree( PHB_GT pGT );
+extern HB_EXPORT void hb_gt_BaseUnlock( PHB_GT pGT );
+extern HB_EXPORT void hb_gt_BaseLock( PHB_GT pGT );
+extern HB_EXPORT void hb_gtSleep( PHB_GT pGT, double dSeconds );
 extern HB_EXPORT PHB_GT hb_gt_ItemBase( PHB_ITEM pItemGT );
 extern HB_EXPORT void hb_gt_gcMark( void );
 
@@ -461,7 +463,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_INKEYLAST(g,m)                (g)->pFuncTable->InkeyLast(g,m)
 #define HB_GTSELF_INKEYNEXT(g,m)                (g)->pFuncTable->InkeyNext(g,m)
 #define HB_GTSELF_INKEYPOLL(g)                  (g)->pFuncTable->InkeyPoll(g)
-#define HB_GTSELF_INKEYSETTEXT(g,s,l)           (g)->pFuncTable->InkeySetText(g,s,l)
+#define HB_GTSELF_INKEYSETTEXT(g,s,l,e)         (g)->pFuncTable->InkeySetText(g,s,l,e)
 #define HB_GTSELF_INKEYSETLAST(g,k)             (g)->pFuncTable->InkeySetLast(g,k)
 #define HB_GTSELF_INKEYRESET(g)                 (g)->pFuncTable->InkeyReset(g)
 #define HB_GTSELF_INKEYEXIT(g)                  (g)->pFuncTable->InkeyExit(g)
@@ -493,7 +495,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSELF_WHOCARES(g,p)                 (g)->pFuncTable->WhoCares(g,p)
 
 #ifndef HB_GTSUPERTABLE
-#  define HB_GTSUPERTABLE(g)  HB_GTSUPER
+#define HB_GTSUPERTABLE(g)  HB_GTSUPER
 #endif
 
 #define HB_GTSUPER_LOCK(g)                       (HB_GTSUPERTABLE(g))->Lock(g)
@@ -591,7 +593,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 #define HB_GTSUPER_INKEYLAST(g,m)                (HB_GTSUPERTABLE(g))->InkeyLast(g,m)
 #define HB_GTSUPER_INKEYNEXT(g,m)                (HB_GTSUPERTABLE(g))->InkeyNext(g,m)
 #define HB_GTSUPER_INKEYPOLL(g)                  (HB_GTSUPERTABLE(g))->InkeyPoll(g)
-#define HB_GTSUPER_INKEYSETTEXT(g,s,l)           (HB_GTSUPERTABLE(g))->InkeySetText(g,s,l)
+#define HB_GTSUPER_INKEYSETTEXT(g,s,l,e)         (HB_GTSUPERTABLE(g))->InkeySetText(g,s,l,e)
 #define HB_GTSUPER_INKEYSETLAST(g,k)             (HB_GTSUPERTABLE(g))->InkeySetLast(g,k)
 #define HB_GTSUPER_INKEYRESET(g)                 (HB_GTSUPERTABLE(g))->InkeyReset(g)
 #define HB_GTSUPER_INKEYEXIT(g)                  (HB_GTSUPERTABLE(g))->InkeyExit(g)
@@ -625,7 +627,7 @@ extern HB_EXPORT void hb_gt_gcMark( void );
 extern HB_EXPORT HB_BOOL hb_gtRegister( const HB_GT_INIT * gtInit );
 extern HB_EXPORT PHB_GT  hb_gtLoad( const char * szGtName, PHB_GT pGT, PHB_GT_FUNCS pSuperTable );
 
-/* low level GT functions common to different GTs supported by RTL */
+/* low-level GT functions common to different GTs supported by RTL */
 extern int  hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC );
 extern HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen );
 extern HB_BOOL hb_gt_getClipboard( char ** pszClipData, HB_SIZE * pnLen );
@@ -638,54 +640,8 @@ extern HB_EXPORT void    hb_gt_winapi_setKbdState( int kbdShifts );
 extern HB_EXPORT void    hb_gt_winapi_tone( double dFrequency, double dDuration );
 #endif /* HB_OS_WIN */
 #if defined( HB_OS_DOS ) || defined( HB_OS_WIN ) || defined( HB_OS_OS2 )
-extern int hb_gt_dos_keyCodeTranslate( int iKey );
+extern int hb_gt_dos_keyCodeTranslate( int iKey, int iFlags, PHB_CODEPAGE cdp );
 #endif /* HB_OS_DOS || HB_OS_WIN || HB_OS_OS2 */
-
-/* macros to manipulate Harbour extended key codes */
-#define HB_INKEY_EXT_MASK           0xF8000000
-#define HB_INKEY_EXT_BIT            0x40000000
-#define HB_INKEY_EXT_TYPEMASK       0xFF000000
-#define HB_INKEY_EXT_VALBITS        16
-#define HB_INKEY_EXT_VALMASK        ( ( 1 << HB_INKEY_EXT_VALBITS ) - 1 )
-#define HB_INKEY_EXT_FLAGMASK       ( 0xFF << HB_INKEY_EXT_VALBITS )
-#define HB_INKEY_EXT_KEY            0x01000000
-#define HB_INKEY_EXT_CHAR           0x02000000
-#define HB_INKEY_EXT_UNICODE        0x03000000
-#define HB_INKEY_EXT_MOUSEKEY       0x04000000
-#define HB_INKEY_EXT_MOUSEPOS       0x05000000
-#define HB_INKEY_EXT_EVENT          0x06000000
-#define HB_INKEY_EXT_POSBITS        12
-#define HB_INKEY_EXT_POSMASK        ( ( 1 << HB_INKEY_EXT_POSBITS ) - 1 )
-
-#define HB_INKEY_ISEXT( n )         ( ( ( n ) & HB_INKEY_EXT_MASK ) == HB_INKEY_EXT_BIT )
-#define HB_INKEY_TYPE( n )          ( ( ( n ) ^ HB_INKEY_EXT_BIT ) & HB_INKEY_EXT_TYPEMASK )
-#define HB_INKEY_ISKEY( n )         ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_KEY )
-#define HB_INKEY_ISCHAR( n )        ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_CHAR )
-#define HB_INKEY_ISUNICODE( n )     ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_UNICODE )
-#define HB_INKEY_ISMOUSEKEY( n )    ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_MOUSEKEY )
-#define HB_INKEY_ISMOUSEPOS( n )    ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_MOUSEPOS )
-#define HB_INKEY_ISEVENT( n )       ( HB_INKEY_TYPE( n ) == HB_INKEY_EXT_EVENT )
-
-#define HB_INKEY_NEW_VALF( v, f )   ( ( ( v ) & HB_INKEY_EXT_VALMASK ) | \
-                                      ( ( ( f ) << HB_INKEY_EXT_VALBITS ) & HB_INKEY_EXT_FLAGMASK ) )
-
-#define HB_INKEY_NEW_MKEY( k, f )   ( HB_INKEY_NEW_VALF( k, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEKEY )
-#define HB_INKEY_NEW_KEY( k, f )    ( HB_INKEY_NEW_VALF( k, f ) | HB_INKEY_EXT_BIT | HB_INKEY_EXT_KEY )
-#define HB_INKEY_NEW_CHAR( b )      ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_CHAR ) )
-#define HB_INKEY_NEW_CHARF( b, f )  ( HB_INKEY_NEW_VALF( b, f ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_CHAR ) )
-#define HB_INKEY_NEW_UNICODE( b )   ( ( b ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_UNICODE ) )
-#define HB_INKEY_NEW_UNICODEF( b, f ) ( HB_INKEY_NEW_VALF( b, f ) | ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_UNICODE ) )
-
-#define HB_INKEY_NEW_MPOS( x, y )   ( ( ( ( y ) & HB_INKEY_EXT_POSMASK ) << HB_INKEY_EXT_POSBITS ) | \
-                                      ( ( x ) & HB_INKEY_EXT_POSMASK ) | \
-                                      ( HB_INKEY_EXT_BIT | HB_INKEY_EXT_MOUSEPOS ) )
-
-#define HB_INKEY_MOUSEPOSX( n )     ( ( n ) & HB_INKEY_EXT_POSMASK )
-#define HB_INKEY_MOUSEPOSY( n )     ( ( ( n ) >> HB_INKEY_EXT_POSBITS ) & HB_INKEY_EXT_POSMASK )
-
-#define HB_INKEY_VALUE( n )         ( ( n ) & HB_INKEY_EXT_VALMASK )
-#define HB_INKEY_FLAGS( n )         ( ( ( n ) & HB_INKEY_EXT_FLAGMASK ) >> HB_INKEY_EXT_VALBITS )
-
 
 HB_EXTERN_END
 

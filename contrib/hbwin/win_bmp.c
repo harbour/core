@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
  * Printing subsystem for Windows using GUI printing
  *
- * Copyright 2010 Viktor Szakats (harbour syenar.net)
+ * Copyright 2010 Viktor Szakats (vszakats.net/harbour)
  * Copyright 2010 Xavi <jarabal/at/gmail.com>
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -87,34 +85,30 @@ HB_FUNC( WIN_BITMAPTYPE )
    hb_retni( hbwin_bitmapType( hb_parc( 1 ), hb_parclen( 1 ) ) );
 }
 
+#define HB_MAX_BMP_SIZE       ( 32 * 1024 * 1024 )
+
 HB_FUNC( WIN_LOADBITMAPFILE )
 {
-   HB_FHANDLE fhnd = hb_fsOpen( hb_parcx( 1 ), FO_READ | FO_SHARED );
+   HB_SIZE nSize;
+   char * pBuffer = ( char * ) hb_fileLoad( hb_parcx( 1 ), HB_MAX_BMP_SIZE, &nSize );
 
-   /* Set default return value */
-   hb_retc_null();
-
-   if( fhnd != FS_ERROR )
+   if( pBuffer )
    {
-      HB_SIZE nSize = hb_fsSeek( fhnd, 0, FS_END );
-
-      /* TOFIX: No check is done on read data from disk which is a large security hole
+      /* FIXME: No check is done on read data from disk which is a large security hole
                 and may cause GPF even in simple error cases, like invalid file content.
                 [vszakats] */
-      if( nSize > 2 && nSize <= ( 32 * 1024 * 1024 ) )
+
+      if( nSize <= 2 || hbwin_bitmapType( pBuffer, nSize ) == HB_WIN_BITMAP_UNKNOWN )
       {
-         void * pbmfh = hb_xgrab( nSize + 1 );
-
-         hb_fsSeek( fhnd, 0, FS_SET );
-
-         if( hb_fsReadLarge( fhnd, pbmfh, nSize ) == nSize && hbwin_bitmapType( pbmfh, nSize ) != HB_WIN_BITMAP_UNKNOWN )
-            hb_retclen_buffer( ( char * ) pbmfh, nSize );
-         else
-            hb_xfree( pbmfh );
+         hb_xfree( pBuffer );
+         pBuffer = NULL;
       }
-
-      hb_fsClose( fhnd );
    }
+
+   if( pBuffer )
+      hb_retclen_buffer( pBuffer, nSize );
+   else
+      hb_retc_null();
 }
 
 /* Some compilers don't implement these define [jarabal] */
@@ -176,7 +170,7 @@ HB_FUNC( WIN_DRAWBITMAP )
    BITMAPFILEHEADER * pbmfh = ( BITMAPFILEHEADER * ) hb_parc( 2 );
    int iType = hbwin_bitmapType( pbmfh, nSize );
 
-   /* TOFIX: No check is done on 2nd parameter which is a large security hole
+   /* FIXME: No check is done on 2nd parameter which is a large security hole
              and may cause GPF in simple error cases.
              [vszakats] */
    if( hbwin_bitmapIsSupported( hDC, iType, pbmfh, nSize ) == 0 )

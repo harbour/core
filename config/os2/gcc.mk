@@ -1,4 +1,3 @@
-
 ifeq ($(HB_BUILD_MODE),cpp)
    HB_CMP := g++
 else
@@ -88,7 +87,7 @@ else
    endef
 
    # We have to use a script to overcome the AR limit of max 850 characters
-   # in commmand line
+   # in command-line
    define create_library
       $(if $(wildcard $(subst /,$(DIRSEP),$(LIB_FILE))),@$(RM) $(subst /,$(DIRSEP),$(LIB_FILE)),)
       @$(ECHO) $(ECHOQUOTE)CREATE $(LIB_DIR)/$@$(ECHOQUOTE) > __lib__.tmp

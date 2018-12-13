@@ -34,7 +34,7 @@ and interfaces to many popular APIs.
    hope they will be useful, but there is NO GUARANTEE that they are
    complete, accurate, non-infringing or usable for any purpose whatsoever.
    Contributors are NOT LIABLE for any damages that result from using
-   Harbour in any ways. For more legal details, see [COPYING](COPYING.txt).
+   Harbour in any ways. For more legal details, see [LICENSE](LICENSE.txt).
 
    If you think you can make Harbour better, start to contribute.
    See [How to Participate](#how-to-participate).
@@ -1744,6 +1744,7 @@ Supported shells per host platforms:
         * <http://os2ports.smedley.info/index.php?page=gcc>
         * <http://os2ports.smedley.info/index.php?page=gcc44>
         * <http://download.smedley.info/gcc-4.4.5-os2-20101004.zip>
+        * <https://dl.dropboxusercontent.com/u/76425158/gcc-4.5.4-os2-20130803.zip>
      * DJGPP [dos, *nix, free, open-source]
         * <http://www.delorie.com/djgpp/>
      * Open Watcom [win, dos, os2, linux, free, open-source]
@@ -1936,7 +1937,7 @@ Supported shells per host platforms:
 
 # Harbour Links
 
-  * [Homepage](http://harbour-project.org/)
+  * [Homepage](https://harbour.github.io/)
   * [Users' Mailing List](https://groups.google.com/group/harbour-users/) (English language)
   * [Development Mailing List](https://groups.google.com/group/harbour-devel/) (English language)
   * [Source code](https://github.com/harbour/core)
@@ -1952,7 +1953,6 @@ Supported shells per host platforms:
      * Harbour [internal documents](doc/)
      * [Wikipedia](https://en.wikipedia.org/wiki/Harbour_compiler)
 
-
-This document Copyright &copy; 2009-2013 Viktor Szakáts (harbour syenar.net)<br />
-Licensed under [Creative Commons Attribution-ShareAlike 3.0](http://creativecommons.org/licenses/by-sa/3.0/)<br />
-See [COPYING](COPYING.txt).
+---
+This document Copyright &copy;&nbsp;2009&ndash;present Viktor Szakats (vszakats.net/harbour)<br />
+[![Creative Commons Attribution-ShareAlike 4.0](https://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by-sa.svg)](https://creativecommons.org/licenses/by-sa/4.0/)

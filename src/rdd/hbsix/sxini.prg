@@ -1,11 +1,9 @@
 /*
- * Harbour Project source code:
- *    SIX compatible functions:
- *          _sx_IniInit()
- *          sx_IniHeader()
+ * SIX compatible functions:
+ *       _sx_IniInit()
+ *       sx_IniHeader()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -76,7 +74,6 @@ STATIC FUNCTION _sx_INIlogical( cVal )
 
 FUNCTION _sx_IniInit( nArea )
 
-   LOCAL cFile, cPath, cName, cExt, cDrive
    LOCAL xShared, xReadOnly, xAlias, xTrigger
    LOCAL hIni, item, sect, h, a
 
@@ -85,7 +82,7 @@ FUNCTION _sx_IniInit( nArea )
     * by workarea number. In Harbour we are using hash arrays.
     */
 
-   IF Left( Type( "SxIniInfo" ), 1 ) == "U"
+   IF hb_LeftEq( Type( "SxIniInfo" ), "U" )
       PUBLIC SxIniInfo := { => }
       hb_HCaseMatch( SxIniInfo, .F. )
       hb_HAutoAdd( SxIniInfo, HB_HAUTOADD_ASSIGN )
@@ -95,13 +92,10 @@ FUNCTION _sx_IniInit( nArea )
       RETURN .F.
    ENDIF
 
-   cFile := ( nArea )->( dbInfo( DBI_FULLPATH ) )
-   hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
-   cFile := hb_FNameMerge( cPath, cName, ".ini", cDrive )
-   hIni := hb_iniRead( cFile, .F.,, .F. )
+   hIni := hb_iniRead( hb_FNameExtSet( ( nArea )->( dbInfo( DBI_FULLPATH ) ), ".ini" ), .F.,, .F. )
 
    IF ! Empty( hIni )
-      IF hb_HHasKey( hIni, HB_SIX_SECTION )
+      IF HB_SIX_SECTION $ hIni
          FOR EACH item IN hIni[ HB_SIX_SECTION ]
             SWITCH item:__enumKey()
             CASE "SHARED"
@@ -147,10 +141,9 @@ FUNCTION sx_IniHeader( cHeaderName, nArea )
       nArea := Select()
    ENDIF
 
-   IF hb_HHasKey( SxIniInfo, nArea )
-      IF hb_HHasKey( SxIniInfo[ nArea ], cHeaderName )
-         RETURN SxIniInfo[ nArea, cHeaderName ]
-      ENDIF
+   IF nArea $ SxIniInfo .AND. ;
+      cHeaderName $ SxIniInfo[ nArea ]
+      RETURN SxIniInfo[ nArea ][ cHeaderName ]
    ENDIF
 
    RETURN {}

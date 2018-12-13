@@ -1,15 +1,6 @@
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
- *    Documentation for: __dbDelim()
- *
- * See COPYING.txt for licensing terms.
- *
- */
-
 /* $DOC$
+   $AUTHOR$
+      Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
    $TEMPLATE$
       Procedure
    $NAME$
@@ -32,11 +23,11 @@
       If a file extension is not specified, ".txt" is used by default.
 
       <xcDelim> Either the character to use as the character field
-      delimiter (only the first character is used). or "BLANK" (not case
+      delimiter (only the first character is used). or `"BLANK"` (not case
       sensitive), which eliminates the character field delimiters and
       sets the field separator to a single space instead of a comma.
 
-      <aFields> An aray of field names to limit the processint to. If
+      <aFields> An array of field names to limit the processing to. If
       not specified, or if empty, then all fields are processed.
 
       <bFor> An optional code block containing a FOR expression that
@@ -61,11 +52,11 @@
       text file to a database table.
    $EXAMPLES$
       // Copy delinquent accounts into a delimited text file.
-      USE ACCOUNTS NEW
+      USE accounts NEW
       COPY TO overdue DELIMITED FOR ! Empty( accounts->duedate ) ;
          .AND. Date() - accounts->duedate > 30
       // Import new customer records.
-      USE CUSTOMER NEW
+      USE customer NEW
       APPEND FROM customer DELIMITED
    $STATUS$
       S

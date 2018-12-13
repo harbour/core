@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- * generate line information for debugger
+ * Generate line information for debugger
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -101,7 +99,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                {
                   int i;
 
-                  ptr = strchr( pszModuleName, ':' );
+                  ptr = strrchr( pszModuleName, ':' );
                   i = ptr ? ( int ) ( ptr - pszModuleName ) : ( int ) strlen( pszModuleName );
 
                   pInfo = pLineInfo;
@@ -125,8 +123,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                       * parameter to hb_compGenPushString(). [druzus]
                       */
                      pInfo->ulAllocated = ( ( ulLine >> 3 ) + 0x100 ) & 0xFFFFFF00L;
-                     pInfo->pLineMap = ( HB_BYTE * ) hb_xgrab( pInfo->ulAllocated + 1 );
-                     memset( pInfo->pLineMap, 0, pInfo->ulAllocated + 1 );
+                     pInfo->pLineMap = ( HB_BYTE * ) hb_xgrabz( pInfo->ulAllocated + 1 );
                      pInfo->pNext = pLineInfo;
                      pLineInfo = pInfo;
                   }

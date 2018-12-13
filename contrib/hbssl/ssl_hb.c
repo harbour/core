@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * OpenSSL API (SSL) - Harbour extensions
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,13 +44,10 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-#include "hbapiitm.h"
-#include "hbsocket.h"
-#include "hbvm.h"
-
 #include "hbssl.h"
+
+#include "hbapiitm.h"
+#include "hbvm.h"
 
 HB_FUNC( HB_SSL_READ_ALL )
 {
@@ -70,7 +65,7 @@ HB_FUNC( HB_SSL_READ_ALL )
          int    iAllocated = 0;
          char * retval     = NULL;
 
-         for(;; )
+         for( ;; )
          {
             char buffer[ 1 ];
             int  iLen;
@@ -140,7 +135,7 @@ HB_FUNC( HB_SSL_READ_LINE )
          int    iAllocated = 0;
          char * retval     = NULL;
 
-         for(;; )
+         for( ;; )
          {
             char buffer[ 1 ];
             int  iLen;

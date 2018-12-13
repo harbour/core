@@ -1,19 +1,9 @@
 /*
- * xHarbour Project source code:
  * Functions to create session id and some utils
  *
  * Copyright 2008 Lorenzo Fiorini <lorenzo.fiorini@gmail.com>
- *
- * code from:
- * TIP Class oriented Internet protocol library
- *
- * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
- * www - http://harbour-project.org
- *
- *    CGI Session Manager Class
- *
+ * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws> (CGI Session Manager Class)
  * Copyright 2003-2006 Francesco Saverio Giudice <info / at / fsgiudice / dot / com>
- * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,9 +16,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -56,62 +46,53 @@
  *
  */
 
-#define SID_LENGTH      25
-#define BASE_KEY_STRING "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-#define CRC_KEY_STRING  "Ak3yStR1Ng"  // Max Length must be 10 chars
+#define SID_LENGTH       25
+#define BASE_KEY_STRING  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+#define CRC_KEY_STRING   "Ak3yStR1Ng"  // Max Length must be 10 chars
 
 FUNCTION tip_GenerateSID( cCRCKey )
 
-   LOCAL cSID, nSIDCRC, cSIDCRC, n, cTemp
-   LOCAL nLenSID     := SID_LENGTH
+   LOCAL cSID, nSIDCRC, cSIDCRC, n, cTemp, nKey, nRand
    LOCAL cBaseKeys   := BASE_KEY_STRING
    LOCAL nLenKeys    := Len( cBaseKeys )
-   LOCAL cRet
-   LOCAL nRand, nKey := 0
 
-   hb_default( @cCRCKey, CRC_KEY_STRING )
-
-   cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
+   cCRCKey := Left( hb_defaultValue( cCRCKey, CRC_KEY_STRING ), 10 )  // Max Length must to be of 10 chars
 
    /* Let's generate the sequence */
-   cSID := Space( nLenSID )
-   FOR n := 1 TO nLenSID
-      nRand     := hb_RandomInt( 1, nLenKeys )
-      cSID      := Stuff( cSID, n, 1, SubStr( cBaseKeys, nRand, 1 ) )
-      nKey      += nRand
+   cSID := ""
+   nKey := 0
+   FOR n := 1 TO SID_LENGTH
+      nRand := hb_randInt( nLenKeys )
+      cSID  += SubStr( cBaseKeys, nRand, 1 )
+      nKey  += nRand
    NEXT
 
    nSIDCRC := nKey * 51 // Max Value is 99603 a 5 chars number
    cTemp   := StrZero( nSIDCRC, 5 )
+
    cSIDCRC := ""
    FOR n := 1 TO Len( cTemp )
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
    NEXT
 
-   cRet := cSID + cSIDCRC
-
-   RETURN cRet
+   RETURN cSID + cSIDCRC
 
 FUNCTION tip_CheckSID( cSID, cCRCKey )
 
-   LOCAL nSIDCRC, cSIDCRC, n, cTemp
-   LOCAL nLenSID     := SID_LENGTH
-   LOCAL cBaseKeys   := BASE_KEY_STRING
-   LOCAL nRand, nKey := 0
+   LOCAL nSIDCRC, cSIDCRC, n, cTemp, nKey
 
-   hb_default( @cCRCKey, CRC_KEY_STRING )
-
-   cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
+   cCRCKey := Left( hb_defaultValue( cCRCKey, CRC_KEY_STRING ), 10 )  // Max Length must to be of 10 chars
 
    /* Calculate the key */
-   FOR n := 1 TO nLenSID
-      nRand := At( SubStr( cSID, n, 1 ), cBaseKeys )
-      nKey  += nRand
+   nKey := 0
+   FOR n := 1 TO SID_LENGTH
+      nKey += At( SubStr( cSID, n, 1 ), BASE_KEY_STRING )
    NEXT
 
-   // Recalculate the CRC
-   nSIDCRC := nKey * 51 // Max Value is 99603. a 5 chars number
+   /* Recalculate the CRC */
+   nSIDCRC := nKey * 51  // Max Value is 99603. a 5 chars number
    cTemp   := StrZero( nSIDCRC, 5 )
+
    cSIDCRC := ""
    FOR n := 1 TO Len( cTemp )
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
@@ -119,17 +100,13 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
 
    RETURN Right( cSID, 5 ) == cSIDCRC
 
-FUNCTION tip_DateToGMT( dDate, cTime )
+FUNCTION tip_DateToGMT( tDate )
 
-   LOCAL aDays   := { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
-   LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
-
-   hb_default( @dDate, Date() )
-   hb_default( @cTime, Time() )
+   hb_default( @tDate, hb_DateTime() )
 
    RETURN ;
-      aDays[ DoW( dDate ) ] + ", " + ;
-      StrZero( Day( dDate ), 2 ) + " " + ;
-      aMonths[ Month( dDate ) ] + " " + ;
-      StrZero( Year( dDate ), 4 ) + " " + ;
-      cTime + " GMT"
+      { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
+      StrZero( Day( tDate ), 2 ) + " " + ;
+      { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }[ Month( tDate ) ] + " " + ;
+      StrZero( Year( tDate ), 4 ) + " " + ;
+      hb_TToC( tDate, "", "hh:mm:ss" ) + " GMT"

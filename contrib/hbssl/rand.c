@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * OpenSSL API (RAND) - Harbour interface.
  *
- * Copyright 2009 Viktor Szakats (harbour syenar.net)
- * www - http://harbour-project.org
+ * Copyright 2009 Viktor Szakats (vszakats.net/harbour)
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,9 +44,6 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-
 #include "hbssl.h"
 
 #include <openssl/rand.h>
@@ -63,6 +58,11 @@ HB_FUNC( RAND_ADD )
    RAND_add( hb_parcx( 1 ), ( int ) hb_parclen( 1 ), hb_parnd( 2 ) );
 }
 
+HB_FUNC( RAND_POLL )
+{
+   RAND_poll();
+}
+
 HB_FUNC( RAND_STATUS )
 {
    hb_retni( RAND_status() );
@@ -71,15 +71,24 @@ HB_FUNC( RAND_STATUS )
 HB_FUNC( RAND_EVENT )
 {
 #if defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
-   hb_retni( RAND_event( hb_parni( 1 ), ( WPARAM ) hb_parnint( 2 ), ( LPARAM ) hb_parnint( 3 ) ) );
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+   RAND_poll();
+   hb_retni( RAND_status() );
 #else
-   hb_retni( 0 );
+   hb_retni( RAND_event( hb_parni( 1 ), ( WPARAM ) hb_parnint( 2 ), ( LPARAM ) hb_parnint( 3 ) ) );
+#endif
+#else
+   hb_retni( 1 );
 #endif
 }
 
 HB_FUNC( RAND_SCREEN )
 {
 #if defined( HB_OS_WIN ) && ! defined( __CYGWIN__ )
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+   RAND_poll();
+#else
    RAND_screen();
+#endif
 #endif
 }

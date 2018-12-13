@@ -1,4 +1,3 @@
-
 #require "rddado"
 
 #include "adordd.ch"

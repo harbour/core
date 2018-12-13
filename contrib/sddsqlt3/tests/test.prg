@@ -1,4 +1,3 @@
-
 #require "rddsql"
 #require "sddsqlt3"
 
@@ -23,7 +22,7 @@ PROCEDURE Main()
    AEval( rddList(), {| X | QOut( X ) } )
 
    ? "-1-"
-   ? "Connect:", tmp := rddInfo( RDDI_CONNECT, { "SQLITE3", hb_DirBase() + "test.sq3" } )
+   ? "Connect:", tmp := rddInfo( RDDI_CONNECT, { "SQLITE3", hb_DirBase() + "test.sqlite3" } )
    IF tmp == 0
       ? "Unable connect to the server"
    ENDIF

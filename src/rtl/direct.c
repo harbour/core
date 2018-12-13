@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Directory() function
  *
  * Copyright 1999 Leslee Griffith <les.griffith@vantagesystems.ca>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -52,7 +50,7 @@
  * Clipper is a bit schizoid with the treatment of file attributes, but we've
  * emulated that weirdness here for your viewing amusement.
  *
- * In Clippers' homeworld of DOS, there are 5 basic attributes: 'A'rchive,
+ * In Clippers' home world of MS-DOS, there are 5 basic attributes: 'A'rchive,
  * 'H'idden, 'S'ystem, 'R'eadonly and 'D'irectory.  In addition, a file can
  * have no attributes, and only 1 file per physical partition can have the
  * 'V'olume label.
@@ -63,7 +61,7 @@
  * unless they also happen to be 'H'idden and that attribute was not requested.
  *
  * "V" is a special case - you will get back the entry that describes the
- * volume label for the drive implied by the filemask.
+ * volume label for the drive implied by the file mask.
  *
  * Differences from the 'standard' (where supported):
  * - Filenames will be returned in the same case as they are stored in the
@@ -99,57 +97,44 @@
          this issue is very much platform specific, and this is
          not the only place which may need the conversion [vszakats]. */
 
-HB_FUNC( DIRECTORY )
+PHB_ITEM hb_fsDirectory( const char * pszDirSpec, const char * pszAttributes, HB_BOOL fDateTime )
 {
-   const char * szDirSpec    = hb_parc( 1 );
-   const char * szAttributes = hb_parc( 2 );
-   char *       pszFree      = NULL;
-   HB_FATTR     ulMask;
-
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
+   char *    pszFree = NULL;
    PHB_FFIND ffind;
+   HB_FATTR  ulMask;
 
    /* Get the passed attributes and convert them to Harbour Flags */
 
-   ulMask = HB_FA_ARCHIVE |
-            HB_FA_READONLY |
-            HB_FA_DEVICE |
-            HB_FA_TEMPORARY |
-            HB_FA_SPARSE |
-            HB_FA_REPARSE |
-            HB_FA_COMPRESSED |
-            HB_FA_OFFLINE |
-            HB_FA_NOTINDEXED |
-            HB_FA_ENCRYPTED |
-            HB_FA_VOLCOMP;
+   ulMask = HB_FA_ARCHIVE | HB_FA_READONLY;
 
-   if( szAttributes && *szAttributes )
-      ulMask |= hb_fsAttrEncode( szAttributes );
+   if( pszAttributes && *pszAttributes )
+      ulMask |= hb_fsAttrEncode( pszAttributes );
 
-   if( szDirSpec && *szDirSpec )
+   if( pszDirSpec && *pszDirSpec )
    {
       if( ulMask != HB_FA_LABEL )
       {
          /* CA-Cl*pper compatible behavior - add all file mask when
           * last character is directory or drive separator
           */
-         HB_SIZE nLen = strlen( szDirSpec ) - 1;
+         HB_SIZE nLen = strlen( pszDirSpec ) - 1;
 #ifdef HB_OS_HAS_DRIVE_LETTER
-         if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR ||
-             szDirSpec[ nLen ] == HB_OS_DRIVE_DELIM_CHR )
+         if( pszDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR ||
+             pszDirSpec[ nLen ] == HB_OS_DRIVE_DELIM_CHR )
 #else
-         if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR )
+         if( pszDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR )
 #endif
-            szDirSpec = pszFree =
-                           hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
+            pszDirSpec = pszFree =
+                           hb_xstrcpy( NULL, pszDirSpec, HB_OS_ALLFILE_MASK, NULL );
       }
    }
    else
-      szDirSpec = HB_OS_ALLFILE_MASK;
+      pszDirSpec = HB_OS_ALLFILE_MASK;
 
    /* Get the file list */
 
-   if( ( ffind = hb_fsFindFirst( szDirSpec, ulMask ) ) != NULL )
+   if( ( ffind = hb_fsFindFirst( pszDirSpec, ulMask ) ) != NULL )
    {
       PHB_ITEM pSubarray = hb_itemNew( NULL );
 
@@ -157,12 +142,16 @@ HB_FUNC( DIRECTORY )
       {
          char buffer[ 32 ];
 
-         hb_arrayNew(     pSubarray, F_LEN );
-         hb_arraySetC(    pSubarray, F_NAME, ffind->szName );
+         hb_arrayNew    ( pSubarray, F_LEN );
+         hb_arraySetC   ( pSubarray, F_NAME, ffind->szName );
          hb_arraySetNInt( pSubarray, F_SIZE, ffind->size );
-         hb_arraySetDL(   pSubarray, F_DATE, ffind->lDate );
-         hb_arraySetC(    pSubarray, F_TIME, ffind->szTime );
-         hb_arraySetC(    pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
+         hb_arraySetC   ( pSubarray, F_TIME, ffind->szTime );
+         hb_arraySetC   ( pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
+
+         if( fDateTime )
+            hb_arraySetTDT( pSubarray, F_DATE, ffind->lDate, ffind->lTime );
+         else
+            hb_arraySetDL ( pSubarray, F_DATE, ffind->lDate );
 
          /* Don't exit when array limit is reached */
          hb_arrayAddForward( pDir, pSubarray );
@@ -177,5 +166,15 @@ HB_FUNC( DIRECTORY )
    if( pszFree )
       hb_xfree( pszFree );
 
-   hb_itemReturnRelease( pDir );
+   return pDir;
+}
+
+HB_FUNC( DIRECTORY )
+{
+   hb_itemReturnRelease( hb_fsDirectory( hb_parc( 1 ), hb_parc( 2 ), HB_FALSE ) );
+}
+
+HB_FUNC( HB_DIRECTORY )
+{
+   hb_itemReturnRelease( hb_fsDirectory( hb_parc( 1 ), hb_parc( 2 ), HB_TRUE ) );
 }

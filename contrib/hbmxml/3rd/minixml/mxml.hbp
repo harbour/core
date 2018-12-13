@@ -1,4 +1,3 @@
-
 -stop{hbdyn}
 
 -hblib
@@ -30,9 +29,9 @@ mxml_set.c
 mxml_str.c
 
 # ORIGIN http://www.minixml.org
-# VER    2.7
-# URL    http://ftp.easysw.com/pub/mxml/2.7/mxml-2.7.tar.gz
-# DIFF   minixml.dif
+# VER    2.8
+# URL    https://www.msweet.org/files/project3/mxml-2.8.tar.gz
+# DIFF   mxml.diff
 #
 # MAP    COPYING
 # MAP    config.h.in     config.h

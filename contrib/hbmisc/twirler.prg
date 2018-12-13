@@ -1,8 +1,6 @@
-/* Harbour Project source code
-   New libmisc twirler class
-   http://harbour-project.org/
-   Donated to the public domain on 2001-04-03 by David G. Holm <dholm@jsd-llc.com>
- */
+/* Donated to the public domain on 2001-04-03 by David G. Holm <dholm@jsd-llc.com> */
+
+/* New twirler class */
 
 #include "hbclass.ch"
 
@@ -21,7 +19,7 @@ CREATE CLASS Twirler
    METHOD show()
    METHOD hide()
 
-END CLASS
+ENDCLASS
 
 METHOD new( nRow, nCol, cTitle, cChars, nSmooth ) CLASS Twirler
 

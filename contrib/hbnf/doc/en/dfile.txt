@@ -1,4 +1,3 @@
-
 /* $DOC$
    $NAME$
       ft_DFSetup()
@@ -50,7 +49,7 @@
 
       @ 20, 0 SAY "Key that terminated ft_DispFile() was: " + "[" + cKey + "]"
    $SEEALSO$
-      ft_DispFile() ft_DFClose()
+      ft_DispFile(), ft_DFClose()
    $END$
  */
 
@@ -83,6 +82,6 @@
 
       @ 20, 0 SAY "Key that terminated ft_DispFile() was: " + "[" + cKey + "]"
    $SEEALSO$
-      ft_DFSetup() ft_DispFile()
+      ft_DFSetup(), ft_DispFile()
    $END$
  */

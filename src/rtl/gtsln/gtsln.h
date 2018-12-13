@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Video subsystem based on Slang screen library.
  *
  * Copyright 2000 Marek Paliwoda <paliwoda@inetia.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -97,7 +95,7 @@
    } while( 0 )
 #define HB_SLN_BUILD_CHAR( slch, ch, clr, attr )  \
    do { \
-      SLsmg_Char_Type * outTab = ( attr ) & HB_GT_ATTR_BOX ? \
+      SLsmg_Char_Type * outTab = ( ( attr ) & HB_GT_ATTR_BOX ) ? \
                                  s_outboxTab : s_outputTab; \
       ( slch ).color = outTab[ ( HB_BYTE ) ( ch ) ].color | \
                        s_colorTab[ ( HB_BYTE ) ( clr ) ]; \
@@ -146,7 +144,7 @@
    } while( 0 )
 #define HB_SLN_BUILD_CHAR( slch, ch, clr, attr )  \
    do { \
-      ( slch ) = ( ( attr ) & HB_GT_ATTR_BOX ? \
+      ( slch ) = ( ( ( attr ) & HB_GT_ATTR_BOX ) ? \
                    s_outboxTab : s_outputTab )[ ( HB_BYTE ) ( ch ) ] | \
                  s_colorTab[ ( HB_BYTE ) ( clr ) ]; \
    } while( 0 )

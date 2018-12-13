@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Compiler Expression Optimizer
  *
  * Copyright 1999 Ryszard Glab
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -46,10 +44,7 @@
  *
  */
 
-
 #include "hbcomp.h"
-
-/* ************************************************************************ */
 
 #ifndef HB_MACRO_SUPPORT
 HB_SIZE hb_compExprListEval( HB_COMP_DECL, PHB_EXPR pExpr, PHB_COMP_CARGO_FUNC pEval )
@@ -248,7 +243,6 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
          /* Reserved Clipper function used to handle GET variables
           */
          PHB_EXPR pArg, pNext;
-         HB_USHORT uiCount;
 
          /* pArg has to be reduced to eliminate possible problems with
           * cloned expressions in SETGET block
@@ -270,6 +264,8 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
 
          if( pArg->ExprType == HB_ET_ARRAYAT )
          {
+            HB_USHORT uiCount;
+
             /* replace:
                _GET_( a[1], "a[1]", , , )
                into:
@@ -299,7 +295,7 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
             /* create a set only codeblock */
             if( pVar->ExprType == HB_ET_MACRO )
             {
-               /* &var[1] */
+               /* &var[ 1 ] */
                HB_COMP_EXPR_FREE( pVar );
                pVar = hb_compExprNewNil( HB_COMP_PARAM );
             }
@@ -332,12 +328,12 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                   pVar->pNext = hb_compExprNewNil( HB_COMP_PARAM );
                pVar = pVar->pNext;
             }
-            if( pVar->pNext ) /* Delete 6-th argument if present */
+            if( pVar->pNext ) /* Delete 6th argument if present */
             {
                pIndex->pNext = pVar->pNext->pNext;
                HB_COMP_EXPR_FREE( pVar->pNext );
             }
-            pVar->pNext = pIndex;   /* Set a new 6-th argument */
+            pVar->pNext = pIndex;   /* Set a new 6th argument */
 
             /* Remove the index expression from a string representation
              */
@@ -377,62 +373,100 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
                }
             }
          }
-         else if( pArg->ExprType == HB_ET_MACRO )
+         else if( pArg->ExprType == HB_ET_MACRO ||
+                  ( pArg->ExprType == HB_ET_ALIASVAR &&
+                    ( pArg->value.asAlias.pAlias->ExprType == HB_ET_MACRO ||
+                      pArg->value.asAlias.pVar->ExprType == HB_ET_MACRO ) ) )
          {
-            /* @ 0,0 GET &var    => __Get( NIL, var,... )
-             * @ 0,0 GET var&var => __Get( NIL, "var&var",... )
-             */
-            pName->value.asSymbol.name = "__GET";
-            if( pArg->value.asMacro.pExprList == NULL )
+            const char * szText = NULL;
+
+            if( pArg->ExprType == HB_ET_ALIASVAR )
             {
-               /* Simple macro expansion (not a parenthesized expressions)
-                */
-               PHB_EXPR pFirst;
+               const char * szAlias = NULL, * szAliasPref = "",
+                          * szVar = NULL, * szVarPref = "";
 
-               pFirst = pArg;                /* first argument  */
-               pNext  = pFirst->pNext;       /* second argument */
-               if( pNext )
-                  pNext = pNext->pNext;      /* third argument */
-
-               pArg = hb_compExprNewNil( HB_COMP_PARAM );   /* replace 1st with NIL */
-               pParms->value.asList.pExprList = pArg;
-               pArg->pNext = pFirst->pNext;
-               if( pFirst->value.asMacro.cMacroOp == '&' )
+               if( pArg->value.asAlias.pAlias->ExprType == HB_ET_ALIAS )
+                  szAlias = pArg->value.asAlias.pAlias->value.asSymbol.name;
+               else if( pArg->value.asAlias.pAlias->ExprType == HB_ET_MACRO &&
+                        pArg->value.asAlias.pAlias->value.asMacro.pExprList == NULL )
                {
-                  /* simple &variable - replace the second argument with
-                   * a variable name
-                   */
-                  const char * szName = pFirst->value.asMacro.szMacro;
-                  if( pFirst->pNext )
-                     HB_COMP_EXPR_FREE( pFirst->pNext );  /* delete a second argument */
-                  pArg->pNext = hb_compExprNewVar( szName, HB_COMP_PARAM );
-                  pArg->pNext->pNext = pNext;    /* restore third argument */
-                  HB_COMP_EXPR_FREE( pFirst );
+                  szAlias = pArg->value.asAlias.pAlias->value.asMacro.szMacro;
+                  if( pArg->value.asAlias.pAlias->value.asMacro.cMacroOp == '&' )
+                     szAliasPref = "&";
                }
-               else
+
+               if( pArg->value.asAlias.pVar->ExprType == HB_ET_VARIABLE )
+                  szVar = pArg->value.asAlias.pVar->value.asSymbol.name;
+               else if( pArg->value.asAlias.pVar->ExprType == HB_ET_MACRO &&
+                        pArg->value.asAlias.pVar->value.asMacro.pExprList == NULL )
                {
-                  /* text substitution text&variable - replace the second
-                   * argument with a string
-                   */
-                  if( pArg->pNext == NULL )
-                  {
-                     /* no second argument */
-                     const char *szText = pFirst->value.asMacro.szMacro;
-                     pArg->pNext = hb_compExprNewString( szText, strlen( szText ), HB_FALSE, HB_COMP_PARAM );
-                     pArg->pNext->pNext = pNext;
-                  }
-                  HB_COMP_EXPR_FREE( pFirst );  /* delete first argument */
+                  szVar = pArg->value.asAlias.pVar->value.asMacro.szMacro;
+                  if( pArg->value.asAlias.pVar->value.asMacro.cMacroOp == '&' )
+                     szVarPref = "&";
+               }
+
+               if( szAlias != NULL && szVar != NULL )
+               {
+                  if( pArg->pNext && pArg->pNext->ExprType == HB_ET_STRING )
+                     szText = "";
+                  else
+                     szText = hb_xstrcpy( NULL, szAliasPref, szAlias, "->", szVarPref, szVar, NULL );
                }
             }
-            else
+            else if( pArg->value.asMacro.pExprList == NULL )
+               /* Simple macro expansion (not a parenthesized expressions) */
+               szText = pArg->value.asMacro.szMacro;
+
+            pName->value.asSymbol.name = "__GET";
+            if( szText == NULL )
             {
                /* @ 0,0 GET &(var)
+                * @ 0,0 GET &(var)->var
+                * @ 0,0 GET var->&(var)
                 */
 #if defined( HB_MACRO_SUPPORT )
                hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
 #else
                hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_GET_COMPLEX_MACRO, NULL, NULL );
 #endif
+            }
+            else
+            {
+               /* @ 0,0 GET &var          => __Get( NIL, var,... )
+                * @ 0,0 GET var&var       => __Get( NIL, "var&var",... )
+                * @ 0,0 GET &var->var     => __Get( NIL, "&var->var",... )
+                * @ 0,0 GET var->var&var  => __Get( NIL, "var->var&var",... )
+                * @ 0,0 GET var&var->&var => __Get( NIL, "var&var->&var",... )
+                */
+               PHB_EXPR pFirst = pArg; /* save first argument */
+
+               pArg = hb_compExprNewNil( HB_COMP_PARAM ); /* replace 1st with NIL */
+               if( pFirst->pNext && pFirst->pNext->ExprType == HB_ET_STRING )
+                  pArg->pNext = pFirst->pNext;
+               else
+               {
+                  if( pArg->ExprType == HB_ET_ALIASVAR )
+                     pArg->pNext = hb_compExprNewString( szText, strlen( szText ), HB_TRUE, HB_COMP_PARAM );
+                  else if( pFirst->value.asMacro.cMacroOp == '&' )
+                     /* simple &variable - replace the second argument with
+                      * a variable name
+                      */
+                     pArg->pNext = hb_compExprNewVar( szText, HB_COMP_PARAM );
+                  else
+                     /* text substitution text&variable - replace the second
+                      * argument with a string
+                      */
+                     pArg->pNext = hb_compExprNewString( szText, strlen( szText ), HB_FALSE, HB_COMP_PARAM );
+
+                  if( pFirst->pNext )
+                  {
+                     pArg->pNext->pNext = pFirst->pNext->pNext;
+                     HB_COMP_EXPR_FREE( pFirst->pNext ); /* delete a second argument */
+                  }
+               }
+               HB_COMP_EXPR_FREE( pFirst ); /* delete first argument */
+               /* set an updated list of arguments */
+               pParms->value.asList.pExprList = pArg;
             }
          }
          else
@@ -444,18 +478,16 @@ PHB_EXPR hb_compExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL )
             pArg->pNext = NULL;
             /* replace first argument with a set/get codeblock */
 #if ! defined( HB_MACRO_SUPPORT )
-            if( pArg->ExprType == HB_ET_VARIABLE )
+            if( pArg->ExprType == HB_ET_VARIABLE &&
+                ! hb_compVariableFind( HB_COMP_PARAM, pArg->value.asSymbol.name, NULL, NULL ) )
             {
-               if( hb_compVariableFind( HB_COMP_PARAM, pArg->value.asSymbol.name, NULL, NULL ) )
-                  pArg = hb_compExprSetGetBlock( pArg, HB_COMP_PARAM );
-               else
-               {
-                  /* Undeclared variable name - create a set/get codeblock
-                   * at runtime
-                   */
-                  HB_COMP_EXPR_FREE( pArg );
-                  pArg = hb_compExprNewNil( HB_COMP_PARAM );
-               }
+               /* Undeclared variable name - create a set/get codeblock
+                * at runtime
+                */
+               if( HB_COMP_PARAM->iWarnings >= 2 )
+                  hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, pArg->value.asSymbol.name, NULL );
+               HB_COMP_EXPR_FREE( pArg );
+               pArg = hb_compExprNewNil( HB_COMP_PARAM );
             }
             else
 #endif
@@ -524,23 +556,21 @@ PHB_EXPR hb_compExprNewArrayAt( PHB_EXPR pArray, PHB_EXPR pIndex, HB_COMP_DECL )
    return pExpr;
 }
 
-
-/* ************************************************************************* */
+/* === */
 
 #ifndef HB_MACRO_SUPPORT
 
 /* List of functions which can be used as static initializers */
 static const char * s_szStaticFun[] = {
-   "HB_MUTEXCREATE"
+   "HB_MUTEXCREATE",
+   "__BREAKBLOCK"
 };
-
-#define STATIC_FUNCTIONS  ( sizeof( s_szStaticFun ) / sizeof( char * ) )
 
 static HB_BOOL hb_compStaticFunction( const char * szName )
 {
    unsigned int ui;
 
-   for( ui = 0; ui < STATIC_FUNCTIONS; ++ui )
+   for( ui = 0; ui < HB_SIZEOFARRAY( s_szStaticFun ); ++ui )
    {
       if( strcmp( szName, s_szStaticFun[ ui ] ) == 0 )
          return HB_TRUE;
@@ -658,7 +688,7 @@ PHB_EXPR hb_compExprAssignStatic( PHB_EXPR pLeftExpr, PHB_EXPR pRightExpr, HB_CO
 
 PHB_EXPR hb_compExprSetCodeblockBody( PHB_EXPR pExpr, HB_BYTE * pCode, HB_SIZE nLen )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprSetCodeblockBody(%p,%p,%" HB_PFS "u)", pExpr, pCode, nLen ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprSetCodeblockBody(%p,%p,%" HB_PFS "u)", ( void * ) pExpr, ( void * ) pCode, nLen ) );
 
    pExpr->value.asCodeblock.string = ( char * ) hb_xgrab( nLen + 1 );
    memcpy( pExpr->value.asCodeblock.string, pCode, nLen );
@@ -723,7 +753,7 @@ PHB_EXPR hb_compExprGenPop( PHB_EXPR pExpr, HB_COMP_DECL )
  */
 PHB_EXPR hb_compExprGenStatement( PHB_EXPR pExpr, HB_COMP_DECL )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprGenStatement(%p)", pExpr ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprGenStatement(%p)", ( void * ) pExpr ) );
    if( pExpr )
    {
       if( pExpr->ExprType == HB_EO_EQUAL )
@@ -743,5 +773,3 @@ PHB_EXPR hb_compExprReduce( PHB_EXPR pExpr, HB_COMP_DECL )
    return HB_EXPR_USE( pExpr, HB_EA_REDUCE );
 }
 #endif
-
-/* ************************************************************************* */

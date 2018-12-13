@@ -1,4 +1,3 @@
-
 #require "hbcups"
 
 PROCEDURE Main( cFile )

@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Compiler C source with real code generation
  *
  * Copyright 2006 Przemyslaw Czerpak < druzus /at/ priv.onet.pl >
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -45,7 +43,6 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-
 
 #include "hbcomp.h"
 
@@ -305,11 +302,24 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             else
             {
                if( iValue )
-                  iValue = HB_COMP_PARAM->supported & iFlag ? 0 : 1;
+                  iValue = ( HB_COMP_PARAM->supported & iFlag ) ? 0 : 1;
                else
-                  iValue = HB_COMP_PARAM->supported & iFlag ? 1 : 0;
+                  iValue = ( HB_COMP_PARAM->supported & iFlag ) ? 1 : 0;
             }
          }
+      }
+      else if( hb_strnicmp( szSwitch, "gc", 2 ) == 0 )
+      {
+         if( fSet )
+         {
+            if( iValue == HB_COMPGENC_REALCODE ||
+                iValue == HB_COMPGENC_VERBOSE ||
+                iValue == HB_COMPGENC_NORMAL ||
+                iValue == HB_COMPGENC_COMPACT )
+               HB_COMP_PARAM->iGenCOutput = iValue;
+         }
+         else
+            iValue = HB_COMP_PARAM->iGenCOutput;
       }
       else if( hb_strnicmp( szSwitch, "es", 2 ) == 0 )
       {
@@ -378,14 +388,14 @@ static void hb_pp_fileIncluded( void * cargo, const char * szFileName )
    *pIncFilePtr = pIncFile;
 }
 
-void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
-                    PHB_PP_OPEN_FUNC pOpenFunc )
+void hb_compInitPP( HB_COMP_DECL, PHB_PP_OPEN_FUNC pOpenFunc )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_compInitPP()" ) );
 
    if( HB_COMP_PARAM->pLex->pPP )
    {
-      hb_pp_init( HB_COMP_PARAM->pLex->pPP, HB_COMP_PARAM->fQuiet,
+      hb_pp_init( HB_COMP_PARAM->pLex->pPP,
+                  HB_COMP_PARAM->fQuiet, HB_COMP_PARAM->fGauge,
                   HB_COMP_PARAM->iMaxTransCycles,
                   HB_COMP_PARAM, pOpenFunc, NULL,
                   hb_pp_ErrorGen, hb_pp_Disp, hb_pp_PragmaDump,
@@ -404,8 +414,8 @@ void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
 
       hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP, ! HB_COMP_PARAM->fNoArchDefs );
 
-      /* Add /D and /undef: command line or envvar defines */
-      hb_compChkDefines( HB_COMP_PARAM, argc, argv );
+      /* Add /D and /undef: command-line or envvar defines */
+      hb_compChkSetDefines( HB_COMP_PARAM );
 
       /* add extended definitions files (-u+<file>) */
       if( HB_COMP_PARAM->iStdChExt > 0 )

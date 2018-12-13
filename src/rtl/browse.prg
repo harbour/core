@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Quick Clipper Browse()
  *
  * Copyright 1999 Antonio Linares <alinares@fivetech.com>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -110,8 +108,9 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
          lKeyPressed := ( nKey := Inkey() ) != 0
       ENDDO
 
-      IF ! lKeyPressed
-
+      IF lKeyPressed
+         lKeyPressed := .F.
+      ELSE
          IF oBrw:HitBottom .AND. ( ! lAppend .OR. RecNo() != LastRec() + 1 )
             IF lAppend
                oBrw:RefreshCurrent()
@@ -136,8 +135,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
             Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
             LOOP
          ENDIF
-      ELSE
-         lKeyPressed := .F.
       ENDIF
 
       SWITCH nKey
@@ -373,26 +370,19 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
 
 STATIC FUNCTION ExitKey( lAppend )
 
-   LOCAL nKey := LastKey()
+   LOCAL nKey
 
-   SWITCH nKey
+   SWITCH nKey := LastKey()
    CASE K_PGDN
-      nKey := iif( lAppend, 0, K_DOWN )
-      EXIT
-
+      RETURN iif( lAppend, 0, K_DOWN )
    CASE K_PGUP
-      nKey := iif( lAppend, 0, K_UP )
-
+      RETURN iif( lAppend, 0, K_UP )
    CASE K_DOWN
    CASE K_UP
-      EXIT
-
-   OTHERWISE
-      nKey := iif( nKey == K_ENTER .OR. ;
-         !( hb_keyChar( nKey ) == "" ), K_RIGHT, 0 )
+      RETURN nKey
    ENDSWITCH
 
-   RETURN nKey
+   RETURN iif( nKey == K_ENTER .OR. !( hb_keyChar( nKey ) == "" ), K_RIGHT, 0 )
 
 STATIC PROCEDURE FreshOrder( oBrw )
 
@@ -415,9 +405,10 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
    LOCAL nSkipped := 0
 
    IF LastRec() != 0
-      IF nRecs == 0
+      DO CASE
+      CASE nRecs == 0
          dbSkip( 0 )
-      ELSEIF nRecs > 0 .AND. RecNo() != LastRec() + 1
+      CASE nRecs > 0 .AND. RecNo() != LastRec() + 1
          DO WHILE nSkipped < nRecs
             dbSkip()
             IF Eof()
@@ -430,7 +421,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             ENDIF
             ++nSkipped
          ENDDO
-      ELSEIF nRecs < 0
+      CASE nRecs < 0
          DO WHILE nSkipped > nRecs
             dbSkip( -1 )
             IF Bof()
@@ -438,7 +429,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             ENDIF
             --nSkipped
          ENDDO
-      ENDIF
+      ENDCASE
    ENDIF
 
    RETURN nSkipped

@@ -1,48 +1,46 @@
 /*
- * xHarbour Project source code:
- * The Service/Daemon support
- * (Includes also signal/low level error management)
+ * The Service/Daemon support (includes also signal/low-level error management)
  *
- * Copyright 2003 Giancarlo Niccolai [gian@niccolai.ws]
- * www - http://www.xharbour.org
+ * Copyright 2003 Giancarlo Niccolai <gian@niccolai.ws>
  *
- * this program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General public License as published by
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2, or (at your option)
  * any later version.
  *
- * this program is distributed in the hope that it will be useful,
+ * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS for A PARTICULAR PURPOSE.  See the
- * GNU General public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General public License
- * along with this software; see the file COPYING.txt.  if not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * You should have received a copy of the GNU General Public License
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
- * As a special exception, xHarbour license gives permission for
- * additional uses of the text contained in its release of xHarbour.
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
  *
- * The exception is that, if you link the xHarbour libraries with other
+ * The exception is that, if you link the Harbour libraries with other
  * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General public License.
+ * resulting executable to be covered by the GNU General Public License.
  * Your use of that executable is in no way restricted on account of
- * linking the xHarbour library code into it.
+ * linking the Harbour library code into it.
  *
- * this exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General public License.
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
  *
- * this exception applies only to the code released with this xHarbour
- * explicit exception.  if you add/copy code from other sources,
- * as the General public License permits, the above exception does
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
  * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
- * If you write modifications of your own for xHarbour, it is your choice
+ * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
- * if you do not wish that, delete this exception notice.
+ * If you do not wish that, delete this exception notice.
  *
  */
 
@@ -64,7 +62,7 @@
    #endif
 #endif
 
-/* These targets can't compile this module */
+/* These targets cannot compile this module */
 #if ! defined( HB_OS_DOS ) && \
    ! defined( HB_OS_DARWIN_5 ) && \
    ! ( defined( HB_OS_WIN_CE ) && ( defined( __POCC__ ) || ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) ) ) && \
@@ -79,20 +77,11 @@
 #include <signal.h>
 #endif
 
-/* TODO:
-   we'll use hb_fsPopen for popening once we put it multiplatform. For now: */
-#ifdef HB_OS_WIN
-   #define popen                       _popen
-   #define pclose                      _pclose
-#endif
-
 #ifdef __LCC__
 #define EXCEPTION_ILLEGAL_INSTRUCTION  STATUS_ILLEGAL_INSTRUCTION
 #endif
 
-/**************************************************
- * Global definition, valid for all systems
- ***************************************************/
+/* Global definition, valid for all systems */
 
 static void s_serviceSetHBSig( void );
 static void s_serviceSetDflSig( void );
@@ -118,17 +107,18 @@ typedef struct
 
 static int s_translateSignal( HB_UINT sig, HB_UINT subsig );
 
-/*****************************************************************************
-* Unix specific signal handling implementation
-*
-* This section has unix specific code to manage the
-* signals, both from kernel or from users.
-*****************************************************************************/
+/* Unix specific signal handling implementation
+ *
+ * This section has unix specific code to manage the
+ * signals, both from kernel or from users.
+ */
 
 #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 
-/* TODO: Register the old signal action to allow graceful fallback
-         static struct sigaction sa_oldAction[ SIGUSR2 + 1 ]; */
+/* TODO: Register the old signal action to allow graceful fallback */
+#if 0
+static struct sigaction s_aOldAction[ SIGUSR2 + 1 ];
+#endif
 
 /* Implementation of the signal translation table */
 static S_TUPLE s_sigTable[] =
@@ -152,18 +142,15 @@ static void s_signalHandler( int sig )
 static void s_signalHandler( int sig, siginfo_t * info, void * v )
 #endif
 {
-   HB_UINT  uiMask;
    HB_UINT  uiSig;
-   PHB_ITEM pFunction, pExecArray, pRet;
    HB_SIZE  nPos;
-   int      iRet;
 
    #if ! ( defined( HB_OS_OS2_GCC ) || defined( __WATCOMC__ ) )
    HB_SYMBOL_UNUSED( v );
    #endif
 
    /* let's find the right signal handler. */
-   hb_threadEnterCriticalSection( &s_ServiceMutex );
+   hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
    /* avoid working if PRG signal handling has been disabled */
    if( ! bSignalEnabled )
@@ -179,10 +166,16 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
 
    while( nPos > 0 )
    {
+      PHB_ITEM pFunction;
+      HB_UINT  uiMask;
+
       pFunction = hb_arrayGetItemPtr( sp_hooks, nPos );
       uiMask    = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( uiMask & uiSig )
       {
+         PHB_ITEM pExecArray, pRet;
+         int iRet;
+
          /* we don't unlock the mutex now, even if it is
             a little dangerous. But we are in a signal hander...
             for now just 2 parameters */
@@ -248,7 +241,9 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    }
 
    bSignalEnabled = HB_TRUE;
-   /*s_serviceSetHBSig();*/
+   #if 0
+   s_serviceSetHBSig();
+   #endif
 
    #if 0
    if( uiSig != HB_SIGNAL_UNKNOWN )
@@ -268,8 +263,9 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
 static void * s_signalListener( void * my_stack )
 {
    static HB_BOOL bFirst = HB_TRUE;
-   sigset_t       passall;
-   HB_STACK *     pStack = ( HB_STACK * ) my_stack;
+
+   sigset_t   passall;
+   HB_STACK * pStack = ( HB_STACK * ) my_stack;
 
 #if defined( HB_OS_BSD )
    int sig;
@@ -306,7 +302,7 @@ static void * s_signalListener( void * my_stack )
    pthread_setcanceltype( PTHREAD_CANCEL_DEFERRED, NULL );
    pthread_setcancelstate( PTHREAD_CANCEL_ENABLE, NULL );
 
-   for(;; )
+   for( ;; )
    {
       /* allow safe cancelation */
       HB_STACK_UNLOCK;
@@ -347,12 +343,11 @@ static void * s_signalListener( void * my_stack )
 #endif
 #endif
 
-/*****************************************************************************
-* Windows specific exception filter system.
-*
-* Windows will only catch exceptions; It is necessary to rely on the
-* HB_SERVICELOOP to receive user generated messages.
-*****************************************************************************/
+/* Windows specific exception filter system.
+ *
+ * Windows will only catch exceptions; It is necessary to rely on the
+ * hb_ServiceLoop() to receive user generated messages.
+ */
 
 #ifdef HB_OS_WIN
 static void s_serviceSetHBSig( void );
@@ -363,8 +358,7 @@ static HHOOK s_hMsgHook = NULL;
 /* old error mode */
 static UINT s_uiErrorMode = 0;
 
-/* -------------------------------
-   implementation of the signal translation table
+/* implementation of the signal translation table
    Under windows, 0 is a system exception, while 1 is a user message
  */
 static S_TUPLE s_sigTable[] = {
@@ -406,18 +400,14 @@ static S_TUPLE s_sigTable[] = {
    { 0, 0,                               0                   }
 };
 
-/* -------------------------------
-   Manager of signals for windows
- */
+/* Manager of signals for windows */
 static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
 {
-   PHB_ITEM pFunction, pExecArray, pRet;
    HB_SIZE  nPos;
-   HB_UINT  uiSig, uiMask;
-   int      iRet;
+   HB_UINT  uiSig;
 
    /* let's find the right signal handler. */
-   hb_threadEnterCriticalSection( &s_ServiceMutex );
+   hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
    /* avoid working if PRG signal handling has been disabled */
    if( ! bSignalEnabled )
@@ -433,10 +423,16 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
 
    while( nPos > 0 )
    {
+      PHB_ITEM pFunction;
+      HB_UINT  uiMask;
+
       pFunction = hb_arrayGetItemPtr( sp_hooks, nPos );
       uiMask    = ( HB_UINT ) hb_arrayGetNI( pFunction, 1 );
       if( ( uiMask & uiSig ) == uiSig )
       {
+         PHB_ITEM pExecArray, pRet;
+         int      iRet;
+
          /* we don't unlock the mutex now, even if it is
             a little dangerous. But we are in a signal hander...
             for now just 2 parameters */
@@ -448,7 +444,7 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
           * 1: low-level signal
           * 2: low-level subsignal
           * 3: low-level system error
-          * 4: address that rised the signal
+          * 4: address that rose the signal
           * 5: process id of the signal riser
           * 6: UID of the riser
           */
@@ -462,13 +458,10 @@ static LONG s_signalHandler( int type, int sig, PEXCEPTION_RECORD exc )
          hb_arraySetNI( pRet, HB_SERVICE_OSERROR, GetLastError() );
 
          if( type == 0 ) /* exception */
-         {
             hb_arraySetPtr( pRet, HB_SERVICE_ADDRESS, ( void * ) exc->ExceptionAddress );
-         }
          else
-         {
             hb_arraySetPtr( pRet, HB_SERVICE_ADDRESS, NULL );
-         }
+
          /* TODO: */
          hb_arraySetNI( pRet, HB_SERVICE_PROCESS, GetCurrentThreadId() );
          /* TODO: */
@@ -567,20 +560,17 @@ BOOL WINAPI s_ConsoleHandlerRoutine( DWORD dwCtrlType )
 
 #endif
 
-/*****************************************************************************
-* Filter/handlers setup/shutdown
-* This utility functions are meant to abstract the process of declare and
-* remove the signal handlers, and do it in a mutltiplatform fashon. Use this
-* to implement new platform signal/exception handlers.
-*****************************************************************************/
-
-/*-----------------------------------------------------
-   Set the signal handlers to our program interceptors.
+/**
+ * Filter/handlers setup/shutdown
+ * This utility functions are meant to abstract the process of declare and
+ * remove the signal handlers, and do it in a mutlti-platform fashion. Use this
+ * to implement new platform signal/exception handlers.
  */
+
+/* Set the signal handlers to our program interceptors. */
 
 static void s_serviceSetHBSig( void )
 {
-
 #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
    struct sigaction act;
 
@@ -604,7 +594,7 @@ static void s_serviceSetHBSig( void )
 
    /* to avoid problems with differ sigaction structures and uninitialized
       fields */
-   memset( &act, 0, sizeof( struct sigaction ) );
+   memset( &act, 0, sizeof( act ) );
 
    #if defined( HB_OS_OS2_GCC ) || defined( __WATCOMC__ )
    act.sa_handler = s_signalHandler;
@@ -613,7 +603,9 @@ static void s_serviceSetHBSig( void )
    act.sa_handler   = NULL;            /* if act.sa.. is a union, we just clean this */
    act.sa_sigaction = s_signalHandler; /* this is what matters */
    /* block al signals, we don't want to be interrupted. */
-   /*sigfillset( &act.sa_mask );*/
+   #if 0
+   sigfillset( &act.sa_mask );
+   #endif
    #endif
 
 
@@ -646,13 +638,10 @@ static void s_serviceSetHBSig( void )
    SetUnhandledExceptionFilter( s_exceptionFilter );
    s_hMsgHook = SetWindowsHookEx( WH_GETMESSAGE, ( HOOKPROC ) s_MsgFilterFunc, NULL, GetCurrentThreadId() );
    SetConsoleCtrlHandler( s_ConsoleHandlerRoutine, TRUE );
-
 #endif
 }
-/* ---------------------------------------------------
-   Reset the signal handlers to the default OS value
- */
 
+/* Reset the signal handlers to the default OS value */
 
 static void s_serviceSetDflSig( void )
 {
@@ -682,10 +671,8 @@ static void s_serviceSetDflSig( void )
 }
 
 
-/* ---------------------------------------------------
-   This translates a signal into abstract HB_SIGNAL
-   from os specific representation
- */
+/* This translates a signal into abstract HB_SIGNAL
+   from os specific representation */
 
 static int s_translateSignal( HB_UINT sig, HB_UINT subsig )
 {
@@ -733,10 +720,10 @@ static void s_signalHandlersInit()
    hb_vmAtQuit( hb_service_exit, NULL );
 }
 
-/*****************************************************************************
-* HB_*Service routines
-* This is the core of the service system.
-*****************************************************************************/
+/**
+ * hb_*Service routines
+ * This is the core of the service system.
+ */
 
 /**
  * Starts the service system.
@@ -744,7 +731,6 @@ static void s_signalHandlersInit()
  * On unix: if the parameter is .T., puts the server in daemonic mode, detaching
  * the main thread from the console and terminating it.
  */
-
 HB_FUNC( HB_STARTSERVICE )
 {
    #ifdef HB_THREAD_SUPPORT
@@ -759,12 +745,10 @@ HB_FUNC( HB_STARTSERVICE )
 
    #if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS )
    {
-      int pid;
-
       /* Iconic? */
       if( hb_parl( 1 ) )
       {
-         pid = fork();
+         int pid = fork();
 
          if( pid != 0 )
          {
@@ -788,23 +772,18 @@ HB_FUNC( HB_STARTSERVICE )
    /* in windows, we just detach from console */
    #ifdef HB_OS_WIN
    if( hb_parl( 1 ) )
-   {
       FreeConsole();
-   }
    #endif
 
    /* Initialize only if the service has not yet been initialized */
    if( sp_hooks == NULL )
-   {
       s_signalHandlersInit();
-   }
 }
 
 /**
  * Returns true if the current program is a service, that is if hb_StartService() has
  * Been called. C version useful for internal api
  */
-
 HB_BOOL hb_isService( void )
 {
    return sb_isService;
@@ -814,7 +793,6 @@ HB_BOOL hb_isService( void )
  * Clean up when system exits
  * Called from hb_vmQuit()
  */
-
 void hb_serviceExit( void )
 {
    if( sp_hooks != NULL )
@@ -844,7 +822,6 @@ HB_FUNC( HB_ISSERVICE )
  * Under windows, it peeks the pending messages and send the relevant ones
  * (quit, user+1 and user+2) to our handling functions.
  */
-
 HB_FUNC( HB_SERVICELOOP )
 {
 #ifdef HB_OS_WIN
@@ -881,11 +858,9 @@ HB_FUNC( HB_PUSHSIGNALHANDLER )
 
    /* if the hook is not initialized, initialize it */
    if( sp_hooks == NULL )
-   {
       s_signalHandlersInit();
-   }
 
-   hb_threadEnterCriticalSection( &s_ServiceMutex );
+   hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
    hb_arrayAddForward( sp_hooks, pHandEntry );
 
@@ -901,7 +876,7 @@ HB_FUNC( HB_POPSIGNALHANDLER )
 
    if( sp_hooks != NULL )
    {
-      hb_threadEnterCriticalSection( &s_ServiceMutex );
+      hb_threadEnterCriticalSectionGC( &s_ServiceMutex );
 
       nLen = hb_arrayLen( sp_hooks );
       if( nLen > 0 )
@@ -917,29 +892,25 @@ HB_FUNC( HB_POPSIGNALHANDLER )
          }
       }
       else
-      {
          hb_retl( HB_FALSE );
-      }
+
       hb_threadLeaveCriticalSection( &s_ServiceMutex );
    }
    else
-   {
       hb_retl( HB_FALSE );
-   }
 }
 
 /**
- * Return a character description of the low level signal that has been
- * issued to signal handling routines. This is system dependant.
+ * Return a character description of the low-level signal that has been
+ * issued to signal handling routines. This is system dependent.
  * TODO: Make it international through the xHarbour standard message system.
  */
 HB_FUNC( HB_SIGNALDESC )
 {
+#if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
+
    int iSig    = hb_parni( 1 );
    int iSubSig = hb_parni( 2 );
-
-   /* UNIX MESSGES */
-   #if defined( HB_OS_UNIX ) || defined( HB_OS_OS2_GCC )
 
    switch( iSig )
    {
@@ -1019,12 +990,16 @@ HB_FUNC( HB_SIGNALDESC )
          hb_retc_const( "User defined (secondary)" );
          return;
    }
-   #endif
 
-   #ifdef HB_OS_WIN
+#elif defined( HB_OS_WIN )
+
+   int iSig    = hb_parni( 1 );
+
    if( iSig == 0 ) /* exception */
    {
-      switch( iSubSig )
+      DWORD dwSubSig = ( DWORD ) hb_parnl( 2 );
+
+      switch( dwSubSig )
       {
          case EXCEPTION_ACCESS_VIOLATION:
             hb_retc_const( "Memory read/write access violation" ); return;
@@ -1076,7 +1051,7 @@ HB_FUNC( HB_SIGNALDESC )
       }
    }
 
-   #endif
+#endif
 
    hb_retc_const( "Unrecognized signal" );
 }

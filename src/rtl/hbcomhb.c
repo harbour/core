@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    Serial communication port API wrapper functions
+ * Serial communication port API wrapper functions
  *
  * Copyright 2010 Mindaugas Kavaliauskas <dbtopas / at / dbtopas.lt>
- * www - http://harbour-project.org/
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -58,6 +56,7 @@
  * hb_comGetDeviceHandle( nPort )  --> nHandle | F_ERROR
  * hb_comGetError( nPort ) --> nError
  * hb_comGetOSError( nPort ) --> nError
+ * hb_comFindPort( cDeviceName [, lCreate = .F. ] ) --> nPort
  * hb_comInit( nPort, nBaud, cParity, nSize, nStop ) --> lSuccess
  * hb_comInputCount( nPort ) --> nCount
  * hb_comInputState( nPort ) --> nState
@@ -143,6 +142,12 @@ HB_FUNC( HB_COMGETOSERROR )
    hb_retni( hb_comGetOsError( hb_parni( 1 ) ) );
 }
 
+HB_FUNC( HB_COMFINDPORT )
+{
+   hb_retni( hb_comFindPort( hb_parc( 1 ), hb_parl( 2 ) ) );
+}
+
+
 HB_FUNC( HB_COMINIT )
 {
    hb_retl( hb_comInit( hb_parni( 1 ), hb_parni( 2 ), HB_ISCHAR( 3 ) ? hb_parc( 3 )[ 0 ] : 0,
@@ -205,7 +210,7 @@ HB_FUNC( HB_COMOUTPUTSTATE )
 
 HB_FUNC( HB_COMSENDBREAK )
 {
-   /* 50ms break is enough for baudrate 300 and higher */
+   /* 50ms break is enough for baud-rate 300 and higher */
    hb_retl( hb_comSendBreak( hb_parni( 1 ), hb_parnidef( 2, 50 ) ) == 0 );
 }
 

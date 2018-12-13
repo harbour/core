@@ -1,4 +1,3 @@
-
 /* $DOC$
    $NAME$
       CharRepl()
@@ -52,7 +51,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      WordRepl()   PosRepl()   RangeRepl()
-      CSetRef()
+      WordRepl(),  PosRepl(),  RangeRepl(), CSetRef()
    $END$
  */

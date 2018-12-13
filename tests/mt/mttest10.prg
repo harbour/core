@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    demonstration/test code for using independent console window in
+ * demonstration/test code for using independent console window in
  *    different thread. It needs GT driver which supports such functionality.
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  */
 
@@ -18,7 +16,7 @@
    #define THREAD_GT "XWC"
 #endif
 
-proc main()
+proc main( cGT )
    local i, aThreads
 
    if ! hb_mtvm()
@@ -26,10 +24,19 @@ proc main()
       quit
    endif
 
+   if empty( cGT )
+      cGT := THREAD_GT
+   endif
+
+   if  cGT == "QTC" .and. ! cGT == hb_gtVersion()
+      /* QTC have to be initialized in main thread */
+      hb_gtReload( cGT )
+   endif
+
    ? "Starting threads..."
    aThreads := {}
    for i := 1 to 3
-      aadd( aThreads, hb_threadStart( @thFunc() ) )
+      aadd( aThreads, hb_threadStart( @thFunc(), cGT ) )
       ? i, "=>", atail( aThreads )
    next
 
@@ -43,9 +50,13 @@ proc main()
    enddo
 return
 
-proc thFunc()
+proc thFunc( cGT )
    /* allocate own GT driver */
-   hb_gtReload( THREAD_GT )
-   use test shared
+   hb_gtReload( cGT )
+   if ! dbExists( "test" ) .and. dbExists( "../test" )
+      use ../test shared
+   else
+      use test shared
+   endif
    browse()
 return

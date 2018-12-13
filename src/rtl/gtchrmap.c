@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
  * Video subsystem based on ncurses screen library.
  *
  * Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
- * www - http://harbour-project.org
  * Special thanks to Marek Paliwoda <paliwoda@inetia.pl>
  * author of gtsln from which I borrowed a lot of code and ideas.
  *
@@ -14,13 +12,13 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.   If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -38,7 +36,7 @@
  * Project under the name Harbour.  If you copy code from other
  * Harbour Project or Free Software Foundation releases into a copy of
  * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.   To avoid misleading
+ * not apply to the code that you add in this way.  To avoid misleading
  * anyone as to the status of such modified files, you must delete
  * this exception notice from them.
  *
@@ -49,6 +47,8 @@
  */
 
 /* NOTE: User programs should never call this layer directly! */
+
+/* TODO: use Harbour FS API */
 
 #include "hbgtcore.h"
 #include "hbapifs.h"
@@ -165,7 +165,6 @@ static void skip_blank( char ** buf )
 static int get_val( char ** buf )
 {
    int n = -1;
-   char c;
 
    if( ( *buf )[ 0 ] == '\'' && ( *buf )[ 1 ] != '\0' && ( *buf )[ 2 ] == '\'' )
    {
@@ -178,16 +177,16 @@ static int get_val( char ** buf )
       *buf += 2;
       for(; ( **buf >= '0' && **buf <= '9' ) ||
             ( **buf >= 'A' && **buf <= 'F' ) ||
-            ( **buf >= 'a' && **buf <= 'f' ); ( *buf )++ )
+            ( **buf >= 'a' && **buf <= 'f' ); ++( *buf ) )
       {
-         c = **buf | 0x20;
+         char c = **buf | 0x20;
          n = ( n << 4 ) + c - ( c > '9' ? ( 'a' - 10 ) : '0' );
       }
    }
    else if( **buf >= '0' && **buf <= '9' )
    {
       n = 0;
-      for(; ( **buf >= '0' && **buf <= '9' ); ( *buf )++ )
+      for(; ( **buf >= '0' && **buf <= '9' ); ++( *buf ) )
          n = n * 10 + ( **buf - '0' );
    }
    return n > 0xff ? -1 : n;
@@ -195,7 +194,7 @@ static int get_val( char ** buf )
 
 static int parse_line( char * buf, int * from, int * to, char * op, int * val, int * mod )
 {
-   char *s, *s2;
+   char *s;
    int ret = 0, ina = 0;
 
    s = buf;
@@ -226,6 +225,7 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
 
    if( *s == '@' )
    {
+      char *s2;
       ++s;
       s2 = buf;
       while( *s != '\0' && *s != ' ' )
@@ -258,8 +258,8 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
                             s[ 1 ] == '|' || s[ 1 ] == '^' || s[ 1 ] == '=' ||
                             s[ 1 ] == ' ' ) )
          {
-            *op = s[1];
-            s+=2;
+            *op = s[ 1 ];
+            s += 2;
          }
          *val = *op == ' ' ? 0 : get_val( &s );
          if( *val >= 0 )
@@ -278,15 +278,16 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
 static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const char * pszFile )
 {
    int line = 0, from = 0, to = 0, val = 0, mod = 0, i, n;
-   char buf[ 256 ], * s, op = 0;
+   char * s, op = 0;
    int isTerm = 0;
    fpos_t pos;
 
    fgetpos( fp, &pos );
-   fseek( fp, 0, SEEK_SET );
+   ( void ) fseek( fp, 0, SEEK_SET );
 
    while( ! feof( fp ) && isTerm < 2 )
    {
+      char buf[ 256 ];
       ++line;
       if( fgets( buf, sizeof( buf ), fp ) != NULL )
       {
@@ -304,7 +305,7 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
                   ++s;
                *s = '\0';
                s = buf;
-               i = strlen( pszTerm );
+               i = ( int ) strlen( pszTerm );
                while( isTerm == 0 && ( s = strstr( s + 1, pszTerm ) ) != NULL )
                {
                   if( *( s - 1 ) == '|' &&
@@ -324,7 +325,9 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
          }
          else if( n == 1 )
          {
-            /* printf("line: %3d\tfrom=%d, to=%d, op='%c', val=%d, mod=%d\n", line, from, to, op, val, mod); */
+            #if 0
+            printf( "line: %3d\tfrom=%d, to=%d, op='%c', val=%d, mod=%d\n", line, from, to, op, val, mod );
+            #endif
             for( i = from; i <= to; ++i )
             {
                switch( op )
@@ -363,21 +366,20 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
       }
    }
 
-   fsetpos( fp, &pos );
+   ( void ) fsetpos( fp, &pos );
 
    return isTerm;
 }
 
 static int hb_gt_chrmapread( const char * pszFile, const char * pszTerm, int * nTransTbl )
 {
-   FILE * fp;
-   char buf[ 256 ], * ptr, * pTerm;
    int isTerm = -1;
-
-   fp = hb_fopen( pszFile, "r" );
+   FILE * fp = hb_fopen( pszFile, "r" );
 
    if( fp != NULL )
    {
+      char buf[ 256 ], * ptr, * pTerm;
+
       hb_strncpy( buf, pszTerm, sizeof( buf ) - 1 );
       isTerm = 0;
       pTerm = buf;
@@ -399,7 +401,7 @@ static int hb_gt_chrmapread( const char * pszFile, const char * pszTerm, int * n
 
 int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
 {
-   char * pszFree = NULL, * pszFile, szFile[ HB_PATH_MAX ];
+   char * pszFree = NULL;
    int nRet = -1;
 
    chrmap_init( piTransTbl );
@@ -415,11 +417,13 @@ int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
 
    if( pszTerm != NULL && *pszTerm != '\0' )
    {
-      pszFile = hb_getenv( "HB_CHARMAP" );
+      char * pszFile = hb_getenv( "HB_CHARMAP" );
+
       if( pszFile != NULL && *pszFile != '\0' )
          nRet = hb_gt_chrmapread( pszFile, pszTerm, piTransTbl );
       if( nRet == -1 )
       {
+         char szFile[ HB_PATH_MAX ];
          if( pszFile )
             hb_xfree( pszFile );
          pszFile = hb_getenv( "HB_ROOT" );
@@ -453,7 +457,7 @@ int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
 }
 
 #if 0
-int main(int argc, char **argv)
+int main( int argc, char ** argv )
 {
    int piTransTbl[ 256 ], i;
 
@@ -463,7 +467,7 @@ int main(int argc, char **argv)
       exit( 1 );
    }
 
-   for( i = 0; i < 256; i++ )
+   for( i = 0; i < 256; ++i )
       printf( "%3d -> %3d : %d\n", i, piTransTbl[ i ] & 0xff, piTransTbl[ i ] >> 16 );
 
    return 0;

@@ -1,10 +1,8 @@
 /*
- * Harbour Project source code:
- *    platform independent task system. It's used when when OS does not
- *    support threads
+ * Platform independent task system. It's used when when OS does not
+ * support threads
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,9 +15,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -402,7 +400,7 @@ static void hb_taskFinalize( PHB_TASKINFO pTask )
 #endif
    }
 
-   /* it cannot happen for runing threads */
+   /* it cannot happen for running threads */
 
    /* remove from mutex lockers queue */
    if( pTask->locking )
@@ -503,19 +501,19 @@ static void hb_taskRun( void )
 static PHB_TASKINFO hb_taskNew( long stack_size )
 {
    PHB_TASKINFO pTask;
+   HB_PTRUINT new_size;
 
    if( stack_size < HB_TASK_STACK_MIN )
       stack_size = HB_TASK_STACK_MIN;
 
-   pTask = ( PHB_TASKINFO ) memset( hb_xgrab( sizeof( HB_TASKINFO ) ), 0,
-                                    sizeof( HB_TASKINFO ) );
+   pTask = ( PHB_TASKINFO ) hb_xgrabz( sizeof( HB_TASKINFO ) );
    pTask->stack = ( char * ) hb_xgrab( stack_size );
 
-   stack_size += ( HB_PTRDIFF ) pTask->stack;
-   stack_size &= ~( HB_TASK_STACK_ALIGN - 1 );
-   stack_size -= ( HB_PTRDIFF ) pTask->stack;
+   new_size = ( HB_PTRUINT ) pTask->stack + stack_size;
+   new_size &= ~ ( HB_PTRUINT ) ( HB_TASK_STACK_ALIGN - 1 );
+   new_size -= ( HB_PTRUINT ) pTask->stack;
 
-   pTask->stack_size = stack_size;
+   pTask->stack_size = ( long ) new_size;
    pTask->id = ++s_iTaskID;
 
    pTask->state = TASK_INIT;
@@ -561,8 +559,7 @@ void hb_taskInit( void )
 {
    if( s_iTaskID == 0 )
    {
-      s_mainTask = s_currTask = ( PHB_TASKINFO )
-         memset( hb_xgrab( sizeof( HB_TASKINFO ) ), 0, sizeof( HB_TASKINFO ) );
+      s_mainTask = s_currTask = ( PHB_TASKINFO ) hb_xgrabz( sizeof( HB_TASKINFO ) );
       /* main task uses default application stack */
       s_currTask->id = ++s_iTaskID;
       s_currTask->state = TASK_RUNNING;
@@ -736,16 +733,15 @@ void hb_taskSuspend( void )
 /* TODO: do not start task immediately */
 void hb_taskResume( void * pTaskPtr )
 {
-   PHB_TASKINFO pTask = ( PHB_TASKINFO ) pTaskPtr, pCurrTask;
+   PHB_TASKINFO pTask = ( PHB_TASKINFO ) pTaskPtr;
 
    if( s_currTask != pTask )
    {
-      pCurrTask = s_currTask;
       switch( pTask->state )
       {
 #if ! defined( HB_HAS_UCONTEXT )
          case TASK_INIT:
-            /* save current execution context  */
+            /* save current execution context */
             if( setjmp( s_currTask->context ) == 0 )
             {
                s_currTask = pTask;
@@ -756,20 +752,23 @@ void hb_taskResume( void * pTaskPtr )
 #endif
          case TASK_SLEEPING:
             hb_taskWakeUp( pTask );
-            /* no break */
+            /* fallthrough */
 #if defined( HB_HAS_UCONTEXT )
          case TASK_INIT:
 #endif
          case TASK_SUSPEND:
             pTask->state = TASK_RUNNING;
-            /* no break */
+            /* fallthrough */
          case TASK_RUNNING:
 #if defined( HB_HAS_UCONTEXT )
-            s_currTask = pTask;
-            /* save current execution context and switch to the new one */
-            swapcontext( &pCurrTask->context, &pTask->context );
+            {
+               PHB_TASKINFO pCurrTask = s_currTask;
+               s_currTask = pTask;
+               /* save current execution context and switch to the new one */
+               swapcontext( &pCurrTask->context, &pTask->context );
+            }
 #else
-            /* save current execution context  */
+            /* save current execution context */
             if( setjmp( s_currTask->context ) == 0 )
             {
                s_currTask = pTask;

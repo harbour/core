@@ -1,9 +1,7 @@
 /*
- * Harbour Project source code:
- *    example of Harbour codepage using UTF-16 little endian encoding
+ * Example of Harbour codepage using UTF-16 little endian encoding
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- * www - http://www.harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,9 +14,9 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
+ * along with this program; see the file LICENSE.txt.  If not, write to
+ * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+ * Boston, MA 02110-1301 USA (or visit https://www.gnu.org/licenses/).
  *
  * As a special exception, the Harbour Project gives permission for
  * additional uses of the text contained in its release of Harbour.
@@ -53,10 +51,10 @@ static HB_CDP_GET_FUNC( UTF16LE_get )
 {
    HB_SYMBOL_UNUSED( cdp );
 
-   if( * pnIndex + 1 < nLen )
+   if( *pnIndex + 1 < nLen )
    {
-      * wc = HB_GET_LE_UINT16( &pSrc[ * pnIndex ] );
-      * pnIndex += 2;
+      *wc = HB_GET_LE_UINT16( &pSrc[ *pnIndex ] );
+      *pnIndex += 2;
       return HB_TRUE;
    }
    else
@@ -68,10 +66,10 @@ static HB_CDP_PUT_FUNC( UTF16LE_put )
 {
    HB_SYMBOL_UNUSED( cdp );
 
-   if( * pnIndex + 1 < nLen )
+   if( *pnIndex + 1 < nLen )
    {
-      HB_PUT_LE_UINT16( &pDst[ * pnIndex ], wc );
-      * pnIndex += 2;
+      HB_PUT_LE_UINT16( &pDst[ *pnIndex ], wc );
+      *pnIndex += 2;
       return HB_TRUE;
    }
    return HB_FALSE;

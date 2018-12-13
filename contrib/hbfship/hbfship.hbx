@@ -25,7 +25,6 @@ DYNAMIC dbSetLocate
 DYNAMIC dbSetLocateBlock
 DYNAMIC ExecName
 DYNAMIC ExecPIDNum
-DYNAMIC FieldDeci
 DYNAMIC FieldGetArr
 DYNAMIC FieldPutArr
 DYNAMIC IndexCount
@@ -36,6 +35,7 @@ DYNAMIC IsDbFLock
 DYNAMIC IsDbRLock
 DYNAMIC IsFunction
 DYNAMIC SecondsCPU
+DYNAMIC StrOccurs
 DYNAMIC StrPeek
 DYNAMIC StrPoke
 DYNAMIC UsersMax
