@@ -529,7 +529,7 @@ static void mxml_node_insert_before( PHB_ITEM pTg, PHB_ITEM pNode )
    pPrev = hb_itemNew( hb_param( -1, HB_IT_ANY ) );
    hb_objSendMsg( pNode, "_OPREV", 1, hb_param( -1, HB_IT_ANY ) );
 
-   /* if the tg->prev is not null, and if it's next was tg, we must update to node */
+   /* if the previous is not null, and if his next was tg, we must update to node */
    if( ! HB_IS_NIL( pPrev ) )
    {
       hb_objSendMsg( pPrev, "ONEXT", 0 );
