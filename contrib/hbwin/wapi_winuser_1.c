@@ -169,6 +169,15 @@ HB_FUNC( WAPI_ISWINDOW )
    hbwapi_ret_L( bResult );
 }
 
+HB_FUNC( WAPI_SHOWWINDOW )
+{
+   BOOL bResult = ShowWindow( hbwapi_par_raw_HWND( 1 ),
+                              hb_parni( 2 ) );
+
+   hbwapi_SetLastError( GetLastError() );
+   hbwapi_ret_L( bResult );
+}
+
 HB_FUNC( WAPI_DRAWTEXT )
 {
    HDC hDC = hbwapi_par_HDC( 1 );
