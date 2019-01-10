@@ -1771,7 +1771,7 @@ Supported shells per host platforms:
 * Libraries:
 
      * HB_WITH_ADS - Advantage Client Engine API [win, linux, free, closed-source]
-        * <http://www.sybase.com/products/databasemanagement/advantagedatabaseserver/client-engine-api>
+        * <http://devzone.advantagedatabase.com/dz/content.aspx?key=20&Release=19&Product=5>
      * HB_WITH_ALLEGRO - Allegro (GUI) [multiplatform, free, open-source]
         * <http://alleg.sourceforge.net/>
      * HB_WITH_BLAT - Blat (SMTP client) [win, free, open-source]
