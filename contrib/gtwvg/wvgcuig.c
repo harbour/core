@@ -732,7 +732,6 @@ static void hb_wvg_LabelEx2( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int iTop
    hOldFont = ( HFONT ) SelectObject( pWVT->hdc, gObj->hFont );
 
    x = iLeft;
-   y = iTop;
 
    switch( gObj->iAlign )
    {
@@ -1463,7 +1462,7 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 {
 #if ! defined( HB_OS_WIN_CE )
    LONG       lWidth, lHeight;
-   int        xe, ye, iWd = 0, iHt = 0, x, y, wd, ht;
+   int        xe, ye, x, y, wd, ht;
    HRGN       hrgn1;
    POINT      lpp     = { 0, 0 };
 
@@ -1482,6 +1481,8 @@ static void hb_wvg_RenderPicture( PHB_GTWVT pWVT, PHB_GOBJS gObj, int iLeft, int
 
       if( gObj->iData == 1 )
       {
+         int iWd, iHt;
+         
          if( lHeight > lWidth )
          {
             iWd = ( int ) ( ( double )  ht * lWidth / lHeight );

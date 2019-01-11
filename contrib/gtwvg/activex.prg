@@ -120,27 +120,27 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
    LOCAL hObj, hWnd
 
-   ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::WvgWindow:create( @oParent, @oOwner, aPos, aSize, aPresParams, lVisible )
 
    __defaultNIL( @cCLSID, ::CLSID )
    __defaultNIL( @cLicense, ::license )
 
    ::CLSID      := cCLSID
    ::license    := cLicense
-   ::hContainer := ::oParent:getHWND()
+   ::hContainer := iif( HB_ISOBJECT( ::oParent ), ::oParent:getHWND(), ::oParent )
 
    IF ! HB_ISNUMERIC( ::hContainer ) .OR. ! HB_ISSTRING( ::CLSID )
       RETURN NIL
    ENDIF
 
    ::hWnd := NIL
-   ::nID  := ::oParent:GetControlId()
+   ::nID  := iif( HB_ISOBJECT( ::oParent ), ::oParent:GetControlId(), ::getControlID() )
    ::oOLE := win_oleAuto()
 
    win_axInit()
 
    hWnd := wapi_CreateWindowEx( ::exStyle, "AtlAxWin", ::CLSID, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
-      ::aSize[ 1 ], ::aSize[ 2 ], win_N2P( ::hContainer ), 0 )
+                                ::aSize[ 1 ], ::aSize[ 2 ], win_N2P( ::hContainer ), 0, NIL, NIL )
    IF Empty( hWnd )
       RETURN NIL
    ENDIF
@@ -162,13 +162,16 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
    ::SetWindowProcCallback()  /* Is this needed to catch windowing events ? - NO */
 #endif
 
-   ::oParent:addChild( Self )
+   IF HB_ISOBJECT( ::oParent )
+      ::oParent:addChild( Self )
+   ENDIF
+
+   ::setPosAndSize()
    IF ::visible
       ::show()
    ELSE
       ::hide()
    ENDIF
-   ::setPosAndSize()
    IF ::isParentCrt()
       ::oParent:setFocus()
    ENDIF
@@ -225,14 +228,15 @@ METHOD WvgActiveXControl:OnError()
 
 METHOD PROCEDURE WvgActiveXControl:Destroy()
 
-   IF ! Empty( ::oOLE:__hObj )
-      IF wapi_IsWindow( ::pWnd )
-         wapi_DestroyWindow( ::pWnd )
+   IF ! Empty( ::oOLE )
+      IF ! Empty( ::oOLE:__hObj )
+         IF wapi_IsWindow( ::pWnd )
+            wapi_DestroyWindow( ::pWnd )
+         ENDIF
+         ::oOle := NIL
+         ::hWnd := NIL
       ENDIF
-      ::oOle := NIL
-      ::hWnd := NIL
    ENDIF
-
    RETURN
 
 METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
