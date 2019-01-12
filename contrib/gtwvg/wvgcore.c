@@ -194,7 +194,7 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    LONG    lWidth, lHeight;
-   int     xe, ye, iWd = 0, iHt = 0;
+   int     xe, ye;
    HRGN    hrgn1;
    POINT   lpp     = { 0, 0 };
    HB_BOOL bResult = HB_FALSE;
@@ -207,6 +207,8 @@ HB_BOOL hb_wvt_gtRenderPicture( int x, int y, int wd, int ht, IPicture * iPictur
 
       if( bDoNotScale )
       {
+         int iWd, iHt;
+
          if( lHeight > lWidth )
          {
             iWd = ( int ) ( ( double )  ht * lWidth / lHeight );
@@ -506,7 +508,7 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
    DWORD   nFileSize;
    DWORD   nReadByte;
    LONG    lWidth, lHeight;
-   int     xe, ye, iWd = 0, iHt = 0;
+   int     xe, ye;
    HRGN    hrgn1;
    POINT   lpp     = { 0, 0 };
    HB_BOOL bResult = HB_FALSE;
@@ -539,6 +541,8 @@ HB_BOOL hb_wvt_DrawImage( HDC hdc, int x, int y, int wd, int ht, LPCTSTR lpImage
 
                   if( bDoNotScale )
                   {
+                     int iWd, iHt;
+                     
                      if( lHeight > lWidth )
                      {
                         iWd = ( int ) ( ( double )  ht * lWidth / lHeight );

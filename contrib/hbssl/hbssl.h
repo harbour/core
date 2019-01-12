@@ -48,6 +48,7 @@
 #define HBSSL_H_
 
 #include "hbapi.h"
+#include "hbapierr.h"
 #include "hbsocket.h"
 
 #if defined( HB_OS_WIN )
@@ -156,6 +157,14 @@
    #define SSL_get_wfd  SSL_get_fd
 #endif
 
+#if ! defined( OPENSSL_VERSION )
+   #define OPENSSL_VERSION   SSLEAY_VERSION
+   #define OPENSSL_CFLAGS    SSLEAY_CFLAGS
+   #define OPENSSL_BUILT_ON  SSLEAY_BUILT_ON
+   #define OPENSSL_PLATFORM  SSLEAY_PLATFORM
+   #define OPENSSL_DIR       SSLEAY_DIR
+#endif
+
 /* use macro to pacify warnings with missing 'const' in some function
    declarations in OpenSSL prior 0.9.8 */
 #if OPENSSL_VERSION_NUMBER < 0x0090800fL
@@ -183,31 +192,31 @@ extern long               hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET s
 
 extern const SSL_METHOD * hb_ssl_method_id_to_ptr( int n );
 
-extern void *             hb_BIO_is( int iParam );
+extern HB_BOOL            hb_BIO_is( int iParam );
 extern BIO *              hb_BIO_par( int iParam );
 
-extern void *             hb_SSL_CTX_is( int iParam );
+extern HB_BOOL            hb_SSL_CTX_is( int iParam );
 extern SSL_CTX *          hb_SSL_CTX_par( int iParam );
 extern SSL_CTX *          hb_SSL_CTX_itemGet( PHB_ITEM pItem );
 
-extern void *             hb_SSL_is( int iParam );
+extern HB_BOOL            hb_SSL_is( int iParam );
 extern SSL *              hb_SSL_par( int iParam );
 extern SSL *              hb_SSL_itemGet( PHB_ITEM pItem );
 
-extern void *             hb_SSL_SESSION_is( int iParam );
+extern HB_BOOL            hb_SSL_SESSION_is( int iParam );
 extern SSL_SESSION *      hb_SSL_SESSION_par( int iParam );
 
-extern void *             hb_X509_is( int iParam );
+extern HB_BOOL            hb_X509_is( int iParam );
 extern X509 *             hb_X509_par( int iParam );
 extern void               hb_X509_ret( X509 * x509, HB_BOOL fRelease );
 
-extern int                hb_EVP_MD_is( int iParam );
+extern HB_BOOL            hb_EVP_MD_is( int iParam );
 extern const EVP_MD *     hb_EVP_MD_par( int iParam );
 
-extern int                hb_EVP_CIPHER_is( int iParam );
+extern HB_BOOL            hb_EVP_CIPHER_is( int iParam );
 extern const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam );
 
-extern void *             hb_EVP_PKEY_is( int iParam );
+extern HB_BOOL            hb_EVP_PKEY_is( int iParam );
 extern EVP_PKEY *         hb_EVP_PKEY_par( int iParam );
 extern void               hb_EVP_PKEY_ret( EVP_PKEY * pkey );
 

@@ -46,13 +46,11 @@
 
 #define _HB_ZNET_INTERNAL_
 
-#include "hbapi.h"
+#include "hbssl.h"
+
 #include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbsocket.h"
 #include "hbdate.h"
 #include "hbznet.h"
-#include "hbssl.h"
 
 static long hb_inetReadSSL( PHB_ZNETSTREAM pStream, HB_SOCKET sd,
                             void * buffer, long len, HB_MAXINT timeout )

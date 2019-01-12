@@ -44,9 +44,12 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-
+/* This must come before #include "hbssl.h".
+   OpenSSL 1.1.x and upper don't require Windows headers anymore,
+   but if #included, it still must come before its own headers.
+   The Harbour wrapper code doesn't need the Windows headers, so
+   they will be dropped once 1.0.2 is EOLed in 2019-12-31. */
+#include "hbdefs.h"
 #if defined( HB_OS_WIN )
    #include <windows.h>
    #include <wincrypt.h>
@@ -82,9 +85,9 @@ static const HB_GC_FUNCS s_gcX509_funcs =
    hb_gcDummyMark
 };
 
-void * hb_X509_is( int iParam )
+HB_BOOL hb_X509_is( int iParam )
 {
-   return hb_parptrGC( &s_gcX509_funcs, iParam );
+   return hb_parptrGC( &s_gcX509_funcs, iParam ) != NULL;
 }
 
 X509 * hb_X509_par( int iParam )

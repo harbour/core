@@ -3377,10 +3377,12 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutNInt( pInfo->pResult, ( HB_PTRUINT ) pWVT->hIcon );
          break;
 
+      case HB_GTI_VIEWPORTWIDTH:
       case HB_GTI_VIEWMAXWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->COLS );
          break;
 
+      case HB_GTI_VIEWPORTHEIGHT:
       case HB_GTI_VIEWMAXHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->ROWS );
          break;
@@ -3664,8 +3666,8 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SETPOS_ROWCOL:
          if( pWVT->hWnd )
          {
-            int i1 = -1;
-            int i2 = -1;
+            int i1, i2;
+            
             RECT rect = { 0, 0, 0, 0 };
             GetWindowRect( pWVT->hWnd, &rect );
 

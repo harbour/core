@@ -78,6 +78,8 @@ extern HB_EXPORT PHB_ITEM     hb_itemArrayNew  ( HB_SIZE nLen );
 extern HB_EXPORT PHB_ITEM     hb_itemArrayPut  ( PHB_ITEM pArray, HB_SIZE nIndex, PHB_ITEM pItem );
 extern HB_EXPORT HB_SIZE      hb_itemCopyC     ( PHB_ITEM pItem, char * szBuffer, HB_SIZE nLen );
 extern HB_EXPORT HB_BOOL      hb_itemFreeC     ( char * szText );
+extern HB_EXPORT const char * hb_itemGetCRef   ( PHB_ITEM pItem, void ** phRef, HB_SIZE * pnLen );
+extern HB_EXPORT void         hb_itemFreeCRef  ( void * hRef );
 extern HB_EXPORT char *       hb_itemGetC      ( PHB_ITEM pItem );
 extern HB_EXPORT const char * hb_itemGetCPtr   ( PHB_ITEM pItem );
 extern HB_EXPORT HB_SIZE      hb_itemGetCLen   ( PHB_ITEM pItem );

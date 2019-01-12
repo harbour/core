@@ -44,13 +44,10 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-#include "hbapiitm.h"
-#include "hbsocket.h"
-#include "hbvm.h"
-
 #include "hbssl.h"
+
+#include "hbapiitm.h"
+#include "hbvm.h"
 
 HB_FUNC( HB_SSL_READ_ALL )
 {

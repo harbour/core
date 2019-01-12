@@ -44,9 +44,6 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapierr.h"
-
 #include "hbssl.h"
 
 #include <openssl/evp.h>

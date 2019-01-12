@@ -245,7 +245,7 @@ CREATE CLASS WvgWindow INHERIT WvgPartHandler
    PROTECTED:
 
    METHOD getPosAndSize( aPs, aSz )
-   METHOD isParentCrt()                         INLINE ::oParent:objType == objTypeCrt
+   METHOD isParentCrt()                         INLINE ( iif( HB_ISOBJECT( ::oParent ), ::oParent:objType == objTypeCrt, .F. ) )
    METHOD rePosition()
    METHOD createControl()
 

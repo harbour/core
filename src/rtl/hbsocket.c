@@ -1956,6 +1956,11 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 #endif /* ! HB_HAS_POLL */
 }
 
+HB_U16 hb_socketNToHS( HB_U16 netshort )
+{
+   return ntohs( netshort );
+}
+
 int hb_socketGetAddrFamily( const void * pSockAddr, unsigned len )
 {
    return pSockAddr && len ? ( ( const struct sockaddr * ) pSockAddr )->sa_family : -1;

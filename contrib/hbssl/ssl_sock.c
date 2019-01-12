@@ -47,12 +47,11 @@
 /* this has to be declared before hbsocket.h is included */
 #define _HB_SOCKEX_IMPLEMENTATION_
 
-#include "hbapiitm.h"
-#include "hbapierr.h"
-#include "hbvm.h"
-#include "hbsocket.h"
-#include "hbdate.h"
 #include "hbssl.h"
+
+#include "hbapiitm.h"
+#include "hbvm.h"
+#include "hbdate.h"
 #include "hbinit.h"
 
 typedef struct _HB_SSLSTREAM
@@ -116,7 +115,7 @@ long hb_ssl_socketRead( PHB_SSLSTREAM pStream, HB_SOCKET sd,
    if( pStream->blocking ? timeout >= 0 : timeout < 0 )
    {
       if( hb_socketSetBlockingIO( sd, timeout < 0 ) >= 0 )
-         pStream->blocking = !pStream->blocking;
+         pStream->blocking = ! pStream->blocking;
    }
 
    timer = hb_timerInit( timeout );
@@ -205,7 +204,7 @@ long hb_ssl_socketWrite( PHB_SSLSTREAM pStream, HB_SOCKET sd,
    if( pStream->blocking ? timeout >= 0 : timeout < 0 )
    {
       if( hb_socketSetBlockingIO( sd, timeout < 0 ) >= 0 )
-         pStream->blocking = !pStream->blocking;
+         pStream->blocking = ! pStream->blocking;
    }
 
    timer = hb_timerInit( timeout );
@@ -288,10 +287,10 @@ PHB_SSLSTREAM hb_ssl_socketNew( HB_SOCKET sd, SSL * ssl, HB_BOOL fServer,
    pStream->pSSL = pSSL ? hb_itemNew( pSSL ) : NULL;
    pStream->blocking = timeout < 0;
    if( hb_socketSetBlockingIO( sd, pStream->blocking ) < 0 )
-      pStream->blocking = !pStream->blocking;
+      pStream->blocking = ! pStream->blocking;
 
    SSL_set_mode( ssl, HB_SSL_MODE_AUTO_RETRY );
-   iResult = SSL_set_fd( ssl, sd );
+   iResult = SSL_set_fd( ssl, sd );  /* Truncates `sd` on win64. OpenSSL bug: https://rt.openssl.org/Ticket/Display.html?id=1928&user=guest&pass=guest */
 
    timer = hb_timerInit( timeout );
 

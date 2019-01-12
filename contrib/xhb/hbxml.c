@@ -522,10 +522,22 @@ HB_FUNC( HBXML_NODE_UNLINK )
 static void mxml_node_insert_before( PHB_ITEM pTg, PHB_ITEM pNode )
 {
    PHB_ITEM pParent;
+   PHB_ITEM pPrev;
 
    /* Move tg->prev into node->prev */
    hb_objSendMsg( pTg, "OPREV", 0 );
+   pPrev = hb_itemNew( hb_param( -1, HB_IT_ANY ) );
    hb_objSendMsg( pNode, "_OPREV", 1, hb_param( -1, HB_IT_ANY ) );
+
+   /* if the previous is not null, and if his next was tg, we must update to node */
+   if( ! HB_IS_NIL( pPrev ) )
+   {
+      hb_objSendMsg( pPrev, "ONEXT", 0 );
+      if( hb_arrayId( hb_param( -1, HB_IT_ANY ) ) == hb_arrayId( pTg ) )
+      {
+         hb_objSendMsg( pPrev, "_ONEXT", 1, pNode );
+      }
+   }
 
    /* tg->prev is now pnode! */
    hb_objSendMsg( pTg, "_OPREV", 1, pNode );
