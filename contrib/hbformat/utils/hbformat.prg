@@ -158,7 +158,7 @@ STATIC PROCEDURE About()
    OutStd( ;
       "Harbour Source Formatter " + HBRawVersion() + hb_eol() + ;
       "Copyright (c) 2010-" + ;
-         "2018" + ", " + ;
+         "2019" + ", " + ;
          hb_Version( HB_VERSION_URL_BASE ) + hb_eol() + ;
       "Copyright (c) 2009, Alexander S.Kresin" + hb_eol() + ;
       hb_eol() )

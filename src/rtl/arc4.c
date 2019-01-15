@@ -50,7 +50,14 @@
 /* XXX: Check and possibly extend this to other Unix-like platforms */
 #if ( defined( HB_OS_BSD ) && ! defined( HB_OS_DARWIN ) ) || \
    ( defined( HB_OS_LINUX ) && ! defined ( HB_OS_ANDROID ) && ! defined ( __WATCOMC__ ) )
-#  define HAVE_SYS_SYSCTL_H
+   /*
+    * sysctl() on Linux has fallen into depreciation. Newer generations
+    * of runtime C libraries, like musl, doesn't even expose it. Here we
+    * look for it only with "classic" line of libc's.
+    */
+#  if ( ! defined( HB_OS_LINUX ) || ( defined( __GLIBC__ ) || defined( __UCLIBC__ ) ) )
+#     define HAVE_SYS_SYSCTL_H
+#  endif
 #  define HAVE_DECL_CTL_KERN
 #  define HAVE_DECL_KERN_RANDOM
 #  if defined( HB_OS_LINUX )
