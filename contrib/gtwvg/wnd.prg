@@ -1,7 +1,7 @@
 /*
  * Xbase++ Compatible xbpWindow Class
  *
- * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * Copyright 2008-2019 Pritpal Bedi <bedipritpal@hotmail.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1130,9 +1130,7 @@ METHOD WvgWindow:findObjectByHandle( hWnd )
 
 METHOD WvgWindow:getPosAndSize( aPs, aSz )
 
-   LOCAL nX, nY, nW, nH, aXY
-   LOCAL aPos, aSize
-   LOCAL nFH, nFW
+   LOCAL nX, nY, nW, nH, aPos, aSize, aFontInfo
 
    __defaultNIL( @aPs, AClone( ::aPos  ) )
    __defaultNIL( @aSz, AClone( ::aSize ) )
@@ -1155,21 +1153,22 @@ METHOD WvgWindow:getPosAndSize( aPs, aSz )
       ENDIF
 
       IF aPos[ 1 ] < 0 .OR. aPos[ 2 ] < 0 .OR. aSize[ 1 ] < 0 .OR. aSize[ 2 ] < 0
+         aFontInfo := wvt_GetFontInfo()
          nX := aPos[ 2 ]
          IF nX < 0
-            nX := Int( Abs( aPos[ 2 ] ) * wvt_GetFontInfo()[ 7 ] )
+            nX := Int( Abs( aPos[ 2 ] ) * aFontInfo[ 7 ] )
          ENDIF
          nY := aPos[ 1 ]
          IF nY < 0
-            nY := Int( Abs( aPos[ 1 ] ) * wvt_GetFontInfo()[ 6 ] )
+            nY := Int( Abs( aPos[ 1 ] ) * aFontInfo[ 6 ] )
          ENDIF
          nW := aSize[ 2 ]
          IF nW < 0
-            nW := Int( Abs( aSize[ 2 ] ) * wvt_GetFontInfo()[ 7 ] )
+            nW := Int( Abs( aSize[ 2 ] ) * aFontInfo[ 7 ] )
          ENDIF
          nH := aSize[ 1 ]
          IF nH < 0
-            nH := Int( Abs( aSize[ 1 ] ) * wvt_GetFontInfo()[ 6 ] )
+            nH := Int( Abs( aSize[ 1 ] ) * aFontInfo[ 6 ] )
          ENDIF
          RETURN { nX, nY, nW, nH }
       ENDIF
