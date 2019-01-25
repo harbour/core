@@ -538,6 +538,7 @@ static void mxml_node_insert_before( PHB_ITEM pTg, PHB_ITEM pNode )
          hb_objSendMsg( pPrev, "_ONEXT", 1, pNode );
       }
    }
+   hb_itemRelease( pPrev );
 
    /* tg->prev is now pnode! */
    hb_objSendMsg( pTg, "_OPREV", 1, pNode );
