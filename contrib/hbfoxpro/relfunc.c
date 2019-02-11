@@ -72,7 +72,7 @@ HB_FUNC( INLIST )
       PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
       int iParam;
 
-      for( iParam = 2; iParam < iPCount; ++iParam )
+      for( iParam = 2; iParam <= iPCount; ++iParam )
       {
          if( hb_itemEqual( pValue, hb_param( iParam, HB_IT_ANY ) ) )
          {

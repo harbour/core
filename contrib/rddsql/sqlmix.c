@@ -1468,6 +1468,29 @@ static HB_ERRCODE sqlmixGoHot( SQLMIXAREAP pArea )
    return HB_SUCCESS;
 }
 
+static HB_ERRCODE sqlmixZap( SQLMIXAREAP pArea )
+{
+   PMIXTAG pTag;
+
+   if( SUPER_ZAP( &pArea->sqlarea.area ) == HB_FAILURE )
+      return HB_FAILURE;
+
+   pTag = pArea->pTagList;
+
+   while( pTag )
+   {
+      if( pTag->Root )
+         hb_mixTagDestroyNode( pTag->Root );
+
+      pTag->Root = hb_mixTagCreateNode( pTag, HB_TRUE );
+      pTag->fEof = HB_TRUE;
+
+      pTag = pTag->pNext;
+   }
+
+   return HB_SUCCESS;
+}
+
 
 static HB_ERRCODE sqlmixClose( SQLMIXAREAP pArea )
 {
@@ -2013,7 +2036,7 @@ static RDDFUNCS sqlmixTable =
   ( DBENTRYP_VS ) NULL,                 /* sqlmixSort */
   ( DBENTRYP_VT ) NULL,                 /* sqlmixTrans */
   ( DBENTRYP_VT ) NULL,                 /* sqlmixTransRec */
-  ( DBENTRYP_V ) NULL,                  /* sqlmixZap */
+  ( DBENTRYP_V ) sqlmixZap,
   ( DBENTRYP_VR ) NULL,                 /* sqlmixChildEnd */
   ( DBENTRYP_VR ) NULL,                 /* sqlmixChildStart */
   ( DBENTRYP_VR ) NULL,                 /* sqlmixChildSync */

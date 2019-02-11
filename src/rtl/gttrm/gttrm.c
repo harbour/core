@@ -3225,10 +3225,17 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
          pTerm->terminal_ext |= TERM_PUTTY;
    }
 
-   if( ( pTerm->terminal_ext & TERM_PUTTY ) ||
-       strncmp( szTerm, "xterm", 5 ) == 0 ||
-       strncmp( szTerm, "rxvt", 4 ) == 0 ||
-       strncmp( szTerm, "screen", 6 ) == 0 )
+   if( ( pTerm->terminal_ext & TERM_PUTTY ) ||  /* PuTTY terminal emulator */
+       strncmp( szTerm, "xterm", 5 ) == 0 ||    /* X11 terminal emulator */
+       strncmp( szTerm, "rxvt", 4 ) == 0 ||     /* rxvt terminal emulator */
+       strncmp( szTerm, "gnome", 5 ) == 0 ||    /* GNOME Terminal */
+       strncmp( szTerm, "vte", 3 ) == 0 ||      /* VTE aka GNOME Terminal */
+       strncmp( szTerm, "konsole", 7 ) == 0 ||  /* KDE console window */
+       strncmp( szTerm, "nsterm", 6 ) == 0 ||   /* Apple Terminal */
+       strncmp( szTerm, "Apple_Terminal", 14 ) == 0 || /* Apple Terminal */
+       strncmp( szTerm, "aixterm", 7 ) == 0 ||  /* IBM Aixterm Terminal Emulator */
+       strncmp( szTerm, "tmux", 4 ) == 0 ||     /* tmux terminal multiplexer */
+       strncmp( szTerm, "screen", 6 ) == 0 )    /* VT 100/ANSI X3.64 virtual terminal */
    {
       pTerm->Init           = hb_gt_trm_AnsiInit;
       pTerm->Exit           = hb_gt_trm_AnsiExit;
@@ -3245,19 +3252,14 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
       pTerm->terminal_type  = TERM_XTERM;
       if( pTerm->iExtColor == HB_GTTRM_CLRNDF )
       {
-         if( pTerm->terminal_ext & TERM_PUTTY )
+         if( pTerm->terminal_ext & TERM_PUTTY ||
+             strstr( szTerm, "+256color" ) != NULL ||
+             strstr( szTerm, "-256color" ) != NULL )
             pTerm->iExtColor = HB_GTTRM_CLR256;
-         else if( strncmp( szTerm, "xterm", 5 ) == 0 ||
-                  strncmp( szTerm, "rxvt", 4 ) == 0 )
-         {
-            if( strstr( szTerm, "+256color" ) != NULL ||
-                strstr( szTerm, "-256color" ) != NULL )
-               pTerm->iExtColor = HB_GTTRM_CLR256;
-            else if( strstr( szTerm, "-88color" ) != NULL )
-               pTerm->iExtColor = HB_GTTRM_CLRRGB;
-            else if( strstr( szTerm, "-16color" ) != NULL )
-               pTerm->iExtColor = HB_GTTRM_CLRAIX;
-         }
+         else if( strstr( szTerm, "-88color" ) != NULL )
+            pTerm->iExtColor = HB_GTTRM_CLRRGB;
+         else if( strstr( szTerm, "-16color" ) != NULL )
+            pTerm->iExtColor = HB_GTTRM_CLRAIX;
       }
    }
    else if( strncmp( szTerm, "linux", 5 ) == 0 ||
