@@ -539,6 +539,7 @@ static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
        ( HB_IS_NUMBER( pItem ) && ( pField->uiType == HB_FT_INTEGER || pField->uiType == HB_FT_LONG ||
                                     pField->uiType == HB_FT_FLOAT || pField->uiType == HB_FT_DOUBLE ) ) ||
        ( HB_IS_LOGICAL( pItem ) && pField->uiType == HB_FT_LOGICAL ) ||
+       pField->uiType == HB_FT_ANY ||
        HB_IS_NIL( pItem ) )
    {
       hb_arraySet( ( PHB_ITEM ) pArea->pRecord, uiIndex, pItem );
@@ -596,6 +597,31 @@ static HB_ERRCODE sqlbaseRecId( SQLBASEAREAP pArea, PHB_ITEM pRecNo )
    errCode = SELF_RECNO( &pArea->area, &ulRecNo );
    hb_itemPutNInt( pRecNo, ulRecNo );
    return errCode;
+}
+
+
+static HB_ERRCODE sqlbaseZap( SQLBASEAREAP pArea )
+{
+   HB_ULONG ulIndex;
+
+   for( ulIndex = 1; ulIndex <= pArea->ulRecCount; ulIndex++ )
+   {
+      if( pArea->pRowFlags[ ulIndex ] & SQLDD_FLAG_CACHED )
+         hb_itemRelease( ( PHB_ITEM ) pArea->pRow[ ulIndex ] );
+   }
+
+   pArea->ulRecCount = 0;
+   pArea->ulRecNo = 0;
+
+   pArea->pRow = ( void ** ) hb_xrealloc( pArea->pRow, SQLDD_ROWSET_RESIZE * sizeof( void * ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, SQLDD_ROWSET_RESIZE * sizeof( HB_BYTE ) );
+   pArea->ulRecMax = SQLDD_ROWSET_RESIZE;
+
+   pArea->fFetched = HB_TRUE;
+
+   pArea->fPositioned = HB_FALSE;
+
+   return SELF_GOTOP( &pArea->area );
 }
 
 
@@ -1140,7 +1166,7 @@ static RDDFUNCS sqlbaseTable =
    ( DBENTRYP_VS ) NULL,             /* sqlbaseSort */
    ( DBENTRYP_VT ) NULL,             /* sqlbaseTrans */
    ( DBENTRYP_VT ) NULL,             /* sqlbaseTransRec */
-   ( DBENTRYP_V ) NULL,              /* sqlbaseZap */
+   ( DBENTRYP_V ) sqlbaseZap,
    ( DBENTRYP_VR ) NULL,             /* sqlbaseChildEnd */
    ( DBENTRYP_VR ) NULL,             /* sqlbaseChildStart */
    ( DBENTRYP_VR ) NULL,             /* sqlbaseChildSync */
