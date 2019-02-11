@@ -2756,7 +2756,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
 #ifdef HB_LEGACY_LEVEL4
       CASE cParamL == "-nocompr"            ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF ; LegacyWarning( hbmk, aParam, "-compr=no" )
 #endif
-      CASE Left( cParamL, 6 ) == "-head="
+      CASE hb_LeftEq( cParamL, "-head=" )
 
          DO CASE
          CASE SubStr( cParamL, 6 + 1 ) == "off"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF
@@ -2764,9 +2764,9 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          CASE SubStr( cParamL, 6 + 1 ) == "native" ; hbmk[ _HBMK_nHEAD ] := _HEAD_NATIVE
          CASE SubStr( cParamL, 6 + 1 ) == "dep"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_DEP
 #ifdef HB_LEGACY_LEVEL4
-         OTHERWISE                             ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL ; LegacyWarning( hbmk, aParam, "-head=full" )
+         OTHERWISE                                 ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL ; LegacyWarning( hbmk, aParam, "-head=full" )
 #else
-         OTHERWISE                             ; InvalidOptionValue( hbmk, aParam )
+         OTHERWISE                                 ; InvalidOptionValue( hbmk, aParam )
 #endif
          ENDCASE
 
@@ -2776,7 +2776,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
       CASE cParamL == "-nohead"                ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF ; LegacyWarning( hbmk, aParam, "-head=off" )
 #endif
 
-      CASE Left( cParamL, 5 ) == "-cpp="
+      CASE hb_LeftEq( cParamL, "-cpp=" )
 
          DO CASE
          CASE SubStr( cParamL, 5 + 1 ) == "def"   ; hbmk[ _HBMK_lCPP ] := NIL
@@ -2785,13 +2785,19 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          CASE SubStr( cParamL, 5 + 1 ) == "iso98" ; hbmk[ _HBMK_cCPP ] := "iso98"
          CASE SubStr( cParamL, 5 + 1 ) == "iso03" ; hbmk[ _HBMK_cCPP ] := "iso03"
          CASE SubStr( cParamL, 5 + 1 ) == "iso0x" ; hbmk[ _HBMK_cCPP ] := "iso0x"
+         CASE SubStr( cParamL, 5 + 1 ) == "iso11" ; hbmk[ _HBMK_cCPP ] := "iso11"
+         CASE SubStr( cParamL, 5 + 1 ) == "iso14" ; hbmk[ _HBMK_cCPP ] := "iso14"
+         CASE SubStr( cParamL, 5 + 1 ) == "iso17" ; hbmk[ _HBMK_cCPP ] := "iso17"
+         CASE SubStr( cParamL, 5 + 1 ) == "iso20" ; hbmk[ _HBMK_cCPP ] := "iso20"
          CASE SubStr( cParamL, 5 + 1 ) == "gnu98" ; hbmk[ _HBMK_cCPP ] := "gnu98"
          CASE SubStr( cParamL, 5 + 1 ) == "gnu0x" ; hbmk[ _HBMK_cCPP ] := "gnu0x"
+         CASE SubStr( cParamL, 5 + 1 ) == "gnu11" ; hbmk[ _HBMK_cCPP ] := "gnu11"
+         CASE SubStr( cParamL, 5 + 1 ) == "gnu14" ; hbmk[ _HBMK_cCPP ] := "gnu14"
+         CASE SubStr( cParamL, 5 + 1 ) == "gnu17" ; hbmk[ _HBMK_cCPP ] := "gnu17"
+         CASE SubStr( cParamL, 5 + 1 ) == "gnu20" ; hbmk[ _HBMK_cCPP ] := "gnu20"
          CASE SubStr( cParamL, 5 + 1 ) == ""      ; hbmk[ _HBMK_cCPP ] := ""
+         OTHERWISE                                ; InvalidOptionValue( hbmk, aParam )
          ENDCASE
-
-         /* dangerous? disable it */
-         hbmk[ _HBMK_cCPP ] := ""
 
       CASE Left( cParamL, 3 ) == "-c="
 
@@ -2803,10 +2809,8 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
          CASE SubStr( cParamL, 3 + 1 ) == "gnu99" ; hbmk[ _HBMK_cC ] := "gnu99"
          CASE SubStr( cParamL, 3 + 1 ) == "gnu1x" ; hbmk[ _HBMK_cC ] := "gnu1x"
          CASE SubStr( cParamL, 3 + 1 ) == ""      ; hbmk[ _HBMK_cC ] := ""
+         OTHERWISE                                ; InvalidOptionValue( hbmk, aParam )
          ENDCASE
-
-         /* dangerous? disable it */
-         hbmk[ _HBMK_cC ] := ""
 
       CASE cParamL == "-cpp"             ; hbmk[ _HBMK_lCPP ]       := .T. /* synonym to -cpp=yes */
       CASE cParamL == "-cpp-"            ; hbmk[ _HBMK_lCPP ]       := .F. /* synonym to -cpp=no */
@@ -7886,24 +7890,15 @@ STATIC PROCEDURE Set_lCreateDyn( hbmk, lValue )
 STATIC FUNCTION gcc_opt_lngc_fill( hbmk )
 
    DO CASE
-   CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp" )
+   CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp|icc|icc64|clang|clang64" )
 
       SWITCH hbmk[ _HBMK_cC ]
-      CASE "iso90" ; RETURN "-std=c89"
-      CASE "iso99" ; RETURN "-std=c9x"
-      CASE "iso1x" ; RETURN "-std=c1x"
-      CASE "gnu90" ; RETURN "-std=gnu89"
-      CASE "gnu99" ; RETURN "-std=gnu9x"
-      CASE "gnu1x" ; RETURN "-std=gnu1x"
-      ENDSWITCH
-
-   CASE HBMK_ISCOMP( "icc|clang" )
-
-      SWITCH hbmk[ _HBMK_cC ]
-      CASE "iso90" ; RETURN "-std=c89"
-      CASE "iso99" ; RETURN "-std=c99"
+      CASE "iso90" ; RETURN "-std=c89" /* aka c89, aka ansi */
+      CASE "iso99" ; RETURN "-std=c99" /* aka c9x */
+      CASE "iso11" ; RETURN "-std=c11" /* aka c1x */
       CASE "gnu90" ; RETURN "-std=gnu89"
       CASE "gnu99" ; RETURN "-std=gnu99"
+      CASE "gnu11" ; RETURN "-std=gnu11"
       ENDSWITCH
 
    ENDCASE
@@ -7913,21 +7908,30 @@ STATIC FUNCTION gcc_opt_lngc_fill( hbmk )
 STATIC FUNCTION gcc_opt_lngcpp_fill( hbmk )
 
    DO CASE
-   CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp" )
+   CASE HBMK_ISCOMP( "gcc|gccarm|gccomf|mingw|mingw64|mingwarm|djgpp|clang|clang64" )
 
       SWITCH hbmk[ _HBMK_cCPP ]
-      CASE "iso98" ; RETURN "-std=c++98"
+      CASE "iso98" ; RETURN "-std=c++98" /* ~aka c++03, ~aka ansi */
       CASE "iso0x" ; RETURN "-std=c++0x"
+      CASE "iso11" ; RETURN "-std=c++11" /* aka c++0x */
+      CASE "iso14" ; RETURN "-std=c++14" /* aka c++1y */
+      CASE "iso17" ; RETURN "-std=c++17" /* aka c++1z */
+      CASE "iso20" ; RETURN "-std=c++20" /* aka c++2a */
       CASE "gnu98" ; RETURN "-std=gnu++98"
       CASE "gnu0x" ; RETURN "-std=gnu++0x"
+      CASE "gnu11" ; RETURN "-std=gnu++11"
+      CASE "gnu14" ; RETURN "-std=gnu++14"
+      CASE "gnu17" ; RETURN "-std=gnu++17"
+      CASE "gnu20" ; RETURN "-std=gnu++20"
       ENDSWITCH
 
-   CASE HBMK_ISCOMP( "icc" )
+   CASE HBMK_ISCOMP( "icc|icc64" )
 
       SWITCH hbmk[ _HBMK_cCPP ]
       CASE "iso98"
       CASE "gnu98" ; RETURN "-std=gnu++98"
       CASE "iso0x" ; RETURN "-std=c++0x"
+      CASE "iso11" ; RETURN "-std=c++11" /* aka c++0x */
       ENDSWITCH
 
    ENDCASE
@@ -15835,8 +15839,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lMore, lLong )
       { "-optim[-]"          , I_( "toggle C compiler optimizations (default: on)" ) }, ;
       { "-cpp[-]"            , I_( "force C++/C mode" ) }, ;
       { "-cpp=<value>"       , I_( "select C++ mode. Allowed values are: def, yes, no" ) }, ;
-/*    { "-c=<value>"         , I_( "select C standard. Allowed values are: iso90, iso99, iso1x, gnu90, gnu99, gnu1x" ) }, */;
-/*    { "-cpp=<value>"       , I_( "select C++ mode or standard. Allowed values are: def, yes, no, iso98, iso03, iso0x, gnu98, gnu0x" ) }, */;
+      { "-c=<value>"         , I_( "select C standard. Allowed values are: iso90, iso99, iso11, gnu90, gnu99, gnu11" ) }, ;
+      { "-cpp=<value>"       , I_( "select C++ mode or standard. Allowed values are: def, yes, no, iso98, iso11, iso14, gnu98, gnu11, gnu14" ) }, ;
       { "-map[-]"            , I_( "create (or not) a map file" ) }, ;
       { "-implib[-]"         , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a suffix added." ) }, ;
       { "-implib=<output>"   , I_( "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)" ) }, ;

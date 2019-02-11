@@ -5,20 +5,32 @@
 
 -w3 -es2
 
+# Tone down warnings for both QT4 and QT5
+-warn=low{allclang}
+
 -stop{dos|watcom|bcc|pocc|pocc64|poccarm|msvcia64|pcc|(hbdyn&android)}
 
 -pic
 
+# NOTE: You can override auto-detection of QT 'moc' tool by using HB_QTPATH and
+#       optionally HB_QTSUFFIX envvars. This may only be necessary on some *nix
+#       systems. E.g.:
+#
+#       HB_QTPATH=/opt/qt5/bin/
+#       HB_QTSUFFIX=
+
 -plugin=hbmk2_qtgt.hb
 
--depcontrol=qt5:${HB_WITH_QT}
+-deppkgname=qt5:qt5
 -depkeyhead=qt5:QtCore/QJsonObject
+-depcontrol=qt5:${HB_WITH_QT}
 -depoptional=qt5:yes
 -depincpath=qt5:/usr/local/opt/qt5/include{darwin}
 -depincpath=qt5:/usr/local/include/qt5{bsd}
 -depfinish=qt5
 
 {!HBMK_HAS_QT5&!darwin&!android}-deppkgname=qt:QtCore
+{!HBMK_HAS_QT5}-deppkgname=qt:qt4
 {!HBMK_HAS_QT5}-depkeyhead=qt:QtCore/qglobal.h
 {!HBMK_HAS_QT5}-depcontrol=qt:${HB_WITH_QT}
 {!HBMK_HAS_QT5&HB_BUILD_3RDEXT='no'}-depcontrol=qt:no
@@ -31,7 +43,10 @@
 {!HBMK_HAS_QT5&darwin}-depincpath=qt:/Library/Frameworks
 {!HBMK_HAS_QT5&darwin}-depincpath=qt:/usr/local/include
 
+${hb_name}.hbx
+
+# Required for 5.7.0 or upper
+-cpp=iso11{HBMK_HAS_QT5}
+
 gtqtc1.cpp
 gtqtc.h
-
-${hb_name}.hbx

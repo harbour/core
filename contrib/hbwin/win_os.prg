@@ -64,9 +64,8 @@ FUNCTION win_osNetRegOk( lSetIt, lDoVista )
    LOCAL cKeyWks
 
    hb_default( @lSetIt, .F. )
-   hb_default( @lDoVista, .T. )
 
-   IF ! lDoVista .AND. hb_osIsWinVista()
+   IF ! hb_defaultValue( lDoVista, .T. ) .AND. hb_osIsWinVista()
       /* do nothing */
    ELSEIF hb_osIsWin9x()
       bRetVal := win_regQuery( WIN_HKEY_LOCAL_MACHINE, "System\CurrentControlSet\Services\VxD\VREDIR", "DiscardCacheOnOpen", 1, lSetIt )
@@ -85,17 +84,20 @@ FUNCTION win_osNetRegOk( lSetIt, lDoVista )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationDelay", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SharingViolationRetries", 0, lSetIt )
 
-      IF hb_osIsWinVista()
-         /* If SMB2 is enabled turning off oplocks does not work, so SMB2 is required to be turned off on Server. */
-         bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SMB2", 0, lSetIt )
-      ENDIF
-
       /* Workstation settings */
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UseOpportunisticLocking", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLocks", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "EnableOpLockForceClose", 1, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UtilizeNtCaching", 0, lSetIt )
       bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "UseLockReadUnlock", 0, lSetIt )
+
+      IF hb_osIsWin7()
+         /* https://groups.google.com/forum/#!msg/harbour-users/RyjXKmlQqWw/QOYwIPS5BQAJ */
+         bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "DisableLeasing", 1, lSetIt )
+      ELSEIF hb_osIsWinVista()
+         /* If SMB2 is enabled turning off oplocks does not work, so SMB2 is required to be turned off on Server. */
+         bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeySrv, "SMB2", 0, lSetIt )
+      ENDIF
 
       IF hb_osIsWinVista()
          bRetVal := bRetVal .AND. win_regQuery( WIN_HKEY_LOCAL_MACHINE, cKeyWks, "FileInfoCacheLifetime", 0, lSetIt )
@@ -116,15 +118,21 @@ FUNCTION win_osNetVRedirOk( /* @ */ nResult )
 
    nResult := 0
 
-   IF hb_osIsWin9x()
-      aFiles := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" )  /* Check for faulty files. */
-      IF ! Empty( aFiles )
-         IF aFiles[ 1 ][ F_SIZE ] == 156749 .AND. aFiles[ 1 ][ F_TIME ] == "11:11:10"
-            nResult := 1111
-         ELSEIF aFiles[ 1 ][ F_SIZE ] == 140343 .AND. aFiles[ 1 ][ F_TIME ] == "09:50:00"
-            nResult := 950
-         ENDIF
-      ENDIF
+   /* Check for faulty files */
+   IF hb_osIsWin9x() .AND. ;
+      ! Empty( aFiles := Directory( hb_GetEnv( "WINDIR", "C:\WINDOWS" ) + "\SYSTEM\VREDIR.VXD" ) )
+      SWITCH aFiles[ 1 ][ F_SIZE ]
+         CASE 156749
+            IF aFiles[ 1 ][ F_TIME ] == "11:11:10"
+               nResult := 1111
+            ENDIF
+            EXIT
+         CASE 140343
+            IF aFiles[ 1 ][ F_TIME ] == "09:50:00"
+               nResult := 950
+            ENDIF
+            EXIT
+      ENDSWITCH
    ENDIF
 
-   RETURN Empty( nResult )
+   RETURN nResult == 0
