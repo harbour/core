@@ -2322,6 +2322,7 @@ static HB_BOOL hb_gt_qtc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                {
                   case 0:
                      iDepth = 32;
+                     /* fallthrough */
                   case 32:
                      format = QImage::Format_RGB32;
                      break;

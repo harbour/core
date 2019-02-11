@@ -1425,6 +1425,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
 
          case HB_BOXCH_FULL_B:
             inverse = HB_TRUE;
+            /* fallthrough */
          case HB_BOXCH_FULL_T:
             rect[ 0 ].x = 0;
             rect[ 0 ].y = 0;
@@ -1436,6 +1437,7 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
 
          case HB_BOXCH_FULL_R:
             inverse = HB_TRUE;
+            /* fallthrough */
          case HB_BOXCH_FULL_L:
             rect[ 0 ].x = 0;
             rect[ 0 ].y = 0;
