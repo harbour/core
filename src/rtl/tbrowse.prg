@@ -123,7 +123,7 @@ CREATE CLASS TBrowse
    VAR cHeadSep   AS CHARACTER INIT ""          // 07. Heading separator characters
    VAR cColSep    AS CHARACTER INIT " "         // 08. Column separator characters
    VAR cFootSep   AS CHARACTER INIT ""          // 09. Footing separator characters
-   VAR FrameColor AS String
+   VAR cSepColor  AS String
 
    VAR cColorSpec AS CHARACTER                  // 10. Color table for the TBrowse display
 
@@ -442,7 +442,7 @@ METHOD dispFrames() CLASS TBrowse
    DispBegin()
 
    IF ::lInvalid .AND. ! Empty( ::cBorder )
-      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cBorder, hb_DefaultValue( ::FrameColor, ::colorValue( _TBC_CLR_STANDARD ) ) )
+      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cBorder, hb_DefaultValue( ::cSepColor, ::colorValue( _TBC_CLR_STANDARD ) ) )
    ENDIF
 
    IF ::nHeadHeight > 0
@@ -452,11 +452,11 @@ METHOD dispFrames() CLASS TBrowse
    ENDIF
    IF ::lHeadSep
       _DISP_FHSEP( ::n_Top + ::nHeadHeight, _TBCI_HEADSEP, ;
-                   hb_DefaultValue( ::FrameColor, ::colorValue( _TBC_CLR_STANDARD ) ), ::aColData )
+                   hb_DefaultValue( ::cSepColor, ::colorValue( _TBC_CLR_STANDARD ) ), ::aColData )
    ENDIF
    IF ::lFootSep
       _DISP_FHSEP( ::n_Bottom - ::nFootHeight, _TBCI_FOOTSEP, ;
-                   hb_DefaultValue( ::FrameColor, ::colorValue( _TBC_CLR_STANDARD ) ), ::aColData )
+                   hb_DefaultValue( ::cSepColor, ::colorValue( _TBC_CLR_STANDARD ) ), ::aColData )
    ENDIF
    IF ::nFootHeight > 0
       _DISP_FHNAME( ::n_Bottom - ::nFootHeight + 1, ::nFootHeight, ::n_Left, ::n_Right, _TBCI_FOOTING, ;
@@ -496,7 +496,7 @@ METHOD dispRow( nRow ) CLASS TBrowse
                lFirst := .F.
             ELSEIF aCol[ _TBCI_SEPWIDTH ] > 0
                hb_DispOutAtBox( nRowPos, aCol[ _TBCI_COLPOS ] - aCol[ _TBCI_FROZENSPACE ], ;
-                                aCol[ _TBCI_COLSEP ], hb_DefaultValue( ::FrameColor, cStdColor ) )
+                                aCol[ _TBCI_COLSEP ], hb_DefaultValue( ::cSepColor, cStdColor ) )
                nColPos += aCol[ _TBCI_SEPWIDTH ]
             ENDIF
             nColPos += aCol[ _TBCI_CELLPOS ]
