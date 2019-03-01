@@ -123,7 +123,6 @@ CREATE CLASS TBrowse
    VAR cHeadSep   AS CHARACTER INIT ""          // 07. Heading separator characters
    VAR cColSep    AS CHARACTER INIT " "         // 08. Column separator characters
    VAR cFootSep   AS CHARACTER INIT ""          // 09. Footing separator characters
-   VAR cSepColor  AS String
 
    VAR cColorSpec AS CHARACTER                  // 10. Color table for the TBrowse display
 
@@ -162,6 +161,7 @@ CREATE CLASS TBrowse
    METHOD message( cMessage ) SETGET            // get/set character string displayed on status bar
 #endif
 
+   VAR    cSepColor  AS CHARACTER               // heading/column/footer separator color
    METHOD nTop( nTop ) SETGET                   // get/set top row number for the TBrowse display
    METHOD nLeft( nLeft ) SETGET                 // get/set leftmost column for the TBrowse display
    METHOD nBottom( nBottom ) SETGET             // get/set bottom row number for the TBrowse display
