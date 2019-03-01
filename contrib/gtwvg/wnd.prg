@@ -1154,6 +1154,7 @@ METHOD WvgWindow:getPosAndSize( aPs, aSz )
 
       IF aPos[ 1 ] < 0 .OR. aPos[ 2 ] < 0 .OR. aSize[ 1 ] < 0 .OR. aSize[ 2 ] < 0
          aFontInfo := wvt_GetFontInfo()
+
          nX := aPos[ 2 ]
          IF nX < 0
             nX := Int( Abs( aPos[ 2 ] ) * aFontInfo[ 7 ] )
