@@ -87,7 +87,7 @@
 
 #include <stddef.h> /* size_t */
 
-#if defined(_WIN32) && defined(_MSC_VER) && (_MSC_VER < 1600)
+#if defined(_WIN32) && ( ( defined(_MSC_VER) && (_MSC_VER < 1600) ) || ( defined( __BORLANDC__ ) && ( __BORLANDC__ <= 0x0560 ) ) )
   /* For vs2003/7.1 up to vs2008/9.0; _MSC_VER 1600 is vs2010/10.0 */
   typedef unsigned __int8   uint8_t;
   typedef unsigned __int32 uint32_t;
