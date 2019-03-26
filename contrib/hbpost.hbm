@@ -39,6 +39,9 @@
 {hbdyn&(allwin|cygwin)}-lhbmaindllp
 {hbdyn}-depimplib-
 
+# android lib required
+{android}-llog
+
 "{hbdyn&darwin}-dflag=-install_name '${hb_dynprefix}${hb_outputname}${hb_dynext}'"
 "{hbdyn&darwin}-dflag=-compatibility_version ${hb_major}.${hb_minor}"
 "{hbdyn&darwin}-dflag=-current_version ${hb_major}.${hb_minor}.${hb_release}"
