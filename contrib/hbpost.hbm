@@ -35,7 +35,7 @@
 {hbdyn&unix&!darwin&!android&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}
 {hbdyn&unix&darwin}-ln=${hb_dynprefix}${hb_outputname}.${hb_major}.${hb_minor}${hb_dynext}
 {hbdyn&android}-lharbour
-{hbdyn&android}-lm
+{hbdyn&android}-lm -llog
 {hbdyn&(allwin|cygwin)}-lhbmaindllp
 {hbdyn}-depimplib-
 
