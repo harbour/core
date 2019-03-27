@@ -4245,6 +4245,7 @@ STATIC FUNCTION __hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExit
                AAdd( l_aLIBSYS, "rt" )
             CASE hbmk[ _HBMK_cPLAT ] == "android"
                AAdd( l_aLIBSYS, "dl" )
+               AAdd( l_aLIBSYS, "log" )
             CASE hbmk[ _HBMK_cPLAT ] == "sunos"
                AAdd( l_aLIBSYS, "rt" )
                AAdd( l_aLIBSYS, "socket" )
