@@ -3517,8 +3517,8 @@ STATIC PROCEDURE SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
 
 
 FUNCTION __dbgColors()
-   RETURN t_oDebugger:GetColors()
-
+   RETURN If( t_oDebugger != nil, t_oDebugger:GetColors(),;
+              { "W+/BG", "N/BG", "R/BG", "N+/BG", "W+/B", "GR+/B", "W/B", "N/W", "R/W", "N/BG", "R/BG" } )
 
 FUNCTION __dbg()
    RETURN t_oDebugger
