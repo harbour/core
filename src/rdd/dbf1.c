@@ -2067,7 +2067,7 @@ static HB_ERRCODE hb_dbfFlush( DBFAREAP pArea )
          errCode = SELF_WRITEDBHEADER( &pArea->area );
    }
 
-   if( hb_setGetHardCommit() && errCode == HB_SUCCESS )
+   if( errCode == HB_SUCCESS && hb_setGetHardCommit() )
    {
       if( pArea->fDataFlush )
       {
@@ -3018,7 +3018,10 @@ static HB_ERRCODE hb_dbfClose( DBFAREAP pArea )
 
       /* Update header */
       if( pArea->fUpdateHeader )
+      {
+         pArea->uiSetHeader |= DB_SETHEADER_EOL;
          SELF_WRITEDBHEADER( &pArea->area );
+      }
 
       /* It's not Clipper compatible but it reduces the problem with
          buggy Windows network setting */
@@ -3796,7 +3799,7 @@ static HB_ERRCODE hb_dbfInfo( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
          if( HB_IS_NUMERIC( pItem ) )
          {
             int iMode = hb_itemGetNI( pItem );
-            if( ( iMode & ~0xFF ) == 0 )
+            if( ( iMode & ~DB_SETHEADER_MASK ) == 0 )
                pArea->uiSetHeader = iMode;
          }
          hb_itemPutNI( pItem, uiSetHeader );
@@ -4113,7 +4116,7 @@ static HB_ERRCODE hb_dbfNewArea( DBFAREAP pArea )
          pArea->bTableType = ( HB_BYTE ) hb_itemGetNI( pItem );
       hb_itemClear( pItem );
       if( SELF_RDDINFO( SELF_RDDNODE( &pArea->area ), RDDI_SETHEADER, 0, pItem ) == HB_SUCCESS )
-         pArea->uiSetHeader = ( HB_BYTE ) hb_itemGetNI( pItem );
+         pArea->uiSetHeader = ( HB_UINT ) hb_itemGetNI( pItem );
       hb_itemRelease( pItem );
    }
 
@@ -5630,6 +5633,7 @@ static HB_ERRCODE hb_dbfZap( DBFAREAP pArea )
 
    if( SELF_WRITEDBHEADER( &pArea->area ) != HB_SUCCESS )
       return HB_FAILURE;
+
    if( SELF_GOTO( &pArea->area, 0 ) != HB_SUCCESS )
       return HB_FAILURE;
 
@@ -6319,23 +6323,26 @@ static HB_ERRCODE hb_dbfWriteDBHeader( DBFAREAP pArea )
       }
       pArea->ulRecCount = hb_dbfCalcRecCount( pArea );
    }
-   else
-   {
-      /* Exclusive mode */
-      /* write eof mark */
-      HB_FOFFSET nOffset = ( HB_FOFFSET ) pArea->uiHeaderLen +
-                           ( HB_FOFFSET ) pArea->uiRecordLen *
-                           ( HB_FOFFSET ) pArea->ulRecCount;
-      hb_fileWriteAt( pArea->pDataFile, "\032", 1, nOffset );
-      hb_fileTruncAt( pArea->pDataFile, nOffset + 1 );
-   }
 
    HB_PUT_LE_UINT32( pArea->dbfHeader.ulRecCount,  pArea->ulRecCount );
    HB_PUT_LE_UINT16( pArea->dbfHeader.uiHeaderLen, pArea->uiHeaderLen );
    HB_PUT_LE_UINT16( pArea->dbfHeader.uiRecordLen, pArea->uiRecordLen );
    if( hb_fileWriteAt( pArea->pDataFile, &pArea->dbfHeader,
                        sizeof( DBFHEADER ), 0 ) == sizeof( DBFHEADER ) )
+   {
       errCode = HB_SUCCESS;
+      if( ! pArea->fShared || ( pArea->uiSetHeader & DB_SETHEADER_EOL ) != 0 )
+      {
+         /* write eof mark */
+         HB_FOFFSET nOffset = ( HB_FOFFSET ) pArea->uiHeaderLen +
+                              ( HB_FOFFSET ) pArea->uiRecordLen *
+                              ( HB_FOFFSET ) pArea->ulRecCount;
+         if( hb_fileWriteAt( pArea->pDataFile, "\032", 1, nOffset ) == 1 )
+            hb_fileTruncAt( pArea->pDataFile, nOffset + 1 );
+         else
+            errCode = HB_FAILURE;
+      }
+   }
    else
       errCode = HB_FAILURE;
 
@@ -6708,7 +6715,7 @@ static HB_ERRCODE hb_dbfRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
          if( HB_IS_NUMERIC( pItem ) )
          {
             int iMode = hb_itemGetNI( pItem );
-            if( ( iMode & ~0xFF ) == 0 )
+            if( ( iMode & ~DB_SETHEADER_MASK ) == 0 )
                pData->uiSetHeader = ( HB_USHORT ) iMode;
          }
          hb_itemPutNI( pItem, uiSetHeader );

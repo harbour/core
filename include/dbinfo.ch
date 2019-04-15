@@ -390,12 +390,14 @@
 #endif
 
 /* DBF HEADER UPDATING */
-#define DB_SETHEADER_CLOSE    0  /* update in CLOSE method - it always happens if necessary */
-#define DB_SETHEADER_COMMIT   1  /* update in FLUSH method */
-#define DB_SETHEADER_WRITE    2  /* update in GOCOLD method */
-#define DB_SETHEADER_APPEND   0  /* record append sets update header flag (always enabled) */
-#define DB_SETHEADER_REPLACE  4  /* record modification sets update header flag */
-#define DB_SETHEADER_YYEAR    16 /* store year() % 100 instead of year - 1900, FoxPro compatibility */
+#define DB_SETHEADER_CLOSE    0x00 /* update in CLOSE method - it always happens if necessary */
+#define DB_SETHEADER_COMMIT   0x01 /* update in FLUSH method */
+#define DB_SETHEADER_WRITE    0x02 /* update in GOCOLD method */
+#define DB_SETHEADER_APPEND   0x00 /* record append sets update header flag (always enabled) */
+#define DB_SETHEADER_REPLACE  0x04 /* record modification sets update header flag */
+#define DB_SETHEADER_YYEAR    0x10 /* store year() % 100 instead of year - 1900, FoxPro compatibility */
+#define DB_SETHEADER_EOL      0x20 /* set EOL when header is written, enabled in CLOSE method if header has to be updated */
+#define DB_SETHEADER_MASK     0x37 /* bits used in DB_SETHEADER_* flags */
 
 /* update in CLOSE after append only */
 #define DB_SETHEADER_MINIMAL     DB_SETHEADER_CLOSE
